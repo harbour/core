@@ -63,7 +63,7 @@
 
 CREATE CLASS tIPClientSMTP FROM tIPClient
 
-   METHOD New( oUrl, lTrace, oCredentials )
+   METHOD New( oUrl, bTrace, oCredentials )
    METHOD Open( cUrl )
    METHOD Close()
    METHOD Write( cData, nLen, bCommit )
@@ -87,26 +87,20 @@ CREATE CLASS tIPClientSMTP FROM tIPClient
 
 ENDCLASS
 
-METHOD New( oUrl, lTrace, oCredentials ) CLASS tIPClientSMTP
-   LOCAL n
+METHOD New( oUrl, bTrace, oCredentials ) CLASS tIPClientSMTP
 
-   ::super:New( oUrl, lTrace, oCredentials )
+   LOCAL oLog
+
+   IF ISLOGICAL( bTrace ) .AND. bTrace
+      oLog := tIPLog():New( "smtp" )
+      bTrace := {| cMsg | iif( PCount() > 0, oLog:Add( cMsg ), oLog:Close() ) }
+   ENDIF
+
+   ::super:New( oUrl, bTrace, oCredentials )
 
    ::nDefaultPort := 25
    ::nConnTimeout := 5000
    ::nAccessMode := TIP_WO  // a write only
-
-   IF ::lTrace
-      IF ! hb_FileExists( "sendmail.log" )
-         ::nHandle := FCreate( "sendmail.log" )
-      ELSE
-         n := 1
-         DO WHILE hb_FileExists( "sendmail" + hb_ntos( n ) + ".log" )
-            n++
-         ENDDO
-         ::nHandle := FCreate( "sendmail" + hb_ntos( n ) + ".log" )
-      ENDIF
-   ENDIF
 
    RETURN Self
 
@@ -163,9 +157,6 @@ METHOD GetOk() CLASS tIPClientSMTP
 
 METHOD Close() CLASS tIPClientSMTP
    hb_inetTimeOut( ::SocketCon, ::nConnTimeout )
-   IF ::lTrace
-      FClose( ::nHandle )
-   ENDIF
    ::Quit()
    RETURN ::super:Close()
 
@@ -282,10 +273,10 @@ METHOD SendMail( oTIpMail ) CLASS TIpClientSmtp
 
    ::mail( oTIpMail:getFieldPart( "From" ) )
 
-   cTo   := oTIpMail:getFieldPart( "To" )
-   cTo   := StrTran( cTo, hb_inetCRLF() )
-   cTo   := StrTran( cTo, Chr( 9 ) )
-   cTo   := StrTran( cTo, Chr( 32 ) )
+   cTo := oTIpMail:getFieldPart( "To" )
+   cTo := StrTran( cTo, hb_inetCRLF() )
+   cTo := StrTran( cTo, Chr( 9 ) )
+   cTo := StrTran( cTo, Chr( 32 ) )
 
    FOR EACH cTo IN hb_regexSplit( ",", cTo )
       ::rcpt( cTo )

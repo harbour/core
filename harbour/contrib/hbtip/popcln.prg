@@ -64,7 +64,7 @@
 
 CREATE CLASS tIPClientPOP FROM tIPClient
 
-   METHOD New( oUrl, lTrace, oCredentials )
+   METHOD New( oUrl, bTrace, oCredentials )
    METHOD Open()
    METHOD Close()
    METHOD Read( iLen )
@@ -83,26 +83,19 @@ CREATE CLASS tIPClientPOP FROM tIPClient
 ENDCLASS
 
 
-METHOD New( oUrl, lTrace, oCredentials ) CLASS tIPClientPOP
+METHOD New( oUrl, bTrace, oCredentials ) CLASS tIPClientPOP
 
-   LOCAL n
+   LOCAL oLog
 
-   ::super:New( oUrl, lTrace, oCredentials )
+   IF ISLOGICAL( bTrace ) .AND. bTrace
+      oLog := tIPLog():New( "pop" )
+      bTrace := {| cMsg | iif( PCount() > 0, oLog:Add( cMsg ), oLog:Close() ) }
+   ENDIF
+
+   ::super:New( oUrl, bTrace, oCredentials )
 
    ::nDefaultPort := 110
    ::nConnTimeout := 10000
-
-   IF ::lTrace
-      IF ! hb_FileExists( "pop3.log" )
-         ::nHandle := FCreate( "pop3.log" )
-      ELSE
-         n := 0
-         DO WHILE hb_FileExists( "pop3" + hb_ntos( n ) + ".log" )
-            n++
-         ENDDO
-         ::nHandle := FCreate( "pop3" + hb_ntos( n ) + ".log" )
-      ENDIF
-   ENDIF
 
    RETURN Self
 
@@ -111,7 +104,7 @@ METHOD Open( cUrl ) CLASS tIPClientPOP
       RETURN .F.
    ENDIF
 
-   IF Empty ( ::oUrl:cUserid ) .OR. Empty ( ::oUrl:cPassword )
+   IF Empty( ::oUrl:cUserid ) .OR. Empty( ::oUrl:cPassword )
       RETURN .F.
    ENDIF
 
@@ -145,10 +138,6 @@ METHOD Close() CLASS tIPClientPOP
 
    hb_inetTimeOut( ::SocketCon, ::nConnTimeout )
 
-   IF ::lTrace
-      FClose( ::nHandle )
-   ENDIF
-
    ::Quit()
 
    RETURN ::super:Close()
@@ -160,7 +149,7 @@ METHOD Quit() CLASS tIPClientPOP
 METHOD Stat() CLASS tIPClientPOP
    LOCAL nRead
    ::InetSendall( ::SocketCon, "STAT" + ::cCRLF )
-   RETURN ::InetRecvLine( ::SocketCon, @nRead, 128)
+   RETURN ::InetRecvLine( ::SocketCon, @nRead, 128 )
 
 METHOD Read( nLen ) CLASS tIPClientPOP
    /** Set what to read for */
@@ -324,6 +313,7 @@ METHOD Delete( nId ) CLASS tIPClientPOP
 
 METHOD countMail CLASS TIpClientPop
    LOCAL aMails
+
    IF ::isOpen
       ::reset()
       aMails := hb_ATokens( StrTran( ::list(), Chr( 13 ) ), Chr( 10 ) )

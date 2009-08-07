@@ -112,7 +112,7 @@ CREATE CLASS tIPClientFTP FROM tIPClient
    VAR SocketPortServer
    VAR cLogFile
 
-   METHOD New( oUrl, lTrace, oCredentials )
+   METHOD New( oUrl, bTrace, oCredentials )
    METHOD Open()
    METHOD Read( nLen )
    METHOD Write( nLen )
@@ -156,10 +156,16 @@ CREATE CLASS tIPClientFTP FROM tIPClient
 ENDCLASS
 
 
-METHOD New( oUrl, lTrace, oCredentials ) CLASS tIPClientFTP
-   LOCAL n
+METHOD New( oUrl, bTrace, oCredentials ) CLASS tIPClientFTP
 
-   ::super:new( oUrl, lTrace, oCredentials )
+   LOCAL oLog
+
+   IF ISLOGICAL( bTrace ) .AND. bTrace
+      oLog := tIPLog():New( "ftp" )
+      bTrace := {| cMsg | iif( PCount() > 0, oLog:Add( cMsg ), oLog:Close() ) }
+   ENDIF
+
+   ::super:new( oUrl, bTrace, oCredentials )
 
    ::nDefaultPort := 21
    ::nConnTimeout := 3000
@@ -167,19 +173,6 @@ METHOD New( oUrl, lTrace, oCredentials ) CLASS tIPClientFTP
    ::nAccessMode  := TIP_RW  // a read-write protocol
    ::nDefaultSndBuffSize := 65536
    ::nDefaultRcvBuffSize := 65536
-
-   IF ::lTrace
-      IF ! hb_FileExists( "ftp.log" )
-         ::nHandle := FCreate( "ftp.log" )
-      ELSE
-         n := 0
-         DO WHILE hb_FileExists( "ftp" + hb_ntos( n ) + ".log" )
-            n++
-         ENDDO
-         ::cLogFile := "ftp" + hb_ntos( n ) + ".log"
-         ::nHandle := FCreate( ::cLogFile )
-      ENDIF
-   ENDIF
 
    // precompilation of regex for better prestations
    ::RegBytes := hb_regexComp( "\(([0-9]+)[ )a-zA-Z]" )
@@ -267,10 +260,6 @@ METHOD Pasv() CLASS tIPClientFTP
 METHOD Close() CLASS tIPClientFTP
 
    hb_inetTimeOut( ::SocketCon, ::nConnTimeout )
-
-   IF ::lTrace
-      FClose( ::nHandle )
-   ENDIF
 
    ::Quit()
 

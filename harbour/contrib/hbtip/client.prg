@@ -99,8 +99,7 @@ CREATE CLASS tIPClient
    VAR oCredentials         /* credential needed to access the service */
    VAR nStatus              /* basic status */
    VAR SocketCon
-   VAR lTrace
-   VAR nHandle
+   VAR bTrace
 
    VAR nDefaultRcvBuffSize
    VAR nDefaultSndBuffSize
@@ -138,7 +137,7 @@ CREATE CLASS tIPClient
    VAR cProxyUser
    VAR cProxyPassword
 
-   METHOD New( oUrl, lTrace, oCredentials )
+   METHOD New( oUrl, bTrace, oCredentials )
    METHOD Open()
 
    METHOD EnableTLS( lEnable )
@@ -182,11 +181,9 @@ CREATE CLASS tIPClient
 
 ENDCLASS
 
-METHOD New( oUrl, lTrace, oCredentials ) CLASS tIPClient
+METHOD New( oUrl, bTrace, oCredentials ) CLASS tIPClient
    LOCAL oErr
    LOCAL cProtoAccepted := "ftp,http,pop,smtp"
-
-   DEFAULT lTrace TO .F.
 
    IF ! ::bInitSocks
       hb_inetInit()
@@ -236,7 +233,7 @@ METHOD New( oUrl, lTrace, oCredentials ) CLASS tIPClient
    ::nRead        := 0
    ::nLastRead    := 0
    ::bEof         := .F.
-   ::lTrace       := lTrace
+   ::bTrace       := bTrace
 
    RETURN self
 
@@ -378,6 +375,11 @@ METHOD Close() CLASS tIPClient
       ::isOpen := .F.
    ENDIF
 
+   IF ISBLOCK( ::bTrace )
+      /* Call with no parameter to signal end of logging session */
+      Eval( ::bTrace )
+   ENDIF
+
    RETURN nRet
 
 METHOD Reset() CLASS tIPClient
@@ -453,7 +455,7 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS tIPClient
 
    nSent := 0
 
-   IF !Empty( ::exGauge )
+   IF ! Empty( ::exGauge )
       hb_ExecFromArray( ::exGauge, { nSent, nSize, Self } )
    ENDIF
 
@@ -593,7 +595,7 @@ METHOD InetSendAll( SocketCon, cData, nLen ) CLASS tIPClient
       nRet := hb_inetSendAll( SocketCon, cData, nLen )
    ENDIF
 
-   IF ::lTrace
+   IF ISBLOCK( ::bTrace )
       ::Log( SocketCon, nlen, cData, nRet )
    ENDIF
 
@@ -602,7 +604,7 @@ METHOD InetSendAll( SocketCon, cData, nLen ) CLASS tIPClient
 METHOD InetCount( SocketCon ) CLASS tIPClient
    LOCAL nRet := hb_inetCount( SocketCon )
 
-   IF ::lTrace
+   IF ISBLOCK( ::bTrace )
       ::Log( SocketCon, nRet )
    ENDIF
 
@@ -625,7 +627,7 @@ METHOD InetRecv( SocketCon, cStr1, len ) CLASS tIPClient
       nRet := hb_inetRecv( SocketCon, @cStr1, len )
    ENDIF
 
-   IF ::lTrace
+   IF ISBLOCK( ::bTrace )
       ::Log( SocketCon, "", len, iif( nRet >= 0, cStr1, nRet ) )
    ENDIF
 
@@ -652,7 +654,7 @@ METHOD InetRecvLine( SocketCon, nRet, size ) CLASS tIPClient
       cRet := hb_inetRecvLine( SocketCon, @nRet, size )
    ENDIF
 
-   IF ::lTrace
+   IF ISBLOCK( ::bTrace )
       ::Log( SocketCon, "", size, cRet )
    ENDIF
 
@@ -679,7 +681,7 @@ METHOD InetRecvAll( SocketCon, cRet, size ) CLASS tIPClient
       nRet := hb_inetRecvAll( SocketCon, @cRet, size )
    ENDIF
 
-   IF ::lTrace
+   IF ISBLOCK( ::bTrace )
       ::Log( SocketCon, "", size, iif( nRet >= 0, cRet, nRet ) )
    ENDIF
 
@@ -700,7 +702,7 @@ METHOD InetErrorCode( SocketCon ) CLASS tIPClient
 
    ::nLastError := nRet
 
-   IF ::lTrace
+   IF ISBLOCK( ::bTrace )
       ::Log( SocketCon, nRet )
    ENDIF
 
@@ -747,7 +749,7 @@ METHOD InetConnect( cServer, nPort, SocketCon ) CLASS tIPClient
    ENDIF
 #endif
 
-   IF ::lTrace
+   IF ISBLOCK( ::bTrace )
       ::Log( cServer, nPort, SocketCon )
    ENDIF
 
@@ -774,29 +776,34 @@ METHOD InetSndBufSize( SocketCon, nSizeBuff ) CLASS tIPClient
 METHOD Log( ... ) CLASS tIPClient
 
    LOCAL xVar
-   LOCAL cMsg := DToS( Date() ) + "-" + Time() + Space( 2 ) + ;
+   LOCAL cMsg
+
+   IF ISBLOCK( ::bTrace )
+
+      cMsg := DToS( Date() ) + "-" + Time() + Space( 2 ) + ;
                  SubStr( ProcName( 1 ), RAt( ":", ProcName( 1 ) ) ) +;
                  "( "
 
-   FOR EACH xVar IN hb_AParams()
+      FOR EACH xVar IN hb_AParams()
 
-      // Preserves CRLF on result
-      IF xVar:__enumIndex() < PCount()
-         cMsg += StrTran( StrTran( AllTrim( hb_CStr( xVar ) ), Chr( 13 ) ), Chr( 10 ) )
-      ELSE
-         cMsg += hb_CStr( xVar )
-      ENDIF
+         // Preserves CRLF on result
+         IF xVar:__enumIndex() < PCount()
+            cMsg += StrTran( StrTran( AllTrim( hb_CStr( xVar ) ), Chr( 13 ) ), Chr( 10 ) )
+         ELSE
+            cMsg += hb_CStr( xVar )
+         ENDIF
 
-      cMsg += iif( xVar:__enumIndex() < PCount() - 1, ", ", "" )
+         cMsg += iif( xVar:__enumIndex() < PCount() - 1, ", ", "" )
 
-      IF xVar:__enumIndex() == PCount() - 1
-         cMsg += " )" + hb_osNewLine() + ">> "
-      ELSEIF xVar:__enumIndex() == PCount()
-         cMsg += " <<" + hb_osNewLine() + hb_osNewLine()
-      ENDIF
-   NEXT
+         IF xVar:__enumIndex() == PCount() - 1
+            cMsg += " )" + hb_osNewLine() + ">> "
+         ELSEIF xVar:__enumIndex() == PCount()
+            cMsg += " <<" + hb_osNewLine() + hb_osNewLine()
+         ENDIF
+      NEXT
 
-   FWrite( ::nHandle, cMsg )
+      Eval( ::bTrace, cMsg )
+   ENDIF
 
    RETURN Self
 

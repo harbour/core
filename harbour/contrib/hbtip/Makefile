@@ -13,22 +13,23 @@ C_SOURCES = \
 	utils.c \
 
 PRG_SOURCES= \
-	popcln.prg \
+	cgi.prg \
+	client.prg \
 	credent.prg \
-	encoder.prg \
 	encb64.prg \
+	encoder.prg \
 	encqp.prg \
 	encurl.prg \
-	url.prg \
-	client.prg \
 	ftpcln.prg \
-	smtpcln.prg	\
 	httpcln.prg \
+	log.prg \
 	mail.prg \
-	cgi.prg \
-	thtml.prg \
+	popcln.prg \
 	sendmail.prg \
 	sessid.prg \
+	smtpcln.prg	\
+	thtml.prg \
+	url.prg \
 
 PRG_HEADERS= \
 	thtml.ch \
