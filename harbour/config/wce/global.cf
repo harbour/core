@@ -4,6 +4,8 @@
 
 all : first
 
+BIN_EXT := .exe
+
 HB_GT_LIBS += gtwvt gtgui
 
 # Favor size for CE builds.

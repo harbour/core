@@ -4,4 +4,6 @@
 
 all : first
 
+BIN_EXT :=
+
 HB_GT_LIBS += gttrm

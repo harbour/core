@@ -12,7 +12,6 @@
 # ---------------------------------------------------------------
 
 OBJ_EXT = .obj
-EXE_EXT = .exe
 LIB_PREF =
 LIB_EXT = .lib
 
@@ -79,7 +78,7 @@ define link_lib
 endef
 
 define link_exe_file
-@echo $(LDFLAGS) NAME $(EXE_DIR)/$@ > __link__.tmp
+@echo $(LDFLAGS) NAME $(BIN_DIR)/$@ > __link__.tmp
 $(foreach file, $(^F), $(link_file))
 $(foreach lib, $(LINKLIBS), $(link_lib))
 $(foreach lib, $(RDDLIBS), $(link_lib))

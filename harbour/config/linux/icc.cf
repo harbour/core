@@ -9,7 +9,6 @@ else
 endif
 
 OBJ_EXT = .o
-EXE_EXT =
 LIB_PREF = lib
 LIB_EXT = .a
 

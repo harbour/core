@@ -6,7 +6,6 @@
 # (usage is largely compatible with msvc)
 
 OBJ_EXT = .obj
-EXE_EXT = .exe
 LIB_PREF =
 LIB_EXT = .lib
 

@@ -26,16 +26,16 @@ INSTALL_RULE_LIBRARIES := $(INSTALL_RULE)
 
 HB_VERHEADER=$(TOP)$(ROOT)include/hbverbld.h
 
-EXE_FILE := $(EXE_DIR)/hbpp$(EXE_EXT)
-vpath hbpp$(EXE_EXT) $(EXE_DIR)
+BIN_FILE := $(BIN_DIR)/hbpp$(BIN_EXT)
+vpath hbpp$(BIN_EXT) $(BIN_DIR)
 
-pptable.c : hbpp$(EXE_EXT)
+pptable.c : hbpp$(BIN_EXT)
 	$(HB_HOST_BIN_DIR)/hbpp$(HB_HOST_BIN_EXT) $(TOP)$(ROOT)include/hbstdgen.ch -opptable.c -q -c$(TOP)$(ROOT) -v$(HB_VERHEADER)
 
 
 ifneq ($(HB_HOST_BUILD),lib)
 ifneq ($(HB_BIN_INSTALL),)
-INSTALL_FILES = $(EXE_DIR)/hbpp$(EXE_EXT)
+INSTALL_FILES = $(BIN_DIR)/hbpp$(BIN_EXT)
 INSTALL_DIR = $(HB_BIN_INSTALL)
 HB_INSTALL_DEF = yes
 include $(TOP)$(ROOT)config/install.cf
@@ -47,8 +47,8 @@ install::
 
 clean::
 	-@$(RM) $(subst /,$(DIRSEP),$(HB_VERHEADER))
-	-@$(RM) $(subst /,$(DIRSEP),$(EXE_DIR)/hbpp$(EXE_EXT))
-	-@$(RM) $(subst /,$(DIRSEP),$(EXE_DIR)/hbpp.tds)
+	-@$(RM) $(subst /,$(DIRSEP),$(BIN_DIR)/hbpp$(BIN_EXT))
+	-@$(RM) $(subst /,$(DIRSEP),$(BIN_DIR)/hbpp.tds)
 
 endif
 endif

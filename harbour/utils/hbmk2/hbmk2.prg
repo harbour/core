@@ -6037,7 +6037,7 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, aLibList, ;
    ENDIF
    FOR EACH cLine IN hb_ATokens( cCommands, Chr( 10 ) )
       cLine := AllTrim( cLine )
-      IF !Empty( cLine )
+      IF ! Empty( cLine )
          FOR EACH cWord IN rtlnk_tokens( cLine )
             IF LEFTEQUAL( cWord, "#" )
                EXIT
@@ -6045,19 +6045,19 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, aLibList, ;
                cFileOut := cWord
                nMode := RTLNK_MODE_FILENEXT
             ELSEIF nMode == RTLNK_MODE_FILE
-               IF !cWord == ","
+               IF !( cWord == "," )
                   IF AScan( aFileList, { |x| x == cWord } ) == 0
                      AAdd( aFileList, PathSepToTarget( hbmk, cWord ) )
                   ENDIF
                   nMode := RTLNK_MODE_FILENEXT
                ENDIF
             ELSEIF nMode == RTLNK_MODE_LIB
-               IF !cWord == ","
+               IF !( cWord == "," )
                   AAdd( aLibList, PathSepToTarget( hbmk, cWord ) )
                   nMode := RTLNK_MODE_LIBNEXT
                ENDIF
             ELSEIF nMode == RTLNK_MODE_SKIP
-               IF !cWord == ","
+               IF !( cWord == "," )
                   nMode := RTLNK_MODE_SKIPNEXT
                ENDIF
             ELSEIF cWord == ","
@@ -6075,8 +6075,7 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, aLibList, ;
                   hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Cannot open file: %1$s" ), cWord ) )
                   RETURN .F.
                ENDIF
-               IF !rtlnk_process( hbmk, cCommands, @cFileOut, @aFileList, @aLibList, ;
-                                  aPrevFiles )
+               IF ! rtlnk_process( hbmk, cCommands, @cFileOut, @aFileList, @aLibList, aPrevFiles )
                   RETURN .F.
                ENDIF
             ELSE
@@ -6316,7 +6315,7 @@ STATIC PROCEDURE POTMerge( hbmk, aFiles, cFileBase, cFileOut )
    LOCAL aTrans := LoadPOTFiles( hbmk, aFiles, cFileBase, .T. )
 
    IF aTrans != NIL
-      IF !__i18n_potArraySave( cFileOut, aTrans, @cErrorMsg, ! hbmk[ _HBMK_lMINIPO ], ! hbmk[ _HBMK_lMINIPO ] )
+      IF ! __i18n_potArraySave( cFileOut, aTrans, @cErrorMsg, ! hbmk[ _HBMK_lMINIPO ], ! hbmk[ _HBMK_lMINIPO ] )
          hbmk_OutErr( hbmk, hb_StrFormat( I_( ".pot merge error: %1$s" ), cErrorMsg ) )
       ENDIF
    ENDIF
@@ -6326,9 +6325,9 @@ STATIC PROCEDURE POTMerge( hbmk, aFiles, cFileBase, cFileOut )
 STATIC PROCEDURE AutoTrans( hbmk, cFileIn, aFiles, cFileOut )
    LOCAL cErrorMsg
 
-   IF !__i18n_potArraySave( cFileOut, ;
-         __i18n_potArrayTrans( LoadPOTFiles( hbmk, {}, cFileIn, .F. ), ;
-                               LoadPOTFilesAsHash( hbmk, aFiles ) ), @cErrorMsg, ! hbmk[ _HBMK_lMINIPO ], ! hbmk[ _HBMK_lMINIPO ] )
+   IF ! __i18n_potArraySave( cFileOut, ;
+          __i18n_potArrayTrans( LoadPOTFiles( hbmk, {}, cFileIn, .F. ), ;
+                                LoadPOTFilesAsHash( hbmk, aFiles ) ), @cErrorMsg, ! hbmk[ _HBMK_lMINIPO ], ! hbmk[ _HBMK_lMINIPO ] )
       hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: %1$s" ), cErrorMsg ) )
    ENDIF
 

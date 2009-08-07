@@ -12,7 +12,6 @@
 # ---------------------------------------------------------------
 
 OBJ_EXT = .o
-EXE_EXT =
 LIB_PREF =
 LIB_EXT = .lib
 
@@ -84,9 +83,9 @@ endif
 LDFILES = $(subst $(space),$(comma) ,$(^F))
 LDLIBS  = $(subst $(space),$(comma) ,$(strip $(LINKLIBS) $(RDDLIBS) $(GTLIBS)))
 ifneq ($(HB_SHELL),sh)
-LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(EXE_DIR)/$@. FILE $(LDFILES)
+LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@. FILE $(LDFILES)
 else
-LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(EXE_DIR)/$@ FILE $(LDFILES)
+LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@ FILE $(LDFILES)
 endif
 ifneq ($(LDLIBS),)
    LD_RULE += LIB $(LDLIBS)

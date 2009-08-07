@@ -39,7 +39,7 @@ endif
 
 # The rule to link an executable.
 ifeq ($(LD_RULE),)
-   LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$(subst /,$(DIRSEP),$(EXE_DIR)/$@) $(^F) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LINKLIBS)
+   LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$(subst /,$(DIRSEP),$(BIN_DIR)/$@) $(^F) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LINKLIBS)
 endif
 
 # Eliminate these rules.
@@ -63,7 +63,7 @@ endif
 	$(CPP_RULE)
 
 # Rule to generate an executable file from an object file.
-%$(EXE_EXT) : %$(OBJ_EXT)
+%$(BIN_EXT) : %$(OBJ_EXT)
 	$(LD_RULE)
 
 # Rule to generate a C file from a PRG file.

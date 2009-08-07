@@ -2,6 +2,8 @@
 # $Id$
 #
 
+BIN_EXT := .exe
+
 ifndef MK
 
 all : first

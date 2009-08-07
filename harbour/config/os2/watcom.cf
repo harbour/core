@@ -12,7 +12,6 @@
 # ---------------------------------------------------------------
 
 OBJ_EXT = .obj
-EXE_EXT = .exe
 LIB_PREF =
 LIB_EXT = .lib
 
@@ -86,7 +85,7 @@ endif
 
 LDFILES = $(subst $(space),$(comma) ,$(^F))
 LDLIBS  = $(subst $(space),$(comma) ,$(strip $(LINKLIBS) $(RDDLIBS) $(GTLIBS)))
-LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(EXE_DIR)/$@ FILE $(LDFILES) $(if $(LDLIBS), LIB $(LDLIBS),)
+LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@ FILE $(LDFILES) $(if $(LDLIBS), LIB $(LDLIBS),)
 
 # maximum size of command line in OS2 is limited to 1024 characters
 # the trick below with 'wordlist' is workaround for it

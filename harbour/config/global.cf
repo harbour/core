@@ -416,7 +416,7 @@ export HB_COMPILER
 ARCH_COMP := $(HB_ARCHITECTURE)/$(HB_COMPILER)$(subst \,/,$(HB_BUILD_NAME))
 
 OBJ_DIR := obj/$(ARCH_COMP)
-EXE_DIR := $(TOP)$(ROOT)bin/$(ARCH_COMP)
+BIN_DIR := $(TOP)$(ROOT)bin/$(ARCH_COMP)
 LIB_DIR := $(TOP)$(ROOT)lib/$(ARCH_COMP)
 
 # Assemble relative path from OBJ_DIR to source.

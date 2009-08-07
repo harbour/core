@@ -5,7 +5,6 @@
 # GNU MAKE file for xHarbour.com POCC compiler
 
 OBJ_EXT = .obj
-EXE_EXT = .exe
 LIB_PREF =
 LIB_EXT = .lib
 

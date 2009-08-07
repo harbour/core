@@ -11,7 +11,6 @@ else
 endif
 
 OBJ_EXT = .o
-EXE_EXT =
 LIB_PREF = lib
 LIB_EXT = .a
 
@@ -98,7 +97,7 @@ endif
 LINKLIBS += -lm
 
 LDFLAGS = $(LINKPATHS)
-LD_RULE = $(LD) $(CFLAGS) $(LD_OUT) $(EXE_DIR)/$@ $(^F) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LINKLIBS) $(LINKLIBS)
+LD_RULE = $(LD) $(CFLAGS) $(LD_OUT) $(BIN_DIR)/$@ $(^F) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LINKLIBS) $(LINKLIBS)
 
 #AR = ar
 #ARFLAGS = $(HB_USER_AFLAGS)

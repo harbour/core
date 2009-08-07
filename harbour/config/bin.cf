@@ -12,35 +12,35 @@ include $(TOP)$(ROOT)config/prg.cf
 
 HB_GCMODE = 0
 
-EXE_NAME =
+BIN_NAME =
 
 ifneq ($(C_MAIN),)
-   ifeq ($(EXE_NAME),)
-      EXE_NAME = $(C_MAIN:.c=$(EXE_EXT))
+   ifeq ($(BIN_NAME),)
+      BIN_NAME = $(C_MAIN:.c=$(BIN_EXT))
    endif
 endif
 
 ifneq ($(PRG_MAIN),)
-   ifeq ($(EXE_NAME),)
-      EXE_NAME = $(PRG_MAIN:.prg=$(EXE_EXT))
+   ifeq ($(BIN_NAME),)
+      BIN_NAME = $(PRG_MAIN:.prg=$(BIN_EXT))
    endif
 endif
 
-EXE_FILE := $(EXE_DIR)/$(EXE_NAME)
+BIN_FILE := $(BIN_DIR)/$(BIN_NAME)
 
 ALL_OBJS = $(ALL_C_OBJS) $(ALL_PRG_OBJS)
 
 first:: dirbase descend
 
 descend:: dirbase
-	+@$(MK) -C $(OBJ_DIR) -f $(GRANDP)Makefile TOP=$(GRANDP) $(EXE_NAME) $(HB_USER_MAKEFLAGS)
+	+@$(MK) -C $(OBJ_DIR) -f $(GRANDP)Makefile TOP=$(GRANDP) $(BIN_NAME) $(HB_USER_MAKEFLAGS)
 
-vpath $(EXE_NAME) $(EXE_DIR)
-$(EXE_NAME) : $(ALL_OBJS)
+vpath $(BIN_NAME) $(BIN_DIR)
+$(BIN_NAME) : $(ALL_OBJS)
 	$(LD_RULE)
 
 
-INSTALL_FILES = $(EXE_FILE)
+INSTALL_FILES = $(BIN_FILE)
 INSTALL_DIR = $(HB_BIN_INSTALL)
 
 include $(TOP)$(ROOT)config/install.cf
