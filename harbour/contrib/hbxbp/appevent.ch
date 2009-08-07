@@ -363,6 +363,14 @@
 #define xbeHTML_FrameBeforeNavigate               ( 759 + xbeB_Event )
 #define xbeHTML_FrameNavigateComplete             ( 760 + xbeB_Event )
 
+#define xbeBRW_ItemMarked                         ( 400 + xbeB_Event )
+#define xbeBRW_ItemSelected                       ( 401 + xbeB_Event )
+#define xbeBRW_ItemRbDown                         ( 402 + xbeB_Event )
+#define xbeBRW_HeaderRbDown                       ( 403 + xbeB_Event )
+#define xbeBRW_FooterRbDown                       ( 404 + xbeB_Event )
+#define xbeBRW_Navigate                           ( 405 + xbeB_Event )
+#define xbeBRW_Pan                                ( 406 + xbeB_Event )
+#define xbeBRW_ForceStable                        ( 408 + xbeB_Event )
 
 #define  _APPEVENT_CH
 #endif

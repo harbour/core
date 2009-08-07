@@ -55,6 +55,7 @@
 #include "appevent.ch"
 #include "inkey.ch"
 #include "gra.ch"
+#include "set.ch"
 
 #ifdef __XPP__
    #pragma library("XppUi2")
@@ -1324,7 +1325,7 @@ FUNCTION Build_Rtf( oWnd )
    oRTF:setColorBG( GraMakeRGBColor( {255,255,200} ) )
    oRTF:setFontCompoundName( "12.Times" )
 
-   oRTF:change := {|| hb_outDebug( "change" ) }
+   //oRTF:change := {|| /*hb_outDebug( "change"*/ NIL ) }
 
    // Assign text to the RTF object's text buffer
    oRTF:text := "Text with varying " + Chr(10) +;
@@ -1442,132 +1443,200 @@ STATIC FUNCTION RtfApplyFont( oRTF )
 FUNCTION Build_Browse( oWnd )
    LOCAL aPresParam, oXbpBrowse, oXbpColumn
 
-   #include "set.ch"
-
    Set( _SET_DATEFORMAT, "MM/DD/YYYY" )
 
    USE "test.dbf" NEW SHARED VIA 'DBFCDX'
+   DbGotop()
 
-   oXbpBrowse := XbpBrowse():new( oWnd ):create( , , { 10,10 }, { oWnd:currentSize()[1]-25,oWnd:currentSize()[2]-45 } )
+   oXbpBrowse := XbpBrowse():new():create( oWnd, , { 10,10 }, { oWnd:currentSize()[1]-25,oWnd:currentSize()[2]-45 } )
+   oXbpBrowse:setFontCompoundName( "10.Courier" )
 
-   aPresParam := { ;
-      { XBP_PP_COL_HA_CAPTION      , "Last"                     }, ;
-      { XBP_PP_COL_HA_FGCLR        , XBPSYSCLR_WINDOWSTATICTEXT }, ;
-      { XBP_PP_COL_HA_BGCLR        , XBPSYSCLR_DIALOGBACKGROUND }, ;
-      { XBP_PP_COL_HA_HEIGHT       , 20                         }, ;
-      { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK              }, ;
-      { XBP_PP_COL_DA_BGCLR        , RGB( 248,210,194 )         }, ;
-      { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              }, ;
-      { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           }, ;
-      { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
-      { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
-      { XBP_PP_COL_DA_ROWHEIGHT    , 20                         }  }
+   oXbpBrowse:skipBlock     := {|n| DbSkipBlock( n ) }
+   oXbpBrowse:goTopBlock    := {| | DbGoTop()        }
+   oXbpBrowse:goBottomBlock := {| | DbGoBottom()     }
 
-   oXbpColumn          := XbpColumn():new( , , , , aPresParam )
-   oXbpColumn:dataLink := {|| test->Last }
-   oXbpColumn:create()
+   oXbpBrowse:firstPosBlock := {| | 1                }
+   oXbpBrowse:lastPosBlock  := {| | LastRec()        }
+   oXbpBrowse:posBlock      := {| | RecNo()          }
+   oXbpBrowse:goPosBlock    := {|n| DbGoto( n )      }
+   oXbpBrowse:phyPosBlock   := {| | RecNo()          }
+
+   oXbpBrowse:headerRbDown  := {|mp1, mp2, o| mp1 := mp1, xbp_debug( o:getColumn( mp2 ):heading ) }
+
+   aPresParam := {}
+   aadd( aPresParam, { XBP_PP_COL_HA_CAPTION      , "Last"                     } )
+   aadd( aPresParam, { XBP_PP_COL_HA_FGCLR        , XBPSYSCLR_WINDOWSTATICTEXT } )
+   aadd( aPresParam, { XBP_PP_COL_HA_BGCLR        , XBPSYSCLR_DIALOGBACKGROUND } )
+   aadd( aPresParam, { XBP_PP_COL_HA_HEIGHT       , 30                         } )
+   aadd( aPresParam, { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_BGCLR        , RGB( 248,210,194 )         } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
+
+   oXbpColumn            := XbpColumn():new()
+   oXbpColumn:dataLink   := {|| test->Last }
    oXbpColumn:colorBlock := {|x| IF( left( x,1 ) $ "L,H", { GRA_CLR_BLUE, GRA_CLR_YELLOW }, { NIL, NIL } ) }
+   oXbpColumn:create( , , , , aPresParam )
    //
    oXbpBrowse:addColumn( oXbpColumn )
 
-   aPresParam := { ;
-      { XBP_PP_COL_HA_CAPTION      , "First"                    }, ;
-      { XBP_PP_COL_HA_ALIGNMENT    , XBPALIGN_LEFT              }, ;
-      { XBP_PP_COL_HA_FGCLR        , GraMakeRGBColor( { 200, 100, 255 } ) }, ;
-      { XBP_PP_COL_HA_BGCLR        , GRA_CLR_RED                }, ;
-      { XBP_PP_COL_HA_HEIGHT       , 20                         }, ;
-      { XBP_PP_COL_DA_FGCLR        , GRA_CLR_WHITE              }, ;
-      { XBP_PP_COL_DA_BGCLR        , RGB( 120,130,230 )         }, ;
-      { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              }, ;
-      { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           }, ;
-      { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
-      { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
-      { XBP_PP_COL_DA_ROWHEIGHT    , 20                         }  }
-   //
-   oXbpColumn          := XbpColumn():new( , , , , aPresParam )
-   oXbpColumn:dataLink := {|| test->First }
-   oXbpColumn:create()
-   //
-   oXbpBrowse:addColumn( oXbpColumn )
+   aPresParam := {}
+   aadd( aPresParam, { XBP_PP_COL_HA_CAPTION      , "Salary"                   } )
+   aadd( aPresParam, { XBP_PP_COL_HA_ALIGNMENT    , XBPALIGN_RIGHT             } )
+   aadd( aPresParam, { XBP_PP_COL_HA_FGCLR        , GRA_CLR_WHITE              } )
+   aadd( aPresParam, { XBP_PP_COL_HA_BGCLR        , RGB( 140,170,240 )         } )
+   aadd( aPresParam, { XBP_PP_COL_HA_HEIGHT       , 20                         } )
+   aadd( aPresParam, { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_BGCLR        , GRA_CLR_DARKGREEN          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 25                         } )
+   //aadd( aPresParam, { XBP_PP_COL_DA_ROWWIDTH     , 60                         } )
 
-   aPresParam := { ;
-      { XBP_PP_COL_HA_CAPTION      , "Hired On"                 }, ;
-      { XBP_PP_COL_HA_FGCLR        , GraMakeRGBColor( { 255, 0, 255 } ) }, ;
-      { XBP_PP_COL_HA_BGCLR        , GRA_CLR_YELLOW             }, ;
-      { XBP_PP_COL_HA_HEIGHT       , 20                         }, ;
-      { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK              }, ;
-      { XBP_PP_COL_DA_BGCLR        , GRA_CLR_GREEN              }, ;
-      { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              }, ;
-      { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           }, ;
-      { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
-      { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
-      { XBP_PP_COL_DA_ROWHEIGHT    , 20                         }  }
    //
-   oXbpColumn          := XbpColumn():new( , , , , aPresParam )
-   oXbpColumn:dataLink := {|| test->HireDate }
-   oXbpColumn:create()
-   //
-   oXbpBrowse:addColumn( oXbpColumn )
-
-   aPresParam := { ;
-      { XBP_PP_COL_HA_CAPTION      , "Age"                      }, ;
-      { XBP_PP_COL_HA_FGCLR        , GraMakeRGBColor( { 200, 100, 255 } ) }, ;
-      { XBP_PP_COL_HA_BGCLR        , GRA_CLR_BLUE               }, ;
-      { XBP_PP_COL_HA_HEIGHT       , 20                         }, ;
-      { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK              }, ;
-      { XBP_PP_COL_DA_BGCLR        , GRA_CLR_YELLOW             }, ;
-      { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              }, ;
-      { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           }, ;
-      { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
-      { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
-      { XBP_PP_COL_DA_ROWHEIGHT    , 20                         }  }
-   //
-   oXbpColumn          := XbpColumn():new( , , , , aPresParam )
-   oXbpColumn:dataLink := {|| test->Age }
-   oXbpColumn:create()
-   //
-   oXbpBrowse:addColumn( oXbpColumn )
-
-   aPresParam := { ;
-      { XBP_PP_COL_HA_CAPTION      , "City"                     }, ;
-      { XBP_PP_COL_HA_FGCLR        , GRA_CLR_CYAN               }, ;
-      { XBP_PP_COL_HA_BGCLR        , GRA_CLR_BLUE               }, ;
-      { XBP_PP_COL_HA_HEIGHT       , 20                         }, ;
-      { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK              }, ;
-      { XBP_PP_COL_DA_BGCLR        , RGB( 205,240,210 )         }, ;
-      { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              }, ;
-      { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           }, ;
-      { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
-      { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
-      { XBP_PP_COL_DA_ROWHEIGHT    , 20                         }  }
-   //
-   oXbpColumn          := XbpColumn():new( , , , , aPresParam )
-   oXbpColumn:dataLink := {|| test->City }
-   oXbpColumn:create()
-   //
-   oXbpBrowse:addColumn( oXbpColumn )
-
-   aPresParam := { ;
-      { XBP_PP_COL_HA_CAPTION      , "Salary"                   }, ;
-      { XBP_PP_COL_HA_ALIGNMENT    , XBPALIGN_RIGHT             }, ;
-      { XBP_PP_COL_HA_FGCLR        , GRA_CLR_WHITE              }, ;
-      { XBP_PP_COL_HA_BGCLR        , RGB( 140,170,240 )         }, ;
-      { XBP_PP_COL_HA_HEIGHT       , 20                         }, ;
-      { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK              }, ;
-      { XBP_PP_COL_DA_BGCLR        , GRA_CLR_DARKGREEN          }, ;
-      { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              }, ;
-      { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           }, ;
-      { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
-      { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
-      { XBP_PP_COL_DA_ROWHEIGHT    , 20                         }  }
-   //
-   oXbpColumn          := XbpColumn():new( , , , , aPresParam )
+   oXbpColumn          := XbpColumn():new()
    oXbpColumn:dataLink := {|| test->Salary }
-   oXbpColumn:create()
+   oXbpColumn:create( , , , , aPresParam )
    oXbpColumn:colorBlock := {|x| IF( x < 40000, { NIL, RGB( 255,0,0 ) }, {NIL,NIL} ) }
+   //
+   oXbpBrowse:addColumn( oXbpColumn )
+
+   aPresParam := {}
+   aadd( aPresParam, { XBP_PP_COL_HA_CAPTION      , "First"                    } )
+   aadd( aPresParam, { XBP_PP_COL_HA_ALIGNMENT    , XBPALIGN_LEFT              } )
+   aadd( aPresParam, { XBP_PP_COL_HA_FGCLR        , GraMakeRGBColor( { 200, 100, 255 } ) } )
+   aadd( aPresParam, { XBP_PP_COL_HA_BGCLR        , GRA_CLR_RED                } )
+   aadd( aPresParam, { XBP_PP_COL_HA_HEIGHT       , 20                         } )
+   aadd( aPresParam, { XBP_PP_COL_DA_FGCLR        , GRA_CLR_WHITE              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_BGCLR        , RGB( 120,130,230 )         } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
+   //
+   oXbpColumn          := XbpColumn():new()
+   oXbpColumn:dataLink := {|| test->First }
+   oXbpColumn:create(  , , , , aPresParam )
+   //
+   oXbpBrowse:addColumn( oXbpColumn )
+
+   aPresParam := {}
+   aadd( aPresParam, { XBP_PP_COL_HA_CAPTION      , "Hired On"                 } )
+   aadd( aPresParam, { XBP_PP_COL_HA_FGCLR        , GraMakeRGBColor( { 255, 0, 255 } ) } )
+   aadd( aPresParam, { XBP_PP_COL_HA_BGCLR        , GRA_CLR_YELLOW             } )
+   aadd( aPresParam, { XBP_PP_COL_HA_HEIGHT       , 20                         } )
+   aadd( aPresParam, { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_BGCLR        , GRA_CLR_GREEN              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
+   //
+   oXbpColumn          := XbpColumn():new()
+   oXbpColumn:dataLink := {|| test->HireDate }
+   oXbpColumn:create( , , , , aPresParam )
+   //
+   oXbpBrowse:addColumn( oXbpColumn )
+
+   aPresParam := {}
+   aadd( aPresParam, { XBP_PP_COL_HA_CAPTION      , "Age"                      } )
+   aadd( aPresParam, { XBP_PP_COL_HA_FGCLR        , GraMakeRGBColor( { 200, 100, 255 } ) } )
+   aadd( aPresParam, { XBP_PP_COL_HA_BGCLR        , GRA_CLR_BLUE               } )
+   aadd( aPresParam, { XBP_PP_COL_HA_HEIGHT       , 20                         } )
+   aadd( aPresParam, { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_BGCLR        , GRA_CLR_YELLOW             } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
+   //
+   oXbpColumn          := XbpColumn():new()
+   oXbpColumn:dataLink := {|| test->Age }
+   oXbpColumn:create( , , , , aPresParam )
+   //
+   oXbpBrowse:addColumn( oXbpColumn )
+
+   aPresParam := {}
+   aadd( aPresParam, { XBP_PP_COL_HA_CAPTION      , "City"                     } )
+   aadd( aPresParam, { XBP_PP_COL_HA_FGCLR        , GRA_CLR_CYAN               } )
+   aadd( aPresParam, { XBP_PP_COL_HA_BGCLR        , GRA_CLR_BLUE               } )
+   aadd( aPresParam, { XBP_PP_COL_HA_HEIGHT       , 20                         } )
+   aadd( aPresParam, { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_BGCLR        , RGB( 205,240,210 )         } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
+   //
+   oXbpColumn          := XbpColumn():new()
+   oXbpColumn:dataLink := {|| test->City }
+   oXbpColumn:create( , , , , aPresParam )
    //
    oXbpBrowse:addColumn( oXbpColumn )
 
    RETURN nil
 
 /*----------------------------------------------------------------------*/
+
+STATIC FUNCTION DbSkipBlock( n )
+   LOCAL nSkipped := 0
+
+   if n == 0
+      DBSkip( 0 )
+
+   elseif n > 0
+      do while nSkipped != n .and. TBNext()
+         nSkipped++
+      enddo
+   else
+      do while nSkipped != n .and. TBPrev()
+         nSkipped--
+      enddo
+   endif
+
+   RETURN  nSkipped
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION TBNext()
+   LOCAL nSaveRecNum := recno()
+   LOCAL lMoved := .T.
+
+   if Eof()
+      lMoved := .F.
+   else
+      DBSkip( 1 )
+      if Eof()
+         lMoved := .F.
+         DBGoTo( nSaveRecNum )
+      endif
+   endif
+
+   RETURN lMoved
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION TBPrev()
+   LOCAL nSaveRecNum := Recno()
+   LOCAL lMoved := .T.
+
+   DBSkip( -1 )
+
+   if Bof()
+      DBGoTo( nSaveRecNum )
+      lMoved := .F.
+   endif
+
+   RETURN lMoved
+
+/*----------------------------------------------------------------------*/
+
