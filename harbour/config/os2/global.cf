@@ -4,6 +4,7 @@
 
 all : first
 
-BIN_EXT :=
+BIN_EXT := .exe
 
 HB_GT_LIBS += gtos2
+

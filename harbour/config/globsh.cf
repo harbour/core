@@ -74,22 +74,22 @@ endif
 
 ifeq ($(HB_SHELL),os2)
 
-MK = $(subst /,\,$(subst \~,~,$(MAKE)))
+MK = $(subst \,/,$(subst \~,~,$(MAKE)))
 RM = del /n
-RD = $(TOOL_DIR)os2-rm -f -r
+RDP = $(TOOL_DIR)os2-rm -rf
 CP = copy
 MD = mkdir
 MDP = $(TOOL_DIR)os2-mkdir -p
 
 dirbase::
-	-@if not exist $(OBJ_DIR_OS) $(MDP) $(OBJ_DIR_OS)
-	$(if $(LIB_FILE),-@if not exist $(LIB_DIR_OS) $(MDP) $(LIB_DIR_OS),)
-	$(if $(BIN_FILE),-@if not exist $(BIN_DIR_OS) $(MDP) $(BIN_DIR_OS),)
+	-@if not exist $(OBJ_DIR_OS) $(MDP) $(OBJ_DIR)
+	$(if $(LIB_FILE),-@if not exist $(LIB_DIR_OS) $(MDP) $(LIB_DIR),)
+	$(if $(BIN_FILE),-@if not exist $(BIN_DIR_OS) $(MDP) $(BIN_DIR),)
 
 clean::
-	-@$(RDP) $(OBJ_DIR_OS) $(LIB_FILE_OS) $(BIN_FILE_OS)
-	$(if $(LIB_FILE),-@if not exist $(LIB_DIR_OS) $(RDP) $(LIB_DIR_OS),)
-	$(if $(BIN_FILE),-@if not exist $(BIN_DIR_OS) $(RDP) $(BIN_DIR_OS),)
+	@$(RDP) $(OBJ_DIR_OS) $(LIB_FILE_OS) $(BIN_FILE_OS)
+	$(if $(LIB_FILE),-@if exist $(LIB_DIR_OS) $(RDP) $(LIB_DIR_OS),)
+	$(if $(BIN_FILE),-@if exist $(BIN_DIR_OS) $(RDP) $(BIN_DIR_OS),)
 
 endif
 
