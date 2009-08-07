@@ -111,8 +111,9 @@ ifeq ($(HB_CONFIG_SHOWN),)
       #   HB_HOST_BUILD, HB_XBUILD, HB_WITHOUT_*, HB_REBUILD_PARSER
 
       ifeq ($(HB_DYNLIB),yes)
-         $(info Dynamic library creation phase)
+         $(info Harbour GNU Make: Dynamic library creation phase)
       endif
+      $(info Harbour GNU Make: Configuration:)
       ifneq ($(HB_USER_PRGFLAGS),)
          $(info HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))
       endif
