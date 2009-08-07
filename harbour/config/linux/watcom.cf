@@ -8,6 +8,7 @@
 # See option docs here:
 #    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/cpopts.html
 #    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/wlink.html
+#    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/wlib.html
 # ---------------------------------------------------------------
 
 OBJ_EXT = .o
@@ -64,9 +65,9 @@ space:= $(empty) $(empty)
 comma:= ,
 
 LD = wlink
-LDFLAGS = sys Linux
+LDFLAGS = SYS linux
 ifeq ($(HB_BUILD_DEBUG),yes)
-LDFLAGS := debug all $(LDFLAGS)
+LDFLAGS := DEBUG ALL $(LDFLAGS)
 endif
 
 LINKLIBS = $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib))

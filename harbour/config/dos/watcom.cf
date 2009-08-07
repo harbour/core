@@ -8,6 +8,7 @@
 # See option docs here:
 #    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/cpopts.html
 #    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/wlink.html
+#    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/wlib.html
 # ---------------------------------------------------------------
 
 OBJ_EXT = .obj
@@ -28,7 +29,7 @@ endif
 CC_IN =
 CC_OUT = -fo=
 
-CPPFLAGS = -zq -bt=DOS
+CPPFLAGS = -zq -bt=dos
 
 ifneq ($(HB_BUILD_WARN),no)
 CPPFLAGS += -w3
@@ -98,10 +99,10 @@ ifeq ($(LIBNAME),hbpp)
 # we force causeway here as workaround for reduced command line size in dos4g
 LDFLAGS = SYS causeway
 else
-LDFLAGS = SYS dos4g op stub=wstubq.exe
+LDFLAGS = SYS dos4g OP STUB=wstubq.exe
 endif
 ifeq ($(HB_BUILD_DEBUG),yes)
-LDFLAGS := debug all $(LDFLAGS)
+LDFLAGS := DEBUG ALL $(LDFLAGS)
 endif
 
 LINKLIBS = $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib))

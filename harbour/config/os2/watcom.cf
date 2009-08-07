@@ -8,6 +8,7 @@
 # See option docs here:
 #    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/cpopts.html
 #    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/wlink.html
+#    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/wlib.html
 # ---------------------------------------------------------------
 
 OBJ_EXT = .obj
@@ -28,7 +29,7 @@ endif
 CC_IN =
 CC_OUT = -fo=
 
-CPPFLAGS = -zq -bt=OS2
+CPPFLAGS = -zq -bt=os2
 
 ifneq ($(HB_BUILD_WARN),no)
 CPPFLAGS += -w3
@@ -67,9 +68,9 @@ space:= $(empty) $(empty)
 comma:= ,
 
 LD = wlink
-LDFLAGS = sys OS2V2
+LDFLAGS = SYS os2v2
 ifeq ($(HB_BUILD_DEBUG),yes)
-LDFLAGS := debug all $(LDFLAGS)
+LDFLAGS := DEBUG ALL $(LDFLAGS)
 endif
 
 LINKLIBS = $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib))
@@ -106,8 +107,5 @@ ARFILES = $(addprefix -+,$(^F))
 AR = wlib
 ARFLAGS = -p=64 -c -n $(HB_USER_AFLAGS)
 AR_RULE = $(create_library)
-
-# disable DOS/4GW Banner
-export DOS4G=quiet
 
 include $(TOP)$(ROOT)config/rules.cf
