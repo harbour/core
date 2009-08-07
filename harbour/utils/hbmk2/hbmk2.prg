@@ -1826,8 +1826,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
          cParam := ArchCompFilter( hbmk, cParam )
          IF ! Empty( cParam )
-            IF hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"
-               /* For MinGW family add .res files as source input, as they
+            IF hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm" .OR. ;
+               ( hbmk[ _HBMK_cARCH ] == "os2" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" )
+               /* For MinGW/EMX GCC family add .res files as source input, as they
                   will need to be converted to coff format with windres (just
                   like plain .rc files) before feeding them to gcc. */
                FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
@@ -2338,7 +2339,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
-         cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], "g++.exe", "gcc.exe" )
+         cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], "g++", "gcc" ) + cCCEXT
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
@@ -2354,7 +2355,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          cLibLibExt := ".a"
-         cBin_Lib := "ar.exe"
+         cBin_Lib := "ar" + cCCEXT
          cOpt_Lib := "{FA} rcs {OL} {LO}"
          IF hbmk[ _HBMK_lMAP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-Map,{OM}" )
@@ -2378,6 +2379,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ELSE
             AAdd( hbmk[ _HBMK_aOPTL ], "-o {OE}" )
          ENDIF
+
+         cBin_Res := "windres" + cCCEXT
+         cResExt := ".reso"
+         cOpt_Res := "{FR} {IR} -O coff -o {OS}"
 
       CASE hbmk[ _HBMK_cARCH ] == "dos" .AND. hbmk[ _HBMK_cCOMP ] == "djgpp"
 
