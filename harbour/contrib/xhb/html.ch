@@ -32,6 +32,7 @@
  * their web site at http://www.gnu.org/).
  *
  */
+
 /*
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
@@ -634,7 +635,7 @@
 #xCommand Comment <text>        ;
           OF <oHtm>             ;
           =>                    ;
-          <oHtm>:Comment(<text>)          
+          <oHtm>:Comment(<text>)
 
 #xCommand LINKNAME <cName>      ;
           OF <oHtm>             ;
@@ -743,8 +744,7 @@
 #xtranslate __HTML_FTYPE__ <ftype:BOLD>       => "<B>"
 #xtranslate __HTML_FTYPE__ <ftype:ULINE>      => "<U>"
 #xtranslate __HTML_FTYPE__ <ftype:UNDERLINE>  => "<U>"
-                                    
+
 
 #define _HTML_CH
 #endif
-

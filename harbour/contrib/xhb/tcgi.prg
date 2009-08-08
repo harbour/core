@@ -1,4 +1,3 @@
-
 /*
  * $Id$
  */
@@ -33,6 +32,7 @@
  * their web site at http://www.gnu.org/).
  *
  */
+
 /*
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org

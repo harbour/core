@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  * dbModifyStructure( <cFile> )           -> lSuccess
-*
+ *
  * Copyright 2009 Ron Pinkas <Ron.Pinkas at xHarbour.com>
  * www - http://www.harbour-project.org
  *

@@ -67,7 +67,7 @@
 //
 // Really Windows comms should be done with threads and/or OVERLAPPED I/O - and I haven't.
 
-CREATE CLASS Win_Port
+CREATE CLASS win_Port
 
    ACCESS Open()     INLINE ::lOpen /* if this is not true something didn't work! */
    ACCESS PortName() INLINE ::cPortName
@@ -78,58 +78,50 @@ CREATE CLASS Win_Port
 
    METHOD Init( cPortName, nBaudRate, nParity, nByteSize, nStopBits )
    METHOD Read( cString, nLength )
-   METHOD Recv( nLength )
+   METHOD Recv( nLength, nResult )          INLINE win_PortRecv( ::nPort, nLength, @nResult )
    METHOD RecvTo( cDelim, nMaxlen )
-   METHOD Write( cString )                  INLINE Win_PortWrite( ::nPort, cString )
-   METHOD Status( lCTS, lDSR, lRing, lDCD ) INLINE Win_PortStatus( ::nPort, @lCTS, @lDSR, @lRing, @lDCD )
+   METHOD Write( cString )                  INLINE win_PortWrite( ::nPort, cString )
+   METHOD Status( lCTS, lDSR, lRing, lDCD ) INLINE win_PortStatus( ::nPort, @lCTS, @lDSR, @lRing, @lDCD )
    METHOD QueueStatus( lCTSHold, lDSRHold, lDCDHold, lXoffHold, lXoffSent, nInQueue, nOutQueue ) ;
-                                            INLINE Win_PortQueueStatus( ::nPort, @lCTSHold, @lDSRHold, @lDCDHold, @lXoffHold, @lXoffSent, @nInQueue, @nOutQueue )
+                                            INLINE win_PortQueueStatus( ::nPort, @lCTSHold, @lDSRHold, @lDCDHold, @lXoffHold, @lXoffSent, @nInQueue, @nOutQueue )
 
-   METHOD SetRTS( lCTS )                    INLINE Win_PortSetRTS( ::nPort, lCTS ) /* boolean return is the status of the call not the line! */
-   METHOD SetDTR( lDTR )                    INLINE Win_PortSetDTR( ::nPort, lDTR ) /* boolean return is the status of the call not the line! */
-   METHOD RTSFlow( nRTS )                   INLINE Win_PortRTSFlow( ::nPort, nRTS )
-   METHOD DTRFlow( nDTR )                   INLINE Win_PortDTRFlow( ::nPort, nDTR )
-   METHOD XonXoffFlow( lXonXoff )           INLINE Win_PortXonXoffFlow( ::nPort, lXonXoff )
-   METHOD Purge( lRXBuffer, lTXBuffer )     INLINE Win_PortPurge( ::nPort, lRXBuffer, lTXBuffer )
-   METHOD PurgeRX()                         INLINE Win_PortPurge( ::nPort, .T., .F. )
-   METHOD PurgeTX()                         INLINE Win_PortPurge( ::nPort, .F., .T. )
-   METHOD Close( nDrain )                   INLINE Win_PortClose( ::nPort, iif( Empty( nDrain ), 0, nDrain ) )
-   METHOD DebugDCB( nDebug )                INLINE Win_PortDebugDCB(::nPort, nDebug )
+   METHOD SetRTS( lCTS )                    INLINE win_PortSetRTS( ::nPort, lCTS ) /* boolean return is the status of the call not the line! */
+   METHOD SetDTR( lDTR )                    INLINE win_PortSetDTR( ::nPort, lDTR ) /* boolean return is the status of the call not the line! */
+   METHOD RTSFlow( nRTS )                   INLINE win_PortRTSFlow( ::nPort, nRTS )
+   METHOD DTRFlow( nDTR )                   INLINE win_PortDTRFlow( ::nPort, nDTR )
+   METHOD XonXoffFlow( lXonXoff )           INLINE win_PortXonXoffFlow( ::nPort, lXonXoff )
+   METHOD Purge( lRXBuffer, lTXBuffer )     INLINE win_PortPurge( ::nPort, lRXBuffer, lTXBuffer )
+   METHOD PurgeRX()                         INLINE win_PortPurge( ::nPort, .T., .F. )
+   METHOD PurgeTX()                         INLINE win_PortPurge( ::nPort, .F., .T. )
+   METHOD Close( nDrain )                   INLINE win_PortClose( ::nPort, iif( Empty( nDrain ), 0, nDrain ) )
+   METHOD DebugDCB( nDebug )                INLINE win_PortDebugDCB(::nPort, nDebug )
    METHOD TimeOuts( nReadInterval, nReadMultiplier, nReadConstant, nWriteMultiplier, nWriteConstant ) ;
-                                            INLINE Win_PortTimeOuts( nReadInterval, nReadMultiplier, nReadConstant, nWriteMultiplier, nWriteConstant )
-   METHOD Buffers( nInQueue, nOutQueue )    INLINE Win_PortBuffers( nInQueue, nOutQueue )
+                                            INLINE win_PortTimeOuts( nReadInterval, nReadMultiplier, nReadConstant, nWriteMultiplier, nWriteConstant )
+   METHOD Buffers( nInQueue, nOutQueue )    INLINE win_PortBuffers( nInQueue, nOutQueue )
    METHOD Error()
 
 ENDCLASS
 
 
-METHOD Init( cPortName, nBaudRate, nParity, nByteSize, nStopBits ) CLASS Win_Port
+METHOD Init( cPortName, nBaudRate, nParity, nByteSize, nStopBits ) CLASS win_Port
 
    ::cPortName := Upper( cPortName )
    IF Left( ::cPortName, 3 ) == "COM"
       ::nPort := Val( SubStr( ::cPortName, 4 ) ) - 1
-      IF Win_PortOpen( ::nPort, nBaudRate, nParity, nByteSize, nStopBits ) != -1
+      IF win_PortOpen( ::nPort, nBaudRate, nParity, nByteSize, nStopBits ) != -1
          ::lOpen := .T.
       ENDIF
    ENDIF
 
    RETURN self
 
-METHOD Read( /* @ */ cString, nLength ) CLASS Win_Port
+METHOD Read( /* @ */ cString, nLength ) CLASS win_Port
 
    cString := Space( nlength )
 
-   RETURN Win_PortRead( ::nPort, @cString )
+   RETURN win_PortRead( ::nPort, @cString )
 
-METHOD Recv( nLength ) CLASS Win_Port
-
-   LOCAL cString := Space( nlength )
-
-   Win_PortRead( ::nPort, @cString )
-
-   RETURN cString
-
-METHOD RecvTo( cDelim, nMaxlen ) CLASS Win_Port
+METHOD RecvTo( cDelim, nMaxlen ) CLASS win_Port
    LOCAL nResult
    LOCAL cRecv := ""
 
@@ -137,7 +129,7 @@ METHOD RecvTo( cDelim, nMaxlen ) CLASS Win_Port
 
    DO WHILE .T.
       cString := Space( 1 )
-      IF ( nResult := Win_PortRead( ::nPort, @cString ) ) != -1
+      IF ( nResult := win_PortRead( ::nPort, @cString ) ) != -1
          IF nResult == 0
             EXIT
          ELSE
@@ -156,11 +148,11 @@ METHOD RecvTo( cDelim, nMaxlen ) CLASS Win_Port
 
    RETURN cRecv
 
-/* Since the Win_Port functions are an amalgamation of Win functions this allows
+/* Since the win_Port functions are an amalgamation of Win functions this allows
    you to see what call did the deed when things go wrong. */
 
-METHOD Error() CLASS Win_Port
-   LOCAL nFcn := Win_PortFcn()
+METHOD Error() CLASS win_Port
+   LOCAL nFcn := win_PortFuncLast( ::nPort )
    LOCAL cString
    LOCAL nError
    LOCAL cMsg
@@ -188,6 +180,6 @@ METHOD Error() CLASS Win_Port
 
    /* WinPortError clears the error - don't call it twice */
    cMsg := Space( 256 )
-   wapi_FormatMessage( NIL, NIL, nError := Win_PortError(), NIL, @cMsg )
+   wapi_FormatMessage( NIL, NIL, nError := win_PortError( ::nPort ), NIL, @cMsg )
 
    RETURN cString + "error (" + hb_ntos( nError ) + ") : " + cMsg

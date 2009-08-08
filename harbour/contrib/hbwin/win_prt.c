@@ -61,40 +61,42 @@ static struct
 {
    HANDLE Port;
    LPCTSTR Name;
+   int iFunction;
+   DWORD dwError;
 } s_PortData[] =
 {
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM1"  ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM2"  ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM3"  ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM4"  ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM5"  ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM6"  ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM7"  ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM8"  ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM9"  ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM10" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM11" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM12" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM13" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM14" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM15" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM16" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM17" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM18" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM19" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM20" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM21" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM22" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM23" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM24" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM25" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM26" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM27" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM28" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM29" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM30" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM31" ) },
-   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM32" ) }
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM1"  ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM2"  ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM3"  ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM4"  ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM5"  ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM6"  ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM7"  ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM8"  ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM9"  ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM10" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM11" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM12" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM13" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM14" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM15" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM16" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM17" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM18" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM19" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM20" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM21" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM22" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM23" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM24" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM25" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM26" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM27" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM28" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM29" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM30" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM31" ), 0, 0 },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM32" ), 0, 0 }
 };
 
 static struct
@@ -103,23 +105,14 @@ static struct
    COMMTIMEOUTS OldTimeouts;
 } s_PortData2[ 32 ];
 
-
-static int s_iWinFcn = 0;
-static DWORD s_dwWinError = 0;
-
 static int s_iReadIntervalTimeout = -1;            /* -1 says use default calculation */
 static int s_iReadTotalTimeoutMultiplier = -1;
 static int s_iReadTotalTimeoutConstant = -1;
 static int s_iWriteTotalTimeoutMultiplier = -1;
 static int s_iWriteTotalTimeoutConstant = -1;
 
-static int s_iInQueue = -1;
-static int s_iOutQueue = -1;
-
-
 HB_FUNC( WIN_PORTOPEN )
 {
-   int Port = hb_parni( 1 );
    int iPort = hb_parni( 1 );
 
    if( iPort >= 0 && iPort < ( int ) HB_SIZEOFARRAY( s_PortData ) )
@@ -128,15 +121,13 @@ HB_FUNC( WIN_PORTOPEN )
       int iParity = hb_parni( 3 );
       int iByteSize = hb_parni( 4 );
       int iStopBits = hb_parni( 5 );
-    /*LONG s_iInQueue = hb_parnl( 6 ); */
-    /*LONG s_iOutQueue = hb_parnl( 7 ); */
 
       HANDLE hCommPort;
       COMMTIMEOUTS NewTimeouts;
       DCB NewDCB;
 
-      s_iWinFcn = FCNCREATEFILE;
-      s_dwWinError = 0;
+      s_PortData[ iPort ].iFunction = FCNCREATEFILE;
+      s_PortData[ iPort ].dwError = 0;
       if( ( hCommPort = CreateFile( s_PortData[ iPort ].Name,
                                     GENERIC_READ | GENERIC_WRITE,
                                     0,
@@ -144,19 +135,19 @@ HB_FUNC( WIN_PORTOPEN )
                                     OPEN_EXISTING,
                                     FILE_FLAG_NO_BUFFERING, 0 ) ) == INVALID_HANDLE_VALUE )
       {
-         s_dwWinError = GetLastError();
+         s_PortData[ iPort ].dwError = GetLastError();
          hb_retnl( -1 );
          return;
       }
 
-      s_iWinFcn = FCNGETCOMMSTATE;
-      s_dwWinError = 0;
+      s_PortData[ iPort ].iFunction = FCNGETCOMMSTATE;
+      s_PortData[ iPort ].dwError = 0;
 
       /* We'll put everything back */
-      s_PortData2[ Port ].OldDCB.DCBlength = sizeof( DCB );
-      if( ! GetCommState( hCommPort, &( s_PortData2[ Port ].OldDCB ) ) )
+      s_PortData2[ iPort ].OldDCB.DCBlength = sizeof( DCB );
+      if( ! GetCommState( hCommPort, &( s_PortData2[ iPort ].OldDCB ) ) )
       {
-         s_dwWinError = GetLastError();
+         s_PortData[ iPort ].dwError = GetLastError();
          CloseHandle( hCommPort );
          hb_retnl( -1 );
          return;
@@ -165,7 +156,7 @@ HB_FUNC( WIN_PORTOPEN )
       NewDCB.DCBlength = sizeof( DCB );
       if( ! GetCommState( hCommPort, &NewDCB ) )
       {
-         s_dwWinError = GetLastError();
+         s_PortData[ iPort ].dwError = GetLastError();
          CloseHandle( hCommPort );
          hb_retnl( -1 );
          return;
@@ -198,24 +189,27 @@ HB_FUNC( WIN_PORTOPEN )
     /*NewDCB.EvtChar*/
 
       /* function reinitializes all hardware and control settings, but it does not empty output or input queues */
-      s_iWinFcn = FCNSETCOMMSTATE;
-      s_dwWinError = 0;
+      s_PortData[ iPort ].iFunction = FCNSETCOMMSTATE;
+      s_PortData[ iPort ].dwError = 0;
       if( ! SetCommState( hCommPort, &NewDCB ) )
       {
-         s_dwWinError = GetLastError();
+         s_PortData[ iPort ].dwError = GetLastError();
          CloseHandle( hCommPort );
          hb_retnl( -1 );
          return;
       }
 
       /* We'll leave this to Windows, unless you really want it changed! */
-      if( s_iInQueue != -1 )
+      if( HB_ISNUM( 6 ) &&
+          HB_ISNUM( 7 ) )
       {
-         s_iWinFcn = FCNSETUPCOMM;
-         s_dwWinError = 0;
-         if( ! SetupComm( hCommPort, s_iInQueue, s_iOutQueue ) )
+         s_PortData[ iPort ].iFunction = FCNSETUPCOMM;
+         s_PortData[ iPort ].dwError = 0;
+         if( ! SetupComm( hCommPort,
+                          ( DWORD ) hb_parnl( 6 ) /* dwInQueue */,
+                          ( DWORD ) hb_parnl( 7 ) /* dwOutQueue */ ) )
          {
-            s_dwWinError = GetLastError();
+            s_PortData[ iPort ].dwError = GetLastError();
             CloseHandle( hCommPort );
             hb_retnl( -1 );
             return;
@@ -223,11 +217,11 @@ HB_FUNC( WIN_PORTOPEN )
       }
 
       /* We'll put everything back */
-      s_iWinFcn = FCNGETCOMMTIMEOUTS;
-      s_dwWinError = 0;
-      if( ! GetCommTimeouts( hCommPort, &( s_PortData2[ Port ].OldTimeouts ) ) )
+      s_PortData[ iPort ].iFunction = FCNGETCOMMTIMEOUTS;
+      s_PortData[ iPort ].dwError = 0;
+      if( ! GetCommTimeouts( hCommPort, &( s_PortData2[ iPort ].OldTimeouts ) ) )
       {
-         s_dwWinError = GetLastError();
+         s_PortData[ iPort ].dwError = GetLastError();
          CloseHandle( hCommPort );
          hb_retnl( -1 );
          return;
@@ -279,22 +273,22 @@ HB_FUNC( WIN_PORTOPEN )
          and if flow control is enabled the program will "hang" or if it is not enabled the data will
          be lost (potentially), so we set a minimum of 1ms (baud rates higher than 4800) */
 
-      s_iWinFcn = FCNSETCOMMTIMEOUTS;
-      s_dwWinError = 0;
+      s_PortData[ iPort ].iFunction = FCNSETCOMMTIMEOUTS;
+      s_PortData[ iPort ].dwError = 0;
       if( ! SetCommTimeouts( hCommPort, &NewTimeouts ) )
       {
-         s_dwWinError = GetLastError();
+         s_PortData[ iPort ].dwError = GetLastError();
          CloseHandle( hCommPort );
          hb_retnl( -1 );
       }
       else
       {
-         s_PortData[ Port ].Port = hCommPort;
+         s_PortData[ iPort ].Port = hCommPort;
          hb_retnl( hCommPort == INVALID_HANDLE_VALUE ? -1 : 0 );
       }
    }
    else
-      hb_retnl( -1 );
+      hb_retnl( -2 );
 }
 
 HB_FUNC( WIN_PORTCLOSE )
@@ -306,21 +300,21 @@ HB_FUNC( WIN_PORTCLOSE )
       HANDLE hCommPort = s_PortData[ iPort ].Port;
       long lDrain = hb_parnl( 2 );
 
-      s_iWinFcn = FCNSETCOMMSTATE;
-      s_dwWinError = 0;
+      s_PortData[ iPort ].iFunction = FCNSETCOMMSTATE;
+      s_PortData[ iPort ].dwError = 0;
       if( ! SetCommState( hCommPort, &( s_PortData2[ iPort ].OldDCB ) ) )
       {
-         s_dwWinError = GetLastError();
+         s_PortData[ iPort ].dwError = GetLastError();
          CloseHandle( hCommPort );
          hb_retl( FALSE );
          return;
       }
 
-      s_iWinFcn = FCNSETCOMMTIMEOUTS;
-      s_dwWinError = 0;
+      s_PortData[ iPort ].iFunction = FCNSETCOMMTIMEOUTS;
+      s_PortData[ iPort ].dwError = 0;
       if( ! SetCommTimeouts( hCommPort, &( s_PortData2[ iPort ].OldTimeouts ) ) )
       {
-         s_dwWinError = GetLastError();
+         s_PortData[ iPort ].dwError = GetLastError();
          CloseHandle( hCommPort );
          hb_retl( FALSE );
          return;
@@ -328,15 +322,15 @@ HB_FUNC( WIN_PORTCLOSE )
 
       s_PortData[ iPort ].Port = INVALID_HANDLE_VALUE;
 
-      s_iWinFcn = FCNCLOSEHANDLE;
-      s_dwWinError = 0;
+      s_PortData[ iPort ].iFunction = FCNCLOSEHANDLE;
+      s_PortData[ iPort ].dwError = 0;
 
       /* I honestly don't know if this helps */
       if( lDrain > 0 )
          Sleep( lDrain * 1000 );
 
       hb_retl( CloseHandle( hCommPort ) != 0 );
-      s_dwWinError = GetLastError();
+      s_PortData[ iPort ].dwError = GetLastError();
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -353,15 +347,15 @@ HB_FUNC( WIN_PORTWRITE )
       DWORD dwNumberofBytesToWrite = ( DWORD ) hb_parclen( 2 );
       DWORD dwNumberofBytesWritten;
 
-      s_iWinFcn = FCNWRITEFILE;
-      s_dwWinError = 0;
-      if( ! WriteFile( hCommPort, lpBuffer, dwNumberofBytesToWrite, &dwNumberofBytesWritten, NULL ) )
+      s_PortData[ iPort ].iFunction = FCNWRITEFILE;
+      s_PortData[ iPort ].dwError = 0;
+      if( WriteFile( hCommPort, lpBuffer, dwNumberofBytesToWrite, &dwNumberofBytesWritten, NULL ) )
+         hb_retnl( dwNumberofBytesWritten );
+      else
       {
-         s_dwWinError = GetLastError();
+         s_PortData[ iPort ].dwError = GetLastError();
          hb_retnl( -1 );
       }
-      else
-         hb_retnl( dwNumberofBytesWritten );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -379,20 +373,51 @@ HB_FUNC( WIN_PORTREAD )
       DWORD dwNumberOfBytesRead;
 
       lpBuffer = ( char * ) hb_xgrab( dwNumberOfBytesToRead + 1 );
-      s_iWinFcn = FCNREADFILE;
-      s_dwWinError = 0;
-      if( ! ReadFile( hCommPort, lpBuffer, dwNumberOfBytesToRead, &dwNumberOfBytesRead, NULL ) )
-      {
-         hb_storc( NULL, 2 );
-         hb_xfree( lpBuffer );
-         s_dwWinError = GetLastError();
-         hb_retnl( -1 );
-      }
-      else
+      s_PortData[ iPort ].iFunction = FCNREADFILE;
+      s_PortData[ iPort ].dwError = 0;
+      if( ReadFile( hCommPort, lpBuffer, dwNumberOfBytesToRead, &dwNumberOfBytesRead, NULL ) )
       {
          if( ! hb_storclen_buffer( lpBuffer, dwNumberOfBytesRead, 2 ) )
             hb_xfree( lpBuffer );
          hb_retnl( dwNumberOfBytesRead );
+      }
+      else
+      {
+         hb_storc( NULL, 2 );
+         hb_xfree( lpBuffer );
+         s_PortData[ iPort ].dwError = GetLastError();
+         hb_retnl( -1 );
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( WIN_PORTRECV )
+{
+   int iPort = hb_parni( 1 );
+
+   if( iPort >= 0 && iPort < ( int ) HB_SIZEOFARRAY( s_PortData ) )
+   {
+      HANDLE hCommPort = s_PortData[ iPort ].Port;
+      char * lpBuffer;
+      DWORD dwNumberOfBytesToRead = ( DWORD ) hb_parnl( 2 );
+      DWORD dwNumberOfBytesRead;
+
+      lpBuffer = ( char * ) hb_xgrab( dwNumberOfBytesToRead + 1 );
+      s_PortData[ iPort ].iFunction = FCNREADFILE;
+      s_PortData[ iPort ].dwError = 0;
+      if( ReadFile( hCommPort, lpBuffer, dwNumberOfBytesToRead, &dwNumberOfBytesRead, NULL ) )
+      {
+         hb_retclen_buffer( lpBuffer, dwNumberOfBytesRead );
+         hb_stornl( dwNumberOfBytesRead, 3 );
+      }
+      else
+      {
+         hb_retc_null();
+         hb_xfree( lpBuffer );
+         s_PortData[ iPort ].dwError = GetLastError();
+         hb_stornl( -1, 3 );
       }
    }
    else
@@ -408,20 +433,9 @@ HB_FUNC( WIN_PORTSTATUS )
       HANDLE hCommPort = s_PortData[ iPort ].Port;
       DWORD dwModemStat;
 
-      s_iWinFcn = FCNGETCOMMMODEMSTATUS;
-      s_dwWinError = 0;
-      if( ! GetCommModemStatus( hCommPort, &dwModemStat ) )
-      {
-         s_dwWinError = GetLastError();
-
-         hb_storl( FALSE, 2 );
-         hb_storl( FALSE, 3 );
-         hb_storl( FALSE, 4 );
-         hb_storl( FALSE, 5 );
-
-         hb_retl( FALSE );
-      }
-      else
+      s_PortData[ iPort ].iFunction = FCNGETCOMMMODEMSTATUS;
+      s_PortData[ iPort ].dwError = 0;
+      if( GetCommModemStatus( hCommPort, &dwModemStat ) )
       {
          hb_storl( ( dwModemStat & MS_CTS_ON )  != 0, 2 );     /* The CTS (clear-to-send) signal is on. */
          hb_storl( ( dwModemStat & MS_DSR_ON )  != 0, 3 );     /* The DSR (data-set-ready) signal is on. */
@@ -429,6 +443,17 @@ HB_FUNC( WIN_PORTSTATUS )
          hb_storl( ( dwModemStat & MS_RLSD_ON ) != 0, 5 );     /* The RLSD (receive-line-signal-detect) signal is on. Also is DCD. */
 
          hb_retl( TRUE );
+      }
+      else
+      {
+         s_PortData[ iPort ].dwError = GetLastError();
+
+         hb_storl( FALSE, 2 );
+         hb_storl( FALSE, 3 );
+         hb_storl( FALSE, 4 );
+         hb_storl( FALSE, 5 );
+
+         hb_retl( FALSE );
       }
    }
    else
@@ -445,15 +470,15 @@ HB_FUNC( WIN_PORTPURGE )
       DWORD dwFlags;
 
       dwFlags = ( hb_parl( 2 ) ? PURGE_RXCLEAR : 0 ) | ( hb_parl( 3 ) ? PURGE_TXCLEAR : 0 );
-      s_iWinFcn = FCNPURGECOMM;
-      s_dwWinError = 0;
-      if( ! PurgeComm( hCommPort, dwFlags ) )
+      s_PortData[ iPort ].iFunction = FCNPURGECOMM;
+      s_PortData[ iPort ].dwError = 0;
+      if( PurgeComm( hCommPort, dwFlags ) )
+         hb_retl( TRUE );
+      else
       {
-         s_dwWinError = GetLastError();
+         s_PortData[ iPort ].dwError = GetLastError();
          hb_retl( FALSE );
       }
-      else
-         hb_retl( TRUE );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -469,23 +494,9 @@ HB_FUNC( WIN_PORTQUEUESTATUS )
       DWORD dwErrors;
       COMSTAT ComStat;
 
-      s_iWinFcn = FCNCLEARCOMMERROR;
-      s_dwWinError = 0;
-      if( ! ClearCommError( hCommPort, &dwErrors, &ComStat ) )
-      {
-         s_dwWinError = GetLastError();
-
-         hb_storl( FALSE, 2 );
-         hb_storl( FALSE, 3 );
-         hb_storl( FALSE, 4 );
-         hb_storl( FALSE, 5 );
-         hb_storl( FALSE, 6 );
-         hb_stornl( 0, 7 );
-         hb_stornl( 0, 8 );
-
-         hb_retl( FALSE );
-      }
-      else
+      s_PortData[ iPort ].iFunction = FCNCLEARCOMMERROR;
+      s_PortData[ iPort ].dwError = 0;
+      if( ClearCommError( hCommPort, &dwErrors, &ComStat ) )
       {
          hb_storl( ComStat.fCtsHold, 2 );
          hb_storl( ComStat.fDsrHold, 3 );
@@ -496,6 +507,20 @@ HB_FUNC( WIN_PORTQUEUESTATUS )
          hb_stornl( ComStat.cbOutQue, 8 ); /* This value will be zero for a nonoverlapped write */
 
          hb_retl( TRUE );
+      }
+      else
+      {
+         s_PortData[ iPort ].dwError = GetLastError();
+
+         hb_storl( FALSE, 2 );
+         hb_storl( FALSE, 3 );
+         hb_storl( FALSE, 4 );
+         hb_storl( FALSE, 5 );
+         hb_storl( FALSE, 6 );
+         hb_stornl( 0, 7 );
+         hb_stornl( 0, 8 );
+
+         hb_retl( FALSE );
       }
    }
    else
@@ -514,15 +539,15 @@ HB_FUNC( WIN_PORTSETRTS )
       HANDLE hCommPort = s_PortData[ iPort ].Port;
       DWORD dwFunc = hb_parl( 2 ) ? SETRTS : CLRRTS;
 
-      s_iWinFcn = ESCAPECOMMFUNCTION;
-      s_dwWinError = 0;
-      if( ! EscapeCommFunction( hCommPort, dwFunc ) )
+      s_PortData[ iPort ].iFunction = ESCAPECOMMFUNCTION;
+      s_PortData[ iPort ].dwError = 0;
+      if( EscapeCommFunction( hCommPort, dwFunc ) )
+         hb_retl( TRUE );
+      else
       {
-         s_dwWinError = GetLastError();
+         s_PortData[ iPort ].dwError = GetLastError();
          hb_retl( FALSE );
       }
-      else
-         hb_retl( TRUE );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -540,15 +565,15 @@ HB_FUNC( WIN_PORTSETDTR )
       HANDLE hCommPort = s_PortData[ iPort ].Port;
       DWORD dwFunc = hb_parl( 2 ) ? SETDTR : CLRDTR;
 
-      s_iWinFcn = ESCAPECOMMFUNCTION;
-      s_dwWinError = 0;
-      if( ! EscapeCommFunction( hCommPort, dwFunc ) )
+      s_PortData[ iPort ].iFunction = ESCAPECOMMFUNCTION;
+      s_PortData[ iPort ].dwError = 0;
+      if( EscapeCommFunction( hCommPort, dwFunc ) )
+         hb_retl( TRUE );
+      else
       {
-         s_dwWinError = GetLastError();
+         s_PortData[ iPort ].dwError = GetLastError();
          hb_retl( FALSE );
       }
-      else
-         hb_retl( TRUE );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -564,12 +589,12 @@ HB_FUNC( WIN_PORTRTSFLOW )
       DCB CurDCB;
       int iRtsControl = hb_parni( 2 );
 
-      s_iWinFcn = FCNGETCOMMSTATE;
-      s_dwWinError = 0;
+      s_PortData[ iPort ].iFunction = FCNGETCOMMSTATE;
+      s_PortData[ iPort ].dwError = 0;
       CurDCB.DCBlength = sizeof( DCB );
       if( ! GetCommState( hCommPort, &CurDCB ) )
       {
-         s_dwWinError = GetLastError();
+         s_PortData[ iPort ].dwError = GetLastError();
          hb_retl( FALSE );
          return;
       }
@@ -595,11 +620,11 @@ HB_FUNC( WIN_PORTRTSFLOW )
          return;
       }
 
-      s_iWinFcn = FCNSETCOMMSTATE;
-      s_dwWinError = 0;
+      s_PortData[ iPort ].iFunction = FCNSETCOMMSTATE;
+      s_PortData[ iPort ].dwError = 0;
       if( ! SetCommState( hCommPort, &CurDCB ) )
       {
-         s_dwWinError = GetLastError();
+         s_PortData[ iPort ].dwError = GetLastError();
          hb_retl( FALSE );
       }
       else
@@ -619,12 +644,12 @@ HB_FUNC( WIN_PORTDTRFLOW )
       DCB CurDCB;
       int DtrControl = hb_parni( 2 );
 
-      s_iWinFcn = FCNGETCOMMSTATE;
-      s_dwWinError = 0;
+      s_PortData[ iPort ].iFunction = FCNGETCOMMSTATE;
+      s_PortData[ iPort ].dwError = 0;
       CurDCB.DCBlength = sizeof( DCB );
       if( ! GetCommState( hCommPort, &CurDCB ) )
       {
-         s_dwWinError = GetLastError();
+         s_PortData[ iPort ].dwError = GetLastError();
          hb_retl( FALSE );
          return;
       }
@@ -650,11 +675,11 @@ HB_FUNC( WIN_PORTDTRFLOW )
          return;
       }
 
-      s_iWinFcn = FCNSETCOMMSTATE;
-      s_dwWinError = 0;
+      s_PortData[ iPort ].iFunction = FCNSETCOMMSTATE;
+      s_PortData[ iPort ].dwError = 0;
       if( ! SetCommState( hCommPort, &CurDCB ) )
       {
-         s_dwWinError = GetLastError();
+         s_PortData[ iPort ].dwError = GetLastError();
          hb_retl( FALSE );
       }
       else
@@ -673,12 +698,12 @@ HB_FUNC( WIN_PORTXONXOFFFLOW )
       HANDLE hCommPort = s_PortData[ iPort ].Port;
       DCB CurDCB;
 
-      s_iWinFcn = FCNGETCOMMSTATE;
-      s_dwWinError = 0;
+      s_PortData[ iPort ].iFunction = FCNGETCOMMSTATE;
+      s_PortData[ iPort ].dwError = 0;
       CurDCB.DCBlength = sizeof( DCB );
       if( ! GetCommState( hCommPort, &CurDCB ) )
       {
-         s_dwWinError = GetLastError();
+         s_PortData[ iPort ].dwError = GetLastError();
          hb_retl( FALSE );
          return;
       }
@@ -694,11 +719,11 @@ HB_FUNC( WIN_PORTXONXOFFFLOW )
          CurDCB.fOutX = 0;
       }
 
-      s_iWinFcn = FCNSETCOMMSTATE;
-      s_dwWinError = 0;
+      s_PortData[ iPort ].iFunction = FCNSETCOMMSTATE;
+      s_PortData[ iPort ].dwError = 0;
       if( ! SetCommState( hCommPort, &CurDCB ) )
       {
-         s_dwWinError = GetLastError();
+         s_PortData[ iPort ].dwError = GetLastError();
          hb_retl( FALSE );
       }
       else
@@ -760,23 +785,27 @@ HB_FUNC( WIN_PORTTIMEOUTS )
       s_iWriteTotalTimeoutConstant = -1;
 }
 
-/* You must set both! */
-
-HB_FUNC( WIN_PORTBUFFERS )
-{
-   s_iInQueue = hb_parni( 1 );
-   s_iOutQueue = hb_parni( 2 );
-}
-
 HB_FUNC( WIN_PORTERROR )
 {
-   hb_retnl( s_dwWinError );
-   s_dwWinError = 0; /* NOTE: reset */
+   int iPort = hb_parni( 1 );
+
+   if( iPort >= 0 && iPort < ( int ) HB_SIZEOFARRAY( s_PortData ) )
+   {
+      hb_retnl( s_PortData[ iPort ].dwError );
+      s_PortData[ iPort ].dwError = 0; /* NOTE: reset */
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( WIN_PORTFCN )
+HB_FUNC( WIN_PORTFUNCLAST )
 {
-   hb_retni( s_iWinFcn );
+   int iPort = hb_parni( 1 );
+
+   if( iPort >= 0 && iPort < ( int ) HB_SIZEOFARRAY( s_PortData ) )
+      hb_retni( s_PortData[ iPort ].iFunction );
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( WIN_PORTDEBUGDCB )
@@ -793,8 +822,8 @@ HB_FUNC( WIN_PORTDEBUGDCB )
       char szDebugString[ 1024 ] = "";
       char buffer[ 80 ];
 
-      s_iWinFcn = FCNGETCOMMSTATE;
-      s_dwWinError = 0;
+      s_PortData[ iPort ].iFunction = FCNGETCOMMSTATE;
+      s_PortData[ iPort ].dwError = 0;
       CurDCB.DCBlength = sizeof( DCB );
       if( GetCommState( hCommPort, &CurDCB ) )
       {
@@ -853,15 +882,15 @@ HB_FUNC( WIN_PORTDEBUGDCB )
       }
       else
       {
-         s_dwWinError = GetLastError();
+         s_PortData[ iPort ].dwError = GetLastError();
          hb_retc_null();
          return;
       }
 
       if( iDebugLevel & WPDBGTIMEOUTS )
       {
-         s_iWinFcn = FCNGETCOMMTIMEOUTS;
-         s_dwWinError = 0;
+         s_PortData[ iPort ].iFunction = FCNGETCOMMTIMEOUTS;
+         s_PortData[ iPort ].dwError = 0;
          if( GetCommTimeouts( hCommPort, &CurCOMMTIMEOUTS ) )
          {
             hb_snprintf( buffer, sizeof( buffer ), "ReadIntervalTimeout : %lu\n"        , CurCOMMTIMEOUTS.ReadIntervalTimeout         ) ; hb_strncat( szDebugString, buffer, sizeof( szDebugString ) - 1 );
@@ -872,7 +901,7 @@ HB_FUNC( WIN_PORTDEBUGDCB )
          }
          else
          {
-            s_dwWinError = GetLastError();
+            s_PortData[ iPort ].dwError = GetLastError();
             hb_retc_null();
             return;
          }
@@ -880,8 +909,8 @@ HB_FUNC( WIN_PORTDEBUGDCB )
 
       if( iDebugLevel & WPDBGQUEUE )
       {
-         s_iWinFcn = FCNGETCOMMPROPERTIES;
-         s_dwWinError = 0;
+         s_PortData[ iPort ].iFunction = FCNGETCOMMPROPERTIES;
+         s_PortData[ iPort ].dwError = 0;
          if( GetCommProperties( hCommPort, &CurCOMMPROP ) )
          {
             hb_snprintf( buffer, sizeof( buffer ), "dwCurrentTxQueue : %lu\n", CurCOMMPROP.dwCurrentTxQueue ) ; hb_strncat( szDebugString, buffer, sizeof( szDebugString ) - 1 );
@@ -889,7 +918,7 @@ HB_FUNC( WIN_PORTDEBUGDCB )
          }
          else
          {
-            s_dwWinError = GetLastError();
+            s_PortData[ iPort ].dwError = GetLastError();
             hb_retc_null();
             return;
          }

@@ -10,7 +10,6 @@
  *     Uses list.js and resize.js (heavily modified) found at
  *     developer.Netscape.com
  *
- *
  * Copyright 2000 Manos Aspradakis <maspr@otenet.gr>
  * www - http://www.harbour-project.org
  *
@@ -37,6 +36,7 @@
  * their web site at http://www.gnu.org/).
  *
  */
+
 /*
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org

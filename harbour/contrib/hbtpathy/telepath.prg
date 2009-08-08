@@ -162,7 +162,7 @@ FUNCTION tp_reopen( nPort, nInSize, nOutSize )
    nBaud       := t_aPorts[ nPort, TPFP_BAUD ]
    nData       := t_aPorts[ nPort, TPFP_DBITS ]
    cParity     := t_aPorts[ nPort, TPFP_PARITY ]
-   nStop       := t_aPorts[ nPort, TPFP_SBITS  ]
+   nStop       := t_aPorts[ nPort, TPFP_SBITS ]
 
    RETURN tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortName )
 

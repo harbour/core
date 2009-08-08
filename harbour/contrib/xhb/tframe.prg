@@ -32,6 +32,7 @@
  * their web site at http://www.gnu.org/).
  *
  */
+
 /*
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
@@ -69,7 +70,7 @@ CLASS THtmlFrameSet
 
 ENDCLASS
 
-   
+
 METHOD New( cFName, cTitle ) CLASS THtmlFrameSet
 
    LOCAL cStr := ""
@@ -93,7 +94,7 @@ METHOD New( cFName, cTitle ) CLASS THtmlFrameSet
                              "  <TITLE>" + ::Title + "</TITLE>" + CRLF() + ;
                              " </HEAD>" + CRLF()
 
-   ::cStr +=  cStr 
+   ::cStr +=  cStr
 
 RETURN Self
 
@@ -148,21 +149,21 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
 
    cStr += " >" + CRLF()
 
-   ::cStr +=  cStr 
+   ::cStr +=  cStr
 
 RETURN Self
 
 
 METHOD Endset() CLASS THtmlFrameSet
 
-   ::cStr +=  " </FRAMESET>" + CRLF() 
+   ::cStr +=  " </FRAMESET>" + CRLF()
 
 RETURN Self
 
 
 METHOD END () CLASS THtmlFrameSet
 
-   ::cStr +=  "</HTML>" + CRLF() 
+   ::cStr +=  "</HTML>" + CRLF()
    FWrite( ::nH, ::cStr )
 
    IF ::FName != NIL
@@ -181,7 +182,7 @@ METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
    DEFAULT lResize TO .T.
    DEFAULT lScrolling TO .F.
    DEFAULT cScrolling TO "AUTO"
-   DEFAULT cTarget TO "_self"  
+   DEFAULT cTarget TO "_self"
 
    cStr := "  <FRAME "
 
@@ -220,7 +221,7 @@ METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
    ENDIF
 
    IF marginwidth != NIL
-      cStr += " MARGINWIDTH= " + NTRIM( marginwidth ) 
+      cStr += " MARGINWIDTH= " + NTRIM( marginwidth )
    ENDIF
 
    IF marginheight != NIL
@@ -229,6 +230,6 @@ METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
 
    cStr += ">" + CRLF()
 
-   ::cStr +=  cStr 
+   ::cStr +=  cStr
 
    RETURN Self

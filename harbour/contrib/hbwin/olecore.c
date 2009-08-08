@@ -448,6 +448,24 @@ static void GetParams( DISPPARAMS * dispparam )
    dispparam->cNamedArgs = 0;
 }
 
+#ifdef _PUTPARAMS_
+static void PutParams( DISPPARAMS * dispparam )
+{
+   UINT uiArg;
+
+   for( uiArg = 0; uiArg < dispparam->cArgs; uiArg++ )
+   {
+      if( HB_ISBYREF( uiArg + 1 ) )
+      {
+         PHB_ITEM pItem = hb_itemNew( NULL );
+
+         hb_oleVariantToItem( pItem, & dispparam->rgvarg[ uiArg ] );
+
+         hb_itemParamStoreForward( ( USHORT ) uiArg + 1, pItem );
+      }
+   }
+}
+#endif
 
 static void FreeParams( DISPPARAMS * dispparam )
 {
@@ -529,18 +547,18 @@ HB_FUNC( __OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 
    if( cOleName )
    {
-      wCLSID = (BSTR) AnsiToWide( (LPSTR) cOleName );
+      wCLSID = ( BSTR ) AnsiToWide( ( LPSTR ) cOleName );
       if( cOleName[ 0 ] == '{' )
-         lOleError = CLSIDFromString( wCLSID, (LPCLSID) &ClassID );
+         lOleError = CLSIDFromString( wCLSID, ( LPCLSID ) &ClassID );
       else
-         lOleError = CLSIDFromProgID( wCLSID, (LPCLSID) &ClassID );
+         lOleError = CLSIDFromProgID( wCLSID, ( LPCLSID ) &ClassID );
       hb_xfree( wCLSID );
 
       if( cID )
       {
          if( cID[ 0 ] == '{' )
          {
-            wCLSID = (BSTR) AnsiToWide( (LPSTR) cID );
+            wCLSID = ( BSTR ) AnsiToWide( ( LPSTR ) cID );
             lOleError = CLSIDFromString( wCLSID, &iid );
             hb_xfree( wCLSID );
          }
@@ -773,9 +791,13 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
       GetParams( &dispparam );
 
       lOleError = HB_VTBL( pDisp )->Invoke( HB_THIS_( pDisp ) dispid, HB_ID_REF( IID_NULL ),
-                                         LOCALE_USER_DEFAULT,
-                                         DISPATCH_PROPERTYGET | DISPATCH_METHOD,
-                                         &dispparam, &variant, &excep, &uiArgErr );
+                                            LOCALE_USER_DEFAULT,
+                                            DISPATCH_PROPERTYGET | DISPATCH_METHOD,
+                                            &dispparam, &variant, &excep, &uiArgErr );
+
+#ifdef _PUTPARAMS_
+      PutParams( &dispparam );
+#endif
       FreeParams( &dispparam );
 
       hb_oleVariantToItem( hb_stackReturnItem(), &variant );

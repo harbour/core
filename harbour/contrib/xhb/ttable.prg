@@ -50,7 +50,7 @@
  *
  */
 
- /*
+/*
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
@@ -61,7 +61,6 @@
  *
  */
 
-
 #include "hbclass.ch"
 
 #include "ttable.ch"
@@ -71,9 +70,9 @@
 #include "inkey.ch"
 #include "dbinfo.ch"
 #include "error.ch"
+
 #define COMPILE(c) &("{||" + c + "}")
 
-//request DBFCDX
 STATIC saTables := {}
 /* NetWork Functions */
 STATIC snNetDelay    := 30
