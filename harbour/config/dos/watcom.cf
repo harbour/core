@@ -58,7 +58,7 @@ endif
 ifeq ($(CC),wcc386)
 ifneq ($(HB_HOST_ARCH),linux)
 CPPFLAGS := $(subst /,\,$(CPPFLAGS))
-CC_RULE = $(CC) $(CPPFLAGS) $(subst /,\,$(CFLAGS)) $(HB_CDBG) $(subst /,\,$(HB_USER_CFLAGS)) $(HB_CDYNLIB) $(CC_IN)$(subst /,\,$<) $(CC_OUT)$(<F:.c=$(OBJ_EXT))
+CC_RULE = $(CC) $(CPPFLAGS) $(subst /,\,$(CFLAGS)) $(HB_CDBG) $(subst /,\,$(HB_USER_CFLAGS)) $(HB_CDYNLIB) $(HB_CUNICODE) $(CC_IN)$(subst /,\,$<) $(CC_OUT)$(<F:.c=$(OBJ_EXT))
 endif
 endif
 

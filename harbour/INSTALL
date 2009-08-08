@@ -271,6 +271,7 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
                                pass them to make_gnu.bat.
    - HB_BUILD_DEBUG=yes        Create a debug build.
    - HB_BUILD_OPTIM=no         Disable C compiler optimizations.
+   - HB_BUILD_UNICODE=yes      Create Unicode build (Windows/Windows CE).
    - HB_BUILD_MODE=[cpp|c]     Changes default build mode to C++ or C.
                                Default is C, except for msvc* and watcom
                                compilers.

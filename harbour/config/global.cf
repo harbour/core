@@ -108,45 +108,49 @@ ifneq ($(HB_BUILD_NAME),)
    ifeq ($(HB_BUILD_NAME),.r)
       HB_BUILD_DEBUG := no
       HB_BUILD_OPTIM := yes
+      HB_BUILD_UNICODE := no
       HB_BUILD_MODE ?= c
    else
    ifeq ($(HB_BUILD_NAME),.rx)
       HB_BUILD_DEBUG := no
       HB_BUILD_OPTIM := yes
+      HB_BUILD_UNICODE := no
       HB_BUILD_MODE ?= cpp
    else
    ifeq ($(HB_BUILD_NAME),.ru)
-      HB_USER_CFLAGS += -DUNICODE
       HB_BUILD_DEBUG := no
       HB_BUILD_OPTIM := yes
+      HB_BUILD_UNICODE := yes
       HB_BUILD_MODE ?= c
    else
    ifeq ($(HB_BUILD_NAME),.rux)
-      HB_USER_CFLAGS += -DUNICODE
       HB_BUILD_DEBUG := no
       HB_BUILD_OPTIM := yes
+      HB_BUILD_UNICODE := yes
       HB_BUILD_MODE ?= cpp
    else
    ifeq ($(HB_BUILD_NAME),.d)
       HB_BUILD_DEBUG := yes
       HB_BUILD_OPTIM := no
+      HB_BUILD_UNICODE := no
       HB_BUILD_MODE ?= c
    else
    ifeq ($(HB_BUILD_NAME),.dx)
       HB_BUILD_DEBUG := yes
       HB_BUILD_OPTIM := no
+      HB_BUILD_UNICODE := no
       HB_BUILD_MODE ?= cpp
    else
    ifeq ($(HB_BUILD_NAME),.du)
-      HB_USER_CFLAGS += -DUNICODE
       HB_BUILD_DEBUG := yes
       HB_BUILD_OPTIM := no
+      HB_BUILD_UNICODE := yes
       HB_BUILD_MODE ?= c
    else
    ifeq ($(HB_BUILD_NAME),.dux)
-      HB_USER_CFLAGS += -DUNICODE
       HB_BUILD_DEBUG := yes
       HB_BUILD_OPTIM := no
+      HB_BUILD_UNICODE := yes
       HB_BUILD_MODE ?= cpp
    endif
    endif
@@ -207,6 +211,9 @@ ifeq ($(HB_CONFIG_SHOWN),)
       endif
       ifneq ($(HB_BUILD_OPTIM),)
          $(info HB_BUILD_OPTIM: $(HB_BUILD_OPTIM))
+      endif
+      ifneq ($(HB_BUILD_UNICODE),)
+         $(info HB_BUILD_UNICODE: $(HB_BUILD_UNICODE))
       endif
       ifneq ($(HB_BUILD_MODE),)
          $(info HB_BUILD_MODE: $(HB_BUILD_MODE))

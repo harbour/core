@@ -16,6 +16,10 @@ else
    HB_PDBG = -l
 endif
 
+ifeq ($(HB_BUILD_UNICODE),yes)
+   HB_CUNICODE = -DUNICODE
+endif
+
 # How to run Harbour
 HB := $(HB_HOST_BIN_DIR)/harbour$(HB_HOST_BIN_EXT)
 
@@ -29,12 +33,12 @@ HB_RULE = $(HB) $? -n1 $(HB_FLAGS) -gc$(HB_GCMODE) $(HB_FLAGSEXTRA) $(HB_USER_PR
 
 # The rule to compile a C source file.
 ifeq ($(CC_RULE),)
-   CC_RULE = $(CC) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_USER_CFLAGS) $(HB_CDYNLIB) $(CC_IN) $< $(CC_OUT)$(<F:.c=$(OBJ_EXT))
+   CC_RULE = $(CC) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_USER_CFLAGS) $(HB_CDYNLIB) $(HB_CUNICODE) $(CC_IN) $< $(CC_OUT)$(<F:.c=$(OBJ_EXT))
 endif
 
 # The rule to compile a C++ source file.
 ifeq ($(CPP_RULE),)
-   CPP_RULE = $(CC) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_USER_CFLAGS) $(HB_CDYNLIB) $(CC_IN) $< $(CC_OUT)$(<F:.cpp=$(OBJ_EXT))
+   CPP_RULE = $(CC) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_USER_CFLAGS) $(HB_CDYNLIB) $(HB_CUNICODE) $(CC_IN) $< $(CC_OUT)$(<F:.cpp=$(OBJ_EXT))
 endif
 
 # The rule to link an executable.
