@@ -76,7 +76,7 @@ CREATE CLASS win_Port
    PROTECT lOpen     INIT .F.
    PROTECT cPortName INIT ""
 
-   METHOD Init( cPortName, nBaudRate, nParity, nByteSize, nStopBits )
+   METHOD Init( cPortName, nBaudRate, nParity, nByteSize, nStopBits, nInQueue, nOutQueue )
    METHOD Read( cString, nLength )
    METHOD Recv( nLength, nResult )          INLINE win_PortRecv( ::nPort, nLength, @nResult )
    METHOD RecvTo( cDelim, nMaxlen )
@@ -97,18 +97,17 @@ CREATE CLASS win_Port
    METHOD DebugDCB( nDebug )                INLINE win_PortDebugDCB(::nPort, nDebug )
    METHOD TimeOuts( nReadInterval, nReadMultiplier, nReadConstant, nWriteMultiplier, nWriteConstant ) ;
                                             INLINE win_PortTimeOuts( nReadInterval, nReadMultiplier, nReadConstant, nWriteMultiplier, nWriteConstant )
-   METHOD Buffers( nInQueue, nOutQueue )    INLINE win_PortBuffers( nInQueue, nOutQueue )
    METHOD Error()
 
 ENDCLASS
 
 
-METHOD Init( cPortName, nBaudRate, nParity, nByteSize, nStopBits ) CLASS win_Port
+METHOD Init( cPortName, nBaudRate, nParity, nByteSize, nStopBits, nInQueue, nOutQueue ) CLASS win_Port
 
    ::cPortName := Upper( cPortName )
    IF Left( ::cPortName, 3 ) == "COM"
       ::nPort := Val( SubStr( ::cPortName, 4 ) ) - 1
-      IF win_PortOpen( ::nPort, nBaudRate, nParity, nByteSize, nStopBits ) != -1
+      IF win_PortOpen( ::nPort, nBaudRate, nParity, nByteSize, nStopBits, nInQueue, nOutQueue ) != -1
          ::lOpen := .T.
       ENDIF
    ENDIF
