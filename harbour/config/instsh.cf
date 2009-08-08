@@ -66,8 +66,8 @@ ifeq ($(HB_SHELL),os2)
 #               but I could not find any other way to make this work around the shell
 #               command line length limit.
 define inst_file
-@$(COMSPEC) /C if not exist $(INSTALL_DIR_OS) $(MDP) $(INSTALL_DIR)
-$(COMSPEC) /C $(CP) $(file) $(INSTALL_DIR_OS)
+@$(CMDPREF)if not exist $(INSTALL_DIR_OS) $(MDP) $(INSTALL_DIR)
+$(CMDPREF)$(CP) $(file) $(INSTALL_DIR_OS)
 
 endef
 

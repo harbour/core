@@ -13,6 +13,7 @@ rem
 rem See COPYING for licensing terms.
 rem ---------------------------------------------------------------
 
+if "%HB_BIN_INSTALL%" == "" echo HB_BIN_INSTALL needs to be set.
 if "%HB_BIN_INSTALL%" == "" goto END
 
 echo Generating %HB_BIN_INSTALL%\hbmk.cfg...
