@@ -59,7 +59,6 @@
 static struct
 {
    HANDLE       hPort;
-   TCHAR        szName[ 11 ];
    int          iFunction;
    DWORD        dwError;
    DCB          OldDCB;
@@ -85,19 +84,20 @@ HB_FUNC( WIN_PORTOPEN )
       int iStopBits = hb_parni( 5 );
 
       char szName[ 11 ];
+      TCHAR tszName[ 11 ];
 
       HANDLE hCommPort;
       COMMTIMEOUTS NewTimeouts;
       DCB NewDCB;
 
       hb_snprintf( szName, sizeof( szName ), "\\\\.\\COM%d", iPort + 1 );
-      HB_TCHAR_SETTO( s_PortData[ iPort ].szName, szName, strlen( szName ) );
+      HB_TCHAR_SETTO( tszName, szName, strlen( szName ) );
 
       s_PortData[ iPort ].hPort = INVALID_HANDLE_VALUE;
       s_PortData[ iPort ].iFunction = FCNCREATEFILE;
       s_PortData[ iPort ].dwError = 0;
 
-      if( ( hCommPort = CreateFile( s_PortData[ iPort ].szName,
+      if( ( hCommPort = CreateFile( tszName,
                                     GENERIC_READ | GENERIC_WRITE,
                                     0,
                                     0,
