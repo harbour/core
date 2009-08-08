@@ -383,6 +383,8 @@ HB_FUNC( WIN_PORTREAD )
       s_dwWinError = 0;
       if( ! ReadFile( hCommPort, lpBuffer, dwNumberOfBytesToRead, &dwNumberOfBytesRead, NULL ) )
       {
+         hb_storc( NULL, 2 );
+         hb_xfree( lpBuffer );
          s_dwWinError = GetLastError();
          hb_retnl( -1 );
       }
@@ -411,6 +413,12 @@ HB_FUNC( WIN_PORTSTATUS )
       if( ! GetCommModemStatus( hCommPort, &dwModemStat ) )
       {
          s_dwWinError = GetLastError();
+
+         hb_storl( FALSE, 2 );
+         hb_storl( FALSE, 3 );
+         hb_storl( FALSE, 4 );
+         hb_storl( FALSE, 5 );
+
          hb_retl( FALSE );
       }
       else
@@ -466,6 +474,15 @@ HB_FUNC( WIN_PORTQUEUESTATUS )
       if( ! ClearCommError( hCommPort, &dwErrors, &ComStat ) )
       {
          s_dwWinError = GetLastError();
+
+         hb_storl( FALSE, 2 );
+         hb_storl( FALSE, 3 );
+         hb_storl( FALSE, 4 );
+         hb_storl( FALSE, 5 );
+         hb_storl( FALSE, 6 );
+         hb_stornl( 0, 7 );
+         hb_stornl( 0, 8 );
+
          hb_retl( FALSE );
       }
       else
