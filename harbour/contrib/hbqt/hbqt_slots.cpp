@@ -1800,6 +1800,7 @@ Qt_WhatsThisRole            5       Qt_SizeHintRole                13
 #define HBQT_BRW_COLHEIGHT                        1011
 #define HBQT_BRW_DATHEIGHT                        1012
 #define HBQT_BRW_DATALIGN                         1013
+#define HBQT_BRW_CELLDECORATION                   1014
 
 QVariant fetchRole( PHB_ITEM block, int what, int par1, int par2 )
 {
@@ -1821,6 +1822,8 @@ QVariant fetchRole( PHB_ITEM block, int what, int par1, int par2 )
       return( hb_itemGetND( ret ) );
    else if( hb_itemType( ret ) & HB_IT_NUMERIC )
       return( hb_itemGetNI( ret ) );
+//   else if( hb_itemType( ret ) & HB_IT_POINTER )
+//      return( hb_itemGetPtr( ret ) );
    else
       return QVariant();
 
@@ -1874,6 +1877,12 @@ QVariant HbDbfModel::data( const QModelIndex & index, int role ) const
             return( QColor( ( Qt::GlobalColor ) iClr ) );
          else
             return( QColor( ( QRgb ) iClr ) );
+      }
+      case Qt::DecorationRole:
+      {
+         QVariant image = fetchRole( block, HBQT_BRW_CELLDECORATION, index.row()+1, index.column()+1 );
+         return( QIcon( image.toString() ) );
+         //return( QPixmap( image.toString() ) );
       }
       case Qt::DisplayRole:
       {

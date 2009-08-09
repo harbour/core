@@ -1576,11 +1576,11 @@ STATIC FUNCTION RtfApplyFont( oRTF )
 
 FUNCTION Build_Browse( oWnd )
    LOCAL aPresParam, oXbpBrowse, oXbpColumn
+   LOCAL cPath := hb_DirBase() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "tests" + hb_osPathSeparator()
 
    Set( _SET_DATEFORMAT, "yyyy.mm.dd" ) /* ANSI */
 
-   USE ( hb_DirBase() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "tests" + hb_osPathSeparator() +;
-         "test.dbf" ) NEW SHARED VIA 'DBFCDX'
+   USE ( cPath + "test.dbf" ) NEW SHARED VIA 'DBFCDX'
    DbGotop()
 
    oXbpBrowse := XbpBrowse():new():create( oWnd, , { 10,10 }, { oWnd:currentSize()[1]-25,oWnd:currentSize()[2]-45 } )
@@ -1600,6 +1600,7 @@ FUNCTION Build_Browse( oWnd )
    oXbpBrowse:phyPosBlock   := {| | RecNo()          }
 
    oXbpBrowse:headerRbDown  := {|mp1, mp2, o| mp1 := mp1, xbp_debug( o:getColumn( mp2 ):heading ) }
+
 
    aPresParam := {}
    aadd( aPresParam, { XBP_PP_COL_HA_CAPTION      , "Last"                     } )
@@ -1716,6 +1717,26 @@ FUNCTION Build_Browse( oWnd )
    //
    oXbpColumn          := XbpColumn():new()
    oXbpColumn:dataLink := {|| test->City }
+   oXbpColumn:create( , , , , aPresParam )
+   //
+   oXbpBrowse:addColumn( oXbpColumn )
+
+   aPresParam := {}
+   aadd( aPresParam, { XBP_PP_COL_HA_CAPTION      , "Icons"                     } )
+   aadd( aPresParam, { XBP_PP_COL_HA_FGCLR        , GRA_CLR_CYAN               } )
+   aadd( aPresParam, { XBP_PP_COL_HA_BGCLR        , GRA_CLR_BLUE               } )
+   aadd( aPresParam, { XBP_PP_COL_HA_HEIGHT       , 20                         } )
+   aadd( aPresParam, { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_BGCLR        , RGB( 5,240,210 )           } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWWIDTH     , 40                         } )
+   //
+   oXbpColumn          := XbpColumn():new()
+   oXbpColumn:type     := XBPCOL_TYPE_FILEICON
+   cPath := hb_DirBase() + hb_osPathSeparator()
+   oXbpColumn:dataLink := {|n| n := recno(), IF( n%3 == 0, cPath + "abs3.png", IF( n%5 == 0, cPath + "copy.png", cPath + "vr.png" ) ) }
    oXbpColumn:create( , , , , aPresParam )
    //
    oXbpBrowse:addColumn( oXbpColumn )

@@ -92,6 +92,7 @@
 #define HBQT_BRW_COLHEIGHT                        1011
 #define HBQT_BRW_DATHEIGHT                        1012
 #define HBQT_BRW_DATALIGN                         1013
+#define HBQT_BRW_CELLDECORATION                   1014
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
@@ -809,14 +810,31 @@ METHOD XbpBrowse:supplyInfo( nInfo, p2, p3 )
       ::forceStable()
       RETURN IF( p3 > 0 .and. p3 <= ::colCount, ::columns[ p3 ]:dheight   , 12           )
 
-   CASE HBQT_BRW_CELLVALUE
+   CASE HBQT_BRW_CELLDECORATION
       IF ::lFirst
          ::lFirst := .f.
          ::forceStable()
          ::setVertScrollBarRange( .t. )
          ::setHorzScrollBarRange( .f. )
       ENDIF
-      RETURN ::cellValue( p2, p3 )
+      IF ::columns[ p3 ]:type == XBPCOL_TYPE_FILEICON
+         RETURN trim( ::cellValue( p2, p3 ) )
+      ELSE
+         RETURN ""
+      ENDIF
+
+   CASE HBQT_BRW_CELLVALUE
+      IF ::columns[ p3 ]:type == XBPCOL_TYPE_TEXT
+         IF ::lFirst
+            ::lFirst := .f.
+            ::forceStable()
+            ::setVertScrollBarRange( .t. )
+            ::setHorzScrollBarRange( .f. )
+         ENDIF
+         RETURN ::cellValue( p2, p3 )
+      ELSE
+         RETURN ""
+      ENDIF
 
    ENDSWITCH
 
@@ -973,6 +991,11 @@ METHOD doConfigure() CLASS XbpBrowse
       xValue   := Eval( oCol:block )
       cType    := ValType( xValue )
       nWidth   := IIF( cType $ "CMNDTL", Len( Transform( xValue, oCol:picture ) ), 0 )
+
+      /* Control the picture spec of Bitmaps|Icon files */
+      IF oCol:type != XBPCOL_TYPE_TEXT
+         nWidth := 256
+      ENDIF
 
       #if 0
       cColSep  := oCol:colSep
@@ -3369,6 +3392,7 @@ CREATE CLASS XbpColumn  INHERIT XbpWindow, XbpDataRef
    DATA   nColWidth
 
    DATA   valtype
+   DATA   type                                    INIT      XBPCOL_TYPE_TEXT
    DATA   blankVariable
 
    ENDCLASS
