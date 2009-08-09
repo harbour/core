@@ -200,7 +200,8 @@ METHOD XbpStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    // OK
    CASE ::type == XBPSTATIC_TYPE_RAISEDLINE
       ::oWidget := QFrame():new( ::pParent )
-      IF ::aPos[ 1 ] + ::aSize[ 1 ] >= ::aPos[ 2 ] + ::aSize[ 2 ]
+      //IF ::aPos[ 1 ] + ::aSize[ 1 ] >= ::aPos[ 2 ] + ::aSize[ 2 ]
+      IF ::aSize[ 1 ] >= ::aSize[ 2 ]
          ::oWidget:setFrameStyle( QFrame_HLine + QFrame_Raised )
       ELSE
          ::oWidget:setFrameStyle( QFrame_VLine + QFrame_Raised )
@@ -211,7 +212,8 @@ METHOD XbpStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    // OK
    CASE ::type == XBPSTATIC_TYPE_RECESSEDLINE
       ::oWidget := QFrame():new( ::pParent )
-      IF ::aPos[ 1 ] + ::aSize[ 1 ] >= ::aPos[ 2 ] + ::aSize[ 2 ]
+      //IF ::aPos[ 1 ] + ::aSize[ 1 ] >= ::aPos[ 2 ] + ::aSize[ 2 ]
+      IF ::aSize[ 1 ] >= ::aSize[ 2 ]
          ::oWidget:setFrameStyle( QFrame_HLine + QFrame_Sunken )
       ELSE
          ::oWidget:setFrameStyle( QFrame_VLine + QFrame_Sunken )

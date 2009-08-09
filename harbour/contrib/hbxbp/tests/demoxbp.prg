@@ -72,6 +72,7 @@ REQUEST DbfCdx
 #define TAB_5   5
 #define TAB_6   6
 #define TAB_7   7
+#define TAB_8   8
 
 #define CRLF    chr( 13 )+chr( 10 )
 
@@ -128,6 +129,12 @@ PROCEDURE BuildADialog()
    /* Install Tab Pages */
    aTabs := Build_TabPages( oDa )
 
+   /* Build XBPBrowse() */
+   Build_Browse( aTabs[ TAB_1 ] )
+
+   /* Install Multi-Line Edit */
+   oMLE := Build_MLE( aTabs[ TAB_2 ] )
+
    /* Install checkboxes */
    Build_CheckBox( aTabs[ TAB_3 ] )
 
@@ -137,41 +144,35 @@ PROCEDURE BuildADialog()
    /* Install Radio Buttons */
    Build_RadioButton( aTabs[ TAB_3 ] )
 
-   /* Install ListBox */
-   Build_ListBox( aTabs[ TAB_5 ] )
-
-   /* Install Push Buttons */
-   Build_PushButton( oDa )
-
-   /* Install Single Line Edits */
-   Build_SLEs( oDa )
-
-   /* Install Multi-Line Edit */
-   oMLE := Build_MLE( aTabs[ 2 ] )
-
-   /* Install ScrollBar */
-   Build_ScrollBar( aTabs[ 5 ] )
-
    /* Install Spin Buttons */
    Build_SpinButtons( aTabs[ TAB_3 ] )
-
-   /* Install Combo Box */
-   Build_ComboBox( oDa )
 
    /* Install TreeView */
    Build_TreeView( aTabs[ TAB_4 ] )
 
-   /* Build Statics */
-   Build_Statics( oDA )
+   /* Install ListBox */
+   Build_ListBox( aTabs[ TAB_5 ] )
 
-   /* Build HTML Viewer */
-   oHtm := Build_HTMLViewer( aTabs[ TAB_7 ] )
+   /* Install Combo Box */
+   Build_ComboBox( aTabs[ TAB_5 ] )
+
+   /* Install Push Buttons */
+   Build_PushButton( aTabs[ TAB_5 ] )
+
+   /* Install Single Line Edits */
+   Build_SLEs( aTabs[ TAB_5 ] )
+
+   /* Install ScrollBar */
+   Build_ScrollBar( aTabs[ TAB_5 ] )
 
    /* Build RTF */
    Build_Rtf( aTabs[ TAB_6 ] )
 
-   /* Build XBPBrowse() */
-   Build_Browse( aTabs[ TAB_1 ] )
+   /* Build HTML Viewer */
+   oHtm := Build_HTMLViewer( aTabs[ TAB_7 ] )
+
+   /* Build Statics */
+   Build_Statics( aTabs[ TAB_8 ] )
 
    /* Present the dialog on the screen */
    oDlg:Show()
@@ -440,25 +441,99 @@ STATIC FUNCTION ExeToolbar( oButton, oDa )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION Build_PushButton( oDA )
-   LOCAL oXbp
+FUNCTION Build_StatusBar( oWnd )
+   LOCAL oSBar, oPanel
 
-    oXbp := XbpPushButton():new( oDA )
-    oXbp:caption := "A"
-    oXbp:create( , , {30,370}, {90,40} )
-    oXbp:activate:= {|| MsgBox( "Pushbutton A" ) }
-    /* Harbour supports presentation colors */
-    //oXbp:setColorBG( GraMakeRGBColor( {133,240,90} ) )
-    oXbp:setColorBG( GraMakeRGBColor( {0,0,255} ) )
+   oSBar := XbpStatusBar():new( oWnd )
+   oSBar:create( oWnd, , { 0,0 }, { oWnd:currentSize()[1],30 } )
 
-    oXbp := XbpPushButton():new( oDA )
-    oXbp:caption := "new.png"
-    oXbp:create( , , {140,370}, {90,40} )
-    oXbp:activate:= {|| MsgBox( "Pushbutton B" ) }
-    /* Harbour supports presentation colors */
-    oXbp:setColorBG( GraMakeRGBColor( {255,255,0} ) )
+   oPanel := oSBar:getItem( 1 )
+   oPanel:caption  := "Harbour-QT-Xbase++ is Ready"
+   oPanel:autosize := XBPSTATUSBAR_AUTOSIZE_SPRING
 
-    RETURN nil
+   #ifdef __XPP__
+   oSBar:setPointer( , XBPSTATIC_SYSICON_SIZEWE, XBPWINDOW_POINTERTYPE_SYSPOINTER )
+   #else
+   oSBar:setPointer( , 'vr.png', XBPWINDOW_POINTERTYPE_ICON )
+   #endif
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Build_TabPages( oWnd )
+   LOCAL nHeight := 390
+   LOCAL aTabs   := { NIL,NIL,NIL,NIL,NIL,NIL,NIL,NIL }
+   LOCAL aPos    := { 20,20 }
+   //LOCAL aPos    := { 510, 20 }
+   LOCAL aSize   := { 860, nHeight }
+   //LOCAL aSize   := { 360, nHeight }
+
+   aTabs[ TAB_1 ] := XbpTabPage():new( oWnd, , aPos, aSize, , .t. )
+   aTabs[ TAB_1 ]:caption    := "Brw"
+   aTabs[ TAB_1 ]:preOffset  := 10
+   aTabs[ TAB_1 ]:postOffset := 300
+   aTabs[ TAB_1 ]:minimized  := .F.
+   aTabs[ TAB_1 ]:create()
+   aTabs[ TAB_1 ]:TabActivate := SetMaximized( aTabs, 1 )
+
+   aTabs[ TAB_2 ] := XbpTabPage():new( oWnd, , aPos, aSize, , .t. )
+   aTabs[ TAB_2 ]:caption    := "MLE"
+   aTabs[ TAB_2 ]:preOffset  := 20
+   aTabs[ TAB_2 ]:postOffset := 120
+   aTabs[ TAB_2 ]:create()
+   aTabs[ TAB_2 ]:TabActivate := SetMaximized( aTabs, 2 )
+
+   aTabs[ TAB_3 ] := XbpTabPage():new( oWnd, , aPos, aSize, , .t. )
+   aTabs[ TAB_3 ]:caption    := "Btns"
+   aTabs[ TAB_3 ]:preOffset  := 40
+   aTabs[ TAB_3 ]:postOffset := 100
+   aTabs[ TAB_3 ]:create()
+   aTabs[ TAB_3 ]:TabActivate := SetMaximized( aTabs, 3 )
+
+   aTabs[ TAB_4 ] := XbpTabPage():new( oWnd, , aPos, aSize, , .t. )
+   aTabs[ TAB_4 ]:caption    := "Tree"
+   aTabs[ TAB_4 ]:preOffset  := 60
+   aTabs[ TAB_4 ]:postOffset := 80
+   aTabs[ TAB_4 ]:create()
+   aTabs[ TAB_4 ]:TabActivate := SetMaximized( aTabs, 4 )
+   aTabs[ TAB_4 ]:setColorBG( GraMakeRGBColor( {198,198,198} ) )
+
+   aTabs[ TAB_5 ] := XbpTabPage():new( oWnd, , aPos, aSize, , .t. )
+   aTabs[ TAB_5 ]:minimized  := .F.
+   aTabs[ TAB_5 ]:caption    := "Lists"
+   aTabs[ TAB_5 ]:preOffset  := 80
+   aTabs[ TAB_5 ]:postOffset := 60
+   aTabs[ TAB_5 ]:create()
+   aTabs[ TAB_5 ]:TabActivate := SetMaximized( aTabs, 5 )
+   aTabs[ TAB_5 ]:setPointer( , XBPSTATIC_SYSICON_SIZENESW, XBPWINDOW_POINTERTYPE_SYSPOINTER )
+   /* comment our following line to position tabs at the bottom */
+   /* aTabs[ TAB_5 ]:type := XBPTABPAGE_TAB_BOTTOM */
+
+   aTabs[ TAB_6 ] := XbpTabPage():new( oWnd, , aPos, aSize, , .t. )
+   aTabs[ TAB_6 ]:caption    := "Rtf"
+   aTabs[ TAB_6 ]:preOffset  := 100
+   aTabs[ TAB_6 ]:postOffset := 40
+   aTabs[ TAB_6 ]:create()
+   aTabs[ TAB_6 ]:TabActivate := SetMaximized( aTabs, 6 )
+
+   aTabs[ TAB_7 ] := XbpTabPage():new( oWnd, , aPos, aSize, , .t. )
+   aTabs[ TAB_7 ]:caption    := "Web"
+   aTabs[ TAB_7 ]:preOffset  := 120
+   aTabs[ TAB_7 ]:postOffset := 20
+   aTabs[ TAB_7 ]:minimized  := .F.
+   aTabs[ TAB_7 ]:create()
+   aTabs[ TAB_7 ]:TabActivate := SetMaximized( aTabs, 7 )
+
+   aTabs[ TAB_8 ] := XbpTabPage():new( oWnd, , aPos, aSize, , .t. )
+   aTabs[ TAB_8 ]:caption    := "Statics"
+   aTabs[ TAB_8 ]:preOffset  := 140
+   aTabs[ TAB_8 ]:postOffset := 0
+   aTabs[ TAB_8 ]:minimized  := .F.
+   aTabs[ TAB_8 ]:create()
+   aTabs[ TAB_8 ]:TabActivate := SetMaximized( aTabs, 8 )
+
+   RETURN aTabs
 
 /*----------------------------------------------------------------------*/
 
@@ -545,70 +620,6 @@ FUNCTION Build_RadioButton( oStatic )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION Build_TabPages( oWnd )
-   LOCAL nHeight := 390
-   LOCAL aTabs   := { NIL,NIL,NIL,NIL,NIL,NIL,NIL }
-
-   aTabs[ TAB_1 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight }, , .t. )
-   aTabs[ TAB_1 ]:caption    := "Brw"
-   aTabs[ TAB_1 ]:preOffset  := 10
-   aTabs[ TAB_1 ]:postOffset := 300
-   aTabs[ TAB_1 ]:minimized  := .F.
-   aTabs[ TAB_1 ]:create()
-   aTabs[ TAB_1 ]:TabActivate := SetMaximized( aTabs, 1 )
-
-   aTabs[ TAB_2 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight }, , .t. )
-   aTabs[ TAB_2 ]:caption    := "MLE"
-   aTabs[ TAB_2 ]:preOffset  := 20
-   aTabs[ TAB_2 ]:postOffset := 120
-   aTabs[ TAB_2 ]:create()
-   aTabs[ TAB_2 ]:TabActivate := SetMaximized( aTabs, 2 )
-
-   aTabs[ TAB_3 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight }, , .t. )
-   aTabs[ TAB_3 ]:caption    := "Btns"
-   aTabs[ TAB_3 ]:preOffset  := 40
-   aTabs[ TAB_3 ]:postOffset := 100
-   aTabs[ TAB_3 ]:create()
-   aTabs[ TAB_3 ]:TabActivate := SetMaximized( aTabs, 3 )
-
-   aTabs[ TAB_4 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight }, , .t. )
-   aTabs[ TAB_4 ]:caption    := "Tree"
-   aTabs[ TAB_4 ]:preOffset  := 60
-   aTabs[ TAB_4 ]:postOffset := 80
-   aTabs[ TAB_4 ]:create()
-   aTabs[ TAB_4 ]:TabActivate := SetMaximized( aTabs, 4 )
-   aTabs[ TAB_4 ]:setColorBG( GraMakeRGBColor( {198,198,198} ) )
-
-   aTabs[ TAB_5 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight }, , .t. )
-   aTabs[ TAB_5 ]:minimized  := .F.
-   aTabs[ TAB_5 ]:caption    := "Lists"
-   aTabs[ TAB_5 ]:preOffset  := 80
-   aTabs[ TAB_5 ]:postOffset := 60
-   aTabs[ TAB_5 ]:create()
-   aTabs[ TAB_5 ]:TabActivate := SetMaximized( aTabs, 5 )
-   aTabs[ TAB_5 ]:setPointer( , XBPSTATIC_SYSICON_SIZENESW, XBPWINDOW_POINTERTYPE_SYSPOINTER )
-   /* comment our following line to position tabs at the bottom */
-   /* aTabs[ TAB_5 ]:type := XBPTABPAGE_TAB_BOTTOM */
-
-   aTabs[ TAB_6 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight }, , .t. )
-   aTabs[ TAB_6 ]:caption    := "Rtf"
-   aTabs[ TAB_6 ]:preOffset  := 100
-   aTabs[ TAB_6 ]:postOffset := 40
-   aTabs[ TAB_6 ]:create()
-   aTabs[ TAB_6 ]:TabActivate := SetMaximized( aTabs, 6 )
-
-   aTabs[ TAB_7 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight }, , .t. )
-   aTabs[ TAB_7 ]:caption    := "Web"
-   aTabs[ TAB_7 ]:preOffset  := 120
-   aTabs[ TAB_7 ]:postOffset := 20
-   aTabs[ TAB_7 ]:minimized  := .F.
-   aTabs[ TAB_7 ]:create()
-   aTabs[ TAB_7 ]:TabActivate := SetMaximized( aTabs, 7 )
-
-   RETURN aTabs
-
-/*----------------------------------------------------------------------*/
-
 STATIC FUNCTION SetMaximized( aTabs, nMax )
    RETURN {|| aeval( aTabs, {|o,i| IF( i != nMax, o:minimize(), ) } ), aTabs[ nMax ]:maximize() }
 
@@ -623,7 +634,7 @@ FUNCTION Build_ListBox( oWnd )
 
    oListBox := XbpListBox():new()
    //oListBox:markMode := XBPLISTBOX_MM_MULTIPLE
-   oListBox:create( oWnd, , {10,10}, {150,200} )
+   oListBox:create( oWnd, , {10,10}, {150,320} )
 
    // Copy field names from the DbStruct() array to the list box
    aeval( aItems, {|e| oListBox:addItem( e ) } )
@@ -640,21 +651,98 @@ FUNCTION Build_ListBox( oWnd )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION Build_StatusBar( oWnd )
-   LOCAL oSBar, oPanel
+STATIC FUNCTION Build_ComboBox( oWnd )
+   LOCAL oCombo, i, bAction
+   LOCAL cDay  := "< Monday >"
+   LOCAL aDays := { "Monday" , "Tuesday"  , "Wednesday", "Thursday", ;
+                    "Friday" , "Saturday" , "Sunday" }
+   LOCAL aPNG  := { "copy", "cut", "new", "open", "paste", "save", "new" }
 
-   oSBar := XbpStatusBar():new( oWnd )
-   oSBar:create( oWnd, , { 0,0 }, { oWnd:currentSize()[1],30 } )
+   // Create combo box with drop down list box
+   oCombo      := XbpCombobox():new()
+   oCombo:type := XBPCOMBO_DROPDOWN
+   //oCombo:editable := .f.
+   oCombo:create( oWnd,, {180, 10}, {200, 30} )
 
-   oPanel := oSBar:getItem( 1 )
-   oPanel:caption  := "Harbour-QT-Xbase++ is Ready"
-   oPanel:autosize := XBPSTATUSBAR_AUTOSIZE_SPRING
+   // Link data from entry field to LOCAL variable
+   oCombo:XbpSLE:dataLink := {|x| IIf( x==NIL, cDay, cDay := x ) }
+   oCombo:XbpSLE:setData()
 
-   #ifdef __XPP__
-   oSBar:setPointer( , XBPSTATIC_SYSICON_SIZEWE, XBPWINDOW_POINTERTYPE_SYSPOINTER )
-   #else
-   oSBar:setPointer( , 'vr.png', XBPWINDOW_POINTERTYPE_ICON )
-   #endif
+   // Code block for selection:
+   //  - assign to LOCAL variable using :getData()
+   //  - display LOCAL variable using DispoutAt()
+   bAction := {|mp1, mp2, obj| obj:XbpSLE:getData(), hb_outDebug( "Highlighted: "+cDay ) }
+
+   // Assign code block for selection with Up and Down keys
+   oCombo:ItemMarked := bAction
+
+   // Assign code block for selection by left mouse click in list box
+   oCombo:ItemSelected := {|mp1, mp2, obj| obj:XbpSLE:getData(), hb_outDebug( "Selected: "+cDay ) }
+
+   // Copy data from array to combo box, then discard array
+   FOR i := 1 TO 7
+      oCombo:addItem( aDays[ i ] )
+      #ifdef __HARBOUR__
+      /*  the command below is not Xbase++ compatible - will be documented while extended */
+      oCombo:setIcon( i, aPNG[ i ]+".png" )
+      #endif
+   NEXT
+
+   oCombo:XbpSLE:setData()
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Build_PushButton( oDA )
+   LOCAL oXbp
+
+    oXbp := XbpPushButton():new( oDA )
+    oXbp:caption := "A"
+    oXbp:create( , , {180,200}, {90,40} )
+    oXbp:activate:= {|| MsgBox( "Pushbutton A" ) }
+    /* Harbour supports presentation colors */
+    //oXbp:setColorBG( GraMakeRGBColor( {133,240,90} ) )
+    oXbp:setColorBG( GraMakeRGBColor( {0,0,255} ) )
+
+    oXbp := XbpPushButton():new( oDA )
+    oXbp:caption := "new.png"
+    oXbp:create( , , {290,200}, {90,40} )
+    oXbp:activate:= {|| MsgBox( "Pushbutton B" ) }
+    /* Harbour supports presentation colors */
+    oXbp:setColorBG( GraMakeRGBColor( {255,255,0} ) )
+
+    RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Build_SLEs( oWnd )
+   LOCAL oXbp
+   LOCAL cVarA := "Test A", cVarB := "Test B"
+
+   // Create second SLE, specify position using :new()
+   oXbp              := XbpSLE():new( oWnd, , {180,300}, {90,30} )
+   oXbp:tabStop      := .T.
+   oXbp:bufferLength := 15
+   oXbp:dataLink     := {|x| IIf( x==NIL, cVarA, cVarA := x ) }
+   oXbp:create()
+   oXbp:setData()
+   //oXbp:setInputFocus  := { |x,y,oSLE| oSLE:getData(), Qt_QDebug( "Var A =" + cVarA ) }
+   //oXbp:setInputFocus  := { |x,y,oSLE| oSLE:getData() }
+
+   oXbp:setColorBG( GraMakeRGBColor( { 170,170,170 } ) )
+
+   oXbp              := XbpSLE():new()
+   oXbp:autoTab      := .T.
+   oXbp:bufferLength := 20
+   // Data code block containing assignment to LOCAL variable
+   oXbp:dataLink     := {|x| IIf( x==NIL, cVarB, cVarB := x ) }
+   oXbp:create( oWnd, , {290,300}, {90,30} )
+   oXbp:setData()
+   // Assign the value of the edit buffer to a LOCAL variable
+   // when the input focus is lost
+   oXbp:killInputFocus := { |x,y,oSLE| oSLE:getData(), hb_outDebug( "Var B =" + cVarB ) }
+
+   oXbp:setColorBG( GraMakeRGBColor( { 190,190,190 } ) )
 
    RETURN nil
 
@@ -678,39 +766,6 @@ FUNCTION Build_ScrollBar( oWnd )
    oXbpV:range := { 1, 100 }
    oXbpV:create( oWnd, , { nWidth-30,10 }, { nFat,nHeight-60 } )
    oXbpV:scroll := {|| oXbpH:setData( oXbpV:getData() ) }
-
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION Build_SLEs( oWnd )
-   LOCAL oXbp
-   LOCAL cVarA := "Test A", cVarB := "Test B"
-
-   // Create second SLE, specify position using :new()
-   oXbp              := XbpSLE():new( oWnd, , {30,320}, {90,30} )
-   oXbp:tabStop      := .T.
-   oXbp:bufferLength := 15
-   oXbp:dataLink     := {|x| IIf( x==NIL, cVarA, cVarA := x ) }
-   oXbp:create()
-   oXbp:setData()
-   //oXbp:setInputFocus  := { |x,y,oSLE| oSLE:getData(), Qt_QDebug( "Var A =" + cVarA ) }
-   //oXbp:setInputFocus  := { |x,y,oSLE| oSLE:getData() }
-
-   oXbp:setColorBG( GraMakeRGBColor( { 170,170,170 } ) )
-
-   oXbp              := XbpSLE():new()
-   oXbp:autoTab      := .T.
-   oXbp:bufferLength := 20
-   // Data code block containing assignment to LOCAL variable
-   oXbp:dataLink     := {|x| IIf( x==NIL, cVarB, cVarB := x ) }
-   oXbp:create( oWnd, , {140,320}, {90,30} )
-   oXbp:setData()
-   // Assign the value of the edit buffer to a LOCAL variable
-   // when the input focus is lost
-   oXbp:killInputFocus := { |x,y,oSLE| oSLE:getData(), hb_outDebug( "Var B =" + cVarB ) }
-
-   oXbp:setColorBG( GraMakeRGBColor( { 190,190,190 } ) )
 
    RETURN nil
 
@@ -787,48 +842,6 @@ FUNCTION Build_SpinButtons( oWnd )
 
 STATIC FUNCTION RGB( r, g, b )
    RETURN GraMakeRGBColor( { b,g,r } )           /* a bug in Qt */
-
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION Build_ComboBox( oWnd )
-   LOCAL oCombo, i, bAction
-   LOCAL cDay  := "< Monday >"
-   LOCAL aDays := { "Monday" , "Tuesday"  , "Wednesday", "Thursday", ;
-                    "Friday" , "Saturday" , "Sunday" }
-   LOCAL aPNG  := { "copy", "cut", "new", "open", "paste", "save", "new" }
-
-   // Create combo box with drop down list box
-   oCombo      := XbpCombobox():new()
-   oCombo:type := XBPCOMBO_DROPDOWN
-   //oCombo:editable := .f.
-   oCombo:create( oWnd,, {30, 20}, {200, 30} )
-
-   // Link data from entry field to LOCAL variable
-   oCombo:XbpSLE:dataLink := {|x| IIf( x==NIL, cDay, cDay := x ) }
-   oCombo:XbpSLE:setData()
-
-   // Code block for selection:
-   //  - assign to LOCAL variable using :getData()
-   //  - display LOCAL variable using DispoutAt()
-   bAction := {|mp1, mp2, obj| obj:XbpSLE:getData(), hb_outDebug( "Highlighted: "+cDay ) }
-
-   // Assign code block for selection with Up and Down keys
-   oCombo:ItemMarked := bAction
-
-   // Assign code block for selection by left mouse click in list box
-   oCombo:ItemSelected := {|mp1, mp2, obj| obj:XbpSLE:getData(), hb_outDebug( "Selected: "+cDay ) }
-
-   // Copy data from array to combo box, then discard array
-   FOR i := 1 TO 7
-      oCombo:addItem( aDays[ i ] )
-      #ifdef __HARBOUR__
-      /*  the command below is not Xbase++ compatible - will be documented while extended */
-      oCombo:setIcon( i, aPNG[ i ]+".png" )
-      #endif
-   NEXT
-
-   oCombo:XbpSLE:setData()
-   RETURN nil
 
 /*----------------------------------------------------------------------*/
 
@@ -916,9 +929,11 @@ FUNCTION Build_Statics( oWnd )
    LOCAL oGrp,oLbl, oLin, oBox, oBmp
    LOCAL nC1 := 10, nC2 := 45, nC3 := 110, nC4 := 175
    LOCAL nW := 50, nH := 50, nG := 10
-   LOCAL nT := 60
-
-   oGrp := XbpStatic():new( oWnd, , {250,10}, {240,400} )
+   LOCAL nT := 20
+   LOCAL oRect := QRect():configure( oWnd:oWidget:geometry() )
+//xbp_debug( oRect:x(),oRect:y(),oRect:right(),oRect:bottom() )
+//xbp_debug( oWnd:oWidget:width(), oWnd:oWidget:height(), oWnd:oWidget:x(), oWnd:oWidget:y() )
+   oGrp := XbpStatic():new( oWnd, , {250,10}, {240,oWnd:currentSize[ 2 ]-45} )
    oGrp:type := XBPSTATIC_TYPE_GROUPBOX
    oGrp:caption := " Harbour-QT-Statics "
    oGrp:create()
@@ -928,7 +943,7 @@ FUNCTION Build_Statics( oWnd )
    oGrp:setPointer( , 'abs3.png', XBPWINDOW_POINTERTYPE_ICON )
    #endif
 
-   oLbl := XbpStatic():new( oGrp, , {10,20}, {220,30} )
+   oLbl := XbpStatic():new( oWnd, , {10,10}, {240,30} )
    oLbl:type    := XBPSTATIC_TYPE_TEXT
    oLbl:options := XBPSTATIC_TEXT_CENTER + XBPSTATIC_TEXT_VCENTER
    oLbl:caption := "Harbour-QT"
@@ -936,24 +951,32 @@ FUNCTION Build_Statics( oWnd )
    oLbl:setFontCompoundName( "18.Courier normal" )
    oLbl:setColorFG( GraMakeRGBColor( { 255,0,0 } ) )
 
-   // OK
-   oLin := XbpStatic():new( oGrp, , {nC2,nT}, {180,10} )
+   oLbl := XbpStatic():new( oWnd, , {10,oWnd:currentSize[ 2 ]-45-25}, {240,40} )
+   oLbl:type    := XBPSTATIC_TYPE_TEXT
+   oLbl:options := XBPSTATIC_TEXT_CENTER + XBPSTATIC_TEXT_BOTTOM
+   oLbl:caption := "Welcome"
+   oLbl:create()
+   oLbl:setFontCompoundName( "30.Courier normal" )
+   oLbl:setColorFG( GraMakeRGBColor( { 255,255,0 } ) )
+
+
+   // Horizontal Lines
+   oLin := XbpStatic():new( oGrp, , {nC2,nT+(nH+nG)*5-5}, {180,10} )
    oLin:type := XBPSTATIC_TYPE_RAISEDLINE
    oLin:create()
    // OK
-   oLin := XbpStatic():new( oGrp, , {nC2,nT+15}, {180,10} )
+   oLin := XbpStatic():new( oGrp, , {nC2,nT+(nH+nG)*5+5}, {180,10} )
    oLin:type := XBPSTATIC_TYPE_RECESSEDLINE
    oLin:options := XBPSTATIC_FRAMETHICK
    oLin:create()
 
-   nT := 100
-   // OK
-   oLin := XbpStatic():new( oGrp, , {nC1,nT}, {10,170} )
+   // Vertical Lines
+   oLin := XbpStatic():new( oGrp, , {nC1,nT}, {10,170+120} )
    oLin:type := XBPSTATIC_TYPE_RAISEDLINE
    oLin:options := XBPSTATIC_FRAMETHICK
    oLin:create()
    // OK
-   oLin := XbpStatic():new( oGrp, , {nC1+15,nT}, {10,170} )
+   oLin := XbpStatic():new( oGrp, , {nC1+15,nT}, {10,170+120} )
    oLin:type := XBPSTATIC_TYPE_RECESSEDLINE
    oLin:create()
 
@@ -965,6 +988,7 @@ FUNCTION Build_Statics( oWnd )
    oBox := XbpStatic():new( oGrp, , {nC3,nT}, {nW,nH} )
    oBox:type := XBPSTATIC_TYPE_RECESSEDBOX
    oBox:create()
+
    // OK
    oBox := XbpStatic():new( oGrp, , {nC2,nT+nH+nG}, {nW,nH} )
    oBox:type := XBPSTATIC_TYPE_RAISEDRECT
@@ -1450,6 +1474,9 @@ FUNCTION Build_Browse( oWnd )
 
    oXbpBrowse := XbpBrowse():new():create( oWnd, , { 10,10 }, { oWnd:currentSize()[1]-25,oWnd:currentSize()[2]-45 } )
    oXbpBrowse:setFontCompoundName( "10.Courier" )
+   //oXbpBrowse:hScroll       := .f.
+   //oXbpBrowse:vScroll       := .f.
+   oXbpBrowse:cursorMode    := XBPBRW_CURSOR_ROW
 
    oXbpBrowse:skipBlock     := {|n| DbSkipBlock( n ) }
    oXbpBrowse:goTopBlock    := {| | DbGoTop()        }
@@ -1484,29 +1511,6 @@ FUNCTION Build_Browse( oWnd )
    oXbpBrowse:addColumn( oXbpColumn )
 
    aPresParam := {}
-   aadd( aPresParam, { XBP_PP_COL_HA_CAPTION      , "Salary"                   } )
-   aadd( aPresParam, { XBP_PP_COL_HA_ALIGNMENT    , XBPALIGN_RIGHT             } )
-   aadd( aPresParam, { XBP_PP_COL_HA_FGCLR        , GRA_CLR_WHITE              } )
-   aadd( aPresParam, { XBP_PP_COL_HA_BGCLR        , RGB( 140,170,240 )         } )
-   aadd( aPresParam, { XBP_PP_COL_HA_HEIGHT       , 20                         } )
-   aadd( aPresParam, { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK              } )
-   aadd( aPresParam, { XBP_PP_COL_DA_BGCLR        , GRA_CLR_DARKGREEN          } )
-   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              } )
-   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           } )
-   aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
-   aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
-   aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 25                         } )
-   //aadd( aPresParam, { XBP_PP_COL_DA_ROWWIDTH     , 60                         } )
-
-   //
-   oXbpColumn          := XbpColumn():new()
-   oXbpColumn:dataLink := {|| test->Salary }
-   oXbpColumn:create( , , , , aPresParam )
-   oXbpColumn:colorBlock := {|x| IF( x < 40000, { NIL, RGB( 255,0,0 ) }, {NIL,NIL} ) }
-   //
-   oXbpBrowse:addColumn( oXbpColumn )
-
-   aPresParam := {}
    aadd( aPresParam, { XBP_PP_COL_HA_CAPTION      , "First"                    } )
    aadd( aPresParam, { XBP_PP_COL_HA_ALIGNMENT    , XBPALIGN_LEFT              } )
    aadd( aPresParam, { XBP_PP_COL_HA_FGCLR        , GraMakeRGBColor( { 200, 100, 255 } ) } )
@@ -1523,6 +1527,28 @@ FUNCTION Build_Browse( oWnd )
    oXbpColumn          := XbpColumn():new()
    oXbpColumn:dataLink := {|| test->First }
    oXbpColumn:create(  , , , , aPresParam )
+   //
+   oXbpBrowse:addColumn( oXbpColumn )
+
+   aPresParam := {}
+   aadd( aPresParam, { XBP_PP_COL_HA_CAPTION      , "Salary"                   } )
+   aadd( aPresParam, { XBP_PP_COL_HA_ALIGNMENT    , XBPALIGN_RIGHT             } )
+   aadd( aPresParam, { XBP_PP_COL_HA_FGCLR        , GRA_CLR_WHITE              } )
+   aadd( aPresParam, { XBP_PP_COL_HA_BGCLR        , RGB( 140,170,240 )         } )
+   aadd( aPresParam, { XBP_PP_COL_HA_HEIGHT       , 20                         } )
+   aadd( aPresParam, { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_BGCLR        , GRA_CLR_DARKGREEN          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 25                         } )
+   //aadd( aPresParam, { XBP_PP_COL_DA_ROWWIDTH     , 60                         } )
+   //
+   oXbpColumn          := XbpColumn():new()
+   oXbpColumn:dataLink := {|| test->Salary }
+   oXbpColumn:create( , , , , aPresParam )
+   oXbpColumn:colorBlock := {|x| IF( x < 40000, { NIL, RGB( 255,0,0 ) }, {NIL,NIL} ) }
    //
    oXbpBrowse:addColumn( oXbpColumn )
 

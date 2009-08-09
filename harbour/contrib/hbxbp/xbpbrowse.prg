@@ -399,11 +399,14 @@ EXPORTED:
    DATA     sl_xbeBRW_Navigate
    DATA     sl_xbeBRW_Pan
 
-   DATA     cursorMode                            INIT      XBPBRW_CURSOR_CELL
-   DATA     hScroll                               INIT      .T.
+   DATA     lHScroll                              INIT      .T.
+   METHOD   hScroll                               SETGET
+   DATA     lVScroll                              INIT      .T.
+   METHOD   vScroll                               SETGET
+   DATA     nCursorMode                           INIT      XBPBRW_CURSOR_CELL
+   METHOD   cursorMode                            SETGET
    DATA     sizeCols                              INIT      .T.
    DATA     softTrack                             INIT      .T.
-   DATA     vScroll                               INIT      .T.
 
    ENDCLASS
 
@@ -439,9 +442,10 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    /* Some parameters */
    ::oWidget:setTabKeyNavigation( .t. )
-   ::oWidget:setShowGrid( .f. )
+   ::oWidget:setShowGrid( .t. )
    ::oWidget:setGridStyle( Qt_DotLine )   /* to be based on column definition */
    ::oWidget:setSelectionMode( QAbstractItemView_SingleSelection )
+   ::oWidget:setSelectionBehavior( IF( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
    ::oWidget:selectRow( 0 )
 
    /* Connect Keyboard Events */
@@ -451,6 +455,7 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    /* Finetune Horizontal Scrollbar */
    ::oWidget:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOn )
+   //
    ::oHorzScrollBar:configure( ::oWidget:horizontalScrollBar() )
    ::connect( QT_PTROF( ::oHorzScrollBar ), "actionTriggered(int)", {|o,i| ::exeBlock( 103, i, o ) } )
    ::connect( QT_PTROF( ::oHorzScrollBar ), "sliderReleased()"    , {|o,i| ::exeBlock( 104, i, o ) } )
@@ -473,7 +478,8 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    /*  Horizontal Header Fine Tuning */
    ::oHorzHeaderView := QHeaderView()
    ::oHorzHeaderView:configure( ::oWidget:horizontalHeader() )
-   ::oHorzHeaderView:setHighlightSections( .f. )
+   ::oHorzHeaderView:setHighlightSections( .F. )
+   // ::oHorzHeaderView:setStretchLastSection( .T. )
    ::connect( QT_PTROF( ::oHorzHeaderView ), "sectionPressed(int)", {|o,i| ::exeBlock( 111, i, o ) } )
 
    /* .DBF Manipulation Model */
@@ -731,12 +737,13 @@ METHOD XbpBrowse:supplyInfo( nInfo, p2, p3 )
    SWITCH ( nInfo )
 
    CASE HBQT_BRW_COLCOUNT
-      ::setHorzScrollBarRange( .f. )
-      RETURN ::colCount()
+      ::forceStable()
+      ::setHorzScrollBarRange( .t. )
+      RETURN ::colCount
 
    CASE HBQT_BRW_ROWCOUNT
       ::setVertScrollBarRange( .f. )
-      RETURN ::rowCount()
+      RETURN ::rowCount
 
    /* Header Area */
 
@@ -761,7 +768,6 @@ METHOD XbpBrowse:supplyInfo( nInfo, p2, p3 )
       ::forceStable()
       IF ( p3 > 0 .and. p3 <= ::colCount() )
          IF hb_isBlock( ::columns[ p3 ]:colorBlock )
-            //aColor := eval( ::columns[ p3 ]:colorBlock, ::columns[ p3 ]:setData() )
             aColor := eval( ::columns[ p3 ]:colorBlock, ::cellValueA( p2, p3 ) )
             IF hb_isArray( aColor ) .and. hb_isNumeric( aColor[ 1 ] )
                RETURN ConvertAFact( "Color", XBTOQT_FROM_XB, aColor[ 1 ] )
@@ -779,8 +785,6 @@ METHOD XbpBrowse:supplyInfo( nInfo, p2, p3 )
       ::forceStable()
       IF ( p3 > 0 .and. p3 <= ::colCount )
          IF hb_isBlock( ::columns[ p3 ]:colorBlock )
-            //aColor := eval( ::columns[ p3 ]:colorBlock, ::columns[ p3 ]:setData() )
-
             aColor := eval( ::columns[ p3 ]:colorBlock, ::cellValueA( p2, p3 ) )
 
             IF hb_isArray( aColor ) .and. hb_isNumeric( aColor[ 2 ] )
@@ -819,112 +823,6 @@ METHOD XbpBrowse:supplyInfo( nInfo, p2, p3 )
 
 /*----------------------------------------------------------------------*/
 
-METHOD footerRbDown( p1, p2 ) CLASS XbpBrowse
-   IF hb_isBlock( p1 )
-      ::sl_xbeBRW_FooterRbDown := p1
-   ENDIF
-   IF hb_isArray( p1 ) .and. hb_isBlock( ::sl_xbeBRW_FooterRbDown )
-      eval( ::sl_xbeBRW_FooterRbDown, p1, p2, self )
-   ENDIF
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD headerRbDown( p1, p2 ) CLASS XbpBrowse
-   IF hb_isBlock( p1 )
-      ::sl_xbeBRW_HeaderRbDown := p1
-   ENDIF
-   IF hb_isArray( p1 ) .and. hb_isBlock( ::sl_xbeBRW_HeaderRbDown )
-      eval( ::sl_xbeBRW_HeaderRbDown, p1, p2, self )
-   ENDIF
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD itemMarked( p1 ) CLASS XbpBrowse
-   IF hb_isBlock( p1 )
-      ::sl_xbeBRW_ItemMarked := p1
-   ENDIF
-   IF hb_isArray( p1 ) .and. hb_isBlock( ::sl_xbeBRW_ItemMarked )
-      eval( ::sl_xbeBRW_ItemMarked, p1, NIL, self )
-   ENDIF
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD itemRbDown( p1, p2 ) CLASS XbpBrowse
-   IF hb_isBlock( p1 )
-      ::sl_xbeBRW_ItemRbDown := p1
-   ENDIF
-   IF hb_isArray( p1 ) .and. hb_isBlock( ::sl_xbeBRW_ItemRbDown )
-      eval( ::sl_xbeBRW_ItemRbDown, p1, p2, self )
-   ENDIF
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD itemSelected( p1 ) CLASS XbpBrowse
-   IF hb_isBlock( p1 )
-      ::sl_xbeBRW_ItemSelected := p1
-      RETURN Self
-   ENDIF
-   IF hb_isBlock( ::sl_xbeBRW_ItemSelected )
-      eval( ::sl_xbeBRW_ItemSelected, NIL, NIL, self )
-   ENDIF
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD pan( p1 ) CLASS XbpBrowse
-   LOCAL xRet
-   IF hb_isBlock( p1 )
-      ::sl_xbeBRW_Pan := p1
-   ENDIF
-   IF hb_isNumeric( p1 ) .and. hb_isBlock( ::sl_xbeBRW_Pan )
-      xRet := eval( ::sl_xbeBRW_Pan, p1, NIL, self )
-      IF xRet != NIL
-         ::handleEvent( xbeBRW_Pan, p1, NIL )
-      ENDIF
-   ELSEIF hb_isNumeric( p1 )
-      ::handleEvent( xbeBRW_Pan, p1, NIL )
-   ENDIF
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD navigate( p1, p2 ) CLASS XbpBrowse
-   LOCAL xRet
-   IF hb_isBlock( p1 )
-      ::sl_xbeBRW_Navigate := p1
-   ENDIF
-   IF hb_isNumeric( p1 ) .and. hb_isBlock( ::sl_xbeBRW_Navigate )
-      xRet := eval( ::sl_xbeBRW_Navigate, p1, p2, self )
-      IF xRet != NIL
-         ::handleEvent( xbeBRW_Navigate, p1, p2 )
-      ENDIF
-   ELSEIF hb_isNumeric( p1 )
-      ::handleEvent( xbeBRW_Navigate, p1, p2 )
-   ENDIF
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION _SKIP_RESULT( xResult )
-   RETURN iif( ISNUMBER( xResult ), Int( xResult ), 0 )
-
-/*----------------------------------------------------------------------*/
-
-METHOD configure( nMode ) CLASS XbpBrowse
-
-   IF !ISNUMBER( nMode ) .OR. nMode == 0 .OR. nMode > _TBR_CONF_ALL
-      nMode := _TBR_CONF_ALL
-   ENDIF
-   ::nConfigure := HB_BITOR( ::nConfigure, nMode )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD setVertScrollBarRange( lPageStep ) CLASS XbpBrowse
    LOCAL nMin, nMax
 
@@ -949,8 +847,9 @@ METHOD setHorzScrollBarRange( lPageStep ) CLASS XbpBrowse
    DEFAULT lPageStep TO .f.
 
    ::oHorzScrollBar:setMinimum( 0 )
-   ::oHorzScrollBar:setMaximum( ::colCount - 1 )
+   ::oHorzScrollBar:setMaximum( ::colCount )
    ::oHorzScrollBar:setSingleStep( 1 )
+   ::oHorzScrollBar:setPageStep( 1 )
 
    RETURN Self
 
@@ -1002,6 +901,42 @@ METHOD setCurrentIndex() CLASS XbpBrowse
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpBrowse:hScroll( lYes )
+
+   IF hb_isLogical( lYes )
+      ::lHScroll := lYes
+      ::setUnstable()
+      ::configure( 128 )
+   ENDIF
+
+   RETURN ::lHScroll
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpBrowse:vScroll( lYes )
+
+   IF hb_isLogical( lYes )
+      ::lVScroll := lYes
+      ::setUnstable()
+      ::configure( 128 )
+   ENDIF
+
+   RETURN ::lHScroll
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpBrowse:cursorMode( nMode )
+
+   IF hb_isNumeric( nMode )
+      ::nCursorMode := nMode
+      ::setUnstable()
+      ::configure( 128 )
+   ENDIF
+
+   RETURN ::nCursorMode
+
+/*----------------------------------------------------------------------*/
+
 METHOD doConfigure() CLASS XbpBrowse
    LOCAL oCol
    LOCAL aCol, aVal, aValA
@@ -1018,6 +953,10 @@ METHOD doConfigure() CLASS XbpBrowse
    LOCAL nViewH, i, xVal, oFontMetrics
 
    ::nConfigure := 0
+
+   ::oWidget:setHorizontalScrollBarPolicy( IF( ::lHScroll, Qt_ScrollBarAlwaysOn, Qt_ScrollBarAlwaysOff ) )
+   ::oWidget:setVerticalScrollBarPolicy( IF( ::lVScroll, Qt_ScrollBarAlwaysOn, Qt_ScrollBarAlwaysOff ) )
+   ::oWidget:setSelectionBehavior( IF( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
 
    nColCount := Len( ::columns )
 
@@ -1215,7 +1154,7 @@ METHOD doConfigure() CLASS XbpBrowse
       //
       nViewH := ::oWidgetViewport:height()
       ::nRowsInView := Int( nViewH / nMaxCellH )
-      IF ( nViewH % nMaxCellH ) > ( nMaxCellH / 3 )
+      IF ( nViewH % nMaxCellH ) > ( nMaxCellH / 2 )
          ::nRowsInView++
       ENDIF
 
@@ -1230,15 +1169,123 @@ METHOD doConfigure() CLASS XbpBrowse
       FOR i := 1 TO len( ::columns )
          IF ::columns[ i ]:nColWidth != NIL
             ::oWidget:setColumnWidth( i-1, ::columns[ i ]:nColWidth )
+            ::oHorzHeaderView:resizeSection( i-1, ::columns[ i ]:nColWidth )
          ELSE
             xVal := transform( eval( ::columns[ i ]:block ), ::columns[ i ]:picture )
             ::oWidget:setColumnWidth( i-1, oFontMetrics:width( xVal, -1 ) + 8 )
+            ::oHorzHeaderView:resizeSection( i-1, oFontMetrics:width( xVal, -1 ) + 8 )
          ENDIF
       NEXT
    ENDIF
 
    /* Tell Qt to Reload Everything */
    ::oDbfModel:reset()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD footerRbDown( p1, p2 ) CLASS XbpBrowse
+   IF hb_isBlock( p1 )
+      ::sl_xbeBRW_FooterRbDown := p1
+   ENDIF
+   IF hb_isArray( p1 ) .and. hb_isBlock( ::sl_xbeBRW_FooterRbDown )
+      eval( ::sl_xbeBRW_FooterRbDown, p1, p2, self )
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD headerRbDown( p1, p2 ) CLASS XbpBrowse
+   IF hb_isBlock( p1 )
+      ::sl_xbeBRW_HeaderRbDown := p1
+   ENDIF
+   IF hb_isArray( p1 ) .and. hb_isBlock( ::sl_xbeBRW_HeaderRbDown )
+      eval( ::sl_xbeBRW_HeaderRbDown, p1, p2, self )
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD itemMarked( p1 ) CLASS XbpBrowse
+   IF hb_isBlock( p1 )
+      ::sl_xbeBRW_ItemMarked := p1
+   ENDIF
+   IF hb_isArray( p1 ) .and. hb_isBlock( ::sl_xbeBRW_ItemMarked )
+      eval( ::sl_xbeBRW_ItemMarked, p1, NIL, self )
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD itemRbDown( p1, p2 ) CLASS XbpBrowse
+   IF hb_isBlock( p1 )
+      ::sl_xbeBRW_ItemRbDown := p1
+   ENDIF
+   IF hb_isArray( p1 ) .and. hb_isBlock( ::sl_xbeBRW_ItemRbDown )
+      eval( ::sl_xbeBRW_ItemRbDown, p1, p2, self )
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD itemSelected( p1 ) CLASS XbpBrowse
+   IF hb_isBlock( p1 )
+      ::sl_xbeBRW_ItemSelected := p1
+      RETURN Self
+   ENDIF
+   IF hb_isBlock( ::sl_xbeBRW_ItemSelected )
+      eval( ::sl_xbeBRW_ItemSelected, NIL, NIL, self )
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD pan( p1 ) CLASS XbpBrowse
+   LOCAL xRet
+   IF hb_isBlock( p1 )
+      ::sl_xbeBRW_Pan := p1
+   ENDIF
+   IF hb_isNumeric( p1 ) .and. hb_isBlock( ::sl_xbeBRW_Pan )
+      xRet := eval( ::sl_xbeBRW_Pan, p1, NIL, self )
+      IF xRet != NIL
+         ::handleEvent( xbeBRW_Pan, p1, NIL )
+      ENDIF
+   ELSEIF hb_isNumeric( p1 )
+      ::handleEvent( xbeBRW_Pan, p1, NIL )
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD navigate( p1, p2 ) CLASS XbpBrowse
+   LOCAL xRet
+   IF hb_isBlock( p1 )
+      ::sl_xbeBRW_Navigate := p1
+   ENDIF
+   IF hb_isNumeric( p1 ) .and. hb_isBlock( ::sl_xbeBRW_Navigate )
+      xRet := eval( ::sl_xbeBRW_Navigate, p1, p2, self )
+      IF xRet != NIL
+         ::handleEvent( xbeBRW_Navigate, p1, p2 )
+      ENDIF
+   ELSEIF hb_isNumeric( p1 )
+      ::handleEvent( xbeBRW_Navigate, p1, p2 )
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION _SKIP_RESULT( xResult )
+   RETURN iif( ISNUMBER( xResult ), Int( xResult ), 0 )
+
+/*----------------------------------------------------------------------*/
+
+METHOD configure( nMode ) CLASS XbpBrowse
+
+   IF !ISNUMBER( nMode ) .OR. nMode == 0 .OR. nMode > _TBR_CONF_ALL
+      nMode := _TBR_CONF_ALL
+   ENDIF
+   ::nConfigure := HB_BITOR( ::nConfigure, nMode )
 
    RETURN Self
 
