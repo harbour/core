@@ -2,12 +2,8 @@
 # $Id$
 #
 
-BIN_EXT := .exe
-
-ifndef MK
-
 all : first
 
-HB_GT_LIBS += gtdos
+BIN_EXT := .exe
 
-endif
+HB_GT_LIBS += gtdos

@@ -2,22 +2,24 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=hbwin
+LIBNAME := hbwin
+
+include $(TOP)$(ROOT)config/global.cf
 
 ifeq ($(HB_WITH_HBWIN),)
 ifeq ($(HB_ARCHITECTURE),win)
-HB_WITH_HBWIN=yes
+HB_WITH_HBWIN := yes
 endif
 ifeq ($(HB_ARCHITECTURE),wce)
-HB_WITH_HBWIN=yes
+HB_WITH_HBWIN := yes
 endif
 endif
 
 ifeq ($(HB_WITH_HBWIN),yes)
 
-C_SOURCES = \
+C_SOURCES := \
 	olecore.c \
 	oleinit.c \
 	axcore.c \
@@ -37,7 +39,7 @@ C_SOURCES = \
 	wapi_winbase.c \
 	wapi_winuser.c \
 
-PRG_SOURCES = \
+PRG_SOURCES := \
 	legacy.prg \
 	oleauto.prg \
 	axfunc.prg \
@@ -47,12 +49,12 @@ PRG_SOURCES = \
 	win_tprn.prg \
 	win_tprt.prg \
 
-C_HEADERS = \
+C_HEADERS := \
 	hbwapi.h \
 	hbwin.h \
 	hbwinole.h \
 
-PRG_HEADERS = \
+PRG_HEADERS := \
 	hbwin.ch \
 
 include $(TOP)$(ROOT)config/header.cf

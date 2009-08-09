@@ -66,7 +66,6 @@
 #include "telepath.ch"
 
 #include <os2.h>
-#include <stdio.h>
 
 HB_FUNC( __TP_INITPORTSPEED )
 {

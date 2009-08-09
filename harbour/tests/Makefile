@@ -6,7 +6,7 @@ ifeq ($(HB_MAIN),)
 HB_MAIN = std
 endif
 
-ROOT = ../
+ROOT := ../
 
 LIBS=\
 	hbdebug \
@@ -27,7 +27,7 @@ endif
 
 ifeq ($(PM),) # PM not defined = build all files
 
-PRG_SOURCES=\
+PRG_SOURCES := \
 	ac_test.prg \
 	adirtest.prg \
 	ainstest.prg \
@@ -157,13 +157,13 @@ PRG_SOURCES=\
 	newrdd.prg \
 	brwpos.prg \
 
-PRG_HEADERS=\
+PRG_HEADERS := \
 	db_brows.ch \
 	cgi.ch \
 	keywords.ch \
 	test.ch \
 
-BAD_PRG_SOURCES=\
+BAD_PRG_SOURCES := \
 	alias.prg \
 	clasinit.prg \
 	dates4.prg \
@@ -193,11 +193,11 @@ BAD_PRG_SOURCES=\
 	tstprag.prg \
 	vec1.prg \
 
-C_SOURCES=\
+C_SOURCES := \
 
-C_HEADERS=\
+C_HEADERS := \
 
-BAD_C_SOURCES=\
+BAD_C_SOURCES := \
 	extend2.c \
 
 include $(TOP)$(ROOT)config/test.cf
@@ -205,14 +205,15 @@ include $(TOP)$(ROOT)config/test.cf
 else #PM defined = build specified file
 
 ifneq ($(findstring .prg,$(PM)),)
-  PRG_MAIN := $(PM)
+   PRG_MAIN := $(PM)
 else
-  ifneq ($(findstring .PRG,$(PM)),)
-    PRG_MAIN := $(PM)
-  else
-    PRG_MAIN := $(PM).prg
-  endif
+   ifneq ($(findstring .PRG,$(PM)),)
+      PRG_MAIN := $(PM)
+   else
+      PRG_MAIN := $(PM).prg
+   endif
 endif
+
 include $(TOP)$(ROOT)config/bin.cf
 
 endif

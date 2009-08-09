@@ -6,7 +6,7 @@ ROOT := ./
 
 ifeq ($(HB_HOST_BUILD),yes)
 
-DIRS :=\
+DIRS := \
 	source \
 
 else
@@ -17,7 +17,7 @@ else
    HB_UTIL_DIR := utils{source}
 endif
 
-DIRS :=\
+DIRS := \
 	doc \
 	include \
 	source \

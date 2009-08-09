@@ -3,6 +3,11 @@
 #
 
 # ---------------------------------------------------------------
+# Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
+# See COPYING for licensing terms.
+# ---------------------------------------------------------------
+
+# ---------------------------------------------------------------
 # See GNU make docs here:
 #    http://www.gnu.org/software/make/manual/make.html
 #    http://www.jgc.org/feeds/topic-gnumake.xml
@@ -12,6 +17,9 @@
 # GNU Coding standards:
 #    http://www.gnu.org/prep/standards/standards.html
 # ---------------------------------------------------------------
+
+ifeq ($(GLOBAL_CF_),)
+GLOBAL_CF_ := yes
 
 # This isn't strictly necessary, but it does signficantly reduce
 # the number of rules that make has to evaluate otherwise, which may give
@@ -609,13 +617,13 @@ ifeq ($(HB_COMMERCE),yes)
 endif
 
 # Names of portable GT drivers
-HB_GT_LIBS=\
+HB_GT_LIBS := \
 	gtcgi \
 	gtpca \
 	gtstd \
 
 # Names of valid RDD libraries
-HB_DB_DRIVERS=\
+HB_DB_DRIVERS := \
 	rddntx \
 	rddnsx \
 	rddcdx \
@@ -626,7 +634,7 @@ HB_DB_DRIVERS=\
 	hbuddall \
 
 # Names of valid RDD subdirectories
-HB_DB_DIRS=\
+HB_DB_DIRS := \
 	dbfntx \
 	dbfnsx \
 	dbfcdx \
@@ -683,3 +691,5 @@ include $(TOP)$(ROOT)config/globsh.cf
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/$(HB_COMPILER).cf
 
 endif
+
+endif # GLOBAL_CF_

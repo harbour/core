@@ -2,9 +2,9 @@
 # $Id$
 #
 
-ROOT = ../
+ROOT := ../
 
-DIRS=\
+DIRS := \
 	hbrun \
 	hbmk2 \
 	hbi18n \

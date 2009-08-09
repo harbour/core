@@ -2,18 +2,18 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=hbmisc
+LIBNAME := hbmisc
 
-C_SOURCES=\
+C_SOURCES := \
 	dates2.c \
 	hb_f.c \
 	spd.c \
 	strfmt.c \
 	stringsx.c \
 
-PRG_SOURCES=\
+PRG_SOURCES := \
 	fcomma.prg \
 	fileread.prg \
 	nconvert.prg \
