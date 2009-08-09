@@ -76,11 +76,11 @@ HB_FUNC( RAT )
          hb_retnl( bFound ? lPos + 2 : 0 );
       }
       else
-         hb_retni( 0 );
+         hb_retnl( 0 );
    }
    else
       /* This function never seems to raise an error */
-      hb_retni( 0 );
+      hb_retnl( 0 );
 }
 
 HB_FUNC( HB_RAT )
@@ -111,15 +111,10 @@ HB_FUNC( HB_RAT )
 
          if( HB_ISNUM( 4 ) )
          {
-            long lEnd = hb_parnl( 4 );
+            long lEnd = hb_parnl( 4 ) - 1;
 
-            if( lEnd >= 1 )
-            {
-               --lEnd;
-
-               if( lEnd < lPos )
-                  lPos = lEnd;
-            }
+            if( lEnd < lPos )
+               lPos = lEnd;
          }
 
          while( lPos >= lStart && !bFound )
@@ -132,9 +127,9 @@ HB_FUNC( HB_RAT )
          hb_retnl( bFound ? lPos + 2 : 0 );
       }
       else
-         hb_retni( 0 );
+         hb_retnl( 0 );
    }
    else
       /* This function never seems to raise an error */
-      hb_retni( 0 );
+      hb_retnl( 0 );
 }
