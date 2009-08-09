@@ -4,6 +4,8 @@
 
 ROOT := ../../
 
+include $(TOP)$(ROOT)config/global.cf
+
 LIBNAME := hbcurl
 
 HB_INC_CURL_OK :=

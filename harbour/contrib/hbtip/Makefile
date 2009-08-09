@@ -4,6 +4,8 @@
 
 ROOT := ../../
 
+include $(TOP)$(ROOT)config/global.cf
+
 LIBNAME := hbtip
 
 ifneq ($(HB_ARCHITECTURE),dos)

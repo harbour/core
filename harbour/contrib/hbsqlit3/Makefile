@@ -4,6 +4,8 @@
 
 ROOT := ../../
 
+include $(TOP)$(ROOT)config/global.cf
+
 LIBNAME := hbsqlit3
 
 ifeq ($(HB_INC_SQLITE3),)

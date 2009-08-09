@@ -4,6 +4,8 @@
 
 ROOT := ../../
 
+include $(TOP)$(ROOT)config/global.cf
+
 LIBNAME := gtqtc
 
 ifeq ($(HB_WITH_QT),)

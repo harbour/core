@@ -4,6 +4,8 @@
 
 ROOT := ../../../
 
+include $(TOP)$(ROOT)config/global.cf
+
 LIBNAME := gtxwc
 
 C_SOURCES := \

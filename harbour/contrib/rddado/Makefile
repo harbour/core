@@ -4,6 +4,8 @@
 
 ROOT := ../../
 
+include $(TOP)$(ROOT)config/global.cf
+
 LIBNAME := rddado
 
 ifneq ($(HB_ARCHITECTURE),os2)

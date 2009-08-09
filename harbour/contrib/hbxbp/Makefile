@@ -2,9 +2,11 @@
 # $Id$
 #
 
-HB_USER_PRGFLAGS += -I$(TOP)$(ROOT)contrib/hbqt
-
 ROOT := ../../
+
+include $(TOP)$(ROOT)config/global.cf
+
+HB_USER_PRGFLAGS += -I$(TOP)$(ROOT)contrib/hbqt
 
 LIBNAME := hbxbp
 

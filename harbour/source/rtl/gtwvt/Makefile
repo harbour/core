@@ -4,6 +4,8 @@
 
 ROOT := ../../../
 
+include $(TOP)$(ROOT)config/global.cf
+
 LIBNAME := gtwvt
 
 HB_WITH_GTWVT := no

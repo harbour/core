@@ -2,11 +2,13 @@
 # $Id$
 #
 
+ROOT := ../../
+
+include $(TOP)$(ROOT)config/global.cf
+
 HB_BUILD_WARN := no
 HB_BUILD_MODE := c
 HB_USER_CFLAGS += -I$(TOP)$(ROOT)source/hbzlib
-
-ROOT := ../../
 
 LIBNAME := libhpdf
 

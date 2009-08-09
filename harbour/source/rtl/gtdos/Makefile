@@ -4,6 +4,8 @@
 
 ROOT := ../../../
 
+include $(TOP)$(ROOT)config/global.cf
+
 LIBNAME := gtdos
 
 ifeq ($(HB_ARCHITECTURE),dos)

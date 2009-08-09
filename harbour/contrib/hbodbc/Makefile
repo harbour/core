@@ -4,6 +4,8 @@
 
 ROOT := ../../
 
+include $(TOP)$(ROOT)config/global.cf
+
 LIBNAME := hbodbc
 
 ifeq ($(HB_COMPILER),rsxnt)

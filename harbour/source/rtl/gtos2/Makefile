@@ -4,6 +4,8 @@
 
 ROOT := ../../../
 
+include $(TOP)$(ROOT)config/global.cf
+
 LIBNAME := gtos2
 
 ifeq ($(HB_ARCHITECTURE),os2)

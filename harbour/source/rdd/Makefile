@@ -4,6 +4,8 @@
 
 ROOT := ../../
 
+include $(TOP)$(ROOT)config/global.cf
+
 ifneq ($(HB_ARCHITECTURE),wce)
    HB_GCMODE := 3
 endif

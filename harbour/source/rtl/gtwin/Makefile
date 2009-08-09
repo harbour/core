@@ -4,6 +4,8 @@
 
 ROOT := ../../../
 
+include $(TOP)$(ROOT)config/global.cf
+
 LIBNAME := gtwin
 
 ifeq ($(HB_ARCHITECTURE),win)

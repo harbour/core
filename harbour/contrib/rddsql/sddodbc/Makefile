@@ -4,6 +4,8 @@
 
 ROOT := ../../../
 
+include $(TOP)$(ROOT)config/global.cf
+
 LIBNAME := sddodbc
 
 ifeq ($(HB_COMPILER),rsxnt)

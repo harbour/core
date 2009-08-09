@@ -7,6 +7,8 @@ vpath %.prg ../
 
 ROOT := ../../../
 
+include $(TOP)$(ROOT)config/global.cf
+
 ifeq ($(HB_ARCHITECTURE),win)
    ifeq ($(HB_COMPILER),mingw)
       C_MAIN := mainwin.c

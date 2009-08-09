@@ -4,9 +4,9 @@
 
 ROOT := ../../
 
-LIBNAME := hbwin
-
 include $(TOP)$(ROOT)config/global.cf
+
+LIBNAME := hbwin
 
 ifeq ($(HB_WITH_HBWIN),)
 ifeq ($(HB_ARCHITECTURE),win)

@@ -4,6 +4,8 @@
 
 ROOT := ../../
 
+include $(TOP)$(ROOT)config/global.cf
+
 LIBNAME := rddads
 
 ifneq ($(HB_ARCHITECTURE),dos)

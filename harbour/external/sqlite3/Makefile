@@ -2,6 +2,10 @@
 # $Id$
 #
 
+ROOT := ../../
+
+include $(TOP)$(ROOT)config/global.cf
+
 HB_BUILD_WARN := no
 HB_BUILD_MODE := c
 
@@ -14,8 +18,6 @@ ifeq ($(HB_ARCHITECTURE),dos)
 # externals though. [vszakats]
 HB_USER_CFLAGS += -DSQLITE_OS_OTHER
 endif
-
-ROOT := ../../
 
 LIBNAME := sqlite3
 

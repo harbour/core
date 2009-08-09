@@ -4,6 +4,8 @@
 
 ROOT := ../../../
 
+include $(TOP)$(ROOT)config/global.cf
+
 LIBNAME := sddfb
 
 ifneq ($(HB_COMPILER),pocc64)

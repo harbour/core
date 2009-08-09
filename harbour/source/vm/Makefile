@@ -4,6 +4,8 @@
 
 ROOT := ../../
 
+include $(TOP)$(ROOT)config/global.cf
+
 ifeq ($(HB_HVM_ALL),)
 
 HB_HVM_ALL := yes

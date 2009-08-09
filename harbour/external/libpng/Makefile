@@ -2,14 +2,16 @@
 # $Id$
 #
 
+ROOT := ../../
+
+include $(TOP)$(ROOT)config/global.cf
+
 HB_BUILD_WARN := no
 HB_USER_CFLAGS += -I$(TOP)$(ROOT)source/hbzlib
 
 ifeq ($(HB_COMPILER),djgpp)
 HB_USER_CFLAGS += -DPNG_NO_SNPRINTF
 endif
-
-ROOT := ../../
 
 LIBNAME := libpng
 

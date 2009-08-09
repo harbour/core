@@ -2,9 +2,11 @@
 # $Id$
 #
 
-HB_USER_CFLAGS += -I$(TOP)$(ROOT)contrib/hbwin
-
 ROOT := ../../
+
+include $(TOP)$(ROOT)config/global.cf
+
+HB_USER_CFLAGS += -I$(TOP)$(ROOT)contrib/hbwin
 
 LIBNAME := gtwvg
 
