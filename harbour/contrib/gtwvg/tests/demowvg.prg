@@ -802,7 +802,7 @@ FUNCTION WvtMyBrowse_X( oCrt )
    s_pGT_[ 2 ] := hb_gtSelect()
 
    cRDD       := "DBFCDX"
-   cFileDbf   := "test.dbf"
+   cFileDbf   := ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "tests" + hb_osPathSeparator() + "test.dbf"
    cFileIndex := "test.z01"
 
    USE ( cFileDbf ) NEW SHARED VIA ( cRDD )
@@ -858,7 +858,7 @@ FUNCTION WvtMyBrowse_X( oCrt )
    aLastPaint := WvtSetBlocks( aBlocks )
 
    DispBox( 0, 0, maxrow(), maxcol(), "         ", "N/W" )
-   DispOutAt( oBrowse:nTop-2, oBrowse:nleft, padc( CurDrive()+":\"+CurDir()+"\"+"test.dbf", oBrowse:nRight-oBrowse:nLeft+1 ), "W+/W" )
+   DispOutAt( oBrowse:nTop-2, oBrowse:nleft, padc( cFileDbf, oBrowse:nRight-oBrowse:nLeft+1 ), "W+/W" )
    DispOutAt( maxrow(), 0, padc( '<F3 Modal Window> <F4 Maximize> <F11 Transp++> <F12 Transp--> <Thread'+str(ThreadID(),3)+'>',maxcol()+1), 'B/W' )
 
    oTBar:buttonClick := {|oBtn| IF( oBtn:caption=='Show',__keyboard( chr( K_DOWN ) ),nil ) }
@@ -889,7 +889,7 @@ FUNCTION WvtMyBrowse_X( oCrt )
          oBrowse:nRight  := maxcol() - 5
 
          DispBox( 0, 0, maxrow(), maxcol(), "         ", "N/W" )
-         DispOutAt( oBrowse:nTop-2, oBrowse:nleft, padc( CurDrive()+":\"+CurDir()+"\"+"test.dbf", oBrowse:nRight - oBrowse:nLeft + 1 ), "W+/W" )
+         DispOutAt( oBrowse:nTop-2, oBrowse:nleft, padc( cFileDbf, oBrowse:nRight - oBrowse:nLeft + 1 ), "W+/W" )
          DispOutAt( maxrow(), 0, padc( '<F3 Modal Window> <F4 Maximize> <F11 Transp++> <F12 Transp--> <Thread'+str(ThreadID(),3)+'>',maxcol()+1), 'B/W' )
          oBrowse:configure()
 
@@ -1770,7 +1770,7 @@ STATIC FUNCTION MyDialogOne_X( oCrt )
 
    lOpen := .f.
    cUseAlias := "TEST"
-   USE "test" NEW ALIAS ( cUseAlias ) SHARED
+   USE ( ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "tests" + hb_osPathSeparator() + "test.dbf" ) NEW ALIAS ( cUseAlias ) SHARED
    if !NetErr()
       lOpen := .t.
       oWvtBrw := CfgMyBrowse( { 1,7,9,10,8 }, cUseAlias, { 6,67,36,120 }, "test.dbf - 1,7,9,10,8", oDlg, "N/W*,N/GR*",1001 )
@@ -1779,7 +1779,7 @@ STATIC FUNCTION MyDialogOne_X( oCrt )
 
    lOpen1 := .f.
    cUseAlias1 := "TEST1"
-   USE "test" NEW ALIAS ( cUseAlias1 ) SHARED
+   USE ( ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "tests" + hb_osPathSeparator() + "test.dbf" ) NEW ALIAS ( cUseAlias1 ) SHARED
    if !NetErr()
       lOpen1 := .t.
       oWvtBrw1 := CfgMyBrowse( { 1,2,3,4,5,6 }, cUseAlias1, { 43,4,51,120 }, "test.dbf - 1,2,3,4,5,6",oDlg, "N/BG*,N/W*",1002 )

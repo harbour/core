@@ -11,7 +11,8 @@ PROCEDURE Main
    CLS
 
    BEGIN SEQUENCE
-      USE test.dbf
+      USE ( ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "tests" + hb_osPathSeparator() +;
+            "test.dbf" )
    RECOVER
       ? "Error: Database not found test.dbf"
       QUIT
@@ -71,7 +72,7 @@ PROCEDURE Main
 
       FOR j:=1 TO FCount()
          oCell      := oRow + "td"
-         oCell:text := FieldGet(j) 
+         oCell:text := FieldGet(j)
       NEXT
 
       SKIP
@@ -85,7 +86,7 @@ PROCEDURE Main
    DbCloseArea()
 
    IF oDoc:writeFile( "address.html" )
-      ? "File created: address.html" 
+      ? "File created: address.html"
    ELSE
       ? "Error: ", FError()
    ENDIF
