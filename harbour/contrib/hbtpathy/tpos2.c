@@ -67,7 +67,7 @@
 
 #include <stdio.h>
 
-HB_FUNC( P_INITPORTSPEED )
+HB_FUNC( __TP_INITPORTSPEED )
 {
    LINECONTROL lctl;
    DCBINFO dcb;
@@ -139,7 +139,7 @@ HB_FUNC( P_INITPORTSPEED )
       hb_retnl( -1 );
 }
 
-HB_FUNC( P_READPORT )
+HB_FUNC( __TP_READPORT )
 {
    char Buffer[ 512 ];
    ULONG nRead = 0;
@@ -148,7 +148,7 @@ HB_FUNC( P_READPORT )
    hb_retclen( rc == NO_ERROR ? Buffer : NULL, nRead );
 }
 
-HB_FUNC( P_WRITEPORT )
+HB_FUNC( __TP_WRITEPORT )
 {
    ULONG nWritten = 0;
    APIRET rc = DosWrite( ( HFILE ) hb_parnl( 1 ), ( void * ) hb_parcx( 2 ), hb_parclen( 2 ), &nWritten );
@@ -156,7 +156,7 @@ HB_FUNC( P_WRITEPORT )
    hb_retnl( rc == NO_ERROR ? ( long ) nWritten : -1 ); /* Put GetLastError() on error, or better a second byref param? */
 }
 
-HB_FUNC( P_INFREE )
+HB_FUNC( __TP_INFREE )
 {
    APIRET rc;
    RXQUEUE rxqueue;
@@ -170,7 +170,7 @@ HB_FUNC( P_INFREE )
       hb_retnl( -1 ); /* Put GetLastError() here, or better a second byref param? */
 }
 
-HB_FUNC( P_OUTFREE )
+HB_FUNC( __TP_OUTFREE )
 {
    APIRET rc;
    RXQUEUE rxqueue;
@@ -184,7 +184,7 @@ HB_FUNC( P_OUTFREE )
       hb_retnl( -1 ); /* Put GetLastError() here, or better a second byref param? */
 }
 
-HB_FUNC( P_ISDCD )
+HB_FUNC( __TP_ISDCD )
 {
    BYTE instat;
 
@@ -196,7 +196,7 @@ HB_FUNC( P_ISDCD )
       hb_retl( FALSE );
 }
 
-HB_FUNC( P_ISRI )
+HB_FUNC( __TP_ISRI )
 {
    BYTE instat;
 
@@ -207,7 +207,7 @@ HB_FUNC( P_ISRI )
       hb_retl( FALSE );
 }
 
-HB_FUNC( P_ISDSR )
+HB_FUNC( __TP_ISDSR )
 {
    BYTE instat;
 
@@ -218,7 +218,7 @@ HB_FUNC( P_ISDSR )
       hb_retl( FALSE );
 }
 
-HB_FUNC( P_ISCTS )
+HB_FUNC( __TP_ISCTS )
 {
    BYTE instat;
 
@@ -229,7 +229,7 @@ HB_FUNC( P_ISCTS )
       hb_retl( FALSE );
 }
 
-HB_FUNC( P_CTRLCTS )
+HB_FUNC( __TP_CTRLCTS )
 {
    hb_retni( 0 );
 }

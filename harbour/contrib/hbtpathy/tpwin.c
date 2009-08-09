@@ -62,7 +62,7 @@
 
 #include <stdio.h>
 
-HB_FUNC( P_INITPORTSPEED )
+HB_FUNC( __TP_INITPORTSPEED )
 {
    DCB dcb;
    char values[ 20 ];
@@ -98,7 +98,7 @@ HB_FUNC( P_INITPORTSPEED )
    HB_TCHAR_FREE( lpValues );
 }
 
-HB_FUNC( P_READPORT )
+HB_FUNC( __TP_READPORT )
 {
    char buffer[ 512 ];
    DWORD nRead = 0;
@@ -111,7 +111,7 @@ HB_FUNC( P_READPORT )
       hb_retc_null();
 }
 
-HB_FUNC( P_WRITEPORT )
+HB_FUNC( __TP_WRITEPORT )
 {
    DWORD nWritten = 0;
    OVERLAPPED Overlapped;
@@ -123,7 +123,7 @@ HB_FUNC( P_WRITEPORT )
       hb_retnl( -1 );
 }
 
-HB_FUNC( P_INFREE )
+HB_FUNC( __TP_INFREE )
 {
    HANDLE hPort = ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 );
    COMMPROP CommProp;
@@ -139,7 +139,7 @@ HB_FUNC( P_INFREE )
       hb_retnl( -1 );
 }
 
-HB_FUNC( P_OUTFREE )
+HB_FUNC( __TP_OUTFREE )
 {
    HANDLE hPort = ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 );
    COMMPROP CommProp;
@@ -155,12 +155,12 @@ HB_FUNC( P_OUTFREE )
       hb_retnl( -1 );
 }
 
-HB_FUNC( P_CTRLCTS )
+HB_FUNC( __TP_CTRLCTS )
 {
    hb_retni( 0 ); /* dummy */
 }
 
-HB_FUNC( P_ISDCD )
+HB_FUNC( __TP_ISDCD )
 {
    DWORD dwModemStat = 0;
    BOOL bRet = GetCommModemStatus( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), &dwModemStat );
@@ -168,7 +168,7 @@ HB_FUNC( P_ISDCD )
    hb_retl( bRet ? ( dwModemStat & MS_RLSD_ON ) != 0 : FALSE ); /* The RLSD (receive-line-signal-detect) signal is on. Also is DCD. */
 }
 
-HB_FUNC( P_ISRI )
+HB_FUNC( __TP_ISRI )
 {
    DWORD dwModemStat = 0;
    BOOL bRet = GetCommModemStatus( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), &dwModemStat );
@@ -176,7 +176,7 @@ HB_FUNC( P_ISRI )
    hb_retl( bRet ? ( dwModemStat & MS_RING_ON ) != 0 : FALSE );
 }
 
-HB_FUNC( P_ISDSR )
+HB_FUNC( __TP_ISDSR )
 {
    DWORD dwModemStat = 0;
    BOOL bRet = GetCommModemStatus( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), &dwModemStat );
@@ -184,7 +184,7 @@ HB_FUNC( P_ISDSR )
    hb_retl( bRet ? ( dwModemStat & MS_DSR_ON ) != 0 : FALSE );
 }
 
-HB_FUNC( P_ISCTS )
+HB_FUNC( __TP_ISCTS )
 {
    DWORD dwModemStat = 0;
    BOOL bRet = GetCommModemStatus( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), &dwModemStat );

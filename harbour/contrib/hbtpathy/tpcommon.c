@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * Telepathy emulation library
  *
+ * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
  * Copyright 2000, 2001 Dan Levitt <dan@boba-fett.net>
- * Copyright 2004, 2005 - Maurilio Longo <maurilio.longo@libero.it>
+ * Copyright 2004, 2005 Maurilio Longo <maurilio.longo@libero.it>
  * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -95,7 +96,7 @@ static unsigned short crctab[ 256 ] = {
 /* updcrc() macro by Pete Disdale */
 #define updcrc( cp, crc )  ( ( crc << 8 ) ^ ( crctab[ ( ( crc >> 8 ) ^ cp ) & 0xFF ] ) )
 
-HB_FUNC( P_CRC16 )
+HB_FUNC( __TP_CRC16 )
 {
    const char * ptr = hb_parc( 1 );
    int count = hb_parclen( 1 );
@@ -107,4 +108,32 @@ HB_FUNC( P_CRC16 )
 
    /* swap Hi and Lo byte */
    hb_retnl( ( crc >> 8 ) | ( ( crc << 8 ) & 0xFF00 ) );
+}
+
+HB_FUNC_EXTERN( HB_BITAND );
+
+HB_FUNC( BIN_AND )
+{
+   HB_FUNC_EXEC( HB_BITAND );
+}
+
+HB_FUNC_EXTERN( HB_BITOR );
+
+HB_FUNC( BIN_OR )
+{
+   HB_FUNC_EXEC( HB_BITOR );
+}
+
+HB_FUNC_EXTERN( HB_BITXOR );
+
+HB_FUNC( BIN_XOR )
+{
+   HB_FUNC_EXEC( HB_BITXOR );
+}
+
+HB_FUNC_EXTERN( HB_BITNOT );
+
+HB_FUNC( BIN_NOT )
+{
+   HB_FUNC_EXEC( HB_BITNOT );
 }

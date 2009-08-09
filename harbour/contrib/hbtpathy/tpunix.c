@@ -67,7 +67,7 @@
 #include <termios.h> /* POSIX terminal control definitions */
 #include <sys/ioctl.h>
 
-HB_FUNC( P_OPEN )
+HB_FUNC( __TP_OPEN )
 {
    int fd = open( hb_parcx( 1 ), O_RDWR | O_NOCTTY | O_NDELAY ); /* File descriptor for the port */
 
@@ -84,7 +84,7 @@ p_InitPortSpeed( aPorts[ nPort, TPFP_HANDLE ] ,;
                  aPorts[ nPort, TPFP_PARITY ] ,;
                  aPorts[ nPort, TPFP_SBITS  ] )
 */
-HB_FUNC( P_INITPORTSPEED )
+HB_FUNC( __TP_INITPORTSPEED )
 {
    struct termios options;
    int port = hb_parnl( 1 );
@@ -176,7 +176,7 @@ HB_FUNC( P_INITPORTSPEED )
    hb_retnl( rc );
 }
 
-HB_FUNC( P_READPORT )
+HB_FUNC( __TP_READPORT )
 {
    char Buffer[ 512 ];
    int nRead = read( hb_parnl( 1 ), Buffer, sizeof( Buffer ) );
@@ -184,24 +184,24 @@ HB_FUNC( P_READPORT )
    hb_retclen( nRead > 0 ? Buffer : NULL, nRead );
 }
 
-HB_FUNC( P_WRITEPORT )
+HB_FUNC( __TP_WRITEPORT )
 {
    long n = write( hb_parnl( 1 ), hb_parcx( 2 ), hb_parclen( 2 ) );
 
    hb_retnl( n < 0 ? -1 : n );
 }
 
-HB_FUNC( P_DRAIN )
+HB_FUNC( __TP_DRAIN )
 {
    hb_retnl( tcdrain( hb_parnl( 1 ) ) );
 }
 
-HB_FUNC( P_INFREE )
+HB_FUNC( __TP_INFREE )
 {
    hb_retnl( -1 );
 }
 
-HB_FUNC( P_OUTFREE )
+HB_FUNC( __TP_OUTFREE )
 {
 #if 0
    APIRET rc;
@@ -215,7 +215,7 @@ HB_FUNC( P_OUTFREE )
 #endif
 }
 
-HB_FUNC( P_ISDCD )
+HB_FUNC( __TP_ISDCD )
 {
    int status;
 
@@ -225,7 +225,7 @@ HB_FUNC( P_ISDCD )
       hb_retl( FALSE );
 }
 
-HB_FUNC( P_ISRI )
+HB_FUNC( __TP_ISRI )
 {
    int status;
 
@@ -235,7 +235,7 @@ HB_FUNC( P_ISRI )
       hb_retl( FALSE );
 }
 
-HB_FUNC( P_ISDSR )
+HB_FUNC( __TP_ISDSR )
 {
    int status;
 
@@ -245,7 +245,7 @@ HB_FUNC( P_ISDSR )
       hb_retl( FALSE );
 }
 
-HB_FUNC( P_ISCTS )
+HB_FUNC( __TP_ISCTS )
 {
    int status;
 
@@ -255,7 +255,7 @@ HB_FUNC( P_ISCTS )
       hb_retl( FALSE );
 }
 
-HB_FUNC( P_CTRLCTS )
+HB_FUNC( __TP_CTRLCTS )
 {
 #if !defined( CRTSCTS ) && defined( __WATCOMC__ )
 #  define CRTSCTS 020000000000
@@ -283,7 +283,7 @@ HB_FUNC( P_CTRLCTS )
 #if 0
 
 /* Inline function moved here from telepath.prg */
-HB_FUNC( P_CTRLDTR )
+HB_FUNC( __TP_CTRLDTR )
 {
    double nph = hb_parnd( 1 );
    double nnewval, noldval;

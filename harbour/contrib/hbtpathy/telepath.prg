@@ -80,11 +80,11 @@ FUNCTION tp_baud( nPort, nNewBaud )
    ENDIF
 
    IF nNewBaud > 0
-      IF p_InitPortSpeed( t_aPorts[ nPort, TPFP_HANDLE ] ,;
-                          nNewBaud,;
-                          t_aPorts[ nPort, TPFP_DBITS  ] ,;
-                          t_aPorts[ nPort, TPFP_PARITY ] ,;
-                          t_aPorts[ nPort, TPFP_SBITS  ] ) == 0
+      IF __tp_InitPortSpeed( t_aPorts[ nPort, TPFP_HANDLE ] ,;
+                             nNewBaud,;
+                             t_aPorts[ nPort, TPFP_DBITS  ] ,;
+                             t_aPorts[ nPort, TPFP_PARITY ] ,;
+                             t_aPorts[ nPort, TPFP_SBITS  ] ) == 0
 
          t_aPorts[ nPort, TPFP_BAUD ] := nNewBaud
       ELSE
@@ -217,20 +217,20 @@ FUNCTION tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
    t_aPorts[ nPort, TPFP_INBUF_SIZE ] := nInSize
 
    #if defined( __PLATFORM__UNIX )
-   // Maybe we should have a p_Open() on every platform
-      t_aPorts[ nPort, TPFP_HANDLE ] := p_Open( cPortname )
+   // Maybe we should have a __tp_Open() on every platform
+      t_aPorts[ nPort, TPFP_HANDLE ] := __tp_Open( cPortname )
    #else
       t_aPorts[ nPort, TPFP_HANDLE ] := FOpen( cPortname, FO_READWRITE )
    #endif
 
    IF t_aPorts[ nPort, TPFP_HANDLE ] >= 0
 
-      /* low level C functions are prefixed p_ (don't ask me why :)) */
-      IF ( nRes := p_InitPortSpeed( t_aPorts[ nPort, TPFP_HANDLE ] ,;
-                                    t_aPorts[ nPort, TPFP_BAUD   ] ,;
-                                    t_aPorts[ nPort, TPFP_DBITS  ] ,;
-                                    t_aPorts[ nPort, TPFP_PARITY ] ,;
-                                    t_aPorts[ nPort, TPFP_SBITS  ] ) ) == 0
+      /* low level C functions are prefixed __tp_ */
+      IF ( nRes := __tp_InitPortSpeed( t_aPorts[ nPort, TPFP_HANDLE ] ,;
+                                       t_aPorts[ nPort, TPFP_BAUD   ] ,;
+                                       t_aPorts[ nPort, TPFP_DBITS  ] ,;
+                                       t_aPorts[ nPort, TPFP_PARITY ] ,;
+                                       t_aPorts[ nPort, TPFP_SBITS  ] ) ) == 0
 
          t_aPorts[ nPort, TPFP_OC ] := .T.
          RETURN nRes
@@ -308,7 +308,7 @@ FUNCTION tp_send( nPort, cString, nTimeout )
    DO WHILE nTotWritten < Len( cString ) .AND. ;
          ( nTimeout < 0 .OR. Seconds() <= nDone )
 
-      nWritten := p_WritePort( t_aPorts[ nPort, TPFP_HANDLE ], SubStr( cString, nTotWritten + 1 ) )
+      nWritten := __tp_WritePort( t_aPorts[ nPort, TPFP_HANDLE ], SubStr( cString, nTotWritten + 1 ) )
 
       IF nWritten >= 0
 
@@ -452,7 +452,7 @@ FUNCTION tp_infree( nPort )
       RETURN 0
    ENDIF
 
-   RETURN p_infree( t_aPorts[ nPort, TPFP_HANDLE ] )
+   RETURN __tp_infree( t_aPorts[ nPort, TPFP_HANDLE ] )
 
 FUNCTION tp_outfree( nPort )
 
@@ -460,7 +460,7 @@ FUNCTION tp_outfree( nPort )
       RETURN 0
    ENDIF
 
-   RETURN p_outfree( t_aPorts[ nPort, TPFP_HANDLE ] )
+   RETURN __tp_outfree( t_aPorts[ nPort, TPFP_HANDLE ] )
 
 PROCEDURE tp_clearin( nPort )
 
@@ -479,7 +479,7 @@ PROCEDURE tp_clrkbd()
 
 FUNCTION tp_crc16( cString )
 
-   RETURN p_CRC16( cString )
+   RETURN __tp_CRC16( cString )
 
 FUNCTION tp_crc32( cString )
 
@@ -523,7 +523,7 @@ FUNCTION tp_waitfor( ... )
 
       FOR x := 1 TO Len( acList )
          IF lIgnorecase
-            nAt := At( upper( acList[ x ] ), Upper( t_aPorts[ nPort, TPFP_INBUF ] ))
+            nAt := At( Upper( acList[ x ] ), Upper( t_aPorts[ nPort, TPFP_INBUF ] ) )
          ELSE
             nAt := At( acList[ x ] , t_aPorts[ nPort, TPFP_INBUF ] )
          ENDIF
@@ -562,9 +562,9 @@ FUNCTION tp_ctrlcts( nPort, nNewCtrl )
    ENDIF
 
    IF Valtype( nNewCtrl ) == "U"
-      nCurValue := p_ctrlcts( t_aPorts[ nPort, TPFP_HANDLE ] )
+      nCurValue := __tp_ctrlcts( t_aPorts[ nPort, TPFP_HANDLE ] )
    ELSE
-      nCurValue := p_ctrlcts( t_aPorts[ nPort, TPFP_HANDLE ], nNewCtrl )
+      nCurValue := __tp_ctrlcts( t_aPorts[ nPort, TPFP_HANDLE ], nNewCtrl )
    ENDIF
 
    RETURN nCurValue
@@ -572,7 +572,6 @@ FUNCTION tp_ctrlcts( nPort, nNewCtrl )
 
 // Simply calls tp_ctrlcts()
 FUNCTION tp_ctrlrts( nPort, nNewCtrl )
-
    RETURN tp_ctrlcts( nPort, nNewCtrl )
 
 
@@ -591,7 +590,7 @@ FUNCTION tp_ctrldtr( nPort, nParamNewval )
    ENDIF
    nph := t_aPorts[ nPort, TPFP_HANDLE ]
 
-   P_CTRLDTR( nph, @nnewval, @noldval )
+   __tp_ctrldtr( nph, @nnewval, @noldval )
 
    RETURN noldval
 */
@@ -602,7 +601,7 @@ FUNCTION tp_isdcd( nPort )
       RETURN .F.
    ENDIF
 
-   RETURN p_isdcd( t_aPorts[ nPort, TPFP_HANDLE ] )
+   RETURN __tp_isdcd( t_aPorts[ nPort, TPFP_HANDLE ] )
 
 FUNCTION tp_isri( nPort )
 
@@ -610,7 +609,7 @@ FUNCTION tp_isri( nPort )
       RETURN .F.
    ENDIF
 
-   RETURN p_isri( t_aPorts[ nPort, TPFP_HANDLE ] )
+   RETURN __tp_isri( t_aPorts[ nPort, TPFP_HANDLE ] )
 
 FUNCTION tp_isdsr( nPort )
 
@@ -618,7 +617,7 @@ FUNCTION tp_isdsr( nPort )
       RETURN .F.
    ENDIF
 
-   RETURN p_isdsr( t_aPorts[ nPort, TPFP_HANDLE ] )
+   RETURN __tp_isdsr( t_aPorts[ nPort, TPFP_HANDLE ] )
 
 FUNCTION tp_iscts( nPort )
 
@@ -626,7 +625,7 @@ FUNCTION tp_iscts( nPort )
       RETURN .F.
    ENDIF
 
-   RETURN p_iscts( t_aPorts[ nPort, TPFP_HANDLE ] )
+   RETURN __tp_iscts( t_aPorts[ nPort, TPFP_HANDLE ] )
 
 #if defined( __PLATFORM__UNIX )
 // NB: On linux i don't know how to make a drain with a timeout, so here
@@ -642,7 +641,7 @@ FUNCTION tp_flush( nPort, nTimeout )
       RETURN TE_CLOSED
    ENDIF
 
-   nRes := p_Drain( t_aPorts[ nPort, TPFP_HANDLE ] )
+   nRes := __tp_drain( t_aPorts[ nPort, TPFP_HANDLE ] )
 
    // Sleep rest of timeout
    /*
@@ -723,7 +722,7 @@ STATIC FUNCTION FetchChars( nPort )
       RETURN 0
    ENDIF
 
-   cStr := p_ReadPort( t_aPorts[ nPort, TPFP_HANDLE ] )
+   cStr := __tp_ReadPort( t_aPorts[ nPort, TPFP_HANDLE ] )
 
    IF Len( cStr ) > 0
       t_aPorts[ nPort, TPFP_INBUF ] += cStr
