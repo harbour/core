@@ -120,10 +120,8 @@ static int utf8Size( USHORT uc )
 {
    if( uc < 0x0080 )
       return 1;
-
    else if( uc < 0x0800 )
       return 2;
-
    else                         /* if( uc <= 0xffff ) */
       return 3;
 }
@@ -237,7 +235,7 @@ static int utf8tou16( const char * szUTF8, USHORT * uc )
          u32 &= 0x01;
          m = 6;
       }
-      while( n < m && ( ( UCHAR ) szUTF8[n] & 0xc0 ) == 0x80 )
+      while( n < m && ( ( UCHAR ) szUTF8[ n ] & 0xc0 ) == 0x80 )
       {
          u32 = ( u32 << 6 ) | ( ( UCHAR ) szUTF8[n++] & 0x3f );
       }
@@ -262,7 +260,7 @@ static ULONG utf8pos( const char * szUTF8, ULONG ulLen, ULONG ulUTF8Pos )
 
       for( ul = ul2 = 0; ul < ulLen; ++ul )
       {
-         if( utf8tou16nextchar( ( UCHAR ) szUTF8[ul], &n, &uc ) )
+         if( utf8tou16nextchar( ( UCHAR ) szUTF8[ ul ], &n, &uc ) )
          {
             if( n == 0 )
             {
@@ -335,8 +333,8 @@ BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
 
                   for( i = 0; i < 256; i++ )
                   {
-                     cdpage->s_upper[i] = ( char ) HB_TOUPPER( ( UCHAR ) i );
-                     cdpage->s_lower[i] = ( char ) HB_TOLOWER( ( UCHAR ) i );
+                     cdpage->s_upper[ i ] = ( char ) HB_TOUPPER( ( UCHAR ) i );
+                     cdpage->s_lower[ i ] = ( char ) HB_TOLOWER( ( UCHAR ) i );
                   }
                   if( strpbrk( cdpage->CharsUpper, "~." ) != NULL )
                   {
@@ -402,13 +400,13 @@ BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                   {
                      for( i = 91; i <= 96; i++ )
                      {
-                        if( !cdpage->s_chars[i] )
-                           cdpage->s_chars[i] = ( char ) ( cdpage->nChars + ( i - 90 ) );
+                        if( !cdpage->s_chars[ i ] )
+                           cdpage->s_chars[ i ] = ( char ) ( cdpage->nChars + ( i - 90 ) );
                      }
                      for( i = 123; i < 256; i++ )
                      {
-                        if( !cdpage->s_chars[i] )
-                           cdpage->s_chars[i] = ( char ) ( cdpage->nChars + nAddLower + ( i - 122 ) );
+                        if( !cdpage->s_chars[ i ] )
+                           cdpage->s_chars[ i ] = ( char ) ( cdpage->nChars + nAddLower + ( i - 122 ) );
                      }
                   }
                   /*
@@ -422,8 +420,8 @@ BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                      {
                      printf( "\n" );
                      for( i=0; i<nMulti; i++ )
-                     printf( "\n %c%c %c%c %d",multi[i].cFirst[0],
-                     multi[i].cFirst[1],multi[i].cLast[0],multi[i].cLast[1],multi[i].nCode );
+                     printf( "\n %c%c %c%c %d",multi[ i ].cFirst[0],
+                     multi[ i ].cFirst[1],multi[ i ].cLast[0],multi[ i ].cLast[1],multi[ i ].nCode );
                      }
                    */
                   if( nMulti )
@@ -481,7 +479,7 @@ const char * hb_cdpID( void )
 
 const char * hb_cdpSelectID( const char *pszID )
 {
-   const char *pszIDOld;
+   const char * pszIDOld;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_cdpSelectID(%s)", pszID ) );
 
@@ -528,7 +526,7 @@ void hb_cdpTranslate( char *psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
             {
                n--;
                *psz = ( n >= ( cdpOut->nChars + nAddLower ) ) ?
-                  cdpOut->CharsLower[n - cdpOut->nChars - nAddLower] : cdpOut->CharsUpper[n];
+                  cdpOut->CharsLower[ n - cdpOut->nChars - nAddLower ] : cdpOut->CharsUpper[ n ];
             }
          }
       }
@@ -572,7 +570,7 @@ void hb_cdpnTranslate( char *psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, ULONG
             {
                n--;
                *psz = ( n >= ( cdpOut->nChars + nAddLower ) ) ?
-                  cdpOut->CharsLower[n - cdpOut->nChars - nAddLower] : cdpOut->CharsUpper[n];
+                  cdpOut->CharsLower[n - cdpOut->nChars - nAddLower] : cdpOut->CharsUpper[ n ];
             }
          }
       }
@@ -581,18 +579,11 @@ void hb_cdpnTranslate( char *psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, ULONG
 
 USHORT hb_cdpGetU16( PHB_CODEPAGE cdp, BOOL fCtrl, UCHAR ch )
 {
-   USHORT u;
-
    if( ( fCtrl || ch >= 32 ) && cdp && cdp->uniTable &&
        cdp->uniTable->uniCodes && ch < cdp->uniTable->nChars )
-   {
-      u = cdp->uniTable->uniCodes[ch];
-   }
+      return cdp->uniTable->uniCodes[ ch ];
    else
-   {
-      u = ch;
-   }
-   return u;
+      return ch;
 }
 
 UCHAR hb_cdpGetChar( PHB_CODEPAGE cdp, BOOL fCtrl, USHORT uc )
@@ -603,7 +594,7 @@ UCHAR hb_cdpGetChar( PHB_CODEPAGE cdp, BOOL fCtrl, USHORT uc )
 
       for( i = fCtrl ? 0 : 32; i < cdp->uniTable->nChars; i++ )
       {
-         if( cdp->uniTable->uniCodes[i] == uc )
+         if( cdp->uniTable->uniCodes[ i ] == uc )
          {
             uc = ( USHORT ) i;
             break;
@@ -627,7 +618,7 @@ char *hb_cdpUTF8StringSubstr( const char * pSrc, ULONG ulLen,
       n = 0;
       for( ul = 0; ul < ulLen && ulFrom; ++ul )
       {
-         if( utf8tou16nextchar( pSrc[ul], &n, &uc ) )
+         if( utf8tou16nextchar( pSrc[ ul ], &n, &uc ) )
          {
             if( n == 0 )
                --ulFrom;
@@ -641,7 +632,7 @@ char *hb_cdpUTF8StringSubstr( const char * pSrc, ULONG ulLen,
          n = 0;
          do
          {
-            if( utf8tou16nextchar( pSrc[ul], &n, &uc ) )
+            if( utf8tou16nextchar( pSrc[ ul ], &n, &uc ) )
             {
                if( n == 0 )
                   --ulCnt;
@@ -651,7 +642,7 @@ char *hb_cdpUTF8StringSubstr( const char * pSrc, ULONG ulLen,
 
          ulDst = ul - ulFrom;
          pDst = ( char * ) hb_xgrab( ulDst + 1 );
-         memcpy( pDst, &pSrc[ulFrom], ulDst );
+         memcpy( pDst, &pSrc[ ulFrom ], ulDst );
          pDst[ ulDst ] = '\0';
       }
    }
@@ -672,7 +663,7 @@ ULONG hb_cdpUTF8StringPeek( const char * pSrc, ULONG ulLen, ULONG ulPos )
 
       for( ul = 0; ul < ulLen && ulPos; ++ul )
       {
-         if( utf8tou16nextchar( ( UCHAR ) pSrc[ul], &n, &uc ) )
+         if( utf8tou16nextchar( ( UCHAR ) pSrc[ ul ], &n, &uc ) )
          {
             if( n == 0 )
                --ulPos;
@@ -684,7 +675,7 @@ ULONG hb_cdpUTF8StringPeek( const char * pSrc, ULONG ulLen, ULONG ulPos )
          n = 0;
          do
          {
-            if( utf8tou16nextchar( ( UCHAR ) pSrc[ul], &n, &uc ) )
+            if( utf8tou16nextchar( ( UCHAR ) pSrc[ ul ], &n, &uc ) )
             {
                if( n == 0 )
                   return uc;
@@ -705,7 +696,7 @@ ULONG hb_cdpUTF8StringLength( const char * pSrc, ULONG ulLen )
 
    for( ul = ulDst = 0; ul < ulLen; ++ul )
    {
-      if( utf8tou16nextchar( ( UCHAR ) pSrc[ul], &n, &uc ) )
+      if( utf8tou16nextchar( ( UCHAR ) pSrc[ ul ], &n, &uc ) )
       {
          if( n == 0 )
             ++ulDst;
@@ -722,7 +713,7 @@ ULONG hb_cdpStringInUTF8Length( PHB_CODEPAGE cdp, BOOL fCtrl,
 
    for( ul = ulDst = 0; ul < ulLen; ++ul )
    {
-      ulDst += utf8Size( hb_cdpGetU16( cdp, fCtrl, ( UCHAR ) pSrc[ul] ) );
+      ulDst += utf8Size( hb_cdpGetU16( cdp, fCtrl, ( UCHAR ) pSrc[ ul ] ) );
    }
 
    return ulDst;
@@ -750,7 +741,7 @@ ULONG hb_cdpUTF8ToStrn( PHB_CODEPAGE cdp, BOOL fCtrl,
 
                   for( i = fCtrl ? 0 : 32; i < cdp->uniTable->nChars; i++ )
                   {
-                     if( cdp->uniTable->uniCodes[i] == uc )
+                     if( cdp->uniTable->uniCodes[ i ] == uc )
                      {
                         uc = ( USHORT ) i;
                         break;
@@ -781,7 +772,7 @@ BOOL hb_cdpGetFromUTF8( PHB_CODEPAGE cdp, BOOL fCtrl, UCHAR ch,
 
          for( i = fCtrl ? 0 : 32; i < cdp->uniTable->nChars; i++ )
          {
-            if( cdp->uniTable->uniCodes[i] == *uc )
+            if( cdp->uniTable->uniCodes[ i ] == *uc )
             {
                *uc = ( USHORT ) i;
                break;
@@ -808,8 +799,8 @@ ULONG hb_cdpStrnToUTF8( PHB_CODEPAGE cdp, BOOL fCtrl,
           */
          for( i = 0, n = 0; i < ulLen; i++ )
          {
-            u = hb_cdpGetU16( cdp, fCtrl, ( UCHAR ) pSrc[i] );
-            n += u16toutf8( &pDst[n], u );
+            u = hb_cdpGetU16( cdp, fCtrl, ( UCHAR ) pSrc[ i ] );
+            n += u16toutf8( &pDst[ n ], u );
          }
          return n;
       }
@@ -827,12 +818,12 @@ ULONG hb_cdpStrnToUTF8( PHB_CODEPAGE cdp, BOOL fCtrl,
 
    for( i = 0, n = 0; i < ulLen; i++ )
    {
-      u = ( UCHAR ) pSrc[i];
+      u = ( UCHAR ) pSrc[ i ];
       if( uniCodes && u < nChars && ( fCtrl || u >= 32 ) )
-         u = uniCodes[u];
-      n += u16toutf8( &pDst[n], u );
+         u = uniCodes[ u ];
+      n += u16toutf8( &pDst[ n ], u );
    }
-   pDst[n] = '\0';
+   pDst[ n ] = '\0';
 
    return n;
 }
@@ -852,7 +843,7 @@ ULONG hb_cdpStrnToU16( PHB_CODEPAGE cdp, BOOL fCtrl,
           */
          for( i = 0; i < ulLen; i++, pDst += 2 )
          {
-            u = hb_cdpGetU16( cdp, fCtrl, ( UCHAR ) pSrc[i] );
+            u = hb_cdpGetU16( cdp, fCtrl, ( UCHAR ) pSrc[ i ] );
             HB_PUT_BE_UINT16( pDst, u );
          }
          return i << 1;
@@ -871,9 +862,9 @@ ULONG hb_cdpStrnToU16( PHB_CODEPAGE cdp, BOOL fCtrl,
 
    for( i = 0; i < ulLen; i++, pDst += 2 )
    {
-      u = ( UCHAR ) pSrc[i];
+      u = ( UCHAR ) pSrc[ i ];
       if( uniCodes && u < nChars && ( fCtrl || u >= 32 ) )
-         u = uniCodes[u];
+         u = uniCodes[ u ];
       HB_PUT_BE_UINT16( pDst, u );
    }
    return i << 1;
@@ -886,8 +877,8 @@ int hb_cdpchrcmp( char cFirst, char cSecond, PHB_CODEPAGE cdpage )
    if( cFirst == cSecond )
       return 0;
 
-   if( ( n1 = ( int ) cdpage->s_chars[( UCHAR ) cFirst] ) != 0 &&
-       ( n2 = ( int ) cdpage->s_chars[( UCHAR ) cSecond] ) != 0 )
+   if( ( n1 = ( int ) cdpage->s_chars[ ( UCHAR ) cFirst ] ) != 0 &&
+       ( n2 = ( int ) cdpage->s_chars[ ( UCHAR ) cSecond ] ) != 0 )
       return ( n1 < n2 ) ? -1 : 1;
 
    return ( ( UCHAR ) cFirst < ( UCHAR ) cSecond ) ? -1 : 1;
@@ -939,8 +930,8 @@ int hb_cdpcmp( const char *szFirst, ULONG ulLenFirst,
                   {
                      if( nd1 == nd2 )
                      {
-                        nd1 = ( UCHAR ) cdpage->s_chars[( UCHAR ) * szFirst];
-                        nd2 = ( UCHAR ) cdpage->s_chars[( UCHAR ) * szSecond];
+                        nd1 = ( UCHAR ) cdpage->s_chars[ ( UCHAR ) * szFirst ];
+                        nd2 = ( UCHAR ) cdpage->s_chars[ ( UCHAR ) * szSecond ];
                         if( nd1 == nd2 || !nd1 || !nd2 )
                         {
                            nd1 = ( UCHAR ) * szFirst;
@@ -967,8 +958,8 @@ int hb_cdpcmp( const char *szFirst, ULONG ulLenFirst,
                {
                   if( nd1 == nd2 )
                   {
-                     nd1 = ( UCHAR ) cdpage->s_chars[( UCHAR ) * szFirst];
-                     nd2 = ( UCHAR ) cdpage->s_chars[( UCHAR ) * szSecond];
+                     nd1 = ( UCHAR ) cdpage->s_chars[ ( UCHAR ) * szFirst ];
+                     nd2 = ( UCHAR ) cdpage->s_chars[ ( UCHAR ) * szSecond ];
                      if( nd1 == nd2 || !nd1 || !nd2 )
                      {
                         nd1 = ( UCHAR ) * szFirst;
@@ -989,8 +980,8 @@ int hb_cdpcmp( const char *szFirst, ULONG ulLenFirst,
             }
          }
 
-         if( ( n1 = ( UCHAR ) cdpage->s_chars[( UCHAR ) * szFirst] ) == 0 ||
-             ( n2 = ( UCHAR ) cdpage->s_chars[( UCHAR ) * szSecond] ) == 0 )
+         if( ( n1 = ( UCHAR ) cdpage->s_chars[ ( UCHAR ) * szFirst ] ) == 0 ||
+             ( n2 = ( UCHAR ) cdpage->s_chars[ ( UCHAR ) * szSecond ] ) == 0 )
          {
             /* One of characters doesn't belong to the national characters */
             iRet = ( ( UCHAR ) * szFirst < ( UCHAR ) * szSecond ) ? -1 : 1;
@@ -1001,8 +992,8 @@ int hb_cdpcmp( const char *szFirst, ULONG ulLenFirst,
             if( iAcc == 0 && ( fExact || ( ulLenFirst == ulLenSecond && cdpage->lAccInterleave ) ) )
             {
                if( cdpage->lAccInterleave )
-                  iAcc = ( cdpage->s_accent[( UCHAR ) * szFirst] <
-                           cdpage->s_accent[( UCHAR ) * szSecond] ) ? -1 : 1;
+                  iAcc = ( cdpage->s_accent[ ( UCHAR ) * szFirst ] <
+                           cdpage->s_accent[ ( UCHAR ) * szSecond ] ) ? -1 : 1;
                else
                   iAcc = ( ( UCHAR ) * szFirst < ( UCHAR ) * szSecond ) ? -1 : 1;
             }

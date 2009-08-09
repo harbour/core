@@ -78,7 +78,7 @@
    #include "simpleio.ch"
 #endif
 
-#if defined( HAVE_OPENSSL )
+#if defined( HAS_OPENSSL )
    #include "hbssl.ch"
 #endif
 
@@ -123,7 +123,7 @@ CREATE CLASS tIPClient
    VAR exGauge              /* Gauge control; it can be a codeblock or a function pointer. */
 
    VAR lTLS   INIT .F.
-#if defined( HAVE_OPENSSL )
+#if defined( HAS_OPENSSL )
    VAR ssl_ctx
    VAR ssl
    VAR nSSLError INIT 0
@@ -187,7 +187,7 @@ METHOD New( oUrl, bTrace, oCredentials ) CLASS tIPClient
 
    IF ! ::bInitSocks
       hb_inetInit()
-#if defined( HAVE_OPENSSL )
+#if defined( HAS_OPENSSL )
       SSL_init()
       RAND_seed( Time() + hb_username() + DToS( Date() ) + hb_DirBase() + NetName() )
 #endif
@@ -198,7 +198,7 @@ METHOD New( oUrl, bTrace, oCredentials ) CLASS tIPClient
       oUrl := tUrl():New( oUrl )
    ENDIF
 
-#if defined( HAVE_OPENSSL )
+#if defined( HAS_OPENSSL )
    IF oURL:cProto == "ftps" .OR. ;
       oURL:cProto == "https" .OR. ;
       oURL:cProto == "pops" .OR. ;
@@ -279,7 +279,7 @@ METHOD EnableTLS( lEnable ) CLASS tIPClient
       RETURN .T.
    ENDIF
 
-#if defined( HAVE_OPENSSL )
+#if defined( HAS_OPENSSL )
    IF lEnable
       ::ssl_ctx := SSL_CTX_new()
       ::ssl := SSL_new( ::ssl_ctx )
@@ -363,7 +363,7 @@ METHOD Close() CLASS tIPClient
 
       nRet := hb_inetClose( ::SocketCon )
 
-#if defined( HAVE_OPENSSL )
+#if defined( HAS_OPENSSL )
       IF ::lTLS
          SSL_shutdown( ::ssl )
          ::ssl := NIL
@@ -418,7 +418,7 @@ METHOD Read( nLen ) CLASS tIPClient
       cStr0 := Space( nLen )
 
       IF ::lTLS
-#if defined( HAVE_OPENSSL )
+#if defined( HAS_OPENSSL )
          /* Getting around implementing the hack used in non-SSL branch for now.
             IMO the proper fix would have been done to hb_inetRecvAll(). [vszakats] */
          ::nLastRead := ::InetRecvAll( ::SocketCon, @cStr0, nLen )
@@ -582,7 +582,7 @@ METHOD InetSendAll( SocketCon, cData, nLen ) CLASS tIPClient
    ENDIF
 
    IF ::lTLS
-#if defined( HAVE_OPENSSL )
+#if defined( HAS_OPENSSL )
 #if defined( _SSL_DEBUG_TEMP )
       ? "SSL_WRITE()", cData
 #endif
@@ -614,7 +614,7 @@ METHOD InetRecv( SocketCon, cStr1, len ) CLASS tIPClient
    LOCAL nRet
 
    IF ::lTLS
-#if defined( HAVE_OPENSSL )
+#if defined( HAS_OPENSSL )
 #if defined( _SSL_DEBUG_TEMP )
       ? "SSL_READ()"
 #endif
@@ -637,7 +637,7 @@ METHOD InetRecvLine( SocketCon, nRet, size ) CLASS tIPClient
    LOCAL cRet
 
    IF ::lTLS
-#if defined( HAVE_OPENSSL )
+#if defined( HAS_OPENSSL )
       nRet := hb_SSL_read_line( ::ssl, @cRet, size, ::nConnTimeout )
 #if defined( _SSL_DEBUG_TEMP )
       ? "HB_SSL_READ_LINE()", cRet
@@ -664,7 +664,7 @@ METHOD InetRecvAll( SocketCon, cRet, size ) CLASS tIPClient
    LOCAL nRet
 
    IF ::lTLS
-#if defined( HAVE_OPENSSL )
+#if defined( HAS_OPENSSL )
       nRet := hb_SSL_read_all( ::ssl, @cRet, size, ::nConnTimeout )
 #if defined( _SSL_DEBUG_TEMP )
       ? "HB_SSL_READ_ALL()", cRet
@@ -691,7 +691,7 @@ METHOD InetErrorCode( SocketCon ) CLASS tIPClient
    LOCAL nRet
 
    IF ::lTLS
-#if defined( HAVE_OPENSSL )
+#if defined( HAS_OPENSSL )
       nRet := iif( ::nSSLError == 0, 0, SSL_get_error( ::ssl, ::nSSLError ) )
 #else
       nRet := 0
@@ -715,7 +715,7 @@ METHOD InetErrorDesc( SocketCon ) CLASS tIPClient
 
    IF ! Empty( SocketCon )
       IF ::lTLS
-#if defined( HAVE_OPENSSL )
+#if defined( HAS_OPENSSL )
          IF ::nSSLError != 0
             cMsg := ERR_error_string( SSL_get_error( ::ssl, ::nSSLError ) )
          ENDIF
@@ -740,7 +740,7 @@ METHOD InetConnect( cServer, nPort, SocketCon ) CLASS tIPClient
       ::InetRcvBufSize( SocketCon, ::nDefaultRcvBuffSize )
    ENDIF
 
-#if defined( HAVE_OPENSSL )
+#if defined( HAS_OPENSSL )
    IF ::lTLS
       SSL_set_mode( ::ssl, HB_SSL_MODE_AUTO_RETRY )
       SSL_set_fd( ::ssl, hb_inetFD( SocketCon ) )

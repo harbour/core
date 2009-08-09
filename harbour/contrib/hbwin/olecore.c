@@ -459,7 +459,7 @@ static void PutParams( DISPPARAMS * dispparam )
       {
          PHB_ITEM pItem = hb_itemNew( NULL );
 
-         hb_oleVariantToItem( pItem, & dispparam->rgvarg[ uiArg ] );
+         hb_oleVariantToItem( pItem, &dispparam->rgvarg[ uiArg ] );
 
          hb_itemParamStoreForward( ( USHORT ) uiArg + 1, pItem );
       }

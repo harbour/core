@@ -405,10 +405,10 @@ FUNCTION Build_ToolBar( oDA )
 
    /* Harbour does not support resource IDs so giving bitmap files */
    #ifdef __HARBOUR__
-      oTBar:addItem( "Save"       , "new.png" , , , , , "1" )
-      oTBar:addItem( "Open"       , "open.png", , , , , "2" )
-      oTBar:addItem( "Font Dialog", "copy.png", , , , , "3" )
-      oTBar:addItem( "Print Dialog", "print.png", , , , , "4" )
+      oTBar:addItem( "Save"        , hb_DirBase() + "new.png"  , , , , , "1" )
+      oTBar:addItem( "Open"        , hb_DirBase() + "open.png" , , , , , "2" )
+      oTBar:addItem( "Font Dialog" , hb_DirBase() + "copy.png" , , , , , "3" )
+      oTBar:addItem( "Print Dialog", hb_DirBase() + "print.png", , , , , "4" )
 
    #else
       oTBar:addItem( "Save"        )//, 100 )
@@ -454,7 +454,7 @@ FUNCTION Build_StatusBar( oWnd )
    #ifdef __XPP__
    oSBar:setPointer( , XBPSTATIC_SYSICON_SIZEWE, XBPWINDOW_POINTERTYPE_SYSPOINTER )
    #else
-   oSBar:setPointer( , 'vr.png', XBPWINDOW_POINTERTYPE_ICON )
+   oSBar:setPointer( , hb_DirBase() + "vr.png", XBPWINDOW_POINTERTYPE_ICON )
    #endif
 
    RETURN nil
@@ -684,7 +684,7 @@ STATIC FUNCTION Build_ComboBox( oWnd )
       oCombo:addItem( aDays[ i ] )
       #ifdef __HARBOUR__
       /*  the command below is not Xbase++ compatible - will be documented while extended */
-      oCombo:setIcon( i, aPNG[ i ]+".png" )
+      oCombo:setIcon( i, hb_DirBase() + aPNG[ i ] + ".png" )
       #endif
    NEXT
 
@@ -705,7 +705,7 @@ FUNCTION Build_PushButton( oDA )
     oXbp:setColorBG( GraMakeRGBColor( {0,0,255} ) )
 
     oXbp := XbpPushButton():new( oDA )
-    oXbp:caption := "new.png"
+    oXbp:caption := hb_DirBase() + "new.png"
     oXbp:create( , , {290,200}, {90,40} )
     oXbp:activate:= {|| MsgBox( "Pushbutton B" ) }
     /* Harbour supports presentation colors */
@@ -876,7 +876,7 @@ PROCEDURE WorkAreaInfo( oTree, iIndex )
 
    oArea:addItem( oStatus )
    #ifdef __HARBOUR__
-   oArea:setImage( "copy.png" )
+   oArea:setImage( hb_DirBase() + "copy.png" )
    #endif
 
    // Create XbpTreeViewItem implicitly (2nd possibility)
@@ -940,7 +940,7 @@ FUNCTION Build_Statics( oWnd )
    oGrp:setColorFG( GraMakeRGBColor( {   0,255,255 } ) )
    oGrp:setColorBG( GraMakeRGBColor( { 134,128,220 } ) )
    #ifdef __HARBOUR__
-   oGrp:setPointer( , 'abs3.png', XBPWINDOW_POINTERTYPE_ICON )
+   oGrp:setPointer( , hb_DirBase() + "abs3.png", XBPWINDOW_POINTERTYPE_ICON )
    #endif
 
    oLbl := XbpStatic():new( oWnd, , {10,10}, {240,30} )
@@ -1034,7 +1034,7 @@ FUNCTION Build_Statics( oWnd )
    oBox:type := XBPSTATIC_TYPE_BITMAP
    oBox:options := XBPSTATIC_BITMAP_SCALED
    oBmp := XbpBitmap():new():create()
-   oBmp:loadFile( 'paste.png' )
+   oBmp:loadFile( hb_DirBase() + "paste.png" )
    oBox:caption := oBmp
    oBox:create()
    oBox:setColorBG( GraMakeRGBColor( { 0,100,100 } ) )
@@ -1043,10 +1043,10 @@ FUNCTION Build_Statics( oWnd )
    oBox:type := XBPSTATIC_TYPE_BITMAP
    oBox:options := XBPSTATIC_BITMAP_TILED
    #ifdef __HARBOUR__
-   oBox:caption := 'cut.png'
+   oBox:caption := hb_DirBase() + "cut.png"
    #else
    oBmp1 := XbpBitmap():new():create()
-   oBmp1:loadFile( 'paste.png' )
+   oBmp1:loadFile( hb_DirBase() + "paste.png" )
    oBox:caption := oBmp1
    #endif
    oBox:create()
@@ -1056,7 +1056,7 @@ FUNCTION Build_Statics( oWnd )
    #ifdef __HARBOUR__ /* Differes from Xbase++ by Disk File | Resource Name, ID */
    oBox := XbpStatic():new( oGrp, , {nC4,nT+(nH+nG)*3}, {nW,nH} )
    oBox:type := XBPSTATIC_TYPE_ICON
-   oBox:caption := "vr.png"
+   oBox:caption := hb_DirBase() + "vr.png"
    oBox:create()
    oBox:setColorBG( GraMakeRGBColor( { 255,255,187 } ) )
    #endif
@@ -1400,7 +1400,7 @@ STATIC FUNCTION RtfInsertImage( oRtf )
    // Proivide a selection dialog
    cFile := GetAnImageFile( oRtf, 'Select Image to be Inserted' )
    IF empty( cFile )
-      oRtf:insertImage( "abs3.png" )
+      oRtf:insertImage( hb_DirBase() + "abs3.png" )
    ELSE
       oRtf:insertImage( cFile )
    ENDIF
@@ -1469,7 +1469,8 @@ FUNCTION Build_Browse( oWnd )
 
    Set( _SET_DATEFORMAT, "MM/DD/YYYY" )
 
-   USE "test.dbf" NEW SHARED VIA 'DBFCDX'
+   USE ( ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "tests" + hb_osPathSeparator() +;
+         "test.dbf" ) NEW SHARED VIA 'DBFCDX'
    DbGotop()
 
    oXbpBrowse := XbpBrowse():new():create( oWnd, , { 10,10 }, { oWnd:currentSize()[1]-25,oWnd:currentSize()[2]-45 } )
@@ -1665,4 +1666,3 @@ STATIC FUNCTION TBPrev()
    RETURN lMoved
 
 /*----------------------------------------------------------------------*/
-
