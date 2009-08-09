@@ -184,19 +184,9 @@ FUNCTION tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
 
    /* Serial ports name are made up of cPortName + nPort if nPort is not NIL */
    #ifdef __PLATFORM__UNIX
-      DEFAULT cPortName TO "/dev/ttyS"
+      DEFAULT cPortName TO "/dev/ttyS" + iif( ISNUMBER( nPort ), hb_NToS( nPort - 1 ), "" )
    #else
-      DEFAULT cPortName TO "COM"          // Ok for Windows and OS/2
-   #endif
-
-   /* This way compatibility is retained for ports 1-4 on Windows and Linux, but,
-      should necessity arise, it is possible to simply pass a NIL on nPort and
-      a full name on cPortName
-   */
-   #ifdef __PLATFORM__UNIX
-      cPortname := AllTrim( cPortname ) + iif( ISNUMBER( nPort ), hb_NToS( nPort - 1 ), "" )
-   #else
-      cPortname := AllTrim( cPortname ) + iif( ISNUMBER( nPort ), hb_NToS( nPort ), "" )
+      DEFAULT cPortName TO "COM"       + iif( ISNUMBER( nPort ), hb_NToS( nPort ), "" )
    #endif
 
    #ifdef __PLATFORM__UNIX
