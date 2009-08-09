@@ -802,7 +802,7 @@ FUNCTION WvtMyBrowse_X( oCrt )
    s_pGT_[ 2 ] := hb_gtSelect()
 
    cRDD       := "DBFCDX"
-   cFileDbf   := ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "tests" + hb_osPathSeparator() + "test.dbf"
+   cFileDbf   := hb_DirBase() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "tests" + hb_osPathSeparator() + "test.dbf"
    cFileIndex := "test.z01"
 
    USE ( cFileDbf ) NEW SHARED VIA ( cRDD )
@@ -1770,7 +1770,7 @@ STATIC FUNCTION MyDialogOne_X( oCrt )
 
    lOpen := .f.
    cUseAlias := "TEST"
-   USE ( ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "tests" + hb_osPathSeparator() + "test.dbf" ) NEW ALIAS ( cUseAlias ) SHARED
+   USE ( hb_DirBase() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "tests" + hb_osPathSeparator() + "test.dbf" ) NEW ALIAS ( cUseAlias ) SHARED
    if !NetErr()
       lOpen := .t.
       oWvtBrw := CfgMyBrowse( { 1,7,9,10,8 }, cUseAlias, { 6,67,36,120 }, "test.dbf - 1,7,9,10,8", oDlg, "N/W*,N/GR*",1001 )
@@ -1779,7 +1779,7 @@ STATIC FUNCTION MyDialogOne_X( oCrt )
 
    lOpen1 := .f.
    cUseAlias1 := "TEST1"
-   USE ( ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "tests" + hb_osPathSeparator() + "test.dbf" ) NEW ALIAS ( cUseAlias1 ) SHARED
+   USE ( hb_DirBase() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "tests" + hb_osPathSeparator() + "test.dbf" ) NEW ALIAS ( cUseAlias1 ) SHARED
    if !NetErr()
       lOpen1 := .t.
       oWvtBrw1 := CfgMyBrowse( { 1,2,3,4,5,6 }, cUseAlias1, { 43,4,51,120 }, "test.dbf - 1,2,3,4,5,6",oDlg, "N/BG*,N/W*",1002 )

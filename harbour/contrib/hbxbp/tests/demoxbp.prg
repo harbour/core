@@ -1467,9 +1467,9 @@ STATIC FUNCTION RtfApplyFont( oRTF )
 FUNCTION Build_Browse( oWnd )
    LOCAL aPresParam, oXbpBrowse, oXbpColumn
 
-   Set( _SET_DATEFORMAT, "MM/DD/YYYY" )
+   Set( _SET_DATEFORMAT, "yyyy.mm.dd" ) /* ANSI */
 
-   USE ( ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "tests" + hb_osPathSeparator() +;
+   USE ( hb_DirBase() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "tests" + hb_osPathSeparator() +;
          "test.dbf" ) NEW SHARED VIA 'DBFCDX'
    DbGotop()
 
