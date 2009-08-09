@@ -284,7 +284,7 @@ STATIC FUNCTION GuiStdDialog( cTitle )
 
    /* NOTE: method to install the windows icon is bit different than Windows */
    /* So curretly we can only place disk icon file only */
-   oDlg:icon     :=  "test"
+   oDlg:icon     := hb_DirBase() + "test.ico"
 
    /* TODO: still not implemented*/
    oDlg:taskList := .T.
