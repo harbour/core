@@ -94,7 +94,7 @@ CREATE CLASS win_Port
    METHOD PurgeRX()                         INLINE win_PortPurge( ::nPort, .T., .F. )
    METHOD PurgeTX()                         INLINE win_PortPurge( ::nPort, .F., .T. )
    METHOD Close( nDrain )                   INLINE win_PortClose( ::nPort, iif( Empty( nDrain ), 0, nDrain ) )
-   METHOD DebugDCB( nDebug )                INLINE win_PortDebugDCB(::nPort, nDebug )
+   METHOD DebugDCB( nDebug )                INLINE win_PortDebugDCB( ::nPort, nDebug )
    METHOD TimeOuts( nReadInterval, nReadMultiplier, nReadConstant, nWriteMultiplier, nWriteConstant ) ;
                                             INLINE win_PortTimeOuts( nReadInterval, nReadMultiplier, nReadConstant, nWriteMultiplier, nWriteConstant )
    METHOD Error()

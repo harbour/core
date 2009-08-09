@@ -2,7 +2,7 @@
 # $Id$
 #
 
-{!(linux|win|os2)}skip=yes
+{!(linux|darwin|win|os2)}skip=yes
 
 incpaths=.
 

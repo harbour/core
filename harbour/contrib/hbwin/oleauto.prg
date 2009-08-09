@@ -71,9 +71,9 @@ ENDCLASS
 METHOD __enumStart( enum, lDescend ) CLASS WIN_OLEAUTO
    LOCAL hObjEnum
 
-   hObjEnum := __OLEENUMCREATE( ::__hObj, lDescend )
-   IF !EMPTY( hObjEnum )
-      IF !EMPTY( ::__hObjEnum )
+   hObjEnum := __OleEnumCreate( ::__hObj, lDescend )
+   IF ! Empty( hObjEnum )
+      IF ! Empty( ::__hObjEnum )
          /* small hack - clone the object array for nested FOR EACH calls */
          self := __objClone( self )
       ENDIF
@@ -82,43 +82,48 @@ METHOD __enumStart( enum, lDescend ) CLASS WIN_OLEAUTO
       (@enum):__enumBase( self )
       RETURN ::__enumSkip( @enum, lDescend )
    ENDIF
-RETURN .F.
+
+   RETURN .F.
 
 
 METHOD __enumSkip( enum, lDescend ) CLASS WIN_OLEAUTO
    LOCAL lContinue, xValue
 
    HB_SYMBOL_UNUSED( lDescend )
-   xValue := __OLEENUMNEXT( ::__hObjEnum, @lContinue )
+
+   xValue := __OleEnumNext( ::__hObjEnum, @lContinue )
    /* set enumerator value */
    (@enum):__enumValue( xValue )
-RETURN lContinue
+
+   RETURN lContinue
 
 
 METHOD PROCEDURE __enumStop() CLASS WIN_OLEAUTO
    ::__hObjEnum := NIL     /* activate autodestructor */
-RETURN
+   RETURN
 
 
 /* OLE functions */
 
-FUNC WIN_OleGetActiveObject( ... )
+FUNCTION win_OleGetActiveObject( ... )
    LOCAL oOle, hOle
 
    hOle := __OleGetActiveObject( ... )
-   IF ! EMPTY( hOle )
-      oOle := WIN_OleAuto()
+   IF ! Empty( hOle )
+      oOle := win_OleAuto()
       oOle:__hObj := hOle
    ENDIF
-RETURN oOle
+
+   RETURN oOle
 
 
-FUNC WIN_OleCreateObject( ... )
+FUNCTION win_OleCreateObject( ... )
    LOCAL oOle, hOle
 
    hOle := __OleCreateObject( ... )
-   IF ! EMPTY( hOle )
-      oOle := WIN_OleAuto()
+   IF ! Empty( hOle )
+      oOle := win_OleAuto()
       oOle:__hObj := hOle
    ENDIF
-RETURN oOle
+
+   RETURN oOle
