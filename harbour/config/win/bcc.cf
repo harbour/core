@@ -4,13 +4,13 @@
 
 # GNU MAKE file for Borland/CodeGear C/C++ 32-bit (4.x-)
 
-OBJ_EXT = .obj
-LIB_PREF =
-LIB_EXT = .lib
+OBJ_EXT := .obj
+LIB_PREF :=
+LIB_EXT := .lib
 
-CC = bcc32.exe
-CC_IN = -c
-CC_OUT = -o
+CC := bcc32.exe
+CC_IN := -c
+CC_OUT := -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS = -q -tWM
 
@@ -33,9 +33,9 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 CFLAGS += -y -v
 endif
 
-LD = bcc32.exe
+LD := bcc32.exe
 LDFLAGS = -O2
-LD_OUT = -e
+LD_OUT := -e
 
 # Add all libraries specified in LIBS.
 LINKPATHS += -L$(LIB_DIR)
@@ -58,7 +58,7 @@ LINKLIBS = $(foreach lib, $(LIBLIST), $(LIB_DIR)/$(lib))
 LDFLAGS = $(LINKPATHS)
 
 # create library rules
-AR = tlib.exe
+AR := tlib.exe
 ARFLAGS = /P64 $(HB_USER_AFLAGS)
 
 ifneq ($(HB_SHELL),sh)

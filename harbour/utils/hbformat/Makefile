@@ -3,20 +3,20 @@
 #
 
 ifeq ($(HB_MAIN),)
-HB_MAIN = std
+   HB_MAIN := std
 endif
 
-ROOT = ../../
+ROOT := ../../
 
-PRG_SOURCES=\
+PRG_SOURCES := \
 	hbformat.prg \
 
-C_SOURCES=\
+C_SOURCES := \
 	hbformac.c \
 
-PRG_MAIN=hbformat.prg
+PRG_MAIN := hbformat.prg
 
-LIBS=\
+LIBS := \
 	hbdebug \
 	hbvm \
 	hbrtl \

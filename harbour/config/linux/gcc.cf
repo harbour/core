@@ -3,18 +3,18 @@
 #
 
 ifeq ($(HB_BUILD_MODE),cpp)
-   HB_CMP = g++
+   HB_CMP := g++
 else
-   HB_CMP = gcc
+   HB_CMP := gcc
 endif
 
-OBJ_EXT = .o
-LIB_PREF = lib
-LIB_EXT = .a
+OBJ_EXT := .o
+LIB_PREF := lib
+LIB_EXT := .a
 
 CC = $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)
-CC_IN = -c
-CC_OUT = -o
+CC_IN := -c
+CC_OUT := -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
 ifeq ($(HB_COMPILER),icc)
@@ -46,7 +46,7 @@ CFLAGS += -g
 endif
 
 LD = $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)
-LD_OUT = -o
+LD_OUT := -o
 
 # Add all libraries specified in LIBS.
 LINKPATHS += -L$(LIB_DIR)
@@ -69,7 +69,7 @@ LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt))
 
 # screen driver libraries
 ifeq ($(HB_CRS_LIB),)
-HB_CRS_LIB = ncurses
+HB_CRS_LIB := ncurses
 endif
 ifneq ($(findstring gtcrs, $(HB_GT_LIBS)),)
 LINKLIBS += -l$(HB_CRS_LIB)

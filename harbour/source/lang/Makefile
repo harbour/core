@@ -2,9 +2,9 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-C_SOURCES=\
+C_SOURCES := \
 	msgbe866.c \
 	msgbewin.c \
 	msgbg866.c \
@@ -72,6 +72,6 @@ C_SOURCES=\
 	msgzhb5.c \
 	msgzhgb.c \
 
-LIBNAME=hblang
+LIBNAME := hblang
 
 include $(TOP)$(ROOT)config/lib.cf

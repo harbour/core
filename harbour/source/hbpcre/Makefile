@@ -2,9 +2,9 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-C_SOURCES=\
+C_SOURCES := \
 	_hbpcreg.c \
 	chartabs.c \
 	pcrecomp.c \
@@ -26,6 +26,6 @@ C_SOURCES=\
 	pcrevutf.c \
 	pcrexcls.c \
 
-LIBNAME=hbpcre
+LIBNAME := hbpcre
 
 include $(TOP)$(ROOT)config/lib.cf

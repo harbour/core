@@ -4,11 +4,11 @@
 
 vpath %.c ../
 
-ROOT = ../../../
+ROOT := ../../../
 
-C_SOURCES=\
+C_SOURCES := \
 	mainwin.c \
 
-LIBNAME=hbmainwin
+LIBNAME := hbmainwin
 
 include $(TOP)$(ROOT)config/lib.cf

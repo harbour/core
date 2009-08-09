@@ -2,21 +2,21 @@
 # $Id$
 #
 
-ROOT = ../../../
+ROOT := ../../../
 
-LIBNAME=gtwvt
+LIBNAME := gtwvt
 
-HB_WITH_GTWVT=no
+HB_WITH_GTWVT := no
 ifeq ($(HB_ARCHITECTURE),win)
-HB_WITH_GTWVT=yes
+HB_WITH_GTWVT := yes
 endif
 ifeq ($(HB_ARCHITECTURE),wce)
-HB_WITH_GTWVT=yes
+HB_WITH_GTWVT := yes
 endif
 
 ifeq ($(HB_WITH_GTWVT),yes)
 
-C_SOURCES=\
+C_SOURCES := \
 	gtwvt.c \
 
 include $(TOP)$(ROOT)config/lib.cf

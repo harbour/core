@@ -2,11 +2,11 @@
 # $Id$
 #
 
-ROOT = ../../../
+ROOT := ../../../
 
-C_SOURCES=\
+C_SOURCES := \
 	gt_tpl.c \
 
-LIBNAME=gt_tpl
+LIBNAME := gt_tpl
 
 include $(TOP)$(ROOT)config/lib.cf

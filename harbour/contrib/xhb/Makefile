@@ -2,11 +2,11 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=xhb
+LIBNAME := xhb
 
-C_SOURCES=\
+C_SOURCES := \
 	bkgtsks.c \
 	cstructc.c \
 	datesxhb.c \
@@ -37,11 +37,11 @@ C_SOURCES=\
 	xhbwith.c \
 	xstrdel.c \
 
-C_HEADERS=\
+C_HEADERS := \
 	hbcompat.h \
 	xhb.h \
 
-PRG_SOURCES=\
+PRG_SOURCES := \
 	arrayblk.prg \
 	cstruct.prg \
 	dbgfx.prg \
@@ -77,7 +77,7 @@ PRG_SOURCES=\
 	tframe.prg \
 	thtm.prg \
 
-PRG_HEADERS=\
+PRG_HEADERS := \
 	hbcompat.ch \
 	xhb.ch \
 

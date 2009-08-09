@@ -6,27 +6,27 @@ HB_BUILD_WARN := no
 HB_BUILD_MODE := c
 HB_USER_CFLAGS += -I$(TOP)$(ROOT)source/hbzlib
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=libhpdf
+LIBNAME := libhpdf
 
 ifeq ($(HB_WITH_LIBHPDF),)
-HB_WITH_LIBHPDF=yes
+HB_WITH_LIBHPDF := yes
 ifeq ($(HB_COMPILER),watcom)
-HB_WITH_LIBHPDF=no
+HB_WITH_LIBHPDF := no
 endif
 ifeq ($(HB_COMPILER),pocc64)
-HB_WITH_LIBHPDF=no
+HB_WITH_LIBHPDF := no
 endif
 ifeq ($(HB_ARCHITECTURE),wce)
-HB_WITH_LIBHPDF=no
+HB_WITH_LIBHPDF := no
 endif
 ifeq ($(HB_COMPILER),mingwarm)
-HB_WITH_LIBHPDF=yes
+HB_WITH_LIBHPDF := yes
 HB_USER_CFLAGS += -U__COREDLL__
 endif
 ifeq ($(HB_ARCHITECTURE),os2)
-HB_WITH_LIBHPDF=yes
+HB_WITH_LIBHPDF := yes
 endif
 
 endif
@@ -60,7 +60,7 @@ ifneq ($(strip $(HB_INC_LIBPNG_OK)),)
 
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_LIBPNG_OK), -I$(d))
 
-C_SOURCES = \
+C_SOURCES := \
 	_hbhbpdf.c \
 	hpdf_annotation.c \
 	hpdf_array.c \

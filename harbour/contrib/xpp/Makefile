@@ -2,11 +2,11 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=xpp
+LIBNAME := xpp
 
-C_SOURCES=\
+C_SOURCES := \
 	binnumx.c \
 	dbcmdx.c \
 	dbdetacx.c \
@@ -15,7 +15,7 @@ C_SOURCES=\
 	oemansix.c \
 	philesx.c \
 
-PRG_SOURCES=\
+PRG_SOURCES := \
 	browdbx.prg \
 	dbfuncsx.prg \
 	dbjoinx.prg \
@@ -31,7 +31,7 @@ PRG_SOURCES=\
 	tthreadx.prg \
 	typefilx.prg \
 
-PRG_HEADERS=\
+PRG_HEADERS := \
 	xpp.ch \
 
 include $(TOP)$(ROOT)config/header.cf

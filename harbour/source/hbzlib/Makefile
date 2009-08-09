@@ -2,9 +2,9 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-C_SOURCES=\
+C_SOURCES := \
 	adler32.c  \
 	compress.c \
 	crc32.c    \
@@ -18,6 +18,6 @@ C_SOURCES=\
 	uncompr.c  \
 	zutil.c    \
 
-LIBNAME=hbzlib
+LIBNAME := hbzlib
 
 include $(TOP)$(ROOT)config/lib.cf

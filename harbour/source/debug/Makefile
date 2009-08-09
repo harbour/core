@@ -2,12 +2,12 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-C_SOURCES=\
+C_SOURCES := \
 	dbgentry.c \
 
-PRG_SOURCES=\
+PRG_SOURCES := \
 	dbgmenu.prg \
 	dbghelp.prg \
 	dbgtinp.prg \
@@ -22,6 +22,6 @@ PRG_SOURCES=\
 	dbgwa.prg \
 	dbgbrwsr.prg \
 
-LIBNAME=hbdebug
+LIBNAME := hbdebug
 
 include $(TOP)$(ROOT)config/lib.cf

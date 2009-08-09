@@ -2,11 +2,11 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-PRG_SOURCES=\
+PRG_SOURCES := \
 	hbextern.prg \
 
-LIBNAME=hbextern
+LIBNAME := hbextern
 
 include $(TOP)$(ROOT)config/lib.cf

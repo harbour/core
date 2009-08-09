@@ -2,13 +2,11 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-C_SOURCES=\
+C_SOURCES := \
 	nortl.c \
 
-PRG_SOURCES=\
-
-LIBNAME=hbnortl
+LIBNAME := hbnortl
 
 include $(TOP)$(ROOT)config/lib.cf

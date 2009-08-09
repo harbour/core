@@ -2,17 +2,17 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=hbmzip
+LIBNAME := hbmzip
 
-C_SOURCES =\
+C_SOURCES := \
 	ioapi.c \
 	zip.c \
 	unzip.c \
 	hbmzip.c
 
-PRG_HEADERS=\
+PRG_HEADERS := \
 	hbmzip.ch
 
 include $(TOP)$(ROOT)config/header.cf

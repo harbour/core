@@ -2,46 +2,46 @@
 # $Id$
 #
 
-ROOT = ../../../
+ROOT := ../../../
 
-LIBNAME=gtcrs
+LIBNAME := gtcrs
 
-C_SOURCES=\
+C_SOURCES := \
 	gtcrs.c \
 
 ifeq ($(HB_INC_CURSES),)
 ifeq ($(HB_XBUILD),)
 ifeq ($(HB_NCURSES_194),yes)
-HB_INC_CURSES = /usr/include/ncur194
+HB_INC_CURSES := /usr/include/ncur194
 else
-HB_INC_CURSES = /usr/include /usr/local/include /sw/include /opt/local/include
+HB_INC_CURSES := /usr/include /usr/local/include /sw/include /opt/local/include
 endif
 endif
 endif
 
 ifeq ($(HB_WITHOUT_GTCRS),yes)
-HB_INC_CURSES =
+HB_INC_CURSES :=
 endif
 ifeq ($(HB_ARCHITECTURE),os2)
-HB_INC_CURSES =
+HB_INC_CURSES :=
 endif
 
 HB_INC_CURSES_OK += $(foreach d, $(HB_INC_CURSES), $(if $(wildcard $(d)/curses.h),$(d),))
-HB_INC_CURSES_OK:=$(strip $(HB_INC_CURSES_OK))
+HB_INC_CURSES_OK := $(strip $(HB_INC_CURSES_OK))
 
 ifeq ($(HB_INC_CURSES_OK),)
 ifeq ($(HB_COMPILER),djgpp)
 HB_INC_CURSES_OK += $(foreach d, $(subst ;, ,$(PATH)), $(if $(wildcard $(d)/../include/curses.h),$(d)/../include,))
-HB_INC_CURSES_OK:=$(strip $(HB_INC_CURSES_OK))
+HB_INC_CURSES_OK := $(strip $(HB_INC_CURSES_OK))
 endif
 endif
 
 ifneq ($(HB_INC_CURSES_OK),)
 
-HB_INC_GPM_OK =
+HB_INC_GPM_OK :=
 ifneq ($(HB_GPM_MOUSE),no)
 ifneq ($(HB_COMMERCE),yes)
-HB_INC_GPM = /usr/include /usr/local/include
+HB_INC_GPM := /usr/include /usr/local/include
 HB_INC_GPM_OK += $(foreach d, $(HB_INC_GPM), $(if $(wildcard $(d)/gpm.h),$(d),))
 endif
 endif

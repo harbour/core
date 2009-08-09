@@ -8,13 +8,13 @@
 # On Linux you'll need these packages:
 #    gd, gd-devel
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=hbgd
+LIBNAME := hbgd
 
 ifeq ($(HB_INC_GD),)
 ifeq ($(HB_XBUILD),)
-HB_INC_GD = /usr/include /opt/local/include
+HB_INC_GD := /usr/include /opt/local/include
 endif
 endif
 
@@ -24,14 +24,14 @@ ifneq ($(strip $(HB_INC_GD_OK)),)
 
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_GD_OK), -I$(d))
 
-C_SOURCES=\
+C_SOURCES := \
 	gdwrp.c \
 
-PRG_HEADERS=\
+PRG_HEADERS := \
 	gd.ch \
 	gdextern.ch \
 
-PRG_SOURCES=\
+PRG_SOURCES := \
 	gd.prg \
 	gdbar.prg \
 	gdchart.prg \

@@ -2,16 +2,16 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=rddado
+LIBNAME := rddado
 
 ifneq ($(HB_ARCHITECTURE),os2)
 
-PRG_SOURCES= \
+PRG_SOURCES := \
 	adordd.prg \
 
-PRG_HEADERS=\
+PRG_HEADERS := \
 	adordd.ch \
 
 include $(TOP)$(ROOT)config/header.cf

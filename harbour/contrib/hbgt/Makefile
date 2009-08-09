@@ -2,9 +2,9 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-C_SOURCES=\
+C_SOURCES := \
 	asciisgt.c \
 	ascposgt.c \
 	atdiff.c \
@@ -23,8 +23,6 @@ C_SOURCES=\
 	strpbrk.c \
 	strright.c \
 
-PRG_SOURCES=\
-
-LIBNAME=hbgt
+LIBNAME := hbgt
 
 include $(TOP)$(ROOT)config/lib.cf

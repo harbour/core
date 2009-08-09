@@ -4,17 +4,17 @@
 
 # Work in progress. Please test.
 
-OBJ_EXT = .obj
-LIB_PREF =
-LIB_EXT = .lib
+OBJ_EXT := .obj
+LIB_PREF :=
+LIB_EXT := .lib
 
 ifeq ($(HB_VISUALC_VER_PRE80),)
-CC = cl.exe
+CC := cl.exe
 else
-CC = clarm.exe
+CC := clarm.exe
 endif
-CC_IN = -c
-CC_OUT = -Fo
+CC_IN := -c
+CC_OUT := -Fo
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS = -nologo -D"_WIN32_WCE=0x420" -D"UNDER_CE=0x420" -D"WIN32_PLATFORM_PSPC" -D"WINCE" -D"_WINCE" -D"_WINDOWS" -D"ARM" -D"_ARM_" -D"ARMV4" -D"POCKETPC2003_UI_MODEL" -D"_M_ARM" -D"UNICODE" -D"_UNICODE" -D_UWIN
 
@@ -46,7 +46,7 @@ LD = cl.exe
 else
 LD = clarm.exe
 endif
-LD_OUT = -Fe
+LD_OUT := -Fe
 
 LINKPATHS += /link
 LINKPATHS += /subsystem:windowsce,4.20 /machine:arm /armpadcode /stack:65536,4096 /nodefaultlib:"oldnames.lib"
@@ -70,7 +70,7 @@ endif
 
 LDFLAGS = /nologo $(LINKPATHS)
 
-AR = lib.exe
+AR := lib.exe
 ARFLAGS = $(HB_USER_AFLAGS)
 AR_RULE = $(AR) $(ARFLAGS) /nologo /out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
 

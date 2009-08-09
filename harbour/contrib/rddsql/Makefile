@@ -2,15 +2,15 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=rddsql
+LIBNAME := rddsql
 
-C_SOURCES=\
+C_SOURCES := \
 	sqlbase.c \
 	sqlmix.c \
 
-DIRS=\
+DIRS := \
 	sddmy \
 	sddpg \
 	sddfb \

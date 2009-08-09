@@ -2,9 +2,9 @@
 # $Id$
 #
 
-ROOT = ../../../
+ROOT := ../../../
 
-C_SOURCES=\
+C_SOURCES := \
 	sxcompr.c \
 	sxcrypt.c \
 	sxdate.c \
@@ -15,11 +15,11 @@ C_SOURCES=\
 	sxutil.c \
 	sxredir.c \
 
-PRG_SOURCES=\
+PRG_SOURCES := \
 	sxcompat.prg \
 	sxini.prg \
 	sxtrig.prg \
 
-LIBNAME=hbsix
+LIBNAME := hbsix
 
 include $(TOP)$(ROOT)config/lib.cf

@@ -2,19 +2,19 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=hbblat
+LIBNAME := hbblat
 
 ifeq ($(HB_ARCHITECTURE),win)
 
-C_SOURCES = \
+C_SOURCES := \
 	blatwrp.c \
 
-PRG_SOURCES = \
+PRG_SOURCES := \
 	blatcls.prg \
 
-PRG_HEADERS = \
+PRG_HEADERS := \
 	hbblat.ch \
 
 include $(TOP)$(ROOT)config/header.cf

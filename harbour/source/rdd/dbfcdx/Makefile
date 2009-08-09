@@ -2,12 +2,12 @@
 # $Id$
 #
 
-ROOT = ../../../
+ROOT := ../../../
 
-C_SOURCES=\
+C_SOURCES := \
 	dbfcdx1.c \
 	sixcdx1.c \
 
-LIBNAME=rddcdx
+LIBNAME := rddcdx
 
 include $(TOP)$(ROOT)config/lib.cf

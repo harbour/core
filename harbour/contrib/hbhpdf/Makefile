@@ -4,7 +4,7 @@
 
 ROOT = ../../
 
-LIBNAME=hbhpdf
+LIBNAME := hbhpdf
 
 ifeq ($(HB_INC_LIBHARU),)
 ifeq ($(HB_XBUILD),)
@@ -18,13 +18,11 @@ ifneq ($(strip $(HB_INC_LIBHARU_OK)),)
 
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_LIBHARU_OK), -I$(d))
 
-C_SOURCES=\
+C_SOURCES := \
 	harupdf.c \
 
-PRG_HEADERS=\
+PRG_HEADERS := \
 	harupdf.ch \
-
-PRG_SOURCES=\
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

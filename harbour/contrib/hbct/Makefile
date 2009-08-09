@@ -2,11 +2,11 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=hbct
+LIBNAME := hbct
 
-C_SOURCES =\
+C_SOURCES := \
 	addascii.c \
 	asciisum.c \
 	ascpos.c \
@@ -86,7 +86,7 @@ C_SOURCES =\
 	wordrepl.c \
 	wordtoch.c \
 
-C_HEADERS = \
+C_HEADERS := \
 	ct.h \
 	ctmath.h \
 	ctset.h \
@@ -94,7 +94,7 @@ C_HEADERS = \
 	ctstrfil.h \
 	ctwin.h \
 
-PRG_SOURCES=\
+PRG_SOURCES := \
 	ct.prg \
 	ctdummy.prg \
 	ctmisc.prg \
@@ -112,7 +112,7 @@ PRG_SOURCES=\
 	scrmark.prg \
 	showtime.prg \
 
-PRG_HEADERS=\
+PRG_HEADERS := \
 	ct.ch \
 	ctdisk.ch \
 	cterror.ch \

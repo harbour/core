@@ -2,17 +2,17 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=hbcurl
+LIBNAME := hbcurl
 
-HB_INC_CURL_OK =
+HB_INC_CURL_OK :=
 
 ifneq ($(HB_ARCHITECTURE),dos)
 
 ifeq ($(HB_INC_CURL),)
 ifeq ($(HB_XBUILD),)
-HB_INC_CURL = /usr/include
+HB_INC_CURL := /usr/include
 endif
 endif
 
@@ -24,11 +24,11 @@ ifneq ($(strip $(HB_INC_CURL_OK)),)
 
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_CURL_OK), -I$(d))
 
-C_SOURCES=\
+C_SOURCES := \
 	hbcurl.c \
 	hbcurlm.c \
 
-PRG_HEADERS=\
+PRG_HEADERS := \
 	hbcurl.ch \
 
 include $(TOP)$(ROOT)config/header.cf

@@ -2,12 +2,12 @@
 # $Id$
 #
 
-ROOT = ../
+ROOT := ../
 
 ifeq ($(HB_EXTERNALLIBS),)
 
 # standalone contribs
-DIRS=\
+DIRS := \
 	libhpdf \
 	libpng \
 	sqlite3 \
@@ -15,7 +15,7 @@ DIRS=\
 else
 
 ifneq ($(HB_EXTERNALLIBS),no)
-DIRS = $(HB_EXTERNALLIBS)
+DIRS := $(HB_EXTERNALLIBS)
 endif
 
 endif

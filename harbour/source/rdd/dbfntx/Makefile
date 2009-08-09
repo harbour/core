@@ -2,11 +2,11 @@
 # $Id$
 #
 
-ROOT = ../../../
+ROOT := ../../../
 
-C_SOURCES=\
+C_SOURCES := \
 	dbfntx1.c \
 
-LIBNAME=rddntx
+LIBNAME := rddntx
 
 include $(TOP)$(ROOT)config/lib.cf

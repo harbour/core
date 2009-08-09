@@ -3,18 +3,18 @@
 #
 
 ifeq ($(HB_BUILD_MODE),cpp)
-   HB_CMP = icpc
+   HB_CMP := icpc
 else
-   HB_CMP = icc
+   HB_CMP := icc
 endif
 
-OBJ_EXT = .o
-LIB_PREF = lib
-LIB_EXT = .a
+OBJ_EXT := .o
+LIB_PREF := lib
+LIB_EXT := .a
 
 CC = $(HB_CCACHE) $(HB_CMP)
-CC_IN = -c
-CC_OUT = -o
+CC_IN := -c
+CC_OUT := -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
 #CFLAGS = -fast
@@ -40,7 +40,7 @@ CFLAGS += -g
 endif
 
 LD = $(HB_CCACHE) $(HB_CMP)
-LD_OUT = -o
+LD_OUT := -o
 
 # Add all libraries specified in LIBS.
 LINKPATHS += -L$(LIB_DIR)
@@ -63,7 +63,7 @@ LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt))
 
 # screen driver libraries
 ifeq ($(HB_CRS_LIB),)
-HB_CRS_LIB = ncurses
+HB_CRS_LIB := ncurses
 endif
 ifneq ($(findstring gtcrs, $(HB_GT_LIBS)),)
 LINKLIBS += -l$(HB_CRS_LIB)
@@ -96,7 +96,7 @@ LINKLIBS += -lm -lrt -ldl -Wl,--end-group
 
 LDFLAGS = $(LINKPATHS)
 
-AR = xiar
+AR := xiar
 ARFLAGS = $(HB_USER_AFLAGS)
 AR_RULE = $(AR) $(ARFLAGS) crs $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 

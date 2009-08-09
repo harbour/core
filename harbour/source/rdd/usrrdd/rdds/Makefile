@@ -2,9 +2,9 @@
 # $Id$
 #
 
-ROOT = ../../../../
+ROOT := ../../../../
 
-PRG_SOURCES=\
+PRG_SOURCES := \
 	arrayrdd.prg \
 	logrdd.prg \
 	hscdx.prg \
@@ -14,6 +14,6 @@ PRG_SOURCES=\
 	smtcdx.prg \
 	vfpcdx.prg \
 
-LIBNAME=hbuddall
+LIBNAME := hbuddall
 
 include $(TOP)$(ROOT)config/lib.cf

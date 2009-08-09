@@ -2,16 +2,16 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=hbvpdf
+LIBNAME := hbvpdf
 
-PRG_SOURCES=\
+PRG_SOURCES := \
 	hbvpdf.prg \
 	hbvpdft.prg \
 	hbvpsup.prg \
 
-PRG_HEADERS=\
+PRG_HEADERS := \
 	hbvpdf.ch \
 
 include $(TOP)$(ROOT)config/header.cf

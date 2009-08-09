@@ -2,13 +2,13 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-C_SOURCES=\
+C_SOURCES := \
 
-C_MAIN=harbour.c
+C_MAIN := harbour.c
 
-LIBS=\
+LIBS := \
 	hbcplr \
 	hbpp \
 	hbcommon \

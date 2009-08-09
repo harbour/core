@@ -2,13 +2,11 @@
 # $Id$
 #
 
-ROOT = ../../../
+ROOT := ../../../
 
-C_SOURCES=\
+C_SOURCES := \
 	nulsys.c \
 
-PRG_SOURCES=\
-
-LIBNAME=hbnulrdd
+LIBNAME := hbnulrdd
 
 include $(TOP)$(ROOT)config/lib.cf

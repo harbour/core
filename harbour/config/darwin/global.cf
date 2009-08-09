@@ -8,4 +8,4 @@ BIN_EXT :=
 
 HB_GT_LIBS += gttrm
 
-RANLIB = ranlib
+RANLIB := ranlib

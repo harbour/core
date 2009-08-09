@@ -2,11 +2,11 @@
 # $Id$
 #
 
-ROOT = ../../../
+ROOT := ../../../
 
-C_SOURCES=\
+C_SOURCES := \
 	dbfnsx1.c \
 
-LIBNAME=rddnsx
+LIBNAME := rddnsx
 
 include $(TOP)$(ROOT)config/lib.cf

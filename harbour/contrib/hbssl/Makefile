@@ -2,18 +2,18 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=hbssl
+LIBNAME := hbssl
 
-HB_INC_OPENSSL_OK =
+HB_INC_OPENSSL_OK :=
 
 ifneq ($(HB_ARCHITECTURE),dos)
 ifneq ($(HB_COMPILER),watcom)
 
 ifeq ($(HB_INC_OPENSSL),)
 ifeq ($(HB_XBUILD),)
-HB_INC_OPENSSL = /usr/include /usr/local/ssl/include
+HB_INC_OPENSSL := /usr/include /usr/local/ssl/include
 endif
 endif
 
@@ -29,7 +29,7 @@ ifneq ($(strip $(HB_INC_OPENSSL_OK)),)
 
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_OPENSSL_OK), -I$(d))
 
-C_SOURCES=\
+C_SOURCES := \
 	hbssl.c \
 	bio.c \
 	err.c \
@@ -46,7 +46,7 @@ C_SOURCES=\
 	sslsess.c \
 	x509.c \
 
-PRG_HEADERS=\
+PRG_HEADERS := \
 	hbssl.ch \
 
 include $(TOP)$(ROOT)config/header.cf

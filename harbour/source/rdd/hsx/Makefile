@@ -2,12 +2,12 @@
 # $Id$
 #
 
-ROOT = ../../../
+ROOT := ../../../
 
-C_SOURCES=\
+C_SOURCES := \
 	hsx.c \
 	cftsfunc.c \
 
-LIBNAME=hbhsx
+LIBNAME := hbhsx
 
 include $(TOP)$(ROOT)config/lib.cf

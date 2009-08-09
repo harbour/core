@@ -1372,7 +1372,7 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
    aadd( txt_, "#                                                       " )
    aadd( txt_, "                                                        " )
    aadd( txt_, "                                                        " )
-   aadd( txt_, "CPP_SOURCES=\                                           " )
+   aadd( txt_, "CPP_SOURCES := \                                        " )
 
    /* Insert .cpp sources */
    aadd( txt_, chr( 9 ) + 'moc_slots.cpp \' )
@@ -1386,7 +1386,7 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
    aadd( txt_, "                                                        " )
    aadd( txt_, "                                                        " )
    IF !empty( prg_ )
-      aadd( txt_, "PRG_SOURCES=\                                        " )
+      aadd( txt_, "PRG_SOURCES := \                                     " )
       FOR EACH s IN prg_
          aadd( txt_, chr( 9 ) + 'T' + s + '.prg \' )
       NEXT

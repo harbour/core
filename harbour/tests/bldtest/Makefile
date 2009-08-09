@@ -2,12 +2,12 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-C_SOURCES=\
+C_SOURCES := \
 
-C_MAIN=bldtest.c
+C_MAIN := bldtest.c
 
-LIBS=\
+LIBS := \
 
 include $(TOP)$(ROOT)config/bin.cf

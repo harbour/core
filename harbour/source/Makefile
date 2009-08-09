@@ -2,11 +2,11 @@
 # $Id$
 #
 
-ROOT = ../
+ROOT := ../
 
 ifeq ($(HB_HOST_BUILD),yes)
 
-DIRS=\
+DIRS := \
 	common \
 	nortl \
 	pp{common,nortl} \
@@ -16,14 +16,14 @@ DIRS=\
 else
 
 ifeq ($(HB_HOST_BUILD),lib)
-HB_COMP_DIR=
-HB_COMP_REF=
+   HB_COMP_DIR :=
+   HB_COMP_REF :=
 else
-HB_COMP_DIR=main{compiler}
-HB_COMP_REF={main}
+   HB_COMP_DIR := main{compiler}
+   HB_COMP_REF := {main}
 endif
 
-DIRS=\
+DIRS := \
 	common \
 	nortl \
 	pp{common,nortl} \

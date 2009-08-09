@@ -2,13 +2,13 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
 ifneq ($(HB_ARCHITECTURE),wce)
-	HB_GCMODE=3
+	HB_GCMODE := 3
 endif
 
-C_SOURCES=\
+C_SOURCES := \
 	abs.c \
 	accept.c \
 	ampm.c \
@@ -188,8 +188,7 @@ C_SOURCES=\
 	xhelp.c \
 	xsavescr.c \
 
-
-PRG_SOURCES=\
+PRG_SOURCES := \
 	achoice.prg \
 	adir.prg \
 	alert.prg \
@@ -262,9 +261,9 @@ PRG_SOURCES=\
 	valtoexp.prg \
 	wait.prg \
 
-LIBNAME=hbrtl
+LIBNAME := hbrtl
 
-DIRS=\
+DIRS := \
 	gtcgi \
 	gtcrs \
 	gtdos \

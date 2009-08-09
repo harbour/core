@@ -4,11 +4,11 @@
 
 vpath %.c ../
 
-ROOT = ../../../
+ROOT := ../../../
 
-C_SOURCES=\
+C_SOURCES := \
 	mainstd.c \
 
-LIBNAME=hbmainstd
+LIBNAME := hbmainstd
 
 include $(TOP)$(ROOT)config/lib.cf

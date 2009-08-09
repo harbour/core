@@ -3,14 +3,14 @@
 #
 
 ifeq ($(HB_COMPILER),xcc)
-HB_USER_CFLAGS:=$(subst -Ox,,$(subst -Ot,,$(HB_USER_CFLAGS)))
+   HB_USER_CFLAGS := $(subst -Ox,,$(subst -Ot,,$(HB_USER_CFLAGS)))
 endif
 
-ROOT = ../../../
+ROOT := ../../../
 
-C_SOURCES=\
+C_SOURCES := \
 	dbffpt1.c \
 
-LIBNAME=rddfpt
+LIBNAME := rddfpt
 
 include $(TOP)$(ROOT)config/lib.cf

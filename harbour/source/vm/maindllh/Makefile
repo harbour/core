@@ -4,12 +4,12 @@
 
 vpath %.c ../
 
-ROOT = ../../../
+ROOT := ../../../
 
-C_SOURCES=\
+C_SOURCES := \
 	maindllh.c \
 
-LIBNAME=hbmaindllh
+LIBNAME := hbmaindllh
 
 # always export symbols
 HB_USER_CFLAGS += -DHB_DYNLIB

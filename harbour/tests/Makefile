@@ -3,12 +3,12 @@
 #
 
 ifeq ($(HB_MAIN),)
-HB_MAIN = std
+   HB_MAIN := std
 endif
 
 ROOT := ../
 
-LIBS=\
+LIBS := \
 	hbdebug \
 	hbvm \
 	hbrtl \
@@ -22,7 +22,7 @@ LIBS=\
 	hbpcre \
 
 ifeq ($(PM),)
-  PM := $(pm)
+   PM := $(pm)
 endif
 
 ifeq ($(PM),) # PM not defined = build all files

@@ -4,13 +4,13 @@
 
 # GNU MAKE file for xHarbour.com POCC compiler
 
-OBJ_EXT = .obj
-LIB_PREF =
-LIB_EXT = .lib
+OBJ_EXT := .obj
+LIB_PREF :=
+LIB_EXT := .lib
 
-CC = xcc.exe
-CC_IN = -c
-CC_OUT = -Fo
+CC := xcc.exe
+CC_IN := -c
+CC_OUT := -Fo
 CFLAGS = -I.
 ifneq ($(HB_INC_COMPILE),)
 CFLAGS += -I$(HB_INC_COMPILE)
@@ -28,8 +28,8 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 CFLAGS += -Zi
 endif
 
-LD = xlink.exe
-LD_OUT = -OUT:
+LD := xlink.exe
+LD_OUT := -OUT:
 
 # Add all libraries specified in LIBS.
 LINKPATHS += -LIBPATH:$(LIB_DIR)
@@ -49,7 +49,7 @@ LDFLAGS = $(LINKPATHS) kernel32.lib user32.lib gdi32.lib ws2_32.lib advapi32.lib
 LDFLAGS += winspool.lib ole32.lib oleaut32.lib uuid.lib \
            comctl32.lib mapi32.lib mpr.lib
 
-AR = xlib.exe
+AR := xlib.exe
 ARFLAGS = $(HB_USER_AFLAGS)
 AR_RULE = $(AR) $(ARFLAGS) /out:$(LIB_DIR)/$@ $(^F)
 

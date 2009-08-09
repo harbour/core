@@ -2,13 +2,13 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=hbsqlit3
+LIBNAME := hbsqlit3
 
 ifeq ($(HB_INC_SQLITE3),)
 ifeq ($(HB_XBUILD),)
-HB_INC_SQLITE3 = /usr/include
+HB_INC_SQLITE3 := /usr/include
 ifeq ($(HB_ARCHITECTURE),win)
 HB_INC_SQLITE3 += $(TOP)$(ROOT)external/sqlite3
 endif
@@ -30,10 +30,10 @@ ifneq ($(strip $(HB_INC_SQLITE3_OK)),)
 
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_SQLITE3_OK), -I$(d))
 
-C_SOURCES=\
+C_SOURCES := \
 	hbsqlit3.c \
 
-PRG_HEADERS=\
+PRG_HEADERS := \
 	hbsqlit3.ch \
 
 include $(TOP)$(ROOT)config/header.cf

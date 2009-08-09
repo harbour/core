@@ -2,21 +2,21 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=hbtpathy
+LIBNAME := hbtpathy
 
-C_SOURCES=\
+C_SOURCES := \
 	tpcommon.c \
 	tpunix.c \
 	tpwin.c \
 	tpos2.c \
 	tpdos.c \
 
-PRG_SOURCES=\
+PRG_SOURCES := \
 	telepath.prg \
 
-PRG_HEADERS=\
+PRG_HEADERS := \
 	telepath.ch \
 
 include $(TOP)$(ROOT)config/header.cf

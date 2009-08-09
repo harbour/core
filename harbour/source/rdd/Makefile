@@ -2,13 +2,13 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
 ifneq ($(HB_ARCHITECTURE),wce)
-	HB_GCMODE=3
+   HB_GCMODE := 3
 endif
 
-C_SOURCES=\
+C_SOURCES := \
 	dbcmd.c \
 	dbcmd53.c \
 	dbcmdhb.c \
@@ -29,7 +29,7 @@ C_SOURCES=\
 	rddinfo.c \
 	hbdbsort.c \
 
-PRG_SOURCES=\
+PRG_SOURCES := \
 	dbdelim.prg \
 	dbfuncs.prg \
 	dbfuncsx.prg \
@@ -51,10 +51,10 @@ PRG_SOURCES=\
 	rddordu.prg \
 	rddsys.prg \
 
-LIBNAME=hbrdd
+LIBNAME := hbrdd
 
 # The list of all valid DB drivers is defined in config/global.cf.
-DIRS=nulsys $(HB_DB_DIRS)
+DIRS = nulsys $(HB_DB_DIRS)
 
 include $(TOP)$(ROOT)config/lib.cf
 include $(TOP)$(ROOT)config/dir.cf

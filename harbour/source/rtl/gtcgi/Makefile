@@ -2,11 +2,11 @@
 # $Id$
 #
 
-ROOT = ../../../
+ROOT := ../../../
 
-C_SOURCES=\
+C_SOURCES := \
 	gtcgi.c \
 
-LIBNAME=gtcgi
+LIBNAME := gtcgi
 
 include $(TOP)$(ROOT)config/lib.cf

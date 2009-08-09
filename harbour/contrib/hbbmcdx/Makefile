@@ -2,12 +2,12 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-C_SOURCES=\
+C_SOURCES := \
 	bmdbfcdx.c \
 	bmsixcdx.c
 
-LIBNAME=hbbmcdx
+LIBNAME := hbbmcdx
 
 include $(TOP)$(ROOT)config/lib.cf

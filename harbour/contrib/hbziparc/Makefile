@@ -2,11 +2,11 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=hbziparc
+LIBNAME := hbziparc
 
-PRG_SOURCES= \
+PRG_SOURCES := \
 	hbziparc.prg \
 
 include $(TOP)$(ROOT)config/lib.cf

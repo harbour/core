@@ -2,11 +2,11 @@
 # $Id$
 #
 
-ROOT = ../../../
+ROOT := ../../../
 
-C_SOURCES=\
+C_SOURCES := \
 	gtpca.c \
 
-LIBNAME=gtpca
+LIBNAME := gtpca
 
 include $(TOP)$(ROOT)config/lib.cf

@@ -3,17 +3,17 @@
 #
 
 ifeq ($(HB_MAIN),)
-HB_MAIN = std
+   HB_MAIN := std
 endif
 
-ROOT = ../../
+ROOT := ../../
 
-PRG_SOURCES=\
+PRG_SOURCES := \
 	hbi18n.prg \
 
-PRG_MAIN=hbi18n.prg
+PRG_MAIN := hbi18n.prg
 
-LIBS=\
+LIBS := \
 	hbdebug \
 	hbvm \
 	hbrtl \

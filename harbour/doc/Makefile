@@ -2,9 +2,9 @@
 # $Id$
 #
 
-ROOT = ../
+ROOT := ../
 
-DOC_FILES=\
+DOC_FILES := \
 	c_std.txt \
 	class_tp.txt \
 	cmdline.txt \
@@ -33,7 +33,7 @@ DOC_FILES=\
 	whatsnew.txt \
 	windll.txt \
 
-DIRS=\
+DIRS := \
 	en-EN \
 
 include $(TOP)$(ROOT)config/doc.cf

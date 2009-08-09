@@ -3,20 +3,20 @@
 #
 
 ifeq ($(HB_BUILD_MODE),cpp)
-   HB_CMP = CC
+   HB_CMP := CC
 else
-   HB_CMP = cc
+   HB_CMP := cc
 endif
 
-OBJ_EXT = .o
-LIB_PREF = lib
-LIB_EXT = .a
+OBJ_EXT := .o
+LIB_PREF := lib
+LIB_EXT := .a
 
 CC = $(HB_CCACHE) $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)
-CC_IN = -c
+CC_IN := -c
 # NOTE: The ending space after -o is important, please preserve it.
 #       Now solved with '$(subst x,x, )' expression.
-CC_OUT = -o$(subst x,x, )
+CC_OUT := -o$(subst x,x, )
 
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
@@ -61,7 +61,7 @@ CFLAGS += -g
 endif
 
 LD = $(HB_CCACHE) $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)
-LD_OUT = -o$(subst x,x, )
+LD_OUT := -o$(subst x,x, )
 
 # Add all libraries specified in LIBS.
 LINKPATHS += -L$(LIB_DIR)
@@ -79,7 +79,7 @@ LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt)) -lhbrtl
 
 # screen driver libraries
 ifeq ($(HB_CRS_LIB),)
-HB_CRS_LIB = curses
+HB_CRS_LIB := curses
 endif
 ifneq ($(findstring gtcrs, $(HB_GT_LIBS)),)
 LINKLIBS += -l$(HB_CRS_LIB)
@@ -107,7 +107,7 @@ LINKLIBS += -lsocket -lnsl -lresolv
 
 LDFLAGS += $(LINKPATHS)
 
-AR = ar
+AR := ar
 ARFLAGS = $(HB_USER_AFLAGS)
 AR_RULE = $(AR) $(ARFLAGS) cr $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 

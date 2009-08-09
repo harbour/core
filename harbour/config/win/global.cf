@@ -9,5 +9,5 @@ BIN_EXT := .exe
 HB_GT_LIBS += gtwvt gtgui gtwin
 
 ifeq ($(HB_DYNLIB),yes)
-   HB_CDYNLIB = -DHB_DYNLIB
+   HB_CDYNLIB := -DHB_DYNLIB
 endif

@@ -4,11 +4,11 @@
 
 vpath %.c ../
 
-ROOT = ../../../
+ROOT := ../../../
 
-LIBNAME=hbcurls
+LIBNAME := hbcurls
 
-HB_INC_CURL_OK = $(foreach d, $(HB_INC_CURL), $(if $(wildcard $(d)/curl/curl.h),$(d),))
+HB_INC_CURL_OK := $(foreach d, $(HB_INC_CURL), $(if $(wildcard $(d)/curl/curl.h),$(d),))
 
 ifneq ($(strip $(HB_INC_CURL_OK)),)
 
@@ -16,7 +16,7 @@ ifneq ($(strip $(HB_INC_CURL_OK)),)
 HB_USER_CFLAGS += -DCURL_STATICLIB
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_CURL_OK), -I$(d))
 
-C_SOURCES=\
+C_SOURCES := \
 	hbcurl.c \
 	hbcurlm.c \
 

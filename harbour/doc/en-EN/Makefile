@@ -2,11 +2,11 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-DOC_SUBDIR=/en-EN
+DOC_SUBDIR := /en-EN
 
-DOC_FILES=\
+DOC_FILES := \
 	array.txt \
 	binnum.txt \
 	browse.txt \

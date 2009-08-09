@@ -2,13 +2,13 @@
 # $Id$
 #
 
-ROOT = ../../../
+ROOT := ../../../
 
-LIBNAME=gtos2
+LIBNAME := gtos2
 
 ifeq ($(HB_ARCHITECTURE),os2)
 
-C_SOURCES=\
+C_SOURCES := \
 	gtos2.c \
 
 include $(TOP)$(ROOT)config/lib.cf

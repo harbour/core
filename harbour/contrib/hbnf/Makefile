@@ -2,11 +2,11 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=hbnf
+LIBNAME := hbnf
 
-C_SOURCES =\
+C_SOURCES := \
 	alt.c \
 	caplock.c \
 	chdir.c \
@@ -38,12 +38,12 @@ C_SOURCES =\
 	shift.c \
 	stod.c \
 
-BAD_C_SOURCES =\
+BAD_C_SOURCES := \
 	ontick.c \
 	peek.c \
 	poke.c \
 
-PRG_SOURCES=\
+PRG_SOURCES := \
 	aading.prg \
 	aavg.prg \
 	acctadj.prg \
@@ -146,10 +146,10 @@ PRG_SOURCES=\
 	xbox.prg \
 	year.prg \
 
-BAD_PRG_SOURCES=\
+BAD_PRG_SOURCES := \
 	mouse1.prg \
 
-PRG_HEADERS=\
+PRG_HEADERS := \
 	ftmenuto.ch \
 
 include $(TOP)$(ROOT)config/header.cf

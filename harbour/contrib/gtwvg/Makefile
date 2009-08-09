@@ -4,30 +4,30 @@
 
 HB_USER_CFLAGS += -I$(TOP)$(ROOT)contrib/hbwin
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=gtwvg
+LIBNAME := gtwvg
 
 ifeq ($(HB_WITH_GTWVG),)
 ifeq ($(HB_ARCHITECTURE),win)
 
 ifeq ($(HB_COMPILER),mingw)
-HB_WITH_GTWVG=yes
+HB_WITH_GTWVG := yes
 endif
 ifeq ($(HB_COMPILER),msvc)
-HB_WITH_GTWVG=yes
+HB_WITH_GTWVG := yes
 endif
 ifeq ($(HB_COMPILER),watcom)
-HB_WITH_GTWVG=yes
+HB_WITH_GTWVG := yes
 endif
 ifeq ($(HB_COMPILER),pocc)
-HB_WITH_GTWVG=yes
+HB_WITH_GTWVG := yes
 endif
 ifeq ($(HB_COMPILER),icc)
-HB_WITH_GTWVG=yes
+HB_WITH_GTWVG := yes
 endif
 ifeq ($(HB_COMPILER),bcc)
-HB_WITH_GTWVG=yes
+HB_WITH_GTWVG := yes
 endif
 
 endif
@@ -35,7 +35,7 @@ endif
 
 ifeq ($(HB_WITH_GTWVG),yes)
 
-C_SOURCES=\
+C_SOURCES := \
 	gtwvg.c \
 	wvgcore.c \
 	wvgutils.c \
@@ -46,7 +46,7 @@ C_SOURCES=\
 	wincallb.c \
 	wvgcuig.c \
 
-PRG_SOURCES=\
+PRG_SOURCES := \
 	wvgclass.prg \
 	wvgpaint.prg \
 	wvgphdlr.prg \
@@ -76,7 +76,7 @@ PRG_SOURCES=\
 	wvgscrlb.prg \
 	wvgtabpg.prg \
 
-PRG_HEADERS=\
+PRG_HEADERS := \
 	hbgtwvg.ch \
 	wvtwin.ch \
 	wvgparts.ch \

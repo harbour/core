@@ -2,13 +2,13 @@
 # $Id$
 #
 
-ROOT = ../
+ROOT := ../
 
 ifeq ($(HB_CONTRIBLIBS),)
 
 # standalone contribs
 
-DIRS=\
+DIRS := \
 	gtwvg \
 	hbbmcdx \
 	hbbtree \
@@ -30,7 +30,7 @@ DIRS=\
 	xpp \
 
 # contribs with external dependencies
-DIRS +=\
+DIRS += \
 	gtalleg \
 	hbblat \
 	hbcurl \
@@ -46,13 +46,13 @@ DIRS +=\
 	rddsql \
 
 # contribs dependent on above
-DIRS +=\
+DIRS += \
 	hbxbp \
 
 else
 
 ifneq ($(HB_CONTRIBLIBS),no)
-DIRS = $(HB_CONTRIBLIBS)
+DIRS := $(HB_CONTRIBLIBS)
 endif
 
 endif

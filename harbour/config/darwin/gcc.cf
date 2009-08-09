@@ -3,22 +3,22 @@
 #
 
 ifeq ($(HB_BUILD_MODE),cpp)
-   HB_CMP = g++
+   HB_CMP := g++
 else
    # for old Darwin systems (having GCC 2.95) this may need to be
    # redefined to 'cc'.
-   HB_CMP = gcc
+   HB_CMP := gcc
 endif
 
-OBJ_EXT = .o
-LIB_PREF = lib
-LIB_EXT = .a
+OBJ_EXT := .o
+LIB_PREF := lib
+LIB_EXT := .a
 
 CC = $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
-CC_IN = -c
+CC_IN := -c
 # NOTE: The ending space after -o is important, please preserve it.
 #       Now solved with '$(subst x,x, )' expression.
-CC_OUT = -o$(subst x,x, )
+CC_OUT := -o$(subst x,x, )
 
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
@@ -45,7 +45,7 @@ endif
 #CFLAGS += -Wno-long-double
 
 LD = $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
-LD_OUT = -o
+LD_OUT := -o
 
 LINKPATHS += -L$(LIB_DIR)
 
@@ -63,7 +63,7 @@ LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt)) -lhbrtl
 
 # screen driver libraries
 ifeq ($(HB_CRS_LIB),)
-HB_CRS_LIB = ncurses
+HB_CRS_LIB := ncurses
 endif
 
 ifneq ($(findstring gtcrs, $(HB_GT_LIBS)),)
@@ -99,12 +99,12 @@ LINKLIBS += -lm
 LDFLAGS = $(LINKPATHS)
 LD_RULE = $(LD) $(CFLAGS) $(LD_OUT) $(BIN_DIR)/$@ $(^F) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LINKLIBS) $(LINKLIBS)
 
-#AR = ar
+#AR := ar
 #ARFLAGS = $(HB_USER_AFLAGS)
 #AR_RULE = $(AR) $(ARFLAGS) r $@ $(^F) || $(RM) $@
-LIBTOOL = libtool
+LIBTOOL := libtool
 LIBTOOLFLAGS = $(HB_USER_AFLAGS)
 AR_RULE = $(LIBTOOL) -static $(LIBTOOLFLAGS) -o $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
-RANLIB = ranlib
+RANLIB := ranlib
 
 include $(TOP)$(ROOT)config/rules.cf

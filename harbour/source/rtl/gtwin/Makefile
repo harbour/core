@@ -2,13 +2,13 @@
 # $Id$
 #
 
-ROOT = ../../../
+ROOT := ../../../
 
-LIBNAME=gtwin
+LIBNAME := gtwin
 
 ifeq ($(HB_ARCHITECTURE),win)
 
-C_SOURCES=\
+C_SOURCES := \
 	gtwin.c \
 
 include $(TOP)$(ROOT)config/lib.cf

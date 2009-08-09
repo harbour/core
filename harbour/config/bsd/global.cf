@@ -8,5 +8,5 @@ BIN_EXT :=
 
 HB_GT_LIBS += gttrm
 
-MAKE = gmake
-RANLIB = ranlib
+MAKE := gmake
+RANLIB := ranlib

@@ -3,18 +3,18 @@
 #
 
 ifeq ($(HB_BUILD_MODE),cpp)
-   HB_CMP = g++
+   HB_CMP := g++
 else
-   HB_CMP = gcc
+   HB_CMP := gcc
 endif
 
-OBJ_EXT = .o
-LIB_PREF =
-LIB_EXT = .a
+OBJ_EXT := .o
+LIB_PREF :=
+LIB_EXT := .a
 
 CC = $(HB_CMP)
-CC_IN = -c
-CC_OUT = -o
+CC_IN := -c
+CC_OUT := -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS =
 
@@ -34,7 +34,7 @@ LD = $(HB_CMP)
 LDFLAGS =
 # NOTE: The ending space after -o is important, please preserve it.
 #       Now solved with '$(subst x,x, )' expression.
-LD_OUT = -o$(subst x,x, )
+LD_OUT := -o$(subst x,x, )
 
 ifeq ($(C_MAIN),)
 ifeq ($(HB_GT_LIB),os2pm)
@@ -102,7 +102,7 @@ endef
 
 
 # Under OS/2 || isn't a command separator (inside a shell, that is); correct separator is &
-AR = ar
+AR := ar
 ARFLAGS = $(HB_USER_AFLAGS)
 AR_RULE = $(create_library) & $(RM) __lib__.tmp
 

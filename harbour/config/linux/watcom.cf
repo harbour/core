@@ -11,22 +11,22 @@
 #    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/wlib.html
 # ---------------------------------------------------------------
 
-OBJ_EXT = .o
-LIB_PREF =
-LIB_EXT = .lib
+OBJ_EXT := .o
+LIB_PREF :=
+LIB_EXT := .lib
 
 ifeq ($(HB_BUILD_MODE),c)
-CC = wcc386
+CC := wcc386
 endif
 ifeq ($(HB_BUILD_MODE),cpp)
-CC = wpp386
+CC := wpp386
 endif
 # Build in C++ mode by default
 ifeq ($(HB_BUILD_MODE),)
-CC = wpp386
+CC := wpp386
 endif
-CC_IN =
-CC_OUT = -fo=
+CC_IN :=
+CC_OUT := -fo=
 
 CPPFLAGS = -zq -bt=linux
 
@@ -63,7 +63,7 @@ empty:=
 space:= $(empty) $(empty)
 comma:= ,
 
-LD = wlink
+LD := wlink
 LDFLAGS = SYS linux
 ifeq ($(HB_BUILD_DEBUG),yes)
 LDFLAGS := DEBUG ALL $(LDFLAGS)
@@ -91,7 +91,7 @@ ifneq ($(LDLIBS),)
    LD_RULE += LIB $(LDLIBS)
 endif
 
-AR = wlib
+AR := wlib
 # ARFLAGS = -c -n -fa $(HB_USER_AFLAGS)
 ARFLAGS = -c -n $(HB_USER_AFLAGS)
 AR_RULE = $(AR) $(ARFLAGS) $(LIB_DIR)/$@ $(foreach file, $(^F), -+$(file))

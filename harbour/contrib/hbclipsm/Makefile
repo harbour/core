@@ -2,9 +2,9 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-C_SOURCES=\
+C_SOURCES := \
 	date.c \
 	environ.c \
 	gauge.c \
@@ -15,12 +15,12 @@ C_SOURCES=\
 	status.c \
 	time.c \
 
-PRG_SOURCES=\
+PRG_SOURCES := \
 
-PRG_HEADERS=\
+PRG_HEADERS := \
 	time87.ch \
 
-LIBNAME=hbclipsm
+LIBNAME := hbclipsm
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

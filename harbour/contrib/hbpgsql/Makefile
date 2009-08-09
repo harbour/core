@@ -2,13 +2,13 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=hbpgsql
+LIBNAME := hbpgsql
 
 ifeq ($(HB_INC_PGSQL),)
 ifeq ($(HB_XBUILD),)
-HB_INC_PGSQL = /usr/include /usr/local/pgsql/include /usr/local/pgsql/include/libpq /usr/include/pgsql /usr/include/postgresql /postgres/include /opt/local/include/postgresql83
+HB_INC_PGSQL := /usr/include /usr/local/pgsql/include /usr/local/pgsql/include/libpq /usr/include/pgsql /usr/include/postgresql /postgres/include /opt/local/include/postgresql83
 endif
 endif
 
@@ -18,14 +18,14 @@ ifneq ($(strip $(HB_INC_PGSQL_OK)),)
 
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_PGSQL_OK), -I$(d))
 
-C_SOURCES=\
+C_SOURCES := \
 	postgres.c \
 
-PRG_SOURCES=\
+PRG_SOURCES := \
 	tpostgre.prg \
 	pgrdd.prg \
 
-PRG_HEADERS=\
+PRG_HEADERS := \
 	postgres.ch \
 
 include $(TOP)$(ROOT)config/header.cf

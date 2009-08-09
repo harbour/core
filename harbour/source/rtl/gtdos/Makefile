@@ -2,13 +2,13 @@
 # $Id$
 #
 
-ROOT = ../../../
+ROOT := ../../../
 
-LIBNAME=gtdos
+LIBNAME := gtdos
 
 ifeq ($(HB_ARCHITECTURE),dos)
 
-C_SOURCES=\
+C_SOURCES := \
 	gtdos.c \
 
 include $(TOP)$(ROOT)config/lib.cf

@@ -2,11 +2,11 @@
 # $Id$
 #
 
-ROOT = ../../../
+ROOT := ../../../
 
-C_SOURCES=\
+C_SOURCES := \
 	usrrdd.c \
 
-LIBNAME=hbusrrdd
+LIBNAME := hbusrrdd
 
 include $(TOP)$(ROOT)config/lib.cf

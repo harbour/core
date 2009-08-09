@@ -3,7 +3,7 @@
 #
 
 
-CPP_SOURCES=\
+CPP_SOURCES := \
 	moc_slots.cpp \
 	hbqt_base.cpp \
 	hbqt_utils.cpp \
@@ -235,7 +235,7 @@ CPP_SOURCES=\
 
 
 
-PRG_SOURCES=\
+PRG_SOURCES := \
 	TQAbstractButton.prg \
 	TQAbstractItemModel.prg \
 	TQAbstractItemView.prg \
@@ -460,5 +460,3 @@ PRG_SOURCES=\
 	TQWindowsStyle.prg \
 	TQWindowsXPStyle.prg \
 	TQWizard.prg \
-
-

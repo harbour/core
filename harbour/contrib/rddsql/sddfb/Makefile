@@ -2,15 +2,15 @@
 # $Id$
 #
 
-ROOT = ../../../
+ROOT := ../../../
 
-LIBNAME=sddfb
+LIBNAME := sddfb
 
 ifneq ($(HB_COMPILER),pocc64)
 
 ifeq ($(HB_INC_FIREBIRD),)
 ifeq ($(HB_XBUILD),)
-HB_INC_FIREBIRD = /usr/include /opt/firebird/include
+HB_INC_FIREBIRD := /usr/include /opt/firebird/include
 endif
 endif
 
@@ -20,7 +20,7 @@ ifneq ($(strip $(HB_INC_FIREBIRD_OK)),)
 
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_FIREBIRD_OK), -I$(d))
 
-C_SOURCES=\
+C_SOURCES := \
 	fbirddd.c \
 
 include $(TOP)$(ROOT)config/lib.cf

@@ -3,28 +3,28 @@
 #
 
 # How to run yacc.
-YACC = bison
+YACC := bison
 YACC_FLAGS := -d $(YACC_FLAGS)
 
 # How to run lex.
-LEX = flex
+LEX := flex
 LEX_FLAGS := -i -8 $(LEX_FLAGS)
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-   HB_CDBG = -DHB_TR_LEVEL_DEBUG
+   HB_CDBG := -DHB_TR_LEVEL_DEBUG
 else
-   HB_PDBG = -l
+   HB_PDBG := -l
 endif
 
 ifeq ($(HB_BUILD_UNICODE),yes)
-   HB_CUNICODE = -DUNICODE
+   HB_CUNICODE := -DUNICODE
 endif
 
 # How to run Harbour
 HB := $(HB_HOST_BIN_DIR)/harbour$(HB_HOST_BIN_EXT)
 
 ifeq ($(HB_GCMODE),)
-   HB_GCMODE = 0
+   HB_GCMODE := 0
 endif
 HB_FLAGS := -i$(HB_INC_COMPILE) -q0 -w3 -es2 -kmo $(HB_PDBG)
 HB_RULE = $(HB) $? -n1 $(HB_FLAGS) -gc$(HB_GCMODE) $(HB_FLAGSEXTRA) $(HB_USER_PRGFLAGS)

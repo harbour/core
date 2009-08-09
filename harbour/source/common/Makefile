@@ -2,9 +2,9 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-C_SOURCES=\
+C_SOURCES := \
 	expropt1.c \
 	expropt2.c \
 	hbffind.c \
@@ -24,8 +24,6 @@ C_SOURCES=\
 	reserved.c \
 	strwild.c \
 
-PRG_SOURCES=\
-
-LIBNAME=hbcommon
+LIBNAME := hbcommon
 
 include $(TOP)$(ROOT)config/lib.cf

@@ -2,9 +2,9 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-C_SOURCES=\
+C_SOURCES := \
 	cpbg866.c \
 	cpbgiso.c \
 	cpbgmik.c \
@@ -138,6 +138,6 @@ C_SOURCES=\
 	ucmactrk.c \
 	ucnext.c \
 
-LIBNAME=hbcpage
+LIBNAME := hbcpage
 
 include $(TOP)$(ROOT)config/lib.cf

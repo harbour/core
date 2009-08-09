@@ -4,13 +4,13 @@
 
 # GNU MAKE file for Pelles ISO C Compiler for WinCE
 
-OBJ_EXT = .obj
-LIB_PREF =
-LIB_EXT = .lib
+OBJ_EXT := .obj
+LIB_PREF :=
+LIB_EXT := .lib
 
 CC = pocc.exe
-CC_IN = -c
-CC_OUT = -Fo
+CC_IN := -c
+CC_OUT := -Fo
 CPPFLAGS = -I.
 
 CPPFLAGS += -Ze -Go
@@ -38,7 +38,7 @@ endif
 CFLAGS =
 
 LD = polink.exe
-LD_OUT = -OUT:
+LD_OUT := -OUT:
 
 # Add all libraries specified in LIBS.
 LINKPATHS += -LIBPATH:$(LIB_DIR)
@@ -57,7 +57,7 @@ endif
 LDFLAGS = $(LINKPATHS) coredll.lib corelibc.lib winsock.lib ws2.lib
 LDFLAGS += /SUBSYSTEM:WINDOWS
 
-AR = polib.exe
+AR := polib.exe
 ARFLAGS = $(HB_USER_AFLAGS)
 AR_RULE = $(AR) $(ARFLAGS) /out:$(LIB_DIR)/$@ $(^F)
 

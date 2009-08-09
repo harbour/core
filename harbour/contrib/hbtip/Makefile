@@ -2,17 +2,17 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=hbtip
+LIBNAME := hbtip
 
 ifneq ($(HB_ARCHITECTURE),dos)
 
-C_SOURCES = \
+C_SOURCES := \
 	encmthd.c \
 	utils.c \
 
-PRG_SOURCES= \
+PRG_SOURCES := \
 	cgi.prg \
 	client.prg \
 	credent.prg \
@@ -31,7 +31,7 @@ PRG_SOURCES= \
 	thtml.prg \
 	url.prg \
 
-PRG_HEADERS= \
+PRG_HEADERS := \
 	thtml.ch \
 	tip.ch \
 

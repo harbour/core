@@ -2,9 +2,9 @@
 # $Id$
 #
 
-ROOT = ../
+ROOT := ../
 
-C_HEADERS=\
+C_HEADERS := \
 	clipdefs.h \
 	extend.h \
 	hbapi.h \
@@ -62,7 +62,7 @@ C_HEADERS=\
 	hbzlib.h \
 	hb_io.h \
 
-PRG_HEADERS=\
+PRG_HEADERS := \
 	achoice.ch \
 	assert.ch \
 	box.ch \
@@ -115,7 +115,7 @@ PRG_HEADERS=\
 	hbsxdef.ch \
 	tbrowse.ch \
 
-API_HEADERS=\
+API_HEADERS := \
 	error.api \
 	extend.api \
 	filesys.api \

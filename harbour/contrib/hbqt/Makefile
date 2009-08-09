@@ -2,35 +2,35 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-LIBNAME=hbqt
+LIBNAME := hbqt
 
 ifeq ($(HB_WITH_QT),)
-HB_WITH_QT=yes
+HB_WITH_QT := yes
 ifeq ($(HB_ARCHITECTURE),dos)
-HB_WITH_QT=no
+HB_WITH_QT := no
 endif
 ifeq ($(HB_ARCHITECTURE),os2)
-HB_WITH_QT=no
+HB_WITH_QT := no
 endif
 ifeq ($(HB_COMPILER),mingw64)
-HB_WITH_QT=no
+HB_WITH_QT := no
 endif
 ifeq ($(HB_COMPILER),watcom)
-HB_WITH_QT=no
+HB_WITH_QT := no
 endif
 ifeq ($(HB_COMPILER),bcc)
-HB_WITH_QT=no
+HB_WITH_QT := no
 endif
 ifeq ($(HB_COMPILER),pocc)
-HB_WITH_QT=no
+HB_WITH_QT := no
 endif
 ifeq ($(HB_COMPILER),pocc64)
-HB_WITH_QT=no
+HB_WITH_QT := no
 endif
 ifeq ($(HB_COMPILER),poccarm)
-HB_WITH_QT=no
+HB_WITH_QT := no
 endif
 endif
 
@@ -38,14 +38,14 @@ ifeq ($(HB_WITH_QT),yes)
 
 ifeq ($(HB_INC_QT),)
 ifeq ($(HB_XBUILD),)
-HB_INC_QT = /usr/include/qt4 /usr/lib/qt4/include /usr/include /Developer/qt/include
+HB_INC_QT := /usr/include/qt4 /usr/lib/qt4/include /usr/include /Developer/qt/include
 endif
 endif
 
 HB_INC_QT_OK += $(foreach d, $(HB_INC_QT), $(if $(wildcard $(d)/Qt/qglobal.h),$(d),))
 ifeq ($(HB_ARCHITECTURE),darwin)
 ifeq ($(strip $(HB_INC_QT_OK)),)
-HB_INC_QT_OK = $(if $(wildcard /Library/Frameworks/QtCore.framework/Versions/4/Headers/QtCore),spec,)
+HB_INC_QT_OK := $(if $(wildcard /Library/Frameworks/QtCore.framework/Versions/4/Headers/QtCore),spec,)
 ifeq ($(HB_INC_QT_OK),spec)
 HB_USER_CFLAGS += -I/Library/Frameworks/QtCore.framework/Headers
 HB_USER_CFLAGS += -I/Library/Frameworks/QtGui.framework/Headers
@@ -58,7 +58,7 @@ endif
 ifneq ($(strip $(HB_INC_QT_OK)),)
 
 ifneq ($(HB_QT_STATIC),)
-LIBNAME=hbqts
+LIBNAME := hbqts
 HB_USER_CFLAGS += -DQT_NODLL
 endif
 
@@ -68,7 +68,7 @@ endif
 
 include $(TOP)$(ROOT)contrib/hbqt/Makefile_gen
 
-PRG_HEADERS=\
+PRG_HEADERS := \
    hbqt.ch \
 
 include $(TOP)$(ROOT)config/header.cf

@@ -2,11 +2,11 @@
 # $Id$
 #
 
-ROOT = ../../../
+ROOT := ../../../
 
-C_SOURCES=\
+C_SOURCES := \
 	gtstd.c \
 
-LIBNAME=gtstd
+LIBNAME := gtstd
 
 include $(TOP)$(ROOT)config/lib.cf

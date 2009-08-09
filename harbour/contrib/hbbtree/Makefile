@@ -2,21 +2,21 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-C_SOURCES=\
+C_SOURCES := \
 	hb_btree.c \
 
-C_HEADERS=\
+C_HEADERS := \
 	hb_btree.h \
 
-PRG_SOURCES=\
+PRG_SOURCES := \
 	tbtree.prg \
 
-PRG_HEADERS=\
+PRG_HEADERS := \
 	hb_btree.ch \
 
-LIBNAME=hbbtree
+LIBNAME := hbbtree
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

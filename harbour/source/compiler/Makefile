@@ -2,19 +2,19 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-#LEX_FLAGS = -Phb_comp -C
-#LEX_SOURCE=harbour.l
-#LEX_HEADERS=\
+#LEX_FLAGS := -Phb_comp -C
+#LEX_SOURCE := harbour.l
+#LEX_HEADERS := \
 #	hbsetup.h \
 #	hberrors.h \
 #	hbdefs.h \
 
-#YACC_FLAGS = -p hb_comp
-YACC_SOURCE=harbour.y
-YACC_DEPEND=complex.c
-YACC_HEADERS=\
+#YACC_FLAGS := -p hb_comp
+YACC_SOURCE := harbour.y
+YACC_DEPEND := complex.c
+YACC_HEADERS := \
 	hbcomp.h \
 	hbcompdf.h \
 	hbsetup.h \
@@ -23,7 +23,7 @@ YACC_HEADERS=\
 	hberrors.h \
 	hbpp.h \
 
-C_SOURCES=\
+C_SOURCES := \
 	cmdcheck.c \
 	genc.c \
 	gencc.c \
@@ -49,6 +49,6 @@ C_SOURCES=\
 	compi18n.c \
 	hbmain.c \
 
-LIBNAME=hbcplr
+LIBNAME := hbcplr
 
 include $(TOP)$(ROOT)config/lib.cf

@@ -281,9 +281,9 @@ endif
 
 # Directory separator default
 ifeq ($(DIRSEP),)
-   DIRSEP = /
+   DIRSEP := /
    ifneq ($(HB_SHELL),sh)
-      DIRSEP = $(subst /,\,\)
+      DIRSEP := $(subst /,\,\)
    endif
 endif
 # Path separator default
@@ -291,9 +291,9 @@ ifeq ($(PTHSEP),)
    # small hack, it's hard to detect what is real path separator because
    # some shells in DOS/Windows translates DOS style paths to POSIX form
    ifeq ($(subst ;,:,$(PATH)),$(PATH))
-      PTHSEP = :
+      PTHSEP := :
    else
-      PTHSEP = ;
+      PTHSEP := ;
    endif
 endif
 
@@ -361,8 +361,16 @@ endif
 
 ifeq ($(HB_ARCHITECTURE),)
    HB_ARCHITECTURE := $(HB_HOST_ARCH)
-   ifneq ($(findstring $(HB_COMPILER),msvcarm mingwarm poccarm),)
+   ifeq ($(HB_COMPILER),msvcarm)
       HB_ARCHITECTURE := wce
+   else
+      ifeq ($(HB_COMPILER),mingwarm)
+         HB_ARCHITECTURE := wce
+      else
+         ifeq ($(HB_COMPILER),poccarm)
+            HB_ARCHITECTURE := wce
+         endif
+      endif
    endif
 endif
 ifeq ($(HB_COMPILER),)
