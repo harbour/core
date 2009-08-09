@@ -54,6 +54,8 @@
 
 #if defined( HB_OS_DOS )
 
+#include "telepath.ch"
+
 HB_FUNC( __TP_INITPORTSPEED )
 {
 }

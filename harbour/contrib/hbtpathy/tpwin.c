@@ -60,6 +60,8 @@
 
 #if defined( HB_OS_WIN )
 
+#include "telepath.ch"
+
 #include <stdio.h>
 
 HB_FUNC( __TP_INITPORTSPEED )

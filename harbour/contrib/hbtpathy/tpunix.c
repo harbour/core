@@ -59,6 +59,8 @@
 
 #if defined( HB_OS_UNIX )
 
+#include "telepath.ch"
+
 #include <stdio.h>   /* Standard input/output definitions */
 #include <string.h>  /* String function definitions */
 #include <unistd.h>  /* UNIX standard function definitions */

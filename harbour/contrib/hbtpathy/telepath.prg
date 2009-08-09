@@ -63,6 +63,17 @@
 #include "telepath.ch"
 
 
+#define TPFP_NAME          1               /* Structure of ports array */
+#define TPFP_HANDLE        2
+#define TPFP_BAUD          3
+#define TPFP_DBITS         4
+#define TPFP_PARITY        5
+#define TPFP_SBITS         6
+#define TPFP_OC            7               /* Open/Close Flag */
+#define TPFP_INBUF         8
+#define TPFP_INBUF_SIZE    9               /* Size of input buffer */
+
+
 THREAD STATIC t_aPorts               // Array with port info
 THREAD STATIC t_nErrorCode := 0      // Error code from last operation, 0 if no error
 
@@ -149,9 +160,6 @@ FUNCTION tp_reopen( nPort, nInSize, nOutSize )
 
    LOCAL nBaud, nData, cParity, nStop, cPortName
 
-   DEFAULT nInSize TO 1536
-   DEFAULT nOutSize TO 1536
-
    IF ! isport( nPort ) .OR. Empty( t_aPorts[ nPort, TPFP_NAME ] )
       RETURN TE_NOPORT
    ENDIF
@@ -166,9 +174,10 @@ FUNCTION tp_reopen( nPort, nInSize, nOutSize )
 
 FUNCTION tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortname )
 
-   LOCAL nRes, lPortExist
+   LOCAL nRes
 
    #if defined( __PLATFORM__UNIX )
+   LOCAL lPortExist
    LOCAL nFileCase
    LOCAL nDirCase
    #endif
@@ -182,26 +191,24 @@ FUNCTION tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
 
    /* Serial ports name are made up of cPortName + nPort if nPort is not NIL */
    #if defined( __PLATFORM__UNIX )
-      DEFAULT cPortName TO "/dev/ttyS" + iif( ISNUMBER( nPort ), hb_NToS( nPort - 1 ), "" )
+      DEFAULT cPortName TO "/dev/ttyS" + iif( ISNUMBER( nPort ), hb_ntos( nPort - 1 ), "" )
    #else
-      DEFAULT cPortName TO "COM"       + iif( ISNUMBER( nPort ), hb_NToS( nPort ), "" )
+      DEFAULT cPortName TO "COM"       + iif( ISNUMBER( nPort ), hb_ntos( nPort ), "" )
    #endif
 
    #if defined( __PLATFORM__UNIX )
       nFileCase := Set( _SET_FILECASE, 0 )
       nDirCase := Set( _SET_DIRCASE, 0 )
-   #endif
 
-   lPortExist := File( cPortname )
+      lPortExist := File( cPortname ) /* Must be File(), hb_FileExists() won't work */
 
-   #if defined( __PLATFORM__UNIX )
       Set( _SET_FILECASE, nFileCase )
       Set( _SET_DIRCASE, nDirCase )
-   #endif
 
-   IF ! lPortExist
-      RETURN TE_NOPORT
-   ENDIF
+      IF ! lPortExist
+         RETURN TE_NOPORT
+      ENDIF
+   #endif
 
    IF ! isport( nPort )
       RETURN TE_NOPORT
@@ -216,14 +223,14 @@ FUNCTION tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
    t_aPorts[ nPort, TPFP_INBUF      ] := ""
    t_aPorts[ nPort, TPFP_INBUF_SIZE ] := nInSize
 
-   #if defined( __PLATFORM__UNIX )
    // Maybe we should have a __tp_Open() on every platform
+   #if defined( __PLATFORM__UNIX )
       t_aPorts[ nPort, TPFP_HANDLE ] := __tp_Open( cPortname )
    #else
-      t_aPorts[ nPort, TPFP_HANDLE ] := FOpen( cPortname, FO_READWRITE )
+      t_aPorts[ nPort, TPFP_HANDLE ] := FOpen( cPortname, FO_READWRITE ) // FO_EXCLUSIVE
    #endif
 
-   IF t_aPorts[ nPort, TPFP_HANDLE ] >= 0
+   IF t_aPorts[ nPort, TPFP_HANDLE ] != F_ERROR
 
       /* low level C functions are prefixed __tp_ */
       IF ( nRes := __tp_InitPortSpeed( t_aPorts[ nPort, TPFP_HANDLE ] ,;
@@ -586,7 +593,7 @@ FUNCTION tp_ctrldtr( nPort, nParamNewval )
     LOCAL nph, nnewval, noldval
 
    IF ! isopenport( nPort )
-      RETURN -1
+      RETURN TE_PARAM
    ENDIF
    nph := t_aPorts[ nPort, TPFP_HANDLE ]
 
