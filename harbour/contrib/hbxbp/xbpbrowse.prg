@@ -405,6 +405,7 @@ EXPORTED:
    METHOD   vScroll                               SETGET
    DATA     nCursorMode                           INIT      XBPBRW_CURSOR_CELL
    METHOD   cursorMode                            SETGET
+
    DATA     sizeCols                              INIT      .T.
    DATA     softTrack                             INIT      .T.
 
@@ -972,10 +973,13 @@ METHOD doConfigure() CLASS XbpBrowse
       xValue   := Eval( oCol:block )
       cType    := ValType( xValue )
       nWidth   := IIF( cType $ "CMNDTL", Len( Transform( xValue, oCol:picture ) ), 0 )
+
+      #if 0
       cColSep  := oCol:colSep
       IF cColSep == NIL
          cColSep := ::cColSep
       ENDIF
+
       cHeadSep := oCol:headSep
       IF !ISCHARACTER( cHeadSep ) .OR. cHeadSep == ""
          cHeadSep := ::cHeadSep
@@ -991,6 +995,11 @@ METHOD doConfigure() CLASS XbpBrowse
             cFootSep := ""
          ENDIF
       ENDIF
+      #endif
+      cColSep  := ""
+      cHeadSep := ""
+      cFootSep := ""
+
       aCol := Array( _TBCI_SIZE )
       aCol[ _TBCI_COLOBJECT   ] := oCol
       aCol[ _TBCI_COLWIDTH    ] := nWidth
@@ -1070,15 +1079,15 @@ METHOD doConfigure() CLASS XbpBrowse
       nFootHeight := nHeight
       nHeight := 0
    ENDIF
-   ::lHeadSep := lHeadSep
+   ::lHeadSep    := .f.  // lHeadSep
    ::nHeadHeight := nHeadHeight
+   ::lFootSep    := .f.  // lFootSep
    ::nFootHeight := nFootHeight
-   ::lFootSep := lFootSep
 
    /* update headings to maximum size and missing head/foot separators */
    FOR EACH aCol IN ::aColData
-      aCol[ _TBCI_HEADING ] := Replicate( _TBR_CHR_LINEDELIMITER, nHeadHeight - hb_TokenCount( aCol[ _TBCI_HEADING ], _TBR_CHR_LINEDELIMITER ) ) + ;
-                               aCol[ _TBCI_HEADING ]
+      aCol[ _TBCI_HEADING ] := Replicate( _TBR_CHR_LINEDELIMITER, nHeadHeight - ;
+             hb_TokenCount( aCol[ _TBCI_HEADING ], _TBR_CHR_LINEDELIMITER ) ) + aCol[ _TBCI_HEADING ]
       IF lHeadSep .AND. aCol[ _TBCI_HEADSEP ] == ""
          aCol[ _TBCI_HEADSEP ] := " "
       ENDIF
@@ -1087,24 +1096,19 @@ METHOD doConfigure() CLASS XbpBrowse
       ENDIF
    NEXT
 
-   ::lHeadSep    := .f. // lHeadSep
-   ::nHeadHeight := 0   // nHeadHeight
-   ::nFootHeight := 0   // nFootHeight
-   ::lFootSep    := .f. // lFootSep
-
    nRowCount := ::rowCount
    IF nRowCount == 0
       _GENLIMITRTE()
    ENDIF
 
    /* create new record buffer */
-   ASize( ::aCellStatus, nRowCount )
-   ASize( ::aDispStatus, nRowCount )
-   ASize( ::aCellValues, nRowCount )
+   ASize( ::aCellStatus , nRowCount )
+   ASize( ::aDispStatus , nRowCount )
+   ASize( ::aCellValues , nRowCount )
    ASize( ::aCellValuesA, nRowCount )
-   ASize( ::aCellColors, nRowCount )
-   AFill( ::aCellStatus, .F. )
-   AFill( ::aDispStatus, .T. )
+   ASize( ::aCellColors , nRowCount )
+   AFill( ::aCellStatus , .F. )
+   AFill( ::aDispStatus , .T. )
    FOR EACH aVal, aValA, aCol IN ::aCellValues, ::aCellValuesA, ::aCellColors
       IF aVal == NIL
          aVal := Array( nColCount )
@@ -1168,11 +1172,11 @@ METHOD doConfigure() CLASS XbpBrowse
       //
       FOR i := 1 TO len( ::columns )
          IF ::columns[ i ]:nColWidth != NIL
-            ::oWidget:setColumnWidth( i-1, ::columns[ i ]:nColWidth )
+            //::oWidget:setColumnWidth( i-1, ::columns[ i ]:nColWidth )
             ::oHorzHeaderView:resizeSection( i-1, ::columns[ i ]:nColWidth )
          ELSE
             xVal := transform( eval( ::columns[ i ]:block ), ::columns[ i ]:picture )
-            ::oWidget:setColumnWidth( i-1, oFontMetrics:width( xVal, -1 ) + 8 )
+            //::oWidget:setColumnWidth( i-1, oFontMetrics:width( xVal, -1 ) + 8 )
             ::oHorzHeaderView:resizeSection( i-1, oFontMetrics:width( xVal, -1 ) + 8 )
          ENDIF
       NEXT

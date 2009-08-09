@@ -184,7 +184,7 @@ METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    IF ::visible
       ::show()
    ENDIF
-   ::setStyle()
+//   ::setStyle()
    ::oParent:AddChild( SELF )
    RETURN Self
 

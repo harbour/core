@@ -846,16 +846,30 @@ STATIC FUNCTION RGB( r, g, b )
 /*----------------------------------------------------------------------*/
 
 FUNCTION Build_TreeView( oWnd )
-   LOCAL i
-   LOCAL oTree := XbpTreeView():new( oWnd, , {10,10}, {oWnd:currentSize()[1]-25,oWnd:currentSize()[2]-45} )
+   LOCAL i, oTree, oTree1
+   LOCAL sz_:= oWnd:currentSize()
+   LOCAL nMid := sz_[ 1 ] / 2
 
+   /* Style Sheet Rendering */
+   oTree := XbpTreeView():new( oWnd, , {10,10}, {nMid-15,sz_[2]-45} )
    oTree:hasLines   := .T.
    oTree:hasButtons := .T.
    oTree:create()
    oTree:itemCollapsed := {|oItem,aRect,oSelf| MsgBox( oItem:caption ) }
-
+   #ifdef __HARBOUR__
+   oTree:setStyleSheet( GetTreeStyleSheet() )
+   #endif
    FOR i := 1 TO 5
       WorkAreaInfo( oTree, i )
+   NEXT
+
+   /* Traditional Rendering */
+   oTree1 := XbpTreeView():new( oWnd, , {nMid+10,10}, {nMid-25,sz_[2]-45} )
+   oTree1:hasLines   := .T.
+   oTree1:hasButtons := .T.
+   oTree1:create()
+   FOR i := 1 TO 5
+      WorkAreaInfo( oTree1, i )
    NEXT
 
    RETURN nil
@@ -922,6 +936,102 @@ PROCEDURE FieldStruct( oItem, aField )
    oItem:addItem( "FIELD_DEC  = " + Str( aField[4], 3 ) )
 
    RETURN
+
+FUNCTION GetTreeStyleSheet()
+   LOCAL s := "", txt_:={}
+
+   aadd( txt_, 'QTreeView {                                                                                      ' )
+   aadd( txt_, '     alternate-background-color: yellow;                                                         ' )
+   aadd( txt_, ' }                                                                                               ' )
+   aadd( txt_, '                                                                                                 ' )
+   aadd( txt_, ' QTreeView {                                                                                     ' )
+   aadd( txt_, '     show-decoration-selected: 1;                                                                ' )
+   aadd( txt_, ' }                                                                                               ' )
+   aadd( txt_, '                                                                                                 ' )
+   aadd( txt_, ' QTreeView::item {                                                                               ' )
+   aadd( txt_, '      border: 1px solid #d9d9d9;                                                                 ' )
+   aadd( txt_, '     border-top-color: transparent;                                                              ' )
+   aadd( txt_, '     border-bottom-color: transparent;                                                           ' )
+   aadd( txt_, ' }                                                                                               ' )
+   aadd( txt_, '                                                                                                 ' )
+   aadd( txt_, ' QTreeView::item:hover {                                                                         ' )
+   aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #e7effd, stop: 1 #cbdaf1);  ' )
+   aadd( txt_, '     border: 1px solid #bfcde4;                                                                  ' )
+   aadd( txt_, ' }                                                                                               ' )
+   aadd( txt_, '                                                                                                 ' )
+   aadd( txt_, ' QTreeView::item:selected {                                                                      ' )
+   aadd( txt_, '     border: 1px solid #567dbc;                                                                  ' )
+   aadd( txt_, ' }                                                                                               ' )
+   aadd( txt_, '                                                                                                 ' )
+   aadd( txt_, ' QTreeView::item:selected:active{                                                                ' )
+   aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6ea1f1, stop: 1 #567dbc);  ' )
+   aadd( txt_, ' }                                                                                               ' )
+   aadd( txt_, '                                                                                                 ' )
+   aadd( txt_, ' QTreeView::item:selected:!active {                                                              ' )
+   aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6b9be8, stop: 1 #577fbf);  ' )
+   aadd( txt_, ' }                                                                                               ' )
+   aadd( txt_, '                                                                                                 ' )
+   aadd( txt_, ' QTreeView::branch {                                                                             ' )
+   aadd( txt_, '         background: palette(base);                                                              ' )
+   aadd( txt_, ' }                                                                                               ' )
+   aadd( txt_, '                                                                                                 ' )
+   aadd( txt_, ' QTreeView::branch:has-siblings:!adjoins-item {                                                  ' )
+   aadd( txt_, '         background: cyan;                                                                       ' )
+   aadd( txt_, ' }                                                                                               ' )
+   aadd( txt_, '                                                                                                 ' )
+   aadd( txt_, ' QTreeView::branch:has-siblings:adjoins-item {                                                   ' )
+   aadd( txt_, '         background: red;                                                                        ' )
+   aadd( txt_, ' }                                                                                               ' )
+   aadd( txt_, '                                                                                                 ' )
+   aadd( txt_, ' QTreeView::branch:!has-children:!has-siblings:adjoins-item {                                    ' )
+   aadd( txt_, '         background: blue;                                                                       ' )
+   aadd( txt_, ' }                                                                                               ' )
+   aadd( txt_, '                                                                                                 ' )
+   aadd( txt_, ' QTreeView::branch:closed:has-children:has-siblings {                                            ' )
+   aadd( txt_, '         background: pink;                                                                       ' )
+   aadd( txt_, ' }                                                                                               ' )
+   aadd( txt_, '                                                                                                 ' )
+   aadd( txt_, ' QTreeView::branch:has-children:!has-siblings:closed {                                           ' )
+   aadd( txt_, '         background: gray;                                                                       ' )
+   aadd( txt_, ' }                                                                                               ' )
+   aadd( txt_, '                                                                                                 ' )
+   aadd( txt_, ' QTreeView::branch:open:has-children:has-siblings {                                              ' )
+   aadd( txt_, '         background: magenta;                                                                    ' )
+   aadd( txt_, ' }                                                                                               ' )
+   aadd( txt_, '                                                                                                 ' )
+   aadd( txt_, ' QTreeView::branch:open:has-children:!has-siblings {                                             ' )
+   aadd( txt_, '         background: green;                                                                      ' )
+   aadd( txt_, ' }                                                                                               ' )
+   aadd( txt_, '                                                                                                 ' )
+   aadd( txt_, '                                                                                                 ' )
+   aadd( txt_, 'vline.png   branch-more.png   branch-end.png   branch-closed.png   branch-open.png               ' )
+   aadd( txt_, ' QTreeView::branch:has-siblings:!adjoins-item {                                                  ' )
+   aadd( txt_, '     border-image: url(vline.png) 0;                                                             ' )
+   aadd( txt_, ' }                                                                                               ' )
+   aadd( txt_, '                                                                                                 ' )
+   aadd( txt_, ' QTreeView::branch:has-siblings:adjoins-item {                                                   ' )
+   aadd( txt_, '     border-image: url(branch-more.png) 0;                                                       ' )
+   aadd( txt_, ' }                                                                                               ' )
+   aadd( txt_, '                                                                                                 ' )
+   aadd( txt_, ' QTreeView::branch:!has-children:!has-siblings:adjoins-item {                                    ' )
+   aadd( txt_, '     border-image: url(branch-end.png) 0;                                                        ' )
+   aadd( txt_, ' }                                                                                               ' )
+   aadd( txt_, '                                                                                                 ' )
+   aadd( txt_, ' QTreeView::branch:has-children:!has-siblings:closed,                                            ' )
+   aadd( txt_, ' QTreeView::branch:closed:has-children:has-siblings {                                            ' )
+   aadd( txt_, '         border-image: none;                                                                     ' )
+   aadd( txt_, '         image: url(branch-closed.png);                                                          ' )
+   aadd( txt_, ' }                                                                                               ' )
+   aadd( txt_, '                                                                                                 ' )
+   aadd( txt_, ' QTreeView::branch:open:has-children:!has-siblings,                                              ' )
+   aadd( txt_, ' QTreeView::branch:open:has-children:has-siblings  {                                             ' )
+   aadd( txt_, '         border-image: none;                                                                     ' )
+   aadd( txt_, '         image: url(branch-open.png);                                                            ' )
+   aadd( txt_, ' } ' )
+
+   aeval( txt_, {|e| s += e + chr( 13 )+chr( 10 ) } )
+
+   RETURN s
 
 /*----------------------------------------------------------------------*/
 
