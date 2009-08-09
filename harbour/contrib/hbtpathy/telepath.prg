@@ -87,8 +87,6 @@ FUNCTION tp_baud( nPort, nNewBaud )
                           t_aPorts[ nPort, TPFP_SBITS  ] ) == 0
 
          t_aPorts[ nPort, TPFP_BAUD ] := nNewBaud
-
-
       ELSE
          // set error code
       ENDIF
@@ -170,7 +168,7 @@ FUNCTION tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
 
    LOCAL nRes, lPortExist
 
-   #ifdef __PLATFORM__UNIX
+   #if defined( __PLATFORM__UNIX )
    LOCAL nFileCase
    LOCAL nDirCase
    #endif
@@ -183,20 +181,20 @@ FUNCTION tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
    DEFAULT nStop    TO 1
 
    /* Serial ports name are made up of cPortName + nPort if nPort is not NIL */
-   #ifdef __PLATFORM__UNIX
+   #if defined( __PLATFORM__UNIX )
       DEFAULT cPortName TO "/dev/ttyS" + iif( ISNUMBER( nPort ), hb_NToS( nPort - 1 ), "" )
    #else
       DEFAULT cPortName TO "COM"       + iif( ISNUMBER( nPort ), hb_NToS( nPort ), "" )
    #endif
 
-   #ifdef __PLATFORM__UNIX
+   #if defined( __PLATFORM__UNIX )
       nFileCase := Set( _SET_FILECASE, 0 )
       nDirCase := Set( _SET_DIRCASE, 0 )
    #endif
 
    lPortExist := File( cPortname )
 
-   #ifdef __PLATFORM__UNIX
+   #if defined( __PLATFORM__UNIX )
       Set( _SET_FILECASE, nFileCase )
       Set( _SET_DIRCASE, nDirCase )
    #endif
@@ -218,7 +216,7 @@ FUNCTION tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
    t_aPorts[ nPort, TPFP_INBUF      ] := ""
    t_aPorts[ nPort, TPFP_INBUF_SIZE ] := nInSize
 
-   #ifdef __PLATFORM__UNIX
+   #if defined( __PLATFORM__UNIX )
    // Maybe we should have a p_Open() on every platform
       t_aPorts[ nPort, TPFP_HANDLE ] := p_Open( cPortname )
    #else
@@ -448,13 +446,21 @@ FUNCTION tp_inchrs( nPort )
 
    RETURN Len( t_aPorts[ nPort, TPFP_INBUF ] )
 
+FUNCTION tp_infree( nPort )
+
+   IF ! isopenport( nPort )
+      RETURN 0
+   ENDIF
+
+   RETURN p_infree( t_aPorts[ nPort, TPFP_HANDLE ] )
+
 FUNCTION tp_outfree( nPort )
 
    IF ! isopenport( nPort )
       RETURN 0
    ENDIF
 
-   RETURN p_OutFree( t_aPorts[ nPort, TPFP_HANDLE ] )
+   RETURN p_outfree( t_aPorts[ nPort, TPFP_HANDLE ] )
 
 PROCEDURE tp_clearin( nPort )
 
@@ -477,7 +483,7 @@ FUNCTION tp_crc16( cString )
 
 FUNCTION tp_crc32( cString )
 
-   RETURN p_CRC32( cString )
+   RETURN hb_crc32( cString )
 
 
 /*                   nPort, nTimeout, acList|cString..., lIgnorecase */
@@ -585,7 +591,7 @@ FUNCTION tp_ctrldtr( nPort, nParamNewval )
    ENDIF
    nph := t_aPorts[ nPort, TPFP_HANDLE ]
 
-   _P_CTRLDTR( nph, @nnewval, @noldval )
+   P_CTRLDTR( nph, @nnewval, @noldval )
 
    RETURN noldval
 */
@@ -622,7 +628,7 @@ FUNCTION tp_iscts( nPort )
 
    RETURN p_iscts( t_aPorts[ nPort, TPFP_HANDLE ] )
 
-#ifdef __PLATFORM__UNIX
+#if defined( __PLATFORM__UNIX )
 // NB: On linux i don't know how to make a drain with a timeout, so here
 //     I'll wait as long as it takes to drain the port.
 FUNCTION tp_flush( nPort, nTimeout )

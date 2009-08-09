@@ -5,13 +5,12 @@
 /*
  * Harbour Project source code:
  * Telepathy emulation library
- * C low level module for linux serial communication
+ * C low level module for *nix serial communication
  *
  * Copyright 2005 - Maurilio Longo <maurilio.longo@libero.it>
  * www - http://www.harbour-project.org
  *
  * Lots of code from http://www.easysw.com/~mike/serial/serial.html
- *
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,7 +57,7 @@
 #include "hbapiitm.h"
 #include "hbapifs.h"
 
-#ifdef HB_OS_UNIX
+#if defined( HB_OS_UNIX )
 
 #include <stdio.h>   /* Standard input/output definitions */
 #include <string.h>  /* String function definitions */
@@ -195,6 +194,11 @@ HB_FUNC( P_WRITEPORT )
 HB_FUNC( P_DRAIN )
 {
    hb_retnl( tcdrain( hb_parnl( 1 ) ) );
+}
+
+HB_FUNC( P_INFREE )
+{
+   hb_retnl( -1 );
 }
 
 HB_FUNC( P_OUTFREE )

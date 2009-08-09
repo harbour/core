@@ -61,7 +61,7 @@
 #include "hbapiitm.h"
 #include "hbapifs.h"
 
-#ifdef HB_OS_OS2
+#if defined( HB_OS_OS2 )
 
 #include <os2.h>
 
@@ -156,6 +156,20 @@ HB_FUNC( P_WRITEPORT )
    hb_retnl( rc == NO_ERROR ? ( long ) nWritten : -1 ); /* Put GetLastError() on error, or better a second byref param? */
 }
 
+HB_FUNC( P_INFREE )
+{
+   APIRET rc;
+   RXQUEUE rxqueue;
+
+   memset( &rxqueue, 0, sizeof( rxqueue ) );
+
+   if( ( rc = DosDevIOCtl( ( HFILE ) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_GETINQUECOUNT,
+                           NULL, 0L, NULL, &rxqueue, sizeof( RXQUEUE ), NULL ) ) == NO_ERROR )
+      hb_retnl( rxqueue.cb - rxqueue.cch );
+   else
+      hb_retnl( -1 ); /* Put GetLastError() here, or better a second byref param? */
+}
+
 HB_FUNC( P_OUTFREE )
 {
    APIRET rc;
@@ -164,7 +178,7 @@ HB_FUNC( P_OUTFREE )
    memset( &rxqueue, 0, sizeof( rxqueue ) );
 
    if( ( rc = DosDevIOCtl( ( HFILE ) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_GETOUTQUECOUNT,
-                           NULL, 0L, NULL, &rxqueue, sizeof(RXQUEUE), NULL ) ) == NO_ERROR )
+                           NULL, 0L, NULL, &rxqueue, sizeof( RXQUEUE ), NULL ) ) == NO_ERROR )
       hb_retnl( rxqueue.cb - rxqueue.cch );
    else
       hb_retnl( -1 ); /* Put GetLastError() here, or better a second byref param? */

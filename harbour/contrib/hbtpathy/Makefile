@@ -8,25 +8,13 @@ LIBNAME=hbtpathy
 
 C_SOURCES=
 
-ifeq ($(HB_ARCHITECTURE),linux)
+ifneq ($(findstring $(HB_ARCHITECTURE),linux darwin hpux bsd sunos),)
 C_SOURCES=\
-	tplinux.c \
+	tpunix.c \
 	tpcommon.c \
 
 endif
-ifeq ($(HB_ARCHITECTURE),darwin)
-C_SOURCES=\
-	tplinux.c \
-	tpcommon.c \
-
-endif
-ifeq ($(HB_ARCHITECTURE),win)
-C_SOURCES=\
-	tpwin.c \
-	tpcommon.c \
-
-endif
-ifeq ($(HB_ARCHITECTURE),wce)
+ifneq ($(findstring $(HB_ARCHITECTURE),win wce),)
 C_SOURCES=\
 	tpwin.c \
 	tpcommon.c \

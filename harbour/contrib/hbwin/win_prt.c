@@ -400,7 +400,7 @@ HB_FUNC( WIN_PORTSTATUS )
    if( iPort >= 0 && iPort < ( int ) HB_SIZEOFARRAY( s_PortData ) )
    {
       HANDLE hCommPort = s_PortData[ iPort ].hPort;
-      DWORD dwModemStat;
+      DWORD dwModemStat = 0;
 
       s_PortData[ iPort ].iFunction = FCNGETCOMMMODEMSTATUS;
       s_PortData[ iPort ].dwError = 0;
@@ -460,7 +460,7 @@ HB_FUNC( WIN_PORTQUEUESTATUS )
    if( iPort >= 0 && iPort < ( int ) HB_SIZEOFARRAY( s_PortData ) )
    {
       HANDLE hCommPort = s_PortData[ iPort ].hPort;
-      DWORD dwErrors;
+      DWORD dwErrors = 0;
       COMSTAT ComStat;
 
       s_PortData[ iPort ].iFunction = FCNCLEARCOMMERROR;

@@ -7,7 +7,8 @@
  * Telepathy emulation library
  * C low level module for Windows serial communication
  *
- * Copyright 2004 - Maurilio Longo <maurilio.longo@libero.it>
+ * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2004 Maurilio Longo <maurilio.longo@libero.it>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -99,33 +100,96 @@ HB_FUNC( P_INITPORTSPEED )
 
 HB_FUNC( P_READPORT )
 {
-   char Buffer[ 512 ];
+   char buffer[ 512 ];
    DWORD nRead = 0;
    OVERLAPPED Overlapped;
-   BOOL bRet;
 
    memset( &Overlapped, 0, sizeof( OVERLAPPED ) );
-   bRet = ReadFile( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), Buffer, sizeof( Buffer ), &nRead, &Overlapped );
-   hb_retclen( bRet ? Buffer : NULL, nRead );
+   if( ReadFile( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), buffer, sizeof( buffer ), &nRead, &Overlapped ) )
+      hb_retclen( buffer, nRead );
+   else
+      hb_retc_null();
 }
 
 HB_FUNC( P_WRITEPORT )
 {
    DWORD nWritten = 0;
    OVERLAPPED Overlapped;
-   BOOL bRet;
 
    memset( &Overlapped, 0, sizeof( OVERLAPPED ) );
-   bRet = WriteFile( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), hb_parcx( 2 ), hb_parclen( 2 ), &nWritten, &Overlapped );
-   hb_retnl( bRet ? ( long ) nWritten : -1 ); /* Put GetLastError() on error, or better a second byref param? */
+   if( WriteFile( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), hb_parcx( 2 ), hb_parclen( 2 ), &nWritten, &Overlapped ) )
+      hb_retnl( ( long ) nWritten ); /* Put GetLastError() on error, or better a second byref param? */
+   else
+      hb_retnl( -1 );
 }
 
-/* TODO: Implement these dummy functions. */
-HB_FUNC( P_OUTFREE ) {}
-HB_FUNC( P_CTRLCTS ) {}
-HB_FUNC( P_ISDCD ) {}
-HB_FUNC( P_ISRI ) {}
-HB_FUNC( P_ISDSR ) {}
-HB_FUNC( P_ISCTS ) {}
+HB_FUNC( P_INFREE )
+{
+   HANDLE hPort = ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 );
+   COMMPROP CommProp;
+   if( GetCommProperties( hPort, &CommProp ) )
+   {
+      COMSTAT ComStat;
+      if( ClearCommError( hPort, NULL, &ComStat ) && CommProp.dwCurrentRxQueue != 0 )
+         hb_retnl( CommProp.dwCurrentRxQueue - ComStat.cbInQue );
+      else
+         hb_retnl( -1 );
+   }
+   else
+      hb_retnl( -1 );
+}
+
+HB_FUNC( P_OUTFREE )
+{
+   HANDLE hPort = ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 );
+   COMMPROP CommProp;
+   if( GetCommProperties( hPort, &CommProp ) )
+   {
+      COMSTAT ComStat;
+      if( ClearCommError( hPort, NULL, &ComStat ) && CommProp.dwCurrentTxQueue != 0 )
+         hb_retnl( CommProp.dwCurrentTxQueue - ComStat.cbOutQue );
+      else
+         hb_retnl( -1 );
+   }
+   else
+      hb_retnl( -1 );
+}
+
+HB_FUNC( P_CTRLCTS )
+{
+   hb_retni( 0 ); /* dummy */
+}
+
+HB_FUNC( P_ISDCD )
+{
+   DWORD dwModemStat = 0;
+   BOOL bRet = GetCommModemStatus( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), &dwModemStat );
+
+   hb_retl( bRet ? ( dwModemStat & MS_RLSD_ON ) != 0 : FALSE ); /* The RLSD (receive-line-signal-detect) signal is on. Also is DCD. */
+}
+
+HB_FUNC( P_ISRI )
+{
+   DWORD dwModemStat = 0;
+   BOOL bRet = GetCommModemStatus( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), &dwModemStat );
+
+   hb_retl( bRet ? ( dwModemStat & MS_RING_ON ) != 0 : FALSE );
+}
+
+HB_FUNC( P_ISDSR )
+{
+   DWORD dwModemStat = 0;
+   BOOL bRet = GetCommModemStatus( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), &dwModemStat );
+
+   hb_retl( bRet ? ( dwModemStat & MS_DSR_ON ) != 0 : FALSE );
+}
+
+HB_FUNC( P_ISCTS )
+{
+   DWORD dwModemStat = 0;
+   BOOL bRet = GetCommModemStatus( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), &dwModemStat );
+
+   hb_retl( bRet ? ( dwModemStat & MS_CTS_ON ) != 0 : FALSE );
+}
 
 #endif /* HB_OS_WIN */
