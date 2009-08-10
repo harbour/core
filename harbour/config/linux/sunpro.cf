@@ -69,7 +69,7 @@ LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt)) -lhbrtl
 
 # screen driver libraries
 ifeq ($(HB_CRS_LIB),)
-HB_CRS_LIB := curses
+HB_CRS_LIB := ncurses
 endif
 ifneq ($(findstring gtcrs, $(HB_GT_LIBS)),)
 LINKLIBS += -l$(HB_CRS_LIB)
@@ -82,11 +82,11 @@ LINKLIBS += -lX11
 LINKPATHS += -L/usr/X11R6/lib
 endif
 
-endif
-
 # HB_GPM_MOUSE: use gpm mouse driver
 ifeq ($(HB_GPM_MOUSE),yes)
 LINKLIBS += -lgpm
+endif
+
 endif
 
 ifneq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
@@ -97,13 +97,12 @@ ifneq ($(findstring -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
 LINKLIBS += -lz
 endif
 
-LINKLIBS += -lm -lrt
-LINKLIBS += -lnsl -lresolv
+LINKLIBS += -lm -lrt -ldl
 
 LDFLAGS += $(LINKPATHS)
 
-AR := ar
+AR := $(HB_CCPREFIX)ar
 ARFLAGS = $(HB_USER_AFLAGS)
-AR_RULE = $(AR) $(ARFLAGS) cr $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
+AR_RULE = $(AR) $(ARFLAGS) crs $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 
 include $(TOP)$(ROOT)config/rules.cf
