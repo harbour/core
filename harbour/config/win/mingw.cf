@@ -42,23 +42,13 @@ LIBLIST =
 # Add all libraries specified in LIBS.
 LINKPATHS += -L$(LIB_DIR)
 
-LIBLIST += $(foreach lib, $(LIBS), -l$(lib))
-
-# If LIBS specifies the RDD library, add all DB drivers.
-ifeq ($(findstring hbrdd,$(LIBS)),hbrdd)
-LIBLIST += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
-endif
+LIBLIST += $(foreach lib, $(LIBS),-l$(lib))
 
 # Add the standard C main() entry
 ifeq ($(HB_MAIN),std)
-ifeq ($(findstring vm,$(LIBS)),vm)
+ifeq ($(findstring hbvm,$(LIBS)),hbvm)
 LIBLIST += -lhbmainstd
 endif
-endif
-
-# Add the specified GT driver library
-ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
-LIBLIST += $(foreach gt, $(HB_GT_LIBS), -l$(gt))
 endif
 
 # This library is needed for CharToOemBuff() and OemToCharBuff() support.
@@ -71,9 +61,7 @@ RANLIB := $(HB_CCPREFIX)ranlib
 
 ifeq ($(AR_RULE),)
 AR_RULE = $(AR) $(ARFLAGS) cr $(LIB_DIR)/$@ $(^F) && $(RANLIB) $(LIB_DIR)/$@ || $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@)
-# our libs have a lot of cross referenced now and we have to group them
-# until we won't have cleaned them
-LINKLIBS = $(LINKPATHS) -Wl,--start-group $(LIBLIST) -Wl,--end-group $(SYSLIBS)
+LINKLIBS = $(LINKPATHS) $(LIBLIST) $(SYSLIBS)
 endif
 
 include $(TOP)$(ROOT)config/rules.cf

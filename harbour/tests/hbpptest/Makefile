@@ -13,17 +13,6 @@ PRG_SOURCES := \
 
 PRG_MAIN := hbpptest.prg
 
-LIBS := \
-   hbdebug \
-   hbvm \
-   hbrtl \
-   hblang \
-   hbcpage \
-   hbrdd \
-   hbrtl \
-   hbvm \
-   hbmacro \
-   hbpp \
-   hbcommon \
+LIBS = $(HB_LIBS_ST_NORDD)
 
 include $(TOP)$(ROOT)config/bin.cf

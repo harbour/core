@@ -42,16 +42,6 @@ LINKPATHS += -L$(LIB_DIR)
 
 LIBLIST += $(foreach lib, $(LIBS), -l$(lib))
 
-# If LIBS specifies the RDD library, add all DB drivers.
-ifeq ($(findstring hbrdd,$(LIBS)),hbrdd)
-LIBLIST += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
-endif
-
-# Add the specified GT driver library
-ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
-LIBLIST += $(foreach gt, $(HB_GT_LIBS), -l$(gt))
-endif
-
 SYSLIBS := -lwininet -lws2
 
 LDFLAGS =

@@ -16,16 +16,6 @@ C_SOURCES := \
 
 PRG_MAIN := hbformat.prg
 
-LIBS := \
-   hbdebug \
-   hbvm \
-   hbrtl \
-   hblang \
-   hbcpage \
-   hbnulrdd \
-   hbrtl \
-   hbvm \
-   hbmacro \
-   hbcommon \
+LIBS = $(HB_LIBS_ST_NORDD)
 
 include $(TOP)$(ROOT)config/bin.cf

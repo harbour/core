@@ -74,17 +74,8 @@ endif
 
 LINKLIBS = $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib))
 
-# If LIBS specifies the RDD library, add all DB drivers.
-ifeq ($(findstring hbrdd,$(LIBS)),hbrdd)
-   RDDLIBS = $(foreach drv, $(HB_DB_DRIVERS), $(LIB_DIR)/$(drv))
-endif
-
-ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
-   GTLIBS = $(foreach gt, $(HB_GT_LIBS), $(LIB_DIR)/$(gt))
-endif
-
 LDFILES = $(subst $(space),$(comma) ,$(^F))
-LDLIBS  = $(subst $(space),$(comma) ,$(strip $(LINKLIBS) $(RDDLIBS) $(GTLIBS)))
+LDLIBS  = $(subst $(space),$(comma) ,$(strip $(LINKLIBS)))
 LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@ FILE $(LDFILES) $(if $(LDLIBS), LIB $(LDLIBS),)
 
 ifeq ($(HB_SHELL),sh)

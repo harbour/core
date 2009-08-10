@@ -13,18 +13,6 @@ PRG_SOURCES := \
 
 PRG_MAIN := hbmk2.prg
 
-LIBS := \
-   hbdebug \
-   hbvmmt \
-   hbrtl \
-   hblang \
-   hbcpage \
-   hbnulrdd \
-   hbrtl \
-   hbvmmt \
-   hbmacro \
-   hbcplr \
-   hbpp \
-   hbcommon \
+LIBS = $(HB_LIBS_MT_NORDD)
 
 include $(TOP)$(ROOT)config/bin.cf

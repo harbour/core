@@ -28,20 +28,8 @@ C_SOURCES := \
 
 PRG_MAIN := hbtest.prg
 
-LIBS := \
-   hbdebug \
-   hbvm \
-   hbrtl \
-   hblang \
-   hbcpage \
-   hbrdd \
-   hbrtl \
-   hbvm \
-   hbmacro \
-   hbpp \
-   hbcommon \
+LIBS = $(HB_LIBS_ST_RDD)
 
 HB_USER_PRGFLAGS += -l-
 
 include $(TOP)$(ROOT)config/bin.cf
-

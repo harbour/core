@@ -87,8 +87,6 @@ define link_exe_file
 @echo $(LDFLAGS) NAME $(BIN_DIR)/$@ > __link__.tmp
 $(foreach file, $(^F), $(link_file))
 $(foreach lib, $(LINKLIBS), $(link_lib))
-$(foreach lib, $(RDDLIBS), $(link_lib))
-$(foreach lib, $(GTLIBS), $(link_lib))
 -$(LD) @__link__.tmp
 endef
 
@@ -105,15 +103,6 @@ LDFLAGS := DEBUG ALL $(LDFLAGS)
 endif
 
 LINKLIBS = $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib))
-
-# If LIBS specifies the RDD library, add all DB drivers.
-ifeq ($(findstring hbrdd,$(LIBS)),hbrdd)
-   RDDLIBS = $(foreach drv, $(HB_DB_DRIVERS), $(LIB_DIR)/$(drv))
-endif
-
-ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
-   GTLIBS = $(foreach gt, $(HB_GT_LIBS), $(LIB_DIR)/$(gt))
-endif
 
 LD_RULE = $(link_exe_file) $(HB_USER_LDFLAGS)
 

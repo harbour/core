@@ -19,9 +19,8 @@ CFLAGS += -w -w-sig- -Q
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-# for some reason -6 generates the exact same code as -4
-# with both 5.5 and 5.8. -5 seems to be significantly slower
-# than both.
+# for some reason -6 generates the exact same code as -4 with both 5.5 and 5.8.
+# -5 seems to be significantly slower than both. [vszakats]
 CFLAGS += -d -6 -O2 -OS -Ov -Oi -Oc
 endif
 
@@ -39,21 +38,11 @@ LD_OUT := -e
 
 # Add all libraries specified in LIBS.
 LINKPATHS += -L$(LIB_DIR)
-LIBLIST += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
-
-# If LIBS specifies the RDD library, add all DB drivers.
-ifeq ($(findstring hbrdd,$(LIBS)),hbrdd)
-LIBLIST += $(foreach drv, $(HB_DB_DRIVERS), $(drv)$(LIB_EXT))
-endif
-
-# Add the specified GT driver library
-ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
-LIBLIST += $(foreach gt, $(HB_GT_LIBS), $(gt)$(LIB_EXT))
-endif
+LIBLIST += $(foreach lib, $(LIBS),$(lib)$(LIB_EXT))
 
 # It's probably not necessary in native Windows but I need it
 # for my Linux box because -L<path> seems to not work with WINE
-LINKLIBS = $(foreach lib, $(LIBLIST), $(LIB_DIR)/$(lib))
+LINKLIBS = $(foreach lib, $(LIBLIST),$(LIB_DIR)/$(lib))
 
 LDFLAGS = $(LINKPATHS)
 

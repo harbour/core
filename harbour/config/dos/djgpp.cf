@@ -38,16 +38,6 @@ LINKPATHS += -L$(LIB_DIR)
 
 LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
 
-# If LIBS specifies the RDD library, add all DB drivers.
-ifeq ($(findstring hbrdd,$(LIBS)),hbrdd)
-LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
-endif
-
-# Add the specified GT driver library and other RTLs
-ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
-LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt))
-endif
-
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 # It causes that every echo command will be separated by LF
 define lib_object

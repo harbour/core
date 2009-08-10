@@ -8,19 +8,7 @@ endif
 
 ROOT := ../
 
-LIBS := \
-   hbdebug \
-   hbvm \
-   hbrtl \
-   hblang \
-   hbcpage \
-   hbrdd \
-   hbrtl \
-   hbvm \
-   hbmacro \
-   hbpp \
-   hbcommon \
-   hbpcre \
+LIBS = $(HB_LIBS_ST_RDD)
 
 ifeq ($(PM),)
    PM := $(pm)
