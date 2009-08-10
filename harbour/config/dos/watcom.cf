@@ -140,4 +140,4 @@ include $(TOP)$(ROOT)config/rules.cf
 
 # work arround to DOS command line size limit
 export HARBOURCMD := $(HB_FLAGS)
-HB_FLAGS =
+HB_FLAGS :=

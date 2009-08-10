@@ -7,4 +7,4 @@
 incpaths=.
 
 libs=rddado
-libs=..\hbwin\hbwin.hbc
+libs=../hbwin/hbwin.hbc

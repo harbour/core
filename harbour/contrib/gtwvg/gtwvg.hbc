@@ -7,6 +7,6 @@
 incpaths=.
 
 gt=gtwvg
-libs=..\hbwin\hbwin.hbc
+libs=../hbwin/hbwin.hbc
 gui=yes
 mt=yes

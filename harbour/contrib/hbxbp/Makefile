@@ -6,7 +6,7 @@ ROOT := ../../
 
 include $(TOP)$(ROOT)config/global.cf
 
-HB_USER_PRGFLAGS += -I$(TOP)$(ROOT)contrib/hbqt
+HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/hbqt
 
 LIBNAME := hbxbp
 

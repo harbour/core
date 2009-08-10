@@ -193,7 +193,11 @@ FUNCTION tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
    #if defined( __PLATFORM__UNIX )
       DEFAULT cPortName TO "/dev/ttyS" + iif( ISNUMBER( nPort ), hb_ntos( nPort - 1 ), "" )
    #else
-      DEFAULT cPortName TO "COM"       + iif( ISNUMBER( nPort ), hb_ntos( nPort ), "" )
+      IF hb_osIsWinNT()
+         DEFAULT cPortName TO "\\.\COM"   + iif( ISNUMBER( nPort ), hb_ntos( nPort ), "" )
+      ELSE
+         DEFAULT cPortName TO "COM"       + iif( ISNUMBER( nPort ), hb_ntos( nPort ), "" )
+      ENDIF
    #endif
 
    #if defined( __PLATFORM__UNIX )
