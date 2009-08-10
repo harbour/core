@@ -51,15 +51,6 @@
  */
 
 #include "hbapi.h"
-#include "hbapifs.h"
-#include "hbchksum.h"
-
-HB_FUNC( __TP_CRC16 )
-{
-   long crc = ( long ) hb_crcct( 0, hb_parcx( 1 ), hb_parclen( 1 ), 0x11021 );
-
-   hb_retnl( ( crc >> 8 ) | ( ( crc << 8 ) & 0xFF00 ) ); /* swap hi and lo byte */
-}
 
 HB_FUNC_EXTERN( HB_BITAND );
 
