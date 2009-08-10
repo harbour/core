@@ -48,7 +48,7 @@ $(MK_OS) -C $(file) $@
 
 endef
 
-DIR_RULE = $(foreach file, $(DIRS_OS), $(dir_mk))
+DIR_RULE = $(foreach file,$(DIRS_OS),$(dir_mk))
 
 endif
 

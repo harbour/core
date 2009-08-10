@@ -49,7 +49,7 @@ LINKPATHS += -L$(LIB_DIR)
 # untill we don't clean them
 LINKLIBS += -Wl,--start-group
 
-LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
+LINKLIBS += $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the specified GT driver library and other RTLs
 ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)

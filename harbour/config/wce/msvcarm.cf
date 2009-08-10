@@ -56,7 +56,7 @@ LINKPATHS += /manifest:no
 endif
 LINKPATHS += /libpath:$(LIB_DIR)
 # Add all libraries specified in LIBS.
-LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
+LINKLIBS += $(foreach lib,$(LIBS),$(lib)$(LIB_EXT))
 
 LDFLAGS = /nologo $(LINKPATHS)
 

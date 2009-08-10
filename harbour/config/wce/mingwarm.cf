@@ -40,7 +40,7 @@ LIBLIST =
 # Add all libraries specified in LIBS.
 LINKPATHS += -L$(LIB_DIR)
 
-LIBLIST += $(foreach lib, $(LIBS), -l$(lib))
+LIBLIST += $(foreach lib,$(LIBS),-l$(lib))
 
 SYSLIBS := -lwininet -lws2
 

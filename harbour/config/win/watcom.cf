@@ -79,8 +79,8 @@ endef
 
 define link_exe_file
 @echo $(LDFLAGS) NAME $(BIN_DIR)/$@ > __link__.tmp
-$(foreach file, $(^F), $(link_file))
-$(foreach lib, $(LINKLIBS), $(link_lib))
+$(foreach file,$(^F),$(link_file))
+$(foreach lib,$(LINKLIBS),$(link_lib))
 @echo LIB ws2_32.lib >> __link__.tmp
 -$(LD) @__link__.tmp
 endef
@@ -91,7 +91,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 LDFLAGS := DEBUG ALL $(LDFLAGS)
 endif
 
-LINKLIBS = $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib))
+LINKLIBS = $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 
 LD_RULE = $(link_exe_file) $(HB_USER_LDFLAGS)
 
@@ -103,7 +103,7 @@ endef
 
 define create_library
 @echo $(LIB_DIR)/$@ > __lib__.tmp
-$(foreach file, $(^F), $(lib_object))
+$(foreach file,$(^F),$(lib_object))
 $(AR) $(ARFLAGS) @__lib__.tmp
 endef
 

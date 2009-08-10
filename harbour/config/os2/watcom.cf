@@ -72,14 +72,14 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 LDFLAGS := DEBUG ALL $(LDFLAGS)
 endif
 
-LINKLIBS = $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib))
+LINKLIBS = $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 
 LDFILES = $(subst $(space),$(comma) ,$(^F))
 LDLIBS  = $(subst $(space),$(comma) ,$(strip $(LINKLIBS)))
 LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@ FILE $(LDFILES) $(if $(LDLIBS), LIB $(LDLIBS),)
 
 ifeq ($(HB_SHELL),sh)
-create_library = $(AR) $(ARFLAGS) $(LIB_DIR)/$@ $(foreach file, $(^F), -+$(file))
+create_library = $(AR) $(ARFLAGS) $(LIB_DIR)/$@ $(foreach file,$(^F),-+$(file))
 else
 # maximum size of command line in OS2 is limited to 1024 characters
 # the trick with divided 'wordlist' is workaround for it:

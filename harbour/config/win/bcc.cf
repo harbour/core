@@ -38,11 +38,11 @@ LD_OUT := -e
 
 # Add all libraries specified in LIBS.
 LINKPATHS += -L$(LIB_DIR)
-LIBLIST += $(foreach lib, $(LIBS),$(lib)$(LIB_EXT))
+LIBLIST += $(foreach lib,$(LIBS),$(lib)$(LIB_EXT))
 
 # It's probably not necessary in native Windows but I need it
 # for my Linux box because -L<path> seems to not work with WINE
-LINKLIBS = $(foreach lib, $(LIBLIST),$(LIB_DIR)/$(lib))
+LINKLIBS = $(foreach lib,$(LIBLIST),$(LIB_DIR)/$(lib))
 
 LDFLAGS = $(LINKPATHS)
 
@@ -60,7 +60,7 @@ endef
 
 define create_library
 @if exist __lib__.tmp del __lib__.tmp
-$(foreach file, $(^F), $(lib_object))
+$(foreach file,$(^F),$(lib_object))
 @echo -+>> __lib__.tmp
 $(AR) $(ARFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" @__lib__.tmp
 endef
@@ -69,7 +69,7 @@ AR_RULE = $(create_library)
 
 else # sh
 
-AROBJS = $(foreach file, $(^F), -+$(file))
+AROBJS = $(foreach file,$(^F),-+$(file))
 AR_RULE = $(AR) $(ARFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" $(AROBJS)
 
 endif

@@ -41,7 +41,7 @@ LD_OUT := -Fe
 
 # Add all libraries specified in LIBS.
 LINKPATHS += /link /libpath:$(LIB_DIR)
-LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
+LINKLIBS += $(foreach lib,$(LIBS),$(lib)$(LIB_EXT))
 
 LDFLAGS = $(LINKPATHS) user32.lib ws2_32.lib advapi32.lib gdi32.lib
 

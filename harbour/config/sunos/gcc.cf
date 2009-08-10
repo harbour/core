@@ -42,7 +42,7 @@ LD_OUT := -o
 
 # Add all libraries specified in LIBS.
 LINKPATHS += -L$(LIB_DIR)
-LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
+LINKLIBS += $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the specified GT driver library
 ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
