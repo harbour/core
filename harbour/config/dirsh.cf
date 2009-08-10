@@ -11,33 +11,30 @@ endif
 
 ifeq ($(DIRS),) # Empty directory list
 
-DIR_RULE =\
-	@echo Done
+DIR_RULE := @echo Done
 
 else
 
 ifeq ($(HB_SHELL),sh)
 
 DIR_RULE =\
-	@for d in $(DIRS); do \
-	  if [ -d "$$d" ]; then \
-	    $(MAKE) -C $$d $@; \
-	  fi \
-	done
+   @for d in $(DIRS); do \
+      if [ -d "$$d" ]; then \
+         $(MAKE) -C $$d $@; \
+      fi \
+   done
 
 endif
 
 ifeq ($(HB_SHELL),nt)
 
-DIR_RULE =\
-	for %%d in ($(DIRS_OS)) do $(MK_OS) -C %%d $@
+DIR_RULE = for %%d in ($(DIRS_OS)) do $(MK_OS) -C %%d $@
 
 endif
 
 ifeq ($(HB_SHELL),os2)
 
-DIR_RULE =\
-	for %d in ($(DIRS_OS)) do $(MK_OS) -C %d $@
+DIR_RULE = for %d in ($(DIRS_OS)) do $(MK_OS) -C %d $@
 
 endif
 
@@ -51,8 +48,7 @@ $(MK_OS) -C $(file) $@
 
 endef
 
-DIR_RULE =\
-	$(foreach file, $(DIRS_OS), $(dir_mk))
+DIR_RULE = $(foreach file, $(DIRS_OS), $(dir_mk))
 
 endif
 

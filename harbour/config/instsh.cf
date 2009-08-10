@@ -11,47 +11,45 @@ endif
 
 ifeq ($(INSTALL_FILES),) # Empty install list
 
-INSTALL_RULE =\
-	@echo Done
+INSTALL_RULE := @echo Done
 
 else
 
 ifeq ($(INSTALL_DIR),) # Empty install dir
 
-INSTALL_RULE =\
-	@echo Done
+INSTALL_RULE := @echo Done
 
 else
 
 ifeq ($(HB_SHELL),sh)
 
 INSTALL_RULE =\
-	@$(MDP) $(subst \,/,$(INSTALL_DIR)); \
-	if [ ! -d "$(subst \,/,$(INSTALL_DIR))" ]; \
-	then \
-	   echo "! Can't install, path not found: '$(subst \,/,$(INSTALL_DIR))'" 1>&2; \
-	   false; \
-	else \
-	   for i in $(INSTALL_FILES); \
-	   do \
-	      if [ -r "$$i" ]; \
-	      then \
-	         echo "! Installing $$i on $(subst \,/,$(INSTALL_DIR))"; \
-	         $(CP) $$i $(subst \,/,$(INSTALL_DIR)); \
-	         true; \
-	      else \
-	         echo "! Can't install $$i, not found" 1>&2; \
-	      fi \
-	   done \
-	fi
+   @$(MDP) $(subst \,/,$(INSTALL_DIR)); \
+   if [ ! -d "$(subst \,/,$(INSTALL_DIR))" ]; \
+   then \
+      echo "! Can't install, path not found: '$(subst \,/,$(INSTALL_DIR))'" 1>&2; \
+      false; \
+   else \
+      for i in $(INSTALL_FILES); \
+      do \
+         if [ -r "$$i" ]; \
+         then \
+            echo "! Installing $$i on $(subst \,/,$(INSTALL_DIR))"; \
+            $(CP) $$i $(subst \,/,$(INSTALL_DIR)); \
+            true; \
+         else \
+            echo "! Can't install $$i, not found" 1>&2; \
+         fi \
+      done \
+   fi
 
 endif
 
 ifeq ($(HB_SHELL),nt)
 
 INSTALL_RULE =\
-	-$(CMDPREF)if not exist "$(INSTALL_DIR_OS)" $(MDP) "$(INSTALL_DIR_OS)" &\
-	for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(INSTALL_DIR_OS)"
+   -$(CMDPREF)if not exist "$(INSTALL_DIR_OS)" $(MDP) "$(INSTALL_DIR_OS)" &\
+   for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(INSTALL_DIR_OS)"
 
 endif
 
@@ -91,8 +89,7 @@ $(CP) $(file) $(INSTALL_DIR_OS)
 
 endef
 
-INSTALL_RULE =\
-	$(inst_file_all)
+INSTALL_RULE = $(inst_file_all)
 
 endif
 
