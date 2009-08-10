@@ -175,7 +175,8 @@ ifeq ($(HB_CONFIG_SHOWN),)
    ifneq ($(MAKE_381),)
 
       # Some additional ones to be given a standard name:
-      #   HB_HOST_BUILD, HB_XBUILD, HB_WITHOUT_*, HB_REBUILD_PARSER
+      #   HB_HOST_BUILD, HB_XBUILD, HB_WITHOUT_*, HB_REBUILD_PARSER, HB_DB_DRVEXT
+      #   HB_COMMERCE, HB_CRS_LIB
 
       ifeq ($(HB_DYNLIB),yes)
          $(info ! Dynamic library creation phase)
@@ -635,7 +636,7 @@ HB_GT_LIBS := \
    gtstd \
 
 # Names of valid RDD libraries
-HB_DB_DRIVERS := \
+HB_RDD_LIBS := \
    rddntx \
    rddnsx \
    rddcdx \
@@ -646,7 +647,7 @@ HB_DB_DRIVERS := \
    hbuddall \
 
 # Names of valid RDD subdirectories
-HB_DB_DIRS := \
+HB_RDD_DIRS := \
    dbfntx \
    dbfnsx \
    dbfcdx \
@@ -657,8 +658,8 @@ HB_DB_DIRS := \
    usrrdd/rdds \
 
 ifneq ($(HB_DB_DRVEXT),)
-   HB_DB_DRIVERS += $(HB_DB_DRVEXT)
-   HB_DB_DIRS += $(HB_DB_DRVEXT)
+   HB_RDD_LIBS += $(HB_DB_DRVEXT)
+   HB_RDD_DIRS += $(HB_DB_DRVEXT)
 endif
 
 ifneq ($(HB_INSTALL_PREFIX),)

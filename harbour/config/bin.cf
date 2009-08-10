@@ -36,7 +36,7 @@ ifeq ($(findstring -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
 endif
 
 # Create a few common core lib lists
-_HB_RDD := hbrdd $(HB_DB_DRIVERS)
+_HB_RDD := hbrdd $(HB_RDD_LIBS)
 _HB_VM := hbvm
 HB_LIBS_ST_RDD := $(HB_LIBS_TPL)
 _HB_VM := hbvmmt
