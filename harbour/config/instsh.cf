@@ -11,13 +11,13 @@ endif
 
 ifeq ($(INSTALL_FILES),) # Empty install list
 
-INSTALL_RULE := @echo Done
+INSTALL_RULE := @echo "! Done"
 
 else
 
 ifeq ($(INSTALL_DIR),) # Empty install dir
 
-INSTALL_RULE := @echo Done
+INSTALL_RULE := @echo "! Done"
 
 else
 

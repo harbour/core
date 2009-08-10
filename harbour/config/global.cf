@@ -31,7 +31,7 @@ ok := $(filter $(need),$(firstword $(sort $(MAKE_VERSION) $(need))))
 
 ifeq ($(ok),)
 
-all: ; @echo Error: GNU Make version $(MAKE_VERSION) found, $(need) or upper needed for Harbour.
+all: ; @echo "! Error: GNU Make version $(MAKE_VERSION) found, $(need) or upper needed for Harbour"
 
 else
 
@@ -178,65 +178,65 @@ ifeq ($(HB_CONFIG_SHOWN),)
       #   HB_HOST_BUILD, HB_XBUILD, HB_WITHOUT_*, HB_REBUILD_PARSER
 
       ifeq ($(HB_DYNLIB),yes)
-         $(info Harbour GNU Make: Dynamic library creation phase)
+         $(info ! Dynamic library creation phase)
       endif
-      $(info Harbour GNU Make: Configuration:)
+      $(info ! Configuration:)
       ifneq ($(HB_USER_PRGFLAGS),)
-         $(info HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))
+         $(info ! HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))
       endif
       ifneq ($(HB_USER_CFLAGS),)
-         $(info HB_USER_CFLAGS: $(HB_USER_CFLAGS))
+         $(info ! HB_USER_CFLAGS: $(HB_USER_CFLAGS))
       endif
       ifneq ($(HB_USER_LDFLAGS),)
-         $(info HB_USER_LDFLAGS: $(HB_USER_LDFLAGS))
+         $(info ! HB_USER_LDFLAGS: $(HB_USER_LDFLAGS))
       endif
       ifneq ($(HB_USER_AFLAGS),)
-         $(info HB_USER_AFLAGS: $(HB_USER_AFLAGS))
+         $(info ! HB_USER_AFLAGS: $(HB_USER_AFLAGS))
       endif
       ifneq ($(HB_USER_MAKEFLAGS),)
-         $(info HB_USER_MAKEFLAGS: $(HB_USER_MAKEFLAGS))
+         $(info ! HB_USER_MAKEFLAGS: $(HB_USER_MAKEFLAGS))
       endif
       ifneq ($(HB_INSTALL_PREFIX),)
-         $(info HB_INSTALL_PREFIX: $(HB_INSTALL_PREFIX))
+         $(info ! HB_INSTALL_PREFIX: $(HB_INSTALL_PREFIX))
       endif
       ifneq ($(HB_BIN_INSTALL),)
-         $(info HB_BIN_INSTALL: $(HB_BIN_INSTALL))
+         $(info ! HB_BIN_INSTALL: $(HB_BIN_INSTALL))
       endif
       ifneq ($(HB_LIB_INSTALL),)
-         $(info HB_LIB_INSTALL: $(HB_LIB_INSTALL))
+         $(info ! HB_LIB_INSTALL: $(HB_LIB_INSTALL))
       endif
       ifneq ($(HB_INC_INSTALL),)
-         $(info HB_LIB_INSTALL: $(HB_INC_INSTALL))
+         $(info ! HB_LIB_INSTALL: $(HB_INC_INSTALL))
       endif
       ifneq ($(HB_DOC_INSTALL),)
-         $(info HB_DOC_INSTALL: $(HB_DOC_INSTALL))
+         $(info ! HB_DOC_INSTALL: $(HB_DOC_INSTALL))
       endif
       ifneq ($(HB_BUILD_NAME),)
-         $(info HB_BUILD_NAME: $(HB_BUILD_NAME))
+         $(info ! HB_BUILD_NAME: $(HB_BUILD_NAME))
       endif
       ifneq ($(HB_BUILD_DEBUG),)
-         $(info HB_BUILD_DEBUG: $(HB_BUILD_DEBUG))
+         $(info ! HB_BUILD_DEBUG: $(HB_BUILD_DEBUG))
       endif
       ifneq ($(HB_BUILD_OPTIM),)
-         $(info HB_BUILD_OPTIM: $(HB_BUILD_OPTIM))
+         $(info ! HB_BUILD_OPTIM: $(HB_BUILD_OPTIM))
       endif
       ifneq ($(HB_BUILD_UNICODE),)
-         $(info HB_BUILD_UNICODE: $(HB_BUILD_UNICODE))
+         $(info ! HB_BUILD_UNICODE: $(HB_BUILD_UNICODE))
       endif
       ifneq ($(HB_BUILD_MODE),)
-         $(info HB_BUILD_MODE: $(HB_BUILD_MODE))
+         $(info ! HB_BUILD_MODE: $(HB_BUILD_MODE))
       endif
       ifneq ($(HB_CONTRIBLIBS),)
-         $(info HB_CONTRIBLIBS: $(HB_CONTRIBLIBS))
+         $(info ! HB_CONTRIBLIBS: $(HB_CONTRIBLIBS))
       endif
       ifneq ($(HB_CONTRIB_ADDONS),)
-         $(info HB_CONTRIB_ADDONS: $(HB_CONTRIB_ADDONS))
+         $(info ! HB_CONTRIB_ADDONS: $(HB_CONTRIB_ADDONS))
       endif
       ifneq ($(HB_EXTERNALLIBS),)
-         $(info HB_EXTERNALLIBS: $(HB_EXTERNALLIBS))
+         $(info ! HB_EXTERNALLIBS: $(HB_EXTERNALLIBS))
       endif
       ifneq ($(HB_EXTERNAL_ADDONS),)
-         $(info HB_EXTERNAL_ADDONS: $(HB_EXTERNAL_ADDONS))
+         $(info ! HB_EXTERNAL_ADDONS: $(HB_EXTERNAL_ADDONS))
       endif
    endif
 
@@ -338,7 +338,7 @@ endif
 
 ifeq ($(HB_BUILD_VERBOSE),yes)
    ifneq ($(MAKE_381),)
-      $(info Harbour GNU Make: Detected host platform: $(HB_HOST_ARCH))
+      $(info ! Detected host platform: $(HB_HOST_ARCH))
    endif
 endif
 
@@ -359,7 +359,7 @@ endif
 
 ifeq ($(HB_BUILD_VERBOSE),yes)
    ifneq ($(MAKE_381),)
-      $(info Harbour GNU Make: Detected host CPU: $(HB_HOST_CPU))
+      $(info ! Detected host CPU: $(HB_HOST_CPU))
    endif
 endif
 
@@ -481,15 +481,15 @@ ifeq ($(HB_COMPILER),)
       endif
    endif
    ifneq ($(MAKE_381),)
-      $(info Harbour GNU Make: Autodetected C compiler: $(HB_COMPILER))
+      $(info ! Autodetected C compiler: $(HB_COMPILER))
    endif
 endif
 
 ifeq ($(HB_ARCHITECTURE),)
-   $(error Harbour GNU Make: HB_ARCHICTECTURE not set, couldn't autodetect.)
+   $(error ! HB_ARCHICTECTURE not set, couldn't autodetect.)
 endif
 ifeq ($(HB_COMPILER),)
-   $(error Harbour GNU Make: HB_COMPILER not set, couldn't autodetect.)
+   $(error ! HB_COMPILER not set, couldn't autodetect.)
 endif
 
 export HB_ARCHITECTURE
@@ -532,7 +532,7 @@ endif
 
 ifeq ($(HB_BUILD_VERBOSE),yes)
    ifneq ($(MAKE_381),)
-      $(info Harbour GNU Make: Detected target CPU: $(HB_CPU))
+      $(info ! Detected target CPU: $(HB_CPU))
    endif
 endif
 
@@ -544,7 +544,7 @@ endif
 
 ifeq ($(HB_BUILD_VERBOSE),yes)
    ifneq ($(MAKE_381),)
-      $(info Harbour GNU Make: Detected host executable extension: $(HB_HOST_BIN_EXT))
+      $(info ! Detected host executable extension: $(HB_HOST_BIN_EXT))
    endif
 endif
 
@@ -564,10 +564,10 @@ ifneq ($(HB_HOST_ARCH)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
                endif
             endif
             ifeq ($(HB_BIN_COMPILE),)
-               $(warning Harbour GNU Make: Warning: HB_BIN_COMPILE not specified. Couldn't find native build.)
+               $(warning ! Warning: HB_BIN_COMPILE not specified. Couldn't find native build.)
             else
                ifneq ($(MAKE_381),)
-                  $(info Harbour GNU Make: HB_BIN_COMPILE not specified. Automatically set to: $(HB_BIN_COMPILE))
+                  $(info ! HB_BIN_COMPILE not specified. Automatically set to: $(HB_BIN_COMPILE))
                endif
             endif
          endif

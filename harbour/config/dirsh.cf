@@ -11,7 +11,7 @@ endif
 
 ifeq ($(DIRS),) # Empty directory list
 
-DIR_RULE := @echo Done
+DIR_RULE := @echo "! Done"
 
 else
 
