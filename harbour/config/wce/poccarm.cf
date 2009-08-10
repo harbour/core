@@ -8,7 +8,7 @@ OBJ_EXT := .obj
 LIB_PREF :=
 LIB_EXT := .lib
 
-CC = pocc.exe
+CC := pocc.exe
 CC_IN := -c
 CC_OUT := -Fo
 CPPFLAGS = -I.
@@ -37,7 +37,7 @@ endif
 
 CFLAGS =
 
-LD = polink.exe
+LD := polink.exe
 LD_OUT := -OUT:
 
 # Add all libraries specified in LIBS.

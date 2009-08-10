@@ -12,7 +12,7 @@ OBJ_EXT := .o
 LIB_PREF := lib
 LIB_EXT := .a
 
-CC = $(HB_CMP)
+CC := $(HB_CMP)
 CC_IN := -c
 CC_OUT := -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
@@ -31,7 +31,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 CFLAGS += -g
 endif
 
-LD = $(HB_CMP)
+LD := $(HB_CMP)
 LD_OUT := -o
 
 # Add all libraries specified in LIBS.

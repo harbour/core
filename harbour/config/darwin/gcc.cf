@@ -14,7 +14,7 @@ OBJ_EXT := .o
 LIB_PREF := lib
 LIB_EXT := .a
 
-CC = $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
+CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 CC_IN := -c
 # NOTE: The ending space after -o is important, please preserve it.
 #       Now solved with '$(subst x,x, )' expression.
@@ -44,7 +44,7 @@ endif
 # remove it if you have newer compiler version
 #CFLAGS += -Wno-long-double
 
-LD = $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
+LD := $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 LD_OUT := -o
 
 LINKPATHS += -L$(LIB_DIR)

@@ -12,7 +12,7 @@ OBJ_EXT := .o
 LIB_PREF := lib
 LIB_EXT := .a
 
-CC = $(HB_CCPREFIX)$(HB_CMP)
+CC := $(HB_CCPREFIX)$(HB_CMP)
 CC_IN := -c
 CC_OUT := -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
@@ -32,7 +32,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 CFLAGS += -g
 endif
 
-LD = $(HB_CCPREFIX)$(HB_CMP)
+LD := $(HB_CCPREFIX)$(HB_CMP)
 LD_OUT := -o
 LINKPATHS =
 LIBLIST =
@@ -58,7 +58,7 @@ SYSLIBS += -lcommdlg -lcommctrl -luuid -lole32
 
 LDFLAGS =
 
-AR = $(HB_CCPREFIX)ar
+AR := $(HB_CCPREFIX)ar
 ARFLAGS = $(HB_USER_AFLAGS)
 
 RANLIB = $(HB_CCPREFIX)ranlib

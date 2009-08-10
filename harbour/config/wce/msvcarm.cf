@@ -42,9 +42,9 @@ CFLAGS += -Zi
 endif
 
 ifeq ($(HB_VISUALC_VER_PRE80),)
-LD = cl.exe
+LD := cl.exe
 else
-LD = clarm.exe
+LD := clarm.exe
 endif
 LD_OUT := -Fe
 

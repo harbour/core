@@ -12,7 +12,7 @@ OBJ_EXT := .o
 LIB_PREF := lib
 LIB_EXT := .a
 
-CC = $(HB_CCACHE) $(HB_CMP)
+CC := $(HB_CCACHE) $(HB_CMP)
 CC_IN := -c
 CC_OUT := -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
@@ -30,7 +30,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 CFLAGS += -g
 endif
 
-LD = $(HB_CCACHE) $(HB_CMP)
+LD := $(HB_CCACHE) $(HB_CMP)
 LD_OUT := -o
 
 LINKPATHS += -L$(LIB_DIR)
@@ -51,7 +51,7 @@ LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt))
 
 # screen driver libraries
 ifeq ($(HB_CRS_LIB),)
-HB_CRS_LIB = ncurses
+HB_CRS_LIB := ncurses
 endif
 
 ifneq ($(findstring gtcrs, $(HB_GT_LIBS)),)

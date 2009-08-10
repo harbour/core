@@ -27,7 +27,7 @@ endif
 
 ifeq ($(HB_SHELL),sh)
 
-MK = $(MAKE)
+MK := $(MAKE)
 RM := rm -f
 RDP := rm -f -r
 CP := cp -f
@@ -54,7 +54,7 @@ endif
 
 ifeq ($(HB_SHELL),nt)
 
-MK = "$(subst \,/,$(subst \~,~,$(MAKE)))"
+MK := "$(subst \,/,$(subst \~,~,$(MAKE)))"
 RM := del /q /f
 RDP := rmdir /q /s
 CP := copy
@@ -79,12 +79,12 @@ endif
 
 ifeq ($(HB_SHELL),os2)
 
-MK = $(subst \,/,$(subst \~,~,$(MAKE)))
+MK := $(subst \,/,$(subst \~,~,$(MAKE)))
 RM := del /n
-RDP = $(TOOL_DIR)os2-rm -rf
+RDP := $(TOOL_DIR)os2-rm -rf
 CP := copy
 MD := mkdir
-MDP = $(TOOL_DIR)os2-mkdir -p
+MDP := $(TOOL_DIR)os2-mkdir -p
 
 dirbase::
 	-@if not exist $(OBJ_DIR_OS) $(MDP) $(OBJ_DIR)
@@ -100,12 +100,12 @@ endif
 
 ifeq ($(HB_SHELL),dos)
 
-MK = $(subst \,/,$(subst \~,~,$(MAKE)))
+MK := $(subst \,/,$(subst \~,~,$(MAKE)))
 RM := del
-RDP = $(TOOL_DIR)dj-rm -f -r
-CP = $(TOOL_DIR)dj-cp -f
+RDP := $(TOOL_DIR)dj-rm -f -r
+CP := $(TOOL_DIR)dj-cp -f
 MD := mkdir
-MDP = $(TOOL_DIR)dj-mkdir -p
+MDP := $(TOOL_DIR)dj-mkdir -p
 
 dirbase::
 	-@if not exist $(OBJ_DIR_OS)\nul $(MDP) $(OBJ_DIR_OS)
