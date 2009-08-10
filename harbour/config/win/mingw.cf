@@ -62,8 +62,7 @@ LIBLIST += $(foreach gt, $(HB_GT_LIBS), -l$(gt))
 endif
 
 # This library is needed for CharToOemBuff() and OemToCharBuff() support.
-SYSLIBS = -luser32 -lgdi32
-SYSLIBS += -lwinspool -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lmpr -lws2_32 -lmapi32
+SYSLIBS := -luser32 -lgdi32 -lws2_32
 
 AR := $(HB_CCPREFIX)ar
 ARFLAGS = $(HB_USER_AFLAGS)

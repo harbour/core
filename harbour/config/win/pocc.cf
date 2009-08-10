@@ -51,9 +51,7 @@ ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
 LINKLIBS += $(foreach gt, $(HB_GT_LIBS), $(gt)$(LIB_EXT))
 endif
 
-LDFLAGS = $(LINKPATHS) kernel32.lib user32.lib gdi32.lib ws2_32.lib advapi32.lib
-LDFLAGS += winspool.lib ole32.lib oleaut32.lib uuid.lib \
-           comctl32.lib mapi32.lib mpr.lib
+LDFLAGS = $(LINKPATHS) kernel32.lib user32.lib ws2_32.lib advapi32.lib gdi32.lib
 LDFLAGS += /SUBSYSTEM:CONSOLE
 
 AR := polib.exe

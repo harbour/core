@@ -52,9 +52,7 @@ ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
 LIBLIST += $(foreach gt, $(HB_GT_LIBS), -l$(gt))
 endif
 
-SYSLIBS = -lwininet -lws2
-# for contribs
-SYSLIBS += -lcommdlg -lcommctrl -luuid -lole32
+SYSLIBS := -lwininet -lws2
 
 LDFLAGS =
 
