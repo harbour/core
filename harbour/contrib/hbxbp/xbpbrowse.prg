@@ -826,18 +826,14 @@ METHOD XbpBrowse:supplyInfo( nInfo, p2, p3 )
       ENDIF
 
    CASE HBQT_BRW_CELLVALUE
-      IF ::columns[ p3 ]:type == XBPCOL_TYPE_TEXT
-         IF ::lFirst
-            ::lFirst := .f.
-            ::forceStable()
-            ::setVertScrollBarRange( .t. )
-            ::setHorzScrollBarRange( .f. )
-            ::oWidget:selectRow( ::rowPos - 1 )
-         ENDIF
-         RETURN ::cellValue( p2, p3 )
-      ELSE
-         RETURN ""
+      IF ::lFirst
+         ::lFirst := .f.
+         ::forceStable()
+         ::setVertScrollBarRange( .t. )
+         ::setHorzScrollBarRange( .f. )
+         ::oWidget:selectRow( ::rowPos - 1 )
       ENDIF
+      RETURN ::cellValue( p2, p3 )
 
    ENDSWITCH
 

@@ -1881,6 +1881,8 @@ QVariant HbDbfModel::data( const QModelIndex & index, int role ) const
       case Qt::DecorationRole:
       {
          QVariant image = fetchRole( block, HBQT_BRW_CELLDECORATION, index.row()+1, index.column()+1 );
+         if( image.toString() == ( QString ) "" )
+            return( QVariant() );
          return( QIcon( image.toString() ) );
          //return( QPixmap( image.toString() ) );
       }
