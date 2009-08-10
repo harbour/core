@@ -280,7 +280,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
                lAuthLogin := .T.
             ELSEIF "PLAIN" $ oInMail:cReply
                lAuthPlain := .T.
-#if defined( HAS_OPENSSL )
+#if defined( HB_HAS_OPENSSL )
             ELSEIF "STARTTLS" $ oInMail:cReply
                lAuthTLS := .T.
 #endif
