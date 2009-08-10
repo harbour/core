@@ -140,7 +140,7 @@ METHOD New( cBody, oEncoder ) CLASS TipMail
    RETURN Self
 
 METHOD SetEncoder( cEnc ) CLASS TipMail
-   if hb_isString( cEnc )
+   IF hb_isString( cEnc )
       ::oEncoder := TIp_GetEncoder( cEnc )
    ELSE
       ::oEncoder := cEnc
@@ -151,11 +151,11 @@ METHOD SetEncoder( cEnc ) CLASS TipMail
 METHOD SetBody( cBody ) CLASS TipMail
    IF ::oEncoder != NIL
       ::cBody := ::oEncoder:Encode( cBody )
-      ::lBodyEncoded:=.T.  //GD needed to prevent an extra crlf from being appended
+      ::lBodyEncoded := .T.  //GD needed to prevent an extra crlf from being appended
    ELSE
       ::cBody := cBody
    ENDIF
-   //::hHeaders[ "Content-Length" ] := hb_ntos( Len( cBody ) )  //GD -not needed
+   ::hHeaders[ "Content-Length" ] := hb_ntos( Len( cBody ) )
    RETURN .T.
 
 METHOD GetBody() CLASS TipMail
@@ -176,7 +176,7 @@ METHOD GetFieldPart( cPart ) CLASS TipMail
       cEnc := hb_HValueAt( ::hHeaders, nPos )
       nPos := At( ";", cEnc )
       IF nPos != 0
-         cEnc := SubStr( cEnc, 1, nPos - 1)
+         cEnc := SubStr( cEnc, 1, nPos - 1 )
       ENDIF
    ENDIF
 
@@ -301,25 +301,25 @@ METHOD ToString() CLASS TipMail
    // Begin output the fields
    // Presenting them in a "well-known" order
    IF "Return-Path" $ ::hHeaders
-      cRet += "Return-Path: "+::hHeaders[ "Return-Path" ] + e"\r\n"
+      cRet += "Return-Path: " + ::hHeaders[ "Return-Path" ] + e"\r\n"
    ENDIF
    IF "Delivered-To" $ ::hHeaders
-      cRet += "Delivered-To: "+::hHeaders[ "Delivered-To" ] + e"\r\n"
+      cRet += "Delivered-To: " + ::hHeaders[ "Delivered-To" ] + e"\r\n"
    ENDIF
    FOR EACH cElem IN ::aReceived
-      cRet += "Received: "+ cElem+ e"\r\n"
+      cRet += "Received: " + cElem + e"\r\n"
    NEXT
    IF "Date" $ ::hHeaders
-      cRet += "Date: "+::hHeaders[ "Date" ] + e"\r\n"
+      cRet += "Date: " + ::hHeaders[ "Date" ] + e"\r\n"
    ENDIF
    IF "From" $ ::hHeaders
-      cRet += "From: "+::hHeaders[ "From" ] + e"\r\n"
+      cRet += "From: " + ::hHeaders[ "From" ] + e"\r\n"
    ENDIF
    IF "To" $ ::hHeaders
-      cRet += "To: "+::hHeaders[ "To" ] + e"\r\n"
+      cRet += "To: " + ::hHeaders[ "To" ] + e"\r\n"
    ENDIF
    IF "Subject" $ ::hHeaders
-      cRet += "Subject: "+ ::hHeaders[ "Subject" ] + e"\r\n"
+      cRet += "Subject: " + ::hHeaders[ "Subject" ] + e"\r\n"
    ENDIF
    IF Len( ::aAttachments ) > 0
       cRet += "Mime-Version:" + ::hHeaders[ "Mime-Version" ] + e"\r\n"
@@ -327,14 +327,14 @@ METHOD ToString() CLASS TipMail
 
    FOR i := 1 TO Len( ::hHeaders )
       cElem := Lower( hb_HKeyAt( ::hHeaders, i ) )
-      IF !( cElem == "return-path" ) .AND.;
-         !( cElem == "delivered-to" ) .AND.;
-         !( cElem == "date" ) .AND.;
-         !( cElem == "from" ) .AND.;
-         !( cElem == "to" ) .AND.;
-         !( cElem == "subject" ) .AND.;
+      IF !( cElem == "return-path" ) .AND. ;
+         !( cElem == "delivered-to" ) .AND. ;
+         !( cElem == "date" ) .AND. ;
+         !( cElem == "from" ) .AND. ;
+         !( cElem == "to" ) .AND. ;
+         !( cElem == "subject" ) .AND. ;
          !( cElem == "mime-version" )
-         cRet += hb_HKeyAt( ::hHeaders, i ) + ": " +;
+         cRet += hb_HKeyAt( ::hHeaders, i ) + ": " + ;
                  hb_HValueAt( ::hHeaders, i ) + e"\r\n"
       ENDIF
    NEXT
@@ -352,7 +352,7 @@ METHOD ToString() CLASS TipMail
          cRet += "--" + cBoundary + e"\r\n"
          cRet += "Content-Type: text/plain; charset=ISO-8859-1; format=flowed" + e"\r\n"
          cRet += "Content-Transfer-Encoding: 7bit" + e"\r\n"
-         cRet += "Content-Disposition: inline" + e"\r\n"+ e"\r\n"
+         cRet += "Content-Disposition: inline" + e"\r\n" + e"\r\n"
          cRet += ::cBody + e"\r\n"
       ENDIF
    ENDIF
@@ -413,7 +413,7 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TipMail
       nPos := nLinePos + 2
       nLinePos := hb_At( e"\r\n", cMail, nPos )
       //Prevents malformed body to affect us
-      IF cBoundary != NIL .AND. hb_At( "--"+cBoundary, cMail, nPos ) == 1
+      IF cBoundary != NIL .AND. hb_At( "--" + cBoundary, cMail, nPos ) == 1
          RETURN 0
       ENDIF
    ENDDO
@@ -498,7 +498,7 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TipMail
       ::cBody := SubStr( cMail, nBodyPos, nPos - nBodyPos )
    ENDIF
 
-  RETURN nPos
+   RETURN nPos
 
 METHOD MakeBoundary() CLASS TipMail
    LOCAL cBound := "=_0" + Space( 17 )
@@ -509,7 +509,7 @@ METHOD MakeBoundary() CLASS TipMail
    NEXT
 
    cBound += "_TIP_" + DToS( Date() ) +;
-       "_" + StrTran(Time(), ":" )
+       "_" + StrTran( Time(), ":" )
 
    RETURN cBound
 

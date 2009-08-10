@@ -60,7 +60,6 @@
  *
  */
 
-#include "tip.ch"
 #include "common.ch"
 
 #define SID_LENGTH      25

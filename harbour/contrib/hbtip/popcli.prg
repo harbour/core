@@ -88,13 +88,13 @@ METHOD New( oUrl, bTrace, oCredentials ) CLASS tIPClientPOP
    LOCAL oLog
 
    IF ISLOGICAL( bTrace ) .AND. bTrace
-      oLog := tIPLog():New( "pop" )
+      oLog := tIPLog():New( "pop3" )
       bTrace := {| cMsg | iif( PCount() > 0, oLog:Add( cMsg ), oLog:Close() ) }
    ENDIF
 
    ::super:New( oUrl, bTrace, oCredentials )
 
-   ::nDefaultPort := 110
+   ::nDefaultPort := iif( ::oUrl:cProto == "pop3s" .OR. ::oUrl:cProto == "pops", 995, 110 )
    ::nConnTimeout := 10000
 
    RETURN Self
@@ -108,7 +108,6 @@ METHOD Open( cUrl ) CLASS tIPClientPOP
       RETURN .F.
    ENDIF
 
-   hb_inetTimeout( ::SocketCon, ::nConnTimeout )
    IF ::GetOk()
       ::InetSendall( ::SocketCon, "USER " + ::oUrl:cUserid + ::cCRLF )
       IF ::GetOK()
@@ -136,7 +135,7 @@ METHOD Noop() CLASS tIPClientPOP
 
 METHOD Close() CLASS tIPClientPOP
 
-   hb_inetTimeOut( ::SocketCon, ::nConnTimeout )
+   ::InetTimeOut( ::SocketCon )
 
    ::Quit()
 

@@ -199,7 +199,6 @@ METHOD Open( cUrl ) CLASS tIPClientFTP
       RETURN .F.
    ENDIF
 
-   hb_inetTimeout( ::SocketCon, ::nConnTimeout )
    IF ::GetReply()
       ::InetSendall( ::SocketCon, "USER " + ::oUrl:cUserid + ::cCRLF )
       IF ::GetReply()
@@ -259,7 +258,7 @@ METHOD Pasv() CLASS tIPClientFTP
 
 METHOD Close() CLASS tIPClientFTP
 
-   hb_inetTimeOut( ::SocketCon, ::nConnTimeout )
+   ::InetTimeOut( ::SocketCon )
 
    ::Quit()
 
@@ -328,7 +327,8 @@ METHOD TransferStart() CLASS tIPClientFTP
             RETURN .F.
          ENDIF
 
-         hb_inetTimeout( skt, ::nConnTimeout )
+         ::InetTimeOut( skt )
+
          /* Set internal socket send buffer to 64k,
          * this should fix the speed problems some users have reported
          */

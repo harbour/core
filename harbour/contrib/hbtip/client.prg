@@ -82,8 +82,6 @@
    #include "hbssl.ch"
 #endif
 
-#include "tip.ch"
-
 #define RCV_BUF_SIZE Int( ::InetRcvBufSize( ::SocketCon ) / 2 )
 #define SND_BUF_SIZE Int( ::InetSndBufSize( ::SocketCon ) / 2 )
 
@@ -160,6 +158,8 @@ CREATE CLASS tIPClient
    METHOD InetRcvBufSize( SocketCon, nSizeBuff )
    METHOD InetSndBufSize( SocketCon, nSizeBuff )
 
+   METHOD InetTimeOut( SocketCon, nConnTimeout )
+
    PROTECTED:
 
    VAR nLastError INIT 0
@@ -201,11 +201,11 @@ METHOD New( oUrl, bTrace, oCredentials ) CLASS tIPClient
 #if defined( HAS_OPENSSL )
    IF oURL:cProto == "ftps" .OR. ;
       oURL:cProto == "https" .OR. ;
-      oURL:cProto == "pops" .OR. ;
+      oURL:cProto == "pop3s" .OR. oURL:cProto == "pops" .OR. ;
       oURL:cProto == "smtps"
       ::EnableTLS( .T. )
    ENDIF
-   cProtoAccepted += "," + "ftps,https,pops,smtps"
+   cProtoAccepted += "," + "ftps,https,pop3s,pops,smtps"
 #endif
 
    IF ! oURL:cProto $ cProtoAccepted
@@ -253,9 +253,7 @@ METHOD Open( cUrl ) CLASS tIPClient
 
    ::SocketCon := hb_inetCreate()
 
-   IF ISNUMBER( ::nConnTimeout )
-      hb_inetTimeout( ::SocketCon, ::nConnTimeout )
-   ENDIF
+   ::InetTimeOut( ::SocketCon )
 
    IF ! Empty( ::cProxyHost )
       cResp := ""
@@ -768,6 +766,15 @@ METHOD InetSndBufSize( SocketCon, nSizeBuff ) CLASS tIPClient
    ENDIF
    RETURN hb_inetGetSndBufSize( SocketCon )
 
+METHOD InetTimeOut( SocketCon, nConnTimeout ) CLASS tIPClient
+   IF ISNUMBER( nConnTimeout )
+      ::nConnTimeout := nConnTimeout
+   ENDIF
+   IF ISNUMBER( ::nConnTimeout )
+      RETURN hb_inetTimeout( SocketCon, ::nConnTimeout )
+   ENDIF
+   RETURN NIL
+
 /* Called from another method with list of parameters and, as last parameter, return code
    of function being logged.
    Example, I want to log MyFunc( a, b, c ) which returns m,
@@ -815,3 +822,10 @@ METHOD SetProxy( cProxyHost, nProxyPort, cProxyUser, cProxyPassword ) CLASS tIPC
    ::cProxyPassword := cProxyPassword
 
    RETURN Self
+
+FUNCTION tip_SSL()
+#if defined( HAS_OPENSSL )
+   RETURN .T.
+#else
+   RETURN .F.
+#endif

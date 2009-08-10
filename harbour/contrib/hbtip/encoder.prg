@@ -52,20 +52,16 @@
 
 /*
  Internet Messaging: http://www.ietf.org/rfc/rfc2045.txt
-
  */
 
 /* 2007-04-12, Hannes Ziegler <hz AT knowlexbase.com>
    Added Function: TIp_GetEncoder()
 */
 
-
 #include "hbclass.ch"
 
 #include "common.ch"
 #include "fileio.ch"
-
-#include "tip.ch"
 
 FUNCTION TIp_GetEncoder( cModel )
    LOCAL oEncoder

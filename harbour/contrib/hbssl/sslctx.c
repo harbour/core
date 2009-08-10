@@ -445,19 +445,6 @@ HB_FUNC( SSL_CTX_SESS_TIMEOUTS )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SSL_CTX_SET_DEFAULT_VERIFY_PATHS )
-{
-   if( hb_SSL_CTX_is( 1 ) )
-   {
-      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
-
-      if( ctx )
-         hb_retni( SSL_CTX_set_default_verify_paths( ctx ) );
-   }
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
 HB_FUNC( SSL_CTX_NEED_TMP_RSA )
 {
    if( hb_SSL_CTX_is( 1 ) )
@@ -740,6 +727,40 @@ HB_FUNC( SSL_CTX_USE_PRIVATEKEY )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_CTX_LOAD_VERIFY_LOCATIONS )
+{
+#ifndef OPENSSL_NO_STDIO
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_load_verify_locations( ctx, hb_parc( 2 ) /* CAfile */, hb_parc( 3 ) /* CApath */ ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_errRT_BASE( EG_NOFUNC, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
+}
+
+HB_FUNC( SSL_CTX_SET_DEFAULT_VERIFY_PATHS )
+{
+#ifndef OPENSSL_NO_STDIO
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_set_default_verify_paths( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_errRT_BASE( EG_NOFUNC, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
+}
+
 /*
 
 #define sk_X509_NAME_new_null() SKM_sk_new_null(X509_NAME)
@@ -761,7 +782,6 @@ int (*SSL_CTX_get_client_cert_cb(SSL_CTX *ctx))(SSL *ssl, X509 **x509, EVP_PKEY 
 int SSL_CTX_get_ex_new_index(long argl, char *argp, int (*new_func);(void), int (*dup_func)(void), void (*free_func)(void))
 void (*SSL_CTX_get_info_callback(SSL_CTX *ctx))(SSL *ssl, int cb, int ret);
 int (*SSL_CTX_get_verify_callback(const SSL_CTX *ctx))(int ok, X509_STORE_CTX *ctx);
-int SSL_CTX_load_verify_locations(SSL_CTX *ctx, char *CAfile, char *CApath);
 SSL_SESSION *(*SSL_CTX_sess_get_get_cb(SSL_CTX *ctx))(SSL *ssl, unsigned char *data, int len, int *copy);
 int (*SSL_CTX_sess_get_new_cb(SSL_CTX *ctx)(SSL *ssl, SSL_SESSION *sess);
 void (*SSL_CTX_sess_get_remove_cb(SSL_CTX *ctx)(SSL_CTX *ctx, SSL_SESSION *sess);

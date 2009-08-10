@@ -65,8 +65,6 @@
 #include "common.ch"
 #include "fileio.ch"
 
-#include "tip.ch"
-
 #define CGI_IN  0
 #define CGI_OUT 1
 #define _CRLF Chr( 13 ) + Chr( 10 )

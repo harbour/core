@@ -55,8 +55,6 @@
 #include "common.ch"
 #include "fileio.ch"
 
-#include "tip.ch"
-
 CREATE CLASS tIPClientHTTP FROM tIPClient
 
    VAR cMethod
@@ -104,7 +102,7 @@ METHOD New( oUrl, bTrace, oCredentials ) CLASS tIPClientHTTP
 
    ::super:new( oUrl, bTrace, oCredentials )
 
-   ::nDefaultPort := 80
+   ::nDefaultPort := iif( ::oUrl:cProto == "https", 443, 80 )
    ::nConnTimeout := 5000
    ::bChunked     := .F.
 

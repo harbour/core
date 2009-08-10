@@ -276,9 +276,6 @@ else
    endif
 endif
 
-$(info Harbour GNU Make: Detected shell: $(SHELL))
-$(info Harbour GNU Make: Detected shell: $(HB_SHELL))
-
 CMDPREF :=
 ifneq ($(HB_SHELL),sh)
    ifneq ($(COMSPEC),)
