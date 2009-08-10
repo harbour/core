@@ -13,6 +13,7 @@ LIBS := \
    hbvm \
    hbrtl \
    hblang \
+   hbcpage \
    hbrdd \
    hbrtl \
    hbvm \

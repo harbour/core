@@ -33,6 +33,7 @@ LIBS := \
    hbvm \
    hbrtl \
    hblang \
+   hbcpage \
    hbrdd \
    hbrtl \
    hbvm \
@@ -43,3 +44,4 @@ LIBS := \
 HB_USER_PRGFLAGS += -l-
 
 include $(TOP)$(ROOT)config/bin.cf
+

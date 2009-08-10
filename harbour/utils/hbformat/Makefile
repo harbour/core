@@ -27,7 +27,5 @@ LIBS := \
    hbvm \
    hbmacro \
    hbcommon \
-   hbpp \
-   hbcplr \
 
 include $(TOP)$(ROOT)config/bin.cf
