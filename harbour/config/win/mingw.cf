@@ -36,13 +36,9 @@ endif
 
 LD := $(HB_CCPREFIX)$(HB_CMP)
 LD_OUT := -o
-LINKPATHS =
-LIBLIST =
 
-# Add all libraries specified in LIBS.
-LINKPATHS += -L$(LIB_DIR)
-
-LIBLIST += $(foreach lib,$(LIBS),-l$(lib))
+LINKPATHS = -L$(LIB_DIR)
+LIBLIST = $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the standard C main() entry
 ifeq ($(HB_MAIN),std)
@@ -51,6 +47,7 @@ LIBLIST += -lhbmainstd
 endif
 endif
 
+LDFLAGS :=
 # This library is needed for CharToOemBuff() and OemToCharBuff() support.
 SYSLIBS := -luser32 -lgdi32 -lws2_32
 
@@ -59,9 +56,7 @@ ARFLAGS = $(HB_USER_AFLAGS)
 
 RANLIB := $(HB_CCPREFIX)ranlib
 
-ifeq ($(AR_RULE),)
 AR_RULE = $(AR) $(ARFLAGS) cr $(LIB_DIR)/$@ $(^F) && $(RANLIB) $(LIB_DIR)/$@ || $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@)
 LINKLIBS = $(LINKPATHS) $(LIBLIST) $(SYSLIBS)
-endif
 
 include $(TOP)$(ROOT)config/rules.cf

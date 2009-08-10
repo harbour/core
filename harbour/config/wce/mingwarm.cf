@@ -34,26 +34,19 @@ endif
 
 LD := $(HB_CCPREFIX)$(HB_CMP)
 LD_OUT := -o
-LINKPATHS =
-LIBLIST =
 
-# Add all libraries specified in LIBS.
-LINKPATHS += -L$(LIB_DIR)
+LINKPATHS = -L$(LIB_DIR)
+LIBLIST = $(foreach lib,$(LIBS),-l$(lib))
 
-LIBLIST += $(foreach lib,$(LIBS),-l$(lib))
-
+LDFLAGS :=
 SYSLIBS := -lwininet -lws2
-
-LDFLAGS =
 
 AR := $(HB_CCPREFIX)ar
 ARFLAGS = $(HB_USER_AFLAGS)
 
 RANLIB := $(HB_CCPREFIX)ranlib
 
-ifeq ($(AR_RULE),)
 AR_RULE = $(AR) $(ARFLAGS) cr $(LIB_DIR)/$@ $(^F) && $(RANLIB) $(LIB_DIR)/$@ || $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@)
 LINKLIBS = $(LINKPATHS) $(LIBLIST) $(SYSLIBS)
-endif
 
 include $(TOP)$(ROOT)config/rules.cf
