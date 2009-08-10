@@ -65,9 +65,7 @@ define link_exe_file
 @echo. $(LDFLAGS) $(HB_USER_LDFLAGS) $(LD_OUT)$(BIN_DIR)/$@ > __link__.tmp
 $(foreach file,$(^F),$(link_file))
 $(foreach file,$(LINKPATHS),$(link_file))
-@echo. -Wl,--start-group >> __link__.tmp
 $(foreach file,$(LINKLIBS),$(link_file))
-@echo. -Wl,--end-group >> __link__.tmp
 @echo. $(LDLIBS) >> __link__.tmp
 -$(LD) @__link__.tmp
 endef

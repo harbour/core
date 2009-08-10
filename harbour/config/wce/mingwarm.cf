@@ -53,9 +53,7 @@ RANLIB := $(HB_CCPREFIX)ranlib
 
 ifeq ($(AR_RULE),)
 AR_RULE = $(AR) $(ARFLAGS) cr $(LIB_DIR)/$@ $(^F) && $(RANLIB) $(LIB_DIR)/$@ || $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@)
-# our libs have a lot of cross referenced now and we have to group them
-# until we won't have cleaned them
-LINKLIBS = $(LINKPATHS) -Wl,--start-group $(LIBLIST) -Wl,--end-group $(SYSLIBS)
+LINKLIBS = $(LINKPATHS) $(LIBLIST) $(SYSLIBS)
 endif
 
 include $(TOP)$(ROOT)config/rules.cf

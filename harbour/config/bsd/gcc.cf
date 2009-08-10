@@ -35,8 +35,6 @@ LD_OUT := -o
 
 LINKPATHS += -L$(LIB_DIR)
 
-LINKLIBS += -Wl,--start-group
-
 LINKLIBS += $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the specified GT driver library and other RTLs
@@ -77,7 +75,7 @@ ifneq ($(findstring -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
 LINKLIBS += -lz
 endif
 
-LINKLIBS += -lm -Wl,--end-group
+LINKLIBS += -lm
 
 LDFLAGS +=  $(LINKPATHS)
 

@@ -45,10 +45,6 @@ LD_OUT := -o
 # Add all libraries specified in LIBS.
 LINKPATHS += -L$(LIB_DIR)
 
-# our libs have a lot of cross referenced now and we have to group them
-# untill we don't clean them
-LINKLIBS += -Wl,--start-group
-
 LINKLIBS += $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the specified GT driver library and other RTLs
@@ -85,7 +81,7 @@ ifneq ($(findstring -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
 LINKLIBS += -lz
 endif
 
-LINKLIBS += -lm -lrt -ldl -Wl,--end-group
+LINKLIBS += -lm -lrt -ldl
 
 LDFLAGS = $(LINKPATHS)
 

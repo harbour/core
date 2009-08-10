@@ -45,7 +45,6 @@ endif
 
 # Add all libraries specified in LIBS.
 LINKPATHS += -L$(LIB_DIR)
-#LINKLIBS += -Wl,-(
 LINKLIBS += $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the specified GT driver library
@@ -62,7 +61,6 @@ endif
 # add socket library
 LINKLIBS += -lsocket
 
-#LINKLIBS += -Wl,-)
 # statical linking with GCC 3.2.2 libc as not require its presence on user system
 LDFLAGS += $(LINKPATHS)
 
