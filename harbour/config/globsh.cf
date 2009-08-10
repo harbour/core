@@ -54,7 +54,7 @@ endif
 
 ifeq ($(HB_SHELL),nt)
 
-MK := "$(subst \,/,$(subst \~,~,$(MAKE)))"
+MK := "$(subst \,/,$(MAKE))"
 RM := del /q /f
 RDP := rmdir /q /s
 CP := copy
@@ -79,7 +79,7 @@ endif
 
 ifeq ($(HB_SHELL),os2)
 
-MK := $(subst \,/,$(subst \~,~,$(MAKE)))
+MK := $(subst \,/,$(MAKE))
 RM := del /n
 RDP := $(TOOL_DIR)os2-rm -rf
 CP := copy
@@ -100,7 +100,7 @@ endif
 
 ifeq ($(HB_SHELL),dos)
 
-MK := $(subst \,/,$(subst \~,~,$(MAKE)))
+MK := $(subst \,/,$(MAKE))
 RM := del
 RDP := $(TOOL_DIR)dj-rm -f -r
 CP := $(TOOL_DIR)dj-cp -f
