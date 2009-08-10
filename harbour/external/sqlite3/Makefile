@@ -44,7 +44,7 @@ endif
 
 ifeq ($(HB_WITH_SQLITE3),yes)
 C_SOURCES := \
-	sqlite3.c \
+   sqlite3.c \
 
 include $(TOP)$(ROOT)config/lib.cf
 

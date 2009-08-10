@@ -630,31 +630,31 @@ endif
 
 # Names of portable GT drivers
 HB_GT_LIBS := \
-	gtcgi \
-	gtpca \
-	gtstd \
+   gtcgi \
+   gtpca \
+   gtstd \
 
 # Names of valid RDD libraries
 HB_DB_DRIVERS := \
-	rddntx \
-	rddnsx \
-	rddcdx \
-	rddfpt \
-	hbsix \
-	hbhsx \
-	hbusrrdd \
-	hbuddall \
+   rddntx \
+   rddnsx \
+   rddcdx \
+   rddfpt \
+   hbsix \
+   hbhsx \
+   hbusrrdd \
+   hbuddall \
 
 # Names of valid RDD subdirectories
 HB_DB_DIRS := \
-	dbfntx \
-	dbfnsx \
-	dbfcdx \
-	dbffpt \
-	hbsix \
-	hsx \
-	usrrdd \
-	usrrdd/rdds \
+   dbfntx \
+   dbfnsx \
+   dbfcdx \
+   dbffpt \
+   hbsix \
+   hsx \
+   usrrdd \
+   usrrdd/rdds \
 
 ifneq ($(HB_DB_DRVEXT),)
    HB_DB_DRIVERS += $(HB_DB_DRVEXT)
