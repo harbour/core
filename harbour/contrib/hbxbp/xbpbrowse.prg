@@ -407,7 +407,9 @@ EXPORTED:
    DATA     nCursorMode                           INIT      XBPBRW_CURSOR_CELL
    METHOD   cursorMode                            SETGET
 
-   DATA     sizeCols                              INIT      .T.
+   DATA     lSizeCols                             INIT      .T.
+   METHOD   sizeCols                              SETGET
+
    DATA     softTrack                             INIT      .T.
 
    ENDCLASS
@@ -448,7 +450,6 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oWidget:setGridStyle( Qt_DotLine )   /* to be based on column definition */
    ::oWidget:setSelectionMode( QAbstractItemView_SingleSelection )
    ::oWidget:setSelectionBehavior( IF( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
-   ::oWidget:selectRow( 0 )
 
    /* Connect Keyboard Events */
    ::connect( ::pWidget, "keyPressEvent()"          , {|o,p| ::exeBlock( 1, p, o ) } )
@@ -816,6 +817,7 @@ METHOD XbpBrowse:supplyInfo( nInfo, p2, p3 )
          ::forceStable()
          ::setVertScrollBarRange( .t. )
          ::setHorzScrollBarRange( .f. )
+         ::oWidget:selectRow( ::rowPos - 1 )
       ENDIF
       IF ::columns[ p3 ]:type == XBPCOL_TYPE_FILEICON
          RETURN trim( ::cellValue( p2, p3 ) )
@@ -830,6 +832,7 @@ METHOD XbpBrowse:supplyInfo( nInfo, p2, p3 )
             ::forceStable()
             ::setVertScrollBarRange( .t. )
             ::setHorzScrollBarRange( .f. )
+            ::oWidget:selectRow( ::rowPos - 1 )
          ENDIF
          RETURN ::cellValue( p2, p3 )
       ELSE
@@ -941,6 +944,18 @@ METHOD XbpBrowse:vScroll( lYes )
    ENDIF
 
    RETURN ::lHScroll
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpBrowse:sizeCols( lYes )
+
+   IF hb_isLogical( lYes )
+      ::lSizeCols := lYes
+      ::setUnstable()
+      ::configure( 128 )
+   ENDIF
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -1190,6 +1205,9 @@ METHOD doConfigure() CLASS XbpBrowse
          ::oWidget:setRowHeight( i-1, nMaxCellH )
       NEXT
 
+      /* Implement Column Resixig Mode */
+      ::oHorzHeaderView:setResizeMode( IF( ::lSizeCols, QHeaderView_Interactive, QHeaderView_Fixed ) )
+
       /* Set column widths */
       oFontMetrics := QFontMetrics():new( "QFont", ::oWidget:font() )
       //
@@ -1201,6 +1219,11 @@ METHOD doConfigure() CLASS XbpBrowse
             xVal := transform( eval( ::columns[ i ]:block ), ::columns[ i ]:picture )
             //::oWidget:setColumnWidth( i-1, oFontMetrics:width( xVal, -1 ) + 8 )
             ::oHorzHeaderView:resizeSection( i-1, oFontMetrics:width( xVal, -1 ) + 8 )
+         ENDIF
+         IF i == len( ::columns )
+            ::oHorzHeaderView:setResizeMode_1( i-1, QHeaderView_Stretch )
+         ELSE
+            ::oHorzHeaderView:setResizeMode_1( i-1, IF( ::lSizeCols, QHeaderView_Interactive, QHeaderView_Fixed ) )
          ENDIF
       NEXT
    ENDIF
@@ -3397,6 +3420,8 @@ CREATE CLASS XbpColumn  INHERIT XbpWindow, XbpDataRef
 
    ENDCLASS
 
+/*----------------------------------------------------------------------*/
+
 METHOD datalink( bBlock ) CLASS XbpColumn
 
    IF bBlock != NIL
@@ -3404,6 +3429,8 @@ METHOD datalink( bBlock ) CLASS XbpColumn
    ENDIF
 
    RETURN ::bBlock
+
+/*----------------------------------------------------------------------*/
 
 METHOD block( bBlock ) CLASS XbpColumn
 
@@ -3413,6 +3440,8 @@ METHOD block( bBlock ) CLASS XbpColumn
 
    RETURN ::bBlock
 
+/*----------------------------------------------------------------------*/
+
 METHOD colorBlock( bColorBlock ) CLASS XbpColumn
 
    IF bColorBlock != NIL
@@ -3420,6 +3449,8 @@ METHOD colorBlock( bColorBlock ) CLASS XbpColumn
    ENDIF
 
    RETURN ::bColorBlock
+
+/*----------------------------------------------------------------------*/
 
 METHOD defColor( aDefColor ) CLASS XbpColumn
 
@@ -3429,6 +3460,8 @@ METHOD defColor( aDefColor ) CLASS XbpColumn
 
    RETURN ::aDefColor
 
+/*----------------------------------------------------------------------*/
+
 METHOD colSep( cColSep ) CLASS XbpColumn
 
    IF cColSep != NIL
@@ -3436,6 +3469,8 @@ METHOD colSep( cColSep ) CLASS XbpColumn
    ENDIF
 
    RETURN ::cColSep
+
+/*----------------------------------------------------------------------*/
 
 METHOD heading( cHeading ) CLASS XbpColumn
 
@@ -3445,6 +3480,8 @@ METHOD heading( cHeading ) CLASS XbpColumn
 
    RETURN ::cHeading
 
+/*----------------------------------------------------------------------*/
+
 METHOD footing( cFooting ) CLASS XbpColumn
 
    IF cFooting != NIL
@@ -3452,6 +3489,8 @@ METHOD footing( cFooting ) CLASS XbpColumn
    ENDIF
 
    RETURN ::cFooting
+
+/*----------------------------------------------------------------------*/
 
 METHOD headSep( cHeadSep ) CLASS XbpColumn
 
@@ -3461,6 +3500,8 @@ METHOD headSep( cHeadSep ) CLASS XbpColumn
 
    RETURN ::cHeadSep
 
+/*----------------------------------------------------------------------*/
+
 METHOD footSep( cFootSep ) CLASS XbpColumn
 
    IF cFootSep != NIL
@@ -3468,6 +3509,8 @@ METHOD footSep( cFootSep ) CLASS XbpColumn
    ENDIF
 
    RETURN ::cFootSep
+
+/*----------------------------------------------------------------------*/
 
 METHOD width( nWidth ) CLASS XbpColumn
 
@@ -3477,6 +3520,8 @@ METHOD width( nWidth ) CLASS XbpColumn
 
    RETURN ::nWidth
 
+/*----------------------------------------------------------------------*/
+
 METHOD preBlock( bPreBlock ) CLASS XbpColumn
 
    IF bPreBlock != NIL
@@ -3485,6 +3530,8 @@ METHOD preBlock( bPreBlock ) CLASS XbpColumn
 
    RETURN ::bPreBlock
 
+/*----------------------------------------------------------------------*/
+
 METHOD postBlock( bPostBlock ) CLASS XbpColumn
 
    IF bPostBlock != NIL
@@ -3492,6 +3539,8 @@ METHOD postBlock( bPostBlock ) CLASS XbpColumn
    ENDIF
 
    RETURN ::bPostBlock
+
+/*----------------------------------------------------------------------*/
 
 METHOD setStyle( nStyle, lNewValue ) CLASS XbpColumn
    IF nStyle > Len( ::aSetStyle ) .AND. nStyle <= 4096
@@ -3504,12 +3553,16 @@ METHOD setStyle( nStyle, lNewValue ) CLASS XbpColumn
 
    RETURN ::aSetStyle[ nStyle ]
 
+/*----------------------------------------------------------------------*/
+
 METHOD new( cHeading, bBlock ) CLASS XbpColumn
 
    ::cHeading := cHeading
    ::bBlock := bBlock
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS XbpColumn
    LOCAL n, xVar //, cVar, p, l
@@ -3524,8 +3577,12 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS XbpCo
    ::valtype := valtype( xVar )
    ::blankVariable := IF( ::valtype == "N", 0, IF( ::valtype == "D", ctod( "" ), IF( ::valtype == "L", .f., "" ) ) )
 
-   ::alignment := IF( ::valtype == "N", Qt_AlignRight, IF( ::valtype $ "DL", Qt_AlignHCenter, Qt_AlignLeft ) )
-   ::alignment += Qt_AlignVCenter
+   IF ( n := ascan( ::aPresParams, {|e_| e_[ 1 ] == XBP_PP_COL_DA_CELLALIGNMENT } ) ) > 0
+      ::alignment := ::aPresParams[ n,2 ]
+   ELSE
+      ::alignment := IF( ::valtype == "N", Qt_AlignRight, IF( ::valtype $ "DL", Qt_AlignHCenter, Qt_AlignLeft ) )
+      ::alignment += Qt_AlignVCenter
+   ENDIF
 
    /* Heading Area */
    IF ( n := ascan( ::aPresParams, {|e_| e_[ 1 ] == XBP_PP_COL_HA_FGCLR } ) ) > 0

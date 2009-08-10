@@ -2046,7 +2046,16 @@
 //
 #define QAbstractItemView_SingleSelection         1      // When the user selects an item, any already-selected item becomes unselected, and the user cannot unselect the selected item by clicking on it.
 #define QAbstractItemView_ContiguousSelection     4      // When the user selects an item in the usual way, the selection is cleared and the new item selected. However, if the user presses the Shift key while clicking on an item, all items between the current item and the clicked item are selected or unselected, depending on the state of the clicked item.
-#define QAbstractItemView_ExtendedSelection       3      // When the user selects an item in the usual way, the selection is cleared and the new item selected. However, if the user presses the Ctrl key when clicking on an item, the clicked item gets toggled and all other items are left untouched. If the user presses the Shift key while clicking on an item, all items between the current item and the clicked item are selected or unselected, depending on the state of the clicked item. Multiple items can be selected by dragging the mouse over them.
+#define QAbstractItemView_ExtendedSelection       3      // When the user selects an item in the usual way,
+                                                         //   the selection is cleared and the new item
+                                                         //   selected. However, if the user presses the Ctrl key
+                                                         //   when clicking on an item, the clicked item gets toggled
+                                                         //   and all other items are left untouched.
+                                                         //   If the user presses the Shift key while clicking on
+                                                         //   an item, all items between the current item and the
+                                                         //   clicked item are selected or unselected, depending on
+                                                         //   the state of the clicked item. Multiple items can be
+                                                         //   selected by dragging the mouse over them.
 #define QAbstractItemView_MultiSelection          2      // When the user selects an item in the usual way, the selection status of that item is toggled and the other items are left alone. Multiple items can be toggled by dragging the mouse over them.
 #define QAbstractItemView_NoSelection             0      // Items cannot be selected.
 // The most commonly used modes are SingleSelection and ExtendedSelection.
@@ -2061,6 +2070,11 @@
 #define QAbstractItemView_ExpandingState          4      // The user is opening a branch of items.
 #define QAbstractItemView_CollapsingState         5      // The user is closing a branch of items.
 #define QAbstractItemView_AnimatingState          6      // The item view is performing an animation.
+
+#define QHeaderView_Interactive                   0      // The user can resize the section. The section can also be resized programmatically using resizeSection(). The section size defaults to defaultSectionSize. (See also cascadingSectionResizes.)
+#define QHeaderView_Fixed                         2      // The user cannot resize the section. The section can only be resized programmatically using resizeSection(). The section size defaults to defaultSectionSize.
+#define QHeaderView_Stretch                       1      // QHeaderView will automatically resize the section to fill the available space. The size cannot be changed by the user or programmatically.
+#define QHeaderView_ResizeToContents              3      // QHeaderView will automatically resize the section to its optimal size based on the contents of the entire column or row. The size cannot be changed by the user or programmatically. (This value was introduced in 4.2)
 
 /*----------------------------------------------------------------------*/
 
