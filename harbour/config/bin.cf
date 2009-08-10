@@ -8,7 +8,24 @@ ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
 
 # Assemble template lib list to help create a few common variations
-HB_LIBS_TPL = hbextern hbdebug $(_HB_VM) hbrtl hblang hbcpage $(HB_GT_LIBS) $(_HB_RDD) hbrtl $(_HB_VM) hbmacro hbcplr hbpp hbcommon
+
+# (have to use '=' operator here)
+HB_LIBS_TPL = \
+   hbextern \
+   hbdebug \
+   $(_HB_VM) \
+   hbrtl \
+   hblang \
+   hbcpage \
+   $(HB_GT_LIBS) \
+   $(_HB_RDD) \
+   hbrtl \
+   $(_HB_VM) \
+   hbmacro \
+   hbcplr \
+   hbpp \
+   hbcommon
+
 ifeq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
    ifeq ($(findstring -DHB_POSIX_REGEX, $(HB_USER_CFLAGS)),)
       HB_LIBS_TPL += hbpcre

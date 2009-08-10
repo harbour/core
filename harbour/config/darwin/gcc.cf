@@ -59,19 +59,19 @@ ifeq ($(HB_CRS_LIB),)
 HB_CRS_LIB := ncurses
 endif
 
-ifneq ($(findstring gtcrs, $(HB_GT_LIBS)),)
+ifneq ($(findstring gtcrs, $(LIBS)),)
 LINKLIBS += -l$(HB_CRS_LIB)
 endif
 
-ifneq ($(findstring gtsln, $(HB_GT_LIBS)),)
+ifneq ($(findstring gtsln, $(LIBS)),)
 LINKLIBS += -lslang
 # In BSD, slang still needs curses :(
-ifeq ($(findstring gtcrs, $(HB_GT_LIBS)),)
+ifeq ($(findstring gtcrs, $(LIBS)),)
 LINKLIBS += -l$(HB_CRS_LIB)
 endif
 endif
 
-ifneq ($(findstring gtxwc, $(HB_GT_LIBS)),)
+ifneq ($(findstring gtxwc, $(LIBS)),)
 LINKLIBS += -lX11
 #LINKPATHS += -L/usr/X11R6/lib64
 LINKPATHS += -L/usr/X11R6/lib
