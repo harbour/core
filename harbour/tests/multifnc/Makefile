@@ -19,23 +19,23 @@ endif
 endif
 
 PRG_SOURCES := \
-	t0.prg \
-	t1.prg \
-	t2.prg \
+   t0.prg \
+   t1.prg \
+   t2.prg \
 
 PRG_MAIN := t0.prg
 
 LIBS := \
-	hbdebug \
-	hbvm \
-	hbrtl \
-	hblang \
-	hbcpage \
-	hbrdd \
-	hbrtl \
-	hbvm \
-	hbmacro \
-	hbpp \
-	hbcommon \
+   hbdebug \
+   hbvm \
+   hbrtl \
+   hblang \
+   hbcpage \
+   hbrdd \
+   hbrtl \
+   hbvm \
+   hbmacro \
+   hbpp \
+   hbcommon \
 
 include $(TOP)$(ROOT)config/bin.cf

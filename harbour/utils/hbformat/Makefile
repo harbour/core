@@ -9,25 +9,25 @@ endif
 ROOT := ../../
 
 PRG_SOURCES := \
-	hbformat.prg \
+   hbformat.prg \
 
 C_SOURCES := \
-	hbformac.c \
+   hbformac.c \
 
 PRG_MAIN := hbformat.prg
 
 LIBS := \
-	hbdebug \
-	hbvm \
-	hbrtl \
-	hblang \
-	hbcpage \
-	hbnulrdd \
-	hbrtl \
-	hbvm \
-	hbmacro \
-	hbcommon \
-	hbpp \
-	hbcplr \
+   hbdebug \
+   hbvm \
+   hbrtl \
+   hblang \
+   hbcpage \
+   hbnulrdd \
+   hbrtl \
+   hbvm \
+   hbmacro \
+   hbcommon \
+   hbpp \
+   hbcplr \
 
 include $(TOP)$(ROOT)config/bin.cf

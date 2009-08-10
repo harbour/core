@@ -9,24 +9,24 @@ endif
 ROOT := ../../
 
 PRG_SOURCES := \
-	hbrun.prg \
+   hbrun.prg \
 
 PRG_MAIN := hbrun.prg
 
 LIBS := \
-	hbextern \
-	hbdebug \
-	hbvm \
-	hbrtl \
-	hblang \
-	hbcpage \
-	hbrdd \
-	hbrtl \
-	hbvm \
-	hbmacro \
-	hbcplr \
-	hbpp \
-	hbcommon \
+   hbextern \
+   hbdebug \
+   hbvm \
+   hbrtl \
+   hblang \
+   hbcpage \
+   hbrdd \
+   hbrtl \
+   hbvm \
+   hbmacro \
+   hbcplr \
+   hbpp \
+   hbcommon \
 
 ifeq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
 ifeq ($(findstring -DHB_POSIX_REGEX, $(HB_USER_CFLAGS)),)

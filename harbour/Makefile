@@ -7,7 +7,7 @@ ROOT := ./
 ifeq ($(HB_HOST_BUILD),yes)
 
 DIRS := \
-	source \
+   source \
 
 else
 
@@ -18,12 +18,12 @@ else
 endif
 
 DIRS := \
-	doc \
-	include \
-	source \
-	$(HB_UTIL_DIR) \
-	contrib{source} \
-	external \
+   doc \
+   include \
+   source \
+   $(HB_UTIL_DIR) \
+   contrib{source} \
+   external \
 
 endif
 
