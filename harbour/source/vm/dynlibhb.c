@@ -64,7 +64,13 @@
 #include "hbstack.h"
 #include "hbvm.h"
 
-#if defined( HB_OS_LINUX ) && !defined( __WATCOMC__ ) && !defined( __SUNPRO_C ) && !defined( __SUNPRO_CC )
+#if !defined( HB_HAS_DLFCN ) && \
+    ( ( defined( HB_OS_LINUX ) && !defined( __WATCOMC__ ) ) || \
+      defined( HB_OS_SUNOS ) )
+#  define HB_HAS_DLFCN
+#endif
+
+#if defined( HB_HAS_DLFCN )
 #  include <dlfcn.h>
 #endif
 
@@ -104,7 +110,7 @@ HB_FUNC( HB_LIBLOAD )
                                ( PCSZ ) hb_parc( 1 ), &hDynModule ) == NO_ERROR )
                hDynLib = ( void * ) hDynModule;
          }
-#elif defined( HB_OS_LINUX ) && !defined( __WATCOMC__ ) && !defined( __SUNPRO_C ) && !defined( __SUNPRO_CC )
+#elif defined( HB_HAS_DLFCN )
          hDynLib = ( void * ) dlopen( hb_parc( 1 ), RTLD_LAZY | RTLD_GLOBAL );
 #endif
          /* set real marker */
@@ -144,7 +150,7 @@ HB_FUNC( HB_LIBFREE )
          fResult = FreeLibrary( ( HMODULE ) hDynLib );
 #elif defined( HB_OS_OS2 )
          fResult = DosFreeModule( ( HMODULE ) hDynLib ) == NO_ERROR;
-#elif defined( HB_OS_LINUX ) && !defined( __WATCOMC__ ) && !defined( __SUNPRO_C ) && !defined( __SUNPRO_CC )
+#elif defined( HB_HAS_DLFCN )
          fResult = dlclose( hDynLib ) == 0;
 #endif
       }
@@ -155,7 +161,7 @@ HB_FUNC( HB_LIBFREE )
 
 HB_FUNC( HB_LIBERROR )
 {
-#if defined( HB_OS_LINUX ) && !defined( __WATCOMC__ ) && !defined( __SUNPRO_C ) && !defined( __SUNPRO_CC )
+#if defined( HB_HAS_DLFCN )
    hb_retc( dlerror() );
 #else
    hb_retc_null();

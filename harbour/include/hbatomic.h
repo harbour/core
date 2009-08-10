@@ -59,6 +59,8 @@
 #  include <windows.h>
 #elif defined( HB_OS_DARWIN )
 #  include <libkern/OSAtomic.h>
+#elif defined( HB_OS_SUNOS )
+#  include <atomic.h>
 #endif
 #if defined( __SVR4 )
 #  include <thread.h>
@@ -368,9 +370,9 @@ HB_EXTERN_BEGIN
 #     define HB_SPINLOCK_ACQUIRE(l) do { \
                                        for( ;; ) \
                                        { \
-                                          if( !InterlockedExchange( (LONG *)(l), 1 ) ) \
+                                          if( !InterlockedExchange( (l), 1 ) ) \
                                              break; \
-                                          if( !InterlockedExchange( (LONG *)(l), 1 ) ) \
+                                          if( !InterlockedExchange( (l), 1 ) ) \
                                              break; \
                                           Sleep( 0 ); \
                                        } \
@@ -409,6 +411,37 @@ HB_EXTERN_BEGIN
 #     define HB_SPINLOCK_INIT       OS_SPINLOCK_INIT
 #     define HB_SPINLOCK_ACQUIRE(l) OSSpinLockLock(l)
 #     define HB_SPINLOCK_RELEASE(l) OSSpinLockUnlock(l)
+#  endif
+
+#elif defined( HB_OS_SUNOS )
+
+   /* Atomic operations on memory reference counters */
+#  if !defined( HB_ATOM_INC ) || !defined( HB_ATOM_DEC )
+#     undef HB_ATOM_DEC
+#     undef HB_ATOM_INC
+#     undef HB_ATOM_GET
+#     undef HB_ATOM_SET
+#     define HB_ATOM_INC( p )    atomic_inc_ulong((ulong_t *)(p))
+#     define HB_ATOM_DEC( p )    atomic_dec_ulong_nv((ulong_t *)(p))
+#     define HB_ATOM_GET( p )    (*(ulong_t volatile *)(p))
+#     define HB_ATOM_SET( p, n ) do { *((ulong_t volatile *)(p)) = (n); } while(0)
+#  endif
+
+   /* Spin locks */
+#  if !defined( HB_SPINLOCK_T )
+#     define HB_SPINLOCK_T          volatile uint_t
+#     define HB_SPINLOCK_INIT       0
+#     define HB_SPINLOCK_ACQUIRE(l) do { \
+                                       for( ;; ) \
+                                       { \
+                                          if( !atomic_swap_uint( (l), 1 ) ) \
+                                             break; \
+                                          if( !atomic_swap_uint( (l), 1 ) ) \
+                                             break; \
+                                          thr_yield(); \
+                                       } \
+                                    } while(0)
+#     define HB_SPINLOCK_RELEASE(l) do { *(l) = 0; } while(0)
 #  endif
 
 #endif  /* HB_OS_??? */
