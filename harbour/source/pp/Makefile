@@ -31,6 +31,7 @@ vpath hbpp$(BIN_EXT) $(BIN_DIR)
 
 pptable.c : hbpp$(BIN_EXT)
 	$(HB_HOST_BIN_DIR)/hbpp$(HB_HOST_BIN_EXT) $(TOP)$(ROOT)include/hbstdgen.ch -opptable.c -q -c$(TOP)$(ROOT) -v$(HB_VERHEADER)
+	-@$(RM) hbpp$(OBJ_EXT)
 
 
 ifneq ($(HB_HOST_BUILD),lib)

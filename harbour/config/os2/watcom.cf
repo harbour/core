@@ -87,21 +87,23 @@ LDFILES = $(subst $(space),$(comma) ,$(^F))
 LDLIBS  = $(subst $(space),$(comma) ,$(strip $(LINKLIBS) $(RDDLIBS) $(GTLIBS)))
 LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@ FILE $(LDFILES) $(if $(LDLIBS), LIB $(LDLIBS),)
 
+ifeq ($(HB_SHELL),sh)
+create_library = $(AR) $(ARFLAGS) $(LIB_DIR)/$@ $(foreach file, $(^F), -+$(file))
+else
 # maximum size of command line in OS2 is limited to 1024 characters
-# the trick below with 'wordlist' is workaround for it
+# the trick with divided 'wordlist' is workaround for it:
+#     -$(if $(wordlist   1,100,$(^F)), echo $(wordlist   1,100,$(addprefix -+,$(^F))) >> __lib__.tmp,)
+#     -$(if $(wordlist 101,200,$(^F)), echo $(wordlist 101,200,$(addprefix -+,$(^F))) >> __lib__.tmp,)
+#     -$(if $(wordlist 201,300,$(^F)), echo $(wordlist 301,300,$(addprefix -+,$(^F))) >> __lib__.tmp,)
+# anyhow OS2 port# of GNU make 3.81 seems to have bug and GPFs when total
+# commands length is too big so for %i in ( *$(OBJ_EXT) ) do ... below is
+# ugly workaround for both problems
 define create_library
 echo $(LIB_DIR)/$@ > __lib__.tmp
-$(if $(wordlist   1, 50,$(^F)), echo $(wordlist   1, 50,$(addprefix -+,$(^F))) >> __lib__.tmp,)
-$(if $(wordlist  51,100,$(^F)), echo $(wordlist  51,100,$(addprefix -+,$(^F))) >> __lib__.tmp,)
-$(if $(wordlist 101,150,$(^F)), echo $(wordlist 101,150,$(addprefix -+,$(^F))) >> __lib__.tmp,)
-$(if $(wordlist 151,200,$(^F)), echo $(wordlist 151,200,$(addprefix -+,$(^F))) >> __lib__.tmp,)
-$(if $(wordlist 201,250,$(^F)), echo $(wordlist 201,250,$(addprefix -+,$(^F))) >> __lib__.tmp,)
-$(if $(wordlist 250,300,$(^F)), echo $(wordlist 250,300,$(addprefix -+,$(^F))) >> __lib__.tmp,)
-$(if $(wordlist 300,999,$(^F)), echo $(wordlist 300,999,$(addprefix -+,$(^F))) >> __lib__.tmp,)
+for %i in ( *$(OBJ_EXT) ) do @echo -+%i >> __lib__.tmp
 $(AR) $(ARFLAGS) @__lib__.tmp
 endef
-
-ARFILES = $(addprefix -+,$(^F))
+endif
 
 AR := wlib
 ARFLAGS = -p=64 -c -n $(HB_USER_AFLAGS)
