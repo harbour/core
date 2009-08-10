@@ -6,8 +6,4 @@
 
 hbrun.prg
 
--lhbcplr
--lhbpp
--lhbcommon
-
 -icon={allwin|os2}../../package/harbour.ico

@@ -480,18 +480,21 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
    LOCAL hbmk[ _HBMK_MAX_ ]
 
-   LOCAL aLIB_BASE1
-   LOCAL aLIB_BASE2
+   LOCAL aLIB_BASE_EXTERN
+   LOCAL aLIB_BASE_DEBUG
+   LOCAL aLIB_BASE_1
+   LOCAL aLIB_BASE_1_MT
+   LOCAL aLIB_BASE_2
+   LOCAL aLIB_BASE_2_MT
    LOCAL aLIB_BASE_GT
+   LOCAL aLIB_BASE_NULRDD
+   LOCAL aLIB_BASE_RDD
+   LOCAL aLIB_BASE_RDD_MT
+   LOCAL aLIB_BASE_CPLR
+   LOCAL aLIB_BASE_3
+   LOCAL aLIB_BASE_3_MT
    LOCAL aLIB_BASE_PCRE
    LOCAL aLIB_BASE_ZLIB
-   LOCAL aLIB_BASE_DEBUG
-   LOCAL aLIB_BASE_CPLR
-   LOCAL aLIB_BASE_ST
-   LOCAL aLIB_BASE_MT
-   LOCAL aLIB_BASE_NULRDD
-   LOCAL aLIB_BASE_RDD_ST
-   LOCAL aLIB_BASE_RDD_MT
 
    LOCAL l_cCSTUB
    LOCAL l_cRESSTUB
@@ -512,8 +515,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    LOCAL l_aLIB
    LOCAL l_aLIBA
    LOCAL l_aLIBRAW
-   LOCAL l_aLIBVM
    LOCAL l_aLIBHB
+   LOCAL l_aLIBHBBASE_2 := {}
    LOCAL l_aLIBHBGT
    LOCAL l_aLIB3RD
    LOCAL l_aLIBSYS
@@ -729,125 +732,45 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                            hb_ntos( hb_Version( HB_VERSION_MINOR ) ) + "." +;
                            hb_ntos( hb_Version( HB_VERSION_RELEASE ) )
 
-      aLIB_BASE1 := {;
-         "hbcpage" ,;
-         "hblang" ,;
-         "hbcommon" }
-
-      aLIB_BASE2 := {;
-         "hbrtl" ,;
-         "hbpp" ,;
-         "hbmacro" ,;
-         "hbextern" }
-
-      aLIB_BASE_GT := {;
-         "gtcgi" ,;
-         "gtpca" ,;
-         "gtstd" }
-
-      aLIB_BASE_PCRE := {;
-         "hbpcre" }
-
-      aLIB_BASE_ZLIB := {;
-         "hbzlib" }
-
-      aLIB_BASE_DEBUG := {;
-         "hbdebug" }
-
-      aLIB_BASE_CPLR := {;
-         "hbcplr" }
-
-      aLIB_BASE_ST := {;
-         "hbvm" }
-      IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_HB10
-         aLIB_BASE_MT := {;
-            "hbvmmt" }
-      ELSE
-         aLIB_BASE_MT := {;
-            "hbvm" }
+      aLIB_BASE_EXTERN  := { "hbextern" }
+      aLIB_BASE_DEBUG   := { "hbdebug" }
+      aLIB_BASE_1       := { "hbvm", "hbrtl", "hblang", "hbcpage" }
+      aLIB_BASE_1_MT    := iif( hbmk[ _HBMK_nHBMODE ] != _HBMODE_HB10, { "hbvmmt", "hbrtl", "hblang", "hbcpage" }, aLIB_BASE_1 )
+      aLIB_BASE_2       := { "hbrtl", "hbvm" }
+      aLIB_BASE_2_MT    := iif( hbmk[ _HBMK_nHBMODE ] != _HBMODE_HB10, { "hbrtl", "hbvmmt" }, aLIB_BASE_2 )
+      aLIB_BASE_GT      := { "gtcgi", "gtpca", "gtstd" }
+      aLIB_BASE_NULRDD  := { "hbnulrdd" }
+      aLIB_BASE_RDD     := { "hbrdd", "hbusrrdd", "hbhsx", "hbsix", "rddntx", "rddcdx", "rddfpt" }
+      IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_HB10 /* These libs have been added after 1.0.x */
+         AAdd( aLIB_BASE_RDD, "hbuddall" )
+         AAdd( aLIB_BASE_RDD, "rddnsx" )
       ENDIF
-
-      aLIB_BASE_NULRDD := {;
-         "hbnulrdd" }
-
-      aLIB_BASE_RDD_ST := {;
-         "hbrdd" ,;
-         "hbusrrdd" ,;
-         "hbhsx" ,;
-         "hbsix" ,;
-         "rddntx" ,;
-         "rddcdx" ,;
-         "rddfpt" }
-
-      /* These libs have been added after 1.0.x */
-      IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_HB10
-         AAdd( aLIB_BASE_RDD_ST, "hbuddall" )
-         AAdd( aLIB_BASE_RDD_ST, "rddnsx" )
-      ENDIF
-
-      aLIB_BASE_RDD_MT := aLIB_BASE_RDD_ST
-
+      aLIB_BASE_RDD_MT  := aLIB_BASE_RDD
+      aLIB_BASE_CPLR    := { "hbcplr" }
+      aLIB_BASE_3       := { "hbmacro", "hbcplr", "hbpp", "hbcommon" }
+      aLIB_BASE_3_MT    := aLIB_BASE_3
+      aLIB_BASE_PCRE    := { "hbpcre" }
+      aLIB_BASE_ZLIB    := { "hbzlib" }
    ELSE
 
       cDL_Version_Alter := ""
       cDL_Version       := ""
 
-      aLIB_BASE1 := {;
-         "codepage" ,;
-         "lang" ,;
-         "common" }
-
-      aLIB_BASE2 := {}
-
-      aLIB_BASE_GT := {;
-         "gtcgi" ,;
-         "gtpca" ,;
-         "gtstd" }
-
-      aLIB_BASE_PCRE := {;
-         "pcrepos" }
-
-      aLIB_BASE_ZLIB := {;
-         "zlib" }
-
-      aLIB_BASE_DEBUG := {;
-         "debug" }
-
-      aLIB_BASE_CPLR := {}
-
-      aLIB_BASE_ST := {;
-         "vm" ,;
-         "rtl" ,;
-         "macro" ,;
-         "pp" }
-      aLIB_BASE_MT := {;
-         "vmmt" ,;
-         "rtlmt" ,;
-         "macromt" ,;
-         "ppmt" }
-
-      aLIB_BASE_NULRDD := {;
-         "nulsys" }
-
-      aLIB_BASE_RDD_ST := {;
-         "rdd" ,;
-         "usrrdd" ,;
-         "rdds" ,;
-         "hsx" ,;
-         "hbsix" ,;
-         "dbfntx" ,;
-         "dbfcdx" ,;
-         "dbffpt" }
-
-      aLIB_BASE_RDD_MT := {;
-         "rddmt" ,;
-         "usrrddmt" ,;
-         "rddsmt" ,;
-         "hsxmt" ,;
-         "hbsixmt" ,;
-         "dbfntxmt" ,;
-         "dbfcdxmt" ,;
-         "dbffptmt" }
+      aLIB_BASE_EXTERN  := {}
+      aLIB_BASE_DEBUG   := { "debug" }
+      aLIB_BASE_1       := { "vm"  , "rtl"  , "lang", "codepage" }
+      aLIB_BASE_1_MT    := { "vmmt", "rtlmt", "lang", "codepage" }
+      aLIB_BASE_2       := { "rtl"  , "vm"   }
+      aLIB_BASE_2_MT    := { "rtlmt", "vmmt" }
+      aLIB_BASE_GT      := { "gtcgi", "gtpca", "gtstd" }
+      aLIB_BASE_NULRDD  := { "nulsys" }
+      aLIB_BASE_RDD     := { "rdd"  , "usrrdd"  , "rdds"  , "hsx"  , "hbsix"  , "dbfntx"  , "dbfcdx"  , "dbffpt"   }
+      aLIB_BASE_RDD_MT  := { "rddmt", "usrrddmt", "rddsmt", "hsxmt", "hbsixmt", "dbfntxmt", "dbfcdxmt", "dbffptmt" }
+      aLIB_BASE_CPLR    := {}
+      aLIB_BASE_3       := { "macro"  , "pp"  , "common" }
+      aLIB_BASE_3_MT    := { "macromt", "ppmt", "common" }
+      aLIB_BASE_PCRE    := { "pcrepos" }
+      aLIB_BASE_ZLIB    := { "zlib" }
    ENDIF
 
    /* Load architecture / compiler settings (compatibility) */
@@ -2024,29 +1947,30 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
       /* Assemble library list */
 
-      IF l_lNOHBLIB
-         aLIB_BASE1 := {}
-         aLIB_BASE2 := {}
-         aLIB_BASE_PCRE := {}
-         aLIB_BASE_ZLIB := {}
-         aLIB_BASE_DEBUG := {}
-         aLIB_BASE_CPLR := {}
-         aLIB_BASE_ST := {}
-         aLIB_BASE_MT := {}
-         aLIB_BASE_NULRDD := {}
-         aLIB_BASE_RDD_ST := {}
-         aLIB_BASE_RDD_MT := {}
-
-         hbmk[ _HBMK_aLIBCOREGT ] := {}
+      IF ! Empty( hbmk[ _HBMK_cGT ] ) .AND. !( Lower( hbmk[ _HBMK_cGT ] ) == "gtnul" )
+         IF AScan( hbmk[ _HBMK_aLIBCOREGT ], {|tmp| Lower( tmp ) == Lower( hbmk[ _HBMK_cGT ] ) } ) == 0
+            AAdd( hbmk[ _HBMK_aLIBCOREGT ], hbmk[ _HBMK_cGT ] )
+         ENDIF
       ENDIF
 
-      l_aLIBVM := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_MT, aLIB_BASE_ST )
-      aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, hbmk[ _HBMK_aLIBCOREGT ] } )
+      IF l_lNOHBLIB
 
-      IF ! Empty( hbmk[ _HBMK_cGT ] ) .AND. !( Lower( hbmk[ _HBMK_cGT ] ) == "gtnul" )
-         IF AScan( aLIB_BASE2, {|tmp| Lower( tmp ) == Lower( hbmk[ _HBMK_cGT ] ) } ) == 0
-            AAdd( aLIB_BASE2, hbmk[ _HBMK_cGT ] )
-         ENDIF
+         aLIB_BASE_EXTERN := {}
+         aLIB_BASE_DEBUG := {}
+         aLIB_BASE_1 := {}
+         aLIB_BASE_1_MT := {}
+         aLIB_BASE_2 := {}
+         aLIB_BASE_2_MT := {}
+         aLIB_BASE_NULRDD := {}
+         aLIB_BASE_RDD := {}
+         aLIB_BASE_RDD_MT := {}
+         aLIB_BASE_CPLR := {}
+         aLIB_BASE_3 := {}
+         aLIB_BASE_3_MT := {}
+         aLIB_BASE_PCRE := {}
+         aLIB_BASE_ZLIB := {}
+
+         hbmk[ _HBMK_aLIBCOREGT ] := {}
       ENDIF
 
       DO CASE
@@ -2104,13 +2028,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibPathSep := " "
          cLibLibExt := ".a"
          IF ! lStopAfterCComp
-            IF hbmk[ _HBMK_cARCH ] == "linux" .OR. ;
-               hbmk[ _HBMK_cARCH ] == "bsd"
-               AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
-            ELSE
-               AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
-               aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, l_aLIBVM } )
-            ENDIF
+            AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
+            l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
          ENDIF
          IF hbmk[ _HBMK_lMAP ]
             IF hbmk[ _HBMK_cARCH ] == "darwin"
@@ -2287,12 +2206,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_BIN_INSTALL )
          ENDIF
          IF ! lStopAfterCComp
-            IF hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"
-               AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
-            ELSE
-               AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
-               aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, l_aLIBVM } )
-            ENDIF
+            AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
+            l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
          ENDIF
          IF hbmk[ _HBMK_lSTRIP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-s" )
@@ -2364,7 +2279,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_BIN_INSTALL )
          ENDIF
          AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
-         aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, l_aLIBVM } )
+         l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
          IF ! hbmk[ _HBMK_lSHARED ]
             l_aLIBSYS := ArrayJoin( l_aLIBSYS, { "socket" } )
          ENDIF
@@ -2411,12 +2326,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibLibExt := ".a"
          cBin_Lib := "ar.exe"
          cOpt_Lib := "{FA} rcs {OL} {LO}{SCRIPT}"
-         IF hbmk[ _HBMK_cCOMP ] == "djgpp"
-            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
-         ELSE
-            AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
-            aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, l_aLIBVM } )
-         ENDIF
+         AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
+         l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
          IF hbmk[ _HBMK_lMAP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-Map,{OM}" )
          ENDIF
@@ -3325,12 +3236,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                                       aLIB_BASE_CPLR,;
                                       aLIB_BASE_DEBUG } )
          ELSE
-            l_aLIBHB := ArrayAJoin( { aLIB_BASE1,;
-                                      aLIB_BASE_CPLR,;
+            l_aLIBHB := ArrayAJoin( { aLIB_BASE_EXTERN,;
                                       aLIB_BASE_DEBUG,;
-                                      l_aLIBVM,;
-                                      iif( hbmk[ _HBMK_lNULRDD ], aLIB_BASE_NULRDD, iif( hbmk[ _HBMK_lMT ], aLIB_BASE_RDD_MT, aLIB_BASE_RDD_ST ) ),;
-                                      aLIB_BASE2,;
+                                      iif( hbmk[ _HBMK_lMT ], aLIB_BASE_1_MT, aLIB_BASE_1 ),;
+                                      hbmk[ _HBMK_aLIBCOREGT ],;
+                                      iif( hbmk[ _HBMK_lNULRDD ], aLIB_BASE_NULRDD, iif( hbmk[ _HBMK_lMT ], aLIB_BASE_RDD_MT, aLIB_BASE_RDD ) ),;
+                                      l_aLIBHBBASE_2,;
+                                      iif( hbmk[ _HBMK_lMT ], aLIB_BASE_3_MT, aLIB_BASE_3 ),;
                                       iif( l_lHB_PCRE, aLIB_BASE_PCRE, {} ),;
                                       iif( l_lHB_ZLIB, aLIB_BASE_ZLIB, {} ) } )
          ENDIF
