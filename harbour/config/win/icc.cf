@@ -16,24 +16,24 @@ CPPFLAGS = -nologo -I. -I$(HB_INC_COMPILE)
 CFLAGS = -Gs
 
 ifeq ($(HB_BUILD_MODE),c)
-CPPFLAGS += -TC
+   CPPFLAGS += -TC
 endif
 ifeq ($(HB_BUILD_MODE),cpp)
-CPPFLAGS += -TP
+   CPPFLAGS += -TP
 endif
 
 ifneq ($(HB_BUILD_WARN),no)
-CFLAGS += -W3
+   CFLAGS += -W3
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-# maximum optimizations
-# CFLAGS += -Ox
-CFLAGS += -O3
+   # maximum optimizations
+   # CFLAGS += -Ox
+   CFLAGS += -O3
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-CFLAGS += -Zi
+   CFLAGS += -Zi
 endif
 
 LD := icl.exe

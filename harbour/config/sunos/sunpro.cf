@@ -68,23 +68,18 @@ LINKPATHS += -L$(LIB_DIR)
 LINKLIBS += $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the specified GT driver library
-ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
-
-# screen driver libraries
-ifeq ($(HB_CRS_LIB),)
-HB_CRS_LIB := curses
-endif
 ifneq ($(findstring gtcrs, $(LIBS)),)
-LINKLIBS += -l$(HB_CRS_LIB)
+   ifeq ($(HB_CRS_LIB),)
+      HB_CRS_LIB := curses
+   endif
+   LINKLIBS += -l$(HB_CRS_LIB)
 endif
 ifneq ($(findstring gtsln, $(LIBS)),)
-LINKLIBS += -lslang
+   LINKLIBS += -lslang
 endif
 ifneq ($(findstring gtxwc, $(LIBS)),)
-LINKLIBS += -lX11
-LINKPATHS += -L/usr/X11R6/lib
-endif
-
+   LINKLIBS += -lX11
+   LINKPATHS += -L/usr/X11R6/lib
 endif
 
 ifneq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)

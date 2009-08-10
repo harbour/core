@@ -16,23 +16,23 @@ CPPFLAGS = -I.
 CPPFLAGS += -Ze -Go
 
 ifneq ($(HB_BUILD_WARN),no)
-CPPFLAGS += -W1
+   CPPFLAGS += -W1
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-CPPFLAGS += -Ot
-# -Ox: can cause GPF in 4.50/5.00, so it's disabled.
+   CPPFLAGS += -Ot
+   # -Ox: can cause GPF in 4.50/5.00, so it's disabled.
 endif
 
 # For Pocket PC and ARM processors (including XScale)
 CPPFLAGS += -Tarm-coff -D_M_ARM -D_WINCE -DUNICODE -DHB_NO_WIN_CONSOLE
 
 ifneq ($(HB_INC_COMPILE),)
-CPPFLAGS += -I$(HB_INC_COMPILE)
+   CPPFLAGS += -I$(HB_INC_COMPILE)
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-CPPFLAGS += -Zi
+   CPPFLAGS += -Zi
 endif
 
 CFLAGS =

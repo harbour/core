@@ -18,23 +18,23 @@ CC_OUT := -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
 ifeq ($(HB_COMPILER),icc)
-CFLAGS = -D_GNU_SOURCE
-#CFLAGS += -std=c99
-#CFLAGS += -xHOST
+   CFLAGS = -D_GNU_SOURCE
+   #CFLAGS += -std=c99
+   #CFLAGS += -xHOST
 else
-CFLAGS =
+   CFLAGS =
 endif
 
 ifneq ($(HB_BUILD_WARN),no)
-ifeq ($(HB_COMPILER),icc)
-#CFLAGS += -w2 -Wall
-else
-CFLAGS += -Wall -W
-endif
+   ifeq ($(HB_COMPILER),icc)
+      #CFLAGS += -w2 -Wall
+   else
+      CFLAGS += -Wall -W
+   endif
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-CFLAGS += -O3
+   CFLAGS += -O3
 endif
 
 # uncomment this if you want to force relocateable code for .so libs
@@ -42,7 +42,7 @@ endif
 #CFLAGS += -fPIC
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-CFLAGS += -g
+   CFLAGS += -g
 endif
 
 LD := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)
@@ -54,37 +54,32 @@ LINKPATHS += -L$(LIB_DIR)
 LINKLIBS += $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the specified GT driver library and other RTLs
-ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
-
-# screen driver libraries
-ifeq ($(HB_CRS_LIB),)
-HB_CRS_LIB := ncurses
-endif
 ifneq ($(findstring gtcrs, $(LIBS)),)
-LINKLIBS += -l$(HB_CRS_LIB)
+   ifeq ($(HB_CRS_LIB),)
+      HB_CRS_LIB := ncurses
+   endif
+   LINKLIBS += -l$(HB_CRS_LIB)
 endif
 ifneq ($(findstring gtsln, $(LIBS)),)
-LINKLIBS += -lslang
+   LINKLIBS += -lslang
 endif
 ifneq ($(findstring gtxwc, $(LIBS)),)
-LINKLIBS += -lX11
-#LINKPATHS += -L/usr/X11R6/lib64
-LINKPATHS += -L/usr/X11R6/lib
+   LINKLIBS += -lX11
+   #LINKPATHS += -L/usr/X11R6/lib64
+   LINKPATHS += -L/usr/X11R6/lib
 endif
 
 # HB_GPM_MOUSE: use gpm mouse driver
 ifeq ($(HB_GPM_MOUSE),yes)
-LINKLIBS += -lgpm
-endif
-
+   LINKLIBS += -lgpm
 endif
 
 ifneq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
-LINKLIBS += -lpcre
+   LINKLIBS += -lpcre
 endif
 
 ifneq ($(findstring -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
-LINKLIBS += -lz
+   LINKLIBS += -lz
 endif
 
 LINKLIBS += -lm -lrt -ldl

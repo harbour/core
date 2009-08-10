@@ -19,19 +19,19 @@ CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS =
 
 ifneq ($(HB_BUILD_WARN),no)
-CFLAGS += -Wall -W
+   CFLAGS += -Wall -W
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-CFLAGS += -O3
-CFLAGS += -fomit-frame-pointer
-ifeq ($(HB_COMPILER),mingw)
-CFLAGS += -march=i586 -mtune=pentiumpro
-endif
+   CFLAGS += -O3
+   CFLAGS += -fomit-frame-pointer
+   ifeq ($(HB_COMPILER),mingw)
+      CFLAGS += -march=i586 -mtune=pentiumpro
+   endif
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-CFLAGS += -g
+   CFLAGS += -g
 endif
 
 LD := $(HB_CCPREFIX)$(HB_CMP)
@@ -42,9 +42,9 @@ LIBLIST = $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the standard C main() entry
 ifeq ($(HB_MAIN),std)
-ifeq ($(findstring hbvm,$(LIBS)),hbvm)
-LIBLIST += -lhbmainstd
-endif
+   ifeq ($(findstring hbvm,$(LIBS)),hbvm)
+      LIBLIST += -lhbmainstd
+   endif
 endif
 
 LDFLAGS :=

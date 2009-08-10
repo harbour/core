@@ -12,38 +12,38 @@ CC_OUT := -Fo
 CPPFLAGS = -nologo -I. -I$(HB_INC_COMPILE) -Gs
 
 ifeq ($(HB_BUILD_MODE),c)
-CPPFLAGS += -TC
+   CPPFLAGS += -TC
 endif
 ifeq ($(HB_BUILD_MODE),cpp)
-CPPFLAGS += -TP
+   CPPFLAGS += -TP
 endif
 # Build in C++ mode by default
 ifeq ($(HB_BUILD_MODE),)
-CPPFLAGS += -TP
+   CPPFLAGS += -TP
 endif
 
 ifneq ($(HB_BUILD_WARN),no)
-CPPFLAGS += -W4 -wd4127
+   CPPFLAGS += -W4 -wd4127
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-ifeq ($(HB_VISUALC_VER_PRE80),)
-CPPFLAGS += -Ot2b1 -EHs-c-
-else
-CPPFLAGS += -Ogt2yb1p -GX- -G6 -YX
-endif
+   ifeq ($(HB_VISUALC_VER_PRE80),)
+      CPPFLAGS += -Ot2b1 -EHs-c-
+   else
+      CPPFLAGS += -Ogt2yb1p -GX- -G6 -YX
+   endif
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-CPPFLAGS += -MTd -Zi
+   CPPFLAGS += -MTd -Zi
 else
-CPPFLAGS += -MT
+   CPPFLAGS += -MT
 endif
 
 # # NOTE: -GA flag should be disabled when building MT _.dlls_,
 # #       as it creates bad code according to MS docs [vszakats].
 # ifeq ($(HB_VISUALC_VER_PRE70),)
-# CPPFLAGS += -GA
+#    CPPFLAGS += -GA
 # endif
 
 LD := link.exe

@@ -19,17 +19,17 @@ CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS =
 
 ifneq ($(HB_BUILD_WARN),no)
-CFLAGS += -Wall -W
+   CFLAGS += -Wall -W
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-# Use -O2 instead of -O3 here.
-CFLAGS += -O2
-CFLAGS += -fomit-frame-pointer
+   # Use -O2 instead of -O3 here.
+   CFLAGS += -O2
+   CFLAGS += -fomit-frame-pointer
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-CFLAGS += -g
+   CFLAGS += -g
 endif
 
 LD := $(HB_CCPREFIX)$(HB_CMP)

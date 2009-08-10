@@ -16,14 +16,14 @@ LIB_PREF :=
 LIB_EXT := .lib
 
 ifeq ($(HB_BUILD_MODE),c)
-CC := wcc386
+   CC := wcc386
 endif
 ifeq ($(HB_BUILD_MODE),cpp)
-CC := wpp386
+   CC := wpp386
 endif
 # Build in C++ mode by default
 ifeq ($(HB_BUILD_MODE),)
-CC := wpp386
+   CC := wpp386
 endif
 CC_IN :=
 CC_OUT := -fo=
@@ -31,32 +31,31 @@ CC_OUT := -fo=
 CPPFLAGS = -zq -bt=linux
 
 ifneq ($(HB_BUILD_WARN),no)
-CPPFLAGS += -w3
+   CPPFLAGS += -w3
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-# architecture flags
-CPPFLAGS += -6r -fp6
+   # architecture flags
+   CPPFLAGS += -6r -fp6
 
-# optimization flags
-# don't enable -ol optimization in OpenWatcom 1.1 - gives buggy code
-# -oxaht
-CPPFLAGS += -onaehtr -s -ei -zp4 -zt0
-#CPPFLAGS += -obl+m
-ifeq ($(CC),wpp386)
-CPPFLAGS += -oi+
+   # optimization flags
+   # don't enable -ol optimization in OpenWatcom 1.1 - gives buggy code
+   # -oxaht
+   CPPFLAGS += -onaehtr -s -ei -zp4 -zt0
+   #CPPFLAGS += -obl+m
+   ifeq ($(CC),wpp386)
+      CPPFLAGS += -oi+
+   else
+      CPPFLAGS += -oi
+   endif
 else
-CPPFLAGS += -oi
+   CPPFLAGS += -3r
 endif
-else
-CPPFLAGS += -3r
-endif
-
 
 CPPFLAGS += -i. -i$(TOP)$(ROOT)include
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-CPPFLAGS += -d2
+   CPPFLAGS += -d2
 endif
 
 empty:=
@@ -66,7 +65,7 @@ comma:= ,
 LD := wlink
 LDFLAGS = SYS linux
 ifeq ($(HB_BUILD_DEBUG),yes)
-LDFLAGS := DEBUG ALL $(LDFLAGS)
+   LDFLAGS := DEBUG ALL $(LDFLAGS)
 endif
 
 LINKLIBS = $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
@@ -74,9 +73,9 @@ LINKLIBS = $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 LDFILES = $(subst $(space),$(comma) ,$(^F))
 LDLIBS  = $(subst $(space),$(comma) ,$(strip $(LINKLIBS)))
 ifneq ($(HB_SHELL),sh)
-LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@. FILE $(LDFILES)
+   LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@. FILE $(LDFILES)
 else
-LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@ FILE $(LDFILES)
+   LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@ FILE $(LDFILES)
 endif
 ifneq ($(LDLIBS),)
    LD_RULE += LIB $(LDLIBS)

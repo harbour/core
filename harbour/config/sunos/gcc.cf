@@ -24,17 +24,17 @@ CFLAGS =
 LDFLAGS =
 
 ifneq ($(HB_BUILD_WARN),no)
-CFLAGS += -Wall -W
+   CFLAGS += -Wall -W
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-CFLAGS += -O3
+   CFLAGS += -O3
 endif
 
 CFLAGS += -fPIC
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-CFLAGS += -g
+   CFLAGS += -g
 endif
 
 LD := $(HB_CCACHE) $(HB_CMP)
@@ -45,32 +45,27 @@ LINKPATHS += -L$(LIB_DIR)
 LINKLIBS += $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the specified GT driver library
-ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
-
-# screen driver libraries
-ifeq ($(HB_CRS_LIB),)
-HB_CRS_LIB := curses
-endif
 ifneq ($(findstring gtcrs, $(LIBS)),)
-LINKLIBS += -l$(HB_CRS_LIB)
+   ifeq ($(HB_CRS_LIB),)
+      HB_CRS_LIB := curses
+   endif
+   LINKLIBS += -l$(HB_CRS_LIB)
 endif
 ifneq ($(findstring gtsln, $(LIBS)),)
-LINKLIBS += -lslang
+   LINKLIBS += -lslang
 endif
 ifneq ($(findstring gtxwc, $(LIBS)),)
-LINKLIBS += -lX11
-#LINKPATHS += -L/usr/X11R6/lib64
-LINKPATHS += -L/usr/X11R6/lib
-endif
-
+   LINKLIBS += -lX11
+   #LINKPATHS += -L/usr/X11R6/lib64
+   LINKPATHS += -L/usr/X11R6/lib
 endif
 
 ifneq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
-LINKLIBS += -lpcre
+   LINKLIBS += -lpcre
 endif
 
 ifneq ($(findstring -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
-LINKLIBS += -lz
+   LINKLIBS += -lz
 endif
 
 LINKLIBS += -lm -lrt

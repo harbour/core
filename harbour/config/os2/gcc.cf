@@ -19,15 +19,15 @@ CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS =
 
 ifneq ($(HB_BUILD_WARN),no)
-CFLAGS += -Wall -W
+   CFLAGS += -Wall -W
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-CFLAGS += -O3
+   CFLAGS += -O3
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-CFLAGS += -g
+   CFLAGS += -g
 endif
 
 LD := $(HB_CMP)
@@ -37,10 +37,10 @@ LDFLAGS =
 LD_OUT := -o$(subst x,x, )
 
 ifeq ($(C_MAIN),)
-ifeq ($(HB_GT_LIB),os2pm)
-# If building a PM program, override the main object.
-LDFLAGS +=$(TOP)$(ROOT)source/vm/$(OBJ_DIR)/mainpm.o
-endif
+   ifeq ($(HB_GT_LIB),os2pm)
+      # If building a PM program, override the main object.
+      LDFLAGS += $(TOP)$(ROOT)source/vm/$(OBJ_DIR)/mainpm.o
+   endif
 endif
 
 # Add all libraries specified in LIBS.
@@ -49,13 +49,13 @@ LINKLIBS += $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the specified GT driver library
 ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
-ifeq ($(C_MAIN),)
-ifeq ($(findstring os2pm,$(HB_GT_LIB)),os2pm)
-# Special handling for PM mode
-LINKLIBS += -l$(HB_GT_LIB)
-LINKLIBS += -lgtos2
-endif
-endif
+   ifeq ($(C_MAIN),)
+      ifeq ($(findstring os2pm,$(HB_GT_LIB)),os2pm)
+         # Special handling for PM mode
+         LINKLIBS += -l$(HB_GT_LIB)
+         LINKLIBS += -lgtos2
+      endif
+   endif
 endif
 
 # add socket library
@@ -65,10 +65,10 @@ LINKLIBS += -lsocket
 LDFLAGS += $(LINKPATHS)
 
 ifeq ($(C_MAIN),)
-ifeq ($(HB_GT_LIB),os2pm)
-# Override the default link rule in order to add a call to emxbind
-LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$(BIN_DIR)/$@ $(^F) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LINKLIBS) & emxbind -ep $@
-endif
+   ifeq ($(HB_GT_LIB),os2pm)
+      # Override the default link rule in order to add a call to emxbind
+      LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$(BIN_DIR)/$@ $(^F) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LINKLIBS) & emxbind -ep $@
+   endif
 endif
 
 # Note: The empty line directly before 'endef' HAVE TO exist!
@@ -88,7 +88,6 @@ echo SAVE >> __lib__.tmp
 echo END >> __lib__.tmp
 $(AR) -M < __lib__.tmp
 endef
-
 
 # Under OS/2 || isn't a command separator (inside a shell, that is); correct separator is &
 AR := ar

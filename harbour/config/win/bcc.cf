@@ -15,21 +15,21 @@ CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS = -q -tWM
 
 ifneq ($(HB_BUILD_WARN),no)
-CFLAGS += -w -w-sig- -Q
+   CFLAGS += -w -w-sig- -Q
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-# for some reason -6 generates the exact same code as -4 with both 5.5 and 5.8.
-# -5 seems to be significantly slower than both. [vszakats]
-CFLAGS += -d -6 -O2 -OS -Ov -Oi -Oc
+   # for some reason -6 generates the exact same code as -4 with both 5.5 and 5.8.
+   # -5 seems to be significantly slower than both. [vszakats]
+   CFLAGS += -d -6 -O2 -OS -Ov -Oi -Oc
 endif
 
 ifeq ($(HB_BUILD_MODE),cpp)
-CFLAGS += -P
+   CFLAGS += -P
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-CFLAGS += -y -v
+   CFLAGS += -y -v
 endif
 
 LD := bcc32.exe

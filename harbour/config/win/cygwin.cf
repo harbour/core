@@ -19,16 +19,16 @@ CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS =
 
 ifneq ($(HB_BUILD_WARN),no)
-CFLAGS += -Wall -W
+   CFLAGS += -Wall -W
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-CFLAGS += -O3
-CFLAGS += -fomit-frame-pointer -march=i586 -mtune=pentiumpro
+   CFLAGS += -O3
+   CFLAGS += -fomit-frame-pointer -march=i586 -mtune=pentiumpro
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-CFLAGS += -g
+   CFLAGS += -g
 endif
 
 LD := $(HB_CMP)

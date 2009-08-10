@@ -16,14 +16,14 @@ LIB_PREF :=
 LIB_EXT := .lib
 
 ifeq ($(HB_BUILD_MODE),c)
-CC := wcc386
+   CC := wcc386
 endif
 ifeq ($(HB_BUILD_MODE),cpp)
-CC := wpp386
+   CC := wpp386
 endif
 # Build in C++ mode by default
 ifeq ($(HB_BUILD_MODE),)
-CC := wpp386
+   CC := wpp386
 endif
 CC_IN :=
 CC_OUT := -fo=
@@ -31,37 +31,37 @@ CC_OUT := -fo=
 CPPFLAGS = -zq -bt=nt -bm
 
 ifneq ($(HB_BUILD_WARN),no)
-CPPFLAGS += -w3
+   CPPFLAGS += -w3
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-# architecture flags
-CPPFLAGS += -6s -fp6
+   # architecture flags
+   CPPFLAGS += -6s -fp6
 
-# optimization flags
-# don't enable -ol optimization in OpenWatcom 1.1 - gives buggy code
-# -oxaht
-CPPFLAGS += -onaehtr -s -ei -zp4 -zt0
-ifeq ($(CC),wpp386)
-CPPFLAGS += -oi+
+   # optimization flags
+   # don't enable -ol optimization in OpenWatcom 1.1 - gives buggy code
+   # -oxaht
+   CPPFLAGS += -onaehtr -s -ei -zp4 -zt0
+   ifeq ($(CC),wpp386)
+      CPPFLAGS += -oi+
+   else
+      CPPFLAGS += -oi
+   endif
 else
-CPPFLAGS += -oi
-endif
-else
-CPPFLAGS += -3s
+   CPPFLAGS += -3s
 endif
 
 CPPFLAGS += -i. -i$(TOP)$(ROOT)include
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-CPPFLAGS += -d2
+   CPPFLAGS += -d2
 endif
 
 ifeq ($(CC),wcc386)
-ifneq ($(HB_HOST_ARCH),linux)
-CPPFLAGS := $(subst /,\,$(CPPFLAGS))
-CC_RULE = $(CC) $(CPPFLAGS) $(subst /,\,$(CFLAGS)) $(HB_CDBG) $(subst /,\,$(HB_USER_CFLAGS)) $(HB_CDYNLIB) $(HB_CUNICODE) $(CC_IN)$(subst /,\,$<) $(CC_OUT)$(<F:.c=$(OBJ_EXT))
-endif
+   ifneq ($(HB_HOST_ARCH),linux)
+      CPPFLAGS := $(subst /,\,$(CPPFLAGS))
+      CC_RULE = $(CC) $(CPPFLAGS) $(subst /,\,$(CFLAGS)) $(HB_CDBG) $(subst /,\,$(HB_USER_CFLAGS)) $(HB_CDYNLIB) $(HB_CUNICODE) $(CC_IN)$(subst /,\,$<) $(CC_OUT)$(<F:.c=$(OBJ_EXT))
+   endif
 endif
 
 # Note: The empty line directly before 'endef' HAVE TO exist!
@@ -88,7 +88,7 @@ endef
 LD := wlink
 LDFLAGS = SYS nt
 ifeq ($(HB_BUILD_DEBUG),yes)
-LDFLAGS := DEBUG ALL $(LDFLAGS)
+   LDFLAGS := DEBUG ALL $(LDFLAGS)
 endif
 
 LINKLIBS = $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))

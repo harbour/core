@@ -9,9 +9,9 @@ LIB_PREF :=
 LIB_EXT := .lib
 
 ifeq ($(HB_VISUALC_VER_PRE80),)
-CC := cl.exe
+   CC := cl.exe
 else
-CC := clarm.exe
+   CC := clarm.exe
 endif
 CC_IN := -c
 CC_OUT := -Fo
@@ -19,32 +19,32 @@ CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS = -nologo -D"_WIN32_WCE=0x420" -D"UNDER_CE=0x420" -D"WIN32_PLATFORM_PSPC" -D"WINCE" -D"_WINCE" -D"_WINDOWS" -D"ARM" -D"_ARM_" -D"ARMV4" -D"POCKETPC2003_UI_MODEL" -D"_M_ARM" -D"UNICODE" -D"_UNICODE" -D_UWIN
 
 ifeq ($(HB_BUILD_MODE),c)
-CFLAGS += -TC
+   CFLAGS += -TC
 endif
 ifeq ($(HB_BUILD_MODE),cpp)
-CFLAGS += -TP
+   CFLAGS += -TP
 endif
 
 ifneq ($(HB_BUILD_WARN),no)
-CFLAGS += -W4
+   CFLAGS += -W4
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-ifeq ($(HB_VISUALC_VER_PRE80),)
-CFLAGS += -Od -Os -Gy -GS- -EHsc- -Gm -Zi -GR-
-else
-CFLAGS += -Oxsb1 -EHsc -YX -GF
-endif
+   ifeq ($(HB_VISUALC_VER_PRE80),)
+      CFLAGS += -Od -Os -Gy -GS- -EHsc- -Gm -Zi -GR-
+   else
+      CFLAGS += -Oxsb1 -EHsc -YX -GF
+   endif
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-CFLAGS += -Zi
+   CFLAGS += -Zi
 endif
 
 ifeq ($(HB_VISUALC_VER_PRE80),)
-LD := cl.exe
+   LD := cl.exe
 else
-LD := clarm.exe
+   LD := clarm.exe
 endif
 LD_OUT := -Fe
 
@@ -52,7 +52,7 @@ LINKPATHS += /link
 LINKPATHS += /subsystem:windowsce,4.20 /machine:arm /armpadcode /stack:65536,4096 /nodefaultlib:"oldnames.lib"
 LINKPATHS += /nodefaultlib:"kernel32.lib" /align:4096 /opt:ref /opt:icf
 ifeq ($(HB_VISUALC_VER_PRE80),)
-LINKPATHS += /manifest:no
+   LINKPATHS += /manifest:no
 endif
 LINKPATHS += /libpath:$(LIB_DIR)
 # Add all libraries specified in LIBS.
