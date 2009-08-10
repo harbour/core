@@ -370,9 +370,9 @@ HB_EXTERN_BEGIN
 #     define HB_SPINLOCK_ACQUIRE(l) do { \
                                        for( ;; ) \
                                        { \
-                                          if( !InterlockedExchange( (l), 1 ) ) \
+                                          if( !InterlockedExchange( (LONG*)(l), 1 ) ) \
                                              break; \
-                                          if( !InterlockedExchange( (l), 1 ) ) \
+                                          if( !InterlockedExchange( (LONG*)(l), 1 ) ) \
                                              break; \
                                           Sleep( 0 ); \
                                        } \
