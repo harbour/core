@@ -93,45 +93,45 @@ CREATE CLASS tIPClient
    CLASSDATA bInitSocks  INIT .F.
    CLASSDATA cCRLF       INIT hb_inetCRLF()
 
-   VAR oUrl                 /* url to wich to connect */
-   VAR oCredentials         /* credential needed to access the service */
-   VAR nStatus              /* basic status */
+   VAR oUrl                      /* url to wich to connect */
+   VAR oCredentials              /* credential needed to access the service */
+   VAR nStatus           INIT 0  /* basic status */
    VAR SocketCon
    VAR bTrace
 
    VAR nDefaultRcvBuffSize
    VAR nDefaultSndBuffSize
 
-   VAR nLength              /* Input stream length */
-   VAR nRead                /* Input stream data read by the app*/
-   VAR nLastRead            /* Last physical read amount */
+   VAR nLength           INIT -1 /* Input stream length */
+   VAR nRead             INIT 0  /* Input stream data read by the app*/
+   VAR nLastRead         INIT 0  /* Last physical read amount */
 
    VAR nDefaultPort
    VAR nConnTimeout
-   VAR bInitialized
+   VAR bInitialized      INIT .F.
 
    VAR cReply
    VAR nAccessMode
-   VAR nWrite
-   VAR nLastWrite
+   VAR nWrite            INIT 0
+   VAR nLastWrite        INIT 0
 
-   VAR bEof
-   VAR isOpen INIT .F.
+   VAR bEof              INIT .F.
+   VAR isOpen            INIT .F.
 
    VAR exGauge              /* Gauge control; it can be a codeblock or a function pointer. */
 
-   VAR lTLS   INIT .F.
+   VAR lTLS              INIT .F.
 #if defined( HAS_OPENSSL )
    VAR ssl_ctx
    VAR ssl
-   VAR nSSLError INIT 0
+   VAR nSSLError         INIT 0
 #endif
 
    VAR Cargo
 
    /* Data for proxy connection */
    VAR cProxyHost
-   VAR nProxyPort INIT 0
+   VAR nProxyPort        INIT 0
    VAR cProxyUser
    VAR cProxyPassword
 
@@ -183,32 +183,21 @@ ENDCLASS
 
 METHOD New( oUrl, bTrace, oCredentials ) CLASS tIPClient
    LOCAL oErr
-   LOCAL cProtoAccepted := "ftp,http,pop,smtp"
 
-   IF ! ::bInitSocks
-      hb_inetInit()
+   LOCAL aProtoAccepted := { "ftp", "http", "pop", "smtp" }
 #if defined( HAS_OPENSSL )
-      SSL_init()
-      RAND_seed( Time() + hb_username() + DToS( Date() ) + hb_DirBase() + NetName() )
+   LOCAL aProtoAcceptedSSL := { "ftps", "https", "pop3s", "pop3", "smtps" }
+#else
+   LOCAL aProtoAcceptedSSL := {}
 #endif
-      ::bInitSocks := .T.
-   ENDIF
 
    IF ISCHARACTER( oUrl )
       oUrl := tUrl():New( oUrl )
    ENDIF
 
-#if defined( HAS_OPENSSL )
-   IF oURL:cProto == "ftps" .OR. ;
-      oURL:cProto == "https" .OR. ;
-      oURL:cProto == "pop3s" .OR. oURL:cProto == "pops" .OR. ;
-      oURL:cProto == "smtps"
-      ::EnableTLS( .T. )
-   ENDIF
-   cProtoAccepted += "," + "ftps,https,pop3s,pops,smtps"
-#endif
+   IF AScan( aProtoAccepted   , {| tmp | tmp == oURL:cProto } ) == 0 .AND. ;
+      AScan( aProtoAcceptedSSL, {| tmp | tmp == oURL:cProto } ) == 0
 
-   IF ! oURL:cProto $ cProtoAccepted
       oErr := ErrorNew()
       oErr:Args          := { Self, oURL:cProto }
       oErr:CanDefault    := .F.
@@ -223,16 +212,26 @@ METHOD New( oUrl, bTrace, oCredentials ) CLASS tIPClient
       Eval( ErrorBlock(), oErr )
    ENDIF
 
+   IF ! ::bInitSocks
+      hb_inetInit()
+#if defined( HAS_OPENSSL )
+      SSL_init()
+      RAND_seed( Time() + hb_username() + DToS( Date() ) + hb_DirBase() + NetName() )
+#endif
+      ::bInitSocks := .T.
+   ENDIF
+
+#if defined( HAS_OPENSSL )
+   IF oURL:cProto == "ftps" .OR. ;
+      oURL:cProto == "https" .OR. ;
+      oURL:cProto == "pop3s" .OR. oURL:cProto == "pops" .OR. ;
+      oURL:cProto == "smtps"
+      ::EnableTLS( .T. )
+   ENDIF
+#endif
+
    ::oUrl         := oUrl
    ::oCredentials := oCredentials
-   ::nStatus      := 0
-   ::bInitialized := .F.
-   ::nWrite       := 0
-   ::nLastWrite   := 0
-   ::nLength      := -1
-   ::nRead        := 0
-   ::nLastRead    := 0
-   ::bEof         := .F.
    ::bTrace       := bTrace
 
    RETURN self

@@ -68,11 +68,12 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    aFiles     -> Optional. Array of attachments to the email to send
    cUser      -> Required. User name for the POP3 server
    cPass      -> Required. Password for cUser
-   cPopServer -> Required. Pop3 server name or address
+   cPopServer -> Required. POP3 server name or address
    nPriority  -> Optional. Email priority: 1=High, 3=Normal (Standard), 5=Low
    lRead      -> Optional. If set to .T., a confirmation request is send. Standard setting is .F.
    bTrace     -> Optional. If set to .T., a log file is created (smtp-<nNr>.log). Standard setting is NIL.
                            If a block is passed, it will be called for each log event with the message a string, no param on session close.
+   lPopAuth   -> Optional. Do POP3 authentication before sending mail.
    lNoAuth    -> Optional. Disable Autentication methods
    nTimeOut   -> Optional. Number os ms to wait default 20000 (20s)
    cReplyTo   -> Optional.
@@ -196,7 +197,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
 
    IF cPopServer != NIL .AND. lPopAuth
       BEGIN SEQUENCE
-         oUrl1 := tUrl():New( "pop://" + cUser + ":" + cPass + "@" + cPopServer + "/" )
+         oUrl1 := tUrl():New( iif( lTLS, "pop3s://" , "pop://" ) + cUser + ":" + cPass + "@" + cPopServer + "/" )
          oUrl1:cUserid := StrTran( cUser, "&at;", "@" )
          opop:= tIPClientPOP():New( oUrl1, bTrace )
          IF oPop:Open()

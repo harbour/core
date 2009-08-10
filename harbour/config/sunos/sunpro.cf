@@ -3,16 +3,16 @@
 #
 
 ifeq ($(HB_BUILD_MODE),cpp)
-   HB_CMP := CC
+   HB_CMP := sunCC
 else
-   HB_CMP := cc
+   HB_CMP := suncc
 endif
 
 OBJ_EXT := .o
 LIB_PREF := lib
 LIB_EXT := .a
 
-CC := $(HB_CCACHE) $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)
+CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)
 CC_IN := -c
 # NOTE: The ending space after -o is important, please preserve it.
 #       Now solved with '$(subst x,x, )' expression.
@@ -60,7 +60,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 CFLAGS += -g
 endif
 
-LD := $(HB_CCACHE) $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)
+LD := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)
 LD_OUT := -o$(subst x,x, )
 
 # Add all libraries specified in LIBS.
