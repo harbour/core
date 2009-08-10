@@ -153,9 +153,6 @@ if [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ]; then
 
 else
 
-    export HARBOUR=
-    export CLIPPER=
-
     # ---------------------------------------------------------------
     # Start the GNU make system
 

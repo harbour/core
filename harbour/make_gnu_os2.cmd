@@ -13,9 +13,6 @@ rem ---------------------------------------------------------------
 rem Minimal initialization of environment variables for OS2 GCC build
 rem for further information about see make_gnu.bat
 
-if "%HB_ARCHITECTURE%" == "" set HB_ARCHITECTURE=os2
-if "%HB_COMPILER%" == "" set HB_COMPILER=gcc
-
 rem In GCC3.2.2 the TCP/IP headers and libraries scheme have been changed.
 rem The default is the current OS/2 tcpip toolkit (BSD 4.4 based).
 rem To target the older OS/2 tcpip stack (BSD 4.3 based) and create
@@ -40,14 +37,4 @@ if "%HB_OS2_TCP32%" == "YES" goto tcp32
    set HB_USER_CFLAGS=-DTCPV40HDRS %HB_USER_CFLAGS%
 :tcp32
 
-set _HB_HARBOUR_OLD=%HARBOUR%
-set _HB_CLIPPER_OLD=%CLIPPER%
-set HARBOUR=
-set CLIPPER=
-
 make %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
-
-set HARBOUR=%_HB_HARBOUR_OLD%
-set CLIPPER=%_HB_CLIPPER_OLD%
-set _HB_HARBOUR_OLD=
-set _HB_CLIPPER_OLD=

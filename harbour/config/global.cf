@@ -698,6 +698,12 @@ endif
 export HB_HOST_ARCH
 export HB_HOST_BIN_DIR
 
+# clear these options for an unambiguous Harbour enviornment
+export HARBOUR :=
+export CLIPPER :=
+export HARBOURCMD :=
+export CLIPPERCMD :=
+
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 include $(TOP)$(ROOT)config/globsh.cf
 

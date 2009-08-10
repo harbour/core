@@ -86,11 +86,6 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
 :MAKE
 
-   set _HB_HARBOUR_OLD=%HARBOUR%
-   set _HB_CLIPPER_OLD=%CLIPPER%
-   set HARBOUR=
-   set CLIPPER=
-
    rem ---------------------------------------------------------------
    rem Setup output log
 
@@ -225,11 +220,7 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 :MAKE_DONE
 
    set _HB_MAKE=
-   set HARBOUR=%_HB_HARBOUR_OLD%
-   set CLIPPER=%_HB_CLIPPER_OLD%
    set _HB_BUILD_LOG=
-   set _HB_HARBOUR_OLD=
-   set _HB_CLIPPER_OLD=
    goto END
 
 :COMP_DET_ONE
