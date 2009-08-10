@@ -4226,15 +4226,19 @@ STATIC FUNCTION SetupForGT( cGT_New, /* @ */ cGT, /* @ */ lGUI )
       SWITCH Lower( cGT_New )
       CASE "gtcgi"
       CASE "gtcrs"
+      CASE "gtdos"
+      CASE "gtos2"
       CASE "gtpca"
       CASE "gtsln"
       CASE "gtstd"
+      CASE "gttrm"
       CASE "gtwin"
          lGUI := .F.
          EXIT
 
       CASE "gtgui"
       CASE "gtwvt"
+      CASE "gtxwc"
          lGUI := .T.
          EXIT
 
