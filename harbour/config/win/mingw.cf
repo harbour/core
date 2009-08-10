@@ -67,7 +67,7 @@ SYSLIBS := -luser32 -lgdi32 -lws2_32
 AR := $(HB_CCPREFIX)ar
 ARFLAGS = $(HB_USER_AFLAGS)
 
-RANLIB = $(HB_CCPREFIX)ranlib
+RANLIB := $(HB_CCPREFIX)ranlib
 
 ifeq ($(AR_RULE),)
 AR_RULE = $(AR) $(ARFLAGS) cr $(LIB_DIR)/$@ $(^F) && $(RANLIB) $(LIB_DIR)/$@ || $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@)
