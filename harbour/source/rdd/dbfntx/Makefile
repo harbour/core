@@ -5,7 +5,7 @@
 ROOT := ../../../
 
 C_SOURCES := \
-	dbfntx1.c \
+   dbfntx1.c \
 
 LIBNAME := rddntx
 

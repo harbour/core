@@ -19,15 +19,15 @@ ifneq ($(strip $(HB_INC_MYSQL_OK)),)
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_MYSQL_OK), -I$(d))
 
 C_SOURCES := \
-	mysql.c \
-	mysqlold.c \
+   mysql.c \
+   mysqlold.c \
 
 PRG_SOURCES := \
-	tmysql.prg \
-	tsqlbrw.prg \
+   tmysql.prg \
+   tsqlbrw.prg \
 
 PRG_HEADERS := \
-	mysql.ch \
+   mysql.ch \
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

@@ -34,8 +34,8 @@ endif
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_ALLEGRO_OK), -I$(d))
 
 C_SOURCES := \
-	gtalleg.c \
-	ssf.c \
+   gtalleg.c \
+   ssf.c \
 
 include $(TOP)$(ROOT)config/lib.cf
 

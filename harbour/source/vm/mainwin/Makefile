@@ -7,7 +7,7 @@ vpath %.c ../
 ROOT := ../../../
 
 C_SOURCES := \
-	mainwin.c \
+   mainwin.c \
 
 LIBNAME := hbmainwin
 

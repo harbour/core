@@ -19,24 +19,24 @@ ROOT := ../../
 #LEX_FLAGS := -Phb_macro -C
 #LEX_SOURCE := macro.l
 #LEX_HEADERS := \
-#	hbsetup.h \
-#	hberrors.h \
-#	hbdefs.h \
-#	hbmacro.h \
+#   hbsetup.h \
+#   hberrors.h \
+#   hbdefs.h \
+#   hbmacro.h \
 
 #YACC_FLAGS := -p hb_macro
 YACC_SOURCE := macro.y
 YACC_DEPEND := macrolex.c
 YACC_HEADERS := \
-	hbmacro.h \
-	hbsetup.h \
-	hbpcode.h \
-	hbdefs.h \
+   hbmacro.h \
+   hbsetup.h \
+   hbpcode.h \
+   hbdefs.h \
 
 C_SOURCES := \
-	macroa.c \
-	macrob.c \
-	macrolex.c \
+   macroa.c \
+   macrob.c \
+   macrolex.c \
 
 LIBNAME := hbmacro
 

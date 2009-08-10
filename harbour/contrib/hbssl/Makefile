@@ -32,24 +32,24 @@ ifneq ($(strip $(HB_INC_OPENSSL_OK)),)
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_OPENSSL_OK), -I$(d))
 
 C_SOURCES := \
-	hbssl.c \
-	bio.c \
-	err.c \
-	evp.c \
-	evpciph.c \
-	evpenc.c \
-	evpmd.c \
-	evppkey.c \
-	pem.c \
-	rand.c \
-	ssl.c \
-	sslciph.c \
-	sslctx.c \
-	sslsess.c \
-	x509.c \
+   hbssl.c \
+   bio.c \
+   err.c \
+   evp.c \
+   evpciph.c \
+   evpenc.c \
+   evpmd.c \
+   evppkey.c \
+   pem.c \
+   rand.c \
+   ssl.c \
+   sslciph.c \
+   sslctx.c \
+   sslsess.c \
+   x509.c \
 
 PRG_HEADERS := \
-	hbssl.ch \
+   hbssl.ch \
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

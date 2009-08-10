@@ -5,20 +5,20 @@
 ROOT := ../../
 
 C_SOURCES := \
-	date.c \
-	environ.c \
-	gauge.c \
-	num.c \
-	numceil.c \
-	numfloor.c \
-	stack.c \
-	status.c \
-	time.c \
+   date.c \
+   environ.c \
+   gauge.c \
+   num.c \
+   numceil.c \
+   numfloor.c \
+   stack.c \
+   status.c \
+   time.c \
 
 PRG_SOURCES := \
 
 PRG_HEADERS := \
-	time87.ch \
+   time87.ch \
 
 LIBNAME := hbclipsm
 

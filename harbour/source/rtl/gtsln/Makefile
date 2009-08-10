@@ -9,9 +9,9 @@ include $(TOP)$(ROOT)config/global.cf
 LIBNAME := gtsln
 
 C_SOURCES := \
-	gtsln.c \
-	kbsln.c \
-	mousesln.c \
+   gtsln.c \
+   kbsln.c \
+   mousesln.c \
 
 ifeq ($(HB_INC_SLANG),)
 ifeq ($(HB_XBUILD),)

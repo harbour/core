@@ -9,7 +9,7 @@ include $(TOP)$(ROOT)config/global.cf
 LIBNAME := gtxwc
 
 C_SOURCES := \
-	gtxwc.c \
+   gtxwc.c \
 
 ifeq ($(HB_INC_X11),)
 ifeq ($(HB_XBUILD),)

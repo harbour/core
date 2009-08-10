@@ -9,45 +9,45 @@ ifeq ($(HB_CONTRIBLIBS),)
 # standalone contribs
 
 DIRS := \
-	gtwvg \
-	hbbmcdx \
-	hbbtree \
-	hbclipsm \
-	hbct \
-	hbgt \
-	hbmisc \
-	hbmzip \
-	hbnf \
-	hbodbc \
-	hbsqlit3 \
-	hbtip \
-	hbtpathy \
-	hbvpdf \
-	hbwin \
-	hbziparc \
-	rddado \
-	xhb \
-	xpp \
+   gtwvg \
+   hbbmcdx \
+   hbbtree \
+   hbclipsm \
+   hbct \
+   hbgt \
+   hbmisc \
+   hbmzip \
+   hbnf \
+   hbodbc \
+   hbsqlit3 \
+   hbtip \
+   hbtpathy \
+   hbvpdf \
+   hbwin \
+   hbziparc \
+   rddado \
+   xhb \
+   xpp \
 
 # contribs with external dependencies
 DIRS += \
-	gtalleg \
-	hbblat \
-	hbcurl \
-	hbfbird \
-	hbfimage \
-	hbgd \
-	hbhpdf \
-	hbmysql \
-	hbpgsql \
-	hbqt \
-	hbssl \
-	rddads \
-	rddsql \
+   gtalleg \
+   hbblat \
+   hbcurl \
+   hbfbird \
+   hbfimage \
+   hbgd \
+   hbhpdf \
+   hbmysql \
+   hbpgsql \
+   hbqt \
+   hbssl \
+   rddads \
+   rddsql \
 
 # contribs dependent on above
 DIRS += \
-	hbxbp \
+   hbxbp \
 
 else
 

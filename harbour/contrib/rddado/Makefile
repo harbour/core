@@ -11,10 +11,10 @@ LIBNAME := rddado
 ifneq ($(HB_ARCHITECTURE),os2)
 
 PRG_SOURCES := \
-	adordd.prg \
+   adordd.prg \
 
 PRG_HEADERS := \
-	adordd.ch \
+   adordd.ch \
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

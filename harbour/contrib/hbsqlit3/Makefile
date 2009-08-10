@@ -33,10 +33,10 @@ ifneq ($(strip $(HB_INC_SQLITE3_OK)),)
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_SQLITE3_OK), -I$(d))
 
 C_SOURCES := \
-	hbsqlit3.c \
+   hbsqlit3.c \
 
 PRG_HEADERS := \
-	hbsqlit3.ch \
+   hbsqlit3.ch \
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

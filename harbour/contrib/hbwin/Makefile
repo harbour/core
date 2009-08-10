@@ -20,42 +20,42 @@ endif
 ifeq ($(HB_WITH_HBWIN),yes)
 
 C_SOURCES := \
-	olecore.c \
-	oleinit.c \
-	axcore.c \
-	legacycd.c \
-	legacyco.c \
-	wce_simc.c \
-	wce_smsc.c \
-	win_dll.c \
-	win_misc.c \
-	win_osc.c \
-	win_prn1.c \
-	win_prn2.c \
-	win_prt.c \
-	win_regc.c \
-	wapi_commctrl.c \
-	wapi_shellapi.c \
-	wapi_winbase.c \
-	wapi_winuser.c \
+   olecore.c \
+   oleinit.c \
+   axcore.c \
+   legacycd.c \
+   legacyco.c \
+   wce_simc.c \
+   wce_smsc.c \
+   win_dll.c \
+   win_misc.c \
+   win_osc.c \
+   win_prn1.c \
+   win_prn2.c \
+   win_prt.c \
+   win_regc.c \
+   wapi_commctrl.c \
+   wapi_shellapi.c \
+   wapi_winbase.c \
+   wapi_winuser.c \
 
 PRG_SOURCES := \
-	legacy.prg \
-	oleauto.prg \
-	axfunc.prg \
-	wce_sim.prg \
-	win_os.prg \
-	win_reg.prg \
-	win_tprn.prg \
-	win_tprt.prg \
+   legacy.prg \
+   oleauto.prg \
+   axfunc.prg \
+   wce_sim.prg \
+   win_os.prg \
+   win_reg.prg \
+   win_tprn.prg \
+   win_tprt.prg \
 
 C_HEADERS := \
-	hbwapi.h \
-	hbwin.h \
-	hbwinole.h \
+   hbwapi.h \
+   hbwin.h \
+   hbwinole.h \
 
 PRG_HEADERS := \
-	hbwin.ch \
+   hbwin.ch \
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

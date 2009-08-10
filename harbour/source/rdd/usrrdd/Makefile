@@ -5,7 +5,7 @@
 ROOT := ../../../
 
 C_SOURCES := \
-	usrrdd.c \
+   usrrdd.c \
 
 LIBNAME := hbusrrdd
 

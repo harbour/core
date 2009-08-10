@@ -19,7 +19,7 @@ endif
 ifeq ($(HB_WITH_GTGUI),yes)
 
 C_SOURCES := \
-	gtgui.c \
+   gtgui.c \
 
 include $(TOP)$(ROOT)config/lib.cf
 

@@ -17,8 +17,8 @@ HB_USER_CFLAGS += -DCURL_STATICLIB
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_CURL_OK), -I$(d))
 
 C_SOURCES := \
-	hbcurl.c \
-	hbcurlm.c \
+   hbcurl.c \
+   hbcurlm.c \
 
 include $(TOP)$(ROOT)config/lib.cf
 

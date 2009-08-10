@@ -5,7 +5,7 @@
 ROOT := ../../../
 
 C_SOURCES := \
-	gtpca.c \
+   gtpca.c \
 
 LIBNAME := gtpca
 

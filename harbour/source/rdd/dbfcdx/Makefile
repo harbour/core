@@ -5,8 +5,8 @@
 ROOT := ../../../
 
 C_SOURCES := \
-	dbfcdx1.c \
-	sixcdx1.c \
+   dbfcdx1.c \
+   sixcdx1.c \
 
 LIBNAME := rddcdx
 

@@ -5,8 +5,8 @@
 ROOT := ../../../
 
 C_SOURCES := \
-	hsx.c \
-	cftsfunc.c \
+   hsx.c \
+   cftsfunc.c \
 
 LIBNAME := hbhsx
 

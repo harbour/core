@@ -5,7 +5,7 @@
 ROOT := ../../../
 
 C_SOURCES := \
-	gtstd.c \
+   gtstd.c \
 
 LIBNAME := gtstd
 

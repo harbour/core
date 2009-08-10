@@ -27,11 +27,11 @@ ifneq ($(strip $(HB_INC_CURL_OK)),)
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_CURL_OK), -I$(d))
 
 C_SOURCES := \
-	hbcurl.c \
-	hbcurlm.c \
+   hbcurl.c \
+   hbcurlm.c \
 
 PRG_HEADERS := \
-	hbcurl.ch \
+   hbcurl.ch \
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)
@@ -48,7 +48,7 @@ DIRS += hbcurls
 endif
 
 ifneq ($(DIRS),)
-	include $(TOP)$(ROOT)config/dir.cf
+   include $(TOP)$(ROOT)config/dir.cf
 endif
 
 else

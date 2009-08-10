@@ -7,6 +7,6 @@ ROOT := ../../
 LIBNAME := hbziparc
 
 PRG_SOURCES := \
-	hbziparc.prg \
+   hbziparc.prg \
 
 include $(TOP)$(ROOT)config/lib.cf

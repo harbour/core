@@ -11,7 +11,7 @@ ifeq ($(HB_COMPILER),xcc)
 endif
 
 C_SOURCES := \
-	dbffpt1.c \
+   dbffpt1.c \
 
 LIBNAME := rddfpt
 

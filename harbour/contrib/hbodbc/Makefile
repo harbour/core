@@ -43,15 +43,15 @@ endif
 ifneq ($(HB_WITHOUT_ODBC),yes)
 
 C_SOURCES := \
-	odbc.c \
-	odbcold.c \
+   odbc.c \
+   odbcold.c \
 
 PRG_SOURCES := \
-	todbc.prg \
-	browodbc.prg \
+   todbc.prg \
+   browodbc.prg \
 
 PRG_HEADERS := \
-	sql.ch \
+   sql.ch \
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

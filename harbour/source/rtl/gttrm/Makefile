@@ -9,7 +9,7 @@ include $(TOP)$(ROOT)config/global.cf
 LIBNAME := gttrm
 
 C_SOURCES := \
-	gttrm.c \
+   gttrm.c \
 
 HB_WITH_GTTRM := yes
 ifeq ($(HB_ARCHITECTURE),win)

@@ -5,7 +5,7 @@
 ROOT := ../../../
 
 C_SOURCES := \
-	nulsys.c \
+   nulsys.c \
 
 LIBNAME := hbnulrdd
 

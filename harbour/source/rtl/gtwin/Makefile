@@ -11,7 +11,7 @@ LIBNAME := gtwin
 ifeq ($(HB_ARCHITECTURE),win)
 
 C_SOURCES := \
-	gtwin.c \
+   gtwin.c \
 
 include $(TOP)$(ROOT)config/lib.cf
 

@@ -1363,8 +1363,8 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
-   LOCAL cFile := cPathOut + s_PathSep + 'Makefile_gen'
-   LOCAL txt_:={}
+   LOCAL cFile := cPathOut + s_PathSep + "Makefile_gen"
+   LOCAL txt_ := {}
    LOCAL s
 
    aadd( txt_, "#                                                       " )
@@ -1375,12 +1375,12 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
    aadd( txt_, "CPP_SOURCES := \                                        " )
 
    /* Insert .cpp sources */
-   aadd( txt_, chr( 9 ) + 'moc_slots.cpp \' )
-   aadd( txt_, chr( 9 ) + 'hbqt_base.cpp \' )
-   aadd( txt_, chr( 9 ) + 'hbqt_utils.cpp \' )
-   aadd( txt_, chr( 9 ) + 'hbqt_slots.cpp \' )
+   aadd( txt_, "   " + "moc_slots.cpp \" )
+   aadd( txt_, "   " + "hbqt_base.cpp \" )
+   aadd( txt_, "   " + "hbqt_utils.cpp \" )
+   aadd( txt_, "   " + "hbqt_slots.cpp \" )
    FOR EACH s IN cpp_
-      aadd( txt_, chr( 9 ) + s + '.cpp \' )
+      aadd( txt_, "   " + s + ".cpp \" )
    NEXT
    aadd( txt_, "                                                        " )
    aadd( txt_, "                                                        " )
@@ -1388,7 +1388,7 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
    IF !empty( prg_ )
       aadd( txt_, "PRG_SOURCES := \                                     " )
       FOR EACH s IN prg_
-         aadd( txt_, chr( 9 ) + 'T' + s + '.prg \' )
+         aadd( txt_, "   " + "T" + s + ".prg \" )
       NEXT
    ENDIF
    aadd( txt_, "                                                        " )
@@ -1400,7 +1400,7 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
 
 STATIC FUNCTION BuildDocument( cWidget, doc_, cPathDoc, docum_ )
    LOCAL i, n, n1, nLen, nLen1, pWidget, cText, oWidget, cRet
-   LOCAL cFile := cPathDoc + s_PathSep + cWidget + '.txt'
+   LOCAL cFile := cPathDoc + s_PathSep + cWidget + ".txt"
    LOCAL txt_:={}
    LOCAL aHM_:= {}, aHF_:={}
 

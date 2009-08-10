@@ -30,13 +30,13 @@ ifneq ($(strip $(HB_INC_FREEIMAGE_OK)),)
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_FREEIMAGE_OK), -I$(d))
 
 C_SOURCES := \
-	fi_winfu.c \
-	fi_wrp.c \
+   fi_winfu.c \
+   fi_wrp.c \
 
 PRG_SOURCES := \
 
 PRG_HEADERS := \
-	freeimage.ch \
+   freeimage.ch \
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

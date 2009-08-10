@@ -5,16 +5,16 @@
 ROOT := ../../
 
 C_SOURCES := \
-	hb_btree.c \
+   hb_btree.c \
 
 C_HEADERS := \
-	hb_btree.h \
+   hb_btree.h \
 
 PRG_SOURCES := \
-	tbtree.prg \
+   tbtree.prg \
 
 PRG_HEADERS := \
-	hb_btree.ch \
+   hb_btree.ch \
 
 LIBNAME := hbbtree
 

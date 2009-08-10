@@ -25,14 +25,14 @@ ifneq ($(strip $(HB_INC_ADS_OK)),)
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_ADS_OK), -I$(d))
 
 C_SOURCES := \
-	ads1.c \
-	adsfunc.c \
-	adsmgmnt.c \
-	adsx.c \
+   ads1.c \
+   adsfunc.c \
+   adsmgmnt.c \
+   adsx.c \
 
 PRG_HEADERS := \
-	ads.ch \
-	adsextrn.ch \
+   ads.ch \
+   adsextrn.ch \
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

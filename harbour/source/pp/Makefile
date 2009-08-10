@@ -5,17 +5,17 @@
 ROOT := ../../
 
 C_SOURCES := \
-	pptable.c \
-	ppcore.c \
-	pplib.c \
-	pplib2.c \
-	pplib3.c \
+   pptable.c \
+   ppcore.c \
+   pplib.c \
+   pplib2.c \
+   pplib3.c \
 
 LIBNAME := hbpp
 
 LIBS := \
-	hbcommon \
-	hbnortl \
+   hbcommon \
+   hbnortl \
 
 include $(TOP)$(ROOT)config/lib.cf
 

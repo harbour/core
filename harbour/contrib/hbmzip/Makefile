@@ -7,13 +7,13 @@ ROOT := ../../
 LIBNAME := hbmzip
 
 C_SOURCES := \
-	ioapi.c \
-	zip.c \
-	unzip.c \
-	hbmzip.c
+   ioapi.c \
+   zip.c \
+   unzip.c \
+   hbmzip.c
 
 PRG_HEADERS := \
-	hbmzip.ch
+   hbmzip.ch
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

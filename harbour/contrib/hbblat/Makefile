@@ -11,13 +11,13 @@ LIBNAME := hbblat
 ifeq ($(HB_ARCHITECTURE),win)
 
 C_SOURCES := \
-	blatwrp.c \
+   blatwrp.c \
 
 PRG_SOURCES := \
-	blatcls.prg \
+   blatcls.prg \
 
 PRG_HEADERS := \
-	hbblat.ch \
+   hbblat.ch \
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

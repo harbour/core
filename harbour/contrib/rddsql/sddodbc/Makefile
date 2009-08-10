@@ -43,7 +43,7 @@ endif
 ifneq ($(HB_WITHOUT_ODBC),yes)
 
 C_SOURCES := \
-	odbcdd.c \
+   odbcdd.c \
 
 include $(TOP)$(ROOT)config/lib.cf
 

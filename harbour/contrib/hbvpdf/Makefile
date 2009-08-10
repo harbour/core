@@ -7,12 +7,12 @@ ROOT := ../../
 LIBNAME := hbvpdf
 
 PRG_SOURCES := \
-	hbvpdf.prg \
-	hbvpdft.prg \
-	hbvpsup.prg \
+   hbvpdf.prg \
+   hbvpdft.prg \
+   hbvpsup.prg \
 
 PRG_HEADERS := \
-	hbvpdf.ch \
+   hbvpdf.ch \
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

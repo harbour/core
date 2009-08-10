@@ -5,7 +5,7 @@
 ROOT := ../../
 
 C_SOURCES := \
-	nortl.c \
+   nortl.c \
 
 LIBNAME := hbnortl
 

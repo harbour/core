@@ -25,18 +25,18 @@ ifneq ($(strip $(HB_INC_GD_OK)),)
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_GD_OK), -I$(d))
 
 C_SOURCES := \
-	gdwrp.c \
+   gdwrp.c \
 
 PRG_HEADERS := \
-	gd.ch \
-	gdextern.ch \
+   gd.ch \
+   gdextern.ch \
 
 PRG_SOURCES := \
-	gd.prg \
-	gdbar.prg \
-	gdchart.prg \
-	gdimage.prg \
-	gdbarcod.prg \
+   gd.prg \
+   gdbar.prg \
+   gdchart.prg \
+   gdimage.prg \
+   gdbarcod.prg \
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

@@ -19,10 +19,10 @@ ifneq ($(strip $(HB_INC_LIBHARU_OK)),)
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_LIBHARU_OK), -I$(d))
 
 C_SOURCES := \
-	harupdf.c \
+   harupdf.c \
 
 PRG_HEADERS := \
-	harupdf.ch \
+   harupdf.ch \
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

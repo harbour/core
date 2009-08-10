@@ -69,11 +69,11 @@ HB_USER_CFLAGS += $(foreach d, $(HB_INC_QT_OK), -I$(d) -I$(d)/Qt -I$(d)/QtCore -
 endif
 
 CPP_SOURCES := \
-	gtqtc.cpp \
-	moc_gtqtc.cpp \
+   gtqtc.cpp \
+   moc_gtqtc.cpp \
 
 C_HEADERS := \
-	gtqtc.h \
+   gtqtc.h \
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

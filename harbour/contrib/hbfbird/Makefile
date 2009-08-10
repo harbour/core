@@ -24,10 +24,10 @@ ifneq ($(strip $(HB_INC_FIREBIRD_OK)),)
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_FIREBIRD_OK), -I$(d))
 
 C_SOURCES := \
-	firebird.c \
+   firebird.c \
 
 PRG_SOURCES := \
-	tfirebrd.prg \
+   tfirebrd.prg \
 
 include $(TOP)$(ROOT)config/lib.cf
 

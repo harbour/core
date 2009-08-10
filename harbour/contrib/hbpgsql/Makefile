@@ -19,14 +19,14 @@ ifneq ($(strip $(HB_INC_PGSQL_OK)),)
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_PGSQL_OK), -I$(d))
 
 C_SOURCES := \
-	postgres.c \
+   postgres.c \
 
 PRG_SOURCES := \
-	tpostgre.prg \
-	pgrdd.prg \
+   tpostgre.prg \
+   pgrdd.prg \
 
 PRG_HEADERS := \
-	postgres.ch \
+   postgres.ch \
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

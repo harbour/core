@@ -7,7 +7,7 @@ vpath %.c ../
 ROOT := ../../../
 
 C_SOURCES := \
-	maindllp.c \
+   maindllp.c \
 
 LIBNAME := hbmaindllp
 

@@ -9,7 +9,7 @@ include $(TOP)$(ROOT)config/global.cf
 LIBNAME := gtcrs
 
 C_SOURCES := \
-	gtcrs.c \
+   gtcrs.c \
 
 ifeq ($(HB_INC_CURSES),)
 ifeq ($(HB_XBUILD),)

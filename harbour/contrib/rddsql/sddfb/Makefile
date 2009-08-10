@@ -23,7 +23,7 @@ ifneq ($(strip $(HB_INC_FIREBIRD_OK)),)
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_FIREBIRD_OK), -I$(d))
 
 C_SOURCES := \
-	fbirddd.c \
+   fbirddd.c \
 
 include $(TOP)$(ROOT)config/lib.cf
 else

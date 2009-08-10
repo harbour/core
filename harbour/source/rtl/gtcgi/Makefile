@@ -5,7 +5,7 @@
 ROOT := ../../../
 
 C_SOURCES := \
-	gtcgi.c \
+   gtcgi.c \
 
 LIBNAME := gtcgi
 

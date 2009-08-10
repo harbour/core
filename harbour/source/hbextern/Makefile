@@ -5,7 +5,7 @@
 ROOT := ../../
 
 PRG_SOURCES := \
-	hbextern.prg \
+   hbextern.prg \
 
 LIBNAME := hbextern
 

@@ -19,7 +19,7 @@ endif
 ifeq ($(HB_WITH_GTWVT),yes)
 
 C_SOURCES := \
-	gtwvt.c \
+   gtwvt.c \
 
 include $(TOP)$(ROOT)config/lib.cf
 
