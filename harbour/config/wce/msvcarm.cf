@@ -49,7 +49,7 @@ else
 endif
 LD_OUT := -Fe
 
-LINKPATHS := /libpath:$(LIB_DIR)
+LIBPATHS := /libpath:$(LIB_DIR)
 # Add all libraries specified in LIBS.
 LDLIBS += $(foreach lib,$(LIBS),$(lib)$(LIB_EXT))
 
@@ -59,7 +59,7 @@ LDFLAGS += /nodefaultlib:"kernel32.lib" /align:4096 /opt:ref /opt:icf
 ifeq ($(HB_VISUALC_VER_PRE80),)
    LDFLAGS += /manifest:no
 endif
-LDFLAGS += $(LINKPATHS)
+LDFLAGS += $(LIBPATHS)
 
 AR := lib.exe
 ARFLAGS :=

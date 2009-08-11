@@ -34,7 +34,7 @@ endif
 LD := $(HB_CMP)
 LD_OUT := -o
 
-LINKPATHS := -L$(LIB_DIR)
+LIBPATHS := -L$(LIB_DIR)
 
 LDLIBS += $(foreach lib,$(LIBS),-l$(lib))
 LDLIBS += -lm
@@ -65,7 +65,7 @@ endef
 define link_exe_file
 @echo. $(LDFLAGS) $(HB_USER_LDFLAGS) $(LD_OUT)$(BIN_DIR)/$@ > __link__.tmp
 $(foreach file,$(^F),$(link_file))
-$(foreach file,$(LINKPATHS),$(link_file))
+$(foreach file,$(LIBPATHS),$(link_file))
 $(foreach file,$(LDLIBS),$(link_file))
 -$(LD) @__link__.tmp
 endef

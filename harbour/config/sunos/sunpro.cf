@@ -65,7 +65,7 @@ LD := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)
 LD_OUT := -o$(subst x,x, )
 
 # Add all libraries specified in LIBS.
-LINKPATHS := -L$(LIB_DIR)
+LIBPATHS := -L$(LIB_DIR)
 LDLIBS += $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the specified GT driver library
@@ -80,7 +80,7 @@ ifneq ($(findstring gtsln, $(LIBS)),)
 endif
 ifneq ($(findstring gtxwc, $(LIBS)),)
    LDLIBS += -lX11
-   LINKPATHS += -L/usr/X11R6/lib
+   LIBPATHS += -L/usr/X11R6/lib
 endif
 
 ifneq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
@@ -94,7 +94,7 @@ endif
 LDLIBS += -lm -lrt
 LDLIBS += -lsocket -lnsl -lresolv
 
-LDFLAGS += $(LINKPATHS)
+LDFLAGS += $(LIBPATHS)
 
 AR := ar
 ARFLAGS :=

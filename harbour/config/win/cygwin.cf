@@ -36,14 +36,14 @@ LD := $(HB_CMP)
 LD_OUT := -o
 
 # Add all libraries specified in LIBS.
-LINKPATHS := -L$(LIB_DIR)
+LIBPATHS := -L$(LIB_DIR)
 
 LDLIBS += $(foreach lib,$(LIBS),-l$(lib))
 
 # This library is needed for CharToOemBuff() and OemToCharBuff() support.
 LDLIBS += -luser32 -lgdi32 -lws2_32
 
-LDFLAGS = $(LINKPATHS)
+LDFLAGS = $(LIBPATHS)
 
 AR := ar
 ARFLAGS :=

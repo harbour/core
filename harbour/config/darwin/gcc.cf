@@ -47,7 +47,7 @@ endif
 LD := $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 LD_OUT := -o
 
-LINKPATHS := -L$(LIB_DIR)
+LIBPATHS := -L$(LIB_DIR)
 LDLIBS = $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the specified GT driver library and other RTLs
@@ -66,8 +66,8 @@ ifneq ($(findstring gtsln, $(LIBS)),)
 endif
 ifneq ($(findstring gtxwc, $(LIBS)),)
    LDLIBS += -lX11
-   #LINKPATHS += -L/usr/X11R6/lib64
-   LINKPATHS += -L/usr/X11R6/lib
+   #LIBPATHS += -L/usr/X11R6/lib64
+   LIBPATHS += -L/usr/X11R6/lib
 endif
 
 ifneq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
@@ -80,7 +80,7 @@ endif
 
 LDLIBS += -lm
 
-LDFLAGS += $(LINKPATHS)
+LDFLAGS += $(LIBPATHS)
 LD_RULE = $(LD) $(CFLAGS) $(LD_OUT) $(BIN_DIR)/$@ $(^F) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LDLIBS)
 
 AR := libtool

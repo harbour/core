@@ -45,7 +45,7 @@ ifeq ($(C_MAIN),)
 endif
 
 # Add all libraries specified in LIBS.
-LINKPATHS := -L$(LIB_DIR)
+LIBPATHS := -L$(LIB_DIR)
 LDLIBS += $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the specified GT driver library
@@ -63,7 +63,7 @@ endif
 LDLIBS += -lsocket
 
 # statical linking with GCC 3.2.2 libc as not require its presence on user system
-LDFLAGS += $(LINKPATHS)
+LDFLAGS += $(LIBPATHS)
 
 ifeq ($(C_MAIN),)
    ifeq ($(HB_GT_LIB),os2pm)

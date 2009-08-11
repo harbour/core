@@ -50,7 +50,7 @@ LD := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)
 LD_OUT := -o
 
 # Add all libraries specified in LIBS.
-LINKPATHS := -L$(LIB_DIR)
+LIBPATHS := -L$(LIB_DIR)
 
 LDLIBS += $(foreach lib,$(LIBS),-l$(lib))
 
@@ -66,8 +66,8 @@ ifneq ($(findstring gtsln, $(LIBS)),)
 endif
 ifneq ($(findstring gtxwc, $(LIBS)),)
    LDLIBS += -lX11
-   #LINKPATHS += -L/usr/X11R6/lib64
-   LINKPATHS += -L/usr/X11R6/lib
+   #LIBPATHS += -L/usr/X11R6/lib64
+   LIBPATHS += -L/usr/X11R6/lib
 endif
 
 # HB_GPM_MOUSE: use gpm mouse driver
@@ -85,7 +85,7 @@ endif
 
 LDLIBS += -lm -lrt -ldl
 
-LDFLAGS = $(LINKPATHS)
+LDFLAGS = $(LIBPATHS)
 
 AR := $(HB_CCPREFIX)ar
 ARFLAGS :=

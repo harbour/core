@@ -41,10 +41,10 @@ LD := icl.exe
 LD_OUT := -Fe
 
 # Add all libraries specified in LIBS.
-LINKPATHS := /libpath:$(LIB_DIR)
+LIBPATHS := /libpath:$(LIB_DIR)
 LDLIBS += $(foreach lib,$(LIBS),$(lib)$(LIB_EXT))
 
-LDFLAGS = /link $(LINKPATHS) user32.lib ws2_32.lib advapi32.lib gdi32.lib
+LDFLAGS = /link $(LIBPATHS) user32.lib ws2_32.lib advapi32.lib gdi32.lib
 
 AR := xilib.exe
 ARFLAGS :=

@@ -37,10 +37,10 @@ LD := polink.exe
 LD_OUT := -OUT:
 
 # Add all libraries specified in LIBS.
-LINKPATHS := -LIBPATH:$(LIB_DIR)
+LIBPATHS := -LIBPATH:$(LIB_DIR)
 LDLIBS += $(foreach lib,$(LIBS),$(lib)$(LIB_EXT))
 
-LDFLAGS = $(LINKPATHS) kernel32.lib user32.lib ws2_32.lib advapi32.lib gdi32.lib
+LDFLAGS = $(LIBPATHS) kernel32.lib user32.lib ws2_32.lib advapi32.lib gdi32.lib
 LDFLAGS += /SUBSYSTEM:CONSOLE
 
 AR := polib.exe
