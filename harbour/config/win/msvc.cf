@@ -12,6 +12,7 @@ CC_OUT := -Fo
 
 CPPFLAGS := -nologo -I. -I$(HB_INC_COMPILE) -Gs
 CFLAGS :=
+LDFLAGS :=
 
 ifeq ($(HB_BUILD_MODE),c)
    CPPFLAGS += -TC
@@ -55,7 +56,7 @@ LD_OUT := /out:
 LIBPATHS := /libpath:$(LIB_DIR)
 LDLIBS := $(foreach lib,$(LIBS),$(lib)$(LIB_EXT))
 
-LDFLAGS = /nologo $(LIBPATHS) user32.lib ws2_32.lib advapi32.lib gdi32.lib
+LDFLAGS += /nologo $(LIBPATHS) user32.lib ws2_32.lib advapi32.lib gdi32.lib
 
 AR := lib.exe
 ARFLAGS :=

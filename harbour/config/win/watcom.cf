@@ -30,6 +30,7 @@ CC_OUT := -fo=
 
 CPPFLAGS := -zq -bt=nt -bm
 CFLAGS :=
+LDFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
    CPPFLAGS += -w3
@@ -87,10 +88,10 @@ $(foreach lib,$(LDLIBS),$(link_lib))
 endef
 
 LD := wlink
-LDFLAGS = SYS nt
 ifeq ($(HB_BUILD_DEBUG),yes)
-   LDFLAGS := DEBUG ALL $(LDFLAGS)
+   LDFLAGS += DEBUG ALL
 endif
+LDFLAGS += SYS nt
 
 LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 

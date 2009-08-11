@@ -30,6 +30,7 @@ CC_OUT := -fo=
 
 CPPFLAGS := -zq -bt=os2
 CFLAGS :=
+LDFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
    CPPFLAGS += -w3
@@ -64,10 +65,10 @@ ifeq ($(CC),wcc386)
 endif
 
 LD := wlink
-LDFLAGS = SYS os2v2
 ifeq ($(HB_BUILD_DEBUG),yes)
-   LDFLAGS := DEBUG ALL $(LDFLAGS)
+   LDFLAGS += DEBUG ALL
 endif
+LDFLAGS += SYS os2v2
 
 LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 

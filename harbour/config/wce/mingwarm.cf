@@ -18,6 +18,7 @@ CC_OUT := -o
 
 CPPFLAGS := -I. -I$(HB_INC_COMPILE)
 CFLAGS :=
+LDFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -Wall -W

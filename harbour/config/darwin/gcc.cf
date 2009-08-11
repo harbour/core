@@ -27,6 +27,7 @@ CPPFLAGS += -no-cpp-precomp
 
 # -fno-common enables building .dylib files
 CFLAGS := -fno-common
+LDFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -Wall -W
@@ -45,7 +46,7 @@ endif
 #CFLAGS += -Wno-long-double
 
 LD := $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
-LD_OUT := -o
+LD_OUT := -o$(subst x,x, )
 
 LIBPATHS := -L$(LIB_DIR)
 LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
@@ -81,7 +82,6 @@ endif
 LDLIBS += -lm
 
 LDFLAGS += $(LIBPATHS)
-LD_RULE = $(LD) $(CFLAGS) $(LD_OUT) $(BIN_DIR)/$@ $(^F) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LDLIBS)
 
 AR := libtool
 ARFLAGS :=

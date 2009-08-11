@@ -17,21 +17,11 @@ CC_IN := -c
 CC_OUT := -o
 
 CPPFLAGS := -I. -I$(HB_INC_COMPILE)
-
-ifeq ($(HB_COMPILER),icc)
-   CFLAGS := -D_GNU_SOURCE
-   #CFLAGS += -std=c99
-   #CFLAGS += -xHOST
-else
-   CFLAGS :=
-endif
+CFLAGS :=
+LDFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
-   ifeq ($(HB_COMPILER),icc)
-      #CFLAGS += -w2 -Wall
-   else
-      CFLAGS += -Wall -W
-   endif
+   CFLAGS += -Wall -W
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
@@ -85,7 +75,7 @@ endif
 
 LDLIBS += -lm -lrt -ldl
 
-LDFLAGS = $(LIBPATHS)
+LDFLAGS += $(LIBPATHS)
 
 AR := $(HB_CCPREFIX)ar
 ARFLAGS :=

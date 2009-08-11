@@ -15,6 +15,7 @@ CC_OUT := -Fo
 CPPFLAGS := -I.
 CPPFLAGS += -Ze -Go -MT
 CFLAGS :=
+LDFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
    CPPFLAGS += -W1
@@ -39,9 +40,10 @@ LD_OUT := -OUT:
 # Add all libraries specified in LIBS.
 LIBPATHS := -LIBPATH:$(LIB_DIR)
 LDLIBS := $(foreach lib,$(LIBS),$(lib)$(LIB_EXT))
+LDLIBS += kernel32.lib user32.lib ws2_32.lib advapi32.lib gdi32.lib
 
-LDFLAGS = $(LIBPATHS) kernel32.lib user32.lib ws2_32.lib advapi32.lib gdi32.lib
 LDFLAGS += /SUBSYSTEM:CONSOLE
+LDFLAGS += $(LIBPATHS)
 
 AR := polib.exe
 ARFLAGS :=

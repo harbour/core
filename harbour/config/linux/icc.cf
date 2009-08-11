@@ -77,7 +77,7 @@ endif
 
 LDLIBS += -lm -lrt -ldl
 
-LDFLAGS = $(LIBPATHS)
+LDFLAGS := $(LIBPATHS)
 
 AR := xiar
 ARFLAGS :=

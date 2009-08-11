@@ -30,6 +30,7 @@ CC_OUT := -fo=
 
 CPPFLAGS := -zq -bt=linux
 CFLAGS :=
+LDFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
    CPPFLAGS += -w3
@@ -60,10 +61,10 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 endif
 
 LD := wlink
-LDFLAGS = SYS linux
 ifeq ($(HB_BUILD_DEBUG),yes)
-   LDFLAGS := DEBUG ALL $(LDFLAGS)
+   LDFLAGS += DEBUG ALL
 endif
+LDFLAGS += SYS linux
 
 LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 

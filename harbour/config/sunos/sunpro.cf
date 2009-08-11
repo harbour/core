@@ -20,6 +20,7 @@ CC_OUT := -o$(subst x,x, )
 
 CPPFLAGS := -I. -I$(HB_INC_COMPILE)
 CFLAGS :=
+LDFLAGS :=
 
 # try to keep `-fast' as left as possible, as later optim
 # flags may override values set by `-fast', and this way
@@ -27,7 +28,7 @@ CFLAGS :=
 
 # may inherit -m64 from sunpro64.cf, which supersedes -xarch=v8
 HB_ISAOPT ?= -xarch=v8
-LDFLAGS ?= $(HB_ISAOPT)
+LDFLAGS += $(HB_ISAOPT)
 
 # might not be needed for sunos, but helps keeping
 # {linux,sunos}/sunpro.cf easily vimdiff'able for now

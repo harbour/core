@@ -15,6 +15,7 @@ CC_OUT := -Fo
 CPPFLAGS := -I.
 CPPFLAGS += -Ze -Go
 CFLAGS :=
+LDFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
    CPPFLAGS += -W1
@@ -39,12 +40,13 @@ endif
 LD := polink.exe
 LD_OUT := -OUT:
 
-# Add all libraries specified in LIBS.
 LIBPATHS := -LIBPATH:$(LIB_DIR)
+# Add all libraries specified in LIBS.
 LDLIBS := $(foreach lib,$(LIBS),$(lib)$(LIB_EXT))
+LDLIBS += coredll.lib corelibc.lib winsock.lib ws2.lib
 
-LDFLAGS = $(LIBPATHS) coredll.lib corelibc.lib winsock.lib ws2.lib
 LDFLAGS += /SUBSYSTEM:WINDOWS
+LDFLAGS += $(LIBPATHS)
 
 AR := polib.exe
 ARFLAGS :=

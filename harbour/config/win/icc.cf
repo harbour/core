@@ -15,6 +15,7 @@ CC_OUT := -Fo
 
 CPPFLAGS := -nologo -I. -I$(HB_INC_COMPILE)
 CFLAGS := -Gs
+LDFLAGS :=
 
 ifeq ($(HB_BUILD_MODE),c)
    CPPFLAGS += -TC
@@ -43,8 +44,9 @@ LD_OUT := -Fe
 # Add all libraries specified in LIBS.
 LIBPATHS := /libpath:$(LIB_DIR)
 LDLIBS := $(foreach lib,$(LIBS),$(lib)$(LIB_EXT))
+LDLIBS += user32.lib ws2_32.lib advapi32.lib gdi32.lib
 
-LDFLAGS = /link $(LIBPATHS) user32.lib ws2_32.lib advapi32.lib gdi32.lib
+LDFLAGS += /link $(LIBPATHS)
 
 AR := xilib.exe
 ARFLAGS :=

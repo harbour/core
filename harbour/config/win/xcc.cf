@@ -14,6 +14,7 @@ CC_OUT := -Fo
 
 CPPFLAGS :=
 CFLAGS := -I. -I$(HB_INC_COMPILE)
+LDFLAGS :=
 
 ifneq ($(HB_BUILD_OPTIM),no)
    # disabled - it produces bad code
@@ -33,8 +34,9 @@ LD_OUT := -OUT:
 # Add all libraries specified in LIBS.
 LIBPATHS := -LIBPATH:$(LIB_DIR)
 LDLIBS := $(foreach lib,$(LIBS),$(lib)$(LIB_EXT))
+LDLIBS += kernel32.lib user32.lib ws2_32.lib advapi32.lib gdi32.lib
 
-LDFLAGS = $(LIBPATHS) kernel32.lib user32.lib ws2_32.lib advapi32.lib gdi32.lib
+LDFLAGS += $(LIBPATHS)
 
 AR := xlib.exe
 ARFLAGS :=

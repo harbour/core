@@ -20,8 +20,7 @@ CC_OUT := -o$(subst x,x, )
 
 CPPFLAGS := -I. -I$(HB_INC_COMPILE)
 CFLAGS :=
-
-LDFLAGS =
+LDFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -Wall -W
