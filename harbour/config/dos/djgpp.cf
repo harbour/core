@@ -33,11 +33,11 @@ endif
 
 LD := $(HB_CMP)
 LD_OUT := -o
-LDLIBS = -lm
 
 LINKPATHS := -L$(LIB_DIR)
 
 LINKLIBS += $(foreach lib,$(LIBS),-l$(lib))
+LINKLIBS += -lm
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 # It causes that every echo command will be separated by LF
@@ -67,7 +67,6 @@ define link_exe_file
 $(foreach file,$(^F),$(link_file))
 $(foreach file,$(LINKPATHS),$(link_file))
 $(foreach file,$(LINKLIBS),$(link_file))
-@echo. $(LDLIBS) >> __link__.tmp
 -$(LD) @__link__.tmp
 endef
 

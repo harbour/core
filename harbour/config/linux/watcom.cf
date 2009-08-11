@@ -59,10 +59,6 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CPPFLAGS += -d2
 endif
 
-empty:=
-space:= $(empty) $(empty)
-comma:= ,
-
 LD := wlink
 LDFLAGS = SYS linux
 ifeq ($(HB_BUILD_DEBUG),yes)
@@ -71,15 +67,16 @@ endif
 
 LINKLIBS = $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 
-LDFILES = $(subst $(space),$(comma) ,$(^F))
-LDLIBS  = $(subst $(space),$(comma) ,$(strip $(LINKLIBS)))
+comma := ,
+LDFILES_COMMA = $(subst $(subst x,x, ),$(comma) ,$(^F))
+LDLIBS_COMMA = $(subst $(subst x,x, ),$(comma) ,$(strip $(LINKLIBS)))
 ifneq ($(HB_SHELL),sh)
-   LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@. FILE $(LDFILES)
+   LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@. FILE $(LDFILES_COMMA)
 else
-   LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@ FILE $(LDFILES)
+   LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@ FILE $(LDFILES_COMMA)
 endif
-ifneq ($(LDLIBS),)
-   LD_RULE += LIB $(LDLIBS)
+ifneq ($(LDLIBS_COMMA),)
+   LD_RULE += LIB $(LDLIBS_COMMA)
 endif
 
 AR := wlib

@@ -35,12 +35,12 @@ pptable.c : hbpp$(BIN_EXT)
 
 
 ifneq ($(HB_HOST_BUILD),lib)
-ifneq ($(HB_BIN_INSTALL),)
-INSTALL_FILES := $(BIN_DIR)/hbpp$(BIN_EXT)
-INSTALL_DIR := $(HB_BIN_INSTALL)
-HB_INSTALL_DEF := yes
-include $(TOP)$(ROOT)config/install.cf
-endif
+   ifneq ($(HB_BIN_INSTALL),)
+      INSTALL_FILES := $(BIN_DIR)/hbpp$(BIN_EXT)
+      INSTALL_DIR := $(HB_BIN_INSTALL)
+      HB_INSTALL_DEF := yes
+      include $(TOP)$(ROOT)config/install.cf
+   endif
 endif
 
 install::

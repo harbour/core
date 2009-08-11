@@ -63,10 +63,6 @@ ifeq ($(CC),wcc386)
    endif
 endif
 
-empty:=
-space:= $(empty) $(empty)
-comma:= ,
-
 LD := wlink
 LDFLAGS = SYS os2v2
 ifeq ($(HB_BUILD_DEBUG),yes)
@@ -75,9 +71,10 @@ endif
 
 LINKLIBS = $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 
-LDFILES = $(subst $(space),$(comma) ,$(^F))
-LDLIBS  = $(subst $(space),$(comma) ,$(strip $(LINKLIBS)))
-LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@ FILE $(LDFILES) $(if $(LDLIBS), LIB $(LDLIBS),)
+comma := ,
+LDFILES_COMMA = $(subst $(subst x,x, ),$(comma) ,$(^F))
+LDLIBS_COMMA = $(subst $(subst x,x, ),$(comma) ,$(strip $(LINKLIBS)))
+LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@ FILE $(LDFILES_COMMA) $(if $(LDLIBS_COMMA), LIB $(LDLIBS_COMMA),)
 
 ifeq ($(HB_SHELL),sh)
 create_library = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ $(foreach file,$(^F),-+$(file))
