@@ -46,7 +46,7 @@ LINKLIBS += $(foreach lib,$(LIBS),$(lib)$(LIB_EXT))
 LDFLAGS = $(LINKPATHS) user32.lib ws2_32.lib advapi32.lib gdi32.lib
 
 AR := xilib.exe
-ARFLAGS = $(HB_USER_AFLAGS)
-AR_RULE = $(AR) $(ARFLAGS) /out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
+ARFLAGS :=
+AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) /out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
 
 include $(TOP)$(ROOT)config/rules.cf

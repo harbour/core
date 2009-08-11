@@ -79,7 +79,7 @@ LDLIBS  = $(subst $(space),$(comma) ,$(strip $(LINKLIBS)))
 LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@ FILE $(LDFILES) $(if $(LDLIBS), LIB $(LDLIBS),)
 
 ifeq ($(HB_SHELL),sh)
-create_library = $(AR) $(ARFLAGS) $(LIB_DIR)/$@ $(foreach file,$(^F),-+$(file))
+create_library = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ $(foreach file,$(^F),-+$(file))
 else
 # maximum size of command line in OS2 is limited to 1024 characters
 # the trick with divided 'wordlist' is workaround for it:
@@ -92,12 +92,12 @@ else
 define create_library
 echo $(LIB_DIR)/$@ > __lib__.tmp
 for %i in ( *$(OBJ_EXT) ) do @echo -+%i >> __lib__.tmp
-$(AR) $(ARFLAGS) @__lib__.tmp
+$(AR) $(ARFLAGS) $(HB_USER_AFLAGS) @__lib__.tmp
 endef
 endif
 
 AR := wlib
-ARFLAGS = -p=64 -c -n $(HB_USER_AFLAGS)
+ARFLAGS := -p=64 -c -n
 AR_RULE = $(create_library)
 
 include $(TOP)$(ROOT)config/rules.cf

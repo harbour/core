@@ -54,8 +54,7 @@ LDFLAGS += $(LINKPATHS)
 RANLIB := $(HB_CCPREFIX)ranlib
 
 AR := $(HB_CCPREFIX)ar
-ARFLAGS = $(HB_USER_AFLAGS)
-
-AR_RULE = $(AR) $(ARFLAGS) cr $(LIB_DIR)/$@ $(^F) && $(RANLIB) $(LIB_DIR)/$@ || $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@)
+ARFLAGS :=
+AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) cr $(LIB_DIR)/$@ $(^F) && $(RANLIB) $(LIB_DIR)/$@ || $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@)
 
 include $(TOP)$(ROOT)config/rules.cf

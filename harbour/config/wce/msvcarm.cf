@@ -61,7 +61,7 @@ LINKLIBS += $(foreach lib,$(LIBS),$(lib)$(LIB_EXT))
 LDFLAGS = /nologo $(LINKPATHS)
 
 AR := lib.exe
-ARFLAGS = $(HB_USER_AFLAGS)
-AR_RULE = $(AR) $(ARFLAGS) /nologo /out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
+ARFLAGS :=
+AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) /nologo /out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
 
 include $(TOP)$(ROOT)config/rules.cf

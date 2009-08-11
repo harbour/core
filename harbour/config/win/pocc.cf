@@ -45,7 +45,7 @@ LDFLAGS = $(LINKPATHS) kernel32.lib user32.lib ws2_32.lib advapi32.lib gdi32.lib
 LDFLAGS += /SUBSYSTEM:CONSOLE
 
 AR := polib.exe
-ARFLAGS = $(HB_USER_AFLAGS)
-AR_RULE = $(AR) $(ARFLAGS) /out:$(LIB_DIR)/$@ $(^F)
+ARFLAGS :=
+AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) /out:$(LIB_DIR)/$@ $(^F)
 
 include $(TOP)$(ROOT)config/rules.cf

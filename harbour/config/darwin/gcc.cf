@@ -84,7 +84,7 @@ LDFLAGS += $(LINKPATHS)
 LD_RULE = $(LD) $(CFLAGS) $(LD_OUT) $(BIN_DIR)/$@ $(^F) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LINKLIBS) $(LINKLIBS)
 
 AR := libtool
-ARFLAGS = $(HB_USER_AFLAGS)
-AR_RULE = $(AR) -static $(ARFLAGS) -o $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
+ARFLAGS :=
+AR_RULE = $(AR) -static $(ARFLAGS) $(HB_USER_AFLAGS) -o $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 
 include $(TOP)$(ROOT)config/rules.cf

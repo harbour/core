@@ -45,7 +45,7 @@ LDFLAGS += $(LINKPATHS)
 
 # create library rules
 AR := tlib.exe
-ARFLAGS = /P64 $(HB_USER_AFLAGS)
+ARFLAGS := /P64
 
 ifneq ($(HB_SHELL),sh)
 
@@ -59,7 +59,7 @@ define create_library
 @if exist __lib__.tmp del __lib__.tmp
 $(foreach file,$(^F),$(lib_object))
 @echo -+>> __lib__.tmp
-$(AR) $(ARFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" @__lib__.tmp
+$(AR) $(ARFLAGS) $(HB_USER_AFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" @__lib__.tmp
 endef
 
 AR_RULE = $(create_library)
@@ -67,7 +67,7 @@ AR_RULE = $(create_library)
 else # sh
 
 AROBJS = $(foreach file,$(^F),-+$(file))
-AR_RULE = $(AR) $(ARFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" $(AROBJS)
+AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" $(AROBJS)
 
 endif
 

@@ -87,7 +87,7 @@ LINKLIBS += -lm -lrt -ldl
 LDFLAGS = $(LINKPATHS)
 
 AR := $(HB_CCPREFIX)ar
-ARFLAGS = $(HB_USER_AFLAGS)
-AR_RULE = $(AR) $(ARFLAGS) crs $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
+ARFLAGS :=
+AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) crs $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 
 include $(TOP)$(ROOT)config/rules.cf

@@ -104,11 +104,11 @@ endef
 define create_library
 @echo $(LIB_DIR)/$@ > __lib__.tmp
 $(foreach file,$(^F),$(lib_object))
-$(AR) $(ARFLAGS) @__lib__.tmp
+$(AR) $(ARFLAGS) $(HB_USER_AFLAGS) @__lib__.tmp
 endef
 
 AR := wlib
-ARFLAGS = -p=64 -c -n $(HB_USER_AFLAGS)
+ARFLAGS := -p=64 -c -n
 AR_RULE = $(create_library)
 
 include $(TOP)$(ROOT)config/rules.cf

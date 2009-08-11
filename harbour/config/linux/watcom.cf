@@ -82,8 +82,8 @@ ifneq ($(LDLIBS),)
 endif
 
 AR := wlib
-# ARFLAGS = -c -n -fa $(HB_USER_AFLAGS)
-ARFLAGS = -c -n $(HB_USER_AFLAGS)
-AR_RULE = $(AR) $(ARFLAGS) $(LIB_DIR)/$@ $(foreach file,$(^F),-+$(file))
+# ARFLAGS := -c -n -fa
+ARFLAGS := -c -n
+AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ $(foreach file,$(^F),-+$(file))
 
 include $(TOP)$(ROOT)config/rules.cf
