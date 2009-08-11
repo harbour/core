@@ -38,10 +38,10 @@ LD_OUT := -o
 # Add all libraries specified in LIBS.
 LINKPATHS := -L$(LIB_DIR)
 
-LINKLIBS += $(foreach lib,$(LIBS),-l$(lib))
+LDLIBS += $(foreach lib,$(LIBS),-l$(lib))
 
 # This library is needed for CharToOemBuff() and OemToCharBuff() support.
-LINKLIBS += -luser32 -lgdi32 -lws2_32
+LDLIBS += -luser32 -lgdi32 -lws2_32
 
 LDFLAGS = $(LINKPATHS)
 

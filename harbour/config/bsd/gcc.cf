@@ -35,24 +35,24 @@ LD := $(HB_CCACHE) $(HB_CMP)
 LD_OUT := -o
 
 LINKPATHS := -L$(LIB_DIR)
-LINKLIBS = $(foreach lib,$(LIBS),-l$(lib))
+LDLIBS = $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the specified GT driver library and other RTLs
 ifeq ($(HB_CRS_LIB),)
    HB_CRS_LIB := ncurses
 endif
 ifneq ($(findstring gtcrs, $(LIBS)),)
-   LINKLIBS += -l$(HB_CRS_LIB)
+   LDLIBS += -l$(HB_CRS_LIB)
 endif
 ifneq ($(findstring gtsln, $(LIBS)),)
-   LINKLIBS += -lslang
+   LDLIBS += -lslang
    # In BSD, slang still needs curses :(
    ifeq ($(findstring gtcrs, $(LIBS)),)
-      LINKLIBS += -l$(HB_CRS_LIB)
+      LDLIBS += -l$(HB_CRS_LIB)
    endif
 endif
 ifneq ($(findstring gtxwc, $(LIBS)),)
-   LINKLIBS += -lX11
+   LDLIBS += -lX11
   #LINKPATHS += -L/usr/X11R6/lib64
    LINKPATHS += -L/usr/X11R6/lib
 endif
@@ -60,14 +60,14 @@ endif
 LINKPATHS += -L/usr/local/lib
 
 ifneq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
-   LINKLIBS += -lpcre
+   LDLIBS += -lpcre
 endif
 
 ifneq ($(findstring -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
-   LINKLIBS += -lz
+   LDLIBS += -lz
 endif
 
-LINKLIBS += -lm
+LDLIBS += -lm
 
 LDFLAGS += $(LINKPATHS)
 

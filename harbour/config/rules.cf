@@ -43,7 +43,7 @@ endif
 
 # The rule to link an executable.
 ifeq ($(LD_RULE),)
-   LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$(subst /,$(DIRSEP),$(BIN_DIR)/$@) $(^F) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LINKLIBS)
+   LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$(subst /,$(DIRSEP),$(BIN_DIR)/$@) $(^F) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LDLIBS)
 endif
 
 # Eliminate these rules.

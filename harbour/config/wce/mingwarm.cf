@@ -37,9 +37,9 @@ LD := $(HB_CCPREFIX)$(HB_CMP)
 LD_OUT := -o
 
 LINKPATHS := -L$(LIB_DIR)
-LINKLIBS = $(foreach lib,$(LIBS),-l$(lib))
+LDLIBS = $(foreach lib,$(LIBS),-l$(lib))
 
-LINKLIBS += -lwininet -lws2
+LDLIBS += -lwininet -lws2
 LDFLAGS += $(LINKPATHS)
 
 RANLIB := $(HB_CCPREFIX)ranlib

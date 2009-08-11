@@ -39,16 +39,16 @@ LD := $(HB_CCPREFIX)$(HB_CMP)
 LD_OUT := -o
 
 LINKPATHS := -L$(LIB_DIR)
-LINKLIBS = $(foreach lib,$(LIBS),-l$(lib))
+LDLIBS = $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the standard C main() entry
 ifeq ($(HB_MAIN),std)
    ifeq ($(findstring hbvm,$(LIBS)),hbvm)
-      LINKLIBS += -lhbmainstd
+      LDLIBS += -lhbmainstd
    endif
 endif
 
-LINKLIBS += -luser32 -lgdi32 -lws2_32
+LDLIBS += -luser32 -lgdi32 -lws2_32
 
 LDFLAGS += $(LINKPATHS)
 

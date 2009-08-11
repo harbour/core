@@ -44,38 +44,38 @@ LD_OUT := -o
 # Add all libraries specified in LIBS.
 LINKPATHS := -L$(LIB_DIR)
 
-LINKLIBS += $(foreach lib,$(LIBS),-l$(lib))
+LDLIBS += $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the specified GT driver library and other RTLs
 ifneq ($(findstring gtcrs, $(LIBS)),)
    ifeq ($(HB_CRS_LIB),)
       HB_CRS_LIB := ncurses
    endif
-   LINKLIBS += -l$(HB_CRS_LIB)
+   LDLIBS += -l$(HB_CRS_LIB)
 endif
 ifneq ($(findstring gtsln, $(LIBS)),)
-   LINKLIBS += -lslang
+   LDLIBS += -lslang
 endif
 ifneq ($(findstring gtxwc, $(LIBS)),)
-   LINKLIBS += -lX11
+   LDLIBS += -lX11
    #LINKPATHS += -L/usr/X11R6/lib64
    LINKPATHS += -L/usr/X11R6/lib
 endif
 
 # HB_GPM_MOUSE: use gpm mouse driver
 ifeq ($(HB_GPM_MOUSE),yes)
-   LINKLIBS += -lgpm
+   LDLIBS += -lgpm
 endif
 
 ifneq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
-   LINKLIBS += -lpcre
+   LDLIBS += -lpcre
 endif
 
 ifneq ($(findstring -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
-   LINKLIBS += -lz
+   LDLIBS += -lz
 endif
 
-LINKLIBS += -lm -lrt -ldl
+LDLIBS += -lm -lrt -ldl
 
 LDFLAGS = $(LINKPATHS)
 
