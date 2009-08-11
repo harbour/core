@@ -1,0 +1,12 @@
+#
+# $Id$
+#
+
+-ldflag={allgcc}-Wl,--allow-multiple-definition
+-ldflag={allmsvc|allpocc|xcc}/force:multiple
+
+t0.prg
+t1.prg
+t2.prg
+
+-nulrdd
