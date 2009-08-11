@@ -181,7 +181,7 @@ ifeq ($(HB_CONFIG_SHOWN),)
       ifeq ($(HB_DYNLIB),yes)
          $(info ! Dynamic library creation phase)
       endif
-      $(info ! Configuration:)
+      $(info ! MAKE: $(MAKE))
       $(info ! MAKE: $(MAKE))
       ifneq ($(HB_USER_PRGFLAGS),)
          $(info ! HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))

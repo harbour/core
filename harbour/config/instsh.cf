@@ -2,94 +2,88 @@
 # $Id$
 #
 
-ifneq ($(HB_SHELL),sh)
-
-INSTALL_DIR_OS = $(subst /,\,$(INSTALL_DIR))
-INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
-
-endif
-
 ifeq ($(INSTALL_FILES),) # Empty install list
-
-INSTALL_RULE := @echo "! Done"
-
+   INSTALL_RULE := @echo "! Done"
 else
-
 ifeq ($(INSTALL_DIR),) # Empty install dir
-
-INSTALL_RULE := @echo "! Done"
-
+   INSTALL_RULE := @echo "! Done"
 else
+
+ifneq ($(HB_SHELL),sh)
+   INSTALL_DIR_OS = $(subst /,\,$(INSTALL_DIR))
+   INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
+endif
 
 ifeq ($(HB_SHELL),sh)
 
-INSTALL_RULE =\
-   @$(MDP) $(subst \,/,$(INSTALL_DIR)); \
-   if [ ! -d "$(subst \,/,$(INSTALL_DIR))" ]; \
-   then \
-      echo "! Can't install, path not found: '$(subst \,/,$(INSTALL_DIR))'" 1>&2; \
-      false; \
-   else \
-      for i in $(INSTALL_FILES); \
-      do \
-         if [ -r "$$i" ]; \
-         then \
-            echo "! Installing $$i on $(subst \,/,$(INSTALL_DIR))"; \
-            $(CP) $$i $(subst \,/,$(INSTALL_DIR)); \
-            true; \
-         else \
-            echo "! Can't install $$i, not found" 1>&2; \
-         fi \
-      done \
-   fi
+   INSTALL_RULE = \
+      @$(MDP) $(subst \,/,$(INSTALL_DIR)); \
+      if [ ! -d "$(subst \,/,$(INSTALL_DIR))" ]; \
+      then \
+         echo "! Can't install, path not found: '$(subst \,/,$(INSTALL_DIR))'" 1>&2; \
+         false; \
+      else \
+         for i in $(INSTALL_FILES); \
+         do \
+            if [ -r "$$i" ]; \
+            then \
+               echo "! Installing $$i on $(subst \,/,$(INSTALL_DIR))"; \
+               $(CP) $$i $(subst \,/,$(INSTALL_DIR)); \
+               true; \
+            else \
+               echo "! Can't install $$i, not found" 1>&2; \
+            fi \
+         done \
+      fi
 
 endif
 
 ifeq ($(HB_SHELL),nt)
 
-INSTALL_RULE =\
-   -$(CMDPREF)if not exist "$(INSTALL_DIR_OS)" $(MDP) "$(INSTALL_DIR_OS)" &\
-   for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(INSTALL_DIR_OS)"
+   define inst_file_all
+      @$(CMDPREF)if not exist "$(INSTALL_DIR_OS)" $(MDP) "$(INSTALL_DIR_OS)"
+      for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(INSTALL_DIR_OS)"
+   endef
+
+   INSTALL_RULE = -$(inst_file_all)
 
 endif
 
 ifeq ($(HB_SHELL),os2)
 
-# We have to use script to overcome the max command size limit
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
-# It causes that every commands will be separated by LF
+   define inst_file_all
+      @$(CMDPREF)if not exist $(INSTALL_DIR_OS) $(MDP) $(INSTALL_DIR)
+      $(foreach file,$(INSTALL_FILES_OS),$(inst_file))
+   endef
 
-# 05/Aug/2009 - <maurilio.longo@libero.it>
-#               I don't like doing the "if not exist..." test for every file copied
-#               but I could not find any other way to make this work around the shell
-#               command line length limit.
-define inst_file
-@$(CMDPREF)if not exist $(INSTALL_DIR_OS) $(MDP) $(INSTALL_DIR)
-$(CMDPREF)$(CP) $(file) $(INSTALL_DIR_OS)
+   # We have to use script to overcome the max command size limit
+   # NOTE: The empty line directly before 'endef' HAVE TO exist!
+   # It causes that every commands will be separated by LF
+   define inst_file
+      $(CMDPREF)$(CP) $(file) $(INSTALL_DIR_OS)
 
-endef
+   endef
 
-INSTALL_RULE = $(foreach file,$(INSTALL_FILES_OS),$(inst_file))
+   INSTALL_RULE = -$(foreach file,$(INSTALL_FILES_OS),$(inst_file))
 
 endif
 
 ifeq ($(HB_SHELL),dos)
 
-define inst_file_all
-$(MDP) $(INSTALL_DIR_OS)
-$(foreach file,$(INSTALL_FILES_OS),$(inst_file))
+   define inst_file_all
+      @if not exist $(INSTALL_DIR_OS)\nul $(MDP) $(INSTALL_DIR_OS)
+      $(foreach file,$(INSTALL_FILES_OS),$(inst_file))
+   endef
 
-endef
+   # We have to use script to overcome the DOS limit of max 128 characters
+   # NOTE: The empty line directly before 'endef' HAVE TO exist!
+   # It causes that every commands will be separated by LF
+   define inst_file
+      $(CP) $(file) $(INSTALL_DIR_OS)
 
-# We have to use script to overcome the DOS limit of max 128 characters
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
-# It causes that every commands will be separated by LF
-define inst_file
-$(CP) $(file) $(INSTALL_DIR_OS)
+   endef
 
-endef
-
-INSTALL_RULE = $(inst_file_all)
+   INSTALL_RULE = -$(inst_file_all)
 
 endif
 
