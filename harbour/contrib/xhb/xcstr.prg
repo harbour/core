@@ -201,8 +201,11 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
             RETURN cRet
          ENDIF
 
+/* There is no support for codeblock serialization */
+#if 0
       CASE 'B'
          RETURN ValToPrgExp( xVal )
+#endif
 
       CASE 'P'
          RETURN "0x" + hb_NumToHex( xVal )
@@ -229,7 +232,7 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
          nPad += 3
          cPad := Space( nPad )
 
-         FOR EACH aVar IN __objGetValueDiff( xVal )
+         FOR EACH aVar IN __objGetValueList( xVal )
             cRet += cPad + cName + ":" + aVar[1] + " := " + ValToPrg( aVar[2], cName + ":" + aVar[1], nPad, aObjs ) + CRLF
          NEXT
 

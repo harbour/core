@@ -665,8 +665,8 @@ METHOD SetPeriodCallback( ... ) CLASS tRPCClient
 
    IF ::skTCP != NIL
       hb_inetTimeout( ::skTCP, ::nTimeout )
-      hb_InetTimeLimit( ::skTCP, ::nTimeLimit )
-      hb_inetSetPeriodCallback( ::skTCP, caCalling )
+      hb_inetTimeLimit( ::skTCP, ::nTimeLimit )
+      hb_inetPeriodCallback( ::skTCP, caCalling )
    ENDIF
 
    HB_MutexUnlock( ::mtxBusy )

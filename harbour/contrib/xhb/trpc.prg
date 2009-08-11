@@ -444,7 +444,7 @@ METHOD Destroy() CLASS tRPCServeCon
    IF ::thFunction != NIL
       ::lCanceled := .T.
       HB_MutexUnlock( ::mtxBusy )
-      JoinThread( ::thFunction )
+      hb_threadJoin( ::thFunction )
       HB_MutexLock( ::mtxBusy )
    ENDIF
 
@@ -474,7 +474,7 @@ METHOD Stop() CLASS tRPCServeCon
       hb_threadQuitRequest( ::thSelf )
       lRet := .T.
       HB_MutexUnlock( ::mtxBusy )
-      JoinThread( ::thSelf )
+      hb_threadJoin( ::thSelf )
       ::thSelf := NIL
    ELSE
       HB_MutexUnlock( ::mtxBusy )
@@ -1362,18 +1362,18 @@ METHOD Stop() CLASS tRPCService
 
    hb_inetClose( ::skServer )
    // closing the socket will make their infinite loops to terminate.
-   StopThread( ::thAccept)
-   JoinThread( ::thAccept )
+   hb_threadQuitRequest( ::thAccept )
+   hb_threadJoin( ::thAccept )
    IF hb_threadId( ::thUDP ) != 0
       hb_inetClose( ::skUdp )
-      StopThread( ::thUdp)
-      JoinThread( ::thUdp )
+      hb_threadQuitRequest( ::thUdp )
+      hb_threadJoin( ::thUdp )
    ENDIF
 
    FOR EACH oElem IN ::aServing
       IF hb_threadId( oElem:thSelf ) != 0
          hb_threadQuitRequest( oElem:thSelf )
-         JoinThread( oElem:thSelf )
+         hb_threadJoin( oElem:thSelf )
       ENDIF
    NEXT
    ASize( ::aServing, 0 )
