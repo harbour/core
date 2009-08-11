@@ -50,6 +50,10 @@ ARFLAGS := /P64
 
 ifneq ($(HB_SHELL),sh)
 
+   # NOTE: Command-line limit length defeating methods found below
+   #       are only needed to support pre-Windows XP systems, where
+   #       limit is 2047 chars. [vszakats]
+
    # NOTE: The empty line directly before 'endef' HAVE TO exist!
    define lib_object
       @echo -+$(subst /,\,$(file)) ^& >> __lib__.tmp
