@@ -33,9 +33,8 @@ endif
 LD := $(HB_CCACHE) $(HB_CMP)
 LD_OUT := -o
 
-LINKPATHS += -L$(LIB_DIR)
-
-LINKLIBS += $(foreach lib,$(LIBS),-l$(lib))
+LINKPATHS = -L$(LIB_DIR)
+LINKLIBS = $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the specified GT driver library and other RTLs
 ifeq ($(HB_CRS_LIB),)
@@ -53,7 +52,7 @@ ifneq ($(findstring gtsln, $(LIBS)),)
 endif
 ifneq ($(findstring gtxwc, $(LIBS)),)
    LINKLIBS += -lX11
-   #LINKPATHS += -L/usr/X11R6/lib64
+  #LINKPATHS += -L/usr/X11R6/lib64
    LINKPATHS += -L/usr/X11R6/lib
 endif
 

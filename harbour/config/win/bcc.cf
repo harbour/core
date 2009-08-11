@@ -11,8 +11,8 @@ LIB_EXT := .lib
 CC := bcc32.exe
 CC_IN := -c
 CC_OUT := -o
-CPPFLAGS = -I. -I$(HB_INC_COMPILE)
-CFLAGS = -q -tWM
+CPPFLAGS := -I. -I$(HB_INC_COMPILE)
+CFLAGS := -q -tWM
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -w -w-sig- -Q
@@ -33,18 +33,15 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 endif
 
 LD := bcc32.exe
-LDFLAGS = -O2
 LD_OUT := -e
 
 # Add all libraries specified in LIBS.
 LINKPATHS += -L$(LIB_DIR)
-LIBLIST += $(foreach lib,$(LIBS),$(lib)$(LIB_EXT))
-
 # It's probably not necessary in native Windows but I need it
 # for my Linux box because -L<path> seems to not work with WINE
-LINKLIBS = $(foreach lib,$(LIBLIST),$(LIB_DIR)/$(lib))
+LINKLIBS = $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib)$(LIB_EXT))
 
-LDFLAGS = $(LINKPATHS)
+LDFLAGS += $(LINKPATHS)
 
 # create library rules
 AR := tlib.exe

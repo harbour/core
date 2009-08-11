@@ -176,7 +176,7 @@ ifeq ($(HB_CONFIG_SHOWN),)
 
       # Some additional ones to be given a standard name:
       #   HB_HOST_BUILD, HB_XBUILD, HB_WITHOUT_*, HB_REBUILD_PARSER, HB_DB_DRVEXT
-      #   HB_COMMERCE, HB_CRS_LIB
+      #   HB_COMMERCE, HB_CRS_LIB, HB_BUILD_VERBOSE
 
       ifeq ($(HB_DYNLIB),yes)
          $(info ! Dynamic library creation phase)
@@ -207,7 +207,7 @@ ifeq ($(HB_CONFIG_SHOWN),)
          $(info ! HB_LIB_INSTALL: $(HB_LIB_INSTALL))
       endif
       ifneq ($(HB_INC_INSTALL),)
-         $(info ! HB_LIB_INSTALL: $(HB_INC_INSTALL))
+         $(info ! HB_INC_INSTALL: $(HB_INC_INSTALL))
       endif
       ifneq ($(HB_DOC_INSTALL),)
          $(info ! HB_DOC_INSTALL: $(HB_DOC_INSTALL))

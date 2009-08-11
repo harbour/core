@@ -15,8 +15,8 @@ LIB_EXT := .a
 CC := $(HB_CMP)
 CC_IN := -c
 CC_OUT := -o
-CPPFLAGS = -I. -I$(HB_INC_COMPILE)
-CFLAGS =
+CPPFLAGS := -I. -I$(HB_INC_COMPILE)
+CFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -Wall -W

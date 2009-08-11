@@ -36,17 +36,16 @@ LD := $(HB_CCPREFIX)$(HB_CMP)
 LD_OUT := -o
 
 LINKPATHS = -L$(LIB_DIR)
-LIBLIST = $(foreach lib,$(LIBS),-l$(lib))
+LINKLIBS = $(foreach lib,$(LIBS),-l$(lib))
 
-LDFLAGS :=
-SYSLIBS := -lwininet -lws2
+LINKLIBS += -lwininet -lws2
+LDFLAGS += $(LINKPATHS)
+
+RANLIB := $(HB_CCPREFIX)ranlib
 
 AR := $(HB_CCPREFIX)ar
 ARFLAGS = $(HB_USER_AFLAGS)
 
-RANLIB := $(HB_CCPREFIX)ranlib
-
 AR_RULE = $(AR) $(ARFLAGS) cr $(LIB_DIR)/$@ $(^F) && $(RANLIB) $(LIB_DIR)/$@ || $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@)
-LINKLIBS = $(LINKPATHS) $(LIBLIST) $(SYSLIBS)
 
 include $(TOP)$(ROOT)config/rules.cf
