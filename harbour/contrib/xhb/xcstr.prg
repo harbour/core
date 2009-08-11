@@ -136,12 +136,11 @@ RETURN "[" + cString + "]"
 //--------------------------------------------------------------//
 FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
 
-   LOCAL cType := ValType( xVal )
    LOCAL aVar, cRet, cPad, nObj
 
    //TraceLog( xVal, cName, nPad, aObjs )
 
-   SWITCH cType
+   SWITCH ValType( xVal )
       CASE 'C'
          RETURN StringToLiteral( xVal )
 
@@ -152,7 +151,7 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
          RETURN IIF( xVal, ".T.", ".F." )
 
       CASE 'N'
-         RETURN Str( xVal )
+         RETURN hb_nToS( xVal )
 
       CASE 'A'
          IF cName == NIL
@@ -184,21 +183,22 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
          RETURN cRet
 
       CASE 'H'
-         IF Len( xVal ) == 0
-            RETURN "hb_Hash()"
+         IF Empty( xVal )
+            cRet := "hb_Hash()"
          ELSE
             cRet := "{ "
-
-            FOR EACH aVar IN xVal:Keys
-               cRet += ValToPrg( aVar ) + " => "
-               cRet += ValToPrg( xVal:Values[ aVar:__EnumIndex() ] ) + ", "
+            FOR EACH aVar IN xVal
+               IF aVar:__enumIndex() != 1
+                  cRet += ", "
+               ENDIF
+               cRet += ValToPrg( aVar:__enumKey() )
+               cRet += " => "
+               cRet += ValToPrg( aVar )
             NEXT
-
-            /* We know for sure xVal isn't empty, and a last ',' is here */
-            cRet = SubStr( cRet, 1, Len( cRet ) - 2 ) + " }"
-
-            RETURN cRet
+            cRet += " }"
          ENDIF
+
+         RETURN cRet
 
 /* There is no support for codeblock serialization */
 #if 0
@@ -286,9 +286,7 @@ RETURN LTrim( CStr( xVal ) )
 //--------------------------------------------------------------//
 FUNCTION ValToDate( xVal )
 
-   LOCAL cType := ValType( xVal )
-
-   SWITCH cType
+   SWITCH ValType( xVal )
       CASE 'A'
       CASE 'H'
       CASE 'L'
@@ -334,9 +332,7 @@ RETURN { ValToCharacter( xVal ) => xVal }
 //--------------------------------------------------------------//
 FUNCTION ValToLogical( xVal )
 
-   LOCAL cType := ValType( xVal )
-
-   SWITCH cType
+   SWITCH ValType( xVal )
       CASE 'A'
       CASE 'D'
       CASE 'H'
@@ -373,9 +369,7 @@ RETURN .F.
 //--------------------------------------------------------------//
 FUNCTION ValToNumber( xVal )
 
-   LOCAL cType := ValType( xVal )
-
-   SWITCH cType
+   SWITCH ValType( xVal )
       CASE 'A'
       CASE 'H'
          RETURN Len( xVal )
@@ -413,9 +407,7 @@ RETURN 0
 //--------------------------------------------------------------//
 FUNCTION ValToObject( xVal )
 
-   LOCAL cType := ValType( xVal )
-
-   SWITCH cType
+   SWITCH ValType( xVal )
       CASE 'A'
          ENABLE TYPE CLASS ARRAY
          EXIT
