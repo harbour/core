@@ -12,8 +12,9 @@ LIB_EXT := .lib
 CC := icl.exe
 CC_IN := -c
 CC_OUT := -Fo
-CPPFLAGS = -nologo -I. -I$(HB_INC_COMPILE)
-CFLAGS = -Gs
+
+CPPFLAGS := -nologo -I. -I$(HB_INC_COMPILE)
+CFLAGS := -Gs
 
 ifeq ($(HB_BUILD_MODE),c)
    CPPFLAGS += -TC

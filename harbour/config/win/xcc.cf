@@ -11,10 +11,9 @@ LIB_EXT := .lib
 CC := xcc.exe
 CC_IN := -c
 CC_OUT := -Fo
-CFLAGS = -I.
-ifneq ($(HB_INC_COMPILE),)
-   CFLAGS += -I$(HB_INC_COMPILE)
-endif
+
+CPPFLAGS :=
+CFLAGS := -I. -I$(HB_INC_COMPILE)
 
 ifneq ($(HB_BUILD_OPTIM),no)
    # disabled - it produces bad code

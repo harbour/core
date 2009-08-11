@@ -15,14 +15,15 @@ LIB_EXT := .a
 CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)
 CC_IN := -c
 CC_OUT := -o
-CPPFLAGS = -I. -I$(HB_INC_COMPILE)
+
+CPPFLAGS := -I. -I$(HB_INC_COMPILE)
 
 ifeq ($(HB_COMPILER),icc)
-   CFLAGS = -D_GNU_SOURCE
+   CFLAGS := -D_GNU_SOURCE
    #CFLAGS += -std=c99
    #CFLAGS += -xHOST
 else
-   CFLAGS =
+   CFLAGS :=
 endif
 
 ifneq ($(HB_BUILD_WARN),no)

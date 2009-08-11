@@ -15,6 +15,7 @@ LIB_EXT := .a
 CC := $(HB_CCACHE) $(HB_CMP)
 CC_IN := -c
 CC_OUT := -o
+
 CPPFLAGS := -I. -I$(HB_INC_COMPILE)
 CFLAGS :=
 

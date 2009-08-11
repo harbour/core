@@ -11,9 +11,10 @@ LIB_EXT := .lib
 CC := pocc.exe
 CC_IN := -c
 CC_OUT := -Fo
-CPPFLAGS = -I.
 
+CPPFLAGS := -I.
 CPPFLAGS += -Ze -Go -MT
+CFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
    CPPFLAGS += -W1
@@ -31,8 +32,6 @@ endif
 ifeq ($(HB_BUILD_DEBUG),yes)
    CPPFLAGS += -Zi
 endif
-
-CFLAGS =
 
 LD := polink.exe
 LD_OUT := -OUT:

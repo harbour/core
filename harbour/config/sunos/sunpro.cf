@@ -18,7 +18,8 @@ CC_IN := -c
 #       Now solved with '$(subst x,x, )' expression.
 CC_OUT := -o$(subst x,x, )
 
-CPPFLAGS = -I. -I$(HB_INC_COMPILE)
+CPPFLAGS := -I. -I$(HB_INC_COMPILE)
+CFLAGS :=
 
 # try to keep `-fast' as left as possible, as later optim
 # flags may override values set by `-fast', and this way
@@ -33,31 +34,31 @@ LDFLAGS ?= $(HB_ISAOPT)
 export HB_ISAOPT
 
 ifneq ($(HB_BUILD_OPTIM),no)
-# Together with $(HB_ISAOPT) above, these are supposed to (somewhat)
-# conform to the Blastwave build standards, see
-#    http://wiki.blastwave.org/mediawiki/index.php/Build_Standards
-# Try to keep them this way.
-CFLAGS = -fast $(HB_ISAOPT)
-ifneq ($(HB_BUILD_MODE),cpp)
-CFLAGS += -xstrconst
-endif
-CFLAGS += -xnolibmopt
+   # Together with $(HB_ISAOPT) above, these are supposed to (somewhat)
+   # conform to the Blastwave build standards, see
+   #    http://wiki.blastwave.org/mediawiki/index.php/Build_Standards
+   # Try to keep them this way.
+   CFLAGS += -fast $(HB_ISAOPT)
+   ifneq ($(HB_BUILD_MODE),cpp)
+      CFLAGS += -xstrconst
+   endif
+   CFLAGS += -xnolibmopt
 endif
 
 ifeq ($(findstring sparc,$(shell isalist)),sparc)
-CFLAGS += -xcode=pic32
+   CFLAGS += -xcode=pic32
 else
-CFLAGS += -KPIC
+   CFLAGS += -KPIC
 endif
 
 ifneq ($(HB_BUILD_WARN),no)
-CFLAGS += -erroff=%none
+   CFLAGS += -erroff=%none
 else
-CFLAGS += -erroff=%all
+   CFLAGS += -erroff=%all
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-CFLAGS += -g
+   CFLAGS += -g
 endif
 
 LD := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)
