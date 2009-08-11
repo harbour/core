@@ -195,8 +195,7 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
             NEXT
 
             /* We know for sure xVal isn't empty, and a last ',' is here */
-            cRet[ -2 ] := ' '
-            cRet[ -1 ] := '}'
+            cRet = SubStr( cRet, 1, Len( cRet ) - 2 ) + " }"
 
             RETURN cRet
          ENDIF
