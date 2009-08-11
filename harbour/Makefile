@@ -33,12 +33,12 @@ ifeq ($(HB_POSTINST),)
    else
       # TOOPT: Use HB_SHELL variable
       ifneq ($(SHLVL),)
-         HB_POSTINST = $(TOP)$(ROOT)bin/postinst.sh $(HB_POSTINSTPARAM)
+         HB_POSTINST := $(TOP)$(ROOT)bin/postinst.sh $(HB_POSTINSTPARAM)
       else
          ifneq ($(OS2_SHELL),)
-            HB_POSTINST = $(subst /,\,$(TOP)$(ROOT)bin/postinst.cmd) $(HB_POSTINSTPARAM)
+            HB_POSTINST := $(subst /,\,$(TOP)$(ROOT)bin/postinst.cmd) $(HB_POSTINSTPARAM)
          else
-            HB_POSTINST = $(subst /,\,$(TOP)$(ROOT)bin/postinst.bat) $(HB_POSTINSTPARAM)
+            HB_POSTINST := $(subst /,\,$(TOP)$(ROOT)bin/postinst.bat) $(HB_POSTINSTPARAM)
          endif
       endif
    endif

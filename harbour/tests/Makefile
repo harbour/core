@@ -10,10 +10,6 @@ ROOT := ../
 
 LIBS = $(HB_LIBS_ST_RDD)
 
-ifeq ($(PM),)
-   PM := $(pm)
-endif
-
 ifeq ($(PM),) # PM not defined = build all files
 
 PRG_SOURCES := \
@@ -191,7 +187,7 @@ BAD_C_SOURCES := \
 
 include $(TOP)$(ROOT)config/test.cf
 
-else #PM defined = build specified file
+else # PM defined = build specified file
 
 ifneq ($(findstring .prg,$(PM)),)
    PRG_MAIN := $(PM)

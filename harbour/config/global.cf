@@ -175,8 +175,9 @@ ifeq ($(HB_CONFIG_SHOWN),)
    ifneq ($(MAKE_381),)
 
       # Some additional ones to be given a standard name:
-      #   HB_HOST_BUILD, HB_XBUILD, HB_WITHOUT_*, HB_REBUILD_PARSER, HB_DB_DRVEXT
+      #   HB_HOST_BUILD [yes|lib], HB_XBUILD, HB_WITHOUT_*, HB_REBUILD_PARSER, HB_DB_DRVEXT
       #   HB_COMMERCE, HB_CRS_LIB, HB_BUILD_VERBOSE, HB_BIN_COMPILE, HB_INC_COMPILE
+      #   HB_POSTINST, HB_ROOTPOSTINST, HB_POSTINSTPARAM, PM
 
       ifeq ($(HB_DYNLIB),yes)
          $(info ! Dynamic library creation phase)
@@ -706,7 +707,7 @@ export HARBOURCMD :=
 export CLIPPER :=
 export CLIPPERCMD :=
 
-# important only for win hosts
+# relevant only for win/dos hosts
 MKFLAGS := --no-print-directory
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
