@@ -18,9 +18,7 @@ else
 endif
 
 ifeq ($(JOB_SRV),NO)
-   ifeq ($(PM),) # Only traverse directories if not compiling a specific module
-      include $(TOP)$(ROOT)config/dirsh.cf
-   endif
+   include $(TOP)$(ROOT)config/dirsh.cf
 endif
 
 ifeq ($(DIR_RULE),)
