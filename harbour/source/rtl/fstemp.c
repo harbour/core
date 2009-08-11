@@ -64,6 +64,16 @@
 #include <unistd.h>  /* We need for mkstemp() on BSD */
 #endif
 
+#if ( defined( HB_OS_LINUX ) && !defined( __WATCOMC__ ) ) || \
+    defined( HB_OS_BSD ) || \
+    defined( HB_OS_SUNOS )
+#  define HB_HAS_MKSTEMP
+   /* some platforms supports also mkstemps() and for them we can
+    * set HB_HAS_MKSTEMPS macro but without autoconf it's hard to
+    * detect if mkstemps() is available [druzus]
+    */
+#endif
+
 #if !defined( HB_OS_WIN )
 static BOOL fsGetTempDirByCase( char * pszName, const char * pszTempDir )
 {
@@ -159,21 +169,32 @@ static HB_FHANDLE hb_fsCreateTempLow( const char * pszDir, const char * pszPrefi
       if( iLen > ( HB_PATH_MAX - 1 ) - 6 )
          return FS_ERROR;
 
-#if !defined( __WATCOMC__ ) && ( defined( HB_OS_LINUX ) || defined( HB_OS_BSD ) )
+#if defined( HB_HAS_MKSTEMP )
       if( hb_setGetFileCase() != HB_SET_CASE_LOWER &&
           hb_setGetFileCase() != HB_SET_CASE_UPPER &&
           hb_setGetDirCase() != HB_SET_CASE_LOWER &&
-          hb_setGetDirCase() != HB_SET_CASE_UPPER &&
-          pszExt == NULL )
+          hb_setGetDirCase() != HB_SET_CASE_UPPER
+#if !defined( HB_HAS_MKSTEMPS )
+          && ( pszExt == NULL || *pszExt == 0 )
+#endif
+        )
       {
-         hb_strncat( pszName, "XXXXXX", HB_PATH_MAX - 1 );
          hb_vmUnlock();
-         fd = ( HB_FHANDLE ) mkstemp( pszName );
+         hb_strncat( pszName, "XXXXXX", HB_PATH_MAX - 1 );
+#if defined( HB_HAS_MKSTEMPS )
+         if( pszExt && *pszExt )
+         {
+            hb_strncat( pszName, pszExt, HB_PATH_MAX - 1 );
+            fd = ( HB_FHANDLE ) mkstemps( pszName, ( int ) strlen( pszExt ) );
+         }
+         else
+#endif
+            fd = ( HB_FHANDLE ) mkstemp( pszName );
          hb_fsSetIOError( fd != ( HB_FHANDLE ) -1, 0 );
          hb_vmLock();
       }
       else
-#endif
+#endif /* HB_HAS_MKSTEMP */
       {
          int i, n;
          double d = hb_random_num(), x;

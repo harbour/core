@@ -64,10 +64,6 @@
       #define __PLATFORM__LINUX
    #endif
 
-   #xtranslate hb_gtSys                    => gtSys
-   #xtranslate hb_gtInfo([<x,...>])        => gtInfo(<x>)
-   #xtranslate hb_gtVersion([<x>])         => hb_gt_Version(<x>)
-
    #xtranslate hb_ScrMaxRow()              => gtInfo( HB_GTI_SCREENHEIGHT )
    #xtranslate hb_ScrMaxCol()              => gtInfo( HB_GTI_SCREENWIDTH )
    #xtranslate MaxRow(.T.)                 => gtInfo( HB_GTI_SCREENHEIGHT )
@@ -235,10 +231,6 @@
    #define GTI_SCREEN         1  /* Maximum screen size ('Screen' in CT terms) */
    #define GTI_CLIENT         2  /* Maximum possible client size of a window */
    #define GTI_MAX            3  /* Maximum possible window size (in Windows) */
-
-   #xtranslate gtSys                       => hb_gtSys
-   #xtranslate gtInfo([<x,...>])           => hb_gtInfo(<x>)
-   #xtranslate hb_gt_Version([<x>])        => hb_gtVersion(<x>)
 
    #xtranslate gtSetClipboard(<x>)         => hb_gtInfo( HB_GTI_CLIPBOARDDATA, <x> )
    #xtranslate gtGetClipboard()            => hb_gtInfo( HB_GTI_CLIPBOARDDATA )
