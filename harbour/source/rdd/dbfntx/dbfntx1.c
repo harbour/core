@@ -1936,7 +1936,7 @@ static HB_ERRCODE hb_ntxIndexHeaderRead( LPNTXINDEX pIndex )
    {
 #if defined( HB_NTX_NOMULTITAG )
       hb_ntxErrorRT( pIndex->Owner, EG_CORRUPTION, EDBF_CORRUPT,
-                     pIndex->IndexName, hb_fsError(), 0, NULL );
+                     pIndex->IndexName, 0, 0, NULL );
       return HB_FAILURE;
 #else
       LPCTXHEADER lpCTX = ( LPCTXHEADER ) pIndex->HeaderBuff;
@@ -1974,7 +1974,7 @@ static HB_ERRCODE hb_ntxIndexHeaderRead( LPNTXINDEX pIndex )
       if( pIndex->Compound )
       {
          hb_ntxErrorRT( pIndex->Owner, EG_CORRUPTION, EDBF_CORRUPT,
-                        pIndex->IndexName, hb_fsError(), 0, NULL );
+                        pIndex->IndexName, 0, 0, NULL );
          return HB_FAILURE;
       }
       pTag = pIndex->iTags ? pIndex->lpTags[0] : NULL;
@@ -4794,7 +4794,7 @@ static void hb_ntxSortWritePage( LPNTXSORTINFO pSort )
       pSort->hTempFile = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, szName );
       if( pSort->hTempFile == FS_ERROR )
          hb_ntxErrorRT( pSort->pTag->Owner->Owner, EG_CREATE, EDBF_CREATE_TEMP,
-                        szName, 0, 0, NULL );
+                        szName, hb_fsError(), 0, NULL );
       else
          pSort->szTempFileName = hb_strdup( szName );
    }
@@ -4805,7 +4805,7 @@ static void hb_ntxSortWritePage( LPNTXSORTINFO pSort )
       pSort->pSwapPage[ pSort->ulCurPage ].nOffset = hb_fsSeekLarge( pSort->hTempFile, 0, FS_END );
       if( hb_fsWriteLarge( pSort->hTempFile, pSort->pStartKey, ulSize ) != ulSize )
          hb_ntxErrorRT( pSort->pTag->Owner->Owner, EG_WRITE, EDBF_WRITE_TEMP,
-                        pSort->szTempFileName, 0, 0, NULL );
+                        pSort->szTempFileName, hb_fsError(), 0, NULL );
    }
    else
       pSort->pSwapPage[ pSort->ulCurPage ].nOffset = 0;
@@ -4828,7 +4828,7 @@ static void hb_ntxSortGetPageKey( LPNTXSORTINFO pSort, ULONG ulPage,
            hb_fsReadLarge( pSort->hTempFile, pSort->pSwapPage[ ulPage ].pKeyPool, ulSize ) != ulSize ) )
       {
          hb_ntxErrorRT( pSort->pTag->Owner->Owner, EG_READ, EDBF_READ_TEMP,
-                        pSort->szTempFileName, 0, 0, NULL );
+                        pSort->szTempFileName, hb_fsError(), 0, NULL );
       }
       pSort->pSwapPage[ ulPage ].nOffset += ulSize;
       pSort->pSwapPage[ ulPage ].ulKeyBuf = ulKeys;
@@ -6223,7 +6223,7 @@ static HB_ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
       hb_vmDestroyBlockOrMacro( pKeyExp );
       SELF_GOTO( ( AREAP ) pArea, ulRecNo );
       hb_ntxErrorRT( pArea, bType == 'U' ? EG_DATATYPE : EG_DATAWIDTH,
-                     1026, NULL, 0, 0, NULL );
+                     EDBF_INVALIDKEY, NULL, 0, 0, NULL );
       return HB_FAILURE;
    }
 
@@ -7008,7 +7008,7 @@ static HB_ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pI
             }
             else
             {
-               hb_ntxErrorRT( pArea, 0, 1052, NULL, 0, 0, NULL );
+               hb_ntxErrorRT( pArea, 0, EDBF_NOTCUSTOM, NULL, 0, 0, NULL );
                return HB_FAILURE;
             }
             break;
@@ -7026,7 +7026,7 @@ static HB_ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pI
             }
             else
             {
-               hb_ntxErrorRT( pArea, 0, 1052, NULL, 0, 0, NULL );
+               hb_ntxErrorRT( pArea, 0, EDBF_NOTCUSTOM, NULL, 0, 0, NULL );
                return HB_FAILURE;
             }
             break;

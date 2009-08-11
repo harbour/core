@@ -106,8 +106,8 @@ FUNCTION tp_baud( nPort, nNewBaud )
    RETURN t_aPorts[ nPort, TPFP_BAUD ]
 
 
-FUNCTION tp_inkey( nSecs )
-   RETURN inkey( nSecs )
+FUNCTION tp_inkey( ... )
+   RETURN inkey( ... )
 
 FUNCTION tp_idle( lNewval )
    IF lNewval == .T.

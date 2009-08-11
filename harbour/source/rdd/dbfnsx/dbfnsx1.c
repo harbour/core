@@ -5205,7 +5205,7 @@ static void hb_nsxSortWritePage( LPNSXSORTINFO pSort )
       pSort->hTempFile = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, szName );
       if( pSort->hTempFile == FS_ERROR )
          hb_nsxErrorRT( pSort->pTag->pIndex->pArea, EG_CREATE, EDBF_CREATE_TEMP,
-                        szName, 0, 0, NULL );
+                        szName, hb_fsError(), 0, NULL );
       else
          pSort->szTempFileName = hb_strdup( szName );
    }
@@ -5216,7 +5216,7 @@ static void hb_nsxSortWritePage( LPNSXSORTINFO pSort )
       pSort->pSwapPage[ pSort->ulCurPage ].nOffset = hb_fsSeekLarge( pSort->hTempFile, 0, FS_END );
       if( hb_fsWriteLarge( pSort->hTempFile, pSort->pStartKey, ulSize ) != ulSize )
          hb_nsxErrorRT( pSort->pTag->pIndex->pArea, EG_WRITE, EDBF_WRITE_TEMP,
-                        pSort->szTempFileName, 0, 0, NULL );
+                        pSort->szTempFileName, hb_fsError(), 0, NULL );
    }
    else
       pSort->pSwapPage[ pSort->ulCurPage ].nOffset = 0;
@@ -5239,7 +5239,7 @@ static void hb_nsxSortGetPageKey( LPNSXSORTINFO pSort, ULONG ulPage,
            hb_fsReadLarge( pSort->hTempFile, pSort->pSwapPage[ ulPage ].pKeyPool, ulSize ) != ulSize ) )
       {
          hb_nsxErrorRT( pSort->pTag->pIndex->pArea, EG_READ, EDBF_READ_TEMP,
-                        pSort->szTempFileName, 0, 0, NULL );
+                        pSort->szTempFileName, hb_fsError(), 0, NULL );
       }
       pSort->pSwapPage[ ulPage ].nOffset += ulSize;
       pSort->pSwapPage[ ulPage ].ulKeyBuf = ulKeys;
@@ -6692,7 +6692,7 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
       hb_vmDestroyBlockOrMacro( pKeyExp );
       SELF_GOTO( ( AREAP ) pArea, ulRecNo );
       hb_nsxErrorRT( pArea, bType == 'U' ? EG_DATATYPE : EG_DATAWIDTH,
-                     1026, NULL, 0, 0, NULL );
+                     EDBF_INVALIDKEY, NULL, 0, 0, NULL );
       return HB_FAILURE;
    }
 
@@ -7445,7 +7445,7 @@ static HB_ERRCODE hb_nsxOrderInfo( NSXAREAP pArea, USHORT uiIndex, LPDBORDERINFO
             }
             else
             {
-               hb_nsxErrorRT( pArea, 0, 1052, NULL, 0, 0, NULL );
+               hb_nsxErrorRT( pArea, 0, EDBF_NOTCUSTOM, NULL, 0, 0, NULL );
                return HB_FAILURE;
             }
             break;
@@ -7462,7 +7462,7 @@ static HB_ERRCODE hb_nsxOrderInfo( NSXAREAP pArea, USHORT uiIndex, LPDBORDERINFO
             }
             else
             {
-               hb_nsxErrorRT( pArea, 0, 1052, NULL, 0, 0, NULL );
+               hb_nsxErrorRT( pArea, 0, EDBF_NOTCUSTOM, NULL, 0, 0, NULL );
                return HB_FAILURE;
             }
             break;
