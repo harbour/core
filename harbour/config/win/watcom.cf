@@ -51,7 +51,7 @@ else
    CPPFLAGS += -3s
 endif
 
-CPPFLAGS += -i. -i$(TOP)$(ROOT)include
+CPPFLAGS += -i. -i$(HB_INC_COMPILE)
 
 ifeq ($(HB_BUILD_DEBUG),yes)
    CPPFLAGS += -d2
