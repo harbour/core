@@ -78,7 +78,9 @@ LDLIBS_COMMA := $(subst $(subst x,x, ),$(comma) ,$(strip $(LDLIBS)))
 LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@ FILE $(LDFILES_COMMA) $(if $(LDLIBS_COMMA), LIB $(LDLIBS_COMMA),)
 
 ifeq ($(HB_SHELL),sh)
+
 create_library = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ $(foreach file,$(^F),-+$(file))
+
 else
 # maximum size of command line in OS2 is limited to 1024 characters
 # the trick with divided 'wordlist' is workaround for it:
@@ -88,11 +90,18 @@ else
 # anyhow OS2 port# of GNU make 3.81 seems to have bug and GPFs when total
 # commands length is too big so for %i in ( *$(OBJ_EXT) ) do ... below is
 # ugly workaround for both problems
+
+ifeq ($(HB_SHELL),nt)
+FILE := %%f
+else
+FILE := %f
+endif
 define create_library
 echo $(LIB_DIR)/$@ > __lib__.tmp
-for %i in ( *$(OBJ_EXT) ) do @echo -+%i >> __lib__.tmp
+for $(FILE) in ( *$(OBJ_EXT) ) do @echo -+$(FILE) >> __lib__.tmp
 $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) @__lib__.tmp
 endef
+
 endif
 
 AR := wlib
