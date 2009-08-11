@@ -28,7 +28,7 @@ ifeq ($(DIR_RULE),)
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 # It causes that every commands will be separated by LF
 define dir_mk
-$(MK) -C $(dir) $@
+@$(MK) $(MKFLAGS) -C $(dir) $@
 
 endef
 
@@ -73,16 +73,15 @@ $(foreach dep, $(DIRS_DEP), $(eval $(call dep_rule,$(dep),.inst)))
 $(foreach dep, $(DIRS_DEP), $(eval $(call dep_rule,$(dep),)))
 
 $(DIRS_CLEAN) ::
-	+$(MK) -C $(@:.clean=) clean
+	+@$(MK) $(MKFLAGS) -C $(@:.clean=) clean
 
 $(DIRS_INST) ::
-	+$(MK) -C $(@:.inst=) install _HB_BLD=yes
+	+@$(MK) $(MKFLAGS) -C $(@:.inst=) install _HB_BLD=yes
 
 $(DIRS_MK) ::
-	+$(MK) -C $(@)
+	+@$(MK) $(MKFLAGS) -C $(@)
 
 endif
-
 
 ifneq ($(HB_POSTINST),)
 install::

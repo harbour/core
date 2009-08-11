@@ -182,6 +182,7 @@ ifeq ($(HB_CONFIG_SHOWN),)
          $(info ! Dynamic library creation phase)
       endif
       $(info ! Configuration:)
+      $(info ! MAKE: $(MAKE))
       ifneq ($(HB_USER_PRGFLAGS),)
          $(info ! HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))
       endif
@@ -704,6 +705,9 @@ export HARBOUR :=
 export HARBOURCMD :=
 export CLIPPER :=
 export CLIPPERCMD :=
+
+# important only for win hosts
+MKFLAGS := --no-print-directory
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 include $(TOP)$(ROOT)config/globsh.cf

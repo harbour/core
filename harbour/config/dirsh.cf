@@ -3,39 +3,29 @@
 #
 
 ifneq ($(HB_SHELL),sh)
-
-MK_OS = $(subst /,\,$(MK))
-DIRS_OS = $(subst /,\,$(DIRS))
-
+   MK_OS = $(subst /,\,$(MK))
+   DIRS_OS = $(subst /,\,$(DIRS))
 endif
 
 ifeq ($(DIRS),) # Empty directory list
-
-DIR_RULE := @echo "! Done"
-
+   DIR_RULE := @echo "! Done"
 else
 
 ifeq ($(HB_SHELL),sh)
-
-DIR_RULE =\
-   @for d in $(DIRS); do \
-      if [ -d "$$d" ]; then \
-         $(MAKE) -C $$d $@; \
-      fi \
-   done
-
+   DIR_RULE =\
+      @for d in $(DIRS); do \
+         if [ -d "$$d" ]; then \
+            $(MK) $(MKFLAGS) -C $$d $@; \
+         fi \
+      done
 endif
 
 ifeq ($(HB_SHELL),nt)
-
-DIR_RULE = for %%d in ($(DIRS_OS)) do $(MK_OS) -C %%d $@
-
+   DIR_RULE = for %%d in ($(DIRS_OS)) do $(MK_OS) $(MKFLAGS) -C %%d $@
 endif
 
 ifeq ($(HB_SHELL),os2)
-
-DIR_RULE = for %d in ($(DIRS_OS)) do $(MK_OS) -C %d $@
-
+   DIR_RULE = for %d in ($(DIRS_OS)) do $(MK_OS) $(MKFLAGS) -C %d $@
 endif
 
 ifeq ($(HB_SHELL),dos)
@@ -44,7 +34,7 @@ ifeq ($(HB_SHELL),dos)
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 # It causes that every commands will be separated by LF
 define dir_mk
-$(MK_OS) -C $(file) $@
+@$(MK_OS) $(MKFLAGS) -C $(file) $@
 
 endef
 

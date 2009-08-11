@@ -79,7 +79,7 @@ ALL_OBJS = $(ALL_C_OBJS) $(ALL_PRG_OBJS)
 first:: dirbase descend
 
 descend:: dirbase
-	+@$(MK) -C $(OBJ_DIR) -f $(GRANDP)Makefile TOP=$(GRANDP) $(BIN_NAME) $(HB_USER_MAKEFLAGS)
+	+@$(MK) $(MKFLAGS) -C $(OBJ_DIR) -f $(GRANDP)Makefile TOP=$(GRANDP) $(BIN_NAME) $(HB_USER_MAKEFLAGS)
 
 vpath $(BIN_NAME) $(BIN_DIR)
 $(BIN_NAME) : $(ALL_OBJS)
