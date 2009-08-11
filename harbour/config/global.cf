@@ -177,7 +177,7 @@ ifeq ($(HB_CONFIG_SHOWN),)
       # Some additional ones to be given a standard name:
       #   HB_HOST_BUILD [yes|lib], HB_XBUILD, HB_WITHOUT_*, HB_REBUILD_PARSER, HB_DB_DRVEXT
       #   HB_COMMERCE, HB_CRS_LIB, HB_BUILD_VERBOSE, HB_BIN_COMPILE, HB_INC_COMPILE
-      #   HB_POSTINST, HB_ROOTPOSTINST, HB_POSTINSTPARAM
+      #   HB_POSTINST, HB_ROOTPOSTINST, HB_POSTINSTPARAM, HB_GCMODE
 
       ifeq ($(HB_DYNLIB),yes)
          $(info ! Dynamic library creation phase)
