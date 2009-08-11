@@ -51,6 +51,15 @@
  *
  */
 
+/* *nixes */
+#if !defined( _LARGEFILE64_SOURCE )
+#  define _LARGEFILE64_SOURCE
+#endif
+#if !defined( _GNU_SOURCE )
+#  define _GNU_SOURCE
+#endif
+
+/* Windows */
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
@@ -65,13 +74,24 @@
 #endif
 
 #if ( defined( HB_OS_LINUX ) && !defined( __WATCOMC__ ) ) || \
-    defined( HB_OS_BSD ) || \
-    defined( HB_OS_SUNOS )
-#  define HB_HAS_MKSTEMP
-   /* some platforms supports also mkstemps() and for them we can
-    * set HB_HAS_MKSTEMPS macro but without autoconf it's hard to
-    * detect if mkstemps() is available [druzus]
-    */
+    defined( HB_OS_BSD ) || defined( HB_OS_DARWIN ) || defined( HB_OS_SUNOS )
+   #define HB_HAS_MKSTEMP
+   #if defined( HB_OS_BSD ) || defined( HB_OS_DARWIN )
+      #define HB_HAS_MKSTEMPS
+   #endif
+#endif
+
+#if !defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX_COMPATIBLE )
+   #if defined( __USE_LARGEFILE64 )
+      /*
+       * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
+       * defined and efectively enables lseek64/flock64/ftruncate64 functions
+       * on 32bit machines.
+       */
+      #define HB_USE_LARGEFILE64
+   #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE ) && ! defined( __WATCOMC__ )
+      #define HB_USE_LARGEFILE64
+   #endif
 #endif
 
 #if !defined( HB_OS_WIN )
@@ -185,11 +205,19 @@ static HB_FHANDLE hb_fsCreateTempLow( const char * pszDir, const char * pszPrefi
          if( pszExt && *pszExt )
          {
             hb_strncat( pszName, pszExt, HB_PATH_MAX - 1 );
+#if defined( HB_USE_LARGEFILE64 )
+            fd = ( HB_FHANDLE ) mkstemps64( pszName, ( int ) strlen( pszExt ) );
+#else
             fd = ( HB_FHANDLE ) mkstemps( pszName, ( int ) strlen( pszExt ) );
+#endif
          }
          else
 #endif
+#if defined( HB_USE_LARGEFILE64 )
+            fd = ( HB_FHANDLE ) mkstemp64( pszName );
+#else
             fd = ( HB_FHANDLE ) mkstemp( pszName );
+#endif
          hb_fsSetIOError( fd != ( HB_FHANDLE ) -1, 0 );
          hb_vmLock();
       }
