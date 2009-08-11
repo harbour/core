@@ -58,17 +58,17 @@ include $(TOP)$(ROOT)config/prg.cf
 
 HB_GCMODE := 0
 
-BIN_NAME =
+BIN_NAME :=
 
 ifneq ($(C_MAIN),)
    ifeq ($(BIN_NAME),)
-      BIN_NAME = $(C_MAIN:.c=$(BIN_EXT))
+      BIN_NAME := $(C_MAIN:.c=$(BIN_EXT))
    endif
 endif
 
 ifneq ($(PRG_MAIN),)
    ifeq ($(BIN_NAME),)
-      BIN_NAME = $(PRG_MAIN:.prg=$(BIN_EXT))
+      BIN_NAME := $(PRG_MAIN:.prg=$(BIN_EXT))
    endif
 endif
 

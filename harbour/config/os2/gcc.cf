@@ -33,8 +33,6 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 endif
 
 LD := $(HB_CMP)
-# NOTE: The ending space after -o is important, please preserve it.
-#       Now solved with '$(subst x,x, )' expression.
 LD_OUT := -o$(subst x,x, )
 
 ifeq ($(C_MAIN),)
@@ -72,22 +70,22 @@ ifeq ($(C_MAIN),)
    endif
 endif
 
-# Note: The empty line directly before 'endef' HAVE TO exist!
-# It causes that every echo command will be separated by LF
+# NOTE: The empty line directly before 'endef' HAVE TO exist!
+#       It causes that every command will be separated by LF
 #define lib_object
-#echo ADDMOD $(file) >> __lib__.tmp
+#   echo ADDMOD $(file) >> __lib__.tmp
 #
 #endef
 
 # We have to use a script to overcome the AR limit of max 850 characters
 # in commmand line
 define create_library
-if exist $(subst /,$(DIRSEP),$(LIB_FILE)) $(RM) $(subst /,$(DIRSEP),$(LIB_FILE))
-echo CREATE $(LIB_DIR)/$@ > __lib__.tmp
-for %i in ( *$(OBJ_EXT) ) do @echo ADDMOD %i >> __lib__.tmp
-echo SAVE >> __lib__.tmp
-echo END >> __lib__.tmp
-$(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -M < __lib__.tmp
+   if exist $(subst /,$(DIRSEP),$(LIB_FILE)) $(RM) $(subst /,$(DIRSEP),$(LIB_FILE))
+   echo CREATE $(LIB_DIR)/$@ > __lib__.tmp
+   for %i in ( *$(OBJ_EXT) ) do @echo ADDMOD %i >> __lib__.tmp
+   echo SAVE >> __lib__.tmp
+   echo END >> __lib__.tmp
+   $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -M < __lib__.tmp
 endef
 
 # Under OS/2 || isn't a command separator (inside a shell, that is); correct separator is &

@@ -25,23 +25,23 @@ endif
 
 ifeq ($(DIR_RULE),)
 
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
-# It causes that every commands will be separated by LF
-define dir_mk
-@$(MK) $(MKFLAGS) -C $(dir) $@
+   # NOTE: The empty line directly before 'endef' HAVE TO exist!
+   #       It causes that every command will be separated by LF
+   define dir_mk
+      @$(MK) $(MKFLAGS) -C $(dir) $@
 
-endef
+   endef
 
-DIRS_PURE = $(filter-out {%},$(subst {, {,$(DIRS)))
-DIRS_DEP  = $(filter-out $(DIRS_PURE),$(DIRS))
-DIRS_MK   = $(foreach d, $(DIRS_PURE), $(if $(wildcard $(d)/Makefile),$(d),))
-DIR_RULE  = $(foreach dir, $(DIRS_MK), $(dir_mk))
-MULTI_DEPS := yes
+   DIRS_PURE = $(filter-out {%},$(subst {, {,$(DIRS)))
+   DIRS_DEP  = $(filter-out $(DIRS_PURE),$(DIRS))
+   DIRS_MK   = $(foreach d, $(DIRS_PURE), $(if $(wildcard $(d)/Makefile),$(d),))
+   DIR_RULE  = $(foreach dir, $(DIRS_MK), $(dir_mk))
+   MULTI_DEPS := yes
 
 else
 
-DIRS := $(filter-out {%},$(subst {, {,$(DIRS)))
-MULTI_DEPS := no
+   DIRS := $(filter-out {%},$(subst {, {,$(DIRS)))
+   MULTI_DEPS := no
 
 endif
 
@@ -63,9 +63,9 @@ endif
 install :: $(DIRS_INST)
 clean   :: $(DIRS_CLEAN)
 
-comma=,
+comma := ,
 define dep_rule
-$(subst $(comma),$(2) ,$(subst },$(2),$(subst {,$(2)::|,$(1))))
+   $(subst $(comma),$(2) ,$(subst },$(2),$(subst {,$(2)::|,$(1))))
 endef
 
 $(foreach dep, $(DIRS_DEP), $(eval $(call dep_rule,$(dep),.clean)))

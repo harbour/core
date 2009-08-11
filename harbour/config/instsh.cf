@@ -3,10 +3,10 @@
 #
 
 ifeq ($(INSTALL_FILES),) # Empty install list
-   INSTALL_RULE := @echo "! Done"
+   INSTALL_RULE := @echo "! Nothing to install"
 else
 ifeq ($(INSTALL_DIR),) # Empty install dir
-   INSTALL_RULE := @echo "! Done"
+   INSTALL_RULE := @echo "! Can't install, install dir isn't set"
 else
 
 ifneq ($(HB_SHELL),sh)
@@ -58,7 +58,7 @@ ifeq ($(HB_SHELL),os2)
 
    # We have to use script to overcome the max command size limit
    # NOTE: The empty line directly before 'endef' HAVE TO exist!
-   # It causes that every commands will be separated by LF
+   #       It causes that every command will be separated by LF
    define inst_file
       $(CMDPREF)$(CP) $(file) $(INSTALL_DIR_OS)
 
@@ -77,7 +77,7 @@ ifeq ($(HB_SHELL),dos)
 
    # We have to use script to overcome the DOS limit of max 128 characters
    # NOTE: The empty line directly before 'endef' HAVE TO exist!
-   # It causes that every commands will be separated by LF
+   #       It causes that every command will be separated by LF
    define inst_file
       $(CP) $(file) $(INSTALL_DIR_OS)
 

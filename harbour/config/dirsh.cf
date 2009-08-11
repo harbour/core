@@ -12,7 +12,7 @@ ifeq ($(DIRS),) # Empty directory list
 else
 
 ifeq ($(HB_SHELL),sh)
-   DIR_RULE =\
+   DIR_RULE = \
       @for d in $(DIRS); do \
          if [ -d "$$d" ]; then \
             $(MK) $(MKFLAGS) -C $$d $@; \
@@ -32,9 +32,9 @@ ifeq ($(HB_SHELL),dos)
 
 # We have to use script to overcome the DOS limit of max 128 characters
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
-# It causes that every commands will be separated by LF
+#       It causes that every command will be separated by LF
 define dir_mk
-@$(MK_OS) $(MKFLAGS) -C $(file) $@
+   @$(MK_OS) $(MKFLAGS) -C $(file) $@
 
 endef
 
