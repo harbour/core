@@ -29,7 +29,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 endif
 
 LD := xlink.exe
-LD_OUT := -OUT:
+LD_OUT := /out:
 
 # Add all libraries specified in LIBS.
 LIBPATHS := -LIBPATH:$(LIB_DIR)

@@ -38,14 +38,14 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 endif
 
 LD := polink.exe
-LD_OUT := -OUT:
+LD_OUT := /out:
 
 LIBPATHS := -LIBPATH:$(LIB_DIR)
 # Add all libraries specified in LIBS.
 LDLIBS := $(foreach lib,$(LIBS),$(lib)$(LIB_EXT))
 LDLIBS += coredll.lib corelibc.lib winsock.lib ws2.lib
 
-LDFLAGS += /SUBSYSTEM:WINDOWS
+LDFLAGS += /subsystem:windows
 LDFLAGS += $(LIBPATHS)
 
 AR := polib.exe
