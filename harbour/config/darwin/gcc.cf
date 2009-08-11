@@ -48,7 +48,7 @@ LD := $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 LD_OUT := -o
 
 LIBPATHS := -L$(LIB_DIR)
-LDLIBS = $(foreach lib,$(LIBS),-l$(lib))
+LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the specified GT driver library and other RTLs
 ifeq ($(HB_CRS_LIB),)

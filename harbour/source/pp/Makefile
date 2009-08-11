@@ -24,7 +24,7 @@ ifneq ($(HB_COMPILER),)
 
 INSTALL_RULE_LIBRARIES := $(INSTALL_RULE)
 
-HB_VERHEADER=$(TOP)$(ROOT)include/hbverbld.h
+HB_VERHEADER := $(TOP)$(ROOT)include/hbverbld.h
 
 BIN_FILE := $(BIN_DIR)/hbpp$(BIN_EXT)
 vpath hbpp$(BIN_EXT) $(BIN_DIR)

@@ -56,7 +56,7 @@ LD_OUT := -o$(subst x,x, )
 
 # Add all libraries specified in LIBS.
 LIBPATHS := -L$(LIB_DIR)
-LDLIBS += $(foreach lib,$(LIBS),-l$(lib))
+LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the specified GT driver library
 ifneq ($(findstring gtcrs, $(LIBS)),)

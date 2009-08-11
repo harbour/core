@@ -36,7 +36,7 @@ LD_OUT := -o
 
 LIBPATHS := -L$(LIB_DIR)
 
-LDLIBS += $(foreach lib,$(LIBS),-l$(lib))
+LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
 LDLIBS += -lm
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!

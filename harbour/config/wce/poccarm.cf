@@ -41,7 +41,7 @@ LD_OUT := -OUT:
 
 # Add all libraries specified in LIBS.
 LIBPATHS := -LIBPATH:$(LIB_DIR)
-LDLIBS += $(foreach lib,$(LIBS),$(lib)$(LIB_EXT))
+LDLIBS := $(foreach lib,$(LIBS),$(lib)$(LIB_EXT))
 
 LDFLAGS = $(LIBPATHS) coredll.lib corelibc.lib winsock.lib ws2.lib
 LDFLAGS += /SUBSYSTEM:WINDOWS

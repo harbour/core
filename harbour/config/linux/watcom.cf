@@ -65,11 +65,11 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    LDFLAGS := DEBUG ALL $(LDFLAGS)
 endif
 
-LDLIBS = $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
+LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 
 comma := ,
 LDFILES_COMMA = $(subst $(subst x,x, ),$(comma) ,$(^F))
-LDLIBS_COMMA = $(subst $(subst x,x, ),$(comma) ,$(strip $(LDLIBS)))
+LDLIBS_COMMA := $(subst $(subst x,x, ),$(comma) ,$(strip $(LDLIBS)))
 ifneq ($(HB_SHELL),sh)
    LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@. FILE $(LDFILES_COMMA)
 else

@@ -40,7 +40,7 @@ LD_OUT := -e
 LIBPATHS := -L$(LIB_DIR)
 # It's probably not necessary in native Windows but I need it
 # for my Linux box because -L<path> seems to not work with WINE
-LDLIBS = $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib)$(LIB_EXT))
+LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib)$(LIB_EXT))
 
 LDFLAGS += $(LIBPATHS)
 

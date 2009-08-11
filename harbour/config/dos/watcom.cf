@@ -103,7 +103,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    LDFLAGS := DEBUG ALL $(LDFLAGS)
 endif
 
-LDLIBS = $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
+LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 
 LD_RULE = $(link_exe_file) $(HB_USER_LDFLAGS)
 

@@ -46,7 +46,7 @@ endif
 
 # Add all libraries specified in LIBS.
 LIBPATHS := -L$(LIB_DIR)
-LDLIBS += $(foreach lib,$(LIBS),-l$(lib))
+LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the specified GT driver library
 ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
