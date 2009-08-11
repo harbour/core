@@ -267,13 +267,19 @@ HB_FHANDLE hb_fsCreateTemp( const char * pszDir, const char * pszPrefix, ULONG u
    {
       if( hb_fsTempName( pszName, pszDir, pszPrefix ) )
       {
-          HB_FHANDLE fhnd = hb_fsCreateEx( pszName, ulAttr, FO_EXCLUSIVE | FO_EXCL );
+#if defined( HB_OS_WIN )
+         /* Using FO_TRUNC on win platforms as hb_fsTempName() uses GetTempFileName(),
+            which creates the file, so FO_EXCL would fail at this point. [vszakats] */
+         HB_FHANDLE fhnd = hb_fsCreateEx( pszName, ulAttr, FO_EXCLUSIVE | FO_TRUNC );
+#else
+         HB_FHANDLE fhnd = hb_fsCreateEx( pszName, ulAttr, FO_EXCLUSIVE | FO_EXCL );
+#endif
 
-          /* This function may fail, if the generated filename got
-             used between generation and the file creation. */
+         /* This function may fail, if the generated filename got
+            used between generation and the file creation. */
 
-          if( fhnd != FS_ERROR )
-             return fhnd;
+         if( fhnd != FS_ERROR )
+            return fhnd;
       }
       else
       {
@@ -285,7 +291,8 @@ HB_FHANDLE hb_fsCreateTemp( const char * pszDir, const char * pszPrefix, ULONG u
 
    return FS_ERROR;
 }
-#else
+
+#else /* HB_OS_UNIX */
 
 HB_FHANDLE hb_fsCreateTemp( const char * pszDir, const char * pszPrefix, ULONG ulAttr, char * pszName )
 {
