@@ -34,7 +34,7 @@ endif
 LD := $(HB_CCACHE) $(HB_CMP)
 LD_OUT := -o
 
-LINKPATHS = -L$(LIB_DIR)
+LINKPATHS := -L$(LIB_DIR)
 LINKLIBS = $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the specified GT driver library and other RTLs

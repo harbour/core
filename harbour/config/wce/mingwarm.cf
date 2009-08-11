@@ -36,7 +36,7 @@ endif
 LD := $(HB_CCPREFIX)$(HB_CMP)
 LD_OUT := -o
 
-LINKPATHS = -L$(LIB_DIR)
+LINKPATHS := -L$(LIB_DIR)
 LINKLIBS = $(foreach lib,$(LIBS),-l$(lib))
 
 LINKLIBS += -lwininet -lws2

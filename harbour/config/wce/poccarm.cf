@@ -40,7 +40,7 @@ LD := polink.exe
 LD_OUT := -OUT:
 
 # Add all libraries specified in LIBS.
-LINKPATHS += -LIBPATH:$(LIB_DIR)
+LINKPATHS := -LIBPATH:$(LIB_DIR)
 LINKLIBS += $(foreach lib,$(LIBS),$(lib)$(LIB_EXT))
 
 LDFLAGS = $(LINKPATHS) coredll.lib corelibc.lib winsock.lib ws2.lib

@@ -49,17 +49,17 @@ else
 endif
 LD_OUT := -Fe
 
-LINKPATHS += /link
-LINKPATHS += /subsystem:windowsce,4.20 /machine:arm /armpadcode /stack:65536,4096 /nodefaultlib:"oldnames.lib"
-LINKPATHS += /nodefaultlib:"kernel32.lib" /align:4096 /opt:ref /opt:icf
-ifeq ($(HB_VISUALC_VER_PRE80),)
-   LINKPATHS += /manifest:no
-endif
-LINKPATHS += /libpath:$(LIB_DIR)
+LINKPATHS := /libpath:$(LIB_DIR)
 # Add all libraries specified in LIBS.
 LINKLIBS += $(foreach lib,$(LIBS),$(lib)$(LIB_EXT))
 
-LDFLAGS = /nologo $(LINKPATHS)
+LDFLAGS = /nologo /link
+LDFLAGS += /subsystem:windowsce,4.20 /machine:arm /armpadcode /stack:65536,4096 /nodefaultlib:"oldnames.lib"
+LDFLAGS += /nodefaultlib:"kernel32.lib" /align:4096 /opt:ref /opt:icf
+ifeq ($(HB_VISUALC_VER_PRE80),)
+   LDFLAGS += /manifest:no
+endif
+LDFLAGS += $(LINKPATHS)
 
 AR := lib.exe
 ARFLAGS :=

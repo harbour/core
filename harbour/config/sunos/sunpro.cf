@@ -65,7 +65,7 @@ LD := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)
 LD_OUT := -o$(subst x,x, )
 
 # Add all libraries specified in LIBS.
-LINKPATHS += -L$(LIB_DIR)
+LINKPATHS := -L$(LIB_DIR)
 LINKLIBS += $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the specified GT driver library
