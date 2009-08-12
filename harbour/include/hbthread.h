@@ -194,7 +194,12 @@ HB_EXTERN_BEGIN
 #  define HB_THREAD_RAWEND             return 0;
 
 #  define HB_THREAD_SELF()          GetCurrentThreadId()
-#  define HB_CRITICAL_INITVAL       { 0, 0, 0, 0, 0, 0 }
+
+#  if defined( __GNUC__ )
+#     define HB_CRITICAL_INITVAL    {  }
+#  else
+#     define HB_CRITICAL_INITVAL    { 0 }
+#  endif
 
 #  define HB_CRITICAL_INIT(v)       InitializeCriticalSection( &(v) )
 #  define HB_CRITICAL_DESTROY(v)    DeleteCriticalSection( &(v) )

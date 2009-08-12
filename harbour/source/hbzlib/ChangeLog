@@ -18,6 +18,10 @@
  *
  */
 
+2009-08-12 23:47 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/hbzlib/zutil.c
+    * use #pragma warning to pacify OpenWatcom warnings
+
 2009-07-16 15:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/hbzlib/trees.c
     * cleaned casting

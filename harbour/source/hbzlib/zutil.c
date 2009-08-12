@@ -29,6 +29,10 @@ const char * ZEXPORT zlibVersion( void )
     return ZLIB_VERSION;
 }
 
+#if defined( __WATCOMC__ )
+#  pragma warning 369 9
+#endif
+
 uLong ZEXPORT zlibCompileFlags( void )
 {
     uLong flags;
