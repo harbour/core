@@ -113,4 +113,3 @@ METHOD Configure( xObject ) CLASS QProgressBar
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

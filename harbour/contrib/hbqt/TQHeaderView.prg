@@ -149,4 +149,3 @@ METHOD Configure( xObject ) CLASS QHeaderView
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

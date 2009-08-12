@@ -118,4 +118,3 @@ METHOD Configure( xObject ) CLASS QGridLayout
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

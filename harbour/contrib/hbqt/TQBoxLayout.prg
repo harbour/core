@@ -112,4 +112,3 @@ METHOD Configure( xObject ) CLASS QBoxLayout
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

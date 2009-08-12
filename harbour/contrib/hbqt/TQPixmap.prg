@@ -130,4 +130,3 @@ METHOD Configure( xObject ) CLASS QPixmap
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

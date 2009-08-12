@@ -163,4 +163,3 @@ METHOD Configure( xObject ) CLASS QStandardItem
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

@@ -121,4 +121,3 @@ METHOD Configure( xObject ) CLASS QListView
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

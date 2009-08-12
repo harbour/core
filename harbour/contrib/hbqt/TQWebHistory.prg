@@ -106,4 +106,3 @@ METHOD Configure( xObject ) CLASS QWebHistory
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

@@ -98,4 +98,3 @@ METHOD Configure( xObject ) CLASS QStyleOptionProgressBar
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

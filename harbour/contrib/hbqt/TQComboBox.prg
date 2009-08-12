@@ -151,4 +151,3 @@ METHOD Configure( xObject ) CLASS QComboBox
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

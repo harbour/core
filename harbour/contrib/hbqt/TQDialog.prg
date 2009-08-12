@@ -102,4 +102,3 @@ METHOD Configure( xObject ) CLASS QDialog
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

@@ -100,4 +100,3 @@ METHOD Configure( xObject ) CLASS QGradient
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

@@ -95,4 +95,3 @@ METHOD Configure( xObject ) CLASS QStyleOptionTabBarBase
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

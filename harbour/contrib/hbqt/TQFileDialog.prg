@@ -137,4 +137,3 @@ METHOD Configure( xObject ) CLASS QFileDialog
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

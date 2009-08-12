@@ -100,4 +100,3 @@ METHOD Configure( xObject ) CLASS QStyleOption
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

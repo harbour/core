@@ -136,4 +136,3 @@ METHOD Configure( xObject ) CLASS QDateTimeEdit
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

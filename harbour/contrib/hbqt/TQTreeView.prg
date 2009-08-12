@@ -141,4 +141,3 @@ METHOD Configure( xObject ) CLASS QTreeView
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

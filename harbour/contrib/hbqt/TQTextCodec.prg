@@ -112,4 +112,3 @@ METHOD Configure( xObject ) CLASS QTextCodec
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

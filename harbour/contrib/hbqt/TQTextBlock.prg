@@ -119,4 +119,3 @@ METHOD Configure( xObject ) CLASS QTextBlock
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

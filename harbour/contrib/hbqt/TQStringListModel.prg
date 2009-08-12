@@ -100,4 +100,3 @@ METHOD Configure( xObject ) CLASS QStringListModel
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

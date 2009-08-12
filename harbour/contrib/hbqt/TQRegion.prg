@@ -108,4 +108,3 @@ METHOD Configure( xObject ) CLASS QRegion
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

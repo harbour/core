@@ -124,4 +124,3 @@ METHOD Configure( xObject ) CLASS QFileSystemModel
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

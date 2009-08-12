@@ -129,4 +129,3 @@ METHOD Configure( xObject ) CLASS QTreeWidget
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

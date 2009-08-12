@@ -103,4 +103,3 @@ METHOD Configure( xObject ) CLASS QSignalMapper
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

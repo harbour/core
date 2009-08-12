@@ -60,9 +60,9 @@ CPP_SOURCES := \
    QFontDatabase.cpp \
    QFontDialog.cpp \
    QFontInfo.cpp \
-   QFormLayout.cpp \
    QFontMetrics.cpp \
    QFontMetricsF.cpp \
+   QFormLayout.cpp \
    QFrame.cpp \
    QFtp.cpp \
    QGradient.cpp \
@@ -460,3 +460,6 @@ PRG_SOURCES := \
    TQWindowsStyle.prg \
    TQWindowsXPStyle.prg \
    TQWizard.prg \
+
+# Don't delete this comment, it's here to ensure empty
+# line above is kept intact.

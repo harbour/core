@@ -92,4 +92,3 @@ METHOD Configure( xObject ) CLASS QTextBlockGroup
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

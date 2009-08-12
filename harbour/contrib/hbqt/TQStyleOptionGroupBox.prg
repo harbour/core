@@ -98,4 +98,3 @@ METHOD Configure( xObject ) CLASS QStyleOptionGroupBox
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

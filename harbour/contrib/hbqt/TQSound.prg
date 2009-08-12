@@ -99,4 +99,3 @@ METHOD Configure( xObject ) CLASS QSound
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

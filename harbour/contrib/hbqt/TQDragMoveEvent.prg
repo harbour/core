@@ -97,4 +97,3 @@ METHOD Configure( xObject ) CLASS QDragMoveEvent
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

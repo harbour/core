@@ -126,4 +126,3 @@ METHOD Configure( xObject ) CLASS QWebPage
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

@@ -144,4 +144,3 @@ CREATE CLASS HBTableView INHERIT QTableView
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
-

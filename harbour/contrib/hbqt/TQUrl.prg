@@ -161,4 +161,3 @@ METHOD Configure( xObject ) CLASS QUrl
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

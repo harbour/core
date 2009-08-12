@@ -173,4 +173,3 @@ METHOD Configure( xObject ) CLASS QTextEdit
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

@@ -94,4 +94,3 @@ METHOD Configure( xObject ) CLASS QWidgetItem
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

@@ -112,4 +112,3 @@ METHOD Configure( xObject ) CLASS QTextBrowser
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

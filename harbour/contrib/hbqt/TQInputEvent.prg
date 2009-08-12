@@ -93,4 +93,3 @@ METHOD Configure( xObject ) CLASS QInputEvent
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

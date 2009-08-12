@@ -148,4 +148,3 @@ METHOD Configure( xObject ) CLASS QFont
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

@@ -99,4 +99,3 @@ METHOD Configure( xObject ) CLASS QTextImageFormat
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

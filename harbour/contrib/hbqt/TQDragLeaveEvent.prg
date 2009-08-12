@@ -92,4 +92,3 @@ METHOD Configure( xObject ) CLASS QDragLeaveEvent
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

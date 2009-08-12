@@ -96,4 +96,3 @@ METHOD Configure( xObject ) CLASS QStyleOptionDockWidget
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

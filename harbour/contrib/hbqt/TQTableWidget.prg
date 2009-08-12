@@ -138,4 +138,3 @@ METHOD Configure( xObject ) CLASS QTableWidget
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

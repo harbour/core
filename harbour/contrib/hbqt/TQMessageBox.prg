@@ -130,4 +130,3 @@ METHOD Configure( xObject ) CLASS QMessageBox
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

@@ -104,4 +104,3 @@ METHOD Configure( xObject ) CLASS QDockWidget
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

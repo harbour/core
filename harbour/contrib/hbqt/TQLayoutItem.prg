@@ -109,4 +109,3 @@ METHOD Configure( xObject ) CLASS QLayoutItem
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

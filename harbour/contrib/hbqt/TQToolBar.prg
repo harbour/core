@@ -120,4 +120,3 @@ METHOD Configure( xObject ) CLASS QToolBar
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

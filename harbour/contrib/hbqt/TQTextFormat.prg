@@ -134,4 +134,3 @@ METHOD Configure( xObject ) CLASS QTextFormat
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

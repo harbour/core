@@ -116,4 +116,3 @@ METHOD Configure( xObject ) CLASS QProgressDialog
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

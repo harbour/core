@@ -155,4 +155,3 @@ METHOD Configure( xObject ) CLASS QAbstractItemView
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

@@ -113,4 +113,3 @@ METHOD Configure( xObject ) CLASS QTextLine
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

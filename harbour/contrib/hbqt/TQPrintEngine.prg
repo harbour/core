@@ -98,4 +98,3 @@ METHOD Configure( xObject ) CLASS QPrintEngine
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

@@ -107,4 +107,3 @@ METHOD Configure( xObject ) CLASS QAbstractScrollArea
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

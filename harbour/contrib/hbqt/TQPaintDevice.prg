@@ -104,4 +104,3 @@ METHOD Configure( xObject ) CLASS QPaintDevice
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

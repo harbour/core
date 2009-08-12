@@ -95,4 +95,3 @@ METHOD Configure( xObject ) CLASS QFocusEvent
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

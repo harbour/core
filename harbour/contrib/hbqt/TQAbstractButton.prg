@@ -118,4 +118,3 @@ METHOD Configure( xObject ) CLASS QAbstractButton
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

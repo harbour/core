@@ -132,4 +132,3 @@ METHOD Configure( xObject ) CLASS QList
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

@@ -92,4 +92,3 @@ METHOD Configure( xObject ) CLASS QStyleHintReturnMask
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

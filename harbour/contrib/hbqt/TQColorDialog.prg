@@ -107,4 +107,3 @@ METHOD Configure( xObject ) CLASS QColorDialog
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

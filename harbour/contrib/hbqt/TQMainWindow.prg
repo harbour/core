@@ -140,4 +140,3 @@ METHOD Configure( xObject ) CLASS QMainWindow
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

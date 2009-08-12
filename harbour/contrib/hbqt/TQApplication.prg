@@ -170,4 +170,3 @@ METHOD Configure( xObject ) CLASS QApplication
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

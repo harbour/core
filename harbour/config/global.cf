@@ -677,17 +677,20 @@ endif
 
 # Fill it automatically if not specified
 ifeq ($(HB_INSTALL_PREFIX),)
+
+   HB_INSTALL_PREFIX := $(realpath $(TOP)$(ROOT))
+
    # Use names which are not likely to be used by users to
    # avoiding accidental overwrites of existing installations
-   ifeq ($(HB_ARCHITECTURE),dos)
-      HB_INSTALL_PREFIX := C:\hbauto
-   else
-      ifeq ($(HB_UNIX_COMPATIBLE),no)
-         HB_INSTALL_PREFIX := C:$(DIRSEP)hb-auto-$(HB_ARCHITECTURE)-$(HB_COMPILER)
-      else
-         HB_INSTALL_PREFIX := $(HOME)$(DIRSEP)hb-auto-$(HB_ARCHITECTURE)-$(HB_COMPILER)
-      endif
-   endif
+#  ifeq ($(HB_ARCHITECTURE),dos)
+#     HB_INSTALL_PREFIX := C:\hbauto
+#  else
+#     ifeq ($(HB_UNIX_COMPATIBLE),no)
+#        HB_INSTALL_PREFIX := C:$(DIRSEP)hb-auto-$(HB_ARCHITECTURE)-$(HB_COMPILER)
+#     else
+#        HB_INSTALL_PREFIX := $(HOME)$(DIRSEP)hb-auto-$(HB_ARCHITECTURE)-$(HB_COMPILER)
+#     endif
+#  endif
 
    ifneq ($(MAKE_381),)
       $(info ! HB_INSTALL_PREFIX automatically set to $(HB_INSTALL_PREFIX))

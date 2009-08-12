@@ -101,4 +101,3 @@ METHOD Configure( xObject ) CLASS QPrintDialog
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

@@ -306,4 +306,3 @@ METHOD Configure( xObject ) CLASS QWidget
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

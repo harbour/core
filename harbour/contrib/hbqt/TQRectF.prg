@@ -150,4 +150,3 @@ METHOD Configure( xObject ) CLASS QRectF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

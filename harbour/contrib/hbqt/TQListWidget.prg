@@ -122,4 +122,3 @@ METHOD Configure( xObject ) CLASS QListWidget
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

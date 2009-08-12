@@ -130,4 +130,3 @@ METHOD Configure( xObject ) CLASS QImageReader
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

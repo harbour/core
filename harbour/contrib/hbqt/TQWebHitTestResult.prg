@@ -106,4 +106,3 @@ METHOD Configure( xObject ) CLASS QWebHitTestResult
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

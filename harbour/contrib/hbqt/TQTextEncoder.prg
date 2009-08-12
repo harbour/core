@@ -93,4 +93,3 @@ METHOD Configure( xObject ) CLASS QTextEncoder
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

@@ -99,4 +99,3 @@ METHOD Configure( xObject ) CLASS QTextFragment
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

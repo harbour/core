@@ -111,4 +111,3 @@ METHOD Configure( xObject ) CLASS QLCDNumber
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

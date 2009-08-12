@@ -127,4 +127,3 @@ METHOD Configure( xObject ) CLASS QTableWidgetItem
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

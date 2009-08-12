@@ -129,4 +129,3 @@ METHOD Configure( xObject ) CLASS QWebFrame
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

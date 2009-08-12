@@ -69,16 +69,14 @@ move "%HB_INSTALL_PREFIX%" "%HB_INSTALL_BASE%\%HB_DIRNAME%" > nul
 set HB_INSTALL_PREFIX=%HB_INSTALL_BASE%\%HB_DIRNAME%
 
 rem ; Post-build cleanup
-if exist "%HB_INSTALL_PREFIX%\bin\*.tds" del "%HB_INSTALL_PREFIX%\bin\*.tds"
 if exist "%HB_INSTALL_PREFIX%\bin\*.lib" del "%HB_INSTALL_PREFIX%\bin\*.lib"
-if exist "%HB_INSTALL_PREFIX%\bin\*.exp" del "%HB_INSTALL_PREFIX%\bin\*.exp"
 
 rem ; Build .zip package
 echo Harbour .zip install package creation: '%HB_PKGNAME%.zip'
 if exist "%HB_PKGNAME%.zip" del "%HB_PKGNAME%.zip"
 pushd
 cd "%HB_INSTALL_BASE%"
-"%HB_DIR_ZIP%zip.exe" -q -9 -X -r -o "%~dp0%HB_PKGNAME%.zip" . -i "%HB_DIRNAME%\*"
+"%HB_DIR_ZIP%zip.exe" -q -9 -X -r -o "%~dp0%HB_PKGNAME%.zip" . -i "%HB_DIRNAME%\*" -x *.tds -x *.exp
 popd
 
 rem ; Build installer package

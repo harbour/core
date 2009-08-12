@@ -122,4 +122,3 @@ METHOD Configure( xObject ) CLASS QObject
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

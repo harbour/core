@@ -99,4 +99,3 @@ METHOD Configure( xObject ) CLASS QTextFrame
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

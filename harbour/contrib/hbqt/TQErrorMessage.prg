@@ -93,4 +93,3 @@ METHOD Configure( xObject ) CLASS QErrorMessage
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

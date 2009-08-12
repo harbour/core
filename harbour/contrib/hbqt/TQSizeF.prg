@@ -105,4 +105,3 @@ METHOD Configure( xObject ) CLASS QSizeF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

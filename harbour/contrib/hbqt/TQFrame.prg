@@ -105,4 +105,3 @@ METHOD Configure( xObject ) CLASS QFrame
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

@@ -158,4 +158,3 @@ METHOD Configure( xObject ) CLASS QTextDocument
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

@@ -125,4 +125,3 @@ METHOD Configure( xObject ) CLASS QWizard
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

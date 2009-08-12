@@ -274,4 +274,3 @@ METHOD Configure( xObject ) CLASS QPainter
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

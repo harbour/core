@@ -103,4 +103,3 @@ METHOD Configure( xObject ) CLASS QTextBoundaryFinder
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

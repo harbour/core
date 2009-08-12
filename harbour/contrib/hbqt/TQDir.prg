@@ -147,4 +147,3 @@ METHOD Configure( xObject ) CLASS QDir
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

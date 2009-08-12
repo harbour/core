@@ -98,4 +98,3 @@ METHOD Configure( xObject ) CLASS QPoint
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

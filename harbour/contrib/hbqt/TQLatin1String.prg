@@ -93,4 +93,3 @@ METHOD Configure( xObject ) CLASS QLatin1String
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

@@ -104,4 +104,3 @@ METHOD Configure( xObject ) CLASS QDesktopWidget
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

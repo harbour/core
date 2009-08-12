@@ -92,4 +92,3 @@ METHOD Configure( xObject ) CLASS QVBoxLayout
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

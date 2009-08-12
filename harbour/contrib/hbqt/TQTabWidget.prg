@@ -133,4 +133,3 @@ METHOD Configure( xObject ) CLASS QTabWidget
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

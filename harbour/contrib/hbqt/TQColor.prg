@@ -155,4 +155,3 @@ METHOD Configure( xObject ) CLASS QColor
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

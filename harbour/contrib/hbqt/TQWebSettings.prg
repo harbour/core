@@ -117,4 +117,3 @@ METHOD Configure( xObject ) CLASS QWebSettings
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

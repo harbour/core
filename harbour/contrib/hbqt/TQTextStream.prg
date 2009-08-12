@@ -128,4 +128,3 @@ METHOD Configure( xObject ) CLASS QTextStream
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

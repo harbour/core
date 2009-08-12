@@ -136,4 +136,3 @@ CREATE CLASS HbDbfModel INHERIT QAbstractItemModel
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
-

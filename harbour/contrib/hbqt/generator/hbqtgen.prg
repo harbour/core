@@ -1188,7 +1188,6 @@ STATIC FUNCTION BuildFooter( txt_ )
    aadd( txt_, "/*----------------------------------------------------------------------*/"   )
    aadd( txt_, "#endif             /* #if QT_VERSION >= 0x040500 */"                          )
    aadd( txt_, "/*----------------------------------------------------------------------*/"   )
-   aadd( txt_, ""                                                                             )
 
    RETURN nil
 
@@ -1244,7 +1243,7 @@ STATIC FUNCTION CreateTarget( cFile, txt_ )
    aeval( txt_, {|e,i| txt_[ i ] := trim( e ) } )
 
    IF hHandle != -1
-      aeval( txt_, { |e| fWrite( hHandle, e + s_NewLine, len( e ) + len( s_NewLine ) ) } )
+      aeval( txt_, { |e| fWrite( hHandle, e + s_NewLine ) } )
       fClose( hHandle )
    ENDIF
 
@@ -1349,13 +1348,12 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
    aadd( txt_, '   RETURN Self                                                             ' )
    aadd( txt_, '                                                                           ' )
    aadd( txt_, '/*----------------------------------------------------------------------*/ ' )
-   aadd( txt_, '                                                                           ' )
 
    IF !empty( subCls_ )
+      aadd( txt_, '                                                                           ' )
       aeval( subCls_, {|e| aadd( txt_, e ) } )
       aadd( txt_, '                                                                           ' )
       aadd( txt_, '/*----------------------------------------------------------------------*/ ' )
-      aadd( txt_, '                                                                           ' )
    ENDIF
 
    RETURN CreateTarget( cFile, txt_ )
@@ -1392,7 +1390,8 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
       NEXT
    ENDIF
    aadd( txt_, "                                                        " )
-   aadd( txt_, "                                                        " )
+   aadd( txt_, "# Don't delete this comment, it's here to ensure empty  " )
+   aadd( txt_, "# line above is kept intact.                            " )
 
    RETURN CreateTarget( cFile, txt_ )
 
@@ -1485,8 +1484,6 @@ STATIC FUNCTION BuildDocument( cWidget, doc_, cPathDoc, docum_ )
 
    aadd( txt_, ' '    )
    aadd( txt_, "/*----------------------------------------------------------------------*/"   )
-   aadd( txt_, ' '    )
-   aadd( txt_, ' '    )
 
    CreateTarget( cFile, txt_ )
 

@@ -115,4 +115,3 @@ METHOD Configure( xObject ) CLASS QFontMetricsF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

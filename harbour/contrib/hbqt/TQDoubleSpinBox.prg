@@ -110,4 +110,3 @@ METHOD Configure( xObject ) CLASS QDoubleSpinBox
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

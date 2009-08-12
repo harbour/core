@@ -96,4 +96,3 @@ METHOD Configure( xObject ) CLASS QLinearGradient
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

@@ -128,4 +128,3 @@ METHOD Configure( xObject ) CLASS QVariant
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

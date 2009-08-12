@@ -147,4 +147,3 @@ METHOD Configure( xObject ) CLASS QPrinter
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

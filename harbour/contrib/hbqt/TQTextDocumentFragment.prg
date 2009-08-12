@@ -99,4 +99,3 @@ METHOD Configure( xObject ) CLASS QTextDocumentFragment
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

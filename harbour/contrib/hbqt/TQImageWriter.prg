@@ -110,4 +110,3 @@ METHOD Configure( xObject ) CLASS QImageWriter
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

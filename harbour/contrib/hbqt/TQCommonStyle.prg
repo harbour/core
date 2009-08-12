@@ -92,4 +92,3 @@ METHOD Configure( xObject ) CLASS QCommonStyle
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
