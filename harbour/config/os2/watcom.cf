@@ -96,7 +96,7 @@ else
    endif
 
    define create_library
-      echo $(LIB_DIR)/$@ > __lib__.tmp
+      @echo $(LIB_DIR)/$@ > __lib__.tmp
       for $(FILE) in ( *$(OBJ_EXT) ) do @echo -+$(FILE) >> __lib__.tmp
       $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) @__lib__.tmp
    endef

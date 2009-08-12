@@ -52,7 +52,7 @@ endif
 ifeq ($(HB_SHELL),os2)
 
    define inst_file_all
-      @$(CMDPREF)if not exist $(INSTALL_DIR_OS) $(MDP) $(INSTALL_DIR)
+      @if not exist $(INSTALL_DIR_OS) $(MDP) $(INSTALL_DIR)
       $(foreach file,$(INSTALL_FILES_OS),$(inst_file))
    endef
 
@@ -60,7 +60,7 @@ ifeq ($(HB_SHELL),os2)
    # NOTE: The empty line directly before 'endef' HAVE TO exist!
    #       It causes that every command will be separated by LF
    define inst_file
-      $(CMDPREF)$(CP) $(file) $(INSTALL_DIR_OS)
+      $(CP) $(file) $(INSTALL_DIR_OS)
 
    endef
 

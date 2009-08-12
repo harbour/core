@@ -40,7 +40,7 @@ MAKE_381 := $(filter $(need),$(firstword $(sort $(MAKE_VERSION) $(need))))
 
 # Don't indent this subroutine
 define find_in_path
-   $(strip $(foreach dir,$(subst $(PTHSEP), ,$(PATH)),$(wildcard $(dir)/$(1)$(HB_HOST_BIN_EXT))))
+$(strip $(foreach dir,$(subst $(PTHSEP), ,$(PATH)),$(wildcard $(dir)/$(1)$(HB_HOST_BIN_EXT))))
 endef
 
 define check_host
