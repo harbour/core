@@ -5,5 +5,7 @@
 all : first
 
 BIN_EXT := .exe
+DYN_PRE :=
+DYN_EXT :=
 
 HB_GT_LIBS += gtdos

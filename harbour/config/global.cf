@@ -664,7 +664,36 @@ ifneq ($(HB_DB_DRVEXT),)
    HB_RDD_DIRS += $(HB_DB_DRVEXT)
 endif
 
+# Fill it automatically if not specified
+ifeq ($(HB_INSTALL_PREFIX),)
+   # Use names which are not likely to be used by users to
+   # avoiding accidental overwrites of existing installations
+   ifeq ($(HB_ARCHITECTURE),dos)
+      HB_INSTALL_PREFIX := C:\hbauto
+   else
+      ifeq ($(HB_UNIX_COMPATIBLE),no)
+         HB_INSTALL_PREFIX := C:$(DIRSEP)hb-auto-$(HB_ARCHITECTURE)-$(HB_COMPILER)
+      else
+         HB_INSTALL_PREFIX := $(HOME)$(DIRSEP)hb-auto-$(HB_ARCHITECTURE)-$(HB_COMPILER)
+      endif
+   endif
+
+   ifneq ($(MAKE_381),)
+      $(info ! HB_INSTALL_PREFIX automatically set to $(HB_INSTALL_PREFIX))
+   endif
+endif
+
 ifneq ($(HB_INSTALL_PREFIX),)
+
+   # TOFIX: HB_INSTALL_PREFIX will have to be duplicated internally to avoid
+   #        recursive operation here
+
+   # Handle simple macros in value
+   HB_INSTALL_PREFIX := $(subst {HB_ARCH},$(HB_ARCHITECTURE),$(HB_INSTALL_PREFIX))
+   HB_INSTALL_PREFIX := $(subst {HB_COMP},$(HB_COMPILER),$(HB_INSTALL_PREFIX))
+   HB_INSTALL_PREFIX := $(subst {HB_CPU},$(HB_CPU),$(HB_INSTALL_PREFIX))
+
+   export HB_INSTALL_PREFIX
 
    ifeq ($(HB_UNIX_COMPATIBLE),no)
       LIBPOSTFIX := $(DIRSEP)$(subst /,$(DIRSEP),$(ARCH_COMP))

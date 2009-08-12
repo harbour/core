@@ -41,18 +41,18 @@ endif
 ifeq ($(HB_SHELL),nt)
 
    define inst_file_all
-      @$(CMDPREF)if not exist "$(INSTALL_DIR_OS)" $(MDP) "$(INSTALL_DIR_OS)"
-      for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(INSTALL_DIR_OS)"
+      -@$(CMDPREF)if not exist "$(INSTALL_DIR_OS)" $(MDP) "$(INSTALL_DIR_OS)"
+      -for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(INSTALL_DIR_OS)"
    endef
 
-   INSTALL_RULE = -$(inst_file_all)
+   INSTALL_RULE = $(inst_file_all)
 
 endif
 
 ifeq ($(HB_SHELL),os2)
 
    define inst_file_all
-      @if not exist $(INSTALL_DIR_OS) $(MDP) $(INSTALL_DIR)
+      -@if not exist $(INSTALL_DIR_OS) $(MDP) $(INSTALL_DIR)
       $(foreach file,$(INSTALL_FILES_OS),$(inst_file))
    endef
 
@@ -60,18 +60,18 @@ ifeq ($(HB_SHELL),os2)
    # NOTE: The empty line directly before 'endef' HAVE TO exist!
    #       It causes that every command will be separated by LF
    define inst_file
-      $(CP) $(file) $(INSTALL_DIR_OS)
+      -$(CP) $(file) $(INSTALL_DIR_OS)
 
    endef
 
-   INSTALL_RULE = -$(foreach file,$(INSTALL_FILES_OS),$(inst_file))
+   INSTALL_RULE = $(foreach file,$(INSTALL_FILES_OS),$(inst_file))
 
 endif
 
 ifeq ($(HB_SHELL),dos)
 
    define inst_file_all
-      @if not exist $(INSTALL_DIR_OS)\nul $(MDP) $(INSTALL_DIR_OS)
+      -@if not exist $(INSTALL_DIR_OS)\nul $(MDP) $(INSTALL_DIR_OS)
       $(foreach file,$(INSTALL_FILES_OS),$(inst_file))
    endef
 
@@ -79,11 +79,11 @@ ifeq ($(HB_SHELL),dos)
    # NOTE: The empty line directly before 'endef' HAVE TO exist!
    #       It causes that every command will be separated by LF
    define inst_file
-      $(CP) $(file) $(INSTALL_DIR_OS)
+      -$(CP) $(file) $(INSTALL_DIR_OS)
 
    endef
 
-   INSTALL_RULE = -$(inst_file_all)
+   INSTALL_RULE = $(inst_file_all)
 
 endif
 
