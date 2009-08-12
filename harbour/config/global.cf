@@ -631,6 +631,17 @@ ifeq ($(HB_COMMERCE),yes)
    export HB_WITHOUT_GTSLN := yes
 endif
 
+ifeq ($(HB_GPM_MOUSE),)
+   HB_GPM_MOUSE := no
+   ifeq ($(HB_INC_GPM),)
+      HB_INC_GPM := /usr/include /usr/local/include
+   endif
+   ifneq ($(strip $(foreach d,$(HB_INC_GPM),$(if $(wildcard $(d)/gpm.h),$(d),))),)
+      HB_GPM_MOUSE := yes
+   endif
+   export HB_GPM_MOUSE
+endif
+
 # Names of portable GT drivers
 HB_GT_LIBS := \
    gtcgi \
