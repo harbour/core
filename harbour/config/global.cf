@@ -178,6 +178,9 @@ ifeq ($(HB_CONFIG_SHOWN),)
       #   HB_HOST_BUILD [yes|lib], HB_XBUILD, HB_WITHOUT_*, HB_REBUILD_PARSER, HB_DB_DRVEXT
       #   HB_COMMERCE, HB_CRS_LIB, HB_BUILD_VERBOSE, HB_BIN_COMPILE, HB_INC_COMPILE
       #   HB_POSTINST, HB_ROOTPOSTINST, HB_POSTINSTPARAM, HB_GCMODE
+      #   HB_GPM_NOICE_DISABLE, HB_GT_CRS_BCEHACK, HB_NCURSES_194
+      # Macros:
+      #   -DHB_PCRE_REGEX, -DHB_POSIX_REGEX, -DHB_EXT_ZLIB, -DHB_HAS_GPM
 
       ifeq ($(HB_DYNLIB),yes)
          $(info ! Dynamic library creation phase)
@@ -751,7 +754,7 @@ export HARBOURCMD :=
 export CLIPPER :=
 export CLIPPERCMD :=
 
-# relevant only for win/dos hosts
+# relevant only for non-*nix hosts
 MKFLAGS := --no-print-directory
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf

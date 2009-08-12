@@ -91,7 +91,7 @@
 # include <sys/ioctl.h>
 # include <sys/wait.h>
 #endif
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
 # include <gpm.h>
 #endif
 
@@ -361,7 +361,7 @@ typedef struct _HB_GTTRM
    int nTermMouseChars;
    unsigned char cTermMouseBuf[3];
    mouseEvent mLastEvt;
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
    Gpm_Connect Conn;
 #endif
 
@@ -830,7 +830,7 @@ static int add_efds( PHB_GTTRM pTerm, int fd, int mode,
    return fd;
 }
 
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
 static void del_efds( PHB_GTTRM pTerm, int fd )
 {
    int i, n = -1;
@@ -1030,7 +1030,7 @@ static void set_tmevt( PHB_GTTRM pTerm, unsigned char *cMBuf, mouseEvent * mEvt 
    return;
 }
 
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
 static int set_gpmevt( int fd, int mode, void *cargo )
 {
    int nKey = 0;
@@ -1094,7 +1094,7 @@ static void flush_gpmevt( PHB_GTTRM pTerm )
 
 static void disp_mousecursor( PHB_GTTRM pTerm )
 {
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
    if( (pTerm->mouse_type & MOUSE_GPM) && gpm_visiblepointer )
    {
       Gpm_DrawPointer( pTerm->mLastEvt.col, pTerm->mLastEvt.row,
@@ -1116,7 +1116,7 @@ static void mouse_init( PHB_GTTRM pTerm )
       pTerm->mouse_type |= MOUSE_XTERM;
       pTerm->mButtons = 3;
    }
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
    if( pTerm->terminal_type == TERM_LINUX )
    {
       pTerm->Conn.eventMask =
@@ -1160,7 +1160,7 @@ static void mouse_exit( PHB_GTTRM pTerm )
       hb_gt_trm_termOut( pTerm, s_szMouseOff, strlen( s_szMouseOff ) );
       hb_gt_trm_termFlush( pTerm );
    }
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
    if( (pTerm->mouse_type & MOUSE_GPM) && gpm_fd >= 0 )
    {
       del_efds( pTerm, gpm_fd );
@@ -3055,7 +3055,7 @@ static void hb_gt_trm_mouse_Show( PHB_GT pGT )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_mouse_Show(%p)", pGT ) );
 
    pTerm = HB_GTTRM_GET( pGT );
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
    if( pTerm->mouse_type & MOUSE_GPM )
       gpm_visiblepointer = 1;
 #endif
@@ -3066,7 +3066,7 @@ static void hb_gt_trm_mouse_Hide( PHB_GT pGT )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_mouse_Hide(%p)", pGT ) );
 
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
    if( HB_GTTRM_GET( pGT )->mouse_type & MOUSE_GPM )
    {
       gpm_visiblepointer = 0;

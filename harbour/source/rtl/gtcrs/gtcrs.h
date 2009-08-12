@@ -79,8 +79,8 @@
 #     include <term.h>
 #  endif
 #endif
-#ifdef HAVE_GPM_H
-# include <gpm.h>
+#if defined( HB_HAS_GPM )
+#  include <gpm.h>
 #endif
 
 #include <stdio.h>
@@ -99,19 +99,19 @@
 #include <fcntl.h>
 #include <time.h>
 #if ( defined( HB_OS_LINUX ) || defined( HB_OS_BSD ) ) && !defined( __WATCOMC__ )
-# if defined( HB_OS_LINUX )
-#  include <pty.h>  /* for openpty and forkpty */
-# elif defined( HB_OS_DARWIN ) || defined( __NetBSD__ ) || defined( __OpenBSD__ )
-#  include <util.h> /* for openpty and forkpty */
-#  if defined( __NetBSD__ )
-#   include <termcap.h>
-#   define tigetnum(id)       tgetnum(id)
-#   define tigetstr(id)       tgetstr(id,NULL)
+#  if defined( HB_OS_LINUX )
+#     include <pty.h>  /* for openpty and forkpty */
+#  elif defined( HB_OS_DARWIN ) || defined( __NetBSD__ ) || defined( __OpenBSD__ )
+#     include <util.h> /* for openpty and forkpty */
+#     if defined( __NetBSD__ )
+#        include <termcap.h>
+#        define tigetnum(id)       tgetnum(id)
+#        define tigetstr(id)       tgetstr(id,NULL)
+#     endif
+#  elif defined( HB_OS_BSD )
+#     include <libutil.h> /* for openpty and forkpty */
 #  endif
-# elif defined( HB_OS_BSD )
-#  include <libutil.h> /* for openpty and forkpty */
-# endif
-# include <utmp.h> /* for login_tty */
+#  include <utmp.h> /* for login_tty */
 #endif
 
 #ifndef O_ACCMODE

@@ -907,7 +907,7 @@ static BOOL hb_gt_sln_Resume( PHB_GT pGT )
        hb_sln_Init_Terminal( 1 ) != -1 )
    {
       SLsmg_refresh(); /* reinitialize a terminal */
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
       hb_gt_sln_mouse_FixTrash();
 #endif
       s_bSuspended = FALSE;
@@ -923,7 +923,7 @@ static BOOL hb_gt_sln_PreExt( PHB_GT pGT )
    HB_SYMBOL_UNUSED( pGT );
 
    SLsmg_refresh();
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
    hb_gt_sln_mouse_FixTrash();
 #endif
    return TRUE;

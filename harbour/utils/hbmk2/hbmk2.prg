@@ -2098,7 +2098,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( l_aLIBSYS, "z" )
             l_lHB_ZLIB := .F.
          ENDIF
-         IF "-DHAVE_GPM_H" $ cSelfFlagC
+         IF "-DHB_HAS_GPM" $ cSelfFlagC
             AAdd( l_aLIBSYS, "gpm" )
          ENDIF
 

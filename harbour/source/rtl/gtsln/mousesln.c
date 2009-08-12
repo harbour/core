@@ -54,7 +54,7 @@
 
 #include "gtsln.h"
 #include <sys/time.h>
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
     #include <sys/types.h>
     #include <sys/stat.h>
     #include <fcntl.h>
@@ -80,7 +80,7 @@ static struct timeval mRightDblckTime;
 
 /* *********************************************************************** */
 
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
 static BOOL GetGpmEvent( Gpm_Event *Evt )
 {
    if( s_bMousePresent && gpm_fd >= 0 )
@@ -271,7 +271,7 @@ int hb_gt_sln_mouse_Inkey( int iEventMask, BOOL fCheckNew )
       }
    }
 
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
 
 #define CHECK_BUTTON_DOWN(Mask,GpmBtn,InkBtn,InkDbl)              \
    if( ( iEventMask & Mask ) && ( Evt.buttons & GpmBtn ) )        \
@@ -348,7 +348,7 @@ void hb_gt_sln_mouse_Init( void )
 
       s_bMousePresent = TRUE;
    }
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
    else if( hb_sln_UnderLinuxConsole )
    {
 #ifdef HB_GPM_NOICE_DISABLE
@@ -416,7 +416,7 @@ void hb_gt_sln_mouse_Exit( void )
          /* force mouse usage under xterm */
          (void)SLtt_set_mouse_mode( 0, 1 );
       }
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
       else if( hb_sln_UnderLinuxConsole )
       {
          if( gpm_fd >= 0 )
@@ -442,7 +442,7 @@ void hb_gt_sln_mouse_Show( PHB_GT pGT )
 {
    HB_SYMBOL_UNUSED( pGT );
 
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
    gpm_visiblepointer = 1;
    if( hb_sln_UnderLinuxConsole && s_bMousePresent )
       Gpm_DrawPointer( s_iMouseCol, s_iMouseRow, gpm_consolefd );
@@ -456,7 +456,7 @@ void hb_gt_sln_mouse_Hide( PHB_GT pGT )
 {
    HB_SYMBOL_UNUSED( pGT );
 
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
    gpm_visiblepointer = 0;
 #endif
    ;
@@ -481,7 +481,7 @@ void hb_gt_sln_mouse_SetPos( PHB_GT pGT, int iRow, int iCol )
    /* it does really nothing */
    s_iMouseRow = iRow;
    s_iMouseCol = iCol;
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
    if( hb_sln_UnderLinuxConsole )
       if( s_bMousePresent && gpm_visiblepointer )
          Gpm_DrawPointer( iCol, iRow, gpm_consolefd );
@@ -520,7 +520,7 @@ int hb_gt_sln_mouse_CountButton( PHB_GT pGT )
 
 void hb_gt_sln_mouse_FixTrash( void )
 {
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
    if( hb_sln_UnderLinuxConsole )
       if( s_bMousePresent && gpm_visiblepointer )
          Gpm_DrawPointer( s_iMouseCol, s_iMouseRow, gpm_consolefd );

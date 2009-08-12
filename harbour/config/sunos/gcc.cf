@@ -43,32 +43,35 @@ LD_OUT := -o
 LIBPATHS := -L$(LIB_DIR)
 LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
 
-# Add the specified GT driver library
-ifneq ($(findstring gtcrs, $(LIBS)),)
-   ifeq ($(HB_CRS_LIB),)
-      HB_CRS_LIB := curses
+ifneq ($(findstring hbrtl, $(LIBS)),)
+   # Add the specified GT driver library
+   ifneq ($(findstring gtcrs, $(LIBS)),)
+      ifeq ($(HB_CRS_LIB),)
+         HB_CRS_LIB := curses
+      endif
+      LDLIBS += -l$(HB_CRS_LIB)
    endif
-   LDLIBS += -l$(HB_CRS_LIB)
-endif
-ifneq ($(findstring gtsln, $(LIBS)),)
-   LDLIBS += -lslang
-endif
-ifneq ($(findstring gtxwc, $(LIBS)),)
-   LDLIBS += -lX11
-   #LIBPATHS += -L/usr/X11R6/lib64
-   LIBPATHS += -L/usr/X11R6/lib
+   ifneq ($(findstring gtsln, $(LIBS)),)
+      LDLIBS += -lslang
+   endif
+   ifneq ($(findstring gtxwc, $(LIBS)),)
+      LDLIBS += -lX11
+     #LIBPATHS += -L/usr/X11R6/lib64
+      LIBPATHS += -L/usr/X11R6/lib
+   endif
+
+   ifneq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
+      LDLIBS += -lpcre
+   endif
+
+   ifneq ($(findstring -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
+      LDLIBS += -lz
+   endif
+
+   LDLIBS += -lrt -lsocket -lnsl -lresolv
 endif
 
-ifneq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
-   LDLIBS += -lpcre
-endif
-
-ifneq ($(findstring -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
-   LDLIBS += -lz
-endif
-
-LDLIBS += -lm -lrt
-LDLIBS += -lsocket -lnsl -lresolv
+LDLIBS += -lm
 
 LDFLAGS += $(LIBPATHS)
 

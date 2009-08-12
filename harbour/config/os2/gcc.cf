@@ -47,7 +47,7 @@ LIBPATHS := -L$(LIB_DIR)
 LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
 
 # Add the specified GT driver library
-ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
+ifneq ($(findstring hbrtl, $(LIBS)),)
    ifeq ($(C_MAIN),)
       ifeq ($(findstring os2pm,$(HB_GT_LIB)),os2pm)
          # Special handling for PM mode
@@ -55,10 +55,9 @@ ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
          LDLIBS += -lgtos2
       endif
    endif
-endif
 
-# add socket library
-LDLIBS += -lsocket
+   LDLIBS += -lsocket
+endif
 
 # statical linking with GCC 3.2.2 libc as not require its presence on user system
 LDFLAGS += $(LIBPATHS)

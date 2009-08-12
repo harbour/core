@@ -38,6 +38,17 @@ LD_OUT := -o
 LIBPATHS := -L$(LIB_DIR)
 
 LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
+
+ifneq ($(findstring hbrtl, $(LIBS)),)
+   # Add the specified GT driver library and other RTLs
+   ifeq ($(HB_CRS_LIB),)
+      HB_CRS_LIB := pdcurses
+   endif
+   ifneq ($(findstring gtcrs, $(LIBS)),)
+      LDLIBS += -l$(HB_CRS_LIB)
+   endif
+endif
+
 LDLIBS += -lm
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!

@@ -158,7 +158,7 @@ void hb_conInit( void )
    hb_fsSetDevMode( s_hFilenoStderr, FD_BINARY );
 
    if( hb_gtInit( s_hFilenoStdin, s_hFilenoStdout, s_hFilenoStderr ) != HB_SUCCESS )
-      hb_errInternal( 9998, "Screen driver initialization failure", NULL, NULL );
+      hb_errInternal( 9998, "Harbour terminal (GT) initialization failure", NULL, NULL );
 
    if( hb_cmdargCheck( "INFO" ) )
    {

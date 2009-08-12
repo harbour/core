@@ -51,32 +51,34 @@ LD_OUT := -o$(subst x,x, )
 LIBPATHS := -L$(LIB_DIR)
 LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
 
-# Add the specified GT driver library and other RTLs
-ifeq ($(HB_CRS_LIB),)
-   HB_CRS_LIB := ncurses
-endif
-ifneq ($(findstring gtcrs, $(LIBS)),)
-   LDLIBS += -l$(HB_CRS_LIB)
-endif
-ifneq ($(findstring gtsln, $(LIBS)),)
-   LDLIBS += -lslang
-   # In BSD, slang still needs curses :(
-   ifeq ($(findstring gtcrs, $(LIBS)),)
+ifneq ($(findstring hbrtl, $(LIBS)),)
+   # Add the specified GT driver library and other RTLs
+   ifeq ($(HB_CRS_LIB),)
+      HB_CRS_LIB := ncurses
+   endif
+   ifneq ($(findstring gtcrs, $(LIBS)),)
       LDLIBS += -l$(HB_CRS_LIB)
    endif
-endif
-ifneq ($(findstring gtxwc, $(LIBS)),)
-   LDLIBS += -lX11
-   #LIBPATHS += -L/usr/X11R6/lib64
-   LIBPATHS += -L/usr/X11R6/lib
-endif
+   ifneq ($(findstring gtsln, $(LIBS)),)
+      LDLIBS += -lslang
+      # In BSD, slang still needs curses :(
+      ifeq ($(findstring gtcrs, $(LIBS)),)
+         LDLIBS += -l$(HB_CRS_LIB)
+      endif
+   endif
+   ifneq ($(findstring gtxwc, $(LIBS)),)
+      LDLIBS += -lX11
+     #LIBPATHS += -L/usr/X11R6/lib64
+      LIBPATHS += -L/usr/X11R6/lib
+   endif
 
-ifneq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
-   LDLIBS += -lpcre
-endif
+   ifneq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
+      LDLIBS += -lpcre
+   endif
 
-ifneq ($(findstring -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
-   LDLIBS += -lz
+   ifneq ($(findstring -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
+      LDLIBS += -lz
+   endif
 endif
 
 LDLIBS += -lm

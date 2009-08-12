@@ -130,7 +130,7 @@ typedef struct InOutBase {
    int nTermMouseChars;
    unsigned char cTermMouseBuf[3];
    mouseEvent mLastEvt;
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
    Gpm_Connect Conn;
 #endif
 
@@ -1156,7 +1156,7 @@ static void set_tmevt( unsigned char *cMBuf, mouseEvent * mEvt )
    return;
 }
 
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
 static int set_gpmevt( int fd, int mode, void *data )
 {
    int nKey = 0;
@@ -1220,7 +1220,7 @@ static void flush_gpmevt( mouseEvent * mEvt )
 
 static void disp_mousecursor( InOutBase * ioBase )
 {
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
    if ( ioBase->mouse_type == MOUSE_GPM && gpm_visiblepointer )
    {
       Gpm_DrawPointer( ioBase->mLastEvt.col, ioBase->mLastEvt.row,
@@ -1245,7 +1245,7 @@ static void mouse_init( InOutBase * ioBase )
       if ( ioBase->mButtons < 1 )
          ioBase->mButtons = 3;
    }
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
    else if ( ioBase->terminal_type == TERM_LINUX )
    {
       ioBase->Conn.eventMask =
@@ -1291,7 +1291,7 @@ static void mouse_exit( InOutBase * ioBase )
       /* disable mouse tracking & restore old hilit tracking */
       write_ttyseq( ioBase, "\033[?1002l\033[?1001r" );
    }
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
    else if ( ioBase->mouse_type == MOUSE_GPM && gpm_fd >= 0 )
    {
       del_efds( ioBase, gpm_fd );
@@ -2708,7 +2708,7 @@ static void hb_gt_crs_mouse_Show( PHB_GT pGT )
 
    HB_SYMBOL_UNUSED( pGT );
 
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
    if( s_ioBase->mouse_type == MOUSE_GPM )
       gpm_visiblepointer = 1;
 #endif
@@ -2723,7 +2723,7 @@ static void hb_gt_crs_mouse_Hide( PHB_GT pGT )
 
    HB_SYMBOL_UNUSED( pGT );
 
-#ifdef HAVE_GPM_H
+#if defined( HB_HAS_GPM )
    if( s_ioBase->mouse_type == MOUSE_GPM )
    {
       gpm_visiblepointer = 0;

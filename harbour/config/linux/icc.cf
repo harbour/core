@@ -17,7 +17,10 @@ CC_IN := -c
 CC_OUT := -o
 
 CPPFLAGS := -I. -I$(HB_INC_COMPILE)
-CFLAGS := -D_GNU_SOURCE
+CFLAGS :=
+LDFLAGS :=
+
+CFLAGS += -D_GNU_SOURCE
 #CFLAGS += -fast
 #CFLAGS += -xHOST
 #CFLAGS += -std=c99
@@ -46,38 +49,42 @@ LIBPATHS := -L$(LIB_DIR)
 
 LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
 
-# Add the specified GT driver library and other RTLs
-ifneq ($(findstring gtcrs, $(LIBS)),)
-   ifeq ($(HB_CRS_LIB),)
-      HB_CRS_LIB := ncurses
+ifneq ($(findstring hbrtl, $(LIBS)),)
+   # Add the specified GT driver library and other RTLs
+   ifneq ($(findstring gtcrs, $(LIBS)),)
+      ifeq ($(HB_CRS_LIB),)
+         HB_CRS_LIB := ncurses
+      endif
+      LDLIBS += -l$(HB_CRS_LIB)
    endif
-   LDLIBS += -l$(HB_CRS_LIB)
-endif
-ifneq ($(findstring gtsln, $(LIBS)),)
-   LDLIBS += -lslang
-endif
-ifneq ($(findstring gtxwc, $(LIBS)),)
-   LDLIBS += -lX11
-   #LIBPATHS += -L/usr/X11R6/lib64
-   LIBPATHS += -L/usr/X11R6/lib
+   ifneq ($(findstring gtsln, $(LIBS)),)
+      LDLIBS += -lslang
+   endif
+   ifneq ($(findstring gtxwc, $(LIBS)),)
+      LDLIBS += -lX11
+     #LIBPATHS += -L/usr/X11R6/lib64
+      LIBPATHS += -L/usr/X11R6/lib
+   endif
+
+   # HB_GPM_MOUSE: use gpm mouse driver
+   ifeq ($(HB_GPM_MOUSE),yes)
+      LDLIBS += -lgpm
+   endif
+
+   ifneq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
+      LDLIBS += -lpcre
+   endif
+
+   ifneq ($(findstring -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
+      LDLIBS += -lz
+   endif
+
+   LDLIBS += -lrt -ldl
 endif
 
-# HB_GPM_MOUSE: use gpm mouse driver
-ifeq ($(HB_GPM_MOUSE),yes)
-   LDLIBS += -lgpm
-endif
+LDLIBS += -lm
 
-ifneq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
-   LDLIBS += -lpcre
-endif
-
-ifneq ($(findstring -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
-   LDLIBS += -lz
-endif
-
-LDLIBS += -lm -lrt -ldl
-
-LDFLAGS := $(LIBPATHS)
+LDFLAGS += $(LIBPATHS)
 
 AR := xiar
 ARFLAGS :=
