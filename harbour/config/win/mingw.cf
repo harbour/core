@@ -53,10 +53,8 @@ LDLIBS += -luser32 -lgdi32 -lws2_32
 
 LDFLAGS += $(LIBPATHS)
 
-RANLIB := $(HB_CCPREFIX)ranlib
-
 AR := $(HB_CCPREFIX)ar
 ARFLAGS :=
-AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) cr $(LIB_DIR)/$@ $(^F) && $(RANLIB) $(LIB_DIR)/$@ || $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@)
+AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) cr $(LIB_DIR)/$@ $(^F) || $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@)
 
 include $(TOP)$(ROOT)config/rules.cf

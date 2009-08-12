@@ -9,5 +9,3 @@ DYN_PRE := lib
 DYN_EXT := .dylib
 
 HB_GT_LIBS += gttrm
-
-RANLIB := ranlib
