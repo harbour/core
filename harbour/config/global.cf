@@ -279,12 +279,13 @@ else
    endif
 endif
 
-CMDPREF :=
-ifneq ($(HB_SHELL),sh)
-   ifneq ($(COMSPEC),)
-      CMDPREF := $(COMSPEC) /C
-   endif
-endif
+# Not needed anymore, can be deleted if everything stays fine [20090812] [vszakats]
+# CMDPREF :=
+# ifneq ($(HB_SHELL),sh)
+#    ifneq ($(COMSPEC),)
+#       CMDPREF := $(COMSPEC) /C
+#    endif
+# endif
 
 # Directory separator default
 ifeq ($(DIRSEP),)

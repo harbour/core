@@ -41,7 +41,7 @@ endif
 ifeq ($(HB_SHELL),nt)
 
    define inst_file_all
-      -@$(CMDPREF)if not exist "$(INSTALL_DIR_OS)" $(MDP) "$(INSTALL_DIR_OS)"
+      -@if not exist "$(INSTALL_DIR_OS)" $(MDP) "$(INSTALL_DIR_OS)"
       -for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(INSTALL_DIR_OS)"
    endef
 
