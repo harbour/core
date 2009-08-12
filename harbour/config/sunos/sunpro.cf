@@ -26,31 +26,36 @@ LDFLAGS :=
 # flags may override values set by `-fast', and this way
 # no warnings are generated.
 
-# may inherit -m64 from sunpro64.cf, which supersedes -xarch=v8
-HB_ISAOPT ?= -xarch=v8
-LDFLAGS += $(HB_ISAOPT)
-
-# might not be needed for sunos, but helps keeping
-# {linux,sunos}/sunpro.cf easily vimdiff'able for now
-export HB_ISAOPT
-
 ifneq ($(HB_BUILD_OPTIM),no)
    # Together with $(HB_ISAOPT) above, these are supposed to (somewhat)
    # conform to the Blastwave build standards, see
    #    http://wiki.blastwave.org/mediawiki/index.php/Build_Standards
    # Try to keep them this way.
-   CFLAGS += -fast $(HB_ISAOPT)
-   ifneq ($(HB_BUILD_MODE),cpp)
-      CFLAGS += -xstrconst
-   endif
+   CFLAGS += -fast
    CFLAGS += -xnolibmopt
+   # workaround for problems in x86 PIC builds exploited by hbpcre library code
+   ifeq ($(LIBNAME),hbpcre)
+      ifneq ($(findstring sparc,$(shell isalist)),sparc)
+         CFLAGS += -xbuiltin=%none
+      endif
+   endif
 endif
 
+# force position independent code for harbour shared library
+# it's not optimal but without support for compilation in two passes
+# we have to use this option also for static libraries and binaries
 ifeq ($(findstring sparc,$(shell isalist)),sparc)
    CFLAGS += -xcode=pic32
 else
    CFLAGS += -KPIC
 endif
+
+# in HB_ISAOPT we may have platform dependent settings set in different
+# sunpro*.cf files
+export HB_ISAOPT
+
+CFLAGS += $(HB_ISAOPT)
+LDFLAGS += $(HB_ISAOPT)
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -erroff=%none

@@ -50,22 +50,6 @@ if [ "$HB_COMPILER" = "gcc" ] || \
    [ "$HB_COMPILER" = "sunpro" ] || \
    [ "$HB_COMPILER" = "sunpro64" ]
 then
-    RANLIB=""
-    MAKE=make
-    AR="${HB_CCPREFIX}ar -cr"
-    AR_OPT=""
-    if [ "${HB_ARCHITECTURE}" = "bsd" ] || \
-       [ "${HB_ARCHITECTURE}" = "hpux" ] || \
-       [ "${HB_ARCHITECTURE}" = "sunos" ] || \
-       [ `uname` = "FreeBSD" ]; then
-        MAKE=gmake
-    elif [ "${HB_ARCHITECTURE}" = "darwin" ]; then
-        # We must build an archive index on Darwin
-        #AR="${HB_CCPREFIX}ar -crs"
-        AR="libtool"
-        AR_OPT="-static ${HB_USER_AFLAGS} -o "
-    fi
-
     if [ -n "${HB_TOOLS_PREF}" ]; then
         hb_mkdyn="${HB_BIN_INSTALL}/${HB_TOOLS_PREF}-mkdyn"
         rm -f "${hb_mkdyn}"
@@ -82,13 +66,16 @@ then
          [ "$HB_COMPILER" = "sunpro64" ]; then
         hb_mkdyn="${HB_BIN_INSTALL}/hb-mkdyn"
         rm -f "${hb_mkdyn}"
-        if [ "$HB_ARCHITECTURE" = "sunos" ]; then
-            sed -e "s/gcc -shared -fPIC/cc -G -xcode=pic32 ${HB_ISAOPT}/g" "${hb_root}/bin/hb-mkdyn.sh" > "${hb_mkdyn}" && \
-            chmod 755 "${hb_mkdyn}"
+        if [ "$HB_ARCHITECTURE" = "sunos" ] && \
+           (isalist|grep sparc) &>/dev/null; then
+            lnopt="-xcode=pic32"
         else
-            sed -e "s/gcc -shared -fPIC/cc -G -KPIC ${HB_ISAOPT}/g" "${hb_root}/bin/hb-mkdyn.sh" > "${hb_mkdyn}" && \
-            chmod 755 "${hb_mkdyn}"
+            lnopt="-KPIC"
         fi
+        [ "$HB_BUILD_OPTIM" = "no" ] || lnopt="-fast -xnolibmopt $lnopt"
+        sed -e "s/gcc -shared -fPIC/suncc -G ${lnopt} ${HB_ISAOPT}/g" \
+            "${hb_root}/bin/hb-mkdyn.sh" > "${hb_mkdyn}" && \
+        chmod 755 "${hb_mkdyn}"
     elif [ "${HB_ARCHITECTURE}" = "sunos" ] || \
          [ "${HB_ARCHITECTURE}" = "hpux" ] || \
          ! which install &>/dev/null; then
@@ -110,13 +97,8 @@ then
     fi
 
     mk_hbtools "${HB_BIN_INSTALL}" "$@"
-    if [ "$HB_COMPILER" = "gcc" ] || \
-       [ "$HB_COMPILER" = "mingw" ] || \
-       [ "$HB_COMPILER" = "mingw64" ] || \
-       [ "$HB_COMPILER" = "mingwarm" ] || \
-       [ "$HB_COMPILER" = "sunpro" ] || \
-       [ "$HB_COMPILER" = "sunpro64" ] || \
-       [ "$HB_COMPILER" = "icc" ]; then
+
+    if [ "${HB_ARCHITECTURE}" != "dos" ]; then
         mk_hblibso "${hb_root}"
     fi
 fi

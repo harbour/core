@@ -794,7 +794,7 @@ mk_hblibso()
         hb_libs="${hb_libs//hbzlib/}"
     fi
     if [ "${HB_COMPILER}" = "mingw" ] || [ "${HB_COMPILER}" = "mingw64" ]; then
-        linker_options="${linker_options} -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lws2_32"
+        linker_options="${linker_options} -luser32 -lwinspool -lgdi32 -lcomctl32 -ladvapi32 -lcomdlg32 -lole32 -loleaut32 -luuid -lws2_32"
     elif [ "${HB_COMPILER}" = "mingwarm" ]; then
         linker_options="${linker_options} -lwininet -lws2 -lcommdlg -lcommctrl -luuid -lole32"
     elif [ "${HB_COMPILER}" = "djgpp" ]; then
