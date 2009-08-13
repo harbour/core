@@ -6274,6 +6274,7 @@ STATIC FUNCTION GenHBL( hbmk, aFiles, cFileOut, lEmpty )
 #define _VCS_GIT                2
 #define _VCS_MERCURIAL          3
 #define _VCS_CVS                4
+#define _VCS_BAZAAR             5
 
 STATIC FUNCTION VCSDetect( cDir )
 
@@ -6287,6 +6288,7 @@ STATIC FUNCTION VCSDetect( cDir )
    CASE hb_DirExists( cDir + ".svn" ) ; RETURN _VCS_SVN
    CASE hb_DirExists( cDir + ".git" ) ; RETURN _VCS_GIT
    CASE hb_DirExists( cDir + ".hg" )  ; RETURN _VCS_MERCURIAL
+   CASE hb_DirExists( cDir + ".bzr" ) ; RETURN _VCS_BAZAAR
    CASE hb_DirExists( cDir + "CVS" )  ; RETURN _VCS_CVS
    CASE hb_DirExists( cDir + "_svn" ) ; RETURN _VCS_SVN /* NOTE: When SVN_ASP_DOT_NET_HACK envvar is set. [vszakats] */
    ENDCASE
@@ -6316,6 +6318,10 @@ STATIC FUNCTION VCSID( cDir, cVCSHEAD, /* @ */ cType )
       EXIT
    CASE _VCS_CVS
       cType := "cvs"
+      EXIT
+   CASE _VCS_BAZAAR
+      cType := "bazaar"
+      cCommand := "bzr version-info" + iif( Empty( cDir ), "", " " + cDir )
       EXIT
    OTHERWISE
       /* No version control system detected, roll our own. */
@@ -6359,6 +6365,21 @@ STATIC FUNCTION VCSID( cDir, cVCSHEAD, /* @ */ cType )
             IF tmp > 0
                cStdOut := Left( cStdOut, tmp - 1 )
                cResult := AllTrim( StrTran( cStdOut, "changeset:" ) )
+            ENDIF
+            EXIT
+         CASE _VCS_BAZAAR
+            /* revision-id: pqm@pqm.ubuntu.com-20090813025005-k2k8pa2o38b8m0l8
+               date: 2009-08-13 03:50:05 +0100
+               build-date: 2009-08-13 16:53:32 +0200
+               revno: 4602
+               branch-nick: bzr */
+            tmp := At( "revno: ", cStdOut )
+            IF tmp > 0
+               cStdOut := SubStr( cStdOut, tmp + Len( "revno: " ) + 1 )
+               tmp := At( Chr( 10 ), cStdOut )
+               IF tmp > 0
+                  cResult := Left( cStdOut, tmp - 1 )
+               ENDIF
             ENDIF
             EXIT
          ENDSWITCH
@@ -6607,7 +6628,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-traceonly"        , I_( "show commands to be executed, but don't execute them" ) },;
       { "-[no]compr[=lev]"  , I_( "compress executable/dynamic lib (needs UPX)\n<lev> can be: min, max, def" ) },;
       { "-[no]run"          , I_( "run/don't run output executable" ) },;
-      { "-vcshead=<file>"   , I_( "generate .ch header file with local repository information. SVN, Git and Mercurial are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) },;
+      { "-vcshead=<file>"   , I_( "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial and Bazaar are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) },;
       { "-tshead=<file>"    , I_( "generate .ch header file with timestamp information. Generated header will define macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) },;
       { "-icon=<file>"      , I_( "set <file> as application icon. <file> should be a supported format on the target platform (experimental)" ) },;
       { "-instpath=<path>"  , I_( "copy target to <path>. if <path> is a directory, it should end with path separator. can be specified multiple times" ) },;

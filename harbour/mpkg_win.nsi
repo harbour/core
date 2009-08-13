@@ -30,9 +30,9 @@ CRCCheck on
 Name "Harbour Project"
 
 ; The file to write
-OutFile "$%HB_PKGNAME%.exe"
+OutFile "$%HB_PKGPATH%.exe"
 
-InstallDir C:\$%HB_DIRNAME%
+InstallDir C:\$%HB_PKGNAMI%
 
 ;--------------------------------
 ; Interface Settings
@@ -122,10 +122,10 @@ Section "Start Menu and Desktop icons" hb_shortcuts
 
   CreateShortCut "$DESKTOP\Harbour Project.lnk" "$INSTDIR" "" "$INSTDIR" 0
   CreateDirectory "$SMPROGRAMS\Harbour Project"
-  CreateShortCut "$SMPROGRAMS\Harbour Project\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
-  CreateShortCut "$SMPROGRAMS\Harbour Project\Harbour Project (Command line).lnk" "cmd.exe" "/k cd $INSTDIR\bin" "cmd.exe" 0
-  CreateShortCut "$SMPROGRAMS\Harbour Project\Harbour Project.lnk" "$INSTDIR" "" "$INSTDIR" 0
-  CreateShortCut "$SMPROGRAMS\Harbour Project\hbrun.lnk" "$INSTDIR\bin\hbrun.exe" "-v" "$INSTDIR\bin\hbrun.exe" 0
+  CreateShortCut  "$SMPROGRAMS\Harbour Project\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
+  CreateShortCut  "$SMPROGRAMS\Harbour Project\Harbour Project (Command line).lnk" "cmd.exe" "/k cd $INSTDIR\bin" "cmd.exe" 0
+  CreateShortCut  "$SMPROGRAMS\Harbour Project\Harbour Project.lnk" "$INSTDIR" "" "$INSTDIR" 0
+  CreateShortCut  "$SMPROGRAMS\Harbour Project\hbrun.lnk" "$INSTDIR\bin\hbrun.exe" "-v" "$INSTDIR\bin\hbrun.exe" 0
   CreateDirectory "$SMPROGRAMS\Harbour Project\Links"
   WriteINIStr     "$SMPROGRAMS\Harbour Project\Links\Homepage.url"                   "InternetShortcut" "URL" "http://www.harbour-project.org/"
   WriteINIStr     "$SMPROGRAMS\Harbour Project\Links\User Forums.url"                "InternetShortcut" "URL" "http://sourceforge.net/apps/phpbb/harbour-project/"

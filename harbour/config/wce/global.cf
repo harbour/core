@@ -12,7 +12,3 @@ HB_GT_LIBS += gtwvt gtgui
 
 # Favor size for CE builds.
 HB_GCMODE := 0
-
-ifeq ($(HB_DYNLIB),yes)
-   HB_CDYNLIB := -DHB_DYNLIB
-endif

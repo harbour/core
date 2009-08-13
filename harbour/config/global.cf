@@ -170,8 +170,29 @@ ifneq ($(HB_BUILD_NAME),)
    endif
 endif
 
-ifeq ($(HB_CONFIG_SHOWN),)
+ifeq ($(HB_BUILD_PKG),yes)
 
+   # 'clean' and 'install' are required when building a release package
+   ifeq ($(findstring clean,$(MAKECMDGOALS)),)
+      export HB_BUILD_PKG := no
+   else
+      ifeq ($(findstring install,$(MAKECMDGOALS)),)
+         export HB_BUILD_PKG := no
+      endif
+   endif
+
+   ifeq ($(HB_BUILD_PKG),no)
+      $(warning ! Warning: You have to use 'clean install' to create a release package.)
+   endif
+
+   # Enforce some basic setting for release packages
+   export HB_BUILD_DLL := yes
+   export HB_BUILD_IMPLIB := no
+   export HB_BUILD_OPTIM := yes
+   export HB_BUILD_DEBUG := no
+endif
+
+ifeq ($(HB_CONFIG_SHOWN),)
    ifneq ($(MAKE_381),)
 
       # Some additional ones to be given a standard name:
@@ -182,10 +203,7 @@ ifeq ($(HB_CONFIG_SHOWN),)
       # Macros:
       #   -DHB_PCRE_REGEX, -DHB_POSIX_REGEX, -DHB_EXT_ZLIB, -DHB_HAS_GPM
 
-      ifeq ($(HB_DYNLIB),yes)
-         $(info ! Dynamic library creation phase)
-      endif
-      $(info ! MAKE: $(MAKE))
+      $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(MAKECMDGOALS))
       ifneq ($(HB_USER_PRGFLAGS),)
          $(info ! HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))
       endif
@@ -219,6 +237,12 @@ ifeq ($(HB_CONFIG_SHOWN),)
       ifneq ($(HB_BUILD_NAME),)
          $(info ! HB_BUILD_NAME: $(HB_BUILD_NAME))
       endif
+      ifneq ($(HB_BUILD_PKG),)
+         $(info ! HB_BUILD_PKG: $(HB_BUILD_PKG))
+      endif
+      ifneq ($(HB_BUILD_DLL),)
+         $(info ! HB_BUILD_DLL: $(HB_BUILD_DLL))
+      endif
       ifneq ($(HB_BUILD_DEBUG),)
          $(info ! HB_BUILD_DEBUG: $(HB_BUILD_DEBUG))
       endif
@@ -244,8 +268,6 @@ ifeq ($(HB_CONFIG_SHOWN),)
          $(info ! HB_EXTERNAL_ADDONS: $(HB_EXTERNAL_ADDONS))
       endif
    endif
-
-   export HB_CONFIG_SHOWN := yes
 endif
 
 # Shell detection
@@ -340,6 +362,13 @@ ifeq ($(HB_HOST_ARCH),)
    endif
 endif
 
+ifeq ($(HB_CONFIG_SHOWN),)
+   ifneq ($(MAKE_381),)
+      $(info ! HB_HOST_ARCH: $(HB_HOST_ARCH))
+      $(info ! HB_SHELL: $(HB_SHELL))
+   endif
+endif
+
 ifneq ($(findstring $(HB_HOST_ARCH),win wce dos os2),)
    HB_HOST_BIN_EXT := .exe
 else
@@ -348,8 +377,7 @@ endif
 
 ifeq ($(HB_BUILD_VERBOSE),yes)
    ifneq ($(MAKE_381),)
-      $(info ! Detected host platform: $(HB_HOST_ARCH))
-      $(info ! Detected shell: $(HB_SHELL))
+      $(info ! Detected host executable extension: $(HB_HOST_BIN_EXT))
    endif
 endif
 
@@ -386,6 +414,7 @@ ifeq ($(HB_BUILD_VERBOSE),yes)
    endif
 endif
 
+HB_ARCH_AUTO :=
 ifeq ($(HB_ARCHITECTURE),)
    HB_ARCHITECTURE := $(HB_HOST_ARCH)
    ifeq ($(HB_COMPILER),msvcarm)
@@ -399,18 +428,23 @@ ifeq ($(HB_ARCHITECTURE),)
          endif
       endif
    endif
+   ifneq ($(HB_ARCHITECTURE),)
+      HB_ARCH_AUTO := (autodetected)
+   endif
 endif
+
+HB_COMP_AUTO :=
 ifeq ($(HB_COMPILER),)
    ifeq ($(HB_ARCHITECTURE),win)
       ifneq ($(call find_in_path,arm-wince-mingw32ce-gcc),)
          HB_COMPILER := mingwarm
          HB_ARCHITECTURE := wce
-         export HB_CCPREFIX := arm-wince-mingw32ce-
+         HB_CCPREFIX := arm-wince-mingw32ce-
       else
          ifneq ($(call find_in_path,arm-mingw32ce-gcc),)
             HB_COMPILER := mingwarm
             HB_ARCHITECTURE := wce
-            export HB_CCPREFIX := arm-mingw32ce-
+            HB_CCPREFIX := arm-mingw32ce-
          else
             ifneq ($(call find_in_path,cygstart),)
                HB_COMPILER := cygwin
@@ -441,7 +475,7 @@ ifeq ($(HB_COMPILER),)
                                     else
                                        ifneq ($(call find_in_path,x86_64-w64-mingw32-gcc),)
                                           HB_COMPILER := mingw64
-                                          export HB_CCPREFIX := x86_64-w64-mingw32-
+                                          HB_CCPREFIX := x86_64-w64-mingw32-
                                        endif
                                     endif
                                  endif
@@ -454,6 +488,7 @@ ifeq ($(HB_COMPILER),)
             endif
          endif
       endif
+      export HB_CCPREFIX
    else
       ifeq ($(HB_ARCHITECTURE),linux)
          ifneq ($(call find_in_path,wpp386),)
@@ -503,8 +538,8 @@ ifeq ($(HB_COMPILER),)
          endif
       endif
    endif
-   ifneq ($(MAKE_381),)
-      $(info ! Autodetected C compiler: $(HB_COMPILER))
+   ifneq ($(HB_COMPILER),)
+      HB_COMP_AUTO := (autodetected)
    endif
 endif
 
@@ -513,6 +548,13 @@ ifeq ($(HB_ARCHITECTURE),)
 endif
 ifeq ($(HB_COMPILER),)
    $(error ! HB_COMPILER not set, couldn't autodetect.)
+endif
+
+ifeq ($(HB_CONFIG_SHOWN),)
+   ifneq ($(MAKE_381),)
+      $(info ! HB_ARCHITECTURE: $(HB_ARCHITECTURE) $(HB_ARCH_AUTO))
+      $(info ! HB_COMPILER: $(HB_COMPILER) $(HB_COMP_AUTO))
+   endif
 endif
 
 export HB_ARCHITECTURE
@@ -563,12 +605,6 @@ ifneq ($(findstring $(HB_ARCHITECTURE),win wce dos os2),)
    HB_UNIX_COMPATIBLE := no
 else
    HB_UNIX_COMPATIBLE := yes
-endif
-
-ifeq ($(HB_BUILD_VERBOSE),yes)
-   ifneq ($(MAKE_381),)
-      $(info ! Detected host executable extension: $(HB_HOST_BIN_EXT))
-   endif
 endif
 
 HB_CROSS_BUILD :=
@@ -698,25 +734,62 @@ ifneq ($(HB_DB_DRVEXT),)
    HB_RDD_DIRS += $(HB_DB_DRVEXT)
 endif
 
-# Fill it automatically if not specified
-ifeq ($(HB_INSTALL_PREFIX),)
+ifneq ($(HB_HOST_ARCH),dos)
+   HB_VERSION := 2.0.0beta2
+   HB_PKGNAME := harbour-$(HB_VERSION)-$(HB_ARCHITECTURE)-$(HB_COMPILER)
+   HB_PKGNAMI := $(HB_PKGNAME)
+else
+   # Use short names in DOS
+   HB_VERSION := 2b2
+   HB_PKGNAME := hb$(HB_VERSION)
+   # Ugly solution
+   ifeq ($(HB_COMPILER),djgpp)
+      HB_PKGNAME += dj
+   else
+      ifeq ($(HB_COMPILER),watcom)
+         HB_PKGNAME += wa
+      endif
+   endif
+   HB_PKGNAMI := $(HB_PKGNAME)
+endif
 
-   HB_INSTALL_PREFIX := $(realpath $(TOP)$(ROOT))
+export HB_VERSION
+export HB_PKGNAME
+export HB_PKGNAMI
 
-   # Use names which are not likely to be used by users to
-   # avoiding accidental overwrites of existing installations
-#  ifeq ($(HB_ARCHITECTURE),dos)
-#     HB_INSTALL_PREFIX := C:\hbauto
-#  else
-#     ifeq ($(HB_UNIX_COMPATIBLE),no)
-#        HB_INSTALL_PREFIX := C:$(DIRSEP)hb-auto-$(HB_ARCHITECTURE)-$(HB_COMPILER)
+ifeq ($(HB_BUILD_PKG),yes)
+   PKG_DIR := $(subst /,$(DIRSEP),$(TOP)$(ROOT))pkg
+   export HB_PKGBASE := $(PKG_DIR)$(DIRSEP)$(HB_ARCHITECTURE)$(DIRSEP)$(HB_COMPILER)
+   export HB_PKGPATH := $(subst /,$(DIRSEP),$(abspath $(PKG_DIR)$(DIRSEP)$(HB_PKGNAME)))
+   HB_INSTALL_PREFIX := $(HB_PKGBASE)$(DIRSEP)$(HB_PKGNAME)
+
+   .PHONY: clean
+
+   HB_BIN_INSTALL :=
+   HB_INC_INSTALL :=
+   HB_LIB_INSTALL :=
+   HB_DOC_INSTALL :=
+else
+   # Fill it automatically if not specified
+   ifeq ($(HB_INSTALL_PREFIX),)
+
+      HB_INSTALL_PREFIX := $(realpath $(TOP)$(ROOT))
+
+      # Use names which are not likely to be used by users to
+      # avoiding accidental overwrites of existing installations
+#     ifeq ($(HB_ARCHITECTURE),dos)
+#        HB_INSTALL_PREFIX := C:\hbauto
 #     else
-#        HB_INSTALL_PREFIX := $(HOME)$(DIRSEP)hb-auto-$(HB_ARCHITECTURE)-$(HB_COMPILER)
+#        ifeq ($(HB_UNIX_COMPATIBLE),no)
+#           HB_INSTALL_PREFIX := C:$(DIRSEP)hb-auto-$(HB_ARCHITECTURE)-$(HB_COMPILER)
+#        else
+#           HB_INSTALL_PREFIX := $(HOME)$(DIRSEP)hb-auto-$(HB_ARCHITECTURE)-$(HB_COMPILER)
+#        endif
 #     endif
-#  endif
 
-   ifneq ($(MAKE_381),)
-      $(info ! HB_INSTALL_PREFIX automatically set to $(HB_INSTALL_PREFIX))
+      ifneq ($(MAKE_381),)
+         $(info ! HB_INSTALL_PREFIX automatically set to $(HB_INSTALL_PREFIX))
+      endif
    endif
 endif
 
@@ -729,8 +802,6 @@ ifneq ($(HB_INSTALL_PREFIX),)
    HB_INSTALL_PREFIX := $(subst {HB_ARCH},$(HB_ARCHITECTURE),$(HB_INSTALL_PREFIX))
    HB_INSTALL_PREFIX := $(subst {HB_COMP},$(HB_COMPILER),$(HB_INSTALL_PREFIX))
    HB_INSTALL_PREFIX := $(subst {HB_CPU},$(HB_CPU),$(HB_INSTALL_PREFIX))
-
-   export HB_INSTALL_PREFIX
 
    ifeq ($(HB_UNIX_COMPATIBLE),no)
       LIBPOSTFIX := $(DIRSEP)$(subst /,$(DIRSEP),$(ARCH_COMP))
@@ -762,6 +833,8 @@ ifneq ($(HB_INSTALL_PREFIX),)
    endif
 endif
 
+export HB_INSTALL_PREFIX
+
 ifeq ($(HB_BIN_COMPILE),)
    HB_HOST_BIN_DIR := $(BIN_DIR)
 else
@@ -776,6 +849,7 @@ HB_DYN_COMPILE := no
 
 # export some variables to eliminate repeated setting in recursive calls
 export HB_HOST_ARCH
+export HB_HOST_CPU
 export HB_HOST_BIN_DIR
 
 # clear these options for an unambiguous Harbour enviornment
@@ -784,8 +858,10 @@ export HARBOURCMD :=
 export CLIPPER :=
 export CLIPPERCMD :=
 
-# relevant only for non-*nix hosts
+# relevant only on non-*nix hosts
 MKFLAGS := --no-print-directory
+
+export HB_CONFIG_SHOWN := yes
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 include $(TOP)$(ROOT)config/globsh.cf

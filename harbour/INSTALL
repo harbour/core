@@ -254,6 +254,7 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    - HB_USER_AFLAGS            User linker options for libraries
    - HB_USER_MAKEFLAGS         User GNU Make options
 
+   - HB_INSTALL_PREFIX         Target root directory to install Harbour files.
    - HB_BIN_INSTALL            Target directory to install executables
    - HB_LIB_INSTALL            Target directory to install libraries
    - HB_INC_INSTALL            Target directory to install language headers
@@ -268,12 +269,9 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
                                appended to compiler directory name, so all
                                filesystem/platform name rules and limits
                                apply. It's valid to use (back)slashes though.
-   - HB_BUILD_DLL=yes          To create a full build with .dlls.
-                               This is only needed and available for
-                               non-GNU Windows compilers. When using this,
-                               full clean + install cycles will automatically
-                               be executed, so you don't have to explicitly
-                               pass them to make_gnu.bat.
+   - HB_BUILD_PKG=yes          Create release packages (requires 'clean install').
+   - HB_BUILD_DLL=no           Don't create Harbour .dlls.
+   - HB_BUILD_IMPLIB=yes       Create import libraries for external .dll dependencies.
    - HB_BUILD_DEBUG=yes        Create a debug build.
    - HB_BUILD_OPTIM=no         Disable C compiler optimizations.
    - HB_BUILD_UNICODE=yes      Create Unicode build (Windows/Windows CE).
@@ -336,7 +334,7 @@ EXAMPLES
       rem
       set HB_COMPILER=msvc
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      call make_gnu.bat %1 %2 > log.txt 2>&1
       ---
 
       --- MSVC 2008
@@ -344,7 +342,7 @@ EXAMPLES
       rem
       set HB_COMPILER=msvc
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      call make_gnu.bat %1 %2 > log.txt 2>&1
       ---
 
       --- MSVC 2008 x86-64 (requires native x86 Harbour binaries)
@@ -354,7 +352,7 @@ EXAMPLES
       rem
       set HB_COMPILER=msvc64
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      call make_gnu.bat %1 %2 > log.txt 2>&1
       ---
 
       --- MSVC 2005
@@ -362,7 +360,7 @@ EXAMPLES
       rem
       set HB_COMPILER=msvc
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      call make_gnu.bat %1 %2 > log.txt 2>&1
       ---
 
       --- MSVC .NET 2003 (untested)
@@ -372,7 +370,7 @@ EXAMPLES
       rem
       set HB_COMPILER=msvc
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      call make_gnu.bat %1 %2 > log.txt 2>&1
       ---
 
       --- MinGW GCC (make sure MSYS (sh.exe) isn't in the PATH)
@@ -380,7 +378,7 @@ EXAMPLES
       rem
       set HB_COMPILER=mingw
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      call make_gnu.bat %1 %2 > log.txt 2>&1
       ---
 
       --- MinGW GCC + MSYS
@@ -388,7 +386,7 @@ EXAMPLES
       rem
       set HB_COMPILER=mingw
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      sh make_gnu.sh %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      sh make_gnu.sh %1 %2 > log.txt 2>&1
       ---
 
       --- MinGW GCC for x86-64 (requires native x86 Harbour binaries)
@@ -399,7 +397,7 @@ EXAMPLES
       set HB_COMPILER=mingw64
       set HB_CCPREFIX=x86_64-w64-mingw32-
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      call make_gnu.bat %1 %2 > log.txt 2>&1
       ---
 
       --- MinGW GCC for WinCE/ARM (requires native x86 Harbour binaries + Cygwin)
@@ -412,7 +410,7 @@ EXAMPLES
       set HB_COMPILER=mingwarm
       set HB_CCPREFIX=arm-wince-mingw32ce-
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      call make_gnu.bat %1 %2 > log.txt 2>&1
       ---
 
       --- Cygwin GCC
@@ -420,7 +418,7 @@ EXAMPLES
       rem
       set HB_COMPILER=cygwin
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      sh make_gnu.sh %1 %2 > log.txt 2>&1
       ---
 
       --- Open Watcom C++
@@ -431,7 +429,7 @@ EXAMPLES
       rem
       set HB_COMPILER=watcom
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      call make_gnu.bat %1 %2 > log.txt 2>&1
       ---
 
       --- Intel(R) C++
@@ -439,7 +437,7 @@ EXAMPLES
       rem
       set HB_COMPILER=icc
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      call make_gnu.bat %1 %2 > log.txt 2>&1
       ---
 
       --- Intel(R) C++ for IA-64 (requires native x86 Harbour binaries)
@@ -449,7 +447,7 @@ EXAMPLES
       rem
       set HB_COMPILER=iccia64
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      call make_gnu.bat %1 %2 > log.txt 2>&1
       ---
 
       --- Borland/CodeGear C++
@@ -457,7 +455,7 @@ EXAMPLES
       rem
       set HB_COMPILER=bcc
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      call make_gnu.bat %1 %2 > log.txt 2>&1
       ---
 
       --- Pelles C
@@ -467,7 +465,7 @@ EXAMPLES
       rem
       set HB_COMPILER=pocc
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      call make_gnu.bat %1 %2 > log.txt 2>&1
       ---
 
       --- Pelles C x86-64 (requires native x86 Harbour binaries)
@@ -479,7 +477,7 @@ EXAMPLES
       rem
       set HB_COMPILER=pocc64
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      call make_gnu.bat %1 %2 > log.txt 2>&1
       ---
 
       --- Pelles C WinCE/ARM (requires native x86 Harbour binaries)
@@ -492,7 +490,7 @@ EXAMPLES
       set HB_ARCHITECTURE=wce
       set HB_COMPILER=poccarm
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      call make_gnu.bat %1 %2 > log.txt 2>&1
       ---
 
       --- Cygwin GCC
@@ -502,7 +500,7 @@ EXAMPLES
       rem
       set HB_COMPILER=cygwin
       set HB_INSTALL_PREFIX=/cygdrive/c/hb-%HB_COMPILER%
-      sh make_gnu.sh %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      sh make_gnu.sh %1 %2 > log.txt 2>&1
       ---
 
       --8<--
@@ -545,10 +543,11 @@ EXAMPLES
 
       --8<--
       rem ; To create installation packages (.exe + .zip),
-      rem   replace last line (calling make_gnu.bat) with these two:
+      rem   add these lines before above sample scripts and
+      rem   pass 'clean install' to make:
       set HB_DIR_NSIS=%ProgramFiles%\NSIS\
       set HB_DIR_ZIP=C:\info-zip\
-      call mpkg_gnu.bat
+      set HB_BUILD_PKG=yes
       -->8--
 
    DOS
@@ -561,7 +560,7 @@ EXAMPLES
       set HB_ARCHITECTURE=dos
       set HB_COMPILER=djgpp
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      call make_gnu.bat %1 %2 > log.txt 2>&1
       ---
 
       --- Open Watcom C++
@@ -588,10 +587,10 @@ EXAMPLES
 
       --8<--
       rem ; To create installation packages (.zip),
-      rem   replace last line (calling make_gnu.bat) with this one:
-      rem   (this will only work when using Windows NT or upper host)
+      rem   add these lines before above sample scripts and
+      rem   pass 'clean install' to make:
       set HB_DIR_ZIP=C:\info-zip\
-      call mpkg_gnu.bat
+      set HB_BUILD_PKG=yes
       -->8--
 
    OS/2
@@ -608,7 +607,7 @@ EXAMPLES
       rem
       set HB_COMPILER=watcom
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu_os2.cmd %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      call make_gnu_os2.cmd %1 %2 > log.txt 2>&1
       ---
 
       --- Open Watcom C++ on Windows NT host (requires native Windows Harbour binaries)
@@ -624,7 +623,7 @@ EXAMPLES
       set HB_ARCHITECTURE=os2
       set HB_COMPILER=watcom
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      call make_gnu.bat %1 %2 > log.txt 2>&1
       ---
 
       --- Open Watcom C++ on Linux host (requires native Linux Harbour binaries)
@@ -660,7 +659,7 @@ EXAMPLES
       set HB_ARCHITECTURE=linux
       set HB_COMPILER=watcom
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      call make_gnu.bat %1 %2 > log.txt 2>&1
       ---
 
 

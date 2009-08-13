@@ -6,6 +6,8 @@
 
 rem ---------------------------------------------------------------
 rem Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
+rem See COPYING for licensing terms.
+rem
 rem script to create import libs for various compilers
 rem
 rem This script requires:
@@ -14,14 +16,14 @@ rem    - C compiler in PATH
 rem    - HB_COMPILER and HB_LIB_INSTALL envvars set
 rem    - HB_DIR_* envvars pointing to installed 3rd party packages
 rem    - GNU sed (sed.exe) for some msvc and msvc64 targets
-rem
-rem See COPYING for licensing terms.
 rem ---------------------------------------------------------------
 
-if not "%OS%" == "Windows_NT" echo This Harbour build script requires Windows NT or upper.
+if not "%OS%" == "Windows_NT" echo ! hb-mkimp.bat Harbour build script requires Windows NT or upper.
 if not "%OS%" == "Windows_NT" goto END
 
 if not "%HB_LIB_INSTALL%" == "" (
+
+   echo ! Creating import libs...
 
    if "%HB_COMPILER%" == "bcc" (
 

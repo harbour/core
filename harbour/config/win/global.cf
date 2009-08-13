@@ -9,7 +9,3 @@ DYN_PRE :=
 DYN_EXT := .dll
 
 HB_GT_LIBS += gtwvt gtgui gtwin
-
-ifeq ($(HB_DYNLIB),yes)
-   HB_CDYNLIB := -DHB_DYNLIB
-endif
