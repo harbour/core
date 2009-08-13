@@ -49,6 +49,8 @@ ifneq ($(HB_BUILD_OPTIM),no)
    else
       CPPFLAGS += -oi
    endif
+else
+   CPPFLAGS += -3r
 endif
 
 CPPFLAGS += -i. -i$(HB_INC_COMPILE)

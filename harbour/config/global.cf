@@ -330,7 +330,11 @@ ifeq ($(HB_HOST_ARCH),)
          ifneq ($(WINDIR),)
             HB_HOST_ARCH := win
          else
-            HB_HOST_ARCH := dos
+            ifneq ($(HB_ARCHITECTURE),)
+               HB_HOST_ARCH := $(HB_ARCHITECTURE)
+            else
+               HB_HOST_ARCH := dos
+            endif
          endif
       endif
    endif
