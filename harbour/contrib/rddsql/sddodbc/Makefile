@@ -28,7 +28,7 @@ HB_INC_ODBC := /usr/include /usr/local/include
 endif
 endif
 
-HB_INC_ODBC_OK += $(foreach d, $(HB_INC_ODBC), $(if $(wildcard $(d)/sql.h),$(d),))
+HB_INC_ODBC_OK := $(foreach d, $(HB_INC_ODBC), $(if $(wildcard $(d)/sql.h),$(d),))
 
 ifneq ($(strip $(HB_INC_ODBC_OK)),)
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_ODBC_OK), -I$(d))

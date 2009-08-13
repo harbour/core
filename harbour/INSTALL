@@ -109,7 +109,12 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
    ----
       You can use OS/2, Windows NT compatible, or Linux hosts to create
       OS/2 builds.
-      Some tricks are required when non-OS/2 host is used, see in examples.
+      Some config tricks are required when non-OS/2 host is used, see in
+      examples.
+
+      When OS/2 host is used, GNU mkdir and rm utilities will have to
+      present in PATH. You can get them from this link:
+         ftp://hobbes.nmsu.edu/pub/os2/util/file/gnufutil.zip
 
       > set HB_COMPILER=<[gcc]|watcom>
       > set HB_INSTALL_PREFIX=<DIR>

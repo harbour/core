@@ -8,6 +8,8 @@ OBJ_EXT := .obj
 LIB_PREF :=
 LIB_EXT := .lib
 
+HB_DYN_COMPILE := yes
+
 CC := bcc32.exe
 CC_IN := -c
 CC_OUT := -o

@@ -10,30 +10,30 @@ HB_BUILD_WARN := no
 HB_USER_CFLAGS += -I$(TOP)$(ROOT)source/hbzlib
 
 ifeq ($(HB_COMPILER),djgpp)
-HB_USER_CFLAGS += -DPNG_NO_SNPRINTF
+   HB_USER_CFLAGS += -DPNG_NO_SNPRINTF
 endif
 
 LIBNAME := libpng
 
 ifeq ($(HB_WITH_LIBPNG),)
-ifeq ($(HB_ARCHITECTURE),win)
-HB_WITH_LIBPNG := yes
-endif
-ifeq ($(HB_ARCHITECTURE),wce)
-HB_WITH_LIBPNG := yes
-endif
-ifeq ($(HB_ARCHITECTURE),os2)
-HB_WITH_LIBPNG := yes
-endif
-ifeq ($(HB_ARCHITECTURE),dos)
-HB_WITH_LIBPNG := yes
-endif
-ifeq ($(HB_ARCHITECTURE),darwin)
-HB_WITH_LIBPNG := yes
-endif
-ifeq ($(HB_COMPILER),poccarm)
-HB_WITH_LIBPNG := no
-endif
+   ifeq ($(HB_ARCHITECTURE),win)
+      HB_WITH_LIBPNG := yes
+   endif
+   ifeq ($(HB_ARCHITECTURE),wce)
+      HB_WITH_LIBPNG := yes
+   endif
+   ifeq ($(HB_ARCHITECTURE),os2)
+      HB_WITH_LIBPNG := yes
+   endif
+   ifeq ($(HB_ARCHITECTURE),dos)
+      HB_WITH_LIBPNG := yes
+   endif
+   ifeq ($(HB_ARCHITECTURE),darwin)
+      HB_WITH_LIBPNG := yes
+   endif
+   ifeq ($(HB_COMPILER),poccarm)
+      HB_WITH_LIBPNG := no
+   endif
 endif
 
 ifeq ($(HB_WITH_LIBPNG),yes)

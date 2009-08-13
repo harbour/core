@@ -26,7 +26,7 @@ endif
 endif
 endif
 
-HB_INC_SQLITE3_OK += $(foreach d, $(HB_INC_SQLITE3), $(if $(wildcard $(d)/sqlite3.h),$(d),))
+HB_INC_SQLITE3_OK := $(foreach d, $(HB_INC_SQLITE3), $(if $(wildcard $(d)/sqlite3.h),$(d),))
 
 ifneq ($(strip $(HB_INC_SQLITE3_OK)),)
 

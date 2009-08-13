@@ -34,6 +34,18 @@ HB_RULE = $(HB) $? -n1 $(HB_INC_DEPEND) $(HB_FLAGS) -gc$(HB_GCMODE) $(HB_FLAGSEX
 # The rule to compile a C source file.
 ifeq ($(CC_RULE),)
    CC_RULE = $(CC) $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_USER_CFLAGS) $(HB_CDYNLIB) $(HB_CUNICODE) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<
+   ifeq ($(HB_DYN_COMPILE),yes)
+      ifneq ($(LIBNAME),)
+         ifneq ($(findstring $(LIBNAME),$(HB_DYN_LIBS)),)
+            define cc_comp_all
+               $(CC) $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_USER_CFLAGS) $(HB_CUNICODE) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<
+               $(CC) $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_USER_CFLAGS) $(HB_CUNICODE) $(CC_OUT)$(<F:.c=_dyn$(OBJ_EXT)) -DHB_DYNLIB $(CC_IN) $<
+            endef
+
+            CC_RULE = $(cc_comp_all)
+         endif
+      endif
+   endif
 endif
 
 # The rule to compile a C++ source file.

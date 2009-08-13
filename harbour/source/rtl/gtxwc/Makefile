@@ -21,7 +21,7 @@ ifeq ($(HB_WITHOUT_GTXWC),yes)
    HB_INC_X11 :=
 endif
 
-HB_INC_X11_OK += $(foreach d, $(HB_INC_X11), $(if $(wildcard $(d)/X11/Xlib.h),$(d),))
+HB_INC_X11_OK := $(foreach d, $(HB_INC_X11), $(if $(wildcard $(d)/X11/Xlib.h),$(d),))
 
 ifneq ($(strip $(HB_INC_X11_OK)),)
 

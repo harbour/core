@@ -7,6 +7,8 @@ include $(TOP)$(ROOT)config/global.cf
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
 
+HB_DYN_LIBS := hbcommon hbpp hbrtl hbmacro hblang hbcpage hbpcre hbzlib hbextern hbrdd rddntx rddnsx rddcdx rddfpt hbsix hbhsx hbusrrdd gtcgi gtpca gtstd gtwvt gtgui gtwin hbvm hbvmmt maindllh
+
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/$(HB_COMPILER).cf
 include $(TOP)$(ROOT)config/c.cf
 include $(TOP)$(ROOT)config/prg.cf

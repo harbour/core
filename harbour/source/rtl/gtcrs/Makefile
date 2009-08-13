@@ -28,13 +28,11 @@ ifeq ($(HB_ARCHITECTURE),os2)
    HB_INC_CURSES :=
 endif
 
-HB_INC_CURSES_OK += $(foreach d, $(HB_INC_CURSES), $(if $(wildcard $(d)/curses.h),$(d),))
-HB_INC_CURSES_OK := $(strip $(HB_INC_CURSES_OK))
+HB_INC_CURSES_OK := $(strip $(foreach d, $(HB_INC_CURSES), $(if $(wildcard $(d)/curses.h),$(d),)))
 
 ifeq ($(HB_INC_CURSES_OK),)
    ifeq ($(HB_COMPILER),djgpp)
-      HB_INC_CURSES_OK += $(foreach d, $(subst ;, ,$(PATH)), $(if $(wildcard $(d)/../include/curses.h),$(d)/../include,))
-      HB_INC_CURSES_OK := $(strip $(HB_INC_CURSES_OK))
+      HB_INC_CURSES_OK := $(strip $(foreach d, $(subst ;, ,$(PATH)), $(if $(wildcard $(d)/../include/curses.h),$(d)/../include,)))
    endif
 endif
 

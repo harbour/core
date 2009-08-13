@@ -32,7 +32,7 @@ ifeq ($(HB_COMMERCE),yes)
    HB_INC_SLANG :=
 endif
 
-HB_INC_SLANG_OK += $(foreach d, $(HB_INC_SLANG), $(if $(wildcard $(d)/slang.h),$(d),))
+HB_INC_SLANG_OK := $(foreach d, $(HB_INC_SLANG), $(if $(wildcard $(d)/slang.h),$(d),))
 
 ifneq ($(strip $(HB_INC_SLANG_OK)),)
 

@@ -18,7 +18,7 @@ HB_INC_CURL := /usr/include
 endif
 endif
 
-HB_INC_CURL_OK += $(foreach d, $(HB_INC_CURL), $(if $(wildcard $(d)/curl/curl.h),$(d),))
+HB_INC_CURL_OK := $(foreach d, $(HB_INC_CURL), $(if $(wildcard $(d)/curl/curl.h),$(d),))
 
 endif
 

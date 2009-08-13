@@ -15,7 +15,7 @@ DIRS := \
 else
 
 ifneq ($(HB_EXTERNALLIBS),no)
-DIRS := $(HB_EXTERNALLIBS)
+   DIRS := $(HB_EXTERNALLIBS)
 endif
 
 endif

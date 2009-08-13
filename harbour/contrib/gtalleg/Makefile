@@ -22,7 +22,7 @@ HB_INC_ALLEGRO := /usr/include /opt/local/include
 endif
 endif
 
-HB_INC_ALLEGRO_OK += $(foreach d, $(HB_INC_ALLEGRO), $(if $(wildcard $(d)/allegro.h),$(d),))
+HB_INC_ALLEGRO_OK := $(foreach d, $(HB_INC_ALLEGRO), $(if $(wildcard $(d)/allegro.h),$(d),))
 
 ifneq ($(strip $(HB_INC_ALLEGRO_OK)),)
 

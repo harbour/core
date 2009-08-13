@@ -12,7 +12,7 @@ HB_INC_PGSQL := /usr/include /usr/local/pgsql/include /usr/local/pgsql/include/l
 endif
 endif
 
-HB_INC_PGSQL_OK += $(foreach d, $(HB_INC_PGSQL), $(if $(wildcard $(d)/libpq-fe.h),$(d),))
+HB_INC_PGSQL_OK := $(foreach d, $(HB_INC_PGSQL), $(if $(wildcard $(d)/libpq-fe.h),$(d),))
 
 ifneq ($(strip $(HB_INC_PGSQL_OK)),)
 

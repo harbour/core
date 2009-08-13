@@ -44,7 +44,7 @@ HB_INC_QT := /usr/include/qt4 /usr/lib/qt4/include /usr/include /Developer/qt/in
 endif
 endif
 
-HB_INC_QT_OK += $(foreach d, $(HB_INC_QT), $(if $(wildcard $(d)/Qt/qglobal.h),$(d),))
+HB_INC_QT_OK := $(foreach d, $(HB_INC_QT), $(if $(wildcard $(d)/Qt/qglobal.h),$(d),))
 ifeq ($(HB_ARCHITECTURE),darwin)
 ifeq ($(strip $(HB_INC_QT_OK)),)
 HB_INC_QT_OK := $(if $(wildcard /Library/Frameworks/QtCore.framework/Versions/4/Headers/QtCore),spec,)

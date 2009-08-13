@@ -19,7 +19,7 @@ HB_INC_OPENSSL := /usr/include /usr/local/ssl/include
 endif
 endif
 
-HB_INC_OPENSSL_OK += $(foreach d, $(HB_INC_OPENSSL), $(if $(wildcard $(d)/openssl/ssl.h),$(d),))
+HB_INC_OPENSSL_OK := $(foreach d, $(HB_INC_OPENSSL), $(if $(wildcard $(d)/openssl/ssl.h),$(d),))
 
 endif
 

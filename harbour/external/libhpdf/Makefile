@@ -13,50 +13,49 @@ HB_USER_CFLAGS += -I$(TOP)$(ROOT)source/hbzlib
 LIBNAME := libhpdf
 
 ifeq ($(HB_WITH_LIBHPDF),)
-HB_WITH_LIBHPDF := yes
-ifeq ($(HB_COMPILER),watcom)
-HB_WITH_LIBHPDF := no
-endif
-ifeq ($(HB_COMPILER),pocc64)
-HB_WITH_LIBHPDF := no
-endif
-ifeq ($(HB_ARCHITECTURE),wce)
-HB_WITH_LIBHPDF := no
-endif
-ifeq ($(HB_COMPILER),mingwarm)
-HB_WITH_LIBHPDF := yes
-HB_USER_CFLAGS += -U__COREDLL__
-endif
-ifeq ($(HB_ARCHITECTURE),os2)
-HB_WITH_LIBHPDF := yes
-endif
-
+   HB_WITH_LIBHPDF := yes
+   ifeq ($(HB_COMPILER),watcom)
+      HB_WITH_LIBHPDF := no
+   endif
+   ifeq ($(HB_COMPILER),pocc64)
+      HB_WITH_LIBHPDF := no
+   endif
+   ifeq ($(HB_ARCHITECTURE),wce)
+      HB_WITH_LIBHPDF := no
+   endif
+   ifeq ($(HB_COMPILER),mingwarm)
+      HB_WITH_LIBHPDF := yes
+      HB_USER_CFLAGS += -U__COREDLL__
+   endif
+   ifeq ($(HB_ARCHITECTURE),os2)
+      HB_WITH_LIBHPDF := yes
+   endif
 endif
 
 ifeq ($(HB_WITH_LIBHPDF),yes)
 
 ifeq ($(HB_INC_LIBPNG),)
-ifeq ($(HB_XBUILD),)
-HB_INC_LIBPNG = /usr/include
-ifeq ($(HB_ARCHITECTURE),win)
-HB_INC_LIBPNG += $(TOP)$(ROOT)external/libpng
-endif
-ifeq ($(HB_ARCHITECTURE),wce)
-HB_INC_LIBPNG += $(TOP)$(ROOT)external/libpng
-endif
-ifeq ($(HB_ARCHITECTURE),os2)
-HB_INC_LIBPNG += $(TOP)$(ROOT)external/libpng
-endif
-ifeq ($(HB_ARCHITECTURE),dos)
-HB_INC_LIBPNG += $(TOP)$(ROOT)external/libpng
-endif
-ifeq ($(HB_ARCHITECTURE),darwin)
-HB_INC_LIBPNG += $(TOP)$(ROOT)external/libpng
-endif
-endif
+   ifeq ($(HB_XBUILD),)
+      HB_INC_LIBPNG = /usr/include
+      ifeq ($(HB_ARCHITECTURE),win)
+         HB_INC_LIBPNG += $(TOP)$(ROOT)external/libpng
+      endif
+      ifeq ($(HB_ARCHITECTURE),wce)
+         HB_INC_LIBPNG += $(TOP)$(ROOT)external/libpng
+      endif
+      ifeq ($(HB_ARCHITECTURE),os2)
+         HB_INC_LIBPNG += $(TOP)$(ROOT)external/libpng
+      endif
+      ifeq ($(HB_ARCHITECTURE),dos)
+         HB_INC_LIBPNG += $(TOP)$(ROOT)external/libpng
+      endif
+      ifeq ($(HB_ARCHITECTURE),darwin)
+         HB_INC_LIBPNG += $(TOP)$(ROOT)external/libpng
+      endif
+   endif
 endif
 
-HB_INC_LIBPNG_OK += $(foreach d, $(HB_INC_LIBPNG), $(if $(wildcard $(d)/png.h),$(d),))
+HB_INC_LIBPNG_OK := $(foreach d, $(HB_INC_LIBPNG), $(if $(wildcard $(d)/png.h),$(d),))
 
 ifneq ($(strip $(HB_INC_LIBPNG_OK)),)
 
