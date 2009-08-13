@@ -285,6 +285,11 @@ public slots:
    void sectionPressed( int logicalIndex );
    void sectionResized( int logicalIndex, int oldSize, int newSize );
    void sortIndicatorChanged( int logicalIndex, Qt::SortOrder order );
+   void buttonClicked( int id );
+   void buttonPressed( int id );
+   void buttonReleased( int id );
+   void linkActivated( const QString & link );
+   void linkHovered( const QString & link );
 };
 
 class Events: public QObject

@@ -63,7 +63,7 @@
 
 #include "hbqt_slots.h"
 
-//             #include <windows.h>   ////////////////////////////////////////////////////
+             #include <windows.h>   ////////////////////////////////////////////////////
 
 #include <QWidget>
 #include <QString>
@@ -939,7 +939,31 @@ void Slots::sortIndicatorChanged( int logicalIndex, Qt::SortOrder order )
    QObject *object = qobject_cast<QObject *>( sender() );
    SlotsExecIntInt( object, ( char* ) "sortIndicatorChanged(int,int)", logicalIndex, order );
 }
-
+void Slots::buttonClicked( int id )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecInt( object, ( char* ) "buttonClicked(int)", id );
+}
+void Slots::buttonPressed( int id )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecInt( object, ( char* ) "buttonPressed(int)", id );
+}
+void Slots::buttonReleased( int id )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecInt( object, ( char* ) "buttonReleased(int)", id );
+}
+void Slots::linkActivated( const QString & link )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecString( object, ( char* ) "linkActivated(QString)", link );
+}
+void Slots::linkHovered( const QString & link )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecString( object, ( char* ) "linkHovered(QString)", link );
+}
 
 /*
  * harbour function to connect signals with slots
@@ -1458,6 +1482,31 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       ret = object->connect( object, SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) ),
                              s_s, SLOT( sortIndicatorChanged( int, Qt::SortOrder ) ), Qt::AutoConnection );
    }
+   if( signal == ( QString ) "buttonClicked(int)" )
+   {
+      ret = object->connect( object, SIGNAL( buttonClicked( int ) ),
+                             s_s, SLOT( buttonClicked( int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "buttonPressed(int)" )
+   {
+      ret = object->connect( object, SIGNAL( buttonPressed( int ) ),
+                             s_s, SLOT( buttonPressed( int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "buttonReleased(int)" )
+   {
+      ret = object->connect( object, SIGNAL( buttonReleased( int ) ),
+                             s_s, SLOT( buttonReleased( int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "linkActivated(QString)" )
+   {
+      ret = object->connect( object, SIGNAL( linkActivated( const QString & ) ),
+                             s_s, SLOT( linkActivated( const QString & ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "linkHovered(QString)" )
+   {
+      ret = object->connect( object, SIGNAL( linkHovered( const QString & ) ),
+                             s_s, SLOT( linkHovered( const QString & ) ), Qt::AutoConnection );
+   }
 
 
    hb_retl( ret );
@@ -1826,8 +1875,6 @@ QVariant fetchRole( PHB_ITEM block, int what, int par1, int par2 )
 //      return( hb_itemGetPtr( ret ) );
    else
       return QVariant();
-
-   hb_itemRelease( ret );
 }
 
 HbDbfModel::HbDbfModel( PHB_ITEM pBlock ) : QAbstractItemModel()
