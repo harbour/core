@@ -47,8 +47,7 @@ if [ "$HB_COMPILER" = "gcc" ] || \
    [ "$HB_COMPILER" = "cygwin" ] || \
    [ "$HB_COMPILER" = "djgpp" ] || \
    [ "$HB_COMPILER" = "icc" ] || \
-   [ "$HB_COMPILER" = "sunpro" ] || \
-   [ "$HB_COMPILER" = "sunpro64" ]
+   [ "$HB_COMPILER" = "sunpro" ]
 then
     if [ -n "${HB_TOOLS_PREF}" ]; then
         hb_mkdyn="${HB_BIN_INSTALL}/${HB_TOOLS_PREF}-mkdyn"
@@ -62,8 +61,7 @@ then
         rm -f "${hb_mkdyn}"
         sed -e "s/gcc/icc/g" "${hb_root}/bin/hb-mkdyn.sh" > "${hb_mkdyn}" && \
         chmod 755 "${hb_mkdyn}"
-    elif [ "$HB_COMPILER" = "sunpro" ] || \
-         [ "$HB_COMPILER" = "sunpro64" ]; then
+    elif [ "$HB_COMPILER" = "sunpro" ]; then
         hb_mkdyn="${HB_BIN_INSTALL}/hb-mkdyn"
         rm -f "${hb_mkdyn}"
         if [ "$HB_ARCHITECTURE" = "sunos" ] && \

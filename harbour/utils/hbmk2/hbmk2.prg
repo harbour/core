@@ -854,9 +854,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    CASE hbmk[ _HBMK_cARCH ] $ "bsd|hpux|sunos|linux" .OR. hbmk[ _HBMK_cARCH ] == "darwin" /* Separated to avoid match with 'win' */
       DO CASE
       CASE hbmk[ _HBMK_cARCH ] == "linux"
-         aCOMPSUP := { "gcc", "watcom", "icc", "sunpro", "sunpro64" }
+         aCOMPSUP := { "gcc", "watcom", "icc", "sunpro" }
       CASE hbmk[ _HBMK_cARCH ] == "sunos"
-         aCOMPSUP := { "gcc", "sunpro", "sunpro64" }
+         aCOMPSUP := { "gcc", "sunpro" }
       OTHERWISE
          aCOMPSUP := { "gcc" }
       ENDCASE
@@ -2782,8 +2782,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
          l_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
 
-      CASE ( hbmk[ _HBMK_cARCH ] == "sunos" .AND. hbmk[ _HBMK_cCOMP ] $ "sunpro|sunpro64" ) .OR. ;
-           ( hbmk[ _HBMK_cARCH ] == "linux" .AND. hbmk[ _HBMK_cCOMP ] $ "sunpro|sunpro64" )
+      CASE ( hbmk[ _HBMK_cARCH ] == "sunos" .AND. hbmk[ _HBMK_cCOMP ] == "sunpro" ) .OR. ;
+           ( hbmk[ _HBMK_cARCH ] == "linux" .AND. hbmk[ _HBMK_cCOMP ] == "sunpro" )
 
          /* TODO */
 
@@ -3263,7 +3263,15 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ListCookLib( hbmk, l_aLIB, l_aLIBA, l_aLIBSHARED, NIL )
       ENDIF
       /* Dress obj names. */
-      l_aOBJ := ListDirExt( ArrayJoin( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_aC ] ), cWorkDir, cObjExt )
+      IF cObjExt == NIL
+         /* NOTE: May only happen if the arch/comp combination isn't supported.
+                  Don't let the obj filelist be the exact same as the source list,
+                  it would cause unwanted deletion of source at cleanup stage.
+                  [vszakats] */
+         l_aOBJ := {}
+      ELSE
+         l_aOBJ := ListDirExt( ArrayJoin( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_aC ] ), cWorkDir, cObjExt )
+      ENDIF
       hbmk[ _HBMK_aOBJUSER ] := ListCook( hbmk[ _HBMK_aOBJUSER ], cObjExt )
 
       IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ]
@@ -6584,7 +6592,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
    LOCAL aText_Supp := {;
       "",;
       I_( "Supported <comp> values for each supported <arch> value:" ),;
-      "  - linux  : gcc, watcom, icc, sunpro, sunpro64",;
+      "  - linux  : gcc, watcom, icc, sunpro",;
       "  - darwin : gcc",;
       "  - win    : mingw, msvc, bcc, watcom, icc, pocc, cygwin, xcc,",;
       "  -          mingw64, msvc64, msvcia64, iccia64, pocc64",;
@@ -6593,7 +6601,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       "  - dos    : djgpp, watcom",;
       "  - bsd    : gcc",;
       "  - hpux   : gcc",;
-      "  - sunos  : gcc, sunpro, sunpro64" }
+      "  - sunos  : gcc, sunpro" }
 
    LOCAL aOpt_Basic := {;
       { "-o<outname>"       , I_( "output file name" ) },;

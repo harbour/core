@@ -62,8 +62,7 @@ if [ -z "$HB_GPM_MOUSE" ]; then
 fi
 
 if [ "$HB_ARCHITECTURE" = "linux" ] && \
-   [ "$HB_COMPILER" != "sunpro" ] && \
-   [ "$HB_COMPILER" != "sunpro64" ]
+   [ "$HB_COMPILER" != "sunpro" ]
 then
     if [ "${HB_USER_CFLAGS}" = "${HB_USER_CFLAGS//-fPIC/}" ]
     then

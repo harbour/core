@@ -5,7 +5,5 @@
 all : first
 
 BIN_EXT := .exe
-DYN_PRE :=
-DYN_EXT := .dll
 
 HB_GT_LIBS += gtwvt gtgui gtwin

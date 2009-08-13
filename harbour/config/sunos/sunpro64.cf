@@ -1,7 +1,0 @@
-#
-# $Id$
-#
-
-HB_ISAOPT := -m64
-
-include $(TOP)$(ROOT)config/sunos/sunpro.cf

@@ -170,13 +170,18 @@ ifneq ($(HB_BUILD_NAME),)
    endif
 endif
 
+ifeq ($(HB_CONFIG_SHOWN),)
+   # Store the original value
+   export HB_MAKECMDGOALS := $(MAKECMDGOALS)
+endif
+
 ifeq ($(HB_BUILD_PKG),yes)
 
    # 'clean' and 'install' are required when building a release package
-   ifeq ($(findstring clean,$(MAKECMDGOALS)),)
+   ifeq ($(findstring clean,$(HB_MAKECMDGOALS)),)
       export HB_BUILD_PKG := no
    else
-      ifeq ($(findstring install,$(MAKECMDGOALS)),)
+      ifeq ($(findstring install,$(HB_MAKECMDGOALS)),)
          export HB_BUILD_PKG := no
       endif
    endif
@@ -203,7 +208,7 @@ ifeq ($(HB_CONFIG_SHOWN),)
       # Macros:
       #   -DHB_PCRE_REGEX, -DHB_POSIX_REGEX, -DHB_EXT_ZLIB, -DHB_HAS_GPM
 
-      $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(MAKECMDGOALS))
+      $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(HB_MAKECMDGOALS))
       ifneq ($(HB_USER_PRGFLAGS),)
          $(info ! HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))
       endif
@@ -364,8 +369,7 @@ endif
 
 ifeq ($(HB_CONFIG_SHOWN),)
    ifneq ($(MAKE_381),)
-      $(info ! HB_HOST_ARCH: $(HB_HOST_ARCH))
-      $(info ! HB_SHELL: $(HB_SHELL))
+      $(info ! HB_HOST_ARCH: $(HB_HOST_ARCH)  HB_SHELL: $(HB_SHELL))
    endif
 endif
 
@@ -834,6 +838,8 @@ ifneq ($(HB_INSTALL_PREFIX),)
 endif
 
 export HB_INSTALL_PREFIX
+
+export HB_OBJ_DIR := $(subst /,$(DIRSEP),$(OBJ_DIR))
 
 ifeq ($(HB_BIN_COMPILE),)
    HB_HOST_BIN_DIR := $(BIN_DIR)

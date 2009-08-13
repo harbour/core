@@ -9,13 +9,13 @@ rem Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
 rem See COPYING for licensing terms.
 rem ---------------------------------------------------------------
 
-rem NOTE: .prg files have to be compiled with -n1
-rem NOTE: .c   files have to be compiled with -DHB_DYNLIB
-
 if not "%OS%" == "Windows_NT" echo ! hb-mkdyn.bat Harbour build script requires Windows NT or upper.
 if not "%OS%" == "Windows_NT" goto :EOF
 
 setlocal
+
+rem NOTE: .prg files have to be compiled with -n1
+rem NOTE: .c   files have to be compiled with -DHB_DYNLIB
 
 if "%HB_ARCHITECTURE%" == "" ( echo ! HB_ARCHITECTURE needs to be set. && goto END )
 if "%HB_COMPILER%" == "" ( echo ! HB_COMPILER needs to be set. && goto END )
@@ -29,7 +29,6 @@ set HB_DLL_LIBS_ST=source\vm
 set HB_DLL_LIBS_MT=source\vm\vmmt
 set HB_DLL_LIBS_WATCOM=source\vm\maindllh
 set HB_OBJ_EXT=.obj
-set HB_OBJ_DIR=obj\%HB_ARCHITECTURE%\%HB_COMPILER%%HB_BUILD_NAME%
 set HB_OBJ_PREF=
 set HB_OBJ_POST=
 
