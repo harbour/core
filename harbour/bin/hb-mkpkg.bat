@@ -34,6 +34,6 @@ cd "%HB_PKGBASE%"
 popd
 
 if not "%HB_ARCHITECTURE%" == "dos" echo ! Harbour .exe install package creation: '%HB_PKGPATH%.exe'
-if not "%HB_ARCHITECTURE%" == "dos" "%HB_DIR_NSIS%makensis.exe" /V2 "%~dp0..\mpkg_win.nsi"
+if not "%HB_ARCHITECTURE%" == "dos" "%HB_DIR_NSIS%makensis.exe" /V2 "%~dp0..\package\mpkg_win.nsi"
 
 :END
