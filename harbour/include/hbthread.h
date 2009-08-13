@@ -196,7 +196,7 @@ HB_EXTERN_BEGIN
 #  define HB_THREAD_SELF()          GetCurrentThreadId()
 
 #  if defined( __GNUC__ )
-#     define HB_CRITICAL_INITVAL    {  }
+#     define HB_CRITICAL_INITVAL    { 0, 0, 0, 0, 0, 0 }
 #  else
 #     define HB_CRITICAL_INITVAL    { 0 }
 #  endif
