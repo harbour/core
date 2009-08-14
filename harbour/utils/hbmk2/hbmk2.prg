@@ -917,7 +917,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       cDynLibExt := ".dll"
       cBinExt := ".exe"
       cOptPrefix := "-/"
-      /* NOTE: Some targets (pocc and watcom) need kernel32 explicitly. */
+      /* NOTE: Some targets (watcom, pocc/xcc) need kernel32 explicitly. */
       l_aLIBSYSCORE := { "kernel32", "user32", "gdi32", "advapi32", "ws2_32" }
       l_aLIBSYSMISC := { "winspool", "comctl32", "comdlg32", "shell32", "ole32", "oleaut32", "uuid", "mpr", "winmm", "mapi32", "imm32", "msimg32" }
    CASE hbmk[ _HBMK_cARCH ] == "wce"
@@ -933,8 +933,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       cDynLibExt := ".dll"
       cBinExt := ".exe"
       cOptPrefix := "-/"
-      l_aLIBSYSCORE := { "wininet", "ws2", "commdlg", "commctrl" }
-      l_aLIBSYSMISC := { "uuid", "ole32" }
+      l_aLIBSYSCORE := { "ws2" }
+      l_aLIBSYSMISC := { "uuid", "ole32", "wininet", "commdlg", "commctrl" }
    OTHERWISE
       hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Architecture value unknown: %1$s" ), hbmk[ _HBMK_cARCH ] ) )
       RETURN 1

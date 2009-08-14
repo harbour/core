@@ -54,10 +54,8 @@ endif
 LD := link.exe
 LD_OUT := /out:
 
-# Add all libraries specified in LIBS.
 LIBPATHS := /libpath:$(LIB_DIR)
-LDLIBS := $(foreach lib,$(LIBS),$(lib)$(LIB_EXT))
-LDLIBS += user32.lib ws2_32.lib advapi32.lib gdi32.lib
+LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
 LDFLAGS += /nologo $(LIBPATHS)
 

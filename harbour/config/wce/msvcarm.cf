@@ -53,8 +53,7 @@ endif
 LD_OUT := -Fe
 
 LIBPATHS := /libpath:$(LIB_DIR)
-# Add all libraries specified in LIBS.
-LDLIBS := $(foreach lib,$(LIBS),$(lib)$(LIB_EXT))
+LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
 LDFLAGS += /nologo /link
 LDFLAGS += /subsystem:windowsce,4.20 /machine:arm /armpadcode /stack:65536,4096 /nodefaultlib:"oldnames.lib"

@@ -85,7 +85,6 @@ define link_exe_file
    @echo $(LDFLAGS) NAME $(BIN_DIR)/$@ > __link__.tmp
    $(foreach file,$(^F),$(link_file))
    $(foreach lib,$(LDLIBS),$(link_lib))
-   @echo LIB ws2_32.lib >> __link__.tmp
    -$(LD) @__link__.tmp
 endef
 
@@ -96,6 +95,7 @@ endif
 LDFLAGS += SYS nt
 
 LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
+LDLIBS += $(foreach lib,$(SYSLIBS),$(lib))
 
 LD_RULE = $(link_exe_file) $(HB_USER_LDFLAGS)
 

@@ -8,5 +8,7 @@ BIN_EXT := .exe
 
 HB_GT_LIBS += gtwvt gtgui
 
+SYSLIBS := ws2
+
 # Favor size for CE builds.
 HB_GCMODE := 0

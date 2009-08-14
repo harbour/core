@@ -222,7 +222,7 @@ ifeq ($(HB_CONFIG_SHOWN),)
       # Macros:
       #   -DHB_PCRE_REGEX, -DHB_POSIX_REGEX, -DHB_EXT_ZLIB, -DHB_HAS_GPM
 
-      $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(HB_MAKECMDGOALS))
+      $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(HB_MAKECMDGOALS) $(SHELL))
       ifneq ($(HB_USER_PRGFLAGS),)
          $(info ! HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))
       endif
@@ -309,6 +309,7 @@ else
                COMSPEC := command.com
             endif
          endif
+         SHELL := $(COMSPEC)
          ifneq ($(findstring COMMAND,$(COMSPEC)),)
             HB_SHELL := dos
          else

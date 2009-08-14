@@ -38,9 +38,8 @@ LD := $(HB_CCPREFIX)$(HB_CMP)
 LD_OUT := -o
 
 LIBPATHS := -L$(LIB_DIR)
-LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
+LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),-l$(lib))
 
-LDLIBS += -lwininet -lws2
 LDFLAGS += $(LIBPATHS)
 
 AR := $(HB_CCPREFIX)ar

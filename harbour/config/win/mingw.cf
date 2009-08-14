@@ -40,7 +40,7 @@ LD := $(HB_CCPREFIX)$(HB_CMP)
 LD_OUT := -o
 
 LIBPATHS := -L$(LIB_DIR)
-LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
+LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),-l$(lib))
 
 # Add the standard C main() entry
 ifeq ($(HB_MAIN),std)
@@ -48,8 +48,6 @@ ifeq ($(HB_MAIN),std)
       LDLIBS += -lhbmainstd
    endif
 endif
-
-LDLIBS += -luser32 -lgdi32 -lws2_32
 
 LDFLAGS += $(LIBPATHS)
 

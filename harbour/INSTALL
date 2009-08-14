@@ -72,7 +72,6 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
                only. For a peace of mind, avoid using spaces, quotes
                in the name. You can leave it empty, in this case the
                results will be created under the current directory tree.
-             - With mingw, sh.exe (part of MSYS) mustn't be in the PATH.
              - You can also use Linux hosts to create Windows builds.
                See script: make_gnu_xmingw.sh
              - You can also use Linux hosts to create Windows CE builds.
@@ -367,7 +366,7 @@ EXAMPLES
       call make_gnu.bat %1 %2 > log.txt 2>&1
       ---
 
-      --- MinGW GCC (make sure MSYS (sh.exe) isn't in the PATH)
+      --- MinGW GCC
       set PATH=C:\mingw\bin;%PATH%
       rem
       set HB_COMPILER=mingw
@@ -395,7 +394,6 @@ EXAMPLES
       ---
 
       --- MinGW GCC for WinCE/ARM (requires native x86 Harbour binaries + Cygwin)
-      set SHLVL=0
       set PATH=C:\mingwce\opt\mingw32ce\bin;C:\cygwin\bin;%PATH%
       rem
       set HB_BIN_COMPILE=C:\hb-mingw\bin

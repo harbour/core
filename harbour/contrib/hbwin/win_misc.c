@@ -74,12 +74,14 @@ HB_FUNC( WIN_RUNDETACHED )
    LPTSTR lpCommandName = HB_ISCHAR( 1 ) ? HB_TCHAR_CONVTO( hb_parc( 1 ) ) : NULL;
    LPTSTR lpCommandLine = HB_ISCHAR( 2 ) ? HB_TCHAR_CONVTO( hb_parc( 2 ) ) : NULL;
 
+#if ! defined( HB_OS_WIN_CE )
    STARTUPINFO si;
    PROCESS_INFORMATION pi;
 
    ZeroMemory( &si, sizeof( si ) );
    si.cb = sizeof( si );
    ZeroMemory( &pi, sizeof( pi ) );
+#endif
 
    if( CreateProcess(
          ( LPCTSTR ) lpCommandName,                            /* Command name */
@@ -87,23 +89,31 @@ HB_FUNC( WIN_RUNDETACHED )
          NULL,                                                 /* Process handle not inheritable */
          NULL,                                                 /* Thread handle not inheritable */
          FALSE,                                                /* Set handle inheritance to FALSE */
-#if defined( HB_OS_WIN_CE )
-         CREATE_NEW_CONSOLE,                                   /* Creation flags */
-#else
+#if ! defined( HB_OS_WIN_CE )
          hb_parl( 4 ) ? CREATE_NO_WINDOW : CREATE_NEW_CONSOLE, /* Creation flags */
+#else
+         CREATE_NEW_CONSOLE,                                   /* Creation flags */
 #endif
          NULL,                                                 /* Use parent's environment block */
          NULL,                                                 /* Use parent's starting directory */
+#if ! defined( HB_OS_WIN_CE )
          &si,                                                  /* Pointer to STARTUPINFO structure */
          &pi )                                                 /* Pointer to PROCESS_INFORMATION structure */
+#else
+         NULL,                                                 /* Pointer to STARTUPINFO structure */
+         NULL )                                                /* Pointer to PROCESS_INFORMATION structure */
+#endif
       )
    {
-      hb_stornl( pi.dwProcessId, 3 );
       hb_retl( TRUE );
+
+#if ! defined( HB_OS_WIN_CE )
+      hb_stornl( pi.dwProcessId, 3 );
 
       /* Close process and thread handles. */
       CloseHandle( pi.hProcess );
       CloseHandle( pi.hThread );
+#endif
    }
    else
    {
