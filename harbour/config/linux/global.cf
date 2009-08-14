@@ -7,3 +7,15 @@ all : first
 BIN_EXT :=
 
 HB_GT_LIBS += gttrm
+
+ifeq ($(HB_SHELL),sh)
+   ifneq ($(HB_COMPILER),sunpro)
+      ifeq ($(findstring -fPIC,$(HB_USER_CFLAGS)),)
+          _UNAME_M := $(shell uname -m)
+          # TODO: Make this complete
+          ifneq ($(findstring $(_UNAME_M),@64 _64),)
+             HB_USER_CFLAGS += -fPIC
+          endif
+      endif
+   endif
+endif

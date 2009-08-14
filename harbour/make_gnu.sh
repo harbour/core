@@ -13,13 +13,6 @@
 # Please read INSTALL for further information.
 # ---------------------------------------------------------------
 
-# ---------------------------------------------------------------
-# See GNU bash docs here:
-#    http://www.gnu.org/software/bash/manual/bashref.html
-# See POSIX shell docs here:
-#    http://www.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html
-# ---------------------------------------------------------------
-
 if [ -z "$HB_ARCHITECTURE" ]; then
     if [ "$OSTYPE" = "msdosdjgpp" ]; then
         hb_arch="dos"
@@ -70,7 +63,6 @@ then
         case "$HB_CPU" in
             *[@_]64)
                 export HB_USER_CFLAGS="$HB_USER_CFLAGS -fPIC"
-                HB_ARCH64="yes"
                 ;;
             *[ix]*86)
                 ;;

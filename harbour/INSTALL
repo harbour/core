@@ -25,11 +25,23 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
    * GNU Make (3.81 or upper)
    * Harbour sources (2.0.0 or upper)
 
-   Linux/Darwin/BSD/HP-UX/Solaris
-   ------------------------------
+   Linux/Darwin
+   ------------
     [ $ export HB_COMPILER=<gcc|watcom|icc|sunpro> ]
     [ $ export HB_INSTALL_PREFIX=<DIR> ]
       $ make install
+
+      To test it, type:
+      $ cd bin
+      $ ./hbmk2 ../tests/hello.prg
+      $ ./hello
+      You should see 'Hello world!' on screen.
+
+   BSD/HP-UX/Solaris
+   -----------------
+    [ $ export HB_COMPILER=<gcc|sunpro> ]
+    [ $ export HB_INSTALL_PREFIX=<DIR> ]
+      $ gmake install
 
       To test it, type:
       $ cd bin
@@ -80,10 +92,12 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
              - You can also use Linux hosts to create Windows CE builds.
                See script: make_gnu_xmingwce.sh
 
-   Windows with MinGW + MSYS or Cygwin
-   ----------------------------------------------
-      You can also use bash shell to build for these platforms.
+   Windows with MSYS or Cygwin shells
+   ----------------------------------
+      You can also use these shells to build Harbour on Windows.
+      Generally it's recommended to use native shell though.
 
+    [ > set HB_COMPILER=<...> ]
     [ > set HB_INSTALL_PREFIX=<DIR> ]
       > sh -c make install
 
@@ -95,6 +109,9 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
 
       NOTES: - With cygwin, <DIR> should use Cygwin drive
                notation: /cygdrive/c for C:
+             - When building for Borland C make sure that
+               GNU Make is executed when typing 'make',
+               Borland Make has the same name.
 
    MS-DOS
    ------

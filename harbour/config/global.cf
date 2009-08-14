@@ -14,6 +14,8 @@
 #    http://lists.gnu.org/archive/html/help-make/
 # Portable shell programming:
 #    http://www.gnu.org/software/autoconf/manual/html_node/Portable-Shell.html
+#    http://www.gnu.org/software/bash/manual/bashref.html
+#    http://www.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html
 # GNU Coding standards:
 #    http://www.gnu.org/prep/standards/standards.html
 # ---------------------------------------------------------------
@@ -170,34 +172,34 @@ ifneq ($(HB_BUILD_NAME),)
    endif
 endif
 
-ifeq ($(HB_CONFIG_SHOWN),)
+ifeq ($(HB_INIT_DONE),)
    # Store the original value
    export HB_MAKECMDGOALS := $(MAKECMDGOALS)
-endif
 
-ifeq ($(HB_BUILD_PKG),yes)
+   ifeq ($(HB_BUILD_PKG),yes)
 
-   # 'clean' and 'install' are required when building a release package
-   ifeq ($(findstring clean,$(HB_MAKECMDGOALS)),)
-      export HB_BUILD_PKG := no
-   else
-      ifeq ($(findstring install,$(HB_MAKECMDGOALS)),)
+      # 'clean' and 'install' are required when building a release package
+      ifeq ($(findstring clean,$(HB_MAKECMDGOALS)),)
          export HB_BUILD_PKG := no
+      else
+         ifeq ($(findstring install,$(HB_MAKECMDGOALS)),)
+            export HB_BUILD_PKG := no
+         endif
       endif
-   endif
 
-   ifeq ($(HB_BUILD_PKG),no)
-      $(warning ! Warning: You have to use 'clean install' to create a release package.)
-   endif
+      ifeq ($(HB_BUILD_PKG),no)
+         $(warning ! Warning: You have to use 'clean install' to create a release package.)
+      endif
 
-   # Enforce some basic setting for release packages
-   export HB_BUILD_DLL := yes
-   export HB_BUILD_IMPLIB := no
-   export HB_BUILD_OPTIM := yes
-   export HB_BUILD_DEBUG := no
+      # Enforce some basic setting for release packages
+      export HB_BUILD_DLL := yes
+      export HB_BUILD_IMPLIB := no
+      export HB_BUILD_OPTIM := yes
+      export HB_BUILD_DEBUG := no
+   endif
 endif
 
-ifeq ($(HB_CONFIG_SHOWN),)
+ifeq ($(HB_INIT_DONE),)
    ifneq ($(MAKE_381),)
 
       # Some additional ones to be given a standard name:
@@ -223,9 +225,6 @@ ifeq ($(HB_CONFIG_SHOWN),)
       #   -DHB_PCRE_REGEX, -DHB_POSIX_REGEX, -DHB_EXT_ZLIB, -DHB_HAS_GPM
 
       $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(HB_MAKECMDGOALS) $(SHELL))
-      ifeq ($(HB_BUILD_VERBOSE),yes)
-         $(info ! SVN: $(shell svnversion))
-      endif
       ifneq ($(HB_USER_PRGFLAGS),)
          $(info ! HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))
       endif
@@ -385,7 +384,7 @@ ifeq ($(HB_HOST_ARCH),)
    endif
 endif
 
-ifeq ($(HB_CONFIG_SHOWN),)
+ifeq ($(HB_INIT_DONE),)
    ifneq ($(MAKE_381),)
       $(info ! HB_HOST_ARCH: $(HB_HOST_ARCH)  HB_SHELL: $(HB_SHELL))
    endif
@@ -582,7 +581,7 @@ ifeq ($(HB_COMPILER),)
    $(error ! HB_COMPILER not set, couldn't autodetect.)
 endif
 
-ifeq ($(HB_CONFIG_SHOWN),)
+ifeq ($(HB_INIT_DONE),)
    ifneq ($(MAKE_381),)
       $(info ! HB_ARCHITECTURE: $(HB_ARCHITECTURE) $(HB_ARCH_AUTO))
       $(info ! HB_COMPILER: $(HB_COMPILER) $(HB_COMP_AUTO))
@@ -810,23 +809,32 @@ export HB_VERSION
 export HB_PKGNAME
 export HB_PKGNAMI
 
+HB_INSTALL_PREFIX_ORI := $(HB_INSTALL_PREFIX)
 ifeq ($(HB_BUILD_PKG),yes)
-   PKG_DIR := $(subst /,$(DIRSEP),$(TOP)$(ROOT))pkg
-   export HB_PKGBASE := $(PKG_DIR)$(DIRSEP)$(HB_ARCHITECTURE)$(DIRSEP)$(HB_COMPILER)
-   export HB_PKGPATH := $(subst /,$(DIRSEP),$(abspath $(PKG_DIR)$(DIRSEP)$(HB_PKGNAME)))
-   HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(abspath $(HB_PKGBASE)$(DIRSEP)$(HB_PKGNAME)))
+   ifeq ($(HB_INIT_DONE),)
+      PKG_DIR := $(TOP)$(ROOT)pkg
+      export HB_PKGBASE := $(subst /,$(DIRSEP),$(PKG_DIR)/$(HB_ARCHITECTURE)/$(HB_COMPILER))
+      export HB_PKGPATH := $(subst /,$(DIRSEP),$(abspath $(PKG_DIR)/$(HB_PKGNAME)))
+      HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(abspath $(HB_PKGBASE)/$(HB_PKGNAME)))
+      PKG_DIR := $(subst /,$(DIRSEP),$(PKG_DIR))
 
-   .PHONY: clean
-
-   HB_BIN_INSTALL :=
-   HB_INC_INSTALL :=
-   HB_LIB_INSTALL :=
-   HB_DOC_INSTALL :=
+      HB_BIN_INSTALL :=
+      HB_INC_INSTALL :=
+      HB_LIB_INSTALL :=
+      HB_DOC_INSTALL :=
+   endif
 else
    # Fill it automatically if not specified
    ifeq ($(HB_INSTALL_PREFIX),)
 
-      HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(realpath $(TOP)$(ROOT)))
+      ifeq ($(HB_UNIX_COMPATIBLE),no)
+         HB_INSTALL_PREFIX := $(realpath $(TOP)$(ROOT))
+      else
+         # Stick to *nix customs. I don't like it, it needs admin.
+         HB_INSTALL_PREFIX := /usr/local
+      endif
+
+      HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(HB_INSTALL_PREFIX))
 
       # Use names which are not likely to be used by users to
       # avoiding accidental overwrites of existing installations
@@ -839,22 +847,28 @@ else
 #           HB_INSTALL_PREFIX := $(HOME)$(DIRSEP)hb-auto-$(HB_ARCHITECTURE)-$(HB_COMPILER)
 #        endif
 #     endif
+   else
+      # TOFIX: HB_INSTALL_PREFIX will have to be duplicated internally to avoid
+      #        recursive operation here.
 
-      ifneq ($(MAKE_381),)
-         $(info ! HB_INSTALL_PREFIX automatically set to $(HB_INSTALL_PREFIX))
-      endif
+      # Handle simple macros in value
+      HB_INSTALL_PREFIX := $(subst {HB_ARCH},$(HB_ARCHITECTURE),$(HB_INSTALL_PREFIX))
+      HB_INSTALL_PREFIX := $(subst {HB_COMP},$(HB_COMPILER),$(HB_INSTALL_PREFIX))
+      HB_INSTALL_PREFIX := $(subst {HB_CPU},$(HB_CPU),$(HB_INSTALL_PREFIX))
+      HB_INSTALL_PREFIX := $(subst {HB_TOP},$(realpath $(TOP)$(ROOT)),$(HB_INSTALL_PREFIX))
+      HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(HB_INSTALL_PREFIX))
+   endif
+endif
+
+export HB_INSTALL_PREFIX
+
+ifneq ($(HB_INSTALL_PREFIX_ORI),$(HB_INSTALL_PREFIX))
+   ifneq ($(MAKE_381),)
+      $(info ! HB_INSTALL_PREFIX set to $(HB_INSTALL_PREFIX))
    endif
 endif
 
 ifneq ($(HB_INSTALL_PREFIX),)
-
-   # TOFIX: HB_INSTALL_PREFIX will have to be duplicated internally to avoid
-   #        recursive operation here.
-
-   # Handle simple macros in value
-   HB_INSTALL_PREFIX := $(subst {HB_ARCH},$(HB_ARCHITECTURE),$(HB_INSTALL_PREFIX))
-   HB_INSTALL_PREFIX := $(subst {HB_COMP},$(HB_COMPILER),$(HB_INSTALL_PREFIX))
-   HB_INSTALL_PREFIX := $(subst {HB_CPU},$(HB_CPU),$(HB_INSTALL_PREFIX))
 
    ifeq ($(HB_UNIX_COMPATIBLE),no)
       LIBPOSTFIX := $(DIRSEP)$(subst /,$(DIRSEP),$(ARCH_COMP))
@@ -886,8 +900,6 @@ ifneq ($(HB_INSTALL_PREFIX),)
    endif
 endif
 
-export HB_INSTALL_PREFIX
-
 export HB_OBJ_DIR := $(subst /,$(DIRSEP),$(OBJ_DIR))
 
 ifeq ($(HB_BIN_COMPILE),)
@@ -918,7 +930,7 @@ ifeq ($(findstring -w,$(HB_USER_MAKEFLAGS))$(findstring --print-directory,$(HB_U
    MKFLAGS := --no-print-directory
 endif
 
-export HB_CONFIG_SHOWN := yes
+export HB_INIT_DONE := yes
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 include $(TOP)$(ROOT)config/globsh.cf
