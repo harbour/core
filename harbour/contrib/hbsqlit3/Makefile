@@ -9,21 +9,21 @@ include $(TOP)$(ROOT)config/global.cf
 LIBNAME := hbsqlit3
 
 ifeq ($(HB_INC_SQLITE3),)
-ifeq ($(HB_XBUILD),)
-HB_INC_SQLITE3 := /usr/include
-ifeq ($(HB_ARCHITECTURE),win)
-HB_INC_SQLITE3 += $(TOP)$(ROOT)external/sqlite3
-endif
-ifeq ($(HB_ARCHITECTURE),wce)
-HB_INC_SQLITE3 += $(TOP)$(ROOT)external/sqlite3
-endif
-ifeq ($(HB_ARCHITECTURE),os2)
-HB_INC_SQLITE3 += $(TOP)$(ROOT)external/sqlite3
-endif
-ifeq ($(HB_ARCHITECTURE),dos)
-HB_INC_SQLITE3 += $(TOP)$(ROOT)external/sqlite3
-endif
-endif
+   ifeq ($(HB_XBUILD),)
+      HB_INC_SQLITE3 := /usr/include
+      ifeq ($(HB_ARCHITECTURE),win)
+         HB_INC_SQLITE3 += $(TOP)$(ROOT)external/sqlite3
+      endif
+      ifeq ($(HB_ARCHITECTURE),wce)
+         HB_INC_SQLITE3 += $(TOP)$(ROOT)external/sqlite3
+      endif
+      ifeq ($(HB_ARCHITECTURE),os2)
+         HB_INC_SQLITE3 += $(TOP)$(ROOT)external/sqlite3
+      endif
+      ifeq ($(HB_ARCHITECTURE),dos)
+         HB_INC_SQLITE3 += $(TOP)$(ROOT)external/sqlite3
+      endif
+   endif
 endif
 
 HB_INC_SQLITE3_OK := $(foreach d, $(HB_INC_SQLITE3), $(if $(wildcard $(d)/sqlite3.h),$(d),))

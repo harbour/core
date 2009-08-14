@@ -17,9 +17,9 @@ ifneq ($(HB_ARCHITECTURE),linux)
 ifneq ($(HB_ARCHITECTURE),darwin)
 
 ifeq ($(HB_INC_FREEIMAGE),)
-ifeq ($(HB_XBUILD),)
-HB_INC_FREEIMAGE := /usr/include /opt/local/include
-endif
+   ifeq ($(HB_XBUILD),)
+      HB_INC_FREEIMAGE := /usr/include /opt/local/include
+   endif
 endif
 
 HB_INC_FREEIMAGE_OK := $(foreach d, $(HB_INC_FREEIMAGE), $(if $(wildcard $(d)/FreeImage.h),$(d),))

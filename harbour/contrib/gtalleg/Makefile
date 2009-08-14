@@ -17,9 +17,9 @@ ifneq ($(HB_COMPILER),watcom)
 ifneq ($(HB_COMPILER),mingwarm)
 
 ifeq ($(HB_INC_ALLEGRO),)
-ifeq ($(HB_XBUILD),)
-HB_INC_ALLEGRO := /usr/include /opt/local/include
-endif
+   ifeq ($(HB_XBUILD),)
+      HB_INC_ALLEGRO := /usr/include /opt/local/include
+   endif
 endif
 
 HB_INC_ALLEGRO_OK := $(foreach d, $(HB_INC_ALLEGRO), $(if $(wildcard $(d)/allegro.h),$(d),))
@@ -27,8 +27,8 @@ HB_INC_ALLEGRO_OK := $(foreach d, $(HB_INC_ALLEGRO), $(if $(wildcard $(d)/allegr
 ifneq ($(strip $(HB_INC_ALLEGRO_OK)),)
 
 ifneq ($(HB_ALLEGRO_STATIC),)
-LIBNAME := gtallegs
-HB_USER_CFLAGS += -DALLEGRO_STATICLINK
+   LIBNAME := gtallegs
+   HB_USER_CFLAGS += -DALLEGRO_STATICLINK
 endif
 
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_ALLEGRO_OK), -I$(d))

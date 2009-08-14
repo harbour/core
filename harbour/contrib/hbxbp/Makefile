@@ -11,31 +11,31 @@ HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/hbqt
 LIBNAME := hbxbp
 
 ifeq ($(HB_WITH_QT),)
-HB_WITH_QT := yes
-ifeq ($(HB_ARCHITECTURE),dos)
-HB_WITH_QT := no
-endif
-ifeq ($(HB_ARCHITECTURE),os2)
-HB_WITH_QT := no
-endif
-ifeq ($(HB_COMPILER),mingw64)
-HB_WITH_QT := no
-endif
-ifeq ($(HB_COMPILER),watcom)
-HB_WITH_QT := no
-endif
-ifeq ($(HB_COMPILER),bcc)
-HB_WITH_QT := no
-endif
-ifeq ($(HB_COMPILER),pocc)
-HB_WITH_QT := no
-endif
-ifeq ($(HB_COMPILER),pocc64)
-HB_WITH_QT := no
-endif
-ifeq ($(HB_COMPILER),poccarm)
-HB_WITH_QT := no
-endif
+   HB_WITH_QT := yes
+   ifeq ($(HB_ARCHITECTURE),dos)
+      HB_WITH_QT := no
+   endif
+   ifeq ($(HB_ARCHITECTURE),os2)
+      HB_WITH_QT := no
+   endif
+   ifeq ($(HB_COMPILER),mingw64)
+      HB_WITH_QT := no
+   endif
+   ifeq ($(HB_COMPILER),watcom)
+      HB_WITH_QT := no
+   endif
+   ifeq ($(HB_COMPILER),bcc)
+      HB_WITH_QT := no
+   endif
+   ifeq ($(HB_COMPILER),pocc)
+      HB_WITH_QT := no
+   endif
+   ifeq ($(HB_COMPILER),pocc64)
+      HB_WITH_QT := no
+   endif
+   ifeq ($(HB_COMPILER),poccarm)
+      HB_WITH_QT := no
+   endif
 endif
 
 ifeq ($(HB_WITH_QT),yes)

@@ -539,6 +539,7 @@ EXAMPLES
       rem
       mingw32-make %1 %2 > log.txt 2>&1
       ---
+      [ TOFIX: currently chokes on some cmdline limit. ]
 
       --- Open Watcom C++
       SET WATCOM=C:\watcom

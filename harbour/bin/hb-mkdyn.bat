@@ -32,43 +32,22 @@ set HB_OBJ_EXT=_dyn.obj
 set HB_OBJ_PREF=
 set HB_OBJ_POST=
 
+set _DST_NAME_POST=
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_bcc"      set _DST_NAME_POST=-bcc
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvc64"   set _DST_NAME_POST=-x64
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw64"  set _DST_NAME_POST=-x64
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc64"   set _DST_NAME_POST=-x64
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_iccia64"  set _DST_NAME_POST=-ia64
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvcia64" set _DST_NAME_POST=-ia64
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_msvcarm"  set _DST_NAME_POST=-wce-arm
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_mingwarm" set _DST_NAME_POST=-wce-arm
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_poccarm"  set _DST_NAME_POST=-wce-arm
+
+set _DST_NAME_ST=harbour-%HB_DLL_VERSION%%_DST_NAME_POST%
+set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%%_DST_NAME_POST%
+
 set _LIST_ST=%HB_BIN_INSTALL%\_hballst.txt
 set _LIST_MT=%HB_BIN_INSTALL%\_hballmt.txt
-
-set _DST_NAME_ST=
-set _DST_NAME_MT=
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_icc"      set _DST_NAME_ST=harbour-%HB_DLL_VERSION%
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_icc"      set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_iccia64"  set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-ia64
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_iccia64"  set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-ia64
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvc"     set _DST_NAME_ST=harbour-%HB_DLL_VERSION%
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvc"     set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_msvcarm"  set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-wce-arm
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_msvcarm"  set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-wce-arm
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvc64"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-x64
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvc64"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-x64
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvcia64" set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-ia64
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvcia64" set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-ia64
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw"    set _DST_NAME_ST=harbour-%HB_DLL_VERSION%
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw"    set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw64"  set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-x64
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw64"  set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-x64
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_mingwarm" set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-wce-arm
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_mingwarm" set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-wce-arm
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_cygwin"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_cygwin"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_bcc"      set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-bcc
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_bcc"      set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-bcc
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_watcom"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_watcom"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc"     set _DST_NAME_ST=harbour-%HB_DLL_VERSION%
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc"     set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc64"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-x64
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc64"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-x64
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_poccarm"  set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-wce-arm
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_poccarm"  set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-wce-arm
-
-if "%_DST_NAME_ST%" == "" ( echo ! Harbour .dll creation isn't supported for this platform. && goto END )
 
 if "%HB_ARCHITECTURE%" == "wce"      set HB_DLL_LIBS_WIN=
 if not "%HB_COMPILER%" == "watcom"   set HB_DLL_LIBS_WATCOM=
@@ -245,8 +224,8 @@ for %%f in (%HB_DLL_LIBS_ST%) do (
       rem echo ! Processing directory: %%f\%HB_OBJ_DIR%
       dir /b "%%f\%HB_OBJ_DIR%\*%HB_OBJ_EXT%" > "%HB_BIN_INSTALL%\_hboraw.txt"
       for /F %%p in (%HB_BIN_INSTALL%\_hboraw.txt) do (
-         if not "%HB_COMPILER%-%%p" == "watcom-mainstd%HB_OBJ_EXT%" (
-         if not "%HB_COMPILER%-%%p" == "watcom-mainwin%HB_OBJ_EXT%" (
+         if not "%HB_COMPILER%_%%p" == "watcom_mainstd%HB_OBJ_EXT%" (
+         if not "%HB_COMPILER%_%%p" == "watcom_mainwin%HB_OBJ_EXT%" (
             echo %HB_OBJ_PREF%%%f\%HB_OBJ_DIR%\%%p%HB_OBJ_POST%>> "%_LIST_ST%"
          )
          )
@@ -261,8 +240,8 @@ for %%f in (%HB_DLL_LIBS_MT%) do (
       rem echo ! Processing directory: %%f\%HB_OBJ_DIR%
       dir /b "%%f\%HB_OBJ_DIR%\*%HB_OBJ_EXT%" > "%HB_BIN_INSTALL%\_hboraw.txt"
       for /F %%p in (%HB_BIN_INSTALL%\_hboraw.txt) do (
-         if not "%HB_COMPILER%-%%p" == "watcom-mainstd%HB_OBJ_EXT%" (
-         if not "%HB_COMPILER%-%%p" == "watcom-mainwin%HB_OBJ_EXT%" (
+         if not "%HB_COMPILER%_%%p" == "watcom_mainstd%HB_OBJ_EXT%" (
+         if not "%HB_COMPILER%_%%p" == "watcom_mainwin%HB_OBJ_EXT%" (
             echo %HB_OBJ_PREF%%%f\%HB_OBJ_DIR%\%%p%HB_OBJ_POST%>> "%_LIST_MT%"
          )
          )

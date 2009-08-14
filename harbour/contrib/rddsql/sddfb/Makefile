@@ -11,9 +11,9 @@ LIBNAME := sddfb
 ifneq ($(HB_COMPILER),pocc64)
 
 ifeq ($(HB_INC_FIREBIRD),)
-ifeq ($(HB_XBUILD),)
-HB_INC_FIREBIRD := /usr/include /opt/firebird/include
-endif
+   ifeq ($(HB_XBUILD),)
+      HB_INC_FIREBIRD := /usr/include /opt/firebird/include
+   endif
 endif
 
 HB_INC_FIREBIRD_OK := $(foreach d, $(HB_INC_FIREBIRD), $(if $(wildcard $(d)/ibase.h),$(d),))

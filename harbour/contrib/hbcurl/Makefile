@@ -13,9 +13,9 @@ HB_INC_CURL_OK :=
 ifneq ($(HB_ARCHITECTURE),dos)
 
 ifeq ($(HB_INC_CURL),)
-ifeq ($(HB_XBUILD),)
-HB_INC_CURL := /usr/include
-endif
+   ifeq ($(HB_XBUILD),)
+      HB_INC_CURL := /usr/include
+   endif
 endif
 
 HB_INC_CURL_OK := $(foreach d, $(HB_INC_CURL), $(if $(wildcard $(d)/curl/curl.h),$(d),))
@@ -41,10 +41,10 @@ install::
 	$(INSTALL_RULE_HEADERS)
 
 ifeq ($(HB_ARCHITECTURE),win)
-DIRS += hbcurls
+   DIRS += hbcurls
 endif
 ifeq ($(HB_ARCHITECTURE),wce)
-DIRS += hbcurls
+   DIRS += hbcurls
 endif
 
 ifneq ($(DIRS),)

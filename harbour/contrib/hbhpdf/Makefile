@@ -7,9 +7,9 @@ ROOT = ../../
 LIBNAME := hbhpdf
 
 ifeq ($(HB_INC_LIBHARU),)
-ifeq ($(HB_XBUILD),)
-HB_INC_LIBHARU = /usr/include /usr/local/include $(TOP)$(ROOT)external/libhpdf
-endif
+   ifeq ($(HB_XBUILD),)
+      HB_INC_LIBHARU = /usr/include /usr/local/include $(TOP)$(ROOT)external/libhpdf
+   endif
 endif
 
 HB_INC_LIBHARU_OK := $(foreach d, $(HB_INC_LIBHARU), $(if $(wildcard $(d)/hpdf.h),$(d),))

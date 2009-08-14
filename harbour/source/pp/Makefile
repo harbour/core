@@ -47,9 +47,9 @@ install::
 	$(INSTALL_RULE_LIBRARIES)
 
 clean::
-	-@$(RM) $(subst /,$(DIRSEP),$(HB_VERHEADER))
-	-@$(RM) $(subst /,$(DIRSEP),$(BIN_DIR)/hbpp$(BIN_EXT))
-	-@$(RM) $(subst /,$(DIRSEP),$(BIN_DIR)/hbpp.tds)
+	$(if $(wildcard $(HB_VERHEADER)),          -@$(RM) $(subst /,$(DIRSEP),$(HB_VERHEADER)),)
+	$(if $(wildcard $(BIN_DIR)/hbpp$(BIN_EXT)),-@$(RM) $(subst /,$(DIRSEP),$(BIN_DIR)/hbpp$(BIN_EXT)),)
+	$(if $(wildcard $(BIN_DIR)/hbpp.tds),      -@$(RM) $(subst /,$(DIRSEP),$(BIN_DIR)/hbpp.tds),)
 
 endif
 endif
