@@ -58,7 +58,7 @@ goto INST_%HB_ARCHITECTURE%
       call "%~dp0hb-mkdyn.bat"
 
       if exist "%HB_BIN_INSTALL%\*.dll" (
-         echo ! Creating dynamic version of Harbour binaries...
+         echo ! Making shared version of Harbour binaries...
          "%HB_HOST_BIN_DIR%\hbmk2" -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbrun-dll"    "%~dp0..\utils\hbrun\hbrun.hbp"
          "%HB_HOST_BIN_DIR%\hbmk2" -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbmk2-dll"    "%~dp0..\utils\hbmk2\hbmk2.hbp"
          "%HB_HOST_BIN_DIR%\hbmk2" -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbtest-dll"   "%~dp0..\utils\hbtest\hbtest.hbp"
@@ -69,7 +69,7 @@ goto INST_%HB_ARCHITECTURE%
    :_SKIP_DLL_BIN
 
    rem ; We build this here, because GNU Make wouldn't add the icon.
-   echo ! Creating hbrun with embedded icon...
+   echo ! Making hbrun with application icon...
    "%HB_HOST_BIN_DIR%\hbmk2" -q0 -lng=en-EN "-o%HB_BIN_INSTALL%\hbrun" "%~dp0..\utils\hbrun\hbrun.hbp"
 
    if "%HB_BUILD_IMPLIB%" == "yes" call "%~dp0hb-mkimp.bat"
@@ -100,7 +100,7 @@ goto INST_%HB_ARCHITECTURE%
 
 :MK_PKG
 
-   echo ! Creating Harbour .zip install package: '%HB_PKGPATH%.zip'
+   echo ! Making Harbour .zip install package: '%HB_PKGPATH%.zip'
    if exist "%HB_PKGPATH%.zip" del "%HB_PKGPATH%.zip"
    pushd
    cd "%HB_PKGBASE%"
@@ -109,7 +109,7 @@ goto INST_%HB_ARCHITECTURE%
 
    if "%HB_ARCHITECTURE%" == "dos" goto :EOF
 
-   echo ! Creating Harbour .exe install package: '%HB_PKGPATH%.exe'
+   echo ! Making Harbour .exe install package: '%HB_PKGPATH%.exe'
    "%HB_DIR_NSIS%makensis.exe" /V2 "%~dp0..\package\mpkg_win.nsi"
 
    goto :EOF

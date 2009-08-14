@@ -23,7 +23,7 @@ if not "%OS%" == "Windows_NT" goto END
 
 if not "%HB_LIB_INSTALL%" == "" (
 
-   echo ! Creating import libs...
+   echo ! Making import libs...
 
    if "%HB_COMPILER%" == "bcc" (
 

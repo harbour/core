@@ -121,7 +121,7 @@ define create_library
 endef
 
 AR := wlib
-ARFLAGS := -p=64 -c -n
+ARFLAGS := -q -p=64 -c -n
 AR_RULE = $(create_library)
 
 # disable DOS/4GW Banner

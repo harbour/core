@@ -3379,7 +3379,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             FOR EACH tmp IN l_aRESSRC_TODO
 
                cCommand := cOpt_Res
-               cCommand := StrTran( cCommand, "{IR}", FN_Escape( tmp, nOpt_Esc ) )
+               cCommand := StrTran( cCommand, "{IR}", FN_Escape( PathSepToTarget( hbmk, tmp ), nOpt_Esc ) )
                cCommand := StrTran( cCommand, "{OS}", FN_Escape( PathSepToTarget( hbmk, FN_DirExtSet( tmp, cWorkDir, cResExt ) ), nOpt_Esc ) )
 
                cCommand := cBin_Res + " " + AllTrim( cCommand )

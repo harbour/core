@@ -43,8 +43,8 @@ if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_iccia64"  set _DST_NAME_ST=harbour-
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_iccia64"  set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-ia64
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvc"     set _DST_NAME_ST=harbour-%HB_DLL_VERSION%
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvc"     set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_msvcarm"  set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-arm
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_msvcarm"  set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-arm
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_msvcarm"  set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-wce-arm
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_msvcarm"  set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-wce-arm
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvc64"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-x64
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvc64"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-x64
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvcia64" set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-ia64
@@ -53,8 +53,8 @@ if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw"    set _DST_NAME_ST=harbour-
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw"    set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw64"  set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-x64
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw64"  set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-x64
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_mingwarm" set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-arm
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_mingwarm" set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-arm
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_mingwarm" set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-wce-arm
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_mingwarm" set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-wce-arm
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_cygwin"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_cygwin"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_bcc"      set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-bcc
@@ -65,8 +65,8 @@ if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc"     set _DST_NAME_ST=harbour-
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc"     set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc64"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-x64
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc64"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-x64
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_poccarm"  set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-arm
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_poccarm"  set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-arm
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_poccarm"  set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-wce-arm
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_poccarm"  set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-wce-arm
 
 if "%_DST_NAME_ST%" == "" ( echo ! Harbour .dll creation isn't supported for this platform. && goto END )
 
@@ -222,12 +222,12 @@ goto END
 
 :MAKE_LISTS
 
-echo ! Making .dlls for %HB_ARCHITECTURE% / %HB_COMPILER%...
+rem echo ! Making .dlls for %HB_ARCHITECTURE% / %HB_COMPILER%...
 
 rem ; Extract neutral objects
 for %%f in (%HB_DLL_LIBS% %HB_DLL_LIBS_WIN% %HB_DLL_LIBS_WATCOM%) do (
    if exist "%%f\%HB_OBJ_DIR%" (
-      echo ! Processing directory: %%f\%HB_OBJ_DIR%
+      rem echo ! Processing directory: %%f\%HB_OBJ_DIR%
       dir /b "%%f\%HB_OBJ_DIR%\*%HB_OBJ_EXT%" > "%HB_BIN_INSTALL%\_hboraw.txt"
       for /F %%p in (%HB_BIN_INSTALL%\_hboraw.txt) do (
          if not "%%p" == "hbpp%HB_OBJ_EXT%" (
@@ -242,7 +242,7 @@ for %%f in (%HB_DLL_LIBS% %HB_DLL_LIBS_WIN% %HB_DLL_LIBS_WATCOM%) do (
 rem ; Extract ST objects
 for %%f in (%HB_DLL_LIBS_ST%) do (
    if exist "%%f\%HB_OBJ_DIR%" (
-      echo ! Processing directory: %%f\%HB_OBJ_DIR%
+      rem echo ! Processing directory: %%f\%HB_OBJ_DIR%
       dir /b "%%f\%HB_OBJ_DIR%\*%HB_OBJ_EXT%" > "%HB_BIN_INSTALL%\_hboraw.txt"
       for /F %%p in (%HB_BIN_INSTALL%\_hboraw.txt) do (
          if not "%HB_COMPILER%-%%p" == "watcom-mainstd%HB_OBJ_EXT%" (
@@ -258,7 +258,7 @@ for %%f in (%HB_DLL_LIBS_ST%) do (
 rem ; Extract MT objects
 for %%f in (%HB_DLL_LIBS_MT%) do (
    if exist "%%f\%HB_OBJ_DIR%" (
-      echo ! Processing directory: %%f\%HB_OBJ_DIR%
+      rem echo ! Processing directory: %%f\%HB_OBJ_DIR%
       dir /b "%%f\%HB_OBJ_DIR%\*%HB_OBJ_EXT%" > "%HB_BIN_INSTALL%\_hboraw.txt"
       for /F %%p in (%HB_BIN_INSTALL%\_hboraw.txt) do (
          if not "%HB_COMPILER%-%%p" == "watcom-mainstd%HB_OBJ_EXT%" (
