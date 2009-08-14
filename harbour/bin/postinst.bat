@@ -107,8 +107,10 @@ goto INST_%HB_ARCHITECTURE%
    "%HB_DIR_ZIP%zip.exe" -q -9 -X -r -o "%HB_PKGPATH%.zip" . -i "%HB_PKGNAME%\*" -x *.tds -x *.exp
    popd
 
-   if not "%HB_ARCHITECTURE%" == "dos" echo ! Creating Harbour .exe install package: '%HB_PKGPATH%.exe'
-   if not "%HB_ARCHITECTURE%" == "dos" "%HB_DIR_NSIS%makensis.exe" /V2 "%~dp0..\package\mpkg_win.nsi"
+   if "%HB_ARCHITECTURE%" == "dos" goto :EOF
+
+   echo ! Creating Harbour .exe install package: '%HB_PKGPATH%.exe'
+   "%HB_DIR_NSIS%makensis.exe" /V2 "%~dp0..\package\mpkg_win.nsi"
 
    goto :EOF
 

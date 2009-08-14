@@ -18,9 +18,9 @@ rem NOTE: .prg files have to be compiled with -n1
 rem NOTE: .c   files have to be compiled with -DHB_DYNLIB
 
 if "%HB_ARCHITECTURE%" == "" ( echo ! HB_ARCHITECTURE needs to be set. && goto END )
-if "%HB_COMPILER%" == "" ( echo ! HB_COMPILER needs to be set. && goto END )
-if "%HB_BIN_INSTALL%" == "" ( echo ! HB_BIN_INSTALL needs to be set. && goto END )
-if "%HB_LIB_INSTALL%" == "" ( echo ! HB_LIB_INSTALL needs to be set. && goto END )
+if "%HB_COMPILER%"     == "" ( echo ! HB_COMPILER needs to be set. && goto END )
+if "%HB_BIN_INSTALL%"  == "" ( echo ! HB_BIN_INSTALL needs to be set. && goto END )
+if "%HB_LIB_INSTALL%"  == "" ( echo ! HB_LIB_INSTALL needs to be set. && goto END )
 
 set HB_DLL_VERSION=20
 set HB_DLL_LIBS=source\common source\pp source\rtl source\macro source\lang source\codepage source\hbpcre source\hbzlib source\hbextern source\rdd source\rdd\dbfntx source\rdd\dbfnsx source\rdd\dbfcdx source\rdd\dbffpt source\rdd\hbsix source\rdd\hsx source\rdd\usrrdd source\rtl\gtcgi source\rtl\gtpca source\rtl\gtstd source\rtl\gtwvt source\rtl\gtgui
@@ -28,7 +28,7 @@ set HB_DLL_LIBS_WIN=source\rtl\gtwin
 set HB_DLL_LIBS_ST=source\vm
 set HB_DLL_LIBS_MT=source\vm\vmmt
 set HB_DLL_LIBS_WATCOM=source\vm\maindllh
-set HB_OBJ_EXT=.obj
+set HB_OBJ_EXT=_dyn.obj
 set HB_OBJ_PREF=
 set HB_OBJ_POST=
 
@@ -113,10 +113,10 @@ if "%HB_ARCHITECTURE%" == "wce" set _SYSLIBS=wininet.lib ws2.lib
 echo ! Making %_DST_NAME_ST%.dll... && %_BIN_LINK% /nologo /dll /subsystem:console /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @"%_LIST_ST%" %_SYSLIBS% %HB_DLLLIBS%
 echo ! Making %_DST_NAME_MT%.dll... && %_BIN_LINK% /nologo /dll /subsystem:console /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @"%_LIST_MT%" %_SYSLIBS% %HB_DLLLIBS%
 
-if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" move "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.lib"
-if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" move "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.lib"
-if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.exp" move "%HB_BIN_INSTALL%\%_DST_NAME_ST%.exp" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.exp"
-if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.exp" move "%HB_BIN_INSTALL%\%_DST_NAME_MT%.exp" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.exp"
+if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" move /Y "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.lib"
+if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" move /Y "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.lib"
+if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.exp" move /Y "%HB_BIN_INSTALL%\%_DST_NAME_ST%.exp" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.exp"
+if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.exp" move /Y "%HB_BIN_INSTALL%\%_DST_NAME_MT%.exp" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.exp"
 
 del "%_LIST_ST%"
 del "%_LIST_MT%"
@@ -165,8 +165,8 @@ echo. , "%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll",, cw32mt.lib import32.lib %HB_DLLI
 echo ! Making %_DST_NAME_ST%.dll... && ilink32 -q -Gn -C -aa -Tpd -Gi -x c0d32.obj @%_LIST_ST%
 echo ! Making %_DST_NAME_MT%.dll... && ilink32 -q -Gn -C -aa -Tpd -Gi -x c0d32.obj @%_LIST_MT%
 
-if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" move "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.lib"
-if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" move "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.lib"
+if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" move /Y "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.lib"
+if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" move /Y "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.lib"
 
 del "%_LIST_ST%"
 del "%_LIST_MT%"
@@ -182,11 +182,11 @@ set HB_OBJ_PREF=FILE '
 set HB_OBJ_POST='
 call :MAKE_LISTS
 
-echo ! Making %_DST_NAME_ST%.dll... && wlink OP QUIET SYS NT_DLL OP IMPLIB NAME '%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll' @"%_LIST_ST%" LIB user32.lib, ws2_32.lib, advapi32.lib, gdi32.lib
-echo ! Making %_DST_NAME_MT%.dll... && wlink OP QUIET SYS NT_DLL OP IMPLIB NAME '%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll' @"%_LIST_MT%" LIB user32.lib, ws2_32.lib, advapi32.lib, gdi32.lib
+echo ! Making %_DST_NAME_ST%.dll... && wlink OP QUIET SYS NT_DLL OP IMPLIB NAME '%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll' @'%_LIST_ST%' LIB user32.lib, ws2_32.lib, advapi32.lib, gdi32.lib
+echo ! Making %_DST_NAME_MT%.dll... && wlink OP QUIET SYS NT_DLL OP IMPLIB NAME '%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll' @'%_LIST_MT%' LIB user32.lib, ws2_32.lib, advapi32.lib, gdi32.lib
 
-if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" move "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.lib"
-if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" move "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.lib"
+if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" move /Y "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.lib"
+if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" move /Y "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.lib"
 
 del "%_LIST_ST%"
 del "%_LIST_MT%"
@@ -206,8 +206,10 @@ if "%HB_ARCHITECTURE%" == "wce" set _SYSLIBS=wininet.lib ws2.lib
 echo ! Making %_DST_NAME_ST%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @%_LIST_ST% %_SYSLIBS% %HB_DLLLIBS%
 echo ! Making %_DST_NAME_MT%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @%_LIST_MT% %_SYSLIBS% %HB_DLLLIBS%
 
-polib "%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" /out:"%HB_LIB_INSTALL%\%_DST_NAME_ST%.lib"
-polib "%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" /out:"%HB_LIB_INSTALL%\%_DST_NAME_MT%.lib"
+if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" move /Y "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.lib"
+if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" move /Y "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.lib"
+if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.exp" move /Y "%HB_BIN_INSTALL%\%_DST_NAME_ST%.exp" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.exp"
+if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.exp" move /Y "%HB_BIN_INSTALL%\%_DST_NAME_MT%.exp" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.exp"
 
 del "%_LIST_ST%"
 del "%_LIST_MT%"
@@ -219,12 +221,12 @@ goto END
 echo ! Making .dlls for %HB_ARCHITECTURE% / %HB_COMPILER%...
 
 rem ; Extract neutral objects
-for %%f in (%HB_DLL_LIBS% %HB_DLL_LIBS_WIN%) do (
+for %%f in (%HB_DLL_LIBS% %HB_DLL_LIBS_WIN% %HB_DLL_LIBS_WATCOM%) do (
    if exist "%%f\%HB_OBJ_DIR%" (
       echo ! Processing directory: %%f\%HB_OBJ_DIR%
-      dir /b "%%f\%HB_OBJ_DIR%\*_dyn%HB_OBJ_EXT%" > "%HB_BIN_INSTALL%\_hboraw.txt"
+      dir /b "%%f\%HB_OBJ_DIR%\*%HB_OBJ_EXT%" > "%HB_BIN_INSTALL%\_hboraw.txt"
       for /F %%p in (%HB_BIN_INSTALL%\_hboraw.txt) do (
-         if not "%%p" == "hbpp_dyn%HB_OBJ_EXT%" (
+         if not "%%p" == "hbpp%HB_OBJ_EXT%" (
             echo %HB_OBJ_PREF%%%f\%HB_OBJ_DIR%\%%p%HB_OBJ_POST%>> "%_LIST_ST%"
             echo %HB_OBJ_PREF%%%f\%HB_OBJ_DIR%\%%p%HB_OBJ_POST%>> "%_LIST_MT%"
          )
@@ -237,10 +239,10 @@ rem ; Extract ST objects
 for %%f in (%HB_DLL_LIBS_ST%) do (
    if exist "%%f\%HB_OBJ_DIR%" (
       echo ! Processing directory: %%f\%HB_OBJ_DIR%
-      dir /b "%%f\%HB_OBJ_DIR%\*_dyn%HB_OBJ_EXT%" > "%HB_BIN_INSTALL%\_hboraw.txt"
+      dir /b "%%f\%HB_OBJ_DIR%\*%HB_OBJ_EXT%" > "%HB_BIN_INSTALL%\_hboraw.txt"
       for /F %%p in (%HB_BIN_INSTALL%\_hboraw.txt) do (
-         if not "%HB_COMPILER%-%%p" == "watcom-mainstd_dyn%HB_OBJ_EXT%" (
-         if not "%HB_COMPILER%-%%p" == "watcom-mainwin_dyn%HB_OBJ_EXT%" (
+         if not "%HB_COMPILER%-%%p" == "watcom-mainstd%HB_OBJ_EXT%" (
+         if not "%HB_COMPILER%-%%p" == "watcom-mainwin%HB_OBJ_EXT%" (
             echo %HB_OBJ_PREF%%%f\%HB_OBJ_DIR%\%%p%HB_OBJ_POST%>> "%_LIST_ST%"
          )
          )
@@ -253,10 +255,10 @@ rem ; Extract MT objects
 for %%f in (%HB_DLL_LIBS_MT%) do (
    if exist "%%f\%HB_OBJ_DIR%" (
       echo ! Processing directory: %%f\%HB_OBJ_DIR%
-      dir /b "%%f\%HB_OBJ_DIR%\*_dyn%HB_OBJ_EXT%" > "%HB_BIN_INSTALL%\_hboraw.txt"
+      dir /b "%%f\%HB_OBJ_DIR%\*%HB_OBJ_EXT%" > "%HB_BIN_INSTALL%\_hboraw.txt"
       for /F %%p in (%HB_BIN_INSTALL%\_hboraw.txt) do (
-         if not "%HB_COMPILER%-%%p" == "watcom-mainstd_dyn%HB_OBJ_EXT%" (
-         if not "%HB_COMPILER%-%%p" == "watcom-mainwin_dyn%HB_OBJ_EXT%" (
+         if not "%HB_COMPILER%-%%p" == "watcom-mainstd%HB_OBJ_EXT%" (
+         if not "%HB_COMPILER%-%%p" == "watcom-mainwin%HB_OBJ_EXT%" (
             echo %HB_OBJ_PREF%%%f\%HB_OBJ_DIR%\%%p%HB_OBJ_POST%>> "%_LIST_MT%"
          )
          )

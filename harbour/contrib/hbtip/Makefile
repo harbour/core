@@ -8,6 +8,11 @@ include $(TOP)$(ROOT)config/global.cf
 
 LIBNAME := hbtip
 
+ifeq ($(HB_HAS_OPENSSL),yes)
+   HB_USER_PRGFLAGS += -DHB_HAS_OPENSSL
+   HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/hbssl
+endif
+
 ifneq ($(HB_ARCHITECTURE),dos)
 
 C_SOURCES := \
