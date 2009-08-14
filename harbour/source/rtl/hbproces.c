@@ -343,8 +343,11 @@ HB_FHANDLE hb_fsProcessOpen( const char *pszFilename,
                              BOOL fDetach, ULONG *pulPID )
 {
    HB_FHANDLE hResult = FS_ERROR;
+   char * pszFree;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessOpen(%s, %p, %p, %p, %d, %p)", pszFilename, phStdin, phStdout, phStderr, fDetach, pulPID));
+
+   pszFilename = hb_osEncode( pszFilename, &pszFree );
 
 #if defined( HB_IO_WIN )
 {
@@ -739,6 +742,9 @@ HB_FHANDLE hb_fsProcessOpen( const char *pszFilename,
 }
 #endif
 
+   if( pszFree )
+      hb_xfree( pszFree );
+
    return hResult;
 }
 
@@ -901,9 +907,12 @@ int hb_fsProcessRun( const char * pszFilename,
    HB_FHANDLE hStdin, hStdout, hStderr, *phStdin, *phStdout, *phStderr;
    char * pOutBuf, *pErrBuf;
    ULONG ulOutSize, ulErrSize, ulOutBuf, ulErrBuf;
+   char * pszFree;
    int iResult;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessRun(%s, %p, %lu, %p, %p, %p, %p, %d)", pStdInBuf, ulStdInLen, pStdOutPtr, pulStdOut, pStdErrPtr, pulStdErr, fDetach));
+
+   pszFilename = hb_osEncode( pszFilename, &pszFree );
 
    ulOutBuf = ulErrBuf = ulOutSize = ulErrSize = 0;
    pOutBuf = pErrBuf = NULL;
@@ -1227,6 +1236,9 @@ int hb_fsProcessRun( const char * pszFilename,
       *pStdErrPtr = pErrBuf;
       *pulStdErr = ulErrBuf;
    }
+
+   if( pszFree )
+      hb_xfree( pszFree );
 
    return iResult;
 }
