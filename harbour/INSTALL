@@ -293,11 +293,6 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
                                you only need this if your are Harbour core
                                developer modifying the parser.
                                This requires GNU Bison 1.28 or upper in PATH.
-   - HB_BUILD_LOG=[yes|no|<f>] Send stdout and stderr build outputs to <f>
-                               file. Leave it as it is if set to 'no' or left
-                               empty. 'yes' will output to an automatically
-                               formed filename, which you can retrieve from
-                               HB_BUILD_LOGFILE envvar.
 
    Cross building
    --------------

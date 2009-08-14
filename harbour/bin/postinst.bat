@@ -6,11 +6,22 @@
 
 rem ---------------------------------------------------------------
 rem Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
-rem Copyright 2003 Przemyslaw Czerpak (druzus / at / priv.onet.pl)
-rem simple script run after Harbour make install to finish install
-rem process
-rem
 rem See COPYING for licensing terms.
+rem
+rem Script run after Harbour make install to finish install process
+rem (for Windows/DOS)
+rem
+rem Contains: install package creator script, which requires:
+rem
+rem    - Info-ZIP zip.exe in PATH
+rem         or HB_DIR_ZIP envvar set to its dir with an ending backslash.
+rem         https://sourceforge.net/project/showfiles.php?group_id=118012
+rem    - NullSoft Installer installed (NSIS)
+rem         https://sourceforge.net/project/showfiles.php?group_id=22049&package_id=15374
+rem      (only for Windows builds)
+rem    - makensis.exe (part of NSIS) in PATH
+rem         or HB_DIR_NSIS envvar set to its dir with an ending backslash.
+rem      (only for Windows builds)
 rem ---------------------------------------------------------------
 
 if "%HB_BIN_INSTALL%" == "" echo HB_BIN_INSTALL needs to be set.
@@ -62,7 +73,7 @@ goto INST_%HB_ARCHITECTURE%
    "%HB_HOST_BIN_DIR%\hbmk2" -q0 -lng=en-EN "-o%HB_BIN_INSTALL%\hbrun" "%~dp0..\utils\hbrun\hbrun.hbp"
 
    if "%HB_BUILD_IMPLIB%" == "yes" call "%~dp0hb-mkimp.bat"
-   if "%HB_BUILD_PKG%" == "yes" call "%~dp0hb-mkpkg.bat"
+   if "%HB_BUILD_PKG%" == "yes" call :MK_PKG
 
    goto END
 
@@ -75,9 +86,8 @@ goto INST_%HB_ARCHITECTURE%
    if not "%HB_INSTALL_PREFIX%" == "" copy INSTALL    %HB_INSTALL_PREFIX% > nul
    if not "%HB_INSTALL_PREFIX%" == "" copy TODO       %HB_INSTALL_PREFIX% > nul
 
-   if "%HB_BUILD_PKG%" == "yes" call "%~dp0hb-mkpkg.bat"
+   if "%HB_BUILD_PKG%" == "yes" call :MK_PKG
 
-   rem DOS post install part
    goto END
 
 :INST_LINUX
@@ -87,5 +97,19 @@ goto INST_%HB_ARCHITECTURE%
 :INST_
 
    goto END
+
+:MK_PKG
+
+   echo ! Creating Harbour .zip install package: '%HB_PKGPATH%.zip'
+   if exist "%HB_PKGPATH%.zip" del "%HB_PKGPATH%.zip"
+   pushd
+   cd "%HB_PKGBASE%"
+   "%HB_DIR_ZIP%zip.exe" -q -9 -X -r -o "%HB_PKGPATH%.zip" . -i "%HB_PKGNAME%\*" -x *.tds -x *.exp
+   popd
+
+   if not "%HB_ARCHITECTURE%" == "dos" echo ! Creating Harbour .exe install package: '%HB_PKGPATH%.exe'
+   if not "%HB_ARCHITECTURE%" == "dos" "%HB_DIR_NSIS%makensis.exe" /V2 "%~dp0..\package\mpkg_win.nsi"
+
+   goto :EOF
 
 :END

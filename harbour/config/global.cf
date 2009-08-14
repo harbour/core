@@ -429,6 +429,14 @@ ifeq ($(HB_ARCHITECTURE),)
       else
          ifeq ($(HB_COMPILER),poccarm)
             HB_ARCHITECTURE := wce
+         else
+            ifeq ($(HB_COMPILER),djgpp)
+               HB_ARCHITECTURE := dos
+            else
+               ifeq ($(findstring $(HB_COMPILER),mingw mingw64 msvc msvc64 msvcia64 bcc xcc pocc pocc64),)
+                  HB_ARCHITECTURE := win
+               endif
+            endif
          endif
       endif
    endif
@@ -765,7 +773,7 @@ ifeq ($(HB_BUILD_PKG),yes)
    PKG_DIR := $(subst /,$(DIRSEP),$(TOP)$(ROOT))pkg
    export HB_PKGBASE := $(PKG_DIR)$(DIRSEP)$(HB_ARCHITECTURE)$(DIRSEP)$(HB_COMPILER)
    export HB_PKGPATH := $(subst /,$(DIRSEP),$(abspath $(PKG_DIR)$(DIRSEP)$(HB_PKGNAME)))
-   HB_INSTALL_PREFIX := $(HB_PKGBASE)$(DIRSEP)$(HB_PKGNAME)
+   HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(abspath $(HB_PKGBASE)$(DIRSEP)$(HB_PKGNAME)))
 
    .PHONY: clean
 
@@ -777,7 +785,7 @@ else
    # Fill it automatically if not specified
    ifeq ($(HB_INSTALL_PREFIX),)
 
-      HB_INSTALL_PREFIX := $(realpath $(TOP)$(ROOT))
+      HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(realpath $(TOP)$(ROOT)))
 
       # Use names which are not likely to be used by users to
       # avoiding accidental overwrites of existing installations
@@ -864,8 +872,10 @@ export HARBOURCMD :=
 export CLIPPER :=
 export CLIPPERCMD :=
 
-# relevant only on non-*nix hosts
-MKFLAGS := --no-print-directory
+# relevant only on non-*nix hosts where --print-directory is on by default
+ifeq ($(findstring -w,$(HB_USER_MAKEFLAGS))$(findstring --print-directory,$(HB_USER_MAKEFLAGS)),)
+   MKFLAGS := --no-print-directory
+endif
 
 export HB_CONFIG_SHOWN := yes
 
