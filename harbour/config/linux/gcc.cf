@@ -39,13 +39,11 @@ endif
 LD := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)
 LD_OUT := -o
 
-# Add all libraries specified in LIBS.
 LIBPATHS := -L$(LIB_DIR)
-
 LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
 
 ifneq ($(findstring hbrtl, $(LIBS)),)
-   # Add the specified GT driver library and other RTLs
+   # Add the specified GT driver library
    ifneq ($(findstring gtcrs, $(LIBS)),)
       ifeq ($(HB_CRS_LIB),)
          HB_CRS_LIB := ncurses

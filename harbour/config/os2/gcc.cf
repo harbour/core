@@ -42,7 +42,6 @@ ifeq ($(C_MAIN),)
    endif
 endif
 
-# Add all libraries specified in LIBS.
 LIBPATHS := -L$(LIB_DIR)
 LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
 
