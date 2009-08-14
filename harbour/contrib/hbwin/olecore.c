@@ -280,7 +280,19 @@ static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
          }
          break;
 
-      case HB_IT_OBJECT: /* or ARRAY */
+#ifdef HB_OLE_PASS_POINTERS
+      case HB_IT_POINTER:
+         pVariant->n1.n2.vt = VT_PTR;
+         pVariant->n1.n2.n3.byref = hb_itemGetPtr( pItem );
+         if( pVarRef )
+         {
+            pVarRef->n1.n2.vt = VT_PTR | VT_BYREF;
+            pVarRef->n1.n2.n3.byref = &pVariant->n1.n2.n3.byref;
+         }
+         break;
+#endif
+
+      case HB_IT_ARRAY: /* or OBJECT */
          if( HB_IS_OBJECT( pItem ) )
          {
             if( hb_clsIsParent( hb_objGetClass( pItem ), "WIN_OLEAUTO" ) )
@@ -336,7 +348,26 @@ static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
             }
          }
          break;
+
+      default:
+         if( pVarRef )
+         {
+            pVarRef->n1.n2.vt = VT_VARIANT | VT_BYREF;
+            pVarRef->n1.n2.n3.pvarVal = pVariant;
+         }
    }
+
+/* enabling this code may allow to exchange parameters by reference
+ * without strong typing restrictions but I do not know if such method
+ * is honored by other OLE code
+ */
+#if 0
+   if( pVarRef )
+   {
+      pVarRef->n1.n2.vt = VT_VARIANT | VT_BYREF;
+      pVarRef->n1.n2.n3.pvarVal = pVariant;
+   }
+#endif
 }
 
 void hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem )
@@ -357,6 +388,9 @@ PHB_ITEM hb_oleItemPut( PHB_ITEM pItem, IDispatch* pDisp )
 
 void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
 {
+   if( pVariant->n1.n2.vt == VT_VARIANT | VT_BYREF )
+      pVariant = pVariant->n1.n2.n3.pvarVal;
+
    switch( pVariant->n1.n2.vt )
    {
       case VT_DISPATCH:
@@ -513,6 +547,22 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
 #endif
          break;
 
+      case VT_INT:
+         hb_itemPutNI( pItem, pVariant->n1.n2.n3.intVal );
+         break;
+
+      case VT_INT | VT_BYREF:
+         hb_itemPutNI( pItem, *pVariant->n1.n2.n3.pintVal );
+         break;
+
+      case VT_UINT:
+         hb_itemPutNInt( pItem, ( HB_LONG ) pVariant->n1.n2.n3.uintVal );
+         break;
+
+      case VT_UINT | VT_BYREF:
+         hb_itemPutNInt( pItem, ( HB_LONG ) *pVariant->n1.n2.n3.puintVal );
+         break;
+
       case VT_R4:
          hb_itemPutND( pItem, ( double ) pVariant->n1.n2.n3.fltVal );
          break;
@@ -537,24 +587,20 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
                       pVariant->n1.n2.n3.cyVal :
                       *pVariant->n1.n2.n3.pcyVal, &dblVal );
          hb_itemPutND( pItem, dblVal );
+         /* hb_itemPutNDLen( pItem, dblVal, 0, 4 ); */
          break;
       }
 
-      case VT_INT:
-         hb_itemPutNI( pItem, pVariant->n1.n2.n3.intVal );
+      case VT_DECIMAL:
+      case VT_DECIMAL | VT_BYREF:
+      {
+         double dblVal;
+         VarR8FromDec( pVariant->n1.n2.vt == VT_DECIMAL ?
+                       &pVariant->n1.decVal :
+                       pVariant->n1.n2.n3.pdecVal, &dblVal );
+         hb_itemPutND( pItem, dblVal );
          break;
-
-      case VT_INT | VT_BYREF:
-         hb_itemPutNI( pItem, *pVariant->n1.n2.n3.pintVal );
-         break;
-
-      case VT_UINT:
-         hb_itemPutNInt( pItem, ( HB_LONG ) pVariant->n1.n2.n3.uintVal );
-         break;
-
-      case VT_UINT | VT_BYREF:
-         hb_itemPutNInt( pItem, ( HB_LONG ) *pVariant->n1.n2.n3.puintVal );
-         break;
+      }
 
       case VT_DATE:
       case VT_DATE | VT_BYREF:
@@ -571,6 +617,12 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
             hb_itemPutDL( pItem, lJulian );
          break;
       }
+
+#ifdef HB_OLE_PASS_POINTERS
+      case VT_PTR:
+         hb_itemPutPtr( pItem, pVariant->n1.n2.n3.byref );
+         break;
+#endif
 
       default:
          hb_itemClear( pItem );
