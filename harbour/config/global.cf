@@ -421,20 +421,22 @@ endif
 HB_ARCH_AUTO :=
 ifeq ($(HB_ARCHITECTURE),)
    HB_ARCHITECTURE := $(HB_HOST_ARCH)
-   ifeq ($(HB_COMPILER),msvcarm)
-      HB_ARCHITECTURE := wce
-   else
-      ifeq ($(HB_COMPILER),mingwarm)
+   ifneq ($(HB_COMPILER),)
+      ifeq ($(HB_COMPILER),msvcarm)
          HB_ARCHITECTURE := wce
       else
-         ifeq ($(HB_COMPILER),poccarm)
+         ifeq ($(HB_COMPILER),mingwarm)
             HB_ARCHITECTURE := wce
          else
-            ifeq ($(HB_COMPILER),djgpp)
-               HB_ARCHITECTURE := dos
+            ifeq ($(HB_COMPILER),poccarm)
+               HB_ARCHITECTURE := wce
             else
-               ifeq ($(findstring $(HB_COMPILER),mingw mingw64 msvc msvc64 msvcia64 bcc xcc pocc pocc64),)
-                  HB_ARCHITECTURE := win
+               ifeq ($(HB_COMPILER),djgpp)
+                  HB_ARCHITECTURE := dos
+               else
+                  ifeq ($(findstring $(HB_COMPILER),mingw mingw64 msvc msvc64 msvcia64 bcc xcc pocc pocc64),)
+                     HB_ARCHITECTURE := win
+                  endif
                endif
             endif
          endif

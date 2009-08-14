@@ -538,70 +538,73 @@ static int hb_sln_isUTF8( int iStdOut, int iStdIn )
    if( isatty( iStdOut ) && isatty( iStdIn ) )
    {
       const char * szBuf = "\r\303\255\033[6n  \r";
-      char rdbuf[ 64 ];
-      int i, j, n, d, y, x;
-      HB_ULONG end_timer, time;
+      int len = strlen( szBuf );
 
-      write( iStdOut, szBuf, strlen( szBuf ) );
-
-      n = j = x = y = 0;
-      /* wait up to 2 seconds for answer */
-      end_timer = hb_dateMilliSeconds() + 2000;
-      for( ; ; )
+      if( write( iStdOut, szBuf, len ) == len )
       {
-         /* loking for cursor position in "\033[%d;%dR" */
-         while( j < n && rdbuf[ j ] != '\033' )
-            ++j;
-         if( n - j >= 6 )
+         char rdbuf[ 64 ];
+         int i, j, n, d, y, x;
+         HB_ULONG end_timer, time;
+
+         n = j = x = y = 0;
+         /* wait up to 2 seconds for answer */
+         end_timer = hb_dateMilliSeconds() + 2000;
+         for( ; ; )
          {
-            i = j + 1;
-            if( rdbuf[ i ] == '[' )
+            /* loking for cursor position in "\033[%d;%dR" */
+            while( j < n && rdbuf[ j ] != '\033' )
+               ++j;
+            if( n - j >= 6 )
             {
-               y = 0;
-               d = ++i;
-               while( i < n && rdbuf[ i ] >= '0' && rdbuf[ i ] <= '9' )
-                  y = y * 10 + ( rdbuf[ i++ ] - '0' );
-               if( i < n && i > d && rdbuf[ i ] == ';' )
+               i = j + 1;
+               if( rdbuf[ i ] == '[' )
                {
-                  x = 0;
+                  y = 0;
                   d = ++i;
                   while( i < n && rdbuf[ i ] >= '0' && rdbuf[ i ] <= '9' )
-                     x = x * 10 + ( rdbuf[ i++ ] - '0' );
-                  if( i < n && i > d && rdbuf[ i ] == 'R' )
+                     y = y * 10 + ( rdbuf[ i++ ] - '0' );
+                  if( i < n && i > d && rdbuf[ i ] == ';' )
                   {
-                     return x == 2 ? 1 : 0;
+                     x = 0;
+                     d = ++i;
+                     while( i < n && rdbuf[ i ] >= '0' && rdbuf[ i ] <= '9' )
+                        x = x * 10 + ( rdbuf[ i++ ] - '0' );
+                     if( i < n && i > d && rdbuf[ i ] == 'R' )
+                     {
+                        return x == 2 ? 1 : 0;
+                     }
                   }
                }
+               if( i < n )
+               {
+                  j = i;
+                  continue;
+               }
             }
-            if( i < n )
+            if( n == sizeof( rdbuf ) )
+               break;
+            time = hb_dateMilliSeconds();
+            if( time > end_timer )
+               break;
+            else
             {
-               j = i;
-               continue;
+               struct timeval tv;
+               fd_set rdfds;
+               int iMilliSec;
+
+               FD_ZERO( &rdfds );
+               FD_SET( iStdIn, &rdfds );
+               iMilliSec = ( int ) ( end_timer - time );
+               tv.tv_sec = iMilliSec / 1000;
+               tv.tv_usec = ( iMilliSec % 1000 ) * 1000;
+
+               if( select( iStdIn + 1, &rdfds, NULL, NULL, &tv ) <= 0 )
+                  break;
+               i = read( iStdIn, rdbuf + n, sizeof( rdbuf ) - n );
+               if( i <= 0 )
+                  break;
+               n += i;
             }
-         }
-         if( n == sizeof( rdbuf ) )
-            break;
-         time = hb_dateMilliSeconds();
-         if( time > end_timer )
-            break;
-         else
-         {
-            struct timeval tv;
-            fd_set rdfds;
-            int iMilliSec;
-
-            FD_ZERO( &rdfds );
-            FD_SET( iStdIn, &rdfds );
-            iMilliSec = ( int ) ( end_timer - time );
-            tv.tv_sec = iMilliSec / 1000;
-            tv.tv_usec = ( iMilliSec % 1000 ) * 1000;
-
-            if( select( iStdIn + 1, &rdfds, NULL, NULL, &tv ) <= 0 )
-               break;
-            i = read( iStdIn, rdbuf + n, sizeof( rdbuf ) - n );
-            if( i <= 0 )
-               break;
-            n += i;
          }
       }
    }
