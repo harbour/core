@@ -54,6 +54,7 @@
 #include "hbapierr.h"
 #include "hbapigt.h"
 #include "hbapiitm.h"
+#include "hbapifs.h"
 
 HB_FUNC( HB_RUN )
 {
@@ -65,12 +66,17 @@ HB_FUNC( HB_RUN )
 
       if( hb_gtSuspend() == HB_SUCCESS )
       {
+#if defined( HB_OS_WIN_CE )
+         iResult = hb_fsProcessRun( pszCommand,
+                                    NULL, 0, NULL, NULL, NULL, NULL, FALSE );
+#else
          char * pszFree;
 
          iResult = system( hb_osEncode( pszCommand, &pszFree ) );
 
          if( pszFree )
             hb_xfree( pszFree );
+#endif
 
          hb_gtResume();
       }
