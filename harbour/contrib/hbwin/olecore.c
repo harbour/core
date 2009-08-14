@@ -388,7 +388,7 @@ PHB_ITEM hb_oleItemPut( PHB_ITEM pItem, IDispatch* pDisp )
 
 void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
 {
-   if( pVariant->n1.n2.vt == VT_VARIANT | VT_BYREF )
+   if( pVariant->n1.n2.vt == ( VT_VARIANT | VT_BYREF ) )
       pVariant = pVariant->n1.n2.n3.pvarVal;
 
    switch( pVariant->n1.n2.vt )
@@ -623,6 +623,39 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
          hb_itemPutPtr( pItem, pVariant->n1.n2.n3.byref );
          break;
 #endif
+
+      case VT_VARIANT | VT_ARRAY:
+      case VT_VARIANT | VT_ARRAY | VT_BYREF:
+      {
+         SAFEARRAY * pSafeArray = pVariant->n1.n2.vt & VT_BYREF ?
+                                  *pVariant->n1.n2.n3.pparray :
+                                  pVariant->n1.n2.n3.parray;
+         if( pSafeArray && SafeArrayGetDim( pSafeArray ) == 1 )
+         {
+            long lFrom, lTo;
+
+            SafeArrayGetLBound( pSafeArray, 1, &lFrom );
+            SafeArrayGetUBound( pSafeArray, 1, &lTo );
+            if( lFrom >= lTo )
+            {
+               VARIANT vItem;
+               ULONG ul = 0;
+
+               hb_arrayNew( pItem, lTo - lFrom + 1 );
+               VariantInit( &vItem );
+               do
+               {
+                  if( SUCCEEDED( SafeArrayGetElement( pSafeArray, &lFrom, &vItem ) ) )
+                  {
+                     hb_oleVariantToItem( hb_arrayGetItemPtr( pItem, ul++ ), &vItem );
+                     VariantClear( &vItem );
+                  }
+               }
+               while( ++lFrom <= lTo );
+               break;
+            }
+         }
+      }
 
       default:
          hb_itemClear( pItem );
