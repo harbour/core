@@ -27,12 +27,12 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
 
    Linux/Darwin/BSD/HP-UX/Solaris
    ------------------------------
-      $ export HB_COMPILER=<[gcc]|watcom|icc|sunpro>
-      $ export HB_INSTALL_PREFIX=<DIR>
-      $ ./make_gnu.sh
-      $ sudo ./make_gnu.sh install
+    [ $ export HB_COMPILER=<gcc|watcom|icc|sunpro> ]
+    [ $ export HB_INSTALL_PREFIX=<DIR> ]
+      $ make install
 
-      To test it, go to <DIR>/bin directory and type:
+      To test it, type:
+      $ cd bin
       $ ./hbmk2 ../tests/hello.prg
       $ ./hello
       You should see 'Hello world!' on screen.
@@ -49,20 +49,23 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       Platform specific prerequisites:
 
       1.) Windows NT or compatible system is required to build Harbour.
-      2.) Make sure to have your C compiler of choice properly installed.
-          Refer to your C compiler installation and setup instructions for
-          details. It's recommended to make sure no tools in your PATH
-          belonging to other C compilers are interfering with your setup.
-          For the list of supported compilers, please look up the
-          relevant section in this file.
-      3.) GNU Make is included in the source package. No configuration
-          is needed.
+      2.) Make sure to have your C compiler of choice properly installed
+          (in PATH). Refer to your C compiler installation and setup
+          instructions for details. It's recommended to make sure no tools
+          in your PATH belonging to other C compilers are interfering with
+          your setup. For the list of supported compilers, please look up
+          the relevant section in this file.
+      3.) You need to get GNU Make. We recommend this link:
+             http://sourceforge.net/projects/mingw/files/GNU%20Make/Current%20Release_%20mingw32-make-3.81-20080326/mingw32-make-3.81-20080326-3.tar.gz/download
+          Unpack it to your PATH or Harbour source root directory.
+          For convenience you may also use included config/mingw32-make.exe instead.
 
-      > set HB_COMPILER=<mingw|msvc|watcom|bcc|pocc|cygwin|...>
-      > set HB_INSTALL_PREFIX=<DIR>
-      > make_gnu.bat install
+    [ > set HB_COMPILER=<mingw|msvc|watcom|bcc|pocc|cygwin|...> ]
+    [ > set HB_INSTALL_PREFIX=<DIR> ]
+      > mingw32-make install
 
-      To test it, go to <DIR>\bin directory and type:
+      To test it, type:
+      > cd bin
       > hbmk2 ..\tests\hello.prg
       > hello
       You should see 'Hello world!' on screen.
@@ -79,30 +82,42 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
 
    Windows with MinGW + MSYS or Cygwin
    ----------------------------------------------
+      You can also use bash shell to build for these platforms.
 
-      This is an *alternative build method* using bash script directly.
-      For the primary and recommended method: see above
+    [ > set HB_INSTALL_PREFIX=<DIR> ]
+      > sh -c make install
 
-      > set HB_INSTALL_PREFIX=<DIR>
-      > sh make_gnu.sh install
-
-      To test it, go to <DIR>/bin directory and type:
-      > hbmk2 ../tests/hello.prg
+      To test it, type:
+      > cd bin
+      > hbmk2 ..\tests\hello.prg
       > hello
       You should see 'Hello world!' on screen.
 
-      NOTES: - With mingw, MSYS must be in PATH *before* MinGW.
-             - With cygwin, <DIR> should use Cygwin drive
+      NOTES: - With cygwin, <DIR> should use Cygwin drive
                notation: /cygdrive/c for C:
 
-   DOS
-   ---
+   MS-DOS
+   ------
       You can use MS-DOS or Windows NT compatible hosts to create DOS builds.
 
-      > set HB_ARCHITECTURE=dos
-      > set HB_COMPILER=<[djgpp]|watcom>
-      > set HB_INSTALL_PREFIX=<DIR>
-      > make_gnu.bat install
+      1.) Make sure to have your C compiler of choice properly installed
+          (in PATH).
+      2.) You need to get GNU Make. If you use MS-DOS host, we recommend this link:
+             ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381b.zip
+          If you use Windows NT host, use this one:
+             http://sourceforge.net/projects/mingw/files/GNU%20Make/Current%20Release_%20mingw32-make-3.81-20080326/mingw32-make-3.81-20080326-3.tar.gz/download
+          Unpack it to your PATH or Harbour source root directory.
+          For convenience you may also use included config/dj-make.exe instead.
+
+    [ > set HB_COMPILER=<djgpp|watcom> ]
+    [ > set HB_INSTALL_PREFIX=<DIR> ]
+      > make install
+
+      To test it, type:
+      > cd bin
+      > hbmk2 ..\tests\hello.prg
+      > hello
+      You should see 'Hello world!' on screen.
 
    OS/2
    ----
@@ -111,13 +126,20 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       Some config tricks are required when non-OS/2 host is used, see in
       examples.
 
-      When OS/2 host is used, GNU mkdir and rm utilities will have to
-      present in PATH. You can get them from this link:
-         ftp://hobbes.nmsu.edu/pub/os2/util/file/gnufutil.zip
+      1.) You need to get GNU Make. If you use OS/2 host, we recommend this link:
+             ftp://hobbes.nmsu.edu/pub/os2/dev/util/make-3.81-r2-bin-static.zip
+          If you use other host, please refer to other platform instructions
+          in this section.
 
-      > set HB_COMPILER=<[gcc]|watcom>
-      > set HB_INSTALL_PREFIX=<DIR>
-      > make_gnu_os2.cmd install
+    [ > set HB_COMPILER=<gcc|watcom> ]
+    [ > set HB_INSTALL_PREFIX=<DIR> ]
+      > make install
+
+      To test it, type:
+      > cd bin
+      > hbmk2 ..\tests\hello.prg
+      > hello
+      You should see 'Hello world!' on screen.
 
 
 HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
@@ -135,7 +157,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    You only need to use manual setup if the dependency isn't available
    on your platform on a system location, or you wish to use
    a non-standard location. Typically you need to do that on non-*nix
-   (Windows/DOS/OS2) systems for all packages and for a few packages on
+   (Windows/MS-DOS/OS2) systems for all packages and for a few packages on
    *nix which aren't available through official package managers
    (ADS Client f.e.). Please see a list of official packages in
    doc/linux1st.txt.
@@ -184,25 +206,34 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
 SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
 ===============================================
 
-   You can use abbreviations below as HB_COMPILER values.
+   You can use HB_ARCHITECURE values shown inside square brackets.
+   You can use below listed abbreviations as HB_COMPILER values.
 
-   Linux
+   Linux [linux]
    -----
    gcc      - GNU C
    watcom   - Open Watcom C++
    icc      - Intel(R) C/C++
    sunpro   - Sun Studio C/C++
 
-   Darwin/BSD/HP-UX
-   ----------------
+   Darwin (OS X) [darwin]
+   -------------
    gcc      - GNU C
 
-   Solaris
+   BSD [bsd]
+   ---
+   gcc      - GNU C
+
+   HP-UX [hpux]
+   -----
+   gcc      - GNU C
+
+   Solaris [sunos]
    -------
    gcc      - GNU C
    sunpro   - Sun Studio C/C++
 
-   Windows (recommended)
+   Windows [win]
    -------
    mingw    - MinGW GNU C 3.4.2 and above
    mingw64  - MinGW GNU C x86-64
@@ -210,8 +241,8 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    msvc64   - Microsoft Visual C++ x86-64
    msvcia64 - Microsoft Visual C++ IA-64
 
-   Windows (supported, some features may be missing)
-   -------
+   Also supported, some features may be missing:
+
    watcom   - Open Watcom C++
    bcc      - Borland/CodeGear C++ 4.x and above
    icc      - Intel(R) C/C++
@@ -221,18 +252,18 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    xcc      - Pelles C for xhb
    cygwin   - Cygwin GNU C
 
-   Windows CE
+   Windows CE [wce]
    ----------
    mingwarm - MinGW GNU C ARM
    msvcarm  - Microsoft Visual C++ ARM
    poccarm  - Pelles C ARM 5.0 and above
 
-   DOS (32-bit)
-   ---
+   MS-DOS [dos] (32-bit)
+   ------
    djgpp    - Delorie GNU C
    watcom   - Open Watcom C++ 9.x and above
 
-   OS/2
+   OS/2 [os2]
    ----
    gcc      - EMX GNU C
    watcom   - Open Watcom C++
@@ -246,6 +277,11 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
 
    General
    -------
+   - HB_COMPILER               Override C compiler autodetection
+   - HB_ARCHITECTURE           Override architecture autodetection
+                               See this secion for possible values:
+                               SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
+
    - HB_USER_PRGFLAGS          User Harbour compiler options
    - HB_USER_CFLAGS            User C compiler options
    - HB_USER_LDFLAGS           User linker options for executables
@@ -253,6 +289,7 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    - HB_USER_MAKEFLAGS         User GNU Make options
 
    - HB_INSTALL_PREFIX         Target root directory to install Harbour files.
+                               This will default to Harbour source tree.
    - HB_BIN_INSTALL            Target directory to install executables
    - HB_LIB_INSTALL            Target directory to install libraries
    - HB_INC_INSTALL            Target directory to install language headers
@@ -315,7 +352,8 @@ EXAMPLES
    Windows/Windows CE
    ------------------
 
-      NOTES: - All code below should be copied to .bat files.
+      NOTES: - All code below should be copied to .bat files or typed at NT
+               command line.
              - Naturally, you'll need to adapt dirs to valid ones on your system.
                Don't use spaces in dirs.
              - '%1 %2' can be empty, 'clean', 'install' or 'clean install'
@@ -325,17 +363,13 @@ EXAMPLES
       set WindowsSDKDir=%ProgramFiles%\Microsoft SDKs\Windows\v6.0A\
       call "%ProgramFiles%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"
       rem
-      set HB_COMPILER=msvc
-      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log.txt 2>&1
+      mingw32-make %1 %2 > log.txt 2>&1
       ---
 
       --- MSVC 2008
       call "%ProgramFiles%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"
       rem
-      set HB_COMPILER=msvc
-      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log.txt 2>&1
+      mingw32-make %1 %2 > log.txt 2>&1
       ---
 
       --- MSVC 2008 x86-64 (requires native x86 Harbour binaries)
@@ -343,17 +377,13 @@ EXAMPLES
       rem
       set HB_BIN_COMPILE=C:\hb-msvc\bin
       rem
-      set HB_COMPILER=msvc64
-      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log.txt 2>&1
+      mingw32-make %1 %2 > log.txt 2>&1
       ---
 
       --- MSVC 2005
       call "%ProgramFiles%\Microsoft Visual Studio 8\VC\vcvarsall.bat"
       rem
-      set HB_COMPILER=msvc
-      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log.txt 2>&1
+      mingw32-make %1 %2 > log.txt 2>&1
       ---
 
       --- MSVC .NET 2003 (untested)
@@ -361,25 +391,19 @@ EXAMPLES
       rem
       set HB_VISUALC_VER_PRE80=yes
       rem
-      set HB_COMPILER=msvc
-      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log.txt 2>&1
+      mingw32-make %1 %2 > log.txt 2>&1
       ---
 
       --- MinGW GCC
       set PATH=C:\mingw\bin;%PATH%
       rem
-      set HB_COMPILER=mingw
-      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log.txt 2>&1
+      mingw32-make %1 %2 > log.txt 2>&1
       ---
 
       --- MinGW GCC + MSYS
       set PATH=C:\msys\1.0.11\bin;C:\mingw\bin;%PATH%
       rem
-      set HB_COMPILER=mingw
-      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      sh make_gnu.sh %1 %2 > log.txt 2>&1
+      sh -c make %1 %2 > log.txt 2>&1
       ---
 
       --- MinGW GCC for x86-64 (requires native x86 Harbour binaries)
@@ -387,10 +411,7 @@ EXAMPLES
       rem
       set HB_BIN_COMPILE=C:\hb-mingw\bin
       rem
-      set HB_COMPILER=mingw64
-      set HB_CCPREFIX=x86_64-w64-mingw32-
-      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log.txt 2>&1
+      mingw32-make %1 %2 > log.txt 2>&1
       ---
 
       --- MinGW GCC for WinCE/ARM (requires native x86 Harbour binaries + Cygwin)
@@ -398,19 +419,13 @@ EXAMPLES
       rem
       set HB_BIN_COMPILE=C:\hb-mingw\bin
       rem
-      set HB_ARCHITECTURE=wce
-      set HB_COMPILER=mingwarm
-      set HB_CCPREFIX=arm-wince-mingw32ce-
-      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log.txt 2>&1
+      mingw32-make %1 %2 > log.txt 2>&1
       ---
 
-      --- Cygwin GCC
+      --- Cygwin GCC (using Cygwin shell)
       set PATH=C:\cygwin\bin
       rem
-      set HB_COMPILER=cygwin
-      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      sh make_gnu.sh %1 %2 > log.txt 2>&1
+      sh -c make %1 %2 > log.txt 2>&1
       ---
 
       --- Open Watcom C++
@@ -419,17 +434,13 @@ EXAMPLES
       SET EDPATH=%WATCOM%\EDDAT
       SET INCLUDE=%WATCOM%\H;%WATCOM%\H\NT
       rem
-      set HB_COMPILER=watcom
-      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log.txt 2>&1
+      mingw32-make %1 %2 > log.txt 2>&1
       ---
 
       --- Intel(R) C++
       call "%ProgramFiles%\Intel\Compiler\C++\10.1.014\IA32\Bin\iclvars.bat"
       rem
-      set HB_COMPILER=icc
-      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log.txt 2>&1
+      mingw32-make %1 %2 > log.txt 2>&1
       ---
 
       --- Intel(R) C++ for IA-64 (requires native x86 Harbour binaries)
@@ -438,16 +449,13 @@ EXAMPLES
       set HB_BIN_COMPILE=C:\hb-icc\bin
       rem
       set HB_COMPILER=iccia64
-      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log.txt 2>&1
+      mingw32-make %1 %2 > log.txt 2>&1
       ---
 
       --- Borland/CodeGear C++
       set PATH=C:\Borland\BCC55\Bin;%PATH%
       rem
-      set HB_COMPILER=bcc
-      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log.txt 2>&1
+      mingw32-make %1 %2 > log.txt 2>&1
       ---
 
       --- Pelles C
@@ -455,9 +463,7 @@ EXAMPLES
       set INCLUDE=%ProgramFiles%\PellesC\Include;%ProgramFiles%\PellesC\Include\Win;%INCLUDE%
       set LIB=%ProgramFiles%\PellesC\Lib;%ProgramFiles%\PellesC\Lib\Win;%LIB%
       rem
-      set HB_COMPILER=pocc
-      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log.txt 2>&1
+      mingw32-make %1 %2 > log.txt 2>&1
       ---
 
       --- Pelles C x86-64 (requires native x86 Harbour binaries)
@@ -468,8 +474,7 @@ EXAMPLES
       set HB_BIN_COMPILE=C:\hb-pocc\bin
       rem
       set HB_COMPILER=pocc64
-      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log.txt 2>&1
+      mingw32-make %1 %2 > log.txt 2>&1
       ---
 
       --- Pelles C WinCE/ARM (requires native x86 Harbour binaries)
@@ -479,20 +484,8 @@ EXAMPLES
       rem
       set HB_BIN_COMPILE=C:\hb-pocc\bin
       rem
-      set HB_ARCHITECTURE=wce
       set HB_COMPILER=poccarm
-      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log.txt 2>&1
-      ---
-
-      --- Cygwin GCC
-      set PATH=C:\cygwin\bin;%PATH%
-      set C_INCLUDE_PATH=/cygdrive/c/cygwin/usr/include:/cygdrive/c/cygwin/usr/include/w32api
-      set LIBRARY_PATH=/cygdrive/c/cygwin/usr/lib:/cygdrive/c/cygwin/usr/lib/w32api
-      rem
-      set HB_COMPILER=cygwin
-      set HB_INSTALL_PREFIX=/cygdrive/c/hb-%HB_COMPILER%
-      sh make_gnu.sh %1 %2 > log.txt 2>&1
+      mingw32-make %1 %2 > log.txt 2>&1
       ---
 
       --8<--
@@ -542,17 +535,21 @@ EXAMPLES
       set HB_BUILD_PKG=yes
       -->8--
 
-   DOS
-   ---
+   MS-DOS
+   ------
 
-      --- Delorie GNU C
+      --- Delorie GNU C (on MS-DOS host)
       set DJGPP=C:\djgpp\djgpp.env
       set PATH=C:\djgpp\bin;%PATH%
       rem
-      set HB_ARCHITECTURE=dos
-      set HB_COMPILER=djgpp
-      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log.txt 2>&1
+      make %1 %2 > log.txt
+      ---
+
+      --- Delorie GNU C (on Windows NT host)
+      set DJGPP=C:\djgpp\djgpp.env
+      set PATH=C:\djgpp\bin;%PATH%
+      rem
+      mingw32-make %1 %2 > log.txt 2>&1
       ---
 
       --- Open Watcom C++
@@ -561,10 +558,7 @@ EXAMPLES
       SET EDPATH=%WATCOM%\EDDAT
       SET INCLUDE=%WATCOM%\H
       rem
-      set HB_ARCHITECTURE=dos
-      set HB_COMPILER=watcom
-      set HB_INSTALL_PREFIX=C:\hb-ow
-      call make_gnu.bat %1 %2 > log-ow.txt 2>&1
+      make %1 %2 > log-ow.txt 2>&1
       ---
 
       --8<--
@@ -597,12 +591,10 @@ EXAMPLES
       SET HELP=%WATCOM%\BINP\HELP;%HELP%
       SET BOOKSHELF=%WATCOM%\BINP\HELP;%BOOKSHELF%
       rem
-      set HB_COMPILER=watcom
-      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu_os2.cmd %1 %2 > log.txt 2>&1
+      make %1 %2 > log.txt 2>&1
       ---
 
-      --- Open Watcom C++ on Windows NT host (requires native Windows Harbour binaries)
+      --- Open Watcom C++ (on Windows NT host - requires native Windows Harbour binaries)
       SET WATCOM=C:\watcom
       SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
       SET BEGINLIBPATH=%WATCOM%\BINP\DLL
@@ -614,11 +606,10 @@ EXAMPLES
       rem
       set HB_ARCHITECTURE=os2
       set HB_COMPILER=watcom
-      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log.txt 2>&1
+      mingw32-make %1 %2 > log.txt 2>&1
       ---
 
-      --- Open Watcom C++ on Linux host (requires native Linux Harbour binaries)
+      --- Open Watcom C++ (on Linux host - requires native Linux Harbour binaries)
       #!/bin/sh
       if [ -z "${WATCOM}" ]; then
          export WATCOM="/opt/lng/watcom"
@@ -633,13 +624,13 @@ EXAMPLES
       export HB_ARCHITECTURE=os2
       export HB_COMPILER=watcom
       export HB_INSTALL_PREFIX="$(pwd)/hb-os2/watcom"
-      ./make_gnu.sh "$@"
+      make "$@"
       ---
 
    Linux
    -----
 
-      --- Open Watcom C++ on Windows NT host (requires native Windows Harbour binaries)
+      --- Open Watcom C++ (on Windows NT host - requires native Windows Harbour binaries)
       SET WATCOM=C:\watcom
       SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
       SET EDPATH=%WATCOM%\EDDAT
@@ -650,8 +641,7 @@ EXAMPLES
       rem
       set HB_ARCHITECTURE=linux
       set HB_COMPILER=watcom
-      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
-      call make_gnu.bat %1 %2 > log.txt 2>&1
+      mingw32-make %1 %2 > log.txt 2>&1
       ---
 
 

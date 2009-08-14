@@ -111,7 +111,7 @@
 #  define _XOPEN_SOURCE_EXTENDED
 #endif
 
-#if defined( HB_OS_UNIX )
+#if defined( HB_OS_UNIX ) && ! defined( __CYGWIN__ )
 #  define HB_HAS_UNIX
 #  if !defined( __WATCOMC__ )
 #     define HB_HAS_INET_ATON
@@ -173,6 +173,10 @@
 #  endif
 #  include <unistd.h>
 #  include <fcntl.h>
+#endif
+
+#if defined( __CYGWIN__ )
+   #undef HB_OS_WIN
 #endif
 
 #if defined( HB_OS_OS2 ) || defined( HB_OS_WIN )

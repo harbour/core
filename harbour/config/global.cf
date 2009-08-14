@@ -223,6 +223,9 @@ ifeq ($(HB_CONFIG_SHOWN),)
       #   -DHB_PCRE_REGEX, -DHB_POSIX_REGEX, -DHB_EXT_ZLIB, -DHB_HAS_GPM
 
       $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(HB_MAKECMDGOALS) $(SHELL))
+      ifeq ($(HB_BUILD_VERBOSE),yes)
+         $(info ! SVN: $(shell svnversion))
+      endif
       ifneq ($(HB_USER_PRGFLAGS),)
          $(info ! HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))
       endif
