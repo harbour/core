@@ -192,7 +192,7 @@ static void hb_freeArgs( char ** argv )
 
 #endif
 
-#if defined( HB_OS_DOS ) || defined( HB_OS_OS2 ) /* || defined( HB_OS_WIN_CE ) */
+#if defined( HB_OS_DOS ) || defined( HB_OS_OS2 ) || defined( HB_OS_WIN_CE )
 static int hb_fsProcessExec( const char *pszFilename,
                              HB_FHANDLE hStdin, HB_FHANDLE hStdout,
                              HB_FHANDLE hStderr )
@@ -201,10 +201,8 @@ static int hb_fsProcessExec( const char *pszFilename,
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessExec(%s, %p, %p, %p, %d, %p)", pszFilename, ( void * ) ( HB_PTRDIFF ) hStdin, ( void * ) ( HB_PTRDIFF ) hStdout, ( void * ) ( HB_PTRDIFF ) hStderr));
 
-#if defined( HB_IO_WIN )
-
-   PROCESS_INFORMATION pi;
-   STARTUPINFO si;
+#if defined( HB_OS_WIN_CE )
+{
    DWORD dwFlags = 0;
 #if defined( UNICODE )
    LPWSTR lpCommand = hb_mbtowc( pszFilename );
@@ -213,45 +211,33 @@ static int hb_fsProcessExec( const char *pszFilename,
 #endif
    BOOL fError;
 
-   memset( &pi, 0, sizeof( pi ) );
-   memset( &si, 0, sizeof( si ) );
-   si.cb = sizeof( si );
-   si.hStdInput  = hStdin == FS_ERROR  ? GetStdHandle( STD_INPUT_HANDLE ) : hStdin;
-   si.hStdOutput = hStdout == FS_ERROR ? GetStdHandle( STD_OUTPUT_HANDLE ) : hStdout;
-   si.hStdError  = hStderr == FS_ERROR ? GetStdHandle( STD_ERROR_HANDLE ) : hStderr;
-#ifdef STARTF_USESTDHANDLES
-   si.dwFlags = STARTF_USESTDHANDLES;
-#endif
+   HB_SYMBOL_UNUSED( hStdin );
+   HB_SYMBOL_UNUSED( hStdout );
+   HB_SYMBOL_UNUSED( hStderr );
+
    hb_vmUnlock();
    fError = ! CreateProcess( NULL,           /* lpAppName */
-                             lpCommand,
+                             lpCommand,      /* lpCommandLine */
                              NULL,           /* lpProcessAttr */
                              NULL,           /* lpThreadAttr */
-                             TRUE,           /* bInheritHandles */
+                             FALSE,          /* bInheritHandles */
                              dwFlags,        /* dwCreationFlags */
                              NULL,           /* lpEnvironment */
                              NULL,           /* lpCurrentDirectory */
-                             &si,
-                             &pi );
+                             NULL,           /* lpStartupInfo */
+                             NULL );         /* lpProcessInformation */
    hb_fsSetIOError( !fError, 0 );
    if( !fError )
    {
-      CloseHandle( pi.hThread );
-      if( WaitForSingleObject( pi.hProcess, INFINITE ) == WAIT_OBJECT_0 )
-      {
-         DWORD dwResult = 0;
-         fError = !GetExitCodeProcess( pi.hProcess, &dwResult );
-         iResult = !fError ? ( int ) dwResult : -2;
-      }
       hb_fsSetIOError( !fError, 0 );
-      CloseHandle( pi.hProcess );
+      iResult = 0;
    }
    hb_vmLock();
    hb_xfree( lpCommand );
-
+}
 #elif defined( HB_OS_DOS ) || defined( HB_OS_WIN ) || defined( HB_OS_OS2 ) || \
       defined( HB_OS_UNIX )
-
+{
    int iStdIn, iStdOut, iStdErr;
    char ** argv;
 
@@ -333,7 +319,7 @@ static int hb_fsProcessExec( const char *pszFilename,
 
    hb_vmLock();
    hb_freeArgs( argv );
-
+}
 #else
 {
    int TODO; /* TODO: for given platform */
@@ -926,10 +912,12 @@ int hb_fsProcessRun( const char * pszFilename,
    phStdout = pStdOutPtr && pulStdOut ? &hStdout : NULL;
    phStderr = pStdErrPtr && pulStdErr ? &hStderr : NULL;
 
-#if defined( HB_OS_DOS ) || defined( HB_OS_OS2 ) /* || defined( HB_OS_WIN_CE ) */
+#if defined( HB_OS_DOS ) || defined( HB_OS_OS2 ) || defined( HB_OS_WIN_CE )
 {
 
-#if defined( HB_OS_UNIX )
+#if defined( HB_OS_WIN_CE )
+#  define _HB_NULLHANDLE()    FS_ERROR
+#elif defined( HB_OS_UNIX )
 #  define _HB_NULLHANDLE()    open( "/dev/null", O_RDWR )
 #else
 #  define _HB_NULLHANDLE()    open( "NUL:", O_RDWR )
