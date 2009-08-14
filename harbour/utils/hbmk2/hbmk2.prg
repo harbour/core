@@ -6340,7 +6340,7 @@ STATIC FUNCTION VCSID( cDir, cVCSHEAD, /* @ */ cType )
       tmp1 := "#define _HBMK_VCS_ID_"
       tmp := At( tmp1, cStdOut )
       IF tmp > 0
-         cStdOut := SubStr( cStdOut, tmp + Len( tmp1 ) )
+         cStdOut := SubStr( cStdOut, tmp + Len( tmp1 ) + 1 )
          tmp := At( Chr( 10 ), cStdOut )
          IF tmp > 0
             cStdOut := Left( cStdOut, tmp - 1 )
@@ -6383,7 +6383,7 @@ STATIC FUNCTION VCSID( cDir, cVCSHEAD, /* @ */ cType )
                branch-nick: bzr */
             tmp := At( "revno: ", cStdOut )
             IF tmp > 0
-               cStdOut := SubStr( cStdOut, tmp + Len( "revno: " ) + 1 )
+               cStdOut := SubStr( cStdOut, tmp + Len( "revno: " ) )
                tmp := At( Chr( 10 ), cStdOut )
                IF tmp > 0
                   cResult := Left( cStdOut, tmp - 1 )
