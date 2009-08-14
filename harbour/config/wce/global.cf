@@ -12,3 +12,5 @@ SYSLIBS := ws2
 
 # Favor size for CE builds.
 HB_GCMODE := 0
+
+HB_BUILD_UNICODE := yes

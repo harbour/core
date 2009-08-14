@@ -2227,6 +2227,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-x64",;
                                                       "harbour" + cDL_Version_Alter + "-x64" ) }
          CASE hbmk[ _HBMK_cCOMP ] == "mingwarm"
+            AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-wce-arm",;
                                                       "harbour" + cDL_Version_Alter + "-wce-arm" ) }
          OTHERWISE
@@ -2639,7 +2640,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aOPTL ], "/subsystem:windowsce,4.20" )
             AAdd( hbmk[ _HBMK_aOPTL ], "/machine:arm" )
             AAdd( hbmk[ _HBMK_aOPTL ], "/armpadcode" )
-            AAdd( hbmk[ _HBMK_aOPTL ], "/stack:65536,4096" )
             AAdd( hbmk[ _HBMK_aOPTL ], "/nodefaultlib:oldnames.lib" )
             AAdd( hbmk[ _HBMK_aOPTL ], "/nodefaultlib:kernel32.lib" )
             AAdd( hbmk[ _HBMK_aOPTL ], "/align:4096" )
@@ -2747,7 +2747,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_M_ARM" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_WINCE" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-DHB_NO_WIN_CONSOLE" )
          ENDCASE
          cOpt_Res := "{FR} /Fo{OS} {IR}"
          cResExt := ".res"

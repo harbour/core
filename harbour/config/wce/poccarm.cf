@@ -29,7 +29,7 @@ ifneq ($(HB_BUILD_OPTIM),no)
 endif
 
 # For Pocket PC and ARM processors (including XScale)
-CPPFLAGS += -Tarm-coff -D_M_ARM -D_WINCE -DUNICODE -DHB_NO_WIN_CONSOLE
+CPPFLAGS += -Tarm-coff -D_M_ARM -D_WINCE
 
 ifneq ($(HB_INC_COMPILE),)
    CPPFLAGS += -I$(HB_INC_COMPILE)
@@ -44,7 +44,7 @@ LD_OUT := /out:
 
 SYSLIBS += coredll corelibc
 
-LIBPATHS := -LIBPATH:$(LIB_DIR)
+LIBPATHS := /libpath:$(LIB_DIR)
 LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
 LDFLAGS += /subsystem:windows

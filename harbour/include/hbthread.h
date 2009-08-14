@@ -178,7 +178,8 @@ HB_EXTERN_BEGIN
    typedef HANDLE             HB_OSCOND_T;
 
 #  if defined( HB_OS_WIN_CE ) && \
-      ( defined( __MINGW32CE__ ) && !defined( __MSVCRT__ ) )
+      ( ( defined( __MINGW32CE__ ) && !defined( __MSVCRT__ ) ) || \
+          defined( __POCC__ ) )
 #     define HB_THREAD_RAWWINAPI
 #  endif
 

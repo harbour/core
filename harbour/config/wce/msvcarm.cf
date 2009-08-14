@@ -19,7 +19,7 @@ CC_IN := -c
 CC_OUT := -Fo
 
 CPPFLAGS := -I. -I$(HB_INC_COMPILE)
-CFLAGS := -nologo -D"_WIN32_WCE=0x420" -D"UNDER_CE=0x420" -D"WIN32_PLATFORM_PSPC" -D"WINCE" -D"_WINCE" -D"_WINDOWS" -D"ARM" -D"_ARM_" -D"ARMV4" -D"POCKETPC2003_UI_MODEL" -D"_M_ARM" -D"UNICODE" -D"_UNICODE" -D_UWIN
+CFLAGS := -nologo -D_WIN32_WCE=0x420 -DUNDER_CE=0x420 -DWIN32_PLATFORM_PSPC -DWINCE -D_WINCE -D_WINDOWS -DARM -D_ARM_ -DARMV4 -DPOCKETPC2003_UI_MODEL -D_M_ARM -D_UNICODE -D_UWIN
 LDFLAGS :=
 
 ifeq ($(HB_BUILD_MODE),c)
@@ -56,8 +56,8 @@ LIBPATHS := /libpath:$(LIB_DIR)
 LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
 LDFLAGS += /nologo /link
-LDFLAGS += /subsystem:windowsce,4.20 /machine:arm /armpadcode /stack:65536,4096 /nodefaultlib:"oldnames.lib"
-LDFLAGS += /nodefaultlib:"kernel32.lib" /align:4096 /opt:ref /opt:icf
+LDFLAGS += /subsystem:windowsce,4.20 /machine:arm /armpadcode /align:4096
+LDFLAGS += /nodefaultlib:oldnames.lib /nodefaultlib:kernel32.lib /opt:ref /opt:icf
 ifeq ($(HB_VISUALC_VER_PRE80),)
    LDFLAGS += /manifest:no
 endif
