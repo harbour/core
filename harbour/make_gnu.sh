@@ -149,10 +149,10 @@ else
 
     case "$HB_ARCHITECTURE" in
         bsd|hpux|sunos)
-            gmake $HB_USER_MAKEFLAGS $*
+            gmake $*
             ;;
         *)
-            make $HB_USER_MAKEFLAGS $*
+            make $*
             ;;
     esac
 

@@ -303,7 +303,6 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    - HB_USER_CFLAGS            User C compiler options
    - HB_USER_LDFLAGS           User linker options for executables
    - HB_USER_AFLAGS            User linker options for libraries
-   - HB_USER_MAKEFLAGS         User GNU Make options
 
    - HB_INSTALL_PREFIX         Target root directory to install Harbour files.
                                This will default to Harbour source tree.

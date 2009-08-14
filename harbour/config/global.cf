@@ -20,6 +20,11 @@
 #    http://www.gnu.org/prep/standards/standards.html
 # ---------------------------------------------------------------
 
+# TOFIX: $(realpath/abspath) need GNU Make 3.81 or upper
+# TOFIX: $(eval) needs GNU Make 3.80 or upper
+# NOTE: $(error/warning/call/if) need GNU Make 3.78 or upper
+# NOTE: $(wordlist/basename/suffix) need GNU Make 3.76 or upper
+
 ifeq ($(GLOBAL_CF_),)
 GLOBAL_CF_ := yes
 
@@ -224,7 +229,7 @@ ifeq ($(HB_INIT_DONE),)
       # Macros:
       #   -DHB_PCRE_REGEX, -DHB_POSIX_REGEX, -DHB_EXT_ZLIB, -DHB_HAS_GPM
 
-      $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(HB_MAKECMDGOALS) $(SHELL))
+      $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(HB_MAKECMDGOALS) $(MAKEFLAGS) $(SHELL))
       ifneq ($(HB_USER_PRGFLAGS),)
          $(info ! HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))
       endif
@@ -236,9 +241,6 @@ ifeq ($(HB_INIT_DONE),)
       endif
       ifneq ($(HB_USER_AFLAGS),)
          $(info ! HB_USER_AFLAGS: $(HB_USER_AFLAGS))
-      endif
-      ifneq ($(HB_USER_MAKEFLAGS),)
-         $(info ! HB_USER_MAKEFLAGS: $(HB_USER_MAKEFLAGS))
       endif
       ifneq ($(HB_INSTALL_PREFIX),)
          $(info ! HB_INSTALL_PREFIX: $(HB_INSTALL_PREFIX))
@@ -926,7 +928,7 @@ export CLIPPER :=
 export CLIPPERCMD :=
 
 # relevant only on non-*nix hosts where --print-directory is on by default
-ifeq ($(findstring -w,$(HB_USER_MAKEFLAGS))$(findstring --print-directory,$(HB_USER_MAKEFLAGS)),)
+ifeq ($(findstring w,$(MAKEFLAGS)),)
    MKFLAGS := --no-print-directory
 endif
 

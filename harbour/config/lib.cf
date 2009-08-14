@@ -22,7 +22,7 @@ ALL_OBJS = $(ALL_C_OBJS) $(ALL_PRG_OBJS)
 first:: dirbase descend
 
 descend:: dirbase
-	+@$(MK) $(MKFLAGS) -C $(OBJ_DIR) -f $(GRANDP)Makefile TOP=$(GRANDP) $(LIB_NAME) $(HB_USER_MAKEFLAGS)
+	+@$(MK) $(MKFLAGS) -C $(OBJ_DIR) -f $(GRANDP)Makefile TOP=$(GRANDP) $(LIB_NAME)
 
 vpath $(LIB_NAME) $(LIB_DIR)
 $(LIB_NAME) : $(ALL_OBJS)
