@@ -15,8 +15,8 @@ rem Decide about GNU Make executable name
 
 rem Some other name variations: gnumake.exe, gmake.exe
 set _HB_MAKE=
-if "%HB_MAKE%%OS%" == "Windows_NT" if exist "%~dp0config\dj-make.exe" set _HB_MAKE="%~dp0config\dj-make.exe"
-if "%HB_MAKE%%OS%" == "Windows_NT" set _HB_MAKE=mingw32-make.exe
+if "%_HB_MAKE%%OS%" == "Windows_NT" if exist "%~dp0config\mingw32-make.exe" set _HB_MAKE="%~dp0config\mingw32-make.exe"
+if "%_HB_MAKE%%OS%" == "Windows_NT" set _HB_MAKE=mingw32-make.exe
 if "%OS%" == "Windows_NT" goto _FM_DONE
 if     exist config\dj-make.exe set _HB_MAKE=config\dj-make.exe
 if not exist config\dj-make.exe set _HB_MAKE=make.exe

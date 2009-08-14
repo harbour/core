@@ -372,10 +372,8 @@ EXAMPLES
       mingw32-make %1 %2 > log.txt 2>&1
       ---
 
-      --- MSVC 2008 x86-64 (requires native x86 Harbour binaries)
+      --- MSVC 2008 x86-64 (requires preceding build for native target)
       call "%ProgramFiles%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86_amd64
-      rem
-      set HB_BIN_COMPILE=C:\hb-msvc\bin
       rem
       mingw32-make %1 %2 > log.txt 2>&1
       ---
@@ -406,18 +404,14 @@ EXAMPLES
       sh -c make %1 %2 > log.txt 2>&1
       ---
 
-      --- MinGW GCC for x86-64 (requires native x86 Harbour binaries)
+      --- MinGW GCC for x86-64 (requires preceding build for native target)
       set PATH=C:\mingw64\bin;%PATH%
-      rem
-      set HB_BIN_COMPILE=C:\hb-mingw\bin
       rem
       mingw32-make %1 %2 > log.txt 2>&1
       ---
 
-      --- MinGW GCC for WinCE/ARM (requires native x86 Harbour binaries + Cygwin)
+      --- MinGW GCC for WinCE/ARM (requires Cygwin + preceding build for native target)
       set PATH=C:\mingwce\opt\mingw32ce\bin;C:\cygwin\bin;%PATH%
-      rem
-      set HB_BIN_COMPILE=C:\hb-mingw\bin
       rem
       mingw32-make %1 %2 > log.txt 2>&1
       ---
@@ -443,10 +437,8 @@ EXAMPLES
       mingw32-make %1 %2 > log.txt 2>&1
       ---
 
-      --- Intel(R) C++ for IA-64 (requires native x86 Harbour binaries)
+      --- Intel(R) C++ for IA-64 (requires preceding build for native target)
       call "%ProgramFiles%\Intel\Compiler\C++\10.1.025\Itanium\Bin\iclvars.bat"
-      rem
-      set HB_BIN_COMPILE=C:\hb-icc\bin
       rem
       set HB_COMPILER=iccia64
       mingw32-make %1 %2 > log.txt 2>&1
@@ -466,23 +458,19 @@ EXAMPLES
       mingw32-make %1 %2 > log.txt 2>&1
       ---
 
-      --- Pelles C x86-64 (requires native x86 Harbour binaries)
+      --- Pelles C x86-64 (requires preceding build for native target)
       set PATH=%ProgramFiles%\PellesC\Bin;%PATH%
       set INCLUDE=%ProgramFiles%\PellesC\Include;%ProgramFiles%\PellesC\Include\Win;%INCLUDE%
       set LIB=%ProgramFiles%\PellesC\Lib;%ProgramFiles%\PellesC\Lib\Win64;%LIB%
-      rem
-      set HB_BIN_COMPILE=C:\hb-pocc\bin
       rem
       set HB_COMPILER=pocc64
       mingw32-make %1 %2 > log.txt 2>&1
       ---
 
-      --- Pelles C WinCE/ARM (requires native x86 Harbour binaries)
+      --- Pelles C WinCE/ARM (requires preceding build for native target)
       set PATH=%ProgramFiles%\PellesC\Bin;%PATH%
       set INCLUDE=%ProgramFiles%\PellesC\Include\WinCE;%ProgramFiles%\PellesC\Include;%INCLUDE%
       set LIB=%ProgramFiles%\PellesC\Lib;%ProgramFiles%\PellesC\Lib\WinCE;%LIB%
-      rem
-      set HB_BIN_COMPILE=C:\hb-pocc\bin
       rem
       set HB_COMPILER=poccarm
       mingw32-make %1 %2 > log.txt 2>&1
@@ -594,7 +582,7 @@ EXAMPLES
       make %1 %2 > log.txt 2>&1
       ---
 
-      --- Open Watcom C++ (on Windows NT host - requires native Windows Harbour binaries)
+      --- Open Watcom C++ (on Windows NT host - requires preceding build for Windows target)
       SET WATCOM=C:\watcom
       SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
       SET BEGINLIBPATH=%WATCOM%\BINP\DLL
@@ -609,7 +597,7 @@ EXAMPLES
       mingw32-make %1 %2 > log.txt 2>&1
       ---
 
-      --- Open Watcom C++ (on Linux host - requires native Linux Harbour binaries)
+      --- Open Watcom C++ (on Linux host - requires preceding build for Linux target)
       #!/bin/sh
       if [ -z "${WATCOM}" ]; then
          export WATCOM="/opt/lng/watcom"
@@ -630,7 +618,7 @@ EXAMPLES
    Linux
    -----
 
-      --- Open Watcom C++ (on Windows NT host - requires native Windows Harbour binaries)
+      --- Open Watcom C++ (on Windows NT host - requires preceding build for Windows target)
       SET WATCOM=C:\watcom
       SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
       SET EDPATH=%WATCOM%\EDDAT
