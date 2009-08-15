@@ -5644,7 +5644,7 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
          NEXT
       ELSEIF ! Empty( cExecNM := FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "nm" ) )
          cFuncList := ""
-         hb_processRun( cExecNM + " " + cFile + " -g -n --defined-only -C",, @cFuncList )
+         hb_processRun( cExecNM + " " + cFile + " -g -n" + iif( hbmk[ _HBMK_cCOMP ] == "darwin", "", " --defined-only -C" ),, @cFuncList )
          IF ( n := At( " T HB_FUN_", cFuncList ) ) != 0
             n += 10
             DO WHILE ( c := SubStr( cFuncList, n++, 1 ) ) == "_" .OR. ;
