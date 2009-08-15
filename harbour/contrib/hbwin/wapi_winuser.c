@@ -59,6 +59,11 @@
 
 #include <winuser.h>
 
+HB_FUNC( WAPI_GETKEYSTATE )
+{
+   hb_retni( GetKeyState( hb_parni( 1 ) ) );
+}
+
 HB_FUNC( WAPI_GETDESKTOPWINDOW )
 {
    hb_retptr( GetDesktopWindow() );

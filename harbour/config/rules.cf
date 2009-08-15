@@ -33,14 +33,14 @@ HB_RULE = $(HB) $? -n1 $(HB_INC_DEPEND) $(HB_FLAGS) -gc$(HB_GCMODE) $(HB_FLAGSEX
 
 # The rule to compile a C source file.
 ifeq ($(CC_RULE),)
-   CC_RULE = $(CC) $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_USER_CFLAGS) $(HB_CUNICODE) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<
+   CC_RULE = $(CC) $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_CFLAGS) $(HB_USER_CFLAGS) $(HB_CUNICODE) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<
    ifneq ($(HB_BUILD_DLL),no)
       ifeq ($(HB_DYN_COMPILE),yes)
          ifneq ($(LIBNAME),)
             ifneq ($(findstring $(LIBNAME),$(HB_DYN_LIBS)),)
                define cc_comp_all
-                  $(CC) $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_USER_CFLAGS) $(HB_CUNICODE) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<
-                  $(CC) $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_USER_CFLAGS) $(HB_CUNICODE) $(CC_OUT)$(<F:.c=_dyn$(OBJ_EXT)) -DHB_DYNLIB $(CC_IN) $<
+                  $(CC) $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_CFLAGS) $(HB_USER_CFLAGS) $(HB_CUNICODE) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<
+                  $(CC) $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_CFLAGS) $(HB_USER_CFLAGS) $(HB_CUNICODE) $(CC_OUT)$(<F:.c=_dyn$(OBJ_EXT)) -DHB_DYNLIB $(CC_IN) $<
                endef
 
                CC_RULE = $(cc_comp_all)
@@ -52,7 +52,7 @@ endif
 
 # The rule to compile a C++ source file.
 ifeq ($(CPP_RULE),)
-   CPP_RULE = $(CC) $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_USER_CFLAGS) $(HB_CUNICODE) $(CC_OUT)$(<F:.cpp=$(OBJ_EXT)) $(CC_IN) $<
+   CPP_RULE = $(CC) $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_CFLAGS) $(HB_USER_CFLAGS) $(HB_CUNICODE) $(CC_OUT)$(<F:.cpp=$(OBJ_EXT)) $(CC_IN) $<
 endif
 
 # The rule to link an executable.

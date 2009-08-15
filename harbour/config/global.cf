@@ -212,20 +212,19 @@ ifeq ($(HB_INIT_DONE),)
 
       # Some additional ones to be given a standard name:
       #   HB_HOST_BUILD [yes|all|lib] -> HB_BUILD_LIBONLY (rest is redundant and can be controlled by other means)
-      #   HB_XBUILD                   -> HB_INC_NODEFAULT ?
+      #   HB_XBUILD                   -> HB_BUILD_INCDEF
       #   HB_WITHOUT_*                -> HB_HAS_*
       #   HB_REBUILD_PARSER           -> HB_BUILD_PARSER
       #   HB_DB_DRVEXT                -> -
-      #   HB_COMMERCE
-      #   HB_CRS_LIB
-      #   HB_BUILD_VERBOSE            ok
-      #   HB_BIN_COMPILE
-      #   HB_INC_COMPILE              -> -
+      #   HB_COMMERCE                 -> ?
+      #   HB_CRS_LIB                  -> HB_LIB_CURSES
+      #   HB_BUILD_VERBOSE            [ OK ]
+      #   HB_BIN_COMPILE              -> HB_BUILD_BIN_DIR
+      #   HB_INC_COMPILE              -> - (HB_BUILD_INC_DIR)
       #   HB_GPM_MOUSE                -> HB_HAS_GPM
-      #   HB_POSTINST
-      #   HB_ROOTPOSTINST
-      #   HB_POSTINSTPARAM
-      #   HB_GCMODE
+      #   HB_POSTINST                 -> ?
+      #   HB_ROOTPOSTINST             -> ?
+      #   HB_POSTINSTPARAM            -> ?
       #   HB_GPM_NOICE_DISABLE        -> HB_USER_CFLAGS=-DHB_GPM_NOICE_DISABLE
       #   HB_GT_CRS_BCEHACK           -> HB_USER_CFLAGS=-DHB_GT_CRS_BCEHACK
       #   HB_NCURSES_194              -> HB_USER_CFLAGS=-DHB_NCURSES_194
@@ -649,6 +648,15 @@ else
    HB_UNIX_COMPATIBLE := yes
 endif
 
+# Reserve variables for local compiler flags. Makefiles
+# should only modify these instead of HB_USER_* variables
+# as these can have bad side effects (doubly added values)
+# caused by recursive GNU Make runs.
+# Notice that even single lib/bin builds will currently
+# result in recursive runs, see rule 'descend'. [vszakats]
+HB_CFLAGS :=
+HB_PRGFLAGS :=
+
 HB_CROSS_BUILD :=
 ifneq ($(HB_HOST_ARCH)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
    ifeq ($(HB_BIN_COMPILE),)
@@ -732,7 +740,7 @@ ifeq ($(HB_COMMERCE),yes)
    export HB_WITHOUT_GTSLN := yes
 endif
 
-# Detect OpenSSL
+# Detect OpenSSL lib
 ifeq ($(HB_HAS_OPENSSL),)
    HB_HAS_OPENSSL := no
    ifneq ($(HB_ARCHITECTURE),dos)
@@ -875,7 +883,7 @@ export HB_INSTALL_PREFIX
 
 ifneq ($(HB_INSTALL_PREFIX_ORI),$(HB_INSTALL_PREFIX))
    ifneq ($(MAKE_381),)
-      $(info ! HB_INSTALL_PREFIX set to $(HB_INSTALL_PREFIX))
+      $(info ! HB_INSTALL_PREFIX set to: $(HB_INSTALL_PREFIX))
    endif
 endif
 
