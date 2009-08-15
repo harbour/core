@@ -8,7 +8,7 @@ ifneq ($(HB_SHELL),sh)
 endif
 
 ifeq ($(DIRS),) # Empty directory list
-   DIR_RULE := @echo "! Done"
+   DIR_RULE := @echo $(ECHOQUOTE)! Done$(ECHOQUOTE)
 else
 
 ifeq ($(HB_SHELL),sh)

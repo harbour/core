@@ -3,10 +3,10 @@
 #
 
 ifeq ($(INSTALL_FILES),) # Empty install list
-   INSTALL_RULE := @echo "! Nothing to install"
+   INSTALL_RULE := @echo $(ECHOQUOTE)! Nothing to install$(ECHOQUOTE)
 else
 ifeq ($(INSTALL_DIR),) # Empty install dir
-   INSTALL_RULE := @echo "! Can't install, install dir isn't set"
+   INSTALL_RULE := @echo $(ECHOQUOTE)! Can't install, install dir isn't set$(ECHOQUOTE)
 else
 
 ifneq ($(HB_SHELL),sh)
