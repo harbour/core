@@ -13,8 +13,8 @@ ifeq ($(HB_DOC_INSTALL),)
 install::
 
 else
-INSTALL_FILES = $(DOC_FILES)
-INSTALL_DIR = $(HB_DOC_INSTALL)$(DOC_SUBDIR)
+INSTALL_FILES := $(DOC_FILES)
+INSTALL_DIR := $(HB_DOC_INSTALL)$(DOC_SUBDIR)
 
 include $(TOP)$(ROOT)config/install.cf
 endif

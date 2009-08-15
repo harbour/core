@@ -20,6 +20,9 @@
 #    http://www.gnu.org/prep/standards/standards.html
 # ---------------------------------------------------------------
 
+# GNU Make NEWS:
+#    http://cvs.savannah.gnu.org/viewvc/make/NEWS?root=make&view=markup
+#
 # TOFIX: $(realpath/abspath) need GNU Make 3.81 or upper
 # TOFIX: $(eval) needs GNU Make 3.80 or upper
 # NOTE: $(error/warning/call/if) need GNU Make 3.78 or upper
@@ -345,7 +348,7 @@ endif
 # Path separator default
 ifeq ($(PTHSEP),)
    # small hack, it's hard to detect what is real path separator because
-   # some shells in DOS/Windows translates DOS style paths to POSIX form
+   # some shells in MS-DOS/Windows translates MS-DOS style paths to POSIX form
    ifeq ($(subst ;,:,$(PATH)),$(PATH))
       PTHSEP := :
    else
@@ -793,7 +796,7 @@ ifneq ($(HB_HOST_ARCH),dos)
    HB_PKGNAME := harbour-$(HB_VERSION)-$(HB_ARCHITECTURE)-$(HB_COMPILER)
    HB_PKGNAMI := $(HB_PKGNAME)
 else
-   # Use short names in DOS
+   # Use short names in MS-DOS
    HB_VERSION := 2b2
    HB_PKGNAME := hb$(HB_VERSION)
    # Ugly solution

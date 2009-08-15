@@ -1,0 +1,10 @@
+#
+# $Id$
+#
+
+{dos}skip=yes
+
+incpaths=.
+
+libs=hbtips
+libs=../hbssl/hbssl.hbc

@@ -74,7 +74,7 @@ endif
 
 BIN_FILE := $(BIN_DIR)/$(BIN_NAME)
 
-ALL_OBJS = $(ALL_C_OBJS) $(ALL_PRG_OBJS)
+ALL_OBJS := $(ALL_C_OBJS) $(ALL_PRG_OBJS)
 
 first:: dirbase descend
 
@@ -85,8 +85,8 @@ vpath $(BIN_NAME) $(BIN_DIR)
 $(BIN_NAME) : $(ALL_OBJS)
 	$(LD_RULE)
 
-INSTALL_FILES = $(BIN_FILE)
-INSTALL_DIR = $(HB_BIN_INSTALL)
+INSTALL_FILES := $(BIN_FILE)
+INSTALL_DIR := $(HB_BIN_INSTALL)
 
 include $(TOP)$(ROOT)config/install.cf
 

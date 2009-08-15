@@ -10,13 +10,13 @@ ifeq ($(INSTALL_DIR),) # Empty install dir
 else
 
 ifneq ($(HB_SHELL),sh)
-   INSTALL_DIR_OS = $(subst /,\,$(INSTALL_DIR))
-   INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
+   INSTALL_DIR_OS := $(subst /,\,$(INSTALL_DIR))
+   INSTALL_FILES_OS := $(subst /,\,$(INSTALL_FILES))
 endif
 
 ifeq ($(HB_SHELL),sh)
 
-   INSTALL_RULE = \
+   INSTALL_RULE := \
       @$(MDP) $(subst \,/,$(INSTALL_DIR)); \
       if [ ! -d "$(subst \,/,$(INSTALL_DIR))" ]; \
       then \
@@ -45,7 +45,7 @@ ifeq ($(HB_SHELL),nt)
       -@for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(INSTALL_DIR_OS)"
    endef
 
-   INSTALL_RULE = $(inst_file_all)
+   INSTALL_RULE := $(inst_file_all)
 
 endif
 
@@ -64,7 +64,7 @@ ifeq ($(HB_SHELL),os2)
 
    endef
 
-   INSTALL_RULE = $(foreach file,$(INSTALL_FILES_OS),$(inst_file))
+   INSTALL_RULE := $(foreach file,$(INSTALL_FILES_OS),$(inst_file))
 
 endif
 
@@ -83,7 +83,7 @@ ifeq ($(HB_SHELL),dos)
 
    endef
 
-   INSTALL_RULE = $(inst_file_all)
+   INSTALL_RULE := $(inst_file_all)
 
 endif
 

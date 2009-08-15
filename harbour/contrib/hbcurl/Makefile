@@ -40,6 +40,7 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
+DIRS :=
 ifeq ($(HB_ARCHITECTURE),win)
    DIRS += hbcurls
 endif

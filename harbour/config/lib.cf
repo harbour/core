@@ -17,7 +17,7 @@ LIB_NAME := $(LIB_PREF)$(LIBNAME)$(LIB_EXT)
 
 LIB_FILE := $(LIB_DIR)/$(LIB_NAME)
 
-ALL_OBJS = $(ALL_C_OBJS) $(ALL_PRG_OBJS)
+ALL_OBJS := $(ALL_C_OBJS) $(ALL_PRG_OBJS)
 
 first:: dirbase descend
 
@@ -28,8 +28,8 @@ vpath $(LIB_NAME) $(LIB_DIR)
 $(LIB_NAME) : $(ALL_OBJS)
 	$(AR_RULE)
 
-INSTALL_FILES = $(LIB_FILE)
-INSTALL_DIR = $(HB_LIB_INSTALL)
+INSTALL_FILES := $(LIB_FILE)
+INSTALL_DIR := $(HB_LIB_INSTALL)
 
 include $(TOP)$(ROOT)config/install.cf
 

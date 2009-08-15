@@ -60,7 +60,7 @@ endif
 ifeq ($(CC),wcc386)
    ifneq ($(HB_HOST_ARCH),linux)
       CPPFLAGS := $(subst /,\,$(CPPFLAGS))
-      CC_RULE = $(CC) $(CPPFLAGS) $(subst /,\,$(CFLAGS)) $(HB_CDBG) $(subst /,\,$(HB_USER_CFLAGS)) $(HB_CUNICODE) $(CC_IN)$(subst /,\,$<) $(CC_OUT)$(<F:.c=$(OBJ_EXT))
+      CC_RULE = $(CC) $(subst /,\,$(HB_INC_DEPEND)) $(CPPFLAGS) $(subst /,\,$(CFLAGS)) $(HB_CDBG) $(subst /,\,$(HB_USER_CFLAGS)) $(HB_CUNICODE) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN)$(subst /,\,$<)
    endif
 endif
 
@@ -70,7 +70,7 @@ ifeq ($(CC),wcc386)
 else
    export WPP386 := $(strip $(CPPFLAGS))
 endif
-CPPFLAGS =
+CPPFLAGS :=
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 #       It causes that every command will be separated by LF

@@ -8,11 +8,6 @@ include $(TOP)$(ROOT)config/global.cf
 
 LIBNAME := hbtip
 
-ifeq ($(HB_HAS_OPENSSL),yes)
-   HB_USER_PRGFLAGS += -DHB_HAS_OPENSSL
-   HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/hbssl
-endif
-
 ifneq ($(HB_ARCHITECTURE),dos)
 
 C_SOURCES := \
@@ -45,6 +40,15 @@ PRG_HEADERS := \
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)
 include $(TOP)$(ROOT)config/lib.cf
+
+DIRS :=
+ifeq ($(HB_HAS_OPENSSL),yes)
+   DIRS += hbtipssl
+endif
+
+ifneq ($(DIRS),)
+   include $(TOP)$(ROOT)config/dir.cf
+endif
 
 install::
 	$(INSTALL_RULE_HEADERS)

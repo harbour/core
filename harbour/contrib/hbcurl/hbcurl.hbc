@@ -4,11 +4,6 @@
 
 incpaths=.
 
-# NOTE: HB_CURL_STATIC mode requires additional libs be linked:
-#       libssh2 and OpenSSL
-
-{!HB_CURL_STATIC}libs=hbcurl
-{ HB_CURL_STATIC}libs=hbcurls
+libs=hbcurl
 {!mingw}libs=libcurl
-{mingw&!HB_CURL_STATIC}libs=curldll
-{mingw& HB_CURL_STATIC}libs=curl
+{mingw}libs=curldll

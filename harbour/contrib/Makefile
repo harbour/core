@@ -53,6 +53,8 @@ else
 
 ifneq ($(HB_CONTRIBLIBS),no)
    DIRS := $(HB_CONTRIBLIBS)
+else
+   DIRS :=
 endif
 
 endif

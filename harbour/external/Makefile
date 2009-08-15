@@ -16,6 +16,8 @@ else
 
 ifneq ($(HB_EXTERNALLIBS),no)
    DIRS := $(HB_EXTERNALLIBS)
+else
+   DIRS :=
 endif
 
 endif

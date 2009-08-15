@@ -17,6 +17,7 @@ ifneq ($(HB_SHELL),sh)
 
 TOOL_DIR := $(subst /,\,$(TOP)$(ROOT)config/)
 
+# Have to use '=' operator here for rules to work
 OBJ_DIR_OS = $(subst /,\,$(OBJ_DIR))
 LIB_DIR_OS = $(subst /,\,$(LIB_DIR))
 LIB_FILE_OS = $(subst /,\,$(LIB_FILE))

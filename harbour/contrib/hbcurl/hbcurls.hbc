@@ -1,0 +1,12 @@
+#
+# $Id$
+#
+
+incpaths=.
+
+libs=hbcurls
+{!mingw}libs=libcurl
+{mingw}libs=curl
+
+# NOTE: Static mode requires additional libs be linked:
+#       libssh2 and OpenSSL

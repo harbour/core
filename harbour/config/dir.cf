@@ -30,10 +30,10 @@ ifeq ($(DIR_RULE),)
 
    endef
 
-   DIRS_PURE = $(filter-out {%},$(subst {, {,$(DIRS)))
-   DIRS_DEP  = $(filter-out $(DIRS_PURE),$(DIRS))
-   DIRS_MK   = $(foreach d, $(DIRS_PURE), $(if $(wildcard $(d)/Makefile),$(d),))
-   DIR_RULE  = $(foreach dir, $(DIRS_MK), $(dir_mk))
+   DIRS_PURE := $(filter-out {%},$(subst {, {,$(DIRS)))
+   DIRS_DEP  := $(filter-out $(DIRS_PURE),$(DIRS))
+   DIRS_MK   := $(foreach d, $(DIRS_PURE), $(if $(wildcard $(d)/Makefile),$(d),))
+   DIR_RULE  := $(foreach dir, $(DIRS_MK), $(dir_mk))
    MULTI_DEPS := yes
 
 else
@@ -52,8 +52,8 @@ first clean install::
 
 else
 
-DIRS_CLEAN = $(foreach dir, $(DIRS_MK), $(dir).clean)
-DIRS_INST  = $(foreach dir, $(DIRS_MK), $(dir).inst)
+DIRS_CLEAN := $(foreach dir, $(DIRS_MK), $(dir).clean)
+DIRS_INST  := $(foreach dir, $(DIRS_MK), $(dir).inst)
 
 ifneq ($(_HB_BLD),yes)
 first   :: $(DIRS_MK)

@@ -3,8 +3,8 @@
 #
 
 ifneq ($(HB_SHELL),sh)
-   MK_OS = $(subst /,\,$(MK))
-   DIRS_OS = $(subst /,\,$(DIRS))
+   MK_OS := $(subst /,\,$(MK))
+   DIRS_OS := $(subst /,\,$(DIRS))
 endif
 
 ifeq ($(DIRS),) # Empty directory list
@@ -12,7 +12,7 @@ ifeq ($(DIRS),) # Empty directory list
 else
 
 ifeq ($(HB_SHELL),sh)
-   DIR_RULE = \
+   DIR_RULE := \
       @for d in $(DIRS); do \
          if [ -d "$$d" ]; then \
             $(MK) $(MKFLAGS) -C $$d $@; \
@@ -21,11 +21,11 @@ ifeq ($(HB_SHELL),sh)
 endif
 
 ifeq ($(HB_SHELL),nt)
-   DIR_RULE = for %%d in ($(DIRS_OS)) do $(MK_OS) $(MKFLAGS) -C %%d $@
+   DIR_RULE := for %%d in ($(DIRS_OS)) do $(MK_OS) $(MKFLAGS) -C %%d $@
 endif
 
 ifeq ($(HB_SHELL),os2)
-   DIR_RULE = for %d in ($(DIRS_OS)) do $(MK_OS) $(MKFLAGS) -C %d $@
+   DIR_RULE := for %d in ($(DIRS_OS)) do $(MK_OS) $(MKFLAGS) -C %d $@
 endif
 
 ifeq ($(HB_SHELL),dos)
@@ -38,7 +38,7 @@ define dir_mk
 
 endef
 
-DIR_RULE = $(foreach file,$(DIRS_OS),$(dir_mk))
+DIR_RULE := $(foreach file,$(DIRS_OS),$(dir_mk))
 
 endif
 

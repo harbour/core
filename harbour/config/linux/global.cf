@@ -12,7 +12,8 @@ ifeq ($(HB_SHELL),sh)
    ifneq ($(HB_COMPILER),sunpro)
       ifeq ($(findstring -fPIC,$(HB_USER_CFLAGS)),)
           _UNAME_M := $(shell uname -m)
-          # TODO: Make this complete
+          # TODO: Make this complete:
+          #       || ( $( "*[ix]*86" ) && $( "*[ix]*86[^0-9]*" ) )
           ifneq ($(findstring $(_UNAME_M),@64 _64),)
              HB_USER_CFLAGS += -fPIC
           endif
