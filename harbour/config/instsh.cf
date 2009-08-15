@@ -49,24 +49,27 @@ ifeq ($(HB_SHELL),nt)
 
 endif
 
-ifeq ($(HB_SHELL),os2)
 
-   define inst_file_all
-      -@if not exist $(INSTALL_DIR_OS) $(MDP) $(INSTALL_DIR)
-      $(foreach file,$(INSTALL_FILES_OS),$(inst_file))
-   endef
+ifeq ($(HB_SHELL),os2)
 
    # We have to use script to overcome the max command size limit
    # NOTE: The empty line directly before 'endef' HAVE TO exist!
-   #       It causes that every command will be separated by LF
+   # It causes that every commands will be separated by LF
+
+   # 05/Aug/2009 - <maurilio.longo@libero.it>
+   #               I don't like doing the "if not exist..." test for every file copied
+   #               but I could not find any other way to make this work around the shell
+   #               command line length limit.
    define inst_file
-      -@$(CP) $(file) $(INSTALL_DIR_OS)
+      @$(COMSPEC) /C if not exist $(INSTALL_DIR_OS) $(MDP) $(INSTALL_DIR)
+      $(COMSPEC) /C $(CP) $(file) $(INSTALL_DIR_OS)
 
    endef
 
    INSTALL_RULE := $(foreach file,$(INSTALL_FILES_OS),$(inst_file))
 
 endif
+
 
 ifeq ($(HB_SHELL),dos)
 
