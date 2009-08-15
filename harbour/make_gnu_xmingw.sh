@@ -100,12 +100,17 @@ export HB_XBUILD="win"
 [ "${HB_HOST_BUILD}" = "all" ] || export HB_HOST_BUILD="lib"
 
 case "$1" in
-    tgz|gnu)
+    tgz)
         ext=$1
         shift
         . `dirname $0`/make_${ext}.sh "$@"
         ;;
     *)
-        . `dirname $0`/make_gnu.sh "$@"
+        if [ "$HB_HOST_ARCH" = "bsd" ] || [ "$HB_HOST_ARCH" = "hpux" ]
+        then
+           gmake $*
+        else
+           make $*
+        fi
         ;;
 esac
