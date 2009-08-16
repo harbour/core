@@ -18,6 +18,7 @@ ifneq ($(HB_SHELL),sh)
 TOOL_DIR := $(subst /,\,$(TOP)$(ROOT)config/)
 
 # Have to use '=' operator here for rules to work
+PKG_DIR_OS = $(subst /,\,$(PKG_DIR))
 OBJ_DIR_OS = $(subst /,\,$(OBJ_DIR))
 LIB_DIR_OS = $(subst /,\,$(LIB_DIR))
 LIB_FILE_OS = $(subst /,\,$(LIB_FILE))
@@ -41,7 +42,7 @@ dirbase::
 	@[ -z "$(BIN_FILE)" ] || [ -d "$(BIN_DIR)" ] || $(MDP) $(BIN_DIR)
 
 clean::
-	-@$(RDP) $(OBJ_DIR) $(LIB_FILE) $(BIN_FILE); \
+	-@$(RDP) $(PKG_DIR) $(OBJ_DIR) $(LIB_FILE) $(BIN_FILE); \
 	if [ -n "$(LIB_FILE)" ]; then \
 	   $(RM) $(basename $(LIB_FILE)).bak; \
 	   [ "`echo $(LIB_DIR)/*`" != "$(LIB_DIR)/*" ] || $(RDP) $(LIB_DIR); \
@@ -74,6 +75,7 @@ dirbase::
 
 clean::
 	-@if exist "$(OBJ_DIR_OS)" $(RDP) "$(OBJ_DIR_OS)"
+	-@if exist "$(PKG_DIR_OS)" $(RDP) "$(PKG_DIR_OS)"
 	$(if $(LIB_FILE),-@if exist "$(LIB_FILE_OS)" $(RM) "$(LIB_FILE_OS)",)
 	$(if $(LIB_FILE),-@if exist "$(basename $(LIB_FILE_OS)).bak" $(RM) "$(basename $(LIB_FILE_OS)).bak",)
 	$(if $(LIB_FILE),-@if exist "$(LIB_DIR_OS)" if not exist "$(LIB_DIR_OS)\*" $(RDP) "$(LIB_DIR_OS)",)
@@ -98,7 +100,7 @@ dirbase::
 	$(if $(BIN_FILE),-@if not exist $(BIN_DIR_OS) $(MDP) $(BIN_DIR),)
 
 clean::
-	@$(RDP) $(OBJ_DIR_OS) $(LIB_FILE_OS) $(BIN_FILE_OS)
+	@$(RDP) $(PKG_DIR_OS) $(OBJ_DIR_OS) $(LIB_FILE_OS) $(BIN_FILE_OS)
 	$(if $(LIB_FILE),-@if exist $(LIB_DIR_OS) $(RDP) $(LIB_DIR_OS),)
 	$(if $(BIN_FILE),-@if exist $(BIN_DIR_OS) $(RDP) $(BIN_DIR_OS),)
 
@@ -119,7 +121,7 @@ dirbase::
 	$(if $(BIN_FILE),-@if not exist $(BIN_DIR_OS)\nul $(MDP) $(BIN_DIR_OS),)
 
 clean::
-	-@$(RDP) $(OBJ_DIR_OS) $(LIB_FILE_OS) $(BIN_FILE_OS)
+	-@$(RDP) $(PKG_DIR_OS) $(OBJ_DIR_OS) $(LIB_FILE_OS) $(BIN_FILE_OS)
 	$(if $(LIB_FILE),-@if exist $(basename $(LIB_FILE_OS)).bak $(RM) $(basename $(LIB_FILE_OS)).bak,)
 	$(if $(LIB_FILE),-@if not exist $(LIB_DIR_OS)\*.* $(RDP) $(LIB_DIR_OS),)
 	$(if $(BIN_FILE),-@if exist $(basename $(BIN_FILE_OS)).tds $(RM) $(basename $(BIN_FILE_OS)).tds,)
