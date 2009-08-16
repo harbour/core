@@ -100,16 +100,26 @@ goto INST_%HB_ARCHITECTURE%
 
 :MK_PKG
 
-   echo ! Making Harbour .zip install package: '%HB_PKGPATH%.zip'
-   if exist "%HB_PKGPATH%.zip" del "%HB_PKGPATH%.zip"
+   if not "%OS%" == "Windows_NT" echo ! postinst.bat Harbour install package creation requires Windows NT or upper.
+   if not "%OS%" == "Windows_NT" goto :EOF
+
+   rem NOTE: Believe it or not this is the official method to zip a different dir with subdirs
+   rem       without including the whole root path in filenames; you have to 'cd' into it.
+   rem       Even with zip 3.0. For this reason this can't work with plain MS-DOS and we need
+   rem       absolute path in HB_TOP. There is also no zip 2.x compatible way to force creation
+   rem       of a new .zip, so we have to delete it first to avoid mixing in an existing .zip
+   rem       files. [vszakats]
+
+   echo ! Making Harbour .zip install package: '%HB_TOP%\%HB_PKGNAME%.zip'
+   if exist "%HB_TOP%\%HB_PKGNAME%.zip" del "%HB_TOP%\%HB_PKGNAME%.zip"
    pushd
-   cd "%HB_PKGBASE%"
-   "%HB_DIR_ZIP%zip.exe" -q -9 -X -r -o "%HB_PKGPATH%.zip" . -i "%HB_PKGNAME%\*" -x *.tds -x *.exp
+   cd "%HB_INSTALL_PREFIX%\.."
+   "%HB_DIR_ZIP%zip.exe" -q -9 -X -r -o "%HB_TOP%\%HB_PKGNAME%.zip" . -i "%HB_PKGNAME%\*" -x *.tds -x *.exp
    popd
 
    if "%HB_ARCHITECTURE%" == "dos" goto :EOF
 
-   echo ! Making Harbour .exe install package: '%HB_PKGPATH%.exe'
+   echo ! Making Harbour .exe install package: '%HB_TOP%\%HB_PKGNAME%.exe'
    "%HB_DIR_NSIS%makensis.exe" /V2 "%~dp0..\package\mpkg_win.nsi"
 
    goto :EOF

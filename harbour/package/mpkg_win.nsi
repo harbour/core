@@ -30,7 +30,7 @@ CRCCheck on
 Name "Harbour Project"
 
 ; The file to write
-OutFile "$%HB_PKGPATH%.exe"
+OutFile "$%HB_TOP%\$%HB_PKGNAME%.exe"
 
 InstallDir C:\$%HB_PKGNAMI%
 
