@@ -11,38 +11,36 @@ LEX := flex
 LEX_FLAGS := -i -8 $(LEX_FLAGS)
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-   HB_CDBG := -DHB_TR_LEVEL_DEBUG
+   HB_CFLAGS := -DHB_TR_LEVEL_DEBUG $(HB_CFLAGS)
 else
-   HB_PDBG := -l
+   HB_PRGFLAGS := -l $(HB_PRGFLAGS)
 endif
 
 ifeq ($(HB_BUILD_UNICODE),yes)
-   HB_CUNICODE := -DUNICODE
+   HB_CFLAGS := -DUNICODE $(HB_CFLAGS)
 endif
 
 # How to run Harbour
 HB := $(HB_HOST_BIN_DIR)/harbour$(HB_HOST_BIN_EXT)
-
 ifeq ($(HB_GCMODE),)
    HB_GCMODE := 0
 endif
-HB_FLAGS := -i$(HB_INC_COMPILE) -q0 -w3 -es2 -kmo $(HB_PDBG)
-HB_RULE = $(HB) $? -n1 $(HB_INC_DEPEND) $(HB_FLAGS) -gc$(HB_GCMODE) $(HB_FLAGSEXTRA) $(HB_USER_PRGFLAGS)
+HB_FLAGS := -n1 $(HB_INC_DEPEND) -i$(HB_INC_COMPILE) -q0 -w3 -es2 -kmo -gc$(HB_GCMODE) $(HB_PRGFLAGS)
+HB_RULE = $(HB) $? $(HB_FLAGS) $(HB_USER_PRGFLAGS)
 
 # Use default rules if architecture/compiler specific rule is not defined
 
 # The rule to compile a C source file.
 ifeq ($(CC_RULE),)
-   CC_RULE = $(CC) $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_CFLAGS) $(HB_USER_CFLAGS) $(HB_CUNICODE) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<
+   CC_RULE = $(CC) $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CFLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<
    ifneq ($(HB_BUILD_DLL),no)
       ifeq ($(HB_DYN_COMPILE),yes)
          ifneq ($(LIBNAME),)
             ifneq ($(findstring $(LIBNAME),$(HB_DYN_LIBS)),)
                define cc_comp_all
-                  $(CC) $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_CFLAGS) $(HB_USER_CFLAGS) $(HB_CUNICODE) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<
-                  $(CC) $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_CFLAGS) $(HB_USER_CFLAGS) $(HB_CUNICODE) $(CC_OUT)$(<F:.c=_dyn$(OBJ_EXT)) -DHB_DYNLIB $(CC_IN) $<
+                  $(CC) $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CFLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<
+                  $(CC) $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CFLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=_dyn$(OBJ_EXT)) -DHB_DYNLIB $(CC_IN) $<
                endef
-
                CC_RULE = $(cc_comp_all)
             endif
          endif
@@ -52,7 +50,7 @@ endif
 
 # The rule to compile a C++ source file.
 ifeq ($(CPP_RULE),)
-   CPP_RULE = $(CC) $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_CFLAGS) $(HB_USER_CFLAGS) $(HB_CUNICODE) $(CC_OUT)$(<F:.cpp=$(OBJ_EXT)) $(CC_IN) $<
+   CPP_RULE = $(CC) $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CFLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.cpp=$(OBJ_EXT)) $(CC_IN) $<
 endif
 
 # The rule to link an executable.

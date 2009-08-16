@@ -68,6 +68,8 @@
 #define TEST_RESULT_COL4_WIDTH  85
 #define TEST_RESULT_COL5_WIDTH  85
 
-#ifndef __HARBOUR__
+#ifdef __HARBOUR__
+   #pragma linenumber=on
+#else
    #define HB_C52_STRICT
 #endif

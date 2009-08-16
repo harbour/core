@@ -39,19 +39,19 @@ endif
 ifneq ($(HB_INC_CURSES_OK),)
 
 ifeq ($(HB_GT_CRS_BCEHACK),yes)
-   HB_USER_CFLAGS += -DHB_GT_CRS_BCEHACK
+   HB_CFLAGS += -DHB_GT_CRS_BCEHACK
 endif
 ifeq ($(HB_GPM_MOUSE),yes)
-   HB_USER_CFLAGS += -DHB_HAS_GPM
+   HB_CFLAGS += -DHB_HAS_GPM
    ifeq ($(HB_GPM_NOICE_DISABLE),yes)
-      HB_USER_CFLAGS += -DHB_GPM_NOICE_DISABLE
+      HB_CFLAGS += -DHB_GPM_NOICE_DISABLE
    endif
 endif
 ifeq ($(HB_NCURSES_194),yes)
-   HB_USER_CFLAGS += -DHB_NCURSES_194
+   HB_CFLAGS += -DHB_NCURSES_194
 endif
 
-HB_USER_CFLAGS += $(foreach d, $(HB_INC_CURSES_OK), -I$(d))
+HB_CFLAGS += $(foreach d,$(HB_INC_CURSES_OK),-I$(d))
 
 include $(TOP)$(ROOT)config/lib.cf
 

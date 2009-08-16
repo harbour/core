@@ -25,7 +25,7 @@ HB_INC_X11_OK := $(foreach d, $(HB_INC_X11), $(if $(wildcard $(d)/X11/Xlib.h),$(
 
 ifneq ($(strip $(HB_INC_X11_OK)),)
 
-HB_USER_CFLAGS += $(foreach d, $(HB_INC_X11_OK), -I$(d))
+HB_CFLAGS += $(foreach d,$(HB_INC_X11_OK),-I$(d))
 
 include $(TOP)$(ROOT)config/lib.cf
 

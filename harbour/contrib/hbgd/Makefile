@@ -10,6 +10,8 @@
 
 ROOT := ../../
 
+include $(TOP)$(ROOT)config/global.cf
+
 LIBNAME := hbgd
 
 ifeq ($(HB_INC_GD),)
@@ -22,7 +24,7 @@ HB_INC_GD_OK := $(foreach d, $(HB_INC_GD), $(if $(wildcard $(d)/gd.h),$(d),))
 
 ifneq ($(strip $(HB_INC_GD_OK)),)
 
-HB_USER_CFLAGS += $(foreach d, $(HB_INC_GD_OK), -I$(d))
+HB_CFLAGS += $(foreach d,$(HB_INC_GD_OK),-I$(d))
 
 C_SOURCES := \
    gdwrp.c \

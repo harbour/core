@@ -2,12 +2,12 @@
 # $Id$
 #
 
-vpath %.c ../
-vpath %.prg ../
-
 ROOT := ../../../
 
 include $(TOP)$(ROOT)config/global.cf
+
+vpath %.c ../
+vpath %.prg ../
 
 ifeq ($(HB_ARCHITECTURE),win)
    ifeq ($(HB_COMPILER),mingw)
@@ -79,8 +79,6 @@ PRG_SOURCES := \
 
 LIBNAME := hbvmmt
 
-ifeq ($(HB_USER_CFLAGS),$(subst -DHB_MT_VM,,$(HB_USER_CFLAGS)))
-   HB_USER_CFLAGS += -DHB_MT_VM
-endif
+HB_CFLAGS += -DHB_MT_VM
 
 include $(TOP)$(ROOT)config/lib.cf

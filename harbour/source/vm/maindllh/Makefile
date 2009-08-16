@@ -2,9 +2,11 @@
 # $Id$
 #
 
-vpath %.c ../
-
 ROOT := ../../../
+
+include $(TOP)$(ROOT)config/global.cf
+
+vpath %.c ../
 
 C_SOURCES := \
    maindllh.c \
@@ -12,6 +14,6 @@ C_SOURCES := \
 LIBNAME := hbmaindllh
 
 # always export symbols
-HB_USER_CFLAGS += -DHB_DYNLIB
+HB_CFLAGS += -DHB_DYNLIB
 
 include $(TOP)$(ROOT)config/lib.cf

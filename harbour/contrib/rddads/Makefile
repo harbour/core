@@ -22,7 +22,7 @@ endif
 
 ifneq ($(strip $(HB_INC_ADS_OK)),)
 
-HB_USER_CFLAGS += $(foreach d, $(HB_INC_ADS_OK), -I$(d))
+HB_CFLAGS += $(foreach d,$(HB_INC_ADS_OK),-I$(d))
 
 C_SOURCES := \
    ads1.c \

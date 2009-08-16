@@ -8,7 +8,7 @@ include $(TOP)$(ROOT)config/global.cf
 
 HB_BUILD_WARN := no
 HB_BUILD_MODE := c
-HB_USER_CFLAGS += -I$(TOP)$(ROOT)source/hbzlib
+HB_CFLAGS += -I$(TOP)$(ROOT)source/hbzlib
 
 LIBNAME := libhpdf
 
@@ -25,7 +25,7 @@ ifeq ($(HB_WITH_LIBHPDF),)
    endif
    ifeq ($(HB_COMPILER),mingwarm)
       HB_WITH_LIBHPDF := yes
-      HB_USER_CFLAGS += -U__COREDLL__
+      HB_CFLAGS += -U__COREDLL__
    endif
    ifeq ($(HB_ARCHITECTURE),os2)
       HB_WITH_LIBHPDF := yes
@@ -59,7 +59,7 @@ HB_INC_LIBPNG_OK := $(foreach d, $(HB_INC_LIBPNG), $(if $(wildcard $(d)/png.h),$
 
 ifneq ($(strip $(HB_INC_LIBPNG_OK)),)
 
-HB_USER_CFLAGS += $(foreach d, $(HB_INC_LIBPNG_OK), -I$(d))
+HB_CFLAGS += $(foreach d,$(HB_INC_LIBPNG_OK),-I$(d))
 
 C_SOURCES := \
    _hbhbpdf.c \

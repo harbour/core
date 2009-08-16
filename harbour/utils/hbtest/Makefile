@@ -30,6 +30,4 @@ PRG_MAIN := hbtest.prg
 
 LIBS = $(HB_LIBS_ST_RDD)
 
-HB_USER_PRGFLAGS += -l-
-
 include $(TOP)$(ROOT)config/bin.cf

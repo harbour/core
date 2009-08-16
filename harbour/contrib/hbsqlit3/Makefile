@@ -30,7 +30,7 @@ HB_INC_SQLITE3_OK := $(foreach d, $(HB_INC_SQLITE3), $(if $(wildcard $(d)/sqlite
 
 ifneq ($(strip $(HB_INC_SQLITE3_OK)),)
 
-HB_USER_CFLAGS += $(foreach d, $(HB_INC_SQLITE3_OK), -I$(d))
+HB_CFLAGS += $(foreach d,$(HB_INC_SQLITE3_OK),-I$(d))
 
 C_SOURCES := \
    hbsqlit3.c \

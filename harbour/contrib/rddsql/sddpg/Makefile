@@ -4,6 +4,8 @@
 
 ROOT := ../../../
 
+include $(TOP)$(ROOT)config/global.cf
+
 LIBNAME := sddpg
 
 ifeq ($(HB_INC_PGSQL),)
@@ -16,7 +18,7 @@ HB_INC_PGSQL_OK := $(foreach d, $(HB_INC_PGSQL), $(if $(wildcard $(d)/libpq-fe.h
 
 ifneq ($(strip $(HB_INC_PGSQL_OK)),)
 
-HB_USER_CFLAGS += $(foreach d, $(HB_INC_PGSQL_OK), -I$(d))
+HB_CFLAGS += $(foreach d,$(HB_INC_PGSQL_OK),-I$(d))
 
 C_SOURCES := \
    pgsqldd.c \

@@ -107,8 +107,6 @@ PRG_SOURCES := \
 
 LIBNAME := hbvm
 
-HB_USER_CFLAGS := $(subst -DHB_MT_VM,,$(HB_USER_CFLAGS))
-
 ifneq ($(HB_MT),yes)
 ifeq ($(HB_ARCHITECTURE),dos)
 ifneq ($(HB_COMPILER),djgpp)

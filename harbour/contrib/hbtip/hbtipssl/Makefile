@@ -2,16 +2,18 @@
 # $Id$
 #
 
+ROOT := ../../../
+
+include $(TOP)$(ROOT)config/global.cf
+
 vpath %.c ../
 vpath %.prg ../
-
-ROOT := ../../../
 
 LIBNAME := hbtipssl
 
 ifeq ($(HB_HAS_OPENSSL),yes)
 
-HB_USER_PRGFLAGS += -DHB_HAS_OPENSSL
+HB_PRGFLAGS += -DHB_HAS_OPENSSL
 HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/hbssl
 
 C_SOURCES := \

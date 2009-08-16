@@ -687,45 +687,44 @@ ifneq ($(HB_HOST_ARCH)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
    else
       HB_CROSS_BUILD := yes
    endif
-   HB_FLAGSEXTRA :=
    ifeq ($(HB_CROSS_BUILD),yes)
       # Setup platform macros (undefine host, define target)
       ifeq ($(HB_HOST_ARCH),win)
-         HB_FLAGSEXTRA += -undef:__PLATFORM__WINDOWS
+         HB_PRGFLAGS += -undef:__PLATFORM__WINDOWS
       else
          ifeq ($(HB_HOST_ARCH),dos)
-            HB_FLAGSEXTRA += -undef:__PLATFORM__DOS
+            HB_PRGFLAGS += -undef:__PLATFORM__DOS
          else
             ifeq ($(HB_HOST_ARCH),os2)
-               HB_FLAGSEXTRA += -undef:__PLATFORM__OS2
+               HB_PRGFLAGS += -undef:__PLATFORM__OS2
             else
                ifeq ($(HB_HOST_ARCH),linux)
-                  HB_FLAGSEXTRA += -undef:__PLATFORM__LINUX -undef:__PLATFORM__UNIX
+                  HB_PRGFLAGS += -undef:__PLATFORM__LINUX -undef:__PLATFORM__UNIX
                endif
             endif
          endif
       endif
       ifeq ($(HB_ARCHITECTURE),win)
-         HB_FLAGSEXTRA += -D__PLATFORM__WINDOWS
+         HB_PRGFLAGS += -D__PLATFORM__WINDOWS
          ifeq ($(HB_CPU),x86_64)
-            HB_FLAGSEXTRA += -D__ARCH64BIT__
+            HB_PRGFLAGS += -D__ARCH64BIT__
          else
             ifeq ($(HB_CPU),ia64)
-               HB_FLAGSEXTRA += -D__ARCH64BIT__
+               HB_PRGFLAGS += -D__ARCH64BIT__
             endif
          endif
       else
          ifeq ($(HB_ARCHITECTURE),wce)
-            HB_FLAGSEXTRA += -D__PLATFORM__WINDOWS -D__PLATFORM__WINCE
+            HB_PRGFLAGS += -D__PLATFORM__WINDOWS -D__PLATFORM__WINCE
          else
             ifeq ($(HB_ARCHITECTURE),dos)
-               HB_FLAGSEXTRA += -D__PLATFORM__DOS
+               HB_PRGFLAGS += -D__PLATFORM__DOS
             else
                ifeq ($(HB_ARCHITECTURE),os2)
-                  HB_FLAGSEXTRA += -D__PLATFORM__OS2
+                  HB_PRGFLAGS += -D__PLATFORM__OS2
                else
                   ifeq ($(HB_ARCHITECTURE),linux)
-                     HB_FLAGSEXTRA += -D__PLATFORM__LINUX -D__PLATFORM__UNIX
+                     HB_PRGFLAGS += -D__PLATFORM__LINUX -D__PLATFORM__UNIX
                   endif
                endif
             endif

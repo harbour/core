@@ -28,10 +28,10 @@ ifneq ($(strip $(HB_INC_ALLEGRO_OK)),)
 
 ifneq ($(HB_ALLEGRO_STATIC),)
    LIBNAME := gtallegs
-   HB_USER_CFLAGS += -DALLEGRO_STATICLINK
+   HB_CFLAGS += -DALLEGRO_STATICLINK
 endif
 
-HB_USER_CFLAGS += $(foreach d, $(HB_INC_ALLEGRO_OK), -I$(d))
+HB_CFLAGS += $(foreach d,$(HB_INC_ALLEGRO_OK),-I$(d))
 
 C_SOURCES := \
    gtalleg.c \

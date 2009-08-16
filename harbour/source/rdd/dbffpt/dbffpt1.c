@@ -61,6 +61,10 @@
 /*#  define HB_MEMO_SAFELOCK */
 #endif
 
+#if defined( __XCC__ )
+#  pragma optimize( none )
+#endif
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbinit.h"

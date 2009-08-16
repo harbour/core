@@ -4,6 +4,8 @@
 
 ROOT := ../../
 
+include $(TOP)$(ROOT)config/global.cf
+
 LIBNAME := hbmysql
 
 ifeq ($(HB_INC_MYSQL),)
@@ -16,7 +18,7 @@ HB_INC_MYSQL_OK := $(foreach d, $(HB_INC_MYSQL), $(if $(wildcard $(d)/mysql.h),$
 
 ifneq ($(strip $(HB_INC_MYSQL_OK)),)
 
-HB_USER_CFLAGS += $(foreach d, $(HB_INC_MYSQL_OK), -I$(d))
+HB_CFLAGS += $(foreach d,$(HB_INC_MYSQL_OK),-I$(d))
 
 C_SOURCES := \
    mysql.c \

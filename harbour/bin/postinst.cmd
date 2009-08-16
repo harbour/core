@@ -25,11 +25,11 @@ echo libpaths=../addons/%%{hb_name}>> %HB_BIN_INSTALL%\hbmk.cfg
 echo libpaths=../examples/%%{hb_name}>> %HB_BIN_INSTALL%\hbmk.cfg
 
 rem ; Post-build installation
-if not "%HB_INSTALL_PREFIX%" == "" xcopy /y ChangeLog* "%HB_INSTALL_PREFIX%\" > nul
-if not "%HB_INSTALL_PREFIX%" == "" xcopy /y COPYING    "%HB_INSTALL_PREFIX%\" > nul
-if not "%HB_INSTALL_PREFIX%" == "" xcopy /y ERRATA     "%HB_INSTALL_PREFIX%\" > nul
-if not "%HB_INSTALL_PREFIX%" == "" xcopy /y INSTALL    "%HB_INSTALL_PREFIX%\" > nul
-if not "%HB_INSTALL_PREFIX%" == "" xcopy /y TODO       "%HB_INSTALL_PREFIX%\" > nul
+if not "%HB_INSTALL_PREFIX%" == "" xcopy /y ChangeLog* %HB_INSTALL_PREFIX%\ > nul
+if not "%HB_INSTALL_PREFIX%" == "" xcopy /y COPYING    %HB_INSTALL_PREFIX%\ > nul
+if not "%HB_INSTALL_PREFIX%" == "" xcopy /y ERRATA     %HB_INSTALL_PREFIX%\ > nul
+if not "%HB_INSTALL_PREFIX%" == "" xcopy /y INSTALL    %HB_INSTALL_PREFIX%\ > nul
+if not "%HB_INSTALL_PREFIX%" == "" xcopy /y TODO       %HB_INSTALL_PREFIX%\ > nul
 
 goto INST_%HB_ARCHITECTURE%
 

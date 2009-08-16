@@ -24,7 +24,7 @@ endif
 
 ifneq ($(strip $(HB_INC_CURL_OK)),)
 
-HB_USER_CFLAGS += $(foreach d, $(HB_INC_CURL_OK), -I$(d))
+HB_CFLAGS += $(foreach d,$(HB_INC_CURL_OK),-I$(d))
 
 C_SOURCES := \
    hbcurl.c \
