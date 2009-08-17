@@ -40,7 +40,7 @@ C_SOURCES=\
 
 LIB=vm
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk
 --  Cut here  ---------------------------------------
 
 What this means is:
@@ -62,18 +62,18 @@ Let's look at another Makefile, this one for the Harbour compiler:
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-YACC_SOURCE=harbour.y
+YACC_SOURCE := harbour.y
 
-LEX_SOURCE=harbour.l
+LEX_SOURCE := harbour.l
 
-C_SOURCES=\
+C_SOURCES := \
         genobj32.c \
 
 C_MAIN=harbour.c
 
-include $(TOP)$(ROOT)config/bin.cf
+include $(TOP)$(ROOT)config/bin.mk
 --  Cut here  ---------------------------------------
 
 Notice how we now have other kinds of source files: yacc sources and
@@ -89,9 +89,9 @@ One final Makefile, this one from the source directory:
 #
 
 --  Cut here  ---------------------------------------
-ROOT = ../
+ROOT := ../
 
-DIRS=\
+DIRS := \
         compiler \
         hbpp \
         rtl \
@@ -99,7 +99,7 @@ DIRS=\
         rdd \
         tools \
 
-include $(ROOT)config/dir.cf
+include $(ROOT)config/dir.mk
 --  Cut here  ---------------------------------------
 
 This Makefile is used to traverse the subdirectories hanging from the
@@ -175,7 +175,7 @@ For GCC on BSD:
               gtsln
         In which case you'll also need to export HB_SCREEN_LIB with
         the name of the appropriate screen library, if it doesn't
-        match the default value in config/bsd/gcc.cf
+        match the default value in config/bsd/gcc.mk
 
 For GCC on Linux:
   HB_ARCHITECTURE   linux
@@ -188,7 +188,7 @@ For GCC on Linux:
               gtsln
         In which case you'll also need to export HB_SCREEN_LIB with
         the name of the appropriate screen library, if it doesn't
-        match the default value in config/linux/gcc.cf.
+        match the default value in config/linux/gcc.mk.
     2)  If you want to take advantage of compiler cache programs
         (such as http://ccaache.samba.org), you may set environment
         variable HB_CCACHE with the value containing the name of program.

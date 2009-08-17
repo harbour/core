@@ -17,7 +17,7 @@ track of all files (read the FAQ if you don't know what SVN is).
 +---bin                 - Executable and build scripts.
 |                         Should contain harbour.exe and other executable. (*)
 |
-+---config              - Configuration Files (.cf) for the GNU Make system.
++---config              - Configuration Files (.mk) for the GNU Make system.
 |   |
 |   +---bsd             - Configuration files specific to FreeBSD.
 |   |

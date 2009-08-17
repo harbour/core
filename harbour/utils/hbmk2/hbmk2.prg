@@ -2623,7 +2623,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aOPTD ], "/map" )
          ENDIF
          IF hbmk[ _HBMK_cCOMP ] == "msvcarm"
-            /* NOTE: Copied from .cf. Probably needs cleaning. */
+            /* NOTE: Copied from .mk. Probably needs cleaning. */
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_WIN32_WCE=0x420" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNDER_CE=0x420" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-DWIN32_PLATFORM_PSPC" )
@@ -5646,6 +5646,10 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
          hb_processRun( cExecNM + " " + cFile + " -g -n" + iif( hbmk[ _HBMK_cCOMP ] == "darwin", "", " --defined-only -C" ),, @cFuncList )
          IF ( n := At( " T HB_FUN_", cFuncList ) ) != 0
             n += 10
+         ELSEIF ( n := At( " T _HB_FUN_", cFuncList ) ) != 0
+            n += 11
+         ENDIF
+         IF n != 0
             DO WHILE ( c := SubStr( cFuncList, n++, 1 ) ) == "_" .OR. ;
                      IsDigit( c ) .OR. IsAlpha( c )
                IF c == "x" .AND. IsHexDigit( SubStr( cFuncList, n, 1 ) ) .AND. ;

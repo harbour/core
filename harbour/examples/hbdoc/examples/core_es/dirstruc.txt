@@ -40,7 +40,7 @@ busca de remover directorios vac¡os)
 +---bin                - Ejecutables y batch de construcci¢n
 |                        deber¡a contener harbour.exe y otros ejecutables (*)
 |
-+---config             - Archivos de Config. (.cf) para the GNU Make system
++---config             - Archivos de Config. (.mk) para the GNU Make system
 |   |
 |   +---bsd            - Archivos de Configuraci¢n espec¡ficos para FreeBSD
 |   |
