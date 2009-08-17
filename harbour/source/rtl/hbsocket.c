@@ -99,7 +99,7 @@
       #define HB_HAS_SELECT_TIMER
 
    all implementations should use BSD compatible constant values but
-   if it's not guarantied then these two mactos can be used.
+   if it's not guarantied then these two macros can be used.
    protocol families have to be translated:
       #define HB_SOCKET_TRANSLATE_DOMAIN
 
@@ -1172,6 +1172,136 @@ static void hb_socketSetOsError( int err )
    pError->iSocketOsError = err;
 }
 
+#if defined( HB_SOCKET_TRANSLATE_DOMAIN )
+static int hb_socketTransDomain( int domain, int *err )
+{
+   switch( domain )
+   {
+      case HB_SOCKET_PF_INET:
+#if   defined( PF_INET )
+         domain = PF_INET;
+#elif defined( AF_INET )
+         domain = AF_INET;
+#else
+         if( err )
+            *err = HB_SOCKET_ERR_PFNOSUPPORT;
+#endif
+         break;
+
+      case HB_SOCKET_PF_INET6:
+#if   defined( PF_INET6 )
+         domain = PF_INET6;
+#elif defined( AF_INET6 )
+         domain = AF_INET6;
+#else
+         if( err )
+            *err = HB_SOCKET_ERR_PFNOSUPPORT;
+#endif
+         break;
+
+      case HB_SOCKET_PF_LOCAL:
+#if   defined( PF_LOCAL )
+         domain = PF_LOCAL;
+#elif defined( AF_LOCAL )
+         domain = AF_LOCAL;
+#elif defined( PF_UNIX )
+         domain = PF_UNIX;
+#elif defined( AF_UNIX )
+         domain = AF_UNIX;
+#else
+         if( err )
+            *err = HB_SOCKET_ERR_PFNOSUPPORT;
+#endif
+         break;
+
+      case HB_SOCKET_PF_PACKET:
+#if   defined( PF_PACKET )
+         domain = PF_PACKET;
+#elif defined( AF_PACKET )
+         domain = AF_PACKET;
+#else
+         if( err )
+            *err = HB_SOCKET_ERR_PFNOSUPPORT;
+#endif
+         break;
+
+      case HB_SOCKET_PF_IPX:
+#if   defined( PF_IPX )
+         domain = PF_IPX;
+#elif defined( AF_IPX )
+         domain = AF_IPX;
+#else
+         if( err )
+            *err = HB_SOCKET_ERR_PFNOSUPPORT;
+#endif
+         break;
+
+      default:
+         if( err )
+            *err = HB_SOCKET_ERR_PFNOSUPPORT;
+   }
+   return domain;
+}
+#endif
+
+#if defined( HB_SOCKET_TRANSLATE_TYPE )
+static int hb_socketTransType( int type, int *err )
+{
+   switch( type )
+   {
+      case HB_SOCKET_PT_STREAM:
+#if   defined( SOCK_STREAM )
+         type = SOCK_STREAM;
+#else
+         if( err )
+            *err = HB_SOCKET_ERR_PROTONOSUPPORT;
+#endif
+         break;
+
+      case HB_SOCKET_PT_DGRAM:
+#if   defined( SOCK_DGRAM )
+         type = SOCK_DGRAM;
+#else
+         if( err )
+            *err = HB_SOCKET_ERR_PROTONOSUPPORT;
+#endif
+         break;
+
+      case HB_SOCKET_PT_SEQPACKET:
+#if   defined( SOCK_SEQPACKET )
+         type = SOCK_SEQPACKET;
+#else
+         if( err )
+            *err = HB_SOCKET_ERR_PROTONOSUPPORT;
+#endif
+         break;
+
+      case HB_SOCKET_PT_RAW:
+#if   defined( SOCK_RAW )
+         type = SOCK_RAW;
+#else
+         if( err )
+            *err = HB_SOCKET_ERR_PROTONOSUPPORT;
+#endif
+         break;
+
+      case HB_SOCKET_PT_RDM:
+#if   defined( SOCK_RDM )
+         type = SOCK_RDM;
+#else
+         if( err )
+            *err = HB_SOCKET_ERR_PROTONOSUPPORT;
+#endif
+         break;
+
+      default:
+         if( err )
+            *err = HB_SOCKET_ERR_PROTONOSUPPORT;
+   }
+   return type;
+}
+#endif
+
 static int hb_socketSelectRD( HB_SOCKET sd, HB_LONG timeout )
 {
    struct timeval tv, * ptv;
@@ -1775,113 +1905,12 @@ HB_SOCKET hb_socketOpen( int domain, int type, int protocol )
    int err = 0;
 
 #if defined( HB_SOCKET_TRANSLATE_DOMAIN )
-   switch( domain )
-   {
-      case HB_SOCKET_PF_INET:
-#if   defined( PF_INET )
-         domain = PF_INET;
-#elif defined( AF_INET )
-         domain = AF_INET;
-#else
-         err = HB_SOCKET_ERR_PFNOSUPPORT;
-#endif
-         break;
-
-      case HB_SOCKET_PF_INET6:
-#if   defined( PF_INET6 )
-         domain = PF_INET6;
-#elif defined( AF_INET6 )
-         domain = AF_INET6;
-#else
-         err = HB_SOCKET_ERR_PFNOSUPPORT;
-#endif
-         break;
-
-      case HB_SOCKET_PF_LOCAL:
-#if   defined( PF_LOCAL )
-         domain = PF_LOCAL;
-#elif defined( AF_LOCAL )
-         domain = AF_LOCAL;
-#elif defined( PF_UNIX )
-         domain = PF_UNIX;
-#elif defined( AF_UNIX )
-         domain = AF_UNIX;
-#else
-         err = HB_SOCKET_ERR_PFNOSUPPORT;
-#endif
-         break;
-
-      case HB_SOCKET_PF_PACKET:
-#if   defined( PF_PACKET )
-         domain = PF_PACKET;
-#elif defined( AF_PACKET )
-         domain = AF_PACKET;
-#else
-         err = HB_SOCKET_ERR_PFNOSUPPORT;
-#endif
-         break;
-
-      case HB_SOCKET_PF_IPX:
-#if   defined( PF_IPX )
-         domain = PF_IPX;
-#elif defined( AF_ )
-         domain = AF_IPX;
-#else
-         err = HB_SOCKET_ERR_PFNOSUPPORT;
-#endif
-         break;
-
-      default:
-         err = HB_SOCKET_ERR_PFNOSUPPORT;
-   }
+   domain = hb_socketTransDomain( domain, &err );
 #endif
 
 #if defined( HB_SOCKET_TRANSLATE_TYPE )
-   if( err == 0 ) switch( type )
-   {
-      case HB_SOCKET_PT_STREAM:
-#if   defined( SOCK_STREAM )
-         type = SOCK_STREAM;
-#else
-         err = HB_SOCKET_ERR_PROTONOSUPPORT;
-#endif
-         break;
-
-      case HB_SOCKET_PT_DGRAM:
-#if   defined( SOCK_DGRAM )
-         type = SOCK_DGRAM;
-#else
-         err = HB_SOCKET_ERR_PROTONOSUPPORT;
-#endif
-         break;
-
-      case HB_SOCKET_PT_SEQPACKET:
-#if   defined( SOCK_SEQPACKET )
-         type = SOCK_SEQPACKET;
-#else
-         err = HB_SOCKET_ERR_PROTONOSUPPORT;
-#endif
-         break;
-
-      case HB_SOCKET_PT_RAW:
-#if   defined( SOCK_RAW )
-         type = SOCK_RAW;
-#else
-         err = HB_SOCKET_ERR_PROTONOSUPPORT;
-#endif
-         break;
-
-      case HB_SOCKET_PT_RDM:
-#if   defined( SOCK_RDM )
-         type = SOCK_RDM;
-#else
-         err = HB_SOCKET_ERR_PROTONOSUPPORT;
-#endif
-         break;
-
-      default:
-         err = HB_SOCKET_ERR_PROTONOSUPPORT;
-   }
+   if( err == 0 )
+      type = hb_socketTransType( type, &err );
 #endif
 
    if( err == 0 )
@@ -2502,71 +2531,23 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
    char * szResult = NULL;
 
 #ifdef HB_HAS_ADDRINFO
+   struct addrinfo hints, *res = NULL;
+
+   hb_vmUnlock();
 
 #if defined( HB_SOCKET_TRANSLATE_DOMAIN )
-   switch( af )
+   af = hb_socketTransDomain( af, NULL );
+#endif
+
+   memset( &hints, 0, sizeof( hints ) );
+   hints.ai_family = af;
+   if( getaddrinfo( szAddr, NULL, &hints, &res ) == 0 )
    {
-      case HB_SOCKET_PF_INET:
-#if   defined( PF_INET )
-         af = PF_INET;
-#elif defined( AF_INET )
-         af = AF_INET;
-#endif
-         break;
-
-      case HB_SOCKET_PF_INET6:
-#if   defined( PF_INET6 )
-         af = PF_INET6;
-#elif defined( AF_INET6 )
-         af = AF_INET6;
-#endif
-         break;
-
-      case HB_SOCKET_PF_LOCAL:
-#if   defined( PF_LOCAL )
-         af = PF_LOCAL;
-#elif defined( AF_LOCAL )
-         af = AF_LOCAL;
-#elif defined( PF_UNIX )
-         af = PF_UNIX;
-#elif defined( AF_UNIX )
-         af = AF_UNIX;
-#endif
-         break;
-
-      case HB_SOCKET_PF_PACKET:
-#if   defined( PF_PACKET )
-         af = PF_PACKET;
-#elif defined( AF_PACKET )
-         af = AF_PACKET;
-#endif
-         break;
-
-      case HB_SOCKET_PF_IPX:
-#if   defined( PF_IPX )
-         af = PF_IPX;
-#elif defined( AF_ )
-         af = AF_IPX;
-#endif
-         break;
+      szResult = hb_socketAddrGetName( res->ai_addr, res->ai_addrlen );
+      freeaddrinfo( res );
    }
-#endif
 
-   {
-      struct addrinfo hints, *res = NULL;
-
-      hb_vmUnlock();
-
-      memset( &hints, 0, sizeof( hints ) );
-      hints.ai_family = af;
-      if( getaddrinfo( szAddr, NULL, &hints, &res ) == 0 )
-      {
-         szResult = hb_socketAddrGetName( res->ai_addr, res->ai_addrlen );
-         freeaddrinfo( res );
-      }
-
-      hb_vmLock();
-   }
+   hb_vmLock();
 #else
 
    if( af == HB_SOCKET_PF_INET )
@@ -2621,107 +2602,58 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
    PHB_ITEM pItem = NULL;
 
 #ifdef HB_HAS_ADDRINFO
+   struct addrinfo hints, *res = NULL, *ai;
+   int iResult;
 
+   hb_vmUnlock();
 #if defined( HB_SOCKET_TRANSLATE_DOMAIN )
-   switch( af )
+   af = hb_socketTransDomain( af, NULL );
+#endif
+   memset( &hints, 0, sizeof( hints ) );
+   hints.ai_family = af;
+   iResult = getaddrinfo( szAddr, NULL, &hints, &res );
+   hb_vmLock();
+
+   if( iResult == 0 )
    {
-      case HB_SOCKET_PF_INET:
-#if   defined( PF_INET )
-         af = PF_INET;
-#elif defined( AF_INET )
-         af = AF_INET;
-#endif
-         break;
-
-      case HB_SOCKET_PF_INET6:
-#if   defined( PF_INET6 )
-         af = PF_INET6;
-#elif defined( AF_INET6 )
-         af = AF_INET6;
-#endif
-         break;
-
-      case HB_SOCKET_PF_LOCAL:
-#if   defined( PF_LOCAL )
-         af = PF_LOCAL;
-#elif defined( AF_LOCAL )
-         af = AF_LOCAL;
-#elif defined( PF_UNIX )
-         af = PF_UNIX;
-#elif defined( AF_UNIX )
-         af = AF_UNIX;
-#endif
-         break;
-
-      case HB_SOCKET_PF_PACKET:
-#if   defined( PF_PACKET )
-         af = PF_PACKET;
-#elif defined( AF_PACKET )
-         af = AF_PACKET;
-#endif
-         break;
-
-      case HB_SOCKET_PF_IPX:
-#if   defined( PF_IPX )
-         af = PF_IPX;
-#elif defined( AF_ )
-         af = AF_IPX;
-#endif
-         break;
-   }
-#endif
-
-   {
-      struct addrinfo hints, *res = NULL, *ai;
-      int iResult;
-
-      hb_vmUnlock();
-      memset( &hints, 0, sizeof( hints ) );
-      hints.ai_family = af;
-      iResult = getaddrinfo( szAddr, NULL, &hints, &res );
-      hb_vmLock();
-
-      if( iResult == 0 )
+      int iCount = 0, i;
+      ai = res;
+      while( ai )
       {
-         int iCount = 0, i;
+         ++iCount;
+         ai = ai->ai_next;
+      }
+      if( iCount )
+      {
+         pItem = hb_itemArrayNew( iCount );
          ai = res;
+         iCount = 0;
          while( ai )
          {
-            ++iCount;
-            ai = ai->ai_next;
-         }
-         if( iCount )
-         {
-            pItem = hb_itemArrayNew( iCount );
-            ai = res;
-            iCount = 0;
-            while( ai )
+            char * szResult = hb_socketAddrGetName( res->ai_addr, res->ai_addrlen );
+            if( szResult )
             {
-               char * szResult = hb_socketAddrGetName( res->ai_addr, res->ai_addrlen );
-               if( szResult )
+               for( i = 1; i <= iCount; ++i )
                {
-                  for( i = 1; i <= iCount; ++i )
+                  if( strcmp( hb_arrayGetCPtr( pItem, i ), szResult ) == 0 )
                   {
-                     if( strcmp( hb_arrayGetCPtr( pItem, i ), szResult ) == 0 )
-                     {
-                        hb_xfree( szResult );
-                        szResult = NULL;
-                        break;
-                     }
-                  }
-                  if( szResult )
-                  {
-                     ++iCount;
-                     if( !hb_arraySetCLPtr( pItem, iCount, szResult, strlen( szResult ) ) )
-                        hb_xfree( szResult );
+                     hb_xfree( szResult );
+                     szResult = NULL;
+                     break;
                   }
                }
-               ai = ai->ai_next;
+               if( szResult )
+               {
+                  ++iCount;
+                  if( !hb_arraySetCLPtr( pItem, iCount, szResult, strlen( szResult ) ) )
+                     hb_xfree( szResult );
+               }
             }
-            hb_arraySize( pItem, iCount );
+            ai = ai->ai_next;
          }
-         freeaddrinfo( res );
+         hb_arraySize( pItem, iCount );
       }
+      freeaddrinfo( res );
    }
 #else
 
