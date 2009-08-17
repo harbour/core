@@ -15,7 +15,7 @@ ifeq ($(HB_SHELL),sh)
           # TODO: Make this complete:
           #       || ( $( "*[ix]*86" ) && $( "*[ix]*86[^0-9]*" ) )
           ifneq ($(findstring $(_UNAME_M),@64 _64 x86_64),)
-             HB_USER_CFLAGS += -fPIC
+             HB_CFLAGS += -fPIC
           endif
       endif
    endif
