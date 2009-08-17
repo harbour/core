@@ -192,6 +192,49 @@ static void hb_freeArgs( char ** argv )
 
 #endif
 
+#if defined( HB_OS_WIN_CE )
+static void hb_getCommand( const char *pszFilename,
+                           LPTSTR * lpAppName, LPTSTR * lpParams )
+{
+   const char * src, * params;
+   char cQuote = 0;
+
+   while( HB_ISSPACE( *pszFilename ) )
+      ++pszFilename;
+
+   params = NULL;
+   src = pszFilename;
+   while( *src )
+   {
+      if( *src == cQuote )
+         cQuote = 0;
+      else if( cQuote == 0 )
+      {
+         if( *src == '"' )
+            cQuote = *src;
+         else if( HB_ISSPACE( *src ) )
+         {
+            params = src;
+            while( HB_ISSPACE( *params ) )
+               ++params;
+            if( *params == 0 )
+               params = NULL;
+            break;
+         }
+      }
+      ++src;
+   }
+
+#if defined( UNICODE )
+   *lpParams = params ? hb_mbtowc( params ) : NULL;
+   *lpAppName = hb_mbntowc( pszFilename, ( ULONG ) ( src - pszFilename ) );
+#else
+   *lpParams = params ? hb_strdup( params ) : NULL;
+   *lpAppName = hb_strndup( pszFilename, ( ULONG ) ( src - pszFilename ) );
+#endif
+}
+#endif
+
 #if defined( HB_OS_DOS ) || defined( HB_OS_OS2 ) || defined( HB_OS_WIN_CE )
 static int hb_fsProcessExec( const char *pszFilename,
                              HB_FHANDLE hStdin, HB_FHANDLE hStdout,
@@ -203,25 +246,22 @@ static int hb_fsProcessExec( const char *pszFilename,
 
 #if defined( HB_OS_WIN_CE )
 {
-   DWORD dwFlags = 0;
-#if defined( UNICODE )
-   LPWSTR lpCommand = hb_mbtowc( pszFilename );
-#else
-   char * lpCommand = hb_strdup( pszFilename );
-#endif
+   LPTSTR lpAppName, lpParams;
    BOOL fError;
 
    HB_SYMBOL_UNUSED( hStdin );
    HB_SYMBOL_UNUSED( hStdout );
    HB_SYMBOL_UNUSED( hStderr );
 
+   hb_getCommand( pszFilename, &lpAppName, &lpParams );
+
    hb_vmUnlock();
-   fError = ! CreateProcess( NULL,           /* lpAppName */
-                             lpCommand,      /* lpCommandLine */
+   fError = ! CreateProcess( lpAppName,      /* lpAppName */
+                             lpParams,       /* lpCommandLine */
                              NULL,           /* lpProcessAttr */
                              NULL,           /* lpThreadAttr */
                              FALSE,          /* bInheritHandles */
-                             dwFlags,        /* dwCreationFlags */
+                             0,              /* dwCreationFlags */
                              NULL,           /* lpEnvironment */
                              NULL,           /* lpCurrentDirectory */
                              NULL,           /* lpStartupInfo */
@@ -233,7 +273,11 @@ static int hb_fsProcessExec( const char *pszFilename,
       iResult = 0;
    }
    hb_vmLock();
-   hb_xfree( lpCommand );
+
+   if( lpAppName )
+      hb_xfree( lpAppName );
+   if( lpParams )
+      hb_xfree( lpParams );
 }
 #elif defined( HB_OS_DOS ) || defined( HB_OS_WIN ) || defined( HB_OS_OS2 ) || \
       defined( HB_OS_UNIX )
