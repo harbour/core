@@ -1380,57 +1380,65 @@ static HB_ERRCODE hb_waRelEval( AREAP pArea, LPDBRELINFO pRelInfo )
    DBORDERINFO pInfo;
    HB_ERRCODE errCode;
    int iOrder;
+   BOOL fEof;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waRelEval(%p, %p)", pArea, pRelInfo));
 
-   errCode = SELF_EVALBLOCK( pRelInfo->lpaParent, pRelInfo->itmCobExpr );
-
+   errCode = SELF_EOF( pRelInfo->lpaParent, &fEof );
    if( errCode == HB_SUCCESS )
    {
-      /*
-       *  Check the current order
-       */
-      pResult = pRelInfo->lpaParent->valResult;
-      pRelInfo->lpaParent->valResult = NULL;
-      memset( &pInfo, 0, sizeof( DBORDERINFO ) );
-      pInfo.itmResult = hb_itemPutNI( NULL, 0 );
-      errCode = SELF_ORDINFO( pArea, DBOI_NUMBER, &pInfo );
-
-      if( errCode == HB_SUCCESS )
+      if( fEof )
+         errCode = SELF_GOTO( pArea, 0 );
+      else
       {
-         iOrder = hb_itemGetNI( pInfo.itmResult );
-         if( iOrder != 0 )
-         {
-            if( pRelInfo->isScoped )
-            {
-               pInfo.itmNewVal = pResult;
-               errCode = SELF_ORDINFO( pArea, DBOI_SCOPETOP, &pInfo );
-               if( errCode == HB_SUCCESS )
-                  errCode = SELF_ORDINFO( pArea, DBOI_SCOPEBOTTOM, &pInfo );
-            }
-            if( errCode == HB_SUCCESS )
-               errCode = SELF_SEEK( pArea, FALSE, pResult, FALSE );
-         }
-         else
+         errCode = SELF_EVALBLOCK( pRelInfo->lpaParent, pRelInfo->itmCobExpr );
+         if( errCode == HB_SUCCESS )
          {
             /*
-             * If current order equals to zero, use GOTOID instead of SEEK
-             * Unfortunately it interacts with buggy .prg code which returns
-             * non numerical values from relation expression and RDD accepts
-             * only numerical record ID. In such case SELF_GOTO() works like
-             * SELF_GOEOF() but SELF_GOTOID() reports error. So for Clipper
-             * compatibility SELF_GOTO() is used here but if RDD can use
-             * non numerical record IDs then this method should be overloaded
-             * to use SELF_GOTOID(), [druzus]
+             *  Check the current order
              */
-            /* errCode = SELF_GOTOID( pArea, pResult ); */
-            errCode = SELF_GOTO( pArea, hb_itemGetNL( pResult ) );
+            pResult = pRelInfo->lpaParent->valResult;
+            pRelInfo->lpaParent->valResult = NULL;
+            memset( &pInfo, 0, sizeof( DBORDERINFO ) );
+            pInfo.itmResult = hb_itemPutNI( NULL, 0 );
+            errCode = SELF_ORDINFO( pArea, DBOI_NUMBER, &pInfo );
+
+            if( errCode == HB_SUCCESS )
+            {
+               iOrder = hb_itemGetNI( pInfo.itmResult );
+               if( iOrder != 0 )
+               {
+                  if( pRelInfo->isScoped )
+                  {
+                     pInfo.itmNewVal = pResult;
+                     errCode = SELF_ORDINFO( pArea, DBOI_SCOPETOP, &pInfo );
+                     if( errCode == HB_SUCCESS )
+                        errCode = SELF_ORDINFO( pArea, DBOI_SCOPEBOTTOM, &pInfo );
+                  }
+                  if( errCode == HB_SUCCESS )
+                     errCode = SELF_SEEK( pArea, FALSE, pResult, FALSE );
+               }
+               else
+               {
+                  /*
+                   * If current order equals to zero, use GOTOID instead of SEEK
+                   * Unfortunately it interacts with buggy .prg code which returns
+                   * non numerical values from relation expression and RDD accepts
+                   * only numerical record ID. In such case SELF_GOTO() works like
+                   * SELF_GOEOF() but SELF_GOTOID() reports error. So for Clipper
+                   * compatibility SELF_GOTO() is used here but if RDD can use
+                   * non numerical record IDs then this method should be overloaded
+                   * to use SELF_GOTOID(), [druzus]
+                   */
+                  /* errCode = SELF_GOTOID( pArea, pResult ); */
+                  errCode = SELF_GOTO( pArea, hb_itemGetNL( pResult ) );
+               }
+            }
+            hb_itemRelease( pInfo.itmResult );
+            hb_itemRelease( pResult );
          }
       }
-      hb_itemRelease( pInfo.itmResult );
-      hb_itemRelease( pResult );
    }
-
    return errCode;
 }
 
