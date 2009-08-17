@@ -53,6 +53,10 @@ define find_in_path
 $(strip $(foreach dir,$(subst $(PTHSEP), ,$(PATH)),$(wildcard $(dir)/$(1)$(HB_HOST_BIN_EXT))))
 endef
 
+define find_in_path_par
+$(strip $(foreach dir,$(subst $(PTHSEP), ,$(2)),$(wildcard $(dir)/$(1)$(HB_HOST_BIN_EXT))))
+endef
+
 define check_host
 
 ifneq ($(findstring MINGW,$(1)),)
@@ -534,25 +538,24 @@ ifeq ($(HB_COMPILER),)
             endif
          endif
       endif
-      export HB_CCPREFIX
    else
       ifeq ($(HB_ARCHITECTURE),linux)
-         ifneq ($(strip $(wildcard $(HB_CCPATH)/arm-wince-mingw32ce-gcc$(HB_HOST_BIN_EXT)))),)
+         ifneq ($(call find_in_path_par,arm-wince-mingw32ce-gcc,$(HB_CCPATH)),)
             HB_COMPILER := mingwarm
             HB_ARCHITECTURE := wce
             HB_CCPREFIX := arm-wince-mingw32ce-
-            HB_CCPATH += /
+            HB_CCPATH := $(HB_CCPATH)/
             export HB_TOOLS_PREF := hbce
             export HB_XBUILD := wce
             ifneq ($(HB_HOST_BUILD),all)
                HB_HOST_BUILD := lib
             endif
          else
-            ifneq ($(strip $(wildcard $(HB_CCPATH)/arm-mingw32ce-gcc$(HB_HOST_BIN_EXT)))),)
+            ifneq ($(call find_in_path_par,arm-mingw32ce-gcc,$(HB_CCPATH)),)
                HB_COMPILER := mingwarm
                HB_ARCHITECTURE := wce
                HB_CCPREFIX := arm-mingw32ce-
-               HB_CCPATH += /
+               HB_CCPATH := $(HB_CCPATH)/
                export HB_TOOLS_PREF := hbce
                export HB_XBUILD := wce
                ifneq ($(HB_HOST_BUILD),all)
@@ -611,6 +614,7 @@ ifeq ($(HB_COMPILER),)
    ifneq ($(HB_COMPILER),)
       HB_COMP_AUTO := (autodetected)
    endif
+   export HB_CCPREFIX
 endif
 
 ifeq ($(HB_ARCHITECTURE),)
