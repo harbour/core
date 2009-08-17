@@ -58,7 +58,7 @@
 #include "hbdate.h"
 #include "hbapierr.h"
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX )
    #include <unistd.h>
    #include <sys/types.h>
    #include <time.h>
