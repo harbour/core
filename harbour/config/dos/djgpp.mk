@@ -88,4 +88,4 @@ AR_RULE = $(create_library)
 
 LD_RULE = $(link_exe_file)
 
-include $(TOP)$(ROOT)config/rules.cf
+include $(TOP)$(ROOT)config/rules.mk

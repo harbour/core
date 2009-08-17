@@ -78,4 +78,4 @@ AR := ar
 ARFLAGS :=
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) cr $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 
-include $(TOP)$(ROOT)config/rules.cf
+include $(TOP)$(ROOT)config/rules.mk

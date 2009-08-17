@@ -91,4 +91,4 @@ AR := ar
 ARFLAGS :=
 AR_RULE = $(create_library) & $(RM) __lib__.tmp
 
-include $(TOP)$(ROOT)config/rules.cf
+include $(TOP)$(ROOT)config/rules.mk

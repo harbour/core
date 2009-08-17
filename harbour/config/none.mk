@@ -2,7 +2,7 @@
 # $Id$
 #
 
-include $(TOP)$(ROOT)config/global.cf
+include $(TOP)$(ROOT)config/global.mk
 
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)

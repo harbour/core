@@ -127,7 +127,7 @@ AR_RULE = $(create_library)
 # disable DOS/4GW Banner
 export DOS4G := quiet
 
-include $(TOP)$(ROOT)config/rules.cf
+include $(TOP)$(ROOT)config/rules.mk
 
 # work arround to DOS command line size limit
 export HARBOURCMD := $(HB_FLAGS)

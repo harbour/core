@@ -619,7 +619,7 @@ endif
 # Assemble relative path from OBJ_DIR to source.
 GRANDP := $(subst $(subst x,x, ),,$(foreach item, $(subst /, ,$(OBJ_DIR)), ../))
 
-# TODO: Set this in <arch>/<comp>.cf
+# TODO: Set this in <arch>/<comp>.mk
 HB_CPU :=
 ifeq ($(HB_ARCHITECTURE),win)
    ifeq ($(HB_COMPILER),msvc64)
@@ -956,8 +956,8 @@ endif
 
 export HB_INIT_DONE := yes
 
-include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
-include $(TOP)$(ROOT)config/globsh.cf
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.mk
+include $(TOP)$(ROOT)config/globsh.mk
 
 endif
 

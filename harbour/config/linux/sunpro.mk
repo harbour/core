@@ -44,8 +44,6 @@ endif
 # we have to use this option also for static libraries and binaries
 CFLAGS += -KPIC
 
-# in HB_ISAOPT we may have platform dependent settings set in different
-# sunpro*.cf files
 export HB_ISAOPT
 
 CFLAGS += $(HB_ISAOPT)
@@ -107,4 +105,4 @@ AR := $(HB_CCPREFIX)ar
 ARFLAGS :=
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) crs $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 
-include $(TOP)$(ROOT)config/rules.cf
+include $(TOP)$(ROOT)config/rules.mk

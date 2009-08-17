@@ -78,4 +78,4 @@ else # sh
 
 endif
 
-include $(TOP)$(ROOT)config/rules.cf
+include $(TOP)$(ROOT)config/rules.mk

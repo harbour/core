@@ -108,4 +108,4 @@ AR := wlib
 ARFLAGS := -q -p=64 -c -n
 AR_RULE = $(create_library)
 
-include $(TOP)$(ROOT)config/rules.cf
+include $(TOP)$(ROOT)config/rules.mk

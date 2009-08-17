@@ -2,16 +2,16 @@
 # $Id$
 #
 
-include $(TOP)$(ROOT)config/global.cf
+include $(TOP)$(ROOT)config/global.mk
 
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
 
 HB_DYN_LIBS := hbcommon hbpp hbrtl hbmacro hblang hbcpage hbpcre hbzlib hbextern hbrdd rddntx rddnsx rddcdx rddfpt hbsix hbhsx hbusrrdd gtcgi gtpca gtstd gtwvt gtgui gtwin hbvm hbvmmt hbmaindllh
 
-include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/$(HB_COMPILER).cf
-include $(TOP)$(ROOT)config/c.cf
-include $(TOP)$(ROOT)config/prg.cf
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/$(HB_COMPILER).mk
+include $(TOP)$(ROOT)config/c.mk
+include $(TOP)$(ROOT)config/prg.mk
 
 LIB_NAME := $(LIB_PREF)$(LIBNAME)$(LIB_EXT)
 
@@ -31,7 +31,7 @@ $(LIB_NAME) : $(ALL_OBJS)
 INSTALL_FILES := $(LIB_FILE)
 INSTALL_DIR := $(HB_LIB_INSTALL)
 
-include $(TOP)$(ROOT)config/install.cf
+include $(TOP)$(ROOT)config/install.mk
 
 endif
 endif

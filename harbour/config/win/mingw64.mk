@@ -2,4 +2,4 @@
 # $Id$
 #
 
-include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/mingw.cf
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/mingw.mk

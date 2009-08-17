@@ -2,7 +2,7 @@
 # $Id$
 #
 
-include $(TOP)$(ROOT)config/global.cf
+include $(TOP)$(ROOT)config/global.mk
 
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
@@ -16,7 +16,7 @@ else
 INSTALL_FILES := $(C_HEADERS) $(PRG_HEADERS) $(API_HEADERS)
 INSTALL_DIR := $(HB_INC_INSTALL)
 
-include $(TOP)$(ROOT)config/install.cf
+include $(TOP)$(ROOT)config/install.mk
 endif
 
 endif

@@ -2,7 +2,7 @@
 # $Id$
 #
 
-include $(TOP)$(ROOT)config/global.cf
+include $(TOP)$(ROOT)config/global.mk
 
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
@@ -18,7 +18,7 @@ else
 endif
 
 ifeq ($(JOB_SRV),NO)
-   include $(TOP)$(ROOT)config/dirsh.cf
+   include $(TOP)$(ROOT)config/dirsh.mk
 endif
 
 ifeq ($(DIR_RULE),)

@@ -2,7 +2,7 @@
 # $Id$
 #
 
-include $(TOP)$(ROOT)config/global.cf
+include $(TOP)$(ROOT)config/global.mk
 
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
@@ -52,9 +52,9 @@ HB_LIBS_TPL :=
 _HB_RDD :=
 _HB_VM :=
 
-include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/$(HB_COMPILER).cf
-include $(TOP)$(ROOT)config/c.cf
-include $(TOP)$(ROOT)config/prg.cf
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/$(HB_COMPILER).mk
+include $(TOP)$(ROOT)config/c.mk
+include $(TOP)$(ROOT)config/prg.mk
 
 BIN_NAME :=
 
@@ -86,7 +86,7 @@ $(BIN_NAME) : $(ALL_OBJS)
 INSTALL_FILES := $(BIN_FILE)
 INSTALL_DIR := $(HB_BIN_INSTALL)
 
-include $(TOP)$(ROOT)config/install.cf
+include $(TOP)$(ROOT)config/install.mk
 
 endif
 endif
