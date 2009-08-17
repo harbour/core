@@ -84,7 +84,7 @@
 #  include <sys/farptr.h>
 #  include <sys/param.h>
 #endif
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
 #  include <sys/types.h>
 #  include <utime.h>
 #  include <unistd.h>

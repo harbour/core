@@ -64,7 +64,7 @@ static BOOL hb_clsSetScope( BOOL fScope ) { return fScope; }
 
 #define HB_DBGINFO_DISABLE    ( ( HB_DEBUGINFO * ) ( HB_PTRDIFF ) 0x01 )
 
-#if defined( HB_OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX )
 #define FILENAME_EQUAL(s1, s2) ( !strcmp( (s1), (s2) ) )
 #else
 #define FILENAME_EQUAL(s1, s2) ( !hb_stricmp( (s1), (s2) ) )

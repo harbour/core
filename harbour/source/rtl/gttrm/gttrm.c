@@ -79,7 +79,7 @@
 #include <string.h>
 #include <fcntl.h>
 
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
 # include <errno.h>
 # include <time.h>
 # include <unistd.h>
@@ -151,7 +151,7 @@ static HB_GT_FUNCS   SuperTable;
 #define MOUSE_GPM       1
 #define MOUSE_XTERM     2
 
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
 
 #define TIMEVAL_GET(tv)             gettimeofday(&(tv), NULL)
 #define TIMEVAL_LESS(tv1, tv2)      (((tv1).tv_sec == (tv2).tv_sec ) ?  \
@@ -264,7 +264,7 @@ typedef struct {
    int mbup_row, mbup_col;
    int mbdn_row, mbdn_col;
    /* to analize DBLCLK on xterm */
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
    struct timeval BL_time;
    struct timeval BR_time;
    struct timeval BM_time;
@@ -342,7 +342,7 @@ typedef struct _HB_GTTRM
    int        terminal_type;
    int        terminal_ext;
 
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
    struct termios saved_TIO, curr_TIO;
    BOOL       fRestTTY;
 #endif
@@ -391,10 +391,10 @@ typedef struct _HB_GTTRM
 } HB_TERM_STATE, HB_GTTRM, * PHB_GTTRM;
 
 /* static variables use by signal handler */
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
    static volatile BOOL s_WinSizeChangeFlag = FALSE;
 #endif
-#if defined( HB_OS_UNIX_COMPATIBLE ) && defined( SA_NOCLDSTOP )
+#if defined( HB_OS_UNIX ) && defined( SA_NOCLDSTOP )
    static volatile BOOL s_fRestTTY = FALSE;
 #endif
 
@@ -604,7 +604,7 @@ static int getClipKey( int nKey )
 
 
 /* SA_NOCLDSTOP in #if is a hack to detect POSIX compatible environment */
-#if defined( HB_OS_UNIX_COMPATIBLE ) && defined( SA_NOCLDSTOP )
+#if defined( HB_OS_UNIX ) && defined( SA_NOCLDSTOP )
 
 static void sig_handler( int iSigNo )
 {
@@ -663,7 +663,7 @@ static int hb_gt_trm_getSize( PHB_GTTRM pTerm, int * piRows, int * piCols )
 {
    *piRows = *piCols = 0;
 
-#if ( defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ ) ) && \
+#if ( defined( HB_OS_UNIX ) || defined( __DJGPP__ ) ) && \
     defined( TIOCGWINSZ )
    if( pTerm->fOutTTY )
    {
@@ -781,7 +781,7 @@ static int add_efds( PHB_GTTRM pTerm, int fd, int mode,
    if( eventFunc == NULL && mode != O_RDONLY )
       return -1;
 
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
    {
       int fl;
       if( ( fl = fcntl( fd, F_GETFL, 0 ) ) == -1 )
@@ -958,7 +958,7 @@ static void chk_mevtdblck( PHB_GTTRM pTerm )
 
    if( newbuttons != 0 )
    {
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
       struct timeval tv;
 #else
       double tv;
@@ -1230,7 +1230,7 @@ static int get_inch( PHB_GTTRM pTerm, int milisec )
                   {
                      unsigned char buf[STDIN_BUFLEN];
 
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
                      n = read( pTerm->event_fds[i]->fd, buf,
                                STDIN_BUFLEN - pTerm->stdin_inbuf );
 #else
@@ -1334,7 +1334,7 @@ static int wait_key( PHB_GTTRM pTerm, int milisec )
    int nKey, esc, n, i, ch, counter;
    keyTab *ptr;
 
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
    if( s_WinSizeChangeFlag )
    {
       s_WinSizeChangeFlag = FALSE;
@@ -1605,7 +1605,7 @@ static BOOL hb_gt_trm_XtermSetMode( PHB_GTTRM pTerm, int * piRows, int * piCols 
    hb_gt_trm_termOut( pTerm, escseq, strlen( escseq ) );
    hb_gt_trm_termFlush( pTerm );
 
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
    /* dirty hack - wait for SIGWINCH */
    if( *piRows != iHeight || *piCols != iWidth )
       sleep( 3 );
@@ -1823,7 +1823,7 @@ static BOOL hb_gt_trm_AnsiGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iCol,
             break;
          else
          {
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
             struct timeval tv;
             fd_set rdfds;
             int iMilliSec;
@@ -2933,7 +2933,7 @@ static void hb_gt_trm_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    hb_gt_trm_SetTerm( pTerm );
 
 /* SA_NOCLDSTOP in #if is a hack to detect POSIX compatible environment */
-#if defined( HB_OS_UNIX_COMPATIBLE ) && defined( SA_NOCLDSTOP )
+#if defined( HB_OS_UNIX ) && defined( SA_NOCLDSTOP )
 
    if( pTerm->fStdinTTY )
    {
@@ -3029,7 +3029,7 @@ static void hb_gt_trm_Exit( PHB_GT pGT )
 
    if( pTerm )
    {
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
       if( pTerm->fRestTTY )
          tcsetattr( pTerm->hFilenoStdin, TCSANOW, &pTerm->saved_TIO );
 #endif
@@ -3195,7 +3195,7 @@ static BOOL hb_gt_trm_Suspend( PHB_GT pGT )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Suspend(%p)", pGT ) );
 
    pTerm = HB_GTTRM_GET( pGT );
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
    if( pTerm->fRestTTY )
       tcsetattr( pTerm->hFilenoStdin, TCSANOW, &pTerm->saved_TIO );
 #endif
@@ -3212,7 +3212,7 @@ static BOOL hb_gt_trm_Resume( PHB_GT pGT )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Resume(%p)", pGT ) );
 
    pTerm = HB_GTTRM_GET( pGT );
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
    if( pTerm->fRestTTY )
       tcsetattr( pTerm->hFilenoStdin, TCSANOW, &pTerm->curr_TIO );
 #endif

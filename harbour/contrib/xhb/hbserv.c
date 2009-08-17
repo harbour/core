@@ -716,7 +716,7 @@ static void hb_service_exit( void* cargo )
 
 static void s_signalHandlersInit()
 {
-   #if defined( HB_THREAD_SUPPORT ) && ( defined( HB_OS_UNIX ) || defined( HB_OS_UNIX_COMPATIBLE ) )
+   #if defined( HB_THREAD_SUPPORT ) && ( defined( HB_OS_UNIX ) || defined( HB_OS_UNIX ) )
       pthread_t res;
       HB_STACK * pStack;
 

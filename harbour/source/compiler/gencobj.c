@@ -36,7 +36,7 @@
 /* QUESTION: Allocate buffer dynamically ? */
 #define HB_CFG_LINE_LEN    ( ( HB_PATH_MAX - 1 ) << 1 )
 
-#if defined( HB_OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX )
    #define HB_NULL_STR " > /dev/null"
 #else
    #define HB_NULL_STR " >nul"
@@ -135,7 +135,7 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
    char szOutPath[ HB_PATH_MAX ] = "\0";
    char pszTemp[ HB_PATH_MAX ] = "";
    char buffer[ HB_CFG_LINE_LEN * 2 + 1024 ];
-#if defined( HB_OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX )
    char * pszEnv = hb_strdup( "/etc:/usr/local/etc" );
 #else
    char * pszEnv = hb_getenv( "PATH" );

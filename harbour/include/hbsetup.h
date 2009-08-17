@@ -174,45 +174,11 @@
  */
 /* #define HB_PP_MULTILINE_STRING */
 
-/* ***********************************************************************
- * Operating system specific definitions
- */
-#if ( ( defined( __GNUC__ ) || defined( __SUNPRO_C ) || defined( __SUNPRO_CC ) ) && \
-      ! ( defined( __DJGPP__ ) || defined( __EMX__ ) || defined( __RSXNT__ ) || \
-          defined( _Windows ) || defined( _WIN32 ) || defined( _WINCE ) ) ) || \
-    ( defined( __WATCOMC__ ) && defined( __LINUX__ ) )
-   #define HB_OS_UNIX_COMPATIBLE
-   #define HB_OS_PATH_LIST_SEP_CHR      ':'
-   #define HB_OS_PATH_DELIM_CHR         '/'
-   #define HB_OS_PATH_DELIM_CHR_STRING  "/"
-   #define HB_OS_PATH_DELIM_CHR_LIST    "/"
-   #define HB_OS_ALLFILE_MASK           "*"
-   #undef  HB_OS_DRIVE_DELIM_CHR
-   #undef  HB_OS_HAS_DRIVE_LETTER
-   #define HB_OS_EOL_LEN                1
-   #define HB_OS_OPT_DELIM_LIST         "-"
-   #define HB_ISOPTSEP( c )             ( ( c ) == '-' )
-#else
-   /* we are assuming here the DOS compatible OS */
-   #define HB_OS_PATH_LIST_SEP_CHR      ';'
-   #define HB_OS_PATH_DELIM_CHR         '\\'
-   #define HB_OS_PATH_DELIM_CHR_STRING  "\\"
-   #define HB_OS_PATH_DELIM_CHR_LIST    "\\/:"
-   #define HB_OS_ALLFILE_MASK           "*.*"
-   #define HB_OS_DRIVE_DELIM_CHR        ':'
-   #define HB_OS_HAS_DRIVE_LETTER
-   #define HB_OS_EOL_LEN                2  /* # of bytes in End of Line marker */
-   #define HB_OS_OPT_DELIM_LIST         "/-"
-   #define HB_ISOPTSEP( c )             ( ( c ) == '-' || ( c ) == '/' )
-#endif
-
 #ifdef HB_LEGACY_LEVEL2
    #ifndef _POSIX_PATH_MAX
       #define _POSIX_PATH_MAX    255
    #endif
 #endif
-
-#define HB_PATH_MAX     264 /* with trailing 0 byte */
 
 /* NOTE:
    Compiler                                _MSC_VER value
@@ -334,15 +300,48 @@
 #endif
 
 #ifndef HB_OS_UNIX
-   #if defined( HB_OS_UNIX_COMPATIBLE ) || \
-       defined( HB_OS_LINUX ) || \
+   #if defined( HB_OS_LINUX ) || \
        defined( HB_OS_DARWIN ) || \
        defined( HB_OS_BSD ) || \
        defined( HB_OS_SUNOS ) || \
        defined( HB_OS_HPUX )
       #define HB_OS_UNIX
+      /* Compatibility. Do not use this. */
+      #ifdef HB_LEGACY_LEVEL2
+         #define HB_OS_UNIX_COMPATIBLE
+      #endif
    #endif
 #endif
+
+/* ***********************************************************************
+ * Operating system specific definitions
+ */
+#if defined( HB_OS_UNIX )
+   #define HB_OS_PATH_LIST_SEP_CHR      ':'
+   #define HB_OS_PATH_DELIM_CHR         '/'
+   #define HB_OS_PATH_DELIM_CHR_STRING  "/"
+   #define HB_OS_PATH_DELIM_CHR_LIST    "/"
+   #define HB_OS_ALLFILE_MASK           "*"
+   #undef  HB_OS_DRIVE_DELIM_CHR
+   #undef  HB_OS_HAS_DRIVE_LETTER
+   #define HB_OS_EOL_LEN                1
+   #define HB_OS_OPT_DELIM_LIST         "-"
+   #define HB_ISOPTSEP( c )             ( ( c ) == '-' )
+#else
+   /* we are assuming here the DOS compatible OS */
+   #define HB_OS_PATH_LIST_SEP_CHR      ';'
+   #define HB_OS_PATH_DELIM_CHR         '\\'
+   #define HB_OS_PATH_DELIM_CHR_STRING  "\\"
+   #define HB_OS_PATH_DELIM_CHR_LIST    "\\/:"
+   #define HB_OS_ALLFILE_MASK           "*.*"
+   #define HB_OS_DRIVE_DELIM_CHR        ':'
+   #define HB_OS_HAS_DRIVE_LETTER
+   #define HB_OS_EOL_LEN                2  /* # of bytes in End of Line marker */
+   #define HB_OS_OPT_DELIM_LIST         "/-"
+   #define HB_ISOPTSEP( c )             ( ( c ) == '-' || ( c ) == '/' )
+#endif
+
+#define HB_PATH_MAX     264 /* with trailing 0 byte */
 
 /* ***********************************************************************
  * CPU detection

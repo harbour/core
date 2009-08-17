@@ -94,7 +94,7 @@
 #define HB_OS_WIN_USED
 #include "hbapi.h"
 
-#if defined( HB_OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX )
 #   include <unistd.h>
 #   if defined( HB_OS_DARWIN )
 #      include <crt_externs.h>
@@ -116,7 +116,7 @@ extern char **_environ;
 
 HB_FUNC( FT_GETE )
 {
-#if defined( HB_OS_DOS ) || defined( HB_OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_DOS ) || defined( HB_OS_UNIX )
    {
       char *buffer = NULL;
       int x;

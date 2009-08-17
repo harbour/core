@@ -116,7 +116,7 @@
 #include "hb_io.h"
 #include "hbset.h"
 
-#if defined( HB_OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX )
    #include <unistd.h>
    #include <time.h>
    #include <utime.h>
@@ -202,7 +202,7 @@
    #include <sys/file.h>
 #endif
 
-#if !defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX_COMPATIBLE )
+#if !defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX )
    #if defined( __USE_LARGEFILE64 )
       /*
        * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
@@ -544,7 +544,7 @@ HB_FHANDLE hb_fsPOpen( const char * pFilename, const char * pMode )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsPOpen(%p, %s)", pFilename, pMode));
 
-#if defined( HB_OS_UNIX_COMPATIBLE ) && !defined( __CYGWIN__ )
+#if defined( HB_OS_UNIX ) && !defined( __CYGWIN__ )
    {
       HB_FHANDLE hPipeHandle[2], hNullHandle;
       pid_t pid;
@@ -1181,7 +1181,7 @@ BOOL hb_fsSetFileTime( const char * pszFileName, long lJulian, long lMillisec )
       if( pszFree )
          hb_xfree( pszFree );
    }
-#elif defined( HB_OS_UNIX_COMPATIBLE ) || defined( HB_OS_DOS )
+#elif defined( HB_OS_UNIX ) || defined( HB_OS_DOS )
    {
       char * pszFree;
 
@@ -1326,7 +1326,7 @@ BOOL hb_fsSetAttr( const char * pszFileName, ULONG ulAttr )
    hb_fsSetIOError( fResult, 0 );
    hb_vmLock();
 
-#elif defined( HB_OS_UNIX_COMPATIBLE )
+#elif defined( HB_OS_UNIX )
    {
       int iAttr = HB_FA_POSIX_ATTR( ulAttr );
       if( iAttr == 0 )
@@ -3149,7 +3149,7 @@ BOOL hb_fsEof( HB_FHANDLE hFileHandle )
 
 #if defined( __DJGPP__ ) || defined( __CYGWIN__ ) || \
     defined( HB_IO_WIN ) || defined( HB_OS_WIN_CE ) || \
-    defined( HB_OS_UNIX_COMPATIBLE )
+    defined( HB_OS_UNIX )
 {
    HB_FOFFSET curPos;
    HB_FOFFSET endPos;

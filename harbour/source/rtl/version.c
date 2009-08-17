@@ -131,7 +131,7 @@ HB_FUNC( HB_VERSION )
    case HB_VERSION_MT:             hb_retl( hb_vmIsMt() );
 
    case HB_VERSION_UNIX_COMPAT:
-      #if defined( HB_OS_UNIX_COMPATIBLE )
+      #if defined( HB_OS_UNIX )
          hb_retl( TRUE );
       #else
          hb_retl( FALSE );

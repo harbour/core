@@ -272,7 +272,7 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
    if( file_name && file_name[ 0 ] != '\0' )
    {
       /* Create full filename */
-#if defined( HB_OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX )
       bPipe = file_name[ 0 ] == '|';
       if( bPipe )
       {
@@ -1082,7 +1082,7 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
    pSet->HB_SET_DELIMCHARS = hb_strdup( "::" );
    pSet->HB_SET_DELIMITERS = FALSE;
    pSet->HB_SET_DEVICE = hb_strdup( "SCREEN" );
-#if defined( HB_OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX )
    pSet->HB_SET_EOF = FALSE;
 #else
    pSet->HB_SET_EOF = TRUE;

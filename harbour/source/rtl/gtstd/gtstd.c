@@ -62,7 +62,7 @@
 #include "hbdate.h"
 #include "hb_io.h"
 
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
    #include <unistd.h>
    #include <termios.h>
    #include <sys/ioctl.h>
@@ -113,7 +113,7 @@ typedef struct _HB_GTSTD
    PHB_CODEPAGE   cdpHost;
    BYTE           keyTransTbl[ 256 ];
 
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
    struct termios saved_TIO;
    struct termios curr_TIO;
    BOOL           fRestTTY;
@@ -124,7 +124,7 @@ typedef struct _HB_GTSTD
 } HB_GTSTD, * PHB_GTSTD;
 
 
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
 
 static volatile BOOL s_fRestTTY = FALSE;
 
@@ -227,7 +227,7 @@ static void hb_gt_std_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
 
 /* SA_NOCLDSTOP in #if is a hack to detect POSIX compatible environment */
-#if ( defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ ) ) && \
+#if ( defined( HB_OS_UNIX ) || defined( __DJGPP__ ) ) && \
     defined( SA_NOCLDSTOP )
 
    if( pGTSTD->fStdinConsole )
@@ -315,7 +315,7 @@ static void hb_gt_std_Exit( PHB_GT pGT )
       while( ++pGTSTD->iRow <= iRow )
          hb_gt_std_newLine( pGTSTD );
 
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
       if( pGTSTD->fRestTTY )
          tcsetattr( pGTSTD->hStdin, TCSANOW, &pGTSTD->saved_TIO );
 #endif
@@ -338,7 +338,7 @@ static int hb_gt_std_ReadKey( PHB_GT pGT, int iEventMask )
 
    pGTSTD = HB_GTSTD_GET( pGT );
 
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
    {
       struct timeval tv;
       fd_set rfds;
@@ -476,7 +476,7 @@ static BOOL hb_gt_std_Suspend( PHB_GT pGT )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Suspend(%p)", pGT ) );
 
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
    {
       PHB_GTSTD pGTSTD = HB_GTSTD_GET( pGT );
       if( pGTSTD->fRestTTY )
@@ -492,7 +492,7 @@ static BOOL hb_gt_std_Resume( PHB_GT pGT )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Resume(%p)", pGT ) );
 
 
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
    {
       PHB_GTSTD pGTSTD = HB_GTSTD_GET( pGT );
       if( pGTSTD->fRestTTY )

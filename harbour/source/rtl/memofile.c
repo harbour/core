@@ -76,7 +76,7 @@ static void hb_memoread( BOOL bHandleEOF )
 
             /* Don't read the file terminating EOF character */
 
-#if ! defined( HB_OS_UNIX_COMPATIBLE )
+#if ! defined( HB_OS_UNIX )
             if( bHandleEOF )
             {
                BYTE byEOF = HB_CHAR_NUL;
@@ -138,7 +138,7 @@ static BOOL hb_memowrit( BOOL bHandleEOF )
 
          /* NOTE: CA-Cl*pper will add the EOF even if the write failed. [vszakats] */
          /* NOTE: CA-Cl*pper will not return .F. when the EOF could not be written. [vszakats] */
-#if ! defined( HB_OS_UNIX_COMPATIBLE )
+#if ! defined( HB_OS_UNIX )
          if( bHandleEOF )  /* if true, then write EOF */
          {
             BYTE byEOF = HB_CHAR_EOF;

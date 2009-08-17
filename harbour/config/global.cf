@@ -308,6 +308,7 @@ else
    else
       ifneq ($(OS2_SHELL),)
          HB_SHELL := os2
+         SHELL := $(COMSPEC)
       else
          ifneq ($(ComSpec),)
             COMSPEC := $(ComSpec)
@@ -651,9 +652,9 @@ ifeq ($(HB_BUILD_VERBOSE),yes)
 endif
 
 ifneq ($(findstring $(HB_ARCHITECTURE),win wce dos os2),)
-   HB_UNIX_COMPATIBLE := no
+   HB_OS_UNIX := no
 else
-   HB_UNIX_COMPATIBLE := yes
+   HB_OS_UNIX := yes
 endif
 
 # Reserve variables for local compiler flags. Makefiles
@@ -850,7 +851,7 @@ else
    # Fill it automatically if not specified
    ifeq ($(HB_INSTALL_PREFIX),)
 
-      ifeq ($(HB_UNIX_COMPATIBLE),no)
+      ifeq ($(HB_OS_UNIX),no)
          HB_INSTALL_PREFIX := $(realpath $(TOP)$(ROOT))
       else
          ifneq ($(PREFIX),)
@@ -889,7 +890,7 @@ endif
 
 ifneq ($(HB_INSTALL_PREFIX),)
 
-   ifeq ($(HB_UNIX_COMPATIBLE),no)
+   ifeq ($(HB_OS_UNIX),no)
       LIBPOSTFIX := $(DIRSEP)$(subst /,$(DIRSEP),$(ARCH_COMP))
    else
       # Not perfect, please enhance it.
@@ -917,7 +918,7 @@ ifneq ($(HB_INSTALL_PREFIX),)
    endif
    ifeq ($(HB_DOC_INSTALL),)
       # Don't set doc dir for *nix targets
-      ifeq ($(HB_UNIX_COMPATIBLE),no)
+      ifeq ($(HB_OS_UNIX),no)
          export HB_DOC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)doc
       endif
    endif
