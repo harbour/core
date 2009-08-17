@@ -781,8 +781,8 @@ typedef long                hbVMIntMax;       /* TOFIX */
 
 #define HB_SWAP_UINT64( w )      ( ( UINT64 ) ( ( ( ( UINT64 ) ( w ) & HB_LL( 0x00000000000000FF ) ) << 56 ) | \
                                                 ( ( ( UINT64 ) ( w ) & HB_LL( 0x000000000000FF00 ) ) << 40 ) | \
-                                                ( ( ( UINT64 ) ( w ) & HB_LL( 0x0000000000FF0000 ) ) >> 24 ) | \
-                                                ( ( ( UINT64 ) ( w ) & HB_LL( 0x00000000FF000000 ) ) >>  8 ) | \
+                                                ( ( ( UINT64 ) ( w ) & HB_LL( 0x0000000000FF0000 ) ) << 24 ) | \
+                                                ( ( ( UINT64 ) ( w ) & HB_LL( 0x00000000FF000000 ) ) <<  8 ) | \
                                                 ( ( ( UINT64 ) ( w ) & HB_LL( 0x000000FF00000000 ) ) >>  8 ) | \
                                                 ( ( ( UINT64 ) ( w ) & HB_LL( 0x0000FF0000000000 ) ) >> 24 ) | \
                                                 ( ( ( UINT64 ) ( w ) & HB_LL( 0x00FF000000000000 ) ) >> 40 ) | \
