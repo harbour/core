@@ -489,9 +489,8 @@ PROCEDURE tp_clrkbd()
    RETURN
 
 FUNCTION tp_crc16( cString )
-   LOCAL crc := hb_crcct( cString )
 
-   RETURN Int( crc / 256 ) + Int( ( crc % 256 ) * 256 ) /* swap lo and hi bytes */
+   RETURN hb_byteSwapW( hb_crcct( cString ) )   /* swap lo and hi bytes */
 
 FUNCTION tp_crc32( cString )
 
