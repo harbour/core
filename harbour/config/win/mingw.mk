@@ -12,7 +12,7 @@ OBJ_EXT := .o
 LIB_PREF := lib
 LIB_EXT := .a
 
-CC := $(HB_CCPREFIX)$(HB_CMP)
+CC := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)
 CC_IN := -c
 CC_OUT := -o
 
@@ -36,7 +36,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
-LD := $(HB_CCPREFIX)$(HB_CMP)
+LD := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)
 LD_OUT := -o
 
 LIBPATHS := -L$(LIB_DIR)
@@ -51,7 +51,7 @@ endif
 
 LDFLAGS += $(LIBPATHS)
 
-AR := $(HB_CCPREFIX)ar
+AR := $(HB_CCPATH)$(HB_CCPREFIX)ar
 ARFLAGS :=
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) crs $(LIB_DIR)/$@ $(^F) || $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@)
 

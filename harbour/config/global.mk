@@ -537,11 +537,35 @@ ifeq ($(HB_COMPILER),)
       export HB_CCPREFIX
    else
       ifeq ($(HB_ARCHITECTURE),linux)
-         ifneq ($(call find_in_path,wpp386),)
-            HB_COMPILER := watcom
+         ifneq ($(strip $(wildcard $(HB_CCPATH)/arm-wince-mingw32ce-gcc$(HB_HOST_BIN_EXT)))),)
+            HB_COMPILER := mingwarm
+            HB_ARCHITECTURE := wce
+            HB_CCPREFIX := arm-wince-mingw32ce-
+            HB_CCPATH += /
+            export HB_TOOLS_PREF := hbce
+            export HB_XBUILD := wce
+            ifneq ($(HB_HOST_BUILD),all)
+               HB_HOST_BUILD := lib
+            endif
          else
-            ifneq ($(call find_in_path,gcc),)
-               HB_COMPILER := gcc
+            ifneq ($(strip $(wildcard $(HB_CCPATH)/arm-mingw32ce-gcc$(HB_HOST_BIN_EXT)))),)
+               HB_COMPILER := mingwarm
+               HB_ARCHITECTURE := wce
+               HB_CCPREFIX := arm-mingw32ce-
+               HB_CCPATH += /
+               export HB_TOOLS_PREF := hbce
+               export HB_XBUILD := wce
+               ifneq ($(HB_HOST_BUILD),all)
+                  HB_HOST_BUILD := lib
+               endif
+            else
+               ifneq ($(call find_in_path,wpp386),)
+                  HB_COMPILER := watcom
+               else
+                  ifneq ($(call find_in_path,gcc),)
+                     HB_COMPILER := gcc
+                  endif
+               endif
             endif
          endif
       else
@@ -862,6 +886,10 @@ else
             else
                # Stick to *nix customs. I don't like it, it needs admin.
                HB_INSTALL_PREFIX := /usr/local
+               # Add postfix for cross builds
+               ifneq ($(HB_HOST_ARCH),$(HB_ARCHITECTURE))
+                  HB_INSTALL_PREFIX += /harbour-$(HB_ARCHITECTURE)-$(HB_COMPILER)
+               endif
             endif
          endif
       endif

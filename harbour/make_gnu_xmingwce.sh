@@ -36,7 +36,7 @@ fi
 [ -n "$HB_INSTALL_PREFIX" ] || \
 export HB_INSTALL_PREFIX="/usr/local/arm-wince-mingwce-harbour"
 
-# default mingwce instalation path
+# default mingwce installation path
 [ -z "$HB_CCPATH" ] && HB_CCPATH="/opt/mingw32ce/bin"
 
 # mingwce executables prefix - this
