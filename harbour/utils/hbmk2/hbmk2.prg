@@ -165,6 +165,7 @@ REQUEST hbmk_KEYW
 #define _ESC_NIX                3
 #define _ESC_BACKSLASH          4
 
+#define _MACRO_NO_PREFIX        ""
 #define _MACRO_NORM_PREFIX      "$"
 #define _MACRO_LATE_PREFIX      "%"
 #define _MACRO_PREFIX_ALL       ( _MACRO_NORM_PREFIX + _MACRO_LATE_PREFIX )
@@ -959,7 +960,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       l_cHB_LIB_INSTALL := PathSepToSelf( GetEnv( "HB_LIB_INSTALL" ) )
       l_cHB_INC_INSTALL := PathSepToSelf( GetEnv( "HB_INC_INSTALL" ) )
 
-      l_cHB_INSTALL_PREFIX := PathSepToSelf( GetEnv( "HB_INSTALL_PREFIX" ) )
+      l_cHB_INSTALL_PREFIX := MacroProc( hbmk, PathSepToSelf( GetEnv( "HB_INSTALL_PREFIX" ) ), NIL, _MACRO_NO_PREFIX )
       IF Empty( l_cHB_INSTALL_PREFIX )
          DO CASE
          CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG + cCCEXT )
@@ -1712,8 +1713,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF ! Empty( cParam )
             IF ! hb_FileExists( cParam )
                FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
-                  IF hb_FileExists( DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cParam, .T. ) ) ) + FN_NameExtGet( cParam ) )
-                     cParam := DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cParam, .T. ) ) ) + FN_NameExtGet( cParam )
+                  IF hb_FileExists( DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cParam, _MACRO_LATE_PREFIX ) ) ) + FN_NameExtGet( cParam ) )
+                     cParam := DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cParam, _MACRO_LATE_PREFIX ) ) ) + FN_NameExtGet( cParam )
                      EXIT
                   ENDIF
                NEXT
@@ -5094,8 +5095,8 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                IF nNestingLevel < _HBMK_NEST_MAX
                   IF ! hb_FileExists( cItem )
                      FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
-                        IF hb_FileExists( DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cItem, .T. ) ) ) + FN_NameExtGet( cItem ) )
-                           cItem := DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cItem, .T. ) ) ) + FN_NameExtGet( cItem )
+                        IF hb_FileExists( DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cItem, _MACRO_LATE_PREFIX ) ) ) + FN_NameExtGet( cItem ) )
+                           cItem := DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cItem, _MACRO_LATE_PREFIX ) ) ) + FN_NameExtGet( cItem )
                            EXIT
                         ENDIF
                      NEXT
@@ -5129,8 +5130,8 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
                IF ! hb_FileExists( cItem )
                   FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
-                     IF hb_FileExists( DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cItem, .T. ) ) ) + FN_NameExtGet( cItem ) )
-                        cItem := DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cItem, .T. ) ) ) + FN_NameExtGet( cItem )
+                     IF hb_FileExists( DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cItem, _MACRO_LATE_PREFIX ) ) ) + FN_NameExtGet( cItem ) )
+                        cItem := DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cItem, _MACRO_LATE_PREFIX ) ) ) + FN_NameExtGet( cItem )
                         EXIT
                      ENDIF
                   NEXT
@@ -5505,20 +5506,14 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem )
 STATIC FUNCTION hb_pwd()
    RETURN DirAddPathSep( hb_CurDrive() + hb_osDriveSeparator() + hb_osPathSeparator() + CurDir() )
 
-STATIC FUNCTION MacroProc( hbmk, cString, cFileName, lLateMode )
+STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
    LOCAL nStart
    LOCAL nEnd
    LOCAL cMacro
 
-   LOCAL cStart
+   LOCAL cStart := iif( cMacroPrefix == NIL, _MACRO_NORM_PREFIX, cMacroPrefix ) + _MACRO_OPEN
 
    LOCAL cStdOut
-
-   IF lLateMode == NIL .OR. ! lLateMode
-      cStart := _MACRO_NORM_PREFIX + _MACRO_OPEN
-   ELSE
-      cStart := _MACRO_LATE_PREFIX + _MACRO_OPEN
-   ENDIF
 
    DO WHILE ( nStart := At( cStart, cString ) ) > 0 .AND. ;
             ( nEnd := hb_At( _MACRO_CLOSE, cString, nStart + Len( cStart ) ) ) > 0
@@ -5572,6 +5567,10 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, lLateMode )
                   will be returned (without warning) [vszakats] */
          cMacro := GetEnv( cMacro )
       ENDSWITCH
+
+      IF ! ISCHARACTER( cMacro )
+         cMacro := ""
+      ENDIF
 
       cString := Left( cString, nStart - 1 ) + cMacro + SubStr( cString, nEnd + Len( _MACRO_CLOSE ) )
    ENDDO
