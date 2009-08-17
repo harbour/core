@@ -66,6 +66,7 @@ New      =
 
 /*
  * QKeyEvent ( Type type, int key, Qt::KeyboardModifiers modifiers, const QString & text = QString(), bool autorep = false, ushort count = 1 )
+ * ~QKeyEvent ()
  */
 HB_FUNC( QT_QKEYEVENT )
 {

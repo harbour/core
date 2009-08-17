@@ -69,6 +69,7 @@
  * QRect ( const QPoint & topLeft, const QPoint & bottomRight )
  * QRect ( const QPoint & topLeft, const QSize & size )
  * QRect ( int x, int y, int width, int height )
+ * ~QRect ()
  */
 HB_FUNC( QT_QRECT )
 {
@@ -95,7 +96,7 @@ HB_FUNC( QT_QRECT )
  */
 HB_FUNC( QT_QRECT_DESTROY )
 {
-
+   hbqt_par_QRect( 1 )->~QRect();
 }
 
 /*

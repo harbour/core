@@ -79,6 +79,7 @@
  * QFont ( const QString & family, int pointSize = -1, int weight = -1, bool italic = false )
  * QFont ( const QFont & font, QPaintDevice * pd )
  * QFont ( const QFont & font )
+ * ~QFont ()
  */
 HB_FUNC( QT_QFONT )
 {
@@ -117,7 +118,7 @@ HB_FUNC( QT_QFONT )
  */
 HB_FUNC( QT_QFONT_DESTROY )
 {
-
+   hbqt_par_QFont( 1 )->~QFont();
 }
 
 /*

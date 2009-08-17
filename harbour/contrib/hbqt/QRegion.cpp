@@ -88,6 +88,7 @@
  * QRegion ( const QRegion & r )
  * QRegion ( const QBitmap & bm )
  * QRegion ( const QRect & r, RegionType t = Rectangle )
+ * ~QRegion ()
  */
 HB_FUNC( QT_QREGION )
 {
@@ -136,7 +137,7 @@ HB_FUNC( QT_QREGION )
  */
 HB_FUNC( QT_QREGION_DESTROY )
 {
-
+   hbqt_par_QRegion( 1 )->~QRegion();
 }
 
 /*

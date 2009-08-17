@@ -1871,8 +1871,12 @@ QVariant fetchRole( PHB_ITEM block, int what, int par1, int par2 )
       return( hb_itemGetND( ret ) );
    else if( hb_itemType( ret ) & HB_IT_NUMERIC )
       return( hb_itemGetNI( ret ) );
-//   else if( hb_itemType( ret ) & HB_IT_POINTER )
-//      return( hb_itemGetPtr( ret ) );
+   #if 0
+   else if( hb_itemType( ret ) & HB_IT_POINTER )
+   {
+      QPixmap pixmap = qobject_cast<QPixmap>( (QPixmap*) hb_itemGetPtr( ret ) );
+   }
+   #endif
    else
       return QVariant();
 }

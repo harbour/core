@@ -80,6 +80,7 @@ oRect := QRect():new( nX, nY, nWidth, nHeight )
  * QRect ( const QPoint & topLeft, const QPoint & bottomRight )
  * QRect ( const QPoint & topLeft, const QSize & size )
  * QRect ( int x, int y, int width, int height )
+ * ~QRect ()
  */
 HB_FUNC( QT_QRECT )
 {

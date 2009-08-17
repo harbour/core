@@ -66,6 +66,7 @@
 
 /*
  * QKeyEvent ( Type type, int key, Qt::KeyboardModifiers modifiers, const QString & text = QString(), bool autorep = false, ushort count = 1 )
+ * ~QKeyEvent ()
  */
 HB_FUNC( QT_QKEYEVENT )
 {
@@ -77,7 +78,7 @@ HB_FUNC( QT_QKEYEVENT )
  */
 HB_FUNC( QT_QKEYEVENT_DESTROY )
 {
-
+   hbqt_par_QKeyEvent( 1 )->~QKeyEvent();
 }
 
 /*

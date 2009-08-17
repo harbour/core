@@ -66,6 +66,7 @@ New      =
 
 /*
  * QMoveEvent ( const QPoint & pos, const QPoint & oldPos )
+ * ~QMoveEvent ()
  */
 HB_FUNC( QT_QMOVEEVENT )
 {

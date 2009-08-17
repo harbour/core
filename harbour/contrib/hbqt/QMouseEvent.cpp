@@ -67,6 +67,7 @@
 /*
  * QMouseEvent ( Type type, const QPoint & position, Qt::MouseButton button, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers )
  * QMouseEvent ( Type type, const QPoint & pos, const QPoint & globalPos, Qt::MouseButton button, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers )
+ * ~QMouseEvent ()
  */
 HB_FUNC( QT_QMOUSEEVENT )
 {
@@ -78,7 +79,7 @@ HB_FUNC( QT_QMOUSEEVENT )
  */
 HB_FUNC( QT_QMOUSEEVENT_DESTROY )
 {
-
+   hbqt_par_QMouseEvent( 1 )->~QMouseEvent();
 }
 
 /*

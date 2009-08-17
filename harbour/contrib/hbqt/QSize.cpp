@@ -67,6 +67,7 @@
 /*
  * QSize ()
  * QSize ( int width, int height )
+ * ~QSize ()
  */
 HB_FUNC( QT_QSIZE )
 {
@@ -89,7 +90,7 @@ HB_FUNC( QT_QSIZE )
  */
 HB_FUNC( QT_QSIZE_DESTROY )
 {
-
+   hbqt_par_QSize( 1 )->~QSize();
 }
 
 /*

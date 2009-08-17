@@ -80,6 +80,7 @@ oRegion := QRegion():new( pQRect, nQRegion_RegionType )
  * QRegion ( const QRegion & r )
  * QRegion ( const QBitmap & bm )
  * QRegion ( const QRect & r, RegionType t = Rectangle )
+ * ~QRegion ()
  */
 HB_FUNC( QT_QREGION )
 {

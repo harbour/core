@@ -72,6 +72,7 @@ oSizeF := QSizeF():new( nWidth, nHeight )
  * QSizeF ()
  * QSizeF ( const QSize & size )
  * QSizeF ( qreal width, qreal height )
+ * ~QSizeF ()
  */
 HB_FUNC( QT_QSIZEF )
 {

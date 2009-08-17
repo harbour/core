@@ -66,6 +66,7 @@
 
 /*
  * QMoveEvent ( const QPoint & pos, const QPoint & oldPos )
+ * ~QMoveEvent ()
  */
 HB_FUNC( QT_QMOVEEVENT )
 {
@@ -77,7 +78,7 @@ HB_FUNC( QT_QMOVEEVENT )
  */
 HB_FUNC( QT_QMOVEEVENT_DESTROY )
 {
-
+   hbqt_par_QMoveEvent( 1 )->~QMoveEvent();
 }
 
 /*

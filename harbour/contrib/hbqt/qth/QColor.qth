@@ -81,6 +81,7 @@ QColor ( Qt::GlobalColor color )
 QColor ( const QString & name )
 QColor ( const char * name )
 QColor ( const QColor & color )
+~QColor ()
  */
 HB_FUNC( QT_QCOLOR )
 {

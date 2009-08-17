@@ -70,6 +70,7 @@
  * QRectF ( const QPointF & topLeft, const QPointF & bottomRight )
  * QRectF ( qreal x, qreal y, qreal width, qreal height )
  * QRectF ( const QRect & rectangle )
+ * ~QRectF ()
  */
 HB_FUNC( QT_QRECTF )
 {
@@ -96,7 +97,7 @@ HB_FUNC( QT_QRECTF )
  */
 HB_FUNC( QT_QRECTF_DESTROY )
 {
-
+   hbqt_par_QRectF( 1 )->~QRectF();
 }
 
 /*
