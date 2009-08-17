@@ -15,4 +15,4 @@ PRG_MAIN := hbrun.prg
 
 LIBS = $(HB_LIBS_ST_RDD)
 
-include $(TOP)$(ROOT)config/bin.cf
+include $(TOP)$(ROOT)config/bin.mk

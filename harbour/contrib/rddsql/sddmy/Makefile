@@ -4,7 +4,7 @@
 
 ROOT := ../../../
 
-include $(TOP)$(ROOT)config/global.cf
+include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := sddmy
 
@@ -23,7 +23,7 @@ HB_CFLAGS += $(foreach d,$(HB_INC_MYSQL_OK),-I$(d))
 C_SOURCES := \
    mysqldd.c \
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk
 else
-include $(TOP)$(ROOT)config/none.cf
+include $(TOP)$(ROOT)config/none.mk
 endif

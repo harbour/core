@@ -22,4 +22,4 @@ PRG_SOURCES := \
    stringp.prg \
    twirler.prg \
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk

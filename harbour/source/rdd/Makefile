@@ -4,7 +4,7 @@
 
 ROOT := ../../
 
-include $(TOP)$(ROOT)config/global.cf
+include $(TOP)$(ROOT)config/global.mk
 
 ifneq ($(HB_ARCHITECTURE),wce)
    HB_PRGFLAGS := -gc3
@@ -55,8 +55,8 @@ PRG_SOURCES := \
 
 LIBNAME := hbrdd
 
-# The list of all valid DB drivers is defined in config/global.cf.
+# The list of all valid DB drivers is defined in config/global.mk
 DIRS = nulsys $(HB_RDD_DIRS)
 
-include $(TOP)$(ROOT)config/lib.cf
-include $(TOP)$(ROOT)config/dir.cf
+include $(TOP)$(ROOT)config/lib.mk
+include $(TOP)$(ROOT)config/dir.mk

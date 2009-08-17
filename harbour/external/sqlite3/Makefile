@@ -4,7 +4,7 @@
 
 ROOT := ../../
 
-include $(TOP)$(ROOT)config/global.cf
+include $(TOP)$(ROOT)config/global.mk
 
 HB_BUILD_WARN := no
 HB_BUILD_MODE := c
@@ -47,8 +47,8 @@ ifeq ($(HB_WITH_SQLITE3),yes)
 C_SOURCES := \
    sqlite3.c \
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk
 
 else
-include $(TOP)$(ROOT)config/none.cf
+include $(TOP)$(ROOT)config/none.mk
 endif

@@ -9,4 +9,4 @@ C_SOURCES := \
 
 LIBNAME := rddnsx
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk

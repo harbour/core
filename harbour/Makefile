@@ -44,4 +44,4 @@ ifeq ($(HB_POSTINST),)
    endif
 endif
 
-include $(ROOT)config/dir.cf
+include $(ROOT)config/dir.mk

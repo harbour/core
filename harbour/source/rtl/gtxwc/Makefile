@@ -4,7 +4,7 @@
 
 ROOT := ../../../
 
-include $(TOP)$(ROOT)config/global.cf
+include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := gtxwc
 
@@ -27,8 +27,8 @@ ifneq ($(strip $(HB_INC_X11_OK)),)
 
 HB_CFLAGS += $(foreach d,$(HB_INC_X11_OK),-I$(d))
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk
 
 else
-include $(TOP)$(ROOT)config/none.cf
+include $(TOP)$(ROOT)config/none.mk
 endif

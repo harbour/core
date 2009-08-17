@@ -4,7 +4,7 @@
 
 ROOT = ../../
 
-include $(TOP)$(ROOT)config/global.cf
+include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := hbhpdf
 
@@ -26,13 +26,13 @@ C_SOURCES := \
 PRG_HEADERS := \
    harupdf.ch \
 
-include $(TOP)$(ROOT)config/header.cf
+include $(TOP)$(ROOT)config/header.mk
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk
 
 install::
 	$(INSTALL_RULE_HEADERS)
 
 else
-include $(TOP)$(ROOT)config/none.cf
+include $(TOP)$(ROOT)config/none.mk
 endif

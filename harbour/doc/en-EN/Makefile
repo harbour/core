@@ -71,4 +71,4 @@ DOC_FILES := \
    treport.txt \
    var.txt \
 
-include $(TOP)$(ROOT)config/doc.cf
+include $(TOP)$(ROOT)config/doc.mk

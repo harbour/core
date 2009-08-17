@@ -40,4 +40,4 @@ C_SOURCES := \
 
 LIBNAME := hbmacro
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk

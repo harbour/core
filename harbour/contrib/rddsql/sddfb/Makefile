@@ -4,7 +4,7 @@
 
 ROOT := ../../../
 
-include $(TOP)$(ROOT)config/global.cf
+include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := sddfb
 
@@ -25,10 +25,10 @@ HB_CFLAGS += $(foreach d,$(HB_INC_FIREBIRD_OK),-I$(d))
 C_SOURCES := \
    fbirddd.c \
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk
 else
-include $(TOP)$(ROOT)config/none.cf
+include $(TOP)$(ROOT)config/none.mk
 endif
 else
-include $(TOP)$(ROOT)config/none.cf
+include $(TOP)$(ROOT)config/none.mk
 endif

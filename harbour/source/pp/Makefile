@@ -17,7 +17,7 @@ LIBS := \
    hbcommon \
    hbnortl \
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk
 
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
@@ -39,7 +39,7 @@ ifneq ($(HB_HOST_BUILD),lib)
       INSTALL_FILES := $(BIN_DIR)/hbpp$(BIN_EXT)
       INSTALL_DIR := $(HB_BIN_INSTALL)
       HB_INSTALL_DEF := yes
-      include $(TOP)$(ROOT)config/install.cf
+      include $(TOP)$(ROOT)config/install.mk
    endif
 endif
 

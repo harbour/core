@@ -4,7 +4,7 @@
 
 ROOT := ../../../
 
-include $(TOP)$(ROOT)config/global.cf
+include $(TOP)$(ROOT)config/global.mk
 
 vpath %.c ../
 
@@ -16,4 +16,4 @@ LIBNAME := hbmaindllp
 # always export symbols
 HB_CFLAGS += -DHB_DYNLIB
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk

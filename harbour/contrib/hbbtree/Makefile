@@ -18,9 +18,9 @@ PRG_HEADERS := \
 
 LIBNAME := hbbtree
 
-include $(TOP)$(ROOT)config/header.cf
+include $(TOP)$(ROOT)config/header.mk
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk
 
 install::
 	$(INSTALL_RULE_HEADERS)

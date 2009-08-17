@@ -9,4 +9,4 @@ C_SOURCES := \
 
 LIBNAME := gt_tpl
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk

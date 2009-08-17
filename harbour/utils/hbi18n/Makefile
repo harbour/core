@@ -15,4 +15,4 @@ PRG_MAIN := hbi18n.prg
 
 LIBS = $(HB_LIBS_ST_NORDD)
 
-include $(TOP)$(ROOT)config/bin.cf
+include $(TOP)$(ROOT)config/bin.mk

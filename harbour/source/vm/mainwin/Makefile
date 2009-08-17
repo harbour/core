@@ -11,4 +11,4 @@ C_SOURCES := \
 
 LIBNAME := hbmainwin
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk

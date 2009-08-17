@@ -4,7 +4,7 @@
 
 ROOT := ../../
 
-include $(TOP)$(ROOT)config/global.cf
+include $(TOP)$(ROOT)config/global.mk
 
 ifneq ($(HB_ARCHITECTURE),wce)
    HB_PRGFLAGS := -gc3
@@ -280,5 +280,5 @@ DIRS := \
    gtwvt \
    gtxwc \
 
-include $(TOP)$(ROOT)config/lib.cf
-include $(TOP)$(ROOT)config/dir.cf
+include $(TOP)$(ROOT)config/lib.mk
+include $(TOP)$(ROOT)config/dir.mk

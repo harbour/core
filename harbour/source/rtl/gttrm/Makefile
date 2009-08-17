@@ -4,7 +4,7 @@
 
 ROOT := ../../../
 
-include $(TOP)$(ROOT)config/global.cf
+include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := gttrm
 
@@ -40,8 +40,8 @@ ifeq ($(HB_GPM_MOUSE),yes)
    endif
 endif
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk
 
 else
-include $(TOP)$(ROOT)config/none.cf
+include $(TOP)$(ROOT)config/none.mk
 endif

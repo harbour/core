@@ -14,4 +14,4 @@ LIBS := \
    hbcommon \
    hbnortl \
 
-include $(TOP)$(ROOT)config/bin.cf
+include $(TOP)$(ROOT)config/bin.mk

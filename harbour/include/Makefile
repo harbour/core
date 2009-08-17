@@ -126,4 +126,4 @@ API_HEADERS := \
    rdd.api \
    vm.api \
 
-include $(TOP)$(ROOT)config/header.cf
+include $(TOP)$(ROOT)config/header.mk

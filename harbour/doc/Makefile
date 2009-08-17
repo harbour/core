@@ -36,5 +36,5 @@ DOC_FILES := \
 DIRS := \
    en-EN \
 
-include $(TOP)$(ROOT)config/doc.cf
-include $(TOP)$(ROOT)config/dir.cf
+include $(TOP)$(ROOT)config/doc.mk
+include $(TOP)$(ROOT)config/dir.mk

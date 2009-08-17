@@ -4,7 +4,7 @@
 
 ROOT := ../../
 
-include $(TOP)$(ROOT)config/global.cf
+include $(TOP)$(ROOT)config/global.mk
 
 ifeq ($(HB_HVM_ALL),)
 
@@ -120,7 +120,7 @@ ifneq ($(HB_MT),no)
    DIRS += vmmt
 endif
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk
 ifneq ($(DIRS),)
-   include $(TOP)$(ROOT)config/dir.cf
+   include $(TOP)$(ROOT)config/dir.mk
 endif

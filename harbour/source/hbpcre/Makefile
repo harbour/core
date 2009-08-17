@@ -28,4 +28,4 @@ C_SOURCES := \
 
 LIBNAME := hbpcre
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk

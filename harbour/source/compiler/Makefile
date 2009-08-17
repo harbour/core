@@ -51,4 +51,4 @@ C_SOURCES := \
 
 LIBNAME := hbcplr
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk

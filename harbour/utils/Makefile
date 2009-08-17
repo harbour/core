@@ -12,4 +12,4 @@ DIRS := \
    hbformat \
    $(HB_UTILS) \
 
-include $(ROOT)config/dir.cf
+include $(ROOT)config/dir.mk

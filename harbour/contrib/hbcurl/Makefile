@@ -4,7 +4,7 @@
 
 ROOT := ../../
 
-include $(TOP)$(ROOT)config/global.cf
+include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := hbcurl
 
@@ -33,9 +33,9 @@ C_SOURCES := \
 PRG_HEADERS := \
    hbcurl.ch \
 
-include $(TOP)$(ROOT)config/header.cf
+include $(TOP)$(ROOT)config/header.mk
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk
 
 install::
 	$(INSTALL_RULE_HEADERS)
@@ -49,9 +49,9 @@ ifeq ($(HB_ARCHITECTURE),wce)
 endif
 
 ifneq ($(DIRS),)
-   include $(TOP)$(ROOT)config/dir.cf
+   include $(TOP)$(ROOT)config/dir.mk
 endif
 
 else
-include $(TOP)$(ROOT)config/none.cf
+include $(TOP)$(ROOT)config/none.mk
 endif

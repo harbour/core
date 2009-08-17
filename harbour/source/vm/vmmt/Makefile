@@ -4,7 +4,7 @@
 
 ROOT := ../../../
 
-include $(TOP)$(ROOT)config/global.cf
+include $(TOP)$(ROOT)config/global.mk
 
 vpath %.c ../
 vpath %.prg ../
@@ -81,4 +81,4 @@ LIBNAME := hbvmmt
 
 HB_CFLAGS += -DHB_MT_VM
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk

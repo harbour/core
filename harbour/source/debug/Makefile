@@ -24,4 +24,4 @@ PRG_SOURCES := \
 
 LIBNAME := hbdebug
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk

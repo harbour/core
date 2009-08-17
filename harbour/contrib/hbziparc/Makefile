@@ -9,4 +9,4 @@ LIBNAME := hbziparc
 PRG_SOURCES := \
    hbziparc.prg \
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk

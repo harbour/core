@@ -15,4 +15,4 @@ PRG_MAIN := hbmk2.prg
 
 LIBS = $(HB_LIBS_MT_NORDD)
 
-include $(TOP)$(ROOT)config/bin.cf
+include $(TOP)$(ROOT)config/bin.mk

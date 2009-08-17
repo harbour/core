@@ -16,5 +16,5 @@ DIRS := \
    sddfb \
    sddodbc \
 
-include $(TOP)$(ROOT)config/lib.cf
-include $(TOP)$(ROOT)config/dir.cf
+include $(TOP)$(ROOT)config/lib.mk
+include $(TOP)$(ROOT)config/dir.mk

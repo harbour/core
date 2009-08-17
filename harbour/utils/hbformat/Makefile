@@ -18,4 +18,4 @@ PRG_MAIN := hbformat.prg
 
 LIBS = $(HB_LIBS_ST_NORDD)
 
-include $(TOP)$(ROOT)config/bin.cf
+include $(TOP)$(ROOT)config/bin.mk

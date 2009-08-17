@@ -4,7 +4,7 @@
 
 ROOT := ../../
 
-include $(TOP)$(ROOT)config/global.cf
+include $(TOP)$(ROOT)config/global.mk
 
 HB_BUILD_WARN := no
 HB_CFLAGS += -I$(TOP)$(ROOT)source/hbzlib
@@ -57,8 +57,8 @@ C_SOURCES := \
    pngwtran.c \
    pngwutil.c \
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk
 
 else
-include $(TOP)$(ROOT)config/none.cf
+include $(TOP)$(ROOT)config/none.mk
 endif

@@ -9,4 +9,4 @@ PRG_SOURCES := \
 
 LIBNAME := hbextern
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk

@@ -10,4 +10,4 @@ C_SOURCES := \
 
 LIBNAME := rddcdx
 
-include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/lib.mk

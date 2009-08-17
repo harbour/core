@@ -42,4 +42,4 @@ DIRS := \
 
 endif
 
-include $(ROOT)config/dir.cf
+include $(ROOT)config/dir.mk
