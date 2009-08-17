@@ -233,7 +233,7 @@ METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBBrwText
    ENDIF
    IF lResize
       ::oBrw:Resize( nTop, nLeft, nBottom, nRight )
-      ::nWidth := nRight - nLeft + 1
+      ::nWidth := ::nRight - ::nLeft + 1
    ENDIF
 
    RETURN Self
