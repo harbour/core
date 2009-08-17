@@ -620,7 +620,7 @@ int hb_itemGetNI( PHB_ITEM pItem )
          return ( int ) pItem->item.asLong.value;
 
       else if( HB_IS_DOUBLE( pItem ) )
-#ifdef __GNUC__
+#if defined( __GNUC__ )
          return ( int ) ( unsigned int ) pItem->item.asDouble.value;
 #else
          return ( int ) pItem->item.asDouble.value;
@@ -643,7 +643,7 @@ long hb_itemGetNL( PHB_ITEM pItem )
          return ( long ) pItem->item.asInteger.value;
 
       else if( HB_IS_DOUBLE( pItem ) )
-#ifdef __GNUC__
+#if defined( __GNUC__ )
          return ( long ) ( ULONG ) pItem->item.asDouble.value;
 #else
          return ( long ) pItem->item.asDouble.value;
@@ -670,7 +670,7 @@ HB_LONG hb_itemGetNInt( PHB_ITEM pItem )
          return ( HB_LONG ) pItem->item.asInteger.value;
 
       else if( HB_IS_DOUBLE( pItem ) )
-#ifdef __GNUC__
+#if defined( __GNUC__ )
          return ( HB_LONG ) ( HB_ULONG ) pItem->item.asDouble.value;
 #else
          return ( HB_LONG ) pItem->item.asDouble.value;
@@ -694,7 +694,7 @@ LONGLONG hb_itemGetNLL( PHB_ITEM pItem )
          return ( LONGLONG ) pItem->item.asInteger.value;
 
       else if( HB_IS_DOUBLE( pItem ) )
-#ifdef __GNUC__
+#if defined( __GNUC__ )
          return ( LONGLONG ) ( ULONGLONG ) pItem->item.asDouble.value;
 #else
          return ( LONGLONG ) pItem->item.asDouble.value;

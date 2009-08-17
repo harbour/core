@@ -148,7 +148,7 @@ static int KeyTranslationTable[][ 2 ] =
 #endif
 
 #if HB_GT_KBD_MODIF_MASK
-#ifdef __linux__
+#if defined( __linux__ )
    { SL_KEY_ALT( 'A' ) | ( ALTL_PRESSED << 16 ),  K_ALT_A },
    { SL_KEY_ALT( 'B' ) | ( ALTL_PRESSED << 16 ),  K_ALT_B },
    { SL_KEY_ALT( 'C' ) | ( ALTL_PRESSED << 16 ),  K_ALT_C },

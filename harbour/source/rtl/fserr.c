@@ -241,7 +241,7 @@ void  hb_fsSetIOError( BOOL fResult, USHORT uiOperation )
       uiOsErrorLast = ( USHORT ) GetLastError();
       uiErrorLast = ( USHORT ) hb_WinToDosError( uiOsErrorLast );
 #elif defined( _MSC_VER ) || defined( __DMC__ )
-      #ifdef __XCC__
+      #if defined( __XCC__ )
          extern unsigned long _doserrno;
          extern void __cdecl _dosmaperr( unsigned long oserrno );
          _dosmaperr( GetLastError() );

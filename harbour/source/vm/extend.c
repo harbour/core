@@ -473,7 +473,7 @@ int  hb_parni( int iParam )
       else if( HB_IS_LONG( pItem ) )
          return ( int ) pItem->item.asLong.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#ifdef __GNUC__
+#if defined( __GNUC__ )
          return ( int ) ( unsigned int ) pItem->item.asDouble.value;
 #else
          return ( int ) pItem->item.asDouble.value;
@@ -501,7 +501,7 @@ int  hb_parnidef( int iParam, int iDefValue )
       else if( HB_IS_LONG( pItem ) )
          return ( int ) pItem->item.asLong.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#ifdef __GNUC__
+#if defined( __GNUC__ )
          return ( int ) ( unsigned int ) pItem->item.asDouble.value;
 #else
          return ( int ) pItem->item.asDouble.value;
@@ -529,7 +529,7 @@ long  hb_parnl( int iParam )
       else if( HB_IS_INTEGER( pItem ) )
          return ( long ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#ifdef __GNUC__
+#if defined( __GNUC__ )
          return ( long ) ( unsigned long ) pItem->item.asDouble.value;
 #else
          return ( long ) pItem->item.asDouble.value;
@@ -557,7 +557,7 @@ long  hb_parnldef( int iParam, long lDefValue )
       else if( HB_IS_INTEGER( pItem ) )
          return ( long ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#ifdef __GNUC__
+#if defined( __GNUC__ )
          return ( long ) ( unsigned long ) pItem->item.asDouble.value;
 #else
          return ( long ) pItem->item.asDouble.value;
@@ -586,7 +586,7 @@ LONGLONG  hb_parnll( int iParam )
       else if( HB_IS_INTEGER( pItem ) )
          return ( LONGLONG ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#ifdef __GNUC__
+#if defined( __GNUC__ )
          return ( LONGLONG ) ( ULONGLONG ) pItem->item.asDouble.value;
 #else
          return ( LONGLONG ) pItem->item.asDouble.value;
@@ -615,7 +615,7 @@ HB_LONG  hb_parnint( int iParam )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_LONG ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#ifdef __GNUC__
+#if defined( __GNUC__ )
          return ( HB_LONG ) ( HB_ULONG ) pItem->item.asDouble.value;
 #else
          return ( HB_LONG ) pItem->item.asDouble.value;
@@ -1061,7 +1061,7 @@ int  hb_parvni( int iParam, ... )
       else if( HB_IS_LONG( pItem ) )
          return ( int ) pItem->item.asLong.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#ifdef __GNUC__
+#if defined( __GNUC__ )
          return ( int ) ( unsigned int ) pItem->item.asDouble.value;
 #else
          return ( int ) pItem->item.asDouble.value;
@@ -1100,7 +1100,7 @@ long  hb_parvnl( int iParam, ... )
       else if( HB_IS_INTEGER( pItem ) )
          return ( long ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#ifdef __GNUC__
+#if defined( __GNUC__ )
          return ( long ) ( unsigned long ) pItem->item.asDouble.value;
 #else
          return ( long ) pItem->item.asDouble.value;
@@ -1143,7 +1143,7 @@ LONGLONG  hb_parvnll( int iParam, ... )
       else if( HB_IS_INTEGER( pItem ) )
          return ( LONGLONG ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#ifdef __GNUC__
+#if defined( __GNUC__ )
          return ( LONGLONG ) ( ULONGLONG ) pItem->item.asDouble.value;
 #else
          return ( LONGLONG ) pItem->item.asDouble.value;
@@ -1183,7 +1183,7 @@ HB_LONG  hb_parvnint( int iParam, ... )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_LONG ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#ifdef __GNUC__
+#if defined( __GNUC__ )
          return ( HB_LONG ) ( HB_ULONG ) pItem->item.asDouble.value;
 #else
          return ( HB_LONG ) pItem->item.asDouble.value;
