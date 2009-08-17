@@ -28,24 +28,22 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
    Linux/Darwin
    ------------
     [ $ export HB_COMPILER=<gcc|watcom|icc|sunpro> ]
-    [ $ export HB_INSTALL_PREFIX=<DIR> ]
       $ make install
 
       To test it, type:
-      $ cd bin
-      $ ./hbmk2 ../tests/hello.prg
+      $ cd tests
+      $ hbmk2 hello.prg
       $ ./hello
       You should see 'Hello world!' on screen.
 
    BSD/HP-UX/Solaris
    -----------------
     [ $ export HB_COMPILER=<gcc|sunpro> ]
-    [ $ export HB_INSTALL_PREFIX=<DIR> ]
       $ gmake install
 
       To test it, type:
-      $ cd bin
-      $ ./hbmk2 ../tests/hello.prg
+      $ cd tests
+      $ hbmk2 hello.prg
       $ ./hello
       You should see 'Hello world!' on screen.
 
@@ -70,15 +68,15 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       3.) You need to get GNU Make. We recommend this link:
              http://sourceforge.net/projects/mingw/files/GNU%20Make/Current%20Release_%20mingw32-make-3.81-20080326/mingw32-make-3.81-20080326-3.tar.gz/download
           Unpack it to your PATH or Harbour source root directory.
+          If you use MinGW compiler, you already have GNU Make.
           For convenience you may also use included config/mingw32-make.exe instead.
 
     [ > set HB_COMPILER=<mingw|msvc|watcom|bcc|pocc|cygwin|...> ]
-    [ > set HB_INSTALL_PREFIX=<DIR> ]
       > mingw32-make install
 
       To test it, type:
-      > cd bin
-      > hbmk2 ..\tests\hello.prg
+      > cd tests
+      > ..\bin\hbmk2 hello.prg
       > hello
       You should see 'Hello world!' on screen.
 
@@ -98,12 +96,11 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       Generally it's recommended to use native shell though.
 
     [ > set HB_COMPILER=<...> ]
-    [ > set HB_INSTALL_PREFIX=<DIR> ]
       > sh -c make install
 
       To test it, type:
-      > cd bin
-      > hbmk2 ..\tests\hello.prg
+      > cd tests
+      > ..\bin\hbmk2 hello.prg
       > hello
       You should see 'Hello world!' on screen.
 
@@ -119,20 +116,17 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
 
       1.) Make sure to have your C compiler of choice properly installed
           (in PATH).
-      2.) You need to get GNU Make. If you use MS-DOS host, we recommend this link:
+      2.) You need to get GNU Make. We recommend this link:
              ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381b.zip
-          If you use Windows NT host, use this one:
-             http://sourceforge.net/projects/mingw/files/GNU%20Make/Current%20Release_%20mingw32-make-3.81-20080326/mingw32-make-3.81-20080326-3.tar.gz/download
           Unpack it to your PATH or Harbour source root directory.
           For convenience you may also use included config/dj-make.exe instead.
 
     [ > set HB_COMPILER=<djgpp|watcom> ]
-    [ > set HB_INSTALL_PREFIX=<DIR> ]
       > make install
 
       To test it, type:
-      > cd bin
-      > hbmk2 ..\tests\hello.prg
+      > cd tests
+      > ..\bin\hbmk2 hello.prg
       > hello
       You should see 'Hello world!' on screen.
 
@@ -149,12 +143,11 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
           in this section.
 
     [ > set HB_COMPILER=<gcc|watcom> ]
-    [ > set HB_INSTALL_PREFIX=<DIR> ]
       > make install
 
       To test it, type:
-      > cd bin
-      > hbmk2 ..\tests\hello.prg
+      > cd tests
+      > ..\bin\hbmk2 hello.prg
       > hello
       You should see 'Hello world!' on screen.
 

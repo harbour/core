@@ -866,18 +866,6 @@ else
       endif
 
       HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(HB_INSTALL_PREFIX))
-
-      # Use names which are not likely to be used by users to
-      # avoiding accidental overwrites of existing installations
-#     ifeq ($(HB_ARCHITECTURE),dos)
-#        HB_INSTALL_PREFIX := C:\hbauto
-#     else
-#        ifeq ($(HB_UNIX_COMPATIBLE),no)
-#           HB_INSTALL_PREFIX := C:$(DIRSEP)hb-auto-$(HB_ARCHITECTURE)-$(HB_COMPILER)
-#        else
-#           HB_INSTALL_PREFIX := $(HOME)$(DIRSEP)hb-auto-$(HB_ARCHITECTURE)-$(HB_COMPILER)
-#        endif
-#     endif
    else
       # TOFIX: HB_INSTALL_PREFIX will have to be duplicated internally to avoid
       #        recursive operation here.

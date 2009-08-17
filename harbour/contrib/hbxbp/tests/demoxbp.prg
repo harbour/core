@@ -1580,7 +1580,7 @@ FUNCTION Build_Browse( oWnd )
 
    Set( _SET_DATEFORMAT, "yyyy.mm.dd" ) /* ANSI */
 
-   USE ( cPath + "test.dbf" ) NEW SHARED VIA 'DBFCDX'
+   USE ( cPath + "test.dbf" ) NEW SHARED READONLY VIA 'DBFCDX'
    #if 1
    INDEX ON test->last TAG "LAST" TO ( cPath + "test.cdx" )
    #endif
@@ -1871,4 +1871,3 @@ STATIC FUNCTION TBPrev()
    RETURN lMoved
 
 /*----------------------------------------------------------------------*/
-

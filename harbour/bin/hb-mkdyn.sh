@@ -134,7 +134,7 @@ if [ "${SLIB_EXT}" = ".dylib" ]; then
 elif [ "${SLIB_EXT}" = ".dll" ]; then
     FULLNAME="${LIB_NAME}${SLIB_EXT}"
     if [ "$HB_COMPILER" = "mingwarm" ]; then
-        SYSLIBS=" -lwininet -lws2"
+        SYSLIBS="-lws2"
     else
         SYSLIBS="-luser32 -lws2_32 -ladvapi32 -lgdi32"
     fi
