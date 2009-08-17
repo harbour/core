@@ -411,6 +411,9 @@ EXPORTED:
    METHOD   sizeCols                              SETGET
 
    DATA     softTrack                             INIT      .T.
+   DATA     nHorzOffset                           INIT      -1
+   DATA     lReset                                INIT      .F.
+   DATA     lHorzMove                             INIT      .f.
 
    ENDCLASS
 
@@ -452,9 +455,10 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oWidget:setSelectionBehavior( IF( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
 
    /* Connect Keyboard Events */
-   ::connect( ::pWidget, "keyPressEvent()"          , {|o,p| ::exeBlock( 1, p, o ) } )
-   ::connect( ::pWidget, "mousePressEvent()"        , {|o,p| ::exeBlock( 2, p, o ) } )
-   ::connect( ::pWidget, "scrollContentsBy(int,int)", {|o,p,p1| ::exeBlock( 3, p, p1, o ) } )
+   ::connect( ::pWidget, "keyPressEvent()"           , {|o,p   | ::exeBlock( 1, p, o ) } )
+   ::connect( ::pWidget, "mousePressEvent()"         , {|o,p   | ::exeBlock( 2, p, o ) } )
+   ::connect( ::pWidget, "mouseDoubleClickEvent()"   , {|o,p   | ::exeBlock( 3, p, o ) } )
+   ::connect( ::pWidget, "scrollContentsBy(int,int)" , {|o,p,p1| ::exeBlock(11, p, p1, o ) } )
 
    /* Finetune Horizontal Scrollbar */
    ::oWidget:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOn )
@@ -487,8 +491,9 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    /* .DBF Manipulation Model */
    ::oDbfModel := HbDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( p1, p2, p3, p4 ) } )
-
+   /* Attach Model with the View */
    ::oWidget:setModel( QT_PTROF( ::oDbfModel ) )
+   /* Set Initial Column and Row */
    ::oWidget:setCurrentIndex( QModelIndex():new():sibling( 0,0 ) )
    ::pCurIndex := ::oWidget:currentIndex()
 
@@ -505,51 +510,66 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpBrowse:exeBlock( nEvent, p1 )
-   LOCAL oMouseEvent, i, nRow, nRowPos, nCol, nColPos
+   LOCAL oMouseEvent, i, nRow, nRowPos, nCol, nColPos, oPoint
 
    DO CASE
    CASE nEvent == 1                   /* Keypress Event */
       SetAppEvent( xbeP_Keyboard, XbpQKeyEventToAppEvent( p1 ), NIL, self )
 
-   CASE nEvent == 2                   /* Mousepress : TOBE: button */
+   CASE nEvent == 2                   /* Mousepress */
       oMouseEvent := QMouseEvent():configure( p1 )
-      IF oMouseEvent:button() == Qt_LeftButton
 
-         IF hb_isPointer( QT_PTROF( ::oModelIndex ) )
-            ::oModelIndex:destroy()
+      IF hb_isPointer( QT_PTROF( ::oModelIndex ) )
+         ::oModelIndex:destroy()
+      ENDIF
+      oPoint := QPoint():new( oMouseEvent:x(), oMouseEvent:y() )
+      ::oModelIndex:configure( ::oWidget:indexAt( QT_PTROF( oPoint ) ) )
+      oPoint:destroy()
+
+      /* Reposition the record pointer */
+      IF ::oModelIndex:isValid()
+         nRow    := ::oModelIndex:row() + 1
+         nRowPos := ::rowPos
+         //
+         IF nRow < ::rowPos
+            FOR i := 1 TO nRowPos - nRow
+               ::up()
+            NEXT
+         ELSEIF nRow > ::rowPos
+            FOR i := 1 TO nRow - nRowPos
+               ::down()
+            NEXT
          ENDIF
-         ::oModelIndex:configure( ::oWidget:indexAt( QT_PTROF( QPoint():new( oMouseEvent:x(), oMouseEvent:y() ) ) ) )
-         IF ::oModelIndex:isValid()
-            nRow    := ::oModelIndex:row() + 1
-            nRowPos := ::rowPos
-            //
-            IF nRow < ::rowPos
-               FOR i := 1 TO nRowPos - nRow
-                  ::up()
-               NEXT
-            ELSEIF nRow > ::rowPos
-               FOR i := 1 TO nRow - nRowPos
-                  ::down()
-               NEXT
-            ENDIF
 
-            nCol    := ::oModelIndex:column() + 1
-            nColPos := ::colPos
-            //
-            IF nCol < nColPos
-               FOR i := 1 TO nColPos - nCol
-                  ::left()
-               NEXT
-            ELSEIF nCol > nColPos
-               FOR i := 1 TO nCol - nColPos
-                  ::right()
-               NEXT
-            ENDIF
+         nCol    := ::oModelIndex:column() + 1
+         nColPos := ::colPos
+         //
+         IF nCol < nColPos
+            FOR i := 1 TO nColPos - nCol
+               ::left()
+            NEXT
+         ELSEIF nCol > nColPos
+            FOR i := 1 TO nCol - nColPos
+               ::right()
+            NEXT
          ENDIF
       ENDIF
-      oMouseEvent:destroy()
 
-   CASE nEvent == 3                   /* Horizontal Scroll Position : sent by Qt */
+      IF oMouseEvent:button() == Qt_LeftButton
+         SetAppEvent( xbeBRW_ItemMarked, { ::rowPos, ::colPos }, NIL, Self )
+
+      ELSEIF oMouseEvent:button() == Qt_RightButton
+         SetAppEvent( xbeBRW_ItemRbDown, { oMouseEvent:x(), oMouseEvent:y() }, { ::rowPos, ::colPos }, Self )
+
+      ENDIF
+
+   CASE nEvent == 3                   /* xbeBRW_ItemSelected */
+      oMouseEvent := QMouseEvent():configure( p1 )
+      IF oMouseEvent:button() == Qt_LeftButton
+         SetAppEvent( xbeBRW_ItemSelected, NIL, NIL, Self )
+      ENDIF
+
+   CASE nEvent == 11                  /* Horizontal Scroll Position : sent by Qt */
       IF p1 <> 0
          ::setHorzOffset()
       ENDIF
@@ -628,72 +648,54 @@ METHOD handleEvent( nEvent, mp1, mp2 ) CLASS XbpBrowse
 
       CASE xbeK_UP                    /* Vertical Navigation */
          ::up()
-         ::updateVertScrollBar()
          EXIT
       CASE xbeK_DOWN
          ::down()
-         ::updateVertScrollBar()
          EXIT
       CASE xbeK_PGUP
          ::pageUp()
-         ::updateVertScrollBar()
          EXIT
       CASE xbeK_PGDN
          ::pageDown()
-         ::updateVertScrollBar()
          EXIT
       CASE xbeK_CTRL_PGUP
          ::goTop()
-         ::updateVertScrollBar()
          EXIT
       CASE xbeK_CTRL_PGDN
          ::goBottom()
-         ::updateVertScrollBar()
          EXIT
       CASE xbeK_RIGHT                 /* Horizontal Navigation */
          ::right()
-         IF ::rowPos == ::rowCount
-            ::updateVertScrollBar()
-         ENDIF
-         //::oHorzScrollBar:setValue( ::colPos - 1 )
          EXIT
       CASE xbeK_LEFT
          ::left()
-         //::oHorzScrollBar:setValue( ::colPos - 1 )
-         IF ::rowPos == ::rowCount
-            ::updateVertScrollBar()
-         ENDIF
          EXIT
       CASE xbeK_HOME
          ::firstCol()
-         //::oHorzScrollBar:setValue( ::colPos - 1 )
-         ::setHorzOffset()
-         IF ::rowPos == ::rowCount
-            ::updateVertScrollBar()
-         ENDIF
          EXIT
       CASE xbeK_END
          ::lastCol()
-         //::oHorzScrollBar:setValue( ::colPos - 1 )
-         ::setHorzOffset()
-         IF ::rowPos == ::rowCount
-            ::updateVertScrollBar()
-         ENDIF
          EXIT
-   #if 0 /* Xbase++ does not recognizes it */
-      CASE xbeK_CTRL_HOME
-         ::panHome()
-         ::setHorzOffset()
+      CASE xbeK_ENTER
+         ::itemSelected( mp1, mp2 )
          EXIT
-      CASE xbeK_CTRL_END
-         ::panEnd()
-         ::setHorzOffset()
-         EXIT
-   #endif
+
       ENDSWITCH
+
+   CASE nEvent == xbeBRW_ItemSelected
+      ::itemSelected( mp1, mp2 )
+
+   CASE nEvent == xbeBRW_ItemMarked
+      ::itemMarked( mp1, mp2 )
+
+   CASE nEvent == xbeBRW_ItemRbDown
+      ::itemRbDown( mp1, mp2 )
 
    CASE nEvent == xbeBRW_ForceStable
       ::forceStable()
+
+   CASE nEvent == xbeBRW_HeaderRbDown
+      ::headerRBDown( mp1, mp2 )
 
    CASE nEvent == xbeBRW_Pan
       DO CASE
@@ -723,9 +725,6 @@ METHOD handleEvent( nEvent, mp1, mp2 ) CLASS XbpBrowse
       CASE mp1 == XBPBRW_Navigate_GotoRecord
       ENDCASE
 
-   CASE nEvent == xbeBRW_HeaderRbDown
-      ::headerRBDown( mp1, mp2 )
-
    ENDCASE
 
    RETURN Self
@@ -740,8 +739,10 @@ METHOD XbpBrowse:supplyInfo( nInfo, p2, p3 )
    SWITCH ( nInfo )
 
    CASE HBQT_BRW_COLCOUNT
-      ::forceStable()
-      ::setHorzScrollBarRange( .t. )
+      IF ::colCount > 0
+         ::forceStable()
+         ::setHorzScrollBarRange( .t. )
+      ENDIF
       RETURN ::colCount
 
    CASE HBQT_BRW_ROWCOUNT
@@ -768,8 +769,7 @@ METHOD XbpBrowse:supplyInfo( nInfo, p2, p3 )
    /* Data Area */
 
    CASE HBQT_BRW_DATFGCOLOR
-      ::forceStable()
-      IF ( p3 > 0 .and. p3 <= ::colCount() )
+      IF ( p3 > 0 .and. p3 <= ::colCount )
          IF hb_isBlock( ::columns[ p3 ]:colorBlock )
             aColor := eval( ::columns[ p3 ]:colorBlock, ::cellValueA( p2, p3 ) )
             IF hb_isArray( aColor ) .and. hb_isNumeric( aColor[ 1 ] )
@@ -785,7 +785,6 @@ METHOD XbpBrowse:supplyInfo( nInfo, p2, p3 )
       ENDIF
 
    CASE HBQT_BRW_DATBGCOLOR
-      ::forceStable()
       IF ( p3 > 0 .and. p3 <= ::colCount )
          IF hb_isBlock( ::columns[ p3 ]:colorBlock )
             aColor := eval( ::columns[ p3 ]:colorBlock, ::cellValueA( p2, p3 ) )
@@ -802,19 +801,15 @@ METHOD XbpBrowse:supplyInfo( nInfo, p2, p3 )
          RETURN Qt_white
       ENDIF
 
-
    CASE HBQT_BRW_DATALIGN
-      ::forceStable()
       RETURN IF( p3 > 0 .and. p3 <= ::colCount, ::columns[ p3 ]:alignment , Qt_AlignLeft )
 
    CASE HBQT_BRW_DATHEIGHT
-      ::forceStable()
       RETURN IF( p3 > 0 .and. p3 <= ::colCount, ::columns[ p3 ]:dheight   , 12           )
 
    CASE HBQT_BRW_CELLDECORATION
       IF ::lFirst
          ::lFirst := .f.
-         ::forceStable()
          ::setVertScrollBarRange( .t. )
          ::setHorzScrollBarRange( .f. )
          ::oWidget:selectRow( ::rowPos - 1 )
@@ -826,15 +821,19 @@ METHOD XbpBrowse:supplyInfo( nInfo, p2, p3 )
       ENDIF
 
    CASE HBQT_BRW_CELLVALUE
-      IF ::lFirst
-         ::lFirst := .f.
-         ::forceStable()
-         ::setVertScrollBarRange( .t. )
-         ::setHorzScrollBarRange( .f. )
-         ::oWidget:selectRow( ::rowPos - 1 )
+//xbp_Debug( "cellvalue",p2,p3 )
+      IF ::columns[ p3 ]:type == XBPCOL_TYPE_FILEICON
+         RETURN ""
+      ELSE
+         IF ::lFirst
+            ::lFirst := .f.
+            //::forceStable()
+            ::setVertScrollBarRange( .t. )
+            ::setHorzScrollBarRange( .f. )
+            ::oWidget:selectRow( ::rowPos - 1 )
+         ENDIF
+         RETURN ::cellValue( p2, p3 )
       ENDIF
-      RETURN ::cellValue( p2, p3 )
-
    ENDSWITCH
 
    RETURN ""
@@ -906,10 +905,13 @@ METHOD setHorzOffset() CLASS XbpBrowse
 
 /*----------------------------------------------------------------------*/
 
-METHOD setCurrentIndex() CLASS XbpBrowse
+METHOD setCurrentIndex( lReset ) CLASS XbpBrowse
 
-   /* Important */
-   ::oDbfModel:reset()
+   DEFAULT lReset TO .t.
+   //
+   IF lReset
+      ::oDbfModel:reset()                         /* Important */
+   ENDIF
 
    Qt_QModelIndex_destroy( ::pCurIndex )
    ::pCurIndex := ::oDbfModel:index( ::rowPos - 1, ::colPos - 1 )
@@ -1337,177 +1339,10 @@ METHOD configure( nMode ) CLASS XbpBrowse
 
 /*----------------------------------------------------------------------*/
 
-METHOD scrollBuffer( nRows ) CLASS XbpBrowse
-   LOCAL nRowCount := ::rowCount
-   LOCAL aValues, aValuesA, aColors
+METHOD forceStable() CLASS XbpBrowse
 
-   /* Store last scroll value to chose refresh order. [druzus] */
-   ::nLastScroll := nRows
-
-   IF nRows >= nRowCount .OR. nRows <= -nRowCount
-      AFill( ::aCellStatus, .F. )
-   ELSE
-      #if 0  /* Physical scroll - in GUI not required */
-      hb_scroll( ::n_Top + ::nHeadHeight + iif( ::lHeadSep, 1, 0 ), ::n_Left, ;
-                 ::n_Bottom - ::nFootHeight - iif( ::lFootSep, 1, 0 ), ::n_Right, ;
-                 nRows,, ::colorValue( _TBC_CLR_STANDARD ) )
-      #endif
-
-      IF nRows > 0
-         DO WHILE --nRows >= 0
-            aValues := ::aCellValues[ 1 ]
-            aValuesA := ::aCellValuesA[ 1 ]
-            aColors := ::aCellColors[ 1 ]
-            ADel( ::aCellValues, 1 )
-            ADel( ::aCellValuesA, 1 )
-            ADel( ::aCellColors, 1 )
-            ADel( ::aCellStatus, 1 )
-            ADel( ::aDispStatus, 1 )
-            ::aCellValues[ nRowCount ] := aValues
-            ::aCellValuesA[ nRowCount ] := aValuesA
-            ::aCellColors[ nRowCount ] := aColors
-            ::aCellStatus[ nRowCount ] := .F.
-            ::aDispStatus[ nRowCount ] := .T.
-         ENDDO
-      ELSEIF nRows < 0
-         DO WHILE ++nRows <= 0
-            HB_AIns( ::aCellValues, 1, ATail( ::aCellValues ), .F. )
-            HB_AIns( ::aCellValuesA, 1, ATail( ::aCellValuesA ), .F. )
-            HB_AIns( ::aCellColors, 1, ATail( ::aCellColors ), .F. )
-            HB_AIns( ::aCellStatus, 1, .F., .F. )
-            HB_AIns( ::aDispStatus, 1, .T., .F. )
-         ENDDO
-      ENDIF
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD readRecord( nRow ) CLASS XbpBrowse
-   LOCAL aCol
-   LOCAL oCol
-   LOCAL cValue, cValueA
-   LOCAL aColor
-   LOCAL nColors, nToMove, nMoved
-   LOCAL nRowCount := ::rowCount
-   LOCAL lRead := .F.
-
-   IF nRow >= 1 .AND. nRow <= nRowCount .AND. !::aCellStatus[ nRow ]
-      IF nRow <= ::nLastRow
-         nToMove := nRow - ::nBufferPos
-         nMoved  := _SKIP_RESULT( Eval( ::bSkipBlock, nToMove ) )
-         IF nToMove > 0
-            IF nMoved < 0
-               nMoved := 0
-            ENDIF
-         ELSEIF nToMove < 0
-            nMoved := nToMove
-         ELSE
-            nMoved := 0
-         ENDIF
-         ::nBufferPos += nMoved
-         IF nToMove > 0 .AND. nMoved < nToMove
-            ::nLastRow := ::nBufferPos
-         ELSE
-            lRead := .T.
-         ENDIF
-      ENDIF
-      nColors := Len( ::aColors )
-      IF nRow <= ::nLastRow
-         FOR EACH aCol, cValue, cValueA, aColor IN ::aColData, ::aCellValues[ nRow ], ::aCellValuesA[ nRow ], ::aCellColors[ nRow ]
-            oCol := aCol[ _TBCI_COLOBJECT ]
-            cValueA := cValue := Eval( oCol:block )
-            aColor := _CELLCOLORS( aCol, cValue, nColors )
-            IF ValType( cValue ) $ "CMNDTL"
-               cValue := PadR( Transform( cValue, oCol:picture ), aCol[ _TBCI_CELLWIDTH ] )
-            ELSE
-               cValue := Space( aCol[ _TBCI_CELLWIDTH ] )
-            ENDIF
-         NEXT
-      ELSE
-         FOR EACH aCol, cValue, cValueA, aColor IN ::aColData, ::aCellValues[ nRow ], ::aCellValuesA[ nRow ], ::aCellColors[ nRow ]
-            aColor := { aCol[ _TBCI_DEFCOLOR ][ 1 ], aCol[ _TBCI_DEFCOLOR ][ 2 ] }
-            cValue := Space( aCol[ _TBCI_CELLWIDTH ] )
-            cValueA := aCol[ _TBCI_COLOBJECT ]:blankVariable
-         NEXT
-      ENDIF
-
-      ::aCellStatus[ nRow ] := .T.
-      ::aDispStatus[ nRow ] := .T.
-   ENDIF
-
-   RETURN lRead
-
-/*----------------------------------------------------------------------*/
-
-METHOD setPosition() CLASS XbpBrowse
-   LOCAL nMoved
-   LOCAL nRowCount   := ::rowCount
-   LOCAL nMoveOffset := ::nMoveOffset + ( ::nRowPos - ::nBufferPos )
-   LOCAL nNewPos     := ::nBufferPos + nMoveOffset
-   LOCAL lSetPos     := .T.
-
-   IF nNewPos < 1
-      IF ::nMoveOffset < -1
-         nMoveOffset -= ::nRowPos - 1
-      ENDIF
-   ELSEIF nNewPos > ::nLastRow
-      IF ::nMoveOffset > 1
-         nMoveOffset += ::nLastRow - ::nRowPos
-      ENDIF
-   ELSEIF lSetPos
-      ::nRowPos := nNewPos
-   ENDIF
-
-   nMoved := _SKIP_RESULT( Eval( ::bSkipBlock, nMoveOffset ) )
-   IF nMoved > 0
-      ::nBufferPos += nMoved
-      IF ::nBufferPos > ::nLastRow
-         AFill( ::aCellStatus, .F., ::nLastRow + 1, ::nBufferPos - ::nLastRow )
-      ENDIF
-      IF ::nBufferPos > nRowCount
-         ::scrollBuffer( ::nBufferPos - nRowCount )
-         ::nBufferPos := nRowCount
-         lSetPos := .F.
-      ENDIF
-      IF ::nBufferPos > ::nLastRow
-         ::nLastRow := ::nBufferPos
-         IF nMoved != nMoveOffset
-            lSetPos := .F.
-         ENDIF
-      ENDIF
-   ELSEIF nMoved < 0
-      ::nBufferPos += nMoved
-      IF ::nBufferPos < 1
-         ::nLastRow := Min( nRowCount, ::nLastRow - ::nBufferPos + 1 )
-         ::scrollBuffer( ::nBufferPos - 1 )
-         ::nBufferPos := 1
-         lSetPos := .F.
-      ENDIF
-   ELSE  /* nMoved == 0 */
-      IF nMoveOffset > 0
-         IF nMoveOffset != 0 .AND. ::nBufferPos == ::nRowPos
-            ::lHitBottom := .T.
-         ENDIF
-         ::nLastRow := ::nBufferPos
-         AFill( ::aCellStatus, .F., ::nLastRow + 1 )
-      ELSEIF nMoveOffset < 0
-         IF nMoveOffset != 0 .AND. ::nBufferPos == ::nRowPos
-            ::lHitTop := .T.
-         ENDIF
-         IF ::nBufferPos > 1
-            ::scrollBuffer( ::nBufferPos - 1 )
-            ::nBufferPos := 1
-         ENDIF
-      ENDIF
-   ENDIF
-
-   IF lSetPos
-      ::nRowPos := ::nBufferPos
-   ENDIF
-
-   ::nMoveOffset := 0
+   DO WHILE !::stabilize()
+   ENDDO
 
    RETURN Self
 
@@ -1596,6 +1431,7 @@ METHOD stabilize() CLASS XbpBrowse
 
       ::lStable := .T.
       ::lInvalid := .F.
+
    ENDIF
 
    IF ::autoLite
@@ -1604,16 +1440,198 @@ METHOD stabilize() CLASS XbpBrowse
       ::setCursorPos()
    ENDIF
 
+   IF ::lStable
+      IF hb_isBlock( ::bStableBlock )
+         eval( ::bStableBlock( Self ) )
+      ENDIF
+   ENDIF
+
    RETURN .T.
 
 /*----------------------------------------------------------------------*/
 
-METHOD forceStable() CLASS XbpBrowse
+METHOD setPosition() CLASS XbpBrowse
+   LOCAL nMoved
+   LOCAL nRowCount   := ::rowCount
+   LOCAL nMoveOffset := ::nMoveOffset + ( ::nRowPos - ::nBufferPos )
+   LOCAL nNewPos     := ::nBufferPos + nMoveOffset
+   LOCAL lSetPos     := .T.
 
-   DO WHILE !::stabilize()
-   ENDDO
+   IF nNewPos < 1
+      IF ::nMoveOffset < -1
+         nMoveOffset -= ::nRowPos - 1
+      ENDIF
+   ELSEIF nNewPos > ::nLastRow
+      IF ::nMoveOffset > 1
+         nMoveOffset += ::nLastRow - ::nRowPos
+      ENDIF
+   ELSEIF lSetPos
+      ::nRowPos := nNewPos
+   ENDIF
+
+   nMoved := _SKIP_RESULT( Eval( ::bSkipBlock, nMoveOffset ) )
+   IF nMoved > 0
+      ::nBufferPos += nMoved
+      IF ::nBufferPos > ::nLastRow
+         AFill( ::aCellStatus, .F., ::nLastRow + 1, ::nBufferPos - ::nLastRow )
+      ENDIF
+      IF ::nBufferPos > nRowCount
+         ::scrollBuffer( ::nBufferPos - nRowCount )
+         ::nBufferPos := nRowCount
+         lSetPos := .F.
+      ENDIF
+      IF ::nBufferPos > ::nLastRow
+         ::nLastRow := ::nBufferPos
+         IF nMoved != nMoveOffset
+            lSetPos := .F.
+         ENDIF
+      ENDIF
+   ELSEIF nMoved < 0
+      ::nBufferPos += nMoved
+      IF ::nBufferPos < 1
+         ::nLastRow := Min( nRowCount, ::nLastRow - ::nBufferPos + 1 )
+         ::scrollBuffer( ::nBufferPos - 1 )
+         ::nBufferPos := 1
+         lSetPos := .F.
+      ENDIF
+   ELSE  /* nMoved == 0 */
+      IF nMoveOffset > 0
+         IF nMoveOffset != 0 .AND. ::nBufferPos == ::nRowPos
+            IF hb_isBlock( ::bHitBottomBlock )
+               eval( ::bHitBottomBlock, Self )
+            ENDIF
+            ::lHitBottom := .T.
+         ENDIF
+         ::nLastRow := ::nBufferPos
+         AFill( ::aCellStatus, .F., ::nLastRow + 1 )
+      ELSEIF nMoveOffset < 0
+         IF nMoveOffset != 0 .AND. ::nBufferPos == ::nRowPos
+            IF hb_isBlock( ::bHitTopBlock )
+               eval( ::bHitTopBlock, Self )
+            ENDIF
+            ::lHitTop := .T.
+         ENDIF
+         IF ::nBufferPos > 1
+            ::scrollBuffer( ::nBufferPos - 1 )
+            ::nBufferPos := 1
+         ENDIF
+      ENDIF
+   ENDIF
+
+   IF lSetPos
+      ::nRowPos := ::nBufferPos
+   ENDIF
+
+   ::nMoveOffset := 0
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD scrollBuffer( nRows ) CLASS XbpBrowse
+   LOCAL nRowCount := ::rowCount
+   LOCAL aValues, aValuesA, aColors
+
+   /* Store last scroll value to chose refresh order. [druzus] */
+   ::nLastScroll := nRows
+
+   IF nRows >= nRowCount .OR. nRows <= -nRowCount
+      AFill( ::aCellStatus, .F. )
+      ::lReset := .t.
+   ELSE
+      #if 0  /* Physical scroll - in GUI not required */
+      hb_scroll( ::n_Top + ::nHeadHeight + iif( ::lHeadSep, 1, 0 ), ::n_Left, ;
+                 ::n_Bottom - ::nFootHeight - iif( ::lFootSep, 1, 0 ), ::n_Right, ;
+                 nRows,, ::colorValue( _TBC_CLR_STANDARD ) )
+      #endif
+
+      IF nRows > 0
+         DO WHILE --nRows >= 0
+            aValues := ::aCellValues[ 1 ]
+            aValuesA := ::aCellValuesA[ 1 ]
+            aColors := ::aCellColors[ 1 ]
+            ADel( ::aCellValues, 1 )
+            ADel( ::aCellValuesA, 1 )
+            ADel( ::aCellColors, 1 )
+            ADel( ::aCellStatus, 1 )
+            ADel( ::aDispStatus, 1 )
+            ::aCellValues[ nRowCount ] := aValues
+            ::aCellValuesA[ nRowCount ] := aValuesA
+            ::aCellColors[ nRowCount ] := aColors
+            ::aCellStatus[ nRowCount ] := .F.
+            ::aDispStatus[ nRowCount ] := .T.
+         ENDDO
+         ::lReset := .t.
+      ELSEIF nRows < 0
+         DO WHILE ++nRows <= 0
+            HB_AIns( ::aCellValues, 1, ATail( ::aCellValues ), .F. )
+            HB_AIns( ::aCellValuesA, 1, ATail( ::aCellValuesA ), .F. )
+            HB_AIns( ::aCellColors, 1, ATail( ::aCellColors ), .F. )
+            HB_AIns( ::aCellStatus, 1, .F., .F. )
+            HB_AIns( ::aDispStatus, 1, .T., .F. )
+         ENDDO
+         ::lReset := .t.
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD readRecord( nRow ) CLASS XbpBrowse
+   LOCAL aCol
+   LOCAL oCol
+   LOCAL cValue, cValueA
+   LOCAL aColor
+   LOCAL nColors, nToMove, nMoved
+   LOCAL nRowCount := ::rowCount
+   LOCAL lRead := .F.
+
+   IF nRow >= 1 .AND. nRow <= nRowCount .AND. !::aCellStatus[ nRow ]
+      IF nRow <= ::nLastRow
+         nToMove := nRow - ::nBufferPos
+         nMoved  := _SKIP_RESULT( Eval( ::bSkipBlock, nToMove ) )
+         IF nToMove > 0
+            IF nMoved < 0
+               nMoved := 0
+            ENDIF
+         ELSEIF nToMove < 0
+            nMoved := nToMove
+         ELSE
+            nMoved := 0
+         ENDIF
+         ::nBufferPos += nMoved
+         IF nToMove > 0 .AND. nMoved < nToMove
+            ::nLastRow := ::nBufferPos
+         ELSE
+            lRead := .T.
+         ENDIF
+      ENDIF
+      nColors := Len( ::aColors )
+      IF nRow <= ::nLastRow
+         FOR EACH aCol, cValue, cValueA, aColor IN ::aColData, ::aCellValues[ nRow ], ::aCellValuesA[ nRow ], ::aCellColors[ nRow ]
+            oCol := aCol[ _TBCI_COLOBJECT ]
+            cValueA := cValue := Eval( oCol:block )
+            aColor := _CELLCOLORS( aCol, cValue, nColors )
+            IF ValType( cValue ) $ "CMNDTL"
+               cValue := PadR( Transform( cValue, oCol:picture ), aCol[ _TBCI_CELLWIDTH ] )
+            ELSE
+               cValue := Space( aCol[ _TBCI_CELLWIDTH ] )
+            ENDIF
+         NEXT
+      ELSE
+         FOR EACH aCol, cValue, cValueA, aColor IN ::aColData, ::aCellValues[ nRow ], ::aCellValuesA[ nRow ], ::aCellColors[ nRow ]
+            aColor := { aCol[ _TBCI_DEFCOLOR ][ 1 ], aCol[ _TBCI_DEFCOLOR ][ 2 ] }
+            cValue := Space( aCol[ _TBCI_CELLWIDTH ] )
+            cValueA := aCol[ _TBCI_COLOBJECT ]:blankVariable
+         NEXT
+      ENDIF
+
+      ::aCellStatus[ nRow ] := .T.
+      ::aDispStatus[ nRow ] := .T.
+   ENDIF
+
+   RETURN lRead
 
 /*----------------------------------------------------------------------*/
 
@@ -1699,24 +1717,28 @@ METHOD refreshCurrent() CLASS XbpBrowse
 /*----------------------------------------------------------------------*/
 
 METHOD up() CLASS XbpBrowse
+   LOCAL lReset := ::rowPos == 1
 
    ::setUnstable()
    ::nMoveOffset--
 
    ::forceStable()
-   ::setCurrentIndex()
+   ::setCurrentIndex( lReset )
+   ::updateVertScrollBar()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD down() CLASS XbpBrowse
+   LOCAL lReset := ::rowPos >= ::rowCount
 
    ::setUnstable()
    ::nMoveOffset++
 
    ::forceStable()
-   ::setCurrentIndex()
+   ::setCurrentIndex( lReset )
+   ::updateVertScrollBar()
 
    RETURN Self
 
@@ -1728,7 +1750,8 @@ METHOD pageUp() CLASS XbpBrowse
    ::nMoveOffset -= ::rowCount
 
    ::forceStable()
-   ::setCurrentIndex()
+   ::setCurrentIndex( .t. )
+   ::updateVertScrollBar()
 
    RETURN Self
 
@@ -1740,7 +1763,8 @@ METHOD pageDown() CLASS XbpBrowse
    ::nMoveOffset += ::rowCount
 
    ::forceStable()
-   ::setCurrentIndex()
+   ::setCurrentIndex( .t. )
+   ::updateVertScrollBar()
 
    RETURN Self
 
@@ -1758,7 +1782,8 @@ METHOD goTop() CLASS XbpBrowse
    Eval( ::bSkipBlock, 0 )
 
    ::forceStable()
-   ::setCurrentIndex()
+   ::setCurrentIndex( .t. )
+   ::updateVertScrollBar()
 
    RETURN Self
 
@@ -1778,7 +1803,8 @@ METHOD goBottom() CLASS XbpBrowse
    Eval( ::bSkipBlock, 0 )
 
    ::forceStable()
-   ::setCurrentIndex()
+   ::setCurrentIndex( .t. )
+   ::updateVertScrollBar()
 
    RETURN Self
 
@@ -1787,43 +1813,97 @@ METHOD goBottom() CLASS XbpBrowse
 /*----------------------------------------------------------------------*/
 
 METHOD left() CLASS XbpBrowse
+   LOCAL n
 
    IF ::colPos > 1
       ::colPos--
-      ::setCurrentIndex()
-   ENDIF
-
-   #if 0  /* NECESSARY ? */
-   ::setUnstable()
-   DO WHILE .T.
-      ::nColPos--
-      IF ::nColPos < 1 .OR. ::nColPos > ::colCount .OR. ;
-                     ::aColData[ ::nColPos, _TBCI_CELLWIDTH ] != 0
-         EXIT
+      n  := ::oHorzHeaderView:sectionViewportPosition( ::colPos-1 )
+      IF n < 0
+         ::oHorzHeaderView:setOffset( ::oHorzHeaderView:offSet() + n )
+         ::setCurrentIndex( .t. )
+      ELSE
+         ::setCurrentIndex( .f. )
       ENDIF
-   ENDDO
-   #endif
+   ENDIF
+   IF ::rowPos == ::rowCount
+      ::updateVertScrollBar()
+   ENDIF
+   //::oHorzScrollBar:setValue( ::colPos - 1 )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD right() CLASS XbpBrowse
+   LOCAL n, n1, n2
 
    IF ::colPos < ::colCount
       ::colPos++
-      ::setCurrentIndex()
+
+      n  := ::oHorzHeaderView:sectionViewportPosition( ::colPos-1 )
+      n1 := ::oHorzHeaderView:sectionSize( ::colPos-1 )
+      n2 := ::oWidgetViewport:width()
+      IF n + n1 > n2
+         ::oHorzHeaderView:setOffset( ::oHorzHeaderView:offSet()+(n1-(n2-n)+1) - ::oWidget:lineWidth() )
+         ::setCurrentIndex( .t. )
+      ELSE
+         ::setCurrentIndex( .f. )
+      ENDIF
    ENDIF
 
-   #if 0  /* NECESSARY ? */
+   IF ::rowPos == ::rowCount
+      ::updateVertScrollBar()
+   ENDIF
+   //::oHorzScrollBar:setValue( ::colPos - 1 )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD firstCol() CLASS XbpBrowse
+   LOCAL n
+
    ::setUnstable()
-   DO WHILE .T.
-      ::nColPos++
-      IF ::nColPos < 1 .OR. ::nColPos > ::colCount .OR. ;
-                  ::aColData[ ::nColPos, _TBCI_CELLWIDTH ] != 0
-         EXIT
-      ENDIF
-   ENDDO
-   #endif
+   ::colPos := 1
+
+   n  := ::oHorzHeaderView:sectionViewportPosition( ::colPos-1 )
+   IF n < 0
+      ::oHorzHeaderView:setOffset( ::oHorzHeaderView:offSet() + n )
+      ::setCurrentIndex( .t. )
+   ELSE
+      ::setCurrentIndex( .f. )
+   ENDIF
+
+   //::oHorzScrollBar:setValue( ::colPos - 1 )
+   IF ::rowPos == ::rowCount
+      ::updateVertScrollBar()
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD lastCol() CLASS XbpBrowse
+   LOCAL n, n1, n2
+
+   ::setUnstable()
+   ::colPos := ::colCount
+
+   n  := ::oHorzHeaderView:sectionViewportPosition( ::colPos-1 )
+   n1 := ::oHorzHeaderView:sectionSize( ::colPos-1 )
+   n2 := ::oWidgetViewport:width()
+   IF n + n1 > n2
+      ::oHorzHeaderView:setOffset( ::oHorzHeaderView:offSet()+(n1-(n2-n)+1) - ::oWidget:lineWidth() )
+      ::setCurrentIndex( .t. )
+   ELSE
+      ::setCurrentIndex( .f. )
+   ENDIF
+
+   //::oHorzScrollBar:setValue( ::colPos - 1 )
+   IF ::rowPos == ::rowCount
+      ::updateVertScrollBar()
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1831,12 +1911,8 @@ METHOD right() CLASS XbpBrowse
 METHOD home() CLASS XbpBrowse
 
    ::colPos := max( 1, ::oHorzHeaderView:visualIndexAt( 1 )+1 )
-   ::setCurrentIndex()
+   ::setCurrentIndex( .t. )
 
-   #if 0  /* NECESSARY ? */
-   ::setUnstable()
-   ::nColPos := iif( ::nLeftVisible < ::nRightVisible, ::nLeftVisible, ::nRightVisible )
-   #endif
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1848,12 +1924,8 @@ METHOD end() CLASS XbpBrowse
       ::nRightVisible := ::colCount
    ENDIF
    ::colPos := ::nRightVisible
-   ::setCurrentIndex()
+   ::setCurrentIndex( .t. )
 
-   #if 0
-   ::setUnstable()
-   ::nColPos := ::nRightVisible
-   #endif
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1861,30 +1933,6 @@ METHOD end() CLASS XbpBrowse
 METHOD panHome() CLASS XbpBrowse
 
    ::colPos := 1
-   ::setCurrentIndex()
-
-   #if 0
-   ::setUnstable()
-   ::nColPos := _NEXTCOLUMN( ::aColData, 1 )
-   #endif
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD firstCol() CLASS XbpBrowse
-
-   ::setUnstable()
-   ::colPos := 1
-   ::setCurrentIndex()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD lastCol() CLASS XbpBrowse
-
-   ::setUnstable()
-   ::colPos := ::colCount
    ::setCurrentIndex()
 
    RETURN Self
@@ -1898,9 +1946,6 @@ METHOD panEnd() CLASS XbpBrowse
    ::colPos := ::colCount
    ::setCurrentIndex()
 
-   #if 0
-   ::nColPos := _PREVCOLUMN( ::aColData, ::colCount )
-   #endif
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1912,17 +1957,6 @@ METHOD panLeft() CLASS XbpBrowse
       ::oHorzHeaderView:setOffSet( ::oHorzHeaderView:sectionPosition( nLeftVisible - 2 ) )
    ENDIF
 
-   #if 0
-   LOCAL nNewPos
-
-   ::setUnstable()
-   nNewPos := _PREVCOLUMN( ::aColData, Min( ::colCount, ::nLeftVisible - 1 ) )
-
-   IF nNewPos != 0 .AND. nNewPos != ::nLeftVisible
-      ::nRightVisible := 0
-      ::nLeftVisible := nNewPos
-   ENDIF
-   #endif
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -2427,7 +2461,7 @@ METHOD setVisible() CLASS XbpBrowse
 
 
 METHOD hiLite() CLASS XbpBrowse
-
+#if 0
    LOCAL cValue, cColor
 
    IF ::nConfigure != 0
@@ -2449,12 +2483,12 @@ METHOD hiLite() CLASS XbpBrowse
    ENDIF
 
    DispEnd()
-
+#endif
    RETURN Self
 
 
 METHOD deHilite() CLASS XbpBrowse
-
+#if 0
    LOCAL cValue, cColor
 
    IF ::nConfigure != 0
@@ -2476,7 +2510,7 @@ METHOD deHilite() CLASS XbpBrowse
    ::lHiLited := .F.
 
    DispEnd()
-
+#endif
    RETURN Self
 
 
@@ -2731,7 +2765,7 @@ METHOD rightVisible() CLASS XbpBrowse
 METHOD addColumn( oCol ) CLASS XbpBrowse
 
    AAdd( ::columns, oCol )
-   ::configure( _TBR_CONF_COLUMNS )
+   //::configure( _TBR_CONF_COLUMNS )
 
    ::doConfigure()  /* QT */
 

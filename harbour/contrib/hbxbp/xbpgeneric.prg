@@ -149,9 +149,11 @@ FUNCTION SetAppEvent( nEvent, mp1, mp2, oXbp )
 /*----------------------------------------------------------------------*/
 
 FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
-   LOCAL nEvent //, n
+   LOCAL nEvent
+   LOCAL nThreadID := ThreadID()
 
-   DEFAULT nTimeout TO 0
+   //DEFAULT nTimeout TO 0
+   HB_SYMBOL_UNUSED( nTimeOut )
 
    IF ++nEventOut > EVENT_BUFFER
       nEventOut := 1
@@ -160,7 +162,7 @@ FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
    DO WHILE .t.
       aEventLoop[ 1,1 ]:processEvents_1( 0, 200 )
 
-      IF ts_events[ nEventOut,5 ] == ThreadID()
+      IF ts_events[ nEventOut,5 ] == nThreadID
          nEvent := ts_events[ nEventOut,1 ]
          mp1    := ts_events[ nEventOut,2 ]
          mp2    := ts_events[ nEventOut,3 ]
@@ -171,7 +173,7 @@ FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
          EXIT
       ENDIF
 
-      hb_idleSleep( 0.01 )                  /* Releases CPU cycles */
+      hb_idleSleep( 0.001 )                  /* Releases CPU cycles */
    ENDDO
 //( "..........................", threadID() )
 
@@ -243,6 +245,7 @@ FUNCTION MsgBox( cMsg, cTitle )
    SetAppWindow():oWidget:setFocus()
    oMB:exec()
 
+   oMB:destroy()
    RETURN nil
 
 /*----------------------------------------------------------------------*/

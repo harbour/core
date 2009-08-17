@@ -1581,27 +1581,42 @@ FUNCTION Build_Browse( oWnd )
    Set( _SET_DATEFORMAT, "yyyy.mm.dd" ) /* ANSI */
 
    USE ( cPath + "test.dbf" ) NEW SHARED VIA 'DBFCDX'
+   #if 1
+   INDEX ON test->last TAG "LAST" TO ( cPath + "test.cdx" )
+   #endif
    DbGotop()
 
    oXbpBrowse := XbpBrowse():new():create( oWnd, , { 10,10 }, { oWnd:currentSize()[1]-25,oWnd:currentSize()[2]-45 } )
    oXbpBrowse:setFontCompoundName( "10.Courier" )
-   //oXbpBrowse:hScroll       := .f.
-   //oXbpBrowse:vScroll       := .f.
-   oXbpBrowse:sizeCols      := .f.
-   oXbpBrowse:cursorMode    := XBPBRW_CURSOR_ROW
+   //oXbpBrowse:hScroll       := .f.          // OK
+   //oXbpBrowse:vScroll       := .f.          // OK
+   //oXbpBrowse:sizeCols      := .f.          // OK
+   //oXbpBrowse:cursorMode    := XBPBRW_CURSOR_ROW
+   oXbpBrowse:cursorMode    := XBPBRW_CURSOR_CELL
 
+   /* Navigation Blocks */
    oXbpBrowse:skipBlock     := {|n| DbSkipBlock( n ) }
    oXbpBrowse:goTopBlock    := {| | DbGoTop()        }
    oXbpBrowse:goBottomBlock := {| | DbGoBottom()     }
-
+   //
    oXbpBrowse:firstPosBlock := {| | 1                }
    oXbpBrowse:lastPosBlock  := {| | LastRec()        }
-   oXbpBrowse:posBlock      := {| | RecNo()          }
-   oXbpBrowse:goPosBlock    := {|n| DbGoto( n )      }
-   oXbpBrowse:phyPosBlock   := {| | RecNo()          }
+   IF indexOrd() == 0
+      oXbpBrowse:posBlock      := {| | RecNo()          }
+      oXbpBrowse:goPosBlock    := {|n| DbGoto( n )      }
+      oXbpBrowse:phyPosBlock   := {| | RecNo()          }
+   ELSE
+      oXbpBrowse:posBlock      := {| | OrdKeyNo()       }
+      oXbpBrowse:goPosBlock    := {|n| OrdKeyGoto( n )  }
+      oXbpBrowse:phyPosBlock   := {| | OrdKeyNo()       }
+   ENDIF
 
    oXbpBrowse:headerRbDown  := {|mp1, mp2, o| mp1 := mp1, xbp_debug( o:getColumn( mp2 ):heading ) }
+   oXbpBrowse:itemSelected  := {|| xbp_debug( 'itemSelected' ) }
 
+   #ifdef __HARBOUR__
+   oXbpBrowse:setStyleSheet( "selection-background-color: qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5, stop: 0 #FF92BB, stop: 1 blue); " )
+   #endif
 
    aPresParam := {}
    aadd( aPresParam, { XBP_PP_COL_HA_CAPTION      , "Icons"                    } )
@@ -1743,6 +1758,63 @@ FUNCTION Build_Browse( oWnd )
    //
    oXbpBrowse:addColumn( oXbpColumn )
 
+   aPresParam := {}
+   aadd( aPresParam, { XBP_PP_COL_HA_CAPTION      , "St"                       } )
+   aadd( aPresParam, { XBP_PP_COL_HA_FGCLR        , GRA_CLR_CYAN               } )
+   aadd( aPresParam, { XBP_PP_COL_HA_BGCLR        , GRA_CLR_BLUE               } )
+   aadd( aPresParam, { XBP_PP_COL_HA_HEIGHT       , 20                         } )
+   aadd( aPresParam, { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_BGCLR        , RGB( 205,240,210 )         } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
+   //
+   oXbpColumn          := XbpColumn():new()
+   oXbpColumn:dataLink := {|| test->State }
+   oXbpColumn:create( , , , , aPresParam )
+   //
+   oXbpBrowse:addColumn( oXbpColumn )
+
+   aPresParam := {}
+   aadd( aPresParam, { XBP_PP_COL_HA_CAPTION      , "Zipcode"                  } )
+   aadd( aPresParam, { XBP_PP_COL_HA_FGCLR        , GRA_CLR_CYAN               } )
+   aadd( aPresParam, { XBP_PP_COL_HA_BGCLR        , GRA_CLR_BLUE               } )
+   aadd( aPresParam, { XBP_PP_COL_HA_HEIGHT       , 20                         } )
+   aadd( aPresParam, { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_BGCLR        , RGB( 205,240,210 )         } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
+   //
+   oXbpColumn          := XbpColumn():new()
+   oXbpColumn:dataLink := {|| test->Zip }
+   oXbpColumn:create( , , , , aPresParam )
+   //
+   oXbpBrowse:addColumn( oXbpColumn )
+
+   aPresParam := {}
+   aadd( aPresParam, { XBP_PP_COL_HA_CAPTION      , "Notes"                    } )
+   aadd( aPresParam, { XBP_PP_COL_HA_FGCLR        , GRA_CLR_CYAN               } )
+   aadd( aPresParam, { XBP_PP_COL_HA_BGCLR        , GRA_CLR_BLUE               } )
+   aadd( aPresParam, { XBP_PP_COL_HA_HEIGHT       , 20                         } )
+   aadd( aPresParam, { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_BGCLR        , RGB( 205,240,210 )         } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              } )
+   aadd( aPresParam, { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
+   //
+   oXbpColumn          := XbpColumn():new()
+   oXbpColumn:dataLink := {|| test->Notes }
+   oXbpColumn:create( , , , , aPresParam )
+   //
+   oXbpBrowse:addColumn( oXbpColumn )
+
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -1799,3 +1871,4 @@ STATIC FUNCTION TBPrev()
    RETURN lMoved
 
 /*----------------------------------------------------------------------*/
+
