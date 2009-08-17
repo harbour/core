@@ -14,7 +14,7 @@ ifeq ($(HB_SHELL),sh)
           _UNAME_M := $(shell uname -m)
           # TODO: Make this complete:
           #       || ( $( "*[ix]*86" ) && $( "*[ix]*86[^0-9]*" ) )
-          ifneq ($(findstring $(_UNAME_M),@64 _64),)
+          ifneq ($(findstring $(_UNAME_M),@64 _64 x86_64),)
              HB_USER_CFLAGS += -fPIC
           endif
       endif

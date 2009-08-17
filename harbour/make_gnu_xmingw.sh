@@ -39,25 +39,25 @@ export HB_INSTALL_PREFIX="/usr/local/mingw32-harbour"
 # using some default platform settings
 if [ -f /etc/debian_version ]; then
     MINGW_PREFIX=/usr
-    TARGET=i586-mingw32msvc
+    [ -n "$TARGET" ] || TARGET=i586-mingw32msvc
     HB_CCPREFIX="$TARGET-"
 elif [ -f /etc/gentoo-release ]; then
     if [ -x /opt/xmingw/bin/i386-mingw32-gcc ]; then
         MINGW_PREFIX=/opt/xmingw
-        TARGET=i386-mingw32msvc
+        [ -n "$TARGET" ] || TARGET=i386-mingw32msvc
     else
         MINGW_PREFIX=/usr
-        TARGET=i686-mingw32
+        [ -n "$TARGET" ] || TARGET=i686-mingw32
     fi
     HB_CCPREFIX="$TARGET-"
 elif [ "$UNAME" = "FreeBSD" ]; then
     MINGW_PREFIX=/usr/local/mingw32
-    TARGET="."
+    [ -n "$TARGET" ] || TARGET="."
     HB_CCPREFIX=""
     UNAMEL=bsd
 elif [ -x /usr/local/bin/i[3456]86-mingw*-gcc ]; then
     MINGW_PREFIX=/usr/local
-    TARGET=`echo /usr/local/bin/i[3456]86-mingw*-gcc|sed -e '1 !d' -e 's/.*\(i[3456]86-mingw[^-]*\).*/\1/g'`
+    [ -n "$TARGET" ] || TARGET=`echo /usr/local/bin/i[3456]86-mingw*-gcc|sed -e '1 !d' -e 's/.*\(i[3456]86-mingw[^-]*\).*/\1/g'`
     HB_CCPREFIX="$TARGET-"
 fi
 
@@ -71,13 +71,13 @@ if [ -z "${MINGW_PREFIX}" ] || \
             MINGWGCC=`echo $d/bin/i[3456]86-mingw*-gcc`
             if [ -x $MINGWGCC ]; then
                 MINGW_PREFIX=$d
-                TARGET=`echo "$MINGWGCC"|sed -e '1 !d' -e 's/.*\(i[3456]86-mingw[^-]*\).*/\1/g'`
+                [ -n "$TARGET" ] || TARGET=`echo "$MINGWGCC"|sed -e '1 !d' -e 's/.*\(i[3456]86-mingw[^-]*\).*/\1/g'`
                 HB_CCPREFIX="$TARGET-"
             else
                 MINGWGCC=`echo $d/i[3456]86-mingw*/bin/gcc`
                 if [ -x $MINGWGCC ]; then
                    MINGW_PREFIX=$d
-                   TARGET=`echo "$MINGWGCC"|sed -e '1 !d' -e 's!.*\(i[3456]86-mingw[^/]*\).*!\1!g'`
+                   [ -n "$TARGET" ] || TARGET=`echo "$MINGWGCC"|sed -e '1 !d' -e 's!.*\(i[3456]86-mingw[^/]*\).*!\1!g'`
                    HB_CCPREFIX=""
                 fi
             fi

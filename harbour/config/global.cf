@@ -906,10 +906,14 @@ ifneq ($(HB_INSTALL_PREFIX),)
    else
       # Not perfect, please enhance it.
       ifneq ($(findstring /usr,$(HB_INSTALL_PREFIX)),)
-         LIBPOSTFIX := $(DIRSEP)harbour
+         ifeq ($(findstring /usr/home,$(HB_INSTALL_PREFIX)),)
+           LIBPOSTFIX := $(DIRSEP)harbour
+           INCPOSTFIX := $(DIRSEP)harbour
+         endif
       else
          ifneq ($(findstring /opt,$(HB_INSTALL_PREFIX)),)
             LIBPOSTFIX := $(DIRSEP)harbour
+            INCPOSTFIX := $(DIRSEP)harbour
          endif
       endif
    endif
