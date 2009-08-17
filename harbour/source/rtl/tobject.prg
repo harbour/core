@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Base Object from wich all object finally inherit
+ * Base Object from which all object finally inherit
  *
  * Copyright 2000 JfL&RaC <jfl@mafact.com>, <rac@mafact.com>
  * www - http://www.harbour-project.org

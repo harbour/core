@@ -7241,7 +7241,7 @@ static void hb_vmPopStatic( USHORT uiStatic )
 
 /* ----------------------------------------------- */
 /*
- * Functions to mange module symbols
+ * Functions to manage module symbols
  */
 
 PHB_SYMB hb_vmGetRealFuncSym( PHB_SYMB pSym )

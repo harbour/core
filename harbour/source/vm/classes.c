@@ -156,7 +156,7 @@ typedef struct
    PHB_ITEM pInitValue;          /* Init Value for data */
    USHORT   uiType;              /* HB_OO_MSG_DATA, HB_OO_MSG_CLASSDATA or HB_OO_MSG_INITIALIZED */
    USHORT   uiData;              /* Item position in instance area or class data */
-   USHORT   uiOffset;            /* Supper cast instance area offset for HB_OO_MSG_DATA or real class item position */
+   USHORT   uiOffset;            /* Super cast instance area offset for HB_OO_MSG_DATA or real class item position */
    USHORT   uiSprClass;          /* The real class where method were defined */
 } INITDATA, * PINITDATA;
 
@@ -3120,7 +3120,7 @@ HB_FUNC( __CLSADDMSG )
  * <szClassName>     Name of the class
  * <uiDatas>         Number of DATAs in the class
  * <pSuperArray>     Optional array with handle(s) of superclass(es)
- * <pClassFunc>      Class function symbol, when NULLpublic function
+ * <pClassFunc>      Class function symbol, when NULL public function
  *                   with the same name as szClassName is used
  * <fModuleFriendly> when true all functions and classes from the same
  *                   module as pClassFunc are defined as friends
@@ -3197,7 +3197,7 @@ static USHORT hb_clsNew( const char * szClassName, USHORT uiDatas,
                memset( puiClassData, 0, sizeof( USHORT ) * nLenClsDatas );
             }
 
-            /* Copy super classs handles */
+            /* Copy super class handles */
             ulLimit = hb_clsMthNum( pSprCls );
             for( ul = 0; ul < ulLimit; ++ul )
             {

@@ -226,6 +226,8 @@ void  hb_fsSetIOError( BOOL fResult, USHORT uiOperation )
    USHORT uiOsErrorLast, uiErrorLast;
    PHB_IOERRORS pIOErrors;
 
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsSetIOError(%d,%hu)", fResult, uiOperation));
+
    /* TODO: implement it */
    HB_SYMBOL_UNUSED( uiOperation );
 

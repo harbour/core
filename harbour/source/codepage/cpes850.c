@@ -53,7 +53,7 @@
 
 /* Language name: Spanish (Modern)*/
 /* ISO language code (2 chars): ES */
-/* Codepage: ISO-8859-1 */
+/* Codepage: 850 */
 
 #include "hbapi.h"
 #include "hbapicdp.h"

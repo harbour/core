@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *
+ * Czech and Slovak Kamenicky <-> Unicode conversion table
  *
  * Copyright 2006 Vojtech Obrdlik <vobrdlik@centrum.cz>
  * adapted from David Kozub - http://linux.fjfi.cvut.cz/%7Ezub/cp895/

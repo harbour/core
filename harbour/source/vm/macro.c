@@ -50,7 +50,7 @@
  *
  */
 
-/* this #define HAVE TO be placed before all #include directives
+/* this #define HAS TO be placed before all #include directives
  */
 #ifndef HB_MACRO_SUPPORT
 #  define HB_MACRO_SUPPORT

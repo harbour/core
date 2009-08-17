@@ -4,6 +4,7 @@
 
 /*
  * xHarbour Project source code:
+ * Mazowia <-> Unicode conversion table
  *
  *
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
