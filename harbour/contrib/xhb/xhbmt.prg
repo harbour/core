@@ -54,7 +54,7 @@
 
 /* real functions used as wrappers in above translations */
 
-function xhb_StartThread( p1, p2, ... )
+function StartThread( p1, p2, ... )
    if PCount() < 2
       return hb_threadStart( p1 )
    elseif valtype( p1 ) == "O" .and. ISCHARACTER( p2 )
@@ -62,12 +62,107 @@ function xhb_StartThread( p1, p2, ... )
    endif
    return hb_threadStart( p1, p2, ... )
 
-function xhb_mutexSubscribe( mtx, nTimeOut, lSubscribed )
+
+function Subscribe( mtx, nTimeOut, lSubscribed )
    local xSubscribed
-   lSubscribed := hb_mutexSubscribe( mtx, nTimeOut, @xSubscribed )
+   lSubscribed := hb_mutexSubscribe( mtx, ;
+                                     iif( ISNUMBER( nTimeOut ), nTimeOut / 1000, ), ;
+                                     @xSubscribed )
    return xSubscribed
 
-function xhb_mutexSubscribeNow( mtx, nTimeOut, lSubscribed )
+
+function SubscribeNow( mtx, nTimeOut, lSubscribed )
    local xSubscribed
-   lSubscribed := hb_mutexSubscribeNow( mtx, nTimeOut, @xSubscribed )
+   lSubscribed := hb_mutexSubscribeNow( mtx, ;
+                                        iif( ISNUMBER( nTimeOut ), nTimeOut / 1000, ), ;
+                                        @xSubscribed )
    return xSubscribed
+
+
+function hb_MultiThread()
+   return hb_mtvm()
+
+
+function GetCurrentThread()
+   return hb_threadSelf()
+
+
+function GetThreadId( pThID )
+   return hb_threadId( pThID )
+
+
+function ThreadGetCurrentInternal()
+   return hb_threadId()
+
+
+function IsSameThread( pThID1, pThID2 )
+   return hb_threadId( pThID1 ) == iif( pcount() < 2, hb_threadId(), ;
+                                                      hb_threadId( pThID2 ) )
+
+
+function IsValidThread( pThID )
+   local lValid
+
+   begin sequence with {|| break() }
+      lValid := hb_threadId( pThID ) != 0
+   recover
+      lValid := .F.
+   end sequence
+
+   return lValid
+
+
+function JoinThread( pThID )
+   return hb_threadJoin( pThID )
+
+
+function KillThread( pThID )
+   hb_threadQuitRequest( pThID )
+   return NIL
+
+
+function StopThread( pThID )
+   hb_threadQuitRequest( pThID )
+   hb_threadJoin( pThID )
+   return NIL
+
+
+function KillAllThreads()
+   return hb_threadTerminateAll()
+
+
+function WaitForThreads()
+   return hb_threadWaitForAll()
+
+
+function ThreadSleep( nTimeOut )
+   return hb_idleSleep( nTimeOut / 1000 )
+
+
+function DestroyMutex( mtx )
+   HB_SYMBOL_UNUSED( mtx )
+   return NIL
+
+
+function hb_MutexTryLock( mtx )
+   return hb_mutexLock( mtx, 0 )
+
+
+function hb_MutexTimeOutLock( mtx, nTimeOut )
+   return hb_mutexLock( mtx, IIF( hb_isNumeric( nTimeOut ), nTimeOut / 1000, 0 ) )
+
+
+function Notify( mtx, xVal )
+   return hb_mutexNotify( mtx, xVal )
+
+
+function NotifyAll( mtx, xVal )
+   return hb_mutexNotifyAll( mtx, xVal )
+
+
+function ThreadGetCurrent()
+   return hb_threadId()
+
+
+function GetSystemThreadId( pThID )
+   return iif( PCount() < 1, hb_threadId(), hb_threadId( pThID ) )

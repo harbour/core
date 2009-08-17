@@ -64,9 +64,6 @@
    #xtranslate __Keyboard([<x,...>])           => xhb__Keyboard(<x>)
    #xtranslate __CopyFile([<x,...>])           => xhb_CopyFile(<x>)
 
-   #xtranslate Subscribe( <x,...> )            => xhb_mutexSubscribe( <x> )
-   #xtranslate SubscribeNow( <x,...> )         => xhb_mutexSubscribeNow( <x> )
-   #xtranslate StartThread( <x,...> )          => xhb_StartThread( <x> )
 #endif
 
 #endif /* __HARBOUR__ */

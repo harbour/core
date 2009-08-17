@@ -88,6 +88,7 @@
    #xtranslate hb_adler32([<x,...>])       => hb_checksum(<x>)
    #xtranslate hb_setLastKey([<x,...>])    => setLastKey(<x>)
    #xtranslate hb_CStr([<x,...>])          => CStr(<x>)
+   #xtranslate hb_valToExp([<x,...>])      => ValToPrgExp(<x>)
    #xtranslate hb_DirExists(<x>)           => IsDirectory(<x>)
    #xtranslate hb_rddInfo([<x,...>])       => rddInfo(<x>)
    #xtranslate hb_idleSleep([<x,...>])     => SecondsSleep(<x>)
@@ -131,9 +132,35 @@
    #xtranslate hb_gtLock()                 => HBCONSOLELOCK()
    #xtranslate hb_gtUnLock()               => HBCONSOLEUNLOCK()
 
+   /* MT functions */
    #xtranslate hb_mtvm()                   => hb_multiThread()
+   #xtranslate hb_threadSelf()             => GetCurrentThread()
+   #xtranslate hb_threadId( [<x,...>] )    => GetThreadId( <x> )
+   #xtranslate hb_threadStart( <x,...> )   => StartThread( [<x>] )
+   #xtranslate hb_threadJoin( <x> )        => JoinThread( <x> )
+   #xtranslate hb_threadQuitRequest( <x> ) => KillThread( <x> )
    #xtranslate hb_threadWaitForAll()       => WaitForThreads()
+   #xtranslate hb_threadTerminateAll()     => KillAllThreads()
+
    #xtranslate hb_mutexNotify(<x,...>)     => Notify(<x>)
+   #xtranslate hb_mutexNotifyAll(<x,...>)  => NotifyAll(<x>)
+
+   #xtranslate hb_mutexSubscribe(<x,...>)  => {|mtx, nTimeOut, xSubscribed| ;;
+                                                local lSubscribed ;;
+                                                xSubscribed := Subscribe( mtx, ;
+                                                                          iif( hb_isNumeric( nTimeOut ), nTimeOut * 1000, ), ;
+                                                                          @lSubscribed ) ;
+                                                return lSubscribed ; }:eval( <x> )
+   #xtranslate hb_mutexSubscribeNow(<x,...>) => {|mtx, nTimeOut, xSubscribed| ;;
+                                                local lSubscribed ;;
+                                                xSubscribed := SubscribeNow( mtx, ;
+                                                                             iif( hb_isNumeric( nTimeOut ), nTimeOut * 1000, ), ;
+                                                                             @lSubscribed ) ;
+                                                return lSubscribed ; }:eval( <x> )
+
+   #xtranslate hb_MutexLock( <x>, <n> )    => iif( !hb_isNumeric( <n> ), hb_MutexLock( <x> ) ;
+                                                 iif( <n> <= 0, hb_MutexTryLock( <x> ), ;
+                                                    hb_MutexTimeOutLock( <x>, <n> ) ) )
 
    /* Hash item functions */
    #xtranslate hb_HASH([<x,...>])          => HASH(<x>)
@@ -253,7 +280,8 @@
    #xtranslate hb_checksum([<x,...>])      => hb_adler32(<x>)
    #xtranslate setLastKey([<x,...>])       => hb_setLastKey(<x>)
    #xtranslate CStr([<x,...>])             => hb_CStr(<x>)
-   #xtranslate IsDirectory(<x>)            => hb_DirExists(<x>)
+   #xtranslate ValToPrgExp([<x,...>])      => hb_valToExp(<x>)
+   #xtranslate IsDirectory(<x>)            => hb_dirExists(<x>)
    #xtranslate SecondsSleep([<x,...>])     => hb_idleSleep(<x>)
    #xtranslate NetName(<n>)                => iif( hb_isNumeric( <n> ) .AND. <n> == 1, hb_UserName(), NetName() )
    #xtranslate FileSize(<x>)               => hb_FSize(<x>)
@@ -314,14 +342,31 @@
    #xtranslate WaitForThreads()                => hb_threadWaitForAll()
 
    #xtranslate ThreadSleep( <x> )              => hb_idleSleep( <x> / 1000 )
-   #xtranslate SecondsSleep( <x> )             => hb_idleSleep( <x> )
 
    #xtranslate DestroyMutex( <x> )             =>
-   #xtranslate hb_MutexTryLock( <x> )          => hb_MutexLock( <x>, 0 )
-   #xtranslate hb_MutexTimeOutLock( <x> )      => hb_MutexLock( <x>, 0 )
-   #xtranslate hb_MutexTimeOutLock( <x>, <n> ) => hb_MutexLock( <x>, <n> / 1000 )
+   #xtranslate hb_MutexTryLock( <x> )          => hb_mutexLock( <x>, 0 )
+   #xtranslate hb_MutexTimeOutLock( <x> )      => hb_mutexLock( <x>, 0 )
+   #xtranslate hb_MutexTimeOutLock( <x>, <n> ) => hb_mutexLock( <x>, IIF( hb_isNumeric( <n> ), <n> / 1000, 0 ) )
+
    #xtranslate Notify( <x,...> )               => hb_mutexNotify( <x> )
    #xtranslate NotifyAll( <x,...> )            => hb_mutexNotifyAll( <x> )
+   #xtranslate Subscribe( <x,...> )            => {|mtx, nTimeOut, lSubscribed| ;;
+                                                   local xSubscribed ;;
+                                                   lSubscribed := hb_mutexSubscribe( mtx, ;
+                                                                                     iif( hb_isNumeric( nTimeOut ), nTimeOut / 1000, ), ;
+                                                                                     @xSubscribed ) ;
+                                                   return xSubscribed ; }:eval( <x> )
+   #xtranslate SubscribeNow( <x,...> )         => {|mtx, nTimeOut, lSubscribed| ;;
+                                                   local xSubscribed ;;
+                                                   lSubscribed := hb_mutexSubscribeNow( mtx, ;
+                                                                                        iif( hb_isNumeric( nTimeOut ), nTimeOut / 1000, ), ;
+                                                                                        @xSubscribed ) ;
+                                                   return xSubscribed ; }:eval( <x> )
+
+   #xtranslate StartThread( [<x>] )            => hb_threadStart( <x> )
+   #xtranslate StartThread( <x>, <y> [, <z,...>] ) => iif( valtype( <x> ) == "O" .and. hb_isString( <y> ), ;
+                                                           hb_threadStart( {|...| (<x>):&(<y>)( ... ) } [, <z>] ), ;
+                                                           hb_threadStart( <x>, <y> [, <z>] ) )
 
    /* not possible to well replicate xHarbour behavior because its buggy
       these function results are different on different platform, chosen
@@ -331,10 +376,10 @@
 
    /* do not need translation */
    /* hb_MutexCreate()                         => hb_mutexCreate() */
-   /* hb_mutexUnlock( <x> )                    => hb_mutexUnlock( <x> ) */
+   /* hb_MutexUnlock( <x> )                    => hb_mutexUnlock( <x> ) */
 
    /* do not need translation only when xHarbour code is compiled by Harbour */
-   /* hb_MutexLock( <x> )                      => hb_MutexLock( <x> ) */
+   /* hb_MutexLock( <x> )                      => hb_mutexLock( <x> ) */
 
    /* functions I do not want to document as public .prg API in Harbour */
    /* ThreadInspect() */
