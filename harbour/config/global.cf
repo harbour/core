@@ -838,7 +838,7 @@ export HB_PKGNAMI
 HB_INSTALL_PREFIX_ORI := $(HB_INSTALL_PREFIX)
 ifeq ($(HB_BUILD_PKG),yes)
    ifeq ($(HB_INIT_DONE),)
-      export HB_TOP := $(subst /,$(DIRSEP),$(abspath $(TOP)$(ROOT)))
+      export HB_TOP := $(subst /,$(DIRSEP),$(realpath $(TOP)$(ROOT)))
       HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(abspath $(PKG_DIR)/$(HB_PKGNAME)))
 
       HB_BIN_INSTALL :=
@@ -853,8 +853,16 @@ else
       ifeq ($(HB_UNIX_COMPATIBLE),no)
          HB_INSTALL_PREFIX := $(realpath $(TOP)$(ROOT))
       else
-         # Stick to *nix customs. I don't like it, it needs admin.
-         HB_INSTALL_PREFIX := /usr/local
+         ifneq ($(PREFIX),)
+            HB_INSTALL_PREFIX := $(PREFIX)
+         else
+            ifneq ($(DESTDIR),)
+               HB_INSTALL_PREFIX := $(DESTDIR)
+            else
+               # Stick to *nix customs. I don't like it, it needs admin.
+               HB_INSTALL_PREFIX := /usr/local
+            endif
+         endif
       endif
 
       HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(HB_INSTALL_PREFIX))
