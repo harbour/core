@@ -18,10 +18,11 @@ else
 endif
 
 ifeq ($(JOB_SRV),NO)
-   include $(TOP)$(ROOT)config/dirsh.mk
-endif
 
-ifeq ($(DIR_RULE),)
+   DIRS := $(filter-out {%},$(subst {, {,$(DIRS)))
+   include $(TOP)$(ROOT)config/dirsh.mk
+
+else
 
    # NOTE: The empty line directly before 'endef' HAVE TO exist!
    #       It causes that every command will be separated by LF
@@ -34,18 +35,12 @@ ifeq ($(DIR_RULE),)
    DIRS_DEP  := $(filter-out $(DIRS_PURE),$(DIRS))
    DIRS_MK   := $(foreach d, $(DIRS_PURE), $(if $(wildcard $(d)/Makefile),$(d),))
    DIR_RULE  = $(foreach dir, $(DIRS_MK), $(dir_mk))
-   MULTI_DEPS := yes
-
-else
-
-   DIRS := $(filter-out {%},$(subst {, {,$(DIRS)))
-   MULTI_DEPS := no
 
 endif
 
 all : first
 
-ifneq ($(MULTI_DEPS),yes)
+ifeq ($(JOB_SRV),NO)
 
 first clean install::
 	+$(DIR_RULE)
