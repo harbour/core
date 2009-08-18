@@ -42,7 +42,7 @@ if [ -f /etc/debian_version ]; then
     [ -n "$TARGET" ] || TARGET=i586-mingw32msvc
     HB_CCPREFIX="$TARGET-"
 elif [ -f /etc/gentoo-release ]; then
-    if [ -x /opt/xmingw/bin/i386-mingw32-gcc ]; then
+    if [ -x /opt/xmingw/bin/i386-mingw32msvc-gcc ]; then
         MINGW_PREFIX=/opt/xmingw
         [ -n "$TARGET" ] || TARGET=i386-mingw32msvc
     else
