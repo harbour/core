@@ -39,7 +39,7 @@ ok := $(filter $(need),$(firstword $(sort $(MAKE_VERSION) $(need))))
 
 ifeq ($(ok),)
 
-all: ; @$(ECHO) "! Error: GNU Make version $(MAKE_VERSION) found, $(need) or upper needed for Harbour"
+$(error ! Error: GNU Make version $(MAKE_VERSION) found, $(need) or upper needed for Harbour)
 
 else
 
