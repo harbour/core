@@ -33,7 +33,7 @@ ifeq ($(DIR_RULE),)
    DIRS_PURE := $(filter-out {%},$(subst {, {,$(DIRS)))
    DIRS_DEP  := $(filter-out $(DIRS_PURE),$(DIRS))
    DIRS_MK   := $(foreach d, $(DIRS_PURE), $(if $(wildcard $(d)/Makefile),$(d),))
-   DIR_RULE  := $(foreach dir, $(DIRS_MK), $(dir_mk))
+   DIR_RULE  = $(foreach dir, $(DIRS_MK), $(dir_mk))
    MULTI_DEPS := yes
 
 else
