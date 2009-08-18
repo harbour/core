@@ -52,18 +52,24 @@ ARFLAGS := /P64
 
 ifneq ($(HB_SHELL),sh)
 
+   ifeq ($(HB_SHELL),nt)
+      LINECONT := ^&
+   else
+      LINECONT := &
+   endif
+
    # NOTE: Command-line limit length defeating methods found below
    #       are only needed to support pre-Windows XP systems, where
    #       limit is 2047 chars. [vszakats]
 
    # NOTE: The empty line directly before 'endef' HAVE TO exist!
    define lib_object
-      @$(ECHO) -+$(subst /,\,$(file)) ^& >> __lib__.tmp
+      @$(ECHO) $(ECHOQUOTE)-+$(subst /,\,$(file)) $(LINECONT)$(ECHOQUOTE) >> __lib__.tmp
 
    endef
 
    define create_library
-      @if exist __lib__.tmp del __lib__.tmp
+      @$(ECHO) $(ECHOQUOTE)-+ $(LINECONT)$(ECHOQUOTE) > __lib__.tmp
       $(foreach file,$(^F),$(lib_object))
       @$(ECHO) -+>> __lib__.tmp
       $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" @__lib__.tmp
