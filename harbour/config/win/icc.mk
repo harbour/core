@@ -9,7 +9,7 @@ OBJ_EXT := .obj
 LIB_PREF :=
 LIB_EXT := .lib
 
-HB_DYN_COMPILE := yes
+HB_DYN_COPT := -DHB_DYNLIB
 
 CC := icl.exe
 CC_IN := -c

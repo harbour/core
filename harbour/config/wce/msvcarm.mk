@@ -8,7 +8,7 @@ OBJ_EXT := .obj
 LIB_PREF :=
 LIB_EXT := .lib
 
-HB_DYN_COMPILE := yes
+HB_DYN_COPT := -DHB_DYNLIB
 
 ifeq ($(HB_VISUALC_VER_PRE80),)
    CC := cl.exe
