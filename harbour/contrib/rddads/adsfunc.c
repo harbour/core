@@ -1626,6 +1626,8 @@ HB_FUNC( ADSDDADDTABLE )
 HB_FUNC( ADSDDREMOVETABLE )
 {
 #if ADS_LIB_VERSION >= 600
+   /* TOFIX: Due to bad and very old typo, the connection handle is
+             taken from 4th parameter instead of 3rd. [vszakats] */
    hb_retl( AdsDDRemoveTable( HB_ADS_PARCONNECTION( 4 ) /* hConnect */,
                               ( UNSIGNED8 * ) hb_parcx( 1 ) /* pTableName */,
                               ( UNSIGNED16 ) ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : ( HB_ISLOG( 2 ) ? hb_parl( 2 ) : 0 ) ) /* usDeleteFiles */ ) == AE_SUCCESS );

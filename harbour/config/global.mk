@@ -208,7 +208,7 @@ ifeq ($(HB_INIT_DONE),)
       endif
 
       ifeq ($(HB_BUILD_PKG),no)
-         $(warning ! Warning: Use 'clean install' from Harbour root directory to create a release package.)
+         $(warning ! Warning: Use 'clean install' from Harbour root directory to create a release package)
       endif
 
       # Enforce some basic setting for release packages
@@ -223,7 +223,7 @@ ifeq ($(HB_INIT_DONE),)
    ifneq ($(MAKE_381),)
 
       # Some additional ones to be given a standard name:
-      #   HB_HOST_BUILD [yes|all|lib] -> HB_BUILD_LIBONLY (rest is redundant and can be controlled by other means)
+      #   HB_HOST_BUILD [yes|all|lib] -> ?
       #   HB_XBUILD                   -> HB_BUILD_INCDEF
       #   HB_WITHOUT_*                -> HB_HAS_*
       #   HB_REBUILD_PARSER           -> HB_BUILD_PARSER
@@ -423,10 +423,10 @@ endif
 # so these will have to installed by user.
 #ifeq ($(HB_SHELL),os2)
 #   ifeq ($(call find_in_path,mkdir),)
-#      $(error ! Harbour build on OS/2 requires GNU mkdir executable in PATH. See INSTALL for more.)
+#      $(error ! Harbour build on OS/2 requires GNU mkdir executable in PATH. See INSTALL for more)
 #   else
 #      ifeq ($(call find_in_path,rm),)
-#         $(error ! Harbour build on OS/2 requires GNU rm executable in PATH. See INSTALL for more.)
+#         $(error ! Harbour build on OS/2 requires GNU rm executable in PATH. See INSTALL for more)
 #      endif
 #   endif
 #endif
@@ -548,9 +548,15 @@ ifeq ($(HB_COMPILER),)
             ifneq ($(HB_HOST_BUILD),all)
                HB_HOST_BUILD := lib
             endif
+         else
+            $(error ! Harbour build couldn't find mingw32 cross-compiler. Please install it, or point HB_CCPATH/HB_CCPREFIX environment variables to it)
          endif
       else
          ifeq ($(HB_ARCHITECTURE),wce)
+            ifeq ($(HB_CCPATH),)
+               HB_CCPATH := /opt/mingw32ce/bin/
+            endif
+
             ifneq ($(call find_in_path_par,arm-wince-mingw32ce-gcc,$(HB_CCPATH)),)
                HB_CCPREFIX := arm-wince-mingw32ce-
                HB_CCPATH := $(HB_CCPATH)/
@@ -558,6 +564,9 @@ ifeq ($(HB_COMPILER),)
                ifneq ($(call find_in_path_par,arm-mingw32ce-gcc,$(HB_CCPATH)),)
                   HB_CCPREFIX := arm-mingw32ce-
                   HB_CCPATH := $(HB_CCPATH)/
+               else
+                  HB_CCPATH :=
+                  HB_CCPREFIX :=
                endif
             endif
             ifneq ($(HB_CCPATH)$(HB_CCPREFIX),)
@@ -568,6 +577,8 @@ ifeq ($(HB_COMPILER),)
                ifneq ($(HB_HOST_BUILD),all)
                   HB_HOST_BUILD := lib
                endif
+            else
+               $(error ! Harbour build couldn't find cegcc cross-compiler. Please install it to /opt/mingw32ce, or point HB_CCPATH/HB_CCPREFIX environment variables to it)
             endif
          endif
       endif
@@ -684,10 +695,10 @@ ifeq ($(HB_COMPILER),)
 endif
 
 ifeq ($(HB_ARCHITECTURE),)
-   $(error ! HB_ARCHICTECTURE not set, couldn't autodetect.)
+   $(error ! HB_ARCHICTECTURE not set, couldn't autodetect)
 endif
 ifeq ($(HB_COMPILER),)
-   $(error ! HB_COMPILER not set, couldn't autodetect.)
+   $(error ! HB_COMPILER not set, couldn't autodetect)
 endif
 
 ifeq ($(HB_INIT_DONE),)
@@ -778,7 +789,7 @@ ifneq ($(HB_HOST_ARCH)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
                HB_BIN_COMPILE := $(realpath $(HB_BIN_COMPILE))
             endif
             ifeq ($(HB_BIN_COMPILE),)
-               $(warning ! Warning: HB_BIN_COMPILE not specified. Couldn't find native build.)
+               $(warning ! Warning: HB_BIN_COMPILE not specified. Couldn't find native build)
             else
                ifneq ($(MAKE_381),)
                   $(info ! HB_BIN_COMPILE not specified. Automatically set to: $(HB_BIN_COMPILE))
