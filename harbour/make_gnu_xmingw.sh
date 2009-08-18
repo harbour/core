@@ -62,8 +62,7 @@ elif [ -x /usr/local/bin/i[3456]86-mingw*-gcc ]; then
 fi
 
 if [ -z "${MINGW_PREFIX}" ] || \
-   ( [ ! -x ${MINGW_PREFIX}/bin/${HB_CCPREFIX}gcc ] && \
-     [ ! -x ${MINGW_PREFIX}/${TARGET}/bin/${HB_CCPREFIX}gcc ] ); then
+   [ ! -x ${MINGW_PREFIX}/bin/${HB_CCPREFIX}gcc ]; then
     # MinGW cross-compiler not found in default location
     # scan some usually used locations and names
     for d in /usr /usr/local /usr/local/mingw32 /opt/xmingw; do
@@ -85,15 +84,14 @@ if [ -z "${MINGW_PREFIX}" ] || \
     done
 fi
 
-if [ ! -x ${MINGW_PREFIX}/bin/${HB_CCPREFIX}gcc ] && \
-   [ ! -x ${MINGW_PREFIX}/${TARGET}/bin/${HB_CCPREFIX}gcc ]; then
+if [ ! -x ${MINGW_PREFIX}/bin/${HB_CCPREFIX}gcc ]; then
     echo "Can't determine the location for the MinGW32 cross-compiler."
     echo "Please install it or add your platform to the $0 script."
     exit 1
 fi
 
-export HB_CCPATH="${MINGW_PREFIX}/bin:${MINGW_PREFIX}/${TARGET}/bin:"
-export PATH="${HB_CCPATH}${PATH}"
+export HB_CCPATH="${MINGW_PREFIX}/bin/"
+export PATH="${HB_CCPATH%/}${PATH}"
 export HB_CCPREFIX
 export HB_TOOLS_PREF="hbw"
 export HB_XBUILD="win"

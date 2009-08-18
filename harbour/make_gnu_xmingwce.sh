@@ -37,14 +37,15 @@ fi
 export HB_INSTALL_PREFIX="/usr/local/arm-wince-mingwce-harbour"
 
 # default mingwce installation path
-[ -z "$HB_CCPATH" ] && HB_CCPATH="/opt/mingw32ce/bin"
+[ -n "$HB_CCPATH" ] && HB_CCPATH="${HB_CCPATH%/}/"
+[ -z "$HB_CCPATH" ] && HB_CCPATH="/opt/mingw32ce/bin/"
 
 # mingwce executables prefix - this
 if [ -z "$HB_CCPREFIX" ]; then
-    if [ -x "${HB_CCPATH}/arm-wince-mingw32ce-gcc" ]; then
+    if [ -x "${HB_CCPATH}arm-wince-mingw32ce-gcc" ]; then
         HB_CCPREFIX="arm-wince-mingw32ce-"
     else
-        if [ -x "${HB_CCPATH}/arm-mingw32ce-gcc" ]; then
+        if [ -x "${HB_CCPATH}arm-mingw32ce-gcc" ]; then
             HB_CCPREFIX="arm-mingw32ce-"
         else
             echo "mingwce compiler executable not found. Ensure you have mingwce package installed in"
@@ -55,8 +56,8 @@ if [ -z "$HB_CCPREFIX" ]; then
     fi
 fi
 
-export HB_CCPATH="${HB_CCPATH}:"
-export PATH="${HB_CCPATH}${PATH}"
+export HB_CCPATH
+export PATH="${HB_CCPATH%/}:${PATH}"
 export HB_CCPREFIX
 export HB_TOOLS_PREF="hbce"
 export HB_XBUILD="wce"

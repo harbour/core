@@ -119,7 +119,7 @@ mk_hbgetlibsctb()
 
 mk_hbtools()
 {
-    local name hb_pref hb_tool hb_libs hb_libsc hb_hbmkcfg hb_mkdef hb_gt_ori
+    local name hb_pref hb_tool hb_libs hb_libsc hb_hbmkcfg hb_mkdef hb_gt_ori hb_ccpath
 
     name=`get_solibname`
     hb_pref="$4"
@@ -264,6 +264,9 @@ mk_hbtools()
         echo "libs=${hb_mkdef}gpm">> ${hb_hbmkcfg}
     fi
 
+    hb_ccpath="${HB_CCPATH%/}"
+    [ -z "${hb_ccpath}" ] || hb_ccpath="${hb_ccpath}${hb_path_separator}"
+
     echo "Generating ${hb_tool}... "
     cat > ${hb_tool} <<EOF
 #!/bin/sh
@@ -285,7 +288,7 @@ export HB_COMPILER="${HB_COMPILER}"
 [ -z "\${HB_LIB_INSTALL}" ] && export HB_LIB_INSTALL="${_DEFAULT_LIB_DIR}"
 
 # be sure that ${name} binaries are in your path
-export PATH="\${HB_BIN_INSTALL}${hb_path_separator}${HB_CCPATH}\${PATH}"
+export PATH="\${HB_BIN_INSTALL}${hb_path_separator}${hb_ccpath}\${PATH}"
 
 if [ "\${HB_COMPILER}" == "gpp" ]; then
    HB_CC="g++"
@@ -762,7 +765,7 @@ EOF
 
 mk_hblibso()
 {
-    local LIBS LIBSMT l lm ll dir hb_rootdir hb_ver hb_libs full_lib_name full_lib_name_mt linker_options linker_mtoptions gpm
+    local LIBS LIBSMT l lm ll dir hb_rootdir hb_ver hb_libs full_lib_name full_lib_name_mt linker_options linker_mtoptions gpm lib_ext lib_pref lib_suff
 
     dir=`pwd`
     name=`get_solibname`
@@ -863,30 +866,30 @@ mk_hblibso()
     done
     if [ "${HB_ARCHITECTURE}" = "darwin" ]; then
         lib_ext=".dylib"
-        full_lib_name="lib${name}.${hb_ver}${lib_ext}"
-        full_lib_name_mt="lib${name}mt.${hb_ver}${lib_ext}"
+        lib_pref="lib"
+        lib_suff=".${hb_ver}${lib_ext}"
     elif [ "${HB_ARCHITECTURE}" = "win" ] || \
          [ "${HB_ARCHITECTURE}" = "wce" ]; then
         lib_ext=".dll"
+        lib_pref=""
         if [ "${HB_COMPILER}" = "mingw64" ]; then
-            full_lib_name="${name}-${hb_ver}-x64${lib_ext}"
-            full_lib_name_mt="${name}mt-${hb_ver}-x64${lib_ext}"
+            lib_suff="-${hb_ver}-x64${lib_ext}"
         elif [ "${HB_COMPILER}" = "mingwarm" ]; then
-            full_lib_name="${name}-${hb_ver}-arm${lib_ext}"
-            full_lib_name_mt="${name}mt-${hb_ver}-arm${lib_ext}"
+            lib_suff="-${hb_ver}-arm${lib_ext}"
         else
-            full_lib_name="${name}-${hb_ver}${lib_ext}"
-            full_lib_name_mt="${name}mt-${hb_ver}${lib_ext}"
+            lib_suff="-${hb_ver}${lib_ext}"
         fi
     elif [ "${HB_ARCHITECTURE}" = "hpux" ]; then
         lib_ext=".sl"
-        full_lib_name="lib${name}-${hb_ver}${lib_ext}"
-        full_lib_name_mt="lib${name}mt-${hb_ver}${lib_ext}"
+        lib_pref="lib"
+        lib_suff="-${hb_ver}${lib_ext}"
     else
         lib_ext=".so"
-        full_lib_name="lib${name}-${hb_ver}${lib_ext}"
-        full_lib_name_mt="lib${name}mt-${hb_ver}${lib_ext}"
+        lib_pref="lib"
+        lib_suff="-${hb_ver}${lib_ext}"
     fi
+    full_lib_name="${lib_pref}${name}${lib_suff}"
+    full_lib_name_mt="${lib_pref}${name}mt${lib_suff}"
     if [ -n "${HB_TOOLS_PREF}" ]; then
         hb_mkdyn="${HB_BIN_INSTALL}/${HB_TOOLS_PREF}-mkdyn"
     else
@@ -902,22 +905,16 @@ mk_hblibso()
     do
         if [ -f $l ]
         then
+            ll=${l%${lib_suff}}${lib_ext}
+            ln -sf $l $ll
             if [ "${HB_ARCHITECTURE}" = "win" ] || \
                [ "${HB_ARCHITECTURE}" = "wce" ]; then
-                ll=${l%-${hb_ver}${lib_ext}}${lib_ext}
-                ln -sf $l $ll
                 if [ "${HB_XBUILD}" = "" ]; then
                    (cd "$dir"
                    mv "${HB_LIB_INSTALL}/$l" "${HB_BIN_INSTALL}"
                    mv "${HB_LIB_INSTALL}/$ll" "${HB_BIN_INSTALL}")
                 fi
             else
-                if [ "${HB_ARCHITECTURE}" = "darwin" ]; then
-                    ll=${l%.${hb_ver}${lib_ext}}${lib_ext}
-                else
-                    ll=${l%-${hb_ver}${lib_ext}}${lib_ext}
-                    ln -sf $l $ll
-                fi
                 case $HB_LIB_INSTALL in
                     */usr/lib/*|*/usr/lib64/*|*/usr/local/lib/*|*/usr/local/lib64/*)
                         ln -sf ${name}/$l ../$ll
