@@ -25,8 +25,6 @@
 #
 # TOFIX: $(realpath/abspath) need GNU Make 3.81 or upper
 # TOFIX: $(eval) needs GNU Make 3.80 or upper
-# NOTE: $(error/warning/call/if) need GNU Make 3.78 or upper
-# NOTE: $(wordlist/basename/suffix) need GNU Make 3.76 or upper
 
 ifeq ($(GLOBAL_CF_),)
 GLOBAL_CF_ := yes
@@ -36,7 +34,7 @@ GLOBAL_CF_ := yes
 # a performance boost on a slow system.
 .SUFFIXES:
 
-need := 3.70
+need := 3.78
 ok := $(filter $(need),$(firstword $(sort $(MAKE_VERSION) $(need))))
 
 ifeq ($(ok),)
