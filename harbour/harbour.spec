@@ -660,7 +660,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbmisc.a
 %{_libdir}/%{name}/libhbmzip.a
 %{_libdir}/%{name}/libhbct.a
-%{_libdir}/%{name}/libhbtip.a
+%{_libdir}/%{name}/libhbtip*.a
 %{_libdir}/%{name}/libxhb.a
 %{_libdir}/%{name}/libhbvpdf.a
 %{_libdir}/%{name}/libhbhpdf.a

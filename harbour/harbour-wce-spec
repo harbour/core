@@ -100,9 +100,9 @@ export HB_BIN_COMPILE="$(pwd)/bin/linux/gcc"
 
 export CC_HB_USER_PRGFLAGS="-D__PLATFORM__WINCE -D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
 
-export HB_CCPATH="%{hb_ccpath}:"
+export HB_CCPATH="%{hb_ccpath}/"
 export HB_CCPREFIX="%{hb_ccpref}"
-export PATH="$HB_CCPATH$PATH"
+export PATH="%{hb_ccpath}:$PATH"
 
 export HB_XBUILD=wce
 export HB_BIN_INSTALL=%{_bindir}
@@ -129,9 +129,9 @@ export HB_BIN_COMPILE="$(pwd)/bin/linux/gcc"
 
 export CC_HB_USER_PRGFLAGS="-D__PLATFORM__WINCE -D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
 
-export HB_CCPATH="%{hb_ccpath}:"
+export HB_CCPATH="%{hb_ccpath}/"
 export HB_CCPREFIX="%{hb_ccpref}"
-export PATH="$HB_CCPATH$PATH"
+export PATH="%{hb_ccpath}:$PATH"
 
 export HB_XBUILD=wce
 export HB_BIN_INSTALL=%{_bindir}
@@ -296,55 +296,7 @@ rm -fR $RPM_BUILD_ROOT
 %dir %{_includedir}/%{name}
 %{_includedir}/%{name}/*
 %dir %{_libdir}/%{name}
-%{_libdir}/%{name}/libhbcpage.a
-%{_libdir}/%{name}/libhbcommon.a
-%{_libdir}/%{name}/libhbcplr.a
-%{_libdir}/%{name}/libhbdebug.a
-%{_libdir}/%{name}/librddfpt.a
-%{_libdir}/%{name}/librddcdx.a
-%{_libdir}/%{name}/librddntx.a
-%{_libdir}/%{name}/librddnsx.a
-%{_libdir}/%{name}/libgt*.a
-%{_libdir}/%{name}/libhblang.a
-%{_libdir}/%{name}/libhbmacro.a
-%{_libdir}/%{name}/libhbpcre.a
-%{_libdir}/%{name}/libhbzlib.a
-%{_libdir}/%{name}/libhbextern.a
-%{_libdir}/%{name}/libhbnulrdd.a
-%{_libdir}/%{name}/libhbnortl.a
-%{_libdir}/%{name}/libhbpp.a
-%{_libdir}/%{name}/libhbrdd.a
-%{_libdir}/%{name}/libhbhsx.a
-%{_libdir}/%{name}/libhbsix.a
-%{_libdir}/%{name}/libhbrtl.a
-%{_libdir}/%{name}/libhbvm.a
-%{_libdir}/%{name}/libhbvmmt.a
-%{_libdir}/%{name}/libhbmainstd.a
-%{_libdir}/%{name}/libhbmainwin.a
-%{_libdir}/%{name}/libhbmaindllp.a
-%{_libdir}/%{name}/libhbmaindllh.a
-%{_libdir}/%{name}/libhbusrrdd.a
-%{_libdir}/%{name}/libhbuddall.a
-
-%{!?_without_nf: %{_libdir}/%{name}/libhbnf.a}
-%{?_with_ads: %{_libdir}/%{name}/librddads.a}
-%{?_with_odbc: %{_libdir}/%{name}/libhbodbc.a}
-%{?_with_mysql: %{_libdir}/%{name}/libhbmysql.a}
-%{?_with_pgsql: %{_libdir}/%{name}/libhbpgsql.a}
-%{?_with_gd: %{_libdir}/%{name}/libhbgd.a}
-%{_libdir}/%{name}/libhbbtree.a
-%{_libdir}/%{name}/libhbmisc.a
-%{_libdir}/%{name}/libhbmzip.a
-%{_libdir}/%{name}/libhbct.a
-%{_libdir}/%{name}/libhbtip.a
-%{_libdir}/%{name}/libxhb.a
-%{_libdir}/%{name}/librddado.a
-%{_libdir}/%{name}/libhbwin.a
-%{_libdir}/%{name}/libhbvpdf.a
-%{_libdir}/%{name}/libhbgt.a
-%{_libdir}/%{name}/libhbbmcdx.a
-%{_libdir}/%{name}/libhbclipsm.a
-%{_libdir}/%{name}/libhbziparc.a
+%{_libdir}/%{name}/*.a
 
 %defattr(755,root,root,755)
 %{_libdir}/%{name}/*.dll
