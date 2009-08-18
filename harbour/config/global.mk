@@ -429,12 +429,6 @@ endif
 #   endif
 #endif
 
-ifeq ($(HB_SHELL),sh)
-   ECHOQUOTE := "
-else
-   ECHOQUOTE :=
-endif
-
 HB_HOST_CPU :=
 ifeq ($(HB_HOST_ARCH),win)
    ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
