@@ -110,21 +110,21 @@ ifeq ($(HB_SHELL),dos)
 
 MK := $(subst \,/,$(MAKE))
 RM := del
-RDP := $(TOOL_DIR)dj-rm -f -r
+RDP := $(TOOL_DIR)dj-rm -fr
 CP := $(TOOL_DIR)dj-cp -f
 MD := mkdir
 MDP := $(TOOL_DIR)dj-mkdir -p
 
 dirbase::
-	-@if not exist $(OBJ_DIR_OS)\nul $(MDP) $(OBJ_DIR_OS)
-	$(if $(LIB_FILE),-@if not exist $(LIB_DIR_OS)\nul $(MDP) $(LIB_DIR_OS),)
-	$(if $(BIN_FILE),-@if not exist $(BIN_DIR_OS)\nul $(MDP) $(BIN_DIR_OS),)
+	-@$(MDP) $(OBJ_DIR_OS)
+	$(if $(LIB_FILE),-@$(MDP) $(LIB_DIR_OS),)
+	$(if $(BIN_FILE),-@$(MDP) $(BIN_DIR_OS),)
 
 clean::
 	-@$(RDP) $(PKG_DIR_OS) $(OBJ_DIR_OS) $(LIB_FILE_OS) $(BIN_FILE_OS)
-	$(if $(LIB_FILE),-@if exist $(basename $(LIB_FILE_OS)).bak $(RM) $(basename $(LIB_FILE_OS)).bak,)
-	$(if $(LIB_FILE),-@if not exist $(LIB_DIR_OS)\*.* $(RDP) $(LIB_DIR_OS),)
-	$(if $(BIN_FILE),-@if exist $(basename $(BIN_FILE_OS)).tds $(RM) $(basename $(BIN_FILE_OS)).tds,)
-	$(if $(BIN_FILE),-@if not exist $(BIN_DIR_OS)\*.* $(RDP) $(BIN_DIR_OS),)
+	$(if $(LIB_FILE),-@$(RDP) $(basename $(LIB_FILE_OS)).bak,)
+	$(if $(LIB_FILE),$(if $(wildcard $(LIB_DIR_OS)/*.*),,-@$(RDP) $(LIB_DIR_OS)),)
+	$(if $(BIN_FILE),-@$(RDP) $(basename $(BIN_FILE_OS)).tds ,)
+	$(if $(BIN_FILE),$(if $(wildcard $(BIN_DIR_OS)/*.*),,-@$(RDP) $(BIN_DIR_OS)),)
 
 endif

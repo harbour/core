@@ -79,37 +79,26 @@
 
 #include "hbapi.h"
 
+#include <sql.h>
+#include <sqlext.h>
+#include <sqltypes.h>
+
 #if !defined( HB_OS_WIN )
 #  define HB_TCHAR_CONVTO( s )       ( ( char * ) ( s ) )
 #  define HB_TCHAR_CONVFROM( s )     ( ( char * ) ( s ) )
 #  define HB_TCHAR_CONVNFROM( s, l ) ( ( char * ) ( s ) )
 #  define HB_TCHAR_FREE( s )         HB_SYMBOL_UNUSED( s )
+#  if !defined( SQLLEN ) && !defined( SQLTCHAR )
+      typedef unsigned char   SQLTCHAR;
+#  endif
+#  if !defined( SQLLEN )
+#     define SQLLEN           SQLINTEGER
+#  endif
+#  if !defined( SQLULEN )
+#     define SQLULEN          SQLUINTEGER
+#  endif
 #endif
 
-#if defined( HB_OS_LINUX ) && defined( __WATCOMC__ )
-#include "/usr/include/sql.h"
-#include "/usr/include/sqlext.h"
-#include "/usr/include/sqltypes.h"
-#else
-#include <sql.h>
-#include <sqlext.h>
-#include <sqltypes.h>
-#endif
-
-#ifndef SQLLEN
-   #ifdef HB_OS_WIN_64
-      typedef INT64           SQLLEN;
-   #else
-      #define SQLLEN          SQLINTEGER
-   #endif
-#endif
-#ifndef SQLULEN
-   #ifdef HB_OS_WIN_64
-      typedef UINT64          SQLULEN;
-   #else
-      #define SQLULEN         SQLUINTEGER
-   #endif
-#endif
 #ifndef SQL_NO_DATA
    #define SQL_NO_DATA     SQL_NO_DATA_FOUND
 #endif

@@ -64,6 +64,15 @@
 #  define HB_TCHAR_CONVTO( s )      ( ( char * ) ( s ) )
 #  define HB_TCHAR_CONVFROM( s )    ( ( char * ) ( s ) )
 #  define HB_TCHAR_FREE( s )        HB_SYMBOL_UNUSED( s )
+#  if !defined( SQLLEN ) && !defined( SQLTCHAR )
+      typedef unsigned char   SQLTCHAR;
+#  endif
+#  if !defined( SQLLEN )
+#     define SQLLEN           SQLINTEGER
+#  endif
+#  if !defined( SQLULEN )
+#     define SQLULEN          SQLUINTEGER
+#  endif
 #endif
 
 static HB_ERRCODE odbcConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem );

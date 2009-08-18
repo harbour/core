@@ -75,7 +75,7 @@ endif
 ifeq ($(HB_SHELL),dos)
 
    define inst_file_all
-      -@if not exist $(INSTALL_DIR_OS)\nul $(MDP) $(INSTALL_DIR_OS)
+      -@$(MDP) $(INSTALL_DIR_OS)
       $(foreach file,$(INSTALL_FILES_OS),$(inst_file))
    endef
 
