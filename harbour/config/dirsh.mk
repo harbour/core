@@ -21,11 +21,11 @@ ifeq ($(HB_SHELL),sh)
 endif
 
 ifeq ($(HB_SHELL),nt)
-   DIR_RULE = for %%d in ($(DIRS_OS)) do $(MK_OS) $(MKFLAGS) -C %%d $@
+   DIR_RULE = @for %%d in ($(DIRS_OS)) do $(MK_OS) $(MKFLAGS) -C %%d $@
 endif
 
 ifeq ($(HB_SHELL),os2)
-   DIR_RULE = for %d in ($(DIRS_OS)) do $(MK_OS) $(MKFLAGS) -C %d $@
+   DIR_RULE = @for %d in ($(DIRS_OS)) do $(MK_OS) $(MKFLAGS) -C %d $@
 endif
 
 ifeq ($(HB_SHELL),dos)
