@@ -3,10 +3,10 @@
 #
 
 ifeq ($(INSTALL_FILES),) # Empty install list
-   INSTALL_RULE := @echo $(ECHOQUOTE)! Nothing to install$(ECHOQUOTE)
+   INSTALL_RULE := @$(ECHO) $(ECHOQUOTE)! Nothing to install$(ECHOQUOTE)
 else
 ifeq ($(INSTALL_DIR),) # Empty install dir
-   INSTALL_RULE := @echo $(ECHOQUOTE)! Can't install, install dir isn't set$(ECHOQUOTE)
+   INSTALL_RULE := @$(ECHO) $(ECHOQUOTE)! Can't install, install dir isn't set$(ECHOQUOTE)
 else
 
 ifneq ($(HB_SHELL),sh)
@@ -20,18 +20,18 @@ ifeq ($(HB_SHELL),sh)
       @$(MDP) $(subst \,/,$(INSTALL_DIR)); \
       if [ ! -d "$(subst \,/,$(INSTALL_DIR))" ]; \
       then \
-         echo "! Can't install, path not found: '$(subst \,/,$(INSTALL_DIR))'" 1>&2; \
+         $(ECHO) "! Can't install, path not found: '$(subst \,/,$(INSTALL_DIR))'" 1>&2; \
          false; \
       else \
          for i in $(INSTALL_FILES); \
          do \
             if [ -r "$$i" ]; \
             then \
-               echo "! Installing $$i on $(subst \,/,$(INSTALL_DIR))"; \
+               $(ECHO) "! Installing $$i on $(subst \,/,$(INSTALL_DIR))"; \
                $(CP) $$i $(subst \,/,$(INSTALL_DIR)); \
                true; \
             else \
-               echo "! Can't install $$i, not found" 1>&2; \
+               $(ECHO) "! Can't install $$i, not found" 1>&2; \
             fi \
          done \
       fi

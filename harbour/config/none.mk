@@ -8,7 +8,7 @@ ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
 
 ifneq ($(LIBNAME),)
-   DIR_RULE := @echo $(ECHOQUOTE)! '$(LIBNAME)' library skipped$(ECHOQUOTE)
+   DIR_RULE := @$(ECHO) $(ECHOQUOTE)! '$(LIBNAME)' library skipped$(ECHOQUOTE)
 else
    DIR_RULE :=
 endif

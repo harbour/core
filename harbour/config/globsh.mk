@@ -35,6 +35,7 @@ RDP := rm -f -r
 CP := cp -f
 MD := mkdir
 MDP := mkdir -p
+ECHO := echo
 
 dirbase::
 	@[ -d "$(OBJ_DIR)" ] || $(MDP) $(OBJ_DIR)
@@ -45,11 +46,11 @@ clean::
 	-@$(RDP) $(PKG_DIR) $(OBJ_DIR) $(LIB_FILE) $(BIN_FILE); \
 	if [ -n "$(LIB_FILE)" ]; then \
 	   $(RM) $(basename $(LIB_FILE)).bak; \
-	   [ "`echo $(LIB_DIR)/*`" != "$(LIB_DIR)/*" ] || $(RDP) $(LIB_DIR); \
+	   [ "`$(ECHO) $(LIB_DIR)/*`" != "$(LIB_DIR)/*" ] || $(RDP) $(LIB_DIR); \
 	fi ; \
 	if [ -n "$(BIN_FILE)" ]; then \
 	   $(RM) $(basename $(BIN_FILE)).tds; \
-	   [ "`echo $(BIN_DIR)/*`" != "$(BIN_DIR)/*" ] || $(RDP) $(BIN_DIR); \
+	   [ "`$(ECHO) $(BIN_DIR)/*`" != "$(BIN_DIR)/*" ] || $(RDP) $(BIN_DIR); \
 	fi
 
 endif
@@ -67,6 +68,7 @@ RDP := rmdir /q /s
 CP := copy
 MD := mkdir
 MDP := mkdir
+ECHO := echo
 
 dirbase::
 	-@if not exist "$(OBJ_DIR_OS)" $(MDP) "$(OBJ_DIR_OS)"
@@ -93,6 +95,7 @@ RDP := $(TOOL_DIR)os2-rm -rf
 CP := copy
 MD := mkdir
 MDP := $(TOOL_DIR)os2-mkdir -p
+ECHO := echo
 
 dirbase::
 	-@if not exist $(OBJ_DIR_OS) $(MDP) $(OBJ_DIR)
@@ -109,11 +112,12 @@ endif
 ifeq ($(HB_SHELL),dos)
 
 MK := $(subst \,/,$(MAKE))
-RM := del
+RM := $(TOOL_DIR)dj-rm -f
 RDP := $(TOOL_DIR)dj-rm -fr
 CP := $(TOOL_DIR)dj-cp -f
-MD := mkdir
+MD := $(TOOL_DIR)dj-mkdir
 MDP := $(TOOL_DIR)dj-mkdir -p
+ECHO := $(TOOL_DIR)dj-echo
 
 dirbase::
 	-@$(MDP) $(OBJ_DIR_OS)
@@ -122,9 +126,9 @@ dirbase::
 
 clean::
 	-@$(RDP) $(PKG_DIR_OS) $(OBJ_DIR_OS) $(LIB_FILE_OS) $(BIN_FILE_OS)
-	$(if $(LIB_FILE),-@$(RDP) $(basename $(LIB_FILE_OS)).bak,)
+	$(if $(LIB_FILE),-@$(RM) $(basename $(LIB_FILE_OS)).bak,)
 	$(if $(LIB_FILE),$(if $(wildcard $(LIB_DIR_OS)/*.*),,-@$(RDP) $(LIB_DIR_OS)),)
-	$(if $(BIN_FILE),-@$(RDP) $(basename $(BIN_FILE_OS)).tds ,)
+	$(if $(BIN_FILE),-@$(RM) $(basename $(BIN_FILE_OS)).tds ,)
 	$(if $(BIN_FILE),$(if $(wildcard $(BIN_DIR_OS)/*.*),,-@$(RDP) $(BIN_DIR_OS)),)
 
 endif
