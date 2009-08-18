@@ -54,28 +54,28 @@ LDLIBS += -lm
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 #       It causes that every command will be separated by LF
 define lib_object
-   @echo ADDMOD $(file) >> __lib__.tmp
+   @$(ECHO) ADDMOD $(file) >> __lib__.tmp
 
 endef
 
 # We have to use script to overcome the DOS limit of max 128 characters
 # in commmand line
 define create_library
-   @echo CREATE $(LIB_DIR)/$@ > __lib__.tmp
+   @$(ECHO) CREATE $(LIB_DIR)/$@ > __lib__.tmp
    $(foreach file,$(^F),$(lib_object))
-   @echo SAVE >> __lib__.tmp
-   @echo END >> __lib__.tmp
+   @$(ECHO) SAVE >> __lib__.tmp
+   @$(ECHO) END >> __lib__.tmp
    $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -M < __lib__.tmp
 endef
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 define link_file
-   @echo $(file) >> __link__.tmp
+   @$(ECHO) $(file) >> __link__.tmp
 
 endef
 
 define link_exe_file
-   @echo $(LDFLAGS) $(HB_USER_LDFLAGS) $(LD_OUT)$(BIN_DIR)/$@ > __link__.tmp
+   @$(ECHO) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LD_OUT)$(BIN_DIR)/$@ > __link__.tmp
    $(foreach file,$(^F),$(link_file))
    $(foreach file,$(LIBPATHS),$(link_file))
    $(foreach file,$(LDLIBS),$(link_file))

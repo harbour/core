@@ -71,7 +71,7 @@ endif
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 #       It causes that every command will be separated by LF
 #define lib_object
-#   @echo ADDMOD $(file) >> __lib__.tmp
+#   @$(ECHO) ADDMOD $(file) >> __lib__.tmp
 #
 #endef
 
@@ -79,10 +79,10 @@ endif
 # in commmand line
 define create_library
    if exist $(subst /,$(DIRSEP),$(LIB_FILE)) $(RM) $(subst /,$(DIRSEP),$(LIB_FILE))
-   @echo CREATE $(LIB_DIR)/$@ > __lib__.tmp
-   for %i in ( *$(OBJ_EXT) ) do @echo ADDMOD %i >> __lib__.tmp
-   @echo SAVE >> __lib__.tmp
-   @echo END >> __lib__.tmp
+   @$(ECHO) CREATE $(LIB_DIR)/$@ > __lib__.tmp
+   for %i in ( *$(OBJ_EXT) ) do @$(ECHO) ADDMOD %i >> __lib__.tmp
+   @$(ECHO) SAVE >> __lib__.tmp
+   @$(ECHO) END >> __lib__.tmp
    $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -M < __lib__.tmp
 endef
 

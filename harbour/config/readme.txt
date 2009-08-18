@@ -23,14 +23,16 @@ Included utilities are:
              ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381b.zip
              ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381s.zip
 
-- GNU coreutils (mkdir, rm, cp)
+- GNU coreutils (mkdir, rm, cp, echo)
      Licence:
         GPL 2 (see below)
      Links to included binaries + sources:
-        - DJGPP (dj-mkdir.exe, dj-rm.exe, dj-cp.exe)
+        - DJGPP (dj-mkdir.exe, dj-rm.exe, dj-cp.exe, dj-echo.exe)
              ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/
              ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/fil41b.zip
              ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/fil41s.zip
+             ftp://ftp.delorie.com/pub/djgpp/current/v2/djdev203.zip
+             ftp://ftp.delorie.com/pub/djgpp/current/v2/djlsr203.zip
         - OS/2 (os2-mkdir.exe, os2-rm.exe)
              http://os2ports.smedley.info/index.php?page=build-environment
              http://download.smedley.info/buildenv_20071022.zip

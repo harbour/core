@@ -84,9 +84,9 @@ ifeq ($(HB_SHELL),sh)
 else
    # maximum size of command line in OS2 is limited to 1024 characters
    # the trick with divided 'wordlist' is workaround for it:
-   #     -$(if $(wordlist   1,100,$(^F)), echo $(wordlist   1,100,$(addprefix -+,$(^F))) >> __lib__.tmp,)
-   #     -$(if $(wordlist 101,200,$(^F)), echo $(wordlist 101,200,$(addprefix -+,$(^F))) >> __lib__.tmp,)
-   #     -$(if $(wordlist 201,300,$(^F)), echo $(wordlist 301,300,$(addprefix -+,$(^F))) >> __lib__.tmp,)
+   #     -$(if $(wordlist   1,100,$(^F)), $(ECHO) $(wordlist   1,100,$(addprefix -+,$(^F))) >> __lib__.tmp,)
+   #     -$(if $(wordlist 101,200,$(^F)), $(ECHO) $(wordlist 101,200,$(addprefix -+,$(^F))) >> __lib__.tmp,)
+   #     -$(if $(wordlist 201,300,$(^F)), $(ECHO) $(wordlist 301,300,$(addprefix -+,$(^F))) >> __lib__.tmp,)
    # anyhow OS2 port# of GNU make 3.81 seems to have bug and GPFs when total
    # commands length is too big so for %i in ( *$(OBJ_EXT) ) do ... below is
    # ugly workaround for both problems
@@ -98,8 +98,8 @@ else
    endif
 
    define create_library
-      @echo $(LIB_DIR)/$@ > __lib__.tmp
-      for $(FILE) in ( *$(OBJ_EXT) ) do @echo -+$(FILE) >> __lib__.tmp
+      @$(ECHO) $(LIB_DIR)/$@ > __lib__.tmp
+      for $(FILE) in ( *$(OBJ_EXT) ) do @$(ECHO) -+$(FILE) >> __lib__.tmp
       $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) @__lib__.tmp
    endef
 endif

@@ -71,18 +71,18 @@ endif
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 #       It causes that every command will be separated by LF
 define link_file
-   @echo FILE $(file) >> __link__.tmp
+   @$(ECHO) FILE $(file) >> __link__.tmp
 
 endef
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 define link_lib
-   @echo LIB $(lib) >> __link__.tmp
+   @$(ECHO) LIB $(lib) >> __link__.tmp
 
 endef
 
 define link_exe_file
-   @echo $(LDFLAGS) NAME $(BIN_DIR)/$@ > __link__.tmp
+   @$(ECHO) $(LDFLAGS) NAME $(BIN_DIR)/$@ > __link__.tmp
    $(foreach file,$(^F),$(link_file))
    $(foreach lib,$(LDLIBS),$(link_lib))
    -$(LD) @__link__.tmp
@@ -101,12 +101,12 @@ LD_RULE = $(link_exe_file) $(HB_USER_LDFLAGS)
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 define lib_object
-   @echo -+$(file) >> __lib__.tmp
+   @$(ECHO) -+$(file) >> __lib__.tmp
 
 endef
 
 define create_library
-   @echo $(LIB_DIR)/$@ > __lib__.tmp
+   @$(ECHO) $(LIB_DIR)/$@ > __lib__.tmp
    $(foreach file,$(^F),$(lib_object))
    $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) @__lib__.tmp
 endef

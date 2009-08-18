@@ -58,14 +58,14 @@ ifneq ($(HB_SHELL),sh)
 
    # NOTE: The empty line directly before 'endef' HAVE TO exist!
    define lib_object
-      @echo -+$(subst /,\,$(file)) ^& >> __lib__.tmp
+      @$(ECHO) -+$(subst /,\,$(file)) ^& >> __lib__.tmp
 
    endef
 
    define create_library
       @if exist __lib__.tmp del __lib__.tmp
       $(foreach file,$(^F),$(lib_object))
-      @echo -+>> __lib__.tmp
+      @$(ECHO) -+>> __lib__.tmp
       $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" @__lib__.tmp
    endef
 
