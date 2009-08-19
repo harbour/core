@@ -27,21 +27,17 @@ DIRS := \
 
 endif
 
-ifeq ($(HB_POSTINST),)
-   ifneq ($(HB_ROOTPOSTINST),)
-      HB_POSTINST := $(HB_ROOTPOSTINST) $(HB_POSTINSTPARAM)
+include $(ROOT)config/dir.mk
+
+ifeq ($(HB_SHELL),sh)
+   HB_POSTINST := $(TOP)$(ROOT)bin/postinst.sh
+else
+   ifeq ($(HB_SHELL),os2)
+      HB_POSTINST := $(subst /,\,$(TOP)$(ROOT)bin/postinst.cmd)
    else
-      # TOOPT: Use HB_SHELL variable
-      ifneq ($(SHLVL),)
-         HB_POSTINST := $(TOP)$(ROOT)bin/postinst.sh $(HB_POSTINSTPARAM)
-      else
-         ifneq ($(OS2_SHELL),)
-            HB_POSTINST := $(subst /,\,$(TOP)$(ROOT)bin/postinst.cmd) $(HB_POSTINSTPARAM)
-         else
-            HB_POSTINST := $(subst /,\,$(TOP)$(ROOT)bin/postinst.bat) $(HB_POSTINSTPARAM)
-         endif
-      endif
+      HB_POSTINST := $(subst /,\,$(TOP)$(ROOT)bin/postinst.bat)
    endif
 endif
 
-include $(ROOT)config/dir.mk
+install::
+	+$(HB_POSTINST)

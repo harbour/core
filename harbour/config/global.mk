@@ -199,7 +199,7 @@ ifeq ($(HB_INIT_DONE),)
          ifeq ($(findstring install,$(HB_MAKECMDGOALS)),)
             export HB_BUILD_PKG := no
          else
-            ifeq ($(HB_POSTINST),)
+            ifneq ($(ROOT),./)
                export HB_BUILD_PKG := no
             endif
          endif
@@ -232,9 +232,6 @@ ifeq ($(HB_INIT_DONE),)
       #   HB_BIN_COMPILE              -> HB_BUILD_BIN_DIR
       #   HB_INC_COMPILE              -> - (HB_BUILD_INC_DIR)
       #   HB_GPM_MOUSE                -> HB_HAS_GPM
-      #   HB_POSTINST                 -> ?
-      #   HB_ROOTPOSTINST             -> ?
-      #   HB_POSTINSTPARAM            -> ?
       #   HB_GPM_NOICE_DISABLE        -> HB_USER_CFLAGS=-DHB_GPM_NOICE_DISABLE
       #   HB_GT_CRS_BCEHACK           -> HB_USER_CFLAGS=-DHB_GT_CRS_BCEHACK
       #   HB_NCURSES_194              -> HB_USER_CFLAGS=-DHB_NCURSES_194
@@ -709,8 +706,10 @@ OBJ_DIR := obj/$(ARCH_COMP)
 BIN_DIR := $(TOP)$(ROOT)bin/$(ARCH_COMP)
 LIB_DIR := $(TOP)$(ROOT)lib/$(ARCH_COMP)
 # define PKG_DIR only if run from root Makefile
-ifneq ($(HB_POSTINST),)
+ifeq ($(ROOT),./)
    PKG_DIR := $(TOP)$(ROOT)pkg/$(ARCH_COMP)
+else
+   PKG_DIR :=
 endif
 
 # Assemble relative path from OBJ_DIR to source.

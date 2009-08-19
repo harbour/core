@@ -76,10 +76,5 @@ $(DIRS_MK) ::
 
 endif
 
-ifneq ($(HB_POSTINST),)
-install::
-	+$(HB_POSTINST)
-endif
-
 endif
 endif
