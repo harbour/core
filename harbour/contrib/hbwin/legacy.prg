@@ -73,6 +73,8 @@ STATIC PROCEDURE Throw( oError )
    Break( oError )
    RETURN
 
+/* NOTE: xOle with numeric pointers isn't supported by this
+         implementation. */
 CREATE CLASS TOLEAUTO FROM WIN_OLEAUTO
    /* TODO: Implement compatibility to the required extent */
    VAR cClassName
@@ -83,9 +85,6 @@ ENDCLASS
 METHOD hObj( xOle ) CLASS TOLEAUTO
 
    IF PCount() > 0 .AND. xOle != NIL
-      IF ISNUMBER( xOle )
-         xOle := win_N2P( xOle )
-      ENDIF
       IF hb_isPointer( xOle )
          ::__hObj := xOle
       ENDIF
@@ -96,10 +95,6 @@ METHOD hObj( xOle ) CLASS TOLEAUTO
 METHOD New( xOle, cClass ) CLASS TOLEAUTO
    LOCAL hOle
    LOCAL oError
-
-   IF ISNUMBER( xOle )
-      xOle := win_N2P( xOle )
-   ENDIF
 
    IF hb_isPointer( xOle )
       ::__hObj := xOle
@@ -140,10 +135,6 @@ FUNCTION GetActiveObject( xOle, cClass )
    LOCAL hOle
    LOCAL oError
 
-   IF ISNUMBER( xOle )
-      xOle := win_N2P( xOle )
-   ENDIF
-
    IF hb_isPointer( xOle )
       o:__hObj := xOle
       IF ISCHARACTER( cClass )
@@ -175,8 +166,12 @@ FUNCTION GetActiveObject( xOle, cClass )
 
    RETURN o
 
+/* NOTE: This will return a pointer type, as opposed to the old
+         implementation which returned a numeric one. Since this
+         is a GC collected pointer, there is no way to convert it
+         to numeric and later reconvert to pointer. */
 FUNCTION CreateOLEObject( ... )
-   RETURN win_P2N( __OleCreateObject( ... ) )
+   RETURN __OleCreateObject( ... )
 
 CREATE CLASS Win32Prn FROM WIN_PRN
 ENDCLASS
