@@ -54,10 +54,17 @@
 #include "hbwinole.h"
 
 /* enable workaround for wrong OLE variant structure definition */
+#if ( defined( __POCC__ ) && defined( HB_OS_WIN_CE ) ) || \
+    defined( __DMC__ )
+#  define HB_OLE_NO_LL
+#endif
+
 #if defined( __MINGW32__ ) || \
+    defined( __DMC__ ) || \
     ( defined( __WATCOMC__ ) && ( __WATCOMC__ < 1280 ) )
 #  define HB_OLE_NO_LLREF
 #endif
+
 
 /* base date value in OLE (1899-12-30) as julian day */
 #define HB_OLE_DATE_BASE      0x0024D9AB
@@ -236,16 +243,21 @@ static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
          }
 #else
          pVariant->n1.n2.vt = VT_I8;
+#  if defined( HB_OLE_NO_LL )
+         /* workaround for wrong OLE variant structure definition */
+         * ( ( LONGLONG * ) &pVariant->n1.n2.n3.lVal ) = hb_itemGetNInt( pItem );
+#  else
          pVariant->n1.n2.n3.llVal = hb_itemGetNInt( pItem );
+#  endif
          if( pVarRef )
          {
             pVarRef->n1.n2.vt = VT_I8 | VT_BYREF;
+#  if defined( HB_OLE_NO_LLREF ) || defined( HB_OLE_NO_LL )
             /* workaround for wrong OLE variant structure definition */
-#if defined( HB_OLE_NO_LLREF )
             pVarRef->n1.n2.n3.pdblVal = &pVariant->n1.n2.n3.dblVal;
-#else
+#  else
             pVarRef->n1.n2.n3.pllVal = &pVariant->n1.n2.n3.llVal;
-#endif
+#  endif
          }
 #endif
          break;
@@ -486,6 +498,9 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
       case VT_I8:
 #if HB_LONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
          hb_itemPutNInt( pItem, ( HB_LONG ) pVariant->n1.n2.n3.lVal );
+#elif defined( HB_OLE_NO_LL )
+         /* workaround for wrong OLE variant structure definition */
+         hb_itemPutNInt( pItem, * ( ( LONGLONG * ) &pVariant->n1.n2.n3.lVal ) );
 #else
          hb_itemPutNInt( pItem, pVariant->n1.n2.n3.llVal );
 #endif
@@ -530,6 +545,9 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
          /* TODO: sign is lost. Convertion to double will lose significant digits. */
 #if HB_LONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
          hb_itemPutNInt( pItem, ( HB_LONG ) pVariant->n1.n2.n3.ulVal );
+#elif defined( HB_OLE_NO_LL )
+         /* workaround for wrong OLE variant structure definition */
+         hb_itemPutNInt( pItem, * ( ( LONGLONG * ) &pVariant->n1.n2.n3.ulVal ) );
 #else
          hb_itemPutNInt( pItem, ( HB_LONG ) pVariant->n1.n2.n3.ullVal );
 #endif

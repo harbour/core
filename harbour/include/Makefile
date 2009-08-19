@@ -82,7 +82,6 @@ PRG_HEADERS := \
    hbextcdp.ch \
    hbextlng.ch \
    hbextern.ch \
-   hbgetcmt.ch \
    hbgfx.ch \
    hbgfxdef.ch \
    hbgtinfo.ch \
