@@ -976,6 +976,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             RETURN 3
          ENDCASE
       ENDIF
+
+      /* Detect special non-installed dir layout (after simple 'make') */
+      IF hb_FileExists( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "include" +;
+                                       hb_osPathSeparator() + "hbvm.h" )
+         l_cHB_INSTALL_PREFIX := DirAddPathSep( l_cHB_INSTALL_PREFIX ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator()
+      ENDIF
+
       /* Detect special *nix dir layout (/bin, /lib/harbour, /include/harbour) */
       IF hb_FileExists( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "include" +;
                                          hb_osPathSeparator() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" ) +;
