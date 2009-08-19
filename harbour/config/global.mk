@@ -26,6 +26,7 @@
 # TOFIX: $(realpath/abspath) need GNU Make 3.81 or upper
 # TOFIX: $(eval) needs GNU Make 3.80 or upper
 
+
 ifeq ($(GLOBAL_CF_),)
 GLOBAL_CF_ := yes
 
@@ -193,10 +194,10 @@ ifeq ($(HB_INIT_DONE),)
    ifeq ($(HB_BUILD_PKG),yes)
 
       # 'clean' and 'install' are required when building a release package
-      ifeq ($(findstring clean,$(HB_MAKECMDGOALS)),)
+      ifeq ($(filter clean,$(HB_MAKECMDGOALS)),)
          export HB_BUILD_PKG := no
       else
-         ifeq ($(findstring install,$(HB_MAKECMDGOALS)),)
+         ifeq ($(filter install,$(HB_MAKECMDGOALS)),)
             export HB_BUILD_PKG := no
          else
             ifneq ($(ROOT),./)
@@ -402,7 +403,7 @@ ifeq ($(HB_INIT_DONE),)
    endif
 endif
 
-ifneq ($(findstring $(HB_HOST_ARCH),win wce dos os2),)
+ifneq ($(filter $(HB_HOST_ARCH),win wce dos os2),)
    HB_HOST_BIN_EXT := .exe
 else
    HB_HOST_BIN_EXT :=
@@ -463,7 +464,7 @@ ifeq ($(HB_ARCHITECTURE),)
                ifeq ($(HB_COMPILER),djgpp)
                   HB_ARCHITECTURE := dos
                else
-                  ifeq ($(findstring $(HB_COMPILER),mingw mingw64 msvc msvc64 msvcia64 bcc xcc pocc pocc64),)
+                  ifneq ($(filter $(HB_COMPILER),mingw mingw64 msvc msvc64 msvcia64 bcc xcc pocc pocc64),)
                      HB_ARCHITECTURE := win
                   endif
                endif
@@ -641,13 +642,13 @@ ifeq ($(HB_COMPILER),)
                endif
             endif
          else
-            ifneq ($(findstring $(HB_ARCHITECTURE),darwin hpux bsd),)
+            ifneq ($(filter $(HB_ARCHITECTURE),darwin hpux bsd),)
                ifneq ($(call find_in_path,gcc),)
                   HB_COMPILER := gcc
                endif
             else
                ifeq ($(HB_ARCHITECTURE),sunos)
-                  ifneq ($(call find_in_path,cc),)
+                  ifneq ($(call find_in_path,suncc),)
                      HB_COMPILER := sunpro
                   else
                      ifneq ($(call find_in_path,gcc),)
@@ -752,7 +753,7 @@ ifeq ($(HB_BUILD_VERBOSE),yes)
    endif
 endif
 
-ifneq ($(findstring $(HB_ARCHITECTURE),win wce dos os2),)
+ifneq ($(filter $(HB_ARCHITECTURE),win wce dos os2),)
    HB_OS_UNIX := no
 else
    HB_OS_UNIX := yes
@@ -999,13 +1000,13 @@ ifneq ($(HB_INSTALL_PREFIX),)
       LIBPOSTFIX := $(DIRSEP)$(subst /,$(DIRSEP),$(ARCH_COMP))
    else
       # Not perfect, please enhance it.
-      ifneq ($(findstring /usr,$(HB_INSTALL_PREFIX)),)
-         ifeq ($(findstring /usr/home,$(HB_INSTALL_PREFIX)),)
+      ifneq ($(findstring |/usr,|$(HB_INSTALL_PREFIX)),)
+         ifeq ($(findstring |/usr/home,|$(HB_INSTALL_PREFIX)),)
            LIBPOSTFIX := $(DIRSEP)harbour
            INCPOSTFIX := $(DIRSEP)harbour
          endif
       else
-         ifneq ($(findstring /opt,$(HB_INSTALL_PREFIX)),)
+         ifneq ($(findstring |/opt,|$(HB_INSTALL_PREFIX)),)
             LIBPOSTFIX := $(DIRSEP)harbour
             INCPOSTFIX := $(DIRSEP)harbour
          endif
