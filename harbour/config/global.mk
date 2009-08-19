@@ -306,7 +306,7 @@ endif
 ifneq ($(SHLVL),)
    HB_SHELL := sh
 else
-   ifeq ($(SHELL),/bin/sh)
+   ifeq ($(patsubst /bin/%sh,sh,$(SHELL)),sh)
       HB_SHELL := sh
    else
       ifneq ($(OS2_SHELL),)
