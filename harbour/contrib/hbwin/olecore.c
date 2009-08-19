@@ -59,9 +59,10 @@
 #  define HB_OLE_NO_LL
 #endif
 
-#if defined( __MINGW32__ ) || \
-    defined( __DMC__ ) || \
-    ( defined( __WATCOMC__ ) && ( __WATCOMC__ < 1280 ) )
+#if ( defined( __POCC__ ) && defined( HB_OS_WIN_CE ) ) || \
+    ( defined( __WATCOMC__ ) && ( __WATCOMC__ < 1280 ) ) || \
+    defined( __MINGW32__ ) || \
+    defined( __DMC__ )
 #  define HB_OLE_NO_LLREF
 #endif
 
