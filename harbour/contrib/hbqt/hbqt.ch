@@ -2076,6 +2076,42 @@
 #define QHeaderView_Stretch                       1      // QHeaderView will automatically resize the section to fill the available space. The size cannot be changed by the user or programmatically.
 #define QHeaderView_ResizeToContents              3      // QHeaderView will automatically resize the section to its optimal size based on the contents of the entire column or row. The size cannot be changed by the user or programmatically. (This value was introduced in 4.2)
 
+#define QSizePolicy_DefaultType                   0x00000001   // The default type, when none is specified.
+#define QSizePolicy_ButtonBox                     0x00000002   // A QDialogButtonBox instance.
+#define QSizePolicy_CheckBox                      0x00000004   // A QCheckBox instance.
+#define QSizePolicy_ComboBox                      0x00000008   // A QComboBox instance.
+#define QSizePolicy_Frame                         0x00000010   // A QFrame instance.
+#define QSizePolicy_GroupBox                      0x00000020   // A QGroupBox instance.
+#define QSizePolicy_Label                         0x00000040   // A QLabel instance.
+#define QSizePolicy_Line                          0x00000080   // A QFrame instance with QFrame::HLine or QFrame::VLine.
+#define QSizePolicy_LineEdit                      0x00000100   // A QLineEdit instance.
+#define QSizePolicy_PushButton                    0x00000200   // A QPushButton instance.
+#define QSizePolicy_RadioButton                   0x00000400   // A QRadioButton instance.
+#define QSizePolicy_Slider                        0x00000800   // A QAbstractSlider instance.
+#define QSizePolicy_SpinBox                       0x00001000   // A QAbstractSpinBox instance.
+#define QSizePolicy_TabWidget                     0x00002000   // A QTabWidget instance.
+#define QSizePolicy_ToolButton                    0x00004000   // A QToolButton instance.
+// The ControlTypes type is a typedef for QFlags<ControlType>. It stores an OR combination of ControlType values.
+
+// enum QSizePolicy::Policy
+// This enum describes the various per-dimension sizing types used when constructing a QSizePolicy.
+//
+#define QSizePolicy_Fixed                         0   // The QWidget::sizeHint() is the only acceptable alternative, so the widget can never grow or shrink (e.g. the vertical direction of a push button).
+#define QSizePolicy_Minimum                       QSizePolicy_GrowFlag                                                     // The sizeHint() is minimal, and sufficient. The widget can be expanded, but there is no advantage to it being larger (e.g. the horizontal direction of a push button). It cannot be smaller than the size provided by sizeHint().
+#define QSizePolicy_Maximum                       QSizePolicy_ShrinkFlag                                                   // The sizeHint() is a maximum. The widget can be shrunk any amount without detriment if other widgets need the space (e.g. a separator line). It cannot be larger than the size provided by sizeHint().
+#define QSizePolicy_Preferred                     QSizePolicy_GrowFlag + QSizePolicy_ShrinkFlag                            // The sizeHint() is best, but the widget can be shrunk and still be useful. The widget can be expanded, but there is no advantage to it being larger than sizeHint() (the default QWidget policy).
+#define QSizePolicy_Expanding                     QSizePolicy_GrowFlag + QSizePolicy_ShrinkFlag + QSizePolicy_ExpandFlag   // The sizeHint() is a sensible size, but the widget can be shrunk and still be useful. The widget can make use of extra space, so it should get as much space as possible (e.g. the horizontal direction of a horizontal slider).
+#define QSizePolicy_MinimumExpanding              QSizePolicy_GrowFlag + QSizePolicy_ExpandFlag                     // The sizeHint() is minimal, and sufficient. The widget can make use of extra space, so it should get as much space as possible (e.g. the horizontal direction of a horizontal slider).
+#define QSizePolicy_Ignored                       QSizePolicy_ShrinkFlag + QSizePolicy_GrowFlag + QSizePolicy_IgnoreFlag   // The sizeHint() is ignored. The widget will get as much space as possible.
+
+// enum QSizePolicy::PolicyFlag
+// These flags are combined together to form the various Policy values:
+//
+#define QSizePolicy_GrowFlag                      1   // The widget can grow beyond its size hint if necessary.
+#define QSizePolicy_ExpandFlag                    2   // The widget should get as much space as possible.
+#define QSizePolicy_ShrinkFlag                    4   // The widget can shrink below its size hint if necessary.
+#define QSizePolicy_IgnoreFlag                    8   // The widget's size hint is ignored. The widget will get as much space as possible.
+
 /*----------------------------------------------------------------------*/
 
 #define _HBQT_CH

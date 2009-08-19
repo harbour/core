@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'hbqt_slots.h'
 **
-** Created: Wed Aug 12 22:46:34 2009
+** Created: Tue Aug 18 18:21:01 2009
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -66,7 +66,7 @@ static const uint qt_meta_data_HbTableView[] = {
        2,       // revision
        0,       // classname
        0,    0, // classinfo
-       8,   12, // methods
+       9,   12, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -78,8 +78,9 @@ static const uint qt_meta_data_HbTableView[] = {
      119,   13,   12,   12, 0x05,
      152,   13,   12,   12, 0x05,
      187,   13,   12,   12, 0x05,
-     240,  217,   12,   12, 0x05,
-     307,  303,   12,   12, 0x05,
+     215,   13,   12,   12, 0x05,
+     268,  245,   12,   12, 0x05,
+     335,  331,   12,   12, 0x05,
 
        0        // eod
 };
@@ -90,6 +91,7 @@ static const char qt_meta_stringdata_HbTableView[] = {
     "sg_mouseDoubleClickEvent(QMouseEvent*)\0"
     "sg_mousePressEvent(QMouseEvent*)\0"
     "sg_mouseReleaseEvent(QMouseEvent*)\0"
+    "sg_wheelEvent(QWheelEvent*)\0"
     "sg_resizeEvent(QResizeEvent*)\0"
     "cursorAction,modifiers\0"
     "sg_moveCursor(HbTableView::CursorAction,Qt::KeyboardModifiers)\0"
@@ -126,12 +128,13 @@ int HbTableView::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 2: sg_mouseDoubleClickEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
         case 3: sg_mousePressEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
         case 4: sg_mouseReleaseEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
-        case 5: sg_resizeEvent((*reinterpret_cast< QResizeEvent*(*)>(_a[1]))); break;
-        case 6: sg_moveCursor((*reinterpret_cast< HbTableView::CursorAction(*)>(_a[1])),(*reinterpret_cast< Qt::KeyboardModifiers(*)>(_a[2]))); break;
-        case 7: sg_scrollContentsBy((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 5: sg_wheelEvent((*reinterpret_cast< QWheelEvent*(*)>(_a[1]))); break;
+        case 6: sg_resizeEvent((*reinterpret_cast< QResizeEvent*(*)>(_a[1]))); break;
+        case 7: sg_moveCursor((*reinterpret_cast< HbTableView::CursorAction(*)>(_a[1])),(*reinterpret_cast< Qt::KeyboardModifiers(*)>(_a[2]))); break;
+        case 8: sg_scrollContentsBy((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         default: ;
         }
-        _id -= 8;
+        _id -= 9;
     }
     return _id;
 }
@@ -172,24 +175,31 @@ void HbTableView::sg_mouseReleaseEvent(QMouseEvent * _t1)
 }
 
 // SIGNAL 5
-void HbTableView::sg_resizeEvent(QResizeEvent * _t1)
+void HbTableView::sg_wheelEvent(QWheelEvent * _t1)
 {
     void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 5, _a);
 }
 
 // SIGNAL 6
-void HbTableView::sg_moveCursor(HbTableView::CursorAction _t1, Qt::KeyboardModifiers _t2)
+void HbTableView::sg_resizeEvent(QResizeEvent * _t1)
 {
-    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 6, _a);
 }
 
 // SIGNAL 7
-void HbTableView::sg_scrollContentsBy(int _t1, int _t2)
+void HbTableView::sg_moveCursor(HbTableView::CursorAction _t1, Qt::KeyboardModifiers _t2)
 {
     void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 7, _a);
+}
+
+// SIGNAL 8
+void HbTableView::sg_scrollContentsBy(int _t1, int _t2)
+{
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
+    QMetaObject::activate(this, &staticMetaObject, 8, _a);
 }
 static const uint qt_meta_data_MyMainWindow[] = {
 
@@ -311,7 +321,7 @@ static const uint qt_meta_data_Slots[] = {
        2,       // revision
        0,       // classname
        0,    0, // classinfo
-     105,   12, // methods
+     106,   12, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -405,23 +415,24 @@ static const uint qt_meta_data_Slots[] = {
     2364, 2245,    6,    6, 0x0a,
     2396, 2245,    6,    6, 0x0a,
     2432, 2245,    6,    6, 0x0a,
-    2463, 2459,    6,    6, 0x0a,
-    2489,    6,    6,    6, 0x0a,
-    2527, 2509,    6,    6, 0x0a,
-    2587, 2574,    6,    6, 0x0a,
-    2625, 2607,    6,    6, 0x0a,
-    2654, 2574,    6,    6, 0x0a,
-    2680, 2574,    6,    6, 0x0a,
-    2700, 2574,    6,    6, 0x0a,
-    2775, 2732,    6,    6, 0x0a,
-    2801, 2574,    6,    6, 0x0a,
-    2850, 2821,    6,    6, 0x0a,
-    2897, 2878,    6,    6, 0x0a,
-    2940, 2937,    6,    6, 0x0a,
-    2959, 2937,    6,    6, 0x0a,
-    2978, 2937,    6,    6, 0x0a,
-    3003, 2998,    6,    6, 0x0a,
-    3026, 2998,    6,    6, 0x0a,
+    2457, 2245,    6,    6, 0x0a,
+    2488, 2484,    6,    6, 0x0a,
+    2514,    6,    6,    6, 0x0a,
+    2552, 2534,    6,    6, 0x0a,
+    2612, 2599,    6,    6, 0x0a,
+    2650, 2632,    6,    6, 0x0a,
+    2679, 2599,    6,    6, 0x0a,
+    2705, 2599,    6,    6, 0x0a,
+    2725, 2599,    6,    6, 0x0a,
+    2800, 2757,    6,    6, 0x0a,
+    2826, 2599,    6,    6, 0x0a,
+    2875, 2846,    6,    6, 0x0a,
+    2922, 2903,    6,    6, 0x0a,
+    2965, 2962,    6,    6, 0x0a,
+    2984, 2962,    6,    6, 0x0a,
+    3003, 2962,    6,    6, 0x0a,
+    3028, 3023,    6,    6, 0x0a,
+    3051, 3023,    6,    6, 0x0a,
 
        0        // eod
 };
@@ -494,6 +505,7 @@ static const char qt_meta_stringdata_Slots[] = {
     "mousePressEvent(QMouseEvent*)\0"
     "mouseReleaseEvent(QMouseEvent*)\0"
     "mouseDoubleClickEvent(QMouseEvent*)\0"
+    "wheelEvent(QWheelEvent*)\0"
     "resizeEvent(QResizeEvent*)\0x,y\0"
     "scrollContentsBy(int,int)\0geometriesChanged()\0"
     "logicalIndex,mode\0"
@@ -625,27 +637,28 @@ int Slots::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 84: mousePressEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
         case 85: mouseReleaseEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
         case 86: mouseDoubleClickEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
-        case 87: resizeEvent((*reinterpret_cast< QResizeEvent*(*)>(_a[1]))); break;
-        case 88: scrollContentsBy((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 89: geometriesChanged(); break;
-        case 90: sectionAutoResize((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< QHeaderView::ResizeMode(*)>(_a[2]))); break;
-        case 91: sectionClicked((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 92: sectionCountChanged((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 93: sectionDoubleClicked((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 94: sectionEntered((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 95: sectionHandleDoubleClicked((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 96: sectionMoved((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3]))); break;
-        case 97: sectionPressed((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 98: sectionResized((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3]))); break;
-        case 99: sortIndicatorChanged((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< Qt::SortOrder(*)>(_a[2]))); break;
-        case 100: buttonClicked((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 101: buttonPressed((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 102: buttonReleased((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 103: linkActivated((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 104: linkHovered((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 87: wheelEvent((*reinterpret_cast< QWheelEvent*(*)>(_a[1]))); break;
+        case 88: resizeEvent((*reinterpret_cast< QResizeEvent*(*)>(_a[1]))); break;
+        case 89: scrollContentsBy((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 90: geometriesChanged(); break;
+        case 91: sectionAutoResize((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< QHeaderView::ResizeMode(*)>(_a[2]))); break;
+        case 92: sectionClicked((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 93: sectionCountChanged((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 94: sectionDoubleClicked((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 95: sectionEntered((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 96: sectionHandleDoubleClicked((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 97: sectionMoved((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3]))); break;
+        case 98: sectionPressed((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 99: sectionResized((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3]))); break;
+        case 100: sortIndicatorChanged((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< Qt::SortOrder(*)>(_a[2]))); break;
+        case 101: buttonClicked((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 102: buttonPressed((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 103: buttonReleased((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 104: linkActivated((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 105: linkHovered((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         default: ;
         }
-        _id -= 105;
+        _id -= 106;
     }
     return _id;
 }

@@ -458,6 +458,11 @@ void Slots::mouseReleaseEvent( QMouseEvent * event )
    QObject *object = qobject_cast<QObject *>( sender() );
    SlotsExecPointer( object, ( char* ) "mouseReleaseEvent()", event );
 }
+void Slots::wheelEvent( QWheelEvent * event )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecPointer( object, ( char* ) "wheelEvent()", event );
+}
 void Slots::resizeEvent( QResizeEvent * event )
 {
    QObject *object = qobject_cast<QObject *>( sender() );
@@ -1417,6 +1422,11 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       ret = object->connect( object, SIGNAL( sg_mouseReleaseEvent( QMouseEvent * ) ),
                              s_s, SLOT( mouseReleaseEvent( QMouseEvent * ) ), Qt::AutoConnection );
    }
+   if( signal == ( QString ) "wheelEvent()" )
+   {
+      ret = object->connect( object, SIGNAL( sg_wheelEvent( QWheelEvent * ) ),
+                             s_s, SLOT( wheelEvent( QWheelEvent * ) ), Qt::AutoConnection );
+   }
    if( signal == ( QString ) "resizeEvent()" )
    {
       ret = object->connect( object, SIGNAL( sg_resizeEvent( QResizeEvent * ) ),
@@ -1800,6 +1810,10 @@ void HbTableView::mouseReleaseEvent( QMouseEvent * event )
 {
    emit sg_mouseReleaseEvent( event );
 }
+void HbTableView::wheelEvent( QWheelEvent * event )
+{
+   emit sg_wheelEvent( event );
+}
 void HbTableView::resizeEvent( QResizeEvent * event )
 {
    emit sg_resizeEvent( event );
@@ -1837,16 +1851,19 @@ Qt_WhatsThisRole            5       Qt_SizeHintRole                13
 #endif
 
 #define HBQT_BRW_CELLVALUE                        1001
+
 #define HBQT_BRW_COLCOUNT                         1002
 #define HBQT_BRW_ROWCOUNT                         1003
+
 #define HBQT_BRW_COLHEADER                        1004
-#define HBQT_BRW_ROWHEADER                        1005
 #define HBQT_BRW_COLALIGN                         1006
 #define HBQT_BRW_COLFGCOLOR                       1007
 #define HBQT_BRW_COLBGCOLOR                       1008
+#define HBQT_BRW_COLHEIGHT                        1011
+
+#define HBQT_BRW_ROWHEADER                        1005
 #define HBQT_BRW_DATFGCOLOR                       1009
 #define HBQT_BRW_DATBGCOLOR                       1010
-#define HBQT_BRW_COLHEIGHT                        1011
 #define HBQT_BRW_DATHEIGHT                        1012
 #define HBQT_BRW_DATALIGN                         1013
 #define HBQT_BRW_CELLDECORATION                   1014
@@ -1947,7 +1964,7 @@ QVariant HbDbfModel::data( const QModelIndex & index, int role ) const
 
 QVariant HbDbfModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-//char str[ 50 ]; hb_snprintf( str, sizeof( str ), "headerData - section=%i orient=%i role=%i", section, orientation, role );  OutputDebugString( str );
+//char str[ 50 ]; hb_snprintf( str, sizeof( str ), "headerData - section=%i orient=%i role=%i name=%s", section, orientation, role, objectName() );  OutputDebugString( str );
 
    if( orientation == Qt::Horizontal )
    {

@@ -116,6 +116,7 @@ public:
    void mouseMoveEvent( QMouseEvent * event );
    void mousePressEvent( QMouseEvent * event );
    void mouseReleaseEvent( QMouseEvent * event );
+   void wheelEvent( QWheelEvent * event );
    void resizeEvent( QResizeEvent * event );
    void scrollContentsBy( int x, int y );
    void scrollTo( const QModelIndex & index, QAbstractItemView::ScrollHint hint = QAbstractItemView::EnsureVisible );
@@ -130,6 +131,7 @@ signals:
    void sg_mouseDoubleClickEvent( QMouseEvent * event );
    void sg_mousePressEvent( QMouseEvent * event );
    void sg_mouseReleaseEvent( QMouseEvent * event );
+   void sg_wheelEvent( QWheelEvent * event );
    void sg_resizeEvent( QResizeEvent * event );
    void sg_moveCursor( HbTableView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers );
    void sg_scrollContentsBy( int x, int y );
@@ -272,6 +274,7 @@ public slots:
    void mousePressEvent( QMouseEvent * event );
    void mouseReleaseEvent( QMouseEvent * event );
    void mouseDoubleClickEvent( QMouseEvent * event );
+   void wheelEvent( QWheelEvent * event );
    void resizeEvent( QResizeEvent * event );
    void scrollContentsBy( int x, int y );
    void geometriesChanged();
