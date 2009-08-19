@@ -1784,7 +1784,7 @@ STATIC FUNCTION Xbp_PresParam()
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION Xbp_SetPresParamIfNil( aPP, nParam, xValue )
+FUNCTION Xbp_SetPresParamIfNil( aPP, nParam, xValue )
    LOCAL n
 
    IF xValue != NIL
@@ -1801,7 +1801,7 @@ STATIC FUNCTION Xbp_SetPresParamIfNil( aPP, nParam, xValue )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION Xbp_SetPresParam( aPP, nParam, xValue )
+FUNCTION Xbp_SetPresParam( aPP, nParam, xValue )
    LOCAL oldValue, n
 
    IF ( n := ascan( aPP, {|e_| e_[ 1 ] == nParam } ) ) > 0

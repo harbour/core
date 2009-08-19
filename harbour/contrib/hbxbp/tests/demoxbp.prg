@@ -1582,7 +1582,7 @@ FUNCTION Build_Browse( oWnd )
 
    USE ( cPath + "test.dbf" ) NEW SHARED READONLY VIA 'DBFCDX'
    #if 1
-   INDEX ON test->last TAG "LAST" TO ( cPath + "test.cdx" )
+   //INDEX ON test->last TAG "LAST" TO ( cPath + "test.cdx" )
    #endif
    DbGotop()
 
@@ -1630,6 +1630,10 @@ FUNCTION Build_Browse( oWnd )
    aadd( aPresParam, { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           } )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWWIDTH     , 40                         } )
+   aadd( aPresParam, { XBP_PP_COL_FA_CAPTION      , " .. "                     } )
+   aadd( aPresParam, { XBP_PP_COL_FA_FGCLR        , GRA_CLR_BLACK              } )
+   aadd( aPresParam, { XBP_PP_COL_FA_BGCLR        , GRA_CLR_DARKGRAY           } )
+   aadd( aPresParam, { XBP_PP_COL_FA_HEIGHT       , 25                         } )
    //
    oXbpColumn          := XbpColumn():new()
    oXbpColumn:type     := XBPCOL_TYPE_FILEICON
@@ -1651,6 +1655,10 @@ FUNCTION Build_Browse( oWnd )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
+   aadd( aPresParam, { XBP_PP_COL_FA_CAPTION      , "Last Name"                } )
+   aadd( aPresParam, { XBP_PP_COL_FA_FGCLR        , GRA_CLR_BLACK              } )
+   aadd( aPresParam, { XBP_PP_COL_FA_BGCLR        , GRA_CLR_DARKGRAY           } )
+   aadd( aPresParam, { XBP_PP_COL_FA_HEIGHT       , 25                         } )
 
    oXbpColumn            := XbpColumn():new()
    oXbpColumn:dataLink   := {|| test->Last }
@@ -1672,6 +1680,10 @@ FUNCTION Build_Browse( oWnd )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
+   aadd( aPresParam, { XBP_PP_COL_FA_CAPTION      , "First Name"               } )
+   aadd( aPresParam, { XBP_PP_COL_FA_FGCLR        , GRA_CLR_BLACK              } )
+   aadd( aPresParam, { XBP_PP_COL_FA_BGCLR        , GRA_CLR_DARKRED            } )
+   aadd( aPresParam, { XBP_PP_COL_FA_HEIGHT       , 25                         } )
    //
    oXbpColumn          := XbpColumn():new()
    oXbpColumn:dataLink := {|| test->First }
@@ -1692,7 +1704,10 @@ FUNCTION Build_Browse( oWnd )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 25                         } )
-   //aadd( aPresParam, { XBP_PP_COL_DA_ROWWIDTH     , 60                         } )
+   aadd( aPresParam, { XBP_PP_COL_FA_CAPTION      , "$$"                       } )
+   aadd( aPresParam, { XBP_PP_COL_FA_FGCLR        , GRA_CLR_BLACK              } )
+   aadd( aPresParam, { XBP_PP_COL_FA_BGCLR        , GRA_CLR_DARKGRAY           } )
+   aadd( aPresParam, { XBP_PP_COL_FA_HEIGHT       , 25                         } )
    //
    oXbpColumn          := XbpColumn():new()
    oXbpColumn:dataLink := {|| test->Salary }
@@ -1713,6 +1728,10 @@ FUNCTION Build_Browse( oWnd )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
+   aadd( aPresParam, { XBP_PP_COL_FA_CAPTION      , "Year Mn Dy"               } )
+   aadd( aPresParam, { XBP_PP_COL_FA_FGCLR        , GRA_CLR_BLACK              } )
+   aadd( aPresParam, { XBP_PP_COL_FA_BGCLR        , GRA_CLR_DARKGRAY           } )
+   aadd( aPresParam, { XBP_PP_COL_FA_HEIGHT       , 25                         } )
    //
    oXbpColumn          := XbpColumn():new()
    oXbpColumn:dataLink := {|| test->HireDate }
@@ -1732,6 +1751,10 @@ FUNCTION Build_Browse( oWnd )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
+   aadd( aPresParam, { XBP_PP_COL_FA_CAPTION      , "Yrs"                     } )
+   aadd( aPresParam, { XBP_PP_COL_FA_FGCLR        , GRA_CLR_BLACK              } )
+   aadd( aPresParam, { XBP_PP_COL_FA_BGCLR        , GRA_CLR_DARKGRAY           } )
+   aadd( aPresParam, { XBP_PP_COL_FA_HEIGHT       , 25                         } )
    //
    oXbpColumn          := XbpColumn():new()
    oXbpColumn:dataLink := {|| test->Age }
@@ -1751,6 +1774,10 @@ FUNCTION Build_Browse( oWnd )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
+   aadd( aPresParam, { XBP_PP_COL_FA_CAPTION      , "USA"                     } )
+   aadd( aPresParam, { XBP_PP_COL_FA_FGCLR        , GRA_CLR_BLACK              } )
+   aadd( aPresParam, { XBP_PP_COL_FA_BGCLR        , GRA_CLR_DARKGRAY           } )
+   aadd( aPresParam, { XBP_PP_COL_FA_HEIGHT       , 25                         } )
    //
    oXbpColumn          := XbpColumn():new()
    oXbpColumn:dataLink := {|| test->City }
@@ -1770,6 +1797,10 @@ FUNCTION Build_Browse( oWnd )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
+   aadd( aPresParam, { XBP_PP_COL_FA_CAPTION      , "USA"                      } )
+   aadd( aPresParam, { XBP_PP_COL_FA_FGCLR        , GRA_CLR_BLACK              } )
+   aadd( aPresParam, { XBP_PP_COL_FA_BGCLR        , GRA_CLR_DARKGRAY           } )
+   aadd( aPresParam, { XBP_PP_COL_FA_HEIGHT       , 25                         } )
    //
    oXbpColumn          := XbpColumn():new()
    oXbpColumn:dataLink := {|| test->State }
@@ -1789,6 +1820,10 @@ FUNCTION Build_Browse( oWnd )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
+   aadd( aPresParam, { XBP_PP_COL_FA_CAPTION      , "USA"                      } )
+   aadd( aPresParam, { XBP_PP_COL_FA_FGCLR        , GRA_CLR_BLACK              } )
+   aadd( aPresParam, { XBP_PP_COL_FA_BGCLR        , GRA_CLR_DARKGRAY           } )
+   aadd( aPresParam, { XBP_PP_COL_FA_HEIGHT       , 25                         } )
    //
    oXbpColumn          := XbpColumn():new()
    oXbpColumn:dataLink := {|| test->Zip }
@@ -1808,6 +1843,10 @@ FUNCTION Build_Browse( oWnd )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          } )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20                         } )
+   aadd( aPresParam, { XBP_PP_COL_FA_CAPTION      , "Generic"                  } )
+   aadd( aPresParam, { XBP_PP_COL_FA_FGCLR        , GRA_CLR_BLACK              } )
+   aadd( aPresParam, { XBP_PP_COL_FA_BGCLR        , GRA_CLR_DARKGRAY           } )
+   aadd( aPresParam, { XBP_PP_COL_FA_HEIGHT       , 25                         } )
    //
    oXbpColumn          := XbpColumn():new()
    oXbpColumn:dataLink := {|| test->Notes }
