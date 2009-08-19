@@ -20,12 +20,12 @@ export HB_ETC_DIR=$(INSTDIR)/etc
 CFLAGS = -g
 
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-	CFLAGS += -O0
+   CFLAGS += -O0
 else
-	CFLAGS += -O3
+   CFLAGS += -O3
 endif
 ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
-	INSTALL_PROGRAM += -s
+   INSTALL_PROGRAM += -s
 endif
 
 build: build-stamp
