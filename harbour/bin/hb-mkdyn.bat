@@ -87,7 +87,7 @@ if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_icc"     set _BIN_LINK=xilink
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_iccia64" set _BIN_LINK=xilink
 
 if "%HB_ARCHITECTURE%" == "win" set _SYSLIBS=user32.lib ws2_32.lib advapi32.lib gdi32.lib
-if "%HB_ARCHITECTURE%" == "wce" set _SYSLIBS=ws2.lib
+if "%HB_ARCHITECTURE%" == "wce" set _SYSLIBS=coredll.lib ws2.lib
 
 echo ! Making %_DST_NAME_ST%.dll... && %_BIN_LINK% /nologo /dll /subsystem:console /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @"%_LIST_ST%" %_SYSLIBS% %HB_DLLLIBS%
 echo ! Making %_DST_NAME_MT%.dll... && %_BIN_LINK% /nologo /dll /subsystem:console /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @"%_LIST_MT%" %_SYSLIBS% %HB_DLLLIBS%
@@ -120,7 +120,7 @@ del "%_LIST_ST%"
 del "%_LIST_MT%"
 
 if "%HB_ARCHITECTURE%" == "win" set _SYSLIBS=-luser32 -lws2_32 -ladvapi32 -lgdi32
-if "%HB_ARCHITECTURE%" == "wce" set _SYSLIBS=-lws2
+if "%HB_ARCHITECTURE%" == "wce" set _SYSLIBS=-lcoredll -lws2
 
 echo ! Making %_DST_NAME_ST%.dll... && %HB_CCPREFIX%gcc -shared -o "%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" "%_LIST_ST%_" %HB_USER_LDFLAGS% %_SYSLIBS% %HB_DLLLIBS% -Wl,--output-def,"%HB_BIN_INSTALL%\%_DST_NAME_ST%.def"
 echo ! Making %_DST_NAME_MT%.dll... && %HB_CCPREFIX%gcc -shared -o "%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" "%_LIST_MT%_" %HB_USER_LDFLAGS% %_SYSLIBS% %HB_DLLLIBS% -Wl,--output-def,"%HB_BIN_INSTALL%\%_DST_NAME_MT%.def"
@@ -184,7 +184,7 @@ echo.> "%_LIST_MT%"
 call :MAKE_LISTS
 
 if "%HB_ARCHITECTURE%" == "win" set _SYSLIBS=user32.lib ws2_32.lib advapi32.lib gdi32.lib
-if "%HB_ARCHITECTURE%" == "wce" set _SYSLIBS=ws2.lib
+if "%HB_ARCHITECTURE%" == "wce" set _SYSLIBS=coredll.lib ws2.lib
 
 echo ! Making %_DST_NAME_ST%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @%_LIST_ST% %_SYSLIBS% %HB_DLLLIBS%
 echo ! Making %_DST_NAME_MT%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @%_LIST_MT% %_SYSLIBS% %HB_DLLLIBS%

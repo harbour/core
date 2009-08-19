@@ -42,7 +42,7 @@ endif
 LD := polink.exe
 LD_OUT := /out:
 
-SYSLIBS += coredll corelibc
+SYSLIBS += corelibc
 
 LIBPATHS := /libpath:$(LIB_DIR)
 LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))

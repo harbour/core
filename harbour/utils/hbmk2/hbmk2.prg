@@ -899,6 +899,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                     { {|| iif( ! Empty( GetEnv( "WATCOM" ) ),;
                                FindInPath( "wpp386"   ),;
                                NIL )               }, "watcom" },;
+                    { {|| FindInPath( "armasm"   ) }, "msvcarm" },;
                     { {|| FindInPath( "ml64"     ) }, "msvc64" },;
                     { {|| iif( FindInPath( "wpp386"   ) == NIL,;
                                FindInPath( "cl"       ),;
@@ -909,7 +910,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                     { {|| iif( ( tmp1 := FindInPath( "icl" ) ) != NIL .AND. "itanium" $ Lower( tmp1 ), tmp1, NIL ) }, "iccia64" },;
                     { {|| FindInPath( "icl"      ) }, "icc"    },;
                     { {|| FindInPath( "xcc"      ) }, "xcc"    },;
-                    { {|| FindInPath( "x86_64-w64-mingw32-gcc" ) }, "mingw64", "x86_64-w64-mingw32-" } }
+                    { {|| FindInPath( "x86_64-w64-mingw32-gcc" ) }, "mingw64", "x86_64-w64-mingw32-" }}
       aCOMPSUP := { "mingw", "msvc", "bcc", "watcom", "icc", "pocc", "xcc", "cygwin",;
                     "mingw64", "msvc64", "msvcia64", "iccia64", "pocc64" }
       l_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
@@ -934,7 +935,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       cDynLibExt := ".dll"
       cBinExt := ".exe"
       cOptPrefix := "-/"
-      l_aLIBSYSCORE := { "ws2" }
+      l_aLIBSYSCORE := { "coredll", "ws2" }
       l_aLIBSYSMISC := { "uuid", "ole32", "wininet", "commdlg", "commctrl" }
    OTHERWISE
       hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Architecture value unknown: %1$s" ), hbmk[ _HBMK_cARCH ] ) )
@@ -2631,28 +2632,19 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
          IF hbmk[ _HBMK_cCOMP ] == "msvcarm"
             /* NOTE: Copied from .mk. Probably needs cleaning. */
-            AAdd( hbmk[ _HBMK_aOPTC ], "-D_WIN32_WCE=0x420" )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-DUNDER_CE=0x420" )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-DWIN32_PLATFORM_PSPC" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-DWINCE" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_WINCE" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_WINDOWS" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-DARM" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_ARM_" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-DARMV4" )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-DPOCKETPC2003_UI_MODEL" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_M_ARM" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_UNICODE" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_UWIN" )
-            AAdd( hbmk[ _HBMK_aOPTL ], "/subsystem:windowsce,4.20" )
-            AAdd( hbmk[ _HBMK_aOPTL ], "/machine:arm" )
-            AAdd( hbmk[ _HBMK_aOPTL ], "/armpadcode" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "/subsystem:windowsce" )
             AAdd( hbmk[ _HBMK_aOPTL ], "/nodefaultlib:oldnames.lib" )
             AAdd( hbmk[ _HBMK_aOPTL ], "/nodefaultlib:kernel32.lib" )
-            AAdd( hbmk[ _HBMK_aOPTL ], "/align:4096" )
-            AAdd( hbmk[ _HBMK_aOPTL ], "/opt:ref" )
-            AAdd( hbmk[ _HBMK_aOPTL ], "/opt:icf" )
             AAdd( hbmk[ _HBMK_aOPTL ], "/manifest:no" )
          ENDIF
          IF hbmk[ _HBMK_lINC ]

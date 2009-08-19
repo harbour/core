@@ -593,27 +593,32 @@ ifeq ($(HB_COMPILER),)
                      ifneq ($(call find_in_path,wpp386),)
                         HB_COMPILER := watcom
                      else
-                        ifneq ($(call find_in_path,ml64),)
-                           HB_COMPILER := msvc64
+                        ifneq ($(call find_in_path,armasm),)
+                           HB_COMPILER := msvcarm
+                           HB_ARCHITECTURE := wce
                         else
-                           ifneq ($(call find_in_path,icl),)
-                              HB_COMPILER := icc
+                           ifneq ($(call find_in_path,ml64),)
+                              HB_COMPILER := msvc64
                            else
-                              ifneq ($(call find_in_path,cl),)
-                                 HB_COMPILER := msvc
+                              ifneq ($(call find_in_path,icl),)
+                                 HB_COMPILER := icc
                               else
-                                 ifneq ($(call find_in_path,bcc32),)
-                                    HB_COMPILER := bcc
+                                 ifneq ($(call find_in_path,cl),)
+                                    HB_COMPILER := msvc
                                  else
-                                    ifneq ($(call find_in_path,pocc),)
-                                       HB_COMPILER := pocc
+                                    ifneq ($(call find_in_path,bcc32),)
+                                       HB_COMPILER := bcc
                                     else
-                                       ifneq ($(call find_in_path,xcc),)
-                                          HB_COMPILER := xcc
+                                       ifneq ($(call find_in_path,pocc),)
+                                          HB_COMPILER := pocc
                                        else
-                                          ifneq ($(call find_in_path,x86_64-w64-mingw32-gcc),)
-                                             HB_COMPILER := mingw64
-                                             HB_CCPREFIX := x86_64-w64-mingw32-
+                                          ifneq ($(call find_in_path,xcc),)
+                                             HB_COMPILER := xcc
+                                          else
+                                             ifneq ($(call find_in_path,x86_64-w64-mingw32-gcc),)
+                                                HB_COMPILER := mingw64
+                                                HB_CCPREFIX := x86_64-w64-mingw32-
+                                             endif
                                           endif
                                        endif
                                     endif
