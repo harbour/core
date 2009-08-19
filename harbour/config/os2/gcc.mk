@@ -48,7 +48,7 @@ LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
 # Add the specified GT driver library
 ifneq ($(findstring hbrtl, $(LIBS)),)
    ifeq ($(C_MAIN),)
-      ifeq ($(findstring os2pm,$(HB_GT_LIB)),os2pm)
+      ifeq ($(filter os2pm,$(HB_GT_LIB)),os2pm)
          # Special handling for PM mode
          LDLIBS += -l$(HB_GT_LIB)
          LDLIBS += -lgtos2

@@ -61,11 +61,11 @@ ifneq ($(findstring hbrtl, $(LIBS)),)
 
    LIBPATHS += -L/usr/local/lib
 
-   ifneq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
+   ifneq ($(filter -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
       LDLIBS += -lpcre
    endif
 
-   ifneq ($(findstring -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
+   ifneq ($(filter -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
       LDLIBS += -lz
    endif
 endif

@@ -26,12 +26,12 @@ HB_LIBS_TPL = \
    hbpp \
    hbcommon
 
-ifeq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
-   ifeq ($(findstring -DHB_POSIX_REGEX, $(HB_USER_CFLAGS)),)
+ifeq ($(filter -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
+   ifeq ($(filter -DHB_POSIX_REGEX, $(HB_USER_CFLAGS)),)
       HB_LIBS_TPL += hbpcre
    endif
 endif
-ifeq ($(findstring -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
+ifeq ($(filter -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
    HB_LIBS_TPL += hbzlib
 endif
 
