@@ -450,6 +450,7 @@ while [ \$n -lt \${#P[@]} ]; do
         -nostrip)    HB_STRIP="no" ;;
         -l[^-]*)     HB_USRLIBS="\${HB_USRLIBS} \${v}" ;;
         -L[^-]*)     HB_USRLPATH="\${HB_USRLPATH} \${v}" ;;
+        -I*)         [ \${HB} = "cc" ] || CC_OPT="\${CC_OPT} \${v}"; p="\${v}" ;;
         -mwindows)   LN_OPT="\${LN_OPT} \${v}"; HB_MODE="gui" ;;
         -mconsole)   LN_OPT="\${LN_OPT} \${v}"; HB_MODE="std" ;;
         -main=*)     HB_MAIN_FUNC="\${v#*=}" ;;
