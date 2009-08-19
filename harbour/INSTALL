@@ -288,7 +288,7 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    General
    -------
    - HB_COMPILER               Override C compiler autodetection
-   - HB_ARCHITECTURE           Override architecture autodetection
+   - HB_ARCHITECTURE           Override platform autodetection
                                See this secion for possible values:
                                SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
 
@@ -308,7 +308,7 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    -------
    - HB_BUILD_NAME=<name>      Create named build. This allows to keep
                                multiple builds in parallel for any given
-                               architecture/compiler. F.e. debug / release.
+                               platform/compiler. F.e. debug / release.
                                NOTE: In current implementation it's
                                appended to compiler directory name, so all
                                filesystem/platform name rules and limits
