@@ -85,10 +85,10 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
                only. For a peace of mind, avoid using spaces, quotes
                in the name. You can leave it empty, in this case the
                results will be created under the current directory tree.
-             - You can also use Linux hosts to create Windows builds.
-               See script: make_gnu_xmingw.sh
-             - You can also use Linux hosts to create Windows CE builds.
-               See script: make_gnu_xmingwce.sh
+             - You can also use *nix hosts to create Windows builds:
+                  $ make HB_ARCHITECTURE=win
+             - You can also use *nix hosts to create Windows CE builds.
+                  $ make HB_ARCHITECTURE=wce
 
    Windows with MSYS or Cygwin shells
    ----------------------------------
@@ -361,7 +361,7 @@ EXAMPLES
    Windows/Windows CE
    ------------------
 
-      NOTES: - All code below should be copied to .bat files or typed at NT
+      NOTES: - All code below should be copied to batch files or typed at NT
                command line.
              - Naturally, you'll need to adapt dirs to valid ones on your system.
                Don't use spaces in dirs.
