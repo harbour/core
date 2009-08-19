@@ -1302,14 +1302,14 @@ STATIC FUNCTION __ParseAttr( parser )
          ENDIF
 
          parser:p_end := parser:p_pos
-         parser:p_pos --
+         parser:p_pos--
          EXIT
 
       CASE '"'
       CASE "'"
          lIsQuoted := .T.
          parser:p_end := parser:p_pos
-         parser:p_pos ++
+         parser:p_pos++
 
          nStart := parser:p_pos
 
@@ -1317,7 +1317,7 @@ STATIC FUNCTION __ParseAttr( parser )
             // empty value ""
             hHash[ aAttr[ 1 ] ] := ""
             parser:p_end := parser:p_pos
-            parser:p_pos --
+            parser:p_pos--
          ELSE
             P_SEEKI( parser, cChr )
             nEnd := parser:p_pos
@@ -4360,7 +4360,7 @@ FUNCTION AnsiToHtml( cAnsiText )
       nEnd  := parser:p_pos
       cText := SubStr( parser:p_str, nStart, nEnd-nStart )
 
-      DO WHILE ! ( ( cChr := P_NEXT( parser ) ) $ "; " )  .AND. parser:p_pos != 0
+      DO WHILE ! ( ( cChr := P_NEXT( parser ) ) $ "; " ) .AND. ! Empty( cChr ) .AND. parser:p_pos != 0
       ENDDO
 
       SWITCH cChr
@@ -4368,9 +4368,9 @@ FUNCTION AnsiToHtml( cAnsiText )
          // HTML character entity found
          nStart  := nEnd
          nEnd    := parser:p_pos+1
-         cEntity := SubStr( parser:p_str, nStart, nEnd-nStart )
+         cEntity := SubStr( parser:p_str, nStart, nEnd - nStart )
          parser:p_end := parser:p_pos
-         parser:p_pos ++
+         parser:p_pos++
          EXIT
       CASE " "
          // "&" character found
@@ -4381,16 +4381,20 @@ FUNCTION AnsiToHtml( cAnsiText )
          nStart    := nEnd
          cHtmlText += "&amp;" + SubStr( cText, 2 )
          LOOP
+      OTHERWISE
+         cEntity := NIL
       ENDSWITCH
 
-      nStart := parser:p_pos
-      FOR EACH aEntity IN s_aHtmlAnsiEntities
-         IF aEntity[ 1 ] $ cText
-            cText := StrTran( cText, aEntity[ 1 ], aEntity[ 2 ] )
-         ENDIF
-      NEXT
+      IF cEntity != NIL
+         nStart := parser:p_pos
+         FOR EACH aEntity IN s_aHtmlAnsiEntities
+            IF aEntity[ 1 ] $ cText
+               cText := StrTran( cText, aEntity[ 1 ], aEntity[ 2 ] )
+            ENDIF
+         NEXT
 
-      cHtmlText += cText + cEntity
+         cHtmlText += cText + cEntity
+      ENDIF
    ENDDO
 
    cText := SubStr( parser:p_str, nStart )
