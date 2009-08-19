@@ -496,9 +496,9 @@ ifeq ($(HB_COMPILER),)
                HB_CCPREFIX := i586-mingw32msvc-
             else
                ifneq ($(call find_in_path_raw,gentoo-release,/etc),)
-                  ifneq ($(call find_in_path_par,i386-mingw32-,/opt/xmingw/bin),)
+                  ifneq ($(call find_in_path_par,i386-mingw32msvc-,/opt/xmingw/bin),)
                      HB_CCPATH := /opt/xmingw
-                     HB_CCPREFIX := i386-mingw32-
+                     HB_CCPREFIX := i386-mingw32msvc-
                   else
                      HB_CCPREFIX := i686-mingw32-
                   endif
