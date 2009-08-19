@@ -33,7 +33,7 @@ build: build-stamp
 build-stamp:
 	dh_testdir
 
-	bash make_gnu.sh
+	make
 
 	touch build-stamp
 
@@ -42,7 +42,7 @@ clean:
 	dh_testroot
 	rm -f build-stamp configure-stamp
 
-	-bash make_gnu.sh clean
+	-make clean
 
 	dh_clean
 
@@ -52,7 +52,7 @@ install: build
 	dh_clean -k
 	dh_installdirs
 
-	bash make_gnu.sh install
+	make install
 	rm -f $(HB_BIN_INSTALL)/hbverfix
 	install -m644 debian/harbour.cfg $(HB_ETC_DIR)/harbour.cfg
 	install -m644 source/rtl/gtcrs/hb-charmap.def $(HB_ETC_DIR)/harbour
