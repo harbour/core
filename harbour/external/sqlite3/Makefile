@@ -40,6 +40,10 @@ ifeq ($(HB_WITH_SQLITE3),)
    ifeq ($(HB_COMPILER),poccarm)
       HB_WITH_SQLITE3 := no
    endif
+   # NOTE: dos based watcom runs out of memory. [vszakats]
+   ifeq ($(HB_HOST_ARCH)-$(HB_COMPILER),dos-watcom)
+      HB_WITH_SQLITE3 := no
+   endif
 endif
 
 ifeq ($(HB_WITH_SQLITE3),yes)
