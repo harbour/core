@@ -39,12 +39,12 @@ LIBPATHS := -L$(LIB_DIR)
 
 LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
 
-ifneq ($(findstring hbrtl, $(LIBS)),)
+ifneq ($(filter hbrtl, $(LIBS)),)
    # Add the specified GT driver library
    ifeq ($(HB_CRS_LIB),)
       HB_CRS_LIB := pdcurses
    endif
-   ifneq ($(findstring gtcrs, $(LIBS)),)
+   ifneq ($(filter gtcrs, $(LIBS)),)
       LDLIBS += -l$(HB_CRS_LIB)
    endif
 endif

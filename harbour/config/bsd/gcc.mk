@@ -38,22 +38,22 @@ LD_OUT := -o
 LIBPATHS := -L$(LIB_DIR)
 LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
 
-ifneq ($(findstring hbrtl, $(LIBS)),)
+ifneq ($(filter hbrtl, $(LIBS)),)
    # Add the specified GT driver library
    ifeq ($(HB_CRS_LIB),)
       HB_CRS_LIB := ncurses
    endif
-   ifneq ($(findstring gtcrs, $(LIBS)),)
+   ifneq ($(filter gtcrs, $(LIBS)),)
       LDLIBS += -l$(HB_CRS_LIB)
    endif
-   ifneq ($(findstring gtsln, $(LIBS)),)
+   ifneq ($(filter gtsln, $(LIBS)),)
       LDLIBS += -lslang
       # In BSD, slang still needs curses :(
-      ifeq ($(findstring gtcrs, $(LIBS)),)
+      ifeq ($(filter gtcrs, $(LIBS)),)
          LDLIBS += -l$(HB_CRS_LIB)
       endif
    endif
-   ifneq ($(findstring gtxwc, $(LIBS)),)
+   ifneq ($(filter gtxwc, $(LIBS)),)
       LDLIBS += -lX11
      #LIBPATHS += -L/usr/X11R6/lib64
       LIBPATHS += -L/usr/X11R6/lib

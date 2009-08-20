@@ -189,7 +189,7 @@ HB_ERRCODE hb_rddSelectFirstAvailable( void )
 }
 
 /*
- * Creare and insert the new WorkArea node
+ * Create and insert the new WorkArea node
  */
 USHORT hb_rddInsertAreaNode( const char *szDriver )
 {
