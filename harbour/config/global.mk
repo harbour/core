@@ -49,15 +49,17 @@ MAKE_381 := $(filter $(need),$(firstword $(sort $(MAKE_VERSION) $(need))))
 
 # Don't indent this subroutine
 define find_in_path
-$(strip $(foreach dir,$(subst $(PTHSEP), ,$(PATH)),$(wildcard $(dir)/$(1)$(HB_HOST_BIN_EXT))))
+$(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),#,$(PATH))), $(wildcard $(subst #,\ ,$(subst \,/,$(dir)))/$(1)$(HB_HOST_BIN_EXT))))
 endef
 
+# Don't indent this subroutine
 define find_in_path_par
-$(strip $(foreach dir,$(subst $(PTHSEP), ,$(2)),$(wildcard $(dir)/$(1)$(HB_HOST_BIN_EXT))))
+$(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),#,$(2))), $(wildcard $(subst #,\ ,$(subst \,/,$(dir)))/$(1)$(HB_HOST_BIN_EXT))))
 endef
 
+# Don't indent this subroutine
 define find_in_path_raw
-$(strip $(foreach dir,$(subst $(PTHSEP), ,$(2)),$(wildcard $(dir)/$(1))))
+$(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),#,$(2))), $(wildcard $(subst #,\ ,$(subst \,/,$(dir)))/$(1))))
 endef
 
 define check_host
