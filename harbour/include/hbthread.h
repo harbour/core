@@ -67,7 +67,9 @@
 #  define HB_PTHREAD_API
 #elif defined( HB_OS_WIN )
 #  include <windows.h>
-#  include <process.h>
+#  if !defined( HB_OS_WIN_CE )
+#    include <process.h>
+#  endif
 #elif defined( HB_OS_OS2 )
 #  if defined( __WATCOMC__ )
 #     include <process.h>
