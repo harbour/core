@@ -100,6 +100,8 @@ AR := wlib
 ARFLAGS := -q -p=64 -c -n
 AR_RULE = $(create_library)
 
+include $(TOP)$(ROOT)config/rules.mk
+
 ifeq ($(HB_SHELL),dos)
 
    # disable DOS/4GW Banner
@@ -116,5 +118,3 @@ ifeq ($(HB_SHELL),dos)
    export HARBOURCMD := $(HB_FLAGS)
    HB_FLAGS :=
 endif
-
-include $(TOP)$(ROOT)config/rules.mk
