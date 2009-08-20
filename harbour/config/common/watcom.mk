@@ -20,14 +20,14 @@ ifeq ($(HB_ARCHITECTURE),linux)
    endif
 endif
 
+AR := wlib
+ARFLAGS := -q -p=64 -c -n
+
 comma := ,
 LDFILES_COMMA = $(subst $(subst x,x, ),$(comma) ,$(^F))
 LDLIBS_COMMA := $(subst $(subst x,x, ),$(comma) ,$(strip $(LDLIBS)))
 LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@$(BIN_EXT) FILE $(LDFILES_COMMA) $(if $(LDLIBS_COMMA), LIB $(LDLIBS_COMMA),)
-
-ifeq ($(HB_SHELL),sh)
-   create_library = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ $(foreach file,$(^F),-+$(file))
-endif
+AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ $(foreach file,$(^F),-+$(file))
 
 ifeq ($(HB_SHELL),os2)
    # maximum size of command line in OS2 is limited to 1024 characters
@@ -39,20 +39,16 @@ ifeq ($(HB_SHELL),os2)
    # commands length is too big so for %i in ( *$(OBJ_EXT) ) do ... below is
    # ugly workaround for both problems
 
-   ifeq ($(HB_SHELL),nt)
-      FILE := %%f
-   else
-      FILE := %f
-   endif
-
    define create_library
       @$(ECHO) $(LIB_DIR)/$@ > __lib__.tmp
-      for $(FILE) in ( *$(OBJ_EXT) ) do @$(ECHO) -+$(FILE) >> __lib__.tmp
+      for %f in ( *$(OBJ_EXT) ) do @$(ECHO) -+%f >> __lib__.tmp
       $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) @__lib__.tmp
    endef
+
+   AR_RULE = $(create_library)
 endif
 
-ifneq ($(filter $(HB_SHELL),nt dos),)
+ifeq ($(HB_SHELL),dos)
 
    # NOTE: The empty line directly before 'endef' HAVE TO exist!
    #       It causes that every command will be separated by LF
@@ -87,11 +83,9 @@ ifneq ($(filter $(HB_SHELL),nt dos),)
       $(foreach file,$(^F),$(lib_object))
       $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) @__lib__.tmp
    endef
-endif
 
-AR := wlib
-ARFLAGS := -q -p=64 -c -n
-AR_RULE = $(create_library)
+   AR_RULE = $(create_library)
+endif
 
 ifeq ($(CC),wcc386)
    ifneq ($(HB_HOST_ARCH),linux)
