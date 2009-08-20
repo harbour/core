@@ -66,5 +66,3 @@ endif
 LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 
 include $(TOP)$(ROOT)config/common/watcom.mk
-
-include $(TOP)$(ROOT)config/rules.mk

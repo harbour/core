@@ -65,5 +65,3 @@ LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 LDLIBS += $(foreach lib,$(SYSLIBS),$(lib))
 
 include $(TOP)$(ROOT)config/common/watcom.mk
-
-include $(TOP)$(ROOT)config/rules.mk
