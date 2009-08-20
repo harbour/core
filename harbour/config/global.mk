@@ -947,6 +947,7 @@ export HB_PKGNAME
 export HB_PKGNAMI
 
 HB_INSTALL_PREFIX_ORI := $(HB_INSTALL_PREFIX)
+HB_INSTALL_PREFIX_TOP := $(subst /,$(DIRSEP),$(realpath $(TOP)$(ROOT)))
 ifeq ($(HB_BUILD_PKG),yes)
    ifeq ($(HB_INIT_DONE),)
       export HB_TOP := $(subst /,$(DIRSEP),$(realpath $(TOP)$(ROOT)))
@@ -1028,12 +1029,16 @@ ifneq ($(HB_INSTALL_PREFIX),)
       export HB_LIB_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)lib$(LIBPOSTFIX)
    endif
    ifeq ($(HB_INC_INSTALL),)
-      export HB_INC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)include$(INCPOSTFIX)
+      ifneq ($(HB_INSTALL_PREFIX),$(HB_INSTALL_PREFIX_TOP))
+         export HB_INC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)include$(INCPOSTFIX)
+      endif
    endif
    ifeq ($(HB_DOC_INSTALL),)
       # Don't set doc dir for *nix targets
       ifeq ($(HB_OS_UNIX),no)
-         export HB_DOC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)doc
+         ifneq ($(HB_INSTALL_PREFIX),$(HB_INSTALL_PREFIX_TOP))
+            export HB_DOC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)doc
+         endif
       endif
    endif
 endif
