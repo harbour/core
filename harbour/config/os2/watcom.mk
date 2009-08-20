@@ -108,4 +108,21 @@ AR := wlib
 ARFLAGS := -q -p=64 -c -n
 AR_RULE = $(create_library)
 
+ifeq ($(HB_SHELL),dos)
+
+   # disable DOS/4GW Banner
+   export DOS4G := quiet
+
+   # work arround to DOS command line size limit
+   ifeq ($(CC),wcc386)
+      export WCC386 := $(strip $(CPPFLAGS))
+   else
+      export WPP386 := $(strip $(CPPFLAGS))
+   endif
+   CPPFLAGS :=
+
+   export HARBOURCMD := $(HB_FLAGS)
+   HB_FLAGS :=
+endif
+
 include $(TOP)$(ROOT)config/rules.mk

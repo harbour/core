@@ -64,14 +64,6 @@ ifeq ($(CC),wcc386)
    endif
 endif
 
-# work arround to DOS command line size limit
-ifeq ($(CC),wcc386)
-   export WCC386 := $(strip $(CPPFLAGS))
-else
-   export WPP386 := $(strip $(CPPFLAGS))
-endif
-CPPFLAGS :=
-
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 #       It causes that every command will be separated by LF
 define link_file
@@ -124,11 +116,21 @@ AR := wlib
 ARFLAGS := -q -p=64 -c -n
 AR_RULE = $(create_library)
 
-# disable DOS/4GW Banner
-export DOS4G := quiet
+ifeq ($(HB_SHELL),dos)
+
+   # disable DOS/4GW Banner
+   export DOS4G := quiet
+
+   # work arround to DOS command line size limit
+   ifeq ($(CC),wcc386)
+      export WCC386 := $(strip $(CPPFLAGS))
+   else
+      export WPP386 := $(strip $(CPPFLAGS))
+   endif
+   CPPFLAGS :=
+
+   export HARBOURCMD := $(HB_FLAGS)
+   HB_FLAGS :=
+endif
 
 include $(TOP)$(ROOT)config/rules.mk
-
-# work arround to DOS command line size limit
-export HARBOURCMD := $(HB_FLAGS)
-HB_FLAGS :=
