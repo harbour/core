@@ -5677,6 +5677,10 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
          #if defined( __PLATFORM__WINCE )
             AAdd( aUnd, "__PLATFORM__WINCE" )
          #endif
+         /* This is defined with Cygwin */
+         #if defined( __PLATFORM__UNIX )
+            AAdd( aUnd, "__PLATFORM__UNIX" )
+         #endif
       #elif defined( __PLATFORM__DOS )
          AAdd( aUnd, "__PLATFORM__DOS" )
       #elif defined( __PLATFORM__OS2 )

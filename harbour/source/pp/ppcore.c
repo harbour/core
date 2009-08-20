@@ -5361,7 +5361,7 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState )
    hb_xfree( szPlatform );
 
    hb_pp_addDefine( pState, szDefine, szResult );
-#ifdef HB_OS_UNIX
+#if defined( HB_OS_UNIX )
    hb_strncpy( szDefine + 12, "UNIX", sizeof( szDefine ) - 13 );
    hb_pp_addDefine( pState, szDefine, szResult );
 #endif

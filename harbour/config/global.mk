@@ -26,7 +26,6 @@
 # TOFIX: $(realpath/abspath) need GNU Make 3.81 or upper
 # TOFIX: $(eval) needs GNU Make 3.80 or upper
 
-
 ifeq ($(GLOBAL_CF_),)
 GLOBAL_CF_ := yes
 
@@ -818,6 +817,8 @@ ifneq ($(HB_HOST_ARCH)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
       # Setup platform macros (undefine host, define target)
       ifeq ($(HB_HOST_ARCH),win)
          HB_PRGFLAGS += -undef:__PLATFORM__WINDOWS
+         # We only need this to avoid problems with using Cygwin binaries as native ones.
+         HB_PRGFLAGS += -undef:__PLATFORM__UNIX
       else
          ifeq ($(HB_HOST_ARCH),dos)
             HB_PRGFLAGS += -undef:__PLATFORM__DOS

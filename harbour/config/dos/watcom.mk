@@ -42,6 +42,7 @@ ifneq ($(HB_BUILD_OPTIM),no)
 
    # optimization flags
    # don't enable -ol optimization in OpenWatcom 1.1 - gives buggy code
+   # -oxaht
    CPPFLAGS += -onaehtr -s -ei -zp4 -zt0
    #CPPFLAGS += -obl+m
    ifeq ($(CC),wpp386)
@@ -57,33 +58,6 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CPPFLAGS += -d2
 endif
 
-ifeq ($(CC),wcc386)
-   ifneq ($(HB_HOST_ARCH),linux)
-      CPPFLAGS := $(subst /,\,$(CPPFLAGS))
-      CC_RULE = $(CC) $(subst /,\,$(HB_INC_DEPEND)) $(CPPFLAGS) $(subst /,\,$(CFLAGS)) $(subst /,\,$(HB_CFLAGS)) $(subst /,\,$(HB_USER_CFLAGS)) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN)$(subst /,\,$<)
-   endif
-endif
-
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
-#       It causes that every command will be separated by LF
-define link_file
-   @$(ECHO) FILE $(file) >> __link__.tmp
-
-endef
-
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
-define link_lib
-   @$(ECHO) LIB $(lib) >> __link__.tmp
-
-endef
-
-define link_exe_file
-   @$(ECHO) $(LDFLAGS) NAME $(BIN_DIR)/$@ > __link__.tmp
-   $(foreach file,$(^F),$(link_file))
-   $(foreach lib,$(LDLIBS),$(link_lib))
-   -$(LD) @__link__.tmp
-endef
-
 LD := wlink
 ifeq ($(HB_BUILD_DEBUG),yes)
    LDFLAGS += DEBUG ALL
@@ -96,41 +70,6 @@ else
    LDFLAGS += SYS dos4g OP STUB=wstubq.exe
 endif
 
-LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
-
-LD_RULE = $(link_exe_file) $(HB_USER_LDFLAGS)
-
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
-define lib_object
-   @$(ECHO) -+$(file) >> __lib__.tmp
-
-endef
-
-define create_library
-   @$(ECHO) $(LIB_DIR)/$@ > __lib__.tmp
-   $(foreach file,$(^F),$(lib_object))
-   $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) @__lib__.tmp
-endef
-
-AR := wlib
-ARFLAGS := -q -p=64 -c -n
-AR_RULE = $(create_library)
-
-ifeq ($(HB_SHELL),dos)
-
-   # disable DOS/4GW Banner
-   export DOS4G := quiet
-
-   # work arround to DOS command line size limit
-   ifeq ($(CC),wcc386)
-      export WCC386 := $(strip $(CPPFLAGS))
-   else
-      export WPP386 := $(strip $(CPPFLAGS))
-   endif
-   CPPFLAGS :=
-
-   export HARBOURCMD := $(HB_FLAGS)
-   HB_FLAGS :=
-endif
+include $(TOP)$(ROOT)config/common/watcom.mk
 
 include $(TOP)$(ROOT)config/rules.mk

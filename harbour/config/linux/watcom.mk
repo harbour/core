@@ -66,40 +66,6 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 endif
 LDFLAGS += SYS linux
 
-LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
-
-comma := ,
-LDFILES_COMMA = $(subst $(subst x,x, ),$(comma) ,$(^F))
-LDLIBS_COMMA := $(subst $(subst x,x, ),$(comma) ,$(strip $(LDLIBS)))
-ifneq ($(HB_SHELL),sh)
-   LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@. FILE $(LDFILES_COMMA)
-else
-   LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@ FILE $(LDFILES_COMMA)
-endif
-ifneq ($(LDLIBS_COMMA),)
-   LD_RULE += LIB $(LDLIBS_COMMA)
-endif
-
-AR := wlib
-# ARFLAGS := -q -c -n -fa
-ARFLAGS := -q -c -n
-AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ $(foreach file,$(^F),-+$(file))
-
-ifeq ($(HB_SHELL),dos)
-
-   # disable DOS/4GW Banner
-   export DOS4G := quiet
-
-   # work arround to DOS command line size limit
-   ifeq ($(CC),wcc386)
-      export WCC386 := $(strip $(CPPFLAGS))
-   else
-      export WPP386 := $(strip $(CPPFLAGS))
-   endif
-   CPPFLAGS :=
-
-   export HARBOURCMD := $(HB_FLAGS)
-   HB_FLAGS :=
-endif
+include $(TOP)$(ROOT)config/common/watcom.mk
 
 include $(TOP)$(ROOT)config/rules.mk
