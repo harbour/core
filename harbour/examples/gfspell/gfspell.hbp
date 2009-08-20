@@ -1,0 +1,11 @@
+#
+# $Id$
+#
+
+-hblib
+-olib/${hb_arch}/${hb_comp}/gfspell
+-inc
+-q0 -w1 -es2 -l
+
+spell.prg
+spellc.c
