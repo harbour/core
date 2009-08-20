@@ -73,8 +73,6 @@ STATIC PROCEDURE Throw( oError )
    Break( oError )
    RETURN
 
-/* NOTE: xOle with numeric pointers isn't supported by this
-         implementation. */
 CREATE CLASS TOLEAUTO FROM WIN_OLEAUTO
    /* TODO: Implement compatibility to the required extent */
    VAR cClassName
@@ -85,6 +83,9 @@ ENDCLASS
 METHOD hObj( xOle ) CLASS TOLEAUTO
 
    IF PCount() > 0 .AND. xOle != NIL
+      IF ISNUMBER( xOle )
+         xOle := __OLEPDISP( xOle )
+      ENDIF
       IF hb_isPointer( xOle )
          ::__hObj := xOle
       ENDIF
@@ -95,6 +96,10 @@ METHOD hObj( xOle ) CLASS TOLEAUTO
 METHOD New( xOle, cClass ) CLASS TOLEAUTO
    LOCAL hOle
    LOCAL oError
+
+   IF ISNUMBER( xOle )
+      xOle := __OLEPDISP( xOle )
+   ENDIF
 
    IF hb_isPointer( xOle )
       ::__hObj := xOle
@@ -134,6 +139,10 @@ FUNCTION GetActiveObject( xOle, cClass )
    LOCAL o := TOleAuto():New()
    LOCAL hOle
    LOCAL oError
+
+   IF ISNUMBER( xOle )
+      xOle := __OLEPDISP( xOle )
+   ENDIF
 
    IF hb_isPointer( xOle )
       o:__hObj := xOle

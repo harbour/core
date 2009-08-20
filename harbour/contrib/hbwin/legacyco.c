@@ -60,6 +60,7 @@
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
+#include "hbwinole.h"
 
 HB_FUNC_EXTERN( WIN_OLEERROR );
 
@@ -112,4 +113,10 @@ HB_FUNC( MESSAGEBOX )
    hb_retni( MessageBox( hWnd, lpStr1, lpStr2, hb_parni( 4 ) ) );
    HB_TCHAR_FREE( lpStr1 );
    HB_TCHAR_FREE( lpStr2 );
+}
+
+HB_FUNC( __OLEPDISP )
+{
+   hb_oleItemPut( hb_param( -1, HB_IT_ANY ),
+                  ( IDispatch * ) ( HB_PTRUINT ) hb_parnint( 1 ) );
 }
