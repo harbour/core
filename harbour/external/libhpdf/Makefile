@@ -14,7 +14,11 @@ LIBNAME := libhpdf
 
 ifeq ($(HB_WITH_LIBHPDF),)
    HB_WITH_LIBHPDF := yes
-   ifeq ($(HB_COMPILER),watcom)
+   ifeq ($(HB_ARCHITECTURE)-$(HB_COMPILER),win-watcom)
+      HB_WITH_LIBHPDF := no
+   endif
+   # NOTE: dos hosts can't build this lib due to long filename. [vszakats]
+   ifeq ($(HB_HOST_ARCH),dos)
       HB_WITH_LIBHPDF := no
    endif
    ifeq ($(HB_COMPILER),pocc64)
@@ -26,9 +30,6 @@ ifeq ($(HB_WITH_LIBHPDF),)
    ifeq ($(HB_COMPILER),mingwarm)
       HB_WITH_LIBHPDF := yes
       HB_CFLAGS += -U__COREDLL__
-   endif
-   ifeq ($(HB_ARCHITECTURE),os2)
-      HB_WITH_LIBHPDF := yes
    endif
 endif
 

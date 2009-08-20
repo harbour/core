@@ -9,8 +9,10 @@ include $(TOP)$(ROOT)config/global.mk
 LIBNAME := hbhpdf
 
 ifeq ($(HB_INC_LIBHARU),)
-   ifeq ($(HB_XBUILD),)
-      HB_INC_LIBHARU = /usr/include /usr/local/include $(TOP)$(ROOT)external/libhpdf
+   ifneq ($(HB_HOST_ARCH),dos)
+      ifeq ($(HB_XBUILD),)
+         HB_INC_LIBHARU = /usr/include /usr/local/include $(TOP)$(ROOT)external/libhpdf
+      endif
    endif
 endif
 

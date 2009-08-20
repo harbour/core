@@ -12,13 +12,6 @@
 #    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/wlib.html
 # ---------------------------------------------------------------
 
-ifeq ($(CC),wcc386)
-   ifneq ($(HB_HOST_ARCH),linux)
-      CPPFLAGS := $(subst /,\,$(CPPFLAGS))
-      CC_RULE = $(CC) $(subst /,\,$(HB_INC_DEPEND)) $(CPPFLAGS) $(subst /,\,$(CFLAGS)) $(subst /,\,$(HB_CFLAGS)) $(subst /,\,$(HB_USER_CFLAGS)) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN)$(subst /,\,$<)
-   endif
-endif
-
 # NOTE: Hack to force no extension for Linux binaries created on non-Linux hosts.
 #       Otherwise they become '.elf'. [vszakats]
 ifeq ($(HB_ARCHITECTURE),linux)
@@ -100,7 +93,19 @@ AR := wlib
 ARFLAGS := -q -p=64 -c -n
 AR_RULE = $(create_library)
 
+ifeq ($(CC),wcc386)
+   ifneq ($(HB_HOST_ARCH),linux)
+      CC_RULE = $(CC) $(CC_FLAGS) $(subst /,\,$(HB_USER_CFLAGS)) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN)$(subst /,\,$<)
+   endif
+endif
+
 include $(TOP)$(ROOT)config/rules.mk
+
+ifeq ($(CC),wcc386)
+   ifneq ($(HB_HOST_ARCH),linux)
+      CC_FLAGS := $(subst /,\,$(CC_FLAGS))
+   endif
+endif
 
 ifeq ($(HB_SHELL),dos)
 
@@ -109,11 +114,11 @@ ifeq ($(HB_SHELL),dos)
 
    # work arround to DOS command line size limit
    ifeq ($(CC),wcc386)
-      export WCC386 := $(strip $(CPPFLAGS))
+      export WCC386 := $(strip $(CC_FLAGS))
    else
-      export WPP386 := $(strip $(CPPFLAGS))
+      export WPP386 := $(strip $(CC_FLAGS))
    endif
-   CPPFLAGS :=
+   CC_FLAGS :=
 
    export HARBOURCMD := $(HB_FLAGS)
    HB_FLAGS :=
