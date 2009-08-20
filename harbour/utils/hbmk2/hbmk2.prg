@@ -938,7 +938,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       cBinExt := ".exe"
       cOptPrefix := "-/"
       l_aLIBSYSCORE := { "coredll", "ws2" }
-      l_aLIBSYSMISC := { "uuid", "ole32", "wininet", "commdlg", "commctrl" }
+      l_aLIBSYSMISC := { "ceshell", "uuid", "ole32", "oleaut32", "wininet", "commdlg", "commctrl" }
+
    OTHERWISE
       hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Architecture value unknown: %1$s" ), hbmk[ _HBMK_cARCH ] ) )
       RETURN 1
@@ -2633,18 +2634,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aOPTD ], "/map" )
          ENDIF
          IF hbmk[ _HBMK_cCOMP ] == "msvcarm"
-            /* NOTE: Copied from .mk. Probably needs cleaning. */
-            AAdd( hbmk[ _HBMK_aOPTC ], "-DWINCE" )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-D_WINCE" )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-D_WINDOWS" )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-DARM" )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-D_ARM_" )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-DARMV4" )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-D_M_ARM" )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-D_UNICODE" )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-D_UWIN" )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-DUNDER_CE" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-D_WIN32_WCE=0x501 -DCE_ARCH -DWINCE -D_WINCE -D_WINDOWS -DARM -D_ARM_ -DARMV4 -D_M_ARM -D_ARMV4I_ -Darmv4i -D__arm__ -D_UNICODE -D_UWIN -DUNDER_CE" )
             AAdd( hbmk[ _HBMK_aOPTL ], "/subsystem:windowsce" )
             AAdd( hbmk[ _HBMK_aOPTL ], "/nodefaultlib:oldnames.lib" )
             AAdd( hbmk[ _HBMK_aOPTL ], "/nodefaultlib:kernel32.lib" )

@@ -7,3 +7,4 @@
 incpaths=.
 
 libs=hbwin
+{wce}libs=sms
