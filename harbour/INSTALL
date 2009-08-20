@@ -368,18 +368,18 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
          -> wce/mingwarm
          -> wce/poccarm
          -> wce/msvcarm
-         -> dos/djgpp     (using DOS GNU make)
+         -> dos/djgpp     (using MS-DOS build of GNU Make)
          -> dos/watcom
          -> os2/watcom
          -> linux/watcom
       on MS-DOS hosts:
-         -> win/watcom    (*)
-         -> os2/watcom    (*)
-         -> linux/watcom  (*)
+         -> win/watcom
+         -> os2/watcom
+         -> linux/watcom
       on OS/2 hosts:
          -> win/watcom
-         -> dos/watcom    (*)
-         -> linux/watcom  (*)
+         -> dos/watcom
+         -> linux/watcom
       on Linux hosts:
          -> wce/mingwarm
          -> win/mingw
@@ -389,8 +389,6 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
       On other *nix hosts:
          -> wce/mingwarm
          -> win/mingw
-
-      (*): Theoretically possible, but not heard of such build yet.
 
    Point this envvar to the directory where native Harbour executables
    for your host platform can be found:

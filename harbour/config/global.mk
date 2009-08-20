@@ -393,10 +393,12 @@ ifeq ($(HB_HOST_ARCH),)
          ifneq ($(WINDIR),)
             HB_HOST_ARCH := win
          else
-            ifneq ($(HB_ARCHITECTURE),)
-               HB_HOST_ARCH := $(HB_ARCHITECTURE)
-            else
+            ifeq ($(HB_SHELL),dos)
                HB_HOST_ARCH := dos
+            else
+               ifneq ($(HB_ARCHITECTURE),)
+                  HB_HOST_ARCH := $(HB_ARCHITECTURE)
+               endif
             endif
          endif
       endif
@@ -487,94 +489,96 @@ HB_COMP_AUTO :=
 ifeq ($(HB_COMPILER),)
    ifneq ($(HB_HOST_ARCH),$(HB_ARCHITECTURE))
       # cross-build section *nix -> win/wce
-      ifeq ($(HB_ARCHITECTURE),win)
+      ifeq ($(filter $(HB_HOST_ARCH),dos os2),)
+         ifeq ($(HB_ARCHITECTURE),win)
 
-         ifeq ($(call find_in_path_par,$(HB_CCPREFIX),$(HB_CCPATH)),)
-            HB_CCPREFIX :=
-            HB_CCPATH :=
-         endif
+            ifeq ($(call find_in_path_par,$(HB_CCPREFIX),$(HB_CCPATH)),)
+               HB_CCPREFIX :=
+               HB_CCPATH :=
+            endif
 
-         # try to detect MinGW cross-compiler location using some default platform settings
-         ifeq ($(HB_CCPATH)$(HB_CCPREFIX),)
-            ifneq ($(call find_in_path_raw,debian_version,/etc),)
-               HB_CCPREFIX := i586-mingw32msvc-
-            else
-               ifneq ($(call find_in_path_raw,gentoo-release,/etc),)
-                  ifneq ($(call find_in_path_par,i386-mingw32msvc-,/opt/xmingw/bin),)
-                     HB_CCPATH := /opt/xmingw
-                     HB_CCPREFIX := i386-mingw32msvc-
-                  else
-                     HB_CCPREFIX := i686-mingw32-
-                  endif
+            # try to detect MinGW cross-compiler location using some default platform settings
+            ifeq ($(HB_CCPATH)$(HB_CCPREFIX),)
+               ifneq ($(call find_in_path_raw,debian_version,/etc),)
+                  HB_CCPREFIX := i586-mingw32msvc-
                else
-                  ifeq ($(HB_ARCHITECTURE),bsd)
-                     HB_CCPATH := /usr/local/mingw32
+                  ifneq ($(call find_in_path_raw,gentoo-release,/etc),)
+                     ifneq ($(call find_in_path_par,i386-mingw32msvc-,/opt/xmingw/bin),)
+                        HB_CCPATH := /opt/xmingw
+                        HB_CCPREFIX := i386-mingw32msvc-
+                     else
+                        HB_CCPREFIX := i686-mingw32-
+                     endif
                   else
-                     MINGW_OK := $(strip $(foreach d, i386-mingw i486-mingw i586-mingw i686-mingw i386-mingw32 i486-mingw32 i586-mingw32 i686-mingw32, $(if $(wildcard /usr/local/bin/$(d)-gcc),$(d),)))
-                     ifneq ($(MINGW_OK),)
-                        HB_CCPATH := /usr/local/bin
-                        HB_CCPREFIX := $(MINGW_OK)-
+                     ifeq ($(HB_ARCHITECTURE),bsd)
+                        HB_CCPATH := /usr/local/mingw32
+                     else
+                        MINGW_OK := $(strip $(foreach d, i386-mingw i486-mingw i586-mingw i686-mingw i386-mingw32 i486-mingw32 i586-mingw32 i686-mingw32, $(if $(wildcard /usr/local/bin/$(d)-gcc),$(d),)))
+                        ifneq ($(MINGW_OK),)
+                           HB_CCPATH := /usr/local/bin
+                           HB_CCPREFIX := $(MINGW_OK)-
+                        endif
                      endif
                   endif
                endif
             endif
-         endif
 
-         # generic detection for mingw cross-compiler
-         ifeq ($(HB_CCPATH)$(HB_CCPREFIX),)
-            MINGW_BASE_LIST := /usr /usr/local /usr/local/mingw32 /opt/xmingw
-            MINGW_PREFIX := $(subst -gcc,,$(firstword $(call find_in_path_par,bin/i?86-mingw*-,$(MINGW_BASE_LIST))))
-            ifneq ($(MINGW_PREFIX),)
-               HB_CCPATH := $(dir $(MINGW_PREFIX))
-               HB_CCPREFIX := $(notdir $(MINGW_PREFIX))
-            else
-               MINGW_PREFIX := $(dir $(firstword $(call find_in_path_par,i?86-mingw*/bin/,$(MINGW_BASE_LIST))))
+            # generic detection for mingw cross-compiler
+            ifeq ($(HB_CCPATH)$(HB_CCPREFIX),)
+               MINGW_BASE_LIST := /usr /usr/local /usr/local/mingw32 /opt/xmingw
+               MINGW_PREFIX := $(subst -gcc,,$(firstword $(call find_in_path_par,bin/i?86-mingw*-,$(MINGW_BASE_LIST))))
                ifneq ($(MINGW_PREFIX),)
-                  HB_CCPATH := $(MINGW_PREFIX)
-                  HB_CCPREFIX :=
-               endif
-            endif
-         endif
-
-         ifneq ($(HB_CCPATH)$(HB_CCPREFIX),)
-            HB_COMPILER := mingw
-            HB_ARCHITECTURE := win
-            export HB_TOOLS_PREF := hbw
-            export HB_XBUILD := win
-            ifneq ($(HB_HOST_BUILD),all)
-               HB_HOST_BUILD := lib
-            endif
-         else
-            $(error ! Harbour build couldn't find mingw32 cross-compiler. Please install it, or point HB_CCPATH/HB_CCPREFIX environment variables to it)
-         endif
-      else
-         ifeq ($(HB_ARCHITECTURE),wce)
-            ifeq ($(HB_CCPATH),)
-               HB_CCPATH := /opt/mingw32ce/bin/
-            endif
-
-            ifneq ($(call find_in_path_par,arm-wince-mingw32ce-gcc,$(HB_CCPATH)),)
-               HB_CCPREFIX := arm-wince-mingw32ce-
-               HB_CCPATH := $(HB_CCPATH)/
-            else
-               ifneq ($(call find_in_path_par,arm-mingw32ce-gcc,$(HB_CCPATH)),)
-                  HB_CCPREFIX := arm-mingw32ce-
-                  HB_CCPATH := $(HB_CCPATH)/
+                  HB_CCPATH := $(dir $(MINGW_PREFIX))
+                  HB_CCPREFIX := $(notdir $(MINGW_PREFIX))
                else
-                  HB_CCPATH :=
-                  HB_CCPREFIX :=
+                  MINGW_PREFIX := $(dir $(firstword $(call find_in_path_par,i?86-mingw*/bin/,$(MINGW_BASE_LIST))))
+                  ifneq ($(MINGW_PREFIX),)
+                     HB_CCPATH := $(MINGW_PREFIX)
+                     HB_CCPREFIX :=
+                  endif
                endif
             endif
+
             ifneq ($(HB_CCPATH)$(HB_CCPREFIX),)
-               HB_COMPILER := mingwarm
-               HB_ARCHITECTURE := wce
-               export HB_TOOLS_PREF := hbce
-               export HB_XBUILD := wce
+               HB_COMPILER := mingw
+               HB_ARCHITECTURE := win
+               export HB_TOOLS_PREF := hbw
+               export HB_XBUILD := win
                ifneq ($(HB_HOST_BUILD),all)
                   HB_HOST_BUILD := lib
                endif
             else
-               $(error ! Harbour build couldn't find cegcc cross-compiler. Please install it to /opt/mingw32ce, or point HB_CCPATH/HB_CCPREFIX environment variables to it)
+               $(error ! Harbour build couldn't find mingw32 cross-compiler. Please install it, or point HB_CCPATH/HB_CCPREFIX environment variables to it)
+            endif
+         else
+            ifeq ($(HB_ARCHITECTURE),wce)
+               ifeq ($(HB_CCPATH),)
+                  HB_CCPATH := /opt/mingw32ce/bin/
+               endif
+
+               ifneq ($(call find_in_path_par,arm-wince-mingw32ce-gcc,$(HB_CCPATH)),)
+                  HB_CCPREFIX := arm-wince-mingw32ce-
+                  HB_CCPATH := $(HB_CCPATH)/
+               else
+                  ifneq ($(call find_in_path_par,arm-mingw32ce-gcc,$(HB_CCPATH)),)
+                     HB_CCPREFIX := arm-mingw32ce-
+                     HB_CCPATH := $(HB_CCPATH)/
+                  else
+                     HB_CCPATH :=
+                     HB_CCPREFIX :=
+                  endif
+               endif
+               ifneq ($(HB_CCPATH)$(HB_CCPREFIX),)
+                  HB_COMPILER := mingwarm
+                  HB_ARCHITECTURE := wce
+                  export HB_TOOLS_PREF := hbce
+                  export HB_XBUILD := wce
+                  ifneq ($(HB_HOST_BUILD),all)
+                     HB_HOST_BUILD := lib
+                  endif
+               else
+                  $(error ! Harbour build couldn't find cegcc cross-compiler. Please install it to /opt/mingw32ce, or point HB_CCPATH/HB_CCPREFIX environment variables to it)
+               endif
             endif
          endif
       endif
