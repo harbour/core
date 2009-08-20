@@ -899,6 +899,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                     { {|| iif( ! Empty( GetEnv( "WATCOM" ) ),;
                                FindInPath( "wpp386"   ),;
                                NIL )               }, "watcom" },;
+                    { {|| FindInPath( "clarm"    ) }, "msvcarm" },;
                     { {|| FindInPath( "armasm"   ) }, "msvcarm" },;
                     { {|| FindInPath( "ml64"     ) }, "msvc64" },;
                     { {|| iif( FindInPath( "wpp386"   ) == NIL,;
@@ -924,7 +925,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       l_aLIBSYSMISC := { "winspool", "comctl32", "comdlg32", "shell32", "uuid", "ole32", "oleaut32", "mpr", "winmm", "mapi32", "imm32", "msimg32", "wininet" }
    CASE hbmk[ _HBMK_cARCH ] == "wce"
       aCOMPDET := { { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" ) }, "mingwarm" },;
-                    { {|| FindInPath( "cl"       ) }, "msvcarm" },;
+                    { {|| FindInPath( "clarm"    ) }, "msvcarm" },;
+                    { {|| FindInPath( "armasm"   ) }, "msvcarm" },;
                     { {|| FindInPath( "pocc"     ) }, "poccarm" },;
                     { {|| FindInPath( "arm-mingw32ce-gcc" ) }, "mingwarm", "arm-mingw32ce-" } ,;
                     { {|| FindInPath( "arm-wince-mingw32ce-gcc" ) }, "mingwarm", "arm-wince-mingw32ce-" } }
@@ -2558,7 +2560,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
          IF Empty( nCCompVer )
             /* Compatibility with Harbour GNU Make system */
-            IF Empty( GetEnv( "HB_VISUALC_VER_PRE80" ) )
+            IF Empty( GetEnv( "HB_VISUALC_VER_PRE80" ) ) .AND. !( hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. FindInPath( "clarm" ) )
                nCCompVer := 800 /* Visual Studio 2005 */
             ELSE
                nCCompVer := 710 /* Visual Studio .NET 2003 */

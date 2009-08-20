@@ -342,17 +342,52 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    Cross building
    --------------
 
-   Point this envvar to the directory where native Harbour executables for
-   your host platform can be found:
+   You can build Harbour for target platforms different than host
+   platform. F.e. you can create Windows build on *nix systems, Linux
+   builds on Windows systems, etc. It's also possible to build targets
+   for different than host CPU architectures. F.e. you can create
+   Windows 64-bit build on 32-bit Windows platform, or Linux x86_64
+   build on x86 hosts, or Linux MIPS build on x86 host.
+
+   Currently possible cross-platform scenarios, sorted by host platform:
+
+      on Windows hosts:
+         -> wce/mingwarm
+         -> wce/poccarm
+         -> wce/msvcarm
+         -> dos/djgpp     (using DOS GNU make)
+         -> dos/watcom
+         -> os2/watcom
+         -> linux/watcom
+      on MS-DOS hosts:
+         -> win/watcom    (*)
+         -> os2/watcom    (*)
+         -> linux/watcom  (*)
+      on OS/2 hosts:
+         -> win/watcom
+         -> dos/watcom    (*)
+         -> linux/watcom  (*)
+      on Linux hosts:
+         -> wce/mingwarm
+         -> win/mingw
+         -> win/watcom
+         -> dos/watcom
+         -> os2/watcom
+      On other *nix hosts:
+         -> wce/mingwarm
+         -> win/mingw
+
+      (*): Theoretically possible, but not heard of such build yet.
+
+   Point this envvar to the directory where native Harbour executables
+   for your host platform can be found:
       HB_BIN_COMPILE=<HARBOUR_NATIVE_BUILD_DIR>\bin
 
-   You need these when building for a platform different than host
-   (f.e. to create Windows builds on Linux, to create a Windows x64
-   build on 32-bit Windows or to create Windows CE/ARM build on any
-   operating systems). For this to work, you will need to point
-   above environment variables to a native Harbour build available on
-   your system. You don't need a full native build, harbour, hbpp and
-   hbmk2 executables are enough for the process to succeed.
+   If you leave this value empty, the make system will try to autodetect it,
+   so in practice all you have to do is to create native build first, then
+   create the cross-build. If you set this value manually, it may be useful
+   to know that only harbour, hbpp and hbmk2 executables are required for
+   a cross-build process to succeed.
 
 
 EXAMPLES
@@ -397,6 +432,14 @@ EXAMPLES
 
       --- MSVC 2005
       call "%ProgramFiles%\Microsoft Visual Studio 8\VC\vcvarsall.bat"
+      rem
+      mingw32-make %1 %2 > log.txt 2>&1
+      ---
+
+      --- MSVC 2005 WinCE/ARM (requires preceding build for native target)
+      set INCLUDE=%ProgramFiles%\Microsoft Visual Studio 8\VC\ce\include;%ProgramFiles%\Windows Mobile 5.0 SDK R2\PocketPC\Include\Armv4i
+      set LIB=%ProgramFiles%\Microsoft Visual Studio 8\VC\ce\lib\armv4i;%ProgramFiles%\Windows Mobile 5.0 SDK R2\PocketPC\Lib\ARMV4I
+      set PATH=%ProgramFiles%\Microsoft Visual Studio 8\VC\ce\bin\x86_arm;%ProgramFiles%\Microsoft Visual Studio 8\Common7\IDE;%PATH%
       rem
       mingw32-make %1 %2 > log.txt 2>&1
       ---
