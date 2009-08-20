@@ -8,7 +8,7 @@ With kind permission of author Joseph D. Booth,
 Copyright (C) 1993, All Rights Reserved.
 
 ------------------------------------------------------------------------
-From: <Joe@jbooth-consulting.com>
+From: (Joe jbooth-consulting com)
 Subject: Re: Grumpfish Speller within xHarbour.
 
 No problem giving you permission, feel free to use Grumpfish Speller in
