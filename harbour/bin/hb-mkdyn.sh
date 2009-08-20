@@ -127,7 +127,7 @@ if [ "${SLIB_EXT}" = ".dylib" ]; then
     FULLNAME="${BASE}.${VERSION}${SLIB_EXT}"
     libtool -dynamic -install_name "${BASE}${SLIB_EXT}" \
         -compatibility_version ${MAJOR}.${MINOR} -current_version ${VERSION} \
-        -flat_namespace -undefined warning -multiply_defined suppress -single_module \
+        -flat_namespace -undefined warning -multiply_defined suppress -single_module ${HB_USER_DFLAGS} \
         -o "${DSTDIR}/${FULLNAME}" "$@" && \
     ln -sf "${FULLNAME}" "${DSTDIR}${BASE}.${MAJOR}${SLIB_EXT}" && \
     ln -sf "${FULLNAME}" "${DSTDIR}${BASE}${SLIB_EXT}"
@@ -139,7 +139,7 @@ elif [ "${SLIB_EXT}" = ".dll" ]; then
         SYSLIBS="-luser32 -lws2_32 -ladvapi32 -lgdi32"
     fi
     # -Wl,--output-def,testdll.def,--out-implib,libtestdll.a
-    ${HB_CCPREFIX}gcc -shared -o "${FULLNAME}" $OBJLST ${linker_options} ${HB_USER_LDFLAGS} ${SYSLIBS} ${HB_DLLIBS} && \
+    ${HB_CCPREFIX}gcc -shared -o "${FULLNAME}" $OBJLST ${linker_options} ${HB_USER_DFLAGS} ${SYSLIBS} ${HB_DLLIBS} && \
         cd "${dir}" && \
         rm -f "${DSTDIR}${FULLNAME}" && \
         mv -f "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${FULLNAME}"
@@ -147,7 +147,7 @@ else
     #FULLNAME="${BASE}-${VERSION}${SLIB_EXT}"
     #FULLNAME="${BASE}{SLIB_EXT}.${VERSION}"
     FULLNAME="${LIB_NAME}${SLIB_EXT}"
-    ${HB_CCPREFIX}gcc -shared -fPIC -o "${FULLNAME}" $OBJLST ${linker_options} ${HB_USER_LDFLAGS} && \
+    ${HB_CCPREFIX}gcc -shared -fPIC -o "${FULLNAME}" $OBJLST ${linker_options} ${HB_USER_DFLAGS} && \
         cd "${dir}" && \
         mv -f "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${FULLNAME}"
 fi

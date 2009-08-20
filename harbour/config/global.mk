@@ -238,6 +238,7 @@ ifeq ($(HB_INIT_DONE),)
       #   HB_GPM_NOICE_DISABLE        -> HB_USER_CFLAGS=-DHB_GPM_NOICE_DISABLE
       #   HB_GT_CRS_BCEHACK           -> HB_USER_CFLAGS=-DHB_GT_CRS_BCEHACK
       #   HB_NCURSES_194              -> HB_USER_CFLAGS=-DHB_NCURSES_194
+      #   HB_DLLIBS                   -> ?
       # Macros:
       #   -DHB_PCRE_REGEX, -DHB_POSIX_REGEX, -DHB_EXT_ZLIB, -DHB_HAS_GPM
 
@@ -253,6 +254,9 @@ ifeq ($(HB_INIT_DONE),)
       endif
       ifneq ($(HB_USER_AFLAGS),)
          $(info ! HB_USER_AFLAGS: $(HB_USER_AFLAGS))
+      endif
+      ifneq ($(HB_USER_DFLAGS),)
+         $(info ! HB_USER_AFLAGS: $(HB_USER_DFLAGS))
       endif
       ifneq ($(HB_INSTALL_PREFIX),)
          $(info ! HB_INSTALL_PREFIX: $(HB_INSTALL_PREFIX))

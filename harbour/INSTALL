@@ -289,55 +289,68 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    -------
    - HB_COMPILER               Override C compiler autodetection
    - HB_ARCHITECTURE           Override platform autodetection
-                               See this secion for possible values:
+                               See this section for possible values:
                                SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
 
    - HB_USER_PRGFLAGS          User Harbour compiler options
    - HB_USER_CFLAGS            User C compiler options
    - HB_USER_LDFLAGS           User linker options for executables
    - HB_USER_AFLAGS            User linker options for libraries
+   - HB_USER_DFLAGS            User linker options for dynamic libraries
 
    - HB_INSTALL_PREFIX         Target root directory to install Harbour files.
-                               This will default to Harbour source tree.
-   - HB_BIN_INSTALL            Target directory to install executables
-   - HB_LIB_INSTALL            Target directory to install libraries
-   - HB_INC_INSTALL            Target directory to install language headers
-   - HB_DOC_INSTALL            Target directory to install documentation
+                               This will default to Harbour source tree on
+                               non-*nix systems. On *nix systems the default
+                               is set to /usr/local/ or $(PREFIX) if specified,
+                               and /usr/local/harbour-<arch>-<comp> for
+                               cross-builds. It's always set to /pkg/<arch>/<comp>
+                               when HB_BUILD_PKG is set to 'yes'.
+
+   - HB_BIN_INSTALL            Override directory to install executables
+   - HB_LIB_INSTALL            Override directory to install libraries
+   - HB_INC_INSTALL            Override directory to install language headers
+   - HB_DOC_INSTALL            Override directory to install documentation
 
    Special
    -------
-   - HB_BUILD_NAME=<name>      Create named build. This allows to keep
+   - HB_BUILD_NAME=[<name>]    Create named build. This allows to keep
                                multiple builds in parallel for any given
                                platform/compiler. F.e. debug / release.
                                NOTE: In current implementation it's
                                appended to compiler directory name, so all
                                filesystem/platform name rules and limits
                                apply. It's valid to use (back)slashes though.
-   - HB_BUILD_PKG=yes          Create release packages (requires 'clean install').
-   - HB_BUILD_DLL=no           Don't create Harbour .dlls.
-   - HB_BUILD_IMPLIB=yes       Create import libraries for external .dll dependencies.
-   - HB_BUILD_DEBUG=yes        Create a debug build.
-   - HB_BUILD_OPTIM=no         Disable C compiler optimizations.
-   - HB_BUILD_UNICODE=yes      Create Unicode build (Windows/Windows CE).
+   - HB_BUILD_PKG=yes          Create release package. Default: no
+                               Requires 'clean install' in root source dir.
+                               (currently on Windows/Windows CE/DOS)
+   - HB_BUILD_DLL=no           Create Harbour .dlls. Default: yes
+   - HB_BUILD_IMPLIB=yes       Create import libraries for external .dll
+                               dependencies. Default: no
+   - HB_BUILD_DEBUG=yes        Create a debug build. Default: no
+   - HB_BUILD_OPTIM=no         Enable C compiler optimizations. Default: yes
+   - HB_BUILD_UNICODE=yes      Create Unicode build (on Windows/Windows CE).
+                               Default: no
    - HB_BUILD_MODE=[cpp|c]     Changes default build mode to C++ or C.
-                               Default is C, except for msvc* and watcom
-                               compilers.
-   - HB_CONTRIBLIBS=no         Don't build any contrib libraries.
+                               Default: c, except for msvc* and watcom
+                                        compilers where it's cpp.
+   - HB_CONTRIBLIBS=no         Don't build any contrib libraries. Default: yes
    - HB_CONTRIBLIBS=[<list>]   Build space separated <list> of contrib
                                libraries. Build all if left empty.
    - HB_CONTRIB_ADDONS=<list>  Build space separated <list> of additional
                                libraries stored in the contrib directory.
-   - HB_EXTERNALLIBS=no        Don't build any external libraries.
+   - HB_EXTERNALLIBS=no        Don't build any external libraries. Default: yes
    - HB_EXTERNALLIBS=[<list>]  Build space separated <list> of external
                                libraries. Build all if left empty.
    - HB_EXTERNAL_ADDONS=<list> Build space separated <list> of additional
                                libraries stored in the external directory.
    - HB_VISUALC_VER_PRE80=yes  Set this if you're using a pre-8.0
                                (= pre-MSVS 2005) version of MSVC compiler.
-   - HB_REBUILD_PARSER=yes     To rebuild the language parsers. Typically
+                               Default: no
+   - HB_REBUILD_PARSER=yes     Rebuild language parser sources. Typically
                                you only need this if your are Harbour core
-                               developer modifying the parser.
-                               This requires GNU Bison 1.28 or upper in PATH.
+                               developer modifying grammar rules (.y).
+                               Requires GNU Bison 1.28 or upper in PATH.
+                               Default: no
 
    Cross building
    --------------

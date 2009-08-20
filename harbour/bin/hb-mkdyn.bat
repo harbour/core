@@ -89,8 +89,8 @@ if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_iccia64" set _BIN_LINK=xilink
 if "%HB_ARCHITECTURE%" == "win" set _SYSLIBS=user32.lib ws2_32.lib advapi32.lib gdi32.lib
 if "%HB_ARCHITECTURE%" == "wce" set _SYSLIBS=coredll.lib ws2.lib
 
-echo ! Making %_DST_NAME_ST%.dll... && %_BIN_LINK% /nologo /dll /subsystem:console /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @"%_LIST_ST%" %_SYSLIBS% %HB_DLLLIBS%
-echo ! Making %_DST_NAME_MT%.dll... && %_BIN_LINK% /nologo /dll /subsystem:console /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @"%_LIST_MT%" %_SYSLIBS% %HB_DLLLIBS%
+echo ! Making %_DST_NAME_ST%.dll... && %_BIN_LINK% /nologo /dll /subsystem:console %HB_USER_DFLAGS% /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @"%_LIST_ST%" %_SYSLIBS% %HB_DLLIBS%
+echo ! Making %_DST_NAME_MT%.dll... && %_BIN_LINK% /nologo /dll /subsystem:console %HB_USER_DFLAGS% /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @"%_LIST_MT%" %_SYSLIBS% %HB_DLLIBS%
 
 if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" move /Y "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.lib"
 if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" move /Y "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.lib"
@@ -122,8 +122,8 @@ del "%_LIST_MT%"
 if "%HB_ARCHITECTURE%" == "win" set _SYSLIBS=-luser32 -lws2_32 -ladvapi32 -lgdi32
 if "%HB_ARCHITECTURE%" == "wce" set _SYSLIBS=-lcoredll -lws2
 
-echo ! Making %_DST_NAME_ST%.dll... && %HB_CCPREFIX%gcc -shared -o "%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" "%_LIST_ST%_" %HB_USER_LDFLAGS% %_SYSLIBS% %HB_DLLLIBS% -Wl,--output-def,"%HB_BIN_INSTALL%\%_DST_NAME_ST%.def"
-echo ! Making %_DST_NAME_MT%.dll... && %HB_CCPREFIX%gcc -shared -o "%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" "%_LIST_MT%_" %HB_USER_LDFLAGS% %_SYSLIBS% %HB_DLLLIBS% -Wl,--output-def,"%HB_BIN_INSTALL%\%_DST_NAME_MT%.def"
+echo ! Making %_DST_NAME_ST%.dll... && %HB_CCPREFIX%gcc -shared %HB_USER_DFLAGS% -o "%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" "%_LIST_ST%_" %HB_USER_LDFLAGS% %_SYSLIBS% %HB_DLLIBS% -Wl,--output-def,"%HB_BIN_INSTALL%\%_DST_NAME_ST%.def"
+echo ! Making %_DST_NAME_MT%.dll... && %HB_CCPREFIX%gcc -shared %HB_USER_DFLAGS% -o "%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" "%_LIST_MT%_" %HB_USER_LDFLAGS% %_SYSLIBS% %HB_DLLIBS% -Wl,--output-def,"%HB_BIN_INSTALL%\%_DST_NAME_MT%.def"
 
 rem ,--out-implib,"%HB_LIB_INSTALL%\lib%_DST_NAME_ST%.a"
 rem ,--out-implib,"%HB_LIB_INSTALL%\lib%_DST_NAME_MT%.a"
@@ -145,8 +145,8 @@ call :MAKE_LISTS
 echo. , "%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll",, cw32mt.lib import32.lib %HB_DLLIBS% >> "%_LIST_ST%"
 echo. , "%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll",, cw32mt.lib import32.lib %HB_DLLIBS% >> "%_LIST_MT%"
 
-echo ! Making %_DST_NAME_ST%.dll... && ilink32 -q -Gn -C -aa -Tpd -Gi -x c0d32.obj @%_LIST_ST%
-echo ! Making %_DST_NAME_MT%.dll... && ilink32 -q -Gn -C -aa -Tpd -Gi -x c0d32.obj @%_LIST_MT%
+echo ! Making %_DST_NAME_ST%.dll... && ilink32 -q -Gn -C -aa -Tpd -Gi -x %HB_USER_DFLAGS% c0d32.obj @%_LIST_ST%
+echo ! Making %_DST_NAME_MT%.dll... && ilink32 -q -Gn -C -aa -Tpd -Gi -x %HB_USER_DFLAGS% c0d32.obj @%_LIST_MT%
 
 if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" move /Y "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.lib"
 if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" move /Y "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.lib"
@@ -165,8 +165,8 @@ set HB_OBJ_PREF=FILE '
 set HB_OBJ_POST='
 call :MAKE_LISTS
 
-echo ! Making %_DST_NAME_ST%.dll... && wlink OP QUIET SYS NT_DLL OP IMPLIB NAME '%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll' @'%_LIST_ST%' LIB user32.lib, ws2_32.lib, advapi32.lib, gdi32.lib
-echo ! Making %_DST_NAME_MT%.dll... && wlink OP QUIET SYS NT_DLL OP IMPLIB NAME '%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll' @'%_LIST_MT%' LIB user32.lib, ws2_32.lib, advapi32.lib, gdi32.lib
+echo ! Making %_DST_NAME_ST%.dll... && wlink OP QUIET SYS NT_DLL %HB_USER_DFLAGS% OP IMPLIB NAME '%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll' @'%_LIST_ST%' LIB user32.lib, ws2_32.lib, advapi32.lib, gdi32.lib
+echo ! Making %_DST_NAME_MT%.dll... && wlink OP QUIET SYS NT_DLL %HB_USER_DFLAGS% OP IMPLIB NAME '%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll' @'%_LIST_MT%' LIB user32.lib, ws2_32.lib, advapi32.lib, gdi32.lib
 
 if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" move /Y "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.lib"
 if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" move /Y "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.lib"
@@ -186,8 +186,8 @@ call :MAKE_LISTS
 if "%HB_ARCHITECTURE%" == "win" set _SYSLIBS=user32.lib ws2_32.lib advapi32.lib gdi32.lib
 if "%HB_ARCHITECTURE%" == "wce" set _SYSLIBS=coredll.lib ws2.lib
 
-echo ! Making %_DST_NAME_ST%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @%_LIST_ST% %_SYSLIBS% %HB_DLLLIBS%
-echo ! Making %_DST_NAME_MT%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @%_LIST_MT% %_SYSLIBS% %HB_DLLLIBS%
+echo ! Making %_DST_NAME_ST%.dll... && polink /nologo /dll %HB_USER_DFLAGS% /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @%_LIST_ST% %_SYSLIBS% %HB_DLLIBS%
+echo ! Making %_DST_NAME_MT%.dll... && polink /nologo /dll %HB_USER_DFLAGS% /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @%_LIST_MT% %_SYSLIBS% %HB_DLLIBS%
 
 if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" move /Y "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.lib"
 if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" move /Y "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.lib"
