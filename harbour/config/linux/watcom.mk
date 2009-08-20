@@ -2,14 +2,7 @@
 # $Id$
 #
 
-# GNU MAKE file for Open Watcom C/C++ compiler
-
-# ---------------------------------------------------------------
-# See option docs here:
-#    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/cpopts.html
-#    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/wlink.html
-#    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/wlib.html
-# ---------------------------------------------------------------
+# GNU Make file for Open Watcom C/C++ compiler
 
 OBJ_EXT := .o
 LIB_PREF :=

@@ -2,7 +2,8 @@
 # $Id$
 #
 
-# GNU MAKE file for Open Watcom C/C++ compiler
+# GNU Make file for Open Watcom C/C++ compiler
+# (shell specific rules)
 
 # ---------------------------------------------------------------
 # See option docs here:
@@ -35,7 +36,9 @@ LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@$(BIN_EXT) FILE 
 
 ifeq ($(HB_SHELL),sh)
    create_library = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ $(foreach file,$(^F),-+$(file))
-else
+endif
+
+ifeq ($(HB_SHELL),os2)
    # maximum size of command line in OS2 is limited to 1024 characters
    # the trick with divided 'wordlist' is workaround for it:
    #     -$(if $(wordlist   1,100,$(^F)), $(ECHO) $(wordlist   1,100,$(addprefix -+,$(^F))) >> __lib__.tmp,)
@@ -54,6 +57,52 @@ else
    define create_library
       @$(ECHO) $(LIB_DIR)/$@ > __lib__.tmp
       for $(FILE) in ( *$(OBJ_EXT) ) do @$(ECHO) -+$(FILE) >> __lib__.tmp
+      $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) @__lib__.tmp
+   endef
+endif
+
+ifneq ($(filter $(HB_SHELL),nt dos),)
+
+   # NOTE: The empty line directly before 'endef' HAVE TO exist!
+   #       It causes that every command will be separated by LF
+   define link_file
+      @$(ECHO) FILE $(file) >> __link__.tmp
+
+   endef
+
+   # NOTE: The empty line directly before 'endef' HAVE TO exist!
+   define link_lib
+      @$(ECHO) LIB $(lib) >> __link__.tmp
+
+   endef
+
+   define link_exe_file
+      @$(ECHO) $(LDFLAGS) NAME $(BIN_DIR)/$@ > __link__.tmp
+      $(foreach file,$(^F),$(link_file))
+      $(foreach lib,$(LDLIBS),$(link_lib))
+      -$(LD) @__link__.tmp
+   endef
+
+   LD := wlink
+   ifeq ($(HB_BUILD_DEBUG),yes)
+      LDFLAGS += DEBUG ALL
+   endif
+   LDFLAGS += SYS nt
+
+   LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
+   LDLIBS += $(foreach lib,$(SYSLIBS),$(lib))
+
+   LD_RULE = $(link_exe_file) $(HB_USER_LDFLAGS)
+
+   # NOTE: The empty line directly before 'endef' HAVE TO exist!
+   define lib_object
+      @$(ECHO) -+$(file) >> __lib__.tmp
+
+   endef
+
+   define create_library
+      @$(ECHO) $(LIB_DIR)/$@ > __lib__.tmp
+      $(foreach file,$(^F),$(lib_object))
       $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) @__lib__.tmp
    endef
 endif
