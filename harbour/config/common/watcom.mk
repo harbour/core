@@ -19,8 +19,6 @@ ifeq ($(CC),wcc386)
    endif
 endif
 
-LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
-
 # NOTE: Hack to force no extension for Linux binaries created on non-Linux hosts.
 #       Otherwise they become '.elf'. [vszakats]
 ifeq ($(HB_ARCHITECTURE),linux)
@@ -82,15 +80,6 @@ ifneq ($(filter $(HB_SHELL),nt dos),)
       $(foreach lib,$(LDLIBS),$(link_lib))
       -$(LD) @__link__.tmp
    endef
-
-   LD := wlink
-   ifeq ($(HB_BUILD_DEBUG),yes)
-      LDFLAGS += DEBUG ALL
-   endif
-   LDFLAGS += SYS nt
-
-   LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
-   LDLIBS += $(foreach lib,$(SYSLIBS),$(lib))
 
    LD_RULE = $(link_exe_file) $(HB_USER_LDFLAGS)
 

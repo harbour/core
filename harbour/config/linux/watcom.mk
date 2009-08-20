@@ -59,6 +59,8 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 endif
 LDFLAGS += SYS linux
 
+LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
+
 include $(TOP)$(ROOT)config/common/watcom.mk
 
 include $(TOP)$(ROOT)config/rules.mk
