@@ -20,7 +20,11 @@ else
    ifneq ($(HB_BUILD_DLL),no)
       ifneq ($(HB_ARCHITECTURE),dos)
 
-         DYNNAME_POST := -$(HB_DYN_VER)
+         ifeq ($(HB_OS_UNIX),yes)
+            DYNNAME_POST := .$(HB_DYN_VER)
+         else
+            DYNNAME_POST := -$(HB_DYN_VER)
+         endif
 
          ifeq ($(HB_ARCHITECTURE),win)
             ifeq ($(HB_COMPILER),bcc)

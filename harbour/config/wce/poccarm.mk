@@ -68,7 +68,7 @@ endef
 define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dyn_object))
-   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)"$(subst /,$(DIRSEP),$(DYN_DIR)/$@)"$(ECHOQUOTE) /implib:"$(IMP_FILE)" @__dyn__.tmp $(DLIBS)
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)"$(subst /,$(DIRSEP),$(DYN_DIR)/$@)" /implib:"$(IMP_FILE)" @__dyn__.tmp $(DLIBS)
 endef
 
 DY_RULE = $(create_dynlib)
