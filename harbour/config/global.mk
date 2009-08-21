@@ -12,6 +12,7 @@
 #    http://www.gnu.org/software/make/manual/make.html
 #    http://www.jgc.org/feeds/topic-gnumake.xml
 #    http://lists.gnu.org/archive/html/help-make/
+#    http://make.paulandlesley.org/
 # Portable shell programming:
 #    http://www.gnu.org/software/autoconf/manual/html_node/Portable-Shell.html
 #    http://www.gnu.org/software/bash/manual/bashref.html
@@ -444,12 +445,16 @@ ifeq ($(HB_HOST_ARCH),win)
       endif
    endif
 else
-   # TODO: CPU detection for rest of systems.
+   ifneq ($(filter $(HB_HOST_ARCH),dos os2),)
+      HB_CPU := x86
+   else
+      # TODO: CPU detection for rest of systems.
+   endif
 endif
 
 ifeq ($(HB_INIT_DONE),)
    ifneq ($(MAKE_381),)
-      $(info ! HB_HOST_ARCH: $(HB_HOST_ARCH)$(if $(HB_HOST_CPU), ($(HB_HOST_CPU)),)  HB_SHELL: $(HB_SHELL) $(if $(HB_SHELL_XP),,(pre-xp)))
+      $(info ! HB_HOST_ARCH: $(HB_HOST_ARCH)$(if $(HB_HOST_CPU), ($(HB_HOST_CPU)),)  HB_SHELL: $(HB_SHELL))
    endif
 endif
 
@@ -725,9 +730,12 @@ BIN_DIR := $(TOP)$(ROOT)bin/$(ARCH_COMP)
 LIB_DIR := $(TOP)$(ROOT)lib/$(ARCH_COMP)
 ifeq ($(HB_OS_UNIX),no)
    DYN_DIR := $(BIN_DIR)
+   IMP_DIR := $(LIB_DIR)
 else
    DYN_DIR := $(LIB_DIR)
+   IMP_DIR :=
 endif
+DYN_PREF :=
 # define PKG_DIR only if run from root Makefile
 ifeq ($(ROOT),./)
    PKG_DIR := $(TOP)$(ROOT)pkg/$(ARCH_COMP)

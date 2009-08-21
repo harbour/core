@@ -13,6 +13,19 @@ ifneq ($(DYNDIRLIST_BASE),)
       DYNNAME := harbourmt$(DYNNAME_POST)
 
       include $(TOP)$(ROOT)config/dyn.mk
+
+      INSTALL_RULE_LIBRARIES := $(INSTALL_RULE)
+
+      ifneq ($(HB_LIB_INSTALL),)
+         INSTALL_FILES := $(IMP_FILE)
+         INSTALL_DIR := $(HB_LIB_INSTALL)
+         HB_INSTALL_DEF := yes
+         include $(TOP)$(ROOT)config/install.mk
+      endif
+
+install::
+	$(INSTALL_RULE_LIBRARIES)
+
    else
       include $(TOP)$(ROOT)config/none.mk
    endif

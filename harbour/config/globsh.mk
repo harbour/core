@@ -26,6 +26,8 @@ BIN_DIR_OS = $(subst /,\,$(BIN_DIR))
 BIN_FILE_OS = $(subst /,\,$(BIN_FILE))
 DYN_DIR_OS = $(subst /,\,$(DYN_DIR))
 DYN_FILE_OS = $(subst /,\,$(DYN_FILE))
+IMP_DIR_OS = $(subst /,\,$(IMP_DIR))
+IMP_FILE_OS = $(subst /,\,$(IMP_FILE))
 
 endif
 
@@ -35,7 +37,6 @@ MK := $(MAKE)
 RM := rm -f
 RDP := rm -f -r
 CP := cp -f
-MV := mv -f
 LN := ln -sf
 MD := mkdir
 MDP := mkdir -p
@@ -47,6 +48,7 @@ dirbase::
 	@[ -z "$(LIB_FILE)" ] || [ -d "$(LIB_DIR)" ] || $(MDP) $(LIB_DIR)
 	@[ -z "$(BIN_FILE)" ] || [ -d "$(BIN_DIR)" ] || $(MDP) $(BIN_DIR)
 	@[ -z "$(DYN_FILE)" ] || [ -d "$(DYN_DIR)" ] || $(MDP) $(DYN_DIR)
+	@[ -z "$(IMP_FILE)" ] || [ -d "$(IMP_DIR)" ] || $(MDP) $(IMP_DIR)
 
 clean::
 	-@$(RDP) $(PKG_DIR) $(OBJ_DIR) $(LIB_FILE) $(BIN_FILE) $(DYN_FILE); \
@@ -63,6 +65,10 @@ clean::
 	   $(RM) $(basename $(DYN_FILE)).exp; \
 	   [ "`$(ECHO) $(DYN_DIR)/*`" != "$(DYN_DIR)/*" ] || $(RDP) $(DYN_DIR); \
 	fi
+	if [ -n "$(IMP_FILE)" ]; then \
+	   $(RM) $(basename $(IMP_FILE)).exp; \
+	   [ "`$(ECHO) $(IMP_DIR)/*`" != "$(IMP_DIR)/*" ] || $(RDP) $(IMP_DIR); \
+	fi
 
 endif
 
@@ -77,7 +83,6 @@ MK := "$(subst \,/,$(MAKE))"
 RM := del /q /f
 RDP := rmdir /q /s
 CP := copy
-MV := move /y
 LN :=
 MD := mkdir
 MDP := mkdir
@@ -89,10 +94,11 @@ dirbase::
 	$(if $(LIB_FILE),$(if $(wildcard $(LIB_DIR)),,-@$(MDP) "$(LIB_DIR_OS)"),)
 	$(if $(BIN_FILE),$(if $(wildcard $(BIN_DIR)),,-@$(MDP) "$(BIN_DIR_OS)"),)
 	$(if $(DYN_FILE),$(if $(wildcard $(DYN_DIR)),,-@$(MDP) "$(DYN_DIR_OS)"),)
+	$(if $(IMP_FILE),$(if $(wildcard $(IMP_DIR)),,-@$(MDP) "$(IMP_DIR_OS)"),)
 
 clean::
-	$(if $(wildcard $(OBJ_DIR_OS)),-@$(RDP) "$(OBJ_DIR_OS)",)
-	$(if $(wildcard $(PKG_DIR_OS)),-@$(RDP) "$(PKG_DIR_OS)",)
+	$(if $(wildcard $(OBJ_DIR)),-@$(RDP) "$(OBJ_DIR_OS)",)
+	$(if $(wildcard $(PKG_DIR)),-@$(RDP) "$(PKG_DIR_OS)",)
 	$(if $(LIB_FILE),$(if $(wildcard $(LIB_FILE)),-@$(RM) "$(LIB_FILE_OS)",),)
 	$(if $(LIB_FILE),$(if $(wildcard $(basename $(LIB_FILE)).bak),-@$(RM) "$(basename $(LIB_FILE_OS)).bak",),)
 	$(if $(LIB_FILE),$(if $(wildcard $(LIB_DIR)),$(if $(wildcard $(LIB_DIR)/*),,-@$(RDP) "$(LIB_DIR_OS)"),),)
@@ -103,6 +109,9 @@ clean::
 	$(if $(DYN_FILE),$(if $(wildcard $(basename $(DYN_FILE)).def),-@$(RM) "$(basename $(DYN_FILE_OS)).def",),)
 	$(if $(DYN_FILE),$(if $(wildcard $(basename $(DYN_FILE)).exp),-@$(RM) "$(basename $(DYN_FILE_OS)).exp",),)
 	$(if $(DYN_FILE),$(if $(wildcard $(DYN_DIR)),$(if $(wildcard $(DYN_DIR)/*),,-@$(RDP) "$(DYN_DIR_OS)"),),)
+	$(if $(IMP_FILE),$(if $(wildcard $(IMP_FILE)),-@$(RM) "$(IMP_FILE_OS)",),)
+	$(if $(IMP_FILE),$(if $(wildcard $(basename $(IMP_FILE)).exp),-@$(RM) "$(basename $(IMP_FILE_OS)).exp",),)
+	$(if $(IMP_FILE),$(if $(wildcard $(IMP_DIR)),$(if $(wildcard $(IMP_DIR)/*),,-@$(RDP) "$(IMP_DIR_OS)"),),)
 
 endif
 
@@ -117,7 +126,6 @@ MK := $(subst \,/,$(MAKE))
 RM := $(TOOL_DIR)os2-rm -f
 RDP := $(TOOL_DIR)os2-rm -fr
 CP := copy
-MV := move /y
 LN :=
 MD := mkdir
 MDP := $(TOOL_DIR)os2-mkdir -p
@@ -129,6 +137,7 @@ dirbase::
 	$(if $(LIB_FILE),-@$(MDP) $(LIB_DIR),)
 	$(if $(BIN_FILE),-@$(MDP) $(BIN_DIR),)
 	$(if $(DYN_FILE),-@$(MDP) $(DYN_DIR),)
+	$(if $(IMP_FILE),-@$(MDP) $(IMP_DIR),)
 
 clean::
 	-@$(RDP) $(PKG_DIR_OS) $(OBJ_DIR_OS) $(LIB_FILE_OS) $(BIN_FILE_OS)
@@ -139,6 +148,8 @@ clean::
 	$(if $(DYN_FILE),-@$(RM) $(basename $(DYN_FILE_OS)).def,)
 	$(if $(DYN_FILE),-@$(RM) $(basename $(DYN_FILE_OS)).exp,)
 	$(if $(DYN_FILE),$(if $(wildcard $(DYN_DIR)/*.*),,-@$(RDP) $(DYN_DIR_OS)),)
+	$(if $(IMP_FILE),-@$(RM) $(basename $(IMP_FILE_OS)).exp,)
+	$(if $(IMP_FILE),$(if $(wildcard $(IMP_DIR)/*.*),,-@$(RDP) $(IMP_DIR_OS)),)
 
 endif
 
@@ -148,7 +159,6 @@ MK := $(subst \,/,$(MAKE))
 RM := $(TOOL_DIR)dj-rm -f
 RDP := $(TOOL_DIR)dj-rm -fr
 CP := $(TOOL_DIR)dj-cp -f
-MV := $(TOOL_DIR)dj-mv -f
 LN :=
 MD := $(TOOL_DIR)dj-mkdir
 MDP := $(TOOL_DIR)dj-mkdir -p
@@ -160,6 +170,7 @@ dirbase::
 	$(if $(LIB_FILE),-@$(MDP) $(LIB_DIR_OS),)
 	$(if $(BIN_FILE),-@$(MDP) $(BIN_DIR_OS),)
 	$(if $(DYN_FILE),-@$(MDP) $(DYN_DIR_OS),)
+	$(if $(IMP_FILE),-@$(MDP) $(IMP_DIR_OS),)
 
 clean::
 	-@$(RDP) $(PKG_DIR_OS) $(OBJ_DIR_OS) $(LIB_FILE_OS) $(BIN_FILE_OS)
@@ -170,5 +181,7 @@ clean::
 	$(if $(DYN_FILE),-@$(RM) $(basename $(DYN_FILE_OS)).def,)
 	$(if $(DYN_FILE),-@$(RM) $(basename $(DYN_FILE_OS)).exp,)
 	$(if $(DYN_FILE),$(if $(wildcard $(DYN_DIR)/*.*),,-@$(RDP) $(DYN_DIR_OS)),)
+	$(if $(IMP_FILE),-@$(RM) $(basename $(IMP_FILE_OS)).exp,)
+	$(if $(IMP_FILE),$(if $(wildcard $(IMP_DIR)/*.*),,-@$(RDP) $(IMP_DIR_OS)),)
 
 endif

@@ -27,7 +27,7 @@ Included utilities are:
      Licence:
         GPL 2 (see below)
      Links to included binaries + sources:
-        - DJGPP (dj-mkdir.exe, dj-rm.exe, dj-cp.exe, dj-mv.exe, dj-echo.exe)
+        - DJGPP (dj-mkdir.exe, dj-rm.exe, dj-cp.exe, dj-echo.exe)
              ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/
              ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/fil41b.zip
              ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/fil41s.zip
