@@ -104,6 +104,11 @@ endif
 
 ifeq ($(HB_SHELL),os2)
 
+# NOTE: Comment on included GNU tools:
+#       os2-mkdir expects forward slashes, while
+#       os2-rm expects backslashes in filenames.
+#       [vszakats]
+
 MK := $(subst \,/,$(MAKE))
 RM := del /n
 RDP := $(TOOL_DIR)os2-rm -fr
@@ -120,14 +125,14 @@ dirbase::
 	$(if $(DYN_FILE),-@$(MDP) $(DYN_DIR),)
 
 clean::
-	-@$(RDP) $(PKG_DIR) $(OBJ_DIR) $(LIB_FILE) $(BIN_FILE)
-	$(if $(LIB_FILE),-@$(RM) $(basename $(LIB_FILE)).bak,)
-	$(if $(LIB_FILE),$(if $(wildcard $(LIB_DIR)/*.*),,-@$(RDP) $(LIB_DIR)),)
-	$(if $(BIN_FILE),-@$(RM) $(basename $(BIN_FILE)).tds,)
-	$(if $(BIN_FILE),$(if $(wildcard $(BIN_DIR)/*.*),,-@$(RDP) $(BIN_DIR)),)
-	$(if $(DYN_FILE),-@$(RM) $(basename $(DYN_FILE)).def,)
-	$(if $(DYN_FILE),-@$(RM) $(basename $(DYN_FILE)).exp,)
-	$(if $(DYN_FILE),$(if $(wildcard $(DYN_DIR)/*.*),,-@$(RDP) $(DYN_DIR)),)
+	-@$(RDP) $(PKG_DIR_OS) $(OBJ_DIR_OS) $(LIB_FILE_OS) $(BIN_FILE_OS)
+	$(if $(LIB_FILE),-@$(RM) $(basename $(LIB_FILE_OS)).bak,)
+	$(if $(LIB_FILE),$(if $(wildcard $(LIB_DIR)/*.*),,-@$(RDP) $(LIB_DIR_OS)),)
+	$(if $(BIN_FILE),-@$(RM) $(basename $(BIN_FILE_OS)).tds,)
+	$(if $(BIN_FILE),$(if $(wildcard $(BIN_DIR)/*.*),,-@$(RDP) $(BIN_DIR_OS)),)
+	$(if $(DYN_FILE),-@$(RM) $(basename $(DYN_FILE_OS)).def,)
+	$(if $(DYN_FILE),-@$(RM) $(basename $(DYN_FILE_OS)).exp,)
+	$(if $(DYN_FILE),$(if $(wildcard $(DYN_DIR)/*.*),,-@$(RDP) $(DYN_DIR_OS)),)
 
 endif
 
