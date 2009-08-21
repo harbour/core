@@ -41,7 +41,7 @@ endif
 ifeq ($(HB_SHELL),nt)
 
    define inst_file_all
-      -@if not exist "$(INSTALL_DIR_OS)" $(MDP) "$(INSTALL_DIR_OS)"
+      $(if $(wildcard $(subst $(subst x,x, ),\ ,$(INSTALL_DIR))),,-@$(MDP) "$(INSTALL_DIR_OS)")
       -@for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(INSTALL_DIR_OS)"
    endef
 
@@ -63,7 +63,7 @@ ifeq ($(HB_SHELL),os2)
    # NOTE: The empty line directly before 'endef' HAVE TO exist!
    #       It causes that every commands will be separated by LF
    define inst_file
-      -@$(COMSPEC) /C if not exist $(INSTALL_DIR_OS) $(MDP) $(INSTALL_DIR)
+      $(if $(wildcard $(INSTALL_DIR)),,-@$(MDP) $(INSTALL_DIR))
       -@$(COMSPEC) /C $(CP) $(file) $(INSTALL_DIR_OS)
 
    endef
