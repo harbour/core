@@ -77,7 +77,10 @@ ifeq ($(HB_SHELL),nt)
 # NOTE: According to http://support.microsoft.com/kb/830473
 #       The command line length limit for cmd.exe is 8191 chars
 #       for Windows XP and upper and 2047 for Windows NT and 2000.
-#       [vszakats]
+#       This is true for commands which are recognized as shell
+#       commands (by using an internal list). For the rest
+#       CreateProcess() is used, where where the maximum length
+#       is 32767. [vszakats]
 
 MK := "$(subst \,/,$(MAKE))"
 RM := del /q /f
