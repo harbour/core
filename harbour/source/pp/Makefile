@@ -27,6 +27,7 @@ INSTALL_RULE_LIBRARIES := $(INSTALL_RULE)
 HB_VERHEADER := $(TOP)$(ROOT)include/hbverbld.h
 
 BIN_FILE := $(BIN_DIR)/hbpp$(BIN_EXT)
+
 vpath hbpp$(BIN_EXT) $(BIN_DIR)
 
 # NOTE: Leave the extra empty line after the rules.
@@ -49,9 +50,7 @@ install::
 	$(INSTALL_RULE_LIBRARIES)
 
 clean::
-	$(if $(wildcard $(HB_VERHEADER)),          -@$(RM) $(subst /,$(DIRSEP),$(HB_VERHEADER)),)
-	$(if $(wildcard $(BIN_DIR)/hbpp$(BIN_EXT)),-@$(RM) $(subst /,$(DIRSEP),$(BIN_DIR)/hbpp$(BIN_EXT)),)
-	$(if $(wildcard $(BIN_DIR)/hbpp.tds),      -@$(RM) $(subst /,$(DIRSEP),$(BIN_DIR)/hbpp.tds),)
+	$(if $(wildcard $(HB_VERHEADER)), -@$(RM) $(subst /,$(DIRSEP),$(HB_VERHEADER)),)
 
 endif
 endif
