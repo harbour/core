@@ -4,6 +4,8 @@
 
 ROOT := ../../
 
+include $(TOP)$(ROOT)config/global.mk
+
 C_SOURCES := \
    pptable.c \
    ppcore.c \
