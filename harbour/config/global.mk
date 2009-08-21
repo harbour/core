@@ -410,7 +410,7 @@ endif
 
 ifeq ($(HB_INIT_DONE),)
    ifneq ($(MAKE_381),)
-      $(info ! HB_HOST_ARCH: $(HB_HOST_ARCH)  HB_SHELL: $(HB_SHELL) $(HB_SHELL_XP))
+      $(info ! HB_HOST_ARCH: $(HB_HOST_ARCH)  HB_SHELL: $(HB_SHELL) $(if $(HB_SHELL_XP),,(pre-xp)))
    endif
 endif
 
