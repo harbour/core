@@ -309,6 +309,7 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
 
    - HB_BIN_INSTALL            Override directory to install executables
    - HB_LIB_INSTALL            Override directory to install libraries
+   - HB_DYN_INSTALL            Override directory to install dynamic libraries
    - HB_INC_INSTALL            Override directory to install language headers
    - HB_DOC_INSTALL            Override directory to install documentation
 

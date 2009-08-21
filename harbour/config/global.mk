@@ -265,6 +265,9 @@ ifeq ($(HB_INIT_DONE),)
       ifneq ($(HB_LIB_INSTALL),)
          $(info ! HB_LIB_INSTALL: $(HB_LIB_INSTALL))
       endif
+      ifneq ($(HB_DYN_INSTALL),)
+         $(info ! HB_DYN_INSTALL: $(HB_DYN_INSTALL))
+      endif
       ifneq ($(HB_INC_INSTALL),)
          $(info ! HB_INC_INSTALL: $(HB_INC_INSTALL))
       endif
@@ -716,10 +719,10 @@ ARCH_COMP := $(HB_ARCHITECTURE)/$(HB_COMPILER)$(subst \,/,$(HB_BUILD_NAME))
 OBJ_DIR := obj/$(ARCH_COMP)
 BIN_DIR := $(TOP)$(ROOT)bin/$(ARCH_COMP)
 LIB_DIR := $(TOP)$(ROOT)lib/$(ARCH_COMP)
-ifeq ($(HB_OS_UNIX),yes)
-   DYN_DIR := $(LIB_DIR)
-else
+ifeq ($(HB_OS_UNIX),no)
    DYN_DIR := $(BIN_DIR)
+else
+   DYN_DIR := $(LIB_DIR)
 endif
 # define PKG_DIR only if run from root Makefile
 ifeq ($(ROOT),./)
@@ -970,6 +973,7 @@ ifeq ($(HB_BUILD_PKG),yes)
       HB_BIN_INSTALL :=
       HB_INC_INSTALL :=
       HB_LIB_INSTALL :=
+      HB_DYN_INSTALL :=
       HB_DOC_INSTALL :=
    endif
 else
@@ -1041,6 +1045,13 @@ ifneq ($(HB_INSTALL_PREFIX),)
    endif
    ifeq ($(HB_LIB_INSTALL),)
       export HB_LIB_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)lib$(LIBPOSTFIX)
+   endif
+   ifeq ($(HB_DYN_INSTALL),)
+      ifeq ($(HB_OS_UNIX),no)
+         export HB_DYN_INSTALL := $(HB_BIN_INSTALL)
+      else
+         export HB_DYN_INSTALL := $(HB_LIB_INSTALL)
+      endif
    endif
    ifeq ($(HB_INC_INSTALL),)
       ifneq ($(HB_INSTALL_PREFIX),$(HB_INSTALL_PREFIX_TOP))

@@ -55,8 +55,6 @@ goto INST_%HB_ARCHITECTURE%
 
    if "%HB_BUILD_DLL%" == "no" goto _SKIP_DLL_BIN
 
-      call "%~dp0hb-mkdyn.bat"
-
       if exist "%HB_BIN_INSTALL%\*.dll" (
          echo ! Making shared version of Harbour binaries...
          "%HB_HOST_BIN_DIR%\hbmk2" -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbrun-dll"    "%~dp0..\utils\hbrun\hbrun.hbp"
