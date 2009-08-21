@@ -23,7 +23,7 @@ CC_OUT := -fo=
 
 CPPFLAGS := -zq -bt=linux
 CFLAGS :=
-LDFLAGS :=
+LDFLAGS := OP quiet
 
 ifneq ($(HB_BUILD_WARN),no)
    CPPFLAGS += -w3

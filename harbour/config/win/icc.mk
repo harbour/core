@@ -53,4 +53,22 @@ AR := xilib.exe
 ARFLAGS :=
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) /out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
 
+DY := $(LD)
+DFLAGS := /nologo /dll /subsystem:console
+DY_OUT := $(LD_OUT)
+DLIBS := $(foreach lib,$(SYSLIBS),$(lib)$(LIB_EXT))
+
+# NOTE: The empty line directly before 'endef' HAVE TO exist!
+define dyn_object
+   @$(ECHO) $(ECHOQUOTE)$(file)$(ECHOQUOTE) >> __dyn__.tmp
+
+endef
+define create_dynlib
+   $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
+   $(foreach file,$^,$(dyn_object))
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)"$(subst /,$(DIRSEP),$(DYN_DIR)/$@)"$(ECHOQUOTE) @__dyn__.tmp $(DLIBS)
+endef
+
+DY_RULE = $(create_dynlib)
+
 include $(TOP)$(ROOT)config/rules.mk

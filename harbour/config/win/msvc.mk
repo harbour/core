@@ -75,9 +75,9 @@ define dyn_object
 
 endef
 define create_dynlib
-   @$(ECHO) $(ECHOQUOTE) $(DFLAGS) > __dyn__.tmp
+   $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dyn_object))
-   $(DY) $(DY_OUT)"$(subst /,$(DIRSEP),$(DYN_DIR)/$@)"$(ECHOQUOTE) @__dyn__.tmp $(HB_USER_DFLAGS) $(DLIBS)
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)"$(subst /,$(DIRSEP),$(DYN_DIR)/$@)"$(ECHOQUOTE) @__dyn__.tmp $(DLIBS)
 endef
 
 DY_RULE = $(create_dynlib)

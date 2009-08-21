@@ -26,7 +26,7 @@ CC_OUT := -fo=
 
 CPPFLAGS := -zq -bt=nt -bm
 CFLAGS :=
-LDFLAGS :=
+LDFLAGS := OP quiet
 
 ifneq ($(HB_BUILD_WARN),no)
    CPPFLAGS += -w3
@@ -64,5 +64,26 @@ LDFLAGS += SYS nt
 
 LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 LDLIBS += $(foreach lib,$(SYSLIBS),$(lib))
+
+DY := $(LD)
+DFLAGS := OP quiet SYS nt_dll
+DY_OUT :=
+DLIBS := $(foreach lib,$(SYSLIBS),$(lib))
+
+comma := ,
+DLIBS_COMMA := $(subst $(subst x,x, ),$(comma) ,$(strip $(DLIBS)))
+
+# NOTE: The empty line directly before 'endef' HAVE TO exist!
+define dyn_object
+   @$(ECHO) $(ECHOQUOTE)FILE '$(file)'$(ECHOQUOTE) >> __dyn__.tmp
+
+endef
+define create_dynlib
+   $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
+   $(foreach file,$^,$(dyn_object))
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) OP implib name '$(subst /,$(DIRSEP),$(DYN_DIR)/$@)' @__dyn__.tmp LIB $(DLIBS_COMMA)
+endef
+
+DY_RULE = $(create_dynlib)
 
 include $(TOP)$(ROOT)config/common/watcom.mk

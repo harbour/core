@@ -83,4 +83,23 @@ ifneq ($(HB_SHELL),sh)
    endif
 endif
 
+DY := ilink32.exe
+DFLAGS := -q -Gn -C -aa -Tpd -Gi -x
+DY_OUT :=
+DLIBS :=
+
+# NOTE: The empty line directly before 'endef' HAVE TO exist!
+define dyn_object
+   @$(ECHO) $(ECHOQUOTE)$(file) +$(ECHOQUOTE) >> __dyn__.tmp
+
+endef
+define create_dynlib
+   $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
+   $(foreach file,$^,$(dyn_object))
+   @$(ECHO) $(ECHOQUOTE), "$(subst /,$(DIRSEP),$(DYN_DIR)/$@)",, cw32mt.lib import32.lib$(ECHOQUOTE) >> __dyn__.tmp
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) c0d32.obj @__dyn__.tmp
+endef
+
+DY_RULE = $(create_dynlib)
+
 include $(TOP)$(ROOT)config/rules.mk

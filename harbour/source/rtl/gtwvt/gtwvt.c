@@ -104,6 +104,10 @@ static HB_CRITICAL_NEW( s_wvtMtx );
 #define HB_WVT_LOCK     hb_threadEnterCriticalSection( &s_wvtMtx );
 #define HB_WVT_UNLOCK   hb_threadLeaveCriticalSection( &s_wvtMtx );
 
+#ifndef WS_OVERLAPPEDWINDOW
+   #define WS_OVERLAPPEDWINDOW ( WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX )
+#endif
+
 #define _WVT_WS_DEF       ( WS_OVERLAPPEDWINDOW )
 #define _WVT_WS_NORESIZE  ( WS_OVERLAPPEDWINDOW & ~( WS_THICKFRAME ) )
 #define _WVT_WS_MAXED     ( WS_OVERLAPPEDWINDOW & ~( WS_MAXIMIZEBOX ) )

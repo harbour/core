@@ -55,7 +55,7 @@
 #include "hbapi.h"
 #include "hbvm.h"
 
-#if !( defined( HB_DYNLIB ) && defined( __WATCOM__ ) )
+#if !( defined( HB_DYNLIB ) && defined( __WATCOMC__ ) )
 
 #if defined( HB_OS_WIN )
 
