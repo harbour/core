@@ -229,6 +229,7 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    Darwin (OS X) [darwin]
    -------------
    gcc      - GNU C
+   icc      - Intel(R) C/C++
 
    BSD [bsd]
    ---
