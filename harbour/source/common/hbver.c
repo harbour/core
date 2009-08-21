@@ -116,7 +116,7 @@ const char * hb_verCPU( void )
    return "ARM";
 #elif defined( HB_CPU_MIPS )
    return "MIPS";
-#elif defined( HB_CPU_SUPERH )
+#elif defined( HB_CPU_SH )
    return "SuperH";
 #elif defined( HB_CPU_ZARCH )
    return "z/Architecture";

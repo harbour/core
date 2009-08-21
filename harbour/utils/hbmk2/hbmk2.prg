@@ -2610,7 +2610,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cOpt_Dyn := "{FD} /dll /out:{OD} {DL} {LO} {LL} {LB} {LS}"
          cOpt_CompC := "-nologo -c -Gs"
          IF hbmk[ _HBMK_lOPTIM ]
-            IF hbmk[ _HBMK_cCOMP ] == "msvcarm"
+            IF hbmk[ _HBMK_cARCH ] == "wce"
                IF nCCompVer >= 800
                   cOpt_CompC += " -Od -Os -Gy -GS- -Gm -Zi -GR-"
                ELSE
@@ -2633,12 +2633,18 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aOPTL ], "/map" )
             AAdd( hbmk[ _HBMK_aOPTD ], "/map" )
          ENDIF
-         IF hbmk[ _HBMK_cCOMP ] == "msvcarm"
-            AAdd( hbmk[ _HBMK_aOPTC ], "-D_WIN32_WCE=0x501 -DCE_ARCH -DWINCE -D_WINCE -D_WINDOWS -DARM -D_ARM_ -DARMV4 -D_M_ARM -D_ARMV4I_ -Darmv4i -D__arm__ -D_UNICODE -D_UWIN -DUNDER_CE" )
+         IF hbmk[ _HBMK_cARCH ] == "wce"
+            AAdd( hbmk[ _HBMK_aOPTC ], "-D_WIN32_WCE=0x501 -DCE_ARCH -DWINCE -D_WINCE -D_WINDOWS -D_UNICODE -D_UWIN -DUNDER_CE" )
+            DO CASE
+            CASE hbmk[ _HBMK_cCOMP ] == "msvcarm"
+               AAdd( hbmk[ _HBMK_aOPTC ], "-DARM -D_ARM_ -DARMV4 -D_M_ARM -D_ARMV4I_ -Darmv4i -D__arm__" )
+            ENDCASE
             AAdd( hbmk[ _HBMK_aOPTL ], "/subsystem:windowsce" )
             AAdd( hbmk[ _HBMK_aOPTL ], "/nodefaultlib:oldnames.lib" )
             AAdd( hbmk[ _HBMK_aOPTL ], "/nodefaultlib:kernel32.lib" )
-            AAdd( hbmk[ _HBMK_aOPTL ], "/manifest:no" )
+            IF nCCompVer >= 800
+               AAdd( hbmk[ _HBMK_aOPTL ], "/manifest:no" )
+            ENDIF
          ENDIF
          IF hbmk[ _HBMK_lINC ]
             IF ! Empty( cWorkDir )

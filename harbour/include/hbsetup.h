@@ -448,7 +448,7 @@
       defined( __sh4__ ) || \
       defined( __SH4__ ) || \
       defined( _M_SH )
-   #define HB_CPU_SUPERH
+   #define HB_CPU_SH
 
 #elif defined( __370__ ) || \
       defined( __THW_370__ )

@@ -2,24 +2,39 @@
 # $Id$
 #
 
-# Work in progress. Please test.
-
 OBJ_EXT := .obj
 LIB_PREF :=
 LIB_EXT := .lib
 
 HB_DYN_COPT := -DHB_DYNLIB
 
-ifeq ($(HB_VISUALC_VER_PRE80),)
-   CC := cl.exe
-else
-   CC := clarm.exe
+CC := cl.exe
+ifeq ($(HB_COMPILER),msvcarm)
+   ifneq ($(HB_VISUALC_VER_PRE80),)
+      CC := clarm.exe
+   endif
 endif
 CC_IN := -c
 CC_OUT := -Fo
 
 CPPFLAGS := -I. -I$(HB_INC_COMPILE)
-CFLAGS := -nologo -D_WIN32_WCE=0x501 -DCE_ARCH -DWINCE -D_WINCE -D_WINDOWS -DARM -D_ARM_ -DARMV4 -D_M_ARM -D_ARMV4I_ -Darmv4i -D__arm__ -D_UNICODE -D_UWIN -DUNDER_CE
+CFLAGS := -nologo -D_WIN32_WCE=0x501 -DCE_ARCH -DWINCE -D_WINCE -D_WINDOWS -D_UNICODE -D_UWIN -DUNDER_CE
+
+ifeq ($(HB_COMPILER),msvcarm)
+   CFLAGS += -DARM -D_ARM_ -DARMV4 -D_M_ARM -D_ARMV4I_ -Darmv4i -D__arm__
+else
+   ifeq ($(HB_COMPILER),msvcsh)
+      CFLAGS += -D_M_SH -DSHx -D_SHX_
+   else
+      ifeq ($(HB_COMPILER),msvcmips)
+         CFLAGS += -D_M_MRX000=4000 -DMIPS -D_MIPS_ -DMIPS_HAS_FPU
+      else
+         ifeq ($(HB_COMPILER),msvc)
+            CFLAGS += -D_X86_ -D_M_IX86
+         endif
+      endif
+   endif
+endif
 
 LDFLAGS :=
 
@@ -46,11 +61,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -Zi
 endif
 
-ifeq ($(HB_VISUALC_VER_PRE80),)
-   LD := cl.exe
-else
-   LD := clarm.exe
-endif
+LD := $(CC)
 LD_OUT := -Fe
 
 SYSLIBS += corelibc
