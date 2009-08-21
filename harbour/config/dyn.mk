@@ -4,6 +4,7 @@
 
 include $(TOP)$(ROOT)config/global.mk
 
+ifneq ($(HB_BUILD_DLL),no)
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
 
@@ -31,5 +32,6 @@ INSTALL_DIR := $(HB_DYN_INSTALL)
 
 include $(TOP)$(ROOT)config/install.mk
 
+endif
 endif
 endif

@@ -59,7 +59,7 @@ endif
 
 # The rule to link a dynamic library.
 ifeq ($(DY_RULE),)
-   DY_RULE = $(DY) $(DY_OUT)$(subst /,$(DIRSEP),$(BIN_DIR)/$@) $^ $(DFLAGS) $(HB_USER_DFLAGS) $(DLIBS)
+#  DY_RULE = $(DY) $(DY_OUT)$(subst /,$(DIRSEP),$(BIN_DIR)/$@) $^ $(DFLAGS) $(HB_USER_DFLAGS) $(DLIBS)
 endif
 
 # Eliminate these rules.
@@ -90,6 +90,12 @@ endif
 %.c : $(GRANDP)%.prg
 	$(HB_RULE)
 
+ifneq ($(HB_BUILD_DLL),no)
+ifneq ($(DY_RULE),)
+
 # Rule to generate an dynamic library from an object file.
 %$(DYN_EXT) : %_dyn$(OBJ_EXT)
 	$(DY_RULE)
+
+endif
+endif

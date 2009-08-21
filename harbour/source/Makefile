@@ -38,8 +38,11 @@ DIRS := \
    hbextern$(HB_COMP_REF) \
    hbpcre \
    hbzlib \
-   debug$(HB_COMP_REF) \
-   dynlib{codepage,common,hbextern,hbpcre,hbzlib,lang,macro,pp,rdd,rtl,vm} \
+   debug$(HB_COMP_REF)
+
+   ifneq ($(HB_BUILD_DLL),no)
+      DIRS += dynlib{codepage,common,hbextern,hbpcre,hbzlib,lang,macro,pp,rdd,rtl,vm} \
+   endif
 
 endif
 
