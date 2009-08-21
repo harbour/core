@@ -7,6 +7,7 @@ LIB_PREF :=
 LIB_EXT := .lib
 
 HB_DYN_COPT := -DHB_DYNLIB
+OBJ_DYN_POSTFIX := _dyn
 
 CC := cl.exe
 ifeq ($(HB_COMPILER),msvcarm)

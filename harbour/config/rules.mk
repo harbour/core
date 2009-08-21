@@ -38,7 +38,7 @@ ifeq ($(CC_RULE),)
             ifneq ($(filter $(LIBNAME),$(HB_DYN_LIBS)),)
                define cc_comp_all
                   $(CC) $(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<
-                  $(CC) $(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=_dyn$(OBJ_EXT)) $(HB_DYN_COPT) $(CC_IN) $<
+                  $(CC) $(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_DYN_POSTFIX)$(OBJ_EXT)) $(HB_DYN_COPT) $(CC_IN) $<
                endef
                CC_RULE = $(cc_comp_all)
             endif
@@ -94,7 +94,7 @@ ifneq ($(HB_BUILD_DLL),no)
 ifneq ($(DY_RULE),)
 
 # Rule to generate an dynamic library from an object file.
-%$(DYN_EXT) : %_dyn$(OBJ_EXT)
+%$(DYN_EXT) : %$(OBJ_DYN_POSTFIX)$(OBJ_EXT)
 	$(DY_RULE)
 
 endif

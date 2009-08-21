@@ -9,6 +9,7 @@ LIB_PREF :=
 LIB_EXT := .lib
 
 HB_DYN_COPT := -DHB_DYNLIB
+OBJ_DYN_POSTFIX := _dyn
 
 CC := bcc32.exe
 CC_IN := -c
@@ -71,7 +72,7 @@ ifneq ($(HB_SHELL),sh)
       endef
 
       define create_library
-         @$(ECHO) $(ECHOQUOTE)-+ $(LINECONT)$(ECHOQUOTE) > __lib__.tmp
+         $(if $(wildcard __lib__.tmp),@$(RM) __lib__.tmp,)
          $(foreach file,$(^F),$(lib_object))
          @$(ECHO) -+>> __lib__.tmp
          $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" @__lib__.tmp

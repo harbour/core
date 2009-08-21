@@ -705,17 +705,29 @@ endif
 export HB_ARCHITECTURE
 export HB_COMPILER
 
+ifneq ($(filter $(HB_ARCHITECTURE),win wce dos os2),)
+   HB_OS_UNIX := no
+else
+   HB_OS_UNIX := yes
+endif
+
 ARCH_COMP := $(HB_ARCHITECTURE)/$(HB_COMPILER)$(subst \,/,$(HB_BUILD_NAME))
 
 OBJ_DIR := obj/$(ARCH_COMP)
 BIN_DIR := $(TOP)$(ROOT)bin/$(ARCH_COMP)
 LIB_DIR := $(TOP)$(ROOT)lib/$(ARCH_COMP)
+ifeq ($(HB_OS_UNIX),yes)
+   DYN_DIR := $(LIB_DIR)
+else
+   DYN_DIR := $(BIN_DIR)
+endif
 # define PKG_DIR only if run from root Makefile
 ifeq ($(ROOT),./)
    PKG_DIR := $(TOP)$(ROOT)pkg/$(ARCH_COMP)
 else
    PKG_DIR :=
 endif
+OBJ_DYN_POSTFIX :=
 
 # Assemble relative path from OBJ_DIR to source.
 GRANDP := $(subst $(subst x,x, ),,$(foreach item, $(subst /, ,$(OBJ_DIR)), ../))
@@ -759,12 +771,6 @@ ifeq ($(HB_INIT_DONE),)
       $(info ! HB_ARCHITECTURE: $(HB_ARCHITECTURE)$(if $(HB_CPU), ($(HB_CPU)),) $(HB_ARCH_AUTO))
       $(info ! HB_COMPILER: $(HB_COMPILER) $(HB_COMP_AUTO))
    endif
-endif
-
-ifneq ($(filter $(HB_ARCHITECTURE),win wce dos os2),)
-   HB_OS_UNIX := no
-else
-   HB_OS_UNIX := yes
 endif
 
 # Reserve variables for local compiler flags. Makefiles

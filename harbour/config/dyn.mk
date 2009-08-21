@@ -14,16 +14,16 @@ include $(TOP)$(ROOT)config/prg.mk
 
 DYN_NAME := $(DYN_PREF)$(DYNNAME)$(DYN_EXT)
 
-DYN_FILE := $(BIN_DIR)/$(DYN_NAME)
+DYN_FILE := $(DYN_DIR)/$(DYN_NAME)
 
-ALL_OBJS := $(subst /,$(DIRSEP),$(foreach dir,$(DYNDIRLIST),$(wildcard $(TOP)$(ROOT)$(dir)/$(OBJ_DIR)/*_dyn$(OBJ_EXT))))
+ALL_OBJS := $(subst /,$(DIRSEP),$(foreach dir,$(DYNDIRLIST),$(wildcard $(TOP)$(ROOT)$(dir)/$(OBJ_DIR)/*$(OBJ_DYN_POSTFIX)$(OBJ_EXT))))
 
 first:: dirbase descend
 
 descend:: dirbase
 	+@$(MK) $(MKFLAGS) -C $(OBJ_DIR) -f $(GRANDP)Makefile TOP=$(GRANDP) $(DYN_NAME)
 
-vpath $(DYN_NAME) $(BIN_DIR)
+vpath $(DYN_NAME) $(DYN_DIR)
 $(DYN_NAME) : $(ALL_OBJS)
 	$(DY_RULE)
 

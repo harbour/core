@@ -10,6 +10,7 @@ LIB_PREF :=
 LIB_EXT := .lib
 
 HB_DYN_COPT := -DHB_DYNLIB
+OBJ_DYN_POSTFIX := _dyn
 
 CC := icl.exe
 CC_IN := -c

@@ -35,7 +35,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 endif
 
 LD := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)
-LD_OUT := -o
+LD_OUT := -o$(subst x,x, )
 
 LIBPATHS := -L$(LIB_DIR)
 LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),-l$(lib))
