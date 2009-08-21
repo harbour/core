@@ -190,10 +190,10 @@ mk_hbtools()
     fi
     if [ "${HB_COMPILER}" = "mingw" ] || \
        [ "${HB_COMPILER}" = "mingw64" ]; then
-        HB_SYS_LIBS="${HB_SYS_LIBS} -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lws2_32"
+        HB_SYS_LIBS="${HB_SYS_LIBS} -luser32 -lwinspool -lgdi32 -lcomctl32  -ladvapi32-lcomdlg32 -lole32 -loleaut32 -luuid -lws2_32"
         HB_WITHOUT_X11="yes"
     elif [ "${HB_COMPILER}" = "mingwarm" ]; then
-        HB_SYS_LIBS="${HB_SYS_LIBS} -lwininet -lws2 -lcommdlg -lcommctrl -luuid -lole32"
+        HB_SYS_LIBS="${HB_SYS_LIBS} -lwininet -lws2 -lcommdlg -lcommctrl -luuid -lole32 -loleaut32"
         HB_WITHOUT_X11="yes"
     elif [ "${HB_COMPILER}" = "djgpp" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS}"
@@ -802,7 +802,7 @@ mk_hblibso()
     if [ "${HB_COMPILER}" = "mingw" ] || [ "${HB_COMPILER}" = "mingw64" ]; then
         linker_options="${linker_options} -luser32 -lwinspool -lgdi32 -lcomctl32 -ladvapi32 -lcomdlg32 -lole32 -loleaut32 -luuid -lws2_32"
     elif [ "${HB_COMPILER}" = "mingwarm" ]; then
-        linker_options="${linker_options} -lwininet -lws2 -lcommdlg -lcommctrl -luuid -lole32"
+        linker_options="${linker_options} -lwininet -lws2 -lcommdlg -lcommctrl -luuid -lole32 -loleaut32"
     elif [ "${HB_COMPILER}" = "djgpp" ]; then
         linker_options="${linker_options}"
     elif [ "${HB_ARCHITECTURE}" = "linux" ]; then
