@@ -59,7 +59,7 @@ endif
 
 # The rule to link a dynamic library.
 ifeq ($(DY_RULE),)
-#  DY_RULE = $(DY) $(DY_OUT)$(subst /,$(DIRSEP),$(BIN_DIR)/$@) $^ $(DFLAGS) $(HB_USER_DFLAGS) $(DLIBS)
+#  DY_RULE = $(DY) $(DY_OUT)$(subst /,$(DIRSEP),$(DYN_DIR)/$@) $^ $(DFLAGS) $(HB_USER_DFLAGS) $(DLIBS)
 endif
 
 # Eliminate these rules.
