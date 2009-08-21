@@ -150,6 +150,8 @@
 
 #define _TBR_COORD( n )       Int( n )
 
+#define ISFROZEN( n )  ( ascan( ::aLeftFrozen, n ) > 0 .OR. ascan( ::aRightFrozen, n ) > 0 )
+
 /*----------------------------------------------------------------------*/
 
 CREATE CLASS XbpBrowse INHERIT XbpWindow
@@ -1605,7 +1607,7 @@ METHOD doConfigure() CLASS XbpBrowse
    ENDIF
 
    FOR i := 1 TO ::colCount
-      IF ascan( ::aLeftFrozen, i ) > 0 .or. ascan( ::aRightFrozen, i ) > 0
+      IF ISFROZEN( i )
          ::oTableView:hideColumn( i - 1 )
          ::oFooterView:setSectionHidden( i - 1, .t. )
       ELSE
@@ -2210,10 +2212,22 @@ METHOD goBottom() CLASS XbpBrowse
 /*----------------------------------------------------------------------*/
 
 METHOD left() CLASS XbpBrowse
-   LOCAL n
+   LOCAL n, nCol
+   LOCAL lUpdate := .f.
 
-   IF ::colPos > 1
-      ::colPos--
+   nCol := ::colPos
+
+   IF nCol > 1
+      DO WHILE --nCol >= 1
+         IF !ISFROZEN( nCol )
+            lUpdate := .t.
+            EXIT
+         ENDIF
+      ENDDO
+   ENDIF
+   IF lUpdate
+      ::colPos := nCol
+
       n  := ::oHeaderView:sectionViewportPosition( ::colPos-1 )
       IF n < 0
          ::oHeaderView:setOffset( ::oHeaderView:offSet() + n )
@@ -2222,86 +2236,124 @@ METHOD left() CLASS XbpBrowse
       ELSE
          ::setCurrentIndex( .f. )
       ENDIF
+
+      ::oHScrollBar:setValue( ::colPos - 1 )
    ENDIF
-   ::oHScrollBar:setValue( ::colPos - 1 )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD right() CLASS XbpBrowse
-   LOCAL n, n1, n2, nLnWidth
+   LOCAL n, n1, n2, nLnWidth, nCol
+   LOCAL lUpdate := .f.
 
    IF ::colPos < ::colCount
-      ::colPos++
+      nCol := ::colPos
 
-      n  := ::oHeaderView:sectionViewportPosition( ::colPos - 1 )
-      n1 := ::oHeaderView:sectionSize( ::colPos-1 )
-      n2 := ::oViewport:width()
-      IF n + n1 > n2
-         nLnWidth := ::oTableView:lineWidth()
-         IF n1 > n2
-            ::oHeaderView:setOffset( ::oHeaderView:sectionPosition( ::colPos - 1 ) )
-            ::oFooterView:setOffset( ::oHeaderView:sectionPosition( ::colPos - 1 ) )
-
-         ELSE
-            ::oHeaderView:setOffset( ::oHeaderView:offSet()+(n1-(n2-n)+1) - nLnWidth )
-            ::oFooterView:setOffset( ::oFooterView:offSet()+(n1-(n2-n)+1) - nLnWidth )
-
+      DO WHILE ++nCol <= ::colCount
+         IF !( ISFROZEN( nCol ) )
+            lUpdate := .t.
+            EXIT
          ENDIF
-         ::setCurrentIndex( .t. )
-      ELSE
-         ::setCurrentIndex( .f. )
+      ENDDO
+
+      IF lUpdate
+         ::colPos := nCol
+
+         n  := ::oHeaderView:sectionViewportPosition( ::colPos - 1 )
+         n1 := ::oHeaderView:sectionSize( ::colPos-1 )
+         n2 := ::oViewport:width()
+         IF n + n1 > n2
+            nLnWidth := ::oTableView:lineWidth()
+            IF n1 > n2
+               ::oHeaderView:setOffset( ::oHeaderView:sectionPosition( ::colPos - 1 ) )
+               ::oFooterView:setOffset( ::oHeaderView:sectionPosition( ::colPos - 1 ) )
+
+            ELSE
+               ::oHeaderView:setOffset( ::oHeaderView:offSet()+(n1-(n2-n)+1) - nLnWidth )
+               ::oFooterView:setOffset( ::oFooterView:offSet()+(n1-(n2-n)+1) - nLnWidth )
+
+            ENDIF
+            ::setCurrentIndex( .t. )
+         ELSE
+            ::setCurrentIndex( .f. )
+         ENDIF
+
+         ::oHScrollBar:setValue( ::colPos - 1 )
       ENDIF
    ENDIF
-   ::oHScrollBar:setValue( ::colPos - 1 )
+
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD firstCol() CLASS XbpBrowse
-   LOCAL n
+   LOCAL n, nCol
+   LOCAL lUpdate := .f.
 
-   ::setUnstable()
-   ::colPos := 1
+   nCol := 0
 
-   n  := ::oHeaderView:sectionViewportPosition( ::colPos-1 )
-   IF n < 0
-      ::oHeaderView:setOffset( ::oHeaderView:offSet() + n )
-      ::oFooterView:setOffset( ::oFooterView:offSet() + n )
-      ::setCurrentIndex( .t. )
-   ELSE
-      ::setCurrentIndex( .f. )
+   DO WHILE ++nCol <= ::colCount
+      IF !ISFROZEN( nCol )
+         lUpdate := .t.
+         EXIT
+      ENDIF
+   ENDDO
+
+   IF lUpdate
+      ::setUnstable()
+      ::colPos := nCol
+
+      n  := ::oHeaderView:sectionViewportPosition( ::colPos-1 )
+      IF n < 0
+         ::oHeaderView:setOffset( ::oHeaderView:offSet() + n )
+         ::oFooterView:setOffset( ::oFooterView:offSet() + n )
+         ::setCurrentIndex( .t. )
+      ELSE
+         ::setCurrentIndex( .f. )
+      ENDIF
+      ::oHScrollBar:setValue( ::colPos - 1 )
    ENDIF
-   ::oHScrollBar:setValue( ::colPos - 1 )
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD lastCol() CLASS XbpBrowse
-   LOCAL n, n1, n2
+   LOCAL n, n1, n2, nCol
+   LOCAL lUpdate := .f.
 
-   ::setUnstable()
-   ::colPos := ::colCount
+   nCol := ::colCount + 1
 
-   n  := ::oHeaderView:sectionViewportPosition( ::colPos-1 )
-   n1 := ::oHeaderView:sectionSize( ::colPos-1 )
-   n2 := ::oViewport:width()
-   IF n + n1 > n2
-      IF n1 > n2
-         ::oHeaderView:setOffset( ::oHeaderView:sectionPosition( ::colPos - 1 ) )
-         ::oFooterView:setOffset( ::oHeaderView:sectionPosition( ::colPos - 1 ) )
-      ELSE
-         ::oHeaderView:setOffset( ::oHeaderView:offSet()+(n1-(n2-n)+1) - ::oTableView:lineWidth() )
-         ::oFooterView:setOffset( ::oFooterView:offSet()+(n1-(n2-n)+1) - ::oTableView:lineWidth() )
+   DO WHILE --nCol >= 1
+      IF !ISFROZEN( nCol )
+         lUpdate := .t.
+         EXIT
       ENDIF
-      ::setCurrentIndex( .t. )
-   ELSE
-      ::setCurrentIndex( .f. )
+   ENDDO
+
+   IF lUpdate
+      ::setUnstable()
+      ::colPos := nCol
+
+      n  := ::oHeaderView:sectionViewportPosition( ::colPos-1 )
+      n1 := ::oHeaderView:sectionSize( ::colPos-1 )
+      n2 := ::oViewport:width()
+      IF n + n1 > n2
+         IF n1 > n2
+            ::oHeaderView:setOffset( ::oHeaderView:sectionPosition( ::colPos - 1 ) )
+            ::oFooterView:setOffset( ::oHeaderView:sectionPosition( ::colPos - 1 ) )
+         ELSE
+            ::oHeaderView:setOffset( ::oHeaderView:offSet()+(n1-(n2-n)+1) - ::oTableView:lineWidth() )
+            ::oFooterView:setOffset( ::oFooterView:offSet()+(n1-(n2-n)+1) - ::oTableView:lineWidth() )
+         ENDIF
+         ::setCurrentIndex( .t. )
+      ELSE
+         ::setCurrentIndex( .f. )
+      ENDIF
+      ::oHScrollBar:setValue( ::colPos - 1 )
    ENDIF
-   ::oHScrollBar:setValue( ::colPos - 1 )
 
    RETURN Self
 
