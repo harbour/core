@@ -49,6 +49,7 @@ else
    else
       ifeq ($(HB_ARCHITECTURE),os2)
          C_MAIN := mainstd.c
+         DIRS := maindllh
       else
          C_MAIN := main.c
       endif

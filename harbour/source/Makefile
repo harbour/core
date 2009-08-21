@@ -48,14 +48,27 @@ else
                      endif
                   endif
                endif
+            else
+               ifeq ($(HB_ARCHITECTURE),os2)
+                  DYNNAME_POST := $(DYNNAME_POST)-os2
+               endif
             endif
          endif
 
-         DYNDIRLIST_BASE := source/common source/pp source/rtl source/macro source/lang source/codepage source/hbpcre source/hbzlib source/hbextern source/rdd source/rdd/dbfntx source/rdd/dbfnsx source/rdd/dbfcdx source/rdd/dbffpt source/rdd/hbsix source/rdd/hsx source/rdd/usrrdd source/rtl/gtcgi source/rtl/gtpca source/rtl/gtstd source/rtl/gtwvt source/rtl/gtgui
-         ifneq ($(HB_ARCHITECTURE),wce)
-            DYNDIRLIST_BASE += source/rtl/gtwin
+         DYNDIRLIST_BASE := source/common source/pp source/rtl source/macro source/lang source/codepage source/hbpcre source/hbzlib source/hbextern source/rdd source/rdd/dbfntx source/rdd/dbfnsx source/rdd/dbfcdx source/rdd/dbffpt source/rdd/hbsix source/rdd/hsx source/rdd/usrrdd source/rtl/gtcgi source/rtl/gtpca source/rtl/gtstd
+         ifeq ($(HB_ARCHITECTURE),os2)
+            DYNDIRLIST_BASE += source/rtl/gtos2
          endif
-         ifeq ($(HB_ARCHITECTURE)-$(HB_COMPILER),win-watcom)
+         ifeq ($(HB_ARCHITECTURE),wce)
+            DYNDIRLIST_BASE += source/rtl/gtwvt source/rtl/gtgui
+         endif
+         ifeq ($(HB_ARCHITECTURE),win)
+            DYNDIRLIST_BASE += source/rtl/gtwvt source/rtl/gtgui source/rtl/gtwin
+         endif
+         ifeq ($(HB_OS_UNIX),yes)
+            DYNDIRLIST_BASE += source/rtl/gttrm
+         endif
+         ifeq ($(HB_COMPILER),watcom)
             DYNDIRLIST_BASE += source/vm/maindllh
          endif
 

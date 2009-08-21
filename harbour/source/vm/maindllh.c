@@ -94,4 +94,12 @@ void hb_forceLinkMainStd( void ) {}
 HB_EXTERN_END
 #endif
 
+#elif defined( HB_OS_OS2 )
+
+#if defined( __WATCOMC__ )
+HB_EXTERN_BEGIN
+void hb_forceLinkMainStd( void ) {}
+HB_EXTERN_END
+#endif
+
 #endif

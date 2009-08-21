@@ -2474,7 +2474,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF hbmk[ _HBMK_cARCH ] $ "win|os2|dos"
             AAdd( hbmk[ _HBMK_aOPTA ], "-p=64" )
          ENDIF
-         IF hbmk[ _HBMK_cARCH ] == "win"
+         DO CASE
+         CASE hbmk[ _HBMK_cARCH ] == "win"
             l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + cLibExt,;
                                                       "harbour" + cDL_Version_Alter + cLibExt ) }
@@ -2482,7 +2483,16 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             IF hbmk[ _HBMK_lSHARED ]
                AAdd( hbmk[ _HBMK_aOPTL ], "FILE " + FN_ExtSet( l_cHB_LIB_INSTALL + hb_osPathSeparator() + iif( hbmk[ _HBMK_lGUI ], "hbmainwin", "hbmainstd" ), cLibExt ) )
             ENDIF
-         ENDIF
+         CASE hbmk[ _HBMK_cARCH ] == "os2"
+            l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
+            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-os2" + cLibExt,;
+                                                      "harbour" + cDL_Version_Alter + "-os2" + cLibExt ) }
+
+            IF hbmk[ _HBMK_lSHARED ]
+               /* TOFIX: This line is plain guessing. */
+               AAdd( hbmk[ _HBMK_aOPTL ], "FILE " + FN_ExtSet( l_cHB_LIB_INSTALL + hb_osPathSeparator() + iif( hbmk[ _HBMK_lGUI ], "hbmainstd", "hbmainstd" ), cLibExt ) )
+            ENDIF
+         ENDCASE
          IF hbmk[ _HBMK_cARCH ] $ "win|os2"
             cBin_Res := "wrc" + cCCEXT
             cResExt := ".res"

@@ -8,6 +8,9 @@ OBJ_EXT := .obj
 LIB_PREF :=
 LIB_EXT := .lib
 
+HB_DYN_COPT := -DHB_DYNLIB
+OBJ_DYN_POSTFIX := _dyn
+
 ifeq ($(HB_BUILD_MODE),c)
    CC := wcc386
 endif
@@ -60,5 +63,23 @@ endif
 LDFLAGS += SYS os2v2
 
 LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
+
+DY := $(LD)
+DFLAGS := OP quiet SYS os2v2_dll
+DY_OUT :=
+DLIBS :=
+
+# NOTE: The empty line directly before 'endef' HAVE TO exist!
+define dyn_object
+   @$(ECHO) $(ECHOQUOTE)FILE '$(file)'$(ECHOQUOTE) >> __dyn__.tmp
+
+endef
+define create_dynlib
+   $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
+   $(foreach file,$^,$(dyn_object))
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) NAME '$(subst /,$(DIRSEP),$(DYN_DIR)/$@)' OP implib='$(IMP_FILE)' @__dyn__.tmp
+endef
+
+DY_RULE = $(create_dynlib)
 
 include $(TOP)$(ROOT)config/common/watcom.mk

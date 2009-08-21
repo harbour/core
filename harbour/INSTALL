@@ -325,9 +325,11 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    - HB_BUILD_PKG=yes          Create release package. Default: no
                                Requires 'clean install' in root source dir.
                                (currently on Windows/Windows CE/DOS)
-   - HB_BUILD_DLL=no           Create Harbour .dlls. Default: yes
+   - HB_BUILD_DLL=no           Create Harbour dynamic libraries. Default: yes
    - HB_BUILD_IMPLIB=yes       Create import libraries for external .dll
-                               dependencies. Default: no
+                               dependencies (including contribs). Default: no
+                               (for Windows targets created on Windows NT
+                               shells only)
    - HB_BUILD_DEBUG=yes        Create a debug build. Default: no
    - HB_BUILD_OPTIM=no         Enable C compiler optimizations. Default: yes
    - HB_BUILD_UNICODE=yes      Create Unicode build (on Windows/Windows CE).
