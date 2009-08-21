@@ -67,7 +67,7 @@ static HMODULE s_hLib = NULL;
 static PHB_AX_GETCTRL   s_pAtlAxGetControl = NULL;
 
 
-static void hb_ax_exit( void* cargo )
+static void hb_oleAxExit( void* cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
@@ -81,8 +81,7 @@ static void hb_ax_exit( void* cargo )
    }
 }
 
-
-static int hb_ax_init( void )
+BOOL hb_oleAxInit( void )
 {
    if( s_hLib == NULL )
    {
@@ -100,7 +99,7 @@ static int hb_ax_init( void )
       if( pAtlAxWinInit )
          ( *pAtlAxWinInit )();
 
-      hb_vmAtQuit( hb_ax_exit, NULL );
+      hb_vmAtQuit( hb_oleAxExit, NULL );
    }
    return 1;
 }
@@ -108,46 +107,71 @@ static int hb_ax_init( void )
 
 HB_FUNC( WIN_AXINIT )
 {
-   hb_retl( hb_ax_init() );
+   hb_retl( hb_oleAxInit() );
+}
+
+
+PHB_ITEM hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd )
+{
+   PHB_ITEM    pSubst = NULL;
+   IUnknown*   pUnk = NULL;
+   IDispatch*  pDisp = NULL;
+   HRESULT     lOleError;
+
+   if( pItem )
+      hb_itemClear( pItem );
+
+   if( ! hb_oleAxInit() || ! s_pAtlAxGetControl )
+   {
+      hb_oleSetError( S_OK );
+      pSubst = hb_errRT_BASE_Subst( EG_UNSUPPORTED, 3012, "ActiveX not initialized", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }
+   else
+   {
+      lOleError = ( *s_pAtlAxGetControl )( hWnd, &pUnk );
+
+      if( lOleError == S_OK )
+      {
+         lOleError = HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( IID_IDispatch ), ( void** ) ( void * ) &pDisp );
+         HB_VTBL( pUnk )->Release( HB_THIS( pUnk ) );
+      }
+
+      hb_oleSetError( lOleError );
+
+      if( lOleError == S_OK )
+         pItem = hb_oleItemPut( pItem, pDisp );
+      else
+         pSubst = hb_errRT_BASE_Subst( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }
+
+   if( pSubst )
+   {
+      if( pItem )
+      {
+         hb_itemMove( pItem, pSubst );
+         hb_itemRelease( pSubst );
+      }
+      else
+         pItem = pSubst;
+   }
+
+   return pItem;
 }
 
 
 HB_FUNC( __AXGETCONTROL ) /* ( hWnd ) --> pDisp */
 {
-   IUnknown*   pUnk = NULL;
-   IDispatch*  pDisp = NULL;
-   HRESULT     lOleError;
+   HWND hWnd = ( HWND ) hb_parptr( 1 );
 
-   if( ! s_pAtlAxGetControl )
-   {
-      hb_oleSetError( S_OK );
+   if( ! hWnd )
       hb_errRT_BASE_SubstR( EG_UNSUPPORTED, 3012, "ActiveX not initialized", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-      return;
-   }
-
-   lOleError = ( *s_pAtlAxGetControl )( ( HWND ) hb_parptr( 1 ), &pUnk );
-
-   if( lOleError == S_OK )
-   {
-      lOleError = HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( IID_IDispatch ), ( void** ) ( void * ) &pDisp );
-      HB_VTBL( pUnk )->Release( HB_THIS( pUnk ) );
-   }
-
-   hb_oleSetError( lOleError );
-
-   if( lOleError == S_OK )
-      hb_itemReturnRelease( hb_oleItemPut( NULL, pDisp ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      hb_oleAxControlNew( hb_stackReturnItem(), hWnd );
 }
 
-HB_FUNC( WIN_AXRELEASEOBJECT )
-{
-   IDispatch * pDisp = hb_oleParam( 1 );
-   HB_VTBL( pDisp )->Release( HB_THIS( pDisp ) );
-}
 
 /* ======================== Event handler support ======================== */
+
 
 #if !defined( HB_OLE_C_API )
 typedef struct
@@ -172,26 +196,6 @@ typedef struct {
 } ISink;
 
 
-static HB_GARBAGE_FUNC( hb_sink_destructor )
-{
-   ISink * pSink = ( ISink * ) Cargo;
-
-   if( pSink->pItemHandler )
-   {
-      hb_itemRelease( pSink->pItemHandler );
-      pSink->pItemHandler = NULL;
-   }
-   if( pSink->pConnectionPoint )
-   {
-      HB_VTBL( pSink->pConnectionPoint )->Unadvise( HB_THIS_( pSink->pConnectionPoint ) pSink->dwCookie );
-      HB_VTBL( pSink->pConnectionPoint )->Release( HB_THIS( pSink->pConnectionPoint ) );
-      pSink->pConnectionPoint = NULL;
-      pSink->dwCookie = 0;
-   }
-   HB_VTBL( ( IDispatch* ) pSink )->Release( HB_THIS( ( IDispatch* ) pSink ) );
-}
-
-
 static HRESULT STDMETHODCALLTYPE QueryInterface( IDispatch* lpThis, REFIID riid, void** ppRet )
 {
    if( IsEqualIID( riid, HB_ID_REF( IID_IUnknown ) ) || IsEqualIID( riid, HB_ID_REF( IID_IDispatch ) ) )
@@ -213,12 +217,26 @@ static ULONG STDMETHODCALLTYPE AddRef( IDispatch* lpThis )
 
 static ULONG STDMETHODCALLTYPE Release( IDispatch* lpThis )
 {
-   if( --( ( ISink* ) lpThis )->count == 0 )
+   ISink* pSink = ( ISink* ) lpThis;
+
+   if( --pSink->count == 0 )
    {
-      hb_xfree( lpThis );
+      if( pSink->pItemHandler )
+      {
+         hb_itemRelease( pSink->pItemHandler );
+         pSink->pItemHandler = NULL;
+      }
+      if( pSink->pConnectionPoint )
+      {
+         HB_VTBL( pSink->pConnectionPoint )->Unadvise( HB_THIS_( pSink->pConnectionPoint ) pSink->dwCookie );
+         HB_VTBL( pSink->pConnectionPoint )->Release( HB_THIS( pSink->pConnectionPoint ) );
+         pSink->pConnectionPoint = NULL;
+         pSink->dwCookie = 0;
+      }
+      hb_xfree( pSink );      /* TODO: GlobalAlloc/Free GMEM_FIXED ??? */
       return 0;
    }
-   return ( ( ISink* ) lpThis )->count;
+   return pSink->count;
 }
 
 
@@ -251,17 +269,22 @@ static HRESULT STDMETHODCALLTYPE GetIDsOfNames( IDispatch* lpThis, REFIID riid, 
    return E_NOTIMPL;
 }
 
+typedef struct
+{
+   PHB_ITEM item;
+   VARIANT* variant;
+}
+HB_OLE_PARAM_REF;
 
 static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFIID riid,
                                          LCID lcid, WORD wFlags, DISPPARAMS* pParams,
                                          VARIANT* pVarResult, EXCEPINFO* pExcepInfo, UINT* puArgErr )
 {
-   PHB_ITEM  pItem;
-   int       i, iCount;
+   int i, iCount, ii, iRefs;
+   PHB_ITEM pAction;
 
    HB_SYMBOL_UNUSED( lcid );
    HB_SYMBOL_UNUSED( wFlags );
-   HB_SYMBOL_UNUSED( pVarResult );
    HB_SYMBOL_UNUSED( pExcepInfo );
    HB_SYMBOL_UNUSED( puArgErr );
 
@@ -271,26 +294,58 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
    if( ! ( ( ISink* ) lpThis)->pItemHandler )
       return S_OK;
 
-   hb_vmPushState();
-   hb_vmPushSymbol( &hb_symEval );
-   hb_vmPush( ( ( ISink* ) lpThis )->pItemHandler );
-   hb_vmPushLong( dispid );
+   pAction = ( ( ISink* ) lpThis )->pItemHandler;
 
-   iCount = pParams->cArgs;
-   for( i = 1; i <= iCount; i++ )
+   if( HB_IS_HASH( pAction ) )
    {
-      pItem = hb_itemNew( NULL );
-      hb_oleVariantToItem( pItem, &( pParams->rgvarg[ iCount - i ] ) );
-      hb_vmPush( pItem );
-      hb_itemRelease( pItem );
+      PHB_ITEM pKey = hb_itemPutNL( NULL, ( LONG ) dispid );
+      pAction = hb_hashGetItemPtr( pAction, pKey, 0 );
+      hb_itemRelease( pKey );
    }
 
-   hb_vmDo( ( USHORT ) iCount + 1 );
+   if( pAction && hb_vmRequestReenter() )
+   {
+      HB_OLE_PARAM_REF refArray[ 32 ];
 
-   if( pVarResult )
-      hb_oleItemToVariant( pVarResult, hb_stackReturnItem() );
+      iCount = pParams->cArgs;
 
-   hb_vmPopState();
+      for( i = iRefs = 0; i < iCount && iRefs < 32; i++ )
+      {
+         if( pParams->rgvarg[ i ].n1.n2.vt & VT_BYREF )
+            refArray[ iRefs++ ].item = hb_stackAllocItem();
+      }
+
+      hb_vmPushEvalSym();
+      hb_vmPush( pAction );
+      hb_vmPushLong( ( LONG ) dispid );
+
+      for( i = 1, ii = 0; i <= iCount; i++ )
+      {
+         if( pParams->rgvarg[ iCount - i ].n1.n2.vt & VT_BYREF )
+         {
+            refArray[ ii ].variant = &pParams->rgvarg[ iCount - i ];
+            hb_oleVariantToItem( refArray[ ii ].item, refArray[ ii ].variant );
+            hb_vmPushItemRef( refArray[ ii++ ].item );
+         }
+         else
+            hb_oleVariantToItem( hb_stackAllocItem(),
+                                 &pParams->rgvarg[ iCount - i ] );
+      }
+
+      hb_vmSend( ( USHORT ) iCount + 1 );
+
+      if( pVarResult )
+         hb_oleItemToVariant( pVarResult, hb_stackReturnItem() );
+
+      for( i = 0; i < iRefs; i++ )
+         hb_oleVariantUpdate( refArray[ i ].variant, refArray[ i ].item );
+
+      for( i = 0; i < iRefs; i++ )
+         hb_stackPop();
+
+      hb_vmRequestRestore();
+   }
+
    return S_OK;
 }
 
@@ -312,7 +367,7 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler ) --> pSink */
 
    if( pDisp )
    {
-      PHB_ITEM pItemBlock = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
+      PHB_ITEM pItemBlock = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL | HB_IT_HASH );
 
       if( pItemBlock )
       {
@@ -327,16 +382,18 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler ) --> pSink */
             if( lOleError == S_OK )
             {
                DWORD dwCookie = 0;
-               ISink * pSink = ( ISink* ) hb_gcAlloc( sizeof( ISink ), hb_sink_destructor ); /* TODO: GlobalAlloc GMEM_FIXED ??? */
-               pSink->lpVtbl = ( IDispatchVtbl * ) &ISink_Vtbl;
-               pSink->count = 2; /* 1 for pCP->Advice() param and 1 for Harbour collectible pointer [Mindaugas] */
-               pSink->pItemHandler = hb_itemNew( pItemBlock );
+               ISink * pSink;
 
+               pSink = ( ISink* ) hb_xgrab( sizeof( ISink ) );    /* TODO: GlobalAlloc/Free GMEM_FIXED ??? */
+
+               pSink->lpVtbl = ( IDispatchVtbl * ) &ISink_Vtbl;
+               pSink->count = 1; /* 1 for Harbour collectible pointer [Mindaugas] */
+               pSink->pItemHandler = hb_itemNew( pItemBlock );
                lOleError = HB_VTBL( pCP )->Advise( HB_THIS_( pCP ) ( IUnknown* ) pSink, &dwCookie );
                pSink->pConnectionPoint = pCP;
                pSink->dwCookie = dwCookie;
 
-               hb_retptrGC( pSink );
+               hb_oleItemPut( hb_stackReturnItem(), ( IDispatch* ) pDisp );
             }
             HB_VTBL( pCPC )->Release( HB_THIS( pCPC ) );
          }

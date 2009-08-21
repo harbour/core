@@ -152,6 +152,23 @@ IDispatch* hb_oleParam( int iParam )
 }
 
 
+IDispatch* hb_oleItemGet( PHB_ITEM pItem )
+{
+   return ( IDispatch* ) hb_itemGetPtrGC( pItem, hb_ole_destructor );
+}
+
+
+PHB_ITEM hb_oleItemPut( PHB_ITEM pItem, IDispatch* pDisp )
+{
+   IDispatch** ppDisp;
+
+   ppDisp = ( IDispatch** ) hb_gcAlloc( sizeof( IDispatch* ), hb_ole_destructor );
+   *ppDisp = pDisp;
+
+   return hb_itemPutPtrGC( pItem, ppDisp );
+}
+
+
 static IEnumVARIANT* hb_oleenumParam( int iParam )
 {
    IEnumVARIANT**  ppEnum = ( IEnumVARIANT** ) hb_parptrGC( hb_oleenum_destructor, iParam );
@@ -178,15 +195,33 @@ static wchar_t* AnsiToWide( const char* szString )
 }
 
 
-static char* WideToAnsi( const wchar_t* szWide )
-{
-   int    iLen;
-   char*  szString;
 
-   iLen = WideCharToMultiByte( CP_ACP, 0, szWide, -1, NULL, 0, NULL, NULL );
+
+static BSTR hb_oleItemToString( PHB_ITEM pItem )
+{
+   const char* szString;
+   BSTR strVal;
+   int iLen, iStrLen;
+
+   szString = hb_itemGetCPtr( pItem );
+   iLen = ( int ) hb_itemGetCLen( pItem );
+   iStrLen = MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, szString, iLen, NULL, 0 );
+   strVal = SysAllocStringLen( NULL, iStrLen );
+   MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, szString, iLen, strVal, iStrLen + 1 );
+   return strVal;
+}
+
+
+static void hb_oleStringToItem( BSTR strVal, PHB_ITEM pItem )
+{
+   char* szString;
+   int iLen, iStrLen;
+
+   iStrLen = ( int ) SysStringLen( strVal );
+   iLen = WideCharToMultiByte( CP_ACP, 0, strVal, iStrLen, NULL, 0, NULL, NULL );
    szString = ( char* ) hb_xgrab( ( iLen + 1 ) * sizeof( char ) );
-   WideCharToMultiByte( CP_ACP, 0, szWide, -1, szString, iLen, NULL, NULL );
-   return szString;
+   WideCharToMultiByte( CP_ACP, 0, strVal, iStrLen, szString, iLen + 1, NULL, NULL );
+   hb_itemPutCLPtr( pItem, szString, iLen );
 }
 
 
@@ -201,18 +236,15 @@ static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
    {
       case HB_IT_STRING:
       case HB_IT_MEMO:
-      {
-         wchar_t* szString = AnsiToWide( hb_itemGetCPtr( pItem ) );
          pVariant->n1.n2.vt = VT_BSTR;
-         pVariant->n1.n2.n3.bstrVal = SysAllocString( szString );
-         hb_xfree( szString );
+         pVariant->n1.n2.n3.bstrVal = hb_oleItemToString( pItem );
          if( pVarRef )
          {
             pVarRef->n1.n2.vt = VT_BSTR | VT_BYREF;
             pVarRef->n1.n2.n3.pbstrVal = &pVariant->n1.n2.n3.bstrVal;
          }
          break;
-      }
+
       case HB_IT_LOGICAL:
          pVariant->n1.n2.vt = VT_BOOL;
          pVariant->n1.n2.n3.boolVal = hb_itemGetL( pItem ) ? VARIANT_TRUE : VARIANT_FALSE;
@@ -383,21 +415,12 @@ static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
 #endif
 }
 
+
 void hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem )
 {
    hb_oleItemToVariantRef( pVariant, pItem, NULL );
 }
 
-
-PHB_ITEM hb_oleItemPut( PHB_ITEM pItem, IDispatch* pDisp )
-{
-   IDispatch** ppDisp;
-
-   ppDisp = ( IDispatch** ) hb_gcAlloc( sizeof( IDispatch* ), hb_ole_destructor );
-   *ppDisp = pDisp;
-
-   return hb_itemPutPtrGC( pItem, ppDisp );
-}
 
 void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
 {
@@ -451,18 +474,12 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
       }
 
       case VT_BSTR:
-      {
-         char* szString = WideToAnsi( pVariant->n1.n2.n3.bstrVal );
-         hb_itemPutCPtr( pItem, szString );
+         hb_oleStringToItem( pVariant->n1.n2.n3.bstrVal, pItem );
          break;
-      }
 
       case VT_BSTR | VT_BYREF:
-      {
-         char* szString = WideToAnsi( *pVariant->n1.n2.n3.pbstrVal );
-         hb_itemPutCPtr( pItem, szString );
+         hb_oleStringToItem( *pVariant->n1.n2.n3.pbstrVal, pItem );
          break;
-      }
 
       case VT_BOOL:
          hb_itemPutL( pItem, pVariant->n1.n2.n3.boolVal ? TRUE : FALSE );
@@ -473,19 +490,19 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
          break;
 
       case VT_I1:
-         hb_itemPutNI( pItem, ( int ) pVariant->n1.n2.n3.cVal );
+         hb_itemPutNI( pItem, ( signed char ) pVariant->n1.n2.n3.cVal );
          break;
 
       case VT_I1 | VT_BYREF:
-         hb_itemPutNI( pItem, ( int ) *pVariant->n1.n2.n3.pcVal );
+         hb_itemPutNI( pItem, ( signed char ) *pVariant->n1.n2.n3.pcVal );
          break;
 
       case VT_I2:
-         hb_itemPutNI( pItem, ( int ) pVariant->n1.n2.n3.iVal );
+         hb_itemPutNI( pItem, ( short ) pVariant->n1.n2.n3.iVal );
          break;
 
       case VT_I2 | VT_BYREF:
-         hb_itemPutNI( pItem, ( int ) *pVariant->n1.n2.n3.piVal );
+         hb_itemPutNI( pItem, ( short ) *pVariant->n1.n2.n3.piVal );
          break;
 
       case VT_I4:
@@ -519,27 +536,27 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
          break;
 
       case VT_UI1:
-         hb_itemPutNI( pItem, ( int ) pVariant->n1.n2.n3.bVal );
+         hb_itemPutNI( pItem, ( unsigned char ) pVariant->n1.n2.n3.bVal );
          break;
 
       case VT_UI1 | VT_BYREF:
-         hb_itemPutNI( pItem, ( int ) *pVariant->n1.n2.n3.pbVal );
+         hb_itemPutNI( pItem, ( unsigned char ) *pVariant->n1.n2.n3.pbVal );
          break;
 
       case VT_UI2:
-         hb_itemPutNI( pItem, ( int ) pVariant->n1.n2.n3.uiVal );
+         hb_itemPutNI( pItem, ( unsigned short ) pVariant->n1.n2.n3.uiVal );
          break;
 
       case VT_UI2 | VT_BYREF:
-         hb_itemPutNI( pItem, ( int ) *pVariant->n1.n2.n3.puiVal );
+         hb_itemPutNI( pItem, ( unsigned short ) *pVariant->n1.n2.n3.puiVal );
          break;
 
       case VT_UI4:
-         hb_itemPutNInt( pItem, ( HB_LONG ) pVariant->n1.n2.n3.ulVal );
+         hb_itemPutNInt( pItem, pVariant->n1.n2.n3.ulVal );
          break;
 
       case VT_UI4 | VT_BYREF:
-         hb_itemPutNInt( pItem, ( HB_LONG ) *pVariant->n1.n2.n3.pulVal );
+         hb_itemPutNInt( pItem, *pVariant->n1.n2.n3.pulVal );
          break;
 
       case VT_UI8:
@@ -575,11 +592,11 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
          break;
 
       case VT_UINT:
-         hb_itemPutNInt( pItem, ( HB_LONG ) pVariant->n1.n2.n3.uintVal );
+         hb_itemPutNInt( pItem, pVariant->n1.n2.n3.uintVal );
          break;
 
       case VT_UINT | VT_BYREF:
-         hb_itemPutNInt( pItem, ( HB_LONG ) *pVariant->n1.n2.n3.puintVal );
+         hb_itemPutNInt( pItem, *pVariant->n1.n2.n3.puintVal );
          break;
 
       case VT_R4:
@@ -678,6 +695,119 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
 
       default:
          hb_itemClear( pItem );
+   }
+}
+
+
+void hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem )
+{
+   switch( pVariant->n1.n2.vt )
+   {
+      case VT_DISPATCH | VT_BYREF:
+      {
+         IDispatch* pDisp = hb_oleItemGet( pItem );
+
+         if( pDisp )
+         {
+            IDispatch* pdispVal = *pVariant->n1.n2.n3.ppdispVal;
+            HB_VTBL( pDisp )->AddRef( HB_THIS( pDisp ) );
+            *pVariant->n1.n2.n3.ppdispVal = pDisp;
+            if( pdispVal )
+               HB_VTBL( pdispVal )->Release( HB_THIS( pdispVal ) );
+         }
+         break;
+      }
+
+      case VT_BSTR | VT_BYREF:
+         SysFreeString( *pVariant->n1.n2.n3.pbstrVal );
+         *pVariant->n1.n2.n3.pbstrVal = hb_oleItemToString( pItem );
+         break;
+
+      case VT_BOOL | VT_BYREF:
+         *pVariant->n1.n2.n3.pboolVal = hb_itemGetL( pItem );
+         break;
+
+      case VT_I1 | VT_BYREF:
+         *pVariant->n1.n2.n3.pcVal = ( signed char ) hb_itemGetNI( pItem );
+         break;
+
+      case VT_I2 | VT_BYREF:
+         *pVariant->n1.n2.n3.piVal = ( short ) hb_itemGetNI( pItem );
+         break;
+
+      case VT_I4 | VT_BYREF:
+         *pVariant->n1.n2.n3.plVal = hb_itemGetNL( pItem );
+         break;
+
+      case VT_I8 | VT_BYREF:
+#if HB_LONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
+         *pVariant->n1.n2.n3.plVal = ( long ) hb_itemGetNInt( pItem );
+#elif defined( HB_OLE_NO_LLREF )
+         /* workaround for wrong OLE variant structure definition */
+         * ( LONGLONG * ) pVariant->n1.n2.n3.pdblVal = ( LONGLONG ) hb_itemGetNInt( pItem );
+#else
+         *pVariant->n1.n2.n3.pllVal = ( LONGLONG ) hb_itemGetNInt( pItem );
+#endif
+         break;
+
+      case VT_UI1 | VT_BYREF:
+         *pVariant->n1.n2.n3.pbVal = ( unsigned char ) hb_itemGetNI( pItem );
+         break;
+
+      case VT_UI2 | VT_BYREF:
+         *pVariant->n1.n2.n3.puiVal = ( unsigned short ) hb_itemGetNI( pItem );
+         break;
+
+      case VT_UI4 | VT_BYREF:
+         *pVariant->n1.n2.n3.pulVal = ( unsigned long ) hb_itemGetNL( pItem );
+         break;
+
+      case VT_UI8 | VT_BYREF:
+#if HB_LONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
+         *pVariant->n1.n2.n3.pulVal = ( unsigned long ) hb_itemGetNInt( pItem );
+#elif defined( HB_OLE_NO_LLREF )
+         /* workaround for wrong OLE variant structure definition */
+         * ( ULONGLONG * ) pVariant->n1.n2.n3.pdblVal = ( ULONGLONG ) hb_itemGetNInt( pItem );
+#else
+         *pVariant->n1.n2.n3.pullVal = ( ULONGLONG ) hb_itemGetNInt( pItem );
+#endif
+         break;
+
+      case VT_INT | VT_BYREF:
+         *pVariant->n1.n2.n3.pintVal = hb_itemGetNI( pItem );
+         break;
+
+      case VT_UINT | VT_BYREF:
+         *pVariant->n1.n2.n3.puintVal = ( unsigned int ) hb_itemGetNI( pItem );
+         break;
+
+      case VT_R4 | VT_BYREF:
+         *pVariant->n1.n2.n3.pfltVal = ( float ) hb_itemGetND( pItem );
+         break;
+
+      case VT_R8 | VT_BYREF:
+         *pVariant->n1.n2.n3.pdblVal = hb_itemGetND( pItem );
+         break;
+
+      case VT_CY | VT_BYREF:
+         VarCyFromR8( hb_itemGetND( pItem ), pVariant->n1.n2.n3.pcyVal );
+         break;
+
+      case VT_DECIMAL | VT_BYREF:
+         VarDecFromR8( hb_itemGetND( pItem ), pVariant->n1.n2.n3.pdecVal );
+         break;
+
+      case VT_DATE | VT_BYREF:
+         *pVariant->n1.n2.n3.pdblVal = hb_itemGetTD( pItem ) - HB_OLE_DATE_BASE;
+         break;
+
+      case VT_BYREF | VT_VARIANT:
+         hb_oleItemToVariantRef( pVariant->n1.n2.n3.pvarVal, pItem, NULL );
+         break;
+
+      case VT_VARIANT | VT_ARRAY | VT_BYREF:
+         /* TODO: */
+         break;
    }
 }
 

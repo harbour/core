@@ -103,9 +103,15 @@ HB_EXTERN_BEGIN
 HB_EXPORT void       hb_oleInit( void );
 HB_EXPORT HRESULT    hb_oleGetError( void );
 HB_EXPORT void       hb_oleSetError( HRESULT lOleError );
-HB_EXPORT void       hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem );
 HB_EXPORT void       hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant );
+HB_EXPORT void       hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem );
+HB_EXPORT void       hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem );
 HB_EXPORT IDispatch* hb_oleParam( int iParam );
+HB_EXPORT IDispatch* hb_oleItemGet( PHB_ITEM pItem );
 HB_EXPORT PHB_ITEM   hb_oleItemPut( PHB_ITEM pItem, IDispatch* pDisp );
+
+/* activex control */
+HB_EXPORT BOOL       hb_oleAxInit( void );
+HB_EXPORT PHB_ITEM   hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd );
 
 HB_EXTERN_END

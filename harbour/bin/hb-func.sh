@@ -519,7 +519,9 @@ fi
 [ -n "\${HB_GPM_LIB}" ] && SYSTEM_LIBS="-l\${HB_GPM_LIB} \${SYSTEM_LIBS}"
 
 
-if [ "\${HB_STATIC}" = "no" ]; then
+if [ "\${HB_STATIC}" = "no" ] && \
+   [ "\${HB_ARCHITECTURE}" != "win" ] && \
+   [ "\${HB_ARCHITECTURE}" != "wce" ]; then
     SYSTEM_LIBS=""
 fi
 
