@@ -108,8 +108,12 @@ else
                                           ifneq ($(findstring OS/2,$(1)),)
                                              HB_HOST_ARCH := os2
                                           else
-                                             ifneq ($(findstring msdos,$(1)),)
+                                             ifneq ($(findstring MS-DOS,$(1)),)
                                                 HB_HOST_ARCH := dos
+                                             else
+                                                ifneq ($(findstring msdos,$(1)),)
+                                                   HB_HOST_ARCH := dos
+                                                endif
                                              endif
                                           endif
                                        endif

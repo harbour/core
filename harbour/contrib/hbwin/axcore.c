@@ -113,7 +113,6 @@ HB_FUNC( WIN_AXINIT )
 
 PHB_ITEM hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd )
 {
-   PHB_ITEM    pSubst = NULL;
    IUnknown*   pUnk = NULL;
    IDispatch*  pDisp = NULL;
    HRESULT     lOleError;
@@ -124,7 +123,7 @@ PHB_ITEM hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd )
    if( ! hb_oleAxInit() || ! s_pAtlAxGetControl )
    {
       hb_oleSetError( S_OK );
-      pSubst = hb_errRT_BASE_Subst( EG_UNSUPPORTED, 3012, "ActiveX not initialized", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_UNSUPPORTED, 3012, "ActiveX not initialized", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
    else
    {
@@ -141,18 +140,7 @@ PHB_ITEM hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd )
       if( lOleError == S_OK )
          pItem = hb_oleItemPut( pItem, pDisp );
       else
-         pSubst = hb_errRT_BASE_Subst( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-   }
-
-   if( pSubst )
-   {
-      if( pItem )
-      {
-         hb_itemMove( pItem, pSubst );
-         hb_itemRelease( pSubst );
-      }
-      else
-         pItem = pSubst;
+         hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
 
    return pItem;
@@ -164,7 +152,7 @@ HB_FUNC( __AXGETCONTROL ) /* ( hWnd ) --> pDisp */
    HWND hWnd = ( HWND ) hb_parptr( 1 );
 
    if( ! hWnd )
-      hb_errRT_BASE_SubstR( EG_UNSUPPORTED, 3012, "ActiveX not initialized", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    else
       hb_oleAxControlNew( hb_stackReturnItem(), hWnd );
 }
@@ -281,7 +269,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
                                          VARIANT* pVarResult, EXCEPINFO* pExcepInfo, UINT* puArgErr )
 {
    int i, iCount, ii, iRefs;
-   PHB_ITEM pAction;
+   PHB_ITEM pAction, pKey = NULL;
 
    HB_SYMBOL_UNUSED( lcid );
    HB_SYMBOL_UNUSED( wFlags );
@@ -298,7 +286,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
 
    if( HB_IS_HASH( pAction ) )
    {
-      PHB_ITEM pKey = hb_itemPutNL( NULL, ( LONG ) dispid );
+      pKey = hb_itemPutNL( pKey, ( LONG ) dispid );
       pAction = hb_hashGetItemPtr( pAction, pKey, 0 );
       hb_itemRelease( pKey );
    }
@@ -317,7 +305,8 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
 
       hb_vmPushEvalSym();
       hb_vmPush( pAction );
-      hb_vmPushLong( ( LONG ) dispid );
+      if( pKey == NULL )
+         hb_vmPushLong( ( LONG ) dispid );
 
       for( i = 1, ii = 0; i <= iCount; i++ )
       {
@@ -332,7 +321,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
                                  &pParams->rgvarg[ iCount - i ] );
       }
 
-      hb_vmSend( ( USHORT ) iCount + 1 );
+      hb_vmSend( ( USHORT ) ( iCount + ( pKey == NULL ? 1 : 0 ) ) );
 
       if( pVarResult )
          hb_oleItemToVariant( pVarResult, hb_stackReturnItem() );
