@@ -7,7 +7,35 @@ include $(TOP)$(ROOT)config/global.mk
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
 
-HB_DYN_LIBS := hbcommon hbpp hbrtl hbmacro hblang hbcpage hbpcre hbzlib hbextern hbrdd rddntx rddnsx rddcdx rddfpt hbsix hbhsx hbusrrdd gtcgi gtpca gtstd gtwvt gtgui gtwin gtos2 gttrm hbvm hbvmmt hbmaindllh
+HB_DYN_LIBS := \
+   hbcommon \
+   hbpp \
+   hbrtl \
+   hbmacro \
+   hblang \
+   hbcpage \
+   hbpcre \
+   hbzlib \
+   hbextern \
+   hbrdd \
+   rddntx \
+   rddnsx \
+   rddcdx \
+   rddfpt \
+   hbsix \
+   hbhsx \
+   hbusrrdd \
+   gtcgi \
+   gtpca \
+   gtstd \
+   gtwvt \
+   gtgui \
+   gtwin \
+   gtos2 \
+   gttrm \
+   hbvm \
+   hbvmmt \
+   hbmaindllh
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/$(HB_COMPILER).mk
 include $(TOP)$(ROOT)config/c.mk

@@ -59,7 +59,28 @@ else
             endif
          endif
 
-         DYNDIRLIST_BASE := source/common source/pp source/rtl source/macro source/lang source/codepage source/hbpcre source/hbzlib source/hbextern source/rdd source/rdd/dbfntx source/rdd/dbfnsx source/rdd/dbfcdx source/rdd/dbffpt source/rdd/hbsix source/rdd/hsx source/rdd/usrrdd source/rtl/gtcgi source/rtl/gtpca source/rtl/gtstd
+         DYNDIRLIST_BASE := \
+            source/common \
+            source/pp \
+            source/rtl \
+            source/macro \
+            source/lang \
+            source/codepage \
+            source/hbpcre \
+            source/hbzlib \
+            source/hbextern \
+            source/rdd \
+            source/rdd/dbfntx \
+            source/rdd/dbfnsx \
+            source/rdd/dbfcdx \
+            source/rdd/dbffpt \
+            source/rdd/hbsix \
+            source/rdd/hsx \
+            source/rdd/usrrdd \
+            source/rtl/gtcgi \
+            source/rtl/gtpca \
+            source/rtl/gtstd
+
          ifeq ($(HB_ARCHITECTURE),os2)
             DYNDIRLIST_BASE += source/rtl/gtos2
          endif
