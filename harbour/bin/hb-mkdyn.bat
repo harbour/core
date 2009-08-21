@@ -209,10 +209,8 @@ for %%f in (%HB_DLL_LIBS% %HB_DLL_LIBS_WIN% %HB_DLL_LIBS_WATCOM%) do (
       rem echo ! Processing directory: %%f\%HB_OBJ_DIR%
       dir /b "%%f\%HB_OBJ_DIR%\*%HB_OBJ_EXT%" > "%HB_BIN_INSTALL%\_hboraw.txt"
       for /F %%p in (%HB_BIN_INSTALL%\_hboraw.txt) do (
-         if not "%%p" == "hbpp%HB_OBJ_EXT%" (
             echo %HB_OBJ_PREF%%%f\%HB_OBJ_DIR%\%%p%HB_OBJ_POST%>> "%_LIST_ST%"
             echo %HB_OBJ_PREF%%%f\%HB_OBJ_DIR%\%%p%HB_OBJ_POST%>> "%_LIST_MT%"
-         )
       )
       del "%HB_BIN_INSTALL%\_hboraw.txt"
    ) else ( echo ! Directory not found: %%f\%HB_OBJ_DIR% )
@@ -223,12 +221,7 @@ for %%f in (%HB_DLL_LIBS_ST%) do (
    if exist "%%f\%HB_OBJ_DIR%" (
       rem echo ! Processing directory: %%f\%HB_OBJ_DIR%
       dir /b "%%f\%HB_OBJ_DIR%\*%HB_OBJ_EXT%" > "%HB_BIN_INSTALL%\_hboraw.txt"
-      for /F %%p in (%HB_BIN_INSTALL%\_hboraw.txt) do (
-         if not "%HB_COMPILER%_%%p" == "watcom_mainstd%HB_OBJ_EXT%" (
-         if not "%HB_COMPILER%_%%p" == "watcom_mainwin%HB_OBJ_EXT%" (
-            echo %HB_OBJ_PREF%%%f\%HB_OBJ_DIR%\%%p%HB_OBJ_POST%>> "%_LIST_ST%"
-         )
-         )
+      for /F %%p in (%HB_BIN_INSTALL%\_hboraw.txt) do echo %HB_OBJ_PREF%%%f\%HB_OBJ_DIR%\%%p%HB_OBJ_POST%>> "%_LIST_ST%"
       )
       del "%HB_BIN_INSTALL%\_hboraw.txt"
    ) else ( echo ! Directory not found: %%f\%HB_OBJ_DIR% )
@@ -239,13 +232,7 @@ for %%f in (%HB_DLL_LIBS_MT%) do (
    if exist "%%f\%HB_OBJ_DIR%" (
       rem echo ! Processing directory: %%f\%HB_OBJ_DIR%
       dir /b "%%f\%HB_OBJ_DIR%\*%HB_OBJ_EXT%" > "%HB_BIN_INSTALL%\_hboraw.txt"
-      for /F %%p in (%HB_BIN_INSTALL%\_hboraw.txt) do (
-         if not "%HB_COMPILER%_%%p" == "watcom_mainstd%HB_OBJ_EXT%" (
-         if not "%HB_COMPILER%_%%p" == "watcom_mainwin%HB_OBJ_EXT%" (
-            echo %HB_OBJ_PREF%%%f\%HB_OBJ_DIR%\%%p%HB_OBJ_POST%>> "%_LIST_MT%"
-         )
-         )
-      )
+      for /F %%p in (%HB_BIN_INSTALL%\_hboraw.txt) do echo %HB_OBJ_PREF%%%f\%HB_OBJ_DIR%\%%p%HB_OBJ_POST%>> "%_LIST_MT%"
       del "%HB_BIN_INSTALL%\_hboraw.txt"
    ) else ( echo ! Directory not found: %%f\%HB_OBJ_DIR% )
 )

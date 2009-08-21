@@ -856,6 +856,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       DO CASE
       CASE hbmk[ _HBMK_cARCH ] == "linux"
          aCOMPSUP := { "gcc", "watcom", "icc", "sunpro" }
+      CASE hbmk[ _HBMK_cARCH ] == "darwin"
+         aCOMPSUP := { "gcc", "icc" }
       CASE hbmk[ _HBMK_cARCH ] == "sunos"
          aCOMPSUP := { "gcc", "sunpro" }
       OTHERWISE
@@ -1992,7 +1994,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
            ( hbmk[ _HBMK_cARCH ] == "hpux"   .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cARCH ] == "sunos"  .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cARCH ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
-           ( hbmk[ _HBMK_cARCH ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "icc" )
+           ( hbmk[ _HBMK_cARCH ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "icc" ) .OR. ;
+           ( hbmk[ _HBMK_cARCH ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "icc" )
 
          nCmd_Esc := _ESC_NIX
          IF hbmk[ _HBMK_lDEBUG ]
@@ -2002,7 +2005,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
-         IF hbmk[ _HBMK_cARCH ] == "darwin"
+         IF hbmk[ _HBMK_cARCH ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" /* TODO: Check what to use for icc */
             cBin_Lib := "libtool"
             cOpt_Lib := "-static {FA} -o {OL} {LO}"
          ELSE
@@ -2053,7 +2056,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF hbmk[ _HBMK_lSTATICFULL ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-static" )
          ENDIF
-         IF hbmk[ _HBMK_cARCH ] == "darwin"
+         IF hbmk[ _HBMK_cARCH ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "gcc"
             AAdd( hbmk[ _HBMK_aOPTC ], "-no-cpp-precomp" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-long-double" )
             IF hbmk[ _HBMK_lSHARED ]
@@ -6597,7 +6600,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       "",;
       I_( "Supported <comp> values for each supported <arch> value:" ),;
       "  - linux  : gcc, watcom, icc, sunpro",;
-      "  - darwin : gcc",;
+      "  - darwin : gcc, icc",;
       "  - win    : mingw, msvc, bcc, watcom, icc, pocc, cygwin, xcc,",;
       "  -          mingw64, msvc64, msvcia64, iccia64, pocc64",;
       "  - wce    : mingwarm, msvcarm, poccarm",;

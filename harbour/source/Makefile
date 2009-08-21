@@ -39,6 +39,7 @@ DIRS := \
    hbpcre \
    hbzlib \
    debug$(HB_COMP_REF) \
+   dynlib{codepage,common,hbextern,hbpcre,hbzlib,lang,macro,pp,rdd,rtl,vm} \
 
 endif
 

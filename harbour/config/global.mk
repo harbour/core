@@ -230,7 +230,6 @@ ifeq ($(HB_INIT_DONE),)
       #   HB_DB_DRVEXT                -> -
       #   HB_COMMERCE                 -> ?
       #   HB_CRS_LIB                  -> HB_LIB_CURSES
-      #   HB_BUILD_VERBOSE            [ OK ]
       #   HB_BIN_COMPILE              -> HB_BUILD_BIN_DIR
       #   HB_INC_COMPILE              -> - (HB_BUILD_INC_DIR)
       #   HB_GPM_MOUSE                -> HB_HAS_GPM
@@ -408,22 +407,10 @@ ifeq ($(HB_HOST_ARCH),)
    endif
 endif
 
-ifeq ($(HB_INIT_DONE),)
-   ifneq ($(MAKE_381),)
-      $(info ! HB_HOST_ARCH: $(HB_HOST_ARCH)  HB_SHELL: $(HB_SHELL) $(if $(HB_SHELL_XP),,(pre-xp)))
-   endif
-endif
-
 ifneq ($(filter $(HB_HOST_ARCH),win wce dos os2),)
    HB_HOST_BIN_EXT := .exe
 else
    HB_HOST_BIN_EXT :=
-endif
-
-ifeq ($(HB_BUILD_VERBOSE),yes)
-   ifneq ($(MAKE_381),)
-      $(info ! Detected host executable extension: $(HB_HOST_BIN_EXT))
-   endif
 endif
 
 # Couldn't find a builds of these tools which would fit Harbour respository,
@@ -453,9 +440,9 @@ else
    # TODO: CPU detection for rest of systems.
 endif
 
-ifeq ($(HB_BUILD_VERBOSE),yes)
+ifeq ($(HB_INIT_DONE),)
    ifneq ($(MAKE_381),)
-      $(info ! Detected host CPU: $(HB_HOST_CPU))
+      $(info ! HB_HOST_ARCH: $(HB_HOST_ARCH)$(if $(HB_HOST_CPU), ($(HB_HOST_CPU)),)  HB_SHELL: $(HB_SHELL) $(if $(HB_SHELL_XP),,(pre-xp)))
    endif
 endif
 
@@ -715,13 +702,6 @@ ifeq ($(HB_COMPILER),)
    $(error ! HB_COMPILER not set, couldn't autodetect)
 endif
 
-ifeq ($(HB_INIT_DONE),)
-   ifneq ($(MAKE_381),)
-      $(info ! HB_ARCHITECTURE: $(HB_ARCHITECTURE) $(HB_ARCH_AUTO))
-      $(info ! HB_COMPILER: $(HB_COMPILER) $(HB_COMP_AUTO))
-   endif
-endif
-
 export HB_ARCHITECTURE
 export HB_COMPILER
 
@@ -743,32 +723,41 @@ GRANDP := $(subst $(subst x,x, ),,$(foreach item, $(subst /, ,$(OBJ_DIR)), ../))
 # TODO: Set this in <arch>/<comp>.mk
 HB_CPU :=
 ifeq ($(HB_ARCHITECTURE),win)
-   ifeq ($(HB_COMPILER),msvc64)
+   ifneq ($(filter $(HB_COMPILER),msvc64 mingw64 pocc64),)
       HB_CPU := x86_64
    else
-      ifeq ($(HB_COMPILER),mingw64)
-         HB_CPU := x86_64
+      ifneq ($(filter $(HB_COMPILER),msvcia64 iccia64),)
+         HB_CPU := ia64
       else
-         ifeq ($(HB_COMPILER),pocc64)
-            HB_CPU := x86_64
+         HB_CPU := x86
+      endif
+   endif
+else
+   ifeq ($(HB_ARCHITECTURE),wce)
+      ifneq ($(filter $(HB_COMPILER),msvcarm mingwarm poccarm),)
+         HB_CPU := arm
+      else
+         ifneq ($(filter $(HB_COMPILER),msvcmips),)
+            HB_CPU := mips
          else
-            ifeq ($(HB_COMPILER),msvcia64)
-               HB_CPU := ia64
+            ifneq ($(filter $(HB_COMPILER),msvcsh),)
+               HB_CPU := sh
             else
-               ifeq ($(HB_COMPILER),iccia64)
-                  HB_CPU := ia64
-               else
-                  HB_CPU := x86
-               endif
+               HB_CPU := x86
             endif
          endif
+      endif
+   else
+      ifneq ($(filter $(HB_ARCHITECTURE),dos os2),)
+         HB_CPU := x86
       endif
    endif
 endif
 
-ifeq ($(HB_BUILD_VERBOSE),yes)
+ifeq ($(HB_INIT_DONE),)
    ifneq ($(MAKE_381),)
-      $(info ! Detected target CPU: $(HB_CPU))
+      $(info ! HB_ARCHITECTURE: $(HB_ARCHITECTURE)$(if $(HB_CPU), ($(HB_CPU)),) $(HB_ARCH_AUTO))
+      $(info ! HB_COMPILER: $(HB_COMPILER) $(HB_COMP_AUTO))
    endif
 endif
 
@@ -934,6 +923,12 @@ HB_RDD_DIRS := \
 ifneq ($(HB_DB_DRVEXT),)
    HB_RDD_LIBS += $(HB_DB_DRVEXT)
    HB_RDD_DIRS += $(HB_DB_DRVEXT)
+endif
+
+ifeq ($(HB_OS_UNIX),yes)
+   HB_DYN_VER := 2.0.0
+else
+   HB_DYN_VER := 20
 endif
 
 ifneq ($(HB_HOST_ARCH),dos)

@@ -57,6 +57,11 @@ ifeq ($(LD_RULE),)
    LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$(subst /,$(DIRSEP),$(BIN_DIR)/$@) $(^F) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LDLIBS)
 endif
 
+# The rule to link a dynamic library.
+ifeq ($(DY_RULE),)
+   DY_RULE = $(DY) $(DY_OUT)$(subst /,$(DIRSEP),$(BIN_DIR)/$@) $^ $(DFLAGS) $(HB_USER_DFLAGS) $(DLIBS)
+endif
+
 # Eliminate these rules.
 %.c : %.y
 
@@ -84,3 +89,7 @@ endif
 # Rule to generate a C file from a PRG file.
 %.c : $(GRANDP)%.prg
 	$(HB_RULE)
+
+# Rule to generate an dynamic library from an object file.
+%$(DYN_EXT) : %_dyn$(OBJ_EXT)
+	$(DY_RULE)

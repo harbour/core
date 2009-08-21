@@ -63,4 +63,22 @@ AR := lib.exe
 ARFLAGS :=
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) /nologo /out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
 
+DY := $(LD)
+DFLAGS := /nologo /dll /subsystem:console
+DY_OUT := $(LD_OUT)
+DLIBS := $(foreach lib,$(SYSLIBS),$(lib)$(LIB_EXT))
+
+# NOTE: The empty line directly before 'endef' HAVE TO exist!
+define dyn_object
+   @$(ECHO) $(ECHOQUOTE)$(file)$(ECHOQUOTE) >> __dyn__.tmp
+
+endef
+define create_dynlib
+   @$(ECHO) $(ECHOQUOTE) $(DFLAGS) > __dyn__.tmp
+   $(foreach file,$^,$(dyn_object))
+   $(DY) $(DY_OUT)"$(subst /,$(DIRSEP),$(BIN_DIR)/$@)"$(ECHOQUOTE) @__dyn__.tmp $(HB_USER_DFLAGS) $(DLIBS)
+endef
+
+DY_RULE = $(create_dynlib)
+
 include $(TOP)$(ROOT)config/rules.mk

@@ -55,6 +55,8 @@
 #include "hbapi.h"
 #include "hbvm.h"
 
+#if !( defined( HB_DYNLIB ) && defined( __WATCOM__ ) )
+
 #if defined( HB_OS_WIN )
 
 #define HB_VM_STARTUP
@@ -64,6 +66,8 @@
 HB_EXTERN_BEGIN
 void hb_forceLinkMainWin( void ) {}
 HB_EXTERN_END
+#endif
+
 #endif
 
 #endif

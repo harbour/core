@@ -53,6 +53,8 @@
 #include "hbapi.h"
 #include "hbvm.h"
 
+#if !( defined( HB_DYNLIB ) && defined( __WATCOM__ ) )
+
 HB_EXTERN_BEGIN
 #if defined( __MINGW32__ )
 int _CRT_glob = 0;
@@ -94,3 +96,5 @@ void hb_forceLinkMainStd( void ) {}
 #endif
 
 HB_EXTERN_END
+
+#endif
