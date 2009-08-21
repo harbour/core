@@ -174,6 +174,9 @@
 #     if !defined( USE_DL_PREFIX ) && !defined( HB_FM_DLMT_ALLOC )
 #        define USE_DL_PREFIX
 #     endif
+#     if defined( HB_OS_WIN_CE )
+#        define LACKS_FCNTL_H
+#     endif
 #  endif
 #  include "dlmalloc.c"
 #  if defined( __BORLANDC__ )
