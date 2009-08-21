@@ -49,39 +49,37 @@ LDFLAGS += $(LIBPATHS)
 
 AR := tlib.exe
 ARFLAGS := /P64
+AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" $(foreach file,$(^F),-+$(file))
 
 ifneq ($(HB_SHELL),sh)
+   ifeq ($(HB_SHELL_XP),)
 
-   ifeq ($(HB_SHELL),nt)
-      LINECONT := ^&
-   else
-      LINECONT := &
+      ifeq ($(HB_SHELL),nt)
+         LINECONT := ^&
+      else
+         LINECONT := &
+      endif
+
+      # NOTE: Command-line limit length defeating methods found below
+      #       are only needed to support pre-Windows XP systems, where
+      #       limit is 2047 chars. [vszakats]
+
+      # NOTE: The empty line directly before 'endef' HAVE TO exist!
+      define lib_object
+         @$(ECHO) $(ECHOQUOTE)-+$(subst /,\,$(file)) $(LINECONT)$(ECHOQUOTE) >> __lib__.tmp
+
+      endef
+
+      define create_library
+         @$(ECHO) $(ECHOQUOTE)-+ $(LINECONT)$(ECHOQUOTE) > __lib__.tmp
+         $(foreach file,$(^F),$(lib_object))
+         @$(ECHO) -+>> __lib__.tmp
+         $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" @__lib__.tmp
+      endef
+
+      AR_RULE = $(create_library)
+
    endif
-
-   # NOTE: Command-line limit length defeating methods found below
-   #       are only needed to support pre-Windows XP systems, where
-   #       limit is 2047 chars. [vszakats]
-
-   # NOTE: The empty line directly before 'endef' HAVE TO exist!
-   define lib_object
-      @$(ECHO) $(ECHOQUOTE)-+$(subst /,\,$(file)) $(LINECONT)$(ECHOQUOTE) >> __lib__.tmp
-
-   endef
-
-   define create_library
-      @$(ECHO) $(ECHOQUOTE)-+ $(LINECONT)$(ECHOQUOTE) > __lib__.tmp
-      $(foreach file,$(^F),$(lib_object))
-      @$(ECHO) -+>> __lib__.tmp
-      $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" @__lib__.tmp
-   endef
-
-   AR_RULE = $(create_library)
-
-else # sh
-
-   AROBJS = $(foreach file,$(^F),-+$(file))
-   AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" $(AROBJS)
-
 endif
 
 include $(TOP)$(ROOT)config/rules.mk

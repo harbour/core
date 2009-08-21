@@ -337,6 +337,10 @@ else
                HB_SHELL := dos
             else
                HB_SHELL := nt
+               _VER := $(shell ver)
+               ifeq ($(strip $(findstring 3.5,$(shell ver))$(findstring 4.0,$(shell ver))$(findstring 5.0,$(shell ver))),)
+                  HB_SHELL_XP := (xp)
+               endif
             endif
          endif
       endif
@@ -406,7 +410,7 @@ endif
 
 ifeq ($(HB_INIT_DONE),)
    ifneq ($(MAKE_381),)
-      $(info ! HB_HOST_ARCH: $(HB_HOST_ARCH)  HB_SHELL: $(HB_SHELL))
+      $(info ! HB_HOST_ARCH: $(HB_HOST_ARCH)  HB_SHELL: $(HB_SHELL) $(HB_SHELL_XP))
    endif
 endif
 
