@@ -190,7 +190,7 @@ mk_hbtools()
     fi
     if [ "${HB_COMPILER}" = "mingw" ] || \
        [ "${HB_COMPILER}" = "mingw64" ]; then
-        HB_SYS_LIBS="${HB_SYS_LIBS} -luser32 -lwinspool -lgdi32 -lcomctl32  -ladvapi32-lcomdlg32 -lole32 -loleaut32 -luuid -lws2_32"
+        HB_SYS_LIBS="${HB_SYS_LIBS} -luser32 -lwinspool -lgdi32 -lcomctl32 -ladvapi32 -lcomdlg32 -lole32 -loleaut32 -luuid -lws2_32"
         HB_WITHOUT_X11="yes"
     elif [ "${HB_COMPILER}" = "mingwarm" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS} -lwininet -lws2 -lcommdlg -lcommctrl -luuid -lole32 -loleaut32"
