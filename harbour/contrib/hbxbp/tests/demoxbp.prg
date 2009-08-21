@@ -1854,6 +1854,9 @@ FUNCTION Build_Browse( oWnd )
    //
    oXbpBrowse:addColumn( oXbpColumn )
 
+   oXbpBrowse:setLeftFrozen( { 1 } )
+   oXbpBrowse:setRightFrozen( { 4,5,6 } )
+
    RETURN nil
 
 /*----------------------------------------------------------------------*/
