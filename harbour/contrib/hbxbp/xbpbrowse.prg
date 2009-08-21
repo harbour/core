@@ -512,6 +512,10 @@ METHOD XbpBrowse:buildLeftFreeze()
    //
    //::oLeftFooterView:hide()
 
+   ::connect( QT_PTROF( ::oLeftView )      , "mousePressEvent()"  , {|o,p| ::exeBlock( 31, p, o ) } )
+   ::connect( QT_PTROF( ::oLeftHeaderView ), "sectionPressed(int)", {|o,i| ::exeBlock( 31, i, o ) } )
+   ::connect( QT_PTROF( ::oLeftFooterView ), "sectionPressed(int)", {|o,i| ::exeBlock( 31, i, o ) } )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -553,6 +557,10 @@ METHOD XbpBrowse:buildRightFreeze()
    //
    ::oRightFooterModel := HbDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 162, p1, p2, p3, p4 ) } )
    ::oRightFooterView:setModel( QT_PTROF( ::oRightFooterModel ) )
+
+   ::connect( QT_PTROF( ::oRightView )      , "mousePressEvent()"  , {|o,p| ::exeBlock( 31, p, o ) } )
+   ::connect( QT_PTROF( ::oRightHeaderView ), "sectionPressed(int)", {|o,i| ::exeBlock( 31, i, o ) } )
+   ::connect( QT_PTROF( ::oRightFooterView ), "sectionPressed(int)", {|o,i| ::exeBlock( 31, i, o ) } )
 
    RETURN Self
 
@@ -635,8 +643,7 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oFooterModel := HbDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 142, p1, p2, p3, p4 ) } )
 
    ::oFooterView:setModel( QT_PTROF( ::oFooterModel ) )
-   //
-   //::oFooterView:hide()
+   ::oFooterView:setFocusPolicy( Qt_NoFocus )
 
    /*  Widget for ::setLeftFrozen( aColumns )  */
    ::buildLeftFreeze()
@@ -683,6 +690,9 @@ METHOD XbpBrowse:exeBlock( nEvent, p1, p2, p3 )
    CASE nEvent == 1                   /* Keypress Event */
       SetAppEvent( xbeP_Keyboard, XbpQKeyEventToAppEvent( p1 ), NIL, self )
 
+   CASE nEvent == 31                  /* Mousepress on Frozen */
+      ::oTableView:setFocus()
+
    CASE nEvent == 2                   /* Mousepress */
       oMouseEvent := QMouseEvent():configure( p1 )
 
@@ -712,13 +722,15 @@ METHOD XbpBrowse:exeBlock( nEvent, p1, p2, p3 )
          nColPos := ::colPos
          //
          IF nCol < nColPos
-            FOR i := 1 TO nColPos - nCol
+            DO WHILE nCol != ::colPos
                ::left()
-            NEXT
+            ENDDO
+
          ELSEIF nCol > nColPos
-            FOR i := 1 TO nCol - nColPos
+            DO WHILE nCol != ::colPos
                ::right()
-            NEXT
+            ENDDO
+
          ENDIF
       ENDIF
 
@@ -789,9 +801,11 @@ METHOD XbpBrowse:exeBlock( nEvent, p1, p2, p3 )
          ::updatePosition()
          EXIT
       ENDSWITCH
+      ::oTableView:setFocus()
 
    CASE nEvent == 102                 /* Vertical Scrollbar: Slider Released */
       ::updatePosition()
+      ::oTableView:setFocus()
 
    CASE nEvent == 103                 /* Horizontal Scrollbar: Slider moved */
       nCol    := ::oHScrollBar:value()+1
@@ -805,6 +819,7 @@ METHOD XbpBrowse:exeBlock( nEvent, p1, p2, p3 )
             ::right()
          NEXT
       ENDIF
+      ::oTableView:setFocus()
 
    CASE nEvent == 104                 /* Horizontal Scrollbar: Slider Released */
       nCol    := ::oHScrollBar:value()+1
@@ -818,6 +833,7 @@ METHOD XbpBrowse:exeBlock( nEvent, p1, p2, p3 )
             ::right()
          NEXT
       ENDIF
+      ::oTableView:setFocus()
 
    CASE nEvent == 111                 /* Column Header Pressed */
       SetAppEvent( xbeBRW_HeaderRbDown, { 0,0 }, p1+1, Self )
@@ -2284,7 +2300,6 @@ METHOD right() CLASS XbpBrowse
       ENDIF
    ENDIF
 
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -2823,6 +2838,7 @@ METHOD setCursorPos() CLASS XbpBrowse
 
 /* set visible columns */
 METHOD setVisible() CLASS XbpBrowse
+   #if 0
    LOCAL nCol, nLeft, nFrozen, nLast, nColumns, nWidth, nColPos
    LOCAL lFirst, lFrames
    LOCAL aCol
@@ -2916,7 +2932,7 @@ METHOD setVisible() CLASS XbpBrowse
       ENDIF
 
    ENDIF
-
+   #endif
    RETURN Self
 
 
@@ -3225,8 +3241,6 @@ METHOD rightVisible() CLASS XbpBrowse
 METHOD addColumn( oCol ) CLASS XbpBrowse
 
    AAdd( ::columns, oCol )
-   //::configure( _TBR_CONF_COLUMNS )
-
    ::doConfigure()  /* QT */
 
    RETURN Self
@@ -3239,7 +3253,7 @@ METHOD delColumn( nColumn ) CLASS XbpBrowse
    oCol := ::columns[ nColumn ]
    ADel( ::columns, nColumn )
    ASize( ::columns, Len( ::columns ) - 1 )
-   ::configure( _TBR_CONF_COLUMNS )
+   ::doConfigure()
 
    RETURN oCol
 
@@ -3248,7 +3262,7 @@ METHOD delColumn( nColumn ) CLASS XbpBrowse
 METHOD insColumn( nColumn, oCol ) CLASS XbpBrowse
 
    HB_AIns( ::columns, nColumn, oCol, .T. )
-   ::configure( _TBR_CONF_COLUMNS )
+   ::doConfigure()
 
    RETURN oCol
 
@@ -3263,7 +3277,7 @@ METHOD setColumn( nColumn, oCol ) CLASS XbpBrowse
 
       oPrevCol := ::columns[ nColumn ]
       ::columns[ nColumn ] := oCol
-      ::configure( _TBR_CONF_COLUMNS )
+      ::doConfigure()
    ENDIF
 
    RETURN oPrevCol
@@ -3515,7 +3529,10 @@ METHOD nCol() CLASS XbpBrowse
 
 
 METHOD hitTest( mRow, mCol ) CLASS XbpBrowse
+   HB_SYMBOL_UNUSED( mRow )
+   HB_SYMBOL_UNUSED( mCol )
 
+   #if 0
    LOCAL nTop, nLeft, nBottom, nRight, nRet, nCol
    LOCAL lFirst
    LOCAL aCol
@@ -3608,10 +3625,15 @@ METHOD hitTest( mRow, mCol ) CLASS XbpBrowse
    ENDIF
 
    RETURN nRet
-
+   #endif
+   RETURN HTNOWHERE
 
 STATIC PROCEDURE _mBrwPos( oBrw, mRow, mCol )
+   HB_SYMBOL_UNUSED( oBrw )
+   HB_SYMBOL_UNUSED( mRow )
+   HB_SYMBOL_UNUSED( mCol )
 
+   #if 0
    LOCAL nTop, nLeft, nBottom, nPos, nCol, aCol
 
    mRow := MRow()
@@ -3659,12 +3681,12 @@ STATIC PROCEDURE _mBrwPos( oBrw, mRow, mCol )
    ELSE
       mRow := mCol := 0
    ENDIF
-
+   #endif
    RETURN
 
 
 METHOD mRowPos() CLASS XbpBrowse
-
+   #if 0
    LOCAL mRow, mCol
 
    IF ::nConfigure != 0
@@ -3674,9 +3696,11 @@ METHOD mRowPos() CLASS XbpBrowse
    _mBrwPos( self, @mRow, @mCol )
 
    RETURN mRow
-
+   #endif
+   RETURN 0
 
 METHOD mColPos() CLASS XbpBrowse
+   #if 0
    LOCAL mRow, mCol
 
    IF ::nConfigure != 0
@@ -3686,10 +3710,12 @@ METHOD mColPos() CLASS XbpBrowse
    _mBrwPos( self, @mRow, @mCol )
 
    RETURN mCol
-
+   #endif
+   RETURN 0
 
 METHOD border( cBorder ) CLASS XbpBrowse
-
+   HB_SYMBOL_UNUSED( cBorder )
+   #if 0
    IF cBorder != NIL
 
       cBorder := __eInstVar53( Self, "BORDER", cBorder, "C", 1001 )
@@ -3713,7 +3739,7 @@ METHOD border( cBorder ) CLASS XbpBrowse
          ::cBorder := cBorder
       ENDIF
    ENDIF
-
+   #endif
    RETURN ::cBorder
 
 
