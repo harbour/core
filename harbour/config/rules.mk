@@ -57,11 +57,6 @@ ifeq ($(LD_RULE),)
    LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$(subst /,$(DIRSEP),$(BIN_DIR)/$@) $(^F) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LDLIBS)
 endif
 
-# The rule to link a dynamic library.
-ifeq ($(DY_RULE),)
-   DY_RULE = @$(ECHO) $(ECHOQUOTE)! Dynamic library creation not supported for this target$(ECHOQUOTE)
-endif
-
 # Eliminate these rules.
 %.c : %.y
 
