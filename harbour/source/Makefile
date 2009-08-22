@@ -18,88 +18,90 @@ ifeq ($(HB_HOST_BUILD),yes)
 else
 
    ifneq ($(HB_BUILD_DLL),no)
-      ifneq ($(HB_ARCHITECTURE),dos)
 
-         ifeq ($(HB_OS_UNIX),yes)
-            DYNNAME_POST := .$(HB_DYN_VER)
-         else
-            DYNNAME_POST := -$(HB_DYN_VER)
-         endif
-
-         ifeq ($(HB_ARCHITECTURE),win)
-            ifeq ($(HB_COMPILER),bcc)
-               DYNNAME_POST := $(DYNNAME_POST)-bcc
-            else
-               ifeq ($(HB_CPU),x86_64)
-                  DYNNAME_POST := $(DYNNAME_POST)-x64
-               else
-                  ifeq ($(HB_CPU),ia64)
-                     DYNNAME_POST := $(DYNNAME_POST)-ia64
-                  endif
-               endif
-            endif
-         else
-            ifeq ($(HB_ARCHITECTURE),wce)
-               DYNNAME_POST := $(DYNNAME_POST)-wce
-               ifeq ($(HB_CPU),arm)
-                  DYNNAME_POST := $(DYNNAME_POST)-arm
-               else
-                  ifeq ($(HB_CPU),mips)
-                     DYNNAME_POST := $(DYNNAME_POST)-mips
-                  else
-                     ifeq ($(HB_CPU),sh)
-                        DYNNAME_POST := $(DYNNAME_POST)-sh
-                     endif
-                  endif
-               endif
-            else
-               ifeq ($(HB_ARCHITECTURE),os2)
-                  DYNNAME_POST := $(DYNNAME_POST)-os2
-               endif
-            endif
-         endif
-
-         DYNDIRLIST_BASE := \
-            source/common \
-            source/pp \
-            source/rtl \
-            source/macro \
-            source/lang \
-            source/codepage \
-            source/hbpcre \
-            source/hbzlib \
-            source/hbextern \
-            source/rdd \
-            source/rdd/dbfntx \
-            source/rdd/dbfnsx \
-            source/rdd/dbfcdx \
-            source/rdd/dbffpt \
-            source/rdd/hbsix \
-            source/rdd/hsx \
-            source/rdd/usrrdd \
-            source/rtl/gtcgi \
-            source/rtl/gtpca \
-            source/rtl/gtstd
-
-         ifeq ($(HB_ARCHITECTURE),os2)
-            DYNDIRLIST_BASE += source/rtl/gtos2
-         endif
-         ifeq ($(HB_ARCHITECTURE),wce)
-            DYNDIRLIST_BASE += source/rtl/gtwvt source/rtl/gtgui
-         endif
-         ifeq ($(HB_ARCHITECTURE),win)
-            DYNDIRLIST_BASE += source/rtl/gtwvt source/rtl/gtgui source/rtl/gtwin
-         endif
-         ifeq ($(HB_OS_UNIX),yes)
-            DYNDIRLIST_BASE += source/rtl/gttrm
-         endif
-         ifeq ($(HB_COMPILER),watcom)
-            DYNDIRLIST_BASE += source/vm/maindllh
-         endif
-
-         export DYNDIRLIST_BASE
-         export DYNNAME_POST
+      ifeq ($(HB_OS_UNIX),yes)
+         DYNNAME_POST := .$(HB_DYN_VER)
+      else
+         DYNNAME_POST := -$(HB_DYN_VER)
       endif
+
+      ifeq ($(HB_ARCHITECTURE),win)
+         ifeq ($(HB_COMPILER),bcc)
+            DYNNAME_POST := $(DYNNAME_POST)-bcc
+         else
+            ifeq ($(HB_CPU),x86_64)
+               DYNNAME_POST := $(DYNNAME_POST)-x64
+            else
+               ifeq ($(HB_CPU),ia64)
+                  DYNNAME_POST := $(DYNNAME_POST)-ia64
+               endif
+            endif
+         endif
+      else
+         ifeq ($(HB_ARCHITECTURE),wce)
+            DYNNAME_POST := $(DYNNAME_POST)-wce
+            ifeq ($(HB_CPU),arm)
+               DYNNAME_POST := $(DYNNAME_POST)-arm
+            else
+               ifeq ($(HB_CPU),mips)
+                  DYNNAME_POST := $(DYNNAME_POST)-mips
+               else
+                  ifeq ($(HB_CPU),sh)
+                     DYNNAME_POST := $(DYNNAME_POST)-sh
+                  endif
+               endif
+            endif
+         else
+            ifeq ($(HB_ARCHITECTURE),os2)
+               DYNNAME_POST := $(DYNNAME_POST)-os2
+            endif
+         endif
+      endif
+
+      DYNDIRLIST_BASE := \
+         source/common \
+         source/pp \
+         source/rtl \
+         source/macro \
+         source/lang \
+         source/codepage \
+         source/hbpcre \
+         source/hbzlib \
+         source/hbextern \
+         source/rdd \
+         source/rdd/dbfntx \
+         source/rdd/dbfnsx \
+         source/rdd/dbfcdx \
+         source/rdd/dbffpt \
+         source/rdd/hbsix \
+         source/rdd/hsx \
+         source/rdd/usrrdd \
+         source/rtl/gtcgi \
+         source/rtl/gtpca \
+         source/rtl/gtstd
+
+      ifeq ($(HB_ARCHITECTURE),dos)
+         # for testing only. dos doesn't have .dlls.
+         DYNDIRLIST_BASE += source/rtl/gtdos
+      endif
+      ifeq ($(HB_ARCHITECTURE),os2)
+         DYNDIRLIST_BASE += source/rtl/gtos2
+      endif
+      ifeq ($(HB_ARCHITECTURE),wce)
+         DYNDIRLIST_BASE += source/rtl/gtwvt source/rtl/gtgui
+      endif
+      ifeq ($(HB_ARCHITECTURE),win)
+         DYNDIRLIST_BASE += source/rtl/gtwvt source/rtl/gtgui source/rtl/gtwin
+      endif
+      ifeq ($(HB_OS_UNIX),yes)
+         DYNDIRLIST_BASE += source/rtl/gttrm
+      endif
+      ifeq ($(HB_COMPILER),watcom)
+         DYNDIRLIST_BASE += source/vm/maindllh
+      endif
+
+      export DYNDIRLIST_BASE
+      export DYNNAME_POST
    endif
 
    ifeq ($(HB_HOST_BUILD),lib)
