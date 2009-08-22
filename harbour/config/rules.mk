@@ -89,11 +89,3 @@ endif
 # Rule to generate a C file from a PRG file.
 %.c : $(GRANDP)%.prg
 	$(HB_RULE)
-
-ifneq ($(HB_BUILD_DLL),no)
-
-# Rule to generate an dynamic library from an object file.
-%$(DYN_EXT) : %$(OBJ_DYN_POSTFIX)$(OBJ_EXT)
-	$(DY_RULE)
-
-endif
