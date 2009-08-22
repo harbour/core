@@ -84,35 +84,6 @@ void extern hb_ToOutDebug( const char * sTraceMsg, ... );
 
 /*----------------------------------------------------------------------*/
 
-static void hb_itemPushList( ULONG ulRefMask, ULONG ulPCount, PHB_ITEM** pItems )
-{
-   HB_ITEM itmRef;
-   ULONG   ulParam;
-
-   if( ulPCount )
-   {
-      /* initialize the reference item */
-      itmRef.type = HB_IT_BYREF;
-      itmRef.item.asRefer.offset = -1;
-      itmRef.item.asRefer.BasePtr.itemsbasePtr = pItems;
-
-      for( ulParam = 0; ulParam < ulPCount; ulParam++ )
-      {
-         if( ulRefMask & ( 1L << ulParam ) )
-         {
-            /* when item is passed by reference then we have to put
-               the reference on the stack instead of the item itself */
-            itmRef.item.asRefer.value = ulParam+1;
-            hb_vmPush( &itmRef );
-         }
-         else
-            hb_vmPush( ( *pItems )[ ulParam ] );
-      }
-   }
-}
-
-/*----------------------------------------------------------------------*/
-
 #undef  INTERFACE
 #define INTERFACE IEventHandler
 
@@ -134,7 +105,7 @@ typedef struct
    ULONG   ( STDMETHODCALLTYPE * AddRef           ) ( IEventHandler* );
    ULONG   ( STDMETHODCALLTYPE * Release          ) ( IEventHandler* );
    HRESULT ( STDMETHODCALLTYPE * GetTypeInfoCount ) ( IEventHandler*, UINT* );
-   HRESULT ( STDMETHODCALLTYPE * GetTypeInfo      ) ( IEventHandler*,  UINT, LCID, ITypeInfo** );
+   HRESULT ( STDMETHODCALLTYPE * GetTypeInfo      ) ( IEventHandler*, UINT, LCID, ITypeInfo** );
    HRESULT ( STDMETHODCALLTYPE * GetIDsOfNames    ) ( IEventHandler*, REFIID, LPOLESTR*, UINT, LCID, DISPID* );
    HRESULT ( STDMETHODCALLTYPE * Invoke           ) ( IEventHandler*, DISPID, REFIID, LCID, WORD, DISPPARAMS*, VARIANT*, EXCEPINFO*, UINT* );
 } IEventHandlerVtbl;
@@ -153,8 +124,6 @@ typedef struct
    int                     iID_riid;
 } MyRealIEventHandler;
 
-/*----------------------------------------------------------------------*/
-/*               Here are IEventHandler's functions.                    */
 /*----------------------------------------------------------------------*/
 
 static HRESULT STDMETHODCALLTYPE QueryInterface( IEventHandler *self, REFIID vTableGuid, void **ppv )
@@ -195,11 +164,14 @@ hb_ToOutDebug( "..................if ( IsEqualIID( vTableGuid, HB_ID_REF( ( ( My
    return E_NOINTERFACE;
 }
 
+/*----------------------------------------------------------------------*/
+
 static ULONG STDMETHODCALLTYPE AddRef( IEventHandler *self )
 {
    return ++( ( MyRealIEventHandler * ) self )->count;
 }
 
+/*----------------------------------------------------------------------*/
 
 static ULONG STDMETHODCALLTYPE Release( IEventHandler *self )
 {
@@ -220,6 +192,8 @@ hb_ToOutDebug( "WinSink.c:Release %i", ( ( MyRealIEventHandler * ) self )->count
    return ( ULONG ) ( ( MyRealIEventHandler * ) self )->count;
 }
 
+/*----------------------------------------------------------------------*/
+
 static HRESULT STDMETHODCALLTYPE GetTypeInfoCount( IEventHandler *self, UINT *pCount )
 {
    HB_SYMBOL_UNUSED( self );
@@ -227,6 +201,8 @@ static HRESULT STDMETHODCALLTYPE GetTypeInfoCount( IEventHandler *self, UINT *pC
 
    return ( HRESULT ) E_NOTIMPL;
 }
+
+/*----------------------------------------------------------------------*/
 
 static HRESULT STDMETHODCALLTYPE GetTypeInfo( IEventHandler *self, UINT itinfo, LCID lcid, ITypeInfo **pTypeInfo )
 {
@@ -237,6 +213,8 @@ static HRESULT STDMETHODCALLTYPE GetTypeInfo( IEventHandler *self, UINT itinfo, 
 
    return ( HRESULT ) E_NOTIMPL;
 }
+
+/*----------------------------------------------------------------------*/
 
 static HRESULT STDMETHODCALLTYPE GetIDsOfNames( IEventHandler *self, REFIID riid, LPOLESTR *rgszNames, UINT cNames, LCID lcid, DISPID *rgdispid )
 {
@@ -251,115 +229,89 @@ static HRESULT STDMETHODCALLTYPE GetIDsOfNames( IEventHandler *self, REFIID riid
    return ( HRESULT ) E_NOTIMPL;
 }
 
-static HRESULT STDMETHODCALLTYPE Invoke( IEventHandler *self, DISPID dispid, REFIID riid,
-                                      LCID lcid, WORD wFlags, DISPPARAMS *params,
-                                      VARIANT *result, EXCEPINFO *pexcepinfo, UINT *puArgErr )
+/*----------------------------------------------------------------------*/
+
+typedef struct
 {
-   int        iArg;
-   int        i;
-   ULONG      ulRefMask = 0;
-   ULONG      ulPos;
-   PHB_ITEM   pItem;
-   PHB_ITEM   pItemArray[ 32 ]; /* max 32 parameters? */
-   PHB_ITEM   *pItems;
-   PHB_ITEM   Key;
+   PHB_ITEM item;
+   VARIANT* variant;
+}
+HB_OLE_PARAM_REF;
 
-#if 0
-hb_ToOutDebug( "winsink.c:Invoke dispid = %i",(int)dispid );
-#endif
+/*----------------------------------------------------------------------*/
 
-   /* We implement only a "default" interface */
-   if( !IsEqualIID( riid, HB_ID_REF( IID_NULL ) ) )
-      return ( HRESULT ) DISP_E_UNKNOWNINTERFACE;
+static HRESULT STDMETHODCALLTYPE Invoke( IEventHandler *lpThis, DISPID dispid, REFIID riid,
+                                         LCID lcid, WORD wFlags, DISPPARAMS* pParams,
+                                         VARIANT* pVarResult, EXCEPINFO* pExcepInfo, UINT* puArgErr )
+{
+   int i, iCount, ii, iRefs;
+   PHB_ITEM pAction, pKey = NULL;
 
    HB_SYMBOL_UNUSED( lcid );
    HB_SYMBOL_UNUSED( wFlags );
-   HB_SYMBOL_UNUSED( result );
-   HB_SYMBOL_UNUSED( pexcepinfo );
+   HB_SYMBOL_UNUSED( pExcepInfo );
    HB_SYMBOL_UNUSED( puArgErr );
 
-   /* Don't know but this speed ups the OLE load time */
-   Sleep( 10 );
+   if( ! IsEqualIID( riid, HB_ID_REF( IID_NULL ) ) )
+      return DISP_E_UNKNOWNINTERFACE;
 
-   Key = hb_itemNew( NULL );
-   if( hb_hashScan( ( ( MyRealIEventHandler * ) self )->pEvents, hb_itemPutNL( Key, dispid ), &ulPos ) )
+   if( ! ( ( MyRealIEventHandler * ) lpThis )->pEvents )
+      return S_OK;
+
+   pAction = ( ( MyRealIEventHandler * ) lpThis )->pEvents;
+
+   if( HB_IS_HASH( pAction ) )
    {
-      #if 0
-      PHB_ITEM pArray = hb_hashGetValueAt( ( ( MyRealIEventHandler * ) self )->pEvents, ulPos );
-      PHB_ITEM pExec  = hb_arrayGetItemPtr( pArray, 1 );
-      #endif
-
-      PHB_ITEM pExec = hb_hashGetItemPtr( ( ( MyRealIEventHandler * ) self )->pEvents, Key, 0 );
-
-      if( pExec )
-      {
-         hb_vmPushState();
-
-         switch ( hb_itemType( pExec ) )
-         {
-         case HB_IT_BLOCK:
-            hb_vmPushSymbol( &hb_symEval );
-            hb_vmPush( pExec );
-            break;
-         #if 0
-         case HB_IT_STRING:
-            {
-               PHB_ITEM pObject = hb_arrayGetItemPtr( pArray, 3 );
-
-               hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( hb_itemGetCPtr( pExec ) ) ) );
-               if( HB_IS_OBJECT( pObject ) )
-                  hb_vmPush( pObject );
-               else
-                  hb_vmPushNil();
-            }
-            break;
-         #endif
-         case HB_IT_POINTER:
-            hb_vmPushSymbol( hb_dynsymSymbol( ( ( PHB_SYMB ) pExec )->pDynSym ) );
-            hb_vmPushNil();
-            break;
-         }
-
-         iArg = params->cArgs;
-
-         if( iArg > ( int ) HB_SIZEOFARRAY( pItemArray ) )
-            iArg = HB_SIZEOFARRAY( pItemArray );
-
-         for( i = 1; i <= iArg; i++ )
-         {
-            pItem = hb_itemNew( NULL );
-            hb_oleVariantToItem( pItem, &( params->rgvarg[ iArg - i ] ) );
-            pItemArray[ i - 1 ] = pItem;
-            ulRefMask |= ( 1L << ( i - 1 ) );                                /* set bit i */
-         }
-
-         if( iArg )
-         {
-            pItems = pItemArray;
-            hb_itemPushList( ulRefMask, iArg, &pItems );
-         }
-
-         /* execute */
-         hb_vmDo( ( USHORT ) iArg );
-
-         for( i = iArg; i > 0; i-- )
-         {
-            if( HB_IS_BYREF( pItemArray[ iArg - i ] ) )
-               hb_oleItemToVariant( &( params->rgvarg[ iArg - i ] ), pItemArray[ iArg - i ] );
-         }
-
-         /* Pritpal */
-         if( iArg )
-         {
-            for( i = iArg; i > 0; i-- )
-               hb_itemRelease( pItemArray[ i - 1 ] );
-         }
-         hb_vmPopState();
-      }
+      pKey = hb_itemPutNL( pKey, ( LONG ) dispid );
+      pAction = hb_hashGetItemPtr( pAction, pKey, 0 );
+      hb_itemRelease( pKey );
    }
-   hb_itemRelease( Key );   /* Pritpal */
 
-   return ( HRESULT ) S_OK;
+   if( pAction && hb_vmRequestReenter() )
+   {
+      HB_OLE_PARAM_REF refArray[ 32 ];
+
+      iCount = pParams->cArgs;
+
+      for( i = iRefs = 0; i < iCount && iRefs < 32; i++ )
+      {
+         if( pParams->rgvarg[ i ].n1.n2.vt & VT_BYREF )
+            refArray[ iRefs++ ].item = hb_stackAllocItem();
+      }
+
+      hb_vmPushEvalSym();
+      hb_vmPush( pAction );
+      if( pKey == NULL )
+         hb_vmPushLong( ( LONG ) dispid );
+
+      for( i = 1, ii = 0; i <= iCount; i++ )
+      {
+         if( pParams->rgvarg[ iCount - i ].n1.n2.vt & VT_BYREF )
+         {
+            refArray[ ii ].variant = &pParams->rgvarg[ iCount - i ];
+            hb_oleVariantToItem( refArray[ ii ].item, refArray[ ii ].variant );
+            hb_vmPushItemRef( refArray[ ii++ ].item );
+         }
+         else
+            hb_oleVariantToItem( hb_stackAllocItem(),
+                                 &pParams->rgvarg[ iCount - i ] );
+      }
+
+      hb_vmSend( ( USHORT ) ( iCount + ( pKey == NULL ? 1 : 0 ) ) );
+
+      if( pVarResult )
+         hb_oleItemToVariant( pVarResult, hb_stackReturnItem() );
+
+      for( i = 0; i < iRefs; i++ )
+         hb_oleVariantUpdate( refArray[ i ].variant, refArray[ i ].item );
+
+      for( i = 0; i < iRefs; i++ )
+         hb_stackPop();
+
+      hb_vmRequestRestore();
+   }
+
+   return S_OK;
 }
 
 /*----------------------------------------------------------------------*/
