@@ -252,7 +252,7 @@ ifeq ($(HB_INIT_DONE),)
       # Macros:
       #   -DHB_PCRE_REGEX, -DHB_POSIX_REGEX, -DHB_EXT_ZLIB, -DHB_HAS_GPM
 
-      $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(HB_MAKECMDGOALS) $(MAKEFLAGS) $(SHELL))
+      $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(HB_MAKECMDGOALS) $(MAKEFLAGS) $(SHELL) $(if $(MAKESHELL), MAKESHELL: $(MAKESHELL),))
       ifneq ($(HB_USER_PRGFLAGS),)
          $(info ! HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))
       endif

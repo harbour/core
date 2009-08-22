@@ -120,10 +120,9 @@ endif
 
 ifeq ($(HB_SHELL),os2)
 
-# NOTE: Comment on included GNU tools:
-#       os2-mkdir expects forward slashes, while
-#       os2-rm and os2-cp expects backslashes in filenames.
-#       [vszakats]
+# NOTE: Comment on included OS/2 GNU tools:
+#       os2-mkdir and os2-cp expects forward slashes, while
+#       os2-rm expects backslashes in filenames. [vszakats]
 
 MK := $(subst \,/,$(MAKE))
 RM := $(TOOL_DIR)os2-rm -f
