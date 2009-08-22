@@ -128,7 +128,7 @@ ifeq ($(HB_SHELL),os2)
 MK := $(subst \,/,$(MAKE))
 RM := $(TOOL_DIR)os2-rm -f
 RDP := $(TOOL_DIR)os2-rm -fr
-CP := copy
+CP := $(TOOL_DIR)os2-cp -f
 LN :=
 MD := $(TOOL_DIR)os2-mkdir
 MDP := $(TOOL_DIR)os2-mkdir -p

@@ -51,24 +51,20 @@ endif
 
 ifeq ($(HB_SHELL),os2)
 
-   # We have to use script to overcome the max command size limit
+   define inst_file_all
+      -@$(MDP) $(INSTALL_DIR)
+      $(foreach file,$(INSTALL_FILES),$(inst_file))
+   endef
 
-   # 05/Aug/2009 - <maurilio.longo@libero.it>
-   #               I don't like doing the "if not exist..." test for every file copied
-   #               but I could not find any other way to make this work around the shell
-   #               command line length limit.
-   #               'dos' method causes freeze on OS/2 (with or without COMPSPEC). [vszakats]
-   #               $(COMSPEC) /C is needed to overcome freezes. [vszakats]
-
+   # We have to use script to overcome the DOS limit of max 128 characters
    # NOTE: The empty line directly before 'endef' HAVE TO exist!
-   #       It causes that every commands will be separated by LF
+   #       It causes that every command will be separated by LF
    define inst_file
-      $(if $(wildcard $(INSTALL_DIR)),,-@$(MDP) $(INSTALL_DIR))
-      -@$(CMDPREF)$(CP) $(file) $(INSTALL_DIR_OS)
+      -@$(CP) $(file) $(INSTALL_DIR)
 
    endef
 
-   INSTALL_RULE := $(foreach file,$(INSTALL_FILES_OS),$(inst_file))
+   INSTALL_RULE := $(inst_file_all)
 
 endif
 
