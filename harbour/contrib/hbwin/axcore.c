@@ -157,6 +157,48 @@ HB_FUNC( __AXGETCONTROL ) /* ( hWnd ) --> pDisp */
       hb_oleAxControlNew( hb_stackReturnItem(), hWnd );
 }
 
+HB_FUNC( __AXDOVERB ) /* ( hWndAx, iVerb ) --> hResult */
+{
+   HWND        hWnd = ( HWND ) hb_parptr( 1 );
+   IUnknown*   pUnk = NULL;
+   HRESULT     lOleError;
+
+   if( ! s_pAtlAxGetControl )
+   {
+      hb_oleSetError( S_OK );
+      hb_errRT_BASE_SubstR( EG_UNSUPPORTED, 3012, "ActiveX not initialized", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      return;
+   }
+
+   lOleError = ( *s_pAtlAxGetControl )( hWnd, &pUnk );
+
+   if( lOleError == S_OK )
+   {
+      IOleObject *lpOleObject = NULL;
+
+      lOleError = HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( IID_IOleObject ), ( void** ) ( void* ) &lpOleObject );
+      if( lOleError == S_OK )
+      {
+         IOleClientSite* lpOleClientSite;
+
+         lOleError = HB_VTBL( lpOleObject )->GetClientSite( HB_THIS_( lpOleObject ) &lpOleClientSite );
+         if( lOleError == S_OK )
+         {
+            MSG Msg;
+            RECT rct;
+
+            memset( &Msg, 0, sizeof( MSG ) );
+            GetClientRect( hWnd, &rct );
+            HB_VTBL( lpOleObject )->DoVerb( HB_THIS_( lpOleObject ) hb_parni( 2 ), &Msg, lpOleClientSite, 0, hWnd, &rct );
+         }
+      }
+   }
+
+   hb_oleSetError( lOleError );
+
+   hb_retnl( lOleError );
+}
+
 
 /* ======================== Event handler support ======================== */
 
@@ -279,7 +321,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
    if( ! IsEqualIID( riid, HB_ID_REF( IID_NULL ) ) )
       return DISP_E_UNKNOWNINTERFACE;
 
-   if( ! ( ( ISink* ) lpThis )->pItemHandler )
+   if( ! ( ( ISink* ) lpThis)->pItemHandler )
       return S_OK;
 
    pAction = ( ( ISink* ) lpThis )->pItemHandler;

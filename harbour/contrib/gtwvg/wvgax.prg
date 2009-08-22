@@ -122,7 +122,6 @@ CLASS WvgActiveXControl FROM win_OleAuto, WvgWindow
    METHOD mapEvent( nEvent, bBlock )
 
    METHOD handleEvent()
-   METHOD HandleOleEvents()
 
 PROTECTED:
    METHOD adviseEvents()
@@ -163,60 +162,39 @@ METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLic
    ::hWnd := NIL
    ::nID  := ::oParent:GetControlId()
 
-   Wvg_AxInit()
+   Win_AxInit()
 
    hWnd := Wvg_AxCreateWindow( Win_N2P( ::hContainer ), ::CLSID, ::nID, ;
-                                 ::aPos[ 1 ], ::aPos[ 2 ], ::aSize[ 1 ], ::aSize[ 2 ], ;
-                                 ::style, ::exStyle )
+                               ::aPos[ 1 ], ::aPos[ 2 ], ::aSize[ 1 ], ::aSize[ 2 ], ;
+                               ::style, ::exStyle )
    IF empty( hWnd )
       RETURN nil
    ENDIF
+   //
+   ::hWnd := Win_p2n( hWnd )
 
-   hObj := Wvg_AxGetControl( hWnd )
+   hObj := __AxGetControl( hWnd )
    if empty( hObj )
       RETURN NIL
    ENDIF
-
-   Wvg_AxDoVerb( hWnd, -4 )
-
+   //
    ::__hObj := hObj
-   ::hWnd   := Win_P2N( hWnd )
 
-   ::oParent:addChild( SELF )
+   __AxDoVerb( hWnd, -4 )
 
-   IF !Empty( ::__hObj ) .AND. !Empty( ::hEvents )
+   IF !Empty( ::hEvents )
 #if 1
-/* hb_ToOutDebug( "AdviseEvents() ----hWnd = %i", hWnd ) */
       ::nEventHandler := "AdviseEvents"
       ::AdviseEvents()
 #else
-/* hb_ToOutDebug( "__AxRegisterHandler() ----hWnd = %i", ::hWnd ) */
       ::nEventHandler := "AxRegisterHandler"
-      ::__hSink := __AxRegisterHandler( ::__hObj, {|n,...| ::handleOleEvents( n, ... ) } )
+      ::__hSink := __AxRegisterHandler( ::__hObj, ::hEvents )
 #endif
    ENDIF
 
+   ::oParent:addChild( SELF )
+
    RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD handleOleEvents( nEvent, ... ) CLASS WvgActiveXControl
-   LOCAL aBlocks, i, bBlock, xResult
-
-   hb_idleSleep()
-   IF !empty( ::hEvents )
-      IF hb_hHasKey( ::hEvents, nEvent )
-         aBlocks := ::hEvents[ nEvent ]
-         FOR i := 1 TO len( aBlocks )
-            bBlock := aBlocks[ i ]
-            IF hb_isBlock( bBlock )
-               xResult := eval( bBlock, ... )
-            ENDIF
-         NEXT
-      ENDIF
-   ENDIF
-
-   RETURN xResult
 
 /*----------------------------------------------------------------------*/
 
@@ -266,7 +244,8 @@ METHOD adviseEvents() CLASS WvgActiveXControl
 METHOD mapEvent( nEvent, bBlock )
 
    if hb_isNumeric( nEvent ) .and. hb_isBlock( bBlock )
-      ::hEvents[ nEvent ] := { bBlock }
+      //::hEvents[ nEvent ] := { bBlock }
+      ::hEvents[ nEvent ] := bBlock
    endif
 
    RETURN Self

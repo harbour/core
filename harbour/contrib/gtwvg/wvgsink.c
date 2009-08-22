@@ -84,76 +84,6 @@ void extern hb_ToOutDebug( const char * sTraceMsg, ... );
 
 /*----------------------------------------------------------------------*/
 
-static HMODULE  s_hLib = NULL;
-
-typedef BOOL      ( CALLBACK * PHB_AX_WININIT )( void );
-typedef BOOL      ( CALLBACK * PHB_AX_WINTERM )( void );
-typedef HRESULT   ( CALLBACK * PHB_AX_GETCTRL )( HWND, IUnknown** );
-
-static PHB_AX_WINTERM   s_pAtlAxWinTerm = NULL;
-static PHB_AX_GETCTRL   s_pAtlAxGetControl = NULL;
-
-/*----------------------------------------------------------------------*/
-
-static void hb_ax_exit( void* cargo )
-{
-   HB_SYMBOL_UNUSED( cargo );
-
-   if( s_hLib )
-   {
-#if 0
-hb_ToOutDebug( "Terminating 1" );
-#endif
-      if( s_pAtlAxWinTerm )
-      {
-#if 0
-hb_ToOutDebug( "Terminating 2" );
-#endif
-         if( ( *s_pAtlAxWinTerm ) () )
-         {
-#if 0
-hb_ToOutDebug( "Terminating 3" );
-#endif
-            s_pAtlAxWinTerm = NULL;
-            s_pAtlAxGetControl = NULL;
-         }
-      }
-      FreeLibrary( s_hLib );
-      s_hLib = NULL;
-   }
-}
-
-static int hb_ax_init( void )
-{
-   if( s_hLib == NULL )
-   {
-      PHB_AX_WININIT pAtlAxWinInit;
-
-      s_hLib = LoadLibrary( TEXT( "atl.dll" ) );
-      if( ( unsigned long ) s_hLib <= 32 )
-      {
-         s_hLib = NULL;
-         return 0;
-      }
-      pAtlAxWinInit      = ( PHB_AX_WININIT ) GetProcAddress( s_hLib, HBTEXT( "AtlAxWinInit" ) );
-      s_pAtlAxWinTerm    = ( PHB_AX_WINTERM ) GetProcAddress( s_hLib, HBTEXT( "AtlAxWinTerm" ) );
-      s_pAtlAxGetControl = ( PHB_AX_GETCTRL ) GetProcAddress( s_hLib, HBTEXT( "AtlAxGetControl" ) );
-      if( pAtlAxWinInit )
-         ( *pAtlAxWinInit )();
-
-      hb_vmAtQuit( hb_ax_exit, NULL );
-   }
-   return 1;
-}
-
-
-HB_FUNC( WVG_AXINIT )
-{
-   hb_retl( hb_ax_init() );
-}
-
-/*----------------------------------------------------------------------*/
-
 static void hb_itemPushList( ULONG ulRefMask, ULONG ulPCount, PHB_ITEM** pItems )
 {
    HB_ITEM itmRef;
@@ -274,21 +204,20 @@ static ULONG STDMETHODCALLTYPE AddRef( IEventHandler *self )
 static ULONG STDMETHODCALLTYPE Release( IEventHandler *self )
 {
 #ifdef __HBTOOUT__
-hb_ToOutDebug( "Release %i", ( ( MyRealIEventHandler * ) self )->count );
+hb_ToOutDebug( "WinSink.c:Release %i", ( ( MyRealIEventHandler * ) self )->count );
 #endif
 
    if( --( ( MyRealIEventHandler * ) self )->count == 0 )
    {
-      if( ( ( MyRealIEventHandler * ) self)->pSelf )
+      if( ( ( MyRealIEventHandler * ) self )->pSelf )
          hb_itemRelease( ( ( MyRealIEventHandler * ) self )->pSelf );
-
+#if 0
       if( ( MyRealIEventHandler * ) self )
          GlobalFree( ( MyRealIEventHandler * ) self );
-
+#endif
       return ( ULONG ) 0;
    }
-   else
-      return ( ULONG ) ( ( MyRealIEventHandler * ) self )->count;
+   return ( ULONG ) ( ( MyRealIEventHandler * ) self )->count;
 }
 
 static HRESULT STDMETHODCALLTYPE GetTypeInfoCount( IEventHandler *self, UINT *pCount )
@@ -336,7 +265,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IEventHandler *self, DISPID dispid, REF
    PHB_ITEM   Key;
 
 #if 0
-hb_ToOutDebug( "event = %i",(int)dispid );
+hb_ToOutDebug( "winsink.c:Invoke dispid = %i",(int)dispid );
 #endif
 
    /* We implement only a "default" interface */
@@ -355,8 +284,12 @@ hb_ToOutDebug( "event = %i",(int)dispid );
    Key = hb_itemNew( NULL );
    if( hb_hashScan( ( ( MyRealIEventHandler * ) self )->pEvents, hb_itemPutNL( Key, dispid ), &ulPos ) )
    {
+      #if 0
       PHB_ITEM pArray = hb_hashGetValueAt( ( ( MyRealIEventHandler * ) self )->pEvents, ulPos );
       PHB_ITEM pExec  = hb_arrayGetItemPtr( pArray, 1 );
+      #endif
+
+      PHB_ITEM pExec = hb_hashGetItemPtr( ( ( MyRealIEventHandler * ) self )->pEvents, Key, 0 );
 
       if( pExec )
       {
@@ -368,7 +301,7 @@ hb_ToOutDebug( "event = %i",(int)dispid );
             hb_vmPushSymbol( &hb_symEval );
             hb_vmPush( pExec );
             break;
-
+         #if 0
          case HB_IT_STRING:
             {
                PHB_ITEM pObject = hb_arrayGetItemPtr( pArray, 3 );
@@ -380,7 +313,7 @@ hb_ToOutDebug( "event = %i",(int)dispid );
                   hb_vmPushNil();
             }
             break;
-
+         #endif
          case HB_IT_POINTER:
             hb_vmPushSymbol( hb_dynsymSymbol( ( ( PHB_SYMB ) pExec )->pDynSym ) );
             hb_vmPushNil();
@@ -572,75 +505,3 @@ HB_FUNC( WVG_AXCREATEWINDOW ) /* ( hWndContainer, CLSID, menuID=0, x, y, w, h, s
 
 /*----------------------------------------------------------------------*/
 
-HB_FUNC( WVG_AXGETCONTROL ) /* HWND hWnd = handle of control container window */
-{
-   IDispatch   *obj;
-   IUnknown    *pUnk = NULL;
-   HWND        hWnd = ( HWND ) hb_parptr( 1 );
-
-   if( ! s_pAtlAxGetControl )
-   {
-      hb_oleSetError( S_OK );
-      hb_errRT_BASE_SubstR( EG_UNSUPPORTED, 3012, "ActiveX not initialized", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-      return;
-   }
-
-   if( hWnd )
-   {
-      ( *s_pAtlAxGetControl )( hWnd, &pUnk );
-
-      if( pUnk )
-      {
-         HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( IID_IDispatch ), ( void** ) (void*) &obj );
-         HB_VTBL( pUnk )->Release( HB_THIS( pUnk ) );
-
-         hb_itemReturnRelease( hb_oleItemPut( NULL, obj ) );
-      }
-   }
-}
-
-/*----------------------------------------------------------------------*/
-
-HB_FUNC( WVG_AXDOVERB ) /* ( hWndAx, iVerb ) --> hResult */
-{
-   HWND        hWnd = ( HWND ) hb_parptr( 1 );
-   IUnknown*   pUnk = NULL;
-   HRESULT     lOleError;
-
-   if( ! s_pAtlAxGetControl )
-   {
-      hb_oleSetError( S_OK );
-      hb_errRT_BASE_SubstR( EG_UNSUPPORTED, 3012, "ActiveX not initialized", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-      return;
-   }
-
-   lOleError = ( *s_pAtlAxGetControl )( hWnd, &pUnk );
-
-   if( lOleError == S_OK )
-   {
-      IOleObject *lpOleObject = NULL;
-
-      lOleError = HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( IID_IOleObject ), ( void** ) ( void* ) &lpOleObject );
-      if( lOleError == S_OK )
-      {
-         IOleClientSite* lpOleClientSite;
-
-         lOleError = HB_VTBL( lpOleObject )->GetClientSite( HB_THIS_( lpOleObject ) &lpOleClientSite );
-         if( lOleError == S_OK )
-         {
-            MSG Msg;
-            RECT rct;
-
-            memset( &Msg, 0, sizeof( MSG ) );
-            GetClientRect( hWnd, &rct );
-            HB_VTBL( lpOleObject )->DoVerb( HB_THIS_( lpOleObject ) hb_parni( 2 ), &Msg, lpOleClientSite, 0, hWnd, &rct );
-         }
-      }
-   }
-
-   hb_oleSetError( lOleError );
-
-   hb_retnl( lOleError );
-}
-
-/*----------------------------------------------------------------------*/
