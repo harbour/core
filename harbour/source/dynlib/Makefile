@@ -17,7 +17,7 @@ ifneq ($(DYNDIRLIST_BASE),)
       include $(TOP)$(ROOT)config/dyn.mk
       include $(TOP)$(ROOT)config/dir.mk
 
-      INSTALL_RULE_LIBRARIES := $(INSTALL_RULE)
+      INSTALL_RULE_DYN := $(INSTALL_RULE)
 
       ifneq ($(HB_LIB_INSTALL),)
          INSTALL_FILES := $(IMP_FILE)
@@ -27,7 +27,7 @@ ifneq ($(DYNDIRLIST_BASE),)
       endif
 
 install::
-	$(INSTALL_RULE_LIBRARIES)
+	$(INSTALL_RULE_DYN)
 
    else
       include $(TOP)$(ROOT)config/none.mk

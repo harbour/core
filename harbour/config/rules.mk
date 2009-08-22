@@ -59,7 +59,7 @@ endif
 
 # The rule to link a dynamic library.
 ifeq ($(DY_RULE),)
-#  DY_RULE = $(DY) $(DY_OUT)$(subst /,$(DIRSEP),$(DYN_DIR)/$@) $^ $(DFLAGS) $(HB_USER_DFLAGS) $(DLIBS)
+   DY_RULE = @$(ECHO) $(ECHOQUOTE)! Dynamic library creation not supported for this target$(ECHOQUOTE)
 endif
 
 # Eliminate these rules.
@@ -91,11 +91,9 @@ endif
 	$(HB_RULE)
 
 ifneq ($(HB_BUILD_DLL),no)
-ifneq ($(DY_RULE),)
 
 # Rule to generate an dynamic library from an object file.
 %$(DYN_EXT) : %$(OBJ_DYN_POSTFIX)$(OBJ_EXT)
 	$(DY_RULE)
 
-endif
 endif

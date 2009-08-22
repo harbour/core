@@ -28,13 +28,11 @@ descend:: dirbase
 	+@$(MK) $(MKFLAGS) -C $(OBJ_DIR) -f $(GRANDP)Makefile TOP=$(GRANDP) $(DYN_NAME)
 
 ifneq ($(HB_BUILD_DLL),no)
-ifneq ($(DY_RULE),)
 
 vpath $(DYN_NAME) $(DYN_DIR)
 $(DYN_NAME) : $(ALL_OBJS)
 	$(DY_RULE)
 
-endif
 endif
 
 INSTALL_FILES := $(DYN_FILE)

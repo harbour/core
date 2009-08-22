@@ -22,7 +22,7 @@ include $(TOP)$(ROOT)config/lib.mk
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
 
-INSTALL_RULE_LIBRARIES := $(INSTALL_RULE)
+INSTALL_RULE_LIB := $(INSTALL_RULE)
 
 HB_VERHEADER := $(TOP)$(ROOT)include/hbverbld.h
 
@@ -47,7 +47,7 @@ ifneq ($(HB_HOST_BUILD),lib)
 endif
 
 install::
-	$(INSTALL_RULE_LIBRARIES)
+	$(INSTALL_RULE_LIB)
 
 clean::
 	$(if $(wildcard $(HB_VERHEADER)), -@$(RM) $(subst /,$(DIRSEP),$(HB_VERHEADER)),)
