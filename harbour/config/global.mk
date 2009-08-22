@@ -26,14 +26,14 @@
 # TOFIX: $(realpath/abspath) need GNU Make 3.81 or upper
 # TOFIX: $(eval) needs GNU Make 3.80 or upper
 
+ifeq ($(GLOBAL_CF_),)
+GLOBAL_CF_ := yes
+
 HB_VER_MAJOR     := 2
 HB_VER_MINOR     := 0
 HB_VER_RELEASE   := 0
 HB_VER_STATUS    := beta2
 HB_VER_STATUS_SH := b2
-
-ifeq ($(GLOBAL_CF_),)
-GLOBAL_CF_ := yes
 
 -include $(TOP)$(ROOT)config/conf.mk
 

@@ -1449,11 +1449,12 @@ HB_FUNC( ADSGETLASTERROR )
    UNSIGNED8  aucError[ ADS_MAX_ERROR_LEN + 1 ];
    UNSIGNED16 usLength = ADS_MAX_ERROR_LEN + 1;
 
-   AdsGetLastError( &ulLastErr,
-                    aucError,
-                    &usLength );
+   AdsGetLastError( &ulLastErr, aucError, &usLength );
 
-   hb_storclen( ( char * ) aucError, usLength, 1 );
+   if( ulLastErr == AE_SUCCESS )
+      hb_storc( NULL, 1 );
+   else
+      hb_storclen( ( char * ) aucError, usLength, 1 );
 
    hb_retnl( ulLastErr );
 }

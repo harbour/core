@@ -192,8 +192,8 @@ msgstr "Harbour: Compilando m¢dulos..."
 
 #: hbmk2.prg:6704
 #, c-format
-msgid "%1$s option file in hbmk directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk directory. The file format is the same as .hbc."
-msgstr "O arquivo de configura‡Æo %1$s no diret¢rio do hbmk sempre ser  processado caso exista. Em plataformas *nix este arquivo ‚ sempre procurado nas pastas ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc (exatamente nesta ordem) antes da pasta que cont‚m o hbmk. O formato deste arquivo ‚ o mesmo de um .hbc."
+msgid "%1$s option file in hbmk2 directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk2 directory. The file format is the same as .hbc."
+msgstr "O arquivo de configura‡Æo %1$s no diret¢rio do hbmk2 sempre ser processado caso exista. Em plataformas *nix este arquivo ‚ sempre procurado nas pastas ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc (exatamente nesta ordem) antes da pasta que cont‚m o hbmk. O formato deste arquivo ‚ o mesmo de um .hbc."
 
 #: hbmk2.prg:3238
 #, c-format
@@ -365,8 +365,8 @@ msgstr "paths adicionais para pesquisa de arquivos headers"
 
 #: hbmk2.prg:6582
 #, c-format
-msgid "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl]>"
-msgstr "  hbmk [op‡äes] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl]>"
+msgid "  hbmk2 [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl]>"
+msgstr "  hbmk2 [op‡äes] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl]>"
 
 #: hbmk2.prg:3663
 #: hbmk2.prg:4162
@@ -674,10 +674,10 @@ msgstr "ativa modo C puro (experimental)"
 #, c-format
 msgid ""
 "stop after creating the object files\\n"
-"create link/copy hbmk to hbcmp/clipper for the same effect"
+"create link/copy hbmk2 to hbcmp/clipper for the same effect"
 msgstr ""
 "interromper ap¢s criar os arquivos objetos\\n"
-"criar um link ou copiar o hbmk para hbcmp/clipper resultar  no mesmo efeito"
+"criar um link ou copiar o hbmk2 para hbcmp/clipper resultar  no mesmo efeito"
 
 #: hbmk2.prg:6687
 #, c-format
@@ -780,10 +780,10 @@ msgstr "copiar o alvo para <path>. Se <path> for um diret¢rio, deve terminar com
 #, c-format
 msgid ""
 "emulate Clipper compatible linker behavior\\n"
-"create link/copy hbmk to rtlink/blinker/exospace for the same effect"
+"create link/copy hbmk2 to rtlink/blinker/exospace for the same effect"
 msgstr ""
 "emula o comportamento de um linkeditor compat¡vel com clipper\\n"
-"criar um link ou copiar o hbmk para rtlink/blinker/exospace resultar  no mesmo efeito"
+"criar um link ou copiar o hbmk2 para rtlink/blinker/exospace resultar  no mesmo efeito"
 
 #: hbmk2.prg:6704
 #, c-format
@@ -997,10 +997,10 @@ msgstr "nix=EN"
 #, c-format
 msgid ""
 "stop after creating the object files and accept raw C flags\\n"
-"create link/copy hbmk to hbcc for the same effect"
+"create link/copy hbmk2 to hbcc for the same effect"
 msgstr ""
 "interromper ap¢s criar os arquivos objetos e processa-los com o compilador C\\n"
-"criar um link ou copiar o hbmk para hbcc resultar  no mesmo efeito"
+"criar um link ou copiar o hbmk2 para hbcc resultar  no mesmo efeito"
 
 #: hbmk2.prg:6549
 #, c-format
