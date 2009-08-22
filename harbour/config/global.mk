@@ -459,7 +459,7 @@ ifeq ($(HB_HOST_ARCH),win)
    endif
 else
    ifneq ($(filter $(HB_HOST_ARCH),dos os2),)
-      HB_CPU := x86
+      HB_HOST_CPU := x86
    else
       # TODO: CPU detection for rest of systems.
    endif
