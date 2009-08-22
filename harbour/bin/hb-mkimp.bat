@@ -78,10 +78,6 @@ if not "%HB_LIB_INSTALL%" == "" (
       if exist "%HB_DIR_OPENSSL%\ssleay32.lib"          copy /b /y "%HB_DIR_OPENSSL%\ssleay32.lib"           "%HB_LIB_INSTALL%\ssleay32.lib"
       if exist "%HB_DIR_PGSQL%\bin\libpq.dll"           call :P_MSVC_IMPLIB x86 "%HB_DIR_PGSQL%\bin\libpq.dll"   "%HB_LIB_INSTALL%\libpq.lib"
       if exist "%HB_DIR_PGSQL%\lib\libpq.lib"           copy /b /y "%HB_DIR_PGSQL%\lib\libpq.lib"            "%HB_LIB_INSTALL%\libpq.lib"
-      if exist "%HB_DIR_QT%\bin\QtCore4.dll"            call :P_MSVC_IMPLIB x86 "%HB_DIR_QT%\bin\QtCore4.dll"    "%HB_LIB_INSTALL%\QtCore4.lib"
-      if exist "%HB_DIR_QT%\bin\QtGui4.dll"             call :P_MSVC_IMPLIB x86 "%HB_DIR_QT%\bin\QtGui4.dll"     "%HB_LIB_INSTALL%\QtGui4.lib"
-      if exist "%HB_DIR_QT%\bin\QtNetwork4.dll"         call :P_MSVC_IMPLIB x86 "%HB_DIR_QT%\bin\QtNetwork4.dll" "%HB_LIB_INSTALL%\QtNetwork4.lib"
-      if exist "%HB_DIR_QT%\bin\QtWebKit4.dll"          call :P_MSVC_IMPLIB x86 "%HB_DIR_QT%\bin\QtWebKit4.dll"  "%HB_LIB_INSTALL%\QtWebKit4.lib"
 
       goto END
    )
