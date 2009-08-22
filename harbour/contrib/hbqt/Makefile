@@ -68,7 +68,7 @@ ifneq ($(strip $(HB_INC_QT_OK)),spec)
    HB_CFLAGS += $(foreach d,$(HB_INC_QT_OK),-I$(d) -I$(d)/Qt -I$(d)/QtCore -I$(d)/QtGui -I$(d)/QtNetwork -I$(d)/QtWebKit)
 endif
 
-include $(TOP)$(ROOT)contrib/hbqt/Makefile_gen
+include $(TOP)$(ROOT)contrib/hbqt/filelist.mk
 
 PRG_HEADERS := \
    hbqt.ch \

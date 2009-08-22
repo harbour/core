@@ -1361,7 +1361,7 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
-   LOCAL cFile := cPathOut + s_PathSep + "Makefile_gen"
+   LOCAL cFile := cPathOut + s_PathSep + "filelist.mk"
    LOCAL txt_ := {}
    LOCAL s
 

@@ -69,7 +69,8 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
              http://sourceforge.net/projects/mingw/files/GNU%20Make/Current%20Release_%20mingw32-make-3.81-20080326/mingw32-make-3.81-20080326-3.tar.gz/download
           Unpack it to your PATH or Harbour source root directory.
           If you use MinGW compiler, you already have GNU Make.
-          For convenience you may also use included config/mingw32-make.exe instead.
+          For convenience you may also use included config/mingw32-make.exe
+          instead.
 
     [ > set HB_COMPILER=<mingw|msvc|watcom|bcc|pocc|cygwin|...> ]
       > mingw32-make install
@@ -119,7 +120,8 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       2.) You need to get GNU Make. We recommend this link:
              ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381b.zip
           Unpack it to your PATH or Harbour source root directory.
-          For convenience you may also use included config/dj-make.exe instead.
+          For convenience you may also use included config/dj-make.exe
+          instead.
 
     [ > set HB_COMPILER=<djgpp|watcom> ]
       > make install
@@ -141,7 +143,8 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
              ftp://hobbes.nmsu.edu/pub/os2/dev/util/make-3.81-r2-bin-static.zip
           If you use other host, please refer to other platform instructions
           in this section.
-          For convenience you may also use included config/os2-make.exe instead.
+          For convenience you may also use included config/os2-make.exe
+          instead.
 
     [ > set HB_COMPILER=<gcc|watcom> ]
       > make install

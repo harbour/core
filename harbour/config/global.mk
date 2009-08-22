@@ -220,7 +220,7 @@ ifeq ($(HB_INIT_DONE),)
       endif
 
       ifeq ($(HB_BUILD_PKG),no)
-         $(warning ! Warning: Use 'clean install' from Harbour root directory to create a release package)
+         $(warning ! Warning: Use 'clean install' from Harbour root directory to create a release package.)
       endif
 
       # Enforce some basic setting for release packages
@@ -468,6 +468,12 @@ endif
 ifeq ($(HB_INIT_DONE),)
    ifneq ($(MAKE_381),)
       $(info ! HB_HOST_ARCH: $(HB_HOST_ARCH)$(if $(HB_HOST_CPU), ($(HB_HOST_CPU)),)  HB_SHELL: $(HB_SHELL))
+   endif
+
+   ifeq ($(HB_HOST_ARCH)-$(HB_SHELL),win-dos)
+      $(warning ! Warning: You're using DOS GNU Make executable (or DOS shell) on Windows host.)
+      $(warning !          Not recommended combination. Some features will be disabled.)
+      $(warning !          Please use the Windows build of GNU Make.)
    endif
 endif
 
@@ -828,7 +834,7 @@ ifneq ($(HB_HOST_ARCH)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
                HB_BIN_COMPILE := $(realpath $(HB_BIN_COMPILE))
             endif
             ifeq ($(HB_BIN_COMPILE),)
-               $(warning ! Warning: HB_BIN_COMPILE not specified. Couldn't find native build)
+               $(warning ! Warning: HB_BIN_COMPILE not specified. Couldn't find native build.)
             else
                ifneq ($(MAKE_381),)
                   $(info ! HB_BIN_COMPILE not specified. Automatically set to: $(HB_BIN_COMPILE))
