@@ -62,8 +62,9 @@
 #endif
 
 #ifdef __HARBOUR__
-   /* NOTE: Better would be to fix warnings. */
-   #pragma -w1
+   #define UNU( x ) HB_SYMBOL_UNUSED( x )
+#else
+   #define UNU( x ) ( x := x )
 #endif
 
 /*----------------------------------------------------------------------*/
@@ -551,9 +552,8 @@ FUNCTION Build_CheckBox( oWnd )
 
    // Determine state using mp1
    oXbp:selected := ;
-      {| mp1, mp2, oChk| MsgBox( "Checkbox A", ;
-                       IIf( mp1, "selected" , ;
-                                 "not selected" ) ) }
+      {| mp1, mp2, oChk| UNU( mp2 ), UNU( oChk ), ;
+                   MsgBox( "Checkbox A", IIf( mp1, "selected", "not selected" ) ) }
 
    // Create second checkbox, specify position using :new()
    oXbp := XbpCheckbox():new( oWnd, , {30,70}, {100,30} )
@@ -562,8 +562,9 @@ FUNCTION Build_CheckBox( oWnd )
 
    // Determine state using :getData()
    oXbp:selected := ;
-      {| mp1, mp2, oChk| MsgBox( "Checkbox B", ;
-            IIf( oChk:getData(), "selected", ;
+      {| mp1, mp2, oChk| UNU( mp1 ), UNU( mp2 ), ;
+             MsgBox( "Checkbox B", ;
+                      IIf( oChk:getData(), "selected", ;
                                  "not selected" ) ) }
    RETURN nil
 
@@ -579,7 +580,7 @@ FUNCTION Build_3State( oWnd )
    oXbp:caption := "3State A"
    oXbp:create( oWnd, , {130,30}, {100,30} )
    // Determine current state using mp1
-   oXbp:selected := {| mp1, mp2, oBtn| MsgBox( "3State A", aState[ mp1+1 ] ) }
+   oXbp:selected := {| mp1, mp2, oBtn| UNU( mp2 ), UNU( oBtn ), MsgBox( "3State A", aState[ mp1+1 ] ) }
 
    // Create second 3State Button, passing the position to :new()
    //
@@ -587,7 +588,7 @@ FUNCTION Build_3State( oWnd )
    oXbp:caption := "3State B"
    oXbp:create()
    // Determine current state using :getData()
-   oXbp:selected := {| mp1, mp2, oBtn|  MsgBox( "3State B", aState[ oBtn:getData()+1 ] ) }
+   oXbp:selected := {| mp1, mp2, oBtn|  UNU( mp1 ), UNU( mp2 ), MsgBox( "3State B", aState[ oBtn:getData()+1 ] ) }
 
    RETURN nil
 
@@ -597,7 +598,7 @@ FUNCTION Build_RadioButton( oStatic )
    LOCAL bSelected, oRadio
 
    // Display which radiobutton is selected
-   bSelected := {|mp1,mp2,obj| MsgBox( obj:caption ) }
+   bSelected := {|mp1,mp2,obj| UNU( mp1 ), UNU( mp2 ), MsgBox( obj:caption ) }
 
    // Create four radiobuttons
    oRadio := XbpRadioButton():new( oStatic,, {30,110}, {80,30} )
@@ -645,7 +646,7 @@ FUNCTION Build_ListBox( oWnd )
    aeval( aItems, {|e| oListBox:addItem( e ) } )
 
    // Code block for list box selection:
-   oListBox:ItemSelected := {|mp1, mp2, obj| mp1:=oListBox:getData(), ;
+   oListBox:ItemSelected := {|mp1, mp2, obj| UNU( obj ), mp1:=oListBox:getData(), ;
                               mp2:=oListBox:getItem( mp1 ), MsgBox( "itemSelected: "+mp2 ) }
    oListBox:setColorFG( GraMakeRGBColor( {227,12,110} ) )
    oListBox:setColorBG( GraMakeRGBColor( {50,45,170} ) )
@@ -676,13 +677,13 @@ STATIC FUNCTION Build_ComboBox( oWnd )
    // Code block for selection:
    //  - assign to LOCAL variable using :getData()
    //  - display LOCAL variable using DispoutAt()
-   bAction := {|mp1, mp2, obj| obj:XbpSLE:getData(), hb_outDebug( "Highlighted: "+cDay ) }
+   bAction := {|mp1, mp2, obj| UNU( mp1 ), UNU( mp2 ), obj:XbpSLE:getData(), hb_outDebug( "Highlighted: "+cDay ) }
 
    // Assign code block for selection with Up and Down keys
    oCombo:ItemMarked := bAction
 
    // Assign code block for selection by left mouse click in list box
-   oCombo:ItemSelected := {|mp1, mp2, obj| obj:XbpSLE:getData(), hb_outDebug( "Selected: "+cDay ) }
+   oCombo:ItemSelected := {|mp1, mp2, obj| UNU( mp1 ), UNU( mp2 ), obj:XbpSLE:getData(), hb_outDebug( "Selected: "+cDay ) }
 
    // Copy data from array to combo box, then discard array
    FOR i := 1 TO 7
@@ -745,7 +746,7 @@ FUNCTION Build_SLEs( oWnd )
    oXbp:setData()
    // Assign the value of the edit buffer to a LOCAL variable
    // when the input focus is lost
-   oXbp:killInputFocus := { |x,y,oSLE| oSLE:getData(), hb_outDebug( "Var B =" + cVarB ) }
+   oXbp:killInputFocus := { |mp1,mp2,oSLE| UNU( mp1 ), UNU( mp2 ),  oSLE:getData(), hb_outDebug( "Var B =" + cVarB ) }
 
    oXbp:setColorBG( GraMakeRGBColor( { 190,190,190 } ) )
 
@@ -804,8 +805,8 @@ FUNCTION Build_SpinButtons( oWnd )
    LOCAL nX := 230, nY := 190
 
    // Callback code block
-   bCallback := {|mp1, mp2, oXbp| nRed := oXbp:getData(), ;
-                               RGB( nRed, nGreen, nBlue ) }
+   bCallback := {|mp1, mp2, oXbp| UNU( mp1 ), UNU( mp2 ), nRed := oXbp:getData(), ;
+                                                        RGB( nRed, nGreen, nBlue ) }
 
    // Create spinbutton for red (without using :dataLink)
    oSpinRed := XbpSpinButton():new( oWnd,, {nX,nY+00}, {100,40} )
@@ -818,8 +819,8 @@ FUNCTION Build_SpinButtons( oWnd )
    oSpinRed:setData( 121 )
 
    // Callback code block
-   bCallback := {|mp1, mp2, oXbp| oXbp:getData(), ;
-                       RGB( nRed, nGreen, nBlue ) }
+   bCallback := {|mp1, mp2, oXbp| UNU( mp1 ), UNU( mp2 ), oXbp:getData(), ;
+                                               RGB( nRed, nGreen, nBlue ) }
 
    // Create spinbutton for green (using :dataLink)
    oSpinGreen := XbpSpinButton():new( oWnd,, {nX,nY+50}, {100,40} )
@@ -860,7 +861,7 @@ FUNCTION Build_TreeView( oWnd )
    oTree:hasLines   := .T.
    oTree:hasButtons := .T.
    oTree:create()
-   oTree:itemCollapsed := {|oItem,aRect,oSelf| MsgBox( oItem:caption ) }
+   oTree:itemCollapsed := {|oItem,aRect,oSelf| UNU( aRect ), UNU( oSelf ), MsgBox( oItem:caption ) }
    #ifdef __HARBOUR__
    oTree:setStyleSheet( GetTreeStyleSheet() )
    #endif
@@ -928,7 +929,7 @@ PROCEDURE WAStruct( oItem, iIndex )
    aadd( aStr, { "Salary", 'N', 10, 2 } )
 
    AEval( aStr, ;
-     {|a,i,oSub| oSub := oItem:addItem( "FIELD_NAME = " + a[1] ), FieldStruct( oSub, a ) } )
+     {|a,i,oSub| UNU( i ), oSub := oItem:addItem( "FIELD_NAME = " + a[1] ), FieldStruct( oSub, a ) } )
 
    RETURN
 
@@ -1045,9 +1046,7 @@ FUNCTION Build_Statics( oWnd )
    LOCAL nC1 := 10, nC2 := 45, nC3 := 110, nC4 := 175
    LOCAL nW := 50, nH := 50, nG := 10
    LOCAL nT := 20
-   LOCAL oRect := QRect():configure( oWnd:oWidget:geometry() )
-//xbp_debug( oRect:x(),oRect:y(),oRect:right(),oRect:bottom() )
-//xbp_debug( oWnd:oWidget:width(), oWnd:oWidget:height(), oWnd:oWidget:x(), oWnd:oWidget:y() )
+
    oGrp := XbpStatic():new( oWnd, , {250,10}, {240,oWnd:currentSize[ 2 ]-45} )
    oGrp:type := XBPSTATIC_TYPE_GROUPBOX
    oGrp:caption := " Harbour-QT-Statics "
@@ -1224,7 +1223,7 @@ FUNCTION Build_HTMLViewer( oWnd )
    oHtm := XbpHTMLViewer():new( oFrm, , {10,10}, {sz_[1]-10-10,sz_[2]-10-10} )
    oHtm:create()
    oHtm:navigate( "http://www.harbour-project.org" )
-   oHtm:titleChange := {|e| hb_outDebug( e ) }
+   oHtm:titleChange := {|e| UNU( e ), hb_outDebug( e ) }
    // oHtm:progressChange := {|nProg,nMax| hb_outDebug( "Downloaded: "+str( nProg*100/nMax,10,0 ) ) }
 
    RETURN oHtm
@@ -1242,7 +1241,7 @@ FUNCTION Build_FileDialog( oWnd, cMode )
       //oDlg:setColorBG( GraMakeRGBColor( { 170,170,170 } ) )
       aFiles := oDlg:open( "c:\temp", , .t. )
       IF !empty( aFiles )
-         aeval( aFiles, {|e| hb_outDebug( e ) } )
+         aeval( aFiles, {|e| UNU( e ), hb_outDebug( e ) } )
       ENDIF
    ELSE
       oDlg:title       := "Save this Database"
@@ -1580,7 +1579,7 @@ STATIC FUNCTION RtfApplyFont( oRTF )
 /*----------------------------------------------------------------------*/
 
 FUNCTION Build_Browse( oWnd )
-   LOCAL aPresParam, oXbpBrowse, oXbpColumn
+   LOCAL aPresParam, oXbpBrowse, oXbpColumn, s
    LOCAL cPath := hb_DirBase() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "tests" + hb_osPathSeparator()
 
    Set( _SET_DATEFORMAT, "yyyy.mm.dd" ) /* ANSI */
@@ -1596,8 +1595,8 @@ FUNCTION Build_Browse( oWnd )
    //oXbpBrowse:hScroll       := .f.          // OK
    //oXbpBrowse:vScroll       := .f.          // OK
    //oXbpBrowse:sizeCols      := .f.          // OK
-   //oXbpBrowse:cursorMode    := XBPBRW_CURSOR_ROW
-   oXbpBrowse:cursorMode    := XBPBRW_CURSOR_CELL
+   oXbpBrowse:cursorMode    := XBPBRW_CURSOR_ROW
+   //oXbpBrowse:cursorMode    := XBPBRW_CURSOR_CELL
 
    /* Navigation Blocks */
    oXbpBrowse:skipBlock     := {|n| DbSkipBlock( n ) }
@@ -1620,7 +1619,11 @@ FUNCTION Build_Browse( oWnd )
    oXbpBrowse:itemSelected  := {|| xbp_debug( 'itemSelected' ) }
 
    #ifdef __HARBOUR__
-   oXbpBrowse:setStyleSheet( "selection-background-color: qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5, stop: 0 #FF92BB, stop: 1 blue); " )
+   s := "selection-background-color: qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5, stop: 0 #FF92BB, stop: 1 gray); "
+//   s := "HbTableView::item:hover { background-color: qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5, stop: 0 #FF92BB, stop: 1 red) }; "
+//   s += "HbTableView::item:focus { background-color: qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5, stop: 0 #FF92BB, stop: 1 blue) }; "
+   s += "focus-background-color: qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5, stop: 0 #FF92BB, stop: 1 blue) ; "
+   oXbpBrowse:setStyleSheet( s )
    #endif
 
    aPresParam := {}
@@ -1860,7 +1863,7 @@ FUNCTION Build_Browse( oWnd )
    oXbpBrowse:addColumn( oXbpColumn )
 
    oXbpBrowse:setLeftFrozen( { 1 } )
-   oXbpBrowse:setRightFrozen( { 4,5,6 } )
+   oXbpBrowse:setRightFrozen( { 6,5,4 } )
 
    RETURN nil
 
@@ -1918,3 +1921,4 @@ STATIC FUNCTION TBPrev()
    RETURN lMoved
 
 /*----------------------------------------------------------------------*/
+
