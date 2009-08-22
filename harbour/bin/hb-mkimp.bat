@@ -58,10 +58,10 @@ if not "%HB_LIB_INSTALL%" == "" (
       if exist "%HB_DIR_ADS%\ace32.lib"                 copy /b /y "%HB_DIR_ADS%\ace32.lib"                  "%HB_LIB_INSTALL%\ace32.lib"
       if exist "%HB_DIR_ADS%\32bit\ace32.lib"           copy /b /y "%HB_DIR_ADS%\32bit\ace32.lib"            "%HB_LIB_INSTALL%\ace32.lib"
       if exist "%HB_DIR_ALLEGRO%\lib\alleg.lib"         copy /b /y "%HB_DIR_ALLEGRO%\lib\alleg.lib"          "%HB_LIB_INSTALL%\alleg.lib"
-      if exist "%HB_DIR_APOLLO%\sde61.dll"              call :P_MSVC_IMPLIB "%HB_DIR_APOLLO%\sde61.dll"      "%HB_LIB_INSTALL%\sde61.lib"
+      if exist "%HB_DIR_APOLLO%\sde61.dll"              call :P_MSVC_IMPLIB x86 "%HB_DIR_APOLLO%\sde61.dll"      "%HB_LIB_INSTALL%\sde61.lib"
       if exist "%HB_DIR_BLAT%\full\blat.lib"            copy /b /y "%HB_DIR_BLAT%\full\blat.lib"             "%HB_LIB_INSTALL%\blat.lib"
-      if exist "%HB_DIR_CURL%\libcurl.dll"              call :P_MSVC_IMPLIB "%HB_DIR_CURL%\libcurl.dll"      "%HB_LIB_INSTALL%\libcurl.lib"
-      if exist "%HB_DIR_CURL%\bin\libcurl.dll"          call :P_MSVC_IMPLIB "%HB_DIR_CURL%\bin\libcurl.dll"  "%HB_LIB_INSTALL%\libcurl.lib"
+      if exist "%HB_DIR_CURL%\libcurl.dll"              call :P_MSVC_IMPLIB x86 "%HB_DIR_CURL%\libcurl.dll"      "%HB_LIB_INSTALL%\libcurl.lib"
+      if exist "%HB_DIR_CURL%\bin\libcurl.dll"          call :P_MSVC_IMPLIB x86 "%HB_DIR_CURL%\bin\libcurl.dll"  "%HB_LIB_INSTALL%\libcurl.lib"
       if exist "%HB_DIR_FIREBIRD%\lib\fbclient_ms.lib"  copy /b /y "%HB_DIR_FIREBIRD%\lib\fbclient_ms.lib"   "%HB_LIB_INSTALL%\fbclient.lib"
       if exist "%HB_DIR_FREEIMAGE%\Dist\FreeImage.lib"  copy /b /y "%HB_DIR_FREEIMAGE%\Dist\FreeImage.lib"   "%HB_LIB_INSTALL%\FreeImage.lib"
       if exist "%HB_DIR_GD%\lib\bgd.lib"                copy /b /y "%HB_DIR_GD%\lib\bgd.lib"                 "%HB_LIB_INSTALL%\bgd.lib"
@@ -76,20 +76,20 @@ if not "%HB_LIB_INSTALL%" == "" (
       if exist "%HB_DIR_OPENSSL%\dll\ssleay32.lib"      copy /b /y "%HB_DIR_OPENSSL%\dll\ssleay32.lib"       "%HB_LIB_INSTALL%\ssleay32.lib"
       if exist "%HB_DIR_OPENSSL%\lib\ssleay32.lib"      copy /b /y "%HB_DIR_OPENSSL%\lib\ssleay32.lib"       "%HB_LIB_INSTALL%\ssleay32.lib"
       if exist "%HB_DIR_OPENSSL%\ssleay32.lib"          copy /b /y "%HB_DIR_OPENSSL%\ssleay32.lib"           "%HB_LIB_INSTALL%\ssleay32.lib"
-      if exist "%HB_DIR_PGSQL%\bin\libpq.dll"           call :P_MSVC_IMPLIB "%HB_DIR_PGSQL%\bin\libpq.dll"   "%HB_LIB_INSTALL%\libpq.lib"
+      if exist "%HB_DIR_PGSQL%\bin\libpq.dll"           call :P_MSVC_IMPLIB x86 "%HB_DIR_PGSQL%\bin\libpq.dll"   "%HB_LIB_INSTALL%\libpq.lib"
       if exist "%HB_DIR_PGSQL%\lib\libpq.lib"           copy /b /y "%HB_DIR_PGSQL%\lib\libpq.lib"            "%HB_LIB_INSTALL%\libpq.lib"
-      if exist "%HB_DIR_QT%\bin\QtCore4.dll"            call :P_MSVC_IMPLIB "%HB_DIR_QT%\bin\QtCore4.dll"    "%HB_LIB_INSTALL%\QtCore4.lib"
-      if exist "%HB_DIR_QT%\bin\QtGui4.dll"             call :P_MSVC_IMPLIB "%HB_DIR_QT%\bin\QtGui4.dll"     "%HB_LIB_INSTALL%\QtGui4.lib"
-      if exist "%HB_DIR_QT%\bin\QtNetwork4.dll"         call :P_MSVC_IMPLIB "%HB_DIR_QT%\bin\QtNetwork4.dll" "%HB_LIB_INSTALL%\QtNetwork4.lib"
-      if exist "%HB_DIR_QT%\bin\QtWebKit4.dll"          call :P_MSVC_IMPLIB "%HB_DIR_QT%\bin\QtWebKit4.dll"  "%HB_LIB_INSTALL%\QtWebKit4.lib"
+      if exist "%HB_DIR_QT%\bin\QtCore4.dll"            call :P_MSVC_IMPLIB x86 "%HB_DIR_QT%\bin\QtCore4.dll"    "%HB_LIB_INSTALL%\QtCore4.lib"
+      if exist "%HB_DIR_QT%\bin\QtGui4.dll"             call :P_MSVC_IMPLIB x86 "%HB_DIR_QT%\bin\QtGui4.dll"     "%HB_LIB_INSTALL%\QtGui4.lib"
+      if exist "%HB_DIR_QT%\bin\QtNetwork4.dll"         call :P_MSVC_IMPLIB x86 "%HB_DIR_QT%\bin\QtNetwork4.dll" "%HB_LIB_INSTALL%\QtNetwork4.lib"
+      if exist "%HB_DIR_QT%\bin\QtWebKit4.dll"          call :P_MSVC_IMPLIB x86 "%HB_DIR_QT%\bin\QtWebKit4.dll"  "%HB_LIB_INSTALL%\QtWebKit4.lib"
 
       goto END
    )
 
    if "%HB_COMPILER%" == "msvc64" (
 
-      if exist "%HB_DIR_CURL%\libcurl.dll"              call :P_MSVC_IMPLIB "%HB_DIR_CURL%\libcurl.dll"      "%HB_LIB_INSTALL%\libcurl.lib"
-      if exist "%HB_DIR_CURL%\bin\libcurl.dll"          call :P_MSVC_IMPLIB "%HB_DIR_CURL%\bin\libcurl.dll"  "%HB_LIB_INSTALL%\libcurl.lib"
+      if exist "%HB_DIR_CURL%\libcurl.dll"              call :P_MSVC_IMPLIB x64 "%HB_DIR_CURL%\libcurl.dll"      "%HB_LIB_INSTALL%\libcurl.lib"
+      if exist "%HB_DIR_CURL%\bin\libcurl.dll"          call :P_MSVC_IMPLIB x64 "%HB_DIR_CURL%\bin\libcurl.dll"  "%HB_LIB_INSTALL%\libcurl.lib"
       if exist "%HB_DIR_FIREBIRD%\lib\fbclient_ms.lib"  copy /b /y "%HB_DIR_FIREBIRD%\lib\fbclient_ms.lib"   "%HB_LIB_INSTALL%\fbclient.lib"
       if exist "%HB_DIR_MYSQL%\lib\opt\libmySQL.lib"    copy /b /y "%HB_DIR_MYSQL%\lib\opt\libmySQL.lib"     "%HB_LIB_INSTALL%\libmySQL.lib"
 
@@ -208,14 +208,14 @@ rem ---------------------------------------------------------------
    echo    s/^^[ \t]\+[0-9]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+\(.*\)/\1/p>> _hbtemp.sed
    echo  }>> _hbtemp.sed
    echo }>> _hbtemp.sed
-   dumpbin /exports "%1" > _dump.tmp
-   echo LIBRARY "%1" > _temp.def
+   dumpbin /exports "%2" > _dump.tmp
+   echo LIBRARY "%~n2" > _temp.def
    echo EXPORTS >> _temp.def
    sed -nf _hbtemp.sed < _dump.tmp >> _temp.def
-   lib /machine:x86 /def:_temp.def /out:"%2"
-   del _dump.tmp
-   del _temp.def
-   del _hbtemp.sed
+   lib /nologo /machine:%1 /def:_temp.def /out:"%3"
+   :del _dump.tmp
+   :del _temp.def
+   :del _hbtemp.sed
    rem ---------------------------------------------------------------
 
    goto END
