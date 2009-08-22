@@ -22,6 +22,10 @@ Included utilities are:
              ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/
              ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381b.zip
              ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381s.zip
+        - OS/2 (os2-make.exe)
+             http://www.os2site.com/sw/dev/make/index.html
+             http://www.os2site.com/sw/dev/make/make-3.81-r2-bin.zip
+             http://www.os2site.com/sw/dev/make/make-3.81-r2.zip
 
 - GNU coreutils (mkdir, rm, cp, echo)
      Licence:

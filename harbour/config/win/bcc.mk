@@ -50,7 +50,7 @@ LDFLAGS += $(LIBPATHS)
 
 AR := tlib.exe
 ARFLAGS := /P64
-AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" $(foreach file,$(^F),-+$(file))
+AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" $(foreach file,$(?F),-+$(file))
 
 ifneq ($(HB_SHELL),sh)
    ifeq ($(HB_SHELL_XP),)
@@ -73,7 +73,7 @@ ifneq ($(HB_SHELL),sh)
 
       define create_library
          $(if $(wildcard __lib__.tmp),@$(RM) __lib__.tmp,)
-         $(foreach file,$(^F),$(lib_object))
+         $(foreach file,$(?F),$(lib_object))
          @$(ECHO) -+>> __lib__.tmp
          $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" @__lib__.tmp
       endef

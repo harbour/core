@@ -93,28 +93,28 @@ ECHO := echo
 ECHOQUOTE :=
 
 dirbase::
-	$(if $(wildcard $(OBJ_DIR)),,-@$(MDP) "$(OBJ_DIR_OS)")
-	$(if $(LIB_FILE),$(if $(wildcard $(LIB_DIR)),,-@$(MDP) "$(LIB_DIR_OS)"),)
-	$(if $(BIN_FILE),$(if $(wildcard $(BIN_DIR)),,-@$(MDP) "$(BIN_DIR_OS)"),)
-	$(if $(DYN_FILE),$(if $(wildcard $(DYN_DIR)),,-@$(MDP) "$(DYN_DIR_OS)"),)
-	$(if $(IMP_FILE),$(if $(wildcard $(IMP_DIR)),,-@$(MDP) "$(IMP_DIR_OS)"),)
+	-@if not exist "$(OBJ_DIR_OS)" $(MDP) "$(OBJ_DIR_OS)"
+	$(if $(LIB_FILE),-@if not exist "$(LIB_DIR_OS)" $(MDP) "$(LIB_DIR_OS)",)
+	$(if $(BIN_FILE),-@if not exist "$(BIN_DIR_OS)" $(MDP) "$(BIN_DIR_OS)",)
+	$(if $(DYN_FILE),-@if not exist "$(DYN_DIR_OS)" $(MDP) "$(DYN_DIR_OS)",)
+	$(if $(IMP_FILE),-@if not exist "$(IMP_DIR_OS)" $(MDP) "$(IMP_DIR_OS)",)
 
 clean::
-	$(if $(wildcard $(OBJ_DIR)),-@$(RDP) "$(OBJ_DIR_OS)",)
-	$(if $(wildcard $(PKG_DIR)),-@$(RDP) "$(PKG_DIR_OS)",)
-	$(if $(LIB_FILE),$(if $(wildcard $(LIB_FILE)),-@$(RM) "$(LIB_FILE_OS)",),)
-	$(if $(LIB_FILE),$(if $(wildcard $(basename $(LIB_FILE)).bak),-@$(RM) "$(basename $(LIB_FILE_OS)).bak",),)
-	$(if $(LIB_FILE),$(if $(wildcard $(LIB_DIR)),$(if $(wildcard $(LIB_DIR)/*),,-@$(RDP) "$(LIB_DIR_OS)"),),)
-	$(if $(BIN_FILE),$(if $(wildcard $(BIN_FILE)),-@$(RM) "$(BIN_FILE_OS)",),)
-	$(if $(BIN_FILE),$(if $(wildcard $(basename $(BIN_FILE)).tds),-@$(RM) "$(basename $(BIN_FILE_OS)).tds",),)
-	$(if $(BIN_FILE),$(if $(wildcard $(BIN_DIR)),$(if $(wildcard $(BIN_DIR)/*),,-@$(RDP) "$(BIN_DIR_OS)"),),)
-	$(if $(DYN_FILE),$(if $(wildcard $(DYN_FILE)),-@$(RM) "$(DYN_FILE_OS)",),)
-	$(if $(DYN_FILE),$(if $(wildcard $(basename $(DYN_FILE)).def),-@$(RM) "$(basename $(DYN_FILE_OS)).def",),)
-	$(if $(DYN_FILE),$(if $(wildcard $(basename $(DYN_FILE)).exp),-@$(RM) "$(basename $(DYN_FILE_OS)).exp",),)
-	$(if $(DYN_FILE),$(if $(wildcard $(DYN_DIR)),$(if $(wildcard $(DYN_DIR)/*),,-@$(RDP) "$(DYN_DIR_OS)"),),)
-	$(if $(IMP_FILE),$(if $(wildcard $(IMP_FILE)),-@$(RM) "$(IMP_FILE_OS)",),)
-	$(if $(IMP_FILE),$(if $(wildcard $(basename $(IMP_FILE)).exp),-@$(RM) "$(basename $(IMP_FILE_OS)).exp",),)
-	$(if $(IMP_FILE),$(if $(wildcard $(IMP_DIR)),$(if $(wildcard $(IMP_DIR)/*),,-@$(RDP) "$(IMP_DIR_OS)"),),)
+	-@if exist "$(OBJ_DIR_OS)" $(RDP) "$(OBJ_DIR_OS)"
+	-@if exist "$(PKG_DIR_OS)" $(RDP) "$(PKG_DIR_OS)"
+	$(if $(LIB_FILE),-@if exist "$(LIB_FILE_OS)" $(RM) "$(LIB_FILE_OS)",)
+	$(if $(LIB_FILE),-@if exist "$(basename $(LIB_FILE_OS)).bak" $(RM) "$(basename $(LIB_FILE_OS)).bak",)
+	$(if $(LIB_FILE),-@if exist "$(LIB_DIR_OS)" if not exist "$(LIB_DIR_OS)\*" $(RDP) "$(LIB_DIR_OS)",)
+	$(if $(BIN_FILE),-@if exist "$(BIN_FILE_OS)" $(RM) "$(BIN_FILE_OS)",)
+	$(if $(BIN_FILE),-@if exist "$(basename $(BIN_FILE_OS)).tds" $(RM) "$(basename $(BIN_FILE_OS)).tds",)
+	$(if $(BIN_FILE),-@if exist "$(BIN_DIR_OS)" if not exist "$(BIN_DIR_OS)\*" $(RDP) "$(BIN_DIR_OS)",)
+	$(if $(DYN_FILE),-@if exist "$(DYN_FILE_OS)" $(RM) "$(DYN_FILE_OS)",)
+	$(if $(DYN_FILE),-@if exist "$(basename $(DYN_FILE_OS)).def" $(RM) "$(basename $(DYN_FILE_OS)).def",)
+	$(if $(DYN_FILE),-@if exist "$(basename $(DYN_FILE_OS)).exp" $(RM) "$(basename $(DYN_FILE_OS)).exp",)
+	$(if $(DYN_FILE),-@if exist "$(DYN_DIR_OS)" if not exist "$(DYN_DIR_OS)\*" $(RDP) "$(DYN_DIR_OS)",)
+	$(if $(IMP_FILE),-@if exist "$(IMP_FILE_OS)" $(RM) "$(IMP_FILE_OS)",)
+	$(if $(IMP_FILE),-@if exist "$(basename $(IMP_FILE_OS)).exp" $(RM) "$(basename $(IMP_FILE_OS)).exp",)
+	$(if $(IMP_FILE),-@if exist "$(IMP_DIR_OS)" if not exist "$(IMP_DIR_OS)\*" $(RDP) "$(IMP_DIR_OS)",)
 
 endif
 

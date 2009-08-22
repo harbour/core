@@ -41,7 +41,7 @@ endif
 ifeq ($(HB_SHELL),nt)
 
    define inst_file_all
-      $(if $(wildcard $(subst $(subst x,x, ),\ ,$(INSTALL_DIR))),,-@$(MDP) "$(INSTALL_DIR_OS)")
+      -@if not exist "$(INSTALL_DIR_OS)" $(MDP) "$(INSTALL_DIR_OS)"
       -@for %%f in ($(INSTALL_FILES_OS)) do $(CP) "%%f" "$(INSTALL_DIR_OS)"
    endef
 

@@ -1029,7 +1029,7 @@ export HB_INSTALL_PREFIX
 
 ifneq ($(HB_INSTALL_PREFIX_ORI),$(HB_INSTALL_PREFIX))
    ifneq ($(MAKE_381),)
-      $(info ! HB_INSTALL_PREFIX set to: $(HB_INSTALL_PREFIX))
+      $(info ! HB_INSTALL_PREFIX automatically set to: $(HB_INSTALL_PREFIX))
    endif
 endif
 
