@@ -37,7 +37,7 @@ Included utilities are:
              ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/fil41s.zip
              ftp://ftp.delorie.com/pub/djgpp/current/v2/djdev203.zip
              ftp://ftp.delorie.com/pub/djgpp/current/v2/djlsr203.zip
-        - OS/2 (os2-mkdir.exe, os2-rm.exe, os2-cp.exe)
+        - OS/2 (os2-mkdir.exe, os2-rm.exe, os2-cp.exe, os2-echo.exe)
              http://os2ports.smedley.info/index.php?page=build-environment
              http://download.smedley.info/buildenv_20071022.zip
              (couldn't find the sources here)
