@@ -61,6 +61,11 @@
    #pragma library("XppUi2")
 #endif
 
+#ifdef __HARBOUR__
+   /* NOTE: Better would be to fix warnings. */
+   #pragma -w1
+#endif
+
 /*----------------------------------------------------------------------*/
 
 REQUEST DbfCdx
