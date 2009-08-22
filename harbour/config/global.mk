@@ -30,6 +30,8 @@
 ifeq ($(GLOBAL_CF_),)
 GLOBAL_CF_ := yes
 
+-include $(TOP)$(ROOT)config/conf.mk
+
 # This isn't strictly necessary, but it does signficantly reduce
 # the number of rules that make has to evaluate otherwise, which may give
 # a performance boost on a slow system.

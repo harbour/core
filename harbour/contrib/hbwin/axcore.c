@@ -321,7 +321,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
    if( ! IsEqualIID( riid, HB_ID_REF( IID_NULL ) ) )
       return DISP_E_UNKNOWNINTERFACE;
 
-   if( ! ( ( ISink* ) lpThis)->pItemHandler )
+   if( ! ( ( ISink* ) lpThis )->pItemHandler )
       return S_OK;
 
    pAction = ( ( ISink* ) lpThis )->pItemHandler;
