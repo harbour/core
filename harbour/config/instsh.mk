@@ -64,7 +64,7 @@ ifeq ($(HB_SHELL),os2)
    #       It causes that every commands will be separated by LF
    define inst_file
       $(if $(wildcard $(INSTALL_DIR)),,-@$(MDP) $(INSTALL_DIR))
-      -@$(COMSPEC) /C $(CP) $(file) $(INSTALL_DIR_OS)
+      -@$(CMDPREF)$(CP) $(file) $(INSTALL_DIR_OS)
 
    endef
 

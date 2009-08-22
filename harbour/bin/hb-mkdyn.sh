@@ -64,8 +64,8 @@ MINOR="${REVIS%%.*}"
 REVIS="${REVIS#${MINOR}}"
 REVIS="${REVIS#.}"
 REVIS="${REVIS%%.*}"
-[ -n "${MAJOR}" ] || MAJOR=1
-[ -n "${MINOR}" ] || MINOR=1
+[ -n "${MAJOR}" ] || MAJOR=2
+[ -n "${MINOR}" ] || MINOR=0
 [ -n "${REVIS}" ] || REVIS=0
 VERSION="${MAJOR}.${MINOR}.${REVIS}"
 

@@ -19,13 +19,18 @@
 #    http://www.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html
 # GNU Coding standards:
 #    http://www.gnu.org/prep/standards/standards.html
-# ---------------------------------------------------------------
-
 # GNU Make NEWS:
 #    http://cvs.savannah.gnu.org/viewvc/make/NEWS?root=make&view=markup
-#
+# ---------------------------------------------------------------
+
 # TOFIX: $(realpath/abspath) need GNU Make 3.81 or upper
 # TOFIX: $(eval) needs GNU Make 3.80 or upper
+
+HB_VER_MAJOR     := 2
+HB_VER_MINOR     := 0
+HB_VER_RELEASE   := 0
+HB_VER_STATUS    := beta2
+HB_VER_STATUS_SH := b2
 
 ifeq ($(GLOBAL_CF_),)
 GLOBAL_CF_ := yes
@@ -37,7 +42,7 @@ GLOBAL_CF_ := yes
 # a performance boost on a slow system.
 .SUFFIXES:
 
-need := 3.78
+need := 3.81
 ok := $(filter $(need),$(firstword $(sort $(MAKE_VERSION) $(need))))
 
 ifeq ($(ok),)
@@ -356,13 +361,15 @@ else
    endif
 endif
 
-# Not needed anymore, can be deleted if everything stays fine [20090812] [vszakats]
-# CMDPREF :=
-# ifneq ($(HB_SHELL),sh)
-#    ifneq ($(COMSPEC),)
-#       CMDPREF := $(COMSPEC) /C
-#    endif
-# endif
+# NOTE: This can be need if we want to run some internal command which are
+#       missing from GNU Make's internal autodetection list. Like 'move' on
+#       non-*nix shells. [vszakats]
+CMDPREF :=
+ifneq ($(HB_SHELL),sh)
+   ifneq ($(COMSPEC),)
+      CMDPREF := $(COMSPEC) /C
+   endif
+endif
 
 # Directory separator default
 ifeq ($(DIRSEP),)
@@ -431,6 +438,10 @@ endif
 #   else
 #      ifeq ($(call find_in_path,rm),)
 #         $(error ! Harbour build on OS/2 requires GNU rm executable in PATH. See INSTALL for more)
+#      else
+#         ifeq ($(call find_in_path,cp),)
+#            $(error ! Harbour build on OS/2 requires GNU cp executable in PATH. See INSTALL for more)
+#         endif
 #      endif
 #   endif
 #endif
@@ -949,18 +960,18 @@ ifneq ($(HB_DB_DRVEXT),)
 endif
 
 ifeq ($(HB_OS_UNIX),yes)
-   HB_DYN_VER := 2.0.0
+   HB_DYN_VER := $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)
 else
-   HB_DYN_VER := 20
+   HB_DYN_VER := $(HB_VER_MAJOR)$(HB_VER_MINOR)
 endif
 
 ifneq ($(HB_HOST_ARCH),dos)
-   HB_VERSION := 2.0.0beta2
+   HB_VERSION := $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)$(HB_VER_STATUS)
    HB_PKGNAME := harbour-$(HB_VERSION)-$(HB_ARCHITECTURE)-$(HB_COMPILER)
    HB_PKGNAMI := $(HB_PKGNAME)
 else
    # Use short names in MS-DOS
-   HB_VERSION := 2b2
+   HB_VERSION := $(HB_VER_MAJOR)$(HB_VER_STATUS_SH)
    HB_PKGNAME := hb$(HB_VERSION)
    # Ugly solution
    ifeq ($(HB_COMPILER),djgpp)
