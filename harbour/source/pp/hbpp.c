@@ -52,6 +52,8 @@
  *
  */
 
+#if ! defined( HB_DYNLIB )
+
 #include "hbapi.h"
 
 int hb_verSvnID( void ) { return 0; }
@@ -826,4 +828,6 @@ int main( int argc, char * argv[] )
 
 #if defined( HB_OS_WIN_CE ) && !defined( __CEGCC__ )
 #  include "hbwmain.c"
+#endif
+
 #endif

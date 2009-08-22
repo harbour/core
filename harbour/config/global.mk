@@ -1065,9 +1065,11 @@ ifneq ($(HB_INSTALL_PREFIX),)
       endif
    endif
 
+   # Standard name: BINDIR
    ifeq ($(HB_BIN_INSTALL),)
       export HB_BIN_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)bin
    endif
+   # Standard name: LIBDIR
    ifeq ($(HB_LIB_INSTALL),)
       export HB_LIB_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)lib$(LIBPOSTFIX)
    endif
@@ -1078,11 +1080,13 @@ ifneq ($(HB_INSTALL_PREFIX),)
          export HB_DYN_INSTALL := $(HB_LIB_INSTALL)
       endif
    endif
+   # Standard name: INCLUDEDIR
    ifeq ($(HB_INC_INSTALL),)
       ifneq ($(HB_INSTALL_PREFIX),$(HB_INSTALL_PREFIX_TOP))
          export HB_INC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)include$(INCPOSTFIX)
       endif
    endif
+   # Standard name: DOCDIR
    ifeq ($(HB_DOC_INSTALL),)
       # Don't set doc dir for *nix targets
       ifeq ($(HB_OS_UNIX),no)
