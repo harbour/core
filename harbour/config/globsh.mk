@@ -79,8 +79,8 @@ ifeq ($(HB_SHELL),nt)
 #       for Windows XP and upper and 2047 for Windows NT and 2000.
 #       This is true for commands which are recognized as shell
 #       commands (by using an internal list). For the rest
-#       CreateProcess() is used, where where the maximum length
-#       is 32767. [vszakats]
+#       CreateProcess() is used, where the maximum length is 32767.
+#       [vszakats]
 
 MK := "$(subst \,/,$(MAKE))"
 RM := del /q /f
@@ -122,7 +122,7 @@ ifeq ($(HB_SHELL),os2)
 
 # NOTE: Comment on included GNU tools:
 #       os2-mkdir expects forward slashes, while
-#       os2-rm expects backslashes in filenames.
+#       os2-rm and os2-cp expects backslashes in filenames.
 #       [vszakats]
 
 MK := $(subst \,/,$(MAKE))
@@ -130,7 +130,7 @@ RM := $(TOOL_DIR)os2-rm -f
 RDP := $(TOOL_DIR)os2-rm -fr
 CP := copy
 LN :=
-MD := mkdir
+MD := $(TOOL_DIR)os2-mkdir
 MDP := $(TOOL_DIR)os2-mkdir -p
 ECHO := echo
 ECHOQUOTE :=
