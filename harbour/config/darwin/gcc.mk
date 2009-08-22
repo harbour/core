@@ -45,7 +45,7 @@ endif
 # remove it if you have newer compiler version
 #CFLAGS += -Wno-long-double
 
-LD := $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
+LD := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 LD_OUT := -o$(subst x,x, )
 
 LIBPATHS := -L$(LIB_DIR)
