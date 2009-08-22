@@ -213,9 +213,9 @@ rem ---------------------------------------------------------------
    echo EXPORTS >> _temp.def
    sed -nf _hbtemp.sed < _dump.tmp >> _temp.def
    lib /nologo /machine:%1 /def:_temp.def /out:"%3"
-   :del _dump.tmp
-   :del _temp.def
-   :del _hbtemp.sed
+   del _dump.tmp
+   del _temp.def
+   del _hbtemp.sed
    rem ---------------------------------------------------------------
 
    goto END
