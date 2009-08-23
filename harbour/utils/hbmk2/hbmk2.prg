@@ -127,6 +127,9 @@ REQUEST hbmk_KEYW
 
 #define I_( x )                 hb_i18n_gettext( x )
 
+#define _TARG_PLAT              1
+#define _TARG_COMP              2
+
 #define _PAR_cParam             1
 #define _PAR_cFileName          2
 #define _PAR_nLine              3
@@ -691,9 +694,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                option processing loop. */
       DO CASE
       CASE cParamL            == "-quiet"   ; hbmk[ _HBMK_lQuiet ] := .T. ; hbmk[ _HBMK_lInfo ] := .F.
-      CASE Left( cParamL, 6 ) == "-comp="   ; hbmk[ _HBMK_cCOMP ] := SubStr( cParam, 7 )
-      CASE Left( cParamL, 6 ) == "-plat="   ; hbmk[ _HBMK_cPLAT ] := SubStr( cParam, 7 )
-      CASE Left( cParamL, 6 ) == "-arch="   ; hbmk[ _HBMK_cPLAT ] := SubStr( cParam, 7 ) /* Compatibility */
+      CASE Left( cParamL, 6 ) == "-comp="   ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_COMP )
+      CASE Left( cParamL, 6 ) == "-plat="   ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_PLAT )
+      CASE Left( cParamL, 6 ) == "-arch="   ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_PLAT ) /* Compatibility */
       CASE Left( cParamL, 6 ) == "-build="  ; hbmk[ _HBMK_cBUILD ] := SubStr( cParam, 8 )
       CASE Left( cParamL, 6 ) == "-lang="   ; hbmk[ _HBMK_cUILNG ] := SubStr( cParam, 7 ) ; SetUILang( hbmk )
       CASE cParamL            == "-hbrun"   ; lSkipBuild := .T. ; hbmk[ _HBMK_lRUN ] := .T.
@@ -780,18 +783,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    /* Load platform / compiler settings (compatibility) */
 
    IF Empty( hbmk[ _HBMK_cPLAT ] )
-      hbmk[ _HBMK_cPLAT ] := Lower( GetEnv( "HB_PLATFORM" ) )
+      ParseCOMPPLAT( hbmk, Lower( GetEnv( "HB_PLATFORM" ) ), _TARG_PLAT )
       IF Empty( hbmk[ _HBMK_cPLAT ] )
-         hbmk[ _HBMK_cPLAT ] := Lower( GetEnv( "HB_ARCHITECTURE" ) ) /* Compatibility */
+         ParseCOMPPLAT( hbmk, Lower( GetEnv( "HB_ARCHITECTURE" ) ), _TARG_PLAT ) /* Compatibility */
       ENDIF
    ENDIF
    IF Empty( hbmk[ _HBMK_cCOMP ] )
-      hbmk[ _HBMK_cCOMP ] := Lower( GetEnv( "HB_COMPILER" ) )
-#if 0
-      IF Empty( hbmk[ _HBMK_cCOMP ] )
-         hbmk[ _HBMK_cCOMP ] := Lower( GetEnv( "HB_COMP" ) )
-      ENDIF
-#endif
+      ParseCOMPPLAT( hbmk, Lower( GetEnv( "HB_COMPILER" ) ), _TARG_COMP )
    ENDIF
 
    nCCompVer := Val( GetEnv( "HB_COMPILER_VER" ) ) /* Format: <09><00>[.<00>] = <major><minor>[.<revision>] */
@@ -931,8 +929,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                     { {|| FindInPath( "clarm"    ) }, "msvcarm" },;
                     { {|| FindInPath( "armasm"   ) }, "msvcarm" },;
                     { {|| FindInPath( "pocc"     ) }, "poccarm" },;
-                    { {|| FindInPath( "arm-mingw32ce-gcc" ) }, "mingwarm", "arm-mingw32ce-" } ,;
-                    { {|| FindInPath( "arm-wince-mingw32ce-gcc" ) }, "mingwarm", "arm-wince-mingw32ce-" } }
+                    { {|| FindInPath( "arm-mingw32ce-gcc"       ) }, "mingwarm", "arm-mingw32ce-" } ,;
+                    { {|| FindInPath( "arm-wince-mingw32ce-gcc" ) }, "mingwarm", "arm-wince-mingw32ce-" } ,;
+                    { {|| FindInPath( "i386-mingw32ce-gcc"      ) }, "mingw"   , "i386-mingw32ce-" } }
       aCOMPSUP := { "mingwarm", "msvcarm", "poccarm" }
       l_aLIBHBGT := { "gtwvt", "gtgui" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtwvt"
@@ -1023,6 +1022,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingw64"  + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "win"  , "mingw64" , "x86_64-w64-mingw32-" , NIL } )
          AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingwarm" + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "wce"  , "mingwarm", "arm-mingw32ce-"      , NIL } )
          AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingwarm" + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "wce"  , "mingwarm", "arm-wince-mingw32ce-", NIL } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingwarm" + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "wce"  , "mingw"   , "i386-mingw32ce-"     , NIL } )
          AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "djgpp"    + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe"      ), tmp1, NIL ) }, "dos"  , "djgpp"   , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
          AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binnt" ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"   ), tmp1, NIL ) }, "win"  , "watcom"  , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
          AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binnt" ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"   ), tmp1, NIL ) }, "dos"  , "watcom"  , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
@@ -1055,11 +1055,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             !( hbmk[ _HBMK_cPLAT ] == "dos" )
 
             DO CASE
-            CASE hbmk[ _HBMK_cCOMP ] == "mingw"
-               AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := "/opt/xmingw/bin"   , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "win", "mingw"   , "i386-mingw-", NIL } )
-            CASE hbmk[ _HBMK_cCOMP ] == "mingwarm"
-               AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := "/opt/mingw32ce/bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "wce", "mingwarm", "arm-mingw32ce-", NIL } )
-               AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := "/opt/mingw32ce/bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-", NIL } )
+            CASE hbmk[ _HBMK_cPLAT ] == "win"
+               AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := "/opt/xmingw/bin"      , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "win", "mingw"   , "i386-mingw-", NIL } )
+            CASE hbmk[ _HBMK_cPLAT ] == "wce"
+               AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := "/opt/mingw32ce/bin"   , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "wce", "mingwarm", "arm-mingw32ce-", NIL } )
+               AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := "/opt/mingw32ce/bin"   , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-", NIL } )
+               AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := "/opt/x86mingw32ce/bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "wce", "mingw"   , "i386-mingw32ce-", NIL } )
             ENDCASE
          ENDIF
 
@@ -2452,7 +2453,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cBin_Link := "wlink" + cCCEXT
          DO CASE
          CASE hbmk[ _HBMK_cPLAT ] == "linux" ; cOpt_Link := "OP quiet SYS linux {FL} NAME {OE} {LO} {DL} {LL} {LB}{SCRIPT}"
-         CASE hbmk[ _HBMK_cPLAT ] == "win"   ; cOpt_Link := "OP quiet SYS nt {FL} NAME {OE} {LO} {DL} {LL} {LB} {LS}{SCRIPT}"
+         CASE hbmk[ _HBMK_cPLAT ] == "win"   ; cOpt_Link := "OP quiet {FL} NAME {OE} {LO} {DL} {LL} {LB} {LS}{SCRIPT}"
          CASE hbmk[ _HBMK_cPLAT ] == "dos"   ; cOpt_Link := "OP quiet SYS dos4g OP stub=wstubq.exe {FL} NAME {OE} {LO} {DL} {LL} {LB}{SCRIPT}"
          CASE hbmk[ _HBMK_cPLAT ] == "os2"   ; cOpt_Link := "OP quiet SYS os2v2 {FL} NAME {OE} {LO} {DL} {LL} {LB} {LS}{SCRIPT}"
          ENDCASE
@@ -6536,6 +6537,33 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword )
 
    RETURN .F.
 
+STATIC PROCEDURE ParseCOMPPLAT( hbmk, cString, nMainTarget )
+   LOCAL aToken := hb_ATokens( Lower( cString ), "/", .T., .T. )
+   LOCAL cToken
+
+   IF Len( aToken ) == 1
+      IF ! Empty( cString )
+         SWITCH nMainTarget
+         CASE _TARG_PLAT ; hbmk[ _HBMK_cPLAT ] := AllTrim( cString ) ; EXIT
+         CASE _TARG_COMP ; hbmk[ _HBMK_cCOMP ] := AllTrim( cString ) ; EXIT
+         ENDSWITCH
+      ENDIF
+   ELSE
+      FOR EACH cToken IN aToken
+         IF ! Empty( cToken )
+            SWITCH cToken:__enumIndex()
+            CASE 1 ; hbmk[ _HBMK_cPLAT ] := AllTrim( cToken ) ; EXIT
+            CASE 2 ; hbmk[ _HBMK_cCOMP ] := AllTrim( cToken ) ; EXIT
+            ENDSWITCH
+            IF cToken:__enumIndex() > 2
+               EXIT
+            ENDIF
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN
+
 STATIC FUNCTION MacOSXFiles( hbmk, nType, cPROGNAME )
    LOCAL cString
 
@@ -6667,7 +6695,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       "  - darwin : gcc, icc",;
       "  - win    : mingw, msvc, bcc, watcom, icc, pocc, cygwin, xcc,",;
       "  -          mingw64, msvc64, msvcia64, iccia64, pocc64",;
-      "  - wce    : mingwarm, msvcarm, poccarm",;
+      "  - wce    : mingwarm, mingw, msvcarm, poccarm",;
       "  - os2    : gcc, watcom",;
       "  - dos    : djgpp, watcom",;
       "  - bsd    : gcc",;

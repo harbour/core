@@ -573,24 +573,56 @@ ifeq ($(HB_COMPILER),)
             endif
          else
             ifeq ($(HB_ARCHITECTURE),wce)
-               ifeq ($(HB_CCPATH),)
-                  HB_CCPATH := /opt/mingw32ce/bin/
-               endif
 
-               ifneq ($(call find_in_path_par,arm-wince-mingw32ce-gcc,$(HB_CCPATH)),)
-                  HB_CCPREFIX := arm-wince-mingw32ce-
-                  HB_CCPATH := $(HB_CCPATH)/
-               else
+               # Look for known mingw32ce compilers on HB_CCPATH if it's set
+               ifneq ($(HB_CCPATH),)
                   ifneq ($(call find_in_path_par,arm-mingw32ce-gcc,$(HB_CCPATH)),)
+                     HB_COMPILER := mingwarm
                      HB_CCPREFIX := arm-mingw32ce-
                      HB_CCPATH := $(HB_CCPATH)/
                   else
-                     HB_CCPATH :=
-                     HB_CCPREFIX :=
+                     ifneq ($(call find_in_path_par,arm-wince-mingw32ce-gcc,$(HB_CCPATH)),)
+                        HB_COMPILER := mingwarm
+                        HB_CCPREFIX := arm-wince-mingw32ce-
+                        HB_CCPATH := $(HB_CCPATH)/
+                     else
+                        ifneq ($(call find_in_path_par,i386-mingw32ce-gcc,$(HB_CCPATH)),)
+                           HB_COMPILER := mingw
+                           HB_CCPREFIX := i386-mingw32ce-
+                           HB_CCPATH := $(HB_CCPATH)/
+                        else
+                           HB_CCPATH :=
+                           HB_CCPREFIX :=
+                        endif
+                     endif
                   endif
                endif
+
+               # If HB_CCPATH not set, or couldn't be found on the provided PATH,
+               # try to detect them in default locations
+               ifeq ($(HB_CCPATH),)
+                  HB_CCPATH := /opt/mingw32ce/bin/
+                  ifneq ($(call find_in_path_par,arm-mingw32ce-gcc,$(HB_CCPATH)),)
+                     HB_COMPILER := mingwarm
+                     HB_CCPREFIX := arm-mingw32ce-
+                  else
+                     ifneq ($(call find_in_path_par,arm-wince-mingw32ce-gcc,$(HB_CCPATH)),)
+                        HB_COMPILER := mingwarm
+                        HB_CCPREFIX := arm-wince-mingw32ce-
+                     else
+                        HB_CCPATH := /opt/x86mingw32ce/bin/
+                        ifneq ($(call find_in_path_par,i386-mingw32ce-gcc,$(HB_CCPATH)),)
+                           HB_COMPILER := mingw
+                           HB_CCPREFIX := i386-mingw32ce-
+                        else
+                           HB_CCPATH :=
+                           HB_CCPREFIX :=
+                        endif
+                     endif
+                  endif
+               endif
+
                ifneq ($(HB_CCPATH)$(HB_CCPREFIX),)
-                  HB_COMPILER := mingwarm
                   HB_ARCHITECTURE := wce
                   export HB_TOOLS_PREF := hbce
                   export HB_XBUILD := wce
@@ -616,45 +648,51 @@ ifeq ($(HB_COMPILER),)
                HB_ARCHITECTURE := wce
                HB_CCPREFIX := arm-mingw32ce-
             else
-               ifneq ($(call find_in_path,cygstart),)
-                  HB_COMPILER := cygwin
+               ifneq ($(call find_in_path,i386-mingw32ce-gcc),)
+                  HB_COMPILER := mingw
+                  HB_ARCHITECTURE := wce
+                  HB_CCPREFIX := i386-mingw32ce-
                else
-                  ifneq ($(call find_in_path,gcc),)
-                     HB_COMPILER := mingw
+                  ifneq ($(call find_in_path,cygstart),)
+                     HB_COMPILER := cygwin
                   else
-                     ifneq ($(call find_in_path,wpp386),)
-                        HB_COMPILER := watcom
+                     ifneq ($(call find_in_path,gcc),)
+                        HB_COMPILER := mingw
                      else
-                        ifneq ($(call find_in_path,clarm),)
-                           HB_COMPILER := msvcarm
-                           HB_ARCHITECTURE := wce
-                           export HB_VISUALC_VER_PRE80 := yes
+                        ifneq ($(call find_in_path,wpp386),)
+                           HB_COMPILER := watcom
                         else
-                           ifneq ($(call find_in_path,armasm),)
+                           ifneq ($(call find_in_path,clarm),)
                               HB_COMPILER := msvcarm
                               HB_ARCHITECTURE := wce
+                              export HB_VISUALC_VER_PRE80 := yes
                            else
-                              ifneq ($(call find_in_path,ml64),)
-                                 HB_COMPILER := msvc64
+                              ifneq ($(call find_in_path,armasm),)
+                                 HB_COMPILER := msvcarm
+                                 HB_ARCHITECTURE := wce
                               else
-                                 ifneq ($(call find_in_path,icl),)
-                                    HB_COMPILER := icc
+                                 ifneq ($(call find_in_path,ml64),)
+                                    HB_COMPILER := msvc64
                                  else
-                                    ifneq ($(call find_in_path,cl),)
-                                       HB_COMPILER := msvc
+                                    ifneq ($(call find_in_path,icl),)
+                                       HB_COMPILER := icc
                                     else
-                                       ifneq ($(call find_in_path,bcc32),)
-                                          HB_COMPILER := bcc
+                                       ifneq ($(call find_in_path,cl),)
+                                          HB_COMPILER := msvc
                                        else
-                                          ifneq ($(call find_in_path,pocc),)
-                                             HB_COMPILER := pocc
+                                          ifneq ($(call find_in_path,bcc32),)
+                                             HB_COMPILER := bcc
                                           else
-                                             ifneq ($(call find_in_path,xcc),)
-                                                HB_COMPILER := xcc
+                                             ifneq ($(call find_in_path,pocc),)
+                                                HB_COMPILER := pocc
                                              else
-                                                ifneq ($(call find_in_path,x86_64-w64-mingw32-gcc),)
-                                                   HB_COMPILER := mingw64
-                                                   HB_CCPREFIX := x86_64-w64-mingw32-
+                                                ifneq ($(call find_in_path,xcc),)
+                                                   HB_COMPILER := xcc
+                                                else
+                                                   ifneq ($(call find_in_path,x86_64-w64-mingw32-gcc),)
+                                                      HB_COMPILER := mingw64
+                                                      HB_CCPREFIX := x86_64-w64-mingw32-
+                                                   endif
                                                 endif
                                              endif
                                           endif
