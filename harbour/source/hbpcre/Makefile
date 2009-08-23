@@ -4,6 +4,8 @@
 
 ROOT := ../../
 
+HB_BUILD_WARN := no
+
 C_SOURCES := \
    _hbpcreg.c \
    chartabs.c \
