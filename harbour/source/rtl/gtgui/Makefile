@@ -9,10 +9,10 @@ include $(TOP)$(ROOT)config/global.mk
 LIBNAME := gtgui
 
 HB_WITH_GTGUI := no
-ifeq ($(HB_ARCHITECTURE),win)
+ifeq ($(HB_PLATFORM),win)
    HB_WITH_GTGUI := yes
 endif
-ifeq ($(HB_ARCHITECTURE),wce)
+ifeq ($(HB_PLATFORM),wce)
    HB_WITH_GTGUI := yes
 endif
 

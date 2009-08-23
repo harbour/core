@@ -14,7 +14,7 @@ LIBNAME := libhpdf
 
 ifeq ($(HB_WITH_LIBHPDF),)
    HB_WITH_LIBHPDF := yes
-   ifeq ($(HB_ARCHITECTURE)-$(HB_COMPILER),win-watcom)
+   ifeq ($(HB_PLATFORM)-$(HB_COMPILER),win-watcom)
       HB_WITH_LIBHPDF := no
    endif
    # NOTE: dos hosts can't build this lib due to long filename. [vszakats]
@@ -24,7 +24,7 @@ ifeq ($(HB_WITH_LIBHPDF),)
    ifeq ($(HB_COMPILER),pocc64)
       HB_WITH_LIBHPDF := no
    endif
-   ifeq ($(HB_ARCHITECTURE),wce)
+   ifeq ($(HB_PLATFORM),wce)
       HB_WITH_LIBHPDF := no
    endif
    ifeq ($(HB_COMPILER),mingwarm)
@@ -38,19 +38,19 @@ ifeq ($(HB_WITH_LIBHPDF),yes)
 ifeq ($(HB_INC_LIBPNG),)
    ifeq ($(HB_XBUILD),)
       HB_INC_LIBPNG = /usr/include
-      ifeq ($(HB_ARCHITECTURE),win)
+      ifeq ($(HB_PLATFORM),win)
          HB_INC_LIBPNG += $(TOP)$(ROOT)external/libpng
       endif
-      ifeq ($(HB_ARCHITECTURE),wce)
+      ifeq ($(HB_PLATFORM),wce)
          HB_INC_LIBPNG += $(TOP)$(ROOT)external/libpng
       endif
-      ifeq ($(HB_ARCHITECTURE),os2)
+      ifeq ($(HB_PLATFORM),os2)
          HB_INC_LIBPNG += $(TOP)$(ROOT)external/libpng
       endif
-      ifeq ($(HB_ARCHITECTURE),dos)
+      ifeq ($(HB_PLATFORM),dos)
          HB_INC_LIBPNG += $(TOP)$(ROOT)external/libpng
       endif
-      ifeq ($(HB_ARCHITECTURE),darwin)
+      ifeq ($(HB_PLATFORM),darwin)
          HB_INC_LIBPNG += $(TOP)$(ROOT)external/libpng
       endif
    endif

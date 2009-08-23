@@ -9,10 +9,10 @@ include $(TOP)$(ROOT)config/global.mk
 LIBNAME := hbwin
 
 ifeq ($(HB_WITH_HBWIN),)
-   ifeq ($(HB_ARCHITECTURE),win)
+   ifeq ($(HB_PLATFORM),win)
       HB_WITH_HBWIN := yes
    endif
-   ifeq ($(HB_ARCHITECTURE),wce)
+   ifeq ($(HB_PLATFORM),wce)
       HB_WITH_HBWIN := yes
    endif
 endif

@@ -31,7 +31,7 @@ if not "%HB_INSTALL_PREFIX%" == "" xcopy /y ERRATA     %HB_INSTALL_PREFIX%\ > nu
 if not "%HB_INSTALL_PREFIX%" == "" xcopy /y INSTALL    %HB_INSTALL_PREFIX%\ > nul
 if not "%HB_INSTALL_PREFIX%" == "" xcopy /y TODO       %HB_INSTALL_PREFIX%\ > nul
 
-goto INST_%HB_ARCHITECTURE%
+goto INST_%HB_PLATFORM%
 
 :INST_OS2
 

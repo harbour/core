@@ -69,7 +69,7 @@
 %define version  2.0.0
 %define releasen beta2
 %define hb_pref  hb
-%define hb_arch  export HB_ARCHITECTURE=linux
+%define hb_plat  export HB_PLATFORM=linux
 %define hb_cc    export HB_COMPILER=gcc
 %define hb_cflag export HB_USER_CFLAGS=
 %define hb_lflag export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS} %{?_with_static:-static}"
@@ -83,7 +83,7 @@
 %define hb_cmrc  export HB_COMMERCE=%{?_without_gpllib:yes}
 %define hb_ctrb  export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbtip hbtpathy hbhpdf hbvpdf hbziparc xhb rddsql %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_libharu:hbhpdf} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_fbsql:hbfbird} %{?_with_allegro:gtalleg}"
 %define hb_extrn export HB_EXTERNALLIBS=no
-%define hb_env   %{hb_arch} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_ctrb} ; %{hb_extrn} ; %{hb_cmrc}
+%define hb_env   %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_ctrb} ; %{hb_extrn} ; %{hb_cmrc}
 %define hb_host  www.harbour-project.org
 %define readme   README.RPM
 ######################################################################
@@ -445,7 +445,7 @@ then
     for utl in hbmk2 hbrun hbi18n hbformat
     do
         pushd utils/${utl}
-        rm -fR "./${HB_ARCHITECTURE}/${HB_COMPILER}"
+        rm -fR "./${HB_PLATFORM}/${HB_COMPILER}"
         make install
         strip ${HB_BIN_INSTALL}/${utl}
         popd

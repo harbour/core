@@ -19,7 +19,7 @@ LIBS := \
 
 include $(TOP)$(ROOT)config/lib.mk
 
-ifneq ($(HB_ARCHITECTURE),)
+ifneq ($(HB_PLATFORM),)
 ifneq ($(HB_COMPILER),)
 
 INSTALL_RULE_LIB := $(INSTALL_RULE)

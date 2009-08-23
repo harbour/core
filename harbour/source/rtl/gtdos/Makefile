@@ -8,7 +8,7 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := gtdos
 
-ifeq ($(HB_ARCHITECTURE),dos)
+ifeq ($(HB_PLATFORM),dos)
 
 C_SOURCES := \
    gtdos.c \

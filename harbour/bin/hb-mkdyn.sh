@@ -12,26 +12,26 @@
 # See COPYING for licensing terms.
 # ---------------------------------------------------------------
 
-# HB_ARCHITECTURE=""
+# HB_PLATFORM=""
 # HB_CCPREFIX=""
 
-if [ -n "${HB_ARCHITECTURE}" ]
+if [ -n "${HB_PLATFORM}" ]
 then
-    hb_arch="${HB_ARCHITECTURE}"
+    hb_plat="${HB_PLATFORM}"
 else
-    hb_arch=`uname -s | tr -d "[-]" | tr '[A-Z]' '[a-z]' 2>/dev/null`
+    hb_plat=`uname -s | tr -d "[-]" | tr '[A-Z]' '[a-z]' 2>/dev/null`
 fi
 
 linker_options=""
 
-case "$hb_arch" in
-    *windows*|*mingw32*|msys*|cygwin*) hb_arch="win" ;;
-    *os/2*)                            hb_arch="os2" ;;
-    *dos)                              hb_arch="dos" ;;
-    *bsd)                              hb_arch="bsd" ;;
+case "$hb_plat" in
+    *windows*|*mingw32*|msys*|cygwin*) hb_plat="win" ;;
+    *os/2*)                            hb_plat="os2" ;;
+    *dos)                              hb_plat="dos" ;;
+    *bsd)                              hb_plat="bsd" ;;
 esac
 
-case "$hb_arch" in
+case "$hb_plat" in
     darwin) SLIB_EXT=".dylib" ;;
     win)    SLIB_EXT=".dll" ;;
     wce)    SLIB_EXT=".dll" ;;

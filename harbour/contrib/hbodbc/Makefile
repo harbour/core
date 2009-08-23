@@ -11,15 +11,15 @@ LIBNAME := hbodbc
 ifeq ($(HB_COMPILER),rsxnt)
    HB_WITHOUT_ODBC := yes
 endif
-ifeq ($(HB_ARCHITECTURE),dos)
+ifeq ($(HB_PLATFORM),dos)
    HB_WITHOUT_ODBC := yes
 endif
-ifeq ($(HB_ARCHITECTURE),os2)
+ifeq ($(HB_PLATFORM),os2)
    HB_WITHOUT_ODBC := yes
 endif
 
-ifneq ($(HB_ARCHITECTURE),win)
-ifneq ($(HB_ARCHITECTURE),wce)
+ifneq ($(HB_PLATFORM),win)
+ifneq ($(HB_PLATFORM),wce)
 ifeq ($(HB_WITHOUT_ODBC),)
 
 ifeq ($(HB_INC_ODBC),)

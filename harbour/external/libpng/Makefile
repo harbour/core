@@ -16,19 +16,19 @@ endif
 LIBNAME := libpng
 
 ifeq ($(HB_WITH_LIBPNG),)
-   ifeq ($(HB_ARCHITECTURE),win)
+   ifeq ($(HB_PLATFORM),win)
       HB_WITH_LIBPNG := yes
    endif
-   ifeq ($(HB_ARCHITECTURE),wce)
+   ifeq ($(HB_PLATFORM),wce)
       HB_WITH_LIBPNG := yes
    endif
-   ifeq ($(HB_ARCHITECTURE),os2)
+   ifeq ($(HB_PLATFORM),os2)
       HB_WITH_LIBPNG := yes
    endif
-   ifeq ($(HB_ARCHITECTURE),dos)
+   ifeq ($(HB_PLATFORM),dos)
       HB_WITH_LIBPNG := yes
    endif
-   ifeq ($(HB_ARCHITECTURE),darwin)
+   ifeq ($(HB_PLATFORM),darwin)
       HB_WITH_LIBPNG := yes
    endif
    ifeq ($(HB_COMPILER),poccarm)

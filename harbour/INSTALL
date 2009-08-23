@@ -86,9 +86,9 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
                in the name. You can leave it empty, in this case the
                results will be created under the current directory tree.
              - You can also use *nix hosts to create Windows builds:
-                  $ make HB_ARCHITECTURE=win
+                  $ make HB_PLATFORM=win
              - You can also use *nix hosts to create Windows CE builds.
-                  $ make HB_ARCHITECTURE=wce
+                  $ make HB_PLATFORM=wce
 
    Windows with MSYS or Cygwin shells
    ----------------------------------
@@ -217,7 +217,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
 SUPPORTED PLATFORMS AND C COMPILERS
 ===================================
 
-   You can use HB_ARCHITECTURE values to select platforms:
+   You can use HB_PLATFORM values to select platforms:
 
    linux   - Linux
    darwin  - Mac OS X
@@ -302,9 +302,9 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    General
    -------
    - HB_COMPILER               Override C compiler autodetection
-   - HB_ARCHITECTURE           Override platform autodetection
+   - HB_PLATFORM               Override platform autodetection
                                See this section for possible values:
-                               SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
+                               SUPPORTED PLATFORMS AND C COMPILERS
 
    - HB_USER_PRGFLAGS          User Harbour compiler options
    - HB_USER_CFLAGS            User C compiler options
@@ -680,7 +680,7 @@ EXAMPLES
       rem ; Native Windows Harbour binaries need to be installed on this path
       set HB_BIN_COMPILE=C:\hb-watcom\bin
       rem
-      set HB_ARCHITECTURE=os2
+      set HB_PLATFORM=os2
       set HB_COMPILER=watcom
       mingw32-make %1 %2 > log.txt 2>&1
       ---
@@ -697,7 +697,7 @@ EXAMPLES
       # ; Native Linux binaries need to be installed on this path
       export HB_BIN_COMPILE="/tmp/cross-hb"
       # ;
-      export HB_ARCHITECTURE=os2
+      export HB_PLATFORM=os2
       export HB_COMPILER=watcom
       export HB_INSTALL_PREFIX="$(pwd)/hb-os2/watcom"
       make "$@"
@@ -715,7 +715,7 @@ EXAMPLES
       rem ; Native Windows Harbour binaries need to be installed on this path
       set HB_BIN_COMPILE=C:\hb-watcom\bin
       rem
-      set HB_ARCHITECTURE=linux
+      set HB_PLATFORM=linux
       set HB_COMPILER=watcom
       mingw32-make %1 %2 > log.txt 2>&1
       ---

@@ -8,7 +8,7 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := rddado
 
-ifneq ($(HB_ARCHITECTURE),os2)
+ifneq ($(HB_PLATFORM),os2)
 
 PRG_SOURCES := \
    adordd.prg \

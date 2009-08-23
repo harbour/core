@@ -519,8 +519,8 @@ msgstr "Generálja újra a .po fájlt, törölve ezáltal minden szükségtelen bejegyzé
 
 #: hbmk2.prg:5758 hbmk2.prg:6471
 #, c-format
-msgid "assume specific platform. Same as HB_ARCHITECTURE envvar"
-msgstr "használja a megadott platform kódot. Ugyanaz mint a HB_ARCHITECTURE környezeti változó."
+msgid "assume specific platform. Same as HB_PLATFORM envvar"
+msgstr "használja a megadott platform kódot. Ugyanaz mint a HB_PLATFORM környezeti változó."
 
 #: hbmk2.prg:5769
 #, c-format

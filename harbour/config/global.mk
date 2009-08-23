@@ -200,6 +200,11 @@ ifneq ($(HB_BUILD_NAME),)
    endif
 endif
 
+# Compatibility
+#ifeq ($(HB_PLATFORM),)
+#   HB_PLATFORM := $(HB_ARCHITECTURE)
+#endif
+
 ifeq ($(HB_INIT_DONE),)
    # Store the original value
    export HB_MAKECMDGOALS := $(MAKECMDGOALS)
@@ -250,7 +255,7 @@ ifeq ($(HB_INIT_DONE),)
       #   HB_NCURSES_194              -> HB_USER_CFLAGS=-DHB_NCURSES_194
       #   HB_DLLIBS                   -> ?
       # Macros:
-      #   -DHB_PCRE_REGEX, -DHB_POSIX_REGEX, -DHB_EXT_ZLIB, -DHB_HAS_GPM
+      #   -DHB_PCRE_REGEX, -DHB_POSIX_REGEX, -DHB_EXT_ZLIB, -DHB_HAS_GPM, -DHB_GT_LIB=
 
       $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(HB_MAKECMDGOALS) $(MAKEFLAGS) $(SHELL) $(if $(MAKESHELL), MAKESHELL: $(MAKESHELL),))
       ifneq ($(HB_USER_PRGFLAGS),)
@@ -415,8 +420,8 @@ ifeq ($(HB_HOST_PLAT),)
             ifeq ($(HB_SHELL),dos)
                HB_HOST_PLAT := dos
             else
-               ifneq ($(HB_ARCHITECTURE),)
-                  HB_HOST_PLAT := $(HB_ARCHITECTURE)
+               ifneq ($(HB_PLATFORM),)
+                  HB_HOST_PLAT := $(HB_PLATFORM)
                endif
             endif
          endif
@@ -478,40 +483,40 @@ ifeq ($(HB_INIT_DONE),)
 endif
 
 HB_PLAT_AUTO :=
-ifeq ($(HB_ARCHITECTURE),)
-   HB_ARCHITECTURE := $(HB_HOST_PLAT)
+ifeq ($(HB_PLATFORM),)
+   HB_PLATFORM := $(HB_HOST_PLAT)
    ifneq ($(HB_COMPILER),)
       ifeq ($(HB_COMPILER),msvcarm)
-         HB_ARCHITECTURE := wce
+         HB_PLATFORM := wce
       else
          ifeq ($(HB_COMPILER),mingwarm)
-            HB_ARCHITECTURE := wce
+            HB_PLATFORM := wce
          else
             ifeq ($(HB_COMPILER),poccarm)
-               HB_ARCHITECTURE := wce
+               HB_PLATFORM := wce
             else
                ifeq ($(HB_COMPILER),djgpp)
-                  HB_ARCHITECTURE := dos
+                  HB_PLATFORM := dos
                else
                   ifneq ($(filter $(HB_COMPILER),mingw mingw64 msvc msvc64 msvcia64 bcc xcc pocc pocc64),)
-                     HB_ARCHITECTURE := win
+                     HB_PLATFORM := win
                   endif
                endif
             endif
          endif
       endif
    endif
-   ifneq ($(HB_ARCHITECTURE),)
+   ifneq ($(HB_PLATFORM),)
       HB_PLAT_AUTO := (autodetected)
    endif
 endif
 
 HB_COMP_AUTO :=
 ifeq ($(HB_COMPILER),)
-   ifneq ($(HB_HOST_PLAT),$(HB_ARCHITECTURE))
+   ifneq ($(HB_HOST_PLAT),$(HB_PLATFORM))
       # cross-build section *nix -> win/wce
       ifeq ($(filter $(HB_HOST_PLAT),dos os2),)
-         ifeq ($(HB_ARCHITECTURE),win)
+         ifeq ($(HB_PLATFORM),win)
 
             ifeq ($(call find_in_path_par,$(HB_CCPREFIX),$(HB_CCPATH)),)
                HB_CCPREFIX :=
@@ -531,7 +536,7 @@ ifeq ($(HB_COMPILER),)
                         HB_CCPREFIX := i686-mingw32-
                      endif
                   else
-                     ifeq ($(HB_ARCHITECTURE),bsd)
+                     ifeq ($(HB_PLATFORM),bsd)
                         HB_CCPATH := /usr/local/mingw32
                      else
                         MINGW_OK := $(strip $(foreach d, i386-mingw i486-mingw i586-mingw i686-mingw i386-mingw32 i486-mingw32 i586-mingw32 i686-mingw32, $(if $(wildcard /usr/local/bin/$(d)-gcc),$(d),)))
@@ -562,7 +567,7 @@ ifeq ($(HB_COMPILER),)
 
             ifneq ($(HB_CCPATH)$(HB_CCPREFIX),)
                HB_COMPILER := mingw
-               HB_ARCHITECTURE := win
+               HB_PLATFORM := win
                export HB_TOOLS_PREF := hbw
                export HB_XBUILD := win
                ifneq ($(HB_HOST_BUILD),all)
@@ -572,7 +577,7 @@ ifeq ($(HB_COMPILER),)
                $(error ! Harbour build couldn't find mingw32 cross-compiler. Please install it, or point HB_CCPATH/HB_CCPREFIX environment variables to it)
             endif
          else
-            ifeq ($(HB_ARCHITECTURE),wce)
+            ifeq ($(HB_PLATFORM),wce)
 
                # Look for known mingw32ce compilers on HB_CCPATH if it's set
                ifneq ($(HB_CCPATH),)
@@ -623,7 +628,7 @@ ifeq ($(HB_COMPILER),)
                endif
 
                ifneq ($(HB_CCPATH)$(HB_CCPREFIX),)
-                  HB_ARCHITECTURE := wce
+                  HB_PLATFORM := wce
                   export HB_TOOLS_PREF := hbce
                   export HB_XBUILD := wce
                   ifneq ($(HB_HOST_BUILD),all)
@@ -637,20 +642,20 @@ ifeq ($(HB_COMPILER),)
       endif
    endif
    ifeq ($(HB_COMPILER),)
-      ifeq ($(HB_ARCHITECTURE),win)
+      ifeq ($(HB_PLATFORM),win)
          ifneq ($(call find_in_path,arm-wince-mingw32ce-gcc),)
             HB_COMPILER := mingwarm
-            HB_ARCHITECTURE := wce
+            HB_PLATFORM := wce
             HB_CCPREFIX := arm-wince-mingw32ce-
          else
             ifneq ($(call find_in_path,arm-mingw32ce-gcc),)
                HB_COMPILER := mingwarm
-               HB_ARCHITECTURE := wce
+               HB_PLATFORM := wce
                HB_CCPREFIX := arm-mingw32ce-
             else
                ifneq ($(call find_in_path,i386-mingw32ce-gcc),)
                   HB_COMPILER := mingw
-                  HB_ARCHITECTURE := wce
+                  HB_PLATFORM := wce
                   HB_CCPREFIX := i386-mingw32ce-
                else
                   ifneq ($(call find_in_path,cygstart),)
@@ -664,12 +669,12 @@ ifeq ($(HB_COMPILER),)
                         else
                            ifneq ($(call find_in_path,clarm),)
                               HB_COMPILER := msvcarm
-                              HB_ARCHITECTURE := wce
+                              HB_PLATFORM := wce
                               export HB_VISUALC_VER_PRE80 := yes
                            else
                               ifneq ($(call find_in_path,armasm),)
                                  HB_COMPILER := msvcarm
-                                 HB_ARCHITECTURE := wce
+                                 HB_PLATFORM := wce
                               else
                                  ifneq ($(call find_in_path,ml64),)
                                     HB_COMPILER := msvc64
@@ -708,7 +713,7 @@ ifeq ($(HB_COMPILER),)
             endif
          endif
       else
-         ifeq ($(HB_ARCHITECTURE),linux)
+         ifeq ($(HB_PLATFORM),linux)
             ifneq ($(call find_in_path,wpp386),)
                HB_COMPILER := watcom
             else
@@ -717,12 +722,12 @@ ifeq ($(HB_COMPILER),)
                endif
             endif
          else
-            ifneq ($(filter $(HB_ARCHITECTURE),darwin hpux bsd),)
+            ifneq ($(filter $(HB_PLATFORM),darwin hpux bsd),)
                ifneq ($(call find_in_path,gcc),)
                   HB_COMPILER := gcc
                endif
             else
-               ifeq ($(HB_ARCHITECTURE),sunos)
+               ifeq ($(HB_PLATFORM),sunos)
                   ifneq ($(call find_in_path,suncc),)
                      HB_COMPILER := sunpro
                   else
@@ -731,7 +736,7 @@ ifeq ($(HB_COMPILER),)
                      endif
                   endif
                else
-                  ifeq ($(HB_ARCHITECTURE),dos)
+                  ifeq ($(HB_PLATFORM),dos)
                      ifneq ($(call find_in_path,gcc),)
                         HB_COMPILER := djgpp
                      else
@@ -740,7 +745,7 @@ ifeq ($(HB_COMPILER),)
                         endif
                      endif
                   else
-                     ifeq ($(HB_ARCHITECTURE),os2)
+                     ifeq ($(HB_PLATFORM),os2)
                         ifneq ($(call find_in_path,gcc),)
                            HB_COMPILER := gcc
                         else
@@ -764,27 +769,27 @@ ifeq ($(HB_COMPILER),)
    export HB_CCPREFIX
 endif
 
-ifeq ($(HB_ARCHITECTURE),)
+ifeq ($(HB_PLATFORM),)
    $(error ! HB_ARCHICTECTURE not set, couldn't autodetect)
 endif
 ifeq ($(HB_COMPILER),)
    $(error ! HB_COMPILER not set, couldn't autodetect)
 endif
 
-export HB_ARCHITECTURE
+export HB_PLATFORM
 export HB_COMPILER
 
-ifneq ($(filter $(HB_ARCHITECTURE),win wce dos os2),)
+ifneq ($(filter $(HB_PLATFORM),win wce dos os2),)
    HB_OS_UNIX := no
 else
    HB_OS_UNIX := yes
 endif
 
-ARCH_COMP := $(HB_ARCHITECTURE)/$(HB_COMPILER)$(subst \,/,$(HB_BUILD_NAME))
+PLAT_COMP := $(HB_PLATFORM)/$(HB_COMPILER)$(subst \,/,$(HB_BUILD_NAME))
 
-OBJ_DIR := obj/$(ARCH_COMP)
-BIN_DIR := $(TOP)$(ROOT)bin/$(ARCH_COMP)
-LIB_DIR := $(TOP)$(ROOT)lib/$(ARCH_COMP)
+OBJ_DIR := obj/$(PLAT_COMP)
+BIN_DIR := $(TOP)$(ROOT)bin/$(PLAT_COMP)
+LIB_DIR := $(TOP)$(ROOT)lib/$(PLAT_COMP)
 ifeq ($(HB_OS_UNIX),no)
    DYN_DIR := $(BIN_DIR)
    IMP_DIR := $(LIB_DIR)
@@ -795,7 +800,7 @@ endif
 DYN_PREF :=
 # define PKG_DIR only if run from root Makefile
 ifeq ($(ROOT),./)
-   PKG_DIR := $(TOP)$(ROOT)pkg/$(ARCH_COMP)
+   PKG_DIR := $(TOP)$(ROOT)pkg/$(PLAT_COMP)
 else
    PKG_DIR :=
 endif
@@ -806,7 +811,7 @@ GRANDP := $(subst $(subst x,x, ),,$(foreach item, $(subst /, ,$(OBJ_DIR)), ../))
 
 # TODO: Set this in <arch>/<comp>.mk
 HB_CPU :=
-ifeq ($(HB_ARCHITECTURE),win)
+ifeq ($(HB_PLATFORM),win)
    ifneq ($(filter $(HB_COMPILER),msvc64 mingw64 pocc64),)
       HB_CPU := x86_64
    else
@@ -817,7 +822,7 @@ ifeq ($(HB_ARCHITECTURE),win)
       endif
    endif
 else
-   ifeq ($(HB_ARCHITECTURE),wce)
+   ifeq ($(HB_PLATFORM),wce)
       ifneq ($(filter $(HB_COMPILER),msvcarm mingwarm poccarm),)
          HB_CPU := arm
       else
@@ -832,7 +837,7 @@ else
          endif
       endif
    else
-      ifneq ($(filter $(HB_ARCHITECTURE),dos os2),)
+      ifneq ($(filter $(HB_PLATFORM),dos os2),)
          HB_CPU := x86
       endif
    endif
@@ -840,7 +845,7 @@ endif
 
 ifeq ($(HB_INIT_DONE),)
    ifneq ($(MAKE_381),)
-      $(info ! HB_ARCHITECTURE: $(HB_ARCHITECTURE)$(if $(HB_CPU), ($(HB_CPU)),) $(HB_PLAT_AUTO))
+      $(info ! HB_PLATFORM: $(HB_PLATFORM)$(if $(HB_CPU), ($(HB_CPU)),) $(HB_PLAT_AUTO))
       $(info ! HB_COMPILER: $(HB_COMPILER) $(HB_COMP_AUTO))
    endif
 endif
@@ -855,11 +860,11 @@ HB_CFLAGS :=
 HB_PRGFLAGS :=
 
 HB_CROSS_BUILD :=
-ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
+ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
    ifeq ($(HB_BIN_COMPILE),)
       # Not required in these combinations: [vszakats]
-      ifneq ($(HB_HOST_PLAT)-$(HB_HOST_CPU)-$(HB_ARCHITECTURE)-$(HB_CPU),win-x86_64-win-x86)
-         ifneq ($(HB_HOST_PLAT)-$(HB_HOST_CPU)-$(HB_ARCHITECTURE)-$(HB_CPU),win-x86-dos-)
+      ifneq ($(HB_HOST_PLAT)-$(HB_HOST_CPU)-$(HB_PLATFORM)-$(HB_CPU),win-x86_64-win-x86)
+         ifneq ($(HB_HOST_PLAT)-$(HB_HOST_CPU)-$(HB_PLATFORM)-$(HB_CPU),win-x86-dos-)
             HB_CROSS_BUILD := yes
             # Try to autosetup
             HB_BIN_COMPILE := $(dir $(firstword $(wildcard $(TOP)$(ROOT)bin/$(HB_HOST_PLAT)/*/harbour$(HB_HOST_BIN_EXT))))
@@ -903,7 +908,7 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
             endif
          endif
       endif
-      ifeq ($(HB_ARCHITECTURE),win)
+      ifeq ($(HB_PLATFORM),win)
          HB_PRGFLAGS += -D__PLATFORM__WINDOWS
          ifeq ($(HB_CPU),x86_64)
             HB_PRGFLAGS += -D__ARCH64BIT__
@@ -913,16 +918,16 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
             endif
          endif
       else
-         ifeq ($(HB_ARCHITECTURE),wce)
+         ifeq ($(HB_PLATFORM),wce)
             HB_PRGFLAGS += -D__PLATFORM__WINDOWS -D__PLATFORM__WINCE
          else
-            ifeq ($(HB_ARCHITECTURE),dos)
+            ifeq ($(HB_PLATFORM),dos)
                HB_PRGFLAGS += -D__PLATFORM__DOS
             else
-               ifeq ($(HB_ARCHITECTURE),os2)
+               ifeq ($(HB_PLATFORM),os2)
                   HB_PRGFLAGS += -D__PLATFORM__OS2
                else
-                  ifeq ($(HB_ARCHITECTURE),linux)
+                  ifeq ($(HB_PLATFORM),linux)
                      HB_PRGFLAGS += -D__PLATFORM__LINUX -D__PLATFORM__UNIX
                   endif
                endif
@@ -941,7 +946,7 @@ endif
 # Detect OpenSSL lib
 ifeq ($(HB_HAS_OPENSSL),)
    HB_HAS_OPENSSL := no
-   ifneq ($(HB_ARCHITECTURE),dos)
+   ifneq ($(HB_PLATFORM),dos)
       ifneq ($(HB_COMPILER),watcom)
          ifeq ($(HB_INC_OPENSSL),)
             ifeq ($(HB_XBUILD),)
@@ -1011,7 +1016,7 @@ endif
 
 ifneq ($(HB_HOST_PLAT),dos)
    HB_VERSION := $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)$(HB_VER_STATUS)
-   HB_PKGNAME := harbour-$(HB_VERSION)-$(HB_ARCHITECTURE)-$(HB_COMPILER)
+   HB_PKGNAME := harbour-$(HB_VERSION)-$(HB_PLATFORM)-$(HB_COMPILER)
    HB_PKGNAMI := $(HB_PKGNAME)
 else
    # Use short names in MS-DOS
@@ -1061,8 +1066,8 @@ else
                # Stick to *nix customs. I don't like it, it needs admin.
                HB_INSTALL_PREFIX := /usr/local
                # Add postfix for cross builds
-               ifneq ($(HB_HOST_PLAT),$(HB_ARCHITECTURE))
-                  HB_INSTALL_PREFIX += /harbour-$(HB_ARCHITECTURE)-$(HB_COMPILER)
+               ifneq ($(HB_HOST_PLAT),$(HB_PLATFORM))
+                  HB_INSTALL_PREFIX += /harbour-$(HB_PLATFORM)-$(HB_COMPILER)
                endif
             endif
          endif
@@ -1074,10 +1079,10 @@ else
       #        recursive operation here.
 
       # Handle simple macros in value
-      HB_INSTALL_PREFIX := $(subst {HB_ARCH},$(HB_ARCHITECTURE),$(HB_INSTALL_PREFIX))
-      HB_INSTALL_PREFIX := $(subst {HB_COMP},$(HB_COMPILER),$(HB_INSTALL_PREFIX))
-      HB_INSTALL_PREFIX := $(subst {HB_CPU},$(HB_CPU),$(HB_INSTALL_PREFIX))
-      HB_INSTALL_PREFIX := $(subst {HB_TOP},$(realpath $(TOP)$(ROOT)),$(HB_INSTALL_PREFIX))
+      HB_INSTALL_PREFIX := $(subst {hb_plat},$(HB_PLATFORM),$(HB_INSTALL_PREFIX))
+      HB_INSTALL_PREFIX := $(subst {hb_comp},$(HB_COMPILER),$(HB_INSTALL_PREFIX))
+      HB_INSTALL_PREFIX := $(subst {hb_cpu},$(HB_CPU),$(HB_INSTALL_PREFIX))
+      HB_INSTALL_PREFIX := $(subst {hb_top},$(realpath $(TOP)$(ROOT)),$(HB_INSTALL_PREFIX))
       HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(HB_INSTALL_PREFIX))
    endif
 endif
@@ -1093,7 +1098,7 @@ endif
 ifneq ($(HB_INSTALL_PREFIX),)
 
    ifeq ($(HB_OS_UNIX),no)
-      LIBPOSTFIX := $(DIRSEP)$(subst /,$(DIRSEP),$(ARCH_COMP))
+      LIBPOSTFIX := $(DIRSEP)$(subst /,$(DIRSEP),$(PLAT_COMP))
    else
       # Not perfect, please enhance it.
       ifneq ($(findstring |/usr,|$(HB_INSTALL_PREFIX)),)
@@ -1173,7 +1178,7 @@ endif
 
 export HB_INIT_DONE := yes
 
-include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.mk
+include $(TOP)$(ROOT)config/$(HB_PLATFORM)/global.mk
 include $(TOP)$(ROOT)config/globsh.mk
 
 endif

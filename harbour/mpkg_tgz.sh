@@ -35,23 +35,23 @@ hb_exesuf=""
 if [ -z "$TMPDIR" ]; then TMPDIR="/tmp"; fi
 HB_INST_PREF="$TMPDIR/$name.bin.$USER.$$"
 
-if [ -z "$HB_ARCHITECTURE" ]; then
+if [ -z "$HB_PLATFORM" ]; then
     if [ "$OSTYPE" = "msdosdjgpp" ]; then
-        hb_arch="dos"
+        hb_plat="dos"
     else
-        hb_arch=`uname -s | tr -d "[-]" | tr '[A-Z]' '[a-z]' 2>/dev/null`
-        case "$hb_arch" in
-            *windows*|*mingw32*|msys*) hb_arch="win" ;;
-            *os/2*)                    hb_arch="os2" ;;
-            *dos)                      hb_arch="dos" ;;
-            *bsd)                      hb_arch="bsd" ;;
+        hb_plat=`uname -s | tr -d "[-]" | tr '[A-Z]' '[a-z]' 2>/dev/null`
+        case "$hb_plat" in
+            *windows*|*mingw32*|msys*) hb_plat="win" ;;
+            *os/2*)                    hb_plat="os2" ;;
+            *dos)                      hb_plat="dos" ;;
+            *bsd)                      hb_plat="bsd" ;;
         esac
     fi
-    export HB_ARCHITECTURE="$hb_arch"
+    export HB_PLATFORM="$hb_plat"
 fi
 
 if [ -z "$HB_COMPILER" ]; then
-    case "$HB_ARCHITECTURE" in
+    case "$HB_PLATFORM" in
         win) HB_COMPILER="mingw" ;;
         dos) HB_COMPILER="djgpp" ;;
         *)   HB_COMPILER="gcc" ;;
@@ -67,7 +67,7 @@ HB_LIBDIRNAME="lib"
 ETC="/etc"
 
 HB_ARCH64=""
-if [ "$HB_ARCHITECTURE" = "linux" ]
+if [ "$HB_PLATFORM" = "linux" ]
 then
     HB_CPU=`uname -m`
     case "$HB_CPU" in
@@ -78,14 +78,14 @@ then
         *)
             ;;
     esac
-elif [ "$HB_ARCHITECTURE" = "hpux" ] || [ "$HB_ARCHITECTURE" = "sunos" ]
+elif [ "$HB_PLATFORM" = "hpux" ] || [ "$HB_PLATFORM" = "sunos" ]
 then
     export HB_USER_CFLAGS="$HB_USER_CFLAGS -fPIC"
 fi
 
 # Select the platform-specific installation prefix and ownership
 HB_INSTALL_OWNER=root
-case "$HB_ARCHITECTURE" in
+case "$HB_PLATFORM" in
     darwin)
         [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr/local"
         HB_INSTALL_GROUP=wheel
@@ -143,7 +143,7 @@ fi
 
 # Set other platform-specific build options
 if [ -z "$HB_GPM_MOUSE" ]; then
-    if [ "$HB_ARCHITECTURE" = "linux" ] && \
+    if [ "$HB_PLATFORM" = "linux" ] && \
        ( [ -f /usr/include/gpm.h ] || [ -f /usr/local/include/gpm.h ]); then
         HB_GPM_MOUSE=yes
     else
@@ -154,7 +154,7 @@ fi
 
 if [ -z "${HB_WITHOUT_GTSLN}" ]; then
     HB_WITHOUT_GTSLN=yes
-    case "$HB_ARCHITECTURE" in
+    case "$HB_PLATFORM" in
         linux|bsd|darwin|hpux|sunos)
             for dir in /usr /usr/local /sw /opt/local
             do
@@ -168,7 +168,7 @@ if [ -z "${HB_WITHOUT_GTSLN}" ]; then
     export HB_WITHOUT_GTSLN
 fi
 
-case "$HB_ARCHITECTURE" in
+case "$HB_PLATFORM" in
     linux)
         ;;
     darwin)
@@ -237,7 +237,7 @@ done
 if [ -f $HB_BIN_INSTALL/harbour${hb_exesuf} ]; then
     ${HB_CCPREFIX}strip $HB_BIN_INSTALL/harbour${hb_exesuf}
 fi
-if [ "$HB_ARCHITECTURE" != "hpux" ]; then
+if [ "$HB_PLATFORM" != "hpux" ]; then
     # Keep the size of the libraries to a minimim, but don't try to strip symlinks.
     ${HB_CCPREFIX}strip -S `find $HB_LIB_INSTALL -type f`
 fi
@@ -260,7 +260,7 @@ fi
 # check if we should rebuild tools with shared libs
 if [ "${hb_lnkso}" = yes ]
 then
-    case $HB_ARCHITECTURE in
+    case $HB_PLATFORM in
         darwin)     ADD_LIBS="$ADD_LIBS -lncurses -L/opt/local/lib -L/sw/lib" ;;
         dos|win)    ADD_LIBS="" ;;
         sunos)      ADD_LIBS="$ADD_LIBS -lcurses" ;;
@@ -276,7 +276,7 @@ then
     for utl in hbmk2 hbrun hbi18n hbformat hbtest
     do
         (cd "utils/${utl}"
-         rm -fR "./${HB_ARCHITECTURE}/${HB_COMPILER}"
+         rm -fR "./${HB_PLATFORM}/${HB_COMPILER}"
          $MAKE install
          ${HB_CCPREFIX}strip "${HB_BIN_INSTALL}/${utl}${hb_exesuf}")
     done
@@ -296,7 +296,7 @@ rm -fR "${HB_INST_PREF}"
 
 if [ -n "${hb_instfile}" ]; then
 
-   if [ "${HB_ARCHITECTURE}" = linux ]; then
+   if [ "${HB_PLATFORM}" = linux ]; then
       DO_LDCONFIG="&& ldconfig"
    else
       DO_LDCONFIG=""

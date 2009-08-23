@@ -12,13 +12,13 @@
 # See COPYING for licensing terms.
 # ---------------------------------------------------------------
 
-if [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ] || \
+if [ -z "$HB_PLATFORM" ] || [ -z "$HB_COMPILER" ] || \
    [ -z "$HB_BIN_INSTALL" ] || \
    [ -z "$HB_INC_INSTALL" ] || \
    [ -z "$HB_LIB_INSTALL" ]
 then
     echo "The following envvars must be set:"
-    echo "   HB_ARCHITECTURE"
+    echo "   HB_PLATFORM"
     echo "   HB_COMPILER"
     echo "   HB_BIN_INSTALL"
     echo "   HB_INC_INSTALL"
@@ -52,7 +52,7 @@ then
     if [ -n "${HB_TOOLS_PREF}" ]; then
         hb_mkdyn="${HB_BIN_INSTALL}/${HB_TOOLS_PREF}-mkdyn"
         rm -f "${hb_mkdyn}"
-        sed -e "s/^# HB_ARCHITECTURE=\"\"\$/HB_ARCHITECTURE=\"${HB_ARCHITECTURE}\"/g" \
+        sed -e "s/^# HB_PLATFORM=\"\"\$/HB_PLATFORM=\"${HB_PLATFORM}\"/g" \
             -e "s/^# HB_CCPREFIX=\"\"\$/[ -n \"\${HB_CCPREFIX}\" ] || HB_CCPREFIX=\"${HB_CCPREFIX}\"/g" \
             "${hb_root}/bin/hb-mkdyn.sh" > "${hb_mkdyn}" && \
         chmod 755 "${hb_mkdyn}"
@@ -64,7 +64,7 @@ then
     elif [ "$HB_COMPILER" = "sunpro" ]; then
         hb_mkdyn="${HB_BIN_INSTALL}/hb-mkdyn"
         rm -f "${hb_mkdyn}"
-        if [ "$HB_ARCHITECTURE" = "sunos" ] && \
+        if [ "$HB_PLATFORM" = "sunos" ] && \
            (isalist|grep sparc) &>/dev/null; then
             lnopt="-xcode=pic32"
         else
@@ -74,14 +74,14 @@ then
         sed -e "s/gcc -shared -fPIC/suncc -G ${lnopt} ${HB_ISAOPT}/g" \
             "${hb_root}/bin/hb-mkdyn.sh" > "${hb_mkdyn}" && \
         chmod 755 "${hb_mkdyn}"
-    elif [ "${HB_ARCHITECTURE}" = "sunos" ] || \
-         [ "${HB_ARCHITECTURE}" = "hpux" ] || \
+    elif [ "${HB_PLATFORM}" = "sunos" ] || \
+         [ "${HB_PLATFORM}" = "hpux" ] || \
          ! which install &>/dev/null; then
         hb_mkdyn="${HB_BIN_INSTALL}/hb-mkdyn"
         rm -f "${hb_mkdyn}"
         cp "${hb_root}/bin/hb-mkdyn.sh" "${hb_mkdyn}" && \
         chmod 755 "${hb_mkdyn}"
-    elif [ "${HB_ARCHITECTURE}" != "dos" ]; then
+    elif [ "${HB_PLATFORM}" != "dos" ]; then
         hb_mkdyn="${HB_BIN_INSTALL}/hb-mkdyn"
         # Without -c some OSes _move_ the file instead of copying it!
         install -c -m 755 "${hb_root}/bin/hb-mkdyn.sh" "${hb_mkdyn}"
@@ -96,7 +96,7 @@ then
 
     mk_hbtools "${HB_BIN_INSTALL}" "$@"
 
-    if [ "${HB_ARCHITECTURE}" != "dos" ]; then
+    if [ "${HB_PLATFORM}" != "dos" ]; then
         mk_hblibso "${hb_root}"
     fi
 fi

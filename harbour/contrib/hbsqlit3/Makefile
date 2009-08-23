@@ -11,16 +11,16 @@ LIBNAME := hbsqlit3
 ifeq ($(HB_INC_SQLITE3),)
    ifeq ($(HB_XBUILD),)
       HB_INC_SQLITE3 := /usr/include
-      ifeq ($(HB_ARCHITECTURE),win)
+      ifeq ($(HB_PLATFORM),win)
          HB_INC_SQLITE3 += $(TOP)$(ROOT)external/sqlite3
       endif
-      ifeq ($(HB_ARCHITECTURE),wce)
+      ifeq ($(HB_PLATFORM),wce)
          HB_INC_SQLITE3 += $(TOP)$(ROOT)external/sqlite3
       endif
-      ifeq ($(HB_ARCHITECTURE),os2)
+      ifeq ($(HB_PLATFORM),os2)
          HB_INC_SQLITE3 += $(TOP)$(ROOT)external/sqlite3
       endif
-      ifeq ($(HB_ARCHITECTURE),dos)
+      ifeq ($(HB_PLATFORM),dos)
          HB_INC_SQLITE3 += $(TOP)$(ROOT)external/sqlite3
       endif
    endif

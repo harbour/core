@@ -25,7 +25,7 @@ else
          DYNNAME_POST := -$(HB_DYN_VER)
       endif
 
-      ifeq ($(HB_ARCHITECTURE),win)
+      ifeq ($(HB_PLATFORM),win)
          ifeq ($(HB_COMPILER),bcc)
             DYNNAME_POST := $(DYNNAME_POST)-bcc
          else
@@ -38,7 +38,7 @@ else
             endif
          endif
       else
-         ifeq ($(HB_ARCHITECTURE),wce)
+         ifeq ($(HB_PLATFORM),wce)
             DYNNAME_POST := $(DYNNAME_POST)-wce
             ifeq ($(HB_CPU),arm)
                DYNNAME_POST := $(DYNNAME_POST)-arm
@@ -52,7 +52,7 @@ else
                endif
             endif
          else
-            ifeq ($(HB_ARCHITECTURE),os2)
+            ifeq ($(HB_PLATFORM),os2)
                DYNNAME_POST := $(DYNNAME_POST)-os2
             endif
          endif
@@ -80,17 +80,17 @@ else
          source/rtl/gtpca \
          source/rtl/gtstd
 
-      ifeq ($(HB_ARCHITECTURE),dos)
+      ifeq ($(HB_PLATFORM),dos)
          # for testing only. dos doesn't have .dlls.
          DYNDIRLIST_BASE += source/rtl/gtdos
       endif
-      ifeq ($(HB_ARCHITECTURE),os2)
+      ifeq ($(HB_PLATFORM),os2)
          DYNDIRLIST_BASE += source/rtl/gtos2
       endif
-      ifeq ($(HB_ARCHITECTURE),wce)
+      ifeq ($(HB_PLATFORM),wce)
          DYNDIRLIST_BASE += source/rtl/gtwvt source/rtl/gtgui
       endif
-      ifeq ($(HB_ARCHITECTURE),win)
+      ifeq ($(HB_PLATFORM),win)
          DYNDIRLIST_BASE += source/rtl/gtwvt source/rtl/gtgui source/rtl/gtwin
       endif
       ifeq ($(HB_OS_UNIX),yes)

@@ -396,11 +396,11 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iSVNID, char * szChangeL
          hb_xfree( pszEnv );
       }
 
-      pszEnv = hb_getenv( "HB_ARCHITECTURE" );
+      pszEnv = hb_getenv( "HB_PLATFORM" );
       if( pszEnv )
       {
          pszEscaped = hb_pp_escapeString( pszEnv );
-         fprintf( fout, "\n#define HB_ARCHITECTURE          \"%s\"\n", pszEscaped );
+         fprintf( fout, "\n#define HB_PLATFORM              \"%s\"\n", pszEscaped );
          hb_xfree( pszEscaped );
          hb_xfree( pszEnv );
       }

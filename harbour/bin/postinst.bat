@@ -36,7 +36,7 @@ echo libpaths=../contrib/rddsql/%%{hb_name}>> %HB_BIN_INSTALL%\hbmk.cfg
 echo libpaths=../addons/%%{hb_name}>> %HB_BIN_INSTALL%\hbmk.cfg
 echo libpaths=../examples/%%{hb_name}>> %HB_BIN_INSTALL%\hbmk.cfg
 
-goto INST_%HB_ARCHITECTURE%
+goto INST_%HB_PLATFORM%
 
 :INST_WIN
 :INST_WCE
@@ -115,7 +115,7 @@ goto INST_%HB_ARCHITECTURE%
    "%HB_DIR_ZIP%zip.exe" -q -9 -X -r -o "%HB_TOP%\%HB_PKGNAME%.zip" . -i "%HB_PKGNAME%\*" -x *.tds -x *.exp
    popd
 
-   if "%HB_ARCHITECTURE%" == "dos" goto :EOF
+   if "%HB_PLATFORM%" == "dos" goto :EOF
 
    echo ! Making Harbour .exe install package: '%HB_TOP%\%HB_PKGNAME%.exe'
    "%HB_DIR_NSIS%makensis.exe" /V2 "%~dp0..\package\mpkg_win.nsi"

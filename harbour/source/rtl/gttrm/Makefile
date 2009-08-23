@@ -12,16 +12,16 @@ C_SOURCES := \
    gttrm.c \
 
 HB_WITH_GTTRM := yes
-ifeq ($(HB_ARCHITECTURE),win)
+ifeq ($(HB_PLATFORM),win)
    HB_WITH_GTTRM := no
 endif
-ifeq ($(HB_ARCHITECTURE),wce)
+ifeq ($(HB_PLATFORM),wce)
    HB_WITH_GTTRM := no
 endif
-ifeq ($(HB_ARCHITECTURE),dos)
+ifeq ($(HB_PLATFORM),dos)
    HB_WITH_GTTRM := no
 endif
-ifeq ($(HB_ARCHITECTURE),os2)
+ifeq ($(HB_PLATFORM),os2)
    HB_WITH_GTTRM := no
 endif
 ifeq ($(HB_COMPILER),cygwin)

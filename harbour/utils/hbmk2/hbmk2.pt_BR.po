@@ -817,8 +817,8 @@ msgstr "herdar todos os flags .prg/.c/linker (ou nenhum) provindos do Harbour "
 
 #: hbmk2.prg:6687
 #, c-format
-msgid "assume specific platform. Same as HB_ARCHITECTURE envvar"
-msgstr "assume uma arquitetura espec¡fica. Semelhante … variavel HB_ARCHITECTURE"
+msgid "assume specific platform. Same as HB_PLATFORM envvar"
+msgstr "assume uma arquitetura espec¡fica. Semelhante … variavel HB_PLATFORM"
 
 #: hbmk2.prg:6687
 #, c-format

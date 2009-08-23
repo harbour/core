@@ -10,7 +10,7 @@ LIBNAME := hbcurl
 
 HB_INC_CURL_OK :=
 
-ifneq ($(HB_ARCHITECTURE),dos)
+ifneq ($(HB_PLATFORM),dos)
 
 ifeq ($(HB_INC_CURL),)
    ifeq ($(HB_XBUILD),)
@@ -41,10 +41,10 @@ install::
 	$(INSTALL_RULE_HEADERS)
 
 DIRS :=
-ifeq ($(HB_ARCHITECTURE),win)
+ifeq ($(HB_PLATFORM),win)
    DIRS += hbcurls
 endif
-ifeq ($(HB_ARCHITECTURE),wce)
+ifeq ($(HB_PLATFORM),wce)
    DIRS += hbcurls
 endif
 

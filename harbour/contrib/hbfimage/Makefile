@@ -10,11 +10,11 @@ LIBNAME := hbfimage
 
 HB_INC_FREEIMAGE_OK :=
 
-ifneq ($(HB_ARCHITECTURE),dos)
+ifneq ($(HB_PLATFORM),dos)
 # disabled until a proper solution is found for type collision
-ifneq ($(HB_ARCHITECTURE),os2)
-ifneq ($(HB_ARCHITECTURE),linux)
-ifneq ($(HB_ARCHITECTURE),darwin)
+ifneq ($(HB_PLATFORM),os2)
+ifneq ($(HB_PLATFORM),linux)
+ifneq ($(HB_PLATFORM),darwin)
 
 ifeq ($(HB_INC_FREEIMAGE),)
    ifeq ($(HB_XBUILD),)

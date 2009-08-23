@@ -8,7 +8,7 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := gtos2
 
-ifeq ($(HB_ARCHITECTURE),os2)
+ifeq ($(HB_PLATFORM),os2)
 
 C_SOURCES := \
    gtos2.c \

@@ -14,7 +14,7 @@
 
 # NOTE: Hack to force no extension for Linux binaries created on non-Linux hosts.
 #       Otherwise they become '.elf'. [vszakats]
-ifeq ($(HB_ARCHITECTURE),linux)
+ifeq ($(HB_PLATFORM),linux)
    ifneq ($(HB_HOST_PLAT),linux)
       BIN_EXT := .
    endif

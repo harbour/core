@@ -4,7 +4,7 @@
 
 include $(TOP)$(ROOT)config/global.mk
 
-ifneq ($(HB_ARCHITECTURE),)
+ifneq ($(HB_PLATFORM),)
 ifneq ($(HB_COMPILER),)
 
 HB_DYN_LIBS := \
@@ -37,7 +37,7 @@ HB_DYN_LIBS := \
    hbvmmt \
    hbmaindllh
 
-include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/$(HB_COMPILER).mk
+include $(TOP)$(ROOT)config/$(HB_PLATFORM)/$(HB_COMPILER).mk
 include $(TOP)$(ROOT)config/c.mk
 include $(TOP)$(ROOT)config/prg.mk
 

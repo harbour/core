@@ -600,8 +600,8 @@ const char * hb_verFlagsPRG( void )
 /* build time Harbour platform setting */
 const char * hb_verHB_PLAT( void )
 {
-#ifdef HB_ARCHITECTURE
-   return HB_ARCHITECTURE;
+#ifdef HB_PLATFORM
+   return HB_PLATFORM;
 #else
    return "";
 #endif

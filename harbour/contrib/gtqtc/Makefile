@@ -10,10 +10,10 @@ LIBNAME := gtqtc
 
 ifeq ($(HB_WITH_QT),)
    HB_WITH_QT := yes
-   ifeq ($(HB_ARCHITECTURE),dos)
+   ifeq ($(HB_PLATFORM),dos)
       HB_WITH_QT := no
    endif
-   ifeq ($(HB_ARCHITECTURE),os2)
+   ifeq ($(HB_PLATFORM),os2)
       HB_WITH_QT := no
    endif
    ifeq ($(HB_COMPILER),mingw64)
@@ -45,7 +45,7 @@ ifeq ($(HB_INC_QT),)
 endif
 
 HB_INC_QT_OK := $(foreach d, $(HB_INC_QT), $(if $(wildcard $(d)/Qt/qglobal.h),$(d),))
-ifeq ($(HB_ARCHITECTURE),darwin)
+ifeq ($(HB_PLATFORM),darwin)
    ifeq ($(strip $(HB_INC_QT_OK)),)
       HB_INC_QT_OK := $(if $(wildcard /Library/Frameworks/QtCore.framework/Versions/4/Headers/QtCore),spec,)
       ifeq ($(HB_INC_QT_OK),spec)

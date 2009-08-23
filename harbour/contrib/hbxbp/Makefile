@@ -12,10 +12,10 @@ LIBNAME := hbxbp
 
 ifeq ($(HB_WITH_QT),)
    HB_WITH_QT := yes
-   ifeq ($(HB_ARCHITECTURE),dos)
+   ifeq ($(HB_PLATFORM),dos)
       HB_WITH_QT := no
    endif
-   ifeq ($(HB_ARCHITECTURE),os2)
+   ifeq ($(HB_PLATFORM),os2)
       HB_WITH_QT := no
    endif
    ifeq ($(HB_COMPILER),mingw64)

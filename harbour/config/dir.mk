@@ -4,7 +4,7 @@
 
 include $(TOP)$(ROOT)config/global.mk
 
-ifneq ($(HB_ARCHITECTURE),)
+ifneq ($(HB_PLATFORM),)
 ifneq ($(HB_COMPILER),)
 
 ifeq ($(HB_HOST_PLAT),dos)

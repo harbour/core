@@ -25,7 +25,8 @@ General
   - L_USR               -> HB_USER_LDFLAGS
   - A_USR               -> HB_USER_AFLAGS
   - MK_USR              -> HB_USER_MAKEFLAGS
-  - HB_ARCHITECTURE=w32 -> HB_ARCHITECTURE=win
+  - HB_ARCHITECTURE     -> HB_PLATFORM
+  - HB_PLATFORM=w32     -> HB_PLATFORM=win
   - CCPATH              -> HB_CCPREFIX
   - CCPREFIX            -> HB_CCPATH
 - GNU-make system revised to give optimal support -j<n>

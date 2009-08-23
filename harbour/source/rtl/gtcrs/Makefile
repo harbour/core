@@ -24,7 +24,7 @@ endif
 ifeq ($(HB_WITHOUT_GTCRS),yes)
    HB_INC_CURSES :=
 endif
-ifeq ($(HB_ARCHITECTURE),os2)
+ifeq ($(HB_PLATFORM),os2)
    HB_INC_CURSES :=
 endif
 

@@ -2,6 +2,6 @@
 # $Id$
 #
 
-include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/pocc.mk
+include $(TOP)$(ROOT)config/$(HB_PLATFORM)/pocc.mk
 
 CPPFLAGS += /Tamd64-coff

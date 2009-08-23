@@ -35,7 +35,7 @@ endif
 
 DIRS :=
 
-ifeq ($(HB_ARCHITECTURE),win)
+ifeq ($(HB_PLATFORM),win)
    ifeq ($(HB_COMPILER),mingw)
       C_MAIN := mainwin.c
    else
@@ -43,11 +43,11 @@ ifeq ($(HB_ARCHITECTURE),win)
    endif
    DIRS := mainstd mainwin maindllh maindllp
 else
-   ifeq ($(HB_ARCHITECTURE),wce)
+   ifeq ($(HB_PLATFORM),wce)
       C_MAIN := mainwin.c
       DIRS := mainstd mainwin maindllh maindllp
    else
-      ifeq ($(HB_ARCHITECTURE),os2)
+      ifeq ($(HB_PLATFORM),os2)
          C_MAIN := mainstd.c
          DIRS := maindllh
       else
@@ -109,7 +109,7 @@ PRG_SOURCES := \
 LIBNAME := hbvm
 
 ifneq ($(HB_MT),yes)
-ifeq ($(HB_ARCHITECTURE),dos)
+ifeq ($(HB_PLATFORM),dos)
 ifneq ($(HB_COMPILER),djgpp)
 ifneq ($(HB_COMPILER),watcom)
    HB_MT := no

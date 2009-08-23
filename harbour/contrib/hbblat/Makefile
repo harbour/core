@@ -8,7 +8,7 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := hbblat
 
-ifeq ($(HB_ARCHITECTURE),win)
+ifeq ($(HB_PLATFORM),win)
 
 C_SOURCES := \
    blatwrp.c \

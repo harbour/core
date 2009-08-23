@@ -31,14 +31,14 @@ of the VM library:
 # $Id$
 #
 
-ROOT = ../../
+ROOT := ../../
 
-C_SOURCES=\
+C_SOURCES := \
         dynsym.c \
         hvm.c \
         initsymb.c \
 
-LIB=vm
+LIB := vm
 
 include $(TOP)$(ROOT)config/lib.mk
 --  Cut here  ---------------------------------------
@@ -99,7 +99,7 @@ DIRS := \
         rdd \
         tools \
 
-include $(ROOT)config/dir.mk
+include $(TOP)$(ROOT)config/dir.mk
 --  Cut here  ---------------------------------------
 
 This Makefile is used to traverse the subdirectories hanging from the
@@ -126,10 +126,11 @@ files compiled with gcc). This has two advantages:
 USAGE
 =====
 
-To use the system, you need to install GNU-make 3.75 or later on your
+To use the system, you need to install GNU-make 3.81 or later on your
 system. To check this, type "make -v"; you should see
 
-  GNU Make version 3.75, by Richard Stallman and Roland McGrath.
+  GNU Make 3.81
+  Copyright (C) 2006  Free Software Foundation, Inc.
   ...
 
 Then, you must set a couple of environment variables that indicate
@@ -139,13 +140,13 @@ For gcc on Win95/WinNT with the Cygwin library:
   Notes: The CYGWIN environment variable must include "noglob" in order
          to avoid having Harbour or programs created with Harbour expand
          wildcard command line arguments (this is checked at run-time!)
-  HB_ARCHITECTURE   win
+  HB_PLATFORM       win
   HB_COMPILER       gcc
   HB_GT_LIB         gtwin
   CYGWIN            noglob
 
 For gcc on Win95/WinNT with the MinGW library:
-  HB_ARCHITECTURE   win
+  HB_PLATFORM       win
   HB_COMPILER       mingw
   HB_GT_LIB         gtwin
 
@@ -157,12 +158,12 @@ For MSVC on Win95/WinNT:
          not set to unix
 
          For best results, in your copy of make_gnu.bat, also set:
-  HB_ARCHITECTURE   win
+  HB_PLATFORM       win
   HB_COMPILER       msvc
   HB_GT_LIB         gtwin
 
 For GCC on BSD:
-  HB_ARCHITECTURE   bsd
+  HB_PLATFORM       bsd
   HB_COMPILER       gcc
   HB_GT_LIB         gtstd
   Notes:
@@ -178,7 +179,7 @@ For GCC on BSD:
         match the default value in config/bsd/gcc.mk
 
 For GCC on Linux:
-  HB_ARCHITECTURE   linux
+  HB_PLATFORM       linux
   HB_COMPILER       gcc
   HB_GT_LIB         gtstd
   Notes:
@@ -196,7 +197,7 @@ For GCC on Linux:
 For GCC on OS/2 for VIO mode:
   Note: You must point C_INCLUDE_PATH to the EMX include directory and
         you must also point LIBRARY_PATH to the EMX library directory.
-  HB_ARCHITECTURE   os2
+  HB_PLATFORM       os2
   HB_COMPILER       gcc
   HB_GT_LIB         gtos2
 
@@ -204,33 +205,33 @@ For GCC on OS/2 for PM mode:
   Note: Harbour does not get built in PM mode, but  Harbour programs do.
   Note: You must point C_INCLUDE_PATH to the EMX include directory and
         you must also point LIBRARY_PATH to the EMX library directory.
-  HB_ARCHITECTURE   os2
+  HB_PLATFORM       os2
   HB_COMPILER       gcc
   HB_GT_LIB         os2pm
 
 For IBM Visual Age C++ on OS/2 for PM mode:
   Note: Harbour does not get built in PM mode, but Harbour programs do.
   Note: You must create an empty unistd.h in the IBMCPP\INCLUDE directory.
-  HB_ARCHITECTURE   os2
+  HB_PLATFORM       os2
   HB_COMPILER       icc
   HB_GT_LIB         os2pm
 
 For Borland C++ 5.5
-  HB_ARCHITECTURE   win
+  HB_PLATFORM       win
   HB_COMPILER       bcc
   HB_GT_LIB         gtwin
 
 For Borland C++ 3.x
-  HB_ARCHITECTURE   dos
+  HB_PLATFORM       dos
   HB_GT_LIB         gtdos
 
 For DJGPP (GCC port for DOS)
-  HB_ARCHITECTURE   dos
+  HB_PLATFORM       dos
   HB_COMPILER       djgpp
   HB_GT_LIB         gtdos
 
 For Watcom C/C++ 10.x (default Makefile creates DOS4G extender executables)
-  HB_ARCHITECTURE   dos
+  HB_PLATFORM       dos
   HB_COMPILER       watcom
   HB_GT_LIB         gtdos
   Note: It is possible that you will have to increase the space reserved for

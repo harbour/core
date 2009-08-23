@@ -8,8 +8,8 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := rddads
 
-ifneq ($(HB_ARCHITECTURE),dos)
-ifneq ($(HB_ARCHITECTURE),os2)
+ifneq ($(HB_PLATFORM),dos)
+ifneq ($(HB_PLATFORM),os2)
 
 ifeq ($(HB_INC_ADS),)
    HB_INC_ADS := /usr/local/ads/acesdk $(HOME)/ads/acesdk

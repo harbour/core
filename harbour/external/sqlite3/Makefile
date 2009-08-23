@@ -9,10 +9,10 @@ include $(TOP)$(ROOT)config/global.mk
 HB_BUILD_WARN := no
 HB_BUILD_MODE := c
 
-ifeq ($(HB_ARCHITECTURE),wce)
+ifeq ($(HB_PLATFORM),wce)
    HB_CFLAGS += -D_WIN32_WCE
 endif
-ifeq ($(HB_ARCHITECTURE),dos)
+ifeq ($(HB_PLATFORM),dos)
    # DJGPP and OpenWatcom in DOS aren't correctly recognized by SQLite,
    # so we're forcing the next best available option. This will cause missing
    # externals though. [vszakats]
@@ -22,16 +22,16 @@ endif
 LIBNAME := sqlite3
 
 ifeq ($(HB_WITH_SQLITE3),)
-   ifeq ($(HB_ARCHITECTURE),win)
+   ifeq ($(HB_PLATFORM),win)
       HB_WITH_SQLITE3 := yes
    endif
-   ifeq ($(HB_ARCHITECTURE),wce)
+   ifeq ($(HB_PLATFORM),wce)
       HB_WITH_SQLITE3 := yes
    endif
-   ifeq ($(HB_ARCHITECTURE),os2)
+   ifeq ($(HB_PLATFORM),os2)
       HB_WITH_SQLITE3 := yes
    endif
-   ifeq ($(HB_ARCHITECTURE),dos)
+   ifeq ($(HB_PLATFORM),dos)
       HB_WITH_SQLITE3 := yes
    endif
    ifeq ($(HB_COMPILER),mingwarm)

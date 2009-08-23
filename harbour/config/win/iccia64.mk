@@ -2,4 +2,4 @@
 # $Id$
 #
 
-include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/icc.mk
+include $(TOP)$(ROOT)config/$(HB_PLATFORM)/icc.mk

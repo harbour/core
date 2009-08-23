@@ -6,7 +6,7 @@ ROOT := ../../
 
 include $(TOP)$(ROOT)config/global.mk
 
-ifneq ($(HB_ARCHITECTURE),wce)
+ifneq ($(HB_PLATFORM),wce)
    HB_PRGFLAGS := -gc3
 endif
 

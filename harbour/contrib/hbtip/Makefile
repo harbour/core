@@ -8,7 +8,7 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := hbtip
 
-ifneq ($(HB_ARCHITECTURE),dos)
+ifneq ($(HB_PLATFORM),dos)
 
 C_SOURCES := \
    encmthd.c \

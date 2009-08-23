@@ -4,7 +4,7 @@
 
 include $(TOP)$(ROOT)config/global.mk
 
-ifneq ($(HB_ARCHITECTURE),)
+ifneq ($(HB_PLATFORM),)
 ifneq ($(HB_COMPILER),)
 
 # Assemble template lib list to help create a few common variations
@@ -52,7 +52,7 @@ HB_LIBS_TPL :=
 _HB_RDD :=
 _HB_VM :=
 
-include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/$(HB_COMPILER).mk
+include $(TOP)$(ROOT)config/$(HB_PLATFORM)/$(HB_COMPILER).mk
 include $(TOP)$(ROOT)config/c.mk
 include $(TOP)$(ROOT)config/prg.mk
 

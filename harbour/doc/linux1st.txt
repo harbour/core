@@ -11,51 +11,23 @@ Ubuntu/Debian distro
 Packages needed to cleanly build Harbour:
 (Tested with Ubuntu 7.04, 8.04, 9.04)
 
-For GTCRS terminal lib:
-sudo apt-get install libncurses-dev
-
-For GTSLN terminal lib:
-sudo apt-get install libslang2-dev
-
-For GTXWC terminal lib:
-sudo apt-get install libx11-dev
-
-For console mouse support in GTTRM, GTSLN and GTCRS:
-sudo apt-get install libgpmg1-dev
-
-For contrib/hbodbc lib:
-sudo apt-get install unixodbc-dev
-
-For contrib/hbcurl lib:
-sudo apt-get install libcurl4-openssl-dev
-or
-sudo apt-get install libcurl4-gnutls-dev
-
-For contrib/hbfbird lib:
-sudo apt-get install libfirebird2.0-dev
-or
-sudo apt-get install firebird2.1-dev
-
-For contrib/hbfimage lib:
-sudo apt-get install libfreeimage-dev
-
-For contrib/hbgd lib:
-sudo apt-get install libgd2-xpm-dev
-or
-sudo apt-get install libgd-xpm-dev
-
-For contrib/hbmysql lib:
-sudo apt-get install libmysqlclient15-dev
-
-For contrib/hbpgsql lib:
-sudo apt-get install libpq-dev
-
-For contrib/hbqt lib:
-sudo apt-get install libqt4-dev
-
-For examples/hbgf/hbgfgtk lib:
-sudo apt-get install libgtk2.0-dev
-sudo apt-get install libglib2.0-dev
+For GTCRS terminal lib:        sudo apt-get install libncurses-dev
+For GTSLN terminal lib:        sudo apt-get install libslang2-dev
+For GTXWC terminal lib:        sudo apt-get install libx11-dev
+For console mouse support:     sudo apt-get install libgpmg1-dev
+For contrib/hbodbc lib:        sudo apt-get install unixodbc-dev
+For contrib/hbcurl lib:        sudo apt-get install libcurl4-openssl-dev OR
+                               sudo apt-get install libcurl4-gnutls-dev
+For contrib/hbfbird lib:       sudo apt-get install libfirebird2.0-dev OR
+                               sudo apt-get install firebird2.1-dev
+For contrib/hbfimage lib:      sudo apt-get install libfreeimage-dev
+For contrib/hbgd lib:          sudo apt-get install libgd2-xpm-dev OR
+                               sudo apt-get install libgd-xpm-dev
+For contrib/hbmysql lib:       sudo apt-get install libmysqlclient15-dev
+For contrib/hbpgsql lib:       sudo apt-get install libpq-dev
+For contrib/hbqt lib:          sudo apt-get install libqt4-dev
+For examples/hbgf/hbgfgtk lib: sudo apt-get install libgtk2.0-dev AND
+                               sudo apt-get install libglib2.0-dev
 
 For contrib/rddads lib:
 Download and install 'Advantage Client Engine API for Linux' package
@@ -88,77 +60,3 @@ For contrib/libharu:
   from http://libharu.org/
 - libpng-devel
 - zlib-devel
-
-
-Notes by Scott Johnson <scomps at purplewire.org>
--------------------------------------------------
-
-Ok, I finally got something to run.  The code I compiled was standard
-Clipper 5.2 code pulled directly from a dos/win box and was working
-properly there.
-
-I'm compiling under Debian Sarge which for their own reasons are using
-the Alpha Build 44.0.  It was installed with the standard apt-get
-harbour.  I did this to pretty much ensure that the install wasn't
-tainted by any of my previous attempts at getting this to work.
-
-The first thing I checked was for the bld.sh.  it didn't exist so I did
-the cut/paste thing from this list (thank you) and set out on my
-adventure.
-
-First off, set your environment variables.  If you want to set this up
-for your shell to do it automagically go for it.  That's beyond what I
-want to cover here.
-
-export HB_ARCHITECTURE=linux
-export HB_BIN_INSTALL=/usr/bin
-export HB_LIB_INSTALL=/usr/lib/harbour
-export HB_INC_INSTALL=/usr/include/harbour
-export HB_COMPILER=gcc
-
-Since we created the bld.sh from scratch, I dropped it in the /usr/bin
-directory where the rest of the harbour binaries exist.
-
-chmod +x bld.sh
-
-Now I go to where my actual clipper/harbour source code is.
-
-The files I have are inv.prg, csrc.prg, cmenu.prg and citem.prg.  The
-dbf files are already created and exist in the same directory, but
-that's just me.  I pulled those over with the dos application.
-
-Next, I issued the following command
-
-bld.sh inv csrc cmenu citem
-
-This ran through it's gyrations, made the c source and attempted to link
-it.  Hey, this is great although it bombed out with an unresolved
-external to dbfdbt.  Ok, so that's a library.  I can do this
-
-I jumped into the bld.sh file and hunted down the gcc line.  It's quite
-a ways down into the file, but you'll need to find the one appropriate
-for your system (mind was right after the last check for GT_LIB where it
-leaves it as gtstd if you don't set something.
-
-On the gcc line, you'll see a section like "-L$HB_LIB_INSTALL -ldebug"
-and so on; add "-ldbfdbt" (without the quotes of course).  I added it
-right after -lrdd, but I don't know if that's important or not. Maybe
-somebody can correct me there.
-
-After I saved it, I went back and issued the same bld.sh command as I
-did above, and lo!  It just worked.
-
-./inv
-
-As a side note, gtstd is probably not going to be very helpful for you
-in linux if you have any SAY/GET's as screen positioning (especially if
-you use xterm) won't be handled correctly.  Same with gtpca.  Gtcrs
-seemed to work properly in my environment.
-
-I know this is pretty sparse as far as any kind of documentation is
-concerned, and I might be doing things I don't need to, and not doing
-things that make people cringe.  It's a start though and maybe some
-folks can clean it up a bit and add/remove things that are important.
-At least this worked on my particular Debian system.   Your mileage may
-vary and other distributions will probably have their own setups and
-issues.

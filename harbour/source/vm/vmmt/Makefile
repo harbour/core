@@ -9,17 +9,17 @@ include $(TOP)$(ROOT)config/global.mk
 vpath %.c ../
 vpath %.prg ../
 
-ifeq ($(HB_ARCHITECTURE),win)
+ifeq ($(HB_PLATFORM),win)
    ifeq ($(HB_COMPILER),mingw)
       C_MAIN := mainwin.c
    else
       C_MAIN := mainstd.c mainwin.c
    endif
 else
-   ifeq ($(HB_ARCHITECTURE),wce)
+   ifeq ($(HB_PLATFORM),wce)
       C_MAIN := mainwin.c
    else
-      ifeq ($(HB_ARCHITECTURE),os2)
+      ifeq ($(HB_PLATFORM),os2)
          C_MAIN := mainstd.c
       else
          C_MAIN := main.c
