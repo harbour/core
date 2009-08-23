@@ -169,7 +169,7 @@ typedef ADSAREA * ADSAREAP;
                               { \
                                  if( (p)->lpdbPendingRel->isScoped && \
                                     !(p)->lpdbPendingRel->isOptimized ) \
-                                    SELF_FORCEREL( ( AREAP ) (p) ); \
+                                    SELF_FORCEREL( &(p)->area ); \
                                  else \
                                     (p)->lpdbPendingRel = NULL; \
                               }
