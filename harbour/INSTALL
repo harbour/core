@@ -168,10 +168,9 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    You only need to use manual setup if the dependency isn't available
    on your platform on a system location, or you wish to use
    a non-standard location. Typically you need to do that on non-*nix
-   (Windows/MS-DOS/OS2) systems for all packages and for a few packages on
-   *nix which aren't available through official package managers
-   (ADS Client f.e.). Please see a list of official packages in
-   doc/linux1st.txt.
+   (Windows, MS-DOS, OS/2) systems for all packages and for a few packages
+   on *nix which aren't available through official package managers
+   (ADS Client f.e.).
 
    You can set these environment variables before starting
    the build. Make sure to adjust them to your own directories:
@@ -201,17 +200,60 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
 
    Windows/Windows CE
    ------------------
-   Some contribs support build mode in which they can be linked *statically*
-   with 3rd party components:
+      Some contribs support build mode in which they can be linked *statically*
+      with 3rd party components:
 
-   HB_ALLEGRO_STATIC=yes
-   HB_QT_STATIC=yes
+      HB_ALLEGRO_STATIC=yes
+      HB_QT_STATIC=yes
 
    Darwin (Mac OS X)
-   -------------
-   1.) Install MacPorts, follow their instructions:
-       http://www.macports.org/
-   2.) sudo port install allegro freeimage gd2 mysql5-devel postgresql83
+   -----------------
+      1.) Install MacPorts, follow their instructions:
+          http://www.macports.org/
+      2.) sudo port install allegro freeimage gd2 mysql5-devel postgresql83
+
+   Linux (all)
+   ----------------------
+
+      For contrib/rddads lib:
+      Download and install 'Advantage Client Engine API for Linux' package
+      (f.e. aceapi-9.00.0.0.tar.gz)
+
+      For contrib/hbhpdf lib:
+      Download libharu from http://libharu.org/ -> './configure' -> 'make install'
+
+   Linux (Debian, Ubuntu)
+   ----------------------
+   (tested with Ubuntu 7.04, 8.04, 9.04)
+
+      for gtcrs terminal lib:          sudo apt-get install libncurses-dev
+      for gtsln terminal lib:          sudo apt-get install libslang2-dev
+      for gtxwc terminal lib:          sudo apt-get install libx11-dev
+      for console mouse (GPM) support: sudo apt-get install libgpmg1-dev
+      for contrib/hbodbc lib:          sudo apt-get install unixodbc-dev
+      for contrib/hbcurl lib:          sudo apt-get install libcurl4-openssl-dev OR
+                                       sudo apt-get install libcurl4-gnutls-dev
+      for contrib/hbfbird lib:         sudo apt-get install libfirebird2.0-dev OR
+                                       sudo apt-get install firebird2.1-dev
+      for contrib/hbfimage lib:        sudo apt-get install libfreeimage-dev
+      for contrib/hbgd lib:            sudo apt-get install libgd2-xpm-dev OR
+                                       sudo apt-get install libgd-xpm-dev
+      for contrib/hbmysql lib:         sudo apt-get install libmysqlclient15-dev
+      for contrib/hbpgsql lib:         sudo apt-get install libpq-dev
+      for contrib/hbqt lib:            sudo apt-get install libqt4-dev
+
+   Linux (openSUSE)
+   ----------------------
+
+      You'll need these packages to compile certain contribs and optional Harbour features:
+      - xorg-x11-devel
+      - postgresql-devel
+      - gtk2-devel
+      - ncurses-devel
+      - slang-devel
+      - unixodbc-devel
+      - gd-devel
+      - libmysqlclient-devel
 
 
 SUPPORTED PLATFORMS AND C COMPILERS

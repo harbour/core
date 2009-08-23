@@ -783,13 +783,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    /* Load platform / compiler settings (compatibility) */
 
    IF Empty( hbmk[ _HBMK_cPLAT ] )
-      ParseCOMPPLAT( hbmk, Lower( GetEnv( "HB_PLATFORM" ) ), _TARG_PLAT )
-      IF Empty( hbmk[ _HBMK_cPLAT ] )
-         ParseCOMPPLAT( hbmk, Lower( GetEnv( "HB_ARCHITECTURE" ) ), _TARG_PLAT ) /* Compatibility */
-      ENDIF
+      ParseCOMPPLAT( hbmk, GetEnv( "HB_PLATFORM" ), _TARG_PLAT )
    ENDIF
    IF Empty( hbmk[ _HBMK_cCOMP ] )
-      ParseCOMPPLAT( hbmk, Lower( GetEnv( "HB_COMPILER" ) ), _TARG_COMP )
+      ParseCOMPPLAT( hbmk, GetEnv( "HB_COMPILER" ), _TARG_COMP )
    ENDIF
 
    nCCompVer := Val( GetEnv( "HB_COMPILER_VER" ) ) /* Format: <09><00>[.<00>] = <major><minor>[.<revision>] */
@@ -5592,7 +5589,6 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
       CASE "HB_PLAT"
       CASE "HB_PLATFORM"
       CASE "HB_ARCH" /* Compatibility */
-      CASE "HB_ARCHITECTURE" /* Compatibility */
          cMacro := hbmk[ _HBMK_cPLAT ] ; EXIT
       CASE "HB_COMP"
       CASE "HB_COMPILER" /* Compatibility */

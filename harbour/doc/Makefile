@@ -21,7 +21,6 @@ DOC_FILES := \
    howtorel.txt \
    howtosvn.txt \
    inet.txt \
-   linux1st.txt \
    pcode.txt \
    pp.txt \
    pragma.txt \

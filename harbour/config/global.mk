@@ -200,11 +200,6 @@ ifneq ($(HB_BUILD_NAME),)
    endif
 endif
 
-# Compatibility
-#ifeq ($(HB_PLATFORM),)
-#   HB_PLATFORM := $(HB_ARCHITECTURE)
-#endif
-
 ifeq ($(HB_INIT_DONE),)
    # Store the original value
    export HB_MAKECMDGOALS := $(MAKECMDGOALS)
