@@ -724,7 +724,7 @@ void hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem )
          break;
 
       case VT_BOOL | VT_BYREF:
-         *pVariant->n1.n2.n3.pboolVal = hb_itemGetL( pItem );
+         *pVariant->n1.n2.n3.pboolVal = ( VARIANT_BOOL ) hb_itemGetL( pItem );
          break;
 
       case VT_I1 | VT_BYREF:

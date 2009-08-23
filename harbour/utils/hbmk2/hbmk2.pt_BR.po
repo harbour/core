@@ -28,7 +28,7 @@ msgstr "Tecle algo para continuar..."
 
 #: hbmk2.prg:953
 #, c-format
-msgid "Autodetected architecture: %1$s"
+msgid "Autodetected platform: %1$s"
 msgstr "Arquitetura detectada: %1$s"
 
 #: hbmk2.prg:4369
@@ -69,7 +69,7 @@ msgstr "Erro: Ao executar o compilador de recursos. %1$s"
 
 #: hbmk2.prg:1055
 #, c-format
-msgid "Error: Architecture value unknown: %1$s"
+msgid "Error: Platform value unknown: %1$s"
 msgstr "Erro: Valor incorreto para arquitetura: %1$s"
 
 #: hbmk2.prg:1209
@@ -305,7 +305,7 @@ msgstr "Script do compilador C:"
 
 #: hbmk2.prg:3712
 #, c-format
-msgid "Error: This architecture/compiler isn't implemented."
+msgid "Error: This platform/compiler isn't implemented."
 msgstr "Erro: Arquitetura/compilador nÆo implementado."
 
 #: hbmk2.prg:3542
@@ -535,10 +535,10 @@ msgstr "habilita o modo de compila‡Æo incremental"
 #, c-format
 msgid ""
 "working directory for incremental build mode\\n"
-"(default: %1$s/arch/comp)"
+"(default: %1$s/plat/comp)"
 msgstr ""
 "diret¢rio de trabalho para o modo de compila‡Æo incremental\\n"
-"(default: %1$s/arch/comp)"
+"(default: %1$s/plat/comp)"
 
 #: hbmk2.prg:6687
 #, c-format
@@ -787,7 +787,7 @@ msgstr ""
 
 #: hbmk2.prg:6704
 #, c-format
-msgid "Defaults and feature support vary by architecture/compiler."
+msgid "Defaults and feature support vary by platform/compiler."
 msgstr "As op‡äes default e suas caracter¡sticas variam de arquitetura/compilador."
 
 #: hbmk2.prg:6163
@@ -817,7 +817,7 @@ msgstr "herdar todos os flags .prg/.c/linker (ou nenhum) provindos do Harbour "
 
 #: hbmk2.prg:6687
 #, c-format
-msgid "assume specific architecure. Same as HB_ARCHITECTURE envvar"
+msgid "assume specific platform. Same as HB_ARCHITECTURE envvar"
 msgstr "assume uma arquitetura espec¡fica. Semelhante … variavel HB_ARCHITECTURE"
 
 #: hbmk2.prg:6687
@@ -832,13 +832,13 @@ msgstr "Nome-de-arquivo .hbl resultante. A macro %1$s ‚ aceita no nome-de-arquiv
 
 #: hbmk2.prg:6596
 #, c-format
-msgid "Supported <comp> values for each supported <arch> value:"
-msgstr "Valores suportados para <comp> conforme a <arch> dispon¡vel:"
+msgid "Supported <comp> values for each supported <plat> value:"
+msgstr "Valores suportados para <comp> conforme a <plat> dispon¡vel:"
 
 #: hbmk2.prg:6704
 #, c-format
-msgid "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_arch}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
-msgstr "Algumas op‡äes do .hbc (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) e seus correspondentes parƒmetros de linha-de-comando aceitam as seguintes macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_arch}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= tamb‚m aceitam %{hb_name} que se traduz como o nome do arquivo .hbc sob pesquisa."
+msgid "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_plat}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
+msgstr "Algumas op‡äes do .hbc (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) e seus correspondentes parƒmetros de linha-de-comando aceitam as seguintes macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_plat}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= tamb‚m aceitam %{hb_name} que se traduz como o nome do arquivo .hbc sob pesquisa."
 
 #: hbmk2.prg:6607
 #, c-format
@@ -974,7 +974,7 @@ msgstr "Especifique um novo alvo para compila‡Æo. <script> pode ser m¢dulo .prg 
 #, c-format
 msgid ""
 "Platform filters are accepted in each .hbc line and with several options.\\n"
-"Filter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
+"Filter format: {[!][<plat>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
 msgstr ""
 "Os filtros para plataformas sÆo aceitos para cada uma das linhas de um arquivo .hbc e possuem diversas op‡äes.\\n"
 "Formato de um filtro: {[!][<arquitetura>|<compilador>|<palavra-chave>]}. Os filtros podem ser combinados usando os operadores '&', '|' e agrupados por parˆnteses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"

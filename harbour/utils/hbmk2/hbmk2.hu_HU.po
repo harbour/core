@@ -104,8 +104,8 @@ msgstr "hozzon létre egy .ch fejlécet a helyi források verziókövetõ (VCS) adatbá
 
 #: hbmk2.prg:737 hbmk2.prg:914
 #, c-format
-msgid "Autodetected architecture: %1$s"
-msgstr "Detektált architektúra: %1$s"
+msgid "Autodetected platform: %1$s"
+msgstr "Detektált platform: %1$s"
 
 #: hbmk2.prg:5758 hbmk2.prg:6471
 #, c-format
@@ -124,8 +124,8 @@ msgstr "C fordító parancsa:"
 
 #: hbmk2.prg:850 hbmk2.prg:1034
 #, c-format
-msgid "Error: Architecture value unknown: %1$s"
-msgstr "Hiba: Ismeretlen architektúra: %1$s"
+msgid "Error: Platform value unknown: %1$s"
+msgstr "Hiba: Ismeretlen platform: %1$s"
 
 #: hbmk2.prg:2775 hbmk2.prg:2793 hbmk2.prg:2824 hbmk2.prg:3146 hbmk2.prg:3167 hbmk2.prg:3199
 #, c-format
@@ -499,8 +499,8 @@ msgstr "Kapcsolók:"
 
 #: hbmk2.prg:5679 hbmk2.prg:6380
 #, c-format
-msgid "Supported <comp> values for each supported <arch> value:"
-msgstr "Az egyes <arch> értékekhez tartozó <comp> értékek a következõk:"
+msgid "Supported <comp> values for each supported <plat> value:"
+msgstr "Az egyes <plat> értékekhez tartozó <comp> értékek a következõk:"
 
 #: hbmk2.prg:5688 hbmk2.prg:6391
 #, c-format
@@ -519,8 +519,8 @@ msgstr "Generálja újra a .po fájlt, törölve ezáltal minden szükségtelen bejegyzé
 
 #: hbmk2.prg:5758 hbmk2.prg:6471
 #, c-format
-msgid "assume specific architecure. Same as HB_ARCHITECTURE envvar"
-msgstr "használja a megadott architektúra kódot. Ugyanaz mint a HB_ARCHITECTURE környezeti változó."
+msgid "assume specific platform. Same as HB_ARCHITECTURE envvar"
+msgstr "használja a megadott platform kódot. Ugyanaz mint a HB_ARCHITECTURE környezeti változó."
 
 #: hbmk2.prg:5769
 #, c-format
@@ -559,8 +559,8 @@ msgstr "visszatér a Harbour fejléc könyvtárral"
 
 #: hbmk2.prg:5769
 #, c-format
-msgid "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_arch}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
-msgstr "Számos .hbc opcióban és parancssori megfelelõikben (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=,echo=) használhatók makrók: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
+msgid "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_plat}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
+msgstr "Számos .hbc opcióban és parancssori megfelelõikben (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=,echo=) használhatók makrók: ${hb_root}, ${hb_self}, ${hb_plat}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
 
 #: hbmk2.prg:5758 hbmk2.prg:6471
 #, c-format
@@ -574,8 +574,8 @@ msgstr "<script> lehet <@script> (.hbm fájl), <script.hbm> vagy <script.hbc>."
 
 #: hbmk2.prg:5769 hbmk2.prg:6487
 #, c-format
-msgid "Defaults and feature support vary by architecture/compiler."
-msgstr "Az alapértelmezések és az egyes kapcsolók támogatása architektúránként/fordítónként változhat"
+msgid "Defaults and feature support vary by platform/compiler."
+msgstr "Az alapértelmezések és az egyes kapcsolók támogatása platformonként/fordítónként változhat"
 
 #: hbmk2.prg:4907 hbmk2.prg:5523
 #, c-format
@@ -809,8 +809,8 @@ msgstr "Statikus függvénykönyvtár létrehozás parancsa:"
 
 #: hbmk2.prg:5769 hbmk2.prg:6487
 #, c-format
-msgid "Platform filters are accepted in each .hbc line and with several options.\\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
-msgstr "A szûrõk az egyes .hbc sorokban használhatók és számos opció esetén támogatottak.\\nSzûrõ formátum: {[!][<arch>|<comp>|<keyword>]}. Szûrõk kombinálhatók '&', '|' operátorokkal és zárójelekkel csoportosíthatók. Pl.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
+msgid "Platform filters are accepted in each .hbc line and with several options.\\nFilter format: {[!][<plat>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
+msgstr "A szûrõk az egyes .hbc sorokban használhatók és számos opció esetén támogatottak.\\nSzûrõ formátum: {[!][<plat>|<comp>|<keyword>]}. Szûrõk kombinálhatók '&', '|' operátorokkal és zárójelekkel csoportosíthatók. Pl.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
 
 #: hbmk2.prg:3225 hbmk2.prg:3642 hbmk2.prg:3646 hbmk2.prg:4075
 #, c-format
@@ -819,7 +819,7 @@ msgstr "Hiba: C fordító futtatásakor. %1$s. szál. %2$s"
 
 #: hbmk2.prg:3238 hbmk2.prg:3659
 #, c-format
-msgid "Error: This architecture/compiler isn't implemented."
+msgid "Error: This platform/compiler isn't implemented."
 msgstr "Hiba: Ez a platform/fordító nincs megvalósítva."
 
 #: hbmk2.prg:3333 hbmk2.prg:3766
@@ -829,8 +829,8 @@ msgstr "Szerkesztõ parancsállománya:"
 
 #: hbmk2.prg:5758 hbmk2.prg:6471
 #, c-format
-msgid "working directory for incremental build mode\\n(default: %1$s/arch/comp)"
-msgstr "munkakönyvtár lépcsõzetes üzemmód használatakor\\n(alapértelmezés: %1$s/arch/comp)"
+msgid "working directory for incremental build mode\\n(default: %1$s/plat/comp)"
+msgstr "munkakönyvtár lépcsõzetes üzemmód használatakor\\n(alapértelmezés: %1$s/plat/ford)"
 
 #: hbmk2.prg:5239 hbmk2.prg:5922
 #, c-format
@@ -874,7 +874,7 @@ msgstr ""
 
 #: hbmk2.prg:6487
 #, c-format
-msgid "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}"
+msgid "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_self}, ${hb_plat}, ${hb_comp}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}"
 msgstr ""
 
 #: hbmk2.prg:6471

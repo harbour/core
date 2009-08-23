@@ -692,7 +692,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       DO CASE
       CASE cParamL            == "-quiet"   ; hbmk[ _HBMK_lQuiet ] := .T. ; hbmk[ _HBMK_lInfo ] := .F.
       CASE Left( cParamL, 6 ) == "-comp="   ; hbmk[ _HBMK_cCOMP ] := SubStr( cParam, 7 )
-      CASE Left( cParamL, 6 ) == "-arch="   ; hbmk[ _HBMK_cARCH ] := SubStr( cParam, 7 )
+      CASE Left( cParamL, 6 ) == "-plat="   ; hbmk[ _HBMK_cARCH ] := SubStr( cParam, 7 )
+      CASE Left( cParamL, 6 ) == "-arch="   ; hbmk[ _HBMK_cARCH ] := SubStr( cParam, 7 ) /* Compatibility */
       CASE Left( cParamL, 6 ) == "-build="  ; hbmk[ _HBMK_cBUILD ] := SubStr( cParam, 8 )
       CASE Left( cParamL, 6 ) == "-lang="   ; hbmk[ _HBMK_cUILNG ] := SubStr( cParam, 7 ) ; SetUILang( hbmk )
       CASE cParamL            == "-hbrun"   ; lSkipBuild := .T. ; hbmk[ _HBMK_lRUN ] := .T.
@@ -776,15 +777,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       aLIB_BASE_ZLIB    := { "zlib" }
    ENDIF
 
-   /* Load architecture / compiler settings (compatibility) */
+   /* Load platform / compiler settings (compatibility) */
 
    IF Empty( hbmk[ _HBMK_cARCH ] )
-      hbmk[ _HBMK_cARCH ] := Lower( GetEnv( "HB_ARCHITECTURE" ) )
-#if 0
+      hbmk[ _HBMK_cARCH ] := Lower( GetEnv( "HB_PLATFORM" ) )
       IF Empty( hbmk[ _HBMK_cARCH ] )
-         hbmk[ _HBMK_cARCH ] := Lower( GetEnv( "HB_ARCH" ) )
+         hbmk[ _HBMK_cARCH ] := Lower( GetEnv( "HB_ARCHITECTURE" ) ) /* Compatibility */
       ENDIF
-#endif
    ENDIF
    IF Empty( hbmk[ _HBMK_cCOMP ] )
       hbmk[ _HBMK_cCOMP ] := Lower( GetEnv( "HB_COMPILER" ) )
@@ -802,13 +801,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    ENDIF
 #endif
 
-   /* Autodetect architecture */
+   /* Autodetect platform */
 
    IF Empty( hbmk[ _HBMK_cARCH ] )
 
       /* NOTE: Keep this in sync manually. All compilers should be listed here,
-               which are supported on one architecture only. In the future this
-               should be automatically extracted from a comp/arch matrix. */
+               which are supported on one platform only. In the future this
+               should be automatically extracted from a comp/plat matrix. */
       SWITCH hbmk[ _HBMK_cCOMP ]
       CASE "mingw"
       CASE "mingw64"
@@ -834,7 +833,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       ENDSWITCH
       IF ! Empty( hbmk[ _HBMK_cARCH ] )
          IF hbmk[ _HBMK_lInfo ]
-            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Autodetected architecture: %1$s" ), hbmk[ _HBMK_cARCH ] ) )
+            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Autodetected platform: %1$s" ), hbmk[ _HBMK_cARCH ] ) )
          ENDIF
       ENDIF
    ENDIF
@@ -849,7 +848,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       cCCEXT := ".exe"
    #endif
 
-   /* Setup architecture dependent data */
+   /* Setup platform dependent data */
 
    cBin_CompPRG := "harbour" + l_cHBPOSTFIX
 
@@ -945,7 +944,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       l_aLIBSYSMISC := { "ceshell", "uuid", "ole32", "oleaut32", "wininet", "commdlg", "commctrl" }
 
    OTHERWISE
-      hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Architecture value unknown: %1$s" ), hbmk[ _HBMK_cARCH ] ) )
+      hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Platform value unknown: %1$s" ), hbmk[ _HBMK_cARCH ] ) )
       RETURN 1
    ENDCASE
 
@@ -1327,7 +1326,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
       DO CASE
       CASE Left( cParamL, 6 ) == "-comp=" .OR. ;
-           Left( cParamL, 6 ) == "-arch=" .OR. ;
+           Left( cParamL, 6 ) == "-plat=" .OR. ;
+           Left( cParamL, 6 ) == "-arch=" .OR. ; /* Compatibility */
            cParamL            == "-hbrun" .OR. ;
            cParamL            == "-hbraw" .OR. ;
            cParamL            == "-hbcmp" .OR. ;
@@ -3316,7 +3316,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       ENDIF
       /* Dress obj names. */
       IF cObjExt == NIL
-         /* NOTE: May only happen if the arch/comp combination isn't supported.
+         /* NOTE: May only happen if the plat/comp combination isn't supported.
                   Don't let the obj filelist be the exact same as the source list,
                   it would cause unwanted deletion of source at cleanup stage.
                   [vszakats] */
@@ -3661,7 +3661,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                ENDIF
             ENDIF
          ELSE
-            hbmk_OutErr( hbmk, I_( "Error: This architecture/compiler isn't implemented." ) )
+            hbmk_OutErr( hbmk, I_( "Error: This platform/compiler isn't implemented." ) )
             nErrorLevel := 8
          ENDIF
       ENDIF
@@ -5493,7 +5493,7 @@ STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, nNestingLevel )
    RETURN
 
 /* Filter microformat:
-   {[!][<arch|comp>]['&'|'|'][...]}
+   {[!][<plat|comp>]['&'|'|'][...]}
 */
 
 STATIC FUNCTION ArchCompFilter( hbmk, cItem )
@@ -5588,7 +5588,9 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
          cMacro := PathSepToSelf( FN_NameGet( cFileName ) ) ; EXIT
       CASE "HB_CURDIR"
          cMacro := hb_pwd() ; EXIT
-      CASE "HB_ARCH"
+      CASE "HB_PLAT"
+      CASE "HB_PLATFORM"
+      CASE "HB_ARCH" /* Compatibility */
       CASE "HB_ARCHITECTURE" /* Compatibility */
          cMacro := hbmk[ _HBMK_cARCH ] ; EXIT
       CASE "HB_COMP"
@@ -6660,7 +6662,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
 
    LOCAL aText_Supp := {;
       "",;
-      I_( "Supported <comp> values for each supported <arch> value:" ),;
+      I_( "Supported <comp> values for each supported <plat> value:" ),;
       "  - linux  : gcc, watcom, icc, sunpro",;
       "  - darwin : gcc, icc",;
       "  - win    : mingw, msvc, bcc, watcom, icc, pocc, cygwin, xcc,",;
@@ -6729,7 +6731,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]head[=<m>]"   , I_( "control source header parsing (in incremental build mode)\n<m> can be: full, partial (default), off" ) },;
       { "-rebuild"          , I_( "rebuild all (in incremental build mode)" ) },;
       { "-clean"            , I_( "clean (in incremental build mode)" ) },;
-      { "-workdir=<dir>"    , hb_StrFormat( I_( "working directory for incremental build mode\n(default: %1$s/arch/comp)" ), _WORKDIR_BASE_ ) },;
+      { "-workdir=<dir>"    , hb_StrFormat( I_( "working directory for incremental build mode\n(default: %1$s/plat/comp)" ), _WORKDIR_BASE_ ) },;
       NIL,;
       { "-hbl[=<output>]"   , hb_StrFormat( I_( "output .hbl filename. %1$s macro is accepted in filename" ), _LNG_MARKER ) },;
       { "-lng=<languages>"  , hb_StrFormat( I_( "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\n-lng=en-EN,hu-HU,de" ), _LNG_MARKER ) },;
@@ -6758,7 +6760,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "--hbdirlib"        , I_( "output Harbour static library directory" ) },;
       { "--hbdirinc"        , I_( "output Harbour header directory" ) },;
       NIL,;
-      { "-arch=<arch>"      , I_( "assume specific architecure. Same as HB_ARCHITECTURE envvar" ) },;
+      { "-plat=<plat>"      , I_( "assume specific platform. Same as HB_PLATFORM envvar" ) },;
       { "-comp=<comp>"      , I_( "use specific C compiler. Same as HB_COMPILER envvar\nSpecial value:\n - bld: use original build settings (default on *nix)" ) },;
       { "-build=<name>"     , I_( "use a specific build name" ) },;
       { "-lang=<lang>"      , I_( "override default language. Similar to HB_LANG envvar." ) },;
@@ -6779,10 +6781,10 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ),;
       I_( ".hbc config files in current dir are automatically processed." ),;
       I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full], skip=[yes|no], echo=<text>\nLines starting with '#' char are ignored" ),;
-      I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}" ),;
-      I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_arch}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ),;
+      I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<plat>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}" ),;
+      I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_plat}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ),;
       I_( 'Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ),;
-      I_( "Defaults and feature support vary by architecture/compiler." ) }
+      I_( "Defaults and feature support vary by platform/compiler." ) }
 
    DEFAULT lLong TO .F.
 
