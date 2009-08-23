@@ -60,7 +60,7 @@ ifeq ($(LIBNAME),hbpp)
    # we force causeway here as workaround for reduced command line size in dos4g
    LDFLAGS += SYS causeway
 else
-   LDFLAGS += SYS dos4g OP STUB=wstubq.exe
+   LDFLAGS += SYS dos4g OP stub=wstubq.exe
 endif
 
 LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))

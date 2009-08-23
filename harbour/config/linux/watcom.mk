@@ -62,7 +62,7 @@ LDFLAGS += SYS linux
 LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 
 DY := $(LD)
-DFLAGS := OP quiet FORM elf dll LIBPATH $(WATCOM)/lib386 LIBPATH $(WATCOM)/lib386/linux RUNTIME linux OP exportall OP norelocs
+DFLAGS := OP quiet FORM elf dll LIBPATH $(WATCOM)/lib386 LIBPATH $(WATCOM)/lib386/linux OP exportall
 DY_OUT :=
 DLIBS :=
 
