@@ -121,17 +121,17 @@ endif
 ifeq ($(HB_SHELL),os2)
 
 # NOTE: Comment on included OS/2 GNU tools:
-#       os2-mkdir and os2-cp expects forward slashes, while
-#       os2-rm expects backslashes in filenames. [vszakats]
+#       os2mkdir and os2cp expects forward slashes, while
+#       os2rm expects backslashes in filenames. [vszakats]
 
 MK := $(subst \,/,$(MAKE))
-RM := $(TOOL_DIR)os2-rm -f
-RDP := $(TOOL_DIR)os2-rm -fr
-CP := $(TOOL_DIR)os2-cp -f
+RM := $(TOOL_DIR)os2rm -f
+RDP := $(TOOL_DIR)os2rm -fr
+CP := $(TOOL_DIR)os2cp -f
 LN :=
-MD := $(TOOL_DIR)os2-mkdir
-MDP := $(TOOL_DIR)os2-mkdir -p
-ECHO := $(TOOL_DIR)os2-echo
+MD := $(TOOL_DIR)os2mkdir
+MDP := $(TOOL_DIR)os2mkdir -p
+ECHO := $(TOOL_DIR)os2echo
 ECHOQUOTE := "
 
 dirbase::
@@ -158,13 +158,13 @@ endif
 ifeq ($(HB_SHELL),dos)
 
 MK := $(subst \,/,$(MAKE))
-RM := $(TOOL_DIR)dj-rm -f
-RDP := $(TOOL_DIR)dj-rm -fr
-CP := $(TOOL_DIR)dj-cp -f
+RM := $(TOOL_DIR)dosrm -f
+RDP := $(TOOL_DIR)dosrm -fr
+CP := $(TOOL_DIR)doscp -f
 LN :=
-MD := $(TOOL_DIR)dj-mkdir
-MDP := $(TOOL_DIR)dj-mkdir -p
-ECHO := $(TOOL_DIR)dj-echo
+MD := $(TOOL_DIR)dosmkdir
+MDP := $(TOOL_DIR)dosmkdir -p
+ECHO := $(TOOL_DIR)dosecho
 ECHOQUOTE := "
 
 dirbase::

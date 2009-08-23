@@ -31,13 +31,13 @@ Included utilities are:
      License:
         GPL 2 (see below)
      Links to included binaries + sources:
-        - DJGPP (dj-mkdir.exe, dj-rm.exe, dj-cp.exe, dj-echo.exe)
+        - DJGPP (dosmkdir.exe, dosrm.exe, doscp.exe, dosecho.exe)
              ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/
              ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/fil41b.zip
              ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/fil41s.zip
              ftp://ftp.delorie.com/pub/djgpp/current/v2/djdev203.zip
              ftp://ftp.delorie.com/pub/djgpp/current/v2/djlsr203.zip
-        - OS/2 (os2-mkdir.exe, os2-rm.exe, os2-cp.exe, os2-echo.exe)
+        - OS/2 (os2mkdir.exe, os2rm.exe, os2cp.exe, os2echo.exe)
              http://os2ports.smedley.info/index.php?page=build-environment
              http://download.smedley.info/buildenv_20071022.zip
              (couldn't find the sources here)
