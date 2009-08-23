@@ -895,7 +895,7 @@ PHB_ITEM hb_itemPutTDT( PHB_ITEM pItem, long lJulian, long lMilliSec )
 
 PHB_ITEM hb_itemPutL( PHB_ITEM pItem, BOOL bValue )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutL(%p, %d)", pItem, (int) bValue));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutL(%p, %d)", pItem, ( int ) bValue));
 
    if( pItem )
    {
@@ -927,7 +927,7 @@ PHB_ITEM hb_itemPutND( PHB_ITEM pItem, double dNumber )
 
    pItem->type = HB_IT_DOUBLE;
    pItem->item.asDouble.length = HB_DBL_LENGTH( dNumber );
-   pItem->item.asDouble.decimal = hb_stackSetStruct()->HB_SET_DECIMALS;
+   pItem->item.asDouble.decimal = ( USHORT ) hb_stackSetStruct()->HB_SET_DECIMALS;
    pItem->item.asDouble.value = dNumber;
 
    return pItem;
@@ -1106,8 +1106,8 @@ PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
    }
 
    pItem->type = HB_IT_DOUBLE;
-   pItem->item.asDouble.length = iWidth;
-   pItem->item.asDouble.decimal = iDec;
+   pItem->item.asDouble.length = ( USHORT ) iWidth;
+   pItem->item.asDouble.decimal = ( USHORT ) iDec;
    pItem->item.asDouble.value = dNumber;
 
    return pItem;
@@ -1131,11 +1131,11 @@ PHB_ITEM hb_itemPutNDDec( PHB_ITEM pItem, double dNumber, int iDec )
    if( iDec == HB_DEFAULT_DECIMALS )
    {
       HB_STACK_TLS_PRELOAD
-      pItem->item.asDouble.decimal = hb_stackSetStruct()->HB_SET_DECIMALS;
+      pItem->item.asDouble.decimal = ( USHORT ) hb_stackSetStruct()->HB_SET_DECIMALS;
    }
    else
    {
-      pItem->item.asDouble.decimal = iDec;
+      pItem->item.asDouble.decimal = ( USHORT ) iDec;
    }
 
    pItem->item.asDouble.value = dNumber;
@@ -1184,7 +1184,7 @@ PHB_ITEM hb_itemPutNILen( PHB_ITEM pItem, int iNumber, int iWidth )
       iWidth = HB_INT_LENGTH( iNumber );
 
    pItem->type = HB_IT_INTEGER;
-   pItem->item.asInteger.length = iWidth;
+   pItem->item.asInteger.length = ( USHORT ) iWidth;
    pItem->item.asInteger.value = iNumber;
 
    return pItem;
@@ -1207,8 +1207,8 @@ PHB_ITEM hb_itemPutNLLen( PHB_ITEM pItem, long lNumber, int iWidth )
       iWidth = HB_INT_LENGTH( lNumber );
 
    pItem->type = HB_IT_INTEGER;
-   pItem->item.asInteger.value = (int) lNumber;
-   pItem->item.asInteger.length = iWidth;
+   pItem->item.asInteger.value = ( int ) lNumber;
+   pItem->item.asInteger.length = ( USHORT ) iWidth;
 #else
    if( iWidth <= 0 || iWidth > 99 )
       iWidth = HB_LONG_LENGTH( lNumber );
@@ -1240,7 +1240,7 @@ PHB_ITEM hb_itemPutNLLLen( PHB_ITEM pItem, LONGLONG llNumber, int iWidth )
 
    pItem->type = HB_IT_LONG;
    pItem->item.asLong.value = ( HB_LONG ) llNumber;
-   pItem->item.asLong.length = iWidth;
+   pItem->item.asLong.length = ( USHORT ) iWidth;
 #else
    pItem->type = HB_IT_DOUBLE;
    pItem->item.asDouble.value = ( double ) llNumber;
@@ -2073,7 +2073,7 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
    ULONG ulMinLen;
    int iRet = 0; /* Current status */
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemStrCmp(%p, %p, %d)", pFirst, pSecond, (int) bForceExact));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemStrCmp(%p, %p, %d)", pFirst, pSecond, ( int ) bForceExact));
 
    szFirst = pFirst->item.asString.value;
    szSecond = pSecond->item.asString.value;
@@ -2154,7 +2154,7 @@ int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
    ULONG ulMinLen;
    int iRet = 0; /* Current status */
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemStrICmp(%p, %p, %d)", pFirst, pSecond, (int) bForceExact));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemStrICmp(%p, %p, %d)", pFirst, pSecond, ( int ) bForceExact));
 
    szFirst = pFirst->item.asString.value;
    szSecond = pSecond->item.asString.value;
