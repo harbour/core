@@ -8,13 +8,7 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := gtalleg
 
-ifneq ($(HB_COMPILER),pocc)
-ifneq ($(HB_COMPILER),pocc64)
-ifneq ($(HB_COMPILER),poccarm)
-ifneq ($(HB_COMPILER),xcc)
-ifneq ($(HB_COMPILER),dmc)
-ifneq ($(HB_COMPILER),watcom)
-ifneq ($(HB_COMPILER),mingwarm)
+ifeq ($(filter $(HB_COMPILER),pocc pocc64 poccarm xcc dmc watcom mingwarm),)
 
 ifeq ($(HB_INC_ALLEGRO),)
    ifeq ($(HB_XBUILD),)
@@ -40,26 +34,10 @@ C_SOURCES := \
 include $(TOP)$(ROOT)config/lib.mk
 
 else
+HB_SKIP_REASON := dependency not set or not found
 include $(TOP)$(ROOT)config/none.mk
 endif
 else
-include $(TOP)$(ROOT)config/none.mk
-endif
-else
-include $(TOP)$(ROOT)config/none.mk
-endif
-else
-include $(TOP)$(ROOT)config/none.mk
-endif
-else
-include $(TOP)$(ROOT)config/none.mk
-endif
-else
-include $(TOP)$(ROOT)config/none.mk
-endif
-else
-include $(TOP)$(ROOT)config/none.mk
-endif
-else
+HB_SKIP_REASON := not supported
 include $(TOP)$(ROOT)config/none.mk
 endif

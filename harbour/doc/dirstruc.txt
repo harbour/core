@@ -63,11 +63,6 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   |
 |   |   +---tests       - Test programs.
 |   |
-|   +---hbcrypt         - Cryptography library for commonly used algorythms
-|   |   |                 like: SHA1, SHA2, HMAC-SHA1, HMAC-SHA2.
-|   |   |
-|   |   +---tests       - Test programs.
-|   |
 |   +---hbct            - CA-T**ls Compatible Library for Harbour.
 |   |   |
 |   |   +---tests       - Test programs.

@@ -54,5 +54,6 @@ C_SOURCES := \
 include $(TOP)$(ROOT)config/lib.mk
 
 else
+HB_SKIP_REASON := not supported or disabled
 include $(TOP)$(ROOT)config/none.mk
 endif

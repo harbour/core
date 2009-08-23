@@ -17,7 +17,6 @@ DOC_FILES := \
    gtapi.txt \
    hdr_tpl.txt \
    howtobld.txt \
-   howtobsd.txt \
    howtorel.txt \
    howtosvn.txt \
    inet.txt \

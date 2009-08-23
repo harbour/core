@@ -152,6 +152,34 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       > hello
       You should see 'Hello world!' on screen.
 
+   FreeBSD
+   -------
+      Platform specific prerequisites:
+
+      1.) You'll need to have the developer tools installed.
+      2.) Then you'll need to install gmake and optionally bison.
+          If you installed the ports collection, then all you need
+          to do to install bison and gmake is to run the following
+          commands, which may require that you run su root first to
+          get the correct permissions:
+
+          $ cd /usr/ports/devel/gmake
+          $ make
+          $ make install
+          $ make clean
+          $ cd /usr/ports/devel/bison
+          $ make
+          $ make install
+          $ make clean
+
+      $ gmake install
+
+      To test it, type:
+      $ cd tests
+      $ hbmk2 hello.prg
+      $ ./hello
+      You should see 'Hello world!' on screen.
+
 
 HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
 ==============================================
@@ -254,6 +282,20 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
       - unixodbc-devel
       - gd-devel
       - libmysqlclient-devel
+
+   FreeBSD
+   -------
+
+      If you want to use the gtsln library instead of gtstd or gtcrs,
+      then you also need to install libslang. If you installed the ports
+      collection, then all you need to do to install libslang is to run
+      the following commands, which may require that you run su first to
+      get the correct permissions:
+
+      $ cd /usr/ports/devel/libslang
+      $ make
+      $ make install
+      $ make clean
 
 
 SUPPORTED PLATFORMS AND C COMPILERS
