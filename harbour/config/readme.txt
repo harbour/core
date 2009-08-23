@@ -11,24 +11,24 @@ features.
 Included utilities are:
 
 - GNU make
-     Licence:
+     License:
         GPL 2 (see below)
      Links to included binaries + sources:
-        - mingw32 (mingw32-make.exe)
+        - win-make.exe (original filename: mingw32-make.exe)
              http://sourceforge.net/projects/mingw/files/GNU%20Make/
              http://sourceforge.net/projects/mingw/files/GNU%20Make/Current%20Release_%20mingw32-make-3.81-20080326/mingw32-make-3.81-20080326-3.tar.gz/download
              http://sourceforge.net/projects/mingw/files/GNU%20Make/Current%20Release_%20mingw32-make-3.81-20080326/mingw32-make-3.81-20080326-src.tar.gz/download
-        - DJGPP (dj-make.exe)
+        - dos-make.exe (original filename: make.exe)
              ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/
              ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381b.zip
              ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381s.zip
-        - OS/2 (os2-make.exe)
+        - os2-make.exe (original filename: make.exe)
              http://www.os2site.com/sw/dev/make/index.html
              http://www.os2site.com/sw/dev/make/make-3.81-r2-bin.zip
              http://www.os2site.com/sw/dev/make/make-3.81-r2.zip
 
 - GNU coreutils (mkdir, rm, cp, echo)
-     Licence:
+     License:
         GPL 2 (see below)
      Links to included binaries + sources:
         - DJGPP (dj-mkdir.exe, dj-rm.exe, dj-cp.exe, dj-echo.exe)
