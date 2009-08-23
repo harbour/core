@@ -82,7 +82,7 @@ ifeq ($(HB_SHELL),nt)
 #       CreateProcess() is used, where the maximum length is 32767.
 #       [vszakats]
 
-MK := "$(subst \,/,$(MAKE))"
+MK := $(subst \,/,$(MAKE))
 RM := del /q /f
 RDP := rmdir /q /s
 CP := copy
