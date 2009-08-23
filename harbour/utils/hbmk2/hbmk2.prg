@@ -6804,9 +6804,9 @@ STATIC PROCEDURE OutOpt( hbmk, aOpt )
       OutStd( hb_osNewLine() )
    ELSE
       aOpt[ 2 ] := StrTran( aOpt[ 2 ], "\n", hb_osNewLine() )
-      nLines := MLCount( aOpt[ 2 ], MaxCol() - 21 )
+      nLines := MLCount( aOpt[ 2 ], MaxCol() - 19 )
       FOR nLine := 1 TO nLines
-         IF ! Empty( tmp := MemoLine( aOpt[ 2 ], MaxCol() - 21, nLine ) )
+         IF ! Empty( tmp := MemoLine( aOpt[ 2 ], MaxCol() - 19, nLine ) )
             OutStd( "  " )
             IF nLine == 1
                OutStd( PadR( aOpt[ 1 ], 19 ) )
