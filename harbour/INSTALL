@@ -210,46 +210,57 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    HB_ALLEGRO_STATIC=yes
    HB_QT_STATIC=yes
 
-   Darwin (OS X)
+   Darwin (Mac OS X)
    -------------
    1.) Install MacPorts, follow their instructions:
        http://www.macports.org/
    2.) sudo port install allegro freeimage gd2 mysql5-devel postgresql83
 
 
-SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
-===============================================
+SUPPORTED PLATFORMS AND C COMPILERS
+===================================
 
-   You can use HB_ARCHITECURE values shown inside square brackets.
-   You can use below listed abbreviations as HB_COMPILER values.
+   You can use HB_ARCHITECURE values to select platforms:
 
-   Linux [linux]
+   linux   - Linux
+   darwin  - Mac OS X
+   bsd     - *BSD
+   hpux    - HP-UX
+   sunos   - Sun Solaris / OpenSolaris
+   win     - MS Windows
+   wce     - MS Windows CE
+   dos     - MS-DOS (32-bit protected mode only)
+   os2     - OS/2
+
+   You can use HB_COMPILER values to select compilers:
+
+   linux
    -----
    gcc      - GNU C
    watcom   - Open Watcom C++
    icc      - Intel(R) C/C++
    sunpro   - Sun Studio C/C++
 
-   Darwin (OS X) [darwin]
-   -------------
+   darwin
+   ------
    gcc      - GNU C
    icc      - Intel(R) C/C++
 
-   BSD [bsd]
+   bsd
    ---
    gcc      - GNU C
 
-   HP-UX [hpux]
-   -----
+   hpux
+   ----
    gcc      - GNU C
 
-   Solaris [sunos]
-   -------
+   sunos
+   -----
    gcc      - GNU C
    sunpro   - Sun Studio C/C++
 
-   Windows [win]
-   -------
+   win
+   ---
    mingw    - MinGW GNU C 3.4.2 and above
    mingw64  - MinGW GNU C x86-64
    msvc     - Microsoft Visual C++
@@ -267,19 +278,19 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    xcc      - Pelles C for xhb
    cygwin   - Cygwin GNU C
 
-   Windows CE [wce]
-   ----------
+   wce
+   ---
    mingwarm - MinGW GNU C ARM
    msvcarm  - Microsoft Visual C++ ARM
    poccarm  - Pelles C ARM 5.0 and above
 
-   MS-DOS [dos] (32-bit)
-   ------
+   dos
+   ---
    djgpp    - Delorie GNU C
    watcom   - Open Watcom C++ 9.x and above
 
-   OS/2 [os2]
-   ----
+   os2
+   ---
    gcc      - EMX GNU C
    watcom   - Open Watcom C++
 
@@ -328,7 +339,7 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
                                apply. It's valid to use (back)slashes though.
    - HB_BUILD_PKG=yes          Create release package. Default: no
                                Requires 'clean install' in root source dir.
-                               (currently on Windows/Windows CE/DOS)
+                               (currently on Windows/Windows CE/MS-DOS)
    - HB_BUILD_DLL=no           Create Harbour dynamic libraries. Default: yes
    - HB_BUILD_IMPLIB=yes       Create import libraries for external .dll
                                dependencies (including contribs). Default: no
@@ -612,13 +623,12 @@ EXAMPLES
       make %1 %2 > log.txt
       ---
 
-      --- Delorie GNU C (on Windows NT host)
+      --- Delorie GNU C (on Windows NT (x86) host)
       set DJGPP=C:\djgpp\djgpp.env
       set PATH=C:\djgpp\bin;%PATH%
       rem
       mingw32-make %1 %2 > log.txt 2>&1
       ---
-      [ TOFIX: currently chokes on some cmdline limit. ]
 
       --- Open Watcom C++
       SET WATCOM=C:\watcom
@@ -822,9 +832,9 @@ QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
             'hbmk2 -help'
             Besides the ones listed, you can use all regular Harbour
             compiler command line options, like:
-               -l, -b, -n, -w3 (etc...)
+               '-l', '-b', '-n', '-w3' (etc...)
           - To make it easier to work with Harbour, it's recommended to
-            put Harbour binary dir into the PATH:
+            put Harbour binary directory into the PATH:
                set PATH=C:\harbour\bin;%PATH% (on Windows)
             (this is not a requirement though)
           - You can access hbmk2 using absolute or relative paths, and

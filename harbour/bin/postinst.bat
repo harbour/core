@@ -57,18 +57,18 @@ goto INST_%HB_ARCHITECTURE%
 
       if exist "%HB_BIN_INSTALL%\*.dll" (
          echo ! Making shared version of Harbour binaries...
-         "%HB_HOST_BIN_DIR%\hbmk2" -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbrun-dll"    "%~dp0..\utils\hbrun\hbrun.hbp"
-         "%HB_HOST_BIN_DIR%\hbmk2" -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbmk2-dll"    "%~dp0..\utils\hbmk2\hbmk2.hbp"
-         "%HB_HOST_BIN_DIR%\hbmk2" -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbtest-dll"   "%~dp0..\utils\hbtest\hbtest.hbp"
-         "%HB_HOST_BIN_DIR%\hbmk2" -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbi18n-dll"   "%~dp0..\utils\hbi18n\hbi18n.hbp"
-         "%HB_HOST_BIN_DIR%\hbmk2" -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbformat-dll" "%~dp0..\utils\hbformat\hbformat.hbp"
+         "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbrun-dll"    "%~dp0..\utils\hbrun\hbrun.hbp"
+         "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbmk2-dll"    "%~dp0..\utils\hbmk2\hbmk2.hbp"
+         "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbtest-dll"   "%~dp0..\utils\hbtest\hbtest.hbp"
+         "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbi18n-dll"   "%~dp0..\utils\hbi18n\hbi18n.hbp"
+         "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbformat-dll" "%~dp0..\utils\hbformat\hbformat.hbp"
       )
 
    :_SKIP_DLL_BIN
 
    rem ; We build this here, because GNU Make wouldn't add the icon.
    echo ! Making hbrun with application icon...
-   "%HB_HOST_BIN_DIR%\hbmk2" -q0 -lng=en-EN "-o%HB_BIN_INSTALL%\hbrun" "%~dp0..\utils\hbrun\hbrun.hbp"
+   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN "-o%HB_BIN_INSTALL%\hbrun" "%~dp0..\utils\hbrun\hbrun.hbp"
 
    if "%HB_BUILD_IMPLIB%" == "yes" call "%~dp0hb-mkimp.bat"
    if "%HB_BUILD_PKG%" == "yes" call :MK_PKG

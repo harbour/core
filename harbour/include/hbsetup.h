@@ -287,7 +287,7 @@
 #endif
 
 #ifndef HB_OS_DARWIN
-   #if defined( __APPLE__ )
+   #if defined( __APPLE__ ) || defined( __DARWIN__ )
       #define HB_OS_DARWIN
    #endif
 #endif
@@ -350,6 +350,7 @@
 /* Partially based on:
       http://predef.sourceforge.net/prearch.html
       http://poshlib.hookatooka.com/poshlib/trac.cgi/browser/posh.h
+      [vszakats]
  */
 
 #if   defined( __alpha__ ) || \
