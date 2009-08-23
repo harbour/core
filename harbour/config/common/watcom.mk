@@ -15,7 +15,7 @@
 # NOTE: Hack to force no extension for Linux binaries created on non-Linux hosts.
 #       Otherwise they become '.elf'. [vszakats]
 ifeq ($(HB_ARCHITECTURE),linux)
-   ifneq ($(HB_HOST_ARCH),linux)
+   ifneq ($(HB_HOST_PLAT),linux)
       BIN_EXT := .
    endif
 endif
@@ -88,7 +88,7 @@ ifeq ($(HB_SHELL),dos)
 endif
 
 ifeq ($(CC),wcc386)
-   ifneq ($(HB_HOST_ARCH),linux)
+   ifneq ($(HB_HOST_PLAT),linux)
       CC_RULE = $(CC) $(CC_FLAGS) $(subst /,\,$(HB_USER_CFLAGS)) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN)$(subst /,\,$<)
    endif
 endif
@@ -96,7 +96,7 @@ endif
 include $(TOP)$(ROOT)config/rules.mk
 
 ifeq ($(CC),wcc386)
-   ifneq ($(HB_HOST_ARCH),linux)
+   ifneq ($(HB_HOST_PLAT),linux)
       CC_FLAGS := $(subst /,\,$(CC_FLAGS))
    endif
 endif

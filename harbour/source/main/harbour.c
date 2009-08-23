@@ -103,8 +103,8 @@ const char * hb_verFlagsPRG( void )
 
 
 #if 0
-/* build time Harbour architecture setting */
-const char * hb_verHB_ARCH( void )
+/* build time Harbour platform setting */
+const char * hb_verHB_PLAT( void )
 {
 #ifdef HB_ARCHITECTURE
    return HB_ARCHITECTURE;

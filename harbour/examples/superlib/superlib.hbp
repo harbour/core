@@ -3,7 +3,7 @@
 #
 
 -hblib
--olib/${hb_arch}/${hb_comp}/super
+-olib/${hb_plat}/${hb_comp}/super
 -inc
 -q0 -w1 -es2 -l
 

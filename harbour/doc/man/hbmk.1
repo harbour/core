@@ -80,8 +80,8 @@ create link/copy hbmk to hbcc/hbcmp for the same effect
 .IP "\fB-hblnk\fP" 10
 act as linker. Currently this is the same as -q
 
-.IP "\fB-arch=<arch>\fP" 10
-assume specific architecure. Same as HB_ARCHITECTURE envvar
+.IP "\fB-plat=<plat>\fP" 10
+assume specific platform. Same as HB_PLATFORM envvar
 
 .IP "\fB-comp=<comp>\fP" 10
 use specific compiler. Same as HB_COMPILER envvar
@@ -114,13 +114,13 @@ gui|mt|shared|nulrdd|debug|map|strip|run=[yes|no]
 Lines starting with '#' char are ignored
 
 Platform filters are accepted in each .hbc line and with -l options.
-Filter format: {[!][<arch|comp>]}. Filters can be combined
+Filter format: {[!][<plat|comp>]}. Filters can be combined
 using '&', '|' operators and grouped by parantheses.
 Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}
 
-Defaults and feature support vary by architecture/compiler.
+Defaults and feature support vary by platform/compiler.
 
-Supported <comp> values for each supported <arch> value:
+Supported <comp> values for each supported <plat> value:
 linux: gcc, gpp, watcom, icc
 darwin: gcc
 win: mingw, msvc, bcc, watcom, icc, pocc, cygwin, msvc64, msvcia64, pocc64
@@ -135,7 +135,7 @@ bsd, hpux, sunos: gcc
 
 .IP "\fBHB_CCPATH\fP" 10
 .IP "\fBHB_CCPREFIX\fP" 10
-.IP "\fBHB_ARCHITECTURE\fP" 10
+.IP "\fBHB_PLATFORM\fP" 10
 .IP "\fBHB_COMPILER\fP" 10
 .IP "\fBHB_INSTALL_PREFIX\fP" 10
 .IP "\fBHB_BIN_INSTALL\fP" 10

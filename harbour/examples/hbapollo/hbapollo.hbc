@@ -5,7 +5,7 @@
 {dos}skip=yes
 
 incpaths=.
-libpaths=lib/${hb_arch}/${hb_comp}
+libpaths=lib/${hb_plat}/${hb_comp}
 
 libs=hbapollo
 libs={win}sde61

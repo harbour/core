@@ -827,7 +827,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          hbmk[ _HBMK_cPLAT ] := "dos"
          EXIT
       OTHERWISE
-         hbmk[ _HBMK_cPLAT ] := hb_Version( HB_VERSION_BUILD_ARCH )
+         hbmk[ _HBMK_cPLAT ] := hb_Version( HB_VERSION_BUILD_PLAT )
       ENDSWITCH
       IF ! Empty( hbmk[ _HBMK_cPLAT ] )
          IF hbmk[ _HBMK_lInfo ]
@@ -5733,7 +5733,7 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
    LOCAL cMacro
    LOCAL nPos
 
-   IF !( hbmk[ _HBMK_cPLAT ] == hb_Version( HB_VERSION_BUILD_ARCH ) ) .OR. ;
+   IF !( hbmk[ _HBMK_cPLAT ] == hb_Version( HB_VERSION_BUILD_PLAT ) ) .OR. ;
       !( hbmk[ _HBMK_cCOMP ] == hb_Version( HB_VERSION_BUILD_COMP ) )
 
       aUnd := {}

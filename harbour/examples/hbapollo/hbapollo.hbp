@@ -3,7 +3,7 @@
 #
 
 -hblib
--olib/${hb_arch}/${hb_comp}/hbapollo
+-olib/${hb_plat}/${hb_comp}/hbapollo
 -inc
 -q0 -w3 -es2 -l
 -i${HB_INC_APOLLO}

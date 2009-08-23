@@ -3,7 +3,7 @@
 #
 
 -hblib
--olib/${hb_arch}/${hb_comp}/hbmsql
+-olib/${hb_plat}/${hb_comp}/hbmsql
 -inc
 
 msql.c

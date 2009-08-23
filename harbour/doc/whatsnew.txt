@@ -151,7 +151,7 @@ Core
   HB_DBCREATETEMP()/DBCREATETEMP() to create temporary tables.
   HB_MMIDDLEDOWN/MMIDDLEDOWN() new Harbour function.
   DBINFO( DBI_ISTEMPORARY )
-  HB_VERSION( HB_VERSION_BUILD_ARCH )
+  HB_VERSION( HB_VERSION_BUILD_PLAT )
   HB_VERSION( HB_VERSION_BUILD_COMP )
   HB_STRFORMAT() C-like string formatting function
     (also as C level API named hb_StrFormat())

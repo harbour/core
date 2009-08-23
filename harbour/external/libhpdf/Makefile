@@ -18,7 +18,7 @@ ifeq ($(HB_WITH_LIBHPDF),)
       HB_WITH_LIBHPDF := no
    endif
    # NOTE: dos hosts can't build this lib due to long filename. [vszakats]
-   ifeq ($(HB_HOST_ARCH),dos)
+   ifeq ($(HB_HOST_PLAT),dos)
       HB_WITH_LIBHPDF := no
    endif
    ifeq ($(HB_COMPILER),pocc64)

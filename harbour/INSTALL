@@ -277,6 +277,7 @@ SUPPORTED PLATFORMS AND C COMPILERS
 
    wce
    ---
+   mingw    - MinGW GNU C x86
    mingwarm - MinGW GNU C ARM
    msvcarm  - Microsoft Visual C++ ARM
    poccarm  - Pelles C ARM 5.0 and above
@@ -620,7 +621,7 @@ EXAMPLES
       make %1 %2 > log.txt
       ---
 
-      --- Delorie GNU C (on Windows NT (x86) host)
+      --- Delorie GNU C (on Windows NT (x86-only) host)
       set DJGPP=C:\djgpp\djgpp.env
       set PATH=C:\djgpp\bin;%PATH%
       rem

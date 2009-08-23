@@ -7,7 +7,7 @@ include $(TOP)$(ROOT)config/global.mk
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
 
-ifeq ($(HB_HOST_ARCH),dos)
+ifeq ($(HB_HOST_PLAT),dos)
    # do not use rules for parallel processing in DOS
    JOB_SRV := NO
 else

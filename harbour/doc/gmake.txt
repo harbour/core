@@ -133,7 +133,7 @@ system. To check this, type "make -v"; you should see
   ...
 
 Then, you must set a couple of environment variables that indicate
-your architecture and compiler.
+your platform and compiler.
 
 For gcc on Win95/WinNT with the Cygwin library:
   Notes: The CYGWIN environment variable must include "noglob" in order

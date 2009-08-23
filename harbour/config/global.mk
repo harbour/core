@@ -72,55 +72,55 @@ endef
 define check_host
 
 ifneq ($(findstring MINGW,$(1)),)
-   HB_HOST_ARCH := win
+   HB_HOST_PLAT := win
 else
    ifneq ($(findstring MSys,$(1)),)
-      HB_HOST_ARCH := win
+      HB_HOST_PLAT := win
    else
       ifneq ($(findstring Windows,$(1)),)
-         HB_HOST_ARCH := win
+         HB_HOST_PLAT := win
       else
          ifneq ($(findstring CYGWIN,$(1)),)
-            HB_HOST_ARCH := win
+            HB_HOST_PLAT := win
          else
             ifneq ($(findstring Darwin,$(1)),)
-               HB_HOST_ARCH := darwin
+               HB_HOST_PLAT := darwin
             else
                ifneq ($(findstring darwin,$(1)),)
-                  HB_HOST_ARCH := darwin
+                  HB_HOST_PLAT := darwin
                else
                   ifneq ($(findstring Linux,$(1)),)
-                     HB_HOST_ARCH := linux
+                     HB_HOST_PLAT := linux
                   else
                      ifneq ($(findstring linux,$(1)),)
-                        HB_HOST_ARCH := linux
+                        HB_HOST_PLAT := linux
                      else
                         ifneq ($(findstring HP-UX,$(1)),)
-                           HB_HOST_ARCH := hpux
+                           HB_HOST_PLAT := hpux
                         else
                            ifneq ($(findstring hp-ux,$(1)),)
-                              HB_HOST_ARCH := hpux
+                              HB_HOST_PLAT := hpux
                            else
                               ifneq ($(findstring SunOS,$(1)),)
-                                 HB_HOST_ARCH := sunos
+                                 HB_HOST_PLAT := sunos
                               else
                                  ifneq ($(findstring sunos,$(1)),)
-                                    HB_HOST_ARCH := sunos
+                                    HB_HOST_PLAT := sunos
                                  else
                                     ifneq ($(findstring BSD,$(1)),)
-                                       HB_HOST_ARCH := bsd
+                                       HB_HOST_PLAT := bsd
                                     else
                                        ifneq ($(findstring bsd,$(1)),)
-                                          HB_HOST_ARCH := bsd
+                                          HB_HOST_PLAT := bsd
                                        else
                                           ifneq ($(findstring OS/2,$(1)),)
-                                             HB_HOST_ARCH := os2
+                                             HB_HOST_PLAT := os2
                                           else
                                              ifneq ($(findstring MS-DOS,$(1)),)
-                                                HB_HOST_ARCH := dos
+                                                HB_HOST_PLAT := dos
                                              else
                                                 ifneq ($(findstring msdos,$(1)),)
-                                                   HB_HOST_ARCH := dos
+                                                   HB_HOST_PLAT := dos
                                                 endif
                                              endif
                                           endif
@@ -389,34 +389,34 @@ ifeq ($(PTHSEP),)
    endif
 endif
 
-ifeq ($(HB_HOST_ARCH),)
+ifeq ($(HB_HOST_PLAT),)
    $(eval $(call check_host,$(OSTYPE),))
-   ifeq ($(HB_HOST_ARCH),)
+   ifeq ($(HB_HOST_PLAT),)
       $(eval $(call check_host,$(MACHTYPE),))
-      ifeq ($(HB_HOST_ARCH),)
+      ifeq ($(HB_HOST_PLAT),)
          $(eval $(call check_host,$(OS),))
-         ifeq ($(HB_HOST_ARCH),)
+         ifeq ($(HB_HOST_PLAT),)
             $(eval $(call check_host,$(shell uname -s),))
          endif
       endif
    endif
 endif
 
-ifeq ($(HB_HOST_ARCH),)
+ifeq ($(HB_HOST_PLAT),)
    ifneq ($(OS2_SHELL),)
-      HB_HOST_ARCH := os2
+      HB_HOST_PLAT := os2
    else
       ifneq ($(windir),)
-         HB_HOST_ARCH := win
+         HB_HOST_PLAT := win
       else
          ifneq ($(WINDIR),)
-            HB_HOST_ARCH := win
+            HB_HOST_PLAT := win
          else
             ifeq ($(HB_SHELL),dos)
-               HB_HOST_ARCH := dos
+               HB_HOST_PLAT := dos
             else
                ifneq ($(HB_ARCHITECTURE),)
-                  HB_HOST_ARCH := $(HB_ARCHITECTURE)
+                  HB_HOST_PLAT := $(HB_ARCHITECTURE)
                endif
             endif
          endif
@@ -424,7 +424,7 @@ ifeq ($(HB_HOST_ARCH),)
    endif
 endif
 
-ifneq ($(filter $(HB_HOST_ARCH),win wce dos os2),)
+ifneq ($(filter $(HB_HOST_PLAT),win wce dos os2),)
    HB_HOST_BIN_EXT := .exe
 else
    HB_HOST_BIN_EXT :=
@@ -447,7 +447,7 @@ endif
 #endif
 
 HB_HOST_CPU :=
-ifeq ($(HB_HOST_ARCH),win)
+ifeq ($(HB_HOST_PLAT),win)
    ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
       HB_HOST_CPU := x86_64
    else
@@ -458,7 +458,7 @@ ifeq ($(HB_HOST_ARCH),win)
       endif
    endif
 else
-   ifneq ($(filter $(HB_HOST_ARCH),dos os2),)
+   ifneq ($(filter $(HB_HOST_PLAT),dos os2),)
       HB_HOST_CPU := x86
    else
       # TODO: CPU detection for rest of systems.
@@ -467,19 +467,19 @@ endif
 
 ifeq ($(HB_INIT_DONE),)
    ifneq ($(MAKE_381),)
-      $(info ! HB_HOST_ARCH: $(HB_HOST_ARCH)$(if $(HB_HOST_CPU), ($(HB_HOST_CPU)),)  HB_SHELL: $(HB_SHELL))
+      $(info ! HB_HOST_PLAT: $(HB_HOST_PLAT)$(if $(HB_HOST_CPU), ($(HB_HOST_CPU)),)  HB_SHELL: $(HB_SHELL))
    endif
 
-   ifeq ($(HB_HOST_ARCH)-$(HB_SHELL),win-dos)
+   ifeq ($(HB_HOST_PLAT)-$(HB_SHELL),win-dos)
       $(warning ! Warning: You're using DOS GNU Make executable (or DOS shell) on Windows host.)
       $(warning !          Not recommended combination. Some features will be disabled.)
       $(warning !          Please use the Windows build of GNU Make.)
    endif
 endif
 
-HB_ARCH_AUTO :=
+HB_PLAT_AUTO :=
 ifeq ($(HB_ARCHITECTURE),)
-   HB_ARCHITECTURE := $(HB_HOST_ARCH)
+   HB_ARCHITECTURE := $(HB_HOST_PLAT)
    ifneq ($(HB_COMPILER),)
       ifeq ($(HB_COMPILER),msvcarm)
          HB_ARCHITECTURE := wce
@@ -502,15 +502,15 @@ ifeq ($(HB_ARCHITECTURE),)
       endif
    endif
    ifneq ($(HB_ARCHITECTURE),)
-      HB_ARCH_AUTO := (autodetected)
+      HB_PLAT_AUTO := (autodetected)
    endif
 endif
 
 HB_COMP_AUTO :=
 ifeq ($(HB_COMPILER),)
-   ifneq ($(HB_HOST_ARCH),$(HB_ARCHITECTURE))
+   ifneq ($(HB_HOST_PLAT),$(HB_ARCHITECTURE))
       # cross-build section *nix -> win/wce
-      ifeq ($(filter $(HB_HOST_ARCH),dos os2),)
+      ifeq ($(filter $(HB_HOST_PLAT),dos os2),)
          ifeq ($(HB_ARCHITECTURE),win)
 
             ifeq ($(call find_in_path_par,$(HB_CCPREFIX),$(HB_CCPATH)),)
@@ -840,7 +840,7 @@ endif
 
 ifeq ($(HB_INIT_DONE),)
    ifneq ($(MAKE_381),)
-      $(info ! HB_ARCHITECTURE: $(HB_ARCHITECTURE)$(if $(HB_CPU), ($(HB_CPU)),) $(HB_ARCH_AUTO))
+      $(info ! HB_ARCHITECTURE: $(HB_ARCHITECTURE)$(if $(HB_CPU), ($(HB_CPU)),) $(HB_PLAT_AUTO))
       $(info ! HB_COMPILER: $(HB_COMPILER) $(HB_COMP_AUTO))
    endif
 endif
@@ -855,14 +855,14 @@ HB_CFLAGS :=
 HB_PRGFLAGS :=
 
 HB_CROSS_BUILD :=
-ifneq ($(HB_HOST_ARCH)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
+ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
    ifeq ($(HB_BIN_COMPILE),)
       # Not required in these combinations: [vszakats]
-      ifneq ($(HB_HOST_ARCH)-$(HB_HOST_CPU)-$(HB_ARCHITECTURE)-$(HB_CPU),win-x86_64-win-x86)
-         ifneq ($(HB_HOST_ARCH)-$(HB_HOST_CPU)-$(HB_ARCHITECTURE)-$(HB_CPU),win-x86-dos-)
+      ifneq ($(HB_HOST_PLAT)-$(HB_HOST_CPU)-$(HB_ARCHITECTURE)-$(HB_CPU),win-x86_64-win-x86)
+         ifneq ($(HB_HOST_PLAT)-$(HB_HOST_CPU)-$(HB_ARCHITECTURE)-$(HB_CPU),win-x86-dos-)
             HB_CROSS_BUILD := yes
             # Try to autosetup
-            HB_BIN_COMPILE := $(dir $(firstword $(wildcard $(TOP)$(ROOT)bin/$(HB_HOST_ARCH)/*/harbour$(HB_HOST_BIN_EXT))))
+            HB_BIN_COMPILE := $(dir $(firstword $(wildcard $(TOP)$(ROOT)bin/$(HB_HOST_PLAT)/*/harbour$(HB_HOST_BIN_EXT))))
             ifeq ($(HB_BIN_COMPILE),)
                HB_BIN_COMPILE := $(dir $(firstword $(foreach dir,$(subst $(PTHSEP), ,$(PATH)),$(wildcard $(dir)/harbour$(HB_HOST_BIN_EXT)))))
                ifneq ($(HB_BIN_COMPILE),)
@@ -886,18 +886,18 @@ ifneq ($(HB_HOST_ARCH)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
    endif
    ifeq ($(HB_CROSS_BUILD),yes)
       # Setup platform macros (undefine host, define target)
-      ifeq ($(HB_HOST_ARCH),win)
+      ifeq ($(HB_HOST_PLAT),win)
          HB_PRGFLAGS += -undef:__PLATFORM__WINDOWS
          # We only need this to avoid problems with using Cygwin binaries as native ones.
          HB_PRGFLAGS += -undef:__PLATFORM__UNIX
       else
-         ifeq ($(HB_HOST_ARCH),dos)
+         ifeq ($(HB_HOST_PLAT),dos)
             HB_PRGFLAGS += -undef:__PLATFORM__DOS
          else
-            ifeq ($(HB_HOST_ARCH),os2)
+            ifeq ($(HB_HOST_PLAT),os2)
                HB_PRGFLAGS += -undef:__PLATFORM__OS2
             else
-               ifeq ($(HB_HOST_ARCH),linux)
+               ifeq ($(HB_HOST_PLAT),linux)
                   HB_PRGFLAGS += -undef:__PLATFORM__LINUX -undef:__PLATFORM__UNIX
                endif
             endif
@@ -1009,7 +1009,7 @@ else
    HB_DYN_VER := $(HB_VER_MAJOR)$(HB_VER_MINOR)
 endif
 
-ifneq ($(HB_HOST_ARCH),dos)
+ifneq ($(HB_HOST_PLAT),dos)
    HB_VERSION := $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)$(HB_VER_STATUS)
    HB_PKGNAME := harbour-$(HB_VERSION)-$(HB_ARCHITECTURE)-$(HB_COMPILER)
    HB_PKGNAMI := $(HB_PKGNAME)
@@ -1061,7 +1061,7 @@ else
                # Stick to *nix customs. I don't like it, it needs admin.
                HB_INSTALL_PREFIX := /usr/local
                # Add postfix for cross builds
-               ifneq ($(HB_HOST_ARCH),$(HB_ARCHITECTURE))
+               ifneq ($(HB_HOST_PLAT),$(HB_ARCHITECTURE))
                   HB_INSTALL_PREFIX += /harbour-$(HB_ARCHITECTURE)-$(HB_COMPILER)
                endif
             endif
@@ -1156,7 +1156,7 @@ endif
 HB_DYN_COMPILE := no
 
 # export some variables to eliminate repeated setting in recursive calls
-export HB_HOST_ARCH
+export HB_HOST_PLAT
 export HB_HOST_CPU
 export HB_HOST_BIN_DIR
 

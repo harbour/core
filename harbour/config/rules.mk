@@ -25,7 +25,7 @@ HB := $(HB_HOST_BIN_DIR)/harbour$(HB_HOST_BIN_EXT)
 HB_FLAGS := -n1 $(HB_INC_DEPEND) -i$(HB_INC_COMPILE) -q0 -w3 -es2 -kmo $(HB_PRGFLAGS)
 HB_RULE = $(HB) $? $(HB_FLAGS) $(HB_USER_PRGFLAGS)
 
-# Use default rules if architecture/compiler specific rule is not defined
+# Use default rules if platform/compiler specific rule is not defined
 
 CC_FLAGS := $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CFLAGS)
 

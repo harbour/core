@@ -1120,7 +1120,7 @@ extern HB_EXPORT const char * hb_verSvnLastEntry( void );    /* retrieves a stat
 extern HB_EXPORT const char * hb_verFlagsC( void );          /* retrieves a static buffer containing build time C compiler flags in HB_USER_CFLAGS envvar */
 extern HB_EXPORT const char * hb_verFlagsL( void );          /* retrieves a static buffer containing build time linker flags in HB_USER_LDFLAGS envvar */
 extern HB_EXPORT const char * hb_verFlagsPRG( void );        /* retrieves a static buffer containing build time Harbour compiler flags in HB_USER_PRGFLAGS envvar */
-extern HB_EXPORT const char * hb_verHB_ARCH( void );         /* retrieves a static buffer containing build time HB_ARCHITECTURE setting */
+extern HB_EXPORT const char * hb_verHB_PLAT( void );         /* retrieves a static buffer containing build time HB_PLATFORM setting */
 extern HB_EXPORT const char * hb_verHB_COMP( void );         /* retrieves a static buffer containing build time HB_COMPILER setting */
 
 extern HB_EXPORT BOOL   hb_iswinnt( void ); /* return .T. if OS == Windows NT, 2000, XP */

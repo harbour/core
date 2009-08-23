@@ -3,7 +3,7 @@
 #
 
 incpaths=.
-libpaths=lib/${hb_arch}/${hb_comp}
+libpaths=lib/${hb_plat}/${hb_comp}
 
 libs=hbsqlit2
 libs=sqlite2
