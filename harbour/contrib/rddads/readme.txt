@@ -20,13 +20,29 @@
    You need also to include to your prg file following lines:
 
       REQUEST ADS
-      rddRegister( "ADS", 1 )
-      rddsetdefault( "ADS" )
 
-   By default RDD is tuned for remote server and cdx indexes. To
-   change this you may use commands, defined in ads.ch:
+   and then you can set default RDD using one of the following functions:
+
+      rddsetdefault( "ADT" )
+      rddsetdefault( "ADSNTX" )
+      rddsetdefault( "ADSCDX" )
+      rddsetdefault( "ADSVFP" )
+
+   You can also use:
+
+      REQUEST ADT | ADSNTX | ADSCDX | ADSVFP
+
+   instead of REQUEST ADS.
+
+   for backward compatibility with old code it's possible to use also:
+      rddsetdefault( "ADS" )
+   and then
+     SET FILETYPE TO NTX | CDX | ADT | VFP
+   command or AdsSetFileType() function to set table type (default is CDX)
+
+   By default RDD is tuned for remote server. To change this you may
+   use commands, defined in ads.ch:
 
      SET SERVER LOCAL
-     SET FILETYPE TO NTX / SET FILETYPE TO ADT
 
-   or functions AdsSetServerType(), AdsSetFileType().
+   or function AdsSetServerType().

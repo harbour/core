@@ -163,7 +163,7 @@ HB_FUNC( __AXDOVERB ) /* ( hWndAx, iVerb ) --> hResult */
    IUnknown*   pUnk = NULL;
    HRESULT     lOleError;
 
-   if( ! s_pAtlAxGetControl )
+   if( ! hb_oleAxInit() || ! s_pAtlAxGetControl )
    {
       hb_oleSetError( S_OK );
       hb_errRT_BASE_SubstR( EG_UNSUPPORTED, 3012, "ActiveX not initialized", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

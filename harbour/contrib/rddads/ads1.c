@@ -1961,7 +1961,7 @@ static HB_ERRCODE adsFlush( ADSAREAP pArea )
 
 static HB_ERRCODE adsGetRec( ADSAREAP pArea, BYTE ** pBuffer )
 {
-   UNSIGNED32 u32Len = pArea->uiRecordLen, u32Result;
+   UNSIGNED32 u32Len = ( UNSIGNED32 ) pArea->ulRecordLen, u32Result;
 
    HB_TRACE(HB_TR_DEBUG, ("adsGetRec(%p, %p)", pArea, pBuffer));
 
@@ -2331,7 +2331,7 @@ static HB_ERRCODE adsGetVarLen( ADSAREAP pArea, USHORT uiIndex, ULONG * ulLen )
 
 static HB_ERRCODE adsPutRec( ADSAREAP pArea, const BYTE * pBuffer )
 {
-   UNSIGNED32 u32Len = pArea->uiRecordLen, u32Result;
+   UNSIGNED32 u32Len = ( UNSIGNED32 ) pArea->ulRecordLen, u32Result;
 
    HB_TRACE(HB_TR_DEBUG, ("adsGetRec(%p, %p)", pArea, pBuffer));
 
@@ -2620,7 +2620,7 @@ static HB_ERRCODE adsRecInfo( ADSAREAP pArea, PHB_ITEM pRecID, USHORT uiInfoType
          break;
       }
       case DBRI_RECSIZE:
-         hb_itemPutNL( pInfo, pArea->uiRecordLen );
+         hb_itemPutNL( pInfo, pArea->ulRecordLen );
          break;
 
       case DBRI_RECNO:
@@ -2874,10 +2874,10 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
    }
 
    AdsGetRecordLength( pArea->hTable, &u32Length );
-   pArea->uiRecordLen = (USHORT) u32Length;
+   pArea->ulRecordLen = u32Length;
    /* Alloc record buffer - because it's also used for some extended types
       conversion it has to be at least 25 bytes size */
-   pArea->pRecord = ( BYTE * ) hb_xgrab( HB_MAX( ( ULONG ) pArea->uiRecordLen, pArea->maxFieldLen ) + 1 );
+   pArea->pRecord = ( BYTE * ) hb_xgrab( HB_MAX( pArea->ulRecordLen, pArea->maxFieldLen ) + 1 );
 
    return SELF_GOTOP( ( AREAP ) pArea );
 }
@@ -2915,7 +2915,7 @@ static HB_ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
       }
       case DBI_GETRECSIZE:
-         hb_itemPutNL( pItem, pArea->uiRecordLen );
+         hb_itemPutNL( pItem, pArea->ulRecordLen );
          break;
 
       case DBI_GETLOCKARRAY:
@@ -3184,7 +3184,7 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    /* Set default alias if necessary */
    if( !pOpenInfo->atomAlias )
    {
-      UNSIGNED16 uiAliasLen = HB_RDD_MAX_ALIAS_LEN;
+      UNSIGNED16 uiAliasLen = HB_RDD_MAX_ALIAS_LEN + 1;
       if( AdsGetTableAlias( hTable, ( UNSIGNED8 * ) szAlias, &uiAliasLen ) == AE_SUCCESS )
          pOpenInfo->atomAlias = szAlias;
       else
@@ -3333,10 +3333,10 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       pArea->maxFieldLen = 24;
 
    AdsGetRecordLength( pArea->hTable, &u32Length );
-   pArea->uiRecordLen = (USHORT) u32Length;
+   pArea->ulRecordLen = u32Length;
    /* Alloc record buffer - because it's also used for some extended types
       conversion it has to be at least 25 bytes size */
-   pArea->pRecord = ( BYTE * ) hb_xgrab( HB_MAX( ( ULONG ) pArea->uiRecordLen, pArea->maxFieldLen ) + 1 );
+   pArea->pRecord = ( BYTE * ) hb_xgrab( HB_MAX( pArea->ulRecordLen, pArea->maxFieldLen ) + 1 );
 
    /* If successful call SUPER_OPEN to finish system jobs */
    if( SUPER_OPEN( ( AREAP ) pArea, pOpenInfo ) == HB_FAILURE )

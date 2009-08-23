@@ -146,7 +146,7 @@ typedef struct _ADSAREA_
    LPDBRELINFO lpdbPendingRel;   /* Pointer to parent rel struct */
 
    char *   szDataFileName;      /* Name of data file */
-   USHORT   uiRecordLen;         /* Size of record */
+   ULONG    ulRecordLen;         /* Size of record */
    ULONG    ulRecNo;             /* Current record */
    BYTE *   pRecord;             /* Buffer of record data */
    ULONG    maxFieldLen;         /* Max field length in table record */
@@ -156,7 +156,7 @@ typedef struct _ADSAREA_
    BOOL     fReadonly;           /* Read only file */
    BOOL     fFLocked;            /* TRUE if file is locked */
 
-   int      iFileType;           /* adt/cdx/ntx */
+   int      iFileType;           /* adt/cdx/ntx/vfp */
 
    ADSHANDLE hTable;
    ADSHANDLE hOrdCurrent;
@@ -165,13 +165,13 @@ typedef struct _ADSAREA_
 
 typedef ADSAREA * ADSAREAP;
 
-#define SELF_RESETREL( p )    if( pArea->lpdbPendingRel ) \
+#define SELF_RESETREL( p )    if( (p)->lpdbPendingRel ) \
                               { \
-                                 if( pArea->lpdbPendingRel->isScoped && \
-                                    !pArea->lpdbPendingRel->isOptimized ) \
-                                    SELF_FORCEREL( ( AREAP ) pArea ); \
+                                 if( (p)->lpdbPendingRel->isScoped && \
+                                    !(p)->lpdbPendingRel->isOptimized ) \
+                                    SELF_FORCEREL( ( AREAP ) (p) ); \
                                  else \
-                                    pArea->lpdbPendingRel = NULL; \
+                                    (p)->lpdbPendingRel = NULL; \
                               }
 
 
