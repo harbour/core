@@ -37,6 +37,9 @@ HB_VER_STATUS_SH := b2
 
 -include $(TOP)$(ROOT)config/conf.mk
 
+# Arbitrary pattern which we don't expect to occur in real-world path names
+substpat := !@!@
+
 # This isn't strictly necessary, but it does signficantly reduce
 # the number of rules that make has to evaluate otherwise, which may give
 # a performance boost on a slow system.
@@ -56,17 +59,17 @@ MAKE_381 := $(filter $(need),$(firstword $(sort $(MAKE_VERSION) $(need))))
 
 # Don't indent this subroutine
 define find_in_path
-$(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),#,$(PATH))), $(wildcard $(subst #,\ ,$(subst \,/,$(dir)))/$(1)$(HB_HOST_BIN_EXT))))
+$(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(PATH))), $(wildcard $(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1)$(HB_HOST_BIN_EXT))))
 endef
 
 # Don't indent this subroutine
 define find_in_path_par
-$(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),#,$(2))), $(wildcard $(subst #,\ ,$(subst \,/,$(dir)))/$(1)$(HB_HOST_BIN_EXT))))
+$(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(2))), $(wildcard $(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1)$(HB_HOST_BIN_EXT))))
 endef
 
 # Don't indent this subroutine
 define find_in_path_raw
-$(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),#,$(2))), $(wildcard $(subst #,\ ,$(subst \,/,$(dir)))/$(1))))
+$(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(2))), $(wildcard $(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1))))
 endef
 
 define check_host
@@ -507,6 +510,7 @@ ifeq ($(HB_PLATFORM),)
 endif
 
 HB_COMP_AUTO :=
+HB_COMP_PATH :=
 ifeq ($(HB_COMPILER),)
    ifneq ($(HB_HOST_PLAT),$(HB_PLATFORM))
       # cross-build section *nix -> win/wce
@@ -561,6 +565,7 @@ ifeq ($(HB_COMPILER),)
             endif
 
             ifneq ($(HB_CCPATH)$(HB_CCPREFIX),)
+               HB_COMP_PATH := $(dir $(HB_CCPATH))
                HB_COMPILER := mingw
                HB_PLATFORM := win
                export HB_TOOLS_PREF := hbw
@@ -623,6 +628,7 @@ ifeq ($(HB_COMPILER),)
                endif
 
                ifneq ($(HB_CCPATH)$(HB_CCPREFIX),)
+                  HB_COMP_PATH := $(dir $(HB_CCPATH))
                   HB_PLATFORM := wce
                   export HB_TOOLS_PREF := hbce
                   export HB_XBUILD := wce
@@ -638,58 +644,73 @@ ifeq ($(HB_COMPILER),)
    endif
    ifeq ($(HB_COMPILER),)
       ifeq ($(HB_PLATFORM),win)
-         ifneq ($(call find_in_path,arm-wince-mingw32ce-gcc),)
+         HB_COMP_PATH := $(call find_in_path,arm-wince-mingw32ce-gcc)
+         ifneq ($(HB_COMP_PATH),)
             HB_COMPILER := mingwarm
             HB_PLATFORM := wce
             HB_CCPREFIX := arm-wince-mingw32ce-
          else
-            ifneq ($(call find_in_path,arm-mingw32ce-gcc),)
+            HB_COMP_PATH := $(call find_in_path,arm-mingw32ce-gcc)
+            ifneq ($(HB_COMP_PATH),)
                HB_COMPILER := mingwarm
                HB_PLATFORM := wce
                HB_CCPREFIX := arm-mingw32ce-
             else
-               ifneq ($(call find_in_path,i386-mingw32ce-gcc),)
+               HB_COMP_PATH := $(call find_in_path,i386-mingw32ce-gcc)
+               ifneq ($(HB_COMP_PATH),)
                   HB_COMPILER := mingw
                   HB_PLATFORM := wce
                   HB_CCPREFIX := i386-mingw32ce-
                else
-                  ifneq ($(call find_in_path,cygstart),)
+                  HB_COMP_PATH := $(call find_in_path,cygstart)
+                  ifneq ($(HB_COMP_PATH),)
                      HB_COMPILER := cygwin
                   else
-                     ifneq ($(call find_in_path,gcc),)
+                     HB_COMP_PATH := $(call find_in_path,gcc)
+                     ifneq ($(HB_COMP_PATH),)
                         HB_COMPILER := mingw
                      else
-                        ifneq ($(call find_in_path,wpp386),)
+                        HB_COMP_PATH := $(call find_in_path,wpp386)
+                        ifneq ($(HB_COMP_PATH),)
                            HB_COMPILER := watcom
                         else
-                           ifneq ($(call find_in_path,clarm),)
+                           HB_COMP_PATH := $(call find_in_path,clarm)
+                           ifneq ($(HB_COMP_PATH),)
                               HB_COMPILER := msvcarm
                               HB_PLATFORM := wce
                               export HB_VISUALC_VER_PRE80 := yes
                            else
-                              ifneq ($(call find_in_path,armasm),)
+                              HB_COMP_PATH := $(call find_in_path,armasm)
+                              ifneq ($(HB_COMP_PATH),)
                                  HB_COMPILER := msvcarm
                                  HB_PLATFORM := wce
                               else
-                                 ifneq ($(call find_in_path,ml64),)
+                                 HB_COMP_PATH := $(call find_in_path,ml64)
+                                 ifneq ($(HB_COMP_PATH),)
                                     HB_COMPILER := msvc64
                                  else
-                                    ifneq ($(call find_in_path,icl),)
+                                    HB_COMP_PATH := $(call find_in_path,icl)
+                                    ifneq ($(HB_COMP_PATH),)
                                        HB_COMPILER := icc
                                     else
-                                       ifneq ($(call find_in_path,cl),)
+                                       HB_COMP_PATH := $(call find_in_path,cl)
+                                       ifneq ($(HB_COMP_PATH),)
                                           HB_COMPILER := msvc
                                        else
-                                          ifneq ($(call find_in_path,bcc32),)
+                                          HB_COMP_PATH := $(call find_in_path,bcc32)
+                                          ifneq ($(HB_COMP_PATH),)
                                              HB_COMPILER := bcc
                                           else
-                                             ifneq ($(call find_in_path,pocc),)
+                                             HB_COMP_PATH := $(call find_in_path,pocc)
+                                             ifneq ($(HB_COMP_PATH),)
                                                 HB_COMPILER := pocc
                                              else
-                                                ifneq ($(call find_in_path,xcc),)
+                                                HB_COMP_PATH := $(call find_in_path,xcc)
+                                                ifneq ($(HB_COMP_PATH),)
                                                    HB_COMPILER := xcc
                                                 else
-                                                   ifneq ($(call find_in_path,x86_64-w64-mingw32-gcc),)
+                                                   HB_COMP_PATH := $(call find_in_path,x86_64-w64-mingw32-gcc)
+                                                   ifneq ($(HB_COMP_PATH),)
                                                       HB_COMPILER := mingw64
                                                       HB_CCPREFIX := x86_64-w64-mingw32-
                                                    endif
@@ -709,42 +730,51 @@ ifeq ($(HB_COMPILER),)
          endif
       else
          ifeq ($(HB_PLATFORM),linux)
-            ifneq ($(call find_in_path,wpp386),)
+            HB_COMP_PATH := $(call find_in_path,wpp386)
+            ifneq ($(HB_COMP_PATH),)
                HB_COMPILER := watcom
             else
-               ifneq ($(call find_in_path,gcc),)
+               HB_COMP_PATH := $(call find_in_path,gcc)
+               ifneq ($(HB_COMP_PATH),)
                   HB_COMPILER := gcc
                endif
             endif
          else
             ifneq ($(filter $(HB_PLATFORM),darwin hpux bsd),)
-               ifneq ($(call find_in_path,gcc),)
+               HB_COMP_PATH := $(call find_in_path,gcc)
+               ifneq ($(HB_COMP_PATH),)
                   HB_COMPILER := gcc
                endif
             else
                ifeq ($(HB_PLATFORM),sunos)
-                  ifneq ($(call find_in_path,suncc),)
+                  HB_COMP_PATH := $(call find_in_path,suncc)
+                  ifneq ($(HB_COMP_PATH),)
                      HB_COMPILER := sunpro
                   else
-                     ifneq ($(call find_in_path,gcc),)
+                     HB_COMP_PATH := $(call find_in_path,gcc)
+                     ifneq ($(HB_COMP_PATH),)
                         HB_COMPILER := gcc
                      endif
                   endif
                else
                   ifeq ($(HB_PLATFORM),dos)
-                     ifneq ($(call find_in_path,gcc),)
+                     HB_COMP_PATH := $(call find_in_path,gcc)
+                     ifneq ($(HB_COMP_PATH),)
                         HB_COMPILER := djgpp
                      else
-                        ifneq ($(call find_in_path,wpp386),)
+                        HB_COMP_PATH := $(call find_in_path,wpp386)
+                        ifneq ($(HB_COMP_PATH),)
                            HB_COMPILER := watcom
                         endif
                      endif
                   else
                      ifeq ($(HB_PLATFORM),os2)
-                        ifneq ($(call find_in_path,gcc),)
+                        HB_COMP_PATH := $(call find_in_path,gcc)
+                        ifneq ($(HB_COMP_PATH),)
                            HB_COMPILER := gcc
                         else
-                           ifneq ($(call find_in_path,wpp386),)
+                           HB_COMP_PATH := $(call find_in_path,wpp386)
+                           ifneq ($(HB_COMP_PATH),)
                               HB_COMPILER := watcom
                            endif
                         endif
@@ -758,7 +788,8 @@ ifeq ($(HB_COMPILER),)
       endif
    endif
    ifneq ($(HB_COMPILER),)
-      HB_COMP_AUTO := (autodetected)
+      HB_COMP_PATH := $(subst $(substpat), ,$(dir $(subst $(subst x, ,x),$(substpat),$(HB_COMP_PATH))))
+      HB_COMP_AUTO := (autodetected$(if $(HB_COMP_PATH),: $(HB_COMP_PATH),))
    endif
    export HB_CCPATH
    export HB_CCPREFIX
@@ -799,7 +830,6 @@ ifeq ($(ROOT),./)
 else
    PKG_DIR :=
 endif
-OBJ_DYN_POSTFIX :=
 
 # Assemble relative path from OBJ_DIR to source.
 GRANDP := $(subst $(subst x,x, ),,$(foreach item, $(subst /, ,$(OBJ_DIR)), ../))

@@ -10,14 +10,13 @@ LIB_PREF :=
 LIB_EXT := .lib
 
 HB_DYN_COPT := -DHB_DYNLIB
-OBJ_DYN_POSTFIX := _dyn
 
 CC := icl.exe
 CC_IN := -c
 CC_OUT := -Fo
 
-CPPFLAGS := -nologo -I. -I$(HB_INC_COMPILE)
-CFLAGS := -Gs
+CPPFLAGS := -nologo -I. -I$(HB_INC_COMPILE) -Gs
+CFLAGS :=
 LDFLAGS :=
 
 ifeq ($(HB_BUILD_MODE),c)
@@ -28,30 +27,30 @@ ifeq ($(HB_BUILD_MODE),cpp)
 endif
 
 ifneq ($(HB_BUILD_WARN),no)
-   CFLAGS += -W3
+   CPPFLAGS += -W3
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
    # maximum optimizations
-   # CFLAGS += -Ox
-   CFLAGS += -O3
+   # CPPFLAGS += -Ox
+   CPPFLAGS += -O3
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-   CFLAGS += -Zi
+   CPPFLAGS += -Zi
 endif
 
-LD := icl.exe
-LD_OUT := -Fe
+LD := xilink.exe
+LD_OUT := /out:
 
 LIBPATHS := /libpath:$(LIB_DIR)
 LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
-LDFLAGS += /link $(LIBPATHS)
+LDFLAGS += /nologo $(LIBPATHS)
 
 AR := xilib.exe
 ARFLAGS :=
-AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) /out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
+AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) /nologo /out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
 
 DY := $(LD)
 DFLAGS := /nologo /dll /subsystem:console

@@ -9,7 +9,6 @@ LIB_PREF :=
 LIB_EXT := .lib
 
 HB_DYN_COPT := -DHB_DYNLIB
-OBJ_DYN_POSTFIX := _dyn
 
 CC := bcc32.exe
 CC_IN := -c

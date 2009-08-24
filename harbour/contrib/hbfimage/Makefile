@@ -10,11 +10,8 @@ LIBNAME := hbfimage
 
 HB_INC_FREEIMAGE_OK :=
 
-ifneq ($(HB_PLATFORM),dos)
-# disabled until a proper solution is found for type collision
-ifneq ($(HB_PLATFORM),os2)
-ifneq ($(HB_PLATFORM),linux)
-ifneq ($(HB_PLATFORM),darwin)
+# disabled until a proper solution is found for type collision (except for dos)
+ifeq ($(filter $(HB_PLATFORM),dos os2 linux darwin),)
 
 ifeq ($(HB_INC_FREEIMAGE),)
    ifeq ($(HB_XBUILD),)
@@ -23,7 +20,6 @@ ifeq ($(HB_INC_FREEIMAGE),)
 endif
 
 HB_INC_FREEIMAGE_OK := $(foreach d, $(HB_INC_FREEIMAGE), $(if $(wildcard $(d)/FreeImage.h),$(d),))
-endif
 
 ifneq ($(strip $(HB_INC_FREEIMAGE_OK)),)
 
@@ -45,12 +41,6 @@ include $(TOP)$(ROOT)config/lib.mk
 install::
 	$(INSTALL_RULE_HEADERS)
 
-else
-include $(TOP)$(ROOT)config/none.mk
-endif
-else
-include $(TOP)$(ROOT)config/none.mk
-endif
 else
 include $(TOP)$(ROOT)config/none.mk
 endif

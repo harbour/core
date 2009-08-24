@@ -8,81 +8,74 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := hbqt
 
-ifeq ($(HB_WITH_QT),)
-   HB_WITH_QT := yes
-   ifeq ($(HB_PLATFORM),dos)
-      HB_WITH_QT := no
-   endif
-   ifeq ($(HB_PLATFORM),os2)
-      HB_WITH_QT := no
-   endif
-   ifeq ($(HB_COMPILER),mingw64)
-      HB_WITH_QT := no
-   endif
-   ifeq ($(HB_COMPILER),watcom)
-      HB_WITH_QT := no
-   endif
-   ifeq ($(HB_COMPILER),bcc)
-      HB_WITH_QT := no
-   endif
-   ifeq ($(HB_COMPILER),pocc)
-      HB_WITH_QT := no
-   endif
-   ifeq ($(HB_COMPILER),pocc64)
-      HB_WITH_QT := no
-   endif
-   ifeq ($(HB_COMPILER),poccarm)
-      HB_WITH_QT := no
-   endif
+ifneq ($(filter $(HB_PLATFORM),dos os2),)
+   PREREQ_MISS := platform
+else ifneq ($(filter $(HB_COMPILER),mingw64 watcom bcc pocc pocc64 poccarm),)
+   PREREQ_MISS := compiler
+else
+   PREREQ_MISS :=
 endif
 
-ifeq ($(HB_WITH_QT),yes)
+ifeq ($(PREREQ_MISS),)
 
-ifeq ($(HB_INC_QT),)
-   ifeq ($(HB_XBUILD),)
-      HB_INC_QT := /usr/include/qt4 /usr/lib/qt4/include /usr/include /Developer/qt/include
-   endif
-endif
+   ifneq ($(HB_INC_QT),no)
 
-HB_INC_QT_OK := $(foreach d, $(HB_INC_QT), $(if $(wildcard $(d)/Qt/qglobal.h),$(d),))
-ifeq ($(HB_PLATFORM),darwin)
-   ifeq ($(strip $(HB_INC_QT_OK)),)
-      HB_INC_QT_OK := $(if $(wildcard /Library/Frameworks/QtCore.framework/Versions/4/Headers/QtCore),spec,)
-      ifeq ($(HB_INC_QT_OK),spec)
-         HB_CFLAGS += -I/Library/Frameworks/QtCore.framework/Headers
-         HB_CFLAGS += -I/Library/Frameworks/QtGui.framework/Headers
-         HB_CFLAGS += -I/Library/Frameworks/QtNetwork.framework/Headers
-         HB_CFLAGS += -I/Library/Frameworks/QtWebKit.framework/Headers
+      ifeq ($(HB_INC_QT),)
+         ifeq ($(HB_XBUILD),)
+            ifeq ($(HB_OS_UNIX),yes)
+               HB_INC_QT := /usr/include/qt4 /usr/lib/qt4/include /usr/include /Developer/qt/include
+               ifeq ($(HB_PLATFORM),darwin)
+                  HB_INC_QT += /Library/Frameworks/QtCore.framework/Versions/4/Headers/QtCore
+               endif
+            endif
+         endif
       endif
-   endif
-endif
 
-ifneq ($(strip $(HB_INC_QT_OK)),)
+      ifneq ($(HB_INC_QT),)
 
-ifneq ($(HB_QT_STATIC),)
-   LIBNAME := hbqts
-   HB_CFLAGS += -DQT_NODLL
-endif
+         HB_INC_QT_OK := $(strip $(foreach d, $(HB_INC_QT), $(if $(wildcard $(d)/Qt/qglobal.h),$(d),)))
 
-ifneq ($(strip $(HB_INC_QT_OK)),spec)
-   HB_CFLAGS += $(foreach d,$(HB_INC_QT_OK),-I$(d) -I$(d)/Qt -I$(d)/QtCore -I$(d)/QtGui -I$(d)/QtNetwork -I$(d)/QtWebKit)
-endif
+         ifneq ($(HB_INC_QT_OK),)
 
-include $(TOP)$(ROOT)contrib/hbqt/filelist.mk
+            ifneq ($(HB_QT_STATIC),)
+               LIBNAME := hbqts
+               HB_CFLAGS += -DQT_NODLL
+            endif
 
-PRG_HEADERS := \
-   hbqt.ch \
+            ifeq ($(HB_INC_QT_OK),/Library/Frameworks/QtCore.framework/Versions/4/Headers/QtCore)
+               HB_CFLAGS += -I/Library/Frameworks/QtCore.framework/Headers
+               HB_CFLAGS += -I/Library/Frameworks/QtGui.framework/Headers
+               HB_CFLAGS += -I/Library/Frameworks/QtNetwork.framework/Headers
+               HB_CFLAGS += -I/Library/Frameworks/QtWebKit.framework/Headers
+            else
+               HB_CFLAGS += $(foreach d,$(HB_INC_QT_OK),-I$(d) -I$(d)/Qt -I$(d)/QtCore -I$(d)/QtGui -I$(d)/QtNetwork -I$(d)/QtWebKit)
+            endif
 
-include $(TOP)$(ROOT)config/header.mk
-INSTALL_RULE_HEADERS := $(INSTALL_RULE)
-include $(TOP)$(ROOT)config/lib.mk
+            include $(TOP)$(ROOT)contrib/hbqt/filelist.mk
 
-install::
+            PRG_HEADERS := \
+               hbqt.ch \
+
+            include $(TOP)$(ROOT)config/header.mk
+            INSTALL_RULE_HEADERS := $(INSTALL_RULE)
+            include $(TOP)$(ROOT)config/lib.mk
+
+            install::
 	$(INSTALL_RULE_HEADERS)
 
+         else
+            HB_SKIP_REASON := component not found
+            include $(TOP)$(ROOT)config/none.mk
+         endif
+      else
+         HB_SKIP_REASON := component location not set
+         include $(TOP)$(ROOT)config/none.mk
+      endif
+   else
+      HB_SKIP_REASON := deselected
+      include $(TOP)$(ROOT)config/none.mk
+   endif
 else
-include $(TOP)$(ROOT)config/none.mk
-endif
-else
-include $(TOP)$(ROOT)config/none.mk
+   HB_SKIP_REASON := $(PREREQ_MISS) not supported
+   include $(TOP)$(ROOT)config/none.mk
 endif

@@ -20,6 +20,12 @@ ifeq ($(HB_BUILD_UNICODE),yes)
    HB_CFLAGS := -DUNICODE $(HB_CFLAGS)
 endif
 
+ifeq ($(HB_DYN_COPT),)
+   OBJ_DYN_POSTFIX :=
+else
+   OBJ_DYN_POSTFIX := _dyn
+endif
+
 # How to run Harbour
 HB := $(HB_HOST_BIN_DIR)/harbour$(HB_HOST_BIN_EXT)
 HB_FLAGS := -n1 $(HB_INC_DEPEND) -i$(HB_INC_COMPILE) -q0 -w3 -es2 -kmo $(HB_PRGFLAGS)

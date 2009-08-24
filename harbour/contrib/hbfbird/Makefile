@@ -8,8 +8,7 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := hbfbird
 
-ifneq ($(HB_COMPILER),pocc64)
-ifneq ($(HB_COMPILER),poccarm)
+ifeq ($(filter $(HB_COMPILER),pocc64 poccarm),)
 
 ifeq ($(HB_INC_FIREBIRD),)
    ifeq ($(HB_XBUILD),)
@@ -31,9 +30,6 @@ PRG_SOURCES := \
 
 include $(TOP)$(ROOT)config/lib.mk
 
-else
-include $(TOP)$(ROOT)config/none.mk
-endif
 else
 include $(TOP)$(ROOT)config/none.mk
 endif

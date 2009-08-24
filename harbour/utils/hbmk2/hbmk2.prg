@@ -3411,6 +3411,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
       ENDIF
 
+      /* Avoid this list being added at link phase if resource compiling isn't available
+         in target compiler. */
+      IF Empty( cBin_Res )
+         ASize( hbmk[ _HBMK_aRESSRC ], 0 )
+      ENDIF
+
       IF Len( l_aRESSRC_TODO ) > 0 .AND. ! Empty( cBin_Res ) .AND. ! l_lCLEAN
 
          IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lQuiet ]
