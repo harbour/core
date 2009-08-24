@@ -131,8 +131,8 @@ CP := $(TOOL_DIR)os2cp -f
 LN :=
 MD := $(TOOL_DIR)os2mkdir
 MDP := $(TOOL_DIR)os2mkdir -p
-ECHO := $(TOOL_DIR)os2echo
-ECHOQUOTE := "
+ECHO := echo
+ECHOQUOTE :=
 
 dirbase::
 	-@$(MDP) $(OBJ_DIR)
