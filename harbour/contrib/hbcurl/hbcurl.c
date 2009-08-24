@@ -1843,3 +1843,31 @@ HB_FUNC( CURL_GETDATE )
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+
+/* Harbour interface (session independent) */
+
+/* NOTE: Obsolete, superceded by curl_easy_escape() */
+HB_FUNC( CURL_ESCAPE )
+{
+   if( HB_ISCHAR( 1 ) )
+   {
+      char * buffer = curl_escape( hb_parc( 1 ), hb_parclen( 1 ) );
+      hb_retc( buffer );
+      curl_free( buffer );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+/* NOTE: Obsolete, superceded by curl_easy_unescape() */
+HB_FUNC( CURL_UNESCAPE )
+{
+   if( HB_ISCHAR( 1 ) )
+   {
+      char * buffer = curl_unescape( hb_parc( 1 ), hb_parclen( 1 ) );
+      hb_retc( buffer );
+      curl_free( buffer );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}

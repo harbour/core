@@ -238,20 +238,25 @@ ifeq ($(HB_INIT_DONE),)
    ifneq ($(MAKE_381),)
 
       # Some additional ones to be given a standard name:
-      #   HB_HOST_BUILD [yes|all|lib] -> ?
-      #   HB_XBUILD                   -> HB_BUILD_INCDEF
-      #   HB_WITHOUT_*                -> HB_HAS_*
-      #   HB_REBUILD_PARSER           -> HB_BUILD_PARSER
+      #   HB_HOST_BUILD [yes|all|lib] -> ? (yes = build harbour/hbpp bin only, all = default, lib = build libs only)
+      #   HB_XBUILD                   -> HB_BUILD_INCDEF (disables default *nix values for HB_INC_* vars)
+      #   HB_REBUILD_PARSER           -> HB_BUILD_PARSER (or maybe HB_HAVE_BISON?)
       #   HB_DB_DRVEXT                -> -
       #   HB_COMMERCE                 -> ?
-      #   HB_CRS_LIB                  -> HB_LIB_CURSES
       #   HB_BIN_COMPILE              -> HB_BUILD_BIN_DIR
       #   HB_INC_COMPILE              -> - (HB_BUILD_INC_DIR)
-      #   HB_GPM_MOUSE                -> HB_HAS_GPM
       #   HB_GPM_NOICE_DISABLE        -> HB_USER_CFLAGS=-DHB_GPM_NOICE_DISABLE
       #   HB_GT_CRS_BCEHACK           -> HB_USER_CFLAGS=-DHB_GT_CRS_BCEHACK
       #   HB_NCURSES_194              -> HB_USER_CFLAGS=-DHB_NCURSES_194
-      #   HB_DLLIBS                   -> ?
+      #   HB_DLLIBS                   -> (only used in place location, so it's a local matter)
+      #
+      #   HB_CRS_LIB                  -> HB_LIB_CURSES
+      #   HB_GPM_MOUSE                -> HB_HAS_GPM ?
+      #   HB_WITHOUT_*                -> HB_HAS_* ?
+      #   HB_INC_*                    -> ?
+      #   HB_DIR_*                    -> ?
+      #   HB_HAS_*                    -> ?
+      #
       # Macros:
       #   -DHB_PCRE_REGEX, -DHB_POSIX_REGEX, -DHB_EXT_ZLIB, -DHB_HAS_GPM, -DHB_GT_LIB=
 
