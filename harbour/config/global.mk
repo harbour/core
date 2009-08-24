@@ -46,6 +46,8 @@ substpat := !@!@
 # a performance boost on a slow system.
 .SUFFIXES:
 
+.PHONY: all clean install
+
 need := 3.81
 ok := $(filter $(need),$(firstword $(sort $(MAKE_VERSION) $(need))))
 
@@ -850,7 +852,7 @@ ifeq ($(HB_COMPILER),)
 endif
 
 ifeq ($(HB_PLATFORM),)
-   $(error ! HB_ARCHICTECTURE not set, couldn't autodetect)
+   $(error ! HB_PLATFORM not set, couldn't autodetect)
 endif
 ifeq ($(HB_COMPILER),)
    $(error ! HB_COMPILER not set, couldn't autodetect)
