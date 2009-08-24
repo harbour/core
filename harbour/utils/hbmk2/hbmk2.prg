@@ -2903,7 +2903,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          /* Update only if something changed to trigger rebuild only if really needed */
          IF hbmk[ _HBMK_lREBUILD ] .OR. !( hb_MemoRead( l_cVCSHEAD ) == tmp )
             IF hbmk[ _HBMK_lInfo ]
-               hbmk_OutStd( hbmk, hb_StrFormat( I_( "Generating VCS header: %1$s" ), l_cVCSHEAD ) )
+               hbmk_OutStd( hbmk, hb_StrFormat( I_( "Creating VCS header: %1$s" ), l_cVCSHEAD ) )
             ENDIF
             hb_MemoWrit( l_cVCSHEAD, tmp )
          ENDIF
@@ -2916,7 +2916,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                 "#define _HBMK_BUILD_TIME_      " + '"' + SubStr( hb_TToS( tmp1 ), 9, 6 ) + '"' + Chr( 10 ) +;
                 "#define _HBMK_BUILD_TIMESTAMP_ " + '"' +         hb_TToS( tmp1 )         + '"' + Chr( 10 )
          IF hbmk[ _HBMK_lInfo ]
-            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Generating timestamp header: %1$s" ), l_cTSHEAD ) )
+            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Creating timestamp header: %1$s" ), l_cTSHEAD ) )
          ENDIF
          hb_MemoWrit( l_cTSHEAD, tmp )
       ENDIF

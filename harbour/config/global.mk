@@ -10,6 +10,7 @@
 # ---------------------------------------------------------------
 # See GNU make docs here:
 #    http://www.gnu.org/software/make/manual/make.html
+#    http://www.wanderinghorse.net/computing/make/
 #    http://www.jgc.org/feeds/topic-gnumake.xml
 #    http://lists.gnu.org/archive/html/help-make/
 #    http://make.paulandlesley.org/
@@ -57,20 +58,9 @@ else
 need := 3.81
 MAKE_381 := $(filter $(need),$(firstword $(sort $(MAKE_VERSION) $(need))))
 
-# Don't indent this subroutine
-define find_in_path
-$(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(PATH))), $(wildcard $(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1)$(HB_HOST_BIN_EXT))))
-endef
-
-# Don't indent this subroutine
-define find_in_path_par
-$(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(2))), $(wildcard $(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1)$(HB_HOST_BIN_EXT))))
-endef
-
-# Don't indent this subroutine
-define find_in_path_raw
-$(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(2))), $(wildcard $(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1))))
-endef
+find_in_path = $(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(PATH))), $(wildcard $(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1)$(HB_HOST_BIN_EXT))))
+find_in_path_par = $(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(2))), $(wildcard $(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1)$(HB_HOST_BIN_EXT))))
+find_in_path_raw = $(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(2))), $(wildcard $(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1))))
 
 define check_host
 
@@ -260,6 +250,7 @@ ifeq ($(HB_INIT_DONE),)
       # Macros:
       #   -DHB_PCRE_REGEX, -DHB_POSIX_REGEX, -DHB_EXT_ZLIB, -DHB_HAS_GPM, -DHB_GT_LIB=
 
+      $(info ! Harbour-Project - Building from source - http://www.harbour-project.org)
       $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(HB_MAKECMDGOALS) $(MAKEFLAGS) $(SHELL) $(if $(MAKESHELL), MAKESHELL: $(MAKESHELL),))
       ifneq ($(HB_USER_PRGFLAGS),)
          $(info ! HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))
@@ -793,7 +784,7 @@ ifeq ($(HB_COMPILER),)
       endif
    endif
    ifneq ($(HB_COMPILER),)
-      HB_COMP_PATH := $(subst $(substpat), ,$(dir $(subst $(subst x, ,x),$(substpat),$(HB_COMP_PATH))))
+      HB_COMP_PATH := $(subst $(substpat), ,$(dir $(subst $(subst x, ,x),$(substpat),$(firstword $(HB_COMP_PATH)))))
       HB_COMP_AUTO := (autodetected$(if $(HB_COMP_PATH),: $(HB_COMP_PATH),))
    endif
    export HB_CCPATH
