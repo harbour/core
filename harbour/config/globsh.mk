@@ -64,7 +64,7 @@ clean::
 	   $(RM) $(basename $(DYN_FILE)).def; \
 	   $(RM) $(basename $(DYN_FILE)).exp; \
 	   [ "`$(ECHO) $(DYN_DIR)/*`" != "$(DYN_DIR)/*" ] || $(RDP) $(DYN_DIR); \
-	fi
+	fi ; \
 	if [ -n "$(IMP_FILE)" ]; then \
 	   $(RM) $(basename $(IMP_FILE)).exp; \
 	   [ "`$(ECHO) $(IMP_DIR)/*`" != "$(IMP_DIR)/*" ] || $(RDP) $(IMP_DIR); \
