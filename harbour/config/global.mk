@@ -58,7 +58,7 @@ else
 need := 3.81
 MAKE_381 := $(filter $(need),$(firstword $(sort $(MAKE_VERSION) $(need))))
 
-find_in_path = $(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(PATH))), $(wildcard $(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1)$(HB_HOST_BIN_EXT))))
+find_in_path     = $(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(PATH))), $(wildcard $(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1)$(HB_HOST_BIN_EXT))))
 find_in_path_par = $(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(2))), $(wildcard $(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1)$(HB_HOST_BIN_EXT))))
 find_in_path_raw = $(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(2))), $(wildcard $(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1))))
 
@@ -513,9 +513,15 @@ ifeq ($(HB_COMPILER),)
       ifeq ($(filter $(HB_HOST_PLAT),dos os2),)
          ifeq ($(HB_PLATFORM),win)
 
-            ifeq ($(call find_in_path_par,$(HB_CCPREFIX),$(HB_CCPATH)),)
-               HB_CCPREFIX :=
-               HB_CCPATH :=
+            ifeq ($(wildcard $(HB_CCPATH)$(HB_CCPREFIX)gcc),)
+               ifeq ($(HB_CCPATH),)
+                  ifeq ($(call find_in_path $(HB_CCPREFIX)gcc),)
+                     HB_CCPREFIX :=
+                  endif
+               else
+                  HB_CCPATH :=
+                  HB_CCPREFIX :=
+               endif
             endif
 
             # try to detect MinGW cross-compiler location using some default platform settings
@@ -525,18 +531,18 @@ ifeq ($(HB_COMPILER),)
                else
                   ifneq ($(call find_in_path_raw,gentoo-release,/etc),)
                      ifneq ($(call find_in_path_par,i386-mingw32msvc-,/opt/xmingw/bin),)
-                        HB_CCPATH := /opt/xmingw
+                        HB_CCPATH := /opt/xmingw/
                         HB_CCPREFIX := i386-mingw32msvc-
                      else
                         HB_CCPREFIX := i686-mingw32-
                      endif
                   else
                      ifeq ($(HB_PLATFORM),bsd)
-                        HB_CCPATH := /usr/local/mingw32
+                        HB_CCPATH := /usr/local/mingw32/
                      else
                         MINGW_OK := $(strip $(foreach d, i386-mingw i486-mingw i586-mingw i686-mingw i386-mingw32 i486-mingw32 i586-mingw32 i686-mingw32, $(if $(wildcard /usr/local/bin/$(d)-gcc),$(d),)))
                         ifneq ($(MINGW_OK),)
-                           HB_CCPATH := /usr/local/bin
+                           HB_CCPATH := /usr/local/bin/
                            HB_CCPREFIX := $(MINGW_OK)-
                         endif
                      endif
@@ -544,17 +550,29 @@ ifeq ($(HB_COMPILER),)
                endif
             endif
 
+            ifeq ($(wildcard $(HB_CCPATH)$(HB_CCPREFIX)gcc),)
+               ifeq ($(HB_CCPATH),)
+                  ifeq ($(call find_in_path $(HB_CCPREFIX)gcc),)
+                     HB_CCPREFIX :=
+                  endif
+               else
+                  HB_CCPATH :=
+                  HB_CCPREFIX :=
+               endif
+            endif
+
             # generic detection for mingw cross-compiler
             ifeq ($(HB_CCPATH)$(HB_CCPREFIX),)
                MINGW_BASE_LIST := /usr /usr/local /usr/local/mingw32 /opt/xmingw
-               MINGW_PREFIX := $(subst -gcc,,$(firstword $(call find_in_path_par,bin/i?86-mingw*-,$(MINGW_BASE_LIST))))
+               MINGW_PREFIX := $(firstword $(foreach d, $(MINGW_BASE_LIST), $(wildcard $(d)/bin/i?86-mingw*-gcc$(HB_HOST_BIN_EXT))))
+               $(info "->[$(MINGW_PREFIX)]<-[$(HB_HOST_BIN_EXT)][$(substpat)]")
                ifneq ($(MINGW_PREFIX),)
                   HB_CCPATH := $(dir $(MINGW_PREFIX))
                   HB_CCPREFIX := $(notdir $(MINGW_PREFIX))
                else
-                  MINGW_PREFIX := $(dir $(firstword $(call find_in_path_par,i?86-mingw*/bin/,$(MINGW_BASE_LIST))))
+                  MINGW_PREFIX := $(firstword $(foreach d, $(MINGW_BASE_LIST), $(wildcard $(d)/i?86-mingw*/bin/gcc$(HB_HOST_BIN_EXT))))
                   ifneq ($(MINGW_PREFIX),)
-                     HB_CCPATH := $(MINGW_PREFIX)
+                     HB_CCPATH := $(dir $(MINGW_PREFIX))
                      HB_CCPREFIX :=
                   endif
                endif
