@@ -744,15 +744,15 @@ EXAMPLES
    (possible cross-build targets: Windows, Windows CE)
 
       --- GCC
-      gmake or make
+      gmake OR make
       ---
 
       --- MinGW GCC for Windows x86
-      gmake or make HB_PLATFORM=win
+      gmake OR make HB_PLATFORM=win
       ---
 
       --- MinGW GCC for Windows CE ARM
-      gmake or make HB_PLATFORM=wce
+      gmake OR make HB_PLATFORM=wce
       ---
 
 HOW TO GET THE HARBOUR SOURCES
