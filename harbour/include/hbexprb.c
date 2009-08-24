@@ -145,6 +145,7 @@ static void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
 static void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL );
 static void hb_compExprUseAliasMacro( HB_EXPR_PTR pAliasedVar, BYTE bAction, HB_COMP_DECL );
 static HB_EXPR_PTR hb_compExprReduceList( HB_EXPR_PTR pExpr, HB_COMP_DECL );
+static HB_EXPR_PTR hb_compExprReduceAliasString( HB_EXPR_PTR pExpr, HB_EXPR_PTR pAlias, HB_COMP_DECL );
 static BOOL hb_compExprIsMemvarAlias( const char *szAlias );
 
 
@@ -2180,7 +2181,19 @@ static HB_EXPR_FUNC( hb_compExprUseAliasVar )
           *       list stripping before PUSH/POP operations
           */
          if( pSelf->value.asAlias.pAlias->ExprType == HB_ET_LIST )
-            pSelf->value.asAlias.pAlias = hb_compExprReduceList( pSelf->value.asAlias.pAlias, HB_COMP_PARAM );
+         {
+            pSelf->value.asAlias.pAlias = hb_compExprReduceList(
+                                 pSelf->value.asAlias.pAlias, HB_COMP_PARAM );
+            if( HB_SUPPORT_HARBOUR &&
+                pSelf->value.asAlias.pAlias->value.asList.pExprList->ExprType == HB_ET_STRING &&
+                pSelf->value.asAlias.pAlias->value.asList.pExprList->pNext == NULL )
+            {
+               pSelf->value.asAlias.pAlias = hb_compExprReduceAliasString(
+                           pSelf->value.asAlias.pAlias,
+                           pSelf->value.asAlias.pAlias->value.asList.pExprList,
+                           HB_COMP_PARAM );
+            }
+         }
          else
             pSelf->value.asAlias.pAlias = HB_EXPR_USE( pSelf->value.asAlias.pAlias, HB_EA_REDUCE );
          break;
@@ -2194,7 +2207,8 @@ static HB_EXPR_FUNC( hb_compExprUseAliasVar )
       {
          HB_EXPR_PTR pAlias = pSelf->value.asAlias.pAlias;
 
-         if( pAlias->ExprType == HB_ET_MACRO || pSelf->value.asAlias.pVar->ExprType == HB_ET_MACRO )
+         if( pAlias->ExprType == HB_ET_MACRO ||
+             pSelf->value.asAlias.pVar->ExprType == HB_ET_MACRO )
          {
             /* Macro operator is used on the left or right side of an alias
              * operator - handle it with a special care
@@ -2278,17 +2292,8 @@ static HB_EXPR_FUNC( hb_compExprUseAliasVar )
              *
              * NOTE: FALSE = don't push alias value
              */
-            if( pAlias->ExprType == HB_ET_NONE )
-            {
-               /* empty expression -> ()->var
-               */
-               hb_compErrorAlias( HB_COMP_PARAM, pAlias );
-            }
-            else
-            {
-               HB_EXPR_USE( pAlias, HB_EA_PUSH_PCODE );
-               HB_GEN_FUNC4( PopAliasedVar, pSelf->value.asAlias.pVar->value.asSymbol, FALSE, NULL, 0 );
-            }
+            HB_EXPR_USE( pAlias, HB_EA_PUSH_PCODE );
+            HB_GEN_FUNC4( PopAliasedVar, pSelf->value.asAlias.pVar->value.asSymbol, FALSE, NULL, 0 );
          }
          else
             hb_compErrorAlias( HB_COMP_PARAM, pAlias );
@@ -2318,6 +2323,10 @@ static HB_EXPR_FUNC( hb_compExprUseAliasExpr )
       case HB_EA_REDUCE:
          pSelf->value.asAlias.pAlias   = HB_EXPR_USE( pSelf->value.asAlias.pAlias, HB_EA_REDUCE );
          pSelf->value.asAlias.pExpList = HB_EXPR_USE( pSelf->value.asAlias.pExpList, HB_EA_REDUCE );
+         if( HB_SUPPORT_HARBOUR && pSelf->value.asAlias.pAlias->ExprType == HB_ET_STRING )
+            pSelf->value.asAlias.pAlias = hb_compExprReduceAliasString(
+                                 pSelf->value.asAlias.pAlias,
+                                 pSelf->value.asAlias.pAlias, HB_COMP_PARAM );
          break;
 
       case HB_EA_ARRAY_AT:
@@ -5290,6 +5299,41 @@ static HB_EXPR_PTR hb_compExprReduceList( HB_EXPR_PTR pList, HB_COMP_DECL )
       pExpr  = pNext;
    }
    return pList;
+}
+
+/* reduce ( "alias" )-> to ALIAS->
+ */
+static HB_EXPR_PTR hb_compExprReduceAliasString( HB_EXPR_PTR pExpr, HB_EXPR_PTR pAlias, HB_COMP_DECL )
+{
+   const char * szAlias = pAlias->value.asString.string;
+
+   if( HB_ISFIRSTIDCHAR( *szAlias ) )
+   {
+      ULONG ulLen = pAlias->ulLength;
+      if( ulLen <= HB_SYMBOL_NAME_LEN )
+      {
+         BOOL fLower = FALSE;
+         while( ulLen )
+         {
+            char c = szAlias[ ulLen - 1 ];
+            if( !HB_ISNEXTIDCHAR( c ) )
+               break;
+            if( HB_ISLOWER( c ) )
+               fLower = TRUE;
+            --ulLen;
+         }
+         if( ulLen == 0 )
+         {
+            if( fLower )
+               szAlias = hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( szAlias ) ), HB_IDENT_FREE );
+            else if( pAlias->value.asString.dealloc )
+               szAlias = hb_compIdentifierNew( HB_COMP_PARAM, szAlias, HB_IDENT_COPY );
+            HB_COMP_EXPR_DELETE( pExpr );
+            pExpr = hb_compExprNewAlias( szAlias, HB_COMP_PARAM );
+         }
+      }
+   }
+   return pExpr;
 }
 
 static BOOL hb_compExprIsMemvarAlias( const char *szAlias )

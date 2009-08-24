@@ -2269,7 +2269,7 @@ BOOL hb_compExprReduceUPPER( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 
       if( ulLen )
       {
-         char * szValue = pArg->value.asString.string;
+         const char * szValue = pArg->value.asString.string;
          do
          {
             char c = * szValue++;
