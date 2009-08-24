@@ -287,6 +287,13 @@ msgstr "Processando: %1$s"
 msgid "Error: Running Harbour compiler. %1$s"
 msgstr "Erro: Executando o compilador Harbour: %1$s"
 
+#: hbmk2.prg:3191
+#: hbmk2.prg:3212
+#: hbmk2.prg:3244
+#, c-format
+msgid "Error: Running Harbour compiler (internal). %1$s"
+msgstr "Erro: Executando o compilador Harbour (interno): %1$s"
+
 #: hbmk2.prg:3591
 #, c-format
 msgid "Compiling..."
