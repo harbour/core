@@ -579,14 +579,6 @@ EXAMPLES
       sh -c make
       ---
 
-      --- Open Watcom C++
-      SET WATCOM=C:\watcom
-      SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
-      SET EDPATH=%WATCOM%\EDDAT
-      SET INCLUDE=%WATCOM%\H;%WATCOM%\H\NT
-      mingw32-make
-      ---
-
       --- Intel(R) C++
       call "%ProgramFiles%\Intel\Compiler\C++\10.1.014\IA32\Bin\iclvars.bat"
       mingw32-make
@@ -594,7 +586,7 @@ EXAMPLES
 
       --- Intel(R) C++ for Windows IA-64 (requires preceding build for native target)
       call "%ProgramFiles%\Intel\Compiler\C++\10.1.025\Itanium\Bin\iclvars.bat"
-      mingw32-make HB_COMPILER=iccia64
+      mingw32-make
       ---
 
       --- Borland/CodeGear C++
@@ -613,20 +605,28 @@ EXAMPLES
       set PATH=%ProgramFiles%\PellesC\Bin;%PATH%
       set INCLUDE=%ProgramFiles%\PellesC\Include;%ProgramFiles%\PellesC\Include\Win;%INCLUDE%
       set LIB=%ProgramFiles%\PellesC\Lib;%ProgramFiles%\PellesC\Lib\Win64;%LIB%
-      mingw32-make HB_COMPILER=pocc64
+      mingw32-make
       ---
 
       --- Pelles C for Windows CE ARM (requires preceding build for native target)
       set PATH=%ProgramFiles%\PellesC\Bin;%PATH%
       set INCLUDE=%ProgramFiles%\PellesC\Include\WinCE;%ProgramFiles%\PellesC\Include;%INCLUDE%
       set LIB=%ProgramFiles%\PellesC\Lib;%ProgramFiles%\PellesC\Lib\WinCE;%LIB%
-      mingw32-make HB_COMPILER=poccarm
+      mingw32-make
       ---
 
       --- Delorie GNU C for MS-DOS (on Intel 32-bit Windows hosts only)
       set DJGPP=C:\djgpp\djgpp.env
       set PATH=C:\djgpp\bin;%PATH%
-      mingw32-make HB_PLATFORM=dos
+      mingw32-make
+      ---
+
+      --- Open Watcom C++
+      SET WATCOM=C:\watcom
+      SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
+      SET EDPATH=%WATCOM%\EDDAT
+      SET INCLUDE=%WATCOM%\H;%WATCOM%\H\NT
+      mingw32-make
       ---
 
       --- Open Watcom C++ for MS-DOS
@@ -634,7 +634,7 @@ EXAMPLES
       SET PATH=%WATCOM%\BINNT;%PATH%
       SET EDPATH=%WATCOM%\EDDAT
       SET INCLUDE=%WATCOM%\H
-      mingw32-make HB_PLATFORM=dos
+      mingw32-make
       ---
 
       --- Open Watcom C++ for OS/2 (requires preceding build for Windows target)
@@ -643,7 +643,7 @@ EXAMPLES
       SET BEGINLIBPATH=%WATCOM%\BINP\DLL
       SET EDPATH=%WATCOM%\EDDAT
       SET INCLUDE=%WATCOM%\H;%WATCOM%\H\OS2
-      mingw32-make HB_PLATFORM=os2
+      mingw32-make
       ---
 
       --- Open Watcom C++ for Linux (requires preceding build for Windows target)
@@ -651,7 +651,7 @@ EXAMPLES
       SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
       SET EDPATH=%WATCOM%\EDDAT
       SET INCLUDE=%WATCOM%\LH
-      mingw32-make HB_PLATFORM=linux
+      mingw32-make
       ---
 
       --8<--
@@ -767,7 +767,7 @@ EXAMPLES
       export HB_XBUILD=yes
       # ;
       export HB_INSTALL_PREFIX="$(pwd)/hb-os2/watcom"
-      make HB_PLATFORM=os2 "$@"
+      make "$@"
       ---
 
    for *nix hosts in general

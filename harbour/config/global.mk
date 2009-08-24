@@ -62,75 +62,89 @@ find_in_path     = $(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x,
 find_in_path_par = $(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(2))), $(wildcard $(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1)$(HB_HOST_BIN_EXT))))
 find_in_path_raw = $(strip $(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(2))), $(wildcard $(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1))))
 
-define check_host
-
-ifneq ($(findstring MINGW,$(1)),)
-   HB_HOST_PLAT := win
-else
-   ifneq ($(findstring MSys,$(1)),)
-      HB_HOST_PLAT := win
+define detect_watcom_platform
+   ifneq ($(call find_in_path_raw,os2.h,$(INCLUDE)),)
+      HB_PLATFORM := os2
    else
-      ifneq ($(findstring Windows,$(1)),)
-         HB_HOST_PLAT := win
+      ifneq ($(call find_in_path_raw,dirent.h,$(INCLUDE)),)
+         HB_PLATFORM := linux
       else
-         ifneq ($(findstring CYGWIN,$(1)),)
-            HB_HOST_PLAT := win
-         else
-            ifneq ($(findstring Darwin,$(1)),)
-               HB_HOST_PLAT := darwin
-            else
-               ifneq ($(findstring darwin,$(1)),)
-                  HB_HOST_PLAT := darwin
-               else
-                  ifneq ($(findstring Linux,$(1)),)
-                     HB_HOST_PLAT := linux
-                  else
-                     ifneq ($(findstring linux,$(1)),)
-                        HB_HOST_PLAT := linux
-                     else
-                        ifneq ($(findstring HP-UX,$(1)),)
-                           HB_HOST_PLAT := hpux
-                        else
-                           ifneq ($(findstring hp-ux,$(1)),)
-                              HB_HOST_PLAT := hpux
-                           else
-                              ifneq ($(findstring SunOS,$(1)),)
-                                 HB_HOST_PLAT := sunos
-                              else
-                                 ifneq ($(findstring sunos,$(1)),)
-                                    HB_HOST_PLAT := sunos
-                                 else
-                                    ifneq ($(findstring BSD,$(1)),)
-                                       HB_HOST_PLAT := bsd
-                                    else
-                                       ifneq ($(findstring bsd,$(1)),)
-                                          HB_HOST_PLAT := bsd
-                                       else
-                                          ifneq ($(findstring OS/2,$(1)),)
-                                             HB_HOST_PLAT := os2
-                                          else
-                                             ifneq ($(findstring MS-DOS,$(1)),)
-                                                HB_HOST_PLAT := dos
-                                             else
-                                                ifneq ($(findstring msdos,$(1)),)
-                                                   HB_HOST_PLAT := dos
-                                                endif
-                                             endif
-                                          endif
-                                       endif
-                                    endif
-                                 endif
-                              endif
-                           endif
-                        endif
-                     endif
-                  endif
-               endif
-            endif
+         ifeq ($(call find_in_path_raw,windows.h,$(INCLUDE)),)
+            HB_PLATFORM := dos
          endif
       endif
    endif
-endif
+endef
+
+define check_host
+
+  ifneq ($(findstring MINGW,$(1)),)
+     HB_HOST_PLAT := win
+  else
+     ifneq ($(findstring MSys,$(1)),)
+        HB_HOST_PLAT := win
+     else
+        ifneq ($(findstring Windows,$(1)),)
+           HB_HOST_PLAT := win
+        else
+           ifneq ($(findstring CYGWIN,$(1)),)
+              HB_HOST_PLAT := win
+           else
+              ifneq ($(findstring Darwin,$(1)),)
+                 HB_HOST_PLAT := darwin
+              else
+                 ifneq ($(findstring darwin,$(1)),)
+                    HB_HOST_PLAT := darwin
+                 else
+                    ifneq ($(findstring Linux,$(1)),)
+                       HB_HOST_PLAT := linux
+                    else
+                       ifneq ($(findstring linux,$(1)),)
+                          HB_HOST_PLAT := linux
+                       else
+                          ifneq ($(findstring HP-UX,$(1)),)
+                             HB_HOST_PLAT := hpux
+                          else
+                             ifneq ($(findstring hp-ux,$(1)),)
+                                HB_HOST_PLAT := hpux
+                             else
+                                ifneq ($(findstring SunOS,$(1)),)
+                                   HB_HOST_PLAT := sunos
+                                else
+                                   ifneq ($(findstring sunos,$(1)),)
+                                      HB_HOST_PLAT := sunos
+                                   else
+                                      ifneq ($(findstring BSD,$(1)),)
+                                         HB_HOST_PLAT := bsd
+                                      else
+                                         ifneq ($(findstring bsd,$(1)),)
+                                            HB_HOST_PLAT := bsd
+                                         else
+                                            ifneq ($(findstring OS/2,$(1)),)
+                                               HB_HOST_PLAT := os2
+                                            else
+                                               ifneq ($(findstring MS-DOS,$(1)),)
+                                                  HB_HOST_PLAT := dos
+                                               else
+                                                  ifneq ($(findstring msdos,$(1)),)
+                                                     HB_HOST_PLAT := dos
+                                                  endif
+                                               endif
+                                            endif
+                                         endif
+                                      endif
+                                   endif
+                                endif
+                             endif
+                          endif
+                       endif
+                    endif
+                 endif
+              endif
+           endif
+        endif
+     endif
+  endif
 
 endef
 
@@ -565,7 +579,6 @@ ifeq ($(HB_COMPILER),)
             ifeq ($(HB_CCPATH)$(HB_CCPREFIX),)
                MINGW_BASE_LIST := /usr /usr/local /usr/local/mingw32 /opt/xmingw
                MINGW_PREFIX := $(firstword $(foreach d, $(MINGW_BASE_LIST), $(wildcard $(d)/bin/i?86-mingw*-gcc$(HB_HOST_BIN_EXT))))
-               $(info "->[$(MINGW_PREFIX)]<-[$(HB_HOST_BIN_EXT)][$(substpat)]")
                ifneq ($(MINGW_PREFIX),)
                   HB_CCPATH := $(dir $(MINGW_PREFIX))
                   HB_CCPREFIX := $(notdir $(MINGW_PREFIX))
@@ -680,53 +693,77 @@ ifeq ($(HB_COMPILER),)
                   ifneq ($(HB_COMP_PATH),)
                      HB_COMPILER := cygwin
                   else
-                     HB_COMP_PATH := $(call find_in_path,gcc)
+                     HB_COMP_PATH := $(call find_in_path,djasm)
                      ifneq ($(HB_COMP_PATH),)
-                        HB_COMPILER := mingw
+                        HB_PLATFORM := dos
+                        HB_COMPILER := djgpp
+                        ifneq ($(HB_HOST_CPU),x86)
+                           $(error ! Error: DJGPP cross-builds are only possible on 32-bit Windows hosts)
+                        endif
                      else
-                        HB_COMP_PATH := $(call find_in_path,wpp386)
+                        HB_COMP_PATH := $(call find_in_path,gcc)
                         ifneq ($(HB_COMP_PATH),)
-                           HB_COMPILER := watcom
+                           HB_COMPILER := mingw
                         else
-                           HB_COMP_PATH := $(call find_in_path,clarm)
+                           HB_COMP_PATH := $(call find_in_path,wpp386)
                            ifneq ($(HB_COMP_PATH),)
-                              HB_COMPILER := msvcarm
-                              HB_PLATFORM := wce
-                              export HB_VISUALC_VER_PRE80 := yes
+                              HB_COMPILER := watcom
+                              $(eval $(call detect_watcom_platform))
                            else
-                              HB_COMP_PATH := $(call find_in_path,armasm)
+                              HB_COMP_PATH := $(call find_in_path,clarm)
                               ifneq ($(HB_COMP_PATH),)
                                  HB_COMPILER := msvcarm
                                  HB_PLATFORM := wce
+                                 export HB_VISUALC_VER_PRE80 := yes
                               else
-                                 HB_COMP_PATH := $(call find_in_path,ml64)
+                                 HB_COMP_PATH := $(call find_in_path,armasm)
                                  ifneq ($(HB_COMP_PATH),)
-                                    HB_COMPILER := msvc64
+                                    HB_COMPILER := msvcarm
+                                    HB_PLATFORM := wce
                                  else
-                                    HB_COMP_PATH := $(call find_in_path,icl)
+                                    HB_COMP_PATH := $(call find_in_path,idis)
                                     ifneq ($(HB_COMP_PATH),)
-                                       HB_COMPILER := icc
+                                       HB_COMPILER := iccia64
                                     else
-                                       HB_COMP_PATH := $(call find_in_path,cl)
+                                       HB_COMP_PATH := $(call find_in_path,icl)
                                        ifneq ($(HB_COMP_PATH),)
-                                          HB_COMPILER := msvc
+                                          HB_COMPILER := icc
                                        else
-                                          HB_COMP_PATH := $(call find_in_path,bcc32)
+                                          HB_COMP_PATH := $(call find_in_path,ml64)
                                           ifneq ($(HB_COMP_PATH),)
-                                             HB_COMPILER := bcc
+                                             HB_COMPILER := msvc64
                                           else
-                                             HB_COMP_PATH := $(call find_in_path,pocc)
+                                             HB_COMP_PATH := $(call find_in_path,cl)
                                              ifneq ($(HB_COMP_PATH),)
-                                                HB_COMPILER := pocc
+                                                HB_COMPILER := msvc
                                              else
-                                                HB_COMP_PATH := $(call find_in_path,xcc)
+                                                HB_COMP_PATH := $(call find_in_path,bcc32)
                                                 ifneq ($(HB_COMP_PATH),)
-                                                   HB_COMPILER := xcc
+                                                   HB_COMPILER := bcc
                                                 else
-                                                   HB_COMP_PATH := $(call find_in_path,x86_64-w64-mingw32-gcc)
+                                                   HB_COMP_PATH := $(call find_in_path,pocc)
                                                    ifneq ($(HB_COMP_PATH),)
-                                                      HB_COMPILER := mingw64
-                                                      HB_CCPREFIX := x86_64-w64-mingw32-
+                                                      ifneq ($(call find_in_path_raw,coredll.lib,$(LIB)),)
+                                                         HB_PLATFORM := wce
+                                                         HB_COMPILER := poccarm
+                                                      else
+                                                         ifneq ($(call find_in_path_raw,dbgeng.lib,$(LIB)),)
+                                                            HB_COMPILER := pocc64
+                                                         else
+                                                            HB_COMPILER := pocc
+                                                         endif
+                                                      endif
+                                                   else
+                                                      HB_COMP_PATH := $(call find_in_path,xcc)
+                                                      ifneq ($(HB_COMP_PATH),)
+                                                         HB_COMPILER := xcc
+                                                      else
+                                                         HB_COMP_PATH := $(call find_in_path,x86_64-w64-mingw32-gcc)
+                                                         ifneq ($(HB_COMP_PATH),)
+                                                            HB_COMPILER := mingw64
+                                                            HB_CCPREFIX := x86_64-w64-mingw32-
+                                                         endif
+                                                      endif
                                                    endif
                                                 endif
                                              endif
@@ -747,6 +784,7 @@ ifeq ($(HB_COMPILER),)
             HB_COMP_PATH := $(call find_in_path,wpp386)
             ifneq ($(HB_COMP_PATH),)
                HB_COMPILER := watcom
+               $(eval $(call detect_watcom_platform))
             else
                HB_COMP_PATH := $(call find_in_path,gcc)
                ifneq ($(HB_COMP_PATH),)
@@ -779,6 +817,7 @@ ifeq ($(HB_COMPILER),)
                         HB_COMP_PATH := $(call find_in_path,wpp386)
                         ifneq ($(HB_COMP_PATH),)
                            HB_COMPILER := watcom
+                           $(eval $(call detect_watcom_platform))
                         endif
                      endif
                   else
@@ -790,6 +829,7 @@ ifeq ($(HB_COMPILER),)
                            HB_COMP_PATH := $(call find_in_path,wpp386)
                            ifneq ($(HB_COMP_PATH),)
                               HB_COMPILER := watcom
+                              $(eval $(call detect_watcom_platform))
                            endif
                         endif
                      else
@@ -802,7 +842,7 @@ ifeq ($(HB_COMPILER),)
       endif
    endif
    ifneq ($(HB_COMPILER),)
-      HB_COMP_PATH := $(subst $(substpat), ,$(dir $(subst $(subst x, ,x),$(substpat),$(firstword $(HB_COMP_PATH)))))
+      HB_COMP_PATH := $(subst $(substpat), ,$(dir $(firstword $(subst $(subst x, ,x),$(substpat),$(HB_COMP_PATH)))))
       HB_COMP_AUTO := (autodetected$(if $(HB_COMP_PATH),: $(HB_COMP_PATH),))
    endif
    export HB_CCPATH

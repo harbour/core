@@ -181,13 +181,13 @@ extern char *strerror( int errnum );
 
 #endif /* HB_OS_WIN_CE */
 
-extern wchar_t * hb_mbtowc( const char *srcA );
-extern char * hb_wctomb( const wchar_t *srcW );
-extern wchar_t * hb_mbntowc( const char *srcA, unsigned long ulLen );
-extern char * hb_wcntomb( const wchar_t *srcW, unsigned long ulLen );
-extern void hb_mbtowccpy( wchar_t *dstW, const char *srcA, unsigned long ulLen );
-extern void hb_mbtowcset( wchar_t *dstW, const char *srcA, unsigned long ulLen );
-extern void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen );
+extern HB_EXPORT wchar_t * hb_mbtowc( const char *srcA );
+extern HB_EXPORT char * hb_wctomb( const wchar_t *srcW );
+extern HB_EXPORT wchar_t * hb_mbntowc( const char *srcA, unsigned long ulLen );
+extern HB_EXPORT char * hb_wcntomb( const wchar_t *srcW, unsigned long ulLen );
+extern HB_EXPORT void hb_mbtowccpy( wchar_t *dstW, const char *srcA, unsigned long ulLen );
+extern HB_EXPORT void hb_mbtowcset( wchar_t *dstW, const char *srcA, unsigned long ulLen );
+extern HB_EXPORT void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen );
 
 #if defined( UNICODE )
 

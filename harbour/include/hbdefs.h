@@ -185,10 +185,6 @@
 
 #endif
 
-#if defined( HB_OS_WIN )
-   #include "hbwince.h"
-#endif
-
 #if ! defined( HB_DONT_DEFINE_BASIC_TYPES )
 
    #if ! defined( HB_DONT_DEFINE_BOOL )
@@ -1592,6 +1588,10 @@ typedef PHB_FUNC HB_FUNC_PTR;
 #else
    #define HB_IMPORT
 
+#endif
+
+#if defined( HB_OS_WIN )
+   #include "hbwince.h"
 #endif
 
 /* Function declaration macros */

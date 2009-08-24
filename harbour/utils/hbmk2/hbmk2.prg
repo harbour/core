@@ -1178,7 +1178,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                                                hb_osPathSeparator() + hbmk[ _HBMK_cPLAT ] +;
                                                hb_osPathSeparator() + hbmk[ _HBMK_cCOMP ] +;
                                                iif( Empty( hbmk[ _HBMK_cBUILD ] ), "", PathSepToTarget( hbmk, hbmk[ _HBMK_cBUILD ] ) ) )
-         l_cHB_DYN_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "lib" )
          l_cHB_LIB_INSTALL := tmp
       ELSE
          l_cHB_LIB_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "lib" )
@@ -3036,7 +3035,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                      hbmk_OutStd( hbmk, I_( "Harbour compiler command (internal):" ) )
                   ENDIF
                ENDIF
-               OutStd( FN_Escape( DirAddPathSep( PathSepToSelf( l_cHB_BIN_INSTALL ) ) + cBin_CompPRG + cBinExt, nCmd_Esc ) +;
+               OutStd( "(" + FN_Escape( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG + cBinExt + ")", nCmd_Esc ) +;
                        " " + ArrayToList( aCommand ) + hb_osNewLine() )
             ENDIF
 
@@ -3045,9 +3044,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   AAdd( aThreads, { hb_threadStart( @hb_compile(), "harbour", aCommand ), aCommand } )
                ELSE
                   IF ( tmp := hb_compile( "harbour", aCommand ) ) != 0
-                     hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler. %1$s" ), hb_ntos( tmp ) ) )
+                     hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler (internal). %1$s" ), hb_ntos( tmp ) ) )
                      IF ! hbmk[ _HBMK_lQuiet ]
-                        OutErr( FN_Escape( DirAddPathSep( PathSepToSelf( l_cHB_BIN_INSTALL ) ) + cBin_CompPRG + cBinExt, nCmd_Esc ) +;
+                        OutErr( "(" + FN_Escape( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG + cBinExt + ")", nCmd_Esc ) +;
                                 " " + ArrayToList( aCommand ) + hb_osNewLine() )
                      ENDIF
                      IF ! hbmk[ _HBMK_lIGNOREERROR ]

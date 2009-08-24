@@ -132,6 +132,11 @@ msgstr "Hiba: Ismeretlen platform: %1$s"
 msgid "Error: Running Harbour compiler. %1$s"
 msgstr "Hiba: Harbour fordító futtatásakor. %1$s"
 
+#: hbmk2.prg:2775 hbmk2.prg:2793 hbmk2.prg:2824 hbmk2.prg:3146 hbmk2.prg:3167 hbmk2.prg:3199
+#, c-format
+msgid "Error: Running Harbour compiler (internal). %1$s"
+msgstr "Hiba: Harbour fordító futtatásakor (belsõ). %1$s"
+
 #: hbmk2.prg:1595 hbmk2.prg:1881
 #, c-format
 msgid "Error: No source files were specified."
@@ -205,7 +210,7 @@ msgstr "Kimenet nem igényel frissítést: %1$s"
 #: hbmk2.prg:2761 hbmk2.prg:3132
 #, c-format
 msgid "Harbour compiler command (internal) job #%1$s:"
-msgstr "Harbour fordító parancs (belsõ) %1$s. szál:"
+msgstr "Harbour (beágyazott) fordító parancs %1$s. szál:"
 
 #: hbmk2.prg:959 hbmk2.prg:1188
 #, c-format
