@@ -31,6 +31,14 @@
 
 #include "sha1.h"
 
+#if defined( __XCC__ )
+/* ugly workaround for bugs in XCC preprocessor */
+static sha1_quadbyte rol( sha1_quadbyte value, int bits )
+{
+   return ((value << bits) | (value >> (32 - bits)));
+}
+#endif
+
 #define rol(value, bits) (((value) << (bits)) | ((value) >> (32 - (bits))))
 
 /* blk0() and blk() perform the initial expand. */

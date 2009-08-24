@@ -135,7 +135,7 @@
 /* #     define HB_HAS_INET6 */
 #  elif defined( __MINGW32__ )
 #     define HB_HAS_SOCKADDR_STORAGE
-#  elif defined( __POCC__ )
+#  elif defined( __POCC__ ) && !defined( __XCC__ )
 #     define HB_HAS_SOCKADDR_STORAGE
 #  endif
 #  define HB_IS_INET_NTOA_MT_SAFE

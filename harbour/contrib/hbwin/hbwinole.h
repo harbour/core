@@ -76,6 +76,7 @@
    #define NONAMELESSUNION
 #endif
 
+#include <windows.h>
 #include <ole2.h>
 #include <ocidl.h>
 

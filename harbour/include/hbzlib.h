@@ -54,7 +54,7 @@
 #  include <zlib.h>
 #else
 #  if defined( __XCC__ ) || defined( __LCC__ )
-#     include "source\hbzlib\zlib.h"
+#     include "..\source\hbzlib\zlib.h"
 #  else
 #     include "../source/hbzlib/zlib.h"
 #  endif

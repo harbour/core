@@ -55,7 +55,12 @@
 #include "hbapiitm.h"
 #include "hbdate.h"
 #include "hbvm.h"
-#include "../hbrddsql.h"
+
+#if defined( __XCC__ ) || defined( __LCC__ )
+#  include "..\hbrddsql.h"
+#else
+#  include "../hbrddsql.h"
+#endif
 
 #include <sql.h>
 #include <sqlext.h>

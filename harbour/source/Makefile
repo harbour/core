@@ -99,6 +99,9 @@ else
       ifeq ($(HB_COMPILER),watcom)
          DYNDIRLIST_BASE += source/vm/maindllh
       endif
+      ifeq ($(HB_COMPILER),xcc)
+         DYNDIRLIST_BASE += source/vm/maindllh
+      endif
 
       export DYNDIRLIST_BASE
       export DYNNAME_POST

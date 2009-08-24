@@ -89,13 +89,13 @@ DLIBS :=
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 define dyn_object
-   @$(ECHO) $(ECHOQUOTE)$(file) +$(ECHOQUOTE) >> __dyn__.tmp
+   @$(ECHO) $(ECHOQUOTE)$(subst /,\,$(file)) +$(ECHOQUOTE) >> __dyn__.tmp
 
 endef
 define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dyn_object))
-   @$(ECHO) $(ECHOQUOTE), "$(subst /,$(DIRSEP),$(DYN_DIR)/$@)",, cw32mt.lib import32.lib$(ECHOQUOTE) >> __dyn__.tmp
+   @$(ECHO) $(ECHOQUOTE), $(subst /,\,$(DYN_DIR)/$@),, cw32mt.lib import32.lib$(ECHOQUOTE) >> __dyn__.tmp
    $(DY) $(DFLAGS) $(HB_USER_DFLAGS) c0d32.obj @__dyn__.tmp
    @$(CP) $(subst /,$(DIRSEP),$(DYN_DIR)/$(basename $@)$(LIB_EXT)) $(subst /,$(DIRSEP),$(IMP_FILE))
    @$(RM) $(subst /,$(DIRSEP),$(DYN_DIR)/$(basename $@)$(LIB_EXT))
