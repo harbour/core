@@ -450,7 +450,7 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
                                Requires GNU Bison 1.28 or upper in PATH.
                                Default: no
 
-   Cross building
+   Cross-building
    --------------
 
    You can build Harbour for target platforms different than host
@@ -947,7 +947,7 @@ BUILD HOST PLATFORM/SHELL - TARGET PLATFORM/COMPILER COMPATIBILITY MATRIX
    x sunos  -> wce/mingw     x86
    x sunos  -> win/mingw     x86
 
-     leading 'x' marks cross-platform scenarios.
+     Leading 'x' marks cross-platform scenarios.
 
      Supported shells per host platforms:
 

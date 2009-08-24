@@ -8,7 +8,7 @@
 # ---------------------------------------------------------------
 
 # ---------------------------------------------------------------
-# See GNU make docs here:
+# GNU make docs:
 #    http://www.gnu.org/software/make/manual/make.html
 #    http://www.wanderinghorse.net/computing/make/
 #    http://www.jgc.org/feeds/topic-gnumake.xml
@@ -18,7 +18,7 @@
 #    http://www.gnu.org/software/autoconf/manual/html_node/Portable-Shell.html
 #    http://www.gnu.org/software/bash/manual/bashref.html
 #    http://www.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html
-# GNU Coding standards:
+# GNU coding standards:
 #    http://www.gnu.org/prep/standards/standards.html
 # GNU Make NEWS:
 #    http://cvs.savannah.gnu.org/viewvc/make/NEWS?root=make&view=markup
