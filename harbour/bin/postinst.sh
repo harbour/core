@@ -52,8 +52,9 @@ then
     if [ -n "${HB_TOOLS_PREF}" ]; then
         hb_mkdyn="${HB_BIN_INSTALL}/${HB_TOOLS_PREF}-mkdyn"
         rm -f "${hb_mkdyn}"
-        sed -e "s/^# HB_PLATFORM=\"\"\$/HB_PLATFORM=\"${HB_PLATFORM}\"/g" \
-            -e "s/^# HB_CCPREFIX=\"\"\$/[ -n \"\${HB_CCPREFIX}\" ] || HB_CCPREFIX=\"${HB_CCPREFIX}\"/g" \
+        sed -e "s!^# HB_PLATFORM=\"\"\$!HB_PLATFORM=\"${HB_PLATFORM}\"!g" \
+            -e "s!^# HB_CCPREFIX=\"\"\$![ -n \"\${HB_CCPREFIX}\" ] || HB_CCPREFIX=\"${HB_CCPREFIX}\"!g" \
+            -e "s!^# HB_CCPATH=\"\"\$![ -n \"\${HB_CCPATH}\" ] || HB_CCPATH=\"${HB_CCPATH}\"!g" \
             "${hb_root}/bin/hb-mkdyn.sh" > "${hb_mkdyn}" && \
         chmod 755 "${hb_mkdyn}"
     elif [ "$HB_COMPILER" = "icc" ]; then

@@ -14,6 +14,7 @@
 
 # HB_PLATFORM=""
 # HB_CCPREFIX=""
+# HB_CCPATH=""
 
 if [ -n "${HB_PLATFORM}" ]
 then
@@ -111,7 +112,7 @@ if [ "${SLIB_EXT}" != ".dylib" ]; then
                 d="${f##*/}"
                 mkdir $d
                 cd $d
-                ${HB_CCPREFIX}ar -x "${f}" || exit 1
+                ${HB_CCPATH}${HB_CCPREFIX}ar -x "${f}" || exit 1
                 cd ..
                 ;;
             *)
@@ -139,7 +140,7 @@ elif [ "${SLIB_EXT}" = ".dll" ]; then
         SYSLIBS="-luser32 -lws2_32 -ladvapi32 -lgdi32"
     fi
     # -Wl,--output-def,testdll.def,--out-implib,libtestdll.a
-    ${HB_CCPREFIX}gcc -shared -o "${FULLNAME}" $OBJLST ${linker_options} ${HB_USER_DFLAGS} ${SYSLIBS} ${HB_DLLIBS} && \
+    ${HB_CCPATH}${HB_CCPREFIX}gcc -shared -o "${FULLNAME}" $OBJLST ${linker_options} ${HB_USER_DFLAGS} ${SYSLIBS} ${HB_DLLIBS} && \
         cd "${dir}" && \
         rm -f "${DSTDIR}${FULLNAME}" && \
         mv -f "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${FULLNAME}"
@@ -147,7 +148,7 @@ else
     #FULLNAME="${BASE}-${VERSION}${SLIB_EXT}"
     #FULLNAME="${BASE}{SLIB_EXT}.${VERSION}"
     FULLNAME="${LIB_NAME}${SLIB_EXT}"
-    ${HB_CCPREFIX}gcc -shared -fPIC -o "${FULLNAME}" $OBJLST ${linker_options} ${HB_USER_DFLAGS} && \
+    ${HB_CCPATH}${HB_CCPREFIX}gcc -shared -fPIC -o "${FULLNAME}" $OBJLST ${linker_options} ${HB_USER_DFLAGS} && \
         cd "${dir}" && \
         mv -f "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${FULLNAME}"
 fi
