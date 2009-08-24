@@ -27,7 +27,7 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
 
    Linux/Darwin
    ------------
-    [ $ export HB_COMPILER=<gcc|watcom|icc|sunpro> ]
+    [ $ export HB_PLATFORM=<...> ]
       $ make install
 
       To test it, type:
@@ -38,7 +38,7 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
 
    BSD/HP-UX/Solaris
    -----------------
-    [ $ export HB_COMPILER=<gcc|sunpro> ]
+    [ $ export HB_PLATFORM=<...> ]
       $ gmake install
 
       To test it, type:
@@ -71,7 +71,6 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
           If you use MinGW compiler, you already have GNU Make.
           You can also use included copy named win-make.exe instead.
 
-    [ > set HB_COMPILER=<mingw|msvc|watcom|bcc|pocc|cygwin|...> ]
       > mingw32-make install
 
       To test it, type:
@@ -91,7 +90,6 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       You can also use these shells to build Harbour on Windows.
       Generally it's recommended to use native shell though.
 
-    [ > set HB_COMPILER=<...> ]
       > sh -c make install
 
       To test it, type:
@@ -117,7 +115,6 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
           Unpack it to your PATH or Harbour source root directory.
           You can also use included copy named dos-make.exe instead.
 
-    [ > set HB_COMPILER=<djgpp|watcom> ]
       > make install
 
       To test it, type:
@@ -139,7 +136,6 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
           in this section.
           You can also use included copy named os2-make.exe instead.
 
-    [ > set HB_COMPILER=<gcc|watcom> ]
       > make install
 
       To test it, type:
@@ -381,8 +377,8 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
 
    General
    -------
-   - HB_COMPILER               Override C compiler autodetection
    - HB_PLATFORM               Override platform autodetection
+   - HB_COMPILER               Override C compiler autodetection
                                See this section for possible values:
                                SUPPORTED PLATFORMS AND C COMPILERS
 
@@ -456,46 +452,18 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    platform. F.e. you can create Windows build on *nix systems, Linux
    builds on Windows systems, etc. It's also possible to build targets
    for different than host CPU architectures. F.e. you can create
-   Windows 64-bit build on 32-bit Windows platform, or Linux x86_64
-   build on x86 hosts, or Linux MIPS build on x86 host.
-
-   Currently possible cross-platform scenarios, sorted by host platform:
-
-      on Windows hosts:
-         -> wce/mingwarm
-         -> wce/poccarm
-         -> wce/msvcarm
-         -> dos/djgpp
-         -> dos/watcom
-         -> os2/watcom
-         -> linux/watcom
-      on MS-DOS compatible hosts:
-         -> win/watcom
-         -> os2/watcom
-         -> linux/watcom
-      on OS/2 hosts:
-         -> win/watcom
-         -> dos/watcom
-         -> linux/watcom
-      on Linux hosts:
-         -> wce/mingwarm
-         -> win/mingw
-         -> win/watcom
-         -> dos/watcom
-         -> os2/watcom
-      On other *nix hosts:
-         -> wce/mingwarm
-         -> win/mingw
+   Windows 64-bit build on 32-bit Windows platform, or Linux x86-64
+   build on x86 hosts, or Linux MIPS build on x86 host, etc.
 
    Point this envvar to the directory where native Harbour executables
    for your host platform can be found:
       HB_BIN_COMPILE=<HARBOUR_NATIVE_BUILD_DIR>\bin
 
    If you leave this value empty, the make system will try to autodetect it,
-   so in practice all you have to do is to create native build first, then
-   create the cross-build. If you set this value manually, it may be useful
-   to know that only harbour, hbpp and hbmk2 executables are required for
-   a cross-build process to succeed.
+   so in practice all you have to do is to create a native build first (no
+   'install' required), then create the cross-build. If you set this value
+   manually, it may be useful to know that only harbour, hbpp and hbmk2
+   executables are required for a cross-build process to succeed.
 
 
 EXAMPLES
@@ -905,6 +873,89 @@ QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
                'C:\hb20\bin\hbmk2 hello.prg'
           - GNU Make, MSYS, or any other extra tool is *not* needed
             to build a Harbour application with above methods.
+
+
+HOST PLATFORM/SHELL - TARGET PLATFORM/COMPILER COMPATIBILITY MATRIX
+===================================================================
+
+     host      target        target
+     plat      plat/comp     cpu
+   - ------    ------------- ----------------------------------------------------
+     win    -> win/bcc       x86
+     win    -> win/cygwin    x86
+     win    -> win/gcc       x86
+     win    -> win/global    x86
+     win    -> win/icc       x86
+     win    -> win/icc64     x86-64 (not supported yet)
+     win    -> win/iccia64   ia64
+     win    -> win/mingw     x86
+     win    -> win/mingw64   x86-64
+     win    -> win/msvc      x86
+     win    -> win/msvc64    x86-64
+     win    -> win/msvcia64  ia64
+     win    -> win/pocc      x86
+     win    -> win/pocc64    x86-64
+     win    -> win/watcom    x86
+     win    -> win/xcc       x86
+   x win    -> wce/mingwarm  arm
+   x win    -> wce/mingw     x86   (not fully supported yet)
+   x win    -> wce/poccarm   arm
+   x win    -> wce/msvcarm   arm
+   x win    -> wce/msvcmips  mips  (not supported yet)
+   x win    -> wce/msvcsh    sh    (not supported yet)
+   x win    -> wce/msvc      x86   (not supported yet)
+   x win    -> dos/djgpp     x86   (on Windows x86 only)
+   x win    -> dos/watcom    x86
+   x win    -> os2/watcom    x86
+   x win    -> linux/watcom  x86
+     dos    -> dos/djgpp     x86
+     dos    -> dos/watcom    x86
+   x dos    -> win/watcom    x86
+   x dos    -> os2/watcom    x86
+   x dos    -> linux/watcom  x86
+     os2    -> os2/gcc       x86
+     os2    -> os2/watcom    x86
+   x os2    -> win/watcom    x86
+   x os2    -> dos/watcom    x86
+   x os2    -> linux/watcom  x86
+     linux  -> linux/gcc     (CPU cross-builds possible)
+     linux  -> linux/icc     (CPU cross-builds possible: x86, x86-64, ia64)
+     linux  -> linux/sunpro  (CPU cross-builds possible: x86, x86-64)
+   x linux  -> wce/mingwarm  arm
+   x linux  -> wce/mingw     x86
+   x linux  -> win/mingw     x86
+   x linux  -> win/watcom    x86
+   x linux  -> dos/watcom    x86
+   x linux  -> os2/watcom    x86
+     bsd    -> bsd/gcc       (CPU cross-builds possible)
+   x bsd    -> wce/mingwarm  arm
+   x bsd    -> wce/mingw     x86
+   x bsd    -> win/mingw     x86
+     darwin -> darwin/gcc    (CPU cross-builds possible: x86, x86-64, ppc, ppc64, unibin)
+     darwin -> darwin/icc    (CPU cross-builds possible: x86, x86-64)
+   x darwin -> wce/mingwarm  arm
+   x darwin -> wce/mingw     x86
+   x darwin -> win/mingw     x86
+     hpux   -> hpux/gcc      (CPU cross-builds possible)
+   x hpux   -> wce/mingwarm  arm
+   x hpux   -> wce/mingw     x86
+   x hpux   -> win/mingw     x86
+     sunos  -> sunos/gcc     (CPU cross-builds possible)
+     sunos  -> sunos/sunpro  (CPU cross-builds possible: x86, x86-64, sparc32, sparc64)
+   x sunos  -> wce/mingwarm  arm
+   x sunos  -> wce/mingw     x86
+   x sunos  -> win/mingw     x86
+
+     leading 'x' marks cross-platform scenarios.
+
+     Supported shells per host platforms:
+
+     win  / cmd.exe
+     win  / sh compatible (MSYS or Cygwin sh.exe) (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
+     win  / command.com                           (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
+     dos  / command.com                           (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
+     os/2 / OS/2 shell                            (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
+     *nix / sh compatible                         (* not supported: HB_BUILD_PKG - implemented as standalone scripts)
 
 
 FOR MORE INFORMATION
