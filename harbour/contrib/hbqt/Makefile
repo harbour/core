@@ -24,9 +24,6 @@ ifeq ($(PREREQ_MISS),)
          ifeq ($(HB_XBUILD),)
             ifeq ($(HB_OS_UNIX),yes)
                HB_INC_QT := /usr/include/qt4 /usr/lib/qt4/include /usr/include /Developer/qt/include
-               ifeq ($(HB_PLATFORM),darwin)
-                  HB_INC_QT += /Library/Frameworks/QtCore.framework/Versions/4/Headers/QtCore
-               endif
             endif
          endif
       endif
@@ -34,6 +31,17 @@ ifeq ($(PREREQ_MISS),)
       ifneq ($(HB_INC_QT),)
 
          HB_INC_QT_OK := $(strip $(foreach d, $(HB_INC_QT), $(if $(wildcard $(d)/Qt/qglobal.h),$(d),)))
+         ifeq ($(HB_PLATFORM),darwin)
+            ifeq ($(HB_INC_QT_OK),)
+               HB_INC_QT_OK := $(if $(wildcard /Library/Frameworks/QtCore.framework/Versions/4/Headers/QtCore),spec,)
+               ifeq ($(HB_INC_QT_OK),spec)
+                  HB_CFLAGS += -I/Library/Frameworks/QtCore.framework/Headers
+                  HB_CFLAGS += -I/Library/Frameworks/QtGui.framework/Headers
+                  HB_CFLAGS += -I/Library/Frameworks/QtNetwork.framework/Headers
+                  HB_CFLAGS += -I/Library/Frameworks/QtWebKit.framework/Headers
+               endif
+            endif
+         endif
 
          ifneq ($(HB_INC_QT_OK),)
 
@@ -42,12 +50,7 @@ ifeq ($(PREREQ_MISS),)
                HB_CFLAGS += -DQT_NODLL
             endif
 
-            ifeq ($(HB_INC_QT_OK),/Library/Frameworks/QtCore.framework/Versions/4/Headers/QtCore)
-               HB_CFLAGS += -I/Library/Frameworks/QtCore.framework/Headers
-               HB_CFLAGS += -I/Library/Frameworks/QtGui.framework/Headers
-               HB_CFLAGS += -I/Library/Frameworks/QtNetwork.framework/Headers
-               HB_CFLAGS += -I/Library/Frameworks/QtWebKit.framework/Headers
-            else
+            ifneq ($(HB_INC_QT_OK),spec)
                HB_CFLAGS += $(foreach d,$(HB_INC_QT_OK),-I$(d) -I$(d)/Qt -I$(d)/QtCore -I$(d)/QtGui -I$(d)/QtNetwork -I$(d)/QtWebKit)
             endif
 
