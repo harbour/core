@@ -102,6 +102,7 @@ extern ULONG hb_macroSetMacro( BOOL bSet, ULONG ulFlag );
 extern ULONG hb_macroAutoSetMacro( ULONG ulFlag );
 extern BOOL hb_macroLexNew( HB_MACRO_PTR pMacro );
 extern void hb_macroLexDelete( HB_MACRO_PTR pMacro );
+extern char * hb_macroIdentNew( HB_COMP_DECL, char * );
 
 extern HB_EXPR_PTR hb_macroExprGenPush( HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_macroExprGenPop( HB_EXPR_PTR, HB_COMP_DECL );

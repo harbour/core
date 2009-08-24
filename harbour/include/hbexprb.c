@@ -5324,10 +5324,17 @@ static HB_EXPR_PTR hb_compExprReduceAliasString( HB_EXPR_PTR pExpr, HB_EXPR_PTR 
          }
          if( ulLen == 0 )
          {
+#if defined( HB_MACRO_SUPPORT )
+            if( fLower )
+               szAlias = hb_macroIdentNew( HB_COMP_PARAM, hb_strupr( hb_strdup( szAlias ) ) );
+            else if( pAlias->value.asString.dealloc )
+               szAlias = hb_macroIdentNew( HB_COMP_PARAM, hb_strdup( szAlias ) );
+#else
             if( fLower )
                szAlias = hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( szAlias ) ), HB_IDENT_FREE );
             else if( pAlias->value.asString.dealloc )
                szAlias = hb_compIdentifierNew( HB_COMP_PARAM, szAlias, HB_IDENT_COPY );
+#endif
             HB_COMP_EXPR_DELETE( pExpr );
             pExpr = hb_compExprNewAlias( szAlias, HB_COMP_PARAM );
          }

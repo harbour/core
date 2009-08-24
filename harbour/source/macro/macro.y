@@ -173,8 +173,6 @@ extern int  yylex( YYSTYPE *, HB_MACRO_PTR );   /* main lex token function, call
 extern int  yyparse( HB_MACRO_PTR );            /* main yacc parsing function */
 extern void yyerror( HB_MACRO_PTR, const char * );    /* parsing error management function */
 
-static void hb_macroIdentNew( HB_COMP_DECL, char * );
-
 %}
 
 %token IDENTIFIER NIL NUM_DOUBLE INASSIGN NUM_LONG NUM_DATE TIMESTAMP
@@ -757,12 +755,14 @@ static HB_EXPR_PTR hb_macroExprAlloc( HB_COMP_DECL )
    return &pMExpr->Expressions[ pMExpr->count++ ];
 }
 
-static void hb_macroIdentNew( HB_COMP_DECL, char * szIdent )
+char * hb_macroIdentNew( HB_COMP_DECL, char * szIdent )
 {
    HB_MIDENT_PTR pMIdent = ( HB_MIDENT_PTR ) hb_xgrab( sizeof( HB_MIDENT ) );
    pMIdent->Identifier = szIdent;
    pMIdent->pPrev = ( HB_MIDENT_PTR ) HB_MACRO_DATA->pIdentLst;
    HB_MACRO_DATA->pIdentLst = ( void * ) pMIdent;
+
+   return szIdent;
 }
 
 static HB_EXPR_PTR hb_macroExprNew( HB_COMP_DECL, HB_EXPRTYPE iType )
