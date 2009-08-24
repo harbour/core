@@ -25,37 +25,10 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
    * GNU Make (3.81 or upper)
    * Harbour sources (2.0.0 or upper)
 
-   Linux/Darwin
-   ------------
-    [ $ export HB_PLATFORM=<...> ]
-      $ make install
+   on Windows hosts
+   ----------------
+   (possible cross-build targets: Windows CE, MS-DOS, OS/2, Linux)
 
-      To test it, type:
-      $ cd tests
-      $ hbmk2 hello.prg
-      $ ./hello
-      You should see 'Hello world!' on screen.
-
-   BSD/HP-UX/Solaris
-   -----------------
-    [ $ export HB_PLATFORM=<...> ]
-      $ gmake install
-
-      To test it, type:
-      $ cd tests
-      $ hbmk2 hello.prg
-      $ ./hello
-      You should see 'Hello world!' on screen.
-
-      NOTE for sunpro on Solaris:
-      ---------------------------
-         If you have any GNU binutils stuff installed, do make sure
-         /usr/ccs/bin (the location of the native Sun C compilation
-         system tools) come *before* the GNU binutils components in
-         your $PATH.
-
-   Windows/Windows CE
-   ------------------
       Platform specific prerequisites:
 
       1.) Windows NT or compatible system is required to build Harbour.
@@ -85,8 +58,8 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
                in the name. You can leave it empty, in this case the
                results will be created under the current directory tree.
 
-   Windows with MSYS and Cygwin shells
-   ----------------------------------
+   on Windows hosts with MSYS and Cygwin shells
+   --------------------------------------------
       You can also use these shells to build Harbour on Windows.
       Generally it's recommended to use native shell though.
 
@@ -98,15 +71,15 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       > hello
       You should see 'Hello world!' on screen.
 
-      NOTES: - With cygwin, <DIR> should use Cygwin drive
+      NOTES: - With Cygwin, <DIR> should use Cygwin drive
                notation: /cygdrive/c for C:
              - When building for Borland C make sure that
                GNU Make is executed when typing 'make',
                Borland Make has the same name.
 
-   MS-DOS
-   ------
-      You can use MS-DOS or Windows NT compatible hosts to create DOS builds.
+   on MS-DOS hosts
+   ---------------
+   (possible cross-build targets: Windows, OS/2, Linux)
 
       1.) Make sure to have your C compiler of choice properly installed
           (in PATH).
@@ -123,12 +96,9 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       > hello
       You should see 'Hello world!' on screen.
 
-   OS/2
-   ----
-      You can use OS/2, Windows NT compatible, or Linux hosts to create
-      OS/2 builds.
-      Some config tricks are required when non-OS/2 host is used, see in
-      examples.
+   on OS/2 hosts
+   -------------
+   (possible cross-build targets: MS-DOS, OS/2, Linux)
 
       1.) You need to get GNU Make. If you use OS/2 host, we recommend this link:
              ftp://hobbes.nmsu.edu/pub/os2/dev/util/make-3.81-r2-bin-static.zip
@@ -144,8 +114,43 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       > hello
       You should see 'Hello world!' on screen.
 
-   FreeBSD
-   -------
+   on Linux hosts
+   --------------
+   (possible cross-build targets: Windows, Windows CE, MS-DOS, OS/2)
+
+    [ $ export HB_PLATFORM=<...> ]
+      $ make install
+
+      To test it, type:
+      $ cd tests
+      $ hbmk2 hello.prg
+      $ ./hello
+      You should see 'Hello world!' on screen.
+
+   on Darwin/BSD/HP-UX/Solaris/*nix hosts
+   --------------------------------------
+   (possible cross-build targets: Windows, Windows CE)
+
+    [ $ export HB_PLATFORM=<...> ]
+      $ gmake install
+      OR
+      $ make install
+
+      To test it, type:
+      $ cd tests
+      $ hbmk2 hello.prg
+      $ ./hello
+      You should see 'Hello world!' on screen.
+
+      NOTE for sunpro on Solaris:
+      ---------------------------
+         If you have any GNU binutils stuff installed, do make sure
+         /usr/ccs/bin (the location of the native Sun C compilation
+         system tools) come *before* the GNU binutils components in
+         your $PATH.
+
+   on FreeBSD hosts
+   ----------------
       Platform specific prerequisites:
 
       1.) You'll need to have the developer tools installed.
@@ -232,8 +237,8 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
           http://www.macports.org/
       2.) sudo port install allegro freeimage gd2 mysql5-devel postgresql83
 
-   Linux (all)
-   ----------------------
+   Linux (generic)
+   ---------------
 
       For contrib/rddads lib:
       Download and install 'Advantage Client Engine API for Linux' package
@@ -263,7 +268,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
       for contrib/hbqt lib:            sudo apt-get install libqt4-dev
 
    Linux (openSUSE)
-   ----------------------
+   ----------------
 
       You'll need these packages to compile certain contribs and optional Harbour features:
       - xorg-x11-devel
@@ -300,7 +305,7 @@ SUPPORTED PLATFORMS AND C COMPILERS
    bsd     - *BSD
    hpux    - HP-UX
    sunos   - Sun Solaris / OpenSolaris
-   win     - MS Windows
+   win     - MS Windows (all flavors)
    wce     - MS Windows CE
    dos     - MS-DOS (32-bit protected mode only)
    os2     - OS/2
@@ -471,7 +476,6 @@ EXAMPLES
 
    for Windows hosts
    -----------------
-   (possible cross-build targets: Windows CE, MS-DOS, OS/2, Linux)
 
       NOTES: - All code below should be copied to batch files or typed at NT
                command line.
@@ -671,7 +675,6 @@ EXAMPLES
 
    for MS-DOS hosts
    ----------------
-   (possible cross-build targets: Windows, OS/2, Linux)
 
       --- Delorie GNU C
       set DJGPP=C:\djgpp\djgpp.env
@@ -707,7 +710,6 @@ EXAMPLES
 
    for OS/2 hosts
    --------------
-   (possible cross-build targets: MS-DOS, OS/2, Linux)
 
       --- Open Watcom C++
       SET WATCOM=C:\watcom
@@ -722,7 +724,6 @@ EXAMPLES
 
    for Linux hosts
    ---------------
-   (possible cross-build targets: Windows, Windows CE, MS-DOS, OS/2)
 
       --- Open Watcom C++ for OS/2 (requires preceding build for Linux target)
       #!/bin/sh
@@ -875,8 +876,8 @@ QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
             to build a Harbour application with above methods.
 
 
-HOST PLATFORM/SHELL - TARGET PLATFORM/COMPILER COMPATIBILITY MATRIX
-===================================================================
+BUILD HOST PLATFORM/SHELL - TARGET PLATFORM/COMPILER COMPATIBILITY MATRIX
+=========================================================================
 
      host      target        target
      plat      plat/comp     cpu
