@@ -30,26 +30,26 @@ ifneq ($(HB_BUILD_OPTIM),no)
 endif
 
 # For Pocket PC and ARM processors (including XScale)
-#CPPFLAGS += /Tarm-coff
+#CPPFLAGS += -Tarm-coff
 
 ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -Zi
 endif
 
 LD := xlink.exe
-LD_OUT := /out:
+LD_OUT := -out:
 
-LIBPATHS := /libpath:$(LIB_DIR)
+LIBPATHS := -libpath:$(LIB_DIR)
 LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
 LDFLAGS += $(LIBPATHS)
 
 AR := xlib.exe
 ARFLAGS :=
-AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) /out:$(LIB_DIR)/$@ $(^F)
+AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -out:$(LIB_DIR)/$@ $(^F)
 
 DY := $(LD)
-DFLAGS := /nologo /dll
+DFLAGS := -nologo -dll
 DY_OUT := $(LD_OUT)
 DLIBS := $(foreach lib,$(SYSLIBS),$(lib)$(LIB_EXT))
 

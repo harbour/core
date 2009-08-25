@@ -646,6 +646,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    hbmk[ _HBMK_lInfo ] := .F.
    hbmk[ _HBMK_lUTF8 ] := .F.
 
+   hbmk[ _HBMK_cPLAT ] := ""
+   hbmk[ _HBMK_cCOMP ] := ""
+
    hbmk[ _HBMK_lCPP ] := NIL
    hbmk[ _HBMK_lGUI ] := .F.
    hbmk[ _HBMK_lMT ] := .F.
@@ -2551,6 +2554,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibExt := ".lib"
          cObjExt := ".obj"
          cBin_Lib := "tlib.exe"
+         /* Only forward slash is accepted here as option prefix. */
          cOpt_Lib := "/P128 {FA} {OL} {LO}{SCRIPT}"
          cLibLibExt := cLibExt
          cLibObjPrefix := "-+ "
@@ -2617,12 +2621,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-Zi" )
-            AAdd( hbmk[ _HBMK_aOPTL ], "/debug" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-debug" )
          ENDIF
          IF hbmk[ _HBMK_lGUI ]
-            AAdd( hbmk[ _HBMK_aOPTL ], "/subsystem:windows" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-subsystem:windows" )
          ELSE
-            AAdd( hbmk[ _HBMK_aOPTL ], "/subsystem:console" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-subsystem:console" )
          ENDIF
          IF hbmk[ _HBMK_lCPP ] != NIL
             IF hbmk[ _HBMK_lCPP ]
@@ -2651,8 +2655,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             cBin_Dyn := cBin_Link
          ENDIF
          nCmd_Esc := _ESC_DBLQUOTE
-         cOpt_Lib := "/nologo {FA} /out:{OL} {LO}"
-         cOpt_Dyn := "{FD} /dll /out:{OD} {DL} {LO} {LL} {LB} {LS}"
+         cOpt_Lib := "-nologo {FA} -out:{OL} {LO}"
+         cOpt_Dyn := "{FD} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
          cOpt_CompC := "-nologo -c -Gs"
          IF hbmk[ _HBMK_lOPTIM ]
             IF hbmk[ _HBMK_cPLAT ] == "wce"
@@ -2671,15 +2675,15 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
          cOpt_CompC += " {FC} {LC}"
          cOptIncMask := "-I{DI}"
-         cOpt_Link := "/nologo /out:{OE} {LO} {DL} {FL} {LL} {LB} {LS}"
-         cLibPathPrefix := "/libpath:"
+         cOpt_Link := "-nologo -out:{OE} {LO} {DL} {FL} {LL} {LB} {LS}"
+         cLibPathPrefix := "-libpath:"
          cLibPathSep := " "
          IF hbmk[ _HBMK_lMAP ]
-            AAdd( hbmk[ _HBMK_aOPTL ], "/map" )
-            AAdd( hbmk[ _HBMK_aOPTD ], "/map" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-map" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-map" )
          ENDIF
          IF hbmk[ _HBMK_lIMPLIB ]
-            AAdd( hbmk[ _HBMK_aOPTD ], "/implib:{OI}" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-implib:{OI}" )
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "wce"
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_WIN32_WCE=0x501 -DCE_ARCH -DWINCE -D_WINCE -D_WINDOWS -D_UNICODE -D_UWIN -DUNDER_CE" )
@@ -2687,11 +2691,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             CASE hbmk[ _HBMK_cCOMP ] == "msvcarm"
                AAdd( hbmk[ _HBMK_aOPTC ], "-DARM -D_ARM_ -DARMV4 -D_M_ARM -D_ARMV4I_ -Darmv4i -D__arm__" )
             ENDCASE
-            AAdd( hbmk[ _HBMK_aOPTL ], "/subsystem:windowsce" )
-            AAdd( hbmk[ _HBMK_aOPTL ], "/nodefaultlib:oldnames.lib" )
-            AAdd( hbmk[ _HBMK_aOPTL ], "/nodefaultlib:kernel32.lib" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-subsystem:windowsce" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-nodefaultlib:oldnames.lib" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-nodefaultlib:kernel32.lib" )
             IF nCCompVer >= 800
-               AAdd( hbmk[ _HBMK_aOPTL ], "/manifest:no" )
+               AAdd( hbmk[ _HBMK_aOPTL ], "-manifest:no" )
             ENDIF
          ENDIF
          IF hbmk[ _HBMK_lINC ]
@@ -2730,9 +2734,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
          IF !( hbmk[ _HBMK_cCOMP ] $ "icc|iccia64" )
             cBin_Res := "rc.exe"
-            cOpt_Res := "{FR} /fo {OS} {IR}"
+            cOpt_Res := "{FR} -fo {OS} {IR}"
             IF nCCompVer >= 1000
-               cOpt_Res := "/nologo " + cOpt_Res  /* NOTE: Only in MSVC 2010 and upper. [vszakats] */
+               cOpt_Res := "-nologo " + cOpt_Res  /* NOTE: Only in MSVC 2010 and upper. [vszakats] */
             ENDIF
             cResExt := ".res"
          ENDIF
@@ -2743,9 +2747,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "xcc" )
 
          IF hbmk[ _HBMK_lGUI ]
-            AAdd( hbmk[ _HBMK_aOPTL ], "/subsystem:windows" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-subsystem:windows" )
          ELSE
-            AAdd( hbmk[ _HBMK_aOPTL ], "/subsystem:console" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-subsystem:console" )
          ENDIF
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-Zi" )
@@ -2767,54 +2771,54 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             cBin_Res := "porc.exe"
          ENDIF
          cBin_Dyn := cBin_Link
-         cOpt_CompC := "/c /Ze"
+         cOpt_CompC := "-c -Ze"
          IF !( hbmk[ _HBMK_cCOMP ] == "poccarm" ) .AND. ;
             !( hbmk[ _HBMK_cCOMP ] == "xcc" ) /* xcc doesn't have this enabled in default Harbour builds. */
-            cOpt_CompC += " /MT"
+            cOpt_CompC += " -MT"
          ENDIF
          IF !( hbmk[ _HBMK_cCOMP ] == "xcc" )
-            cOpt_CompC += " /Go"
+            cOpt_CompC += " -Go"
          ENDIF
-         cOpt_CompC += " {FC} {IC} /Fo{OO}"
+         cOpt_CompC += " {FC} {IC} -Fo{OO}"
          IF Empty( cWorkDir )
             cWorkDir := "."
          ENDIF
-         cOptIncMask := "/I{DI}"
-         cOpt_Dyn := "{FD} /dll /out:{OD} {DL} {LO} {LL} {LB} {LS}"
+         cOptIncMask := "-I{DI}"
+         cOpt_Dyn := "{FD} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
          DO CASE
          CASE hbmk[ _HBMK_cCOMP ] == "pocc"
             IF hbmk[ _HBMK_lOPTIM ]
-               AAdd( hbmk[ _HBMK_aOPTC ], "/Ot" )
+               AAdd( hbmk[ _HBMK_aOPTC ], "-Ot" )
             ENDIF
-            AAdd( hbmk[ _HBMK_aOPTC ], "/Tx86-coff" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-Tx86-coff" )
          CASE hbmk[ _HBMK_cCOMP ] == "pocc64"
-            AAdd( hbmk[ _HBMK_aOPTC ], "/Tamd64-coff" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-Tamd64-coff" )
          CASE hbmk[ _HBMK_cCOMP ] == "poccarm"
-            AAdd( hbmk[ _HBMK_aOPTC ], "/Tarm-coff" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-Tarm-coff" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_M_ARM" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_WINCE" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
          ENDCASE
-         cOpt_Res := "{FR} /Fo{OS} {IR}"
+         cOpt_Res := "{FR} -Fo{OS} {IR}"
          cResExt := ".res"
-         cOpt_Lib := "{FA} /out:{OL} {LO}"
+         cOpt_Lib := "{FA} -out:{OL} {LO}"
          IF hbmk[ _HBMK_lMT ]
-            AAdd( hbmk[ _HBMK_aOPTC ], "/MT" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-MT" )
          ENDIF
-         cOpt_Link := "/out:{OE} {LO} {DL} {FL} {LL} {LB} {LS}"
-         cLibPathPrefix := "/libpath:"
+         cOpt_Link := "-out:{OE} {LO} {DL} {FL} {LL} {LB} {LS}"
+         cLibPathPrefix := "-libpath:"
          cLibPathSep := " "
          IF hbmk[ _HBMK_lSHARED ]
             AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_BIN_INSTALL )
          ENDIF
          IF hbmk[ _HBMK_lMAP ]
-            AAdd( hbmk[ _HBMK_aOPTL ], "/map" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-map" )
          ENDIF
          IF hbmk[ _HBMK_lIMPLIB ]
-            AAdd( hbmk[ _HBMK_aOPTD ], "/implib:{OI}" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-implib:{OI}" )
          ENDIF
          IF hbmk[ _HBMK_lDEBUG ]
-            AAdd( hbmk[ _HBMK_aOPTL ], "/debug" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-debug" )
          ENDIF
          l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
          DO CASE

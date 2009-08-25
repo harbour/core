@@ -66,21 +66,21 @@ LD_OUT := -Fe
 
 SYSLIBS += corelibc
 
-LIBPATHS := /libpath:$(LIB_DIR)
+LIBPATHS := -libpath:$(LIB_DIR)
 LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
-LDFLAGS += /nologo /link /subsystem:windowsce /nodefaultlib:oldnames.lib /nodefaultlib:kernel32.lib
+LDFLAGS += -nologo -link -subsystem:windowsce -nodefaultlib:oldnames.lib -nodefaultlib:kernel32.lib
 ifeq ($(HB_VISUALC_VER_PRE80),)
-   LDFLAGS += /manifest:no
+   LDFLAGS += -manifest:no
 endif
 LDFLAGS += $(LIBPATHS)
 
 AR := lib.exe
 ARFLAGS :=
-AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) /nologo /out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
+AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -nologo -out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
 
 DY := $(LD)
-DFLAGS := /nologo /dll /subsystem:windowsce
+DFLAGS := -nologo -dll -subsystem:windowsce
 DY_OUT := $(LD_OUT)
 DLIBS := $(foreach lib,$(SYSLIBS),$(lib)$(LIB_EXT))
 
@@ -92,7 +92,7 @@ endef
 define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dyn_object))
-   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)"$(subst /,$(DIRSEP),$(DYN_DIR)/$@)" /implib:"$(IMP_FILE)" @__dyn__.tmp $(DLIBS)
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)"$(subst /,$(DIRSEP),$(DYN_DIR)/$@)" -implib:"$(IMP_FILE)" @__dyn__.tmp $(DLIBS)
 endef
 
 DY_RULE = $(create_dynlib)

@@ -37,20 +37,20 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 endif
 
 LD := polink.exe
-LD_OUT := /out:
+LD_OUT := -out:
 
-LIBPATHS := /libpath:$(LIB_DIR)
+LIBPATHS := -libpath:$(LIB_DIR)
 LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
-LDFLAGS += /subsystem:console
+LDFLAGS += -subsystem:console
 LDFLAGS += $(LIBPATHS)
 
 AR := polib.exe
 ARFLAGS :=
-AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) /out:$(LIB_DIR)/$@ $(^F)
+AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -out:$(LIB_DIR)/$@ $(^F)
 
 DY := $(LD)
-DFLAGS := /nologo /dll
+DFLAGS := -nologo -dll
 DY_OUT := $(LD_OUT)
 DLIBS := $(foreach lib,$(SYSLIBS),$(lib)$(LIB_EXT))
 
@@ -62,7 +62,7 @@ endef
 define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dyn_object))
-   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)"$(subst /,$(DIRSEP),$(DYN_DIR)/$@)" /implib:"$(IMP_FILE)" @__dyn__.tmp $(DLIBS)
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)"$(subst /,$(DIRSEP),$(DYN_DIR)/$@)" -implib:"$(IMP_FILE)" @__dyn__.tmp $(DLIBS)
 endef
 
 DY_RULE = $(create_dynlib)
