@@ -127,10 +127,10 @@ HB_FUNC( GETE )
 /* NOTE: Harbour extended version of GETENV(). The 2nd parameter
          can be used to specify a default value, returned if the
          requested envvar doesn't exist.
-         3rd, optional logical parameter can specify wether to
-         apply automatic codepage conversion (to the codepage
-         specified by Set( _SET_OSCODEPAGE ) on the returned value.
-         The default is .T.
+         3rd, optional logical parameter can specify whether to
+         apply automatic codepage conversion [ to the codepage
+         specified by Set( _SET_OSCODEPAGE ) ] onto the retrieved
+         envvar value. The default is .T.
          [vszakats] */
 
 HB_FUNC( HB_GETENV )

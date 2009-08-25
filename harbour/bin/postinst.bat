@@ -24,7 +24,7 @@ rem         or HB_DIR_NSIS envvar set to its dir with an ending backslash.
 rem      (only for Windows builds)
 rem ---------------------------------------------------------------
 
-if "%HB_BIN_INSTALL%" == "" echo HB_BIN_INSTALL needs to be set.
+if "%HB_BIN_INSTALL%" == "" echo ! HB_BIN_INSTALL needs to be set.
 if "%HB_BIN_INSTALL%" == "" goto END
 
 echo ! Making %HB_BIN_INSTALL%\hbmk.cfg...
@@ -36,70 +36,60 @@ echo libpaths=../contrib/rddsql/%%{hb_name}>> %HB_BIN_INSTALL%\hbmk.cfg
 echo libpaths=../addons/%%{hb_name}>> %HB_BIN_INSTALL%\hbmk.cfg
 echo libpaths=../examples/%%{hb_name}>> %HB_BIN_INSTALL%\hbmk.cfg
 
-goto INST_%HB_PLATFORM%
+if "%HB_SHELL%" == "nt" goto _SH_NT
 
-:INST_WIN
-:INST_WCE
+   if "%HB_INSTALL_PREFIX%" == "" goto END
 
-   rem Windows post install part
+   copy CHANG*     %HB_INSTALL_PREFIX%\CHANGES > nul
+   copy COPYING    %HB_INSTALL_PREFIX% > nul
+   copy ERRATA     %HB_INSTALL_PREFIX% > nul
+   copy INSTALL    %HB_INSTALL_PREFIX% > nul
+   copy TODO       %HB_INSTALL_PREFIX% > nul
 
-   if not "%OS%" == "Windows_NT" echo ! postinst.bat Harbour build script requires Windows NT or upper.
-   if not "%OS%" == "Windows_NT" goto END
+   goto END
 
-   rem ; Post-build installation
-   if not "%HB_INSTALL_PREFIX%" == "" copy ChangeLog* "%HB_INSTALL_PREFIX%\" > nul
-   if not "%HB_INSTALL_PREFIX%" == "" copy COPYING    "%HB_INSTALL_PREFIX%\" > nul
-   if not "%HB_INSTALL_PREFIX%" == "" copy ERRATA     "%HB_INSTALL_PREFIX%\" > nul
-   if not "%HB_INSTALL_PREFIX%" == "" copy INSTALL    "%HB_INSTALL_PREFIX%\" > nul
-   if not "%HB_INSTALL_PREFIX%" == "" copy TODO       "%HB_INSTALL_PREFIX%\" > nul
+:_SH_NT
 
-   if "%HB_BUILD_DLL%" == "no" goto _SKIP_DLL_BIN
+   if "%HB_INSTALL_PREFIX%" == "" goto _NO_COPY
 
-      if exist "%HB_BIN_INSTALL%\*.dll" (
-         echo ! Making shared version of Harbour binaries...
-         "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbrun-dll"    "%~dp0..\utils\hbrun\hbrun.hbp"
-         "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbmk2-dll"    "%~dp0..\utils\hbmk2\hbmk2.hbp"
-         "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbtest-dll"   "%~dp0..\utils\hbtest\hbtest.hbp"
-         "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbi18n-dll"   "%~dp0..\utils\hbi18n\hbi18n.hbp"
-         "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbformat-dll" "%~dp0..\utils\hbformat\hbformat.hbp"
-      )
+   if     "%HB_PLATFORM%" == "dos" copy ChangeLog* "%HB_INSTALL_PREFIX%\CHANGES" > nul
+   if not "%HB_PLATFORM%" == "dos" copy ChangeLog* "%HB_INSTALL_PREFIX%\" > nul
 
-   :_SKIP_DLL_BIN
+   copy COPYING    "%HB_INSTALL_PREFIX%\" > nul
+   copy ERRATA     "%HB_INSTALL_PREFIX%\" > nul
+   copy INSTALL    "%HB_INSTALL_PREFIX%\" > nul
+   copy TODO       "%HB_INSTALL_PREFIX%\" > nul
+
+:_NO_COPY
+
+   if "%HB_PLATFORM%" == "dos" goto _NO_DLL_BIN
+   if "%HB_PLATFORM%" == "linux" goto _NO_DLL_BIN
+   if "%HB_BUILD_DLL%" == "no" goto _NO_DLL_BIN
+
+   echo ! Making shared version of Harbour binaries...
+   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbrun-dll"    "%HB_TOP%\utils\hbrun\hbrun.hbp"
+   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbmk2-dll"    "%HB_TOP%\utils\hbmk2\hbmk2.hbp"
+   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbtest-dll"   "%HB_TOP%\utils\hbtest\hbtest.hbp"
+   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbi18n-dll"   "%HB_TOP%\utils\hbi18n\hbi18n.hbp"
+   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbformat-dll" "%HB_TOP%\utils\hbformat\hbformat.hbp"
+
+:_NO_DLL_BIN
+
+   if "%HB_PLATFORM%" == "dos" goto _NO_ICON_BIN
+   if "%HB_PLATFORM%" == "linux" goto _NO_ICON_BIN
 
    rem ; We build this here, because GNU Make wouldn't add the icon.
    echo ! Making hbrun with application icon...
-   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN "-o%HB_BIN_INSTALL%\hbrun" "%~dp0..\utils\hbrun\hbrun.hbp"
+   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN "-o%HB_BIN_INSTALL%\hbrun" "%HB_TOP%\utils\hbrun\hbrun.hbp"
 
-   if "%HB_BUILD_IMPLIB%" == "yes" call "%~dp0hb-mkimp.bat"
-   if "%HB_BUILD_PKG%" == "yes" call :MK_PKG
+:_NO_ICON_BIN
 
-   goto END
+   if "%HB_BUILD_IMPLIB%" == "yes" call "%HB_TOP%\bin\hb-mkimp.bat"
 
-:INST_DOS
+:_NO_IMPLIB
 
-   rem ; Post-build installation
-   if not "%HB_INSTALL_PREFIX%" == "" copy CHANG*     %HB_INSTALL_PREFIX%\CHANGES > nul
-   if not "%HB_INSTALL_PREFIX%" == "" copy COPYING    %HB_INSTALL_PREFIX% > nul
-   if not "%HB_INSTALL_PREFIX%" == "" copy ERRATA     %HB_INSTALL_PREFIX% > nul
-   if not "%HB_INSTALL_PREFIX%" == "" copy INSTALL    %HB_INSTALL_PREFIX% > nul
-   if not "%HB_INSTALL_PREFIX%" == "" copy TODO       %HB_INSTALL_PREFIX% > nul
-
-   if "%HB_BUILD_PKG%" == "yes" call :MK_PKG
-
-   goto END
-
-:INST_LINUX
-
-   goto END
-
-:INST_
-
-   goto END
-
-:MK_PKG
-
-   if not "%OS%" == "Windows_NT" echo ! postinst.bat Harbour install package creation requires Windows NT or upper.
-   if not "%OS%" == "Windows_NT" goto :EOF
+   if "%HB_PLATFORM%" == "linux" goto _NO_PKG
+   if not "%HB_BUILD_PKG%" == "yes" goto _NO_PKG
 
    rem NOTE: Believe it or not this is the official method to zip a different dir with subdirs
    rem       without including the whole root path in filenames; you have to 'cd' into it.
@@ -111,15 +101,14 @@ goto INST_%HB_PLATFORM%
    echo ! Making Harbour .zip install package: '%HB_TOP%\%HB_PKGNAME%.zip'
    if exist "%HB_TOP%\%HB_PKGNAME%.zip" del "%HB_TOP%\%HB_PKGNAME%.zip"
    pushd
-   cd "%HB_INSTALL_PREFIX%\.."
+   cd "%HB_INSTALL_PREFIX%"
+   cd ..
    "%HB_DIR_ZIP%zip.exe" -q -9 -X -r -o "%HB_TOP%\%HB_PKGNAME%.zip" . -i "%HB_PKGNAME%\*" -x *.tds -x *.exp
    popd
 
-   if "%HB_PLATFORM%" == "dos" goto :EOF
-
    echo ! Making Harbour .exe install package: '%HB_TOP%\%HB_PKGNAME%.exe'
-   "%HB_DIR_NSIS%makensis.exe" /V2 "%~dp0..\package\mpkg_win.nsi"
+   "%HB_DIR_NSIS%makensis.exe" /V2 "%HB_TOP%\package\mpkg_win.nsi"
 
-   goto :EOF
+:_NO_PKG
 
 :END

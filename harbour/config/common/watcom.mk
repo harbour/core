@@ -101,7 +101,15 @@ ifeq ($(CC),wcc386)
    endif
 endif
 
+ANYDOS := no
 ifeq ($(HB_SHELL),dos)
+   ANYDOS := yes
+endif
+ifeq ($(HB_PLATFORM),dos)
+   ANYDOS := yes
+endif
+
+ifeq ($(ANYDOS),yes)
 
    # disable DOS/4GW Banner
    export DOS4G := quiet

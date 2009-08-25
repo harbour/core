@@ -860,6 +860,7 @@ endif
 
 export HB_PLATFORM
 export HB_COMPILER
+export HB_SHELL
 
 ifneq ($(filter $(HB_PLATFORM),win wce dos os2),)
    HB_OS_UNIX := no
@@ -1105,10 +1106,10 @@ else
    HB_PKGNAME := hb$(HB_VERSION)
    # Ugly solution
    ifeq ($(HB_COMPILER),djgpp)
-      HB_PKGNAME += dj
+      HB_PKGNAME := $(HB_PKGNAME)dj
    else
       ifeq ($(HB_COMPILER),watcom)
-         HB_PKGNAME += wa
+         HB_PKGNAME := $(HB_PKGNAME)wa
       endif
    endif
    HB_PKGNAMI := $(HB_PKGNAME)
@@ -1246,7 +1247,7 @@ export HB_HOST_PLAT
 export HB_HOST_CPU
 export HB_HOST_BIN_DIR
 
-# clear these options for an unambiguous Harbour enviornment
+# clear these options for an unambiguous Harbour environment
 export HARBOUR :=
 export HARBOURCMD :=
 export CLIPPER :=

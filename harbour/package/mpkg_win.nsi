@@ -78,7 +78,8 @@ Section "Main components" hb_main
   File /nonfatal "$%HB_INSTALL_PREFIX%\ERRATA"
   File /nonfatal "$%HB_INSTALL_PREFIX%\INSTALL"
   File /nonfatal "$%HB_INSTALL_PREFIX%\TODO"
-  File /nonfatal "$%HB_INSTALL_PREFIX%\ChangeLog*"
+  ; Let it work also for DOS packages where short filename is used here
+  File /nonfatal "$%HB_INSTALL_PREFIX%\Change*"
 
   SetOutPath $INSTDIR\bin
   File "$%HB_INSTALL_PREFIX%\bin\*.*"

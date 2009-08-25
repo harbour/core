@@ -12,7 +12,7 @@ rem Script run after Harbour make install to finish install process
 rem (for OS/2)
 rem ---------------------------------------------------------------
 
-if "%HB_BIN_INSTALL%" == "" echo HB_BIN_INSTALL needs to be set.
+if "%HB_BIN_INSTALL%" == "" echo ! HB_BIN_INSTALL needs to be set.
 if "%HB_BIN_INSTALL%" == "" goto END
 
 echo ! Making %HB_BIN_INSTALL%\hbmk.cfg...
@@ -24,11 +24,12 @@ echo libpaths=../contrib/rddsql/%%{hb_name}>> %HB_BIN_INSTALL%\hbmk.cfg
 echo libpaths=../addons/%%{hb_name}>> %HB_BIN_INSTALL%\hbmk.cfg
 echo libpaths=../examples/%%{hb_name}>> %HB_BIN_INSTALL%\hbmk.cfg
 
-rem ; Post-build installation
-if not "%HB_INSTALL_PREFIX%" == "" xcopy /y ChangeLog* %HB_INSTALL_PREFIX%\ > nul
-if not "%HB_INSTALL_PREFIX%" == "" xcopy /y COPYING    %HB_INSTALL_PREFIX%\ > nul
-if not "%HB_INSTALL_PREFIX%" == "" xcopy /y ERRATA     %HB_INSTALL_PREFIX%\ > nul
-if not "%HB_INSTALL_PREFIX%" == "" xcopy /y INSTALL    %HB_INSTALL_PREFIX%\ > nul
-if not "%HB_INSTALL_PREFIX%" == "" xcopy /y TODO       %HB_INSTALL_PREFIX%\ > nul
+if "%HB_INSTALL_PREFIX%" == "" goto END
+
+xcopy /y ChangeLog* %HB_INSTALL_PREFIX%\ > nul
+xcopy /y COPYING    %HB_INSTALL_PREFIX%\ > nul
+xcopy /y ERRATA     %HB_INSTALL_PREFIX%\ > nul
+xcopy /y INSTALL    %HB_INSTALL_PREFIX%\ > nul
+xcopy /y TODO       %HB_INSTALL_PREFIX%\ > nul
 
 :END
