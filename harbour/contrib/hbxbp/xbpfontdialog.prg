@@ -255,7 +255,9 @@ METHOD XbpFontDialog:display( nMode )
    ::oFont := QFont():new()
 
    ::oFont:setFamily( ::familyName )
-   ::oFont:setPointSize( ::nominalPointSize )
+   IF ::nominalPointSize > 0
+      ::oFont:setPointSize( ::nominalPointSize )
+   ENDIF
 
    ::oWidget:setCurrentFont( QT_PTROF( ::oFont ) )
 
@@ -326,7 +328,7 @@ CLASS XbpFont
 
    DATA     familyName                            INIT   ""
    DATA     height                                INIT   0
-   DATA     nominalPointSize                      INIT   -1
+   DATA     nominalPointSize                      INIT   0
 
    DATA     width                                 INIT   0
    DATA     widthClass                            INIT   .F.
