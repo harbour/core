@@ -22,7 +22,7 @@ ifeq ($(PREREQ_MISS),)
 
       ifeq ($(HB_INC_QT),)
          ifeq ($(HB_XBUILD),)
-            ifeq ($(HB_OS_UNIX),yes)
+            ifneq ($(HB_PLATFORM_UNIX),)
                HB_INC_QT := /usr/include/qt4 /usr/lib/qt4/include /usr/include /Developer/qt/include
             endif
          endif

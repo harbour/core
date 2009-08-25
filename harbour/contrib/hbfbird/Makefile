@@ -16,22 +16,37 @@ PRG_SOURCES := \
 
 ifeq ($(filter $(HB_COMPILER),pocc64 poccarm),)
 
-   ifeq ($(HB_INC_FIREBIRD),)
-      ifeq ($(HB_XBUILD),)
-         HB_INC_FIREBIRD := /usr/include /opt/firebird/include
+   ifneq ($(HB_INC_FIREBIRD),no)
+
+      ifeq ($(HB_INC_FIREBIRD),)
+         ifeq ($(HB_XBUILD),)
+            ifneq ($(HB_PLATFORM_UNIX),)
+               HB_INC_FIREBIRD := /usr/include /opt/firebird/include
+            endif
+         endif
       endif
-   endif
 
-   HB_INC_FIREBIRD_OK := $(foreach d, $(HB_INC_FIREBIRD), $(if $(wildcard $(d)/ibase.h),$(d),))
+      ifneq ($(HB_INC_FIREBIRD),)
+         HB_INC_FIREBIRD_OK := $(strip $(foreach d, $(HB_INC_FIREBIRD), $(if $(wildcard $(d)/ibase.h),$(d),)))
 
-   ifneq ($(strip $(HB_INC_FIREBIRD_OK)),)
+         ifneq ($(HB_INC_FIREBIRD_OK),)
 
-      HB_CFLAGS += $(foreach d,$(HB_INC_FIREBIRD_OK),-I$(d))
+            HB_CFLAGS += $(foreach d,$(HB_INC_FIREBIRD_OK),-I$(d))
 
-      include $(TOP)$(ROOT)config/lib.mk
+            include $(TOP)$(ROOT)config/lib.mk
+         else
+            HB_SKIP_REASON := component not found
+            include $(TOP)$(ROOT)config/none.mk
+         endif
+      else
+         HB_SKIP_REASON := component location not set
+         include $(TOP)$(ROOT)config/none.mk
+      endif
    else
+      HB_SKIP_REASON := deselected
       include $(TOP)$(ROOT)config/none.mk
    endif
 else
+   HB_SKIP_REASON := compiler not supported
    include $(TOP)$(ROOT)config/none.mk
 endif

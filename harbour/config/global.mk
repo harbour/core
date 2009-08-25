@@ -676,6 +676,45 @@ ifeq ($(HB_COMPILER),)
                else
                   $(error ! Harbour build couldn't find cegcc cross-compiler. Please install it to /opt/mingw32ce, or point HB_CCPATH/HB_CCPREFIX environment variables to it)
                endif
+            else
+               ifeq ($(HB_PLATFORM),dos)
+                  # Look for djgpp compiler on HB_CCPATH if it's set
+                  ifneq ($(HB_CCPATH),)
+                     ifneq ($(call find_in_path_par,i586-pc-msdosdjgpp,$(HB_CCPATH)),)
+                        HB_COMPILER := djgpp
+                        HB_CCPREFIX := i586-pc-msdosdjgpp-
+                        HB_CCPATH := $(HB_CCPATH)/
+                     else
+                        HB_CCPATH :=
+                        HB_CCPREFIX :=
+                     endif
+                  endif
+
+                  # If HB_CCPATH not set, or couldn't be found on the provided PATH,
+                  # try to detect them in default locations
+                  ifeq ($(HB_CCPATH),)
+                     HB_CCPATH := /usr/local/i586-pc-msdosdjgpp
+                     ifneq ($(call find_in_path_par,i586-pc-msdosdjgpp,$(HB_CCPATH)),)
+                        HB_COMPILER := djgpp
+                        HB_CCPREFIX := i586-pc-msdosdjgpp-
+                     else
+                        HB_CCPATH :=
+                        HB_CCPREFIX :=
+                     endif
+                  endif
+
+                  ifneq ($(HB_CCPATH)$(HB_CCPREFIX),)
+                     HB_COMP_PATH := $(dir $(HB_CCPATH))
+                     HB_PLATFORM := dos
+                     export HB_TOOLS_PREF := hbce
+                     export HB_XBUILD := dos
+                     ifneq ($(HB_HOST_BUILD),all)
+                        HB_HOST_BUILD := lib
+                     endif
+                  else
+                     $(error ! Harbour build couldn't find djgpp cross-compiler. Please install it to /usr/local/i586-pc-msdosdjgpp, or point HB_CCPATH/HB_CCPREFIX environment variables to it)
+                  endif
+               endif
             endif
          endif
       endif
@@ -872,9 +911,9 @@ export HB_COMPILER
 export HB_SHELL
 
 ifneq ($(filter $(HB_PLATFORM),win wce dos os2),)
-   HB_OS_UNIX := no
+   HB_PLATFORM_UNIX :=
 else
-   HB_OS_UNIX := yes
+   HB_PLATFORM_UNIX := yes
 endif
 
 PLAT_COMP := $(HB_PLATFORM)/$(HB_COMPILER)$(subst \,/,$(HB_BUILD_NAME))
@@ -882,7 +921,7 @@ PLAT_COMP := $(HB_PLATFORM)/$(HB_COMPILER)$(subst \,/,$(HB_BUILD_NAME))
 OBJ_DIR := obj/$(PLAT_COMP)
 BIN_DIR := $(TOP)$(ROOT)bin/$(PLAT_COMP)
 LIB_DIR := $(TOP)$(ROOT)lib/$(PLAT_COMP)
-ifeq ($(HB_OS_UNIX),no)
+ifeq ($(HB_PLATFORM_UNIX),)
    DYN_DIR := $(BIN_DIR)
    IMP_DIR := $(LIB_DIR)
 else
@@ -1106,10 +1145,10 @@ ifneq ($(HB_DB_DRVEXT),)
    HB_RDD_DIRS += $(HB_DB_DRVEXT)
 endif
 
-ifeq ($(HB_OS_UNIX),yes)
-   HB_DYN_VER := $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)
-else
+ifeq ($(HB_PLATFORM_UNIX),)
    HB_DYN_VER := $(HB_VER_MAJOR)$(HB_VER_MINOR)
+else
+   HB_DYN_VER := $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)
 endif
 
 ifneq ($(HB_PLATFORM),dos)
@@ -1152,7 +1191,7 @@ else
    # Fill it automatically if not specified
    ifeq ($(HB_INSTALL_PREFIX),)
 
-      ifeq ($(HB_OS_UNIX),no)
+      ifeq ($(HB_PLATFORM_UNIX),)
          HB_INSTALL_PREFIX := $(realpath $(TOP)$(ROOT))
       else
          ifneq ($(PREFIX),)
@@ -1195,7 +1234,7 @@ endif
 
 ifneq ($(HB_INSTALL_PREFIX),)
 
-   ifeq ($(HB_OS_UNIX),no)
+   ifeq ($(HB_PLATFORM_UNIX),)
       LIBPOSTFIX := $(DIRSEP)$(subst /,$(DIRSEP),$(PLAT_COMP))
    else
       # Not perfect, please enhance it.
@@ -1221,7 +1260,7 @@ ifneq ($(HB_INSTALL_PREFIX),)
       export HB_LIB_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)lib$(LIBPOSTFIX)
    endif
    ifeq ($(HB_DYN_INSTALL),)
-      ifeq ($(HB_OS_UNIX),no)
+      ifeq ($(HB_PLATFORM_UNIX),)
          export HB_DYN_INSTALL := $(HB_BIN_INSTALL)
       else
          export HB_DYN_INSTALL := $(HB_LIB_INSTALL)
@@ -1236,7 +1275,7 @@ ifneq ($(HB_INSTALL_PREFIX),)
    # Standard name: DOCDIR
    ifeq ($(HB_DOC_INSTALL),)
       # Don't set doc dir for *nix targets
-      ifeq ($(HB_OS_UNIX),no)
+      ifeq ($(HB_PLATFORM_UNIX),)
          ifneq ($(HB_INSTALL_PREFIX),$(HB_INSTALL_PREFIX_TOP))
             export HB_DOC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)doc
          endif
