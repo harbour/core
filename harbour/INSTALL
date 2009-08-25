@@ -308,6 +308,7 @@ SUPPORTED PLATFORMS AND C COMPILERS
    win     - MS Windows (all flavors)
    wce     - MS Windows CE
    dos     - MS-DOS (32-bit protected mode only)
+             (MS-DOS compatible system also work, like dosemu)
    os2     - OS/2
 
    You can use HB_COMPILER values to select compilers:

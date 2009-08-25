@@ -240,6 +240,21 @@ ifeq ($(HB_INIT_DONE),)
    endif
 endif
 
+# Make platform detection
+ifneq ($(findstring COMMAND,$(SHELL)),)
+   HB_MAKE_PLAT := dos
+else
+   ifneq ($(findstring sh.exe,$(SHELL)),)
+      HB_MAKE_PLAT := win
+   else
+      ifneq ($(findstring CMD.EXE,$(SHELL)),)
+         HB_MAKE_PLAT := os2
+      else
+         HB_MAKE_PLAT := unix
+      endif
+   endif
+endif
+
 ifeq ($(HB_INIT_DONE),)
    ifneq ($(MAKE_381),)
 
@@ -483,12 +498,6 @@ endif
 ifeq ($(HB_INIT_DONE),)
    ifneq ($(MAKE_381),)
       $(info ! HB_HOST_PLAT: $(HB_HOST_PLAT)$(if $(HB_HOST_CPU), ($(HB_HOST_CPU)),)  HB_SHELL: $(HB_SHELL))
-   endif
-
-   ifeq ($(HB_HOST_PLAT)-$(HB_SHELL),win-dos)
-      $(warning ! Warning: You're using DOS GNU Make executable (or DOS shell) on Windows host.)
-      $(warning !          Not recommended combination. Some features will be disabled.)
-      $(warning !          Please use the Windows build of GNU Make.)
    endif
 endif
 
@@ -926,6 +935,13 @@ else
 endif
 
 ifeq ($(HB_INIT_DONE),)
+   ifneq ($(HB_COMPILER),djgpp)
+      ifeq ($(HB_HOST_PLAT)-$(HB_MAKE_PLAT),win-dos)
+         $(warning ! Warning: You're using MS-DOS GNU Make executable on Windows host.)
+         $(warning !          Not recommended combination. Some features will be disabled.)
+         $(warning !          Please use the Windows build of GNU Make.)
+      endif
+   endif
    ifneq ($(MAKE_381),)
       $(info ! HB_PLATFORM: $(HB_PLATFORM)$(if $(HB_CPU), ($(HB_CPU)),) $(HB_PLAT_AUTO))
       $(info ! HB_COMPILER: $(HB_COMPILER) $(HB_COMP_AUTO))

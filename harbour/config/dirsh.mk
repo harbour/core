@@ -30,7 +30,6 @@ endif
 
 ifeq ($(HB_SHELL),dos)
 
-# We have to use script to overcome the DOS limit of max 128 characters
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 #       It causes that every command will be separated by LF
 define dir_mk

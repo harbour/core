@@ -38,13 +38,24 @@ echo libpaths=../examples/%%{hb_name}>> %HB_BIN_INSTALL%\hbmk.cfg
 
 if "%HB_SHELL%" == "nt" goto _SH_NT
 
-   if "%HB_INSTALL_PREFIX%" == "" goto END
+   if "%HB_INSTALL_PREFIX%" == "" goto _NO_COPYD
 
    copy CHANG*     %HB_INSTALL_PREFIX%\CHANGES > nul
    copy COPYING    %HB_INSTALL_PREFIX% > nul
    copy ERRATA     %HB_INSTALL_PREFIX% > nul
    copy INSTALL    %HB_INSTALL_PREFIX% > nul
    copy TODO       %HB_INSTALL_PREFIX% > nul
+
+:_NO_COPYD
+
+   if "%HB_PLATFORM%" == "linux" goto _NO_PKG
+   if not "%HB_BUILD_PKG%" == "yes" goto _NO_PKG
+
+   echo ! Making Harbour .zip install package: '%HB_TOP%\%HB_PKGNAME%.zip'
+   if exist "%HB_TOP%\%HB_PKGNAME%.zip" del %HB_TOP%\%HB_PKGNAME%.zip
+   cd %HB_INSTALL_PREFIX%
+   cd ..
+   %HB_DIR_ZIP%zip.exe -q -9 -X -r -o %HB_TOP%\%HB_PKGNAME%.zip . -i %HB_PKGNAME%\* -x *.tds -x *.exp
 
    goto END
 
@@ -101,8 +112,7 @@ if "%HB_SHELL%" == "nt" goto _SH_NT
    echo ! Making Harbour .zip install package: '%HB_TOP%\%HB_PKGNAME%.zip'
    if exist "%HB_TOP%\%HB_PKGNAME%.zip" del "%HB_TOP%\%HB_PKGNAME%.zip"
    pushd
-   cd "%HB_INSTALL_PREFIX%"
-   cd ..
+   cd "%HB_INSTALL_PREFIX%\.."
    "%HB_DIR_ZIP%zip.exe" -q -9 -X -r -o "%HB_TOP%\%HB_PKGNAME%.zip" . -i "%HB_PKGNAME%\*" -x *.tds -x *.exp
    popd
 

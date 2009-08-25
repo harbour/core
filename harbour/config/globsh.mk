@@ -120,6 +120,9 @@ endif
 
 ifeq ($(HB_SHELL),os2)
 
+# NOTE: Maximum size of command line in OS/2 is limited to 1024
+#       characters.
+
 # NOTE: Comment on included OS/2 GNU tools:
 #       os2mkdir and os2cp expects forward slashes, while
 #       os2rm expects backslashes in filenames. [vszakats]
@@ -156,6 +159,13 @@ clean::
 endif
 
 ifeq ($(HB_SHELL),dos)
+
+# NOTE: DOS command line length has a limit of 126 characters.
+#       When using DJGPP GNU Make to invoke other DJGPP tools this limit
+#       is about 13KB, as they do special trick to overcome it.
+#       See DJGPP (djgppfaq) FAQ 16.4 and 16.5:
+#          ftp://ftp.delorie.com/pub/djgpp/v2faq/frfaq.zip
+#       [vszakats]
 
 MK := $(subst \,/,$(MAKE))
 RM := $(TOOL_DIR)dosrm -f
