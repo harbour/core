@@ -102,14 +102,14 @@ struct _HB_SYMB;
                do { \
                   (p)->type = HB_IT_INTEGER; \
                   (p)->item.asInteger.value = ( int ) (v); \
-                  (p)->item.asInteger.length = HB_INT_EXPLENGTH( v ); \
+                  (p)->item.asInteger.length = HB_INT_LENGTH( v ); \
                } while( 0 )
 #  else
 #     define HB_ITEM_PUT_LONGRAW( p, v )  \
                do { \
                   (p)->type = HB_IT_LONG; \
                   (p)->item.asLong.value = (v); \
-                  (p)->item.asLong.length = HB_LONG_EXPLENGTH( v ); \
+                  (p)->item.asLong.length = HB_LONG_LENGTH( v ); \
                } while( 0 )
 #  endif
 

@@ -2184,7 +2184,7 @@ static HB_EXPR_FUNC( hb_compExprUseAliasVar )
          {
             pSelf->value.asAlias.pAlias = hb_compExprReduceList(
                                  pSelf->value.asAlias.pAlias, HB_COMP_PARAM );
-            if( HB_SUPPORT_HARBOUR &&
+            if( HB_SUPPORT_EXTOPT &&
                 pSelf->value.asAlias.pAlias->value.asList.pExprList->ExprType == HB_ET_STRING &&
                 pSelf->value.asAlias.pAlias->value.asList.pExprList->pNext == NULL )
             {
@@ -2323,7 +2323,7 @@ static HB_EXPR_FUNC( hb_compExprUseAliasExpr )
       case HB_EA_REDUCE:
          pSelf->value.asAlias.pAlias   = HB_EXPR_USE( pSelf->value.asAlias.pAlias, HB_EA_REDUCE );
          pSelf->value.asAlias.pExpList = HB_EXPR_USE( pSelf->value.asAlias.pExpList, HB_EA_REDUCE );
-         if( HB_SUPPORT_HARBOUR && pSelf->value.asAlias.pAlias->ExprType == HB_ET_STRING )
+         if( HB_SUPPORT_EXTOPT && pSelf->value.asAlias.pAlias->ExprType == HB_ET_STRING )
             pSelf->value.asAlias.pAlias = hb_compExprReduceAliasString(
                                  pSelf->value.asAlias.pAlias,
                                  pSelf->value.asAlias.pAlias, HB_COMP_PARAM );
