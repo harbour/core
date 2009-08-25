@@ -2,14 +2,17 @@
 # $Id$
 #
 
-# NOTE: We do need DJGPP build of GNU Make. The reason is
-#       that this uses special trick to pass command lines
-#       to other DJGPP tools (like gcc) to overcome 126
-#       chars MS-DOS command line length limitation.
-#       IOW: mingw32-make.exe won't work with DJGPP.
+# NOTE: We do need DJGPP build of GNU Make on Windows
+#       systems. The reason is that this uses special
+#       trick to pass command lines to other DJGPP tools
+#       (like gcc) to overcome 126 chars MS-DOS command
+#       line length limitation. IOW: mingw32-make.exe
+#       won't work with DJGPP on Windows hosts.
 #       [vszakats]
-ifneq ($(HB_MAKE_PLAT),dos)
-   $(error ! Error: You must use DJGPP provided GNU Make)
+ifeq ($(HB_HOST_PLAT),win)
+   ifneq ($(HB_MAKE_PLAT),dos)
+      $(error ! Error: You must use DJGPP provided GNU Make on Windows hosts)
+   endif
 endif
 
 ifeq ($(HB_BUILD_MODE),cpp)
@@ -22,7 +25,7 @@ OBJ_EXT := .o
 LIB_PREF := lib
 LIB_EXT := .a
 
-CC := $(HB_CMP)
+CC := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 CC_IN := -c
 CC_OUT := -o
 
@@ -42,7 +45,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
-LD := $(HB_CMP)
+LD := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 LD_OUT := -o
 
 LIBPATHS := -L$(LIB_DIR)

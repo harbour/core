@@ -2040,11 +2040,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}"
-         IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
-            cBin_Lib   := hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Lib
-            cBin_CompC := hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompC
-            cBin_Link  := hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Link
-         ENDIF
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          cLibLibExt := ".a"
@@ -2327,6 +2322,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cResExt := ".reso"
          cOpt_Res := "{FR} {IR} -O coff -o {OS}"
 
+         IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
+            cBin_Lib   := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Lib, nCmd_Esc )
+            cBin_CompC := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompC, nCmd_Esc )
+            cBin_Link  := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Link, nCmd_Esc )
+            cBin_Res   := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Res, nCmd_Esc )
+         ENDIF
+
       CASE hbmk[ _HBMK_cPLAT ] == "dos" .AND. hbmk[ _HBMK_cCOMP ] == "djgpp"
 
          IF hbmk[ _HBMK_lDEBUG ]
@@ -2336,7 +2338,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
-         cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], "gpp", "gcc" ) + ".exe"
+         cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], "gpp", "gcc" ) + hbmk[ _HBMK_cCCPOSTFIX ] + cCCEXT
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
@@ -2352,7 +2354,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          cLibLibExt := ".a"
-         cBin_Lib := "ar" + ".exe"
+         cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + cCCEXT
          cOpt_Lib := "{FA} rcs {OL} {LO}{SCRIPT}"
          AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
          l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
@@ -2375,6 +2377,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
          IF IsGTRequested( hbmk, "gtcrs" )
             AAdd( l_aLIBSYS, "pdcurses" )
+         ENDIF
+
+         IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
+            cBin_Lib   := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Lib, nCmd_Esc )
+            cBin_CompC := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompC, nCmd_Esc )
+            cBin_Link  := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Link, nCmd_Esc )
          ENDIF
 
       /* Watcom family */

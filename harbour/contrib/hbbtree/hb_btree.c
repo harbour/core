@@ -736,7 +736,8 @@ static ULONG Grow( struct hb_BTree * pBTree )
     ioBuffer_T * thisptr;
 
     thisptr = ioOneBufferAlloc( pBTree, NULL, pBTree->ioBuffer );
-    thisptr->ulPage = ( ULONG )thisptr;
+    /* TOFIX: casting pointer to ULONG! */
+    thisptr->ulPage = ( ULONG ) thisptr;
     if ( pBTree->ioBuffer )  pBTree->ioBuffer->prev = thisptr;
     pBTree->ioBuffer = thisptr;
   }

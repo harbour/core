@@ -49,8 +49,7 @@ LDFLAGS += $(LIBPATHS)
 
 AR := tlib.exe
 ARFLAGS := /P64
-# NOTE: Don't use double quotes around filenames as it prevents it working in some sh shells (f.e. msys).
-AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) $(subst /,\,$(LIB_DIR)/$@) $(foreach file,$(?F),-+$(file))
+AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" $(foreach file,$(?F),-+$(file))
 
 ifneq ($(HB_SHELL),sh)
    ifeq ($(HB_SHELL_XP),)

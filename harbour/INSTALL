@@ -58,8 +58,8 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
                in the name. You can leave it empty, in this case the
                results will be created under the current directory tree.
 
-   on Windows hosts with MSYS and Cygwin shells
-   --------------------------------------------
+   on Windows hosts with POSIX shells (MSYS/Cygwin)
+   ----------------------------------
       You can also use these shells to build Harbour on Windows.
       Generally it's recommended to use native shell though.
 
@@ -129,7 +129,7 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
 
    on Darwin/BSD/HP-UX/Solaris/*nix hosts
    --------------------------------------
-   (possible cross-build targets: Windows, Windows CE)
+   (possible cross-build targets: Windows, Windows CE, MS-DOS)
 
     [ $ export HB_PLATFORM=<...> ]
       $ gmake install
@@ -924,37 +924,44 @@ BUILD HOST PLATFORM/SHELL - TARGET PLATFORM/COMPILER COMPATIBILITY MATRIX
    x linux  -> wce/mingw     x86
    x linux  -> win/mingw     x86
    x linux  -> win/watcom    x86
-   x linux  -> dos/watcom    x86
    x linux  -> os2/watcom    x86
+   x linux  -> dos/watcom    x86
+   x linux  -> dos/djgpp     x86
      bsd    -> bsd/gcc       (CPU cross-builds possible)
    x bsd    -> wce/mingwarm  arm
    x bsd    -> wce/mingw     x86
    x bsd    -> win/mingw     x86
+   x bsd    -> dos/djgpp     x86
      darwin -> darwin/gcc    (CPU cross-builds possible: x86, x86-64, ppc, ppc64, unibin)
      darwin -> darwin/icc    (CPU cross-builds possible: x86, x86-64)
    x darwin -> wce/mingwarm  arm
    x darwin -> wce/mingw     x86
    x darwin -> win/mingw     x86
+   x darwin -> dos/djgpp     x86
      hpux   -> hpux/gcc      (CPU cross-builds possible)
    x hpux   -> wce/mingwarm  arm
    x hpux   -> wce/mingw     x86
    x hpux   -> win/mingw     x86
+   x hpux   -> dos/djgpp     x86
      sunos  -> sunos/gcc     (CPU cross-builds possible)
      sunos  -> sunos/sunpro  (CPU cross-builds possible: x86, x86-64, sparc32, sparc64)
    x sunos  -> wce/mingwarm  arm
    x sunos  -> wce/mingw     x86
    x sunos  -> win/mingw     x86
+   x sunos  -> dos/djgpp     x86
 
      Leading 'x' marks cross-platform scenarios.
 
      Supported shells per host platforms:
 
-     win  / cmd.exe
-     win  / sh compatible (MSYS or Cygwin sh.exe) (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
-     win  / command.com                           (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
-     dos  / command.com                           (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
-     os/2 / OS/2 shell                            (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
-     *nix / sh compatible                         (* not supported: HB_BUILD_PKG - implemented as standalone scripts)
+     win  / NT shell (cmd.exe)
+     win  / POSIX shell (MSYS or Cygwin sh.exe) (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
+     win  / MS-DOS shell (command.com)          (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
+     dos  / MS-DOS shell (command.com)          (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
+     dos  / POSIX shell (bash.exe)              (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
+     os/2 / OS/2 shell                          (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
+     os/2 / POSIX shell (bash.exe)              (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
+     *nix / POSIX shell                         (* not supported: HB_BUILD_PKG - implemented as standalone scripts)
 
 
 FOR MORE INFORMATION

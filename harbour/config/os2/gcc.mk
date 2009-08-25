@@ -12,7 +12,7 @@ OBJ_EXT := .o
 LIB_PREF :=
 LIB_EXT := .a
 
-CC := $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
+CC := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 CC_IN := -c
 CC_OUT := -o
 
@@ -32,7 +32,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
-LD := $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
+LD := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 LD_OUT := -o$(subst x,x, )
 
 ifeq ($(C_MAIN),)
@@ -89,7 +89,7 @@ define create_library
 endef
 
 # Under OS/2 || isn't a command separator (inside a shell, that is); correct separator is &
-AR := $(HB_CCPREFIX)ar
+AR := $(HB_CCPATH)$(HB_CCPREFIX)ar
 ARFLAGS :=
 AR_RULE = $(create_library) & $(RM) __lib__.tmp
 
