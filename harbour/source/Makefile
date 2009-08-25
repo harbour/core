@@ -82,7 +82,7 @@ else
 
       ifeq ($(HB_PLATFORM),dos)
          # Don't consume environment space
-         DYNDIRLIST_BASE = x
+         DYNDIRLIST_BASE := x
       endif
       ifeq ($(HB_PLATFORM),os2)
          DYNDIRLIST_BASE += source/rtl/gtos2

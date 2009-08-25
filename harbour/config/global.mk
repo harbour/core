@@ -24,8 +24,8 @@
 #    http://cvs.savannah.gnu.org/viewvc/make/NEWS?root=make&view=markup
 # ---------------------------------------------------------------
 
-# TOFIX: $(realpath/abspath) need GNU Make 3.81 or upper
-# TOFIX: $(eval) needs GNU Make 3.80 or upper
+# NOTE: $(realpath/abspath) need GNU Make 3.81 or upper
+# NOTE: $(eval) needs GNU Make 3.80 or upper
 
 ifeq ($(GLOBAL_CF_),)
 GLOBAL_CF_ := yes
@@ -1226,9 +1226,14 @@ endif
 
 export HB_INSTALL_PREFIX
 
-ifneq ($(HB_INSTALL_PREFIX_ORI),$(HB_INSTALL_PREFIX))
-   ifneq ($(MAKE_381),)
+ifneq ($(MAKE_381),)
+   ifneq ($(HB_INSTALL_PREFIX_ORI),$(HB_INSTALL_PREFIX))
       $(info ! HB_INSTALL_PREFIX automatically set to: $(HB_INSTALL_PREFIX))
+   endif
+   ifeq ($(ROOT),./)
+      ifneq ($(call find_in_path,svnversion),)
+         $(info ! REVISION: $(shell svnversion))
+      endif
    endif
 endif
 
