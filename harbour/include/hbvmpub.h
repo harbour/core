@@ -97,6 +97,22 @@ struct _HB_SYMB;
                   } \
                } while( 0 )
 
+#  if HB_INT_MAX >= LONG_MAX
+#     define HB_ITEM_PUT_LONGRAW( p, v )  \
+               do { \
+                  (p)->type = HB_IT_INTEGER; \
+                  (p)->item.asInteger.value = ( int ) (v); \
+                  (p)->item.asInteger.length = HB_INT_EXPLENGTH( v ); \
+               } while( 0 )
+#  else
+#     define HB_ITEM_PUT_LONGRAW( p, v )  \
+               do { \
+                  (p)->type = HB_IT_LONG; \
+                  (p)->item.asLong.value = (v); \
+                  (p)->item.asLong.length = HB_LONG_EXPLENGTH( v ); \
+               } while( 0 )
+#  endif
+
 #  define HB_ITEM_GET_NUMDBLRAW( p )   ( HB_IS_INTEGER( p ) ? \
                                           ( double ) (p)->item.asInteger.value : \
                                           ( HB_IS_LONG( p ) ? \

@@ -3272,7 +3272,7 @@ static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIt
       {
          if( HB_IS_COMPLEX( pResult ) )
             hb_itemClear( pResult );
-         HB_ITEM_PUT_NUMINTRAW( pResult, lJulian );
+         HB_ITEM_PUT_LONGRAW( pResult, lJulian );
       }
    }
    else if( HB_IS_DATETIME( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
@@ -6548,15 +6548,7 @@ void hb_vmPushLong( long lNumber )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushLong(%ld)", lNumber));
 
-#if HB_INT_MAX >= LONG_MAX
-   pItem->type = HB_IT_INTEGER;
-   pItem->item.asInteger.value = ( int ) lNumber;
-   pItem->item.asInteger.length = HB_INT_LENGTH( lNumber );
-#else
-   pItem->type = HB_IT_LONG;
-   pItem->item.asLong.value = ( HB_LONG ) lNumber;
-   pItem->item.asLong.length = HB_LONG_LENGTH( lNumber );
-#endif
+   HB_ITEM_PUT_LONGRAW( pItem, lNumber );
 }
 
 static void hb_vmPushHBLong( HB_LONG lNumber )

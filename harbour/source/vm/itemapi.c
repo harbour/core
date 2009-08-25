@@ -964,15 +964,7 @@ PHB_ITEM hb_itemPutNL( PHB_ITEM pItem, long lNumber )
    else
       pItem = hb_itemNew( NULL );
 
-#if HB_INT_MAX >= LONG_MAX
-   pItem->type = HB_IT_INTEGER;
-   pItem->item.asInteger.value = ( int ) lNumber;
-   pItem->item.asInteger.length = HB_INT_LENGTH( lNumber );
-#else
-   pItem->type = HB_IT_LONG;
-   pItem->item.asLong.value = ( HB_LONG ) lNumber;
-   pItem->item.asLong.length = HB_LONG_LENGTH( lNumber );
-#endif
+   HB_ITEM_PUT_LONGRAW( pItem, lNumber );
 
    return pItem;
 }
@@ -1269,7 +1261,7 @@ PHB_ITEM hb_itemPutNumType( PHB_ITEM pItem, double dNumber, int iDec, int iType1
    else if( HB_DBL_LIM_LONG( dNumber ) )
    {
 #ifdef HB_LONG_LONG_OFF
-      return hb_itemPutNL( pItem, ( long ) dNumber );
+      return hb_itemPutNL( pItem, ( long ) ( unsigned long ) dNumber );
 #else
       return hb_itemPutNLL( pItem, ( LONGLONG ) dNumber );
 #endif

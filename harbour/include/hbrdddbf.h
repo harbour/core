@@ -141,7 +141,7 @@ typedef struct _DBFDATA
    BYTE     bMemoType;        /* DB_MEMO_FPT */
    BYTE     bMemoExtType;     /* DB_MEMOVER_FLEX */
    USHORT   uiDirtyRead;      /* HB_IDXREAD_CLEANMASK */
-   USHORT   uiMemoBlockSize;  /* 0 */
+   ULONG    ulMemoBlockSize;  /* 0 */
 
    BOOL     fSortRecNo;
    BOOL     fMultiKey;
@@ -183,8 +183,8 @@ typedef struct _DBFAREA
    char *   szMemoFileName;         /* Name of memo file */
    USHORT   uiHeaderLen;            /* Size of header */
    USHORT   uiRecordLen;            /* Size of record */
-   USHORT   uiMemoBlockSize;        /* Size of memo block */
-   USHORT   uiNewBlockSize;         /* Size of new memo block */
+   ULONG    ulMemoBlockSize;        /* Size of memo block */
+   ULONG    ulNewBlockSize;         /* Size of new memo block */
    USHORT   uiMemoVersion;          /* MEMO file version */
    USHORT   uiDirtyRead;            /* Index dirty read bit filed */
    USHORT   uiNullOffset;           /* Offset to _NullFlags filed */

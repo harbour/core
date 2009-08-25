@@ -3208,7 +3208,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    {
       pArea->bMemoType = DB_MEMO_NONE;
    }
-   pArea->uiMemoBlockSize = 0;
+   pArea->ulMemoBlockSize = 0;
 
 #ifndef HB_CDP_SUPPORT_OFF
    if( pCreateInfo->cdpId )
