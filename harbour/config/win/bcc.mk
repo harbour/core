@@ -73,7 +73,7 @@ ifneq ($(HB_SHELL),sh)
       define create_library
          $(if $(wildcard __lib__.tmp),@$(RM) __lib__.tmp,)
          $(foreach file,$(?F),$(lib_object))
-         @$(ECHO) -+>> __lib__.tmp
+         @$(ECHO) $(ECHOQUOTE)-+$(ECHOQUOTE)>> __lib__.tmp
          $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" @__lib__.tmp
       endef
 

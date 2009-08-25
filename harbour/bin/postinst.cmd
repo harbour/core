@@ -6,13 +6,13 @@
 
 rem ---------------------------------------------------------------
 rem Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
-rem Copyright 2003 Przemyslaw Czerpak (druzus / at / priv.onet.pl)
-rem simple script run after Harbour make install to finish install
-rem process
-rem
 rem See COPYING for licensing terms.
+rem
+rem Script run after Harbour make install to finish install process
+rem (for OS/2)
 rem ---------------------------------------------------------------
 
+if "%HB_BIN_INSTALL%" == "" echo HB_BIN_INSTALL needs to be set.
 if "%HB_BIN_INSTALL%" == "" goto END
 
 echo ! Making %HB_BIN_INSTALL%\hbmk.cfg...
@@ -31,12 +31,4 @@ if not "%HB_INSTALL_PREFIX%" == "" xcopy /y ERRATA     %HB_INSTALL_PREFIX%\ > nu
 if not "%HB_INSTALL_PREFIX%" == "" xcopy /y INSTALL    %HB_INSTALL_PREFIX%\ > nul
 if not "%HB_INSTALL_PREFIX%" == "" xcopy /y TODO       %HB_INSTALL_PREFIX%\ > nul
 
-goto INST_%HB_PLATFORM%
-
-:INST_OS2
-
-   rem OS/2 post install part
-   goto END
-
-:INST_
 :END

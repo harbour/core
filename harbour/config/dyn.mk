@@ -21,7 +21,7 @@ DYN_NAME := $(DYN_PREF)$(DYNNAME)$(DYN_EXT)
 DYN_FILE := $(DYN_DIR)/$(DYN_NAME)
 
 ifneq ($(IMP_DIR),)
-   IMP_NAME := $(basename $(DYN_NAME))$(LIB_EXT)
+   IMP_NAME := $(LIB_PREF)$(DYNNAME)$(LIB_EXT)
    IMP_FILE := $(IMP_DIR)/$(IMP_NAME)
 endif
 

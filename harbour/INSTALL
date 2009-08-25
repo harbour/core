@@ -31,7 +31,7 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
 
       Platform specific prerequisites:
 
-      1.) Windows NT or compatible system is required to build Harbour.
+      1.) Windows XP or upper system is recommended to build Harbour.
       2.) Make sure to have your C compiler of choice properly installed
           (in PATH). Refer to your C compiler installation and setup
           instructions for details. It's recommended to make sure no tools
@@ -419,6 +419,7 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    - HB_BUILD_PKG=yes          Create release package. Default: no
                                Requires 'clean install' in root source dir.
                                (currently on Windows/Windows CE/MS-DOS)
+                               (only when using Windows NT shells)
    - HB_BUILD_DLL=no           Create Harbour dynamic libraries. Default: yes
    - HB_BUILD_IMPLIB=yes       Create import libraries for external .dll
                                dependencies (including contribs). Default: no
@@ -430,7 +431,7 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
                                Default: no
    - HB_BUILD_MODE=[cpp|c]     Changes default build mode to C++ or C.
                                Default: c, except for msvc* and watcom
-                                        compilers where it's cpp.
+                                        compilers, where it's cpp.
    - HB_CONTRIBLIBS=no         Don't build any contrib libraries. Default: yes
    - HB_CONTRIBLIBS=[<list>]   Build space separated <list> of contrib
                                libraries. Build all if left empty.
@@ -726,12 +727,9 @@ EXAMPLES
    ---------------
 
       --- Open Watcom C++ for OS/2 (requires preceding build for Linux target)
-      #!/bin/sh
-      if [ -z "${WATCOM}" ]; then
-         export WATCOM="/opt/lng/watcom"
-         export INCLUDE="${WATCOM}/h:${WATCOM}/h/os2"
-         export PATH="${WATCOM}/binl:$PATH"
-      fi
+      export WATCOM="/opt/lng/watcom"
+      export INCLUDE="${WATCOM}/h:${WATCOM}/h/os2"
+      export PATH="${WATCOM}/binl:$PATH"
       # ; eliminate libraries which scans for local host header files
       export HB_XBUILD=yes
       # ;
@@ -741,7 +739,6 @@ EXAMPLES
 
    for *nix hosts in general
    -------------------------
-   (possible cross-build targets: Windows, Windows CE)
 
       --- GCC
       gmake OR make

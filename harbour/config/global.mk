@@ -266,7 +266,7 @@ ifeq ($(HB_INIT_DONE),)
       # Macros:
       #   -DHB_PCRE_REGEX, -DHB_POSIX_REGEX, -DHB_EXT_ZLIB, -DHB_HAS_GPM, -DHB_GT_LIB=
 
-      $(info ! Harbour-Project - Building from source - http://www.harbour-project.org)
+      $(info ! Building Harbour $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)$(HB_VER_STATUS) from source - http://www.harbour-project.org)
       $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(HB_MAKECMDGOALS) $(MAKEFLAGS) $(SHELL) $(if $(MAKESHELL), MAKESHELL: $(MAKESHELL),))
       ifneq ($(HB_USER_PRGFLAGS),)
          $(info ! HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))
@@ -1095,7 +1095,7 @@ else
    HB_DYN_VER := $(HB_VER_MAJOR)$(HB_VER_MINOR)
 endif
 
-ifneq ($(HB_HOST_PLAT),dos)
+ifneq ($(HB_PLATFORM),dos)
    HB_VERSION := $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)$(HB_VER_STATUS)
    HB_PKGNAME := harbour-$(HB_VERSION)-$(HB_PLATFORM)-$(HB_COMPILER)
    HB_PKGNAMI := $(HB_PKGNAME)

@@ -33,6 +33,8 @@ HB_DYN_LIBS := \
    gtwin \
    gtos2 \
    gttrm \
+   gtcrs \
+   gtsln \
    hbvm \
    hbvmmt \
    hbmaindllh

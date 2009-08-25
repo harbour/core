@@ -59,16 +59,18 @@ DY := $(CC)
 DFLAGS := -shared
 DY_OUT := $(LD_OUT)
 DLIBS := $(foreach lib,$(SYSLIBS),-l$(lib))
+IMP_DIR :=
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 define dyn_object
    @$(ECHO) $(ECHOQUOTE)INPUT($(subst \,/,$(file)))$(ECHOQUOTE) >> __dyn__.tmp
 
 endef
+# ,--out-implib,$(IMP_FILE)
 define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dyn_object))
-   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ __dyn__.tmp $(DLIBS) -Wl,--output-def,$(DYN_DIR)/$(basename $@).def,--out-implib,$(IMP_FILE)
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ __dyn__.tmp $(DLIBS) -Wl,--output-def,$(DYN_DIR)/$(basename $@).def
 endef
 
 DY_RULE = $(create_dynlib)

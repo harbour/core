@@ -2,9 +2,8 @@
 # $Id$
 #
 
-ifeq ($(INSTALL_FILES),) # Empty install list
-   INSTALL_RULE := @$(ECHO) $(ECHOQUOTE)! Nothing to install$(ECHOQUOTE)
-else
+ifneq ($(INSTALL_FILES),) # Empty install list
+
 ifeq ($(INSTALL_DIR),) # Empty install dir
    INSTALL_RULE := @$(ECHO) $(ECHOQUOTE)! Can't install, install dir isn't set$(ECHOQUOTE)
 else

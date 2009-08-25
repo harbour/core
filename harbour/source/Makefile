@@ -81,8 +81,8 @@ else
          source/rtl/gtstd
 
       ifeq ($(HB_PLATFORM),dos)
-         # for testing only. dos doesn't have .dlls.
-         DYNDIRLIST_BASE += source/rtl/gtdos
+         # Don't consume environment space
+         DYNDIRLIST_BASE = x
       endif
       ifeq ($(HB_PLATFORM),os2)
          DYNDIRLIST_BASE += source/rtl/gtos2
@@ -95,6 +95,8 @@ else
       endif
       ifeq ($(HB_OS_UNIX),yes)
          DYNDIRLIST_BASE += source/rtl/gttrm
+         DYNDIRLIST_BASE += source/rtl/gtcrs
+         DYNDIRLIST_BASE += source/rtl/gtsln
       endif
       ifeq ($(HB_COMPILER),watcom)
          DYNDIRLIST_BASE += source/vm/maindllh

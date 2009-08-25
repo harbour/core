@@ -105,4 +105,25 @@ AR := $(HB_CCPREFIX)ar
 ARFLAGS :=
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) crs $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 
+DY := $(CC)
+DFLAGS := -G -KPIC $(HB_ISAOPT)
+ifneq ($(HB_BUILD_OPTIM),no)
+   DFLAGS += -fast -xnolibmopt
+endif
+DY_OUT := -o$(subst x,x, )
+DLIBS :=
+
+# NOTE: The empty line directly before 'endef' HAVE TO exist!
+define dyn_object
+   @$(ECHO) $(ECHOQUOTE)$(subst \,/,$(file))$(ECHOQUOTE) >> __dyn__.tmp
+
+endef
+define create_dynlib
+   $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
+   $(foreach file,$^,$(dyn_object))
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ @__dyn__.tmp
+endef
+
+DY_RULE = $(create_dynlib)
+
 include $(TOP)$(ROOT)config/rules.mk
