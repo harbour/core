@@ -554,9 +554,9 @@ HB_EXPR_PTR hb_compExprReduceMinus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    else if( pLeft->ExprType == HB_ET_DATE && pRight->ExprType == HB_ET_NUMERIC )
    {
       if( pRight->value.asNum.NumType == HB_ET_LONG )
-         pSelf->value.asDate.lDate = ( long ) ( ( HB_LONG ) pLeft->value.asDate.lDate - pRight->value.asNum.val.l );
+         pSelf->value.asDate.lDate =  pLeft->value.asDate.lDate - ( long ) pRight->value.asNum.val.l;
       else
-         pSelf->value.asDate.lDate = ( long ) ( ( HB_LONG ) pLeft->value.asDate.lDate - ( HB_LONG ) pRight->value.asNum.val.d );
+         pSelf->value.asDate.lDate = pLeft->value.asDate.lDate - ( long ) ( unsigned long ) pRight->value.asNum.val.d;
       pSelf->value.asDate.lTime = 0;
       pSelf->ExprType = HB_ET_DATE;
       pSelf->ValType  = HB_EV_DATE;
@@ -566,7 +566,7 @@ HB_EXPR_PTR hb_compExprReduceMinus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    else if( pLeft->ExprType == HB_ET_TIMESTAMP && pRight->ExprType == HB_ET_NUMERIC )
    {
       if( pRight->value.asNum.NumType == HB_ET_LONG )
-         hb_compExprReduceTimeStampPut( pSelf, ( long ) ( pLeft->value.asDate.lDate - pRight->value.asNum.val.l ),
+         hb_compExprReduceTimeStampPut( pSelf, pLeft->value.asDate.lDate - ( long ) pRight->value.asNum.val.l,
                                         pLeft->value.asDate.lTime );
       else
          hb_compExprReduceTimeStampAdd( pSelf, pLeft, - pRight->value.asNum.val.d );
@@ -757,9 +757,9 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       else if( pRight->ExprType == HB_ET_DATE )
       {
          if( pLeft->value.asNum.NumType == HB_ET_LONG )
-            pSelf->value.asDate.lDate = ( long ) ( ( HB_LONG ) pRight->value.asDate.lDate + pLeft->value.asNum.val.l );
+            pSelf->value.asDate.lDate = pRight->value.asDate.lDate + ( long ) pLeft->value.asNum.val.l;
          else
-            pSelf->value.asDate.lDate = ( long ) ( ( HB_LONG ) pRight->value.asDate.lDate + ( HB_LONG ) pLeft->value.asNum.val.d );
+            pSelf->value.asDate.lDate = pRight->value.asDate.lDate + ( long ) ( unsigned long ) pLeft->value.asNum.val.d;
          pSelf->value.asDate.lTime = 0;
          pSelf->ExprType = HB_ET_DATE;
          pSelf->ValType  = HB_EV_DATE;
@@ -769,7 +769,7 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       else if( pRight->ExprType == HB_ET_TIMESTAMP )
       {
          if( pLeft->value.asNum.NumType == HB_ET_LONG )
-            hb_compExprReduceTimeStampPut( pSelf, ( long ) ( pRight->value.asDate.lDate + pLeft->value.asNum.val.l ),
+            hb_compExprReduceTimeStampPut( pSelf, pRight->value.asDate.lDate + ( long ) pLeft->value.asNum.val.l,
                                            pRight->value.asDate.lTime );
          else
             hb_compExprReduceTimeStampAdd( pSelf, pRight, pLeft->value.asNum.val.d );
@@ -810,9 +810,9 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       if( pLeft->ExprType == HB_ET_DATE )
       {
          if( pRight->value.asNum.NumType == HB_ET_LONG )
-            pSelf->value.asDate.lDate = ( long ) ( ( HB_LONG ) pLeft->value.asDate.lDate + pRight->value.asNum.val.l );
+            pSelf->value.asDate.lDate = pLeft->value.asDate.lDate + ( long ) pRight->value.asNum.val.l;
          else
-            pSelf->value.asDate.lDate = ( long ) ( ( HB_LONG ) pLeft->value.asDate.lDate + ( HB_LONG ) pRight->value.asNum.val.d );
+            pSelf->value.asDate.lDate = pLeft->value.asDate.lDate + ( long ) ( unsigned long ) pRight->value.asNum.val.d;
          pSelf->value.asDate.lTime = 0;
          pSelf->ExprType = HB_ET_DATE;
          pSelf->ValType  = HB_EV_DATE;
@@ -822,7 +822,7 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       else if( pLeft->ExprType == HB_ET_TIMESTAMP )
       {
          if( pRight->value.asNum.NumType == HB_ET_LONG )
-            hb_compExprReduceTimeStampPut( pSelf, ( long ) ( pLeft->value.asDate.lDate + pRight->value.asNum.val.l ),
+            hb_compExprReduceTimeStampPut( pSelf, pLeft->value.asDate.lDate + ( long ) pRight->value.asNum.val.l,
                                            pLeft->value.asDate.lTime );
          else
             hb_compExprReduceTimeStampAdd( pSelf, pLeft, pRight->value.asNum.val.d );

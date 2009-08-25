@@ -3262,12 +3262,12 @@ static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIt
    }
    else if( HB_IS_DATETIME( pItem1 ) && HB_IS_DATETIME( pItem2 ) )
    {
-      HB_LONG lTime = pItem1->item.asDateTime.time -
-                      pItem2->item.asDateTime.time,
-              lJulian = pItem1->item.asDateTime.julian -
-                        pItem2->item.asDateTime.julian;
+      long lTime = pItem1->item.asDateTime.time -
+                   pItem2->item.asDateTime.time,
+           lJulian = pItem1->item.asDateTime.julian -
+                     pItem2->item.asDateTime.julian;
       if( lTime != 0 )
-         hb_itemPutNDDec( pResult, hb_timeStampPackDT( ( long ) lJulian, ( long ) lTime ), HB_TIMEDIFF_DEC );
+         hb_itemPutNDDec( pResult, hb_timeStampPackDT( lJulian, lTime ), HB_TIMEDIFF_DEC );
       else
       {
          if( HB_IS_COMPLEX( pResult ) )
