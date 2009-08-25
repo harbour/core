@@ -163,12 +163,12 @@ HB_CALL_ON_STARTUP_END( _hb_mysqldd_init_ )
 
 
 /*=====================================================================================*/
-static USHORT hb_errRT_MySQLDD( ULONG ulGenCode, ULONG ulSubCode, const char * szDescription, const char * szOperation, USHORT uiOsCode )
+static USHORT hb_errRT_MySQLDD( ULONG ulGenCode, ULONG ulSubCode, const char * szDescription, const char * szOperation, unsigned int uiOsCode )
 {
    USHORT uiAction;
    PHB_ITEM pError;
 
-   pError = hb_errRT_New( ES_ERROR, "SDDMY", ulGenCode, ulSubCode, szDescription, szOperation, uiOsCode, EF_NONE );
+   pError = hb_errRT_New( ES_ERROR, "SDDMY", ulGenCode, ulSubCode, szDescription, szOperation, ( USHORT ) uiOsCode, EF_NONE );
 
    uiAction = hb_errLaunch( pError );
 
@@ -277,7 +277,7 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
       return HB_FAILURE;
    }
 
-   uiFields = mysql_num_fields( (MYSQL_RES*) pArea->pResult );
+   uiFields = ( USHORT ) mysql_num_fields( (MYSQL_RES*) pArea->pResult );
    SELF_SETFIELDEXTENT( (AREAP) pArea, uiFields );
 
    pItemEof = hb_itemArrayNew( uiFields );
@@ -294,7 +294,7 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
       hb_strUpper( pBuffer, MAX_FIELD_NAME + 1 );
       pFieldInfo.atomName = pBuffer;
 
-      pFieldInfo.uiLen = pMyField->length;
+      pFieldInfo.uiLen = ( USHORT ) pMyField->length;
       pFieldInfo.uiDec = 0;
 
       switch( pMyField->type )
@@ -315,7 +315,7 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
          case MYSQL_TYPE_FLOAT:
          case MYSQL_TYPE_DOUBLE:
            pFieldInfo.uiType = HB_FT_DOUBLE;
-           pFieldInfo.uiDec = pMyField->decimals;
+           pFieldInfo.uiDec = ( USHORT ) pMyField->decimals;
            break;
 
          case MYSQL_TYPE_STRING:

@@ -362,7 +362,7 @@ static BOOL hb_comp_timeDecode( PHB_PP_TOKEN pTime, long * plTime )
    if( !pTime || HB_PP_TOKEN_TYPE( pTime->type ) != HB_PP_TOKEN_RIGHT_CB )
       return FALSE;
 
-   *plTime = ( lHour * 60 + lMinute ) * 60000 + lMilliSec;
+   *plTime = ( long ) ( ( lHour * 60 + lMinute ) * 60000 + lMilliSec );
 
    return TRUE;
 }
@@ -413,7 +413,7 @@ static int hb_comp_dayTimeDecode( PHB_COMP_LEX pLex, PHB_PP_TOKEN pToken,
                                   &iDec, &iWidth ) )
             {
                pDay = pDay->pNext;
-               lDate = hb_dateEncode( lYear, lMonth, lDay );
+               lDate = hb_dateEncode( ( long ) lYear, ( long ) lMonth, ( long ) lDay );
                if( lDate != 0 || ( lYear == 0 && lMonth == 0 && lDay == 0 ) )
                {
                   iType = NUM_DATE;

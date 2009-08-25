@@ -59,8 +59,8 @@ HB_EXTERN_BEGIN
 
 struct hb_BTree;
 
-struct hb_BTree * hb_BTreeNew( const char *FileName, USHORT usPageSize, USHORT usKeySize, ULONG ulFlags, USHORT usBuffers );
-struct hb_BTree * hb_BTreeOpen( const char *FileName, ULONG lFlags, USHORT usBuffers );
+struct hb_BTree * hb_BTreeNew( const char *FileName, USHORT usPageSize, USHORT usKeySize, ULONG ulFlags, ULONG ulBuffers );
+struct hb_BTree * hb_BTreeOpen( const char *FileName, ULONG lFlags, ULONG ulBuffers );
 void hb_BTreeClose( struct hb_BTree * pBTree );
 BOOL hb_BTreeInsert( struct hb_BTree * pBTree, const char * szKey, PHB_ITEM pData );
 BOOL hb_BTreeDelete( struct hb_BTree * pBTree, const char * szKey, LONG lData );

@@ -50,6 +50,7 @@ if "%HB_SHELL%" == "nt" goto _SH_NT
 
    if "%HB_PLATFORM%" == "linux" goto _NO_PKG
    if not "%HB_BUILD_PKG%" == "yes" goto _NO_PKG
+   if "%HB_TOP%" == "" goto _NO_PKG
 
    echo ! Making Harbour .zip install package: '%HB_TOP%\%HB_PKGNAME%.zip'
    if exist "%HB_TOP%\%HB_PKGNAME%.zip" del %HB_TOP%\%HB_PKGNAME%.zip
@@ -78,11 +79,11 @@ if "%HB_SHELL%" == "nt" goto _SH_NT
    if "%HB_BUILD_DLL%" == "no" goto _NO_DLL_BIN
 
    echo ! Making shared version of Harbour binaries...
-   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbrun-dll"    "%HB_TOP%\utils\hbrun\hbrun.hbp"
-   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbmk2-dll"    "%HB_TOP%\utils\hbmk2\hbmk2.hbp"
-   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbtest-dll"   "%HB_TOP%\utils\hbtest\hbtest.hbp"
-   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbi18n-dll"   "%HB_TOP%\utils\hbi18n\hbi18n.hbp"
-   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbformat-dll" "%HB_TOP%\utils\hbformat\hbformat.hbp"
+   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbrun-dll"    "%~dp0..\utils\hbrun\hbrun.hbp"
+   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbmk2-dll"    "%~dp0..\utils\hbmk2\hbmk2.hbp"
+   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbtest-dll"   "%~dp0..\utils\hbtest\hbtest.hbp"
+   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbi18n-dll"   "%~dp0..\utils\hbi18n\hbi18n.hbp"
+   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbformat-dll" "%~dp0..\utils\hbformat\hbformat.hbp"
 
 :_NO_DLL_BIN
 
@@ -91,23 +92,23 @@ if "%HB_SHELL%" == "nt" goto _SH_NT
 
    rem ; We build this here, because GNU Make wouldn't add the icon.
    echo ! Making hbrun with application icon...
-   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN "-o%HB_BIN_INSTALL%\hbrun" "%HB_TOP%\utils\hbrun\hbrun.hbp"
+   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lng=en-EN "-o%HB_BIN_INSTALL%\hbrun" "%~dp0..\utils\hbrun\hbrun.hbp"
 
 :_NO_ICON_BIN
 
-   if "%HB_BUILD_IMPLIB%" == "yes" call "%HB_TOP%\bin\hb-mkimp.bat"
+   if "%HB_BUILD_IMPLIB%" == "yes" call "%~dp0hb-mkimp.bat"
 
 :_NO_IMPLIB
 
    if "%HB_PLATFORM%" == "linux" goto _NO_PKG
    if not "%HB_BUILD_PKG%" == "yes" goto _NO_PKG
+   if "%HB_TOP%" == "" goto _NO_PKG
 
    rem NOTE: Believe it or not this is the official method to zip a different dir with subdirs
    rem       without including the whole root path in filenames; you have to 'cd' into it.
-   rem       Even with zip 3.0. For this reason this can't work with plain MS-DOS and we need
-   rem       absolute path in HB_TOP. There is also no zip 2.x compatible way to force creation
-   rem       of a new .zip, so we have to delete it first to avoid mixing in an existing .zip
-   rem       files. [vszakats]
+   rem       Even with zip 3.0. For this reason we need absolute path in HB_TOP. There is also
+   rem       no zip 2.x compatible way to force creation of a new .zip, so we have to delete it
+   rem       first to avoid mixing in an existing .zip files. [vszakats]
 
    echo ! Making Harbour .zip install package: '%HB_TOP%\%HB_PKGNAME%.zip'
    if exist "%HB_TOP%\%HB_PKGNAME%.zip" del "%HB_TOP%\%HB_PKGNAME%.zip"
@@ -117,7 +118,7 @@ if "%HB_SHELL%" == "nt" goto _SH_NT
    popd
 
    echo ! Making Harbour .exe install package: '%HB_TOP%\%HB_PKGNAME%.exe'
-   "%HB_DIR_NSIS%makensis.exe" /V2 "%HB_TOP%\package\mpkg_win.nsi"
+   "%HB_DIR_NSIS%makensis.exe" /V2 "%~dp0..\package\mpkg_win.nsi"
 
 :_NO_PKG
 

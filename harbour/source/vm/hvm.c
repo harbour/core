@@ -3192,7 +3192,7 @@ static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
       {
          if( HB_IS_NUMINT( pItem2 ) )
             hb_vmTimeStampPut( pResult, pItem1->item.asDateTime.julian +
-                                        HB_ITEM_GET_NUMINTRAW( pItem2 ),
+                                        ( long ) HB_ITEM_GET_NUMINTRAW( pItem2 ),
                                         pItem1->item.asDateTime.time );
          else
             hb_vmTimeStampAdd( pResult, pItem1, pItem2->item.asDouble.value );
@@ -3205,7 +3205,7 @@ static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
       if( HB_IS_TIMESTAMP( pItem2 ) )
       {
          if( HB_IS_NUMINT( pItem1 ) )
-            hb_vmTimeStampPut( pResult, HB_ITEM_GET_NUMINTRAW( pItem1 ) +
+            hb_vmTimeStampPut( pResult, ( long ) HB_ITEM_GET_NUMINTRAW( pItem1 ) +
                                         pItem2->item.asDateTime.julian,
                                         pItem2->item.asDateTime.time );
          else
@@ -3267,7 +3267,7 @@ static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIt
               lJulian = pItem1->item.asDateTime.julian -
                         pItem2->item.asDateTime.julian;
       if( lTime != 0 )
-         hb_itemPutNDDec( pResult, hb_timeStampPackDT( lJulian, lTime ), HB_TIMEDIFF_DEC );
+         hb_itemPutNDDec( pResult, hb_timeStampPackDT( ( long ) lJulian, ( long ) lTime ), HB_TIMEDIFF_DEC );
       else
       {
          if( HB_IS_COMPLEX( pResult ) )
@@ -3281,7 +3281,7 @@ static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIt
       {
          if( HB_IS_NUMINT( pItem2 ) )
             hb_vmTimeStampPut( pResult, pItem1->item.asDateTime.julian -
-                                        HB_ITEM_GET_NUMINTRAW( pItem2 ),
+                                        ( long ) HB_ITEM_GET_NUMINTRAW( pItem2 ),
                                         pItem1->item.asDateTime.time );
          else
             hb_vmTimeStampAdd( pResult, pItem1, - pItem2->item.asDouble.value );
@@ -6524,7 +6524,7 @@ static void hb_vmPushIntegerConst( int iNumber )
 
    pItem->type = HB_IT_INTEGER;
    pItem->item.asInteger.value = iNumber;
-   pItem->item.asInteger.length = hb_vmCalcIntWidth( iNumber );
+   pItem->item.asInteger.length = ( USHORT ) hb_vmCalcIntWidth( iNumber );
 }
 #else
 static void hb_vmPushLongConst( long lNumber )
@@ -6536,7 +6536,7 @@ static void hb_vmPushLongConst( long lNumber )
 
    pItem->type = HB_IT_LONG;
    pItem->item.asLong.value = ( HB_LONG ) lNumber;
-   pItem->item.asLong.length = hb_vmCalcIntWidth( lNumber );
+   pItem->item.asLong.length = ( USHORT ) hb_vmCalcIntWidth( lNumber );
 }
 #endif
 
@@ -6581,7 +6581,7 @@ static void hb_vmPushLongLongConst( LONGLONG llNumber )
 
    pItem->type = HB_IT_LONG;
    pItem->item.asLong.value = ( HB_LONG ) llNumber;
-   pItem->item.asLong.length = hb_vmCalcIntWidth( llNumber );
+   pItem->item.asLong.length = ( USHORT ) hb_vmCalcIntWidth( llNumber );
 }
 #endif
 
@@ -6604,9 +6604,9 @@ void hb_vmPushDouble( double dNumber, int iDec )
    pItem->item.asDouble.value = dNumber;
    pItem->item.asDouble.length = HB_DBL_LENGTH( dNumber );
    if( iDec == HB_DEFAULT_DECIMALS )
-      pItem->item.asDouble.decimal = hb_stackSetStruct()->HB_SET_DECIMALS;
+      pItem->item.asDouble.decimal = ( USHORT ) hb_stackSetStruct()->HB_SET_DECIMALS;
    else
-      pItem->item.asDouble.decimal = iDec;
+      pItem->item.asDouble.decimal = ( USHORT ) iDec;
 }
 
 static void hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec )
@@ -6620,14 +6620,14 @@ static void hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec )
    pItem->item.asDouble.value = dNumber;
 
    if( iDec == HB_DEFAULT_DECIMALS )
-      pItem->item.asDouble.decimal = hb_stackSetStruct()->HB_SET_DECIMALS;
+      pItem->item.asDouble.decimal = ( USHORT ) hb_stackSetStruct()->HB_SET_DECIMALS;
    else
-      pItem->item.asDouble.decimal = iDec;
+      pItem->item.asDouble.decimal = ( USHORT ) iDec;
 
    if( iWidth == HB_DEFAULT_WIDTH )
       pItem->item.asDouble.length = HB_DBL_LENGTH( dNumber );
    else
-      pItem->item.asDouble.length = iWidth;
+      pItem->item.asDouble.length = ( USHORT ) iWidth;
 }
 
 void hb_vmPushDate( long lDate )

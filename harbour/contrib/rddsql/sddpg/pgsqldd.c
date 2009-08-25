@@ -271,7 +271,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
 
    pArea->pResult = pResult;
 
-   uiFields = PQnfields( pResult );
+   uiFields = ( USHORT ) PQnfields( pResult );
    SELF_SETFIELDEXTENT( (AREAP) pArea, uiFields );
 
    pItemEof = hb_itemArrayNew( uiFields );
@@ -293,7 +293,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
          case BPCHAROID:
          case VARCHAROID:
             pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen = (USHORT) PQfsize( pResult, uiCount ) - 4;
+            pFieldInfo.uiLen = ( USHORT ) PQfsize( pResult, uiCount ) - 4;
             break;
 
          case NUMERICOID:
@@ -353,7 +353,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
          case BITOID:
          case VARBITOID:
             pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen = PQfsize( pResult, uiCount );
+            pFieldInfo.uiLen = ( USHORT ) PQfsize( pResult, uiCount );
             break;
 
          case TIMEOID:

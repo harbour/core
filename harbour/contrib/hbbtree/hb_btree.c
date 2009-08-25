@@ -235,7 +235,7 @@ HB_EXTERN_BEGIN
 typedef struct stack_item
 {
   ULONG  ulNode;
-  USHORT iPosition;
+  int    iPosition;
 } BTreeStackItem;
 
 typedef struct stack_tag
@@ -368,7 +368,7 @@ static void hb_RaiseError( enum hb_BTree_Error_Codes ulSubCode, const char * szD
   hb_errRelease( pErr );
 }
 
-static void *BufferRealloc( void *buffer, USHORT size )
+static void * BufferRealloc( void *buffer, ULONG size )
 {
   void *tmpBuffer = hb_xgrab( size );
 
@@ -417,19 +417,19 @@ static ioBuffer_T * ioOneBufferAlloc( struct hb_BTree * pBTree, ioBuffer_T * pre
 }
 
 /* a link list 'most recently access' page buffering system */
-static void ioBufferAlloc( struct hb_BTree * pBTree, short int usBuffers )
+static void ioBufferAlloc( struct hb_BTree * pBTree, ULONG ulBuffers )
 {
   ioBuffer_T *thisptr = NULL, *last = NULL;
 
-  if ( usBuffers <= 0 )
-    usBuffers = 1;
+  if ( ulBuffers <= 0 )
+    ulBuffers = 1;
 
-  if ( usBuffers > 1 || GETFLAG( pBTree, IsInMemory ) )
+  if ( ulBuffers > 1 || GETFLAG( pBTree, IsInMemory ) )
     SETFLAG( pBTree, IsMultiBuffers );
   else
     RESETFLAG( pBTree, IsMultiBuffers );
 
-  while ( usBuffers-- > 0 )
+  while ( ulBuffers-- > 0 )
   {
     thisptr = ioOneBufferAlloc( pBTree, NULL, last );
     if ( last )  last->prev = thisptr;
@@ -804,14 +804,14 @@ static USHORT CountGet( struct hb_BTree * pBTree, ULONG ulNode )
   return ( USHORT )( *pBTree->ioBuffer->pulPageCount );
 }
 
-static void CountSet( struct hb_BTree * pBTree, ULONG ulNode, USHORT newPageCount )
+static void CountSet( struct hb_BTree * pBTree, ULONG ulNode, ULONG newPageCount )
 {
   READPAGE_IF_NEEDED( pBTree, ulNode );
   *pBTree->ioBuffer->pulPageCount = newPageCount;
   pBTree->ioBuffer->IsDirty = pBTree->IsDirtyFlagAssignment;
 }
 
-static USHORT CountAdj( struct hb_BTree * pBTree, ULONG ulNode, SHORT adjPageCount )
+static USHORT CountAdj( struct hb_BTree * pBTree, ULONG ulNode, LONG adjPageCount )
 {
   READPAGE_IF_NEEDED( pBTree, ulNode );
 
@@ -1558,10 +1558,11 @@ static int hb_BTstrncmp( const char *s1, const char *s2, size_t n )
 }
 
 /* allocate hb_BTree structure */
-struct hb_BTree * hb_BTreeNew( const char * FileName, USHORT usPageSize, USHORT usKeySize, ULONG ulFlags, USHORT usBuffers )
+struct hb_BTree * hb_BTreeNew( const char * FileName, USHORT usPageSize, USHORT usKeySize, ULONG ulFlags, ULONG ulBuffers )
 {
-  struct hb_BTree *pBTree = ( struct hb_BTree * )BufferAlloc( sizeof( struct hb_BTree ) );
-  int iMaximumKeys, size;
+  struct hb_BTree *pBTree = ( struct hb_BTree * ) BufferAlloc( sizeof( struct hb_BTree ) );
+  int iMaximumKeys;
+  ULONG size;
   int iFileIOmode;
   BYTE *buffer;
 
@@ -1628,15 +1629,15 @@ struct hb_BTree * hb_BTreeNew( const char * FileName, USHORT usPageSize, USHORT 
   pBTree->ulRootPage = NULLPAGE;
   pBTree->usPageSize = usPageSize;
   pBTree->usKeySize  = usKeySize;
-  pBTree->usMaxKeys  = iMaximumKeys;
-  pBTree->usMinKeys  = ( iMaximumKeys + 1 ) / 2 - iMaximumKeys % 2;
+  pBTree->usMaxKeys  = ( USHORT ) iMaximumKeys;
+  pBTree->usMinKeys  = ( USHORT ) ( ( iMaximumKeys + 1 ) / 2 - iMaximumKeys % 2 );
   pBTree->ulFlags    = ulFlags;
   pBTree->ulKeyCount = 0;
   pBTree->pStack     = NULL;
 /* TODO: use stack optimization if flags warrant: if ( flag... ) StackNew( &pBTree->pStack ); */
-  pBTree->pThisKeyData = ( hb_KeyData_T * )BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
+  pBTree->pThisKeyData = ( hb_KeyData_T * ) BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
   CLEARKEYDATA( pBTree );
-  ioBufferAlloc( pBTree, usBuffers );
+  ioBufferAlloc( pBTree, ulBuffers );
 
   if ( GETFLAG( pBTree, IsCaseLess ) )
   {
@@ -1656,7 +1657,7 @@ struct hb_BTree * hb_BTreeNew( const char * FileName, USHORT usPageSize, USHORT 
     buffer = ( BYTE * ) BufferAlloc( size );
     hb_xmemset( buffer, '\0', size );
 
-    if ( size != hb_fsWrite( pBTree->hFile, buffer, size ) )
+    if ( size != hb_fsWriteLarge( pBTree->hFile, buffer, size ) )
     {
       BufferRelease( buffer );
       BufferRelease( pBTree );
@@ -1674,9 +1675,9 @@ struct hb_BTree * hb_BTreeNew( const char * FileName, USHORT usPageSize, USHORT 
 }
 
 /* open an existing structure */
-struct hb_BTree *hb_BTreeOpen( const char *FileName, ULONG ulFlags, USHORT usBuffers )
+struct hb_BTree *hb_BTreeOpen( const char *FileName, ULONG ulFlags, ULONG ulBuffers )
 {
-  struct hb_BTree *pBTree = ( struct hb_BTree * )BufferAlloc( sizeof( struct hb_BTree ) );
+  struct hb_BTree *pBTree = ( struct hb_BTree * ) BufferAlloc( sizeof( struct hb_BTree ) );
   int iMaximumKeys;
   BYTE TmpHeader[ sizeof( HEADER_ID ) - 1 ];
 
@@ -1712,14 +1713,14 @@ struct hb_BTree *hb_BTreeOpen( const char *FileName, ULONG ulFlags, USHORT usBuf
                      sizeof( *pBTree->ioBuffer->xData.plData )    +  \
                      pBTree->usKeySize ) - 1;
 
-  pBTree->usMaxKeys  = iMaximumKeys;
-  pBTree->usMinKeys  = ( iMaximumKeys + 1 ) / 2 - iMaximumKeys % 2;
+  pBTree->usMaxKeys  = ( USHORT ) iMaximumKeys;
+  pBTree->usMinKeys  = ( USHORT ) ( ( iMaximumKeys + 1 ) / 2 - iMaximumKeys % 2 );
   pBTree->pThisKeyData = ( hb_KeyData_T * ) BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
   CLEARKEYDATA( pBTree );
   pBTree->pStack     = NULL;
 /* TODO: use stack optimization if flags warrant: if ( flag... ) StackNew( &pBTree->pStack ); */
   HB_SYMBOL_UNUSED( ulFlags );
-  ioBufferAlloc( pBTree, usBuffers );
+  ioBufferAlloc( pBTree, ulBuffers );
 
   RESETFLAG( pBTree, HB_BTREE_INMEMORY ); /* clear this flag */
   pBTree->IsDirtyFlagAssignment = TRUE;  /* replaces const value for assignment */
@@ -1807,7 +1808,7 @@ HB_FUNC( HB_BTREEOPEN  )  /* hb_BTreeOpen( CHAR cFileName, ULONG ulFlags [ , int
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( HB_ISCHAR( 1 ) )
-    hb_retni( BTree_SetTreeIndex( hb_BTreeOpen( hb_parc( 1 ), hb_parnl( 2 ), hb_parni( 3 ) ) ) );
+    hb_retni( BTree_SetTreeIndex( hb_BTreeOpen( hb_parc( 1 ), hb_parnl( 2 ), hb_parnl( 3 ) ) ) );
   else
   {
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", HB_ERR_FUNCNAME, hb_pcount() );
@@ -1821,7 +1822,7 @@ HB_FUNC( HB_BTREENEW )  /* hb_BTreeNew( CHAR cFileName, int nPageSize, int nKeyS
   if ( ( ( hb_parnl( 4 ) & HB_BTREE_INMEMORY ) == HB_BTREE_INMEMORY || HB_ISCHAR( 1 ) ) &&
        HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
   {
-    hb_retni( BTree_SetTreeIndex( hb_BTreeNew( hb_parc( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parnl( 4 ), hb_parni( 5 ) ) ) );
+    hb_retni( BTree_SetTreeIndex( hb_BTreeNew( hb_parc( 1 ), ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 3 ), hb_parnl( 4 ), hb_parnl( 5 ) ) ) );
   }
   else
   {

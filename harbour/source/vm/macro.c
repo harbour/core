@@ -1434,7 +1434,7 @@ void hb_macroGenPushVar( const char * szVarName, BOOL bMacroVar, HB_COMP_DECL )
 /* generates the pcode to push a variable by reference to the virtual machine stack */
 void hb_macroGenPushVarRef( const char * szVarName, HB_COMP_DECL )
 {
-   USHORT iVar;
+   int iVar;
 
    iVar = hb_macroLocalVarGetPos( szVarName, HB_COMP_PARAM );
    if( iVar )
