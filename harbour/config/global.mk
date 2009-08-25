@@ -282,7 +282,7 @@ ifeq ($(HB_INIT_DONE),)
       #   -DHB_PCRE_REGEX, -DHB_POSIX_REGEX, -DHB_EXT_ZLIB, -DHB_HAS_GPM, -DHB_GT_LIB=
 
       $(info ! Building Harbour $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)$(HB_VER_STATUS) from source - http://www.harbour-project.org)
-      $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(HB_MAKECMDGOALS) $(MAKEFLAGS) $(SHELL) $(if $(MAKESHELL), MAKESHELL: $(MAKESHELL),))
+      $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(SHELL) $(HB_MAKECMDGOALS) $(MAKEFLAGS) $(if $(MAKESHELL),MAKESHELL: $(MAKESHELL),))
       ifneq ($(HB_USER_PRGFLAGS),)
          $(info ! HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))
       endif
@@ -459,22 +459,6 @@ ifneq ($(filter $(HB_HOST_PLAT),win wce dos os2),)
 else
    HB_HOST_BIN_EXT :=
 endif
-
-# Couldn't find a builds of these tools which would fit Harbour respository,
-# so these will have to installed by user.
-#ifeq ($(HB_SHELL),os2)
-#   ifeq ($(call find_in_path,mkdir),)
-#      $(error ! Harbour build on OS/2 requires GNU mkdir executable in PATH. See INSTALL for more)
-#   else
-#      ifeq ($(call find_in_path,rm),)
-#         $(error ! Harbour build on OS/2 requires GNU rm executable in PATH. See INSTALL for more)
-#      else
-#         ifeq ($(call find_in_path,cp),)
-#            $(error ! Harbour build on OS/2 requires GNU cp executable in PATH. See INSTALL for more)
-#         endif
-#      endif
-#   endif
-#endif
 
 HB_HOST_CPU :=
 ifeq ($(HB_HOST_PLAT),win)

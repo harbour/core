@@ -2016,12 +2016,10 @@ QVariant HbDbfModel::headerData( int section, Qt::Orientation orientation, int r
 int HbDbfModel::rowCount( const QModelIndex & /*parent = QModelIndex()*/ ) const
 {
    PHB_ITEM p0 = hb_itemPutNI( NULL, HBQT_BRW_ROWCOUNT );
-   PHB_ITEM ret = hb_vmEvalBlockV( block, 1, p0 );
 
-   int result = hb_itemGetNI( ret );
+   int result = hb_itemGetNI( hb_vmEvalBlockV( block, 1, p0 ) );
 
    hb_itemRelease( p0 );
-   hb_itemRelease( ret );
 
    return result;
 }
@@ -2029,12 +2027,10 @@ int HbDbfModel::rowCount( const QModelIndex & /*parent = QModelIndex()*/ ) const
 int HbDbfModel::columnCount( const QModelIndex & /*parent = QModelIndex()*/ ) const
 {
    PHB_ITEM p0 = hb_itemPutNI( NULL, HBQT_BRW_COLCOUNT );
-   PHB_ITEM ret = hb_vmEvalBlockV( block, 1, p0 );
 
-   int result = hb_itemGetNI( ret );
+   int result = hb_itemGetNI( hb_vmEvalBlockV( block, 1, p0 ) );
 
    hb_itemRelease( p0 );
-   hb_itemRelease( ret );
 
    return result;
 }
