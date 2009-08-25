@@ -395,7 +395,14 @@ PROCEDURE Main_HVMA()
    TEST_LINE( (ErrorNew())->NOFIELD           , "E 1 BASE 1065 Argument error (&) OS:0 #:0 A:2:O:ERROR Object;C:NOFIELD F:S" )
 
 #ifndef __XPP__
+#ifdef __HARBOUR__
+   /* disable Harbour extended optimizations to test correct RTE message */
+   #pragma -ko-
+#endif
    TEST_LINE( ("NOTHERE")->(Eof())            , .T.                                               )
+#ifdef __HARBOUR__
+   #pragma -ko+
+#endif
    TEST_LINE( (mcString)->(Eof())             , .T.                                               )
    TEST_LINE( ({})->(Eof())                   , .T.                                               )
    TEST_LINE( ({|| NIL })->(Eof())            , .T.                                               )
