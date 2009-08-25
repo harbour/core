@@ -1622,7 +1622,7 @@ FUNCTION Build_Browse( oWnd )
    s := "selection-background-color: qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5, stop: 0 #FF92BB, stop: 1 gray); "
 //   s := "HbTableView::item:hover { background-color: qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5, stop: 0 #FF92BB, stop: 1 red) }; "
 //   s += "HbTableView::item:focus { background-color: qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5, stop: 0 #FF92BB, stop: 1 blue) }; "
-   s += "focus-background-color: qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5, stop: 0 #FF92BB, stop: 1 blue) ; "
+//   s += "focus-background-color: qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5, stop: 0 #FF92BB, stop: 1 blue) ; "
    oXbpBrowse:setStyleSheet( s )
    #endif
 
