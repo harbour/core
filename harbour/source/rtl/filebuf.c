@@ -53,9 +53,6 @@
 
 /* this has to be declared before hbapifs.h is included */
 #define _HB_FILE_INTERNAL_
-struct _HB_FILE;
-typedef struct _HB_FILE * PHB_FILE;
-
 
 #include "hbapi.h"
 #include "hbapifs.h"
@@ -68,6 +65,7 @@ typedef struct _HB_FILE * PHB_FILE;
 #  include <sys/stat.h>
 #endif
 
+
 #define HB_FLOCK_RESIZE       16
 
 typedef struct
@@ -79,6 +77,7 @@ HB_FLOCK, * PHB_FLOCK;
 
 typedef struct _HB_FILE
 {
+   const HB_FILE_FUNCS * pFuncs;
    ULONG          device;
    ULONG          inode;
    int            used;
@@ -94,9 +93,43 @@ typedef struct _HB_FILE
 }
 HB_FILE;
 
+
 static HB_CRITICAL_NEW( s_fileMtx );
 
 static PHB_FILE s_openFiles = NULL;
+
+
+static BOOL s_fileAccept( const char * pFilename );
+static PHB_FILE s_fileExtOpen( const char * pFilename, const char * pDefExt,
+                               USHORT uiExFlags, const char * pPaths,
+                               PHB_ITEM pError );
+static void s_fileClose( PHB_FILE pFile );
+static BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
+                        int iType );
+static ULONG s_fileReadAt( PHB_FILE pFile, void * buffer, ULONG ulSize,
+                           HB_FOFFSET llOffset );
+static ULONG s_fileWriteAt( PHB_FILE pFile, const void * buffer, ULONG ulSize,
+                            HB_FOFFSET llOffset );
+static BOOL s_fileTruncAt( PHB_FILE pFile, HB_FOFFSET llOffset );
+static HB_FOFFSET s_fileSize( PHB_FILE pFile );
+static void s_fileCommit( PHB_FILE pFile );
+static HB_FHANDLE s_fileHandle( PHB_FILE pFile );
+
+const HB_FILE_FUNCS s_fileFuncs =
+{
+   s_fileAccept,
+   hb_spFileExists,
+   hb_fsDelete,
+   s_fileExtOpen,
+   s_fileClose,
+   s_fileLock,
+   s_fileReadAt,
+   s_fileWriteAt,
+   s_fileTruncAt,
+   s_fileSize,
+   s_fileCommit,
+   s_fileHandle
+};
 
 /*
 void hb_fileDsp( PHB_FILE pFile, const char * szMsg )
@@ -139,6 +172,7 @@ static PHB_FILE hb_fileNew( HB_FHANDLE hFile, BOOL fShared, BOOL fReadonly,
    {
       pFile = ( PHB_FILE ) hb_xgrab( sizeof( HB_FILE ) );
       memset( pFile, 0, sizeof( HB_FILE ) );
+      pFile->pFuncs   = &s_fileFuncs;
       pFile->device   = device;
       pFile->inode    = inode;
       pFile->hFile    = hFile;
@@ -301,13 +335,19 @@ static BOOL hb_fileUnlock( PHB_FILE pFile, BOOL * pfLockFS,
    return fResult;
 }
 
+
 /*
- * public API functions
+ * file methods
  */
 
-PHB_FILE hb_fileExtOpen( const char * pFilename, const char * pDefExt,
-                         USHORT uiExFlags, const char * pPaths,
-                         PHB_ITEM pError )
+static BOOL s_fileAccept( const char * pFilename )
+{
+   return pFilename && *pFilename;
+}
+
+static PHB_FILE s_fileExtOpen( const char * pFilename, const char * pDefExt,
+                               USHORT uiExFlags, const char * pPaths,
+                               PHB_ITEM pError )
 {
    PHB_FILE pFile = NULL;
 #if defined( HB_OS_UNIX )
@@ -432,7 +472,7 @@ PHB_FILE hb_fileExtOpen( const char * pFilename, const char * pDefExt,
    return pFile;
 }
 
-void hb_fileClose( PHB_FILE pFile )
+static void s_fileClose( PHB_FILE pFile )
 {
    HB_FHANDLE hFile = FS_ERROR, hFileRO = FS_ERROR;
 
@@ -469,8 +509,8 @@ void hb_fileClose( PHB_FILE pFile )
       hb_fsClose( hFileRO );
 }
 
-BOOL hb_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
-                  int iType )
+static BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
+                        int iType )
 {
    BOOL fResult, fLockFS = FALSE;
 
@@ -502,37 +542,150 @@ BOOL hb_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
    return fResult;
 }
 
+static ULONG s_fileReadAt( PHB_FILE pFile, void * buffer, ULONG ulSize,
+                           HB_FOFFSET llOffset )
+{
+   return hb_fsReadAt( pFile->hFile, buffer, ulSize, llOffset );
+}
+
+static ULONG s_fileWriteAt( PHB_FILE pFile, const void * buffer, ULONG ulSize,
+                            HB_FOFFSET llOffset )
+{
+   return hb_fsWriteAt( pFile->hFile, buffer, ulSize, llOffset );
+}
+
+static BOOL s_fileTruncAt( PHB_FILE pFile, HB_FOFFSET llOffset )
+{
+   return hb_fsTruncAt( pFile->hFile, llOffset );
+}
+
+static HB_FOFFSET s_fileSize( PHB_FILE pFile )
+{
+   return hb_fsSeekLarge( pFile->hFile, 0, FS_END );
+}
+
+static void s_fileCommit( PHB_FILE pFile )
+{
+   hb_fsCommit( pFile->hFile );
+}
+
+static HB_FHANDLE s_fileHandle( PHB_FILE pFile )
+{
+   return pFile ? pFile->hFile : FS_ERROR;
+}
+
+
+
+#define HB_FILE_TYPE_MAX      32
+
+static const HB_FILE_FUNCS * s_pFileTypes[ HB_FILE_TYPE_MAX ];
+static int s_iFileTypes = 0;
+
+
+/*
+ * public API functions
+ */
+
+BOOL hb_fileRegister( const HB_FILE_FUNCS * pFuncs )
+{
+   BOOL fResult = FALSE;
+
+   hb_threadEnterCriticalSection( &s_fileMtx );
+
+   if( s_iFileTypes < HB_FILE_TYPE_MAX )
+   {
+      s_pFileTypes[ s_iFileTypes ] = pFuncs;
+      s_iFileTypes++;
+      fResult = TRUE;
+   }
+
+   hb_threadLeaveCriticalSection( &s_fileMtx );
+
+   return fResult;
+}
+
+BOOL hb_fileDelete( const char * pFilename )
+{
+   int i;
+
+   for( i = 0; i < s_iFileTypes; ++i )
+   {
+      if( s_pFileTypes[ i ]->Accept( pFilename ) )
+         return s_pFileTypes[ i ]->Delete( pFilename );
+   }
+   return hb_fsDelete( pFilename );
+}
+
+BOOL hb_fileExists( const char * pFilename, char * pRetPath )
+{
+   int i;
+
+   for( i = 0; i < s_iFileTypes; ++i )
+   {
+      if( s_pFileTypes[ i ]->Accept( pFilename ) )
+         return s_pFileTypes[ i ]->Exists( pFilename, pRetPath );
+   }
+   return hb_spFileExists( pFilename, pRetPath );
+}
+
+PHB_FILE hb_fileExtOpen( const char * pFilename, const char * pDefExt,
+                         USHORT uiExFlags, const char * pPaths,
+                         PHB_ITEM pError )
+{
+   int i;
+
+   for( i = 0; i < s_iFileTypes; ++i )
+   {
+      if( s_pFileTypes[ i ]->Accept( pFilename ) )
+         return s_pFileTypes[ i ]->Open( pFilename, pDefExt, uiExFlags, pPaths, pError );
+   }
+   return s_fileExtOpen( pFilename, pDefExt, uiExFlags, pPaths, pError );
+}
+
+void hb_fileClose( PHB_FILE pFile )
+{
+   pFile->pFuncs->Close( pFile );
+}
+
+BOOL hb_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
+                  int iType )
+{
+   return pFile->pFuncs->Lock( pFile, ulStart, ulLen, iType );
+}
+
 ULONG hb_fileReadAt( PHB_FILE pFile, void * buffer, ULONG ulSize,
                      HB_FOFFSET llOffset )
 {
-   return hb_fsReadAt( pFile->hFile, buffer, ulSize, llOffset );
+   return pFile->pFuncs->ReadAt( pFile, buffer, ulSize, llOffset );
 }
 
 ULONG hb_fileWriteAt( PHB_FILE pFile, const void * buffer, ULONG ulSize,
                       HB_FOFFSET llOffset )
 {
-   return hb_fsWriteAt( pFile->hFile, buffer, ulSize, llOffset );
+   return pFile->pFuncs->WriteAt( pFile, buffer, ulSize, llOffset );
 }
 
 BOOL hb_fileTruncAt( PHB_FILE pFile, HB_FOFFSET llOffset )
 {
-   return hb_fsTruncAt( pFile->hFile, llOffset );
+   return pFile->pFuncs->TruncAt( pFile, llOffset );
 }
 
 HB_FOFFSET hb_fileSize( PHB_FILE pFile )
 {
-   return hb_fsSeekLarge( pFile->hFile, 0, FS_END );
+   return pFile->pFuncs->Size( pFile );
 }
 
 void hb_fileCommit( PHB_FILE pFile )
 {
-   hb_fsCommit( pFile->hFile );
+   pFile->pFuncs->Commit( pFile );
 }
 
 HB_FHANDLE hb_fileHandle( PHB_FILE pFile )
 {
-   return pFile ? pFile->hFile : FS_ERROR;
+   return pFile->pFuncs->Handle( pFile );
 }
+
+/* internal FILE structures only */
 
 PHB_FILE hb_fileCreateTemp( const char * pszDir, const char * pszPrefix,
                             ULONG ulAttr, char * pszName )

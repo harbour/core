@@ -2744,7 +2744,7 @@ static HB_ERRCODE hb_dbfClose( DBFAREAP pArea )
       pArea->pDataFile = NULL;
 
       if( pArea->fTemporary )
-         hb_fsDelete( pArea->szDataFileName );
+         hb_fileDelete( pArea->szDataFileName );
    }
 
    /* Close the memo file */
@@ -2754,7 +2754,7 @@ static HB_ERRCODE hb_dbfClose( DBFAREAP pArea )
       pArea->pMemoFile = NULL;
 
       if( pArea->fTemporary )
-         hb_fsDelete( pArea->szMemoFileName );
+         hb_fileDelete( pArea->szMemoFileName );
    }
 
    pArea->fTemporary = FALSE;
@@ -5395,7 +5395,7 @@ static HB_ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pIte
 
    pFileName = hb_fsFNameSplit( szFile );
 
-   if( ! pFileName->szExtension && hb_setGetDefExtension() )
+   if( ! pFileName->szExtension && ( !fTable || hb_setGetDefExtension() ) )
    {
       /* Add default extension if missing */
       pFileExt = hb_itemPutC( NULL, NULL );
@@ -5405,10 +5405,10 @@ static HB_ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pIte
    hb_fsFNameMerge( szFileName, pFileName );
    hb_xfree( pFileName );
 
-   /* Use hb_spFileExists first to locate table which can be in differ path */
-   if( hb_spFileExists( szFileName, szFileName ) )
+   /* Use hb_fileExists first to locate table which can be in differ path */
+   if( hb_fileExists( szFileName, szFileName ) )
    {
-      fResult = hb_fsDelete( szFileName );
+      fResult = hb_fileDelete( szFileName );
       if( fResult && fTable )
       {
          /*
@@ -5416,7 +5416,7 @@ static HB_ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pIte
           * supported and if yes then try to delete memo file if it exists
           * in the same directory as table file
           * hb_fsFNameSplit() repeated intentionally to respect
-          * the path set by hb_spFileExists()
+          * the path set by hb_fileExists()
           */
          pFileName = hb_fsFNameSplit( szFileName );
          pFileExt = hb_itemPutC( pFileExt, NULL );
@@ -5427,7 +5427,7 @@ static HB_ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pIte
             {
                pFileName->szExtension = szExt;
                hb_fsFNameMerge( szFileName, pFileName );
-               hb_fsDelete( szFileName );
+               hb_fileDelete( szFileName );
             }
          }
          /*
@@ -5442,7 +5442,7 @@ static HB_ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pIte
             {
                pFileName->szExtension = szExt;
                hb_fsFNameMerge( szFileName, pFileName );
-               hb_fsDelete( szFileName );
+               hb_fileDelete( szFileName );
             }
          }
          hb_xfree( pFileName );
@@ -5477,7 +5477,7 @@ static HB_ERRCODE hb_dbfExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pI
 
    pFileName = hb_fsFNameSplit( szFile );
 
-   if( ! pFileName->szExtension && hb_setGetDefExtension() )
+   if( ! pFileName->szExtension && ( !fTable || hb_setGetDefExtension() ) )
    {
       pFileExt = hb_itemPutC( NULL, NULL );
       if( SELF_RDDINFO( pRDD, fTable ? RDDI_TABLEEXT : RDDI_ORDBAGEXT, ulConnect, pFileExt ) == HB_SUCCESS )
@@ -5490,7 +5490,7 @@ static HB_ERRCODE hb_dbfExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pI
       hb_itemRelease( pFileExt );
    }
 
-   return hb_spFileExists( szFileName, NULL ) ? HB_SUCCESS : HB_FAILURE;
+   return hb_fileExists( szFileName, NULL ) ? HB_SUCCESS : HB_FAILURE;
 }
 
 static void hb_dbfInitTSD( void * Cargo )

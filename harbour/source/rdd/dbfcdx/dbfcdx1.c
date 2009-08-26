@@ -4889,7 +4889,7 @@ static void hb_cdxIndexFree( LPCDXINDEX pIndex )
    {
       hb_fileClose( pIndex->pFile );
       if( pIndex->fDelete )
-         hb_fsDelete( pIndex->szRealName ? pIndex->szRealName : pIndex->szFileName );
+         hb_fileDelete( pIndex->szRealName ? pIndex->szRealName : pIndex->szFileName );
    }
 
 #ifdef HB_CDX_DBGCODE
@@ -7170,7 +7170,7 @@ static HB_ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
 
       pArea->dbfarea.fHasTags = FALSE;
       hb_cdxCreateFName( pArea, NULL, NULL, szFileName, NULL );
-      if( hb_spFileExists( szFileName, NULL ) ||
+      if( hb_fileExists( szFileName, NULL ) ||
           DBFAREA_DATA( &pArea->dbfarea )->fStrictStruct )
       {
          DBORDERINFO pOrderInfo;

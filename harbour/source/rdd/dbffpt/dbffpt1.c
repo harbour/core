@@ -4586,7 +4586,7 @@ static HB_ERRCODE hb_fptDoPack( FPTAREAP pArea, USHORT uiBlockSize,
                }
             }
             hb_fileClose( pArea->pMemoTmpFile );
-            hb_fsDelete( szFile );
+            hb_fileDelete( szFile );
             pArea->pMemoTmpFile = NULL;
          }
       }
@@ -4687,7 +4687,7 @@ static HB_ERRCODE hb_fptPack( FPTAREAP pArea )
             }
          }
          hb_fileClose( pArea->pMemoTmpFile );
-         hb_fsDelete( szFile );
+         hb_fileDelete( szFile );
          pArea->pMemoTmpFile = NULL;
          return errCode;
       }

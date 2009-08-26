@@ -1981,7 +1981,7 @@ static void hb_nsxIndexFree( LPNSXINDEX pIndex )
       hb_fileClose( pIndex->pFile );
       if( pIndex->fDelete )
       {
-         hb_fsDelete( pIndex->RealName ? pIndex->RealName : pIndex->IndexName );
+         hb_fileDelete( pIndex->RealName ? pIndex->RealName : pIndex->IndexName );
       }
    }
    if( pIndex->IndexName )
@@ -6554,7 +6554,7 @@ static HB_ERRCODE hb_nsxOpen( NSXAREAP pArea, LPDBOPENINFO pOpenInfo )
       char szFileName[ HB_PATH_MAX ];
 
       hb_nsxCreateFName( pArea, NULL, NULL, szFileName, NULL );
-      if( hb_spFileExists( szFileName, NULL ) ||
+      if( hb_fileExists( szFileName, NULL ) ||
           DBFAREA_DATA( &pArea->dbfarea )->fStrictStruct )
       {
          DBORDERINFO pOrderInfo;

@@ -316,10 +316,38 @@ extern HB_EXPORT const char * hb_fsNameConv( const char * szFileName, char ** ps
 /* Harbour file functions with shared file handles and locks
  * (buffers in the future)
  */
-#ifndef _HB_FILE_INTERNAL_
+
+#if defined( _HB_FILE_IMPLEMENTATION_ ) || defined( _HB_FILE_INTERNAL_ )
+   struct _HB_FILE;
+   typedef struct _HB_FILE * PHB_FILE;
+
+   typedef struct _HB_FILE_FUNCS
+   {
+      BOOL        (* Accept ) ( const char * pszFilename );
+      BOOL        (* Exists ) ( const char * pszFilename, char * pRetPath );
+      BOOL        (* Delete ) ( const char * pszFilename );
+      PHB_FILE    (* Open ) ( const char * pszFilename, const char * pDefExt,
+                              USHORT uiExFlags, const char * pPaths,
+                              PHB_ITEM pError );
+      void        (* Close ) ( PHB_FILE pFile );
+      BOOL        (* Lock ) ( PHB_FILE, HB_FOFFSET ulStart, HB_FOFFSET ulLen, int iType );
+      ULONG       (* ReadAt ) ( PHB_FILE pFile, void * buffer, ULONG ulSize, HB_FOFFSET llOffset );
+      ULONG       (* WriteAt ) ( PHB_FILE pFile, const void * buffer, ULONG ulSize, HB_FOFFSET llOffset );
+      BOOL        (* TruncAt ) ( PHB_FILE pFile, HB_FOFFSET llOffset );
+      HB_FOFFSET  (* Size ) ( PHB_FILE pFile );
+      void        (* Commit ) ( PHB_FILE pFile );
+      HB_FHANDLE  (* Handle ) ( PHB_FILE pFile );
+   }
+   HB_FILE_FUNCS;
+
+   HB_EXPORT BOOL hb_fileRegister( const HB_FILE_FUNCS * pFuncs );
+#else
    typedef void * PHB_FILE;
 #endif
-HB_EXPORT PHB_FILE   hb_fileExtOpen( const char * pFilename, const char * pDefExt,
+
+HB_EXPORT BOOL       hb_fileExists( const char * pFilename, char * pRetPath );
+HB_EXPORT BOOL       hb_fileDelete( const char * pFilename );
+HB_EXPORT PHB_FILE   hb_fileExtOpen( const char * pszFilename, const char * pDefExt,
                                      USHORT uiExFlags, const char * pPaths,
                                      PHB_ITEM pError );
 HB_EXPORT PHB_FILE   hb_fileCreateTemp( const char * pszDir, const char * pszPrefix,
