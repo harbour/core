@@ -39,40 +39,10 @@ endif
 LD := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 LD_OUT := -o
 
-LIBPATHS := -L$(LIB_DIR)
-LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
+LIBPATHS := $(LIB_DIR)
 
-ifneq ($(filter hbrtl, $(LIBS)),)
-   # Add the specified GT driver library
-   ifneq ($(filter gtcrs, $(LIBS)),)
-      ifeq ($(HB_CRS_LIB),)
-         HB_CRS_LIB := curses
-      endif
-      LDLIBS += -l$(HB_CRS_LIB)
-   endif
-   ifneq ($(filter gtsln, $(LIBS)),)
-      LDLIBS += -lslang
-   endif
-   ifneq ($(filter gtxwc, $(LIBS)),)
-      LDLIBS += -lX11
-     #LIBPATHS += -L/usr/X11R6/lib64
-      LIBPATHS += -L/usr/X11R6/lib
-   endif
-
-   ifneq ($(filter -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
-      LDLIBS += -lpcre
-   endif
-
-   ifneq ($(filter -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
-      LDLIBS += -lz
-   endif
-
-   LDLIBS += -lrt -lsocket -lnsl -lresolv
-endif
-
-LDLIBS += -lm
-
-LDFLAGS += $(LIBPATHS)
+LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),-l$(lib))
+LDFLAGS += $(foreach dir,$(LIBPATHS) $(SYSLIBPATHS),-L$(dir))
 
 AR := $(HB_CCPREFIX)ar
 ARFLAGS :=

@@ -52,12 +52,6 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       > hello
       You should see 'Hello world!' on screen.
 
-      NOTES: - <DIR> is your destination directory where executables,
-               libraries and headers will be created. Use absolute paths
-               only. For a peace of mind, avoid using spaces, quotes
-               in the name. You can leave it empty, in this case the
-               results will be created under the current directory tree.
-
    on Windows hosts with POSIX shells (MSYS/Cygwin)
    ----------------------------------
       You can also use these shells to build Harbour on Windows.
@@ -71,9 +65,7 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       > hello
       You should see 'Hello world!' on screen.
 
-      NOTES: - With Cygwin, <DIR> should use Cygwin drive
-               notation: /cygdrive/c for C:
-             - When building for Borland C make sure that
+      NOTES: - When building for Borland C make sure that
                GNU Make is executed when typing 'make',
                Borland Make has the same name.
 
@@ -178,6 +170,20 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       You should see 'Hello world!' on screen.
 
 
+HOW TO DO A PARTIAL [RE]BUILD
+=============================
+
+   If you want to [re]build only a specific part of Harbour, like
+   one library, all contrib libs or core libs, you have to do
+   everything the same as for a full build, the only difference
+   is that you first have to go into the specific source directory
+   you want to [re]build. When starting GNU Make, all components
+   under that dir will be built:
+
+      cd source/rtl
+      <make> [clean] [install]
+
+
 HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
 ==============================================
 
@@ -216,8 +222,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    HB_INC_QT=C:\Qt\include
    HB_INC_SQLITE3=C:\sqlite3 (defaults to locally hosted version on win/dos/os2)
 
-   NOTES: - For MinGW + MSYS and Cygwin you have to use forward slashes
-            and also Cygwin drive notation for Cygwin.
+   NOTES: - You need to use native path format to your shell.
           - Spaces in directory names aren't currently supported.
             (You can use short name alias on Windows platform, though)
           - Don't put directory names inside double quotes.
@@ -401,6 +406,16 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
                                and /usr/local/harbour-<arch>-<comp> for
                                cross-builds. It's always set to /pkg/<arch>/<comp>
                                when HB_BUILD_PKG is set to 'yes'.
+                               Use absolute paths only. For a peace of mind,
+                               avoid using spaces and quotes in the name.
+                               You have to use path format native to your shell.
+                               F.e. to specify C:\dir on Windows, with Cygwin
+                               you should use /cygdrive/c/dir, with MSYS /c/dir.
+                               It's also possible to use following macros:
+                                  {hb_top}  - Source tree root dir.
+                                  {hb_plat} - Target platform
+                                  {hb_comp} - Target compiler
+                                  {hb_cpu}  - Target CPU
 
    - HB_BIN_INSTALL            Override directory to install executables
    - HB_LIB_INSTALL            Override directory to install libraries
@@ -458,7 +473,7 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    - HB_CCPREFIX=[<prefix>]    Used with gcc family to specify
                                compiler/linker/archive tool name prefix.
    - HB_CCPOSTFIX=[<postfix>]  Used with gcc family to specify compiler/linker
-                               tool postfix (usually version number).
+                               tool name postfix (usually version number).
 
    Cross-building
    --------------
@@ -638,7 +653,7 @@ EXAMPLES
 
       --8<--
       rem ; Add these *before* above sample scripts to configure 3rd party dependencies.
-      rem   For 'MinGW + MSYS' and Cygwin you'll have to use forward slashes and
+      rem   When using MSYS or Cygwin shell you'll have to use forward slashes and
       rem   also Cygwin drive notation for Cygwin.
       set HB_INC_ADS=C:\ads\acesdk
       set HB_INC_ALLEGRO=C:\allegro\include

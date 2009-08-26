@@ -7,6 +7,7 @@ include $(TOP)$(ROOT)config/global.mk
 ifneq ($(HB_PLATFORM),)
 ifneq ($(HB_COMPILER),)
 
+-include $(TOP)$(ROOT)config/$(HB_PLATFORM)/libs.mk
 include $(TOP)$(ROOT)config/$(HB_PLATFORM)/$(HB_COMPILER).mk
 include $(TOP)$(ROOT)config/c.mk
 include $(TOP)$(ROOT)config/prg.mk

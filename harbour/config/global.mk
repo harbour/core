@@ -960,7 +960,20 @@ else
 endif
 
 ifeq ($(HB_INIT_DONE),)
-   ifneq ($(HB_COMPILER),djgpp)
+   ifeq ($(HB_COMPILER),djgpp)
+      # NOTE: We do need DJGPP build of GNU Make on Windows
+      #       systems. The reason is that this uses special
+      #       trick to pass command lines to other DJGPP tools
+      #       (like gcc) to overcome 126 chars MS-DOS command
+      #       line length limitation. IOW: mingw32-make.exe
+      #       won't work with DJGPP on Windows hosts.
+      #       [vszakats]
+      ifeq ($(HB_HOST_PLAT),win)
+         ifneq ($(HB_MAKE_PLAT),dos)
+            $(warning ! Warning: You should use DJGPP provided MS-DOS GNU Make on Windows hosts)
+         endif
+      endif
+   else
       ifeq ($(HB_HOST_PLAT)-$(HB_MAKE_PLAT),win-dos)
          $(warning ! Warning: You're using MS-DOS GNU Make executable on Windows host.)
          $(warning !          Not recommended combination. Some features will be disabled.)

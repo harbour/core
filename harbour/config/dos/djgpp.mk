@@ -2,19 +2,6 @@
 # $Id$
 #
 
-# NOTE: We do need DJGPP build of GNU Make on Windows
-#       systems. The reason is that this uses special
-#       trick to pass command lines to other DJGPP tools
-#       (like gcc) to overcome 126 chars MS-DOS command
-#       line length limitation. IOW: mingw32-make.exe
-#       won't work with DJGPP on Windows hosts.
-#       [vszakats]
-ifeq ($(HB_HOST_PLAT),win)
-   ifneq ($(HB_MAKE_PLAT),dos)
-      $(error ! Error: You must use DJGPP provided GNU Make on Windows hosts)
-   endif
-endif
-
 ifeq ($(HB_BUILD_MODE),cpp)
    HB_CMP := gpp
 else
