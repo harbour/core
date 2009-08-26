@@ -754,26 +754,24 @@ static void hb_gt_wvt_Maximize( PHB_GTWVT pWVT )
          hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
 }
 
-static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
+static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT, HFONT hFont )
 {
    HDC        hdc;
-   HFONT      hFont, hOldFont;
+   HFONT      hOldFont;
    int        height, width;
    RECT       wi, ci;
    TEXTMETRIC tm;
    RECT       rcWorkArea;
    int        n;
 
-   /*
-    * set the font and get it's size to determine the size of the client area
-    * for the required number of rows and columns .
-    * No need to call hb_gt_wvt_GetFont() if font is already existant [prtpal 20081108]
-    */
-   if( !pWVT->hFont )
+   if( !pWVT->hFont || hFont )
    {
-      hFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
-                                 pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
+      if( !hFont )
+         hFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
+                                    pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
 #if ! defined( UNICODE )
+      if( pWVT->hFont )
+         DeleteObject( pWVT->hFont );
       if( pWVT->hFontBox )
          DeleteObject( pWVT->hFontBox );
       if( pWVT->CodePage == pWVT->boxCodePage )
@@ -911,11 +909,11 @@ static BOOL hb_gt_wvt_SetWindowSize( PHB_GTWVT pWVT, int iRow, int iCol )
    return FALSE;
 }
 
-static BOOL hb_gt_wvt_InitWindow( PHB_GTWVT pWVT, int iRow, int iCol )
+static BOOL hb_gt_wvt_InitWindow( PHB_GTWVT pWVT, int iRow, int iCol, HFONT hFont )
 {
    BOOL fRet = hb_gt_wvt_SetWindowSize( pWVT, iRow, iCol );
 
-   hb_gt_wvt_ResetWindowSize( pWVT );
+   hb_gt_wvt_ResetWindowSize( pWVT, hFont );
 
    return fRet;
 }
@@ -1616,7 +1614,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
    if( pWVT ) switch( message )
    {
       case WM_CREATE:
-         return hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS );
+         return hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS, NULL );
 
       case WM_PAINT:
       {
@@ -1865,7 +1863,7 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       }
 #endif
 
-      hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS );
+      hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS, NULL );
 
       /* Set icon */
       if( pWVT->hIcon )
@@ -1973,9 +1971,10 @@ static BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
              * font settings will fit in the window
              */
             if( hb_gt_wvt_ValidWindowSize( pWVT->hWnd, iRow, iCol, hFont, pWVT->fontWidth ) )
-               fResult = hb_gt_wvt_InitWindow( pWVT, iRow, iCol );
+               fResult = hb_gt_wvt_InitWindow( pWVT, iRow, iCol, hFont );
+            else
+               DeleteObject( hFont );
 
-            DeleteObject( hFont );
             HB_GTSELF_REFRESH( pGT );
          }
       }
@@ -2138,10 +2137,11 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                pWVT->fontHeight = iVal;
                if( pWVT->hWnd )
                {
-                  hb_gt_wvt_ResetWindowSize( pWVT );
+                  hb_gt_wvt_ResetWindowSize( pWVT, hFont );
                   HB_GTSELF_REFRESH( pGT );
                }
-               DeleteObject( hFont );
+               else
+                  DeleteObject( hFont );
             }
          }
          break;
