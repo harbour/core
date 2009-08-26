@@ -987,6 +987,7 @@ endif
 # Notice that even single lib/bin builds will currently
 # result in recursive runs, see rule 'descend'. [vszakats]
 HB_CFLAGS :=
+HB_LDFLAGS :=
 HB_PRGFLAGS :=
 
 HB_CROSS_BUILD :=
