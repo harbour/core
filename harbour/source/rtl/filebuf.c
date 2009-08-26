@@ -93,43 +93,11 @@ typedef struct _HB_FILE
 }
 HB_FILE;
 
+static const HB_FILE_FUNCS * s_fileMethods( void );
 
 static HB_CRITICAL_NEW( s_fileMtx );
 
 static PHB_FILE s_openFiles = NULL;
-
-
-static BOOL s_fileAccept( const char * pFilename );
-static PHB_FILE s_fileExtOpen( const char * pFilename, const char * pDefExt,
-                               USHORT uiExFlags, const char * pPaths,
-                               PHB_ITEM pError );
-static void s_fileClose( PHB_FILE pFile );
-static BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
-                        int iType );
-static ULONG s_fileReadAt( PHB_FILE pFile, void * buffer, ULONG ulSize,
-                           HB_FOFFSET llOffset );
-static ULONG s_fileWriteAt( PHB_FILE pFile, const void * buffer, ULONG ulSize,
-                            HB_FOFFSET llOffset );
-static BOOL s_fileTruncAt( PHB_FILE pFile, HB_FOFFSET llOffset );
-static HB_FOFFSET s_fileSize( PHB_FILE pFile );
-static void s_fileCommit( PHB_FILE pFile );
-static HB_FHANDLE s_fileHandle( PHB_FILE pFile );
-
-const HB_FILE_FUNCS s_fileFuncs =
-{
-   s_fileAccept,
-   hb_spFileExists,
-   hb_fsDelete,
-   s_fileExtOpen,
-   s_fileClose,
-   s_fileLock,
-   s_fileReadAt,
-   s_fileWriteAt,
-   s_fileTruncAt,
-   s_fileSize,
-   s_fileCommit,
-   s_fileHandle
-};
 
 /*
 void hb_fileDsp( PHB_FILE pFile, const char * szMsg )
@@ -172,7 +140,7 @@ static PHB_FILE hb_fileNew( HB_FHANDLE hFile, BOOL fShared, BOOL fReadonly,
    {
       pFile = ( PHB_FILE ) hb_xgrab( sizeof( HB_FILE ) );
       memset( pFile, 0, sizeof( HB_FILE ) );
-      pFile->pFuncs   = &s_fileFuncs;
+      pFile->pFuncs   = s_fileMethods();
       pFile->device   = device;
       pFile->inode    = inode;
       pFile->hFile    = hFile;
@@ -574,6 +542,28 @@ static HB_FHANDLE s_fileHandle( PHB_FILE pFile )
    return pFile ? pFile->hFile : FS_ERROR;
 }
 
+/* methods table */
+const HB_FILE_FUNCS s_fileFuncs =
+{
+   s_fileAccept,
+   hb_spFileExists,
+   hb_fsDelete,
+   s_fileExtOpen,
+   s_fileClose,
+   s_fileLock,
+   s_fileReadAt,
+   s_fileWriteAt,
+   s_fileTruncAt,
+   s_fileSize,
+   s_fileCommit,
+   s_fileHandle
+};
+
+static const HB_FILE_FUNCS * s_fileMethods( void )
+{
+   return &s_fileFuncs;
+}
+
 
 
 #define HB_FILE_TYPE_MAX      32
@@ -606,9 +596,9 @@ BOOL hb_fileRegister( const HB_FILE_FUNCS * pFuncs )
 
 BOOL hb_fileDelete( const char * pFilename )
 {
-   int i;
+   int i = s_iFileTypes;
 
-   for( i = 0; i < s_iFileTypes; ++i )
+   while( --i >= 0 )
    {
       if( s_pFileTypes[ i ]->Accept( pFilename ) )
          return s_pFileTypes[ i ]->Delete( pFilename );
@@ -618,9 +608,9 @@ BOOL hb_fileDelete( const char * pFilename )
 
 BOOL hb_fileExists( const char * pFilename, char * pRetPath )
 {
-   int i;
+   int i = s_iFileTypes;
 
-   for( i = 0; i < s_iFileTypes; ++i )
+   while( --i >= 0 )
    {
       if( s_pFileTypes[ i ]->Accept( pFilename ) )
          return s_pFileTypes[ i ]->Exists( pFilename, pRetPath );
@@ -632,9 +622,9 @@ PHB_FILE hb_fileExtOpen( const char * pFilename, const char * pDefExt,
                          USHORT uiExFlags, const char * pPaths,
                          PHB_ITEM pError )
 {
-   int i;
+   int i = s_iFileTypes;
 
-   for( i = 0; i < s_iFileTypes; ++i )
+   while( --i >= 0 )
    {
       if( s_pFileTypes[ i ]->Accept( pFilename ) )
          return s_pFileTypes[ i ]->Open( pFilename, pDefExt, uiExFlags, pPaths, pError );
