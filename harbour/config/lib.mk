@@ -40,6 +40,8 @@ HB_DYN_LIBS := \
    hbvmmt \
    hbmaindllh
 
+# Added only for hbpp
+-include $(TOP)$(ROOT)config/$(HB_PLATFORM)/libs.mk
 include $(TOP)$(ROOT)config/$(HB_PLATFORM)/$(HB_COMPILER).mk
 include $(TOP)$(ROOT)config/c.mk
 include $(TOP)$(ROOT)config/prg.mk
