@@ -47,8 +47,7 @@ SYSLIBS := socket
 LIBPATHS := -L$(LIB_DIR)
 LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
 
-# Add the specified GT driver library
-ifneq ($(filter hbrtl, $(LIBS)),)
+ifneq ($(HB_LINKING_RTL),)
    ifeq ($(C_MAIN),)
       ifeq ($(filter os2pm,$(HB_GT_LIB)),os2pm)
          # Special handling for PM mode

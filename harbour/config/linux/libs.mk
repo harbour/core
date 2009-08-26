@@ -28,22 +28,22 @@ endif
 SYSLIBS :=
 SYSLIBPATHS :=
 
-ifneq ($(filter hbrtl, $(LIBS)),)
+ifneq ($(HB_LINKING_RTL),)
    ifeq ($(HB_CRS_LIB),)
       HB_CRS_LIB := ncurses
    endif
-   ifneq ($(filter gtcrs, $(LIBS)),)
+   ifneq ($(HB_HAS_CURSES),)
       SYSLIBS += $(HB_CRS_LIB)
    endif
-   ifneq ($(filter gtsln, $(LIBS)),)
+   ifneq ($(HB_HAS_SLANG),)
       SYSLIBS += slang
    endif
-   ifneq ($(filter gtxwc, $(LIBS)),)
+   ifneq ($(HB_HAS_X11),)
       SYSLIBS += X11
     # SYSLIBPATHS += /usr/X11R6/lib64
       SYSLIBPATHS += /usr/X11R6/lib
    endif
-   ifeq ($(HB_GPM_MOUSE),yes)
+   ifneq ($(HB_HAS_GPM),)
       SYSLIBS += gpm
    endif
    ifneq ($(filter -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)

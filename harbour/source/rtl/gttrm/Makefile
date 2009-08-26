@@ -33,7 +33,7 @@ endif
 
 ifeq ($(HB_WITH_GTTRM),yes)
 
-ifeq ($(HB_GPM_MOUSE),yes)
+ifneq ($(HB_HAS_GPM),)
    HB_CFLAGS += -DHB_HAS_GPM
    ifeq ($(HB_GPM_NOICE_DISABLE),yes)
       HB_CFLAGS += -DHB_GPM_NOICE_DISABLE

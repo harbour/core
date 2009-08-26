@@ -268,11 +268,7 @@ ifeq ($(HB_INIT_DONE),)
       #   HB_GT_CRS_BCEHACK           -> HB_USER_CFLAGS=-DHB_GT_CRS_BCEHACK
       #   HB_NCURSES_194              -> HB_USER_CFLAGS=-DHB_NCURSES_194
       #   HB_DLLIBS                   -> (only used in place location, so it's a local matter)
-      #
       #   HB_CRS_LIB                  -> HB_LIB_CURSES
-      #   HB_GPM_MOUSE                -> HB_WITH_GPM
-      #   HB_WITHOUT_*                -> HB_WITH_*=no
-      #   HB_INC_*                    -> HB_WITH_*=<dir>
       #   HB_DIR_*                    -> ? (only used for implib
       #   HB_HAS_*                    -> ?
       #
@@ -1078,6 +1074,17 @@ HB_GT_LIBS := \
    gtcgi \
    gtpca \
    gtstd \
+
+# Add GTs if dependency is available
+ifneq ($(HB_HAS_CURSES),)
+   HB_GT_LIBS += gtcrs
+endif
+ifneq ($(HB_HAS_SLANG),)
+   HB_GT_LIBS += gtsln
+endif
+ifneq ($(HB_HAS_X11),)
+   HB_GT_LIBS += gtxwc
+endif
 
 # Names of valid RDD libraries
 HB_RDD_LIBS := \

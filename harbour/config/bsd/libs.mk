@@ -5,21 +5,21 @@
 SYSLIBS :=
 SYSLIBPATHS :=
 
-ifneq ($(filter hbrtl, $(LIBS)),)
+ifneq ($(HB_LINKING_RTL),)
    ifeq ($(HB_CRS_LIB),)
       HB_CRS_LIB := ncurses
    endif
-   ifneq ($(filter gtcrs, $(LIBS)),)
+   ifneq ($(HB_HAS_CURSES),)
       SYSLIBS += $(HB_CRS_LIB)
    endif
-   ifneq ($(filter gtsln, $(LIBS)),)
+   ifneq ($(HB_HAS_SLANG),)
       SYSLIBS += slang
       # In BSD, slang still needs curses :(
-      ifeq ($(filter gtcrs, $(LIBS)),)
+      ifneq ($(HB_HAS_CURSES),)
          SYSLIBS += $(HB_CRS_LIB)
       endif
    endif
-   ifneq ($(filter gtxwc, $(LIBS)),)
+   ifneq ($(HB_HAS_X11),)
       SYSLIBS += X11
     # SYSLIBPATHS += /usr/X11R6/lib64
       SYSLIBPATHS += /usr/X11R6/lib

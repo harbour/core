@@ -39,8 +39,7 @@ LIBPATHS := -L$(LIB_DIR)
 
 LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
 
-ifneq ($(filter hbrtl, $(LIBS)),)
-   # Add the specified GT driver library
+ifneq ($(HB_LINKING_RTL),)
    ifeq ($(HB_CRS_LIB),)
       HB_CRS_LIB := pdcurses
    endif

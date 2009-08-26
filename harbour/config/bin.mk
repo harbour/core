@@ -52,6 +52,12 @@ HB_LIBS_TPL :=
 _HB_RDD :=
 _HB_VM :=
 
+ifneq ($(filter hbrtl, $(LIBS)),)
+   HB_LINKING_RTL := yes
+else
+   HB_LINKING_RTL :=
+endif
+
 -include $(TOP)$(ROOT)config/$(HB_PLATFORM)/libs.mk
 include $(TOP)$(ROOT)config/$(HB_PLATFORM)/$(HB_COMPILER).mk
 include $(TOP)$(ROOT)config/c.mk

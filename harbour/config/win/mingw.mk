@@ -44,7 +44,7 @@ LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),-l$(lib))
 
 # Add the standard C main() entry
 ifeq ($(HB_MAIN),std)
-   ifeq ($(filter hbrtl,$(LIBS)),hbrtl)
+   ifneq ($(HB_LINKING_RTL),)
       LDLIBS += -lhbmainstd
    endif
 endif
