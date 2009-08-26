@@ -355,9 +355,11 @@ endif
 # Shell detection
 ifneq ($(SHLVL),)
    HB_SHELL := sh
+   SHELL := /bin/sh
 else
    ifeq ($(patsubst /bin/%sh,sh,$(SHELL)),sh)
       HB_SHELL := sh
+      SHELL := /bin/sh
    else
       ifneq ($(OS2_SHELL),)
          HB_SHELL := os2
