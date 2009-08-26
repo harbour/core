@@ -51,7 +51,7 @@ ARFLAGS :=
 AR_RULE = $(AR) -static $(ARFLAGS) $(HB_USER_AFLAGS) -o $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 
 DY := $(AR)
-DFLAGS := -dynamic -flat_namespace -undefined warning -multiply_defined suppress -single_module
+DFLAGS := -dynamic -flat_namespace -undefined warning -multiply_defined suppress -single_module $(foreach dir,$(SYSLIBPATHS),-L$(dir))
 DY_OUT := -o$(subst x,x, )
 DLIBS := $(foreach lib,$(SYSLIBS),-l$(lib))
 

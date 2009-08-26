@@ -45,7 +45,7 @@ ARFLAGS :=
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) r $(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
 
 DY := $(CC)
-DFLAGS := -shared -fPIC
+DFLAGS := -shared -fPIC $(foreach dir,$(SYSLIBPATHS),-L$(dir))
 DY_OUT := -o$(subst x,x, )
 DLIBS := $(foreach lib,$(SYSLIBS),-l$(lib))
 

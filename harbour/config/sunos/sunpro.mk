@@ -78,7 +78,7 @@ ARFLAGS :=
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) cr $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 
 DY := $(CC)
-DFLAGS := -G $(HB_ISAOPT)
+DFLAGS := -G $(HB_ISAOPT) $(foreach dir,$(SYSLIBPATHS),-L$(dir))
 ifneq ($(HB_BUILD_OPTIM),no)
    DFLAGS += -fast -xnolibmopt
 endif
