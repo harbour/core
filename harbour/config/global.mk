@@ -27,16 +27,14 @@
 # NOTE: $(realpath/abspath) need GNU Make 3.81 or upper
 # NOTE: $(eval) needs GNU Make 3.80 or upper
 
-ifeq ($(GLOBAL_CF_),)
-GLOBAL_CF_ := yes
+ifeq ($(GLOBAL_MK_),)
+GLOBAL_MK_ := yes
 
 HB_VER_MAJOR     := 2
 HB_VER_MINOR     := 0
 HB_VER_RELEASE   := 0
 HB_VER_STATUS    := beta2
 HB_VER_STATUS_SH := b2
-
--include $(TOP)$(ROOT)config/conf.mk
 
 # Arbitrary pattern which we don't expect to occur in real-world path names
 substpat := !@!@
@@ -1073,43 +1071,7 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
    endif
 endif
 
-# Exclude Harbour-wide features prohibiting commercial usage
-ifeq ($(HB_COMMERCE),yes)
-   export HB_GPM_MOUSE := no
-   export HB_WITHOUT_GTSLN := yes
-endif
-
-# Detect OpenSSL lib
-ifeq ($(HB_HAS_OPENSSL),)
-   HB_HAS_OPENSSL := no
-   ifneq ($(HB_PLATFORM),dos)
-      ifneq ($(HB_COMPILER),watcom)
-         ifeq ($(HB_INC_OPENSSL),)
-            ifeq ($(HB_XBUILD),)
-               HB_INC_OPENSSL := /usr/include /usr/local/ssl/include
-            endif
-         endif
-         HB_INC_OPENSSL := $(strip $(foreach d,$(HB_INC_OPENSSL),$(if $(wildcard $(d)/openssl/ssl.h),$(d),)))
-         ifneq ($(HB_INC_OPENSSL),)
-            HB_HAS_OPENSSL := yes
-            export HB_INC_OPENSSL
-         endif
-      endif
-   endif
-   export HB_HAS_OPENSSL
-endif
-
-# Detect GPM mouse lib
-ifeq ($(HB_GPM_MOUSE),)
-   HB_GPM_MOUSE := no
-   ifeq ($(HB_INC_GPM),)
-      HB_INC_GPM := /usr/include /usr/local/include
-   endif
-   ifneq ($(strip $(foreach d,$(HB_INC_GPM),$(if $(wildcard $(d)/gpm.h),$(d),))),)
-      HB_GPM_MOUSE := yes
-   endif
-   export HB_GPM_MOUSE
-endif
+include $(TOP)$(ROOT)config/detect.mk
 
 # Names of portable GT drivers
 HB_GT_LIBS := \
@@ -1330,4 +1292,4 @@ include $(TOP)$(ROOT)config/globsh.mk
 
 endif
 
-endif # GLOBAL_CF_
+endif # GLOBAL_MK_

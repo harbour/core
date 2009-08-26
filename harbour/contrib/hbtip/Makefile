@@ -42,7 +42,7 @@ INSTALL_RULE_HEADERS := $(INSTALL_RULE)
 include $(TOP)$(ROOT)config/lib.mk
 
 DIRS :=
-ifeq ($(HB_HAS_OPENSSL),yes)
+ifneq ($(HB_HAS_OPENSSL),)
    DIRS += hbtipssl
 endif
 

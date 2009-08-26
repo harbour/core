@@ -8,7 +8,7 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := hbssl
 
-ifeq ($(HB_HAS_OPENSSL),yes)
+ifneq ($(HB_HAS_OPENSSL),)
 
 HB_CFLAGS += -I$(HB_INC_OPENSSL)
 ifeq ($(HB_PLATFORM),darwin)

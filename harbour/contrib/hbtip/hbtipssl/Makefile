@@ -11,7 +11,7 @@ vpath %.prg ../
 
 LIBNAME := hbtipssl
 
-ifeq ($(HB_HAS_OPENSSL),yes)
+ifneq ($(HB_HAS_OPENSSL),)
 
 HB_PRGFLAGS += -DHB_HAS_OPENSSL
 HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/hbssl
