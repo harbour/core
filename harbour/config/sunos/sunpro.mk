@@ -83,8 +83,8 @@ ifneq ($(HB_BUILD_OPTIM),no)
    DFLAGS += -fast -xnolibmopt
 endif
 DY_OUT := -o$(subst x,x, )
-DLIBS :=
+DLIBS := $(foreach lib,$(SYSLIBS),-l$(lib))
 
-DY_RULE = $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ $^
+DY_RULE = $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ $^ $(DLIBS)
 
 include $(TOP)$(ROOT)config/rules.mk
