@@ -19,7 +19,7 @@ else
 
    ifneq ($(HB_BUILD_DLL),no)
 
-      ifneq ($(HB_PLATFORM_UNIX),)
+      ifeq ($(HB_PLATFORM),darwin)
          DYNNAME_POST := .$(HB_DYN_VER)
       else
          DYNNAME_POST := -$(HB_DYN_VER)
@@ -97,6 +97,7 @@ else
          DYNDIRLIST_BASE += source/rtl/gttrm
          DYNDIRLIST_BASE += source/rtl/gtcrs
          DYNDIRLIST_BASE += source/rtl/gtsln
+         DYNDIRLIST_BASE += source/rtl/gtxwc
       endif
       ifeq ($(HB_COMPILER),watcom)
          DYNDIRLIST_BASE += source/vm/maindllh

@@ -272,10 +272,10 @@ ifeq ($(HB_INIT_DONE),)
       #   HB_DLLIBS                   -> (only used in place location, so it's a local matter)
       #
       #   HB_CRS_LIB                  -> HB_LIB_CURSES
-      #   HB_GPM_MOUSE                -> HB_HAS_GPM ?
-      #   HB_WITHOUT_*                -> HB_HAS_* ?
-      #   HB_INC_*                    -> ?
-      #   HB_DIR_*                    -> ?
+      #   HB_GPM_MOUSE                -> HB_WITH_GPM
+      #   HB_WITHOUT_*                -> HB_WITH_*=no
+      #   HB_INC_*                    -> HB_WITH_*=<dir>
+      #   HB_DIR_*                    -> ? (only used for implib
       #   HB_HAS_*                    -> ?
       #
       # Macros:
@@ -1259,9 +1259,15 @@ ifneq ($(HB_INSTALL_PREFIX),)
    endif
    # Standard name: INCLUDEDIR
    ifeq ($(HB_INC_INSTALL),)
-      ifneq ($(HB_INSTALL_PREFIX),$(HB_INSTALL_PREFIX_TOP))
-         export HB_INC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)include$(INCPOSTFIX)
+      HB_INC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)include$(INCPOSTFIX)
+      # Don't set include install dir if it's inside the source tree
+      # to avoid 'source same as dest' warnings on 'install' copy operation.
+      ifneq ($(HB_SHELL),sh)
+         ifeq ($(HB_INSTALL_PREFIX),$(HB_INSTALL_PREFIX_TOP))
+            HB_INC_INSTALL :=
+         endif
       endif
+      export HB_INC_INSTALL
    endif
    # Standard name: DOCDIR
    ifeq ($(HB_DOC_INSTALL),)

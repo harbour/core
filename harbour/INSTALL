@@ -451,6 +451,14 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
                                developer modifying grammar rules (.y).
                                Requires GNU Bison 1.28 or upper in PATH.
                                Default: no
+   - HB_CCPATH=[<dir>/]        Used with non-*nix gcc family compilers to
+                               specify path to compiler/linker/archive tool
+                               to help them run from *nix hosts as cross-build
+                               tools. Ending slash must be used.
+   - HB_CCPREFIX=[<prefix>]    Used with gcc family to specify
+                               compiler/linker/archive tool name prefix.
+   - HB_CCPOSTFIX=[<postfix>]  Used with gcc family to specify compiler/linker
+                               tool postfix (usually version number).
 
    Cross-building
    --------------

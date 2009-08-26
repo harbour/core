@@ -62,44 +62,10 @@ endif
 LD := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)
 LD_OUT := -o$(subst x,x, )
 
-LIBPATHS := -L$(LIB_DIR)
-LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
+LIBPATHS := $(LIB_DIR)
 
-ifneq ($(filter hbrtl, $(LIBS)),)
-   # Add the specified GT driver library
-   ifneq ($(filter gtcrs, $(LIBS)),)
-      ifeq ($(HB_CRS_LIB),)
-         HB_CRS_LIB := ncurses
-      endif
-      LDLIBS += -l$(HB_CRS_LIB)
-   endif
-   ifneq ($(filter gtsln, $(LIBS)),)
-      LDLIBS += -lslang
-   endif
-   ifneq ($(filter gtxwc, $(LIBS)),)
-      LDLIBS += -lX11
-      LIBPATHS += -L/usr/X11R6/lib
-   endif
-
-   # HB_GPM_MOUSE: use gpm mouse driver
-   ifeq ($(HB_GPM_MOUSE),yes)
-      LDLIBS += -lgpm
-   endif
-
-   ifneq ($(filter -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
-      LDLIBS += -lpcre
-   endif
-
-   ifneq ($(filter -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
-      LDLIBS += -lz
-   endif
-
-   LDLIBS += -lrt -ldl
-endif
-
-LDLIBS += -lm
-
-LDFLAGS += $(LIBPATHS)
+LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),-l$(lib))
+LDFLAGS += $(foreach dir,$(LIBPATHS) $(SYSLIBPATHS),-L$(dir))
 
 AR := $(HB_CCPREFIX)ar
 ARFLAGS :=
@@ -111,8 +77,8 @@ ifneq ($(HB_BUILD_OPTIM),no)
    DFLAGS += -fast -xnolibmopt
 endif
 DY_OUT := -o$(subst x,x, )
-DLIBS :=
+DLIBS := $(foreach lib,$(SYSLIBS),-l$(lib))
 
-DY_RULE = $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ $^
+DY_RULE = $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ $^ $(DLIBS)
 
 include $(TOP)$(ROOT)config/rules.mk

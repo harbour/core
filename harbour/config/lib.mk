@@ -35,6 +35,7 @@ HB_DYN_LIBS := \
    gttrm \
    gtcrs \
    gtsln \
+   gtxwc \
    hbvm \
    hbvmmt \
    hbmaindllh
