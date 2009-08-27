@@ -12,7 +12,7 @@ OBJ_EXT := .o
 LIB_PREF := lib
 LIB_EXT := .a
 
-CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)
+CC := $(HB_CCACHE) $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 CC_IN := -c
 # NOTE: The ending space after -o is important, please preserve it.
 #       Now solved with '$(subst x,x, )' expression.
@@ -59,7 +59,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
-LD := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)
+LD := $(HB_CCACHE) $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 LD_OUT := -o$(subst x,x, )
 
 LIBPATHS := $(LIB_DIR)
@@ -67,7 +67,7 @@ LIBPATHS := $(LIB_DIR)
 LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),-l$(lib))
 LDFLAGS += $(foreach dir,$(LIBPATHS) $(SYSLIBPATHS),-L$(dir))
 
-AR := $(HB_CCPREFIX)ar
+AR := ar
 ARFLAGS :=
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) crs $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 
