@@ -20,7 +20,8 @@
 #       HB_HAS_* variable with following possible contents:
 #          (empty)   - We can't use this component
 #          <dirlist> - Component headers were found at these locations
-#    config/conf.mk if found, will
+#
+#    config/conf.mk if present, is able to override HB_HAS_* values.
 
 ifeq ($(DETECT_MK_),)
 export DETECT_MK_ := yes
@@ -60,10 +61,7 @@ endif
 _DET_DSP_NAME := OpenSSL
 _DET_VAR_INC_ := HB_INC_OPENSSL
 _DET_VAR_HAS_ := HB_HAS_OPENSSL
-_DET_SUP_PLAT :=
-_DET_SUP_COMP :=
-_DET_UNS_PLAT := dos
-_DET_UNS_COMP := watcom
+_DET_SUP_FILT := !dos !watcom
 _DET_INC_DEFP := /usr/include /usr/local/ssl/include
 _DET_INC_HEAD := /openssl/ssl.h
 
@@ -74,10 +72,7 @@ include $(TOP)$(ROOT)config/detfun.mk
 _DET_DSP_NAME := GPM
 _DET_VAR_INC_ := HB_INC_GPM
 _DET_VAR_HAS_ := HB_HAS_GPM
-_DET_SUP_PLAT := linux
-_DET_SUP_COMP :=
-_DET_UNS_PLAT :=
-_DET_UNS_COMP :=
+_DET_SUP_FILT := linux
 _DET_INC_DEFP := /usr/include /usr/local/include
 _DET_INC_HEAD := /gpm.h
 
@@ -88,10 +83,7 @@ include $(TOP)$(ROOT)config/detfun.mk
 _DET_DSP_NAME := slang
 _DET_VAR_INC_ := HB_INC_SLANG
 _DET_VAR_HAS_ := HB_HAS_SLANG
-_DET_SUP_PLAT :=
-_DET_SUP_COMP :=
-_DET_UNS_PLAT :=
-_DET_UNS_COMP :=
+_DET_SUP_FILT :=
 _DET_INC_DEFP :=
 _DET_INC_HEAD := /slang.h
 
@@ -111,10 +103,7 @@ include $(TOP)$(ROOT)config/detfun.mk
 _DET_DSP_NAME := curses
 _DET_VAR_INC_ := HB_INC_CURSES
 _DET_VAR_HAS_ := HB_HAS_CURSES
-_DET_SUP_PLAT :=
-_DET_SUP_COMP :=
-_DET_UNS_PLAT := os2
-_DET_UNS_COMP :=
+_DET_SUP_FILT := !os2
 _DET_INC_DEFP :=
 _DET_INC_HEAD := /curses.h
 
@@ -134,10 +123,7 @@ include $(TOP)$(ROOT)config/detfun.mk
 _DET_DSP_NAME := X11
 _DET_VAR_INC_ := HB_INC_X11
 _DET_VAR_HAS_ := HB_HAS_X11
-_DET_SUP_PLAT :=
-_DET_SUP_COMP :=
-_DET_UNS_PLAT :=
-_DET_UNS_COMP :=
+_DET_SUP_FILT :=
 _DET_INC_DEFP := /usr/include
 _DET_INC_HEAD := /X11/Xlib.h
 

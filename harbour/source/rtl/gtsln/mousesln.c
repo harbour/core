@@ -354,9 +354,9 @@ void hb_gt_sln_mouse_Init( void )
 #ifdef HB_GPM_NOICE_DISABLE
       int iNull, iErr;
 
-      iErr = dup( 2 );
+      iErr = dup( STDERR_FILENO );
       iNull = open( "/dev/null", O_RDWR );
-      dup2( iNull, 2 );
+      dup2( iNull, STDERR_FILENO );
       close( iNull );
 #endif
       Conn.eventMask = GPM_MOVE | GPM_UP | GPM_DOWN | GPM_DRAG | GPM_DOUBLE;
@@ -390,7 +390,7 @@ void hb_gt_sln_mouse_Init( void )
          hb_gt_sln_mouse_FixTrash();
       }
 #ifdef HB_GPM_NOICE_DISABLE
-      dup2( iErr, 2 );
+      dup2( iErr, STDERR_FILENO );
       close( iErr );
 #endif
    }
