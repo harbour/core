@@ -95,7 +95,7 @@ ifneq ($(HB_INC_LIBHARU),no)
    _DET_FLT_COMP :=
    _DET_INC_DEFP := /usr/include
    ifneq ($(filter $(HB_PLATFORM),win wce os2 dos darwin),)
-      HB_INC_LIBPNG += $(TOP)$(ROOT)external/libpng
+      _DET_INC_DEFP += $(TOP)$(ROOT)external/libpng
    endif
    _DET_INC_HEAD := /png.h
    include $(TOP)$(ROOT)config/detfun.mk

@@ -215,16 +215,13 @@ ifeq ($(HB_INIT_DONE),)
 
       # 'clean' and 'install' are required when building a release package
       ifeq ($(filter clean,$(HB_MAKECMDGOALS)),)
-         override HB_BUILD_PKG := no
-         export HB_BUILD_PKG
+         export HB_BUILD_PKG := no
       else
          ifeq ($(filter install,$(HB_MAKECMDGOALS)),)
-            override HB_BUILD_PKG := no
-            export HB_BUILD_PKG
+            export HB_BUILD_PKG := no
          else
             ifneq ($(ROOT),./)
-               override HB_BUILD_PKG := no
-               export HB_BUILD_PKG
+               export HB_BUILD_PKG := no
             endif
          endif
       endif
@@ -234,14 +231,10 @@ ifeq ($(HB_INIT_DONE),)
       endif
 
       # Enforce some basic setting for release packages
-      override HB_BUILD_DLL := yes
-      override HB_BUILD_IMPLIB := no
-      override HB_BUILD_OPTIM := yes
-      override HB_BUILD_DEBUG := no
-      export HB_BUILD_DLL
-      export HB_BUILD_IMPLIB
-      export HB_BUILD_OPTIM
-      export HB_BUILD_DEBUG
+      export HB_BUILD_DLL := yes
+      export HB_BUILD_IMPLIB := no
+      export HB_BUILD_OPTIM := yes
+      export HB_BUILD_DEBUG := no
    endif
 endif
 
@@ -1156,13 +1149,13 @@ HB_INSTALL_PREFIX_TOP := $(subst /,$(DIRSEP),$(realpath $(TOP)$(ROOT)))
 ifeq ($(HB_BUILD_PKG),yes)
    ifeq ($(HB_INIT_DONE),)
       export HB_TOP := $(subst /,$(DIRSEP),$(realpath $(TOP)$(ROOT)))
-      override HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(abspath $(PKG_DIR)/$(HB_PKGNAME)))
+      HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(abspath $(PKG_DIR)/$(HB_PKGNAME)))
 
-      override HB_BIN_INSTALL :=
-      override HB_INC_INSTALL :=
-      override HB_LIB_INSTALL :=
-      override HB_DYN_INSTALL :=
-      override HB_DOC_INSTALL :=
+      HB_BIN_INSTALL :=
+      HB_INC_INSTALL :=
+      HB_LIB_INSTALL :=
+      HB_DYN_INSTALL :=
+      HB_DOC_INSTALL :=
    endif
 else
    # Fill it automatically if not specified
@@ -1193,11 +1186,11 @@ else
       #        recursive operation here.
 
       # Handle simple macros in value
-      override HB_INSTALL_PREFIX := $(subst {hb_plat},$(HB_PLATFORM),$(HB_INSTALL_PREFIX))
-      override HB_INSTALL_PREFIX := $(subst {hb_comp},$(HB_COMPILER),$(HB_INSTALL_PREFIX))
-      override HB_INSTALL_PREFIX := $(subst {hb_cpu},$(HB_CPU),$(HB_INSTALL_PREFIX))
-      override HB_INSTALL_PREFIX := $(subst {hb_top},$(realpath $(TOP)$(ROOT)),$(HB_INSTALL_PREFIX))
-      override HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(HB_INSTALL_PREFIX))
+      HB_INSTALL_PREFIX := $(subst {hb_plat},$(HB_PLATFORM),$(HB_INSTALL_PREFIX))
+      HB_INSTALL_PREFIX := $(subst {hb_comp},$(HB_COMPILER),$(HB_INSTALL_PREFIX))
+      HB_INSTALL_PREFIX := $(subst {hb_cpu},$(HB_CPU),$(HB_INSTALL_PREFIX))
+      HB_INSTALL_PREFIX := $(subst {hb_top},$(realpath $(TOP)$(ROOT)),$(HB_INSTALL_PREFIX))
+      HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(HB_INSTALL_PREFIX))
    endif
 endif
 
