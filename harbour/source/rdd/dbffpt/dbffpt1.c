@@ -5035,8 +5035,8 @@ static HB_ERRCODE hb_fptRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect
                   ( szExt = hb_setGetMFileExt() ) != NULL && *szExt )
             hb_itemPutC( pItem, szExt );
          else
-            hb_itemPutC( pItem, hb_memoDefaultFileExt( pData->bMemoType, pRDD->rddID ) );
-
+            hb_itemPutC( pItem, hb_memoDefaultFileExt( pData->bMemoType ?
+                                pData->bMemoType : DB_MEMO_FPT, pRDD->rddID ) );
          if( szNewVal )
          {
             hb_strncpy( pData->szMemoExt, szNewVal, sizeof( pData->szMemoExt ) - 1 );

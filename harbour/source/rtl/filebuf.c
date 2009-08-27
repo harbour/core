@@ -542,25 +542,25 @@ static HB_FHANDLE s_fileHandle( PHB_FILE pFile )
    return pFile ? pFile->hFile : FS_ERROR;
 }
 
-/* methods table */
-const HB_FILE_FUNCS s_fileFuncs =
-{
-   s_fileAccept,
-   hb_spFileExists,
-   hb_fsDelete,
-   s_fileExtOpen,
-   s_fileClose,
-   s_fileLock,
-   s_fileReadAt,
-   s_fileWriteAt,
-   s_fileTruncAt,
-   s_fileSize,
-   s_fileCommit,
-   s_fileHandle
-};
-
 static const HB_FILE_FUNCS * s_fileMethods( void )
 {
+   /* methods table */
+   static const HB_FILE_FUNCS s_fileFuncs =
+   {
+      s_fileAccept,
+      hb_spFileExists,
+      hb_fsDelete,
+      s_fileExtOpen,
+      s_fileClose,
+      s_fileLock,
+      s_fileReadAt,
+      s_fileWriteAt,
+      s_fileTruncAt,
+      s_fileSize,
+      s_fileCommit,
+      s_fileHandle
+   };
+
    return &s_fileFuncs;
 }
 
