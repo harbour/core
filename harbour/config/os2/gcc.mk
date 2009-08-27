@@ -65,7 +65,7 @@ LDFLAGS += $(LIBPATHS)
 ifeq ($(C_MAIN),)
    ifeq ($(HB_GT_LIB),os2pm)
       # Override the default link rule in order to add a call to emxbind
-      LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$(BIN_DIR)/$@ $(^F) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LDLIBS) & emxbind -ep $@
+      LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$(BIN_DIR)/$@ $(^F) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) $(LDLIBS) & emxbind -ep $@
    endif
 endif
 

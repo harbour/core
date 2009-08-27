@@ -26,7 +26,7 @@ ARFLAGS := -q -p=64 -c -n
 comma := ,
 LDFILES_COMMA = $(subst $(subst x,x, ),$(comma) ,$(^F))
 LDLIBS_COMMA := $(subst $(subst x,x, ),$(comma) ,$(strip $(LDLIBS)))
-LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@ FILE $(LDFILES_COMMA) $(if $(LDLIBS_COMMA), LIB $(LDLIBS_COMMA),)
+LD_RULE = $(LD) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@ FILE $(LDFILES_COMMA) $(if $(LDLIBS_COMMA), LIB $(LDLIBS_COMMA),)
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ $(foreach file,$(^F),-+$(file))
 
 ifeq ($(HB_SHELL),os2)
@@ -64,7 +64,7 @@ ifeq ($(HB_SHELL),dos)
    endef
 
    define link_exe_file
-      @$(ECHO) $(ECHOQUOTE)$(LDFLAGS) NAME $(BIN_DIR)/$@$(ECHOQUOTE) > __link__.tmp
+      @$(ECHO) $(ECHOQUOTE)$(LDFLAGS) $(HB_LDFLAGS) NAME $(BIN_DIR)/$@$(ECHOQUOTE) > __link__.tmp
       $(foreach file,$(^F),$(link_file))
       $(foreach lib,$(LDLIBS),$(link_lib))
       -$(LD) @__link__.tmp

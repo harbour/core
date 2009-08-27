@@ -18,6 +18,8 @@ CC_IN := -c
 #       Now solved with '$(subst x,x, )' expression.
 CC_OUT := -o$(subst x,x, )
 
+CXX := $(HB_CCACHE) $(HB_CCPATH)$(HB_CCPREFIX)sunCC$(HB_CCPOSTFIX)
+
 CPPFLAGS := -I. -I$(HB_INC_COMPILE)
 CFLAGS :=
 LDFLAGS :=

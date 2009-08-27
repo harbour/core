@@ -21,7 +21,6 @@ ifneq ($(HB_LINKING_RTL),)
    endif
    ifneq ($(HB_HAS_X11),)
       SYSLIBS += X11
-    # SYSLIBPATHS += /usr/X11R6/lib64
       SYSLIBPATHS += /usr/X11R6/lib
    endif
 

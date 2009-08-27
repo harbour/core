@@ -74,7 +74,7 @@ define link_file
 endef
 
 define link_exe_file
-   @$(ECHO) $(ECHOQUOTE)$(LDFLAGS) $(HB_USER_LDFLAGS) $(LD_OUT)$(BIN_DIR)/$@$(ECHOQUOTE) > __link__.tmp
+   @$(ECHO) $(ECHOQUOTE)$(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) $(LD_OUT)$(BIN_DIR)/$@$(ECHOQUOTE) > __link__.tmp
    $(foreach file,$(^F),$(link_file))
    $(foreach file,$(LIBPATHS),$(link_file))
    $(foreach file,$(LDLIBS),$(link_file))
