@@ -46,18 +46,6 @@ ifeq ($(HB_COMMERCE),yes)
    export HB_INC_SLANG := no
 endif
 
-# Compatibility inputs (deprecated)
-
-ifeq ($(HB_WITHOUT_GTCRS),yes)
-   export HB_INC_CURSES := no
-endif
-ifeq ($(HB_WITHOUT_SLANG),yes)
-   export HB_INC_SLANG := no
-endif
-ifeq ($(HB_WITHOUT_GTXWC),yes)
-   export HB_INC_X11 := no
-endif
-
 # Detect OpenSSL
 
 _DET_DSP_NAME := OpenSSL
@@ -139,13 +127,5 @@ include $(TOP)$(ROOT)config/detfun.mk
 # Finished
 
 _DET_OPT_VERB :=
-
-# Compatibility outputs (deprecated)
-
-ifeq ($(HB_HAS_GPM),)
-   HB_GPM_MOUSE := no
-else
-   HB_GPM_MOUSE := yes
-endif
 
 endif # DETECT_MK_
