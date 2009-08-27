@@ -6,79 +6,63 @@ ROOT := ../../
 
 include $(TOP)$(ROOT)config/global.mk
 
-LIBNAME := hbqt
-
-ifneq ($(filter $(HB_PLATFORM),dos os2),)
-   PREREQ_MISS := platform
-else ifneq ($(filter $(HB_COMPILER),mingw64 watcom bcc pocc pocc64 poccarm),)
-   PREREQ_MISS := compiler
+ifeq ($(HB_QT_STATIC),)
+   LIBNAME := hbqt
 else
-   PREREQ_MISS :=
+   LIBNAME := hbqts
 endif
 
-ifeq ($(PREREQ_MISS),)
+PRG_HEADERS := \
+   hbqt.ch \
 
-   ifneq ($(HB_INC_QT),no)
+_DET_DSP_NAME := qt
+_DET_VAR_INC_ := HB_INC_QT
+_DET_VAR_HAS_ := HB_HAS_QT
+_DET_FLT_PLAT := !dos !os2
+_DET_FLT_COMP := !mingw64 !watcom !bcc !pocc !pocc64 !poccarm
+_DET_INC_DEFP := /usr/include/qt4 /usr/lib/qt4/include /usr/include /Developer/qt/include
+_DET_INC_HEAD := /Qt/qglobal.h
+include $(TOP)$(ROOT)config/detfun.mk
 
-      ifeq ($(HB_INC_QT),)
-         ifeq ($(HB_XBUILD),)
-            ifneq ($(HB_PLATFORM_UNIX),)
-               HB_INC_QT := /usr/include/qt4 /usr/lib/qt4/include /usr/include /Developer/qt/include
-            endif
-         endif
-      endif
+ifeq ($(HB_PLATFORM),darwin)
+   ifneq ($(HB_HAS_QT),)
+      _DET_DSP_NAME := qt
+      _DET_VAR_INC_ := HB_INC_QT
+      _DET_VAR_HAS_ := HB_HAS_QT
+      _DET_FLT_PLAT := !dos !os2
+      _DET_FLT_COMP := !mingw64 !watcom !bcc !pocc !pocc64 !poccarm
+      _DET_INC_DEFP := /Library/Frameworks/QtCore.framework/Versions/4/Headers
+      _DET_INC_HEAD := /QtCore
+      include $(TOP)$(ROOT)config/detfun.mk
+      _QT_DARWIN := yes
+   endif
+endif
 
-      ifneq ($(HB_INC_QT),)
+ifneq ($(HB_HAS_QT),)
 
-         HB_INC_QT_OK := $(strip $(foreach d, $(HB_INC_QT), $(if $(wildcard $(d)/Qt/qglobal.h),$(d),)))
-         ifeq ($(HB_PLATFORM),darwin)
-            ifeq ($(HB_INC_QT_OK),)
-               HB_INC_QT_OK := $(if $(wildcard /Library/Frameworks/QtCore.framework/Versions/4/Headers/QtCore),spec,)
-               ifeq ($(HB_INC_QT_OK),spec)
-                  HB_CFLAGS += -I/Library/Frameworks/QtCore.framework/Headers
-                  HB_CFLAGS += -I/Library/Frameworks/QtGui.framework/Headers
-                  HB_CFLAGS += -I/Library/Frameworks/QtNetwork.framework/Headers
-                  HB_CFLAGS += -I/Library/Frameworks/QtWebKit.framework/Headers
-               endif
-            endif
-         endif
+   ifeq ($(_QT_DARWIN),yes)
+      HB_CFLAGS += -I/Library/Frameworks/QtCore.framework/Headers
+      HB_CFLAGS += -I/Library/Frameworks/QtGui.framework/Headers
+      HB_CFLAGS += -I/Library/Frameworks/QtNetwork.framework/Headers
+      HB_CFLAGS += -I/Library/Frameworks/QtWebKit.framework/Headers
+   else
+      HB_CFLAGS += $(foreach d,$(HB_HAS_QT),-I$(d) -I$(d)/Qt -I$(d)/QtCore -I$(d)/QtGui -I$(d)/QtNetwork -I$(d)/QtWebKit)
+   endif
 
-         ifneq ($(HB_INC_QT_OK),)
+   ifneq ($(HB_QT_STATIC),)
+      HB_CFLAGS += -DQT_NODLL
+   endif
 
-            ifneq ($(HB_QT_STATIC),)
-               LIBNAME := hbqts
-               HB_CFLAGS += -DQT_NODLL
-            endif
+   include $(TOP)$(ROOT)contrib/hbqt/filelist.mk
 
-            ifneq ($(HB_INC_QT_OK),spec)
-               HB_CFLAGS += $(foreach d,$(HB_INC_QT_OK),-I$(d) -I$(d)/Qt -I$(d)/QtCore -I$(d)/QtGui -I$(d)/QtNetwork -I$(d)/QtWebKit)
-            endif
+   include $(TOP)$(ROOT)config/header.mk
+   INSTALL_RULE_HEADERS := $(INSTALL_RULE)
+   include $(TOP)$(ROOT)config/lib.mk
 
-            include $(TOP)$(ROOT)contrib/hbqt/filelist.mk
-
-            PRG_HEADERS := \
-               hbqt.ch \
-
-            include $(TOP)$(ROOT)config/header.mk
-            INSTALL_RULE_HEADERS := $(INSTALL_RULE)
-            include $(TOP)$(ROOT)config/lib.mk
-
-            install::
+   install::
 	$(INSTALL_RULE_HEADERS)
 
-         else
-            HB_SKIP_REASON := component not found
-            include $(TOP)$(ROOT)config/none.mk
-         endif
-      else
-         HB_SKIP_REASON := component location not set
-         include $(TOP)$(ROOT)config/none.mk
-      endif
-   else
-      HB_SKIP_REASON := deselected
-      include $(TOP)$(ROOT)config/none.mk
-   endif
 else
-   HB_SKIP_REASON := $(PREREQ_MISS) not supported
+   HB_SKIP_REASON := $(_DET_RES_TEXT)
    include $(TOP)$(ROOT)config/none.mk
 endif
