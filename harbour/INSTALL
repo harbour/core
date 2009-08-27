@@ -187,14 +187,14 @@ HOW TO DO A PARTIAL [RE]BUILD
 HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
 ==============================================
 
-   Some Harbour parts (typically contrib libraries) depend on 3rd
+   Certain Harbour parts (typically contrib libraries) depend on 3rd
    party components. To make these Harbour parts built, you need
    to tell Harbour where to find the required 3rd party components
    (typically headers).
 
    On *nix systems most of these 3rd party components will
-   automatically be picked up if installed on some well-known
-   standard system locations.
+   automatically be picked up if installed on well-known standard
+   system locations.
 
    You only need to use manual setup if the dependency isn't available
    on your platform on a system location, or you wish to use
@@ -210,28 +210,37 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    HB_INC_ALLEGRO=C:\allegro\include
    HB_INC_BLAT=C:\blat\full\source
    HB_INC_CURL=C:\curl\include
+   HB_INC_CURSES= (on *nix systems and DJGPP, where it's autodetected)
    HB_INC_FIREBIRD=C:\Firebird\include
    HB_INC_FREEIMAGE=C:\FreeImage\Dist
    HB_INC_GD=C:\gd\include
+   HB_INC_GPM= (on Linux only)
    HB_INC_LIBHARU=C:\libharu\include (defaults to locally hosted version)
    HB_INC_LIBPNG=C:\libpng (defaults to locally hosted version on win/dos/os2)
    HB_INC_MYSQL=C:\mysql\include
    HB_INC_ODBC= (may only be needed on non-Windows systems)
    HB_INC_OPENSSL=C:\openssl\inc32
+   HB_INC_PNG= (defaults to locally hosted version on non-*nix and Darwin systems)
    HB_INC_PGSQL=C:\pgsql\include
    HB_INC_QT=C:\Qt\include
+   HB_INC_SLANG= (on *nix systems)
    HB_INC_SQLITE3=C:\sqlite3 (defaults to locally hosted version on win/dos/os2)
+   HB_INC_X11= (on *nix systems)
 
-   NOTES: - You need to use native path format to your shell.
+   To explicitly disable any given components, use the value 'no' (without
+   quotes). This may be useful to avoid autodetection of installed packages
+   on *nix systems.
+
+   NOTES: - You need to use native path format to your shell/OS.
           - Spaces in directory names aren't currently supported.
-            (You can use short name alias on Windows platform, though)
+            (You can use 8.3 name alias on Windows platform, though)
           - Don't put directory names inside double quotes.
           - Use absolute paths.
 
    Windows/Windows CE
    ------------------
-      Some contribs support build mode in which they can be linked *statically*
-      with 3rd party components:
+      Certain contribs support build mode in which they can be linked
+      *statically* with 3rd party components:
 
       HB_ALLEGRO_STATIC=yes
       HB_QT_STATIC=yes
@@ -384,7 +393,9 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
 =======================================
 
    You can fine-tune Harbour builds with below listed
-   environment variables. All of these are optional.
+   environment variables. You can add most of these via the
+   GNU Make command line also, using 'make VARNAME=value' syntax.
+   All of these settings are optional.
 
    General
    -------
@@ -466,9 +477,9 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
                                developer modifying grammar rules (.y).
                                Requires GNU Bison 1.28 or upper in PATH.
                                Default: no
-   - HB_CCPATH=[<dir>/]        Used with non-*nix gcc family compilers to
-                               specify path to compiler/linker/archive tool
-                               to help them run from *nix hosts as cross-build
+   - HB_CCPATH=[<dir>/]        Used with non-*nix gcc family compilers (and
+                               sunpro) to specify path to compiler/linker/archive
+                               tool to help them run from *nix hosts as cross-build
                                tools. Ending slash must be used.
    - HB_CCPREFIX=[<prefix>]    Used with gcc family to specify
                                compiler/linker/archive tool name prefix.
