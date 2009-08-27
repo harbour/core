@@ -37,7 +37,7 @@ CC_FLAGS := $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CFLAGS)
 
 # The rule to compile a C source file.
 ifeq ($(CC_RULE),)
-   CC_RULE = $(CC) $(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<
+   CC_RULE = $(CC) $(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_IN) $< $(CC_OUT)$(<F:.c=$(OBJ_EXT))
    ifneq ($(HB_BUILD_DLL),no)
       ifneq ($(HB_DYN_COPT),)
          ifneq ($(LIBNAME),)
@@ -55,7 +55,10 @@ endif
 
 # The rule to compile a C++ source file.
 ifeq ($(CPP_RULE),)
-   CPP_RULE = $(CC) $(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.cpp=$(OBJ_EXT)) $(CC_IN) $<
+   ifeq ($(CXX),)
+      CXX := $(CC)
+   endif
+   CPP_RULE = $(CXX) $(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.cpp=$(OBJ_EXT)) $(CC_IN) $<
 endif
 
 # The rule to link an executable.
