@@ -191,13 +191,13 @@ mk_hbtools()
     if [ "${HB_COMPILER}" = "mingw" ] || \
        [ "${HB_COMPILER}" = "mingw64" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS} -luser32 -lwinspool -lgdi32 -lcomctl32 -ladvapi32 -lcomdlg32 -lole32 -loleaut32 -luuid -lws2_32"
-        HB_WITHOUT_X11="yes"
+        HB_INC_X11="no"
     elif [ "${HB_COMPILER}" = "mingwarm" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS} -lwininet -lws2 -lcommdlg -lcommctrl -luuid -lole32 -loleaut32"
-        HB_WITHOUT_X11="yes"
+        HB_INC_X11="no"
     elif [ "${HB_COMPILER}" = "djgpp" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS}"
-        HB_WITHOUT_X11="yes"
+        HB_INC_X11="no"
     else
         HB_CRS_LIB=""
         if [ "${HB_PLATFORM}" = "linux" ]; then
@@ -364,29 +364,29 @@ if [ -z "$HB_INC_GPM" ]; then
     export HB_INC_GPM
 fi
 
-if [ -z "${HB_WITHOUT_GTSLN}" ]; then
-    HB_WITHOUT_GTSLN=yes
+if [ -z "${HB_INC_SLANG}" ]; then
+    HB_INC_SLANG=no
     case "$HB_PLATFORM" in
         linux|bsd|darwin|hpux|sunos)
             for dir in /usr /usr/local /sw /opt/local
             do
                 if [ -f ${dir}/include/slang.h ] || \
                    [ -f ${dir}/include/slang/slang.h ]; then
-                    HB_WITHOUT_GTSLN=no
+                    HB_INC_SLANG=yes
                 fi
             done
             ;;
     esac
 fi
 
-if [ -z "${HB_WITHOUT_GTCRS}" ]; then
-    HB_WITHOUT_GTCRS=yes
+if [ -z "${HB_INC_CURSES}" ]; then
+    HB_INC_CURSES=no
     case "$HB_PLATFORM" in
         linux|bsd|darwin|hpux|sunos)
             for dir in /usr /usr/local /sw /opt/local
             do
                 if [ -f ${dir}/include/curses.h ]; then
-                    HB_WITHOUT_GTCRS=no
+                    HB_INC_CURSES=yes
                 fi
             done
             ;;
@@ -399,7 +399,7 @@ fi
 
 if [ "$HB_COMMERCE" = yes ]; then
     HB_INC_GPM=no
-    HB_WITHOUT_GTSLN=yes
+    HB_INC_SLANG=no
 fi
 
 HB_GT_REQ=""
@@ -504,13 +504,13 @@ if [ -f "\${HB_LIB_INSTALL}/libgtsln.a" ]; then
         SYSTEM_LIBS="\${SYSTEM_LIBS} -L/usr/local/lib"
     fi
     SYSTEM_LIBS="-l${HB_SLN_LIB:-slang} \${SYSTEM_LIBS}"
-    [ "\${HB_GPM_MOUSE}" = "yes" ] && HB_GPM_LIB="gpm"
+    [ "\${HB_INC_GPM}" != "no" ] && HB_GPM_LIB="gpm"
 fi
 if [ -f "\${HB_LIB_INSTALL}/libgtcrs.a" ]; then
     SYSTEM_LIBS="-l${HB_CRS_LIB:-ncurses} \${SYSTEM_LIBS}"
-    [ "\${HB_GPM_MOUSE}" = "yes" ] && HB_GPM_LIB="gpm"
+    [ "\${HB_INC_GPM}" != "no" ] && HB_GPM_LIB="gpm"
 fi
-if [ "\${HB_WITHOUT_X11}" != "yes" ]; then
+if [ "\${HB_INC_X11}" != "no" ]; then
     if [ -f "\${HB_LIB_INSTALL}/libgtxvt.a" ] || [ -f "\${HB_LIB_INSTALL}/libgtxwc.a" ]; then
         [ -d "/usr/X11R6/lib64" ] && SYSTEM_LIBS="\${SYSTEM_LIBS} -L/usr/X11R6/lib64"
         SYSTEM_LIBS="-L/usr/X11R6/lib -lX11 \${SYSTEM_LIBS}"
@@ -786,7 +786,7 @@ mk_hblibso()
     (cd $HB_LIB_INSTALL
     LIBS=""
     LIBSMT=""
-    gpm="${HB_GPM_MOUSE}"
+    gpm="${HB_INC_GPM}"
     linker_options="-lm"
     linker_mtoptions=""
     if [ "${HB_USER_CFLAGS//-DHB_PCRE_REGEX/}" != "${HB_USER_CFLAGS}" ]; then
@@ -848,7 +848,7 @@ mk_hblibso()
                             linker_options="$linker_options -lncurses"
                         fi
                     elif [ "${l}" = gtsln ]; then
-                        if [ "${HB_WITHOUT_GTSLN}" != "yes" ]; then
+                        if [ "${HB_INC_SLANG}" != "no" ]; then
                             linker_options="$linker_options -lslang"
                         fi
                     elif [ "${l}" = gtxwc ]; then
@@ -858,7 +858,7 @@ mk_hblibso()
                            linker_options="$linker_options -L/usr/X11R6/lib64"
                         linker_options="$linker_options -lX11"
                     fi
-                    if [ "${gpm}" = yes ] && ( [ "${l}" = gtcrs ] || \
+                    if [ "${gpm}" != no ] && ( [ "${l}" = gtcrs ] || \
                        [ "${l}" = gtsln ] || [ "${l}" = gttrm ] ); then
                         linker_options="$linker_options -lgpm"
                         gpm=""

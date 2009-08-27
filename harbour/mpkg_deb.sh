@@ -32,28 +32,28 @@ done
 if [ "$HB_COMMERCE" = yes ]
 then
     export HB_INC_GPM=no
-    export HB_WITHOUT_GTSLN=yes
+    export HB_INC_SLANG=no
 else
     if [ -z "$HB_INC_GPM" ] && ( test_reqpkg libgpmg1-dev || test_reqpkg libgpm-dev )
     then
         export HB_INC_GPM=yes
     fi
-    if [ -z "$HB_WITHOUT_GTSLN" ] && \
+    if [ -z "$HB_INC_SLANG" ] && \
        ! test_reqpkg libslang2-dev && \
        ! test_reqpkg libslang1-dev
     then
-        export HB_WITHOUT_GTSLN=yes
+        export HB_INC_SLANG=no
     fi
 fi
 
-if [ -z "$HB_WITHOUT_GTCRS" ] && ! test_reqpkg libncurses5-dev
+if [ -z "$HB_INC_CURSES" ] && ! test_reqpkg libncurses5-dev
 then
-    export HB_WITHOUT_GTCRS=yes
+    export HB_INC_CURSES=no
 fi
 
-if [ -z "$HB_WITHOUT_X11" ] && ! test_reqpkg libx11-dev
+if [ -z "$HB_INC_X11" ] && ! test_reqpkg libx11-dev
 then
-    export HB_WITHOUT_X11=yes
+    export HB_INC_X11=no
 fi
 
 export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnf hbsqlit3 hbtip hbtpathy hbvpdf hbziparc xhb"

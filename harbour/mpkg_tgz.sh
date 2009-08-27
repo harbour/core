@@ -152,20 +152,20 @@ if [ -z "$HB_INC_GPM" ]; then
     export HB_INC_GPM
 fi
 
-if [ -z "${HB_WITHOUT_GTSLN}" ]; then
-    HB_WITHOUT_GTSLN=yes
+if [ -z "${HB_INC_SLANG}" ]; then
+    HB_INC_SLANG=yes
     case "$HB_PLATFORM" in
         linux|bsd|darwin|hpux|sunos)
             for dir in /usr /usr/local /sw /opt/local
             do
                 if [ -f ${dir}/include/slang.h ] || \
                    [ -f ${dir}/include/slang/slang.h ]; then
-                    HB_WITHOUT_GTSLN=no
+                    HB_INC_SLANG=no
                 fi
             done
             ;;
     esac
-    export HB_WITHOUT_GTSLN
+    export HB_INC_SLANG
 fi
 
 case "$HB_PLATFORM" in
@@ -176,20 +176,20 @@ case "$HB_PLATFORM" in
         if [ `uname -r | sed "s/\..*//g"` -lt 6 ]; then
             export HB_NCURSES_FINK=yes
         fi
-        [ -z "$HB_WITHOUT_X11" ] && export HB_WITHOUT_X11=yes
+        [ -z "$HB_INC_X11" ] && export HB_INC_X11=no
         ;;
     dos|win)
-        [ -z "$HB_WITHOUT_X11" ] && export HB_WITHOUT_X11=yes
+        [ -z "$HB_INC_X11" ] && export HB_INC_X11=no
         ;;
     *)
-        [ -z "$HB_WITHOUT_X11" ] && export HB_WITHOUT_X11=yes
+        [ -z "$HB_INC_X11" ] && export HB_INC_X11=no
         ;;
 esac
 
 if [ "$HB_COMMERCE" = yes ]
 then
    export HB_INC_GPM=no
-   export HB_WITHOUT_GTSLN=yes
+   export HB_INC_SLANG=no
 fi
 
 if [ "${hb_sysdir}" = "yes" ]; then
@@ -266,9 +266,9 @@ then
         sunos)      ADD_LIBS="$ADD_LIBS -lcurses" ;;
         *)          ADD_LIBS="$ADD_LIBS -lncurses" ;;
     esac
-    [ "${HB_INC_GPM}" = yes ] && ADD_LIBS="$ADD_LIBS -lgpm"
-    [ "${HB_WITHOUT_GTSLN}" != yes ] && ADD_LIBS="$ADD_LIBS -lslang"
-    [ "${HB_WITHOUT_X11}" != yes ] && ADD_LIBS="$ADD_LIBS -L/usr/X11R6/$HB_LIBDIRNAME -lX11"
+    [ "${HB_INC_GPM}" != no ] && ADD_LIBS="$ADD_LIBS -lgpm"
+    [ "${HB_INC_SLANG}" != no ] && ADD_LIBS="$ADD_LIBS -lslang"
+    [ "${HB_INC_X11}" != no ] && ADD_LIBS="$ADD_LIBS -L/usr/X11R6/$HB_LIBDIRNAME -lX11"
 
     export HB_USER_LDFLAGS="-L${HB_LIB_INSTALL} -l${name} ${ADD_LIBS} ${HB_USER_LDFLAGS}"
     export HB_USER_PRGFLAGS="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\" ${HB_USER_PRGFLAGS}"
