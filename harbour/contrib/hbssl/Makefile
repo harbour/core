@@ -8,13 +8,6 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := hbssl
 
-ifneq ($(HB_HAS_OPENSSL),)
-
-HB_CFLAGS += -I$(HB_INC_OPENSSL)
-ifeq ($(HB_PLATFORM),darwin)
-   HB_CFLAGS += -DOPENSSL_NO_SHA256 -DOPENSSL_NO_SHA512 -DOPENSSL_NO_CAMELLIA -DOPENSSL_NO_SEED -DOPENSSL_NO_DGRAM -DHB_OPENSSL_OLD_OSX_
-endif
-
 C_SOURCES := \
    hbssl.c \
    bio.c \
@@ -35,13 +28,20 @@ C_SOURCES := \
 PRG_HEADERS := \
    hbssl.ch \
 
-include $(TOP)$(ROOT)config/header.mk
-INSTALL_RULE_HEADERS := $(INSTALL_RULE)
-include $(TOP)$(ROOT)config/lib.mk
+ifneq ($(HB_HAS_OPENSSL),)
 
-install::
+   HB_CFLAGS += $(foreach d,$(HB_HAS_OPENSSL),-I$(d))
+   ifeq ($(HB_PLATFORM),darwin)
+      HB_CFLAGS += -DOPENSSL_NO_SHA256 -DOPENSSL_NO_SHA512 -DOPENSSL_NO_CAMELLIA -DOPENSSL_NO_SEED -DOPENSSL_NO_DGRAM -DHB_OPENSSL_OLD_OSX_
+   endif
+
+   include $(TOP)$(ROOT)config/header.mk
+   INSTALL_RULE_HEADERS := $(INSTALL_RULE)
+   include $(TOP)$(ROOT)config/lib.mk
+
+   install::
 	$(INSTALL_RULE_HEADERS)
 
 else
-include $(TOP)$(ROOT)config/none.mk
+   include $(TOP)$(ROOT)config/none.mk
 endif

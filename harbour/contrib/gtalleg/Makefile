@@ -10,7 +10,6 @@ ifeq ($(HB_ALLEGRO_STATIC),)
    LIBNAME := gtalleg
 else
    LIBNAME := gtallegs
-   HB_CFLAGS += -DALLEGRO_STATICLINK
 endif
 
 C_SOURCES := \
@@ -27,7 +26,12 @@ _DET_INC_HEAD := /allegro.h
 include $(TOP)$(ROOT)config/detfun.mk
 
 ifneq ($(HB_HAS_ALLEGRO),)
+
    HB_CFLAGS += $(foreach d,$(HB_HAS_ALLEGRO),-I$(d))
+
+   ifneq ($(HB_ALLEGRO_STATIC),)
+      HB_CFLAGS += -DALLEGRO_STATICLINK
+   endif
 
    include $(TOP)$(ROOT)config/lib.mk
 else
