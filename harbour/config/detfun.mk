@@ -28,6 +28,9 @@ ifeq ($($(_DET_VAR_HAS_)),)
             ifneq ($(if $(_DET_POS),$(filter $(HB_COMPILER),$(_DET_POS)),ok),)
                ifeq ($(filter $(HB_COMPILER),$(_DET_NEG)),)
                   $(_DET_VAR_HAS_) := $($(_DET_VAR_INC_))
+                  ifeq ($($(_DET_VAR_HAS_)),yes)
+                     $(_DET_VAR_HAS_) :=
+                  endif
                   ifeq ($($(_DET_VAR_HAS_)),)
                      ifeq ($(HB_XBUILD),)
                         $(_DET_VAR_HAS_) := $(_DET_INC_DEFP)
