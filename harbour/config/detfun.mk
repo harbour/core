@@ -10,21 +10,23 @@
 # used in Harbour core code. Generic function.
 # ---------------------------------------------------------------
 
-# Show verbose information
-_DET_SHOW_RES := yes
-
-ifeq ($(_DET_SHOW_RES),yes)
+# Show verbose information (empty|yes|very)
+ifneq ($(_DET_OPT_VERB),)
    do_info = $(info ! Component: $(1))
 else
    do_info =
 endif
 
+_DET_RES_TEXT :=
+
 ifeq ($($(_DET_VAR_HAS_)),)
    ifneq ($($(_DET_VAR_INC_)),no)
-      _DET_POS := $(filter-out !%,$(_DET_SUP_FILT))
-      _DET_NEG := $(subst !,,$(filter !%,$(_DET_SUP_FILT)))
+      _DET_POS := $(filter-out !%,$(_DET_FLT_PLAT))
+      _DET_NEG := $(subst !,,$(filter !%,$(_DET_FLT_PLAT)))
       ifneq ($(if $(_DET_POS),$(filter $(HB_PLATFORM),$(_DET_POS)),ok),)
          ifeq ($(filter $(HB_PLATFORM),$(_DET_NEG)),)
+            _DET_POS := $(filter-out !%,$(_DET_FLT_COMP))
+            _DET_NEG := $(subst !,,$(filter !%,$(_DET_FLT_COMP)))
             ifneq ($(if $(_DET_POS),$(filter $(HB_COMPILER),$(_DET_POS)),ok),)
                ifeq ($(filter $(HB_COMPILER),$(_DET_NEG)),)
                   $(_DET_VAR_HAS_) := $($(_DET_VAR_INC_))
@@ -39,28 +41,38 @@ ifeq ($($(_DET_VAR_HAS_)),)
                   ifneq ($($(_DET_VAR_HAS_)),)
                      $(_DET_VAR_HAS_) := $(strip $(foreach d,$($(_DET_VAR_HAS_)),$(if $(wildcard $(d)$(_DET_INC_HEAD)),$(d),)))
                      ifeq ($($(_DET_VAR_HAS_)),)
-                        $(call do_info,$(_DET_DSP_NAME) not found)
+                        _DET_RES_TEXT := $(_DET_DSP_NAME) not found
+                        $(call do_info,$(_DET_RES_TEXT))
                      else
-                        $(call do_info,$(_DET_DSP_NAME) found in $($(_DET_VAR_HAS_)))
+                        _DET_RES_TEXT := $(_DET_DSP_NAME) found in $($(_DET_VAR_HAS_))
+                        ifeq ($(_DET_OPT_VERB),very)
+                           $(call do_info,$(_DET_RES_TEXT))
+                        endif
                      endif
                   else
-                     $(call do_info,$(_DET_DSP_NAME) location not specified)
+                     _DET_RES_TEXT := $(_DET_DSP_NAME) location not specified
+                     $(call do_info,$(_DET_RES_TEXT))
                   endif
                else
-                  $(call do_info,$(_DET_DSP_NAME) not supported with $(HB_COMPILER) compiler)
+                  _DET_RES_TEXT := $(_DET_DSP_NAME) not supported with $(HB_COMPILER) compiler
+                  $(call do_info,$(_DET_RES_TEXT))
                endif
             else
-               $(call do_info,$(_DET_DSP_NAME) not supported with $(HB_COMPILER) compiler)
+               _DET_RES_TEXT := $(_DET_DSP_NAME) not supported with $(HB_COMPILER) compiler
+               $(call do_info,$(_DET_RES_TEXT))
             endif
          else
-            $(call do_info,$(_DET_DSP_NAME) not supported on $(HB_PLATFORM) platform)
+            _DET_RES_TEXT := $(_DET_DSP_NAME) not supported on $(HB_PLATFORM) platform
+            $(call do_info,$(_DET_RES_TEXT))
          endif
       else
-         $(call do_info,$(_DET_DSP_NAME) not supported on $(HB_PLATFORM) platform)
+         _DET_RES_TEXT := $(_DET_DSP_NAME) not supported on $(HB_PLATFORM) platform
+         $(call do_info,$(_DET_RES_TEXT))
       endif
       _DET_POS :=
       _DET_NEG :=
    else
-      $(call do_info,$(_DET_DSP_NAME) explicitly disabled)
+      _DET_RES_TEXT := $(_DET_DSP_NAME) explicitly disabled
+      $(call do_info,$(_DET_RES_TEXT))
    endif
 endif

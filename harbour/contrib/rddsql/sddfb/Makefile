@@ -8,27 +8,23 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := sddfb
 
-ifneq ($(HB_COMPILER),pocc64)
-
-ifeq ($(HB_INC_FIREBIRD),)
-   ifeq ($(HB_XBUILD),)
-      HB_INC_FIREBIRD := /usr/include /opt/firebird/include
-   endif
-endif
-
-HB_INC_FIREBIRD_OK := $(foreach d, $(HB_INC_FIREBIRD), $(if $(wildcard $(d)/ibase.h),$(d),))
-
-ifneq ($(strip $(HB_INC_FIREBIRD_OK)),)
-
-HB_CFLAGS += $(foreach d,$(HB_INC_FIREBIRD_OK),-I$(d))
-
 C_SOURCES := \
    fbirddd.c \
 
-include $(TOP)$(ROOT)config/lib.mk
+_DET_DSP_NAME := Firebird
+_DET_VAR_INC_ := HB_INC_FIREBIRD
+_DET_VAR_HAS_ := HB_HAS_FIREBIRD
+_DET_FLT_PLAT :=
+_DET_FLT_COMP := !pocc64 !poccarm
+_DET_INC_DEFP := /usr/include /opt/firebird/include
+_DET_INC_HEAD := /ibase.h
+include $(TOP)$(ROOT)config/detfun.mk
+
+ifneq ($(HB_HAS_FIREBIRD),)
+   HB_CFLAGS += $(foreach d,$(HB_HAS_FIREBIRD),-I$(d))
+
+   include $(TOP)$(ROOT)config/lib.mk
 else
-include $(TOP)$(ROOT)config/none.mk
-endif
-else
-include $(TOP)$(ROOT)config/none.mk
+   HB_SKIP_REASON := $(_DET_RES_TEXT)
+   include $(TOP)$(ROOT)config/none.mk
 endif
