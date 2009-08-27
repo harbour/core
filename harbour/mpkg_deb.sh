@@ -31,12 +31,12 @@ done
 
 if [ "$HB_COMMERCE" = yes ]
 then
-    export HB_GPM_MOUSE=no
+    export HB_INC_GPM=no
     export HB_WITHOUT_GTSLN=yes
 else
-    if [ -z "$HB_GPM_MOUSE" ] && ( test_reqpkg libgpmg1-dev || test_reqpkg libgpm-dev )
+    if [ -z "$HB_INC_GPM" ] && ( test_reqpkg libgpmg1-dev || test_reqpkg libgpm-dev )
     then
-        export HB_GPM_MOUSE=yes
+        export HB_INC_GPM=yes
     fi
     if [ -z "$HB_WITHOUT_GTSLN" ] && \
        ! test_reqpkg libslang2-dev && \

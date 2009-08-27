@@ -73,7 +73,7 @@
 %define hb_cc    export HB_COMPILER=gcc
 %define hb_cflag export HB_USER_CFLAGS=
 %define hb_lflag export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS} %{?_with_static:-static}"
-%define hb_gpm   export HB_GPM_MOUSE=%{!?_without_gpm:yes}%{?_without_gpm:no}
+%define hb_gpm   export HB_INC_GPM=%{!?_without_gpm:yes}%{?_without_gpm:no}
 %define hb_crs   export HB_WITHOUT_GTCRS=%{?_without_gtcrs:yes}%{!?_without_gtcrs:no}
 %define hb_sln   export HB_WITHOUT_GTSLN=%{?_without_gtsln:yes}%{!?_without_gtsln:no}
 %define hb_x11   export HB_WITHOUT_X11=%{?_without_x11:yes}%{!?_without_x11:no}

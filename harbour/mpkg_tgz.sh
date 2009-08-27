@@ -142,14 +142,14 @@ elif ! make --version >/dev/null 2>&1; then
 fi
 
 # Set other platform-specific build options
-if [ -z "$HB_GPM_MOUSE" ]; then
+if [ -z "$HB_INC_GPM" ]; then
     if [ "$HB_PLATFORM" = "linux" ] && \
        ( [ -f /usr/include/gpm.h ] || [ -f /usr/local/include/gpm.h ]); then
-        HB_GPM_MOUSE=yes
+        HB_INC_GPM=yes
     else
-        HB_GPM_MOUSE=no
+        HB_INC_GPM=no
     fi
-    export HB_GPM_MOUSE
+    export HB_INC_GPM
 fi
 
 if [ -z "${HB_WITHOUT_GTSLN}" ]; then
@@ -188,7 +188,7 @@ esac
 
 if [ "$HB_COMMERCE" = yes ]
 then
-   export HB_GPM_MOUSE=no
+   export HB_INC_GPM=no
    export HB_WITHOUT_GTSLN=yes
 fi
 
@@ -266,7 +266,7 @@ then
         sunos)      ADD_LIBS="$ADD_LIBS -lcurses" ;;
         *)          ADD_LIBS="$ADD_LIBS -lncurses" ;;
     esac
-    [ "${HB_GPM_MOUSE}" = yes ] && ADD_LIBS="$ADD_LIBS -lgpm"
+    [ "${HB_INC_GPM}" = yes ] && ADD_LIBS="$ADD_LIBS -lgpm"
     [ "${HB_WITHOUT_GTSLN}" != yes ] && ADD_LIBS="$ADD_LIBS -lslang"
     [ "${HB_WITHOUT_X11}" != yes ] && ADD_LIBS="$ADD_LIBS -L/usr/X11R6/$HB_LIBDIRNAME -lX11"
 

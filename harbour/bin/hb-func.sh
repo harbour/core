@@ -260,7 +260,7 @@ mk_hbtools()
     if [ -n "${CC_HB_USER_LIBS}" ]; then
         echo "libs=${hb_mkdef}${CC_HB_USER_LIBS}">> ${hb_hbmkcfg}
     fi
-    if [ "${HB_GPM_MOUSE}" = "yes" ]; then
+    if [ -n "${HB_HAS_GPM}" ]; then
         echo "libs=${hb_mkdef}gpm">> ${hb_hbmkcfg}
     fi
 
@@ -354,14 +354,14 @@ HB_STATIC="${hb_static}"
 HB_MT=""
 HB_GT="${HB_GT_LIB#gt}"
 
-if [ -z "$HB_GPM_MOUSE" ]; then
+if [ -z "$HB_INC_GPM" ]; then
     if [ "$HB_PLATFORM" = "linux" ] && \
        ( [ -f /usr/include/gpm.h ] || [ -f /usr/local/include/gpm.h ]); then
-        HB_GPM_MOUSE=yes
+        HB_INC_GPM=yes
     else
-        HB_GPM_MOUSE=no
+        HB_INC_GPM=no
     fi
-    export HB_GPM_MOUSE
+    export HB_INC_GPM
 fi
 
 if [ -z "${HB_WITHOUT_GTSLN}" ]; then
@@ -398,7 +398,7 @@ if [ -z "$HB_COMMERCE" ]; then
 fi
 
 if [ "$HB_COMMERCE" = yes ]; then
-    HB_GPM_MOUSE=no
+    HB_INC_GPM=no
     HB_WITHOUT_GTSLN=yes
 fi
 
