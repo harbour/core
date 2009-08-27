@@ -10,19 +10,26 @@ vpath %.c ../
 
 LIBNAME := hbcurls
 
-HB_INC_CURL_OK := $(foreach d, $(HB_INC_CURL), $(if $(wildcard $(d)/curl/curl.h),$(d),))
-
-ifneq ($(strip $(HB_INC_CURL_OK)),)
-
-# always export symbols
-HB_CFLAGS += -DCURL_STATICLIB
-HB_CFLAGS += $(foreach d,$(HB_INC_CURL_OK),-I$(d))
-
 C_SOURCES := \
    hbcurl.c \
 
-include $(TOP)$(ROOT)config/lib.mk
+_DET_DSP_NAME := libcurl
+_DET_VAR_INC_ := HB_INC_CURL
+_DET_VAR_HAS_ := HB_HAS_CURL
+_DET_FLT_PLAT := !dos
+_DET_FLT_COMP :=
+_DET_INC_DEFP := /usr/include
+_DET_INC_HEAD := /curl/curl.h
+include $(TOP)$(ROOT)config/detfun.mk
 
+ifneq ($(HB_HAS_CURL),)
+
+   HB_CFLAGS += $(foreach d,$(HB_HAS_CURL),-I$(d))
+   # always export symbols
+   HB_CFLAGS += -DCURL_STATICLIB
+
+   include $(TOP)$(ROOT)config/lib.mk
 else
-include $(TOP)$(ROOT)config/none.mk
+   HB_SKIP_REASON := $(_DET_RES_TEXT)
+   include $(TOP)$(ROOT)config/none.mk
 endif

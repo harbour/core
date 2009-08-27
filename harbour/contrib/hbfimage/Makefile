@@ -17,7 +17,7 @@ PRG_SOURCES := \
 PRG_HEADERS := \
    freeimage.ch \
 
-_DET_DSP_NAME := FreeImage
+_DET_DSP_NAME := freeimage
 _DET_VAR_INC_ := HB_INC_FREEIMAGE
 _DET_VAR_HAS_ := HB_HAS_FREEIMAGE
 # disabled until a proper solution is found for type collision (except for dos where it's not supported at all)

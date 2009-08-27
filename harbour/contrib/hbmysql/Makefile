@@ -8,18 +8,6 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := hbmysql
 
-ifeq ($(HB_INC_MYSQL),)
-   ifeq ($(HB_XBUILD),)
-      HB_INC_MYSQL := /usr/include/mysql /opt/local/include/mysql5/mysql
-   endif
-endif
-
-HB_INC_MYSQL_OK := $(foreach d, $(HB_INC_MYSQL), $(if $(wildcard $(d)/mysql.h),$(d),))
-
-ifneq ($(strip $(HB_INC_MYSQL_OK)),)
-
-HB_CFLAGS += $(foreach d,$(HB_INC_MYSQL_OK),-I$(d))
-
 C_SOURCES := \
    mysql.c \
    mysqlold.c \
@@ -31,13 +19,27 @@ PRG_SOURCES := \
 PRG_HEADERS := \
    mysql.ch \
 
-include $(TOP)$(ROOT)config/header.mk
-INSTALL_RULE_HEADERS := $(INSTALL_RULE)
-include $(TOP)$(ROOT)config/lib.mk
+_DET_DSP_NAME := mysql
+_DET_VAR_INC_ := HB_INC_MYSQL
+_DET_VAR_HAS_ := HB_HAS_MYSQL
+_DET_FLT_PLAT :=
+_DET_FLT_COMP :=
+_DET_INC_DEFP := /usr/include/mysql /opt/local/include/mysql5/mysql
+_DET_INC_HEAD := /mysql.h
+include $(TOP)$(ROOT)config/detfun.mk
 
-install::
+ifneq ($(HB_HAS_MYSQL),)
+
+   HB_CFLAGS += $(foreach d,$(HB_HAS_MYSQL),-I$(d))
+
+   include $(TOP)$(ROOT)config/header.mk
+   INSTALL_RULE_HEADERS := $(INSTALL_RULE)
+   include $(TOP)$(ROOT)config/lib.mk
+
+   install::
 	$(INSTALL_RULE_HEADERS)
 
 else
-include $(TOP)$(ROOT)config/none.mk
+   HB_SKIP_REASON := $(_DET_RES_TEXT)
+   include $(TOP)$(ROOT)config/none.mk
 endif

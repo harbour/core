@@ -64,7 +64,7 @@ then
    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbhpdf"
 fi
 
-if [ -z "$HB_WITHOUT_ADS" ] && \
+if ( [ -z "$HB_INC_ADS" ] || [ "$HB_INC_ADS" != "no" ] ) && \
    [ ! -f "/usr/local/ads/acesdk/ace.h" ] && \
    [ ! -f "${HOME}/ads/acesdk/ace.h" ]
 then
@@ -103,7 +103,7 @@ then
     export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbmysql"
 fi
 
-if [ -z "$HB_WITHOUT_ODBC" ] && test_reqpkg unixodbc-dev
+if [ -z "$HB_INC_ODBC" ] || [ "$HB_INC_ODBC" != "no" ] && test_reqpkg unixodbc-dev
 then
     export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbodbc"
 fi

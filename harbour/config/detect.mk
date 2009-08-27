@@ -10,18 +10,7 @@
 # used in Harbour core code.
 # ---------------------------------------------------------------
 
-# NOTE:
-#    INPUT:
-#       HB_INC_* variable with following possible contents:
-#          (empty)   - Will enable external component if found on default locations
-#          no        - Will disable external component
-#          <dirlist> - Will specify locations to check for the external component
-#    OUTPUT:
-#       HB_HAS_* variable with following possible contents:
-#          (empty)   - We can't use this component
-#          <dirlist> - Component headers were found at these locations
-#
-#    config/conf.mk if present, is able to override HB_HAS_* values.
+# config/conf.mk if present, is able to override HB_HAS_* values.
 
 ifeq ($(DETECT_MK_),)
 export DETECT_MK_ := yes
@@ -48,7 +37,7 @@ endif
 
 # Detect OpenSSL
 
-_DET_DSP_NAME := OpenSSL
+_DET_DSP_NAME := openssl
 _DET_VAR_INC_ := HB_INC_OPENSSL
 _DET_VAR_HAS_ := HB_HAS_OPENSSL
 _DET_FLT_PLAT := !dos
@@ -60,7 +49,7 @@ include $(TOP)$(ROOT)config/detfun.mk
 
 # Detect GPM mouse
 
-_DET_DSP_NAME := GPM
+_DET_DSP_NAME := gpm
 _DET_VAR_INC_ := HB_INC_GPM
 _DET_VAR_HAS_ := HB_HAS_GPM
 _DET_FLT_PLAT := linux
@@ -114,7 +103,7 @@ include $(TOP)$(ROOT)config/detfun.mk
 
 # Detect X11
 
-_DET_DSP_NAME := X11
+_DET_DSP_NAME := x11
 _DET_VAR_INC_ := HB_INC_X11
 _DET_VAR_HAS_ := HB_HAS_X11
 _DET_FLT_PLAT :=

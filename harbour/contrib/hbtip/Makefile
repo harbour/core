@@ -41,12 +41,9 @@ include $(TOP)$(ROOT)config/header.mk
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)
 include $(TOP)$(ROOT)config/lib.mk
 
-DIRS :=
 ifneq ($(HB_HAS_OPENSSL),)
-   DIRS += hbtipssl
-endif
+   DIRS := hbtipssl
 
-ifneq ($(DIRS),)
    include $(TOP)$(ROOT)config/dir.mk
 endif
 

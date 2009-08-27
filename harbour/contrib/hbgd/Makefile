@@ -14,18 +14,6 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := hbgd
 
-ifeq ($(HB_INC_GD),)
-   ifeq ($(HB_XBUILD),)
-      HB_INC_GD := /usr/include /opt/local/include
-   endif
-endif
-
-HB_INC_GD_OK := $(foreach d, $(HB_INC_GD), $(if $(wildcard $(d)/gd.h),$(d),))
-
-ifneq ($(strip $(HB_INC_GD_OK)),)
-
-HB_CFLAGS += $(foreach d,$(HB_INC_GD_OK),-I$(d))
-
 C_SOURCES := \
    gdwrp.c \
 
@@ -40,13 +28,27 @@ PRG_SOURCES := \
    gdimage.prg \
    gdbarcod.prg \
 
-include $(TOP)$(ROOT)config/header.mk
-INSTALL_RULE_HEADERS := $(INSTALL_RULE)
-include $(TOP)$(ROOT)config/lib.mk
+_DET_DSP_NAME := libgd
+_DET_VAR_INC_ := HB_INC_GD
+_DET_VAR_HAS_ := HB_HAS_GD
+_DET_FLT_PLAT :=
+_DET_FLT_COMP :=
+_DET_INC_DEFP := /usr/include /opt/local/include
+_DET_INC_HEAD := /gd.h
+include $(TOP)$(ROOT)config/detfun.mk
 
-install::
+ifneq ($(HB_HAS_GD),)
+
+   HB_CFLAGS += $(foreach d,$(HB_HAS_GD),-I$(d))
+
+   include $(TOP)$(ROOT)config/header.mk
+   INSTALL_RULE_HEADERS := $(INSTALL_RULE)
+   include $(TOP)$(ROOT)config/lib.mk
+
+   install::
 	$(INSTALL_RULE_HEADERS)
 
 else
-include $(TOP)$(ROOT)config/none.mk
+   HB_SKIP_REASON := $(_DET_RES_TEXT)
+   include $(TOP)$(ROOT)config/none.mk
 endif

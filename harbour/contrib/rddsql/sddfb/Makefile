@@ -11,7 +11,7 @@ LIBNAME := sddfb
 C_SOURCES := \
    fbirddd.c \
 
-_DET_DSP_NAME := Firebird
+_DET_DSP_NAME := firebird
 _DET_VAR_INC_ := HB_INC_FIREBIRD
 _DET_VAR_HAS_ := HB_HAS_FIREBIRD
 _DET_FLT_PLAT :=

@@ -8,33 +8,36 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := hbhpdf
 
-ifeq ($(HB_INC_LIBHARU),)
-   ifneq ($(HB_HOST_PLAT),dos)
-      ifeq ($(HB_XBUILD),)
-         HB_INC_LIBHARU = /usr/include /usr/local/include $(TOP)$(ROOT)external/libhpdf
-      endif
-   endif
-endif
-
-HB_INC_LIBHARU_OK := $(foreach d, $(HB_INC_LIBHARU), $(if $(wildcard $(d)/hpdf.h),$(d),))
-
-ifneq ($(strip $(HB_INC_LIBHARU_OK)),)
-
-HB_CFLAGS += $(foreach d,$(HB_INC_LIBHARU_OK),-I$(d))
-
 C_SOURCES := \
    harupdf.c \
 
 PRG_HEADERS := \
    harupdf.ch \
 
-include $(TOP)$(ROOT)config/header.mk
-INSTALL_RULE_HEADERS := $(INSTALL_RULE)
-include $(TOP)$(ROOT)config/lib.mk
+_DET_DSP_NAME := libharu
+_DET_VAR_INC_ := HB_INC_LIBHARU
+_DET_VAR_HAS_ := HB_HAS_LIBHARU
+_DET_FLT_PLAT :=
+_DET_FLT_COMP :=
+_DET_INC_DEFP :=
+ifneq ($(HB_HOST_PLAT),dos)
+_DET_INC_DEFP += /usr/include /usr/local/include $(TOP)$(ROOT)external/libhpdf
+endif
+_DET_INC_HEAD := /hpdf.h
+include $(TOP)$(ROOT)config/detfun.mk
 
-install::
+ifneq ($(HB_HAS_LIBHARU),)
+
+   HB_CFLAGS += $(foreach d,$(HB_HAS_LIBHARU),-I$(d))
+
+   include $(TOP)$(ROOT)config/header.mk
+   INSTALL_RULE_HEADERS := $(INSTALL_RULE)
+   include $(TOP)$(ROOT)config/lib.mk
+
+   install::
 	$(INSTALL_RULE_HEADERS)
 
 else
-include $(TOP)$(ROOT)config/none.mk
+   HB_SKIP_REASON := $(_DET_RES_TEXT)
+   include $(TOP)$(ROOT)config/none.mk
 endif

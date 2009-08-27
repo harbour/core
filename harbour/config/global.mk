@@ -264,13 +264,14 @@ ifeq ($(HB_INIT_DONE),)
       #   HB_COMMERCE                 -> ?
       #   HB_BIN_COMPILE              -> HB_BUILD_BIN_DIR
       #   HB_INC_COMPILE              -> - (HB_BUILD_INC_DIR)
+      #
+      #   HB_DLLIBS                   -> (only used in place location, so it's a local matter)
+      #   HB_CRS_LIB                  -> HB_LIB_CURSES
+      #   HB_DIR_*                    -> ? (only used for implib and a few .hbm files)
+      #
       #   HB_GPM_NOICE_DISABLE        -> HB_USER_CFLAGS=-DHB_GPM_NOICE_DISABLE
       #   HB_GT_CRS_BCEHACK           -> HB_USER_CFLAGS=-DHB_GT_CRS_BCEHACK
       #   HB_NCURSES_194              -> HB_USER_CFLAGS=-DHB_NCURSES_194
-      #   HB_DLLIBS                   -> (only used in place location, so it's a local matter)
-      #   HB_CRS_LIB                  -> HB_LIB_CURSES
-      #   HB_DIR_*                    -> ? (only used for implib
-      #   HB_HAS_*                    -> ?
       #
       # Macros:
       #   -DHB_PCRE_REGEX, -DHB_POSIX_REGEX, -DHB_EXT_ZLIB, -DHB_HAS_GPM, -DHB_GT_LIB=

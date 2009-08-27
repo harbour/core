@@ -16,7 +16,7 @@ C_SOURCES := \
    gtalleg.c \
    ssf.c \
 
-_DET_DSP_NAME := Allegro
+_DET_DSP_NAME := allegro
 _DET_VAR_INC_ := HB_INC_ALLEGRO
 _DET_VAR_HAS_ := HB_HAS_ALLEGRO
 _DET_FLT_PLAT :=
