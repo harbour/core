@@ -8,17 +8,6 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := hbwin
 
-ifeq ($(HB_WITH_HBWIN),)
-   ifeq ($(HB_PLATFORM),win)
-      HB_WITH_HBWIN := yes
-   endif
-   ifeq ($(HB_PLATFORM),wce)
-      HB_WITH_HBWIN := yes
-   endif
-endif
-
-ifeq ($(HB_WITH_HBWIN),yes)
-
 C_SOURCES := \
    olecore.c \
    oleinit.c \
@@ -57,13 +46,14 @@ C_HEADERS := \
 PRG_HEADERS := \
    hbwin.ch \
 
-include $(TOP)$(ROOT)config/header.mk
-INSTALL_RULE_HEADERS := $(INSTALL_RULE)
-include $(TOP)$(ROOT)config/lib.mk
+ifneq ($(filter $(HB_PLATFORM),win wce),)
 
-install::
+   include $(TOP)$(ROOT)config/header.mk
+   INSTALL_RULE_HEADERS := $(INSTALL_RULE)
+   include $(TOP)$(ROOT)config/lib.mk
+
+   install::
 	$(INSTALL_RULE_HEADERS)
-
 else
-include $(TOP)$(ROOT)config/none.mk
+   include $(TOP)$(ROOT)config/none.mk
 endif
