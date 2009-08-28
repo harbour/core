@@ -786,7 +786,7 @@ mk_hblibso()
     (cd $HB_LIB_INSTALL
     LIBS=""
     LIBSMT=""
-    gpm="${HB_INC_GPM}"
+    gpm="${HB_HAS_GPM}"
     linker_options="-lm"
     linker_mtoptions=""
     if [ "${HB_USER_CFLAGS//-DHB_PCRE_REGEX/}" != "${HB_USER_CFLAGS}" ]; then
@@ -858,7 +858,7 @@ mk_hblibso()
                            linker_options="$linker_options -L/usr/X11R6/lib64"
                         linker_options="$linker_options -lX11"
                     fi
-                    if [ "${gpm}" != no ] && ( [ "${l}" = gtcrs ] || \
+                    if [ -n "${gpm}" ] && ( [ "${l}" = gtcrs ] || \
                        [ "${l}" = gtsln ] || [ "${l}" = gttrm ] ); then
                         linker_options="$linker_options -lgpm"
                         gpm=""

@@ -24,16 +24,16 @@ export HB_HAS_SLANG   :=
 export HB_HAS_CURSES  :=
 export HB_HAS_X11     :=
 
-# Allow detection by external (generated) config file
-
--include $(TOP)$(ROOT)config/conf.mk
-
 # Exclude Harbour-wide features prohibiting commercial use
 
 ifeq ($(HB_COMMERCE),yes)
    export HB_INC_GPM := no
    export HB_INC_SLANG := no
 endif
+
+# Allow detection by external (generated) config file
+
+-include $(TOP)$(ROOT)config/conf.mk
 
 # Detect OpenSSL
 

@@ -13,8 +13,8 @@
 # USAGE:
 #    ON CALL:
 #       _DET_DSP_NAME - human readable name of external component.
-#       _DET_VAR_INC_ - variable name containing user component control.
-#       _DET_VAR_HAS_ - variable name receiving detection result.
+#       _DET_VAR_INC_ - variable name containing user component control (typically "HB_INC_*").
+#       _DET_VAR_HAS_ - variable name receiving detection result (typically "HB_HAS_*").
 #       _DET_FLT_PLAT - positive and negative platform filters. Prefix negative ones with '!' char.
 #       _DET_FLT_COMP - positive and negative compiler filters. Prefix negative ones with '!' char.
 #       _DET_INC_DEFP - default location to look at. Not effective in HB_XBUILD mode.
@@ -33,11 +33,16 @@
 #          (empty)        - we can't use this component
 #          <dirlist>      - component headers were found at these locations (typically one)
 
-# Show verbose information (empty|yes|very)
+# show verbose information (empty|yes|very)
 ifneq ($(_DET_OPT_VERB),)
    do_info = $(info ! Component: $(1))
 else
    do_info =
+endif
+
+# preparing switch to HB_WITH_* variables from HB_INC_*
+ifneq ($($(subst HB_INC_,HB_WITH_,$(_DET_VAR_INC_))),)
+   $($(subst HB_INC_,HB_WITH_,$(_DET_VAR_INC_))) := $($(_DET_VAR_INC_))
 endif
 
 _DET_RES_TEXT :=

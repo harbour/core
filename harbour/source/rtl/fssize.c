@@ -101,6 +101,7 @@ HB_FOFFSET hb_fsFSize( const char * pszFileName, BOOL bUseDirEntry )
       BOOL fResult;
       struct stat64 statbuf;
       pszFileName = hb_fsNameConv( pszFileName, &pszFree );
+      statbuf.st_size = 0;
       hb_vmUnlock();
       fResult = stat64( pszFileName, &statbuf ) == 0;
       hb_fsSetIOError( fResult, 0 );
@@ -114,6 +115,7 @@ HB_FOFFSET hb_fsFSize( const char * pszFileName, BOOL bUseDirEntry )
       BOOL fResult;
       struct stat statbuf;
       pszFileName = hb_fsNameConv( pszFileName, &pszFree );
+      statbuf.st_size = 0;
       hb_vmUnlock();
       fResult = stat( ( char * ) pszFileName, &statbuf ) == 0;
       hb_fsSetIOError( fResult, 0 );
