@@ -7,10 +7,14 @@ include $(TOP)$(ROOT)config/global.mk
 ifneq ($(HB_PLATFORM),)
 ifneq ($(HB_COMPILER),)
 
+HB_LINKING_RTL :=
+HB_LINKING_VMMT :=
+
 ifneq ($(DYNNAME),)
    HB_LINKING_RTL := yes
-else
-   HB_LINKING_RTL :=
+   ifneq ($(findstring vmmt, $(DYNDIRLIST)),)
+      HB_LINKING_VMMT := yes
+   endif
 endif
 
 -include $(TOP)$(ROOT)config/$(HB_PLATFORM)/libs.mk

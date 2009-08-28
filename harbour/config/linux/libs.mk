@@ -33,6 +33,10 @@ ifneq ($(HB_LINKING_RTL),)
       SYSLIBS += z
    endif
    SYSLIBS += rt dl
+   # Don't seem to be needed here, but added it for reference to move/copy it to *nix platforms where this is required
+   ifneq ($(HB_LINKING_VMMT),)
+      SYSLIBS += pthread
+   endif
 endif
 
 SYSLIBS += m

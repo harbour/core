@@ -52,10 +52,14 @@ HB_LIBS_TPL :=
 _HB_RDD :=
 _HB_VM :=
 
+HB_LINKING_RTL :=
+HB_LINKING_VMMT :=
+
 ifneq ($(filter hbrtl, $(LIBS)),)
    HB_LINKING_RTL := yes
-else
-   HB_LINKING_RTL :=
+   ifneq ($(filter hbvmmt, $(LIBS)),)
+      HB_LINKING_VMMT := yes
+   endif
 endif
 
 -include $(TOP)$(ROOT)config/$(HB_PLATFORM)/libs.mk

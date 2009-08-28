@@ -249,14 +249,14 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    -----------------
       1.) Install MacPorts, follow their instructions:
           http://www.macports.org/
-      2.) sudo port install allegro freeimage gd2 mysql5-devel postgresql83
+      2.) sudo port install slang allegro freeimage gd2 mysql5-devel postgresql83
 
    Linux (generic)
    ---------------
 
       For contrib/rddads lib:
       Download and install 'Advantage Client Engine API for Linux' package
-      (f.e. aceapi-9.00.0.0.tar.gz)
+      (f.e. aceapi-9.10.0.0.tar.gz)
 
       For contrib/hbhpdf lib:
       Download libharu from http://libharu.org/ -> './configure' -> 'make install'
@@ -265,21 +265,20 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    ----------------------
    (tested with Ubuntu 7.04, 8.04, 9.04)
 
-      for gtcrs terminal lib:          sudo apt-get install libncurses-dev
-      for gtsln terminal lib:          sudo apt-get install libslang2-dev
-      for gtxwc terminal lib:          sudo apt-get install libx11-dev
-      for console mouse (GPM) support: sudo apt-get install libgpmg1-dev
-      for contrib/hbodbc lib:          sudo apt-get install unixodbc-dev
-      for contrib/hbcurl lib:          sudo apt-get install libcurl4-openssl-dev OR
-                                       sudo apt-get install libcurl4-gnutls-dev
-      for contrib/hbfbird lib:         sudo apt-get install libfirebird2.0-dev OR
-                                       sudo apt-get install firebird2.1-dev
-      for contrib/hbfimage lib:        sudo apt-get install libfreeimage-dev
-      for contrib/hbgd lib:            sudo apt-get install libgd2-xpm-dev OR
-                                       sudo apt-get install libgd-xpm-dev
-      for contrib/hbmysql lib:         sudo apt-get install libmysqlclient15-dev
-      for contrib/hbpgsql lib:         sudo apt-get install libpq-dev
-      for contrib/hbqt lib:            sudo apt-get install libqt4-dev
+      for gtcrs terminal lib:    sudo apt-get install libncurses-dev
+      for gtsln terminal lib:    sudo apt-get install libslang2-dev
+      for gtxwc terminal lib:    sudo apt-get install libx11-dev
+      for console mouse support: sudo apt-get install libgpm-dev OR libgpmg1-dev
+      for contrib/hbodbc lib:    sudo apt-get install unixodbc-dev
+      for contrib/hbcurl lib:    sudo apt-get install libcurl4-openssl-dev
+      for contrib/hbfbird lib:   sudo apt-get install firebird2.1-dev OR
+                                 sudo apt-get install libfirebird2.0-dev
+      for contrib/hbfimage lib:  sudo apt-get install libfreeimage-dev
+      for contrib/hbgd lib:      sudo apt-get install libgd2-xpm-dev OR
+                                 sudo apt-get install libgd-xpm-dev
+      for contrib/hbmysql lib:   sudo apt-get install libmysqlclient15-dev
+      for contrib/hbpgsql lib:   sudo apt-get install libpq-dev
+      for contrib/hbqt lib:      sudo apt-get install libqt4-dev
 
    Linux (openSUSE)
    ----------------
