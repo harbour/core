@@ -1964,7 +1964,7 @@ void hb_compExternAdd( HB_COMP_DECL, const char * szExternName, HB_SYMBOLSCOPE c
 static void hb_compAddFunc( HB_COMP_DECL, PFUNCTION pFunc )
 {
    while( HB_COMP_PARAM->functions.pLast &&
-       !HB_COMP_PARAM->functions.pLast->szName )
+          !HB_COMP_PARAM->functions.pLast->szName )
    {
       PFUNCTION pBlock = HB_COMP_PARAM->functions.pLast;
       HB_COMP_PARAM->functions.pLast = pBlock->pOwner;
@@ -3831,6 +3831,7 @@ static void hb_compAddInitFunc( HB_COMP_DECL, PFUNCTION pFunc )
    PCOMSYMBOL pSym = hb_compSymbolAdd( HB_COMP_PARAM, pFunc->szName, NULL, HB_SYM_FUNCNAME );
 
    pSym->cScope |= pFunc->cScope;
+   pFunc->funFlags |= FUN_ATTACHED;
    hb_compAddFunc( HB_COMP_PARAM, pFunc );
    hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
 }
@@ -3881,6 +3882,13 @@ void hb_compCompileEnd( HB_COMP_DECL )
       while( pFunc )
          pFunc = hb_compFunctionKill( HB_COMP_PARAM, pFunc );
       HB_COMP_PARAM->functions.pFirst = NULL;
+   }
+
+   if( HB_COMP_PARAM->pInitFunc &&
+       ( HB_COMP_PARAM->pInitFunc->funFlags & FUN_ATTACHED ) == 0 )
+   {
+      hb_compFunctionKill( HB_COMP_PARAM, HB_COMP_PARAM->pInitFunc );
+      HB_COMP_PARAM->pInitFunc = NULL;
    }
 
    while( HB_COMP_PARAM->funcalls.pFirst )
@@ -3974,7 +3982,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
       else
          hb_compModuleAdd( HB_COMP_PARAM,
                            hb_compIdentifierNew( HB_COMP_PARAM, szPrg, HB_IDENT_COPY ),
-                           FALSE );
+                           TRUE );
    }
 
    pModule = HB_COMP_PARAM->modules;

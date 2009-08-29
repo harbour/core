@@ -127,14 +127,15 @@ extern int hb_compVariableScope( HB_COMP_DECL, const char * );
 /*
  * flags for funFlags member
  */
-#define FUN_STATEMENTS        0x01  /* Function have at least one executable statement */
-#define FUN_USES_STATICS      0x02  /* Function uses static variables */
-#define FUN_PROCEDURE         0x04  /* This is a procedure that shouldn't return value */
-#define FUN_BREAK_CODE        0x08  /* last statement breaks execution flow */
-#define FUN_USES_LOCAL_PARAMS 0x10  /* parameters are declared using () */
-#define FUN_WITH_RETURN       0x20  /* there was RETURN statement in previous line */
-#define FUN_EXTBLOCK          0x40  /* it's extended codeblock */
-#define FUN_FILE_DECL         0x80  /* pseudo function with file wide declarations */
+#define FUN_STATEMENTS        0x0001   /* Function have at least one executable statement */
+#define FUN_USES_STATICS      0x0002   /* Function uses static variables */
+#define FUN_PROCEDURE         0x0004   /* This is a procedure that shouldn't return value */
+#define FUN_BREAK_CODE        0x0008   /* last statement breaks execution flow */
+#define FUN_USES_LOCAL_PARAMS 0x0010   /* parameters are declared using () */
+#define FUN_WITH_RETURN       0x0020   /* there was RETURN statement in previous line */
+#define FUN_EXTBLOCK          0x0040   /* it's extended codeblock */
+#define FUN_FILE_DECL         0x0080   /* pseudo function with file wide declarations */
+#define FUN_ATTACHED          0x0100   /* function attached to function list */
 
 extern void      hb_compFunctionAdd( HB_COMP_DECL, const char * szFunName, HB_SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
 extern PFUNCTION hb_compFunctionFind( HB_COMP_DECL, const char * szFunName ); /* locates a previously defined function */
