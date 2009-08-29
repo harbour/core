@@ -535,7 +535,11 @@ char * hb_verCompiler( void )
 #elif defined( __BORLANDC__ )
 
    #if ( __BORLANDC__ >= 1424 ) /* Version 5.9 */
-      pszName = "CodeGear C++";
+      #if ( __BORLANDC__ >= 1568 ) /* Version 6.2 */
+         pszName = "Borland/Embarcadero C++";
+      #else
+         pszName = "Borland/CodeGear C++";
+      #endif
    #else
       pszName = "Borland C++";
    #endif

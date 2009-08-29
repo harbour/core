@@ -8,7 +8,6 @@ incpaths=.
 
 libs=hbssl
 
-{win&!mingw}libs=ssleay32 libeay32
-{mingw}libs=ssl ssl32 crypto eay32
 {unix}libs=ssl crypto
 {os2}libs=openssl ssl crypto libosslfips
+{win}libs=ssleay32 libeay32

@@ -85,8 +85,10 @@ static BIO_METHOD * hb_BIO_METHOD_par( int iParam )
    case HB_BIO_METHOD_S_CONNECT    : p = BIO_s_connect();    break;
    case HB_BIO_METHOD_S_ACCEPT     : p = BIO_s_accept();     break;
    case HB_BIO_METHOD_S_FD         : p = BIO_s_fd();         break;
+#if 0 /* BIO_s_log() isn't exported via implibs on Windows at version 0.9.8k. [vszakats] */
 #ifndef OPENSSL_SYS_OS2
    case HB_BIO_METHOD_S_LOG        : p = BIO_s_log();        break;
+#endif
 #endif
    case HB_BIO_METHOD_S_BIO        : p = BIO_s_bio();        break;
 #ifndef OPENSSL_NO_DGRAM
@@ -119,8 +121,10 @@ static int hb_BIO_METHOD_ptr_to_id( const BIO_METHOD * p )
    else if( p == BIO_s_connect()    ) n = HB_BIO_METHOD_S_CONNECT;
    else if( p == BIO_s_accept()     ) n = HB_BIO_METHOD_S_ACCEPT;
    else if( p == BIO_s_fd()         ) n = HB_BIO_METHOD_S_FD;
+#if 0 /* BIO_s_log() isn't exported via implibs on Windows at version 0.9.8k. [vszakats] */
 #ifndef OPENSSL_SYS_OS2
    else if( p == BIO_s_log()        ) n = HB_BIO_METHOD_S_LOG;
+#endif
 #endif
    else if( p == BIO_s_bio()        ) n = HB_BIO_METHOD_S_BIO;
 #ifndef OPENSSL_NO_DGRAM

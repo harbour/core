@@ -898,12 +898,12 @@ mk_hblibso()
     else
         hb_mkdyn="${HB_BIN_INSTALL}/hb-mkdyn"
     fi
-    echo "Making ${full_lib_name}..."
-    ${hb_mkdyn} ${full_lib_name} ${LIBS} ${linker_options}
-    if [ "${LIBS}" != "${LIBSMT}" ]; then
-        echo "Making ${full_lib_name_mt}..."
-        ${hb_mkdyn} ${full_lib_name_mt} ${LIBSMT} ${linker_mtoptions} ${linker_options}
-    fi
+#   echo "Making ${full_lib_name}..."
+#   ${hb_mkdyn} ${full_lib_name} ${LIBS} ${linker_options}
+#   if [ "${LIBS}" != "${LIBSMT}" ]; then
+#       echo "Making ${full_lib_name_mt}..."
+#       ${hb_mkdyn} ${full_lib_name_mt} ${LIBSMT} ${linker_mtoptions} ${linker_options}
+#   fi
     for l in ${full_lib_name} ${full_lib_name_mt}
     do
         if [ -f $l ]

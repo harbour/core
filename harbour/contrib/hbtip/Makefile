@@ -8,8 +8,6 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := hbtip
 
-ifneq ($(HB_PLATFORM),dos)
-
 C_SOURCES := \
    encmthd.c \
    utils.c \
@@ -37,19 +35,20 @@ PRG_HEADERS := \
    thtml.ch \
    tip.ch \
 
-include $(TOP)$(ROOT)config/header.mk
-INSTALL_RULE_HEADERS := $(INSTALL_RULE)
-include $(TOP)$(ROOT)config/lib.mk
+ifneq ($(HB_PLATFORM),dos)
 
-ifneq ($(HB_HAS_OPENSSL),)
-   DIRS := hbtipssl
+   include $(TOP)$(ROOT)config/header.mk
+   INSTALL_RULE_HEADERS := $(INSTALL_RULE)
+   include $(TOP)$(ROOT)config/lib.mk
 
-   include $(TOP)$(ROOT)config/dir.mk
-endif
+   ifneq ($(HB_HAS_OPENSSL),)
+      DIRS := hbtipssl
+      include $(TOP)$(ROOT)config/dir.mk
+   endif
 
-install::
+   install::
 	$(INSTALL_RULE_HEADERS)
 
 else
-include $(TOP)$(ROOT)config/none.mk
+   include $(TOP)$(ROOT)config/none.mk
 endif

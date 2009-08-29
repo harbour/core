@@ -6,34 +6,7 @@ ROOT := ../../
 
 include $(TOP)$(ROOT)config/global.mk
 
-HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/hbwin
-
 LIBNAME := gtwvg
-
-ifeq ($(HB_WITH_GTWVG),)
-   ifeq ($(HB_PLATFORM),win)
-      ifeq ($(HB_COMPILER),mingw)
-         HB_WITH_GTWVG := yes
-      endif
-      ifeq ($(HB_COMPILER),msvc)
-         HB_WITH_GTWVG := yes
-      endif
-      ifeq ($(HB_COMPILER),watcom)
-         HB_WITH_GTWVG := yes
-      endif
-      ifeq ($(HB_COMPILER),pocc)
-         HB_WITH_GTWVG := yes
-      endif
-      ifeq ($(HB_COMPILER),icc)
-         HB_WITH_GTWVG := yes
-      endif
-      ifeq ($(HB_COMPILER),bcc)
-         HB_WITH_GTWVG := yes
-      endif
-   endif
-endif
-
-ifeq ($(HB_WITH_GTWVG),yes)
 
 C_SOURCES := \
    gtwvg.c \
@@ -81,13 +54,40 @@ PRG_HEADERS := \
    wvtwin.ch \
    wvgparts.ch \
 
-include $(TOP)$(ROOT)config/header.mk
-INSTALL_RULE_HEADERS := $(INSTALL_RULE)
-include $(TOP)$(ROOT)config/lib.mk
+ifeq ($(HB_WITH_GTWVG),)
+   ifeq ($(HB_PLATFORM),win)
+      ifeq ($(HB_COMPILER),mingw)
+         HB_WITH_GTWVG := yes
+      endif
+      ifeq ($(HB_COMPILER),msvc)
+         HB_WITH_GTWVG := yes
+      endif
+      ifeq ($(HB_COMPILER),watcom)
+         HB_WITH_GTWVG := yes
+      endif
+      ifeq ($(HB_COMPILER),pocc)
+         HB_WITH_GTWVG := yes
+      endif
+      ifeq ($(HB_COMPILER),icc)
+         HB_WITH_GTWVG := yes
+      endif
+      ifeq ($(HB_COMPILER),bcc)
+         HB_WITH_GTWVG := yes
+      endif
+   endif
+endif
 
-install::
+ifeq ($(HB_WITH_GTWVG),yes)
+
+   HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/hbwin
+
+   include $(TOP)$(ROOT)config/header.mk
+   INSTALL_RULE_HEADERS := $(INSTALL_RULE)
+   include $(TOP)$(ROOT)config/lib.mk
+
+   install::
 	$(INSTALL_RULE_HEADERS)
 
 else
-include $(TOP)$(ROOT)config/none.mk
+   include $(TOP)$(ROOT)config/none.mk
 endif

@@ -34,6 +34,9 @@ ifneq ($(HB_HAS_OPENSSL),)
    ifeq ($(HB_PLATFORM),darwin)
       HB_CFLAGS += -DOPENSSL_NO_SHA256 -DOPENSSL_NO_SHA512 -DOPENSSL_NO_CAMELLIA -DOPENSSL_NO_SEED -DOPENSSL_NO_DGRAM -DHB_OPENSSL_OLD_OSX_
    endif
+   ifneq ($(filter $(HB_PLATFORM),win wce),)
+      HB_CFLAGS += -DOPENSSL_OPT_WINDLL
+   endif
 
    include $(TOP)$(ROOT)config/header.mk
    INSTALL_RULE_HEADERS := $(INSTALL_RULE)
@@ -42,6 +45,10 @@ ifneq ($(HB_HAS_OPENSSL),)
    install::
 	$(INSTALL_RULE_HEADERS)
 
+   ifneq ($(filter $(HB_PLATFORM),win wce),)
+      DIRS += hbssls
+      include $(TOP)$(ROOT)config/dir.mk
+   endif
 else
    include $(TOP)$(ROOT)config/none.mk
 endif
