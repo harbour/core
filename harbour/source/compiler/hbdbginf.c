@@ -60,107 +60,108 @@ PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL )
    PFUNCTION pFunc;
 
    pFunc = HB_COMP_PARAM->functions.pFirst;
-   if( ( pFunc->funFlags & FUN_FILE_DECL ) != 0 )
-      pFunc = pFunc->pNext;
 
    while( pFunc )
    {
-      ulPos = ulLine = 0;
-      while( ulPos < pFunc->lPCodePos )
+      if( ( pFunc->funFlags & FUN_FILE_DECL ) == 0 )
       {
-         ulSkip = 0;
-         switch( pFunc->pCode[ ulPos ] )
+         ulPos = ulLine = 0;
+         while( ulPos < pFunc->lPCodePos )
          {
-            case HB_P_LINE:
-               ulLine = HB_PCODE_MKUSHORT( &pFunc->pCode[ ulPos + 1 ] );
-               break;
-
-            case HB_P_MODULENAME:
-               pszModuleName = ( const char * ) &pFunc->pCode[ ulPos + 1 ];
-               pInfo = NULL;
-               break;
-
-            /*
-             * This enables checking also code block bodies,
-             * if it's not necessary then simply remove the
-             * code below. [druzus]
-             */
-            case HB_P_PUSHBLOCKLARGE:
-               ulSkip = 8 + HB_PCODE_MKUSHORT( &pFunc->pCode[ ulPos + 6 ] ) * 2;
-               break;
-
-            case HB_P_PUSHBLOCK:
-               ulSkip = 7 + HB_PCODE_MKUSHORT( &pFunc->pCode[ ulPos + 5 ] ) * 2;
-               break;
-
-            case HB_P_PUSHBLOCKSHORT:
-               ulSkip = 2;
-               break;
-         }
-
-         if( ulLine != 0 )
-         {
-            if( !pInfo )
+            ulSkip = 0;
+            switch( pFunc->pCode[ ulPos ] )
             {
-               int i;
+               case HB_P_LINE:
+                  ulLine = HB_PCODE_MKUSHORT( &pFunc->pCode[ ulPos + 1 ] );
+                  break;
 
-               ptr = strchr( pszModuleName, ':' );
-               i = ptr ? ( int ) ( ptr - pszModuleName ) : ( int ) strlen( pszModuleName );
+               case HB_P_MODULENAME:
+                  pszModuleName = ( const char * ) &pFunc->pCode[ ulPos + 1 ];
+                  pInfo = NULL;
+                  break;
 
-               pInfo = pLineInfo;
-               while( pInfo != NULL )
-               {
-                  if( strncmp( pszModuleName, pInfo->pszModuleName, i ) == 0 &&
-                      ( pInfo->pszModuleName[ i ] == '\0' ||
-                        pInfo->pszModuleName[ i ] == ':' ) )
-                     break;
-                  pInfo = pInfo->pNext;
-               }
+               /*
+                * This enables checking also code block bodies,
+                * if it's not necessary then simply remove the
+                * code below. [druzus]
+                */
+               case HB_P_PUSHBLOCKLARGE:
+                  ulSkip = 8 + HB_PCODE_MKUSHORT( &pFunc->pCode[ ulPos + 6 ] ) * 2;
+                  break;
+
+               case HB_P_PUSHBLOCK:
+                  ulSkip = 7 + HB_PCODE_MKUSHORT( &pFunc->pCode[ ulPos + 5 ] ) * 2;
+                  break;
+
+               case HB_P_PUSHBLOCKSHORT:
+                  ulSkip = 2;
+                  break;
+            }
+
+            if( ulLine != 0 )
+            {
                if( !pInfo )
                {
-                  pInfo = ( PHB_DEBUGINFO ) hb_xgrab( sizeof( HB_DEBUGINFO ) );
-                  pInfo->pszModuleName = hb_strndup( pszModuleName, i );
-                  pInfo->ulFirstLine = pInfo->ulLastLine = ulLine;
-                  /*
-                   * allocate memory in 256 bytes chunks (for 2048 lines)
-                   * The last 1 byte is reserved for additional 0 byte if
-                   * the caller will want to use the returned buffer as
-                   * parameter to hb_compGenPushString(). [druzus]
-                   */
-                  pInfo->ulAllocated = ( ( ulLine >> 3 ) + 0x100 ) & 0xFFFFFF00L;
-                  pInfo->pLineMap = ( BYTE * ) hb_xgrab( pInfo->ulAllocated + 1 );
-                  memset( pInfo->pLineMap, 0, pInfo->ulAllocated + 1 );
-                  pInfo->pNext = pLineInfo;
-                  pLineInfo = pInfo;
-               }
-            }
-            ulOffset = ulLine >> 3;
-            if( pInfo->ulAllocated <= ulOffset )
-            {
-               ULONG ulNewSize = ( ( ulLine >> 3 ) + 0x100 ) & 0xFFFFFF00L;
-               pInfo->pLineMap = ( BYTE * ) hb_xrealloc( pInfo->pLineMap, ulNewSize + 1 );
-               memset( pInfo->pLineMap + pInfo->ulAllocated, 0, ulNewSize - pInfo->ulAllocated + 1 );
-               pInfo->ulAllocated = ulNewSize;
-            }
-            pInfo->pLineMap[ ulOffset ] |= 1 << ( ulLine & 0x7 );
-            /*
-             * It's possible the the line number will be ascending
-             * if some external file is included more then once. [druzus]
-             */
-            if( pInfo->ulFirstLine > ulLine )
-               pInfo->ulFirstLine = ulLine;
-            if( pInfo->ulLastLine < ulLine )
-               pInfo->ulLastLine = ulLine;
-            ulLine = 0;
-         }
+                  int i;
 
-         if( ulSkip == 0 )
-         {
-            ulSkip = hb_compPCodeSize( pFunc, ulPos );
+                  ptr = strchr( pszModuleName, ':' );
+                  i = ptr ? ( int ) ( ptr - pszModuleName ) : ( int ) strlen( pszModuleName );
+
+                  pInfo = pLineInfo;
+                  while( pInfo != NULL )
+                  {
+                     if( strncmp( pszModuleName, pInfo->pszModuleName, i ) == 0 &&
+                         ( pInfo->pszModuleName[ i ] == '\0' ||
+                           pInfo->pszModuleName[ i ] == ':' ) )
+                        break;
+                     pInfo = pInfo->pNext;
+                  }
+                  if( !pInfo )
+                  {
+                     pInfo = ( PHB_DEBUGINFO ) hb_xgrab( sizeof( HB_DEBUGINFO ) );
+                     pInfo->pszModuleName = hb_strndup( pszModuleName, i );
+                     pInfo->ulFirstLine = pInfo->ulLastLine = ulLine;
+                     /*
+                      * allocate memory in 256 bytes chunks (for 2048 lines)
+                      * The last 1 byte is reserved for additional 0 byte if
+                      * the caller will want to use the returned buffer as
+                      * parameter to hb_compGenPushString(). [druzus]
+                      */
+                     pInfo->ulAllocated = ( ( ulLine >> 3 ) + 0x100 ) & 0xFFFFFF00L;
+                     pInfo->pLineMap = ( BYTE * ) hb_xgrab( pInfo->ulAllocated + 1 );
+                     memset( pInfo->pLineMap, 0, pInfo->ulAllocated + 1 );
+                     pInfo->pNext = pLineInfo;
+                     pLineInfo = pInfo;
+                  }
+               }
+               ulOffset = ulLine >> 3;
+               if( pInfo->ulAllocated <= ulOffset )
+               {
+                  ULONG ulNewSize = ( ( ulLine >> 3 ) + 0x100 ) & 0xFFFFFF00L;
+                  pInfo->pLineMap = ( BYTE * ) hb_xrealloc( pInfo->pLineMap, ulNewSize + 1 );
+                  memset( pInfo->pLineMap + pInfo->ulAllocated, 0, ulNewSize - pInfo->ulAllocated + 1 );
+                  pInfo->ulAllocated = ulNewSize;
+               }
+               pInfo->pLineMap[ ulOffset ] |= 1 << ( ulLine & 0x7 );
+               /*
+                * It's possible the the line number will be ascending
+                * if some external file is included more then once. [druzus]
+                */
+               if( pInfo->ulFirstLine > ulLine )
+                  pInfo->ulFirstLine = ulLine;
+               if( pInfo->ulLastLine < ulLine )
+                  pInfo->ulLastLine = ulLine;
+               ulLine = 0;
+            }
+
             if( ulSkip == 0 )
-               break;
+            {
+               ulSkip = hb_compPCodeSize( pFunc, ulPos );
+               if( ulSkip == 0 )
+                  break;
+            }
+            ulPos += ulSkip;
          }
-         ulPos += ulSkip;
       }
       pFunc = pFunc->pNext;
    }

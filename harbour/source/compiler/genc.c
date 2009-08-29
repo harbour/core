@@ -131,21 +131,38 @@ static void hb_compDumpFindCFunc( HB_COMP_DECL )
    }
 }
 
+static void hb_compGenCStdHeaders( HB_COMP_DECL, FILE * yyc, BOOL fHbInLine )
+{
+   fprintf( yyc, "#include \"hbvmpub.h\"\n" );
+
+   if( HB_COMP_PARAM->iGenCOutput != HB_COMPGENC_COMPACT )
+      fprintf( yyc, "#include \"hbpcode.h\"\n" );
+
+   fprintf( yyc, "#include \"hbinit.h\"\n" );
+
+   if( HB_COMP_PARAM->iGenCOutput == HB_COMPGENC_REALCODE )
+      fprintf( yyc, "#include \"hbxvm.h\"\n" );
+
+   if( fHbInLine )
+   {
+      fprintf( yyc, "#include \"hbapi.h\"\n" );
+      fprintf( yyc, "#include \"hbstack.h\"\n" );
+      fprintf( yyc, "#include \"hbapierr.h\"\n" );
+      fprintf( yyc, "#include \"hbapiitm.h\"\n" );
+      fprintf( yyc, "#include \"hbvm.h\"\n" );
+      fprintf( yyc, "#include \"hbapicls.h\"\n" );
+      fprintf( yyc, "#include \"hboo.ch\"\n" );
+   }
+}
+
 void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the C language output */
 {
    char szFileName[ HB_PATH_MAX ];
-   char szModulname[ HB_PATH_MAX ];
    PCOMSYMBOL pSym;
    PFUNCTION pFunc;
    PINLINE pInline;
-   PFUNCALL pFuncall;
    FILE * yyc; /* file handle for C output */
-   BOOL bIsInlineFunction = FALSE;
-   BOOL bIsInitStatics;
-   BOOL bIsLineNumberInfo;
-   BOOL bIsInitFunction;
-   BOOL bIsExitFunction;
-   BOOL bIsStaticFunction;
+   BOOL fHasHbInline = FALSE;
 
    hb_fsFNameMerge( szFileName, pFileName );
    if( ! pFileName->szExtension )
@@ -163,13 +180,13 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
    {
       char buffer[ 80 + HB_PATH_MAX - 1 ];
       hb_snprintf( buffer, sizeof( buffer ),
-                "Generating C source output to \'%s\'... ", szFileName );
+                   "Generating C source output to \'%s\'... ", szFileName );
       hb_compOutStd( HB_COMP_PARAM, buffer );
    }
 
    {
       char *szCmp = hb_verCompiler();
-      char *szHrb  = hb_verHarbour();
+      char *szHrb = hb_verHarbour();
 
       fprintf( yyc, "/*\n * %s\n", szHrb );
       fprintf( yyc, " * %s\n", szCmp );
@@ -190,91 +207,66 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
    {
       hb_compDumpFindCFunc( HB_COMP_PARAM );
 
-      fprintf( yyc, "#include \"hbvmpub.h\"\n" );
-      if( HB_COMP_PARAM->iGenCOutput != HB_COMPGENC_COMPACT )
-         fprintf( yyc, "#include \"hbpcode.h\"\n" );
-      fprintf( yyc, "#include \"hbinit.h\"\n" );
-
-      if( HB_COMP_PARAM->iGenCOutput == HB_COMPGENC_REALCODE )
-         fprintf( yyc, "#include \"hbxvm.h\"\n" );
-
-      fprintf( yyc, "\n\n" );
-
-      /* write functions prototypes for PRG defined functions */
-      pFunc = HB_COMP_PARAM->functions.pFirst;
-      if( ( pFunc->funFlags & FUN_FILE_DECL ) != 0 )
-         pFunc = pFunc->pNext;
-
-      while( pFunc )
-      {
-         bIsInitStatics    = ( pFunc == HB_COMP_PARAM->pInitFunc );
-         bIsLineNumberInfo = ( pFunc == HB_COMP_PARAM->pLineFunc );
-         bIsInitFunction   = ( pFunc->cScope & HB_FS_INIT ) != 0;
-         bIsExitFunction   = ( pFunc->cScope & HB_FS_EXIT ) != 0;
-         bIsStaticFunction = ( pFunc->cScope & HB_FS_STATIC ) != 0;
-
-         /* Is it _STATICS$ - static initialization function */
-         if( bIsInitStatics )
-            fprintf( yyc, "HB_FUNC_INITSTATICS();\n" );
-         /* Is it an (_INITLINES) function */
-         else if( bIsLineNumberInfo )
-            fprintf( yyc, "HB_FUNC_INITLINES();\n" );
-         /* Is it an INIT FUNCTION/PROCEDURE */
-         else if( bIsInitFunction )
-            hb_compGenCFunc( yyc, "HB_FUNC_INIT( %s );\n", pFunc->szName, TRUE );
-         /* Is it an EXIT FUNCTION/PROCEDURE */
-         else if( bIsExitFunction )
-            hb_compGenCFunc( yyc, "HB_FUNC_EXIT( %s );\n", pFunc->szName, TRUE );
-         /* Is it a STATIC FUNCTION/PROCEDURE */
-         else if( bIsStaticFunction )
-            hb_compGenCFunc( yyc, "HB_FUNC_STATIC( %s );\n", pFunc->szName, FALSE );
-         else /* Then it must be PUBLIC FUNCTION/PROCEDURE */
-            hb_compGenCFunc( yyc, "HB_FUNC( %s );\n", pFunc->szName, FALSE );
-
-         pFunc = pFunc->pNext;
-      }
-
-      /* write functions prototypes for inline blocks */
       pInline = HB_COMP_PARAM->inlines.pFirst;
       while( pInline )
       {
          if( pInline->szName )
          {
-            bIsInlineFunction = TRUE;
-            hb_compGenCFunc( yyc, "HB_FUNC_STATIC( %s );\n", pInline->szName, FALSE );
+            fHasHbInline = TRUE;
+            break;
          }
          pInline = pInline->pNext;
       }
 
-      /* write functions prototypes for called functions outside this PRG */
-      pFuncall = HB_COMP_PARAM->funcalls.pFirst;
-      while( pFuncall )
+      hb_compGenCStdHeaders( HB_COMP_PARAM, yyc, fHasHbInline );
+
+      fprintf( yyc, "\n\n" );
+
+      /* write functions prototypes */
+      pSym = HB_COMP_PARAM->symbols.pFirst;
+      while( pSym )
       {
-         if( ( pFuncall->cScope & ( HB_FS_DEFERRED | HB_FS_LOCAL ) ) == 0 &&
-             hb_compFunctionFind( HB_COMP_PARAM, pFuncall->szName ) == NULL &&
-             hb_compInlineFind( HB_COMP_PARAM, pFuncall->szName ) == NULL )
-            hb_compGenCFunc( yyc, ( pFuncall->cScope & HB_FS_STATIC ) ?
-                             "HB_FUNC_STATIC( %s );\n" :
-                             "HB_FUNC_EXTERN( %s );\n", pFuncall->szName, FALSE );
-         pFuncall = pFuncall->pNext;
+         if( pSym->bFunc )
+         {
+            if( pSym->szName[ 0 ] == '(' )
+            {
+               fprintf( yyc, "HB_FUNC_INIT%s();\n",
+                        !memcmp( pSym->szName + 1, "_INITLINES", 10 ) ?
+                        "LINES" : "STATICS" );
+            }
+            else if( pSym->cScope & HB_FS_LOCAL ) /* is it a function defined in this module */
+            {
+               if( pSym->cScope & HB_FS_INIT )
+                  hb_compGenCFunc( yyc, "HB_FUNC_INIT( %s );\n", pSym->szName, TRUE );
+               else if( pSym->cScope & HB_FS_EXIT )
+                  hb_compGenCFunc( yyc, "HB_FUNC_EXIT( %s );\n", pSym->szName, TRUE );
+               else if( pSym->cScope & HB_FS_STATIC )
+                  hb_compGenCFunc( yyc, "HB_FUNC_STATIC( %s );\n", pSym->szName, FALSE );
+               else
+                  hb_compGenCFunc( yyc, "HB_FUNC( %s );\n", pSym->szName, FALSE );
+            }
+            else if( ( pSym->cScope & HB_FS_DEFERRED ) == 0 ) /* it's not a function declared as dynamic */
+               hb_compGenCFunc( yyc, "HB_FUNC_EXTERN( %s );\n", pSym->szName, FALSE );
+         }
+         pSym = pSym->pNext;
       }
 
       /* writes the symbol table */
       /* Generate the wrapper that will initialize local symbol table
        */
-      hb_strncpyUpper( szModulname, pFileName->szName, sizeof( szModulname ) - 1 );
+      hb_strncpyUpper( szFileName, pFileName->szName, sizeof( szFileName ) - 1 );
       /* replace non ID characters in name of local symbol table by '_' */
       {
-         int iLen = strlen( szModulname ), i;
+         int iLen = strlen( szFileName ), i;
 
          for( i = 0; i < iLen; i++ )
          {
-            char c = szModulname[ i ];
+            char c = szFileName[ i ];
             if( !HB_ISNEXTIDCHAR( c ) )
-               szModulname[ i ] = '_';
+               szFileName[ i ] = '_';
          }
       }
-      fprintf( yyc, "\n\nHB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_%s%s )\n", HB_COMP_PARAM->szPrefix, szModulname );
+      fprintf( yyc, "\n\nHB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_%s%s )\n", HB_COMP_PARAM->szPrefix, szFileName );
 
       pSym = HB_COMP_PARAM->symbols.pFirst;
       while( pSym )
@@ -285,9 +277,9 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
              * we are using these two bits to mark the special function used to
              * initialize static variables or debugging info about valid stop lines
              */
-            fprintf( yyc, "{ \"%s\", {HB_FS_INITEXIT | HB_FS_LOCAL}, {hb_%s}, NULL }",
-                     pSym->szName, !memcmp( pSym->szName, "(_INITLINES", 11 ) ?
-                     "INITLINES" : "INITSTATICS" ); /* NOTE: "hb_" intentionally in lower case */
+            fprintf( yyc, "{ \"%s\", {HB_FS_INITEXIT | HB_FS_LOCAL}, {hb_INIT%s}, NULL }",
+                     pSym->szName, !memcmp( pSym->szName + 1, "_INITLINES", 10 ) ?
+                     "LINES" : "STATICS" ); /* NOTE: "hb_" intentionally in lower case */
          }
          else
          {
@@ -295,13 +287,10 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
 
             if( pSym->cScope & HB_FS_STATIC )
                fprintf( yyc, "HB_FS_STATIC" );
-
             else if( pSym->cScope & HB_FS_INIT )
                fprintf( yyc, "HB_FS_INIT" );
-
             else if( pSym->cScope & HB_FS_EXIT )
                fprintf( yyc, "HB_FS_EXIT" );
-
             else
                fprintf( yyc, "HB_FS_PUBLIC" );
 
@@ -329,7 +318,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
             }
             else if( pSym->cScope & HB_FS_DEFERRED ) /* is it a function declared as dynamic */
                fprintf( yyc, " | HB_FS_DEFERRED}, {NULL}, NULL }" );
-            else if( pSym->bFunc && hb_compFunCallFind( HB_COMP_PARAM, pSym->szName ) ) /* is it a function called from this module */
+            else if( pSym->bFunc /* && hb_compFunCallFind( HB_COMP_PARAM, pSym->szName ) */ ) /* is it a function called from this module */
                hb_compGenCFunc( yyc, "}, {HB_FUNCNAME( %s )}, NULL }", pSym->szName, FALSE );
             else
                fprintf( yyc, "}, {NULL}, NULL }" );   /* memvar | alias | message */
@@ -341,69 +330,49 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
          pSym = pSym->pNext;
       }
 
-      hb_writeEndInit( HB_COMP_PARAM, yyc, szModulname, HB_COMP_PARAM->szFile );
+      hb_writeEndInit( HB_COMP_PARAM, yyc, szFileName, HB_COMP_PARAM->szFile );
 
       /* Generate functions data
        */
       pFunc = HB_COMP_PARAM->functions.pFirst;
-      if( ( pFunc->funFlags & FUN_FILE_DECL ) != 0 )
-         pFunc = pFunc->pNext;
-
       while( pFunc )
       {
-         bIsInitStatics    = ( pFunc == HB_COMP_PARAM->pInitFunc );
-         bIsLineNumberInfo = ( pFunc == HB_COMP_PARAM->pLineFunc );
-         bIsInitFunction   = ( pFunc->cScope & HB_FS_INIT ) != 0;
-         bIsExitFunction   = ( pFunc->cScope & HB_FS_EXIT ) != 0;
-         bIsStaticFunction = ( pFunc->cScope & HB_FS_STATIC ) != 0;
-
-         /* Is it _STATICS$ - static initialization function */
-         if( bIsInitStatics )
-            fprintf( yyc, "HB_FUNC_INITSTATICS()" );
-         /* Is it an (_INITLINES) function */
-         else if( bIsLineNumberInfo )
-            fprintf( yyc, "HB_FUNC_INITLINES()" );
-         /* Is it an INIT FUNCTION/PROCEDURE */
-         else if( bIsInitFunction )
-            hb_compGenCFunc( yyc, "HB_FUNC_INIT( %s )", pFunc->szName, TRUE );
-         /* Is it an EXIT FUNCTION/PROCEDURE */
-         else if( bIsExitFunction )
-            hb_compGenCFunc( yyc, "HB_FUNC_EXIT( %s )", pFunc->szName, TRUE );
-         /* Is it a STATIC FUNCTION/PROCEDURE */
-         else if( bIsStaticFunction )
-            hb_compGenCFunc( yyc, "HB_FUNC_STATIC( %s )", pFunc->szName, FALSE );
-         else /* Then it must be PUBLIC FUNCTION/PROCEDURE */
-            hb_compGenCFunc( yyc, "HB_FUNC( %s )", pFunc->szName, FALSE );
-
-         fprintf( yyc, "\n" );
-         if( HB_COMP_PARAM->iGenCOutput == HB_COMPGENC_REALCODE )
+         if( ( pFunc->funFlags & FUN_FILE_DECL ) == 0 )
          {
-            hb_compGenCRealCode( HB_COMP_PARAM, pFunc, yyc );
-         }
-         else
-         {
-            if( HB_COMP_PARAM->iGenCOutput == HB_COMPGENC_COMPACT )
-               hb_compGenCCompact( pFunc, yyc );
+            /* Is it _STATICS$ - static initialization function */
+            if( pFunc == HB_COMP_PARAM->pInitFunc )
+               fprintf( yyc, "HB_FUNC_INITSTATICS()\n" );
+            /* Is it an (_INITLINES) function */
+            else if( pFunc == HB_COMP_PARAM->pLineFunc )
+               fprintf( yyc, "HB_FUNC_INITLINES()\n" );
+            /* Is it an INIT FUNCTION/PROCEDURE */
+            else if( pFunc->cScope & HB_FS_INIT )
+               hb_compGenCFunc( yyc, "HB_FUNC_INIT( %s )\n", pFunc->szName, TRUE );
+            /* Is it an EXIT FUNCTION/PROCEDURE */
+            else if( pFunc->cScope & HB_FS_EXIT )
+               hb_compGenCFunc( yyc, "HB_FUNC_EXIT( %s )\n", pFunc->szName, TRUE );
+            /* Is it a STATIC FUNCTION/PROCEDURE */
+            else if( pFunc->cScope & HB_FS_STATIC )
+               hb_compGenCFunc( yyc, "HB_FUNC_STATIC( %s )\n", pFunc->szName, FALSE );
+            else /* Then it must be PUBLIC FUNCTION/PROCEDURE */
+               hb_compGenCFunc( yyc, "HB_FUNC( %s )\n", pFunc->szName, FALSE );
+
+            if( HB_COMP_PARAM->iGenCOutput == HB_COMPGENC_REALCODE )
+               hb_compGenCRealCode( HB_COMP_PARAM, pFunc, yyc );
             else
-               hb_compGenCReadable( HB_COMP_PARAM, pFunc, yyc );
+            {
+               if( HB_COMP_PARAM->iGenCOutput == HB_COMPGENC_COMPACT )
+                  hb_compGenCCompact( pFunc, yyc );
+               else
+                  hb_compGenCReadable( HB_COMP_PARAM, pFunc, yyc );
+            }
+            fprintf( yyc, "\n" );
          }
-         fprintf( yyc, "\n" );
          pFunc = pFunc->pNext;
       }
 
       /* Generate C inline functions
        */
-      if( bIsInlineFunction )
-      {
-         fprintf( yyc, "#include \"hbapi.h\"\n" );
-         fprintf( yyc, "#include \"hbstack.h\"\n" );
-         fprintf( yyc, "#include \"hbapierr.h\"\n" );
-         fprintf( yyc, "#include \"hbapiitm.h\"\n" );
-         fprintf( yyc, "#include \"hbvm.h\"\n" );
-         fprintf( yyc, "#include \"hbapicls.h\"\n" );
-         fprintf( yyc, "#include \"hboo.ch\"\n" );
-      }
-
       pInline = HB_COMP_PARAM->inlines.pFirst;
       while( pInline )
       {
@@ -429,15 +398,10 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
       {
          if( pInline->pCode )
          {
-            if( !bIsInlineFunction )
+            if( !fHasHbInline )
             {
-               fprintf( yyc, "#include \"hbvmpub.h\"\n" );
-               if( HB_COMP_PARAM->iGenCOutput != HB_COMPGENC_COMPACT )
-                  fprintf( yyc, "#include \"hbpcode.h\"\n" );
-               fprintf( yyc, "#include \"hbinit.h\"\n" );
-               if( HB_COMP_PARAM->iGenCOutput == HB_COMPGENC_REALCODE )
-                  fprintf( yyc, "#include \"hbxvm.h\"\n" );
-               bIsInlineFunction = TRUE;
+               hb_compGenCStdHeaders( HB_COMP_PARAM, yyc, FALSE );
+               fHasHbInline = TRUE;
             }
             fprintf( yyc, "#line %i ", pInline->iLine );
             hb_compGenCString( yyc, ( BYTE * ) pInline->szFileName,
@@ -451,7 +415,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
          }
          pInline = pInline->pNext;
       }
-      if( !bIsInlineFunction )
+      if( !fHasHbInline )
          fprintf( yyc, "\n/* Empty source file */\n" );
    }
 
@@ -487,7 +451,6 @@ static void hb_writeEndInit( HB_COMP_DECL, FILE* yyc, const char * szModulname, 
                  HB_COMP_PARAM->szPrefix, szModulname,
                  HB_COMP_PARAM->szPrefix, szModulname );
 }
-
 
 static void hb_compGenCFunc( FILE * yyc, const char *cDecor, const char *szName, BOOL fStrip )
 {

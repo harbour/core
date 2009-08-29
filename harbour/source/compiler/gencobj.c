@@ -153,7 +153,7 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
    /* Force file extension to avoid collisions when called from a make utility */
    pFileName->szExtension = ".c";
    hb_fsFNameMerge( szFileName, pFileName );
-   hb_compGenCCode( HB_COMP_PARAM, HB_COMP_PARAM->pFileName );
+   hb_compGenCCode( HB_COMP_PARAM, pFileName );
 
    /* Begin second pass */
 

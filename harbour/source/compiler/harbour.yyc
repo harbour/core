@@ -4657,7 +4657,7 @@ yyreduce:
                   (yyvsp[(1) - (1)].valChar).string = ( char * ) hb_compIdentifierNew( HB_COMP_PARAM, (yyvsp[(1) - (1)].valChar).string, HB_IDENT_FREE );
                   (yyvsp[(1) - (1)].valChar).dealloc = FALSE;
                }
-               hb_compAutoOpenAdd( HB_COMP_PARAM, (yyvsp[(1) - (1)].valChar).string );
+               hb_compModuleAdd( HB_COMP_PARAM, (yyvsp[(1) - (1)].valChar).string, FALSE );
             ;}
     break;
 
@@ -4667,7 +4667,7 @@ yyreduce:
                {
                   char szFileName[ HB_PATH_MAX ];
                   hb_strncat( hb_strncpy( szFileName, (yyvsp[(1) - (3)].valChar).string, sizeof( szFileName ) - 1 ), (yyvsp[(3) - (3)].valChar).string, sizeof( szFileName ) - 1 );
-                  hb_compAutoOpenAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, szFileName, HB_IDENT_COPY ) );
+                  hb_compModuleAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, szFileName, HB_IDENT_COPY ), FALSE );
                   if( (yyvsp[(1) - (3)].valChar).dealloc )
                   {
                      hb_xfree( (yyvsp[(1) - (3)].valChar).string );
@@ -6768,7 +6768,7 @@ yyreduce:
   case 593:
 #line 1889 "harbour.y"
     {
-                  hb_compAutoOpenAdd( HB_COMP_PARAM, (yyvsp[(1) - (2)].string) );
+                  hb_compModuleAdd( HB_COMP_PARAM, (yyvsp[(1) - (2)].string), FALSE );
                   /* DOIDENT is the only one identifier which can be returned in lower letters */
                   (yyval.asExpr) = hb_compExprNewFunCall( hb_compExprNewFunName( hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( (yyvsp[(1) - (2)].string) ) ), HB_IDENT_FREE ), HB_COMP_PARAM ), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM );
                ;}

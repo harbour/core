@@ -451,9 +451,9 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
             case 'm':
             case 'M':
                if( *( s + 1 ) == '-' )
-                  HB_COMP_PARAM->fAutoOpen = TRUE;
+                  HB_COMP_PARAM->fSingleModule = FALSE;
                else
-                  HB_COMP_PARAM->fAutoOpen = FALSE;
+                  HB_COMP_PARAM->fSingleModule = TRUE;
                break;
 
             case 'n':

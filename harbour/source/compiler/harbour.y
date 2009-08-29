@@ -476,13 +476,13 @@ CompTimeStr : LITERAL {
                   $1.string = ( char * ) hb_compIdentifierNew( HB_COMP_PARAM, $1.string, HB_IDENT_FREE );
                   $1.dealloc = FALSE;
                }
-               hb_compAutoOpenAdd( HB_COMP_PARAM, $1.string );
+               hb_compModuleAdd( HB_COMP_PARAM, $1.string, FALSE );
             }
             | LITERAL '+' LITERAL {
                {
                   char szFileName[ HB_PATH_MAX ];
                   hb_strncat( hb_strncpy( szFileName, $1.string, sizeof( szFileName ) - 1 ), $3.string, sizeof( szFileName ) - 1 );
-                  hb_compAutoOpenAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, szFileName, HB_IDENT_COPY ) );
+                  hb_compModuleAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, szFileName, HB_IDENT_COPY ), FALSE );
                   if( $1.dealloc )
                   {
                      hb_xfree( $1.string );
@@ -1887,7 +1887,7 @@ DoProc     : DO DoName DoArgs
                }
            | DOIDENT DoArgs
                {
-                  hb_compAutoOpenAdd( HB_COMP_PARAM, $1 );
+                  hb_compModuleAdd( HB_COMP_PARAM, $1, FALSE );
                   /* DOIDENT is the only one identifier which can be returned in lower letters */
                   $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( $1 ) ), HB_IDENT_FREE ), HB_COMP_PARAM ), $2, HB_COMP_PARAM );
                }

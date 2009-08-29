@@ -230,7 +230,7 @@ HB_COMP_PTR hb_comp_new( void )
       pComp->fBuildInfo       = FALSE;    /* print build info */
       pComp->fLogo            = TRUE;     /* print logo */
       pComp->fSyntaxCheckOnly = FALSE;    /* syntax check only */
-      pComp->fAutoOpen        = TRUE;
+      pComp->fSingleModule    = FALSE;
       pComp->fError           = FALSE;
 
       pComp->iStartProc       = 0;        /* no implicit starting procedure */
@@ -267,12 +267,12 @@ void hb_comp_free( HB_COMP_PTR pComp )
    if( pComp->pPpoPath )
       hb_xfree( pComp->pPpoPath );
 
-   while( pComp->autoopen )
+   while( pComp->modules )
    {
-      PAUTOOPEN pAutoOpen = pComp->autoopen;
+      PHB_MODULE pModule = pComp->modules;
 
-      pComp->autoopen = pComp->autoopen->pNext;
-      hb_xfree( pAutoOpen );
+      pComp->modules = pComp->modules->pNext;
+      hb_xfree( pModule );
    }
 
    while( pComp->pVarType )

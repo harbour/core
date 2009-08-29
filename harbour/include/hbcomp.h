@@ -172,7 +172,8 @@ extern void hb_compGenBreak( HB_COMP_DECL );  /* generate code for BREAK stateme
 
 extern void hb_compExternGen( HB_COMP_DECL ); /* generates the symbols for the EXTERN names */
 extern void hb_compExternAdd( HB_COMP_DECL, const char * szExternName, HB_SYMBOLSCOPE cScope ); /* defines a new extern name */
-extern void hb_compAutoOpenAdd( HB_COMP_DECL, const char * szName );
+
+extern void hb_compModuleAdd( HB_COMP_DECL, const char * szModuleName, BOOL fForce );
 
 extern void hb_compRTVariableKill( HB_COMP_DECL, PFUNCTION );
 extern void hb_compSwitchKill( HB_COMP_DECL, PFUNCTION );

@@ -493,11 +493,12 @@ typedef struct __EXTERN
 } _EXTERN, * PEXTERN;      /* support structure for extern symbols */
 /* as they have to be placed on the symbol table later than the first public symbol */
 
-typedef struct _AUTOOPEN
+typedef struct _HB_MODULE
 {
-   const char * szName;
-   struct _AUTOOPEN * pNext;
-} AUTOOPEN, * PAUTOOPEN;      /* support structure for extern symbols */
+   const char *         szName;
+   BOOL                 force;
+   struct _HB_MODULE *  pNext;
+} HB_MODULE, * PHB_MODULE;
 
 typedef struct _HB_DEBUGINFO
 {
@@ -641,7 +642,7 @@ typedef struct _HB_COMP
    SYMBOLS           symbols;
    INLINES           inlines;
    PEXTERN           externs;
-   PAUTOOPEN         autoopen;
+   PHB_MODULE        modules;
    PHB_VARTYPE       pVarType;
 
    PCOMDECLARED      pFirstDeclared;
@@ -652,7 +653,7 @@ typedef struct _HB_COMP
 
    PFUNCTION         pInitFunc;
    PFUNCTION         pLineFunc;
-   PHB_FNAME         pMainFileName;
+   PFUNCTION         pDeclFunc;
    PHB_FNAME         pFileName;
    PHB_FNAME         pOutPath;
    PHB_FNAME         pPpoPath;
@@ -712,7 +713,7 @@ typedef struct _HB_COMP
    BOOL              fLogo;               /* print logo */
    BOOL              fSyntaxCheckOnly;    /* syntax check only */
    BOOL              fLongOptimize;       /* optimize PCODEs generated for integers */
-   BOOL              fAutoOpen;           /* automatically compile DO...[WITH...] external modules (-m) */
+   BOOL              fSingleModule;       /* do not automatically compile DO...[WITH...] external modules (-m) */
    BOOL              fError;              /* error appeared during compilation */
    BOOL              fMeaningful;         /* do not generate warnings about meaningless expression usage */
 }

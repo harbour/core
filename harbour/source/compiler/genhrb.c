@@ -36,14 +36,6 @@
 #define SYM_EXTERN   2              /* function defined in other module  */
 #define SYM_DEFERRED 3              /* lately bound function             */
 
-static PFUNCTION hb_compFirstFunc( HB_COMP_DECL )
-{
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pFirst;
-   if( ( pFunc->funFlags & FUN_FILE_DECL ) != 0 )
-      pFunc = pFunc->pNext;
-   return pFunc;
-}
-
 static ULONG hb_compHrbSize( HB_COMP_DECL, ULONG * pulSymbols, ULONG * pulFunctions )
 {
    PFUNCTION pFunc;
@@ -63,11 +55,14 @@ static ULONG hb_compHrbSize( HB_COMP_DECL, ULONG * pulSymbols, ULONG * pulFuncti
    }
    ulSize += 4; /* functions_number[4] */
    /* Generate functions data */
-   pFunc = hb_compFirstFunc( HB_COMP_PARAM );
+   pFunc = HB_COMP_PARAM->functions.pFirst;
    while( pFunc )
    {
-      ( * pulFunctions )++;
-      ulSize += strlen( pFunc->szName ) + 5 + pFunc->lPCodePos; /* \0 + func_size[4] + function_body */
+      if( ( pFunc->funFlags & FUN_FILE_DECL ) == 0 )
+      {
+         ( * pulFunctions )++;
+         ulSize += strlen( pFunc->szName ) + 5 + pFunc->lPCodePos; /* \0 + func_size[4] + function_body */
+      }
       pFunc = pFunc->pNext;
    }
 
@@ -116,7 +111,7 @@ void hb_compGenBufPortObj( HB_COMP_DECL, BYTE ** pBufPtr, ULONG * pulSize )
          *ptr++ = SYM_FUNC;      /* function defined in this module */
       else if( pSym->cScope & HB_FS_DEFERRED )
          *ptr++ = SYM_DEFERRED;  /* lately bound function */
-      else if( hb_compFunCallFind( HB_COMP_PARAM, pSym->szName ) )
+      else if( pSym->bFunc /* && hb_compFunCallFind( HB_COMP_PARAM, pSym->szName ) */ )
          *ptr++ = SYM_EXTERN; /* external function */
       else
          *ptr++ = SYM_NOLINK; /* other symbol */
@@ -126,16 +121,19 @@ void hb_compGenBufPortObj( HB_COMP_DECL, BYTE ** pBufPtr, ULONG * pulSize )
    HB_PUT_LE_UINT32( ptr, ulFunctions );  /* number of functions */
    ptr += 4;
    /* generate functions data */
-   pFunc = hb_compFirstFunc( HB_COMP_PARAM );
+   pFunc = HB_COMP_PARAM->functions.pFirst;
    while( pFunc )
    {
-      ulLen = strlen( pFunc->szName ) + 1;
-      memcpy( ptr, pFunc->szName, ulLen );
-      ptr += ulLen;
-      HB_PUT_LE_UINT32( ptr, pFunc->lPCodePos );      /* function size */
-      ptr += 4;
-      memcpy( ptr, pFunc->pCode, pFunc->lPCodePos );  /* function body */
-      ptr += pFunc->lPCodePos;
+      if( ( pFunc->funFlags & FUN_FILE_DECL ) == 0 )
+      {
+         ulLen = strlen( pFunc->szName ) + 1;
+         memcpy( ptr, pFunc->szName, ulLen );
+         ptr += ulLen;
+         HB_PUT_LE_UINT32( ptr, pFunc->lPCodePos );      /* function size */
+         ptr += 4;
+         memcpy( ptr, pFunc->pCode, pFunc->lPCodePos );  /* function body */
+         ptr += pFunc->lPCodePos;
+      }
       pFunc = pFunc->pNext;
    }
 }
