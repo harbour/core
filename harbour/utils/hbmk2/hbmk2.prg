@@ -1827,6 +1827,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cParam := ArchCompFilter( hbmk, cParam )
          IF ! Empty( cParam )
             cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+            IF Empty( FN_ExtGet( cParam ) )
+               cParam := FN_ExtSet( cParam, ".prg" )
+            ENDIF
             AAdd( hbmk[ _HBMK_aPRG ], PathSepToTarget( hbmk, cParam ) )
             DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cParam )
          ENDIF
@@ -2997,13 +3000,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          FOR EACH tmp IN hbmk[ _HBMK_aPRG ]
             IF hbmk[ _HBMK_lDEBUGINC ]
                hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: PRG %1$s %2$s",;
-                  FN_ExtSet( tmp, ".prg" ),;
-                  FN_DirExtSet( tmp, cWorkDir, ".c" ) ) )
+                  tmp, FN_DirExtSet( tmp, cWorkDir, ".c" ) ) )
             ENDIF
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp2 ) .OR. ;
-               ! hb_FGetDateTime( FN_ExtSet( tmp, ".prg" ), @tmp1 ) .OR. ;
+               ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, FN_ExtSet( tmp, ".prg" ), NIL, tmp2, .F., .F., @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, .F., .F., @headstate ) )
                AAdd( l_aPRG_TODO, tmp )
             ENDIF
          NEXT
@@ -5151,6 +5153,9 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                      NEXT
                   ENDIF
                OTHERWISE /* .prg */
+                  IF Empty( FN_ExtGet( cItem ) )
+                     cItem := FN_ExtSet( cItem, ".prg" )
+                  ENDIF
                   AAddNew( hbmk[ _HBMK_aPRG ], PathSepToTarget( hbmk, cItem ) )
                ENDCASE
             ENDIF
