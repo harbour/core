@@ -280,7 +280,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
       for contrib/hbmysql lib:   sudo apt-get install libmysqlclient15-dev
       for contrib/hbpgsql lib:   sudo apt-get install libpq-dev
       for contrib/hbqt lib:      sudo apt-get install libqt4-dev
-      for contrib/hbsqlite3 lib: sudo apt-get install libsqlite3-dev
+      for contrib/hbsqlit3 lib:  sudo apt-get install libsqlite3-dev
 
    Linux (openSUSE)
    ----------------
