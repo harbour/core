@@ -269,6 +269,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
       for gtsln terminal lib:    sudo apt-get install libslang2-dev
       for gtxwc terminal lib:    sudo apt-get install libx11-dev
       for console mouse support: sudo apt-get install libgpm-dev OR libgpmg1-dev
+      for contrib/gtalleg lib:   sudo apt-get install liballegro4.2-dev
       for contrib/hbodbc lib:    sudo apt-get install unixodbc-dev
       for contrib/hbcurl lib:    sudo apt-get install libcurl4-openssl-dev
       for contrib/hbfbird lib:   sudo apt-get install firebird2.1-dev OR
@@ -279,6 +280,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
       for contrib/hbmysql lib:   sudo apt-get install libmysqlclient15-dev
       for contrib/hbpgsql lib:   sudo apt-get install libpq-dev
       for contrib/hbqt lib:      sudo apt-get install libqt4-dev
+      for contrib/hbsqlite3 lib: sudo apt-get install libsqlite3-dev
 
    Linux (openSUSE)
    ----------------
