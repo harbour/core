@@ -56,6 +56,7 @@
 #include "hbset.h"
 #include "hbvm.h"
 #include "hbcomp.h"
+#include "hbmemory.ch"
 
 /* ------------------------------------------------------------------------- */
 /* FM statistic module */

@@ -3875,6 +3875,13 @@ void hb_compCompileEnd( HB_COMP_DECL )
    }
    HB_COMP_PARAM->functions.pLast = NULL;
 
+   if( HB_COMP_PARAM->pInitFunc &&
+       ( HB_COMP_PARAM->pInitFunc->funFlags & FUN_ATTACHED ) == 0 )
+   {
+      hb_compFunctionKill( HB_COMP_PARAM, HB_COMP_PARAM->pInitFunc );
+   }
+   HB_COMP_PARAM->pInitFunc = NULL;
+
    if( HB_COMP_PARAM->functions.pFirst )
    {
       PFUNCTION pFunc = HB_COMP_PARAM->functions.pFirst;
@@ -3882,13 +3889,6 @@ void hb_compCompileEnd( HB_COMP_DECL )
       while( pFunc )
          pFunc = hb_compFunctionKill( HB_COMP_PARAM, pFunc );
       HB_COMP_PARAM->functions.pFirst = NULL;
-   }
-
-   if( HB_COMP_PARAM->pInitFunc &&
-       ( HB_COMP_PARAM->pInitFunc->funFlags & FUN_ATTACHED ) == 0 )
-   {
-      hb_compFunctionKill( HB_COMP_PARAM, HB_COMP_PARAM->pInitFunc );
-      HB_COMP_PARAM->pInitFunc = NULL;
    }
 
    while( HB_COMP_PARAM->funcalls.pFirst )

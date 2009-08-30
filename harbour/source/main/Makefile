@@ -11,7 +11,7 @@ C_MAIN := harbour.c
 LIBS := \
    hbcplr \
    hbpp \
-   hbcommon \
    hbnortl \
+   hbcommon \
 
 include $(TOP)$(ROOT)config/bin.mk

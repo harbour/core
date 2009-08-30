@@ -14,8 +14,8 @@ C_SOURCES := \
 LIBNAME := hbpp
 
 LIBS := \
-   hbcommon \
    hbnortl \
+   hbcommon \
 
 include $(TOP)$(ROOT)config/lib.mk
 
