@@ -80,8 +80,6 @@
       #define gethostname __gethostname
    #endif
 
-   #define MAXGETHOSTNAME 256      /* should be enough for a host name */
-
 #elif defined( HB_OS_DOS )
 
    #if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __GNUC__ )
@@ -96,8 +94,13 @@
       #include <sys/types.h>
    #endif
    #include <unistd.h>
-   #define MAXGETHOSTNAME 256      /* should be enough for a host name */
 
+#endif
+
+#if !defined( MAXGETHOSTNAME ) && ( defined( HB_OS_UNIX ) || \
+      ( ( defined( HB_OS_OS2 ) || defined( HB_OS_DOS ) ) && \
+        defined( __GNUC__ ) ) )
+   #define MAXGETHOSTNAME 256      /* should be enough for a host name */
 #endif
 
 /* NOTE: Clipper will only return a maximum of 15 bytes from this function.
