@@ -108,7 +108,7 @@ export HB_XBUILD=win
 export HB_BIN_INSTALL=%{_bindir}
 export HB_INC_INSTALL=%{_includedir}/%{name}
 export HB_LIB_INSTALL=%{_libdir}/%{name}
-export HB_CONTRIBLIBS="gtwvg hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbtip hbvpdf hbwin hbziparc rddado xhb %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_allegro:gtalleg}"
+export HB_CONTRIBLIBS="gtwvg hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbvpdf hbwin hbziparc rddado xhb %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_allegro:gtalleg}"
 export HB_EXTERNALLIBS=no
 
 make %{?_smp_mflags}
@@ -137,7 +137,7 @@ export HB_XBUILD=win
 export HB_BIN_INSTALL=%{_bindir}
 export HB_INC_INSTALL=%{_includedir}/%{name}
 export HB_LIB_INSTALL=%{_libdir}/%{name}
-export HB_CONTRIBLIBS="gtwvg hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbtip hbvpdf hbwin hbziparc rddado xhb %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_allegro:gtalleg}"
+export HB_CONTRIBLIBS="gtwvg hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbvpdf hbwin hbziparc rddado xhb %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_allegro:gtalleg}"
 export HB_EXTERNALLIBS=no
 
 export _DEFAULT_BIN_DIR=$HB_BIN_INSTALL

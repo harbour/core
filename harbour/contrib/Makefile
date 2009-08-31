@@ -17,6 +17,7 @@ DIRS := \
    hbgt \
    hbmisc \
    hbmzip \
+   hbnetio \
    hbnf \
    hbodbc \
    hbsqlit3 \

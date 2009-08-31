@@ -81,7 +81,7 @@
 %define hb_idir  export HB_INC_INSTALL=%{_includedir}/%{name}
 %define hb_ldir  export HB_LIB_INSTALL=%{_libdir}/%{name}
 %define hb_cmrc  export HB_COMMERCE=%{?_without_gpllib:yes}
-%define hb_ctrb  export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbtip hbtpathy hbhpdf hbvpdf hbziparc xhb rddsql %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_libharu:hbhpdf} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_fbsql:hbfbird} %{?_with_allegro:gtalleg}"
+%define hb_ctrb  export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbtpathy hbhpdf hbvpdf hbziparc xhb rddsql %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_libharu:hbhpdf} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_fbsql:hbfbird} %{?_with_allegro:gtalleg}"
 %define hb_extrn export HB_EXTERNALLIBS=no
 %define hb_env   %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_ctrb} ; %{hb_extrn} ; %{hb_cmrc}
 %define hb_host  www.harbour-project.org
@@ -659,6 +659,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbbtree.a
 %{_libdir}/%{name}/libhbmisc.a
 %{_libdir}/%{name}/libhbmzip.a
+%{_libdir}/%{name}/libhbnetio.a
 %{_libdir}/%{name}/libhbct.a
 %{_libdir}/%{name}/libhbtip*.a
 %{_libdir}/%{name}/libxhb.a

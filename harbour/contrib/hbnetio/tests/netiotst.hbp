@@ -1,0 +1,7 @@
+#
+# $Id: uhttpd2.hbp 11370 2009-06-15 18:22:09Z vszakats $
+#
+
+netiotst.prg
+-lhbnetio
+-mt
