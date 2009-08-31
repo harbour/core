@@ -280,5 +280,12 @@ DIRS := \
    gtwvt \
    gtxwc \
 
+ifeq ($(HB_HAS_TCP),yes)
+   HB_CFLAGS += -DHB_HAS_TCP
+   ifneq ($(HB_INC_TCP),)
+      HB_CFLAGS += -I$(HB_INC_TCP)
+   endif
+endif
+
 include $(TOP)$(ROOT)config/lib.mk
 include $(TOP)$(ROOT)config/dir.mk

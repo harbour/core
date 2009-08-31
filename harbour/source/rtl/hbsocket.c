@@ -52,7 +52,7 @@
 
 #include "hbsocket.h"
 
-#if defined( HB_OS_DOS )
+#if defined( HB_OS_DOS ) && !defined( HB_HAS_TCP )
 #  if !defined( HB_SOCKET_OFF )
 #     define HB_SOCKET_OFF
 #  endif
@@ -146,6 +146,14 @@
 #  else
    /* test shows that GCC 3.3.6 does not support inet_pton() and inet_ntop() */
 #  endif
+#elif defined( HB_OS_DOS )
+#  define HB_HAS_INET_ATON
+#  define HB_HAS_INET_PTON
+#  define HB_HAS_INET_NTOP
+#  define HB_HAS_SOCKADDR_STORAGE
+#  define HB_HAS_ADDRINFO
+#  define HB_HAS_INET6_ADDR_CONST
+/* #  define HB_HAS_INET6 */
 #endif
 
 
@@ -179,12 +187,18 @@
    #undef HB_OS_WIN
 #endif
 
-#if defined( HB_OS_OS2 ) || defined( HB_OS_WIN )
+#if defined( HB_OS_OS2 ) || defined( HB_OS_WIN ) || defined( HB_OS_DOS )
 #  define socklen_t int
 #endif
 
 #if !defined( INET_ADDRSTRLEN )
 #  define INET_ADDRSTRLEN  16
+#endif
+
+#if defined( HB_OS_DOS ) && !defined( SHUT_RD )
+#  define SHUT_RD       0
+#  define SHUT_WR       1
+#  define SHUT_RDWR     2
 #endif
 
 #if defined( __WATCOMC__ ) && defined( HB_OS_LINUX ) && !defined( IP_ADD_MEMBERSHIP )
