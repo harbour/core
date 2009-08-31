@@ -252,6 +252,8 @@ static HRESULT STDMETHODCALLTYPE Invoke( IEventHandler *lpThis, DISPID dispid, R
    HB_SYMBOL_UNUSED( pExcepInfo );
    HB_SYMBOL_UNUSED( puArgErr );
 
+   Sleep( 10 );
+
    if( ! IsEqualIID( riid, HB_ID_REF( IID_NULL ) ) )
       return DISP_E_UNKNOWNINTERFACE;
 
@@ -337,10 +339,10 @@ HB_FUNC( WVG_AXSETUPCONNECTIONPOINT )
    MyRealIEventHandler*        hSink;
    device_interface*           pdevice_interface = ( device_interface * ) hb_oleParam( 1 );
 
-   IConnectionPointContainer*  pIConnectionPointContainerTemp = NULL;
+   IConnectionPointContainer*  pCPC = NULL;
    IUnknown*                   pIUnknown;
-   IConnectionPoint*           m_pIConnectionPoint = NULL;
-   IEnumConnectionPoints*      m_pIEnumConnectionPoints;
+   IConnectionPoint*           pCP = NULL;
+   IEnumConnectionPoints*      pEnumCPs;
    IID                         rriid;
    IEventHandler*              thisobj;
    DWORD                       dwCookie = 0;
@@ -356,18 +358,18 @@ HB_FUNC( WVG_AXSETUPCONNECTIONPOINT )
       hr = HB_VTBL( thisobj )->QueryInterface( HB_THIS_( thisobj ) HB_ID_REF( IID_IUnknown ), (void **) (void*) &pIUnknown );
       if( hr == S_OK && pIUnknown )
       {
-         hr = HB_VTBL( pdevice_interface )->QueryInterface( HB_THIS_( pdevice_interface ) HB_ID_REF( IID_IConnectionPointContainer ), (void**) (void*) &pIConnectionPointContainerTemp);
-         if( hr == S_OK && pIConnectionPointContainerTemp )
+         hr = HB_VTBL( pdevice_interface )->QueryInterface( HB_THIS_( pdevice_interface ) HB_ID_REF( IID_IConnectionPointContainer ), (void**) (void*) &pCPC);
+         if( hr == S_OK && pCPC )
          {
-            hr = HB_VTBL( pIConnectionPointContainerTemp )->EnumConnectionPoints( HB_THIS_( pIConnectionPointContainerTemp ) &m_pIEnumConnectionPoints );
-            if( hr == S_OK && m_pIEnumConnectionPoints )
+            hr = HB_VTBL( pCPC )->EnumConnectionPoints( HB_THIS_( pCPC ) &pEnumCPs );
+            if( hr == S_OK && pEnumCPs )
             {
                do
                {
-                  hr = HB_VTBL( m_pIEnumConnectionPoints )->Next( HB_THIS_( m_pIEnumConnectionPoints ) 1, &m_pIConnectionPoint, NULL );
+                  hr = HB_VTBL( pEnumCPs )->Next( HB_THIS_( pEnumCPs ) 1, &pCP, NULL );
                   if( hr == S_OK )
                   {
-                     hr = HB_VTBL( m_pIConnectionPoint )->GetConnectionInterface( HB_THIS_( m_pIConnectionPoint ) &rriid );
+                     hr = HB_VTBL( pCP )->GetConnectionInterface( HB_THIS_( pCP ) &rriid );
                      if( hr == S_OK )
                      {
                         /**************           This has to be review         *******************
@@ -378,10 +380,10 @@ HB_FUNC( WVG_AXSETUPCONNECTIONPOINT )
                         ( ( MyRealIEventHandler* ) thisobj )->device_event_interface_iid = rriid;
                         #endif
 
-                        hr = HB_VTBL( m_pIConnectionPoint )->Advise( HB_THIS_( m_pIConnectionPoint ) pIUnknown, &dwCookie );
+                        hr = HB_VTBL( pCP )->Advise( HB_THIS_( pCP ) pIUnknown, &dwCookie );
                         if( hr == S_OK )
                         {
-                           ( ( MyRealIEventHandler* ) thisobj )->pIConnectionPoint = m_pIConnectionPoint;
+                           ( ( MyRealIEventHandler* ) thisobj )->pIConnectionPoint = pCP;
                            ( ( MyRealIEventHandler* ) thisobj )->dwEventCookie     = dwCookie;
                         }
                         else
@@ -391,11 +393,11 @@ HB_FUNC( WVG_AXSETUPCONNECTIONPOINT )
                         hr = S_OK;
                   }
                } while( hr == S_OK );
-               HB_VTBL( m_pIEnumConnectionPoints )->Release( HB_THIS( m_pIEnumConnectionPoints ) );
-               m_pIEnumConnectionPoints = NULL;
+               HB_VTBL( pEnumCPs )->Release( HB_THIS( pEnumCPs ) );
+               pEnumCPs = NULL;
             }
-            HB_VTBL( pIConnectionPointContainerTemp )->Release( HB_THIS( pIConnectionPointContainerTemp ) );
-            pIConnectionPointContainerTemp = NULL;
+            HB_VTBL( pCPC )->Release( HB_THIS( pCPC ) );
+            pCPC = NULL;
          }
          HB_VTBL( pIUnknown )->Release( HB_THIS( pIUnknown ) );
          pIUnknown = NULL;

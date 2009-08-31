@@ -574,11 +574,23 @@ static void hb_gt_wvt_UpdateCaret( PHB_GTWVT pWVT )
       }
       if( pWVT->CaretExist )
       {
+         BOOL bShow;
          POINT xy;
          xy = hb_gt_wvt_GetXYFromColRow( pWVT, iCol, iRow );
          SetCaretPos( xy.x, pWVT->CaretSize < 0 ?
                       xy.y : xy.y + pWVT->PTEXTSIZE.y - pWVT->CaretSize );
-         ShowCaret( pWVT->hWnd );
+
+         bShow = ShowCaret( pWVT->hWnd );
+         /* Normally it MUST not happen but in certain cases it was failing, so.. [pritpal] */
+         if( !bShow )
+         {
+            DestroyCaret();
+            pWVT->CaretExist = CreateCaret( pWVT->hWnd, ( HBITMAP ) NULL, pWVT->PTEXTSIZE.x,
+                                   pWVT->CaretSize < 0 ? - pWVT->CaretSize : pWVT->CaretSize );
+            SetCaretPos( xy.x, pWVT->CaretSize < 0 ?
+                                   xy.y : xy.y + pWVT->PTEXTSIZE.y - pWVT->CaretSize );
+            ShowCaret( pWVT->hWnd );
+         }
          pWVT->CaretHidden = FALSE;
       }
    }
