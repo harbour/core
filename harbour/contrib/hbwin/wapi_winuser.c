@@ -310,3 +310,13 @@ HB_FUNC( WAPI_LOADBITMAP )
 }
 #endif
 /*----------------------------------------------------------------------*/
+HB_FUNC( WAPI_GETACTIVEWINDOW )
+{
+   hb_retptr( GetActiveWindow() );
+}
+/*----------------------------------------------------------------------*/
+HB_FUNC( WAPI_SETACTIVEWINDOW )
+{
+   hb_retptr( SetActiveWindow( wapi_par_HWND( 1 ) ) );
+}
+/*----------------------------------------------------------------------*/
