@@ -163,7 +163,7 @@ static USHORT hb_errRT_FireBirdDD( ULONG ulGenCode, ULONG ulSubCode, const char 
 static HB_ERRCODE fbConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
 {
    ISC_STATUS       status[ 5 ];
-   isc_db_handle    db = NULL;
+   isc_db_handle    db = ( isc_db_handle ) 0;
    char             parambuf[ 520 ];
    int              i;
    ULONG            ul;
@@ -191,7 +191,7 @@ static HB_ERRCODE fbConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
       /* TODO: error code in status[1]; */
       return HB_FAILURE;
    }
-   pConnection->hConnection = (void*) db;
+   pConnection->hConnection = ( void* ) ( HB_PTRDIFF ) db;
    return HB_SUCCESS;
 }
 
@@ -216,8 +216,8 @@ static HB_ERRCODE fbExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
 static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
 {
    ISC_STATUS       status[ 5 ];
-   isc_tr_handle    pTrans = NULL;
-   isc_stmt_handle  pStmt = NULL;
+   isc_tr_handle    pTrans = ( isc_tr_handle ) 0;
+   isc_stmt_handle  pStmt = ( isc_stmt_handle ) 0;
    XSQLDA ISC_FAR*  pSqlda;
    XSQLVAR*         pVar;
    PHB_ITEM         pItemEof, pItem;
@@ -407,8 +407,8 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
    hb_xfree( pBuffer );
 
    pArea->pResult = pSqlda;
-   pArea->pStmt = ( void* ) pStmt;
-   pArea->pTrans = ( void* ) pTrans;
+   pArea->pStmt = ( void* ) ( HB_PTRDIFF ) pStmt;
+   pArea->pTrans = ( void* ) ( HB_PTRDIFF ) pTrans;
 
    if ( bError )
    {
@@ -444,7 +444,7 @@ static HB_ERRCODE fbClose( SQLBASEAREAP pArea )
    }
    if ( pArea->pStmt )
    {
-      isc_stmt_handle  stmt = ( isc_stmt_handle ) pArea->pStmt;
+      isc_stmt_handle  stmt = ( isc_stmt_handle ) ( HB_PTRDIFF ) pArea->pStmt;
 
       /* We can not pass here ( isc_stmt_handle* ) &pArea->pStmt.
          It will not work on 64bit big-endian system, since on 64bit
@@ -454,7 +454,7 @@ static HB_ERRCODE fbClose( SQLBASEAREAP pArea )
    }
    if ( pArea->pTrans )
    {
-      isc_tr_handle   tr = ( isc_tr_handle ) pArea->pTrans;
+      isc_tr_handle   tr = ( isc_tr_handle ) ( HB_PTRDIFF ) pArea->pTrans;
 
       isc_rollback_transaction( status, &tr );
       pArea->pTrans = NULL;
@@ -474,8 +474,8 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
 
    while ( ulRecNo > pArea->ulRecCount && ! pArea->fFetched )
    {
-      isc_stmt_handle  stmt = ( isc_stmt_handle ) pArea->pStmt;
-      isc_tr_handle  tr = ( isc_tr_handle ) pArea->pTrans;
+      isc_stmt_handle  stmt = ( isc_stmt_handle ) ( HB_PTRDIFF ) pArea->pStmt;
+      isc_tr_handle  tr = ( isc_tr_handle ) ( HB_PTRDIFF ) pArea->pTrans;
 
       lErr = isc_dsql_fetch( status, &stmt, DIALECT, (XSQLDA *) pArea->pResult );
 
