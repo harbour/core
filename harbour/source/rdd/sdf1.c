@@ -1116,6 +1116,8 @@ static HB_ERRCODE hb_sdfOpen( SDFAREAP pArea, LPDBOPENINFO pOpenInfo )
       const char * szName = strrchr( pFileName->szName, ':' );
       if( szName == NULL )
          szName = pFileName->szName;
+      else
+         ++szName;
       hb_strncpyUpperTrim( szAlias, szName, sizeof( szAlias ) - 1 );
       pOpenInfo->atomAlias = szAlias;
    }

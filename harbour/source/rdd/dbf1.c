@@ -3834,6 +3834,8 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
       const char * szName = strrchr( pFileName->szName, ':' );
       if( szName == NULL )
          szName = pFileName->szName;
+      else
+         ++szName;
       hb_strncpyUpperTrim( szAlias, szName, sizeof( szAlias ) - 1 );
       pOpenInfo->atomAlias = szAlias;
    }
