@@ -1113,7 +1113,10 @@ static HB_ERRCODE hb_sdfOpen( SDFAREAP pArea, LPDBOPENINFO pOpenInfo )
    /* Create default alias if necessary */
    if( !pOpenInfo->atomAlias && pFileName->szName )
    {
-      hb_strncpyUpperTrim( szAlias, pFileName->szName, sizeof( szAlias ) - 1 );
+      const char * szName = strrchr( pFileName->szName, ':' );
+      if( szName == NULL )
+         szName = pFileName->szName;
+      hb_strncpyUpperTrim( szAlias, szName, sizeof( szAlias ) - 1 );
       pOpenInfo->atomAlias = szAlias;
    }
    hb_xfree( pFileName );
