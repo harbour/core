@@ -3768,7 +3768,9 @@ METHOD applyKey( nKey ) CLASS XbpBrowse
 
 
 METHOD setKey( nKey, bBlock ) CLASS XbpBrowse
-
+   HB_SYMBOL_UNUSED( nKey )
+   HB_SYMBOL_UNUSED( bBlock )
+#if 0
    LOCAL bReturn
    LOCAL nPos
 
@@ -3816,7 +3818,9 @@ METHOD setKey( nKey, bBlock ) CLASS XbpBrowse
    ENDIF
 
    RETURN bReturn
-
+#else
+   RETURN .f.
+#endif
 
 METHOD setStyle( nStyle, lNewValue ) CLASS XbpBrowse
 
@@ -3839,7 +3843,7 @@ METHOD setStyle( nStyle, lNewValue ) CLASS XbpBrowse
 
    RETURN ::styles[ nStyle ]
 
-
+#if 0
 FUNCTION TBMouse( oBrw, nMRow, nMCol )
 
    LOCAL n
@@ -3870,7 +3874,7 @@ FUNCTION TBMouse( oBrw, nMRow, nMCol )
    ENDIF
 
    RETURN TBR_EXCEPTION
-
+#endif
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/

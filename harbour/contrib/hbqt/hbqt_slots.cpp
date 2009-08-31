@@ -56,6 +56,7 @@
 #include "hbapi.h"
 #include "hbvm.h"
 #include "hbapiitm.h"
+#include "hbstack.h"
 
 #include "hbqt.h"
 
@@ -75,8 +76,56 @@
 
 /*----------------------------------------------------------------------*/
 
-static Slots  *s_s = NULL;
-static Events *s_e = NULL;
+typedef struct
+{
+   Events * events;
+} HB_EVENTS, * PHB_EVENTS;
+
+static HB_TSD_NEW( s_events, sizeof( HB_EVENTS ), NULL, NULL );
+
+#define hb_getQtEventFilter()       ( ( PHB_EVENTS ) hb_stackGetTSD( &s_events ) )
+
+
+
+typedef struct
+{
+   Slots * slot;
+} HB_SLOTS, * PHB_SLOTS;
+
+static HB_TSD_NEW( s_slots, sizeof( HB_SLOTS ), NULL, NULL );
+
+#define hb_getQtEventSlots()       ( ( PHB_SLOTS ) hb_stackGetTSD( &s_slots ) )
+
+/*----------------------------------------------------------------------*/
+
+void qt_setEventFilter( Events * event )
+{
+   hb_getQtEventFilter()->events = event;
+}
+
+Events * qt_getEventFilter( void )
+{
+   Events * s_e = hb_getQtEventFilter()->events;
+   if( !s_e )
+      hb_getQtEventFilter()->events = new Events();
+
+   return hb_getQtEventFilter()->events;
+}
+
+
+void qt_setEventSlots( Slots * slot )
+{
+   hb_getQtEventSlots()->slot = slot;
+}
+
+Slots * qt_getEventSlots( void )
+{
+   Slots * s_s = hb_getQtEventSlots()->slot;
+   if( !s_s )
+      hb_getQtEventSlots()->slot = new Slots();
+
+   return hb_getQtEventSlots()->slot;
+}
 
 /*----------------------------------------------------------------------*/
 
@@ -91,6 +140,7 @@ static void SlotsExec( QObject* object, char* event )
 {
    if( object )
    {
+      Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
       if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
       {
@@ -105,6 +155,7 @@ static void SlotsExecBool( QObject* object, char* event, bool bBool )
 {
    if( object )
    {
+      Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
       if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
       {
@@ -121,6 +172,7 @@ static void SlotsExecInt( QObject* object, char* event, int iValue )
 {
    if( object )
    {
+      Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
       if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
       {
@@ -137,6 +189,7 @@ static void SlotsExecIntInt( QObject* object, char* event, int iValue1, int iVal
 {
    if( object )
    {
+      Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
       if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) )
       {
@@ -155,6 +208,7 @@ static void SlotsExecIntIntInt( QObject* object, char* event, int iValue1, int i
 {
    if( object )
    {
+      Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
       if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) )
       {
@@ -175,6 +229,7 @@ static void SlotsExecIntIntRect( QObject* object, char* event, int iValue1, int 
 {
    if( object )
    {
+      Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
       if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) )
       {
@@ -195,6 +250,7 @@ static void SlotsExecString( QObject* object, char* event, const QString & strin
 {
    if( object )
    {
+      Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
       if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) )
       {
@@ -211,6 +267,7 @@ static void SlotsExecString2( QObject* object, char* event, const QString & s1, 
 {
    if( object )
    {
+      Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
       if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) )
       {
@@ -229,6 +286,7 @@ static void SlotsExecString3( QObject* object, char* event, const QString & s1, 
 {
    if( object )
    {
+      Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
       if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) )
       {
@@ -249,6 +307,7 @@ static void SlotsExecModel( QObject* object, char* event, const QModelIndex & in
 {
    if( object )
    {
+      Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
       if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
       {
@@ -265,6 +324,7 @@ static void SlotsExecRect( QObject* object, char* event, const QRect & rect )
 {
    if( object )
    {
+      Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
       if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
       {
@@ -281,6 +341,7 @@ static void SlotsExecUrl( QObject* object, char* event, const QUrl & url )
 {
    if( object )
    {
+      Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
       if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
       {
@@ -297,6 +358,7 @@ static void SlotsExecTextCharFormat( QObject* object, char* event, const QTextCh
 {
    if( object )
    {
+      Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
       if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
       {
@@ -313,6 +375,7 @@ static void SlotsExecFont( QObject* object, char* event, const QFont & font )
 {
    if( object )
    {
+      Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
       if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
       {
@@ -329,6 +392,7 @@ static void SlotsExecStringList( QObject* object, char* event, const QStringList
 {
    if( object )
    {
+      Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
       if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
       {
@@ -345,6 +409,7 @@ static void SlotsExecNetworkRequest( QObject* object, char* event, const QNetwor
 {
    if( object )
    {
+      Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
       if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
       {
@@ -361,6 +426,7 @@ static void SlotsExecPointer( QObject* object, char* event, void * p1 )
 {
    if( object )
    {
+      Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
       if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
       {
@@ -377,6 +443,7 @@ static void SlotsExecPointerString( QObject* object, char* event, void * p1, QSt
 {
    if( object )
    {
+      Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
       if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
       {
@@ -395,6 +462,7 @@ static void SlotsExecPointerInt( QObject* object, char* event, void * p1, int iI
 {
    if( object )
    {
+      Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
       if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
       {
@@ -413,6 +481,7 @@ static void SlotsExecPointerPointer( QObject* object, char* event, void * p1, vo
 {
    if( object )
    {
+      Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
       if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
       {
@@ -979,9 +1048,7 @@ HB_FUNC( QT_CONNECT_SIGNAL )
    QString   signal    = hb_parcx( 2 );               /* get signal */
    PHB_ITEM  codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK | HB_IT_BYREF ) ); /* get codeblock */
    bool      ret       = false;                       /* return value */
-
-   if( s_s == NULL )
-      s_s = new Slots();
+   Slots   * s_s       = qt_getEventSlots();
 
    if( signal == ( QString ) "clicked()" )
    {
@@ -1523,29 +1590,9 @@ HB_FUNC( QT_CONNECT_SIGNAL )
 
    if( ret == true )
    {
-      bool bFound = false;
-      int  i;
-
-      for( i = 0; i < s_s->listBlock.size(); i++ )
-      {
-         if( s_s->listBlock.at( i ) == NULL )
-         {
-            bFound = true;
-            break;
-         }
-      }
-      if( bFound )
-      {
-         s_s->listBlock[ i ] = codeblock;
-         s_s->listActv[ i ] = true;
-         object->setProperty( hb_parcx( 2 ), ( int ) i + 1 );
-      }
-      else
-      {
-         s_s->listBlock  << codeblock;
-         s_s->listActv   << true;
-         object->setProperty( hb_parcx( 2 ), ( int ) s_s->listBlock.size() );
-      }
+      s_s->listBlock  << codeblock;
+      s_s->listActv   << true;
+      object->setProperty( hb_parcx( 2 ), ( int ) s_s->listBlock.size() );
    }
 }
 
@@ -1557,17 +1604,15 @@ HB_FUNC( QT_DISCONNECT_SIGNAL )
    QObject * object = ( QObject* ) hb_parptr( 1 );
    if( object )
    {
+      Slots * s_s = qt_getEventSlots();
       const char * event = hb_parcx( 2 );
       int i = object->property( event ).toInt();
 
       if( i > 0 && i <= s_s->listBlock.size() )
       {
-         if( s_s->listBlock.at( i - 1 ) != NULL )
-         {
-            hb_itemRelease( s_s->listBlock.at( i - 1 ) );
-            s_s->listBlock[ i - 1 ] = NULL;
-            s_s->listActv[ i - 1 ] = false;
-         }
+         hb_itemRelease( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ) );
+         s_s->listBlock[ i - 1 ] = NULL;
+         s_s->listActv[ i - 1 ] = false;
       }
    }
 }
@@ -1578,6 +1623,8 @@ HB_FUNC( QT_DISCONNECT_SIGNAL )
  */
 HB_FUNC( RELEASE_CODEBLOCKS )
 {
+   Slots * s_s = qt_getEventSlots();
+
    if( s_s )
    {
       for( int i = 0; i < s_s->listBlock.size(); ++i )
@@ -1599,6 +1646,7 @@ HB_FUNC( RELEASE_CODEBLOCKS )
  */
 void release_codeblocks( void )
 {
+   Slots * s_s = qt_getEventSlots();
    if( s_s )
    {
       for( int i = 0; i < s_s->listBlock.size(); ++i )
@@ -1703,15 +1751,12 @@ bool Events::eventFilter( QObject * object, QEvent * event )
       else
          event->ignore();
    }
-   return ret; //true;
+   return ret;
 }
 
 HB_FUNC( QT_QEVENTFILTER )
 {
-   if( s_e == NULL )
-      s_e = new Events();
-
-   hb_retptr( ( Events * ) s_e );
+   hb_retptr( qt_getEventFilter() );
 }
 
 HB_FUNC( QT_CONNECT_EVENT )
@@ -1719,44 +1764,24 @@ HB_FUNC( QT_CONNECT_EVENT )
    QObject * object    = ( QObject * ) hb_parptr( 1 );
    int       type      = hb_parni( 2 );
    PHB_ITEM  codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK | HB_IT_BYREF ) );
+   Events  * s_e       = qt_getEventFilter();
 
-   if( s_e == NULL )
-      s_e = new Events();
-
-   bool bFound = false;
-   int  i;
-   char str[ 10 ];
+   char str[ 20 ];
    hb_snprintf( str, sizeof( str ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
 
-   for( i = 0; i < s_e->listBlock.size(); i++ )
-   {
-      if( s_e->listBlock.at( i ) == NULL )
-      {
-         bFound = true;
-         break;
-      }
-   }
-   if( bFound )
-   {
-      s_e->listBlock[ i ] = codeblock;
-      s_e->listActv[ i ] = true;
-      object->setProperty( str, ( int ) i + 1 );
-   }
-   else
-   {
-      s_e->listBlock << codeblock;
-      s_e->listActv  << true;
-      object->setProperty( str, ( int ) s_e->listBlock.size() );
-   }
+   s_e->listBlock << codeblock;
+   s_e->listActv  << true;
+   object->setProperty( str, ( int ) s_e->listBlock.size() );
 
    hb_retl( true );
 }
 
 HB_FUNC( QT_DISCONNECT_EVENT )
 {
-   QObject * object    = ( QObject * ) hb_parptr( 1 );
-   int       type      = hb_parni( 2 );
-   bool      bRet = false;
+   QObject * object = ( QObject * ) hb_parptr( 1 );
+   int       type   = hb_parni( 2 );
+   bool      bRet   = false;
+   Events  * s_e    = qt_getEventFilter();
 
    char str[ 10 ];
    hb_snprintf( str, sizeof( str ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
@@ -1764,13 +1789,10 @@ HB_FUNC( QT_DISCONNECT_EVENT )
    int i = object->property( str ).toInt();
    if( i > 0 && i <= s_e->listBlock.size() )
    {
-      if( s_e->listBlock.at( i - 1 ) != NULL )
-      {
-         hb_itemRelease( s_e->listBlock.at( i - 1 ) );
-         s_e->listBlock[ i - 1 ] = NULL;
-         s_e->listActv[ i - 1 ] = false;
-         bRet = true;
-      }
+      hb_itemRelease( s_e->listBlock.at( i - 1 ) );
+      s_e->listBlock[ i - 1 ] = NULL;
+      s_e->listActv[ i - 1 ] = false;
+      bRet = true;
    }
    hb_retl( bRet );
 }
@@ -1820,7 +1842,7 @@ void HbTableView::resizeEvent( QResizeEvent * event )
 }
 QModelIndex HbTableView::moveCursor( HbTableView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers )
 {
-   // char str[ 50 ]; hb_snprintf( str, sizeof( str ), "HbTableView: action=%i %i", cursorAction, QAbstractItemView::MoveDown );  OutputDebugString( str );
+// char str[ 50 ]; hb_snprintf( str, sizeof( str ), "HbTableView: action=%i %i", cursorAction, QAbstractItemView::MoveDown );  OutputDebugString( str );
 
    //emit sg_moveCursor( cursorAction, modifiers );
    return QTableView::moveCursor( cursorAction, modifiers );
@@ -1888,12 +1910,6 @@ QVariant fetchRole( PHB_ITEM block, int what, int par1, int par2 )
       return( hb_itemGetND( ret ) );
    else if( hb_itemType( ret ) & HB_IT_NUMERIC )
       return( hb_itemGetNI( ret ) );
-   #if 0
-   else if( hb_itemType( ret ) & HB_IT_POINTER )
-   {
-      QPixmap pixmap = qobject_cast<QPixmap>( (QPixmap*) hb_itemGetPtr( ret ) );
-   }
-   #endif
    else
       return QVariant();
 }

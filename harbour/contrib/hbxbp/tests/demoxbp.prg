@@ -82,12 +82,25 @@ REQUEST DbfCdx
 
 #define CRLF    chr( 13 )+chr( 10 )
 
-STATIC oMLE         /* Change Font elsewhere */
+#ifdef __HARBOUR__
+THREAD STATIC oMLE         /* Change Font elsewhere */
+#else
+STATIC oMLE
+#endif
 
 /*----------------------------------------------------------------------*/
 
 PROCEDURE Main()
 
+   _BuildADialog()
+
+   RETURN
+
+/*----------------------------------------------------------------------*/
+
+PROCEDURE _BuildADialog()
+
+   hb_gtReload( 'GUI' )
    BuildADialog()
 
    RETURN
@@ -248,7 +261,7 @@ STATIC FUNCTION uiXtoS( xVar )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION uiDebug( p1, p2, p3, p4, p5, p6, p7, p8, p9, p10 )
+FUNCTION MyDebug( p1, p2, p3, p4, p5, p6, p7, p8, p9, p10 )
    LOCAL s
 
    s := uiXtoS( p1 ) + CRLF
@@ -347,7 +360,7 @@ STATIC FUNCTION Build_MenuBar( oDlg )
       oSubMenu:title := "~Dialogs"
       #if 1             /*  T H R E D E D   D I A L O G */
          oSubMenu:addItem( { "~One More Instance"+ chr( K_TAB ) +"Ctrl+M", ;
-                                    {|| hb_threadStart( {|| BuildADialog() } ) } } )
+                                    {|| hb_threadStart( {|| _BuildADialog() } ) } } )
       #else
          oSubMenu:addItem( { "~One More Instance"+ chr( K_TAB )+ "Ctrl+M", {|| BuildADialog() } } )
       #endif
@@ -1360,7 +1373,7 @@ FUNCTION Build_PrintDialog( oWnd )
 
    IF valtype( oPrn := oDlg:display() ) == "O"
 
-      uiDebug( oPrn:devName           , ;
+      MyDebug( oPrn:devName           , ;
                oPrn:setOrientation()  , ;
                oPrn:setFormSize()     , ;
                oPrn:setResolution()[1], ;

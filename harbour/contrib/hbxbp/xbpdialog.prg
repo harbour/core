@@ -85,7 +85,7 @@ CLASS XbpDialog FROM XbpWindow
    DATA     tasklist                              INIT  .t.
    DATA     oEventLoop
 
-   METHOD   init()
+   METHOD   new()
    METHOD   create()
    METHOD   configure()
    METHOD   destroy()
@@ -107,7 +107,7 @@ CLASS XbpDialog FROM XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpDialog:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD XbpDialog:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -152,7 +152,7 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    /* Install Event Loop per Dialog Basis */
    /*               Limitng               */
    ::oEventLoop := QEventLoop():new( ::pWidget )
-   AddEventLoop( ::oEventLoop )
+   SetEventLoop( ::oEventLoop )
 
    /* Instal Event Filter */
    ::oWidget:installEventFilter( SetEventFilter() )
@@ -207,7 +207,6 @@ METHOD XbpDialog:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 METHOD XbpDialog:destroy()
 
    ::oEventLoop:exit( 0 )
-   RemoveEventLoop( ::oEventLoop )
 
    ::xbpWindow:destroy()
 

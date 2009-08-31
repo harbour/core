@@ -82,9 +82,8 @@
 STATIC ts_mutex
 STATIC oApp
 
-THREAD STATIC aEventLoop := {}
+THREAD STATIC aEventLoop
 
-//STATIC ts_events
 THREAD STATIC ts_events
 
 THREAD STATIC nEventIn  := 0
@@ -93,7 +92,8 @@ THREAD STATIC oDummy
 
 THREAD STATIC oAppWindow
 
-THREAD STATIC sEventFilter
+//THREAD STATIC sEventFilter
+STATIC sEventFilter
 THREAD STATIC oEventLoop
 
 /*----------------------------------------------------------------------*/
@@ -136,7 +136,7 @@ FUNCTION SetAppEvent( nEvent, mp1, mp2, oXbp )
       nEventIn := 1
    ENDIF
 
-//xbp_debug( "SetAppEvent ... ", threadID(), nEventIn )
+xbp_debug( "SetAppEvent ... ", threadID(), nEventIn )
 
    ts_events[ nEventIn,1 ] := nEvent
    ts_events[ nEventIn,2 ] := mp1
@@ -158,9 +158,9 @@ FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
    IF ++nEventOut > EVENT_BUFFER
       nEventOut := 1
    ENDIF
-//xbp_debug( "            AppEvent ... ", threadID(), nEventOut )
+xbp_debug( "            AppEvent ... ", nThreadID, nEventOut )
    DO WHILE .t.
-      aEventLoop[ 1,1 ]:processEvents_1( 0, 200 )
+      oEventLoop:processEvents( 0 )
 
       IF ts_events[ nEventOut,5 ] == nThreadID
          nEvent := ts_events[ nEventOut,1 ]
@@ -175,7 +175,7 @@ FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
 
       hb_idleSleep( 0.001 )                  /* Releases CPU cycles */
    ENDDO
-//( "..........................", threadID() )
+xbp_debug( "..........................", threadID() )
 
    RETURN nEvent
 
@@ -242,7 +242,7 @@ FUNCTION MsgBox( cMsg, cTitle )
    oMB:setParent( SetAppWindow():pWidget )
    oMB:setWindowFlags( Qt_Dialog )
    oMB:setWindowTitle( cTitle )
-   SetAppWindow():oWidget:setFocus()
+   //SetAppWindow():oWidget:setFocus()
    oMB:exec()
 
    oMB:destroy()
@@ -268,43 +268,14 @@ FUNCTION GraMakeRGBColor( aRGB )
 /*----------------------------------------------------------------------*/
 
 FUNCTION SetEventFilter()
-   LOCAL pEventFilter
 
-   IF empty( sEventFilter )
-      pEventFilter := QT_QEventFilter()
-      IF hb_isPointer( pEventFilter )
-         sEventFilter := pEventFilter
-      ENDIF
-   ENDIF
-
-   RETURN sEventFilter
+   RETURN QT_QEventFilter()
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION AddEventLoop( oEventLoop )
+FUNCTION SetEventLoop( oELoop )
 
-   //hb_mutexLock( ts_mutex )
-
-   aadd( aEventLoop, { oEventLoop, threadID() } )
-
-   //hb_mutexUnLock( ts_mutex )
-
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION RemoveEventLoop( oEventLoop )
-   LOCAL n
-
-   n := ascan( aEventLoop, {|o_| o_[ 1 ] == oEventLoop } )
-   IF n > 0
-      hb_mutexLock( ts_mutex )
-
-      aEventLoop[ n,1 ] := NIL
-      aEventLoop[ n,2 ] := 0
-
-      hb_mutexUnLock( ts_mutex )
-   ENDIF
+   oEventLoop := oELoop
 
    RETURN nil
 
