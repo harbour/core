@@ -195,11 +195,16 @@ static void hb_inetAutoInit( void )
 
 HB_FUNC( HB_INETINIT )
 {
+   int ret;
    hb_atomic_set( &s_initialize, 0 );
-   hb_socketInit();
+   ret = hb_socketInit();
+   if( ret == 0 )
+   {
 #if defined( HB_INET_LINUX_INTERRUPT )
-   signal( HB_INET_LINUX_INTERRUPT, hb_inetLinuxSigusrHandle );
+      signal( HB_INET_LINUX_INTERRUPT, hb_inetLinuxSigusrHandle );
 #endif
+   }
+   hb_retl( ret == 0 );
 }
 
 HB_FUNC( HB_INETCLEANUP )
