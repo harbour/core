@@ -22,8 +22,6 @@ include $(TOP)$(ROOT)config/lib.mk
 ifneq ($(HB_PLATFORM),)
 ifneq ($(HB_COMPILER),)
 
-INSTALL_RULE_LIB := $(INSTALL_RULE)
-
 HB_VERHEADER := $(TOP)$(ROOT)include/hbverbld.h
 
 BIN_FILE := $(BIN_DIR)/hbpp$(BIN_EXT)
@@ -38,13 +36,9 @@ ifneq ($(HB_HOST_BUILD),lib)
    ifneq ($(HB_BIN_INSTALL),)
       INSTALL_FILES := $(BIN_DIR)/hbpp$(BIN_EXT)
       INSTALL_DIR := $(HB_BIN_INSTALL)
-      HB_INSTALL_DEF := yes
       include $(TOP)$(ROOT)config/install.mk
    endif
 endif
-
-install::
-	$(INSTALL_RULE_LIB)
 
 clean::
 	$(if $(wildcard $(HB_VERHEADER)), -@$(RM) $(subst /,$(DIRSEP),$(HB_VERHEADER)),)

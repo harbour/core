@@ -49,8 +49,13 @@ $(DYN_NAME) : $(ALL_OBJS)
 
 INSTALL_FILES := $(DYN_FILE)
 INSTALL_DIR := $(HB_DYN_INSTALL)
+include $(TOP)$(ROOT)config/instsh.mk
+INSTALL_RULE_DYN := $(INSTALL_RULE)
+ifneq ($(INSTALL_RULE_DYN),)
+install:: first
+	$(INSTALL_RULE_DYN)
 
-include $(TOP)$(ROOT)config/install.mk
+endif
 
 endif
 endif

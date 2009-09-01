@@ -120,8 +120,4 @@ PRG_HEADERS := \
    ctvideo.ch \
 
 include $(TOP)$(ROOT)config/header.mk
-INSTALL_RULE_HEADERS := $(INSTALL_RULE)
 include $(TOP)$(ROOT)config/lib.mk
-
-install::
-	$(INSTALL_RULE_HEADERS)

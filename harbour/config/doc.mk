@@ -15,8 +15,14 @@ install::
 else
 INSTALL_FILES := $(DOC_FILES)
 INSTALL_DIR := $(HB_DOC_INSTALL)$(DOC_SUBDIR)
+include $(TOP)$(ROOT)config/instsh.mk
+INSTALL_RULE_DOC := $(INSTALL_RULE)
+ifneq ($(INSTALL_RULE_DOC),)
+install:: first
+	$(INSTALL_RULE_DOC)
 
-include $(TOP)$(ROOT)config/install.mk
+endif
+
 endif
 endif
 endif

@@ -96,8 +96,15 @@ $(BIN_NAME) : $(ALL_OBJS)
 
 INSTALL_FILES := $(BIN_FILE)
 INSTALL_DIR := $(HB_BIN_INSTALL)
+include $(TOP)$(ROOT)config/instsh.mk
+INSTALL_RULE_BIN := $(INSTALL_RULE)
 
-include $(TOP)$(ROOT)config/install.mk
+ifneq ($(INSTALL_RULE_BIN),)
+
+install:: first
+	$(INSTALL_RULE_BIN)
+
+endif
 
 endif
 endif

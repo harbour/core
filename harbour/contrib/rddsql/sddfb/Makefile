@@ -22,7 +22,6 @@ include $(TOP)$(ROOT)config/detfun.mk
 
 ifneq ($(HB_HAS_FIREBIRD),)
    HB_CFLAGS += $(foreach d,$(HB_HAS_FIREBIRD),-I$(d))
-
    include $(TOP)$(ROOT)config/lib.mk
 else
    HB_SKIP_REASON := $(_DET_RES_TEXT)

@@ -110,11 +110,7 @@ ifneq ($(HB_INC_LIBHARU),no)
       endif
 
       include $(TOP)$(ROOT)config/header.mk
-      INSTALL_RULE_HEADERS := $(INSTALL_RULE)
       include $(TOP)$(ROOT)config/lib.mk
-
-      install::
-	$(INSTALL_RULE_HEADERS)
 
    else
       HB_SKIP_REASON := $(_DET_RES_TEXT)

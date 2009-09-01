@@ -22,16 +22,8 @@ _DET_INC_HEAD := /libpq-fe.h
 include $(TOP)$(ROOT)config/detfun.mk
 
 ifneq ($(HB_HAS_PGSQL),)
-
    HB_CFLAGS += $(foreach d,$(HB_HAS_PGSQL),-I$(d))
-
-   include $(TOP)$(ROOT)config/header.mk
-   INSTALL_RULE_HEADERS := $(INSTALL_RULE)
    include $(TOP)$(ROOT)config/lib.mk
-
-   install::
-	$(INSTALL_RULE_HEADERS)
-
 else
    HB_SKIP_REASON := $(_DET_RES_TEXT)
    include $(TOP)$(ROOT)config/none.mk

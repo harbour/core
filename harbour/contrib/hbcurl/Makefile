@@ -28,11 +28,7 @@ ifneq ($(HB_HAS_CURL),)
    HB_CFLAGS += $(foreach d,$(HB_HAS_CURL),-I$(d))
 
    include $(TOP)$(ROOT)config/header.mk
-   INSTALL_RULE_HEADERS := $(INSTALL_RULE)
    include $(TOP)$(ROOT)config/lib.mk
-
-   install::
-	$(INSTALL_RULE_HEADERS)
 
    ifneq ($(filter $(HB_PLATFORM),win wce),)
       DIRS += hbcurls

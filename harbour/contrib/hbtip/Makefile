@@ -38,16 +38,12 @@ PRG_HEADERS := \
 ifneq ($(HB_PLATFORM),dos)
 
    include $(TOP)$(ROOT)config/header.mk
-   INSTALL_RULE_HEADERS := $(INSTALL_RULE)
    include $(TOP)$(ROOT)config/lib.mk
 
    ifneq ($(HB_HAS_OPENSSL),)
       DIRS := hbtipssl
       include $(TOP)$(ROOT)config/dir.mk
    endif
-
-   install::
-	$(INSTALL_RULE_HEADERS)
 
 else
    include $(TOP)$(ROOT)config/none.mk

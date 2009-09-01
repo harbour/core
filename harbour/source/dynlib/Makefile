@@ -16,20 +16,14 @@ ifneq ($(DYNDIRLIST_BASE),)
    include $(TOP)$(ROOT)config/dyn.mk
    include $(TOP)$(ROOT)config/dir.mk
 
-   ifneq ($(INSTALL_RULE),)
-
-      INSTALL_RULE_DYN := $(INSTALL_RULE)
-
+   ifneq ($(INSTALL_RULE_DYN),)
       ifneq ($(HB_LIB_INSTALL),)
-         INSTALL_FILES := $(IMP_FILE)
-         INSTALL_DIR := $(HB_LIB_INSTALL)
-         HB_INSTALL_DEF := yes
-         include $(TOP)$(ROOT)config/install.mk
+         ifneq ($(IMP_FILE),)
+            INSTALL_FILES := $(IMP_FILE)
+            INSTALL_DIR := $(HB_LIB_INSTALL)
+            include $(TOP)$(ROOT)config/install.mk
+         endif
       endif
-
-install::
-	$(INSTALL_RULE_DYN)
-
    else
       include $(TOP)$(ROOT)config/none.mk
    endif

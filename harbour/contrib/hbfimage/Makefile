@@ -31,11 +31,7 @@ ifneq ($(HB_HAS_FREEIMAGE),)
    HB_CFLAGS += $(foreach d,$(HB_HAS_FREEIMAGE),-I$(d))
 
    include $(TOP)$(ROOT)config/header.mk
-   INSTALL_RULE_HEADERS := $(INSTALL_RULE)
    include $(TOP)$(ROOT)config/lib.mk
-
-install::
-	$(INSTALL_RULE_HEADERS)
 
 else
    HB_SKIP_REASON := $(_DET_RES_TEXT)

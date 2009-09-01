@@ -2,6 +2,8 @@
 # $Id$
 #
 
+INSTALL_RULE :=
+
 ifneq ($(INSTALL_FILES),) # Empty install list
 
 ifeq ($(INSTALL_DIR),) # Empty install dir

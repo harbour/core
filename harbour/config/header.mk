@@ -15,9 +15,14 @@ install::
 else
 INSTALL_FILES := $(C_HEADERS) $(PRG_HEADERS) $(API_HEADERS)
 INSTALL_DIR := $(HB_INC_INSTALL)
+include $(TOP)$(ROOT)config/instsh.mk
+INSTALL_RULE_HEADERS := $(INSTALL_RULE)
+ifneq ($(INSTALL_RULE_HEADERS),)
+install:: first
+	$(INSTALL_RULE_HEADERS)
 
-include $(TOP)$(ROOT)config/install.mk
 endif
 
+endif
 endif
 endif

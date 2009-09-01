@@ -64,7 +64,16 @@ $(LIB_NAME) : $(ALL_OBJS)
 INSTALL_FILES := $(LIB_FILE)
 INSTALL_DIR := $(HB_LIB_INSTALL)
 
-include $(TOP)$(ROOT)config/install.mk
+include $(TOP)$(ROOT)config/instsh.mk
+INSTALL_RULE_LIBS := $(INSTALL_RULE)
+
+ifneq ($(INSTALL_RULE_LIBS),)
+
+install:: first
+	$(INSTALL_RULE_LIBS)
+
+endif
+
 
 endif
 endif

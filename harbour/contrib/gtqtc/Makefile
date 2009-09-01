@@ -59,11 +59,7 @@ ifneq ($(HB_HAS_QT),)
    include $(TOP)$(ROOT)contrib/hbqt/filelist.mk
 
    include $(TOP)$(ROOT)config/header.mk
-   INSTALL_RULE_HEADERS := $(INSTALL_RULE)
    include $(TOP)$(ROOT)config/lib.mk
-
-   install::
-	$(INSTALL_RULE_HEADERS)
 
 else
    HB_SKIP_REASON := $(_DET_RES_TEXT)
