@@ -23,22 +23,31 @@ proc main()
    rddSetDefault( "DBFCDX" )
 
    pSockSrv := netio_mtserver()
+   if empty( pSockSrv )
+      ? "Cannot start NETIO server !!!"
+      wait "Press any key to exit..."
+      quit
+   endif
 
+   ? "NETIO server activated."
    hb_idleSleep( 0.1 )
+   wait
 
+   ?
    ? "NETIO_CONNECT():", netio_connect()
+   ?
 
    createdb( DBNAME )
    testdb( DBNAME )
    wait
 
-   test( DBNAME )
+   ?
+   ? "table exists:", dbExists( DBNAME )
    wait
 
    ?
-   ? "deleteing..."
-   dbDrop( DBNAME )
-   test( DBNAME )
+   ? "delete table with indexes:", dbDrop( DBNAME )
+   ? "table exists:", dbExists( DBNAME )
    wait
 
    netio_serverstop( pSockSrv, .t. )
@@ -97,10 +106,4 @@ proc testdb( cName )
    browse()
    setpos( i, j )
    close
-return
-
-proc test( cName )
-   ? "test start"
-   ? "File exists: ", dbExists( cName )
-   ? "test end"
 return
