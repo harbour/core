@@ -162,7 +162,9 @@
 #  include <ws2tcpip.h>
 #else
 #  include <errno.h>
-#  if defined( HB_OS_OS2 )
+#  if defined( HB_OS_DOS )
+#     include <tcp.h>
+#  elif defined( HB_OS_OS2 )
 #     if defined( __WATCOMC__ )
 #        include <types.h>
 #        include <nerrno.h>
@@ -181,6 +183,9 @@
 #  endif
 #  include <unistd.h>
 #  include <fcntl.h>
+#  if defined( HB_OS_DOS )
+#     define select       select_s
+#  endif
 #endif
 
 #if defined( __CYGWIN__ )
@@ -715,6 +720,8 @@ int hb_socketInit( void )
 #if defined( HB_OS_WIN )
       WSADATA wsadata;
       ret = WSAStartup( HB_MKUSHORT( 1, 1 ), &wsadata );
+#elif defined( HB_OS_DOS )
+      ret = sock_init();
 #endif
    }
    HB_SOCKET_UNLOCK
@@ -729,6 +736,8 @@ void hb_socketCleanup( void )
    {
 #if defined( HB_OS_WIN )
       WSACleanup();
+#elif defined( HB_OS_DOS )
+      sock_exit();
 #endif
    }
    HB_SOCKET_UNLOCK
@@ -1945,6 +1954,8 @@ int hb_socketClose( HB_SOCKET sd )
    hb_vmUnlock();
 #if defined( HB_OS_WIN )
    ret = closesocket( sd );
+#elif defined( HB_OS_DOS )
+   ret = close_s( sd );
 #else
 #  if defined( EINTR )
       /* ignoring EINTR in close() it's quite common bug when sockets or

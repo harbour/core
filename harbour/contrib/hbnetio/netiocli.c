@@ -116,6 +116,9 @@ static char s_defaultServer[ NETIO_SERVERNAME_MAX ] = NETIO_DEFAULT_SERVER;
 static int  s_defaultPort = NETIO_DEFAULT_PORT;
 static int  s_defaultTimeOut = NETIO_DEFAULT_TIMEOUT;
 
+static BOOL s_fInit = TRUE;
+
+
 static const HB_FILE_FUNCS * s_fileMethods( void );
 
 static long s_fileRecvAll( PHB_CONCLI conn, void * buffer, long len )
@@ -433,14 +436,19 @@ static void s_netio_exit( void* cargo )
       s_connections = conn->next;
       s_fileConFree( conn );
    }
+
+   if( s_fInit )
+   {
+      hb_socketCleanup();
+      s_fInit = TRUE;
+   }
 }
 
 static void s_netio_init( void )
 {
-   static BOOL s_fInit = TRUE;
-
    if( s_fInit )
    {
+      hb_socketInit();
       hb_fileRegister( s_fileMethods() );
       hb_vmAtQuit( s_netio_exit, NULL );
       s_fInit = FALSE;

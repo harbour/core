@@ -94,7 +94,6 @@ typedef struct _HB_LISTENSD
 }
 HB_LISTENSD, * PHB_LISTENSD;
 
-
 static BOOL s_isDirSep( char c )
 {
    /* intentionally used explicit values instead of harbour macros
@@ -389,12 +388,20 @@ HB_FUNC( NETIO_SERVERSTOP )
 
 HB_FUNC( NETIO_LISTEN )
 {
+   static BOOL s_fInit = TRUE;
+
    int iPort = hb_parnidef( 1, NETIO_DEFAULT_PORT );
    const char * szAddress = hb_parc( 2 );
    const char * szRootPath = hb_parc( 3 );
    void * pSockAddr;
    unsigned uiLen;
    HB_SOCKET sd = HB_NO_SOCKET;
+
+   if( s_fInit )
+   {
+      hb_socketInit();
+      s_fInit = FALSE;
+   }
 
    if( hb_socketInetAddr( &pSockAddr, &uiLen, szAddress, iPort ) )
    {
