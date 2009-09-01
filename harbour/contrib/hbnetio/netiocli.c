@@ -293,7 +293,7 @@ static PHB_CONCLI s_fileConnect( const char ** pszFilename,
                                  const char * pszServer,
                                  int iPort, int iTimeOut )
 {
-   PHB_CONCLI conn = NULL;
+   PHB_CONCLI conn;
    HB_SOCKET sd;
    PHB_CONDATA pConData = ( PHB_CONDATA ) hb_stackGetTSD( &s_conData );
    char server[ NETIO_SERVERNAME_MAX ];
@@ -451,7 +451,7 @@ HB_FUNC( NETIO_CONNECT )
 {
    const char * pszServer = hb_parc( 1 );
    int iPort = hb_parni( 2 ), iTimeOut = hb_parni( 3 );
-   PHB_CONCLI conn = NULL;
+   PHB_CONCLI conn;
 
    s_netio_init();
 

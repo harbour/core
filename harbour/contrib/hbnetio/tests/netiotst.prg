@@ -1,3 +1,17 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ *    demonstration/test code for alternative RDD IO API which uses own
+ *    very simple TCP/IP file server.
+ *
+ * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * www - http://www.harbour-project.org
+ *
+ */
+
 #define DBNAME    "net:127.0.0.1:2941:data/_tst_"
 
 request DBFCDX
