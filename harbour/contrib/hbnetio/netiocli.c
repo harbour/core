@@ -300,6 +300,7 @@ static PHB_CONCLI s_fileConnect( const char ** pszFilename,
    HB_SOCKET sd;
    PHB_CONDATA pConData = ( PHB_CONDATA ) hb_stackGetTSD( &s_conData );
    char server[ NETIO_SERVERNAME_MAX ];
+   char * pszIpAddres;
 
    if( pConData->port )
    {
@@ -369,7 +370,11 @@ static PHB_CONCLI s_fileConnect( const char ** pszFilename,
       }
    }
 
-   conn = s_fileConFind( pszServer, iPort );
+   pszIpAddres = hb_socketResolveAddr( pszServer, HB_SOCKET_AF_INET );
+   if( pszIpAddres == NULL )
+      return NULL;
+
+   conn = s_fileConFind( pszIpAddres, iPort );
    if( conn == NULL )
    {
       sd = hb_socketOpen( HB_SOCKET_PF_INET, HB_SOCKET_PT_STREAM, 0 );
@@ -378,7 +383,7 @@ static PHB_CONCLI s_fileConnect( const char ** pszFilename,
          void * pSockAddr;
          unsigned uiLen;
 
-         if( hb_socketInetAddr( &pSockAddr, &uiLen, pszServer, iPort ) )
+         if( hb_socketInetAddr( &pSockAddr, &uiLen, pszIpAddres, iPort ) )
          {
             hb_socketSetKeepAlive( sd, TRUE );
             if( hb_socketConnect( sd, pSockAddr, uiLen, iTimeOut ) == 0 )
@@ -390,7 +395,7 @@ static PHB_CONCLI s_fileConnect( const char ** pszFilename,
                HB_PUT_LE_UINT16( &msgbuf[ 4 ], len );
                memset( msgbuf + 6, '\0', sizeof( msgbuf ) - 6 );
 
-               conn = s_fileConNew( sd, pszServer, iPort, iTimeOut );
+               conn = s_fileConNew( sd, pszIpAddres, iPort, iTimeOut );
                sd = HB_NO_SOCKET;
 
                if( !s_fileSendMsg( conn, msgbuf, NETIO_LOGINSTRID, len, TRUE ) ||
@@ -414,14 +419,15 @@ static PHB_CONCLI s_fileConnect( const char ** pszFilename,
       HB_NETIO_LOCK
       if( s_defaultInit )
       {
-         if( pszServer != s_defaultServer )
-            hb_strncpy( s_defaultServer, pszServer, sizeof( s_defaultServer ) - 1 );
+         hb_strncpy( s_defaultServer, pszIpAddres, sizeof( s_defaultServer ) - 1 );
          s_defaultPort = iPort;
          s_defaultTimeOut = iTimeOut;
          s_defaultInit = FALSE;
       }
       HB_NETIO_UNLOCK
    }
+
+   hb_xfree( pszIpAddres );
 
    return conn;
 }

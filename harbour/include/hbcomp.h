@@ -138,16 +138,9 @@ extern int hb_compVariableScope( HB_COMP_DECL, const char * );
 #define FUN_ATTACHED          0x0100   /* function attached to function list */
 
 extern void      hb_compFunctionAdd( HB_COMP_DECL, const char * szFunName, HB_SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
-extern PFUNCTION hb_compFunctionFind( HB_COMP_DECL, const char * szFunName ); /* locates a previously defined function */
-extern void      hb_compAnnounce( HB_COMP_DECL, const char * );
-
-extern PINLINE   hb_compInlineAdd( HB_COMP_DECL, const char * szFunName, int iLine );
-extern PINLINE   hb_compInlineFind( HB_COMP_DECL, const char * szFunName );
-
-extern void      hb_compFunctionMarkStatic( HB_COMP_DECL, const char * szFunName );
-
-extern PFUNCALL  hb_compFunCallFind( HB_COMP_DECL, const char * szFunName ); /* locates a previously defined called function */
 extern BOOL      hb_compFunCallCheck( HB_COMP_DECL, const char *, int );
+extern PINLINE   hb_compInlineAdd( HB_COMP_DECL, const char * szFunName, int iLine );
+extern void      hb_compFunctionMarkStatic( HB_COMP_DECL, const char * szFunName );
 
 extern PHB_VARTYPE hb_compVarTypeNew( HB_COMP_DECL, char cVarType, const char * szFromClass );
 extern void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarType ); /* add a new param, local, static variable to a function definition or a public or private */
@@ -171,7 +164,6 @@ extern void hb_compDeclaredParameterAdd( HB_COMP_DECL, const char * szVarName, P
 
 extern void hb_compGenBreak( HB_COMP_DECL );  /* generate code for BREAK statement */
 
-extern void hb_compExternGen( HB_COMP_DECL ); /* generates the symbols for the EXTERN names */
 extern void hb_compExternAdd( HB_COMP_DECL, const char * szExternName, HB_SYMBOLSCOPE cScope ); /* defines a new extern name */
 
 extern void hb_compModuleAdd( HB_COMP_DECL, const char * szModuleName, BOOL fForce );

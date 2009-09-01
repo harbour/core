@@ -459,14 +459,6 @@ typedef struct
    int     iCount;            /* number of defined inlines */
 } INLINES;
 
-/* structure to control all Clipper defined functions */
-typedef struct
-{
-   PFUNCALL  pFirst;            /* pointer to the first called funtion */
-   PFUNCALL  pLast;             /* pointer to the last called function */
-   int       iCount;            /* number of defined functions */
-} FUNCALLS;
-
 /* compiler symbol support structure */
 typedef struct _COMSYMBOL
 {
@@ -638,7 +630,6 @@ typedef struct _HB_COMP
 
    HB_HASH_TABLE_PTR pIdentifiers;
    FUNCTIONS         functions;
-   FUNCALLS          funcalls;
    SYMBOLS           symbols;
    INLINES           inlines;
    PEXTERN           externs;

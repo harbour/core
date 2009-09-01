@@ -318,7 +318,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
             }
             else if( pSym->cScope & HB_FS_DEFERRED ) /* is it a function declared as dynamic */
                fprintf( yyc, " | HB_FS_DEFERRED}, {NULL}, NULL }" );
-            else if( pSym->bFunc /* && hb_compFunCallFind( HB_COMP_PARAM, pSym->szName ) */ ) /* is it a function called from this module */
+            else if( pSym->bFunc ) /* is it a function called from this module */
                hb_compGenCFunc( yyc, "}, {HB_FUNCNAME( %s )}, NULL }", pSym->szName, FALSE );
             else
                fprintf( yyc, "}, {NULL}, NULL }" );   /* memvar | alias | message */
