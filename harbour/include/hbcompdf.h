@@ -399,6 +399,7 @@ typedef struct __FUNC
    ULONG        lPCodeSize;               /* total memory size for pcode */
    ULONG        lPCodePos;                /* actual pcode offset */
    int          iStaticsBase;             /* base for this function statics */
+   int          iFuncSuffix;              /* function suffix for multiple static functions with the same name */
    ULONG *      pNOOPs;                   /* pointer to the NOOP array */
    ULONG *      pJumps;                   /* pointer to the Jumps array */
    ULONG        iNOOPs;                   /* NOOPs Counter */
@@ -462,10 +463,10 @@ typedef struct
 /* compiler symbol support structure */
 typedef struct _COMSYMBOL
 {
-   const char *   szName;               /* the name of the symbol */
-   HB_SYMBOLSCOPE cScope;               /* the scope of the symbol */
-   BOOL           bFunc;      /* is it a function name (TRUE) or memvar (FALSE) */
-   PCOMCLASS      pClass;
+   const char *   szName;     /* the name of the symbol */
+   HB_SYMBOLSCOPE cScope;     /* the scope of the symbol */
+   int            iFunc;      /* is it a function name (TRUE) or memvar (FALSE) */
+   PFUNCTION      pFunc;
    struct _COMSYMBOL * pNext; /* pointer to the next defined symbol */
 } COMSYMBOL, * PCOMSYMBOL;
 
@@ -677,7 +678,8 @@ typedef struct _HB_COMP
    char              cCastType;           /* current casting type */
 
    int               iErrorCount;
-   BOOL              iStartProc;          /* holds if we need to create the starting procedure */
+   int               iModulesCount;       /* number of compiled .prg modules */
+   int               iStartProc;          /* holds if we need to create the starting procedure */
    int               iMaxTransCycles;     /* maximum translate cycles in PP (-r=<n>) */
    int               iHidden;             /* hide strings */
    int               iWarnings;           /* enable parse warnings */

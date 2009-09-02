@@ -135,7 +135,8 @@ extern int hb_compVariableScope( HB_COMP_DECL, const char * );
 #define FUN_WITH_RETURN       0x0020   /* there was RETURN statement in previous line */
 #define FUN_EXTBLOCK          0x0040   /* it's extended codeblock */
 #define FUN_FILE_DECL         0x0080   /* pseudo function with file wide declarations */
-#define FUN_ATTACHED          0x0100   /* function attached to function list */
+#define FUN_FILE_FIRST        0x0100   /* 1-st real or pseudo function in compiled .prg module */
+#define FUN_ATTACHED          0x0200   /* function attached to function list */
 
 extern void      hb_compFunctionAdd( HB_COMP_DECL, const char * szFunName, HB_SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
 extern BOOL      hb_compFunCallCheck( HB_COMP_DECL, const char *, int );

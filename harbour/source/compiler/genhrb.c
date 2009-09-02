@@ -110,7 +110,7 @@ void hb_compGenBufPortObj( HB_COMP_DECL, BYTE ** pBufPtr, ULONG * pulSize )
          *ptr++ = SYM_FUNC;      /* function defined in this module */
       else if( pSym->cScope & HB_FS_DEFERRED )
          *ptr++ = SYM_DEFERRED;  /* lately bound function */
-      else if( pSym->bFunc )
+      else if( pSym->iFunc )
          *ptr++ = SYM_EXTERN; /* external function */
       else
          *ptr++ = SYM_NOLINK; /* other symbol */

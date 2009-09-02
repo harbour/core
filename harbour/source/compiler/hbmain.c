@@ -263,7 +263,7 @@ static PCOMSYMBOL hb_compSymbolAdd( HB_COMP_DECL, const char * szSymbolName, USH
    pSym->szName = szSymbolName;
    pSym->cScope = 0;
    pSym->pNext = NULL;
-   pSym->bFunc = bFunction;
+   pSym->iFunc = bFunction ? HB_COMP_PARAM->iModulesCount : 0;
 
    if( ! HB_COMP_PARAM->symbols.iCount )
    {
@@ -287,12 +287,13 @@ static PCOMSYMBOL hb_compSymbolFind( HB_COMP_DECL, const char * szSymbolName, US
 {
    PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
    USHORT wCnt = 0;
+   int iFunc = bFunction ? HB_COMP_PARAM->iModulesCount : 0;
 
    while( pSym )
    {
       if( ! strcmp( pSym->szName, szSymbolName ) )
       {
-         if( bFunction == pSym->bFunc )
+         if( iFunc == pSym->iFunc )
          {
             if( pwPos )
                *pwPos = wCnt;
@@ -1938,15 +1939,28 @@ static void hb_compAddFunc( HB_COMP_DECL, PFUNCTION pFunc )
    HB_COMP_PARAM->functions.iCount++;
 }
 
-static PFUNCTION hb_compFunctionFind( HB_COMP_DECL, const char * szFunctionName )
+static PFUNCTION hb_compFunctionFind( HB_COMP_DECL, const char * szName, BOOL fLocal )
 {
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pFirst;
+   PFUNCTION pFunc;
 
+   if( HB_COMP_PARAM->iModulesCount <= 1 )
+   {
+      pFunc = HB_COMP_PARAM->functions.pFirst;
+      fLocal = TRUE;
+   }
+   else
+      pFunc = fLocal ? HB_COMP_PARAM->pDeclFunc :
+                       HB_COMP_PARAM->functions.pFirst;
    while( pFunc )
    {
+      if( pFunc == HB_COMP_PARAM->pDeclFunc )
+         fLocal = TRUE;
+
       if( ( pFunc->funFlags & FUN_FILE_DECL ) == 0 &&
-          ! strcmp( pFunc->szName, szFunctionName ) )
+          ( fLocal || ( pFunc->cScope & ( HB_FS_STATIC | HB_FS_INITEXIT ) ) == 0 ) &&
+          strcmp( pFunc->szName, szName ) == 0 )
          break;
+
       pFunc = pFunc->pNext;
    }
    return pFunc;
@@ -1966,12 +1980,38 @@ static BOOL hb_compIsModuleFunc( HB_COMP_DECL, const char * szFunctionName )
    return pFunc != NULL;
 }
 
+static void hb_compUpdateFunctionNames( HB_COMP_DECL )
+{
+   if( HB_COMP_PARAM->iModulesCount > 1 )
+   {
+      PFUNCTION pFunc = HB_COMP_PARAM->functions.pFirst;
+
+      while( pFunc )
+      {
+         if( ( pFunc->cScope & ( HB_FS_STATIC | HB_FS_INITEXIT ) ) != 0 )
+         {
+            BOOL fGlobal = FALSE;
+            PFUNCTION pSeek = HB_COMP_PARAM->functions.pFirst;
+
+            while( pSeek )
+            {
+               if( pFunc == pSeek )
+                  fGlobal = TRUE;
+               else if( ( !fGlobal || ( pSeek->cScope & ( HB_FS_STATIC | HB_FS_INITEXIT ) ) == 0 ) &&
+                   strcmp( pFunc->szName, pSeek->szName ) == 0 )
+                  pFunc->iFuncSuffix++;
+               pSeek = pSeek->pNext;
+            }
+         }
+         pFunc = pFunc->pNext;
+      }
+   }
+}
+
 static BOOL hb_compRegisterFunc( HB_COMP_DECL, PFUNCTION pFunc, BOOL fError )
 {
-   /* TODO: ignore static functions from other modules and set number
-    * such functions in pSym
-    */
-   if( hb_compFunctionFind( HB_COMP_PARAM, pFunc->szName ) )
+   if( hb_compFunctionFind( HB_COMP_PARAM, pFunc->szName,
+                            ( pFunc->cScope & HB_FS_STATIC ) != 0 ) )
    {
       /* The name of a function/procedure is already defined */
       if( fError )
@@ -1991,6 +2031,7 @@ static BOOL hb_compRegisterFunc( HB_COMP_DECL, PFUNCTION pFunc, BOOL fError )
          if( ! pSym )
             pSym = hb_compSymbolAdd( HB_COMP_PARAM, pFunc->szName, NULL, HB_SYM_FUNCNAME );
          pSym->cScope |= pFunc->cScope | HB_FS_LOCAL;
+         pSym->pFunc = pFunc;
          return TRUE;
       }
    }
@@ -2028,7 +2069,8 @@ void hb_compFunctionAdd( HB_COMP_DECL, const char * szFunName, HB_SYMBOLSCOPE cS
 
    if( ( iType & FUN_FILE_DECL ) == 0 )
       hb_compRegisterFunc( HB_COMP_PARAM, pFunc, TRUE );
-   else
+
+   if( ( iType & ( FUN_FILE_DECL | FUN_FILE_FIRST ) ) != 0 )
       HB_COMP_PARAM->pDeclFunc = pFunc;
 
    hb_compAddFunc( HB_COMP_PARAM, pFunc );
@@ -2043,6 +2085,50 @@ void hb_compFunctionAdd( HB_COMP_DECL, const char * szFunName, HB_SYMBOLSCOPE cS
       hb_compGenModuleName( HB_COMP_PARAM, szFunName );
    else
       HB_COMP_PARAM->lastLine = -1;
+}
+
+/* create an ANNOUNCEd procedure
+ */
+static void hb_compAnnounce( HB_COMP_DECL, const char * szFunName )
+{
+   PFUNCTION pFunc;
+
+   /* Clipper call this function after compiling .prg module when ANNOUNCE
+    * symbol was deined not after compiling all .prg modules and search for
+    * public ANNOUNCEd function/procedure in all compiled so far modules
+    * and then for static one in currently compiler module.
+    */
+
+   pFunc = hb_compFunctionFind( HB_COMP_PARAM, szFunName, FALSE );
+   if( pFunc )
+   {
+      /* there is a function/procedure defined already - ANNOUNCEd procedure
+       * have to be a public symbol - check if existing symbol is public
+       */
+      if( pFunc->cScope & HB_FS_STATIC )
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_FUNC_ANNOUNCE, szFunName, NULL );
+   }
+   else
+   {
+      PCOMSYMBOL pSym;
+
+      /* create a new procedure
+       */
+      pFunc = hb_compFunctionNew( HB_COMP_PARAM, szFunName, HB_FS_LOCAL );
+      pFunc->funFlags |= FUN_PROCEDURE;
+
+      pSym = hb_compSymbolFind( HB_COMP_PARAM, szFunName, NULL, HB_SYM_FUNCNAME );
+      if( ! pSym )
+         pSym = hb_compSymbolAdd( HB_COMP_PARAM, szFunName, NULL, HB_SYM_FUNCNAME );
+      pSym->cScope |= pFunc->cScope;
+      pSym->pFunc = pFunc;
+
+      hb_compAddFunc( HB_COMP_PARAM, pFunc );
+
+      /* this function have a very limited functionality
+       */
+      hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
+   }
 }
 
 void hb_compFunctionMarkStatic( HB_COMP_DECL, const char * szFunName )
@@ -2086,43 +2172,6 @@ PINLINE hb_compInlineAdd( HB_COMP_DECL, const char * szFunName, int iLine )
    return pInline;
 }
 
-/* create an ANNOUNCEd procedure
- */
-static void hb_compAnnounce( HB_COMP_DECL, const char * szFunName )
-{
-   PFUNCTION pFunc;
-
-   pFunc = hb_compFunctionFind( HB_COMP_PARAM, szFunName );
-   if( pFunc )
-   {
-      /* there is a function/procedure defined already - ANNOUNCEd procedure
-       * have to be a public symbol - check if existing symbol is public
-       */
-      if( pFunc->cScope & HB_FS_STATIC )
-         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_FUNC_ANNOUNCE, szFunName, NULL );
-   }
-   else
-   {
-      PCOMSYMBOL pSym;
-
-      /* create a new procedure
-       */
-      pSym = hb_compSymbolFind( HB_COMP_PARAM, szFunName, NULL, HB_SYM_FUNCNAME );
-      if( ! pSym )
-         pSym = hb_compSymbolAdd( HB_COMP_PARAM, szFunName, NULL, HB_SYM_FUNCNAME );
-      pSym->cScope = HB_FS_PUBLIC | HB_FS_LOCAL;
-
-      pFunc = hb_compFunctionNew( HB_COMP_PARAM, szFunName, pSym->cScope );
-      pFunc->funFlags |= FUN_PROCEDURE;
-
-      hb_compAddFunc( HB_COMP_PARAM, pFunc );
-
-      /* this function have a very limited functionality
-       */
-      hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
-   }
-}
-
 void hb_compGenBreak( HB_COMP_DECL )
 {
    hb_compGenPushFunCall( "BREAK", HB_COMP_PARAM );
@@ -2132,9 +2181,6 @@ void hb_compGenBreak( HB_COMP_DECL )
 static void hb_compExternGen( HB_COMP_DECL )
 {
    PEXTERN pDelete;
-
-   if( HB_COMP_PARAM->fDebugInfo )
-      hb_compExternAdd( HB_COMP_PARAM, "__DBGENTRY", 0 );
 
    while( HB_COMP_PARAM->externs )
    {
@@ -3202,10 +3248,9 @@ void hb_compStaticDefStart( HB_COMP_DECL )
    {
       BYTE pBuffer[ 5 ];
 
-      HB_COMP_PARAM->pInitFunc = hb_compFunctionNew( HB_COMP_PARAM, "(_INITSTATICS)", HB_FS_INITEXIT );
+      HB_COMP_PARAM->pInitFunc = hb_compFunctionNew( HB_COMP_PARAM, "(_INITSTATICS)", HB_FS_INITEXIT | HB_FS_LOCAL );
       HB_COMP_PARAM->pInitFunc->pOwner = HB_COMP_PARAM->functions.pLast;
       HB_COMP_PARAM->pInitFunc->funFlags = FUN_USES_STATICS | FUN_PROCEDURE;
-      HB_COMP_PARAM->pInitFunc->cScope = HB_FS_INITEXIT | HB_FS_LOCAL;
       HB_COMP_PARAM->functions.pLast = HB_COMP_PARAM->pInitFunc;
 
       pBuffer[ 0 ] = HB_P_STATICS;
@@ -3336,10 +3381,9 @@ static void hb_compLineNumberDefStart( HB_COMP_DECL )
 {
    if( ! HB_COMP_PARAM->pLineFunc )
    {
-      HB_COMP_PARAM->pLineFunc = hb_compFunctionNew( HB_COMP_PARAM, "(_INITLINES)", HB_FS_INITEXIT );
+      HB_COMP_PARAM->pLineFunc = hb_compFunctionNew( HB_COMP_PARAM, "(_INITLINES)", HB_FS_INITEXIT | HB_FS_LOCAL );
       HB_COMP_PARAM->pLineFunc->pOwner = HB_COMP_PARAM->functions.pLast;
       HB_COMP_PARAM->pLineFunc->funFlags = 0;
-      HB_COMP_PARAM->pLineFunc->cScope = HB_FS_INITEXIT | HB_FS_LOCAL;
       HB_COMP_PARAM->functions.pLast = HB_COMP_PARAM->pLineFunc;
 
       if( HB_COMP_PARAM->fDebugInfo )
@@ -3639,6 +3683,8 @@ static void hb_compInitVars( HB_COMP_DECL )
    HB_COMP_PARAM->inlines.pLast    = NULL;
 
    HB_COMP_PARAM->szFile           = NULL;
+
+   HB_COMP_PARAM->iModulesCount    = 0;
 }
 
 static void hb_compGenOutput( HB_COMP_DECL, int iLanguage )
@@ -3719,6 +3765,7 @@ static void hb_compAddInitFunc( HB_COMP_DECL, PFUNCTION pFunc )
    PCOMSYMBOL pSym = hb_compSymbolAdd( HB_COMP_PARAM, pFunc->szName, NULL, HB_SYM_FUNCNAME );
 
    pSym->cScope |= pFunc->cScope;
+   pSym->pFunc = pFunc;
    pFunc->funFlags |= FUN_ATTACHED;
    hb_compAddFunc( HB_COMP_PARAM, pFunc );
    hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
@@ -3943,6 +3990,21 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
 
       if( !fSkip )
       {
+#if !defined( HB_MODULES_MERGE )
+         /* TODO: HRB format does not support yet multiple static functions
+          *       with the same name. Such functionality needs extended .HRB
+          *       file format.
+          */
+         if( HB_COMP_PARAM->iLanguage != HB_LANG_PORT_OBJ &&
+             HB_COMP_PARAM->iLanguage != HB_LANG_PORT_OBJ_BUF )
+         {
+            if( HB_COMP_PARAM->iModulesCount++ )
+               hb_compExternGen( HB_COMP_PARAM );
+         }
+         else
+#else
+            HB_COMP_PARAM->iModulesCount = 1;
+#endif
          HB_COMP_PARAM->currLine = 1;
          HB_COMP_PARAM->currModule = hb_compIdentifierNew(
                                     HB_COMP_PARAM, szFileName, HB_IDENT_COPY );
@@ -3950,7 +4012,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
             HB_COMP_PARAM->szFile = HB_COMP_PARAM->currModule;
 
          if( szBuffer )
-            hb_compFunctionAdd( HB_COMP_PARAM, "", 0, FUN_PROCEDURE | FUN_FILE_DECL );
+            hb_compFunctionAdd( HB_COMP_PARAM, "", 0, FUN_PROCEDURE | FUN_FILE_FIRST | FUN_FILE_DECL );
          else
          {
             if( ! HB_COMP_PARAM->fQuiet )
@@ -3968,10 +4030,8 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
             /* Generate the starting procedure frame */
             hb_compFunctionAdd( HB_COMP_PARAM,
                                 hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( pFileName->szName ) ), HB_IDENT_FREE ),
-                                HB_FS_PUBLIC, FUN_PROCEDURE | ( HB_COMP_PARAM->iStartProc == 0 ? 0 : FUN_FILE_DECL ) );
+                                HB_FS_PUBLIC, FUN_PROCEDURE | FUN_FILE_FIRST | ( HB_COMP_PARAM->iStartProc == 0 ? 0 : FUN_FILE_DECL ) );
          }
-
-         /* TODO: set first function and function symbol in given module */
 
          if( !HB_COMP_PARAM->fExit )
          {
@@ -4003,6 +4063,9 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
 
       /* fix all previous function returns offsets */
       hb_compFinalizeFunction( HB_COMP_PARAM );
+
+      if( HB_COMP_PARAM->fDebugInfo )
+         hb_compExternAdd( HB_COMP_PARAM, "__DBGENTRY", 0 );
 
       hb_compExternGen( HB_COMP_PARAM );       /* generates EXTERN symbols names */
 
@@ -4058,6 +4121,8 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
 
       if( HB_COMP_PARAM->szAnnounce )
          hb_compAnnounce( HB_COMP_PARAM, HB_COMP_PARAM->szAnnounce );
+
+      hb_compUpdateFunctionNames( HB_COMP_PARAM );
 
       /* End of finalization phase. */
 
