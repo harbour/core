@@ -443,7 +443,7 @@ static void s_netio_exit( void* cargo )
       s_fileConFree( conn );
    }
 
-   if( s_fInit )
+   if( !s_fInit )
    {
       hb_socketCleanup();
       s_fInit = TRUE;
