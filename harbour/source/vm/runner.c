@@ -461,6 +461,8 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, ULONG ulBodySize, USHORT us
          /* External function */
          if( pSymRead[ ul ].value.pCodeFunc == ( PHB_PCODEFUNC ) SYM_EXTERN )
          {
+            pSymRead[ ul ].value.pCodeFunc = NULL;
+
             pDynSym = hb_dynsymFind( pSymRead[ ul ].szName );
 
             if( pDynSym )
