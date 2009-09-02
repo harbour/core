@@ -4,6 +4,9 @@
 
 INSTALL_RULE :=
 
+INSTALL_FILES := $(strip $(INSTALL_FILES))
+INSTALL_DIR := $(strip $(INSTALL_DIR))
+
 ifneq ($(INSTALL_FILES),) # Empty install list
 
 ifeq ($(INSTALL_DIR),) # Empty install dir
@@ -18,7 +21,7 @@ endif
 ifeq ($(HB_SHELL),sh)
 
    INSTALL_RULE := \
-      @$(MDP) $(subst \,/,$(INSTALL_DIR)); \
+      $(MDP) $(subst \,/,$(INSTALL_DIR)); \
       if [ ! -d "$(subst \,/,$(INSTALL_DIR))" ]; \
       then \
          $(ECHO) "! Can't install, path not found: '$(subst \,/,$(INSTALL_DIR))'" 1>&2; \

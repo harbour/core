@@ -55,7 +55,7 @@
 #include "hbhash.h"
 
 static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuffer );
-static BOOL hb_compRegisterFunc( HB_COMP_DECL, const char * szFunName, HB_SYMBOLSCOPE cScope, BOOL fError );
+static BOOL hb_compRegisterFunc( HB_COMP_DECL, PFUNCTION pFunc, BOOL fError );
 
 /* ************************************************************************* */
 
@@ -258,36 +258,27 @@ static PCOMSYMBOL hb_compSymbolAdd( HB_COMP_DECL, const char * szSymbolName, USH
 {
    PCOMSYMBOL pSym;
 
-   if( szSymbolName[ 0 ] )
+   pSym = ( PCOMSYMBOL ) hb_xgrab( sizeof( COMSYMBOL ) );
+
+   pSym->szName = szSymbolName;
+   pSym->cScope = 0;
+   pSym->pNext = NULL;
+   pSym->bFunc = bFunction;
+
+   if( ! HB_COMP_PARAM->symbols.iCount )
    {
-      /* Create a symbol for non-empty names only.
-       * NOTE: an empty name is passed for a fake starting function when
-       * '-n' switch is used
-       */
-      pSym = ( PCOMSYMBOL ) hb_xgrab( sizeof( COMSYMBOL ) );
-
-      pSym->szName = szSymbolName;
-      pSym->cScope = 0;
-      pSym->pNext = NULL;
-      pSym->bFunc = bFunction;
-
-      if( ! HB_COMP_PARAM->symbols.iCount )
-      {
-         HB_COMP_PARAM->symbols.pFirst = pSym;
-         HB_COMP_PARAM->symbols.pLast  = pSym;
-      }
-      else
-      {
-         ( ( PCOMSYMBOL ) HB_COMP_PARAM->symbols.pLast )->pNext = pSym;
-         HB_COMP_PARAM->symbols.pLast = pSym;
-      }
-      HB_COMP_PARAM->symbols.iCount++;
-
-      if( pwPos )
-         *pwPos = HB_COMP_PARAM->symbols.iCount -1; /* position number starts form 0 */
+      HB_COMP_PARAM->symbols.pFirst =
+      HB_COMP_PARAM->symbols.pLast  = pSym;
    }
    else
-      pSym = NULL;
+   {
+      HB_COMP_PARAM->symbols.pLast->pNext = pSym;
+      HB_COMP_PARAM->symbols.pLast = pSym;
+   }
+   HB_COMP_PARAM->symbols.iCount++;
+
+   if( pwPos )
+      *pwPos = HB_COMP_PARAM->symbols.iCount -1; /* position number starts form 0 */
 
    return pSym;
 }
@@ -297,8 +288,6 @@ static PCOMSYMBOL hb_compSymbolFind( HB_COMP_DECL, const char * szSymbolName, US
    PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
    USHORT wCnt = 0;
 
-   if( pwPos )
-      *pwPos = 0;
    while( pSym )
    {
       if( ! strcmp( pSym->szName, szSymbolName ) )
@@ -310,15 +299,13 @@ static PCOMSYMBOL hb_compSymbolFind( HB_COMP_DECL, const char * szSymbolName, US
             return pSym;
          }
       }
-
-      if( pSym->pNext )
-      {
-         pSym = pSym->pNext;
-         ++wCnt;
-      }
-      else
-         return NULL;
+      pSym = pSym->pNext;
+      ++wCnt;
    }
+
+   if( pwPos )
+      *pwPos = 0;
+
    return NULL;
 }
 
@@ -376,7 +363,7 @@ void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarT
          HB_COMP_PARAM->iVarScope == ( VS_PRIVATE | VS_PARAMETER ) ) )
    {
       if( HB_COMP_PARAM->iStartProc == 2 && pFunc->szName[0] &&
-          hb_compRegisterFunc( HB_COMP_PARAM, pFunc->szName, pFunc->cScope, FALSE ) )
+          hb_compRegisterFunc( HB_COMP_PARAM, pFunc, FALSE ) )
          pFunc->funFlags &= ~FUN_FILE_DECL;
       else
       {
@@ -1979,38 +1966,32 @@ static BOOL hb_compIsModuleFunc( HB_COMP_DECL, const char * szFunctionName )
    return pFunc != NULL;
 }
 
-static BOOL hb_compRegisterFunc( HB_COMP_DECL, const char * szFunName,
-                                 HB_SYMBOLSCOPE cScope, BOOL fError )
+static BOOL hb_compRegisterFunc( HB_COMP_DECL, PFUNCTION pFunc, BOOL fError )
 {
-   PFUNCTION pFunc = hb_compFunctionFind( HB_COMP_PARAM, szFunName );
-
-   if( pFunc )
+   /* TODO: ignore static functions from other modules and set number
+    * such functions in pSym
+    */
+   if( hb_compFunctionFind( HB_COMP_PARAM, pFunc->szName ) )
    {
       /* The name of a function/procedure is already defined */
       if( fError )
-         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FUNC_DUPL, szFunName, NULL );
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FUNC_DUPL, pFunc->szName, NULL );
    }
    else
    {
-      const char * szFunction = hb_compReservedName( szFunName );
+      const char * szFunction = hb_compReservedName( pFunc->szName );
       if( szFunction )
       {
          if( fError )
-            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FUNC_RESERVED, szFunction, szFunName );
+            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FUNC_RESERVED, szFunction, pFunc->szName );
       }
       else
       {
-         PCOMSYMBOL pSym = hb_compSymbolFind( HB_COMP_PARAM, szFunName, NULL, HB_SYM_FUNCNAME );
+         PCOMSYMBOL pSym = hb_compSymbolFind( HB_COMP_PARAM, pFunc->szName, NULL, HB_SYM_FUNCNAME );
          if( ! pSym )
-         {
-            /* there is not a symbol on the symbol table for this function name */
-            pSym = hb_compSymbolAdd( HB_COMP_PARAM, szFunName, NULL, HB_SYM_FUNCNAME );
-         }
-         if( pSym )
-         {
-            pSym->cScope |= cScope | HB_FS_LOCAL;
-            return TRUE;
-         }
+            pSym = hb_compSymbolAdd( HB_COMP_PARAM, pFunc->szName, NULL, HB_SYM_FUNCNAME );
+         pSym->cScope |= pFunc->cScope | HB_FS_LOCAL;
+         return TRUE;
       }
    }
    return FALSE;
@@ -2046,7 +2027,7 @@ void hb_compFunctionAdd( HB_COMP_DECL, const char * szFunName, HB_SYMBOLSCOPE cS
    pFunc->funFlags |= iType;
 
    if( ( iType & FUN_FILE_DECL ) == 0 )
-      hb_compRegisterFunc( HB_COMP_PARAM, szFunName, cScope, TRUE );
+      hb_compRegisterFunc( HB_COMP_PARAM, pFunc, TRUE );
    else
       HB_COMP_PARAM->pDeclFunc = pFunc;
 
@@ -2085,8 +2066,7 @@ PINLINE hb_compInlineAdd( HB_COMP_DECL, const char * szFunName, int iLine )
       pSym = hb_compSymbolFind( HB_COMP_PARAM, szFunName, NULL, HB_SYM_FUNCNAME );
       if( ! pSym )
          pSym = hb_compSymbolAdd( HB_COMP_PARAM, szFunName, NULL, HB_SYM_FUNCNAME );
-      if( pSym )
-         pSym->cScope |= HB_FS_STATIC | HB_FS_LOCAL;
+      pSym->cScope |= HB_FS_STATIC | HB_FS_LOCAL;
    }
    pInline = hb_compInlineNew( pComp, szFunName, iLine );
 
@@ -2300,7 +2280,7 @@ void hb_compStatmentStart( HB_COMP_DECL )
       if( ( pFunc->funFlags & FUN_FILE_DECL ) != 0 )
       {
          if( HB_COMP_PARAM->iStartProc == 2 && pFunc->szName[0] &&
-             hb_compRegisterFunc( HB_COMP_PARAM, pFunc->szName, pFunc->cScope, FALSE ) )
+             hb_compRegisterFunc( HB_COMP_PARAM, pFunc, FALSE ) )
             pFunc->funFlags &= ~FUN_FILE_DECL;
          else
             hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_OUTSIDE, NULL, NULL );
@@ -3990,6 +3970,8 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
                                 hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( pFileName->szName ) ), HB_IDENT_FREE ),
                                 HB_FS_PUBLIC, FUN_PROCEDURE | ( HB_COMP_PARAM->iStartProc == 0 ? 0 : FUN_FILE_DECL ) );
          }
+
+         /* TODO: set first function and function symbol in given module */
 
          if( !HB_COMP_PARAM->fExit )
          {
