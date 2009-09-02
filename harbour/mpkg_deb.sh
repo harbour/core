@@ -56,7 +56,7 @@ then
     export HB_INC_X11=no
 fi
 
-export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnf hbsqlit3 hbtip hbtpathy hbvpdf hbziparc xhb"
+export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbnf hbsqlit3 hbtip hbtpathy hbvpdf hbziparc xhb"
 
 if [ ! -f "/usr/include/hpdf.h" ] && \
    [ ! -f "/usr/local/include/hpdf.h" ]
