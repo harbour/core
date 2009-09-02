@@ -102,6 +102,7 @@
 /* { NETIO_SIZE,   file_no[2], ... } -> { NETIO_SIZE, size[ 8 ], err[ 2 ], ... } */
 /* { NETIO_COMMIT, file_no[2], ... } -> NULL */
 /* { NETIO_CLOSE,  file_no[2], ... } -> { NETIO_CLOSE, ... } */
+/* alternative answer for all non NULL messages: -> { NETIO_ERROR,  err[ 2 ], ... } */
 
 /* netio errors */
 #define NETIO_ERR_UNKNOWN_COMMAND   0xff01
