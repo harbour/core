@@ -407,51 +407,44 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler ) --> pSink */
       {
          IConnectionPointContainer* pCPC = NULL;
          IConnectionPoint*          pCP = NULL;
-         HRESULT                    lOleError;
-         IID                        rriid = IID_IUnknown;
+         HRESULT                    lOleError = S_OK;
+         IID                        rriid = IID_IDispatch;
+         const char*                cID = hb_parc( 3 );
 
-         lOleError = HB_VTBL( pDisp )->QueryInterface( HB_THIS_( pDisp ) HB_ID_REF( IID_IConnectionPointContainer ), ( void** ) ( void* ) &pCPC );
+         if( cID )
+         {
+            wchar_t* wCLSID = hb_mbtowc( cID );
+            lOleError = CLSIDFromString( wCLSID, &rriid );
+            hb_xfree( wCLSID );
+         }
+
          if( lOleError == S_OK )
          {
-            lOleError = HB_VTBL( pCPC )->FindConnectionPoint( HB_THIS_( pCPC ) HB_ID_REF( IID_IDispatch ), &pCP );
-            if( lOleError != S_OK )
-            {
-               IEnumConnectionPoints* pEnumCPs = NULL;
-
-               lOleError = HB_VTBL( pCPC )->EnumConnectionPoints( HB_THIS_( pCPC ) &pEnumCPs );
-               if( lOleError == S_OK )
-               {
-                  for( ;; )
-                  {
-                     lOleError = HB_VTBL( pEnumCPs )->Next( HB_THIS_( pEnumCPs ) 1, &pCP, NULL );
-                     if( lOleError != S_OK )
-                        break;
-                     if( HB_VTBL( pCP )->GetConnectionInterface( HB_THIS_( pCP ) &rriid ) == S_OK )
-                        break;
-                     rriid = IID_IUnknown;
-                  }
-                  HB_VTBL( pEnumCPs )->Release( HB_THIS( pEnumCPs ) );
-               }
-            }
+            lOleError = HB_VTBL( pDisp )->QueryInterface( HB_THIS_( pDisp ) HB_ID_REF( IID_IConnectionPointContainer ), ( void** ) ( void* ) &pCPC );
 
             if( lOleError == S_OK )
             {
-               DWORD dwCookie = 0;
-               ISink * pSink;
+               lOleError = HB_VTBL( pCPC )->FindConnectionPoint( HB_THIS_( pCPC ) HB_ID_REF( rriid ), &pCP );
 
-               pSink = ( ISink* ) hb_xgrab( sizeof( ISink ) );    /* TODO: GlobalAlloc/Free GMEM_FIXED ??? */
+               if( lOleError == S_OK )
+               {
+                  DWORD dwCookie = 0;
+                  ISink * pSink;
 
-               pSink->lpVtbl = ( IDispatchVtbl * ) &ISink_Vtbl;
-               pSink->count = 1; /* 1 for Harbour collectible pointer [Mindaugas] */
-               pSink->pItemHandler = hb_itemNew( pItemBlock );
-               pSink->rriid = rriid;
-               lOleError = HB_VTBL( pCP )->Advise( HB_THIS_( pCP ) ( IUnknown* ) pSink, &dwCookie );
-               pSink->pConnectionPoint = pCP;
-               pSink->dwCookie = dwCookie;
+                  pSink = ( ISink* ) hb_xgrab( sizeof( ISink ) );    /* TODO: GlobalAlloc/Free GMEM_FIXED ??? */
 
-               hb_oleItemPut( hb_stackReturnItem(), ( IDispatch* ) pDisp );
+                  pSink->lpVtbl = ( IDispatchVtbl * ) &ISink_Vtbl;
+                  pSink->count = 1; /* 1 for Harbour collectible pointer [Mindaugas] */
+                  pSink->pItemHandler = hb_itemNew( pItemBlock );
+                  pSink->rriid = rriid;
+                  lOleError = HB_VTBL( pCP )->Advise( HB_THIS_( pCP ) ( IUnknown* ) pSink, &dwCookie );
+                  pSink->pConnectionPoint = pCP;
+                  pSink->dwCookie = dwCookie;
+
+                  hb_oleItemPut( hb_stackReturnItem(), ( IDispatch* ) pDisp );
+               }
+               HB_VTBL( pCPC )->Release( HB_THIS( pCPC ) );
             }
-            HB_VTBL( pCPC )->Release( HB_THIS( pCPC ) );
          }
 
          hb_oleSetError( lOleError );
