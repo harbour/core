@@ -212,7 +212,6 @@ extern void hb_compGenPushString( const char * szText, ULONG ulLen, HB_COMP_DECL
 extern void hb_compGenPushSymbol( const char * szSymbolName, BOOL bFunction, HB_COMP_DECL ); /* Pushes a symbol on to the Virtual machine stack */
 extern void hb_compGenPushAliasedVar( const char *, BOOL, const char *, HB_LONG, HB_COMP_DECL );
 extern void hb_compGenPopAliasedVar( const char *, BOOL, const char *, HB_LONG, HB_COMP_DECL );
-extern void hb_compGenPushFunRef( const char *, HB_COMP_DECL );
 extern void hb_compGenPCode1( BYTE, HB_COMP_DECL ); /* generates 1 byte of pcode */
 extern void hb_compGenPCode2( BYTE, BYTE, HB_COMP_DECL ); /* generates 2 bytes of pcode + flag for optional StrongType(). */
 extern void hb_compGenPCode3( BYTE, BYTE, BYTE, HB_COMP_DECL ); /* generates 3 bytes of pcode + flag for optional StrongType() */
