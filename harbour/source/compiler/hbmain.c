@@ -262,8 +262,9 @@ static PCOMSYMBOL hb_compSymbolAdd( HB_COMP_DECL, const char * szSymbolName, USH
 
    pSym->szName = szSymbolName;
    pSym->cScope = 0;
-   pSym->pNext = NULL;
    pSym->iFunc = bFunction ? HB_COMP_PARAM->iModulesCount : 0;
+   pSym->pFunc = NULL;
+   pSym->pNext = NULL;
 
    if( ! HB_COMP_PARAM->symbols.iCount )
    {
