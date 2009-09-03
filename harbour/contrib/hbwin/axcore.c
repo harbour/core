@@ -218,17 +218,20 @@ typedef struct
 
 
 typedef struct {
-   IDispatchVtbl*          lpVtbl;
-   DWORD                   count;
-   IConnectionPoint*       pConnectionPoint;
-   DWORD                   dwCookie;
-   PHB_ITEM                pItemHandler;
+   IDispatchVtbl*       lpVtbl;
+   DWORD                count;
+   IConnectionPoint*    pConnectionPoint;
+   DWORD                dwCookie;
+   IID                  rriid;
+   PHB_ITEM             pItemHandler;
 } ISink;
 
 
 static HRESULT STDMETHODCALLTYPE QueryInterface( IDispatch* lpThis, REFIID riid, void** ppRet )
 {
-   if( IsEqualIID( riid, HB_ID_REF( IID_IUnknown ) ) || IsEqualIID( riid, HB_ID_REF( IID_IDispatch ) ) )
+   if( IsEqualIID( riid, HB_ID_REF( IID_IUnknown ) ) ||
+       IsEqualIID( riid, HB_ID_REF( IID_IDispatch ) ) ||
+       IsEqualIID( riid, HB_ID_REF( ( ( ISink* ) lpThis )->rriid ) ) )
    {
       *ppRet = ( void* ) lpThis;
       HB_VTBL( lpThis )->AddRef( HB_THIS( lpThis ) );
@@ -402,14 +405,35 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler ) --> pSink */
 
       if( pItemBlock )
       {
-         IConnectionPointContainer*  pCPC = NULL;
-         IConnectionPoint*           pCP = NULL;
-         HRESULT                     lOleError;
+         IConnectionPointContainer* pCPC = NULL;
+         IConnectionPoint*          pCP = NULL;
+         HRESULT                    lOleError;
+         IID                        rriid = IID_IUnknown;
 
          lOleError = HB_VTBL( pDisp )->QueryInterface( HB_THIS_( pDisp ) HB_ID_REF( IID_IConnectionPointContainer ), ( void** ) ( void* ) &pCPC );
          if( lOleError == S_OK )
          {
             lOleError = HB_VTBL( pCPC )->FindConnectionPoint( HB_THIS_( pCPC ) HB_ID_REF( IID_IDispatch ), &pCP );
+            if( lOleError != S_OK )
+            {
+               IEnumConnectionPoints* pEnumCPs = NULL;
+
+               lOleError = HB_VTBL( pCPC )->EnumConnectionPoints( HB_THIS_( pCPC ) &pEnumCPs );
+               if( lOleError == S_OK )
+               {
+                  for( ;; )
+                  {
+                     lOleError = HB_VTBL( pEnumCPs )->Next( HB_THIS_( pEnumCPs ) 1, &pCP, NULL );
+                     if( lOleError != S_OK )
+                        break;
+                     if( HB_VTBL( pCP )->GetConnectionInterface( HB_THIS_( pCP ) &rriid ) == S_OK )
+                        break;
+                     rriid = IID_IUnknown;
+                  }
+                  HB_VTBL( pEnumCPs )->Release( HB_THIS( pEnumCPs ) );
+               }
+            }
+
             if( lOleError == S_OK )
             {
                DWORD dwCookie = 0;
@@ -420,6 +444,7 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler ) --> pSink */
                pSink->lpVtbl = ( IDispatchVtbl * ) &ISink_Vtbl;
                pSink->count = 1; /* 1 for Harbour collectible pointer [Mindaugas] */
                pSink->pItemHandler = hb_itemNew( pItemBlock );
+               pSink->rriid = rriid;
                lOleError = HB_VTBL( pCP )->Advise( HB_THIS_( pCP ) ( IUnknown* ) pSink, &dwCookie );
                pSink->pConnectionPoint = pCP;
                pSink->dwCookie = dwCookie;
