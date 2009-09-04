@@ -91,7 +91,9 @@ HB_FUNC( TRANSFORM )
 
    BOOL bError = FALSE;
 
-   if( pPic && hb_itemGetCLen( pPic ) > 0 )
+   if( pValue == NULL )
+      bError = TRUE;
+   else if( pPic && hb_itemGetCLen( pPic ) > 0 )
    {
       char szPicDate[ 11 ];
       const char * szPic = hb_itemGetCPtr( pPic );

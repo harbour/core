@@ -156,6 +156,7 @@ arguments are well known and can be callculated at compile time:
          0 + <expr>              => <expr>
          <expr> + ""             => <expr>
          "" + <expr>             => <expr>
+         ( "<alias>" )->         => <alias>->
 
      In cases when result is miningless Harbour compiler can skip code
      for operation, i.e. for such line of .prg code:

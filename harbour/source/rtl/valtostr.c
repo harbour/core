@@ -52,15 +52,23 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbapierr.h"
 
 HB_FUNC( HB_VALTOSTR )
 {
-   ULONG ulLen;
-   BOOL bFreeReq;
-   char * buffer = hb_itemString( hb_param( 1, HB_IT_ANY ), &ulLen, &bFreeReq );
+   PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
 
-   if( bFreeReq )
-      hb_retclen_buffer( buffer, ulLen );
+   if( pItem )
+   {
+      ULONG ulLen;
+      BOOL bFreeReq;
+      char * buffer = hb_itemString( pItem, &ulLen, &bFreeReq );
+
+      if( bFreeReq )
+         hb_retclen_buffer( buffer, ulLen );
+      else
+         hb_retclen( buffer, ulLen );
+   }
    else
-      hb_retclen( buffer, ulLen );
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

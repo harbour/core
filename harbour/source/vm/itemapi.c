@@ -1393,7 +1393,7 @@ const char * hb_itemTypeStr( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemTypeStr(%p)", pItem));
 
-   switch( HB_ITEM_TYPE( pItem ) )
+   if( pItem ) switch( HB_ITEM_TYPE( pItem ) )
    {
       case HB_IT_ARRAY:
          return hb_arrayIsObject( pItem ) ? "O" : "A";
