@@ -4,5 +4,5 @@
 
 incpaths=.
 
-libs=hbtips
+libs=hbtipssl
 libs=../hbssl/hbssl.hbc
