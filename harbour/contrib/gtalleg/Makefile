@@ -6,11 +6,7 @@ ROOT := ../../
 
 include $(TOP)$(ROOT)config/global.mk
 
-ifeq ($(HB_ALLEGRO_STATIC),)
-   LIBNAME := gtalleg
-else
-   LIBNAME := gtallegs
-endif
+LIBNAME := gtalleg
 
 C_SOURCES := \
    gtalleg.c \
@@ -29,11 +25,10 @@ ifneq ($(HB_HAS_ALLEGRO),)
 
    HB_CFLAGS += $(foreach d,$(HB_HAS_ALLEGRO),-I$(d))
 
-   ifneq ($(HB_ALLEGRO_STATIC),)
-      HB_CFLAGS += -DALLEGRO_STATICLINK
-   endif
-
    include $(TOP)$(ROOT)config/lib.mk
+
+   DIRS += gtallegs
+   include $(TOP)$(ROOT)config/dir.mk
 else
    HB_SKIP_REASON := $(_DET_RES_TEXT)
    include $(TOP)$(ROOT)config/none.mk

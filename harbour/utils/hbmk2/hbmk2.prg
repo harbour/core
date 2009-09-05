@@ -1286,7 +1286,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    /* Collect all command line parameters */
    FOR EACH cParam IN aArgs
       DO CASE
-      CASE ( Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" )
+      CASE ( Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" ) .AND. ;
+         !( Lower( FN_ExtGet( cParam ) ) == ".clp" )
          cParam := SubStr( cParam, 2 )
          IF Empty( FN_ExtGet( cParam ) )
             cParam := FN_ExtSet( cParam, ".hbm" )
@@ -1836,6 +1837,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
       ENDCASE
    NEXT
+
+   /* Strip leading @ char of .clp files */
+   IF Left( hbmk[ _HBMK_cFIRST ], 1 ) == "@" .AND. Lower( FN_ExtGet( hbmk[ _HBMK_cFIRST ] ) ) == ".clp"
+      hbmk[ _HBMK_cFIRST ] := SubStr( hbmk[ _HBMK_cFIRST ], 2 )
+   ENDIF
 
    IF lCreateDyn .AND. hbmk[ _HBMK_lSHARED ]
       hbmk[ _HBMK_lSHARED ] := .F.
@@ -3136,7 +3142,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
          /* Do entry function detection on platform required and supported */
          IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ! lStopAfterCComp .AND. l_cMAIN == NIL
-            tmp := iif( Lower( FN_ExtGet( hbmk[ _HBMK_cFIRST ] ) ) == ".prg" .OR. Empty( FN_ExtGet( hbmk[ _HBMK_cFIRST ] ) ), FN_ExtSet( hbmk[ _HBMK_cFIRST ], ".c" ), hbmk[ _HBMK_cFIRST ] )
+            tmp := iif( Lower( FN_ExtGet( hbmk[ _HBMK_cFIRST ] ) ) $ ".prg|.clp" .OR. Empty( FN_ExtGet( hbmk[ _HBMK_cFIRST ] ) ), FN_ExtSet( hbmk[ _HBMK_cFIRST ], ".c" ), hbmk[ _HBMK_cFIRST ] )
             IF ! Empty( tmp := getFirstFunc( hbmk, tmp ) )
                l_cMAIN := tmp
             ENDIF
@@ -3280,7 +3286,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                ELSE
                   hbmk_OutErr( hbmk, I_( "Warning: Stub helper .c program couldn't be created." ) )
                   IF ! hbmk[ _HBMK_lINC ]
-                     AEval( ListDirExt( hbmk[ _HBMK_aPRG ], cWorkDir, ".c" ), {|tmp| FErase( tmp ) } )
+                     AEval( ListDirExt( hbmk[ _HBMK_aPRG ], cWorkDir, ".c", .T. ), {|tmp| FErase( tmp ) } )
                   ENDIF
                   IF hbmk[ _HBMK_lBEEP ]
                      DoBeep( hbmk, .F. )
@@ -3334,7 +3340,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   [vszakats] */
          l_aOBJ := {}
       ELSE
-         l_aOBJ := ListDirExt( ArrayJoin( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_aC ] ), cWorkDir, cObjExt )
+         l_aOBJ := ListDirExt( ArrayJoin( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_aC ] ), cWorkDir, cObjExt, .T. )
       ENDIF
       hbmk[ _HBMK_aOBJUSER ] := ListCook( hbmk[ _HBMK_aOBJUSER ], cObjExt )
 
@@ -3358,11 +3364,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
          IF hbmk[ _HBMK_lREBUILDPO ]
             IF ! Empty( hbmk[ _HBMK_cPO ] ) .AND. ! Empty( hbmk[ _HBMK_aPRG ] )
-               RebuildPO( hbmk, ListDirExt( hbmk[ _HBMK_aPRG ], cWorkDir, ".pot" ) )
+               RebuildPO( hbmk, ListDirExt( hbmk[ _HBMK_aPRG ], cWorkDir, ".pot", .T. ) )
             ENDIF
          ELSE
             IF ! Empty( hbmk[ _HBMK_cPO ] ) .AND. Len( l_aPRG_TODO ) > 0
-               UpdatePO( hbmk, ListDirExt( l_aPRG_TODO, cWorkDir, ".pot" ) )
+               UpdatePO( hbmk, ListDirExt( l_aPRG_TODO, cWorkDir, ".pot", .T. ) )
             ENDIF
          ENDIF
 
@@ -3576,7 +3582,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             IF "{IC}" $ cOpt_CompC
 
                aThreads := {}
-               FOR EACH aTODO IN ArraySplit( ArrayJoin( ListDirExt( l_aPRG_TODO, cWorkDir, ".c" ), l_aC_TODO ), l_nJOBS )
+               FOR EACH aTODO IN ArraySplit( ArrayJoin( ListDirExt( l_aPRG_TODO, cWorkDir, ".c", .T. ), l_aC_TODO ), l_nJOBS )
                   IF hb_mtvm() .AND. Len( aTODO:__enumBase() ) > 1
                      AAdd( aThreads, hb_threadStart( @CompileCLoop(), hbmk, aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cObjExt, nOpt_Esc, aTODO:__enumIndex(), Len( aTODO:__enumBase() ) ) )
                   ELSE
@@ -3604,7 +3610,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                cOpt_CompC := StrTran( cOpt_CompC, "{OW}"  , FN_Escape( PathSepToTarget( hbmk, cWorkDir ), nOpt_Esc ) )
 
                aThreads := {}
-               FOR EACH aTODO IN ArraySplit( ArrayJoin( ListDirExt( l_aPRG_TODO, cWorkDir, ".c" ), l_aC_TODO ), l_nJOBS )
+               FOR EACH aTODO IN ArraySplit( ArrayJoin( ListDirExt( l_aPRG_TODO, cWorkDir, ".c", .T. ), l_aC_TODO ), l_nJOBS )
 
                   cOpt_CompCLoop := AllTrim( StrTran( cOpt_CompC, "{LC}"  , ArrayToList( aTODO,, nOpt_Esc ) ) )
 
@@ -3971,7 +3977,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          FErase( FN_DirExtSet( l_cRESSTUB, cWorkDir, cResExt ) )
       ENDIF
       IF ! hbmk[ _HBMK_lINC ] .OR. l_lCLEAN
-         AEval( ListDirExt( hbmk[ _HBMK_aPRG ], cWorkDir, ".c" ), {|tmp| FErase( tmp ) } )
+         AEval( ListDirExt( hbmk[ _HBMK_aPRG ], cWorkDir, ".c", .T. ), {|tmp| FErase( tmp ) } )
       ENDIF
       IF ! lStopAfterCComp .OR. lCreateLib .OR. lCreateDyn
          IF ! hbmk[ _HBMK_lINC ] .OR. l_lCLEAN
@@ -4607,13 +4613,26 @@ STATIC FUNCTION AAddNotEmpty( array, xItem )
 
    RETURN array
 
-STATIC FUNCTION ListDirExt( arraySrc, cDirNew, cExtNew )
+STATIC FUNCTION ListDirExt( arraySrc, cDirNew, cExtNew, lStripClpAt )
    LOCAL array := AClone( arraySrc )
    LOCAL cFileName
 
-   FOR EACH cFileName IN array
-      cFileName := FN_DirExtSet( cFileName, cDirNew, cExtNew )
-   NEXT
+   DEFAULT lStripClpAt TO .F.
+
+   IF lStripClpAt
+      FOR EACH cFileName IN array
+         IF Left( cFileName, 1 ) == "@" .AND. ;
+            Lower( FN_ExtGet( cFileName ) ) == ".clp"
+            cFileName := FN_DirExtSet( SubStr( cFileName, 2 ), cDirNew, cExtNew )
+         ELSE
+            cFileName := FN_DirExtSet( cFileName, cDirNew, cExtNew )
+         ENDIF
+      NEXT
+   ELSE
+      FOR EACH cFileName IN array
+         cFileName := FN_DirExtSet( cFileName, cDirNew, cExtNew )
+      NEXT
+   ENDIF
 
    RETURN array
 
@@ -5483,7 +5502,8 @@ STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, nNestingLevel )
                   DO CASE
                   CASE Lower( cParam ) == "-skip"
                      RETURN
-                  CASE ( Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" )
+                  CASE ( Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" ) .AND. ;
+                       !( Lower( FN_ExtGet( cParam ) ) == ".clp" )
                      IF nNestingLevel < _HBMK_NEST_MAX
                         cParam := SubStr( cParam, 2 )
                         IF Empty( FN_ExtGet( cParam ) )

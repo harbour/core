@@ -6,11 +6,9 @@ incpaths=.
 
 {allwin}libpaths=${HB_DIR_QT}\lib
 
-{!HB_QT_STATIC}libs=hbqt
-{HB_QT_STATIC}libs=hbqts
+libs=hbqt
 {win}libs=version shlwapi
-{allwin&!HB_QT_STATIC}libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
-{allwin&HB_QT_STATIC}libs=QtCore QtGui QtNetwork QtWebKit
+{allwin}libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
 {linux}libs=QtCore QtGui QtNetwork QtWebKit
 {darwin}libs=/Library/Frameworks/QtCore.framework/QtCore
 {darwin}libs=/Library/Frameworks/QtGui.framework/QtGui

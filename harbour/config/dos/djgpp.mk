@@ -46,8 +46,9 @@ ifneq ($(HB_LINKING_RTL),)
    ifneq ($(filter gtcrs, $(LIBS)),)
       LDLIBS += -l$(HB_CRS_LIB)
    endif
-   ifneq ($(HB_HAS_TCP),)
-      LDLIBS += -L$(HB_HAS_TCP:/inc=/lib) -lwatt
+   ifneq ($(HB_HAS_WATT),)
+      LIBPATHS += -L$(HB_HAS_WATT:/inc=/lib)
+      LDLIBS += -lwatt
    endif
 endif
 

@@ -280,8 +280,8 @@ DIRS := \
    gtwvt \
    gtxwc \
 
-ifneq ($(HB_HAS_TCP),)
-   HB_CFLAGS += -DHB_HAS_TCP $(foreach d,$(HB_HAS_TCP),-I$(d))
+ifneq ($(HB_HAS_WATT),)
+   HB_CFLAGS += -DHB_HAS_WATT $(foreach d,$(HB_HAS_WATT),-I$(d))
 endif
 
 include $(TOP)$(ROOT)config/lib.mk

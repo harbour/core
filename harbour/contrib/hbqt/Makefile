@@ -6,11 +6,7 @@ ROOT := ../../
 
 include $(TOP)$(ROOT)config/global.mk
 
-ifeq ($(HB_QT_STATIC),)
-   LIBNAME := hbqt
-else
-   LIBNAME := hbqts
-endif
+LIBNAME := hbqt
 
 PRG_HEADERS := \
    hbqt.ch \
@@ -48,15 +44,17 @@ ifneq ($(HB_HAS_QT),)
       HB_CFLAGS += $(foreach d,$(HB_HAS_QT),-I$(d) -I$(d)/Qt -I$(d)/QtCore -I$(d)/QtGui -I$(d)/QtNetwork -I$(d)/QtWebKit)
    endif
 
-   ifneq ($(HB_QT_STATIC),)
-      HB_CFLAGS += -DQT_NODLL
-   endif
-
    include $(TOP)$(ROOT)contrib/hbqt/filelist.mk
 
    include $(TOP)$(ROOT)config/header.mk
    include $(TOP)$(ROOT)config/lib.mk
 
+   ifneq ($(filter $(HB_PLATFORM),win wce),)
+      ifneq ($(HB_QT_STATIC),)
+         DIRS += hbqts
+         include $(TOP)$(ROOT)config/dir.mk
+      endif
+   endif
 else
    HB_SKIP_REASON := $(_DET_RES_TEXT)
    include $(TOP)$(ROOT)config/none.mk

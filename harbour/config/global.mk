@@ -1281,6 +1281,8 @@ endif
 
 HB_DYN_COMPILE := no
 
+CXX :=
+
 # export some variables to eliminate repeated setting in recursive calls
 export HB_HOST_PLAT
 export HB_HOST_CPU

@@ -23,7 +23,7 @@ export HB_HAS_GPM     :=
 export HB_HAS_SLANG   :=
 export HB_HAS_CURSES  :=
 export HB_HAS_X11     :=
-export HB_HAS_TCP     :=
+export HB_HAS_WATT    :=
 
 # Exclude Harbour-wide features prohibiting commercial use
 
@@ -116,9 +116,9 @@ include $(TOP)$(ROOT)config/detfun.mk
 
 # Detect WATTCP/WATT-32 in DOS builds
 
-_DET_DSP_NAME := WATTCP/WATT-32
-_DET_VAR_INC_ := HB_INC_TCP
-_DET_VAR_HAS_ := HB_HAS_TCP
+_DET_DSP_NAME := wattcp/watt-32
+_DET_VAR_INC_ := HB_INC_WATT
+_DET_VAR_HAS_ := HB_HAS_WATT
 _DET_FLT_PLAT := dos
 _DET_FLT_COMP :=
 _DET_INC_DEFP := $(if $(WATT_ROOT),$(WATT_ROOT)/inc,) /usr/include

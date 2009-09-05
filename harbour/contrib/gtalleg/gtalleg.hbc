@@ -2,10 +2,7 @@
 # $Id$
 #
 
-{!HB_ALLEGRO_STATIC}libs=gtalleg
-{HB_ALLEGRO_STATIC}libs=gtallegs
+libs=gtalleg
 
-{win&HB_ALLEGRO_STATIC}libs=alleg_s d3d9 dsound
-{win&!HB_ALLEGRO_STATIC}libs=alleg
-{linux&HB_ALLEGRO_STATIC}ldflags="`allegro-config --static 2>/dev/null`"
-{linux&!HB_ALLEGRO_STATIC}ldflags="`allegro-config --libs 2>/dev/null`"
+{win}libs=alleg
+{linux}ldflags="`allegro-config --libs 2>/dev/null`"
