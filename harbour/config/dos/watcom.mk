@@ -67,7 +67,7 @@ LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 
 ifneq ($(HB_LINKING_RTL),)
    ifneq ($(HB_HAS_WATT),)
-      LDLIBS += $(HB_HAS_WATT:/inc=/lib)/watt
+      LDLIBS += $(HB_HAS_WATT:/inc=/lib)/wattcpWF
    endif
 endif
 
