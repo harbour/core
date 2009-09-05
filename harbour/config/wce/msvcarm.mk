@@ -22,18 +22,12 @@ CFLAGS := -nologo -D_WIN32_WCE=0x501 -DCE_ARCH -DWINCE -D_WINCE -D_WINDOWS -D_UN
 
 ifeq ($(HB_COMPILER),msvcarm)
    CFLAGS += -DARM -D_ARM_ -DARMV4 -D_M_ARM -D_ARMV4I_ -Darmv4i -D__arm__
-else
-   ifeq ($(HB_COMPILER),msvcsh)
-      CFLAGS += -D_M_SH -DSHx -D_SHX_
-   else
-      ifeq ($(HB_COMPILER),msvcmips)
-         CFLAGS += -D_M_MRX000=4000 -DMIPS -D_MIPS_ -DMIPS_HAS_FPU
-      else
-         ifeq ($(HB_COMPILER),msvc)
-            CFLAGS += -D_X86_ -D_M_IX86
-         endif
-      endif
-   endif
+else ifeq ($(HB_COMPILER),msvcsh)
+   CFLAGS += -D_M_SH -DSHx -D_SHX_
+else ifeq ($(HB_COMPILER),msvcmips)
+   CFLAGS += -D_M_MRX000=4000 -DMIPS -D_MIPS_ -DMIPS_HAS_FPU
+else ifeq ($(HB_COMPILER),msvc)
+   CFLAGS += -D_X86_ -D_M_IX86
 endif
 
 LDFLAGS :=
