@@ -1,0 +1,6 @@
+#
+# $Id: hbmk.hbm 11362 2009-06-15 12:46:55Z vszakats $
+#
+
+../hbnetio.hbc
+-mt

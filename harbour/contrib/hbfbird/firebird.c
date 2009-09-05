@@ -81,8 +81,8 @@ HB_FUNC( FBCREATEDB )
 {
    if( hb_pcount() == 6 )
    {
-      isc_db_handle newdb = NULL;
-      isc_tr_handle trans = NULL;
+      isc_db_handle newdb = ( isc_db_handle ) 0;
+      isc_tr_handle trans = ( isc_tr_handle ) 0;
       ISC_STATUS status[ 20 ];
       char create_db[ MAX_BUFFER ];
 
@@ -109,7 +109,7 @@ HB_FUNC( FBCREATEDB )
 HB_FUNC( FBCONNECT )
 {
    ISC_STATUS    status[ MAX_FIELDS ];
-   isc_db_handle db = NULL;
+   isc_db_handle db = ( isc_db_handle ) 0;
    const char *  db_connect = hb_parcx( 1 );
    const char *  user = hb_parcx( 2 );
    const char *  passwd = hb_parcx( 3 );
@@ -120,14 +120,14 @@ HB_FUNC( FBCONNECT )
    /* TOFIX: Possible buffer overflow. Use hb_snprintf(). */
    dpb[ i++ ] = isc_dpb_version1;
    dpb[ i++ ] = isc_dpb_user_name;
-   len = strlen( user );
+   len = ( int ) strlen( user );
    if( len > ( int ) ( sizeof( dpb ) - i - 4 ) )
       len = ( int ) ( sizeof( dpb ) - i - 4 );
    dpb[ i++ ] = ( char ) len;
    hb_strncpy( &( dpb[ i ] ), user, len );
    i += ( short ) len;
    dpb[ i++ ] = isc_dpb_password;
-   len = strlen( passwd );
+   len = ( int ) strlen( passwd );
    if( len > ( int ) ( sizeof( dpb ) - i - 2 ) )
       len = ( int ) ( sizeof( dpb ) - i - 2 );
    dpb[ i++ ] = ( char ) len;
@@ -137,13 +137,13 @@ HB_FUNC( FBCONNECT )
    if( isc_attach_database( status, 0, db_connect, &db, i, dpb ) )
       hb_retnl( isc_sqlcode( status ) );
    else
-      hb_retptr( ( void * ) db );
+      hb_retptr( ( void * ) ( HB_PTRDIFF ) db );
 }
 
 
 HB_FUNC( FBCLOSE )
 {
-   isc_db_handle db = ( isc_db_handle ) hb_parptr( 1 );
+   isc_db_handle db = ( isc_db_handle ) ( HB_PTRDIFF ) hb_parptr( 1 );
    ISC_STATUS status[ 20 ];
 
    if( isc_detach_database( status, &db ) )
@@ -166,19 +166,19 @@ HB_FUNC( FBERROR )
 
 HB_FUNC( FBSTARTTRANSACTION )
 {
-   isc_db_handle db = ( isc_db_handle ) hb_parptr( 1 );
-   isc_tr_handle trans = NULL;
+   isc_db_handle db = ( isc_db_handle ) ( HB_PTRDIFF ) hb_parptr( 1 );
+   isc_tr_handle trans = ( isc_tr_handle ) 0;
    ISC_STATUS status[ MAX_FIELDS ];
 
    if( isc_start_transaction( status, &trans, 1, &db, 0, NULL ) )
       hb_retnl( isc_sqlcode( status ) );
    else
-      hb_retptr( ( void * ) trans );
+      hb_retptr( ( void * ) ( HB_PTRDIFF ) trans );
 }
 
 HB_FUNC( FBCOMMIT )
 {
-   isc_tr_handle trans = ( isc_db_handle ) hb_parptr( 1 );
+   isc_tr_handle trans = ( isc_db_handle ) ( HB_PTRDIFF ) hb_parptr( 1 );
    ISC_STATUS status[ MAX_FIELDS ];
 
    if( isc_commit_transaction( status, &trans ) )
@@ -189,7 +189,7 @@ HB_FUNC( FBCOMMIT )
 
 HB_FUNC( FBROLLBACK )
 {
-   isc_tr_handle trans = ( isc_db_handle ) hb_parptr( 1 );
+   isc_tr_handle trans = ( isc_db_handle ) ( HB_PTRDIFF ) hb_parptr( 1 );
    ISC_STATUS status[ MAX_FIELDS ];
 
    if( isc_rollback_transaction( status, &trans ) )
@@ -200,8 +200,8 @@ HB_FUNC( FBROLLBACK )
 
 HB_FUNC( FBEXECUTE )
 {
-   isc_db_handle   db = ( isc_db_handle ) hb_parptr( 1 );
-   isc_tr_handle   trans = NULL;
+   isc_db_handle   db = ( isc_db_handle ) ( HB_PTRDIFF ) hb_parptr( 1 );
+   isc_tr_handle   trans = ( isc_tr_handle ) 0;
    const char *    exec_str = hb_parcx( 2 );
    ISC_STATUS      status[ 20 ];
    ISC_STATUS      status_rollback[ 20 ];
@@ -209,7 +209,7 @@ HB_FUNC( FBEXECUTE )
 
    if( HB_ISPOINTER( 4 ) )
    {
-      trans = ( isc_tr_handle ) hb_parptr( 4 );
+      trans = ( isc_tr_handle ) ( HB_PTRDIFF ) hb_parptr( 4 );
    }
    else
    {
@@ -243,11 +243,11 @@ HB_FUNC( FBEXECUTE )
 
 HB_FUNC( FBQUERY )
 {
-   isc_db_handle       db = ( isc_db_handle ) hb_parptr( 1 );
-   isc_tr_handle       trans = NULL;
+   isc_db_handle       db = ( isc_db_handle ) ( HB_PTRDIFF ) hb_parptr( 1 );
+   isc_tr_handle       trans = ( isc_tr_handle ) 0;
    ISC_STATUS          status[ MAX_FIELDS ];
    XSQLDA *            sqlda;
-   isc_stmt_handle     stmt = NULL;
+   isc_stmt_handle     stmt = ( isc_stmt_handle ) 0;
    XSQLVAR           * var;
 
    char                sel_str[ MAX_LEN ];
@@ -264,7 +264,7 @@ HB_FUNC( FBQUERY )
 
    if( HB_ISPOINTER( 4 ) )
    {
-      trans = ( isc_tr_handle ) hb_parptr( 4 );
+      trans = ( isc_tr_handle ) ( HB_PTRDIFF ) hb_parptr( 4 );
    }
    else if( isc_start_transaction( status, &trans, 1, &db, 0, NULL ) )
    {
@@ -369,11 +369,11 @@ HB_FUNC( FBQUERY )
 
    qry_handle = hb_itemArrayNew( 6 );
 
-   hb_arraySetPtr( qry_handle, 1, ( void * ) stmt );
-   hb_arraySetPtr( qry_handle, 2, ( void * ) sqlda );
+   hb_arraySetPtr( qry_handle, 1, ( void * ) ( HB_PTRDIFF ) stmt );
+   hb_arraySetPtr( qry_handle, 2, ( void * ) ( HB_PTRDIFF ) sqlda );
 
    if( ! HB_ISPOINTER( 4 ) )
-      hb_arraySetPtr( qry_handle, 3, ( void * ) trans );
+      hb_arraySetPtr( qry_handle, 3, ( void * ) ( HB_PTRDIFF ) trans );
 
    hb_arraySetNL( qry_handle, 4, ( long ) num_cols );
    hb_arraySetNI( qry_handle, 5, ( int ) dialect );
@@ -389,11 +389,11 @@ HB_FUNC( FBFETCH )
    {
       PHB_ITEM aParam = hb_param( 1, HB_IT_ARRAY );
 
-      isc_stmt_handle stmt = ( isc_stmt_handle ) hb_itemGetPtr( hb_itemArrayGet( aParam, 1 ) );
+      isc_stmt_handle stmt = ( isc_stmt_handle ) ( HB_PTRDIFF ) hb_itemGetPtr( hb_itemArrayGet( aParam, 1 ) );
       ISC_STATUS      status[ MAX_FIELDS ];
       XSQLDA *        sqlda = ( XSQLDA * ) hb_itemGetPtr( hb_itemArrayGet( aParam, 2 ) );
       unsigned short  dialect = ( unsigned short ) hb_itemGetNI( hb_itemArrayGet( aParam, 5 ) );
-      long            fetch_stat;
+      ISC_STATUS      fetch_stat;
 
       /* TOFIX */
       fetch_stat = isc_dsql_fetch( status, &stmt, dialect, sqlda );
@@ -413,9 +413,9 @@ HB_FUNC( FBFREE )
    {
       PHB_ITEM aParam = hb_param( 1, HB_IT_ARRAY );
 
-      isc_stmt_handle stmt = ( isc_stmt_handle ) hb_itemGetPtr( hb_itemArrayGet( aParam, 1 ) );
+      isc_stmt_handle stmt = ( isc_stmt_handle ) ( HB_PTRDIFF ) hb_itemGetPtr( hb_itemArrayGet( aParam, 1 ) );
       XSQLDA *        sqlda = ( XSQLDA * ) hb_itemGetPtr( hb_itemArrayGet( aParam, 2 ) );
-      isc_tr_handle   trans = ( isc_tr_handle ) hb_itemGetPtr( hb_itemArrayGet( aParam, 3 ) );
+      isc_tr_handle   trans = ( isc_tr_handle ) ( HB_PTRDIFF ) hb_itemGetPtr( hb_itemArrayGet( aParam, 3 ) );
       ISC_STATUS      status[ MAX_FIELDS ];
 
       if( isc_dsql_free_statement( status, &stmt, DSQL_drop ) )
@@ -607,18 +607,18 @@ HB_FUNC( FBGETDATA )
 HB_FUNC( FBGETBLOB )
 {
    ISC_STATUS      status[ MAX_FIELDS ];
-   isc_db_handle   db = ( isc_db_handle ) hb_parptr( 1 );
-   isc_tr_handle   trans = NULL;
-   isc_blob_handle blob_handle = NULL;
+   isc_db_handle   db = ( isc_db_handle ) ( HB_PTRDIFF ) hb_parptr( 1 );
+   isc_tr_handle   trans = ( isc_tr_handle ) 0;
+   isc_blob_handle blob_handle = ( isc_blob_handle ) 0;
    short           blob_seg_len;
    char            blob_segment[ 512 ];
    ISC_QUAD *      blob_id = ( ISC_QUAD * ) hb_parptr( 2 );
    char            p[ MAX_BUFFER ];
-   long            blob_stat;
+   ISC_STATUS      blob_stat;
 
    if( HB_ISPOINTER( 3 ) )
    {
-      trans = ( isc_tr_handle ) hb_parptr( 3 );
+      trans = ( isc_tr_handle ) ( HB_PTRDIFF ) hb_parptr( 3 );
    }
    else
    {
