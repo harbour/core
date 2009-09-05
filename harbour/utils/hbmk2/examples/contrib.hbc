@@ -7,4 +7,4 @@
 # Thank you. [vszakats]
 
 # Some popular and portable Harbour contribs
-libs=hbct hbmzip hbcrypt
+libs=hbct hbmzip
