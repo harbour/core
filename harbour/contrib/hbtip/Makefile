@@ -35,16 +35,10 @@ PRG_HEADERS := \
    thtml.ch \
    tip.ch \
 
-ifneq ($(HB_PLATFORM),dos)
+include $(TOP)$(ROOT)config/header.mk
+include $(TOP)$(ROOT)config/lib.mk
 
-   include $(TOP)$(ROOT)config/header.mk
-   include $(TOP)$(ROOT)config/lib.mk
-
-   ifneq ($(HB_HAS_OPENSSL),)
-      DIRS := hbtipssl
-      include $(TOP)$(ROOT)config/dir.mk
-   endif
-
-else
-   include $(TOP)$(ROOT)config/none.mk
+ifneq ($(HB_HAS_OPENSSL),)
+   DIRS := hbtipssl
+   include $(TOP)$(ROOT)config/dir.mk
 endif

@@ -2,8 +2,6 @@
 # $Id$
 #
 
-{dos}skip=yes
-
 incpaths=.
 
 libs=hbtip
