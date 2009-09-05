@@ -744,10 +744,10 @@ msgstr "O script %1$s no diret¢rio atual ser† sempre processado se existir."
 #: hbmk2.prg:6704
 #, c-format
 msgid ""
-".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full], skip=[yes|no], echo=<text>\\n"
+".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full], skip=[yes|no], echo=<text>\\n"
 "Lines starting with '#' char are ignored"
 msgstr ""
-"As opá‰es em um arquivo .hbc devem estar em linhas separadas e s∆o: libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], prgflags=[flags do Harbour], cflags=[flags do compilador C], resflags=[flags do compilador de recursos], ldflags=[flags do linkeditor], libpaths=[paths], sources=[m¢dulos fontes], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full], skip=[yes|no], echo=<text>\\n"
+"As opá‰es em um arquivo .hbc devem estar em linhas separadas e s∆o: libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[flags do Harbour], cflags=[flags do compilador C], resflags=[flags do compilador de recursos], ldflags=[flags do linkeditor], libpaths=[paths], sources=[m¢dulos fontes], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full], skip=[yes|no], echo=<text>\\n"
 "Linhas iniciadas com '#' s∆o interpretadas como coment†rios e ser∆o ignoradas"
 
 #: hbmk2.prg:3822

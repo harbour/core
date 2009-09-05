@@ -424,7 +424,7 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
                                F.e. to specify C:\dir on Windows, with Cygwin
                                you should use /cygdrive/c/dir, with MSYS /c/dir.
                                It's also possible to use following macros:
-                                  {hb_top}  - Source tree root dir.
+                                  {hb_top}  - Source tree root dir
                                   {hb_plat} - Target platform
                                   {hb_comp} - Target compiler
                                   {hb_cpu}  - Target CPU
@@ -451,7 +451,7 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    - HB_BUILD_DLL=no           Create Harbour dynamic libraries. Default: yes
    - HB_BUILD_IMPLIB=yes       Create import libraries for external .dll
                                dependencies (including contribs). Default: no
-                               (for Windows targets created on Windows NT
+                               (for Windows targets created from Windows NT
                                shells only)
    - HB_BUILD_DEBUG=yes        Create a debug build. Default: no
    - HB_BUILD_OPTIM=no         Enable C compiler optimizations. Default: yes
@@ -481,7 +481,7 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    - HB_CCPATH=[<dir>/]        Used with non-*nix gcc family compilers (and
                                sunpro) to specify path to compiler/linker/archive
                                tool to help them run from *nix hosts as cross-build
-                               tools. Ending slash must be used.
+                               tools. Ending slash must be added.
    - HB_CCPREFIX=[<prefix>]    Used with gcc family to specify
                                compiler/linker/archive tool name prefix.
    - HB_CCPOSTFIX=[<postfix>]  Used with gcc family to specify compiler/linker
@@ -735,7 +735,7 @@ EXAMPLES
       set HB_INC_GD=C:\GD-20~1.34\include
       set HB_INC_MYSQL=C:\MYSQL-~1.67\include
       set HB_INC_PGSQL=C:\PGSQL-~1.3\include
-      set HB_INC_WATT=C:\WATT
+      set HB_INC_WATT=C:\WATT\inc
       -->8--
 
       --8<--
@@ -854,8 +854,8 @@ QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
 
        Your compiler of choice has to be placed in the PATH
        (and configured appropriately according to instructions).
-       If you use Harbour binary distribution on Windows, you
-       already have MinGW compiler embedded in the installation,
+       If you use official Harbour binary distribution on Windows,
+       you already have MinGW compiler embedded in the installation,
        which will automatically be used, so you don't have to
        make any extra steps here.
 

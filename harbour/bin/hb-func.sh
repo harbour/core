@@ -261,7 +261,7 @@ mk_hbtools()
         echo "libs=${hb_mkdef}${CC_HB_USER_LIBS}">> ${hb_hbmkcfg}
     fi
     if [ -n "${HB_HAS_GPM}" ]; then
-        echo "libs=${hb_mkdef}gpm">> ${hb_hbmkcfg}
+        echo "syslibs=${hb_mkdef}gpm">> ${hb_hbmkcfg}
     fi
 
     hb_ccpath="${HB_CCPATH%/}"
