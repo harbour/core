@@ -75,10 +75,10 @@ msgstr "Erro: Valor incorreto para arquitetura: %1$s"
 #: hbmk2.prg:1209
 #, c-format
 msgid ""
-"Please choose a C compiler by using -comp= option or envvar HB_COMPILER.\\n"
+"Please choose a C compiler by using -compiler= option or envvar HB_COMPILER.\\n"
 "You have the following choices on your platform: %1$s"
 msgstr ""
-"Por favor, selecione um compilador C usando a op‡Æo -comp= ou a vari vel de ambiente HBCOMPILER.\\n"
+"Por favor, selecione um compilador C usando a op‡Æo -compiler= ou a vari vel de ambiente HBCOMPILER.\\n"
 "Vocˆ possui as seguintes op‡äes para sua plataforma> %1$s"
 
 #: hbmk2.prg:1090
@@ -100,10 +100,10 @@ msgstr "Compilador C detectado automaticamente: %1$s"
 #, c-format
 msgid ""
 "Couldn't detect any supported C compiler in your PATH.\\n"
-"Please setup one or set -comp= option or envvar HB_COMPILER to one of these values: %1$s"
+"Please setup one or set -compiler= option or envvar HB_COMPILER to one of these values: %1$s"
 msgstr ""
 "Nenhum compilador C suportado foi encontrado em seu PATH.\\n"
-"Por favor, utilize a op‡Æo -comp= ou a vari vel HB_COMPILER com um destes valores: %1$s"
+"Por favor, utilize a op‡Æo -compiler= ou a vari vel HB_COMPILER com um destes valores: %1$s"
 
 #: hbmk2.prg:6687
 #, c-format

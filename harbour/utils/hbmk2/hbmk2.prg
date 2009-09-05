@@ -696,25 +696,27 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       /* NOTE: Don't forget to make these ignored in the main
                option processing loop. */
       DO CASE
-      CASE cParamL            == "-quiet"   ; hbmk[ _HBMK_lQuiet ] := .T. ; hbmk[ _HBMK_lInfo ] := .F.
-      CASE Left( cParamL, 6 ) == "-comp="   ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_COMP )
-      CASE Left( cParamL, 6 ) == "-plat="   ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_PLAT )
-      CASE Left( cParamL, 6 ) == "-arch="   ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_PLAT ) /* Compatibility */
-      CASE Left( cParamL, 6 ) == "-build="  ; hbmk[ _HBMK_cBUILD ] := SubStr( cParam, 8 )
-      CASE Left( cParamL, 6 ) == "-lang="   ; hbmk[ _HBMK_cUILNG ] := SubStr( cParam, 7 ) ; SetUILang( hbmk )
-      CASE cParamL            == "-hbrun"   ; lSkipBuild := .T. ; hbmk[ _HBMK_lRUN ] := .T.
-      CASE cParamL            == "-hbraw"   ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .T. ; lStopAfterCComp := .T. ; lCreateLib := .F. ; lCreateDyn := .F. ; lAcceptCFlag := .F. ; lAcceptLDFlag := .F.
-      CASE cParamL            == "-hbcmp" .OR. ;
-           cParamL            == "-clipper" ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .F. ; lCreateDyn := .F. ; lAcceptCFlag := .F. ; lAcceptLDFlag := .F.
-      CASE cParamL            == "-hbcc"    ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptCFlag := .T.
-      CASE cParamL            == "-hblnk"   ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptLDFlag := .T.
-      CASE cParamL            == "-rtlink" .OR. ;
-           cParamL            == "-exospace" .OR. ;
-           cParamL            == "-blinker" ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptLDClipper := .T.
-      CASE cParamL            == "-info"    ; hbmk[ _HBMK_lInfo ] := .T.
-      CASE cParamL            == "-xhb"     ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_XHB
-      CASE cParamL            == "-hb10"    ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_HB10
-      CASE cParamL            == "-hbc"     ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_RAW_C ; lAcceptCFlag := .T.
+      CASE cParamL             == "-quiet"     ; hbmk[ _HBMK_lQuiet ] := .T. ; hbmk[ _HBMK_lInfo ] := .F.
+      CASE Left( cParamL, 6 )  == "-comp="     ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_COMP )
+      CASE Left( cParamL, 10 ) == "-compiler=" ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_COMP )
+      CASE Left( cParamL, 6 )  == "-plat="     ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_PLAT )
+      CASE Left( cParamL, 10 ) == "-platform=" ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_PLAT )
+      CASE Left( cParamL, 6 )  == "-arch="     ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_PLAT ) /* Compatibility */
+      CASE Left( cParamL, 6 )  == "-build="    ; hbmk[ _HBMK_cBUILD ] := SubStr( cParam, 8 )
+      CASE Left( cParamL, 6 )  == "-lang="     ; hbmk[ _HBMK_cUILNG ] := SubStr( cParam, 7 ) ; SetUILang( hbmk )
+      CASE cParamL             == "-hbrun"     ; lSkipBuild := .T. ; hbmk[ _HBMK_lRUN ] := .T.
+      CASE cParamL             == "-hbraw"     ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .T. ; lStopAfterCComp := .T. ; lCreateLib := .F. ; lCreateDyn := .F. ; lAcceptCFlag := .F. ; lAcceptLDFlag := .F.
+      CASE cParamL             == "-hbcmp" .OR. ;
+           cParamL             == "-clipper"   ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .F. ; lCreateDyn := .F. ; lAcceptCFlag := .F. ; lAcceptLDFlag := .F.
+      CASE cParamL             == "-hbcc"      ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptCFlag := .T.
+      CASE cParamL             == "-hblnk"     ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptLDFlag := .T.
+      CASE cParamL             == "-rtlink" .OR. ;
+           cParamL             == "-exospace" .OR. ;
+           cParamL             == "-blinker"   ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptLDClipper := .T.
+      CASE cParamL             == "-info"      ; hbmk[ _HBMK_lInfo ] := .T.
+      CASE cParamL             == "-xhb"       ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_XHB
+      CASE cParamL             == "-hb10"      ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_HB10
+      CASE cParamL             == "-hbc"       ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_RAW_C ; lAcceptCFlag := .T.
       CASE cParamL == "-help" .OR. ;
            cParamL == "--help"
 
@@ -1120,9 +1122,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
          ELSE
             IF Empty( aCOMPDET )
-               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Please choose a C compiler by using -comp= option or envvar HB_COMPILER.\nYou have the following choices on your platform: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Please choose a C compiler by using -compiler= option or envvar HB_COMPILER.\nYou have the following choices on your platform: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
             ELSE
-               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Couldn't detect any supported C compiler in your PATH.\nPlease setup one or set -comp= option or envvar HB_COMPILER to one of these values: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Couldn't detect any supported C compiler in your PATH.\nPlease setup one or set -compiler= option or envvar HB_COMPILER to one of these values: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
             ENDIF
             RETURN 2
          ENDIF
@@ -1326,22 +1328,24 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       cParamL := Lower( cParam )
 
       DO CASE
-      CASE Left( cParamL, 6 ) == "-comp=" .OR. ;
-           Left( cParamL, 6 ) == "-plat=" .OR. ;
-           Left( cParamL, 6 ) == "-arch=" .OR. ; /* Compatibility */
-           cParamL            == "-hbrun" .OR. ;
-           cParamL            == "-hbraw" .OR. ;
-           cParamL            == "-hbcmp" .OR. ;
-           cParamL            == "-hbcc"  .OR. ;
-           cParamL            == "-hblnk" .OR. ;
-           cParamL            == "-nohbc" .OR. ;
-           cParamL            == "-xhb" .OR. ;
-           cParamL            == "-hb10" .OR. ;
-           cParamL            == "-hbc" .OR. ;
-           cParamL            == "-clipper" .OR. ;
-           cParamL            == "-rtlink" .OR. ;
-           cParamL            == "-blinker" .OR. ;
-           cParamL            == "-exospace"
+      CASE Left( cParamL, 6 )  == "-comp=" .OR. ;
+           Left( cParamL, 10 ) == "-compiler=" .OR. ;
+           Left( cParamL, 6 )  == "-plat=" .OR. ;
+           Left( cParamL, 10 ) == "-platform=" .OR. ;
+           Left( cParamL, 6 )  == "-arch=" .OR. ; /* Compatibility */
+           cParamL             == "-hbrun" .OR. ;
+           cParamL             == "-hbraw" .OR. ;
+           cParamL             == "-hbcmp" .OR. ;
+           cParamL             == "-hbcc"  .OR. ;
+           cParamL             == "-hblnk" .OR. ;
+           cParamL             == "-nohbc" .OR. ;
+           cParamL             == "-xhb" .OR. ;
+           cParamL             == "-hb10" .OR. ;
+           cParamL             == "-hbc" .OR. ;
+           cParamL             == "-clipper" .OR. ;
+           cParamL             == "-rtlink" .OR. ;
+           cParamL             == "-blinker" .OR. ;
+           cParamL             == "-exospace"
 
          /* Simply ignore. They were already processed in the first pass. */
 
@@ -6827,8 +6831,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "--hbdirlib"        , I_( "output Harbour static library directory" ) },;
       { "--hbdirinc"        , I_( "output Harbour header directory" ) },;
       NIL,;
-      { "-plat=<plat>"      , I_( "assume specific platform. Same as HB_PLATFORM envvar" ) },;
-      { "-comp=<comp>"      , I_( "use specific C compiler. Same as HB_COMPILER envvar\nSpecial value:\n - bld: use original build settings (default on *nix)" ) },;
+      { "-plat[form]=<plat>", I_( "assume specific platform. Same as HB_PLATFORM envvar" ) },;
+      { "-comp[iler]=<comp>", I_( "use specific C compiler. Same as HB_COMPILER envvar\nSpecial value:\n - bld: use original build settings (default on *nix)" ) },;
       { "-build=<name>"     , I_( "use a specific build name" ) },;
       { "-lang=<lang>"      , I_( "override default language. Similar to HB_LANG envvar." ) },;
       { "--version"         , I_( "display version header only" ) },;
