@@ -1845,7 +1845,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    NEXT
 
    /* Strip leading @ char of .clp files */
-   IF Left( hbmk[ _HBMK_cFIRST ], 1 ) == "@" .AND. Lower( FN_ExtGet( hbmk[ _HBMK_cFIRST ] ) ) == ".clp"
+   IF ! Empty( hbmk[ _HBMK_cFIRST ] ) .AND. Left( hbmk[ _HBMK_cFIRST ], 1 ) == "@" .AND. Lower( FN_ExtGet( hbmk[ _HBMK_cFIRST ] ) ) == ".clp"
       hbmk[ _HBMK_cFIRST ] := SubStr( hbmk[ _HBMK_cFIRST ], 2 )
    ENDIF
 
