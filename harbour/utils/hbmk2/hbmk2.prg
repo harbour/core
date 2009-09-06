@@ -753,10 +753,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       aLIB_BASE_2_MT    := iif( hbmk[ _HBMK_nHBMODE ] != _HBMODE_HB10, { "hbrtl", "hbvmmt" }, aLIB_BASE_2 )
       aLIB_BASE_GT      := { "gtcgi", "gtpca", "gtstd" }
       aLIB_BASE_NULRDD  := { "hbnulrdd" }
-      aLIB_BASE_RDD     := { "hbrdd", "hbusrrdd", "hbhsx", "hbsix", "rddntx", "rddcdx", "rddfpt" }
-      IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_HB10 /* These libs have been added after 1.0.x */
-         AAdd( aLIB_BASE_RDD, "hbuddall" )
-         AAdd( aLIB_BASE_RDD, "rddnsx" )
+      IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10
+         aLIB_BASE_RDD  := {             "hbusrrdd", "rddntx", "rddcdx",           "rddfpt", "hbrdd", "hbhsx", "hbsix" }
+      ELSE
+         aLIB_BASE_RDD  := { "hbuddall", "hbusrrdd", "rddntx", "rddcdx", "rddnsx", "rddfpt", "hbrdd", "hbhsx", "hbsix" }
       ENDIF
       aLIB_BASE_RDD_MT  := aLIB_BASE_RDD
       aLIB_BASE_CPLR    := { "hbcplr" }
@@ -3998,7 +3998,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          DirUnbuild( cWorkDir )
       ENDIF
 
-      IF nErrorLevel == 0 .AND. ! l_lCLEAN .AND. ! lTargetUpToDate
+      IF nErrorLevel == 0 .AND. ! l_lCLEAN .AND. ! lTargetUpToDate .AND. ;
+         ( ! lStopAfterCComp .OR. lCreateLib .OR. lCreateDyn )
 
          IF ! Empty( cBin_Post )
 
