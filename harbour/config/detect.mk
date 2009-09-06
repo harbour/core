@@ -124,6 +124,9 @@ _DET_FLT_COMP :=
 _DET_INC_DEFP := $(if $(WATT_ROOT),$(WATT_ROOT)/inc,) /usr/include
 _DET_INC_HEAD := /sys/socket.h
 
+HB_LIB_WATT := $(HB_HAS_WATT:/inc=/lib)
+HB_LIB_WATT := $(HB_LIB_WATT:\inc=\lib)
+
 include $(TOP)$(ROOT)config/detfun.mk
 
 # Finished

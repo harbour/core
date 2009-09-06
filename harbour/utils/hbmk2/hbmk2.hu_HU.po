@@ -724,8 +724,8 @@ msgstr "Hiba: C fordító futtatásakor. %1$s"
 
 #: hbmk2.prg:5661 hbmk2.prg:6366
 #, c-format
-msgid "  hbmk2 [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl]>"
-msgstr "  hbmk2 [kapcsolók] [<parancsállomány[s]>] <forrás[.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl]>"
+msgid "  hbmk2 [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl|@.clp]>"
+msgstr "  hbmk2 [kapcsolók] [<parancsállomány[s]>] <forrás[.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl|@.clp]>"
 
 #: hbmk2.prg:2937 hbmk2.prg:3341
 #, c-format

@@ -372,8 +372,8 @@ msgstr "paths adicionais para pesquisa de arquivos headers"
 
 #: hbmk2.prg:6582
 #, c-format
-msgid "  hbmk2 [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl]>"
-msgstr "  hbmk2 [op‡äes] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl]>"
+msgid "  hbmk2 [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl|@.clp]>"
+msgstr "  hbmk2 [op‡äes] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl|@.clp]>"
 
 #: hbmk2.prg:3663
 #: hbmk2.prg:4162

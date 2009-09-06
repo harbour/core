@@ -47,7 +47,7 @@ ifneq ($(HB_LINKING_RTL),)
       LDLIBS += -l$(HB_CRS_LIB)
    endif
    ifneq ($(HB_HAS_WATT),)
-      LIBPATHS += -L$(HB_HAS_WATT:/inc=/lib)
+      LIBPATHS += -L$(HB_LIB_WATT)
       LDLIBS += -lwatt
    endif
 endif
