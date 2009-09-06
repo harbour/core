@@ -1111,8 +1111,8 @@ ifeq ($(HB_INIT_DONE),)
          $(info ! HB_INSTALL_PREFIX automatically set to: $(HB_INSTALL_PREFIX))
       endif
       ifeq ($(ROOT),./)
-         ifneq ($(call find_in_path,svnversion .),)
-            $(info ! REVISION: $(shell svnversion))
+         ifneq ($(call find_in_path,svnversion),)
+            $(info ! REVISION: $(shell svnversion .))
          endif
       endif
    endif
