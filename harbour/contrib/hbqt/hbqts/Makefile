@@ -7,6 +7,7 @@ ROOT := ../../../
 include $(TOP)$(ROOT)config/global.mk
 
 vpath %.cpp ../
+vpath %.prg ../
 
 LIBNAME := hbqts
 
