@@ -699,9 +699,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       DO CASE
       CASE cParamL             == "-quiet"     ; hbmk[ _HBMK_lQuiet ] := .T. ; hbmk[ _HBMK_lInfo ] := .F.
       CASE Left( cParamL, 6 )  == "-comp="     ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_COMP )
-      CASE Left( cParamL, 10 ) == "-compiler=" ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_COMP )
+      CASE Left( cParamL, 10 ) == "-compiler=" ; ParseCOMPPLAT( hbmk, SubStr( cParam, 11 ), _TARG_COMP )
       CASE Left( cParamL, 6 )  == "-plat="     ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_PLAT )
-      CASE Left( cParamL, 10 ) == "-platform=" ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_PLAT )
+      CASE Left( cParamL, 10 ) == "-platform=" ; ParseCOMPPLAT( hbmk, SubStr( cParam, 11 ), _TARG_PLAT )
       CASE Left( cParamL, 6 )  == "-arch="     ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_PLAT ) /* Compatibility */
       CASE Left( cParamL, 6 )  == "-build="    ; hbmk[ _HBMK_cBUILD ] := SubStr( cParam, 8 )
       CASE Left( cParamL, 6 )  == "-lang="     ; hbmk[ _HBMK_cUILNG ] := SubStr( cParam, 7 ) ; SetUILang( hbmk )
