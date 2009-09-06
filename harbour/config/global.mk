@@ -33,8 +33,8 @@ GLOBAL_MK_ := yes
 HB_VER_MAJOR     := 2
 HB_VER_MINOR     := 0
 HB_VER_RELEASE   := 0
-HB_VER_STATUS    := beta2
-HB_VER_STATUS_SH := b2
+HB_VER_STATUS    := beta3
+HB_VER_STATUS_SH := b3
 
 # Arbitrary pattern which we do not expect to occur in real-world path names
 substpat := !@!@

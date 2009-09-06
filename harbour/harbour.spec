@@ -67,7 +67,7 @@
 %define name     harbour
 %define dname    Harbour
 %define version  2.0.0
-%define releasen beta2
+%define releasen beta3
 %define hb_pref  hb
 %define hb_plat  export HB_PLATFORM=linux
 %define hb_cc    export HB_COMPILER=gcc
