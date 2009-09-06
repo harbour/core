@@ -754,9 +754,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       aLIB_BASE_GT      := { "gtcgi", "gtpca", "gtstd" }
       aLIB_BASE_NULRDD  := { "hbnulrdd" }
       IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10
-         aLIB_BASE_RDD  := {             "hbusrrdd", "rddntx", "rddcdx",           "rddfpt", "hbrdd", "hbhsx", "hbsix" }
+         aLIB_BASE_RDD  := { "hbrdd",             "hbusrrdd", "rddntx", "rddcdx",           "rddfpt", "hbrdd", "hbhsx", "hbsix" }
       ELSE
-         aLIB_BASE_RDD  := { "hbuddall", "hbusrrdd", "rddntx", "rddcdx", "rddnsx", "rddfpt", "hbrdd", "hbhsx", "hbsix" }
+         aLIB_BASE_RDD  := { "hbrdd", "hbuddall", "hbusrrdd", "rddntx", "rddcdx", "rddnsx", "rddfpt", "hbrdd", "hbhsx", "hbsix" }
       ENDIF
       aLIB_BASE_RDD_MT  := aLIB_BASE_RDD
       aLIB_BASE_CPLR    := { "hbcplr" }
@@ -777,8 +777,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       aLIB_BASE_2_MT    := { "rtlmt", "vmmt" }
       aLIB_BASE_GT      := { "gtcgi", "gtpca", "gtstd" }
       aLIB_BASE_NULRDD  := { "nulsys" }
-      aLIB_BASE_RDD     := { "rdd"  , "usrrdd"  , "rdds"  , "hsx"  , "hbsix"  , "dbfntx"  , "dbfcdx"  , "dbffpt"   }
-      aLIB_BASE_RDD_MT  := { "rddmt", "usrrddmt", "rddsmt", "hsxmt", "hbsixmt", "dbfntxmt", "dbfcdxmt", "dbffptmt" }
+      aLIB_BASE_RDD     := { "rdd"  , "usrrdd"  , "rdds"  , "dbfntx"  , "dbfcdx"  , "dbffpt"  , "rdd"  , "hsx"  , "hbsix"   }
+      aLIB_BASE_RDD_MT  := { "rddmt", "usrrddmt", "rddsmt", "dbfntxmt", "dbfcdxmt", "dbffptmt", "rddmt", "hsxmt", "hbsixmt" }
       aLIB_BASE_CPLR    := {}
       aLIB_BASE_3       := { "macro"  , "pp"  , "common" }
       aLIB_BASE_3_MT    := { "macromt", "ppmt", "common" }
