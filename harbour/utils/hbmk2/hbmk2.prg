@@ -158,6 +158,7 @@ REQUEST hbmk_KEYW
 #define _HBMODE_XHB             2
 #define _HBMODE_RAW_C           3
 
+/* Not implemented yet */
 #define _CONF_RELEASE           0 /* No debug */
 #define _CONF_DEBUG             1 /* Harbour level debug */
 #define _CONF_FULLDEBUG         2 /* Harbour + C level debug */
@@ -542,6 +543,16 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    LOCAL l_cTSHEAD
    LOCAL l_cHBPOSTFIX := ""
    LOCAL l_lNOHBLIB := .F.
+   LOCAL l_lLIBSYSMISC := .T.
+
+   /* hbmk2 lib ordering tries to satisfy linkers which require this
+      (mingw*, linux/gcc, bsd/gcc and dos/djgpp), but this won't solve
+      potential problems when users are speccing custom libs themselves
+      and expect them to work the same way on all supported platforms/compilers.
+      So I decided to readd this feature until we find a solution which
+      doesn't have such bad side-effect.
+      [vszakats] */
+   LOCAL l_lLIBGROUPING := .T.
 
    LOCAL l_lBLDFLGP := .F.
    LOCAL l_lBLDFLGC := .F.
@@ -753,6 +764,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       aLIB_BASE_2_MT    := iif( hbmk[ _HBMK_nHBMODE ] != _HBMODE_HB10, { "hbrtl", "hbvmmt" }, aLIB_BASE_2 )
       aLIB_BASE_GT      := { "gtcgi", "gtpca", "gtstd" }
       aLIB_BASE_NULRDD  := { "hbnulrdd" }
+      /* Double 'hbrdd' is required for linkers which otherwise need lib grouping. */
       IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10
          aLIB_BASE_RDD  := { "hbrdd",             "hbusrrdd", "rddntx", "rddcdx",           "rddfpt", "hbrdd", "hbhsx", "hbsix" }
       ELSE
@@ -944,7 +956,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       cOptPrefix := "-/"
       l_aLIBSYSCORE := { "coredll", "ws2" }
       l_aLIBSYSMISC := { "ceshell", "uuid", "ole32", "oleaut32", "wininet", "commdlg", "commctrl" }
-
    OTHERWISE
       hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Platform value unknown: %1$s" ), hbmk[ _HBMK_cPLAT ] ) )
       RETURN 1
@@ -1369,8 +1380,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       CASE cParamL == "-fullstatic"      ; hbmk[ _HBMK_lSHARED ]    := .F. ; hbmk[ _HBMK_lSTATICFULL ] := .T. ; hbmk[ _HBMK_lSHAREDDIST ] := NIL
       CASE cParamL == "-nohblib"         ; l_lNOHBLIB := .T.
       CASE cParamL == "-nohblib-"        ; l_lNOHBLIB := .F.
-      CASE cParamL == "-bldf"            ; l_lBLDFLGP   := l_lBLDFLGC := l_lBLDFLGL := .T.
-      CASE cParamL == "-bldf-"           ; l_lBLDFLGP   := l_lBLDFLGC := l_lBLDFLGL := .F.
+      CASE cParamL == "-nomiscsyslib"    ; l_lLIBSYSMISC := .F.
+      CASE cParamL == "-nomiscsyslib-"   ; l_lLIBSYSMISC := .T.
+      CASE cParamL == "-nolibgrouping"   ; l_lLIBGROUPING := .F.
+      CASE cParamL == "-nolibgrouping-"  ; l_lLIBGROUPING := .T.
+      CASE cParamL == "-bldf"            ; l_lBLDFLGP := l_lBLDFLGC := l_lBLDFLGL := .T.
+      CASE cParamL == "-bldf-"           ; l_lBLDFLGP := l_lBLDFLGC := l_lBLDFLGL := .F.
       CASE Left( cParamL, 6 ) == "-bldf="
          cParam := SubStr( cParam, 7 )
          l_lBLDFLGP := "p" $ cParam
@@ -1844,6 +1859,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       ENDCASE
    NEXT
 
+   IF ! l_lLIBSYSMISC
+      l_aLIBSYSMISC := {}
+   ENDIF
+
    /* Strip leading @ char of .clp files */
    IF ! Empty( hbmk[ _HBMK_cFIRST ] ) .AND. Left( hbmk[ _HBMK_cFIRST ], 1 ) == "@" .AND. Lower( FN_ExtGet( hbmk[ _HBMK_cFIRST ] ) ) == ".clp"
       hbmk[ _HBMK_cFIRST ] := SubStr( hbmk[ _HBMK_cFIRST ], 2 )
@@ -2060,8 +2079,14 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibPathSep := " "
          cLibLibExt := ".a"
          IF ! lStopAfterCComp
-            AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
-            l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
+            IF l_lLIBGROUPING .AND. ;
+               ( hbmk[ _HBMK_cPLAT ] == "linux" .OR. ;
+                 hbmk[ _HBMK_cPLAT ] == "bsd" )
+               AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
+            ELSE
+               AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
+               l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
+            ENDIF
          ENDIF
          IF hbmk[ _HBMK_lMAP ]
             IF hbmk[ _HBMK_cPLAT ] == "darwin"
@@ -2241,8 +2266,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_BIN_INSTALL )
          ENDIF
          IF ! lStopAfterCComp
-            AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
-            l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
+            IF l_lLIBGROUPING .AND. hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"
+               AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
+            ELSE
+               AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
+               l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
+            ENDIF
          ENDIF
          IF hbmk[ _HBMK_lSTRIP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-s" )
@@ -2372,8 +2401,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibLibExt := ".a"
          cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + cCCEXT
          cOpt_Lib := "{FA} rcs {OL} {LO}{SCRIPT}"
-         AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
-         l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
+         IF l_lLIBGROUPING
+            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
+         ELSE
+            AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
+            l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
+         ENDIF
          IF hbmk[ _HBMK_lMAP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-Map,{OM}" )
          ENDIF
@@ -6787,6 +6820,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]beep"         , I_( "enable (or disable) single beep on successful exit, double beep on failure" ) },;
       { "-[no]ignore"       , I_( "ignore errors when running compiler tools (default: off)" ) },;
       { "-nohblib[-]"       , I_( "do not use static core Harbour libraries when linking" ) },;
+      { "-nolibgrouping[-]" , I_( "disable library grouping on gcc based compilers" ) },;
+      { "-nomiscsyslib[-]"  , I_( "don't add extra list of system libraries to default library list" ) },;
       { "-traceonly"        , I_( "show commands to be executed, but don't execute them" ) },;
       { "-[no]compr[=lev]"  , I_( "compress executable/dynamic lib (needs UPX)\n<lev> can be: min, max, def" ) },;
       { "-[no]run"          , I_( "run/don't run output executable" ) },;
