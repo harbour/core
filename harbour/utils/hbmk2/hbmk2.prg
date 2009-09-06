@@ -1001,6 +1001,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       IF hb_FileExists( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "include" +;
                                        hb_osPathSeparator() + "hbvm.h" )
          l_cHB_INSTALL_PREFIX := DirAddPathSep( l_cHB_INSTALL_PREFIX ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator()
+      /* Detect special multi-host dir layout */
+      ELSEIF hb_FileExists( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + ".." + hb_osPathSeparator() + "include" +;
+                                       hb_osPathSeparator() + "hbvm.h" )
+         l_cHB_INSTALL_PREFIX := DirAddPathSep( l_cHB_INSTALL_PREFIX ) + ".." + hb_osPathSeparator()
       ENDIF
 
       /* Detect special *nix dir layout (/bin, /lib/harbour, /include/harbour) */
