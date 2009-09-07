@@ -163,6 +163,10 @@
 #else
 #  include <errno.h>
 #  if defined( HB_OS_DOS )
+#     if defined( __WATCOMC__ )
+         /* workaround for declaration conflicts in tcp.h */
+#        define _GETOPT_H
+#     endif
 #     include <tcp.h>
 #  elif defined( HB_OS_OS2 )
 #     if defined( __WATCOMC__ )
@@ -172,7 +176,9 @@
 #     include <sys/select.h>
 #     include <sys/ioctl.h>
 #  endif
-#  include <sys/time.h>
+#  if !( defined( HB_OS_DOS ) && defined( __WATCOMC__ ) )
+#     include <sys/time.h>
+#  endif
 #  include <sys/types.h>
 #  include <sys/socket.h>
 #  include <netdb.h>
@@ -184,6 +190,7 @@
 #  include <unistd.h>
 #  include <fcntl.h>
 #  if defined( HB_OS_DOS )
+#     include <sys/ioctl.h>
 #     define select       select_s
 #  endif
 #endif
@@ -2295,6 +2302,12 @@ int hb_socketSetBlockingIO( HB_SOCKET sd, BOOL fBlocking )
 #if defined( HB_OS_WIN )
    u_long mode = fBlocking ? 0 : 1;
    ret = ioctlsocket( sd, FIONBIO, &mode );
+   hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
+   if( ret == 0 )
+      ret = 1;
+#elif defined( HB_OS_DOS )
+   int mode = fBlocking ? 0 : 1;
+   ret = ioctlsocket( sd, FIONBIO, ( char * ) &mode );
    hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
    if( ret == 0 )
       ret = 1;
