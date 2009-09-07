@@ -6481,7 +6481,7 @@ STATIC FUNCTION VCSID( cDir, cVCSHEAD, /* @ */ cType )
    SWITCH nType
    CASE _VCS_SVN
       cType := "svn"
-      cCommand := "svnversion" + iif( Empty( cDir ), "", " " + cDir )
+      cCommand := "svnversion " + iif( Empty( cDir ), ".", cDir )
       EXIT
    CASE _VCS_GIT
       cType := "git"

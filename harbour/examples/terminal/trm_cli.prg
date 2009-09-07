@@ -63,6 +63,7 @@
 
 #include "hbgtinfo.ch"
 #include "fileio.ch"
+#include "inkey.ch"
 #include "setcurs.ch"
 
 //----------------------------------------------------------------------//
@@ -91,15 +92,15 @@ REQUEST Tone
 
 //----------------------------------------------------------------------//
 
-Static commSocket
-static nTotalBytes       := 0
-static nScreens          := 0
-static nPing             := 0
-static lReceiving        := .f.
-static lSending          := .f.
-static lTraceLog         := .f.
-static nTrace            := 0
-static aDat              := { {"",""} }
+Static s_commSocket
+static s_nTotalBytes       := 0
+static s_nScreens          := 0
+static s_nPing             := 0
+static s_lReceiving        := .f.
+static s_lSending          := .f.
+static s_lTraceLog         := .f.
+static s_nTrace            := 0
+static s_aDat              := { {"",""} }
 
 Function Main( cAddress, cPort, cAppln, cParams, cDirectory )
    LOCAL Socket, n, cText, cResponse
@@ -115,7 +116,7 @@ Function Main( cAddress, cPort, cAppln, cParams, cDirectory )
    CLS
 
    /* Comment out following line if you wish to receive log */
-   // lTraceLog := .t.
+   // s_lTraceLog := .t.
 
    Hb_InetInit()
 
@@ -244,22 +245,23 @@ STATIC FUNCTION ResolveParams( cAddress, cPort, cAppln, cParams, cDirectory )
 Function TrmServeServer( Socket, cAddress, cServerInfo )
    Local nPort, a_, nError
    Local nSeconds := Seconds()
+   Local nKey
 
    a_:= hb_aTokens( cServerInfo, ";" )
    nPort := val( a_[ 2 ] )
 
-   commSocket := Hb_INetConnect( cAddress, nPort )
+   s_commSocket := Hb_INetConnect( cAddress, nPort )
 
-   do while Hb_INetErrorCode( commSocket ) != 0
+   do while Hb_INetErrorCode( s_commSocket ) != 0
 
-      commSocket := Hb_INetConnect( cAddress, nPort )
+      s_commSocket := Hb_INetConnect( cAddress, nPort )
       if Seconds()-nSeconds > 60 .or. Seconds()-nSeconds < 0
          exit
       endif
    enddo
-   IF Hb_InetErrorCode( commSocket ) != 0
+   IF Hb_InetErrorCode( s_commSocket ) != 0
       Hb_INetClose( Socket )
-      DispOutAt( 17,0, padc( "Can't connect with " + cAddress+": " + Hb_InetErrorDesc( commSocket ),maxcol()+1), "w+/n" )
+      DispOutAt( 17,0, padc( "Can't connect with " + cAddress+": " + Hb_InetErrorDesc( s_commSocket ),maxcol()+1), "w+/n" )
       DispOutAt( 18,0, padc( "Press a key to terminate the program", maxcol()+1 ), "w+/n" )
       Inkey(0)
       quit
@@ -267,7 +269,7 @@ Function TrmServeServer( Socket, cAddress, cServerInfo )
 
    //  Very Important Factor   10-50 ok
    //
-   Hb_INetTimeout( commSocket, -1 )
+   Hb_INetTimeout( s_commSocket, -1 )
 
    Hb_INetSend( Socket, "ARCONNECTED" + CR_LF )
    Hb_INetClose( Socket )
@@ -310,15 +312,15 @@ Function TrmReceiveServer()
    Local a_, b_, cBuffer, nBytes, cCommand, cData, cOdd, cEvn, n
    LOCAL cOdd1, cEvn1
 
-   if !( lReceiving ) .and. ( commSocket != NIL )
-      lReceiving := .t.
-      if ( nBytes := Hb_INetDataReady( commSocket ) ) > 0
+   if !( s_lReceiving ) .and. ( s_commSocket != NIL )
+      s_lReceiving := .t.
+      if ( nBytes := Hb_INetDataReady( s_commSocket ) ) > 0
 
-         Hb_INetTimeout( commSocket, 10 )
-         cBuffer := Hb_INetRecvEndBlock( commSocket, "|/END\|", @nBytes )
-         Hb_INetTimeout( commSocket, -1 )
+         Hb_INetTimeout( s_commSocket, 10 )
+         cBuffer := Hb_INetRecvEndBlock( s_commSocket, "|/END\|", @nBytes )
+         Hb_INetTimeout( s_commSocket, -1 )
          if nBytes > 0 .and. !empty( cBuffer )
-            nTotalBytes += nBytes
+            s_nTotalBytes += nBytes
 
             do while .t.
                cCommand := TrmFetchCommand( @cBuffer, @cData )
@@ -328,7 +330,7 @@ Function TrmReceiveServer()
 
                do case
                case cCommand == "SCR"
-                  nScreens++
+                  s_nScreens++
                   a_:= Str2A( cData, "</E?>" )
                   b_:= hb_aTokens( a_[ 1 ], ";" )
                   aeval( b_, {|e,i| b_[ i ] := val( e ) } )
@@ -369,7 +371,7 @@ Function TrmReceiveServer()
          endif
       ENDIF
 
-      lReceiving := .f.
+      s_lReceiving := .f.
    endif
 
    Return 0
@@ -491,7 +493,7 @@ Static Function uiDebug( p1,p2,p3,p4,p5,p6,p7,p8,p9,p10 )
       cDebug += "   " + uiXtos( p10 )
    endif
 
-   if lTraceLog
+   if s_lTraceLog
       DbgTraceLog( cDebug )
    else
       wapi_OutputDebugString( cDebug )

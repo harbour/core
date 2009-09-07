@@ -65,7 +65,7 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       > hello
       You should see 'Hello world!' on screen.
 
-      NOTES: - When building for Borland C make sure that
+      NOTES: - When building for Borland C++ make sure that
                GNU Make is executed when typing 'make',
                Borland Make has the same name.
 
@@ -317,14 +317,14 @@ SUPPORTED PLATFORMS AND C COMPILERS
 
    linux   - Linux
    darwin  - Mac OS X
-   bsd     - *BSD
+   bsd     - FreeBSD / OpenBSD / NetBSD / *BSD
    hpux    - HP-UX
    sunos   - Sun Solaris / OpenSolaris
    win     - MS Windows (all flavors)
    wce     - MS Windows CE
    dos     - MS-DOS (32-bit protected mode only)
              (MS-DOS compatible systems also work, like dosemu)
-   os2     - OS/2
+   os2     - OS/2 / eComStation
 
    You can use HB_COMPILER values to select compilers:
 
@@ -364,7 +364,7 @@ SUPPORTED PLATFORMS AND C COMPILERS
    Also supported, some features may be missing:
 
    watcom   - Open Watcom C++
-   bcc      - Borland/CodeGear C++ 4.x and above
+   bcc      - Borland/CodeGear/Embarcadero C++ 4.x and above
    icc      - Intel(R) C/C++
    iccia64  - Intel(R) C/C++ IA-64
    pocc     - Pelles C 4.5 and above
@@ -382,7 +382,7 @@ SUPPORTED PLATFORMS AND C COMPILERS
    dos
    ---
    djgpp    - Delorie GNU C
-   watcom   - Open Watcom C++ 9.x and above
+   watcom   - Open Watcom C++
 
    os2
    ---
@@ -598,7 +598,7 @@ EXAMPLES
       mingw32-make
       ---
 
-      --- Borland/CodeGear C++
+      --- Borland C++ 5.5.1
       set PATH=C:\Borland\BCC55\Bin;%PATH%
       mingw32-make
       ---
