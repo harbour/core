@@ -2332,6 +2332,12 @@ int hb_socketSetBlockingIO( HB_SOCKET sd, BOOL fBlocking )
          ret = 0;
    }
    hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
+#elif defined( HB_OS_OS2 )
+   unsigned long mode = fBlocking ? 0 : 1;
+   ret = ioctl( sd, FIONBIO, ( char * ) &mode );
+   hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
+   if( ret == 0 )
+      ret = 1;
 #else
    int TODO;
    HB_SYMBOL_UNUSED( sd );
