@@ -12,10 +12,13 @@
  *
  */
 
-proc main( cPort, cAddress )
+/* netio_mtserver() needs MT HVM version */
+request HB_MT
+
+proc main( port, ifaddr )
    local pListenSocket
 
-   pListenSocket := netio_mtserver( hb_ntos( cPort ), cAddress )
+   pListenSocket := netio_mtserver( iif( port != NIL, val( port ), ), ifaddr )
    if empty( pListenSocket )
       ? "Cannot start server."
    else

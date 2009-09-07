@@ -2506,6 +2506,13 @@ HB_FUNC( HB_MTVM )
 #endif
 }
 
+#if defined( HB_MT_VM )
+HB_FUNC( HB_MT )
+{
+   hb_retl( TRUE );
+}
+#endif
+
 #if defined( HB_TASK_THREAD ) && defined( HB_MT_VM )
 #  include "task.c"
 #endif
