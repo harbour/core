@@ -21,7 +21,7 @@ ifeq ($(HB_PLATFORM),linux)
 endif
 
 AR := wlib
-ARFLAGS := -q -p=64 -c -n
+ARFLAGS := -q -p=72 -c -n
 
 comma := ,
 LDFILES_COMMA = $(subst $(subst x,x, ),$(comma) ,$(^F))
