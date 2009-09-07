@@ -3899,7 +3899,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
    PHB_MODULE pModule;
    BOOL fGenCode = TRUE;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_compCompile(%s,%d)", szPrg, iFileType));
+   HB_TRACE(HB_TR_DEBUG, ("hb_compCompile(%s,%p)", szPrg, szBuffer));
 
    /* Initialize support variables */
    hb_compInitVars( HB_COMP_PARAM );

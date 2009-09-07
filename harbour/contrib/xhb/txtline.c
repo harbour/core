@@ -62,7 +62,7 @@ void hb_readLine( const char * szText, ULONG ulTextLen, ULONG uiLineLen, USHORT 
    ULONG ulPos, ulCurrCol, ulLastBlk;
    BOOL bBreak = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_readLine(%p, %i, %i, %i, %i, %p, %p, %i, %i, %i, %i, %i)", szText, ulTextLen, uiLineLen, uiTabLen, bWrap, ** Term, * iTermSizes, uiTerms, *bFound, *bEOF, *lEnd, *ulEndOffset ));
+   HB_TRACE(HB_TR_DEBUG, ("hb_readLine(%p, %lu, %lu, %hu, %d, %p, %p, %hu, %p, %p, %p, %p)", szText, ulTextLen, uiLineLen, uiTabLen, bWrap, Term, iTermSizes, uiTerms, bFound, bEOF, lEnd, ulEndOffset ));
 
    *bFound    = 0;
    *bEOF      = 0;
