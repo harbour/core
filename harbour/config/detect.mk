@@ -124,10 +124,10 @@ _DET_FLT_COMP :=
 _DET_INC_DEFP := $(if $(WATT_ROOT),$(subst \,/,$(WATT_ROOT))/inc,) /usr/include
 _DET_INC_HEAD := /sys/socket.h
 
-# indirect assignment used intentionally
-export HB_LIB_WATT = $(HB_HAS_WATT:/inc=/lib)
-
 include $(TOP)$(ROOT)config/detfun.mk
+
+HB_LIB_WATT := $(subst \,/,$(HB_HAS_WATT))
+export HB_LIB_WATT := $(HB_LIB_WATT:/inc=/lib)
 
 # Finished
 

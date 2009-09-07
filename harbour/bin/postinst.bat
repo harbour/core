@@ -46,6 +46,8 @@ if "%HB_SHELL%" == "nt" goto _SH_NT
    copy INSTALL    %HB_INSTALL_PREFIX% > nul
    copy TODO       %HB_INSTALL_PREFIX% > nul
 
+   if "%HB_PLATFORM%" == "win" copy bin\hb-mkimp.bat %HB_BIN_INSTALL% > nul
+
 :_NO_COPYD
 
    if "%HB_PLATFORM%" == "linux" goto _NO_PKG
@@ -71,6 +73,9 @@ if "%HB_SHELL%" == "nt" goto _SH_NT
    copy ERRATA     "%HB_INSTALL_PREFIX%\" > nul
    copy INSTALL    "%HB_INSTALL_PREFIX%\" > nul
    copy TODO       "%HB_INSTALL_PREFIX%\" > nul
+
+   if "%HB_PLATFORM%" == "win" copy bin\hb-mkimp.bat "%HB_BIN_INSTALL%\" > nul
+   if "%HB_PLATFORM%" == "wce" copy bin\hb-mkimp.bat "%HB_BIN_INSTALL%\" > nul
 
 :_NO_COPY
 
