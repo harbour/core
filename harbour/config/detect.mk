@@ -121,11 +121,11 @@ _DET_VAR_INC_ := HB_INC_WATT
 _DET_VAR_HAS_ := HB_HAS_WATT
 _DET_FLT_PLAT := dos
 _DET_FLT_COMP :=
-_DET_INC_DEFP := $(if $(WATT_ROOT),$(WATT_ROOT)/inc,) /usr/include
+_DET_INC_DEFP := $(if $(WATT_ROOT),$(subst \,/,$(WATT_ROOT))/inc,) /usr/include
 _DET_INC_HEAD := /sys/socket.h
 
-HB_LIB_WATT := $(HB_HAS_WATT:/inc=/lib)
-HB_LIB_WATT := $(HB_LIB_WATT:\inc=\lib)
+# indirect assignment used intentionally
+export HB_LIB_WATT = $(HB_HAS_WATT:/inc=/lib)
 
 include $(TOP)$(ROOT)config/detfun.mk
 
