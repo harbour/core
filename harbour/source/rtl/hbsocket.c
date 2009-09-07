@@ -1587,7 +1587,6 @@ BOOL hb_socketInet6Addr( void ** pSockAddr, unsigned * puiLen,
 {
 #if defined( HB_HAS_INET6 )
    struct sockaddr_in6 sa;
-   int err;
 
    memset( &sa, 0, sizeof( sa ) );
    sa.sin6_family = AF_INET6;
@@ -1608,7 +1607,7 @@ BOOL hb_socketInet6Addr( void ** pSockAddr, unsigned * puiLen,
    else
    {
 #if defined( HB_HAS_INET_PTON )
-      err = inet_pton( AF_INET6, szAddr, &sa.sin6_addr );
+      int err = inet_pton( AF_INET6, szAddr, &sa.sin6_addr );
       if( err > 0 )
       {
          *pSockAddr = memcpy( hb_xgrab( sizeof( sa ) + 1 ), &sa, sizeof( sa ) );
@@ -2573,70 +2572,83 @@ int hb_socketSelect( PHB_ITEM pArrayRD, BOOL fSetRD,
 char * hb_socketResolveAddr( const char * szAddr, int af )
 {
    char * szResult = NULL;
-
-#ifdef HB_HAS_ADDRINFO
-   struct addrinfo hints, *res = NULL;
-
-   hb_vmUnlock();
-
-#if defined( HB_SOCKET_TRANSLATE_DOMAIN )
-   af = hb_socketTransDomain( af, NULL );
-#endif
-
-   memset( &hints, 0, sizeof( hints ) );
-   hints.ai_family = af;
-   if( getaddrinfo( szAddr, NULL, &hints, &res ) == 0 )
-   {
-      szResult = hb_socketAddrGetName( res->ai_addr, res->ai_addrlen );
-      freeaddrinfo( res );
-   }
-
-   hb_vmLock();
-#else
+   BOOL fTrans = FALSE;
 
    if( af == HB_SOCKET_PF_INET )
    {
-      struct hostent * he = NULL;
+      struct in_addr sin;
+#if defined( HB_HAS_INET_PTON )
+      fTrans = inet_pton( AF_INET, szAddr, &sin ) > 0;
+#elif defined( HB_HAS_INET_ATON )
+      fTrans = inet_aton( szAddr, &sin ) != 0;
+#else
+      sin.s_addr = inet_addr( szAddr );
+      fTrans = sin.s_addr != INADDR_NONE ||
+            strcmp( "255.255.255.255", szAddr ) == 0; /* dirty hack */
+#endif
 
-      hb_vmUnlock();
-
-      /* gethostbyname() in Windows and OS2 does not accept direct IP
-       * addresses
-       */
-#if defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
+#if !defined( HB_HAS_ADDRINFO )
+      if( !fTrans )
       {
-         ULONG addr = inet_addr( szAddr );
-         if( addr != INADDR_NONE || strcmp( "255.255.255.255", szAddr ) == 0 )
-            he = gethostbyaddr( ( const char * ) &addr, sizeof( addr ), AF_INET );
+         struct hostent * he;
+
+         hb_vmUnlock();
+         he = gethostbyname( szAddr );
+         if( he && he->h_addr_list[ 0 ] )
+         {
+            sin.s_addr = ( ( struct in_addr * ) he->h_addr_list[ 0 ] )->s_addr;
+            fTrans = TRUE;
+         }
+         hb_vmLock();
       }
 #endif
-      if( he == NULL )
-         he = gethostbyname( szAddr );
 
-      if( he && he->h_addr_list[ 0 ] )
+      if( fTrans )
       {
-         struct in_addr * sin = ( struct in_addr * ) he->h_addr_list[ 0 ];
 #  if defined( HB_HAS_INET_NTOP )
          char buf[ INET_ADDRSTRLEN ];
-         szAddr = inet_ntop( AF_INET, sin, buf, sizeof( buf ) );
+         szAddr = inet_ntop( AF_INET, &sin, buf, sizeof( buf ) );
 #  elif defined( HB_IS_INET_NTOA_MT_SAFE )
-         szAddr = inet_ntoa( *sin );
+         szAddr = inet_ntoa( sin );
 #  else
          char buf[ INET_ADDRSTRLEN ];
-         szAddr = hb_inet_ntoa( sin, buf );
+         szAddr = hb_inet_ntoa( &sin, buf );
 #  endif
          szResult = hb_strdup( szAddr );
       }
-      hb_vmLock();
    }
 #if defined( HB_HAS_INET6 )
    else if( af == HB_SOCKET_PF_INET6 )
    {
+#if defined( HB_HAS_INET_PTON )
+      struct in6_addr sin;
+      fTrans = inet_pton( AF_INET6, szAddr, &sin ) > 0;
+#else
       int TODO;
+      fTrans = FALSE;
+#endif
    }
 #endif
 
+   if( !fTrans )
+   {
+#if defined( HB_HAS_ADDRINFO )
+      struct addrinfo hints, *res = NULL;
+
+      hb_vmUnlock();
+#  if defined( HB_SOCKET_TRANSLATE_DOMAIN )
+      af = hb_socketTransDomain( af, NULL );
+#  endif
+      memset( &hints, 0, sizeof( hints ) );
+      hints.ai_family = af;
+      if( getaddrinfo( szAddr, NULL, &hints, &res ) == 0 )
+      {
+         szResult = hb_socketAddrGetName( res->ai_addr, res->ai_addrlen );
+         freeaddrinfo( res );
+      }
+      hb_vmLock();
 #endif
+   }
 
    return szResult;
 }
