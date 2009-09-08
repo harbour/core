@@ -339,6 +339,7 @@ SUPPORTED PLATFORMS AND C COMPILERS
    ------
    gcc      - GNU C
    icc      - Intel(R) C/C++
+   clang    - clang compiler frontend
 
    bsd
    ---

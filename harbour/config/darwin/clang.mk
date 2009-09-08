@@ -18,27 +18,27 @@ CC_IN := -c
 #       Now solved with '$(subst x,x, )' expression.
 CC_OUT := -o$(subst x,x, )
 
-CPPFLAGS := -I. -I$(HB_INC_COMPILE)
+CPPFLAGS := -I. -I$(HB_INC_COMPILE) -DHB_CC_CLANG
 
 # -fno-common enables building .dylib files
-CFLAGS := -fno-common
+CPPFLAGS += -fno-common
 LDFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
-   CFLAGS += -Wall -W
+   CPPFLAGS += -Wall -W
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-   CFLAGS += -O3
+   CPPFLAGS += -O3
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-   CFLAGS += -g
+   CPPFLAGS += -g
 endif
 
 # It's to avoid warning message generated when 'long double' is used
 # remove it if you have newer compiler version
-#CFLAGS += -Wno-long-double
+#CPPFLAGS += -Wno-long-double
 
 LD := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 LD_OUT := -o$(subst x,x, )

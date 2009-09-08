@@ -511,7 +511,7 @@
    #define HB_NORETURN_ATTR
 #  endif
 #  if ( ( __GNUC__ > 4 ) || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 1 ) ) && \
-      !defined( __ICC ) && !defined( HB_NO_FLATTEN )
+      !defined( __ICC ) && !defined( HB_NO_FLATTEN ) && !defined( HB_CC_CLANG )
    #define HB_FLATTEN_ATTR \
                      __attribute__ (( flatten ))
 #  else
