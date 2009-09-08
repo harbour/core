@@ -6591,6 +6591,10 @@ FUNCTION hbmk_CPU( hbmk )
         hbmk[ _HBMK_cCOMP ] == "msvcarm" .OR. ;
         hbmk[ _HBMK_cCOMP ] == "poccarm"
       RETURN "arm"
+   CASE hbmk[ _HBMK_cCOMP ] == "msvcmips"
+      RETURN "mips"
+   CASE hbmk[ _HBMK_cCOMP ] == "msvcsh"
+      RETURN "sh"
    ENDCASE
 
    RETURN ""
