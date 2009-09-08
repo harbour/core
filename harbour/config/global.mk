@@ -300,26 +300,28 @@ else
    else ifneq ($(OS2_SHELL),)
       HB_SHELL := os2
       SHELL := $(COMSPEC)
-   else ifneq ($(ComSpec),)
-      COMSPEC := $(ComSpec)
-   endif
-   ifeq ($(COMSPEC),)
-      ifeq ($(OS),Windows_NT)
-         COMSPEC := cmd.exe
-      else
-         COMSPEC := command.com
-      endif
-   endif
-   SHELL := $(COMSPEC)
-   ifneq ($(findstring COMMAND,$(COMSPEC)),)
-      HB_SHELL := dos
-   else ifneq ($(findstring command,$(COMSPEC)),)
-      HB_SHELL := dos
    else
-      HB_SHELL := nt
-      _VER := $(shell ver)
-      ifeq ($(strip $(findstring 3.5,$(shell ver))$(findstring 4.0,$(shell ver))$(findstring 5.0,$(shell ver))),)
-         HB_SHELL_XP := (xp)
+      ifneq ($(ComSpec),)
+         COMSPEC := $(ComSpec)
+      endif
+      ifeq ($(COMSPEC),)
+         ifeq ($(OS),Windows_NT)
+            COMSPEC := cmd.exe
+         else
+            COMSPEC := command.com
+         endif
+      endif
+      SHELL := $(COMSPEC)
+      ifneq ($(findstring COMMAND,$(COMSPEC)),)
+         HB_SHELL := dos
+      else ifneq ($(findstring command,$(COMSPEC)),)
+         HB_SHELL := dos
+      else
+         HB_SHELL := nt
+         _VER := $(shell ver)
+         ifeq ($(strip $(findstring 3.5,$(shell ver))$(findstring 4.0,$(shell ver))$(findstring 5.0,$(shell ver))),)
+            HB_SHELL_XP := (xp)
+         endif
       endif
    endif
 endif
