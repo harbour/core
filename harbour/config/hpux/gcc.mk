@@ -48,7 +48,7 @@ LDFLAGS += $(foreach dir,$(LIBPATHS) $(SYSLIBPATHS),-L$(dir))
 
 AR := $(HB_CCPREFIX)ar
 ARFLAGS :=
-AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) cr $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
+AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) rc $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 
 DY := $(CC)
 DFLAGS := -shared -fPIC $(foreach dir,$(SYSLIBPATHS),-L$(dir))

@@ -2060,7 +2060,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ELSE
                cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar"
             ENDIF
-            cOpt_Lib := "{FA} rcs {OL} {LO}"
+            IF hbmk[ _HBMK_cPLAT ] == "sunos"
+               cOpt_Lib := "{FA} rc {OL} {LO}"
+            ELSE
+               cOpt_Lib := "{FA} rcs {OL} {LO}"
+            ENDIF
          ENDIF
          DO CASE
          CASE hbmk[ _HBMK_cCOMP ] == "icc"
@@ -2082,20 +2086,22 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ELSE
             cOpt_CompC += " {LC}"
          ENDIF
+         cBin_Dyn := cBin_CompC
+         cOpt_Dyn := "-shared -fPIC {FD} -o {OD} {DL} {LO} {LS}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          cLibLibExt := ".a"
-         IF ! lStopAfterCComp
-            IF l_lLIBGROUPING .AND. ;
-               ( hbmk[ _HBMK_cPLAT ] == "linux" .OR. ;
-                 hbmk[ _HBMK_cPLAT ] == "bsd" )
-               AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
-            ELSE
-               AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
-               l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
-            ENDIF
+         IF l_lLIBGROUPING .AND. ;
+            ( hbmk[ _HBMK_cPLAT ] == "linux" .OR. ;
+              hbmk[ _HBMK_cPLAT ] == "bsd" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
+         ELSE
+            AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "{LL} {LB}" )
+            l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
          ENDIF
          IF hbmk[ _HBMK_lMAP ]
             IF hbmk[ _HBMK_cPLAT ] == "darwin"
@@ -2242,6 +2248,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ELSE
             cOpt_CompC += " {LC}"
          ENDIF
+         cBin_Dyn := cBin_CompC
+         cOpt_Dyn := "-shared {FD} -o {OD} {DL} {LO} {LS}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {LS} {FL} {DL}"
          cLibPathPrefix := "-L"
@@ -2274,13 +2282,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF hbmk[ _HBMK_lSHARED ]
             AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_BIN_INSTALL )
          ENDIF
-         IF ! lStopAfterCComp
-            IF l_lLIBGROUPING .AND. hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"
-               AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
-            ELSE
-               AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
-               l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
-            ENDIF
+         IF l_lLIBGROUPING .AND. hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"
+            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
+         ELSE
+            AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "{LL} {LB}" )
+            l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
          ENDIF
          IF hbmk[ _HBMK_lSTRIP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-s" )
@@ -2339,6 +2347,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ELSE
             cOpt_CompC += " {LC}"
          ENDIF
+         cBin_Dyn := cBin_CompC
+         cOpt_Dyn := "-shared {FD} -o {OD} {DL} {LO} {LL} {LB} {LS}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}"
          cLibPathPrefix := "-L"
@@ -2904,7 +2914,119 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       CASE ( hbmk[ _HBMK_cPLAT ] == "sunos" .AND. hbmk[ _HBMK_cCOMP ] == "sunpro" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "linux" .AND. hbmk[ _HBMK_cCOMP ] == "sunpro" )
 
-         /* TODO */
+         nCmd_Esc := _ESC_NIX
+         IF hbmk[ _HBMK_lDEBUG ]
+            AAdd( hbmk[ _HBMK_aOPTC ], "-g" )
+         ENDIF
+         cLibLibPrefix := "lib"
+         cLibPrefix := "-l"
+         cLibExt := ""
+         cObjExt := ".o"
+         cBin_Lib := "ar"
+         IF hbmk[ _HBMK_cPLAT ] == "linux"
+            cOpt_Lib := "{FA} rcs {OL} {LO}"
+         ELSE
+            cOpt_Lib := "{FA} rc {OL} {LO}"
+         ENDIF
+         cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], "sunCC", "suncc" ) + hbmk[ _HBMK_cCCPOSTFIX ]
+         cOpt_CompC := "-c {FC}"
+         IF hbmk[ _HBMK_lOPTIM ]
+            AAdd( hbmk[ _HBMK_aOPTC ], "-fast" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-xnolibmopt" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-fast" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-xnolibmopt" )
+         ENDIF
+         AAdd( hbmk[ _HBMK_aOPTC ], "-KPIC" )
+         IF hbmk[ _HBMK_lINC ] .AND. ! Empty( cWorkDir )
+            cOpt_CompC += " {IC} -o {OO}"
+         ELSE
+            cOpt_CompC += " {LC}"
+         ENDIF
+         cBin_Link := cBin_CompC
+         cOpt_Link := "{LO} {LA} {FL} {DL}"
+         cLibPathPrefix := "-L"
+         cLibPathSep := " "
+         cLibLibExt := ".a"
+         cBin_Dyn := cBin_CompC
+         cOpt_Dyn := "-G {FD} -o {OD} {DL} {LO} {LL} {LB} {LS}"
+         IF hbmk[ _HBMK_cPLAT ] == "linux"
+            AAdd( hbmk[ _HBMK_aOPTD ], "-KPIC" )
+         ENDIF
+         IF ! lStopAfterCComp
+            AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
+            l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
+         ENDIF
+         IF hbmk[ _HBMK_lMAP ]
+            AAdd( hbmk[ _HBMK_aOPTL ], "-M{OM}" )
+         ENDIF
+         /*
+         IF hbmk[ _HBMK_lSTATICFULL ]
+            AAdd( hbmk[ _HBMK_aOPTL ], "-static" )
+         ENDIF
+         */
+         IF hbmk[ _HBMK_lSTRIP ]
+            AAdd( hbmk[ _HBMK_aOPTL ], "-s" )
+         ENDIF
+         IF lStopAfterCComp
+            IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) ) == 1
+               AAdd( hbmk[ _HBMK_aOPTC ], "-o {OO}" )
+            ENDIF
+         ELSE
+            AAdd( hbmk[ _HBMK_aOPTL ], "-o {OE}" )
+         ENDIF
+
+         DO CASE
+         CASE "-DHB_PCRE_REGEX" $ cSelfFlagC
+            AAdd( l_aLIBSYS, "pcre" )
+            l_lHB_PCRE := .F.
+         CASE "-DHB_POSIX_REGEX" $ cSelfFlagC
+            l_lHB_PCRE := .F.
+         ENDCASE
+         IF "-DHB_EXT_ZLIB" $ cSelfFlagC
+            AAdd( l_aLIBSYS, "z" )
+            l_lHB_ZLIB := .F.
+         ENDIF
+         IF "-DHB_HAS_GPM" $ cSelfFlagC
+            AAdd( l_aLIBSYS, "gpm" )
+         ENDIF
+
+         /* Add system libraries */
+         IF ! hbmk[ _HBMK_lSHARED ]
+            AAdd( l_aLIBSYS, "m" )
+            IF hbmk[ _HBMK_lMT ]
+               AAdd( l_aLIBSYS, "pthread" )
+            ENDIF
+            DO CASE
+            CASE hbmk[ _HBMK_cPLAT ] == "linux"
+               AAdd( l_aLIBSYS, "rt" )
+               AAdd( l_aLIBSYS, "dl" )
+            CASE hbmk[ _HBMK_cPLAT ] == "sunos"
+               AAdd( l_aLIBSYS, "rt" )
+               AAdd( l_aLIBSYS, "socket" )
+               AAdd( l_aLIBSYS, "nsl" )
+               AAdd( l_aLIBSYS, "resolv" )
+            ENDCASE
+         ENDIF
+
+         IF IsGTRequested( hbmk, "gtcrs" )
+            /* TOFIX: Sometimes 'ncur194' is needed. */
+            AAdd( l_aLIBSYS, IIF( hbmk[ _HBMK_cPLAT ] == "sunos", "curses", "ncurses" ) )
+         ENDIF
+         IF IsGTRequested( hbmk, "gtsln" )
+            AAdd( l_aLIBSYS, "slang" )
+         ENDIF
+         IF IsGTRequested( hbmk, "gtxwc" )
+            IF hbmk[ _HBMK_cPLAT ] == "linux" .AND. hb_DirExists( "/usr/X11R6/lib64" )
+               AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/X11R6/lib64" )
+            ENDIF
+            AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/X11R6/lib" )
+            AAdd( l_aLIBSYS, "X11" )
+         ENDIF
+
+         IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
+            cBin_CompC := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompC, nCmd_Esc )
+            cBin_Link  := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Link, nCmd_Esc )
+         ENDIF
 
       ENDCASE
 
@@ -6580,10 +6702,13 @@ FUNCTION hbmk_CPU( hbmk )
 
    DO CASE
    CASE hbmk[ _HBMK_cPLAT ] $ "dos|os2" .OR. ;
-        hbmk[ _HBMK_cCOMP ] $ "gcc|cygwin|watcom|bcc|icc|xcc" .OR. ;
-        hbmk[ _HBMK_cCOMP ] == "mingw" .OR. ;
-        hbmk[ _HBMK_cCOMP ] == "msvc" .OR. ;
-        hbmk[ _HBMK_cCOMP ] == "pocc"
+        hbmk[ _HBMK_cCOMP ] $ "mingw|cygwin|msvc|pocc|watcom|bcc|xcc" .OR. ;
+        ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "icc" )
+      RETURN "x86"
+   CASE hbmk[ _HBMK_cCOMP ] $ "gcc|icc|clang|sunpro"
+      /* TOFIX: This isn't necessarily correct, since these inherit the
+                default CPU architecture from OS default, by and large,
+                and targets can be overridden using user options. */
       RETURN "x86"
    CASE hbmk[ _HBMK_cCOMP ] == "mingw64" .OR. ;
         hbmk[ _HBMK_cCOMP ] == "msvc64" .OR. ;
