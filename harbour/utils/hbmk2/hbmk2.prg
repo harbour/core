@@ -2104,7 +2104,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "gcc"
             AAdd( hbmk[ _HBMK_aOPTC ], "-no-cpp-precomp" )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-long-double" )
+/*          AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-long-double" ) */
             IF hbmk[ _HBMK_lSHARED ]
                AAdd( hbmk[ _HBMK_aOPTL ], "-bind_at_load" )
 /*             AAdd( hbmk[ _HBMK_aOPTL ], "-multiply_defined suppress" ) */

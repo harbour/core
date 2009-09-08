@@ -2509,6 +2509,7 @@ HB_FUNC( HB_MTVM )
 #if defined( HB_MT_VM )
 HB_FUNC( HB_MT )
 {
+   HB_STACK_TLS_PRELOAD
    hb_retl( TRUE );
 }
 #endif
