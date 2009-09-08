@@ -1518,15 +1518,6 @@ typedef long                hbVMIntMax;       /* TOFIX */
    #define HB_DLL_ENTRY_POINT    DllEntryPoint
 #endif
 
-#if defined( HB_FUNC_CALLCONV )
-   #define HARBOUR void HB_FUNC_CALLCONV
-#else
-   #define HARBOUR void
-#endif
-
-typedef HARBOUR ( * PHB_FUNC )( void );
-typedef PHB_FUNC HB_FUNC_PTR;
-
 #if defined( HB_DYNLIB )
    #if defined( __RSXNT__ )
       /* RSXNT does not support any type of export keyword.
@@ -1607,11 +1598,11 @@ typedef PHB_FUNC HB_FUNC_PTR;
 #define HB_INITSTATICS_FUNCNAME()      hb_INITSTATICS
 
 #if defined( __cplusplus ) && !defined( HB_FUNC_USE_DECORATION )
-   #define HB_EXTERN_C_ extern "C"
+   #define HB_EXTERN_C_ HB_EXTERN_C
    #define HB_EXTERN_
 #else
    #define HB_EXTERN_C_
-   #define HB_EXTERN_ extern
+   #define HB_EXTERN_   extern
 #endif
 
 #define HB_FUNC_EXEC( funcname )   HB_FUN_##funcname();
@@ -1622,6 +1613,15 @@ typedef PHB_FUNC HB_FUNC_PTR;
 #define HB_FUNC_EXIT( funcname )   static HARBOUR HB_FUN_exit_##funcname ( void )
 #define HB_FUNC_INITSTATICS( )     static HARBOUR hb_INITSTATICS( void )
 #define HB_FUNC_INITLINES( )       static HARBOUR hb_INITLINES( void )
+
+#if defined( HB_FUNC_CALLCONV )
+   #define HARBOUR void HB_FUNC_CALLCONV
+#else
+   #define HARBOUR void
+#endif
+
+HB_EXTERN_C_ typedef HARBOUR ( * PHB_FUNC )( void );
+HB_EXTERN_C_ typedef PHB_FUNC HB_FUNC_PTR;
 
 typedef SHORT HB_SYMBOLSCOPE;   /* stores symbol's scope */
 

@@ -95,6 +95,17 @@ optimized.
 #  define _GNU_SOURCE
 #endif
 
+#ifndef __EXTENSIONS__
+#  define __EXTENSIONS__
+#endif
+
+/* workaround for some missing C99 math macros in SunOS GCC
+ * used in C++ mode
+ */
+#if !defined( __C99FEATURES__ ) && defined( __GNUC__ ) && defined( __sun__ )
+#  define __C99FEATURES__
+#endif
+
 #include <stddef.h>
 
 #include "hbapi.h"
@@ -189,7 +200,8 @@ optimized.
                                            _HB_NUM_PINF ) ) ); \
                               } while( 0 )
 
-#elif defined( __GNUC__ ) && \
+#elif ( defined( __GNUC__ ) || \
+        defined( __SUNPRO_C ) || defined( __SUNPRO_CC ) ) && \
       ( defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) || \
         defined( _XOPEN_SOURCE ) )
 

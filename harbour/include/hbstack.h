@@ -273,7 +273,7 @@ extern LONG        hb_stackTopOffset( void );
 extern LONG        hb_stackBaseOffset( void );
 extern LONG        hb_stackTotalItems( void );
 extern HB_ITEM_PTR hb_stackBaseItem( void );
-extern HB_ITEM_PTR hb_stackItem( LONG iItemPos );
+extern HB_ITEM_PTR hb_stackItem( long iItemPos );
 extern HB_ITEM_PTR hb_stackSelfItem( void );   /* returns Self object at C function level */
 extern HB_ITEM_PTR hb_stackReturnItem( void ); /* returns RETURN Item from stack */
 extern char *      hb_stackDateBuffer( void );
@@ -368,14 +368,14 @@ extern void        hb_stackIsStackRef( void *, PHB_TSD_FUNC );
 
 #if defined( HB_STACK_MACROS )
 
-#define hb_stackItemFromTop( n )    ( * ( hb_stack.pPos + ( int ) (n) ) )
-#define hb_stackItemFromBase( n )   ( * ( hb_stack.pBase + ( int ) (n) + 1 ) )
+#define hb_stackItemFromTop( n )    ( * ( hb_stack.pPos + ( int ) ( n ) ) )
+#define hb_stackItemFromBase( n )   ( * ( hb_stack.pBase + ( int ) ( n ) + 1 ) )
 #define hb_stackTopOffset( )        ( hb_stack.pPos - hb_stack.pItems )
 #define hb_stackBaseOffset( )       ( hb_stack.pBase - hb_stack.pItems + 1 )
 #define hb_stackTotalItems( )       ( hb_stack.wItems )
 #define hb_stackBaseItem( )         ( * hb_stack.pBase )
 #define hb_stackSelfItem( )         ( * ( hb_stack.pBase + 1 ) )
-#define hb_stackItem( iItemPos )    ( * ( hb_stack.pItems + ( iItemPos ) ) )
+#define hb_stackItem( iItemPos )    ( * ( hb_stack.pItems + ( long ) ( iItemPos ) ) )
 #define hb_stackReturnItem( )       ( &hb_stack.Return )
 #define hb_stackDateBuffer( )       ( hb_stack.szDate )
 #define hb_stackItemBasePtr( )      ( &hb_stack.pItems )

@@ -721,7 +721,7 @@ void hb_stackOldFrame( PHB_STACK_STATE pFrame )
 }
 
 #undef hb_stackItem
-HB_ITEM_PTR hb_stackItem( LONG iItemPos )
+HB_ITEM_PTR hb_stackItem( long iItemPos )
 {
    HB_STACK_TLS_PRELOAD
    if( iItemPos < 0 )

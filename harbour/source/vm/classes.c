@@ -240,30 +240,30 @@ typedef struct
 #endif
 
 
-static HARBOUR  hb___msgGetData( void );
-static HARBOUR  hb___msgSetData( void );
-static HARBOUR  hb___msgGetClsData( void );
-static HARBOUR  hb___msgSetClsData( void );
-static HARBOUR  hb___msgGetShrData( void );
-static HARBOUR  hb___msgSetShrData( void );
-static HARBOUR  hb___msgEvalInline( void );
-static HARBOUR  hb___msgVirtual( void );
-static HARBOUR  hb___msgSuper( void );
-static HARBOUR  hb___msgRealClass( void );
-static HARBOUR  hb___msgPerform( void );
-static HARBOUR  hb___msgDelegate( void );
-static HARBOUR  hb___msgSync( void );
-static HARBOUR  hb___msgSyncClass( void );
-static HARBOUR  hb___msgNoMethod( void );
-static HARBOUR  hb___msgScopeErr( void );
-static HARBOUR  hb___msgTypeErr( void );
-static HARBOUR  hb___msgNull( void );
+HB_FUNC_STATIC( msgGetData );
+HB_FUNC_STATIC( msgSetData );
+HB_FUNC_STATIC( msgGetClsData );
+HB_FUNC_STATIC( msgSetClsData );
+HB_FUNC_STATIC( msgGetShrData );
+HB_FUNC_STATIC( msgSetShrData );
+HB_FUNC_STATIC( msgEvalInline );
+HB_FUNC_STATIC( msgVirtual );
+HB_FUNC_STATIC( msgSuper );
+HB_FUNC_STATIC( msgRealClass );
+HB_FUNC_STATIC( msgPerform );
+HB_FUNC_STATIC( msgDelegate );
+HB_FUNC_STATIC( msgSync );
+HB_FUNC_STATIC( msgSyncClass );
+HB_FUNC_STATIC( msgNoMethod );
+HB_FUNC_STATIC( msgScopeErr );
+HB_FUNC_STATIC( msgTypeErr );
+HB_FUNC_STATIC( msgNull );
 
-static HARBOUR  hb___msgClassH( void );
-static HARBOUR  hb___msgClassName( void );
-static HARBOUR  hb___msgClassSel( void );
-/* static HARBOUR  hb___msgClass( void ); */
-/* static HARBOUR  hb___msgClassParent( void ); */
+HB_FUNC_STATIC( msgClassH );
+HB_FUNC_STATIC( msgClassName );
+HB_FUNC_STATIC( msgClassSel );
+/* HB_FUNC_STATIC( msgClass ); */
+/* HB_FUNC_STATIC( msgClassParent ); */
 
 /* ================================================ */
 
@@ -309,48 +309,48 @@ static HB_SYMB s_opSymbols[ HB_OO_MAX_OPERATOR + 1 ] = {
 static HB_SYMB s___msgDestructor = { "__msgDestructor", {HB_FS_MESSAGE}, {NULL},               NULL };
 static HB_SYMB s___msgOnError    = { "__msgOnError",    {HB_FS_MESSAGE}, {NULL},               NULL };
 
-static HB_SYMB s___msgSetData    = { "__msgSetData",    {HB_FS_MESSAGE}, {hb___msgSetData},    NULL };
-static HB_SYMB s___msgGetData    = { "__msgGetData",    {HB_FS_MESSAGE}, {hb___msgGetData},    NULL };
-static HB_SYMB s___msgSetClsData = { "__msgSetClsData", {HB_FS_MESSAGE}, {hb___msgSetClsData}, NULL };
-static HB_SYMB s___msgGetClsData = { "__msgGetClsData", {HB_FS_MESSAGE}, {hb___msgGetClsData}, NULL };
-static HB_SYMB s___msgSetShrData = { "__msgSetShrData", {HB_FS_MESSAGE}, {hb___msgSetShrData}, NULL };
-static HB_SYMB s___msgGetShrData = { "__msgGetShrData", {HB_FS_MESSAGE}, {hb___msgGetShrData}, NULL };
-static HB_SYMB s___msgEvalInline = { "__msgEvalInline", {HB_FS_MESSAGE}, {hb___msgEvalInline}, NULL };
-static HB_SYMB s___msgVirtual    = { "__msgVirtual",    {HB_FS_MESSAGE}, {hb___msgVirtual},    NULL };
-static HB_SYMB s___msgSuper      = { "__msgSuper",      {HB_FS_MESSAGE}, {hb___msgSuper},      NULL };
-static HB_SYMB s___msgRealClass  = { "__msgRealClass",  {HB_FS_MESSAGE}, {hb___msgRealClass},  NULL };
-static HB_SYMB s___msgPerform    = { "__msgPerform",    {HB_FS_MESSAGE}, {hb___msgPerform},    NULL };
-static HB_SYMB s___msgDelegate   = { "__msgDelegate",   {HB_FS_MESSAGE}, {hb___msgDelegate},   NULL };
-static HB_SYMB s___msgSync       = { "__msgSync",       {HB_FS_MESSAGE}, {hb___msgSync},       NULL };
-static HB_SYMB s___msgSyncClass  = { "__msgSyncClass",  {HB_FS_MESSAGE}, {hb___msgSyncClass},  NULL };
-static HB_SYMB s___msgNoMethod   = { "__msgNoMethod",   {HB_FS_MESSAGE}, {hb___msgNoMethod},   NULL };
-static HB_SYMB s___msgScopeErr   = { "__msgScopeErr",   {HB_FS_MESSAGE}, {hb___msgScopeErr},   NULL };
-static HB_SYMB s___msgTypeErr    = { "__msgTypeErr",    {HB_FS_MESSAGE}, {hb___msgTypeErr},    NULL };
+static HB_SYMB s___msgSetData    = { "__msgSetData",    {HB_FS_MESSAGE}, {HB_FUNCNAME( msgSetData )},    NULL };
+static HB_SYMB s___msgGetData    = { "__msgGetData",    {HB_FS_MESSAGE}, {HB_FUNCNAME( msgGetData )},    NULL };
+static HB_SYMB s___msgSetClsData = { "__msgSetClsData", {HB_FS_MESSAGE}, {HB_FUNCNAME( msgSetClsData )}, NULL };
+static HB_SYMB s___msgGetClsData = { "__msgGetClsData", {HB_FS_MESSAGE}, {HB_FUNCNAME( msgGetClsData )}, NULL };
+static HB_SYMB s___msgSetShrData = { "__msgSetShrData", {HB_FS_MESSAGE}, {HB_FUNCNAME( msgSetShrData )}, NULL };
+static HB_SYMB s___msgGetShrData = { "__msgGetShrData", {HB_FS_MESSAGE}, {HB_FUNCNAME( msgGetShrData )}, NULL };
+static HB_SYMB s___msgEvalInline = { "__msgEvalInline", {HB_FS_MESSAGE}, {HB_FUNCNAME( msgEvalInline )}, NULL };
+static HB_SYMB s___msgVirtual    = { "__msgVirtual",    {HB_FS_MESSAGE}, {HB_FUNCNAME( msgVirtual )},    NULL };
+static HB_SYMB s___msgSuper      = { "__msgSuper",      {HB_FS_MESSAGE}, {HB_FUNCNAME( msgSuper )},      NULL };
+static HB_SYMB s___msgRealClass  = { "__msgRealClass",  {HB_FS_MESSAGE}, {HB_FUNCNAME( msgRealClass )},  NULL };
+static HB_SYMB s___msgPerform    = { "__msgPerform",    {HB_FS_MESSAGE}, {HB_FUNCNAME( msgPerform )},    NULL };
+static HB_SYMB s___msgDelegate   = { "__msgDelegate",   {HB_FS_MESSAGE}, {HB_FUNCNAME( msgDelegate )},   NULL };
+static HB_SYMB s___msgSync       = { "__msgSync",       {HB_FS_MESSAGE}, {HB_FUNCNAME( msgSync )},       NULL };
+static HB_SYMB s___msgSyncClass  = { "__msgSyncClass",  {HB_FS_MESSAGE}, {HB_FUNCNAME( msgSyncClass )},  NULL };
+static HB_SYMB s___msgNoMethod   = { "__msgNoMethod",   {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNoMethod )},   NULL };
+static HB_SYMB s___msgScopeErr   = { "__msgScopeErr",   {HB_FS_MESSAGE}, {HB_FUNCNAME( msgScopeErr )},   NULL };
+static HB_SYMB s___msgTypeErr    = { "__msgTypeErr",    {HB_FS_MESSAGE}, {HB_FUNCNAME( msgTypeErr )},    NULL };
 
 static HB_SYMB s___msgNew        = { "NEW",             {HB_FS_MESSAGE}, {NULL},               NULL };
 static HB_SYMB s___msgSymbol     = { "SYMBOL",          {HB_FS_MESSAGE}, {NULL},               NULL };
 
-static HB_SYMB s___msgClassName  = { "CLASSNAME",       {HB_FS_MESSAGE}, {hb___msgClassName},  NULL };
-static HB_SYMB s___msgClassH     = { "CLASSH",          {HB_FS_MESSAGE}, {hb___msgClassH},     NULL };
-static HB_SYMB s___msgClassSel   = { "CLASSSEL",        {HB_FS_MESSAGE}, {hb___msgClassSel},   NULL };
-static HB_SYMB s___msgExec       = { "EXEC",            {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
-static HB_SYMB s___msgName       = { "NAME",            {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
+static HB_SYMB s___msgClassName  = { "CLASSNAME",       {HB_FS_MESSAGE}, {HB_FUNCNAME( msgClassName )},  NULL };
+static HB_SYMB s___msgClassH     = { "CLASSH",          {HB_FS_MESSAGE}, {HB_FUNCNAME( msgClassH )},     NULL };
+static HB_SYMB s___msgClassSel   = { "CLASSSEL",        {HB_FS_MESSAGE}, {HB_FUNCNAME( msgClassSel )},   NULL };
+static HB_SYMB s___msgExec       = { "EXEC",            {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
+static HB_SYMB s___msgName       = { "NAME",            {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
 /*
-static HB_SYMB s___msgClsParent  = { "ISDERIVEDFROM",   {HB_FS_MESSAGE}, {hb___msgClassParent},NULL };
-static HB_SYMB s___msgClass      = { "CLASS",           {HB_FS_MESSAGE}, {hb___msgClass},      NULL };
+static HB_SYMB s___msgClsParent  = { "ISDERIVEDFROM",   {HB_FS_MESSAGE}, {HB_FUNCNAME( msgClassParent )},NULL };
+static HB_SYMB s___msgClass      = { "CLASS",           {HB_FS_MESSAGE}, {HB_FUNCNAME( msgClass )},      NULL };
 */
-static HB_SYMB s___msgKeys       = { "KEYS",            {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
-static HB_SYMB s___msgValues     = { "VALUES",          {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
+static HB_SYMB s___msgKeys       = { "KEYS",            {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
+static HB_SYMB s___msgValues     = { "VALUES",          {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
 
 /* Default enumerator methods (FOR EACH) */
-static HB_SYMB s___msgEnumIndex  = { "__ENUMINDEX",     {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
-static HB_SYMB s___msgEnumBase   = { "__ENUMBASE",      {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
-static HB_SYMB s___msgEnumKey    = { "__ENUMKEY",       {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
-static HB_SYMB s___msgEnumValue  = { "__ENUMVALUE",     {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
+static HB_SYMB s___msgEnumIndex  = { "__ENUMINDEX",     {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
+static HB_SYMB s___msgEnumBase   = { "__ENUMBASE",      {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
+static HB_SYMB s___msgEnumKey    = { "__ENUMKEY",       {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
+static HB_SYMB s___msgEnumValue  = { "__ENUMVALUE",     {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
 
 /* WITH OBJECT base value access/asign methods (:__withobject) */
-static HB_SYMB s___msgWithObjectPush = { "__WITHOBJECT",  {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
-static HB_SYMB s___msgWithObjectPop  = { "___WITHOBJECT", {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
+static HB_SYMB s___msgWithObjectPush = { "__WITHOBJECT",  {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
+static HB_SYMB s___msgWithObjectPop  = { "___WITHOBJECT", {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
 
 /* ================================================ */
 
@@ -2080,7 +2080,7 @@ BOOL hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage,
    if( pExecSym )
    {
       HB_STACK_TLS_PRELOAD
-      if( pExecSym->value.pFunPtr == hb___msgSetData )
+      if( pExecSym->value.pFunPtr == HB_FUNCNAME( msgSetData ) )
       {
          USHORT uiObjClass = pObject->item.asArray.value->uiClass;
          PCLASS pClass     = s_pClasses[ pStack->uiClass ];
@@ -2099,7 +2099,7 @@ BOOL hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage,
 
          return hb_arrayGetItemRef( pObject, ulIndex, hb_stackReturnItem() );
       }
-      else if( pExecSym->value.pFunPtr == hb___msgSetClsData )
+      else if( pExecSym->value.pFunPtr == HB_FUNCNAME( msgSetClsData ) )
       {
          PCLASS pClass   = s_pClasses[ pStack->uiClass ];
          PMETHOD pMethod = pClass->pMethods + pStack->uiMethod;
@@ -2107,7 +2107,7 @@ BOOL hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage,
          return hb_arrayGetItemRef( pClass->pClassDatas, pMethod->uiData,
                                     hb_stackReturnItem() );
       }
-      else if( pExecSym->value.pFunPtr == hb___msgSetShrData )
+      else if( pExecSym->value.pFunPtr == HB_FUNCNAME( msgSetShrData ) )
       {
          PCLASS pClass   = s_pClasses[ pStack->uiClass ];
          PMETHOD pMethod = pClass->pMethods + pStack->uiMethod;
@@ -2115,7 +2115,7 @@ BOOL hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage,
          return hb_arrayGetItemRef( s_pClasses[ pMethod->uiSprClass ]->pSharedDatas,
                                     pMethod->uiData, hb_stackReturnItem() );
       }
-      else if( pExecSym->value.pFunPtr == hb___msgScopeErr )
+      else if( pExecSym->value.pFunPtr == HB_FUNCNAME( msgScopeErr ) )
       {
          pExecSym->value.pFunPtr();
       }
@@ -4164,7 +4164,7 @@ HB_FUNC( __CLASSH )
  *
  * Returns class handle of <obj>
  */
-static HARBOUR hb___msgClassH( void )
+HB_FUNC_STATIC( msgClassH )
 {
    HB_STACK_TLS_PRELOAD
    hb_retni( hb_stackBaseItem()->item.asSymbol.stackstate->uiClass );
@@ -4176,7 +4176,7 @@ static HARBOUR hb___msgClassH( void )
  *
  * Return class name of <obj>. Can also be used for all types.
  */
-static HARBOUR hb___msgClassName( void )
+HB_FUNC_STATIC( msgClassName )
 {
    HB_STACK_TLS_PRELOAD
    USHORT uiClass = hb_stackBaseItem()->item.asSymbol.stackstate->uiClass;
@@ -4238,7 +4238,7 @@ static int hb_methodType( PMETHOD pMethod )
  *
  * Returns all the messages in <obj>
  */
-static HARBOUR hb___msgClassSel( void )
+HB_FUNC_STATIC( msgClassSel )
 {
    HB_STACK_TLS_PRELOAD
    USHORT uiClass = hb_stackBaseItem()->item.asSymbol.stackstate->uiClass;
@@ -4301,7 +4301,7 @@ static HARBOUR hb___msgClassSel( void )
  *
  * Internal function to return Self at Self:Class call (classy compatibility)
  */
-static HARBOUR hb___msgClass( void )
+HB_FUNC_STATIC( msgClass )
 {
    hb_itemReturnForward( hb_stackSelfItem() );
 }
@@ -4312,7 +4312,7 @@ static HARBOUR hb___msgClass( void )
  * Return true if <obj> is derived from xParam.
  * xParam can be either an obj or a classname
  */
-static HARBOUR hb___msgClassParent( void )
+HB_FUNC_STATIC( msgClassParent )
 {
    char * szParentName = NULL;
    PHB_ITEM pItem;
@@ -4340,7 +4340,7 @@ static HARBOUR hb___msgClassParent( void )
  *
  * Internal function executed for inline methods
  */
-static HARBOUR hb___msgEvalInline( void )
+HB_FUNC_STATIC( msgEvalInline )
 {
    HB_STACK_TLS_PRELOAD
    PHB_STACK_STATE pStack = hb_stackBaseItem()->item.asSymbol.stackstate;
@@ -4367,7 +4367,7 @@ static HARBOUR hb___msgEvalInline( void )
    hb_vmSend( ( USHORT ) ( uiPCount + 1 ) );
 }
 
-static HARBOUR hb___msgPerform( void )
+HB_FUNC_STATIC( msgPerform )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
@@ -4403,7 +4403,7 @@ static HARBOUR hb___msgPerform( void )
    }
 }
 
-static HARBOUR hb___msgDelegate( void )
+HB_FUNC_STATIC( msgDelegate )
 {
    HB_STACK_TLS_PRELOAD
    PHB_STACK_STATE pStack = hb_stackBaseItem()->item.asSymbol.stackstate;
@@ -4419,11 +4419,11 @@ static HARBOUR hb___msgDelegate( void )
    }
    else
    {
-      hb___msgNoMethod();
+      HB_FUNC_EXEC( msgNoMethod );
    }
 }
 
-static HARBOUR hb___msgSync( void )
+HB_FUNC_STATIC( msgSync )
 {
    HB_STACK_TLS_PRELOAD
    PHB_STACK_STATE pStack = hb_stackBaseItem()->item.asSymbol.stackstate;
@@ -4451,11 +4451,11 @@ static HARBOUR hb___msgSync( void )
    }
    else
    {
-      hb___msgNoMethod();
+      HB_FUNC_EXEC( msgNoMethod );
    }
 }
 
-static HARBOUR hb___msgSyncClass( void )
+HB_FUNC_STATIC( msgSyncClass )
 {
    HB_STACK_TLS_PRELOAD
    PHB_STACK_STATE pStack = hb_stackBaseItem()->item.asSymbol.stackstate;
@@ -4476,7 +4476,7 @@ static HARBOUR hb___msgSyncClass( void )
    }
    else
    {
-      hb___msgNoMethod();
+      HB_FUNC_EXEC( msgNoMethod );
    }
 }
 
@@ -4485,7 +4485,7 @@ static HARBOUR hb___msgSyncClass( void )
  *
  * Internal function for generating error when not existing message is sent
  */
-static HARBOUR hb___msgNoMethod( void )
+HB_FUNC_STATIC( msgNoMethod )
 {
    HB_STACK_TLS_PRELOAD
    PHB_SYMB pSym = hb_itemGetSymbol( hb_stackBaseItem() );
@@ -4516,7 +4516,7 @@ static HARBOUR hb___msgNoMethod( void )
  *
  * Internal function for generating error when not existing message is sent
  */
-static HARBOUR hb___msgScopeErr( void )
+HB_FUNC_STATIC( msgScopeErr )
 {
    HB_STACK_TLS_PRELOAD
    char * pszProcName;
@@ -4534,7 +4534,7 @@ static HARBOUR hb___msgScopeErr( void )
    hb_xfree( pszProcName );
 }
 
-static HARBOUR hb___msgTypeErr( void )
+HB_FUNC_STATIC( msgTypeErr )
 {
    HB_STACK_TLS_PRELOAD
    char * pszProcName;
@@ -4554,7 +4554,7 @@ static HARBOUR hb___msgTypeErr( void )
  *
  * Internal function to return a superobject
  */
-static HARBOUR hb___msgSuper( void )
+HB_FUNC_STATIC( msgSuper )
 {
    HB_STACK_TLS_PRELOAD
    PHB_STACK_STATE pStack = hb_stackBaseItem()->item.asSymbol.stackstate;
@@ -4569,7 +4569,7 @@ static HARBOUR hb___msgSuper( void )
  * Internal function to return a superobject of class where the method was
  * defined
  */
-static HARBOUR hb___msgRealClass( void )
+HB_FUNC_STATIC( msgRealClass )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pObject = hb_stackSelfItem();
@@ -4592,7 +4592,7 @@ static HARBOUR hb___msgRealClass( void )
  *
  * Internal function to return a CLASSDATA
  */
-static HARBOUR hb___msgGetClsData( void )
+HB_FUNC_STATIC( msgGetClsData )
 {
    HB_STACK_TLS_PRELOAD
    PCLASS pClass   = s_pClasses[
@@ -4609,7 +4609,7 @@ static HARBOUR hb___msgGetClsData( void )
  *
  * Internal function to set a CLASSDATA
  */
-static HARBOUR hb___msgSetClsData( void )
+HB_FUNC_STATIC( msgSetClsData )
 {
    HB_STACK_TLS_PRELOAD
    PCLASS pClass   = s_pClasses[
@@ -4645,7 +4645,7 @@ static HARBOUR hb___msgSetClsData( void )
  *
  * Internal function to return a SHAREDDATA
  */
-static HARBOUR hb___msgGetShrData( void )
+HB_FUNC_STATIC( msgGetShrData )
 {
    HB_STACK_TLS_PRELOAD
    PCLASS pClass   = s_pClasses[
@@ -4662,7 +4662,7 @@ static HARBOUR hb___msgGetShrData( void )
  *
  * Internal function to set a SHAREDDATA
  */
-static HARBOUR hb___msgSetShrData( void )
+HB_FUNC_STATIC( msgSetShrData )
 {
    HB_STACK_TLS_PRELOAD
    PCLASS pClass   = s_pClasses[
@@ -4699,7 +4699,7 @@ static HARBOUR hb___msgSetShrData( void )
  *
  * Internal function to return a DATA
  */
-static HARBOUR hb___msgGetData( void )
+HB_FUNC_STATIC( msgGetData )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pObject  = hb_stackSelfItem();
@@ -4732,7 +4732,7 @@ static HARBOUR hb___msgGetData( void )
  *
  * Internal function to set a DATA
  */
-static HARBOUR hb___msgSetData( void )
+HB_FUNC_STATIC( msgSetData )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pObject  = hb_stackSelfItem();
@@ -4784,13 +4784,13 @@ static HARBOUR hb___msgSetData( void )
 }
 
 /* No comment :-) */
-static HARBOUR hb___msgVirtual( void )
+HB_FUNC_STATIC( msgVirtual )
 {
    /* hb_ret(); */ /* NOTE: It's safe to comment this out */
    ;
 }
 
-static HARBOUR hb___msgNull( void )
+HB_FUNC_STATIC( msgNull )
 {
    ;
 }

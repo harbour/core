@@ -486,10 +486,11 @@
  */
 
 #if defined( __cplusplus ) && !defined( __IBMCPP__ )
-   #define HB_EXTERN_C
+   #define HB_EXTERN_C        extern "C"
    #define HB_EXTERN_BEGIN    extern "C" {
    #define HB_EXTERN_END      }
 #else
+   #define HB_EXTERN_C
    #define HB_EXTERN_BEGIN
    #define HB_EXTERN_END
 #endif

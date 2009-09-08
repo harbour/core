@@ -5298,7 +5298,7 @@ static void hb_vmArrayGen( ULONG ulElements ) /* generates an ulElements Array a
          hb_itemMove( pArray->item.asArray.value->pItems + ulPos, pValue );
       }
       /* move the new array to position of first parameter */
-      hb_itemMove( hb_stackItemFromTop( ( int ) ( -1 - ulElements ) ), pArray );
+      hb_itemMove( hb_stackItemFromTop( -1 - ( int ) ulElements ), pArray );
 
       /* decrease the stack counter - all items are NIL */
       hb_stackDecrease( ulElements );
@@ -8373,30 +8373,30 @@ void hb_vmRequestEndProc( void )
 void hb_vmRequestBreak( PHB_ITEM pItem )
 {
    HB_STACK_TLS_PRELOAD
-   ULONG ulRecoverBase;
+   long lRecoverBase;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestBreak(%p)", pItem));
 
-   ulRecoverBase = hb_stackGetRecoverBase();
-   while( ulRecoverBase && ( hb_stackItem( ulRecoverBase +
+   lRecoverBase = hb_stackGetRecoverBase();
+   while( lRecoverBase && ( hb_stackItem( lRecoverBase +
                HB_RECOVER_STATE )->item.asRecover.flags & HB_SEQ_DOALWAYS ) )
    {
 #if defined( _HB_RECOVER_DEBUG )
-      if( hb_stackItem( ulRecoverBase + HB_RECOVER_STATE )->type != HB_IT_RECOVER )
+      if( hb_stackItem( lRecoverBase + HB_RECOVER_STATE )->type != HB_IT_RECOVER )
          hb_errInternal( HB_EI_ERRUNRECOV, "hb_vmRequestBreak", NULL, NULL );
 #endif
-      ulRecoverBase = hb_stackItem( ulRecoverBase +
-                                    HB_RECOVER_STATE )->item.asRecover.base;
+      lRecoverBase = hb_stackItem( lRecoverBase +
+                                   HB_RECOVER_STATE )->item.asRecover.base;
    }
 
-   if( ulRecoverBase )
+   if( lRecoverBase )
    {
 #if defined( _HB_RECOVER_DEBUG )
-      if( hb_stackItem( ulRecoverBase + HB_RECOVER_STATE )->type != HB_IT_RECOVER )
+      if( hb_stackItem( lRecoverBase + HB_RECOVER_STATE )->type != HB_IT_RECOVER )
          hb_errInternal( HB_EI_ERRUNRECOV, "hb_vmRequestBreak2", NULL, NULL );
 #endif
       if( pItem )
-         hb_itemCopy( hb_stackItem( ulRecoverBase + HB_RECOVER_VALUE ), pItem );
+         hb_itemCopy( hb_stackItem( lRecoverBase + HB_RECOVER_VALUE ), pItem );
 
       hb_stackSetActionRequest( HB_BREAK_REQUESTED );
    }

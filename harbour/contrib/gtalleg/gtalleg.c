@@ -430,8 +430,8 @@ static BOOL hb_gt_alleg_InitializeScreen( PHB_GT pGT, int iRows, int iCols, BOOL
          lMode = TRUE;
       }
 
-      pFileName = hb_fsFNameSplit(hb_cmdargARGV()[0]);
-      al_set_window_title(pFileName->szName);
+      pFileName = hb_fsFNameSplit( hb_cmdargARGV()[0] );
+      al_set_window_title( ( char * ) pFileName->szName );
       hb_xfree( pFileName );
 
       if( !lPrev )
@@ -908,7 +908,7 @@ static BOOL hb_gt_alleg_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_WINTITLE:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            al_set_window_title( hb_itemGetCPtr( pInfo->pNewVal ) );
+            al_set_window_title( ( char * ) hb_itemGetCPtr( pInfo->pNewVal ) );
          }
          break;
 
