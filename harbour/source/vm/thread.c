@@ -2507,11 +2507,8 @@ HB_FUNC( HB_MTVM )
 }
 
 #if defined( HB_MT_VM )
-HB_FUNC( HB_MT )
-{
-   HB_STACK_TLS_PRELOAD
-   hb_retl( TRUE );
-}
+/* function to use in REQUEST statement in .prg code to force MT HVM */
+HB_FUNC( HB_MT ) { ; }
 #endif
 
 #if defined( HB_TASK_THREAD ) && defined( HB_MT_VM )
