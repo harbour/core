@@ -23,7 +23,7 @@ CC_OUT := -o$(subst x,x, )
 CPPFLAGS := -I. -I$(HB_INC_COMPILE)
 
 # -no-cpp-precomp prevents from using buggy precompiled headers
-CPPFLAGS += -no-cpp-precomp
+# CPPFLAGS += -no-cpp-precomp
 
 # -fno-common enables building .dylib files
 CFLAGS := -fno-common

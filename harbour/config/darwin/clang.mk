@@ -3,6 +3,7 @@
 #
 
 ifeq ($(HB_BUILD_MODE),cpp)
+   # -ccc-clang-cxx
    HB_CMP := clang
 else
    HB_CMP := clang

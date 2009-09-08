@@ -871,7 +871,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       CASE hbmk[ _HBMK_cPLAT ] == "linux"
          aCOMPSUP := { "gcc", "watcom", "icc", "sunpro" }
       CASE hbmk[ _HBMK_cPLAT ] == "darwin"
-         aCOMPSUP := { "gcc", "icc" }
+         aCOMPSUP := { "gcc", "icc", "clang" }
       CASE hbmk[ _HBMK_cPLAT ] == "sunos"
          aCOMPSUP := { "gcc", "sunpro" }
       OTHERWISE
@@ -2040,7 +2040,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
            ( hbmk[ _HBMK_cPLAT ] == "sunos"  .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "icc" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "icc" )
+           ( hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "icc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "clang" )
 
          nCmd_Esc := _ESC_NIX
          IF hbmk[ _HBMK_lDEBUG ]
@@ -2061,12 +2062,16 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
             cOpt_Lib := "{FA} rcs {OL} {LO}"
          ENDIF
-         IF hbmk[ _HBMK_cCOMP ] == "icc"
+         DO CASE
+         CASE hbmk[ _HBMK_cCOMP ] == "icc"
             cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], "icpc", "icc" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_GNU_SOURCE" )
-         ELSE
+         CASE hbmk[ _HBMK_cCOMP ] == "clang"
+            cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + "clang" + hbmk[ _HBMK_cCCPOSTFIX ]
+            AAdd( hbmk[ _HBMK_aOPTC ], "-DHB_CC_CLANG" )
+         OTHERWISE
             cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], "g++", "gcc" ) + hbmk[ _HBMK_cCCPOSTFIX ]
-         ENDIF
+         ENDCASE
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
@@ -2103,7 +2108,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aOPTL ], "-static" )
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "gcc"
-            AAdd( hbmk[ _HBMK_aOPTC ], "-no-cpp-precomp" )
+/*          AAdd( hbmk[ _HBMK_aOPTC ], "-no-cpp-precomp" ) */
 /*          AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-long-double" ) */
             IF hbmk[ _HBMK_lSHARED ]
                AAdd( hbmk[ _HBMK_aOPTL ], "-bind_at_load" )
@@ -6791,7 +6796,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       "",;
       I_( "Supported <comp> values for each supported <plat> value:" ),;
       "  - linux  : gcc, watcom, icc, sunpro",;
-      "  - darwin : gcc, icc",;
+      "  - darwin : gcc, icc, clang",;
       "  - win    : mingw, msvc, bcc, watcom, icc, pocc, cygwin, xcc,",;
       "  -          mingw64, msvc64, msvcia64, iccia64, pocc64",;
       "  - wce    : mingwarm, mingw, msvcarm, poccarm",;
