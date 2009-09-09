@@ -74,7 +74,7 @@ get_hbver_so()
         if [ "${HB_COMPILER}" = "mingw64" ]; then
             hb_ver="${hb_ver}-x64"
         elif [ "${HB_COMPILER}" = "mingwarm" ]; then
-            hb_ver="${hb_ver}-arm"
+            hb_ver="${hb_ver}-wce-arm"
         fi
     else
         hb_ver=`get_hbver "${hb_rootdir}"`

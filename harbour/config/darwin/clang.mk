@@ -14,7 +14,11 @@ LIB_PREF := lib
 LIB_EXT := .a
 
 CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
-CC_IN := -c
+ifneq ($(filter --analyze, $(HB_USER_CFLAGS)),)
+   CC_IN :=
+else
+   CC_IN := -c
+endif
 # NOTE: The ending space after -o is important, please preserve it.
 #       Now solved with '$(subst x,x, )' expression.
 CC_OUT := -o$(subst x,x, )

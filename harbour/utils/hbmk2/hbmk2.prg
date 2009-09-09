@@ -544,6 +544,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    LOCAL l_cHBPOSTFIX := ""
    LOCAL l_lNOHBLIB := .F.
    LOCAL l_lLIBSYSMISC := .T.
+   LOCAL l_cCMAIN := NIL
 
    /* hbmk2 lib ordering tries to satisfy linkers which require this
       (mingw*, linux/gcc, bsd/gcc and dos/djgpp), but this won't solve
@@ -2269,6 +2270,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF !( hbmk[ _HBMK_cPLAT ] == "wce" )
             IF hbmk[ _HBMK_lGUI ]
                AAdd( hbmk[ _HBMK_aOPTL ], "-mwindows" )
+               l_cCMAIN := "hb_forceLinkMainWin"
             ELSE
                AAdd( hbmk[ _HBMK_aOPTL ], "-mconsole" )
             ENDIF
@@ -2316,7 +2318,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                                                       "harbour" + cDL_Version_Alter ) }
          ENDCASE
 
-         l_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
+         IF hbmk[ _HBMK_lGUI ]
+            l_aLIBSHAREDPOST := { "hbmainwin" }
+         ELSE
+            l_aLIBSHAREDPOST := { "hbmainstd" }
+         ENDIF
 
          IF hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"
             cBin_Res := hbmk[ _HBMK_cCCPREFIX ] + "windres" + cCCEXT
@@ -3323,7 +3329,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF ! lStopAfterCComp .AND. ;
             ( l_cMAIN != NIL .OR. ;
               ! Empty( hbmk[ _HBMK_aLIBUSERGT ] ) .OR. ;
-              hbmk[ _HBMK_cGT ] != NIL )
+              hbmk[ _HBMK_cGT ] != NIL ) .OR. ;
+            l_cCMAIN != NIL
 
             l_cCSTUB := DirAddPathSep( cWorkDir ) + "_hbmkaut.c"
 
@@ -3368,14 +3375,22 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                         '/* You can safely delete it. */'                                         + Chr( 10 ) +;
                         ''                                                                        + Chr( 10 ) +;
                         '#include "hbapi.h"'                                                      + Chr( 10 )
-               IF ! Empty( array )
+               IF ! Empty( array ) .OR. l_cCMAIN != NIL
                   AEval( array, {|tmp, i| array[ i ] := FuncNameEncode( tmp ) } )
                   cFile += ''                                                                     + Chr( 10 )
                   AEval( array, {|tmp| cFile += 'HB_FUNC_EXTERN( ' + tmp + ' );'                  + Chr( 10 ) } )
+                  IF l_cCMAIN != NIL
+                     cFile += ''                                                                  + Chr( 10 )
+                     cFile += 'HB_EXTERN_C void ' + l_cCMAIN + '( void );'                        + Chr( 10 )
+                  ENDIF
                   cFile += ''                                                                     + Chr( 10 )
                   cFile += 'void _hb_lnk_ForceLink_hbmk( void )'                                  + Chr( 10 )
                   cFile += '{'                                                                    + Chr( 10 )
                   AEval( array, {|tmp| cFile += '   HB_FUNC_EXEC( ' + tmp + ' );'                 + Chr( 10 ) } )
+                  IF l_cCMAIN != NIL
+                     cFile += ''                                                                  + Chr( 10 )
+                     cFile += '   ' + l_cCMAIN + '();'                                            + Chr( 10 )
+                  ENDIF
                   cFile += '}'                                                                    + Chr( 10 )
                   cFile += ''                                                                     + Chr( 10 )
                ENDIF
