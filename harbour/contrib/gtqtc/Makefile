@@ -56,8 +56,6 @@ ifneq ($(HB_HAS_QT),)
       HB_CFLAGS += -DQT_NODLL
    endif
 
-   include $(TOP)$(ROOT)contrib/hbqt/filelist.mk
-
    include $(TOP)$(ROOT)config/header.mk
    include $(TOP)$(ROOT)config/lib.mk
 
