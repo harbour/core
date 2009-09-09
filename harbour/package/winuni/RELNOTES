@@ -1,0 +1,153 @@
+Hi All,
+
+Harbour 2.0.0beta3 (r12422) source archives and Windows binary
+releases are available for download on sourceforge.net.
+
+Make sure to check INSTALL doc "QUICK START" section and visit
+our user forums at:
+   http://sourceforge.net/apps/phpbb/harbour-project/
+
+Release notes:
+-----------------------------------------------------------------------
+Unified Windows release for most supported compilers and
+x86, x64, WinCE/ARM, MS-DOS, OS/2, Linux target platforms.
+
+Installed size: 232MB (46MB - 340MB)
+
+The default installation will install MinGW compiler + x86 static and
+shared libs, MSVC and BCC x86 libs and examples.
+
+Options: x86 shared tools, x64 shared tools, MinGW x64 and
+WinCE-ARM libs, MSVC x64 libs, Open Watcom x86 libs,
+shared x64/WinCE-ARM libs, MS-DOS 32-bit DJGPP libs,
+OS/2 (watcom) libs, Linux (watcom) libs.
+
+Usage:
+1) install/unpack to any directory (C:\hb20)
+2) go to bin dir (optional if you specify path for hbmk2)
+3) For x86 executable, type: 'hbmk2 ../tests/hello.prg'
+4) For x64 executable, type: 'hbmk2 ../tests/hello.prg -compiler=mingw64'
+   [needs mingw64 to be installed into 'comp/mingw64' dir beforehand]
+5) For WinCE/ARM executable, type: 'hbmk2 ../tests/hello.prg -platform=wce'
+   [needs cegcc to be installed into 'comp/mingwarm' dir beforehand]
+6) For MS-DOS executable, type: 'hbmk2 ../tests/hello.prg -platform=dos'
+   [needs DJGPP to be installed into 'comp/djgpp' dir beforehand]
+7) For Linux executable, type: 'hbmk2 ../tests/hello.prg -platform=linux'
+   [needs OpenWatcom to be installed into 'comp/watcom' dir beforehand]
+
+Tool/lib versions used to create this package:
+-----------------------------------------------------------------------
+
+   Compiler tools
+   --------------
+
+   MinGW 4.4.1 (included)
+   MinGW w64 4.5.0
+   MinGW CEGCC 4.1.0
+   DJGPP 4.4.1 (2.04b1)
+   MSVC 2008 SP1
+   Open Watcom C++ 1.8
+   Borland C++ 5.5.1
+
+   External lib dependencies
+   -------------------------
+
+   ACE 9.10
+   Allegro 4.2.2
+   Blat 2.6.2
+   libcurl 7.19.6
+   Firebird 2.1.2
+   FreeImage 3.12.0
+   GD 2.0.35
+   MySQL 5.1.35
+   OpenSSL 0.9.8k
+   PostgreSQL 8.3.7
+   QT 4.5.2
+   WATTCG 2.2.10
+
+Changes since previous (2.0.0beta2 20090624) release:
+-----------------------------------------------------------------------
+
+- Harbour updated to r12422 (from r11508)
+- Rewritten socket library.
+- Fixed remaining Clipper compatibility issues (@.clp, SET PROC TO, DO WITH, etc)
+- Added replaceable core file I/O layer.
+- Reworked build system with integrated dynlib creation, cross-platform
+  support, compiler and external component autodetection and much more.
+- MinGW updated to 4.4.1
+- MinGW x64 updated to 4.5.0 (20090905)
+- Finalizing ActiveX/OLE2 support.
+- Timestamp/datetime support in core.
+- Added MT support for dos platform.
+- Added socket support for dos platform (via WATTCP lib).
+- Added hbnetio lib client/server file I/O implementation.
+- hbxbp lib about feature complete.
+- wce/msvcarm target improvements, sunpro compiler support.
+- hbssl OpenSSL wrapper lib.
+- SSL support in hbtip lib.
+- Serial communication fixes in hbwin/hbtpathy on win platform.
+- Lots of other additions and some fixes.
+- Changed default install path to be 'hb20' rather than 'harbour20',
+  to avoid long filenames.
+- Replaced mingw64 built x64 shared tools with msvc64 builds, as
+  the former didn't work.
+- Included hbqt lib which links against static QT libs.
+
+Changes since previous (2.0.0beta1 20090609) release:
+-----------------------------------------------------------------------
+- Harbour updated to r11508 (from r11287)
+- New User's Forum linked
+- upx compressor included in install package
+- DOS cross build libs included in install package
+- preparation to host 3rd party packages inside Harbour directory tree
+- new "zero-conf" library install system in preparation
+- hbmk2: lots of minor refinements, support for all free compilers
+  in embedded form, support spaces in filenames/paths, all Harbour
+  supported C compilers have now complete support in hbmk2
+- DOS support tested and required fixes applied
+- embedded compilers moved to 'comp' subdir
+- support for latest MinGW x64 and MSVS 2010 compilers
+- extended INSTALL with new examples and app build quick guide
+- icon for installer and hbrun tool
+- hbxbp and hbqt enhancements
+- hbwin refinements and better compatibility
+- new uhttpd2 sessioned HTTP server
+- C++ build support for all compilers, new HB_WAEVAL() function,
+  new xpp (Xbase++ compatibility) lib, .hrb loading enhancements
+- DBU, RL, SuperLib fixes.
+- MinGW64 updated to 4.4.1
+- There were a few changes in this release which may require updating
+  your source code (hb_par*()/hb_stor*() in .c files and GTWVG WIN_*()
+  function in .prg files). Search for 'incompatible' word in ChangeLog
+  for more.
+-----------------------------------------------------------------------
+
+Changes since previous (1.1.0dev 20090602) release:
+-----------------------------------------------------------------------
+- Harbour updated to r11287 (from r11179)
+- all contrib tests included in install package
+- All 3rd party packages upgraded to latest version.
+- hbmk2: project support, new file extensions, fixes, Harbour 1.0.x
+  support.
+- further simplified/updated build process and instructions
+- hbqt many enhancements
+- almost full xhb compatibility
+- 'terminal' fixed in examples
+- source formatter, Cl*pper RL tool, legacy hbmake added
+- MT Xbase++ compatibility
+-----------------------------------------------------------------------
+
+Changes since previous (1.1.0dev 20090408) release:
+-----------------------------------------------------------------------
+- Harbour updated to r11179 (from r10819)
+- Updated hbmk2 (filter issues + experimental Harbour 1.0.x support)
+- Included contrib tests/utils
+- Full and now standalone 'examples'
+- 'tests' with subdirs included.
+- No longer included pocc/pocc64/poccarm libs.
+- QT updated to 4.5.1
+- MinGW updated to 4.4.0
+
+--
+Brgds,
+Viktor Szakats
