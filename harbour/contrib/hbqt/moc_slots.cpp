@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'hbqt_slots.h'
 **
-** Created: Tue Aug 18 18:21:01 2009
+** Created: Wed Sep 9 00:41:01 2009
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -321,7 +321,7 @@ static const uint qt_meta_data_Slots[] = {
        2,       // revision
        0,       // classname
        0,    0, // classinfo
-     106,   12, // methods
+     113,   12, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -433,6 +433,13 @@ static const uint qt_meta_data_Slots[] = {
     3003, 2962,    6,    6, 0x0a,
     3028, 3023,    6,    6, 0x0a,
     3051, 3023,    6,    6, 0x0a,
+    3083, 3072,    6,    6, 0x0a,
+    3106, 3072,    6,    6, 0x0a,
+    3127, 3072,    6,    6, 0x0a,
+    3148, 3072,    6,    6, 0x0a,
+    3175, 3072,    6,    6, 0x0a,
+    3196, 3072,    6,    6, 0x0a,
+    3269, 3217,    6,    6, 0x0a,
 
        0        // eod
 };
@@ -523,6 +530,12 @@ static const char qt_meta_stringdata_Slots[] = {
     "id\0buttonClicked(int)\0buttonPressed(int)\0"
     "buttonReleased(int)\0link\0"
     "linkActivated(QString)\0linkHovered(QString)\0"
+    "row,column\0cellActivated(int,int)\0"
+    "cellChanged(int,int)\0cellClicked(int,int)\0"
+    "cellDoubleClicked(int,int)\0"
+    "cellEntered(int,int)\0cellPressed(int,int)\0"
+    "currentRow,currentColumn,previousRow,previousColumn\0"
+    "currentCellChanged(int,int,int,int)\0"
 };
 
 const QMetaObject Slots::staticMetaObject = {
@@ -656,9 +669,16 @@ int Slots::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 103: buttonReleased((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 104: linkActivated((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         case 105: linkHovered((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 106: cellActivated((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 107: cellChanged((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 108: cellClicked((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 109: cellDoubleClicked((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 110: cellEntered((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 111: cellPressed((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 112: currentCellChanged((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< int(*)>(_a[4]))); break;
         default: ;
         }
-        _id -= 106;
+        _id -= 113;
     }
     return _id;
 }

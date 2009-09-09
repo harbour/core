@@ -64,7 +64,7 @@
 
 #include "hbqt_slots.h"
 
-//             #include <windows.h>   ////////////////////////////////////////////////////
+//         #include <windows.h>   ////////////////////////////////////////////////////
 
 #include <QWidget>
 #include <QString>
@@ -97,12 +97,12 @@ static HB_TSD_NEW( s_slots, sizeof( HB_SLOTS ), NULL, NULL );
 #define hb_getQtEventSlots()       ( ( PHB_SLOTS ) hb_stackGetTSD( &s_slots ) )
 
 /*----------------------------------------------------------------------*/
-
+#if 0
 void qt_setEventFilter( Events * event )
 {
    hb_getQtEventFilter()->events = event;
 }
-
+#endif
 Events * qt_getEventFilter( void )
 {
    Events * s_e = hb_getQtEventFilter()->events;
@@ -112,12 +112,12 @@ Events * qt_getEventFilter( void )
    return hb_getQtEventFilter()->events;
 }
 
-
+#if 0
 void qt_setEventSlots( Slots * slot )
 {
    hb_getQtEventSlots()->slot = slot;
 }
-
+#endif
 Slots * qt_getEventSlots( void )
 {
    Slots * s_s = hb_getQtEventSlots()->slot;
@@ -142,7 +142,7 @@ static void SlotsExec( QObject* object, char* event )
    {
       Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, ( QObject* ) object );
          hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 1, pObject );
@@ -157,7 +157,7 @@ static void SlotsExecBool( QObject* object, char* event, bool bBool )
    {
       Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pBool = hb_itemPutL( NULL, bBool );
@@ -174,7 +174,7 @@ static void SlotsExecInt( QObject* object, char* event, int iValue )
    {
       Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, ( QObject* ) object );
          PHB_ITEM pState = hb_itemPutNI( NULL, iValue );
@@ -191,7 +191,7 @@ static void SlotsExecIntInt( QObject* object, char* event, int iValue1, int iVal
    {
       Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) )
+      if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, ( QObject* ) object );
          PHB_ITEM pValue1 = hb_itemPutNI( NULL, iValue1 );
@@ -210,7 +210,7 @@ static void SlotsExecIntIntInt( QObject* object, char* event, int iValue1, int i
    {
       Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) )
+      if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, ( QObject* ) object );
          PHB_ITEM pValue1 = hb_itemPutNI( NULL, iValue1 );
@@ -225,13 +225,36 @@ static void SlotsExecIntIntInt( QObject* object, char* event, int iValue1, int i
    }
 }
 
+static void SlotsExecIntIntIntInt( QObject* object, char* event, int iValue1, int iValue2, int iValue3, int iValue4 )
+{
+   if( object )
+   {
+      Slots * s_s = qt_getEventSlots();
+      int i = object->property( event ).toInt();
+      if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) && hb_vmRequestReenter() )
+      {
+         PHB_ITEM pObject = hb_itemPutPtr( NULL, ( QObject* ) object );
+         PHB_ITEM pValue1 = hb_itemPutNI( NULL, iValue1 );
+         PHB_ITEM pValue2 = hb_itemPutNI( NULL, iValue2 );
+         PHB_ITEM pValue3 = hb_itemPutNI( NULL, iValue3 );
+         PHB_ITEM pValue4 = hb_itemPutNI( NULL, iValue4 );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 5, pObject, pValue1, pValue2, pValue3, pValue4 );
+         hb_itemRelease( pObject );
+         hb_itemRelease( pValue1 );
+         hb_itemRelease( pValue2 );
+         hb_itemRelease( pValue3 );
+         hb_itemRelease( pValue4 );
+      }
+   }
+}
+
 static void SlotsExecIntIntRect( QObject* object, char* event, int iValue1, int iValue2, const QRect & rect )
 {
    if( object )
    {
       Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) )
+      if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, ( QObject* ) object );
          PHB_ITEM pValue1 = hb_itemPutNI( NULL, iValue1 );
@@ -252,7 +275,7 @@ static void SlotsExecString( QObject* object, char* event, const QString & strin
    {
       Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) )
+      if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, ( QObject* ) object );
          PHB_ITEM pString = hb_itemPutC( NULL, string.toLatin1().data() );
@@ -269,7 +292,7 @@ static void SlotsExecString2( QObject* object, char* event, const QString & s1, 
    {
       Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) )
+      if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, ( QObject* ) object );
          PHB_ITEM pS1 = hb_itemPutC( NULL, s1.toLatin1().data() );
@@ -288,7 +311,7 @@ static void SlotsExecString3( QObject* object, char* event, const QString & s1, 
    {
       Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) )
+      if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, ( QObject* ) object );
          PHB_ITEM pS1 = hb_itemPutC( NULL, s1.toLatin1().data() );
@@ -309,7 +332,7 @@ static void SlotsExecModel( QObject* object, char* event, const QModelIndex & in
    {
       Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, ( QObject* ) object );
          PHB_ITEM pState = hb_itemPutPtr( NULL, ( QModelIndex * ) new QModelIndex( index ) );
@@ -326,7 +349,7 @@ static void SlotsExecRect( QObject* object, char* event, const QRect & rect )
    {
       Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, ( QObject* ) object );
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QRect( rect ) );
@@ -343,7 +366,7 @@ static void SlotsExecUrl( QObject* object, char* event, const QUrl & url )
    {
       Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, ( QObject* ) object );
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QUrl( url ) );
@@ -360,7 +383,7 @@ static void SlotsExecTextCharFormat( QObject* object, char* event, const QTextCh
    {
       Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, ( QObject* ) object );
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QTextCharFormat( f ) );
@@ -377,7 +400,7 @@ static void SlotsExecFont( QObject* object, char* event, const QFont & font )
    {
       Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, ( QObject* ) object );
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QFont( font ) );
@@ -394,7 +417,7 @@ static void SlotsExecStringList( QObject* object, char* event, const QStringList
    {
       Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, ( QObject* ) object );
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QStringList( stringList ) );
@@ -411,7 +434,7 @@ static void SlotsExecNetworkRequest( QObject* object, char* event, const QNetwor
    {
       Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, ( QObject* ) object );
          PHB_ITEM p1 = hb_itemPutPtr( NULL, ( QNetworkRequest* ) new QNetworkRequest( request ) );
@@ -428,7 +451,7 @@ static void SlotsExecPointer( QObject* object, char* event, void * p1 )
    {
       Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pP1 = hb_itemPutPtr( NULL, p1 );
@@ -445,7 +468,7 @@ static void SlotsExecPointerString( QObject* object, char* event, void * p1, QSt
    {
       Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pP1 = hb_itemPutPtr( NULL, p1 );
@@ -464,7 +487,7 @@ static void SlotsExecPointerInt( QObject* object, char* event, void * p1, int iI
    {
       Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pP1 = hb_itemPutPtr( NULL, p1 );
@@ -483,7 +506,7 @@ static void SlotsExecPointerPointer( QObject* object, char* event, void * p1, vo
    {
       Slots * s_s = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pP1 = hb_itemPutPtr( NULL, p1 );
@@ -1038,6 +1061,42 @@ void Slots::linkHovered( const QString & link )
    QObject *object = qobject_cast<QObject *>( sender() );
    SlotsExecString( object, ( char* ) "linkHovered(QString)", link );
 }
+void Slots::cellActivated( int row, int column )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecIntInt( object, ( char* ) "cellActivated(int,int)", row, column );
+}
+void Slots::cellChanged( int row, int column )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecIntInt( object, ( char* ) "cellChanged(int,int)", row, column );
+}
+void Slots::cellClicked( int row, int column )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecIntInt( object, ( char* ) "cellClicked(int,int)", row, column );
+}
+void Slots::cellDoubleClicked( int row, int column )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecIntInt( object, ( char* ) "cellDoubleClicked(int,int)", row, column );
+}
+void Slots::cellEntered( int row, int column )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecIntInt( object, ( char* ) "cellEntered(int,int)", row, column );
+}
+void Slots::cellPressed( int row, int column )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecIntInt( object, ( char* ) "cellEntered(int,int)", row, column );
+}
+void Slots::currentCellChanged( int currentRow, int currentColumn, int previousRow, int previousColumn )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecIntIntIntInt( object, ( char* ) "currentCellChanged(int,int,int,int)", currentRow, currentColumn, previousRow, previousColumn );
+}
+
 
 /*
  * harbour function to connect signals with slots
@@ -1584,6 +1643,41 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       ret = object->connect( object, SIGNAL( linkHovered( const QString & ) ),
                              s_s, SLOT( linkHovered( const QString & ) ), Qt::AutoConnection );
    }
+   if( signal == ( QString ) "cellActivated(int,int)" )
+   {
+      ret = object->connect( object, SIGNAL( cellActivated( int, int ) ),
+                             s_s, SLOT( cellActivated( int, int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "cellChanged(int,int)" )
+   {
+      ret = object->connect( object, SIGNAL( cellChanged( int, int ) ),
+                             s_s, SLOT( cellChanged( int, int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "cellClicked(int,int)" )
+   {
+      ret = object->connect( object, SIGNAL( cellClicked( int, int ) ),
+                             s_s, SLOT( cellClicked( int, int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "cellDoubleClicked(int,int)" )
+   {
+      ret = object->connect( object, SIGNAL( cellDoubleClicked( int, int ) ),
+                             s_s, SLOT( cellDoubleClicked( int, int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "cellEntered(int,int)" )
+   {
+      ret = object->connect( object, SIGNAL( cellEntered( int, int ) ),
+                             s_s, SLOT( cellEntered( int, int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "cellPressed(int,int)" )
+   {
+      ret = object->connect( object, SIGNAL( cellPressed( int, int ) ),
+                             s_s, SLOT( cellPressed( int, int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "currentCellChanged(int,int,int,int)" )
+   {
+      ret = object->connect( object, SIGNAL( currentCellChanged( int, int, int, int ) ),
+                             s_s, SLOT( currentCellChanged( int, int, int, int ) ), Qt::AutoConnection );
+   }
 
 
    hb_retl( ret );
@@ -1724,22 +1818,29 @@ Events::~Events()
 bool Events::eventFilter( QObject * object, QEvent * event )
 {
    QEvent::Type eventtype = event->type();
-   int          found;;
-   bool         ret;
+//char str[ 50 ]; hb_snprintf( str, sizeof( str ), "0 Events::eventFilter = %i", ( int ) eventtype ); OutputDebugString( str );
 
    if( ( int ) eventtype == 0 )
-      return true;
-
-   char str[ 10 ];
-   hb_snprintf( str, sizeof( str ), "%s%i%s", "P", eventtype, "P" );
-   found = object->property( str ).toInt();
-   if( found == 0 )
+   {
+//hb_snprintf( str, sizeof( str ), "x Events::eventFilter = %i", ( int ) eventtype ); OutputDebugString( str );
       return false;
+   }
+
+   char prop[ 10 ];
+   hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", eventtype, "P" );
+   int found = object->property( prop ).toInt();
+   if( found == 0 )
+   {
+//hb_snprintf( str, sizeof( str ), "f Events::eventFilter = %i", ( int ) eventtype ); OutputDebugString( str );
+      return false;
+   }
 
    PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
    PHB_ITEM pEvent  = hb_itemPutPtr( NULL, event  );
 
-   ret = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 2, pObject, pEvent ) );
+   bool ret = false;
+   if( hb_vmRequestReenter() )
+      ret = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 2, pObject, pEvent ) );
 
    hb_itemRelease( pObject );
    hb_itemRelease( pEvent  );
@@ -1751,6 +1852,8 @@ bool Events::eventFilter( QObject * object, QEvent * event )
       else
          event->ignore();
    }
+//hb_snprintf( str, sizeof( str ), "1 Events::eventFilter = %i", ( int ) eventtype ); OutputDebugString( str );
+
    return ret;
 }
 
@@ -1892,26 +1995,33 @@ Qt_WhatsThisRole            5       Qt_SizeHintRole                13
 
 QVariant fetchRole( PHB_ITEM block, int what, int par1, int par2 )
 {
-   PHB_ITEM p0  = hb_itemPutNI( NULL, what );
-   PHB_ITEM p1  = hb_itemPutNI( NULL, par1 );
-   PHB_ITEM p2  = hb_itemPutNI( NULL, par2 );
+   if( hb_vmRequestReenter() )
+   {
+      PHB_ITEM p0  = hb_itemPutNI( NULL, what );
+      PHB_ITEM p1  = hb_itemPutNI( NULL, par1 );
+      PHB_ITEM p2  = hb_itemPutNI( NULL, par2 );
 
-   PHB_ITEM ret = hb_vmEvalBlockV( block, 3, p0, p1, p2 );
+      PHB_ITEM ret = hb_vmEvalBlockV( block, 3, p0, p1, p2 );
 
-   hb_itemRelease( p0 );
-   hb_itemRelease( p1 );
-   hb_itemRelease( p2 );
+      hb_itemRelease( p0 );
+      hb_itemRelease( p1 );
+      hb_itemRelease( p2 );
 
-   if( hb_itemType( ret ) & HB_IT_STRING )
-      return( hb_itemGetC( ret ) );
-   else if( hb_itemType( ret ) & HB_IT_LOGICAL )
-      return( hb_itemGetL( ret ) );
-   else if( hb_itemType( ret ) & HB_IT_DOUBLE  )
-      return( hb_itemGetND( ret ) );
-   else if( hb_itemType( ret ) & HB_IT_NUMERIC )
-      return( hb_itemGetNI( ret ) );
+      if( hb_itemType( ret ) & HB_IT_STRING )
+         return( hb_itemGetC( ret ) );
+      else if( hb_itemType( ret ) & HB_IT_LOGICAL )
+         return( hb_itemGetL( ret ) );
+      else if( hb_itemType( ret ) & HB_IT_DOUBLE  )
+         return( hb_itemGetND( ret ) );
+      else if( hb_itemType( ret ) & HB_IT_NUMERIC )
+         return( hb_itemGetNI( ret ) );
+      else
+         return QVariant();
+   }
    else
+   {
       return QVariant();
+   }
 }
 
 HbDbfModel::HbDbfModel( PHB_ITEM pBlock ) : QAbstractItemModel()
@@ -2031,24 +2141,38 @@ QVariant HbDbfModel::headerData( int section, Qt::Orientation orientation, int r
 
 int HbDbfModel::rowCount( const QModelIndex & /*parent = QModelIndex()*/ ) const
 {
-   PHB_ITEM p0 = hb_itemPutNI( NULL, HBQT_BRW_ROWCOUNT );
+   if( hb_vmRequestReenter() )
+   {
+      PHB_ITEM p0 = hb_itemPutNI( NULL, HBQT_BRW_ROWCOUNT );
 
-   int result = hb_itemGetNI( hb_vmEvalBlockV( block, 1, p0 ) );
+      int result = hb_itemGetNI( hb_vmEvalBlockV( block, 1, p0 ) );
 
-   hb_itemRelease( p0 );
+      hb_itemRelease( p0 );
 
-   return result;
+      return result;
+   }
+   else
+   {
+      return 0;
+   }
 }
 
 int HbDbfModel::columnCount( const QModelIndex & /*parent = QModelIndex()*/ ) const
 {
-   PHB_ITEM p0 = hb_itemPutNI( NULL, HBQT_BRW_COLCOUNT );
+   if( hb_vmRequestReenter() )
+   {
+      PHB_ITEM p0 = hb_itemPutNI( NULL, HBQT_BRW_COLCOUNT );
 
-   int result = hb_itemGetNI( hb_vmEvalBlockV( block, 1, p0 ) );
+      int result = hb_itemGetNI( hb_vmEvalBlockV( block, 1, p0 ) );
 
-   hb_itemRelease( p0 );
+      hb_itemRelease( p0 );
 
-   return result;
+      return result;
+   }
+   else
+   {
+      return 0;
+   }
 }
 
 QModelIndex HbDbfModel::index( int row, int column, const QModelIndex & parent ) const
