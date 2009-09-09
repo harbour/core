@@ -18,6 +18,8 @@ export DETECT_MK_ := yes
 _DET_OPT_VERB := very
 
 # Reset everything to default
+export HB_HAS_ZLIB    :=
+export HB_HAS_PCRE    :=
 export HB_HAS_OPENSSL :=
 export HB_HAS_GPM     :=
 export HB_HAS_SLANG   :=
@@ -35,6 +37,30 @@ endif
 # Allow detection by external (generated) config file
 
 -include $(TOP)$(ROOT)config/conf.mk
+
+# Detect zlib
+
+_DET_DSP_NAME := zlib
+_DET_VAR_INC_ := HB_INC_ZLIB
+_DET_VAR_HAS_ := HB_HAS_ZLIB
+_DET_FLT_PLAT :=
+_DET_FLT_COMP :=
+_DET_INC_DEFP := /usr/include
+_DET_INC_HEAD := /zlib.h
+
+include $(TOP)$(ROOT)config/detfun.mk
+
+# Detect pcre
+
+_DET_DSP_NAME := pcre
+_DET_VAR_INC_ := HB_INC_PCRE
+_DET_VAR_HAS_ := HB_HAS_PCRE
+_DET_FLT_PLAT :=
+_DET_FLT_COMP :=
+_DET_INC_DEFP := /usr/include
+_DET_INC_HEAD := /pcre.h
+
+include $(TOP)$(ROOT)config/detfun.mk
 
 # Detect OpenSSL
 

@@ -35,10 +35,6 @@ ifneq ($(HB_BUILD_OPTIM),no)
    # Try to keep them this way.
    CFLAGS += -fast
    CFLAGS += -xnolibmopt
-   # workaround for problems in x86 PIC builds exploited by hbpcre library code
-   ifeq ($(LIBNAME),hbpcre)
-      CFLAGS += -xbuiltin=%none
-   endif
 endif
 
 # force position independent code for harbour shared library

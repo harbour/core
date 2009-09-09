@@ -30,4 +30,15 @@ C_SOURCES := \
 
 LIBNAME := hbpcre
 
+# workaround for problems in sunpro x86 PIC builds exploited by hbpcre library code
+ifeq ($(HB_COMPILER),sunpro)
+   ifeq ($(HB_PLATFORM),sunos)
+      ifeq ($(findstring sparc,$(shell isalist)),)
+         HB_CFLAGS += -xbuiltin=%none
+      endif
+   else
+      HB_CFLAGS += -xbuiltin=%none
+   endif
+endif
+
 include $(TOP)$(ROOT)config/lib.mk
