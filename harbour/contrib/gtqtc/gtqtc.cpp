@@ -1023,7 +1023,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_WINTITLE:
          if( pWVT->qWnd )
          {
-            pInfo->pResult = hb_itemPutCPtr( pInfo->pResult, pWVT->qWnd->windowTitle().toLatin1().data() );
+            pInfo->pResult = hb_itemPutCPtr( pInfo->pResult, pWVT->qWnd->windowTitle().toAscii().data() );
             if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
                pWVT->qWnd->setWindowTitle( hb_itemGetCPtr( pInfo->pNewVal ) );
          }
@@ -1091,7 +1091,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          else
          {
             QClipboard *cb = QApplication::clipboard();
-            pInfo->pResult = hb_itemPutC( pInfo->pResult, cb->text().toLatin1().data() );
+            pInfo->pResult = hb_itemPutC( pInfo->pResult, cb->text().toAscii().data() );
          }
 
          break;
@@ -2023,7 +2023,7 @@ static void hb_gt_wvt_QTranslateKeyAlpha( PHB_GTWVT pWVT, Qt::KeyboardModifiers 
       if( kbm & Qt::ControlModifier )
          hb_gt_wvt_AddCharToInputQueue( pWVT, controlkey );
       else
-         hb_gt_wvt_AddCharToInputQueue( pWVT, ( int ) *text.toLatin1().data() );
+         hb_gt_wvt_AddCharToInputQueue( pWVT, ( int ) *text.toAscii().data() );
    }
 }
 
