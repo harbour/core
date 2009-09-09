@@ -1,0 +1,6 @@
+#
+# $Id$
+#
+
+netiosrv.prg
+-onetiosrv_${hb_plat}
