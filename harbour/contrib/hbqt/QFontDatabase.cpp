@@ -167,7 +167,7 @@ HB_FUNC( QT_QFONTDATABASE_ITALIC )
  */
 HB_FUNC( QT_QFONTDATABASE_STYLESTRING )
 {
-   hb_retc( hbqt_par_QFontDatabase( 1 )->styleString( *hbqt_par_QFont( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QFontDatabase( 1 )->styleString( *hbqt_par_QFont( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -175,7 +175,7 @@ HB_FUNC( QT_QFONTDATABASE_STYLESTRING )
  */
 HB_FUNC( QT_QFONTDATABASE_STYLESTRING_1 )
 {
-   hb_retc( hbqt_par_QFontDatabase( 1 )->styleString( *hbqt_par_QFontInfo( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QFontDatabase( 1 )->styleString( *hbqt_par_QFontInfo( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -247,7 +247,7 @@ HB_FUNC( QT_QFONTDATABASE_SUPPORTSTHREADEDFONTRENDERING )
  */
 HB_FUNC( QT_QFONTDATABASE_WRITINGSYSTEMNAME )
 {
-   hb_retc( hbqt_par_QFontDatabase( 1 )->writingSystemName( ( QFontDatabase::WritingSystem ) hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QFontDatabase( 1 )->writingSystemName( ( QFontDatabase::WritingSystem ) hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -255,7 +255,7 @@ HB_FUNC( QT_QFONTDATABASE_WRITINGSYSTEMNAME )
  */
 HB_FUNC( QT_QFONTDATABASE_WRITINGSYSTEMSAMPLE )
 {
-   hb_retc( hbqt_par_QFontDatabase( 1 )->writingSystemSample( ( QFontDatabase::WritingSystem ) hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QFontDatabase( 1 )->writingSystemSample( ( QFontDatabase::WritingSystem ) hb_parni( 2 ) ).toAscii().data() );
 }
 
 

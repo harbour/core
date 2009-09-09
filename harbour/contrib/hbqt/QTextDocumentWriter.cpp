@@ -104,7 +104,7 @@ HB_FUNC( QT_QTEXTDOCUMENTWRITER_DEVICE )
  */
 HB_FUNC( QT_QTEXTDOCUMENTWRITER_FILENAME )
 {
-   hb_retc( hbqt_par_QTextDocumentWriter( 1 )->fileName().toLatin1().data() );
+   hb_retc( hbqt_par_QTextDocumentWriter( 1 )->fileName().toAscii().data() );
 }
 
 /*

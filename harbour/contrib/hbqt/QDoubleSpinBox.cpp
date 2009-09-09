@@ -85,7 +85,7 @@ HB_FUNC( QT_QDOUBLESPINBOX_DESTROY )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_CLEANTEXT )
 {
-   hb_retc( hbqt_par_QDoubleSpinBox( 1 )->cleanText().toLatin1().data() );
+   hb_retc( hbqt_par_QDoubleSpinBox( 1 )->cleanText().toAscii().data() );
 }
 
 /*
@@ -117,7 +117,7 @@ HB_FUNC( QT_QDOUBLESPINBOX_MINIMUM )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_PREFIX )
 {
-   hb_retc( hbqt_par_QDoubleSpinBox( 1 )->prefix().toLatin1().data() );
+   hb_retc( hbqt_par_QDoubleSpinBox( 1 )->prefix().toAscii().data() );
 }
 
 /*
@@ -189,7 +189,7 @@ HB_FUNC( QT_QDOUBLESPINBOX_SINGLESTEP )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_SUFFIX )
 {
-   hb_retc( hbqt_par_QDoubleSpinBox( 1 )->suffix().toLatin1().data() );
+   hb_retc( hbqt_par_QDoubleSpinBox( 1 )->suffix().toAscii().data() );
 }
 
 /*
@@ -197,7 +197,7 @@ HB_FUNC( QT_QDOUBLESPINBOX_SUFFIX )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_TEXTFROMVALUE )
 {
-   hb_retc( hbqt_par_QDoubleSpinBox( 1 )->textFromValue( hb_parnd( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QDoubleSpinBox( 1 )->textFromValue( hb_parnd( 2 ) ).toAscii().data() );
 }
 
 /*

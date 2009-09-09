@@ -255,7 +255,7 @@ HB_FUNC( QT_QTEXTLAYOUT_PREEDITAREAPOSITION )
  */
 HB_FUNC( QT_QTEXTLAYOUT_PREEDITAREATEXT )
 {
-   hb_retc( hbqt_par_QTextLayout( 1 )->preeditAreaText().toLatin1().data() );
+   hb_retc( hbqt_par_QTextLayout( 1 )->preeditAreaText().toAscii().data() );
 }
 
 /*
@@ -319,7 +319,7 @@ HB_FUNC( QT_QTEXTLAYOUT_SETTEXTOPTION )
  */
 HB_FUNC( QT_QTEXTLAYOUT_TEXT )
 {
-   hb_retc( hbqt_par_QTextLayout( 1 )->text().toLatin1().data() );
+   hb_retc( hbqt_par_QTextLayout( 1 )->text().toAscii().data() );
 }
 
 /*

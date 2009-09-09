@@ -86,7 +86,7 @@ HB_FUNC( QT_QRESOURCE_DESTROY )
  */
 HB_FUNC( QT_QRESOURCE_ABSOLUTEFILEPATH )
 {
-   hb_retc( hbqt_par_QResource( 1 )->absoluteFilePath().toLatin1().data() );
+   hb_retc( hbqt_par_QResource( 1 )->absoluteFilePath().toAscii().data() );
 }
 
 /*
@@ -102,7 +102,7 @@ HB_FUNC( QT_QRESOURCE_DATA )
  */
 HB_FUNC( QT_QRESOURCE_FILENAME )
 {
-   hb_retc( hbqt_par_QResource( 1 )->fileName().toLatin1().data() );
+   hb_retc( hbqt_par_QResource( 1 )->fileName().toAscii().data() );
 }
 
 /*

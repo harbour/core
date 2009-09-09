@@ -131,7 +131,7 @@ HB_FUNC( QT_QDIRMODEL_FILEINFO )
  */
 HB_FUNC( QT_QDIRMODEL_FILENAME )
 {
-   hb_retc( hbqt_par_QDirModel( 1 )->fileName( *hbqt_par_QModelIndex( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QDirModel( 1 )->fileName( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -139,7 +139,7 @@ HB_FUNC( QT_QDIRMODEL_FILENAME )
  */
 HB_FUNC( QT_QDIRMODEL_FILEPATH )
 {
-   hb_retc( hbqt_par_QDirModel( 1 )->filePath( *hbqt_par_QModelIndex( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QDirModel( 1 )->filePath( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() );
 }
 
 /*

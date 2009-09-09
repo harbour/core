@@ -91,7 +91,7 @@ HB_FUNC( QT_QTEXTCHARFORMAT_DESTROY )
  */
 HB_FUNC( QT_QTEXTCHARFORMAT_ANCHORHREF )
 {
-   hb_retc( hbqt_par_QTextCharFormat( 1 )->anchorHref().toLatin1().data() );
+   hb_retc( hbqt_par_QTextCharFormat( 1 )->anchorHref().toAscii().data() );
 }
 
 /*
@@ -123,7 +123,7 @@ HB_FUNC( QT_QTEXTCHARFORMAT_FONTCAPITALIZATION )
  */
 HB_FUNC( QT_QTEXTCHARFORMAT_FONTFAMILY )
 {
-   hb_retc( hbqt_par_QTextCharFormat( 1 )->fontFamily().toLatin1().data() );
+   hb_retc( hbqt_par_QTextCharFormat( 1 )->fontFamily().toAscii().data() );
 }
 
 /*
@@ -435,7 +435,7 @@ HB_FUNC( QT_QTEXTCHARFORMAT_TEXTOUTLINE )
  */
 HB_FUNC( QT_QTEXTCHARFORMAT_TOOLTIP )
 {
-   hb_retc( hbqt_par_QTextCharFormat( 1 )->toolTip().toLatin1().data() );
+   hb_retc( hbqt_par_QTextCharFormat( 1 )->toolTip().toAscii().data() );
 }
 
 /*

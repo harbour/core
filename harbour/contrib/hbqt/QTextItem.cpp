@@ -123,7 +123,7 @@ HB_FUNC( QT_QTEXTITEM_RENDERFLAGS )
  */
 HB_FUNC( QT_QTEXTITEM_TEXT )
 {
-   hb_retc( hbqt_par_QTextItem( 1 )->text().toLatin1().data() );
+   hb_retc( hbqt_par_QTextItem( 1 )->text().toAscii().data() );
 }
 
 /*

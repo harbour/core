@@ -231,7 +231,7 @@ HB_FUNC( QT_QLABEL_SETWORDWRAP )
  */
 HB_FUNC( QT_QLABEL_TEXT )
 {
-   hb_retc( hbqt_par_QLabel( 1 )->text().toLatin1().data() );
+   hb_retc( hbqt_par_QLabel( 1 )->text().toAscii().data() );
 }
 
 /*

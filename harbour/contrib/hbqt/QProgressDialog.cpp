@@ -103,7 +103,7 @@ HB_FUNC( QT_QPROGRESSDIALOG_AUTORESET )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_LABELTEXT )
 {
-   hb_retc( hbqt_par_QProgressDialog( 1 )->labelText().toLatin1().data() );
+   hb_retc( hbqt_par_QProgressDialog( 1 )->labelText().toAscii().data() );
 }
 
 /*

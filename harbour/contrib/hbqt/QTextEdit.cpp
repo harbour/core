@@ -123,7 +123,7 @@ HB_FUNC( QT_QTEXTEDIT_ALIGNMENT )
  */
 HB_FUNC( QT_QTEXTEDIT_ANCHORAT )
 {
-   hb_retc( hbqt_par_QTextEdit( 1 )->anchorAt( *hbqt_par_QPoint( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTextEdit( 1 )->anchorAt( *hbqt_par_QPoint( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -219,7 +219,7 @@ HB_FUNC( QT_QTEXTEDIT_DOCUMENT )
  */
 HB_FUNC( QT_QTEXTEDIT_DOCUMENTTITLE )
 {
-   hb_retc( hbqt_par_QTextEdit( 1 )->documentTitle().toLatin1().data() );
+   hb_retc( hbqt_par_QTextEdit( 1 )->documentTitle().toAscii().data() );
 }
 
 /*
@@ -243,7 +243,7 @@ HB_FUNC( QT_QTEXTEDIT_FIND )
  */
 HB_FUNC( QT_QTEXTEDIT_FONTFAMILY )
 {
-   hb_retc( hbqt_par_QTextEdit( 1 )->fontFamily().toLatin1().data() );
+   hb_retc( hbqt_par_QTextEdit( 1 )->fontFamily().toAscii().data() );
 }
 
 /*
@@ -531,7 +531,7 @@ HB_FUNC( QT_QTEXTEDIT_TEXTINTERACTIONFLAGS )
  */
 HB_FUNC( QT_QTEXTEDIT_TOHTML )
 {
-   hb_retc( hbqt_par_QTextEdit( 1 )->toHtml().toLatin1().data() );
+   hb_retc( hbqt_par_QTextEdit( 1 )->toHtml().toAscii().data() );
 }
 
 /*
@@ -539,7 +539,7 @@ HB_FUNC( QT_QTEXTEDIT_TOHTML )
  */
 HB_FUNC( QT_QTEXTEDIT_TOPLAINTEXT )
 {
-   hb_retc( hbqt_par_QTextEdit( 1 )->toPlainText().toLatin1().data() );
+   hb_retc( hbqt_par_QTextEdit( 1 )->toPlainText().toAscii().data() );
 }
 
 /*

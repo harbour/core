@@ -385,7 +385,7 @@ HB_FUNC( QT_QCOLOR_MAGENTAF )
  */
 HB_FUNC( QT_QCOLOR_NAME )
 {
-   hb_retc( hbqt_par_QColor( 1 )->name().toLatin1().data() );
+   hb_retc( hbqt_par_QColor( 1 )->name().toAscii().data() );
 }
 
 /*

@@ -173,7 +173,7 @@ HB_FUNC( QT_QHTTP_ERROR )
  */
 HB_FUNC( QT_QHTTP_ERRORSTRING )
 {
-   hb_retc( hbqt_par_QHttp( 1 )->errorString().toLatin1().data() );
+   hb_retc( hbqt_par_QHttp( 1 )->errorString().toAscii().data() );
 }
 
 /*

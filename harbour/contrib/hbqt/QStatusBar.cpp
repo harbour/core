@@ -102,7 +102,7 @@ HB_FUNC( QT_QSTATUSBAR_ADDWIDGET )
  */
 HB_FUNC( QT_QSTATUSBAR_CURRENTMESSAGE )
 {
-   hb_retc( hbqt_par_QStatusBar( 1 )->currentMessage().toLatin1().data() );
+   hb_retc( hbqt_par_QStatusBar( 1 )->currentMessage().toAscii().data() );
 }
 
 /*

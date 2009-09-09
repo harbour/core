@@ -572,7 +572,7 @@ HB_FUNC( QT_QIMAGE_SIZE )
  */
 HB_FUNC( QT_QIMAGE_TEXT )
 {
-   hb_retc( hbqt_par_QImage( 1 )->text( hbqt_par_QString( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QImage( 1 )->text( hbqt_par_QString( 2 ) ).toAscii().data() );
 }
 
 /*

@@ -87,7 +87,7 @@ HB_FUNC( QT_QCOMMANDLINKBUTTON_DESTROY )
  */
 HB_FUNC( QT_QCOMMANDLINKBUTTON_DESCRIPTION )
 {
-   hb_retc( hbqt_par_QCommandLinkButton( 1 )->description().toLatin1().data() );
+   hb_retc( hbqt_par_QCommandLinkButton( 1 )->description().toAscii().data() );
 }
 
 /*

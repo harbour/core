@@ -154,7 +154,7 @@ HB_FUNC( QT_QSTRINGLIST_INDEXOF_2 )
  */
 HB_FUNC( QT_QSTRINGLIST_JOIN )
 {
-   hb_retc( hbqt_par_QStringList( 1 )->join( hbqt_par_QString( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QStringList( 1 )->join( hbqt_par_QString( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -202,7 +202,7 @@ HB_FUNC( QT_QSTRINGLIST_SORT )
  */
 HB_FUNC( QT_QSTRINGLIST_AT )
 {
-   hb_retc( hbqt_par_QStringList( 1 )->at( hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QStringList( 1 )->at( hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -210,7 +210,7 @@ HB_FUNC( QT_QSTRINGLIST_AT )
  */
 HB_FUNC( QT_QSTRINGLIST_BACK )
 {
-   hb_retc( hbqt_par_QStringList( 1 )->back().toLatin1().data() );
+   hb_retc( hbqt_par_QStringList( 1 )->back().toAscii().data() );
 }
 
 /*
@@ -234,7 +234,7 @@ HB_FUNC( QT_QSTRINGLIST_ENDSWITH )
  */
 HB_FUNC( QT_QSTRINGLIST_FIRST )
 {
-   hb_retc( hbqt_par_QStringList( 1 )->first().toLatin1().data() );
+   hb_retc( hbqt_par_QStringList( 1 )->first().toAscii().data() );
 }
 
 /*
@@ -242,7 +242,7 @@ HB_FUNC( QT_QSTRINGLIST_FIRST )
  */
 HB_FUNC( QT_QSTRINGLIST_FIRST_1 )
 {
-   hb_retc( hbqt_par_QStringList( 1 )->first().toLatin1().data() );
+   hb_retc( hbqt_par_QStringList( 1 )->first().toAscii().data() );
 }
 
 /*
@@ -250,7 +250,7 @@ HB_FUNC( QT_QSTRINGLIST_FIRST_1 )
  */
 HB_FUNC( QT_QSTRINGLIST_FRONT )
 {
-   hb_retc( hbqt_par_QStringList( 1 )->front().toLatin1().data() );
+   hb_retc( hbqt_par_QStringList( 1 )->front().toAscii().data() );
 }
 
 /*
@@ -258,7 +258,7 @@ HB_FUNC( QT_QSTRINGLIST_FRONT )
  */
 HB_FUNC( QT_QSTRINGLIST_FRONT_1 )
 {
-   hb_retc( hbqt_par_QStringList( 1 )->front().toLatin1().data() );
+   hb_retc( hbqt_par_QStringList( 1 )->front().toAscii().data() );
 }
 
 /*
@@ -274,7 +274,7 @@ HB_FUNC( QT_QSTRINGLIST_INSERT )
  */
 HB_FUNC( QT_QSTRINGLIST_LAST )
 {
-   hb_retc( hbqt_par_QStringList( 1 )->last().toLatin1().data() );
+   hb_retc( hbqt_par_QStringList( 1 )->last().toAscii().data() );
 }
 
 /*
@@ -282,7 +282,7 @@ HB_FUNC( QT_QSTRINGLIST_LAST )
  */
 HB_FUNC( QT_QSTRINGLIST_LAST_1 )
 {
-   hb_retc( hbqt_par_QStringList( 1 )->last().toLatin1().data() );
+   hb_retc( hbqt_par_QStringList( 1 )->last().toAscii().data() );
 }
 
 /*
@@ -346,7 +346,7 @@ HB_FUNC( QT_QSTRINGLIST_STARTSWITH )
  */
 HB_FUNC( QT_QSTRINGLIST_TAKEAT )
 {
-   hb_retc( hbqt_par_QStringList( 1 )->takeAt( hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QStringList( 1 )->takeAt( hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -354,7 +354,7 @@ HB_FUNC( QT_QSTRINGLIST_TAKEAT )
  */
 HB_FUNC( QT_QSTRINGLIST_TAKEFIRST )
 {
-   hb_retc( hbqt_par_QStringList( 1 )->takeFirst().toLatin1().data() );
+   hb_retc( hbqt_par_QStringList( 1 )->takeFirst().toAscii().data() );
 }
 
 /*
@@ -362,7 +362,7 @@ HB_FUNC( QT_QSTRINGLIST_TAKEFIRST )
  */
 HB_FUNC( QT_QSTRINGLIST_TAKELAST )
 {
-   hb_retc( hbqt_par_QStringList( 1 )->takeLast().toLatin1().data() );
+   hb_retc( hbqt_par_QStringList( 1 )->takeLast().toAscii().data() );
 }
 
 /*
@@ -370,7 +370,7 @@ HB_FUNC( QT_QSTRINGLIST_TAKELAST )
  */
 HB_FUNC( QT_QSTRINGLIST_VALUE )
 {
-   hb_retc( hbqt_par_QStringList( 1 )->value( hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QStringList( 1 )->value( hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -378,7 +378,7 @@ HB_FUNC( QT_QSTRINGLIST_VALUE )
  */
 HB_FUNC( QT_QSTRINGLIST_VALUE_1 )
 {
-   hb_retc( hbqt_par_QStringList( 1 )->value( hb_parni( 2 ), hbqt_par_QString( 3 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QStringList( 1 )->value( hb_parni( 2 ), hbqt_par_QString( 3 ) ).toAscii().data() );
 }
 
 

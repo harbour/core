@@ -195,7 +195,7 @@ HB_FUNC( QT_QCLIPBOARD_SUPPORTSSELECTION )
  */
 HB_FUNC( QT_QCLIPBOARD_TEXT )
 {
-   hb_retc( hbqt_par_QClipboard( 1 )->text( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QClipboard( 1 )->text( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ).toAscii().data() );
 }
 
 

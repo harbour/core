@@ -469,7 +469,7 @@ HB_FUNC( QT_QTREEWIDGETITEM_SORTCHILDREN )
  */
 HB_FUNC( QT_QTREEWIDGETITEM_STATUSTIP )
 {
-   hb_retc( hbqt_par_QTreeWidgetItem( 1 )->statusTip( hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTreeWidgetItem( 1 )->statusTip( hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -485,7 +485,7 @@ HB_FUNC( QT_QTREEWIDGETITEM_TAKECHILD )
  */
 HB_FUNC( QT_QTREEWIDGETITEM_TEXT )
 {
-   hb_retc( hbqt_par_QTreeWidgetItem( 1 )->text( hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTreeWidgetItem( 1 )->text( hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -501,7 +501,7 @@ HB_FUNC( QT_QTREEWIDGETITEM_TEXTALIGNMENT )
  */
 HB_FUNC( QT_QTREEWIDGETITEM_TOOLTIP )
 {
-   hb_retc( hbqt_par_QTreeWidgetItem( 1 )->toolTip( hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTreeWidgetItem( 1 )->toolTip( hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -525,7 +525,7 @@ HB_FUNC( QT_QTREEWIDGETITEM_TYPE )
  */
 HB_FUNC( QT_QTREEWIDGETITEM_WHATSTHIS )
 {
-   hb_retc( hbqt_par_QTreeWidgetItem( 1 )->whatsThis( hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTreeWidgetItem( 1 )->whatsThis( hb_parni( 2 ) ).toAscii().data() );
 }
 
 

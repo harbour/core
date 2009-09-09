@@ -135,7 +135,7 @@ HB_FUNC( QT_QTEXTBOUNDARYFINDER_SETPOSITION )
  */
 HB_FUNC( QT_QTEXTBOUNDARYFINDER_STRING )
 {
-   hb_retc( hbqt_par_QTextBoundaryFinder( 1 )->string().toLatin1().data() );
+   hb_retc( hbqt_par_QTextBoundaryFinder( 1 )->string().toAscii().data() );
 }
 
 /*

@@ -142,7 +142,7 @@ HB_FUNC( QT_QFONT_CAPITALIZATION )
  */
 HB_FUNC( QT_QFONT_DEFAULTFAMILY )
 {
-   hb_retc( hbqt_par_QFont( 1 )->defaultFamily().toLatin1().data() );
+   hb_retc( hbqt_par_QFont( 1 )->defaultFamily().toAscii().data() );
 }
 
 /*
@@ -158,7 +158,7 @@ HB_FUNC( QT_QFONT_EXACTMATCH )
  */
 HB_FUNC( QT_QFONT_FAMILY )
 {
-   hb_retc( hbqt_par_QFont( 1 )->family().toLatin1().data() );
+   hb_retc( hbqt_par_QFont( 1 )->family().toAscii().data() );
 }
 
 /*
@@ -198,7 +198,7 @@ HB_FUNC( QT_QFONT_KERNING )
  */
 HB_FUNC( QT_QFONT_KEY )
 {
-   hb_retc( hbqt_par_QFont( 1 )->key().toLatin1().data() );
+   hb_retc( hbqt_par_QFont( 1 )->key().toAscii().data() );
 }
 
 /*
@@ -206,7 +206,7 @@ HB_FUNC( QT_QFONT_KEY )
  */
 HB_FUNC( QT_QFONT_LASTRESORTFAMILY )
 {
-   hb_retc( hbqt_par_QFont( 1 )->lastResortFamily().toLatin1().data() );
+   hb_retc( hbqt_par_QFont( 1 )->lastResortFamily().toAscii().data() );
 }
 
 /*
@@ -214,7 +214,7 @@ HB_FUNC( QT_QFONT_LASTRESORTFAMILY )
  */
 HB_FUNC( QT_QFONT_LASTRESORTFONT )
 {
-   hb_retc( hbqt_par_QFont( 1 )->lastResortFont().toLatin1().data() );
+   hb_retc( hbqt_par_QFont( 1 )->lastResortFont().toAscii().data() );
 }
 
 /*
@@ -278,7 +278,7 @@ HB_FUNC( QT_QFONT_RAWMODE )
  */
 HB_FUNC( QT_QFONT_RAWNAME )
 {
-   hb_retc( hbqt_par_QFont( 1 )->rawName().toLatin1().data() );
+   hb_retc( hbqt_par_QFont( 1 )->rawName().toAscii().data() );
 }
 
 /*
@@ -494,7 +494,7 @@ HB_FUNC( QT_QFONT_STYLESTRATEGY )
  */
 HB_FUNC( QT_QFONT_TOSTRING )
 {
-   hb_retc( hbqt_par_QFont( 1 )->toString().toLatin1().data() );
+   hb_retc( hbqt_par_QFont( 1 )->toString().toAscii().data() );
 }
 
 /*
@@ -566,7 +566,7 @@ HB_FUNC( QT_QFONT_REMOVESUBSTITUTION )
  */
 HB_FUNC( QT_QFONT_SUBSTITUTE )
 {
-   hb_retc( hbqt_par_QFont( 1 )->substitute( hbqt_par_QString( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QFont( 1 )->substitute( hbqt_par_QString( 2 ) ).toAscii().data() );
 }
 
 /*

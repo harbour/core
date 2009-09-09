@@ -321,7 +321,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_SIZEHINT )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_STATUSTIP )
 {
-   hb_retc( hbqt_par_QTableWidgetItem( 1 )->statusTip().toLatin1().data() );
+   hb_retc( hbqt_par_QTableWidgetItem( 1 )->statusTip().toAscii().data() );
 }
 
 /*
@@ -337,7 +337,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_TABLEWIDGET )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_TEXT )
 {
-   hb_retc( hbqt_par_QTableWidgetItem( 1 )->text().toLatin1().data() );
+   hb_retc( hbqt_par_QTableWidgetItem( 1 )->text().toAscii().data() );
 }
 
 /*
@@ -353,7 +353,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_TEXTALIGNMENT )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_TOOLTIP )
 {
-   hb_retc( hbqt_par_QTableWidgetItem( 1 )->toolTip().toLatin1().data() );
+   hb_retc( hbqt_par_QTableWidgetItem( 1 )->toolTip().toAscii().data() );
 }
 
 /*
@@ -369,7 +369,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_TYPE )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_WHATSTHIS )
 {
-   hb_retc( hbqt_par_QTableWidgetItem( 1 )->whatsThis().toLatin1().data() );
+   hb_retc( hbqt_par_QTableWidgetItem( 1 )->whatsThis().toAscii().data() );
 }
 
 /*

@@ -225,7 +225,7 @@ HB_FUNC( QT_QDATETIME_TOLOCALTIME )
  */
 HB_FUNC( QT_QDATETIME_TOSTRING )
 {
-   hb_retc( hbqt_par_QDateTime( 1 )->toString( hbqt_par_QString( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QDateTime( 1 )->toString( hbqt_par_QString( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -233,7 +233,7 @@ HB_FUNC( QT_QDATETIME_TOSTRING )
  */
 HB_FUNC( QT_QDATETIME_TOSTRING_1 )
 {
-   hb_retc( hbqt_par_QDateTime( 1 )->toString( ( HB_ISNUM( 2 ) ? ( Qt::DateFormat ) hb_parni( 2 ) : ( Qt::DateFormat ) Qt::TextDate ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QDateTime( 1 )->toString( ( HB_ISNUM( 2 ) ? ( Qt::DateFormat ) hb_parni( 2 ) : ( Qt::DateFormat ) Qt::TextDate ) ).toAscii().data() );
 }
 
 /*

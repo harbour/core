@@ -317,7 +317,7 @@ HB_FUNC( QT_QLISTWIDGETITEM_SIZEHINT )
  */
 HB_FUNC( QT_QLISTWIDGETITEM_STATUSTIP )
 {
-   hb_retc( hbqt_par_QListWidgetItem( 1 )->statusTip().toLatin1().data() );
+   hb_retc( hbqt_par_QListWidgetItem( 1 )->statusTip().toAscii().data() );
 }
 
 /*
@@ -325,7 +325,7 @@ HB_FUNC( QT_QLISTWIDGETITEM_STATUSTIP )
  */
 HB_FUNC( QT_QLISTWIDGETITEM_TEXT )
 {
-   hb_retc( hbqt_par_QListWidgetItem( 1 )->text().toLatin1().data() );
+   hb_retc( hbqt_par_QListWidgetItem( 1 )->text().toAscii().data() );
 }
 
 /*
@@ -341,7 +341,7 @@ HB_FUNC( QT_QLISTWIDGETITEM_TEXTALIGNMENT )
  */
 HB_FUNC( QT_QLISTWIDGETITEM_TOOLTIP )
 {
-   hb_retc( hbqt_par_QListWidgetItem( 1 )->toolTip().toLatin1().data() );
+   hb_retc( hbqt_par_QListWidgetItem( 1 )->toolTip().toAscii().data() );
 }
 
 /*
@@ -357,7 +357,7 @@ HB_FUNC( QT_QLISTWIDGETITEM_TYPE )
  */
 HB_FUNC( QT_QLISTWIDGETITEM_WHATSTHIS )
 {
-   hb_retc( hbqt_par_QListWidgetItem( 1 )->whatsThis().toLatin1().data() );
+   hb_retc( hbqt_par_QListWidgetItem( 1 )->whatsThis().toAscii().data() );
 }
 
 /*

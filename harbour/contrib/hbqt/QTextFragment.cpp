@@ -134,7 +134,7 @@ HB_FUNC( QT_QTEXTFRAGMENT_POSITION )
  */
 HB_FUNC( QT_QTEXTFRAGMENT_TEXT )
 {
-   hb_retc( hbqt_par_QTextFragment( 1 )->text().toLatin1().data() );
+   hb_retc( hbqt_par_QTextFragment( 1 )->text().toAscii().data() );
 }
 
 

@@ -129,7 +129,7 @@ HB_FUNC( QT_QWIDGET_ACCEPTDROPS )
  */
 HB_FUNC( QT_QWIDGET_ACCESSIBLEDESCRIPTION )
 {
-   hb_retc( hbqt_par_QWidget( 1 )->accessibleDescription().toLatin1().data() );
+   hb_retc( hbqt_par_QWidget( 1 )->accessibleDescription().toAscii().data() );
 }
 
 /*
@@ -137,7 +137,7 @@ HB_FUNC( QT_QWIDGET_ACCESSIBLEDESCRIPTION )
  */
 HB_FUNC( QT_QWIDGET_ACCESSIBLENAME )
 {
-   hb_retc( hbqt_par_QWidget( 1 )->accessibleName().toLatin1().data() );
+   hb_retc( hbqt_par_QWidget( 1 )->accessibleName().toAscii().data() );
 }
 
 /*
@@ -1411,7 +1411,7 @@ HB_FUNC( QT_QWIDGET_STACKUNDER )
  */
 HB_FUNC( QT_QWIDGET_STATUSTIP )
 {
-   hb_retc( hbqt_par_QWidget( 1 )->statusTip().toLatin1().data() );
+   hb_retc( hbqt_par_QWidget( 1 )->statusTip().toAscii().data() );
 }
 
 /*
@@ -1427,7 +1427,7 @@ HB_FUNC( QT_QWIDGET_STYLE )
  */
 HB_FUNC( QT_QWIDGET_STYLESHEET )
 {
-   hb_retc( hbqt_par_QWidget( 1 )->styleSheet().toLatin1().data() );
+   hb_retc( hbqt_par_QWidget( 1 )->styleSheet().toAscii().data() );
 }
 
 /*
@@ -1443,7 +1443,7 @@ HB_FUNC( QT_QWIDGET_TESTATTRIBUTE )
  */
 HB_FUNC( QT_QWIDGET_TOOLTIP )
 {
-   hb_retc( hbqt_par_QWidget( 1 )->toolTip().toLatin1().data() );
+   hb_retc( hbqt_par_QWidget( 1 )->toolTip().toAscii().data() );
 }
 
 /*
@@ -1531,7 +1531,7 @@ HB_FUNC( QT_QWIDGET_VISIBLEREGION )
  */
 HB_FUNC( QT_QWIDGET_WHATSTHIS )
 {
-   hb_retc( hbqt_par_QWidget( 1 )->whatsThis().toLatin1().data() );
+   hb_retc( hbqt_par_QWidget( 1 )->whatsThis().toAscii().data() );
 }
 
 /*
@@ -1563,7 +1563,7 @@ HB_FUNC( QT_QWIDGET_WINDOW )
  */
 HB_FUNC( QT_QWIDGET_WINDOWFILEPATH )
 {
-   hb_retc( hbqt_par_QWidget( 1 )->windowFilePath().toLatin1().data() );
+   hb_retc( hbqt_par_QWidget( 1 )->windowFilePath().toAscii().data() );
 }
 
 /*
@@ -1587,7 +1587,7 @@ HB_FUNC( QT_QWIDGET_WINDOWICON )
  */
 HB_FUNC( QT_QWIDGET_WINDOWICONTEXT )
 {
-   hb_retc( hbqt_par_QWidget( 1 )->windowIconText().toLatin1().data() );
+   hb_retc( hbqt_par_QWidget( 1 )->windowIconText().toAscii().data() );
 }
 
 /*
@@ -1611,7 +1611,7 @@ HB_FUNC( QT_QWIDGET_WINDOWOPACITY )
  */
 HB_FUNC( QT_QWIDGET_WINDOWROLE )
 {
-   hb_retc( hbqt_par_QWidget( 1 )->windowRole().toLatin1().data() );
+   hb_retc( hbqt_par_QWidget( 1 )->windowRole().toAscii().data() );
 }
 
 /*
@@ -1635,7 +1635,7 @@ HB_FUNC( QT_QWIDGET_WINDOWSURFACE )
  */
 HB_FUNC( QT_QWIDGET_WINDOWTITLE )
 {
-   hb_retc( hbqt_par_QWidget( 1 )->windowTitle().toLatin1().data() );
+   hb_retc( hbqt_par_QWidget( 1 )->windowTitle().toAscii().data() );
 }
 
 /*

@@ -123,7 +123,7 @@ HB_FUNC( QT_QWEBFRAME_CONTENTSSIZE )
  */
 HB_FUNC( QT_QWEBFRAME_FRAMENAME )
 {
-   hb_retc( hbqt_par_QWebFrame( 1 )->frameName().toLatin1().data() );
+   hb_retc( hbqt_par_QWebFrame( 1 )->frameName().toAscii().data() );
 }
 
 /*
@@ -203,7 +203,7 @@ HB_FUNC( QT_QWEBFRAME_RENDER_1 )
  */
 HB_FUNC( QT_QWEBFRAME_RENDERTREEDUMP )
 {
-   hb_retc( hbqt_par_QWebFrame( 1 )->renderTreeDump().toLatin1().data() );
+   hb_retc( hbqt_par_QWebFrame( 1 )->renderTreeDump().toAscii().data() );
 }
 
 /*
@@ -339,7 +339,7 @@ HB_FUNC( QT_QWEBFRAME_TEXTSIZEMULTIPLIER )
  */
 HB_FUNC( QT_QWEBFRAME_TITLE )
 {
-   hb_retc( hbqt_par_QWebFrame( 1 )->title().toLatin1().data() );
+   hb_retc( hbqt_par_QWebFrame( 1 )->title().toAscii().data() );
 }
 
 /*
@@ -347,7 +347,7 @@ HB_FUNC( QT_QWEBFRAME_TITLE )
  */
 HB_FUNC( QT_QWEBFRAME_TOHTML )
 {
-   hb_retc( hbqt_par_QWebFrame( 1 )->toHtml().toLatin1().data() );
+   hb_retc( hbqt_par_QWebFrame( 1 )->toHtml().toAscii().data() );
 }
 
 /*
@@ -355,7 +355,7 @@ HB_FUNC( QT_QWEBFRAME_TOHTML )
  */
 HB_FUNC( QT_QWEBFRAME_TOPLAINTEXT )
 {
-   hb_retc( hbqt_par_QWebFrame( 1 )->toPlainText().toLatin1().data() );
+   hb_retc( hbqt_par_QWebFrame( 1 )->toPlainText().toAscii().data() );
 }
 
 /*

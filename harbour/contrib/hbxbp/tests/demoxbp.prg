@@ -92,26 +92,26 @@ STATIC oMLE
 
 PROCEDURE Main()
 
+   //hb_threadStart( {|| _BuildADialog() } )
    _BuildADialog()
 
    RETURN
 
 /*----------------------------------------------------------------------*/
 
-PROCEDURE _BuildADialog()
-
+FUNCTION _BuildADialog()
+xbp_debug( 1 )
    hb_gtReload( 'GUI' )
+xbp_debug( 2 )
    BuildADialog()
 
-   RETURN
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
 PROCEDURE BuildADialog()
-   LOCAL oDlg, mp1, mp2, oXbp, nEvent, aSize, aTabs, oDa
+   LOCAL oDlg, mp1, mp2, oXbp, nEvent, aSize, aTabs, oDa, oHtm
    LOCAL nThread := ThreadID()
-   //LOCAL cThread := hb_ntos( nThread )
-   LOCAL oHtm
 
    /* Create Application Window */
    oDlg := GuiStdDialog( "Harbour - Xbase++ - QT Dialog  [ "+ hb_ntos( nThread )+" ]" )
@@ -360,9 +360,9 @@ STATIC FUNCTION Build_MenuBar( oDlg )
       oSubMenu:title := "~Dialogs"
       #if 1             /*  T H R E D E D   D I A L O G */
          oSubMenu:addItem( { "~One More Instance"+ chr( K_TAB ) +"Ctrl+M", ;
-                                    {|| hb_threadStart( {|| _BuildADialog() } ) } } )
+                                    {|| hb_threadStart( {|| BuildADialog() } ) } } )
       #else
-         oSubMenu:addItem( { "~One More Instance"+ chr( K_TAB )+ "Ctrl+M", {|| BuildADialog() } } )
+         oSubMenu:addItem( { "~One More Instance"+ chr( K_TAB )+ "Ctrl+M", {|| _BuildADialog() } } )
       #endif
    #endif
    #endif

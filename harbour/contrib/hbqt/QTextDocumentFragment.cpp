@@ -97,7 +97,7 @@ HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_ISEMPTY )
  */
 HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_TOHTML )
 {
-   hb_retc( hbqt_par_QTextDocumentFragment( 1 )->toHtml( *hbqt_par_QByteArray( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTextDocumentFragment( 1 )->toHtml( *hbqt_par_QByteArray( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -105,7 +105,7 @@ HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_TOHTML )
  */
 HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_TOHTML_1 )
 {
-   hb_retc( hbqt_par_QTextDocumentFragment( 1 )->toHtml().toLatin1().data() );
+   hb_retc( hbqt_par_QTextDocumentFragment( 1 )->toHtml().toAscii().data() );
 }
 
 /*
@@ -113,7 +113,7 @@ HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_TOHTML_1 )
  */
 HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_TOPLAINTEXT )
 {
-   hb_retc( hbqt_par_QTextDocumentFragment( 1 )->toPlainText().toLatin1().data() );
+   hb_retc( hbqt_par_QTextDocumentFragment( 1 )->toPlainText().toAscii().data() );
 }
 
 /*

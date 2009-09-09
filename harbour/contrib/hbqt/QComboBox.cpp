@@ -139,7 +139,7 @@ HB_FUNC( QT_QCOMBOBOX_CURRENTINDEX )
  */
 HB_FUNC( QT_QCOMBOBOX_CURRENTTEXT )
 {
-   hb_retc( hbqt_par_QComboBox( 1 )->currentText().toLatin1().data() );
+   hb_retc( hbqt_par_QComboBox( 1 )->currentText().toAscii().data() );
 }
 
 /*
@@ -267,7 +267,7 @@ HB_FUNC( QT_QCOMBOBOX_ITEMICON )
  */
 HB_FUNC( QT_QCOMBOBOX_ITEMTEXT )
 {
-   hb_retc( hbqt_par_QComboBox( 1 )->itemText( hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QComboBox( 1 )->itemText( hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*

@@ -133,7 +133,7 @@ HB_FUNC( QT_QIMAGEWRITER_ERROR )
  */
 HB_FUNC( QT_QIMAGEWRITER_ERRORSTRING )
 {
-   hb_retc( hbqt_par_QImageWriter( 1 )->errorString().toLatin1().data() );
+   hb_retc( hbqt_par_QImageWriter( 1 )->errorString().toAscii().data() );
 }
 
 /*
@@ -141,7 +141,7 @@ HB_FUNC( QT_QIMAGEWRITER_ERRORSTRING )
  */
 HB_FUNC( QT_QIMAGEWRITER_FILENAME )
 {
-   hb_retc( hbqt_par_QImageWriter( 1 )->fileName().toLatin1().data() );
+   hb_retc( hbqt_par_QImageWriter( 1 )->fileName().toAscii().data() );
 }
 
 /*

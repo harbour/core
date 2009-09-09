@@ -102,7 +102,7 @@ HB_FUNC( QT_QTEXTIMAGEFORMAT_ISVALID )
  */
 HB_FUNC( QT_QTEXTIMAGEFORMAT_NAME )
 {
-   hb_retc( hbqt_par_QTextImageFormat( 1 )->name().toLatin1().data() );
+   hb_retc( hbqt_par_QTextImageFormat( 1 )->name().toAscii().data() );
 }
 
 /*

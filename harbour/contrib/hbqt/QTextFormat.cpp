@@ -371,7 +371,7 @@ HB_FUNC( QT_QTEXTFORMAT_SETPROPERTY )
  */
 HB_FUNC( QT_QTEXTFORMAT_STRINGPROPERTY )
 {
-   hb_retc( hbqt_par_QTextFormat( 1 )->stringProperty( hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTextFormat( 1 )->stringProperty( hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*

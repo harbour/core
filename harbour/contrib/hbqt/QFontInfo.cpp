@@ -103,7 +103,7 @@ HB_FUNC( QT_QFONTINFO_EXACTMATCH )
  */
 HB_FUNC( QT_QFONTINFO_FAMILY )
 {
-   hb_retc( hbqt_par_QFontInfo( 1 )->family().toLatin1().data() );
+   hb_retc( hbqt_par_QFontInfo( 1 )->family().toAscii().data() );
 }
 
 /*

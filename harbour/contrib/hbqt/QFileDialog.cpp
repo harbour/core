@@ -129,7 +129,7 @@ HB_FUNC( QT_QFILEDIALOG_CONFIRMOVERWRITE )
  */
 HB_FUNC( QT_QFILEDIALOG_DEFAULTSUFFIX )
 {
-   hb_retc( hbqt_par_QFileDialog( 1 )->defaultSuffix().toLatin1().data() );
+   hb_retc( hbqt_par_QFileDialog( 1 )->defaultSuffix().toAscii().data() );
 }
 
 /*
@@ -201,7 +201,7 @@ HB_FUNC( QT_QFILEDIALOG_ITEMDELEGATE )
  */
 HB_FUNC( QT_QFILEDIALOG_LABELTEXT )
 {
-   hb_retc( hbqt_par_QFileDialog( 1 )->labelText( ( QFileDialog::DialogLabel ) hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QFileDialog( 1 )->labelText( ( QFileDialog::DialogLabel ) hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -281,7 +281,7 @@ HB_FUNC( QT_QFILEDIALOG_SELECTEDFILES )
  */
 HB_FUNC( QT_QFILEDIALOG_SELECTEDNAMEFILTER )
 {
-   hb_retc( hbqt_par_QFileDialog( 1 )->selectedNameFilter().toLatin1().data() );
+   hb_retc( hbqt_par_QFileDialog( 1 )->selectedNameFilter().toAscii().data() );
 }
 
 /*
@@ -465,7 +465,7 @@ HB_FUNC( QT_QFILEDIALOG_VIEWMODE )
  */
 HB_FUNC( QT_QFILEDIALOG_GETEXISTINGDIRECTORY )
 {
-   hb_retc( hbqt_par_QFileDialog( 1 )->getExistingDirectory( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ), ( HB_ISNUM( 5 ) ? ( QFileDialog::Options ) hb_parni( 5 ) : ( QFileDialog::Options ) QFileDialog::ShowDirsOnly ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QFileDialog( 1 )->getExistingDirectory( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ), ( HB_ISNUM( 5 ) ? ( QFileDialog::Options ) hb_parni( 5 ) : ( QFileDialog::Options ) QFileDialog::ShowDirsOnly ) ).toAscii().data() );
 }
 
 

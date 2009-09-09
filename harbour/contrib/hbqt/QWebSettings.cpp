@@ -93,7 +93,7 @@ HB_FUNC( QT_QWEBSETTINGS_DESTROY )
  */
 HB_FUNC( QT_QWEBSETTINGS_FONTFAMILY )
 {
-   hb_retc( hbqt_par_QWebSettings( 1 )->fontFamily( ( QWebSettings::FontFamily ) hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QWebSettings( 1 )->fontFamily( ( QWebSettings::FontFamily ) hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -197,7 +197,7 @@ HB_FUNC( QT_QWEBSETTINGS_GLOBALSETTINGS )
  */
 HB_FUNC( QT_QWEBSETTINGS_ICONDATABASEPATH )
 {
-   hb_retc( hbqt_par_QWebSettings( 1 )->iconDatabasePath().toLatin1().data() );
+   hb_retc( hbqt_par_QWebSettings( 1 )->iconDatabasePath().toAscii().data() );
 }
 
 /*
@@ -229,7 +229,7 @@ HB_FUNC( QT_QWEBSETTINGS_OFFLINESTORAGEDEFAULTQUOTA )
  */
 HB_FUNC( QT_QWEBSETTINGS_OFFLINESTORAGEPATH )
 {
-   hb_retc( hbqt_par_QWebSettings( 1 )->offlineStoragePath().toLatin1().data() );
+   hb_retc( hbqt_par_QWebSettings( 1 )->offlineStoragePath().toAscii().data() );
 }
 
 /*

@@ -97,7 +97,7 @@ HB_FUNC( QT_QPROGRESSBAR_ALIGNMENT )
  */
 HB_FUNC( QT_QPROGRESSBAR_FORMAT )
 {
-   hb_retc( hbqt_par_QProgressBar( 1 )->format().toLatin1().data() );
+   hb_retc( hbqt_par_QProgressBar( 1 )->format().toAscii().data() );
 }
 
 /*
@@ -185,7 +185,7 @@ HB_FUNC( QT_QPROGRESSBAR_SETTEXTVISIBLE )
  */
 HB_FUNC( QT_QPROGRESSBAR_TEXT )
 {
-   hb_retc( hbqt_par_QProgressBar( 1 )->text().toLatin1().data() );
+   hb_retc( hbqt_par_QProgressBar( 1 )->text().toAscii().data() );
 }
 
 /*

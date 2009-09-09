@@ -173,7 +173,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_DEFAULTFONT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_DEFAULTSTYLESHEET )
 {
-   hb_retc( hbqt_par_QTextDocument( 1 )->defaultStyleSheet().toLatin1().data() );
+   hb_retc( hbqt_par_QTextDocument( 1 )->defaultStyleSheet().toAscii().data() );
 }
 
 /*
@@ -373,7 +373,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_MAXIMUMBLOCKCOUNT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_METAINFORMATION )
 {
-   hb_retc( hbqt_par_QTextDocument( 1 )->metaInformation( ( QTextDocument::MetaInformation ) hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTextDocument( 1 )->metaInformation( ( QTextDocument::MetaInformation ) hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -581,7 +581,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_TEXTWIDTH )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_TOHTML )
 {
-   hb_retc( hbqt_par_QTextDocument( 1 )->toHtml( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QByteArray( 2 ) : QByteArray() ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTextDocument( 1 )->toHtml( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QByteArray( 2 ) : QByteArray() ) ).toAscii().data() );
 }
 
 /*
@@ -589,7 +589,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_TOHTML )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_TOPLAINTEXT )
 {
-   hb_retc( hbqt_par_QTextDocument( 1 )->toPlainText().toLatin1().data() );
+   hb_retc( hbqt_par_QTextDocument( 1 )->toPlainText().toAscii().data() );
 }
 
 /*

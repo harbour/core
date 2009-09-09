@@ -121,7 +121,7 @@ HB_FUNC( QT_QCOREAPPLICATION_ADDLIBRARYPATH )
  */
 HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONDIRPATH )
 {
-   hb_retc( hbqt_par_QCoreApplication( 1 )->applicationDirPath().toLatin1().data() );
+   hb_retc( hbqt_par_QCoreApplication( 1 )->applicationDirPath().toAscii().data() );
 }
 
 /*
@@ -129,7 +129,7 @@ HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONDIRPATH )
  */
 HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONFILEPATH )
 {
-   hb_retc( hbqt_par_QCoreApplication( 1 )->applicationFilePath().toLatin1().data() );
+   hb_retc( hbqt_par_QCoreApplication( 1 )->applicationFilePath().toAscii().data() );
 }
 
 /*
@@ -137,7 +137,7 @@ HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONFILEPATH )
  */
 HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONNAME )
 {
-   hb_retc( hbqt_par_QCoreApplication( 1 )->applicationName().toLatin1().data() );
+   hb_retc( hbqt_par_QCoreApplication( 1 )->applicationName().toAscii().data() );
 }
 
 /*
@@ -153,7 +153,7 @@ HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONPID )
  */
 HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONVERSION )
 {
-   hb_retc( hbqt_par_QCoreApplication( 1 )->applicationVersion().toLatin1().data() );
+   hb_retc( hbqt_par_QCoreApplication( 1 )->applicationVersion().toAscii().data() );
 }
 
 /*
@@ -233,7 +233,7 @@ HB_FUNC( QT_QCOREAPPLICATION_LIBRARYPATHS )
  */
 HB_FUNC( QT_QCOREAPPLICATION_ORGANIZATIONDOMAIN )
 {
-   hb_retc( hbqt_par_QCoreApplication( 1 )->organizationDomain().toLatin1().data() );
+   hb_retc( hbqt_par_QCoreApplication( 1 )->organizationDomain().toAscii().data() );
 }
 
 /*
@@ -241,7 +241,7 @@ HB_FUNC( QT_QCOREAPPLICATION_ORGANIZATIONDOMAIN )
  */
 HB_FUNC( QT_QCOREAPPLICATION_ORGANIZATIONNAME )
 {
-   hb_retc( hbqt_par_QCoreApplication( 1 )->organizationName().toLatin1().data() );
+   hb_retc( hbqt_par_QCoreApplication( 1 )->organizationName().toAscii().data() );
 }
 
 /*
@@ -401,7 +401,7 @@ HB_FUNC( QT_QCOREAPPLICATION_TESTATTRIBUTE )
  */
 HB_FUNC( QT_QCOREAPPLICATION_TRANSLATE )
 {
-   hb_retc( hbqt_par_QCoreApplication( 1 )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( QCoreApplication::Encoding ) hb_parni( 5 ), hb_parni( 6 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QCoreApplication( 1 )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( QCoreApplication::Encoding ) hb_parni( 5 ), hb_parni( 6 ) ).toAscii().data() );
 }
 
 /*
@@ -409,7 +409,7 @@ HB_FUNC( QT_QCOREAPPLICATION_TRANSLATE )
  */
 HB_FUNC( QT_QCOREAPPLICATION_TRANSLATE_1 )
 {
-   hb_retc( hbqt_par_QCoreApplication( 1 )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( HB_ISNUM( 5 ) ? ( QCoreApplication::Encoding ) hb_parni( 5 ) : ( QCoreApplication::Encoding ) QCoreApplication::CodecForTr ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QCoreApplication( 1 )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( HB_ISNUM( 5 ) ? ( QCoreApplication::Encoding ) hb_parni( 5 ) : ( QCoreApplication::Encoding ) QCoreApplication::CodecForTr ) ).toAscii().data() );
 }
 
 /*

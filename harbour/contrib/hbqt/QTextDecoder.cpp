@@ -86,7 +86,7 @@ HB_FUNC( QT_QTEXTDECODER_DESTROY )
  */
 HB_FUNC( QT_QTEXTDECODER_TOUNICODE )
 {
-   hb_retc( hbqt_par_QTextDecoder( 1 )->toUnicode( hbqt_par_char( 2 ), hb_parni( 3 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTextDecoder( 1 )->toUnicode( hbqt_par_char( 2 ), hb_parni( 3 ) ).toAscii().data() );
 }
 
 

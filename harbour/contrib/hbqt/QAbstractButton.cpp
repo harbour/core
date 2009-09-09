@@ -246,7 +246,7 @@ HB_FUNC( QT_QABSTRACTBUTTON_SHORTCUT )
  */
 HB_FUNC( QT_QABSTRACTBUTTON_TEXT )
 {
-   hb_retc( hbqt_par_QAbstractButton( 1 )->text().toLatin1().data() );
+   hb_retc( hbqt_par_QAbstractButton( 1 )->text().toAscii().data() );
 }
 
 /*

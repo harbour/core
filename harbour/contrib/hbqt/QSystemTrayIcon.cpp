@@ -156,7 +156,7 @@ HB_FUNC( QT_QSYSTEMTRAYICON_SHOWMESSAGE )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_TOOLTIP )
 {
-   hb_retc( hbqt_par_QSystemTrayIcon( 1 )->toolTip().toLatin1().data() );
+   hb_retc( hbqt_par_QSystemTrayIcon( 1 )->toolTip().toAscii().data() );
 }
 
 /*

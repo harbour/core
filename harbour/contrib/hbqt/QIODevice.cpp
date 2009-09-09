@@ -141,7 +141,7 @@ HB_FUNC( QT_QIODEVICE_CLOSE )
  */
 HB_FUNC( QT_QIODEVICE_ERRORSTRING )
 {
-   hb_retc( hbqt_par_QIODevice( 1 )->errorString().toLatin1().data() );
+   hb_retc( hbqt_par_QIODevice( 1 )->errorString().toAscii().data() );
 }
 
 /*

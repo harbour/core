@@ -86,7 +86,7 @@ HB_FUNC( QT_QSOUND_DESTROY )
  */
 HB_FUNC( QT_QSOUND_FILENAME )
 {
-   hb_retc( hbqt_par_QSound( 1 )->fileName().toLatin1().data() );
+   hb_retc( hbqt_par_QSound( 1 )->fileName().toAscii().data() );
 }
 
 /*

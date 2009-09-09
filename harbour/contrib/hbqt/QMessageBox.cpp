@@ -159,7 +159,7 @@ HB_FUNC( QT_QMESSAGEBOX_DEFAULTBUTTON )
  */
 HB_FUNC( QT_QMESSAGEBOX_DETAILEDTEXT )
 {
-   hb_retc( hbqt_par_QMessageBox( 1 )->detailedText().toLatin1().data() );
+   hb_retc( hbqt_par_QMessageBox( 1 )->detailedText().toAscii().data() );
 }
 
 /*
@@ -191,7 +191,7 @@ HB_FUNC( QT_QMESSAGEBOX_ICONPIXMAP )
  */
 HB_FUNC( QT_QMESSAGEBOX_INFORMATIVETEXT )
 {
-   hb_retc( hbqt_par_QMessageBox( 1 )->informativeText().toLatin1().data() );
+   hb_retc( hbqt_par_QMessageBox( 1 )->informativeText().toAscii().data() );
 }
 
 /*
@@ -335,7 +335,7 @@ HB_FUNC( QT_QMESSAGEBOX_STANDARDBUTTONS )
  */
 HB_FUNC( QT_QMESSAGEBOX_TEXT )
 {
-   hb_retc( hbqt_par_QMessageBox( 1 )->text().toLatin1().data() );
+   hb_retc( hbqt_par_QMessageBox( 1 )->text().toAscii().data() );
 }
 
 /*

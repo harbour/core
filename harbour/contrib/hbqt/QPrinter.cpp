@@ -142,7 +142,7 @@ HB_FUNC( QT_QPRINTER_COLORMODE )
  */
 HB_FUNC( QT_QPRINTER_CREATOR )
 {
-   hb_retc( hbqt_par_QPrinter( 1 )->creator().toLatin1().data() );
+   hb_retc( hbqt_par_QPrinter( 1 )->creator().toAscii().data() );
 }
 
 /*
@@ -150,7 +150,7 @@ HB_FUNC( QT_QPRINTER_CREATOR )
  */
 HB_FUNC( QT_QPRINTER_DOCNAME )
 {
-   hb_retc( hbqt_par_QPrinter( 1 )->docName().toLatin1().data() );
+   hb_retc( hbqt_par_QPrinter( 1 )->docName().toAscii().data() );
 }
 
 /*
@@ -248,7 +248,7 @@ HB_FUNC( QT_QPRINTER_ORIENTATION )
  */
 HB_FUNC( QT_QPRINTER_OUTPUTFILENAME )
 {
-   hb_retc( hbqt_par_QPrinter( 1 )->outputFileName().toLatin1().data() );
+   hb_retc( hbqt_par_QPrinter( 1 )->outputFileName().toAscii().data() );
 }
 
 /*
@@ -344,7 +344,7 @@ HB_FUNC( QT_QPRINTER_PRINTENGINE )
  */
 HB_FUNC( QT_QPRINTER_PRINTPROGRAM )
 {
-   hb_retc( hbqt_par_QPrinter( 1 )->printProgram().toLatin1().data() );
+   hb_retc( hbqt_par_QPrinter( 1 )->printProgram().toAscii().data() );
 }
 
 /*
@@ -360,7 +360,7 @@ HB_FUNC( QT_QPRINTER_PRINTRANGE )
  */
 HB_FUNC( QT_QPRINTER_PRINTERNAME )
 {
-   hb_retc( hbqt_par_QPrinter( 1 )->printerName().toLatin1().data() );
+   hb_retc( hbqt_par_QPrinter( 1 )->printerName().toAscii().data() );
 }
 
 /*

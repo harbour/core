@@ -189,7 +189,7 @@ HB_FUNC( QT_QDATETIMEEDIT_DATETIME )
  */
 HB_FUNC( QT_QDATETIMEEDIT_DISPLAYFORMAT )
 {
-   hb_retc( hbqt_par_QDateTimeEdit( 1 )->displayFormat().toLatin1().data() );
+   hb_retc( hbqt_par_QDateTimeEdit( 1 )->displayFormat().toAscii().data() );
 }
 
 /*
@@ -269,7 +269,7 @@ HB_FUNC( QT_QDATETIMEEDIT_SECTIONCOUNT )
  */
 HB_FUNC( QT_QDATETIMEEDIT_SECTIONTEXT )
 {
-   hb_retc( hbqt_par_QDateTimeEdit( 1 )->sectionText( ( QDateTimeEdit::Section ) hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QDateTimeEdit( 1 )->sectionText( ( QDateTimeEdit::Section ) hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*

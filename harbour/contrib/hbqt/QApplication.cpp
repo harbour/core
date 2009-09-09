@@ -237,7 +237,7 @@ HB_FUNC( QT_QAPPLICATION_SAVESTATE )
  */
 HB_FUNC( QT_QAPPLICATION_SESSIONID )
 {
-   hb_retc( hbqt_par_QApplication( 1 )->sessionId().toLatin1().data() );
+   hb_retc( hbqt_par_QApplication( 1 )->sessionId().toAscii().data() );
 }
 
 /*
@@ -245,7 +245,7 @@ HB_FUNC( QT_QAPPLICATION_SESSIONID )
  */
 HB_FUNC( QT_QAPPLICATION_SESSIONKEY )
 {
-   hb_retc( hbqt_par_QApplication( 1 )->sessionKey().toLatin1().data() );
+   hb_retc( hbqt_par_QApplication( 1 )->sessionKey().toAscii().data() );
 }
 
 /*
@@ -261,7 +261,7 @@ HB_FUNC( QT_QAPPLICATION_SETINPUTCONTEXT )
  */
 HB_FUNC( QT_QAPPLICATION_STYLESHEET )
 {
-   hb_retc( hbqt_par_QApplication( 1 )->styleSheet().toLatin1().data() );
+   hb_retc( hbqt_par_QApplication( 1 )->styleSheet().toAscii().data() );
 }
 
 /*

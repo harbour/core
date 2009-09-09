@@ -109,7 +109,7 @@ HB_FUNC( QT_QTEXTBROWSER_FORWARDHISTORYCOUNT )
  */
 HB_FUNC( QT_QTEXTBROWSER_HISTORYTITLE )
 {
-   hb_retc( hbqt_par_QTextBrowser( 1 )->historyTitle( hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTextBrowser( 1 )->historyTitle( hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*

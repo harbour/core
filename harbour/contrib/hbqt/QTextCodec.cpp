@@ -161,7 +161,7 @@ HB_FUNC( QT_QTEXTCODEC_NAME )
  */
 HB_FUNC( QT_QTEXTCODEC_TOUNICODE )
 {
-   hb_retc( hbqt_par_QTextCodec( 1 )->toUnicode( *hbqt_par_QByteArray( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTextCodec( 1 )->toUnicode( *hbqt_par_QByteArray( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -169,7 +169,7 @@ HB_FUNC( QT_QTEXTCODEC_TOUNICODE )
  */
 HB_FUNC( QT_QTEXTCODEC_TOUNICODE_1 )
 {
-   hb_retc( hbqt_par_QTextCodec( 1 )->toUnicode( hbqt_par_char( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTextCodec( 1 )->toUnicode( hbqt_par_char( 2 ) ).toAscii().data() );
 }
 
 /*

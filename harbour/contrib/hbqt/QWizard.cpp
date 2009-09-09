@@ -122,7 +122,7 @@ HB_FUNC( QT_QWIZARD_BUTTON )
  */
 HB_FUNC( QT_QWIZARD_BUTTONTEXT )
 {
-   hb_retc( hbqt_par_QWizard( 1 )->buttonText( ( QWizard::WizardButton ) hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QWizard( 1 )->buttonText( ( QWizard::WizardButton ) hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*

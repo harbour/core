@@ -360,7 +360,7 @@ HB_FUNC( QT_QMENU_SETTITLE )
  */
 HB_FUNC( QT_QMENU_TITLE )
 {
-   hb_retc( hbqt_par_QMenu( 1 )->title().toLatin1().data() );
+   hb_retc( hbqt_par_QMenu( 1 )->title().toAscii().data() );
 }
 
 

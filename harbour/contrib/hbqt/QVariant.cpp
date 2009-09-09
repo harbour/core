@@ -361,7 +361,7 @@ HB_FUNC( QT_QVARIANT_TOSIZEF )
  */
 HB_FUNC( QT_QVARIANT_TOSTRING )
 {
-   hb_retc( hbqt_par_QVariant( 1 )->toString().toLatin1().data() );
+   hb_retc( hbqt_par_QVariant( 1 )->toString().toAscii().data() );
 }
 
 /*

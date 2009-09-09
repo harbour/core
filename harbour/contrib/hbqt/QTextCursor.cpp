@@ -535,7 +535,7 @@ HB_FUNC( QT_QTEXTCURSOR_SELECTEDTABLECELLS )
  */
 HB_FUNC( QT_QTEXTCURSOR_SELECTEDTEXT )
 {
-   hb_retc( hbqt_par_QTextCursor( 1 )->selectedText().toLatin1().data() );
+   hb_retc( hbqt_par_QTextCursor( 1 )->selectedText().toAscii().data() );
 }
 
 /*

@@ -389,7 +389,7 @@ HB_FUNC( QT_QTABBAR_TABRECT )
  */
 HB_FUNC( QT_QTABBAR_TABTEXT )
 {
-   hb_retc( hbqt_par_QTabBar( 1 )->tabText( hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTabBar( 1 )->tabText( hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -405,7 +405,7 @@ HB_FUNC( QT_QTABBAR_TABTEXTCOLOR )
  */
 HB_FUNC( QT_QTABBAR_TABTOOLTIP )
 {
-   hb_retc( hbqt_par_QTabBar( 1 )->tabToolTip( hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTabBar( 1 )->tabToolTip( hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -413,7 +413,7 @@ HB_FUNC( QT_QTABBAR_TABTOOLTIP )
  */
 HB_FUNC( QT_QTABBAR_TABWHATSTHIS )
 {
-   hb_retc( hbqt_par_QTabBar( 1 )->tabWhatsThis( hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTabBar( 1 )->tabWhatsThis( hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*

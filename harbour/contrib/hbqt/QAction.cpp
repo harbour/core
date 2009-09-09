@@ -158,7 +158,7 @@ HB_FUNC( QT_QACTION_ICON )
  */
 HB_FUNC( QT_QACTION_ICONTEXT )
 {
-   hb_retc( hbqt_par_QAction( 1 )->iconText().toLatin1().data() );
+   hb_retc( hbqt_par_QAction( 1 )->iconText().toAscii().data() );
 }
 
 /*
@@ -406,7 +406,7 @@ HB_FUNC( QT_QACTION_SHOWSTATUSTEXT )
  */
 HB_FUNC( QT_QACTION_STATUSTIP )
 {
-   hb_retc( hbqt_par_QAction( 1 )->statusTip().toLatin1().data() );
+   hb_retc( hbqt_par_QAction( 1 )->statusTip().toAscii().data() );
 }
 
 /*
@@ -414,7 +414,7 @@ HB_FUNC( QT_QACTION_STATUSTIP )
  */
 HB_FUNC( QT_QACTION_TEXT )
 {
-   hb_retc( hbqt_par_QAction( 1 )->text().toLatin1().data() );
+   hb_retc( hbqt_par_QAction( 1 )->text().toAscii().data() );
 }
 
 /*
@@ -422,7 +422,7 @@ HB_FUNC( QT_QACTION_TEXT )
  */
 HB_FUNC( QT_QACTION_TOOLTIP )
 {
-   hb_retc( hbqt_par_QAction( 1 )->toolTip().toLatin1().data() );
+   hb_retc( hbqt_par_QAction( 1 )->toolTip().toAscii().data() );
 }
 
 /*
@@ -430,7 +430,7 @@ HB_FUNC( QT_QACTION_TOOLTIP )
  */
 HB_FUNC( QT_QACTION_WHATSTHIS )
 {
-   hb_retc( hbqt_par_QAction( 1 )->whatsThis().toLatin1().data() );
+   hb_retc( hbqt_par_QAction( 1 )->whatsThis().toAscii().data() );
 }
 
 /*

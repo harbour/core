@@ -85,7 +85,7 @@ HB_FUNC( QT_QSPINBOX_DESTROY )
  */
 HB_FUNC( QT_QSPINBOX_CLEANTEXT )
 {
-   hb_retc( hbqt_par_QSpinBox( 1 )->cleanText().toLatin1().data() );
+   hb_retc( hbqt_par_QSpinBox( 1 )->cleanText().toAscii().data() );
 }
 
 /*
@@ -109,7 +109,7 @@ HB_FUNC( QT_QSPINBOX_MINIMUM )
  */
 HB_FUNC( QT_QSPINBOX_PREFIX )
 {
-   hb_retc( hbqt_par_QSpinBox( 1 )->prefix().toLatin1().data() );
+   hb_retc( hbqt_par_QSpinBox( 1 )->prefix().toAscii().data() );
 }
 
 /*
@@ -173,7 +173,7 @@ HB_FUNC( QT_QSPINBOX_SINGLESTEP )
  */
 HB_FUNC( QT_QSPINBOX_SUFFIX )
 {
-   hb_retc( hbqt_par_QSpinBox( 1 )->suffix().toLatin1().data() );
+   hb_retc( hbqt_par_QSpinBox( 1 )->suffix().toAscii().data() );
 }
 
 /*

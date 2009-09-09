@@ -223,7 +223,7 @@ HB_FUNC( QT_QOBJECT_MOVETOTHREAD )
  */
 HB_FUNC( QT_QOBJECT_OBJECTNAME )
 {
-   hb_retc( hbqt_par_QObject( 1 )->objectName().toLatin1().data() );
+   hb_retc( hbqt_par_QObject( 1 )->objectName().toAscii().data() );
 }
 
 /*
@@ -319,7 +319,7 @@ HB_FUNC( QT_QOBJECT_DISCONNECT_2 )
  */
 HB_FUNC( QT_QOBJECT_TR )
 {
-   hb_retc( hbqt_par_QObject( 1 )->tr( hbqt_par_char( 2 ), hbqt_par_char( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QObject( 1 )->tr( hbqt_par_char( 2 ), hbqt_par_char( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) ).toAscii().data() );
 }
 
 /*
@@ -327,7 +327,7 @@ HB_FUNC( QT_QOBJECT_TR )
  */
 HB_FUNC( QT_QOBJECT_TRUTF8 )
 {
-   hb_retc( hbqt_par_QObject( 1 )->trUtf8( hbqt_par_char( 2 ), hbqt_par_char( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QObject( 1 )->trUtf8( hbqt_par_char( 2 ), hbqt_par_char( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) ).toAscii().data() );
 }
 
 /*

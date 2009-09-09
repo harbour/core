@@ -187,7 +187,7 @@ HB_FUNC( QT_QLINEEDIT_DESELECT )
  */
 HB_FUNC( QT_QLINEEDIT_DISPLAYTEXT )
 {
-   hb_retc( hbqt_par_QLineEdit( 1 )->displayText().toLatin1().data() );
+   hb_retc( hbqt_par_QLineEdit( 1 )->displayText().toAscii().data() );
 }
 
 /*
@@ -269,7 +269,7 @@ HB_FUNC( QT_QLINEEDIT_HOME )
  */
 HB_FUNC( QT_QLINEEDIT_INPUTMASK )
 {
-   hb_retc( hbqt_par_QLineEdit( 1 )->inputMask().toLatin1().data() );
+   hb_retc( hbqt_par_QLineEdit( 1 )->inputMask().toAscii().data() );
 }
 
 /*
@@ -333,7 +333,7 @@ HB_FUNC( QT_QLINEEDIT_MINIMUMSIZEHINT )
  */
 HB_FUNC( QT_QLINEEDIT_SELECTEDTEXT )
 {
-   hb_retc( hbqt_par_QLineEdit( 1 )->selectedText().toLatin1().data() );
+   hb_retc( hbqt_par_QLineEdit( 1 )->selectedText().toAscii().data() );
 }
 
 /*
@@ -461,7 +461,7 @@ HB_FUNC( QT_QLINEEDIT_SIZEHINT )
  */
 HB_FUNC( QT_QLINEEDIT_TEXT )
 {
-   hb_retc( hbqt_par_QLineEdit( 1 )->text().toLatin1().data() );
+   hb_retc( hbqt_par_QLineEdit( 1 )->text().toAscii().data() );
 }
 
 /*

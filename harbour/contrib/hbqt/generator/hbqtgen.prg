@@ -850,7 +850,8 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                cPrgRet := 'c' + cDocNM
 
             CASE aA[ PRT_CAST ] == 'QString'
-               cCmd := 'hb_retc( ' + cCmn + '.toLatin1().data()' + ' )'
+               //cCmd := 'hb_retc( ' + cCmn + '.toLatin1().data()' + ' )'
+               cCmd := 'hb_retc( ' + cCmn + '.toAscii().data()' + ' )'
                cPrgRet := 'c' + cDocNM
 
             CASE aA[ PRT_CAST ] == 'FT_Face'

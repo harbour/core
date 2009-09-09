@@ -166,7 +166,7 @@ HB_FUNC( QT_QIMAGEREADER_ERROR )
  */
 HB_FUNC( QT_QIMAGEREADER_ERRORSTRING )
 {
-   hb_retc( hbqt_par_QImageReader( 1 )->errorString().toLatin1().data() );
+   hb_retc( hbqt_par_QImageReader( 1 )->errorString().toAscii().data() );
 }
 
 /*
@@ -174,7 +174,7 @@ HB_FUNC( QT_QIMAGEREADER_ERRORSTRING )
  */
 HB_FUNC( QT_QIMAGEREADER_FILENAME )
 {
-   hb_retc( hbqt_par_QImageReader( 1 )->fileName().toLatin1().data() );
+   hb_retc( hbqt_par_QImageReader( 1 )->fileName().toAscii().data() );
 }
 
 /*
@@ -374,7 +374,7 @@ HB_FUNC( QT_QIMAGEREADER_SUPPORTSOPTION )
  */
 HB_FUNC( QT_QIMAGEREADER_TEXT )
 {
-   hb_retc( hbqt_par_QImageReader( 1 )->text( hbqt_par_QString( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QImageReader( 1 )->text( hbqt_par_QString( 2 ) ).toAscii().data() );
 }
 
 /*

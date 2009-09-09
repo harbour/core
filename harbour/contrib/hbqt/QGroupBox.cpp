@@ -151,7 +151,7 @@ HB_FUNC( QT_QGROUPBOX_SETTITLE )
  */
 HB_FUNC( QT_QGROUPBOX_TITLE )
 {
-   hb_retc( hbqt_par_QGroupBox( 1 )->title().toLatin1().data() );
+   hb_retc( hbqt_par_QGroupBox( 1 )->title().toAscii().data() );
 }
 
 /*

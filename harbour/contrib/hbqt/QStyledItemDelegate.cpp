@@ -94,7 +94,7 @@ HB_FUNC( QT_QSTYLEDITEMDELEGATE_CREATEEDITOR )
  */
 HB_FUNC( QT_QSTYLEDITEMDELEGATE_DISPLAYTEXT )
 {
-   hb_retc( hbqt_par_QStyledItemDelegate( 1 )->displayText( *hbqt_par_QVariant( 2 ), *hbqt_par_QLocale( 3 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QStyledItemDelegate( 1 )->displayText( *hbqt_par_QVariant( 2 ), *hbqt_par_QLocale( 3 ) ).toAscii().data() );
 }
 
 /*

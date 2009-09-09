@@ -181,7 +181,7 @@ HB_FUNC( QT_QFTP_ERROR )
  */
 HB_FUNC( QT_QFTP_ERRORSTRING )
 {
-   hb_retc( hbqt_par_QFtp( 1 )->errorString().toLatin1().data() );
+   hb_retc( hbqt_par_QFtp( 1 )->errorString().toAscii().data() );
 }
 
 /*

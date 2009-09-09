@@ -203,7 +203,7 @@ HB_FUNC( QT_QTEXTSTREAM_POS )
  */
 HB_FUNC( QT_QTEXTSTREAM_READ )
 {
-   hb_retc( hbqt_par_QTextStream( 1 )->read( hb_parnint( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTextStream( 1 )->read( hb_parnint( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -211,7 +211,7 @@ HB_FUNC( QT_QTEXTSTREAM_READ )
  */
 HB_FUNC( QT_QTEXTSTREAM_READALL )
 {
-   hb_retc( hbqt_par_QTextStream( 1 )->readAll().toLatin1().data() );
+   hb_retc( hbqt_par_QTextStream( 1 )->readAll().toAscii().data() );
 }
 
 /*
@@ -219,7 +219,7 @@ HB_FUNC( QT_QTEXTSTREAM_READALL )
  */
 HB_FUNC( QT_QTEXTSTREAM_READLINE )
 {
-   hb_retc( hbqt_par_QTextStream( 1 )->readLine( hb_parnint( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTextStream( 1 )->readLine( hb_parnint( 2 ) ).toAscii().data() );
 }
 
 /*

@@ -112,7 +112,7 @@ HB_FUNC( QT_QWEBSECURITYORIGIN_DATABASEUSAGE )
  */
 HB_FUNC( QT_QWEBSECURITYORIGIN_HOST )
 {
-   hb_retc( hbqt_par_QWebSecurityOrigin( 1 )->host().toLatin1().data() );
+   hb_retc( hbqt_par_QWebSecurityOrigin( 1 )->host().toAscii().data() );
 }
 
 /*
@@ -128,7 +128,7 @@ HB_FUNC( QT_QWEBSECURITYORIGIN_PORT )
  */
 HB_FUNC( QT_QWEBSECURITYORIGIN_SCHEME )
 {
-   hb_retc( hbqt_par_QWebSecurityOrigin( 1 )->scheme().toLatin1().data() );
+   hb_retc( hbqt_par_QWebSecurityOrigin( 1 )->scheme().toAscii().data() );
 }
 
 /*

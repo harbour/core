@@ -136,7 +136,7 @@ HB_FUNC( QT_QKEYSEQUENCE_MATCHES )
  */
 HB_FUNC( QT_QKEYSEQUENCE_TOSTRING )
 {
-   hb_retc( hbqt_par_QKeySequence( 1 )->toString( ( HB_ISNUM( 2 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 2 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QKeySequence( 1 )->toString( ( HB_ISNUM( 2 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 2 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ).toAscii().data() );
 }
 
 /*

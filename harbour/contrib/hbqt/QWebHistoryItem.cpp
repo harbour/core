@@ -128,7 +128,7 @@ HB_FUNC( QT_QWEBHISTORYITEM_SETUSERDATA )
  */
 HB_FUNC( QT_QWEBHISTORYITEM_TITLE )
 {
-   hb_retc( hbqt_par_QWebHistoryItem( 1 )->title().toLatin1().data() );
+   hb_retc( hbqt_par_QWebHistoryItem( 1 )->title().toAscii().data() );
 }
 
 /*

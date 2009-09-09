@@ -114,7 +114,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_FILEINFO )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_FILENAME )
 {
-   hb_retc( hbqt_par_QFileSystemModel( 1 )->fileName( *hbqt_par_QModelIndex( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QFileSystemModel( 1 )->fileName( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -122,7 +122,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_FILENAME )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_FILEPATH )
 {
-   hb_retc( hbqt_par_QFileSystemModel( 1 )->filePath( *hbqt_par_QModelIndex( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QFileSystemModel( 1 )->filePath( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -266,7 +266,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_ROOTDIRECTORY )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_ROOTPATH )
 {
-   hb_retc( hbqt_par_QFileSystemModel( 1 )->rootPath().toLatin1().data() );
+   hb_retc( hbqt_par_QFileSystemModel( 1 )->rootPath().toAscii().data() );
 }
 
 /*
@@ -338,7 +338,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_SIZE )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_TYPE )
 {
-   hb_retc( hbqt_par_QFileSystemModel( 1 )->type( *hbqt_par_QModelIndex( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QFileSystemModel( 1 )->type( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() );
 }
 
 

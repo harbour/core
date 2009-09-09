@@ -144,7 +144,7 @@ HB_FUNC( QT_QURL_ALLQUERYITEMVALUES )
  */
 HB_FUNC( QT_QURL_AUTHORITY )
 {
-   hb_retc( hbqt_par_QUrl( 1 )->authority().toLatin1().data() );
+   hb_retc( hbqt_par_QUrl( 1 )->authority().toAscii().data() );
 }
 
 /*
@@ -216,7 +216,7 @@ HB_FUNC( QT_QURL_ENCODEDUSERNAME )
  */
 HB_FUNC( QT_QURL_ERRORSTRING )
 {
-   hb_retc( hbqt_par_QUrl( 1 )->errorString().toLatin1().data() );
+   hb_retc( hbqt_par_QUrl( 1 )->errorString().toAscii().data() );
 }
 
 /*
@@ -224,7 +224,7 @@ HB_FUNC( QT_QURL_ERRORSTRING )
  */
 HB_FUNC( QT_QURL_FRAGMENT )
 {
-   hb_retc( hbqt_par_QUrl( 1 )->fragment().toLatin1().data() );
+   hb_retc( hbqt_par_QUrl( 1 )->fragment().toAscii().data() );
 }
 
 /*
@@ -264,7 +264,7 @@ HB_FUNC( QT_QURL_HASQUERYITEM )
  */
 HB_FUNC( QT_QURL_HOST )
 {
-   hb_retc( hbqt_par_QUrl( 1 )->host().toLatin1().data() );
+   hb_retc( hbqt_par_QUrl( 1 )->host().toAscii().data() );
 }
 
 /*
@@ -304,7 +304,7 @@ HB_FUNC( QT_QURL_ISVALID )
  */
 HB_FUNC( QT_QURL_PASSWORD )
 {
-   hb_retc( hbqt_par_QUrl( 1 )->password().toLatin1().data() );
+   hb_retc( hbqt_par_QUrl( 1 )->password().toAscii().data() );
 }
 
 /*
@@ -312,7 +312,7 @@ HB_FUNC( QT_QURL_PASSWORD )
  */
 HB_FUNC( QT_QURL_PATH )
 {
-   hb_retc( hbqt_par_QUrl( 1 )->path().toLatin1().data() );
+   hb_retc( hbqt_par_QUrl( 1 )->path().toAscii().data() );
 }
 
 /*
@@ -336,7 +336,7 @@ HB_FUNC( QT_QURL_PORT_1 )
  */
 HB_FUNC( QT_QURL_QUERYITEMVALUE )
 {
-   hb_retc( hbqt_par_QUrl( 1 )->queryItemValue( hbqt_par_QString( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QUrl( 1 )->queryItemValue( hbqt_par_QString( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -400,7 +400,7 @@ HB_FUNC( QT_QURL_RESOLVED )
  */
 HB_FUNC( QT_QURL_SCHEME )
 {
-   hb_retc( hbqt_par_QUrl( 1 )->scheme().toLatin1().data() );
+   hb_retc( hbqt_par_QUrl( 1 )->scheme().toAscii().data() );
 }
 
 /*
@@ -568,7 +568,7 @@ HB_FUNC( QT_QURL_TOENCODED )
  */
 HB_FUNC( QT_QURL_TOLOCALFILE )
 {
-   hb_retc( hbqt_par_QUrl( 1 )->toLocalFile().toLatin1().data() );
+   hb_retc( hbqt_par_QUrl( 1 )->toLocalFile().toAscii().data() );
 }
 
 /*
@@ -576,7 +576,7 @@ HB_FUNC( QT_QURL_TOLOCALFILE )
  */
 HB_FUNC( QT_QURL_TOSTRING )
 {
-   hb_retc( hbqt_par_QUrl( 1 )->toString( ( HB_ISNUM( 2 ) ? ( QUrl::FormattingOptions ) hb_parni( 2 ) : ( QUrl::FormattingOptions ) QUrl::None ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QUrl( 1 )->toString( ( HB_ISNUM( 2 ) ? ( QUrl::FormattingOptions ) hb_parni( 2 ) : ( QUrl::FormattingOptions ) QUrl::None ) ).toAscii().data() );
 }
 
 /*
@@ -584,7 +584,7 @@ HB_FUNC( QT_QURL_TOSTRING )
  */
 HB_FUNC( QT_QURL_USERINFO )
 {
-   hb_retc( hbqt_par_QUrl( 1 )->userInfo().toLatin1().data() );
+   hb_retc( hbqt_par_QUrl( 1 )->userInfo().toAscii().data() );
 }
 
 /*
@@ -592,7 +592,7 @@ HB_FUNC( QT_QURL_USERINFO )
  */
 HB_FUNC( QT_QURL_USERNAME )
 {
-   hb_retc( hbqt_par_QUrl( 1 )->userName().toLatin1().data() );
+   hb_retc( hbqt_par_QUrl( 1 )->userName().toAscii().data() );
 }
 
 /*
@@ -600,7 +600,7 @@ HB_FUNC( QT_QURL_USERNAME )
  */
 HB_FUNC( QT_QURL_FROMACE )
 {
-   hb_retc( hbqt_par_QUrl( 1 )->fromAce( *hbqt_par_QByteArray( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QUrl( 1 )->fromAce( *hbqt_par_QByteArray( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -632,7 +632,7 @@ HB_FUNC( QT_QURL_FROMLOCALFILE )
  */
 HB_FUNC( QT_QURL_FROMPERCENTENCODING )
 {
-   hb_retc( hbqt_par_QUrl( 1 )->fromPercentEncoding( *hbqt_par_QByteArray( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QUrl( 1 )->fromPercentEncoding( *hbqt_par_QByteArray( 2 ) ).toAscii().data() );
 }
 
 /*

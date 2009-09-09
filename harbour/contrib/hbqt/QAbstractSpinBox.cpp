@@ -237,7 +237,7 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SETWRAPPING )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_SPECIALVALUETEXT )
 {
-   hb_retc( hbqt_par_QAbstractSpinBox( 1 )->specialValueText().toLatin1().data() );
+   hb_retc( hbqt_par_QAbstractSpinBox( 1 )->specialValueText().toAscii().data() );
 }
 
 /*
@@ -253,7 +253,7 @@ HB_FUNC( QT_QABSTRACTSPINBOX_STEPBY )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_TEXT )
 {
-   hb_retc( hbqt_par_QAbstractSpinBox( 1 )->text().toLatin1().data() );
+   hb_retc( hbqt_par_QAbstractSpinBox( 1 )->text().toAscii().data() );
 }
 
 /*

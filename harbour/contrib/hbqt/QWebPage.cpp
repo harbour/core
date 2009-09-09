@@ -225,7 +225,7 @@ HB_FUNC( QT_QWEBPAGE_PLUGINFACTORY )
  */
 HB_FUNC( QT_QWEBPAGE_SELECTEDTEXT )
 {
-   hb_retc( hbqt_par_QWebPage( 1 )->selectedText().toLatin1().data() );
+   hb_retc( hbqt_par_QWebPage( 1 )->selectedText().toAscii().data() );
 }
 
 /*

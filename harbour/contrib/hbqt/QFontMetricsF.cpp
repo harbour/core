@@ -159,7 +159,7 @@ HB_FUNC( QT_QFONTMETRICSF_DESCENT )
  */
 HB_FUNC( QT_QFONTMETRICSF_ELIDEDTEXT )
 {
-   hb_retc( hbqt_par_QFontMetricsF( 1 )->elidedText( hbqt_par_QString( 2 ), ( Qt::TextElideMode ) hb_parni( 3 ), hb_parnd( 4 ), hb_parni( 5 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QFontMetricsF( 1 )->elidedText( hbqt_par_QString( 2 ), ( Qt::TextElideMode ) hb_parni( 3 ), hb_parnd( 4 ), hb_parni( 5 ) ).toAscii().data() );
 }
 
 /*

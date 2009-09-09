@@ -151,7 +151,7 @@ HB_FUNC( QT_QWEBVIEW_PAGEACTION )
  */
 HB_FUNC( QT_QWEBVIEW_SELECTEDTEXT )
 {
-   hb_retc( hbqt_par_QWebView( 1 )->selectedText().toLatin1().data() );
+   hb_retc( hbqt_par_QWebView( 1 )->selectedText().toAscii().data() );
 }
 
 /*
@@ -223,7 +223,7 @@ HB_FUNC( QT_QWEBVIEW_TEXTSIZEMULTIPLIER )
  */
 HB_FUNC( QT_QWEBVIEW_TITLE )
 {
-   hb_retc( hbqt_par_QWebView( 1 )->title().toLatin1().data() );
+   hb_retc( hbqt_par_QWebView( 1 )->title().toAscii().data() );
 }
 
 /*

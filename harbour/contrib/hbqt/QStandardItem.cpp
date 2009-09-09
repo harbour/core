@@ -109,7 +109,7 @@ HB_FUNC( QT_QSTANDARDITEM_DESTROY )
  */
 HB_FUNC( QT_QSTANDARDITEM_ACCESSIBLEDESCRIPTION )
 {
-   hb_retc( hbqt_par_QStandardItem( 1 )->accessibleDescription().toLatin1().data() );
+   hb_retc( hbqt_par_QStandardItem( 1 )->accessibleDescription().toAscii().data() );
 }
 
 /*
@@ -117,7 +117,7 @@ HB_FUNC( QT_QSTANDARDITEM_ACCESSIBLEDESCRIPTION )
  */
 HB_FUNC( QT_QSTANDARDITEM_ACCESSIBLETEXT )
 {
-   hb_retc( hbqt_par_QStandardItem( 1 )->accessibleText().toLatin1().data() );
+   hb_retc( hbqt_par_QStandardItem( 1 )->accessibleText().toAscii().data() );
 }
 
 /*
@@ -613,7 +613,7 @@ HB_FUNC( QT_QSTANDARDITEM_SORTCHILDREN )
  */
 HB_FUNC( QT_QSTANDARDITEM_STATUSTIP )
 {
-   hb_retc( hbqt_par_QStandardItem( 1 )->statusTip().toLatin1().data() );
+   hb_retc( hbqt_par_QStandardItem( 1 )->statusTip().toAscii().data() );
 }
 
 /*
@@ -629,7 +629,7 @@ HB_FUNC( QT_QSTANDARDITEM_TAKECHILD )
  */
 HB_FUNC( QT_QSTANDARDITEM_TEXT )
 {
-   hb_retc( hbqt_par_QStandardItem( 1 )->text().toLatin1().data() );
+   hb_retc( hbqt_par_QStandardItem( 1 )->text().toAscii().data() );
 }
 
 /*
@@ -645,7 +645,7 @@ HB_FUNC( QT_QSTANDARDITEM_TEXTALIGNMENT )
  */
 HB_FUNC( QT_QSTANDARDITEM_TOOLTIP )
 {
-   hb_retc( hbqt_par_QStandardItem( 1 )->toolTip().toLatin1().data() );
+   hb_retc( hbqt_par_QStandardItem( 1 )->toolTip().toAscii().data() );
 }
 
 /*
@@ -661,7 +661,7 @@ HB_FUNC( QT_QSTANDARDITEM_TYPE )
  */
 HB_FUNC( QT_QSTANDARDITEM_WHATSTHIS )
 {
-   hb_retc( hbqt_par_QStandardItem( 1 )->whatsThis().toLatin1().data() );
+   hb_retc( hbqt_par_QStandardItem( 1 )->whatsThis().toAscii().data() );
 }
 
 /*

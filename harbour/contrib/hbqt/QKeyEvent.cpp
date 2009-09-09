@@ -150,7 +150,7 @@ HB_FUNC( QT_QKEYEVENT_NATIVEVIRTUALKEY )
  */
 HB_FUNC( QT_QKEYEVENT_TEXT )
 {
-   hb_retc( hbqt_par_QKeyEvent( 1 )->text().toLatin1().data() );
+   hb_retc( hbqt_par_QKeyEvent( 1 )->text().toAscii().data() );
 }
 
 

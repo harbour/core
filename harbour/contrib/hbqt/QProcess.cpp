@@ -304,7 +304,7 @@ HB_FUNC( QT_QPROCESS_WAITFORSTARTED )
  */
 HB_FUNC( QT_QPROCESS_WORKINGDIRECTORY )
 {
-   hb_retc( hbqt_par_QProcess( 1 )->workingDirectory().toLatin1().data() );
+   hb_retc( hbqt_par_QProcess( 1 )->workingDirectory().toAscii().data() );
 }
 
 /*

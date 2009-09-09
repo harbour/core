@@ -95,7 +95,7 @@ HB_FUNC( QT_QDIR_DESTROY )
  */
 HB_FUNC( QT_QDIR_ABSOLUTEFILEPATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->absoluteFilePath( hbqt_par_QString( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QDir( 1 )->absoluteFilePath( hbqt_par_QString( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -103,7 +103,7 @@ HB_FUNC( QT_QDIR_ABSOLUTEFILEPATH )
  */
 HB_FUNC( QT_QDIR_ABSOLUTEPATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->absolutePath().toLatin1().data() );
+   hb_retc( hbqt_par_QDir( 1 )->absolutePath().toAscii().data() );
 }
 
 /*
@@ -111,7 +111,7 @@ HB_FUNC( QT_QDIR_ABSOLUTEPATH )
  */
 HB_FUNC( QT_QDIR_CANONICALPATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->canonicalPath().toLatin1().data() );
+   hb_retc( hbqt_par_QDir( 1 )->canonicalPath().toAscii().data() );
 }
 
 /*
@@ -143,7 +143,7 @@ HB_FUNC( QT_QDIR_COUNT )
  */
 HB_FUNC( QT_QDIR_DIRNAME )
 {
-   hb_retc( hbqt_par_QDir( 1 )->dirName().toLatin1().data() );
+   hb_retc( hbqt_par_QDir( 1 )->dirName().toAscii().data() );
 }
 
 /*
@@ -199,7 +199,7 @@ HB_FUNC( QT_QDIR_EXISTS_1 )
  */
 HB_FUNC( QT_QDIR_FILEPATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->filePath( hbqt_par_QString( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QDir( 1 )->filePath( hbqt_par_QString( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -279,7 +279,7 @@ HB_FUNC( QT_QDIR_NAMEFILTERS )
  */
 HB_FUNC( QT_QDIR_PATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->path().toLatin1().data() );
+   hb_retc( hbqt_par_QDir( 1 )->path().toAscii().data() );
 }
 
 /*
@@ -295,7 +295,7 @@ HB_FUNC( QT_QDIR_REFRESH )
  */
 HB_FUNC( QT_QDIR_RELATIVEFILEPATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->relativeFilePath( hbqt_par_QString( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QDir( 1 )->relativeFilePath( hbqt_par_QString( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -383,7 +383,7 @@ HB_FUNC( QT_QDIR_ADDSEARCHPATH )
  */
 HB_FUNC( QT_QDIR_CLEANPATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->cleanPath( hbqt_par_QString( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QDir( 1 )->cleanPath( hbqt_par_QString( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -399,7 +399,7 @@ HB_FUNC( QT_QDIR_CURRENT )
  */
 HB_FUNC( QT_QDIR_CURRENTPATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->currentPath().toLatin1().data() );
+   hb_retc( hbqt_par_QDir( 1 )->currentPath().toAscii().data() );
 }
 
 /*
@@ -415,7 +415,7 @@ HB_FUNC( QT_QDIR_DRIVES )
  */
 HB_FUNC( QT_QDIR_FROMNATIVESEPARATORS )
 {
-   hb_retc( hbqt_par_QDir( 1 )->fromNativeSeparators( hbqt_par_QString( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QDir( 1 )->fromNativeSeparators( hbqt_par_QString( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -431,7 +431,7 @@ HB_FUNC( QT_QDIR_HOME )
  */
 HB_FUNC( QT_QDIR_HOMEPATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->homePath().toLatin1().data() );
+   hb_retc( hbqt_par_QDir( 1 )->homePath().toAscii().data() );
 }
 
 /*
@@ -479,7 +479,7 @@ HB_FUNC( QT_QDIR_ROOT )
  */
 HB_FUNC( QT_QDIR_ROOTPATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->rootPath().toLatin1().data() );
+   hb_retc( hbqt_par_QDir( 1 )->rootPath().toAscii().data() );
 }
 
 /*
@@ -519,7 +519,7 @@ HB_FUNC( QT_QDIR_TEMP )
  */
 HB_FUNC( QT_QDIR_TEMPPATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->tempPath().toLatin1().data() );
+   hb_retc( hbqt_par_QDir( 1 )->tempPath().toAscii().data() );
 }
 
 /*
@@ -527,7 +527,7 @@ HB_FUNC( QT_QDIR_TEMPPATH )
  */
 HB_FUNC( QT_QDIR_TONATIVESEPARATORS )
 {
-   hb_retc( hbqt_par_QDir( 1 )->toNativeSeparators( hbqt_par_QString( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QDir( 1 )->toNativeSeparators( hbqt_par_QString( 2 ) ).toAscii().data() );
 }
 
 

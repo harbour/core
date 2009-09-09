@@ -166,7 +166,7 @@ HB_FUNC( QT_QTOOLBOX_ITEMICON )
  */
 HB_FUNC( QT_QTOOLBOX_ITEMTEXT )
 {
-   hb_retc( hbqt_par_QToolBox( 1 )->itemText( hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QToolBox( 1 )->itemText( hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -174,7 +174,7 @@ HB_FUNC( QT_QTOOLBOX_ITEMTEXT )
  */
 HB_FUNC( QT_QTOOLBOX_ITEMTOOLTIP )
 {
-   hb_retc( hbqt_par_QToolBox( 1 )->itemToolTip( hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QToolBox( 1 )->itemToolTip( hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*
