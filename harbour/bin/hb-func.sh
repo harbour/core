@@ -63,6 +63,25 @@ get_hbver_win()
     echo "${MAJOR}${MINOR}"
 }
 
+get_hbver_so()
+{
+    local hb_ver hb_rootdir
+
+    hb_rootdir="${1-.}"
+    if [ "${HB_PLATFORM}" = "win" ] || \
+       [ "${HB_PLATFORM}" = "wce" ]; then
+        hb_ver=`get_hbver_win "${hb_rootdir}"`
+        if [ "${HB_COMPILER}" = "mingw64" ]; then
+            hb_ver="${hb_ver}-x64"
+        elif [ "${HB_COMPILER}" = "mingwarm" ]; then
+            hb_ver="${hb_ver}-arm"
+        fi
+    else
+        hb_ver=`get_hbver "${hb_rootdir}"`
+    fi
+    echo "${hb_ver}"
+}
+
 get_hbverstat()
 {
     local FVER VERSTAT hb_rootdir
@@ -355,7 +374,7 @@ HB_MT=""
 HB_GT="${HB_GT_LIB#gt}"
 
 if [ -z "$HB_INC_GPM" ]; then
-    if [ "$HB_PLATFORM" = "linux" ] && \
+    if [ "$HB_PLATFORM" = "linux" ] && \\
        ( [ -f /usr/include/gpm.h ] || [ -f /usr/local/include/gpm.h ]); then
         HB_INC_GPM=yes
     else
@@ -370,7 +389,7 @@ if [ -z "${HB_INC_SLANG}" ]; then
         linux|bsd|darwin|hpux|sunos)
             for dir in /usr /usr/local /sw /opt/local
             do
-                if [ -f ${dir}/include/slang.h ] || \
+                if [ -f ${dir}/include/slang.h ] || \\
                    [ -f ${dir}/include/slang/slang.h ]; then
                     HB_INC_SLANG=yes
                 fi
@@ -519,8 +538,8 @@ fi
 [ -n "\${HB_GPM_LIB}" ] && SYSTEM_LIBS="-l\${HB_GPM_LIB} \${SYSTEM_LIBS}"
 
 
-if [ "\${HB_STATIC}" = "no" ] && \
-   [ "\${HB_PLATFORM}" != "win" ] && \
+if [ "\${HB_STATIC}" = "no" ] && \\
+   [ "\${HB_PLATFORM}" != "win" ] && \\
    [ "\${HB_PLATFORM}" != "wce" ]; then
     SYSTEM_LIBS=""
 fi
@@ -557,18 +576,46 @@ done
 
 HB_LNK_ATTR=""
 HARBOUR_LIBS=""
+
+l=""
+HB_MAIN_REQ=""
+if [ "\${HB_COMPILER}" = "mingw" ] || [ "\${HB_COMPILER}" = "mingw64" ]; then
+    if [ -z "\${HB_MODE}" ]; then
+        LN_OPT="\${LN_OPT} -mwindows"
+        l="hbmainwin"
+        HB_MAIN_REQ="hb_forceLinkMainWin"
+    elif [ "\${HB_MODE}" = "gui" ]; then
+        l="hbmainwin"
+        HB_MAIN_REQ="hb_forceLinkMainWin"
+    elif [ "\${HB_MODE}" = "std" ]; then
+        l="hbmainstd"
+    fi
+elif [ "\${HB_COMPILER}" = "mingwarm" ]; then
+    if [ "\${HB_MODE}" = "std" ]; then
+        l="hbmainstd"
+    else
+        l="hbmainwin"
+    fi
+fi
+if [ -n "\${l}" ]; then
+    [ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/lib\${l}mt.a" ] && l="\${l}mt"
+    [ -f "\${HB_LIB_INSTALL}/lib\${l}.a" ] && HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}"
+fi
+
 if [ "\${HB_STATIC}" = "yes" ]; then
     libs="${hb_libs} ${hb_libsc}"
 else
     l="${name}"
+    ver=""
     if [ "\${HB_PLATFORM}" = "darwin" ]; then
         pref="lib"
         ext=".dylib"
         LN_OPT="\${LN_OPT} -bind_at_load -multiply_defined suppress"
-    elif [ "\${HB_PLATFORM}" = "win" ] || \
+    elif [ "\${HB_PLATFORM}" = "win" ] || \\
          [ "\${HB_PLATFORM}" = "wce" ]; then
         pref=""
         ext=".dll"
+        ver=`get_hbver_so`
         HB_LNK_ATTR="__attribute__ ((dllimport))"
     elif [ "\${HB_PLATFORM}" = "hpux" ]; then
         pref="lib"
@@ -578,19 +625,37 @@ else
         ext=".so"
     fi
     if [ "\${HB_MT}" = "MT" ]; then
-        if [ -f "\${HB_LIB_INSTALL}/\${pref}\${l}mt\${ext}" ]; then
+        if [ -f "\${HB_LIB_INSTALL}/\${pref}\${l}mt\${ext}" ] || \\
+           [ -f "\${HB_LIB_INSTALL}/lib\${l}mt.a" ]; then
             HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}mt"
             l=""
         elif [ -f "\${HB_BIN_INSTALL}/\${pref}\${l}mt\${ext}" ]; then
             HARBOUR_LIBS="\${HARBOUR_LIBS} -L\${HB_BIN_INSTALL} -l\${l}mt"
             l=""
+        elif [ -n "\${ver}" ]; then
+            if [ -f "\${HB_LIB_INSTALL}/\${pref}\${l}mt-\${ver}\${ext}" ] || \\
+               [ -f "\${HB_LIB_INSTALL}/lib\${l}mt-\${ver}.a" ]; then
+                HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}mt-\${ver}"
+                l=""
+            elif [ -f "\${HB_BIN_INSTALL}/\${pref}\${l}mt-\${ver}\${ext}" ]; then
+                HARBOUR_LIBS="\${HARBOUR_LIBS} -L\${HB_BIN_INSTALL} -l\${l}mt-\${ver}"
+                l=""
+            fi
         fi
     fi
     if [ -n "\${l}" ]; then
-        if [ -f "\${HB_LIB_INSTALL}/\${pref}\${l}\${ext}" ]; then
+        if [ -f "\${HB_LIB_INSTALL}/\${pref}\${l}\${ext}" ] || \\
+           [ -f "\${HB_LIB_INSTALL}/lib\${l}.a" ]; then
             HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}"
         elif [ -f "\${HB_BIN_INSTALL}/\${pref}\${l}\${ext}" ]; then
             HARBOUR_LIBS="\${HARBOUR_LIBS} -L\${HB_BIN_INSTALL} -l\${l}"
+        elif [ -n "\${ver}" ]; then
+            if [ -f "\${HB_LIB_INSTALL}/\${pref}\${l}-\${ver}\${ext}" ] || \\
+               [ -f "\${HB_LIB_INSTALL}/lib\${l}-\${ver}.a" ]; then
+                HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}-\${ver}"
+            elif [ -f "\${HB_BIN_INSTALL}/\${pref}\${l}-\${ver}\${ext}" ]; then
+                HARBOUR_LIBS="\${HARBOUR_LIBS} -L\${HB_BIN_INSTALL} -l\${l}-\${ver}"
+            fi
         fi
     fi
     libs="gtalleg hbdebug profiler hbcplr ${hb_libsc}"
@@ -612,34 +677,13 @@ fi
 if [ "\${HB_HWGUI}" = "yes" ]; then
     HARBOUR_LIBS="\${HARBOUR_LIBS} -lhwgui -lprocmisc -lhbxml"
 fi
+
 if [ "\${HB_PLATFORM}" = "darwin" ] || \\
    [ "\${HB_PLATFORM}" = "sunos" ] || \\
    [ "\${HB_PLATFORM}" = "hpux" ]; then
     HARBOUR_LIBS="\${HARBOUR_LIBS} \${HARBOUR_LIBS}"
 else
     HARBOUR_LIBS="-Wl,--start-group \${HARBOUR_LIBS} -Wl,--end-group"
-fi
-
-l=""
-if [ "\${HB_COMPILER}" = "mingw" ] || [ "\${HB_COMPILER}" = "mingw64" ]; then
-    if [ -z "\${HB_MODE}" ]; then
-        LN_OPT="\${LN_OPT} -mwindows"
-        l="hbmainwin"
-    elif [ "\${HB_MODE}" = "gui" ]; then
-        l="hbmainwin"
-    elif [ "\${HB_MODE}" = "std" ]; then
-        l="hbmainstd"
-    fi
-elif [ "\${HB_COMPILER}" = "mingwarm" ]; then
-    if [ "\${HB_MODE}" = "std" ]; then
-        l="hbmainstd"
-    else
-        l="hbmainwin"
-    fi
-fi
-if [ -n "\${l}" ]; then
-    [ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/lib\${l}mt.a" ] && l="\${l}mt"
-    [ -f "\${HB_LIB_INSTALL}/lib\${l}.a" ] && HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}"
 fi
 
 if [ "\${HB_PLATFORM}" = "darwin" ]; then
@@ -687,7 +731,8 @@ hb_link()
     elif [ "\${HB_COMPILER}" != "djgpp" ] && [ -f "\${FOUTO}" ]; then
         HB_MAIN_FUNC=\`hb_lnk_main "\${FOUTO}"\`
     fi
-    if [ -n "\${HB_LNK_REQ}" ] || [ -n "\${HB_GT_REQ}" ] || [ -n "\${HB_MAIN_FUNC}" ]; then
+    if [ -n "\${HB_LNK_REQ}" ] || [ -n "\${HB_GT_REQ}" ] || \\
+       [ -n "\${HB_MAIN_FUNC}" ] || [ -n "\${HB_MAIN_REQ}" ]; then
         hb_lnk_request > \${_TMP_FILE_}
         LN_OPT="\${_TMP_FILE_} \${LN_OPT}"
     fi
@@ -697,15 +742,17 @@ hb_link()
 hb_lnk_request()
 {
     echo "#include \\"hbapi.h\\""
-    if [ -n "\${HB_LNK_REQ}" ]; then
+    if [ -n "\${HB_LNK_REQ}" ] || [ -n "\${HB_MAIN_REQ}" ]; then
         for fn in \${HB_LNK_REQ}; do
             echo "HB_FUNC_EXTERN( \${fn} );"
         done
+        [ -z "\${HB_MAIN_REQ}" ] || echo "HB_EXTERN_C \${HB_MAIN_REQ}( void );"
         echo "void _hb_lnk_ForceLink_build( void )"
         echo "{"
         for fn in \${HB_LNK_REQ}; do
             echo "   HB_FUNC_EXEC( \${fn} );"
         done
+        [ -z "\${HB_MAIN_REQ}" ] || echo "   \${HB_MAIN_REQ}();"
         echo "}"
     fi
     gt="\${HB_GT_REQ%% *}"
@@ -774,12 +821,7 @@ mk_hblibso()
     name=`get_solibname`
     hb_rootdir="${1-.}"
 
-    if [ "${HB_PLATFORM}" = "win" ] || \
-       [ "${HB_PLATFORM}" = "wce" ]; then
-       hb_ver=`get_hbver_win "${hb_rootdir}"`
-    else
-       hb_ver=`get_hbver "${hb_rootdir}"`
-    fi
+    hb_ver=`get_hbver_so "${hb_rootdir}"`
     hb_libs=`mk_hbgetlibs "$2"`
     [ -z "${HB_GT_LIB}" ] && HB_GT_LIB="gtstd"
 
@@ -875,13 +917,7 @@ mk_hblibso()
          [ "${HB_PLATFORM}" = "wce" ]; then
         lib_ext=".dll"
         lib_pref=""
-        if [ "${HB_COMPILER}" = "mingw64" ]; then
-            lib_suff="-${hb_ver}-x64${lib_ext}"
-        elif [ "${HB_COMPILER}" = "mingwarm" ]; then
-            lib_suff="-${hb_ver}-arm${lib_ext}"
-        else
-            lib_suff="-${hb_ver}${lib_ext}"
-        fi
+        lib_suff="-${hb_ver}${lib_ext}"
     elif [ "${HB_PLATFORM}" = "hpux" ]; then
         lib_ext=".sl"
         lib_pref="lib"
