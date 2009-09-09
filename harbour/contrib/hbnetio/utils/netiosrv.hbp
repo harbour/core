@@ -3,4 +3,5 @@
 #
 
 netiosrv.prg
--onetiosrv_${hb_plat}
+-o{!dos}netiosrv_${hb_plat}
+-o{dos}netiodos

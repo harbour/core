@@ -112,6 +112,8 @@ ifeq ($($(_DET_VAR_HAS_)),)
    endif
 endif
 
+export $(_DET_VAR_HAS_)
+
 _DET_DSP_NAME :=
 _DET_VAR_INC_ :=
 _DET_VAR_HAS_ :=

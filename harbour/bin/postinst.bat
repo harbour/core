@@ -36,6 +36,11 @@ echo libpaths=../contrib/rddsql/%%{hb_name}>> %HB_BIN_INSTALL%\hbmk.cfg
 echo libpaths=../addons/%%{hb_name}>> %HB_BIN_INSTALL%\hbmk.cfg
 echo libpaths=../examples/%%{hb_name}>> %HB_BIN_INSTALL%\hbmk.cfg
 
+if not "%HB_HAS_WATT%" == "" echo.>> %HB_BIN_INSTALL%\hbmk.cfg
+if not "%HB_HAS_WATT%" == "" echo {dos&djgpp}syslibs=watt>> %HB_BIN_INSTALL%\hbmk.cfg
+if not "%HB_HAS_WATT%" == "" echo {dos&watcom}syslibs=wattcpwf>> %HB_BIN_INSTALL%\hbmk.cfg
+if not "%HB_HAS_WATT%" == "" echo {dos}libpaths=${WATT_ROOT}/lib>> %HB_BIN_INSTALL%\hbmk.cfg
+
 if "%HB_SHELL%" == "nt" goto _SH_NT
 
    if "%HB_INSTALL_PREFIX%" == "" goto _NO_COPYD
