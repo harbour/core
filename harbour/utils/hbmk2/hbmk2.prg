@@ -1541,8 +1541,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                ENDIF
             ENDIF
             IF !( Lower( cParam ) == "gtnul" )
-               IF AScan( hbmk[ _HBMK_aLIBCOREGT ], {|tmp| Lower( tmp ) == cParamL } ) == 0 .AND. ;
-                  AScan( hbmk[ _HBMK_aLIBUSERGT ], {|tmp| Lower( tmp ) == cParamL } ) == 0
+               IF AScan( hbmk[ _HBMK_aLIBCOREGT ], {|tmp| Lower( tmp ) == Lower( cParam ) } ) == 0 .AND. ;
+                  AScan( hbmk[ _HBMK_aLIBUSERGT ], {|tmp| Lower( tmp ) == Lower( cParam ) } ) == 0
                   AAddNotEmpty( hbmk[ _HBMK_aLIBUSERGT ], PathSepToTarget( hbmk, cParam ) )
                ENDIF
             ENDIF
