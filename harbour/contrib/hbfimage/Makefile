@@ -15,7 +15,7 @@ C_SOURCES := \
 PRG_SOURCES := \
 
 PRG_HEADERS := \
-   freeimage.ch \
+   freeimag.ch \
 
 _DET_DSP_NAME := freeimage
 _DET_VAR_INC_ := HB_INC_FREEIMAGE
