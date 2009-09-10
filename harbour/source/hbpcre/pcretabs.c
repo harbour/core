@@ -44,8 +44,8 @@ uses macros to change their names from _pcre_xxx to xxxx, thereby avoiding name
 clashes with the library. */
 
 
-#if 2875
-#include "_hbconf.h"
+#ifdef HAVE_CONFIG_H
+#include "config.h"
 #endif
 
 #include "pcreinal.h"

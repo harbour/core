@@ -1,6 +1,9 @@
 /* config.h.  Generated from config.h.in by configure.  */
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+#if !defined( HB_DYNLIB )
+   #define PCRE_STATIC
+#endif
 
 /* On Unix-like systems config.h.in is converted by "configure" into config.h.
 Some other environments also support the use of "configure". PCRE is written in

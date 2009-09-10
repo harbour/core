@@ -4,10 +4,11 @@
 
 ROOT := ../../
 
+include $(TOP)$(ROOT)config/global.mk
+
 HB_BUILD_WARN := no
 
 C_SOURCES := \
-   _hbpcreg.c \
    chartabs.c \
    pcrecomp.c \
    pcreconf.c \
@@ -15,6 +16,7 @@ C_SOURCES := \
    pcreexec.c \
    pcrefinf.c \
    pcreget.c \
+   pcreglob.c \
    pcreinfo.c \
    pcremktb.c \
    pcrenewl.c \
@@ -40,5 +42,12 @@ ifeq ($(HB_COMPILER),sunpro)
       HB_CFLAGS += -xbuiltin=%none
    endif
 endif
+
+# suppress bcc warnings
+ifeq ($(HB_COMPILER),bcc)
+   HB_CFLAGS += -w-use -w-csu -w-aus -w-sig
+endif
+
+HB_CFLAGS += -DHAVE_CONFIG_H
 
 include $(TOP)$(ROOT)config/lib.mk

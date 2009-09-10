@@ -41,8 +41,8 @@ POSSIBILITY OF SUCH DAMAGE.
 /* This file contains a private PCRE function that converts an ordinal
 character value into a UTF8 string. */
 
-#if 2875
-#include "_hbconf.h"
+#ifdef HAVE_CONFIG_H
+#include "config.h"
 #endif
 
 #include "pcreinal.h"

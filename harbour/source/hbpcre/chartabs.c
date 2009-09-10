@@ -20,8 +20,8 @@ and dead code stripping is activated. This leads to link errors. Pulling in the
 header ensures that the array gets flagged as "someone outside this compilation
 unit might reference this" and so it will always be supplied to the linker. */
 
-#if 2875
-#include "_hbconf.h"
+#ifdef HAVE_CONFIG_H
+#include "config.h"
 #endif
 
 #include "pcreinal.h"

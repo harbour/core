@@ -42,8 +42,8 @@ POSSIBILITY OF SUCH DAMAGE.
 supporting internal functions that are not used by other modules. */
 
 
-#if 2875
-#include "_hbconf.h"
+#ifdef HAVE_CONFIG_H
+#include "config.h"
 #endif
 
 #define NLBLOCK cd             /* Block containing newline information */

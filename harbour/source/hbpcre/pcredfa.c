@@ -45,8 +45,8 @@ FSM). This is NOT Perl- compatible, but it has advantages in certain
 applications. */
 
 
-#if 2875
-#include "_hbconf.h"
+#ifdef HAVE_CONFIG_H
+#include "config.h"
 #endif
 
 #define NLBLOCK md             /* Block containing newline information */

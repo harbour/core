@@ -42,8 +42,8 @@ POSSIBILITY OF SUCH DAMAGE.
 class. It is used by both pcre_exec() and pcre_def_exec(). */
 
 
-#if 2875
-#include "_hbconf.h"
+#ifdef HAVE_CONFIG_H
+#include "config.h"
 #endif
 
 #include "pcreinal.h"

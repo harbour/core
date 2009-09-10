@@ -50,7 +50,6 @@
  *
  */
 
-
 #ifndef HB_ZLIB_CH_
 #define HB_ZLIB_CH_
 

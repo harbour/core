@@ -43,8 +43,8 @@ information about a compiled pattern. However, use of this function is now
 deprecated, as it has been superseded by pcre_fullinfo(). */
 
 
-#if 2875
-#include "_hbconf.h"
+#ifdef HAVE_CONFIG_H
+#include "config.h"
 #endif
 
 #include "pcreinal.h"

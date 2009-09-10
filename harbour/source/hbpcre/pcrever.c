@@ -42,8 +42,8 @@ POSSIBILITY OF SUCH DAMAGE.
 string that identifies the PCRE version that is in use. */
 
 
-#if 2875
-#include "_hbconf.h"
+#ifdef HAVE_CONFIG_H
+#include "config.h"
 #endif
 
 #include "pcreinal.h"

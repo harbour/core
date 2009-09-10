@@ -42,8 +42,8 @@ POSSIBILITY OF SUCH DAMAGE.
 information about a compiled pattern. */
 
 
-#if 2875
-#include "_hbconf.h"
+#ifdef HAVE_CONFIG_H
+#include "config.h"
 #endif
 
 #include "pcreinal.h"
