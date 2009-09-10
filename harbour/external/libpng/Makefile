@@ -51,13 +51,36 @@ ifeq ($(HB_WITH_LIBPNG),)
 endif
 
 ifeq ($(HB_WITH_LIBPNG),yes)
-   HB_CFLAGS += -I$(TOP)$(ROOT)source/hbzlib
 
-   ifeq ($(HB_COMPILER),djgpp)
-      HB_CFLAGS += -DPNG_NO_SNPRINTF
+   # force redetection
+   HB_HAS_ZLIB :=
+
+   _DET_DSP_NAME := zlib
+   _DET_VAR_INC_ := HB_INC_ZLIB
+   _DET_VAR_HAS_ := HB_HAS_ZLIB
+   _DET_FLT_PLAT :=
+   _DET_FLT_COMP :=
+   _DET_INC_DEFP := /usr/include
+   ifneq ($(filter $(HB_PLATFORM),win wce os2 dos),)
+      _DET_INC_DEFP += $(TOP)$(ROOT)external/zlib
    endif
+   _DET_INC_HEAD := /zlib.h
 
-   include $(TOP)$(ROOT)config/lib.mk
+   include $(TOP)$(ROOT)config/detfun.mk
+
+   ifneq ($(HB_HAS_ZLIB),)
+
+      HB_CFLAGS += $(foreach d,$(HB_HAS_ZLIB),-I$(d))
+
+      ifeq ($(HB_COMPILER),djgpp)
+         HB_CFLAGS += -DPNG_NO_SNPRINTF
+      endif
+
+      include $(TOP)$(ROOT)config/lib.mk
+   else
+      HB_SKIP_REASON := $(_DET_RES_TEXT)
+      include $(TOP)$(ROOT)config/none.mk
+   endif
 else
    include $(TOP)$(ROOT)config/none.mk
 endif

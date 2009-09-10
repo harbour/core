@@ -67,7 +67,8 @@ LDLIBS += $(foreach lib,$(SYSLIBS),$(lib))
 DY := $(LD)
 DFLAGS := OP quiet SYS nt_dll
 DY_OUT :=
-DLIBS := $(foreach lib,$(SYSLIBS),$(lib))
+DLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
+DLIBS += $(foreach lib,$(SYSLIBS),$(lib))
 
 comma := ,
 DLIBS_COMMA := $(subst $(subst x,x, ),$(comma) ,$(strip $(DLIBS)))

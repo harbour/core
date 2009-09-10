@@ -280,9 +280,57 @@ DIRS := \
    gtwvt \
    gtxwc \
 
-ifneq ($(HB_HAS_WATT),)
-   HB_CFLAGS += -DHB_HAS_WATT $(foreach d,$(HB_HAS_WATT),-I$(d))
-endif
+# force redetection
+HB_HAS_ZLIB :=
 
-include $(TOP)$(ROOT)config/lib.mk
-include $(TOP)$(ROOT)config/dir.mk
+_DET_DSP_NAME := zlib
+_DET_VAR_INC_ := HB_INC_ZLIB
+_DET_VAR_HAS_ := HB_HAS_ZLIB
+_DET_FLT_PLAT :=
+_DET_FLT_COMP :=
+_DET_INC_DEFP := /usr/include
+ifneq ($(filter $(HB_PLATFORM),win wce os2 dos),)
+   _DET_INC_DEFP += $(TOP)$(ROOT)external/zlib
+endif
+_DET_INC_HEAD := /zlib.h
+
+include $(TOP)$(ROOT)config/detfun.mk
+
+ifneq ($(HB_HAS_ZLIB),)
+
+   # Detect pcre
+
+   # force redetection
+   HB_HAS_PCRE :=
+
+   _DET_DSP_NAME := pcre
+   _DET_VAR_INC_ := HB_INC_PCRE
+   _DET_VAR_HAS_ := HB_HAS_PCRE
+   _DET_FLT_PLAT :=
+   _DET_FLT_COMP :=
+   _DET_INC_DEFP := /usr/include /opt/local/include
+   ifneq ($(filter $(HB_PLATFORM),win wce os2 dos),)
+      _DET_INC_DEFP += $(TOP)$(ROOT)external/pcre
+   endif
+   _DET_INC_HEAD := /pcre.h
+
+   include $(TOP)$(ROOT)config/detfun.mk
+
+   ifneq ($(HB_HAS_PCRE),)
+      HB_CFLAGS += -DHB_HAS_PCRE $(foreach d,$(HB_HAS_PCRE),-I$(d))
+      ifneq ($(HB_HAS_PCRE_LOCAL),)
+         HB_CFLAGS += -DPCRE_STATIC
+      endif
+   endif
+   ifneq ($(HB_HAS_ZLIB),)
+      HB_CFLAGS += -DHB_HAS_ZLIB $(foreach d,$(HB_HAS_ZLIB),-I$(d))
+   endif
+   ifneq ($(HB_HAS_WATT),)
+      HB_CFLAGS += -DHB_HAS_WATT $(foreach d,$(HB_HAS_WATT),-I$(d))
+   endif
+
+   include $(TOP)$(ROOT)config/lib.mk
+   include $(TOP)$(ROOT)config/dir.mk
+else
+   $(error ! Error: zlib component required, but not available)
+endif

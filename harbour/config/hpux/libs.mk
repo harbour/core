@@ -19,10 +19,12 @@ ifneq ($(HB_LINKING_RTL),)
       SYSLIBS += X11
       SYSLIBPATHS += /usr/X11R6/lib
    endif
-   ifneq ($(filter -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
-      SYSLIBS += pcre
+   ifneq ($(HB_HAS_PCRE),)
+      ifeq ($(HB_HAS_PCRE_LOCAL),)
+         SYSLIBS += pcre
+      endif
    endif
-   ifneq ($(filter -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
+   ifeq ($(HB_HAS_ZLIB_LOCAL),)
       SYSLIBS += z
    endif
    SYSLIBS += rt

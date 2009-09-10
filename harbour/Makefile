@@ -14,14 +14,14 @@ else
 ifeq ($(HB_HOST_BUILD),lib)
    HB_UTIL_DIR :=
 else
-   HB_UTIL_DIR := utils{source,external}
+   HB_UTIL_DIR := utils{source}
 endif
 
 DIRS := \
    doc \
    include \
-   source \
    external \
+   source{external} \
    $(HB_UTIL_DIR) \
    contrib{source} \
 

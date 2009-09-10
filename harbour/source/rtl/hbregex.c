@@ -50,8 +50,6 @@
  *
  */
 
-/* #define HB_PCRE_REGEX */
-
 #define _HB_REGEX_INTERNAL_
 #include "hbregex.h"
 #include "hbapiitm.h"
@@ -60,7 +58,7 @@
 
 static void hb_regfree( PHB_REGEX pRegEx )
 {
-#if defined( HB_PCRE_REGEX )
+#if defined( HB_HAS_PCRE )
    ( pcre_free )( pRegEx->re_pcre );
 #elif defined( HB_POSIX_REGEX )
    regfree( &pRegEx->reg );
@@ -71,7 +69,7 @@ static void hb_regfree( PHB_REGEX pRegEx )
 
 static int hb_regcomp( PHB_REGEX pRegEx, const char * szRegEx )
 {
-#if defined( HB_PCRE_REGEX )
+#if defined( HB_HAS_PCRE )
    const unsigned char * pCharTable = NULL;
    const char *szError = NULL;
    int iErrOffset = 0;
@@ -103,7 +101,7 @@ static int hb_regcomp( PHB_REGEX pRegEx, const char * szRegEx )
 static int hb_regexec( PHB_REGEX pRegEx, const char * szString, ULONG ulLen,
                        int iMatches, HB_REGMATCH * aMatches )
 {
-#if defined( HB_PCRE_REGEX )
+#if defined( HB_HAS_PCRE )
    int iResult, i;
 
    iResult = pcre_exec( pRegEx->re_pcre, NULL /* pcre_extra */,
@@ -536,7 +534,7 @@ HB_FUNC( HB_REGEXALL )
    hb_regex( 5 );
 }
 
-#if defined( HB_PCRE_REGEX )
+#if defined( HB_HAS_PCRE )
 static void * hb_pcre_grab( size_t size )
 {
    return hb_xgrab( size );
@@ -548,7 +546,7 @@ static void hb_pcre_free( void * ptr )
 #endif
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_regex_init_ )
-#if defined( HB_PCRE_REGEX )
+#if defined( HB_HAS_PCRE )
    /* Hack to force linking newer PCRE versions not the one included in BCC RTL */
 #  if defined( __BORLANDC__ )
    {

@@ -14,8 +14,6 @@ HB_DYN_LIBS := \
    hbmacro \
    hblang \
    hbcpage \
-   hbpcre \
-   hbzlib \
    hbextern \
    hbrdd \
    rddntx \

@@ -97,26 +97,6 @@
 #endif
 
 /* ***********************************************************************
- * Use system PCRE library instead of build in. I'm setting it sometimes
- * when I want to use exactly the same PCRE version as installed in
- * a system.
- */
-/* #define HB_PCRE_REGEX */
-
-/* ***********************************************************************
- * Use old PCRE library which is part of BCC CRTL used to emulate
- * POSIX regex.
- */
-/* #define HB_PCRE_REGEX_BCC */
-
-/* ***********************************************************************
- * Use POSIX regex library which should be part of each POSIX compatible
- * system / C compiler I also use this when I want to support exactly
- * the same regular expressions as other tools installed in the system
- */
-/* #define HB_POSIX_REGEX */
-
-/* ***********************************************************************
  * This symbol defines if Harbour is compiled using C compiler
  * that support strict ANSI C only
  *

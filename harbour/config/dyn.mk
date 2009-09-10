@@ -18,9 +18,35 @@ ifneq ($(DYNNAME),)
 endif
 
 -include $(TOP)$(ROOT)config/$(HB_PLATFORM)/libs.mk
+
+ifneq ($(HB_HAS_PCRE),)
+   ifneq ($(HB_HAS_PCRE_LOCAL),)
+      LIBS += hbpcre
+   endif
+endif
+ifneq ($(HB_HAS_ZLIB_LOCAL),)
+   LIBS += hbzlib
+endif
+
 include $(TOP)$(ROOT)config/$(HB_PLATFORM)/$(HB_COMPILER).mk
 include $(TOP)$(ROOT)config/c.mk
 include $(TOP)$(ROOT)config/prg.mk
+
+HB_LIBS_TPL = \
+   hbextern \
+   hbdebug \
+   $(_HB_VM) \
+   hbrtl \
+   hblang \
+   hbcpage \
+   $(HB_GT_LIBS) \
+   $(_HB_RDD) \
+   hbrtl \
+   $(_HB_VM) \
+   hbmacro \
+   hbcplr \
+   hbpp \
+   hbcommon
 
 DYN_FILE :=
 IMP_FILE :=

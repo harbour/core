@@ -57,26 +57,18 @@
 
 #if defined( _HB_REGEX_INTERNAL_ )
 
-#if defined( HB_PCRE_REGEX_BCC )
-#  include <pcreposi.h>
-#  undef HB_PCRE_REGEX
-#  if !defined( HB_POSIX_REGEX )
-#     define HB_POSIX_REGEX
-#  endif
-#elif defined( HB_PCRE_REGEX )
+#if defined( HB_HAS_PCRE )
 #  include <pcre.h>
 #  undef HB_POSIX_REGEX
-#elif defined( HB_POSIX_REGEX )
+#elif defined( HB_OS_UNIX )
 #  include <sys/types.h>
 #  include <regex.h>
+#  define HB_POSIX_REGEX
+#elif defined( __BORLANDC__ )
+#  include <pcreposi.h>
+#  define HB_POSIX_REGEX
 #else
-#  define HB_PCRE_REGEX
-#  define PCRE_STATIC
-#  if defined( __XCC__ ) || defined( __LCC__ )
-#     include "..\source\hbpcre\pcre.h"
-#  else
-#     include "../source/hbpcre/pcre.h"
-#  endif
+#  error pcre component required, but not available
 #endif
 
 typedef struct
@@ -84,7 +76,7 @@ typedef struct
    BOOL        fFree;
    int         iFlags;
    int         iEFlags;
-#if defined( HB_PCRE_REGEX )
+#if defined( HB_HAS_PCRE )
    pcre        * re_pcre;
 #elif defined( HB_POSIX_REGEX )
    regex_t     reg;
@@ -92,7 +84,7 @@ typedef struct
 } HB_REGEX;
 typedef HB_REGEX * PHB_REGEX;
 
-#if defined( HB_PCRE_REGEX )
+#if defined( HB_HAS_PCRE )
    #define HB_REGMATCH              int
    #define HB_REGMATCH_SIZE( n )    ( ( n ) * 3 )
    #define HB_REGMATCH_SO( p, n )   ( p )[ ( n ) * 2 ]

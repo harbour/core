@@ -10,7 +10,9 @@ ifeq ($(HB_EXTERNALLIBS),)
 DIRS := \
    libhpdf \
    libpng \
+   pcre \
    sqlite3 \
+   zlib \
 
 else
 

@@ -50,8 +50,6 @@
  *
  */
 
-/* #define HB_PCRE_REGEX */
-
 #define _HB_REGEX_INTERNAL_
 #include "hbregex.h"
 #include "hbapiitm.h"

@@ -500,8 +500,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    LOCAL aLIB_BASE_CPLR
    LOCAL aLIB_BASE_3
    LOCAL aLIB_BASE_3_MT
-   LOCAL aLIB_BASE_PCRE
-   LOCAL aLIB_BASE_ZLIB
+   LOCAL cLIB_BASE_PCRE
+   LOCAL cLIB_BASE_ZLIB
 
    LOCAL l_cCSTUB
    LOCAL l_cRESSTUB
@@ -535,8 +535,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    LOCAL l_aOBJ
    LOCAL l_aOBJA
    LOCAL l_aCLEAN
-   LOCAL l_lHB_PCRE := .T.
-   LOCAL l_lHB_ZLIB := .T.
    LOCAL l_cMAIN := NIL
    LOCAL l_cVCSDIR
    LOCAL l_cVCSHEAD
@@ -775,8 +773,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       aLIB_BASE_CPLR    := { "hbcplr" }
       aLIB_BASE_3       := { "hbmacro", "hbcplr", "hbpp", "hbcommon" }
       aLIB_BASE_3_MT    := aLIB_BASE_3
-      aLIB_BASE_PCRE    := { "hbpcre" }
-      aLIB_BASE_ZLIB    := { "hbzlib" }
+      cLIB_BASE_PCRE    := "hbpcre"
+      cLIB_BASE_ZLIB    := "hbzlib"
    ELSE
 
       cDL_Version_Alter := ""
@@ -795,8 +793,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       aLIB_BASE_CPLR    := {}
       aLIB_BASE_3       := { "macro"  , "pp"  , "common" }
       aLIB_BASE_3_MT    := { "macromt", "ppmt", "common" }
-      aLIB_BASE_PCRE    := { "pcrepos" }
-      aLIB_BASE_ZLIB    := { "zlib" }
+      cLIB_BASE_PCRE    := "pcrepos"
+      cLIB_BASE_ZLIB    := "zlib"
    ENDIF
 
    /* Load platform / compiler settings (compatibility) */
@@ -2027,8 +2025,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          aLIB_BASE_CPLR := {}
          aLIB_BASE_3 := {}
          aLIB_BASE_3_MT := {}
-         aLIB_BASE_PCRE := {}
-         aLIB_BASE_ZLIB := {}
+         cLIB_BASE_PCRE := NIL
+         cLIB_BASE_ZLIB := NIL
 
          hbmk[ _HBMK_aLIBCOREGT ] := {}
       ENDIF
@@ -2158,21 +2156,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ELSEIF "-fpic"  $ cSelfFlagC ; AAddNew( hbmk[ _HBMK_aOPTC ], "-fpic" )
          ELSEIF hbmk[ _HBMK_cPLAT ] == "sunos|hpux"
             AAddNew( hbmk[ _HBMK_aOPTC ], "-fPIC" )
-         ENDIF
-
-         DO CASE
-         CASE "-DHB_PCRE_REGEX" $ cSelfFlagC
-            AAdd( l_aLIBSYS, "pcre" )
-            l_lHB_PCRE := .F.
-         CASE "-DHB_POSIX_REGEX" $ cSelfFlagC
-            l_lHB_PCRE := .F.
-         ENDCASE
-         IF "-DHB_EXT_ZLIB" $ cSelfFlagC
-            AAdd( l_aLIBSYS, "z" )
-            l_lHB_ZLIB := .F.
-         ENDIF
-         IF "-DHB_HAS_GPM" $ cSelfFlagC
-            AAdd( l_aLIBSYS, "gpm" )
          ENDIF
 
          /* Add system libraries */
@@ -2981,21 +2964,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aOPTL ], "-o {OE}" )
          ENDIF
 
-         DO CASE
-         CASE "-DHB_PCRE_REGEX" $ cSelfFlagC
-            AAdd( l_aLIBSYS, "pcre" )
-            l_lHB_PCRE := .F.
-         CASE "-DHB_POSIX_REGEX" $ cSelfFlagC
-            l_lHB_PCRE := .F.
-         ENDCASE
-         IF "-DHB_EXT_ZLIB" $ cSelfFlagC
-            AAdd( l_aLIBSYS, "z" )
-            l_lHB_ZLIB := .F.
-         ENDIF
-         IF "-DHB_HAS_GPM" $ cSelfFlagC
-            AAdd( l_aLIBSYS, "gpm" )
-         ENDIF
-
          /* Add system libraries */
          IF ! hbmk[ _HBMK_lSHARED ]
             AAdd( l_aLIBSYS, "m" )
@@ -3485,6 +3453,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
          ENDIF
 
+         IF ! Empty( cLIB_BASE_PCRE ) .AND. hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLIB_BASE_PCRE + cLibLibExt )
+            AAdd( l_aLIBSYS, cLIB_BASE_PCRE )
+         ENDIF
+         IF ! Empty( cLIB_BASE_ZLIB ) .AND. hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLIB_BASE_ZLIB + cLibLibExt )
+            AAdd( l_aLIBSYS, cLIB_BASE_ZLIB )
+         ENDIF
+
          /* Library list assembly */
          IF hbmk[ _HBMK_lSHARED ] .AND. ! Empty( l_aLIBSHARED )
             l_aLIBHB := ArrayAJoin( { l_aLIBSHAREDPOST,;
@@ -3497,9 +3472,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                                       hbmk[ _HBMK_aLIBCOREGT ],;
                                       iif( hbmk[ _HBMK_lNULRDD ], aLIB_BASE_NULRDD, iif( hbmk[ _HBMK_lMT ], aLIB_BASE_RDD_MT, aLIB_BASE_RDD ) ),;
                                       l_aLIBHBBASE_2,;
-                                      iif( hbmk[ _HBMK_lMT ], aLIB_BASE_3_MT, aLIB_BASE_3 ),;
-                                      iif( l_lHB_PCRE, aLIB_BASE_PCRE, {} ),;
-                                      iif( l_lHB_ZLIB, aLIB_BASE_ZLIB, {} ) } )
+                                      iif( hbmk[ _HBMK_lMT ], aLIB_BASE_3_MT, aLIB_BASE_3 ) } )
          ENDIF
       ELSE
          l_aLIBHB := {}

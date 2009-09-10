@@ -215,7 +215,7 @@ ifeq ($(HB_INIT_DONE),)
       #   HB_NCURSES_194              -> HB_USER_CFLAGS=-DHB_NCURSES_194
       #
       # Macros:
-      #   -DHB_PCRE_REGEX, -DHB_POSIX_REGEX, -DHB_EXT_ZLIB, -DHB_GT_LIB=
+      #   -DHB_GT_LIB=
 
       $(info ! Building Harbour $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)$(HB_VER_STATUS) from source - http://www.harbour-project.org)
       $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(SHELL) $(HB_MAKECMDGOALS) $(MAKEFLAGS) $(if $(MAKESHELL),MAKESHELL: $(MAKESHELL),))

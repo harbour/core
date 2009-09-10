@@ -53,7 +53,8 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
-#include "hbzlib.h"
+
+#include <zlib.h>
 
 /* GZIP stream destructor */
 static HB_GARBAGE_FUNC( hb_gz_Destructor )

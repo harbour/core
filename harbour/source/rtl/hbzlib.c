@@ -53,7 +53,8 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
-#include "hbzlib.h"
+
+#include <zlib.h>
 
 static ULONG hb_zlibUncompressedSize( const char * szSrc, ULONG ulLen )
 {

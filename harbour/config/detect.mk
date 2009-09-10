@@ -46,9 +46,17 @@ _DET_VAR_HAS_ := HB_HAS_ZLIB
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
 _DET_INC_DEFP := /usr/include
+ifneq ($(filter $(HB_PLATFORM),win wce os2 dos),)
+   _DET_INC_DEFP += $(TOP)$(ROOT)external/zlib
+endif
 _DET_INC_HEAD := /zlib.h
 
 include $(TOP)$(ROOT)config/detfun.mk
+
+export HB_HAS_ZLIB_LOCAL := no
+ifneq ($(findstring /external/,$(HB_HAS_ZLIB)),)
+   HB_HAS_ZLIB_LOCAL := yes
+endif
 
 # Detect pcre
 
@@ -58,9 +66,17 @@ _DET_VAR_HAS_ := HB_HAS_PCRE
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
 _DET_INC_DEFP := /usr/include /opt/local/include
+ifneq ($(filter $(HB_PLATFORM),win wce os2 dos),)
+   _DET_INC_DEFP += $(TOP)$(ROOT)external/pcre
+endif
 _DET_INC_HEAD := /pcre.h
 
 include $(TOP)$(ROOT)config/detfun.mk
+
+export HB_HAS_PCRE_LOCAL := no
+ifneq ($(findstring /external/,$(HB_HAS_PCRE)),)
+   HB_HAS_PCRE_LOCAL := yes
+endif
 
 # Detect OpenSSL
 

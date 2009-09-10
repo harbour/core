@@ -66,7 +66,7 @@ LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 DY := $(LD)
 DFLAGS := OP quiet SYS os2v2_dll
 DY_OUT :=
-DLIBS :=
+DLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 define dyn_object

@@ -65,8 +65,6 @@ else
          source/macro \
          source/lang \
          source/codepage \
-         source/hbpcre \
-         source/hbzlib \
          source/hbextern \
          source/rdd \
          source/rdd/dbfntx \
@@ -131,12 +129,10 @@ else
       lang \
       rdd$(HB_COMP_REF) \
       hbextern$(HB_COMP_REF) \
-      hbpcre \
-      hbzlib \
       debug$(HB_COMP_REF)
 
       ifneq ($(HB_BUILD_DLL),no)
-         DIRS += dynlib{codepage,common,hbextern,hbpcre,hbzlib,lang,macro,pp,rdd,rtl,vm}
+         DIRS += dynlib{codepage,common,hbextern,lang,macro,pp,rdd,rtl,vm}
       endif
 
 endif
