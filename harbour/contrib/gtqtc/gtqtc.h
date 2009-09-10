@@ -81,6 +81,8 @@
 #include "hbvm.h"
 #include "hbthread.h"
 
+#include "hbgtqtc.ch"
+
 #define WVT_CHAR_QUEUE_SIZE        4096 //  128
 #define WVT_MAX_TITLE_SIZE         128
 #define WVT_MAX_ROWS               256

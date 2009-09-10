@@ -16,8 +16,8 @@ CPP_SOURCES := \
    gtqtc.cpp \
    moc_gtqtc.cpp \
 
-C_HEADERS := \
-   gtqtc.h \
+PRG_HEADERS := \
+   hbgtqtc.ch
 
 _DET_DSP_NAME := qt
 _DET_VAR_INC_ := HB_INC_QT

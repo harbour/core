@@ -911,7 +911,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
    switch( iType )
    {
-      case HB_GTI_CODEC:
+      case HB_GTI_QTCODEC:
       {
          QTextCodec * codec = QTextCodec::codecForName( ( char * ) hb_itemGetCPtr( pInfo->pNewVal ) );
          QTextCodec::setCodecForCStrings( codec );
