@@ -90,8 +90,9 @@ ifneq ($(HB_INC_LIBHARU),no)
    _DET_FLT_PLAT :=
    _DET_FLT_COMP :=
    _DET_INC_DEFP := /usr/include
+   _DET_INC_LOCL :=
    ifneq ($(filter $(HB_PLATFORM),win wce os2 dos darwin),)
-      _DET_INC_DEFP += $(TOP)$(ROOT)external/libpng
+      _DET_INC_LOCL += $(TOP)$(ROOT)external/libpng
    endif
    _DET_INC_HEAD := /png.h
    include $(TOP)$(ROOT)config/detfun.mk
@@ -107,8 +108,9 @@ ifneq ($(HB_INC_LIBHARU),no)
       _DET_FLT_PLAT :=
       _DET_FLT_COMP :=
       _DET_INC_DEFP := /usr/include
+      _DET_INC_LOCL :=
       ifneq ($(filter $(HB_PLATFORM),win wce os2 dos),)
-         _DET_INC_DEFP += $(TOP)$(ROOT)external/zlib
+         _DET_INC_LOCL += $(TOP)$(ROOT)external/zlib
       endif
       _DET_INC_HEAD := /zlib.h
 

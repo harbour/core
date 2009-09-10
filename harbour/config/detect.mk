@@ -46,8 +46,9 @@ _DET_VAR_HAS_ := HB_HAS_ZLIB
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
 _DET_INC_DEFP := /usr/include
+_DET_INC_LOCL :=
 ifneq ($(filter $(HB_PLATFORM),win wce os2 dos),)
-   _DET_INC_DEFP += $(TOP)$(ROOT)external/zlib
+   _DET_INC_LOCL += $(TOP)$(ROOT)external/zlib
 endif
 _DET_INC_HEAD := /zlib.h
 
@@ -66,8 +67,9 @@ _DET_VAR_HAS_ := HB_HAS_PCRE
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
 _DET_INC_DEFP := /usr/include /opt/local/include
+_DET_INC_LOCL :=
 ifneq ($(filter $(HB_PLATFORM),win wce os2 dos),)
-   _DET_INC_DEFP += $(TOP)$(ROOT)external/pcre
+   _DET_INC_LOCL += $(TOP)$(ROOT)external/pcre
 endif
 _DET_INC_HEAD := /pcre.h
 

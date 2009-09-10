@@ -20,8 +20,9 @@ _DET_VAR_HAS_ := HB_HAS_SQLITE3
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
 _DET_INC_DEFP := /usr/include
+_DET_INC_LOCL :=
 ifneq ($(filter $(HB_PLATFORM),win wce os2 dos),)
-   _DET_INC_DEFP += $(TOP)$(ROOT)external/sqlite3
+   _DET_INC_LOCL += $(TOP)$(ROOT)external/sqlite3
 endif
 _DET_INC_HEAD := /sqlite3.h
 include $(TOP)$(ROOT)config/detfun.mk

@@ -89,6 +89,9 @@ void release_codeblocks();
 static QApplication * app = NULL;
 static bool hbqtinit = false;
 
+static int s_argc;
+static char ** s_argv;
+
 /*
  * QApplication ( int & argc, char ** argv )
  * QApplication ( int & argc, char ** argv, bool GUIenabled )
@@ -129,15 +132,12 @@ static void hbqt_Exit( void * cargo )
 
 static void hbqt_Init( void * cargo )
 {
-   int argc;
-   char ** argv;
-
    HB_SYMBOL_UNUSED( cargo );
 
-   argc = hb_cmdargARGC();
-   argv = hb_cmdargARGV();
+   s_argc = hb_cmdargARGC();
+   s_argv = hb_cmdargARGV();
 
-   app = new QApplication( argc, argv );
+   app = new QApplication( s_argc, s_argv );
 
    if( app )
       hbqtinit = true;
@@ -145,7 +145,7 @@ static void hbqt_Init( void * cargo )
    if( ! hbqtinit )
       hb_errInternal( 11001, "hbqt_Init(): QT Initilization Error.", NULL, NULL );
 
-   hb_cmdargInit( argc, argv );
+   hb_cmdargInit( s_argc, s_argv );
 
    hb_vmAtExit( hbqt_Exit, NULL );
 }
