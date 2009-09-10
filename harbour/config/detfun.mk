@@ -17,7 +17,7 @@
 #       _DET_VAR_HAS_ - variable name receiving detection result (typically "HB_HAS_*").
 #       _DET_FLT_PLAT - positive and negative platform filters. Prefix negative ones with '!' char.
 #       _DET_FLT_COMP - positive and negative compiler filters. Prefix negative ones with '!' char.
-#       _DET_INC_DEFP - default location to look at. Not effective in HB_XBUILD mode.
+#       _DET_INC_DEFP - default location to look at. Not effective in 'HB_BUILD_EXTDEF=no' mode.
 #       _DET_INC_HEAD - header filename to look for. Unless looking for a directory, prefix with forward slash.
 #       - variable name specified by _DET_VAR_INC_ (typically "HB_INC_*") should contains:
 #          (empty) or yes - will enable external component if found on default locations.
@@ -67,7 +67,7 @@ ifeq ($($(_DET_VAR_HAS_)),)
                      endif
                   endif
                   ifeq ($($(_DET_VAR_HAS_)),)
-                     ifeq ($(HB_XBUILD),)
+                     ifneq ($(HB_BUILD_EXTDEF),no)
                         $(_DET_VAR_HAS_) := $(_DET_INC_DEFP)
                      endif
                   endif

@@ -461,6 +461,8 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    - HB_BUILD_MODE=[cpp|c]     Changes default build mode to C++ or C.
                                Default: c, except for msvc* and watcom
                                         compilers, where it's cpp.
+   - HB_BUILD_EXTDEF=no        Controls autodetection of external components
+                               on default systems locations. Default: yes
    - HB_CONTRIBLIBS=no         Don't build any contrib libraries. Default: yes
    - HB_CONTRIBLIBS=[<list>]   Build space separated <list> of contrib
                                libraries. Build all if left empty.
@@ -768,8 +770,7 @@ EXAMPLES
       export WATCOM="/opt/lng/watcom"
       export INCLUDE="${WATCOM}/h:${WATCOM}/h/os2"
       export PATH="${WATCOM}/binl:$PATH"
-      # ; eliminate libraries which scans for local host header files
-      export HB_XBUILD=yes
+      export HB_BUILD_EXTDEF=no
       # ;
       export HB_INSTALL_PREFIX="$(pwd)/hb-os2/watcom"
       make "$@"

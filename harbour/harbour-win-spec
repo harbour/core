@@ -104,7 +104,7 @@ export HB_CCPATH="%{hb_ccpath}/"
 export HB_CCPREFIX="%{hb_ccpref}"
 export PATH="%{hb_ccpath}:$PATH"
 
-export HB_XBUILD=win
+export HB_BUILD_EXTDEF=no
 export HB_BIN_INSTALL=%{_bindir}
 export HB_INC_INSTALL=%{_includedir}/%{name}
 export HB_LIB_INSTALL=%{_libdir}/%{name}
@@ -133,7 +133,7 @@ export HB_CCPATH="%{hb_ccpath}/"
 export HB_CCPREFIX="%{hb_ccpref}"
 export PATH="%{hb_ccpath}:$PATH"
 
-export HB_XBUILD=win
+export HB_BUILD_EXTDEF=no
 export HB_BIN_INSTALL=%{_bindir}
 export HB_INC_INSTALL=%{_includedir}/%{name}
 export HB_LIB_INSTALL=%{_libdir}/%{name}

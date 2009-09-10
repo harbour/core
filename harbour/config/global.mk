@@ -200,17 +200,16 @@ ifeq ($(HB_INIT_DONE),)
 
       # Some additional ones to be given a standard name:
       #   HB_HOST_BUILD [yes|all|lib] -> ? (yes = build harbour/hbpp bin only, all = default, lib = build libs only)
-      #   HB_XBUILD                   -> HB_BUILD_INCDEF (disables default *nix values for HB_INC_* vars)
       #   HB_REBUILD_PARSER           -> HB_BUILD_PARSER (or maybe HB_HAVE_BISON?)
       #   HB_DB_DRVEXT                -> -
       #   HB_COMMERCE                 -> ?
       #   HB_BIN_COMPILE              -> HB_BUILD_BIN_DIR
       #   HB_INC_COMPILE              -> - (HB_BUILD_INC_DIR)
       #
-      #   HB_DLLIBS                   -> (only used in place location, so it's a local matter)
       #   HB_CRS_LIB                  -> HB_LIBNAME_CURSES
       #   HB_DIR_*                    -> HB_LIBDIR_* ? (only used for implib and a few .hbm files)
       #
+      #   HB_DLLIBS                   -> (only used in one location, so it's a local matter)
       #   HB_GPM_NOICE_DISABLE        -> HB_USER_CFLAGS=-DHB_GPM_NOICE_DISABLE
       #   HB_GT_CRS_BCEHACK           -> HB_USER_CFLAGS=-DHB_GT_CRS_BCEHACK
       #   HB_NCURSES_194              -> HB_USER_CFLAGS=-DHB_NCURSES_194
@@ -505,7 +504,7 @@ ifeq ($(HB_COMPILER),)
                HB_COMPILER := mingw
                HB_PLATFORM := win
                export HB_TOOLS_PREF := hbw
-               export HB_XBUILD := win
+               export HB_BUILD_EXTDEF := no
                ifneq ($(HB_HOST_BUILD),all)
                   HB_HOST_BUILD := lib
                endif
@@ -567,7 +566,7 @@ ifeq ($(HB_COMPILER),)
                   HB_COMP_PATH := $(dir $(HB_CCPATH))
                   HB_PLATFORM := wce
                   export HB_TOOLS_PREF := hbce
-                  export HB_XBUILD := wce
+                  export HB_BUILD_EXTDEF := no
                   ifneq ($(HB_HOST_BUILD),all)
                      HB_HOST_BUILD := lib
                   endif
@@ -605,7 +604,7 @@ ifeq ($(HB_COMPILER),)
                      HB_COMP_PATH := $(dir $(HB_CCPATH))
                      HB_PLATFORM := dos
                      export HB_TOOLS_PREF := hbce
-                     export HB_XBUILD := dos
+                     export HB_BUILD_EXTDEF := no
                      ifneq ($(HB_HOST_BUILD),all)
                         HB_HOST_BUILD := lib
                      endif

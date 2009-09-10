@@ -948,7 +948,7 @@ mk_hblibso()
             ln -sf $l $ll
             if [ "${HB_PLATFORM}" = "win" ] || \
                [ "${HB_PLATFORM}" = "wce" ]; then
-                if [ "${HB_XBUILD}" = "" ]; then
+                if [ "${HB_PLATFORM}" = "${HB_HOST_PLAT}" ]; then
                    (cd "$dir"
                    mv "${HB_LIB_INSTALL}/$l" "${HB_BIN_INSTALL}"
                    mv "${HB_LIB_INSTALL}/$ll" "${HB_BIN_INSTALL}")
