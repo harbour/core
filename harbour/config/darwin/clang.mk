@@ -48,17 +48,17 @@ endif
 LD := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 LD_OUT := -o$(subst x,x, )
 
-LIBPATHS := $(LIB_DIR)
-
+LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),-L$(dir))
 LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),-l$(lib))
-LDFLAGS += $(foreach dir,$(LIBPATHS) $(SYSLIBPATHS),-L$(dir))
+
+LDFLAGS += $(LIBPATHS)
 
 AR := libtool
 ARFLAGS :=
 AR_RULE = $(AR) -static $(ARFLAGS) $(HB_USER_AFLAGS) -o $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 
 DY := $(AR)
-DFLAGS := -dynamic -flat_namespace -undefined warning -multiply_defined suppress -single_module $(foreach dir,$(SYSLIBPATHS),-L$(dir))
+DFLAGS := -dynamic -flat_namespace -undefined warning -multiply_defined suppress -single_module $(LIBPATHS)
 DY_OUT := -o$(subst x,x, )
 DLIBS := $(foreach lib,$(SYSLIBS),-l$(lib))
 

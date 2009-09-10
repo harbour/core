@@ -1111,7 +1111,13 @@ STATIC FUNCTION BuildHeader( txt_, nMode )
    aadd( txt_, "/*"                                                                            )
    aadd( txt_, " * $Id$"                     )
    aadd( txt_, " */"                                                                           )
-   aadd( txt_, "   "                                                                           )
+   aadd( txt_, ""                                                                              )
+   aadd( txt_, "/* -------------------------------------------------------------------- */"    )
+   aadd( txt_, "/* WARNING: Automatically generated source file. DO NOT EDIT!           */"    )
+   aadd( txt_, "/*          Instead, edit corresponding .qth file,                      */"    )
+   aadd( txt_, "/*          or the generator tool itself, and run regenarate.           */"    )
+   aadd( txt_, "/* -------------------------------------------------------------------- */"    )
+   aadd( txt_, ""                                                                              )
    aadd( txt_, "/* "                                                                           )
    aadd( txt_, " * Harbour Project source code:"                                               )
    aadd( txt_, " * QT wrapper main header"                                                     )
@@ -1198,7 +1204,7 @@ STATIC FUNCTION DispHelp()
    LOCAL cHlp := ''
 
    cHlp += ''                                                                               + s_NewLine
-   cHlp += 'SYNTAX:'                                                                        + s_NewLine
+   cHlp += 'Syntax:'                                                                        + s_NewLine
    cHlp += '   hbqtgen.exe [Options] [[@]<QtProjectFile.qtp>] [<QtHeaderFile.qth, ...>]'    + s_NewLine
    cHlp += ''                                                                               + s_NewLine
    cHlp += 'Options:'                                                                       + s_NewLine
@@ -1366,12 +1372,17 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
    LOCAL txt_ := {}
    LOCAL s
 
-   aadd( txt_, "#                                                       " )
+   aadd( txt_, "#" )
    aadd( txt_, "# $Id$" )
-   aadd( txt_, "#                                                       " )
-   aadd( txt_, "                                                        " )
-   aadd( txt_, "                                                        " )
-   aadd( txt_, "CPP_SOURCES := \                                        " )
+   aadd( txt_, "#" )
+   aadd( txt_, "" )
+   aadd( txt_, "# --------------------------------------------------------------------" )
+   aadd( txt_, "# WARNING: Automatically generated source file. DO NOT EDIT!          " )
+   aadd( txt_, "#          Instead, edit corresponding .qth file,                     " )
+   aadd( txt_, "#          or the generator tool itself, and run regenarate.          " )
+   aadd( txt_, "# --------------------------------------------------------------------" )
+   aadd( txt_, "" )
+   aadd( txt_, "CPP_SOURCES := \" )
 
    /* Insert .cpp sources */
    aadd( txt_, "   " + "moc_slots.cpp \" )
@@ -1381,18 +1392,18 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
    FOR EACH s IN cpp_
       aadd( txt_, "   " + s + ".cpp \" )
    NEXT
-   aadd( txt_, "                                                        " )
-   aadd( txt_, "                                                        " )
-   aadd( txt_, "                                                        " )
+   aadd( txt_, "" )
+   aadd( txt_, "" )
+   aadd( txt_, "" )
    IF !empty( prg_ )
-      aadd( txt_, "PRG_SOURCES := \                                     " )
+      aadd( txt_, "PRG_SOURCES := \" )
       FOR EACH s IN prg_
          aadd( txt_, "   " + "T" + s + ".prg \" )
       NEXT
    ENDIF
-   aadd( txt_, "                                                        " )
-   aadd( txt_, "# Don't delete this comment, it's here to ensure empty  " )
-   aadd( txt_, "# line above is kept intact.                            " )
+   aadd( txt_, "" )
+   aadd( txt_, "# Don't delete this comment, it's here to ensure empty" )
+   aadd( txt_, "# line above is kept intact." )
 
    RETURN CreateTarget( cFile, txt_ )
 

@@ -1002,6 +1002,27 @@ BUILD HOST-PLATFORM/SHELL - TARGET-PLATFORM/COMPILER COMPATIBILITY MATRIX
      *nix / POSIX shell                         (* not supported: HB_BUILD_PKG - implemented as standalone scripts)
 
 
+HOW TO PARTICIPATE
+==================
+
+   There are several ways to help making Harbour better:
+
+   - You can give feedback/suggestions to developers on available
+     channels.
+   - You can submit patches or source code on above channels.
+     Patches are accepted in 'svn diff' or 'diff -u' format.
+     Always .zip your patch/source files before attaching them.
+     The size limit for e-mails sent to the development list is
+     40KB. If you need more, upload it to a site where we can
+     access it, or use the sf.net page to submit it.
+   - Given a good history of valuable contributions, you can get
+     write access to the source repository.
+   - Of course there is more into Harbour contribution than writing
+     code, so you're welcome to do so in other areas like documentation,
+     helping fellow users, giving input on decisions, testing in
+     various environments, etc.
+
+
 FOR MORE INFORMATION
 ====================
 

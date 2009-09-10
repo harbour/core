@@ -74,7 +74,7 @@ ARFLAGS :=
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -nologo -out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
 
 DY := $(LD)
-DFLAGS := -nologo -dll -subsystem:windowsce
+DFLAGS := -nologo -dll -subsystem:windowsce $(LIBPATHS)
 DY_OUT := $(LD_OUT)
 DLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 

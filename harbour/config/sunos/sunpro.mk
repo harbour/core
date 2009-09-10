@@ -64,17 +64,17 @@ endif
 LD := $(HB_CCACHE) $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 LD_OUT := -o$(subst x,x, )
 
-LIBPATHS := $(LIB_DIR)
-
+LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),-L$(dir))
 LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),-l$(lib))
-LDFLAGS += $(foreach dir,$(LIBPATHS) $(SYSLIBPATHS),-L$(dir))
+
+LDFLAGS += $(LIBPATHS)
 
 AR := ar
 ARFLAGS :=
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) rc $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 
 DY := $(CC)
-DFLAGS := -G $(HB_ISAOPT) $(foreach dir,$(SYSLIBPATHS),-L$(dir))
+DFLAGS := -G $(HB_ISAOPT) $(LIBPATHS)
 ifneq ($(HB_BUILD_OPTIM),no)
    DFLAGS += -fast -xnolibmopt
 endif

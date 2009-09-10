@@ -93,7 +93,7 @@ ARFLAGS :=
 AR_RULE = $(create_library) & $(RM) __lib__.tmp
 
 #DY := $(CC)
-#DFLAGS := -shared
+#DFLAGS := -shared $(LIBPATHS)
 #DY_OUT := $(LD_OUT)
 #DLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),-l$(lib))
 #

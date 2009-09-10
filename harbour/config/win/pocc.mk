@@ -50,7 +50,7 @@ ARFLAGS :=
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -out:$(LIB_DIR)/$@ $(^F)
 
 DY := $(LD)
-DFLAGS := -nologo -dll
+DFLAGS := -nologo -dll $(LIBPATHS)
 DY_OUT := $(LD_OUT)
 DLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 

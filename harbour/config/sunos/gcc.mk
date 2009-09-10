@@ -39,17 +39,17 @@ endif
 LD := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 LD_OUT := -o
 
-LIBPATHS := $(LIB_DIR)
-
+LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),-L$(dir))
 LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),-l$(lib))
-LDFLAGS += $(foreach dir,$(LIBPATHS) $(SYSLIBPATHS),-L$(dir))
+
+LDFLAGS += $(LIBPATHS)
 
 AR := $(HB_CCPREFIX)ar
 ARFLAGS :=
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) rc $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 
 DY := $(CC)
-DFLAGS := -shared -fPIC $(foreach dir,$(SYSLIBPATHS),-L$(dir))
+DFLAGS := -shared -fPIC $(LIBPATHS)
 DY_OUT := -o$(subst x,x, )
 DLIBS := $(foreach lib,$(SYSLIBS),-l$(lib))
 
