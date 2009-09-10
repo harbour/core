@@ -13,66 +13,62 @@ LIBNAME := libhpdf
 
 C_SOURCES := \
    _hbhbpdf.c \
-   hpdf_annotation.c \
-   hpdf_array.c \
-   hpdf_binary.c \
-   hpdf_boolean.c \
-   hpdf_catalog.c \
-   hpdf_destination.c \
-   hpdf_dict.c \
-   hpdf_doc.c \
-   hpdf_doc_png.c \
-   hpdf_encoder.c \
-   hpdf_encoder_cns.c \
-   hpdf_encoder_cnt.c \
-   hpdf_encoder_jp.c \
-   hpdf_encoder_kr.c \
-   hpdf_encrypt.c \
-   hpdf_encryptdict.c \
-   hpdf_error.c \
-   hpdf_ext_gstate.c \
-   hpdf_font.c \
-   hpdf_font_cid.c \
-   hpdf_font_tt.c \
-   hpdf_font_type1.c \
-   hpdf_fontdef.c \
-   hpdf_fontdef_base14.c \
-   hpdf_fontdef_cid.c \
-   hpdf_fontdef_cns.c \
-   hpdf_fontdef_cnt.c \
-   hpdf_fontdef_jp.c \
-   hpdf_fontdef_kr.c \
-   hpdf_fontdef_tt.c \
-   hpdf_fontdef_type1.c \
-   hpdf_gstate.c \
-   hpdf_image.c \
-   hpdf_image_png.c \
-   hpdf_info.c \
-   hpdf_list.c \
-   hpdf_mmgr.c \
-   hpdf_name.c \
-   hpdf_null.c \
-   hpdf_number.c \
-   hpdf_objects.c \
-   hpdf_outline.c \
-   hpdf_page_label.c \
-   hpdf_page_operator.c \
-   hpdf_pages.c \
-   hpdf_real.c \
-   hpdf_streams.c \
-   hpdf_string.c \
-   hpdf_u3d.c \
-   hpdf_utils.c \
-   hpdf_xref.c \
+   hpdfanno.c \
+   hpdfarra.c \
+   hpdfbina.c \
+   hpdfbool.c \
+   hpdfcata.c \
+   hpdfdest.c \
+   hpdfdict.c \
+   hpdfdoc.c \
+   hpdfdocp.c \
+   hpdfecy.c \
+   hpdfecyd.c \
+   hpdfencc.c \
+   hpdfencj.c \
+   hpdfenck.c \
+   hpdfencn.c \
+   hpdfenco.c \
+   hpdferro.c \
+   hpdfextg.c \
+   hpdffdf.c \
+   hpdffdf1.c \
+   hpdffdfb.c \
+   hpdffdfc.c \
+   hpdffdfi.c \
+   hpdffdfj.c \
+   hpdffdfk.c \
+   hpdffdfn.c \
+   hpdffdft.c \
+   hpdffon1.c \
+   hpdffonc.c \
+   hpdffont.c \
+   hpdffott.c \
+   hpdfgsta.c \
+   hpdfimag.c \
+   hpdfimap.c \
+   hpdfinfo.c \
+   hpdflist.c \
+   hpdfmmgr.c \
+   hpdfname.c \
+   hpdfnull.c \
+   hpdfnumb.c \
+   hpdfobje.c \
+   hpdfoutl.c \
+   hpdfpage.c \
+   hpdfpago.c \
+   hpdfpags.c \
+   hpdfreal.c \
+   hpdfstre.c \
+   hpdfstri.c \
+   hpdfu3d.c \
+   hpdfutil.c \
+   hpdfxref.c \
 
 # decide whether to build it locally
 ifeq ($(HB_INC_LIBHARU),)
    HB_INC_LIBHARU := yes
    ifeq ($(HB_PLATFORM)-$(HB_COMPILER),win-watcom)
-      HB_INC_LIBHARU := no
-   endif
-   # NOTE: dos hosts can't build this lib due to long filename. [vszakats]
-   ifeq ($(HB_HOST_PLAT),dos)
       HB_INC_LIBHARU := no
    endif
    ifeq ($(HB_COMPILER),pocc64)

@@ -17,8 +17,8 @@
 #ifndef _HPDF_H
 #define _HPDF_H
 
-#include "hpdf_config.h"
-#include "hpdf_version.h"
+#include "hpdfcfg.h"
+#include "hpdfvers.h"
 
 #ifdef HPDF_DLL_MAKE
 #    define HPDF_EXPORT(A)  __declspec(dllexport) A  __stdcall
@@ -48,8 +48,8 @@
 #define HPDF_EXPORT(A) extern A
 #endif /* HPDF_EXPORT */
 
-#include "hpdf_consts.h"
-#include "hpdf_types.h"
+#include "hpdfcons.h"
+#include "hpdftype.h"
 
 typedef void         *HPDF_HANDLE;
 typedef HPDF_HANDLE   HPDF_Doc;
@@ -71,8 +71,8 @@ typedef HPDF_HANDLE   HPDF_ExtGState;
 #define HPDF_EXPORT(A)  A
 #endif /* HPDF_EXPORT  */
 
-#include "hpdf_consts.h"
-#include "hpdf_doc.h"
+#include "hpdfcons.h"
+#include "hpdfdoc.h"
 
 #endif /* HPDF_SHARED */
 

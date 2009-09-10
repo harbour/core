@@ -6,9 +6,9 @@ rem
 rem Tested with PCRE 7.7
 
 rem NOTE:       Purpose of this script is to take the original
-rem             PCRE file from its source distribution and convert
+rem             files from its source distribution and convert
 rem             them to the short filenames we use here in Harbour.
-rem             Short filenames are needed for full DJGPP support.
+rem             Short filenames are needed for dos compiler support.
 rem             Some other automated modifications are also done
 rem             to help compiling the sources "as-is", to try to
 rem             avoid any manual editing on these foreign sources.
@@ -33,7 +33,7 @@ copy ori_src\pcre_dfa_exec.c        pcredfa.c
 copy ori_src\pcre_exec.c            pcreexec.c
 copy ori_src\pcre_fullinfo.c        pcrefinf.c
 copy ori_src\pcre_get.c             pcreget.c
-copy ori_dst\pcre_globals.c         pcreglob.c
+copy ori_src\pcre_globals.c         pcreglob.c
 copy ori_src\pcre_info.c            pcreinfo.c
 copy ori_src\pcre_maketables.c      pcremktb.c
 copy ori_src\pcre_newline.c         pcrenewl.c

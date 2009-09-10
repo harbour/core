@@ -5,11 +5,11 @@ rem
 
 rem Tested with PCRE 7.7
 
-rem NOTE:       Purpose of this script is to take the PCRE files
+rem NOTE:       Purpose of this script is to take the source files
 rem             in Harbour repo and convert them back to the filenames
-rem             used in the original PCRE source distribution.
+rem             used in the original source distribution.
 rem             This is to aid finding local modifications and
-rem             apply them after a PCRE source update.
+rem             apply them after an original source update.
 rem             [vszakats]
 rem
 rem             This tool uses 'GNU gsar' for search and replace.
