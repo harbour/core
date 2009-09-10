@@ -911,6 +911,12 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
    switch( iType )
    {
+      case HB_GTI_CODEC:
+      {
+         QTextCodec * codec = QTextCodec::codecForName( ( char * ) hb_itemGetCPtr( pInfo->pNewVal ) );
+         QTextCodec::setCodecForCStrings( codec );
+         break;
+      }
       case HB_GTI_FULLSCREEN:
       case HB_GTI_KBDSUPPORT:
       case HB_GTI_ISGRAPHIC:

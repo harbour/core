@@ -138,6 +138,8 @@
 #define HB_GTI_CARGO            58  /* Storage of any user defined value */
 #define HB_GTI_FONTSEL          59  /* X11 style font selecting */
 
+#define HB_GTI_CODEC            60  /* Instructs gtqtc to reqest for code page conversion class off Qt */
+
 /* Font weights */
 #define HB_GTI_FONTW_THIN       1
 #define HB_GTI_FONTW_NORMAL     2

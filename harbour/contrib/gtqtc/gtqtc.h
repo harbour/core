@@ -70,6 +70,7 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QClipboard>
 #include <QtCore/QThread>
+#include <QtCore/QTextCodec>
 
 #include "hbset.h"
 #include "hbgtcore.h"
