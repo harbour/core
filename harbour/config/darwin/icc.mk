@@ -30,10 +30,6 @@ ifneq ($(HB_BUILD_OPTIM),no)
    CFLAGS += -O3
 endif
 
-# uncomment this if you want to force relocateable code for .so libs
-# it's necessary on some platforms but can reduce performance
-#CFLAGS += -fPIC
-
 ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
