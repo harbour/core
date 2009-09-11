@@ -1895,25 +1895,26 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt)
    if( n > 0 )
    {
 #ifndef HB_CDP_SUPPORT_OFF
-      if( wnd->inCDP && wnd->hostCDP && wnd->inCDP != wnd->hostCDP )
-      {
-         hb_cdpnTranslate( (char *) buf, wnd->inCDP, wnd->hostCDP, n );
-      }
+      unsigned char keystr[ 32 ];
+      ULONG u = sizeof( keystr );
+
+      hb_cdpnDup2( ( const char * ) buf, n, ( char * ) keystr, &u,
+                   wnd->inCDP, wnd->hostCDP );
+      n = ( int ) u;
+#else
+      unsigned char * keystr = buf;
 #endif
+
 #ifdef XWC_DEBUG
-      buf[n] = '\0';
-      printf( "keySymISO=%lx keystr=[%s]\r\n", outISO, buf ); fflush(stdout);
+      keystr[n] = '\0';
+      printf( "keySymISO=%lx keystr=[%s]\r\n", outISO, keystr ); fflush(stdout);
 #endif
       for( i = 0; i < n; i++ )
       {
          if( wnd->keyModifiers.bAlt || wnd->keyModifiers.bCtrl )
-         {
-            hb_gt_xwc_TranslateKey( wnd, buf[i] );
-         }
+            hb_gt_xwc_TranslateKey( wnd, keystr[i] );
          else
-         {
-            hb_gt_xwc_AddCharToInputQueue( wnd, buf[i] );
-         }
+            hb_gt_xwc_AddCharToInputQueue( wnd, keystr[i] );
       }
       return;
    }
@@ -2197,14 +2198,17 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 #endif
                   if( wnd->ClipboardData != NULL )
                      hb_xfree( wnd->ClipboardData );
+
+                  wnd->ClipboardSize = text.nitems;
+#ifndef HB_CDP_SUPPORT_OFF
+                  wnd->ClipboardData = ( unsigned char * )
+                        hb_cdpnDup( ( const char * ) text.value, &wnd->ClipboardSize,
+                                    wnd->inCDP, wnd->hostCDP );
+#else
                   wnd->ClipboardData = ( unsigned char * ) hb_xgrab( text.nitems + 1 );
                   memcpy( wnd->ClipboardData, text.value, text.nitems );
-#ifndef HB_CDP_SUPPORT_OFF
-                  if( wnd->inCDP && wnd->hostCDP && wnd->inCDP != wnd->hostCDP )
-                     hb_cdpnTranslate( ( char * ) wnd->ClipboardData, wnd->inCDP, wnd->hostCDP, text.nitems );
-#endif
                   wnd->ClipboardData[ text.nitems ] = '\0';
-                  wnd->ClipboardSize = text.nitems;
+#endif
                   wnd->ClipboardTime = evt->xselection.time;
                   wnd->ClipboardRcvd = TRUE;
                }
@@ -2271,12 +2275,12 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 #ifndef HB_CDP_SUPPORT_OFF
             if( wnd->inCDP && wnd->hostCDP && wnd->inCDP != wnd->hostCDP )
             {
-               BYTE * pBuffer = ( BYTE * ) hb_xgrab( wnd->ClipboardSize + 1 );
-               memcpy( pBuffer, wnd->ClipboardData, wnd->ClipboardSize + 1 );
-               hb_cdpnTranslate( ( char * ) pBuffer, wnd->hostCDP, wnd->inCDP, wnd->ClipboardSize );
+               ULONG ulLen = wnd->ClipboardSize;
+               unsigned char * pBuffer = ( unsigned char * ) hb_cdpnDup( ( const char * ) wnd->ClipboardData, &ulLen, wnd->hostCDP, wnd->inCDP );
+
                XChangeProperty( wnd->dpy, req->requestor, req->property,
                                 s_atomString, 8, PropModeReplace,
-                                pBuffer, wnd->ClipboardSize );
+                                pBuffer, ulLen );
                hb_xfree( pBuffer );
             }
             else

@@ -61,8 +61,8 @@ HB_FUNC( WAPI_GETCOMMANDLINE )
 
    {
       /* Convert from OS codepage */
-      char * pszFree;
-      const char * pszResult = hb_osDecode( buffer, &pszFree );
+      char * pszFree = NULL;
+      const char * pszResult = hb_osDecodeCP( buffer, &pszFree, NULL );
 
       if( pszFree )
          hb_retc_buffer( pszFree );

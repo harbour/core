@@ -556,13 +556,12 @@ static HB_ERRCODE hb_delimGetValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM p
    {
       case HB_FT_STRING:
 #ifndef HB_CDP_SUPPORT_OFF
-         if( pArea->area.cdPage != hb_vmCDP() )
+         if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
          {
-            char * pVal = ( char * ) hb_xgrab( pField->uiLen + 1 );
-            memcpy( pVal, pArea->pRecord + pArea->pFieldOffset[ uiIndex ], pField->uiLen );
-            pVal[ pField->uiLen ] = '\0';
-            hb_cdpnTranslate( pVal, pArea->area.cdPage, hb_vmCDP(), pField->uiLen );
-            hb_itemPutCLPtr( pItem, pVal, pField->uiLen );
+            ULONG ulLen = pField->uiLen;
+            char * pszVal = hb_cdpnDup( ( const char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
+                                        &ulLen, pArea->area.cdPage, hb_vmCDP() );
+            hb_itemPutCLPtr( pItem, pszVal, ulLen );
          }
          else
 #endif
@@ -592,31 +591,24 @@ static HB_ERRCODE hb_delimGetValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM p
          break;
 
       case HB_FT_LONG:
-         {
-            HB_LONG lVal;
-            double dVal;
-            BOOL fDbl;
+      {
+         HB_LONG lVal;
+         double dVal;
+         BOOL fDbl;
 
-            fDbl = hb_strnToNum( (const char *) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
-                                 pField->uiLen, &lVal, &dVal );
+         fDbl = hb_strnToNum( (const char *) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
+                              pField->uiLen, &lVal, &dVal );
 
-
-            if( pField->uiDec )
-            {
-               hb_itemPutNDLen( pItem, fDbl ? dVal : ( double ) lVal,
-                                ( int ) ( pField->uiLen - pField->uiDec - 1 ),
-                                ( int ) pField->uiDec );
-            }
-            else if( fDbl )
-            {
-               hb_itemPutNDLen( pItem, dVal, ( int ) pField->uiLen, 0 );
-            }
-            else
-            {
-               hb_itemPutNIntLen( pItem, lVal, ( int ) pField->uiLen );
-            }
-         }
+         if( pField->uiDec )
+            hb_itemPutNDLen( pItem, fDbl ? dVal : ( double ) lVal,
+                             ( int ) ( pField->uiLen - pField->uiDec - 1 ),
+                             ( int ) pField->uiDec );
+         else if( fDbl )
+            hb_itemPutNDLen( pItem, dVal, ( int ) pField->uiLen, 0 );
+         else
+            hb_itemPutNIntLen( pItem, lVal, ( int ) pField->uiLen );
          break;
+      }
 
       case HB_FT_MEMO:
          hb_itemPutC( pItem, NULL );
@@ -651,7 +643,7 @@ static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM p
    char szBuffer[ 256 ];
    HB_ERRCODE uiError;
    LPFIELD pField;
-   USHORT uiSize;
+   ULONG ulSize;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_delimPutValue(%p,%hu,%p)", pArea, uiIndex, pItem));
 
@@ -670,16 +662,26 @@ static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM p
       {
          if( pField->uiType == HB_FT_STRING )
          {
-            uiSize = ( USHORT ) hb_itemGetCLen( pItem );
-            if( uiSize > pField->uiLen )
-               uiSize = pField->uiLen;
-            memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
-                    hb_itemGetCPtr( pItem ), uiSize );
 #ifndef HB_CDP_SUPPORT_OFF
-            hb_cdpnTranslate( ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ], hb_vmCDP(), pArea->area.cdPage, uiSize );
+            if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
+            {
+               ulSize = pField->uiLen;
+               hb_cdpnDup2( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ),
+                            ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
+                            &ulSize, hb_vmCDP(), pArea->area.cdPage );
+            }
+            else
 #endif
-            memset( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + uiSize,
-                    ' ', pField->uiLen - uiSize );
+            {
+               ulSize = hb_itemGetCLen( pItem );
+               if( ulSize > ( ULONG ) pField->uiLen )
+                  ulSize = pField->uiLen;
+               memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
+                       hb_itemGetCPtr( pItem ), ulSize );
+            }
+            if( ulSize < ( ULONG ) pField->uiLen )
+               memset( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + ulSize,
+                       ' ', pField->uiLen - ulSize );
          }
          else
             uiError = EDBF_DATATYPE;
@@ -1262,7 +1264,7 @@ static HB_ERRCODE hb_delimCreate( DELIMAREAP pArea, LPDBOPENINFO pCreateInfo )
 #ifndef HB_CDP_SUPPORT_OFF
    if( pCreateInfo->cdpId )
    {
-      pArea->area.cdPage = hb_cdpFind( pCreateInfo->cdpId );
+      pArea->area.cdPage = hb_cdpFindExt( pCreateInfo->cdpId );
       if( !pArea->area.cdPage )
          pArea->area.cdPage = hb_vmCDP();
    }
@@ -1350,7 +1352,7 @@ static HB_ERRCODE hb_delimOpen( DELIMAREAP pArea, LPDBOPENINFO pOpenInfo )
 #ifndef HB_CDP_SUPPORT_OFF
    if( pOpenInfo->cdpId )
    {
-      pArea->area.cdPage = hb_cdpFind( pOpenInfo->cdpId );
+      pArea->area.cdPage = hb_cdpFindExt( pOpenInfo->cdpId );
       if( !pArea->area.cdPage )
          pArea->area.cdPage = hb_vmCDP();
    }

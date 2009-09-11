@@ -367,18 +367,18 @@ int hb_charLower( int iChar )
    return HB_TOLOWER( iChar );
 }
 
-const char * hb_osEncode( const char * szFileName, char ** pszFree )
+const char * hb_osEncodeCP( const char * szName, char ** pszFree, ULONG * pulSize )
 {
-   if( pszFree )
-      *pszFree = NULL;
-   return szFileName;
+   HB_SYMBOL_UNUSED( pulSize );
+   HB_SYMBOL_UNUSED( pszFree );
+   return szName;
 }
 
-const char * hb_osDecode( const char * szFileName, char ** pszFree )
+const char * hb_osDecodeCP( const char * szName, char ** pszFree, ULONG * pulSize )
 {
-   if( pszFree )
-      *pszFree = NULL;
-   return szFileName;
+   HB_SYMBOL_UNUSED( pulSize );
+   HB_SYMBOL_UNUSED( pszFree );
+   return szName;
 }
 
 /* VM */

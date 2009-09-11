@@ -2765,8 +2765,11 @@ USHORT hb_fsCurDirBuff( USHORT uiDrive, char * pszBuffer, ULONG ulSize )
 
       /* Convert from OS codepage */
       {
-         char * pszFree;
-         const char * pszResult = hb_osDecode( pszBuffer, &pszFree );
+         char * pszFree = NULL;
+         const char * pszResult;
+
+         ulLen = ulSize;
+         pszResult = hb_osDecodeCP( pszBuffer, &pszFree, &ulLen );
 
          if( pszResult != pszBuffer )
             hb_strncpy( pszBuffer, pszResult, ulSize - 1 );
@@ -3286,15 +3289,21 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
             hb_strUpper( ( char * ) pFileName->szPath, strlen( pFileName->szPath ) );
       }
 
-      if( pszCP )
-      {
-         szFileName = hb_osEncode( szFileName, NULL );
-         if( pszFree )
-            *pszFree = ( char * ) szFileName;
-      }
-
       hb_fsFNameMerge( ( char * ) szFileName, pFileName );
       hb_xfree( pFileName );
+
+      if( pszCP )
+      {
+         const char * pszPrev = szFileName;
+         ulLen = HB_PATH_MAX;
+         szFileName = hb_osEncodeCP( szFileName, pszFree, &ulLen );
+         if( pszFree == NULL && szFileName != pszPrev )
+         {
+            hb_strncpy( ( char * ) pszPrev, szFileName, HB_PATH_MAX - 1 );
+            hb_xfree( ( void * ) szFileName );
+            szFileName = pszPrev;
+         }
+      }
    }
 
    return szFileName;
@@ -3309,7 +3318,8 @@ void hb_fsBaseDirBuff( char * pszBuffer )
    {
       PHB_FNAME pFName = hb_fsFNameSplit( szBaseName );
       const char * pszResult;
-      char * pszFree;
+      char * pszFree = NULL;
+      ULONG ulSize = HB_PATH_MAX;
 
       pFName->szName = NULL;
       pFName->szExtension = NULL;
@@ -3317,7 +3327,7 @@ void hb_fsBaseDirBuff( char * pszBuffer )
       hb_xfree( pFName );
 
       /* Convert from OS codepage */
-      pszResult = hb_osDecode( pszBuffer, &pszFree );
+      pszResult = hb_osDecodeCP( pszBuffer, &pszFree, &ulSize );
       if( pszResult != pszBuffer )
          hb_strncpy( pszBuffer, pszResult, HB_PATH_MAX - 1 );
       if( pszFree )

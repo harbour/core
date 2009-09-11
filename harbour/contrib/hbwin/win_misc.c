@@ -190,8 +190,8 @@ HB_FUNC( WIN_GETCOMMANDLINEPARAM )
 
    {
       /* Convert from OS codepage */
-      char * pszFree;
-      const char * pszResult = hb_osDecode( buffer + pos, &pszFree );
+      char * pszFree = NULL;
+      const char * pszResult = hb_osDecodeCP( buffer + pos, &pszFree, NULL );
 
       if( pszFree )
          hb_retc_buffer( pszFree );

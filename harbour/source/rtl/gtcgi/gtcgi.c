@@ -241,8 +241,8 @@ static BOOL hb_gt_cgi_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
    {
       PHB_GTCGI pGTCGI = HB_GTCGI_GET( pGT );
 
-      pGTCGI->cdpTerm = hb_cdpFind( pszTermCDP );
-      pGTCGI->cdpHost = hb_cdpFind( pszHostCDP );
+      pGTCGI->cdpTerm = hb_cdpFindExt( pszTermCDP );
+      pGTCGI->cdpHost = hb_cdpFindExt( pszHostCDP );
       pGTCGI->fDispTrans = pGTCGI->cdpTerm && pGTCGI->cdpHost &&
                            pGTCGI->cdpTerm != pGTCGI->cdpHost;
       return TRUE;
@@ -253,23 +253,23 @@ static BOOL hb_gt_cgi_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
 }
 
 #ifdef HB_GT_CGI_RAWOUTPUT
-
 static void hb_gt_cgi_WriteCon( PHB_GT pGT, const char * szText, ULONG ulLength )
 {
-   char * buffer = NULL;
    PHB_GTCGI pGTCGI = HB_GTCGI_GET( pGT );
 
 #ifndef HB_CDP_SUPPORT_OFF
    if( pGTCGI->fDispTrans )
    {
-      buffer = ( char * ) hb_xgrab( ulLength );
-      memcpy( buffer, szText, ulLength );
-      hb_cdpnTranslate( buffer, pGTCGI->cdpHost, pGTCGI->cdpTerm, ulLength );
-      szText = buffer;
+      ULONG ulLen = ulLength;
+      char * buffer = hb_cdpnDup( szText, &ulLen,
+                                  pGTCGI->cdpHost, pGTCGI->cdpTerm );
+      hb_gt_cgi_termOut( pGTCGI, buffer, ulLen );
+      hb_xfree( buffer );
    }
+   else
 #endif
+      hb_gt_cgi_termOut( pGTCGI, szText, ulLength );
 
-   hb_gt_cgi_termOut( pGTCGI, szText, ulLength );
    while( ulLength-- )
    {
       switch( *szText++ )
@@ -295,9 +295,6 @@ static void hb_gt_cgi_WriteCon( PHB_GT pGT, const char * szText, ULONG ulLength 
       }
    }
    HB_GTSUPER_SETPOS( pGT, pGTCGI->iRow, pGTCGI->iCol );
-
-   if( buffer )
-      hb_xfree( buffer );
 }
 
 static void hb_gt_cgi_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * szText, ULONG ulLength )
@@ -393,9 +390,17 @@ static void hb_gt_cgi_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       {
 #ifndef HB_CDP_SUPPORT_OFF
          if( pGTCGI->fDispTrans )
-            hb_cdpnTranslate( ( char * ) pGTCGI->sLineBuf, pGTCGI->cdpHost, pGTCGI->cdpTerm, iLen );
+         {
+            ULONG ulLen = iLen;
+            char * buffer = hb_cdpnDup( pGTCGI->sLineBuf, &ulLen,
+                                        pGTCGI->cdpHost, pGTCGI->cdpTerm );
+            hb_gt_cgi_termOut( pGTCGI, buffer, ulLen );
+            hb_xfree( buffer );
+         }
+         else
 #endif
-         hb_gt_cgi_termOut( pGTCGI, pGTCGI->sLineBuf, iLen );
+            hb_gt_cgi_termOut( pGTCGI, pGTCGI->sLineBuf, iLen );
+
          pGTCGI->iCol = iCol;
          if( pGTCGI->iCol > pGTCGI->iLastCol )
             pGTCGI->iLastCol = pGTCGI->iCol;

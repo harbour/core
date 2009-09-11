@@ -151,8 +151,7 @@ typedef struct
    HB_FHANDLE     hb_set_extrahan;
    HB_FHANDLE     hb_set_printhan;
    HB_PATHNAMES * hb_set_path;
-   UCHAR          hb_set_oscptransto[ 256 ];
-   UCHAR          hb_set_oscptransfrom[ 256 ];
+   void *         hb_set_oscp;
    void *         hb_set_listener;
 
    /* Upper case members are directly related to a SET */

@@ -98,7 +98,7 @@ HB_FUNC( GETENV )
          if( szValue && szValue[ 0 ] != '\0' )
          {
             /* Convert from OS codepage */
-            hb_retc_buffer( ( char * ) hb_osDecode( szValue, NULL ) );
+            hb_retc_buffer( ( char * ) hb_osDecodeCP( szValue, NULL, NULL ) );
          }
          else
          {
@@ -167,7 +167,7 @@ HB_FUNC( HB_GETENV )
          if( szValue && szValue[ 0 ] != '\0' )
          {
             if( ! HB_ISLOG( 3 ) || hb_parl( 3 ) )
-               szValue = ( char * ) hb_osDecode( szValue, NULL );
+               szValue = ( char * ) hb_osDecodeCP( szValue, NULL, NULL );
             hb_retc_buffer( szValue );
          }
          else
@@ -198,9 +198,9 @@ HB_FUNC( HB_SETENV )
 
       if( ( ! HB_ISLOG( 3 ) || hb_parl( 3 ) ) )
       {
-         pszName = hb_osEncode( pszName, &pszFreeName );
+         pszName = hb_osEncodeCP( pszName, &pszFreeName, NULL );
          if( pszValue )
-            pszValue = hb_osEncode( pszValue, &pszFreeVal );
+            pszValue = hb_osEncodeCP( pszValue, &pszFreeVal, NULL );
       }
 
       fResult = hb_setenv( pszName, pszValue );

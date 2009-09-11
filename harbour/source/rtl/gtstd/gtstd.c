@@ -543,8 +543,8 @@ static BOOL hb_gt_std_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
    if( pszTermCDP && pszHostCDP )
    {
       PHB_GTSTD pGTSTD = HB_GTSTD_GET( pGT );
-      pGTSTD->cdpTerm = hb_cdpFind( pszTermCDP );
-      pGTSTD->cdpHost = hb_cdpFind( pszHostCDP );
+      pGTSTD->cdpTerm = hb_cdpFindExt( pszTermCDP );
+      pGTSTD->cdpHost = hb_cdpFindExt( pszHostCDP );
       pGTSTD->fDispTrans = pGTSTD->cdpTerm && pGTSTD->cdpHost &&
                            pGTSTD->cdpTerm != pGTSTD->cdpHost;
       return TRUE;
@@ -718,9 +718,16 @@ static void hb_gt_std_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       {
 #ifndef HB_CDP_SUPPORT_OFF
          if( pGTSTD->fDispTrans )
-            hb_cdpnTranslate( ( char * ) pGTSTD->sLineBuf, pGTSTD->cdpHost, pGTSTD->cdpTerm, iLen );
+         {
+            ULONG ulLen = iLen;
+            char * buffer = hb_cdpnDup( pGTSTD->sLineBuf, &ulLen,
+                                        pGTSTD->cdpHost, pGTSTD->cdpTerm );
+            hb_gt_std_termOut( pGTSTD, buffer, ulLen );
+            hb_xfree( buffer );
+         }
+         else
 #endif
-         hb_gt_std_termOut( pGTSTD, pGTSTD->sLineBuf, iLen );
+            hb_gt_std_termOut( pGTSTD, pGTSTD->sLineBuf, iLen );
       }
       pGTSTD->iRow = iRow;
       pGTSTD->iCol = iCol;

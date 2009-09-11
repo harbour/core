@@ -438,25 +438,31 @@ static LPKEYINFO hb_ntxKeyPutItem( LPKEYINFO pKey, PHB_ITEM pItem, ULONG ulRecNo
    switch( hb_ntxItemType( pItem ) )
    {
       case 'C':
-         len = hb_itemGetCLen( pItem );
+#ifndef HB_CDP_SUPPORT_OFF
+         if( fTrans )
+         {
+            len = pTag->KeyLength;
+            hb_cdpnDup2( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ),
+                         pKey->key, &len,
+                         hb_vmCDP(), pTag->Owner->Owner->dbfarea.area.cdPage );
+         }
+         else
+#else
+         HB_SYMBOL_UNUSED( fTrans );
+#endif
+         {
+            len = hb_itemGetCLen( pItem );
+            if( len > ( ULONG ) pTag->KeyLength )
+               len = pTag->KeyLength;
+            memcpy( pKey->key, hb_itemGetCPtr( pItem ), len );
+         }
          if( len < ( ULONG ) pTag->KeyLength )
          {
-            memcpy( pKey->key, hb_itemGetCPtr( pItem ), len );
             memset( pKey->key + len, ' ', pTag->KeyLength - len );
             if( puiLen )
                *puiLen = ( USHORT ) len;
          }
-         else
-         {
-            memcpy( pKey->key, hb_itemGetCPtr( pItem ), pTag->KeyLength );
-         }
          pKey->key[ pTag->KeyLength ] = '\0';
-#ifndef HB_CDP_SUPPORT_OFF
-         if( fTrans )
-            hb_cdpnTranslate( pKey->key, hb_vmCDP(), pTag->Owner->Owner->dbfarea.area.cdPage, pTag->KeyLength );
-#else
-         HB_SYMBOL_UNUSED( fTrans );
-#endif
          break;
       case 'N':
          hb_ntxNumToStr( pItem, pKey->key, pTag->KeyLength, pTag->KeyDec );
@@ -513,14 +519,12 @@ static PHB_ITEM hb_ntxKeyGetItem( PHB_ITEM pItem, LPKEYINFO pKey,
       {
          case 'C':
 #ifndef HB_CDP_SUPPORT_OFF
-            if( fTrans && pTag->Owner->Owner->dbfarea.area.cdPage != hb_vmCDP() )
+            if( fTrans )
             {
-               char * pVal = ( char * ) hb_xgrab( pTag->KeyLength + 1 );
-               memcpy( pVal, pKey->key, pTag->KeyLength );
-               pVal[ pTag->KeyLength ] = '\0';
-               hb_cdpnTranslate( pVal, pTag->Owner->Owner->dbfarea.area.cdPage, hb_vmCDP(),
-                                 pTag->KeyLength );
-               pItem = hb_itemPutCLPtr( pItem, pVal, pTag->KeyLength );
+               ULONG ulLen = pTag->KeyLength;
+               char * pszVal = hb_cdpnDup( pKey->key, &ulLen,
+                                           pTag->Owner->Owner->dbfarea.area.cdPage, hb_vmCDP() );
+               pItem = hb_itemPutCLPtr( pItem, pszVal, ulLen );
             }
             else
 #else
@@ -4234,8 +4238,7 @@ static BOOL hb_ntxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm 
 #ifndef HB_CDP_SUPPORT_OFF
    if( pArea->dbfarea.area.cdPage != hb_vmCDP() )
    {
-      szPattern = szFree = hb_strdup( szPattern );
-      hb_cdpTranslate( szFree, hb_vmCDP(), pArea->dbfarea.area.cdPage );
+      szPattern = szFree = hb_cdpDup( szPattern, hb_vmCDP(), pArea->dbfarea.area.cdPage );
    }
 #endif
    while( iFixed < pTag->KeyLength && szPattern[ iFixed ] &&
@@ -4338,19 +4341,22 @@ static BOOL hb_ntxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm 
 
 static BOOL hb_ntxRegexMatch( LPTAGINFO pTag, PHB_REGEX pRegEx, char * szKey )
 {
+   ULONG ulLen = pTag->KeyLength;
 #ifndef HB_CDP_SUPPORT_OFF
    char szBuff[ NTX_MAX_KEY + 1 ];
 
    if( pTag->Owner->Owner->dbfarea.area.cdPage != hb_vmCDP() )
    {
-      memcpy( szBuff, pTag->CurKeyInfo->key, pTag->KeyLength + 1 );
-      hb_cdpnTranslate( szBuff, pTag->Owner->Owner->dbfarea.area.cdPage, hb_vmCDP(), pTag->KeyLength );
+      ulLen = sizeof( szBuff ) - 1;
+      hb_cdpnDup2( szKey, pTag->KeyLength, szBuff, &ulLen,
+                   pTag->Owner->Owner->dbfarea.area.cdPage, hb_vmCDP() );
+      szBuff[ ulLen ] = '\0';
       szKey = szBuff;
    }
 #else
    HB_SYMBOL_UNUSED( pTag );
 #endif
-   return hb_regexMatch( pRegEx, szKey, pTag->KeyLength, FALSE );
+   return hb_regexMatch( pRegEx, szKey, ulLen, FALSE );
 }
 
 /*

@@ -56,7 +56,7 @@
 
 #include <shellapi.h>
 
-/* TODO: Add hb_osEncode(). */
+/* TODO: Add hb_osEncodeCP(). */
 
 HB_FUNC( WAPI_SHELLEXECUTE )
 {

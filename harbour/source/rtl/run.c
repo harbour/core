@@ -68,9 +68,9 @@ HB_FUNC( __RUN )
 #if defined( HB_OS_WIN_CE )
       hb_fsProcessRun( pszCommand, NULL, 0, NULL, NULL, NULL, NULL, FALSE );
 #else
-      char * pszFree;
+      char * pszFree = NULL;
 
-      if( system( hb_osEncode( pszCommand, &pszFree ) ) != 0 ) {}
+      if( system( hb_osEncodeCP( pszCommand, &pszFree, NULL ) ) != 0 ) {}
 
       if( pszFree )
          hb_xfree( pszFree );

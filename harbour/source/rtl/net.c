@@ -195,10 +195,10 @@ char * hb_username( void )
 
 HB_FUNC( NETNAME )
 {
-   hb_retc_buffer( ( char * ) hb_osDecode( hb_netname(), NULL ) );
+   hb_retc_buffer( ( char * ) hb_osDecodeCP( hb_netname(), NULL, NULL ) );
 }
 
 HB_FUNC( HB_USERNAME )
 {
-   hb_retc_buffer( ( char * ) hb_osDecode( hb_username(), NULL ) );
+   hb_retc_buffer( ( char * ) hb_osDecodeCP( hb_username(), NULL, NULL ) );
 }

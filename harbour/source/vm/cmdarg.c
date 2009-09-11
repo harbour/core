@@ -402,7 +402,7 @@ HB_FUNC( HB_ARGSTRING )
       if( pszValue )
       {
          /* Convert from OS codepage */
-         hb_retc_buffer( ( char * ) hb_osDecode( pszValue, NULL ) );
+         hb_retc_buffer( ( char * ) hb_osDecodeCP( pszValue, NULL, NULL ) );
          return;
       }
    }
@@ -454,7 +454,7 @@ HB_FUNC( HB_CMDLINE )
       *--ptr = '\0';
 
       /* Convert from OS codepage */
-      hb_retc_buffer( ( char * ) hb_osDecode( pszBuffer, NULL ) );
+      hb_retc_buffer( ( char * ) hb_osDecodeCP( pszBuffer, NULL, NULL ) );
    }
    else
       hb_retc_null();

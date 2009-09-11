@@ -289,9 +289,9 @@ HB_FUNC( HB_PROGNAME )
    if( szBaseName )
    {
       /* Convert from OS codepage */
-      char * pszFree;
+      char * pszFree = NULL;
 
-      szBaseName = hb_osDecode( szBaseName, &pszFree );
+      szBaseName = hb_osDecodeCP( szBaseName, &pszFree, NULL );
 
       if( pszFree )
          hb_retc_buffer( pszFree );

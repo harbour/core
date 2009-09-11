@@ -396,43 +396,6 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
    return;
 }
 
-static void hb_set_OSCODEPAGE( PHB_SET_STRUCT pSet )
-{
-   int i;
-
-   for( i = 0; i < 256; ++i )
-   {
-      pSet->hb_set_oscptransto[ i ] = ( UCHAR ) i;
-      pSet->hb_set_oscptransfrom[ i ] = ( UCHAR ) i;
-   }
-
-#ifndef HB_CDP_SUPPORT_OFF
-
-   {
-      const char * pszHostCDP = hb_cdpID();
-      const char * pszFileCDP = pSet->HB_SET_OSCODEPAGE;
-
-      if( pszFileCDP && pszFileCDP[ 0 ] && pszHostCDP )
-      {
-         PHB_CODEPAGE cdpFile = hb_cdpFind( pszFileCDP );
-         PHB_CODEPAGE cdpHost = hb_cdpFind( pszHostCDP );
-
-         if( cdpFile && cdpHost && cdpFile != cdpHost &&
-             cdpFile->nChars && cdpFile->nChars == cdpHost->nChars )
-         {
-            for( i = 0; i < cdpHost->nChars; ++i )
-            {
-               pSet->hb_set_oscptransto[ ( UCHAR ) cdpHost->CharsUpper[ i ] ] = ( UCHAR ) cdpFile->CharsUpper[ i ];
-               pSet->hb_set_oscptransto[ ( UCHAR ) cdpHost->CharsLower[ i ] ] = ( UCHAR ) cdpFile->CharsLower[ i ];
-               pSet->hb_set_oscptransfrom[ ( UCHAR ) cdpFile->CharsUpper[ i ] ] = ( UCHAR ) cdpHost->CharsUpper[ i ];
-               pSet->hb_set_oscptransfrom[ ( UCHAR ) cdpFile->CharsLower[ i ] ] = ( UCHAR ) cdpHost->CharsLower[ i ];
-            }
-         }
-      }
-   }
-#endif
-}
-
 BOOL hb_setSetCentury( BOOL new_century_setting )
 {
    HB_STACK_TLS_PRELOAD
@@ -1016,10 +979,19 @@ HB_FUNC( SET )
          break;
       case HB_SET_OSCODEPAGE:
          hb_retc( pSet->HB_SET_OSCODEPAGE );
-         if( args > 1 )
+         if( args > 1 && ( HB_IS_STRING( pArg2 ) || HB_IS_NIL( pArg2 ) ) )
          {
-            pSet->HB_SET_OSCODEPAGE = set_string( pArg2, pSet->HB_SET_OSCODEPAGE );
-            hb_set_OSCODEPAGE( pSet );
+#ifndef HB_CDP_SUPPORT_OFF
+            PHB_CODEPAGE cdpOS = hb_cdpFindExt( hb_itemGetCPtr( pArg2 ) );
+            char * szValue = cdpOS ? hb_strdup( cdpOS->id ) : NULL;
+#else
+            void * cdpOS = NULL;
+            char *szValue = NULL;
+#endif
+            if( pSet->HB_SET_OSCODEPAGE )
+               hb_xfree( pSet->HB_SET_OSCODEPAGE );
+            pSet->HB_SET_OSCODEPAGE = szValue;
+            pSet->hb_set_oscp = ( void * ) cdpOS;
          }
          break;
 
@@ -1130,11 +1102,10 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
    pSet->HB_SET_TRIMFILENAME = FALSE;
    pSet->HB_SET_HBOUTLOG = hb_strdup( "hb_out.log" );
    pSet->HB_SET_HBOUTLOGINFO = hb_strdup( "" );
-   pSet->HB_SET_OSCODEPAGE = hb_strdup( "" );
+   pSet->HB_SET_OSCODEPAGE = NULL;
 
    hb_xsetfilename( pSet->HB_SET_HBOUTLOG );
    hb_xsetinfo( pSet->HB_SET_HBOUTLOGINFO );
-   hb_set_OSCODEPAGE( pSet );
 
    pSet->hb_set_listener = NULL;
 }
@@ -1846,11 +1817,17 @@ BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
          case HB_SET_OSCODEPAGE:
             if( HB_IS_STRING( pItem ) || HB_IS_NIL( pItem ) )
             {
-               szValue = hb_strndup( hb_itemGetCPtr( pItem ), USHRT_MAX );
+#ifndef HB_CDP_SUPPORT_OFF
+               PHB_CODEPAGE cdpOS = hb_cdpFindExt( hb_itemGetCPtr( pItem ) );
+               szValue = cdpOS ? hb_strdup( cdpOS->id ) : NULL;
+#else
+               void * cdpOS = NULL;
+               szValue = NULL;
+#endif
                if( pSet->HB_SET_OSCODEPAGE )
                   hb_xfree( pSet->HB_SET_OSCODEPAGE );
                pSet->HB_SET_OSCODEPAGE = szValue;
-               hb_set_OSCODEPAGE( pSet );
+               pSet->hb_set_oscp = ( void * ) cdpOS;
                fResult = TRUE;
             }
             break;
@@ -2633,77 +2610,77 @@ const char * hb_setGetOSCODEPAGE( void )
    return hb_stackSetStruct()->HB_SET_OSCODEPAGE;
 }
 
-const char * hb_osEncode( const char * szName, char ** pszFree )
+const char * hb_osEncodeCP( const char * szName, char ** pszFree, ULONG * pulSize )
 {
    HB_STACK_TLS_PRELOAD
 
 #if defined( HB_MT_VM )
-   if( !hb_stackId() )
-   {
-      if( pszFree )
-         *pszFree = NULL;
-   }
-   else
+   if( hb_stackId() )
 #endif
    {
-      const char * pszCP = hb_setGetOSCODEPAGE();
-
-      if( pszCP && *pszCP )
+      PHB_CODEPAGE cdpOS = ( PHB_CODEPAGE ) hb_stackSetStruct()->hb_set_oscp;
+      if( cdpOS )
       {
-         UCHAR * pCPTrans = hb_stackSetStruct()->hb_set_oscptransto;
-         char * p;
-
-         if( pszFree )
-            szName = *pszFree = p = hb_strdup( szName );
-         else
-            p = ( char * ) szName;
-
-         while( *p )
+         PHB_CODEPAGE cdpHost = hb_vmCDP();
+         if( cdpHost && cdpHost != cdpOS )
          {
-            *p = pCPTrans[ ( UCHAR ) *p ];
-            p++;
+            ULONG ulSize = 0;
+            char * pszBuf;
+
+            if( pszFree == NULL )
+            {
+               pszFree = ( char ** ) &szName;
+               ulSize = strlen( szName );
+            }
+            pszBuf = *pszFree;
+            if( pulSize == NULL )
+               pulSize = &ulSize;
+            else if( *pulSize > 0 )
+               ulSize = *pulSize - 1;
+
+            szName = hb_cdpnDup3( szName, ( ULONG ) strlen( szName ),
+                                  pszBuf, &ulSize, pszFree, pulSize,
+                                  cdpHost, cdpOS );
          }
       }
-      else if( pszFree )
-         *pszFree = NULL;
    }
 
    return szName;
 }
 
-const char * hb_osDecode( const char * szName, char ** pszFree )
+const char * hb_osDecodeCP( const char * szName, char ** pszFree, ULONG * pulSize )
 {
    HB_STACK_TLS_PRELOAD
 
 #if defined( HB_MT_VM )
-   if( !hb_stackId() )
-   {
-      if( pszFree )
-         *pszFree = NULL;
-   }
-   else
+   if( hb_stackId() )
 #endif
    {
-      const char * pszCP = hb_setGetOSCODEPAGE();
-
-      if( pszCP && *pszCP )
+      PHB_CODEPAGE cdpOS = ( PHB_CODEPAGE ) hb_stackSetStruct()->hb_set_oscp;
+      if( cdpOS )
       {
-         UCHAR * pCPTrans = hb_stackSetStruct()->hb_set_oscptransfrom;
-         char * p;
-
-         if( pszFree )
-            szName = *pszFree = p = hb_strdup( szName );
-         else
-            p = ( char * ) szName;
-
-         while( *p )
+         PHB_CODEPAGE cdpHost = hb_vmCDP();
+         if( cdpHost && cdpHost != cdpOS )
          {
-            *p = pCPTrans[ ( UCHAR ) *p ];
-            p++;
+            ULONG ulSize = 0;
+            char * pszBuf;
+
+            if( pszFree == NULL )
+            {
+               pszFree = ( char ** ) &szName;
+               ulSize = strlen( szName );
+            }
+            pszBuf = *pszFree;
+            if( pulSize == NULL )
+               pulSize = &ulSize;
+            else if( *pulSize > 0 )
+               ulSize = *pulSize - 1;
+
+            szName = hb_cdpnDup3( szName, ( ULONG ) strlen( szName ),
+                                  pszBuf, &ulSize, pszFree, pulSize,
+                                  cdpOS, cdpHost );
          }
       }
-      else if( pszFree )
-         *pszFree = NULL;
    }
 
    return szName;

@@ -858,9 +858,16 @@ static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       {
 #ifndef HB_CDP_SUPPORT_OFF
          if( s_fDispTrans )
-            hb_cdpnTranslate( ( char * ) s_sLineBuf, s_cdpHost, s_cdpTerm, iLen );
+         {
+            ULONG ulLen = iLen;
+            char * buffer = hb_cdpnDup( s_sLineBuf, &ulLen, s_cdpHost, s_cdpTerm );
+            hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, buffer, ulLen );
+            hb_xfree( buffer );
+         }
+         else
 #endif
-         hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, s_sLineBuf, iLen );
+            hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, s_sLineBuf, iLen );
+
          iCol += iLen;
          iLen = 0;
          iColor2 = iColor;
@@ -873,9 +880,15 @@ static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    {
 #ifndef HB_CDP_SUPPORT_OFF
       if( s_fDispTrans )
-         hb_cdpnTranslate( ( char * ) s_sLineBuf, s_cdpHost, s_cdpTerm, iLen );
+      {
+         ULONG ulLen = iLen;
+         char * buffer = hb_cdpnDup( s_sLineBuf, &ulLen, s_cdpHost, s_cdpTerm );
+         hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, buffer, ulLen );
+         hb_xfree( buffer );
+      }
+      else
 #endif
-      hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, s_sLineBuf, iLen );
+         hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, s_sLineBuf, iLen );
    }
 }
 

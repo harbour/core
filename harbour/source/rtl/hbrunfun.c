@@ -70,9 +70,9 @@ HB_FUNC( HB_RUN )
          iResult = hb_fsProcessRun( pszCommand,
                                     NULL, 0, NULL, NULL, NULL, NULL, FALSE );
 #else
-         char * pszFree;
+         char * pszFree = NULL;
 
-         iResult = system( hb_osEncode( pszCommand, &pszFree ) );
+         iResult = system( hb_osEncodeCP( pszCommand, &pszFree, NULL ) );
 
          if( pszFree )
             hb_xfree( pszFree );

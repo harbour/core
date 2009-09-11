@@ -669,10 +669,9 @@ static void hb_gt_def_OutStd( PHB_GT pGT, const char * szStr, ULONG ulLen )
          HB_GTSELF_PREEXT( pGT );
          if( pGT->fDispTrans )
          {
-            char * szStrBuff = ( char * ) hb_xgrab( ulLen );
-            memcpy( szStrBuff, szStr, ulLen );
-            hb_cdpnTranslate( szStrBuff, pGT->cdpHost, pGT->cdpTerm, ulLen );
-            hb_fsWriteLarge( pGT->hStdOut, szStrBuff, ulLen );
+            char * szStrBuff = hb_cdpnDup( szStr, &ulLen,
+                                           pGT->cdpHost, pGT->cdpTerm );
+            hb_fsWriteLarge( pGT->hStdErr, szStrBuff, ulLen );
             hb_xfree( szStrBuff );
          }
          else
@@ -693,9 +692,8 @@ static void hb_gt_def_OutErr( PHB_GT pGT, const char * szStr, ULONG ulLen )
          HB_GTSELF_PREEXT( pGT );
          if( pGT->fDispTrans )
          {
-            char * szStrBuff = ( char * ) hb_xgrab( ulLen );
-            memcpy( szStrBuff, szStr, ulLen );
-            hb_cdpnTranslate( szStrBuff, pGT->cdpHost, pGT->cdpTerm, ulLen );
+            char * szStrBuff = hb_cdpnDup( szStr, &ulLen,
+                                           pGT->cdpHost, pGT->cdpTerm );
             hb_fsWriteLarge( pGT->hStdErr, szStrBuff, ulLen );
             hb_xfree( szStrBuff );
          }
@@ -1431,8 +1429,8 @@ static BOOL hb_gt_def_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
 
    if( pszTermCDP && pszHostCDP )
    {
-      pGT->cdpTerm = hb_cdpFind( pszTermCDP );
-      pGT->cdpHost = hb_cdpFind( pszHostCDP );
+      pGT->cdpTerm = hb_cdpFindExt( pszTermCDP );
+      pGT->cdpHost = hb_cdpFindExt( pszHostCDP );
       pGT->fDispTrans = pGT->cdpTerm && pGT->cdpHost &&
                         pGT->cdpTerm != pGT->cdpHost;
       return TRUE;

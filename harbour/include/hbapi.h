@@ -483,8 +483,6 @@ typedef USHORT HB_ERRCODE;
 
 extern HB_SYMB  hb_symEval;
 
-typedef ULONG HB_VMHANDLE;
-
 extern HB_EXPORT void   hb_xinit( void );                           /* Initialize fixed memory subsystem */
 extern HB_EXPORT void   hb_xexit( void );                           /* Deinitialize fixed memory subsystem */
 extern HB_EXPORT void * hb_xalloc( ULONG ulSize );                  /* allocates memory, returns NULL on failure */
@@ -499,23 +497,6 @@ extern HB_EXPORT void   hb_xsetinfo( const char * szValue );
 extern void hb_xinit_thread( void );
 extern void hb_xexit_thread( void );
 #endif
-
-extern HB_EXPORT HB_VMHANDLE hb_xvalloc( ULONG nSize, USHORT nFlags );
-extern HB_EXPORT void        hb_xvfree( HB_VMHANDLE h );
-extern HB_EXPORT HB_VMHANDLE hb_xvrealloc( HB_VMHANDLE h, ULONG nSize, USHORT nFlags );
-extern HB_EXPORT void *      hb_xvlock( HB_VMHANDLE h );
-extern HB_EXPORT void        hb_xvunlock( HB_VMHANDLE h );
-extern HB_EXPORT void *      hb_xvwire( HB_VMHANDLE h );
-extern HB_EXPORT void        hb_xvunwire( HB_VMHANDLE h );
-extern HB_EXPORT ULONG       hb_xvlockcount( HB_VMHANDLE h );
-extern HB_EXPORT ULONG       hb_xvsize( HB_VMHANDLE h );
-extern HB_EXPORT HB_VMHANDLE hb_xvheapnew( ULONG nSize );
-extern HB_EXPORT void        hb_xvheapdestroy( HB_VMHANDLE h );
-extern HB_EXPORT HB_VMHANDLE hb_xvheapresize( HB_VMHANDLE h, ULONG nSize );
-extern HB_EXPORT ULONG       hb_xvheapalloc( HB_VMHANDLE h, ULONG nSize );
-extern HB_EXPORT void        hb_xvheapfree( HB_VMHANDLE h, ULONG nOffset );
-extern HB_EXPORT void *      hb_xvheaplock( HB_VMHANDLE h, ULONG nOffset );
-extern HB_EXPORT void        hb_xvheapunlock( HB_VMHANDLE h, ULONG nOffset );
 
 #ifdef _HB_API_INTERNAL_
 extern void       hb_xRefInc( void * pMem );    /* increment reference counter */
@@ -544,6 +525,9 @@ extern void *     hb_xRefResize( void * pMem, ULONG ulSave, ULONG ulSize, ULONG 
 
 #endif /* _HB_API_INTERNAL_ */
 
+#define hb_xgrabz( n )        memset( hb_xgrab( ( n ) ), 0, ( n ) )
+#define hb_xmemdup( p, n )    memcpy( hb_xgrab( ( n ) ), ( p ), ( n ) )
+
 /* #if UINT_MAX == ULONG_MAX */
 /* it fails on 64bit platforms where int has 32 bit and long has 64 bit.
    we need these functions only when max(size_t) < max(long)
@@ -559,6 +543,26 @@ extern void *     hb_xRefResize( void * pMem, ULONG ulSave, ULONG ulSize, ULONG 
 extern HB_EXPORT void * hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ulLen ); /* copy more than memcpy() can */
 extern HB_EXPORT void * hb_xmemset( void * pDestArg, int iFill, ULONG ulLen ); /* set more than memset() can */
 #endif
+
+/* virtual memory */
+typedef ULONG HB_VMHANDLE;
+
+extern HB_EXPORT HB_VMHANDLE hb_xvalloc( ULONG nSize, USHORT nFlags );
+extern HB_EXPORT void        hb_xvfree( HB_VMHANDLE h );
+extern HB_EXPORT HB_VMHANDLE hb_xvrealloc( HB_VMHANDLE h, ULONG nSize, USHORT nFlags );
+extern HB_EXPORT void *      hb_xvlock( HB_VMHANDLE h );
+extern HB_EXPORT void        hb_xvunlock( HB_VMHANDLE h );
+extern HB_EXPORT void *      hb_xvwire( HB_VMHANDLE h );
+extern HB_EXPORT void        hb_xvunwire( HB_VMHANDLE h );
+extern HB_EXPORT ULONG       hb_xvlockcount( HB_VMHANDLE h );
+extern HB_EXPORT ULONG       hb_xvsize( HB_VMHANDLE h );
+extern HB_EXPORT HB_VMHANDLE hb_xvheapnew( ULONG nSize );
+extern HB_EXPORT void        hb_xvheapdestroy( HB_VMHANDLE h );
+extern HB_EXPORT HB_VMHANDLE hb_xvheapresize( HB_VMHANDLE h, ULONG nSize );
+extern HB_EXPORT ULONG       hb_xvheapalloc( HB_VMHANDLE h, ULONG nSize );
+extern HB_EXPORT void        hb_xvheapfree( HB_VMHANDLE h, ULONG nOffset );
+extern HB_EXPORT void *      hb_xvheaplock( HB_VMHANDLE h, ULONG nOffset );
+extern HB_EXPORT void        hb_xvheapunlock( HB_VMHANDLE h, ULONG nOffset );
 
 /* garbage collector */
 #define HB_GARBAGE_FUNC( hbfunc )   void hbfunc( void * Cargo ) /* callback function for cleaning garbage memory pointer */
@@ -1128,8 +1132,8 @@ extern HB_EXPORT BOOL   hb_iswince( void ); /* return .T. if OS is Windows CE or
 extern HB_EXPORT BOOL   hb_printerIsReady( const char * pszPrinterName );
 
 /* OS/Harbour codepage conversion */
-extern HB_EXPORT const char * hb_osEncode( const char * szFileName, char ** pszFree ); /* Convert a string sent to a system call, from Harbour codepage. */
-extern HB_EXPORT const char * hb_osDecode( const char * szFileName, char ** pszFree ); /* Convert a string received from a system call, to Harbour codepage. */
+extern HB_EXPORT const char * hb_osEncodeCP( const char * szName, char ** pszFree, ULONG * pulSize ); /* Convert a string sent to a system call, from Harbour codepage. */
+extern HB_EXPORT const char * hb_osDecodeCP( const char * szName, char ** pszFree, ULONG * pulSize ); /* Convert a string received from a system call, to Harbour codepage. */
 
 /* environment variables access */
 extern BOOL   hb_getenv_buffer( const char * szName, char * szBuffer, int nSize );

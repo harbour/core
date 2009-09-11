@@ -116,6 +116,10 @@ HB_CODEPAGE_ANNOUNCE( EN )
 
 static PHB_CODEPAGE s_cdpList[HB_CDP_MAX_] = { &s_en_codepage };
 
+/* pseudo codepage for translations only */
+static HB_CODEPAGE s_utf8_codepage =
+   { "UTF8", HB_CPID_437, HB_UNITB_437, 0, NULL, NULL, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
+
 static int utf8Size( USHORT uc )
 {
    if( uc < 0x0080 )
@@ -453,6 +457,20 @@ PHB_CODEPAGE hb_cdpFind( const char *pszID )
    return ( iPos != -1 ) ? s_cdpList[iPos] : NULL;
 }
 
+PHB_CODEPAGE hb_cdpFindExt( const char *pszID )
+{
+   int iPos;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_cdpFindExt(%s)", pszID ) );
+
+   if( pszID && strcmp( pszID, "UTF8" ) == 0 )
+      return &s_utf8_codepage;
+
+   iPos = hb_cdpFindPos( pszID );
+
+   return ( iPos != -1 ) ? s_cdpList[iPos] : NULL;
+}
+
 PHB_CODEPAGE hb_cdpSelect( PHB_CODEPAGE cdpage )
 {
    PHB_CODEPAGE cdpOld;
@@ -719,6 +737,23 @@ ULONG hb_cdpStringInUTF8Length( PHB_CODEPAGE cdp, BOOL fCtrl,
    return ulDst;
 }
 
+ULONG hb_cdpStringInUTF8Length2( PHB_CODEPAGE cdp, BOOL fCtrl,
+                                 const char * pSrc, ULONG ulLen, ULONG ulMax )
+{
+   ULONG ul, ulDst;
+   int n;
+
+   for( ul = ulDst = 0; ul < ulLen; ++ul )
+   {
+      n = utf8Size( hb_cdpGetU16( cdp, fCtrl, ( UCHAR ) pSrc[ ul ] ) );
+      if( ulDst + n > ulMax )
+         break;
+      ulDst += n;
+   }
+
+   return ulDst;
+}
+
 ULONG hb_cdpUTF8ToStrn( PHB_CODEPAGE cdp, BOOL fCtrl,
                         const char * pSrc, ULONG ulSrc,
                         char * pDst, ULONG ulDst )
@@ -802,6 +837,7 @@ ULONG hb_cdpStrnToUTF8( PHB_CODEPAGE cdp, BOOL fCtrl,
             u = hb_cdpGetU16( cdp, fCtrl, ( UCHAR ) pSrc[ i ] );
             n += u16toutf8( &pDst[ n ], u );
          }
+         pDst[ n ] = '\0';
          return n;
       }
       else
@@ -824,6 +860,68 @@ ULONG hb_cdpStrnToUTF8( PHB_CODEPAGE cdp, BOOL fCtrl,
       n += u16toutf8( &pDst[ n ], u );
    }
    pDst[ n ] = '\0';
+
+   return n;
+}
+
+ULONG hb_cdpStrnToUTF8n( PHB_CODEPAGE cdp, BOOL fCtrl,
+                         const char * pSrc, ULONG ulLen,
+                         char * pDst, ULONG ulDst )
+{
+   USHORT u, *uniCodes, nChars;
+   ULONG i, n, l;
+
+   if( cdp && cdp->uniTable )
+   {
+      if( cdp->nMulti || cdp->uniTable->lMulti )
+      {
+         /*
+          * TODO: this translation is bad, please fix me!!!
+          */
+         for( i = 0, n = 0; i < ulLen; i++ )
+         {
+            u = hb_cdpGetU16( cdp, fCtrl, ( UCHAR ) pSrc[ i ] );
+            l = utf8Size( u );
+            if( n + l <= ulDst )
+            {
+               u16toutf8( &pDst[ n ], u );
+               n += l;
+            }
+            else
+               break;
+         }
+         if( n < ulDst )
+            pDst[ n ] = '\0';
+         return n;
+      }
+      else
+      {
+         uniCodes = cdp->uniTable->uniCodes;
+         nChars = ( USHORT ) cdp->uniTable->nChars;
+      }
+   }
+   else
+   {
+      nChars = 0;
+      uniCodes = NULL;
+   }
+
+   for( i = 0, n = 0; i < ulLen; i++ )
+   {
+      u = ( UCHAR ) pSrc[ i ];
+      if( uniCodes && u < nChars && ( fCtrl || u >= 32 ) )
+         u = uniCodes[ u ];
+      l = utf8Size( u );
+      if( n + l <= ulDst )
+      {
+         u16toutf8( &pDst[ n ], u );
+         n += l;
+      }
+      else
+         break;
+   }
+   if( n < ulDst )
+      pDst[ n ] = '\0';
 
    return n;
 }
@@ -868,6 +966,192 @@ ULONG hb_cdpStrnToU16( PHB_CODEPAGE cdp, BOOL fCtrl,
       HB_PUT_BE_UINT16( pDst, u );
    }
    return i << 1;
+}
+
+ULONG hb_cdpnDupLen( const char * pszSrc, ULONG ulLen,
+                     PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
+{
+   if( cdpIn && cdpOut && cdpIn != cdpOut && ulLen )
+   {
+      if( cdpIn == &s_utf8_codepage )
+         ulLen = hb_cdpUTF8StringLength( pszSrc, ulLen );
+      else if( cdpOut == &s_utf8_codepage )
+         ulLen = hb_cdpStringInUTF8Length( cdpIn, FALSE, pszSrc, ulLen );
+      else
+      {
+         /* TODO: add unicode base translation which can respect
+          * multibyte characters
+          */
+      }
+   }
+
+   return ulLen;
+}
+
+ULONG hb_cdpnDup2Len( const char * pszSrc, ULONG ulLen, ULONG ulMax,
+                      PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
+{
+   if( cdpIn && cdpOut && cdpIn != cdpOut && ulLen )
+   {
+      if( cdpIn == &s_utf8_codepage )
+         ulLen = hb_cdpUTF8StringLength( pszSrc, ulLen );
+      else if( cdpOut == &s_utf8_codepage )
+         ulLen = hb_cdpStringInUTF8Length2( cdpIn, FALSE, pszSrc, ulLen, ulMax );
+      else
+      {
+         /* TODO: add unicode base translation which can respect
+          * multibyte characters
+          */
+      }
+   }
+   if( ulLen > ulMax )
+      ulLen = ulMax;
+
+   return ulLen;
+}
+
+char * hb_cdpDup( const char * pszSrc, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
+{
+   ULONG ulLen = strlen( pszSrc );
+   return hb_cdpnDup( pszSrc, &ulLen, cdpIn, cdpOut );
+}
+
+char * hb_cdpnDup( const char * pszSrc, ULONG * pulLen,
+                   PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
+{
+   char * pszDst;
+   ULONG ulDst;
+
+   if( cdpIn && cdpOut && cdpIn != cdpOut )
+   {
+      if( cdpIn == &s_utf8_codepage )
+      {
+         ulDst = hb_cdpUTF8StringLength( pszSrc, *pulLen );
+         pszDst = ( char * ) hb_xgrab( ulDst + 1 );
+         hb_cdpUTF8ToStrn( cdpOut, FALSE, pszSrc, *pulLen, pszDst, ulDst + 1 );
+      }
+      else if( cdpOut == &s_utf8_codepage )
+      {
+         ulDst = hb_cdpStringInUTF8Length( cdpIn, FALSE, pszSrc, *pulLen );
+         pszDst = ( char * ) hb_xgrab( ulDst + 1 );
+         hb_cdpStrnToUTF8( cdpIn, FALSE, pszSrc, *pulLen, pszDst );
+      }
+      else
+      {
+         /* TODO: add unicode base translation which can respect
+          * multibyte characters
+          */
+         ulDst = *pulLen;
+         pszDst = ( char * ) hb_xgrab( ulDst + 1 );
+         memcpy( pszDst, pszSrc, ulDst );
+         pszDst[ ulDst ] = '\0';
+         hb_cdpnTranslate( pszDst, cdpIn, cdpOut, ulDst );
+      }
+   }
+   else
+   {
+      ulDst = *pulLen;
+      pszDst = ( char * ) hb_xgrab( ulDst + 1 );
+      memcpy( pszDst, pszSrc, ulDst );
+      pszDst[ ulDst ] = '\0';
+   }
+
+   *pulLen = ulDst;
+
+   return pszDst;
+}
+
+const char * hb_cdpnDup2( const char * pszSrc, ULONG ulSrc,
+                          char * pszDst, ULONG * pulDst,
+                          PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
+{
+   if( cdpIn && cdpOut && cdpIn != cdpOut )
+   {
+      if( cdpIn == &s_utf8_codepage )
+         *pulDst = hb_cdpUTF8ToStrn( cdpOut, FALSE, pszSrc, ulSrc, pszDst, *pulDst );
+      else if( cdpOut == &s_utf8_codepage )
+         *pulDst = hb_cdpStrnToUTF8n( cdpIn, FALSE, pszSrc, ulSrc, pszDst, *pulDst );
+      else
+      {
+         /* TODO: add unicode base translation which can respect
+          * multibyte characters
+          */
+         if( *pulDst > ulSrc )
+         {
+            *pulDst = ulSrc;
+            pszDst[ ulSrc ] = '\0';
+         }
+         else
+            ulSrc = *pulDst;
+         memcpy( pszDst, pszSrc, ulSrc );
+         hb_cdpnTranslate( pszDst, cdpIn, cdpOut, ulSrc );
+      }
+   }
+   else
+   {
+      if( *pulDst > ulSrc )
+      {
+         *pulDst = ulSrc;
+         pszDst[ ulSrc ] = '\0';
+      }
+      else
+         ulSrc = *pulDst;
+      memcpy( pszDst, pszSrc, ulSrc );
+   }
+
+   return pszDst;
+}
+
+const char * hb_cdpnDup3( const char * pszSrc, ULONG ulSrc,
+                          char * pszDst, ULONG * pulDst,
+                          char ** pszFree, ULONG * pulSize,
+                          PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
+{
+   if( cdpIn && cdpOut && cdpIn != cdpOut && ulSrc )
+   {
+      char * pszPrev = NULL;
+      ULONG ulDst = cdpOut != &s_utf8_codepage ? ulSrc :
+                     hb_cdpStringInUTF8Length( cdpIn, FALSE, pszSrc, ulSrc );
+
+      if( pszDst == NULL )
+      {
+         pszDst = *pszFree;
+         if( pszDst == NULL && *pulSize > 0 )
+            pszDst = ( char * ) pszSrc;
+      }
+
+      if( ulDst >= *pulSize ||
+          ( pszDst == pszSrc && cdpOut == &s_utf8_codepage ) )
+      {
+         pszPrev = *pszFree;
+         pszDst = *pszFree = ( char * ) hb_xgrab( ulDst + 1 );
+         *pulSize = ulDst + 1;
+      }
+
+      if( cdpIn == &s_utf8_codepage )
+         ulDst = hb_cdpUTF8ToStrn( cdpOut, FALSE, pszSrc, ulSrc, pszDst, *pulSize );
+      else if( cdpOut == &s_utf8_codepage )
+         ulDst = hb_cdpStrnToUTF8n( cdpIn, FALSE, pszSrc, ulSrc, pszDst, *pulSize );
+      else
+      {
+         /* TODO: add unicode base translation which can respect
+          * multibyte characters
+          */
+         if( pszDst != pszSrc )
+            memcpy( pszDst, pszSrc, ulDst );
+         pszDst[ ulDst ] = '\0';
+         hb_cdpnTranslate( pszDst, cdpIn, cdpOut, ulSrc );
+      }
+      if( pszPrev )
+         hb_xfree( pszPrev );
+      if( *pulDst )
+         *pulDst = ulDst;
+      return pszDst;
+   }
+
+   if( *pulDst )
+      *pulDst = ulSrc;
+   return pszSrc;
 }
 
 int hb_cdpchrcmp( char cFirst, char cSecond, PHB_CODEPAGE cdpage )
@@ -1211,10 +1495,7 @@ HB_FUNC( HB_TRANSLATE )
 
       if( cdpIn && cdpOut && cdpIn != cdpOut )
       {
-         char *szResult = ( char * ) hb_xgrab( ulLen + 1 );
-
-         memcpy( szResult, hb_parc( 1 ), ulLen + 1 );
-         hb_cdpnTranslate( szResult, cdpIn, cdpOut, ulLen );
+         char *szResult = hb_cdpnDup( hb_parc( 1 ), &ulLen, cdpIn, cdpOut );
          hb_retclen_buffer( szResult, ulLen );
       }
       else
