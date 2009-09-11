@@ -16,12 +16,12 @@ C_SOURCES := \
    legacyco.c \
    wce_simc.c \
    wce_smsc.c \
+   win_com.c \
    win_dll.c \
    win_misc.c \
    win_osc.c \
    win_prn1.c \
    win_prn2.c \
-   win_prt.c \
    win_regc.c \
    wapi_commctrl.c \
    wapi_shellapi.c \
@@ -33,10 +33,10 @@ PRG_SOURCES := \
    oleauto.prg \
    axfunc.prg \
    wce_sim.prg \
+   win_tcom.prg \
    win_os.prg \
    win_reg.prg \
    win_tprn.prg \
-   win_tprt.prg \
 
 C_HEADERS := \
    hbwapi.h \
