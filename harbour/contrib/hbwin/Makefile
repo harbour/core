@@ -47,10 +47,9 @@ PRG_HEADERS := \
    hbwin.ch \
 
 ifneq ($(filter $(HB_PLATFORM),win wce),)
-
    include $(TOP)$(ROOT)config/header.mk
    include $(TOP)$(ROOT)config/lib.mk
-
 else
+   HB_SKIP_REASON := platform not supported
    include $(TOP)$(ROOT)config/none.mk
 endif

@@ -54,6 +54,6 @@ ifneq ($(HB_HAS_PCRE_LOCAL),)
 
    include $(TOP)$(ROOT)config/lib.mk
 else
-   HB_SKIP_REASON := not supported or disabled
+   HB_SKIP_REASON := unused
    include $(TOP)$(ROOT)config/none.mk
 endif

@@ -8,13 +8,12 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := gtwin
 
-ifeq ($(HB_PLATFORM),win)
-
 C_SOURCES := \
    gtwin.c \
 
-include $(TOP)$(ROOT)config/lib.mk
-
+ifeq ($(HB_PLATFORM),win)
+   include $(TOP)$(ROOT)config/lib.mk
 else
-include $(TOP)$(ROOT)config/none.mk
+   HB_SKIP_REASON := platform not supported
+   include $(TOP)$(ROOT)config/none.mk
 endif

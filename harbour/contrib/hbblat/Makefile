@@ -8,8 +8,6 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := hbblat
 
-ifeq ($(HB_PLATFORM),win)
-
 C_SOURCES := \
    blatwrp.c \
 
@@ -19,9 +17,10 @@ PRG_SOURCES := \
 PRG_HEADERS := \
    hbblat.ch \
 
-include $(TOP)$(ROOT)config/header.mk
-include $(TOP)$(ROOT)config/lib.mk
-
+ifeq ($(HB_PLATFORM),win)
+   include $(TOP)$(ROOT)config/header.mk
+   include $(TOP)$(ROOT)config/lib.mk
 else
-include $(TOP)$(ROOT)config/none.mk
+   HB_SKIP_REASON := platform not supported
+   include $(TOP)$(ROOT)config/none.mk
 endif
