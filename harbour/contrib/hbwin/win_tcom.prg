@@ -3,7 +3,7 @@
  */
 
 /*
- * xHarbour Project source code:
+ * Harbour Project source code:
  * Windows communications library
  *
  * Copyright 2005-2009 Alex Strickland <sscc@mweb.co.za>

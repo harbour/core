@@ -3,11 +3,11 @@
  */
 
 /*
- * xHarbour Project source code:
+ * Harbour Project source code:
  * Windows communications library
  *
- * Copyright 2005 Alex Strickland <sscc@mweb.co.za>
- * www - http://www.xharbour.org
+ * Copyright 2005-2009 Alex Strickland <sscc@mweb.co.za>
+ * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,9 +59,9 @@
 #define FCNCLOSEHANDLE              7
 #define FCNWRITEFILE                8
 #define FCNREADFILE                 9
-#define FCNGETCOMMMODEMSTATUS       10    /* WinPort:Status() */
+#define FCNGETCOMMMODEMSTATUS       10    /* win_com:Status() */
 #define FCNPURGECOMM                11
-#define FCNCLEARCOMMERROR           12    /* WinPort:QueueStatus() */
+#define FCNCLEARCOMMERROR           12    /* win_com:QueueStatus() */
 #define ESCAPECOMMFUNCTION          13
 #define FCNGETCOMMPROPERTIES        14
 #define FCNMAX                      14
