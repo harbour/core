@@ -253,7 +253,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    -----------------
       1.) Install MacPorts, follow their instructions:
           http://www.macports.org/
-      2.) sudo port install pcre slang allegro freeimage gd2 mysql5-devel postgresql83
+      2.) sudo port install pcre slang allegro freeimage gd2 mysql5-devel postgresql84
 
    Linux (generic)
    ---------------
