@@ -2113,11 +2113,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aOPTL ], "-static" )
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "gcc"
-/*          AAdd( hbmk[ _HBMK_aOPTC ], "-no-cpp-precomp" ) */
 /*          AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-long-double" ) */
             IF hbmk[ _HBMK_lSHARED ]
                AAdd( hbmk[ _HBMK_aOPTL ], "-bind_at_load" )
-/*             AAdd( hbmk[ _HBMK_aOPTL ], "-multiply_defined suppress" ) */
             ENDIF
          ENDIF
          IF hbmk[ _HBMK_lSTRIP ]
@@ -2176,6 +2174,15 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             CASE hbmk[ _HBMK_cPLAT ] == "hpux"
                AAdd( l_aLIBSYS, "rt" )
             ENDCASE
+
+            IF ! Empty( cLIB_BASE_PCRE ) .AND. ! hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLibLibPrefix + cLIB_BASE_PCRE + cLibLibExt )
+               AAdd( l_aLIBSYS, "pcre" )
+               cLIB_BASE_PCRE := NIL
+            ENDIF
+            IF ! Empty( cLIB_BASE_ZLIB ) .AND. ! hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLibLibPrefix + cLIB_BASE_ZLIB + cLibLibExt )
+               AAdd( l_aLIBSYS, "z" )
+               cLIB_BASE_ZLIB := NIL
+            ENDIF
          ENDIF
 
          IF IsGTRequested( hbmk, "gtcrs" )
@@ -2980,6 +2987,15 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                AAdd( l_aLIBSYS, "nsl" )
                AAdd( l_aLIBSYS, "resolv" )
             ENDCASE
+
+            IF ! Empty( cLIB_BASE_PCRE ) .AND. ! hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLibLibPrefix + cLIB_BASE_PCRE + cLibLibExt )
+               AAdd( l_aLIBSYS, "pcre" )
+               cLIB_BASE_PCRE := NIL
+            ENDIF
+            IF ! Empty( cLIB_BASE_ZLIB ) .AND. ! hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLibLibPrefix + cLIB_BASE_ZLIB + cLibLibExt )
+               AAdd( l_aLIBSYS, "z" )
+               cLIB_BASE_ZLIB := NIL
+            ENDIF
          ENDIF
 
          IF IsGTRequested( hbmk, "gtcrs" )

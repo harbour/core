@@ -21,7 +21,6 @@ _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
 _DET_INC_DEFP := /usr/include /usr/local/include
 _DET_INC_LOCL := $(TOP)$(ROOT)external/libhpdf
-_DET_LOC_PLAT := !dos
 _DET_INC_HEAD := /hpdf.h
 include $(TOP)$(ROOT)config/detfun.mk
 

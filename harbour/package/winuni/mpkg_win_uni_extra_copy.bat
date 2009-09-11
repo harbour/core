@@ -18,6 +18,3 @@ for /F %%a in ( 'dir /b /ad rddsql' ) do (
    xcopy /y /s rddsql\%%a\*.hbc     C:\hb\hb20\contrib\rddsql\%%a\
    xcopy /y /s rddsql\%%a\tests\*.* C:\hb\hb20\contrib\rddsql\%%a\tests\
 )
-
-rem xcopy /D /Y source\hbzlib\*.h %HB_INSTALL_PREFIX%\source\hbzlib\
-rem xcopy /D /Y source\hbpcre\*.h %HB_INSTALL_PREFIX%\source\hbpcre\

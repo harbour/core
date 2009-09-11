@@ -89,7 +89,6 @@ ifeq ($(HB_SUPPORTED),yes)
    _DET_FLT_COMP :=
    _DET_INC_DEFP := /usr/include /usr/local/include
    _DET_INC_LOCL := $(TOP)$(ROOT)external/libhpdf
-   _DET_LOC_PLAT := !dos
    _DET_INC_HEAD := /hpdf.h
    include $(TOP)$(ROOT)config/detfun.mk
 
@@ -102,7 +101,6 @@ ifeq ($(HB_SUPPORTED),yes)
       _DET_FLT_COMP :=
       _DET_INC_DEFP := /usr/include
       _DET_INC_LOCL := $(TOP)$(ROOT)external/libpng
-      _DET_LOC_PLAT := win wce os2 dos darwin
       _DET_INC_HEAD := /png.h
       include $(TOP)$(ROOT)config/detfun.mk
 
