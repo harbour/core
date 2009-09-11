@@ -65,6 +65,13 @@
 #include "config.h"
 #endif
 
+#if ! defined( HB_OS_WIN )
+   /* NOTE: Terrible hack until we clean Harbour from these types completely. */
+   #undef BOOL
+   #undef BYTE
+   #undef LONG
+#endif
+
 #include "FreeImage.h"
 
 /* ************************* WRAPPED FUNCTIONS ****************************** */

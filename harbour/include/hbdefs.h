@@ -189,36 +189,36 @@
 
    #if ! defined( HB_DONT_DEFINE_BOOL )
       #undef BOOL                         /* boolean */
-      typedef int BOOL;
+      #define BOOL int
    #endif
 
    #undef UINT                            /* varies with platform */
-   typedef unsigned int UINT;
+   #define UINT unsigned int
 
    #undef SCHAR                           /* 1 byte signed */
-   typedef signed char SCHAR;
+   #define SCHAR signed char
 
    #undef UCHAR                           /* 1 byte unsigned */
-   typedef unsigned char UCHAR;
+   #define UCHAR unsigned char
 
    #if ! defined( HB_DONT_DEFINE_BYTE )
       #undef BYTE                            /* 1 byte unsigned */
-      typedef unsigned char BYTE;
+      #define BYTE unsigned char
    #endif
 
    #undef SHORT                           /* 2 bytes signed */
-   typedef signed short int SHORT;
+   #define SHORT signed short int
 
    #undef USHORT                          /* 2 bytes unsigned */
-   typedef unsigned short int USHORT;
+   #define USHORT unsigned short int
 
    #if ! defined( HB_DONT_DEFINE_LONG )
       #undef LONG                         /* 4 or 8 bytes signed */
-      typedef long LONG;
+      #define LONG long
    #endif
 
    #undef ULONG                           /* 4 or 8 bytes unsigned */
-   typedef unsigned long ULONG;
+   #define ULONG unsigned long
 
    #undef FALSE
    #define FALSE  0
