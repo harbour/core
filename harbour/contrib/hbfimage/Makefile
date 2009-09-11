@@ -20,8 +20,8 @@ PRG_HEADERS := \
 _DET_DSP_NAME := freeimage
 _DET_VAR_INC_ := HB_INC_FREEIMAGE
 _DET_VAR_HAS_ := HB_HAS_FREEIMAGE
-# on dos and os2 it doesn't compile with watcom
-_DET_FLT_PLAT := !dos !os2
+# disabled until a proper solution is found for type collision (except for dos where it's not supported at all)
+_DET_FLT_PLAT := !dos !os2 !linux !darwin
 _DET_FLT_COMP :=
 _DET_INC_DEFP := /usr/include /opt/local/include
 _DET_INC_HEAD := /FreeImage.h
