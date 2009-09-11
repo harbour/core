@@ -19,7 +19,7 @@ _DET_VAR_INC_ := HB_INC_FIREBIRD
 _DET_VAR_HAS_ := HB_HAS_FIREBIRD
 _DET_FLT_PLAT :=
 _DET_FLT_COMP := !pocc64 !poccarm
-_DET_INC_DEFP := /usr/include /opt/firebird/include
+_DET_INC_DEFP := /usr/include /opt/firebird/include /Library/Frameworks/Firebird.framework/Headers
 _DET_INC_HEAD := /ibase.h
 include $(TOP)$(ROOT)config/detfun.mk
 
