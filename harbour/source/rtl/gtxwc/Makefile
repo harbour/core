@@ -17,5 +17,6 @@ ifneq ($(HB_HAS_X11),)
 
    include $(TOP)$(ROOT)config/lib.mk
 else
+   HB_SKIP_REASON := component not found
    include $(TOP)$(ROOT)config/none.mk
 endif

@@ -30,5 +30,6 @@ ifneq ($(HB_HAS_SLANG),)
 
    include $(TOP)$(ROOT)config/lib.mk
 else
+   HB_SKIP_REASON := component not found
    include $(TOP)$(ROOT)config/none.mk
 endif
