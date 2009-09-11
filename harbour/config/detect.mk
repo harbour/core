@@ -18,14 +18,16 @@ export DETECT_MK_ := yes
 _DET_OPT_VERB := very
 
 # Reset everything to default
-export HB_HAS_ZLIB    :=
-export HB_HAS_PCRE    :=
-export HB_HAS_OPENSSL :=
-export HB_HAS_GPM     :=
-export HB_HAS_SLANG   :=
-export HB_HAS_CURSES  :=
-export HB_HAS_X11     :=
-export HB_HAS_WATT    :=
+export HB_HAS_ZLIB       :=
+export HB_HAS_ZLIB_LOCAL :=
+export HB_HAS_PCRE       :=
+export HB_HAS_PCRE_LOCAL :=
+export HB_HAS_OPENSSL    :=
+export HB_HAS_GPM        :=
+export HB_HAS_SLANG      :=
+export HB_HAS_CURSES     :=
+export HB_HAS_X11        :=
+export HB_HAS_WATT       :=
 
 # Exclude Harbour-wide features prohibiting commercial use
 
@@ -46,18 +48,11 @@ _DET_VAR_HAS_ := HB_HAS_ZLIB
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
 _DET_INC_DEFP := /usr/include
-_DET_INC_LOCL :=
-ifneq ($(filter $(HB_PLATFORM),win wce os2 dos),)
-   _DET_INC_LOCL += $(TOP)$(ROOT)external/zlib
-endif
+_DET_INC_LOCL := $(realpath $(TOP)$(ROOT)external/zlib)
+_DET_LOC_PLAT := win wce os2 dos
 _DET_INC_HEAD := /zlib.h
 
 include $(TOP)$(ROOT)config/detfun.mk
-
-export HB_HAS_ZLIB_LOCAL := no
-ifneq ($(findstring /external/,$(HB_HAS_ZLIB)),)
-   HB_HAS_ZLIB_LOCAL := yes
-endif
 
 # Detect pcre
 
@@ -67,18 +62,11 @@ _DET_VAR_HAS_ := HB_HAS_PCRE
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
 _DET_INC_DEFP := /usr/include /opt/local/include
-_DET_INC_LOCL :=
-ifneq ($(filter $(HB_PLATFORM),win wce os2 dos),)
-   _DET_INC_LOCL += $(TOP)$(ROOT)external/pcre
-endif
+_DET_INC_LOCL := $(realpath $(TOP)$(ROOT)external/pcre)
+_DET_LOC_PLAT := win wce os2 dos
 _DET_INC_HEAD := /pcre.h
 
 include $(TOP)$(ROOT)config/detfun.mk
-
-export HB_HAS_PCRE_LOCAL := no
-ifneq ($(findstring /external/,$(HB_HAS_PCRE)),)
-   HB_HAS_PCRE_LOCAL := yes
-endif
 
 # Detect OpenSSL
 

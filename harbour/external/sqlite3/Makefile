@@ -14,45 +14,56 @@ HB_BUILD_MODE := c
 C_SOURCES := \
    sqlite3.c \
 
-ifeq ($(HB_WITH_SQLITE3),)
-   ifeq ($(HB_PLATFORM),win)
-      HB_WITH_SQLITE3 := yes
-   endif
-   ifeq ($(HB_PLATFORM),wce)
-      HB_WITH_SQLITE3 := yes
-   endif
-   ifeq ($(HB_PLATFORM),os2)
-      HB_WITH_SQLITE3 := yes
-   endif
-   ifeq ($(HB_PLATFORM),dos)
-      HB_WITH_SQLITE3 := yes
-   endif
-   ifeq ($(HB_COMPILER),mingwarm)
-      HB_WITH_SQLITE3 := no
-   endif
-   ifeq ($(HB_COMPILER),poccarm)
-      HB_WITH_SQLITE3 := no
-   endif
-   # NOTE: dos based watcom runs out of memory. [vszakats]
-   ifeq ($(HB_HOST_PLAT)-$(HB_COMPILER),dos-watcom)
-      HB_WITH_SQLITE3 := no
+# decide if it's supported at all
+HB_SUPPORTED := yes
+ifeq ($(HB_COMPILER),mingwarm)
+   HB_SUPPORTED := no
+endif
+ifeq ($(HB_COMPILER),poccarm)
+   HB_SUPPORTED := no
+endif
+# NOTE: dos based watcom runs out of memory. [vszakats]
+ifeq ($(HB_HOST_PLAT)-$(HB_COMPILER),dos-watcom)
+   HB_SUPPORTED := no
+endif
+# NOTE: diable *nix builds on non-*nix platforms. [vszakats]
+ifeq ($(HB_HOST_PLAT_UNIX),)
+   ifneq ($(HB_PLATFORM_UNIX),)
+      HB_SUPPORTED := no
    endif
 endif
 
-ifeq ($(HB_WITH_SQLITE3),yes)
+ifeq ($(HB_SUPPORTED),yes)
 
-   ifeq ($(HB_PLATFORM),wce)
-      HB_CFLAGS += -D_WIN32_WCE
-   endif
-   ifeq ($(HB_PLATFORM),dos)
-      # DJGPP and OpenWatcom in DOS aren't correctly recognized by SQLite,
-      # so we're forcing the next best available option. This will cause missing
-      # externals though. [vszakats]
-      HB_CFLAGS += -DSQLITE_OS_OTHER
-   endif
+   _DET_DSP_NAME := sqlite3
+   _DET_VAR_INC_ := HB_INC_SQLITE3
+   _DET_VAR_HAS_ := HB_HAS_SQLITE3
+   _DET_FLT_PLAT :=
+   _DET_FLT_COMP :=
+   _DET_INC_DEFP := /usr/include
+   _DET_INC_LOCL := $(TOP)$(ROOT)external/sqlite3
+   _DET_LOC_PLAT := win wce os2 dos
+   _DET_INC_HEAD := /sqlite3.h
+   include $(TOP)$(ROOT)config/detfun.mk
 
-   include $(TOP)$(ROOT)config/lib.mk
+   ifneq ($(HB_HAS_SQLITE3_LOCAL),)
+
+      ifeq ($(HB_PLATFORM),wce)
+         HB_CFLAGS += -D_WIN32_WCE
+      endif
+      ifeq ($(HB_PLATFORM),dos)
+         # DJGPP and OpenWatcom in DOS aren't correctly recognized by SQLite,
+         # so we're forcing the next best available option. This will cause missing
+         # externals though. [vszakats]
+         HB_CFLAGS += -DSQLITE_OS_OTHER
+      endif
+
+      include $(TOP)$(ROOT)config/lib.mk
+   else
+      HB_SKIP_REASON := unused
+      include $(TOP)$(ROOT)config/none.mk
+   endif
 else
-   HB_SKIP_REASON := not supported or disabled
+   HB_SKIP_REASON := platform or compiler not supported
    include $(TOP)$(ROOT)config/none.mk
 endif

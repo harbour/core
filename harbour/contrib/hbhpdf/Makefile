@@ -19,11 +19,9 @@ _DET_VAR_INC_ := HB_INC_LIBHARU
 _DET_VAR_HAS_ := HB_HAS_LIBHARU
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
-_DET_INC_DEFP :=
-_DET_INC_LOCL :=
-ifneq ($(HB_HOST_PLAT),dos)
-   _DET_INC_LOCL += /usr/include /usr/local/include $(TOP)$(ROOT)external/libhpdf
-endif
+_DET_INC_DEFP := /usr/include /usr/local/include
+_DET_INC_LOCL := $(TOP)$(ROOT)external/libhpdf
+_DET_LOC_PLAT := !dos
 _DET_INC_HEAD := /hpdf.h
 include $(TOP)$(ROOT)config/detfun.mk
 

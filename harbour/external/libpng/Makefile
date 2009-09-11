@@ -29,59 +29,45 @@ C_SOURCES := \
    pngwtran.c \
    pngwutil.c \
 
-ifeq ($(HB_WITH_LIBPNG),)
-   ifeq ($(HB_PLATFORM),win)
-      HB_WITH_LIBPNG := yes
-   endif
-   ifeq ($(HB_PLATFORM),wce)
-      HB_WITH_LIBPNG := yes
-   endif
-   ifeq ($(HB_PLATFORM),os2)
-      HB_WITH_LIBPNG := yes
-   endif
-   ifeq ($(HB_PLATFORM),dos)
-      HB_WITH_LIBPNG := yes
-   endif
-   ifeq ($(HB_PLATFORM),darwin)
-      HB_WITH_LIBPNG := yes
-   endif
-   ifeq ($(HB_COMPILER),poccarm)
-      HB_WITH_LIBPNG := no
-   endif
+# decide if it's supported at all
+HB_SUPPORTED := yes
+ifeq ($(HB_COMPILER),poccarm)
+   HB_SUPPORTED := no
 endif
 
-ifeq ($(HB_WITH_LIBPNG),yes)
+ifeq ($(HB_SUPPORTED),yes)
 
-   # force redetection
-   HB_HAS_ZLIB :=
-
-   _DET_DSP_NAME := zlib
-   _DET_VAR_INC_ := HB_INC_ZLIB
-   _DET_VAR_HAS_ := HB_HAS_ZLIB
+   _DET_DSP_NAME := libpng
+   _DET_VAR_INC_ := HB_INC_PNG
+   _DET_VAR_HAS_ := HB_HAS_PNG
    _DET_FLT_PLAT :=
    _DET_FLT_COMP :=
    _DET_INC_DEFP := /usr/include
-   _DET_INC_LOCL :=
-   ifneq ($(filter $(HB_PLATFORM),win wce os2 dos),)
-      _DET_INC_LOCL += $(TOP)$(ROOT)external/zlib
-   endif
-   _DET_INC_HEAD := /zlib.h
-
+   _DET_INC_LOCL := $(TOP)$(ROOT)external/libpng
+   _DET_LOC_PLAT := win wce os2 dos darwin
+   _DET_INC_HEAD := /png.h
    include $(TOP)$(ROOT)config/detfun.mk
 
-   ifneq ($(HB_HAS_ZLIB),)
+   ifneq ($(HB_HAS_PNG_LOCAL),)
 
-      HB_CFLAGS += $(foreach d,$(HB_HAS_ZLIB),-I$(d))
+      ifneq ($(HB_HAS_ZLIB),)
 
-      ifeq ($(HB_COMPILER),djgpp)
-         HB_CFLAGS += -DPNG_NO_SNPRINTF
+         HB_CFLAGS += $(foreach d,$(HB_HAS_ZLIB),-I$(d))
+
+         ifeq ($(HB_COMPILER),djgpp)
+            HB_CFLAGS += -DPNG_NO_SNPRINTF
+         endif
+
+         include $(TOP)$(ROOT)config/lib.mk
+      else
+         HB_SKIP_REASON := $(_DET_RES_TEXT)
+         include $(TOP)$(ROOT)config/none.mk
       endif
-
-      include $(TOP)$(ROOT)config/lib.mk
    else
-      HB_SKIP_REASON := $(_DET_RES_TEXT)
+      HB_SKIP_REASON := unused
       include $(TOP)$(ROOT)config/none.mk
    endif
 else
+   HB_SKIP_REASON := platform or compiler not supported
    include $(TOP)$(ROOT)config/none.mk
 endif

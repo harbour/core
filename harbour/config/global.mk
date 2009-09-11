@@ -807,6 +807,12 @@ export HB_PLATFORM
 export HB_COMPILER
 export HB_SHELL
 
+ifneq ($(filter $(HB_HOST_PLAT),win wce dos os2),)
+   HB_HOST_PLAT_UNIX :=
+else
+   HB_HOST_PLAT_UNIX := yes
+endif
+
 ifneq ($(filter $(HB_PLATFORM),win wce dos os2),)
    HB_PLATFORM_UNIX :=
 else

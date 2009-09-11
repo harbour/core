@@ -220,17 +220,21 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    HB_INC_MYSQL=C:\mysql\include
    HB_INC_ODBC= (may only be needed on non-Windows systems)
    HB_INC_OPENSSL=C:\openssl\inc32 OR C:\openssl\include
+   HB_INC_PCRE=C:\pcre (defaults to locally hosted version on win/dos/os2)
    HB_INC_PNG= (defaults to locally hosted version on non-*nix and Darwin systems)
    HB_INC_PGSQL=C:\pgsql\include
    HB_INC_QT=C:\Qt\include
    HB_INC_SLANG= (on *nix systems)
    HB_INC_SQLITE3=C:\sqlite3 (defaults to locally hosted version on win/dos/os2)
    HB_INC_X11= (on *nix systems)
+   HB_INC_ZLIB=C:\zlib (defaults to locally hosted version on win/dos/os2)
    HB_INC_WATT= (on MS-DOS systems)
 
    To explicitly disable any given components, use the value 'no' (without
    quotes). This may be useful to avoid autodetection of installed packages
-   on *nix systems.
+   on *nix systems. You may also use the value 'local' to force using the
+   locally hosted copy of these packages, where applicable. 'nolocal' will
+   explicitly disable using locally hosted copies.
 
    NOTES: - You need to use native path format to your shell/OS.
           - Spaces in directory names aren't currently supported.
@@ -243,7 +247,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
       Some contribs support build mode in which they can be linked
       *statically* with 3rd party components:
 
-      HB_QT_STATIC=yes (only for Windows/Windows CE targets)
+      HB_QT_STATIC=yes
 
    Darwin (Mac OS X)
    -----------------
@@ -265,6 +269,8 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    ----------------------
    (tested with Ubuntu 7.04, 8.04, 9.04)
 
+      for zlib support:          sudo apt-get install zlib1g-dev
+      for pcre regex support:    sudo apt-get install libpcre3-dev
       for gtcrs terminal lib:    sudo apt-get install libncurses-dev
       for gtsln terminal lib:    sudo apt-get install libslang2-dev
       for gtxwc terminal lib:    sudo apt-get install libx11-dev

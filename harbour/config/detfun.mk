@@ -19,12 +19,16 @@
 #       _DET_FLT_COMP - positive and negative compiler filters. Prefix negative ones with '!' char.
 #       _DET_INC_DEFP - default location to look at. Not effective in 'HB_BUILD_EXTDEF=no' mode.
 #       _DET_INC_LOCL - embedded location to look at.
+#       _DET_LOC_PLAT - positive and negative platform filters where embedded location is utilized.
 #       _DET_INC_HEAD - header filename to look for. Unless looking for a directory, prefix with forward slash.
 #       - variable name specified by _DET_VAR_INC_ (typically "HB_INC_*") should contains:
 #          (empty) or yes - will enable external component if found on default locations.
 #          no             - will disable external component.
-#          force          - will forcibly enable external component, bypass location checks,
-#                           HB_HAS_* will have the content '.' (as local dir).
+#          force          - will forcibly enable external component, bypassing location checks,
+#                           HB_HAS_* will have the content '.' (as local dir). In this case user
+#                           is responsible to pass -I C compiler option manually.
+#          local          - will choose locally hosted version of external component.
+#          nolocal        - will disable using locally hosted version of external component.
 #          <dirlist>      - will specify locations to check for the external component.
 #    ON RETURN:
 #       - above variables cleared.
@@ -33,6 +37,8 @@
 #         have any these values:
 #          (empty)        - we can't use this component
 #          <dirlist>      - component headers were found at these locations (typically one)
+#       - variable name specified in _DET_VAR_HAS_ + "_LOCAL" (typically "HB_HAS_*_LOCAL") will
+#         be non-empty if we're using the locally hosted version of the package.
 
 # show verbose information (empty|yes|very)
 ifneq ($(_DET_OPT_VERB),)
@@ -72,15 +78,31 @@ ifeq ($($(_DET_VAR_HAS_)),)
                         $(_DET_VAR_HAS_) := $(_DET_INC_DEFP)
                      endif
                      $(_DET_VAR_HAS_) += $(_DET_INC_LOCL)
+                  else
+                     ifeq ($($(_DET_VAR_HAS_)),nolocal)
+                        ifneq ($(HB_BUILD_EXTDEF),no)
+                           $(_DET_VAR_HAS_) := $(_DET_INC_DEFP)
+                        endif
+                     endif
+                  endif
+                  ifeq ($($(_DET_VAR_INC_)),local)
+                     $(_DET_VAR_HAS_) := $(_DET_INC_LOCL)
                   endif
                   ifneq ($($(_DET_VAR_HAS_)),)
                      ifneq ($($(_DET_VAR_HAS_)),.)
-                        $(_DET_VAR_HAS_) := $(strip $(foreach d,$($(_DET_VAR_HAS_)),$(if $(wildcard $(d)$(_DET_INC_HEAD)),$(d),)))
+                        $(_DET_VAR_HAS_) := $(strip $(firstword $(foreach d,$($(_DET_VAR_HAS_)),$(if $(wildcard $(d)$(_DET_INC_HEAD)),$(d),))))
                         ifeq ($($(_DET_VAR_HAS_)),)
                            _DET_RES_TEXT := '$(_DET_DSP_NAME)' not found
                            $(call do_info,$(_DET_RES_TEXT))
                         else
-                           _DET_RES_TEXT := '$(_DET_DSP_NAME)' found in $($(_DET_VAR_HAS_))
+                           # detect if the component was found in locally hosted dir
+                           $(_DET_VAR_HAS_)_LOCAL :=
+                           ifneq ($(_DET_INC_LOCL),)
+                              ifneq ($(filter $(_DET_INC_LOCL),$($(_DET_VAR_HAS_))),)
+                                 $(_DET_VAR_HAS_)_LOCAL := (local)
+                              endif
+                           endif
+                           _DET_RES_TEXT := '$(_DET_DSP_NAME)' found in $($(_DET_VAR_HAS_)) $($(_DET_VAR_HAS_)_LOCAL)
                            ifeq ($(_DET_OPT_VERB),very)
                               $(call do_info,$(_DET_RES_TEXT))
                            endif
@@ -121,4 +143,5 @@ _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
 _DET_INC_DEFP :=
 _DET_INC_LOCL :=
+_DET_LOC_PLAT :=
 _DET_INC_HEAD :=

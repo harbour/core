@@ -32,13 +32,7 @@ C_SOURCES := \
 
 LIBNAME := hbpcre
 
-ifeq ($(HB_WITH_PCRE),)
-   ifneq ($(filter $(HB_PLATFORM),win wce os2 dos),)
-      HB_WITH_PCRE := yes
-   endif
-endif
-
-ifeq ($(HB_WITH_PCRE),yes)
+ifneq ($(HB_HAS_PCRE_LOCAL),)
 
    # workaround for problems in sunpro x86 PIC builds exploited by hbpcre library code
    ifeq ($(HB_COMPILER),sunpro)

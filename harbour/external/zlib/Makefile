@@ -24,15 +24,9 @@ C_SOURCES := \
 
 LIBNAME := hbzlib
 
-ifeq ($(HB_WITH_ZLIB),)
-   ifneq ($(filter $(HB_PLATFORM),win wce os2 dos),)
-      HB_WITH_ZLIB := yes
-   endif
-endif
-
-ifeq ($(HB_WITH_ZLIB),yes)
+ifneq ($(HB_HAS_ZLIB_LOCAL),)
    include $(TOP)$(ROOT)config/lib.mk
 else
-   HB_SKIP_REASON := not supported or disabled
+   HB_SKIP_REASON := unused
    include $(TOP)$(ROOT)config/none.mk
 endif

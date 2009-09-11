@@ -280,43 +280,7 @@ DIRS := \
    gtwvt \
    gtxwc \
 
-# force redetection
-HB_HAS_ZLIB :=
-
-_DET_DSP_NAME := zlib
-_DET_VAR_INC_ := HB_INC_ZLIB
-_DET_VAR_HAS_ := HB_HAS_ZLIB
-_DET_FLT_PLAT :=
-_DET_FLT_COMP :=
-_DET_INC_DEFP := /usr/include
-_DET_INC_LOCL :=
-ifneq ($(filter $(HB_PLATFORM),win wce os2 dos),)
-   _DET_INC_LOCL += $(TOP)$(ROOT)external/zlib
-endif
-_DET_INC_HEAD := /zlib.h
-
-include $(TOP)$(ROOT)config/detfun.mk
-
 ifneq ($(HB_HAS_ZLIB),)
-
-   # Detect pcre
-
-   # force redetection
-   HB_HAS_PCRE :=
-
-   _DET_DSP_NAME := pcre
-   _DET_VAR_INC_ := HB_INC_PCRE
-   _DET_VAR_HAS_ := HB_HAS_PCRE
-   _DET_FLT_PLAT :=
-   _DET_FLT_COMP :=
-   _DET_INC_DEFP := /usr/include /opt/local/include
-   _DET_INC_LOCL :=
-   ifneq ($(filter $(HB_PLATFORM),win wce os2 dos),)
-      _DET_INC_LOCL += $(TOP)$(ROOT)external/pcre
-   endif
-   _DET_INC_HEAD := /pcre.h
-
-   include $(TOP)$(ROOT)config/detfun.mk
 
    ifneq ($(HB_HAS_PCRE),)
       HB_CFLAGS += -DHB_HAS_PCRE $(foreach d,$(HB_HAS_PCRE),-I$(d))

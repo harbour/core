@@ -54,36 +54,20 @@ PRG_HEADERS := \
    wvtwin.ch \
    wvgparts.ch \
 
-ifeq ($(HB_WITH_GTWVG),)
-   ifeq ($(HB_PLATFORM),win)
-      ifeq ($(HB_COMPILER),mingw)
-         HB_WITH_GTWVG := yes
-      endif
-      ifeq ($(HB_COMPILER),msvc)
-         HB_WITH_GTWVG := yes
-      endif
-      ifeq ($(HB_COMPILER),watcom)
-         HB_WITH_GTWVG := yes
-      endif
-      ifeq ($(HB_COMPILER),pocc)
-         HB_WITH_GTWVG := yes
-      endif
-      ifeq ($(HB_COMPILER),icc)
-         HB_WITH_GTWVG := yes
-      endif
-      ifeq ($(HB_COMPILER),bcc)
-         HB_WITH_GTWVG := yes
-      endif
+HB_SUPPORTED := no
+ifeq ($(HB_PLATFORM),win)
+   ifneq ($(filter $(HB_COMPILER),mingw msvc watcom pocc icc bcc),)
+      HB_SUPPORTED := yes
    endif
 endif
 
-ifeq ($(HB_WITH_GTWVG),yes)
+ifeq ($(HB_SUPPORTED),yes)
 
    HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/hbwin
 
    include $(TOP)$(ROOT)config/header.mk
    include $(TOP)$(ROOT)config/lib.mk
-
 else
+   HB_SKIP_REASON := platform or compiler not supported
    include $(TOP)$(ROOT)config/none.mk
 endif
