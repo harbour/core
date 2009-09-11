@@ -3453,10 +3453,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
          ENDIF
 
-         IF ! Empty( cLIB_BASE_PCRE ) .AND. hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLIB_BASE_PCRE + cLibLibExt )
+         IF ! Empty( cLIB_BASE_PCRE ) .AND. hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLibLibPrefix + cLIB_BASE_PCRE + cLibLibExt )
             AAdd( l_aLIBSYS, cLIB_BASE_PCRE )
          ENDIF
-         IF ! Empty( cLIB_BASE_ZLIB ) .AND. hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLIB_BASE_ZLIB + cLibLibExt )
+         IF ! Empty( cLIB_BASE_ZLIB ) .AND. hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLibLibPrefix + cLIB_BASE_ZLIB + cLibLibExt )
             AAdd( l_aLIBSYS, cLIB_BASE_ZLIB )
          ENDIF
 
