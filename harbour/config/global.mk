@@ -521,7 +521,7 @@ ifeq ($(HB_COMPILER),)
             # generic detection for mingw cross-compiler
             ifeq ($(HB_CCPATH)$(HB_CCPREFIX),)
                MINGW_BASE_LIST := /usr /usr/local /usr/local/mingw32 /opt/xmingw
-               MINGW_PREFIX := $(firstword $(foreach d, $(MINGW_BASE_LIST), $(wildcard $(d)/bin/i?86-mingw*-gcc$(HB_HOST_BIN_EXT))))
+               MINGW_PREFIX := $(firstword $(foreach d, $(MINGW_BASE_LIST), $(wildcard $(d)/bin/i?86*-mingw*-gcc$(HB_HOST_BIN_EXT))))
                ifneq ($(MINGW_PREFIX),)
                   MINGW_PREFIX := $(MINGW_PREFIX:gcc$(HB_HOST_BIN_EXT)=)
                   HB_CCPATH := $(dir $(MINGW_PREFIX))

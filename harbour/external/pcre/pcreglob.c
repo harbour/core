@@ -53,13 +53,17 @@ differently, and global variables are not used (see pcre.in). */
 #include "pcreinal.h"
 
 #ifndef VPCOMPAT
+#if defined( __cplusplus ) && !defined( __IBMCPP__ )
 extern "C" {
+#endif
 PCRE_EXP_DATA_DEFN void *(*pcre_malloc)(size_t) = malloc;
 PCRE_EXP_DATA_DEFN void  (*pcre_free)(void *) = free;
 PCRE_EXP_DATA_DEFN void *(*pcre_stack_malloc)(size_t) = malloc;
 PCRE_EXP_DATA_DEFN void  (*pcre_stack_free)(void *) = free;
 PCRE_EXP_DATA_DEFN int   (*pcre_callout)(pcre_callout_block *) = NULL;
+#if defined( __cplusplus ) && !defined( __IBMCPP__ )
 }
+#endif
 #endif
 
 /* End of pcre_globals.c */
