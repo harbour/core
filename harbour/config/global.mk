@@ -114,10 +114,32 @@ endef
 
 define check_host_cpu
 
-   # TODO: Please extend
+   # TODO: Please fix/extend
 
-   ifneq ($(findstring 86,$(1)),)
+   ifneq ($(findstring ppc,$(1)),)
+      HB_HOST_CPU := ppc
+   else ifneq ($(findstring ppc64,$(1)),)
+      HB_HOST_CPU := ppc64
+   else ifneq ($(findstring arm,$(1)),)
+      HB_HOST_CPU := arm
+   else ifneq ($(findstring ia64,$(1)),)
+      HB_HOST_CPU := ia64
+   else ifneq ($(findstring sparc64,$(1)),)
+      HB_HOST_CPU := sparc64
+   else ifneq ($(findstring sparc,$(1)),)
+      HB_HOST_CPU := sparc32
+   else ifneq ($(findstring mips,$(1)),)
+      HB_HOST_CPU := mips
+   else ifneq ($(findstring alpha,$(1)),)
+      HB_HOST_CPU := alpha
+   else ifneq ($(findstring 9000,$(1)),)
+      HB_HOST_CPU := parisc
+   else ifneq ($(findstring parisc,$(1)),)
+      HB_HOST_CPU := parisc
+   else ifneq ($(findstring 86,$(1)),)
       HB_HOST_CPU := x86
+   else ifneq ($(findstring x86_64,$(1)),)
+      HB_HOST_CPU := x86_64
    else ifneq ($(findstring 64,$(1)),)
       HB_HOST_CPU := x86_64
    endif
