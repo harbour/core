@@ -112,6 +112,18 @@ define check_host
 
 endef
 
+define check_host_cpu
+
+   # TODO: Please extend
+
+   ifneq ($(findstring 86,$(1)),)
+      HB_HOST_CPU := x86
+   else ifneq ($(findstring 64,$(1)),)
+      HB_HOST_CPU := x86_64
+   endif
+
+endef
+
 # Some presets based on HB_BUILD_NAME
 ifneq ($(HB_BUILD_NAME),)
    ifeq ($(HB_BUILD_NAME),.r)
@@ -399,7 +411,7 @@ else
    ifneq ($(filter $(HB_HOST_PLAT),dos os2),)
       HB_HOST_CPU := x86
    else
-      # TODO: CPU detection for rest of systems.
+      $(eval $(call check_host_cpu,$(shell uname -m),))
    endif
 endif
 
@@ -842,7 +854,7 @@ endif
 # Assemble relative path from OBJ_DIR to source.
 GRANDP := $(subst $(subst x,x, ),,$(foreach item, $(subst /, ,$(OBJ_DIR)), ../))
 
-# TODO: Set this in <arch>/<comp>.mk
+# TODO: Set this in <arch>/<comp>.mk (compiler switches may influence it)
 HB_CPU :=
 ifeq ($(HB_PLATFORM),win)
    ifneq ($(filter $(HB_COMPILER),msvc64 mingw64 pocc64),)
@@ -866,6 +878,8 @@ else
    else
       ifneq ($(filter $(HB_PLATFORM),dos os2),)
          HB_CPU := x86
+      else
+         HB_CPU := $(HB_HOST_CPU)
       endif
    endif
 endif
