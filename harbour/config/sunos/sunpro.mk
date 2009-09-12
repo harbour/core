@@ -12,6 +12,13 @@ OBJ_EXT := .o
 LIB_PREF := lib
 LIB_EXT := .a
 
+HB_DYN_COPT := -DHB_DYNLIB
+ifeq ($(findstring sparc,$(shell isalist)),sparc)
+   HB_DYN_COPT += -xcode=pic32
+else
+   HB_DYN_COPT += -KPIC
+endif
+
 CC := $(HB_CCACHE) $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 CC_IN := -c
 # NOTE: The ending space after -o is important, please preserve it.
@@ -35,15 +42,6 @@ ifneq ($(HB_BUILD_OPTIM),no)
    # Try to keep them this way.
    CFLAGS += -fast
    CFLAGS += -xnolibmopt
-endif
-
-# force position independent code for harbour shared library
-# it's not optimal but without support for compilation in two passes
-# we have to use this option also for static libraries and binaries
-ifeq ($(findstring sparc,$(shell isalist)),sparc)
-   CFLAGS += -xcode=pic32
-else
-   CFLAGS += -KPIC
 endif
 
 export HB_ISAOPT
