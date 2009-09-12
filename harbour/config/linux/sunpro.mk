@@ -12,6 +12,8 @@ OBJ_EXT := .o
 LIB_PREF := lib
 LIB_EXT := .a
 
+HB_DYN_COPT := -DHB_DYNLIB -KPIC
+
 CC := $(HB_CCACHE) $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 CC_IN := -c
 # NOTE: The ending space after -o is important, please preserve it.
@@ -36,11 +38,6 @@ ifneq ($(HB_BUILD_OPTIM),no)
    CFLAGS += -fast
    CFLAGS += -xnolibmopt
 endif
-
-# force position independent code for harbour shared library
-# it's not optimal but without support for compilation in two passes
-# we have to use this option also for static libraries and binaries
-CFLAGS += -KPIC
 
 export HB_ISAOPT
 
@@ -70,7 +67,7 @@ ARFLAGS :=
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) rcs $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 
 DY := $(CC)
-DFLAGS := -G -KPIC $(HB_ISAOPT) $(LIBPATHS)
+DFLAGS := -G $(HB_ISAOPT) $(LIBPATHS)
 ifneq ($(HB_BUILD_OPTIM),no)
    DFLAGS += -fast -xnolibmopt
 endif

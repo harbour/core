@@ -99,7 +99,7 @@ ifeq ($(HB_SUPPORTED),yes)
       _DET_VAR_HAS_ := HB_HAS_PNG
       _DET_FLT_PLAT :=
       _DET_FLT_COMP :=
-      _DET_INC_DEFP := /usr/include
+      _DET_INC_DEFP := /usr/include /opt/local/include
       _DET_INC_LOCL := $(TOP)$(ROOT)external/libpng
       _DET_INC_HEAD := /png.h
       include $(TOP)$(ROOT)config/detfun.mk

@@ -110,8 +110,7 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
    --------------
    (possible cross-build targets: Windows, Windows CE, MS-DOS, OS/2)
 
-    [ $ export HB_PLATFORM=<...> ]
-      $ make install
+      $ make install [HB_PLATFORM=<...>]
 
       To test it, type:
       $ cd tests
@@ -123,10 +122,9 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
    --------------------------------------
    (possible cross-build targets: Windows, Windows CE, MS-DOS)
 
-    [ $ export HB_PLATFORM=<...> ]
-      $ gmake install
+      $ gmake install [HB_PLATFORM=<...>]
       OR
-      $ make install
+      $ make install [HB_PLATFORM=<...>]
 
       To test it, type:
       $ cd tests
@@ -216,18 +214,18 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    HB_INC_GD=C:\gd\include
    HB_INC_GPM= (on Linux only)
    HB_INC_LIBHARU=C:\libharu\include (defaults to locally hosted version)
-   HB_INC_LIBPNG=C:\libpng (defaults to locally hosted version on win/dos/os2)
+   HB_INC_LIBPNG=C:\libpng (defaults to locally hosted version if not found)
    HB_INC_MYSQL=C:\mysql\include
    HB_INC_ODBC= (may only be needed on non-Windows systems)
    HB_INC_OPENSSL=C:\openssl\inc32 OR C:\openssl\include
-   HB_INC_PCRE=C:\pcre (defaults to locally hosted version on win/dos/os2)
-   HB_INC_PNG= (defaults to locally hosted version on non-*nix and Darwin systems)
+   HB_INC_PCRE=C:\pcre (defaults to locally hosted version if not found)
+   HB_INC_PNG= (defaults to locally hosted version if not found)
    HB_INC_PGSQL=C:\pgsql\include
    HB_INC_QT=C:\Qt\include
    HB_INC_SLANG= (on *nix systems)
-   HB_INC_SQLITE3=C:\sqlite3 (defaults to locally hosted version on win/dos/os2)
+   HB_INC_SQLITE3=C:\sqlite3 (defaults to locally hosted version if not found)
    HB_INC_X11= (on *nix systems)
-   HB_INC_ZLIB=C:\zlib (defaults to locally hosted version on win/dos/os2)
+   HB_INC_ZLIB=C:\zlib (defaults to locally hosted version if not found)
    HB_INC_WATT= (on MS-DOS systems)
 
    To explicitly disable any given components, use the value 'no' (without
@@ -252,7 +250,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    Darwin (Mac OS X)
    -----------------
       1.) Install MacPorts, follow their instructions:
-          http://www.macports.org/
+          https://www.macports.org/
       2.) sudo port install pcre slang allegro freeimage gd2 mysql5-devel postgresql84
 
    Linux (generic)

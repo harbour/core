@@ -12,6 +12,8 @@ OBJ_EXT := .o
 LIB_PREF := lib
 LIB_EXT := .a
 
+HB_DYN_COPT := -DHB_DYNLIB -fpic
+
 CC := $(HB_CCACHE) $(HB_CMP)
 CC_IN := -c
 CC_OUT := -o
@@ -33,10 +35,6 @@ ifneq ($(HB_BUILD_OPTIM),no)
    CFLAGS += -O3
 endif
 
-# uncomment this if you want to force relocateable code for .so libs
-# it's necessary on some platforms but can reduce performance
-#CFLAGS += -fPIC
-
 ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
@@ -54,7 +52,7 @@ ARFLAGS :=
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) rcs $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 
 DY := $(CC)
-DFLAGS := -shared -fPIC $(LIBPATHS)
+DFLAGS := -shared $(LIBPATHS)
 DY_OUT := -o$(subst x,x, )
 DLIBS := $(foreach lib,$(SYSLIBS),-l$(lib))
 
