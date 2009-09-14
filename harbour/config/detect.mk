@@ -47,7 +47,7 @@ _DET_VAR_INC_ := HB_INC_ZLIB
 _DET_VAR_HAS_ := HB_HAS_ZLIB
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
-_DET_INC_DEFP := /usr/include
+_DET_INC_DEFP := /usr/include /boot/develop/headers/3rdparty
 _DET_INC_LOCL := $(realpath $(TOP)$(ROOT)external/zlib)
 _DET_INC_HEAD := /zlib.h
 
@@ -118,7 +118,7 @@ _DET_VAR_INC_ := HB_INC_CURSES
 _DET_VAR_HAS_ := HB_HAS_CURSES
 _DET_FLT_PLAT := !os2
 _DET_FLT_COMP :=
-_DET_INC_DEFP :=
+_DET_INC_DEFP := /boot/develop/headers/3rdparty
 _DET_INC_HEAD := /curses.h
 
 ifeq ($(HB_NCURSES_194),yes)

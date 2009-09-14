@@ -112,7 +112,8 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
    #define HB_CALL_ON_STARTUP_END( func ) \
       }
 
-#elif defined( __GNUC__ ) || defined( __SUNPRO_C ) || defined( __SUNPRO_CC )
+#elif defined( __GNUC__ ) || defined( __SUNPRO_C ) || defined( __SUNPRO_CC ) || \
+      defined( __HAIKU__ )
 
    #if defined( HB_PRAGMA_STARTUP ) || defined( HB_MSC_STARTUP )
       #error Wrong macros set for startup code - clean your make/env settings.

@@ -62,7 +62,8 @@
       defined( HB_OS_DOS )
 #  define HB_TASK_THREAD
 #elif defined( HB_OS_LINUX ) || defined( HB_OS_DARWIN ) || \
-      defined( HB_OS_SUNOS ) || defined( HB_OS_HPUX )
+      defined( HB_OS_SUNOS ) || defined( HB_OS_HPUX ) || \
+      defined( HB_OS_HAIKU )
 #  include <pthread.h>
 #  define HB_PTHREAD_API
 #elif defined( HB_OS_WIN )

@@ -160,7 +160,8 @@ optimized.
     ( defined( __DJGPP__ ) && \
       ( __DJGPP__ < 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ <= 3 ) ) ) || \
     ( defined( _MSC_VER ) && \
-      !( defined( __LCC__ ) || defined( __POCC__ ) || defined( __XCC__ ) ) )
+      !( defined( __LCC__ ) || defined( __POCC__ ) || defined( __XCC__ ) ) ) || \
+      ( defined( __GNUC__ ) && __GNUC__ < 3 )
    /* TODO: add other C compilers which does not support [u]intmax_t
     *       definitions (check C compiler version number).
     *       If compiler supports stdint.h then it should be added
@@ -283,7 +284,7 @@ optimized.
 #  else
 #     define _x_long_dbl      long double
 #     if defined( __WATCOMC__ ) || defined( __MINGW32CE__ ) || defined( __CYGWIN__ ) || \
-         ( defined( HB_OS_WIN_CE ) && defined( __POCC__ ) )
+         ( defined( HB_OS_WIN_CE ) && defined( __POCC__ ) ) || defined( __HAIKU__ )
 #        define _HB_WRAP_MODFL_
 #        define _MODFD( x, p )   _hb_modfl( x, p )
 #     else

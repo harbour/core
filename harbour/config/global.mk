@@ -108,6 +108,8 @@ define check_host
       HB_HOST_PLAT := dos
    else ifneq ($(findstring msdos,$(1)),)
       HB_HOST_PLAT := dos
+   else ifneq ($(findstring Haiku,$(1)),)
+      HB_HOST_PLAT := haiku
    endif
 
 endef
@@ -816,6 +818,12 @@ ifeq ($(HB_COMPILER),)
                            endif
                         endif
                      else
+                        ifeq ($(HB_PLATFORM),haiku)
+                           HB_COMP_PATH := $(call find_in_path,gcc)
+                           ifneq ($(HB_COMP_PATH),)
+                              HB_COMPILER := gcc
+                           endif
+                        endif
                         # add other platforms here
                      endif
                   endif
