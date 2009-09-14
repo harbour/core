@@ -408,6 +408,7 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    - HB_COMPILER               Override C compiler autodetection
                                See this section for possible values:
                                SUPPORTED PLATFORMS AND C COMPILERS
+                               See also: HB_CC* settings.
 
    - HB_USER_PRGFLAGS          User Harbour compiler options
    - HB_USER_CFLAGS            User C compiler options

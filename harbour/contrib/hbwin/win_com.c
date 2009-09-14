@@ -656,7 +656,7 @@ HB_FUNC( WIN_COMSETTIMEOUTS )
       s_PortData[ iPort ].dwError = 0;
 
       CurDCB.DCBlength = sizeof( DCB );
-      if( ! GetCommState( s_PortData[ iPort ].hPort, &CurDCB ) )
+      if( ! GetCommState( hCommPort, &CurDCB ) )
       {
          s_PortData[ iPort ].dwError = GetLastError();
          hb_retl( FALSE );
@@ -665,7 +665,7 @@ HB_FUNC( WIN_COMSETTIMEOUTS )
 
       s_PortData[ iPort ].iFunction = FCNSETCOMMTIMEOUTS;
       s_PortData[ iPort ].dwError = 0;
-      if( ! hb_win_ComSetTimeouts( s_PortData[ iPort ].hPort, &Timeouts, CurDCB.BaudRate, CurDCB.Parity, CurDCB.ByteSize, CurDCB.StopBits ) )
+      if( ! hb_win_ComSetTimeouts( hCommPort, &Timeouts, CurDCB.BaudRate, CurDCB.Parity, CurDCB.ByteSize, CurDCB.StopBits ) )
       {
          s_PortData[ iPort ].dwError = GetLastError();
          hb_retl( FALSE );
@@ -686,7 +686,7 @@ HB_FUNC( WIN_COMSETQUEUESIZE )
    {
       s_PortData[ iPort ].iFunction = FCNSETUPCOMM;
       s_PortData[ iPort ].dwError = 0;
-      if( ! SetupComm( s_PortData[ iPort ].hPort, hb_parni( 2 ), hb_parni( 3 ) ) )
+      if( ! SetupComm( hCommPort, hb_parni( 2 ), hb_parni( 3 ) ) )
       {
          s_PortData[ iPort ].dwError = GetLastError();
          hb_retl( FALSE );
