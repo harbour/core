@@ -93,7 +93,7 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
    (possible cross-build targets: MS-DOS, OS/2, Linux)
 
       1.) You need to get GNU Make. If you use OS/2 host, we recommend this link:
-             ftp://hobbes.nmsu.edu/pub/os2/dev/util/make-3.81-r2-bin-static.zip
+             ftp://hobbes.nmsu.edu/pub/os2/dev/util/make-3.81-r3-bin-static.zip
           If you use other host, please refer to other platform instructions
           in this section.
           You can also use included copy named os2-make.exe instead.
