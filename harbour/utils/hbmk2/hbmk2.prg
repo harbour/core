@@ -602,7 +602,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
    LOCAL cBin_Dyn
    LOCAL cPath_CompC
    LOCAL nErrorLevel := 0
-   LOCAL tmp, tmp1, tmp2, tmp3, array
+   LOCAL tmp, tmp1, tmp2, array
+#if defined( __PLATFORM__UNIX )
+   LOCAL tmp3
+#endif
    LOCAL cScriptFile
    LOCAL fhnd
    LOCAL cFile

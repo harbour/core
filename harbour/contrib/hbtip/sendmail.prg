@@ -226,21 +226,34 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    oUrl:nPort   := nPort
    oUrl:cUserid := StrTran( cUser, "&at;", "@" )
 
-   oMail   := tipMail():new()
-   oAttach := tipMail():new()
-   oAttach:SetEncoder( "7-bit" )
+   oMail := tipMail():new()
+   oMail:SetEncoder( "7bit" )
+   IF ! Empty( aFiles )
+      oAttach := tipMail():new()
+      oAttach:SetEncoder( "7bit" )
 
-   IF ( ".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. hb_FileExists( cBody )
-      cMimeText := "text/html ; charset=ISO-8859-1"
-      oAttach:hHeaders[ "Content-Type" ] := cMimeText
-      cBodyTemp := cBody
-      cBody     := MemoRead( cBodyTemp ) + Chr( 13 ) + Chr( 10 )
+      IF ( ".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. hb_FileExists( cBody )
+         cMimeText := "text/html; charset=ISO-8859-1"
+         oAttach:hHeaders[ "Content-Type" ] := cMimeText
+         cBodyTemp := cBody
+         cBody     := MemoRead( cBodyTemp ) + Chr( 13 ) + Chr( 10 )
+      ELSE
+         oAttach:hHeaders[ "Content-Type" ] := "text/plain; charset=iso8851"
+      ENDIF
+      oAttach:SetBody( cBody )
+      oMail:Attach( oAttach )
    ELSE
-      oMail:hHeaders[ "Content-Type" ] := "text/plain; charset=iso8851"
+      IF ( ".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. hb_FileExists( cBody )
+         cMimeText := "text/html ; charset=ISO-8859-1"
+         oMail:hHeaders[ "Content-Type" ] := cMimeText
+         cBodyTemp := cBody
+         cBody     := MemoRead( cBodyTemp ) + Chr( 13 ) + Chr( 10 )
+      ELSE
+         oMail:hHeaders[ "Content-Type" ] := "text/plain; charset=iso8851"
+      ENDIF
+      oMail:SetBody( cBody )
    ENDIF
 
-   oAttach:SetBody( cBody )
-   oMail:Attach( oAttach )
    oUrl:cFile := cTo + iif( Empty( cCC ), "", "," + cCC ) + iif( Empty( cBCC ), "", "," + cBCC )
 
    oMail:hHeaders[ "Date" ] := tip_Timestamp()
