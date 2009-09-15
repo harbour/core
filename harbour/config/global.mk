@@ -108,6 +108,8 @@ define check_host
       HB_HOST_PLAT := dos
    else ifneq ($(findstring msdos,$(1)),)
       HB_HOST_PLAT := dos
+   else ifneq ($(findstring beos,$(1)),)
+      HB_HOST_PLAT := haiku
    else ifneq ($(findstring Haiku,$(1)),)
       HB_HOST_PLAT := haiku
    endif
@@ -146,6 +148,8 @@ define check_host_cpu
       HB_HOST_CPU := x86
    else ifneq ($(findstring 64,$(1)),)
       HB_HOST_CPU := x86_64
+   else ifneq ($(findstring BePC,$(1)),)
+      HB_HOST_CPU := x86
    endif
 
 endef

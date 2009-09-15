@@ -17,11 +17,6 @@ ifneq ($(HB_LINKING_RTL),)
    endif
    ifneq ($(HB_HAS_X11),)
       SYSLIBS += X11
-      # add 64-bit lib dir needed for some distros (red hat)
-      #ifneq ($(findstring 64,$(shell uname -m)),)
-      #   SYSLIBPATHS += /usr/X11R6/lib64
-      #endif
-      #SYSLIBPATHS += /usr/X11R6/lib
    endif
    ifneq ($(HB_HAS_PCRE),)
       ifeq ($(HB_HAS_PCRE_LOCAL),)
@@ -33,4 +28,3 @@ ifneq ($(HB_LINKING_RTL),)
    endif
    SYSLIBS += root socket
 endif
-
