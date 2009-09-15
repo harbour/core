@@ -63,15 +63,12 @@ static struct
    DWORD        dwError;
 } s_PortData[ 256 ];
 
-#if 0
-HB_INITFUNC( WIN_COMINIT )
+static void hb_wincom_init( void )
 {
    int i;
-
    for( i = 0; i < ( int ) HB_SIZEOFARRAY( s_PortData ); i++ )
       s_PortData[ i ].hPort = INVALID_HANDLE_VALUE;
 }
-#endif
 
 HB_FUNC( WIN_COMOPEN )
 {
@@ -842,3 +839,18 @@ HB_FUNC( WIN_COMDEBUGDCB )
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+
+HB_CALL_ON_STARTUP_BEGIN( _hb_wincom_init_ )
+   hb_wincom_init();
+HB_CALL_ON_STARTUP_END( _hb_wincom_init_ )
+
+#if defined( HB_PRAGMA_STARTUP )
+   #pragma startup _hb_wincom_init_
+#elif defined( HB_MSC_STARTUP )
+   #if defined( HB_OS_WIN_64 )
+      #pragma section( HB_MSC_START_SEGMENT, long, read )
+   #endif
+   #pragma data_seg( HB_MSC_START_SEGMENT )
+   static HB_$INITSYM hb_vm_auto_wincom_init = _hb_wincom_init_;
+   #pragma data_seg()
+#endif
