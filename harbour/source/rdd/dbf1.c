@@ -5547,7 +5547,7 @@ static HB_ERRCODE hb_dbfRename( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pI
    char szFileNew[ HB_PATH_MAX ];
    const char * szFile, * szExt;
    PHB_ITEM pFileExt = NULL;
-   PHB_FNAME pFileName, pFileNameNew = NULL;
+   PHB_FNAME pFileName, pFileNameNew;
    BOOL fTable = FALSE, fResult = FALSE;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfRename(%p,%p,%p,%p,%lu)", pRDD, pItemTable, pItemIndex, pItemNew, ulConnect));

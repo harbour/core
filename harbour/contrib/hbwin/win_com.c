@@ -54,6 +54,7 @@
 
 #include "hbapi.h"
 #include "hbapierr.h"
+#include "hbinit.h"
 #include "hbwin.h"
 
 static struct
