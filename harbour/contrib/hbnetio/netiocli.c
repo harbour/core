@@ -565,7 +565,7 @@ static BOOL s_fileRename( const char * pszFileName, const char * pszNewName )
          BYTE msgbuf[ NETIO_MSGLEN ];
          UINT16 len1 = ( UINT16 ) strlen( pszFileName );
          UINT16 len2 = ( UINT16 ) strlen( pszNewName );
-         BYTE * pBuffer = hb_xgrab( len1 + len2 );
+         BYTE * pBuffer = ( BYTE * ) hb_xgrab( len1 + len2 );
 
          memcpy( pBuffer, pszFileName, len1 );
          memcpy( pBuffer + len1, pszNewName, len2 );
