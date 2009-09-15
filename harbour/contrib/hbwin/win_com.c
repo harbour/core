@@ -97,7 +97,7 @@ HB_FUNC( WIN_COMOPEN )
       s_PortData[ iPort ].iFunction = FCNCREATEFILE;
       s_PortData[ iPort ].dwError = 0;
 
-      if( ( hCommPort = CreateFile( szName,
+      if( ( hCommPort = CreateFile( tszName,
                                     GENERIC_READ | GENERIC_WRITE,
                                     0,
                                     NULL,
