@@ -502,6 +502,9 @@
       #translate ( <exp1> ^^ <exp2> )     => ( HB_BITXOR( (<exp1>), (<exp2>) ) )
    #endif
 
+   #command @ <row>, <col> PROMPT <prompt> [ MESSAGE <msg> ] [ COLOR <color> ] => ;
+      __AtPrompt( <row>, <col>, <prompt>, <msg>, <color> )
+
 #endif
 
 #endif /* __HARBOUR__ */

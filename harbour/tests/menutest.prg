@@ -14,10 +14,10 @@ procedure main()
 
    clear screen
 
-   @  1, 10 prompt 'Menu Item 1' message 'Menu Message 1' Color "w/b+,w/b,w/r,n/w"
-   @  2, 10 prompt 'Menu Item 2' message 'Menu Message 2' Color "w/r+,bg/b,w/r,n/w"
-   @  3, 10 prompt 'Menu Item 3' message 'Menu Message 3' Color "w/g+,r/b,w/r,n/w"
-   @  4, 10 prompt 'Menu Item 4' message 'Menu Message 4' Color "w/bg+,g/b,w/r,n/w"
+   @  1, 10 prompt 'Menu Item 1' message 'Menu Message 1'
+   @  2, 10 prompt 'Menu Item 2' message 'Menu Message 2'
+   @  3, 10 prompt 'Menu Item 3' message 'Menu Message 3'
+   @  4, 10 prompt 'Menu Item 4' message 'Menu Message 4'
 
    @  6, 10 say 'Testing with LOCAL parameter'
    @  7, 10 say 'Press F8 to recurse into MENU TO'
@@ -32,10 +32,10 @@ procedure main()
 
    clear screen
 
-   @  1, 10 prompt 'Menu Item 1' message 'Menu Message 1' Color "g/b+,w/b,w/r,n/w"
-   @  2, 10 prompt 'Menu Item 2' message 'Menu Message 2' Color "r/b+,w/b,w/r,n/w"
-   @  3, 10 prompt 'Menu Item 3' message 'Menu Message 3' Color "b/w+,w/b,w/r,n/w"
-   @  4, 10 prompt 'Menu Item 4' message 'Menu Message 4' Color "g/b+,w/b,w/r,n/w"
+   @  1, 10 prompt 'Menu Item 1' message 'Menu Message 1'
+   @  2, 10 prompt 'Menu Item 2' message 'Menu Message 2'
+   @  3, 10 prompt 'Menu Item 3' message 'Menu Message 3'
+   @  4, 10 prompt 'Menu Item 4' message 'Menu Message 4'
 
    @  6, 10 say 'Testing with MEMVAR parameter'
    @  7, 10 say 'Press F8 to recurse into MENU TO'

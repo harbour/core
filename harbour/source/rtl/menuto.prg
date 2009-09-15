@@ -24,6 +24,8 @@
 THREAD STATIC t_aLevel   := {}
 THREAD STATIC t_nPointer := 1
 
+/* NOTE: <cColor> parameter is a Harbour extension. */
+
 FUNCTION __AtPrompt( nRow, nCol, cPrompt, cMsg, cColor )
 
    IF t_nPointer < 1
