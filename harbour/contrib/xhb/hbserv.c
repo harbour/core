@@ -68,7 +68,9 @@
     !defined( HB_OS_DARWIN_5 ) && \
     ! ( defined( HB_OS_WIN_CE ) && defined( __POCC__ ) ) && \
     !defined( HB_OS_WIN_64 ) && \
-    ( !defined( HB_OS_OS2 ) || defined( HB_OS_OS2_GCC ) )
+    ( !defined( HB_OS_OS2 ) || defined( HB_OS_OS2_GCC ) ) && \
+    !defined( __HAIKU__ )
+/* TODO: Haiku will supposedly do this later on, read /boot/develop/headers/posix/signal.h */
 
 #if defined( HB_OS_UNIX ) || defined( HB_OS_OS2_GCC )
 #include <sys/types.h>

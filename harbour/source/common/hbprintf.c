@@ -284,7 +284,7 @@ optimized.
 #  else
 #     define _x_long_dbl      long double
 #     if defined( __WATCOMC__ ) || defined( __MINGW32CE__ ) || defined( __CYGWIN__ ) || \
-         ( defined( HB_OS_WIN_CE ) && defined( __POCC__ ) ) || defined( __HAIKU__ )
+         ( defined( HB_OS_WIN_CE ) && defined( __POCC__ ) ) || defined( HB_OS_BEOS )
 #        define _HB_WRAP_MODFL_
 #        define _MODFD( x, p )   _hb_modfl( x, p )
 #     else

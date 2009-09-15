@@ -321,7 +321,7 @@ SUPPORTED PLATFORMS AND C COMPILERS
    linux   - Linux
    darwin  - Mac OS X
    bsd     - FreeBSD / OpenBSD / NetBSD / *BSD
-   haiku   - Haiku (experimental)
+   beos    - BeOS / Haiku (experimental)
    hpux    - HP-UX
    sunos   - Sun Solaris / OpenSolaris
    win     - MS Windows (all flavors)
@@ -353,8 +353,8 @@ SUPPORTED PLATFORMS AND C COMPILERS
    ----
    gcc      - GNU C
 
-   haiku
-   -----
+   beos
+   ----
    gcc      - GNU C
 
    sunos
@@ -986,7 +986,7 @@ BUILD HOST-PLATFORM/SHELL - TARGET-PLATFORM/COMPILER COMPATIBILITY MATRIX
    x darwin -> win/mingw     x86
    x darwin -> dos/djgpp     x86
      hpux   -> hpux/gcc      (CPU cross-builds possible)
-     haiku  -> haiku/gcc     x86
+     beos   -> beos/gcc      x86
    x hpux   -> wce/mingwarm  arm
    x hpux   -> wce/mingw     x86
    x hpux   -> win/mingw     x86

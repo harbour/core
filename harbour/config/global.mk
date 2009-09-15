@@ -109,9 +109,9 @@ define check_host
    else ifneq ($(findstring msdos,$(1)),)
       HB_HOST_PLAT := dos
    else ifneq ($(findstring beos,$(1)),)
-      HB_HOST_PLAT := haiku
+      HB_HOST_PLAT := beos
    else ifneq ($(findstring Haiku,$(1)),)
-      HB_HOST_PLAT := haiku
+      HB_HOST_PLAT := beos
    endif
 
 endef
@@ -822,7 +822,7 @@ ifeq ($(HB_COMPILER),)
                            endif
                         endif
                      else
-                        ifeq ($(HB_PLATFORM),haiku)
+                        ifeq ($(HB_PLATFORM),beos)
                            HB_COMP_PATH := $(call find_in_path,gcc)
                            ifneq ($(HB_COMP_PATH),)
                               HB_COMPILER := gcc

@@ -125,8 +125,10 @@ HB_FUNC( __TP_INITPORTSPEED )
    /* Enable the receiver and set local mode... */
    options.c_cflag |= ( CLOCAL | CREAD );
 
+#if defined( cfmakeraw )
    /* Raw input from device */
    cfmakeraw( &options );
+#endif
 
    /* Reset data bits ( cfmakeraw() puts it to CS8 ) */
    options.c_cflag &= ~CSIZE;
@@ -219,41 +221,49 @@ HB_FUNC( __TP_OUTFREE )
 
 HB_FUNC( __TP_ISDCD )
 {
+#if defined( TIOCMGET )
    int status;
 
    if ( ioctl( hb_parnl( 1 ), TIOCMGET, &status ) == 0 )
       hb_retl( ( status & TIOCM_CD ) == TIOCM_CD );
    else
+#endif
       hb_retl( FALSE );
 }
 
 HB_FUNC( __TP_ISRI )
 {
+#if defined( TIOCMGET )
    int status;
 
    if ( ioctl( hb_parnl( 1 ), TIOCMGET, &status ) == 0 )
       hb_retl( ( status & TIOCM_RI ) == TIOCM_RI );
    else
+#endif
       hb_retl( FALSE );
 }
 
 HB_FUNC( __TP_ISDSR )
 {
+#if defined( TIOCMGET )
    int status;
 
    if ( ioctl( hb_parnl( 1 ), TIOCMGET, &status ) == 0 )
       hb_retl( ( status & TIOCM_DSR ) == TIOCM_DSR );
    else
+#endif
       hb_retl( FALSE );
 }
 
 HB_FUNC( __TP_ISCTS )
 {
+#if defined( TIOCMGET )
    int status;
 
    if ( ioctl( hb_parnl( 1 ), TIOCMGET, &status ) == 0 )
       hb_retl( ( status & TIOCM_CTS ) == TIOCM_CTS );
    else
+#endif
       hb_retl( FALSE );
 }
 

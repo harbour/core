@@ -78,7 +78,7 @@
         ( defined( __STDC_VERSION__ ) && __STDC_VERSION__ >= 199901L ) || \
         ( defined( __DJGPP__ ) && \
           ( __DJGPP__ > 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ >= 4 ) ) ) || \
-        defined( HB_OS_LINUX ) || defined( HB_OS_DARWIN ) || defined( HB_OS_SUNOS ) || defined( HB_OS_HAIKU ) ) )
+        defined( HB_OS_LINUX ) || defined( HB_OS_DARWIN ) || defined( HB_OS_SUNOS ) || defined( HB_OS_BEOS ) ) )
    #include <stdint.h>
    /* workaround for BCC 5.8 bug */
    #if ( defined( __BORLANDC__ ) && __BORLANDC__ >= 1410 )

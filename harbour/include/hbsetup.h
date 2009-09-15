@@ -279,9 +279,9 @@
    #endif
 #endif
 
-#ifndef HB_OS_HAIKU
+#ifndef HB_OS_BEOS
    #if defined( __HAIKU__ )
-      #define HB_OS_HAIKU
+      #define HB_OS_BEOS
    #endif
 #endif
 
@@ -291,7 +291,7 @@
        defined( HB_OS_BSD ) || \
        defined( HB_OS_SUNOS ) || \
        defined( HB_OS_HPUX ) || \
-       defined( HB_OS_HAIKU )
+       defined( HB_OS_BEOS )
       #define HB_OS_UNIX
       /* Compatibility. Do not use this. */
       #ifdef HB_LEGACY_LEVEL2

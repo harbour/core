@@ -113,7 +113,7 @@
 
 #if defined( HB_OS_UNIX ) && ! defined( __CYGWIN__ )
 #  define HB_HAS_UNIX
-#  if !defined( __WATCOMC__ ) && !defined( __HAIKU__ )
+#  if !defined( __WATCOMC__ ) && !defined( HB_OS_BEOS )
 #     define HB_HAS_INET_ATON
 #     define HB_HAS_INET_PTON
 #     define HB_HAS_INET_NTOP
