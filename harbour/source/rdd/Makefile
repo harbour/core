@@ -19,6 +19,7 @@ C_SOURCES := \
    dbdetacx.c \
    dbdrop.c \
    dbexists.c \
+   dbrename.c \
    fieldhb.c \
    workarea.c \
    wacore.c \

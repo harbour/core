@@ -8138,6 +8138,7 @@ static const RDDFUNCS nsxTable = {
                              NULL,
                              NULL,
                              NULL,
+                             NULL,
                              hb_nsxRddInfo,
                              NULL
                            };

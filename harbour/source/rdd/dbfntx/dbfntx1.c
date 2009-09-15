@@ -7756,6 +7756,7 @@ static const RDDFUNCS ntxTable = {
                              ntxExit,
                              ntxDrop,
                              ntxExists,
+                             ntxRename,
                              ntxRddInfo,
                              ntxWhoCares
                            };

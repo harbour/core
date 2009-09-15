@@ -550,6 +550,7 @@ static const HB_FILE_FUNCS * s_fileMethods( void )
       s_fileAccept,
       hb_spFileExists,
       hb_fsDelete,
+      hb_fsRename,
       s_fileExtOpen,
       s_fileClose,
       s_fileLock,
@@ -616,6 +617,18 @@ BOOL hb_fileExists( const char * pFilename, char * pRetPath )
          return s_pFileTypes[ i ]->Exists( pFilename, pRetPath );
    }
    return hb_spFileExists( pFilename, pRetPath );
+}
+
+BOOL hb_fileRename( const char * pFilename, const char * pszNewName )
+{
+   int i = s_iFileTypes;
+
+   while( --i >= 0 )
+   {
+      if( s_pFileTypes[ i ]->Accept( pFilename ) )
+         return s_pFileTypes[ i ]->Rename( pFilename, pszNewName );
+   }
+   return hb_fsRename( pFilename, pszNewName );
 }
 
 PHB_FILE hb_fileExtOpen( const char * pFilename, const char * pDefExt,

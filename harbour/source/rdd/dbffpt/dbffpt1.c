@@ -232,6 +232,7 @@ static const RDDFUNCS fptTable =
    ( DBENTRYP_R )     hb_fptExit,
    ( DBENTRYP_RVVL )  hb_fptDrop,
    ( DBENTRYP_RVVL )  hb_fptExists,
+   ( DBENTRYP_RVVVL ) hb_fptRename,
    ( DBENTRYP_RSLV )  hb_fptRddInfo,
 
    /* Special and reserved methods */

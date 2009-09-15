@@ -102,8 +102,7 @@ static BOOL s_isDirSep( char c )
    return c == '/' || c == '\\';
 }
 
-static const char * s_consrvFilePath( char * pszFileName,
-                                      PHB_CONSRV conn )
+static const char * s_consrvFilePath( char * pszFileName, PHB_CONSRV conn )
 {
    int iPos = 0, iLevel = 0;
    char ch = HB_OS_PATH_DELIM_CHR;
@@ -485,7 +484,7 @@ HB_FUNC( NETIO_SERVER )
       {
          BYTE msgbuf[ NETIO_MSGLEN ], buffer[ 2048 ], * ptr = NULL, * msg;
          BOOL fNoAnswer = FALSE;
-         long len = 0, size;
+         long len = 0, size, size2;
          int iError = 0, iFileNo;
          USHORT uiFalgs, uiFsError;
          char * szExt;
@@ -516,7 +515,7 @@ HB_FUNC( NETIO_SERVER )
 
                      if( !szFile )
                         iError = NETIO_ERR_WRONG_FILE_PATH;
-                     else if( !hb_fileExists( ( const char * ) msg, NULL ) )
+                     else if( !hb_fileExists( szFile, NULL ) )
                         iError = hb_fsError();
                      else
                      {
@@ -544,13 +543,57 @@ HB_FUNC( NETIO_SERVER )
 
                      if( !szFile )
                         iError = NETIO_ERR_WRONG_FILE_PATH;
-                     else if( !hb_fileDelete( ( const char * ) msg ) )
+                     else if( !hb_fileDelete( szFile ) )
                         iError = hb_fsError();
                      else
                      {
                         HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_DELETE );
                         memset( msg + 4, '\0', NETIO_MSGLEN - 4 );
                      }
+                  }
+               }
+               break;
+
+            case NETIO_RENAME:
+               size = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
+               size2 = HB_GET_LE_UINT16( &msgbuf[ 6 ] );
+               if( size <= 0 || size2 <= 0 )
+                  iError = NETIO_ERR_WRONG_PARAM;
+               else
+               {
+                  if( HB_MAX( size, size2 ) + conn->rootPathLen >= ( long ) sizeof( buffer ) )
+                     ptr = msg = ( BYTE * ) hb_xgrab( HB_MAX( size, size2 ) + conn->rootPathLen + 1 );
+                  msg[ size ] = '\0';
+                  if( s_srvRecvAll( conn, msg, size ) != size )
+                     iError = NETIO_ERR_READ;
+                  else
+                  {
+                     char * szOldName = NULL;
+                     const char * szFile = s_consrvFilePath( ( char * ) msg, conn );
+
+                     if( szFile )
+                        szOldName = hb_strdup( szFile );
+
+                     msg[ size2 ] = '\0';
+                     if( s_srvRecvAll( conn, msg, size2 ) != size2 )
+                        iError = NETIO_ERR_READ;
+                     else if( !szOldName )
+                        iError = NETIO_ERR_WRONG_FILE_PATH;
+                     else
+                     {
+                        szFile = s_consrvFilePath( ( char * ) msg, conn );
+                        if( !szFile )
+                           iError = NETIO_ERR_WRONG_FILE_PATH;
+                        else if( !hb_fileRename( szOldName, szFile ) )
+                           iError = hb_fsError();
+                        else
+                        {
+                           HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_RENAME );
+                           memset( msg + 4, '\0', NETIO_MSGLEN - 4 );
+                        }
+                     }
+                     if( szOldName )
+                        hb_xfree( szOldName );
                   }
                }
                break;

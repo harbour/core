@@ -4725,6 +4725,17 @@ static HB_ERRCODE adsExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItem
    return hb_spFile( szFileName, NULL ) ? HB_SUCCESS : HB_FAILURE;
 }
 
+static HB_ERRCODE adsRename( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex, PHB_ITEM pNewName, ULONG ulConnect )
+{
+   HB_SYMBOL_UNUSED( pRDD );
+   HB_SYMBOL_UNUSED( pItemTable );
+   HB_SYMBOL_UNUSED( pItemIndex );
+   HB_SYMBOL_UNUSED( pNewName );
+   HB_SYMBOL_UNUSED( ulConnect );
+
+   return HB_FAILURE;
+}
+
 #define  adsInit                  NULL
 
 static HB_ERRCODE adsExit( LPRDDNODE pRDD )
@@ -4903,6 +4914,7 @@ static const RDDFUNCS adsTable = { ( DBENTRYP_BP ) adsBof,
                                    ( DBENTRYP_R ) adsExit,
                                    ( DBENTRYP_RVVL ) adsDrop,
                                    ( DBENTRYP_RVVL ) adsExists,
+                                   ( DBENTRYP_RVVVL ) adsRename,
                                    ( DBENTRYP_RSLV ) adsRddInfo,
                                    ( DBENTRYP_SVP ) adsWhoCares
                                  };

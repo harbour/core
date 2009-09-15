@@ -579,6 +579,7 @@ static HB_ERRCODE hb_cdxSetFilter( CDXAREAP pArea, LPDBFILTERINFO pFilterInfo );
 #define hb_cdxExit                                 NULL
 #define hb_cdxDrop                                 NULL
 #define hb_cdxExists                               NULL
+#define hb_cdxRename                               NULL
 static HB_ERRCODE hb_cdxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem );
 #define hb_cdxWhoCares                             NULL
 

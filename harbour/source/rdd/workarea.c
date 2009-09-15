@@ -2017,6 +2017,7 @@ static const RDDFUNCS waTable =
    ( DBENTRYP_R )       NULL,                   /* Exit    */
    ( DBENTRYP_RVVL )    hb_waRddUnsupported,    /* Drop    */
    ( DBENTRYP_RVVL )    hb_waRddUnsupported,    /* Exists  */
+   ( DBENTRYP_RVVVL )   hb_waRddUnsupported,    /* Rename  */
 /* ( DBENTRYP_RSLV ) */ hb_waRddInfo,           /* RddInfo */
 
    /* Special and reserved methods */

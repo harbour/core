@@ -548,6 +548,40 @@ static BOOL s_fileDelete( const char * pFilename )
    return fResult;
 }
 
+static BOOL s_fileRename( const char * pszFileName, const char * pszNewName )
+{
+   BOOL fResult = FALSE;
+   PHB_CONCLI conn;
+
+   pszFileName += NETIO_FILE_PREFIX_LEN;
+   if( s_fileAccept( pszNewName ) )
+      pszNewName += NETIO_FILE_PREFIX_LEN;
+
+   conn = s_fileConnect( &pszFileName, NULL, 0, 0 );
+   if( conn )
+   {
+      if( s_fileConLock( conn ) )
+      {
+         BYTE msgbuf[ NETIO_MSGLEN ];
+         UINT16 len1 = ( UINT16 ) strlen( pszFileName );
+         UINT16 len2 = ( UINT16 ) strlen( pszNewName );
+         BYTE * pBuffer = hb_xgrab( len1 + len2 );
+
+         memcpy( pBuffer, pszFileName, len1 );
+         memcpy( pBuffer + len1, pszNewName, len2 );
+         HB_PUT_LE_UINT32( &msgbuf[ 0 ], NETIO_RENAME );
+         HB_PUT_LE_UINT16( &msgbuf[ 4 ], len1 );
+         HB_PUT_LE_UINT16( &msgbuf[ 6 ], len2 );
+         memset( msgbuf + 8, '\0', sizeof( msgbuf ) - 8 );
+         fResult = s_fileSendMsg( conn, msgbuf, pBuffer, len1 + len2, TRUE );
+         s_fileConUnlock( conn );
+      }
+      s_fileConClose( conn );
+   }
+
+   return fResult;
+}
+
 static PHB_FILE s_fileOpen( const char * pFilename, const char * pDefExt,
                             USHORT uiExFlags, const char * pPaths,
                             PHB_ITEM pError )
@@ -768,6 +802,7 @@ static const HB_FILE_FUNCS * s_fileMethods( void )
       s_fileAccept,
       s_fileExists,
       s_fileDelete,
+      s_fileRename,
       s_fileOpen,
       s_fileClose,
       s_fileLock,

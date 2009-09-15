@@ -297,6 +297,7 @@ static const RDDFUNCS cdxTable =
    ( DBENTRYP_R )     hb_cdxExit,
    ( DBENTRYP_RVVL )  hb_cdxDrop,
    ( DBENTRYP_RVVL )  hb_cdxExists,
+   ( DBENTRYP_RVVVL ) hb_cdxRename,
    ( DBENTRYP_RSLV )  hb_cdxRddInfo,
 
 

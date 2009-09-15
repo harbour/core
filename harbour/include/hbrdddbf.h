@@ -341,6 +341,7 @@ static HB_ERRCODE hb_dbfInit( LPRDDNODE pRDD );
 static HB_ERRCODE hb_dbfExit( LPRDDNODE pRDD );
 static HB_ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex, ULONG ulConnect );
 static HB_ERRCODE hb_dbfExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex, ULONG ulConnect );
+static HB_ERRCODE hb_dbfRename( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex, PHB_ITEM pNewName, ULONG ulConnect );
 static HB_ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem );
 
 #define hb_dbfWhoCares                             NULL

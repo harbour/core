@@ -73,27 +73,29 @@
 #define NETIO_SERVERNAME_MAX  256
 
 /* login string */
-#define NETIO_LOGINSTRID      "HarbourFileTcpIpServer\003"
+#define NETIO_LOGINSTRID      "HarbourFileTcpIpServer\004"
 
 /* messages */
 #define NETIO_LOGIN           1
 #define NETIO_EXISTS          2
 #define NETIO_DELETE          3
-#define NETIO_COMMIT          4
-#define NETIO_SIZE            5
-#define NETIO_TRUNC           6
-#define NETIO_READ            7
-#define NETIO_WRITE           8
-#define NETIO_LOCK            9
-#define NETIO_OPEN            10
-#define NETIO_CLOSE           11
-#define NETIO_ERROR           12
+#define NETIO_RENAME          4
+#define NETIO_COMMIT          5
+#define NETIO_SIZE            6
+#define NETIO_TRUNC           7
+#define NETIO_READ            8
+#define NETIO_WRITE           9
+#define NETIO_LOCK            10
+#define NETIO_OPEN            11
+#define NETIO_CLOSE           12
+#define NETIO_ERROR           13
 #define NETIO_CONNECTED       0x4321DEAD
 
 /* messages format */
 /* { NETIO_LOGIN,  len[ 2 ]... } + loginstr[ len ] -> { NETIO_LOGIN, NETIO_CONNECTED[ 4 ], ... } */
 /* { NETIO_EXISTS, len[ 2 ]... } + filename[ len ] -> { NETIO_EXISTS, ... } */
 /* { NETIO_DELETE, len[ 2 ]... } + filename[ len ] -> { NETIO_DELETE, ... } */
+/* { NETIO_RENAME, len[ 2 ], len2[ 2 ]... } + filename[ len ] + filename[ len2 ] -> { NETIO_RENAME, ... } */
 /* { NETIO_OPEN,   len[ 2 ], flags[ 2 ], def_ext[], 0, ... } + filename[ len ] -> { NETIO_OPEN, file_no[2], ... } */
 /* { NETIO_READ,   file_no[2], size[ 4 ], offset[ 8 ], ... } -> { NETIO_READ, read[ 4 ], err[ 2 ], ... } + data[ read ] */
 /* { NETIO_WRITE,  file_no[2], size[ 4 ], offset[ 8 ], ... } + data[ size ] -> { NETIO_WRITE, written[ 4 ], err[ 2 ], ... } */

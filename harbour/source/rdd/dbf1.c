@@ -172,6 +172,7 @@ static const RDDFUNCS dbfTable = { ( DBENTRYP_BP ) hb_dbfBof,
                                    ( DBENTRYP_R ) hb_dbfExit,
                                    ( DBENTRYP_RVVL ) hb_dbfDrop,
                                    ( DBENTRYP_RVVL ) hb_dbfExists,
+                                   ( DBENTRYP_RVVVL ) hb_dbfRename,
                                    ( DBENTRYP_RSLV ) hb_dbfRddInfo,
                                    ( DBENTRYP_SVP ) hb_dbfWhoCares
                                  };
@@ -5438,7 +5439,7 @@ static HB_ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pIte
       /* Try to delete index file */
       szFile = hb_itemGetCPtr( pItemTable );
       if( !szFile[ 0 ] )
-         return FALSE;
+         return HB_FAILURE;
       fTable = TRUE;
    }
 
@@ -5497,10 +5498,9 @@ static HB_ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pIte
          hb_xfree( pFileName );
       }
    }
+
    if( pFileExt )
-   {
       hb_itemRelease( pFileExt );
-   }
 
    return fResult ? HB_SUCCESS : HB_FAILURE;
 }
@@ -5520,7 +5520,7 @@ static HB_ERRCODE hb_dbfExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pI
    {
       szFile = hb_itemGetCPtr( pItemTable );
       if( !szFile[ 0 ] )
-         return FALSE;
+         return HB_FAILURE;
       fTable = TRUE;
    }
 
@@ -5534,12 +5534,114 @@ static HB_ERRCODE hb_dbfExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pI
    }
    hb_fsFNameMerge( szFileName, pFileName );
    hb_xfree( pFileName );
+
    if( pFileExt )
-   {
       hb_itemRelease( pFileExt );
-   }
 
    return hb_fileExists( szFileName, NULL ) ? HB_SUCCESS : HB_FAILURE;
+}
+
+static HB_ERRCODE hb_dbfRename( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex, PHB_ITEM pItemNew, ULONG ulConnect )
+{
+   char szFileName[ HB_PATH_MAX ];
+   char szFileNew[ HB_PATH_MAX ];
+   const char * szFile, * szExt;
+   PHB_ITEM pFileExt = NULL;
+   PHB_FNAME pFileName, pFileNameNew = NULL;
+   BOOL fTable = FALSE, fResult = FALSE;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dbfRename(%p,%p,%p,%p,%lu)", pRDD, pItemTable, pItemIndex, pItemNew, ulConnect));
+
+   szFile = hb_itemGetCPtr( pItemIndex );
+   if( !szFile[ 0 ] )
+   {
+      /* Try to delete index file */
+      szFile = hb_itemGetCPtr( pItemTable );
+      if( !szFile[ 0 ] )
+         return HB_FAILURE;
+      fTable = TRUE;
+   }
+
+   pFileName = hb_fsFNameSplit( szFile );
+
+   if( ! pFileName->szExtension && ( !fTable || hb_setGetDefExtension() ) )
+   {
+      /* Add default extension if missing */
+      pFileExt = hb_itemPutC( pFileExt, NULL );
+      if( SELF_RDDINFO( pRDD, fTable ? RDDI_TABLEEXT : RDDI_ORDBAGEXT, ulConnect, pFileExt ) == HB_SUCCESS )
+         pFileName->szExtension = hb_itemGetCPtr( pFileExt );
+   }
+   hb_fsFNameMerge( szFileName, pFileName );
+   hb_xfree( pFileName );
+
+   szFile = hb_itemGetCPtr( pItemNew );
+   /* Use hb_fileExists first to locate table which can be in differ path */
+   if( szFile[ 0 ] && hb_fileExists( szFileName, szFileName ) )
+   {
+      /* hb_fsFNameSplit() repeated intentionally to respect
+       * the path set by hb_fileExists()
+       */
+      pFileName = hb_fsFNameSplit( szFileName );
+
+      pFileNameNew = hb_fsFNameSplit( szFile );
+      if( ! pFileNameNew->szExtension && ( !fTable || hb_setGetDefExtension() ) )
+      {
+         /* Add default extension if missing */
+         pFileExt = hb_itemPutC( pFileExt, NULL );
+         if( SELF_RDDINFO( pRDD, fTable ? RDDI_TABLEEXT : RDDI_ORDBAGEXT, ulConnect, pFileExt ) == HB_SUCCESS )
+            pFileNameNew->szExtension = hb_itemGetCPtr( pFileExt );
+      }
+      if( !pFileNameNew->szPath )
+         pFileNameNew->szPath = pFileName->szPath;
+      hb_fsFNameMerge( szFileNew, pFileNameNew );
+
+      fResult = hb_fileRename( szFileName, szFileNew );
+      if( fResult && fTable )
+      {
+         /*
+          * Database table file has been renamed, now check if memo is
+          * supported and if yes then try to rename memo file if it exists
+          * in the same directory as table file
+          */
+         pFileExt = hb_itemPutC( pFileExt, NULL );
+         if( SELF_RDDINFO( pRDD, RDDI_MEMOEXT, ulConnect, pFileExt ) == HB_SUCCESS )
+         {
+            szExt = hb_itemGetCPtr( pFileExt );
+            if( szExt[ 0 ] )
+            {
+               pFileName->szExtension = szExt;
+               pFileNameNew->szExtension = szExt;
+               hb_fsFNameMerge( szFileName, pFileName );
+               hb_fsFNameMerge( szFileNew, pFileNameNew );
+               hb_fileRename( szFileName, szFileNew );
+            }
+         }
+         /*
+          * and try to rename production index also if it exists
+          * in the same directory as table file
+          */
+         pFileExt = hb_itemPutC( pFileExt, NULL );
+         if( SELF_RDDINFO( pRDD, RDDI_ORDSTRUCTEXT, ulConnect, pFileExt ) == HB_SUCCESS )
+         {
+            szExt = hb_itemGetCPtr( pFileExt );
+            if( szExt[ 0 ] )
+            {
+               pFileName->szExtension = szExt;
+               pFileNameNew->szExtension = szExt;
+               hb_fsFNameMerge( szFileName, pFileName );
+               hb_fsFNameMerge( szFileNew, pFileNameNew );
+               hb_fileRename( szFileName, szFileNew );
+            }
+         }
+      }
+      hb_xfree( pFileName );
+      hb_xfree( pFileNameNew );
+   }
+
+   if( pFileExt )
+      hb_itemRelease( pFileExt );
+
+   return fResult ? HB_SUCCESS : HB_FAILURE;
 }
 
 static void hb_dbfInitTSD( void * Cargo )

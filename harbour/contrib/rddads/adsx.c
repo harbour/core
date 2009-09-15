@@ -1452,6 +1452,7 @@ static RDDFUNCS adsxTable = { NULL,
                               NULL,
                               NULL,
                               NULL,
+                              NULL,
                               NULL  };
 
 

@@ -470,6 +470,7 @@ static HB_ERRCODE ntxInit( LPRDDNODE pRDD );
 #define ntxExit                  NULL
 #define ntxDrop                  NULL
 #define ntxExists                NULL
+#define ntxRename                NULL
 static HB_ERRCODE ntxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem );
 #define ntxWhoCares              NULL
 

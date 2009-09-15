@@ -326,6 +326,7 @@ extern HB_EXPORT const char * hb_fsNameConv( const char * szFileName, char ** ps
       BOOL        (* Accept ) ( const char * pszFilename );
       BOOL        (* Exists ) ( const char * pszFilename, char * pRetPath );
       BOOL        (* Delete ) ( const char * pszFilename );
+      BOOL        (* Rename ) ( const char * pszFilename, const char * pszNewName );
       PHB_FILE    (* Open ) ( const char * pszFilename, const char * pDefExt,
                               USHORT uiExFlags, const char * pPaths,
                               PHB_ITEM pError );
@@ -347,6 +348,7 @@ extern HB_EXPORT const char * hb_fsNameConv( const char * szFileName, char ** ps
 
 HB_EXPORT BOOL       hb_fileExists( const char * pFilename, char * pRetPath );
 HB_EXPORT BOOL       hb_fileDelete( const char * pFilename );
+HB_EXPORT BOOL       hb_fileRename( const char * pFilename, const char * pszNewName );
 HB_EXPORT PHB_FILE   hb_fileExtOpen( const char * pszFilename, const char * pDefExt,
                                      USHORT uiExFlags, const char * pPaths,
                                      PHB_ITEM pError );

@@ -1191,6 +1191,7 @@ static RDDFUNCS sqlbaseTable =
    ( DBENTRYP_R )     sqlbaseExit,
    ( DBENTRYP_RVVL )  NULL,                       /* sqlbaseDrop */
    ( DBENTRYP_RVVL )  NULL,                       /* sqlbaseExists */
+   ( DBENTRYP_RVVVL ) NULL,                       /* sqlbaseRename */
    ( DBENTRYP_RSLV )  sqlbaseRddInfo,
    ( DBENTRYP_SVP )   NULL                        /* sqlbaseWhoCares */
 };

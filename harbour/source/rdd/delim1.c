@@ -1559,6 +1559,7 @@ static const RDDFUNCS delimTable = { NULL /* hb_delimBof */,
                                      NULL /* hb_delimExit */,
                                      NULL /* hb_delimDrop */,
                                      NULL /* hb_delimExists */,
+                                     NULL /* hb_delimRename */,
                                    ( DBENTRYP_RSLV ) hb_delimRddInfo,
                                      NULL /* hb_delimWhoCares */
                                    };

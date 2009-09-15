@@ -2560,6 +2560,23 @@ static HB_ERRCODE hb_usrExists( LPRDDNODE pRDD, PHB_ITEM pTable, PHB_ITEM pIndex
    return hb_usrReturn();
 }
 
+static HB_ERRCODE hb_usrRename( LPRDDNODE pRDD, PHB_ITEM pTable, PHB_ITEM pIndex, PHB_ITEM pNewName, ULONG ulConnection )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_usrRename(%p,%p,%p,%p,%lu)", pRDD, pTable, pIndex, pNewName, ulConnection));
+
+   if( !hb_usrPushMethod( SELF_USRNODE( pRDD )->pMethods, UR_RENAME ) )
+      return SUPER_RENAME( pRDD, pTable, pIndex, pNewName, ulConnection );
+
+   hb_vmPushInteger( pRDD->rddID );
+   hb_vmPush( pTable );
+   hb_vmPush( pIndex );
+   hb_vmPush( pNewName );
+   hb_vmPushLong( ulConnection );
+   hb_vmDo( 5 );
+
+   return hb_usrReturn();
+}
+
 static HB_ERRCODE hb_usrRddInfo( LPRDDNODE pRDD, USHORT uiInfoType, ULONG ulConnection, PHB_ITEM pInfo )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_usrRddInfo(%p,%hu,%lu,%p)", pRDD, uiInfoType, ulConnection, pInfo));
@@ -2697,6 +2714,7 @@ static const RDDFUNCS usrFuncTable =
    /* ( DBENTRYP_R )    */ NULL, /* RDD */    /* Exit    */
    /* ( DBENTRYP_RVVL ) */ hb_usrDrop,        /* Drop    */
    /* ( DBENTRYP_RVVL ) */ hb_usrExists,      /* Exists  */
+   /* ( DBENTRYP_RVVVL )*/ hb_usrRename,      /* Rename  */
    /* ( DBENTRYP_RSLV ) */ hb_usrRddInfo,     /* RddInfo */
 
    /* Special and reserved methods */
@@ -2823,6 +2841,7 @@ static const RDDFUNCS rddFuncTable =
    /* ( DBENTRYP_R )    */ hb_usrExit,        /* Exit    */
    /* ( DBENTRYP_RVVL ) */ NULL,              /* Drop    */
    /* ( DBENTRYP_RVVL ) */ NULL,              /* Exists  */
+   /* ( DBENTRYP_RVVVL )*/ NULL,              /* Rename  */
    /* ( DBENTRYP_RSLV ) */ NULL,              /* RddInfo */
 
    /* Special and reserved methods */
@@ -4255,6 +4274,17 @@ HB_FUNC_UR_SUPER( EXISTS )
       hb_retni( SUPER_EXISTS( pRDD, hb_param( 2, HB_IT_ANY ),
                                     hb_param( 3, HB_IT_ANY ),
                                     hb_parnl( 4 ) ) );
+}
+
+HB_FUNC_UR_SUPER( RENAME )
+{
+   LPRDDNODE pRDD = hb_usrGetNodeParam( 2 );
+
+   if( pRDD )
+      hb_retni( SUPER_RENAME( pRDD, hb_param( 2, HB_IT_ANY ),
+                                    hb_param( 3, HB_IT_ANY ),
+                                    hb_param( 4, HB_IT_ANY ),
+                                    hb_parnl( 5 ) ) );
 }
 
 HB_FUNC_UR_SUPER( RDDINFO )

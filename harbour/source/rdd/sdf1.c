@@ -1300,6 +1300,7 @@ static const RDDFUNCS sdfTable = { NULL /* hb_sdfBof */,
                                    NULL /* hb_sdfExit */,
                                    NULL /* hb_sdfDrop */,
                                    NULL /* hb_sdfExists */,
+                                   NULL /* hb_sdfRename */,
                                    ( DBENTRYP_RSLV ) hb_sdfRddInfo,
                                    NULL /* hb_sdfWhoCares */
                            };

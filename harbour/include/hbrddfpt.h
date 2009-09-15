@@ -347,6 +347,7 @@ static HB_ERRCODE hb_fptPutValueFile( FPTAREAP pArea, USHORT uiIndex, const char
 #define hb_fptExit                                 NULL
 #define hb_fptDrop                                 NULL
 #define hb_fptExists                               NULL
+#define hb_fptRename                               NULL
 static HB_ERRCODE hb_fptRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem );
 #define hb_fptWhoCares                             NULL
 

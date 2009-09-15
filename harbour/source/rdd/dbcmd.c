@@ -2145,6 +2145,38 @@ HB_FUNC( HB_DBEXISTS )
       hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
 }
 
+HB_FUNC( HB_DBRENAME )
+{
+   LPRDDNODE  pRDDNode;
+   USHORT     uiRddID;
+   ULONG      ulConnection;
+   const char * szDriver;
+   PHB_ITEM   pTable, pIndex, pNewName;
+
+   szDriver = hb_parc( 4 );
+   if( !szDriver ) /* no VIA RDD parameter, use default */
+   {
+      szDriver = hb_rddDefaultDrv( NULL );
+   }
+   ulConnection = hb_parnl( 5 );
+
+   pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDDNODE */
+   pTable = hb_param( 1, HB_IT_STRING );
+   pIndex = hb_param( 2, HB_IT_STRING );
+   pNewName = hb_param( 3, HB_IT_STRING );
+   if( pIndex && !pNewName )
+   {
+      pNewName = pIndex;
+      pIndex = NULL;
+   }
+
+   if( pRDDNode && pTable && pNewName )
+      hb_retl( SELF_RENAME( pRDDNode, pTable, pIndex, pNewName,
+                            ulConnection ) == HB_SUCCESS );
+   else
+      hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
+}
+
 HB_FUNC( HB_FIELDLEN )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();

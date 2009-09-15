@@ -2248,6 +2248,7 @@ static RDDFUNCS sqlmixTable =
         ( DBENTRYP_R )    sqlmixExit,
         ( DBENTRYP_RVVL)  NULL,                   /* sqlmixDrop */
         ( DBENTRYP_RVVL)  NULL,                   /* sqlmixExists */
+        ( DBENTRYP_RVVVL) NULL,                   /* sqlmixRename */
         ( DBENTRYP_RSLV ) NULL,                   /* sqlmixRddInfo */
         ( DBENTRYP_SVP )  NULL,                   /* sqlmixWhoCares */
        };
