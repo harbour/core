@@ -157,9 +157,10 @@ BOOL hb_setenv( const char * szName, const char * szValue )
    return SetEnvironmentVariableA( szName, szValue ) != 0;
 
 #elif defined( _BSD_SOURCE ) || _POSIX_C_SOURCE >= 200112L || \
-      _XOPEN_SOURCE >= 600 || defined( __WATCOMC__ ) || defined( __DJGPP__ ) || \
-      defined( HB_OS_SUNOS ) || defined( HB_OS_BSD ) || defined( HB_OS_DARWIN ) \
-      defined( HB_OS_BEOS )
+      _XOPEN_SOURCE >= 600 || \
+      defined( __WATCOMC__ ) || defined( __DJGPP__ ) || \
+      defined( HB_OS_SUNOS ) || defined( HB_OS_BSD ) || \
+      defined( HB_OS_DARWIN ) || defined( HB_OS_BEOS )
 
    if( szValue )
       return setenv( szName, szValue, 1 ) == 0;
