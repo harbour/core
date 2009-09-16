@@ -1,0 +1,11 @@
+#
+# $Id$
+#
+
+-hblib
+-olib/${hb_plat}/${hb_comp}/hbvpdf
+-inc
+
+hbvpdf.prg
+hbvpdft.prg
+hbvpsup.prg
