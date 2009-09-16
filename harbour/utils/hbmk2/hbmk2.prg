@@ -860,7 +860,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
    cBin_CompPRG := "harbour" + l_cHBPOSTFIX
 
    DO CASE
-   CASE hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|linux" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" /* Separated to avoid match with 'win' */
+   CASE hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|beos|linux" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" /* Separated to avoid match with 'win' */
       DO CASE
       CASE hbmk[ _HBMK_cPLAT ] == "linux"
          aCOMPSUP := { "gcc", "watcom", "icc", "sunpro" }
@@ -1105,7 +1105,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       IF Empty( hbmk[ _HBMK_cCOMP ] ) .OR. hbmk[ _HBMK_cCOMP ] == "bld"
          IF Len( aCOMPSUP ) == 1
             hbmk[ _HBMK_cCOMP ] := aCOMPSUP[ 1 ]
-         ELSEIF hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|linux" .OR. ;
+         ELSEIF hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|beos|linux" .OR. ;
                 hbmk[ _HBMK_cPLAT ] == "darwin" .OR. ;
                 hbmk[ _HBMK_cCOMP ] == "bld"
             hbmk[ _HBMK_cCOMP ] := hb_Version( HB_VERSION_BUILD_COMP )
@@ -1245,7 +1245,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
    /* Build with shared libs by default, if we're installed to default system locations. */
 
-   IF lSysLoc .AND. ( hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|linux" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" )
+   IF lSysLoc .AND. ( hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|beos|linux" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" )
       hbmk[ _HBMK_lSHARED ] := .T.
       hbmk[ _HBMK_lSTATICFULL ] := .F.
    ELSE
@@ -1966,7 +1966,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 #endif
 
       DO CASE
-      CASE hbmk[ _HBMK_cPLAT ] $ "bsd|linux|hpux|sunos" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" /* Separated to avoid match with 'win' */
+      CASE hbmk[ _HBMK_cPLAT ] $ "bsd|linux|hpux|beos|sunos" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" /* Separated to avoid match with 'win' */
          IF Empty( cPrefix )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cPostfix,;
                                                       "harbour"   + cPostfix ) }
@@ -2050,7 +2050,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
            ( hbmk[ _HBMK_cPLAT ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "icc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "icc" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "clang" )
+           ( hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "beos"   .AND. hbmk[ _HBMK_cCOMP ] == "gcc" )
 
          nCmd_Esc := _ESC_NIX
          IF hbmk[ _HBMK_lDEBUG ]
@@ -2169,8 +2170,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          /* Add system libraries */
          IF ! hbmk[ _HBMK_lSHARED ]
             AAdd( l_aLIBSYS, "m" )
-            IF hbmk[ _HBMK_lMT ]
-               AAdd( l_aLIBSYS, "pthread" )
+            IF !( hbmk[ _HBMK_cPLAT ] == "beos" )
+               IF hbmk[ _HBMK_lMT ]
+                  AAdd( l_aLIBSYS, "pthread" )
+               ENDIF
             ENDIF
             DO CASE
             CASE hbmk[ _HBMK_cPLAT ] == "linux"
@@ -2183,6 +2186,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                AAdd( l_aLIBSYS, "resolv" )
             CASE hbmk[ _HBMK_cPLAT ] == "hpux"
                AAdd( l_aLIBSYS, "rt" )
+            CASE hbmk[ _HBMK_cPLAT ] == "beos"
+               AAdd( hbmk[ _HBMK_aLIBPATH ], "/system/lib" )
+               AAdd( l_aLIBSYS, "root" )
+               AAdd( l_aLIBSYS, "socket" )
             ENDCASE
 
             IF ! Empty( cLIB_BASE_PCRE ) .AND. ! hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLibLibPrefix + cLIB_BASE_PCRE + cLibLibExt )
@@ -6009,6 +6016,9 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
       #elif defined( __PLATFORM__HPUX )
          AAdd( aUnd, "__PLATFORM__HPUX" )
          AAdd( aUnd, "__PLATFORM__UNIX" )
+      #elif defined( __PLATFORM__BEOS )
+         AAdd( aUnd, "__PLATFORM__BEOS" )
+         AAdd( aUnd, "__PLATFORM__UNIX" )
       #endif
 
       #if   defined( __ARCH16BIT__ )
@@ -6060,6 +6070,9 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
          AAdd( aDef, "__PLATFORM__UNIX" )
       CASE hbmk[ _HBMK_cPLAT ] == "hpux"
          AAdd( aDef, "__PLATFORM__HPUX" )
+         AAdd( aDef, "__PLATFORM__UNIX" )
+      CASE hbmk[ _HBMK_cPLAT ] == "beos"
+         AAdd( aDef, "__PLATFORM__BEOS" )
          AAdd( aDef, "__PLATFORM__UNIX" )
       ENDCASE
 
@@ -6754,7 +6767,7 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword )
       RETURN .T.
    ENDIF
 
-   IF ( cKeyword == "unix"     .AND. ( hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|linux" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" ) ) .OR. ;
+   IF ( cKeyword == "unix"     .AND. ( hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|beos|linux" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" ) ) .OR. ;
       ( cKeyword == "allwin"   .AND. hbmk[ _HBMK_cPLAT ] $ "win|wce"                                             ) .OR. ;
       ( cKeyword == "allgcc"   .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin|djgpp"             ) .OR. ;
       ( cKeyword == "allmingw" .AND. hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"                              ) .OR. ;
@@ -6943,6 +6956,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  - dos    : djgpp, watcom",;
       "  - bsd    : gcc",;
       "  - hpux   : gcc",;
+      "  - beos   : gcc",;
       "  - sunos  : gcc, sunpro" }
 
    LOCAL aOpt_Basic := {;
