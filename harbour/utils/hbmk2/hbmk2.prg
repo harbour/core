@@ -96,6 +96,10 @@
          adding rest of variables). */
 /* TODO: Add a way to fallback to stop if required headers couldn't be found.
          This needs a way to spec what key headers to look for. */
+/* TODO: Clean up compiler autodetection and add those few feature only
+         found in GNU Make / global.mk, like *nix native autodetection,
+         autodetection of watcom cross-build setups, poccarm/pocc64 setups,
+         etc. */
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -182,6 +186,7 @@ REQUEST hbmk_KEYW
 
 #define _LNG_MARKER             ( _MACRO_LATE_PREFIX + _MACRO_OPEN + "hb_lng" + _MACRO_CLOSE )
 
+#define _HBMK_ENV_NAME          "HBMK_OPTIONS"
 #define _HBMK_CFG_NAME          "hbmk.cfg"
 #define _HBMK_AUTOHBM_NAME      "hbmk.hbm"
 
@@ -631,6 +636,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
    LOCAL aParam
    LOCAL cParam
    LOCAL cParamL
+   LOCAL cEnv
 
    LOCAL tTarget
    LOCAL lTargetUpToDate
@@ -695,6 +701,60 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       RETURN 19
    ENDIF
 
+   /* Process environment */
+
+   cEnv := GetEnv( _HBMK_ENV_NAME )
+
+   /* Compatibility */
+
+   IF ValueIsT( GetEnv( "HB_MT" ) ) .OR. Lower( GetEnv( "HB_MT" ) ) == "mt"
+      cEnv += " -mt"
+   ELSEIF ValueIsF( GetEnv( "HB_MT" ) )
+      cEnv += " -st"
+   ENDIF
+   IF ValueIsT( GetEnv( "HB_GUI" ) )
+      cEnv += " -gui"
+   ELSEIF ValueIsF( GetEnv( "HB_GUI" ) )
+      cEnv += " -std"
+   ENDIF
+   IF ValueIsT( GetEnv( "HB_SHARED" ) )
+      cEnv += " -shared"
+   ELSEIF ValueIsF( GetEnv( "HB_SHARED" ) )
+      cEnv += " -static"
+   ENDIF
+   IF ValueIsT( GetEnv( "HB_DEBUG" ) )
+      cEnv += " -debug"
+   ELSEIF ValueIsF( GetEnv( "HB_DEBUG" ) )
+      cEnv += " -debug-"
+   ENDIF
+   IF ValueIsT( GetEnv( "HB_NULRDD" ) )
+      cEnv += " -nulrdd"
+   ELSEIF ValueIsF( GetEnv( "HB_NULRDD" ) )
+      cEnv += " -nulrdd-"
+   ENDIF
+   IF Lower( Left( GetEnv( "HB_GT" ), 2 ) ) == "gt"
+      cEnv += " -" + GetEnv( "HB_GT" )
+   ENDIF
+   FOR EACH tmp IN ListToArray( PathSepToTarget( hbmk, GetEnv( "HB_USER_LIBPATHS" ) ) )
+      cEnv += " -L" + tmp
+   NEXT
+   FOR EACH tmp IN ListToArray( PathSepToTarget( hbmk, GetEnv( "HB_USER_LIBS" ) ) )
+      cEnv += " -l" + tmp
+   NEXT
+   IF ! Empty( GetEnv( "HB_PLATFORM" ) )
+      cEnv += " -platform=" + GetEnv( "HB_PLATFORM" )
+   ENDIF
+   IF ! Empty( GetEnv( "HB_COMPILER" ) )
+      cEnv += " -compiler=" + GetEnv( "HB_COMPILER" )
+   ENDIF
+   cEnv := AllTrim( cEnv )
+
+   IF ! Empty( cEnv )
+      aArgs := ArrayJoin( ListToArray( cEnv ), aArgs )
+   ENDIF
+
+   /* ; */
+
    FOR EACH cParam IN aArgs
 
       cParamL := Lower( cParam )
@@ -737,6 +797,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
       ENDCASE
    NEXT
+
+   IF ! Empty( cEnv )
+      IF ! hbmk[ _HBMK_lQuiet ]
+         hbmk_OutStd( hb_StrFormat( I_( "Processing environment options: %1$s" ), cEnv ) )
+      ENDIF
+   ENDIF
 
    /* Initialize Harbour libs */
 
@@ -792,21 +858,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       cLIB_BASE_ZLIB    := "zlib"
    ENDIF
 
-   /* Load platform / compiler settings (compatibility) */
-
-   IF Empty( hbmk[ _HBMK_cPLAT ] )
-      ParseCOMPPLAT( hbmk, GetEnv( "HB_PLATFORM" ), _TARG_PLAT )
-   ENDIF
-   IF Empty( hbmk[ _HBMK_cCOMP ] )
-      ParseCOMPPLAT( hbmk, GetEnv( "HB_COMPILER" ), _TARG_COMP )
-   ENDIF
-
    nCCompVer := Val( GetEnv( "HB_COMPILER_VER" ) ) /* Format: <09><00>[.<00>] = <major><minor>[.<revision>] */
-#if 0
-   IF Empty( nCCompVer )
-      nCCompVer := Val( GetEnv( "HB_COMP_VER" ) )
-   ENDIF
-#endif
 
    /* Autodetect platform */
 
@@ -1147,9 +1199,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             ENDIF
          ELSE
             IF Empty( aCOMPDET )
-               hbmk_OutErr( hb_StrFormat( I_( "Please choose a C compiler by using -compiler= option or envvar HB_COMPILER.\nYou have the following choices on your platform: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
+               hbmk_OutErr( hb_StrFormat( I_( "Please choose a C compiler by using -compiler= option.\nYou have the following choices on your platform: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
             ELSE
-               hbmk_OutErr( hb_StrFormat( I_( "Couldn't detect any supported C compiler in your PATH.\nPlease setup one or set -compiler= option or envvar HB_COMPILER to one of these values: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
+               hbmk_OutErr( hb_StrFormat( I_( "Couldn't detect any supported C compiler in your PATH.\nPlease setup one or set -compiler= option to one of these values: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
             ENDIF
             RETURN 2
          ENDIF
@@ -1252,23 +1304,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       hbmk[ _HBMK_lSHARED ] := .F.
       hbmk[ _HBMK_lSTATICFULL ] := .F.
    ENDIF
-
-   /* Process environment */
-
-   IF    Lower( GetEnv( "HB_MT"     ) ) == "mt" ; hbmk[ _HBMK_lMT ]     := .T. ; ENDIF /* Compatibility */
-   IF ValueIsT( GetEnv( "HB_MT"     ) )         ; hbmk[ _HBMK_lMT ]     := .T. ; ENDIF
-   IF ValueIsT( GetEnv( "HB_GUI"    ) )         ; hbmk[ _HBMK_lGUI ]    := .T. ; ENDIF
-   IF ValueIsT( GetEnv( "HB_SHARED" ) )         ; hbmk[ _HBMK_lSHARED ] := .T. ; hbmk[ _HBMK_lSTATICFULL ] := .F. ; hbmk[ _HBMK_lSHAREDDIST ] := NIL ; ENDIF
-   IF ValueIsT( GetEnv( "HB_DEBUG"  ) )         ; hbmk[ _HBMK_lDEBUG ]  := .T. ; ENDIF
-   IF ValueIsT( GetEnv( "HB_NULRDD" ) )         ; hbmk[ _HBMK_lNULRDD ] := .T. ; ENDIF
-
-   IF Lower( Left( GetEnv( "HB_GT" ), 2 ) ) == "gt"
-      SetupForGT( GetEnv( "HB_GT" ), @hbmk[ _HBMK_cGT ], @hbmk[ _HBMK_lGUI ] )
-   ENDIF
-
-   FOR EACH tmp IN ListToArray( PathSepToTarget( hbmk, GetEnv( "HB_USER_LIBPATHS" ) ) )
-      AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], tmp )
-   NEXT
 
    /* Process command line */
 
@@ -1949,7 +1984,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       ENDIF
 
       /* Merge user libs from command line and envvar. Command line has priority. */
-      hbmk[ _HBMK_aLIBUSER ] := ArrayAJoin( { hbmk[ _HBMK_aLIBUSERGT ], hbmk[ _HBMK_aLIBUSER ], ListToArray( PathSepToTarget( hbmk, GetEnv( "HB_USER_LIBS" ) ) ) } )
+      hbmk[ _HBMK_aLIBUSER ] := ArrayAJoin( { hbmk[ _HBMK_aLIBUSERGT ], hbmk[ _HBMK_aLIBUSER ] } )
 
       DEFAULT hbmk[ _HBMK_lSHAREDDIST ] TO lSysLoc
 
@@ -7047,8 +7082,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "--hbdirlib"        , I_( "output Harbour static library directory" ) },;
       { "--hbdirinc"        , I_( "output Harbour header directory" ) },;
       NIL,;
-      { "-plat[form]=<plat>", I_( "assume specific platform. Same as HB_PLATFORM envvar" ) },;
-      { "-comp[iler]=<comp>", I_( "use specific C compiler. Same as HB_COMPILER envvar\nSpecial value:\n - bld: use original build settings (default on *nix)" ) },;
+      { "-plat[form]=<plat>", I_( "select target platform." ) },;
+      { "-comp[iler]=<comp>", I_( "select C compiler.\nSpecial value:\n - bld: use original build settings (default on *nix)" ) },;
       { "-build=<name>"     , I_( "use a specific build name" ) },;
       { "-lang=<lang>"      , I_( "override default language. Similar to HB_LANG envvar." ) },;
       { "--version"         , I_( "display version header only" ) },;
@@ -7071,7 +7106,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<plat>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}" ),;
       I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_plat}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ),;
       I_( 'Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ),;
-      I_( "Defaults and feature support vary by platform/compiler." ) }
+      I_( "Defaults and feature support vary by platform/compiler." ) ,;
+      hb_StrFormat( I_( "Options can also be specified in environment variable %1$s" ), _HBMK_ENV_NAME ) }
 
    DEFAULT lLong TO .F.
 
