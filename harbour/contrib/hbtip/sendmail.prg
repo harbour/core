@@ -286,7 +286,9 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
       IF oInMail:OpenSecure()
 
          DO WHILE .T.
-            oInMail:GetOk()
+            IF ! oInMail:GetOk()
+               EXIT
+            ENDIF
             IF oInMail:cReply == NIL
                EXIT
             ELSEIF "LOGIN" $ oInMail:cReply
@@ -314,7 +316,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
             ENDIF
          ELSE
             IF ! lConnectPlain
-               oInmail:Getok()
+               oInmail:GetOk()
                lConnect := .F.
             ENDIF
          ENDIF
@@ -345,7 +347,9 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
       ENDIF
 
       DO WHILE .T.
-         oInMail:GetOk()
+         IF ! oInMail:GetOk()
+            EXIT
+         ENDIF
          IF oInMail:cReply == NIL
             EXIT
          ENDIF
