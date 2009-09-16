@@ -59,10 +59,6 @@
 
 #define EG_OLEEXCEPTION 1001
 
-#xcommand TRY                => BEGIN SEQUENCE WITH s_bBreak
-#xcommand CATCH [<!oError!>] => RECOVER [USING <oError>] <-oError->
-#xcommand FINALLY            => ALWAYS
-
 STATIC s_bBreak := { | oError | Break( oError ) }
 
 STATIC PROCEDURE Throw( oError )
@@ -73,11 +69,41 @@ STATIC PROCEDURE Throw( oError )
    Break( oError )
    RETURN
 
+STATIC FUNCTION ThrowOpError( nSubCode, cOperator, ... )
+   LOCAL oError
+
+   oError := ErrorNew()
+   oError:Args          := { ... }
+   oError:CanDefault    := .F.
+   oError:CanRetry      := .F.
+   oError:CanSubstitute := .T.
+   oError:Description   := "argument error"
+   oError:GenCode       := EG_ARG
+   oError:Operation     := cOperator
+   oError:Severity      := ES_ERROR
+   oError:SubCode       := nSubCode
+   oError:SubSystem     := "BASE"
+
+   RETURN Throw( oError )
+
 CREATE CLASS TOLEAUTO FROM WIN_OLEAUTO
    /* TODO: Implement compatibility to the required extent */
    VAR cClassName
    METHOD New( xOle, cIID )
    METHOD hObj( xOle )
+
+   METHOD OleCollection( xIndex, xValue ) OPERATOR "[]"
+   METHOD OleValuePlus( xArg )            OPERATOR "+"
+   METHOD OleValueMinus( xArg )           OPERATOR "-"
+   METHOD OleValueMultiply( xArg )        OPERATOR "*"
+   METHOD OleValueDivide( xArg )          OPERATOR "/"
+   METHOD OleValueModulus( xArg )         OPERATOR "%"
+   METHOD OleValuePower( xArg )           OPERATOR "^"
+   METHOD OleValueInc()                   OPERATOR "++"
+   METHOD OleValueDec()                   OPERATOR "--"
+   METHOD OleValueEqual( xArg )           OPERATOR "="
+   METHOD OleValueExactEqual( xArg )      OPERATOR "=="
+   METHOD OleValueNotEqual( xArg )        OPERATOR "!="
 ENDCLASS
 
 METHOD hObj( xOle ) CLASS TOLEAUTO
@@ -174,6 +200,140 @@ FUNCTION GetActiveObject( xOle, cClass )
    ENDIF
 
    RETURN o
+
+METHOD OleCollection( xIndex, xValue ) CLASS TOLEAUTO
+   LOCAL xRet
+
+   IF PCount() == 1
+      RETURN ::Item( xIndex )
+   ENDIF
+
+   BEGIN SEQUENCE WITH s_bBreak
+      xRet := ::_Item( xIndex, xValue ) /* ASP Collection syntax. */
+   RECOVER
+      xRet := ::SetItem( xIndex, xValue )
+   END SEQUENCE
+
+   RETURN xRet
+
+METHOD OleValuePlus( xArg ) CLASS TOLEAUTO
+   LOCAL xRet
+
+   BEGIN SEQUENCE WITH s_bBreak
+      xRet := ::OleValue + xArg
+   RECOVER
+      RETURN ThrowOpError( 1081, "+", Self, xArg )
+   END SEQUENCE
+
+   RETURN xRet
+
+METHOD OleValueMinus( xArg ) CLASS TOLEAUTO
+   LOCAL xRet
+
+   BEGIN SEQUENCE WITH s_bBreak
+      xRet := ::OleValue - xArg
+   RECOVER
+      RETURN ThrowOpError( 1082, "-", Self, xArg )
+   END SEQUENCE
+
+   RETURN xRet
+
+METHOD OleValueMultiply( xArg ) CLASS TOLEAUTO
+   LOCAL xRet
+
+   BEGIN SEQUENCE WITH s_bBreak
+      xRet := ::OleValue * xArg
+   RECOVER
+      RETURN ThrowOpError( 1083, "*", Self, xArg )
+   END SEQUENCE
+
+   RETURN xRet
+
+METHOD OleValueDivide( xArg ) CLASS TOLEAUTO
+   LOCAL xRet
+
+   BEGIN SEQUENCE WITH s_bBreak
+      xRet := ::OleValue / xArg
+   RECOVER
+      RETURN ThrowOpError( 1084, "/", Self, xArg )
+   END SEQUENCE
+
+   RETURN xRet
+
+METHOD OleValueModulus( xArg ) CLASS TOLEAUTO
+   LOCAL xRet
+
+   BEGIN SEQUENCE WITH s_bBreak
+      xRet := ::OleValue % xArg
+   RECOVER
+      RETURN ThrowOpError( 1085, "%", Self, xArg )
+   END SEQUENCE
+
+   RETURN xRet
+
+METHOD OleValuePower( xArg ) CLASS TOLEAUTO
+   LOCAL xRet
+
+   BEGIN SEQUENCE WITH s_bBreak
+      xRet := ::OleValue ^ xArg
+   RECOVER
+      RETURN ThrowOpError( 1088, "^", Self, xArg )
+   END SEQUENCE
+
+   RETURN xRet
+
+METHOD OleValueInc() CLASS TOLEAUTO
+
+   BEGIN SEQUENCE WITH s_bBreak
+      ++::OleValue
+   RECOVER
+      RETURN ThrowOpError( 1086, "++", Self )
+   END SEQUENCE
+
+   RETURN Self
+
+METHOD OleValueDec() CLASS TOLEAUTO
+
+   BEGIN SEQUENCE WITH s_bBreak
+      --::OleValue
+   RECOVER
+      RETURN ThrowOpError( 1087, "--", Self )
+   END SEQUENCE
+
+   RETURN Self
+
+METHOD OleValueEqual( xArg ) CLASS TOLEAUTO
+   LOCAL xRet
+
+   BEGIN SEQUENCE WITH s_bBreak
+      xRet := ( ::OleValue = xArg ) /* NOTE: Intentionally using '=' operator. */
+   RECOVER
+      RETURN ThrowOpError( 1089, "=", Self, xArg )
+   END SEQUENCE
+
+   RETURN xRet
+
+METHOD OleValueExactEqual( xArg ) CLASS TOLEAUTO
+   LOCAL xRet
+
+   BEGIN SEQUENCE WITH s_bBreak
+      xRet := ( ::OleValue == xArg )
+   RECOVER
+      RETURN ThrowOpError( 1090, "==", Self, xArg )
+   END SEQUENCE
+
+   RETURN xRet
+
+METHOD OleValueNotEqual( xArg ) CLASS TOLEAUTO
+   LOCAL xRet
+
+   BEGIN SEQUENCE WITH s_bBreak
+      xRet := ( ::OleValue != xArg )
+   RECOVER
+      RETURN ThrowOpError( 1091, "!=", Self, xArg )
+   END SEQUENCE
+
+   RETURN xRet
 
 /* NOTE: This will return a pointer type, as opposed to the old
          implementation which returned a numeric one. Since this
