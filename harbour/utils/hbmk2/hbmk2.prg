@@ -2169,8 +2169,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
          /* Add system libraries */
          IF ! hbmk[ _HBMK_lSHARED ]
-            AAdd( l_aLIBSYS, "m" )
             IF !( hbmk[ _HBMK_cPLAT ] == "beos" )
+               AAdd( l_aLIBSYS, "m" )
                IF hbmk[ _HBMK_lMT ]
                   AAdd( l_aLIBSYS, "pthread" )
                ENDIF
