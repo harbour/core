@@ -778,42 +778,56 @@ ifeq ($(HB_COMPILER),)
                HB_COMP_PATH := $(call find_in_path,gcc)
                ifneq ($(HB_COMP_PATH),)
                   HB_COMPILER := gcc
+               else
+                  HB_COMP_PATH := $(call find_in_path,suncc)
+                  ifneq ($(HB_COMP_PATH),)
+                     HB_COMPILER := sunpro
+                  else
+                     HB_COMP_PATH := $(call find_in_path,icc)
+                     ifneq ($(HB_COMP_PATH),)
+                        HB_COMPILER := icc
+                     endif
+                  endif
                endif
             endif
          else
-            ifneq ($(filter $(HB_PLATFORM),darwin hpux bsd),)
+            ifneq ($(filter $(HB_PLATFORM),hpux bsd),)
                HB_COMP_PATH := $(call find_in_path,gcc)
                ifneq ($(HB_COMP_PATH),)
                   HB_COMPILER := gcc
                endif
             else
-               ifeq ($(HB_PLATFORM),sunos)
-                  HB_COMP_PATH := $(call find_in_path,suncc)
+               ifeq ($(HB_PLATFORM),darwin)
+                  HB_COMP_PATH := $(call find_in_path,clang)
                   ifneq ($(HB_COMP_PATH),)
-                     HB_COMPILER := sunpro
+                     HB_COMPILER := clang
                   else
                      HB_COMP_PATH := $(call find_in_path,gcc)
                      ifneq ($(HB_COMP_PATH),)
                         HB_COMPILER := gcc
+                     else
+                        HB_COMP_PATH := $(call find_in_path,icc)
+                        ifneq ($(HB_COMP_PATH),)
+                           HB_COMPILER := icc
+                        endif
                      endif
                   endif
                else
-                  ifeq ($(HB_PLATFORM),dos)
-                     HB_COMP_PATH := $(call find_in_path,gcc)
+                  ifeq ($(HB_PLATFORM),sunos)
+                     HB_COMP_PATH := $(call find_in_path,suncc)
                      ifneq ($(HB_COMP_PATH),)
-                        HB_COMPILER := djgpp
+                        HB_COMPILER := sunpro
                      else
-                        HB_COMP_PATH := $(call find_in_path,wpp386)
-                        ifneq ($(HB_COMP_PATH),)
-                           HB_COMPILER := watcom
-                           $(eval $(call detect_watcom_platform))
-                        endif
-                     endif
-                  else
-                     ifeq ($(HB_PLATFORM),os2)
                         HB_COMP_PATH := $(call find_in_path,gcc)
                         ifneq ($(HB_COMP_PATH),)
                            HB_COMPILER := gcc
+                        endif
+                     endif
+                  else
+                     ifeq ($(HB_PLATFORM),dos)
+                        HB_COMP_PATH := $(call find_in_path,gcc)
+                        ifneq ($(HB_COMP_PATH),)
+                           HB_COMPILER := djgpp
                         else
                            HB_COMP_PATH := $(call find_in_path,wpp386)
                            ifneq ($(HB_COMP_PATH),)
@@ -822,13 +836,26 @@ ifeq ($(HB_COMPILER),)
                            endif
                         endif
                      else
-                        ifeq ($(HB_PLATFORM),beos)
+                        ifeq ($(HB_PLATFORM),os2)
                            HB_COMP_PATH := $(call find_in_path,gcc)
                            ifneq ($(HB_COMP_PATH),)
                               HB_COMPILER := gcc
+                           else
+                              HB_COMP_PATH := $(call find_in_path,wpp386)
+                              ifneq ($(HB_COMP_PATH),)
+                                 HB_COMPILER := watcom
+                                 $(eval $(call detect_watcom_platform))
+                              endif
                            endif
+                        else
+                           ifeq ($(HB_PLATFORM),beos)
+                              HB_COMP_PATH := $(call find_in_path,gcc)
+                              ifneq ($(HB_COMP_PATH),)
+                                 HB_COMPILER := gcc
+                              endif
+                           endif
+                           # add other platforms here
                         endif
-                        # add other platforms here
                      endif
                   endif
                endif

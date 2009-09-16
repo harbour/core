@@ -20,7 +20,7 @@
 #       _DET_INC_DEFP - default location to look at. Not effective in 'HB_BUILD_EXTDEF=no' mode.
 #       _DET_INC_LOCL - embedded location to look at.
 #       _DET_INC_HEAD - header filename to look for. Unless looking for a directory, prefix with forward slash.
-#       - variable name specified by _DET_VAR_INC_ (typically "HB_INC_*") should contains:
+#       - variable name specified by _DET_VAR_INC_ (typically "HB_INC_*") containing:
 #          (empty) or yes - will enable external component if found on default locations.
 #          no             - will disable external component.
 #          force          - will forcibly enable external component, bypassing location checks,
@@ -54,6 +54,7 @@ endif
 _DET_RES_TEXT :=
 
 ifeq ($($(_DET_VAR_HAS_)),)
+   $(_DET_VAR_HAS_)_LOCAL :=
    ifneq ($($(_DET_VAR_INC_)),no)
       _DET_POS := $(filter-out !%,$(_DET_FLT_PLAT))
       _DET_NEG := $(subst !,,$(filter !%,$(_DET_FLT_PLAT)))
@@ -95,7 +96,6 @@ ifeq ($($(_DET_VAR_HAS_)),)
                            $(call do_info,$(_DET_RES_TEXT))
                         else
                            # detect if the component was found in locally hosted dir
-                           $(_DET_VAR_HAS_)_LOCAL :=
                            ifneq ($(_DET_INC_LOCL),)
                               ifneq ($(filter $(_DET_INC_LOCL),$($(_DET_VAR_HAS_))),)
                                  $(_DET_VAR_HAS_)_LOCAL := (local)

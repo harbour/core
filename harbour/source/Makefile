@@ -104,6 +104,13 @@ else
          DYNDIRLIST_BASE += source/vm/maindllh
       endif
 
+      ifneq ($(HB_HAS_PCRE_LOCAL),)
+         DYNDIRLIST_BASE += external/pcre
+      endif
+      ifneq ($(HB_HAS_ZLIB_LOCAL),)
+         DYNDIRLIST_BASE += external/zlib
+      endif
+
       export DYNDIRLIST_BASE
       export DYNNAME_POST
    endif

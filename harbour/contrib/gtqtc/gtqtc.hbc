@@ -10,7 +10,6 @@ libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
 {darwin}libs=/Library/Frameworks/QtGui.framework/QtGui
 {darwin}libs=/Library/Frameworks/QtNetwork.framework/QtNetwork
 {darwin}libs=/Library/Frameworks/QtWebKit.framework/QtWebKit
-{allgcc}libs=supc++
 gui=yes
 gt=gtqtc
 # optional

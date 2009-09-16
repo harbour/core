@@ -56,6 +56,10 @@ ifeq ($(HB_SUPPORTED),yes)
          # externals though. [vszakats]
          HB_CFLAGS += -DSQLITE_OS_OTHER
       endif
+      ifeq ($(HB_PLATFORM)-$(HB_COMPILER),linux-watcom)
+         # Watcom Linux builds cannot use system header files
+         HB_CFLAGS += -DSQLITE_OS_OTHER
+      endif
 
       include $(TOP)$(ROOT)config/lib.mk
    else

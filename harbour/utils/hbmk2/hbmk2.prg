@@ -2140,6 +2140,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          cLibLibExt := ".a"
          IF l_lLIBGROUPING .AND. ;
             ( hbmk[ _HBMK_cPLAT ] == "linux" .OR. ;
+              hbmk[ _HBMK_cPLAT ] == "beos" .OR. ;
               hbmk[ _HBMK_cPLAT ] == "bsd" )
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
@@ -2260,6 +2261,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             AAdd( l_aLIBSYS, "X11" )
          ENDIF
 
+         AAdd( l_aLIBSYS, "supc++" ) /* NOTE: or stdc++? */
+
       CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "mingw" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "mingw64" ) .OR. ;
@@ -2375,6 +2378,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             ENDIF
          ENDIF
 
+         AAdd( l_aLIBSYS, "supc++" ) /* NOTE: or stdc++? */
+
       CASE hbmk[ _HBMK_cPLAT ] == "os2" .AND. hbmk[ _HBMK_cCOMP ] == "gcc"
 
          IF hbmk[ _HBMK_lDEBUG ]
@@ -2441,6 +2446,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             cBin_Res   := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Res, nCmd_Esc )
          ENDIF
 
+         AAdd( l_aLIBSYS, "supc++" ) /* NOTE: or stdc++? */
+
       CASE hbmk[ _HBMK_cPLAT ] == "dos" .AND. hbmk[ _HBMK_cCOMP ] == "djgpp"
 
          IF hbmk[ _HBMK_lDEBUG ]
@@ -2500,6 +2507,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             cBin_CompC := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompC, nCmd_Esc )
             cBin_Link  := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Link, nCmd_Esc )
          ENDIF
+
+         AAdd( l_aLIBSYS, "supcxx" ) /* NOTE: or stdcxx? */
 
       /* Watcom family */
       CASE hbmk[ _HBMK_cCOMP ] == "watcom"
@@ -3521,11 +3530,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             ENDIF
          ENDIF
 
-         IF ! Empty( cLIB_BASE_PCRE ) .AND. hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLibLibPrefix + cLIB_BASE_PCRE + cLibLibExt )
-            AAdd( l_aLIBSYS, cLIB_BASE_PCRE )
-         ENDIF
-         IF ! Empty( cLIB_BASE_ZLIB ) .AND. hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLibLibPrefix + cLIB_BASE_ZLIB + cLibLibExt )
-            AAdd( l_aLIBSYS, cLIB_BASE_ZLIB )
+         IF ! hbmk[ _HBMK_lSHARED ]
+            IF ! Empty( cLIB_BASE_PCRE ) .AND. hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLibLibPrefix + cLIB_BASE_PCRE + cLibLibExt )
+               AAdd( l_aLIBSYS, cLIB_BASE_PCRE )
+            ENDIF
+            IF ! Empty( cLIB_BASE_ZLIB ) .AND. hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLibLibPrefix + cLIB_BASE_ZLIB + cLibLibExt )
+               AAdd( l_aLIBSYS, cLIB_BASE_ZLIB )
+            ENDIF
          ENDIF
 
          /* Library list assembly */

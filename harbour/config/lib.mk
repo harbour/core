@@ -38,6 +38,13 @@ HB_DYN_LIBS := \
    hbvmmt \
    hbmaindllh
 
+ifneq ($(HB_HAS_PCRE_LOCAL),)
+   HB_DYN_LIBS += hbpcre
+endif
+ifneq ($(HB_HAS_ZLIB_LOCAL),)
+   HB_DYN_LIBS += hbzlib
+endif
+
 # Added only for hbpp
 -include $(TOP)$(ROOT)config/$(HB_PLATFORM)/libs.mk
 include $(TOP)$(ROOT)config/$(HB_PLATFORM)/$(HB_COMPILER).mk

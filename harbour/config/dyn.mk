@@ -19,14 +19,13 @@ endif
 
 -include $(TOP)$(ROOT)config/$(HB_PLATFORM)/libs.mk
 
-ifneq ($(HB_HAS_PCRE),)
-   ifneq ($(HB_HAS_PCRE_LOCAL),)
-      LIBS += hbpcre
-   endif
-endif
-ifneq ($(HB_HAS_ZLIB_LOCAL),)
-   LIBS += hbzlib
-endif
+# We're linking them directly to Harbour dynlib now.
+#ifneq ($(HB_HAS_PCRE_LOCAL),)
+#   SYSLIBS += hbpcre
+#endif
+#ifneq ($(HB_HAS_ZLIB_LOCAL),)
+#   SYSLIBS += hbzlib
+#endif
 
 include $(TOP)$(ROOT)config/$(HB_PLATFORM)/$(HB_COMPILER).mk
 include $(TOP)$(ROOT)config/c.mk

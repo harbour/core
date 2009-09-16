@@ -26,10 +26,8 @@ HB_LIBS_TPL = \
    hbpp \
    hbcommon
 
-ifneq ($(HB_HAS_PCRE),)
-   ifneq ($(HB_HAS_PCRE_LOCAL),)
-      HB_LIBS_TPL += hbpcre
-   endif
+ifneq ($(HB_HAS_PCRE_LOCAL),)
+   HB_LIBS_TPL += hbpcre
 endif
 ifneq ($(HB_HAS_ZLIB_LOCAL),)
    HB_LIBS_TPL += hbzlib

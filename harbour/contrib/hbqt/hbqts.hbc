@@ -9,6 +9,5 @@ incpaths=.
 libs=hbqts
 {win}libs=version shlwapi
 {allwin}libs=QtCore QtGui QtNetwork QtWebKit
-{allgcc}libs=supc++
 gui=yes
 gt=gtnul
