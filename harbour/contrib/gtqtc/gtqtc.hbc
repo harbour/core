@@ -4,16 +4,14 @@
 
 {allwin}libpaths=${HB_DIR_QT}\lib
 
-{allwin&!HB_QT_STATIC}libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
-{allwin&HB_QT_STATIC}libs=QtCore QtGui QtNetwork QtWebKit
+libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
 {linux}libs=QtCore QtGui QtNetwork QtWebKit
 {darwin}libs=/Library/Frameworks/QtCore.framework/QtCore
 {darwin}libs=/Library/Frameworks/QtGui.framework/QtGui
 {darwin}libs=/Library/Frameworks/QtNetwork.framework/QtNetwork
 {darwin}libs=/Library/Frameworks/QtWebKit.framework/QtWebKit
-{mingw|mingwce|(gcc&(linux|darwin))}libs=supc++
+{allgcc}libs=supc++
 gui=yes
-{!HB_QT_STATIC}gt=gtqtc
-{HB_QT_STATIC}gt=gtqtcs
+gt=gtqtc
 # optional
 mt=yes

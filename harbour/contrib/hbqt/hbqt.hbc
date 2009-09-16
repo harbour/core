@@ -14,6 +14,6 @@ libs=hbqt
 {darwin}libs=/Library/Frameworks/QtGui.framework/QtGui
 {darwin}libs=/Library/Frameworks/QtNetwork.framework/QtNetwork
 {darwin}libs=/Library/Frameworks/QtWebKit.framework/QtWebKit
-{mingw|mingwce|(gcc&(linux|darwin))}libs=supc++
+{allgcc}libs=supc++
 gui=yes
 gt=gtnul
