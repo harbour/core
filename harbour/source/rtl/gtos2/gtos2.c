@@ -788,7 +788,7 @@ static void hb_gt_os2_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
    char * pBufPtr = s_sLineBuf;
    int iColor;
-   char bAttr;
+   BYTE bAttr;
    USHORT usChar;
    int iLen = 0;
 
