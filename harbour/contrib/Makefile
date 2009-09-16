@@ -23,7 +23,6 @@ DIRS := \
    hbsqlit3 \
    hbtip \
    hbtpathy \
-   hbvpdf \
    hbwin \
    hbziparc \
    rddado \

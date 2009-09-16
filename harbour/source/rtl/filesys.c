@@ -2115,14 +2115,14 @@ BOOL hb_fsLock( HB_FHANDLE hFileHandle, ULONG ulStart,
       {
          case FL_LOCK:
 
-            lock_info.l_type   = (uiMode & FLX_SHARED) ? F_RDLCK : F_WRLCK;
+            lock_info.l_type   = ( uiMode & FLX_SHARED ) ? F_RDLCK : F_WRLCK;
             lock_info.l_start  = ulStart;
             lock_info.l_len    = ulLength;
             lock_info.l_whence = SEEK_SET;   /* start from the beginning of the file */
             lock_info.l_pid    = getpid();
 
             bResult = ( fcntl( hFileHandle,
-                               (uiMode & FLX_WAIT) ? F_SETLKW: F_SETLK,
+                               ( uiMode & FLX_WAIT ) ? F_SETLKW: F_SETLK,
                                &lock_info ) >= 0 );
             break;
 
@@ -2251,14 +2251,14 @@ BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET ulStart,
       {
          case FL_LOCK:
 
-            lock_info.l_type   = (uiMode & FLX_SHARED) ? F_RDLCK : F_WRLCK;
+            lock_info.l_type   = ( uiMode & FLX_SHARED ) ? F_RDLCK : F_WRLCK;
             lock_info.l_start  = ulStart;
             lock_info.l_len    = ulLength;
             lock_info.l_whence = SEEK_SET;   /* start from the beginning of the file */
             lock_info.l_pid    = getpid();
 
             bResult = ( fcntl( hFileHandle,
-                               (uiMode & FLX_WAIT) ? F_SETLKW64: F_SETLK64,
+                               ( uiMode & FLX_WAIT ) ? F_SETLKW64: F_SETLK64,
                                &lock_info ) != -1 );
             break;
 
@@ -2416,7 +2416,7 @@ HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset, USHORT u
       hb_vmUnlock();
       if( llOffset < 0 && Flags == SEEK_SET )
       {
-         llPos = (HB_FOFFSET) -1;
+         llPos = ( HB_FOFFSET ) -1;
          hb_fsSetError( 25 ); /* 'Seek Error' */
       }
       else
@@ -2425,14 +2425,14 @@ HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset, USHORT u
          hb_fsSetIOError( llPos != ( HB_FOFFSET ) -1, 0 );
       }
 
-      if( llPos == (HB_FOFFSET) -1 )
+      if( llPos == ( HB_FOFFSET ) -1 )
       {
          llPos = lseek64( hFileHandle, 0L, SEEK_CUR );
       }
       hb_vmLock();
    }
 #else
-   llPos = (HB_FOFFSET) hb_fsSeek( hFileHandle, ( LONG ) llOffset, uiFlags );
+   llPos = ( HB_FOFFSET ) hb_fsSeek( hFileHandle, ( LONG ) llOffset, uiFlags );
 #endif
 
    return llPos;
@@ -2787,7 +2787,7 @@ USHORT hb_fsChDrv( BYTE nDrive )
 {
    USHORT uiResult;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsChDrv(%d)", (int) nDrive));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsChDrv(%d)", ( int ) nDrive));
 
 #if defined( HB_OS_HAS_DRIVE_LETTER )
    {
@@ -2860,7 +2860,7 @@ USHORT hb_fsIsDrv( BYTE nDrive )
 {
    USHORT uiResult;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsIsDrv(%d)", (int) nDrive));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsIsDrv(%d)", ( int ) nDrive));
 
 #if defined( HB_OS_WIN ) && !defined( HB_OS_WIN_CE )
    {
