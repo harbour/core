@@ -118,7 +118,7 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       $ ./hello
       You should see 'Hello world!' on screen.
 
-   on Darwin/BSD/HP-UX/Solaris/*nix hosts
+   on Darwin/BSD/HP-UX/Solaris/BeOS/Haiku/*nix hosts
    --------------------------------------
    (possible cross-build targets: Windows, Windows CE, MS-DOS)
 
@@ -321,7 +321,7 @@ SUPPORTED PLATFORMS AND C COMPILERS
    linux   - Linux
    darwin  - Mac OS X
    bsd     - FreeBSD / OpenBSD / NetBSD / *BSD
-   beos    - BeOS / Haiku (experimental)
+   beos    - BeOS / Haiku
    hpux    - HP-UX
    sunos   - Sun Solaris / OpenSolaris
    win     - MS Windows (all flavors)

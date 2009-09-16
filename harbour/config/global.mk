@@ -1127,7 +1127,9 @@ else
    # Fill it automatically if not specified
    ifeq ($(HB_INSTALL_PREFIX),)
 
-      ifeq ($(HB_PLATFORM_UNIX),)
+      ifeq ($(HB_PLATFORM),beos)
+         HB_INSTALL_PREFIX := /boot/common
+      else ifeq ($(HB_PLATFORM_UNIX),)
          HB_INSTALL_PREFIX := $(realpath $(TOP)$(ROOT))
       else
          ifneq ($(PREFIX),)
@@ -1177,7 +1179,10 @@ endif
 
 ifneq ($(HB_INSTALL_PREFIX),)
 
-   ifeq ($(HB_PLATFORM_UNIX),)
+   ifeq ($(HB_PLATFORM),beos)
+      LIBPOSTFIX := $(DIRSEP)harbour
+      INCPOSTFIX := $(DIRSEP)harbour
+   else ifeq ($(HB_PLATFORM_UNIX),)
       LIBPOSTFIX := $(DIRSEP)$(subst /,$(DIRSEP),$(PLAT_COMP))
    else
       # Not perfect, please enhance it.
