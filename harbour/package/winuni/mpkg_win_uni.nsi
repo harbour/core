@@ -110,14 +110,6 @@ Section "Main components" hb_main
   SetOutPath $INSTDIR\include
   File "hb20\include\*.*"
 
-  SetOutPath $INSTDIR\source\hbpcre
-  File "hb20\source\hbpcre\LICENCE"
-  File "hb20\source\hbpcre\*.h"
-
-  SetOutPath $INSTDIR\source\hbzlib
-  File "hb20\source\hbzlib\README"
-  File "hb20\source\hbzlib\*.h"
-
   SetOutPath $INSTDIR\doc
   File /r "hb20\doc\*.*"
 

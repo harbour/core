@@ -72,10 +72,6 @@ echo "hb20\doc\*.*"                               >> _hbfiles
 echo "hb20\comp\mingw\*"                          >> _hbfiles
 echo "hb20\examples\*.*"                          >> _hbfiles
 echo "hb20\contrib\*.*"                           >> _hbfiles
-echo "hb20\source\hbpcre\LICENCE"                 >> _hbfiles
-echo "hb20\source\hbpcre\*.h"                     >> _hbfiles
-echo "hb20\source\hbzlib\README"                  >> _hbfiles
-echo "hb20\source\hbzlib\*.h"                     >> _hbfiles
 
 if exist harbour-2.0.0beta3-win-20090905.7z del harbour-2.0.0beta3-win-20090905.7z
 7z a -r harbour-2.0.0beta3-win-20090905.7z @_hbfiles
