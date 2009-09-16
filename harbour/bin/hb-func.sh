@@ -194,7 +194,11 @@ mk_hbtools()
     [ -z "${_DEFAULT_INC_DIR}" ] && _DEFAULT_INC_DIR="${HB_INC_INSTALL}"
     [ -z "${_DEFAULT_LIB_DIR}" ] && _DEFAULT_LIB_DIR="${HB_LIB_INSTALL}"
 
-    HB_SYS_LIBS="-lm"
+    if [ "${HB_PLATFORM}" = "beos" ]; then
+        HB_SYS_LIBS="-lroot -lsocket"
+    else
+        HB_SYS_LIBS="-lm"
+    fi
     HB_CRS_LIB=""
     HB_SLN_LIB=""
     if [ "${HB_USER_CFLAGS//-DHB_PCRE_REGEX/}" != "${HB_USER_CFLAGS}" ]; then
@@ -574,6 +578,10 @@ for gt in \${HB_GT_REQ}; do
 #    fi
 done
 
+if [ "\${HB_PLATFORM}" = "beos" ]; then
+    SYSTEM_LIBS="-L/system/lib \${SYSTEM_LIBS}"
+fi
+
 HB_LNK_ATTR=""
 HARBOUR_LIBS=""
 
@@ -829,7 +837,11 @@ mk_hblibso()
     LIBS=""
     LIBSMT=""
     gpm="${HB_HAS_GPM}"
-    linker_options="-lm"
+    if [ "${HB_PLATFORM}" = "beos" ]; then
+        linker_options="-L/system/lib -lroot -lsocket"
+    else
+        linker_options="-lm"
+    fi
     linker_mtoptions=""
     if [ "${HB_USER_CFLAGS//-DHB_PCRE_REGEX/}" != "${HB_USER_CFLAGS}" ]; then
         linker_options="-lpcre ${linker_options}"

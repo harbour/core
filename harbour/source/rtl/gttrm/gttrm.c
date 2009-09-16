@@ -1002,6 +1002,19 @@ static void set_tmevt( PHB_GTTRM pTerm, unsigned char *cMBuf, mouseEvent * mEvt 
       mEvt->col = col;
    }
 
+#if defined( HB_OS_BEOS )
+   /* warning in HAIKU/BEOS MIDDLE and RIGHT buttons are reverted */
+   switch( cMBuf[0] & 0xC3 )
+   {
+      case 0x1:
+         cMBuf[0] = 0x2;
+         break;
+      case 0x2:
+         cMBuf[0] = 0x1;
+         break;
+   }
+#endif
+
    switch( cMBuf[0] & 0xC3 )
    {
       case 0x0:
@@ -2397,6 +2410,28 @@ static void init_keys( PHB_GTTRM pTerm )
 
       { 0, NULL } };
 
+#if defined( HB_OS_BEOS )
+   /* warning above XFree 3.x.x CTRL + {UP,DOWN,RIGHT,LEFT} kyes create
+    * collision with HAIKU/BEOS XTerm and standard CTRL keys
+    */
+   static const keySeq haikuStdKeySeq[] = {
+      { EXKEY_UP   , "\033OA" },
+      { EXKEY_DOWN , "\033OB" },
+      { EXKEY_RIGHT, "\033OC" },
+      { EXKEY_LEFT , "\033OD" },
+
+      { 0, NULL } };
+#endif
+
+   static const keySeq haikuCtrlKeySeq[] = {
+      /* HAIKU/BEOS XTerm CTRL + {UP,DOWN,RIGHT,LEFT} kyes */
+      { EXKEY_UP    |KEY_CTRLMASK, "\033O5A" },
+      { EXKEY_DOWN  |KEY_CTRLMASK, "\033O5B" },
+      { EXKEY_RIGHT |KEY_CTRLMASK, "\033O5C" },
+      { EXKEY_LEFT  |KEY_CTRLMASK, "\033O5D" },
+
+      { 0, NULL } };
+
    static const keySeq rxvtKeySeq[] = {
 
       { EXKEY_HOME,     "\033[H" },
@@ -2708,6 +2743,10 @@ static void init_keys( PHB_GTTRM pTerm )
       addKeyTab( pTerm, stdCursorKeySeq );
       addKeyTab( pTerm, xtermModKeySeq );
       addKeyTab( pTerm, puttyKeySeq );
+      addKeyTab( pTerm, haikuCtrlKeySeq );
+#if defined( HB_OS_BEOS )
+      addKeyTab( pTerm, haikuStdKeySeq );
+#endif
    }
    else if( pTerm->terminal_type == TERM_LINUX )
    {

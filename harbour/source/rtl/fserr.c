@@ -252,12 +252,14 @@ void  hb_fsSetIOError( BOOL fResult, USHORT uiOperation )
       }
       else
       {
-         uiOsErrorLast = errno;
-         uiErrorLast = hb_errnoToDosError( errno );
+         int iErrCode = errno;
+         uiOsErrorLast = iErrCode;
+         uiErrorLast = hb_errnoToDosError( iErrCode );
       }
 #else
-      uiOsErrorLast = errno;
-      uiErrorLast = hb_errnoToDosError( uiOsErrorLast );
+      int iErrCode = errno;
+      uiOsErrorLast = iErrCode;
+      uiErrorLast = hb_errnoToDosError( iErrCode );
 #endif
    }
    pIOErrors = hb_stackIOErrors();

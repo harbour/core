@@ -66,8 +66,8 @@
 
 #if !defined( HB_HAS_DLFCN ) && \
     ( ( defined( HB_OS_LINUX ) && !defined( __WATCOMC__ ) ) || \
-      defined( HB_OS_SUNOS ) || \
-      defined( HB_OS_DARWIN ) )
+      defined( HB_OS_SUNOS ) || defined( HB_OS_DARWIN ) || \
+      defined( HB_OS_BEOS )  )
 #  define HB_HAS_DLFCN
 #endif
 
@@ -113,6 +113,10 @@ HB_FUNC( HB_LIBLOAD )
          }
 #elif defined( HB_HAS_DLFCN )
          hDynLib = ( void * ) dlopen( hb_parc( 1 ), RTLD_LAZY | RTLD_GLOBAL );
+#elif !defined( HB_OS_DOS )
+         {
+            int TODO;
+         }
 #endif
          /* set real marker */
          hb_vmInitSymbolGroup( hDynLib, argc, argv );
