@@ -145,13 +145,13 @@ struct _HB_SYMB;
 #if !defined( HB_MT_VM )
       void *   pMemvar;          /* memvar pointer ( publics & privates ) */
       USHORT   uiArea;           /* Workarea number */
-#endif
+#endif /* !HB_MT_VM */
       USHORT   uiSymNum;         /* dynamic symbol number */
-#ifndef HB_NO_PROFILER
+#if !defined( HB_NO_PROFILER )
       ULONG    ulCalls;          /* profiler support */
       ULONG    ulTime;           /* profiler support */
       ULONG    ulRecurse;        /* profiler support */
-#endif
+#endif /* !HB_NO_PROFILER */
    } HB_DYNS, * PHB_DYNS, * HB_DYNS_PTR;
 
    /* pCode dynamic function - HRB */
@@ -161,7 +161,7 @@ struct _HB_SYMB;
       struct _HB_SYMB * pSymbols;/* module symbol table */
    } HB_PCODEFUNC, * PHB_PCODEFUNC;
 
-#else
+#else /* !_HB_API_INTERNAL_ */
 
 #  undef HB_API_MACROS
 #  undef HB_STACK_MACROS
@@ -202,7 +202,7 @@ struct _HB_SYMB;
    typedef void *  PHB_DYNS_PTR;
 #endif
 
-#endif
+#endif /* !_HB_API_INTERNAL_ */
 
 /* symbol support structure */
 typedef struct _HB_SYMB

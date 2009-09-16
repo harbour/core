@@ -3,7 +3,7 @@
 #
 
 SYSLIBS :=
-SYSLIBPATHS := /system/lib /boot/develop/abi/x86/gcc2/lib
+SYSLIBPATHS := /system/lib
 
 ifneq ($(HB_LINKING_RTL),)
    ifeq ($(HB_CRS_LIB),)

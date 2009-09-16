@@ -113,13 +113,15 @@
 
 #if defined( HB_OS_UNIX ) && ! defined( __CYGWIN__ )
 #  define HB_HAS_UNIX
-#  if !defined( __WATCOMC__ ) && !defined( HB_OS_BEOS )
+#  if !defined( __WATCOMC__ )
 #     define HB_HAS_INET_ATON
 #     define HB_HAS_INET_PTON
 #     define HB_HAS_INET_NTOP
-#     define HB_HAS_INET6
 #     define HB_HAS_SOCKADDR_STORAGE
 #     define HB_HAS_ADDRINFO
+#  endif
+#  if !defined( __WATCOMC__ ) && !defined( HB_OS_BEOS )
+#     define HB_HAS_INET6
 #     define HB_HAS_INET6_ADDR_CONST
 #  endif
 #  if defined( HB_OS_LINUX )
@@ -1044,7 +1046,7 @@ static void hb_socketSetOsError( int err )
          uiErr = HB_SOCKET_ERR_PROTOTYPE;
          break;
       case EOPNOTSUPP:
-#if defined( SOCKTNOSUPPORT )
+#if defined( ESOCKTNOSUPPORT )
       case ESOCKTNOSUPPORT:
 #endif
          uiErr = HB_SOCKET_ERR_NOSUPPORT;

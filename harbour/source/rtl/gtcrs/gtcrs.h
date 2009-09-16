@@ -120,7 +120,9 @@
 
 /* #define HB_GT_CRS_TTYHACK */
 
-#define MAX_SIGNO       64
+#ifndef MAX_SIGNO
+#  define MAX_SIGNO     64
+#endif
 
 #define BASE_INFD       0
 #define BASE_OUTFD      1

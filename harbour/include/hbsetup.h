@@ -485,13 +485,17 @@
 #if defined( __GNUC__ )
    #define HB_PRINTF_FORMAT( _nStr, _nParam ) \
                      __attribute__ (( format (printf, _nStr, _nParam)))
+#  if ( __GNUC__ >= 3 )
    #define HB_MALLOC_ATTR \
                      __attribute__ (( malloc ))
+#  else
+   #define HB_MALLOC_ATTR
+#  endif
    #define HB_HOT_ATTR \
                      __attribute__ (( hot ))
    #define HB_COLD_ATTR \
                      __attribute__ (( cold ))
-#if 0
+#  if 0
    #define HB_NORETURN_ATTR \
                      __attribute__ (( noreturn ))
 #  else
