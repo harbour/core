@@ -493,7 +493,7 @@ ifeq ($(HB_COMPILER),)
                   HB_CCPREFIX := i586-mingw32msvc-
                else
                   ifneq ($(call find_in_path_raw,gentoo-release,/etc),)
-                     ifneq ($(call find_in_path_par,i386-mingw32msvc-,/opt/xmingw/bin),)
+                     ifneq ($(call find_in_path_par,i386-mingw32msvc-gcc,/opt/xmingw/bin),)
                         HB_CCPATH := /opt/xmingw/
                         HB_CCPREFIX := i386-mingw32msvc-
                      else
@@ -619,7 +619,7 @@ ifeq ($(HB_COMPILER),)
                ifeq ($(HB_PLATFORM),dos)
                   # Look for djgpp compiler on HB_CCPATH if it's set
                   ifneq ($(HB_CCPATH),)
-                     ifneq ($(call find_in_path_par,i586-pc-msdosdjgpp,$(HB_CCPATH)),)
+                     ifneq ($(call find_in_path_par,i586-pc-msdosdjgpp-gcc,$(HB_CCPATH)),)
                         HB_COMPILER := djgpp
                         HB_CCPREFIX := i586-pc-msdosdjgpp-
                         HB_CCPATH := $(HB_CCPATH)/
@@ -633,7 +633,7 @@ ifeq ($(HB_COMPILER),)
                   # try to detect them in default locations
                   ifeq ($(HB_CCPATH),)
                      HB_CCPATH := /usr/local/i586-pc-msdosdjgpp
-                     ifneq ($(call find_in_path_par,i586-pc-msdosdjgpp,$(HB_CCPATH)),)
+                     ifneq ($(call find_in_path_par,i586-pc-msdosdjgpp-gcc,$(HB_CCPATH)),)
                         HB_COMPILER := djgpp
                         HB_CCPREFIX := i586-pc-msdosdjgpp-
                      else
@@ -798,8 +798,9 @@ ifeq ($(HB_COMPILER),)
                endif
             else
                ifeq ($(HB_PLATFORM),darwin)
-                  HB_COMP_PATH := $(call find_in_path,clang)
+                  HB_COMP_PATH := $(call find_in_path_par,clang,/Developer/usr/bin/)
                   ifneq ($(HB_COMP_PATH),)
+                     HB_CCPREFIX := /Developer/usr/bin/
                      HB_COMPILER := clang
                   else
                      HB_COMP_PATH := $(call find_in_path,gcc)
