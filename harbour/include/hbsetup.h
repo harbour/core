@@ -280,7 +280,7 @@
 #endif
 
 #ifndef HB_OS_BEOS
-   #if defined( __HAIKU__ )
+   #if defined( __HAIKU__ ) || defined( __BEOS__ )
       #define HB_OS_BEOS
    #endif
 #endif
