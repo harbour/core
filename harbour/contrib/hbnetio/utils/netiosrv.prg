@@ -13,17 +13,44 @@
  */
 
 /* netio_mtserver() needs MT HVM version */
-request HB_MT
+REQUEST HB_MT
 
-proc main( port, ifaddr, root )
-   local pListenSocket
+PROCEDURE Main( port, ifaddr, root )
+   LOCAL pListenSocket
 
-   pListenSocket := netio_mtserver( iif( port != NIL, val( port ), ), ifaddr, root )
-   if empty( pListenSocket )
-      ? "Cannot start server."
-   else
-      wait "Press any key to stop NETIO server."
+   HB_Logo()
+
+   pListenSocket := netio_mtserver( iif( port != NIL, Val( port ), ), ifaddr, root )
+   IF Empty( pListenSocket )
+      OutStd( "Cannot start server." + hb_osNewLine() )
+   ELSE
+      OutStd( "Listening on: " + iif( ifaddr != NIL, ifaddr, "127.0.0.1" ) + ":" + iif( port != NIL, port, "2941" ) + hb_osNewLine() )
+      OutStd( "Root filesystem: " + iif( root != NIL, root, hb_dirBase() ) + hb_osNewLine() )
+
+      OutStd( hb_osNewLine() )
+      OutStd( "Press any key to stop NETIO server." + hb_osNewLine() )
+      Inkey( 0 )
+
       netio_serverstop( pListenSocket )
       pListenSocket := NIL
-   endif
-return
+   ENDIF
+
+   RETURN
+
+STATIC PROCEDURE HB_Logo()
+
+   OutStd( 'Harbour NETIO Server ' + HBRawVersion() + hb_osNewLine() +;
+           "Copyright (c) 2009, Przemyslaw Czerpak" + hb_osNewLine() + ;
+           "http://www.harbour-project.org/" + hb_osNewLine() +;
+           hb_osNewLine() )
+
+   RETURN
+
+STATIC PROCEDURE HB_Usage()
+
+   OutStd( "Syntax:  netiosrv <server> <port> <root>" + hb_osNewLine() )
+
+   RETURN
+
+STATIC FUNCTION HBRawVersion()
+   RETURN StrTran( Version(), "Harbour " )
