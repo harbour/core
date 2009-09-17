@@ -2446,7 +2446,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             cBin_Res   := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Res, nCmd_Esc )
          ENDIF
 
+#if 0 /* Causes strange linker (emxomf) warnings. */
          AAdd( l_aLIBSYS, "supc++" ) /* NOTE: or stdc++? */
+#endif
 
       CASE hbmk[ _HBMK_cPLAT ] == "dos" .AND. hbmk[ _HBMK_cCOMP ] == "djgpp"
 
