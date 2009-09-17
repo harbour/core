@@ -489,6 +489,8 @@ static BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
       hb_threadLeaveCriticalSection( &s_fileMtx );
       if( fLockFS )
          hb_fsLockLarge( pFile->hFile, ulStart, ulLen, ( USHORT ) iType );
+      else
+         hb_fsSetError( fResult ? 0 : 33 );
    }
    else
    {
@@ -505,6 +507,8 @@ static BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
             hb_threadLeaveCriticalSection( &s_fileMtx );
          }
       }
+      else
+         hb_fsSetError( fResult ? 0 : 33 );
    }
 
    return fResult;

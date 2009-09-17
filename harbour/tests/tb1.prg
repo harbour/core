@@ -2,6 +2,15 @@
  * $Id$
  */
 
+/*
+ * Harbour Project source code:
+ *    demonstration/test code for TBrowse class
+ *
+ * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * www - http://www.harbour-project.org
+ *
+ */
+
 #include "inkey.ch"
 #include "button.ch"
 #include "setcurs.ch"
