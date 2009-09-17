@@ -47,7 +47,6 @@ if "%HB_SHELL%" == "nt" goto _SH_NT
 
    copy CHANG*     %HB_INSTALL_PREFIX%\CHANGES > nul
    copy COPYING    %HB_INSTALL_PREFIX% > nul
-   copy ERRATA     %HB_INSTALL_PREFIX% > nul
    copy INSTALL    %HB_INSTALL_PREFIX% > nul
    copy TODO       %HB_INSTALL_PREFIX% > nul
 
@@ -75,7 +74,6 @@ if "%HB_SHELL%" == "nt" goto _SH_NT
    if not "%HB_PLATFORM%" == "dos" copy ChangeLog* "%HB_INSTALL_PREFIX%\" > nul
 
    copy COPYING    "%HB_INSTALL_PREFIX%\" > nul
-   copy ERRATA     "%HB_INSTALL_PREFIX%\" > nul
    copy INSTALL    "%HB_INSTALL_PREFIX%\" > nul
    copy TODO       "%HB_INSTALL_PREFIX%\" > nul
 

@@ -16,8 +16,8 @@ HARBOUR
 HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
 ============================================
 
-   NOTE: Before reporting a problem on the mailing list, please make
-         sure to read the TROUBLESHOOTING section in this file.
+   NOTE: Before reporting a problem on the developers' mailing list, please
+         make sure to read the TROUBLESHOOTING section in this file.
 
    For all platforms you'll need:
 
@@ -241,6 +241,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
 
    Windows/Windows CE
    ------------------
+
       Some contribs support build mode in which they can be linked
       *statically* with 3rd party components:
 
@@ -248,6 +249,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
 
    Darwin (Mac OS X)
    -----------------
+
       1.) Install MacPorts, follow their instructions:
           https://www.macports.org/
       2.) sudo port install pcre slang allegro freeimage gd2 mysql5-devel postgresql84
@@ -831,7 +833,8 @@ HOW TO GET THE HARBOUR SOURCES
 TROUBLESHOOTING
 ===============
 
-   Please evaluate these points before reporting an issue on the mailing list.
+   Please evaluate these points before reporting an issue on the developers'
+   mailing list.
 
    - Make sure to have carefully read this document.
    - Make sure to do a 'clean' before doing a build after refreshing
@@ -1007,7 +1010,7 @@ BUILD HOST-PLATFORM/SHELL - TARGET-PLATFORM/COMPILER COMPATIBILITY MATRIX
      win  / MS-DOS shell (command.com)          (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
      dos  / MS-DOS shell (command.com)          (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
      dos  / POSIX shell (bash.exe)              (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
-     os/2 / OS/2 shell                          (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
+     os/2 / OS/2 shell (cmd.exe)                (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
      os/2 / POSIX shell (bash.exe)              (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
      *nix / POSIX shell                         (* not supported: HB_BUILD_PKG - implemented as standalone scripts)
 
@@ -1045,11 +1048,14 @@ FOR MORE INFORMATION
    Sourceforge Page:
    http://sourceforge.net/projects/harbour-project/
 
-   Developers' Mail Archives:
+   Developers' Mailing List Archives:
    http://lists.harbour-project.org/pipermail/harbour/
 
    Development Timeline:
    http://sourceforge.net/apps/trac/harbour-project/timeline
+
+   Bug Tracker:
+   https://sourceforge.net/tracker/?group_id=681
 
    Source Repository Browser:
    http://harbour-project.svn.sourceforge.net/viewvc/harbour-project/

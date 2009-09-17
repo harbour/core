@@ -10,7 +10,6 @@ echo.> _hbfiles
 echo "hb20\RELNOTES"                              >> _hbfiles
 echo "hb20\INSTALL"                               >> _hbfiles
 echo "hb20\COPYING"                               >> _hbfiles
-echo "hb20\ERRATA"                                >> _hbfiles
 echo "hb20\TODO"                                  >> _hbfiles
 echo "hb20\ChangeLog*"                            >> _hbfiles
 echo "hb20\bin\hb-mkimp.bat"                      >> _hbfiles

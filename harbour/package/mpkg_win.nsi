@@ -75,7 +75,6 @@ Section "Main components" hb_main
   SetOutPath $INSTDIR
 
   File /nonfatal "$%HB_INSTALL_PREFIX%\COPYING"
-  File /nonfatal "$%HB_INSTALL_PREFIX%\ERRATA"
   File /nonfatal "$%HB_INSTALL_PREFIX%\INSTALL"
   File /nonfatal "$%HB_INSTALL_PREFIX%\TODO"
   ; Let it work also for DOS packages where short filename is used here

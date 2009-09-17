@@ -88,7 +88,6 @@ Section "Main components" hb_main
 
   File /nonfatal "hb20\INSTALL"
   File /nonfatal "hb20\COPYING"
-  File /nonfatal "hb20\ERRATA"
   File /nonfatal "hb20\TODO"
   File /nonfatal "hb20\ChangeLog*"
 

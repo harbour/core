@@ -28,7 +28,6 @@ if "%HB_INSTALL_PREFIX%" == "" goto END
 
 xcopy /y ChangeLog* %HB_INSTALL_PREFIX%\ > nul
 xcopy /y COPYING    %HB_INSTALL_PREFIX%\ > nul
-xcopy /y ERRATA     %HB_INSTALL_PREFIX%\ > nul
 xcopy /y INSTALL    %HB_INSTALL_PREFIX%\ > nul
 xcopy /y TODO       %HB_INSTALL_PREFIX%\ > nul
 
