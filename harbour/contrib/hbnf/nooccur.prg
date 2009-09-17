@@ -56,7 +56,7 @@
  *     // Find the number of times "the" appears in cMemoString, case
  *     // sensitive
  *
- *     nNoOfOccurrences := FT_NOOCCUR( "the", cMemoString, TRUE )
+ *     nNoOfOccurrences := FT_NOOCCUR( "the", cMemoString, .T. )
  *  $END$
  */
 

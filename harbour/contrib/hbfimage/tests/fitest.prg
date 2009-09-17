@@ -89,7 +89,7 @@ PROCEDURE Main()
 
    centerx := fi_GetWidth( clone ) / 2
    centery := fi_GetHeight( clone ) / 2
-   ? "Rotate Ex        :", ValToPrg( rotatedEx := fi_RotateEx( clone, 15, 0, 0, centerx, centery, TRUE ) )
+   ? "Rotate Ex        :", ValToPrg( rotatedEx := fi_RotateEx( clone, 15, 0, 0, centerx, centery, .T. ) )
    ? "Save JPG ?       :", fi_Save( FIF_JPEG, rotatedEx, IMAGES_OUT + "rotateex.jpg", JPEG_DEFAULT )
    fi_Unload( rotatedEx )
 
@@ -149,7 +149,7 @@ PROCEDURE Main()
    ? "Save GIF ?       :", fi_Save( FIF_GIF, im, IMAGES_OUT + "wrong.gif", 0 )
 
    //? ValToPrg( fi_GetInfoHeader( im ) )
-   //bmpinfoheader:Buffer( fi_GetInfoHeader( im ), TRUE )
+   //bmpinfoheader:Buffer( fi_GetInfoHeader( im ), .T. )
    //bmpinfoheader:Pointer( fi_GetInfoHeader( im ) )
    //? "Header           :", ValToPrg( bmpinfoheader )
    //? bmpinfoheader:SayMembers(" ", .t., .t.)

@@ -84,15 +84,15 @@ PROCEDURE Main()
       :cServerSMTP             := SERVER_SMTP
       :cSubject                := "Test from Blat"
       //:lSuppressSubject        := TRUE
-      //:cSubjectFile            := "f_subjectline.txt"
+      //:cSubjectFile            := "f_subjct.txt"
       //:lToUndiscloseRecipients := TRUE
       :cPostScriptumFile       := "f_ps.txt"
       :lRequestDisposition     := TRUE          // does not work ???
       :lRequestReturnReceipt   := TRUE
 
-      :cAttachTextFiles         := "f_subjectline.txt"
+      :cAttachTextFiles         := "f_subjct.txt"
       :aAttachTextFiles         := { "f_ps.txt", "blattest.prg", "blatcmd.prg" }
-      :cAttachListTextFile      := "f_listtext.txt"
+      :cAttachListTextFile      := "f_listtx.txt"
 
       :cLogFile                 := "log.txt"
       :lLogTimestamp            := TRUE
@@ -124,4 +124,3 @@ PROCEDURE Main()
 RETURN
 
 //-----------------------------------------
-

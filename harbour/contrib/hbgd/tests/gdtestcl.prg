@@ -245,13 +245,13 @@ PROCEDURE Main()
    oI5:AddDef( "FONTPITCH", "GIANT" )
 
    oI5:SetData( { ;
-                   { "LABEL" => "One"  , "VALUE" => 10, "COLOR"  => blue , "FILLED" => TRUE, "EXTRUDE" => 40/*, "TILE" => oB*/ },;
-                   { "LABEL" => "Two"  , "VALUE" => 35, "COLOR"  => gray , "FILLED" => TRUE, "FONT" => { "NAME" => "Verdana", "PITCH" => 12, "ANGLE" => 0, "COLOR" => red }  },;
-                   { "LABEL" => "Three", "VALUE" => 55, "COLOR"  => green, "FILLED" => TRUE }, ;
-                   { "LABEL" => "Four" , "VALUE" => 55, "FILLED" => TRUE , "TILE"   => oB }, ;
-                   { "LABEL" => "Five" , "VALUE" => 55, "COLOR"  => red  , "FILLED" => TRUE, "EXTRUDE" => 20}, ;
-                   { "LABEL" => "Six"  , "VALUE" => 55, "FILLED" => TRUE , "TILE"   => oB }, ;
-                   { "LABEL" => "Seven", "VALUE" => 55, "FILLED" => TRUE , "COLOR"  => green } ;
+                   { "LABEL" => "One"  , "VALUE" => 10, "COLOR"  => blue , "FILLED" => .T., "EXTRUDE" => 40/*, "TILE" => oB*/ },;
+                   { "LABEL" => "Two"  , "VALUE" => 35, "COLOR"  => gray , "FILLED" => .T., "FONT" => { "NAME" => "Verdana", "PITCH" => 12, "ANGLE" => 0, "COLOR" => red }  },;
+                   { "LABEL" => "Three", "VALUE" => 55, "COLOR"  => green, "FILLED" => .T. }, ;
+                   { "LABEL" => "Four" , "VALUE" => 55, "FILLED" => .T.  , "TILE"   => oB }, ;
+                   { "LABEL" => "Five" , "VALUE" => 55, "COLOR"  => red  , "FILLED" => .T., "EXTRUDE" => 20 }, ;
+                   { "LABEL" => "Six"  , "VALUE" => 55, "FILLED" => .T.  , "TILE"   => oB }, ;
+                   { "LABEL" => "Seven", "VALUE" => 55, "FILLED" => .T.  , "COLOR"  => green } ;
                 } )
 
    //oI5:VerticalBarChart()
@@ -284,29 +284,29 @@ PROCEDURE Main()
 
 /*
    oI5:SetData( { ;
-                  { "LABEL" => "One", "VALUE" => 1000, "COLOR" => blue, "FILLED" => TRUE, "EXTRUDE" => 40 },;
-                  { "LABEL" => "Two", "VALUE" => 3500, "COLOR" => gray, "FILLED" => TRUE, "FONT" => { "NAME" => "Verdana", "PITCH" => 12, "ANGLE" => 0, "COLOR" => red }  },;
-                  { "LABEL" => "Three", "VALUE" => 5500, "COLOR" => green, "FILLED" => TRUE }, ;
-                  { "LABEL" => "Four", "VALUE" => 6500, "FILLED" => TRUE, "TILE" => oB }, ;
-                  { "LABEL" => "Five", "VALUE" => 3400, "FILLED" => TRUE, "COLOR" => green }, ;
+                  { "LABEL" => "One", "VALUE" => 1000, "COLOR" => blue, "FILLED" => .T., "EXTRUDE" => 40 },;
+                  { "LABEL" => "Two", "VALUE" => 3500, "COLOR" => gray, "FILLED" => .T., "FONT" => { "NAME" => "Verdana", "PITCH" => 12, "ANGLE" => 0, "COLOR" => red }  },;
+                  { "LABEL" => "Three", "VALUE" => 5500, "COLOR" => green, "FILLED" => .T. }, ;
+                  { "LABEL" => "Four", "VALUE" => 6500, "FILLED" => .T., "TILE" => oB }, ;
+                  { "LABEL" => "Five", "VALUE" => 3400, "FILLED" => .T., "COLOR" => green }, ;
                   { "LABEL" => "Six", "VALUE" => 10000 }, ;
-                  { "LABEL" => "Seven", "VALUE" => 0, "FILLED" => TRUE, "COLOR" => red }, ;
+                  { "LABEL" => "Seven", "VALUE" => 0, "FILLED" => .T., "COLOR" => red }, ;
                   { "LABEL" => "Eight", "VALUE" => -2200 }, ;
-                  { "LABEL" => "Nine", "VALUE" => -3600, "COLOR" => blue, "FILLED" => TRUE } ;
+                  { "LABEL" => "Nine", "VALUE" => -3600, "COLOR" => blue, "FILLED" => .T. } ;
                 } )
 */
 
 
    oI5:SetData( { ;
-                  { "LABEL" => "One", "VALUE" => 10, "COLOR" => blue, "FILLED" => TRUE, "EXTRUDE" => 40/*, "TILE" => oB*/ },;
-                  { "LABEL" => "Two", "VALUE" => 35, "COLOR" => gray, "FILLED" => TRUE, "FONT" => { "NAME" => "Verdana", "PITCH" => 12, "ANGLE" => 0, "COLOR" => red }  },;
-                  { "LABEL" => "Three", "VALUE" => 55, "COLOR" => green, "FILLED" => TRUE }, ;
-                  { "LABEL" => "Four", "VALUE" => 65, "FILLED" => TRUE, "TILE" => oB }, ;
-                  { "LABEL" => "Five", "VALUE" => 34, "FILLED" => TRUE, "COLOR" => green }, ;
+                  { "LABEL" => "One", "VALUE" => 10, "COLOR" => blue, "FILLED" => .T., "EXTRUDE" => 40/*, "TILE" => oB*/ },;
+                  { "LABEL" => "Two", "VALUE" => 35, "COLOR" => gray, "FILLED" => .T., "FONT" => { "NAME" => "Verdana", "PITCH" => 12, "ANGLE" => 0, "COLOR" => red }  },;
+                  { "LABEL" => "Three", "VALUE" => 55, "COLOR" => green, "FILLED" => .T. }, ;
+                  { "LABEL" => "Four", "VALUE" => 65, "FILLED" => .T., "TILE" => oB }, ;
+                  { "LABEL" => "Five", "VALUE" => 34, "FILLED" => .T., "COLOR" => green }, ;
                   { "LABEL" => "Six", "VALUE" => 100 }, ;
-                  { "LABEL" => "Seven", "VALUE" => 0, "FILLED" => TRUE, "COLOR" => red }, ;
+                  { "LABEL" => "Seven", "VALUE" => 0, "FILLED" => .T., "COLOR" => red }, ;
                   { "LABEL" => "Eight", "VALUE" => -0 }, ;
-                  { "LABEL" => "Nine", "VALUE" => -0, "COLOR" => blue, "FILLED" => TRUE } ;
+                  { "LABEL" => "Nine", "VALUE" => -0, "COLOR" => blue, "FILLED" => .T. } ;
                 } )
 
 
@@ -330,4 +330,3 @@ PROCEDURE Main()
    ?
 
 RETURN
-

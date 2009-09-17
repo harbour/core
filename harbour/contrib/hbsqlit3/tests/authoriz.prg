@@ -53,26 +53,26 @@
 /*
  * Using sqlite3_set_authorizer()
  *
- * This routine registers a authorizer callback with a particular 
- * database connection, supplied in the first argument. 
+ * This routine registers a authorizer callback with a particular
+ * database connection, supplied in the first argument.
  * The authorizer callback is invoked as SQL statements are being compiled
  * by sqlite3_prepare().
  *
  * When the callback returns SQLITE_OK, that means the operation requested
- * is ok. 
+ * is ok.
  * When the callback returns SQLITE_DENY, the sqlite3_prepare() or
  * equivalent call that triggered the authorizer will fail with an error
- * message explaining that access is denied. 
- * If the authorizer code is SQLITE_READ and the callback returns 
+ * message explaining that access is denied.
+ * If the authorizer code is SQLITE_READ and the callback returns
  * SQLITE_IGNORE then the prepared statement statement is constructed to
- * substitute a NULL value in place of the table column that would have 
- * been read if SQLITE_OK had been returned. 
+ * substitute a NULL value in place of the table column that would have
+ * been read if SQLITE_OK had been returned.
  * The SQLITE_IGNORE return can be used to deny an untrusted user access
  * to individual columns of a table.
  *
- * The first parameter to the authorizer callback is an integer 
- * action code that specifies the particular action to be authorized. 
- * The second through fourth parameters to the callback are strings 
+ * The first parameter to the authorizer callback is an integer
+ * action code that specifies the particular action to be authorized.
+ * The second through fourth parameters to the callback are strings
  * that contain additional details about the action to be authorized.
  */
 
@@ -86,7 +86,7 @@ FUNCTION main()
    IF Empty( pDb := PrepareDB(cFile) )
       RETURN 1
    ENDIF
-   // Authorizer1  
+   // Authorizer1
    sqlite3_set_authorizer( pDb, @Authorizer() /*"Authorizer"*/ )
 
    QOut( cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40" )
@@ -108,7 +108,7 @@ FUNCTION main()
    Qout( cErrorMsg(sqlite3_exec(pDb, cSQLTEXT, cb), FALSE) )
 
    sqlite3_sleep( 3000 )
-   //   
+   //
    pDb := Nil   // close database
    //
 RETURN 0
@@ -127,7 +127,7 @@ RETURN SQLITE_OK
 /**
 */
 FUNCTION Authorizer2( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
-LOCAL oldColor := SetColor( "R/N" ) 
+LOCAL oldColor := SetColor( "R/N" )
    //
    Qout( "=>", StrZero(nAction, 2), cName1, cName2, cDatabaseName, cTriggerOrViewName )
 
@@ -189,9 +189,9 @@ STATIC FUNCTION cErrorMsg( nError, lShortMsg )
       { SQLITE_DONE       , "SQLITE_DONE"       , "sqlite3_step() has finished executing"       } ;
    }, nIndex, cErrorMsg := "UNKNOWN"
    //
-   DEFAULT lShortMsg TO TRUE
+   DEFAULT lShortMsg TO .T.
 
-   IF hb_IsNumeric( nError ) 
+   IF hb_IsNumeric( nError )
       IF nError == 0
          cErrorMsg := "SQLITE_OK"
       ELSE
@@ -215,7 +215,7 @@ STATIC FUNCTION PrepareDB( cFile )
                      "Ivet"  => 28  ;
                     }, enum
    //
-   pDb := sqlite3_open( cFile, TRUE )
+   pDb := sqlite3_open( cFile, .T. )
    IF Empty( pDb )
       QOut( "Can't open/create database : ", cFile )
 

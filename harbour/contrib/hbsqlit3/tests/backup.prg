@@ -53,13 +53,13 @@
 /*
  * Using sqlite3_backup_*()
  *
- * This API is used to overwrite the contents of one database with that 
- * of another. It is useful either for creating backups of databases or 
+ * This API is used to overwrite the contents of one database with that
+ * of another. It is useful either for creating backups of databases or
  * for copying in-memory databases to or from persistent files.
  *
- * sqlite3_backup_init() is called once to initialize the backup, 
+ * sqlite3_backup_init() is called once to initialize the backup,
  * sqlite3_backup_step() is called one or more times to transfer the data
- *                       between the two databases, and finally 
+ *                       between the two databases, and finally
  * sqlite3_backup_finish() is called to release all resources associated
  *                       with the backup operation.
  */
@@ -89,7 +89,7 @@ FUNCTION main()
       RETURN 1
    ENDIF
 
-   sqlite3_trace( pDbDest, TRUE, "backup.log" )
+   sqlite3_trace( pDbDest, .T., "backup.log" )
 
    //
    pBackup := sqlite3_backup_init( pDbDest, "main", pDbSource, "main" )
@@ -169,9 +169,9 @@ STATIC FUNCTION cErrorMsg( nError, lShortMsg )
       { SQLITE_DONE       , "SQLITE_DONE"       , "sqlite3_step() has finished executing"       } ;
    }, nIndex, cErrorMsg := "UNKNOWN"
    //
-   DEFAULT lShortMsg TO TRUE
+   DEFAULT lShortMsg TO .T.
 
-   IF hb_IsNumeric( nError ) 
+   IF hb_IsNumeric( nError )
       IF nError == 0
          cErrorMsg := "SQLITE_OK"
       ELSE
@@ -195,14 +195,14 @@ STATIC FUNCTION PrepareDB( cFile )
                      "Ivet"  => 28  ;
                     }, enum
    //
-   pDb := sqlite3_open( cFile, TRUE )
+   pDb := sqlite3_open( cFile, .T. )
    IF Empty( pDb )
       QOut( "Can't open/create database : ", cFile )
 
       RETURN NIL
    ENDIF
 
-   sqlite3_trace( pDb, TRUE, "backup.log" )
+   sqlite3_trace( pDb, .T., "backup.log" )
 
    cSQLTEXT := "CREATE TABLE person( name TEXT, age INTEGER )"
    cMsg := cErrorMsg( sqlite3_exec(pDb, cSQLTEXT) )

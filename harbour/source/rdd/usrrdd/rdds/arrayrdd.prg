@@ -121,7 +121,7 @@ STATIC FUNCTION AR_DATABASEINIT()
              {}    ,; // DATABASE_RECORDS
              {}    ,; // DATABASE_RECINFO
              0     ,; // DATABASE_OPENNUMBER
-             FALSE ,; // DATABASE_LOCKED
+             .F.   ,; // DATABASE_LOCKED
              NIL    ; // DATABASE_STRUCT - aStruct
           }
 
@@ -131,18 +131,18 @@ STATIC FUNCTION AR_WADATAINIT()
             0      ,; // WADATA_WORKAREA
             NIL    ,; // WADATA_OPENINFO
             0      ,; // WADATA_RECNO
-            FALSE  ,; // WADATA_BOF
-            FALSE  ,; // WADATA_FORCEBOF  // to solve an hack in dbf1.c
-            FALSE  ,; // WADATA_EOF
-            FALSE  ,; // WADATA_TOP
-            FALSE  ,; // WADATA_BOTTOM
-            FALSE  ,; // WADATA_FOUND
+            .F.    ,; // WADATA_BOF
+            .F.    ,; // WADATA_FORCEBOF  // to solve an hack in dbf1.c
+            .F.    ,; // WADATA_EOF
+            .F.    ,; // WADATA_TOP
+            .F.    ,; // WADATA_BOTTOM
+            .F.    ,; // WADATA_FOUND
             {}      ; // WADATA_LOCKS
           }
 
 STATIC FUNCTION AR_RECDATAINIT()
    RETURN { ;
-            FALSE   ; // RECDATA_DELETED
+            .F.     ; // RECDATA_DELETED
           }
 
 /*
@@ -236,7 +236,7 @@ STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
 
       /* Setting file attribs */
       aDBFData[ DATABASE_FILENAME ] := cFullName
-      aDBFData[ DATABASE_LOCKED   ] := TRUE      /* I need Exclusive mode in creation */
+      aDBFData[ DATABASE_LOCKED   ] := .T.      /* I need Exclusive mode in creation */
 
       /* Adding new database in RDD memory slots using filename as key */
       hb_hSet( hRDDData, cFullName, aDBFData )
@@ -363,7 +363,7 @@ STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
    // Open file in exclusive mode
    IF !aOpenInfo[ UR_OI_SHARED ]
       IF aDBFData[ DATABASE_OPENNUMBER ] == 1
-         aDBFData[ DATABASE_LOCKED     ] := TRUE
+         aDBFData[ DATABASE_LOCKED     ] := .T.
       ELSE
          oError := ErrorNew()
          oError:GenCode     := EG_OPEN
@@ -396,7 +396,7 @@ STATIC FUNCTION AR_CLOSE( nWA )
       aDBFData[ DATABASE_OPENNUMBER ]--
 
       // unlock file
-      aDBFData[ DATABASE_LOCKED     ] := FALSE  // Exclusive mode
+      aDBFData[ DATABASE_LOCKED     ] := .F.  // Exclusive mode
    ENDIF
 
    RETURN UR_SUPER_CLOSE( nWA )
@@ -440,7 +440,7 @@ STATIC FUNCTION AR_PUTVALUE( nWA, nField, xValue )
 #endif
 
    IF nField > 0 .AND. nField <= Len( aStruct ) .AND. ;
-      IIF( ValType( xValue ) == "C" .AND. aStruct[ nField ][ DBS_TYPE ] == "M", TRUE, ValType( xValue ) == aStruct[ nField ][ DBS_TYPE ] )
+      IIF( ValType( xValue ) == "C" .AND. aStruct[ nField ][ DBS_TYPE ] == "M", .T., ValType( xValue ) == aStruct[ nField ][ DBS_TYPE ] )
 
       xVal := PutValue( xValue, aStruct[ nField ][ DBS_TYPE ], aStruct[ nField ][ DBS_LEN ], aStruct[ nField ][ DBS_DEC ] )
 
@@ -486,8 +486,8 @@ STATIC FUNCTION AR_GOTO( nWA, nRecord )
       aWAData[ WADATA_EOF ]   := aWAData[ WADATA_BOF ] := .F.
       aWAData[ WADATA_RECNO ] := nRecord
 
-      //pArea->fBof = pArea->fEof = pArea->fValidBuffer = FALSE;
-      //pArea->fPositioned = TRUE;
+      //pArea->fBof = pArea->fEof = pArea->fValidBuffer = .F.;
+      //pArea->fPositioned = .T.;
 
    ELSEIF nRecCount == 0
 
@@ -594,8 +594,8 @@ STATIC FUNCTION AR_SKIPFILTER( nWA, nRecords )
                RETURN HB_FAILURE
             ENDIF
             IF nToSkip < 0 .AND. aWAData[ WADATA_BOF ]
-               lBof := TRUE
-               aWAData[ WADATA_BOF ] := FALSE
+               lBof := .T.
+               aWAData[ WADATA_BOF ] := .F.
                nToSkip := 1
             ELSEIF nToSkip > 0 .AND. aWAData[ WADATA_EOF ]
                EXIT
@@ -609,7 +609,7 @@ STATIC FUNCTION AR_SKIPFILTER( nWA, nRecords )
       ENDDO
 
       IF lBof != NIL
-         aWAData[ WADATA_BOF ] := TRUE
+         aWAData[ WADATA_BOF ] := .T.
       ENDIF
 
    ENDIF
@@ -665,7 +665,7 @@ STATIC FUNCTION AR_BOF( nWA, lBof )
    // This is a hack to protect from dbf1.c skipraw hack
    IF aWAData[ WADATA_FORCEBOF ] .AND. lBof
       aWAData[ WADATA_BOF ] := lBof
-      aWAData[ WADATA_FORCEBOF ] := FALSE
+      aWAData[ WADATA_FORCEBOF ] := .F.
    ELSE
       lBof := aWAData[ WADATA_BOF ]
    ENDIF
@@ -1191,7 +1191,7 @@ STATIC FUNCTION EmptyValue( cType, nLen, nDec )
    CASE cType == "D"
         xVal := CToD( "" )
    CASE cType == "L"
-        xVal := FALSE
+        xVal := .F.
    CASE cType == "N"
         xVal := Val( Str( 0, nLen, nDec ) )
    ENDCASE
@@ -1221,14 +1221,14 @@ STATIC FUNCTION HB_Decode(...)
 
         xVal := aParams[ 1 ]
 
-        aDel( aParams, 1, TRUE ) // Resize params
+        aDel( aParams, 1, .T. ) // Resize params
         nParams := Len( aParams )
 
         // if I have a odd number of members, last is default
         IF ( nParams % 2 <> 0 )
            xDefault := aTail( aParams )
            // Resize again deleting last
-           aDel( aParams, nParams, TRUE )
+           aDel( aParams, nParams, .T. )
            nParams := Len( aParams )
         ENDIF
 
@@ -1301,7 +1301,7 @@ STATIC FUNCTION HB_Decode(...)
            ENDIF
 
            // Then add Decoding value at beginning
-           aIns( aParams, 1, xVal, TRUE )
+           aIns( aParams, 1, xVal, .T. )
 
            // And run decode() again
            xRet := hb_ExecFromArray( @hb_Decode(), aParams )

@@ -65,14 +65,14 @@ CREATE CLASS HBBlat
    VAR cCommand                AS STRING  INIT ""
    VAR cVersion                AS STRING  INIT "0.1"
    VAR cBlatVersion            AS STRING  INIT "2.6.2"
-   VAR lChecked                AS LOGICAL INIT FALSE
+   VAR lChecked                AS LOGICAL INIT .F.
 
    EXPORTED:
    // Installation
-   VAR lSaveSettings           AS LOGICAL INIT FALSE           // store common settings to the Windows Registry.  Takes the
+   VAR lSaveSettings           AS LOGICAL INIT .F.             // store common settings to the Windows Registry.  Takes the
                                                                // same parameters as -install, and is only for SMTP settings.
    METHOD SaveSettings( ... )  INLINE ::Install( "SMTP", ... )
-   //VAR lInstall                AS LOGICAL INIT FALSE
+   //VAR lInstall                AS LOGICAL INIT .F.
    METHOD Install( cService, cServerAddress, cSenderEmailAddress, nTries, nPort, cProfile, cUsername, cPassword ) VIRTUAL // TODO
 
    // Basics
@@ -84,9 +84,9 @@ CREATE CLASS HBBlat
    VAR cBCC                    AS STRING                       // blind carbon copy recipient list (comma separated)
    VAR cBCCFile                AS STRING                       // bcc recipient list filename
    VAR nMaxNames               AS NUMERIC INIT 0               // send to groups of x number of recipients
-   VAR lToUndiscloseRecipients AS LOGICAL INIT FALSE           // set To: header to Undisclosed Recipients if not using the ::cTo and ::cCC options
+   VAR lToUndiscloseRecipients AS LOGICAL INIT .F.             // set To: header to Undisclosed Recipients if not using the ::cTo and ::cCC options
    VAR cSubject                AS STRING                       // subject line
-   VAR lSuppressSubject        AS LOGICAL INIT FALSE           // suppress subject line if it is not defined
+   VAR lSuppressSubject        AS LOGICAL INIT .F.             // suppress subject line if it is not defined
    VAR cSubjectFile            AS STRING                       // file containing subject line
    VAR cBody                   AS STRING                       // message body
    VAR cBodyFile               AS STRING                       // file containing the message body
@@ -96,7 +96,7 @@ CREATE CLASS HBBlat
 
    // Registry Overrides
    VAR cProfile                AS STRING                       // Send using cProfile profile (using server, user, and port)
-   VAR lShowProfiles           AS LOGICAL INIT FALSE           // list all profiles in the Registry
+   VAR lShowProfiles           AS LOGICAL INIT .F.             // list all profiles in the Registry
    VAR cServerSMTP             AS STRING                       // specify SMTP server to be used (optionally, addr:port)
    VAR cServerNNTP             AS STRING                       // specify NNTP server to be used (optionally, addr:port)
    VAR cServerPOP3             AS STRING                       // specify POP3 server to be used (optionally, addr:port) when POP3 access is required before sending email
@@ -121,18 +121,18 @@ CREATE CLASS HBBlat
    VAR cOrganization           AS STRING
    VAR cUserAgent              AS STRING
    VAR cXHeader                AS STRING
-   VAR lNoBlatHomePage         AS LOGICAL INIT TRUE
-   VAR lNoBlatXHeader          AS LOGICAL INIT TRUE
-   VAR lRequestDisposition     AS LOGICAL INIT FALSE
-   VAR lRequestReturnReceipt   AS LOGICAL INIT FALSE
+   VAR lNoBlatHomePage         AS LOGICAL INIT .T.
+   VAR lNoBlatXHeader          AS LOGICAL INIT .T.
+   VAR lRequestDisposition     AS LOGICAL INIT .F.
+   VAR lRequestReturnReceipt   AS LOGICAL INIT .F.
    VAR cCharSet                AS STRING
    VAR cUserHeader1            AS STRING
    VAR cUserHeader2            AS STRING
    VAR cDSN                    AS STRING                 // Delivery Status Notifications (RFC 3461): n = never, s = successful, f = failure, d = delayed - can be used together, however N takes precedence
-   VAR lEHBase64               AS LOGICAL INIT FALSE     // use base64 for encoding headers, if necessary
-   VAR lEHQuoted               AS LOGICAL INIT FALSE     // use quoted-printable for encoding headers, if necessary
-   VAR lLowPriority            AS LOGICAL INIT FALSE
-   VAR lHighPriority           AS LOGICAL INIT FALSE
+   VAR lEHBase64               AS LOGICAL INIT .F.       // use base64 for encoding headers, if necessary
+   VAR lEHQuoted               AS LOGICAL INIT .F.       // use quoted-printable for encoding headers, if necessary
+   VAR lLowPriority            AS LOGICAL INIT .F.
+   VAR lHighPriority           AS LOGICAL INIT .F.
    VAR nSensitivity            AS NUMERIC INIT -1        // set message sensitity 0 for personal, 1 for private, 2 for company-confidential
 
    // Attachment and encoding options
@@ -152,41 +152,41 @@ CREATE CLASS HBBlat
    VAR cAttachListTextFile     AS STRING
    VAR cAttachListEmbeddedFile AS STRING
 
-   VAR lSendBinaryBase64       AS LOGICAL INIT FALSE
-   VAR lSendBinaryUUEncoded    AS LOGICAL INIT FALSE
-   VAR lSendEnrichedText       AS LOGICAL INIT FALSE
-   VAR lUnicode                AS LOGICAL INIT FALSE
-   VAR lHtml                   AS LOGICAL INIT FALSE
+   VAR lSendBinaryBase64       AS LOGICAL INIT .F.
+   VAR lSendBinaryUUEncoded    AS LOGICAL INIT .F.
+   VAR lSendEnrichedText       AS LOGICAL INIT .F.
+   VAR lUnicode                AS LOGICAL INIT .F.
+   VAR lHtml                   AS LOGICAL INIT .F.
    VAR cAlternateText          AS STRING
    VAR cAlternateTextFile      AS STRING
-   VAR lMime                   AS LOGICAL INIT FALSE     // MIME Quoted-Printable Content-Transfer-Encoding
-   VAR lAskFor8BitMime         AS LOGICAL INIT FALSE     // ask for 8bit data support when sending MIME
+   VAR lMime                   AS LOGICAL INIT .F.       // MIME Quoted-Printable Content-Transfer-Encoding
+   VAR lAskFor8BitMime         AS LOGICAL INIT .F.       // ask for 8bit data support when sending MIME
    VAR nMultipartSize          AS NUMERIC                // send multipart messages, breaking attachments on <size> KB boundaries, where <size> is per 1000 bytes
-   VAR lNoMultipartMessage     AS LOGICAL INIT FALSE     // do not allow multipart messages
+   VAR lNoMultipartMessage     AS LOGICAL INIT .F.       // do not allow multipart messages
 
    // NNTP specific options
    VAR cGroups                 AS STRING                 // list of newsgroups (comma separated)
 
    // Other options
-   VAR lXtndXmit               AS LOGICAL INIT FALSE     // Attempt to use POP3 to transmit when accessing POP3 first
-   VAR lHelp                   AS LOGICAL INIT FALSE     // displays this help (also -?, /?, -help or /help)
-   VAR lQuiet                  AS LOGICAL INIT TRUE      // suppresses all output to the screen
-   VAR lDebug                  AS LOGICAL INIT FALSE     // echoes server communications to a log file or screen (overrides -q if echoes to the screen)
+   VAR lXtndXmit               AS LOGICAL INIT .F.       // Attempt to use POP3 to transmit when accessing POP3 first
+   VAR lHelp                   AS LOGICAL INIT .F.       // displays this help (also -?, /?, -help or /help)
+   VAR lQuiet                  AS LOGICAL INIT .T.       // suppresses all output to the screen
+   VAR lDebug                  AS LOGICAL INIT .F.       // echoes server communications to a log file or screen (overrides -q if echoes to the screen)
    VAR cLogFile                AS STRING                 // log everything but usage to <file>
-   VAR lLogTimestamp           AS LOGICAL INIT FALSE     // when -log is used, a timestamp is added to each log line
-   VAR lLogOverwrite           AS LOGICAL INIT FALSE     // when -log is used, overwrite the log file
+   VAR lLogTimestamp           AS LOGICAL INIT .F.       // when -log is used, a timestamp is added to each log line
+   VAR lLogOverwrite           AS LOGICAL INIT .F.       // when -log is used, overwrite the log file
    VAR nTimeout                AS NUMERIC INIT 60        // set timeout to 'n' seconds.  Blat will wait 'n' seconds for server responses
    VAR nTry                    AS NUMERIC INIT 1         // -1 == INFINITE, how many times blat should try to send (1 to 'INFINITE')
-   VAR lBinary                 AS LOGICAL INIT FALSE     // do not convert ASCII | (pipe, 0x7c) to CrLf in the message body
+   VAR lBinary                 AS LOGICAL INIT .F.       // do not convert ASCII | (pipe, 0x7c) to CrLf in the message body
    VAR cHostname               AS STRING                 // select the hostname used to send the message via SMTP this is typically your local machine name
-   VAR lRaw                    AS LOGICAL INIT FALSE     // do not add CR/LF after headers
+   VAR lRaw                    AS LOGICAL INIT .F.       // do not add CR/LF after headers
    VAR nDelay                  AS NUMERIC INIT 1         // wait x seconds between messages being sent when used with -maxnames or -multipart
    VAR cCommentChar            AS STRING                 // use this character to mark the start of commments in options files and recipient list files.  The default is ;
-   VAR lSuperDebug             AS LOGICAL INIT FALSE     // hex/ascii dump the data between Blat and the server
-   VAR lSuperDebugText         AS LOGICAL INIT FALSE     // ascii dump the data between Blat and the server
+   VAR lSuperDebug             AS LOGICAL INIT .F.       // hex/ascii dump the data between Blat and the server
+   VAR lSuperDebugText         AS LOGICAL INIT .F.       // ascii dump the data between Blat and the server
 
    // Other
-   VAR lIgnoreErrors           AS LOGICAL INIT FALSE
+   VAR lIgnoreErrors           AS LOGICAL INIT .F.
 
 
    // Methods
@@ -562,7 +562,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // No Blat Home Page
-      // Add only if ::lNoBlatXHeader is FALSE
+      // Add only if ::lNoBlatXHeader is .F.
       IF !::lNoBlatXHeader
          IF ::lNoBlatHomePage
             ::cCommand += " -noh"
@@ -619,7 +619,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
          ::cCommand += " -hdrencq"
       ENDIF
 
-      // lHighPriority / lLowPriority - if both == FALSE, priority is standard
+      // lHighPriority / lLowPriority - if both == .F., priority is standard
       IF ::lHighPriority
          ::cCommand += " -priority 1"
       ELSEIF ::lLowPriority
@@ -890,7 +890,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
       //--------------------------------------------------
 
       // Check done
-      ::lChecked := TRUE
+      ::lChecked := .T.
 
    ENDIF
 

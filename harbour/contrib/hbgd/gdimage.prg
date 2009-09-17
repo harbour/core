@@ -71,7 +71,7 @@ CLASS GDImage
 
    DATA aPoints      INIT {}
    DATA aStyles      INIT {}
-   DATA lDestroy     INIT TRUE
+   DATA lDestroy     INIT .T.
 
    EXPORTED:
    DATA hFile
@@ -259,8 +259,8 @@ CLASS GDImage
    METHOD SetTransparent( pColor )         INLINE gdImageColorTransparent( ::pImage, pColor )
    METHOD SetSharpen( nPerc )              INLINE gdImageSharpen( ::pImage, nPerc )
    METHOD SetInterlace( lOnOff )           INLINE gdImageInterlace( ::pImage, lOnOff )
-   METHOD SetInterlaceOn()                 INLINE gdImageInterlace( ::pImage, TRUE )
-   METHOD SetInterlaceOff()                INLINE gdImageInterlace( ::pImage, FALSE )
+   METHOD SetInterlaceOn()                 INLINE gdImageInterlace( ::pImage, .T. )
+   METHOD SetInterlaceOff()                INLINE gdImageInterlace( ::pImage, .F. )
 
    /* COPY AND RESIZING FUNCTIONS */
    METHOD Copy()
@@ -307,7 +307,7 @@ RETURN
 
 METHOD Polygon( aPoints, lFilled, color ) CLASS GDImage
   DEFAULT aPoints TO ::aPoints
-  DEFAULT lFilled TO FALSE
+  DEFAULT lFilled TO .F.
   DEFAULT color   TO ::pColor
   IF lFilled
      gdImageFilledPolygon( ::pImage, aPoints, color )
@@ -325,7 +325,7 @@ RETURN Self
 #endif
 
 METHOD Rectangle( x1, y1, x2, y2, lFilled, color ) CLASS GDImage
-  DEFAULT lFilled TO FALSE
+  DEFAULT lFilled TO .F.
   DEFAULT color   TO ::pColor
   IF lFilled
      gdImageFilledRectangle( ::pImage, x1, y1, x2, y2, color )
@@ -335,7 +335,7 @@ METHOD Rectangle( x1, y1, x2, y2, lFilled, color ) CLASS GDImage
 RETURN Self
 
 METHOD Arc( x, y, nWidth, nHeight, nStartDegree, nEndDegree, lFilled, color, nStyle ) CLASS GDImage
-  DEFAULT lFilled TO FALSE
+  DEFAULT lFilled TO .F.
   DEFAULT color   TO ::pColor
   DEFAULT nStyle  TO gdArc
   IF lFilled
@@ -346,7 +346,7 @@ METHOD Arc( x, y, nWidth, nHeight, nStartDegree, nEndDegree, lFilled, color, nSt
 RETURN Self
 
 METHOD Ellipse( x, y, nWidth, nHeight, lFilled, color ) CLASS GDImage
-  DEFAULT lFilled TO FALSE
+  DEFAULT lFilled TO .F.
   DEFAULT color   TO ::pColor
   IF lFilled
      gdImageFilledEllipse( ::pImage, x, y, nWidth, nHeight, color )
@@ -362,7 +362,7 @@ METHOD LoadFromFile( cFile ) CLASS GDImage
    ::Destroy()
    Self := ::CloneDataFrom( aLoad[1] )
    //Self := __objClone( aLoad[1] )
-   aLoad[1]:lDestroy := FALSE
+   aLoad[1]:lDestroy := .F.
    aLoad[1] := NIL
 
    ::hFile := aLoad[2]
@@ -520,7 +520,7 @@ METHOD Rotate( nAngle, lInside ) CLASS GDImage
   LOCAL nWidth, nHeight
   LOCAL nAngRad := nAngle * PI() / 180
 
-  DEFAULT lInside TO FALSE
+  DEFAULT lInside TO .F.
 
   IF !lInside
      nWidth  := ::Width * cos( nAngRad ) + ::Height * sin( nAngRad )
@@ -548,7 +548,7 @@ METHOD Rotate( nAngle, lInside ) CLASS GDImage
 
   // Move new image to existing one
   // Signal that this image must not be destroyed
-  oDestImage:lDestroy := FALSE
+  oDestImage:lDestroy := .F.
   oDestImage := NIL
 
 RETURN Self
@@ -563,7 +563,7 @@ METHOD Crop( nX, nY, nWidth, nHeight ) CLASS GDImage
 
   // Move new image to existing one
   // Signal that this image must not be destroyed
-  oDestImage:lDestroy := FALSE
+  oDestImage:lDestroy := .F.
   oDestImage := NIL
 
 RETURN Self
@@ -578,7 +578,7 @@ METHOD Resize( nWidth, nHeight ) CLASS GDImage
 
   // Move new image to existing one
   // Signal that this image must not be destroyed
-  oDestImage:lDestroy := FALSE
+  oDestImage:lDestroy := .F.
   oDestImage := NIL
 
 RETURN Self
@@ -593,7 +593,7 @@ METHOD Zoom( nPerc ) CLASS GDImage
 
   // Move new image to existing one
   // Signal that this image must not be destroyed
-  oDestImage:lDestroy := FALSE
+  oDestImage:lDestroy := .F.
   oDestImage := NIL
 
 RETURN Self
@@ -617,7 +617,7 @@ METHOD Clone() CLASS GDImage
 
   //pImage := oDestImage:pImage
   //// Signal that this image must not be destroyed
-  //oDestImage:lDestroy := FALSE
+  //oDestImage:lDestroy := .F.
   //oDestImage := NIL
   //oDestImage:pImage := pImage
 

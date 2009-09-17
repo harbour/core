@@ -90,9 +90,6 @@
 
 #include "ftint86.ch"
 
-#define TRUE      .T.
-#define FALSE     .F.
-
 #DEFINE ERR_WRONG_PARAMETERS  -1
 #DEFINE ERR_NO_ERROR          0
 #DEFINE ERR_DRIVE_NOT_READY   1
@@ -171,7 +168,7 @@ STATIC FUNCTION _GetDisketteNum(          ; // returns false if no floppy drive 
 
       // ASSERT 0 <= nDrive_i
 
-      lRetCode := FALSE
+      lRetCode := .F.
       IF FT_INT86( 1*16+1, aRegs )  // INT for equipment determination
             nByte := lowbyte( aRegs[AX] )
                   // bit 0 indicates floppy drive installed
@@ -179,7 +176,7 @@ STATIC FUNCTION _GetDisketteNum(          ; // returns false if no floppy drive 
                   // bits 6 & 7 indicate number of floppies installed upto 4.
                   nDriveCount := Asc( FT_BYTEAND( Chr(nByte), chr(BITS_6AND7) ) )
                   IF nDriveCount >= nDrive_i
-                        lRetCode := TRUE
+                        lRetCode := .T.
                   ENDIF
             ENDIF
       ENDIF
@@ -259,7 +256,7 @@ STATIC FUNCTION _CallInt13hRetry(         ;     // logical: did the interrupt su
       LOCAL nInterrupt_c := 1*16+3  // INT 13h
       LOCAL i
 
-      lCarrySet := FALSE
+      lCarrySet := .F.
       aRegisters := AClone( aRegs_io )
       lSuccess := FT_INT86( nInterrupt_c, aRegisters )
       IF lSuccess

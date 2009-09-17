@@ -192,14 +192,14 @@ METHOD PieChart() CLASS GDChart
       nExtrude  := HGetValue( hElement, "EXTRUDE" )
       pTile     := HGetValue( hElement, "TILE" )
       IF nExtrude <> NIL
-         lExtruded := TRUE
+         lExtruded := .T.
       ELSE
-         lExtruded := FALSE
+         lExtruded := .F.
       ENDIF
       colorp    := HGetValue( hElement, "COLOR" )
       nVal      := hElement["VALUE"]
       nDim      := 360 * ( ( nVal / nTot ) * 100 ) / 100
-      DEFAULT lFilled  TO FALSE
+      DEFAULT lFilled  TO .F.
       DEFAULT nExtrude TO 0
       DEFAULT colorp   TO ::SetColor( 0, 0, 0 )
       IF lExtruded
@@ -218,9 +218,9 @@ METHOD PieChart() CLASS GDChart
          endif
       ENDIF
       IF lFilled
-         ::Arc( nPosX, nPosY, nWidth, nWidth, nDegree, nDegree + nDim, TRUE, colorp, gdPie )
+         ::Arc( nPosX, nPosY, nWidth, nWidth, nDegree, nDegree + nDim, .T., colorp, gdPie )
       ELSE
-         ::Arc( nPosX, nPosY, nWidth, nWidth, nDegree, nDegree + nDim, TRUE, colorp, gdNoFill + gdEdged )
+         ::Arc( nPosX, nPosY, nWidth, nWidth, nDegree, nDegree + nDim, .T., colorp, gdNoFill + gdEdged )
       ENDIF
       IF cLabel <> NIL
          hFont := HGetValue( hElement, "FONT" )
@@ -273,10 +273,10 @@ METHOD VerticalBarChart() CLASS GDChart
   LOCAL nRightLabelSpace  //:= 40
   LOCAL nBottomLabelSpace //:= 40
   LOCAL nTopLabelSpace    := 40
-  LOCAL lShowLabelLeft    := TRUE
-  LOCAL lShowLabelRight   := TRUE //FALSE
-  LOCAL lShowLabelBottom  := TRUE
-  LOCAL lShowLabelTop     := FALSE
+  LOCAL lShowLabelLeft    := .T.
+  LOCAL lShowLabelRight   := .T. //.F.
+  LOCAL lShowLabelBottom  := .T.
+  LOCAL lShowLabelTop     := .F.
   LOCAL cAxisPict
   LOCAL cFontPitch
 
@@ -301,8 +301,8 @@ METHOD VerticalBarChart() CLASS GDChart
   DEFAULT nWidth     TO ::Width()
   DEFAULT nHeight    TO ::Height()
   DEFAULT color      TO ::GetColor()
-  DEFAULT lShowAxis  TO TRUE
-  DEFAULT lShowGrid  TO TRUE
+  DEFAULT lShowAxis  TO .T.
+  DEFAULT lShowGrid  TO .T.
   DEFAULT cAxisPict  TO "@E 9,999.99"
   DEFAULT cFontPitch TO "TINY"
 
@@ -368,7 +368,7 @@ METHOD VerticalBarChart() CLASS GDChart
   nSize := nWidth / Len( aDataOfHash )
 
   IF lShowGrid
-     ::Rectangle( x, ::Height() - ( y + nHeight ), x + nWidth, ::Height() - y, FALSE, color )
+     ::Rectangle( x, ::Height() - ( y + nHeight ), x + nWidth, ::Height() - y, .F., color )
 
      nThick := ::SetThickness( 1 )
 
@@ -412,15 +412,15 @@ METHOD VerticalBarChart() CLASS GDChart
       //nExtrude  := HGetValue( hElement, "EXTRUDE" )
       pTile     := HGetValue( hElement, "TILE" )
       //IF nExtrude <> NIL
-      //   lExtruded := TRUE
+      //   lExtruded := .T.
       //ELSE
-      //   lExtruded := FALSE
+      //   lExtruded := .F.
       //ENDIF
       colorp    := HGetValue( hElement, "COLOR" )
       nVal      := hElement["VALUE"]
       nDim      := ( nVal / nMaxValue ) * nHeight
 
-      DEFAULT lFilled  TO FALSE
+      DEFAULT lFilled  TO .F.
       //DEFAULT nExtrude TO 0
       DEFAULT colorp   TO ::SetColor( 0, 0, 0 )
 
@@ -462,10 +462,10 @@ METHOD HorizontalBarChart() CLASS GDChart
   LOCAL nRightLabelSpace  //:= 40
   LOCAL nBottomLabelSpace //:= 40
   LOCAL nTopLabelSpace    //:= 40
-  LOCAL lShowLabelLeft    := TRUE
-  LOCAL lShowLabelRight   := TRUE
-  LOCAL lShowLabelBottom  := TRUE
-  LOCAL lShowLabelTop     := TRUE
+  LOCAL lShowLabelLeft    := .T.
+  LOCAL lShowLabelRight   := .T.
+  LOCAL lShowLabelBottom  := .T.
+  LOCAL lShowLabelTop     := .T.
   LOCAL cAxisPict
   LOCAL cFontPitch
 
@@ -490,8 +490,8 @@ METHOD HorizontalBarChart() CLASS GDChart
   DEFAULT nWidth     TO ::Width()
   DEFAULT nHeight    TO ::Height()
   DEFAULT color      TO ::GetColor()
-  DEFAULT lShowAxis  TO TRUE
-  DEFAULT lShowGrid  TO TRUE
+  DEFAULT lShowAxis  TO .T.
+  DEFAULT lShowGrid  TO .T.
   DEFAULT cAxisPict  TO "@E 9,999.99"
   DEFAULT cFontPitch TO "TINY"
 
@@ -553,7 +553,7 @@ METHOD HorizontalBarChart() CLASS GDChart
   nSize := nHeight / Len( aDataOfHash )
 
   IF lShowGrid
-     ::Rectangle( x, ::Height() - ( y + nHeight ), x + nWidth, ::Height() - y, FALSE, color )
+     ::Rectangle( x, ::Height() - ( y + nHeight ), x + nWidth, ::Height() - y, .F., color )
 
      nThick := ::SetThickness( 1 )
 
@@ -596,15 +596,15 @@ METHOD HorizontalBarChart() CLASS GDChart
       //nExtrude  := HGetValue( hElement, "EXTRUDE" )
       pTile     := HGetValue( hElement, "TILE" )
       //IF nExtrude <> NIL
-      //   lExtruded := TRUE
+      //   lExtruded := .T.
       //ELSE
-      //   lExtruded := FALSE
+      //   lExtruded := .F.
       //ENDIF
       colorp    := HGetValue( hElement, "COLOR" )
       nVal      := hElement["VALUE"]
       nDim      := ( nVal / nMaxValue ) * nWidth
       //__OutDebug( "nDim", nDim )
-      DEFAULT lFilled  TO FALSE
+      DEFAULT lFilled  TO .F.
       //DEFAULT nExtrude TO 0
       DEFAULT colorp   TO ::SetColor( 0, 0, 0 )
 
@@ -648,10 +648,10 @@ METHOD LineChart() CLASS GDChart
   LOCAL nRightLabelSpace  //:= 40
   LOCAL nBottomLabelSpace //:= 40
   LOCAL nTopLabelSpace    := 40
-  LOCAL lShowLabelLeft    := TRUE
-  LOCAL lShowLabelRight   := TRUE //FALSE
-  LOCAL lShowLabelBottom  := TRUE
-  LOCAL lShowLabelTop     := FALSE
+  LOCAL lShowLabelLeft    := .T.
+  LOCAL lShowLabelRight   := .T. //.F.
+  LOCAL lShowLabelBottom  := .T.
+  LOCAL lShowLabelTop     := .F.
   LOCAL cAxisPict
   LOCAL cFontPitch
 
@@ -677,8 +677,8 @@ METHOD LineChart() CLASS GDChart
   DEFAULT nWidth     TO ::Width()
   DEFAULT nHeight    TO ::Height()
   DEFAULT colorp     TO ::GetColor()
-  DEFAULT lShowAxis  TO TRUE
-  DEFAULT lShowGrid  TO TRUE
+  DEFAULT lShowAxis  TO .T.
+  DEFAULT lShowGrid  TO .T.
   DEFAULT cAxisPict  TO "@E 9,999.99"
   DEFAULT cFontPitch TO "TINY"
 
@@ -774,7 +774,7 @@ METHOD LineChart() CLASS GDChart
   nTotRange := nMaxValue + iif( nMinValue < 0, abs( nMinValue ), 0 )
 
   IF lShowGrid
-     ::Rectangle( x, ::Height() - ( y + nHeight ), x + nWidth, ::Height() - y, FALSE, colorp )
+     ::Rectangle( x, ::Height() - ( y + nHeight ), x + nWidth, ::Height() - y, .F., colorp )
 
      nThick := ::SetThickness( 1 )
 
@@ -824,15 +824,15 @@ METHOD LineChart() CLASS GDChart
       //nExtrude  := HGetValue( hElement, "EXTRUDE" )
       pTile     := HGetValue( hElement, "TILE" )
       //IF nExtrude <> NIL
-      //   lExtruded := TRUE
+      //   lExtruded := .T.
       //ELSE
-      //   lExtruded := FALSE
+      //   lExtruded := .F.
       //ENDIF
       colorp    := HGetValue( hElement, "COLOR" )
       nVal      := hElement["VALUE"]
       nDim      := ( ( nVal + abs( nMinValue ) ) / nTotRange ) * nHeight
 
-      //DEFAULT lFilled  TO FALSE
+      //DEFAULT lFilled  TO .F.
       //DEFAULT nExtrude TO 0
       DEFAULT colorp   TO ::SetColor( 0, 0, 0 )
 
@@ -897,7 +897,7 @@ METHOD Clone() CLASS GDChart
 
   //pImage := oDestImage:pImage
   //// Signal that this image must not be destroyed
-  //oDestImage:lDestroy := FALSE
+  //oDestImage:lDestroy := .F.
   //oDestImage := NIL
   //oDestImage:pImage := pImage
 

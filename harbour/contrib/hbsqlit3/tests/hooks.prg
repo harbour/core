@@ -183,9 +183,9 @@ STATIC FUNCTION cErrorMsg( nError, lShortMsg )
       { SQLITE_DONE       , "SQLITE_DONE"       , "sqlite3_step() has finished executing"       } ;
    }, nIndex, cErrorMsg := "UNKNOWN"
    //
-   DEFAULT lShortMsg TO TRUE
+   DEFAULT lShortMsg TO .T.
 
-   IF hb_IsNumeric( nError ) 
+   IF hb_IsNumeric( nError )
       IF nError == 0
          cErrorMsg := "SQLITE_OK"
       ELSE
@@ -209,7 +209,7 @@ STATIC FUNCTION PrepareDB( cFile )
                      "Ivet"  => 28  ;
                     }, enum
    //
-   pDb := sqlite3_open( cFile, TRUE )
+   pDb := sqlite3_open( cFile, .T. )
    IF Empty( pDb )
       QOut( "Can't open/create database : ", cFile )
 
@@ -234,7 +234,7 @@ STATIC FUNCTION PrepareDB( cFile )
 
       RETURN NIL
    ENDIF
- 
+
    QOut( sqlite3_sql(pStmt) )
    QOut( Replicate("-", Len(cSQLTEXT)) )
 
