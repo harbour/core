@@ -3058,7 +3058,7 @@ HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
 
 /* *********************************************************************** */
 
-#if defined( HB_GT_CRS_BCEHACK ) && defined( NCURSES_VERSION ) && !defined( HB_NCURSES_194 )
+#if defined( HB_GT_CRS_BCEHACK ) && defined( NCURSES_VERSION )
 #include <term.h>
 static void curs_wrkaround( void )
 {

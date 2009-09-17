@@ -118,14 +118,9 @@ _DET_VAR_INC_ := HB_INC_CURSES
 _DET_VAR_HAS_ := HB_HAS_CURSES
 _DET_FLT_PLAT := !os2
 _DET_FLT_COMP :=
-_DET_INC_DEFP := /boot/develop/headers/3rdparty
+_DET_INC_DEFP := /usr/include /usr/local/include /sw/include /opt/local/include /boot/develop/headers/3rdparty
 _DET_INC_HEAD := /curses.h
 
-ifneq ($(filter -DHB_NCURSES_194,$(HB_USER_CFLAGS)),)
-   _DET_INC_DEFP += /usr/include/ncur194
-else
-   _DET_INC_DEFP += /usr/include /usr/local/include /sw/include /opt/local/include
-endif
 ifeq ($(HB_COMPILER),djgpp)
    _DET_INC_DEFP += $(foreach d, $(subst $(PTHSEP), ,$(PATH)), $(d)/../include)
 endif

@@ -62,22 +62,15 @@
 #include "hbapierr.h"
 
 #ifndef HB_CDP_SUPPORT_OFF
-#include "hbapicdp.h"
+#  include "hbapicdp.h"
 #endif
 
-#ifdef HB_NCURSES_194
-#  include <ncur194/curses.h>
-   extern int tigetflag(char *);
-   extern int tigetnum(char *);
-   extern char *tigetstr(char *);
-#else
-#  if defined( HB_OS_HPUX )
-#     define _XOPEN_SOURCE_EXTENDED
-#  endif
-#  include <curses.h>
-#  if defined( HB_OS_SUNOS ) || defined( __PDCURSES__ )
-#     include <term.h>
-#  endif
+#if defined( HB_OS_HPUX )
+#  define _XOPEN_SOURCE_EXTENDED
+#endif
+#include <curses.h>
+#if defined( HB_OS_SUNOS ) || defined( __PDCURSES__ )
+#  include <term.h>
 #endif
 #if defined( HB_HAS_GPM )
 #  include <gpm.h>

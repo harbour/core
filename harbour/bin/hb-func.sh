@@ -234,8 +234,6 @@ mk_hbtools()
         fi
         if [ -n "${HB_CURSES_VER}" ]; then
             HB_LIBNAME_CURSES="${HB_CURSES_VER}"
-        elif [ "${HB_NCURSES_194}" = "yes" ]; then
-            HB_LIBNAME_CURSES="ncur194"
         elif [ -z "${HB_LIBNAME_CURSES}" ]; then
             HB_LIBNAME_CURSES="ncurses"
         fi
