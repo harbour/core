@@ -199,8 +199,8 @@ mk_hbtools()
     else
         HB_SYS_LIBS="-lm"
     fi
-    HB_CRS_LIB=""
-    HB_SLN_LIB=""
+    HB_LIBNAME_CURSES=""
+    HB_LIBNAME_SLANG=""
     if [ "${HB_USER_CFLAGS//-DHB_PCRE_REGEX/}" != "${HB_USER_CFLAGS}" ]; then
         HB_SYS_LIBS="-lpcre ${HB_SYS_LIBS}"
         hb_libs="${hb_libs//hbpcre/}"
@@ -222,24 +222,24 @@ mk_hbtools()
         HB_SYS_LIBS="${HB_SYS_LIBS}"
         HB_INC_X11="no"
     else
-        HB_CRS_LIB=""
+        HB_LIBNAME_CURSES=""
         if [ "${HB_PLATFORM}" = "linux" ]; then
             HB_SYS_LIBS="${HB_SYS_LIBS} -ldl -lrt"
         elif [ "${HB_PLATFORM}" = "sunos" ]; then
             HB_SYS_LIBS="${HB_SYS_LIBS} -lrt"
             HB_SYS_LIBS="${HB_SYS_LIBS} -lsocket -lnsl -lresolv"
-            HB_CRS_LIB="curses"
+            HB_LIBNAME_CURSES="curses"
         elif [ "${HB_PLATFORM}" = "hpux" ]; then
             HB_SYS_LIBS="${HB_SYS_LIBS} -lrt"
         fi
         if [ -n "${HB_CURSES_VER}" ]; then
-            HB_CRS_LIB="${HB_CURSES_VER}"
+            HB_LIBNAME_CURSES="${HB_CURSES_VER}"
         elif [ "${HB_NCURSES_194}" = "yes" ]; then
-            HB_CRS_LIB="ncur194"
-        elif [ -z "${HB_CRS_LIB}" ]; then
-            HB_CRS_LIB="ncurses"
+            HB_LIBNAME_CURSES="ncur194"
+        elif [ -z "${HB_LIBNAME_CURSES}" ]; then
+            HB_LIBNAME_CURSES="ncurses"
         fi
-        HB_SLN_LIB="slang"
+        HB_LIBNAME_SLANG="slang"
     fi
     if [ "${HB_USER_CFLAGS//-mlp64/}" != "${HB_USER_CFLAGS}" ]; then
         CC_HB_USER_CFLAGS="${CC_HB_USER_CFLAGS} -mlp64"
@@ -526,11 +526,11 @@ if [ -f "\${HB_LIB_INSTALL}/libgtsln.a" ]; then
     elif [ "\${HB_PLATFORM}" = "bsd" ]; then
         SYSTEM_LIBS="\${SYSTEM_LIBS} -L/usr/local/lib"
     fi
-    SYSTEM_LIBS="-l${HB_SLN_LIB:-slang} \${SYSTEM_LIBS}"
+    SYSTEM_LIBS="-l${HB_LIBNAME_SLANG:-slang} \${SYSTEM_LIBS}"
     [ "\${HB_INC_GPM}" != "no" ] && HB_GPM_LIB="gpm"
 fi
 if [ -f "\${HB_LIB_INSTALL}/libgtcrs.a" ]; then
-    SYSTEM_LIBS="-l${HB_CRS_LIB:-ncurses} \${SYSTEM_LIBS}"
+    SYSTEM_LIBS="-l${HB_LIBNAME_CURSES:-ncurses} \${SYSTEM_LIBS}"
     [ "\${HB_INC_GPM}" != "no" ] && HB_GPM_LIB="gpm"
 fi
 if [ "\${HB_INC_X11}" != "no" ]; then

@@ -6,11 +6,11 @@ SYSLIBS :=
 SYSLIBPATHS :=
 
 ifneq ($(HB_LINKING_RTL),)
-   ifeq ($(HB_CRS_LIB),)
-      HB_CRS_LIB := curses
+   ifeq ($(HB_LIBNAME_CURSES),)
+      HB_LIBNAME_CURSES := curses
    endif
    ifneq ($(HB_HAS_CURSES),)
-      SYSLIBS += $(HB_CRS_LIB)
+      SYSLIBS += $(HB_LIBNAME_CURSES)
    endif
    ifneq ($(HB_HAS_SLANG),)
       SYSLIBS += slang

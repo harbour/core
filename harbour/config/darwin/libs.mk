@@ -6,17 +6,17 @@ SYSLIBS :=
 SYSLIBPATHS :=
 
 ifneq ($(HB_LINKING_RTL),)
-   ifeq ($(HB_CRS_LIB),)
-      HB_CRS_LIB := ncurses
+   ifeq ($(HB_LIBNAME_CURSES),)
+      HB_LIBNAME_CURSES := ncurses
    endif
    ifneq ($(HB_HAS_CURSES),)
-      SYSLIBS += $(HB_CRS_LIB)
+      SYSLIBS += $(HB_LIBNAME_CURSES)
    endif
    ifneq ($(HB_HAS_SLANG),)
       SYSLIBS += slang
       # In BSD, slang still needs curses :(
       ifneq ($(HB_HAS_CURSES),)
-         SYSLIBS += $(HB_CRS_LIB)
+         SYSLIBS += $(HB_LIBNAME_CURSES)
       endif
       SYSLIBPATHS += /sw/lib /opt/local/lib
    endif

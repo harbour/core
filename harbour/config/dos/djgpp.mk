@@ -32,27 +32,29 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
-LD := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
-LD_OUT := -o
-
-LIBPATHS := -L$(LIB_DIR)
-
-LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
+SYSLIBS :=
+SYSLIBPATHS :=
 
 ifneq ($(HB_LINKING_RTL),)
-   ifeq ($(HB_CRS_LIB),)
-      HB_CRS_LIB := pdcurses
+   ifeq ($(HB_LIBNAME_CURSES),)
+      HB_LIBNAME_CURSES := pdcurses
    endif
    ifneq ($(filter gtcrs, $(LIBS)),)
-      LDLIBS += -l$(HB_CRS_LIB)
+      SYSLIBS += $(HB_LIBNAME_CURSES)
    endif
    ifneq ($(HB_HAS_WATT),)
-      LIBPATHS += -L$(HB_LIB_WATT)
-      LDLIBS += -lwatt
+      SYSLIBPATHS += $(HB_LIB_WATT)
+      SYSLIBS += watt
    endif
 endif
 
-LDLIBS += -lm
+SYSLIBS += m
+
+LD := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
+LD_OUT := -o
+
+LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),-L$(dir))
+LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),-l$(lib))
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 #       It causes that every command will be separated by LF
