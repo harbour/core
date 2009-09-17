@@ -121,7 +121,7 @@ _DET_FLT_COMP :=
 _DET_INC_DEFP := /boot/develop/headers/3rdparty
 _DET_INC_HEAD := /curses.h
 
-ifeq ($(HB_NCURSES_194),yes)
+ifneq ($(filter -DHB_NCURSES_194,$(HB_USER_CFLAGS)),)
    _DET_INC_DEFP += /usr/include/ncur194
 else
    _DET_INC_DEFP += /usr/include /usr/local/include /sw/include /opt/local/include

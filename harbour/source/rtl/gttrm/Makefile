@@ -35,9 +35,6 @@ ifeq ($(HB_SUPPORTED),yes)
 
    ifneq ($(HB_HAS_GPM),)
       HB_CFLAGS += -DHB_HAS_GPM
-      ifeq ($(HB_GPM_NOICE_DISABLE),yes)
-         HB_CFLAGS += -DHB_GPM_NOICE_DISABLE
-      endif
    endif
 
    include $(TOP)$(ROOT)config/lib.mk
