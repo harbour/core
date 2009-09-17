@@ -2261,8 +2261,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             AAdd( l_aLIBSYS, "X11" )
          ENDIF
 
-         AAdd( l_aLIBSYS, "supc++" ) /* NOTE: or stdc++? */
-
       CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "mingw" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "mingw64" ) .OR. ;
@@ -2378,8 +2376,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             ENDIF
          ENDIF
 
-         AAdd( l_aLIBSYS, "supc++" ) /* NOTE: or stdc++? */
-
       CASE hbmk[ _HBMK_cPLAT ] == "os2" .AND. hbmk[ _HBMK_cCOMP ] == "gcc"
 
          IF hbmk[ _HBMK_lDEBUG ]
@@ -2446,10 +2442,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             cBin_Res   := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Res, nCmd_Esc )
          ENDIF
 
-#if 0 /* Causes strange linker (emxomf) warnings. */
-         AAdd( l_aLIBSYS, "supc++" ) /* NOTE: or stdc++? */
-#endif
-
       CASE hbmk[ _HBMK_cPLAT ] == "dos" .AND. hbmk[ _HBMK_cCOMP ] == "djgpp"
 
          IF hbmk[ _HBMK_lDEBUG ]
@@ -2509,8 +2501,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             cBin_CompC := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompC, nCmd_Esc )
             cBin_Link  := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Link, nCmd_Esc )
          ENDIF
-
-         AAdd( l_aLIBSYS, "supcxx" ) /* NOTE: or stdcxx? */
 
       /* Watcom family */
       CASE hbmk[ _HBMK_cCOMP ] == "watcom"

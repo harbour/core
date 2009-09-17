@@ -5,6 +5,7 @@
 {allwin}libpaths=${HB_DIR_QT}\lib
 
 libs=QtCore QtGui QtNetwork QtWebKit
+{allgcc}libs=supc++
 gui=yes
 gt=gtqtcs
 # optional
