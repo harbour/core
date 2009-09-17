@@ -138,8 +138,7 @@ static const char * s_consrvFilePath( char * pszFileName, PHB_CONSRV conn )
       pszFileName = NULL;
    else if( conn->rootPathLen )
    {
-      memmove( pszFileName + conn->rootPathLen, pszFileName,
-               iPos + 1 );
+      memmove( pszFileName + conn->rootPathLen, pszFileName, iPos + 1 );
       memcpy( pszFileName, conn->rootPath, conn->rootPathLen );
    }
 

@@ -8,7 +8,8 @@
  *    very simple TCP/IP file server.
  *    All files which names starts 'net:' are redirected to this API.
  *    This is code for simple MT server which is activated by:
- *       NETIO_MTSERVER( [<nPort>], [<cAddress>] ) -> <pListenSocket> | NIL
+ *       NETIO_MTSERVER( [<nPort>], [<cAddress>], [<cRootDir>] )
+                                                -> <pListenSocket> | NIL
  *    and can be stopped by:
  *       NETIO_SERVERSTOP( <pListenSocket>, .T. )
  *

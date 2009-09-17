@@ -34,6 +34,9 @@ HB_SUPPORTED := yes
 ifeq ($(HB_COMPILER),poccarm)
    HB_SUPPORTED := no
 endif
+ifeq ($(HB_COMPILER),xcc)
+   HB_SUPPORTED := no
+endif
 
 ifeq ($(HB_SUPPORTED),yes)
 
