@@ -20,7 +20,7 @@ _DET_VAR_HAS_ := HB_HAS_LIBHARU
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
 _DET_INC_DEFP := /usr/include /usr/local/include
-_DET_INC_LOCL := $(TOP)$(ROOT)external/libhpdf
+_DET_INC_LOCL := $(realpath $(TOP)$(ROOT)external/libhpdf)
 _DET_INC_HEAD := /hpdf.h
 include $(TOP)$(ROOT)config/detfun.mk
 
@@ -30,7 +30,6 @@ ifneq ($(HB_HAS_LIBHARU),)
 
    include $(TOP)$(ROOT)config/header.mk
    include $(TOP)$(ROOT)config/lib.mk
-
 else
    HB_SKIP_REASON := $(_DET_RES_TEXT)
    include $(TOP)$(ROOT)config/none.mk

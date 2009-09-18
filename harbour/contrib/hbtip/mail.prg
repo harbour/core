@@ -102,7 +102,7 @@ CREATE CLASS TipMail
    METHOD isMultiPart()
    METHOD getMultiParts()
 
-   METHOD setHeader
+   METHOD setHeader( cSubject, cFrom, cTo, cCC, cBCC )
    METHOD attachFile( cFileName )
    METHOD detachFile( cPath )
    METHOD getFileName()
@@ -110,7 +110,7 @@ CREATE CLASS TipMail
    HIDDEN:
 
    VAR cBody
-   VAR lBodyEncoded init .F.
+   VAR lBodyEncoded INIT .F.
    VAR oEncoder
    VAR aAttachments
    VAR nAttachPos   INIT 1
@@ -128,13 +128,7 @@ METHOD New( cBody, oEncoder ) CLASS TipMail
    ENDIF
 
    IF cBody != NIL
-      IF ::oEncoder != NIL
-         ::cBody := ::oEncoder:Encode( cBody )
-         ::hHeaders[ "Content-Transfer-Encoding" ] := ::oEncoder:cName
-      ELSE
-         ::cBody := cBody
-      ENDIF
-      ::hHeaders[ "Content-Length" ] := hb_ntos( Len( ::cBody ) )
+      ::setBody( cBody )
    ENDIF
 
    RETURN Self
@@ -151,11 +145,13 @@ METHOD SetEncoder( cEnc ) CLASS TipMail
 METHOD SetBody( cBody ) CLASS TipMail
    IF ::oEncoder != NIL
       ::cBody := ::oEncoder:Encode( cBody )
+      ::hHeaders[ "Content-Transfer-Encoding" ] := ::oEncoder:cName
       ::lBodyEncoded := .T.  //GD needed to prevent an extra crlf from being appended
    ELSE
       ::cBody := cBody
    ENDIF
-   ::hHeaders[ "Content-Length" ] := hb_ntos( Len( cBody ) )
+   // not needed
+   // ::hHeaders[ "Content-Length" ] := hb_ntos( Len( cBody ) )
    RETURN .T.
 
 METHOD GetBody() CLASS TipMail

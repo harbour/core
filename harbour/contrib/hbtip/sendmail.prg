@@ -139,8 +139,8 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
 
    IF !( ( ".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. hb_FileExists( cBody ) )
 
-      IF !( Right( cBody, 2 ) == hb_osNewLine() )
-         cBody += hb_osNewLine()
+      IF !( Right( cBody, 2 ) == Chr( 13 ) + Chr( 10 ) )
+         cBody += Chr( 13 ) + Chr( 10 )
       ENDIF
 
    ENDIF

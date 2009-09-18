@@ -18,7 +18,9 @@
 #       _DET_FLT_PLAT - positive and negative platform filters. Prefix negative ones with '!' char.
 #       _DET_FLT_COMP - positive and negative compiler filters. Prefix negative ones with '!' char.
 #       _DET_INC_DEFP - default location to look at. Not effective in 'HB_BUILD_EXTDEF=no' mode.
+#                       (you must use absolute paths only.)
 #       _DET_INC_LOCL - embedded location to look at.
+#                       (you must use absolute paths only.)
 #       _DET_INC_HEAD - header filename to look for. Unless looking for a directory, prefix with forward slash.
 #       - variable name specified by _DET_VAR_INC_ (typically "HB_INC_*") containing:
 #          (empty) or yes - will enable external component if found on default locations.
@@ -134,6 +136,9 @@ ifeq ($($(_DET_VAR_HAS_)),)
       $(call do_info,$(_DET_RES_TEXT))
    endif
 endif
+
+export $(_DET_VAR_HAS_)
+export $(_DET_VAR_HAS_)_LOCAL
 
 _DET_DSP_NAME :=
 _DET_VAR_INC_ :=

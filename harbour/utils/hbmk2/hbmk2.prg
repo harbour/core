@@ -2225,7 +2225,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             CASE hbmk[ _HBMK_cPLAT ] == "beos"
                AAdd( hbmk[ _HBMK_aLIBPATH ], "/system/lib" )
                AAdd( l_aLIBSYS, "root" )
-               AAdd( l_aLIBSYS, "socket" )
+               AAdd( l_aLIBSYS, "network" )
             ENDCASE
 
             IF ! Empty( cLIB_BASE_PCRE ) .AND. ! hb_FileExists( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_osPathSeparator() + cLibLibPrefix + cLIB_BASE_PCRE + cLibLibExt )

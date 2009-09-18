@@ -26,5 +26,5 @@ ifneq ($(HB_LINKING_RTL),)
    ifeq ($(HB_HAS_ZLIB_LOCAL),)
       SYSLIBS += z
    endif
-   SYSLIBS += root socket
+   SYSLIBS += root network
 endif

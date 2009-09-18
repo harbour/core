@@ -58,6 +58,10 @@
 #  endif
 #endif
 
+#if defined( HB_OS_BEOS )
+#  define HB_SOCKET_TRANSLATE_TYPE
+#endif
+
 #if !defined( HB_SOCKET_OFF )
 
 /* we do not use autoconf so we can only guess what is supported
