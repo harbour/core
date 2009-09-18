@@ -112,7 +112,7 @@ mk_hbgetlibs()
         then
             libs="$libs gtwin"
         fi
-        echo "hbextern hbvm hbpp hbrtl hbrdd rddfpt rddcdx rddnsx rddntx hbhsx hbsix hbusrrdd ${HB_DB_DRVEXT} hbmacro hbcommon hblang hbcpage gtcrs gtsln gtxvt gtxwc gtalleg gtcgi gtstd gtpca gttrm $libs gtwvt gtgui gtdos gtos2 hbdebug profiler hbcplr hbpcre hbzlib"
+        echo "hbextern hbvm hbpp hbrtl hbrdd rddfpt rddcdx rddnsx rddntx hbhsx hbsix hbusrrdd ${HB_DB_DRVEXT} hbmacro hbcommon hblang hbcpage gtcrs gtsln gtxvt gtxwc gtcgi gtstd gtpca gttrm $libs gtwvt gtgui gtdos gtos2 hbdebug profiler hbcplr hbpcre hbzlib"
     else
         echo "$@"
     fi
@@ -129,7 +129,7 @@ mk_hbgetlibsctb()
         then
             libs="$libs gtwin"
         fi
-        echo "$libs hbct hbnf hbmzip hbnetio hbtip xhb hbgd hbfimage rddsql sddfb sddmy sddpg hbodbc hbpgsql hbmysql hbfbird rddads rddado hbhpdf hbvpdf hbcurl hbwin gtwvg gtalleg hbsqlit3 hbbtree $HB_USER_LIBS"
+        echo "$libs ${HB_DB_DRVEXT} hbct hbnf hbmzip hbnetio hbtip xhb hbgd hbfimage rddsql sddfb sddmy sddpg hbodbc hbpgsql hbmysql hbfbird rddads rddado hbhpdf hbvpdf hbcurl hbwin gtwvg gtalleg hbsqlit3 hbbtree $HB_USER_LIBS"
         #"hbgf hbgt hbbmcdx hbmisc hbtpathy hbwhat hbziparc hbmsql"
     else
         echo "$@"
@@ -201,13 +201,13 @@ mk_hbtools()
     fi
     HB_LIBNAME_CURSES=""
     HB_LIBNAME_SLANG=""
-    if [ "${HB_USER_CFLAGS//-DHB_PCRE_REGEX/}" != "${HB_USER_CFLAGS}" ]; then
+    if [ "${HB_USER_CFLAGS//-DHB_POSIX_REGEX/}" != "${HB_USER_CFLAGS}" ]; then
+        hb_libs="${hb_libs//hbpcre/}"
+    elif [ -z "${HB_HAS_PCRE_LOCAL}" ]; then
         HB_SYS_LIBS="-lpcre ${HB_SYS_LIBS}"
         hb_libs="${hb_libs//hbpcre/}"
-    elif [ "${HB_USER_CFLAGS//-DHB_POSIX_REGEX/}" != "${HB_USER_CFLAGS}" ]; then
-        hb_libs="${hb_libs//hbpcre/}"
     fi
-    if [ "${HB_USER_CFLAGS//-DHB_EXT_ZLIB/}" != "${HB_USER_CFLAGS}" ]; then
+    if [ -z "${HB_HAS_ZLIB_LOCAL}" ]; then
         HB_SYS_LIBS="-lz ${HB_SYS_LIBS}"
         hb_libs="${hb_libs//hbzlib/}"
     fi
@@ -664,7 +664,7 @@ else
             fi
         fi
     fi
-    libs="gtalleg hbdebug profiler hbcplr ${hb_libsc}"
+    libs="hbdebug profiler hbcplr ${hb_libsc}"
 fi
 for l in \${libs}
 do
@@ -841,13 +841,13 @@ mk_hblibso()
         linker_options="-lm"
     fi
     linker_mtoptions=""
-    if [ "${HB_USER_CFLAGS//-DHB_PCRE_REGEX/}" != "${HB_USER_CFLAGS}" ]; then
+    if [ "${HB_USER_CFLAGS//-DHB_POSIX_REGEX/}" != "${HB_USER_CFLAGS}" ]; then
+        hb_libs="${hb_libs//hbpcre/}"
+    elif [ -z "${HB_HAS_PCRE_LOCAL}" ]; then
         linker_options="-lpcre ${linker_options}"
         hb_libs="${hb_libs//hbpcre/}"
-    elif [ "${HB_USER_CFLAGS//-DHB_POSIX_REGEX/}" != "${HB_USER_CFLAGS}" ]; then
-        hb_libs="${hb_libs//hbpcre/}"
     fi
-    if [ "${HB_USER_CFLAGS//-DHB_EXT_ZLIB/}" != "${HB_USER_CFLAGS}" ]; then
+    if [ -z "${HB_HAS_ZLIB_LOCAL}" ]; then
         linker_options="-lz ${linker_options}"
         hb_libs="${hb_libs//hbzlib/}"
     fi

@@ -471,6 +471,8 @@ static void s_fileClose( PHB_FILE pFile )
 
    hb_threadLeaveCriticalSection( &s_fileMtx );
 
+   hb_fsSetError( 0 );
+
    if( hFile != FS_ERROR )
       hb_fsClose( hFile );
    if( hFileRO != FS_ERROR )

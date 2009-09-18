@@ -313,6 +313,7 @@ typedef struct _HB_GTTRM
    int        iCurrentSGR, iFgColor, iBgColor, iBold, iBlink, iACSC, iAM;
    int        iAttrMask;
    int        iCursorStyle;
+   BOOL       fAM;
 
    BOOL       fOutTTY;
    BOOL       fStdinTTY;
@@ -1744,7 +1745,7 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
  * BSD console
  */
 static BOOL hb_gt_trm_BsdGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iCol,
-                                        const char * szPost )
+                                       const char * szPost )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_BsdGetCursorPos(%p,%p,%p,%p)", pTerm, iRow, iCol, szPost));
 
@@ -1765,31 +1766,29 @@ static void hb_gt_trm_BsdSetCursorStyle( PHB_GTTRM pTerm, int iStyle )
 
    if( pTerm->iCursorStyle != iStyle )
    {
-      char escseq[64];
-      int l, h;
+      const char * escseq = NULL;
 
       switch( iStyle )
       {
          case SC_NONE:
-            l = h = 32;
+            escseq = "\033[=5C";
             break;
          case SC_NORMAL:
-            l = 6; h = 7;
+            escseq = "\033[=11;13C\033[=2C";
             break;
          case SC_INSERT:
-            l = 4; h = 7;
+            escseq = "\033[=8;15C\033[=2C";
             break;
          case SC_SPECIAL1:
-            l = 0; h = 7;
+            escseq = "\033[=0;15C\033[=2C";
             break;
          case SC_SPECIAL2:
-            l = 0; h = 3;
+            escseq = "\033[=0;7C\033[=2C";
             break;
          default:
             return;
       }
 
-      hb_snprintf( escseq, sizeof( escseq ), "\033[=%d;%dC", l, h );
       hb_gt_trm_termOut( pTerm, escseq, strlen( escseq ) );
       pTerm->iCursorStyle = iStyle;
    }
@@ -2167,6 +2166,8 @@ static void hb_gt_trm_AnsiExit( PHB_GTTRM pTerm )
    pTerm->SetCursorStyle( pTerm, SC_NORMAL );
    pTerm->SetTermMode( pTerm, 1 );
    hb_gt_trm_termOut( pTerm, "\x1B[m", 3 );
+   if( pTerm->terminal_type == TERM_CONS )
+      hb_gt_trm_termOut( pTerm, "\033[=4C", 5 );
 }
 
 /* ************************************************************************* */
@@ -2945,10 +2946,11 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
       pTerm->iOutBufSize = 16384;
       pTerm->pOutBuf = ( char * ) hb_xgrab( pTerm->iOutBufSize );
    }
-   pTerm->mouse_type = MOUSE_NONE;
-   pTerm->esc_delay  = ESC_DELAY;
-   pTerm->iAttrMask  = ~HB_GTTRM_ATTR_BOX;
-   pTerm->terminal_ext = 0;
+   pTerm->mouse_type    = MOUSE_NONE;
+   pTerm->esc_delay     = ESC_DELAY;
+   pTerm->iAttrMask     = ~HB_GTTRM_ATTR_BOX;
+   pTerm->terminal_ext  = 0;
+   pTerm->fAM           = FALSE;
 
    szTerm = getenv("HB_TERM");
    if( szTerm == NULL || *szTerm == '\0' )
@@ -3012,6 +3014,7 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
       pTerm->Bell           = hb_gt_trm_AnsiBell;
       pTerm->szAcsc         = szExtAcsc;
       pTerm->terminal_type  = TERM_CONS;
+      pTerm->fAM            = TRUE;
    }
    else
    {
@@ -3591,6 +3594,14 @@ static void hb_gt_trm_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    }
    if( iLen )
    {
+      if( pTerm->fAM )
+      {
+         int iHeight, iWidth;
+
+         HB_GTSELF_GETSIZE( pGT, &iHeight, &iWidth );
+         if( iRow == iHeight - 1 && iCol + iLen == iWidth )
+            --iLen;
+      }
       hb_gt_trm_PutStr( pTerm, iRow, iCol, iAttribute, pTerm->pLineBuf, iLen );
    }
 }

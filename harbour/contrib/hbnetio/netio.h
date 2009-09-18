@@ -113,3 +113,4 @@
 #define NETIO_ERR_WRONG_FILE_HANDLE 0xff04
 #define NETIO_ERR_FILES_MAX         0xff05
 #define NETIO_ERR_READ              0xff06
+#define NETIO_ERR_FILE_IO           0xff07

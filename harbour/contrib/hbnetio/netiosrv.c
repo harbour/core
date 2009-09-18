@@ -145,6 +145,14 @@ static const char * s_consrvFilePath( char * pszFileName, PHB_CONSRV conn )
    return pszFileName;
 }
 
+static int s_srvFsError( void )
+{
+   int iError = hb_fsError();
+   if( iError == 0 )
+      iError = NETIO_ERR_FILE_IO;
+   return iError;
+}
+
 static int s_srvFileNew( PHB_CONSRV conn, PHB_FILE pFile )
 {
    if( conn->filesCount < NETIO_FILES_MAX )
@@ -438,7 +446,7 @@ HB_FUNC( NETIO_ACCEPT )
       if( connsd != HB_NO_SOCKET )
       {
          BOOL fOK = FALSE;
-         BYTE msgbuf[ 64 ];
+         BYTE msgbuf[ NETIO_MSGLEN * 2 ];
 
          conn = s_consrvNew( connsd, lsd->rootPath );
 
@@ -515,7 +523,7 @@ HB_FUNC( NETIO_SERVER )
                      if( !szFile )
                         iError = NETIO_ERR_WRONG_FILE_PATH;
                      else if( !hb_fileExists( szFile, NULL ) )
-                        iError = hb_fsError();
+                        iError = s_srvFsError();
                      else
                      {
                         HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_EXISTS );
@@ -543,7 +551,7 @@ HB_FUNC( NETIO_SERVER )
                      if( !szFile )
                         iError = NETIO_ERR_WRONG_FILE_PATH;
                      else if( !hb_fileDelete( szFile ) )
-                        iError = hb_fsError();
+                        iError = s_srvFsError();
                      else
                      {
                         HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_DELETE );
@@ -584,7 +592,7 @@ HB_FUNC( NETIO_SERVER )
                         if( !szFile )
                            iError = NETIO_ERR_WRONG_FILE_PATH;
                         else if( !hb_fileRename( szOldName, szFile ) )
-                           iError = hb_fsError();
+                           iError = s_srvFsError();
                         else
                         {
                            HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_RENAME );
@@ -623,7 +631,7 @@ HB_FUNC( NETIO_SERVER )
                      {
                         pFile = hb_fileExtOpen( szFile, szExt, uiFalgs, NULL, NULL );
                         if( !pFile )
-                           iError = hb_fsError();
+                           iError = s_srvFsError();
                         else
                         {
                            iFileNo = s_srvFileNew( conn, pFile );
@@ -710,7 +718,7 @@ HB_FUNC( NETIO_SERVER )
                if( pFile == NULL )
                   iError = NETIO_ERR_WRONG_FILE_HANDLE;
                else if( !hb_fileLock( pFile, llOffset, llSize, uiFalgs ) )
-                  iError = hb_fsError();
+                  iError = s_srvFsError();
                else
                {
                   HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_LOCK );
@@ -725,7 +733,7 @@ HB_FUNC( NETIO_SERVER )
                if( pFile == NULL )
                   iError = NETIO_ERR_WRONG_FILE_HANDLE;
                else if( !hb_fileTruncAt( pFile, llOffset ) )
-                  iError = hb_fsError();
+                  iError = s_srvFsError();
                else
                {
                   HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_TRUNC );
