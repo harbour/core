@@ -47,7 +47,7 @@ _DET_VAR_INC_ := HB_INC_ZLIB
 _DET_VAR_HAS_ := HB_HAS_ZLIB
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
-_DET_INC_DEFP := /usr/include /boot/develop/headers/3rdparty
+_DET_INC_DEFP := /usr/include /usr/local/include /boot/develop/headers/3rdparty
 _DET_INC_LOCL := $(realpath $(TOP)$(ROOT)external/zlib)
 _DET_INC_HEAD := /zlib.h
 
@@ -60,7 +60,7 @@ _DET_VAR_INC_ := HB_INC_PCRE
 _DET_VAR_HAS_ := HB_HAS_PCRE
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
-_DET_INC_DEFP := /usr/include /opt/local/include
+_DET_INC_DEFP := /usr/include /usr/local/include /opt/local/include
 _DET_INC_LOCL := $(realpath $(TOP)$(ROOT)external/pcre)
 _DET_INC_HEAD := /pcre.h
 
@@ -73,7 +73,7 @@ _DET_VAR_INC_ := HB_INC_OPENSSL
 _DET_VAR_HAS_ := HB_HAS_OPENSSL
 _DET_FLT_PLAT :=
 _DET_FLT_COMP := !watcom
-_DET_INC_DEFP := /usr/include /usr/local/ssl/include /boot/common/include
+_DET_INC_DEFP := /usr/include /usr/local/include /usr/local/ssl/include /boot/common/include
 _DET_INC_HEAD := /openssl/ssl.h
 
 include $(TOP)$(ROOT)config/detfun.mk
@@ -130,7 +130,7 @@ _DET_VAR_INC_ := HB_INC_X11
 _DET_VAR_HAS_ := HB_HAS_X11
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
-_DET_INC_DEFP := /usr/include
+_DET_INC_DEFP := /usr/include /usr/local/include /usr/X11R6/include
 _DET_INC_HEAD := /X11/Xlib.h
 
 include $(TOP)$(ROOT)config/detfun.mk

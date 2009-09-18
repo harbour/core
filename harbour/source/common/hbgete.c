@@ -174,6 +174,9 @@ BOOL hb_setenv( const char * szName, const char * szValue )
          return setenv( szName, "", 1 ) == 0;
       else
          return TRUE;
+#  elif defined( __OpenBSD__ )
+      unsetenv( szName );
+      return TRUE;
 #  else
       return unsetenv( szName ) == 0;
 #  endif
