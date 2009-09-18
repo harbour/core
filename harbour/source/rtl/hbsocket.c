@@ -128,6 +128,10 @@
 #     define HB_HAS_INET6
 #     define HB_HAS_INET6_ADDR_CONST
 #  endif
+#  if defined( HB_OS_BEOS )
+#     define HB_SOCKET_TRANSLATE_DOMAIN
+#     define HB_SOCKET_TRANSLATE_TYPE
+#  endif
 #  if defined( HB_OS_LINUX )
 #     define HB_HAS_SELECT_TIMER
 #  endif

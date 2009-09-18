@@ -195,7 +195,7 @@ mk_hbtools()
     [ -z "${_DEFAULT_LIB_DIR}" ] && _DEFAULT_LIB_DIR="${HB_LIB_INSTALL}"
 
     if [ "${HB_PLATFORM}" = "beos" ]; then
-        HB_SYS_LIBS="-lroot -lsocket"
+        HB_SYS_LIBS="-lroot -lnetwork"
     else
         HB_SYS_LIBS="-lm"
     fi
@@ -836,7 +836,7 @@ mk_hblibso()
     LIBSMT=""
     gpm="${HB_HAS_GPM}"
     if [ "${HB_PLATFORM}" = "beos" ]; then
-        linker_options="-L/system/lib -lroot -lsocket"
+        linker_options="-L/system/lib -lroot -lnetwork"
     else
         linker_options="-lm"
     fi
