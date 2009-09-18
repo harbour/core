@@ -89,7 +89,7 @@ HB_FUNC( WIN_COMOPEN )
       DCB NewDCB;
 
       hb_snprintf( szName, sizeof( szName ), "\\\\.\\COM%d", iPort + 1 );
-      HB_TCHAR_SETTO( tszName, szName, strlen( szName ) );
+      HB_TCHAR_CPTO( tszName, szName, sizeof( tszName ) - 1 );
 
       s_PortData[ iPort ].hPort = INVALID_HANDLE_VALUE;
       s_PortData[ iPort ].iFunction = FCNCREATEFILE;
