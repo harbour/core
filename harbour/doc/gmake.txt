@@ -201,21 +201,6 @@ For GCC on OS/2 for VIO mode:
   HB_COMPILER       gcc
   HB_GT_LIB         gtos2
 
-For GCC on OS/2 for PM mode:
-  Note: Harbour does not get built in PM mode, but  Harbour programs do.
-  Note: You must point C_INCLUDE_PATH to the EMX include directory and
-        you must also point LIBRARY_PATH to the EMX library directory.
-  HB_PLATFORM       os2
-  HB_COMPILER       gcc
-  HB_GT_LIB         os2pm
-
-For IBM Visual Age C++ on OS/2 for PM mode:
-  Note: Harbour does not get built in PM mode, but Harbour programs do.
-  Note: You must create an empty unistd.h in the IBMCPP\INCLUDE directory.
-  HB_PLATFORM       os2
-  HB_COMPILER       icc
-  HB_GT_LIB         os2pm
-
 For Borland C++ 5.5
   HB_PLATFORM       win
   HB_COMPILER       bcc

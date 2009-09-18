@@ -32,25 +32,10 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
-ifeq ($(C_MAIN),)
-   ifeq ($(HB_GT_LIB),os2pm)
-      # If building a PM program, override the main object.
-      LDFLAGS += $(TOP)$(ROOT)source/vm/$(OBJ_DIR)/mainpm.o
-   endif
-endif
-
 SYSLIBS :=
 SYSLIBPATHS :=
 
 ifneq ($(HB_LINKING_RTL),)
-   ifeq ($(C_MAIN),)
-      ifeq ($(filter os2pm,$(HB_GT_LIB)),os2pm)
-         # Special handling for PM mode
-         LIBS += $(HB_GT_LIB)
-         LIBS += gtos2
-      endif
-   endif
-
    SYSLIBS += socket
 endif
 
@@ -60,15 +45,7 @@ LD_OUT := -o$(subst x,x, )
 LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),-L$(dir))
 LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),-l$(lib))
 
-# static linking with GCC 3.2.2 libc as not require its presence on user system
 LDFLAGS += $(LIBPATHS)
-
-ifeq ($(C_MAIN),)
-   ifeq ($(HB_GT_LIB),os2pm)
-      # Override the default link rule in order to add a call to emxbind
-      LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$(BIN_DIR)/$@ $(^F) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) $(LDLIBS) & emxbind -ep $@
-   endif
-endif
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 #       It causes that every command will be separated by LF

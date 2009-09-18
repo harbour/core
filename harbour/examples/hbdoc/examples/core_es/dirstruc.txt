@@ -87,9 +87,6 @@ busca de remover directorios vac¡os)
 |   |   |
 |   |   +---gtk        - Implementaci¢n para entorno GTK+
 |   |   |
-|   |   +---os2pm      - Implementaci¢n para OS/2 Presentation Manager
-|   |   |
-|   |   |
 |   |   +---tests      - Programas de Testeo
 |   |   |
 |   |   +---hbgfwin    - Implementaci¢n para entorno Windows
