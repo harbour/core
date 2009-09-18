@@ -100,14 +100,10 @@ _DET_FLT_COMP :=
 _DET_INC_DEFP :=
 _DET_INC_HEAD := /slang.h
 
-ifeq ($(HB_LOCAL_SLN),yes)
-   _DET_INC_DEFP += /usr/local/include /usr/local/include/slang
-else
-   _DET_INC_DEFP += /usr/include /usr/include/slang
-   _DET_INC_DEFP += /usr/usr/local/include /usr/local/include/slang
-   _DET_INC_DEFP += /sw/include /sw/include/slang
-   _DET_INC_DEFP += /opt/local/include /opt/local/include/slang
-endif
+_DET_INC_DEFP += /usr/include /usr/include/slang
+_DET_INC_DEFP += /usr/local/include /usr/local/include/slang
+_DET_INC_DEFP += /sw/include /sw/include/slang
+_DET_INC_DEFP += /opt/local/include /opt/local/include/slang
 
 include $(TOP)$(ROOT)config/detfun.mk
 
