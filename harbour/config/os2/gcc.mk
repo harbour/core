@@ -32,9 +32,6 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
-LD := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
-LD_OUT := -o$(subst x,x, )
-
 ifeq ($(C_MAIN),)
    ifeq ($(HB_GT_LIB),os2pm)
       # If building a PM program, override the main object.
@@ -42,24 +39,28 @@ ifeq ($(C_MAIN),)
    endif
 endif
 
-SYSLIBS := socket
-
-LIBPATHS := -L$(LIB_DIR)
-LDLIBS := $(foreach lib,$(LIBS),-l$(lib))
+SYSLIBS :=
+SYSLIBPATHS :=
 
 ifneq ($(HB_LINKING_RTL),)
    ifeq ($(C_MAIN),)
       ifeq ($(filter os2pm,$(HB_GT_LIB)),os2pm)
          # Special handling for PM mode
-         LDLIBS += -l$(HB_GT_LIB)
-         LDLIBS += -lgtos2
+         LIBS += $(HB_GT_LIB)
+         LIBS += gtos2
       endif
    endif
 
-   LDLIBS += $(foreach lib,$(SYSLIBS),-l$(lib))
+   SYSLIBS += socket
 endif
 
-# statical linking with GCC 3.2.2 libc as not require its presence on user system
+LD := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
+LD_OUT := -o$(subst x,x, )
+
+LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),-L$(dir))
+LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),-l$(lib))
+
+# static linking with GCC 3.2.2 libc as not require its presence on user system
 LDFLAGS += $(LIBPATHS)
 
 ifeq ($(C_MAIN),)
@@ -95,7 +96,7 @@ AR_RULE = $(create_library) & $(RM) __lib__.tmp
 #DY := $(CC)
 #DFLAGS := -shared $(LIBPATHS)
 #DY_OUT := $(LD_OUT)
-#DLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),-l$(lib))
+#DLIBS := $(foreach lib,$(SYSLIBS),-l$(lib))
 #
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 #define dyn_object
