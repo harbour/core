@@ -218,14 +218,14 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    HB_INC_ODBC= (may only be needed on non-Windows systems)
    HB_INC_OPENSSL=C:\openssl\inc32 OR C:\openssl\include
    HB_INC_PCRE=C:\pcre (defaults to locally hosted version if not found)
-   HB_INC_PNG=C:\libpng (defaults to locally hosted version if not found)
    HB_INC_PGSQL=C:\pgsql\include
+   HB_INC_PNG=C:\libpng (defaults to locally hosted version if not found)
    HB_INC_QT=C:\Qt\include
    HB_INC_SLANG= (on *nix systems)
    HB_INC_SQLITE3=C:\sqlite3 (defaults to locally hosted version if not found)
+   HB_INC_WATT= (on MS-DOS systems)
    HB_INC_X11= (on *nix systems)
    HB_INC_ZLIB=C:\zlib (defaults to locally hosted version if not found)
-   HB_INC_WATT= (on MS-DOS systems)
 
    To explicitly disable any given components, use the value 'no' (without
    quotes). This may be useful to avoid autodetection of installed packages

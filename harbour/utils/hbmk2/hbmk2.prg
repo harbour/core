@@ -2345,9 +2345,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ELSE
             AAdd( hbmk[ _HBMK_aOPTL ], "-o{OE}" )
          ENDIF
-         IF ! hbmk[ _HBMK_lSHARED ]
-            l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
-         ENDIF
+         l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
          DO CASE
          CASE hbmk[ _HBMK_cCOMP ] == "mingw64"
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-x64",;
@@ -2430,6 +2428,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ELSE
             AAdd( hbmk[ _HBMK_aOPTL ], "-o {OE}" )
          ENDIF
+
+         l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-os2",;
+                                                   "harbour" + cDL_Version_Alter + "-os2" ) }
 
          cBin_Res := hbmk[ _HBMK_cCCPREFIX ] + "windres" + cCCEXT
          cResExt := ".reso"
