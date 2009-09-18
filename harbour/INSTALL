@@ -472,6 +472,8 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    - HB_BUILD_MODE=[cpp|c]     Changes default build mode to C++ or C.
                                Default: c, except for msvc* and watcom
                                         compilers, where it's cpp.
+   - HB_BUILD_PART=
+         [all|compiler|lib]    Build only specific part of Harbour.
    - HB_BUILD_EXTDEF=no        Controls autodetection of external components
                                on default systems locations. Default: yes
    - HB_CONTRIBLIBS=no         Don't build any contrib libraries. Default: yes

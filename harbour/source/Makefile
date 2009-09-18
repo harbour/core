@@ -6,7 +6,7 @@ ROOT := ../
 
 include $(TOP)$(ROOT)config/global.mk
 
-ifeq ($(HB_HOST_BUILD),yes)
+ifeq ($(HB_BUILD_PART),compiler)
 
    DIRS := \
       common \
@@ -115,7 +115,7 @@ else
       export DYNNAME_POST
    endif
 
-   ifeq ($(HB_HOST_BUILD),lib)
+   ifeq ($(HB_BUILD_PART),lib)
       HB_COMP_DIR :=
       HB_COMP_REF :=
    else

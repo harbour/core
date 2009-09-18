@@ -241,7 +241,6 @@ ifeq ($(HB_INIT_DONE),)
    ifneq ($(MAKE_381),)
 
       # Some additional ones to be given a standard name:
-      #   HB_HOST_BUILD [yes|all|lib] -> ? (yes = build harbour/hbpp bin only, all = default, lib = build libs only)
       #   HB_DB_DRVEXT                -> -
       #   HB_COMMERCE                 -> ?
       #   HB_BIN_COMPILE              -> HB_BUILD_BIN_DIR
@@ -539,8 +538,8 @@ ifeq ($(HB_COMPILER),)
                HB_PLATFORM := win
                export HB_TOOLS_PREF := hbw
                export HB_BUILD_EXTDEF := no
-               ifneq ($(HB_HOST_BUILD),all)
-                  HB_HOST_BUILD := lib
+               ifneq ($(HB_BUILD_PART),all)
+                  HB_BUILD_PART := lib
                endif
             else
                $(error ! Harbour build could not find mingw32 cross-compiler. Please install it, or point HB_CCPATH/HB_CCPREFIX environment variables to it)
@@ -601,8 +600,8 @@ ifeq ($(HB_COMPILER),)
                   HB_PLATFORM := wce
                   export HB_TOOLS_PREF := hbce
                   export HB_BUILD_EXTDEF := no
-                  ifneq ($(HB_HOST_BUILD),all)
-                     HB_HOST_BUILD := lib
+                  ifneq ($(HB_BUILD_PART),all)
+                     HB_BUILD_PART := lib
                   endif
                else
                   $(error ! Harbour build could not find cegcc cross-compiler. Please install it to /opt/mingw32ce, or point HB_CCPATH/HB_CCPREFIX environment variables to it)
@@ -639,8 +638,8 @@ ifeq ($(HB_COMPILER),)
                      HB_PLATFORM := dos
                      export HB_TOOLS_PREF := hbce
                      export HB_BUILD_EXTDEF := no
-                     ifneq ($(HB_HOST_BUILD),all)
-                        HB_HOST_BUILD := lib
+                     ifneq ($(HB_BUILD_PART),all)
+                        HB_BUILD_PART := lib
                      endif
                   else
                      $(error ! Harbour build could not find djgpp cross-compiler. Please install it to /usr/local/i586-pc-msdosdjgpp, or point HB_CCPATH/HB_CCPREFIX environment variables to it)

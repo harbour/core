@@ -4,26 +4,26 @@
 
 ROOT := ./
 
-ifeq ($(HB_HOST_BUILD),yes)
+ifeq ($(HB_BUILD_PART),compiler)
 
-DIRS := \
-   source \
+   DIRS := \
+      source \
 
 else
 
-ifeq ($(HB_HOST_BUILD),lib)
-   HB_UTIL_DIR :=
-else
-   HB_UTIL_DIR := utils{source}
-endif
+   ifeq ($(HB_BUILD_PART),lib)
+      HB_UTIL_DIR :=
+   else
+      HB_UTIL_DIR := utils{source}
+   endif
 
-DIRS := \
-   doc \
-   include \
-   external \
-   source{external} \
-   $(HB_UTIL_DIR) \
-   contrib{source} \
+   DIRS := \
+      doc \
+      include \
+      external \
+      source{external} \
+      $(HB_UTIL_DIR) \
+      contrib{source} \
 
 endif
 

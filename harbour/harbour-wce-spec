@@ -86,13 +86,13 @@ rm -fR $RPM_BUILD_ROOT
 
 %build
 
-export HB_HOST_BUILD=yes
+export HB_BUILD_PART=compiler
 export HB_PLATFORM=linux
 export HB_COMPILER=gcc
 export HB_USER_CFLAGS=
 make %{?_smp_mflags}
 
-export HB_HOST_BUILD=lib
+export HB_BUILD_PART=lib
 export HB_PLATFORM=wce
 export HB_COMPILER=mingwarm
 
@@ -121,7 +121,7 @@ make %{?_smp_mflags}
 
 # Install harbour itself.
 
-export HB_HOST_BUILD=lib
+export HB_BUILD_PART=lib
 export HB_PLATFORM=wce
 export HB_COMPILER=mingwarm
 

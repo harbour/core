@@ -84,15 +84,15 @@ done
 
 if [ -z "${TOINST_LST}" ] || [ "${FORCE}" = "yes" ]
 then
-    . ./bin/pack_src.sh
+    . ./mpkg_src.sh
     stat="$?"
     if [ -z "${hb_filename}" ]
     then
-        echo "The script ./bin/pack_src.sh doesn't set archive name to \${hb_filename}"
+        echo "The script ./mpkg_src.sh doesn't set archive name to \${hb_filename}"
         exit 1
     elif [ "${stat}" != 0 ]
     then
-        echo "Error during packing the sources in ./bin/pack_src.sh"
+        echo "Error during packing the sources in ./mpkg_src.sh"
         exit 1
     elif [ -f ${hb_filename} ]
     then

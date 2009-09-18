@@ -32,7 +32,7 @@ pptable.c : hbpp$(BIN_EXT)
 	$(HB_HOST_BIN_DIR)/hbpp$(HB_HOST_BIN_EXT) $(TOP)$(ROOT)include/hbstdgen.ch -opptable.c -q -c$(TOP)$(ROOT) -v$(HB_VERHEADER)
 	-@$(RM) hbpp$(OBJ_EXT)
 
-ifneq ($(HB_HOST_BUILD),lib)
+ifneq ($(HB_BUILD_PART),lib)
    ifneq ($(HB_BIN_INSTALL),)
       INSTALL_FILES := $(BIN_DIR)/hbpp$(BIN_EXT)
       INSTALL_DIR := $(HB_BIN_INSTALL)
