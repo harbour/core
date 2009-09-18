@@ -121,6 +121,7 @@ static HB_GT_FUNCS   SuperTable;
 #define TERM_LINUX      2
 #define TERM_XTERM      3
 #define TERM_PUTTY      4
+#define TERM_CONS       8
 
 #define NO_STDKEYS      96
 #define NO_EXTDKEYS     30
@@ -1530,7 +1531,7 @@ static void hb_gt_trm_LinuxTone( PHB_GTTRM pTerm, double dFrequency, double dDur
       pTerm->iACSC = 0;
    }
    hb_snprintf( escseq, sizeof( escseq ), "\033[10;%d]\033[11;%d]\007",
-             ( int ) dFrequency, ( int ) ( dDuration * 1000.0 / 18.2 ) );
+                ( int ) dFrequency, ( int ) ( dDuration * 1000.0 / 18.2 ) );
    hb_gt_trm_termOut( pTerm, escseq, strlen( escseq ) );
    hb_gt_trm_termFlush( pTerm );
 
@@ -1572,7 +1573,7 @@ static void hb_gt_trm_LinuxSetCursorStyle( PHB_GTTRM pTerm, int iStyle )
       {
          char escseq[64];
          hb_snprintf( escseq, sizeof( escseq ), "\033[?25%c\033[?%dc",
-                   iStyle == SC_NONE ? 'l' : 'h', lcurs );
+                      iStyle == SC_NONE ? 'l' : 'h', lcurs );
          hb_gt_trm_termOut( pTerm, escseq, strlen( escseq ) );
          pTerm->iCursorStyle = iStyle;
       }
@@ -1735,6 +1736,78 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
          hb_gt_trm_termOut( pTerm, buff, i );
       }
    }
+}
+
+
+
+/*
+ * BSD console
+ */
+static BOOL hb_gt_trm_BsdGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iCol,
+                                        const char * szPost )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_BsdGetCursorPos(%p,%p,%p,%p)", pTerm, iRow, iCol, szPost));
+
+   HB_SYMBOL_UNUSED( szPost );
+
+   if( pTerm->fPosAnswer )
+   {
+      pTerm->fPosAnswer = FALSE;
+      *iRow = *iCol = -1;
+   }
+
+   return FALSE;
+}
+
+static void hb_gt_trm_BsdSetCursorStyle( PHB_GTTRM pTerm, int iStyle )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_BsdSetCursorStyle(%p,%d)", pTerm, iStyle));
+
+   if( pTerm->iCursorStyle != iStyle )
+   {
+      char escseq[64];
+      int l, h;
+
+      switch( iStyle )
+      {
+         case SC_NONE:
+            l = h = 32;
+            break;
+         case SC_NORMAL:
+            l = 6; h = 7;
+            break;
+         case SC_INSERT:
+            l = 4; h = 7;
+            break;
+         case SC_SPECIAL1:
+            l = 0; h = 7;
+            break;
+         case SC_SPECIAL2:
+            l = 0; h = 3;
+            break;
+         default:
+            return;
+      }
+
+      hb_snprintf( escseq, sizeof( escseq ), "\033[=%d;%dC", l, h );
+      hb_gt_trm_termOut( pTerm, escseq, strlen( escseq ) );
+      pTerm->iCursorStyle = iStyle;
+   }
+}
+
+static void hb_gt_trm_BsdTone( PHB_GTTRM pTerm, double dFrequency, double dDuration )
+{
+   char escseq[64];
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_BsdTone(%p,%lf,%lf)", pTerm, dFrequency, dDuration));
+
+   hb_snprintf( escseq, sizeof( escseq ), "\033[=%d;%dB\007",
+                ( int ) dFrequency, ( int ) ( dDuration * 10.0 / 18.2 ) );
+   hb_gt_trm_termOut( pTerm, escseq, strlen( escseq ) );
+   hb_gt_trm_termFlush( pTerm );
+
+   /* convert Clipper (DOS) timer tick units to seconds ( x / 18.2 ) */
+   hb_idleSleep( dDuration / 18.2 );
 }
 
 
@@ -2733,6 +2806,12 @@ static void init_keys( PHB_GTTRM pTerm )
 
       { 0, NULL } };
 
+   static const keySeq bsdConsKeySeq[] = {
+
+      { EXKEY_TAB   |KEY_CTRLMASK|KEY_ALTMASK, "\033[Z" }, /* SHIFT+TAB */
+
+      { 0, NULL } };
+
 
    addKeyTab( pTerm, stdKeySeq );
    if( pTerm->terminal_type == TERM_XTERM )
@@ -2758,6 +2837,11 @@ static void init_keys( PHB_GTTRM pTerm )
       addKeyTab( pTerm, puttyKeySeq );
       /* if( pTerm->terminal_ext & TERM_PUTTY ) for PuTTY */
       addKeyTab( pTerm, rxvtKeySeq );
+   }
+   else if( pTerm->terminal_type == TERM_CONS )
+   {
+      addKeyTab( pTerm, ansiKeySeq );
+      addKeyTab( pTerm, bsdConsKeySeq );
    }
    else if( pTerm->terminal_type == TERM_ANSI )
    {
@@ -2864,6 +2948,7 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
    pTerm->mouse_type = MOUSE_NONE;
    pTerm->esc_delay  = ESC_DELAY;
    pTerm->iAttrMask  = ~HB_GTTRM_ATTR_BOX;
+   pTerm->terminal_ext = 0;
 
    szTerm = getenv("HB_TERM");
    if( szTerm == NULL || *szTerm == '\0' )
@@ -2872,6 +2957,7 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
       if( szTerm == NULL || *szTerm == '\0' )
          szTerm = "ansi";
    }
+
 
    if( strncmp( szTerm, "linux", 5 ) == 0 ||
        strcmp( szTerm, "tterm" ) == 0 ||
@@ -2910,6 +2996,22 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
       pTerm->Bell           = hb_gt_trm_AnsiBell;
       pTerm->szAcsc         = szAcsc;
       pTerm->terminal_type  = TERM_XTERM;
+   }
+   else if( strncmp( szTerm, "cons", 4 ) == 0 )
+   {
+      pTerm->Init           = hb_gt_trm_AnsiInit;
+      pTerm->Exit           = hb_gt_trm_AnsiExit;
+      pTerm->SetTermMode    = hb_gt_trm_AnsiSetTermMode;
+      pTerm->GetCursorPos   = hb_gt_trm_BsdGetCursorPos;
+      pTerm->SetCursorPos   = hb_gt_trm_AnsiSetCursorPos;
+      pTerm->SetCursorStyle = hb_gt_trm_BsdSetCursorStyle;
+      pTerm->SetAttributes  = hb_gt_trm_AnsiSetAttributes;
+      pTerm->SetMode        = hb_gt_trm_AnsiSetMode;
+      pTerm->GetAcsc        = hb_gt_trm_AnsiGetAcsc;
+      pTerm->Tone           = hb_gt_trm_BsdTone;
+      pTerm->Bell           = hb_gt_trm_AnsiBell;
+      pTerm->szAcsc         = szExtAcsc;
+      pTerm->terminal_type  = TERM_CONS;
    }
    else
    {
@@ -3453,7 +3555,8 @@ static void hb_gt_trm_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 
    pTerm = HB_GTTRM_GET( pGT );
    pTerm->SetTermMode( pTerm, 0 );
-   pTerm->SetCursorStyle( pTerm, SC_NONE );
+   if( iRow < pTerm->iRow )
+      pTerm->SetCursorStyle( pTerm, SC_NONE );
    while( iSize-- )
    {
       if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iLen, &iColor, &bAttr, &usChar ) )
