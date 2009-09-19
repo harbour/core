@@ -72,15 +72,11 @@ then
     HB_CPU=`uname -m`
     case "$HB_CPU" in
         *[_@]64)
-            export HB_USER_CFLAGS="$HB_USER_CFLAGS -fPIC"
             HB_ARCH64="yes"
             ;;
         *)
             ;;
     esac
-elif [ "$HB_PLATFORM" = "hpux" ] || [ "$HB_PLATFORM" = "sunos" ]
-then
-    export HB_USER_CFLAGS="$HB_USER_CFLAGS -fPIC"
 fi
 
 # Select the platform-specific installation prefix and ownership
@@ -172,10 +168,6 @@ case "$HB_PLATFORM" in
     linux)
         ;;
     darwin)
-        # Autodetect old Darwin versions and set appropriate build options
-        if [ `uname -r | sed "s/\..*//g"` -lt 6 ]; then
-            export HB_NCURSES_FINK=yes
-        fi
         [ -z "$HB_INC_X11" ] && export HB_INC_X11=no
         ;;
     dos|win)

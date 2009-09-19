@@ -1207,14 +1207,18 @@ ifneq ($(HB_INSTALL_PREFIX),)
       # Not perfect, please enhance it.
       ifneq ($(findstring |/usr,|$(HB_INSTALL_PREFIX)),)
          ifeq ($(findstring |/usr/home,|$(HB_INSTALL_PREFIX)),)
-           LIBPOSTFIX := $(DIRSEP)harbour
-           INCPOSTFIX := $(DIRSEP)harbour
+            LIBPOSTFIX := $(DIRSEP)harbour
+            INCPOSTFIX := $(DIRSEP)harbour
          endif
       else
          ifneq ($(findstring |/opt,|$(HB_INSTALL_PREFIX)),)
             LIBPOSTFIX := $(DIRSEP)harbour
             INCPOSTFIX := $(DIRSEP)harbour
          endif
+      endif
+      # Use 'lib64' instead of 'lib' for 64-bit targets
+      ifneq ($(filter $(HB_CPU),x86_64),)
+         LIBPOSTFIX += 64$(LIBPOSTFIX)
       endif
    endif
 

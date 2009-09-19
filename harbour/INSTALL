@@ -204,28 +204,28 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    You can set these environment variables before starting
    the build. Make sure to adjust them to your own directories:
 
-   HB_INC_ADS=C:\ads\acesdk
-   HB_INC_ALLEGRO=C:\allegro\include
-   HB_INC_BLAT=C:\blat\full\source
-   HB_INC_CURL=C:\curl\include
-   HB_INC_CURSES= (on *nix systems and DJGPP, where it's autodetected)
-   HB_INC_FIREBIRD=C:\Firebird\include
-   HB_INC_FREEIMAGE=C:\FreeImage\Dist
-   HB_INC_GD=C:\gd\include
-   HB_INC_GPM= (on Linux only)
-   HB_INC_LIBHARU=C:\libharu\include (defaults to locally hosted version)
-   HB_INC_MYSQL=C:\mysql\include
-   HB_INC_ODBC= (may only be needed on non-Windows systems)
-   HB_INC_OPENSSL=C:\openssl\inc32 OR C:\openssl\include
-   HB_INC_PCRE=C:\pcre (defaults to locally hosted version if not found)
-   HB_INC_PGSQL=C:\pgsql\include
-   HB_INC_PNG=C:\libpng (defaults to locally hosted version if not found)
-   HB_INC_QT=C:\Qt\include
-   HB_INC_SLANG= (on *nix systems)
-   HB_INC_SQLITE3=C:\sqlite3 (defaults to locally hosted version if not found)
-   HB_INC_WATT= (on MS-DOS systems)
-   HB_INC_X11= (on *nix systems)
-   HB_INC_ZLIB=C:\zlib (defaults to locally hosted version if not found)
+   HB_WITH_ADS=C:\ads\acesdk
+   HB_WITH_ALLEGRO=C:\allegro\include
+   HB_WITH_BLAT=C:\blat\full\source
+   HB_WITH_CURL=C:\curl\include
+   HB_WITH_CURSES= (on *nix systems and DJGPP, where it's autodetected)
+   HB_WITH_FIREBIRD=C:\Firebird\include
+   HB_WITH_FREEIMAGE=C:\FreeImage\Dist
+   HB_WITH_GD=C:\gd\include
+   HB_WITH_GPM= (on Linux only)
+   HB_WITH_LIBHARU=C:\libharu\include (defaults to locally hosted version)
+   HB_WITH_MYSQL=C:\mysql\include
+   HB_WITH_ODBC= (may only be needed on non-Windows systems)
+   HB_WITH_OPENSSL=C:\openssl\inc32 OR C:\openssl\include
+   HB_WITH_PCRE=C:\pcre (defaults to locally hosted version if not found)
+   HB_WITH_PGSQL=C:\pgsql\include
+   HB_WITH_PNG=C:\libpng (defaults to locally hosted version if not found)
+   HB_WITH_QT=C:\Qt\include
+   HB_WITH_SLANG= (on *nix systems)
+   HB_WITH_SQLITE3=C:\sqlite3 (defaults to locally hosted version if not found)
+   HB_WITH_WATT= (on MS-DOS systems)
+   HB_WITH_X11= (on *nix systems)
+   HB_WITH_ZLIB=C:\zlib (defaults to locally hosted version if not found)
 
    To explicitly disable any given components, use the value 'no' (without
    quotes). This may be useful to avoid autodetection of installed packages
@@ -264,19 +264,22 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
       For contrib/hbhpdf lib:
       Download libharu from http://libharu.org/ -> './configure' -> 'make install'
 
-   Linux (Debian, Ubuntu)
-   ----------------------
+   Linux (Debian, Ubuntu, .deb based distros)
+   ------------------------------------------
    (tested with Ubuntu 7.04, 8.04, 9.04)
 
       for zlib support:          sudo apt-get install zlib1g-dev
       for pcre regex support:    sudo apt-get install libpcre3-dev
       for gtcrs terminal lib:    sudo apt-get install libncurses-dev
-      for gtsln terminal lib:    sudo apt-get install libslang2-dev
+      for gtsln terminal lib:    sudo apt-get install libslang2-dev OR
+                                 sudo apt-get install libslang1-dev
       for gtxwc terminal lib:    sudo apt-get install libx11-dev
-      for console mouse support: sudo apt-get install libgpm-dev OR libgpmg1-dev
+      for console mouse support: sudo apt-get install libgpm-dev OR
+                                 sudo apt-get install libgpmg1-dev
       for contrib/gtalleg lib:   sudo apt-get install liballegro4.2-dev
       for contrib/hbodbc lib:    sudo apt-get install unixodbc-dev
-      for contrib/hbcurl lib:    sudo apt-get install libcurl4-openssl-dev OR libcurl4-gnutls-dev
+      for contrib/hbcurl lib:    sudo apt-get install libcurl4-openssl-dev OR
+                                 sudo apt-get install libcurl4-gnutls-dev
       for contrib/hbfbird lib:   sudo apt-get install firebird2.1-dev OR
                                  sudo apt-get install libfirebird2.0-dev
       for contrib/hbfimage lib:  sudo apt-get install libfreeimage-dev
@@ -287,18 +290,23 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
       for contrib/hbqt lib:      sudo apt-get install libqt4-dev
       for contrib/hbsqlit3 lib:  sudo apt-get install libsqlite3-dev
 
-   Linux (openSUSE)
-   ----------------
+   Linux (openSUSE, .rpm based distros)
+   ------------------------------------
 
       You'll need these packages to compile certain contribs and optional Harbour features:
-      - xorg-x11-devel
+
+      - xorg-x11-devel OR XFree86-devel
       - postgresql-devel
+      - firebird-devel
       - gtk2-devel
-      - ncurses-devel
-      - slang-devel
-      - unixodbc-devel
+      - ncurses-devel AND ncurses
+      - slang-devel AND slang
+      - unixodbc-devel OR unixODBC-devel
       - gd-devel
-      - libmysqlclient-devel
+      - libmysqlclient-devel OR mysql-devel OR MySQL-devel
+      - allegro-devel
+      - curl-devel
+      - gpm-devel
 
    FreeBSD
    -------
@@ -683,18 +691,18 @@ EXAMPLES
       rem ; Add these *before* above sample scripts to configure 3rd party dependencies.
       rem   When using MSYS or Cygwin shell you'll have to use forward slashes and
       rem   also Cygwin drive notation for Cygwin.
-      set HB_INC_ADS=C:\ads\acesdk
-      set HB_INC_ALLEGRO=C:\allegro\include
-      set HB_INC_APOLLO=C:\Apollo\include
-      set HB_INC_BLAT=C:\blat\full\source
-      set HB_INC_CURL=C:\curl\include
-      set HB_INC_FIREBIRD=C:\Firebird\include
-      set HB_INC_FREEIMAGE=C:\FreeImage\Dist
-      set HB_INC_GD=C:\gd\include
-      set HB_INC_MYSQL=C:\mysql\include
-      set HB_INC_OPENSSL=C:\openssl\inc32
-      set HB_INC_PGSQL=C:\pgsql\include
-      set HB_INC_QT=C:\Qt\include
+      set HB_WITH_ADS=C:\ads\acesdk
+      set HB_WITH_ALLEGRO=C:\allegro\include
+      set HB_WITH_APOLLO=C:\Apollo\include
+      set HB_WITH_BLAT=C:\blat\full\source
+      set HB_WITH_CURL=C:\curl\include
+      set HB_WITH_FIREBIRD=C:\Firebird\include
+      set HB_WITH_FREEIMAGE=C:\FreeImage\Dist
+      set HB_WITH_GD=C:\gd\include
+      set HB_WITH_MYSQL=C:\mysql\include
+      set HB_WITH_OPENSSL=C:\openssl\inc32
+      set HB_WITH_PGSQL=C:\pgsql\include
+      set HB_WITH_QT=C:\Qt\include
       -->8--
 
       --8<--
@@ -746,12 +754,12 @@ EXAMPLES
       --8<--
       rem ; Add these *before* above sample scripts to configure 3rd party dependencies.
       rem   You have to use 8.3 path notation.
-      set HB_INC_ALLEGRO=C:\ALLEGR~1.2\include
-      set HB_INC_FIREBIRD=C:\FIREBI~1.4\include
-      set HB_INC_GD=C:\GD-20~1.34\include
-      set HB_INC_MYSQL=C:\MYSQL-~1.67\include
-      set HB_INC_PGSQL=C:\PGSQL-~1.3\include
-      set HB_INC_WATT=C:\WATT\inc
+      set HB_WITH_ALLEGRO=C:\ALLEGR~1.2\include
+      set HB_WITH_FIREBIRD=C:\FIREBI~1.4\include
+      set HB_WITH_GD=C:\GD-20~1.34\include
+      set HB_WITH_MYSQL=C:\MYSQL-~1.67\include
+      set HB_WITH_PGSQL=C:\PGSQL-~1.3\include
+      set HB_WITH_WATT=C:\WATT\inc
       -->8--
 
       --8<--

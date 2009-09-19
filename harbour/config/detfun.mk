@@ -50,7 +50,7 @@ endif
 
 # preparing switch to HB_WITH_* variables from HB_INC_*
 ifneq ($($(subst HB_INC_,HB_WITH_,$(_DET_VAR_INC_))),)
-   $($(subst HB_INC_,HB_WITH_,$(_DET_VAR_INC_))) := $($(_DET_VAR_INC_))
+   $(_DET_VAR_INC_) := $($(subst HB_INC_,HB_WITH_,$(_DET_VAR_INC_)))
 endif
 
 _DET_RES_TEXT :=
