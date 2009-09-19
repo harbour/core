@@ -26,7 +26,7 @@ endif
 ifeq ($(HB_HOST_PLAT)-$(HB_COMPILER),dos-watcom)
    HB_SUPPORTED := no
 endif
-# NOTE: diable *nix builds on non-*nix platforms. [vszakats]
+# NOTE: disable *nix builds on non-*nix platforms. [vszakats]
 ifeq ($(HB_HOST_PLAT_UNIX),)
    ifneq ($(HB_PLATFORM_UNIX),)
       HB_SUPPORTED := no

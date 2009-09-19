@@ -4,20 +4,20 @@
 # GNU copyright 1997 to 1999 by Joey Hess.
 
 # Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
+#export DH_VERBOSE := 1
 
-export _DEFAULT_BIN_DIR=/usr/bin
-export _DEFAULT_INC_DIR=/usr/include/harbour
-export _DEFAULT_LIB_DIR=/usr/lib/harbour
-export _DEFAULT_DOC_DIR=/usr/share/doc/harbour
-export INSTDIR=$(CURDIR)/debian/harbour
-export HB_BIN_INSTALL=$(INSTDIR)$(_DEFAULT_BIN_DIR)
-export HB_LIB_INSTALL=$(INSTDIR)$(_DEFAULT_LIB_DIR)
-export HB_INC_INSTALL=$(INSTDIR)$(_DEFAULT_INC_DIR)
-export HB_DOC_INSTALL=$(INSTDIR)$(_DEFAULT_DOC_DIR)
-export HB_ETC_DIR=$(INSTDIR)/etc
+export _DEFAULT_BIN_DIR := /usr/bin
+export _DEFAULT_INC_DIR := /usr/include/harbour
+export _DEFAULT_LIB_DIR := /usr/lib/harbour
+export _DEFAULT_DOC_DIR := /usr/share/doc/harbour
+export INSTDIR := $(CURDIR)/debian/harbour
+export HB_BIN_INSTALL := $(INSTDIR)$(_DEFAULT_BIN_DIR)
+export HB_LIB_INSTALL := $(INSTDIR)$(_DEFAULT_LIB_DIR)
+export HB_INC_INSTALL := $(INSTDIR)$(_DEFAULT_INC_DIR)
+export HB_DOC_INSTALL := $(INSTDIR)$(_DEFAULT_DOC_DIR)
+export HB_ETC_DIR := $(INSTDIR)/etc
 
-CFLAGS = -g
+CFLAGS := -g
 
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
    CFLAGS += -O0

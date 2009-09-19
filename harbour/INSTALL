@@ -276,7 +276,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
       for console mouse support: sudo apt-get install libgpm-dev OR libgpmg1-dev
       for contrib/gtalleg lib:   sudo apt-get install liballegro4.2-dev
       for contrib/hbodbc lib:    sudo apt-get install unixodbc-dev
-      for contrib/hbcurl lib:    sudo apt-get install libcurl4-openssl-dev
+      for contrib/hbcurl lib:    sudo apt-get install libcurl4-openssl-dev OR libcurl4-gnutls-dev
       for contrib/hbfbird lib:   sudo apt-get install firebird2.1-dev OR
                                  sudo apt-get install libfirebird2.0-dev
       for contrib/hbfimage lib:  sudo apt-get install libfreeimage-dev
