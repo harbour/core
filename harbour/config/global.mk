@@ -1196,16 +1196,22 @@ ifeq ($(HB_INIT_DONE),)
    endif
 endif
 
+HB_SYSLOC :=
+ifneq ($(findstring |/usr/local/bin,|$(HB_INSTALL_PREFIX)),)
+   HB_SYSLOC := yes
+else ifneq ($(findstring |/usr/bin,|$(HB_INSTALL_PREFIX)),)
+   HB_SYSLOC := yes
+else ifneq ($(findstring |/opt/harbour,|$(HB_INSTALL_PREFIX)),)
+   HB_SYSLOC := yes
+else ifneq ($(findstring |/opt/bin,|$(HB_INSTALL_PREFIX)),)
+   HB_SYSLOC := yes
+endif
+export HB_SYSLOC
+
 ifneq ($(HB_INSTALL_PREFIX),)
 
    ifeq ($(HB_BUILD_SHARED),)
-      ifneq ($(findstring |/usr/local/bin,|$(HB_INSTALL_PREFIX)),)
-         export HB_BUILD_SHARED := yes
-      else ifneq ($(findstring |/usr/bin,|$(HB_INSTALL_PREFIX)),)
-         export HB_BUILD_SHARED := yes
-      else ifneq ($(findstring |/opt/harbour,|$(HB_INSTALL_PREFIX)),)
-         export HB_BUILD_SHARED := yes
-      else ifneq ($(findstring |/opt/bin,|$(HB_INSTALL_PREFIX)),)
+      ifeq ($(HB_SYSLOC),yes)
          export HB_BUILD_SHARED := yes
       endif
    endif
@@ -1228,9 +1234,11 @@ ifneq ($(HB_INSTALL_PREFIX),)
             INCPOSTFIX := $(DIRSEP)harbour
          endif
       endif
-      # Use 'lib64' instead of 'lib' for 64-bit targets
-      ifneq ($(filter $(HB_CPU),x86_64),)
-         LIBPOSTFIX := 64$(LIBPOSTFIX)
+      # Use 'lib64' instead of 'lib' for 64-bit targets where lib64 dir exists
+      ifneq ($(wildcard $(HB_INSTALL_PREFIX)$(DIRSEP)lib64),)
+         ifneq ($(filter $(HB_CPU),x86_64),)
+            LIBPOSTFIX := 64$(LIBPOSTFIX)
+         endif
       endif
    endif
 

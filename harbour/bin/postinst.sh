@@ -40,6 +40,29 @@ fi
 
 . ${hb_root}/bin/hb-func.sh
 
+# Keep the size of the binaries to a minimim.
+if [ -f $HB_BIN_INSTALL/harbour${hb_exesuf} ]; then
+   ${HB_CCPREFIX}strip $HB_BIN_INSTALL/harbour${hb_exesuf}
+fi
+if [ "$HB_PLATFORM" != "hpux" ]; then
+   # Keep the size of the libraries to a minimim, but don't try to strip symlinks.
+   ${HB_CCPREFIX}strip -S `find $HB_LIB_INSTALL -type f`
+fi
+
+# check if we should rebuild tools with shared libs
+if [ "${HB_SYSLOC}" = yes ]
+then
+   for utl in hbmk2 hbrun hbi18n hbformat hbtest
+   do
+      (cd "utils/${utl}"
+       rm -fR "./${HB_PLATFORM}/${HB_COMPILER}/${utl}${hb_exesuf}"
+       $MAKE install HB_BUILD_SHARED=yes
+       ${HB_CCPREFIX}strip "${HB_BIN_INSTALL}/${utl}${hb_exesuf}")
+   done
+fi
+
+chmod 644 $HB_INC_INSTALL/*
+
 if [ "$HB_COMPILER" = "gcc" ] || \
    [ "$HB_COMPILER" = "mingw" ] || \
    [ "$HB_COMPILER" = "mingw64" ] || \

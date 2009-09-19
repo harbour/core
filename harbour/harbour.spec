@@ -379,11 +379,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %build
 %{hb_env}
-case "`uname -m`" in
-    *[_@]64)
-        export HB_USER_CFLAGS="$HB_USER_CFLAGS -fPIC"
-        ;;
-esac
 
 make %{?_smp_mflags}
 
@@ -396,11 +391,6 @@ make %{?_smp_mflags}
 # Install harbour itself.
 
 %{hb_env}
-case "`uname -m`" in
-    *[_@]64)
-        export HB_USER_CFLAGS="$HB_USER_CFLAGS -fPIC"
-        ;;
-esac
 
 export _DEFAULT_BIN_DIR=$HB_BIN_INSTALL
 export _DEFAULT_INC_DIR=$HB_INC_INSTALL

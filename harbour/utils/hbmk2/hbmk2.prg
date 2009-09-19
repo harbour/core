@@ -1958,7 +1958,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          /* NOTE: We only use different shared object flags when compiling for
                   "( win || wce ) & !( allmingw | cygwin )". This may change in the future.
                   IMPORTANT: Keep this condition in sync with setting -DHB_DYNLIB C compiler flag */
-         IF lCreateDyn .AND. hbmk[ _HBMK_cPLAT ] $ "win|wce" .AND. !( hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm|cygwin" )
+         IF lCreateDyn .AND. !( hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm|cygwin" )
             DEFAULT cWorkDir TO FN_DirGet( l_cPROGNAME ) + _WORKDIR_DEF_ + hb_osPathSeparator() + "hbdyn"
          ELSE
             DEFAULT cWorkDir TO FN_DirGet( l_cPROGNAME ) + _WORKDIR_DEF_
@@ -2132,7 +2132,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             cOpt_CompC += " {LC}"
          ENDIF
          cBin_Dyn := cBin_CompC
-         cOpt_Dyn := "-shared -fPIC {FD} -o {OD} {DL} {LO} {LS}"
+         cOpt_Dyn := "-shared {FD} -o {OD} {DL} {LO} {LS}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}"
          cLibPathPrefix := "-L"
@@ -2189,18 +2189,20 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             ENDIF
          ENDIF
 
+         IF lCreateDyn .AND. !( hbmk[ _HBMK_cPLAT ] == "darwin" )
+            IF hbmk[ _HBMK_cPLAT ] $ "hpux|sunos"
+               AAdd( hbmk[ _HBMK_aOPTC ], "-fPIC" )
+            ELSE
+               AAdd( hbmk[ _HBMK_aOPTC ], "-fpic" )
+            ENDIF
+         ENDIF
+
          /* Always inherit/reproduce some flags from self */
 
          IF     "-mlp64" $ cSelfFlagC ; AAddNew( hbmk[ _HBMK_aOPTC ], "-mlp64" )
          ELSEIF "-mlp32" $ cSelfFlagC ; AAddNew( hbmk[ _HBMK_aOPTC ], "-mlp32" )
          ELSEIF "-m64"   $ cSelfFlagC ; AAddNew( hbmk[ _HBMK_aOPTC ], "-m64" )
          ELSEIF "-m32"   $ cSelfFlagC ; AAddNew( hbmk[ _HBMK_aOPTC ], "-m32" )
-         ENDIF
-
-         IF     "-fPIC"  $ cSelfFlagC ; AAddNew( hbmk[ _HBMK_aOPTC ], "-fPIC" )
-         ELSEIF "-fpic"  $ cSelfFlagC ; AAddNew( hbmk[ _HBMK_aOPTC ], "-fpic" )
-         ELSEIF hbmk[ _HBMK_cPLAT ] == "sunos|hpux"
-            AAddNew( hbmk[ _HBMK_aOPTC ], "-fPIC" )
          ENDIF
 
          /* Add system libraries */
@@ -3010,6 +3012,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTL ], "-o {OE}" )
          ENDIF
 
+         IF lCreateDyn
+            AAdd( hbmk[ _HBMK_aOPTC ], "-KPIC" )
+         ENDIF
+
          /* Add system libraries */
          IF ! hbmk[ _HBMK_lSHARED ]
             AAdd( l_aLIBSYS, "m" )
@@ -3062,7 +3068,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       /* NOTE: We only use different shared object flags when compiling for
                "( win || wce ) & !( allmingw | cygwin )". This may change in the future.
                IMPORTANT: Keep this condition in sync with workdir default settings */
-      IF lCreateDyn .AND. hbmk[ _HBMK_cPLAT ] $ "win|wce" .AND. !( hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm|cygwin" )
+      IF lCreateDyn .AND. !( hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm|cygwin" )
          IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB .OR. ;
             hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10
             AAdd( hbmk[ _HBMK_aOPTC ], "-D__EXPORT__" )
