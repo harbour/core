@@ -23,25 +23,28 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      PROCNAME()
  *  $CATEGORY$
- *      Misc
+ *      API
+ *  $SUBCATEGORY$
+ *      Application
  *  $ONELINER$
  *      Gets the name of the current function on the stack
  *  $SYNTAX$
  *      PROCNAME( <nLevel> ) --> <cProcName>
  *  $ARGUMENTS$
- *      <nLevel> is the function level required.   </par>
+ *      <nLevel> is the function level required.
  *  $RETURNS$
- *      <cProcName> The name of the function that it is being executed.   </par>
+ *      <cProcName> The name of the function that it is being executed.
  *  $DESCRIPTION$
  *      This function looks at the top of the stack and gets the current
  *      executed function if no arguments are passed. Otherwise it returns
- *      the name of the function or procedure at <nLevel>.   </par>
+ *      the name of the function or procedure at <nLevel>.
  *  $EXAMPLES$
  *      See Test
- *  </fixed>
  *  $TESTS$
  *      This test will show the functions and procedures in stack.
  *      before executing it.
@@ -51,11 +54,10 @@
  *            ? ProcName( n++ )
  *         end do
  *      return nil
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      PROCNAME() is fully CA-Cl*pper compliant.   </par>
+ *      C
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -64,36 +66,38 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      PROCLINE()
  *  $CATEGORY$
- *      Misc
+ *      API
+ *  $SUBCATEGORY$
+ *     Application
  *  $ONELINER$
  *      Gets the line number of the current function on the stack.
  *  $SYNTAX$
  *      PROCLINE( <nLevel> ) --> <nLine>
  *  $ARGUMENTS$
- *      <nLevel> is the function level required.   </par>
+ *      <nLevel> is the function level required.
  *  $RETURNS$
- *      <nLine> The line number of the function that it is being executed.   </par>
+ *      <nLine> The line number of the function that it is being executed.
  *  $DESCRIPTION$
  *      This function looks at the top of the stack and gets the current
  *      line number of the executed function if no arguments are passed.
  *      Otherwise it returns the line number of the function or procedure
- *      at <nLevel>.   </par>
+ *      at <nLevel>.
  *  $EXAMPLES$
  *      See Test
- *  </fixed>
  *  $TESTS$
  *      function Test()
  *         ? ProcLine( 0 )
  *         ? ProcName( 2 )
  *      return nil
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      PROCLINE() is fully CA-Cl*pper compliant.   </par>
+ *      C
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -102,35 +106,37 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      PROCFILE()
  *  $CATEGORY$
- *      Misc
+ *      API
+ *  $SUBCATEGORY$
+ *     Application
  *  $ONELINER$
  *      This function allways returns an empty string.
  *  $SYNTAX$
  *      PROCFILE( <xExp> ) --> <cEmptyString>
  *  $ARGUMENTS$
- *      <xExp> is any valid type.   </par>
+ *      <xExp> is any valid type.
  *  $RETURNS$
- *      <cEmptyString> Return an empty string   </par>
+ *      <cEmptyString> Return an empty string
  *  $DESCRIPTION$
  *      This function is added to the RTL for full compatibility. It
- *      always returns an empty string.   </par>
+ *      always returns an empty string.
  *  $EXAMPLES$
  *      ? ProcFile()
- *  </fixed>
  *  $TESTS$
  *      function Test()
  *         ? ProcFile()
  *         ? ProcFile( NIL )
  *         ? ProcFile( 2 )
  *      return nil
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      PROCFILE() is fully CA-Cl*pper compliant.   </par>
+ *      C
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -139,23 +145,26 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      HB_PVALUE()
  *  $CATEGORY$
- *      Parameter Checks
+ *      API
+ *  $SUBCATEGORY$
+ *      Application
  *  $ONELINER$
  *      Retrieves the value of an argument.
  *  $SYNTAX$
  *      HB_PVALUE( <nArg> ) --> <xExp>
  *  $ARGUMENTS$
- *      A number that indicates the argument to check.   </par>
+ *      A number that indicates the argument to check.
  *  $RETURNS$
- *      <xExp> Returns the value stored by an argument.   </par>
+ *      <xExp> Returns the value stored by an argument.
  *  $DESCRIPTION$
- *      This function is useful to check the value stored in an argument.   </par>
+ *      This function is useful to check the value stored in an argument.
  *  $EXAMPLES$
  *      See Test
- *  </fixed>
  *  $TESTS$
  *      function Test( nValue, cString )
  *         if PCount() == 2
@@ -163,11 +172,10 @@
  *            ? hb_PValue( 2 ), cString
  *         endif
  *      return nil
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      HB_PVALUE() is a new function and hence not CA-Cl*pper compliant.   </par>
+ *      H
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -176,25 +184,28 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      PCOUNT()
  *  $CATEGORY$
- *      Parameter Checks
+ *      API
+ *  $SUBCATEGORY$
+ *      Application
  *  $ONELINER$
  *      Retrieves the number of arguments passed to a function.
  *  $SYNTAX$
  *      PCOUNT() --> <nArgs>
  *  $ARGUMENTS$
- *      None   </par>
+ *      None
  *  $RETURNS$
  *      <nArgs> A number that indicates the number of arguments
- *      passed to a function or procedure.   </par>
+ *      passed to a function or procedure.
  *  $DESCRIPTION$
  *      This function is useful to check if a function or procedure
- *      has received the required number of arguments.   </par>
+ *      has received the required number of arguments.
  *  $EXAMPLES$
  *      See Test
- *  </fixed>
  *  $TESTS$
  *      function Test( xExp )
  *         if PCount() == 0
@@ -203,11 +214,10 @@
  *            ? xExp
  *         endif
  *      return nil
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      PCOUNT() is fully CA-Cl*pper compliant.   </par>
+ *      C
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -216,35 +226,35 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      __QUIT()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Events
  *  $ONELINER$
  *      Terminates an application.
  *  $SYNTAX$
- *      __QUIT() --> NIL
+ *      __QUIT()
  *  $ARGUMENTS$
- *      None   </par>
- *  $RETURNS$
- *      NIL   </par>
+ *      None
  *  $DESCRIPTION$
  *      This function terminates the current application and returns
- *      to the system.   </par>
+ *      to the system.
  *  $EXAMPLES$
  *      See Test
- *  </fixed>
  *  $TESTS$
  *      function EndApp( lYesNo )
  *         if lYesNo
  *            __Quit()
  *         endif
  *      return nil
- *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __QUIT() is fully CA-Cl*pper compliant.   </par>
+ *      C
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -253,56 +263,62 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      CLIPINIT()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Internal
  *  $ONELINER$
  *      Initialize various Harbour sub-systems
  *  $SYNTAX$
  *      CLIPINIT() --> NIL
  *  $ARGUMENTS$
- *      none.   </par>
+ *      none.
  *  $RETURNS$
- *      CLIPINIT() always return NIL.   </par>
+ *      CLIPINIT() always return NIL.
  *  $DESCRIPTION$
  *      CLIPINIT() is one of the pre-defined INIT PROCEDURE and is executed
  *      at program startup. It declare an empty MEMVAR PUBLIC array called
  *      GetList that is going to be used by the Get system. It activates the
  *      default error handler, and (at least for the moment) calls the
- *      function that sets the default help key.   </par>
+ *      function that sets the default help key.
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      It is said that CLIPINIT() should not call the function that sets
- *      the default help key since CA-Cl*pper does it in some other place.   </par>
+ *      the default help key since CA-Cl*pper does it in some other place.
  *  $PLATFORMS$
- *      All   </par>
+ *      All
  *  $SEEALSO$
  *       INIT PROCEDURE
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      __SetHelpK()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Internal
  *  $ONELINER$
  *      Set F1 as the default help key
  *  $SYNTAX$
- *      __SetHelpK() --> NIL
+ *      __SetHelpK()
  *  $ARGUMENTS$
- *      None.   </par>
- *  $RETURNS$
- *      __SetHelpK() always return NIL.   </par>
+ *      None.
  *  $DESCRIPTION$
  *      Set F1 to execute a function called HELP if such a function is
- *      linked into the program.   </par>
+ *      linked into the program.
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __SetHelpK() works exactly like CA-Cl*pper's __SetHelpK()   </par>
+ *      C
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -311,29 +327,30 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      BREAK()
  *  $CATEGORY$
- *      Error recovery
+ *      API
+ *  $SUBCATEGORY$
+ *      Error
  *  $ONELINER$
  *      Exits from a BEGIN SEQUENCE block
  *  $SYNTAX$
- *      BREAK( <xExp> ) --> NIL
+ *      BREAK( <xExp> )
  *  $ARGUMENTS$
  *      <xExp> is any valid expression. It is always required.
- *      If do not want to pass any argument, just use NIL.   </par>
- *  $RETURNS$
- *      NIL   </par>
+ *      If do not want to pass any argument, just use NIL.
  *  $DESCRIPTION$
  *      This function passes control to the RECOVER statement in a
- *      BEGIN SEQUENCE block.   </par>
+ *      BEGIN SEQUENCE block.
  *  $EXAMPLES$
  *      Break( NIL )
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      BREAK() is fully CA-Cl*pper compliant.   </par>
+ *      C
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -342,63 +359,78 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      DO()
  *  $CATEGORY$
- *      Utility
+ *      API
+ *  $SUBCATEGORY$
+ *      Application
  *  $ONELINER$
  *      Calls a procedure or a function
  *  $SYNTAX$
- *      DO( <xFuncProc> [, <xArguments...>] )
+ *      DO( <xFuncProc> [, <xArguments...>] ) --> <xRetVal>
  *  $ARGUMENTS$
  *      <xFuncProc> = Either a string with a function/procedure name to be called
- *      or a codeblock to evaluate.   </par>
+ *      or a codeblock to evaluate.
+ *
  *      <xArguments> = arguments passed to a called function/procedure or to
- *      a codeblock.   </par>
+ *      a codeblock.
  *  $RETURNS$
- *      A value that was returned from called function.   </par>
+ *      <xRetVal> A value that was returned from called function.
  *  $DESCRIPTION$
  *      This function can be called either by the harbour compiler or by user.
  *      The compiler always passes the item of IT_SYMBOL type that stores the
- *      name of procedure specified in DO <proc> WITH ... statement.   </par>
+ *      name of procedure specified in DO <proc> WITH ... statement.
+ *
  *      If called procedure/function doesn't exist then a runtime error
- *      is generated.   </par>
+ *      is generated.
+ *
  *      This function can be used as replacement of macro operator.
  *      It is also used internally to implement DO <proc> WITH <args...>
- *      In this case <xFuncProc> is of type HB_SYMB.   </par>
+ *      In this case <xFuncProc> is of type HB_SYMB.
  *  $EXAMPLES$
  *      cbCode ={|x| MyFunc( x )}
  *      DO( cbCode, 1 )
  *
  *      cFunction := "MyFunc"
- *      xRetVal :=DO( cFunction, 2 )
+ *      xRetVal := DO( cFunction, 2 )
  *
- *      Old style (slower):
+ *      // Old style (slower):
  *      DO &cFunction WITH 3
- *  </fixed>
+ *  $COMPLIANCE$
+ *      C
  *  $FILES$
  *      Library is rtl
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __DBGVMVARLGET()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Variable Management
  *  $ONELINER$
  *      Retrive a local variable from a procedure level
  *  $SYNTAX$
- *      __DBGVMVARLGET( <nProcLevel>, <nLocal> )
+ *      __DBGVMVARLGET( <nProcLevel>, <nLocal> ) --> <xRetVal>
  *  $ARGUMENTS$
  *      <nProcLevel> Is the procedure level, same as used in ProcName()
  *      and ProcLine(), from which a local variable containts is going to
- *      be retrieved.   </par>
- *      <nLocal> Is the index of the local variable to retrieve.   </par>
+ *      be retrieved.
+ *
+ *      <nLocal> Is the index of the local variable to retrieve.
  *  $RETURNS$
- *      The containts of a specific local variable   </par>
+ *      <xRetVal> The content of a specific local variable
  *  $DESCRIPTION$
- *      This function is used from the debugger   </par>
+ *      This function is used from the debugger
+ *  $COMPLIANCE$
+ *
  *  $FILES$
  *      Library is vm
  *  $END$

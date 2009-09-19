@@ -76,7 +76,7 @@ CLASS HEADER TEMPLATE
 ========================
 
 /*  $CLASSDOC$
- *  $FUNCNAME$
+ *  $NAME$
  *
  *  $CATEGORY$
  *
@@ -116,33 +116,33 @@ CLASS HEADER TEMPLATE
  */
 
 
-/*  $CLASSDOC$     
+/*  $CLASSDOC$
  *  $METHOD$
- *  
+ *
  *  $CATEGORY$
  *
  *  $ONELINER$
- *  
+ *
  *  $SYNTAX$
- *  
+ *
  *  $ARGUMENTS$
- *  
+ *
  *  $RETURNS$
- *  
+ *
  *  $DESCRIPTION$
- *  
- *  $END$           
+ *
+ *  $END$
  */
 
-/*  $CLASSDOC$      
+/*  $CLASSDOC$
  *  $DATA$
- * 
+ *
  *  $CATEGORY$
  *
  *  $ONELINER$
- * 
- *  $DESCRIPTION$  
- * 
- *  $END$           
+ *
+ *  $DESCRIPTION$
+ *
+ *  $END$
  */
 

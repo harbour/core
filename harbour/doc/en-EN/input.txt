@@ -14,10 +14,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      INKEY()
  *  $CATEGORY$
- *      Console input
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Extracts the next key code from the Harbour keyboard buffer.
  *  $SYNTAX$
@@ -51,6 +55,7 @@
  *        INKEY_ALL           All mouse and keyboard events are allowed
  *        HB_INKEY_EXTENDED   Extended keyboard codes are used.
  *        </table>
+ *
  *      If the parameter is not numeric, it will be treated as if it were set
  *      to hb_set.HB_SET_EVENTMASK.
  *  $RETURNS$
@@ -91,19 +96,17 @@
  *      ? "Please press the ESC key."
  *      WHILE INKEY( 0.1 ) != K_ESC
  *      END
- *  </fixed>
  *  $TESTS$
  *      KEYBOARD "AB"; ? INKEY(), INKEY() ==>   65   66
- *  </fixed>
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      INKEY() is compliant with the Clipper 5.3 INKEY() function with one
+ *      INKEY() is compliant with the CA-Cl*pper 5.3 INKEY() function with one
  *      exception: The Harbour INKEY() function will raise an argument error
  *      if the first parameter is less than or equal to 0 and the second
  *      parameter (or the default mask) is not valid, because otherwise INKEY
  *      would never return, because it was, in effect, asked to wait forever
- *      for no events (Note: In Clipper, this also blocks SET KEY events).
+ *      for no events (Note: In CA-Cl*pper, this also blocks SET KEY events).
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -111,12 +114,15 @@
  *  $END$
  */
 
-
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      __KEYBOARD()
  *  $CATEGORY$
- *      Console input
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      DO NOT CALL THIS FUNCTION DIRECTLY!
  *  $SYNTAX$
@@ -124,10 +130,10 @@
  *      CLEAR TYPEAHEAD
  *  $ARGUMENTS$
  *      <cString> is the optional string to stuff into the Harbour keyboard
- *      buffer after clearing it first. Note: The character ";" is converted
+ *      buffer after clearing it first.
+ *
+ *      Note: The character ";" is converted
  *      to CHR(13) (this is an undocumented CA-Cl*pper feature).
- *  $RETURNS$
- *      There is no return value.
  *  $DESCRIPTION$
  *      Clears the Harbour keyboard typeahead buffer and then inserts an
  *      optional string into it.
@@ -136,12 +142,10 @@
  *      KEYBOARD CHR(13)
  *      // Clear the keyboard buffer
  *      CLEAR TYPEAHEAD
- *  </fixed>
  *  $TESTS$
  *      KEYBOARD CHR(13); ? INKEY() ==> 13
  *      KEYBOARD ";" ? INKEY() ==> 13
  *      KEYBOARD "HELLO"; CLEAR TYPEAHEAD; ? INKEY() ==> 0
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -154,10 +158,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      HB_KEYPUT()
  *  $CATEGORY$
- *      Console input
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Put an inkey code to the keyboard buffer.
  *  $SYNTAX$
@@ -176,15 +184,13 @@
  *  $EXAMPLES$
  *      // Stuff an Alt+PgDn key into the keyboard buffer
  *      HB_KEYPUT( K_ALT_PGDN )
- *  </fixed>
  *  $TESTS$
  *      HB_KEYPUT( K_ALT_PGDN ) ; ? INKEY() ==> 417
  *      HB_KEYPUT( K_F11 ) ; ? INKEY() ==> -40
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      HB_KEYPUT() is a Harbour extension.
+ *      H
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -193,10 +199,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      NEXTKEY()
  *  $CATEGORY$
- *      Console input
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Get the next key code in the buffer without extracting it.
  *  $SYNTAX$
@@ -205,7 +215,7 @@
  *      nInputMask is an optional integer value composed of one or more
  *      INKEY_ or HB_INKEY_ constants. The sole purpose of this argument
  *      is to allow switching between using HB_INKEY_EXTENDED key codes
- *      and using the normal Clipper-compatible key codes
+ *      and using the normal CA-Cl*pper-compatible key codes
  *  $RETURNS$
  *      <nKey>  The value of the next key in the Harbour keyboard buffer.
  *  $DESCRIPTION$
@@ -226,10 +236,8 @@
  *            END IF
  *         END IF
  *      END WHILE
- *  </fixed>
  *  $TESTS$
  *      KEYBOARD "AB"; ? NEXTKEY(), NEXTKEY() ==>   65   65
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -243,10 +251,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      LASTKEY()
  *  $CATEGORY$
- *      Console input
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Get the last key extracted from the keyboard buffer.
  *  $SYNTAX$
@@ -255,7 +267,7 @@
  *      nInputMask is an optional integer value composed of one or more
  *      INKEY_ or HB_INKEY_ constants. The sole purpose of this argument
  *      is to allow switching between using HB_INKEY_EXTENDED key codes
- *      and using the normal Clipper-compatible key codes
+ *      and using the normal CA-Cl*pper-compatible key codes
  *  $RETURNS$
  *      <nKey>  The last key extracted from the keyboard buffer.
  *  $DESCRIPTION$
@@ -269,10 +281,8 @@
  *            EXIT
  *         ENDIF
  *      END WHILE
- *  </fixed>
  *  $TESTS$
  *      KEYBOARD "AB"; ? INKEY(), LASTKEY() ==>   65   65
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -287,10 +297,14 @@
 
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      KEYBOARD
  *  $CATEGORY$
  *      Command
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Stuffs the keyboard with a string.
  *  $SYNTAX$
@@ -299,39 +313,44 @@
  *      <cString> String to be processed, one character at a time,
  *      by the Harbour keyboard processor
  *  $DESCRIPTION$
- *      This command stuffs the input buffer with <cString>. The
- *      number of characters that can be stuffed into the keyboard
+ *      This command stuffs the input buffer with <cString>.
+ *
+ *      The number of characters that can be stuffed into the keyboard
  *      buffer is controlled by the SET TYPEAHEAD command and may range
- *      from 0 to 32,622, with each character appearing in the ASCII
- *      range of 0 to 255. None of the extended keys may be stuffed
- *      into the keyboard buffer.
+ *      from 0 to 32,622, with each character being in the ASCII
+ *      range of 0 to 255.
+ *
+ *      None of the extended keys may be stuffed into the keyboard buffer.
+ *
  *      Issuing a KEYBOARD " " will clear the keyboard buffer.
  *  $EXAMPLES$
  *      // Stuff an Enter key into the keyboard buffer
  *      KEYBOARD CHR(13)
  *      // Clear the keyboard buffer
  *      CLEAR TYPEAHEAD
- *  </fixed>
  *  $TESTS$
  *      KEYBOARD CHR(13); ? INKEY() ==> 13
  *      KEYBOARD "HELLO"; CLEAR TYPEAHEAD; ? INKEY() ==> 0
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __KEYBOARD() is compliant with CA-Cl*pper 5.3
+ *      KEYBOARD is compliant with CA-Cl*pper 5.3
  *  $SEEALSO$
  *       CLEAR TYPEAHEAD,__KEYBOARD()
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      READKEY()*
  *  $CATEGORY$
- *      Data input and output
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
- *      Find out which key terminated a READ.
+ *      Determine which key terminated a READ.
  *  $SYNTAX$
  *      READKEY() --> nKeyCode
  *  $ARGUMENTS$
@@ -360,6 +379,7 @@
  *      Key >= 32            15            271
  *      otherwise             0            0
  *      </table>
+ *
  *      READKEY() is a compatibility function so try not to use it.
  *      READKEY() is superseded by LASTKEY() which returns the INKEY()
  *      code for that key.  UPDATED() could be used to find if the
@@ -376,10 +396,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      MROW()
  *  $CATEGORY$
- *      Console input
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Returns the mouse cursor row position.
  *  $SYNTAX$
@@ -392,18 +416,18 @@
  *      This function returns the current mouse row cursor position.
  *      On graphical systems the value represents pixel rows.
  *      On character-based systems the value represents character
- *      rows as in Clipper.
+ *      rows as in CA-Cl*pper.
  *  $EXAMPLES$
  *      IF MRow() < 1
  *         ? "Mouse is on top row!"
  *      ENDIF
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      MROW() is compliant with CA-Cl*pper 5.3, but has been extended
  *      to work on graphical systems as well as character-based systems.
  *  $PLATFORMS$
+ *
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -412,10 +436,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      MCOL()
  *  $CATEGORY$
- *      Console input
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Returns the mouse cursor column position.
  *  $SYNTAX$
@@ -428,16 +456,15 @@
  *      This function returns the column position of the mouse cursor.
  *      On graphical systems the value represents pixels.
  *      On character-based systems the value represents character
- *      columns as in Clipper.
+ *      columns as in CA-Cl*pper.
  *  $EXAMPLES$
  *      IF MCol() < 1
  *         ? "Mouse is on left edge!"
  *      ENDIF
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      MROW() is compliant with CA-Cl*pper 5.3, but has been extended
+ *      MCOL() is compliant with CA-Cl*pper 5.3, but has been extended
  *      to work on graphical systems as well as character-based systems.
  *  $PLATFORMS$
  *      All

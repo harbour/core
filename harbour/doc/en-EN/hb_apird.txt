@@ -7,17 +7,21 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
- *   Header file for the RDD API
+ *   Header file for the API
  *
  * See COPYING for licensing terms.
  *
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_rddInsertAreaNode()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -28,7 +32,7 @@
  *  $ARGUMENTS$
  *      <*szDriver>
  *  $RETURNS$
- *
+ *      <usResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -36,7 +40,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rdd, nulsys, dbfntx, dbfcdx
  *  $PLATFORMS$
@@ -47,10 +51,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_rddGetCurrentWorkAreaNumber()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -61,7 +69,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <iResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -69,7 +77,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rdd, nulsys, dbfntx, dbfcdx
  *  $PLATFORMS$
@@ -80,10 +88,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_rddGetCurrentWorkAreaPointer()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -94,7 +106,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -102,7 +114,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rdd, nulsys, dbfntx, dbfcdx
  *  $PLATFORMS$
@@ -113,10 +125,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_rddSelectWorkAreaAlias()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -127,7 +143,7 @@
  *  $ARGUMENTS$
  *      <szAlias>
  *  $RETURNS$
- *
+ *      <hResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -135,7 +151,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rdd, nulsys, dbfntx, dbfcdx
  *  $PLATFORMS$
@@ -146,10 +162,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_rddSelectWorkAreaNumber()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -160,7 +180,7 @@
  *  $ARGUMENTS$
  *      <iArea>
  *  $RETURNS$
- *
+ *      <hResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -168,7 +188,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rdd, nulsys, dbfntx, dbfcdx
  *  $PLATFORMS$
@@ -179,10 +199,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_rddSelectWorkAreaSymbol()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -193,7 +217,7 @@
  *  $ARGUMENTS$
  *      <pSymAlias>
  *  $RETURNS$
- *
+ *      <hResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -201,7 +225,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rdd, nulsys, dbfntx, dbfcdx
  *  $PLATFORMS$
@@ -212,10 +236,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_rddGetFieldValue()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -228,7 +256,7 @@
  *
  *      <pFieldSymbol>
  *  $RETURNS$
- *
+ *      <hResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -236,7 +264,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rdd, nulsys, dbfntx, dbfcdx
  *  $PLATFORMS$
@@ -247,10 +275,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_rddPutFieldValue()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -263,7 +295,7 @@
  *
  *      <pFieldSymbol>
  *  $RETURNS$
- *
+ *      <hResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -271,7 +303,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rdd, nulsys, dbfntx, dbfcdx
  *  $PLATFORMS$
@@ -282,10 +314,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_rddFieldGet()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -298,7 +334,7 @@
  *
  *      <pFieldSymbol>
  *  $RETURNS$
- *
+ *      <hResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -306,7 +342,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rdd, nulsys, dbfntx, dbfcdx
  *  $PLATFORMS$
@@ -317,10 +353,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_rddFieldPut()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -333,7 +373,7 @@
  *
  *      <pFieldSymbol>
  *  $RETURNS$
- *
+ *      <hResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -341,7 +381,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rdd, nulsys, dbfntx, dbfcdx
  *  $PLATFORMS$
@@ -352,20 +392,22 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      hb_rddShutDown()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
  *      C Prototype
  *
  *      #include <hbapirdd.h>
- *      hb_rddShutDown( void ) --> void
+ *      hb_rddShutDown( void )
  *  $ARGUMENTS$
- *
- *  $RETURNS$
  *
  *  $DESCRIPTION$
  *
@@ -374,7 +416,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rdd, nulsys, dbfntx, dbfcdx
  *  $PLATFORMS$
@@ -385,10 +427,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_rddInherit()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -405,7 +451,7 @@
  *
  *      <szDrvName>
  *  $RETURNS$
- *
+ *      <hResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -413,7 +459,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rdd, nulsys, dbfntx, dbfcdx
  *  $PLATFORMS$
@@ -424,10 +470,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_rddDisinherit()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -438,7 +488,7 @@
  *  $ARGUMENTS$
  *      <drvName>
  *  $RETURNS$
- *
+ *      <hResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -446,7 +496,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rdd, nulsys, dbfntx, dbfcdx
  *  $PLATFORMS$
@@ -457,10 +507,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_rddExtendType()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -471,7 +525,7 @@
  *  $ARGUMENTS$
  *      <fieldType>
  *  $RETURNS$
- *
+ *      <usResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -479,7 +533,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rdd, nulsys, dbfntx, dbfcdx
  *  $PLATFORMS$
@@ -490,10 +544,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_rddFieldType()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -504,7 +562,7 @@
  *  $ARGUMENTS$
  *      <extendType>
  *  $RETURNS$
- *
+ *      <usResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -512,7 +570,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rdd, nulsys, dbfntx, dbfcdx
  *  $PLATFORMS$
@@ -523,10 +581,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_BOF()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -539,7 +601,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->bof )( w, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -547,7 +609,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -558,10 +620,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_EOF()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -574,7 +640,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->eof )( w, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -582,7 +648,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -593,10 +659,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_FOUND()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -609,7 +679,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->found )( w, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -617,7 +687,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -628,10 +698,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_GOTO()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -644,7 +718,7 @@
  *
  *      <l>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->go )( w, l ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -652,7 +726,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -663,10 +737,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_GOTOID()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -679,7 +757,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->goToId )( w, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -687,7 +765,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -698,10 +776,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_GOBOTTOM()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -712,7 +794,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->goBottom )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -720,7 +802,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -731,10 +813,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_GOTOP()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -745,7 +831,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->goTop )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -753,7 +839,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -764,10 +850,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_SEEK()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -784,7 +874,7 @@
  *
  *      <i2>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->seek )( w, i1, v, i2 ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -792,7 +882,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -803,10 +893,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_SKIP()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -819,7 +913,7 @@
  *
  *      <l>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->skip )( w, l ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -827,7 +921,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -838,10 +932,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_SKIPFILTER()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -854,7 +952,7 @@
  *
  *      <l>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->skipFilter )( w, l ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -862,7 +960,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -873,10 +971,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_SKIPRAW()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -889,7 +991,7 @@
  *
  *      <l>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->skipRaw )( w, l ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -897,7 +999,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -908,10 +1010,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_ADDFIELD()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -924,7 +1030,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->addField )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -932,7 +1038,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -943,10 +1049,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_APPEND()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -959,7 +1069,7 @@
  *
  *      <l>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->append )( w, l ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -967,7 +1077,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -978,10 +1088,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_CREATEFIELDS()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -994,7 +1108,7 @@
  *
  *      <v>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->createFields )( w, v ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1002,7 +1116,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1013,10 +1127,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_DELETE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1027,7 +1145,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->deleterec )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1035,7 +1153,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1046,10 +1164,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_DELETED()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1062,7 +1184,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->deleted )( w, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1070,7 +1192,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1081,10 +1203,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_FIELDCOUNT()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1097,7 +1223,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->fieldCount )( w, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1105,7 +1231,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1116,10 +1242,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_FIELDDISPLAY()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1132,7 +1262,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->fieldDisplay )( w, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1140,7 +1270,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1151,10 +1281,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_FIELDINFO()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1171,7 +1305,7 @@
  *
  *      <v>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->fieldInfo )( w, s1, s2, v ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1179,7 +1313,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1190,10 +1324,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_FIELDNAME()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1208,7 +1346,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->fieldName )( w, i, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1216,7 +1354,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1227,10 +1365,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_FLUSH()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1241,7 +1383,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->flush )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1249,7 +1391,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1260,10 +1402,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_GETREC()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1276,7 +1422,7 @@
  *
  *      <bpp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->getRec )( w, bpp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1284,7 +1430,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1295,10 +1441,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_GETVALUE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1313,7 +1463,7 @@
  *
  *      <v>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->getValue )( w, i, v ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1321,7 +1471,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1332,10 +1482,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_GETVARLEN()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1350,7 +1504,7 @@
  *
  *      <lp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->getVarLen )( w, i, lp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1358,7 +1512,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1369,10 +1523,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_GOCOLD()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1383,7 +1541,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->goCold )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1391,7 +1549,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1402,10 +1560,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_GOHOT()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1416,7 +1578,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->goHot )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1424,7 +1586,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1435,10 +1597,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_PUTVALUE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1453,7 +1619,7 @@
  *
  *      <v>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->putValue )( w, i, v ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1461,7 +1627,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1472,10 +1638,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_PUTREC()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1488,7 +1658,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->putRec )( w, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1496,7 +1666,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1507,10 +1677,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_RECALL()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1521,7 +1695,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->recall )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1529,7 +1703,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1540,10 +1714,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_RECCOUNT()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1556,7 +1734,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->reccount )( w, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1564,7 +1742,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1575,10 +1753,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_RECINFO()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1595,7 +1777,7 @@
  *
  *      <v2>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->recInfo )( w, v1, i, v2 ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1603,7 +1785,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1614,10 +1796,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_RECNO()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1630,7 +1816,7 @@
  *
  *      <i>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->recno )( w, i ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1638,7 +1824,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1649,10 +1835,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_SETFIELDEXTENT()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1665,7 +1855,7 @@
  *
  *      <s>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->setFieldExtent )( w, s ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1673,7 +1863,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1684,10 +1874,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_ALIAS()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1700,7 +1894,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->alias )( w, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1708,7 +1902,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1719,10 +1913,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_CLOSE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1733,7 +1931,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->close )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1741,7 +1939,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1752,10 +1950,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_CREATE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1768,7 +1970,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->create )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1776,7 +1978,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1787,10 +1989,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_INFO()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1805,7 +2011,7 @@
  *
  *      <g>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->info )( w, i, g ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1813,7 +2019,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1824,10 +2030,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_NEW()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1838,7 +2048,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->newarea )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1846,7 +2056,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1857,10 +2067,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_OPEN()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1873,7 +2087,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->open )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1881,7 +2095,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1892,10 +2106,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_RELEASE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1906,7 +2124,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->release )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1914,7 +2132,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1925,10 +2143,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_STRUCTSIZE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1941,7 +2163,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->structSize )( w, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1949,7 +2171,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1960,10 +2182,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_SYSNAME()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1976,7 +2202,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->sysName )( w, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1984,7 +2210,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -1995,10 +2221,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_DBEVAL()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2011,7 +2241,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->dbEval )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2019,7 +2249,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2030,10 +2260,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_PACK()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2044,7 +2278,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->pack )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2052,7 +2286,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2063,10 +2297,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_PACKREC()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2081,7 +2319,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->packRec )( w, l, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2089,7 +2327,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2100,10 +2338,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_SORT()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2116,7 +2358,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->sort )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2124,7 +2366,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2135,10 +2377,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_TRANS()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2151,7 +2397,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->trans )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2159,7 +2405,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2170,10 +2416,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_TRANSREC()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2186,7 +2436,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->transRec )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2194,7 +2444,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2205,10 +2455,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_ZAP()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2219,7 +2473,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->zap )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2227,7 +2481,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2238,10 +2492,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_CHILDEND()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2254,7 +2512,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->childEnd )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2262,7 +2520,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2273,10 +2531,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_CHILDSTART()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2289,7 +2551,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->childStart )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2297,7 +2559,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2308,10 +2570,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_CHILDSYNC()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2324,7 +2590,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->childSync )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2332,7 +2598,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2343,10 +2609,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_SYNCCHILDREN()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2357,7 +2627,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->syncChildren )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2365,7 +2635,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2376,10 +2646,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_CLEARREL()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2390,7 +2664,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->clearRel )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2398,7 +2672,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2409,10 +2683,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_FORCEREL()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2423,7 +2701,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->forceRel )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2431,7 +2709,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2442,10 +2720,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_RELAREA()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2460,7 +2742,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->relArea )( w, s, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2468,7 +2750,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2479,10 +2761,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_RELEVAL()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2495,7 +2781,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->relEval )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2503,7 +2789,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2514,10 +2800,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_RELTEXT()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2532,7 +2822,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->relText )( w, s, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2540,7 +2830,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2551,10 +2841,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_SETREL()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2567,7 +2861,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->setRel )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2575,7 +2869,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2586,10 +2880,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_ORDLSTADD()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2602,7 +2900,7 @@
  *
  *      <lp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->orderListAdd )( w, lp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2610,7 +2908,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2621,10 +2919,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_ORDLSTDELETE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2637,7 +2939,7 @@
  *
  *      <lp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->orderListDelete )( w, lp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2645,7 +2947,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2656,10 +2958,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_ORDLSTFOCUS()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2672,7 +2978,7 @@
  *
  *      <lp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->orderListFocus )( w, lp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2680,7 +2986,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2691,10 +2997,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_ORDLSTREBUILD()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2705,7 +3015,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->orderListRebuild )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2713,7 +3023,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2724,10 +3034,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_ORDLSTCLEAR()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2738,7 +3052,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->orderListClear )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2746,7 +3060,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2757,10 +3071,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_ORDSETCOND()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2773,7 +3091,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->orderCondition )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2781,7 +3099,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2792,10 +3110,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_ORDCREATE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2808,7 +3130,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->orderCreate )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2816,7 +3138,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2827,10 +3149,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_ORDDESTROY()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2843,7 +3169,7 @@
  *
  *      <p>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->orderDestroy )( w, p ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2851,7 +3177,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2862,10 +3188,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_ORDINFO()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2880,7 +3210,7 @@
  *
  *      <p>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->orderInfo )( w, i, p ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2888,7 +3218,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2899,10 +3229,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_ORDEXPR()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2915,7 +3249,7 @@
  *
  *      <p>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_EXPRESSION, p ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2923,7 +3257,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2934,10 +3268,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_ORDCOND()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2950,7 +3288,7 @@
  *
  *      <p>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_CONDITION,  p ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2958,7 +3296,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -2969,10 +3307,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_ORDRECNO()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2985,7 +3327,7 @@
  *
  *      <p>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_RECNO,      p ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2993,7 +3335,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3004,10 +3346,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_ORDPOS()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3020,7 +3366,7 @@
  *
  *      <p>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_POSITION,   p ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3028,7 +3374,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3039,10 +3385,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_ORDNUMBER()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3055,7 +3405,7 @@
  *
  *      <p>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_NUMBER,     p ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3063,7 +3413,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3074,10 +3424,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_ORDNAME()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3090,7 +3444,7 @@
  *
  *      <p>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_NAME,       p ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3098,7 +3452,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3109,10 +3463,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_ORDBAGNAME()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3125,7 +3483,7 @@
  *
  *      <p>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_BAGNAME,    p ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3133,7 +3491,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3144,10 +3502,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_ORDBAGEXT()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3160,7 +3522,7 @@
  *
  *      <p>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_BAGEXT,     p ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3168,7 +3530,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3179,10 +3541,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_CLEARFILTER()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3193,7 +3559,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->clearFilter )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3201,7 +3567,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3212,10 +3578,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_CLEARLOCATE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3226,7 +3596,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->clearLocate )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3234,7 +3604,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3245,10 +3615,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_CLEARSCOPE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3259,7 +3633,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->clearScope )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3267,7 +3641,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3278,10 +3652,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_COUNTSCOPE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3296,7 +3674,7 @@
  *
  *      <lp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->countScope )( w, ip, lp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3304,7 +3682,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3315,10 +3693,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_FILTERTEXT()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3331,7 +3713,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->filterText )( w, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3339,7 +3721,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3350,10 +3732,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_SCOPEINFO()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3368,7 +3754,7 @@
  *
  *      <v>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->scopeInfo )( w, i, v ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3376,7 +3762,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3387,10 +3773,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_SETFILTER()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3403,7 +3793,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->setFilter )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3411,7 +3801,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3422,10 +3812,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_SETLOCATE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3438,7 +3832,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->setLocate )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3446,7 +3840,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3457,10 +3851,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_SETSCOPE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3473,7 +3871,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->setScope )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3481,7 +3879,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3492,10 +3890,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_SKIPSCOPE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3510,7 +3912,7 @@
  *
  *      <l>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->skipScope )( w, bp, l ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3518,7 +3920,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3529,10 +3931,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_COMPILE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3545,7 +3951,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->compile )( w, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3553,7 +3959,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3564,10 +3970,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_ERROR()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3580,7 +3990,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->error )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3588,7 +3998,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3599,10 +4009,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_EVALBLOCK()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3615,7 +4029,7 @@
  *
  *      <v>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->evalBlock )( w, v ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3623,7 +4037,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3634,10 +4048,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_GETLOCKS()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3650,7 +4068,7 @@
  *
  *      <g>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->info )( w, DBI_GETLOCKARRAY, g ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3658,7 +4076,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3669,10 +4087,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_RAWLOCK()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3687,7 +4109,7 @@
  *
  *      <l>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->rawlock )( w, i, l ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3695,7 +4117,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3706,10 +4128,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_LOCK()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3722,7 +4148,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->lock )( w, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3730,7 +4156,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3741,10 +4167,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_UNLOCK()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3757,7 +4187,7 @@
  *
  *      <l>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->unlock )( w, l ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3765,7 +4195,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3776,10 +4206,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_CLOSEMEMFILE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3790,7 +4224,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->closeMemFile )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3798,7 +4232,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3809,10 +4243,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_CREATEMEMFILE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3825,7 +4263,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->createMemFile )( w, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3833,7 +4271,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3844,10 +4282,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_GETVALUEFILE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3862,7 +4304,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->getValueFile )( w, i, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3870,7 +4312,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3881,10 +4323,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_OPENMEMFILE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3897,7 +4343,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->openMemFile )( w, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3905,7 +4351,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3916,10 +4362,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_PUTVALUEFILE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3934,7 +4384,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->putValueFile )( w, i, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3942,7 +4392,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3953,10 +4403,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_READDBHEADER()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3967,7 +4421,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->readDBHeader )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3975,7 +4429,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -3986,10 +4440,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_WRITEDBHEADER()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4000,7 +4458,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->writeDBHeader )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4008,7 +4466,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4019,10 +4477,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_RECSIZE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4035,7 +4497,7 @@
  *
  *      <lp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->info )( w, DBI_GETRECSIZE, lp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4043,7 +4505,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4054,10 +4516,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_HEADERSIZE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4070,7 +4536,7 @@
  *
  *      <fp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->info )( w, DBI_GETHEADERSIZE, fp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4078,7 +4544,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4089,10 +4555,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_LUPDATE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4105,7 +4575,7 @@
  *
  *      <fp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->info )( w, DBI_LASTUPDATE, fp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4113,7 +4583,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4124,10 +4594,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_SETDELIM()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4140,7 +4614,7 @@
  *
  *      <fp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->info )( w, DBI_SETDELIMITER, fp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4148,7 +4622,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4159,10 +4633,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_GETDELIM()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4175,7 +4653,7 @@
  *
  *      <fp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->info )( w, DBI_GETDELIMITER, fp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4183,7 +4661,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4194,10 +4672,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELF_TABLEEXT()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4210,7 +4692,7 @@
  *
  *      <fp>
  *  $RETURNS$
- *
+ *      <see ( ( *( w )->lprfsHost->info )( w, DBI_TABLEEXT, fp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4218,7 +4700,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4229,10 +4711,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_BOF()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4245,7 +4731,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->bof )( w, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4253,7 +4739,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4264,10 +4750,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_EOF()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4280,7 +4770,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->eof )( w, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4288,7 +4778,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4299,10 +4789,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_FOUND()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4315,7 +4809,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->found )( w, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4323,7 +4817,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4334,10 +4828,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_GOTO()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4350,7 +4848,7 @@
  *
  *      <l>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->go )( w, l ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4358,7 +4856,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4369,10 +4867,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_GOTOID()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4385,7 +4887,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->goToId )( w, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4393,7 +4895,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4404,10 +4906,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_GOBOTTOM()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4418,7 +4924,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->goBottom )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4426,7 +4932,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4437,10 +4943,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_GOTOP()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4451,7 +4961,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->goTop )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4459,7 +4969,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4470,10 +4980,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_SEEK()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4490,7 +5004,7 @@
  *
  *      <i2>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->seek )( w, i1, v, i2 ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4498,7 +5012,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4509,10 +5023,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_SKIP()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4525,7 +5043,7 @@
  *
  *      <l>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->skip )( w, l ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4533,7 +5051,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4544,10 +5062,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_SKIPFILTER()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4560,7 +5082,7 @@
  *
  *      <l>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->skipFilter )( w, l ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4568,7 +5090,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4579,10 +5101,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_SKIPRAW()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4595,7 +5121,7 @@
  *
  *      <l>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->skipRaw )( w, l ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4603,7 +5129,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4614,10 +5140,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_ADDFIELD()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4630,7 +5160,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->addField )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4638,7 +5168,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4649,10 +5179,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_APPEND()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4665,7 +5199,7 @@
  *
  *      <l>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->append )( w, l ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4673,7 +5207,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4684,10 +5218,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_CREATEFIELDS()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4700,7 +5238,7 @@
  *
  *      <v>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->createFields )( w, v ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4708,7 +5246,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4719,10 +5257,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_DELETE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4733,7 +5275,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->deleterec )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4741,7 +5283,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4752,10 +5294,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_DELETED()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4768,7 +5314,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->deleted )( w, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4776,7 +5322,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4787,10 +5333,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_FIELDCOUNT()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4803,7 +5353,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->fieldCount )( w, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4811,7 +5361,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4822,10 +5372,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_FIELDDISPLAY()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4838,7 +5392,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->fieldDisplay )( w, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4846,7 +5400,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4857,10 +5411,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_FIELDINFO()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4877,7 +5435,7 @@
  *
  *      <v>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->fieldInfo )( w, s1, s2, v ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4885,7 +5443,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4896,10 +5454,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_FIELDNAME()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4914,7 +5476,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->fieldName )( w, i, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4922,7 +5484,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4933,10 +5495,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_FLUSH()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4947,7 +5513,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->flush )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4955,7 +5521,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -4966,10 +5532,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_GETREC()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4982,7 +5552,7 @@
  *
  *      <bpp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->getRec )( w, bpp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4990,7 +5560,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5001,10 +5571,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_GETVALUE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5019,7 +5593,7 @@
  *
  *      <v>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->getValue )( w, i, v ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5027,7 +5601,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5038,10 +5612,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_GETVARLEN()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5056,7 +5634,7 @@
  *
  *      <lp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->getVarLen )( w, i, lp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5064,7 +5642,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5075,10 +5653,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_GOCOLD()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5089,7 +5671,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->goCold )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5097,7 +5679,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5108,10 +5690,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_GOHOT()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5122,7 +5708,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->goHot )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5130,7 +5716,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5141,10 +5727,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_PUTVALUE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5159,7 +5749,7 @@
  *
  *      <v>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->putValue )( w, i, v ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5167,7 +5757,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5178,10 +5768,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_PUTREC()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5194,7 +5788,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->putRec )( w, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5202,7 +5796,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5213,10 +5807,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_RECALL()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5227,7 +5825,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->recall )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5235,7 +5833,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5246,10 +5844,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_RECCOUNT()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5262,7 +5864,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->reccount )( w, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5270,7 +5872,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5281,10 +5883,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_RECINFO()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5301,7 +5907,7 @@
  *
  *      <v2>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->recInfo )( w, v1, i, v2 ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5309,7 +5915,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5320,10 +5926,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_RECNO()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5336,7 +5946,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->recno )( w, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5344,7 +5954,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5355,10 +5965,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_SETFIELDEXTENT()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5371,7 +5985,7 @@
  *
  *      <s>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->setFieldExtent )( w, s ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5379,7 +5993,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5390,10 +6004,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_ALIAS()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5406,7 +6024,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->alias )( w, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5414,7 +6032,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5425,10 +6043,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_CLOSE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5439,7 +6061,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->close )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5447,7 +6069,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5458,10 +6080,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_CREATE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5474,7 +6100,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->create )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5482,7 +6108,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5493,10 +6119,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_INFO()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5511,7 +6141,7 @@
  *
  *      <g>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->info )( w, i, g ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5519,7 +6149,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5530,10 +6160,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_NEW()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5544,7 +6178,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->newarea )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5552,7 +6186,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5563,10 +6197,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_OPEN()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5579,7 +6217,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->open )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5587,7 +6225,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5598,10 +6236,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_RELEASE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5612,7 +6254,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->release )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5620,7 +6262,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5631,10 +6273,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_STRUCTSIZE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5647,7 +6293,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->structSize )( w, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5655,7 +6301,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5666,10 +6312,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_SYSNAME()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5682,7 +6332,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->sysName )( w, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5690,7 +6340,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5701,10 +6351,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_DBEVAL()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5717,7 +6371,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->dbEval )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5725,7 +6379,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5736,10 +6390,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_PACK()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5750,7 +6408,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->pack )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5758,7 +6416,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5769,10 +6427,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_PACKREC()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5787,7 +6449,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->packRec )( w, l, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5795,7 +6457,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5806,10 +6468,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_SORT()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5822,7 +6488,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->sort )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5830,7 +6496,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5841,10 +6507,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_TRANS()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5857,7 +6527,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->trans )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5865,7 +6535,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5876,10 +6546,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_TRANSREC()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5892,7 +6566,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->transRec )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5900,7 +6574,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5911,10 +6585,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_ZAP()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5925,7 +6603,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->zap )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5933,7 +6611,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5944,10 +6622,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_CHILDEND()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5960,7 +6642,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->childEnd )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5968,7 +6650,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -5979,10 +6661,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_CHILDSTART()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5995,7 +6681,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->childStart )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6003,7 +6689,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6014,10 +6700,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_CHILDSYNC()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6030,7 +6720,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->childSync )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6038,7 +6728,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6049,10 +6739,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_SYNCCHILDREN()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6063,7 +6757,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->syncChildren )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6071,7 +6765,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6082,10 +6776,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_CLEARREL()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6096,7 +6794,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->clearRel )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6104,7 +6802,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6115,10 +6813,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_FORCEREL()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6129,7 +6831,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->forceRel )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6137,7 +6839,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6148,10 +6850,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_RELAREA()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6166,7 +6872,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->relArea )( w, s, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6174,7 +6880,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6185,10 +6891,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_RELEVAL()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6201,7 +6911,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->relEval )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6209,7 +6919,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6220,10 +6930,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_RELTEXT()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6238,7 +6952,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->relText )( w, s, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6246,7 +6960,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6257,10 +6971,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_SETREL()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6273,7 +6991,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->setRel )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6281,7 +6999,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6292,10 +7010,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_ORDLSTADD()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6308,7 +7030,7 @@
  *
  *      <lp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->orderListAdd )( w, lp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6316,7 +7038,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6327,10 +7049,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_ORDLSTDELETE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6343,7 +7069,7 @@
  *
  *      <lp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->orderListDelete )( w, lp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6351,7 +7077,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6362,10 +7088,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_ORDLSTFOCUS()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6378,7 +7108,7 @@
  *
  *      <lp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->orderListFocus )( w, lp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6386,7 +7116,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6397,10 +7127,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_ORDLSTREBUILD()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6411,7 +7145,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->orderListRebuild )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6419,7 +7153,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6430,10 +7164,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_ORDLSTCLEAR()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6444,7 +7182,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->orderListClear )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6452,7 +7190,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6463,10 +7201,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_ORDSETCOND()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6479,7 +7221,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->orderCondition )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6487,7 +7229,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6498,10 +7240,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_ORDCREATE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6514,7 +7260,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->orderCreate )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6522,7 +7268,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6533,10 +7279,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_ORDDELETE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6549,7 +7299,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->orderDelete )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6557,7 +7307,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6568,10 +7318,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_ORDINFO()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6586,7 +7340,7 @@
  *
  *      <p>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->orderInfo )( w, i, p ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6594,7 +7348,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6605,10 +7359,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_ORDEXPR()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6621,7 +7379,7 @@
  *
  *      <p>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_EXPRESSION, p ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6629,7 +7387,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6640,10 +7398,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_ORDCOND()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6656,7 +7418,7 @@
  *
  *      <p>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_CONDITION,  p ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6664,7 +7426,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6675,10 +7437,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_ORDRECNO()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6691,7 +7457,7 @@
  *
  *      <p>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_RECNO,      p ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6699,7 +7465,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6710,10 +7476,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_ORDPOS()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6726,7 +7496,7 @@
  *
  *      <p>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_POSITION,   p ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6734,7 +7504,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6745,10 +7515,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_ORDNUMBER()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6761,7 +7535,7 @@
  *
  *      <p>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_NUMBER,     p ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6769,7 +7543,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6780,10 +7554,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_ORDNAME()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6796,7 +7574,7 @@
  *
  *      <p>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_NAME,       p ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6804,7 +7582,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6815,10 +7593,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_ORDBAGNAME()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6831,7 +7613,7 @@
  *
  *      <p>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_BAGNAME,    p ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6839,7 +7621,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6850,10 +7632,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_ORDBAGEXT()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6866,7 +7652,7 @@
  *
  *      <p>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_BAGEXT,     p ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6874,7 +7660,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6885,10 +7671,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_CLEARFILTER()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6899,7 +7689,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->clearFilter )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6907,7 +7697,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6918,10 +7708,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_CLEARLOCATE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6932,7 +7726,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->clearLocate )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6940,7 +7734,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6951,10 +7745,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_CLEARSCOPE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -6965,7 +7763,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->clearScope )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -6973,7 +7771,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -6984,10 +7782,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_COUNTSCOPE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7002,7 +7804,7 @@
  *
  *      <lp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->countScope )( w, ip, lp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7010,7 +7812,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7021,10 +7823,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_FILTERTEXT()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7037,7 +7843,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->filterText )( w, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7045,7 +7851,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7056,10 +7862,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_SCOPEINFO()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7074,7 +7884,7 @@
  *
  *      <v>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->scopeInfo )( w, i, v ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7082,7 +7892,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7093,10 +7903,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_SETFILTER()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7109,7 +7923,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->setFilter )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7117,7 +7931,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7128,10 +7942,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_SETLOCATE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7144,7 +7962,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->setLocate )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7152,7 +7970,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7163,10 +7981,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_SETSCOPE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7179,7 +8001,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->setScope )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7187,7 +8009,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7198,10 +8020,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_SKIPSCOPE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7216,7 +8042,7 @@
  *
  *      <l>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->skipScope )( w, bp, l ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7224,7 +8050,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7235,10 +8061,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_COMPILE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7251,7 +8081,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->compile )( w, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7259,7 +8089,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7270,10 +8100,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_ERROR()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7286,7 +8120,7 @@
  *
  *      <ip>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->error )( w, ip ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7294,7 +8128,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7305,10 +8139,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_EVALBLOCK()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7321,7 +8159,7 @@
  *
  *      <v>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->evalBlock )( w, v ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7329,7 +8167,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7340,10 +8178,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_GETLOCKS()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7356,7 +8198,7 @@
  *
  *      <g>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->info )( w, DBI_GETLOCKARRAY, g ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7364,7 +8206,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7375,10 +8217,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_RAWLOCK()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7393,7 +8239,7 @@
  *
  *      <l>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->rawlock )( w, i, l ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7401,7 +8247,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7412,10 +8258,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_LOCK()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7428,7 +8278,7 @@
  *
  *      <sp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->lock )( w, sp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7436,7 +8286,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7447,10 +8297,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_UNLOCK()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7461,7 +8315,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->unlock )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7469,7 +8323,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7480,10 +8334,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_CLOSEMEMFILE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7494,7 +8352,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->closeMemFile )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7502,7 +8360,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7513,10 +8371,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_CREATEMEMFILE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7529,7 +8391,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->createMemFile )( w, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7537,7 +8399,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7548,10 +8410,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_GETVALUEFILE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7566,7 +8432,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->getValueFile )( w, i, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7574,7 +8440,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7585,10 +8451,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_OPENMEMFILE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7601,7 +8471,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->openMemFile )( w, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7609,7 +8479,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7620,10 +8490,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_PUTVALUEFILE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7638,7 +8512,7 @@
  *
  *      <bp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->putValueFile )( w, i, bp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7646,7 +8520,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7657,10 +8531,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_READDBHEADER()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7671,7 +8549,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->readDBHeader )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7679,7 +8557,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7690,10 +8568,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_WRITEDBHEADER()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7704,7 +8586,7 @@
  *  $ARGUMENTS$
  *      <w>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->writeDBHeader )( w ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7712,7 +8594,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7723,10 +8605,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_RECSIZE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7739,7 +8625,7 @@
  *
  *      <lp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->info )( w, DBI_GETRECSIZE, lp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7747,7 +8633,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7758,10 +8644,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_HEADERSIZE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7774,7 +8664,7 @@
  *
  *      <fp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->info )( w, DBI_GETHEADERSIZE, fp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7782,7 +8672,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7793,10 +8683,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_LUPDATE()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7809,7 +8703,7 @@
  *
  *      <fp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->info )( w, DBI_LASTUPDATE, fp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7817,7 +8711,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7828,10 +8722,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_SETDELIM()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7844,7 +8742,7 @@
  *
  *      <fp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->info )( w, DBI_SETDELIMITER, fp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7852,7 +8750,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7863,10 +8761,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_GETDELIM()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7879,7 +8781,7 @@
  *
  *      <fp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->info )( w, DBI_GETDELIMITER, fp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7887,7 +8789,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$
@@ -7898,10 +8800,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SUPER_TABLEEXT()
  *  $CATEGORY$
- *      RDD API
+ *      C level API
+ * $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -7914,7 +8820,7 @@
  *
  *      <fp>
  *  $RETURNS$
- *
+ *      <see ( ( *( SUPERTABLE )->info )( w, DBI_TABLEEXT, fp ) )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -7922,7 +8828,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapirdd.h
  *  $PLATFORMS$

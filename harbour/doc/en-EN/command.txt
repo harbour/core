@@ -14,10 +14,14 @@
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      CLASS
  *  $CATEGORY$
- *      OOP Command
+ *      Class
+ *  $SUBCATEGORY$
+ *
  *  $ONELINER$
  *      Define a Class for Object Oriented Programming
  *  $SYNTAX$
@@ -32,7 +36,6 @@
  *
  *      STATIC       This clause causes the class function to be declared
  *                   as a static function. It will therefore not be available outside the current module.
- *
  *  $DESCRIPTION$
  *      CLASS creates a class from which you can create objects.
  *      The CLASS command begins the class specification, in which the DATA
@@ -41,10 +44,10 @@
  *      They control the default scope of DATA and METHOD commands that follow them.
  *
  *      <fixed>
- *         EXPORTED: 
- *         VISIBLE: 
- *         HIDDEN: 
- *         PROTECTED: 
+ *         EXPORTED:
+ *         VISIBLE:
+ *         HIDDEN:
+ *         PROTECTED:
  *      </fixed>
  *      The class specification ends with the END CLASS command.
  *
@@ -60,7 +63,6 @@
  *      and Delegating, and is largely compatible with Class(y)(tm), TopClass(tm)
  *      and Visual Objects(tm).
  *  $EXAMPLES$
-    <fixed>
  *      CLASS TBColumn
  *
  *         DATA Block      // Code block to retrieve data for the column
@@ -78,11 +80,10 @@
  *         METHOD New()    // Constructor
  *
  *      ENDCLASS
-    </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      CLASS is a Harbour extension.
+ *      H
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -91,10 +92,14 @@
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      DATA
  *  $CATEGORY$
- *      OOP Command
+ *      Class
+ *  $SUBCATEGORY$
+ *      Data
  *  $ONELINER$
  *      Alternate syntax for VAR: instance variable for the objects.
  *  $SYNTAX$
@@ -105,7 +110,7 @@
 
  *      <type>       Optional data type specification from the following:
  *                   Character, Numeric, Date, Logical, Codeblock, Nil.
-
+ *
  *      <uValue>     Optional initial value when creating a new object.
  *
  *      EXPORTED     Specifies that this DATA is accessible to functions and
@@ -116,13 +121,12 @@
  *      HIDDEN       Specifies that this DATA is only accessible to the
  *                   class where it was defined, and is not inherited by the
  *                   subclasses.
-
+ *
  *      READONLY     Restricts assignment to the variable. If specified with
  *                   the EXPORTED clause, assignment is only permitted from the current
  *                   class and its subclasses.  If specified with the PROTECTED clause,
  *                   assignment is only permitted from the current class.
  *                   RO is a synonym for READONLY.
-
  *  $DESCRIPTION$
  *      DATA elements can also be thought of as the "properties" of an
  *      object. They can be of any data type, including codeblock.
@@ -139,9 +143,7 @@
  *
  *      VAR can be a synonym for DATA, or it can use a slightly different
  *      syntax for compatibility with other dialects.
-
  *  $EXAMPLES$
-    <fixed>
  *      CLASS TBColumn
  *
  *         DATA Block      // Code block to retrieve data for the column
@@ -162,7 +164,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      DATA is a Harbour extension.
+ *      H
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -171,20 +173,24 @@
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      CLASSDATA
  *  $CATEGORY$
- *      OOP Command
+ *      Class
+ *  $SUBCATEGORY$
+ *      Data
  *  $ONELINER$
  *      Define a CLASSDATA variable for a class (NOT for an Object!)
  *  $SYNTAX$
  *      CLASSDATA <DataName1> [,<DataNameN>] [ AS <type> ] [ INIT <uValue> ]
  *  $ARGUMENTS$
  *      <DataName1>  Name of the DATA
-
+ *
  *      <type>       Optional data type specification from the following:
  *                      Character, Numeric, Date, Logical, Codeblock, Nil
-
+ *
  *      <uValue>     Optional initial value at program startup
  *  $DESCRIPTION$
  *      CLASSDATA variables can also be thought of as the "properties" of an
@@ -200,16 +206,14 @@
  *      Use the "INIT <uValue>" clause to initialize that DATA to <uValue>
  *      whenever the class is first used.
  *  $EXAMPLES$
-       <fixed>
  *      CLASS TWindow
  *         DATA   hWnd, nOldProc
  *         CLASSDATA lRegistered AS LOGICAL
  *      ENDCLASS
-        </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      CLASSDATA is a Harbour extension.
+ *      H
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -218,24 +222,35 @@
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      METHOD
  *  $CATEGORY$
- *      OOP Command
+ *      Class
+ *  $SUBCATEGORY$
+ *      Method
  *  $ONELINER$
  *      Declare a METHOD for a class in the class header
  *  $SYNTAX$
- *      METHOD <MethodName>( [<params,...>] ) [ CONSTRUCTOR ]
+ *      METHOD <MethodName>( [<params,...>] ) [CONSTRUCTOR]
+ *
  *      METHOD <MethodName>( [<params,...>] ) INLINE <Code,...>
+ *
  *      METHOD <MethodName>( [<params,...>] ) BLOCK  <CodeBlock>
- *      METHOD <MethodName>( [<params,...>] ) EXTERN <FuncName>([<args,...>])
+ *
+ *      METHOD <MethodName>( [<params,...>] ) EXTERN <NAME>([<args,...>])
+ *
  *      METHOD <MethodName>( [<params,...>] ) SETGET
+ *
  *      METHOD <MethodName>( [<params,...>] ) VIRTUAL
+ *
  *      METHOD <MethodName>( [<param>] )      OPERATOR <op>
+ *
  *      METHOD <MethodName>( [<params,...>] ) CLASS <ClassName>
  *  $ARGUMENTS$
  *      <MethodName>  Name of the method to define
-
+ *
  *      <params,...>  Optional parameter list
  *  $DESCRIPTION$
  *      Methods are "class functions" which do the work of the class.
@@ -244,7 +259,7 @@
  *      defined here, the full body is written below the ENDCLASS command
  *      using this syntax:
  *
- *         METHOD <MethodName>( [<params,...>] ) CLASS <ClassName>
+ *      METHOD <MethodName>( [<params,...>] ) CLASS <ClassName>
  *
  *      Methods can reference the current object with the keyword "Self:" or
  *      its shorthand version "::".
@@ -268,7 +283,7 @@
  *                   methods that need parameters. The first parameter to
  *                   <CodeBlock> must be Self, as in:
  *
- *          METHOD <MethodName> BLOCK {|Self,<arg1>,<arg2>, ...,<argN>|...}
+ *      METHOD       <MethodName> BLOCK {|Self,<arg1>,<arg2>, ...,<argN>|...}
  *
  *      EXTERN       If an external function does what the method needs,
  *                   use this clause to make an optimized call to that
@@ -288,7 +303,6 @@
  *                   Use this syntax only for defining a full method after
  *                   the ENDCLASS command.
  *  $EXAMPLES$
-        <fixed>
  *      CLASS TWindow
  *         DATA   hWnd, nOldProc
  *         METHOD New( ) CONSTRUCTOR
@@ -305,15 +319,12 @@
  *         ... <code> ...
  *         ... <code> ...
  *      RETURN Self
-        </fixed>
  *  $TESTS$
-        <fixed>
  *      TestOp.prg
-         </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      METHOD is a Harbour extension.
+ *      H
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -322,21 +333,26 @@
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      MESSAGE
  *  $CATEGORY$
- *      OOP Command
+ *      Class
+ *  $SUBCATEGORY$
+ *      Method
  *  $ONELINER$
  *      Route a method call to another Method
  *  $SYNTAX$
  *      MESSAGE <MessageName>   METHOD <MethodName>( [<params,...>] )
+ *
  *      MESSAGE <MessageName>() METHOD <MethodName>( [<params,...>] )
  *  $ARGUMENTS$
  *      <MessageName>  The pseudo-method name to define
-
+ *
  *      <MethodName>   The method to create and call when <MessageName>
  *                     is invoked.
-
+ *
  *      <params,...>   Optional parameter list for the method
  *  $DESCRIPTION$
  *      The MESSAGE command is a seldom-used feature that lets you re-route
@@ -356,17 +372,15 @@
  *      to call ::xBeginPaint().  This is then free to call the public
  *      function BeginPaint().
  *  $EXAMPLES$
-    <fixed>
  *      CLASS TWindow
  *         DATA   hWnd, nOldProc
  *         METHOD New( ) CONSTRUCTOR
  *         MESSAGE BeginPaint METHOD xBeginPaint()
  *      ENDCLASS
-    </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      MESSAGE is a Harbour extension.
+ *      H
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -375,31 +389,33 @@
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      ERROR HANDLER
  *  $CATEGORY$
- *      OOP Command
+ *      Class
+ *  $SUBCATEGORY$
+ *      Method
  *  $ONELINER$
  *      Designate a method as an error handler for the class
  *  $SYNTAX$
  *      ERROR HANDLER <MethodName>( [<params,...>] )
  *  $ARGUMENTS$
  *      <MethodName>  Name of the method to define
-
+ *
  *      <params,...>  Optional parameter list
  *  $DESCRIPTION$
  *      ERROR HANDLER names the method that should handle errors for the
  *      class being defined.
  *  $EXAMPLES$
-    <fixed>
  *      CLASS TWindow
  *         ERROR HANDLER  MyErrHandler()
  *      ENDCLASS
-    </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      ERROR HANDLER is a Harbour extension.
+ *      H
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -408,32 +424,34 @@
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      ON ERROR
  *  $CATEGORY$
- *      OOP Command
+ *      Class
+ *  $SUBCATEGORY$
+ *      Method
  *  $ONELINER$
  *      Designate a method as an error handler for the class
  *  $SYNTAX$
  *      ON ERROR <MethodName>( [<params,...>] )
  *  $ARGUMENTS$
  *      <MethodName>  Name of the method to define
-
+ *
  *      <params,...>  Optional parameter list
  *  $DESCRIPTION$
  *      ON ERROR is a synonym for ERROR HANDLER.
  *      It names the method that should handle errors for the
  *      class being defined.
  *  $EXAMPLES$
-    <fixed>
  *      CLASS TWindow
  *         ON ERROR  MyErrHandler()
  *      ENDCLASS
-    </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      ON ERROR is a Harbour extension.
+ *      H
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -442,27 +460,31 @@
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      ENDCLASS
  *  $CATEGORY$
- *      OOP Command
+ *      Class
+ *  $SUBCATEGORY$
+ *
  *  $ONELINER$
  *      End the declaration of a class.
  *  $SYNTAX$
  *      ENDCLASS
+ *  $ARGUMENTS$
+ *
  *  $DESCRIPTION$
  *      ENDCLASS marks the end of a class declaration.
  *      It is usually followed by the class methods that are not INLINE.
  *  $EXAMPLES$
-     <fixed>
  *      CLASS TWindow
  *         DATA   hWnd, nOldProc
  *      ENDCLASS
-     </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      ON ERROR is a Harbour extension.
+ *      H
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$

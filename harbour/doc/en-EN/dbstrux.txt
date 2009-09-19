@@ -16,22 +16,24 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      __dbCopyStruct()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Create a new database based on current database structure
  *  $SYNTAX$
- *      __dbCopyStruct( <cFileName>, [<aFieldList>] ) --> NIL
+ *      __dbCopyStruct( <cFileName>, [<aFieldList>] )
  *  $ARGUMENTS$
  *      <cFileName> is the name of the new database file to create. (.dbf)
  *      is the default extension if none is given.
  *
  *      <aFieldList> is an array where each element is a field name.
  *      Names could be specified as uppercase or lowercase.
- *  $RETURNS$
- *      __dbCopyStruct() always return NIL.
  *  $DESCRIPTION$
  *      __dbCopyStruct() create a new empty database file with a structure
  *      that is based on the currently open database in this work-area. If
@@ -57,7 +59,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __dbCopyStruct() works exactly like CA-Cl*pper's __dbCopyStruct()
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -68,10 +70,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      COPY STRUCTURE
  *  $CATEGORY$
  *      Command
+ *  $SUBCATEGORY$
+ *      Database
  *  $ONELINER$
  *      Create a new database based on current database structure
  *  $SYNTAX$
@@ -105,7 +111,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      COPY STRUCTURE works exactly as in CA-Cl*pper
+ *      C
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -114,9 +120,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __dbCopyXStruct()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Copy current database structure into a definition file
@@ -126,8 +136,8 @@
  *      <cFileName> is the name of target definition file to create. (.dbf)
  *      is the default extension if none is given.
  *  $RETURNS$
- *      __dbCopyXStruct() return (.F.) if no database is USED in the current
- *      work-area, (.T.) on success, or a run-time error if the file create
+ *      __dbCopyXStruct() returns .F. if no database is USED in the current
+ *      work-area, .T. on success, or a run-time error if the file create
  *      operation had failed.
  *  $DESCRIPTION$
  *      __dbCopyXStruct() create a new database named <cFileName> with a
@@ -174,12 +184,12 @@
  *      __dbCopyXStruct( "TestStru" )
  *      USE TestStru
  *      LIST
- *
  *  $TESTS$
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __dbCopyXStruct() works exactly like CA-Cl*pper's __dbCopyXStruct()
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -190,16 +200,20 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      COPY STRUCTURE EXTENDED
  *  $CATEGORY$
  *      Command
+ *  $SUBCATEGORY$
+ *      Database
  *  $ONELINER$
  *      Copy current database structure into a definition file
  *  $SYNTAX$
  *      COPY STRUCTURE EXTENDED TO <xcFileName>
  *  $ARGUMENTS$
- *      <b>TO <xcFileName></b>  The name of the target definition file to
+ *      <xcFileName> The name of the target definition file to
  *      create. (.dbf) is the default extension if none is given. It can be
  *      specified as a literal file name or as a character expression
  *      enclosed in parentheses.
@@ -251,7 +265,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      COPY STRUCTURE EXTENDED works exactly as in CA-Cl*pper
+ *      C
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -260,9 +274,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __dbCreate()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Create structure extended file or use one to create new file
@@ -360,7 +378,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __dbCreate() works exactly as in CA-Cl*pper
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -371,10 +389,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      CREATE
  *  $CATEGORY$
  *      Command
+ *  $SUBCATEGORY$
+ *      Database
  *  $ONELINER$
  *      Create empty structure extended file
  *  $SYNTAX$
@@ -433,7 +455,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      CREATE works exactly as in CA-Cl*pper
+ *      C
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -442,10 +464,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      CREATE FROM
  *  $CATEGORY$
  *      Command
+ *  $SUBCATEGORY$
+ *      Database
  *  $ONELINER$
  *      Create new database file from a structure extended file
  *  $SYNTAX$
@@ -498,7 +524,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      CREATE FROM works exactly as in CA-Cl*pper
+ *      C
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -507,9 +533,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __FLEDIT()*
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Filter a database structure array
@@ -581,7 +611,7 @@
  *      CA-Cl*pper has internal undocumented function named __FLEDIT(),
  *      in Harbour we name it __dbStructFilter(). The new name gives a better
  *      description of what this function does. In Harbour __FLEDIT() simply
- *      calls __dbStructFilter() and therefor the later is the recommended
+ *      calls __dbStructFilter() and therefor the latter is the recommended
  *      function to use.
  *
  *      This function is only visible if source/rdd/dbstrux.prg was compiled
@@ -597,9 +627,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __dbStructFilter()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Filter a database structure array

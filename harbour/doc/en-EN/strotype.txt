@@ -3,16 +3,20 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *     Document
+ *  $NAME$
  *      Strong Typing
  *  $CATEGORY$
  *      Document
  *  $ONELINER$
  *      Compile-Time type checking
  *  $DESCRIPTION$
- *      Strong Type Checking, could also be described as "Compile-Time Type
- *      Checking". As you might know Clipper, generates a Run-Time Error,
- *      ("Type Mismatch") when we attempt to perform some operations with
+ *      Strong Type Checking could also be described as "Compile-Time Type
+ *      Checking".
+ *
+ *      CA-Cl*pper generates a Run-Time Error
+ *      ("Type Mismatch") at an attempt to perform some operations with
  *      the wrong type of Variable.
  *
  *      Examples:

@@ -9,9 +9,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SETMODE()
  *  $CATEGORY$
+ *       API
+ *  $SUBCATEGORY$
  *      Environment
  *  $ONELINER$
  *      Change the video mode to a specified number of rows and columns
@@ -50,28 +54,27 @@
  *      Any change produced on the screen size is updated in the values
  *      returned by MAXROW() and MAXCOL().
  *  $EXAMPLES$
- *   þ  The first example change to a 12 lines of display mode:
+ *      // The first example change to a 12 lines of display mode:
  *      IF SETMODE( 12, 40)
  *         ? "Hey man are you blind ?"
  *      ELSE
  *         ? "Mom bring me my glasses!"
  *      ENDIF
  *
- *   þ  Next example change to a 50 lines mode:
+ *      // Next example change to a 50 lines mode:
  *      IF SETMODE( 50, 80)
  *         ? "This wonderful mode was successfully set"
  *      ELSE
  *         ? "Wait. this monitor are not made in rubber !"
  *      ENDIF
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Some of these modes are not availables on Clipper
+ *      Some of these modes are not availables in CA-Cl*pper
  *  $PLATFORMS$
- *      DOS,Windows
+ *      DOS,Win
  *  $FILES$
- *      Source  is gtdos.c,gtwin.c
+ *      Source is gtdos.c,gtwin.c
  *  $SEEALSO$
  *      MAXCOL(),MAXROW()
  *  $END$

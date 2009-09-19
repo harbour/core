@@ -92,50 +92,60 @@ Jose Lalin <dezac@corevia.com>
 SPECIAL PRAGMAS
 ===============
   These pragmas allows to control the processing of PRG source within
-the preprocessor. The special handling is done with a text enclosed 
-beetwen the '#pragma <type>' and '#pragma __endtext'
+the preprocessor. The special handling is done with a text enclosed
+betwen the '#pragma <type>' and '#pragma __endtext'
 
 #pragma __text
 --------------
 Syntax:
   #pragma __text '|' [LineOutputCode] '|' [FinallyCode] '|' [StartupCode]
-  
+
   Every line of text is stringified using '[' and ']' markers and is
   passed to 'LineOutputCode' using C '%s' formating code. The result
-  text is passed further to the syntax analyzer. The 'StartupCode' 
-  is returned at the very beginning of procesing. The 'FinallyCode' 
-  is returned at the end. If 'LineOutputCode' is ommited then all 
-  lines are ignored. 
-  
+  text is passed further to the syntax analyzer. The 'StartupCode'
+  is returned at the very beginning of procesing. The 'FinallyCode'
+  is returned at the end. If 'LineOutputCode' is ommited then all
+  lines are ignored.
+
   For example, this pragma is used to implement TEXT/ENDTEXT command
-  
+
   #command TEXT => #pragma __text|Qout(%s)|QQout()
   #command TEXT TO PRINTER => ;
            #pragma __text|Qout(%s)|__TextRestore()|__TextSave("PRINTER")
   #command TEXT TO FILE <file> => ;
            #pragma __text|Qout(%s)|__TextRestore()|__TextSave(<"file">)
-  
+
+
+?
+#xcommand TEXT INTO <v> => #pragma __text|<v>+=%s+HB_OSNEWLINE();<v>:=""
+?
+
 #pragma __stream
 ----------------
 Syntax:
   #pragma __stream '|' [JoinLineCode] '|' [EndingCode] '|' [StartingCode]
 
-  All lines are joined together. The result text is stringified and is 
+  All lines are joined together. The result text is stringified and is
   appended to 'StartingCode'. Finally the 'EndingCode' is appended.
   The resulting text is returned for further syntax analysis.
-  
+
   For example:
-  
+
   #command TEXT TO VAR <var> => ;
            #pragma __stream|%s||<var>:=
-           
+
+
+?
+#xcommand TEXT TO VAR <var> => #pragma __stream|<var>:=%s
+?
+
   TEXT TO VAR v
   This is 'example' text with ''""[] embeded
   ENDTEXT
-  
+
   The above example is preprocessed into:
   v:=[This is 'example' text with ''""[] embeded]
-  
+
 #pragma __cstream
 ----------------
 Syntax:
@@ -143,50 +153,49 @@ Syntax:
 
   This is simmilar to '#pragma __stream' with the additional convertion
   of C esc sequences e.g \n \t \r \b
-  
+
   For example:
-    
+
   #command TEXT TO VAR <var> => ;
-           #pragma __stream|%s||<var>:=
-           
+           #pragma __cstream|%s||<var>:=
+
   TEXT TO VAR v
   This is 'example' text with ''""[] embeded and C \n
   sequence
   ENDTEXT
   ? v
-  
+
   The above example is preprocessed into:
   v:=[This is 'example' text with ''""[] embeded and C \nsequence]
   qout(v)
 
   and at runtime the following is printed:
-  
-  This is 'example' text with ''""[] embeded and C 
+
+  This is 'example' text with ''""[] embeded and C
   sequence
-  
+
 #pragma __endtext
 -----------------
 Syntax:
   #pragma __endtext
-  
+
   This pragma is used to finish the special processing defined with
   #pragma [__text | __stream | __cstream]
-  
+
   The following command is hardcoded in the preprocessor:
-  
+
   #xcommand ENDTEXT => #pragma __endtext
-  
+
 #pragma RECURSELEVEL
 --------------------
 Syntax:
   #pragma RECURSELEVEL <nNumberOfIterations>
-  
+
   This pragma sets the maximum number of preprocess iterations during
-  the source code translation. The dfault value is 1024.
+  the source code translation. The default value is 1024.
   This is the same as /r= command line switch
-  
+
   For example:
-  
-  #pragma   RECURSELEVEL 2048  
-  
-  
+
+  #pragma   RECURSELEVEL 2048
+

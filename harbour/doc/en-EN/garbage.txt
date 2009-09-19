@@ -3,7 +3,9 @@
 */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *     Document
+ *  $NAME$
  *      The Garbage Collector
  *  $CATEGORY$
  *      Document
@@ -30,15 +32,15 @@
  *
  *      In special cases when the value of a harbour variable is stored internally
  *      in some static area (at C or assembler level), the garbage collector will
- *      be not able to scan such values since it doesn't know their location. This 
- *      could cause some memory blocks to be released prematurely. To prevent the 
+ *      be not able to scan such values since it doesn't know their location. This
+ *      could cause some memory blocks to be released prematurely. To prevent the
  *      premature deallocation of such memory blocks the static data have to store
  *      a pointer to the value created with hb_itemNew() function.
  *      Example:
- *        static HB_ITEM s_item; // this item can be released by the GC 
+ *        static HB_ITEM s_item; // this item can be released by the GC
  *
  *        static PHB_ITEM pItem; // this item will be maintained correctly
- *        pItem = hb_itemNew( hb_param(1, IT_BLOCK) ); 
+ *        pItem = hb_itemNew( hb_param(1, IT_BLOCK) );
  *
  *      However, scanning of all variables can be a time consuming operation. It
  *      requires that all allocated arrays have to be traversed through all their
@@ -98,10 +100,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *     Function
+ *  $NAME$
  *      hb_gcAlloc()
  *  $CATEGORY$
- *      The garbage collector
+ *      API
+ *  $SUBCATEGORY$
+ *      Garbage Collector
  *  $ONELINER$
  *      Allocates memory that will be collected by the garbage collector.
  *  $SYNTAX$
@@ -134,7 +140,7 @@
  *  $STATUS$
  *      C
  *  $COMPLIANCE$
- *      This function is a Harbour extension
+ *      H
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -145,10 +151,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
- *      hb_gcFree()
+ *  $TEMPLATE$
+ *     Function
+ *  $NAME$
+ *      hb_gcAlloc()
  *  $CATEGORY$
- *      The garbage collector
+ *      API
+ *  $SUBCATEGORY$
+ *      Garbage Collector
  *  $ONELINER$
  *      Releases the memory that was allocated with hb_gcAlloc().
  *  $SYNTAX$
@@ -166,7 +176,7 @@
  *  $STATUS$
  *      C
  *  $COMPLIANCE$
- *      This function is a Harbour extension
+ *      H
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -177,10 +187,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
- *      hb_gcCollectAll()
+ *  $TEMPLATE$
+ *     Function
+ *  $NAME$
+ *      hb_gcAlloc()
  *  $CATEGORY$
- *      The garbage collector
+ *      API
+ *  $SUBCATEGORY$
+ *      Garbage Collector
  *  $ONELINER$
  *      Scans all memory blocks and releases the garbage memory.
  *  $SYNTAX$
@@ -197,7 +211,7 @@
  *  $STATUS$
  *      C
  *  $COMPLIANCE$
- *      This function is a Harbour extension
+ *      H
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -208,10 +222,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
- *      hb_gcItemRef()
+ *  $TEMPLATE$
+ *     Function
+ *  $NAME$
+ *      hb_gcAlloc()
  *  $CATEGORY$
- *      The garbage collector
+ *      API
+ *  $SUBCATEGORY$
+ *      Garbage Collector
  *  $ONELINER$
  *      Marks the memory to prevent deallocation by the garbage collector.
  *  $SYNTAX$
@@ -237,7 +255,7 @@
  *  $STATUS$
  *      C
  *  $COMPLIANCE$
- *      This function is a Harbour extension
+ *      H
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -248,25 +266,27 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
- *      HB_GCALL()
+ *  $TEMPLATE$
+ *     Procedure
+ *  $NAME$
+ *      hb_gcAlloc()
  *  $CATEGORY$
- *      The garbage collector
+ *      API
+ *  $SUBCATEGORY$
+ *      Garbage Collector
  *  $ONELINER$
  *      Scans the memory and releases all garbage memory blocks.
  *  $SYNTAX$
  *      HB_GCALL()
  *  $ARGUMENTS$
  *      None
- *  $RETURNS$
- *      NIL
  *  $DESCRIPTION$
  *      This function releases all memory blocks that are considered
  *      as the garbage.
  *  $STATUS$
  *      Harbour
  *  $COMPLIANCE$
- *      This function is a Harbour extension
+ *      H
  *  $PLATFORMS$
  *      All
  *  $FILES$

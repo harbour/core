@@ -11,15 +11,21 @@
  *    MIN(),SQRT(),ROUND()
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *           Author: Martin Vogel <vogel@inttec.de>
- *    Documentation for Math API functions
+ *    Documentation for API
+ *  $SUBCATEGORY$
+ *      Math functions
  * See COPYING for licensing terms.
  *
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ABS()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Math
  *  $ONELINER$
  *      Return the absolute value of a number.
@@ -44,24 +50,27 @@
  *      qout(ABS(nNumber-nNumber1))
  *      qout(ABSnNumber1-nNumber))
  *      qout(ABS( -1 * 345))
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant.
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
- *      EXP()
+ *
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      EXP()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Math
  *  $ONELINER$
  *      Calculates the value of e raised to the passed power.
@@ -76,11 +85,10 @@
  *      <nNumber>.  It is the inverse of LOG().
  *  $EXAMPLES$
  *      ? EXP(45)
- *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant.
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -91,9 +99,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      INT()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Math
  *  $ONELINER$
  *      Return the integer port of a numeric value.
@@ -112,11 +124,10 @@
  *      SET Decimal to 5
  *      ? INT(632512.62541)
  *      ? INT(845414111.91440)
- *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant.
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -127,9 +138,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      LOG()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Math
  *  $ONELINER$
  *      Returns the natural logarithm of a number.
@@ -146,11 +161,10 @@
  *      This function is the inverse of EXP().
  *  $EXAMPLES$
  *      ? LOG(632512)
- *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant.
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -162,9 +176,13 @@
 
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      MAX()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Math
  *  $ONELINER$
  *      Returns the maximum of two numbers or dates.
@@ -186,11 +204,10 @@
  *  $EXAMPLES$
  *      ? MAX(214514214,6251242142)
  *      ? MAX(CTOD('11/11/2000'),CTOD('21/06/2014')
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant.
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -201,9 +218,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      MIN()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Math
  *  $ONELINER$
  *      Determines the minumum of two numbers or dates.
@@ -222,11 +243,10 @@
  *  $EXAMPLES$
  *      ? MIN(214514214,6251242142)
  *      ? MIN(CTOD('11/11/2000'),CTOD('21/06/2014')
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant.
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -237,9 +257,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      MOD()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Math
  *  $ONELINER$
  *      Return the modulus of two numbers.
@@ -258,11 +282,10 @@
  *      ? MOD(12,8.521)
  *      ? Mod(12,0)
  *      ? Mod(62412.5142,4522114.12014)
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This Function is CA-Cl*pper compliant.
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -273,9 +296,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SQRT()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Math
  *  $ONELINER$
  *      Calculates the square root of a number.
@@ -297,7 +324,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant.
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -308,9 +335,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ROUND()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Math
  *  $ONELINER$
  *      Rounds off a numeric expression.
@@ -334,7 +365,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant.
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -345,10 +376,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_mathGetLastError()
  *  $CATEGORY$
- *      Math API
+ *      C level API
+ *  $SUBCATEGORY$
+ *      Math
  *  $ONELINER$
  *      get the last math lib error
  *  $SYNTAX$
@@ -378,7 +413,7 @@
  *                              // 0 otherwise.
  *          } HB_MATH_EXCEPTION;
  *  $RETURNS$
- *
+ *      <iMathErrorType>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -386,7 +421,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbmath.h
  *      Library is rtl
@@ -398,20 +433,22 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      hb_mathResetError()
  *  $CATEGORY$
- *      Math API
+ *      C level API
+ *  $SUBCATEGORY$
+ *      Math
  *  $ONELINER$
- *      reset the internal math error information structure
+ *      Reset the internal math error information structure
  *  $SYNTAX$
  *      C Prototype
  *
  *      #include <hbmath.h>
- *      hb_mathResetError (void) --> void
+ *      hb_mathResetError (void)
  *  $ARGUMENTS$
- *
- *  $RETURNS$
  *
  *  $DESCRIPTION$
  *
@@ -420,7 +457,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbmath.h
  *      Library is rtl
@@ -432,12 +469,16 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_mathIsMathErr()
  *  $CATEGORY$
- *      Math API
+ *      C level API
+ *  $SUBCATEGORY$
+ *      Math
  *  $ONELINER$
- *      check if harbour math error handling is available
+ *      Check if harbour math error handling is available
  *  $SYNTAX$
  *      C Prototype
  *
@@ -446,7 +487,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <iIsMathHandler>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -454,7 +495,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbmath.h
  *      Library is rtl
@@ -466,10 +507,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_mathSetHandler()
  *  $CATEGORY$
- *      Math API
+ *      C level API
+ *  $SUBCATEGORY$
+ *      Math
  *  $ONELINER$
  *      set the harbour math handler
  *  $SYNTAX$
@@ -491,7 +536,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbmath.h
  *      Library is rtl
@@ -503,10 +548,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_mathGetHandler()
  *  $CATEGORY$
- *      Math API
+ *      C level API
+ *  $SUBCATEGORY$
+ *      Math
  *  $ONELINER$
  *      get current Harbour math error handler
  *  $SYNTAX$
@@ -518,7 +567,7 @@
  *      handlerproc             custom math handler
  *              typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION * err)
  *  $RETURNS$
- *
+ *      <handerproc>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -526,7 +575,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbmath.h
  *      Library is rtl
@@ -538,10 +587,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_mathSetErrMode()
  *  $CATEGORY$
- *      Math API
+ *      C level API
+ *  $SUBCATEGORY$
+ *      Math
  *  $ONELINER$
  *      set math error handling mode
  *  $SYNTAX$
@@ -566,7 +619,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbmath.h
  *      Library is rtl
@@ -578,10 +631,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_mathGetErrMode()
  *  $CATEGORY$
- *      Math API
+ *      C level API
+ *  $SUBCATEGORY$
+ *      Math
  *  $ONELINER$
  *      get math error handling mode
  *  $SYNTAX$
@@ -600,7 +657,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbmath.h
  *      Library is rtl
@@ -612,9 +669,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      HB_MATHERMODE()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Math
  *  $ONELINER$
  *      Set/Get math error handling mode
@@ -631,10 +692,13 @@
  *  $RETURNS$
  *      <nOldMode>    old math error handling mode
  *  $DESCRIPTION$
+ *
  *  $EXAMPLES$
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
+ *
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -646,21 +710,30 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      HB_MATHERBLOCK()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Math
  *  $ONELINER$
  *      Set/Get math error handling codeblock
  *  $SYNTAX$
  *      HB_MATHERBLOCK ([<bNewBlock>]) --> <bOldBlock>
  *  $ARGUMENTS$
+ *      <bNewBlock>
  *  $RETURNS$
+ *      <bOldBlock> is the current error handler codeblock
  *  $DESCRIPTION$
+ *
  *  $EXAMPLES$
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
+ *
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -669,4 +742,3 @@
  *
  *  $END$
  */
-

@@ -22,10 +22,14 @@
          text. [chkedem] */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      DBEDIT()*
  *  $CATEGORY$
- *      Data input and output
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Browse records in a table
  *  $SYNTAX$
@@ -103,7 +107,7 @@
  *      a grid on screen. Each column is defined by element from <acColumns>
  *      and is the equivalent of one field. Each row is equivalent of one
  *      database record.
-
+ *
  *      Following are active keys that handled by DBEDIT():       </par>
  *      ---------------------------------------------------
  *
@@ -125,9 +129,9 @@
  *       Ctrl Home        Move to the leftmost column
  *       Ctrl End         Move to the rightmost column
  *     </table>
-
+ *
  *      When <xUserFunc> is omitted, two more keys are active:
-
+ *
  *     <table>
  *       Key              Meaning
  *
@@ -175,44 +179,45 @@
  *      DBEDIT() is a compatibility function, it is superseded by the
  *      TBrowse class and there for not recommended for new applications.
  *  $EXAMPLES$
-    <fixed>
  *      // Browse a file using default values
  *      USE Test
  *      DBEDIT()
- *  </fixed>
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
  *      <xUserFunc> can take a code block value, this is a Harbour
  *      extension.
-
+ *
  *      CA-Cl*pper will throw an error if there's no database open, Harbour
  *      would return .F.
-
+ *
  *      CA-Cl*pper is buggy and will throw an error if the number of columns
- *      zero, Harbour would return .F.
-
+ *      is zero, Harbour would return .F.
+ *
  *      The CA-Cl*pper 5.2 NG state that the return value is NIL, this is
  *      wrong and should be read logical.
-
+ *
  *      There is an undocumented result code (3) from the user defined
- *      function in Clipper (both 87 and 5.x). This is an Append Mode which:
+ *      function in CA-Cl*pper (both 87 and 5.x). This is an Append Mode which:
  *      "split the screen to allow data to be appended in windowed area".
  *      This mode is not supported by Harbour.
  *  $FILES$
  *      Header files are dbedit.ch, inkey.ch
  *      Library is rtl
-
  *  $SEEALSO$
  *     @...SAY,BROWSE(),TBrowse class,TRANSFORM()
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      BROWSE()
  *  $CATEGORY$
- *      Data input and output
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Browse a database file
  *  $SYNTAX$
@@ -251,6 +256,7 @@
  *       Ctrl End         Move to the rightmost column
  *       Esc              Terminate BROWSE()
  *      </table>
+ *
  *      On top of the screen you see a status line with the following
  *      indication:
  *
@@ -261,17 +267,18 @@
  *       <Deleted>        Current record is deleted.
  *       <bof>            You are at the top of file.
  *      </table>
+ *
  *      You should pass whole four valid coordinate, if less than four
  *      parameters are passed to BROWSE() the coordinate are default to:
  *      1, 0, MAXROW(), MAXCOL().
  *  $EXAMPLES$
-    <fixed>
  *      // this one shows you how to browse around
  *      USE Around
  *      BROWSE()
-    </fixed>
  *  $STATUS$
  *      S
+ *  $COMPLIANCE$
+ *      C
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -280,10 +287,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      TBrowseDB()
  *  $CATEGORY$
- *      TBrowse class
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Create a new TBrowse object to be used with database file
  *  $SYNTAX$
@@ -306,14 +317,12 @@
  *      returned TBrowse object contain no TBColumn objects and you need
  *      to add column for each field by your self.
  *  $EXAMPLES$
-        <fixed>
  *      for a good example, look at the source code for BROWSE() function
  *      at source/rtl/browse.prg
-        </fixed>
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      TBrowseDB() works exactly like CA-Cl*pper's TBrowseDB().
+ *      H
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -322,10 +331,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      dbSkipper()
  *  $CATEGORY$
- *      Database
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Helper function to skip a database
  *  $SYNTAX$
@@ -342,7 +355,6 @@
  *      a number of records while giving the caller indication about the
  *      actual records skipped.
  *  $EXAMPLES$
-    <fixed>
  *      // open a file and find if we've got enough records in it
  *      USE MonthSales
  *      IF dbSkipper( 100 ) == 100
@@ -351,15 +363,10 @@
  *         ? "Too bad, you should really work harder"
  *      ENDIF
  *      CLOSE
-      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      dbSkipper() is an Xbase++ compatibility function and does not exist
- *      as a standard CA-Cl*pper 5.x function.
-
- *      This function is only visible if source/rtl/browdb.prg was compiled
- *      with the HB_COMPAT_XPP flag.
+ *      XPP
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$

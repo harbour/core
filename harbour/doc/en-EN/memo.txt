@@ -19,9 +19,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      MEMOTRAN()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Strings
  *  $ONELINER$
  *      Converts hard and soft carriage returns within strings.
@@ -42,16 +46,14 @@
  *      specified chars.
  *  $EXAMPLES$
  *      ? MEMOTRAN( DATA->CNOTES )
- *  </fixed>
  *  $TESTS$
  *      @ 1, 1 SAY MEMOTRAN( Data->CNOTES )
  *      will display converted string starting on row two, column two of the
  *      current device.
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      MEMOTRAN() is fully CA-Cl*pper compliant.
+ *      C
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -60,9 +62,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      HARDCR()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Strings
  *  $ONELINER$
  *      Replace all soft carriage returns with hard carriages returns.
@@ -77,16 +83,14 @@
  *      hard carriage return chars.
  *  $EXAMPLES$
  *      ? HARDCR( Data->CNOTES )
- *  </fixed>
  *  $TESTS$
  *      @ 1, 1 SAY HARDCR( Data->CNOTES )
  *      will display converted string starting on row two, column two of the
  *      current device.
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      HARDCR() is fully CA-Cl*pper compliant.
+ *      C
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -95,10 +99,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      MEMOREAD()
  *  $CATEGORY$
- *      Memo Field
+ *      API
+ *  $SUBCATEGORY$
+ *      Strings
  *  $ONELINER$
  *      Return the text file's contents as a character string
  *  $SYNTAX$
@@ -109,10 +117,8 @@
  *                  lives in another directory, you must include the path.
  *  $RETURNS$
  *      Returns the contents of a text file as a character string.
- *      The maximum size of the file that can be read is the same as the
- *      maximum size of a character string (more than 2 Mb). It has not the
- *      64 Kb limit as in Clipper.
- *      If <cFileName> cannot be found, nor read, function returns a null
+ *
+ *      If <cFileName> cannot be found or read MEMOREAD returns an empty
  *      string ("").
  *  $DESCRIPTION$
  *      MEMOREAD() is a function that reads the content of a text file (till
@@ -135,8 +141,6 @@
  *      Over a network, MEMOREAD() attempts to open <cFileName> in read-only
  *      mode and shared.  If the file is used in mode exclusive by another
  *      process, the function will returns a null string ("").
- *
- *      Is one of the most useful Clipper functions!, it really makes simple
  *  $EXAMPLES$
  *      *  This example uses MEMOREAD() to assign the contents of a text
  *         file to a character variable for later search
@@ -147,13 +151,12 @@
  *         IF AT( "Melina", cString) == 0             // check for copyright
  *            MEMOWRIT( cFile, cCopyright + cString ) // if not, add it!
  *         ENDIF
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      MEMOREAD() is fully CA-Cl*pper compliant.
+ *      C
  *  $PLATFORMS$
- *      All
+ *      All(64K)
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -163,10 +166,14 @@
 
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      MEMOWRIT()
  *  $CATEGORY$
- *      Memo Field
+ *      API
+ *  $SUBCATEGORY$
+ *      Strings
  *  $ONELINER$
  *      Write a memo field or character string to a text file on disk
  *  $SYNTAX$
@@ -191,12 +198,12 @@
  *      If you not specified a path, MEMOWRIT() writes <cFileName> to the
  *      current directory. If <cFileName> exists, it is overwritten.
  *
- *      Note:
  *      There is a third parameter (optional), <lWriteEof>, (not found in
- *      Clipper) which let to programmer change the default behavior of
- *      - allways - to write the EOF character, CHR(26) as in Clipper.
+ *      CA-Cl*pper) which let to programmer change the default behavior of
+ *      - allways - to write the EOF character, CHR(26) as in CA-Cl*pper.
+ *
  *      If there is no third parameter, nothing change, EOF is written as
- *      in Clipper, the same occurs when <lWriteEof> is set to .T.
+ *      in CA-Cl*pper, the same occurs when <lWriteEof> is set to .T.
  *      But, if <lWriteEof> is set to .F., EOF char is Not written to the
  *      end of the file.
  *
@@ -204,12 +211,7 @@
  *      to save to disk text from several sources that was edited, searched,
  *      replaced, displayed, etc.
  *
- *      It is used to export the database to another format.
- *
- *      Note:
- *      MEMOWRIT() do not use the directory settings SET DEFAULT.
- *
- *      Is one of the most useful Clipper functions!, it really makes simple
+ *      Note that MEMOWRIT() do not use the directory settings SET DEFAULT.
  *  $EXAMPLES$
  *      *  This example uses MEMOWRIT() to write the contents of a character
  *         variable to a text file.
@@ -220,11 +222,10 @@
  *         IF AT( "Melina", cString) == 0             // check for copyright
  *            MEMOWRIT( cFile, cCopyright + cString ) // if not, add it!
  *         ENDIF
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      MEMOWRIT() is fully CA-Cl*pper compliant.
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -233,6 +234,3 @@
  *      MEMOEDIT(),MEMOREAD()
  *  $END$
  */
-
-
-

@@ -3,7 +3,9 @@
 */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *     Document
+ *  $NAME$
  *      The idle states
  *  $CATEGORY$
  *      Document
@@ -34,16 +36,20 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *     Function
+ *  $NAME$
  *      HB_IDLEADD()
  *  $CATEGORY$
- *      The idle states
+ *      API
+ *  $SUBCATEGORY$
+ *      Idle states
  *  $ONELINER$
  *      Adds the background task.
  *  $SYNTAX$
- *      HB_IDLEADD( <cbAction> ) --> nHandle
+ *      HB_IDLEADD( <bAction> ) --> nHandle
  *  $ARGUMENTS$
- *      <cbAction> is a codeblock that will be executed during idle states.
+ *      <bAction> is a codeblock that will be executed during idle states.
  *      There are no arguments passed to this codeblock during evaluation.
  *  $RETURNS$
  *      <nHandle> The handle (an integer value) that identifies the task. This
@@ -53,7 +59,7 @@
  *      tasks that will be evaluated during the idle states. There is no
  *      limit for the number of tasks.
  *  $EXAMPLES$
- *      nTask := HB_IDLEADD( {|| SayTime()} )
+ *      nTask := HB_IDLEADD( {|| SayTime() } )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -69,19 +75,23 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *     Function
+ *  $NAME$
  *      HB_IDLEDEL()
  *  $CATEGORY$
- *      The idle states
+ *      API
+ *  $SUBCATEGORY$
+ *      Idle states
  *  $ONELINER$
  *      Removes the background task from the list of tasks.
  *  $SYNTAX$
- *      HB_IDLEDEL( <nHandle> ) --> xAction
+ *      HB_IDLEDEL( <nHandle> ) --> <bAction>
  *  $ARGUMENTS$
  *      <nHandle> is the identifier of the task returned by the
  *      HB_IDLEADD() function.
  *  $RETURNS$
- *      <xAction> NIL if invalid handle is passed or a codeblock that was
+ *      <bAction> NIL if invalid handle is passed or a codeblock that was
  *      passed to HB_IDLEADD() function
  *  $DESCRIPTION$
  *      HB_IDLEDEL() removes the action associated with passed identifier
@@ -91,13 +101,13 @@
  *      If specified task is defined then the codeblock is returned
  *      otherwise the NIL value is returned.
  *  $EXAMPLES$
- *      nTask := HB_IDLEADD( {|| SayTime()} )
+ *      nTask := HB_IDLEADD( {|| SayTime() } )
  *      INKEY(10)
- *      cbAction := HB_IDLEDEL( nTask )
+ *      bAction := HB_IDLEDEL( nTask )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Harbour extension
+ *      H
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -108,18 +118,20 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *     Procedure
+ *  $NAME$
  *      HB_IdleState()
  *  $CATEGORY$
- *      The idle states
+ *      API
+ *  $SUBCATEGORY$
+ *      Idle states
  *  $ONELINER$
  *      Evaluates a single background task and calls the garbage collector.
  *  $SYNTAX$
  *      HB_IDLESTATE()
  *  $ARGUMENTS$
  *      None
- *  $RETURNS$
- *      NIL
  *  $DESCRIPTION$
  *      HB_IDLESTATE() requests the garbage collection and executes a
  *      single background task defined by the codeblock passed with
@@ -130,10 +142,10 @@
  *      This function can be safely called even if there are no background
  *      tasks defined.
  *  $EXAMPLES$
- *      nTask1 := HB_IDLEADD( {|| SayTime()} )
- *      nTask2 := HB_IDLEADD( {|| SaveScreen()} )
+ *      nTask1 := HB_IDLEADD( {|| SayTime() } )
+ *      nTask2 := HB_IDLEADD( {|| SaveScreen() } )
  *      DO WHILE( !bFinished )
- *        bFinished :=DOSomethingVeryImportant()
+ *        bFinished := DOSomethingVeryImportant()
  *        HB_IdleState()
  *      ENDDO
  *      cbAction := HB_IDLEDEL( nTask1 )
@@ -153,18 +165,20 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *     Procedure
+ *  $NAME$
  *      hb_idleState()
  *  $CATEGORY$
- *      The idle states
+ *      C level API
+ *  $SUBCATEGORY$
+ *      Idle states
  *  $ONELINER$
  *      Evaluates a single background task and calls the garbage collector.
  *  $SYNTAX$
  *      void hb_idleState( void );
  *  $ARGUMENTS$
  *      None
- *  $RETURNS$
- *      Nothing
  *  $DESCRIPTION$
  *      hb_idleState() is a C function that requests garbage collection and
  *      executes a single background task defined by the codeblock passed
@@ -181,6 +195,8 @@
  *      This function is automatically called from the INKEY() function.
  *  $STATUS$
  *      R
+ *  $COMPLIANCE$
+ *      H
  *  $PLATFORMS$
  *      All
  *  $FILES$

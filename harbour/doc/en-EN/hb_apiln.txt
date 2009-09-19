@@ -7,339 +7,380 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
- *   Header file for the Language API
+ *   Header file for the API
+ * $SUBCATEGORY$
+ *    Language and Nation
  *
  * See COPYING for licensing terms.
  *
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_langRegister()
  *  $CATEGORY$
- *      Language API
+ *      API
+ * $SUBCATEGORY$
+ *    Language and Nation
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbapilng.h>
  *      hb_langRegister( PHB_LANG lang ) --> ( BOOL )bResult
  *  $ARGUMENTS$
  *      <lang>
  *  $RETURNS$
- *      
+ *      <bResult>
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is lang
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      
+ *
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_langDeRegister()
  *  $CATEGORY$
- *      Language API
+ *      API
+ * $SUBCATEGORY$
+ *    Language and Nation
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbapilng.h>
  *      hb_langDeRegister( char * pszID ) --> ( BOOL )bResult
  *  $ARGUMENTS$
  *      <pszID>
  *  $RETURNS$
- *      
+ *      <bResult>
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is lang
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      
+ *
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_langFind()
  *  $CATEGORY$
- *      Language API
+ *      API
+ * $SUBCATEGORY$
+ *    Language and Nation
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbapilng.h>
  *      hb_langFind( char * pszID ) --> ( PHB_LANG )pResult
  *  $ARGUMENTS$
  *      <pszID>
  *  $RETURNS$
- *      
+ *      <pResult>
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is lang
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      
+ *
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_langSelect()
  *  $CATEGORY$
- *      Language API
+ *      API
+ * $SUBCATEGORY$
+ *    Language and Nation
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbapilng.h>
  *      hb_langSelect( PHB_LANG lang ) --> ( PHB_LANG )pResult
  *  $ARGUMENTS$
  *      <lang>
  *  $RETURNS$
- *      
+ *      <pResult>
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is lang
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      
+ *
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_langSelectID()
  *  $CATEGORY$
- *      Language API
+ *      API
+ * $SUBCATEGORY$
+ *    Language and Nation
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbapilng.h>
  *      hb_langSelectID( char * pszID ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pszID>
  *  $RETURNS$
- *      
+ *      <pszResult>
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is lang
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      
+ *
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_langDGetItem()
  *  $CATEGORY$
- *      Language API
+ *      API
+ * $SUBCATEGORY$
+ *    Language and Nation
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbapilng.h>
  *      hb_langDGetItem( int iIndex ) --> ( void * )pResult
  *  $ARGUMENTS$
  *      <iIndex>
  *  $RETURNS$
- *      
+ *      <pResult>
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is lang
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      
+ *
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_langID()
  *  $CATEGORY$
- *      Language API
+ *      API
+ * $SUBCATEGORY$
+ *    Language and Nation
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbapilng.h>
  *      hb_langID( void ) --> ( char * )pszResult
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
- *      
+ *      <pszResult>
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is lang
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      
+ *
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_langName()
  *  $CATEGORY$
- *      Language API
+ *      API
+ * $SUBCATEGORY$
+ *    Language and Nation
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbapilng.h>
  *      hb_langName( void ) --> ( char * )pszResult
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
- *      
+ *      <pszResult>
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is lang
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      
+ *
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_langDGetErrorDesc()
  *  $CATEGORY$
- *      Language API
+ *      API
+ * $SUBCATEGORY$
+ *    Language and Nation
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbapilng.h>
  *      hb_langDGetErrorDesc( ULONG ulIndex ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <ulIndex>
  *  $RETURNS$
- *      
+ *      <pszResult>
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is lang
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      
+ *
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      HB_LANG_REQUEST()
  *  $CATEGORY$
- *      Language API
+ *      API
+ * $SUBCATEGORY$
+ *    Language and Nation
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype (macro definition)
- *      
+ *
  *      #include <hbapilng.h>
  *      HB_LANG_REQUEST( id ) --> <see HB_LANG_REQUEST_( id )>
  *  $ARGUMENTS$
  *      <id>
  *  $RETURNS$
- *      
+ *      <see HB_LANG_REQUEST_( id )>
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is hbapilng.h
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      
+ *
  *  $END$
  */
-

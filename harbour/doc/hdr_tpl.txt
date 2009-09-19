@@ -75,9 +75,11 @@ FUNCTION HEADER TEMPLATE
 ========================
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $NAME$
  *
  *  $CATEGORY$
+ *
+ *  $SUBCATEGORY$
  *
  *  $ONELINER$
  *
@@ -110,10 +112,10 @@ FUNCTION HEADER EXAMPLE
 =======================
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $NAME$
  *      IsLeapYr()
  *  $CATEGORY$
- *      Dates
+ *      Date functions
  *  $ONELINER$
  *      Test if a date falls in a leap year.
  *  $SYNTAX$

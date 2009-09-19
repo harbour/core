@@ -15,11 +15,14 @@
  *
  */
 
-
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ORDBAGEXT()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Returns the Order Bag extension
@@ -28,7 +31,7 @@
  *  $ARGUMENTS$
  *      None
  *  $RETURNS$
- *      <cBagExt> The Rdd extension name.
+ *      <cBagExt> The RDD extension name.
  *  $DESCRIPTION$
  *      This function return th character name of the RDD extension for
  *      the order bag. This is determined by the active RDD for the selected
@@ -45,7 +48,7 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -56,9 +59,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ORDBAGNAME()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Returns the Order Bag Name.
@@ -91,7 +98,7 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -102,9 +109,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      ORDCONDSET()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Set the Condition and scope for an order
@@ -127,13 +138,12 @@
  *  $ARGUMENTS$
  *      <cForCondition> is a string that specifies the FOR condition for the
  *   order.
+ *
  *     <bForCondition> is a code block that defines a FOR condition that
  *   each record within the scope must meet in order to be processed. If
  *   a record does not meet the specified condition, it is ignored and the
  *   next  record is processed.Duplicate keys values are not added to the
  *   index file when a FOR condition is Used.
- *  $RETURNS$
- *
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -143,7 +153,7 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      ORDCONDSET() is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -152,15 +162,19 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      ORDCREATE()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Create an Order in an Order Bag
  *  $SYNTAX$
  *      ORDCREATE(<cOrderBagName>,[<cOrderName>], <cExpKey>,
- *      [<bExpKey>], [<lUnique>]) --> NIL
+ *      [<bExpKey>], [<lUnique>])
  *  $ARGUMENTS$
  *      <cOrderBagName>  Name of the file that contains one or more Orders.
  *
@@ -172,8 +186,6 @@
  *      record in the work area.
  *
  *      <lUnique> Toggle the unique status of the index.
- *  $RETURNS$
- *      ORDCREATE() always returns NIL.
  *  $DESCRIPTION$
  *      This function creates an order for the current work area. It is
  *      similar to the DBCREATEINDEX() except that this function allows
@@ -212,7 +224,7 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -223,21 +235,23 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      ORDDESTROY()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Remove an Order from an Order Bag
  *  $SYNTAX$
- *      ORDDESTROY(<cOrderName> [, <cOrderBagName> ]) --> NIL
+ *      ORDDESTROY(<cOrderName> [, <cOrderBagName> ])
  *  $ARGUMENTS$
  *      <cOrderName> Name of the order to remove
  *
  *      <cOrderBagName> Name of the order bag from which order id to be
  *      removed
- *  $RETURNS$
- *      ORDDESTROY() always returns NIL.
  *  $DESCRIPTION$
  *      This function attempts to remove the order named <cOrderName> from the
  *      file containing the order bag name <cOrderBagName>. If <cOrderBagName>
@@ -258,7 +272,7 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -269,9 +283,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ORDFOR()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Return the FOR expression of an Order
@@ -304,7 +322,7 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant with one exception.
+ *      This function is CA-Cl*pper compliant with one exception:
  *      If the <xOrder> paramter is not specified or <xOrder> is 0, the current
  *      active order is used.
  *  $PLATFORMS$
@@ -317,9 +335,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ORDKEY()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Return the key expression of an Order
@@ -333,6 +355,7 @@
  *  $RETURNS$
  *      <cExpKey> Returns a character string, cExpKey.
  *  $DESCRIPTION$
+ *
  *  $EXAMPLES$
  *      USE Tests NEW via _DBFCDX
  *      INDEX ON  Tests->fName ;
@@ -347,7 +370,7 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant with one exception.
+ *      This function is CA-Cl*pper compliant with one exception:
  *      If the <xOrder> paramter is not specified or <xOrder> is 0, the current
  *      active order is used.
  *  $PLATFORMS$
@@ -360,9 +383,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      INDEXEXT()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Returns the file extension of the index module used in an application
@@ -384,7 +411,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -395,9 +422,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      INDEXKEY()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Yields the key expression of a specified index file.
@@ -422,7 +453,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -433,9 +464,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      INDEXORD()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Returns the numeric position of the controlling index.
@@ -458,7 +493,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$

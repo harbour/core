@@ -14,25 +14,30 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      OS()
+ *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
+ *      Environment
  * $ONELINER$
  *      Return the current operating system.
  *  $SYNTAX$
  *      OS() --> <cOperatingSystem>
- *  $CATEGORY$
- *      DOS
  *  $RETURNS$
- *     <cOperatinSystem> The Current operating system.
+ *     <cOperatinSystem> The current operating system.
  *  $DESCRIPTION$
  *      This function will return the current operating system.
  *  $EXAMPLES$
  *      ? OS()
  *  $TESTS$
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compatible.
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -41,9 +46,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      VERSION()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Environment
  *  $ONELINER$
  *      Returns the HARBOUR Version or the Harbour/Compiler Version.
@@ -58,12 +67,12 @@
  *  $EXAMPLES$
  *      ? QOUT(VERSION())
  *      "Harbour Terminal: Standard stream console"
- *
  *  $TESTS$
+ *
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compatible.
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -75,50 +84,158 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      GETENV()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Environment
  *  $ONELINER$
- *      Obtains system environmental settings.
+ *      Obtains a system environmental setting.
  *  $SYNTAX$
- *      GETENV(<cEnviroment>, <cDefaultValue> )  --> <cReturn>
+ *      GETENV(<cEnviroment> )  --> <cReturn>
  *  $ARGUMENTS$
  *      <cEnviroment> Enviromental variable to obtain.
- *
- *      <cDefaultValue> Optional value to return if <cEnvironment> is not found.
  *  $RETURNS$
  *      <cReturn>     Value of the Environment Variable.
  *  $DESCRIPTION$
  *      This function yields a string that is the value of the
  *      environment variable <cEnviroment>, which is stored at the
- *      system level with the Set command. If no environment variable
- *      can be found, the value of the function will be <cDefaultValue>
- *      if it is passed, else an empty string.
+ *      system level.
+ *
+ *      If no environment variable
+ *      is found, an empty string is returned.
  *  $EXAMPLES$
  *      ? QOUT(GETENV('PATH'))
  *      ? QOUT(GETENV('CONFIG'))
  *      ? QOUT(GETENV('HARBOURCMD', '-n -l -es2'))
- *  </fixed>
  *  $TESTS$
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper compliant.
+ *      C
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *     source/rtl/gete.c
+ *      Library is rtl
+ *  $SEEALSO$
+ *     GETE
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
+ *      GETE()
+ *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
+ *      Environment
+ *  $ONELINER$
+ *      Obtains a system environmental setting.
+ *  $SYNTAX$
+ *      GETE(<cEnviroment> )  --> <cReturn>
+ *  $ARGUMENTS$
+ *      <cEnviroment> Enviromental variable to obtain.
+ *  $RETURNS$
+ *      <cReturn>     Value of the Environment Variable.
+ *  $DESCRIPTION$
+ *      This function yields a string that is the value of the
+ *      environment variable <cEnviroment>, which is stored at the
+ *      system level.
+ *
+ *      If no environment variable
+ *      is found, an empty string is returned.
+ *  $EXAMPLES$
+ *      ? QOUT(GETE('PATH'))
+ *      ? QOUT(GETE('CONFIG'))
+ *      ? QOUT(GETE('HARBOURCMD', '-n -l -es2'))
+ *  $TESTS$
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This is CA-Cl*pper compliant.
+ *
  *      The <cDefaultValue> parameter is a Harbour extension.
  *  $PLATFORMS$
  *      All
  *  $FILES$
  *     source/rtl/gete.c
  *      Library is rtl
+ *  $SEEALSO$
+ *     GETENV
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
+ *      HB_GETENV()
+ *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
+ *      Environment
+ *  $ONELINER$
+ *      Obtains a system environmental setting.
+ *  $SYNTAX$
+ *      HB_GETENV(<cEnviroment>, [<cDefaultValue>], [<lApplyCodepage>] )  --> <cReturn>
+ *  $ARGUMENTS$
+ *      <cEnviroment> Enviromental variable to obtain.
+ *
+ *      <cDefaultValue> Optional value to return if <cEnvironment> is not found.
+ *
+ *      <lApplyCodepage> optional logical parameter specifing whether to
+ *       apply automatic codepage conversion (to the codepage
+ *       specified by Set( _SET_OSCODEPAGE ) on the obtained value.
+ *       The default is .T.  Note that if the default value is passed and the environment
+ *       value is not found, this codepage conversion is not performed against
+ *       the returned default value
+ *  $RETURNS$
+ *      <cReturn>     Value of the environment variable or <cDefaultValue> or an empty string.
+ *  $DESCRIPTION$
+ *      This function yields a string that is the value of the
+ *      environment variable <cEnviroment>, which is stored at the
+ *      system level.
+ *
+ *      If no environment variable
+ *      can be found, the value of the function will be <cDefaultValue>
+ *      if it is passed, else an empty string.
+ *  $EXAMPLES$
+ *      ? QOUT(HB_GETENV('PATH'))
+ *      ? QOUT(HB_GETENV('CONFIG'))
+ *      ? QOUT(HB_GETENV('HARBOURCMD', '-n -l -es2'))
+ *  $TESTS$
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      H
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      source/rtl/gete.c
+ *      Library is rtl
+ *  $SEEALSO$
+ *     GETENV, GETE
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      __RUN()
  *  $CATEGORY$
- *      DOS
+ *      API
+ *  $SUBCATEGORY$
+ *      Environment
  *  $ONELINER$
  *      Run an external program.
  *  $SYNTAX$
@@ -126,9 +243,9 @@
  *  $ARGUMENTS$
  *      <cCommand> Command to execute.
  *  $DESCRIPTION$
- *      This command runs an external program. Please make sure that
+ *      This command runs an external program. Ensure that
  *      you have enough free memory to be able to run the external
- *      program. Do not use it to run Terminate and Stay Resident programs
+ *      program. Do not use it to run 'Terminate and Stay Resident' programs
  *      (in case of DOS) since that causes several problems.
  *
  *      Note: This function is what the RUN command preprocesses into.
@@ -137,12 +254,12 @@
  *  $EXAMPLES$
  *      __Run( "edit " + cMyTextFile )    // Runs an external editor
  *      __Run( "command" )                // Gives a DOS shell (DOS only)
- *  </fixed>
  *  $TESTS$
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant.
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -154,10 +271,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      TONE()
  *  $CATEGORY$
- *      Miscellaneous
+ *      API
+ *  $SUBCATEGORY$
+ *      Environment
  *  $ONELINER$
  *      Sound a tone with a specified frequency and duration.
  *  $SYNTAX$
@@ -173,7 +294,7 @@
  *  $DESCRIPTION$
  *      TONE() is a sound function that could be used to irritate the end
  *      user, his or her dog, and the surrounding neighborhood. The frequency
- *      is clamped to the range 0 to 32767 Hz.
+ *      is limited to the range 0 to 32767 Hz.
  *  $EXAMPLES$
  *      If lOk   // Good Sound
  *         TONE(  500, 1 )
@@ -184,7 +305,6 @@
  *         TONE(  499, 5 )
  *         TONE(  700, 5 )
  *      EndIf
- *      </fixed>
  *  $TESTS$
  *      TONE( 800, 1 )                         // same as ? CHR(7)
  *      TONE( 32000, 200 )                     // any dogs around yet?
@@ -194,12 +314,10 @@
  *      TONE( 10, 18.2 )                       // 1 second delay
  *      TONE( -1 )                             // 1/18.2 second delay
  *      TONE( )                                // 1/18.2 second delay
- *  </fixed>
- *  $TESTS$
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      TONE() works exactly like CA-Cl*pper's TONE().
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -210,14 +328,18 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      RUN
  *  $CATEGORY$
- *      Command
+ *      API
+ *  $SUBCATEGORY$
+ *      Environment
  *  $ONELINER$
  *      Run an external program.
  *  $SYNTAX$
- *      RUN  <cCommand>
+ *      RUN <cCommand>
  *  $ARGUMENTS$
  *      <cCommand> Command to execute.
  *  $DESCRIPTION$
@@ -226,13 +348,14 @@
  *      Do not use it to run Terminate and Stay Resident programs
  *      (in case of DOS) since that causes several problems.
  *  $EXAMPLES$
- *      Run  "edit " + cMyTextFile      // Runs an external editor
- *      Run  "command"                  // Gives a DOS shell (DOS only)
+ *      Run "edit " + cMyTextFile      // Runs an external editor
+ *      Run "command"                  // Gives a DOS shell (DOS only)
  *  $TESTS$
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper compliant.
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$

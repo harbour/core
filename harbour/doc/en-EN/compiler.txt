@@ -3,7 +3,9 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *     Document
+ *  $NAME$
  *      Compiler Options
  *  $CATEGORY$
  *      Document
@@ -28,13 +30,13 @@
  *
  *      /a               automatic memvar declaration   </par>
  *      =================   </par>
-
+ *
  *          This causes all variables declared by PARAMETER, PRIVATE or PUBLIC
  *          statements to be automatically declared as MEMVAR variables.
  *
  *      /b               debug info   </par>
  *      =================   </par>
-
+ *
  *          The compiler generates all information required for debugging
  *
  *      /d<id>[=<val>]   #define <id>   </par>
@@ -74,7 +76,7 @@
  *      /k<mode>         enable <mode> compatibility mode  </par>
  *      =================                                  </par>
  *
- *          /kc          clear all flags (strict Clipper compatibility)
+ *          /kc          clear all flags (strict CA-Cl*pper compatibility)
  *
  *          /kh          Harbour extensions (default)
  *
@@ -169,9 +171,9 @@
  *
  *          /w0         - no warnings
  *
- *          /w or /w1   - Clipper compatible warnings
+ *          /w or /w1   - CA-Cl*pper compatible warnings
  *
- *          /w2         - some useful warnings missed in Clipper
+ *          /w2         - some useful warnings missed in CA-Cl*pper
  *
  *          /w3         - warnings generated for Harbour language extensions
  *                        and also enables strong type checking but only
@@ -210,7 +212,7 @@
  *
  *          Not supported yet.
  *
- *      <b>Known incompatibilities between harbour and clipper compilers  </b> </par>
+ *      <b>Known incompatibilities between Harbour and CA-Cl*pper compilers  </b> </par>
  *      =============================================================   </par>
  *
  *      NOTE:   </par>
@@ -227,12 +229,12 @@
  *      ================================   </par>
  *
  *      When a value is assigned to an undeclared variable and the '-v'
- *      command line option is not used, then the Clipper compiler assumes
+ *      command line option is not used, then the CA-Cl*pper compiler assumes
  *      that the variable is a PRIVATE or a PUBLIC variable and generates
  *      POPM (pop memvar) opcode.
  *
  *      When the value of an undeclared variable is accessed and the '-v'
- *      command line option is not used, the Clipper compiler generates PUSHV
+ *      command line option is not used, the CA-Cl*pper compiler generates PUSHV
  *      (push variable) opcode that determines the type of variable at runtime.
  *      If a field with the requested name exists in the current workarea then
  *      its value is used. If there is no field then a PRIVATE or a PUBLIC
@@ -258,10 +260,10 @@
  *
  *        myname := myname + " assigned"
  *
- *        // In Clipper: "FIELD",  In Harbour: "FIELD assigned"
+ *        // In CA-Cl*pper: "FIELD",  In Harbour: "FIELD assigned"
  *        ? FIELD->myname
  *
- *        // In Clipper: "MEMVAR assigned", In Harbour: "MEMVAR"
+ *        // In CA-Cl*pper: "MEMVAR assigned", In Harbour: "MEMVAR"
  *        ? MEMVAR->myname
  *
  *        USE
@@ -272,14 +274,14 @@
  *      <b>Passing an undeclared variable by the reference </b>  </par>
  *      ===============================================   </par>
  *
- *      The Clipper compiler uses the special opcode PUSHP to pass a
+ *      The CA-Cl*pper compiler uses the special opcode PUSHP to pass a
  *      reference to an undeclared variable ( '@' operator ). The type of
  *      passed variable is checked at runtime (field or memvar). However,
  *      field variables cannot be passed by reference. This means that
- *      Clipper checks the memvar variable only and doesn't look for a field.
+ *      CA-Cl*pper checks the memvar variable only and doesn't look for a field.
  *      This is the reason why the Harbour compiler uses the usual
  *      PUSHMEMVARREF opcode in such cases. Notice that the runtime behavior
- *      is the same in Clipper and in Harbour - only the generated opcodes
+ *      is the same in CA-Cl*pper and in Harbour - only the generated opcodes
  *      are different.
  *
  *
@@ -297,13 +299,13 @@
  *
  *      a:b( COUNT() ):c := a:b( COUNT() ):c + 1
  *
- *      in strict Clipper compatibility mode and
+ *      in strict CA-Cl*pper compatibility mode and
  *
  *      temp := a:b( COUNT() ), temp:c += 1
  *
  *      in non-strict mode.
  *
- *      In practice, Clipper will call the COUNT() function two times:
+ *      In practice, CA-Cl*pper will call the COUNT() function two times:
  *      the first time before addition and the second one after addition.
  *      In Harbour, COUNT() will be called only once, before addition.
  *
@@ -332,19 +334,19 @@
  *      RETURN
  *      </fixed>
 
- *      The above code compiles fine in Clipper, but it generates a
+ *      The above code compiles fine in CA-Cl*pper, but it generates a
  *      runtime error Error/BASE 1132 Bound error: array access
  *      Called form (b)STATICS$(0)
  *
  *      In Harbour this code generates a compile time error:
  *      Error E0009 Illegal variable (b) initializer: 'MyLocalVar'
  *
- *      Both Clipper and Harbour are handling all local variables used in a
+ *      Both CA-Cl*pper and Harbour are handling all local variables used in a
  *      codeblock in a special way: they are detached from the local stack
  *      of function/procedure where they are declared. This allows access to
  *      these variables after the exit from a function/procedure. However,
  *      all static variables are initialized in a separate procedure
- *      ('STATICS$' in Clipper and '(_INITSTATICS)' in Harbour) before the
+ *      ('STATICS$' in CA-Cl*pper and '(_INITSTATICS)' in Harbour) before the
  *      main procedure and before all INIT procedures. The local variables
  *      don't exist on the eval stack when static variables are initialized,
  *      so they cannot be detached.

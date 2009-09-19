@@ -3,7 +3,9 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *     Document
+ *  $NAME$
  *      GNU License
  *  $CATEGORY$
  *      Document
@@ -217,7 +219,9 @@
  */
  /*
  *  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *     Document
+ *  $NAME$
  *     GNU License Part 2
  *  $CATEGORY$
  *     Document

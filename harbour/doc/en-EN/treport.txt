@@ -14,10 +14,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      REPORT FORM
  *  $CATEGORY$
  *      Command
+ *  $SUBCATEGORY$
+ *      Legacy
  *  $ONELINER$
  *      Display a report
  *  $SYNTAX$
@@ -37,8 +41,6 @@
  *      <bFor>        Logical expression of FOR condition.
  *
  *      <cHeading>    Report heading
- *  $RETURNS$
- *      NIL
  *  $DESCRIPTION$
  *      This command prints out the report named <cReportName>, which is a
  *      standard FRM file. The file extension is not required because .frm
@@ -98,9 +100,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This Command is CA-Cl*pper compliant.
+ *      C
  *  $PLATFORMS$
- *      ALL
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$

@@ -7,17 +7,23 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- *   Header file for the Item API
+ *   Header file for the API
+ * $SUBCATEGORY$
+ *      Item
  *
  * See COPYING for licensing terms.
  *
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_evalLaunch()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -28,7 +34,7 @@
  *  $ARGUMENTS$
  *      <pEvalInfo>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -36,7 +42,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -47,10 +53,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_evalNew()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -63,7 +73,7 @@
  *
  *      <pItem>
  *  $RETURNS$
- *
+ *      <bResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -71,7 +81,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -82,10 +92,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_evalPutParam()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -98,7 +112,7 @@
  *
  *      <pItem>
  *  $RETURNS$
- *
+ *      <bResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -106,7 +120,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -117,10 +131,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_evalRelease()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -131,7 +149,7 @@
  *  $ARGUMENTS$
  *      <pEvalInfo>
  *  $RETURNS$
- *
+ *      <bResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -139,7 +157,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -150,10 +168,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemDo()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -170,7 +192,7 @@
  *
  *      <...>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -178,7 +200,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -189,10 +211,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemDoC()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -209,7 +235,7 @@
  *
  *      <...>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -217,7 +243,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -228,10 +254,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemArrayGet()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -244,7 +274,7 @@
  *
  *      <ulIndex>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -252,7 +282,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -263,10 +293,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemArrayNew()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -277,7 +311,7 @@
  *  $ARGUMENTS$
  *      <ulLen>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -285,7 +319,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -296,10 +330,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemArrayPut()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -314,7 +352,7 @@
  *
  *      <pItem>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -322,7 +360,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -333,10 +371,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemCopyC()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -351,7 +393,7 @@
  *
  *      <ulLen>
  *  $RETURNS$
- *
+ *      <ulResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -359,7 +401,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -370,10 +412,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemFreeC()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -384,7 +430,7 @@
  *  $ARGUMENTS$
  *      <szText>
  *  $RETURNS$
- *
+ *      <bResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -392,7 +438,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -403,10 +449,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemGetC()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -417,7 +467,7 @@
  *  $ARGUMENTS$
  *      <pItem>
  *  $RETURNS$
- *
+ *      <pszResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -425,7 +475,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -436,10 +486,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemGetCPtr()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -450,7 +504,7 @@
  *  $ARGUMENTS$
  *      <pItem>
  *  $RETURNS$
- *
+ *      <pszResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -458,7 +512,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -469,10 +523,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemGetCLen()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -483,7 +541,7 @@
  *  $ARGUMENTS$
  *      <pItem>
  *  $RETURNS$
- *
+ *      <ulResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -491,7 +549,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -502,10 +560,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemGetDS()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -518,7 +580,7 @@
  *
  *      <szDate>
  *  $RETURNS$
- *
+ *      <pszResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -526,7 +588,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -537,10 +599,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemGetDL()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -551,7 +617,7 @@
  *  $ARGUMENTS$
  *      <pItem>
  *  $RETURNS$
- *
+ *      <lResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -559,7 +625,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -570,10 +636,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemGetL()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -584,7 +654,7 @@
  *  $ARGUMENTS$
  *      <pItem>
  *  $RETURNS$
- *
+ *      <bResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -592,7 +662,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -603,10 +673,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemGetND()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -617,7 +691,7 @@
  *  $ARGUMENTS$
  *      <pItem>
  *  $RETURNS$
- *
+ *      <dResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -625,7 +699,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -636,10 +710,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemGetNI()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -650,7 +728,7 @@
  *  $ARGUMENTS$
  *      <pItem>
  *  $RETURNS$
- *
+ *      <iResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -658,7 +736,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -669,10 +747,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemGetNL()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -683,7 +765,7 @@
  *  $ARGUMENTS$
  *      <pItem>
  *  $RETURNS$
- *
+ *      <lResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -691,7 +773,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -702,25 +784,27 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      hb_itemGetNLen()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
  *      C Prototype
  *
  *      #include <hbapiitm.h>
- *      hb_itemGetNLen( PHB_ITEM pItem, int * piWidth, int * piDec ) --> void
+ *      hb_itemGetNLen( PHB_ITEM pItem, int * piWidth, int * piDec )
  *  $ARGUMENTS$
  *      <pItem>
  *
  *      <piWidth>
  *
  *      <piDec>
- *  $RETURNS$
- *
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -728,7 +812,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -739,10 +823,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemGetPtr()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -753,7 +841,7 @@
  *  $ARGUMENTS$
  *      <pItem>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -761,7 +849,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -772,10 +860,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemNew()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -786,7 +878,7 @@
  *  $ARGUMENTS$
  *      <pNull>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -794,7 +886,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -805,21 +897,23 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      hb_itemInit()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
  *      C Prototype
  *
  *      #include <hbapiitm.h>
- *      hb_itemInit( PHB_ITEM pItem ) --> void
+ *      hb_itemInit( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
- *  $RETURNS$
- *
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -827,7 +921,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -838,10 +932,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemPCount()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -852,7 +950,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <usResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -860,7 +958,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -871,10 +969,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemParam()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *      Creates a copy of an item parameter (outside the eval stack)
  *  $SYNTAX$
@@ -900,7 +1002,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -911,10 +1013,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemPutC()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -927,7 +1033,7 @@
  *
  *      <szText>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -935,7 +1041,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -946,10 +1052,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemPutCPtr()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -964,7 +1074,7 @@
  *
  *      <ulLen>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -972,7 +1082,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -983,10 +1093,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemPutCLPtr()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1001,7 +1115,7 @@
  *
  *      <ulLen>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1009,7 +1123,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1020,10 +1134,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemPutCL()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1038,7 +1156,7 @@
  *
  *      <ulLen>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1046,7 +1164,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1057,21 +1175,23 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      hb_itemSetCMemo()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
  *      C Prototype
  *
  *      #include <hbapiitm.h>
- *      hb_itemSetCMemo( PHB_ITEM pItem ) --> void
+ *      hb_itemSetCMemo( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
- *  $RETURNS$
- *
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1079,7 +1199,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1090,10 +1210,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemPutD()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1110,7 +1234,7 @@
  *
  *      <lDay>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1118,7 +1242,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1129,10 +1253,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemPutDS()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1145,7 +1273,7 @@
  *
  *      <szDate>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1153,7 +1281,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1164,10 +1292,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemPutDL()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1180,7 +1312,7 @@
  *
  *      <lJulian>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1188,7 +1320,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1199,10 +1331,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemPutL()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1215,7 +1351,7 @@
  *
  *      <bValue>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1223,7 +1359,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1234,10 +1370,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemPutND()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1250,7 +1390,7 @@
  *
  *      <dNumber>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1258,7 +1398,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1269,10 +1409,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemPutNI()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1285,7 +1429,7 @@
  *
  *      <iNumber>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1293,7 +1437,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1304,10 +1448,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemPutNL()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1320,7 +1468,7 @@
  *
  *      <lNumber>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1328,7 +1476,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1339,10 +1487,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemPutNLen()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1359,7 +1511,7 @@
  *
  *      <iDec>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1367,7 +1519,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1378,10 +1530,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemPutNDLen()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1398,7 +1554,7 @@
  *
  *      <iDec>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1406,7 +1562,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1417,10 +1573,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemPutNILen()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1435,7 +1595,7 @@
  *
  *      <iWidth>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1443,7 +1603,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1454,10 +1614,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemPutNLLen()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1472,7 +1636,7 @@
  *
  *      <iWidth>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1480,7 +1644,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1491,10 +1655,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemPutPtr()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1507,7 +1675,7 @@
  *
  *      <pValue>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1515,7 +1683,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1526,10 +1694,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemRelease()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1540,7 +1712,7 @@
  *  $ARGUMENTS$
  *      <pItem>
  *  $RETURNS$
- *
+ *      <bResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1548,7 +1720,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1559,10 +1731,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemReturn()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1573,7 +1749,7 @@
  *  $ARGUMENTS$
  *      <pItem>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1581,7 +1757,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1592,10 +1768,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemSize()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1606,7 +1786,7 @@
  *  $ARGUMENTS$
  *      <pItem>
  *  $RETURNS$
- *
+ *      <ulResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1614,7 +1794,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1625,10 +1805,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemType()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1639,7 +1823,7 @@
  *  $ARGUMENTS$
  *      <pItem>
  *  $RETURNS$
- *
+ *      <usResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1647,7 +1831,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1658,10 +1842,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemTypeStr()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1672,7 +1860,7 @@
  *  $ARGUMENTS$
  *      <pItem>
  *  $RETURNS$
- *
+ *      <pszResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1680,7 +1868,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1691,10 +1879,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemParamPtr()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1707,7 +1899,7 @@
  *
  *      <iMask>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1715,7 +1907,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1726,10 +1918,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemReturnPtr()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1740,7 +1936,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1748,7 +1944,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1759,10 +1955,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemStrCmp()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *      Our string compare
  *  $SYNTAX$
@@ -1777,7 +1977,7 @@
  *
  *      <bForceExact>
  *  $RETURNS$
- *
+ *      <iResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1785,7 +1985,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1796,23 +1996,25 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      hb_itemCopy()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *      Copies an item to one place to another respecting its containts
  *  $SYNTAX$
  *      C Prototype
  *
  *      #include <hbapiitm.h>
- *      hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource ) --> void
+ *      hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
  *  $ARGUMENTS$
  *      <pDest>
  *
  *      <pSource>
- *  $RETURNS$
- *
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1820,7 +2022,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1831,21 +2033,23 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      hb_itemClear()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
  *      C Prototype
  *
  *      #include <hbapiitm.h>
- *      hb_itemClear( PHB_ITEM pItem ) --> void
+ *      hb_itemClear( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
- *  $RETURNS$
- *
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1853,7 +2057,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1864,10 +2068,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemUnRef()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *      De-references passed variable
  *  $SYNTAX$
@@ -1878,7 +2086,7 @@
  *  $ARGUMENTS$
  *      <pItem>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1886,7 +2094,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1897,10 +2105,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemStr()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *      Convert a number to a string
  *  $SYNTAX$
@@ -1915,7 +2127,7 @@
  *
  *      <pDec>
  *  $RETURNS$
- *
+ *      <pszResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1923,7 +2135,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1934,10 +2146,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemString()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *      Convert any scalar to a string
  *  $SYNTAX$
@@ -1952,7 +2168,7 @@
  *
  *      <bFreeReq>
  *  $RETURNS$
- *
+ *      <pszResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1960,7 +2176,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -1971,10 +2187,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemValToStr()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *      Convert any scalar to a string
  *  $SYNTAX$
@@ -1985,7 +2205,7 @@
  *  $ARGUMENTS$
  *      <pItem>
  *  $RETURNS$
- *
+ *      <pResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1993,7 +2213,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -2004,10 +2224,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_itemPadConv()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2022,7 +2246,7 @@
  *
  *      <pulSize>
  *  $RETURNS$
- *
+ *      <pszResult>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2030,7 +2254,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -2041,23 +2265,25 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      hb_itemSwap()
  *  $CATEGORY$
- *      Item API
+ *      C level API
+ * $SUBCATEGORY$
+ *      Item
  *  $ONELINER$
  *
  *  $SYNTAX$
  *      C Prototype
  *
  *      #include <hbapiitm.h>
- *      hb_itemSwap( PHB_ITEM pItem1, PHB_ITEM pItem2 ) --> void
+ *      hb_itemSwap( PHB_ITEM pItem1, PHB_ITEM pItem2 )
  *  $ARGUMENTS$
  *      <pItem1>
  *
  *      <pItem2>
- *  $RETURNS$
- *
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2065,7 +2291,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$

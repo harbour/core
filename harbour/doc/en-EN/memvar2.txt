@@ -3,10 +3,14 @@
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      FIELD
  *  $CATEGORY$
  *      Command
+ *  $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *      Declares a list of database field names.
  *  $SYNTAX$
@@ -17,8 +21,6 @@
  *      <xFieldn>   Additional field name
  *
  *      <cDatabase> An valid alias name
- *  $RETURNS$
- *      None
  *  $DESCRIPTION$
  *      This command declares the names of fields <xField> (and <xFieldn> and
  *      following) with an optional alias identifier as <cDatabase> for each.
@@ -43,9 +45,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command works exactaly as CA-Cl*pper.
+ *      C
  *  $PLATFORMS$
- *      All.
+ *      All
  *  $FILES$
  *      None.
  *  $SEEALSO$
@@ -55,10 +57,14 @@
 
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      LOCAL
  *  $CATEGORY$
  *      Command
+ *  $SUBCATEGORY$
+ *      Variable management
  *  $ONELINER$
  *      Initializes a local memory variable or array
  *  $SYNTAX$
@@ -67,8 +73,6 @@
  *      <xVar>    Name of a memory variable or array.
  *
  *      <xInit>   Value to be assinged to a variable or array
- *  $RETURNS$
- *      None
  *  $DESCRIPTION$
  *      This command created a LOCAL memory variable or array. The name
  *      of either is specified in <xVar>. If more then one variable is being
@@ -107,7 +111,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command works exactaly as CA-Cl*pper.
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -118,18 +122,20 @@
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      MEMVAR
  *  $CATEGORY$
  *      Command
+ *  $SUBCATEGORY$
+ *      Variable management
  *  $ONELINER$
  *      Declares private and public variables and arrays.
  *  $SYNTAX$
  *      MEMVAR <xVar>
  *  $ARGUMENTS$
  *      <xVar> Memory variable Name
- *  $RETURNS$
- *      None.
  *  $DESCRIPTION$
  *      This command tells the compiler to resolve any reference to a memory
  *      variable designated within this list s if it possessed an explicit
@@ -159,7 +165,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command works exactaly as CA-Cl*pper.
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$

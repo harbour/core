@@ -16,9 +16,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *     AFIELDS()*
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Fills referenced arrays with database field information
@@ -83,7 +87,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      AFIELDS() is fully CA-Cl*pper compliant.
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -92,9 +96,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *     ALIAS()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Returns the alias name of a work area
@@ -121,7 +129,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      ALIAS() is fully CA-Cl*pper compliant.
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -130,9 +138,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *     BOF()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Test for the beggining-of-file condition
@@ -158,7 +170,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      BOF() is fully CA-Cl*pper compliant.
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -167,14 +179,20 @@
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      ZAP
  *  $CATEGORY$
  *      Command
+ *  $SUBCATEGORY$
+ *      Database
  *  $ONELINER$
  *      Remove all records from the current database file
  *  $SYNTAX$
  *      ZAP
+ *  $ARGUMENTS$
+ *
  *  $DESCRIPTION$
  *      This command removes all of the records from the database in the
  *      current work area. This operation also updates any index file in
@@ -189,21 +207,27 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper compliant
+ *      C
  *  $SEEALSO$
  *      DELETE,PACK,USE
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      DELETED()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Tests the record's deletion flag.
  *  $SYNTAX$
  *      DELETED() --> lDeleted
+ *  $ARGUMENTS$
+ *
  *  $RETURNS$
  *      DELETED() return a logical true (.T.) or false (.F.).
  *  $DESCRIPTION$
@@ -222,7 +246,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -231,14 +255,20 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      EOF()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Test for end-of-file condition.
  *  $SYNTAX$
  *      EOF() --> <lEnd>
+ *  $ARGUMENTS$
+ *
  *  $RETURNS$
  *      <lEnd> A logical true (.T.) or false (.F.)
  *  $DESCRIPTION$
@@ -257,7 +287,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      EOF() is fully CA-Cl*pper compliant.
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -266,9 +296,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      FCOUNT()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Counts the number of fields in an active database.
@@ -289,7 +323,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -298,9 +332,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      FIELDGET()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Obtains the value  of a specified field
@@ -324,7 +362,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper Compliant.
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -333,9 +371,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      FIELDNAME()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Return the name of a field at a numeric field location.
@@ -362,7 +404,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compatible.
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -371,9 +413,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      FIELDPOS()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Return the ordinal position of a field.
@@ -397,7 +443,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant.
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -406,9 +452,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      FIELDPUT()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Set the value of a field variable
@@ -433,7 +483,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compatible.
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -442,9 +492,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      FLOCK()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Locks a file
@@ -467,7 +521,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compatible
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -476,9 +530,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      FOUND()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Determine the success of a previous search operation.
@@ -504,7 +562,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compatible
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -513,9 +571,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      HEADER()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Return the length of a database file header
@@ -536,7 +598,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compatible
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -545,9 +607,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      LASTREC()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Returns the number of records in an active work area or database.
@@ -565,10 +631,11 @@
  *      USE Tests NEW
  *      ? LASTREC(), RECCOUNT()
  *  $TESTS$
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compatible
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -579,9 +646,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      LUPDATE()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Yields the date the database was last updated.
@@ -603,10 +674,11 @@
  *      Use
  *      Return Nil
  *  $TESTS$
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -617,9 +689,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      NETERR()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Tests the success of a network function
@@ -653,7 +729,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -662,9 +738,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      RECCOUNT()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Counts the number of records in a database.
@@ -687,10 +767,11 @@
  *      ? Test->(RECCOUNT())
  *      CLOSE ALL
  *  $TESTS$
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -699,9 +780,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      RECNO()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Returns the current record number or identity.
@@ -723,10 +808,11 @@
  *      DBGOTO(50)
  *      RECNO()            // Returns 50
  *  $TESTS$
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -735,9 +821,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      RECSIZE()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Returns the size of a single record in an active database.
@@ -759,10 +849,11 @@
  *      DBGOTO(50)
  *      RECSIZE()
  *  $TESTS$
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -771,9 +862,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      RLOCK()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Lock a record in a work area
@@ -811,10 +906,11 @@
  *      ENDIF
  *      USE
  *  $TESTS$
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -823,9 +919,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SELECT()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Returns the work area number for a specified alias.
@@ -847,10 +947,11 @@
  *      LIST
  *      SELECT cOldArea
  *  $TESTS$
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -859,9 +960,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      USED()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Checks whether a database is in use in a work area
@@ -885,12 +990,12 @@
  *      ? USED()  // .F.
  *      Select TESTS
  *      ? USED() //.T.
- *
  *  $TESTS$
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper Compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -899,14 +1004,20 @@
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      PACK
  *  $CATEGORY$
  *      Command
+ *  $SUBCATEGORY$
+ *      Database
  *  $ONELINER$
  *      Remove records marked for deletion from a database
  *  $SYNTAX$
  *      PACK
+ *  $ARGUMENTS$
+ *
  *  $DESCRIPTION$
  *      This command removes records that were marked for deletion from the
  *      currently selected database. This command does not pack the contents
@@ -924,7 +1035,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper compliant
+ *      C
  *  $SEEALSO$
  *      DBEVAL(), DELETE, DELETED(), ZAP, RECALL
  *  $END$

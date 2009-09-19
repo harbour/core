@@ -16,10 +16,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ISAFFIRM()
  *  $CATEGORY$
- *      Nation
+ *      API
+ *  $SUBCATEGORY$
+ *      Language and Nation
  *  $ONELINER$
  *      Checks if passed char is an affirmation char
  *  $SYNTAX$
@@ -27,7 +31,7 @@
  *  $ARGUMENTS$
  *      <cChar> is a char or string of chars   </par>
  *  $RETURNS$
- *      <lTrueOrFalse> True if passed char is an affirmation char,otherwise
+ *      <lTrueOrFalse> True if passed char is an affirmation char, otherwise
  *      false   </par>
  *  $DESCRIPTION$
  *      This function is used to check if a user's input is true or not
@@ -37,11 +41,10 @@
  *      DO WHILE !ISAFFIRM( cYesNo )
  *        ACCEPT "Sure: " TO cYesNo
  *      END DO
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      ISAFFIRM() is fully CA-Cl*pper compliant.   </par>
+ *      C
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -50,10 +53,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ISNEGATIVE()
  *  $CATEGORY$
- *      Nation
+ *      API
+ *  $SUBCATEGORY$
+ *      Language and Nation
  *  $ONELINER$
  *      Checks if passed char is a negation char.
  *  $SYNTAX$
@@ -71,11 +78,10 @@
  *      DO WHILE !ISNEGATIVE( cYesNo )
  *        ACCEPT "Sure: " TO cYesNo
  *      END DO
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      ISNEGATIVE() is fully CA-Cl*pper compliant.   </par>
+ *      C
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -84,14 +90,18 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
- *      NATIONMSG()
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
+ *      Language and Nation MSG()
  *  $CATEGORY$
- *      Nation
+ *      API
+ *  $SUBCATEGORY$
+ *      Language and Nation
  *  $ONELINER$
  *      Returns international strings messages.
  *  $SYNTAX$
- *      NATIONMSG( <nMsg> ) --> <cMessage>
+ *      Language and Nation MSG( <nMsg> ) --> <cMessage>
  *  $ARGUMENTS$
  *      <nMsg> is the message number you want to get.   </par>
  *  $RETURNS$
@@ -99,7 +109,7 @@
  *      If <nMsg> is nil returns "Invalid Argument", and if <nMsg> is any
  *      other type it returns an empty string.   </par>
  *  $DESCRIPTION$
- *      NATIONMSG() returns international message descriptions.   </par>
+ *      Language and Nation MSG() returns international message descriptions.   </par>
  *  $EXAMPLES$
  *      // Displays "Sure Y/N: "  and waits until user enters Y
  *      // Y/N is the string for NATIONMSG( 12 ) with default natmsg module.
@@ -110,7 +120,7 @@
  *  $STATUS$
  *      C
  *  $COMPLIANCE$
- *      NATIONMSG() is fully CA-Cl*pper compliant.   </par>
+ *      C
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$

@@ -23,10 +23,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      FOPEN()
  *  $CATEGORY$
- *      Low Level
+ *      API
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Open a file.
  *  $SYNTAX$
@@ -55,6 +59,7 @@
  *       64      FO_DENYNONE    Not deny, Let to others Read / Write
  *       64      FO_SHARED      same as FO_DENYNONE
  *  </table>
+ *
  *      If there is an error in opening a file, a -1 will be returned by
  *      the function. Files handles may be in the range of 0 to 65535. The
  *      status of the SET DEFAULT TO and SET PATH TO commands has no effect
@@ -68,11 +73,10 @@
  *      IF (nH:=FOPEN('x.txt',66) < 0
  *         ? 'File can't be opened'
  *      ENDIF
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rtl
  *      Header  is fileio.ch
@@ -82,10 +86,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      FCREATE()
  *  $CATEGORY$
- *      Low Level
+ *      API
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Creates a file.
  *  $SYNTAX$
@@ -124,11 +132,10 @@
  *      IF (nh:=FCREATE("test.txt") <0
  *          ? "Cannot create file"
  *      ENDIF
- *    </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant.
+ *      C
  *  $FILES$
  *      Library is rtl
  *      Header is fileio.ch
@@ -138,10 +145,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      FREAD()
  *  $CATEGORY$
- *      Low Level
+ *      API
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Reads a specified number of bytes from a file.
  *  $SYNTAX$
@@ -184,12 +195,12 @@
  *         ? cbuffer
  *      ENDIF
  *      FCLOSE(nH)
- *      </fixed>
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is CA-Cl*pper compliant, but also extends the possible
- *     buffer size to strings greater than 65K (depending on platform).
+ *     C
+ *  $PLATFORMS$
+ *     All(64K)
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -198,10 +209,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      FWRITE()
  *  $CATEGORY$
- *      Low Level
+ *      API
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Writes characters to a file.
  *  $SYNTAX$
@@ -238,12 +253,12 @@
  *        FWRITE( nHandle, STR( x ) )
  *      NEXT
  *      FCLOSE( nHandle )
-    </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is not CA-Cl*pper compatile since
- *      it can writes strings greather the 64K
+ *      C
+ *  $PLATFORMS$
+ *      All(64K)
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -252,10 +267,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      FERROR()
  *  $CATEGORY$
- *      Low Level
+ *      API
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Reports the error status of low-level file functions
  *  $SYNTAX$
@@ -298,11 +317,10 @@
  *      IF FERROR() != 0
  *         ? "Cannot create file, DOS error ", FERROR()
  *      ENDIF
- *      </fixed>
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is CA-Cl*pper compatible
+ *     C
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -311,10 +329,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
- *     FCLOSE()
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
+ *      FCLOSE()
  *  $CATEGORY$
- *     Low Level
+ *      API
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *     Closes an open file
  *  $SYNTAX$
@@ -332,11 +354,10 @@
  *     nHandle:=FOPEN('x.txt')
  *     ? FSEEK(nHandle, 0, 2)
  *     FCLOSE(nHandle)
- *     </fixed>
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is CA-Cl*pper compliant
+ *     C
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -345,10 +366,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      FERASE()
  *  $CATEGORY$
- *      Low Level
+ *      API
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Erase a file from disk
  *  $SYNTAX$
@@ -378,11 +403,10 @@
  *      ELSE
  *          ? "File can not be deleted"
  *      ENDIF
- *  </fixed>
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is CA-Cl*pper Compatible
+ *     C
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -391,10 +415,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      FRENAME()
  *  $CATEGORY$
- *      File management
+ *      API
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Renames a file
  *  $SYNTAX$
@@ -432,11 +460,10 @@
  *      IF nResult < 0
  *         ? "File could not be renamed."
  *      ENDIF
- *      </fixed>
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is CA-Cl*pper compliant
+ *     C
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -445,10 +472,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      FSEEK()
  *  $CATEGORY$
- *      Low Level
+ *      API
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Positions the file pointer in a file.
  *  $SYNTAX$
@@ -485,6 +516,7 @@
  *       1           FS_RELATIVE   Current file pointer position
  *       2           FS_END        End of file
  *      </table>
+ *
  *      If a value is not provided for <nOrigin>, it defaults to 0 and
  *      moves the file pointer from the beginning of the file.
  *  $EXAMPLES$
@@ -508,11 +540,10 @@
  *        FSEEK( nH, nSavePos + nEol + 1, FS_SET )
  *      ENDIF
  *      RETURN nNumRead != 0
- *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant.
+ *      C
  *  $FILES$
  *      Library is rtl
  *      Header is fileio.ch
@@ -522,10 +553,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      FILE()
  *  $CATEGORY$
- *      File management
+ *      API
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Tests for the existence of file(s)
  *  $SYNTAX$
@@ -548,11 +583,10 @@
  *  $EXAMPLES$
  *      ? file('C:\harbour\doc\compiler.txt")
  *      ? file('C:/harbour/doc/subcodes.txt")
- *  </fixed>
  *  $STATUS$
  *      S (wild card support is missing)
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compatible.
+ *      C
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -561,10 +595,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      FREADSTR()
  *  $CATEGORY$
- *      Low Level
+ *      API
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Reads a string from a file.
  *  $SYNTAX$
@@ -599,12 +637,12 @@
  *         ? cStr
  *      ENDIF
  *      FCLOSE(nH)
- *   </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is not CA-Cl*pper compliant since may read
- *      strings greather the 65K depending of platform.
+ *     C
+ *  $PLATFORMS$
+ *     All(64K)
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -615,10 +653,14 @@
 /* HARBOUR COMMANDS */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      RENAME
  *  $CATEGORY$
  *      Command
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Changes the name of a specified file
  *  $SYNTAX$
@@ -638,11 +680,10 @@
  *      command will not perform the desired operation.
  *  $EXAMPLES$
  *      RENAME C:\autoexec.bat TO C:\autoexec.old
- *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper compatible
+ *      C
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -651,10 +692,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      ERASE
  *  $CATEGORY$
  *      Command
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Remove a file from disk
  *  $SYNTAX$
@@ -672,21 +717,24 @@
  *  $EXAMPLES$
  *      ERASE C:\autoexec.bat
  *      ERASE C:/temp/read.txt
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper compatible
+ *      C
  *  $SEEALSO$
  *      CURDIR(), FILE(), FERASE(), DELETE FILE
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      DELETE FILE
  *  $CATEGORY$
  *      Command
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Remove a file from disk
  *  $SYNTAX$
@@ -704,21 +752,24 @@
  *  $EXAMPLES$
  *      ERASE C:\autoexec.bat
  *      ERASE C:/temp/read.txt
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper compatible
+ *      C
  *  $SEEALSO$
  *      CURDIR(), FILE(), FERASE(), ERASE
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __TYPEFILE()
  *  $CATEGORY$
- *      Data input and output
+ *      API
+ *  $SUBCATEGORY$
+ *      Terminal
  *  $ONELINER$
  *      Show the content of a file on the console and/or printer
  *  $SYNTAX$
@@ -760,11 +811,10 @@
  *      SET CONSOLE OFF
  *      __TYPEFILE( "mytext.dat", .T. )
  *      SET CONSOLE ON
- *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __TYPEFILE() works exactly like CA-Cl*pper's __TYPEFILE()
+ *      C
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -773,10 +823,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      TYPE
  *  $CATEGORY$
  *      Command
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Show the content of a file on the console, printer or file
  *  $SYNTAX$
@@ -826,21 +880,24 @@
  *
  *      // display mytext.dat file on screen and into a file myreport.txt
  *      TYPE mytext.dat TO FILE MyReport
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      TYPE works exactly like CA-Cl*pper's TYPE
+ *      C
  *  $SEEALSO$
  *      COPY FILE,SET DEFAULT,SET PATH,SET PRINTER,__TYPEFILE()
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      CURDIR()
  *  $CATEGORY$
- *      Low Level
+ *      API
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Returns the current OS directory name.
  *  $SYNTAX$
@@ -862,13 +919,12 @@
  *      byte.
  *  $EXAMPLES$
  *      ? Curdir()
- *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper Compatible
+ *      C
  *  $PLATFORMS$
- *      ALL
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -877,10 +933,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      COPY FILE
  *  $CATEGORY$
  *      Command
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Copies a file.
  *  $SYNTAX$
@@ -901,17 +961,21 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper compliant
+ *      C
  *  $SEEALSO$
  *      ERASE,RENAME,FRENAME(),FERASE()
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      HB_FEOF()
  *  $CATEGORY$
- *      Low Level
+ *      API
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Check for end-of-file.
  *  $SYNTAX$
@@ -937,7 +1001,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is a Harbour extension
+ *      H
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -946,10 +1010,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      DIRREMOVE()
  *  $CATEGORY$
- *      Low Level
+ *      API
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Attempt to remove an directory
  *  $SYNTAX$
@@ -984,10 +1052,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      DIRCHANGE()
  *  $CATEGORY$
- *      Low Level
+ *      API
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Changes the directory
  *  $SYNTAX$
@@ -1022,10 +1094,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      MAKEDIR()
  *  $CATEGORY$
- *      Low Level
+ *      API
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Create a new directory
  *  $SYNTAX$
@@ -1061,10 +1137,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ISDISK()
  *  $CATEGORY$
- *      Low Level
+ *      API
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Verify if a drive is ready
  *  $SYNTAX$

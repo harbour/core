@@ -14,10 +14,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      DISKSPACE()
  *  $CATEGORY$
- *      Low Level
+ *      API
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Get the amount of space available on a disk
  *  $SYNTAX$
@@ -37,14 +41,15 @@
  *      If information is requested on a disk that is not available, a runtime
  *      error 2018 will be raised.
  *  $EXAMPLES$
- *      ? "You can use : " +Str( DiskSpace() ) + " bytes " +;
+ *      ? "You can use : " +Str( DiskSpace() ) + " bytes "
+ *
  *      Note: See tests\tstdspac.prg for another example
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
- *      Dos,Windows,OS/2
+ *      DOS,Win,OS2
  *  $FILES$
  *      Library is rtl
  *      Header is fileio.ch
@@ -52,10 +57,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      HB_DISKSPACE()
  *  $CATEGORY$
- *      Low Level
+ *      API
+ *  $SUBCATEGORY$
+ *      FileSys
  *  $ONELINER$
  *      Get the amount of space available on a disk
  *  $SYNTAX$
@@ -99,12 +108,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      CA-Cl*pper will return an integer value which limits its usefulness to
- *      drives less than 2 gigabytes. The Harbour version will return a
- *      floating point value with 0 decimals if the disk is > 2 gigabytes.
- *      <nType> is a Harbour extension.
+ *      H
  *  $PLATFORMS$
- *      Dos,Windows,OS/2,Unix
+ *      DOS,Win,OS2,Unix
  *  $FILES$
  *      Library is rtl
  *      Header is fileio.ch

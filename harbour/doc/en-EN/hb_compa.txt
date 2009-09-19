@@ -14,10 +14,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _evalLaunch()
  *  $CATEGORY$
- *      Item compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -28,7 +32,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_evalLaunch>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -47,10 +51,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _evalNew()
  *  $CATEGORY$
- *      Item compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -61,7 +69,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_evalNew>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -80,10 +88,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _evalPutParam()
  *  $CATEGORY$
- *      Item compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -94,7 +106,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_evalPutParam>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -113,10 +125,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _evalRelease()
  *  $CATEGORY$
- *      Item compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -127,7 +143,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_evalRelease>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -146,10 +162,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _itemArrayGet()
  *  $CATEGORY$
- *      Item compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -160,7 +180,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_itemArrayGet>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -179,10 +199,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _itemArrayNew()
  *  $CATEGORY$
- *      Item compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -193,7 +217,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_itemArrayNew>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -212,10 +236,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _itemArrayPut()
  *  $CATEGORY$
- *      Item compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -226,7 +254,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_itemArrayPut>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -245,10 +273,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _itemNew()
  *  $CATEGORY$
- *      Item compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -259,7 +291,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_itemNew>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -278,10 +310,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _itemParam()
  *  $CATEGORY$
- *      Item compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -292,7 +328,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_itemParam>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -311,10 +347,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _itemRelease()
  *  $CATEGORY$
- *      Item compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -325,7 +365,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_itemRelease>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -344,10 +384,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _itemReturn()
  *  $CATEGORY$
- *      Item compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -358,7 +402,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_itemReturn>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -377,10 +421,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _itemSize()
  *  $CATEGORY$
- *      Item compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -391,7 +439,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_itemSize>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -410,10 +458,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _itemType()
  *  $CATEGORY$
- *      Item compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Item
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -424,7 +476,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_itemType>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -443,10 +495,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _reta()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -457,7 +513,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_reta>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -476,10 +532,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _pcount()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -490,7 +550,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_pcount>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -509,10 +569,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _tchdir()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -523,7 +587,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsChDir>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -542,10 +606,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _tchdrv()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -556,7 +624,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsChDrv>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -575,10 +643,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _tclose()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -589,7 +661,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsClose>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -608,10 +680,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _tcommit()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -622,7 +698,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsCommit>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -641,10 +717,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _tcreat()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -655,7 +735,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsCreate>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -674,10 +754,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _tcurdir()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -688,7 +772,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsCurDir>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -707,10 +791,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _tcurdrv()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -721,7 +809,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsCurDrv>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -740,10 +828,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _tdevraw()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -754,7 +846,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsSetDevRaw>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -773,10 +865,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _terror()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -787,7 +883,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsError>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -806,10 +902,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _tisdevice()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -820,7 +920,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsIsDevice>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -839,10 +939,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _tisdrv()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -853,7 +957,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsIsDrv>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -872,10 +976,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _tlock()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -886,7 +994,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsLock>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -905,10 +1013,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _tlseek()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -919,7 +1031,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsSeek>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -938,10 +1050,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _tmkdir()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -952,7 +1068,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsMkDir>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -971,10 +1087,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _topen()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -985,7 +1105,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsOpen>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1004,10 +1124,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _tread()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1018,7 +1142,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsRead>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1037,10 +1161,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _trename()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1051,7 +1179,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsRename>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1070,10 +1198,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _trmdir()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1084,7 +1216,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsRmDir>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1103,10 +1235,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _tunlink()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1117,7 +1253,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsDelete>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1136,10 +1272,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _twrite()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1150,7 +1290,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsWrite>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1169,10 +1309,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _bset()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1183,7 +1327,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see memset>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1202,10 +1346,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _bmove()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1216,7 +1364,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see memmove>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1235,10 +1383,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _bcopy()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1249,7 +1401,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see memcpy>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1268,10 +1420,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _bcmp()
  *  $CATEGORY$
- *      Undocumented compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Undocumented
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1282,7 +1438,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see memcmp>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1301,10 +1457,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtBox()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1315,7 +1475,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtBox>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1334,10 +1494,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtColorSelect()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1348,7 +1512,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtColorSelect>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1367,10 +1531,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtDispBegin()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1381,7 +1549,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtDispBegin>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1400,10 +1568,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtDispCount()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1414,7 +1586,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtDispCount>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1433,10 +1605,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtDispEnd()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1447,7 +1623,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtDispEnd>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1466,10 +1642,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtGetColorStr()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1480,7 +1660,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtGetColorStr>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1499,10 +1679,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtGetCursor()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1513,7 +1697,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtGetCursor>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1532,10 +1716,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtGetPos()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1546,7 +1734,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtGetPos>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1565,10 +1753,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtIsColor()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1579,7 +1771,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtIsColor>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1598,10 +1790,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtMaxCol()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1612,7 +1808,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtMaxCol>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1631,10 +1827,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtMaxRow()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1645,7 +1845,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtMaxRow>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1664,10 +1864,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtPostExt()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1678,7 +1882,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtPostExt>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1697,10 +1901,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtPreExt()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1711,7 +1919,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtPreExt>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1730,10 +1938,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtRectSize()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1744,7 +1956,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtRectSize>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1763,10 +1975,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtRepChar()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1777,7 +1993,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtRepChar>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1796,10 +2012,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtRest()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1810,7 +2030,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtRest>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1829,10 +2049,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtSave()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1843,7 +2067,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtSave>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1862,10 +2086,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtScrDim()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1876,7 +2104,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtScrDim>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1895,10 +2123,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtScroll()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1909,7 +2141,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtScroll>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1928,10 +2160,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtSetBlink()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1942,7 +2178,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtSetBlink>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1961,10 +2197,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtSetColorStr()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -1975,7 +2215,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtSetColorStr>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1994,10 +2234,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtSetCursor()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2008,7 +2252,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtSetCursor>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2027,10 +2271,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtSetMode()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2041,7 +2289,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtSetMode>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2060,10 +2308,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtSetPos()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2074,7 +2326,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtSetPos>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2093,10 +2345,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtSetSnowFlag()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2107,7 +2363,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtSetSnowFlag>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2126,10 +2382,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtWrite()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2140,7 +2400,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtWrite>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2159,10 +2419,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtWriteAt()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2173,7 +2437,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtWriteAt>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2192,10 +2456,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtWriteCon()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2206,7 +2474,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtWriteCon>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2225,10 +2493,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtInit()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2239,7 +2511,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtInit>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2258,10 +2530,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtExit()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2272,7 +2548,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtExit>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2291,10 +2567,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtWCreate()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2305,7 +2585,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtWCreate>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2324,10 +2604,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtWDestroy()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2338,7 +2622,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtWDestroy>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2357,10 +2641,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtWFlash()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2371,7 +2659,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtWFlash>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2390,10 +2678,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtWApp()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2404,7 +2696,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtWApp>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2423,10 +2715,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtWCurrent()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2437,7 +2733,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtWCurrent>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2456,10 +2752,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtWPos()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2470,7 +2770,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtWPos>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2489,10 +2789,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtWVis()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2503,7 +2807,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtWVis>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2522,10 +2826,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtModalRead()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2536,7 +2844,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtModalRead>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2555,10 +2863,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtBeginWrite()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2569,7 +2881,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtBeginWrite>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2588,10 +2900,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtEndWrite()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2602,7 +2918,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtEndWrite>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2621,10 +2937,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtFlushCursor()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2635,7 +2955,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtFlushCursor>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2654,10 +2974,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtSetColor()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2668,7 +2992,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtSetColor>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2687,10 +3011,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtGetColor()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2701,7 +3029,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtGetColor>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2720,10 +3048,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _gtSetBorder()
  *  $CATEGORY$
- *      Terminal compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2734,7 +3066,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_gtSetBorder>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2753,10 +3085,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _xalloc()
  *  $CATEGORY$
- *      Fixed memory compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Fixed memory
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2767,7 +3103,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_xalloc>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2786,10 +3122,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _xgrab()
  *  $CATEGORY$
- *      Fixed memory compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Fixed memory
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2800,7 +3140,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_xgrab>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2819,10 +3159,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _xfree()
  *  $CATEGORY$
- *      Fixed memory compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Fixed memory
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2833,7 +3177,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_xfree>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2852,10 +3196,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _exmgrab()
  *  $CATEGORY$
- *      Fixed memory compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Fixed memory
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2866,7 +3214,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_xgrab>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2885,10 +3233,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _fsChDir()
  *  $CATEGORY$
- *      FileSys compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2899,7 +3251,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsChDir>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2918,10 +3270,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _fsChDrv()
  *  $CATEGORY$
- *      FileSys compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2932,7 +3288,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsChDrv>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2951,10 +3307,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _fsClose()
  *  $CATEGORY$
- *      FileSys compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2965,7 +3325,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsClose>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -2984,10 +3344,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _fsCommit()
  *  $CATEGORY$
- *      FileSys compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -2998,7 +3362,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsCommit>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3017,10 +3381,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _fsCreate()
  *  $CATEGORY$
- *      FileSys compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3031,7 +3399,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsCreate>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3050,10 +3418,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _fsCurDir()
  *  $CATEGORY$
- *      FileSys compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3064,7 +3436,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsCurDir>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3083,10 +3455,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _fsCurDrv()
  *  $CATEGORY$
- *      FileSys compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3097,7 +3473,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsCurDrv>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3116,10 +3492,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _fsDelete()
  *  $CATEGORY$
- *      FileSys compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3130,7 +3510,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsDelete>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3149,10 +3529,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _fsError()
  *  $CATEGORY$
- *      FileSys compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3163,7 +3547,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsError>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3182,10 +3566,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _fsExtOpen()
  *  $CATEGORY$
- *      FileSys compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3196,7 +3584,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsExtOpen>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3215,10 +3603,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _fsIsDrv()
  *  $CATEGORY$
- *      FileSys compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3229,7 +3621,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsIsDrv>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3248,10 +3640,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _fsLock()
  *  $CATEGORY$
- *      FileSys compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3262,7 +3658,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsLock>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3281,10 +3677,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _fsMkDir()
  *  $CATEGORY$
- *      FileSys compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3295,7 +3695,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsMkDir>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3314,10 +3714,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _fsOpen()
  *  $CATEGORY$
- *      FileSys compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3328,7 +3732,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsOpen>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3347,10 +3751,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _fsRead()
  *  $CATEGORY$
- *      FileSys compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3361,7 +3769,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsRead>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3380,10 +3788,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _fsRmDir()
  *  $CATEGORY$
- *      FileSys compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3394,7 +3806,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsRmDir>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3413,10 +3825,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _fsRename()
  *  $CATEGORY$
- *      FileSys compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3427,7 +3843,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsRename>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3446,10 +3862,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _fsSeek()
  *  $CATEGORY$
- *      FileSys compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3460,7 +3880,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsSeek>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3479,10 +3899,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _fsWrite()
  *  $CATEGORY$
- *      FileSys compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    FileSys
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3493,7 +3917,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_fsWrite>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3512,10 +3936,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ALENGTH
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3526,7 +3954,7 @@
  *  $ARGUMENTS$
  *      <n>
  *  $RETURNS$
- *
+ *      <see hb_parinfa( n, 0 )>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3534,7 +3962,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Header file is extend.api
  *  $PLATFORMS$
@@ -3545,10 +3973,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _parc()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3559,7 +3991,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_parc>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3578,10 +4010,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _parclen()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3592,7 +4028,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_parclen>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3611,10 +4047,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _parcsiz()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3625,7 +4065,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_parcsiz>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3644,10 +4084,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _pards()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3658,7 +4102,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_pards>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3677,10 +4121,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _parinfa()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3691,7 +4139,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_parinfa>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3710,10 +4158,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _parinfo()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3724,7 +4176,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_parinfo>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3743,10 +4195,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _parl()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3757,7 +4213,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_parl>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3776,10 +4232,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _parnd()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3790,7 +4250,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_parnd>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3809,10 +4269,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _parni()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3823,7 +4287,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_parni>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3842,10 +4306,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _parnl()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3856,7 +4324,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_parnl>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3875,10 +4343,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _ret()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3889,7 +4361,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_ret>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3908,10 +4380,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _retc()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3922,7 +4398,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_retc>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3941,10 +4417,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _retclen()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3955,7 +4435,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_retclen>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -3974,10 +4454,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _retds()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -3988,7 +4472,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_retds>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4007,10 +4491,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _retl()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4021,7 +4509,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_retl>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4040,10 +4528,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _retnd()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4054,7 +4546,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_retnd>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4073,10 +4565,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _retni()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4087,7 +4583,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_retni>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4106,10 +4602,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _retnl()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4120,7 +4620,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_retnl>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4139,10 +4639,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _storc()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4153,7 +4657,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_storc>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4172,10 +4676,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _storclen()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4186,7 +4694,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_storclen>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4205,10 +4713,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _stords()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4219,7 +4731,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_stords>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4238,10 +4750,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _storl()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4252,7 +4768,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_storl>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4271,10 +4787,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _stornd()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4285,7 +4805,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_stornd>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4304,10 +4824,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _storni()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4318,7 +4842,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_storni>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4337,10 +4861,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _stornl()
  *  $CATEGORY$
- *      Extend compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Extend
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4351,7 +4879,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_stornl>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4370,10 +4898,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errGetDescription()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4384,7 +4916,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errGetDescription>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4403,10 +4935,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errGetFileName()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4417,7 +4953,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errGetFileName>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4436,10 +4972,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errGetFlags()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4450,7 +4990,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errGetFlags>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4469,10 +5009,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errGetGenCode()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4483,7 +5027,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errGetGenCode>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4502,10 +5046,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errGetOperation()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4516,7 +5064,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errGetOperation>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4535,10 +5083,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errGetOsCode()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4549,7 +5101,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errGetOsCode>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4568,10 +5120,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errGetSeverity()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4582,7 +5138,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errGetSeverity>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4601,10 +5157,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errGetSubCode()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4615,7 +5175,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errGetSubCode>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4634,10 +5194,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errGetSubSystem()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4648,7 +5212,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errGetSubSystem>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4667,10 +5231,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errGetTries()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4681,7 +5249,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errGetTries>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4700,10 +5268,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errLaunch()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4714,7 +5286,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errLaunch>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4733,10 +5305,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errNew()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4747,7 +5323,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errNew>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4766,10 +5342,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errPutDescription()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4780,7 +5360,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errPutDescription>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4799,10 +5379,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errPutFileName()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4813,7 +5397,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errPutFileName>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4832,10 +5416,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errPutFlags()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4846,7 +5434,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errPutFlags
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4865,10 +5453,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errPutGenCode()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4879,7 +5471,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errPutGenCode>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4898,10 +5490,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errPutOperation()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4912,7 +5508,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errPutOperation>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4931,10 +5527,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errPutOsCode()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4945,7 +5545,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errPutOsCode>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4964,10 +5564,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errPutSeverity()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -4978,7 +5582,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errPutSeverity>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -4997,10 +5601,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errPutSubCode()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5011,7 +5619,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errPutSubCode>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5030,10 +5638,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errPutSubSystem()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5044,7 +5656,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errPutSubSystem>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5063,10 +5675,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errPutTries()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5077,7 +5693,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errPutTries>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5096,10 +5712,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      _errRelease()
  *  $CATEGORY$
- *      Error compatability API
+ *      C level API compatability
+ * $SUBCATEGORY$
+ *    Error
  *  $ONELINER$
  *
  *  $SYNTAX$
@@ -5110,7 +5730,7 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *
+ *      <see hb_errRelease>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -5127,4 +5747,3 @@
  *      hb_errRelease()
  *  $END$
  */
-

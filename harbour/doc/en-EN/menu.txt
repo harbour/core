@@ -14,10 +14,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ACHOICE()
  *  $CATEGORY$
- *      Array
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Allows selection of an element from an array
  *  $SYNTAX$
@@ -72,7 +76,7 @@
  *                   selection was aborted.
  *  $DESCRIPTION$
  *      Allows selection of an element from an array.
- *      Please see standard Clipper documentation for ACHOICE for
+ *      Please see standard CA-Cl*pper documentation for ACHOICE for
  *      additional detail.
  *  $EXAMPLES$
  *      aItems := { "One", "Two", "Three" }
@@ -83,19 +87,24 @@
  *          ? "You chose element " + LTRIM( STR( nChoice ) )
  *          ?? " which has a value of " + aItems[ nChoice ]
  *      ENDIF
- *  </fixed>
  *  $FILES$
  *      Library is rtl
+ *  $COMPLIANCE$
+ *      C
  *  $SEEALSO$
  *      MENU TO
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __AtPrompt()
  *  $CATEGORY$
- *      Data input and output
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Display a menu item on screen and define a message
  *  $SYNTAX$
@@ -141,13 +150,10 @@
  *         CASE nChoice == 2           // user select 2nd menu item
  *              ? "Just another day for some"
  *      ENDCASE
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      CA-Cl*pper array is limited to 4096 items, and therefor 4096 menu
- *      items are the maximum that could be defined per one menu, Harbour
- *      does not have this limit (not that you'll ever need that).
+ *      C(menu)
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -156,10 +162,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      @...PROMPT
  *  $CATEGORY$
  *      Command
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Display a menu item on screen and define a message
  *  $SYNTAX$
@@ -177,8 +187,6 @@
  *      highlighted. <xMsg> could be a character string or code block that
  *      is evaluated to a character string. If <xMsg> is not specified or
  *      got the wrong type, an empty string ("") would be used.
- *  $RETURNS$
- *      @...Prompt always return .F.
  *  $DESCRIPTION$
  *      With @...Prompt you define and display a menu item, each call to
  *      @...Prompt add another item to the menu, to start the menu itself
@@ -205,23 +213,24 @@
  *         CASE nChoice == 2           // user select 2nd menu item
  *              ? "Just another day for some"
  *      ENDCASE
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      CA-Cl*pper array is limited to 4096 items, and therefor 4096 menu
- *      items are the maximum that could be defined per one menu, Harbour
- *      does not have this limit (not that you'll ever need that).
+ *      C(menu)
  *  $SEEALSO$
  *      ACHOICE(),MENU TO,SET MESSAGE,SET INTENSITY,SET WRAP,__MENUTO()
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __MenuTo()
  *  $CATEGORY$
- *      Data input and output
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Invoked a menu defined by set of @...PROMPT
  *  $SYNTAX$
@@ -294,11 +303,10 @@
  *      else
  *         ?? "Selected option is", nChoice
  *      endif
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -307,10 +315,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      MENU TO
  *  $CATEGORY$
- *      Command
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Invoked a menu defined by set of @...PROMPT
  *  $SYNTAX$
@@ -320,9 +332,6 @@
  *      variable to hold the menu choices, if this variable does not exist
  *      a PRIVATE variable with the name <cVariable> would be created to
  *      hold the result.
- *  $RETURNS$
- *      Menu To return the number of select menu item, or 0 if there was
- *      no item to select from or if the user pressed the Esc key.
  *  $DESCRIPTION$
  *      Menu To() invoked the menu define by previous __AtPrompt() call
  *      and display a highlight bar that the user can move to select an
@@ -342,7 +351,6 @@
  *      the first item is highlighted.
  *
  *      Following are active keys that handled by Menu To:
- *
  *
  *  <table>
  *       key              Meaning
@@ -381,11 +389,10 @@
  *      else
  *         ?? "Selected option is", nChoice
  *      endif
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper compliant
+ *      C
  *  $SEEALSO$
  *   @...PROMPT,ACHOICE(),SET MESSAGE,SET INTENSITY,SET WRAP,__ATPROMPT()
  *  $END$

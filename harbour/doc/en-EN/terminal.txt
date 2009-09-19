@@ -28,18 +28,20 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      __XSaveScreen()
  *  $CATEGORY$
- *      Data input and output
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Save whole screen image and coordinate to an internal buffer
  *  $SYNTAX$
- *      __XSaveScreen() --> NIL
+ *      __XSaveScreen()
  *  $ARGUMENTS$
  *      none.
- *  $RETURNS$
- *      __XSaveScreen() always return NIL.
  *  $DESCRIPTION$
  *      __XSaveScreen() save the image of the whole screen into an internal
  *      buffer, it also save current cursor position. The information could
@@ -59,14 +61,12 @@
  *      DIR *.*
  *      WAIT
  *      RESTORE SCREEN
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __XSaveScreen() works exactly like CA-Cl*pper's __XSaveScreen()
+ *      C
  *  $PLATFORMS$
- *      __XSaveScreen() is part of the GT API, and supported only by some
- *      platforms.
+ *      All(GT)
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -75,18 +75,20 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *     SAVE SCREEN
  *  $CATEGORY$
- *      Command
+ *      API
+ *  $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *      Save whole screen image and coordinate to an internal buffer
  *  $SYNTAX$
  *      SAVE SCREEN
  *  $ARGUMENTS$
  *      none.
- *  $RETURNS$
- *      SAVE SCREEN always return NIL.
  *  $DESCRIPTION$
  *      SAVE SCREEN save the image of the whole screen into an internal
  *      buffer, it also save current cursor position. The information could
@@ -105,28 +107,29 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __XSaveScreen() works exactly like CA-Cl*pper's __XSaveScreen()
+ *      C
  *  $PLATFORMS$
- *      __XSaveScreen() is part of the GT API, and supported only by some
- *      platforms.
+ *      All(GT)
  *  $SEEALSO$
  *      RESTORE SCREEN,__XRESTSCREEN(),__XSAVESCREEN()
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      __XRestScreen()
  *  $CATEGORY$
- *      Data input and output
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Restore screen image and coordinate from an internal buffer
  *  $SYNTAX$
- *      __XRestScreen() --> NIL
+ *      __XRestScreen()
  *  $ARGUMENTS$
  *      none.
- *  $RETURNS$
- *      __XRestScreen() always return NIL.
  *  $DESCRIPTION$
  *      __XRestScreen() restore saved image of the whole screen from an
  *      internal buffer that was saved by __XSaveScreen(), it also restore
@@ -148,10 +151,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __XRestScreen() works exactly like CA-Cl*pper's __XRestScreen()
+ *      C
  *  $PLATFORMS$
- *      __XRestScreen() is part of the GT API, and supported only by some
- *      platforms.
+ *      All(GT)
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -160,18 +162,20 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      RESTORE SCREEN
  *  $CATEGORY$
- *      Command
+ *      API
+ *  $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *      Restore screen image and coordinate from an internal buffer
  *  $SYNTAX$
  *      RESTORE SCREEN
  *  $ARGUMENTS$
  *      none.
- *  $RETURNS$
- *      REST SCREEN always return NIL.
  *  $DESCRIPTION$
  *      Rest Screen restore saved image of the whole screen from an
  *      internal buffer that was saved by Save Screen, it also restore
@@ -190,20 +194,23 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Rest Screen() works exactly like CA-Cl*pper's Rest Screen
+ *      C
  *  $PLATFORMS$
- *      Rest Screen is part of the GT API, and supported only by some
- *      platforms.
+ *      All(GT)
  *  $SEEALSO$
  *      __XRESTSCREEN(),SAVE SCREEN,__XSAVESCREEN()
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ALERT()
  *  $CATEGORY$
- *      Data input and output
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Display a dialog box with a message
  *  $SYNTAX$
@@ -226,7 +233,10 @@
  *      Default value is 0, that wait forever.
  *  $RETURNS$
  *      ALERT() return Numeric value representing option number chosen.
- *      If ESC was pressed, return value is zero. The return value is NIL
+ *
+ *      If ESC was pressed, return value is zero.
+ *
+ *      The return value is NIL
  *      if ALERT() is called with no parameters, or if <xMessage> type is
  *      not Character and HB_C52_STRICT option was used. If <nDelay> seconds
  *      had passed without user response, the return value is 1.
@@ -302,18 +312,20 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      __NONOALERT()
  *  $CATEGORY$
- *      Data input and output
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Override //NOALERT command line switch
  *  $SYNTAX$
- *      __NONOALERT() --> NIL
+ *      __NONOALERT()
  *  $ARGUMENTS$
  *      This function takes no arguments.
- *  $RETURNS$
- *      __NONOALERT() always return NIL.
  *  $DESCRIPTION$
  *      The //NOALERT command line switch cause Clipper to ignore calls to
  *      the ALERT() function, this function override this behavior
@@ -326,17 +338,19 @@
  *  $FILES$
  *      Library is rtl
  *  $COMPLIANCE$
- *      __NONOALERT() is an undocumented CA-Cl*pper function and exist only
- *      if HB_C52_UNDOC was defined during the compilation of
- *      source/rtl/alert.prg
+ *      C52U
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      HB_OSNEWLINE()
  *  $CATEGORY$
- *      Operating System Specific
+ *      API
+ *  $SUBCATEGORY$
+ *     Environment
  *  $ONELINER$
  *      Returns the newline character(s) to use with the current OS
  *  $SYNTAX$
@@ -344,34 +358,34 @@
  *  $RETURNS$
  *      <cString> A character string containing the character or characters
  *      required to move the screen cursor or print head to the start of a
- *      new line. The string will hold either CHR(10) or CHR(13) + CHR(10).
+ *      new line.
  *  $DESCRIPTION$
  *      Returns a character string containing the character or characters
  *      required to move the screen cursor or print head to the start of a
  *      new line for the operating system that the program is running on
  *      (or thinks it is running on, if an OS emulator is being used).
+ *
+ *      Under HB_OS_UNIX operating system the return value is the
+ *      Line-Feed character (0x0a, CHR(10)); with other operating systems
+ *      (like DOS) the return value is the Carriage-Return plus Line-Feed
+ *      characters (0x0d 0x0a, CHR(13)+CHR(10)).
  *  $EXAMPLES$
- *      // Get the newline character(s) for the current OS using defaults.
+ *      // Get the newline character(s) for the current OS.
+ *      // Get the newline character(s) for the current OS.
  *      STATIC s_cNewLine
  *      ...
  *      s_cNewLine := HB_OSNewLine()
  *      ...
  *      OutStd( "Hello World!" + s_cNewLine )
- *      ...
  *  $TESTS$
- *      <fixed>
- *      valtype( HB_OSNewLine() ) == "C"
- *      LEN( HB_OSNewLine() ) == 1
- *      </fixed>
+ *      ? valtype( HB_OSNewLine() ) == "C"
+ *      ? LEN( HB_OSNewLine() ) == 1
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This is an add-on Operating System Tool function.
+ *      H
  *  $PLATFORMS$
- *      Under HB_OS_UNIX_COMPATIBLE operating system the return value is the
- *      Line-Feed (0x0a) character CHR(10), with other operating systems
- *      (like DOS) the return value is the Carriage-Return plus Line-Feed
- *      (0x0d 0x0a) characters CHR(13)+CHR(10).
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -380,16 +394,20 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_ColorIndex()
  *  $CATEGORY$
- *      GT
+ *      API
+ *  $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
- *      Extract one color from a full Clipper colorspec string.
+ *      Extract one color from a full colorspec string.
  *  $SYNTAX$
- *      hb_ColorIndex( <cColorSpec>, <nIndex> )
+ *      hb_ColorIndex( <cColorSpec>, <nIndex> ) --> <cColor>
  *  $ARGUMENTS$
- *      <cColorSpec> is a Clipper color list
+ *      <cColorSpec> is a color list
  *
  *      <nIndex> is the position of the color item to be extracted, the
  *      first position is the zero.
@@ -397,10 +415,12 @@
  *      The selected color string, or if anything goes wrong, an empty
  *      string.
  *  $DESCRIPTION$
- *      Clipper has a color spec string, which has more than one
- *      color in it, separated with commas. This function is able to extract
+ *      CA-Cl*pper has a color spec string, which has more than one
+ *      color in it, separated with commas.
+ *
+ *      This function will extract
  *      a given item from this list. You may use the manifest constants
- *      defined in color.ch to extract common Clipper colors.
+ *      defined in color.ch to identify and extract common colors.
  *  $EXAMPLES$
  *      ? hb_ColorIndex( "W/N, N/W", CLR_ENHANCED ) // "N/W"
  *  $TESTS$
@@ -408,7 +428,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Was not part of CA-Cl*pper.
+ *      H
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -417,14 +437,18 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      DEVOUTPICT()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Terminal
  *  $ONELINER$
  *      Displays a value to a device using a picture template
  *  $SYNTAX$
- *      DEVOUTPICT( <xExp>, <cPicture>, [<cColorString>] ) --> NIL
+ *      DEVOUTPICT( <xExp>, <cPicture>, [<cColorString>] )
  *  $ARGUMENTS$
  *      <xExp> is any valid expression.
  *
@@ -432,8 +456,6 @@
  *
  *      <cColorString> is an optional string that specifies a screen color to
  *      use in place of the default color when the output goes to the screen.
- *  $RETURNS$
- *      NIL
  *  $DESCRIPTION$
  *      Outputs any expression using a picture transformation instead of
  *      using the default transformation for the type of expression.
@@ -441,11 +463,9 @@
  *      // Output a negative dollar amount using debit notation.
  *      DEVOUTPICT( -1.25, "@D$ 99,999.99 )
  *  $TESTS$
- *      <fixed>
  *      @ 3,1 SAY -1.25 PICTURE "@D$ 99,999.99"
  *      will display "$(     1.25)" starting on row four, column two of the
  *      current device (without the double quotation marks, of course).
- *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -459,10 +479,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __INPUT()
  *  $CATEGORY$
- *      Data input and output
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Stops application
  *  $SYNTAX$
@@ -470,14 +494,14 @@
  *  $ARGUMENTS$
  *      <cMessage> is any valid expression.
  *  $RETURNS$
- *      Macroed <cString>
+ *      <cString> input value macroed
  *  $DESCRIPTION$
  *      This function waits for a console input and returns macroed
  *      expression entered.
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      __INPUT() is fully CA-Cl*pper compliant.
+ *      C
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -486,20 +510,22 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *     __TextSave()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *     Internal
  *  $ONELINER$
  *     Redirect console output to printer or file and save old settings
  *  $SYNTAX$
- *      __TextSave( <cFile> ) --> NIL
+ *      __TextSave( <cFile> )
  *  $ARGUMENTS$
  *      <cFile> is either "PRINTER" (note the uppercase) in which console
  *      output is SET to PRINTER, or a name of a text file with a default
  *      ".txt" extension, that is used to redirect console output.
- *  $RETURNS$
- *      __TextSave() always return NIL.
  *  $DESCRIPTION$
  *      __TextSave() is used in the preprocessing of the TEXT TO command to
  *      redirect the console output while saving old settings that can be
@@ -507,9 +533,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __TextSave() is an Undocumented CA-Cl*pper function
+ *      C52U
  *  $PLATFORMS$
- *      ALL
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -518,18 +544,20 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      __TextRestore()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Internal
  *  $ONELINER$
  *      Restore console output settings as saved by __TextSave()
  *  $SYNTAX$
- *      __TextRestore() --> NIL
+ *      __TextRestore()
  *  $ARGUMENTS$
  *      none.
- *  $RETURNS$
- *      __TextRestore() always return NIL.
  *  $DESCRIPTION$
  *      __TextRestore() is used in the preprocessing of the TEXT TO command
  *      to restore console output settings that were previously saved by
@@ -537,9 +565,9 @@
  *  $STATUS$
  *       R
  *  $COMPLIANCE$
- *      __TextRestore() is an Undocumented CA-Cl*pper function
+ *      C52U
  *  $PLATFORMS$
- *       All
+ *       A
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -548,9 +576,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __WAIT()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Events
  *  $ONELINER$
  *      Stops the application until a key is pressed.
@@ -567,15 +599,13 @@
  *      // Wait for a key stroke
  *      __Wait( "Press a key to continue" )
  *  $TESTS$
- *      <fixed>
  *      do while cKey != "Q"
  *        cKey := __Wait( "Press 'Q' to continue" )
  *      end do
- *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __WAIT() is fully CA-Cl*pper compliant.
+ *      C
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -584,19 +614,21 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      OUTSTD()
  *  $CATEGORY$
- *      Data input and output
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Write a list of values to the standard output device
  *  $SYNTAX$
- *      OUTSTD( <xExp,...> ) --> NIL
+ *      OUTSTD( <xExp,...> )
  *  $ARGUMENTS$
  *      <xExp,...> is a list of expressions to display. Expressions are any
  *      mixture of Harbour data types.
- *  $RETURNS$
- *      OUTSTD() always returns NIL.
  *  $DESCRIPTION$
  *      OUTSTD() write one or more values into the standard output device.
  *      Character and Memo values are printed as is, Dates are printed
@@ -620,7 +652,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      OUTSTD() works exactly as in CA-Cl*pper
+ *      C
  *  $PLATFORMS$
  *  $FILES$
  *      Library is rtl
@@ -630,19 +662,21 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      OUTERR()
  *  $CATEGORY$
- *      Data input and output
+ *      API
+ *  $SUBCATEGORY$
+ *      User interface
  *  $ONELINER$
  *      Write a list of values to the standard error device
  *  $SYNTAX$
- *      OUTERR( <xExp,...> ) --> NIL
+ *      OUTERR( <xExp,...> )
  *  $ARGUMENTS$
  *      <xExp,...> is a list of expressions to display. Expressions are any
  *      mixture of Harbour data types.
- *  $RETURNS$
- *      OUTERR() always returns NIL.
  *  $DESCRIPTION$
  *      OUTERR() write one or more values into the standard error device.
  *      Character and Memo values are printed as is, Dates are printed
@@ -667,7 +701,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      OUTERR() works exactly as in CA-Cl*pper
+ *      C
  *  $PLATFORMS$
  *  $FILES$
  *      Library is rtl
@@ -677,10 +711,14 @@
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      EJECT
  *  $CATEGORY$
  *      Command
+ *  $SUBCATEGORY$
+ *      Printer
  *  $ONELINER$
  *      Issue an command to advance the printer to the top of the form
  *  $SYNTAX$
@@ -717,7 +755,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -726,10 +764,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      COL()
  *  $CATEGORY$
- *      GT
+ *      API
+ *  $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *      Returns the current screen column position
  *  $SYNTAX$
@@ -746,7 +788,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This Functions is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -757,10 +799,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ROW()
  *  $CATEGORY$
- *      GT
+ *      API
+ *  $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *      Returns the current screen row position
  *  $SYNTAX$
@@ -777,7 +823,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This Functions is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -788,10 +834,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      MAXCOL()
  *  $CATEGORY$
- *      GT
+ *      API
+ *  $SUBCATEGORY$
+ *    Terminal
  *  $ONELINER$
  *      Returns the maximun number of columns in the current video mode
  *  $SYNTAX$
@@ -809,12 +859,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This Functions is CA-Cl*pper compliant.
+ *      C
  *  $PLATFORMS$
- *      It works in all platform with some remarks:Under Linux and OS/2 the
- *      number of columns avaliable depends of the current Terminal screen
- *      size. Under Windows, the return value of MAXCOL() function is only
- *      affected if called after an SETMODE() function
+ *      Linux(GT),OS2(GT),Win(GT)
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -823,10 +870,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      MAXROW()
  *  $CATEGORY$
- *      GT
+ *      API
+ *  $SUBCATEGORY$
+ *      Terminal
  *  $ONELINER$
  *      Returns the current screen row position
  *  $SYNTAX$
@@ -844,12 +895,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This Functions is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
- *      It works in all platform with some remarks:Under Linux and OS/2 the
- *      number of columns avaliable depends of the current Terminal screen
- *      size. Under Windows, the return value of MAXROW() function is only
- *      affected if called after an SETMODE() function
+ *      Linux(GT),OS2(GT),Win(GT)
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$

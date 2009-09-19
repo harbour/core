@@ -14,14 +14,18 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      EVAL()
  *  $CATEGORY$
- *      Code Block
+ *      API
+ *  $SUBCATEGORY$
+ *      Execute and Execution
  *  $ONELINER$
  *      Evaluate a code block
  *  $SYNTAX$
- *      EVAL( <bBlock> [, <xVal> [,...]])   --> xExpression
+ *      EVAL( <bBlock> [, <xVal> [,...]])  --> xExpression
  *  $ARGUMENTS$
  *      <bBlock>   Code block expression to be evaluated
  *
@@ -53,7 +57,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$

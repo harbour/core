@@ -26,10 +26,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __MVPUBLIC()
  *  $CATEGORY$
- *      Variable Management
+ *      API
+ *  $SUBCATEGORY$
+ *      Variable management
  *  $ONELINER$
  *      This function creates a PUBLIC variable
  *  $SYNTAX$
@@ -50,11 +54,10 @@
  *      initialized with .T. value.
  *  $EXAMPLES$
  *      None Avaliable
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is a Harbour extension
+ *      H
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -63,10 +66,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __MVPRIVATE()
  *  $CATEGORY$
- *      Variable Management
+ *      API
+ *  $SUBCATEGORY$
+ *      Variable management
  *  $ONELINER$
  *      This function creates a PRIVATE variable
  *  $SYNTAX$
@@ -86,21 +93,24 @@
  *      is always initialized to NIL value.
  *  $EXAMPLES$
  *      None Avaliable
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is a Harbour extension
+ *      H
  *  $FILES$
  *      Library is vm
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __MVXRELEASE()
  *  $CATEGORY$
- *      Variable Management
+ *      API
+ *  $SUBCATEGORY$
+ *      Variable management
  *  $ONELINER$
  *      This function releases value stored in PRIVATE or PUBLIC variable
  *  $SYNTAX$
@@ -124,7 +134,6 @@
  *      It releases variable even if this variable was created in different
  *      procedure
  *  $EXAMPLES$
- *
  *      PROCEDURE MAIN()
  *      PRIVATE mPrivate
  *
@@ -145,22 +154,24 @@
  *        mPrivate :="Again in Test()"
  *
  *      RETURN
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is a Harbour extension
+ *      H
  *  $FILES$
  *      Library is vm
- *
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __MVRELEASE()
  *  $CATEGORY$
- *      Variable Management
+ *      API
+ *  $SUBCATEGORY$
+ *      Variable management
  *  $ONELINER$
  *      This function releases PRIVATE variables
  *  $SYNTAX$
@@ -185,21 +196,24 @@
  *      PUBLIC variables are not changed by this function.
  *  $EXAMPLES$
  *      None Avaliable
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is a Harbour extension
+ *      H
  *  $FILES$
  *      Library is vm
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __MVSCOPE()
  *  $CATEGORY$
- *      Variable Management
+ *      API
+ *  $SUBCATEGORY$
+ *      Variable management
  *  $ONELINER$
  *      If variable exists then returns its scope.
  *  $SYNTAX$
@@ -218,7 +232,6 @@
  *      HB_MV_PRIVATE_LOCAL  =for private variables declared in current
  *      function/procedure
  *  $EXAMPLES$
- *
  *      PROCEDURE MAIN()
  *      PUBLIC mPublic
  *      PRIVATE mPrivateGlobal
@@ -243,12 +256,10 @@
  *      ENDIF
  *
  *      RETURN
- *
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is a Harbour Extension
+ *      H
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -257,10 +268,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __MVCLEAR()
  *  $CATEGORY$
- *      Variable Management
+ *      API
+ *  $SUBCATEGORY$
+ *      Variable management
  *  $ONELINER$
  *      This function releases all PRIVATE and PUBLIC variables
  *  $SYNTAX$
@@ -279,7 +294,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is a Harbour extension
+ *      H
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -288,10 +303,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __MVDBGINFO()
  *  $CATEGORY$
- *      Variable Management
+ *      API
+ *  $SUBCATEGORY$
+ *      Internal
  *  $ONELINER$
  *      This function returns the information about the variables for debugger
  *  $SYNTAX$
@@ -324,11 +343,11 @@
  *      variables are sorted in the creation order.
  *
  *      Note:
+ *
  *      Due to dynamic nature of memvar variables there is no guarantee that
  *      successive calls to retrieve the value of <Nth> PUBLIC variable will
  *      return the value of the same variable.
  *  $EXAMPLES$
- *
  *      #include <hbmemvar.ch>
  *
  *      LOCAL nCount, i, xValue, cName
@@ -338,7 +357,6 @@
  *          xValue =__mvDBGINFO( HB_MV_PUBLIC, i, @cName )
  *          ? i, cName, xValue
  *      NEXT
- *   </fixed>
  *  $TESTS$
  *      #include <hbmemvar.ch>
  *      PROCEDURE MAIN()
@@ -361,7 +379,6 @@
  *      ? 'Back in Main'
  *      ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
  *      ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
- *
  *
  *      RETURN
  *
@@ -392,7 +409,6 @@
  *      NEXT
  *
  *      RETURN
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -403,10 +419,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __MVEXIST()
  *  $CATEGORY$
- *      Variable Management
+ *      API
+ *  $SUBCATEGORY$
+ *      Variable management
  *  $ONELINER$
  *      Determine if a given name is a PUBLIC or PRIVATE memory variable
  *  $SYNTAX$
@@ -428,11 +448,10 @@
  *      ? __MVEXIST( "TheStatic"  )        // .F.
  *      ? __MVEXIST( "ThePublic"  )        // .T.
  *      ? __MVEXIST( "ThePrivate" )        // .T.
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is a Harbour extension
+ *      H
  *  $SEEALSO$
  *      MEMVAR, PRIVATE, PUBLIC
  *  $FILES$
@@ -441,10 +460,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __MVGET()
  *  $CATEGORY$
- *      Variable Management
+ *      API
+ *  $SUBCATEGORY$
+ *      Variable management
  *  $ONELINER$
  *      This function returns value of memory variable
  *  $SYNTAX$
@@ -459,13 +482,14 @@
  *      The variable is specified by its name passed as the function parameter.
  *  $EXAMPLES$
  *      FUNCTION MEMVARBLOCK( cMemvar )
- *      RETURN {|x| IIF( PCOUNT()==0, __MVGET( cMemvar ),;
- *      __MVPUT( cMemvar, x ) ) }
- *  </fixed>
+ *      RETURN {|x| ;
+ *          IIF( PCOUNT()==0, ;
+ *          __MVGET( cMemvar ),;
+ *          __MVPUT( cMemvar, x ) ) }
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is a Harbour extension
+ *      H
  *  $SEEALSO$
  *      __MVPUT()
  *  $FILES$
@@ -474,10 +498,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __MVPUT()
  *  $CATEGORY$
- *      Variable Management
+ *      API
+ *  $SUBCATEGORY$
+ *      Variable management
  *  $ONELINER$
  *      This function set the value of memory variable
  *  $SYNTAX$
@@ -495,14 +523,15 @@
  *      parameter.
  *      If a value is not specified then the NIL is assumed
  *  $EXAMPLES$
- *      FUNCTION MEMVARBLOCK( cMemvar )
- *      RETURN {|x| IIF( PCOUNT()==0, __MVGET( cMemvar ),;
- *      __MVPUT( cMemvar, x ) ) }
- *   </fixed>
- *  $STATUS$
+  *      FUNCTION MEMVARBLOCK( cMemvar )
+ *      RETURN {|x| ;
+ *          IIF( PCOUNT()==0, ;
+ *          __MVGET( cMemvar ),;
+ *          __MVPUT( cMemvar, x ) ) }
+*  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is a Harbour extension
+ *      H
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -511,10 +540,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      MEMVARBLOCK()
  *  $CATEGORY$
- *      Variable Management
+ *      API
+ *  $SUBCATEGORY$
+ *      Variable management
  *  $ONELINER$
  *      Returns a codeblock that sets/gets a value of memvar variable
  *  $SYNTAX$
@@ -541,11 +574,10 @@
  *      ? "Value of xPublic variable", EVAL( cbSetGet )
  *
  *      RETURN
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compatible
+ *      C
  *  $SEEALSO$
  *      __MVGET(),__MVPUT()
  *  $FILES$
@@ -554,10 +586,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      FIELDBLOCK()
  *  $CATEGORY$
- *      Code Block
+ *      API
+ *  $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *      Return a code block that sets/gets a value for a given field
  *  $SYNTAX$
@@ -566,7 +602,7 @@
  *      <cFieldName> is a string that contain the field name.
  *  $RETURNS$
  *      FIELDBLOCK() return a code block that when evaluate could retrieve
- *      field value or assigning a new value to the field. If <cFieldName>
+ *      a field value or assigning a new value to the field. If <cFieldName>
  *      is not specified or from type other than character, FIELDBLOCK()
  *      return NIL.
  *  $DESCRIPTION$
@@ -588,7 +624,6 @@
  *      ? 'Original value of field "name" :', EVAL( bField )
  *      EVAL( bField, "Mr X new name" )
  *      ? 'New value for the field "name" :', EVAL( bField )
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -604,10 +639,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      FIELDWBLOCK()
  *  $CATEGORY$
- *      Code Block
+ *      API
+ *  $SUBCATEGORY$
+ *      RDD
  *  $ONELINER$
  *      Return a sets/gets code block for field in a given work area
  *  $SYNTAX$
@@ -648,7 +687,6 @@
  *      ? "Name value for file Two :", EVAL( bField )
  *      EVAL( bField, "Two has new name" )
  *      ? "and now: ", One->name, Two->name
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -664,10 +702,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      TYPE()
  *  $CATEGORY$
- *      Misc
+ *      API
+ *  $SUBCATEGORY$
+ *      Variable management
  *  $ONELINER$
  *      Retrieves the type of an expression
  *  $SYNTAX$
@@ -734,8 +776,6 @@
  *          // this is a valid expression
  *          SET FILTER TO &cFilter
  *       ENDIF
- *
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -751,6 +791,7 @@
  *        correct. However invalid arguments can be passed to
  *        function/procedure that will cause runtime errors during
  *        evaluation of expression.
+ *
  *      - Harbour supports two new types (Pointer and Symbol) which does
  *        not exists in CA-Cl*pper.
  *  $FILES$
@@ -761,10 +802,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      VALTYPE()
  *  $CATEGORY$
- *      Misc
+ *      API
+ *  $SUBCATEGORY$
+ *      Variable management
  *  $ONELINER$
  *      Retrieves the data type of an expression
  *  $SYNTAX$
@@ -793,8 +838,7 @@
  *      This function returns one character which represents the data type
  *      of the argument.
  *  $EXAMPLES$
- *      See Test
- *  </fixed>
+ *      See Test(s)
  *  $TESTS$
  *      function Test()
  *         ? ValType( Array( 1 ) )   // "A"
@@ -808,7 +852,6 @@
  *         ? ValType( @QOut() )      // "S" Harbour extension
  *         ? ValType( NIL )          // "U"
  *      return nil
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -822,22 +865,27 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      HB_ISBYREF()
  *  $CATEGORY$
- *      Misc
+ *      API
+ *  $SUBCATEGORY$
+ *      Variable management
  *  $ONELINER$
- *      Inform if the variable is passed by reference.
+ *      Determine if a variable is passed by reference.
  *  $SYNTAX$
  *      HB_ISBYREF( @<Var> ) --> <lVarIsByRef>
  *  $ARGUMENTS$
- *      @<Var> is the variable to test passed by reference.
+ *      @<Var> is the variable to test; it must be passed by reference.
  *  $RETURNS$
  *      <lVarIsByRef> a logical value indicating if the variable is passed
  *      by reference to actual function or procedure.
  *  $DESCRIPTION$
  *      This function return a logical value indicating if the variable
  *      is passed by reference to actual function or procedure.
+ *
  *      ATTENTION: The variable to test must be passed by reference.
  *      If the variable is not passed by reference, the function return NIL.
  *      This function is based on the form that Harbour manages to the
@@ -848,8 +896,7 @@
  *      variable passed points to a common variable or to a variable
  *      passed by reference.
  *  $EXAMPLES$
- *      See Test
- *  </fixed>
+ *      See Tests
  *  $TESTS$
  *      function Main()
  *         local cVar := "Test local"
@@ -864,11 +911,10 @@
  *         ? hb_isbyref( @Arg3 )        // .F.
  *         ? hb_isbyref( @Arg4 )        // .F.
  *      return
- *  </fixed>
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      HB_ISBYREF() is an extention of Harbour
+ *      H
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$

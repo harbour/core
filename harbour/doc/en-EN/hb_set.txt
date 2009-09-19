@@ -7,88 +7,96 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *   Header file for the Set API
+ *   Header file for the API
  *
  * See COPYING for licensing terms.
  *
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      hb_setInitialize()
  *  $CATEGORY$
- *      Set API
+ *      C level API
+ *  $SUBCATEGORY$
+ *      Environment
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbset.h>
- *      hb_setInitialize( void ) --> void
+ *      hb_setInitialize( void )
  *  $ARGUMENTS$
- *      
- *  $RETURNS$
- *      
+ *
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      
+ *
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      hb_setRelease()
  *  $CATEGORY$
- *      Set API
+ *      C level API
+ *  $SUBCATEGORY$
+ *      Environment
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbset.h>
- *      hb_setRelease( void ) --> void
+ *      hb_setRelease( void )
  *  $ARGUMENTS$
- *      
- *  $RETURNS$
- *      
+ *
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      
+ *
  *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_setListenerAdd()
  *  $CATEGORY$
- *      Set API
+ *      C level API
+ *  $SUBCATEGORY$
+ *      Environment
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbset.h>
  *      hb_setListenerAdd( PHB_SET_LISTENER_CALLBACK callback ) --> int
  *  $ARGUMENTS$
@@ -118,7 +126,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -129,27 +137,32 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_setListenerNotify()
  *  $CATEGORY$
- *      Set API
+ *      C level API
+ *  $SUBCATEGORY$
+ *      Environment
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbset.h>
  *      hb_setListenerNotify( HB_set_enum set, HB_set_listener_enum
  *      when ) --> int
  *  $ARGUMENTS$
  *      <set>
  *      The number of the SET parameter that is to be or was changed.
+ *
  *      <when>
  *      Set to HB_SET_LISTENER_BEFORE when called before the SET parameter
  *      is to be changed and set to HB_SET_LISTENER_AFTER when called
  *      after the SET parameter has been changed.
  *  $RETURNS$
- *      
+ *      <int>
  *  $DESCRIPTION$
  *      This function notifies all SET listener callback functions. It
  *      must be called any time you change the value of a SET parameter
@@ -162,7 +175,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$
@@ -174,15 +187,19 @@
 
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      hb_setListenerRemove()
  *  $CATEGORY$
- *      Set API
+ *      C level API
+ *  $SUBCATEGORY$
+ *      Environment
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbset.h>
  *      hb_setListenerRemove( int handle ) --> int
  *  $ARGUMENTS$
@@ -200,7 +217,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
+ *      NA
  *  $FILES$
  *      Library is rtl
  *  $PLATFORMS$

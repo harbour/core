@@ -3,7 +3,7 @@
  */
 
 /*  $CLASSDOC$
- *  $FUNCNAME$
+ *  $NAME$
  *      TBROWSENew()
  *  $CATEGORY$
  *      TBrowse class

@@ -17,10 +17,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      DBEVAL()
  *  $CATEGORY$
- *      Database
+ *      API
+ *  $SUBCATEGORY$
+ *      Execute and Execution
  *  $ONELINER$
  *      Performs a code block operation on the current Database
  *  $SYNTAX$
@@ -61,7 +65,7 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      DBEVAL is fully CA-Cl*pper compliant.
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -70,9 +74,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *     DBF()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Alias name of a work area
@@ -97,7 +105,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      DBF() is fully CA-Cl*pper compliant.
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -106,9 +114,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *     DBAPPEND()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Appends a new record to a database file.
@@ -151,7 +163,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      DBAPPEND() is fully CA-Cl*pper compliant.
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -160,9 +172,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      DBCLEARFILTER()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Clears the current filter condiction in a work area
@@ -190,7 +206,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      DBCLEARFILTER() is fully CA-Cl*pper compliant.
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -199,9 +215,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      DBCLOSEALL()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Close all open files in all work areas.
@@ -232,7 +252,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      DBCLOSEALL() is fully CA-Cl*pper compliant.
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -241,35 +261,32 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *     DBCLOSEAREA()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Close a database file in a work area.
  *  $SYNTAX$
- *      DbCloseArea() --> NIL
- *  $RETURNS$
- *      DbCloseArea() always returns NIL.
+ *      DbCloseArea()
  *  $DESCRIPTION$
  *      This function  will close any database open in the selected
  *      or aliased work area.
  *  $EXAMPLES$
  *      Function Main()
- *
  *       Use Test
- *
  *       Dbedit()
- *
  *       Test->(DbCloseArea())
- *
  *       USE
- *
  *       Return Nil
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      DBCLOSEAREA() is fully CA-Cl*pper compliant.
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -278,16 +295,18 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      DBCOMMIT()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Updates all index and database buffers for a given workarea
  *  $SYNTAX$
- *     DBCOMMIT() --> NIL
- *  $RETURNS$
- *      DBCOMMIT() always returns NIL.
+ *     DBCOMMIT()
  *  $DESCRIPTION$
  *      This function updates all of the information for a give,selected,
  *      or active workarea. This operation includes all database and index
@@ -313,7 +332,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -322,16 +341,18 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      DBCOMMITALL()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Flushes the memory buffer and performs a hard-disk write
  *  $SYNTAX$
- *      DBCOMMIT() --> NIL
- *  $RETURNS$
- *      DBCOMMIT() always returns NIL.
+ *      DBCOMMIT()
  *  $DESCRIPTION$
  *      This function performs a hard-disk write for all work areas.
  *      Before the disk write is performed,all buffers are flushed.
@@ -361,7 +382,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant.
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -370,15 +391,19 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      DBCREATE()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Creates an empty database from a array.
  *  $SYNTAX$
  *      DBCREATE( <cDatabase>, <aStruct>, [<cDriver>], [<lOpen>],
- *                [<cAlias>] ) --> NIL
+ *                [<cAlias>] )
  *  $ARGUMENTS$
  *      <cDatabase> Name of database to be create
  *
@@ -394,9 +419,8 @@
  *                       True    It is opened in a New area.
  *                       False   It is opened in the current area.
  *                  </table>
+ *
  *      <cAlias>    Name of database Alias
- *  $RETURNS$
- *      DBCREATE() always returns NIL.
  *  $DESCRIPTION$
  *      This function creates the database file specified as <cDatabase> from the
  *      multidimensional array <aStruct>. If no file extension is use with <cDatabase>
@@ -452,7 +476,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Not CA-Cl*pper compliant
+ *      This function is not CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *      Header  is dbstruct.ch
@@ -462,16 +486,18 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      DBDELETE()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
- *      Marks records for deletion in a database.
+ *      Mark a record for deletion in a database.
  *  $SYNTAX$
- *      DBDELETE() --> NIL
- *  $RETURNS$
- *      DBDELETE() always returns NIL.
+ *      DBDELETE()
  *  $DESCRIPTION$
  *      This function marks a record for deletion in the selected
  *      or aliased work area. If the DELETED setting is on, the record
@@ -492,7 +518,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -501,9 +527,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      DBFILTER()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Return the filter expression in a work area
@@ -527,7 +557,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -536,16 +566,18 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      DBGOBOTTOM()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Moves the record pointer to the bottom of the database.
  *  $SYNTAX$
- *      DBGOBOTTOM() --> NIL
- *  $RETURNS$
- *      DBGOBOTTOM() always returns NIL.
+ *      DBGOBOTTOM()
  *  $DESCRIPTION$
  *      This function moves the record pointer in the selected or aliased
  *      work area to the end of the file. The position of the record pointer
@@ -562,7 +594,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -571,32 +603,34 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      DBGOTO()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Position the record pointer to a specific location.
  *  $SYNTAX$
- *      DBGOTO(<xRecordNumber>) --> NIL
+ *      DBGOTO(<xRecordNumber>)
  *  $ARGUMENTS$
  *      <xRecordNumber> Record number or unique identity
- *  $RETURNS$
- *      DBGOTO() always returns NIL.
  *  $DESCRIPTION$
  *      This function places the record pointer, if working with a .dbf file,
  *      in selected or aliased work area at the record number specified by
- *      <xRecordNumber>. The position if not affected by an active index or
+ *      <xRecordNumber>. The position is not affected by an active index or
  *      by any enviromental SET condiction.
  *
- *      Issuing a DBGOTO(RECNO()) call in a network enviroment will refresh
- *      the database and index buffers. This is the same as a DBSKIP(0) call.
  *      The parameter <xRecordNumber> may be something other than a record
  *      number. In some data formats, for example, the value of <xRecordNumber>
  *      is a unique primary key while in other formats,<xRecordNumber> could
  *      be an array offset if the data set was an array.
- *  $EXAMPLES$
  *
+ *      Issuing a DBGOTO(RECNO()) call in a network enviroment will refresh
+ *      the database and index buffers. This is the same as a DBSKIP(0) call.
+ *  $EXAMPLES$
  *      The following example uses DBGOTO() to iteratively process
  *      every fourth record:
  *
@@ -607,11 +641,10 @@
  *         DBGOTO( RECNO() + 4 )
  *         Sales->Group := "Bear"
  *      ENDDO
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant.
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -620,16 +653,18 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      DBGOTOP()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Moves the record pointer to the top of the database.
  *  $SYNTAX$
- *      DBGOTOP() --> NIL
- *  $RETURNS$
- *      DBGOTOP() always returns NIL.
+ *      DBGOTOP()
  *  $DESCRIPTION$
  *      This function moves the record pointer in the selected or aliased
  *      work area to the top of the file. The position of the record pointer
@@ -646,7 +681,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -655,16 +690,18 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      DBRECALL()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Recalls a record previousy marked for deletion.
  *  $SYNTAX$
- *      DBRECALL() --> NIL
- *  $RETURNS$
- *      DBRECALL() always returns NIL.
+ *      DBRECALL()
  *  $DESCRIPTION$
  *      This function unmarks those records marked for deletion and
  *      reactivates them in the aliased or selected work area. If a record
@@ -684,7 +721,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -693,9 +730,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      DBRLOCK()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      This function locks the record basedon identify
@@ -725,7 +766,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -734,9 +775,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      DBRLOCKLIST()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      This function return a list of records in the database work area
@@ -767,7 +812,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -776,18 +821,20 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      DBRUNLOCK()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Unlocks a record base on its indentifier
  *  $SYNTAX$
- *      DBRUNLOCK([<xIdentity>]) --> NIL
+ *      DBRUNLOCK([<xIdentity>])
  *  $ARGUMENTS$
  *      <xIdentity> Record indentifier,tipicaly a record number
- *  $RETURNS$
- *      DBRUNLOCK() always returns NIL.
  *  $DESCRIPTION$
  *      This function will attempt to unlock the record specified as
  *      <xIdentity>, which in a .dbf format is the record number. If not
@@ -806,7 +853,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -815,9 +862,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      DBSEEK()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Searches for a value based on an active index.
@@ -873,7 +924,6 @@
  *      ELSE
  *         ? "Not found"
  *      END
- *
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
@@ -886,26 +936,28 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      DBSELECTAREA()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Change to another work area
  *  $SYNTAX$
- *      DBSELECTAREA(<xArea>) --> NIL
+ *      DBSELECTAREA(<xArea>) -
  *  $ARGUMENTS$
  *      <xArea> Alias or work area
- *  $RETURNS$
- *      DBSELECTAREA() always returns NIL.
  *  $DESCRIPTION$
  *      This function moves the Harbour internal primary focus to the work
- *      area designated by <xArea>. If <xArea> is numeric, them it will
- *      select the numeric work area;if <xArea> is character,then it will
+ *      area designated by <xArea>. If <xArea> is numeric, then it will
+ *      select the numeric work area; if <xArea> is character,then it will
  *      select the work area with the alias name.
  *
  *      DBSELECTAREA(0) will select the next avaliable and unused work area.
- *      Up to 255 work areas are supported.Each work area has its own alias
+ *      Up to 255 work areas are supported. Each work area has its own alias
  *      and record pointer, as well as its own FOUND(), DBFILTER(),
  *      DBRSELECT() and DBRELATION() function values.
  *  $EXAMPLES$
@@ -924,7 +976,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compatible.
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -933,9 +985,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      DBSETDRIVER()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Establishes the RDD name for the selected work area
@@ -956,7 +1012,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compatible
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -965,18 +1021,20 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      DBSKIP()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Moves the record pointer in the selected work area.
  *  $SYNTAX$
- *      DBSKIP([<nRecords>]) --> NIL
+ *      DBSKIP([<nRecords>])
  *  $ARGUMENTS$
  *      <nRecords> Numbers of records to move record pointer.
- *  $RETURNS$
- *      DBSKIP() always returns NIL.
  *  $DESCRIPTION$
  *      This function moves the record pointer <nRecords> in the selected or
  *      aliased work area. The default value for <nRecords> will be 1.
@@ -996,7 +1054,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compatible
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -1005,20 +1063,22 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      DBSETFILTER()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Establishes a filter condition for a work area.
  *  $SYNTAX$
- *      DBSETFILTER(<bCondition>, [<cCondition>]) --> NIL
+ *      DBSETFILTER(<bCondition>, [<cCondition>])
  *  $ARGUMENTS$
  *      <bCondition> Code block expression for filtered evaluation.
  *
  *      <cCondition> Optional character expression of code block.
- *  $RETURNS$
- *      DBSETFILTER() always returns NIL.
  *  $DESCRIPTION$
  *      This function masks a database so that only those records that meet
  *      the condition prescribed by the expression in the code block
@@ -1031,11 +1091,10 @@
  *      USE Tests NEW
  *      DBSETFILTER( {|| Tests->Id <100 }, "Tests->Id <100" )
  *      DBGOTOP()
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant.
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -1044,9 +1103,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      DBSTRUCT()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Creates a multidimensional array of a database structure.
@@ -1074,7 +1137,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *      Header  is dbstruct.ch
@@ -1084,16 +1147,18 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      DBUNLOCK()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Unlock a record or release a file lock
  *  $SYNTAX$
- *      DBUNLOCK() --> NIL
- *  $RETURNS$
- *      DBUNLOCK() always returns NIL.
+ *      DBUNLOCK()
  *  $DESCRIPTION$
  *      This function releases the file or record lock in the currently
  *      selected or aliased work area. It will not unlock an associated lock
@@ -1112,7 +1177,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compatible.
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -1121,16 +1186,18 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      DBUNLOCKALL()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Unlocks all records and releases all file locks in all work areas.
  *  $SYNTAX$
- *      DBUNLOCKALL() --> NIL
- *  $RETURNS$
- *      DBUNLOCKALL() always returns NIL.
+ *      DBUNLOCKALL()
  *  $DESCRIPTION$
  *      This function will remove all file and record locks in all work area.
  *  $EXAMPLES$
@@ -1150,7 +1217,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -1159,15 +1226,19 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Procedure
+ *  $NAME$
  *      DBUSEAREA()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
  *      Opens a work area and uses a database file.
  *  $SYNTAX$
  *      DBUSEAREA( [<lNewArea>], [<cDriver>], <cName>, [<xcAlias>],
- *      [<lShared>], [<lReadonly>]) --> NIL
+ *      [<lShared>], [<lReadonly>])
  *  $ARGUMENTS$
  *     <lNewArea>  A optional logical expression for the new work area
  *
@@ -1180,8 +1251,6 @@
  *     <lShared>   Shared/exclusive status flag
  *
  *     <lReadonly> Read-write status flag.
- *  $RETURNS$
- *      DBUSEAREA() always returns NIL.
  *  $DESCRIPTION$
  *      This function opens an existing database named <cName> in the current
  *      work area. If <lNewArea> is set to a logical true (.T.) value, then
@@ -1210,7 +1279,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$

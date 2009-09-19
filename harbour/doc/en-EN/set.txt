@@ -1,5 +1,5 @@
 /*
- * $Id$
+ *  $Id$
  */
 
 /*
@@ -31,35 +31,45 @@
  */
 
 /* $DOC$
- * $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __SETCENTURY()
- * $CATEGORY$
+ *  $CATEGORY$
+ *       API
+ *  $SUBCATEGORY$
  *      Environment
  *  $ONELINER$
  *      Set the Current Century
- * $SYNTAX$
+ *  $SYNTAX$
  *      __SETCENTURY([<lFlag> | <cOnOff> ] ) --> lPreviousValue
- * $ARGUMENTS$
+ *  $ARGUMENTS$
  *      optional <lFlag> or <cOnOff> (not case sensitive)
  *              .T. or "ON" to enable the century setting (4-digit years)
  *              .F. or "OFF" to disable the century setting (2-digit years)
- * $RETURNS$
+ *  $RETURNS$
  *      Either the current or previous century setting as a logical value
- * $FILES$
+ *  $FILES$
  *      Library is rtl
- * $END$
+ *  $COMPLIANCE$
+ *      C
+ *  $END$
  */
 
 /* $DOC$
- * $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SET()
- * $CATEGORY$
+ *  $CATEGORY$
+ *       API
+ *  $SUBCATEGORY$
  *      Environment
  *  $ONELINER$
  *      Changes or evaluated enviromental settings
- * $SYNTAX$
+ *  $SYNTAX$
  *      Set(<nSet> [, <xNewSetting> [, <xOption> ] ] ) --> xPreviousSetting
- * $ARGUMENTS$
+ *  $ARGUMENTS$
  *      <nSet> Set Number
  *
  *      <xNewSetting> Any expression to assing a value to the seting
@@ -274,7 +284,7 @@
  *              _SET_EXTRA       <lFlag> | <cOnOff>
  *
  *                   QUESTION: What is this for?
- *                   It does not affect _SET_EXTRAFILE in Clipper!
+ *                   It does not affect _SET_EXTRAFILE in CA-Cl*pper!
  *
  *              _SET_EXTRAFILE   <cFileName>             <lAdditive>
  *
@@ -418,18 +428,24 @@
  *                   last position to the first and from the first position
  *                   to the last. When disabled, which is the default, there
  *                   is a hard stop at the first and last positions.
- * $RETURNS$
+ *  $RETURNS$
  *      SET() The current or previous setting
- * $FILES$
+ *  $FILES$
  *      Library is rtl
- * $END$
+ *  $COMPLIANCE$
+ *      C
+ *  $END$
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __SetFunction()
  *  $CATEGORY$
- *      Environment
+ *      API
+ *  $SUBCATEGORY$
+ *      Events
  *  $ONELINER$
  *      Assign a character string to a function key
  *  $SYNTAX$
@@ -457,6 +473,7 @@
  *        21 .. 30      Ctrl-F1 .. Ctrl-F10
  *        31 .. 40      Alt-F1 .. Alt-F10
  *      </table>
+ *
  *      SET FUNCTION command is preprocessed into __SetFunction() function
  *      during compile time.
  *  $EXAMPLES$
@@ -467,7 +484,6 @@
  *      @ 10, 0 SAY "type something or F1 for lazy mode " GET cTest
  *      READ
  *      ? cTest
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -475,7 +491,7 @@
  *      11 and 12 to represent Shift-F1 and Shift-F2.
  *  $PLATFORMS$
  *      All
- * $FILES$
+ *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
  *      INKEY(),SETKEY(),__Keyboard(),SET KEY
@@ -483,10 +499,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *     SET FUNCTION
  *  $CATEGORY$
  *     Command
+ *  $SUBCATEGORY$
+ *     Environment
  *  $ONELINER$
  *      Assign a character string to a function key
  *  $SYNTAX$
@@ -512,6 +532,7 @@
  *        21 .. 30      Ctrl-F1 .. Ctrl-F10
  *        31 .. 40      Alt-F1 .. Alt-F10
  *      </table>
+ *
  *      SET FUNCTION command is preprocessed into __SetFunction() function
  *      during compile time.
  *  $EXAMPLES$
@@ -522,7 +543,6 @@
  *      @ 10, 0 SAY "type something or F1 for lazy mode " GET cTest
  *      READ
  *      ? cTest
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -536,9 +556,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SETKEY()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Events
  *  $ONELINER$
  *      Assign an action block to a key
@@ -571,10 +595,8 @@
  *      // wait-states such as menus, achoices, etc...
  *      SetKey( K_F10, {|| GetActive():State := GE_WRITE },;
  *       {|| GetActive() != NIL } )
- *  </fixed>
  *  $TESTS$
  *      None definable
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -582,7 +604,7 @@
  *      addition of the condition code-block parameter, allowing set-keys to
  *      be conditionally turned off or on.  This condition-block cannot be
  *      returned once set - see SetKeyGet()
- * $FILES$
+ *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
  *      HB_SETKEYSAVE()
@@ -590,12 +612,16 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      HB_SetKeyGet()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Events
  *  $ONELINER$
- *      Determine a set-key code block & condition-block
+ *      Determine a set-key code block and condition-block
  *  $SYNTAX$
  *      HB_SETKEYGET( <nKey> [, <bConditionByRef> ] )
  *  $ARGUMENTS$
@@ -613,15 +639,13 @@
  *      bOldF10 := HB_SetKeyGet( K_F10, @bOldF10Cond )
  *      ... // some other processing
  *      SetKey( K_F10, bOldF10, bOldF10Cond )
- *  </fixed>
  *  $TESTS$
  *      See test code above
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      HB_SETKEYGET() is a new function and hence not CA-Cl*pper compliant.
- * $FILES$
+ *      H
+ *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
  *      SETKEY(),HB_SETKEYSAVE(),HB_SETKEYCHECK()
@@ -629,10 +653,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *     HB_SETKEYSAVE()
  *  $CATEGORY$
- *     Events
+ *      API
+ *  $SUBCATEGORY$
+ *      Events
  *  $ONELINER$
  *     Returns a copy of internal set-key list, optionally overwriting
  *  $SYNTAX$
@@ -653,15 +681,13 @@
  *     local aKeys := HB_SetKeySave( NIL )  // removes all current set=keys
  *     ... // some other processing
  *     HB_SetKeySave( aKeys )
- *  </fixed>
  *  $TESTS$
  *     None definable
- *  </fixed>
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     HB_SETKEYSAVE() is new.
- * $FILES$
+ *     H
+ *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
  *     SETKEY()
@@ -669,9 +695,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      HB_SetKeyCheck()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Events
  *  $ONELINER$
  *      Impliments common hot-key activation code
@@ -704,15 +734,13 @@
  *        return
  *      case nInKey == K_ESC
  *      ... // some other processing
- *  </fixed>
  *  $TESTS$
  *      None definable
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      HB_SETKEYCHECK() is new.
- * $FILES$
+ *      H
+ *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
  *      SETKEY(),HB_SETKEYSAVE()
@@ -720,10 +748,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      SET KEY
  *  $CATEGORY$
- *      Command
+ *     Command
+ *  $SUBCATEGORY$
+ *     Environment
  *  $ONELINER$
  *      Assign an action block to a key
  *  $SYNTAX$
@@ -754,10 +786,8 @@
  *      // wait-states such as menus, achoices, etc...
  *      SetKey( K_F10, {|| GetActive():State := GE_WRITE },;
  *       {|| GetActive() != NIL } )
- *  </fixed>
  *  $TESTS$
  *      None definable
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -771,9 +801,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SETTYPEAHEAD()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Environment
  *  $ONELINER$
  *      Sets the typeahead buffer to given size.
@@ -789,12 +823,11 @@
  *  $EXAMPLES$
  *      // Sets typeahead to 12
  *      SetTypeahead( 12 )
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      SETTYPEAHEAD() is fully CA-Cl*pper compliant.
- * $FILES$
+ *      C
+ *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
  *      __ACCEPT(),__INPUT()
@@ -802,12 +835,16 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      __XHELP()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Internal
  *  $ONELINER$
- *      Looks if a Help() user defined function exist.
+ *      Determines whether a Help() user defined function exists.
  *  $SYNTAX$
  *      __XHELP() --> <xValue>
  *  $ARGUMENTS$
@@ -815,24 +852,28 @@
  *  $RETURNS$
  *      This function returns aleatory values.
  *  $DESCRIPTION$
- *      This is an internal undocumented Clipper function, which will
- *      try to call the user defined function HELP() if it's defined
+ *      This is an internal undocumented CA-Cl*pper function, which will
+ *      try to call the user defined function HELP() if it is defined
  *      in the current application. This is the default SetKey() handler
  *      for the F1 key.
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __XHELP() is fully CA-Cl*pper compliant.
- * $FILES$
+ *      C52U
+ *  $FILES$
  *      Library is rtl
  *  $END$
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      SET DEFAULT
  *  $CATEGORY$
- *      Command
+ *     Command
+ *  $SUBCATEGORY$
+ *     Environment
  *  $ONELINER$
  *      Establishes the Harbour search drive and directory.
  *  $SYNTAX$
@@ -846,21 +887,24 @@
  *      current logged drive and directory.
  *  $EXAMPLES$
  *      SET DEFAULT to C:\temp
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper Compliant.
+ *      C
  *  $SEEALSO$
  *      SET PATH,CURDIR(),SET()
  *  $END$
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      SET WRAP
  *  $CATEGORY$
- *      Command
+ *     Command
+ *  $SUBCATEGORY$
+ *     Environment
  *  $ONELINER$
  *      Toggle wrapping the PROMPTs in a menu.
  *  $SYNTAX$
@@ -874,21 +918,24 @@
  *      the wrapping mode is set OFF;otherwise,it is set ON.
  *  $EXAMPLES$
  *      See Tests/menutest.prg
- *   </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper Compliant.
+ *      C
  *  $SEEALSO$
  *      @...PROMPT,MENU TO
  *  $END$
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      SET MESSAGE
  *  $CATEGORY$
- *      Command
+ *     Command
+ *  $SUBCATEGORY$
+ *     Environment
  *  $ONELINER$
  *      Extablishes a message row for @...PROMPT command
  *  $SYNTAX$
@@ -914,21 +961,24 @@
  *      The British spelling of CENTRE is also supported.
  *  $EXAMPLES$
  *      See Tests/menutest.prg
- *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper Compliant.
+ *      C
  *  $SEEALSO$
  *      SET(),SET WRAP,@...PROMPT,MENU TO
  *  $END$
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      SET PATH
  *  $CATEGORY$
- *      Command
+ *     Command
+ *  $SUBCATEGORY$
+ *     Environment
  *  $ONELINER$
  *      Specifies a search path for opening files
  *  $SYNTAX$
@@ -944,21 +994,24 @@
  *      path; 3 The SET PATH path.
  *  $EXAMPLES$
  *      SET PATH TO C:\harbour\test
- *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper Compliant.
+ *      C
  *  $SEEALSO$
  *      SET DEFAULT,CURDIR(),SET()
  *  $END$
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      SET INTENSITY
  *  $CATEGORY$
- *      Command
+ *     Command
+ *  $SUBCATEGORY$
+ *     Environment
  *  $ONELINER$
  *      Toggles the enhaced display of PROMPT's and GETs.
  *  $SYNTAX$
@@ -974,17 +1027,21 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper Compliant.
+ *      C
  *  $SEEALSO$
  *      @...GET,@...PROMPT,@...SAY,SET()
  *  $END$
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      SET ALTERNATE
  *  $CATEGORY$
- *      Command
+ *     Command
+ *  $SUBCATEGORY$
+ *     Environment
  *  $ONELINER$
  *      Toggle and echos output to an alternate file
  *  $SYNTAX$
@@ -1020,17 +1077,21 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper Compliant.
+ *      C
  *  $SEEALSO$
  *      CLOSE,SET PRINTER,SET CONSOLE,SET()
  *  $END$
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      SET CENTURY
  *  $CATEGORY$
- *      Command
+ *     Command
+ *  $SUBCATEGORY$
+ *     Environment
  *  $ONELINER$
  *      Toggle the century digits in all dates display
  *  $SYNTAX$
@@ -1050,17 +1111,21 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper compliant
+ *      C
  *  $SEEALSO$
  *      SET DATE,SET EPOCH,CTOD(),DATE(),DTOC(),SET()
  *  $END$
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      SET DATE
  *  $CATEGORY$
- *      Command
+ *     Command
+ *  $SUBCATEGORY$
+ *     Environment
  *  $ONELINER$
  *      Assings a date format or chooses a predefined date data set.
  *  $SYNTAX$
@@ -1098,17 +1163,21 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper compliant
+ *      C
  *  $SEEALSO$
  *      SET DATE,SET EPOCH,CTOD(),DATE(),DTOC(),SET()
  *  $END$
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      SET EPOCH
  *  $CATEGORY$
- *      Command
+ *     Command
+ *  $SUBCATEGORY$
+ *     Environment
  *  $ONELINER$
  *      Specifie a base year for interpreting dates
  *  $SYNTAX$
@@ -1124,16 +1193,20 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper compliant
+ *      C
  *  $SEEALSO$
  *      SET DATE,SET CENTURY,CTOD(),DATE(),DTOC(),SET()
  *  $END$
  */
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      SET FIXED
  *  $CATEGORY$
- *      Command
+ *     Command
+ *  $SUBCATEGORY$
+ *     Environment
  *  $ONELINER$
  *      Set the number of decimal position to be displayed
  *  $SYNTAX$
@@ -1167,17 +1240,21 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper compliant
+ *      C
  *  $SEEALSO$
  *      SET DECIMALS,EXP(),LOG(),SQRT(),VAL(),SET()
  *  $END$
 */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      SET PRINTER
  *  $CATEGORY$
- *      Command
+ *     Command
+ *  $SUBCATEGORY$
+ *     Environment
  *  $ONELINER$
  *      Toggles the printer and controls the printer device
  *  $SYNTAX$
@@ -1186,6 +1263,7 @@
  *      SET PRINTER TO [<cPrinter>] [ADDITIVE]
  *  $ARGUMENTS$
  *      <lFixed>   Logical condition by which to toggle the printer
+ *
  *      <cPrinter> A device name or an alternate name
  *  $DESCRIPTION$
  *      This command can direct all output that is not controled by the
@@ -1219,17 +1297,21 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper compliant
+ *      C
  *  $SEEALSO$
  *      SET DEVICE, SET CONSOLE, DEVOUT(), SET()
  *  $END$
 */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      SET CONSOLE
  *  $CATEGORY$
- *      Command
+ *     Command
+ *  $SUBCATEGORY$
+ *     Environment
  *  $ONELINER$
  *      Toggle the console display
  *  $SYNTAX$
@@ -1251,17 +1333,21 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper compliant
+ *      C
  *  $SEEALSO$
  *      SET DEVICE,SET()
  *  $END$
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      SET DECIMALS
  *  $CATEGORY$
- *      Command
+ *     Command
+ *  $SUBCATEGORY$
+ *     Environment
  *  $ONELINER$
  *      Toggle the console display
  *  $SYNTAX$
@@ -1282,17 +1368,21 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper compliant
+ *      C
  *  $SEEALSO$
  *      SET FIXED,SET()
  *  $END$
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      SET DEVICE
  *  $CATEGORY$
- *      Command
+ *     Command
+ *  $SUBCATEGORY$
+ *     Environment
  *  $ONELINER$
  *      Directs all @...SAY output to a device.
  *  $SYNTAX$
@@ -1320,17 +1410,21 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper compliant
+ *      C
  *  $SEEALSO$
  *      @...SAY,SET PRINTER,SETPRC(),SET()
  *  $END$
  */
 
 /*  $DOC$
- *  $COMMANDNAME$
+ *  $TEMPLATE$
+ *      Command
+ *  $NAME$
  *      SET BELL
  *  $CATEGORY$
- *      Command
+ *     Command
+ *  $SUBCATEGORY$
+ *     Environment
  *  $ONELINER$
  *      Toggle the bell to sound once a GET has been completed.
  *  $SYNTAX$
@@ -1339,21 +1433,21 @@
  *      <lBell> Logical expression for toggle command
  *  $DESCRIPTION$
  *      This command toggles the bell to sound whenever a character is
- *      entered into the last character positionof a GET, of if an invalid
+ *      entered into the last character positionof a GET, or if an invalid
  *      data type is entered into a GET.
  *
  *      If <lBell> is a logical true (.T.), the bell will be turned
- *      ON;otherwise, the belle will be turned off.
+ *      ON; otherwise, the bell will be turned off.
  *  $EXAMPLES$
- *      SET BEEL ON
+ *      SET BELL ON
  *      cDummy:=space(20)
- *      ? 3,2 get cDummy
+ *      @ 3,2 get cDummy
  *      Read
  *      SET bell off
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Cl*pper compliant
+ *      C
  *  $SEEALSO$
  *      SET()
  *  $END$

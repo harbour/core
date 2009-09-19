@@ -18,9 +18,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ARRAY()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Array
  *  $ONELINER$
  *      Create an uninitialized array of specified length
@@ -32,8 +36,11 @@
  *      <aArray> an array of specified dimensions.
  *  $DESCRIPTION$
  *      This function returns an uninitialized array with the length of
- *      <nElements>. Nested arrays are uninitialized within the same array
+ *      <nElements>.
+ *
+ *      Nested arrays are uninitialized within the same array
  *      pointer reference if additional parameters are specified.
+ *
  *      Establishing a memory variable with the same name as the array may
  *      destroy the original array and release the entire contents of the
  *      array. This depends, of course, on the data storage type of either
@@ -49,9 +56,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper Compliant in all Cases, except that
- *      arrays in Harbour can have an unlimited number of dimensions, while
- *      Clipper has a limit of 4096 array elements.
+ *      C(array)
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -60,9 +65,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      AADD()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Array
  *  $ONELINER$
  *      Dynamically add an element to an array
@@ -90,6 +99,8 @@
  *      NEXT
  *  $STATUS$
  *      R
+ *  $COMPLIANCE$
+ *      C
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -98,9 +109,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ASIZE()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Array
  *  $ONELINER$
  *      Adjust the size of an array
@@ -137,9 +152,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ATAIL()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Array
  *  $ONELINER$
  *      Returns the rightmost element of an array
@@ -159,7 +178,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -168,9 +187,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      AINS()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Array
  *  $ONELINER$
  *      Insert a NIL value at an array subscript position.
@@ -199,7 +222,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -208,9 +231,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ADEL()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Array
  *  $ONELINER$
  *      Delete an element form an array.
@@ -238,7 +265,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -247,9 +274,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      AFILL()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Array
  *  $ONELINER$
  *      Fill an array with a specified value
@@ -284,7 +315,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -293,9 +324,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ASCAN()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Array
  *  $ONELINER$
  *      Scan array elements for a specified condition
@@ -337,7 +372,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is not CA-Cl*pper compatible. Clipper ASCAN() is affected by the SET EXACT ON/OFF Condition
+ *      This function is not CA-Cl*pper compatible.  CA-Cl*pper ASCAN() is affected by the SET EXACT ON/OFF Condition
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -346,9 +381,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      AEVAL()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Array
  *  $ONELINER$
  *      Evaluated the subscript element of an array
@@ -382,7 +421,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -391,9 +430,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ACOPY()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Array
  *  $ONELINER$
  *      Copy elements from one array to another
@@ -445,7 +488,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -454,9 +497,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ACLONE()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Array
  *  $ONELINER$
  *      Duplicate a  multidimensional array
@@ -481,7 +528,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Clipper will return NIL if the parameter is not an array.
+ *       CA-Cl*pper will return NIL if the parameter is not an array.
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -490,9 +537,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ASORT()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Array
  *  $ONELINER$
  *      Sort an array
@@ -543,7 +594,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Codeblock calling frequency and order differs from Clipper, since
+ *      Codeblock calling frequency and order differs from  CA-Cl*pper, since
  *      Harbour uses a different (faster) sorting algorithm (quicksort).
  *  $FILES$
  *      Library is vm

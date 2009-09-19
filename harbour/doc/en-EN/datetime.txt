@@ -15,10 +15,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      CDOW()
  *  $CATEGORY$
- *      Date
+ *      API
+ * $SUBCATEGORY$
+ *      Date/Time
  *  $ONELINER$
  *      Converts a date to the day of week
  *  $SYNTAX$
@@ -40,7 +44,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant.
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -51,10 +55,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      CMONTH()
  *  $CATEGORY$
- *      Date
+ *      API
+ * $SUBCATEGORY$
+ *      Date/Time
  *  $ONELINER$
  *      Return the name of the month.
  *  $SYNTAX$
@@ -76,7 +84,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -87,10 +95,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      DATE()
  *  $CATEGORY$
- *      Date
+ *      API
+ * $SUBCATEGORY$
+ *      Date/Time
  *  $ONELINER$
  *      Return the Current OS Date
  *  $SYNTAX$
@@ -108,7 +120,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper Compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -119,10 +131,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      CTOD()
  *  $CATEGORY$
- *      Date
+ *      API
+ * $SUBCATEGORY$
+ *      Date/Time
  *  $ONELINER$
  *      Converts a character string to a date expression
  *  $SYNTAX$
@@ -143,7 +159,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -154,10 +170,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      DAY()
  *  $CATEGORY$
- *      Date
+ *      API
+ * $SUBCATEGORY$
+ *      Date/Time
  *  $ONELINER$
  *      Return the numeric day of the month.
  *  $SYNTAX$
@@ -175,7 +195,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -186,10 +206,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      DAYS()
  *  $CATEGORY$
- *      Date
+ *      API
+ * $SUBCATEGORY$
+ *      Date/Time
  *  $ONELINER$
  *      Convert elapsed seconds into days
  *  $SYNTAX$
@@ -207,7 +231,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -218,10 +242,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      DOW()
  *  $CATEGORY$
- *      Date
+ *      API
+ * $SUBCATEGORY$
+ *      Date/Time
  *  $ONELINER$
  *      Value for the day of week.
  *  $SYNTAX$
@@ -239,7 +267,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -250,10 +278,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      DTOC()
  *  $CATEGORY$
- *      Date
+ *      API
+ * $SUBCATEGORY$
+ *      Date/Time
  *  $ONELINER$
  *      Date to character conversion
  *  $SYNTAX$
@@ -273,7 +305,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -284,10 +316,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      DTOS()
  *  $CATEGORY$
- *      Date
+ *      API
+ * $SUBCATEGORY$
+ *      Date/Time
  *  $ONELINER$
  *      Date to string conversion
  *  $SYNTAX$
@@ -305,7 +341,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -316,10 +352,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      ELAPTIME()
  *  $CATEGORY$
- *      Time
+ *      API
+ * $SUBCATEGORY$
+ *      Date/Time
  *  $ONELINER$
  *      Calculates elapted time.
  *  $SYNTAX$
@@ -344,7 +384,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -355,10 +395,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      MONTH()
  *  $CATEGORY$
- *      Date
+ *      API
+ * $SUBCATEGORY$
+ *      Date/Time
  *  $ONELINER$
  *      Converts a date expression to a month value
  *  $SYNTAX$
@@ -377,7 +421,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -388,10 +432,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SECONDS()
  *  $CATEGORY$
- *      Time
+ *      API
+ * $SUBCATEGORY$
+ *      Date/Time
  *  $ONELINER$
  *      Returns the number of elapsed seconds past midnight.
  *  $SYNTAX$
@@ -411,7 +459,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -422,10 +470,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      SECS()
  *  $CATEGORY$
- *      Time
+ *      API
+ * $SUBCATEGORY$
+ *      Date/Time
  *  $ONELINER$
  *      Return the number of seconds from the system date.
  *  $SYNTAX$
@@ -443,7 +495,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -454,10 +506,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      TIME()
  *  $CATEGORY$
- *      Time
+ *      API
+ * $SUBCATEGORY$
+ *      Date/Time
  *  $ONELINER$
  *      Returns the system time as a string
  *  $SYNTAX$
@@ -474,7 +530,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -485,10 +541,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      YEAR()
  *  $CATEGORY$
- *      Date
+ *      API
+ * $SUBCATEGORY$
+ *      Date/Time
  *  $ONELINER$
  *      Converts the year portion of a date into a numeric value
  *  $SYNTAX$
@@ -503,14 +563,13 @@
  *      by the setting of the SET CENTURY and SET DATE commands. Addition
  *      ally, an empty date expression passed to this function will yield
  *      a zero value.
- *
  *  $EXAMPLES$
  *      ? Year(date())
  *      ? year(CTOD("01/25/3251"))
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Cl*pper compliant
+ *      C
  *  $PLATFORMS$
  *      All
  *  $FILES$

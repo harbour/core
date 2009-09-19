@@ -15,10 +15,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      BIN2W()
  *  $CATEGORY$
- *      Binary conversion
+ *      API
+ *  $SUBCATEGORY$
+ *      Conversion
  *  $ONELINER$
  *      Convert unsigned short encoded bytes into Harbour numeric
  *  $SYNTAX$
@@ -35,16 +39,15 @@
  *      representation of numeric value. BIN2W() take two bytes of encoded
  *      16 bit unsigned short integer and convert it into standard Harbour
  *      numeric value.
-
+ *
  *      You might ask what is the need for such functions, well, first of
  *      all it allow you to read/write information from/to a binary file
  *      (like extracting information from DBF header), it is also a useful
  *      way to share information from source other than Harbour (C for
  *      instance).
-
+ *
  *      BIN2W() is the opposite of W2BIN()
  *  $EXAMPLES$
-   <fixed>
  *      // Show header length of a DBF
  *      FUNCTION main()
  *      LOCAL nHandle, cBuffer := space( 2 )
@@ -58,11 +61,10 @@
  *         ? "Can not open file"
  *      ENDIF
  *      RETURN NIL
-   </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      BIN2W() works exactly like CA-Cl*pper's BIN2W()
+ *      C
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -71,10 +73,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      BIN2I()
  *  $CATEGORY$
- *      Binary conversion
+ *      API
+ *  $SUBCATEGORY$
+ *      Conversion
  *  $ONELINER$
  *      Convert signed short encoded bytes into Harbour numeric
  *  $SYNTAX$
@@ -91,16 +97,15 @@
  *      representation of numeric value. BIN2I() take two bytes of encoded
  *      16 bit signed short integer and convert it into standard Harbour
  *      numeric value.
-
+ *
  *      You might ask what is the need for such functions, well, first of
  *      all it allow you to read/write information from/to a binary file
  *      (like extracting information from DBF header), it is also a useful
  *      way to share information from source other than Harbour (C for
  *      instance).
-
+ *
  *      BIN2I() is the opposite of I2BIN()
  *  $EXAMPLES$
-   <fixed>
  *      // Show DBF last update date
  *      FUNCTION main()
  *      LOCAL nHandle, cYear, cMonth, cDay
@@ -117,11 +122,10 @@
  *         ? "Can not open file"
  *      ENDIF
  *      RETURN NIL
-   </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      BIN2I() works exactly like CA-Cl*pper's BIN2I()
+ *      C
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -130,10 +134,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      BIN2L()
  *  $CATEGORY$
- *      Binary conversion
+ *      API
+ *  $SUBCATEGORY$
+ *      Conversion
  *  $ONELINER$
  *      Convert signed long encoded bytes into Harbour numeric
  *  $SYNTAX$
@@ -150,16 +158,15 @@
  *      representation of numeric value. BIN2L() take four bytes of encoded
  *      32 bit signed long integer and convert it into standard Harbour
  *      numeric value.
-
+ *
  *      You might ask what is the need for such functions, well, first of
  *      all it allow you to read/write information from/to a binary file
  *      (like extracting information from DBF header), it is also a useful
  *      way to share information from source other than Harbour (C for
  *      instance).
-
+ *
  *      BIN2L() is the opposite of L2BIN()
  *  $EXAMPLES$
-   <fixed>
  *      // Show number of records in DBF
  *      FUNCTION main()
  *      LOCAL nHandle, cBuffer := space( 4 )
@@ -173,11 +180,10 @@
  *         ? "Can not open file"
  *      ENDIF
  *      RETURN NIL
-   </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      BIN2L() works exactly like CA-Cl*pper's BIN2L()
+ *      C
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -186,10 +192,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      BIN2U()
  *  $CATEGORY$
- *      Binary conversion
+ *      API
+ *  $SUBCATEGORY$
+ *      Conversion
  *  $ONELINER$
  *      Convert unsigned long encoded bytes into Harbour numeric
  *  $SYNTAX$
@@ -206,16 +216,15 @@
  *      representation of numeric value. BIN2U() take four bytes of encoded
  *      32 bit unsigned long integer and convert it into standard Harbour
  *      numeric value.
-
+ *
  *      You might ask what is the need for such functions, well, first of
  *      all it allow you to read/write information from/to a binary file
  *      (like extracting information from DBF header), it is also a useful
  *      way to share information from source other than Harbour (C for
  *      instance).
-
+ *
  *      BIN2U() is the opposite of U2BIN()
  *  $EXAMPLES$
-   <fixed>
  *      // Show number of records in DBF
  *      FUNCTION main()
  *      LOCAL nHandle, cBuffer := space( 4 )
@@ -229,14 +238,10 @@
  *         ? "Can not open file"
  *      ENDIF
  *      RETURN NIL
-   </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      BIN2U() is an Xbase++ compatibility function and does not exist
- *      as a standard CA-Cl*pper 5.x function.
- *      This function is only visible if source/rtl/binnum.c was compiled
- *      with the HB_COMPAT_XPP flag.
+ *      XPP
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -245,10 +250,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      I2BIN()
  *  $CATEGORY$
- *      Binary conversion
+ *      API
+ *  $SUBCATEGORY$
+ *      Conversion
  *  $ONELINER$
  *      Convert Harbour numeric into signed short encoded bytes
  *  $SYNTAX$
@@ -264,16 +273,15 @@
  *      representation of numeric value. I2BIN() take a numeric integer
  *      value and convert it into two bytes of encoded 16 bit signed short
  *      integer.
-
+ *
  *      You might ask what is the need for such functions, well, first of
  *      all it allow you to read/write information from/to a binary file
  *      (like extracting information from DBF header), it is also a useful
  *      way to share information from source other than Harbour (C for
  *      instance).
-
+ *
  *      I2BIN() is the opposite of BIN2I()
  *  $EXAMPLES$
-   <fixed>
  *      // Update DBF "last update" date
  *      #include "fileio.ch"
  *      FUNCTION main()
@@ -298,11 +306,10 @@
  *         ? "Can not open file"
  *      ENDIF
  *      RETURN NIL
-   </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      I2BIN() works exactly like CA-Cl*pper's I2BIN()
+ *      C
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -311,10 +318,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      W2BIN()
  *  $CATEGORY$
- *      Binary conversion
+ *      API
+ *  $SUBCATEGORY$
+ *      Conversion
  *  $ONELINER$
  *      Convert Harbour numeric into unsigned short encoded bytes
  *  $SYNTAX$
@@ -330,21 +341,18 @@
  *      representation of numeric value. W2BIN() take a numeric integer
  *      value and convert it into two bytes of encoded 16 bit unsigned short
  *      integer.
-
+ *
  *      You might ask what is the need for such functions, well, first of
  *      all it allow you to read/write information from/to a binary file
  *      (like extracting information from DBF header), it is also a useful
  *      way to share information from source other than Harbour (C for
  *      instance).
-
+ *
  *      W2BIN() is the opposite of BIN2W()
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      W2BIN() is an Xbase++ compatibility function and does not exist
- *      as a standard CA-Cl*pper 5.x function.
- *      This function is only visible if source/rtl/binnum.c was compiled
- *      with the HB_COMPAT_XPP flag.
+ *      XPP
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -353,10 +361,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      L2BIN()
  *  $CATEGORY$
- *      Binary conversion
+ *      API
+ *  $SUBCATEGORY$
+ *      Conversion
  *  $ONELINER$
  *      Convert Harbour numeric into signed long encoded bytes
  *  $SYNTAX$
@@ -372,18 +384,18 @@
  *      representation of numeric value. L2BIN() take a numeric integer
  *      value and convert it into four bytes of encoded 32 bit signed long
  *      integer.
-
+ *
  *      You might ask what is the need for such functions, well, first of
  *      all it allow you to read/write information from/to a binary file
  *      (like extracting information from DBF header), it is also a useful
  *      way to share information from source other than Harbour (C for
  *      instance).
-
+ *
  *      L2BIN() is the opposite of BIN2L()
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      L2BIN() works exactly like CA-Cl*pper's L2BIN()
+ *      C
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -392,10 +404,14 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      U2BIN()
  *  $CATEGORY$
- *      Binary conversion
+ *      API
+ *  $SUBCATEGORY$
+ *      Conversion
  *  $ONELINER$
  *      Convert Harbour numeric into unsigned long encoded bytes
  *  $SYNTAX$
@@ -411,21 +427,18 @@
  *      representation of numeric value. U2BIN() take a numeric integer
  *      value and convert it into four bytes of encoded 32 bit unsigned long
  *      integer.
-
+ *
  *      You might ask what is the need for such functions, well, first of
  *      all it allow you to read/write information from/to a binary file
  *      (like extracting information from DBF header), it is also a useful
  *      way to share information from source other than Harbour (C for
  *      instance).
-
+ *
  *      U2BIN() is the opposite of BIN2U()
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      U2BIN() is an Xbase++ compatibility function and does not exist
- *      as a standard CA-Cl*pper 5.x function.
- *      This function is only visible if source/rtl/binnum.c was compiled
- *      with the HB_COMPAT_XPP flag.
+ *      XPP
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -434,9 +447,13 @@
  */
 
 /*  $DOC$
- *  $FUNCNAME$
+ *  $TEMPLATE$
+ *      Function
+ *  $NAME$
  *      WORD()
  *  $CATEGORY$
+ *      API
+ *  $SUBCATEGORY$
  *      Conversion
  *  $ONELINER$
  *      Converts double to integer values.
@@ -452,7 +469,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      The Clipper NG states that WORD() will only work when used in CALL
+ *      The CA-Cl*pper NG states that WORD() will only work when used in CALL
  *      commands parameter list, otherwise it will return NIL, in Harbour
  *      it will work anywhere.
  *  $FILES$

@@ -9,16 +9,17 @@
         Giancarlo Niccolai <gian@niccolai.ws>
 
 /*  $DOC$
- *  $FUNCNAME$
- *      harbour Inet functions
+ *  $TEMPLATE$
+ *     Document
+ *  $NAME$
+ *      Harbour Inet functions
  *  $CATEGORY$
- *      harbour Enhacements
+ *     Document
  *  $ONELINER$
  *      HARBOUR INET API
  *  $DESCRIPTION$
  *
  *      STATUS OF THIS DOCUMENT
- *
  *
  *      This is just a draft, a survival guide with minimal API instructions
  *      extracted from the inet.c program comments and from some posting to
@@ -30,7 +31,6 @@
  *      HARBOUR INET API
  *      ================
  *
- *
  *      Startup / cleanup functions
  *      ---------------------------
  *
@@ -38,7 +38,6 @@
  *        Activates inet support; mainly used for winsock start up at the moment, but
  *        could be used in the future for many other purpose. Put it at the beginning
  *        of every program using INET functions.
- *
  *
  *      hb_InetCleanup() -->NIL
  *        Closes Inet support; mainly used for Windows. Put it at the end of any program
@@ -62,11 +61,9 @@
  *        RETURNS 0 on success or -1 on error; on error, the error code is set;
  *        (actually, on success the socket error code is set to 1 -- socket closed )
  *
- *
  *      hb_InetDestroy( SOCKET ) --> Numeric
  *        Closes AND destroys a socket. After this call, the socket can't be used
  *        anymore. Returns 0 on success -1 on failure.
- *
  *
  *      hb_InetSetTimeout( SOCKET, nMillisecs ) --> NIL
  *        Sets the default timeout of the given socket. Default timeout is used in all
@@ -88,7 +85,6 @@
  *        Clears the default timeout of the given socket. Default timeout is used in all
  *        blocking operations.
  *
- *
  *      Informative functions
  *      ---------------------
  *
@@ -108,13 +104,11 @@
  *        Returns the amount of characters read or written in the latest socket
  *        operation.
  *
- *
  *      hb_InetAddress( SOCKET ) --> STRING
  *        Returns a string representing the remote server address in quad dot notation,
  *        e.g. "192.168.1.1", or the local server address if the socket is server
  *        side.
  *        TODO: have a version that returns a vector of 4 numbers.
- *
  *
  *      hb_InetPort( SOCKET ) --> STRING
  *        Returns the port to which this socket is bound, or the remote port if this
@@ -176,7 +170,6 @@
  *        be due to unavailable name resolving service, host name not valid,
  *        host address not reachable and host reachable but port not open.
  *
- *
  *      hb_InetConnectIP( cAddress, PORT ) --> SOCKET
  *      hb_InetConnectIP( cAddress, PORT, SOCKET ) --> NIL
  *        Connects to a remote server described by cAddress, that can be specified
@@ -190,8 +183,6 @@
  *        socket data. Also, it is possible to give timeout at the given SOCKET.
  *
  *        On error, the error of the returned socket is set.
- *
- *
  *
  *      Sending and receiving data
  *      ----------------------------
@@ -212,14 +203,12 @@
  *        use the hb_InetRecvALL().
  *        RETURNS the number of the characters read from the SOCKET.
  *
- *
  *      hb_InetRecvAll( SOCKET, @cString [, @nAmount] ) --> NUMERIC
  *        This function works exactly as hb_InetRecv, except for the fact that it
  *        blocks until nAmount bytes are read, if nAmount is given, or
  *        cString is filled for its whole length.
  *        RETURNS the number of the characters read from the SOCKET. Might be
  *        less than nAmount on premature socket closing or on network error.
- *
  *
  *      hb_InetRecvLine( SOCKET [, @nResult, [, nMaxLength [, nBufSize]]] ) --> STRING
  *        Blocks the calling thread until a sequence CRLF is read from the socket.
@@ -242,14 +231,12 @@
  *        equal to nMaxLength, memory for reading the line will be allocated only
  *        once, at the beginning of the function).
  *
- *
  *      hb_InetRecvEndBlock( SOCKET [, cBlock [, @nResult, [, nMaxLength [,
  *             nBufSize]]]] ) --> STRING
  *        This function operates exactly the same way as hb_InetRecvLine, but
  *        the "record termination" is customizable thorugh the cBlock parameter.
  *        If not given, this parameter defaults to the CRLF sequence.
  *        Provided by: Marcelo Lombardo
- *
  *
  *      hb_InetDataReady( SOCKET [, nMillisecs] ) --> NUMERIC
  *        Verifies if some data is available to be read in the socket without blocking
@@ -263,7 +250,6 @@
  *        On error, hb_InetErrorCode and hb_InetErrorDesc can be use to determine what kind
  *        of error happened.
  *
- *
  *      hb_InetSend( SOCKET, STRING [, nLength ] ) --> NUMERIC
  *        Send data being stored in a string over the socket. Returns the amount of
  *        data written, 0 if the socket has been closed in the meanwhile or -1 on
@@ -276,7 +262,6 @@
  *        To ensure that all the data is sent before the function returns, use the
  *        hb_InetSendAll() function.
  *        On error, the error in the socket is set.
- *
  *
  *      hb_InetSendAll( SOCKET, STRING [, nLength ] ) --> NUMERIC
  *        This function works exactly as hb_InetSend() but it ensures that all the
@@ -299,13 +284,11 @@
  *        should ever arise, you are advised to use a thread MUTEX.
  *        On error, and if the server can't be found, the function returns NIL.
  *
- *
  *      hb_InetGetAlias( cName ) --> aHosts
  *        Returns an array containing the aliases ( CNAME DNS records ) by
  *        which the server is currently known. Whether this function is able
  *        to have the complete list of aliases or not depends on the verbosity
  *        of the DNS server.
- *
  *
  *      hb_InetCRLF() --> String
  *        Returns a CRLF sequence used in many internet protocols.
@@ -325,7 +308,6 @@
  *        Returns the socket, and if an error occurs, the socket error message
  *        and code are set.
  *
- *
  *      hb_InetDGramBind( nPort, [cAddress [, bBroadcast] ] ) --> SOCKET
  *        Creates a datagram oriented socket and binds it to a particular port, and
  *        eventually to a certain interface if cAddress is given and not NIL.
@@ -334,7 +316,6 @@
  *        requires special user privileges.
  *        Returns the socket, and if an error occurs, the socket error message
  *        and code are set.
- *
  *
  *      hb_InetDGramSend( SOCKET, cAddress, nPort, cBuffer [, nSize ] ) --> NUMERIC
  *        Sends a datagram (a fixed length data) to a determined ip address (cAddress,
