@@ -959,7 +959,7 @@ PROCEDURE ShowHelp( cExtraMessage, aArgs )
    LOCAL aHelp
 
    DO CASE
-   CASE Empty( aArgs ) .OR. Len( aArgs ) == 0 .OR. Empty( aArgs[ 1 ] )
+   CASE Empty( aArgs ) .OR. Len( aArgs ) <= 1 .OR. Empty( aArgs[ 1 ] )
       aHelp = { ;
          cExtraMessage, ;
          "Harbour Document Extractor  No. 2 (" + Version() + ")", ;
