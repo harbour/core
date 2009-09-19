@@ -7273,8 +7273,7 @@ const char * hb_vmFindModuleSymbolName( PHB_SYMB pSym )
 
       while( pLastSymbols )
       {
-         if( pLastSymbols->fActive &&
-             pSym >= pLastSymbols->pModuleSymbols &&
+         if( pSym >= pLastSymbols->pModuleSymbols &&
              pSym < pLastSymbols->pModuleSymbols + pLastSymbols->uiModuleSymbols )
          {
             return pLastSymbols->szModuleName;
