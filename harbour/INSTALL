@@ -469,6 +469,8 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
                                (currently on Windows/Windows CE/MS-DOS)
                                (only when using Windows NT shells)
    - HB_BUILD_DLL=no           Create Harbour dynamic libraries. Default: yes
+   - HB_BUILD_SHARED=yes       Create Harbour executables in shared mode.
+                               Default: no
    - HB_BUILD_IMPLIB=yes       Create import libraries for external .dll
                                dependencies (including contribs). Default: no
                                (for Windows targets created from Windows NT

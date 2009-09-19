@@ -9,7 +9,7 @@ include $(TOP)$(ROOT)config/global.mk
 ifneq ($(DYNDIRLIST_BASE),)
 
    DYNDIRLIST := $(DYNDIRLIST_BASE) source/vm/vmmt
-   DYNNAME := harbourmt$(DYNNAME_POST)
+   DYNNAME := $(HB_DYNLIB_MT)
 
    include $(TOP)$(ROOT)config/dyn.mk
 

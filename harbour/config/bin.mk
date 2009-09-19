@@ -9,46 +9,68 @@ ifneq ($(HB_COMPILER),)
 
 # Assemble template lib list to help create a few common variations
 
-# (have to use '=' operator here)
-HB_LIBS_TPL = \
-   hbextern \
-   hbdebug \
-   $(_HB_VM) \
-   hbrtl \
-   hblang \
-   hbcpage \
-   $(HB_GT_LIBS) \
-   $(_HB_RDD) \
-   hbrtl \
-   $(_HB_VM) \
-   hbmacro \
-   hbcplr \
-   hbpp \
-   hbcommon
+ifeq ($(HB_BUILD_SHARED),yes)
+   HB_LIBS_TPL := \
+      hbcplr \
+      hbdebug \
 
-ifneq ($(HB_HAS_PCRE_LOCAL),)
-   HB_LIBS_TPL += hbpcre
+   ifneq ($(filter $(HB_PLATFORM),win wce),)
+      ifneq ($(filter $(HB_COMPILER),mingw mingw64 mingwarm),)
+         HB_LIBS_TPL += hbmainstd
+      else
+         HB_LIBS_TPL += hbmainstd hbmainwin
+      endif
+   endif
+
+   HB_LIBS_ST_RDD := $(HB_LIBS_TPL) $(HB_DYNLIB_ST)
+   HB_LIBS_MT_RDD := $(HB_LIBS_TPL) $(HB_DYNLIB_MT)
+   HB_LIBS_ST_NORDD := $(HB_LIBS_ST_RDD)
+   HB_LIBS_MT_NORDD := $(HB_LIBS_MT_RDD)
+
+   HB_LIBS_TPL :=
+else
+   # (have to use '=' operator here)
+   HB_LIBS_TPL = \
+      hbextern \
+      hbdebug \
+      $(_HB_VM) \
+      hbrtl \
+      hblang \
+      hbcpage \
+      $(HB_GT_LIBS) \
+      $(_HB_RDD) \
+      hbrtl \
+      $(_HB_VM) \
+      hbmacro \
+      hbcplr \
+      hbpp \
+      hbcommon
+
+   ifneq ($(HB_HAS_PCRE_LOCAL),)
+      HB_LIBS_TPL += hbpcre
+   endif
+   ifneq ($(HB_HAS_ZLIB_LOCAL),)
+      HB_LIBS_TPL += hbzlib
+   endif
+
+   # Create a few common core lib lists
+   _HB_RDD := hbrdd $(HB_RDD_LIBS)
+   _HB_VM := hbvm
+   HB_LIBS_ST_RDD := $(HB_LIBS_TPL)
+   _HB_VM := hbvmmt
+   HB_LIBS_MT_RDD := $(HB_LIBS_TPL)
+   _HB_RDD := hbnulrdd
+   _HB_VM := hbvm
+   HB_LIBS_ST_NORDD := $(HB_LIBS_TPL)
+   _HB_VM := hbvmmt
+   HB_LIBS_MT_NORDD := $(HB_LIBS_TPL)
+
+   # Cleanup temp vars
+   HB_LIBS_TPL :=
+   _HB_RDD :=
+   _HB_VM :=
+
 endif
-ifneq ($(HB_HAS_ZLIB_LOCAL),)
-   HB_LIBS_TPL += hbzlib
-endif
-
-# Create a few common core lib lists
-_HB_RDD := hbrdd $(HB_RDD_LIBS)
-_HB_VM := hbvm
-HB_LIBS_ST_RDD := $(HB_LIBS_TPL)
-_HB_VM := hbvmmt
-HB_LIBS_MT_RDD := $(HB_LIBS_TPL)
-_HB_RDD := hbnulrdd
-_HB_VM := hbvm
-HB_LIBS_ST_NORDD := $(HB_LIBS_TPL)
-_HB_VM := hbvmmt
-HB_LIBS_MT_NORDD := $(HB_LIBS_TPL)
-
-# Cleanup temp vars
-HB_LIBS_TPL :=
-_HB_RDD :=
-_HB_VM :=
 
 HB_LINKING_RTL :=
 HB_LINKING_VMMT :=
@@ -61,6 +83,12 @@ ifneq ($(filter hbrtl, $(LIBS)),)
 endif
 
 -include $(TOP)$(ROOT)config/$(HB_PLATFORM)/libs.mk
+
+ifeq ($(HB_BUILD_SHARED),yes)
+   SYSLIBS :=
+   SYSLIBPATHS :=
+endif
+
 include $(TOP)$(ROOT)config/$(HB_PLATFORM)/$(HB_COMPILER).mk
 include $(TOP)$(ROOT)config/c.mk
 include $(TOP)$(ROOT)config/prg.mk

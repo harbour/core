@@ -9,7 +9,7 @@ include $(TOP)$(ROOT)config/global.mk
 ifneq ($(DYNDIRLIST_BASE),)
 
    DYNDIRLIST := $(DYNDIRLIST_BASE) source/vm
-   DYNNAME := harbour$(DYNNAME_POST)
+   DYNNAME := $(HB_DYNLIB_ST)
 
    DIRS := mt
 

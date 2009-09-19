@@ -223,6 +223,12 @@ ifeq ($(HB_INIT_DONE),)
       export HB_BUILD_IMPLIB := no
       export HB_BUILD_OPTIM := yes
       export HB_BUILD_DEBUG := no
+      export HB_BUILD_SHARED := no
+   endif
+
+   # Can't build shared tools if we don't create dlls
+   ifeq ($(HB_BUILD_DLL),no)
+      export HB_BUILD_SHARED := no
    endif
 endif
 
@@ -1100,12 +1106,6 @@ ifneq ($(HB_DB_DRVEXT),)
    HB_RDD_DIRS += $(HB_DB_DRVEXT)
 endif
 
-ifeq ($(HB_PLATFORM_UNIX),)
-   HB_DYN_VER := $(HB_VER_MAJOR)$(HB_VER_MINOR)
-else
-   HB_DYN_VER := $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)
-endif
-
 ifneq ($(HB_PLATFORM),dos)
    HB_VERSION := $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)$(HB_VER_STATUS)
    HB_PKGNAME := harbour-$(HB_VERSION)-$(HB_PLATFORM)-$(HB_COMPILER)
@@ -1270,6 +1270,59 @@ endif
 
 ifeq ($(HB_INC_COMPILE),)
    HB_INC_COMPILE := $(TOP)$(ROOT)include
+endif
+
+ifeq ($(HB_INIT_DONE),)
+   ifneq ($(HB_BUILD_DLL),no)
+
+      ifeq ($(HB_PLATFORM_UNIX),)
+         HB_DYN_VER := $(HB_VER_MAJOR)$(HB_VER_MINOR)
+      else
+         HB_DYN_VER := $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)
+      endif
+
+      ifeq ($(HB_PLATFORM),darwin)
+         DYNNAME_POST := .$(HB_DYN_VER)
+      else
+         DYNNAME_POST := -$(HB_DYN_VER)
+      endif
+
+      ifeq ($(HB_PLATFORM),win)
+         ifeq ($(HB_COMPILER),bcc)
+            DYNNAME_POST := $(DYNNAME_POST)-bcc
+         else
+            ifeq ($(HB_CPU),x86_64)
+               DYNNAME_POST := $(DYNNAME_POST)-x64
+            else
+               ifeq ($(HB_CPU),ia64)
+                  DYNNAME_POST := $(DYNNAME_POST)-ia64
+               endif
+            endif
+         endif
+      else
+         ifeq ($(HB_PLATFORM),wce)
+            DYNNAME_POST := $(DYNNAME_POST)-wce
+            ifeq ($(HB_CPU),arm)
+               DYNNAME_POST := $(DYNNAME_POST)-arm
+            else
+               ifeq ($(HB_CPU),mips)
+                  DYNNAME_POST := $(DYNNAME_POST)-mips
+               else
+                  ifeq ($(HB_CPU),sh)
+                     DYNNAME_POST := $(DYNNAME_POST)-sh
+                  endif
+               endif
+            endif
+         else
+            ifeq ($(HB_PLATFORM),os2)
+               DYNNAME_POST := $(DYNNAME_POST)-os2
+            endif
+         endif
+      endif
+
+      export HB_DYNLIB_ST := harbour$(DYNNAME_POST)
+      export HB_DYNLIB_MT := harbourmt$(DYNNAME_POST)
+   endif
 endif
 
 HB_DYN_COMPILE := no
