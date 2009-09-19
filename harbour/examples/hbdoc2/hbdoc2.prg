@@ -949,6 +949,9 @@ PROCEDURE ShowSubHelp( xLine, nMode, nIndent, n )
 
    RETURN
 
+STATIC FUNCTION HBRawVersion()
+   RETURN StrTran( Version(), "Harbour " )
+
 PROCEDURE ShowHelp( cExtraMessage, aArgs )
    LOCAL nMode := 1
 
@@ -962,11 +965,14 @@ PROCEDURE ShowHelp( cExtraMessage, aArgs )
    CASE Empty( aArgs ) .OR. Len( aArgs ) <= 1 .OR. Empty( aArgs[ 1 ] )
       aHelp = { ;
          cExtraMessage, ;
-         "Harbour Document Extractor  No. 2 (" + Version() + ")", ;
+         "Harbour Document Extractor (hbdoc2) " + HBRawVersion(), ;
          "Copyright (c) 1999-2009, http://www.harbour-project.org/", ;
-         "Syntax: ", ;
+         "", ;
+         "Syntax:", ;
+         "", ;
          { "hbdoc2 [options]" }, ;
-         "options:", ;
+         "", ;
+         "Options:", ;
          { ;
             "-? or --help // this screen", ;
             "-? <option> or --help <option> // help on <option>, <option> is one of:", ;
@@ -980,8 +986,8 @@ PROCEDURE ShowHelp( cExtraMessage, aArgs )
             "-by-method // output is one file per method (function, command, etc)" + IsDefault( p_hsSwitches[ "by-" ] == "method" ), ;
             "-by-category // output is one file per category" + IsDefault( p_hsSwitches[ "by-" ] == "category" ), ;
             "-source=<folder> // source folder, default is .." + PATH_SEPARATOR + "..", ;
-            "- include-doc-source // output is to indicate the document source file name", ;
-            "- include-doc-version // output is to indicate the document source file version", ;
+            "-include-doc-source // output is to indicate the document source file name", ;
+            "-include-doc-version // output is to indicate the document source file version", ;
          } ;
       }
 
