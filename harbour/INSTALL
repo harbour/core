@@ -182,6 +182,56 @@ HOW TO DO A PARTIAL [RE]BUILD
       <make> [clean] [install]
 
 
+HOW TO CREATE DISTRIBUTABLE PACKAGES
+====================================
+
+   Source .tgz on *nixes
+   ---------------------
+
+      $ ./mpkg_src.sh
+
+   Binary .tgz on *nixes
+   ---------------------
+
+      $ ./mpkg_tgz.sh
+
+   Binary .deb on Linux
+   --------------------
+
+      $ fakeroot debian/rules
+
+   .rpm on Linux
+   -------------
+
+      for native build:
+         $ ./mpkg_rpm.sh
+      for Windows cross-build:
+         $ ./mpkg_rpm_win.sh
+      for Windows CE cross-build:
+         $ ./mpkg_rpm_wce.sh
+
+   Binzary .zip + .exe on Windows for all targets (except Linux)
+   -------------------------------------------------------------
+
+      > set HB_DIR_NSIS=%ProgramFiles%\NSIS\
+      > set HB_DIR_ZIP=C:\info-zip\
+      > set HB_BUILD_PKG=yes
+      (then run build as usual, see: HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE)
+
+   Binary .zip on MS-DOS for all targets (except Linux)
+   ----------------------------------------------------
+
+      > set HB_DIR_ZIP=C:\info-zip\
+      > set HB_BUILD_PKG=yes
+      (then run build as usual, see: HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE)
+
+   Unified .7z + .exe installer for Windows
+   ----------------------------------------
+
+      [ To be completed. All required files and scripts reside in package/winuni.
+        This is a semi-manual process yet. ]
+
+
 HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
 ==============================================
 

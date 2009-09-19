@@ -76,12 +76,7 @@ then
     elif [ "$HB_COMPILER" = "sunpro" ]; then
         hb_mkdyn="${HB_BIN_INSTALL}/hb-mkdyn"
         rm -f "${hb_mkdyn}"
-        if [ "$HB_PLATFORM" = "sunos" ] && \
-           (isalist|grep sparc) &>/dev/null; then
-            lnopt="-xcode=pic32"
-        else
-            lnopt="-KPIC"
-        fi
+        lnopt=""
         [ "$HB_BUILD_OPTIM" = "no" ] || lnopt="-fast -xnolibmopt $lnopt"
         sed -e "s/gcc -shared/suncc -G ${lnopt} ${HB_ISAOPT}/g" \
             "${hb_root}/bin/hb-mkdyn.sh" > "${hb_mkdyn}" && \
