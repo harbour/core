@@ -95,7 +95,7 @@ then
             lnopt="-KPIC"
         fi
         [ "$HB_BUILD_OPTIM" = "no" ] || lnopt="-fast -xnolibmopt $lnopt"
-        sed -e "s/gcc -shared -fPIC/suncc -G ${lnopt} ${HB_ISAOPT}/g" \
+        sed -e "s/gcc -shared/suncc -G ${lnopt} ${HB_ISAOPT}/g" \
             "${hb_root}/bin/hb-mkdyn.sh" > "${hb_mkdyn}" && \
         chmod 755 "${hb_mkdyn}"
     elif [ "${HB_PLATFORM}" = "sunos" ] || \
