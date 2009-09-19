@@ -1320,8 +1320,16 @@ ifeq ($(HB_INIT_DONE),)
          endif
       endif
 
-      export HB_DYNLIB_ST := harbour$(DYNNAME_POST)
-      export HB_DYNLIB_MT := harbourmt$(DYNNAME_POST)
+      ifeq ($(HB_PLATFORM)-$(HB_COMPILER),dos-watcom)
+         HB_DYNLIB_ST := harbour
+         HB_DYNLIB_MT := harbourm
+      else
+         HB_DYNLIB_ST := harbour$(DYNNAME_POST)
+         HB_DYNLIB_MT := harbourmt$(DYNNAME_POST)
+      endif
+
+      export HB_DYNLIB_ST
+      export HB_DYNLIB_MT
    endif
 endif
 

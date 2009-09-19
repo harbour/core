@@ -71,4 +71,31 @@ ifneq ($(HB_LINKING_RTL),)
    endif
 endif
 
+DY := $(LD)
+DFLAGS := OP quiet SYS cwdllr
+DY_OUT :=
+DLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
+DLIBS += $(foreach lib,$(SYSLIBS),$(lib))
+DLIBS := $(strip $(DLIBS))
+
+ifneq ($(DLIBS),)
+   comma := ,
+   DLIBS_COMMA := LIB $(subst $(subst x,x, ),$(comma) ,$(DLIBS))
+else
+   DLIBS_COMMA :=
+endif
+
+# NOTE: The empty line directly before 'endef' HAVE TO exist!
+define dyn_object
+   @$(ECHO) $(ECHOQUOTE)FILE '$(file)'$(ECHOQUOTE) >> __dyn__.tmp
+
+endef
+define create_dynlib
+   $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
+   $(foreach file,$^,$(dyn_object))
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) NAME '$(subst /,$(DIRSEP),$(DYN_DIR)/$@)' OP implib='$(IMP_FILE)' @__dyn__.tmp $(DLIBS_COMMA)
+endef
+
+DY_RULE = $(create_dynlib)
+
 include $(TOP)$(ROOT)config/common/watcom.mk

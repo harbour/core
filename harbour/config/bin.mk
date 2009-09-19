@@ -22,6 +22,8 @@ ifeq ($(HB_BUILD_SHARED),yes)
       else
          HB_LIBS_TPL += hbmainstd hbmainwin
       endif
+   else ifeq ($(HB_PLATFORM)-$(HB_COMPILER),os2-watcom)
+      HB_LDFLAGS += FILE $(LIB_DIR)/hbmainstd.lib
    endif
 
    HB_LIBS_ST_RDD := $(HB_LIBS_TPL) $(HB_DYNLIB_ST)

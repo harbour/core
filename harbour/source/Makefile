@@ -40,8 +40,7 @@ else
          source/rtl/gtstd
 
       ifeq ($(HB_PLATFORM),dos)
-         # Don't consume environment space
-         DYNDIRLIST_BASE := x
+         DYNDIRLIST_BASE += source/rtl/gtdos
       endif
       ifeq ($(HB_PLATFORM),os2)
          DYNDIRLIST_BASE += source/rtl/gtos2
@@ -73,7 +72,6 @@ else
       endif
 
       export DYNDIRLIST_BASE
-      export DYNNAME_POST
    endif
 
    ifeq ($(HB_BUILD_PART),lib)
