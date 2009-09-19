@@ -13,6 +13,6 @@ PRG_SOURCES := \
 
 PRG_MAIN := hbmk2.prg
 
-LIBS = $(HB_LIBS_MT_NORDD)
+LIBS = hbcplr hbpp hbcommon $(HB_LIBS_MT_NORDD)
 
 include $(TOP)$(ROOT)config/bin.mk

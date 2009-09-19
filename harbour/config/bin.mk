@@ -17,6 +17,8 @@ ifeq ($(HB_BUILD_SHARED),yes)
    ifneq ($(filter $(HB_PLATFORM),win wce),)
       ifneq ($(filter $(HB_COMPILER),mingw mingw64 mingwarm),)
          HB_LIBS_TPL += hbmainstd
+      else ifeq ($(HB_COMPILER),watcom)
+         HB_LDFLAGS += FILE $(LIB_DIR)/hbmainstd.lib
       else
          HB_LIBS_TPL += hbmainstd hbmainwin
       endif
@@ -84,9 +86,11 @@ endif
 
 -include $(TOP)$(ROOT)config/$(HB_PLATFORM)/libs.mk
 
-ifeq ($(HB_BUILD_SHARED),yes)
-   SYSLIBS :=
-   SYSLIBPATHS :=
+ifneq ($(HB_PLATFORM_UNIX),)
+   ifeq ($(HB_BUILD_SHARED),yes)
+      SYSLIBS :=
+      SYSLIBPATHS :=
+   endif
 endif
 
 include $(TOP)$(ROOT)config/$(HB_PLATFORM)/$(HB_COMPILER).mk
