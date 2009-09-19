@@ -221,8 +221,8 @@ mk_hbtools()
     elif [ "${HB_COMPILER}" = "djgpp" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS}"
         HB_INC_X11="no"
+        HB_LIBNAME_CURSES="pdcurses"
     else
-        HB_LIBNAME_CURSES=""
         if [ "${HB_PLATFORM}" = "linux" ]; then
             HB_SYS_LIBS="${HB_SYS_LIBS} -ldl -lrt"
         elif [ "${HB_PLATFORM}" = "sunos" ]; then
@@ -231,6 +231,8 @@ mk_hbtools()
             HB_LIBNAME_CURSES="curses"
         elif [ "${HB_PLATFORM}" = "hpux" ]; then
             HB_SYS_LIBS="${HB_SYS_LIBS} -lrt"
+        elif [ "${HB_PLATFORM}" = "bsd" ]; then
+            HB_LIBNAME_CURSES="curses"
         fi
         if [ -n "${HB_CURSES_VER}" ]; then
             HB_LIBNAME_CURSES="${HB_CURSES_VER}"
@@ -375,54 +377,6 @@ HB_STATIC="${hb_static}"
 HB_MT=""
 HB_GT="${HB_GT_LIB#gt}"
 
-if [ -z "$HB_INC_GPM" ]; then
-    if [ "$HB_PLATFORM" = "linux" ] && \\
-       ( [ -f /usr/include/gpm.h ] || [ -f /usr/local/include/gpm.h ]); then
-        HB_INC_GPM=yes
-    else
-        HB_INC_GPM=no
-    fi
-    export HB_INC_GPM
-fi
-
-if [ -z "${HB_INC_SLANG}" ]; then
-    HB_INC_SLANG=no
-    case "$HB_PLATFORM" in
-        linux|bsd|darwin|hpux|sunos)
-            for dir in /usr /usr/local /sw /opt/local
-            do
-                if [ -f ${dir}/include/slang.h ] || \\
-                   [ -f ${dir}/include/slang/slang.h ]; then
-                    HB_INC_SLANG=yes
-                fi
-            done
-            ;;
-    esac
-fi
-
-if [ -z "${HB_INC_CURSES}" ]; then
-    HB_INC_CURSES=no
-    case "$HB_PLATFORM" in
-        linux|bsd|darwin|hpux|sunos)
-            for dir in /usr /usr/local /sw /opt/local
-            do
-                if [ -f ${dir}/include/curses.h ]; then
-                    HB_INC_CURSES=yes
-                fi
-            done
-            ;;
-    esac
-fi
-
-if [ -z "$HB_COMMERCE" ]; then
-    HB_COMMERCE=no;
-fi
-
-if [ "$HB_COMMERCE" = yes ]; then
-    HB_INC_GPM=no
-    HB_INC_SLANG=no
-fi
-
 HB_GT_REQ=""
 HB_STRIP="yes"
 HB_MAIN_FUNC=""
@@ -522,13 +476,13 @@ GCC_PATHS="\${HB_PATHS} -L\${HB_LIB_INSTALL}"
 HB_GPM_LIB=""
 if [ -f "\${HB_LIB_INSTALL}/libgtsln.a" ]; then
     SYSTEM_LIBS="-l${HB_LIBNAME_SLANG:-slang} \${SYSTEM_LIBS}"
-    [ "\${HB_INC_GPM}" != "no" ] && HB_GPM_LIB="gpm"
+    [ "${HB_INC_GPM}" != "no" ] && HB_GPM_LIB="gpm"
 fi
 if [ -f "\${HB_LIB_INSTALL}/libgtcrs.a" ]; then
     SYSTEM_LIBS="-l${HB_LIBNAME_CURSES:-ncurses} \${SYSTEM_LIBS}"
-    [ "\${HB_INC_GPM}" != "no" ] && HB_GPM_LIB="gpm"
+    [ "${HB_INC_GPM}" != "no" ] && HB_GPM_LIB="gpm"
 fi
-if [ "\${HB_INC_X11}" != "no" ]; then
+if [ "${HB_INC_X11}" != "no" ]; then
     if [ -f "\${HB_LIB_INSTALL}/libgtxvt.a" ] || [ -f "\${HB_LIB_INSTALL}/libgtxwc.a" ]; then
         [ -d "/usr/X11R6/lib64" ] && SYSTEM_LPATHS="\${SYSTEM_LPATHS} -L/usr/X11R6/lib64"
         [ -d "/usr/X11R6/lib" ]   && SYSTEM_LPATHS="\${SYSTEM_LPATHS} -L/usr/X11R6/lib"
@@ -897,15 +851,14 @@ mk_hblibso()
                 then
                     LIBS="$LIBS $ls"
                     if [ "${l}" = gtcrs ]; then
-                        if [ "${HB_PLATFORM}" = "sunos" ]; then
+                        if [ "${HB_PLATFORM}" = "sunos" ] || \
+                           [ "${HB_PLATFORM}" = "bsd" ]; then
                             linker_options="$linker_options -lcurses"
                         else
                             linker_options="$linker_options -lncurses"
                         fi
                     elif [ "${l}" = gtsln ]; then
-                        if [ "${HB_INC_SLANG}" != "no" ]; then
-                            linker_options="$linker_options -lslang"
-                        fi
+                        linker_options="$linker_options -lslang"
                     elif [ "${l}" = gtxwc ]; then
                         [ -d "/usr/X11R6/lib" ] && \
                            linker_options="$linker_options -L/usr/X11R6/lib"

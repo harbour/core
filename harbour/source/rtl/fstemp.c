@@ -76,7 +76,8 @@
 #if ( defined( HB_OS_LINUX ) && !defined( __WATCOMC__ ) ) || \
     defined( HB_OS_BSD ) || defined( HB_OS_DARWIN ) || defined( HB_OS_SUNOS )
    #define HB_HAS_MKSTEMP
-   #if defined( HB_OS_BSD ) || defined( HB_OS_DARWIN )
+   #if ( defined( HB_OS_BSD ) && !defined( __NetBSD__ ) ) || \
+       defined( HB_OS_DARWIN )
       #define HB_HAS_MKSTEMPS
    #endif
 #endif
