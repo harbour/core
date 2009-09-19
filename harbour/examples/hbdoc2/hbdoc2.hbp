@@ -1,0 +1,19 @@
+#
+# $Id$
+#
+
+-q0
+-w3
+-es2
+
+-nulrdd
+
+-gtstd
+
+hbdoc2.prg
+gentpl.prg
+gentxt.prg
+genhtml.prg
+genxml.prg
+
+tmplates.prg
