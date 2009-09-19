@@ -1,5 +1,5 @@
 #!/bin/sh
-[ "$BASH" ] || exec bash `which $0` ${1+"$@"}
+[ "$BASH" ] || exec bash $0 "$@"
 #
 # $Id$
 #
@@ -214,13 +214,10 @@ mk_hbtools()
     if [ "${HB_COMPILER}" = "mingw" ] || \
        [ "${HB_COMPILER}" = "mingw64" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS} -luser32 -lwinspool -lgdi32 -lcomctl32 -ladvapi32 -lcomdlg32 -lole32 -loleaut32 -luuid -lws2_32"
-        HB_INC_X11="no"
     elif [ "${HB_COMPILER}" = "mingwarm" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS} -lwininet -lws2 -lcommdlg -lcommctrl -luuid -lole32 -loleaut32"
-        HB_INC_X11="no"
     elif [ "${HB_COMPILER}" = "djgpp" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS}"
-        HB_INC_X11="no"
         HB_LIBNAME_CURSES="pdcurses"
     else
         if [ "${HB_PLATFORM}" = "linux" ]; then
@@ -476,13 +473,13 @@ GCC_PATHS="\${HB_PATHS} -L\${HB_LIB_INSTALL}"
 HB_GPM_LIB=""
 if [ -f "\${HB_LIB_INSTALL}/libgtsln.a" ]; then
     SYSTEM_LIBS="-l${HB_LIBNAME_SLANG:-slang} \${SYSTEM_LIBS}"
-    [ "${HB_INC_GPM}" != "no" ] && HB_GPM_LIB="gpm"
+    [ "${HB_HAS_GPM}" != "" ] && HB_GPM_LIB="gpm"
 fi
 if [ -f "\${HB_LIB_INSTALL}/libgtcrs.a" ]; then
     SYSTEM_LIBS="-l${HB_LIBNAME_CURSES:-ncurses} \${SYSTEM_LIBS}"
-    [ "${HB_INC_GPM}" != "no" ] && HB_GPM_LIB="gpm"
+    [ "${HB_HAS_GPM}" != "" ] && HB_GPM_LIB="gpm"
 fi
-if [ "${HB_INC_X11}" != "no" ]; then
+if [ -n "${HB_HAS_X11}" ]; then
     if [ -f "\${HB_LIB_INSTALL}/libgtxvt.a" ] || [ -f "\${HB_LIB_INSTALL}/libgtxwc.a" ]; then
         [ -d "/usr/X11R6/lib64" ] && SYSTEM_LPATHS="\${SYSTEM_LPATHS} -L/usr/X11R6/lib64"
         [ -d "/usr/X11R6/lib" ]   && SYSTEM_LPATHS="\${SYSTEM_LPATHS} -L/usr/X11R6/lib"

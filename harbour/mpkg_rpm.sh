@@ -1,5 +1,5 @@
 #!/bin/sh
-[ "$BASH" ] || exec bash `which $0` ${1+"$@"}
+[ "$BASH" ] || exec bash $0 "$@"
 #
 # $Id$
 #
