@@ -498,6 +498,8 @@ case "\${HB_MT}" in
 esac
 
 SYSTEM_LIBS="${HB_SYS_LIBS}"
+SYSTEM_LPATHS=""
+
 # use pthread system library for MT programs
 if [ "\${HB_MT}" = "MT" ]; then
     case "\${HB_PLATFORM}" in
@@ -519,11 +521,6 @@ GCC_PATHS="\${HB_PATHS} -L\${HB_LIB_INSTALL}"
 
 HB_GPM_LIB=""
 if [ -f "\${HB_LIB_INSTALL}/libgtsln.a" ]; then
-    if [ "\${HB_PLATFORM}" = "darwin" ]; then
-        SYSTEM_LIBS="\${SYSTEM_LIBS} -L/sw/lib -L/opt/local/lib"
-    elif [ "\${HB_PLATFORM}" = "bsd" ]; then
-        SYSTEM_LIBS="\${SYSTEM_LIBS} -L/usr/local/lib"
-    fi
     SYSTEM_LIBS="-l${HB_LIBNAME_SLANG:-slang} \${SYSTEM_LIBS}"
     [ "\${HB_INC_GPM}" != "no" ] && HB_GPM_LIB="gpm"
 fi
@@ -533,12 +530,12 @@ if [ -f "\${HB_LIB_INSTALL}/libgtcrs.a" ]; then
 fi
 if [ "\${HB_INC_X11}" != "no" ]; then
     if [ -f "\${HB_LIB_INSTALL}/libgtxvt.a" ] || [ -f "\${HB_LIB_INSTALL}/libgtxwc.a" ]; then
-        [ -d "/usr/X11R6/lib64" ] && SYSTEM_LIBS="\${SYSTEM_LIBS} -L/usr/X11R6/lib64"
-        SYSTEM_LIBS="-L/usr/X11R6/lib -lX11 \${SYSTEM_LIBS}"
+        [ -d "/usr/X11R6/lib64" ] && SYSTEM_LPATHS="\${SYSTEM_LPATHS} -L/usr/X11R6/lib64"
+        [ -d "/usr/X11R6/lib" ]   && SYSTEM_LPATHS="\${SYSTEM_LPATHS} -L/usr/X11R6/lib"
+        SYSTEM_LIBS="-lX11 \${SYSTEM_LIBS}"
     fi
 fi
 [ -n "\${HB_GPM_LIB}" ] && SYSTEM_LIBS="-l\${HB_GPM_LIB} \${SYSTEM_LIBS}"
-
 
 if [ "\${HB_STATIC}" = "no" ] && \\
    [ "\${HB_PLATFORM}" != "win" ] && \\
@@ -577,8 +574,14 @@ for gt in \${HB_GT_REQ}; do
 done
 
 if [ "\${HB_PLATFORM}" = "beos" ]; then
-    SYSTEM_LIBS="-L/system/lib \${SYSTEM_LIBS}"
+    [ -d "/system/lib" ] && SYSTEM_LPATHS="-L/system/lib \${SYSTEM_LPATHS}"
+elif [ "\${HB_PLATFORM}" = "darwin" ]; then
+    [ -d "/sw/lib" ] && SYSTEM_LPATHS="\${SYSTEM_LPATHS} -L/sw/lib"
+    [ -d "/opt/local/lib" ] && SYSTEM_LPATHS="\${SYSTEM_LPATHS} -L/opt/local/lib"
+elif [ "\${HB_PLATFORM}" = "bsd" ]; then
+    [ -d "/usr/local/lib" ] && SYSTEM_LPATHS="\${SYSTEM_LPATHS} -L/usr/local/lib"
 fi
+SYSTEM_LIBS="\${SYSTEM_LPATHS} \${SYSTEM_LIBS}"
 
 HB_LNK_ATTR=""
 HARBOUR_LIBS=""
