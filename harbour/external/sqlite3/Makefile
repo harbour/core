@@ -16,9 +16,6 @@ C_SOURCES := \
 
 # decide if it's supported at all
 HB_SUPPORTED := yes
-ifeq ($(HB_COMPILER),mingwarm)
-   HB_SUPPORTED := no
-endif
 ifeq ($(HB_COMPILER),poccarm)
    HB_SUPPORTED := no
 endif

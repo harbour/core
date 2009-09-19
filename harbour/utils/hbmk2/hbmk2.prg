@@ -6643,6 +6643,7 @@ STATIC FUNCTION GenHBL( hbmk, aFiles, cFileOut, lEmpty )
 #define _VCS_MERCURIAL          3
 #define _VCS_CVS                4
 #define _VCS_BAZAAR             5
+#define _VCS_FOSSIL             6
 
 STATIC FUNCTION VCSDetect( cDir )
 
@@ -6653,12 +6654,13 @@ STATIC FUNCTION VCSDetect( cDir )
    ENDIF
 
    DO CASE
-   CASE hb_DirExists( cDir + ".svn" ) ; RETURN _VCS_SVN
-   CASE hb_DirExists( cDir + ".git" ) ; RETURN _VCS_GIT
-   CASE hb_DirExists( cDir + ".hg" )  ; RETURN _VCS_MERCURIAL
-   CASE hb_DirExists( cDir + ".bzr" ) ; RETURN _VCS_BAZAAR
-   CASE hb_DirExists( cDir + "CVS" )  ; RETURN _VCS_CVS
-   CASE hb_DirExists( cDir + "_svn" ) ; RETURN _VCS_SVN /* NOTE: When SVN_ASP_DOT_NET_HACK envvar is set. [vszakats] */
+   CASE hb_DirExists( cDir + ".svn" )      ; RETURN _VCS_SVN
+   CASE hb_DirExists( cDir + ".git" )      ; RETURN _VCS_GIT
+   CASE hb_DirExists( cDir + ".hg" )       ; RETURN _VCS_MERCURIAL
+   CASE hb_DirExists( cDir + ".bzr" )      ; RETURN _VCS_BAZAAR
+   CASE hb_FileExists( cDir + "_FOSSIL_" ) ; RETURN _VCS_FOSSIL
+   CASE hb_DirExists( cDir + "CVS" )       ; RETURN _VCS_CVS
+   CASE hb_DirExists( cDir + "_svn" )      ; RETURN _VCS_SVN /* NOTE: When SVN_ASP_DOT_NET_HACK envvar is set. [vszakats] */
    ENDCASE
 
    RETURN _VCS_UNKNOWN
@@ -6690,6 +6692,10 @@ STATIC FUNCTION VCSID( cDir, cVCSHEAD, /* @ */ cType )
    CASE _VCS_BAZAAR
       cType := "bazaar"
       cCommand := "bzr version-info" + iif( Empty( cDir ), "", " " + cDir )
+      EXIT
+   CASE _VCS_FOSSIL
+      cType := "fossil"
+      cCommand := "fossil info"
       EXIT
    OTHERWISE
       /* No version control system detected, roll our own. */
@@ -6745,6 +6751,25 @@ STATIC FUNCTION VCSID( cDir, cVCSHEAD, /* @ */ cType )
             IF tmp > 0
                cStdOut := SubStr( cStdOut, tmp + Len( "revno: " ) )
                tmp := At( Chr( 10 ), cStdOut )
+               IF tmp > 0
+                  cResult := Left( cStdOut, tmp - 1 )
+               ENDIF
+            ENDIF
+            EXIT
+         CASE _VCS_FOSSIL
+            /* project-name: Fossil
+               repository:   C:/fossil/fossil.fossil
+               local-root:   C:/fossil/src/
+               project-code: CE59BB9F186226D80E49D1FA2DB29F935CCA0333
+               server-code:  9fbdba27d27885515cbf885579dbffa7cebd8d95
+               checkout:     c774e298c3f213f7487fb0ba638edfa3f1b89edf 2009-09-18 20:58:06 UTC
+               parent:       0eb08b860c5b851c074113fd459d1cd0671f4805 2009-09-16 21:29:18 UTC
+               tags:         trunk
+             */
+            tmp := At( "checkout:", cStdOut )
+            IF tmp > 0
+               cStdOut := LTrim( SubStr( cStdOut, tmp + Len( "checkout:" ) ) )
+               tmp := At( " ", cStdOut )
                IF tmp > 0
                   cResult := Left( cStdOut, tmp - 1 )
                ENDIF
