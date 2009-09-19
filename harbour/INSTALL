@@ -193,15 +193,15 @@ HOW TO CREATE DISTRIBUTABLE PACKAGES
    Binary .tgz on *nixes
    ---------------------
 
-      $ ./mpkg_tgz.sh
+      $ sudo ./mpkg_tgz.sh
 
    Binary .deb on Linux
    --------------------
 
       $ fakeroot debian/rules
 
-   .rpm on Linux
-   -------------
+   Binary .rpm on Linux
+   --------------------
 
       for native build:
          $ ./mpkg_rpm.sh
@@ -210,8 +210,8 @@ HOW TO CREATE DISTRIBUTABLE PACKAGES
       for Windows CE cross-build:
          $ ./mpkg_rpm_wce.sh
 
-   Binzary .zip + .exe on Windows for all targets (except Linux)
-   -------------------------------------------------------------
+   Binary .zip + .exe on Windows for all targets (except Linux)
+   ------------------------------------------------------------
 
       > set HB_DIR_NSIS=%ProgramFiles%\NSIS\
       > set HB_DIR_ZIP=C:\info-zip\
