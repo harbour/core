@@ -2324,9 +2324,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lIMPLIB ]
             AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--out-implib,{OI}" )
          ENDIF
-         IF hbmk[ _HBMK_lSHARED ]
-            AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_BIN_INSTALL )
-         ENDIF
          IF l_lLIBGROUPING .AND. hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
@@ -2408,9 +2405,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ENDIF
          IF hbmk[ _HBMK_lIMPLIB ]
             AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--out-implib,{OI}" )
-         ENDIF
-         IF hbmk[ _HBMK_lSHARED ]
-            AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_BIN_INSTALL )
          ENDIF
          AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
          l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
@@ -2723,9 +2717,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                ENDIF
             ENDIF
          ENDIF
-         IF hbmk[ _HBMK_lSHARED ]
-            AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_BIN_INSTALL )
-         ENDIF
          l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-bcc" + cLibExt,;
                                                    "harbour" + cDL_Version_Alter + "-bcc" + cLibExt ) }
          l_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
@@ -2837,9 +2828,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                ENDIF
             ENDIF
          ENDIF
-         IF hbmk[ _HBMK_lSHARED ]
-            AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_BIN_INSTALL )
-         ENDIF
          l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
          DO CASE
          CASE hbmk[ _HBMK_cCOMP ] $ "msvc|icc"
@@ -2934,9 +2922,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          cOpt_Link := "-out:{OE} {LO} {DL} {FL} {LL} {LB} {LS}"
          cLibPathPrefix := "-libpath:"
          cLibPathSep := " "
-         IF hbmk[ _HBMK_lSHARED ]
-            AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_BIN_INSTALL )
-         ENDIF
          IF hbmk[ _HBMK_lMAP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-map" )
          ENDIF
