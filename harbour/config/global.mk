@@ -1218,7 +1218,7 @@ ifneq ($(HB_INSTALL_PREFIX),)
       endif
       # Use 'lib64' instead of 'lib' for 64-bit targets
       ifneq ($(filter $(HB_CPU),x86_64),)
-         LIBPOSTFIX += 64$(LIBPOSTFIX)
+         LIBPOSTFIX := 64$(LIBPOSTFIX)
       endif
    endif
 

@@ -2240,7 +2240,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
          IF IsGTRequested( hbmk, "gtcrs" )
             /* TOFIX: Sometimes 'ncur194' is needed. */
-            AAdd( l_aLIBSYS, iif( hbmk[ _HBMK_cPLAT ] == "sunos", "curses", "ncurses" ) )
+            AAdd( l_aLIBSYS, iif( hbmk[ _HBMK_cPLAT ] $ "sunos|bsd", "curses", "ncurses" ) )
          ENDIF
          IF IsGTRequested( hbmk, "gtsln" )
             AAdd( l_aLIBSYS, "slang" )
