@@ -1361,6 +1361,7 @@ CXX :=
 export HB_HOST_PLAT
 export HB_HOST_CPU
 export HB_HOST_BIN_DIR
+export HB_HOST_BIN_EXT
 
 # clear these options for an unambiguous Harbour environment
 export HARBOUR :=
