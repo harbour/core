@@ -1198,6 +1198,18 @@ endif
 
 ifneq ($(HB_INSTALL_PREFIX),)
 
+   ifeq ($(HB_BUILD_SHARED),)
+      ifneq ($(findstring |/usr/local/bin,|$(HB_INSTALL_PREFIX)),)
+         export HB_BUILD_SHARED := yes
+      else ifneq ($(findstring |/usr/bin,|$(HB_INSTALL_PREFIX)),)
+         export HB_BUILD_SHARED := yes
+      else ifneq ($(findstring |/opt/harbour,|$(HB_INSTALL_PREFIX)),)
+         export HB_BUILD_SHARED := yes
+      else ifneq ($(findstring |/opt/bin,|$(HB_INSTALL_PREFIX)),)
+         export HB_BUILD_SHARED := yes
+      endif
+   endif
+
    ifeq ($(HB_PLATFORM),beos)
       LIBPOSTFIX := $(DIRSEP)harbour
       INCPOSTFIX := $(DIRSEP)harbour
