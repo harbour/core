@@ -1234,22 +1234,25 @@ ifneq ($(HB_INSTALL_PREFIX),)
    else ifeq ($(HB_PLATFORM_UNIX),)
       LIBPOSTFIX := $(DIRSEP)$(subst /,$(DIRSEP),$(PLAT_COMP))
    else
+      LIBPOSTFIX :=
+      # Use 'lib64' instead of 'lib' for 64-bit targets where lib64 dir exists
+      ifneq ($(wildcard $(HB_INSTALL_PREFIX)$(DIRSEP)lib64),)
+         ifneq ($(filter $(HB_CPU),x86_64),)
+            LIBPOSTFIX := 64
+         endif
+      endif
       # Not perfect, please enhance it.
       ifneq ($(findstring |/usr,|$(HB_INSTALL_PREFIX)),)
          ifeq ($(findstring |/usr/home,|$(HB_INSTALL_PREFIX)),)
-            LIBPOSTFIX := $(DIRSEP)harbour
+            LIBPOSTFIX := $(LIBPOSTFIX)$(DIRSEP)harbour
             INCPOSTFIX := $(DIRSEP)harbour
          endif
       else
          ifneq ($(findstring |/opt,|$(HB_INSTALL_PREFIX)),)
-            LIBPOSTFIX := $(DIRSEP)harbour
+            LIBPOSTFIX := $(LIBPOSTFIX)$(DIRSEP)harbour
             INCPOSTFIX := $(DIRSEP)harbour
-         endif
-      endif
-      # Use 'lib64' instead of 'lib' for 64-bit targets where lib64 dir exists
-      ifneq ($(wildcard $(HB_INSTALL_PREFIX)$(DIRSEP)lib64),)
-         ifneq ($(filter $(HB_CPU),x86_64),)
-            LIBPOSTFIX := 64$(LIBPOSTFIX)
+         else
+            LIBPOSTFIX := $(DIRSEP)$(subst /,$(DIRSEP),$(PLAT_COMP))
          endif
       endif
    endif
