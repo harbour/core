@@ -62,6 +62,6 @@ DFLAGS := -dynamic -flat_namespace -undefined warning -multiply_defined suppress
 DY_OUT := -o$(subst x,x, )
 DLIBS := $(foreach lib,$(SYSLIBS),-l$(lib))
 
-DY_RULE = $(DY) $(DFLAGS) -install_name "harbour$(DYN_EXT)" -compatibility_version $(HB_VER_MAJOR).$(HB_VER_MINOR) -current_version $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ $^ $(DLIBS)
+DY_RULE = $(DY) $(DFLAGS) -install_name "harbour$(DYN_EXT)" -compatibility_version $(HB_VER_MAJOR).$(HB_VER_MINOR) -current_version $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ $^ $(DLIBS) && $(LN) $(DYN_DIR)/$@ $(DYN_FILE2) && $(LN) $(DYN_DIR)/$@ $(DYN_DIR)/$(DYN_PREF)$(DYNNAME2).$(HB_VER_MAJOR)$(DYN_EXT)
 
 include $(TOP)$(ROOT)config/rules.mk

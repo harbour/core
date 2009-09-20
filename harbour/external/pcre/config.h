@@ -1,6 +1,7 @@
 /* config.h.  Generated from config.h.in by configure.  */
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+
 /* On Unix-like systems config.h.in is converted by "configure" into config.h.
 Some other environments also support the use of "configure". PCRE is written in
 Standard C, but there are a few non-standard things it can cope with, allowing
