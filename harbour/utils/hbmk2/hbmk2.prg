@@ -2000,9 +2000,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
       DEFAULT hbmk[ _HBMK_lSHAREDDIST ] TO lSysLoc
 
-      IF hbmk[ _HBMK_lSHAREDDIST ]
+      IF hbmk[ _HBMK_lSHAREDDIST ] .OR. !( hbmk[ _HBMK_cCOMP ] == "gcc" )
          cPrefix := ""
       ELSE
+         /* Only supported by gcc compilers. */
          cPrefix := DirAddPathSep( l_cHB_DYN_INSTALL )
       ENDIF
 #if 1
@@ -2268,11 +2269,17 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             ENDCASE
          ENDIF
          IF IsGTRequested( hbmk, "gtxwc" )
-            IF hb_DirExists( "/usr/X11R6/lib64" )
+            IF hbmk[ _HBMK_cPLAT ] == "linux" .AND. hb_DirExists( "/usr/X11R6/lib64" )
                AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/X11R6/lib64" )
             ENDIF
             AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/X11R6/lib" )
             AAdd( l_aLIBSYS, "X11" )
+         ENDIF
+
+         /* Hack needed for OpenBSD to find dynamic libs referenced from harbour dynlib (embedded dirs are ignored) */
+         IF hbmk[ _HBMK_cPLAT ] == "bsd" .AND. hbmk[ _HBMK_lSHARED ]
+            AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/X11R6/lib" )
+            AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/local/lib" )
          ENDIF
 
       CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
@@ -3008,11 +3015,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lMAP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-M{OM}" )
          ENDIF
-         /*
          IF hbmk[ _HBMK_lSTATICFULL ]
-            AAdd( hbmk[ _HBMK_aOPTL ], "-static" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-B -static" )
          ENDIF
-         */
          IF hbmk[ _HBMK_lSTRIP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-s" )
          ENDIF
