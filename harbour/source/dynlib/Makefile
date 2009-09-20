@@ -10,6 +10,7 @@ ifneq ($(DYNDIRLIST_BASE),)
 
    DYNDIRLIST := $(DYNDIRLIST_BASE) source/vm
    DYNNAME := $(HB_DYNLIB_ST)
+   DYNNAME2 := $(HB_DYNLIB_BASE_ST)
 
    DIRS := mt
 

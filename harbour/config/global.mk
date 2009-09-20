@@ -300,6 +300,9 @@ ifeq ($(HB_INIT_DONE),)
       ifneq ($(HB_BUILD_DLL),)
          $(info ! HB_BUILD_DLL: $(HB_BUILD_DLL))
       endif
+      ifneq ($(HB_BUILD_SHARED),)
+         $(info ! HB_BUILD_SHARED: $(HB_BUILD_SHARED))
+      endif
       ifneq ($(HB_BUILD_DEBUG),)
          $(info ! HB_BUILD_DEBUG: $(HB_BUILD_DEBUG))
       endif
@@ -312,6 +315,12 @@ ifeq ($(HB_INIT_DONE),)
       ifneq ($(HB_BUILD_MODE),)
          $(info ! HB_BUILD_MODE: $(HB_BUILD_MODE))
       endif
+      ifneq ($(HB_BUILD_EXTDEF),)
+         $(info ! HB_BUILD_EXTDEF: $(HB_BUILD_EXTDEF))
+      endif
+      ifneq ($(HB_BUILD_PART),)
+         $(info ! HB_BUILD_PART: $(HB_BUILD_PART))
+      endif
       ifneq ($(HB_CONTRIBLIBS),)
          $(info ! HB_CONTRIBLIBS: $(HB_CONTRIBLIBS))
       endif
@@ -323,6 +332,9 @@ ifeq ($(HB_INIT_DONE),)
       endif
       ifneq ($(HB_EXTERNAL_ADDONS),)
          $(info ! HB_EXTERNAL_ADDONS: $(HB_EXTERNAL_ADDONS))
+      endif
+      ifneq ($(HB_REBUILD_PARSER),)
+         $(info ! HB_REBUILD_PARSER: $(HB_REBUILD_PARSER))
       endif
    endif
 endif
@@ -1341,13 +1353,19 @@ ifeq ($(HB_INIT_DONE),)
       endif
 
       ifeq ($(HB_PLATFORM)-$(HB_COMPILER),dos-watcom)
-         HB_DYNLIB_ST := harbour
-         HB_DYNLIB_MT := harbourm
+         HB_DYNLIB_BASE_ST := harbour
+         HB_DYNLIB_BASE_MT := harbourm
+         HB_DYNLIB_ST := $(HB_DYNLIB_BASE_ST)
+         HB_DYNLIB_MT := $(HB_DYNLIB_BASE_MT)
       else
-         HB_DYNLIB_ST := harbour$(DYNNAME_POST)
-         HB_DYNLIB_MT := harbourmt$(DYNNAME_POST)
+         HB_DYNLIB_BASE_ST := harbour
+         HB_DYNLIB_BASE_MT := harbourmt
+         HB_DYNLIB_ST := $(HB_DYNLIB_BASE_ST)$(DYNNAME_POST)
+         HB_DYNLIB_MT := $(HB_DYNLIB_BASE_MT)$(DYNNAME_POST)
       endif
 
+      export HB_DYNLIB_BASE_ST
+      export HB_DYNLIB_BASE_MT
       export HB_DYNLIB_ST
       export HB_DYNLIB_MT
    endif

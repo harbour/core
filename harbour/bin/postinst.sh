@@ -46,7 +46,7 @@ if [ -f $HB_BIN_INSTALL/harbour${HB_HOST_BIN_EXT} ]; then
 fi
 if [ "$HB_PLATFORM" != "hpux" ]; then
    # Keep the size of the libraries to a minimim, but don't try to strip symlinks.
-   ${HB_CCPREFIX}strip -S ${HB_LIB_INSTALL}/*
+   ${HB_CCPREFIX}strip -S `find $HB_LIB_INSTALL -type f -maxdepth 1`
 fi
 
 chmod 644 $HB_INC_INSTALL/*
