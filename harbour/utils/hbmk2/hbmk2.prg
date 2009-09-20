@@ -1024,12 +1024,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
    IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
 
-      /* Detect system locations to enable shared library option by default */
-      lSysLoc := hb_DirBase() == "/usr/local/bin/" .OR. ;
-                 hb_DirBase() == "/usr/bin/" .OR. ;
-                 hb_DirBase() == "/opt/harbour/" .OR. ;
-                 hb_DirBase() == "/opt/bin/"
-
       l_cHB_BIN_INSTALL := PathSepToSelf( GetEnv( "HB_BIN_INSTALL" ) )
       l_cHB_LIB_INSTALL := PathSepToSelf( GetEnv( "HB_LIB_INSTALL" ) )
       l_cHB_INC_INSTALL := PathSepToSelf( GetEnv( "HB_INC_INSTALL" ) )
@@ -1075,6 +1069,24 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             l_cHB_INC_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "include" + hb_osPathSeparator() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" ) )
          ENDIF
       ENDIF
+
+      #if defined( __PLATFORM__UNIX )
+         /* Detect system locations to enable shared library option by default */
+         IF hbmk[ _HBMK_cPLAT ] == "beos"
+            lSysLoc := LEFTEQUAL( l_cHB_BIN_INSTALL, "/boot/common"      ) .OR. ;
+                       LEFTEQUAL( l_cHB_BIN_INSTALL, "/boot/system"      ) .OR. ;
+                       LEFTEQUAL( l_cHB_BIN_INSTALL, "/boot/home/config" ) .OR. ;
+                       AScan( ListToArray( GetEnv( "LIBRARY_PATH" ), ":" ), {| tmp | LEFTEQUAL( l_cHB_LIB_INSTALL, tmp ) } ) > 0
+         ELSE
+            lSysLoc := LEFTEQUAL( l_cHB_BIN_INSTALL, "/usr/local/bin" ) .OR. ;
+                       LEFTEQUAL( l_cHB_BIN_INSTALL, "/usr/bin"       ) .OR. ;
+                       LEFTEQUAL( l_cHB_BIN_INSTALL, "/opt/harbour"   ) .OR. ;
+                       LEFTEQUAL( l_cHB_BIN_INSTALL, "/opt/bin"       ) .OR. ;
+                       AScan( ListToArray( GetEnv( "LD_LIBRARY_PATH" ), ":" ), {| tmp | LEFTEQUAL( l_cHB_LIB_INSTALL, tmp ) } ) > 0
+         ENDIF
+      #else
+         lSysLoc := .F.
+      #endif
    ELSE
       lSysLoc := .F.
 

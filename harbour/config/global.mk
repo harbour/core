@@ -1209,14 +1209,14 @@ ifeq ($(HB_INIT_DONE),)
 endif
 
 HB_SYSLOC :=
-ifneq ($(findstring |/usr/local/bin,|$(HB_INSTALL_PREFIX)),)
-   HB_SYSLOC := yes
-else ifneq ($(findstring |/usr/bin,|$(HB_INSTALL_PREFIX)),)
-   HB_SYSLOC := yes
-else ifneq ($(findstring |/opt/harbour,|$(HB_INSTALL_PREFIX)),)
-   HB_SYSLOC := yes
-else ifneq ($(findstring |/opt/bin,|$(HB_INSTALL_PREFIX)),)
-   HB_SYSLOC := yes
+ifeq ($(HB_PLATFORM),beos)
+   ifneq ($(foreach dir,/boot/common /boot/system /boot/home/config $(subst :, ,$(LIBRARY_PATH)),$(findstring |$(dir),|$(HB_INSTALL_PREFIX))),)
+      HB_SYSLOC := yes
+   endif
+else ifneq ($(HB_PLATFORM_UNIX),)
+   ifneq ($(foreach dir,/usr/local/bin /usr/bin /opt/harbour /opt/bin $(subst :, ,$(LD_LIBRARY_PATH)),$(findstring |$(dir),|$(HB_INSTALL_PREFIX))),)
+      HB_SYSLOC := yes
+   endif
 endif
 export HB_SYSLOC
 
@@ -1228,9 +1228,13 @@ ifneq ($(HB_INSTALL_PREFIX),)
       endif
    endif
 
+   LIBPOSTFIX :=
+   INCPOSTFIX :=
    ifeq ($(HB_PLATFORM),beos)
-      LIBPOSTFIX := $(DIRSEP)harbour
-      INCPOSTFIX := $(DIRSEP)harbour
+      ifeq ($(HB_SYSLOC),yes)
+         LIBPOSTFIX := $(DIRSEP)harbour
+         INCPOSTFIX := $(DIRSEP)harbour
+      endif
    else ifeq ($(HB_PLATFORM_UNIX),)
       LIBPOSTFIX := $(DIRSEP)$(subst /,$(DIRSEP),$(PLAT_COMP))
    else
@@ -1252,7 +1256,7 @@ ifneq ($(HB_INSTALL_PREFIX),)
             LIBPOSTFIX := $(LIBPOSTFIX)$(DIRSEP)harbour
             INCPOSTFIX := $(DIRSEP)harbour
          else
-            LIBPOSTFIX := $(DIRSEP)$(subst /,$(DIRSEP),$(PLAT_COMP))
+            LIBPOSTFIX :=
          endif
       endif
    endif
