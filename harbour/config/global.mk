@@ -253,6 +253,7 @@ ifeq ($(HB_INIT_DONE),)
       #   HB_INC_COMPILE              -> - (HB_BUILD_INC_DIR)
       #   HB_DIR_*                    -> HB_LIBDIR_* ? (only used for implib and a few .hbm files)
       #   HB_DLLIBS                   -> (only used in one location, so it's a local matter)
+      #   HB_TOOLS_PREF               -> ?
       # Macros:
       #   -DHB_GT_LIB=
 
@@ -306,6 +307,9 @@ ifeq ($(HB_INIT_DONE),)
       ifneq ($(HB_BUILD_DEBUG),)
          $(info ! HB_BUILD_DEBUG: $(HB_BUILD_DEBUG))
       endif
+      ifneq ($(HB_BUILD_STRIP),)
+         $(info ! HB_BUILD_STRIP: $(HB_BUILD_STRIP))
+      endif
       ifneq ($(HB_BUILD_OPTIM),)
          $(info ! HB_BUILD_OPTIM: $(HB_BUILD_OPTIM))
       endif
@@ -318,8 +322,8 @@ ifeq ($(HB_INIT_DONE),)
       ifneq ($(HB_BUILD_EXTDEF),)
          $(info ! HB_BUILD_EXTDEF: $(HB_BUILD_EXTDEF))
       endif
-      ifneq ($(HB_BUILD_PART),)
-         $(info ! HB_BUILD_PART: $(HB_BUILD_PART))
+      ifneq ($(HB_BUILD_PARTS),)
+         $(info ! HB_BUILD_PARTS: $(HB_BUILD_PARTS))
       endif
       ifneq ($(HB_CONTRIBLIBS),)
          $(info ! HB_CONTRIBLIBS: $(HB_CONTRIBLIBS))
@@ -558,8 +562,8 @@ ifeq ($(HB_COMPILER),)
                   export HB_TOOLS_PREF := hbw
                endif
                export HB_BUILD_EXTDEF := no
-               ifneq ($(HB_BUILD_PART),all)
-                  HB_BUILD_PART := lib
+               ifneq ($(HB_BUILD_PARTS),all)
+                  HB_BUILD_PARTS := lib
                endif
             else
                $(error ! Harbour build could not find mingw32 cross-compiler. Please install it, or point HB_CCPATH/HB_CCPREFIX environment variables to it)
@@ -622,8 +626,8 @@ ifeq ($(HB_COMPILER),)
                      export HB_TOOLS_PREF := hbce
                   endif
                   export HB_BUILD_EXTDEF := no
-                  ifneq ($(HB_BUILD_PART),all)
-                     HB_BUILD_PART := lib
+                  ifneq ($(HB_BUILD_PARTS),all)
+                     HB_BUILD_PARTS := lib
                   endif
                else
                   $(error ! Harbour build could not find cegcc cross-compiler. Please install it to /opt/mingw32ce, or point HB_CCPATH/HB_CCPREFIX environment variables to it)
@@ -662,8 +666,8 @@ ifeq ($(HB_COMPILER),)
                         export HB_TOOLS_PREF := hbdos
                      endif
                      export HB_BUILD_EXTDEF := no
-                     ifneq ($(HB_BUILD_PART),all)
-                        HB_BUILD_PART := lib
+                     ifneq ($(HB_BUILD_PARTS),all)
+                        HB_BUILD_PARTS := lib
                      endif
                   else
                      $(error ! Harbour build could not find djgpp cross-compiler. Please install it to /usr/local/i586-pc-msdosdjgpp, or point HB_CCPATH/HB_CCPREFIX environment variables to it)

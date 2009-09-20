@@ -527,13 +527,16 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
                                (for Windows targets created from Windows NT
                                shells only)
    - HB_BUILD_DEBUG=yes        Create a debug build. Default: no
+   - HB_BUILD_STRIP=
+         [all|bin|lib|no]      Strips symbols and debug information from binaries.
+                               Default: no
    - HB_BUILD_OPTIM=no         Enable C compiler optimizations. Default: yes
    - HB_BUILD_UNICODE=yes      Create Unicode build (on Windows/Windows CE).
                                Default: no
    - HB_BUILD_MODE=[cpp|c]     Changes default build mode to C++ or C.
                                Default: c, except for msvc* and watcom
                                         compilers, where it's cpp.
-   - HB_BUILD_PART=
+   - HB_BUILD_PARTS=
          [all|compiler|lib]    Build only specific part of Harbour.
    - HB_BUILD_EXTDEF=no        Controls autodetection of external components
                                on default systems locations. Default: yes

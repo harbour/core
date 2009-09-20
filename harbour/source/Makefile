@@ -6,7 +6,7 @@ ROOT := ../
 
 include $(TOP)$(ROOT)config/global.mk
 
-ifeq ($(HB_BUILD_PART),compiler)
+ifeq ($(HB_BUILD_PARTS),compiler)
 
    DIRS := \
       common \
@@ -74,7 +74,7 @@ else
       export DYNDIRLIST_BASE
    endif
 
-   ifeq ($(HB_BUILD_PART),lib)
+   ifeq ($(HB_BUILD_PARTS),lib)
       HB_COMP_DIR :=
       HB_COMP_REF :=
    else

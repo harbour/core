@@ -4,14 +4,14 @@
 
 ROOT := ./
 
-ifeq ($(HB_BUILD_PART),compiler)
+ifeq ($(HB_BUILD_PARTS),compiler)
 
    DIRS := \
       source \
 
 else
 
-   ifeq ($(HB_BUILD_PART),lib)
+   ifeq ($(HB_BUILD_PARTS),lib)
       HB_UTIL_DIR :=
    else
       HB_UTIL_DIR := utils{source}

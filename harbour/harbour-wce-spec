@@ -86,13 +86,13 @@ rm -fR $RPM_BUILD_ROOT
 
 %build
 
-export HB_BUILD_PART=compiler
+export HB_BUILD_PARTS=compiler
 export HB_PLATFORM=linux
 export HB_COMPILER=gcc
 make %{?_smp_mflags}
 unset HB_COMPILER
 
-export HB_BUILD_PART=lib
+export HB_BUILD_PARTS=lib
 export HB_PLATFORM=wce
 
 export HB_BIN_COMPILE="$(pwd)/bin/linux/gcc"
@@ -108,7 +108,7 @@ make %{?_smp_mflags}
 
 # Install harbour itself.
 
-export HB_BUILD_PART=lib
+export HB_BUILD_PARTS=lib
 export HB_PLATFORM=wce
 unset HB_COMPILER
 
