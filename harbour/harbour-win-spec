@@ -89,27 +89,14 @@ rm -fR $RPM_BUILD_ROOT
 export HB_BUILD_PART=compiler
 export HB_PLATFORM=linux
 export HB_COMPILER=gcc
-export HB_USER_CFLAGS=
 make %{?_smp_mflags}
+unset HB_COMPILER
 
 export HB_BUILD_PART=lib
 export HB_PLATFORM=win
-export HB_COMPILER=mingw
 
 export HB_BIN_COMPILE="$(pwd)/bin/linux/gcc"
-
 export CC_HB_USER_PRGFLAGS="-D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
-
-export HB_CCPATH="%{hb_ccpath}/"
-export HB_CCPREFIX="%{hb_ccpref}"
-export PATH="%{hb_ccpath}:$PATH"
-
-export HB_BUILD_EXTDEF=no
-export HB_BIN_INSTALL=%{_bindir}
-export HB_INC_INSTALL=%{_includedir}/%{name}
-export HB_LIB_INSTALL=%{_libdir}/%{name}
-export HB_CONTRIBLIBS="gtwvg hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbvpdf hbwin hbziparc rddado xhb %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_allegro:gtalleg}"
-export HB_EXTERNALLIBS=no
 
 make %{?_smp_mflags}
 
@@ -123,22 +110,16 @@ make %{?_smp_mflags}
 
 export HB_BUILD_PART=lib
 export HB_PLATFORM=win
-export HB_COMPILER=mingw
+unset HB_COMPILER
 
 export HB_BIN_COMPILE="$(pwd)/bin/linux/gcc"
 
 export CC_HB_USER_PRGFLAGS="-D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
 
-export HB_CCPATH="%{hb_ccpath}/"
-export HB_CCPREFIX="%{hb_ccpref}"
-export PATH="%{hb_ccpath}:$PATH"
-
-export HB_BUILD_EXTDEF=no
 export HB_BIN_INSTALL=%{_bindir}
 export HB_INC_INSTALL=%{_includedir}/%{name}
 export HB_LIB_INSTALL=%{_libdir}/%{name}
-export HB_CONTRIBLIBS="gtwvg hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbvpdf hbwin hbziparc rddado xhb %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_allegro:gtalleg}"
-export HB_EXTERNALLIBS=no
+export HB_DYN_INSTALL=${HB_LIB_INSTALL}
 
 export _DEFAULT_BIN_DIR=$HB_BIN_INSTALL
 export _DEFAULT_INC_DIR=$HB_INC_INSTALL
@@ -146,13 +127,11 @@ export _DEFAULT_LIB_DIR=$HB_LIB_INSTALL
 export HB_BIN_INSTALL=$RPM_BUILD_ROOT/$HB_BIN_INSTALL
 export HB_INC_INSTALL=$RPM_BUILD_ROOT/$HB_INC_INSTALL
 export HB_LIB_INSTALL=$RPM_BUILD_ROOT/$HB_LIB_INSTALL
-export HB_TOOLS_PREF=%{hb_pref}
+export HB_DYN_INSTALL=${HB_LIB_INSTALL}
 
 mkdir -p $HB_BIN_INSTALL
-mkdir -p $HB_INC_INSTALL
-mkdir -p $HB_LIB_INSTALL
 
-make -i install %{?_smp_mflags}
+make install %{?_smp_mflags}
 
 [ "%{?_with_odbc:1}" ]    || rm -f $HB_LIB_INSTALL/libhbodbc.a
 [ "%{?_with_allegro:1}" ] || rm -f $HB_LIB_INSTALL/libgtalleg.a
@@ -160,7 +139,7 @@ make -i install %{?_smp_mflags}
 [ "%{?_without_nf:1}" ]   && rm -f $HB_LIB_INSTALL/libhbnf.a
 
 # Keep the size of the libraries to a minimim.
-${HB_CCPREFIX}strip --strip-debug $HB_LIB_INSTALL/*
+%{__strip} --strip-debug $HB_LIB_INSTALL/*
 
 # remove unused files
 rm -fR ${HB_BIN_INSTALL}/{harbour,hbpp,hbmk2,hbrun,hbi18n,hbtest}.exe
@@ -290,7 +269,7 @@ rm -fR $RPM_BUILD_ROOT
 %{_bindir}/%{hb_pref}cmp
 %{_bindir}/%{hb_pref}lnk
 %{_bindir}/%{hb_pref}mk
-%{_bindir}/hbmk.cfg
+%{_bindir}/%{hb_pref}mk.cfg
 
 %defattr(644,root,root,755)
 %dir %{_includedir}/%{name}

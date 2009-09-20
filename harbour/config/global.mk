@@ -554,7 +554,9 @@ ifeq ($(HB_COMPILER),)
                HB_COMP_PATH := $(dir $(HB_CCPATH))
                HB_COMPILER := mingw
                HB_PLATFORM := win
-               export HB_TOOLS_PREF := hbw
+               ifeq ($(HB_TOOLS_PREF),)
+                  export HB_TOOLS_PREF := hbw
+               endif
                export HB_BUILD_EXTDEF := no
                ifneq ($(HB_BUILD_PART),all)
                   HB_BUILD_PART := lib
@@ -616,7 +618,9 @@ ifeq ($(HB_COMPILER),)
                ifneq ($(HB_CCPATH)$(HB_CCPREFIX),)
                   HB_COMP_PATH := $(dir $(HB_CCPATH))
                   HB_PLATFORM := wce
-                  export HB_TOOLS_PREF := hbce
+                  ifeq ($(HB_TOOLS_PREF),)
+                     export HB_TOOLS_PREF := hbce
+                  endif
                   export HB_BUILD_EXTDEF := no
                   ifneq ($(HB_BUILD_PART),all)
                      HB_BUILD_PART := lib
@@ -654,7 +658,9 @@ ifeq ($(HB_COMPILER),)
                   ifneq ($(HB_CCPATH)$(HB_CCPREFIX),)
                      HB_COMP_PATH := $(dir $(HB_CCPATH))
                      HB_PLATFORM := dos
-                     export HB_TOOLS_PREF := hbce
+                     ifeq ($(HB_TOOLS_PREF),)
+                        export HB_TOOLS_PREF := hbdos
+                     endif
                      export HB_BUILD_EXTDEF := no
                      ifneq ($(HB_BUILD_PART),all)
                         HB_BUILD_PART := lib

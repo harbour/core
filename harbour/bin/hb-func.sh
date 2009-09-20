@@ -257,7 +257,7 @@ mk_hbtools()
         CC_HB_USER_CFLAGS="${CC_HB_USER_CFLAGS} -fpic"
     fi
 
-    hb_hbmkcfg="$1/hbmk.cfg"
+    hb_hbmkcfg="$1/${hb_pref}mk.cfg"
     hb_mkdef="{${HB_PLATFORM}&${HB_COMPILER}}"
     echo "Making ${hb_hbmkcfg}... "
     echo "# hbmk2 configuration"> ${hb_hbmkcfg}
@@ -892,11 +892,7 @@ mk_hblibso()
     fi
     full_lib_name="${lib_pref}${name}${lib_suff}"
     full_lib_name_mt="${lib_pref}${name}mt${lib_suff}"
-    if [ -n "${HB_TOOLS_PREF}" ]; then
-        hb_mkdyn="${HB_BIN_INSTALL}/${HB_TOOLS_PREF}-mkdyn"
-    else
-        hb_mkdyn="${HB_BIN_INSTALL}/hb-mkdyn"
-    fi
+    hb_mkdyn="${HB_BIN_INSTALL}/${HB_TOOLS_PREF-hb}-mkdyn"
 #   echo "Making ${full_lib_name}..."
 #   ${hb_mkdyn} ${full_lib_name} ${LIBS} ${linker_options}
 #   if [ "${LIBS}" != "${LIBSMT}" ]; then
