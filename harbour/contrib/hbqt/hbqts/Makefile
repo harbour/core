@@ -14,6 +14,9 @@ LIBNAME := hbqts
 PRG_HEADERS := \
    hbqt.ch \
 
+# force redetect. needed for _QT_DARWIN trick
+HB_HAS_QT :=
+
 _DET_DSP_NAME := qt
 _DET_VAR_INC_ := HB_INC_QT
 _DET_VAR_HAS_ := HB_HAS_QT
