@@ -2183,7 +2183,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lSTRIP ]
             IF hbmk[ _HBMK_cPLAT ] $ "darwin|sunos"
                cBin_Post := "strip"
-               cOpt_Post := "{OB}"
+               IF lCreateDyn .OR. lCreateLib
+                  cOpt_Post := "-S {OB}"
+               ELSE
+                  cOpt_Post := "{OB}"
+               ENDIF
             ELSE
                AAdd( hbmk[ _HBMK_aOPTL ], "-s" )
                AAdd( hbmk[ _HBMK_aOPTD ], "-s" )
@@ -2357,8 +2361,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
          ENDIF
          IF hbmk[ _HBMK_lSTRIP ]
-            AAdd( hbmk[ _HBMK_aOPTL ], "-s" )
-            AAdd( hbmk[ _HBMK_aOPTD ], "-s" )
+            IF lCreateLib
+               cBin_Post := "strip"
+               cOpt_Post := "-S {OB}"
+            ELSE
+               AAdd( hbmk[ _HBMK_aOPTL ], "-s" )
+               AAdd( hbmk[ _HBMK_aOPTD ], "-s" )
+            ENDIF
          ENDIF
          IF lStopAfterCComp
             IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) ) == 1
@@ -2437,8 +2446,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             l_aLIBSYS := ArrayJoin( l_aLIBSYS, { "socket" } )
          ENDIF
          IF hbmk[ _HBMK_lSTRIP ]
-            AAdd( hbmk[ _HBMK_aOPTL ], "-s" )
-            AAdd( hbmk[ _HBMK_aOPTD ], "-s" )
+            IF lCreateLib
+               cBin_Post := "strip"
+               cOpt_Post := "-S {OB}"
+            ELSE
+               AAdd( hbmk[ _HBMK_aOPTL ], "-s" )
+               AAdd( hbmk[ _HBMK_aOPTD ], "-s" )
+            ENDIF
          ENDIF
          /* OS/2 needs a space between -o and file name following it */
          IF lStopAfterCComp
@@ -2504,8 +2518,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             l_aLIBSYS := ArrayJoin( l_aLIBSYS, { "m" } )
          ENDIF
          IF hbmk[ _HBMK_lSTRIP ]
-            AAdd( hbmk[ _HBMK_aOPTL ], "-s" )
-            AAdd( hbmk[ _HBMK_aOPTD ], "-s" )
+            IF lCreateLib
+               cBin_Post := "strip"
+               cOpt_Post := "-S {OB}"
+            ELSE
+               AAdd( hbmk[ _HBMK_aOPTL ], "-s" )
+               AAdd( hbmk[ _HBMK_aOPTD ], "-s" )
+            ENDIF
          ENDIF
          IF lStopAfterCComp
             IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) ) == 1
@@ -3026,9 +3045,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTL ], "-B -static" )
          ENDIF
          IF hbmk[ _HBMK_lSTRIP ]
-            IF hbmk[ _HBMK_cPLAT ] == "sunos"
+            IF lCreateLib .OR. hbmk[ _HBMK_cPLAT ] == "sunos"
                cBin_Post := "strip"
-               cOpt_Post := "{OB}"
+               IF lCreateDyn .OR. lCreateLib
+                  cOpt_Post := "-S {OB}"
+               ELSE
+                  cOpt_Post := "{OB}"
+               ENDIF
             ELSE
                AAdd( hbmk[ _HBMK_aOPTL ], "-s" )
                AAdd( hbmk[ _HBMK_aOPTD ], "-s" )
