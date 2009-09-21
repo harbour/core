@@ -15,6 +15,7 @@ DIRS := \
    hbclipsm \
    hbct \
    hbgt \
+   hbmemio \
    hbmisc \
    hbmzip \
    hbnetio \
@@ -42,7 +43,6 @@ DIRS += \
    hbpgsql \
    hbqt \
    hbssl \
-   iodmem \
    rddads \
    rddsql \
 
