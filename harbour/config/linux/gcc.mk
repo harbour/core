@@ -34,6 +34,14 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
+ifneq ($(filter $(HB_BUILD_STRIP),all lib),)
+   ARSTRIP = && strip -S $(LIB_DIR)/$@
+endif
+ifneq ($(filter $(HB_BUILD_STRIP),all bin),)
+   LDSTRIP := -s
+   DYSTRIP := -s
+endif
+
 LD := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 LD_OUT := -o
 
@@ -44,13 +52,13 @@ LDFLAGS += $(LIBPATHS)
 
 AR := $(HB_CCPREFIX)ar
 ARFLAGS :=
-AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) rcs $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
+AR_RULE = ( $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) rcs $(LIB_DIR)/$@ $(^F) $(ARSTRIP) ) || ( $(RM) $(LIB_DIR)/$@ && false )
 
 DY := $(CC)
 DFLAGS := -shared $(LIBPATHS)
 DY_OUT := -o$(subst x,x, )
 DLIBS := $(foreach lib,$(SYSLIBS),-l$(lib))
 
-DY_RULE = $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ $^ $(DLIBS) && $(LN) $(DYN_DIR)/$@ $(DYN_FILE2)
+DY_RULE = $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ $^ $(DLIBS) $(DYSTRIP) && $(LN) $(DYN_DIR)/$@ $(DYN_FILE2)
 
 include $(TOP)$(ROOT)config/rules.mk

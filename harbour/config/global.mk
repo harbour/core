@@ -1220,11 +1220,11 @@ endif
 
 HB_SYSLOC :=
 ifeq ($(HB_PLATFORM),beos)
-   ifneq ($(foreach dir,/boot/common /boot/system /boot/home/config $(subst :, ,$(LIBRARY_PATH)),$(findstring |$(dir),|$(HB_INSTALL_PREFIX))),)
+   ifneq ($(strip $(foreach dir,/boot/common /boot/system /boot/home/config $(subst :, ,$(LIBRARY_PATH)),$(findstring |$(dir),|$(HB_INSTALL_PREFIX)))),)
       HB_SYSLOC := yes
    endif
 else ifneq ($(HB_PLATFORM_UNIX),)
-   ifneq ($(foreach dir,/usr/local/bin /usr/bin /opt/harbour /opt/bin $(subst :, ,$(LD_LIBRARY_PATH)),$(findstring |$(dir),|$(HB_INSTALL_PREFIX))),)
+   ifneq ($(strip $(foreach dir,/usr/local/bin /usr/bin /opt/harbour /opt/bin $(subst :, ,$(LD_LIBRARY_PATH)),$(findstring |$(dir),|$(HB_INSTALL_PREFIX)))),)
       HB_SYSLOC := yes
    endif
 endif

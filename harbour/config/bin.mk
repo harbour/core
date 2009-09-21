@@ -9,7 +9,14 @@ ifneq ($(HB_COMPILER),)
 
 # Assemble template lib list to help create a few common variations
 
-ifeq ($(HB_BUILD_SHARED),yes)
+BUILD_SHARED :=
+ifeq ($(flavor LIBS),recursive)
+   ifeq ($(HB_BUILD_SHARED),yes)
+      BUILD_SHARED := yes
+   endif
+endif
+
+ifeq ($(BUILD_SHARED),yes)
    HB_LIBS_TPL := \
       hbcplr \
       hbdebug \
@@ -79,9 +86,9 @@ endif
 HB_LINKING_RTL :=
 HB_LINKING_VMMT :=
 
-ifneq ($(filter hbrtl, $(LIBS)),)
+ifneq ($(filter hbrtl,$(LIBS)),)
    HB_LINKING_RTL := yes
-   ifneq ($(filter hbvmmt, $(LIBS)),)
+   ifneq ($(filter hbvmmt,$(LIBS)),)
       HB_LINKING_VMMT := yes
    endif
 endif
@@ -89,7 +96,7 @@ endif
 -include $(TOP)$(ROOT)config/$(HB_PLATFORM)/libs.mk
 
 ifneq ($(HB_PLATFORM_UNIX),)
-   ifeq ($(HB_BUILD_SHARED),yes)
+   ifeq ($(BUILD_SHARED),yes)
       SYSLIBS :=
       SYSLIBPATHS :=
    endif
