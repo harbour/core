@@ -39,6 +39,14 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
+ifneq ($(filter $(HB_BUILD_STRIP),all lib),)
+   ARSTRIP = && strip -S $(LIB_DIR)/$@
+endif
+ifneq ($(filter $(HB_BUILD_STRIP),all bin),)
+   LDSTRIP := -s
+   DYSTRIP := -s
+endif
+
 LD := $(HB_CCACHE) $(HB_CMP)
 LD_OUT := -o
 
@@ -49,7 +57,7 @@ LDFLAGS += $(LIBPATHS)
 
 AR := xiar
 ARFLAGS :=
-AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) rcs $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
+AR_RULE = ( $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) rcs $(LIB_DIR)/$@ $(^F) $(ARSTRIP) ) || ( $(RM) $(LIB_DIR)/$@ && false )
 
 DY := $(CC)
 DFLAGS := -shared $(LIBPATHS)
@@ -64,7 +72,7 @@ endef
 define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dyn_object))
-   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ __dyn__.tmp $(DLIBS)
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ __dyn__.tmp $(DLIBS) $(DYSTRIP)
 endef
 
 DY_RULE = $(create_dynlib)

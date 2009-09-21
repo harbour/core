@@ -40,15 +40,6 @@ fi
 
 . ${hb_root}/bin/hb-func.sh
 
-# Keep the size of the binaries to a minimim.
-if [ -f $HB_BIN_INSTALL/harbour${HB_HOST_BIN_EXT} ]; then
-   ${HB_CCPATH}${HB_CCPREFIX}strip ${HB_BIN_INSTALL}/harbour${HB_HOST_BIN_EXT}
-fi
-if [ "$HB_PLATFORM" != "hpux" ]; then
-   # Keep the size of the libraries to a minimim, but don't try to strip symlinks.
-   ${HB_CCPATH}${HB_CCPREFIX}strip -S `find $HB_LIB_INSTALL -maxdepth 1 -type f`
-fi
-
 chmod 644 $HB_INC_INSTALL/*
 
 if [ "$HB_COMPILER" = "gcc" ] || \

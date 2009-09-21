@@ -32,6 +32,14 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
+ifneq ($(filter $(HB_BUILD_STRIP),all lib),)
+   ARSTRIP = $(HB_CCPATH)$(HB_CCPREFIX)strip -S $(LIB_DIR)/$@
+endif
+ifneq ($(filter $(HB_BUILD_STRIP),all bin),)
+   LDSTRIP := -s
+   DYSTRIP := -s
+endif
+
 SYSLIBS :=
 SYSLIBPATHS :=
 
@@ -71,6 +79,7 @@ define create_library
    @$(ECHO) $(ECHOQUOTE)SAVE$(ECHOQUOTE) >> __lib__.tmp
    @$(ECHO) $(ECHOQUOTE)END$(ECHOQUOTE) >> __lib__.tmp
    $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -M < __lib__.tmp
+   $(ARSTRIP)
 endef
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
@@ -106,7 +115,7 @@ LD_RULE = $(link_exe_file)
 #define create_dynlib
 #   $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
 #   $(foreach file,$^,$(dyn_object))
-#   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ __dyn__.tmp $(DLIBS)
+#   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ __dyn__.tmp $(DLIBS) $(DYSTRIP)
 #endef
 #
 #DY_RULE = $(create_dynlib)

@@ -32,6 +32,14 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
+ifneq ($(filter $(HB_BUILD_STRIP),all lib),)
+   ARSTRIP = ${HB_CCPATH}${HB_CCPREFIX}strip -S $(LIB_DIR)/$@
+endif
+ifneq ($(filter $(HB_BUILD_STRIP),all bin),)
+   LDSTRIP := -s
+   DYSTRIP := -s
+endif
+
 SYSLIBS :=
 SYSLIBPATHS :=
 
@@ -63,6 +71,7 @@ define create_library
    @$(ECHO) $(ECHOQUOTE)SAVE$(ECHOQUOTE) >> __lib__.tmp
    @$(ECHO) $(ECHOQUOTE)END$(ECHOQUOTE) >> __lib__.tmp
    $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -M < __lib__.tmp
+   $(ARSTRIP)
 endef
 
 # Under OS/2 || isn't a command separator (inside a shell, that is); correct separator is &
@@ -90,7 +99,7 @@ define create_dynlib
    @$(ECHO) DATA PRELOAD MOVEABLE MULTIPLE NONSHARED >> __dyn__.def
    @$(ECHO) EXPORTS >> __dyn__.def
    $(foreach file,$^,$(dyn_object))
-   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ @__dyn__.tmp __dyn__.def $(DLIBS)
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ @__dyn__.tmp __dyn__.def $(DLIBS) $(DYSTRIP)
 endef
 
 DY_RULE = $(create_dynlib)
