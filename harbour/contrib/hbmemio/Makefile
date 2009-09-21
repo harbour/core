@@ -7,6 +7,6 @@ ROOT := ../../
 LIBNAME := hbmemio
 
 C_SOURCES := \
-   iodmem.c \
+   memio.c \
 
 include $(TOP)$(ROOT)config/lib.mk
