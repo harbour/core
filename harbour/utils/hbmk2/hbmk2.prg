@@ -2181,7 +2181,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             ENDIF
          ENDIF
          IF hbmk[ _HBMK_lSTRIP ]
-            IF hbmk[ _HBMK_cPLAT ] $ "darwin|sunos"
+            IF lCreateLib .OR. hbmk[ _HBMK_cPLAT ] $ "darwin|sunos"
                cBin_Post := "strip"
                IF lCreateDyn .OR. lCreateLib
                   cOpt_Post := "-S {OB}"
