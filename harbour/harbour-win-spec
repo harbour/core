@@ -128,6 +128,7 @@ export HB_BIN_INSTALL=$RPM_BUILD_ROOT/$HB_BIN_INSTALL
 export HB_INC_INSTALL=$RPM_BUILD_ROOT/$HB_INC_INSTALL
 export HB_LIB_INSTALL=$RPM_BUILD_ROOT/$HB_LIB_INSTALL
 export HB_DYN_INSTALL=${HB_LIB_INSTALL}
+export HB_BUILD_STRIP=lib
 
 mkdir -p $HB_BIN_INSTALL
 
@@ -137,9 +138,6 @@ make install %{?_smp_mflags}
 [ "%{?_with_allegro:1}" ] || rm -f $HB_LIB_INSTALL/libgtalleg.a
 [ "%{?_with_ads:1}" ]     || rm -f $HB_LIB_INSTALL/librddads.a
 [ "%{?_without_nf:1}" ]   && rm -f $HB_LIB_INSTALL/libhbnf.a
-
-# Keep the size of the libraries to a minimim.
-%{__strip} --strip-debug $HB_LIB_INSTALL/*
 
 # remove unused files
 rm -fR ${HB_BIN_INSTALL}/{harbour,hbpp,hbmk2,hbrun,hbi18n,hbtest}.exe

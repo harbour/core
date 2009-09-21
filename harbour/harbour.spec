@@ -398,21 +398,18 @@ export _DEFAULT_LIB_DIR=$HB_LIB_INSTALL
 export HB_BIN_INSTALL=$RPM_BUILD_ROOT/$HB_BIN_INSTALL
 export HB_INC_INSTALL=$RPM_BUILD_ROOT/$HB_INC_INSTALL
 export HB_LIB_INSTALL=$RPM_BUILD_ROOT/$HB_LIB_INSTALL
+export HB_BUILD_STRIP=all
+export HB_BUILD_SHARED=%{!?_with_static:yes}
 
 mkdir -p $HB_BIN_INSTALL
 mkdir -p $HB_INC_INSTALL
 mkdir -p $HB_LIB_INSTALL
 
-make -i install %{?_smp_mflags}
+make install %{?_smp_mflags}
 
 [ "%{?_with_allegro:1}" ]  || rm -f $HB_LIB_INSTALL/libgtalleg.a
 [ "%{?_without_gtcrs:1}" ] && rm -f $HB_LIB_INSTALL/libgtcrs.a
 [ "%{?_without_gtsln:1}" ] && rm -f $HB_LIB_INSTALL/libgtsln.a
-
-# Keep the size of the binaries to a minimim.
-strip $HB_BIN_INSTALL/harbour
-# Keep the size of the libraries to a minimim.
-strip --strip-debug $HB_LIB_INSTALL/*
 
 mkdir -p $RPM_BUILD_ROOT%{_mandir}/man1
 install -m644 doc/man/*.1* $RPM_BUILD_ROOT%{_mandir}/man1/
@@ -425,22 +422,6 @@ CFLAGS=-c -I$_DEFAULT_INC_DIR
 VERBOSE=YES
 DELTMP=YES
 EOF
-
-# check if we should rebuild tools with shared libs
-if [ "%{!?_with_static:1}" ]
-then
-    export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS} -L${HB_LIB_INSTALL} -l%{name}"
-    export HB_USER_PRGFLAGS="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\" ${HB_USER_PRGFLAGS}"
-
-    for utl in hbmk2 hbrun hbi18n hbformat
-    do
-        pushd utils/${utl}
-        rm -fR "./${HB_PLATFORM}/${HB_COMPILER}"
-        make install
-        strip ${HB_BIN_INSTALL}/${utl}
-        popd
-    done
-fi
 
 # remove unused files
 rm -f ${HB_BIN_INSTALL}/hbtest
