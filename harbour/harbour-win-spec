@@ -28,14 +28,8 @@
 %define version   2.0.0
 %define releasen  beta3
 %define hb_pref   hbw
-%define hb_ccpath /opt/xmingw/bin
-%define hb_ccpref i386-mingw-
 %define hb_host   www.harbour-project.org
 %define readme    README.RPM
-
-# Workaround for the problem of /usr/bin/strip not handling PE binaries.
-%define __strip   %{hb_ccpath}/%{hb_ccpref}strip
-%define __objdump %{hb_ccpath}/%{hb_ccpref}objdump
 
 ######################################################################
 ## Preamble.

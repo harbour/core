@@ -73,10 +73,10 @@
 %define hb_cc    export HB_COMPILER=gcc
 %define hb_cflag export HB_USER_CFLAGS=
 %define hb_lflag export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS} %{?_with_static:-static}"
-%define hb_gpm   export HB_INC_GPM=%{!?_without_gpm:yes}%{?_without_gpm:no}
-%define hb_crs   export HB_INC_CURSES=%{!?_without_gtcrs:yes}%{?_without_gtcrs:no}
-%define hb_sln   export HB_INC_SLANG=%{!?_without_gtsln:yes}%{?_without_gtsln:no}
-%define hb_x11   export HB_INC_X11=%{!?_without_x11:yes}%{?_without_x11:no}
+%define hb_gpm   export HB_WITH_GPM=%{!?_without_gpm:yes}%{?_without_gpm:no}
+%define hb_crs   export HB_WITH_CURSES=%{!?_without_gtcrs:yes}%{?_without_gtcrs:no}
+%define hb_sln   export HB_WITH_SLANG=%{!?_without_gtsln:yes}%{?_without_gtsln:no}
+%define hb_x11   export HB_WITH_X11=%{!?_without_x11:yes}%{?_without_x11:no}
 %define hb_bdir  export HB_BIN_INSTALL=%{_bindir}
 %define hb_idir  export HB_INC_INSTALL=%{_includedir}/%{name}
 %define hb_ldir  export HB_LIB_INSTALL=%{_libdir}/%{name}
