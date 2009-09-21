@@ -42,6 +42,7 @@ DIRS += \
    hbpgsql \
    hbqt \
    hbssl \
+   iodmem \
    rddads \
    rddsql \
 

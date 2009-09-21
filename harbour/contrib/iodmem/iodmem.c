@@ -260,6 +260,30 @@ HB_MEMFS_EXPORT BOOL hb_memfsDelete( const char * szName )
 }
 
 
+HB_MEMFS_EXPORT BOOL hb_memfsRename( const char * szName, const char * szNewName )
+{
+   ULONG  ulPos;
+
+   HB_MEMFSMT_LOCK
+   if( ( ulPos = memfsInodeFind( szName, NULL ) ) == 0 )
+   {
+      HB_MEMFSMT_UNLOCK
+      /* File not found */
+      return 0;
+   }
+   if( memfsInodeFind( szNewName, NULL ) )
+   {
+      HB_MEMFSMT_UNLOCK
+      /* File already exists */
+      return 0;
+   }
+   hb_xfree( s_fs.pInodes[ ulPos - 1 ]->szName );
+   s_fs.pInodes[ ulPos - 1 ]->szName = hb_strdup( szNewName );
+   HB_MEMFSMT_UNLOCK
+   return 1;
+}
+
+
 HB_MEMFS_EXPORT HB_FHANDLE hb_memfsOpen( const char * szName, USHORT uiFlags )
 {
    PHB_MEMFS_FILE  pFile;
@@ -273,7 +297,7 @@ HB_MEMFS_EXPORT HB_FHANDLE hb_memfsOpen( const char * szName, USHORT uiFlags )
      So, 3=readwrite, 48=exclusive.
      Compatibility mode == DenyNone.
    */
-   uiFlags = uiFlags & ( FO_CREAT | FO_TRUNC | FO_EXCL ) |
+   uiFlags = ( uiFlags & ( FO_CREAT | FO_TRUNC | FO_EXCL ) ) |
              ( uiFlags & FO_READWRITE ? FOX_READWRITE : ( uiFlags & FO_WRITE ? FOX_WRITE : FOX_READ ) ) |
              ( ( uiFlags & 0xf0 ) == FO_EXCLUSIVE ? FOX_EXCLUSIVE : 
                ( ( uiFlags & 0xf0 ) == FO_DENYWRITE ? FOX_DENYWRITE : 
@@ -386,7 +410,7 @@ HB_MEMFS_EXPORT ULONG hb_memfsReadAt( HB_FHANDLE pFile, void * pBuff, ULONG ulCo
    PHB_MEMFS_INODE  pInode = ( ( PHB_MEMFS_FILE ) pFile )->pInode;
    ULONG            ulRead;
 
-   if( ( ( PHB_MEMFS_FILE ) pFile )->uiFlags & FOX_READ == 0 )
+   if( ( ( ( PHB_MEMFS_FILE ) pFile )->uiFlags & FOX_READ ) == 0 )
       return 0; /* access denied */
 
    if( llOffset < 0 || pInode->llSize <= llOffset )
@@ -409,7 +433,7 @@ HB_MEMFS_EXPORT ULONG hb_memfsWriteAt( HB_FHANDLE pFile, const void * pBuff, ULO
 {
    PHB_MEMFS_INODE  pInode = ( ( PHB_MEMFS_FILE ) pFile )->pInode;
 
-   if( ( ( PHB_MEMFS_FILE ) pFile )->uiFlags & FOX_WRITE == 0 )
+   if( ( ( ( PHB_MEMFS_FILE ) pFile )->uiFlags & FOX_WRITE ) == 0 )
       return 0; /* access denied */
 
    if( llOffset < 0 )
@@ -439,7 +463,7 @@ HB_MEMFS_EXPORT ULONG hb_memfsWriteAt( HB_FHANDLE pFile, const void * pBuff, ULO
    return ulCount;
 }
 
-
+#ifdef HB_MEMFS_PUBLIC_API
 HB_MEMFS_EXPORT ULONG hb_memfsRead( HB_FHANDLE pFile, void * pBuff, ULONG ulCount )
 {
    return hb_memfsReadAt( pFile, pBuff, ulCount, ( ( PHB_MEMFS_FILE ) pFile )->llPos );
@@ -450,6 +474,7 @@ HB_MEMFS_EXPORT ULONG hb_memfsWrite( HB_FHANDLE pFile, const void * pBuff, ULONG
 {
    return hb_memfsWriteAt( pFile, pBuff, ulCount, ( ( PHB_MEMFS_FILE ) pFile )->llPos );
 }
+#endif
 
 
 HB_MEMFS_EXPORT BOOL hb_memfsTruncAt( HB_FHANDLE pFile, HB_FOFFSET llOffset )
@@ -457,7 +482,7 @@ HB_MEMFS_EXPORT BOOL hb_memfsTruncAt( HB_FHANDLE pFile, HB_FOFFSET llOffset )
    PHB_MEMFS_INODE  pInode = ( ( PHB_MEMFS_FILE ) pFile )->pInode;
    HB_FOFFSET       llNewAlloc;
 
-   if( ( ( PHB_MEMFS_FILE ) pFile )->uiFlags & FOX_WRITE == 0 )
+   if( ( ( ( PHB_MEMFS_FILE ) pFile )->uiFlags & FOX_WRITE ) == 0 )
       return 0; /* access denied */
 
    if( llOffset < 0 )
@@ -468,7 +493,7 @@ HB_MEMFS_EXPORT BOOL hb_memfsTruncAt( HB_FHANDLE pFile, HB_FOFFSET llOffset )
    /* Reallocate if neccesary */
    if( pInode->llAlloc < llOffset )
    {
-      llNewAlloc = pInode->llAlloc + pInode->llAlloc >> 1;
+      llNewAlloc = pInode->llAlloc + ( pInode->llAlloc >> 1 );
 
       if( llNewAlloc < llOffset )
          llNewAlloc = llOffset;
@@ -477,7 +502,7 @@ HB_MEMFS_EXPORT BOOL hb_memfsTruncAt( HB_FHANDLE pFile, HB_FOFFSET llOffset )
       memset( pInode->pData + ( ULONG ) pInode->llAlloc, 0, llNewAlloc - pInode->llAlloc );
       pInode->llAlloc = llNewAlloc;
    }
-   else if( pInode->llAlloc >> 2 > ( llOffset > HB_MEMFS_INITSIZE ? llOffset : HB_MEMFS_INITSIZE ) )
+   else if( ( pInode->llAlloc >> 2 ) > ( llOffset > HB_MEMFS_INITSIZE ? llOffset : HB_MEMFS_INITSIZE ) )
    {
       llNewAlloc = ( llOffset > HB_MEMFS_INITSIZE ? llOffset : HB_MEMFS_INITSIZE );
       pInode->pData = hb_xrealloc( pInode->pData, llNewAlloc );
@@ -535,8 +560,8 @@ HB_MEMFS_EXPORT BOOL hb_memfsLock( HB_FHANDLE pFile, HB_FOFFSET ulStart, HB_FOFF
 *
 *******************************************************/
 
-#define FILE_PREXIF     "mem:"
-#define FILE_PREXIF_LEN strlen( FILE_PREXIF )
+#define FILE_PREFIX     "mem:"
+#define FILE_PREFIX_LEN strlen( FILE_PREFIX )
 
 typedef struct _HB_FILE
 {
@@ -552,15 +577,13 @@ static PHB_FILE s_fileNew( HB_FHANDLE hFile );
 static BOOL s_fileAccept( const char * pFilename )
 {
    /* printf("\ns_fileAccept %s\n", pFilename ); */
-   return hb_strnicmp( pFilename, FILE_PREXIF, FILE_PREXIF_LEN ) == 0;
+   return hb_strnicmp( pFilename, FILE_PREFIX, FILE_PREFIX_LEN ) == 0;
 }
 
 
 static BOOL s_fileExists( const char * pFilename, char * pRetPath )
 {
-   BOOL bRet; 
-
-   if( hb_memfsFileExists( pFilename + FILE_PREXIF_LEN ) )
+   if( hb_memfsFileExists( pFilename + FILE_PREFIX_LEN ) )
    {
       /* Warning: return buffer could be the same memory place as filename parameter! */
       if( pRetPath && pRetPath != pFilename )
@@ -573,7 +596,19 @@ static BOOL s_fileExists( const char * pFilename, char * pRetPath )
 
 static BOOL s_fileDelete( const char * pFilename )
 {
-   return hb_memfsDelete( pFilename + FILE_PREXIF_LEN );
+   return hb_memfsDelete( pFilename + FILE_PREFIX_LEN );
+}
+
+
+static BOOL s_fileRename( const char * szName, const char * szNewName )
+{
+   szName += FILE_PREFIX_LEN;
+   if( s_fileAccept( szNewName ) )
+   {
+      szNewName += FILE_PREFIX_LEN;
+      return hb_memfsRename( szName, szNewName );
+   }
+   return 0;
 }
 
 
@@ -587,7 +622,7 @@ static PHB_FILE s_fileOpen( const char * szName, const char * szDefExt, USHORT u
    HB_SYMBOL_UNUSED( pPaths );
    HB_SYMBOL_UNUSED( pError );
 
-   hb_strncpy( szNameNew, szName + FILE_PREXIF_LEN, HB_PATH_MAX );
+   hb_strncpy( szNameNew, szName + FILE_PREFIX_LEN, HB_PATH_MAX );
 
    ulLen = strlen( szNameNew );
    do {
@@ -683,6 +718,7 @@ const HB_FILE_FUNCS s_fileFuncs =
    s_fileAccept,
    s_fileExists,
    s_fileDelete,
+   s_fileRename,
    s_fileOpen,
    s_fileClose,
    s_fileLock,
