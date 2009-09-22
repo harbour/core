@@ -385,36 +385,46 @@ static HB_ERRCODE hb_cdxErrorRT( CDXAREAP pArea, USHORT uiGenCode, USHORT uiSubC
 static void hb_cdxMakeSortTab( CDXAREAP pArea )
 {
 #ifndef HB_CDP_SUPPORT_OFF
-   if( pArea->dbfarea.area.cdPage && pArea->dbfarea.area.cdPage->lSort && !pArea->bCdxSortTab )
+   if( pArea->dbfarea.area.cdPage && pArea->dbfarea.area.cdPage->lSort &&
+       !( pArea->fSortCDP || pArea->bCdxSortTab ) )
    {
-      int i, j, l;
-      BYTE * pbSort;
-      BYTE b;
-
-      pArea->bCdxSortTab = ( BYTE * ) hb_xgrab( 256 );
-      pbSort = ( BYTE * ) hb_xgrab( 256 );
-      /* this table should be allready quite good sorted so this simple
-         algorithms will be one of the most efficient one. */
-      for( i = 0; i <= 255; i++ )
-         pbSort[i] = ( BYTE ) i;
-      l = 255;
-      do
+      if( pArea->dbfarea.area.cdPage->nMulti ||
+          pArea->dbfarea.area.cdPage->lAccEqual ||
+          pArea->dbfarea.area.cdPage->lAccInterleave )
       {
-         j = l;
-         for( i = 0; i < j; i++ )
+         pArea->fSortCDP = TRUE;
+      }
+      else
+      {
+         int i, j, l;
+         BYTE * pbSort;
+         BYTE b;
+
+         pArea->bCdxSortTab = ( BYTE * ) hb_xgrab( 256 );
+         pbSort = ( BYTE * ) hb_xgrab( 256 );
+         /* this table should be allready quite good sorted so this simple
+            algorithms is one of the most efficient one. */
+         for( i = 0; i <= 255; i++ )
+            pbSort[i] = ( BYTE ) i;
+         l = 255;
+         do
          {
-            if( hb_cdpchrcmp( pbSort[i], pbSort[i+1], pArea->dbfarea.area.cdPage ) > 0 )
+            j = l;
+            for( i = 0; i < j; i++ )
             {
-               b = pbSort[i+1];
-               pbSort[i+1] = pbSort[i];
-               pbSort[i] = b;
-               l = i;
+               if( hb_cdpchrcmp( pbSort[i], pbSort[i+1], pArea->dbfarea.area.cdPage ) > 0 )
+               {
+                  b = pbSort[i+1];
+                  pbSort[i+1] = pbSort[i];
+                  pbSort[i] = b;
+                  l = i;
+               }
             }
-         }
-      } while( j != l );
-      for( i = 0; i <= 255; i++ )
-         pArea->bCdxSortTab[pbSort[i]] = i;
-      hb_xfree( pbSort );
+         } while( j != l );
+         for( i = 0; i <= 255; i++ )
+            pArea->bCdxSortTab[pbSort[i]] = i;
+         hb_xfree( pbSort );
+      }
    }
 #else
    HB_SYMBOL_UNUSED( pArea );
@@ -556,11 +566,19 @@ static int hb_cdxValCompare( LPCDXTAG pTag, BYTE * val1, BYTE len1,
       {
          BYTE * pSort = pTag->pIndex->pArea->bCdxSortTab;
          int iPos = 0;
-         while( iResult == 0 && iPos < iLimit )
+         while( iPos < iLimit )
          {
             iResult = pSort[ val1[ iPos ] ] - pSort[ val2[ iPos ] ];
+            if( iResult != 0 )
+               break;
             iPos++;
          }
+      }
+      else if( pTag->pIndex->pArea->fSortCDP )
+      {
+         iResult = hb_cdpcmp( ( const char * ) val1, ( ULONG ) iLimit,
+                              ( const char * ) val2, ( ULONG ) iLimit,
+                              pTag->pIndex->pArea->dbfarea.area.cdPage, 0 );
       }
       else
 #endif

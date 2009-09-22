@@ -461,11 +461,12 @@ typedef struct _CDXAREA
    *  example.
    */
 
-   BOOL           fCdxAppend;    /* Appended record changed */
-   LPCDXINDEX     lpIndexes;     /* Pointer to indexes array  */
-   USHORT         uiTag;         /* current tag focus */
    LPCDXSORTINFO  pSort;         /* Index build structure */
-   BYTE *         bCdxSortTab;   /* Table with storted characters */
+   LPCDXINDEX     lpIndexes;     /* Pointer to indexes array  */
+   BYTE *         bCdxSortTab;   /* Table with sorted characters */
+   BOOL           fCdxAppend;    /* Appended record changed */
+   BOOL           fSortCDP;      /* Use CDP functions for sorting */
+   USHORT         uiTag;         /* current tag focus */
 
 } CDXAREA;
 
