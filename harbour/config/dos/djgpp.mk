@@ -34,6 +34,8 @@ endif
 
 ifneq ($(filter $(HB_BUILD_STRIP),all lib),)
    ARSTRIP = $(HB_CCPATH)$(HB_CCPREFIX)strip -S $(LIB_DIR)/$@
+else
+   ARSTRIP := @$(ECHO) .
 endif
 ifneq ($(filter $(HB_BUILD_STRIP),all bin),)
    LDSTRIP := -s

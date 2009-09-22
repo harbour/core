@@ -2464,8 +2464,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ENDIF
 
          l_aLIBSHAREDPOST := { "hbmainstd" }
-         l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-os2",;
-                                                   "harbour" + cDL_Version_Alter + "-os2" ) }
+         l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourm",;
+                                                   "harbour" ) }
 
          cBin_Res := hbmk[ _HBMK_cCCPREFIX ] + "windres" + cCCEXT
          cResExt := ".reso"
@@ -2680,8 +2680,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             ENDIF
          CASE hbmk[ _HBMK_cPLAT ] == "os2"
             l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-os2" + cLibExt,;
-                                                      "harbour" + cDL_Version_Alter + "-os2" + cLibExt ) }
+            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourm" + cLibExt,;
+                                                      "harbour" + cLibExt ) }
 
             IF hbmk[ _HBMK_lSHARED ]
                /* TOFIX: This line is plain guessing. */

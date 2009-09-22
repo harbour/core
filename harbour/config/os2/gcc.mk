@@ -33,7 +33,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 endif
 
 ifneq ($(filter $(HB_BUILD_STRIP),all lib),)
-   ARSTRIP = ${HB_CCPATH}${HB_CCPREFIX}strip -S $(LIB_DIR)/$@
+   ARSTRIP = & ${HB_CCPATH}${HB_CCPREFIX}strip -S $(LIB_DIR)/$@
 endif
 ifneq ($(filter $(HB_BUILD_STRIP),all bin),)
    LDSTRIP := -s
@@ -71,13 +71,12 @@ define create_library
    @$(ECHO) $(ECHOQUOTE)SAVE$(ECHOQUOTE) >> __lib__.tmp
    @$(ECHO) $(ECHOQUOTE)END$(ECHOQUOTE) >> __lib__.tmp
    $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -M < __lib__.tmp
-   $(ARSTRIP)
 endef
 
 # Under OS/2 || isn't a command separator (inside a shell, that is); correct separator is &
 AR := $(HB_CCPATH)$(HB_CCPREFIX)ar
 ARFLAGS :=
-AR_RULE = $(create_library) & $(RM) __lib__.tmp
+AR_RULE = $(create_library) $(ARSTRIP) & $(RM) __lib__.tmp
 
 DY := $(CC)
 DFLAGS := -shared $(LIBPATHS)
