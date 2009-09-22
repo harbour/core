@@ -331,8 +331,10 @@ HB_MEMFS_EXPORT HB_FHANDLE hb_memfsOpen( const char * szName, USHORT uiFlags )
    {
       /* truncate existing */
       if( ulPos )
+      {
          if( s_fs.pInodes[ ulPos - 1 ]->uiDeny & FOX_DENYWRITE )
             uiError = 32;
+      }
       else
          uiError = 2;
    }
@@ -347,21 +349,15 @@ HB_MEMFS_EXPORT HB_FHANDLE hb_memfsOpen( const char * szName, USHORT uiFlags )
    {
       if( ulPos )
       {
-         if( uiFlags & FOX_READ && s_fs.pInodes[ ulPos - 1 ]->uiDeny & FOX_DENYREAD ||
-             uiFlags & FOX_WRITE && s_fs.pInodes[ ulPos - 1 ]->uiDeny & FOX_DENYWRITE ||
+         if( ( uiFlags & FOX_READ && s_fs.pInodes[ ulPos - 1 ]->uiDeny & FOX_DENYREAD ) ||
+             ( uiFlags & FOX_WRITE && s_fs.pInodes[ ulPos - 1 ]->uiDeny & FOX_DENYWRITE ) ||
              s_fs.pInodes[ ulPos - 1 ]->uiDeny & uiFlags )
-         {
             uiError = 32;
-         }
          else
-         {
             pFile = memfsFileAlloc( s_fs.pInodes[ ulPos - 1 ] );
-         }
       }
       else
-      {
          pFile = memfsFileAlloc( memfsInodeAlloc( szName ) );
-      }
    }
 
    s_error = uiError;
@@ -545,12 +541,12 @@ HB_MEMFS_EXPORT void hb_memfsCommit( HB_FHANDLE pFile )
 }
 
 
-HB_MEMFS_EXPORT BOOL hb_memfsLock( HB_FHANDLE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLength, USHORT uiMode )
+HB_MEMFS_EXPORT BOOL hb_memfsLock( HB_FHANDLE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLength, int iMode )
 {
    HB_SYMBOL_UNUSED( pFile );
    HB_SYMBOL_UNUSED( ulStart );
    HB_SYMBOL_UNUSED( ulLength );
-   HB_SYMBOL_UNUSED( uiMode );
+   HB_SYMBOL_UNUSED( iMode );
    return 1;
 }
 
