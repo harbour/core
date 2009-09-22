@@ -88,7 +88,7 @@ BOOL hb_PrinterExists( LPCSTR pPrinterName )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_PrinterExists(%s)", pPrinterName ) );
 
-   if( !strchr( pPrinterName, HB_OS_PATH_LIST_SEP_CHR ) && !hb_isLegacyDevice( pPrinterName ) )
+   if( ! strchr( pPrinterName, HB_OS_PATH_LIST_SEP_CHR ) && ! hb_isLegacyDevice( pPrinterName ) )
 
    {                            /* Don't bother with test if '\' in string */
       if( hb_iswinnt() )
@@ -420,31 +420,36 @@ HB_FUNC( PRINTERPORTTONAME )
 
 #   define BIG_PRINT_BUFFER (1024*32)
 
-LONG hb_PrintFileRaw( UCHAR * cPrinterName, UCHAR * cFileName, UCHAR * cDocName )
+LONG hb_PrintFileRaw( const char * cPrinterName, const char * cFileName, const char * cDocName )
 {
-   UCHAR printBuffer[ BIG_PRINT_BUFFER ];
-   HANDLE hPrinter, hFile;
-   DOC_INFO_1 DocInfo;
-   DWORD nRead, nWritten;
+   HANDLE hPrinter;
    LONG Result;
-   LPTSTR lpPrinterName = HB_TCHAR_CONVTO( ( char * ) cPrinterName );
+   LPTSTR lpPrinterName = HB_TCHAR_CONVTO( cPrinterName );
 
    if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) != 0 )
    {
-      LPTSTR lpDocName = HB_TCHAR_CONVTO( ( char * ) cDocName );
+      LPTSTR lpDocName = HB_TCHAR_CONVTO( cDocName );
+      DOC_INFO_1 DocInfo;
       DocInfo.pDocName = lpDocName;
       DocInfo.pOutputFile = NULL;
       DocInfo.pDatatype = ( LPTSTR ) TEXT( "RAW" );
-      if( StartDocPrinter( hPrinter, 1, ( UCHAR * ) & DocInfo ) != 0 )
+      if( StartDocPrinter( hPrinter, 1, ( LPBYTE ) &DocInfo ) != 0 )
       {
          if( StartPagePrinter( hPrinter ) != 0 )
          {
-            hFile =
-               CreateFileA( ( char * ) cFileName, GENERIC_READ, 0, NULL, OPEN_EXISTING,
-                            FILE_ATTRIBUTE_NORMAL, NULL );
+            LPTSTR lpFileName = HB_TCHAR_CONVTO( cFileName );
+            HANDLE hFile;
+
+            hFile = CreateFile( ( LPCTSTR ) lpFileName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
+
+            HB_TCHAR_FREE( lpFileName );
+
             if( hFile != INVALID_HANDLE_VALUE )
             {
-               while( ReadFile( hFile, printBuffer, BIG_PRINT_BUFFER, &nRead, NULL )
+               BYTE printBuffer[ BIG_PRINT_BUFFER ];
+               DWORD nRead, nWritten;
+
+               while( ReadFile( hFile, printBuffer, sizeof( printBuffer ), &nRead, NULL )
                       && ( nRead > 0 ) )
                {
                   if( printBuffer[ nRead - 1 ] == 26 )
@@ -481,9 +486,9 @@ HB_FUNC( PRINTFILERAW )
    LONG Result = -1;
 
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
-      Result = hb_PrintFileRaw( ( UCHAR * ) hb_parc( 1 ) /* cPrinterName */,
-                                ( UCHAR * ) hb_parc( 2 ) /* cFileName */,
-                                HB_ISCHAR( 3 ) ? ( UCHAR * ) hb_parc( 3 ) : ( UCHAR * ) hb_parc( 2 ) /* cDocName */ );
+      Result = hb_PrintFileRaw( hb_parc( 1 ) /* cPrinterName */,
+                                hb_parc( 2 ) /* cFileName */,
+                                HB_ISCHAR( 3 ) ? hb_parc( 3 ) : hb_parc( 2 ) /* cDocName */ );
 
    hb_retnl( Result );
 }

@@ -751,7 +751,11 @@ static LPVOID hb_getprocaddress( HMODULE hDLL, int iProc )
 
 HB_FUNC( LOADLIBRARY )
 {
-   hb_retnint( ( HB_PTRDIFF ) LoadLibraryA( ( LPCSTR ) hb_parcx( 1 ) ) );
+   LPTSTR lpName = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
+
+   hb_retnint( ( HB_PTRDIFF ) LoadLibrary( ( LPCTSTR ) lpName ) );
+
+   HB_TCHAR_FREE( lpName );
 }
 
 HB_FUNC( FREELIBRARY )
@@ -797,7 +801,13 @@ HB_FUNC( DLLCALL )
    else if( HB_ISNUM( 1 ) )
       hDLL = ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 );
    else
-      hDLL = LoadLibraryA( hb_parcx( 1 ) );
+   {
+      LPTSTR lpName = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
+
+      hDLL = LoadLibrary( ( LPCTSTR ) lpName );
+
+      HB_TCHAR_FREE( lpName );
+   }
 
    if( hDLL && ( HB_PTRDIFF ) hDLL >= 32 )
    {
@@ -818,8 +828,12 @@ HB_FUNC( DLLPREPARECALL )
 
    if( HB_ISCHAR( 1 ) )
    {
+      LPTSTR lpName = HB_TCHAR_CONVTO( hb_parc( 1 ) );
+
       xec->cDLL = hb_strdup( hb_parc( 1 ) );
-      xec->hDLL = LoadLibraryA( xec->cDLL );
+      xec->hDLL = LoadLibrary( ( LPCTSTR ) lpName );
+
+      HB_TCHAR_FREE( lpName );
    }
    else if( HB_ISPOINTER( 1 ) )
       xec->hDLL = ( HMODULE ) hb_parptr( 1 );

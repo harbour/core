@@ -461,20 +461,22 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
 
 HB_FUNC( WIN_LOADBITMAPFILE )
 {
-   const char * pstrFileName = hb_parc( 1 );
+   LPTSTR lpFileName = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
    BOOL bSuccess = FALSE;
    DWORD dwFileSize = 0, dwHighSize, dwBytesRead;
    HANDLE hFile;
-   BITMAPFILEHEADER *pbmfh = NULL;
+   BITMAPFILEHEADER * pbmfh = NULL;
 
-   hFile = CreateFileA( pstrFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING,
-                        FILE_FLAG_SEQUENTIAL_SCAN, NULL );
+   hFile = CreateFile( ( LPCTSTR ) lpFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING,
+                       FILE_FLAG_SEQUENTIAL_SCAN, NULL );
+
+   HB_TCHAR_FREE( lpFileName );
 
    if( hFile != INVALID_HANDLE_VALUE )
    {
       dwFileSize = GetFileSize( hFile, &dwHighSize );
 
-      if( ( dwFileSize != INVALID_FILE_SIZE ) && !dwHighSize )  /* Do not continue if File size error or TOO big for memory */
+      if( ( dwFileSize != INVALID_FILE_SIZE ) && ! dwHighSize )  /* Do not continue if File size error or TOO big for memory */
       {
          pbmfh = ( BITMAPFILEHEADER * ) hb_xgrab( dwFileSize );
 
@@ -490,7 +492,7 @@ HB_FUNC( WIN_LOADBITMAPFILE )
 
    if( bSuccess )
    {
-      hb_retclen( ( char * ) pbmfh, dwFileSize );       /* hb_retclenAdoptRaw */
+      hb_retclen( ( char * ) pbmfh, dwFileSize );
 
       if( pbmfh )
          hb_xfree( pbmfh );
@@ -499,7 +501,7 @@ HB_FUNC( WIN_LOADBITMAPFILE )
    {
       hb_retc_null();
 
-      if( pbmfh != NULL )
+      if( pbmfh )
          hb_xfree( pbmfh );
    }
 }

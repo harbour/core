@@ -117,7 +117,11 @@ HB_FUNC( WAPI_SETERRORMODE )
 
 HB_FUNC( WAPI_LOADLIBRARY )
 {
-   hb_retptr( LoadLibraryA( ( LPCSTR ) hb_parcx( 1 ) ) );
+   LPTSTR lpName = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
+
+   hb_retptr( LoadLibrary( ( LPCTSTR ) lpName ) );
+
+   HB_TCHAR_FREE( lpName );
 }
 
 HB_FUNC( WAPI_FREELIBRARY )

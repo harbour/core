@@ -101,9 +101,13 @@ extern char *strerror( int errnum );
                                 LPFILETIME lpCreationTime, LPFILETIME lpExitTime,
                                 LPFILETIME lpKernelTime, LPFILETIME lpUserTime );
    BOOL WINAPI GetUserNameA( LPSTR buffer, LPDWORD len );
+   BOOL WINAPI GetUserNameW( LPWSTR buffer, LPDWORD len );
    BOOL WINAPI GetComputerNameA( LPSTR buffer, LPDWORD len );
+   BOOL WINAPI GetComputerNameW( LPWSTR buffer, LPDWORD len );
    DWORD WINAPI GetCurrentDirectoryA( DWORD len, LPSTR buffer );
+   DWORD WINAPI GetCurrentDirectoryW( DWORD len, LPWSTR buffer );
    BOOL WINAPI SetCurrentDirectoryA( LPCSTR dirname );
+   BOOL WINAPI SetCurrentDirectoryW( LPCWSTR dirname );
    BOOL WINAPI LockFile( HANDLE hFile,
                          DWORD dwFileOffsetLow, DWORD dwFileOffsetHigh,
                          DWORD nNumberOfBytesToLockLow, DWORD nNumberOfBytesToLockHigh );

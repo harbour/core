@@ -157,12 +157,14 @@ HB_FUNC( DISKSPACE )
       }
       else
       {
+         LPTSTR lpPath = HB_TCHAR_CONVTO( szPath );
+
          DWORD dwSectorsPerCluster;
          DWORD dwBytesPerSector;
          DWORD dwNumberOfFreeClusters;
          DWORD dwTotalNumberOfClusters;
 
-         bError = !GetDiskFreeSpaceA( szPath,
+         bError = ! GetDiskFreeSpace( ( LPCTSTR ) lpPath,
                                       &dwSectorsPerCluster,
                                       &dwBytesPerSector,
                                       &dwNumberOfFreeClusters,
@@ -171,6 +173,8 @@ HB_FUNC( DISKSPACE )
             dSpace = ( double ) dwNumberOfFreeClusters *
                      ( double ) dwSectorsPerCluster *
                      ( double ) dwBytesPerSector;
+
+         HB_TCHAR_FREE( lpPath );
       }
 #endif
       SetErrorMode( uiErrMode );

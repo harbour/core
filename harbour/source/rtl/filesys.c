@@ -654,15 +654,18 @@ HB_FHANDLE hb_fsOpen( const char * pFilename, USHORT uiFlags )
 
 #if defined( HB_IO_WIN )
    {
+      LPTSTR lpFilename = HB_TCHAR_CONVTO( pFilename );
       DWORD dwMode, dwShare, dwCreat, dwAttr;
       HANDLE hFile;
 
       convert_open_flags( FALSE, FC_NORMAL, uiFlags, &dwMode, &dwShare, &dwCreat, &dwAttr );
 
       hb_vmUnlock();
-      hFile = CreateFileA( pFilename, dwMode, dwShare, NULL, dwCreat, dwAttr, NULL );
+      hFile = CreateFile( ( LPCTSTR ) lpFilename, dwMode, dwShare, NULL, dwCreat, dwAttr, NULL );
       hb_fsSetIOError( hFile != ( HANDLE ) INVALID_HANDLE_VALUE, 0 );
       hb_vmLock();
+
+      HB_TCHAR_FREE( lpFilename );
 
       hFileHandle = ( HB_FHANDLE ) hFile;
    }
@@ -713,15 +716,18 @@ HB_FHANDLE hb_fsCreate( const char * pFilename, ULONG ulAttr )
 
 #if defined( HB_IO_WIN )
    {
+      LPTSTR lpFilename = HB_TCHAR_CONVTO( pFilename );
       DWORD dwMode, dwShare, dwCreat, dwAttr;
       HANDLE hFile;
 
       convert_open_flags( TRUE, ulAttr, FO_EXCLUSIVE, &dwMode, &dwShare, &dwCreat, &dwAttr );
 
       hb_vmUnlock();
-      hFile = CreateFileA( pFilename, dwMode, dwShare, NULL, dwCreat, dwAttr, NULL );
+      hFile = CreateFile( ( LPCTSTR ) lpFilename, dwMode, dwShare, NULL, dwCreat, dwAttr, NULL );
       hb_fsSetIOError( hFile != ( HANDLE ) INVALID_HANDLE_VALUE, 0 );
       hb_vmLock();
+
+      HB_TCHAR_FREE( lpFilename );
 
       hFileHandle = ( HB_FHANDLE ) hFile;
    }
@@ -772,15 +778,18 @@ HB_FHANDLE hb_fsCreateEx( const char * pFilename, ULONG ulAttr, USHORT uiFlags )
 
 #if defined( HB_IO_WIN )
    {
+      LPTSTR lpFilename = HB_TCHAR_CONVTO( pFilename );
       DWORD dwMode, dwShare, dwCreat, dwAttr;
       HANDLE hFile;
 
       convert_open_flags( TRUE, ulAttr, uiFlags, &dwMode, &dwShare, &dwCreat, &dwAttr );
 
       hb_vmUnlock();
-      hFile = CreateFileA( pFilename, dwMode, dwShare, NULL, dwCreat, dwAttr, NULL );
+      hFile = CreateFile( ( LPCTSTR ) lpFilename, dwMode, dwShare, NULL, dwCreat, dwAttr, NULL );
       hb_fsSetIOError( hFile != ( HANDLE ) INVALID_HANDLE_VALUE, 0 );
       hb_vmLock();
+
+      HB_TCHAR_FREE( lpFilename );
 
       hFileHandle = ( HB_FHANDLE ) hFile;
    }
@@ -1008,10 +1017,11 @@ BOOL hb_fsGetAttr( const char * pszFileName, ULONG * pulAttr )
 
 #if defined( HB_OS_WIN )
    {
+      LPTSTR lpFilename = HB_TCHAR_CONVTO( pszFileName );
       DWORD dwAttr;
 
       hb_vmUnlock();
-      dwAttr = GetFileAttributesA( pszFileName );
+      dwAttr = GetFileAttributes( lpFilename );
 
       if( dwAttr != INVALID_FILE_ATTRIBUTES )
       {
@@ -1020,6 +1030,8 @@ BOOL hb_fsGetAttr( const char * pszFileName, ULONG * pulAttr )
       }
       hb_fsSetIOError( fResult, 0 );
       hb_vmLock();
+
+      HB_TCHAR_FREE( lpFilename );
    }
 #elif defined( HB_OS_DOS )
    hb_vmUnlock();
@@ -1272,6 +1284,7 @@ BOOL hb_fsSetAttr( const char * pszFileName, ULONG ulAttr )
 
 #if defined( HB_OS_WIN )
    {
+      LPTSTR lpFilename = HB_TCHAR_CONVTO( pszFileName );
       DWORD dwFlags = FILE_ATTRIBUTE_ARCHIVE;
 
       if( ulAttr & HB_FA_READONLY )
@@ -1283,9 +1296,11 @@ BOOL hb_fsSetAttr( const char * pszFileName, ULONG ulAttr )
       if( ulAttr & HB_FA_NORMAL )
          dwFlags |= FILE_ATTRIBUTE_NORMAL;
       hb_vmUnlock();
-      fResult = SetFileAttributesA( pszFileName, dwFlags );
+      fResult = SetFileAttributes( lpFilename, dwFlags );
       hb_fsSetIOError( fResult, 0 );
       hb_vmLock();
+
+      HB_TCHAR_FREE( lpFilename );
    }
 #elif defined( HB_OS_OS2 )
    {
@@ -2456,10 +2471,16 @@ BOOL hb_fsDelete( const char * pFilename )
 
 #if defined( HB_OS_WIN )
 
-   hb_vmUnlock();
-   bResult = DeleteFileA( pFilename );
-   hb_fsSetIOError( bResult, 0 );
-   hb_vmLock();
+   {
+      LPTSTR lpFilename = HB_TCHAR_CONVTO( pFilename );
+
+      hb_vmUnlock();
+      bResult = DeleteFile( lpFilename );
+      hb_fsSetIOError( bResult, 0 );
+      hb_vmLock();
+
+      HB_TCHAR_FREE( lpFilename );
+   }
 
 #elif defined( HB_FS_FILE_IO )
 
@@ -2493,10 +2514,18 @@ BOOL hb_fsRename( const char * pOldName, const char * pNewName )
 
 #if defined( HB_OS_WIN )
 
-   hb_vmUnlock();
-   bResult = MoveFileA( pOldName, pNewName );
-   hb_fsSetIOError( bResult, 0 );
-   hb_vmLock();
+   {
+      LPTSTR lpOldName = HB_TCHAR_CONVTO( pOldName );
+      LPTSTR lpNewName = HB_TCHAR_CONVTO( pNewName );
+
+      hb_vmUnlock();
+      bResult = MoveFile( lpOldName, lpNewName );
+      hb_fsSetIOError( bResult, 0 );
+      hb_vmLock();
+
+      HB_TCHAR_FREE( lpOldName );
+      HB_TCHAR_FREE( lpNewName );
+   }
 
 #elif defined( HB_FS_FILE_IO )
 
@@ -2533,10 +2562,16 @@ BOOL hb_fsMkDir( const char * pDirname )
 
 #if defined( HB_OS_WIN )
 
-   hb_vmUnlock();
-   bResult = CreateDirectoryA( pDirname, NULL );
-   hb_fsSetIOError( bResult, 0 );
-   hb_vmLock();
+   {
+      LPTSTR lpDirname = HB_TCHAR_CONVTO( pDirname );
+
+      hb_vmUnlock();
+      bResult = CreateDirectory( lpDirname, NULL );
+      hb_fsSetIOError( bResult, 0 );
+      hb_vmLock();
+
+      HB_TCHAR_FREE( lpDirname );
+   }
 
 #elif defined( HAVE_POSIX_IO ) || defined( __MINGW32__ )
 
@@ -2575,10 +2610,16 @@ BOOL hb_fsChDir( const char * pDirname )
 
 #if defined( HB_OS_WIN )
 
-   hb_vmUnlock();
-   bResult = SetCurrentDirectoryA( pDirname );
-   hb_fsSetIOError( bResult, 0 );
-   hb_vmLock();
+   {
+      LPTSTR lpDirname = HB_TCHAR_CONVTO( pDirname );
+
+      hb_vmUnlock();
+      bResult = SetCurrentDirectory( lpDirname );
+      hb_fsSetIOError( bResult, 0 );
+      hb_vmLock();
+
+      HB_TCHAR_FREE( lpDirname );
+   }
 
 #elif defined( HAVE_POSIX_IO ) || defined( __MINGW32__ )
 
@@ -2611,10 +2652,16 @@ BOOL hb_fsRmDir( const char * pDirname )
 
 #if defined( HB_OS_WIN )
 
-   hb_vmUnlock();
-   bResult = RemoveDirectoryA( pDirname );
-   hb_fsSetIOError( bResult, 0 );
-   hb_vmLock();
+   {
+      LPTSTR lpDirname = HB_TCHAR_CONVTO( pDirname );
+
+      hb_vmUnlock();
+      bResult = RemoveDirectory( lpDirname );
+      hb_fsSetIOError( bResult, 0 );
+      hb_vmLock();
+
+      HB_TCHAR_FREE( lpDirname );
+   }
 
 #elif defined( HAVE_POSIX_IO ) || defined( __MINGW32__ )
 

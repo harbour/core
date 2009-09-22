@@ -719,11 +719,13 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
 
 #if defined( HB_OS_WIN )
    {
-      ulExtAttr = GetFileAttributesA( szFileName );
+      LPTSTR lpFileName = HB_TCHAR_CONVTO( szFileName );
 
-      if( (LONG) ulExtAttr != -1 )
+      ulExtAttr = GetFileAttributes( ( LPCTSTR ) lpFileName );
+
+      if( ( LONG ) ulExtAttr != -1 )
       {
-         ulExtAttr = GetFileAttributesA( szFileName ) &
+         ulExtAttr = GetFileAttributes( ( LPCTSTR ) lpFileName ) &
                      ( FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_HIDDEN |
                        FILE_ATTRIBUTE_SYSTEM   | FILE_ATTRIBUTE_DIRECTORY |
                        FILE_ATTRIBUTE_ARCHIVE );
@@ -732,6 +734,8 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
       }
       else
          fError = TRUE;
+
+      HB_TCHAR_FREE( lpFileName );
    }
 #elif defined( HB_OS_UNIX )
    {
@@ -1116,7 +1120,11 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
 
 #if defined( HB_OS_WIN )
    {
-      SetFileAttributesA( szName, ufi.external_fa & 0xFF );
+      LPTSTR lpFileName = HB_TCHAR_CONVTO( szName );
+
+      SetFileAttributes( ( LPCTSTR ) lpFileName, ufi.external_fa & 0xFF );
+
+      HB_TCHAR_FREE( lpFileName );
    }
 #elif defined( HB_OS_UNIX ) || defined( __DJGPP__ )
    {

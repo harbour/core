@@ -242,16 +242,18 @@ HB_FUNC( HB_DISKSPACE )
          }
          else
          {
+            LPTSTR lpPath = HB_TCHAR_CONVTO( szPath );
+
             DWORD dwSectorsPerCluster;
             DWORD dwBytesPerSector;
             DWORD dwNumberOfFreeClusters;
             DWORD dwTotalNumberOfClusters;
 
-            fResult = GetDiskFreeSpaceA( szPath,
-                                         &dwSectorsPerCluster,
-                                         &dwBytesPerSector,
-                                         &dwNumberOfFreeClusters,
-                                         &dwTotalNumberOfClusters );
+            fResult = GetDiskFreeSpace( ( LPCTSTR ) lpPath,
+                                        &dwSectorsPerCluster,
+                                        &dwBytesPerSector,
+                                        &dwNumberOfFreeClusters,
+                                        &dwTotalNumberOfClusters );
             hb_fsSetIOError( fResult, 0 );
             if( fResult )
             {
@@ -277,6 +279,8 @@ HB_FUNC( HB_DISKSPACE )
                      break;
                }
             }
+
+            HB_TCHAR_FREE( lpPath );
          }
 #endif
          SetErrorMode( uiErrMode );

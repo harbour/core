@@ -125,7 +125,7 @@
    typedef struct
    {
       HANDLE            hFindFile;
-      WIN32_FIND_DATAA  pFindFileData;
+      WIN32_FIND_DATA   pFindFileData;
       DWORD             dwAttr;
    } HB_FFIND_INFO, * PHB_FFIND_INFO;
 
@@ -526,28 +526,38 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       {
          if( ffind->bFirst )
          {
+            LPTSTR lpFileMask = HB_TCHAR_CONVTO( ffind->pszFileMask );
+            TCHAR szName[ HB_PATH_MAX ];
+
             ffind->bFirst = FALSE;
             ffind->szName[ 0 ] = '\0';
 
-            bFound = GetVolumeInformationA( ffind->pszFileMask, ffind->szName, sizeof( ffind->szName ) - 1, NULL, NULL, NULL, NULL, 0 );
+            bFound = GetVolumeInformation( ( LPCTSTR ) lpFileMask, szName, sizeof( szName ) - 1, NULL, NULL, NULL, NULL, 0 );
+
+            HB_TCHAR_FREE( lpFileMask );
+            HB_TCHAR_GETFROM( ffind->szName, szName, sizeof( ffind->szName ) - 1 );
          }
       }
       else
       {
          if( ffind->bFirst )
          {
+            LPTSTR lpFileMask = HB_TCHAR_CONVTO( ffind->pszFileMask );
+
             ffind->bFirst = FALSE;
 
-            info->hFindFile = FindFirstFileA( ffind->pszFileMask, &info->pFindFileData );
+            info->hFindFile = FindFirstFile( ( LPCTSTR ) lpFileMask, &info->pFindFileData );
             info->dwAttr    = ( DWORD ) hb_fsAttrToRaw( ffind->attrmask );
 
             if( ( info->hFindFile != INVALID_HANDLE_VALUE ) && HB_WIN_MATCH() )
                bFound = TRUE;
+
+            HB_TCHAR_FREE( lpFileMask );
          }
 
          if( ! bFound && info->hFindFile != INVALID_HANDLE_VALUE )
          {
-            while( FindNextFileA( info->hFindFile, &info->pFindFileData ) )
+            while( FindNextFile( info->hFindFile, &info->pFindFileData ) )
             {
                if( HB_WIN_MATCH() )
                {
@@ -561,7 +571,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
          if( bFound )
          {
-            hb_strncpy( ffind->szName, info->pFindFileData.cFileName, sizeof( ffind->szName ) - 1 );
+            HB_TCHAR_GETFROM( ffind->szName, info->pFindFileData.cFileName, sizeof( ffind->szName ) - 1 );
 
             if( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
                ffind->size = 0;

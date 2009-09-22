@@ -260,7 +260,23 @@ BOOL WINAPI GetUserNameA( LPSTR buffer, LPDWORD len )
    return FALSE;
 }
 
+BOOL WINAPI GetUserNameW( LPWSTR buffer, LPDWORD len )
+{
+   if( len && buffer )
+      buffer[ 0 ] = '\0';
+
+   return FALSE;
+}
+
 BOOL WINAPI GetComputerNameA( LPSTR buffer, LPDWORD len )
+{
+   if( len && buffer )
+      buffer[ 0 ] = '\0';
+
+   return FALSE;
+}
+
+BOOL WINAPI GetComputerNameW( LPWSTR buffer, LPDWORD len )
 {
    if( len && buffer )
       buffer[ 0 ] = '\0';
@@ -276,7 +292,22 @@ DWORD WINAPI GetCurrentDirectoryA( DWORD len, LPSTR buffer )
    return FALSE;
 }
 
+DWORD WINAPI GetCurrentDirectoryW( DWORD len, LPWSTR buffer )
+{
+   if( len && buffer )
+      buffer[ 0 ] = '\0';
+
+   return FALSE;
+}
+
 BOOL WINAPI SetCurrentDirectoryA( LPCSTR dirname )
+{
+   HB_SYMBOL_UNUSED( dirname );
+
+   return FALSE;
+}
+
+BOOL WINAPI SetCurrentDirectoryW( LPCWSTR dirname )
 {
    HB_SYMBOL_UNUSED( dirname );
 

@@ -310,7 +310,11 @@ BOOL hb_fsNameExists( const char * pszFileName )
    }
 #elif defined( HB_OS_WIN )
    {
-      fExist = ( GetFileAttributesA( pszFileName ) != INVALID_FILE_ATTRIBUTES );
+      LPTSTR lpFileName = HB_TCHAR_CONVTO( pszFileName );
+
+      fExist = ( GetFileAttributes( ( LPCTSTR ) lpFileName ) != INVALID_FILE_ATTRIBUTES );
+
+      HB_TCHAR_FREE( lpFileName );
    }
 #elif defined( HB_OS_OS2 )
    {
@@ -363,12 +367,15 @@ BOOL hb_fsFileExists( const char * pszFileName )
    }
 #elif defined( HB_OS_WIN )
    {
-      DWORD   dwAttr;
+      LPTSTR lpFileName = HB_TCHAR_CONVTO( pszFileName );
+      DWORD dwAttr;
 
-      dwAttr = GetFileAttributesA( pszFileName );
+      dwAttr = GetFileAttributes( ( LPCTSTR ) lpFileName );
       fExist = ( dwAttr != INVALID_FILE_ATTRIBUTES ) &&
                ( dwAttr & ( FILE_ATTRIBUTE_DIRECTORY |
                             FILE_ATTRIBUTE_DEVICE ) ) == 0;
+
+      HB_TCHAR_FREE( lpFileName );
    }
 #elif defined( HB_OS_OS2 )
    {
@@ -423,11 +430,14 @@ BOOL hb_fsDirExists( const char * pszDirName )
    }
 #elif defined( HB_OS_WIN )
    {
-      DWORD   dwAttr;
+      LPTSTR lpDirName = HB_TCHAR_CONVTO( pszDirName );
+      DWORD dwAttr;
 
-      dwAttr = GetFileAttributesA( pszDirName );
+      dwAttr = GetFileAttributes( ( LPCTSTR ) lpDirName );
       fExist = ( dwAttr != INVALID_FILE_ATTRIBUTES ) &&
                ( dwAttr & FILE_ATTRIBUTE_DIRECTORY );
+
+      HB_TCHAR_FREE( lpDirName );
    }
 #elif defined( HB_OS_OS2 )
    {

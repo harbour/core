@@ -102,7 +102,13 @@ HB_FUNC( HB_LIBLOAD )
          /* use stack address as first level marker */
          hb_vmBeginSymbolGroup( ( void * ) hb_stackId(), TRUE );
 #if defined( HB_OS_WIN )
-         hDynLib = ( void * ) LoadLibraryA( hb_parc( 1 ) );
+         {
+            LPTSTR lpFileName = HB_TCHAR_CONVTO( hb_parc( 1 ) );
+
+            hDynLib = ( void * ) LoadLibraryA( lpFileName );
+
+            HB_TCHAR_FREE( lpFileName );
+         }
 #elif defined( HB_OS_OS2 )
          {
             UCHAR LoadError[ 256 ] = "";  /* Area for load failure information */
