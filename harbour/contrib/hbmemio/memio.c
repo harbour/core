@@ -259,7 +259,7 @@ HB_MEMFS_EXPORT BOOL hb_memfsDelete( const char * szName )
    ULONG            ulFile;
 
    HB_MEMFSMT_LOCK
-   if( ( ulFile = memfsInodeFind( szName, NULL ) ) != 0 )
+   if( ( ulFile = memfsInodeFind( szName, NULL ) ) == 0 )
    {
       HB_MEMFSMT_UNLOCK
       return 0;
