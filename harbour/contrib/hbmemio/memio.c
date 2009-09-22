@@ -58,6 +58,7 @@
 #include "hbapifs.h"
 #include "hbapierr.h"
 #include "hbthread.h"
+#include "hbvm.h"
 #include "hbinit.h"
 
 /******************************************************
@@ -124,6 +125,22 @@ static HB_CRITICAL_NEW( s_mtx );
 #define HB_MEMFSMT_LOCK        hb_threadEnterCriticalSection( &s_mtx );
 #define HB_MEMFSMT_UNLOCK      hb_threadLeaveCriticalSection( &s_mtx );
 
+static void memfsInodeFree( PHB_MEMFS_INODE pInode );
+
+
+static void memfsExit( void * cargo )
+{
+   ULONG  ul;
+
+   HB_SYMBOL_UNUSED( cargo );
+
+   for( ul = 0; ul < s_fs.ulCount; ul++ )
+   {
+      memfsInodeFree( s_fs.pInodes[ ul ] );
+   }
+   hb_xfree( s_fs.pInodes );
+}
+
 
 static void memfsInit( void )
 {
@@ -132,6 +149,7 @@ static void memfsInit( void )
    s_fs.ulCount = 0;
    s_fs.ulAlloc = HB_MEMFS_INITSIZE;
    s_fs.pInodes = ( PHB_MEMFS_INODE * ) hb_xgrab( sizeof( PHB_MEMFS_INODE ) * s_fs.ulAlloc );
+   hb_vmAtExit( memfsExit, NULL );
 }
 
 
@@ -167,7 +185,7 @@ static PHB_MEMFS_INODE memfsInodeAlloc( const char* szName )
 
    pInode->llSize = 0;
    pInode->llAlloc = HB_MEMFS_INITSIZE;
-   pInode->pData = ( char * ) hb_xgrab( pInode->llAlloc );
+   pInode->pData = ( char * ) hb_xgrab( ( ULONG ) pInode->llAlloc );
    memset( pInode->pData, 0, pInode->llAlloc );
    pInode->szName = hb_strdup( szName );
 
@@ -416,7 +434,7 @@ HB_MEMFS_EXPORT ULONG hb_memfsReadAt( HB_FHANDLE pFile, void * pBuff, ULONG ulCo
    if( pInode->llSize >= llOffset + ulCount )
       ulRead = ulCount;
    else
-      ulRead = pInode->llSize - llOffset;
+      ulRead = ( ULONG ) ( pInode->llSize - llOffset );
 
    memcpy( pBuff, pInode->pData + ( ULONG ) llOffset, ulRead );
    HB_MEMFSMT_UNLOCK
@@ -445,7 +463,7 @@ HB_MEMFS_EXPORT ULONG hb_memfsWriteAt( HB_FHANDLE pFile, const void * pBuff, ULO
       if( llNewAlloc < llOffset + ulCount )
          llNewAlloc = llOffset + ulCount;
 
-      pInode->pData = ( char * ) hb_xrealloc( pInode->pData, llNewAlloc );
+      pInode->pData = ( char * ) hb_xrealloc( pInode->pData, ( ULONG ) llNewAlloc );
       memset( pInode->pData + ( ULONG ) pInode->llAlloc, 0, llNewAlloc - pInode->llAlloc );
       pInode->llAlloc = llNewAlloc;
    }
@@ -494,14 +512,14 @@ HB_MEMFS_EXPORT BOOL hb_memfsTruncAt( HB_FHANDLE pFile, HB_FOFFSET llOffset )
       if( llNewAlloc < llOffset )
          llNewAlloc = llOffset;
 
-      pInode->pData = ( char * ) hb_xrealloc( pInode->pData, llNewAlloc );
+      pInode->pData = ( char * ) hb_xrealloc( pInode->pData, ( ULONG ) llNewAlloc );
       memset( pInode->pData + ( ULONG ) pInode->llAlloc, 0, llNewAlloc - pInode->llAlloc );
       pInode->llAlloc = llNewAlloc;
    }
    else if( ( pInode->llAlloc >> 2 ) > ( llOffset > HB_MEMFS_INITSIZE ? llOffset : HB_MEMFS_INITSIZE ) )
    {
       llNewAlloc = ( llOffset > HB_MEMFS_INITSIZE ? llOffset : HB_MEMFS_INITSIZE );
-      pInode->pData = ( char * ) hb_xrealloc( pInode->pData, llNewAlloc );
+      pInode->pData = ( char * ) hb_xrealloc( pInode->pData, ( ULONG ) llNewAlloc );
    }
    pInode->llSize = llOffset;
    HB_MEMFSMT_UNLOCK
