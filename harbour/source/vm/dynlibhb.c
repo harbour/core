@@ -105,7 +105,7 @@ HB_FUNC( HB_LIBLOAD )
          {
             LPTSTR lpFileName = HB_TCHAR_CONVTO( hb_parc( 1 ) );
 
-            hDynLib = ( void * ) LoadLibrary( lpFileName );
+            hDynLib = ( void * ) LoadLibrary( ( LPCTSTR ) lpFileName );
 
             HB_TCHAR_FREE( lpFileName );
          }

@@ -2,7 +2,7 @@
  * $Id$
  */
 
-REQUEST HB_IODMEM
+REQUEST HB_MEMIO
 
 PROC Main()
    LOCAL nI

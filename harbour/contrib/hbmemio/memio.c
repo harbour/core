@@ -737,10 +737,10 @@ static PHB_FILE s_fileNew( HB_FHANDLE hFile )
 }
 
 
-HB_FUNC( HB_IODMEM ) {;}
+HB_FUNC( HB_MEMIO ) {;}
 
 HB_INIT_SYMBOLS_BEGIN( iodmem__InitSymbols )
-{ "HB_IODMEM",   {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( HB_IODMEM )}, NULL }
+{ "HB_MEMIO",   {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( HB_MEMIO )}, NULL }
 HB_INIT_SYMBOLS_END( iodmem__InitSymbols )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_file_io_init_ )
