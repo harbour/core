@@ -1370,7 +1370,7 @@ ifeq ($(HB_INIT_DONE),)
          HB_DYNLIB_BASE_MT := harbourm
          HB_DYNLIB_ST := $(HB_DYNLIB_BASE_ST)
          HB_DYNLIB_MT := $(HB_DYNLIB_BASE_MT)
-      ifeq ($(HB_PLATFORM),os2)
+      else ifeq ($(HB_PLATFORM),os2)
          HB_DYNLIB_BASE_ST := harbour
          HB_DYNLIB_BASE_MT := harbourm
          HB_DYNLIB_ST := $(HB_DYNLIB_BASE_ST)
