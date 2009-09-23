@@ -1257,6 +1257,7 @@ static void hb_nsxDiscardBuffers( LPNSXINDEX pIndex )
    {
       pIndex->lpTags[ i ]->RootBlock = 0;
       pIndex->lpTags[ i ]->stackLevel = 0;
+      pIndex->lpTags[ i ]->CurKeyOffset = 0;
    }
 }
 
@@ -2106,13 +2107,12 @@ static HB_ERRCODE hb_nsxIndexHeaderRead( LPNSXINDEX pIndex )
          pIndex->Version = ulVersion;
          pIndex->NextAvail = ulNext;
          pIndex->FileSize = ulFileSize;
-         for( i = 1; i < pIndex->iTags; i++ )
+         for( i = 0; i < pIndex->iTags; i++ )
          {
             pIndex->lpTags[ i ]->HeadBlock =
                hb_nsxIndexTagFind( &pIndex->HeaderBuff, pIndex->lpTags[ i ]->TagName );
             if( !pIndex->lpTags[ i ]->HeadBlock )
                pIndex->lpTags[ i ]->RootBlock = 0;
-            pIndex->lpTags[ i ]->CurKeyOffset = 0;
          }
       }
    }
@@ -3096,6 +3096,8 @@ static BOOL hb_nsxTagInsertKey( LPTAGINFO pTag, LPPAGEINFO pPage,
          if( ! pPage )
          {
             hb_xfree( pKeyBuff );
+            pTag->CurKeyOffset = 0;
+            pTag->stackLevel = 0;
             return FALSE;
          }
          pNewKey = hb_nsxKeyNew( iLen );
@@ -3128,6 +3130,7 @@ static BOOL hb_nsxTagInsertKey( LPTAGINFO pTag, LPPAGEINFO pPage,
          if( ! pPage )
          {
             hb_nsxKeyFree( pNewKey );
+            pTag->CurKeyOffset = 0;
             pTag->stackLevel = 0;
             return FALSE;
          }
@@ -3156,6 +3159,7 @@ static BOOL hb_nsxTagInsertKey( LPTAGINFO pTag, LPPAGEINFO pPage,
          if( ! pPage )
          {
             hb_nsxKeyFree( pNewKey );
+            pTag->CurKeyOffset = 0;
             pTag->stackLevel = 0;
             return FALSE;
          }
@@ -3165,11 +3169,13 @@ static BOOL hb_nsxTagInsertKey( LPTAGINFO pTag, LPPAGEINFO pPage,
          hb_nsxPageKeyAdd( pTag, pPage, 0, pNewKey );
          pTag->RootBlock = pPage->Page;
          pTag->HdrChanged = TRUE;
+         pTag->CurKeyOffset = 0;
          pTag->stackLevel = 0;
          hb_nsxKeyFree( pNewKey );
       }
    }
    hb_nsxPageRelease( pTag, pPage );
+   pTag->CurKeyOffset = 0;
    pTag->stackLevel = 0;
    return TRUE;
 }
@@ -3412,6 +3418,7 @@ static BOOL hb_nsxTagKeyDel( LPTAGINFO pTag, LPKEYINFO pKey )
          hb_nsxKeyFree( pKeyNew );
       }
    }
+   pTag->CurKeyOffset = 0;
    pTag->stackLevel = 0;
    return fResult;
 }
@@ -5680,6 +5687,7 @@ static void hb_nsxSortOut( LPNSXSORTINFO pSort )
             return;
          pSort->ulLastRec = pTag->CurKeyInfo->rec;
          memcpy( pSort->pLastKey, pTag->CurKeyInfo->val, iLen );
+         pTag->CurKeyOffset = 0;
          pTag->stackLevel = 0;
       }
 

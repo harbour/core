@@ -383,9 +383,9 @@ extern const BYTE    hb_comp_pcode_len[];
 #define HB_COMPFLAG_ARRSTR       HB_SM_ARRSTR      /* 16 -ks strings as array of bytes */
 #define HB_COMPFLAG_EXTOPT       HB_SM_EXTOPT      /* 32 -ko clipper incompatible optimizations */
 #define HB_COMPFLAG_RT_MACRO     HB_SM_RT_MACRO    /* 64 -kr */
-#define HB_COMPFLAG_OPTJUMP      256               /* -kj turn off jump optimalization */
-#define HB_COMPFLAG_HB_INLINE    512               /* -ki hb_inLine(...) { ... } support */
-#define HB_COMPFLAG_MACROTEXT    1024              /* -kM turn off macrotext substitution */
+#define HB_COMPFLAG_OPTJUMP      0x0100            /* -kj turn off jump optimalization */
+#define HB_COMPFLAG_HB_INLINE    0x0200            /* -ki hb_inLine(...) { ... } support */
+#define HB_COMPFLAG_MACROTEXT    0x0400            /* -kM turn off macrotext substitution */
 
 #define HB_COMP_ISSUPPORTED(flag)   ( HB_COMP_PARAM->supported & (flag) )
 
