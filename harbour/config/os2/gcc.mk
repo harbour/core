@@ -92,13 +92,14 @@ endef
 define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(if $(wildcard __dyn__.def),@$(RM) __dyn__.def,)
-   @$(ECHO) LIBRARY $@ INITINSTANCE TERMINSTANCE >> __dyn__.def
+   @$(ECHO) LIBRARY $(DYNNAME) INITINSTANCE TERMINSTANCE >> __dyn__.def
    @$(ECHO) PROTMODE >> __dyn__.def
    @$(ECHO) CODE PRELOAD MOVEABLE DISCARDABLE >> __dyn__.def
    @$(ECHO) DATA PRELOAD MOVEABLE MULTIPLE NONSHARED >> __dyn__.def
    @$(ECHO) EXPORTS >> __dyn__.def
    $(foreach file,$^,$(dyn_object))
    $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ @__dyn__.tmp __dyn__.def $(DLIBS) $(DYSTRIP)
+   emximp -o $(IMP_FILE) $(DYN_DIR)/$@
 endef
 
 DY_RULE = $(create_dynlib)

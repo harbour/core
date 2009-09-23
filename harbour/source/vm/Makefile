@@ -49,7 +49,7 @@ else
    else
       ifeq ($(HB_PLATFORM),os2)
          C_MAIN := mainstd.c
-         DIRS := maindllh
+         DIRS := mainstd maindllh
       else
          C_MAIN := main.c
       endif
