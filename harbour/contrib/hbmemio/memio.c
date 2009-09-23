@@ -149,7 +149,7 @@ static void memfsInit( void )
    s_fs.ulCount = 0;
    s_fs.ulAlloc = HB_MEMFS_INITSIZE;
    s_fs.pInodes = ( PHB_MEMFS_INODE * ) hb_xgrab( sizeof( PHB_MEMFS_INODE ) * s_fs.ulAlloc );
-   hb_vmAtExit( memfsExit, NULL );
+   hb_vmAtQuit( memfsExit, NULL );
 }
 
 
