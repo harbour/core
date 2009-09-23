@@ -18,10 +18,10 @@
 # --with fbsql       - build hbfbird lib and sddfb for sqlrdd
 # --with odbc        - build hbodbc lib and sddodbc for sqlrdd
 # --with gd          - build hbgd lib
-# --with allegro     - build GTALLEG - Allegro based GT driver
 # --with ads         - build rddads RDD
 # --with curl        - build hbcurl lib
-# --with libharu     - build hbhpdf lib
+# --with localzlib   - build local copy of zlib library
+# --with localpcre   - build local copy of pcre library
 # --without nf       - do not build nanforum lib
 # --without gpllib   - do not build libs which needs GPL 3-rd party code
 # --without x11      - do not build GTXWC
@@ -77,13 +77,13 @@
 %define hb_crs   export HB_WITH_CURSES=%{!?_without_gtcrs:yes}%{?_without_gtcrs:no}
 %define hb_sln   export HB_WITH_SLANG=%{!?_without_gtsln:yes}%{?_without_gtsln:no}
 %define hb_x11   export HB_WITH_X11=%{!?_without_x11:yes}%{?_without_x11:no}
+%define hb_local export HB_WITH_ZLIB=%{?_with_localzlib:local} ; HB_WITH_PCRE=%{?_with_localpcre:local}
 %define hb_bdir  export HB_BIN_INSTALL=%{_bindir}
 %define hb_idir  export HB_INC_INSTALL=%{_includedir}/%{name}
 %define hb_ldir  export HB_LIB_INSTALL=%{_libdir}/%{name}
 %define hb_cmrc  export HB_COMMERCE=%{?_without_gpllib:yes}
-%define hb_ctrb  export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbtpathy hbhpdf hbvpdf hbziparc xhb rddsql %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_libharu:hbhpdf} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_fbsql:hbfbird} %{?_with_allegro:gtalleg}"
-%define hb_extrn export HB_EXTERNALLIBS=no
-%define hb_env   %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_ctrb} ; %{hb_extrn} ; %{hb_cmrc}
+%define hb_ctrb  export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbtpathy hbhpdf hbziparc xhb rddsql %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_fbsql:hbfbird} %{?_with_allegro:gtalleg}"
+%define hb_env   %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_ctrb} ; %{hb_cmrc}
 %define hb_host  www.harbour-project.org
 %define readme   README.RPM
 ######################################################################
@@ -275,21 +275,6 @@ statikus szerkesztéshez.
 %{?_with_curl:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
 %{?_with_curl:Ten pakiet udostêpnia statyczn+ biliotekê CURL dla kompilatora %{dname}.}
 
-## libharu library
-%{?_with_libharu:%package libharu}
-%{?_with_libharu:Summary:        hbhpdf libarary for %{dname} compiler}
-%{?_with_libharu:Summary(pl):    Bilioteka hbhpdf dla kompilatora %{dname}}
-%{?_with_libharu:Group:          Development/Languages}
-%{?_with_libharu:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
-
-%{?_with_libharu:%description libharu}
-%{?_with_libharu:%{dname} is a Clipper compatible compiler.}
-%{?_with_libharu:This package provides %{dname} hbhpdf library for program linking.}
-
-%{?_with_libharu:%description -l pl libharu}
-%{?_with_libharu:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_libharu:Ten pakiet udostêpnia statyczn+ biliotekê hbhpdf dla kompilatora %{dname}.}
-
 ## ADS RDD
 %{?_with_ads:%package ads}
 %{?_with_ads:Summary:        ADS RDDs for %{dname} compiler}
@@ -379,6 +364,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %build
 %{hb_env}
+export HB_BUILD_STRIP=all
+export HB_BUILD_SHARED=%{!?_with_static:yes}
 
 make %{?_smp_mflags}
 
@@ -401,15 +388,14 @@ export HB_LIB_INSTALL=$RPM_BUILD_ROOT/$HB_LIB_INSTALL
 export HB_BUILD_STRIP=all
 export HB_BUILD_SHARED=%{!?_with_static:yes}
 
-mkdir -p $HB_BIN_INSTALL
-mkdir -p $HB_INC_INSTALL
-mkdir -p $HB_LIB_INSTALL
-
 make install %{?_smp_mflags}
 
 [ "%{?_with_allegro:1}" ]  || rm -f $HB_LIB_INSTALL/libgtalleg.a
 [ "%{?_without_gtcrs:1}" ] && rm -f $HB_LIB_INSTALL/libgtcrs.a
 [ "%{?_without_gtsln:1}" ] && rm -f $HB_LIB_INSTALL/libgtsln.a
+rm -f $HB_LIB_INSTALL/liblibhpdf.a
+rm -f $HB_LIB_INSTALL/liblibpng.a
+rm -f $HB_LIB_INSTALL/libsqlite3.a
 
 mkdir -p $RPM_BUILD_ROOT%{_mandir}/man1
 install -m644 doc/man/*.1* $RPM_BUILD_ROOT%{_mandir}/man1/
@@ -608,8 +594,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libgt*.a
 %{_libdir}/%{name}/libhblang.a
 %{_libdir}/%{name}/libhbmacro.a
-%{_libdir}/%{name}/libhbpcre.a
-%{_libdir}/%{name}/libhbzlib.a
 %{_libdir}/%{name}/libhbextern.a
 %{_libdir}/%{name}/libhbnulrdd.a
 %{_libdir}/%{name}/libhbnortl.a
@@ -622,6 +606,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbvmmt.a
 %{_libdir}/%{name}/libhbusrrdd.a
 %{_libdir}/%{name}/libhbuddall.a
+%{?_with_localzlib:%{_libdir}/%{name}/libhbzlib.a}
+%{?_with_localpcre:%{_libdir}/%{name}/libhbpcre.a}
 
 %files contrib
 %defattr(644,root,root,755)
@@ -634,7 +620,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbct.a
 %{_libdir}/%{name}/libhbtip*.a
 %{_libdir}/%{name}/libxhb.a
-%{_libdir}/%{name}/libhbvpdf.a
 %{_libdir}/%{name}/libhbhpdf.a
 %{_libdir}/%{name}/libhbgt.a
 %{_libdir}/%{name}/libhbbmcdx.a
@@ -653,11 +638,6 @@ rm -rf $RPM_BUILD_ROOT
 %{?_with_curl:%defattr(644,root,root,755)}
 %{?_with_curl:%dir %{_libdir}/%{name}}
 %{?_with_curl:%{_libdir}/%{name}/libhbcurl.a}
-
-%{?_with_libharu:%files libharu}
-%{?_with_libharu:%defattr(644,root,root,755)}
-%{?_with_libharu:%dir %{_libdir}/%{name}}
-%{?_with_libharu:%{_libdir}/%{name}/libhbhpdf.a}
 
 %{?_with_ads:%files ads}
 %{?_with_ads:%defattr(644,root,root,755)}

@@ -21,6 +21,8 @@
 # --with ads         - build rddads RDD
 # --with gd          - build hbgd lib
 # --with allegro     - build GTALLEG - Allegro based GT driver
+# --with localzlib   - build local copy of zlib library
+# --with localpcre   - build local copy of pcre library
 # --without gpllib   - do not build libs which needs GPL 3-rd party code
 # --without nf       - do not build hbnf lib (nanforum lib)
 # --without x11      - do not build GTXWC
@@ -123,10 +125,6 @@ if [ -f /usr/local/ads/acesdk/ace.h ] || [ -f ${HOME}/ads/acesdk/ace.h ]
 then
     INST_PARAM="${INST_PARAM} --with ads"
 fi
-if [ -f /usr/include/hpdf.h ] || [ -f /usr/local/include/hpdf.h ]
-then
-    INST_PARAM="${INST_PARAM} --with libharu"
-fi
 if [ "${HB_COMMERCE}" = "yes" ]
 then
     INST_PARAM="${INST_PARAM} --without gpllib"
@@ -146,6 +144,14 @@ fi
 if ! test_reqrpm slang || ! test_reqrpm slang-devel
 then
     INST_PARAM="${INST_PARAM} --without gtsln"
+fi
+if [ ! -f /usr/include/zlib.h ] && [ ! -f /usr/local/include/zlib.h ]
+then
+    INST_PARAM="${INST_PARAM} --with localzlib"
+fi
+if [ ! -f /usr/include/pcre.h ] && [ ! -f /usr/local/include/pcre.h ]
+then
+    INST_PARAM="${INST_PARAM} --with localpcre"
 fi
 
 TOINST_LST=""

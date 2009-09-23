@@ -524,6 +524,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
       if( ffind->attrmask & HB_FA_LABEL )
       {
+#if !defined( HB_OS_WIN_CE )
          if( ffind->bFirst )
          {
             LPTSTR lpFileMask = HB_TCHAR_CONVTO( ffind->pszFileMask );
@@ -537,6 +538,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             HB_TCHAR_FREE( lpFileMask );
             HB_TCHAR_GETFROM( ffind->szName, szName, sizeof( ffind->szName ) - 1 );
          }
+#endif
       }
       else
       {
