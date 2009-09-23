@@ -190,6 +190,8 @@ static PHB_MEMFS_INODE memfsInodeAlloc( const char* szName )
    pInode->szName = hb_strdup( szName );
 
    pInode->uiCount = 1;
+   pInode->uiCountRead = pInode->uiCountWrite = 0;
+   pInode->uiDeny = 0;
 
    /* Insert into inode array. Inode should not exist!!! */
    if( s_fs.ulCount >= s_fs.ulAlloc )
