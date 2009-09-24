@@ -306,7 +306,7 @@ HB_MEMFS_EXPORT BOOL hb_memfsRename( const char * szName, const char * szNewName
 
 HB_MEMFS_EXPORT HB_FHANDLE hb_memfsOpen( const char * szName, USHORT uiFlags )
 {
-   PHB_MEMFS_FILE  pFile;
+   PHB_MEMFS_FILE  pFile = NULL;
    ULONG           ulPos;
    USHORT          uiError = 0;
 
@@ -381,7 +381,7 @@ HB_MEMFS_EXPORT HB_FHANDLE hb_memfsOpen( const char * szName, USHORT uiFlags )
    }
 
    s_error = uiError;
-   if( uiError )
+   if( !pFile )
    {
       HB_MEMFSMT_UNLOCK
       return FS_ERROR;
