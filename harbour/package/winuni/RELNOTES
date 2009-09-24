@@ -43,7 +43,7 @@ Tool/lib versions used to create this package:
 
    MinGW 4.4.1 (included)
    MinGW w64 4.5.0
-   MinGW CEGCC 4.1.0
+   MinGW CEGCC 4.4.0
    DJGPP 4.4.1 (2.04b1)
    MSVC 2008 SP1
    Open Watcom C++ 1.8
@@ -64,6 +64,11 @@ Tool/lib versions used to create this package:
    PostgreSQL 8.3.7
    QT 4.5.2
    WATTCG 2.2.10
+
+Changes since previous (2.0.0beta3 20090905) release:
+-----------------------------------------------------------------------
+
+- MinGW CEGCC updated to 4.4.0
 
 Changes since previous (2.0.0beta2 20090624) release:
 -----------------------------------------------------------------------

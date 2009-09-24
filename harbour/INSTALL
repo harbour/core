@@ -550,6 +550,8 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
                                libraries. Build all if left empty.
    - HB_EXTERNAL_ADDONS=<list> Build space separated <list> of additional
                                libraries stored in the external directory.
+   - HB_UTIL_ADDONS=<list>     Build space separated <list> of additional
+                               utilities stored in the utils directoty.
    - HB_VISUALC_VER_PRE80=yes  Set this if you're using a pre-8.0
                                (= pre-MSVS 2005) version of MSVC compiler.
                                Default: no
