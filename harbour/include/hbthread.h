@@ -157,7 +157,6 @@ HB_EXTERN_BEGIN
 #        define HB_CRITICAL_NEED_INIT
 #     endif
 #     define HB_CRITICAL_GET(v)        ( &( (v)->critical ) )
-#     define HB_CRITICAL_INITVAL       { }
 #  endif
 
 #  if defined( PTHREAD_COND_INITIALIZER ) && !defined( HB_COND_NEED_INIT )
@@ -170,7 +169,6 @@ HB_EXTERN_BEGIN
 #        define HB_COND_NEED_INIT
 #     endif
 #     define HB_COND_GET(v)            ( &( (v)->cond ) )
-#     define HB_COND_INITVAL           { }
 #  endif
 
 #elif defined( HB_OS_WIN )
@@ -198,12 +196,6 @@ HB_EXTERN_BEGIN
 #  define HB_THREAD_RAWEND             return 0;
 
 #  define HB_THREAD_SELF()          GetCurrentThreadId()
-
-#  if defined( __GNUC__ )
-#     define HB_CRITICAL_INITVAL    { 0, 0, 0, 0, 0, 0 }
-#  else
-#     define HB_CRITICAL_INITVAL    { 0 }
-#  endif
 
 #  define HB_CRITICAL_INIT(v)       InitializeCriticalSection( &(v) )
 #  define HB_CRITICAL_DESTROY(v)    DeleteCriticalSection( &(v) )
@@ -236,7 +228,6 @@ HB_EXTERN_BEGIN
 #  define HB_THREAD_END                   _endthread(); return;
 #  define HB_THREAD_RAWEND                return;
 
-#  define HB_CRITICAL_INITVAL ( ( HMTX ) 0 )
 #  if defined( __GNUC__ )
 #     define HB_THREAD_SELF()    ( ( TID ) _gettid() )
 #  else
@@ -314,9 +305,13 @@ HB_EXTERN_BEGIN
    typedef struct
    {
       BOOL  fInit;
-      HB_RAWCRITICAL_T  critical;
+      union
+      {
+         int               dummy;
+         HB_RAWCRITICAL_T  critical;
+      };
    } HB_CRITICAL_T;
-#  define HB_CRITICAL_NEW( name )   HB_CRITICAL_T name = { FALSE, HB_CRITICAL_INITVAL }
+#  define HB_CRITICAL_NEW( name )   HB_CRITICAL_T name = { FALSE, { 0 } }
 #endif /* HB_CRITICAL_NEED_INIT */
 
 #ifdef HB_COND_NEED_INIT
@@ -324,18 +319,30 @@ HB_EXTERN_BEGIN
       typedef struct
       {
          BOOL           fInit;
-         HB_RAWCOND_T   cond;
+         union
+         {
+            int            dummy;
+            HB_RAWCOND_T   cond;
+         };
       } HB_COND_T;
-#     define HB_COND_NEW( name )       HB_COND_T name = { FALSE, HB_COND_INITVAL }
+#     define HB_COND_NEW( name )       HB_COND_T name = { FALSE, { 0 } }
 #  else
       typedef struct
       {
          BOOL              fInit;
          int               waiters;
-         HB_RAWCOND_T      cond;
-         HB_RAWCRITICAL_T  critical;
+         union
+         {
+            int               dummycond;
+            HB_RAWCOND_T      cond;
+         };
+         union
+         {
+            int               dummy;
+            HB_RAWCRITICAL_T  critical;
+         };
       } HB_COND_T;
-#     define HB_COND_NEW( name )       HB_COND_T name = { FALSE, 0, HB_COND_INITVAL, HB_CRITICAL_INITVAL }
+#     define HB_COND_NEW( name )       HB_COND_T name = { FALSE, 0, { 0 }, { 0 } }
 #  endif
 #endif /* HB_COND_NEED_INIT */
 
