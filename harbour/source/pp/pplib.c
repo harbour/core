@@ -155,7 +155,7 @@ PHB_PP_STATE hb_pp_Param( int iParam )
 
 /*
  * initialize new PP context and return pointer to it.
- * __PP_INIT( [<cIncludePath>] [, <cStdChFile> ] )
+ * __PP_INIT( [<cIncludePath>], [<cStdChFile> ] [, <lArchDefs>] )
  * when <cStdChFile> is empty string ("") then no default rules are used
  * only the dynamically created #defines like __HARBOUR__, __DATE__, __TIME__
  */
@@ -166,6 +166,7 @@ HB_FUNC( __PP_INIT )
    if( pState )
    {
       const char * szPath = hb_parc( 1 ), * szStdCh = hb_parc( 2 );
+      BOOL fArchDefs = !ISLOG( 3 ) || hb_parl( 3 );
       PHB_ITEM ppItem;
 
       pStatePtr = ( PHB_PP_STATE * ) hb_gcAlloc( sizeof( PHB_PP_STATE ),
@@ -185,7 +186,7 @@ HB_FUNC( __PP_INIT )
       else if( *szStdCh )
          hb_pp_readRules( pState, szStdCh );
 
-      hb_pp_initDynDefines( pState );
+      hb_pp_initDynDefines( pState, fArchDefs );
       hb_pp_setStdBase( pState );
 
       hb_itemReturnRelease( ppItem );

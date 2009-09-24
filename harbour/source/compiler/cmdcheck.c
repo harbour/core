@@ -551,12 +551,23 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
 
             case 'u':
             case 'U':
-               if( s[1] && ( s[1] == 'N' || s[1] == 'n' ) &&
-                   s[2] && ( s[2] == 'D' || s[2] == 'd' ) &&
-                   s[3] && ( s[3] == 'E' || s[3] == 'e' ) &&
-                   s[4] && ( s[4] == 'F' || s[4] == 'f' ) && s[5] == ':' )
+               if( ( s[1] == 'N' || s[1] == 'n' ) &&
+                   ( s[2] == 'D' || s[2] == 'd' ) &&
+                   ( s[3] == 'E' || s[3] == 'e' ) &&
+                   ( s[4] == 'F' || s[4] == 'f' ) && s[5] == ':' )
                {
-                  /* NOTE: Ignore these -undef: switches will be processed separately */
+                  /* NOTE: Ignore these -undef: switches (will be processed
+                   *       separately) except -undef:.arch.
+                   */
+                  if( s[6] == '.' &&
+                      (  s[7] == 'A' ||  s[7] == 'a' ) &&
+                      (  s[8] == 'R' ||  s[8] == 'r' ) &&
+                      (  s[9] == 'C' ||  s[9] == 'c' ) &&
+                      ( s[10] == 'H' || s[10] == 'h' ) &&
+                      s[11] == '.' )
+                  {
+                     HB_COMP_PARAM->fNoArchDefs = TRUE;
+                  }
                   break;
                }
                /* extended definitions file (-u+<file>) */
@@ -1090,7 +1101,10 @@ static void hb_compChkDefineSwitch( HB_COMP_DECL, const char *pszSwitch )
          szDefText[i] = '\0';
 
          if( szDefText[0] )
-            hb_pp_delDefine( HB_COMP_PARAM->pLex->pPP, szDefText );
+         {
+            if( hb_stricmp( szDefText, ".ARCH." ) == 0 )
+               hb_pp_delDefine( HB_COMP_PARAM->pLex->pPP, szDefText );
+         }
          hb_xfree( szDefText );
       }
    }

@@ -5327,7 +5327,7 @@ void hb_pp_setStdBase( PHB_PP_STATE pState )
 /*
  * initialize dynamic definitions
  */
-void hb_pp_initDynDefines( PHB_PP_STATE pState )
+void hb_pp_initDynDefines( PHB_PP_STATE pState, BOOL fArchDefs )
 {
    char szDefine[ 65 ];
    char szResult[ 65 ];
@@ -5335,36 +5335,56 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState )
    int iYear, iMonth, iDay, i;
    long lDate, lTime;
 
-   /* __PLATFORM__* */
-   pSrc = szPlatform = hb_verPlatform();
-   pDst = hb_strncpy( szDefine, "__PLATFORM__", sizeof( szDefine ) - 1 );
-   i = 12;
-   while( pSrc[ 0 ] > ' ' && i < ( int ) sizeof( szDefine ) - 1 )
+   if( fArchDefs )
    {
-      if( HB_PP_ISNEXTIDCHAR( pSrc[ 0 ] ) )
-         pDst[ i++ ] = HB_PP_UPPER( pSrc[ 0 ] );
-      pSrc++;
-   }
-   pDst[ i ] = '\0';
+      /* __PLATFORM__* */
+      pSrc = szPlatform = hb_verPlatform();
+      pDst = hb_strncpy( szDefine, "__PLATFORM__", sizeof( szDefine ) - 1 );
+      i = 12;
+      while( pSrc[ 0 ] > ' ' && i < ( int ) sizeof( szDefine ) - 1 )
+      {
+         if( HB_PP_ISNEXTIDCHAR( pSrc[ 0 ] ) )
+            pDst[ i++ ] = HB_PP_UPPER( pSrc[ 0 ] );
+         pSrc++;
+      }
+      pDst[ i ] = '\0';
 
-   i = 0;
-   pDst = szResult;
-   pDst[ i++ ] = '"';
-   if( pSrc[ 0 ] == ' ' )
-   {
-      while( *( ++pSrc ) && i < ( int ) sizeof( szResult ) - 2 )
-         pDst[ i++ ] = pSrc[ 0 ];
-   }
-   pDst[ i++ ] = '"';
-   pDst[ i ] = '\0';
+      i = 0;
+      pDst = szResult;
+      pDst[ i++ ] = '"';
+      if( pSrc[ 0 ] == ' ' )
+      {
+         while( *( ++pSrc ) && i < ( int ) sizeof( szResult ) - 2 )
+            pDst[ i++ ] = pSrc[ 0 ];
+      }
+      pDst[ i++ ] = '"';
+      pDst[ i ] = '\0';
 
-   hb_xfree( szPlatform );
+      hb_xfree( szPlatform );
 
-   hb_pp_addDefine( pState, szDefine, szResult );
+      hb_pp_addDefine( pState, szDefine, szResult );
 #if defined( HB_OS_UNIX )
-   hb_strncpy( szDefine + 12, "UNIX", sizeof( szDefine ) - 13 );
-   hb_pp_addDefine( pState, szDefine, szResult );
+      hb_strncpy( szDefine + 12, "UNIX", sizeof( szDefine ) - 13 );
+      hb_pp_addDefine( pState, szDefine, szResult );
 #endif
+
+      hb_snprintf( szResult, sizeof( szResult ), "%d", ( int ) sizeof( void * ) );
+#if defined( HB_ARCH_16BIT )
+      hb_pp_addDefine( pState, "__ARCH16BIT__", szResult );
+#elif defined( HB_ARCH_32BIT )
+      hb_pp_addDefine( pState, "__ARCH32BIT__", szResult );
+#elif defined( HB_ARCH_64BIT )
+      hb_pp_addDefine( pState, "__ARCH64BIT__", szResult );
+#endif
+
+#if defined( HB_LITTLE_ENDIAN )
+      hb_pp_addDefine( pState, "__LITTLE_ENDIAN__", szResult );
+#elif defined( HB_BIG_ENDIAN )
+      hb_pp_addDefine( pState, "__BIG_ENDIAN__", szResult );
+#elif defined( HB_PDP_ENDIAN )
+      hb_pp_addDefine( pState, "__PDP_ENDIAN__", szResult );
+#endif
+   }
 
 #if defined( __HARBOUR__ )
    hb_snprintf( szResult, sizeof( szResult ), "0x%02X%02X%02X", HB_VER_MAJOR & 0xFF, HB_VER_MINOR & 0xFF, HB_VER_RELEASE & 0xFF );
@@ -5398,23 +5418,6 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState )
 
    hb_pp_addDefine( pState, "__FILE__", &s_pp_dynamicResult );
    hb_pp_addDefine( pState, "__LINE__", &s_pp_dynamicResult );
-
-   hb_snprintf( szResult, sizeof( szResult ), "%d", ( int ) sizeof( void * ) );
-#if defined( HB_ARCH_16BIT )
-   hb_pp_addDefine( pState, "__ARCH16BIT__", szResult );
-#elif defined( HB_ARCH_32BIT )
-   hb_pp_addDefine( pState, "__ARCH32BIT__", szResult );
-#elif defined( HB_ARCH_64BIT )
-   hb_pp_addDefine( pState, "__ARCH64BIT__", szResult );
-#endif
-
-#if defined( HB_LITTLE_ENDIAN )
-   hb_pp_addDefine( pState, "__LITTLE_ENDIAN__", szResult );
-#elif defined( HB_BIG_ENDIAN )
-   hb_pp_addDefine( pState, "__BIG_ENDIAN__", szResult );
-#elif defined( HB_PDP_ENDIAN )
-   hb_pp_addDefine( pState, "__PDP_ENDIAN__", szResult );
-#endif
 
 #ifdef HB_START_PROCEDURE
    hb_pp_addDefine( pState, "__HB_MAIN__", HB_START_PROCEDURE );

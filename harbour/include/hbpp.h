@@ -645,7 +645,7 @@ extern void   hb_pp_init( PHB_PP_STATE pState, BOOL fQuiet,
                   PHB_PP_ERROR_FUNC pErrorFunc, PHB_PP_DISP_FUNC  pDispFunc,
                   PHB_PP_DUMP_FUNC  pDumpFunc, PHB_PP_INLINE_FUNC pInLineFunc,
                   PHB_PP_SWITCH_FUNC pSwitchFunc );
-extern void   hb_pp_initDynDefines( PHB_PP_STATE pState );
+extern void   hb_pp_initDynDefines( PHB_PP_STATE pState, BOOL fArchDefs );
 extern void   hb_pp_readRules( PHB_PP_STATE pState, const char * szRulesFile );
 extern void   hb_pp_setStdRules( PHB_PP_STATE pState );
 extern void   hb_pp_setStdBase( PHB_PP_STATE pState );
