@@ -1058,12 +1058,10 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
          HB_PRGFLAGS += -undef:__PLATFORM__BEOS -undef:__PLATFORM__UNIX
       endif
       ifneq ($(HB_HOST_CPU),$(HB_CPU))
-         ifeq ($(HB_HOST_CPU),x86)
-            HB_PRGFLAGS += -undef:__ARCH32BIT__
-         else ifeq ($(HB_HOST_CPU),x86_64)
-            HB_PRGFLAGS += -undef:__ARCH64BIT__
-         else ifeq ($(HB_HOST_CPU),ia64)
-            HB_PRGFLAGS += -undef:__ARCH64BIT__
+         ifneq ($(filter $(HB_HOST_CPU),x86 arm),)
+            HB_PRGFLAGS += -D__ARCH32BIT__
+         else ifneq ($(filter $(HB_HOST_CPU),x86_64 ia64),)
+            HB_PRGFLAGS += -D__ARCH64BIT__
          endif
       endif
       ifeq ($(HB_PLATFORM),win)
@@ -1088,11 +1086,9 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
          HB_PRGFLAGS += -D__PLATFORM__BEOS -D__PLATFORM__UNIX
       endif
       ifneq ($(HB_HOST_CPU),$(HB_CPU))
-         ifeq ($(HB_CPU),x86)
+         ifneq ($(filter $(HB_CPU),x86 arm),)
             HB_PRGFLAGS += -D__ARCH32BIT__
-         else ifeq ($(HB_CPU),x86_64)
-            HB_PRGFLAGS += -D__ARCH64BIT__
-         else ifeq ($(HB_CPU),ia64)
+         else ifneq ($(filter $(HB_CPU),x86_64 ia64),)
             HB_PRGFLAGS += -D__ARCH64BIT__
          endif
       endif
