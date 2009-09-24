@@ -1036,34 +1036,7 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
    endif
    ifeq ($(HB_CROSS_BUILD),yes)
       # Setup platform macros (undefine host, define target)
-      ifeq ($(HB_HOST_PLAT),win)
-         HB_PRGFLAGS += -undef:__PLATFORM__WINDOWS
-         # We only need this to avoid problems with using Cygwin binaries as native ones.
-         HB_PRGFLAGS += -undef:__PLATFORM__UNIX
-      else ifeq ($(HB_HOST_PLAT),dos)
-         HB_PRGFLAGS += -undef:__PLATFORM__DOS
-      else ifeq ($(HB_HOST_PLAT),os2)
-         HB_PRGFLAGS += -undef:__PLATFORM__OS2
-      else ifeq ($(HB_HOST_PLAT),linux)
-         HB_PRGFLAGS += -undef:__PLATFORM__LINUX -undef:__PLATFORM__UNIX
-      else ifeq ($(HB_HOST_PLAT),darwin)
-         HB_PRGFLAGS += -undef:__PLATFORM__DARWIN -undef:__PLATFORM__UNIX
-      else ifeq ($(HB_HOST_PLAT),bsd)
-         HB_PRGFLAGS += -undef:__PLATFORM__BSD -undef:__PLATFORM__UNIX
-      else ifeq ($(HB_HOST_PLAT),sunos)
-         HB_PRGFLAGS += -undef:__PLATFORM__SUNOS -undef:__PLATFORM__UNIX
-      else ifeq ($(HB_HOST_PLAT),hpux)
-         HB_PRGFLAGS += -undef:__PLATFORM__HPUX -undef:__PLATFORM__UNIX
-      else ifeq ($(HB_HOST_PLAT),beos)
-         HB_PRGFLAGS += -undef:__PLATFORM__BEOS -undef:__PLATFORM__UNIX
-      endif
-      ifneq ($(HB_HOST_CPU),$(HB_CPU))
-         ifneq ($(filter $(HB_HOST_CPU),x86 arm),)
-            HB_PRGFLAGS += -D__ARCH32BIT__
-         else ifneq ($(filter $(HB_HOST_CPU),x86_64 ia64),)
-            HB_PRGFLAGS += -D__ARCH64BIT__
-         endif
-      endif
+      HB_PRGFLAGS += -undef:.ARCH.
       ifeq ($(HB_PLATFORM),win)
          HB_PRGFLAGS += -D__PLATFORM__WINDOWS
       else ifeq ($(HB_PLATFORM),wce)

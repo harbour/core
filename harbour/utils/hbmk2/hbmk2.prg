@@ -607,10 +607,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
    LOCAL cBin_Dyn
    LOCAL cPath_CompC
    LOCAL nErrorLevel := 0
-   LOCAL tmp, tmp1, tmp2, array
-#if defined( __PLATFORM__UNIX )
-   LOCAL tmp3
-#endif
+   LOCAL tmp, tmp1, tmp2, tmp3, array
    LOCAL cScriptFile
    LOCAL fhnd
    LOCAL cFile
@@ -1102,6 +1099,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
       #if defined( __PLATFORM__WINDOWS )
 
+         tmp3 := NIL; HB_SYMBOL_UNUSED( tmp3 )
+
          AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingw"    + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "win"  , "mingw"   , ""                    , NIL, NIL } )
          AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingw64"  + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "win"  , "mingw64" , "x86_64-w64-mingw32-" , NIL, NIL } )
          AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingwarm" + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "wce"  , "mingwarm", "arm-mingw32ce-"      , NIL, NIL } )
@@ -1118,6 +1117,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
       #elif defined( __PLATFORM__DOS )
 
+         tmp3 := NIL; HB_SYMBOL_UNUSED( tmp3 )
+
          AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "djgpp"    + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe"      ), tmp1, NIL ) }, "dos"  , "djgpp"   , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
          AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binw"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"   ), tmp1, NIL ) }, "dos"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
          AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binw"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"   ), tmp1, NIL ) }, "win"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
@@ -1125,6 +1126,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binw"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"   ), tmp1, NIL ) }, "linux", "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
 
       #elif defined( __PLATFORM__OS2 )
+
+         tmp3 := NIL; HB_SYMBOL_UNUSED( tmp3 )
 
          AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binp"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"   ), tmp1, NIL ) }, "os2"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
          AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binp"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"   ), tmp1, NIL ) }, "win"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
@@ -6065,11 +6068,11 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
       aUnd := {}
       aDef := {}
 
+      AAdd( aUnd, ".ARCH." )
+
+      IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
       #if   defined( __PLATFORM__WINDOWS )
-         AAdd( aUnd, "__PLATFORM__WINDOWS" )
-         IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
-            AAdd( aUnd, "__PLATFORM__Windows" )
-         ENDIF
+         AAdd( aUnd, "__PLATFORM__Windows" )
          #if defined( __PLATFORM__WINCE )
             AAdd( aUnd, "__PLATFORM__WINCE" )
          #endif
@@ -6082,10 +6085,7 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
       #elif defined( __PLATFORM__OS2 )
          AAdd( aUnd, "__PLATFORM__OS2" )
       #elif defined( __PLATFORM__LINUX )
-         IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
-            AAdd( aUnd, "__PLATFORM__Linux" )
-         ENDIF
-         AAdd( aUnd, "__PLATFORM__LINUX" )
+         AAdd( aUnd, "__PLATFORM__Linux" )
          AAdd( aUnd, "__PLATFORM__UNIX" )
       #elif defined( __PLATFORM__DARWIN )
          AAdd( aUnd, "__PLATFORM__DARWIN" )
@@ -6098,9 +6098,6 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
          AAdd( aUnd, "__PLATFORM__UNIX" )
       #elif defined( __PLATFORM__HPUX )
          AAdd( aUnd, "__PLATFORM__HPUX" )
-         AAdd( aUnd, "__PLATFORM__UNIX" )
-      #elif defined( __PLATFORM__BEOS )
-         AAdd( aUnd, "__PLATFORM__BEOS" )
          AAdd( aUnd, "__PLATFORM__UNIX" )
       #endif
 
@@ -6119,6 +6116,7 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
       #elif defined( __PDP_ENDIAN__ )
          AAdd( aUnd, "__PDP_ENDIAN__" )
       #endif
+      ENDIF
 
       DO CASE
       CASE hbmk[ _HBMK_cPLAT ] == "wce"
