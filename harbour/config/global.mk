@@ -1138,7 +1138,6 @@ export HB_PKGNAME
 export HB_PKGNAMI
 
 HB_INSTALL_PREFIX_ORI := $(HB_INSTALL_PREFIX)
-HB_INSTALL_PREFIX_TOP := $(subst /,$(DIRSEP),$(realpath $(TOP)$(ROOT)))
 ifeq ($(HB_BUILD_PKG),yes)
    ifeq ($(HB_INIT_DONE),)
       export HB_TOP := $(subst /,$(DIRSEP),$(realpath $(TOP)$(ROOT)))
@@ -1274,23 +1273,13 @@ ifneq ($(HB_INSTALL_PREFIX),)
    endif
    # Standard name: INCLUDEDIR
    ifeq ($(HB_INC_INSTALL),)
-      HB_INC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)include$(INCPOSTFIX)
-      # Do not set include install dir if it's inside the source tree
-      # to avoid 'source same as dest' warnings on 'install' copy operation.
-      ifneq ($(HB_SHELL),sh)
-         ifeq ($(HB_INSTALL_PREFIX),$(HB_INSTALL_PREFIX_TOP))
-            HB_INC_INSTALL :=
-         endif
-      endif
-      export HB_INC_INSTALL
+      export HB_INC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)include$(INCPOSTFIX)
    endif
    # Standard name: DOCDIR
    ifeq ($(HB_DOC_INSTALL),)
       # Do not set doc dir for *nix targets
       ifeq ($(HB_PLATFORM_UNIX),)
-         ifneq ($(HB_INSTALL_PREFIX),$(HB_INSTALL_PREFIX_TOP))
-            export HB_DOC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)doc
-         endif
+         export HB_DOC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)doc
       endif
    endif
 endif

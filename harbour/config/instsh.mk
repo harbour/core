@@ -13,6 +13,10 @@ ifeq ($(INSTALL_DIR),) # Empty install dir
    INSTALL_RULE := @$(ECHO) $(ECHOQUOTE)! Can't install, install dir isn't set$(ECHOQUOTE)
 else
 
+ifeq ($(realpath $(INSTALL_DIR)),$(realpath .))
+   INSTALL_RULE := @$(ECHO) $(ECHOQUOTE)! Skip install, destination dir '$(INSTALL_DIR)' is the same as source$(ECHOQUOTE)
+else
+
 ifneq ($(HB_SHELL),sh)
    INSTALL_DIR_OS := $(subst /,\,$(INSTALL_DIR))
    INSTALL_FILES_OS := $(subst /,\,$(INSTALL_FILES))
@@ -88,6 +92,8 @@ ifeq ($(HB_SHELL),dos)
    INSTALL_RULE := $(inst_file_all)
 
 endif
+
+endif # Source and destination directories are equal
 
 endif # Empty install dir
 
