@@ -51,7 +51,7 @@ dirbase::
 	@[ -z "$(IMP_FILE)" ] || [ -d "$(IMP_DIR)" ] || $(MDP) $(IMP_DIR)
 
 clean::
-	-@$(RDP) $(PKG_DIR) $(OBJ_DIR) $(LIB_FILE) $(BIN_FILE) $(DYN_FILE); \
+	-@$(RDP) $(PKG_DIR) $(OBJ_DIR) $(LIB_FILE) $(BIN_FILE) $(DYN_FILE) $(IMP_FILE); \
 	if [ -n "$(LIB_FILE)" ]; then \
 	   $(RM) $(basename $(LIB_FILE)).bak; \
 	   [ "`$(ECHO) $(LIB_DIR)/*`" != "$(LIB_DIR)/*" ] || $(RDP) $(LIB_DIR); \
@@ -145,7 +145,7 @@ dirbase::
 	$(if $(IMP_FILE),-@$(MDP) $(IMP_DIR),)
 
 clean::
-	-@$(RDP) $(PKG_DIR_OS) $(OBJ_DIR_OS) $(LIB_FILE_OS) $(BIN_FILE_OS)
+	-@$(RDP) $(PKG_DIR_OS) $(OBJ_DIR_OS) $(LIB_FILE_OS) $(BIN_FILE_OS) $(DYN_FILE_OS) $(IMP_FILE_OS)
 	$(if $(LIB_FILE),-@$(RM) $(basename $(LIB_FILE_OS)).bak,)
 	$(if $(LIB_FILE),$(if $(wildcard $(LIB_DIR)/*.*),,-@$(RDP) $(LIB_DIR_OS)),)
 	$(if $(BIN_FILE),-@$(RM) $(basename $(BIN_FILE_OS)).tds,)
@@ -186,7 +186,7 @@ dirbase::
 	$(if $(IMP_FILE),-@$(MDP) $(IMP_DIR_OS),)
 
 clean::
-	-@$(RDP) $(PKG_DIR_OS) $(OBJ_DIR_OS) $(LIB_FILE_OS) $(BIN_FILE_OS)
+	-@$(RDP) $(PKG_DIR_OS) $(OBJ_DIR_OS) $(LIB_FILE_OS) $(BIN_FILE_OS) $(DYN_FILE_OS) $(IMP_FILE_OS)
 	$(if $(LIB_FILE),-@$(RM) $(basename $(LIB_FILE_OS)).bak,)
 	$(if $(LIB_FILE),$(if $(wildcard $(LIB_DIR)/*.*),,-@$(RDP) $(LIB_DIR_OS)),)
 	$(if $(BIN_FILE),-@$(RM) $(basename $(BIN_FILE_OS)).tds,)

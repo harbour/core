@@ -436,8 +436,8 @@ SUPPORTED PLATFORMS AND C COMPILERS
    bcc      - Borland/CodeGear/Embarcadero C++ 4.x and above
    icc      - Intel(R) C/C++
    iccia64  - Intel(R) C/C++ IA-64
-   pocc     - Pelles C 4.5 and above
-   pocc64   - Pelles C x86-64 5.0 and above
+   pocc     - Pelles C 4.5 and 5.0
+   pocc64   - Pelles C x86-64 5.0
    xcc      - Pelles C for xhb
    cygwin   - Cygwin GNU C
 
@@ -446,7 +446,7 @@ SUPPORTED PLATFORMS AND C COMPILERS
    mingw    - MinGW GNU C x86
    mingwarm - MinGW GNU C ARM
    msvcarm  - Microsoft Visual C++ ARM
-   poccarm  - Pelles C ARM 5.0 and above
+   poccarm  - Pelles C ARM 5.0
 
    dos
    ---

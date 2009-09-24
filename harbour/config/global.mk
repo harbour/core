@@ -1040,43 +1040,60 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
          HB_PRGFLAGS += -undef:__PLATFORM__WINDOWS
          # We only need this to avoid problems with using Cygwin binaries as native ones.
          HB_PRGFLAGS += -undef:__PLATFORM__UNIX
-      else
-         ifeq ($(HB_HOST_PLAT),dos)
-            HB_PRGFLAGS += -undef:__PLATFORM__DOS
-         else
-            ifeq ($(HB_HOST_PLAT),os2)
-               HB_PRGFLAGS += -undef:__PLATFORM__OS2
-            else
-               ifeq ($(HB_HOST_PLAT),linux)
-                  HB_PRGFLAGS += -undef:__PLATFORM__LINUX -undef:__PLATFORM__UNIX
-               endif
-            endif
+      else ifeq ($(HB_HOST_PLAT),dos)
+         HB_PRGFLAGS += -undef:__PLATFORM__DOS
+      else ifeq ($(HB_HOST_PLAT),os2)
+         HB_PRGFLAGS += -undef:__PLATFORM__OS2
+      else ifeq ($(HB_HOST_PLAT),linux)
+         HB_PRGFLAGS += -undef:__PLATFORM__LINUX -undef:__PLATFORM__UNIX
+      else ifeq ($(HB_HOST_PLAT),darwin)
+         HB_PRGFLAGS += -undef:__PLATFORM__DARWIN -undef:__PLATFORM__UNIX
+      else ifeq ($(HB_HOST_PLAT),bsd)
+         HB_PRGFLAGS += -undef:__PLATFORM__BSD -undef:__PLATFORM__UNIX
+      else ifeq ($(HB_HOST_PLAT),sunos)
+         HB_PRGFLAGS += -undef:__PLATFORM__SUNOS -undef:__PLATFORM__UNIX
+      else ifeq ($(HB_HOST_PLAT),hpux)
+         HB_PRGFLAGS += -undef:__PLATFORM__HPUX -undef:__PLATFORM__UNIX
+      else ifeq ($(HB_HOST_PLAT),beos)
+         HB_PRGFLAGS += -undef:__PLATFORM__BEOS -undef:__PLATFORM__UNIX
+      endif
+      ifneq ($(HB_HOST_CPU),$(HB_CPU))
+         ifeq ($(HB_HOST_CPU),x86)
+            HB_PRGFLAGS += -undef:__ARCH32BIT__
+         else ifeq ($(HB_HOST_CPU),x86_64)
+            HB_PRGFLAGS += -undef:__ARCH64BIT__
+         else ifeq ($(HB_HOST_CPU),ia64)
+            HB_PRGFLAGS += -undef:__ARCH64BIT__
          endif
       endif
       ifeq ($(HB_PLATFORM),win)
          HB_PRGFLAGS += -D__PLATFORM__WINDOWS
-         ifeq ($(HB_CPU),x86_64)
+      else ifeq ($(HB_PLATFORM),wce)
+         HB_PRGFLAGS += -D__PLATFORM__WINDOWS -D__PLATFORM__WINCE
+      else ifeq ($(HB_PLATFORM),dos)
+         HB_PRGFLAGS += -D__PLATFORM__DOS
+      else ifeq ($(HB_PLATFORM),os2)
+         HB_PRGFLAGS += -D__PLATFORM__OS2
+      else ifeq ($(HB_PLATFORM),linux)
+         HB_PRGFLAGS += -D__PLATFORM__LINUX -D__PLATFORM__UNIX
+      else ifeq ($(HB_PLATFORM),darwin)
+         HB_PRGFLAGS += -D__PLATFORM__DARWIN -D__PLATFORM__UNIX
+      else ifeq ($(HB_PLATFORM),bsd)
+         HB_PRGFLAGS += -D__PLATFORM__BSD -D__PLATFORM__UNIX
+      else ifeq ($(HB_PLATFORM),sunos)
+         HB_PRGFLAGS += -D__PLATFORM__SUNOS -D__PLATFORM__UNIX
+      else ifeq ($(HB_PLATFORM),hpux)
+         HB_PRGFLAGS += -D__PLATFORM__HPUX -D__PLATFORM__UNIX
+      else ifeq ($(HB_PLATFORM),beos)
+         HB_PRGFLAGS += -D__PLATFORM__BEOS -D__PLATFORM__UNIX
+      endif
+      ifneq ($(HB_HOST_CPU),$(HB_CPU))
+         ifeq ($(HB_CPU),x86)
+            HB_PRGFLAGS += -D__ARCH32BIT__
+         else ifeq ($(HB_CPU),x86_64)
             HB_PRGFLAGS += -D__ARCH64BIT__
-         else
-            ifeq ($(HB_CPU),ia64)
-               HB_PRGFLAGS += -D__ARCH64BIT__
-            endif
-         endif
-      else
-         ifeq ($(HB_PLATFORM),wce)
-            HB_PRGFLAGS += -D__PLATFORM__WINDOWS -D__PLATFORM__WINCE
-         else
-            ifeq ($(HB_PLATFORM),dos)
-               HB_PRGFLAGS += -D__PLATFORM__DOS
-            else
-               ifeq ($(HB_PLATFORM),os2)
-                  HB_PRGFLAGS += -D__PLATFORM__OS2
-               else
-                  ifeq ($(HB_PLATFORM),linux)
-                     HB_PRGFLAGS += -D__PLATFORM__LINUX -D__PLATFORM__UNIX
-                  endif
-               endif
-            endif
+         else ifeq ($(HB_CPU),ia64)
+            HB_PRGFLAGS += -D__ARCH64BIT__
          endif
       endif
    endif

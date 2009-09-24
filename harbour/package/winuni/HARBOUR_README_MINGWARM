@@ -2,21 +2,12 @@
 If this directory is empty, download package from link below
 and unpack into this directory.
 
-https://sourceforge.net/project/downloading.php?group_id=173455&use_mirror=switch&filename=cygwin-cegcc-mingw32ce-0.51.0-1.tar.gz&a=34126466
+http://sourceforge.net/projects/cegcc/files/
 
 NOTES: - In order to unpack and *use* this package, you'll
          need Cygwin package (from http://cygwin.com) installed
          and put in PATH for Cygwin runtime (cygwin1.dll).
-       - To unpack:
-            > sh
-            $ tar -zxvf cygwin-cegcc-mingw32ce-0.51.0-1.tar.gz
-            $ exit
+       - Unpack using these commands:
+            > bzip2 -d cegcc_mingw32ce_cygwin1.7_r1375.tar.bz2
+            > tar -xvf cegcc_mingw32ce_cygwin1.7_r1375.tar -h
        - Move content of /opt/mingw32ce directory to this one.
-       - If you feel unconfortable with Cygwin shell, you can
-         use gzip and GNU Tar to unpack it from Windows command
-         line, using these commands:
-            > gzip -d cygwin-cegcc-mingw32ce-0.51.0-1.tar.gz
-            > tar -xvf cygwin-cegcc-mingw32ce-0.51.0-1.tar -h
-
-UPDATE: It seems the cegcc team doesn't provide this binary download
-        anymore. Please consult their website for more information.

@@ -6146,7 +6146,7 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
          AAdd( aDef, "__PLATFORM__DARWIN" )
          AAdd( aDef, "__PLATFORM__UNIX" )
       CASE hbmk[ _HBMK_cPLAT ] == "bsd"
-         AAdd( aDef, "__PLATFORM__BDS" )
+         AAdd( aDef, "__PLATFORM__BSD" )
          AAdd( aDef, "__PLATFORM__UNIX" )
       CASE hbmk[ _HBMK_cPLAT ] == "sunos"
          AAdd( aDef, "__PLATFORM__SUNOS" )
