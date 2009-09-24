@@ -28,13 +28,6 @@ else
 endif
 
 ifeq ($(HB_HVM_ALL),yes)
-   # we disable it due to compiler bug (internal error) when using -fpic option. [20090920]
-   ifeq ($(HB_PLATFORM)-$(HB_COMPILER),linux-icc)
-      HB_HVM_ALL := no
-   endif
-endif
-
-ifeq ($(HB_HVM_ALL),yes)
 
 C_SOURCES := \
    hvmall.c \

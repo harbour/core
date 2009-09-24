@@ -1047,9 +1047,6 @@ PHB_ITEM hb_itemPutNLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutNLen(%p, %lf, %d, %d)", pItem, dNumber, iWidth, iDec));
 
-   if( iWidth <= 0 || iWidth > 99 )
-      iWidth = HB_DBL_LENGTH( dNumber );
-
    if( iDec < 0 )
    {
       HB_STACK_TLS_PRELOAD
@@ -1062,14 +1059,10 @@ PHB_ITEM hb_itemPutNLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
 
       if( ( double ) lNumber == dNumber )
       {
-         if( HB_LIM_INT( lNumber ) )
-            return hb_itemPutNILen( pItem, ( int ) lNumber, iWidth );
-         else
-#ifdef HB_LONG_LONG_OFF
-            return hb_itemPutNLLen( pItem, ( long ) lNumber, iWidth );
-#else
-            return hb_itemPutNLLLen( pItem, ( LONGLONG ) lNumber, iWidth );
-#endif
+         if( iWidth <= 0 || iWidth > 99 )
+            iWidth = HB_DBL_LENGTH( dNumber );
+
+         return hb_itemPutNIntLen( pItem, lNumber, iWidth );
       }
    }
 
