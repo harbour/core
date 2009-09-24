@@ -40,7 +40,7 @@ fi
 
 . ${hb_root}/bin/hb-func.sh
 
-chmod 644 $HB_INC_INSTALL/*
+# chmod 644 $HB_INC_INSTALL/*
 
 if [ "$HB_COMPILER" = "gcc" ] || \
    [ "$HB_COMPILER" = "mingw" ] || \
