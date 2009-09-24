@@ -13,8 +13,8 @@ HARBOUR
                                        http://www.harbour-project.org/
 
 
-HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
-============================================
+1. HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
+===============================================
 
    NOTE: Before reporting a problem on the developers' mailing list, please
          make sure to read the TROUBLESHOOTING section in this file.
@@ -168,8 +168,8 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       You should see 'Hello world!' on screen.
 
 
-HOW TO DO A PARTIAL [RE]BUILD
-=============================
+2. HOW TO DO A PARTIAL [RE]BUILD
+================================
 
    If you want to [re]build only a specific part of Harbour, like
    one library, all contrib libs or core libs, you have to do
@@ -182,8 +182,8 @@ HOW TO DO A PARTIAL [RE]BUILD
       <make> [clean] [install]
 
 
-HOW TO CREATE DISTRIBUTABLE PACKAGES
-====================================
+3. HOW TO CREATE DISTRIBUTABLE PACKAGES
+=======================================
 
    Source .tgz on *nixes
    ---------------------
@@ -232,8 +232,8 @@ HOW TO CREATE DISTRIBUTABLE PACKAGES
         This is a semi-manual process yet. ]
 
 
-HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
-==============================================
+4. HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
+=================================================
 
    Certain Harbour parts (typically contrib libraries) depend on 3rd
    party components. To make these Harbour parts built, you need
@@ -373,8 +373,8 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
       $ make clean
 
 
-SUPPORTED PLATFORMS AND C COMPILERS
-===================================
+5. SUPPORTED PLATFORMS AND C COMPILERS
+======================================
 
    You can use HB_PLATFORM values to select platforms:
 
@@ -459,8 +459,8 @@ SUPPORTED PLATFORMS AND C COMPILERS
    watcom   - Open Watcom C++
 
 
-OPTIONS AVAILABLE WHEN BUILDING HARBOUR
-=======================================
+6. OPTIONS AVAILABLE WHEN BUILDING HARBOUR
+==========================================
 
    You can fine-tune Harbour builds with below listed
    environment variables. You can add most of these via the
@@ -590,8 +590,8 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    executables are required for a cross-build process to succeed.
 
 
-EXAMPLES
-========
+7. EXAMPLES
+===========
 
    for Windows hosts
    -----------------
@@ -870,8 +870,8 @@ EXAMPLES
       gmake OR make HB_PLATFORM=wce
       ---
 
-HOW TO GET THE HARBOUR SOURCES
-==============================
+8. HOW TO GET THE HARBOUR SOURCES
+=================================
 
    1.) It's possible you're reading this file as part of the Harbour
        source code package. If not, read along.
@@ -898,8 +898,8 @@ HOW TO GET THE HARBOUR SOURCES
           http://sourceforge.net/project/showfiles.php?group_id=681&package_id=192305
 
 
-TROUBLESHOOTING
-===============
+9. TROUBLESHOOTING
+==================
 
    Please evaluate these points before reporting an issue on the developers'
    mailing list.
@@ -921,8 +921,8 @@ TROUBLESHOOTING
      examples as is.
 
 
-QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
-==================================================
+10. QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
+======================================================
 
    For all platforms you'll need two things:
 
@@ -992,8 +992,8 @@ QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
             to build a Harbour application with above methods.
 
 
-BUILD HOST-PLATFORM/SHELL - TARGET-PLATFORM/COMPILER COMPATIBILITY MATRIX
-=========================================================================
+11. BUILD HOST-PLATFORM/SHELL - TARGET-PLATFORM/COMPILER COMPATIBILITY MATRIX
+=============================================================================
 
      host      target        target
      plat      plat/comp     cpu
@@ -1084,8 +1084,8 @@ BUILD HOST-PLATFORM/SHELL - TARGET-PLATFORM/COMPILER COMPATIBILITY MATRIX
      *nix / POSIX shell                         (* not supported: HB_BUILD_PKG - implemented as standalone scripts)
 
 
-HOW TO PARTICIPATE
-==================
+12. HOW TO PARTICIPATE
+======================
 
    There are several ways to help making Harbour better:
 
@@ -1105,8 +1105,8 @@ HOW TO PARTICIPATE
      various environments, etc.
 
 
-FOR MORE INFORMATION
-====================
+13. FOR MORE INFORMATION
+========================
 
    Homepage:
    http://www.harbour-project.org/
