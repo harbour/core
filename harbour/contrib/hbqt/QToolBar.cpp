@@ -88,7 +88,7 @@ HB_FUNC( QT_QTOOLBAR )
  */
 HB_FUNC( QT_QTOOLBAR_DESTROY )
 {
-   hbqt_par_QToolBar( 1 )->~QToolBar();
+   delete hbqt_par_QToolBar( 1 );
 }
 
 /*

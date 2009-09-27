@@ -85,7 +85,7 @@ HB_FUNC( QT_QFONTINFO )
  */
 HB_FUNC( QT_QFONTINFO_DESTROY )
 {
-   hbqt_par_QFontInfo( 1 )->~QFontInfo();
+   delete hbqt_par_QFontInfo( 1 );
 }
 
 /*

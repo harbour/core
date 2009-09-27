@@ -84,7 +84,7 @@ HB_FUNC( QT_QTOOLBOX )
  */
 HB_FUNC( QT_QTOOLBOX_DESTROY )
 {
-   hbqt_par_QToolBox( 1 )->~QToolBox();
+   delete hbqt_par_QToolBox( 1 );
 }
 
 /*

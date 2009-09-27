@@ -85,7 +85,7 @@ HB_FUNC( QT_QSCROLLBAR )
  */
 HB_FUNC( QT_QSCROLLBAR_DESTROY )
 {
-   hbqt_par_QScrollBar( 1 )->~QScrollBar();
+   delete hbqt_par_QScrollBar( 1 );
 }
 
 

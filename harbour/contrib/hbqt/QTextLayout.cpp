@@ -101,7 +101,7 @@ HB_FUNC( QT_QTEXTLAYOUT )
  */
 HB_FUNC( QT_QTEXTLAYOUT_DESTROY )
 {
-   hbqt_par_QTextLayout( 1 )->~QTextLayout();
+   delete hbqt_par_QTextLayout( 1 );
 }
 
 /*

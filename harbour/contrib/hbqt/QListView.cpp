@@ -92,7 +92,7 @@ HB_FUNC( QT_QLISTVIEW )
  */
 HB_FUNC( QT_QLISTVIEW_DESTROY )
 {
-   hbqt_par_QListView( 1 )->~QListView();
+   delete hbqt_par_QListView( 1 );
 }
 
 /*

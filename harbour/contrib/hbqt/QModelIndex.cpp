@@ -85,7 +85,7 @@ HB_FUNC( QT_QMODELINDEX )
  */
 HB_FUNC( QT_QMODELINDEX_DESTROY )
 {
-   hbqt_par_QModelIndex( 1 )->~QModelIndex();
+   delete hbqt_par_QModelIndex( 1 );
 }
 
 /*

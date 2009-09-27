@@ -93,7 +93,7 @@ HB_FUNC( QT_QSIZEF )
  */
 HB_FUNC( QT_QSIZEF_DESTROY )
 {
-   hbqt_par_QSizeF( 1 )->~QSizeF();
+   delete hbqt_par_QSizeF( 1 );
 }
 
 /*

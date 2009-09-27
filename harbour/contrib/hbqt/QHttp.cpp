@@ -107,7 +107,7 @@ HB_FUNC( QT_QHTTP_READ )
  */
 HB_FUNC( QT_QHTTP_DESTROY )
 {
-   hbqt_par_QHttp( 1 )->~QHttp();
+   delete hbqt_par_QHttp( 1 );
 }
 
 /*

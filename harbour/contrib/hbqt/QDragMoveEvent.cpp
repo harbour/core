@@ -84,7 +84,7 @@ HB_FUNC( QT_QDRAGMOVEEVENT )
  */
 HB_FUNC( QT_QDRAGMOVEEVENT_DESTROY )
 {
-   hbqt_par_QDragMoveEvent( 1 )->~QDragMoveEvent();
+   delete hbqt_par_QDragMoveEvent( 1 );
 }
 
 /*

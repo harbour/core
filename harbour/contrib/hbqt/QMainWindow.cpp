@@ -98,7 +98,7 @@ HB_FUNC( QT_QMAINWINDOW )
  */
 HB_FUNC( QT_QMAINWINDOW_DESTROY )
 {
-   hbqt_par_QMainWindow( 1 )->~QMainWindow();
+   delete hbqt_par_QMainWindow( 1 );
 }
 
 /*

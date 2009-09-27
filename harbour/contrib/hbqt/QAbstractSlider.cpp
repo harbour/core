@@ -88,7 +88,7 @@ HB_FUNC( QT_QABSTRACTSLIDER )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_DESTROY )
 {
-   hbqt_par_QAbstractSlider( 1 )->~QAbstractSlider();
+   delete hbqt_par_QAbstractSlider( 1 );
 }
 
 /*

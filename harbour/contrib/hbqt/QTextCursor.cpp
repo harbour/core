@@ -123,7 +123,7 @@ HB_FUNC( QT_QTEXTCURSOR )
  */
 HB_FUNC( QT_QTEXTCURSOR_DESTROY )
 {
-   hbqt_par_QTextCursor( 1 )->~QTextCursor();
+   delete hbqt_par_QTextCursor( 1 );
 }
 
 /*

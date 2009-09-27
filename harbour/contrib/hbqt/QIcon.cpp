@@ -114,7 +114,7 @@ HB_FUNC( QT_QICON )
  */
 HB_FUNC( QT_QICON_DESTROY )
 {
-   hbqt_par_QIcon( 1 )->~QIcon();
+   delete hbqt_par_QIcon( 1 );
 }
 
 /*

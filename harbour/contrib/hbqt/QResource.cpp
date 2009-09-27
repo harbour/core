@@ -84,7 +84,7 @@ HB_FUNC( QT_QRESOURCE )
  */
 HB_FUNC( QT_QRESOURCE_DESTROY )
 {
-   hbqt_par_QResource( 1 )->~QResource();
+   delete hbqt_par_QResource( 1 );
 }
 
 /*

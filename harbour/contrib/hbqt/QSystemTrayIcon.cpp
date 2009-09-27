@@ -90,7 +90,7 @@ HB_FUNC( QT_QSYSTEMTRAYICON )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_DESTROY )
 {
-   hbqt_par_QSystemTrayIcon( 1 )->~QSystemTrayIcon();
+   delete hbqt_par_QSystemTrayIcon( 1 );
 }
 
 /*

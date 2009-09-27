@@ -87,7 +87,7 @@ HB_FUNC( QT_QDATETIME )
  */
 HB_FUNC( QT_QDATETIME_DESTROY )
 {
-   hbqt_par_QDateTime( 1 )->~QDateTime();
+   delete hbqt_par_QDateTime( 1 );
 }
 
 /*

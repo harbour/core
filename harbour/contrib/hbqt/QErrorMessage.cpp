@@ -93,7 +93,7 @@ HB_FUNC( QT_QERRORMESSAGE )
  */
 HB_FUNC( QT_QERRORMESSAGE_DESTROY )
 {
-   hbqt_par_QErrorMessage( 1 )->~QErrorMessage();
+   delete hbqt_par_QErrorMessage( 1 );
 }
 
 /*

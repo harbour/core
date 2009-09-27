@@ -105,7 +105,7 @@ HB_FUNC( QT_QFONTMETRICSF )
  */
 HB_FUNC( QT_QFONTMETRICSF_DESTROY )
 {
-   hbqt_par_QFontMetricsF( 1 )->~QFontMetricsF();
+   delete hbqt_par_QFontMetricsF( 1 );
 }
 
 /*

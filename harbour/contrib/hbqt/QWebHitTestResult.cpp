@@ -85,7 +85,7 @@ HB_FUNC( QT_QWEBHITTESTRESULT )
  */
 HB_FUNC( QT_QWEBHITTESTRESULT_DESTROY )
 {
-   hbqt_par_QWebHitTestResult( 1 )->~QWebHitTestResult();
+   delete hbqt_par_QWebHitTestResult( 1 );
 }
 
 /*

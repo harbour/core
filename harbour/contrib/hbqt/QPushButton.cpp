@@ -86,7 +86,7 @@ HB_FUNC( QT_QPUSHBUTTON )
  */
 HB_FUNC( QT_QPUSHBUTTON_DESTROY )
 {
-   hbqt_par_QPushButton( 1 )->~QPushButton();
+   delete hbqt_par_QPushButton( 1 );
 }
 
 /*

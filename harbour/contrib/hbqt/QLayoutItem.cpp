@@ -84,7 +84,7 @@ HB_FUNC( QT_QLAYOUTITEM )
  */
 HB_FUNC( QT_QLAYOUTITEM_DESTROY )
 {
-   hbqt_par_QLayoutItem( 1 )->~QLayoutItem();
+   delete hbqt_par_QLayoutItem( 1 );
 }
 
 /*

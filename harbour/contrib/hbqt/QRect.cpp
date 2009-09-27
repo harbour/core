@@ -102,7 +102,7 @@ HB_FUNC( QT_QRECT )
  */
 HB_FUNC( QT_QRECT_DESTROY )
 {
-   hbqt_par_QRect( 1 )->~QRect();
+   delete hbqt_par_QRect( 1 );
 }
 
 /*

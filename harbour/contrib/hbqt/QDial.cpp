@@ -84,7 +84,7 @@ HB_FUNC( QT_QDIAL )
  */
 HB_FUNC( QT_QDIAL_DESTROY )
 {
-   hbqt_par_QDial( 1 )->~QDial();
+   delete hbqt_par_QDial( 1 );
 }
 
 /*

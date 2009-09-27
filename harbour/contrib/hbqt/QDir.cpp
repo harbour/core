@@ -93,7 +93,7 @@ HB_FUNC( QT_QDIR )
  */
 HB_FUNC( QT_QDIR_DESTROY )
 {
-   hbqt_par_QDir( 1 )->~QDir();
+   delete hbqt_par_QDir( 1 );
 }
 
 /*

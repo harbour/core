@@ -96,7 +96,7 @@ HB_FUNC( QT_QPOINT )
  */
 HB_FUNC( QT_QPOINT_DESTROY )
 {
-   hbqt_par_QPoint( 1 )->~QPoint();
+   delete hbqt_par_QPoint( 1 );
 }
 
 /*

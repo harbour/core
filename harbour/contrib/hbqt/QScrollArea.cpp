@@ -84,7 +84,7 @@ HB_FUNC( QT_QSCROLLAREA )
  */
 HB_FUNC( QT_QSCROLLAREA_DESTROY )
 {
-   hbqt_par_QScrollArea( 1 )->~QScrollArea();
+   delete hbqt_par_QScrollArea( 1 );
 }
 
 /*

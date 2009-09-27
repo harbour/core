@@ -475,7 +475,8 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       aadd( cpp_, 'HB_FUNC( QT_' + upper( cWidget ) + '_DESTROY )' )
       aadd( cpp_, '{ ' )
       IF ( '~'+cWidget $ cQth )
-         aadd( cpp_, '   hbqt_par_' + cWidget + '( 1 )->~' + cWidget + '();' )
+         aadd( cpp_, '   delete hbqt_par_' + cWidget + '( 1 );' )
+         //aadd( cpp_, '   hbqt_par_' + cWidget + '( 1 )->~' + cWidget + '();' )
       ELSE
          aadd( cpp_, '   ' )
       ENDIF

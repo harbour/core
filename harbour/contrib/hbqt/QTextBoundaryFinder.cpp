@@ -93,7 +93,7 @@ HB_FUNC( QT_QTEXTBOUNDARYFINDER )
  */
 HB_FUNC( QT_QTEXTBOUNDARYFINDER_DESTROY )
 {
-   hbqt_par_QTextBoundaryFinder( 1 )->~QTextBoundaryFinder();
+   delete hbqt_par_QTextBoundaryFinder( 1 );
 }
 
 /*

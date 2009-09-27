@@ -89,7 +89,7 @@ HB_FUNC( QT_QTABWIDGET )
  */
 HB_FUNC( QT_QTABWIDGET_DESTROY )
 {
-   hbqt_par_QTabWidget( 1 )->~QTabWidget();
+   delete hbqt_par_QTabWidget( 1 );
 }
 
 /*

@@ -90,7 +90,7 @@ HB_FUNC( QT_QINPUTDIALOG )
  */
 HB_FUNC( QT_QINPUTDIALOG_DESTROY )
 {
-   hbqt_par_QInputDialog( 1 )->~QInputDialog();
+   delete hbqt_par_QInputDialog( 1 );
 }
 
 /*

@@ -105,7 +105,7 @@ HB_FUNC( QT_QTEXTEDIT )
  */
 HB_FUNC( QT_QTEXTEDIT_DESTROY )
 {
-   hbqt_par_QTextEdit( 1 )->~QTextEdit();
+   delete hbqt_par_QTextEdit( 1 );
 }
 
 /*

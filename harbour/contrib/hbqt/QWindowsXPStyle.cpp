@@ -89,7 +89,7 @@ HB_FUNC( QT_QWINDOWSXPSTYLE )
  */
 HB_FUNC( QT_QWINDOWSXPSTYLE_DESTROY )
 {
-   hbqt_par_QWindowsXPStyle( 1 )->~QWindowsXPStyle();
+   delete hbqt_par_QWindowsXPStyle( 1 );
 }
 
 

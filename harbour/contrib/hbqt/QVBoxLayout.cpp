@@ -85,7 +85,7 @@ HB_FUNC( QT_QVBOXLAYOUT )
  */
 HB_FUNC( QT_QVBOXLAYOUT_DESTROY )
 {
-   hbqt_par_QVBoxLayout( 1 )->~QVBoxLayout();
+   delete hbqt_par_QVBoxLayout( 1 );
 }
 
 

@@ -100,7 +100,7 @@ HB_FUNC( QT_QIMAGEREADER )
  */
 HB_FUNC( QT_QIMAGEREADER_DESTROY )
 {
-   hbqt_par_QImageReader( 1 )->~QImageReader();
+   delete hbqt_par_QImageReader( 1 );
 }
 
 /*

@@ -95,7 +95,7 @@ HB_FUNC( QT_HBTABLEVIEW_NAVIGATE )
  */
 HB_FUNC( QT_QTABLEVIEW_DESTROY )
 {
-   hbqt_par_QTableView( 1 )->~QTableView();
+   delete hbqt_par_QTableView( 1 );
 }
 
 /*

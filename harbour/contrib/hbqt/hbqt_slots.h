@@ -74,9 +74,58 @@
 #include <QTableView>
 #include <QTableWidget>
 #include <QHeaderView>
+#include <QPainter>
 
 #include "hbapi.h"
 #include "hbapiitm.h"
+
+/*----------------------------------------------------------------------*/
+
+class MyMainWindow : public QMainWindow
+{
+   Q_OBJECT
+
+public:
+   MyMainWindow( PHB_ITEM pBlock, int iThreadID );
+   virtual ~MyMainWindow();
+
+   bool event( QEvent * event );
+   void keyPressEvent( QKeyEvent * event );
+   void mouseDoubleClickEvent( QMouseEvent * event );
+   void mouseMoveEvent( QMouseEvent * event );
+   void mousePressEvent( QMouseEvent * event );
+   void mouseReleaseEvent( QMouseEvent * event );
+   void wheelEvent( QWheelEvent * event );
+   void resizeEvent( QResizeEvent * event );
+   void paintEvent( QPaintEvent * event );
+   void focusInEvent( QFocusEvent * event );
+   void focusOutEvent( QFocusEvent * event );
+
+   PHB_ITEM   block;
+   int        threadID;
+   bool       activated;
+   QPainter * painter;
+
+   char str[ 50 ];
+};
+
+/*----------------------------------------------------------------------*/
+
+class MyDrawingArea : public QWidget
+{
+   Q_OBJECT
+
+public:
+   MyDrawingArea( QWidget *parent = 0 );
+   virtual ~MyDrawingArea( void );
+
+   void keyPressEvent( QKeyEvent * event );
+   void mouseMoveEvent( QMouseEvent * event );
+
+signals:
+   void sg_mouseMoveEvent( QMouseEvent * event );
+   void sg_keyPressEvent( QKeyEvent * event );
+};
 
 /*----------------------------------------------------------------------*/
 
@@ -89,6 +138,10 @@ public:
    ~HbDbfModel();
 
    PHB_ITEM block;
+   int      iRows;
+   int      iCols;
+
+   void          hbSetRowColumns( int rows, int cols );
 
    Qt::ItemFlags flags( const QModelIndex & index ) const;
    QVariant      data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
@@ -103,7 +156,6 @@ public:
 /*----------------------------------------------------------------------*/
 
 class HbTableView : public QTableView
-//class HbTableView : public QTableWidget
 {
    Q_OBJECT
 
@@ -135,35 +187,6 @@ signals:
    void sg_resizeEvent( QResizeEvent * event );
    void sg_moveCursor( HbTableView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers );
    void sg_scrollContentsBy( int x, int y );
-};
-
-/*----------------------------------------------------------------------*/
-
-class MyMainWindow : public QMainWindow
-{
-   Q_OBJECT
-
-public:
-   MyMainWindow();
-   virtual ~MyMainWindow();
-};
-
-/*----------------------------------------------------------------------*/
-
-class MyDrawingArea : public QWidget
-{
-   Q_OBJECT
-
-public:
-   MyDrawingArea( QWidget *parent = 0 );
-   virtual ~MyDrawingArea( void );
-
-   void keyPressEvent( QKeyEvent * event );
-   void mouseMoveEvent( QMouseEvent * event );
-
-signals:
-   void sg_mouseMoveEvent( QMouseEvent * event );
-   void sg_keyPressEvent( QKeyEvent * event );
 };
 
 /*----------------------------------------------------------------------*/
@@ -312,6 +335,7 @@ public:
    ~Events();
    QList<PHB_ITEM>     listBlock;
    QList<bool>         listActv;
+   QList<QObject*>     listObj;
 
 protected:
    bool eventFilter( QObject * obj, QEvent * event );

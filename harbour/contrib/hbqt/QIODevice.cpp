@@ -99,7 +99,7 @@ HB_FUNC( QT_QIODEVICE )
  */
 HB_FUNC( QT_QIODEVICE_DESTROY )
 {
-   hbqt_par_QIODevice( 1 )->~QIODevice();
+   delete hbqt_par_QIODevice( 1 );
 }
 
 /*

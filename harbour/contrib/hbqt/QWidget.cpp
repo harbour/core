@@ -119,7 +119,7 @@ HB_FUNC( QT_QWIDGET )
  */
 HB_FUNC( QT_QWIDGET_DESTROY )
 {
-   hbqt_par_QWidget( 1 )->~QWidget();
+   delete hbqt_par_QWidget( 1 );
 }
 
 /*

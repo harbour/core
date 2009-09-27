@@ -84,7 +84,7 @@ HB_FUNC( QT_QKEYEVENT )
  */
 HB_FUNC( QT_QKEYEVENT_DESTROY )
 {
-   hbqt_par_QKeyEvent( 1 )->~QKeyEvent();
+   delete hbqt_par_QKeyEvent( 1 );
 }
 
 /*

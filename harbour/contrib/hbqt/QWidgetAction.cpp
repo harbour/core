@@ -84,7 +84,7 @@ HB_FUNC( QT_QWIDGETACTION )
  */
 HB_FUNC( QT_QWIDGETACTION_DESTROY )
 {
-   hbqt_par_QWidgetAction( 1 )->~QWidgetAction();
+   delete hbqt_par_QWidgetAction( 1 );
 }
 
 /*

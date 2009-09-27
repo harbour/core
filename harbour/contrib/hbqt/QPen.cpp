@@ -130,7 +130,7 @@ HB_FUNC( QT_QPEN )
  */
 HB_FUNC( QT_QPEN_DESTROY )
 {
-   hbqt_par_QPen( 1 )->~QPen();
+   delete hbqt_par_QPen( 1 );
 }
 
 /*

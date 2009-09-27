@@ -105,7 +105,7 @@ HB_FUNC( QT_QTEXTSTREAM_PADCHAR )
  */
 HB_FUNC( QT_QTEXTSTREAM_DESTROY )
 {
-   hbqt_par_QTextStream( 1 )->~QTextStream();
+   delete hbqt_par_QTextStream( 1 );
 }
 
 /*

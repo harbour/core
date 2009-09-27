@@ -84,7 +84,7 @@ HB_FUNC( QT_QABSTRACTLISTMODEL )
  */
 HB_FUNC( QT_QABSTRACTLISTMODEL_DESTROY )
 {
-   hbqt_par_QAbstractListModel( 1 )->~QAbstractListModel();
+   delete hbqt_par_QAbstractListModel( 1 );
 }
 
 /*

@@ -94,7 +94,7 @@ HB_FUNC( QT_QABSTRACTITEMVIEW )
  */
 HB_FUNC( QT_QABSTRACTITEMVIEW_DESTROY )
 {
-   hbqt_par_QAbstractItemView( 1 )->~QAbstractItemView();
+   delete hbqt_par_QAbstractItemView( 1 );
 }
 
 /*

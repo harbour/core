@@ -85,7 +85,7 @@ HB_FUNC( QT_QMOUSEEVENT )
  */
 HB_FUNC( QT_QMOUSEEVENT_DESTROY )
 {
-   hbqt_par_QMouseEvent( 1 )->~QMouseEvent();
+   delete hbqt_par_QMouseEvent( 1 );
 }
 
 /*

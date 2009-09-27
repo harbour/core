@@ -84,7 +84,7 @@ HB_FUNC( QT_QABSTRACTBUTTON )
  */
 HB_FUNC( QT_QABSTRACTBUTTON_DESTROY )
 {
-   hbqt_par_QAbstractButton( 1 )->~QAbstractButton();
+   delete hbqt_par_QAbstractButton( 1 );
 }
 
 /*

@@ -85,7 +85,7 @@ HB_FUNC( QT_QSPLASHSCREEN )
  */
 HB_FUNC( QT_QSPLASHSCREEN_DESTROY )
 {
-   hbqt_par_QSplashScreen( 1 )->~QSplashScreen();
+   delete hbqt_par_QSplashScreen( 1 );
 }
 
 /*

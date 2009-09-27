@@ -99,7 +99,7 @@ HB_FUNC( QT_QIMAGEWRITER )
  */
 HB_FUNC( QT_QIMAGEWRITER_DESTROY )
 {
-   hbqt_par_QImageWriter( 1 )->~QImageWriter();
+   delete hbqt_par_QImageWriter( 1 );
 }
 
 /*

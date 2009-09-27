@@ -107,7 +107,7 @@ HB_FUNC( QT_QSTANDARDITEM )
  */
 HB_FUNC( QT_QSTANDARDITEM_DESTROY )
 {
-   hbqt_par_QStandardItem( 1 )->~QStandardItem();
+   delete hbqt_par_QStandardItem( 1 );
 }
 
 /*

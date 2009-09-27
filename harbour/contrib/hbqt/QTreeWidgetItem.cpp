@@ -115,7 +115,7 @@ HB_FUNC( QT_QTREEWIDGETITEM )
  */
 HB_FUNC( QT_QTREEWIDGETITEM_DESTROY )
 {
-   hbqt_par_QTreeWidgetItem( 1 )->~QTreeWidgetItem();
+   delete hbqt_par_QTreeWidgetItem( 1 );
 }
 
 /*

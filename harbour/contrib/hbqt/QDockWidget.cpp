@@ -90,7 +90,7 @@ HB_FUNC( QT_QDOCKWIDGET )
  */
 HB_FUNC( QT_QDOCKWIDGET_DESTROY )
 {
-   hbqt_par_QDockWidget( 1 )->~QDockWidget();
+   delete hbqt_par_QDockWidget( 1 );
 }
 
 /*

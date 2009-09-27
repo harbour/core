@@ -94,7 +94,7 @@ HB_FUNC( QT_QLISTWIDGET )
  */
 HB_FUNC( QT_QLISTWIDGET_DESTROY )
 {
-   hbqt_par_QListWidget( 1 )->~QListWidget();
+   delete hbqt_par_QListWidget( 1 );
 }
 
 /*

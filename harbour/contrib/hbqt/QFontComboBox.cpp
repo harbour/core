@@ -89,7 +89,7 @@ HB_FUNC( QT_QFONTCOMBOBOX )
  */
 HB_FUNC( QT_QFONTCOMBOBOX_DESTROY )
 {
-   hbqt_par_QFontComboBox( 1 )->~QFontComboBox();
+   delete hbqt_par_QFontComboBox( 1 );
 }
 
 /*

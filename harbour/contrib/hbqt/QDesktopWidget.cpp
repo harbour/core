@@ -84,7 +84,7 @@ HB_FUNC( QT_QDESKTOPWIDGET )
  */
 HB_FUNC( QT_QDESKTOPWIDGET_DESTROY )
 {
-   hbqt_par_QDesktopWidget( 1 )->~QDesktopWidget();
+   delete hbqt_par_QDesktopWidget( 1 );
 }
 
 /*

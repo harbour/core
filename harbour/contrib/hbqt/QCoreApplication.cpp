@@ -103,7 +103,7 @@ HB_FUNC( QT_QCOREAPPLICATION )
  */
 HB_FUNC( QT_QCOREAPPLICATION_DESTROY )
 {
-   hbqt_par_QCoreApplication( 1 )->~QCoreApplication();
+   delete hbqt_par_QCoreApplication( 1 );
 }
 
 /*

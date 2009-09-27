@@ -147,7 +147,7 @@ HB_FUNC( QT_QVARIANT )
  */
 HB_FUNC( QT_QVARIANT_DESTROY )
 {
-   hbqt_par_QVariant( 1 )->~QVariant();
+   delete hbqt_par_QVariant( 1 );
 }
 
 /*

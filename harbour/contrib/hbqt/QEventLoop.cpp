@@ -89,7 +89,7 @@ HB_FUNC( QT_QEVENTLOOP )
  */
 HB_FUNC( QT_QEVENTLOOP_DESTROY )
 {
-   hbqt_par_QEventLoop( 1 )->~QEventLoop();
+   delete hbqt_par_QEventLoop( 1 );
 }
 
 /*

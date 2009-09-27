@@ -85,7 +85,7 @@ HB_FUNC( QT_QGROUPBOX )
  */
 HB_FUNC( QT_QGROUPBOX_DESTROY )
 {
-   hbqt_par_QGroupBox( 1 )->~QGroupBox();
+   delete hbqt_par_QGroupBox( 1 );
 }
 
 /*

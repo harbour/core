@@ -143,7 +143,7 @@ HB_FUNC( QT_QREGION )
  */
 HB_FUNC( QT_QREGION_DESTROY )
 {
-   hbqt_par_QRegion( 1 )->~QRegion();
+   delete hbqt_par_QRegion( 1 );
 }
 
 /*

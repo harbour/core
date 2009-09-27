@@ -109,7 +109,7 @@ HB_FUNC( QT_QPALETTE )
  */
 HB_FUNC( QT_QPALETTE_DESTROY )
 {
-   hbqt_par_QPalette( 1 )->~QPalette();
+   delete hbqt_par_QPalette( 1 );
 }
 
 /*

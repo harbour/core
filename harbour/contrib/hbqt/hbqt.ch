@@ -2112,6 +2112,15 @@
 #define QSizePolicy_ShrinkFlag                    4   // The widget can shrink below its size hint if necessary.
 #define QSizePolicy_IgnoreFlag                    8   // The widget's size hint is ignored. The widget will get as much space as possible.
 
+
+// This enum controls the types of events processed by the processEvents() functions.
+//
+#define QEventLoop_AllEvents                      0x00   // All events. Note that DeferredDelete events are processed specially. See QObject::deleteLater() for more details.
+#define QEventLoop_ExcludeUserInputEvents         0x01   // Do not process user input events, such as ButtonPress and KeyPress. Note that the events are not discarded; they will be delivered the next time processEvents() is called without the ExcludeUserInputEvents flag.
+#define QEventLoop_ExcludeSocketNotifiers         0x02   // Do not process socket notifier events. Note that the events are not discarded; they will be delivered the next time processEvents() is called without the ExcludeSocketNotifiers flag.
+#define QEventLoop_WaitForMoreEvents              0x04   // Wait for events if no pending events are available.
+#define QEventLoop_DeferredDeletion               0x10   // deprecated - do not use.
+// The ProcessEventsFlags type is a typedef for QFlags<ProcessEventsFlag>. It stores an OR combination of ProcessEventsFlag values.
 /*----------------------------------------------------------------------*/
 
 #define _HBQT_CH

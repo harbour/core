@@ -91,7 +91,7 @@ HB_FUNC( QT_QLISTWIDGETITEM )
  */
 HB_FUNC( QT_QLISTWIDGETITEM_DESTROY )
 {
-   hbqt_par_QListWidgetItem( 1 )->~QListWidgetItem();
+   delete hbqt_par_QListWidgetItem( 1 );
 }
 
 /*

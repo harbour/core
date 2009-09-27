@@ -146,7 +146,7 @@ HB_FUNC( QT_QIMAGE )
  */
 HB_FUNC( QT_QIMAGE_DESTROY )
 {
-   hbqt_par_QImage( 1 )->~QImage();
+   delete hbqt_par_QImage( 1 );
 }
 
 /*

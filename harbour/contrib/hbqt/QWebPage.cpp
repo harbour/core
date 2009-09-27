@@ -95,7 +95,7 @@ HB_FUNC( QT_QWEBPAGE )
  */
 HB_FUNC( QT_QWEBPAGE_DESTROY )
 {
-   hbqt_par_QWebPage( 1 )->~QWebPage();
+   delete hbqt_par_QWebPage( 1 );
 }
 
 /*

@@ -101,7 +101,7 @@ HB_FUNC( QT_QOBJECT )
  */
 HB_FUNC( QT_QOBJECT_DESTROY )
 {
-   hbqt_par_QObject( 1 )->~QObject();
+   delete hbqt_par_QObject( 1 );
 }
 
 /*

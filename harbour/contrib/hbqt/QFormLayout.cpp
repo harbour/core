@@ -90,7 +90,7 @@ HB_FUNC( QT_QFORMLAYOUT )
  */
 HB_FUNC( QT_QFORMLAYOUT_DESTROY )
 {
-   hbqt_par_QFormLayout( 1 )->~QFormLayout();
+   delete hbqt_par_QFormLayout( 1 );
 }
 
 /*

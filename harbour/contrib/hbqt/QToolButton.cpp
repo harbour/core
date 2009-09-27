@@ -88,7 +88,7 @@ HB_FUNC( QT_QTOOLBUTTON )
  */
 HB_FUNC( QT_QTOOLBUTTON_DESTROY )
 {
-   hbqt_par_QToolButton( 1 )->~QToolButton();
+   delete hbqt_par_QToolButton( 1 );
 }
 
 /*

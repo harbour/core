@@ -88,7 +88,7 @@ HB_FUNC( QT_QDIALOG )
  */
 HB_FUNC( QT_QDIALOG_DESTROY )
 {
-   hbqt_par_QDialog( 1 )->~QDialog();
+   delete hbqt_par_QDialog( 1 );
 }
 
 /*

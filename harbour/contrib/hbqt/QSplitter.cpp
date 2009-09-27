@@ -98,7 +98,7 @@ HB_FUNC( QT_QSPLITTER )
  */
 HB_FUNC( QT_QSPLITTER_DESTROY )
 {
-   hbqt_par_QSplitter( 1 )->~QSplitter();
+   delete hbqt_par_QSplitter( 1 );
 }
 
 /*

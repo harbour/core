@@ -90,7 +90,7 @@ HB_FUNC( QT_QPRINTDIALOG )
  */
 HB_FUNC( QT_QPRINTDIALOG_DESTROY )
 {
-   hbqt_par_QPrintDialog( 1 )->~QPrintDialog();
+   delete hbqt_par_QPrintDialog( 1 );
 }
 
 /*

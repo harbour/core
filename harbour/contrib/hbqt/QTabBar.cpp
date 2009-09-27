@@ -91,7 +91,7 @@ HB_FUNC( QT_QTABBAR )
  */
 HB_FUNC( QT_QTABBAR_DESTROY )
 {
-   hbqt_par_QTabBar( 1 )->~QTabBar();
+   delete hbqt_par_QTabBar( 1 );
 }
 
 /*

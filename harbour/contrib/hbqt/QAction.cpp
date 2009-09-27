@@ -108,7 +108,7 @@ HB_FUNC( QT_QACTION )
  */
 HB_FUNC( QT_QACTION_DESTROY )
 {
-   hbqt_par_QAction( 1 )->~QAction();
+   delete hbqt_par_QAction( 1 );
 }
 
 /*

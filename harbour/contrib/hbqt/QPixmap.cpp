@@ -109,7 +109,7 @@ HB_FUNC( QT_QPIXMAP )
  */
 HB_FUNC( QT_QPIXMAP_DESTROY )
 {
-   hbqt_par_QPixmap( 1 )->~QPixmap();
+   delete hbqt_par_QPixmap( 1 );
 }
 
 /*

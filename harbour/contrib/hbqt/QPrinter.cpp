@@ -116,7 +116,7 @@ HB_FUNC( QT_QPRINTER )
  */
 HB_FUNC( QT_QPRINTER_DESTROY )
 {
-   hbqt_par_QPrinter( 1 )->~QPrinter();
+   delete hbqt_par_QPrinter( 1 );
 }
 
 /*

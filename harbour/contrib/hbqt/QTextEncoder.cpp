@@ -84,7 +84,7 @@ HB_FUNC( QT_QTEXTENCODER )
  */
 HB_FUNC( QT_QTEXTENCODER_DESTROY )
 {
-   hbqt_par_QTextEncoder( 1 )->~QTextEncoder();
+   delete hbqt_par_QTextEncoder( 1 );
 }
 
 /*

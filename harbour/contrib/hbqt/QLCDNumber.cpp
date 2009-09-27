@@ -90,7 +90,7 @@ HB_FUNC( QT_QLCDNUMBER )
  */
 HB_FUNC( QT_QLCDNUMBER_DESTROY )
 {
-   hbqt_par_QLCDNumber( 1 )->~QLCDNumber();
+   delete hbqt_par_QLCDNumber( 1 );
 }
 
 /*

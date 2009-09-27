@@ -88,7 +88,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_DESTROY )
 {
-   hbqt_par_QFileSystemModel( 1 )->~QFileSystemModel();
+   delete hbqt_par_QFileSystemModel( 1 );
 }
 
 /*

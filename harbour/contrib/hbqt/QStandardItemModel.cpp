@@ -100,7 +100,7 @@ HB_FUNC( QT_QSTANDARDITEMMODEL )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_DESTROY )
 {
-   hbqt_par_QStandardItemModel( 1 )->~QStandardItemModel();
+   delete hbqt_par_QStandardItemModel( 1 );
 }
 
 /*

@@ -85,7 +85,7 @@ HB_FUNC( QT_QLABEL )
  */
 HB_FUNC( QT_QLABEL_DESTROY )
 {
-   hbqt_par_QLabel( 1 )->~QLabel();
+   delete hbqt_par_QLabel( 1 );
 }
 
 /*

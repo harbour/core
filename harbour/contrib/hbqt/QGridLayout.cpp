@@ -85,7 +85,7 @@ HB_FUNC( QT_QGRIDLAYOUT )
  */
 HB_FUNC( QT_QGRIDLAYOUT_DESTROY )
 {
-   hbqt_par_QGridLayout( 1 )->~QGridLayout();
+   delete hbqt_par_QGridLayout( 1 );
 }
 
 /*

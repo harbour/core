@@ -84,7 +84,7 @@ HB_FUNC( QT_QABSTRACTTABLEMODEL )
  */
 HB_FUNC( QT_QABSTRACTTABLEMODEL_DESTROY )
 {
-   hbqt_par_QAbstractTableModel( 1 )->~QAbstractTableModel();
+   delete hbqt_par_QAbstractTableModel( 1 );
 }
 
 /*

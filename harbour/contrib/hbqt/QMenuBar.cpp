@@ -98,7 +98,7 @@ HB_FUNC( QT_QMENUBAR )
  */
 HB_FUNC( QT_QMENUBAR_DESTROY )
 {
-   hbqt_par_QMenuBar( 1 )->~QMenuBar();
+   delete hbqt_par_QMenuBar( 1 );
 }
 
 /*

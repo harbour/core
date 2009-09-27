@@ -84,7 +84,7 @@ HB_FUNC( QT_QSIZEGRIP )
  */
 HB_FUNC( QT_QSIZEGRIP_DESTROY )
 {
-   hbqt_par_QSizeGrip( 1 )->~QSizeGrip();
+   delete hbqt_par_QSizeGrip( 1 );
 }
 
 

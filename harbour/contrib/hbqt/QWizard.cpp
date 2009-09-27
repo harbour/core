@@ -104,7 +104,7 @@ HB_FUNC( QT_QWIZARD )
  */
 HB_FUNC( QT_QWIZARD_DESTROY )
 {
-   hbqt_par_QWizard( 1 )->~QWizard();
+   delete hbqt_par_QWizard( 1 );
 }
 
 /*

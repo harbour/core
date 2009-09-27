@@ -92,7 +92,7 @@ HB_FUNC( QT_QSLIDER )
  */
 HB_FUNC( QT_QSLIDER_DESTROY )
 {
-   hbqt_par_QSlider( 1 )->~QSlider();
+   delete hbqt_par_QSlider( 1 );
 }
 
 /*

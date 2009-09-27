@@ -99,7 +99,7 @@ HB_FUNC( QT_QTEXTFRAME )
  */
 HB_FUNC( QT_QTEXTFRAME_DESTROY )
 {
-   hbqt_par_QTextFrame( 1 )->~QTextFrame();
+   delete hbqt_par_QTextFrame( 1 );
 }
 
 /*

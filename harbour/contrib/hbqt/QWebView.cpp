@@ -85,7 +85,7 @@ HB_FUNC( QT_QWEBVIEW )
  */
 HB_FUNC( QT_QWEBVIEW_DESTROY )
 {
-   hbqt_par_QWebView( 1 )->~QWebView();
+   delete hbqt_par_QWebView( 1 );
 }
 
 /*

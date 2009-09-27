@@ -118,7 +118,7 @@ HB_FUNC( QT_QURL_SETQUERYDELIMITERS )
  */
 HB_FUNC( QT_QURL_DESTROY )
 {
-   hbqt_par_QUrl( 1 )->~QUrl();
+   delete hbqt_par_QUrl( 1 );
 }
 
 /*

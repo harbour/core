@@ -107,7 +107,7 @@ HB_FUNC( QT_QFTP_READ )
  */
 HB_FUNC( QT_QFTP_DESTROY )
 {
-   hbqt_par_QFtp( 1 )->~QFtp();
+   delete hbqt_par_QFtp( 1 );
 }
 
 /*

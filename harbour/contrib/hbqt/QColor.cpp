@@ -127,7 +127,7 @@ HB_FUNC( QT_QCOLOR )
  */
 HB_FUNC( QT_QCOLOR_DESTROY )
 {
-   hbqt_par_QColor( 1 )->~QColor();
+   delete hbqt_par_QColor( 1 );
 }
 
 /*

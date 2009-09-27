@@ -111,7 +111,7 @@ HB_FUNC( QT_QFILEDIALOG )
  */
 HB_FUNC( QT_QFILEDIALOG_DESTROY )
 {
-   hbqt_par_QFileDialog( 1 )->~QFileDialog();
+   delete hbqt_par_QFileDialog( 1 );
 }
 
 /*

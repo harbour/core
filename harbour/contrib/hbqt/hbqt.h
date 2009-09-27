@@ -63,10 +63,12 @@
 
 #define hbqt_par_HbDbfModel( n )             ( ( HbDbfModel* ) hb_parptr( n ) )
 #define hbqt_par_HbTableView( n )            ( ( HbTableView* ) hb_parptr( n ) )
+#define hbqt_par_MyMainWindow( n )           ( ( MyMainWindow* ) hb_parptr( n ) )
 
 #define hbqt_par_ExtensionOption( n )        ( ( ExtensionOption* ) hb_parptr( n ) )
 #define hbqt_par_IUnknown( n )               ( ( IUnknown* ) hb_parptr( n ) )
 #define hbqt_par_QAbstractButton( n )        ( ( QAbstractButton* ) hb_parptr( n ) )
+#define hbqt_par_QAbstractEventDispatcher( n ) ( ( QAbstractEventDispatcher* ) hb_parptr( n ) )
 #define hbqt_par_QAbstractItemDelegate( n )  ( ( QAbstractItemDelegate* ) hb_parptr( n ) )
 #define hbqt_par_QAbstractItemModel( n )     ( ( QAbstractItemModel* ) hb_parptr( n ) )
 #define hbqt_par_QAbstractItemView( n )      ( ( QAbstractItemView* ) hb_parptr( n ) )

@@ -96,7 +96,7 @@ HB_FUNC( QT_QPICTURE )
  */
 HB_FUNC( QT_QPICTURE_DESTROY )
 {
-   hbqt_par_QPicture( 1 )->~QPicture();
+   delete hbqt_par_QPicture( 1 );
 }
 
 /*

@@ -96,7 +96,7 @@ HB_FUNC( QT_QSIZE )
  */
 HB_FUNC( QT_QSIZE_DESTROY )
 {
-   hbqt_par_QSize( 1 )->~QSize();
+   delete hbqt_par_QSize( 1 );
 }
 
 /*

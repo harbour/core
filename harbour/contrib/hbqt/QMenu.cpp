@@ -102,7 +102,7 @@ HB_FUNC( QT_QMENU )
  */
 HB_FUNC( QT_QMENU_DESTROY )
 {
-   hbqt_par_QMenu( 1 )->~QMenu();
+   delete hbqt_par_QMenu( 1 );
 }
 
 /*

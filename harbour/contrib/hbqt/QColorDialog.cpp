@@ -97,7 +97,7 @@ HB_FUNC( QT_QCOLORDIALOG )
  */
 HB_FUNC( QT_QCOLORDIALOG_DESTROY )
 {
-   hbqt_par_QColorDialog( 1 )->~QColorDialog();
+   delete hbqt_par_QColorDialog( 1 );
 }
 
 /*

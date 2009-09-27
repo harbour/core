@@ -85,7 +85,7 @@ HB_FUNC( QT_QWINDOWSSTYLE )
  */
 HB_FUNC( QT_QWINDOWSSTYLE_DESTROY )
 {
-   hbqt_par_QWindowsStyle( 1 )->~QWindowsStyle();
+   delete hbqt_par_QWindowsStyle( 1 );
 }
 
 

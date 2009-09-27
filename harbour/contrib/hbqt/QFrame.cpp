@@ -90,7 +90,7 @@ HB_FUNC( QT_QFRAME )
  */
 HB_FUNC( QT_QFRAME_DESTROY )
 {
-   hbqt_par_QFrame( 1 )->~QFrame();
+   delete hbqt_par_QFrame( 1 );
 }
 
 /*

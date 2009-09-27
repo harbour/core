@@ -102,7 +102,7 @@ HB_FUNC( QT_QPROCESS )
  */
 HB_FUNC( QT_QPROCESS_DESTROY )
 {
-   hbqt_par_QProcess( 1 )->~QProcess();
+   delete hbqt_par_QProcess( 1 );
 }
 
 /*

@@ -102,7 +102,7 @@ HB_FUNC( QT_QWEBPLUGINFACTORY )
  */
 HB_FUNC( QT_QWEBPLUGINFACTORY_DESTROY )
 {
-   hbqt_par_QWebPluginFactory( 1 )->~QWebPluginFactory();
+   delete hbqt_par_QWebPluginFactory( 1 );
 }
 
 /*

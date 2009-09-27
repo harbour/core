@@ -103,7 +103,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_DESTROY )
 {
-   hbqt_par_QTableWidgetItem( 1 )->~QTableWidgetItem();
+   delete hbqt_par_QTableWidgetItem( 1 );
 }
 
 /*

@@ -111,13 +111,18 @@ HB_FUNC( QT_HBDBFMODEL_INDEX )
    hb_retptr( new QModelIndex( hbqt_par_HbDbfModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), QModelIndex() ) ) );
 }
 
+HB_FUNC( QT_HBDBFMODEL_HBSETROWCOLUMNS )
+{
+   hbqt_par_HbDbfModel( 1 )->hbSetRowColumns( hb_parni( 2 ), hb_parni( 3 ) );
+}
+
 
 /*
  * DESTRUCTOR
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_DESTROY )
 {
-   hbqt_par_QAbstractItemModel( 1 )->~QAbstractItemModel();
+   delete hbqt_par_QAbstractItemModel( 1 );
 }
 
 /*

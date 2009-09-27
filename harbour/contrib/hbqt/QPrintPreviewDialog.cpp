@@ -90,7 +90,7 @@ HB_FUNC( QT_QPRINTPREVIEWDIALOG )
  */
 HB_FUNC( QT_QPRINTPREVIEWDIALOG_DESTROY )
 {
-   hbqt_par_QPrintPreviewDialog( 1 )->~QPrintPreviewDialog();
+   delete hbqt_par_QPrintPreviewDialog( 1 );
 }
 
 /*

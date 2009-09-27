@@ -86,7 +86,7 @@ HB_FUNC( QT_QWEBHISTORYITEM )
  */
 HB_FUNC( QT_QWEBHISTORYITEM_DESTROY )
 {
-   hbqt_par_QWebHistoryItem( 1 )->~QWebHistoryItem();
+   delete hbqt_par_QWebHistoryItem( 1 );
 }
 
 /*

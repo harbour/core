@@ -91,7 +91,7 @@ HB_FUNC( QT_QABSTRACTSPINBOX )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_DESTROY )
 {
-   hbqt_par_QAbstractSpinBox( 1 )->~QAbstractSpinBox();
+   delete hbqt_par_QAbstractSpinBox( 1 );
 }
 
 /*

@@ -89,7 +89,7 @@ HB_FUNC( QT_QLINEEDIT )
  */
 HB_FUNC( QT_QLINEEDIT_DESTROY )
 {
-   hbqt_par_QLineEdit( 1 )->~QLineEdit();
+   delete hbqt_par_QLineEdit( 1 );
 }
 
 /*

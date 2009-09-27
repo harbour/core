@@ -99,7 +99,7 @@ HB_FUNC( QT_QTABLEWIDGET )
  */
 HB_FUNC( QT_QTABLEWIDGET_DESTROY )
 {
-   hbqt_par_QTableWidget( 1 )->~QTableWidget();
+   delete hbqt_par_QTableWidget( 1 );
 }
 
 /*

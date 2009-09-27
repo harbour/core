@@ -94,7 +94,7 @@ HB_FUNC( QT_QWEBSECURITYORIGIN )
  */
 HB_FUNC( QT_QWEBSECURITYORIGIN_DESTROY )
 {
-   hbqt_par_QWebSecurityOrigin( 1 )->~QWebSecurityOrigin();
+   delete hbqt_par_QWebSecurityOrigin( 1 );
 }
 
 /*

@@ -86,7 +86,7 @@ HB_FUNC( QT_QPAINTDEVICE )
  */
 HB_FUNC( QT_QPAINTDEVICE_DESTROY )
 {
-   hbqt_par_QPaintDevice( 1 )->~QPaintDevice();
+   delete hbqt_par_QPaintDevice( 1 );
 }
 
 /*

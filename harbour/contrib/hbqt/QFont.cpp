@@ -124,7 +124,7 @@ HB_FUNC( QT_QFONT )
  */
 HB_FUNC( QT_QFONT_DESTROY )
 {
-   hbqt_par_QFont( 1 )->~QFont();
+   delete hbqt_par_QFont( 1 );
 }
 
 /*

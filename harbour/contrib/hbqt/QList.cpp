@@ -112,7 +112,7 @@ HB_FUNC( QT_QLIST )
  */
 HB_FUNC( QT_QLIST_DESTROY )
 {
-   hbqt_par_QList( 1 )->~QList();
+   delete hbqt_par_QList( 1 );
 }
 
 /*

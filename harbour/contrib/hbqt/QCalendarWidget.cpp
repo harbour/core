@@ -99,7 +99,7 @@ HB_FUNC( QT_QCALENDARWIDGET )
  */
 HB_FUNC( QT_QCALENDARWIDGET_DESTROY )
 {
-   hbqt_par_QCalendarWidget( 1 )->~QCalendarWidget();
+   delete hbqt_par_QCalendarWidget( 1 );
 }
 
 /*

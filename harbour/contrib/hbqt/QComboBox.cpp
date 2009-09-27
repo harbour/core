@@ -89,7 +89,7 @@ HB_FUNC( QT_QCOMBOBOX )
  */
 HB_FUNC( QT_QCOMBOBOX_DESTROY )
 {
-   hbqt_par_QComboBox( 1 )->~QComboBox();
+   delete hbqt_par_QComboBox( 1 );
 }
 
 /*

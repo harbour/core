@@ -111,7 +111,7 @@ HB_FUNC( QT_QPAINTER )
  */
 HB_FUNC( QT_QPAINTER_DESTROY )
 {
-   hbqt_par_QPainter( 1 )->~QPainter();
+   delete hbqt_par_QPainter( 1 );
 }
 
 /*

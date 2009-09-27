@@ -105,7 +105,7 @@ HB_FUNC( QT_QTEXTFORMAT )
  */
 HB_FUNC( QT_QTEXTFORMAT_DESTROY )
 {
-   hbqt_par_QTextFormat( 1 )->~QTextFormat();
+   delete hbqt_par_QTextFormat( 1 );
 }
 
 /*

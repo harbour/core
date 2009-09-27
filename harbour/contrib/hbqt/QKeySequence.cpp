@@ -110,7 +110,7 @@ HB_FUNC( QT_QKEYSEQUENCE )
  */
 HB_FUNC( QT_QKEYSEQUENCE_DESTROY )
 {
-   hbqt_par_QKeySequence( 1 )->~QKeySequence();
+   delete hbqt_par_QKeySequence( 1 );
 }
 
 /*

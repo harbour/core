@@ -84,7 +84,7 @@ HB_FUNC( QT_QSOUND )
  */
 HB_FUNC( QT_QSOUND_DESTROY )
 {
-   hbqt_par_QSound( 1 )->~QSound();
+   delete hbqt_par_QSound( 1 );
 }
 
 /*

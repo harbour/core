@@ -85,7 +85,7 @@ HB_FUNC( QT_QPROGRESSDIALOG )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_DESTROY )
 {
-   hbqt_par_QProgressDialog( 1 )->~QProgressDialog();
+   delete hbqt_par_QProgressDialog( 1 );
 }
 
 /*

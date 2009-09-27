@@ -88,7 +88,7 @@ HB_FUNC( QT_QHEADERVIEW )
  */
 HB_FUNC( QT_QHEADERVIEW_DESTROY )
 {
-   hbqt_par_QHeaderView( 1 )->~QHeaderView();
+   delete hbqt_par_QHeaderView( 1 );
 }
 
 /*

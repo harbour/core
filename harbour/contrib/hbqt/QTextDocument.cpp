@@ -107,7 +107,7 @@ HB_FUNC( QT_QTEXTDOCUMENT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_DESTROY )
 {
-   hbqt_par_QTextDocument( 1 )->~QTextDocument();
+   delete hbqt_par_QTextDocument( 1 );
 }
 
 /*

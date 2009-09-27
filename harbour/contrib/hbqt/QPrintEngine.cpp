@@ -87,7 +87,7 @@ HB_FUNC( QT_QPRINTENGINE )
  */
 HB_FUNC( QT_QPRINTENGINE_DESTROY )
 {
-   hbqt_par_QPrintEngine( 1 )->~QPrintEngine();
+   delete hbqt_par_QPrintEngine( 1 );
 }
 
 /*

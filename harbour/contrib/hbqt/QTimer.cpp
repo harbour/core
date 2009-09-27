@@ -84,7 +84,7 @@ HB_FUNC( QT_QTIMER )
  */
 HB_FUNC( QT_QTIMER_DESTROY )
 {
-   hbqt_par_QTimer( 1 )->~QTimer();
+   delete hbqt_par_QTimer( 1 );
 }
 
 /*

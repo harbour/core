@@ -84,7 +84,7 @@ HB_FUNC( QT_QSIGNALMAPPER )
  */
 HB_FUNC( QT_QSIGNALMAPPER_DESTROY )
 {
-   hbqt_par_QSignalMapper( 1 )->~QSignalMapper();
+   delete hbqt_par_QSignalMapper( 1 );
 }
 
 /*

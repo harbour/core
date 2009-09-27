@@ -89,7 +89,7 @@ HB_FUNC( QT_QDIRMODEL )
  */
 HB_FUNC( QT_QDIRMODEL_DESTROY )
 {
-   hbqt_par_QDirModel( 1 )->~QDirModel();
+   delete hbqt_par_QDirModel( 1 );
 }
 
 /*

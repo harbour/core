@@ -88,7 +88,7 @@ HB_FUNC( QT_QEVENT )
  */
 HB_FUNC( QT_QEVENT_DESTROY )
 {
-   hbqt_par_QEvent( 1 )->~QEvent();
+   delete hbqt_par_QEvent( 1 );
 }
 
 /*

@@ -86,7 +86,7 @@ HB_FUNC( QT_QTEXTDOCUMENTWRITER )
  */
 HB_FUNC( QT_QTEXTDOCUMENTWRITER_DESTROY )
 {
-   hbqt_par_QTextDocumentWriter( 1 )->~QTextDocumentWriter();
+   delete hbqt_par_QTextDocumentWriter( 1 );
 }
 
 /*

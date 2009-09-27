@@ -84,7 +84,7 @@ HB_FUNC( QT_QSTYLEDITEMDELEGATE )
  */
 HB_FUNC( QT_QSTYLEDITEMDELEGATE_DESTROY )
 {
-   hbqt_par_QStyledItemDelegate( 1 )->~QStyledItemDelegate();
+   delete hbqt_par_QStyledItemDelegate( 1 );
 }
 
 /*

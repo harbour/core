@@ -203,7 +203,7 @@ HB_FUNC( QT_QAPPLICATION_QUIT )
  */
 HB_FUNC( QT_QAPPLICATION_DESTROY )
 {
-   hbqt_par_QApplication( 1 )->~QApplication();
+   delete hbqt_par_QApplication( 1 );
 }
 
 /*

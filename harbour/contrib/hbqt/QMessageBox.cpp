@@ -101,7 +101,7 @@ HB_FUNC( QT_QMESSAGEBOX )
  */
 HB_FUNC( QT_QMESSAGEBOX_DESTROY )
 {
-   hbqt_par_QMessageBox( 1 )->~QMessageBox();
+   delete hbqt_par_QMessageBox( 1 );
 }
 
 /*

@@ -87,7 +87,7 @@ HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT )
  */
 HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_DESTROY )
 {
-   hbqt_par_QTextDocumentFragment( 1 )->~QTextDocumentFragment();
+   delete hbqt_par_QTextDocumentFragment( 1 );
 }
 
 /*

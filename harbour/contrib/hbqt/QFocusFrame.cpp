@@ -84,7 +84,7 @@ HB_FUNC( QT_QFOCUSFRAME )
  */
 HB_FUNC( QT_QFOCUSFRAME_DESTROY )
 {
-   hbqt_par_QFocusFrame( 1 )->~QFocusFrame();
+   delete hbqt_par_QFocusFrame( 1 );
 }
 
 /*

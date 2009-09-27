@@ -91,7 +91,7 @@ HB_FUNC( QT_QSTYLEOPTION )
  */
 HB_FUNC( QT_QSTYLEOPTION_DESTROY )
 {
-   hbqt_par_QStyleOption( 1 )->~QStyleOption();
+   delete hbqt_par_QStyleOption( 1 );
 }
 
 /*

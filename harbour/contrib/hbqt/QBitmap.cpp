@@ -122,7 +122,7 @@ HB_FUNC( QT_QBITMAP )
  */
 HB_FUNC( QT_QBITMAP_DESTROY )
 {
-   hbqt_par_QBitmap( 1 )->~QBitmap();
+   delete hbqt_par_QBitmap( 1 );
 }
 
 /*

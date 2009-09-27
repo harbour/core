@@ -96,7 +96,7 @@ HB_FUNC( QT_QTREEVIEW )
  */
 HB_FUNC( QT_QTREEVIEW_DESTROY )
 {
-   hbqt_par_QTreeView( 1 )->~QTreeView();
+   delete hbqt_par_QTreeView( 1 );
 }
 
 /*

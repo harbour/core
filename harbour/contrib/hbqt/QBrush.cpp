@@ -146,7 +146,7 @@ HB_FUNC( QT_QBRUSH )
  */
 HB_FUNC( QT_QBRUSH_DESTROY )
 {
-   hbqt_par_QBrush( 1 )->~QBrush();
+   delete hbqt_par_QBrush( 1 );
 }
 
 /*

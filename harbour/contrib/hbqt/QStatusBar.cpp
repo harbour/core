@@ -84,7 +84,7 @@ HB_FUNC( QT_QSTATUSBAR )
  */
 HB_FUNC( QT_QSTATUSBAR_DESTROY )
 {
-   hbqt_par_QStatusBar( 1 )->~QStatusBar();
+   delete hbqt_par_QStatusBar( 1 );
 }
 
 /*

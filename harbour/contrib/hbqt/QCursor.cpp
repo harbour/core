@@ -122,7 +122,7 @@ HB_FUNC( QT_QCURSOR )
  */
 HB_FUNC( QT_QCURSOR_DESTROY )
 {
-   hbqt_par_QCursor( 1 )->~QCursor();
+   delete hbqt_par_QCursor( 1 );
 }
 
 /*

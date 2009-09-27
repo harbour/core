@@ -84,7 +84,7 @@ HB_FUNC( QT_QMOVEEVENT )
  */
 HB_FUNC( QT_QMOVEEVENT_DESTROY )
 {
-   hbqt_par_QMoveEvent( 1 )->~QMoveEvent();
+   delete hbqt_par_QMoveEvent( 1 );
 }
 
 /*

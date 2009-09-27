@@ -100,7 +100,7 @@ HB_FUNC( QT_QBUTTONGROUP )
  */
 HB_FUNC( QT_QBUTTONGROUP_DESTROY )
 {
-   hbqt_par_QButtonGroup( 1 )->~QButtonGroup();
+   delete hbqt_par_QButtonGroup( 1 );
 }
 
 /*
