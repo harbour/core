@@ -299,7 +299,7 @@ static long s_srvSendAll( PHB_CONSRV conn, void * buffer, long len )
 
    while( lSent < len && !conn->stop )
    {
-      l = hb_socketSend( conn->sd, ptr + lSent, len - lSent, 0, 1000 );
+      l = hb_socketSend( conn->sd, ptr + lSent, len - lSent, 0, -1 );
       if( l <= 0 )
       {
          if( hb_socketGetError() != HB_SOCKET_ERR_TIMEOUT ||
@@ -709,6 +709,8 @@ HB_FUNC( NETIO_SERVER )
                }
                break;
 
+            case NETIO_UNLOCK:
+               fNoAnswer = TRUE;
             case NETIO_LOCK:
                iFileNo = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
                llOffset = HB_GET_LE_INT64( &msgbuf[ 6 ] );
@@ -719,9 +721,10 @@ HB_FUNC( NETIO_SERVER )
                   iError = NETIO_ERR_WRONG_FILE_HANDLE;
                else if( !hb_fileLock( pFile, llOffset, llSize, uiFalgs ) )
                   iError = s_srvFsError();
-               else
+               else if( !fNoAnswer )
                {
-                  HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_LOCK );
+                  UINT32 uiMsg = HB_GET_LE_UINT32( msgbuf );
+                  HB_PUT_LE_UINT32( &msg[ 0 ], uiMsg );
                   memset( msg + 4, '\0', NETIO_MSGLEN - 4 );
                }
                break;
@@ -778,29 +781,37 @@ HB_FUNC( NETIO_SERVER )
                fNoAnswer = TRUE;
                break;
 
+            case NETIO_SYNC:
+               continue;
+
             default: /* unkown message */
                iError = NETIO_ERR_UNKNOWN_COMMAND;
                break;
          }
 
-         if( !fNoAnswer )
+         if( fNoAnswer )
          {
-            if( iError != 0 )
-            {
-               HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_ERROR );
-               HB_PUT_LE_UINT16( &msg[ 4 ], iError );
-               memset( msg + 6, '\0', NETIO_MSGLEN - 6 );
-               len = NETIO_MSGLEN;
-            }
-            else
-               len += NETIO_MSGLEN;
-
-            if( s_srvSendAll( conn, msg, len ) != len )
-               break;
+            HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_SYNC );
+            memset( msg + 4, '\0', NETIO_MSGLEN - 4 );
+            len = NETIO_MSGLEN;
          }
+         else if( iError != 0 )
+         {
+            HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_ERROR );
+            HB_PUT_LE_UINT16( &msg[ 4 ], iError );
+            memset( msg + 6, '\0', NETIO_MSGLEN - 6 );
+            len = NETIO_MSGLEN;
+         }
+         else
+            len += NETIO_MSGLEN;
+
+         iError = s_srvSendAll( conn, msg, len ) != len;
 
          if( ptr )
             hb_xfree( ptr );
+
+         if( iError )
+            break;
       }
    }
 }

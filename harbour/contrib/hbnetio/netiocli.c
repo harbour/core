@@ -121,6 +121,8 @@ static BOOL s_fInit = TRUE;
 
 static const HB_FILE_FUNCS * s_fileMethods( void );
 
+#define NETIO_TIMEOUT   -1
+
 static long s_fileRecvAll( PHB_CONCLI conn, void * buffer, long len )
 {
    BYTE * ptr = ( BYTE * ) buffer;
@@ -128,7 +130,7 @@ static long s_fileRecvAll( PHB_CONCLI conn, void * buffer, long len )
 
    while( lRead < len )
    {
-      l = hb_socketRecv( conn->sd, ptr + lRead, len - lRead, 0, -1 );
+      l = hb_socketRecv( conn->sd, ptr + lRead, len - lRead, 0, NETIO_TIMEOUT );
       if( l <= 0 )
          break;
       lRead += l;
@@ -162,7 +164,7 @@ static BOOL s_fileSendMsg( PHB_CONCLI conn, BYTE * msgbuf,
 
    while( lSent < len )
    {
-      l = hb_socketSend( conn->sd, msg + lSent, len - lSent, 0, -1 );
+      l = hb_socketSend( conn->sd, msg + lSent, len - lSent, 0, NETIO_TIMEOUT );
       if( l <= 0 )
          break;
       lSent += l;
@@ -177,14 +179,18 @@ static BOOL s_fileSendMsg( PHB_CONCLI conn, BYTE * msgbuf,
       {
          int iMsg = HB_GET_LE_INT32( msgbuf );
 
-         if( s_fileRecvAll( conn, msgbuf, NETIO_MSGLEN ) == NETIO_MSGLEN )
+         while( s_fileRecvAll( conn, msgbuf, NETIO_MSGLEN ) == NETIO_MSGLEN )
          {
             int iResult = HB_GET_LE_INT32( msgbuf );
 
-            if( iResult == NETIO_ERROR )
-               hb_fsSetError( HB_GET_LE_UINT16( &msgbuf[ 4 ] ) );
-            else if( iResult == iMsg )
-               fResult = TRUE;
+            if( iResult != NETIO_SYNC )
+            {
+               if( iResult == NETIO_ERROR )
+                  hb_fsSetError( HB_GET_LE_UINT16( &msgbuf[ 4 ] ) );
+               else if( iResult == iMsg )
+                  fResult = TRUE;
+               break;
+            }
          }
       }
       else
@@ -659,15 +665,16 @@ static BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
    if( s_fileConLock( pFile->conn ) )
    {
       BYTE msgbuf[ NETIO_MSGLEN ];
+      BOOL fUnLock = ( iType & FL_MASK ) == FL_UNLOCK;
 
-      HB_PUT_LE_UINT32( &msgbuf[  0 ], NETIO_LOCK );
+      HB_PUT_LE_UINT32( &msgbuf[  0 ], fUnLock ? NETIO_UNLOCK : NETIO_LOCK );
       HB_PUT_LE_UINT16( &msgbuf[  4 ], pFile->fd );
       HB_PUT_LE_UINT64( &msgbuf[  6 ], ulStart );
       HB_PUT_LE_UINT64( &msgbuf[ 14 ], ulLen );
       HB_PUT_LE_UINT16( &msgbuf[ 22 ], ( USHORT ) iType );
       memset( msgbuf + 24, '\0', sizeof( msgbuf ) - 24 );
 
-      fResult = s_fileSendMsg( pFile->conn, msgbuf, NULL, 0, TRUE );
+      fResult = s_fileSendMsg( pFile->conn, msgbuf, NULL, 0, !fUnLock );
       s_fileConUnlock( pFile->conn );
    }
 
