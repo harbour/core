@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Header file for cross-compatibility between different Harbour flavours
  *
- * Copyright 1999-2007 {list of individual authors and e-mail addresses}
+ * Copyright 1999-2009 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -368,7 +368,7 @@
                                                            hb_threadStart( {|...| (<x>):&(<y>)( ... ) } [, <z>] ), ;
                                                            hb_threadStart( <x>, <y> [, <z>] ) )
 
-   /* not possible to well replicate xHarbour behavior because its buggy
+   /* not possible to well replicate xHarbour behavior because it's buggy
       these function results are different on different platform, chosen
       translation which returns compatible types (numeric) */
    #xtranslate ThreadGetCurrent()              => hb_threadId()

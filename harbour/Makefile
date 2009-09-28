@@ -43,5 +43,5 @@ else
 endif
 
 install::
-	+$(HB_POSTINST)
 	+$(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT) --hb:gtcgi $(TOP)$(ROOT)bin/postinst.prg
+	$(if $(wildcard $(HB_POSTINST)),+$(HB_POSTINST),)

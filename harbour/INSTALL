@@ -106,6 +106,10 @@ HARBOUR
       > hello
       You should see 'Hello world!' on screen.
 
+      NOTE: To select alternative TCP/IP stack, use these commands:
+	        set HB_USER_CFLAGS=-DTCPV40HDRS %HB_USER_CFLAGS%
+	        set HB_USER_LDFLAGS=-LC:\usr\lib\tcpipv4 %HB_USER_LDFLAGS%
+
    on Linux hosts
    --------------
    (possible cross-build targets: Windows, Windows CE, MS-DOS, OS/2)
@@ -551,7 +555,7 @@ HARBOUR
    - HB_EXTERNAL_ADDONS=<list> Build space separated <list> of additional
                                libraries stored in the external directory.
    - HB_UTIL_ADDONS=<list>     Build space separated <list> of additional
-                               utilities stored in the utils directoty.
+                               utilities stored in the utils directory.
    - HB_VISUALC_VER_PRE80=yes  Set this if you're using a pre-8.0
                                (= pre-MSVS 2005) version of MSVC compiler.
                                Default: no
@@ -831,6 +835,10 @@ HARBOUR
    for OS/2 hosts
    --------------
 
+      --- GCC 3.3.x
+      C:\usr\bin\gccenv.cmd
+      os2-make
+
       --- Open Watcom C++
       SET WATCOM=C:\watcom
       SET PATH=%WATCOM%\BINP;%WATCOM%\BINW;%PATH%
@@ -839,7 +847,7 @@ HARBOUR
       SET INCLUDE=%WATCOM%\H;%WATCOM%\H\OS2
       SET HELP=%WATCOM%\BINP\HELP;%HELP%
       SET BOOKSHELF=%WATCOM%\BINP\HELP;%BOOKSHELF%
-      make
+      os2-make
       ---
 
    for Linux hosts
@@ -1041,6 +1049,7 @@ HARBOUR
    x linux  -> wce/mingwarm  arm
    x linux  -> wce/mingw     x86
    x linux  -> win/mingw     x86
+   x linux  -> win/mingw64   x86-64
    x linux  -> win/watcom    x86
    x linux  -> os2/watcom    x86
    x linux  -> dos/watcom    x86
@@ -1084,7 +1093,96 @@ HARBOUR
      *nix / POSIX shell                         (* not supported: HB_BUILD_PKG - implemented as standalone scripts)
 
 
-12. HOW TO PARTICIPATE
+12. LINKS TO EXTERNAL TOOLS
+===========================
+
+   C/C++ Compilers/Shells:
+
+      MinGW [win, *nix, free, open-soource]
+         http://www.tdragon.net/recentgcc/ (unofficial, recommended)
+         http://www.mingw.org/ (official, rarely updated, MSYS home)
+      MinGW x64 [win, *nix, free, open-source]
+         http://mingw-w64.org/
+         http://mingw-w64.sourceforge.net/
+         http://sourceforge.net/projects/mingw-w64/
+      MinGW CEGCC [win, *nix, free, open-source]
+         http://cegcc.sourceforge.net/
+      Cygwin [win, free, open-source]
+         http://www.cygwin.com/
+      OS/2 GCC [os2, free, open-source]
+         ftp://ftp.netlabs.org/pub/gcc/
+         ftp://ftp.netlabs.org/pub/gcc/GCC-3.3.5-csd3.zip
+         ftp://ftp.netlabs.org/pub/gcc/libc-0_6_3-csd3.exe
+      DJGPP [dos, *nix, free, open-source]
+         http://www.delorie.com/djgpp/
+      Open Watcom [win, dos, os2, linux, free, open-source]
+         http://www.openwatcom.org/
+      XCode [darwin, free, closed-source]
+         http://developer.apple.com/TOOLS/Xcode/
+      MS Visual Studio Express [win, free, closed-source]
+         http://www.microsoft.com/express/
+      MS Windows SDK [win, free]:
+         http://msdn.microsoft.com/en-us/windowsserver/bb980924.aspx
+      MS Windows Mobile SDK [wce, free]:
+         http://www.microsoft.com/downloads/details.aspx?familyid=83A52AF2-F524-4EC5-9155-717CBE5D25ED
+      Pelles C [win, wce, free, closed-source]
+         http://www.smorgasbordet.com/pellesc/
+      Borland/CodeGear/Embarcadero Compiler [win, free, closed-source]
+         https://downloads.embarcadero.com/free/c_builder
+      Intel Compiler [win, linux, darwin, commercial, closed-source]
+         http://software.intel.com/en-us/intel-compilers/
+
+
+   Libraries:
+
+      HB_WITH_ADS - Advantage Client Engine API [win, linux, free, closed-source]
+         http://www.sybase.com/products/databasemanagement/advantagedatabaseserver/client-engine-api
+      HB_WITH_ALLEGRO - Allegro [multiplatform, free, open-source]
+         http://alleg.sourceforge.net/
+      HB_WITH_BLAT - Blat [win, free, open-source]
+         http://www.blat.net/
+      HB_WITH_CURL - libcurl [multiplatform, free, open-source]
+         http://curl.haxx.se/
+      HB_WITH_FIREBIRD - firebird SQL [multiplatform, free, open-source]
+         http://www.firebirdsql.org/
+      HB_WITH_FREEIMAGE - FreeImage [multiplatform, free, open-source]
+         http://freeimage.sourceforge.net/
+      HB_WITH_GD - GD Graphics Library [multiplatform, free, open-source]
+         http://www.boutell.com/gd/
+      HB_WITH_LIBHARU - libharu [multiplatform, free, open-source]
+         http://libharu.org/
+      HB_WITH_MYSQL - MySQL [multiplatform, free, open-source]
+         http://dev.mysql.com/downloads/
+      HB_WITH_OPENSSL - OpenSSL [multiplatform, free, open-source]
+         http://www.openssl.org/
+      HB_WITH_PCRE - Perl Compatible Regular Expressions [multiplatform, free, open-source]
+         http://www.pcre.org/
+      HB_WITH_PGSQL - PostgreSQL [multiplatform, free, open-source]
+         http://www.postgresql.org/
+      HB_WITH_PNG - libpng [multiplatform, free, open-source]
+         http://www.libpng.org/pub/png/libpng.html
+      HB_WITH_QT - Nokia QT [win, wce, darwin, linux, free, open-source]
+         http://qt.nokia.com/products
+      HB_WITH_SQLITE3 - sqlite3 [multiplatform, free, open-source]
+         http://www.sqlite.org/
+      HB_WITH_WATT - Watt-32 TCP/IP [dos, free, open-source]
+         http://www.bgnett.no/~giva/
+      HB_WITH_ZLIB - zlib [multiplatform, free, open-source]
+         http://www.zlib.net/
+
+   Tools:
+
+      Nullsoft Installer [win, FOSS]
+         http://nsis.sourceforge.net/
+      7-Zip [multiplatform, FOSS]
+         http://www.7-zip.org/
+      Info-ZIP [multiplatform, FOSS]
+         http://www.info-zip.org/
+      UPX [win, dos, linux, FOSS]
+         http://upx.sourceforge.net/
+
+
+13. HOW TO PARTICIPATE
 ======================
 
    There are several ways to help making Harbour better:
@@ -1105,7 +1203,7 @@ HARBOUR
      various environments, etc.
 
 
-13. FOR MORE INFORMATION
+14. FOR MORE INFORMATION
 ========================
 
    Homepage:
