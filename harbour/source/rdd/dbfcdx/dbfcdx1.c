@@ -348,8 +348,8 @@ static void hb_cdxErrInternal( const char * szMsg )
  * generate Run-Time error
  */
 static HB_ERRCODE hb_cdxErrorRT( CDXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode,
-                              const char * filename, USHORT uiOsCode,
-                              USHORT uiFlags, PHB_ITEM * pErrorPtr )
+                                 const char * filename, USHORT uiOsCode,
+                                 USHORT uiFlags, PHB_ITEM * pErrorPtr )
 {
    PHB_ITEM pError;
    HB_ERRCODE iRet = HB_FAILURE;

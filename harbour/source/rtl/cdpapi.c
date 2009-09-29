@@ -1490,8 +1490,8 @@ HB_FUNC( HB_TRANSLATE )
 
    if( ulLen && ( szIdIn || szIdOut ) )
    {
-      PHB_CODEPAGE cdpIn = szIdIn ? hb_cdpFind( szIdIn ) : hb_vmCDP();
-      PHB_CODEPAGE cdpOut = szIdOut ? hb_cdpFind( szIdOut ) : hb_vmCDP();
+      PHB_CODEPAGE cdpIn = szIdIn ? hb_cdpFindExt( szIdIn ) : hb_vmCDP();
+      PHB_CODEPAGE cdpOut = szIdOut ? hb_cdpFindExt( szIdOut ) : hb_vmCDP();
 
       if( cdpIn && cdpOut && cdpIn != cdpOut )
       {

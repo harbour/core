@@ -469,8 +469,8 @@ static USHORT hb_nsxLeafPutKey( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiOffse
  * generate Run-Time error
  */
 static HB_ERRCODE hb_nsxErrorRT( NSXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode,
-                              const char * szFileName, USHORT uiOsCode,
-                              USHORT uiFlags, PHB_ITEM * pErrorPtr )
+                                 const char * szFileName, USHORT uiOsCode,
+                                 USHORT uiFlags, PHB_ITEM * pErrorPtr )
 {
    PHB_ITEM pError;
    HB_ERRCODE iRet = HB_FAILURE;

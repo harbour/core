@@ -340,6 +340,9 @@ extern HB_EXPORT ULONG         hb_cdpUTF8StringLength( const char *, ULONG );
 extern HB_EXPORT char *        hb_cdpUTF8StringSubstr( const char *, ULONG, ULONG, ULONG, ULONG * );
 extern HB_EXPORT ULONG         hb_cdpUTF8StringPeek( const char *, ULONG, ULONG );
 
+extern HB_EXPORT PHB_ITEM      hb_itemDeserializeCP( const char ** pBufferPtr, ULONG * pulSize, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut );
+extern HB_EXPORT char *        hb_itemSerializeCP( PHB_ITEM pItem, BOOL fNumSize, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, ULONG *pulSize );
+
 HB_EXTERN_END
 
 #else

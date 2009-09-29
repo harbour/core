@@ -243,7 +243,8 @@ static const RDDFUNCS fptTable =
 /*
  * generate Run-Time error
  */
-static HB_ERRCODE hb_memoErrorRT( FPTAREAP pArea, USHORT uiGenCode, USHORT uiSubCode, char * szFileName, USHORT uiOsCode, USHORT uiFlags )
+static HB_ERRCODE hb_memoErrorRT( FPTAREAP pArea, USHORT uiGenCode, USHORT uiSubCode,
+                                  char * szFileName, USHORT uiOsCode, USHORT uiFlags )
 {
    HB_ERRCODE errCode = HB_FAILURE;
 
