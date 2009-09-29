@@ -7,9 +7,13 @@
  * See COPYING for licensing terms.
  */
 
+/* TOFIX: Ugly hack to avoid #include "directry.ch" */
+#define F_NAME          1       /* File name */
+
 PROCEDURE Main()
    LOCAL nErrorLevel := 0
    LOCAL cFile
+   LOCAL aFile
 
    IF Empty( GetEnv( "HB_PLATFORM" ) ) .OR. ;
       Empty( GetEnv( "HB_COMPILER" ) ) .OR. ;
@@ -46,8 +50,8 @@ PROCEDURE Main()
    IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos" .AND. ;
       ! Empty( GetEnv( "HB_INSTALL_PREFIX" ) )
 
-      FOR EACH cFile IN Directory( "Change*" )
-         hb_FCopy( cFile, GetEnv( "HB_INSTALL_PREFIX" ) + hb_osPathSeparator() + iif( GetEnv( "HB_PLATFORM" ) == "dos", "CHANGES", cFile ) )
+      FOR EACH aFile IN Directory( "Change*" )
+         hb_FCopy( aFile[ F_NAME ], GetEnv( "HB_INSTALL_PREFIX" ) + hb_osPathSeparator() + iif( GetEnv( "HB_PLATFORM" ) == "dos", "CHANGES", aFile[ F_NAME ] ) )
       NEXT
 
       hb_FCopy( "COPYING", GetEnv( "HB_INSTALL_PREFIX" ) + hb_osPathSeparator() + "COPYING" )
