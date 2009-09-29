@@ -200,7 +200,7 @@ msgstr "cdp=HUISO"
 #: hbmk2.prg:7002
 #, c-format
 msgid "additional path to search for libraries"
-msgstr "további keresési útvonal könyvtárakhoz"
+msgstr "további keresési útvonal függvénykönyvtárakhoz"
 
 #: hbmk2.prg:7088
 #, c-format
