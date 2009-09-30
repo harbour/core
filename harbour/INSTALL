@@ -529,7 +529,7 @@ HARBOUR
    - HB_BUILD_IMPLIB=yes       Create import libraries for external .dll
                                dependencies (including contribs). Default: no
                                (for Windows targets created from Windows NT
-                               shells only)
+                               shells only. Needs GNU Sed.)
    - HB_BUILD_DEBUG=yes        Create a debug build. Default: no
    - HB_BUILD_STRIP=
          [all|bin|lib|no]      Strips symbols and debug information from binaries.
@@ -1093,8 +1093,8 @@ HARBOUR
      *nix / POSIX shell                         (* not supported: HB_BUILD_PKG - implemented as standalone scripts)
 
 
-12. LINKS TO EXTERNAL TOOLS
-===========================
+12. LINKS TO EXTERNAL COMPONENTS
+================================
 
    C/C++ Compilers/Shells:
 
@@ -1105,6 +1105,7 @@ HARBOUR
          http://mingw-w64.org/
          http://mingw-w64.sourceforge.net/
          http://sourceforge.net/projects/mingw-w64/
+         http://www.cadforte.com/
       MinGW CEGCC [win, *nix, free, open-source]
          http://cegcc.sourceforge.net/
       Cygwin [win, free, open-source]
@@ -1113,6 +1114,8 @@ HARBOUR
          ftp://ftp.netlabs.org/pub/gcc/
          ftp://ftp.netlabs.org/pub/gcc/GCC-3.3.5-csd3.zip
          ftp://ftp.netlabs.org/pub/gcc/libc-0_6_3-csd3.exe
+         http://os2ports.smedley.info/index.php?page=gcc
+         http://os2ports.smedley.info/index.php?page=gcc44
       DJGPP [dos, *nix, free, open-source]
          http://www.delorie.com/djgpp/
       Open Watcom [win, dos, os2, linux, free, open-source]
@@ -1131,7 +1134,6 @@ HARBOUR
          https://downloads.embarcadero.com/free/c_builder
       Intel Compiler [win, linux, darwin, commercial, closed-source]
          http://software.intel.com/en-us/intel-compilers/
-
 
    Libraries:
 
@@ -1172,14 +1174,61 @@ HARBOUR
 
    Tools:
 
-      Nullsoft Installer [win, FOSS]
-         http://nsis.sourceforge.net/
-      7-Zip [multiplatform, FOSS]
-         http://www.7-zip.org/
-      Info-ZIP [multiplatform, FOSS]
-         http://www.info-zip.org/
-      UPX [win, dos, linux, FOSS]
+      Subversion Version Control System:
+         http://subversion.tigris.org/
+      GNU Flex
+         Windows binary:
+            http://gnuwin32.sourceforge.net/packages/flex.htm
+               (not verified with current Harbour build)
+      GNU Bison
+         Windows binary:
+            http://gnuwin32.sourceforge.net/packages/bison.htm
+               (not verified with current Harbour build)
+      GNU Sed [multiplatform, free, open-source]
+         Windows binary:
+            http://gnuwin32.sourceforge.net/packages/sed.htm
+      UPX [win, dos, linux, free, open-source]
          http://upx.sourceforge.net/
+      Nullsoft Installer [win, free, open-source]
+         http://nsis.sourceforge.net/
+      7-Zip [multiplatform, free, open-source]
+         http://www.7-zip.org/
+      Info-ZIP [multiplatform, free, open-source]
+         http://www.info-zip.org/
+      bzip2 [multiplatform, free, open-source]
+         Windows binary:
+            http://www.bzip.org/downloads.html
+      GNU Make
+         Windows binary + source:
+            http://sourceforge.net/projects/mingw/files/GNU%20Make/
+            http://sourceforge.net/projects/mingw/files/GNU%20Make/Current%20Release_%20mingw32-make-3.81-20080326/mingw32-make-3.81-20080326-3.tar.gz/download
+            http://sourceforge.net/projects/mingw/files/GNU%20Make/Current%20Release_%20mingw32-make-3.81-20080326/mingw32-make-3.81-20080326-src.tar.gz/download
+            (included in Harbour as win-make.exe)
+         MS-DOS binary + source:
+            ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/
+            ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381b.zip
+            ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381s.zip
+            (included in Harbour as dos-make.exe)
+         OS/2 binary + source:
+            http://www.os2site.com/sw/dev/make/index.html
+            http://www.os2site.com/sw/dev/make/make-3.81-r3-bin-static.zip
+            http://www.os2site.com/sw/dev/make/make-3.81-r3.zip
+            http://www.os2site.com/sw/dev/make/make-3.81-r2.zip
+            (included in Harbour as os2-make.exe)
+      GNU core utils (mkdir, rm, cp, echo)
+         MS-DOS binary + source:
+            ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/
+            ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/fil41b.zip
+            ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/fil41s.zip
+            ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/shl2011b.zip
+            ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/shtl208s.zip
+            ftp://ftp.delorie.com/pub/djgpp/current/v2/djdev203.zip
+            ftp://ftp.delorie.com/pub/djgpp/current/v2/djlsr203.zip
+            (included in Harbour as dosmkdir.exe, dosrm.exe, doscp.exe, dosecho.exe)
+         OS/2 binary:
+            http://os2ports.smedley.info/index.php?page=build-environment
+            http://download.smedley.info/buildenv_20071022.zip
+            (included in Harbour as os2mkdir.exe, os2rm.exe, os2cp.exe)
 
 
 13. HOW TO PARTICIPATE
@@ -1227,7 +1276,7 @@ HARBOUR
    Source Repository Browser:
    http://harbour-project.svn.sourceforge.net/viewvc/harbour-project/
 
-   Source Repository Checkout (anonymous):
+   Source Repository Checkout (anonymous) [needs Subversion]:
    svn co https://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
 
    Miscellaneous documents:
