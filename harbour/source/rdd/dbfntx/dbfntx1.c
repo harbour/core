@@ -7799,14 +7799,6 @@ HB_FUNC( DBFNTX_GETFUNCTABLE )
    }
 }
 
-
-#define __PRG_SOURCE__ __FILE__
-
-#ifdef HB_PCODE_VER
-#  undef HB_PRG_PCODE_VER
-#  define HB_PRG_PCODE_VER HB_PCODE_VER
-#endif
-
 HB_FUNC_EXTERN( _DBF );
 
 static void hb_dbfntxRddInit( void * cargo )

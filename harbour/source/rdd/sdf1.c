@@ -1327,14 +1327,6 @@ HB_FUNC( SDF_GETFUNCTABLE )
       hb_retni( HB_FAILURE );
 }
 
-
-#define __PRG_SOURCE__ __FILE__
-
-#ifdef HB_PCODE_VER
-   #undef HB_PRG_PCODE_VER
-   #define HB_PRG_PCODE_VER HB_PCODE_VER
-#endif
-
 static void hb_sdfRddInit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );

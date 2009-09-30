@@ -1492,14 +1492,6 @@ HB_FUNC( ADSX_GETFUNCTABLE )
 
 HB_FUNC( ADSX ) { ; }
 
-
-#define __PRG_SOURCE__ __FILE__
-
-#ifdef HB_PCODE_VER
-   #undef HB_PRG_PCODE_VER
-   #define HB_PRG_PCODE_VER HB_PCODE_VER
-#endif
-
 HB_FUNC_EXTERN( ADS );
 
 static void hb_adsxRddInit( void * cargo )

@@ -2279,7 +2279,8 @@ static int hb_cdxPageLeafAddKey( LPCDXPAGE pPage, LPCDXKEY pKey )
    iPos = iKey * iLen;
    if( iKey < pPage->iKeys )
    {
-      iDup = pPage->pKeyBuf[ iPos + iNum + 4 ];
+      if( !pPage->TagParent->pIndex->pArea->fSortCDP )
+         iDup = pPage->pKeyBuf[ iPos + iNum + 4 ];
       memmove( &pPage->pKeyBuf[ iPos + iLen ], &pPage->pKeyBuf[ iPos ],
                iLen * ( pPage->iKeys - iKey ) );
    }
@@ -9780,12 +9781,6 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, BOOL fReindex )
    hb_cdpSelect( cdpTmp );
 #endif
 }
-
-#define __PRG_SOURCE__ __FILE__
-#ifdef HB_PCODE_VER
-   #undef HB_PRG_PCODE_VER
-   #define HB_PRG_PCODE_VER HB_PCODE_VER
-#endif
 
 HB_FUNC_EXTERN( _DBF );
 

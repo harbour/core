@@ -3523,7 +3523,7 @@ static HB_ERRCODE adsForceRel( ADSAREAP pArea )
 
       hb_adsUpdateAreaFlags( pArea );
    }
-   fflush(stdout);
+
    return HB_SUCCESS;
 }
 
@@ -4995,13 +4995,6 @@ HB_FUNC_STATIC( ADSVFP_GETFUNCTABLE )
 #endif
 
 HB_FUNC( ADS ) { ; }
-
-#define __PRG_SOURCE__ __FILE__
-
-#ifdef HB_PCODE_VER
-   #undef HB_PRG_PCODE_VER
-   #define HB_PRG_PCODE_VER HB_PCODE_VER
-#endif
 
 static void hb_adsRddInit( void * cargo )
 {

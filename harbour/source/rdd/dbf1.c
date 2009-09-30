@@ -2665,9 +2665,9 @@ static HB_ERRCODE hb_dbfRecCount( DBFAREAP pArea, ULONG * pRecCount )
 /*
  * Obtain physical row number at current WorkArea cursor position.
  */
-static HB_ERRCODE hb_dbfRecNo( DBFAREAP pArea, ULONG * ulRecNo )
+static HB_ERRCODE hb_dbfRecNo( DBFAREAP pArea, ULONG * pulRecNo )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_dbfRecNo(%p, %p)", pArea, ulRecNo));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dbfRecNo(%p, %p)", pArea, pulRecNo));
 
    if( pArea->lpdbPendingRel )
    {
@@ -2675,7 +2675,7 @@ static HB_ERRCODE hb_dbfRecNo( DBFAREAP pArea, ULONG * ulRecNo )
          return HB_FAILURE;
    }
 
-   *ulRecNo = pArea->ulRecNo;
+   *pulRecNo = pArea->ulRecNo;
    return HB_SUCCESS;
 }
 
@@ -2685,7 +2685,7 @@ static HB_ERRCODE hb_dbfRecNo( DBFAREAP pArea, ULONG * ulRecNo )
 static HB_ERRCODE hb_dbfRecId( DBFAREAP pArea, PHB_ITEM pRecNo )
 {
    HB_ERRCODE errCode;
-   ULONG ulRecNo;
+   ULONG ulRecNo = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfRecId(%p, %p)", pArea, pRecNo));
 
@@ -5903,14 +5903,6 @@ HB_FUNC( DBF_GETFUNCTABLE )
    else
       hb_retni( HB_FAILURE );
 }
-
-
-#define __PRG_SOURCE__ __FILE__
-
-#ifdef HB_PCODE_VER
-   #undef HB_PRG_PCODE_VER
-   #define HB_PRG_PCODE_VER HB_PCODE_VER
-#endif
 
 static void hb_dbfRddInit( void * cargo )
 {
