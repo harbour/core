@@ -8,9 +8,15 @@ else
    HB_CMP := gcc
 endif
 
-OBJ_EXT := .o
-LIB_PREF :=
-LIB_EXT := .a
+ifeq ($(HB_OS2_OMF),yes)
+   OBJ_EXT := .obj
+   LIB_PREF :=
+   LIB_EXT := .lib
+else
+   OBJ_EXT := .o
+   LIB_PREF :=
+   LIB_EXT := .a
+endif
 
 CC := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 CC_IN := -c
@@ -19,6 +25,10 @@ CC_OUT := -o
 CPPFLAGS := -I. -I$(HB_INC_COMPILE)
 CFLAGS :=
 LDFLAGS :=
+
+ifeq ($(HB_OS2_OMF),yes)
+   CFLAGS += -Zomf
+endif
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -Wall -W
@@ -62,33 +72,52 @@ LDFLAGS += $(LIBPATHS)
 #
 #endef
 
-# We have to use a script to overcome the AR limit of max 850 characters
-# in commmand line
-define create_library
-   $(if $(wildcard $(subst /,$(DIRSEP),$(LIB_FILE))),@$(RM) $(subst /,$(DIRSEP),$(LIB_FILE)),)
-   @$(ECHO) $(ECHOQUOTE)CREATE $(LIB_DIR)/$@$(ECHOQUOTE) > __lib__.tmp
-   for %i in ( *$(OBJ_EXT) ) do @$(ECHO) $(ECHOQUOTE)ADDMOD %i$(ECHOQUOTE) >> __lib__.tmp
-   @$(ECHO) $(ECHOQUOTE)SAVE$(ECHOQUOTE) >> __lib__.tmp
-   @$(ECHO) $(ECHOQUOTE)END$(ECHOQUOTE) >> __lib__.tmp
-   $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -M < __lib__.tmp
-endef
+
+ifeq ($(HB_OS2_OMF),yes)
+   define create_library
+      $(if $(wildcard $(subst /,$(DIRSEP),$(LIB_FILE))),@$(RM) $(subst /,$(DIRSEP),$(LIB_FILE)),)
+      for %i in ( *$(OBJ_EXT) ) do $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -p128 r $(LIB_DIR)/$@ %i$(ECHOQUOTE)
+   endef
+else
+   # We have to use a script to overcome the AR limit of max 850 characters
+   # in commmand line
+   define create_library
+      $(if $(wildcard $(subst /,$(DIRSEP),$(LIB_FILE))),@$(RM) $(subst /,$(DIRSEP),$(LIB_FILE)),)
+      @$(ECHO) $(ECHOQUOTE)CREATE $(LIB_DIR)/$@$(ECHOQUOTE) > __lib__.tmp
+      for %i in ( *$(OBJ_EXT) ) do @$(ECHO) $(ECHOQUOTE)ADDMOD %i$(ECHOQUOTE) >> __lib__.tmp
+      @$(ECHO) $(ECHOQUOTE)SAVE$(ECHOQUOTE) >> __lib__.tmp
+      @$(ECHO) $(ECHOQUOTE)END$(ECHOQUOTE) >> __lib__.tmp
+      $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -M < __lib__.tmp
+   endef
+endif
 
 # Under OS/2 || isn't a command separator (inside a shell, that is); correct separator is &
-AR := $(HB_CCPATH)$(HB_CCPREFIX)ar
-ARFLAGS :=
-AR_RULE = $(create_library) $(ARSTRIP) & $(RM) __lib__.tmp
+
+ifeq ($(HB_OS2_OMF),yes)
+   AR := $(HB_CCPATH)$(HB_CCPREFIX)emxomfar
+   ARFLAGS :=
+   AR_RULE = $(create_library) $(ARSTRIP)
+else
+   AR := $(HB_CCPATH)$(HB_CCPREFIX)ar
+   ARFLAGS :=
+   AR_RULE = $(create_library) $(ARSTRIP) & $(RM) __lib__.tmp
+endif
 
 DY := $(CC)
 DFLAGS := -shared $(LIBPATHS)
+ifeq ($(HB_OS2_OMF),yes)
+   DFLAGS += -Zomf
+endif
 DY_OUT := $(LD_OUT)
 DLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),-l$(lib))
 
 # NOTE: The empty line directly before 'endef' HAS TO exist!
 define dyn_object
-   @$(ECHO) $(file)>> __dyn__.tmp
+   @$(ECHO) $(subst $(DIRSEP),/,$(file))>> __dyn__.tmp
    @emxexp $(file)>> __dyn__.def
 
 endef
+
 define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(if $(wildcard __dyn__.def),@$(RM) __dyn__.def,)

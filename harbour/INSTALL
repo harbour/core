@@ -106,9 +106,18 @@ HARBOUR
       > hello
       You should see 'Hello world!' on screen.
 
-      NOTE: To select alternative TCP/IP stack, use these commands:
-	        set HB_USER_CFLAGS=-DTCPV40HDRS %HB_USER_CFLAGS%
-	        set HB_USER_LDFLAGS=-LC:\usr\lib\tcpipv4 %HB_USER_LDFLAGS%
+      NOTES:
+      a) To select older TCP/IP stack (<4.1), use these values:
+         set HB_USER_CFLAGS=-DTCPV40HDRS %HB_USER_CFLAGS%
+         set HB_USER_LDFLAGS=-LC:\usr\lib\tcpipv4 %HB_USER_LDFLAGS%
+      b) To select alternative OMF library format, use:
+            set HB_OS2_OMF=yes
+         For gcc settings you optionally can use these values:
+            set EMXOMFLD_TYPE=WLINK   ( or prefered choice )
+            set EMXOMFLD_LINKER=WL.EXE   ( or prefered choice )
+         If choice is WL.exe, modified OpenWatcom wlink.exe available in
+           ftp://ftp.netlabs.org/pub/gcc/wl-hll-r1.zip
+         and located somewhere in PATH
 
    on Linux hosts
    --------------
