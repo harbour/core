@@ -966,6 +966,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                     { {|| FindInPath( "clarm"    ) }, "msvcarm" },;
                     { {|| FindInPath( "armasm"   ) }, "msvcarm" },;
                     { {|| FindInPath( "ml64"     ) }, "msvc64" },;
+                    { {|| FindInPath( "ias"      ) }, "msvcia64" },;
                     { {|| iif( FindInPath( "wpp386"   ) == NIL,;
                                FindInPath( "cl"       ),;
                                NIL )                      }, "msvc"    },;
@@ -2417,18 +2418,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
-
-         IF ValueIsT( GetEnv( "HB_OS2_OMF" ) )
-            cObjExt := ".obj"
-         ENDIF
-
          cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], "g++", "gcc" ) + hbmk[ _HBMK_cCCPOSTFIX ] + cCCEXT
          cOpt_CompC := "-c"
-
-         IF ValueIsT( GetEnv( "HB_OS2_OMF" ) )
-            cOpt_CompC += " -Zomf"
-         ENDIF
-
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
          ENDIF
@@ -2440,29 +2431,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ENDIF
          cBin_Dyn := cBin_CompC
          cOpt_Dyn := "-shared {FD} -o {OD} {DL} {LO} {LL} {LB} {LS}"
-         IF ValueIsT( GetEnv( "HB_OS2_OMF" ) )
-            cOpt_Dyn += " -Zomf"
-         ENDIF
-
          cBin_Link := cBin_CompC
-         
          cOpt_Link := "{LO} {LA} {FL} {DL}"
-
-         IF ValueIsT( GetEnv( "HB_OS2_OMF" ) )
-            cOpt_Link += " -Zomf"
-         ENDIF
-
          cLibPathPrefix := "-L"
          cLibPathSep := " "
-
-         IF ValueIsT( GetEnv( "HB_OS2_OMF" ) )
-            cLibLibExt := ".lib"
-            cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "emxomfar" + cCCEXT
-         ELSE
-            cLibLibExt := ".a"
-            cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + cCCEXT
-         ENDIF
-
+         cLibLibExt := ".a"
+         cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + cCCEXT
          cOpt_Lib := "{FA} rcs {OL} {LO}"
          IF hbmk[ _HBMK_lMAP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-Map,{OM}" )

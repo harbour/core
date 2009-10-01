@@ -106,18 +106,9 @@ HARBOUR
       > hello
       You should see 'Hello world!' on screen.
 
-      NOTES:
-      a) To select older TCP/IP stack (<4.1), use these values:
-         set HB_USER_CFLAGS=-DTCPV40HDRS %HB_USER_CFLAGS%
-         set HB_USER_LDFLAGS=-LC:\usr\lib\tcpipv4 %HB_USER_LDFLAGS%
-      b) To select alternative OMF library format, use:
-            set HB_OS2_OMF=yes
-         For gcc settings you optionally can use these values:
-            set EMXOMFLD_TYPE=WLINK   ( or prefered choice )
-            set EMXOMFLD_LINKER=WL.EXE   ( or prefered choice )
-         If choice is WL.exe, modified OpenWatcom wlink.exe available in
-           ftp://ftp.netlabs.org/pub/gcc/wl-hll-r1.zip
-         and located somewhere in PATH
+      NOTE: To select alternative TCP/IP stack, use these commands:
+	        set HB_USER_CFLAGS=-DTCPV40HDRS %HB_USER_CFLAGS%
+	        set HB_USER_LDFLAGS=-LC:\usr\lib\tcpipv4 %HB_USER_LDFLAGS%
 
    on Linux hosts
    --------------
@@ -416,7 +407,7 @@ HARBOUR
    ------
    gcc      - GNU C
    icc      - Intel(R) C/C++
-   clang    - clang compiler frontend
+   clang    - Clang compiler frontend
 
    bsd
    ---
@@ -1148,11 +1139,11 @@ HARBOUR
 
       HB_WITH_ADS - Advantage Client Engine API [win, linux, free, closed-source]
          http://www.sybase.com/products/databasemanagement/advantagedatabaseserver/client-engine-api
-      HB_WITH_ALLEGRO - Allegro [multiplatform, free, open-source]
+      HB_WITH_ALLEGRO - Allegro (GUI) [multiplatform, free, open-source]
          http://alleg.sourceforge.net/
-      HB_WITH_BLAT - Blat [win, free, open-source]
+      HB_WITH_BLAT - Blat (SMTP client) [win, free, open-source]
          http://www.blat.net/
-      HB_WITH_CURL - libcurl [multiplatform, free, open-source]
+      HB_WITH_CURL - libcurl (file transfer) [multiplatform, free, open-source]
          http://curl.haxx.se/
       HB_WITH_FIREBIRD - firebird SQL [multiplatform, free, open-source]
          http://www.firebirdsql.org/
@@ -1160,7 +1151,7 @@ HARBOUR
          http://freeimage.sourceforge.net/
       HB_WITH_GD - GD Graphics Library [multiplatform, free, open-source]
          http://www.boutell.com/gd/
-      HB_WITH_LIBHARU - libharu [multiplatform, free, open-source]
+      HB_WITH_LIBHARU - libharu (PDF creation) [multiplatform, free, open-source]
          http://libharu.org/
       HB_WITH_MYSQL - MySQL [multiplatform, free, open-source]
          http://dev.mysql.com/downloads/
@@ -1172,31 +1163,31 @@ HARBOUR
          http://www.postgresql.org/
       HB_WITH_PNG - libpng [multiplatform, free, open-source]
          http://www.libpng.org/pub/png/libpng.html
-      HB_WITH_QT - Nokia QT [win, wce, darwin, linux, free, open-source]
+      HB_WITH_QT - Nokia QT (GUI) [win, wce, darwin, linux, free, open-source]
          http://qt.nokia.com/products
       HB_WITH_SQLITE3 - sqlite3 [multiplatform, free, open-source]
          http://www.sqlite.org/
-      HB_WITH_WATT - Watt-32 TCP/IP [dos, free, open-source]
+      HB_WITH_WATT - Watt-32 (TCP/IP sockets) [dos, free, open-source]
          http://www.bgnett.no/~giva/
       HB_WITH_ZLIB - zlib [multiplatform, free, open-source]
          http://www.zlib.net/
 
    Tools:
 
-      Subversion Version Control System:
+      Subversion (Version Control System) [multiplatform, free, open-source]:
          http://subversion.tigris.org/
-      GNU Flex
+      GNU Flex (lexical analyzer) [multiplatform, free, open-source]
          Windows binary:
             http://gnuwin32.sourceforge.net/packages/flex.htm
-               (not verified with current Harbour build)
-      GNU Bison
+               (not verified with current Harbour version)
+      GNU Bison (grammer paser generator) [multiplatform, free, open-source]
          Windows binary:
             http://gnuwin32.sourceforge.net/packages/bison.htm
-               (not verified with current Harbour build)
-      GNU Sed [multiplatform, free, open-source]
+               (not verified with current Harbour version)
+      GNU Sed (stream editor) [multiplatform, free, open-source]
          Windows binary:
             http://gnuwin32.sourceforge.net/packages/sed.htm
-      UPX [win, dos, linux, free, open-source]
+      UPX (executable compressor) [win, dos, linux, free, open-source]
          http://upx.sourceforge.net/
       Nullsoft Installer [win, free, open-source]
          http://nsis.sourceforge.net/
