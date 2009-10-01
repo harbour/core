@@ -947,7 +947,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       aCOMPDET := { { {|| FindInPath( "gcc"      ) }, "gcc"    },;
                     { {|| FindInPath( "wpp386"   ) }, "watcom" } }
 #endif
-      aCOMPSUP := { "gcc", "watcom" }
+      aCOMPSUP := { "gcc", "gccomf", "watcom" }
       l_aLIBHBGT := { "gtos2" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtos2"
       cDynLibNamePrefix := ""
@@ -1855,7 +1855,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          cParam := ArchCompFilter( hbmk, cParam )
          IF ! Empty( cParam )
             IF hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm" .OR. ;
-               ( hbmk[ _HBMK_cPLAT ] == "os2" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" )
+               ( hbmk[ _HBMK_cPLAT ] == "os2" .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|gccomf" )
                /* For MinGW/EMX GCC family add .res files as source input, as they
                   will need to be converted to coff format with windres (just
                   like plain .rc files) before feeding them to gcc. */
@@ -2409,7 +2409,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             ENDIF
          ENDIF
 
-      CASE hbmk[ _HBMK_cPLAT ] == "os2" .AND. hbmk[ _HBMK_cCOMP ] == "gcc"
+      CASE hbmk[ _HBMK_cPLAT ] == "os2" .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|gccomf"
 
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-g" )
@@ -2417,7 +2417,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          cLibLibPrefix := "lib"
          cLibPrefix := "-l"
          cLibExt := ""
-         cObjExt := ".o"
+         IF hbmk[ _HBMK_cCOMP ] == "gccomf"
+            cObjExt := ".obj"
+         ELSE
+            cObjExt := ".o"
+         ENDIF
          cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], "g++", "gcc" ) + hbmk[ _HBMK_cCCPOSTFIX ] + cCCEXT
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
@@ -2435,8 +2439,17 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          cOpt_Link := "{LO} {LA} {FL} {DL}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
-         cLibLibExt := ".a"
-         cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + cCCEXT
+         IF hbmk[ _HBMK_cCOMP ] == "gccomf"
+            cLibLibExt := ".lib"
+            cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "emxomfar" + cCCEXT
+
+            AAdd( hbmk[ _HBMK_aOPTC ], "-Zomf" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-Zomf" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-Zomf" )
+         ELSE
+            cLibLibExt := ".a"
+            cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + cCCEXT
+         ENDIF
          cOpt_Lib := "{FA} rcs {OL} {LO}"
          IF hbmk[ _HBMK_lMAP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-Map,{OM}" )
@@ -2473,7 +2486,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
          cBin_Res := hbmk[ _HBMK_cCCPREFIX ] + "windres" + cCCEXT
          cResExt := ".reso"
-         cOpt_Res := "{FR} {IR} -O coff -o {OS}"
+         IF hbmk[ _HBMK_cCOMP ] == "gccomf"
+            cOpt_Res := "{FR} {IR} -O omf -o {OS}"
+         ELSE
+            cOpt_Res := "{FR} {IR} -O coff -o {OS}"
+         ENDIF
 
          IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
             cBin_Lib   := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Lib, nCmd_Esc )
@@ -6876,7 +6893,7 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword )
 
    IF ( cKeyword == "unix"     .AND. ( hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|beos|linux" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" ) ) .OR. ;
       ( cKeyword == "allwin"   .AND. hbmk[ _HBMK_cPLAT ] $ "win|wce"                                             ) .OR. ;
-      ( cKeyword == "allgcc"   .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin|djgpp"             ) .OR. ;
+      ( cKeyword == "allgcc"   .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin|djgpp|gccomf"      ) .OR. ;
       ( cKeyword == "allmingw" .AND. hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"                              ) .OR. ;
       ( cKeyword == "allmsvc"  .AND. hbmk[ _HBMK_cCOMP ] $ "msvc|msvc64|msvcia64|msvcarm"                        ) .OR. ;
       ( cKeyword == "allpocc"  .AND. hbmk[ _HBMK_cCOMP ] $ "pocc|pocc64|poccarm"                                 ) .OR. ;
@@ -7059,7 +7076,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  - win    : mingw, msvc, bcc, watcom, icc, pocc, cygwin, xcc,",;
       "  -          mingw64, msvc64, msvcia64, iccia64, pocc64",;
       "  - wce    : mingwarm, mingw, msvcarm, poccarm",;
-      "  - os2    : gcc, watcom",;
+      "  - os2    : gcc, gccomf, watcom",;
       "  - dos    : djgpp, watcom",;
       "  - bsd    : gcc",;
       "  - hpux   : gcc",;

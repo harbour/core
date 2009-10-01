@@ -18,7 +18,7 @@ _DET_DSP_NAME := qt
 _DET_VAR_INC_ := HB_INC_QT
 _DET_VAR_HAS_ := HB_HAS_QT
 _DET_FLT_PLAT := !dos !os2
-_DET_FLT_COMP := !mingw64 !watcom !bcc !pocc !pocc64 !poccarm
+_DET_FLT_COMP := !mingw64 !watcom !bcc !pocc !pocc64 !poccarm !msvcia64
 _DET_INC_DEFP := /usr/include/qt4 /usr/lib/qt4/include /usr/include /Developer/qt/include
 _DET_INC_HEAD := /Qt/qglobal.h
 include $(TOP)$(ROOT)config/detfun.mk

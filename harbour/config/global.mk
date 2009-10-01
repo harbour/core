@@ -942,7 +942,7 @@ endif
 # Assemble relative path from OBJ_DIR to source.
 GRANDP := $(subst $(subst x,x, ),,$(foreach item, $(subst /, ,$(OBJ_DIR)), ../))
 
-# TODO: Set this in <arch>/<comp>.mk (compiler switches may influence it)
+# TODO: Set this in <plat>/<comp>.mk (compiler switches may influence it)
 HB_CPU :=
 ifeq ($(HB_PLATFORM),win)
    ifneq ($(filter $(HB_COMPILER),msvc64 mingw64 pocc64),)

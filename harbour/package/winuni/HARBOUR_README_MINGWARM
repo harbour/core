@@ -10,4 +10,6 @@ NOTES: - In order to unpack and *use* this package, you'll
        - Unpack using these commands:
             > bzip2 -d cegcc_mingw32ce_cygwin1.7_r1375.tar.bz2
             > tar -xvf cegcc_mingw32ce_cygwin1.7_r1375.tar -h
+            OR
+            > tar --force-local -xvf cegcc_mingw32ce_cygwin1.7_r1375.tar
        - Move content of /opt/mingw32ce directory to this one.

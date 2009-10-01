@@ -107,8 +107,8 @@ HARBOUR
       You should see 'Hello world!' on screen.
 
       NOTE: To select alternative TCP/IP stack, use these commands:
-	        set HB_USER_CFLAGS=-DTCPV40HDRS %HB_USER_CFLAGS%
-	        set HB_USER_LDFLAGS=-LC:\usr\lib\tcpipv4 %HB_USER_LDFLAGS%
+            set HB_USER_CFLAGS=-DTCPV40HDRS %HB_USER_CFLAGS%
+            set HB_USER_LDFLAGS=-LC:\usr\lib\tcpipv4 %HB_USER_LDFLAGS%
 
    on Linux hosts
    --------------
@@ -459,7 +459,8 @@ HARBOUR
 
    os2
    ---
-   gcc      - EMX GNU C
+   gcc      - EMX GNU C 3.3.5 or lower
+   gccomf   - EMX GNU C 3.3.5 or upper
    watcom   - Open Watcom C++
 
 
@@ -835,8 +836,13 @@ HARBOUR
    for OS/2 hosts
    --------------
 
-      --- GCC 3.3.x
+      --- GCC 3.3.4
       C:\usr\bin\gccenv.cmd
+      os2-make
+
+      --- GCC 4.x
+      C:\usr\bin\gccenv.cmd
+      set HB_COMPILER=gccomf
       os2-make
 
       --- Open Watcom C++
