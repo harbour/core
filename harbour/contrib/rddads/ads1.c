@@ -4342,6 +4342,11 @@ these are really global settings:
 static HB_ERRCODE adsClearFilter( ADSAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("adsClearFilter(%p)", pArea));
+
+   /* resolve any pending relations */
+   if( pArea->lpdbPendingRel )
+      SELF_FORCEREL( ( AREAP ) pArea );
+
    /*
     We don't know if an AOF was used.
     Since a call to the server would need to be made to see if there's an AOF
@@ -4368,6 +4373,10 @@ static HB_ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
       If not, don't pass it to the server; let the super level
       filter the records locally.
     --------------------------------------------------*/
+
+   /* resolve any pending relations */
+   if( pArea->lpdbPendingRel )
+      SELF_FORCEREL( ( AREAP ) pArea );
 
    /* must do this first as it calls clearFilter */
    if( SUPER_SETFILTER( ( AREAP ) pArea, pFilterInfo ) == HB_SUCCESS )

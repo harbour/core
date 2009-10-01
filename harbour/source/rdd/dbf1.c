@@ -4818,10 +4818,7 @@ static HB_ERRCODE hb_dbfClearFilter( DBFAREAP pArea )
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfClearFilter(%p)", pArea));
 
    if( pArea->lpdbPendingRel )
-   {
-      if( SELF_FORCEREL( ( AREAP ) pArea ) != HB_SUCCESS )
-         return HB_FAILURE;
-   }
+      SELF_FORCEREL( ( AREAP ) pArea );
 
    return SUPER_CLEARFILTER( ( AREAP ) pArea );
 }
@@ -4834,10 +4831,7 @@ static HB_ERRCODE hb_dbfSetFilter( DBFAREAP pArea, LPDBFILTERINFO pFilterInfo )
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfSetFilter(%p, %p)", pArea, pFilterInfo));
 
    if( pArea->lpdbPendingRel )
-   {
-      if( SELF_FORCEREL( ( AREAP ) pArea ) != HB_SUCCESS )
-         return HB_FAILURE;
-   }
+      SELF_FORCEREL( ( AREAP ) pArea );
 
    return SUPER_SETFILTER( ( AREAP ) pArea, pFilterInfo );
 }

@@ -8730,8 +8730,9 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO
 /* ( DBENTRYP_V )     hb_cdxClearFilter */
 static HB_ERRCODE hb_cdxClearFilter( CDXAREAP pArea )
 {
+   HB_ERRCODE errCode = SUPER_CLEARFILTER( ( AREAP ) pArea );
    hb_cdxClearLogPosInfo( pArea );
-   return SUPER_CLEARFILTER( ( AREAP ) pArea );
+   return errCode;
 }
 
 /* ( DBENTRYP_V )     hb_cdxClearLocate     : NULL */
@@ -8755,8 +8756,9 @@ static HB_ERRCODE hb_cdxCountScope( CDXAREAP pArea, void * pPtr, LONG * plRec )
 /* ( DBENTRYP_VFI )   hb_cdxSetFilter */
 static HB_ERRCODE hb_cdxSetFilter( CDXAREAP pArea, LPDBFILTERINFO pFilterInfo )
 {
+   HB_ERRCODE errCode = SUPER_SETFILTER( ( AREAP ) pArea, pFilterInfo );
    hb_cdxClearLogPosInfo( pArea );
-   return SUPER_SETFILTER( ( AREAP ) pArea, pFilterInfo );
+   return errCode;
 }
 
 /* ( DBENTRYP_VLO )   hb_cdxSetLocate       : NULL */
