@@ -4811,6 +4811,22 @@ static HB_ERRCODE hb_dbfForceRel( DBFAREAP pArea )
 }
 
 /*
+ * Clear the filter condition for the specified WorkArea.
+ */
+static HB_ERRCODE hb_dbfClearFilter( DBFAREAP pArea )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_dbfClearFilter(%p)", pArea));
+
+   if( pArea->lpdbPendingRel )
+   {
+      if( SELF_FORCEREL( ( AREAP ) pArea ) != HB_SUCCESS )
+         return HB_FAILURE;
+   }
+
+   return SUPER_CLEARFILTER( ( AREAP ) pArea );
+}
+
+/*
  * Set the filter condition for the specified WorkArea.
  */
 static HB_ERRCODE hb_dbfSetFilter( DBFAREAP pArea, LPDBFILTERINFO pFilterInfo )

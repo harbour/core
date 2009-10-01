@@ -311,7 +311,7 @@ static HB_ERRCODE hb_dbfForceRel( DBFAREAP pArea );
 #define hb_dbfOrderCreate                          NULL
 #define hb_dbfOrderDestroy                         NULL
 #define hb_dbfOrderInfo                            NULL
-#define hb_dbfClearFilter                          NULL
+static HB_ERRCODE hb_dbfClearFilter( DBFAREAP pArea );
 #define hb_dbfClearLocate                          NULL
 #define hb_dbfClearScope                           NULL
 #define hb_dbfCountScope                           NULL
