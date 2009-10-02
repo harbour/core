@@ -28,7 +28,6 @@ if [ -f bin/hb-func.sh ]; then
   hb_rootdir="."
 else
   hb_rootdir=`dirname $0`
-  hb_rootdir="${hb_rootdir}/.."
 fi
 . ${hb_rootdir}/bin/hb-func.sh
 

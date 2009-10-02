@@ -77,7 +77,7 @@
 %define hb_crs   export HB_WITH_CURSES=%{!?_without_gtcrs:yes}%{?_without_gtcrs:no}
 %define hb_sln   export HB_WITH_SLANG=%{!?_without_gtsln:yes}%{?_without_gtsln:no}
 %define hb_x11   export HB_WITH_X11=%{!?_without_x11:yes}%{?_without_x11:no}
-%define hb_local export HB_WITH_ZLIB=%{?_with_localzlib:local} ; HB_WITH_PCRE=%{?_with_localpcre:local}
+%define hb_local export HB_WITH_ZLIB=%{?_with_localzlib:local} ; export HB_WITH_PCRE=%{?_with_localpcre:local}
 %define hb_bdir  export HB_BIN_INSTALL=%{_bindir}
 %define hb_idir  export HB_INC_INSTALL=%{_includedir}/%{name}
 %define hb_ldir  export HB_LIB_INSTALL=%{_libdir}/%{name}
