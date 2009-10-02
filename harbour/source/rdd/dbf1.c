@@ -852,7 +852,7 @@ static void hb_dbfGetLockArray( DBFAREAP pArea, PHB_ITEM pItem )
    hb_arrayNew( pItem, pArea->ulNumLocksPos );
    for( ulCount = 0; ulCount < pArea->ulNumLocksPos; ulCount++ )
    {
-      hb_arraySetNL( pItem, ulCount + 1, pArea->pLocksPos[ ulCount ] );
+      hb_arraySetNInt( pItem, ulCount + 1, pArea->pLocksPos[ ulCount ] );
    }
 }
 
@@ -3547,7 +3547,7 @@ static HB_ERRCODE hb_dbfRecInfo( DBFAREAP pArea, PHB_ITEM pRecID, USHORT uiInfoT
          break;
 
       case DBRI_RECNO:
-         hb_itemPutNL( pInfo, ulRecNo );
+         hb_itemPutNInt( pInfo, ulRecNo );
          break;
 
       case DBRI_UPDATED:
