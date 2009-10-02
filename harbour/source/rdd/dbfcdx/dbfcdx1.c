@@ -133,155 +133,6 @@ static void hb_cdxSortFree( LPCDXSORTINFO pSort );
 static USHORT s_uiRddId = ( USHORT ) -1;
 
 static RDDFUNCS cdxSuper;
-static const RDDFUNCS cdxTable =
-{
-
-   /* Movement and positioning methods */
-
-   ( DBENTRYP_BP )    hb_cdxBof,
-   ( DBENTRYP_BP )    hb_cdxEof,
-   ( DBENTRYP_BP )    hb_cdxFound,
-   ( DBENTRYP_V )     hb_cdxGoBottom,
-   ( DBENTRYP_UL )    hb_cdxGoTo,
-   ( DBENTRYP_I )     hb_cdxGoToId,
-   ( DBENTRYP_V )     hb_cdxGoTop,
-   ( DBENTRYP_BIB )   hb_cdxSeek,
-   ( DBENTRYP_L )     hb_cdxSkip,
-   ( DBENTRYP_L )     hb_cdxSkipFilter,
-   ( DBENTRYP_L )     hb_cdxSkipRaw,
-
-
-   /* Data management */
-
-   ( DBENTRYP_VF )    hb_cdxAddField,
-   ( DBENTRYP_B )     hb_cdxAppend,
-   ( DBENTRYP_I )     hb_cdxCreateFields,
-   ( DBENTRYP_V )     hb_cdxDeleteRec,
-   ( DBENTRYP_BP )    hb_cdxDeleted,
-   ( DBENTRYP_SP )    hb_cdxFieldCount,
-   ( DBENTRYP_VF )    hb_cdxFieldDisplay,
-   ( DBENTRYP_SSI )   hb_cdxFieldInfo,
-   ( DBENTRYP_SCP )   hb_cdxFieldName,
-   ( DBENTRYP_V )     hb_cdxFlush,
-   ( DBENTRYP_PP )    hb_cdxGetRec,
-   ( DBENTRYP_SI )    hb_cdxGetValue,
-   ( DBENTRYP_SVL )   hb_cdxGetVarLen,
-   ( DBENTRYP_V )     hb_cdxGoCold,
-   ( DBENTRYP_V )     hb_cdxGoHot,
-   ( DBENTRYP_P )     hb_cdxPutRec,
-   ( DBENTRYP_SI )    hb_cdxPutValue,
-   ( DBENTRYP_V )     hb_cdxRecall,
-   ( DBENTRYP_ULP )   hb_cdxRecCount,
-   ( DBENTRYP_ISI )   hb_cdxRecInfo,
-   ( DBENTRYP_ULP )   hb_cdxRecNo,
-   ( DBENTRYP_I )     hb_cdxRecId,
-   ( DBENTRYP_S )     hb_cdxSetFieldExtent,
-
-
-   /* WorkArea/Database management */
-
-   ( DBENTRYP_CP )    hb_cdxAlias,
-   ( DBENTRYP_V )     hb_cdxClose,
-   ( DBENTRYP_VO )    hb_cdxCreate,
-   ( DBENTRYP_SI )    hb_cdxInfo,
-   ( DBENTRYP_V )     hb_cdxNewArea,
-   ( DBENTRYP_VO )    hb_cdxOpen,
-   ( DBENTRYP_V )     hb_cdxRelease,
-   ( DBENTRYP_SP )    hb_cdxStructSize,
-   ( DBENTRYP_CP )    hb_cdxSysName,
-   ( DBENTRYP_VEI )   hb_cdxEval,
-   ( DBENTRYP_V )     hb_cdxPack,
-   ( DBENTRYP_LSP )   hb_cdxPackRec,
-   ( DBENTRYP_VS )    hb_cdxSort,
-   ( DBENTRYP_VT )    hb_cdxTrans,
-   ( DBENTRYP_VT )    hb_cdxTransRec,
-   ( DBENTRYP_V )     hb_cdxZap,
-
-
-   /* Relational Methods */
-
-   ( DBENTRYP_VR )    hb_cdxChildEnd,
-   ( DBENTRYP_VR )    hb_cdxChildStart,
-   ( DBENTRYP_VR )    hb_cdxChildSync,
-   ( DBENTRYP_V )     hb_cdxSyncChildren,
-   ( DBENTRYP_V )     hb_cdxClearRel,
-   ( DBENTRYP_V )     hb_cdxForceRel,
-   ( DBENTRYP_SSP )   hb_cdxRelArea,
-   ( DBENTRYP_VR )    hb_cdxRelEval,
-   ( DBENTRYP_SI )    hb_cdxRelText,
-   ( DBENTRYP_VR )    hb_cdxSetRel,
-
-
-   /* Order Management */
-
-   ( DBENTRYP_VOI )   hb_cdxOrderListAdd,
-   ( DBENTRYP_V )     hb_cdxOrderListClear,
-   ( DBENTRYP_VOI )   hb_cdxOrderListDelete,
-   ( DBENTRYP_VOI )   hb_cdxOrderListFocus,
-   ( DBENTRYP_V )     hb_cdxOrderListRebuild,
-   ( DBENTRYP_VOO )   hb_cdxOrderCondition,
-   ( DBENTRYP_VOC )   hb_cdxOrderCreate,
-   ( DBENTRYP_VOI )   hb_cdxOrderDestroy,
-   ( DBENTRYP_SVOI )  hb_cdxOrderInfo,
-
-
-   /* Filters and Scope Settings */
-
-   ( DBENTRYP_V )     hb_cdxClearFilter,
-   ( DBENTRYP_V )     hb_cdxClearLocate,
-   ( DBENTRYP_V )     hb_cdxClearScope,
-   ( DBENTRYP_VPLP )  hb_cdxCountScope,
-   ( DBENTRYP_I )     hb_cdxFilterText,
-   ( DBENTRYP_SI )    hb_cdxScopeInfo,
-   ( DBENTRYP_VFI )   hb_cdxSetFilter,
-   ( DBENTRYP_VLO )   hb_cdxSetLocate,
-   ( DBENTRYP_VOS )   hb_cdxSetScope,
-   ( DBENTRYP_VPL )   hb_cdxSkipScope,
-   ( DBENTRYP_B )     hb_cdxLocate,
-
-
-   /* Miscellaneous */
-
-   ( DBENTRYP_CC )    hb_cdxCompile,
-   ( DBENTRYP_I )     hb_cdxError,
-   ( DBENTRYP_I )     hb_cdxEvalBlock,
-
-
-   /* Network operations */
-
-   ( DBENTRYP_VSP )   hb_cdxRawLock,
-   ( DBENTRYP_VL )    hb_cdxLock,
-   ( DBENTRYP_I )     hb_cdxUnLock,
-
-
-   /* Memofile functions */
-
-   ( DBENTRYP_V )     hb_cdxCloseMemFile,
-   ( DBENTRYP_VO )    hb_cdxCreateMemFile,
-   ( DBENTRYP_SCCS )  hb_cdxGetValueFile,
-   ( DBENTRYP_VO )    hb_cdxOpenMemFile,
-   ( DBENTRYP_SCCS )  hb_cdxPutValueFile,
-
-
-   /* Database file header handling */
-
-   ( DBENTRYP_V )     hb_cdxReadDBHeader,
-   ( DBENTRYP_V )     hb_cdxWriteDBHeader,
-
-
-   /* non WorkArea functions       */
-   ( DBENTRYP_R )     hb_cdxInit,
-   ( DBENTRYP_R )     hb_cdxExit,
-   ( DBENTRYP_RVVL )  hb_cdxDrop,
-   ( DBENTRYP_RVVL )  hb_cdxExists,
-   ( DBENTRYP_RVVVL ) hb_cdxRename,
-   ( DBENTRYP_RSLV )  hb_cdxRddInfo,
-
-
-   /* Special and reserved methods */
-
-   ( DBENTRYP_SVP )   hb_cdxWhoCares
-};
 
 
 #ifdef HB_CDX_DSPDBG_INFO
@@ -330,6 +181,7 @@ static ULONG cdxReadNO = 0;
 static SHORT cdxStackSize = 0;
 static SHORT cdxTmpStackSize = 0;
 #endif
+
 
 /*
  * internal DBFCDX function
@@ -9783,6 +9635,159 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, BOOL fReindex )
    hb_cdpSelect( cdpTmp );
 #endif
 }
+
+
+static const RDDFUNCS cdxTable =
+{
+
+   /* Movement and positioning methods */
+
+   ( DBENTRYP_BP )    NULL,   /* hb_cdxBof */
+   ( DBENTRYP_BP )    NULL,   /* hb_cdxEof */
+   ( DBENTRYP_BP )    NULL,   /* hb_cdxFound */
+   ( DBENTRYP_V )     hb_cdxGoBottom,
+   ( DBENTRYP_UL )    NULL,   /* hb_cdxGoTo */
+   ( DBENTRYP_I )     NULL,   /* hb_cdxGoToId */
+   ( DBENTRYP_V )     hb_cdxGoTop,
+   ( DBENTRYP_BIB )   hb_cdxSeek,
+   ( DBENTRYP_L )     hb_cdxSkip,
+   ( DBENTRYP_L )     NULL,   /* hb_cdxSkipFilter */
+   ( DBENTRYP_L )     hb_cdxSkipRaw,
+
+
+   /* Data management */
+
+   ( DBENTRYP_VF )    NULL,   /* hb_cdxAddField */
+   ( DBENTRYP_B )     NULL,   /* hb_cdxAppend */
+   ( DBENTRYP_I )     NULL,   /* hb_cdxCreateFields */
+   ( DBENTRYP_V )     NULL,   /* hb_cdxDeleteRec */
+   ( DBENTRYP_BP )    NULL,   /* hb_cdxDeleted */
+   ( DBENTRYP_SP )    NULL,   /* hb_cdxFieldCount */
+   ( DBENTRYP_VF )    NULL,   /* hb_cdxFieldDisplay */
+   ( DBENTRYP_SSI )   NULL,   /* hb_cdxFieldInfo */
+   ( DBENTRYP_SCP )   NULL,   /* hb_cdxFieldName */
+   ( DBENTRYP_V )     hb_cdxFlush,
+   ( DBENTRYP_PP )    NULL,   /* hb_cdxGetRec */
+   ( DBENTRYP_SI )    NULL,   /* hb_cdxGetValue */
+   ( DBENTRYP_SVL )   NULL,   /* hb_cdxGetVarLen */
+   ( DBENTRYP_V )     hb_cdxGoCold,
+   ( DBENTRYP_V )     hb_cdxGoHot,
+   ( DBENTRYP_P )     NULL,   /* hb_cdxPutRec */
+   ( DBENTRYP_SI )    NULL,   /* hb_cdxPutValue */
+   ( DBENTRYP_V )     NULL,   /* hb_cdxRecall */
+   ( DBENTRYP_ULP )   NULL,   /* hb_cdxRecCount */
+   ( DBENTRYP_ISI )   NULL,   /* hb_cdxRecInfo */
+   ( DBENTRYP_ULP )   NULL,   /* hb_cdxRecNo */
+   ( DBENTRYP_I )     NULL,   /* hb_cdxRecId */
+   ( DBENTRYP_S )     NULL,   /* hb_cdxSetFieldExtent */
+
+
+   /* WorkArea/Database management */
+
+   ( DBENTRYP_CP )    NULL,   /* hb_cdxAlias */
+   ( DBENTRYP_V )     hb_cdxClose,
+   ( DBENTRYP_VO )    NULL,   /* hb_cdxCreate */
+   ( DBENTRYP_SI )    NULL,   /* hb_cdxInfo */
+   ( DBENTRYP_V )     NULL,   /* hb_cdxNewArea */
+   ( DBENTRYP_VO )    hb_cdxOpen,
+   ( DBENTRYP_V )     NULL,   /* hb_cdxRelease */
+   ( DBENTRYP_SP )    hb_cdxStructSize,
+   ( DBENTRYP_CP )    NULL,   /* hb_cdxSysName */
+   ( DBENTRYP_VEI )   NULL,   /* hb_cdxEval */
+   ( DBENTRYP_V )     hb_cdxPack,
+   ( DBENTRYP_LSP )   NULL,   /* hb_cdxPackRec */
+   ( DBENTRYP_VS )    NULL,   /* hb_cdxSort */
+   ( DBENTRYP_VT )    NULL,   /* hb_cdxTrans */
+   ( DBENTRYP_VT )    NULL,   /* hb_cdxTransRec */
+   ( DBENTRYP_V )     hb_cdxZap,
+
+
+   /* Relational Methods */
+
+   ( DBENTRYP_VR )    NULL,   /* hb_cdxChildEnd */
+   ( DBENTRYP_VR )    NULL,   /* hb_cdxChildStart */
+   ( DBENTRYP_VR )    NULL,   /* hb_cdxChildSync */
+   ( DBENTRYP_V )     NULL,   /* hb_cdxSyncChildren */
+   ( DBENTRYP_V )     NULL,   /* hb_cdxClearRel */
+   ( DBENTRYP_V )     NULL,   /* hb_cdxForceRel */
+   ( DBENTRYP_SSP )   NULL,   /* hb_cdxRelArea */
+   ( DBENTRYP_VR )    NULL,   /* hb_cdxRelEval */
+   ( DBENTRYP_SI )    NULL,   /* hb_cdxRelText */
+   ( DBENTRYP_VR )    NULL,   /* hb_cdxSetRel */
+
+
+   /* Order Management */
+
+   ( DBENTRYP_VOI )   hb_cdxOrderListAdd,
+   ( DBENTRYP_V )     hb_cdxOrderListClear,
+   ( DBENTRYP_VOI )   hb_cdxOrderListDelete,
+   ( DBENTRYP_VOI )   hb_cdxOrderListFocus,
+   ( DBENTRYP_V )     hb_cdxOrderListRebuild,
+   ( DBENTRYP_VOO )   NULL,   /* hb_cdxOrderCondition */
+   ( DBENTRYP_VOC )   hb_cdxOrderCreate,
+   ( DBENTRYP_VOI )   hb_cdxOrderDestroy,
+   ( DBENTRYP_SVOI )  hb_cdxOrderInfo,
+
+
+   /* Filters and Scope Settings */
+
+   ( DBENTRYP_V )     hb_cdxClearFilter,
+   ( DBENTRYP_V )     NULL,   /* hb_cdxClearLocate */
+   ( DBENTRYP_V )     NULL,   /* hb_cdxClearScope */
+   ( DBENTRYP_VPLP )  hb_cdxCountScope,
+   ( DBENTRYP_I )     NULL,   /* hb_cdxFilterText */
+   ( DBENTRYP_SI )    NULL,   /* hb_cdxScopeInfo */
+   ( DBENTRYP_VFI )   hb_cdxSetFilter,
+   ( DBENTRYP_VLO )   NULL,   /* hb_cdxSetLocate */
+   ( DBENTRYP_VOS )   NULL,   /* hb_cdxSetScope */
+   ( DBENTRYP_VPL )   NULL,   /* hb_cdxSkipScope */
+   ( DBENTRYP_B )     NULL,   /* hb_cdxLocate */
+
+
+   /* Miscellaneous */
+
+   ( DBENTRYP_CC )    NULL,   /* hb_cdxCompile */
+   ( DBENTRYP_I )     NULL,   /* hb_cdxError */
+   ( DBENTRYP_I )     NULL,   /* hb_cdxEvalBlock */
+
+
+   /* Network operations */
+
+   ( DBENTRYP_VSP )   NULL,   /* hb_cdxRawLock */
+   ( DBENTRYP_VL )    NULL,   /* hb_cdxLock */
+   ( DBENTRYP_I )     NULL,   /* hb_cdxUnLock */
+
+
+   /* Memofile functions */
+
+   ( DBENTRYP_V )     NULL,   /* hb_cdxCloseMemFile */
+   ( DBENTRYP_VO )    NULL,   /* hb_cdxCreateMemFile */
+   ( DBENTRYP_SCCS )  NULL,   /* hb_cdxGetValueFile */
+   ( DBENTRYP_VO )    NULL,   /* hb_cdxOpenMemFile */
+   ( DBENTRYP_SCCS )  NULL,   /* hb_cdxPutValueFile */
+
+
+   /* Database file header handling */
+
+   ( DBENTRYP_V )     NULL,   /* hb_cdxReadDBHeader */
+   ( DBENTRYP_V )     NULL,   /* hb_cdxWriteDBHeader */
+
+
+   /* non WorkArea functions       */
+
+   ( DBENTRYP_R )     NULL,   /* hb_cdxInit */
+   ( DBENTRYP_R )     NULL,   /* hb_cdxExit */
+   ( DBENTRYP_RVVL )  NULL,   /* hb_cdxDrop */
+   ( DBENTRYP_RVVL )  NULL,   /* hb_cdxExists */
+   ( DBENTRYP_RVVVL ) NULL,   /* hb_cdxRename */
+   ( DBENTRYP_RSLV )  hb_cdxRddInfo,
+
+
+   /* Special and reserved methods */
+
+   ( DBENTRYP_SVP )   NULL    /* hb_cdxWhoCares */
+};
+
 
 HB_FUNC_EXTERN( _DBF );
 

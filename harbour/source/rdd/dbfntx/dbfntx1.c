@@ -153,6 +153,7 @@
    static ULONG s_rdNO = 0;
    static ULONG s_wrNO = 0;
 #endif
+
 static RDDFUNCS ntxSuper;
 static USHORT s_uiRddId;
 
@@ -5579,11 +5580,15 @@ static HB_ERRCODE hb_ntxReIndex( LPNTXINDEX pIndex )
 
 /* Implementation of exported functions */
 
-static HB_ERRCODE ntxGoBottom( NTXAREAP pArea )
+#define hb_ntxBof                   NULL
+#define hb_ntxEof                   NULL
+#define hb_ntxFound                 NULL
+
+static HB_ERRCODE hb_ntxGoBottom( NTXAREAP pArea )
 {
    HB_ERRCODE retval;
 
-   HB_TRACE(HB_TR_DEBUG, ("ntxGoBottom(%p)", pArea));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxGoBottom(%p)", pArea));
 
    if( SELF_GOCOLD( ( AREAP ) pArea ) == HB_FAILURE )
       return HB_FAILURE;
@@ -5616,11 +5621,14 @@ static HB_ERRCODE ntxGoBottom( NTXAREAP pArea )
    return retval;
 }
 
-static HB_ERRCODE ntxGoTop( NTXAREAP pArea )
+#define hb_ntxGoTo                  NULL
+#define hb_ntxGoToId                NULL
+
+static HB_ERRCODE hb_ntxGoTop( NTXAREAP pArea )
 {
    HB_ERRCODE retval;
 
-   HB_TRACE(HB_TR_DEBUG, ("ntxGoTop(%p)", pArea));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxGoTop(%p)", pArea));
 
    if( SELF_GOCOLD( ( AREAP ) pArea ) == HB_FAILURE )
       return HB_FAILURE;
@@ -5653,9 +5661,9 @@ static HB_ERRCODE ntxGoTop( NTXAREAP pArea )
    return retval;
 }
 
-static HB_ERRCODE ntxSeek( NTXAREAP pArea, BOOL fSoftSeek, PHB_ITEM pItem, BOOL fFindLast )
+static HB_ERRCODE hb_ntxSeek( NTXAREAP pArea, BOOL fSoftSeek, PHB_ITEM pItem, BOOL fFindLast )
 {
-   HB_TRACE(HB_TR_DEBUG, ("ntxSeek(%p, %d, %p, %d)", pArea, fSoftSeek, pItem, fFindLast));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxSeek(%p, %d, %p, %d)", pArea, fSoftSeek, pItem, fFindLast));
 
    if( SELF_GOCOLD( ( AREAP ) pArea ) == HB_FAILURE )
       return HB_FAILURE;
@@ -5741,12 +5749,15 @@ static HB_ERRCODE ntxSeek( NTXAREAP pArea, BOOL fSoftSeek, PHB_ITEM pItem, BOOL 
    }
 }
 
-static HB_ERRCODE ntxSkipRaw( NTXAREAP pArea, LONG lToSkip )
+#define hb_ntxSkip                  NULL
+#define hb_ntxSkipFilter            NULL
+
+static HB_ERRCODE hb_ntxSkipRaw( NTXAREAP pArea, LONG lToSkip )
 {
    HB_ERRCODE retval;
    BOOL fOut = FALSE, fForward;
 
-   HB_TRACE(HB_TR_DEBUG, ("ntxSkipRaw(%p, %ld)", pArea, lToSkip));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxSkipRaw(%p, %ld)", pArea, lToSkip));
 
    if( SELF_GOCOLD( ( AREAP ) pArea ) == HB_FAILURE )
       return HB_FAILURE;
@@ -5809,14 +5820,24 @@ static HB_ERRCODE ntxSkipRaw( NTXAREAP pArea, LONG lToSkip )
    return retval;
 }
 
+#define hb_ntxAddField              NULL
+#define hb_ntxAppend                NULL
+#define hb_ntxCreateFields          NULL
+#define hb_ntxDeleteRec             NULL
+#define hb_ntxDeleted               NULL
+#define hb_ntxFieldCount            NULL
+#define hb_ntxFieldDisplay          NULL
+#define hb_ntxFieldInfo             NULL
+#define hb_ntxFieldName             NULL
+
 /*
  * Flush _system_ buffers to disk
  */
-static HB_ERRCODE ntxFlush( NTXAREAP pArea )
+static HB_ERRCODE hb_ntxFlush( NTXAREAP pArea )
 {
    HB_ERRCODE uiError;
 
-   HB_TRACE(HB_TR_DEBUG, ("ntxFlush(%p)", pArea));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxFlush(%p)", pArea));
 
    uiError = SELF_GOCOLD( ( AREAP ) pArea );
    if( uiError == HB_SUCCESS )
@@ -5841,15 +5862,19 @@ static HB_ERRCODE ntxFlush( NTXAREAP pArea )
    return uiError;
 }
 
+#define hb_ntxGetRec                NULL
+#define hb_ntxGetValue              NULL
+#define hb_ntxGetVarLen             NULL
+
 /*
  * Perform a write of WorkArea memory to the data store.
  */
-static HB_ERRCODE ntxGoCold( NTXAREAP pArea )
+static HB_ERRCODE hb_ntxGoCold( NTXAREAP pArea )
 {
    BOOL fRecordChanged = pArea->dbfarea.fRecordChanged;
    BOOL fAppend = pArea->dbfarea.fAppend;
 
-   HB_TRACE(HB_TR_DEBUG, ("ntxGoCold(%p)", pArea));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxGoCold(%p)", pArea));
 
    if( SUPER_GOCOLD( ( AREAP ) pArea ) == HB_SUCCESS )
    {
@@ -5858,7 +5883,7 @@ static HB_ERRCODE ntxGoCold( NTXAREAP pArea )
          if( fAppend && pArea->dbfarea.fShared )
          {
             if( pArea->fNtxAppend )
-               hb_errInternal( 9312, "ntxGoCold: multiple appending without GOCOLD.", NULL, NULL );
+               hb_errInternal( 9312, "hb_ntxGoCold: multiple appending without GOCOLD.", NULL, NULL );
             pArea->fNtxAppend = TRUE;
          }
          else
@@ -5977,11 +6002,11 @@ static HB_ERRCODE ntxGoCold( NTXAREAP pArea )
 /*
  * Mark the WorkArea data buffer as hot.
  */
-static HB_ERRCODE ntxGoHot( NTXAREAP pArea )
+static HB_ERRCODE hb_ntxGoHot( NTXAREAP pArea )
 {
    HB_ERRCODE errCode;
 
-   HB_TRACE(HB_TR_DEBUG, ("ntxGoHot(%p)", pArea));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxGoHot(%p)", pArea));
 
    errCode = SUPER_GOHOT( ( AREAP ) pArea );
    if( errCode == HB_SUCCESS )
@@ -6015,14 +6040,24 @@ static HB_ERRCODE ntxGoHot( NTXAREAP pArea )
    return errCode;
 }
 
+#define hb_ntxPutRec                NULL
+#define hb_ntxPutValue              NULL
+#define hb_ntxRecall                NULL
+#define hb_ntxRecCount              NULL
+#define hb_ntxRecInfo               NULL
+#define hb_ntxRecNo                 NULL
+#define hb_ntxRecId                 NULL
+#define hb_ntxSetFieldsExtent       NULL
+#define hb_ntxAlias                 NULL
+
 /*
  * Close the table in the WorkArea.
  */
-static HB_ERRCODE ntxClose( NTXAREAP pArea )
+static HB_ERRCODE hb_ntxClose( NTXAREAP pArea )
 {
    HB_ERRCODE errCode;
 
-   HB_TRACE(HB_TR_DEBUG, ("ntxClose(%p)", pArea));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxClose(%p)", pArea));
 
    if( SELF_GOCOLD( ( AREAP ) pArea ) == HB_FAILURE )
       return HB_FAILURE;
@@ -6055,13 +6090,17 @@ static HB_ERRCODE ntxClose( NTXAREAP pArea )
    return errCode;
 }
 
+#define hb_ntxCreate                NULL
+#define hb_ntxInfo                  NULL
+#define hb_ntxNewArea               NULL
+
 /*
  * Retrieve the size of the WorkArea structure.
  */
-static HB_ERRCODE ntxStructSize( NTXAREAP pArea, USHORT * uiSize )
+static HB_ERRCODE hb_ntxStructSize( NTXAREAP pArea, USHORT * uiSize )
 
 {
-   HB_TRACE(HB_TR_DEBUG, ("ntxStructSize(%p, %p)", pArea, uiSize));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxStructSize(%p, %p)", pArea, uiSize));
    HB_SYMBOL_UNUSED( pArea );
 
    * uiSize = sizeof( NTXAREA );
@@ -6071,11 +6110,11 @@ static HB_ERRCODE ntxStructSize( NTXAREAP pArea, USHORT * uiSize )
 /*
  * Open a data store in the WorkArea.
  */
-static HB_ERRCODE ntxOpen( NTXAREAP pArea, LPDBOPENINFO pOpenInfo )
+static HB_ERRCODE hb_ntxOpen( NTXAREAP pArea, LPDBOPENINFO pOpenInfo )
 {
    HB_ERRCODE errCode;
 
-   HB_TRACE(HB_TR_DEBUG, ("ntxOpen(%p, %p)", pArea, pOpenInfo));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxOpen(%p, %p)", pArea, pOpenInfo));
 
    errCode = SUPER_OPEN( ( AREAP ) pArea, pOpenInfo );
 
@@ -6112,10 +6151,14 @@ static HB_ERRCODE ntxOpen( NTXAREAP pArea, LPDBOPENINFO pOpenInfo )
    return errCode;
 }
 
-static HB_ERRCODE ntxPack( NTXAREAP pArea )
+#define hb_ntxRelease               NULL
+#define hb_ntxSysName               NULL
+#define hb_ntxEval                  NULL
+
+static HB_ERRCODE hb_ntxPack( NTXAREAP pArea )
 {
    HB_ERRCODE errCode;
-   HB_TRACE(HB_TR_DEBUG, ("ntxPack(%p)", pArea ));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxPack(%p)", pArea ));
 
    errCode = SUPER_PACK( ( AREAP ) pArea );
    if( errCode == HB_SUCCESS )
@@ -6124,11 +6167,16 @@ static HB_ERRCODE ntxPack( NTXAREAP pArea )
    return errCode;
 }
 
-static HB_ERRCODE ntxZap( NTXAREAP pArea )
+#define ntPackRec                NULL
+#define hb_ntxSort                  NULL
+#define hb_ntxTrans                 NULL
+#define hb_ntxTransRec              NULL
+
+static HB_ERRCODE hb_ntxZap( NTXAREAP pArea )
 {
    HB_ERRCODE errCode;
 
-   HB_TRACE(HB_TR_DEBUG, ("ntxZap(%p)", pArea ));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxZap(%p)", pArea ));
 
    errCode = SUPER_ZAP( ( AREAP ) pArea );
    if( errCode == HB_SUCCESS )
@@ -6137,7 +6185,20 @@ static HB_ERRCODE ntxZap( NTXAREAP pArea )
    return errCode;
 }
 
-static HB_ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
+#define hb_ntxchildEnd              NULL
+#define hb_ntxchildStart            NULL
+#define hb_ntxchildSync             NULL
+#define hb_ntxsyncChildren          NULL
+#define hb_ntxclearRel              NULL
+#define hb_ntxforceRel              NULL
+#define hb_ntxrelArea               NULL
+#define hb_ntxrelEval               NULL
+#define hb_ntxrelText               NULL
+#define hb_ntxsetRel                NULL
+
+#define hb_ntxOrderCondition        NULL
+
+static HB_ERRCODE hb_ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 {
    PHB_ITEM pResult, pKeyExp, pForExp = NULL;
    int iLen, iDec, iTag, i;
@@ -6153,7 +6214,7 @@ static HB_ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
         fAscend = TRUE, fCustom = FALSE, fTemporary = FALSE, fExclusive = FALSE;
    BYTE bType;
 
-   HB_TRACE(HB_TR_DEBUG, ("ntxOrderCreate(%p, %p)", pArea, pOrderInfo));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxOrderCreate(%p, %p)", pArea, pOrderInfo));
 
    errCode = SELF_GOCOLD( ( AREAP ) pArea );
    if( errCode != HB_SUCCESS )
@@ -6565,11 +6626,11 @@ static HB_ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
    return SELF_GOTOP( ( AREAP ) pArea );
 }
 
-static HB_ERRCODE ntxOrderDestroy( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
+static HB_ERRCODE hb_ntxOrderDestroy( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
    HB_ERRCODE errCode;
 
-   HB_TRACE(HB_TR_DEBUG, ("ntxOrderDestroy(%p, %p)", pArea, pOrderInfo));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxOrderDestroy(%p, %p)", pArea, pOrderInfo));
 
    errCode = SELF_GOCOLD( ( AREAP ) pArea );
    if( errCode != HB_SUCCESS )
@@ -6636,10 +6697,10 @@ static HB_ERRCODE ntxOrderDestroy( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
    return errCode;
 }
 
-static HB_ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo )
+static HB_ERRCODE hb_ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo )
 {
    LPTAGINFO pTag;
-   HB_TRACE(HB_TR_DEBUG, ("ntxOrderInfo(%p, %hu, %p)", pArea, uiIndex, pInfo));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxOrderInfo(%p, %hu, %p)", pArea, uiIndex, pInfo));
 
    switch( uiIndex )
    {
@@ -7309,18 +7370,7 @@ static HB_ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pI
    return HB_SUCCESS;
 }
 
-static HB_ERRCODE ntxCountScope( NTXAREAP pArea, void * pPtr, LONG * plRecNo )
-{
-   HB_TRACE(HB_TR_DEBUG, ("ntxCountScope(%p, %p, %p)", pArea, pPtr, plRecNo));
-
-   if( pPtr == NULL )
-   {
-      return HB_SUCCESS;
-   }
-   return SUPER_COUNTSCOPE( ( AREAP ) pArea, pPtr, plRecNo );
-}
-
-static HB_ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
+static HB_ERRCODE hb_ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
    USHORT uiFlags;
    PHB_FILE pFile;
@@ -7329,7 +7379,7 @@ static HB_ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
    HB_ERRCODE errCode;
    BOOL fRetry, fReadonly, fShared, fProd;
 
-   HB_TRACE(HB_TR_DEBUG, ("ntxOrderListAdd(%p, %p)", pArea, pOrderInfo));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxOrderListAdd(%p, %p)", pArea, pOrderInfo));
 
    errCode = SELF_GOCOLD( ( AREAP ) pArea );
    if( errCode != HB_SUCCESS )
@@ -7415,11 +7465,11 @@ static HB_ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
    return errCode;
 }
 
-static HB_ERRCODE ntxOrderListClear( NTXAREAP pArea )
+static HB_ERRCODE hb_ntxOrderListClear( NTXAREAP pArea )
 {
    LPNTXINDEX *pIndexPtr, pIndex;
 
-   HB_TRACE(HB_TR_DEBUG, ("ntxOrderListClear(%p)", pArea));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxOrderListClear(%p)", pArea));
 
    if( SELF_GOCOLD( ( AREAP ) pArea ) == HB_FAILURE )
       return HB_FAILURE;
@@ -7445,14 +7495,14 @@ static HB_ERRCODE ntxOrderListClear( NTXAREAP pArea )
    return HB_SUCCESS;
 }
 
-static HB_ERRCODE ntxOrderListDelete( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
+static HB_ERRCODE hb_ntxOrderListDelete( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
    char szTagName[ NTX_MAX_TAGNAME + 1 ];
    char szFileName[ HB_PATH_MAX ];
    LPNTXINDEX pIndex, * pIndexPtr;
    BOOL fProd;
 
-   HB_TRACE(HB_TR_DEBUG, ("ntxOrderListDelete(%p, %p)", pArea, pOrderInfo));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxOrderListDelete(%p, %p)", pArea, pOrderInfo));
 
    if( SELF_GOCOLD( ( AREAP ) pArea ) == HB_FAILURE )
       return HB_FAILURE;
@@ -7481,9 +7531,9 @@ static HB_ERRCODE ntxOrderListDelete( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
    return HB_SUCCESS;
 }
 
-static HB_ERRCODE ntxOrderListFocus( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
+static HB_ERRCODE hb_ntxOrderListFocus( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
-   HB_TRACE(HB_TR_DEBUG, ("ntxOrderListFocus(%p, %p)", pArea, pOrderInfo));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxOrderListFocus(%p, %p)", pArea, pOrderInfo));
 
    pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult,
                              pArea->lpCurTag ? pArea->lpCurTag->TagName : NULL );
@@ -7509,13 +7559,13 @@ static HB_ERRCODE ntxOrderListFocus( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
    return HB_SUCCESS;
 }
 
-static HB_ERRCODE ntxOrderListRebuild( NTXAREAP pArea )
+static HB_ERRCODE hb_ntxOrderListRebuild( NTXAREAP pArea )
 {
    LPTAGINFO pCurrTag;
    LPNTXINDEX pIndex;
    HB_ERRCODE errCode;
 
-   HB_TRACE(HB_TR_DEBUG, ("ntxOrderListRebuild(%p)", pArea));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxOrderListRebuild(%p)", pArea));
 
    errCode = SELF_GOCOLD( ( AREAP ) pArea );
    if( errCode != HB_SUCCESS )
@@ -7554,11 +7604,47 @@ static HB_ERRCODE ntxOrderListRebuild( NTXAREAP pArea )
    return errCode;
 }
 
-static HB_ERRCODE ntxInit( LPRDDNODE pRDD )
+#define hb_ntxClearFilter           NULL
+#define hb_ntxClearLocate           NULL
+#define hb_ntxClearScope            NULL
+
+static HB_ERRCODE hb_ntxCountScope( NTXAREAP pArea, void * pPtr, LONG * plRecNo )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxCountScope(%p, %p, %p)", pArea, pPtr, plRecNo));
+
+   if( pPtr == NULL )
+   {
+      return HB_SUCCESS;
+   }
+   return SUPER_COUNTSCOPE( ( AREAP ) pArea, pPtr, plRecNo );
+}
+
+#define hb_ntxFilterText            NULL
+#define hb_ntxScopeInfo             NULL
+#define hb_ntxSetFilter             NULL
+#define hb_ntxSetLocate             NULL
+#define hb_ntxSetScope              NULL
+#define hb_ntxSkipScope             NULL
+#define hb_ntxLocate                NULL
+#define hb_ntxCompile               NULL
+#define hb_ntxError                 NULL
+#define hb_ntxEvalBlock             NULL
+#define hb_ntxRawLock               NULL
+#define hb_ntxLock                  NULL
+#define hb_ntxUnLock                NULL
+#define hb_ntxCloseMemFile          NULL
+#define hb_ntxCreateMemFile         NULL
+#define hb_ntxGetValueFile          NULL
+#define hb_ntxOpenMemFile           NULL
+#define hb_ntxPutValueFile          NULL
+#define hb_ntxReadDBHeader          NULL
+#define hb_ntxWriteDBHeader         NULL
+
+static HB_ERRCODE hb_ntxInit( LPRDDNODE pRDD )
 {
    HB_ERRCODE errCode;
 
-   HB_TRACE(HB_TR_DEBUG, ("ntxInit(%p)", pRDD));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxInit(%p)", pRDD));
 
    errCode = SUPER_INIT( pRDD );
    if( errCode == HB_SUCCESS )
@@ -7573,11 +7659,16 @@ static HB_ERRCODE ntxInit( LPRDDNODE pRDD )
    return errCode;
 }
 
-static HB_ERRCODE ntxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem )
+#define hb_ntxExit                  NULL
+#define hb_ntxDrop                  NULL
+#define hb_ntxExists                NULL
+#define hb_ntxRename                NULL
+
+static HB_ERRCODE hb_ntxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem )
 {
    LPDBFDATA pData;
 
-   HB_TRACE(HB_TR_DEBUG, ("ntxRddInfo(%p, %hu, %lu, %p)", pRDD, uiIndex, ulConnect, pItem));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ntxRddInfo(%p, %hu, %lu, %p)", pRDD, uiIndex, ulConnect, pItem));
 
    pData = DBFNODE_DATA( pRDD );
 
@@ -7658,107 +7749,109 @@ static HB_ERRCODE ntxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
    return HB_SUCCESS;
 }
 
+#define hb_ntxWhoCares              NULL
+
 static const RDDFUNCS ntxTable = {
-                             ntxBof,
-                             ntxEof,
-                             ntxFound,
-                             ( DBENTRYP_V ) ntxGoBottom,
-                             ntxGoTo,
-                             ntxGoToId,
-                             ( DBENTRYP_V ) ntxGoTop,
-                             ( DBENTRYP_BIB ) ntxSeek,
-                             ntxSkip,
-                             ntxSkipFilter,
-                             ( DBENTRYP_L ) ntxSkipRaw,
-                             ntxAddField,
-                             ( DBENTRYP_B ) ntxAppend,
-                             ntxCreateFields,
-                             ntxDeleteRec,
-                             ntxDeleted,
-                             ntxFieldCount,
-                             ntxFieldDisplay,
-                             ntxFieldInfo,
-                             ntxFieldName,
-                             ( DBENTRYP_V ) ntxFlush,
-                             ntxGetRec,
-                             ntxGetValue,
-                             ntxGetVarLen,
-                             ( DBENTRYP_V ) ntxGoCold,
-                             ( DBENTRYP_V ) ntxGoHot,
-                             ntxPutRec,
-                             ntxPutValue,
-                             ntxRecall,
-                             ntxRecCount,
-                             ntxRecInfo,
-                             ntxRecNo,
-                             ntxRecId,
-                             ntxSetFieldsExtent,
-                             ntxAlias,
-                             ( DBENTRYP_V ) ntxClose,
-                             ntxCreate,
-                             ntxInfo,
-                             ntxNewArea,
-                             ( DBENTRYP_VO ) ntxOpen,
-                             ntxRelease,
-                             ( DBENTRYP_SP ) ntxStructSize,
-                             ntxSysName,
-                             ntxEval,
-                             ( DBENTRYP_V ) ntxPack,
+                             hb_ntxBof,
+                             hb_ntxEof,
+                             hb_ntxFound,
+              ( DBENTRYP_V ) hb_ntxGoBottom,
+                             hb_ntxGoTo,
+                             hb_ntxGoToId,
+              ( DBENTRYP_V ) hb_ntxGoTop,
+            ( DBENTRYP_BIB ) hb_ntxSeek,
+                             hb_ntxSkip,
+                             hb_ntxSkipFilter,
+              ( DBENTRYP_L ) hb_ntxSkipRaw,
+                             hb_ntxAddField,
+              ( DBENTRYP_B ) hb_ntxAppend,
+                             hb_ntxCreateFields,
+                             hb_ntxDeleteRec,
+                             hb_ntxDeleted,
+                             hb_ntxFieldCount,
+                             hb_ntxFieldDisplay,
+                             hb_ntxFieldInfo,
+                             hb_ntxFieldName,
+              ( DBENTRYP_V ) hb_ntxFlush,
+                             hb_ntxGetRec,
+                             hb_ntxGetValue,
+                             hb_ntxGetVarLen,
+              ( DBENTRYP_V ) hb_ntxGoCold,
+              ( DBENTRYP_V ) hb_ntxGoHot,
+                             hb_ntxPutRec,
+                             hb_ntxPutValue,
+                             hb_ntxRecall,
+                             hb_ntxRecCount,
+                             hb_ntxRecInfo,
+                             hb_ntxRecNo,
+                             hb_ntxRecId,
+                             hb_ntxSetFieldsExtent,
+                             hb_ntxAlias,
+              ( DBENTRYP_V ) hb_ntxClose,
+                             hb_ntxCreate,
+                             hb_ntxInfo,
+                             hb_ntxNewArea,
+             ( DBENTRYP_VO ) hb_ntxOpen,
+                             hb_ntxRelease,
+             ( DBENTRYP_SP ) hb_ntxStructSize,
+                             hb_ntxSysName,
+                             hb_ntxEval,
+              ( DBENTRYP_V ) hb_ntxPack,
                              ntPackRec,
-                             ntxSort,
-                             ntxTrans,
-                             ntxTransRec,
-                             ( DBENTRYP_V ) ntxZap,
-                             ntxchildEnd,
-                             ntxchildStart,
-                             ntxchildSync,
-                             ntxsyncChildren,
-                             ntxclearRel,
-                             ntxforceRel,
-                             ntxrelArea,
-                             ntxrelEval,
-                             ntxrelText,
-                             ntxsetRel,
-                             ( DBENTRYP_VOI ) ntxOrderListAdd,
-                             ( DBENTRYP_V ) ntxOrderListClear,
-                             ( DBENTRYP_VOI ) ntxOrderListDelete,
-                             ( DBENTRYP_VOI ) ntxOrderListFocus,
-                             ( DBENTRYP_V ) ntxOrderListRebuild,
-                             ntxOrderCondition,
-                             ( DBENTRYP_VOC ) ntxOrderCreate,
-                             ( DBENTRYP_VOI ) ntxOrderDestroy,
-                             ( DBENTRYP_SVOI ) ntxOrderInfo,
-                             ntxClearFilter,
-                             ntxClearLocate,
-                             ntxClearScope,
-                             ( DBENTRYP_VPLP ) ntxCountScope,
-                             ntxFilterText,
-                             ntxScopeInfo,
-                             ntxSetFilter,
-                             ntxSetLocate,
-                             ntxSetScope,
-                             ntxSkipScope,
-                             ntxLocate,
-                             ntxCompile,
-                             ntxError,
-                             ntxEvalBlock,
-                             ntxRawLock,
-                             ntxLock,
-                             ntxUnLock,
-                             ntxCloseMemFile,
-                             ntxCreateMemFile,
-                             ntxGetValueFile,
-                             ntxOpenMemFile,
-                             ntxPutValueFile,
-                             ntxReadDBHeader,
-                             ntxWriteDBHeader,
-                             ntxInit,
-                             ntxExit,
-                             ntxDrop,
-                             ntxExists,
-                             ntxRename,
-                             ntxRddInfo,
-                             ntxWhoCares
+                             hb_ntxSort,
+                             hb_ntxTrans,
+                             hb_ntxTransRec,
+              ( DBENTRYP_V ) hb_ntxZap,
+                             hb_ntxchildEnd,
+                             hb_ntxchildStart,
+                             hb_ntxchildSync,
+                             hb_ntxsyncChildren,
+                             hb_ntxclearRel,
+                             hb_ntxforceRel,
+                             hb_ntxrelArea,
+                             hb_ntxrelEval,
+                             hb_ntxrelText,
+                             hb_ntxsetRel,
+            ( DBENTRYP_VOI ) hb_ntxOrderListAdd,
+              ( DBENTRYP_V ) hb_ntxOrderListClear,
+            ( DBENTRYP_VOI ) hb_ntxOrderListDelete,
+            ( DBENTRYP_VOI ) hb_ntxOrderListFocus,
+              ( DBENTRYP_V ) hb_ntxOrderListRebuild,
+                             hb_ntxOrderCondition,
+            ( DBENTRYP_VOC ) hb_ntxOrderCreate,
+            ( DBENTRYP_VOI ) hb_ntxOrderDestroy,
+           ( DBENTRYP_SVOI ) hb_ntxOrderInfo,
+                             hb_ntxClearFilter,
+                             hb_ntxClearLocate,
+                             hb_ntxClearScope,
+           ( DBENTRYP_VPLP ) hb_ntxCountScope,
+                             hb_ntxFilterText,
+                             hb_ntxScopeInfo,
+                             hb_ntxSetFilter,
+                             hb_ntxSetLocate,
+                             hb_ntxSetScope,
+                             hb_ntxSkipScope,
+                             hb_ntxLocate,
+                             hb_ntxCompile,
+                             hb_ntxError,
+                             hb_ntxEvalBlock,
+                             hb_ntxRawLock,
+                             hb_ntxLock,
+                             hb_ntxUnLock,
+                             hb_ntxCloseMemFile,
+                             hb_ntxCreateMemFile,
+                             hb_ntxGetValueFile,
+                             hb_ntxOpenMemFile,
+                             hb_ntxPutValueFile,
+                             hb_ntxReadDBHeader,
+                             hb_ntxWriteDBHeader,
+                             hb_ntxInit,
+                             hb_ntxExit,
+                             hb_ntxDrop,
+                             hb_ntxExists,
+                             hb_ntxRename,
+                             hb_ntxRddInfo,
+                             hb_ntxWhoCares
                            };
 
 HB_FUNC( DBFNTX ) {;}

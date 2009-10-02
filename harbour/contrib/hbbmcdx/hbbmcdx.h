@@ -501,6 +501,7 @@ typedef BM_FILTER * LPBM_FILTER;
  * -- DBFCDX METHODS --
  */
 
+#undef  SUPERTABLE
 #define SUPERTABLE                         ( &cdxSuper )
 
 #define hb_cdxBof                                  NULL

@@ -566,6 +566,7 @@ typedef NSXAREA * LPNSXAREA;
 #define NSXAREAP LPNSXAREA
 #endif
 
+#undef  SUPERTABLE
 #define SUPERTABLE                         ( &nsxSuper )
 
 HB_EXTERN_END

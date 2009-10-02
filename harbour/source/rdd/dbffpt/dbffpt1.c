@@ -91,154 +91,6 @@ static USHORT s_uiRddIdBLOB = ( USHORT ) -1;
 static USHORT s_uiRddIdFPT  = ( USHORT ) -1;
 
 static RDDFUNCS fptSuper;
-static const RDDFUNCS fptTable =
-{
-
-   /* Movement and positioning methods */
-
-   ( DBENTRYP_BP )    hb_fptBof,
-   ( DBENTRYP_BP )    hb_fptEof,
-   ( DBENTRYP_BP )    hb_fptFound,
-   ( DBENTRYP_V )     hb_fptGoBottom,
-   ( DBENTRYP_UL )    hb_fptGoTo,
-   ( DBENTRYP_I )     hb_fptGoToId,
-   ( DBENTRYP_V )     hb_fptGoTop,
-   ( DBENTRYP_BIB )   hb_fptSeek,
-   ( DBENTRYP_L )     hb_fptSkip,
-   ( DBENTRYP_L )     hb_fptSkipFilter,
-   ( DBENTRYP_L )     hb_fptSkipRaw,
-
-
-   /* Data management */
-
-   ( DBENTRYP_VF )    hb_fptAddField,
-   ( DBENTRYP_B )     hb_fptAppend,
-   ( DBENTRYP_I )     hb_fptCreateFields,
-   ( DBENTRYP_V )     hb_fptDeleteRec,
-   ( DBENTRYP_BP )    hb_fptDeleted,
-   ( DBENTRYP_SP )    hb_fptFieldCount,
-   ( DBENTRYP_VF )    hb_fptFieldDisplay,
-   ( DBENTRYP_SSI )   hb_fptFieldInfo,
-   ( DBENTRYP_SCP )   hb_fptFieldName,
-   ( DBENTRYP_V )     hb_fptFlush,
-   ( DBENTRYP_PP )    hb_fptGetRec,
-   ( DBENTRYP_SI )    hb_fptGetValue,
-   ( DBENTRYP_SVL )   hb_fptGetVarLen,
-   ( DBENTRYP_V )     hb_fptGoCold,
-   ( DBENTRYP_V )     hb_fptGoHot,
-   ( DBENTRYP_P )     hb_fptPutRec,
-   ( DBENTRYP_SI )    hb_fptPutValue,
-   ( DBENTRYP_V )     hb_fptRecall,
-   ( DBENTRYP_ULP )   hb_fptRecCount,
-   ( DBENTRYP_ISI )   hb_fptRecInfo,
-   ( DBENTRYP_ULP )   hb_fptRecNo,
-   ( DBENTRYP_I )     hb_fptRecId,
-   ( DBENTRYP_S )     hb_fptSetFieldExtent,
-
-
-   /* WorkArea/Database management */
-
-   ( DBENTRYP_CP )    hb_fptAlias,
-   ( DBENTRYP_V )     hb_fptClose,
-   ( DBENTRYP_VO )    hb_fptCreate,
-   ( DBENTRYP_SI )    hb_fptInfo,
-   ( DBENTRYP_V )     hb_fptNewArea,
-   ( DBENTRYP_VO )    hb_fptOpen,
-   ( DBENTRYP_V )     hb_fptRelease,
-   ( DBENTRYP_SP )    hb_fptStructSize,
-   ( DBENTRYP_CP )    hb_fptSysName,
-   ( DBENTRYP_VEI )   hb_fptEval,
-   ( DBENTRYP_V )     hb_fptPack,
-   ( DBENTRYP_LSP )   hb_fptPackRec,
-   ( DBENTRYP_VS )    hb_fptSort,
-   ( DBENTRYP_VT )    hb_fptTrans,
-   ( DBENTRYP_VT )    hb_fptTransRec,
-   ( DBENTRYP_V )     hb_fptZap,
-
-
-   /* Relational Methods */
-
-   ( DBENTRYP_VR )    hb_fptChildEnd,
-   ( DBENTRYP_VR )    hb_fptChildStart,
-   ( DBENTRYP_VR )    hb_fptChildSync,
-   ( DBENTRYP_V )     hb_fptSyncChildren,
-   ( DBENTRYP_V )     hb_fptClearRel,
-   ( DBENTRYP_V )     hb_fptForceRel,
-   ( DBENTRYP_SSP )   hb_fptRelArea,
-   ( DBENTRYP_VR )    hb_fptRelEval,
-   ( DBENTRYP_SI )    hb_fptRelText,
-   ( DBENTRYP_VR )    hb_fptSetRel,
-
-
-   /* Order Management */
-
-   ( DBENTRYP_VOI )   hb_fptOrderListAdd,
-   ( DBENTRYP_V )     hb_fptOrderListClear,
-   ( DBENTRYP_VOI )   hb_fptOrderListDelete,
-   ( DBENTRYP_VOI )   hb_fptOrderListFocus,
-   ( DBENTRYP_V )     hb_fptOrderListRebuild,
-   ( DBENTRYP_VOO )   hb_fptOrderCondition,
-   ( DBENTRYP_VOC )   hb_fptOrderCreate,
-   ( DBENTRYP_VOI )   hb_fptOrderDestroy,
-   ( DBENTRYP_SVOI )  hb_fptOrderInfo,
-
-
-   /* Filters and Scope Settings */
-
-   ( DBENTRYP_V )     hb_fptClearFilter,
-   ( DBENTRYP_V )     hb_fptClearLocate,
-   ( DBENTRYP_V )     hb_fptClearScope,
-   ( DBENTRYP_VPLP )  hb_fptCountScope,
-   ( DBENTRYP_I )     hb_fptFilterText,
-   ( DBENTRYP_SI )    hb_fptScopeInfo,
-   ( DBENTRYP_VFI )   hb_fptSetFilter,
-   ( DBENTRYP_VLO )   hb_fptSetLocate,
-   ( DBENTRYP_VOS )   hb_fptSetScope,
-   ( DBENTRYP_VPL )   hb_fptSkipScope,
-   ( DBENTRYP_B )     hb_fptLocate,
-
-
-   /* Miscellaneous */
-
-   ( DBENTRYP_CC )    hb_fptCompile,
-   ( DBENTRYP_I )     hb_fptError,
-   ( DBENTRYP_I )     hb_fptEvalBlock,
-
-
-   /* Network operations */
-
-   ( DBENTRYP_VSP )   hb_fptRawLock,
-   ( DBENTRYP_VL )    hb_fptLock,
-   ( DBENTRYP_I )     hb_fptUnLock,
-
-
-   /* Memofile functions */
-
-   ( DBENTRYP_V )     hb_fptCloseMemFile,
-   ( DBENTRYP_VO )    hb_fptCreateMemFile,
-   ( DBENTRYP_SCCS )  hb_fptGetValueFile,
-   ( DBENTRYP_VO )    hb_fptOpenMemFile,
-   ( DBENTRYP_SCCS )  hb_fptPutValueFile,
-
-
-   /* Database file header handling */
-
-   ( DBENTRYP_V )     hb_fptReadDBHeader,
-   ( DBENTRYP_V )     hb_fptWriteDBHeader,
-
-
-   /* non WorkArea functions       */
-   ( DBENTRYP_R )     hb_fptInit,
-   ( DBENTRYP_R )     hb_fptExit,
-   ( DBENTRYP_RVVL )  hb_fptDrop,
-   ( DBENTRYP_RVVL )  hb_fptExists,
-   ( DBENTRYP_RVVVL ) hb_fptRename,
-   ( DBENTRYP_RSLV )  hb_fptRddInfo,
-
-   /* Special and reserved methods */
-
-   ( DBENTRYP_SVP )   hb_fptWhoCares
-};
 
 /*
  * generate Run-Time error
@@ -318,8 +170,6 @@ static BOOL hb_fptFileLockEx( FPTAREAP pArea, BOOL fWait )
 /*
  * Shared lock memo file.
  */
-
-
 static BOOL hb_fptFileLockSh( FPTAREAP pArea, BOOL fWait )
 {
    BOOL fRet;
@@ -5259,6 +5109,159 @@ static HB_ERRCODE hb_fptRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect
 
    return HB_SUCCESS;
 }
+
+
+static const RDDFUNCS fptTable =
+{
+
+   /* Movement and positioning methods */
+
+   ( DBENTRYP_BP )    NULL,   /* hb_fptBof */
+   ( DBENTRYP_BP )    NULL,   /* hb_fptEof */
+   ( DBENTRYP_BP )    NULL,   /* hb_fptFound */
+   ( DBENTRYP_V )     NULL,   /* hb_fptGoBottom */
+   ( DBENTRYP_UL )    NULL,   /* hb_fptGoTo */
+   ( DBENTRYP_I )     NULL,   /* hb_fptGoToId */
+   ( DBENTRYP_V )     NULL,   /* hb_fptGoTop */
+   ( DBENTRYP_BIB )   NULL,   /* hb_fptSeek */
+   ( DBENTRYP_L )     NULL,   /* hb_fptSkip */
+   ( DBENTRYP_L )     NULL,   /* hb_fptSkipFilter */
+   ( DBENTRYP_L )     NULL,   /* hb_fptSkipRaw */
+
+
+   /* Data management */
+
+   ( DBENTRYP_VF )    NULL,   /* hb_fptAddField */
+   ( DBENTRYP_B )     NULL,   /* hb_fptAppend */
+   ( DBENTRYP_I )     NULL,   /* hb_fptCreateFields */
+   ( DBENTRYP_V )     NULL,   /* hb_fptDeleteRec */
+   ( DBENTRYP_BP )    NULL,   /* hb_fptDeleted */
+   ( DBENTRYP_SP )    NULL,   /* hb_fptFieldCount */
+   ( DBENTRYP_VF )    NULL,   /* hb_fptFieldDisplay */
+   ( DBENTRYP_SSI )   hb_fptFieldInfo,
+   ( DBENTRYP_SCP )   NULL,   /* hb_fptFieldName */
+   ( DBENTRYP_V )     NULL,   /* hb_fptFlush */
+   ( DBENTRYP_PP )    NULL,   /* hb_fptGetRec */
+   ( DBENTRYP_SI )    hb_fptGetValue,
+   ( DBENTRYP_SVL )   hb_fptGetVarLen,
+   ( DBENTRYP_V )     NULL,   /* hb_fptGoCold */
+   ( DBENTRYP_V )     NULL,   /* hb_fptGoHot */
+   ( DBENTRYP_P )     NULL,   /* hb_fptPutRec */
+   ( DBENTRYP_SI )    hb_fptPutValue,
+   ( DBENTRYP_V )     NULL,   /* hb_fptRecall */
+   ( DBENTRYP_ULP )   NULL,   /* hb_fptRecCount */
+   ( DBENTRYP_ISI )   NULL,   /* hb_fptRecInfo */
+   ( DBENTRYP_ULP )   NULL,   /* hb_fptRecNo */
+   ( DBENTRYP_I )     NULL,   /* hb_fptRecId */
+   ( DBENTRYP_S )     NULL,   /* hb_fptSetFieldExtent */
+
+
+   /* WorkArea/Database management */
+
+   ( DBENTRYP_CP )    NULL,   /* hb_fptAlias */
+   ( DBENTRYP_V )     NULL,   /* hb_fptClose */
+   ( DBENTRYP_VO )    NULL,   /* hb_fptCreate */
+   ( DBENTRYP_SI )    hb_fptInfo,
+   ( DBENTRYP_V )     NULL,   /* hb_fptNewArea */
+   ( DBENTRYP_VO )    NULL,   /* hb_fptOpen */
+   ( DBENTRYP_V )     NULL,   /* hb_fptRelease */
+   ( DBENTRYP_SP )    hb_fptStructSize,
+   ( DBENTRYP_CP )    NULL,   /* hb_fptSysName */
+   ( DBENTRYP_VEI )   NULL,   /* hb_fptEval */
+   ( DBENTRYP_V )     hb_fptPack,
+   ( DBENTRYP_LSP )   hb_fptPackRec,
+   ( DBENTRYP_VS )    NULL,   /* hb_fptSort */
+   ( DBENTRYP_VT )    NULL,   /* hb_fptTrans */
+   ( DBENTRYP_VT )    NULL,   /* hb_fptTransRec */
+   ( DBENTRYP_V )     NULL,   /* hb_fptZap */
+
+
+   /* Relational Methods */
+
+   ( DBENTRYP_VR )    NULL,   /* hb_fptChildEnd */
+   ( DBENTRYP_VR )    NULL,   /* hb_fptChildStart */
+   ( DBENTRYP_VR )    NULL,   /* hb_fptChildSync */
+   ( DBENTRYP_V )     NULL,   /* hb_fptSyncChildren */
+   ( DBENTRYP_V )     NULL,   /* hb_fptClearRel */
+   ( DBENTRYP_V )     NULL,   /* hb_fptForceRel */
+   ( DBENTRYP_SSP )   NULL,   /* hb_fptRelArea */
+   ( DBENTRYP_VR )    NULL,   /* hb_fptRelEval */
+   ( DBENTRYP_SI )    NULL,   /* hb_fptRelText */
+   ( DBENTRYP_VR )    NULL,   /* hb_fptSetRel */
+
+
+   /* Order Management */
+
+   ( DBENTRYP_VOI )   NULL,   /* hb_fptOrderListAdd */
+   ( DBENTRYP_V )     NULL,   /* hb_fptOrderListClear */
+   ( DBENTRYP_VOI )   NULL,   /* hb_fptOrderListDelete */
+   ( DBENTRYP_VOI )   NULL,   /* hb_fptOrderListFocus */
+   ( DBENTRYP_V )     NULL,   /* hb_fptOrderListRebuild */
+   ( DBENTRYP_VOO )   NULL,   /* hb_fptOrderCondition */
+   ( DBENTRYP_VOC )   NULL,   /* hb_fptOrderCreate */
+   ( DBENTRYP_VOI )   NULL,   /* hb_fptOrderDestroy */
+   ( DBENTRYP_SVOI )  NULL,   /* hb_fptOrderInfo */
+
+
+   /* Filters and Scope Settings */
+
+   ( DBENTRYP_V )     NULL,   /* hb_fptClearFilter */
+   ( DBENTRYP_V )     NULL,   /* hb_fptClearLocate */
+   ( DBENTRYP_V )     NULL,   /* hb_fptClearScope */
+   ( DBENTRYP_VPLP )  NULL,   /* hb_fptCountScope */
+   ( DBENTRYP_I )     NULL,   /* hb_fptFilterText */
+   ( DBENTRYP_SI )    NULL,   /* hb_fptScopeInfo */
+   ( DBENTRYP_VFI )   NULL,   /* hb_fptSetFilter */
+   ( DBENTRYP_VLO )   NULL,   /* hb_fptSetLocate */
+   ( DBENTRYP_VOS )   NULL,   /* hb_fptSetScope */
+   ( DBENTRYP_VPL )   NULL,   /* hb_fptSkipScope */
+   ( DBENTRYP_B )     NULL,   /* hb_fptLocate */
+
+
+   /* Miscellaneous */
+
+   ( DBENTRYP_CC )    NULL,   /* hb_fptCompile */
+   ( DBENTRYP_I )     NULL,   /* hb_fptError */
+   ( DBENTRYP_I )     NULL,   /* hb_fptEvalBlock */
+
+
+   /* Network operations */
+
+   ( DBENTRYP_VSP )   NULL,   /* hb_fptRawLock */
+   ( DBENTRYP_VL )    NULL,   /* hb_fptLock */
+   ( DBENTRYP_I )     NULL,   /* hb_fptUnLock */
+
+
+   /* Memofile functions */
+
+   ( DBENTRYP_V )     NULL,   /* hb_fptCloseMemFile */
+   ( DBENTRYP_VO )    hb_fptCreateMemFile,
+   ( DBENTRYP_SCCS )  hb_fptGetValueFile,
+   ( DBENTRYP_VO )    hb_fptOpenMemFile,
+   ( DBENTRYP_SCCS )  hb_fptPutValueFile,
+
+
+   /* Database file header handling */
+
+   ( DBENTRYP_V )     NULL,   /* hb_fptReadDBHeader */
+   ( DBENTRYP_V )     NULL,   /* hb_fptWriteDBHeader */
+
+
+   /* non WorkArea functions       */
+
+   ( DBENTRYP_R )     NULL,   /* hb_fptInit */
+   ( DBENTRYP_R )     NULL,   /* hb_fptExit */
+   ( DBENTRYP_RVVL )  NULL,   /* hb_fptDrop */
+   ( DBENTRYP_RVVL )  NULL,   /* hb_fptExists */
+   ( DBENTRYP_RVVVL ) NULL,   /* hb_fptRename */
+   ( DBENTRYP_RSLV )  hb_fptRddInfo,
+
+
+   /* Special and reserved methods */
+
+   ( DBENTRYP_SVP )   NULL    /* hb_fptWhoCares */
+};
+
 
 HB_FUNC( DBFDBT ) {;}
 HB_FUNC( DBFSMT ) {;}
