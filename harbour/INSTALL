@@ -626,6 +626,11 @@ HARBOUR
       mingw32-make
       ---
 
+      --- MSVC 2008 for Windows Itanium (requires preceding build for native target)
+      call "%ProgramFiles%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86_ia64
+      mingw32-make
+      ---
+
       --- MSVC 2008 for Windows CE ARM (requires preceding build for native target)
       set INCLUDE=%ProgramFiles%\Microsoft Visual Studio 9.0\VC\ce\include;%ProgramFiles%\Windows Mobile 5.0 SDK R2\PocketPC\Include\Armv4i
       set LIB=%ProgramFiles%\Microsoft Visual Studio 9.0\VC\ce\lib\armv4i;%ProgramFiles%\Windows Mobile 5.0 SDK R2\PocketPC\Lib\ARMV4I
@@ -797,6 +802,29 @@ HARBOUR
       set HB_BUILD_PKG=yes
       -->8--
 
+   for Windows x64 (x86_64) hosts
+   ------------------------------
+
+      Same as regular Windows, but you'll have to change %ProgramFiles% to 
+      %ProgramFiles(x86)% for 32-bit and mixed tools, you can build for 
+      both x86 and x64 without building a native target first, and potential 
+      differences in compilers to use native binaries if they are available.
+
+      --- MSVC 2008
+      call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"
+      mingw32-make
+      ---
+
+      --- MSVC 2008 for Windows x86-64
+      call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" amd64
+      mingw32-make
+      ---
+
+      --- MSVC 2008 for Windows Itanium (requires preceding build for native target)
+      call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86_ia64
+      mingw32-make
+      ---
+
    for MS-DOS hosts
    ----------------
 
@@ -836,12 +864,12 @@ HARBOUR
    for OS/2 hosts
    --------------
 
-      --- GCC 3.3.4
+      --- GCC 3.3.4 and GCC 3.3.5
       C:\usr\bin\gccenv.cmd
       os2-make
 
       --- GCC 4.x
-      C:\usr\bin\gccenv.cmd
+      C:\usr\local433\gccenv.cmd
       set HB_COMPILER=gccomf
       os2-make
 
