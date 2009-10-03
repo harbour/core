@@ -685,7 +685,7 @@ METHOD XbpBrowse:exeBlock( nEvent, p1, p2, p3 )
    LOCAL oWheelEvent, oMouseEvent, i, nRow, nRowPos, nCol, nColPos, oPoint
 
    HB_SYMBOL_UNUSED( p2 )
-
+//xbp_debug( "        exeblock:", nEvent )
    DO CASE
    CASE nEvent == 1                   /* Keypress Event */
       SetAppEvent( xbeP_Keyboard, XbpQKeyEventToAppEvent( p1 ), NIL, self )
@@ -946,6 +946,7 @@ METHOD handleEvent( nEvent, mp1, mp2 ) CLASS XbpBrowse
 
 METHOD XbpBrowse:supplyInfo( nMode, nInfo, p2, p3 )
 
+//xbp_debug( 'supplyInfo:',nMode )
    DO CASE
    CASE nMode == 141       /* Main View Header|Data */
       IF nInfo == HBQT_BRW_COLCOUNT
@@ -1183,11 +1184,13 @@ METHOD setHorzOffset() CLASS XbpBrowse
 /*----------------------------------------------------------------------*/
 
 METHOD setCurrentIndex( lReset ) CLASS XbpBrowse
+   LOCAL pIndex
 
    DEFAULT lReset TO .t.
    //
    IF lReset
       ::oDbfModel:reset()                         /* Important */
+      //
       IF hb_isObject( ::oLeftDbfModel )
          ::oLeftDbfModel:reset()
       ENDIF
@@ -1196,9 +1199,9 @@ METHOD setCurrentIndex( lReset ) CLASS XbpBrowse
       ENDIF
    ENDIF
 
-   Qt_QModelIndex_destroy( ::pCurIndex )
-   ::pCurIndex := ::oDbfModel:index( ::rowPos - 1, ::colPos - 1 )
-   ::oTableView:setCurrentIndex( ::pCurIndex )
+   pIndex := ::oDbfModel:index( ::rowPos - 1, ::colPos - 1 )
+   ::oTableView:setCurrentIndex( pIndex )
+   Qt_QModelIndex_destroy( pIndex )
 
    RETURN Self
 
@@ -1634,13 +1637,17 @@ METHOD doConfigure() CLASS XbpBrowse
 
    ::setHorzScrollBarRange()
 
+   /* Inform Qt about number of rows and columns browser implements */
+   ::oDbfModel:hbSetRowColumns( ::rowCount - 1, ::colCount - 1 )
    /* Tell Qt to Reload Everything */
    ::oDbfModel:reset()
    //
    IF hb_isObject( ::oLeftDbfModel )
+      ::oLeftDbfModel:hbSetRowColumns( ::rowCount - 1, ::nLeftFrozen - 1 )
       ::oLeftDbfModel:reset()
    ENDIF
    IF hb_isObject( ::oRightDbfModel )
+      ::oRightDbfModel:hbSetRowColumns( ::rowCount - 1, ::nRightFrozen - 1 )
       ::oRightDbfModel:reset()
    ENDIF
 

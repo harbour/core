@@ -124,8 +124,10 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::cargo := ThreadID()                               /* To Be Removed */
 
-   ::oWidget := QMainWindow():new()
-   ::oWidget:setAttribute( Qt_WA_DeleteOnClose )
+   //::oWidget := QMainWindow():new()
+   ::oWidget := QMainWindow():configure( QT_MyMainWindow( {|n,p| ::grabEvent( n,p ) }, ThreadID() ) )
+   //::oWidget:setAttribute( Qt_WA_DeleteOnClose )
+   //::oWidget:setMouseTracking( .t. )
 
    IF !empty( ::title )
       ::oWidget:setWindowTitle( ::title )
@@ -146,6 +148,12 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    SetAppWindow( Self )
 
+   QT_MUTEXCREATE()        //-------------//
+
+   /* Initialize Qt's event stacks */
+   QT_SetEventSlots()
+   QT_SetEventFilter()
+
    /* Thread specific event buffer */
    InitializeEventBuffer()
 
@@ -154,13 +162,16 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oEventLoop := QEventLoop():new( ::pWidget )
    SetEventLoop( ::oEventLoop )
 
+   #if 0
    /* Instal Event Filter */
    ::oWidget:installEventFilter( SetEventFilter() )
+
+   ::connectWindowEvents()
 
    ::connectEvent( ::pWidget, QEvent_Close           , {|o,e| ::exeBlock( QEvent_Close           , e, o ) } )
    ::connectEvent( ::pWidget, QEvent_WindowActivate  , {|o,e| ::exeBlock( QEvent_WindowActivate  , e, o ) } )
    ::connectEvent( ::pWidget, QEvent_WindowDeactivate, {|o,e| ::exeBlock( QEvent_WindowDeactivate, e, o ) } )
-
+   #endif
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -172,7 +183,6 @@ METHOD XbpDialog:exeBlock( nEvent, pEvent )
 
    DO CASE
    CASE nEvent == QEvent_WindowActivate
-      SetAppWindow( Self )                                /*  TO REVIEW */
       SetAppEvent( xbeP_SetDisplayFocus, NIL, NIL, Self )
       lRet := .T.
 
@@ -206,11 +216,13 @@ METHOD XbpDialog:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
 METHOD XbpDialog:destroy()
 
+   SetEventLoop( NIL )
    ::oEventLoop:exit( 0 )
+   ::oEventLoop:destroy()
 
    ::xbpWindow:destroy()
 
-   ::oWidget:destroy()
+   //   ::oWidget:destroy()
 
    RETURN nil
 
@@ -307,8 +319,9 @@ METHOD XbpDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
    ::oParent:addChild( SELF )
 
    /* Connects All Event Handlers */
-   ::connectWindowEvents()
+   //::connectWindowEvents()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+

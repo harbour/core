@@ -178,6 +178,7 @@ FUNCTION XbpQKeyEventToAppEvent( pEvent )
    key := oKeyEvent:key()
    kbm := oKeyEvent:modifiers()
    txt := oKeyEvent:text()
+   oKeyEvent:destroy()
 
    SWITCH( key )
    CASE Qt_Key_Escape

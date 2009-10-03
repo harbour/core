@@ -92,8 +92,6 @@ THREAD STATIC oDummy
 
 THREAD STATIC oAppWindow
 
-//THREAD STATIC sEventFilter
-STATIC sEventFilter
 THREAD STATIC oEventLoop
 
 /*----------------------------------------------------------------------*/
@@ -121,9 +119,23 @@ FUNCTION InitializeEventBuffer()
 
    IF empty( ts_events )
       ts_events := array( EVENT_BUFFER )
-      aeval( ts_events, {|e,i| e := e, ts_events[ i ] := { 0, NIL, NIL, NIL, -9999 } } )
+      aeval( ts_events, {|e,i| e := e, ts_events[ i ] := { 0, NIL, NIL, NIL } } )
    ENDIF
-//xbp_debug( len( ts_events ) )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION SetEventFilter()
+
+   RETURN QT_QEventFilter()
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION SetEventLoop( oELoop )
+
+   oEventLoop := oELoop
+
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -135,22 +147,22 @@ FUNCTION SetAppEvent( nEvent, mp1, mp2, oXbp )
    IF ++nEventIn > EVENT_BUFFER
       nEventIn := 1
    ENDIF
-
-xbp_debug( "SetAppEvent ... ", threadID(), nEventIn )
-
+#if 0
+xbp_debug( 0, "SetAppEvent ... ", threadID(), nEvent, xbeP_Paint )
+#endif
    ts_events[ nEventIn,1 ] := nEvent
    ts_events[ nEventIn,2 ] := mp1
    ts_events[ nEventIn,3 ] := mp2
    ts_events[ nEventIn,4 ] := oXbp
-   ts_events[ nEventIn,5 ] := ThreadID()
 
+//xbp_debug( 1, "SetAppEvent ... ", threadID(), nEvent )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
    LOCAL nEvent
-   LOCAL nThreadID := ThreadID()
+   //LOCAL nThreadID := ThreadID()
 
    //DEFAULT nTimeout TO 0
    HB_SYMBOL_UNUSED( nTimeOut )
@@ -158,24 +170,21 @@ FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
    IF ++nEventOut > EVENT_BUFFER
       nEventOut := 1
    ENDIF
-xbp_debug( "            AppEvent ... ", nThreadID, nEventOut )
-   DO WHILE .t.
-      oEventLoop:processEvents( 0 )
+//xbp_debug( "            AppEvent ... ", nThreadID, nEventOut )
+   DO WHILE !empty( oEventLoop ) //.t.
+      oEventLoop:processEvents( QEventLoop_AllEvents )
 
-      IF ts_events[ nEventOut,5 ] == nThreadID
+      IF !empty( ts_events[ nEventOut,4 ] )
          nEvent := ts_events[ nEventOut,1 ]
          mp1    := ts_events[ nEventOut,2 ]
          mp2    := ts_events[ nEventOut,3 ]
          oXbp   := ts_events[ nEventOut,4 ]
-
-         ts_events[ nEventOut,5 ] := -9999  /* an arbirary value never reached by ThreadID() */
-
+         ts_events[ nEventOut,4 ] := NIL
          EXIT
       ENDIF
-
-      hb_idleSleep( 0.001 )                  /* Releases CPU cycles */
+      hb_idleSleep( 0.01 )                  /* Releases CPU cycles */
    ENDDO
-xbp_debug( "..........................", threadID() )
+//xbp_debug( "..........................", threadID() )
 
    RETURN nEvent
 
@@ -184,15 +193,11 @@ xbp_debug( "..........................", threadID() )
 FUNCTION SetAppWindow( oXbp )
    LOCAL oldAppWindow
 
-   //hb_outDebug( str( threadId() )+'  0' )
-
    oldAppWindow := oAppWindow
 
    IF hb_isObject( oXbp )
       oAppWindow := oXbp
    ENDIF
-
-   //hb_outDebug( str( threadId() )+'  1' )
 
    RETURN oldAppWindow
 
@@ -264,20 +269,6 @@ FUNCTION GraMakeRGBColor( aRGB )
    ENDIF
 
    RETURN nRGB
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION SetEventFilter()
-
-   RETURN QT_QEventFilter()
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION SetEventLoop( oELoop )
-
-   oEventLoop := oELoop
-
-   RETURN nil
 
 /*----------------------------------------------------------------------*/
 
