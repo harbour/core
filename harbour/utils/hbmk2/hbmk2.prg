@@ -2464,7 +2464,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ENDIF
          IF hbmk[ _HBMK_lSTRIP ]
             IF lCreateLib
-               cBin_Post := "strip"
+               IF hbmk[ _HBMK_cCOMP ] == "gccomf"
+                  cBin_Post := "stripomf"
+               ELSE
+                  cBin_Post := "strip"
+               ENDIF
                cOpt_Post := "-S {OB}"
             ELSE
                AAdd( hbmk[ _HBMK_aOPTL ], "-s" )

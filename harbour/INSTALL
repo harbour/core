@@ -869,7 +869,7 @@ HARBOUR
       os2-make
 
       --- GCC 4.x
-      C:\usr\local433\gccenv.cmd
+      C:\usr\local433\gcc440.cmd
       set HB_COMPILER=gccomf
       os2-make
 

@@ -43,7 +43,11 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 endif
 
 ifneq ($(filter $(HB_BUILD_STRIP),all lib),)
-   ARSTRIP = & ${HB_CCPATH}${HB_CCPREFIX}strip -S $(LIB_DIR)/$@
+   ifeq ($(HB_COMPILER),gccomf)
+      ARSTRIP = & ${HB_CCPATH}${HB_CCPREFIX}stripomf -S $(LIB_DIR)/$@
+   else
+      ARSTRIP = & ${HB_CCPATH}${HB_CCPREFIX}strip -S $(LIB_DIR)/$@
+   endif
 endif
 ifneq ($(filter $(HB_BUILD_STRIP),all bin),)
    LDSTRIP := -s
