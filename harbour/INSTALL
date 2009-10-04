@@ -121,8 +121,22 @@ HARBOUR
       $ ./hello
       You should see 'Hello world!' on screen.
 
-   on Darwin/BSD/HP-UX/Solaris/BeOS/Haiku/*nix hosts
-   --------------------------------------
+   on Darwin (Mac OS X) hosts
+   --------------------------
+   (possible cross-build targets: Windows, Windows CE, MS-DOS)
+
+      Platform specific prerequisite: XCode installed
+
+      $ make install [HB_PLATFORM=<...>]
+
+      To test it, type:
+      $ cd tests
+      $ hbmk2 hello.prg
+      $ ./hello
+      You should see 'Hello world!' on screen.
+
+   on BSD/HP-UX/Solaris/BeOS/Haiku/*nix hosts
+   ------------------------------------------
    (possible cross-build targets: Windows, Windows CE, MS-DOS)
 
       $ gmake install [HB_PLATFORM=<...>]
@@ -866,11 +880,13 @@ HARBOUR
       --- GCC 3.3.4 and GCC 3.3.5
       C:\usr\bin\gccenv.cmd
       os2-make
+      ---
 
       --- GCC 4.x
       C:\usr\local433\gcc440.cmd
       set HB_COMPILER=gccomf
       os2-make
+      ---
 
       --- Open Watcom C++
       SET WATCOM=C:\watcom
@@ -894,6 +910,16 @@ HARBOUR
       # ;
       export HB_INSTALL_PREFIX="$(pwd)/hb-os2/watcom"
       make "$@"
+      ---
+
+   for Darwin (Mac OS X) hosts
+   ---------------------------
+
+      --- To create "Universal" binaries, compatible with pre-Snow Leopard PowerPC and Intel systems
+      export HB_USER_LDFLAGS="-arch i386 -arch ppc"
+      export HB_USER_CFLAGS="$HB_USER_LDFLAGS"
+      export HB_COMPILER=gcc
+      make
       ---
 
    for *nix hosts in general
