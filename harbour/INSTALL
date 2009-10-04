@@ -65,9 +65,8 @@ HARBOUR
       > hello
       You should see 'Hello world!' on screen.
 
-      NOTES: - When building for Borland C++ make sure that
-               GNU Make is executed when typing 'make',
-               Borland Make has the same name.
+      NOTE: When building for Borland C++ make sure that GNU Make 
+            is executed when typing 'make', Borland Make has the same name.
 
    on MS-DOS hosts
    ---------------
@@ -432,14 +431,14 @@ HARBOUR
    mingw64  - MinGW GNU C x86-64
    msvc     - Microsoft Visual C++
    msvc64   - Microsoft Visual C++ x86-64
-   msvcia64 - Microsoft Visual C++ IA-64
+   msvcia64 - Microsoft Visual C++ IA-64 (Itanium)
 
    Also supported, some features may be missing:
 
    watcom   - Open Watcom C++
    bcc      - Borland/CodeGear/Embarcadero C++ 4.x and above
    icc      - Intel(R) C/C++
-   iccia64  - Intel(R) C/C++ IA-64
+   iccia64  - Intel(R) C/C++ IA-64 (Itanium)
    pocc     - Pelles C 4.5 and 5.0
    pocc64   - Pelles C x86-64 5.0
    xcc      - Pelles C for xhb
@@ -621,12 +620,12 @@ HARBOUR
       mingw32-make
       ---
 
-      --- MSVC 2008 for Windows x86-64 (requires preceding build for native target)
+      --- MSVC 2008 (Standard or above) for Windows x86-64 (requires preceding build for native target)
       call "%ProgramFiles%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86_amd64
       mingw32-make
       ---
 
-      --- MSVC 2008 for Windows Itanium (requires preceding build for native target)
+      --- MSVC 2008 (Team Suite) for Windows IA-64 Itanium (requires preceding build for native target)
       call "%ProgramFiles%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86_ia64
       mingw32-make
       ---
@@ -685,7 +684,7 @@ HARBOUR
       mingw32-make
       ---
 
-      --- Intel(R) C++ for Windows IA-64 (requires preceding build for native target)
+      --- Intel(R) C++ for Windows IA-64 Itanium (requires preceding build for native target)
       call "%ProgramFiles%\Intel\Compiler\C++\10.1.025\Itanium\Bin\iclvars.bat"
       mingw32-make
       ---
@@ -815,12 +814,12 @@ HARBOUR
       mingw32-make
       ---
 
-      --- MSVC 2008 for Windows x86-64
+      --- MSVC 2008 (Standard or above) for Windows x86-64
       call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" amd64
       mingw32-make
       ---
 
-      --- MSVC 2008 for Windows Itanium (requires preceding build for native target)
+      --- MSVC 2008 (Team Suite) for Windows IA-64 Itanium (requires preceding build for native target)
       call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86_ia64
       mingw32-make
       ---
@@ -1158,6 +1157,8 @@ HARBOUR
          http://developer.apple.com/TOOLS/Xcode/
       MS Visual Studio Express [win, free, closed-source]
          http://www.microsoft.com/express/
+      MS Visual Studio [win, commercial, closed-source]
+         http://www.microsoft.com/visualstudio/
       MS Windows SDK [win, free]:
          http://msdn.microsoft.com/en-us/windowsserver/bb980924.aspx
       MS Windows Mobile SDK [wce, free]:
