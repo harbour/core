@@ -448,6 +448,7 @@ HB_FUNC( NETIO_ACCEPT )
          BOOL fOK = FALSE;
          BYTE msgbuf[ NETIO_MSGLEN * 2 ];
 
+         hb_socketSetNoDelay( connsd, TRUE );
          conn = s_consrvNew( connsd, lsd->rootPath );
 
          if( s_srvRecvAll( conn, msgbuf, NETIO_MSGLEN ) == NETIO_MSGLEN &&

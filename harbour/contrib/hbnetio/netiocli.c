@@ -401,6 +401,7 @@ static PHB_CONCLI s_fileConnect( const char ** pszFilename,
                HB_PUT_LE_UINT16( &msgbuf[ 4 ], len );
                memset( msgbuf + 6, '\0', sizeof( msgbuf ) - 6 );
 
+               hb_socketSetNoDelay( sd, TRUE );
                conn = s_fileConNew( sd, pszIpAddres, iPort, iTimeOut );
                sd = HB_NO_SOCKET;
 

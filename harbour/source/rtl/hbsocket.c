@@ -193,6 +193,7 @@
 #  if defined( HB_HAS_UNIX )
 #     include <sys/un.h>
 #  endif
+#  include <netinet/tcp.h>
 #  include <unistd.h>
 #  include <fcntl.h>
 #  if defined( HB_OS_DOS )
@@ -547,6 +548,14 @@ int hb_socketSetBlockingIO( HB_SOCKET sd, BOOL fBlocking )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( fBlocking );
+   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   return -1;
+}
+
+int hb_socketSetNoDelay( HB_SOCKET sd, BOOL fNoDelay )
+{
+   HB_SYMBOL_UNUSED( sd );
+   HB_SYMBOL_UNUSED( fNoDelay );
    hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
@@ -2357,47 +2366,85 @@ int hb_socketSetBlockingIO( HB_SOCKET sd, BOOL fBlocking )
    return ret;
 }
 
+int hb_socketSetNoDelay( HB_SOCKET sd, BOOL fNoDelay )
+{
+   int ret;
+#if defined( TCP_NODELAY )
+   /*
+    * Turn off the nagle algorithm for the specified socket.
+    * The nagle algorithm says that we should delay sending
+    * partial packets in the hopes of getting more data.
+    * There are bad interactions between persistent connections and
+    * Nagle's algorithm that have severe performance penalties.
+    */
+   int val = fNoDelay ? 1 : 0;
+   ret = setsockopt( sd, IPPROTO_TCP, TCP_NODELAY, ( const char * ) &val, sizeof( val ) );
+   hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
+#else
+   int TODO;
+   HB_SYMBOL_UNUSED( sd );
+   HB_SYMBOL_UNUSED( fNoDelay );
+   hb_socketSetRawError( HB_SOCKET_ERR_NOSUPPORT );
+   ret = -1;
+#endif
+   return ret;
+}
+
 int hb_socketSetReuseAddr( HB_SOCKET sd, BOOL fReuse )
 {
    /* it allows to reuse port immediately without timeout used to
     * clean all pending connections addressed to previous port owner
     */
-   int val = fReuse ? 1 : 0;
-   return setsockopt( sd, SOL_SOCKET, SO_REUSEADDR, ( const char * ) &val, sizeof( val ) );
+   int val = fReuse ? 1 : 0, ret;
+   ret = setsockopt( sd, SOL_SOCKET, SO_REUSEADDR, ( const char * ) &val, sizeof( val ) );
+   hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
+   return ret;
 }
 
 int hb_socketSetKeepAlive( HB_SOCKET sd, BOOL fKeepAlive )
 {
-   int val = fKeepAlive ? 1 : 0;
-   return setsockopt( sd, SOL_SOCKET, SO_KEEPALIVE, ( const char * ) &val, sizeof( val ) );
+   int val = fKeepAlive ? 1 : 0, ret;
+   ret = setsockopt( sd, SOL_SOCKET, SO_KEEPALIVE, ( const char * ) &val, sizeof( val ) );
+   hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
+   return ret;
 }
 
 int hb_socketSetBroadcast( HB_SOCKET sd, BOOL fBroadcast )
 {
-   int val = fBroadcast ? 1 : 0;
-   return setsockopt( sd, SOL_SOCKET, SO_BROADCAST, ( const char * ) &val, sizeof( val ) );
+   int val = fBroadcast ? 1 : 0, ret;
+   ret = setsockopt( sd, SOL_SOCKET, SO_BROADCAST, ( const char * ) &val, sizeof( val ) );
+   hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
+   return ret;
 }
 
 int hb_socketSetSndBufSize( HB_SOCKET sd, int iSize )
 {
-   return setsockopt( sd, SOL_SOCKET, SO_SNDBUF, ( const char * ) &iSize, sizeof( iSize ) );
+   int ret = setsockopt( sd, SOL_SOCKET, SO_SNDBUF, ( const char * ) &iSize, sizeof( iSize ) );
+   hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
+   return ret;
 }
 
 int hb_socketSetRcvBufSize( HB_SOCKET sd, int iSize )
 {
-   return setsockopt( sd, SOL_SOCKET, SO_RCVBUF, ( const char * ) &iSize, sizeof( iSize ) );
+   int ret = setsockopt( sd, SOL_SOCKET, SO_RCVBUF, ( const char * ) &iSize, sizeof( iSize ) );
+   hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
+   return ret;
 }
 
 int hb_socketGetSndBufSize( HB_SOCKET sd, int * piSize )
 {
    socklen_t len = sizeof( * piSize );
-   return getsockopt( sd, SOL_SOCKET, SO_SNDBUF, ( char * ) piSize, &len );
+   int ret = getsockopt( sd, SOL_SOCKET, SO_SNDBUF, ( char * ) piSize, &len );
+   hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
+   return ret;
 }
 
 int hb_socketGetRcvBufSize( HB_SOCKET sd, int * piSize )
 {
    socklen_t len = sizeof( * piSize );
-   return getsockopt( sd, SOL_SOCKET, SO_RCVBUF, ( char * ) piSize, &len );
+   int ret = getsockopt( sd, SOL_SOCKET, SO_RCVBUF, ( char * ) piSize, &len );
+   hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
+   return ret;
 }
 
 int hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr )
@@ -2406,11 +2453,14 @@ int hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr )
    {
 #if defined( IP_ADD_MEMBERSHIP ) && defined( IPPROTO_IP )
       struct ip_mreq mreq;
+      int ret;
 
       mreq.imr_multiaddr.s_addr = inet_addr( szAddr );
       mreq.imr_interface.s_addr = htonl( INADDR_ANY );
 
-      return setsockopt( sd, IPPROTO_IP, IP_ADD_MEMBERSHIP, ( const char * ) &mreq, sizeof( mreq ) );
+      ret = setsockopt( sd, IPPROTO_IP, IP_ADD_MEMBERSHIP, ( const char * ) &mreq, sizeof( mreq ) );
+      hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
+      return ret;
 #else
       int TODO;
 #endif
@@ -2420,11 +2470,13 @@ int hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr )
    {
 #if defined( HB_HAS_INET_PTON )
       struct ipv6_mreq mreq;
-      int err = inet_pton( AF_INET6, szAddr, &mreq.ipv6mr_multiaddr );
+      int err = inet_pton( AF_INET6, szAddr, &mreq.ipv6mr_multiaddr ), ret;
       if( err > 0 )
       {
          mreq.ipv6mr_interface = 0;
-         return setsockopt( sd, IPPROTO_IPV6, IPV6_JOIN_GROUP, ( const char * ) &mreq, sizeof( mreq ) );
+         ret = setsockopt( sd, IPPROTO_IPV6, IPV6_JOIN_GROUP, ( const char * ) &mreq, sizeof( mreq ) );
+         hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
+         return ret;
       }
       else if( err == 0 )
          hb_socketSetRawError( HB_SOCKET_ERR_WRONGADDR );

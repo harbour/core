@@ -98,6 +98,7 @@ HB_EXPORT extern long         hb_socketSendTo( HB_SOCKET sd, const void * data, 
 HB_EXPORT extern long         hb_socketRecv( HB_SOCKET sd, void * data, long len, int flags, HB_LONG timeout );
 HB_EXPORT extern long         hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** pSockAddr, unsigned * puiSockLen, HB_LONG timeout );
 HB_EXPORT extern int          hb_socketSetBlockingIO( HB_SOCKET sd, BOOL fBlocking );
+HB_EXPORT extern int          hb_socketSetNoDelay( HB_SOCKET sd, BOOL fNoDelay );
 HB_EXPORT extern int          hb_socketSetReuseAddr( HB_SOCKET sd, BOOL fReuse );
 HB_EXPORT extern int          hb_socketSetKeepAlive( HB_SOCKET sd, BOOL fKeepAlive );
 HB_EXPORT extern int          hb_socketSetBroadcast( HB_SOCKET sd, BOOL fBroadcast );
