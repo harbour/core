@@ -706,7 +706,7 @@ hb_lnk_request()
         for fn in \${HB_LNK_REQ}; do
             echo "HB_FUNC_EXTERN( \${fn} );"
         done
-        [ -z "\${HB_MAIN_REQ}" ] || echo "HB_EXTERN_C \${HB_MAIN_REQ}( void );"
+        [ -z "\${HB_MAIN_REQ}" ] || echo "HB_EXTERN_C void \${HB_MAIN_REQ}( void );"
         echo "void _hb_lnk_ForceLink_build( void )"
         echo "{"
         for fn in \${HB_LNK_REQ}; do
