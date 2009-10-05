@@ -772,7 +772,7 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT, HFONT hFont )
 #if ! defined( UNICODE )
       if( pWVT->hFont )
          DeleteObject( pWVT->hFont );
-      if( pWVT->hFontBox )
+      if( pWVT->hFontBox && pWVT->hFontBox != pWVT->hFont )
          DeleteObject( pWVT->hFontBox );
       if( pWVT->CodePage == pWVT->boxCodePage )
          pWVT->hFontBox = hFont;
@@ -1542,6 +1542,9 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
    TCHAR       text[ WVT_MAX_ROWS ];
 
    hdc = BeginPaint( pWVT->hWnd, &ps );
+#if defined( UNICODE )
+   SelectObject( hdc, pWVT->hFont );
+#endif
 
    rcRect = hb_gt_wvt_GetColRowFromXYRect( pWVT, updateRect );
 
