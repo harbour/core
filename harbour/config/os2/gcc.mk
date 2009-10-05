@@ -71,10 +71,10 @@ LDFLAGS += $(LIBPATHS)
 
 # NOTE: The empty line directly before 'endef' HAS TO exist!
 #       It causes that every command will be separated by LF
-#define lib_object
-#   @$(ECHO) $(ECHOQUOTE)ADDMOD $(file)$(ECHOQUOTE) >> __lib__.tmp
-#
-#endef
+define lib_object
+   @$(ECHO) $(ECHOQUOTE)ADDMOD $(file)$(ECHOQUOTE) >> __lib__.tmp
+
+endef
 
 ifeq ($(HB_COMPILER),gccomf)
    define create_library
@@ -87,7 +87,7 @@ else
    define create_library
       $(if $(wildcard $(subst /,$(DIRSEP),$(LIB_FILE))),@$(RM) $(subst /,$(DIRSEP),$(LIB_FILE)),)
       @$(ECHO) $(ECHOQUOTE)CREATE $(LIB_DIR)/$@$(ECHOQUOTE) > __lib__.tmp
-      for %i in ( *$(OBJ_EXT) ) do @$(ECHO) $(ECHOQUOTE)ADDMOD %i$(ECHOQUOTE) >> __lib__.tmp
+      $(foreach file,$^,$(lib_object))
       @$(ECHO) $(ECHOQUOTE)SAVE$(ECHOQUOTE) >> __lib__.tmp
       @$(ECHO) $(ECHOQUOTE)END$(ECHOQUOTE) >> __lib__.tmp
       $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -M < __lib__.tmp
