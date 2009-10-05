@@ -4393,7 +4393,7 @@ void hb_dbfTranslateRec( DBFAREAP pArea, BYTE * pBuffer, PHB_CODEPAGE cdp_src, P
 
    for( uiIndex = 0, pField = pArea->area.lpFields; uiIndex < pArea->area.uiFieldCount; uiIndex++, pField++ )
    {
-      if( ( pField->uiFlags && HB_FF_BINARY ) == 0 &&
+      if( ( pField->uiFlags & HB_FF_BINARY ) == 0 &&
           ( pField->uiType == HB_FT_STRING || pField->uiType == HB_FT_VARLENGTH ) )
       {
          if( pTmpBuf == NULL )
