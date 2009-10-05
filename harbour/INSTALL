@@ -1181,12 +1181,13 @@ HARBOUR
          http://www.openwatcom.org/
       XCode [darwin, free, closed-source]
          http://developer.apple.com/TOOLS/Xcode/
+      MS Windows SDK [win, free]:
+         http://msdn.microsoft.com/en-us/windowsserver/bb980924.aspx
+         (7.0 contains compilers for x86, x86_64 and IA-64)
       MS Visual Studio Express [win, free, closed-source]
          http://www.microsoft.com/express/
       MS Visual Studio [win, commercial, closed-source]
          http://www.microsoft.com/visualstudio/
-      MS Windows SDK [win, free]:
-         http://msdn.microsoft.com/en-us/windowsserver/bb980924.aspx
       MS Windows Mobile SDK [wce, free]:
          http://www.microsoft.com/downloads/details.aspx?familyid=83A52AF2-F524-4EC5-9155-717CBE5D25ED
       Pelles C [win, wce, free, closed-source]

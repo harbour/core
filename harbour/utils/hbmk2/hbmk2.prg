@@ -86,7 +86,7 @@
 /* TODO: Create temporary .c files with mangled names, to avoid
          incidentally overwriting existing .c file with the same name.
          Problems to solve: -hbcc compatibility (the feature has to be
-         disabled when this switch is uses). Collision with -o harbour
+         disabled when this switch is used). Collision with -o harbour
          option isn't a problem, since we're overriding it already for
          hbmk2, but we will need to deal with "/" prefixed variant. Since
          we need to use -o Harbour switch, it will be a problem also when

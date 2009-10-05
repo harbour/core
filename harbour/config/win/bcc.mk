@@ -88,6 +88,7 @@ DY := ilink32.exe
 DFLAGS := -q -Gn -C -aa -Tpd -Gi -x
 DY_OUT :=
 DLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib)$(LIB_EXT))
+DLIBS += $(foreach lib,$(SYSLIBS),$(lib)$(LIB_EXT))
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 define dyn_object
