@@ -69,19 +69,26 @@ LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),-l$(lib))
 
 LDFLAGS += $(LIBPATHS)
 
-# NOTE: The empty line directly before 'endef' HAS TO exist!
-#       It causes that every command will be separated by LF
-define lib_object
-   @$(ECHO) $(ECHOQUOTE)ADDMOD $(file)$(ECHOQUOTE) >> __lib__.tmp
-
-endef
-
 ifeq ($(HB_COMPILER),gccomf)
+   # NOTE: The empty line directly before 'endef' HAS TO exist!
+   #       It causes that every command will be separated by LF
+   define lib_object
+      $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -p128 r $(LIB_DIR)/$@ $(file)$(ECHOQUOTE)
+  
+   endef
+  
    define create_library
       $(if $(wildcard $(subst /,$(DIRSEP),$(LIB_FILE))),@$(RM) $(subst /,$(DIRSEP),$(LIB_FILE)),)
-      for %i in ( *$(OBJ_EXT) ) do $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -p128 r $(LIB_DIR)/$@ %i$(ECHOQUOTE)
+      $(foreach file,$^,$(lib_object))
    endef
 else
+   # NOTE: The empty line directly before 'endef' HAS TO exist!
+   #       It causes that every command will be separated by LF
+   define lib_object
+      @$(ECHO) $(ECHOQUOTE)ADDMOD $(file)$(ECHOQUOTE) >> __lib__.tmp
+   
+   endef
+
    # We have to use a script to overcome the AR limit of max 850 characters
    # in commmand line
    define create_library

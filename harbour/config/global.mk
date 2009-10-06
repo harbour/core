@@ -756,6 +756,8 @@ ifeq ($(HB_COMPILER),)
                                                       HB_COMPILER_VER := 800
                                                    else ifneq ($(findstring 9.0,$(HB_COMP_PATH)),)
                                                       HB_COMPILER_VER := 900
+                                                   else ifneq ($(findstring 10.0,$(HB_COMP_PATH)),)
+                                                      HB_COMPILER_VER := 1000
                                                    endif
                                                 else
                                                    HB_COMP_PATH := $(call find_in_path,bcc32)

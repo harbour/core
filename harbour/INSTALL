@@ -210,7 +210,7 @@ HARBOUR
    Binary .tgz on *nixes
    ---------------------
 
-      $ sudo ./mpkg_tgz.sh
+      $ ./mpkg_tgz.sh
 
    Binary .deb on Linux
    --------------------
