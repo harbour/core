@@ -105,7 +105,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
       //
 
       nSaveCursor := SetCursor( iif( Set( _SET_INTENSITY ), SC_NONE, NIL ) )
-      cSaveReadVar := ReadVar( Upper( cVariable ) )
+      cSaveReadVar := ReadVar( hb_asciiUpper( cVariable ) )
       xMsg := ""
       nMsgCol := 0
       nMsgRow := Set( _SET_MESSAGE )
@@ -181,7 +181,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
             IF ( bAction := SetKey( nKey ) ) != NIL
 
                Eval( bBlock, n )
-               Eval( bAction, ProcName( 1 ), ProcLine( 1 ), Upper( cVariable ) )
+               Eval( bAction, ProcName( 1 ), ProcLine( 1 ), hb_asciiUpper( cVariable ) )
                n := Eval( bBlock )
 
                IF n < 1

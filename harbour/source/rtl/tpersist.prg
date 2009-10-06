@@ -83,12 +83,12 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
       cLine := ExtractLine( cObjectText, @nFrom )
 
       DO CASE
-      CASE Upper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "OBJECT"
+      CASE hb_asciiUpper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "OBJECT"
          IF lStart
             lStart := .F.
          ENDIF
 
-      CASE Upper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "ARRAY"
+      CASE hb_asciiUpper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "ARRAY"
          cLine := SubStr( cLine, At( "::", cLine ) )
          MEMVAR->oSelf := Self
          cLine := StrTran( cLine, "::", "oSelf:" )

@@ -272,7 +272,7 @@ FUNCTION __objDerivedFrom( oObject, xSuper )
    IF ISOBJECT( xSuper )
       cClassName := xSuper:ClassName()
    ELSEIF ISCHARACTER( xSuper )
-      cClassName := Upper( xSuper )
+      cClassName := hb_asciiUpper( xSuper )
    ELSE
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ENDIF

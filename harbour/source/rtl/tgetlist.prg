@@ -748,7 +748,7 @@ METHOD PostActiveGet() CLASS HBGetList
 METHOD GetReadVar() CLASS HBGetList
 
    LOCAL oGet := ::oGet
-   LOCAL cName := Upper( oGet:Name )
+   LOCAL cName := hb_asciiUpper( oGet:Name )
    LOCAL n
 
    IF oGet:Subscript != NIL
