@@ -570,9 +570,12 @@ HARBOUR
                                libraries stored in the external directory.
    - HB_UTIL_ADDONS=<list>     Build space separated <list> of additional
                                utilities stored in the utils directory.
-   - HB_VISUALC_VER_PRE80=yes  Set this if you're using a pre-8.0
-                               (= pre-MSVS 2005) version of MSVC compiler.
-                               Default: no
+   - HB_COMPILER_VER=[<ver>]   Set C compiler version. This is used with msvc 
+                               targets currently, and in the case of this 
+                               compiler, it will be autodetected.
+                               <ver> format:
+                                   <09><00>[.<00>] = <major><minor>[.<revision>]
+                               Default: filled by autodetection or empty
    - HB_REBUILD_PARSER=yes     Rebuild language parser sources. Typically
                                you only need this if your are Harbour core
                                developer modifying grammar rules (.y).
@@ -665,7 +668,7 @@ HARBOUR
 
       --- MSVC .NET 2003 (untested)
       call "%ProgramFiles%\Microsoft Visual Studio .NET 2003\VC7\vcvarsall.bat"
-      mingw32-make HB_VISUALC_VER_PRE80=yes
+      mingw32-make
       ---
 
       --- MinGW GCC

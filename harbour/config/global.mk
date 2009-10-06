@@ -720,9 +720,9 @@ ifeq ($(HB_COMPILER),)
                            else
                               HB_COMP_PATH := $(call find_in_path,clarm)
                               ifneq ($(HB_COMP_PATH),)
+                                 HB_COMPILER_VER := 710
                                  HB_COMPILER := msvcarm
                                  HB_PLATFORM := wce
-                                 export HB_VISUALC_VER_PRE80 := yes
                               else
                                  HB_COMP_PATH := $(call find_in_path,armasm)
                                  ifneq ($(HB_COMP_PATH),)
@@ -748,6 +748,15 @@ ifeq ($(HB_COMPILER),)
                                                 HB_COMP_PATH := $(call find_in_path,cl)
                                                 ifneq ($(HB_COMP_PATH),)
                                                    HB_COMPILER := msvc
+                                                   ifneq ($(findstring VC98,$(HB_COMP_PATH)),)
+                                                      HB_COMPILER_VER := 600
+                                                   else ifneq ($(findstring 2003,$(HB_COMP_PATH)),)
+                                                      HB_COMPILER_VER := 700
+                                                   else ifneq ($(findstring 8/,$(HB_COMP_PATH)),)
+                                                      HB_COMPILER_VER := 800
+                                                   else ifneq ($(findstring 9.0,$(HB_COMP_PATH)),)
+                                                      HB_COMPILER_VER := 900
+                                                   endif
                                                 else
                                                    HB_COMP_PATH := $(call find_in_path,bcc32)
                                                    ifneq ($(HB_COMP_PATH),)
@@ -891,6 +900,7 @@ ifeq ($(HB_COMPILER),)
    ifneq ($(HB_COMPILER),)
       HB_COMP_PATH := $(subst $(substpat), ,$(dir $(firstword $(subst $(subst x, ,x),$(substpat),$(HB_COMP_PATH)))))
       HB_COMP_AUTO := (autodetected$(if $(HB_COMP_PATH),: $(HB_COMP_PATH),))
+      HB_COMP_VER := $(if $(HB_COMPILER_VER), (v$(HB_COMPILER_VER)),)
    endif
    export HB_CCPATH
    export HB_CCPREFIX
@@ -905,6 +915,7 @@ endif
 
 export HB_PLATFORM
 export HB_COMPILER
+export HB_COMPILER_VER
 export HB_SHELL
 
 ifneq ($(filter $(HB_HOST_PLAT),win wce dos os2),)
@@ -995,7 +1006,7 @@ ifeq ($(HB_INIT_DONE),)
    endif
    ifneq ($(MAKE_381),)
       $(info ! HB_PLATFORM: $(HB_PLATFORM)$(if $(HB_CPU), ($(HB_CPU)),) $(HB_PLAT_AUTO))
-      $(info ! HB_COMPILER: $(HB_COMPILER) $(HB_COMP_AUTO))
+      $(info ! HB_COMPILER: $(HB_COMPILER)$(HB_COMP_VER) $(HB_COMP_AUTO))
    endif
 endif
 

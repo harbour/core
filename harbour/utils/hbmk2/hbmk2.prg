@@ -2799,10 +2799,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
          IF Empty( nCCompVer )
             /* Compatibility with Harbour GNU Make system */
-            IF Empty( GetEnv( "HB_VISUALC_VER_PRE80" ) ) .AND. !( hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. FindInPath( "clarm" ) )
-               nCCompVer := 800 /* Visual Studio 2005 */
-            ELSE
+            IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. FindInPath( "clarm" )
                nCCompVer := 710 /* Visual Studio .NET 2003 */
+            ELSE
+               nCCompVer := 800 /* Visual Studio 2005 */
             ENDIF
             /*  900 : Visual Studio 2008 */
             /* 1000 : Visual Studio 2010 */

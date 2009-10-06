@@ -6,6 +6,14 @@ OBJ_EXT := .obj
 LIB_PREF :=
 LIB_EXT := .lib
 
+ifeq ($(HB_CPU),x86)
+   # Always compile in -UNICODE mode for MSVC 9.0 and upper
+   # This version doesn't support Win9x anyway. [vszakats]
+   ifeq ($(filter $(HB_COMPILER_VER),600 700 710 800),)
+      HB_CFLAGS += -DUNICODE
+   endif
+endif
+
 HB_DYN_COPT := -DHB_DYNLIB
 
 CC := cl.exe
@@ -32,10 +40,10 @@ ifneq ($(HB_BUILD_WARN),no)
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-   ifeq ($(HB_VISUALC_VER_PRE80),)
-      CPPFLAGS += -Ot2b1 -EHs-c-
-   else
+   ifneq ($(filter $(HB_COMPILER_VER),600 700 710),)
       CPPFLAGS += -Ogt2yb1p -GX- -G6 -YX
+   else
+      CPPFLAGS += -Ot2b1 -EHs-c-
    endif
 endif
 
@@ -47,7 +55,7 @@ endif
 
 # # NOTE: -GA flag should be disabled when building MT _.dlls_,
 # #       as it creates bad code according to MS docs [vszakats].
-# ifeq ($(HB_VISUALC_VER_PRE70),)
+# ifneq ($(filter $(HB_COMPILER_VER),600),)
 #    CPPFLAGS += -GA
 # endif
 

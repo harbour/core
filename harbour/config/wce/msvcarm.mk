@@ -10,7 +10,7 @@ HB_DYN_COPT := -DHB_DYNLIB
 
 CC := cl.exe
 ifeq ($(HB_COMPILER),msvcarm)
-   ifneq ($(HB_VISUALC_VER_PRE80),)
+   ifneq ($(filter $(HB_COMPILER_VER),600 700 710),)
       CC := clarm.exe
    endif
 endif
@@ -44,10 +44,10 @@ ifneq ($(HB_BUILD_WARN),no)
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-   ifeq ($(HB_VISUALC_VER_PRE80),)
-      CFLAGS += -Od -Os -Gy -GS- -EHsc-
-   else
+   ifneq ($(filter $(HB_COMPILER_VER),600 700 710),)
       CFLAGS += -Oxsb1 -EHsc -YX -GF
+   else
+      CFLAGS += -Od -Os -Gy -GS- -EHsc-
    endif
 endif
 
@@ -64,7 +64,7 @@ LIBPATHS := -libpath:$(LIB_DIR)
 LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
 LDFLAGS += -nologo -link -subsystem:windowsce -nodefaultlib:oldnames.lib -nodefaultlib:kernel32.lib
-ifeq ($(HB_VISUALC_VER_PRE80),)
+ifeq ($(filter $(HB_COMPILER_VER),600 700 710),)
    LDFLAGS += -manifest:no
 endif
 LDFLAGS += $(LIBPATHS)
