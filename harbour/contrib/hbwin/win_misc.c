@@ -69,6 +69,8 @@
 #define QS_ALLPOSTMESSAGE   0x0100
 #endif
 
+/* TODO: Add hb_osEncodeCP(). */
+
 HB_FUNC( WIN_RUNDETACHED )
 {
    LPTSTR lpCommandName = HB_ISCHAR( 1 ) ? HB_TCHAR_CONVTO( hb_parc( 1 ) ) : NULL;
