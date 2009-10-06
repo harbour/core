@@ -86,17 +86,19 @@ rm -fR $RPM_BUILD_ROOT
 
 %build
 
-export HB_BUILD_PARTS=compiler
+#export HB_BUILD_PARTS=compiler
+export HB_CONTRIBLIBS=no
 export HB_PLATFORM=linux
 export HB_COMPILER=gcc
 make %{?_smp_mflags}
 unset HB_COMPILER
+unset HB_CONTRIBLIBS
 
 export HB_BUILD_PARTS=lib
 export HB_PLATFORM=win
 
 export HB_BIN_COMPILE="$(pwd)/bin/linux/gcc"
-export CC_HB_USER_PRGFLAGS="-D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
+export CC_HB_USER_PRGFLAGS="-undef:.ARCH. -D__PLATFORM__WINDOWS"
 
 make %{?_smp_mflags}
 
@@ -114,7 +116,7 @@ unset HB_COMPILER
 
 export HB_BIN_COMPILE="$(pwd)/bin/linux/gcc"
 
-export CC_HB_USER_PRGFLAGS="-D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
+export CC_HB_USER_PRGFLAGS="-undef:.ARCH. -D__PLATFORM__WINDOWS"
 
 export HB_BIN_INSTALL=%{_bindir}
 export HB_INC_INSTALL=%{_includedir}/%{name}
