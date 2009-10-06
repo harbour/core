@@ -135,8 +135,10 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
    char szOutPath[ HB_PATH_MAX ] = "\0";
    char pszTemp[ HB_PATH_MAX ] = "";
    char buffer[ HB_CFG_LINE_LEN * 2 + 1024 ];
-#if defined( HB_OS_UNIX )
-   char * pszEnv = hb_strdup( "/etc:/usr/local/etc" );
+#if defined( HB_OS_BEOS )
+   char * pszEnv = hb_strdup( "/boot/common/etc/harbour" );
+#elif defined( HB_OS_UNIX )
+   char * pszEnv = hb_strdup( "/etc/harbour:/usr/local/etc/harbour:/opt/harbour/etc" );
 #else
    char * pszEnv = hb_getenv( "PATH" );
 #endif

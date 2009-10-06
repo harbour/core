@@ -6,26 +6,25 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE := 1
 
-export _DEFAULT_BIN_DIR := /usr/bin
-export _DEFAULT_INC_DIR := /usr/include/harbour
-export _DEFAULT_LIB_DIR := /usr/lib/harbour
-export _DEFAULT_DOC_DIR := /usr/share/doc/harbour
-export INSTDIR := $(CURDIR)/debian/harbour
-export HB_BIN_INSTALL := $(INSTDIR)$(_DEFAULT_BIN_DIR)
-export HB_LIB_INSTALL := $(INSTDIR)$(_DEFAULT_LIB_DIR)
-export HB_INC_INSTALL := $(INSTDIR)$(_DEFAULT_INC_DIR)
-export HB_DOC_INSTALL := $(INSTDIR)$(_DEFAULT_DOC_DIR)
-export HB_ETC_DIR := $(INSTDIR)/etc
+export HB_BIN_INSTALL := /usr/bin
+export HB_LIB_INSTALL := /usr/include/harbour
+export HB_INC_INSTALL := /usr/lib/harbour
+export HB_DOC_INSTALL := /usr/share/doc/harbour
+export HB_ETC_INSTALL := /etc/harbour
+export HB_INST_PKGPREF := $(CURDIR)/debian/harbour
 
-CFLAGS := -g
+# is INSTDIR necessary for dpkg? If not then please remove it.
+export INSTDIR := $(HB_INST_PKGPREF)
 
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-   CFLAGS += -O0
+   HB_USER_CFLAGS += -O0
 else
-   CFLAGS += -O3
+   HB_USER_CFLAGS += -O3
 endif
 ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
    INSTALL_PROGRAM += -s
+else
+   HB_USER_CFLAGS := -g
 endif
 
 build: build-stamp
@@ -53,9 +52,8 @@ install: build
 	dh_installdirs
 
 	make install
-	rm -f $(HB_BIN_INSTALL)/hbverfix
-	install -m644 debian/harbour.cfg $(HB_ETC_DIR)/harbour.cfg
-	install -m644 source/rtl/gtcrs/hb-charmap.def $(HB_ETC_DIR)/harbour
+	install -m644 debian/harbour.cfg $(HB_INST_PKGPREF)$(HB_ETC_INSTALL)/harbour.cfg
+	install -m644 source/rtl/gtcrs/hb-charmap.def $(HB_INST_PKGPREF)$(HB_ETC_INSTALL)/hb-charmap.def
 
 
 # Build architecture-independent files here.

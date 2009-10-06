@@ -190,10 +190,6 @@ mk_hbtools()
     hb_gt_ori=${HB_GT_LIB}
     [ -z "${HB_GT_LIB}" ] && HB_GT_LIB="gtstd"
 
-    [ -z "${_DEFAULT_BIN_DIR}" ] && _DEFAULT_BIN_DIR="${HB_BIN_INSTALL}"
-    [ -z "${_DEFAULT_INC_DIR}" ] && _DEFAULT_INC_DIR="${HB_INC_INSTALL}"
-    [ -z "${_DEFAULT_LIB_DIR}" ] && _DEFAULT_LIB_DIR="${HB_LIB_INSTALL}"
-
     if [ "${HB_PLATFORM}" = "beos" ]; then
         HB_SYS_LIBS="-lroot -lnetwork"
     else
@@ -303,9 +299,9 @@ mk_hbtools()
 # set environment variables
 export HB_PLATFORM="${HB_PLATFORM}"
 export HB_COMPILER="${HB_COMPILER}"
-[ -z "\${HB_BIN_INSTALL}" ] && export HB_BIN_INSTALL="${_DEFAULT_BIN_DIR}"
-[ -z "\${HB_INC_INSTALL}" ] && export HB_INC_INSTALL="${_DEFAULT_INC_DIR}"
-[ -z "\${HB_LIB_INSTALL}" ] && export HB_LIB_INSTALL="${_DEFAULT_LIB_DIR}"
+[ -z "\${HB_BIN_INSTALL}" ] && export HB_BIN_INSTALL="${HB_BIN_INSTALL}"
+[ -z "\${HB_INC_INSTALL}" ] && export HB_INC_INSTALL="${HB_INC_INSTALL}"
+[ -z "\${HB_LIB_INSTALL}" ] && export HB_LIB_INSTALL="${HB_LIB_INSTALL}"
 
 # be sure that ${name} binaries are in your path
 export PATH="\${HB_BIN_INSTALL}${hb_path_separator}${hb_ccpath}\${PATH}"

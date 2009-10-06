@@ -69,6 +69,7 @@
 %define version  2.0.0
 %define releasen beta3
 %define hb_pref  hb
+%define hb_etcdir /etc/%{name}
 %define hb_plat  export HB_PLATFORM=linux
 %define hb_cc    export HB_COMPILER=gcc
 %define hb_cflag export HB_USER_CFLAGS=
@@ -81,9 +82,10 @@
 %define hb_bdir  export HB_BIN_INSTALL=%{_bindir}
 %define hb_idir  export HB_INC_INSTALL=%{_includedir}/%{name}
 %define hb_ldir  export HB_LIB_INSTALL=%{_libdir}/%{name}
+%define hb_edir  export HB_ETC_INSTALL=%{hb_etcdir}
 %define hb_cmrc  export HB_COMMERCE=%{?_without_gpllib:yes}
 %define hb_ctrb  export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbtpathy hbhpdf hbziparc xhb rddsql %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_fbsql:hbfbird} %{?_with_allegro:gtalleg}"
-%define hb_env   %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_ctrb} ; %{hb_cmrc}
+%define hb_env   %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_edir} ; %{hb_ctrb} ; %{hb_cmrc}
 %define hb_host  www.harbour-project.org
 %define readme   README.RPM
 ######################################################################
@@ -379,38 +381,36 @@ make %{?_smp_mflags}
 
 %{hb_env}
 
-export _DEFAULT_BIN_DIR=$HB_BIN_INSTALL
-export _DEFAULT_INC_DIR=$HB_INC_INSTALL
-export _DEFAULT_LIB_DIR=$HB_LIB_INSTALL
-export HB_BIN_INSTALL=$RPM_BUILD_ROOT/$HB_BIN_INSTALL
-export HB_INC_INSTALL=$RPM_BUILD_ROOT/$HB_INC_INSTALL
-export HB_LIB_INSTALL=$RPM_BUILD_ROOT/$HB_LIB_INSTALL
+export HB_INST_PKGPREF=$RPM_BUILD_ROOT
 export HB_BUILD_STRIP=all
 export HB_BUILD_SHARED=%{!?_with_static:yes}
 
+# necessary for shared linked hbrun used to execute postinst.prg
+export LD_LIBRARY_PATH=$HB_INST_PKGPREF$HB_LIB_INSTALL
+
 make install %{?_smp_mflags}
 
-[ "%{?_with_allegro:1}" ]  || rm -f $HB_LIB_INSTALL/libgtalleg.a
-[ "%{?_without_gtcrs:1}" ] && rm -f $HB_LIB_INSTALL/libgtcrs.a
-[ "%{?_without_gtsln:1}" ] && rm -f $HB_LIB_INSTALL/libgtsln.a
-rm -f $HB_LIB_INSTALL/liblibhpdf.a
-rm -f $HB_LIB_INSTALL/liblibpng.a
-rm -f $HB_LIB_INSTALL/libsqlite3.a
+[ "%{?_with_allegro:1}" ]  || rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/libgtalleg.a
+[ "%{?_without_gtcrs:1}" ] && rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/libgtcrs.a
+[ "%{?_without_gtsln:1}" ] && rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/libgtsln.a
+rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/liblibhpdf.a
+rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/liblibpng.a
+rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/libsqlite3.a
 
-mkdir -p $RPM_BUILD_ROOT%{_mandir}/man1
-install -m644 doc/man/*.1* $RPM_BUILD_ROOT%{_mandir}/man1/
+mkdir -p $HB_INST_PKGPREF%{_mandir}/man1
+install -m644 doc/man/*.1* $HB_INST_PKGPREF%{_mandir}/man1/
 
-mkdir -p $RPM_BUILD_ROOT/etc/harbour
-install -m644 source/rtl/gtcrs/hb-charmap.def $RPM_BUILD_ROOT/etc/harbour/hb-charmap.def
-cat > $RPM_BUILD_ROOT/etc/harbour.cfg <<EOF
+mkdir -p $HB_INST_PKGPREF$HB_ETC_INSTALL
+install -m644 source/rtl/gtcrs/hb-charmap.def $HB_INST_PKGPREF$HB_ETC_INSTALL/hb-charmap.def
+cat > $HB_INST_PKGPREF$HB_ETC_INSTALL/harbour.cfg <<EOF
 CC=gcc
-CFLAGS=-c -I$_DEFAULT_INC_DIR
+CFLAGS=-c -I$HB_INC_INSTALL
 VERBOSE=YES
 DELTMP=YES
 EOF
 
 # remove unused files
-rm -f ${HB_BIN_INSTALL}/hbtest
+rm -f $HB_INST_PKGPREF$HB_BIN_INSTALL/hbtest
 
 # Create a README file for people using this RPM.
 cat > doc/%{readme} <<EOF
@@ -558,9 +558,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/%{readme}
 %doc doc/en-EN/
 
-%dir /etc/harbour
-%verify(not md5 mtime) %config /etc/harbour.cfg
-%verify(not md5 mtime) %config /etc/harbour/hb-charmap.def
+%dir %{hb_etcdir}
+%verify(not md5 mtime) %config %{hb_etcdir}/harbour.cfg
+%verify(not md5 mtime) %config %{hb_etcdir}/hb-charmap.def
 %{_bindir}/harbour
 %{_bindir}/hbpp
 %{_bindir}/hb-mkdyn

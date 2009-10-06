@@ -121,7 +121,7 @@ if [ "${hb_sysdir}" = "yes" ]; then
     cp -f source/rtl/gtcrs/hb-charmap.def $HB_INST_PKGPREF$ETC/harbour/hb-charmap.def
     chmod 644 $HB_INST_PKGPREF$ETC/harbour/hb-charmap.def
 
-    cat > $HB_INST_PKGPREF$ETC/harbour.cfg <<EOF
+    cat > $HB_INST_PKGPREF$ETC/harbour/harbour.cfg <<EOF
 CC=${HB_CCPREFIX}gcc
 CFLAGS=-c -I${HB_INSTALL_PREFIX}/include/harbour
 VERBOSE=YES
