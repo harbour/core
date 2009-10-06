@@ -30,7 +30,7 @@ hb_sysdir="yes"
 [ -z "$HB_INSTALL_PREFIX" ] && [ -n "$PREFIX" ] && export HB_INSTALL_PREFIX="$PREFIX"
 
 if [ -z "$TMPDIR" ]; then TMPDIR="/tmp"; fi
-HB_INST_PREF="$TMPDIR/$name.bin.$USER.$$"
+HB_INST_PKGPREF="$TMPDIR/$name.bin.$USER.$$"
 
 if [ -z "$HB_PLATFORM" ]; then
     if [ "$OSTYPE" = "msdosdjgpp" ]; then
@@ -50,40 +50,46 @@ fi
 ETC="/etc"
 
 # Select the platform-specific installation prefix and ownership
-HB_INSTALL_OWNER=root
+HB_INSTALL_OWNER="root"
+HB_INSTALL_GROUP="root"
 case "$HB_PLATFORM" in
     darwin)
         [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr/local"
-        HB_INSTALL_GROUP=wheel
+        HB_INSTALL_GROUP="wheel"
         ETC="/private/etc"
         ;;
+    bsd)
+        [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr/local"
+        HB_INSTALL_GROUP="wheel"
+        ;;
     linux)
-        [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr"
-        HB_INSTALL_GROUP=root
+        [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr/local"
         ;;
     sunos)
-        [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr"
-        HB_INSTALL_GROUP=root
+        [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/opt"
+        ;;
+    haiku)
+        [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/boot/common"
         ;;
     win)
         [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr/local"
-        HB_INSTALL_GROUP=0
+        HB_INSTALL_GROUP="0"
         hb_sysdir="no"
         hb_instfile=""
         ;;
     dos)
         [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/${name}"
-        HB_INSTALL_GROUP=root
         hb_sysdir="no"
         hb_instfile=""
         hb_archfile="${name}.tgz"
-        HB_INST_PREF="$TMPDIR/hb-$$"
+        HB_INST_PKGPREF="$TMPDIR/hb-$$"
         ;;
     *)
         [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr/local"
-        HB_INSTALL_GROUP=wheel
         ;;
 esac
+
+export HB_INST_PKGPREF
 
 # Select the platform-specific command names
 MAKE=make
@@ -103,21 +109,21 @@ fi
 
 # build
 umask 022
-$MAKE clean
-$MAKE
+$MAKE clean "$@" || exit
+$MAKE "$@" || exit
 # install
-rm -fR "${HB_INST_PREF}"
-$MAKE -i install
+rm -fR "${HB_INST_PKGPREF}"
+$MAKE install "$@" || exit
 
 if [ "${hb_sysdir}" = "yes" ]; then
 
-    mkdir -p $HB_INST_PREF$ETC/harbour
-    cp -f source/rtl/gtcrs/hb-charmap.def $HB_INST_PREF$ETC/harbour/hb-charmap.def
-    chmod 644 $HB_INST_PREF$ETC/harbour/hb-charmap.def
+    mkdir -p $HB_INST_PKGPREF$ETC/harbour
+    cp -f source/rtl/gtcrs/hb-charmap.def $HB_INST_PKGPREF$ETC/harbour/hb-charmap.def
+    chmod 644 $HB_INST_PKGPREF$ETC/harbour/hb-charmap.def
 
-    cat > $HB_INST_PREF$ETC/harbour.cfg <<EOF
+    cat > $HB_INST_PKGPREF$ETC/harbour.cfg <<EOF
 CC=${HB_CCPREFIX}gcc
-CFLAGS=-c -I$_DEFAULT_INC_DIR
+CFLAGS=-c -I${HB_INSTALL_PREFIX}/include/harbour
 VERBOSE=YES
 DELTMP=YES
 EOF
@@ -126,13 +132,13 @@ fi
 
 CURDIR=$(pwd)
 if [ $hb_gnutar = yes ]; then
-    (cd "${HB_INST_PREF}"; $TAR czvf "${CURDIR}/${hb_archfile}" --owner=${HB_INSTALL_OWNER} --group=${HB_INSTALL_GROUP} .)
+    (cd "${HB_INST_PKGPREF}"; $TAR czvf "${CURDIR}/${hb_archfile}" --owner=${HB_INSTALL_OWNER} --group=${HB_INSTALL_GROUP} .)
     UNTAR_OPT=xvpf
 else
-    (cd "${HB_INST_PREF}"; $TAR covf - . | gzip > "${CURDIR}/${hb_archfile}")
+    (cd "${HB_INST_PKGPREF}"; $TAR covf - . | gzip > "${CURDIR}/${hb_archfile}")
     UNTAR_OPT=xvf
 fi
-rm -fR "${HB_INST_PREF}"
+rm -fR "${HB_INST_PKGPREF}"
 
 if [ -n "${hb_instfile}" ]; then
 

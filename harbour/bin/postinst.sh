@@ -40,7 +40,7 @@ fi
 
 . ${hb_root}/bin/hb-func.sh
 
-# chmod 644 $HB_INC_INSTALL/*
+# chmod 644 ${HB_INST_PKGPREF}${HB_INC_INSTALL}/*
 
 if [ "$HB_COMPILER" = "gcc" ] || \
    [ "$HB_COMPILER" = "mingw" ] || \
@@ -52,7 +52,7 @@ if [ "$HB_COMPILER" = "gcc" ] || \
    [ "$HB_COMPILER" = "sunpro" ]
 then
     if [ -n "${HB_TOOLS_PREF}" ]; then
-        hb_mkdyn="${HB_BIN_INSTALL}/${HB_TOOLS_PREF}-mkdyn"
+        hb_mkdyn="${HB_INST_PKGPREF}${HB_BIN_INSTALL}/${HB_TOOLS_PREF}-mkdyn"
         rm -f "${hb_mkdyn}"
         sed -e "s!^# HB_PLATFORM=\"\"\$!HB_PLATFORM=\"${HB_PLATFORM}\"!g" \
             -e "s!^# HB_CCPREFIX=\"\"\$![ -n \"\${HB_CCPREFIX}\" ] || HB_CCPREFIX=\"${HB_CCPREFIX}\"!g" \
@@ -60,12 +60,12 @@ then
             "${hb_root}/bin/hb-mkdyn.sh" > "${hb_mkdyn}" && \
         chmod 755 "${hb_mkdyn}"
     elif [ "$HB_COMPILER" = "icc" ]; then
-        hb_mkdyn="${HB_BIN_INSTALL}/hb-mkdyn"
+        hb_mkdyn="${HB_INST_PKGPREF}${HB_BIN_INSTALL}/hb-mkdyn"
         rm -f "${hb_mkdyn}"
         sed -e "s/gcc/icc/g" "${hb_root}/bin/hb-mkdyn.sh" > "${hb_mkdyn}" && \
         chmod 755 "${hb_mkdyn}"
     elif [ "$HB_COMPILER" = "sunpro" ]; then
-        hb_mkdyn="${HB_BIN_INSTALL}/hb-mkdyn"
+        hb_mkdyn="${HB_INST_PKGPREF}${HB_BIN_INSTALL}/hb-mkdyn"
         rm -f "${hb_mkdyn}"
         lnopt=""
         [ "$HB_BUILD_OPTIM" = "no" ] || lnopt="-fast -xnolibmopt $lnopt"
@@ -75,12 +75,12 @@ then
     elif [ "${HB_PLATFORM}" = "sunos" ] || \
          [ "${HB_PLATFORM}" = "hpux" ] || \
          ! which install &>/dev/null; then
-        hb_mkdyn="${HB_BIN_INSTALL}/hb-mkdyn"
+        hb_mkdyn="${HB_INST_PKGPREF}${HB_BIN_INSTALL}/hb-mkdyn"
         rm -f "${hb_mkdyn}"
         cp "${hb_root}/bin/hb-mkdyn.sh" "${hb_mkdyn}" && \
         chmod 755 "${hb_mkdyn}"
     elif [ "${HB_PLATFORM}" != "dos" ]; then
-        hb_mkdyn="${HB_BIN_INSTALL}/hb-mkdyn"
+        hb_mkdyn="${HB_INST_PKGPREF}${HB_BIN_INSTALL}/hb-mkdyn"
         # Without -c some OSes _move_ the file instead of copying it!
         install -c -m 755 "${hb_root}/bin/hb-mkdyn.sh" "${hb_mkdyn}"
     fi
@@ -88,11 +88,11 @@ then
     # Compatibility hb-mkslib creation. Please use hb-mkdyn instead.
     if [ -n "${hb_mkdyn}" ] && [ -f "${hb_mkdyn}" ]; then
         hb_mkdyn="${HB_TOOLS_PREF-hb}-mkslib"
-        (cd "${HB_BIN_INSTALL}" && rm -f "${hb_mkdyn}" && \
+        (cd "${HB_INST_PKGPREF}${HB_BIN_INSTALL}" && rm -f "${hb_mkdyn}" && \
          ln -s "${HB_TOOLS_PREF-hb}-mkdyn" "${hb_mkdyn}")
     fi
 
-    mk_hbtools "${HB_BIN_INSTALL}" "$@"
+    mk_hbtools "${HB_INST_PKGPREF}${HB_BIN_INSTALL}" "$@"
 
     if [ "${HB_PLATFORM}" != "dos" ]; then
         mk_hblibso "${hb_root}"

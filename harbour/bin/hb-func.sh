@@ -785,7 +785,7 @@ mk_hblibso()
     hb_libs=`mk_hbgetlibs "$2"`
     [ -z "${HB_GT_LIB}" ] && HB_GT_LIB="gtstd"
 
-    (cd $HB_LIB_INSTALL
+    (cd ${HB_INST_PKGPREF}${HB_LIB_INSTALL}
     LIBS=""
     LIBSMT=""
     gpm="${HB_HAS_GPM}"
@@ -892,7 +892,7 @@ mk_hblibso()
     fi
     full_lib_name="${lib_pref}${name}${lib_suff}"
     full_lib_name_mt="${lib_pref}${name}mt${lib_suff}"
-    hb_mkdyn="${HB_BIN_INSTALL}/${HB_TOOLS_PREF-hb}-mkdyn"
+    hb_mkdyn="${HB_INST_PKGPREF}${HB_BIN_INSTALL}/${HB_TOOLS_PREF-hb}-mkdyn"
 #   echo "Making ${full_lib_name}..."
 #   ${hb_mkdyn} ${full_lib_name} ${LIBS} ${linker_options}
 #   if [ "${LIBS}" != "${LIBSMT}" ]; then
@@ -909,8 +909,8 @@ mk_hblibso()
                [ "${HB_PLATFORM}" = "wce" ]; then
                 if [ "${HB_PLATFORM}" = "${HB_HOST_PLAT}" ]; then
                    (cd "$dir"
-                   mv "${HB_LIB_INSTALL}/$l" "${HB_BIN_INSTALL}"
-                   mv "${HB_LIB_INSTALL}/$ll" "${HB_BIN_INSTALL}")
+                   mv "${HB_INST_PKGPREF}${HB_LIB_INSTALL}/$l" "${HB_INST_PKGPREF}${HB_BIN_INSTALL}"
+                   mv "${HB_INST_PKGPREF}${HB_LIB_INSTALL}/$ll" "${HB_INST_PKGPREF}${HB_BIN_INSTALL}")
                 fi
             else
                 case $HB_LIB_INSTALL in
@@ -928,5 +928,5 @@ mk_hblibso()
         fi
     done
     )
-    #export LD_LIBRARY_PATH="$HB_LIB_INSTALL:$LD_LIBRARY_PATH"
+    #export LD_LIBRARY_PATH="${HB_INST_PKGPREF}$HB_LIB_INSTALL:$LD_LIBRARY_PATH"
 }

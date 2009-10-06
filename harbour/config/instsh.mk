@@ -18,25 +18,27 @@ ifeq ($(realpath $(INSTALL_DIR)),$(realpath .))
 else
 
 ifneq ($(HB_SHELL),sh)
-   INSTALL_DIR_OS := $(subst /,\,$(INSTALL_DIR))
+   INSTALL_DIR_OS := $(subst /,\,$(HB_INST_PKGPREF)$(INSTALL_DIR))
    INSTALL_FILES_OS := $(subst /,\,$(INSTALL_FILES))
+else
+   INSTALL_DIR_OS := $(subst \,/,$(HB_INST_PKGPREF)$(INSTALL_DIR))
 endif
 
 ifeq ($(HB_SHELL),sh)
 
    INSTALL_RULE := \
-      @$(MDP) $(subst \,/,$(INSTALL_DIR)); \
-      if [ ! -d "$(subst \,/,$(INSTALL_DIR))" ]; \
+      @$(MDP) $(INSTALL_DIR_OS); \
+      if [ ! -d "$(INSTALL_DIR_OS)" ]; \
       then \
-         $(ECHO) "! Can't install, path not found: '$(subst \,/,$(INSTALL_DIR))'" 1>&2; \
+         $(ECHO) "! Can't install, path not found: '$(INSTALL_DIR_OS)'" 1>&2; \
          false; \
       else \
          for i in $(INSTALL_FILES); \
          do \
             if [ -r "$$i" ]; \
             then \
-               $(ECHO) "! Installing $$i on $(subst \,/,$(INSTALL_DIR))"; \
-               $(CP) $$i $(subst \,/,$(INSTALL_DIR)); \
+               $(ECHO) "! Installing $$i on $(INSTALL_DIR_OS)"; \
+               $(CP) $$i $(INSTALL_DIR_OS); \
                true; \
             else \
                $(ECHO) "! Can't install $$i, not found" 1>&2; \
@@ -60,14 +62,14 @@ endif
 ifeq ($(HB_SHELL),os2)
 
    define inst_file_all
-      -@$(MDP) $(INSTALL_DIR)
+      -@$(MDP) $(INSTALL_DIR_OS)
       $(foreach file,$(INSTALL_FILES),$(inst_file))
    endef
 
    # NOTE: The empty line directly before 'endef' HAVE TO exist!
    #       It causes that every command will be separated by LF
    define inst_file
-      -@$(CP) $(file) $(INSTALL_DIR)
+      -@$(CP) $(file) $(INSTALL_DIR_OS)
 
    endef
 
