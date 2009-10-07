@@ -783,10 +783,10 @@ ifeq ($(HB_COMPILER),)
                                                          ifneq ($(HB_COMP_PATH),)
                                                             HB_COMPILER := xcc
                                                          else
-                                                            HB_COMP_PATH := $(call find_in_path,x86_64-w64-mingw32-gcc)
+                                                            HB_COMP_PATH := $(call find_in_path,i686-w64-mingw32-gcc)
                                                             ifneq ($(HB_COMP_PATH),)
                                                                HB_COMPILER := mingw64
-                                                               HB_CCPREFIX := x86_64-w64-mingw32-
+                                                               HB_CCPREFIX := i686-w64-mingw32-
                                                             endif
                                                          endif
                                                       endif
