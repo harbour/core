@@ -238,7 +238,7 @@
  *
  *      The return value is NIL
  *      if ALERT() is called with no parameters, or if <xMessage> type is
- *      not Character and HB_C52_STRICT option was used. If <nDelay> seconds
+ *      not Character and HB_CLP_STRICT option was used. If <nDelay> seconds
  *      had passed without user response, the return value is 1.
  *  $DESCRIPTION$
  *      ALERT() display simple dialog box on screen and let the user select
@@ -279,7 +279,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is sensitive to HB_C52_STRICT settings during the
+ *      This function is sensitive to HB_CLP_STRICT settings during the
  *      compilation of source/rtl/alert.prg
  *
  *      <b>defined</b>: <xMessage> accept Character values only and return
@@ -298,7 +298,7 @@
  *      an option.
  *
  *      The interpretation of the //NOALERT command line switch is done only
- *      if HB_C52_UNDOC was define during compilation of source/rtl/alert.prg
+ *      if HB_CLP_UNDOC was define during compilation of source/rtl/alert.prg
  *
  *      <cColorNorm> is a Harbour extension, or at least un-documented
  *      in Clipper 5.2 NG.
@@ -693,7 +693,7 @@
  *      OUTERR() to output to the same file handle as OUTSTD(), //STDERR:n
  *      set output to file handle n. Like other undocumented features this
  *      switch is available only if source/rtl/console.c was compiled with
- *      the HB_C52_UNDOC flag.
+ *      the HB_CLP_UNDOC flag.
  *  $EXAMPLES$
  *      // write error log information
  *      OUTERR( DATE(), TIME(), "Core meltdown detected" )

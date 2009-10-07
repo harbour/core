@@ -668,7 +668,7 @@ making in last days.
 -----------------------------------------------------------------------------
 
 Other things you can see in the new PP code. I was adding comments or
-using HB_C52_STRICT macro to mark the most important things. In few places
+using HB_CLP_STRICT macro to mark the most important things. In few places
 I had to break Clipper compatibility to keep FLEX working. Just simply
 I cannot generate preprocessed line in exactly the same form as Clipper
 does because FLEX or SIMPLEX will not be able to decode it.

@@ -312,7 +312,7 @@ static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
             pFieldInfo.uiLen = uiLen;
 /* Too many people reported the behavior with code below as a
    Clipper compatibility bug so I commented this code. Druzus.
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
             pFieldInfo.uiLen = uiLen;
 #else
             pFieldInfo.uiLen = uiLen + uiDec * 256;

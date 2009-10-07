@@ -53,7 +53,7 @@
 
 #include "hbapi.h"
 
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
 
 /* NOTE: These functions are a new Harbour functions implemented in the
          original CA-Cl*pper namespace. These should have been marked as

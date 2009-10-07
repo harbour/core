@@ -63,7 +63,7 @@
 
 /* various flags for macro compiler */
 #ifndef HB_SM_DEFAULT
-#  ifdef HB_C52_STRICT
+#  ifdef HB_CLP_STRICT
 #     define HB_SM_DEFAULT    ( HB_SM_SHORTCUTS )
 #  else
 #     define HB_SM_DEFAULT    ( HB_SM_SHORTCUTS | HB_SM_HARBOUR )

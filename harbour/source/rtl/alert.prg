@@ -37,7 +37,7 @@
 /* NOTE: Clipper handles these buttons { "Ok", "", "Cancel" } in a buggy way.
          This is fixed. [vszakats] */
 
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
 STATIC s_lNoAlert
 #endif
 
@@ -46,7 +46,7 @@ FUNCTION Alert( cMessage, aOptions, cColorNorm )
    LOCAL aOptionsOK
    LOCAL nEval
 
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
 
    DEFAULT s_lNoAlert TO hb_argCheck( "NOALERT" )
 
@@ -83,7 +83,7 @@ FUNCTION Alert( cMessage, aOptions, cColorNorm )
 
    IF Len( aOptionsOK ) == 0
       aOptionsOK := { "Ok" }
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
    /* NOTE: Clipper allows only four options [vszakats] */
    ELSEIF Len( aOptionsOK ) > 4
       ASize( aOptionsOK, 4 )
@@ -103,7 +103,7 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
    LOCAL lFirst
    LOCAL cLine
 
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
 
    DEFAULT s_lNoAlert TO hb_argCheck( "NOALERT" )
 
@@ -155,7 +155,7 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
 
    IF Len( aOptionsOK ) == 0
       aOptionsOK := { "Ok" }
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
    /* NOTE: Clipper allows only four options [vszakats] */
    ELSEIF Len( aOptionsOK ) > 4
       ASize( aOptionsOK, 4 )
@@ -164,7 +164,7 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
 
    RETURN hb_gtAlert( cMessage, aOptionsOK, cColorNorm, cColorHigh, nDelay )
 
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
 
 PROCEDURE __NONOALERT()
 

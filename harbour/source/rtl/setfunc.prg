@@ -60,7 +60,7 @@ PROCEDURE __SetFunction( nFunctionKey, xKeySeq )
 
    DO CASE
    CASE nFunctionKey == 1  ; nFunctionKey := K_F1
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
    CASE nFunctionKey == 11 ; nFunctionKey := K_F11
    CASE nFunctionKey == 12 ; nFunctionKey := K_F12
 #endif

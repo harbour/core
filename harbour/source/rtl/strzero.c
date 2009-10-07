@@ -115,7 +115,7 @@ HB_FUNC( STRZERO )
             hb_retc_null();
       }
       else
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
          /* NOTE: In CA-Cl*pper STRZERO() is written in Clipper, and will call
                   STR() to do the job, the error (if any) will also be thrown
                   by STR().  [vszakats] */

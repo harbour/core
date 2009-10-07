@@ -65,7 +65,7 @@ HB_FUNC( CHR )
                will return an empty string instead of a Chr(0). [vszakats] */
 
       /* Believe it or not, clipper does this! */
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
       char szChar[ 2 ];
       szChar[ 0 ] = hb_parnl( 1 ) % 256;
       szChar[ 1 ] = '\0';

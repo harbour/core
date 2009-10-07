@@ -138,7 +138,7 @@
 /* Disable method decoration when Harbour compiled strict compatibility mode.
    In strict mode, PP doesn't support identifier concatenation, which
    would be needed for method decoration. */
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
    #ifndef HB_CLS_NO_DECORATION
       #define HB_CLS_NO_DECORATION
    #endif

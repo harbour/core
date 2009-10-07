@@ -489,7 +489,7 @@ double hb_numRound( double dNum, int iDec )
 
    doComplete5 /= doBase;
 
-#if defined( HB_DBLFL_PREC_FACTOR ) && !defined( HB_C52_STRICT )
+#if defined( HB_DBLFL_PREC_FACTOR ) && !defined( HB_CLP_STRICT )
    /* similar operation is done by Cl5.3
       it's a hack to force rounding FL values UP */
    doComplete5 *= HB_DBLFL_PREC_FACTOR;
@@ -516,7 +516,7 @@ double hb_numInt( double dNum )
 {
    double dInt;
 
-#if defined( HB_DBLFL_PREC_FACTOR ) && !defined( HB_C52_STRICT )
+#if defined( HB_DBLFL_PREC_FACTOR ) && !defined( HB_CLP_STRICT )
    /* Similar hack as in round to make this functions compatible */
    dNum *= HB_DBLFL_PREC_FACTOR;
 #endif

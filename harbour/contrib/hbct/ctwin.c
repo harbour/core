@@ -75,7 +75,7 @@ static int           s_GtId;
 
 #define HB_CTWIN_ALLOC        16
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
 #define HB_CTWIN_MINROWS      1
 #define HB_CTWIN_MINCOLS      1
 #define HB_CTWIN_MAXROWS      255
@@ -337,7 +337,7 @@ static int hb_ctw_SetWindowBoard( PHB_GTCTW pCTW, int iTop, int iLeft, int iBott
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_SetWindowBoard(%p,%d,%d,%d,%d)", pCTW, iTop, iLeft, iBottom, iRight));
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
    /*
     * This limitation is only for strict CT3 compatibility, the CTW GTs
     * can work in practice with any virtual board size and position and
@@ -634,7 +634,7 @@ static int hb_ctw_CreateWindow( PHB_GTCTW pCTW, int iTop, int iLeft, int iBottom
    if( iWidth > pCTW->iBoardRight - pCTW->iBoardLeft + 1 )
       iWidth = pCTW->iBoardRight - pCTW->iBoardLeft + 1;
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
    if( iHeight < HB_CTWIN_MINROWS || iWidth < HB_CTWIN_MINCOLS ||
        iHeight > HB_CTWIN_MAXROWS || iWidth > HB_CTWIN_MAXCOLS )
       return -1;

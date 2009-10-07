@@ -123,7 +123,7 @@ HB_EXTERN_BEGIN
 #define HB_B_DOUBLE_V          '\xBA'
 #define HB_B_DOUBLE_H          '\xCD'
 
-#if defined( HB_COMPAT_C53 ) && !defined( HB_C52_STRICT )
+#if defined( HB_COMPAT_C53 ) && !defined( HB_CLP_STRICT )
 #  define HB_DEFAULT_INKEY_BUFSIZE  50
 #else
 #  define HB_DEFAULT_INKEY_BUFSIZE  15

@@ -64,7 +64,7 @@
 #define DE_ABORT        0       /* Abort DBEDIT()                          */
 #define DE_CONT         1       /* Continue DBEDIT()                       */
 #define DE_REFRESH      2       /* Force reread/redisplay of all data rows */
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
    #define DE_APPEND       3       /* Undocumented CA-Cl*pper append mode in DBEdit */
 #endif
 

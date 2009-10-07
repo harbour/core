@@ -618,7 +618,7 @@ typedef unsigned long HB_COUNTER;
 /* This value is used to hack the double FL value in round/int
    operation - similar thing is done by CL5.3 - I do not know
    only the exact factor value but it should be close to this one.
-   When HB_C52_STRICT is set this macro is not used.
+   When HB_CLP_STRICT is set this macro is not used.
 */
 #define HB_DBLFL_PREC_FACTOR 1.0000000000000002;
 

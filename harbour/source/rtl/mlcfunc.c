@@ -162,7 +162,7 @@ static PHB_EOL_INFO hb_mlGetEOLs( int iParam, int * piEOLs )
          because there was no other idea which seemed natural enough.
          Clipper will ignore these parameters and use CRLF EOL hard
          coded. [vszakats] */
-#ifndef HB_C52_STRICT /* HB_EXTENSION */
+#ifndef HB_CLP_STRICT /* HB_EXTENSION */
    ULONG ulLen = hb_parclen( iParam );
    if( ulLen )
    {
@@ -235,7 +235,7 @@ static const char * hb_mlGetParams( int iParAdd, ULONG * pulLen,
       * pulTabSize = HB_ISNUM( 3 + iParAdd ) ? hb_parnl( 3 + iParAdd ) : 4;
       * pfWordWrap = HB_ISLOG( 4 + iParAdd ) ? hb_parl( 4 + iParAdd ) : TRUE;
       * pEOLs = hb_mlGetEOLs( 5 + iParAdd, piEOLs );
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
       if( * pulLineLength > 254 )
          * pulLineLength = 79;
 #endif

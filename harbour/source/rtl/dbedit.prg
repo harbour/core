@@ -237,7 +237,7 @@ FUNCTION DBEDIT( nTop, nLeft, nBottom, nRight, ;
       lDoIdleCall := .T.
 
       IF nKey != 0
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
          IF lAppend
             SWITCH nKey
                CASE K_DOWN
@@ -318,7 +318,7 @@ STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend, lFlag )
       dbSkip( -1 )
    ENDIF
 
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
    IF nAction == DE_APPEND
 
       IF ( lAppend := !( lAppend .AND. EOF() ) )

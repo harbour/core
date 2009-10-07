@@ -53,7 +53,7 @@
 
 #include "hbapi.h"
 
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
 
 HB_FUNC_EXTERN( HB_RDDINFO );
 

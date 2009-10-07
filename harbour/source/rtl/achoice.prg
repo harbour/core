@@ -183,7 +183,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
             ENDIF
          ENDIF
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
       CASE nKey == K_UP
 #else
       CASE nKey == K_UP .OR. nKey == K_MWFORWARD
@@ -219,7 +219,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
             ENDIF
          ENDIF
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
       CASE nKey == K_DOWN
 #else
       CASE nKey == K_DOWN .OR. nKey == K_MWBACKWARD

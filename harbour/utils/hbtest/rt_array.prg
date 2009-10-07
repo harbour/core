@@ -95,7 +95,7 @@ PROCEDURE Main_ARRAY()
    TEST_LINE( ASort(10)                       , NIL                                        )
    TEST_LINE( ASort({})                       , "{.[0].}"                                  )
    TEST_LINE( ASort(ErrorNew())               , NIL                                        )
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
 #ifndef __XPP__
    TEST_LINE( AFill()                         , "E 1 BASE 2017 Argument error (AEVAL) OS:0 #:0 A:4:U:NIL;B:{||...};U:NIL;U:NIL " )
 #endif

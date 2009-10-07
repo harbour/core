@@ -138,7 +138,7 @@ CREATE CLASS GET
    METHOD picture( cPicture ) SETGET
    ACCESS pos METHOD getPos()
    ASSIGN pos METHOD setPos( nPos )
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
    METHOD reform()
 #endif
    METHOD reset()
@@ -1471,7 +1471,7 @@ METHOD badDate() CLASS GET
 
    RETURN .F.
 
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
 
 METHOD reform() CLASS GET
 

@@ -1222,7 +1222,7 @@ METHOD TBApplyKey( oGet, oTB, nKey, oMenu, aMsg ) CLASS HBGetList
       oGet:exitState := GE_UP
 
    CASE nKey == K_ENTER
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
       IF !oTb:Stable()
          oTb:ForceStable()
       ENDIF

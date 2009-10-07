@@ -111,7 +111,7 @@ HB_FUNC( XHB_ALLTRIM )
    else
 #ifdef HB_COMPAT_C53
       /* NOTE: This runtime error appeared in CA-Cl*pper 5.3 [vszakats] */
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
       hb_errRT_BASE_SubstR( EG_ARG, 2022, NULL, "ALLTRIM", 0 );
 #else
       hb_errRT_BASE_SubstR( EG_ARG, 2022, NULL, "ALLTRIM", HB_ERR_ARGS_BASEPARAMS );

@@ -98,7 +98,7 @@ HB_FUNC( ARRAY )
 
          if( hb_parnl( iParam ) < 0 ) /* || hb_parnl( iParam ) <= 4096 */
          {
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
             hb_errRT_BASE( EG_BOUND, 1131, NULL, hb_langDGetErrorDesc( EG_ARRDIMENSION ), 0 );
 #else
             hb_errRT_BASE( EG_BOUND, 1131, NULL, hb_langDGetErrorDesc( EG_ARRDIMENSION ), HB_ERR_ARGS_BASEPARAMS );
@@ -147,7 +147,7 @@ HB_FUNC( ASIZE )
    }
 #ifdef HB_COMPAT_C53 /* From CA-Cl*pper 5.3a */
    else
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
       hb_errRT_BASE( EG_ARG, 2023, NULL, HB_ERR_FUNCNAME, 0 );
 #else
       hb_errRT_BASE( EG_ARG, 2023, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -239,7 +239,7 @@ HB_FUNC( AFILL )
       }
    }
    else
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
       /* NOTE: In CA-Cl*pper AFILL() is written in a manner that it will
                call AEVAL() to do the job, so the error (if any) will also be
                thrown by AEVAL().  [vszakats] */

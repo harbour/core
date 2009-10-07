@@ -591,7 +591,7 @@ HB_FUNC( TRANSFORM )
                while( ( ULONG ) iCount + 1 < i && szResult[ iCount + 1 ] == ' ' )
                   ++iCount;
 
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
                /* This is not Clipper compatible */
                if( szResult[ iCount ] >= '1' && szResult[ iCount ] <= '9' &&
                    ( ulPicLen == 0 || szPic[ iCount ] == '9' ||
@@ -613,7 +613,7 @@ HB_FUNC( TRANSFORM )
             }
             else if( ( uiPicFlags & PF_PARNEG ) )
             {
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
                /* This is not Clipper compatible */
                if( *szResult >= '1' && *szResult <= '9' &&
                    ( ulPicLen == 0 || *szPic == '9' || *szPic != *szResult ) )
@@ -664,7 +664,7 @@ HB_FUNC( TRANSFORM )
          szResult = ( char * ) hb_xgrab( 13 );
          szDateFormat = hb_setGetDateFormat();
 
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
          if( uiPicFlags & PF_BRITISH )
          {
             /* When @E is used CA-Cl*pper do not update date format
@@ -709,7 +709,7 @@ HB_FUNC( TRANSFORM )
          hb_dateFormat( hb_itemGetDS( pValue, szDate ), szResult, szDateFormat );
          ulResultPos = strlen( szResult );
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
          if( uiPicFlags & PF_BRITISH )
          {
             /* replicated wrong Clipper behavior, see note above.
@@ -768,7 +768,7 @@ HB_FUNC( TRANSFORM )
          if( ( uiPicFlags & ( PF_DATE | PF_TIME ) ) != PF_DATE )
             szTimeFormat = hb_setGetTimeFormat();
 
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
          if( szDateFormat && ( uiPicFlags & PF_BRITISH ) )
          {
             /* When @E is used CA-Cl*pper do not update date format
@@ -825,7 +825,7 @@ HB_FUNC( TRANSFORM )
          }
          ulResultPos = strlen( szResult );
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
          if( uiPicFlags & PF_BRITISH )
          {
             /* replicated wrong Clipper behavior, see note above.

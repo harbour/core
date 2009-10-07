@@ -241,11 +241,11 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is sensitive to HB_C52_STRICT settings during the
+ *      This function is sensitive to HB_CLP_STRICT settings during the
  *      compilation of source/rtl/at.c
  *
  *      <nStart> and <nEnd> are Harbour extensions and do not exist if
- *      HB_C52_STRICT is defined. In that case, the whole string is searched.
+ *      HB_CLP_STRICT is defined. In that case, the whole string is searched.
  *  $PLATFORMS$
  *      All
  *  $FILES$

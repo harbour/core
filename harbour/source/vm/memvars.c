@@ -1412,7 +1412,7 @@ static HB_DYNS_FUNC( hb_memvarSave )
             dNumber = hb_itemGetND( pMemvar );
             hb_itemGetNLen( pMemvar, &iWidth, &iDec );
             buffer[ 11 ] = 'N' + 128;
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
 /* NOTE: This is the buggy, but fully CA-Cl*pper compatible method. [vszakats] */
             buffer[ 16 ] = ( BYTE ) iWidth + ( HB_IS_DOUBLE( pMemvar ) ? ( BYTE ) ( iDec + 1 ) : 0 );
 #else
@@ -1516,7 +1516,7 @@ HB_FUNC( __MVSAVE )
 
          /* NOTE: Here, we're not CA-Cl*pper compatible by default settings.
                   [vszakats] */
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
          if( hb_setGetHardCommit() )
             hb_fsCommit( fhnd );
 #endif
@@ -1540,7 +1540,7 @@ HB_FUNC( __MVRESTORE )
 {
    /* Clipper checks for the number of arguments here here, but we cannot
       in Harbour since we have two optional parameters as an extension. */
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
    if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISLOG( 2 ) )
 #else
    if( HB_ISCHAR( 1 ) && HB_ISLOG( 2 ) )
@@ -1595,7 +1595,7 @@ HB_FUNC( __MVRESTORE )
          char *szName;
          PHB_ITEM pItem = NULL;
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
          pszMask = "*";
          bIncludeMask = TRUE;
 #else

@@ -365,7 +365,7 @@ HB_FUNC( DBCREATE )
     * level, [druzus]
     */
    if( !pStruct ||
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
        hb_arrayLen( pStruct ) == 0 ||
 #endif
        !szFileName )
@@ -422,7 +422,7 @@ HB_FUNC( HB_DBCREATETEMP )
     * level, [druzus]
     */
    if( !szAlias || !pStruct
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
        || hb_arrayLen( pStruct ) == 0
 #endif
        )
@@ -1645,7 +1645,7 @@ HB_FUNC( SELECT )
 
       if( szAlias )
       {
-#if defined( HB_C52_STRICT ) || 1
+#if defined( HB_CLP_STRICT ) || 1
          /*
           * I do not like this Clipper behavior, in some constructions
           * programmer may use "<aliasNum>" in some others not. [Druzus]

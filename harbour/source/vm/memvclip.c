@@ -61,7 +61,7 @@ HB_FUNC_EXTERN( __MVRESTORE );
 
 /* NOTE: Undocumented Clipper internal function. */
 
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
 
 HB_FUNC( __QQPUB )
 {

@@ -305,7 +305,7 @@ static HB_ERRCODE hb_sdfRecId( SDFAREAP pArea, PHB_ITEM pRecNo )
 
    errCode = SELF_RECNO( ( AREAP ) pArea, &ulRecNo );
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
    /* this is for strict Clipper compatibility but IMHO Clipper should not
       do that and always set fixed size independent to the record number */
    if( ulRecNo < 10000000 )

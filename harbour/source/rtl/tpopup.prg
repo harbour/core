@@ -682,7 +682,7 @@ METHOD border( cBorder ) CLASS POPUPMENU
 
 METHOD bottom( nBottom ) CLASS POPUPMENU
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
    IF nBottom != NIL
       ::nBottom := __eInstVar53( Self, "BOTTOM", nBottom, "N", 1001 )
    ENDIF
@@ -711,7 +711,7 @@ METHOD itemCount() CLASS POPUPMENU
 
 METHOD left( nLeft ) CLASS POPUPMENU
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
    IF nLeft != NIL
       ::nLeft := __eInstVar53( Self, "LEFT", nLeft, "N", 1001 )
    ENDIF
@@ -725,7 +725,7 @@ METHOD left( nLeft ) CLASS POPUPMENU
 
 METHOD right( nRight ) CLASS POPUPMENU
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
    IF nRight != NIL
       ::nRight := __eInstVar53( Self, "RIGHT", nRight, "N", 1001 )
    ENDIF
@@ -739,7 +739,7 @@ METHOD right( nRight ) CLASS POPUPMENU
 
 METHOD top( nTop ) CLASS POPUPMENU
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
    IF nTop != NIL
       ::nTop := __eInstVar53( Self, "TOP", nTop, "N", 1001 )
    ENDIF

@@ -132,7 +132,7 @@ void hb_conInit( void )
 
 #endif
 
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
    {
       /* Undocumented CA-Cl*pper switch //STDERR:x */
       int iStderr = hb_cmdargNum( "STDERR" );
@@ -143,7 +143,7 @@ void hb_conInit( void )
        * dangerous because it can redirect error messages to data files
        * [druzus]
        */
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
       else if( iStderr > 0 ) /* //STDERR:x */
          s_hFilenoStderr = ( HB_FHANDLE ) iStderr;
 #endif

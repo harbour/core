@@ -57,10 +57,10 @@
 /* Don't change the position of this #include. */
 #include "rt_vars.ch"
 
-#undef HB_C52_STRICT_OFF
+#undef HB_CLP_STRICT_OFF
 #ifdef __HARBOUR__
-   #ifndef HB_C52_STRICT
-      #define HB_C52_STRICT_OFF
+   #ifndef HB_CLP_STRICT
+      #define HB_CLP_STRICT_OFF
    #endif
 #endif
 
@@ -169,7 +169,7 @@ PROCEDURE Main_MISC()
    TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( ","                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
    TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( ",,"                         ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
    TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "+"                          ), SetColor() ) , "N+/N,N/N,N/N,N/N,N/N"  )
-#ifdef HB_C52_STRICT_OFF
+#ifdef HB_CLP_STRICT_OFF
    TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "+*"                         ), SetColor() ) , "N+/N*,N/N,N/N,N/N,N/N" )
    TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "*"                          ), SetColor() ) , "N/N*,N/N,N/N,N/N,N/N"  )
    TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "*+"                         ), SetColor() ) , "N+/N*,N/N,N/N,N/N,N/N" )
@@ -252,7 +252,7 @@ PROCEDURE Main_MISC()
    TEST_LINE( ( o:colorSpec := ","                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
    TEST_LINE( ( o:colorSpec := ",,"                        , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
    TEST_LINE( ( o:colorSpec := "+"                         , o:colorSpec ) , "N+/N,N+/N,N+/N,N+/N"    )
-#ifdef HB_C52_STRICT_OFF
+#ifdef HB_CLP_STRICT_OFF
    TEST_LINE( ( o:colorSpec := "+*"                        , o:colorSpec ) , "N+/N*,N+/N*,N+/N*,N+/N*")
    TEST_LINE( ( o:colorSpec := "*"                         , o:colorSpec ) , "N/N*,N/N*,N/N*,N/N*"    )
    TEST_LINE( ( o:colorSpec := "*+"                        , o:colorSpec ) , "N+/N*,N+/N*,N+/N*,N+/N*")
@@ -330,7 +330,7 @@ PROCEDURE Main_MISC()
    TEST_LINE( ( o:colorSpec := ","                         , o:colorSpec ) , "N/N,N/N"                )
    TEST_LINE( ( o:colorSpec := ",,"                        , o:colorSpec ) , "N/N,N/N"                )
    TEST_LINE( ( o:colorSpec := "+"                         , o:colorSpec ) , "N+/N,N+/N"              )
-#ifdef HB_C52_STRICT_OFF
+#ifdef HB_CLP_STRICT_OFF
    TEST_LINE( ( o:colorSpec := "+*"                        , o:colorSpec ) , "N+/N*,N+/N*"            )
    TEST_LINE( ( o:colorSpec := "*"                         , o:colorSpec ) , "N/N*,N/N*"              )
    TEST_LINE( ( o:colorSpec := "*+"                        , o:colorSpec ) , "N+/N*,N+/N*"            )
@@ -410,7 +410,7 @@ PROCEDURE Main_MISC()
    /* NATION functions (do not exist in 5.2e US) */
 
 #ifdef __HARBOUR__
-   #ifndef HB_C52_UNDOC
+   #ifndef HB_CLP_UNDOC
       /* NOTE: Use the identical internal versions if Harbour
                was compiled without C5.x undocumented features.
                [vszakats] */

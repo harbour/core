@@ -96,7 +96,7 @@ HB_FUNC( ROUND )
    {
       int iDec = hb_parni( 2 );
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
       /* In CA-Cl*pper ROUND() always returns double item, what in some
        * applications may be important due to different formatting rules
        * when SET FIXED is ON [druzus]

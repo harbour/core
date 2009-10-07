@@ -52,7 +52,7 @@
 
 #include "hbapigt.h"
 
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
 
 /* NOTE: This function is a new Harbour functions implemented in the
          original CA-Cl*pper namespace. It should have been marked as

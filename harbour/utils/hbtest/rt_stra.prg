@@ -162,7 +162,7 @@ PROCEDURE Main_STRA()
 
    /* STRZERO() */
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
    TEST_LINE( StrZero(NIL)                    , "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:1:U:NIL F:S" )
    TEST_LINE( StrZero("A", 10, 2)             , "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:C:A;N:10;N:2 F:S" )
    TEST_LINE( StrZero(100, 10, "A")           , "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:N:100;N:10;C:A F:S" )

@@ -225,7 +225,7 @@ set fixed on
 ? transtest( 1234,     "@!",      "            1234" )
 ? transtest( -1234,        ,      "           -1234" )
 ? transtest( -1234,    "@" ,      "           -1234" )
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
 ? transtest( round(123,0),      , "       123.00" )
 ? transtest( round(123,0), "@!",  "       123.00" )
 ? transtest( round(123.0,0),    , "       123.00" )

@@ -60,7 +60,7 @@ REQUEST DELIM
 
 FUNCTION __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nRecord, lRest, cCodePage )
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
 
    LOCAL nSrcArea
    LOCAL nDstArea

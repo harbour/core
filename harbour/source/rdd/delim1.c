@@ -482,7 +482,7 @@ static HB_ERRCODE hb_delimRecId( DELIMAREAP pArea, PHB_ITEM pRecNo )
 
    errCode = SELF_RECNO( ( AREAP ) pArea, &ulRecNo );
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
    /* this is for strict Clipper compatibility but IMHO Clipper should not
       do that and always set fixed size independent to the record number */
    if( ulRecNo < 10000000 )
@@ -932,7 +932,7 @@ static HB_ERRCODE hb_delimInfo( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
                pArea->cDelim = '\0';
                pArea->cSeparator = ' ';
             }
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
             else if( hb_stricmp( szDelim, "PIPE" ) == 0 )
             {
                pArea->cDelim = '\0';
@@ -957,7 +957,7 @@ static HB_ERRCODE hb_delimInfo( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
           * array. F.e.:
           *    COPY TO test DELIMITED WITH ({"","|"})
           */
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
          else if( hb_itemType( pItem ) & HB_IT_ARRAY )
          {
             char cSeparator;

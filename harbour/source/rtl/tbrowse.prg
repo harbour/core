@@ -510,7 +510,7 @@ METHOD dispRow( nRow ) CLASS TBROWSE
                hb_dispOutAt( nRowPos, nColPos, ;
                              Left( cValue, ::n_Right - nColPos + 1 ), cColor )
             ELSE
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
                hb_dispOutAt( nRowPos, nColPos, ;
                              Left( cValue, aCol[ _TBCI_COLWIDTH ] - aCol[ _TBCI_CELLPOS ] ), cColor )
 #else
@@ -1375,7 +1375,7 @@ METHOD doConfigure() CLASS TBROWSE
                aCol[ _TBCI_CELLPOS ] := Int( ( aCol[ _TBCI_COLWIDTH ] - aCol[ _TBCI_CELLWIDTH ] ) / 2 )
             ENDIF
          ENDIF
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
          /* This is bug in CA-Cl*pper TBrowse. It causes that column
           * is not well centered when picture increase the field size
           * it also has other bad side effects in Clipper. :hiLite()
@@ -2144,7 +2144,7 @@ METHOD delColumn( nColumn ) CLASS TBROWSE
    LOCAL oCol
 
    /* NOTE: CA-Cl*pper doesn't check the parameters. */
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
    IF nColumn >= 1 .AND. nColumn <= ::colCount
 #else
    IF .T.      /* It's optimized by compiler without any RT overhead */
@@ -2162,7 +2162,7 @@ METHOD delColumn( nColumn ) CLASS TBROWSE
 METHOD insColumn( nColumn, oCol ) CLASS TBROWSE
 
    /* NOTE: CA-Cl*pper doesn't check the parameters. */
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
    IF nColumn >= 1 .AND. nColumn <= ::colCount + 1
 #else
    IF .T.      /* It's optimized by compiler without any RT overhead */
@@ -2187,7 +2187,7 @@ METHOD setColumn( nColumn, oCol ) CLASS TBROWSE
       /* NOTE: CA-Cl*pper doesn't check nColumn range (and type in C5.3 - I didn't implement this behaviour),
                but crashes instead. */
 
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
       IF nColumn >= 1 .AND. nColumn <= ::colCount
 #else
       IF .T.      /* It's optimized by compiler without any RT overhead */
@@ -2202,7 +2202,7 @@ METHOD setColumn( nColumn, oCol ) CLASS TBROWSE
             column, but it's returning Self instead. In C5.3 this bug
             was fixed and it works as expected (except when wrong
             parameter is passed, when it returns NIL). [vszakats] */
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
    RETURN Self
 #else
    RETURN oPrevCol
@@ -2212,7 +2212,7 @@ METHOD setColumn( nColumn, oCol ) CLASS TBROWSE
 /* Gets a specific TBColumn object */
 METHOD getColumn( nColumn ) CLASS TBROWSE
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
    RETURN ::columns[ nColumn ]
 #else
    RETURN iif( nColumn >= 1 .AND. nColumn <= ::colCount, ::columns[ nColumn ], NIL )
@@ -2680,7 +2680,7 @@ METHOD setKey( nKey, bBlock ) CLASS TBROWSE
                   { K_ESC        , {|   |               TBR_EXIT       } },;
                   { K_LBUTTONDOWN, {| o | TBMouse( o, MRow(), MCol() ) } } }
 
-      #ifndef HB_C52_STRICT
+      #ifndef HB_CLP_STRICT
          AAdd( ::keys, { K_MWFORWARD  , {| o | o:Up()      , TBR_CONTINUE   } } )
          AAdd( ::keys, { K_MWBACKWARD , {| o | o:Down()    , TBR_CONTINUE   } } )
       #endif

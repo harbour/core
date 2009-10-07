@@ -60,7 +60,7 @@
    It can be used in codeblocks, too. */
 #define HB_SYMBOL_UNUSED( symbol )  ( ( symbol ) )
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
    #command END SEQUENCE      => end
    #command ENDSEQUENCE       => end
 #else

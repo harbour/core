@@ -71,5 +71,5 @@
 #ifdef __HARBOUR__
    #pragma linenumber=on
 #else
-   #define HB_C52_STRICT
+   #define HB_CLP_STRICT
 #endif

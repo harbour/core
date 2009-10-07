@@ -81,7 +81,7 @@ FUNCTION __eInstVar52( oVar, cMethod, xValue, cType, nSubCode, xMin, xMax )
       oError:severity := 2
       oError:cansubstitute := .T.
       oError:subsystem := oVar:className
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
       HB_SYMBOL_UNUSED( cMethod )
 #else
       oError:operation := cMethod

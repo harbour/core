@@ -234,7 +234,7 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
 #define HB_PP_TOKEN_ISEOC(t)     ( HB_PP_TOKEN_ISEOL(t) || \
                                    HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_EOC )
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
 #  define HB_PP_TOKEN_ISEOS(t)   HB_PP_TOKEN_ISEOL(t)
 #  define HB_PP_TOKEN_ISEOP(t,l) HB_PP_TOKEN_ISEOL(t)
 #else
@@ -302,7 +302,7 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
    with a code example so I'll be able if it should be implemented or not.
    Now I simply disabled HB_PP_TOKEN_NEEDRIGHT() macro.
  */
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
 #define HB_PP_TOKEN_NEEDRIGHT(t) ( FALSE )
 #else
 #define HB_PP_TOKEN_NEEDRIGHT(t) ( HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_PLUS || \
@@ -313,7 +313,7 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
                                    HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_POWER )
 #endif
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
 #  define HB_PP_TOKEN_ISUNARY(t) ( HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_MINUS || \
                                    HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_DEC || \
                                    HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_INC || \
@@ -351,7 +351,7 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
                                       ( (t)->pNext && HB_PP_TOKEN_ISUNARY( (t)->type ) && \
                                         HB_PP_TOKEN_ISEXPVAL( (t)->pNext->type ) ) )
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
 /* Clipper supports quoting by [] for 1-st token in the line so we
    are not checking for HB_PP_TOKEN_NUL in this macro */
 #define HB_PP_TOKEN_CANQUOTE(t)     ( HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_KEYWORD && \
@@ -437,7 +437,7 @@ HB_PP_TOKEN, * PHB_PP_TOKEN;
 /* For platforms which does not use ASCII based character tables this macros
    have to be changed to use valid C functions, f.e.:
       isalpha(), isdigit(), ... */
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
 #  define HB_PP_ISILLEGAL(c)     ( (c) < 32 || (c) >= 126 )
 #else
 #  define HB_PP_ISILLEGAL(c)     ( (c) < 32 || (c) == 127 )

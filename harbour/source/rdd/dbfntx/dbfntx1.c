@@ -7545,7 +7545,7 @@ static HB_ERRCODE hb_ntxOrderListFocus( NTXAREAP pArea, LPDBORDERINFO pOrderInfo
        * but not in DBFCDX. I'd like to keep the same behavior in
        * [x]Harbour RDDs and I chosen DBFCDX one as default. [druzus]
        */
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
       LPTAGINFO pTag = hb_ntxFindTag( pArea, pOrderInfo->itmOrder,
                                       pOrderInfo->atomBagName );
       if( pTag )

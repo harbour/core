@@ -71,7 +71,7 @@ HB_FUNC_EXTERN( QOUT );
 
 #define ACCEPT_BUFFER_LEN 256 /* length of input buffer for ACCEPT command */
 
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
 
 static HB_TSD_NEW( s_szAcceptResult, ACCEPT_BUFFER_LEN, NULL, NULL );
 
@@ -126,7 +126,7 @@ HB_FUNC( __ACCEPT )
 
    szAcceptResult[ ulLen ] = '\0';
 
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
    hb_strncpy( hb_acceptBuffer(), szAcceptResult, ACCEPT_BUFFER_LEN - 1 );
 #endif
 

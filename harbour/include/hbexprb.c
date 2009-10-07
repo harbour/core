@@ -957,7 +957,7 @@ static HB_EXPR_FUNC( hb_compExprUseIIF )
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
       {
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
          HB_GEN_FUNC1( PCode1, HB_P_POP );  /* remove a value if used in statement */
 #else

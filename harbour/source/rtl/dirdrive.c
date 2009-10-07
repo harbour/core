@@ -86,7 +86,7 @@ HB_FUNC( DIRREMOVE )
 
 /* NOTE: Clipper 5.3 undocumented */
 
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
 
 HB_FUNC( ISDISK )
 {

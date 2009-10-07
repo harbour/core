@@ -1036,7 +1036,7 @@ void hb_vmInit( BOOL bStartMainProc )
             s_pSymStart = NULL;
 #endif
 
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
          if( bStartMainProc && ! s_pSymStart )
          {
             if( pszMain )
@@ -5062,7 +5062,7 @@ static void hb_vmArrayPush( void )
                hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pArray, pArray, pIndex, NULL ) )
          hb_stackPop();
       else
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 0 );
 #else
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, pIndex );
@@ -5158,7 +5158,7 @@ static void hb_vmArrayPushRef( void )
          return;
       }
       else
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 0 );
 #else
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, pIndex );
@@ -5259,7 +5259,7 @@ static void hb_vmArrayPop( void )
          hb_stackPop();
       }
       else
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
          hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 0 );
 #else
          hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 1, pIndex );
@@ -8401,7 +8401,7 @@ void hb_vmRequestBreak( PHB_ITEM pItem )
    }
    else
    {
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
       /*
        * do not execute EXIT procedures to be as close as possible
        * buggy Clipper behavior. [druzus]
@@ -10710,7 +10710,7 @@ static void hb_vmArrayItemPush( ULONG ulIndex )
                                  hb_stackItemFromTop( -1 ), NULL ) )
             hb_stackPop();
          else
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
             hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 0 );
 #else
             hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
@@ -10794,7 +10794,7 @@ static void hb_vmArrayItemPop( ULONG ulIndex )
             hb_stackPop();
          }
          else
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
             hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 0 );
 #else
             hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ),

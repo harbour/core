@@ -51,7 +51,7 @@
  *
  */
 
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
 
 FUNCTION _eInstVar( ... )
 #ifdef HB_COMPAT_C53

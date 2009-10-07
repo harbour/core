@@ -334,7 +334,7 @@ EXTERNAL YEAR
 /* Harbour extensions violating extension namespace rules.
    See reasons in source. */
 
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
 EXTERNAL RDDINFO
 EXTERNAL DBDROP
 EXTERNAL DBEXISTS
@@ -604,7 +604,7 @@ EXTERNAL RDDSYS
 
 /* CA-Cl*pper 5.2 compatible undocumented functions */
 
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
 
 EXTERNAL __ACCEPTSTR
 EXTERNAL __ATCLEAR
@@ -654,7 +654,7 @@ EXTERNAL SETTYPEAHEAD
 EXTERNAL ERRORINHAN
 EXTERNAL ERRORINHANDLER
 
-#endif /* HB_C52_UNDOC */
+#endif /* HB_CLP_UNDOC */
 
 /* CA-Cl*pper 5.3 compatible functions */
 
@@ -664,7 +664,7 @@ EXTERNAL __CAPTION
 EXTERNAL __GUICOLOR
 EXTERNAL __CAPLENGTH
 EXTERNAL __CAPMETRICS
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
 EXTERNAL __MICOLUMN
 EXTERNAL __MIROW
 #endif

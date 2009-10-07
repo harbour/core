@@ -536,7 +536,7 @@ static void hb_gt_def_ColorsToString( PHB_GT pGT, int * pColors, int iColorCount
                      which is quite ugly, otherwise it will put the "+" to the
                      first half and the "*" to the second (like "W+/B*"), which
                      is how it should be done. [vszakats] */
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
             if( ( pColors[ iColorIndex ] & 0x80 ) != 0 )
                pszColorString[ iPos++ ] = '*';
 #endif
@@ -546,7 +546,7 @@ static void hb_gt_def_ColorsToString( PHB_GT pGT, int * pColors, int iColorCount
 
             pszColorString[ iPos++ ] = '/';
          }
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
          else
          {
             if( ( pColors[ iColorIndex ] & 0x80 ) != 0 )
@@ -1721,7 +1721,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
                      szMsgDsp[ ulDst++ ] = '\n';
                      ulLast = ulDst;
                   }
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
                   else
                   {
                      ulCurrWidth--;

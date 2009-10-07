@@ -67,7 +67,7 @@ PROCEDURE __Dir( cFileMask )
                This is hard wired to English. So this is a small
                incompatibility. */
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
       QOut( "Database Files    # Records    Last Update     Size" )
 #else
       QOut( __NatMsg( _DIR_HEADER ) )

@@ -50,7 +50,7 @@
  *
  */
 
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
 
 FUNCTION SetTypeahead( nSize )
    RETURN Set( _SET_TYPEAHEAD, nSize )

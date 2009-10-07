@@ -645,7 +645,7 @@
  *      y por tanto la segunda es la funci¢n recomendada.
  *
  *      Esta funci¢n es s¢lo visible si ../source/rdd/dbstrux.prg fu‚
- *      compilado con la bandera HB_C52_UNDOC.
+ *      compilado con la bandera HB_CLP_UNDOC.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$

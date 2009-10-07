@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 
-/* NOTE: Cannot be disabled with the HB_C52_UNDOC macro, because this symbol
+/* NOTE: Cannot be disabled with the HB_CLP_UNDOC macro, because this symbol
          is referenced by the VM [vszakats] */
 
 /* NOTE: Clipper 5.x undocumented */

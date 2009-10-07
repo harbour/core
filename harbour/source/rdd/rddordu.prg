@@ -54,7 +54,7 @@
 
 /* NOTE: Undocumented Clipper function */
 
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
 
 FUNCTION _dtxCondSet( cFor, bFor, lAll, bWhile, bEval, nEvery, xDummy, nRecNo, nNext, nRecord, lRest )
 

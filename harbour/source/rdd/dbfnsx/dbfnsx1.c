@@ -7915,7 +7915,7 @@ static HB_ERRCODE hb_nsxOrderListFocus( NSXAREAP pArea, LPDBORDERINFO pOrderInfo
        * I'd like to keep the same behavior in all native [x]Harbour
        * RDDs and I chosen DBFCDX one as default. [druzus]
        */
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
       LPTAGINFO pTag = hb_nsxFindTag( pArea, pOrderInfo->itmOrder,
                                       pOrderInfo->atomBagName );
       if( pTag )

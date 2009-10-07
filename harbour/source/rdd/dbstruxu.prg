@@ -54,7 +54,7 @@
 
 /* NOTE: Undocumented, internal Clipper function */
 
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
 
 FUNCTION __FLEDIT( aStruct, aFieldList )
    RETURN __dbStructFilter( aStruct, aFieldList )

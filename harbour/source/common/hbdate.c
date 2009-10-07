@@ -93,7 +93,7 @@
 #endif
 
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
    #define HB_DATE_YEAR_LIMIT    2999
 #else
    #define HB_DATE_YEAR_LIMIT    9999
@@ -297,7 +297,7 @@ void hb_dateStrGet( const char * szDate, int * piYear, int * piMonth, int * piDa
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dateStrGet(%s, %p, %p, %p)", szDate, piYear, piMonth, piDay));
 
-#if defined( HB_C52_STRICT ) || 1
+#if defined( HB_CLP_STRICT ) || 1
    if( szDate )
 #else
    if( szDate &&

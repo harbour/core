@@ -50,7 +50,7 @@
  *
  */
 
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
 
 FUNCTION __Input( xPrompt )
    LOCAL cString := __Accept( xPrompt )

@@ -1362,7 +1362,7 @@ BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart,
             ulCount = ulSrcLen - ulStart + 1;
 
 /* This is probably a bug, present in all versions of CA-Cl*pper. */
-#if defined( HB_C52_STRICT ) || 1
+#if defined( HB_CLP_STRICT ) || 1
          if( ulDstLen > 0 )
          {
             if( ulTarget > ulDstLen )

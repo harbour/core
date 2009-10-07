@@ -64,7 +64,7 @@
          source file to avoid linking errors when a 3rd party
          library would also define this function. [vszakats] */
 
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
 
 HB_FUNC( STOD )
 {

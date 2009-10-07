@@ -54,7 +54,7 @@
 #include "hbapigt.h"
 #include "hbapiitm.h"
 
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
 
 HB_FUNC( __BOX )
 {

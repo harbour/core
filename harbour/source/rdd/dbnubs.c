@@ -52,7 +52,7 @@
 
 #include "hbdefs.h"
 
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
 
 HB_FUNC_EXTERN( DBSEEK );
 HB_FUNC_EXTERN( DBSKIP );

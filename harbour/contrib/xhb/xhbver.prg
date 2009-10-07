@@ -74,12 +74,12 @@ FUNCTION hb_buildinfo( n )
    v[ _HB_VER_L_USR              ] := hb_Version( HB_VERSION_FLAG_LINKER )
    v[ _HB_VER_PRG_USR            ] := hb_Version( HB_VERSION_FLAG_PRG )
    v[ _HB_EXTENSION              ] := .F.
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
    v[ _HB_C52_UNDOC              ] := .T.
 #else
    v[ _HB_C52_UNDOC              ] := .F.
 #endif
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
    v[ _HB_C52_STRICT             ] := .T.
 #else
    v[ _HB_C52_STRICT             ] := .F.

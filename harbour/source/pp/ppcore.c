@@ -51,7 +51,7 @@
  */
 
 /* #define HB_PP_MULTILINE_STRING */
-/* #define HB_C52_STRICT */
+/* #define HB_CLP_STRICT */
 /* #define HB_PP_NO_LINEINFO_TOKEN */
 /* #define HB_PP_STRICT_LINEINFO_TOKEN */
 
@@ -158,7 +158,7 @@ static const HB_PP_OPERATOR s_operators[] =
    { ".NOT.", 5, "!"    , HB_PP_TOKEN_NOT       | HB_PP_TOKEN_STATIC },
    { ".AND.", 5, ".AND.", HB_PP_TOKEN_AND       | HB_PP_TOKEN_STATIC },
    { ".OR." , 4, ".OR." , HB_PP_TOKEN_OR        | HB_PP_TOKEN_STATIC },
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
    { "..."  , 3, "..."  , HB_PP_TOKEN_EPSILON   | HB_PP_TOKEN_STATIC },
 #endif
    { "**="  , 3, "^="   , HB_PP_TOKEN_EXPEQ     | HB_PP_TOKEN_STATIC },
@@ -440,7 +440,7 @@ static PHB_PP_TOKEN hb_pp_tokenResultEnd( PHB_PP_TOKEN * pTokenPtr, BOOL fDirect
 {
    PHB_PP_TOKEN pNext = NULL;
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
    HB_SYMBOL_UNUSED( fDirect );
 #endif
 
@@ -595,7 +595,7 @@ static void hb_pp_tokenAddNext( PHB_PP_STATE pState, const char * value, ULONG u
       }
    }
 
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
    if( pState->iSpacesMin != 0 && pState->iSpaces == 0 &&
        HB_PP_TOKEN_TYPE( type ) == HB_PP_TOKEN_KEYWORD )
       pState->iSpaces = pState->iSpacesMin;
@@ -1088,7 +1088,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                ul = ulLen; /* hb_strRemEscSeq() above could change ul */
             }
          }
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
          else if( ( ( ch == 'e' || ch == 'E' ) && ulLen > 1 &&
                     pBuffer[ 1 ] == '"' ) || ( ch == '"' && pState->fEscStr ) )
          {
@@ -1241,7 +1241,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
          }
          else if( ch == '/' && ulLen > 1 && pBuffer[ 1 ] == '*' )
          {
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
             /* In Clipper multiline comments used after ';' flushes
                the EOC token what causes that ';' is always command
                separator and cannot be used as line concatenator just
@@ -1283,7 +1283,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
              * statement separator ';' it does not work like a single line
              * comment.
              */
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
             if( pState->pFile->iTokens == 0 &&
 #else
             if( pState->fNewStatement &&
@@ -3170,7 +3170,7 @@ static void hb_pp_directiveNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
    PHB_PP_TOKEN pResult, pMatch, pStart, pLast;
    BOOL fValid = FALSE;
 
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
    HB_SYMBOL_UNUSED( fDirect );
 #endif
 
@@ -3289,7 +3289,7 @@ static void hb_pp_directiveNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
                      ( * pOptStart )->pMTokens = ( * pOptStart )->pNext;
                      ( * pOptStart )->pNext = pLast->pNext;
                      HB_PP_TOKEN_SETTYPE( * pOptStart, HB_PP_RMARKER_OPTIONAL );
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
                      /* This is not Clipper compatible but we have word
                         concatenation and without this modification we
                         will introduce very serious bug */
@@ -4917,7 +4917,7 @@ static void hb_pp_preprocessToken( PHB_PP_STATE pState )
          {
             fError = TRUE;
          }
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
          /* Harbour PP extension */
          else if( fDirect && pState->pFile->iCurrentLine == 1 &&
                   HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_NOT &&
@@ -4942,7 +4942,7 @@ static void hb_pp_preprocessToken( PHB_PP_STATE pState )
          {
             hb_pp_condCompile( pState, pToken->pNext, FALSE );
          }
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
          /* xHarbour PP extension */
          else if( hb_pp_tokenValueCmp( pToken, "IF", HB_PP_CMP_DBASE ) )
          {
@@ -5040,7 +5040,7 @@ static void hb_pp_preprocessToken( PHB_PP_STATE pState )
          {
             hb_pp_directiveNew( pState, pToken, HB_PP_CMP_STD, FALSE, fDirect, FALSE );
          }
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
          else if( hb_pp_tokenValueCmp( pToken, "YTRANSLATE", HB_PP_CMP_DBASE ) )
          {
             hb_pp_directiveNew( pState, pToken, HB_PP_CMP_CASE, FALSE, fDirect, FALSE );
@@ -5054,7 +5054,7 @@ static void hb_pp_preprocessToken( PHB_PP_STATE pState )
          {
             hb_pp_directiveNew( pState, pToken, HB_PP_CMP_STD, TRUE, fDirect, FALSE );
          }
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
          else if( hb_pp_tokenValueCmp( pToken, "YCOMMAND", HB_PP_CMP_DBASE ) )
          {
             hb_pp_directiveNew( pState, pToken, HB_PP_CMP_CASE, TRUE, fDirect, FALSE );
@@ -5115,7 +5115,7 @@ static void hb_pp_preprocessToken( PHB_PP_STATE pState )
                fDirective = TRUE;
                break;
             }
-#ifndef HB_C52_STRICT
+#ifndef HB_CLP_STRICT
             /* Harbour extension: concatenate keywords without spaces between
                them */
             hb_pp_concatenateKeywords( pState, &pState->pFile->pTokenList );

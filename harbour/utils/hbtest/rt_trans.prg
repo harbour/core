@@ -702,7 +702,7 @@ PROCEDURE Main_TRANS()
    TEST_LINE( Transform(           1234, "@!"   ), "            1234"   )
    TEST_LINE( Transform(          -1234,        ), "           -1234"   )
    TEST_LINE( Transform(          -1234, "@"    ), "           -1234"   )
-#ifdef HB_C52_STRICT
+#ifdef HB_CLP_STRICT
    TEST_LINE( Transform( round(123  ,0),        ), "       123.00"      )
    TEST_LINE( Transform( round(123,  0), "@!"   ), "       123.00"      )
    TEST_LINE( Transform( round(123.0,0),        ), "       123.00"      )

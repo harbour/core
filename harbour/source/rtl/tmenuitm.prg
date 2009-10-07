@@ -196,7 +196,7 @@ METHOD New( cCaption, boData, nShortcut, cMessage, nID ) CLASS MENUITEM
 FUNCTION MenuItem( cCaption, boData, nShortcut, cMessage, nID )
    RETURN HBMenuItem():New( cCaption, boData, nShortcut, cMessage, nID )
 
-#ifdef HB_C52_UNDOC
+#ifdef HB_CLP_UNDOC
 
 FUNCTION __miColumn( o, nColumn )
 
