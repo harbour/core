@@ -38,7 +38,7 @@ endif
 
 # Allow detection by external (generated) config file
 
--include $(TOP)$(ROOT)config/conf.mk
+-include $(TOP)$(ROOT)config.mk
 
 # Detect zlib
 

@@ -30,6 +30,8 @@
 ifeq ($(GLOBAL_MK_),)
 GLOBAL_MK_ := yes
 
+-include $(TOP)$(ROOT)user.mk
+
 HB_VER_MAJOR     := 2
 HB_VER_MINOR     := 0
 HB_VER_RELEASE   := 0
