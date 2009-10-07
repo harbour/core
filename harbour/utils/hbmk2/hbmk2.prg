@@ -4322,8 +4322,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
          /* Setup compressor for host platform */
 
-         #if defined( __PLATFORM__LINUX ) .OR. ;
-             defined( __PLATFORM__DARWIN )
+         #if defined( __PLATFORM__UNIX )
 
             cBin_Cprs := "upx"
             cOpt_Cprs := "{OB}"
