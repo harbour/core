@@ -1975,32 +1975,29 @@ static BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
 
    pWVT = HB_GTWVT_GET( pGT );
 
-   if( iRow <= WVT_MAX_ROWS && iCol <= WVT_MAX_COLS )
+   if( pWVT->hWnd ) /* Is the window already open */
    {
-      if( pWVT->hWnd ) /* Is the window already open */
-      {
-         HFONT hFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
-                                          pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
+      HFONT hFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
+                                       pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
 
-         if( hFont )
-         {
-            /*
-             * make sure that the mode selected along with the current
-             * font settings will fit in the window
-             */
-            if( hb_gt_wvt_ValidWindowSize( pWVT->hWnd, iRow, iCol, hFont, pWVT->fontWidth ) )
-               fResult = hb_gt_wvt_InitWindow( pWVT, iRow, iCol, hFont );
-            else
-               DeleteObject( hFont );
-
-            HB_GTSELF_REFRESH( pGT );
-         }
-      }
-      else
+      if( hFont )
       {
-         fResult = hb_gt_wvt_SetWindowSize( pWVT, iRow, iCol );
-         HB_GTSELF_SEMICOLD( pGT );
+         /*
+          * make sure that the mode selected along with the current
+          * font settings will fit in the window
+          */
+         if( hb_gt_wvt_ValidWindowSize( pWVT->hWnd, iRow, iCol, hFont, pWVT->fontWidth ) )
+            fResult = hb_gt_wvt_InitWindow( pWVT, iRow, iCol, hFont );
+         else
+            DeleteObject( hFont );
+
+         HB_GTSELF_REFRESH( pGT );
       }
+   }
+   else
+   {
+      fResult = hb_gt_wvt_SetWindowSize( pWVT, iRow, iCol );
+      HB_GTSELF_SEMICOLD( pGT );
    }
 
    return fResult;
