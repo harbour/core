@@ -69,6 +69,7 @@ Changes since previous (2.0.0beta3 20090905) release:
 -----------------------------------------------------------------------
 
 - MinGW CEGCC updated to 4.4.0
+- upx updated to 3.04.
 
 Changes since previous (2.0.0beta2 20090624) release:
 -----------------------------------------------------------------------
