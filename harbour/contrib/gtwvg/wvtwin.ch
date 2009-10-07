@@ -1998,5 +1998,25 @@
 #define TVCDRF_NOIMAGES                           65536
 
 /*----------------------------------------------------------------------*/
+
+#define R2_BLACK                                  1   /*  0       */
+#define R2_NOTMERGEPEN                            2   /* DPon     */
+#define R2_MASKNOTPEN                             3   /* DPna     */
+#define R2_NOTCOPYPEN                             4   /* PN       */
+#define R2_MASKPENNOT                             5   /* PDna     */
+#define R2_NOT                                    6   /* Dn       */
+#define R2_XORPEN                                 7   /* DPx      */
+#define R2_NOTMASKPEN                             8   /* DPan     */
+#define R2_MASKPEN                                9   /* DPa      */
+#define R2_NOTXORPEN                              10  /* DPxn     */
+#define R2_NOP                                    11  /* D        */
+#define R2_MERGENOTPEN                            12  /* DPno     */
+#define R2_COPYPEN                                13  /* P        */
+#define R2_MERGEPENNOT                            14  /* PDno     */
+#define R2_MERGEPEN                               15  /* DPo      */
+#define R2_WHITE                                  16  /*  1       */
+#define R2_LAST                                   16
+
+/*----------------------------------------------------------------------*/
 #endif
 /*----------------------------------------------------------------------*/
