@@ -3,5 +3,6 @@
 #
 
 netiosrv.prg
--o{!dos}netiosrv_${hb_plat}
--o{dos}netiodos
+-o{!dos&x86}hbnetio_${hb_plat}
+-o{!dos&!x86}hbnetio_${hb_plat}_${hb_cpu}
+-o{dos}hbnetio
