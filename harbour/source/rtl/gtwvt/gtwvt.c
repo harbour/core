@@ -731,6 +731,8 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
             height = ( ( int ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) ) + borderHeight;
 
             SetWindowPos( pWVT->hWnd, NULL, 0, 0, width, height, SWP_NOZORDER | SWP_NOMOVE );
+            if( width > maxWidth || height > maxHeight )
+               hb_gt_wvt_FitRows( pWVT );
          }
 
          HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
