@@ -207,6 +207,12 @@
 //                          Windows Specific
 //
 /*----------------------------------------------------------------------*/
+#define LVM_FIRST                                 0x1000      // ListView messages
+#define TV_FIRST                                  0x1100      // TreeView messages
+#define TVN_FIRST                                 (0-400)
+#define HDM_FIRST                                 0x1200      // Header messages
+#define TCM_FIRST                                 0x1300      // Tab control messages
+/*----------------------------------------------------------------------*/
 //
 //                   Menu Manipulation Constants
 //
@@ -1550,38 +1556,6 @@
 #define SBARS_TOOLTIPS                            2048
 
 /*----------------------------------------------------------------------*/
-//                         Tree View Constants
-/*----------------------------------------------------------------------*/
-
-#define TVS_HASBUTTONS                            1
-#define TVS_HASLINES                              2
-#define TVS_LINESATROOT                           4
-#define TVS_EDITLABELS                            8
-#define TVS_DISABLEDRAGDROP                       16
-#define TVS_SHOWSELALWAYS                         32
-#define TVS_RTLREADING                            64
-
-#define TVS_NOTOOLTIPS                            128
-#define TVS_CHECKBOXES                            256
-#define TVS_TRACKSELECT                           512
-#define TVS_SINGLEEXPAND                          1024
-#define TVS_INFOTIP                               2048
-#define TVS_FULLROWSELECT                         4096
-#define TVS_NOSCROLL                              8192
-#define TVS_NONEVENHEIGHT                         16384
-#define TVS_NOHSCROLL                             32768               // TVS_NOSCROLL overrides this
-
-#define TVN_FIRST                                 (0-400)
-
-#define TVN_SELCHANGEDA                           (TVN_FIRST-2)
-#define TVN_SELCHANGEDW                           (TVN_FIRST-51)
-#ifdef  UNICODE
-#define TVN_SELCHANGED                            TVN_SELCHANGEDW
-#else
-#define TVN_SELCHANGED                            TVN_SELCHANGEDA
-#endif
-
-/*----------------------------------------------------------------------*/
 
 #define WM_CHOOSEFONT_GETLOGFONT                  (WM_USER + 1)
 #define WM_CHOOSEFONT_SETLOGFONT                  (WM_USER + 101)
@@ -1625,6 +1599,58 @@
 #define SBS_TOPALIGN                              2
 #define SBS_VERT                                  1
 
+
+#define SB_SETTEXTA                               (WM_USER+1)
+#define SB_SETTEXTW                               (WM_USER+11)
+#define SB_GETTEXTA                               (WM_USER+2)
+#define SB_GETTEXTW                               (WM_USER+13)
+#define SB_GETTEXTLENGTHA                         (WM_USER+3)
+#define SB_GETTEXTLENGTHW                         (WM_USER+12)
+
+#ifdef UNICODE
+#define SB_GETTEXT                                SB_GETTEXTW
+#define SB_SETTEXT                                SB_SETTEXTW
+#define SB_GETTEXTLENGTH                          SB_GETTEXTLENGTHW
+#define SB_SETTIPTEXT                             SB_SETTIPTEXTW
+#define SB_GETTIPTEXT                             SB_GETTIPTEXTW
+#else
+#define SB_GETTEXT                                SB_GETTEXTA
+#define SB_SETTEXT                                SB_SETTEXTA
+#define SB_GETTEXTLENGTH                          SB_GETTEXTLENGTHA
+#define SB_SETTIPTEXT                             SB_SETTIPTEXTA
+#define SB_GETTIPTEXT                             SB_GETTIPTEXTA
+#endif
+
+#define SB_SETPARTS                               (WM_USER+4)
+#define SB_GETPARTS                               (WM_USER+6)
+#define SB_GETBORDERS                             (WM_USER+7)
+#define SB_SETMINHEIGHT                           (WM_USER+8)
+#define SB_SIMPLE                                 (WM_USER+9)
+#define SB_GETRECT                                (WM_USER+10)
+#define SB_ISSIMPLE                               (WM_USER+14)
+#define SB_SETICON                                (WM_USER+15)
+#define SB_SETTIPTEXTA                            (WM_USER+16)
+#define SB_SETTIPTEXTW                            (WM_USER+17)
+#define SB_GETTIPTEXTA                            (WM_USER+18)
+#define SB_GETTIPTEXTW                            (WM_USER+19)
+#define SB_GETICON                                (WM_USER+20)
+#define SB_SETUNICODEFORMAT                       CCM_SETUNICODEFORMAT
+#define SB_GETUNICODEFORMAT                       CCM_GETUNICODEFORMAT
+
+#define SBT_OWNERDRAW                             0x1000
+#define SBT_NOBORDERS                             0x0100
+#define SBT_POPOUT                                0x0200
+#define SBT_RTLREADING                            0x0400
+#define SBT_NOTABPARSING                          0x0800
+
+#define SB_SETBKCOLOR                             CCM_SETBKCOLOR      // lParam = bkColor
+
+#define SBN_SIMPLEMODECHANGE                      (SBN_FIRST - 0)
+
+#define SB_SIMPLEID                               0x00ff
+
+/*----------------------------------------------------------------------*/
+
 #define ILC_COLOR                                 0
 #define ILC_COLOR4                                4
 #define ILC_COLOR8                                8
@@ -1659,6 +1685,317 @@
 #define TCS_OWNERDRAWFIXED                        0x2000
 #define TCS_TOOLTIPS                              0x4000
 #define TCS_FOCUSNEVER                            0x8000
+
+/*----------------------------------------------------------------------*/
+//                         Tree View Constants
+/*----------------------------------------------------------------------*/
+
+#define WC_TREEVIEWA                              "SysTreeView32"
+#define WC_TREEVIEWW                              L"SysTreeView32"
+#ifdef UNICODE
+  #define  WC_TREEVIEW                            WC_TREEVIEWW
+#else
+  #define  WC_TREEVIEW                            WC_TREEVIEWA
+#endif
+
+#define TVS_HASBUTTONS                            1
+#define TVS_HASLINES                              2
+#define TVS_LINESATROOT                           4
+#define TVS_EDITLABELS                            8
+#define TVS_DISABLEDRAGDROP                       16
+#define TVS_SHOWSELALWAYS                         32
+#define TVS_RTLREADING                            64
+
+#define TVS_NOTOOLTIPS                            128
+#define TVS_CHECKBOXES                            256
+#define TVS_TRACKSELECT                           512
+#define TVS_SINGLEEXPAND                          1024
+#define TVS_INFOTIP                               2048
+#define TVS_FULLROWSELECT                         4096
+#define TVS_NOSCROLL                              8192
+#define TVS_NONEVENHEIGHT                         16384
+#define TVS_NOHSCROLL                             32768  // TVS_NOSCROLL overrides this
+
+#define TVIF_TEXT                                 1
+#define TVIF_IMAGE                                2
+#define TVIF_PARAM                                4
+#define TVIF_STATE                                8
+#define TVIF_HANDLE                               16
+#define TVIF_SELECTEDIMAGE                        32
+#define TVIF_CHILDREN                             64
+#define TVIF_INTEGRAL                             128
+#define TVIS_SELECTED                             2
+#define TVIS_CUT                                  4
+#define TVIS_DROPHILITED                          8
+#define TVIS_BOLD                                 16
+#define TVIS_EXPANDED                             32
+#define TVIS_EXPANDEDONCE                         64
+#define TVIS_EXPANDPARTIAL                        128
+
+#define TVIS_OVERLAYMASK                          3840
+#define TVIS_STATEIMAGEMASK                       61440
+#define TVIS_USERMASK                             61440
+
+#define I_CHILDRENCALLBACK                        (-1)
+
+#define LPTV_ITEMW                                LPTVITEMW
+#define LPTV_ITEMA                                LPTVITEMA
+#define TV_ITEMW                                  TVITEMW
+#define TV_ITEMA                                  TVITEMA
+
+#define LPTV_ITEM                                 LPTVITEM
+#define TV_ITEM                                   TVITEM
+
+#ifdef UNICODE
+  #define  TVITEM                                 TVITEMW
+  #define  LPTVITEM                               LPTVITEMW
+#else
+  #define  TVITEM                                 TVITEMA
+  #define  LPTVITEM                               LPTVITEMA
+#endif
+
+#define TVI_ROOT                                  (-0x10000)
+#define TVI_FIRST                                 (-0x0FFFF)
+#define TVI_LAST                                  (-0x0FFFE)
+#define TVI_SORT                                  (-0x0FFFD)
+
+#define LPTV_INSERTSTRUCTA                        LPTVINSERTSTRUCTA
+#define LPTV_INSERTSTRUCTW                        LPTVINSERTSTRUCTW
+#define TV_INSERTSTRUCTA                          TVINSERTSTRUCTA
+#define TV_INSERTSTRUCTW                          TVINSERTSTRUCTW
+
+#define TV_INSERTSTRUCT                           TVINSERTSTRUCT
+#define LPTV_INSERTSTRUCT                         LPTVINSERTSTRUCT
+
+#define TVM_INSERTITEMA                           (TV_FIRST + 0)
+#define TVM_INSERTITEMW                           (TV_FIRST + 50)
+#ifdef UNICODE
+  #define  TVM_INSERTITEM                         TVM_INSERTITEMW
+#else
+  #define  TVM_INSERTITEM                         TVM_INSERTITEMA
+#endif
+#define TVM_DELETEITEM                            (TV_FIRST + 1)
+#define TVM_EXPAND                                (TV_FIRST + 2)
+
+#define TVE_COLLAPSE                              1
+#define TVE_EXPAND                                2
+#define TVE_TOGGLE                                3
+#define TVE_EXPANDPARTIAL                         16384
+#define TVE_COLLAPSERESET                         32768
+
+#define TVM_GETITEMRECT                           (TV_FIRST + 4)
+#define TVM_GETCOUNT                              (TV_FIRST + 5)
+#define TVM_GETINDENT                             (TV_FIRST + 6)
+#define TVM_SETINDENT                             (TV_FIRST + 7)
+#define TVM_GETIMAGELIST                          (TV_FIRST + 8)
+#define TVSIL_NORMAL                              0
+#define TVSIL_STATE                               2
+
+#define TVM_SETIMAGELIST                          (TV_FIRST + 9)
+#define TVM_GETNEXTITEM                           (TV_FIRST + 10)
+
+#define TVGN_ROOT                                 0
+#define TVGN_NEXT                                 1
+#define TVGN_PREVIOUS                             2
+#define TVGN_PARENT                               3
+#define TVGN_CHILD                                4
+#define TVGN_FIRSTVISIBLE                         5
+#define TVGN_NEXTVISIBLE                          6
+#define TVGN_PREVIOUSVISIBLE                      7
+#define TVGN_DROPHILITE                           8
+#define TVGN_CARET                                9
+#define TVGN_LASTVISIBLE                          10
+
+#define TVM_SELECTITEM                            (TV_FIRST + 11)
+#define TVM_GETITEMA                              (TV_FIRST + 12)
+#define TVM_GETITEMW                              (TV_FIRST + 62)
+
+#ifdef UNICODE
+  #define  TVM_GETITEM                            TVM_GETITEMW
+#else
+  #define  TVM_GETITEM                            TVM_GETITEMA
+#endif
+
+#define TVM_SETITEMA                              (TV_FIRST + 13)
+#define TVM_SETITEMW                              (TV_FIRST + 63)
+
+#ifdef UNICODE
+  #define  TVM_SETITEM                            TVM_SETITEMW
+#else
+  #define  TVM_SETITEM                            TVM_SETITEMA
+#endif
+
+#define TVM_EDITLABELA                            (TV_FIRST + 14)
+#define TVM_EDITLABELW                            (TV_FIRST + 65)
+#ifdef UNICODE
+  #define TVM_EDITLABEL                           TVM_EDITLABELW
+#else
+  #define TVM_EDITLABEL                           TVM_EDITLABELA
+#endif
+#define TVM_GETEDITCONTROL                        (TV_FIRST + 15)
+#define TVM_GETVISIBLECOUNT                       (TV_FIRST + 16)
+#define TVM_HITTEST                               (TV_FIRST + 17)
+
+#define LPTV_HITTESTINFO                          LPTVHITTESTINFO
+#define TV_HITTESTINFO                            TVHITTESTINFO
+
+#define TVHT_NOWHERE                              1
+#define TVHT_ONITEMICON                           2
+#define TVHT_ONITEMLABEL                          4
+#define TVHT_ONITEM                               (TVHT_ONITEMICON + TVHT_ONITEMLABEL + TVHT_ONITEMSTATEICON)
+#define TVHT_ONITEMINDENT                         8
+#define TVHT_ONITEMBUTTON                         16
+#define TVHT_ONITEMRIGHT                          32
+#define TVHT_ONITEMSTATEICON                      64
+
+#define TVHT_ABOVE                                256
+#define TVHT_BELOW                                512
+#define TVHT_TORIGHT                              1024
+#define TVHT_TOLEFT                               2048
+
+#define TVM_CREATEDRAGIMAGE                       (TV_FIRST + 18)
+#define TVM_SORTCHILDREN                          (TV_FIRST + 19)
+#define TVM_ENSUREVISIBLE                         (TV_FIRST + 20)
+#define TVM_SORTCHILDRENCB                        (TV_FIRST + 21)
+#define TVM_ENDEDITLABELNOW                       (TV_FIRST + 22)
+#define TVM_GETISEARCHSTRINGA                     (TV_FIRST + 23)
+#define TVM_GETISEARCHSTRINGW                     (TV_FIRST + 64)
+
+#ifdef UNICODE
+  #define TVM_GETISEARCHSTRING                    TVM_GETISEARCHSTRINGW
+#else
+  #define TVM_GETISEARCHSTRING                    TVM_GETISEARCHSTRINGA
+#endif
+
+#define TVM_SETTOOLTIPS                           (TV_FIRST + 24)
+#define TVM_GETTOOLTIPS                           (TV_FIRST + 25)
+#define TVM_SETINSERTMARK                         (TV_FIRST + 26)
+#define TVM_SETUNICODEFORMAT                      CCM_SETUNICODEFORMAT
+#define TVM_GETUNICODEFORMAT                      CCM_GETUNICODEFORMAT
+#define TVM_SETITEMHEIGHT                         (TV_FIRST + 27)
+#define TVM_GETITEMHEIGHT                         (TV_FIRST + 28)
+#define TVM_SETBKCOLOR                            (TV_FIRST + 29)
+#define TVM_SETTEXTCOLOR                          (TV_FIRST + 30)
+#define TVM_GETBKCOLOR                            (TV_FIRST + 31)
+#define TVM_GETTEXTCOLOR                          (TV_FIRST + 32)
+#define TVM_SETSCROLLTIME                         (TV_FIRST + 33)
+#define TVM_GETSCROLLTIME                         (TV_FIRST + 34)
+#define TVM_SETINSERTMARKCOLOR                    (TV_FIRST + 37)
+#define TVM_GETINSERTMARKCOLOR                    (TV_FIRST + 38)
+#define TVM_GETITEMSTATE                          (TV_FIRST + 39)
+#define TVM_SETLINECOLOR                          (TV_FIRST + 40)
+#define TVM_GETLINECOLOR                          (TV_FIRST + 41)
+
+#define LPTV_SORTCB                               LPTVSORTCB
+#define TV_SORTCB                                 TVSORTCB
+
+#define LPNM_TREEVIEWA                            LPNMTREEVIEWA
+#define LPNM_TREEVIEWW                            LPNMTREEVIEWW
+#define NM_TREEVIEWW                              NMTREEVIEWW
+#define NM_TREEVIEWA                              NMTREEVIEWA
+
+#define LPNM_TREEVIEW                             LPNMTREEVIEW
+#define NM_TREEVIEW                               NMTREEVIEW
+
+#ifdef UNICODE
+  #define  NMTREEVIEW                             NMTREEVIEWW
+  #define  LPNMTREEVIEW                           LPNMTREEVIEWW
+#else
+  #define  NMTREEVIEW                             NMTREEVIEWA
+  #define  LPNMTREEVIEW                           LPNMTREEVIEWA
+#endif
+
+#define TVN_SELCHANGINGA                          (TVN_FIRST-1)
+#define TVN_SELCHANGINGW                          (TVN_FIRST-50)
+#define TVN_SELCHANGEDA                           (TVN_FIRST-2)
+#define TVN_SELCHANGEDW                           (TVN_FIRST-51)
+
+#define TVC_UNKNOWN                               0
+#define TVC_BYMOUSE                               1
+#define TVC_BYKEYBOARD                            2
+
+#define TVN_GETDISPINFOA                          (TVN_FIRST-3)
+#define TVN_GETDISPINFOW                          (TVN_FIRST-52)
+#define TVN_SETDISPINFOA                          (TVN_FIRST-4)
+#define TVN_SETDISPINFOW                          (TVN_FIRST-53)
+
+#define TVIF_DI_SETITEM                           4096
+
+#define TV_DISPINFOA                              NMTVDISPINFOA
+#define TV_DISPINFOW                              NMTVDISPINFOW
+#define TV_DISPINFO                               NMTVDISPINFO
+
+#ifdef UNICODE
+  #define NMTVDISPINFO                            NMTVDISPINFOW
+  #define LPNMTVDISPINFO                          LPNMTVDISPINFOW
+#else
+  #define NMTVDISPINFO                            NMTVDISPINFOA
+  #define LPNMTVDISPINFO                          LPNMTVDISPINFOA
+#endif
+
+#define TVN_ITEMEXPANDINGA                        (TVN_FIRST-5)
+#define TVN_ITEMEXPANDINGW                        (TVN_FIRST-54)
+#define TVN_ITEMEXPANDEDA                         (TVN_FIRST-6)
+#define TVN_ITEMEXPANDEDW                         (TVN_FIRST-55)
+#define TVN_BEGINDRAGA                            (TVN_FIRST-7)
+#define TVN_BEGINDRAGW                            (TVN_FIRST-56)
+#define TVN_BEGINRDRAGA                           (TVN_FIRST-8)
+#define TVN_BEGINRDRAGW                           (TVN_FIRST-57)
+#define TVN_DELETEITEMA                           (TVN_FIRST-9)
+#define TVN_DELETEITEMW                           (TVN_FIRST-58)
+#define TVN_BEGINLABELEDITA                       (TVN_FIRST-10)
+#define TVN_BEGINLABELEDITW                       (TVN_FIRST-59)
+#define TVN_ENDLABELEDITA                         (TVN_FIRST-11)
+#define TVN_ENDLABELEDITW                         (TVN_FIRST-60)
+#define TVN_KEYDOWN                               (TVN_FIRST-12)
+
+#define TVN_GETINFOTIPA                           (TVN_FIRST-13)
+#define TVN_GETINFOTIPW                           (TVN_FIRST-14)
+#define TVN_SINGLEEXPAND                          (TVN_FIRST-15)
+
+#define TVNRET_DEFAULT                            0
+#define TVNRET_SKIPOLD                            1
+#define TVNRET_SKIPNEW                            2
+
+#define TV_KEYDOWN                                NMTVKEYDOWN
+
+#ifdef UNICODE
+  #define TVN_SELCHANGING                         TVN_SELCHANGINGW
+  #define TVN_SELCHANGED                          TVN_SELCHANGEDW
+  #define TVN_GETDISPINFO                         TVN_GETDISPINFOW
+  #define TVN_SETDISPINFO                         TVN_SETDISPINFOW
+  #define TVN_ITEMEXPANDING                       TVN_ITEMEXPANDINGW
+  #define TVN_ITEMEXPANDED                        TVN_ITEMEXPANDEDW
+  #define TVN_BEGINDRAG                           TVN_BEGINDRAGW
+  #define TVN_BEGINRDRAG                          TVN_BEGINRDRAGW
+  #define TVN_DELETEITEM                          TVN_DELETEITEMW
+  #define TVN_BEGINLABELEDIT                      TVN_BEGINLABELEDITW
+  #define TVN_ENDLABELEDIT                        TVN_ENDLABELEDITW
+#else
+  #define TVN_SELCHANGING                         TVN_SELCHANGINGA
+  #define TVN_SELCHANGED                          TVN_SELCHANGEDA
+  #define TVN_GETDISPINFO                         TVN_GETDISPINFOA
+  #define TVN_SETDISPINFO                         TVN_SETDISPINFOA
+  #define TVN_ITEMEXPANDING                       TVN_ITEMEXPANDINGA
+  #define TVN_ITEMEXPANDED                        TVN_ITEMEXPANDEDA
+  #define TVN_BEGINDRAG                           TVN_BEGINDRAGA
+  #define TVN_BEGINRDRAG                          TVN_BEGINRDRAGA
+  #define TVN_DELETEITEM                          TVN_DELETEITEMA
+  #define TVN_BEGINLABELEDIT                      TVN_BEGINLABELEDITA
+  #define TVN_ENDLABELEDIT                        TVN_ENDLABELEDITA
+#endif
+
+#ifdef UNICODE
+  #define TVN_GETINFOTIP                          TVN_GETINFOTIPW
+  #define NMTVGETINFOTIP                          NMTVGETINFOTIPW
+  #define LPNMTVGETINFOTIP                        LPNMTVGETINFOTIPW
+#else
+  #define TVN_GETINFOTIP                          TVN_GETINFOTIPA
+  #define NMTVGETINFOTIP                          NMTVGETINFOTIPA
+  #define LPNMTVGETINFOTIP                        LPNMTVGETINFOTIPA
+#endif
+
+#define TVCDRF_NOIMAGES                           65536
 
 /*----------------------------------------------------------------------*/
 #endif
