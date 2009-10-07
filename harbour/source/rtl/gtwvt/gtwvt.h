@@ -118,6 +118,8 @@ typedef struct
    int      ROWS;                         /* number of displayable rows in window */
    int      COLS;                         /* number of displayable columns in window */
 
+   TCHAR *  TextLine;                     /* buffer for text line */
+
    COLORREF COLORS[ 16 ];                 /* colors */
 
    BOOL     CaretExist;                   /* TRUE if a caret has been created */
@@ -135,7 +137,7 @@ typedef struct
 
    POINT    PTEXTSIZE;                    /* size of the fixed width font */
    BOOL     FixedFont;                    /* TRUE if current font is a fixed font */
-   int      FixedSize[ WVT_MAX_COLS ];    /* buffer for ExtTextOut() to emulate fixed pitch when Proportional font selected */
+   int *    FixedSize;                    /* buffer for ExtTextOut() to emulate fixed pitch when Proportional font selected */
    int      fontHeight;                   /* requested font height */
    int      fontWidth;                    /* requested font width */
    int      fontWeight;                   /* Bold level */

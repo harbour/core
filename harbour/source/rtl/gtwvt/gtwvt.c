@@ -236,6 +236,12 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
    if( pWVT->hIcon && pWVT->bIconToFree )
       DestroyIcon( pWVT->hIcon );
 
+   if( pWVT->TextLine )
+      hb_xfree( pWVT->TextLine );
+
+   if( pWVT->FixedSize )
+      hb_xfree( pWVT->FixedSize );
+
    hb_xfree( pWVT );
 }
 
@@ -262,6 +268,9 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 
    pWVT->ROWS              = WVT_DEFAULT_ROWS;
    pWVT->COLS              = WVT_DEFAULT_COLS;
+
+   pWVT->TextLine          = ( TCHAR * ) hb_xgrab( pWVT->COLS * sizeof( TCHAR ) );
+   pWVT->FixedSize         = ( int * ) hb_xgrab( pWVT->COLS * sizeof( int ) );
 
    pWVT->COLORS[ 0]        = BLACK;
    pWVT->COLORS[ 1]        = BLUE;
@@ -897,12 +906,19 @@ static BOOL hb_gt_wvt_GetWindowTitle( HWND hWnd, char ** title )
    return FALSE;
 }
 
-static BOOL hb_gt_wvt_SetWindowSize( PHB_GTWVT pWVT, int iRow, int iCol )
+static BOOL hb_gt_wvt_SetWindowSize( PHB_GTWVT pWVT, int iRows, int iCols )
 {
-   if( HB_GTSELF_RESIZE( pWVT->pGT, iRow, iCol ) )
+   if( HB_GTSELF_RESIZE( pWVT->pGT, iRows, iCols ) )
    {
-      pWVT->ROWS = iRow;
-      pWVT->COLS = iCol;
+      if( pWVT->COLS != iCols )
+      {
+         pWVT->TextLine = ( TCHAR * ) hb_xrealloc( pWVT->TextLine,
+                                                   iCols * sizeof( TCHAR ) );
+         pWVT->FixedSize = ( int * ) hb_xrealloc( pWVT->FixedSize,
+                                                  iCols * sizeof( int ) );
+      }
+      pWVT->ROWS = iRows;
+      pWVT->COLS = iCols;
       return TRUE;
    }
 
@@ -1539,7 +1555,6 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
    HFONT       hFont, hOldFont = NULL;
 #endif
    USHORT      usChar;
-   TCHAR       text[ WVT_MAX_COLS ];
 
    hdc = BeginPaint( pWVT->hWnd, &ps );
 #if defined( UNICODE )
@@ -1570,7 +1585,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
          }
          else if( iColor != iOldColor )
          {
-            hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, iOldColor, text, ( UINT ) len );
+            hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, iOldColor, pWVT->TextLine, ( UINT ) len );
             iOldColor = iColor;
             startCol = iCol;
             len = 0;
@@ -1589,7 +1604,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
          }
          else if( iColor != iOldColor || hFont != hOldFont )
          {
-            hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, iOldColor, text, ( UINT ) len );
+            hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, iOldColor, pWVT->TextLine, ( UINT ) len );
             if( hFont != hOldFont )
             {
                SelectObject( hdc, hFont );
@@ -1600,11 +1615,11 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
             len = 0;
          }
 #endif
-         text[ len++ ] = ( TCHAR ) usChar;
+         pWVT->TextLine[ len++ ] = ( TCHAR ) usChar;
          iCol++;
       }
       if( len > 0 )
-         hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, iOldColor, text, ( UINT ) len );
+         hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, iOldColor, pWVT->TextLine, ( UINT ) len );
    }
 
    EndPaint( pWVT->hWnd, &ps );
