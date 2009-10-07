@@ -808,7 +808,7 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT, HFONT hFont )
 #if defined( HB_OS_WIN_CE )
    pWVT->FixedFont = FALSE;
 #else
-   pWVT->FixedFont = !pWVT->Win9X && pWVT->fontWidth >= 0 &&
+   pWVT->FixedFont = ! pWVT->Win9X && pWVT->fontWidth >= 0 &&
                      ( tm.tmPitchAndFamily & TMPF_FIXED_PITCH ) == 0 &&
                      ( pWVT->PTEXTSIZE.x == tm.tmMaxCharWidth );
 #endif
@@ -1539,7 +1539,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
    HFONT       hFont, hOldFont = NULL;
 #endif
    USHORT      usChar;
-   TCHAR       text[ WVT_MAX_ROWS ];
+   TCHAR       text[ WVT_MAX_COLS ];
 
    hdc = BeginPaint( pWVT->hWnd, &ps );
 #if defined( UNICODE )
@@ -1783,7 +1783,7 @@ static BOOL hb_gt_wvt_ValidWindowSize( HWND hWnd, int rows, int cols, HFONT hFon
    TEXTMETRIC tm;
    RECT       rcWorkArea;
 
-   SystemParametersInfo( SPI_GETWORKAREA,0, &rcWorkArea, 0 );
+   SystemParametersInfo( SPI_GETWORKAREA, 0, &rcWorkArea, 0 );
 
    maxWidth  = ( int ) ( rcWorkArea.right - rcWorkArea.left );
    maxHeight = ( int ) ( rcWorkArea.bottom - rcWorkArea.top );

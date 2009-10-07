@@ -17,6 +17,7 @@ C_SOURCES := \
    cpdeiso.c \
    cpdewin.c \
    cpel737.c \
+   cpeliso.c \
    cpelwin.c \
    cpes850.c \
    cpes850c.c \
@@ -70,6 +71,7 @@ C_SOURCES := \
    cpsviso.c \
    cpsvwin.c \
    cptr857.c \
+   cptriso.c \
    cptrwin.c \
    cpua1125.c \
    cpua866.c \
