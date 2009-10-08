@@ -119,8 +119,8 @@ msgstr "Figyelem: Hibás -main érték figyelmen kívül hagyva: %1$s"
 
 #: hbmk2.prg:3264
 #, c-format
-msgid "Harbour compiler command (internal):"
-msgstr "Harbour fordítási parancs (belsõ):"
+msgid "Harbour compiler command (embedded):"
+msgstr "Harbour fordítási parancs (beágyazott):"
 
 #: hbmk2.prg:1808 hbmk2.prg:5324 hbmk2.prg:5426 hbmk2.prg:5469
 #, c-format
@@ -154,8 +154,8 @@ msgstr "örököljön minden/semmi (alapért.) kapcsolót a Harbourtól"
 
 #: hbmk2.prg:3276
 #, c-format
-msgid "Error: Running Harbour compiler (internal). %1$s"
-msgstr "Hiba: Harbour fordító futtatásakor (belsõ). %1$s"
+msgid "Error: Running Harbour compiler (embedded). %1$s"
+msgstr "Hiba: Harbour fordító futtatásakor (beágyazott). %1$s"
 
 #: hbmk2.prg:3135
 #, c-format
@@ -249,7 +249,7 @@ msgstr "Harbour források fordítása..."
 
 #: hbmk2.prg:3262
 #, c-format
-msgid "Harbour compiler command (internal) job #%1$s:"
+msgid "Harbour compiler command (embedded) job #%1$s:"
 msgstr "Harbour (beágyazott) fordító parancs %1$s. szál:"
 
 #: hbmk2.prg:7088

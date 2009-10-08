@@ -119,7 +119,7 @@ msgstr "Atená∆o: Opá∆o -main inv†lida sendo ignorada: %1$s"
 
 #: hbmk2.prg:3264
 #, c-format
-msgid "Harbour compiler command (internal):"
+msgid "Harbour compiler command (embedded):"
 msgstr "Linha de comando do compilador Harbour: (interno)"
 
 #: hbmk2.prg:1808 hbmk2.prg:5324 hbmk2.prg:5426 hbmk2.prg:5469
@@ -154,7 +154,7 @@ msgstr "herdar flags do Harbour: todos/nenhum (padr∆o) "
 
 #: hbmk2.prg:3276
 #, c-format
-msgid "Error: Running Harbour compiler (internal). %1$s"
+msgid "Error: Running Harbour compiler (embedded). %1$s"
 msgstr "Erro: Executando o compilador Harbour (interno): %1$s"
 
 #: hbmk2.prg:3135
@@ -249,7 +249,7 @@ msgstr "Harbour: Compilando m¢dulos..."
 
 #: hbmk2.prg:3262
 #, c-format
-msgid "Harbour compiler command (internal) job #%1$s:"
+msgid "Harbour compiler command (embedded) job #%1$s:"
 msgstr "Harbour: Linha de comando (interno) - tarefa #%1$s:"
 
 #: hbmk2.prg:7088

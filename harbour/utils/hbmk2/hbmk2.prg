@@ -3334,9 +3334,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             IF hbmk[ _HBMK_lTRACE ]
                IF ! hbmk[ _HBMK_lQuiet ]
                   IF Len( aTODO:__enumBase() ) > 1
-                     hbmk_OutStd( hb_StrFormat( I_( "Harbour compiler command (internal) job #%1$s:" ), hb_ntos( aTODO:__enumIndex() ) ) )
+                     hbmk_OutStd( hb_StrFormat( I_( "Harbour compiler command (embedded) job #%1$s:" ), hb_ntos( aTODO:__enumIndex() ) ) )
                   ELSE
-                     hbmk_OutStd( I_( "Harbour compiler command (internal):" ) )
+                     hbmk_OutStd( I_( "Harbour compiler command (embedded):" ) )
                   ENDIF
                ENDIF
                OutStd( "(" + FN_Escape( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG + cBinExt + ")", nCmd_Esc ) +;
@@ -3348,7 +3348,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                   AAdd( aThreads, { hb_threadStart( @hb_compile(), "harbour", aCommand ), aCommand } )
                ELSE
                   IF ( tmp := hb_compile( "harbour", aCommand ) ) != 0
-                     hbmk_OutErr( hb_StrFormat( I_( "Error: Running Harbour compiler (internal). %1$s" ), hb_ntos( tmp ) ) )
+                     hbmk_OutErr( hb_StrFormat( I_( "Error: Running Harbour compiler (embedded). %1$s" ), hb_ntos( tmp ) ) )
                      IF ! hbmk[ _HBMK_lQuiet ]
                         OutErr( "(" + FN_Escape( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG + cBinExt + ")", nCmd_Esc ) +;
                                 " " + ArrayToList( aCommand ) + hb_osNewLine() )
