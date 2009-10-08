@@ -73,6 +73,6 @@ echo "hb20\examples\*.*"                          >> _hbfiles
 echo "hb20\contrib\*.*"                           >> _hbfiles
 
 if exist harbour-2.0.0beta3-win-20090905.7z del harbour-2.0.0beta3-win-20090905.7z
-7z a -r harbour-2.0.0beta3-win-20090905.7z @_hbfiles
+7za a -r harbour-2.0.0beta3-win-20090905.7z @_hbfiles
 
 del _hbfiles
