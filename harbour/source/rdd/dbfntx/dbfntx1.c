@@ -7540,20 +7540,21 @@ static HB_ERRCODE hb_ntxOrderListFocus( NTXAREAP pArea, LPDBORDERINFO pOrderInfo
 
    if( pOrderInfo->itmOrder )
    {
+      LPTAGINFO pTag = hb_ntxFindTag( pArea, pOrderInfo->itmOrder,
+                                      pOrderInfo->atomBagName );
       /*
        * In Clipper tag is not changed when bad name is given in DBFNTX
        * but not in DBFCDX. I'd like to keep the same behavior in
        * [x]Harbour RDDs and I chosen DBFCDX one as default. [druzus]
        */
 #ifdef HB_CLP_STRICT
-      LPTAGINFO pTag = hb_ntxFindTag( pArea, pOrderInfo->itmOrder,
-                                      pOrderInfo->atomBagName );
-      if( pTag )
-         pArea->lpCurTag = pTag;
-#else
-      pArea->lpCurTag = hb_ntxFindTag( pArea, pOrderInfo->itmOrder,
-                                       pOrderInfo->atomBagName );
+      if( pTag ||
+          ( HB_IS_NUMERIC( pOrderInfo->itmOrder ) &&
+            hb_itemGetNI( pOrderInfo->itmOrder ) == 0 ) ||
+          ( HB_IS_STRING( pOrderInfo->itmOrder ) &&
+            hb_itemGetCLen( pOrderInfo->itmOrder ) == 0 ) )
 #endif
+         pArea->lpCurTag = pTag;
    }
 
    return HB_SUCCESS;

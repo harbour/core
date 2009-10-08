@@ -7908,6 +7908,8 @@ static HB_ERRCODE hb_nsxOrderListFocus( NSXAREAP pArea, LPDBORDERINFO pOrderInfo
 
    if( pOrderInfo->itmOrder )
    {
+      LPTAGINFO pTag = hb_nsxFindTag( pArea, pOrderInfo->itmOrder,
+                                      pOrderInfo->atomBagName );
       /*
        * In Clipper 5.3 DBFCDX (COMIX) when bad name or order is given
        * tag number is set to 0 (natural record order). CL52 RDDs and
@@ -7916,14 +7918,13 @@ static HB_ERRCODE hb_nsxOrderListFocus( NSXAREAP pArea, LPDBORDERINFO pOrderInfo
        * RDDs and I chosen DBFCDX one as default. [druzus]
        */
 #ifdef HB_CLP_STRICT
-      LPTAGINFO pTag = hb_nsxFindTag( pArea, pOrderInfo->itmOrder,
-                                      pOrderInfo->atomBagName );
-      if( pTag )
-         pArea->lpCurTag = pTag;
-#else
-      pArea->lpCurTag = hb_nsxFindTag( pArea, pOrderInfo->itmOrder,
-                                       pOrderInfo->atomBagName );
+      if( pTag ||
+          ( HB_IS_NUMERIC( pOrderInfo->itmOrder ) &&
+            hb_itemGetNI( pOrderInfo->itmOrder ) == 0 ) ||
+          ( HB_IS_STRING( pOrderInfo->itmOrder ) &&
+            hb_itemGetCLen( pOrderInfo->itmOrder ) == 0 ) )
 #endif
+         pArea->lpCurTag = pTag;
    }
 
    return HB_SUCCESS;
