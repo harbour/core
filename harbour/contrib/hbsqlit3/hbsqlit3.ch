@@ -60,12 +60,8 @@
 /* Fundamental Datatypes */
 #define SQLITE_INTEGER                     1
 #define SQLITE_FLOAT                       2
-#ifdef SQLITE_TEXT
-   #undef SQLITE_TEXT
-#else
-   #define SQLITE_TEXT                     3
-#endif
-#define SQLITE3_TEXT                       3
+#define SQLITE_TEXT                        3
+#define SQLITE3_TEXT                       SQLITE_TEXT
 #define SQLITE_BLOB                        4
 #define SQLITE_NULL                        5
                                            

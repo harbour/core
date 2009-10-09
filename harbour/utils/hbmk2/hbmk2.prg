@@ -3043,7 +3043,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTD ], "-fast" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-xnolibmopt" )
          ENDIF
-         AAdd( hbmk[ _HBMK_aOPTC ], "-KPIC" )
          IF hbmk[ _HBMK_lINC ] .AND. ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -o {OO}"
          ELSE
@@ -3056,9 +3055,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          cLibLibExt := ".a"
          cBin_Dyn := cBin_CompC
          cOpt_Dyn := "-G {FD} -o {OD} {DL} {LO} {LL} {LB} {LS}"
-         IF hbmk[ _HBMK_cPLAT ] == "linux"
-            AAdd( hbmk[ _HBMK_aOPTD ], "-KPIC" )
-         ENDIF
          IF ! lStopAfterCComp
             AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
             l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
