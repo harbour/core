@@ -4055,7 +4055,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
          pModule = pModule->pNext;
    }
 
-   if( HB_COMP_PARAM->pFileName != pFileName )
+   if( pFileName && HB_COMP_PARAM->pFileName != pFileName )
       hb_xfree( pFileName );
 
    if( !HB_COMP_PARAM->fExit && iStatus == EXIT_SUCCESS )
