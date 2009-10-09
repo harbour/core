@@ -118,7 +118,7 @@ $MAKE install "$@" || exit
 if [ "${hb_sysdir}" = "yes" ]; then
 
     mkdir -p $HB_INST_PKGPREF$ETC/harbour
-    cp -f source/rtl/gtcrs/hb-charmap.def $HB_INST_PKGPREF$ETC/harbour/hb-charmap.def
+    cp -f src/rtl/gtcrs/hb-charmap.def $HB_INST_PKGPREF$ETC/harbour/hb-charmap.def
     chmod 644 $HB_INST_PKGPREF$ETC/harbour/hb-charmap.def
 
     cat > $HB_INST_PKGPREF$ETC/harbour/harbour.cfg <<EOF

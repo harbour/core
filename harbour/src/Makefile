@@ -20,48 +20,48 @@ else
    ifneq ($(HB_BUILD_DLL),no)
 
       DYNDIRLIST_BASE := \
-         source/common \
-         source/pp \
-         source/rtl \
-         source/macro \
-         source/lang \
-         source/codepage \
-         source/hbextern \
-         source/rdd \
-         source/rdd/dbfntx \
-         source/rdd/dbfnsx \
-         source/rdd/dbfcdx \
-         source/rdd/dbffpt \
-         source/rdd/hbsix \
-         source/rdd/hsx \
-         source/rdd/usrrdd \
-         source/rtl/gtcgi \
-         source/rtl/gtpca \
-         source/rtl/gtstd
+         src/common \
+         src/pp \
+         src/rtl \
+         src/macro \
+         src/lang \
+         src/codepage \
+         src/hbextern \
+         src/rdd \
+         src/rdd/dbfntx \
+         src/rdd/dbfnsx \
+         src/rdd/dbfcdx \
+         src/rdd/dbffpt \
+         src/rdd/hbsix \
+         src/rdd/hsx \
+         src/rdd/usrrdd \
+         src/rtl/gtcgi \
+         src/rtl/gtpca \
+         src/rtl/gtstd
 
       ifeq ($(HB_PLATFORM),dos)
-         DYNDIRLIST_BASE += source/rtl/gtdos
+         DYNDIRLIST_BASE += src/rtl/gtdos
       endif
       ifeq ($(HB_PLATFORM),os2)
-         DYNDIRLIST_BASE += source/rtl/gtos2
+         DYNDIRLIST_BASE += src/rtl/gtos2
       endif
       ifeq ($(HB_PLATFORM),wce)
-         DYNDIRLIST_BASE += source/rtl/gtwvt source/rtl/gtgui
+         DYNDIRLIST_BASE += src/rtl/gtwvt src/rtl/gtgui
       endif
       ifeq ($(HB_PLATFORM),win)
-         DYNDIRLIST_BASE += source/rtl/gtwvt source/rtl/gtgui source/rtl/gtwin
+         DYNDIRLIST_BASE += src/rtl/gtwvt src/rtl/gtgui src/rtl/gtwin
       endif
       ifneq ($(HB_PLATFORM_UNIX),)
-         DYNDIRLIST_BASE += source/rtl/gttrm
-         DYNDIRLIST_BASE += source/rtl/gtcrs
-         DYNDIRLIST_BASE += source/rtl/gtsln
-         DYNDIRLIST_BASE += source/rtl/gtxwc
+         DYNDIRLIST_BASE += src/rtl/gttrm
+         DYNDIRLIST_BASE += src/rtl/gtcrs
+         DYNDIRLIST_BASE += src/rtl/gtsln
+         DYNDIRLIST_BASE += src/rtl/gtxwc
       endif
       ifeq ($(HB_COMPILER),watcom)
-         DYNDIRLIST_BASE += source/vm/maindllh
+         DYNDIRLIST_BASE += src/vm/maindllh
       endif
       ifeq ($(HB_COMPILER),xcc)
-         DYNDIRLIST_BASE += source/vm/maindllh
+         DYNDIRLIST_BASE += src/vm/maindllh
       endif
 
       ifneq ($(HB_HAS_PCRE_LOCAL),)

@@ -195,7 +195,7 @@ HARBOUR
    you want to [re]build. When starting GNU Make, all components
    under that dir will be built:
 
-      cd source/rtl
+      cd src/rtl
       <make> [clean] [install]
 
 
@@ -1035,7 +1035,7 @@ HARBOUR
        'hbmk2 -shared hello.prg'
    - To build an application out of all .prg and .c sources residing
      in 'source' subdir:
-       'hbmk2 -omyapp source/*.prg source/*.c'
+       'hbmk2 -omyapp src/*.prg src/*.c'
 
    Examples to build a Harbour static library:
 

@@ -9,24 +9,24 @@ include $(ROOT)config/global.mk
 ifeq ($(HB_BUILD_PARTS),compiler)
 
    DIRS := \
-      source \
-      utils{source} \
+      src \
+      utils{src} \
 
 else
 
    ifeq ($(HB_BUILD_PARTS),lib)
       HB_UTIL_DIR :=
    else
-      HB_UTIL_DIR := utils{source}
+      HB_UTIL_DIR := utils{src}
    endif
 
    DIRS := \
       doc \
       include \
       external \
-      source{external} \
+      src{external} \
       $(HB_UTIL_DIR) \
-      contrib{source} \
+      contrib{src} \
 
 endif
 

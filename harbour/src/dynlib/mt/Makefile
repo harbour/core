@@ -8,7 +8,7 @@ include $(TOP)$(ROOT)config/global.mk
 
 ifneq ($(DYNDIRLIST_BASE),)
 
-   DYNDIRLIST := $(DYNDIRLIST_BASE) source/vm/vmmt
+   DYNDIRLIST := $(DYNDIRLIST_BASE) src/vm/vmmt
    DYNNAME := $(HB_DYNLIB_MT)
    DYNNAME2 := $(HB_DYNLIB_BASE_MT)
 
