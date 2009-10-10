@@ -110,11 +110,11 @@ HB_FUNC( QT_QPEN )
    }
    else if( hb_pcount() >= 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
    {
-      hb_retptr( ( QPen* ) new QPen( *hbqt_par_QBrush( 1 ), hb_parnd( 2 ), 
-                                     HB_ISNUM( 3 ) ? ( Qt::PenStyle ) hb_parni( 3 ) : Qt::SolidLine,
-                                     HB_ISNUM( 4 ) ? ( Qt::PenCapStyle ) hb_parni( 4 ) : Qt::SquareCap,
-                                     HB_ISNUM( 5 ) ? ( Qt::PenJoinStyle ) hb_parni( 5 ) : Qt::BevelJoin
-                                   ) );      
+      Qt::PenStyle iStyle = HB_ISNUM( 3 ) ? ( Qt::PenStyle ) hb_parni( 3 ) : Qt::SolidLine;
+      Qt::PenCapStyle iCap = HB_ISNUM( 4 ) ? ( Qt::PenCapStyle ) hb_parni( 4 ) : Qt::SquareCap;
+      Qt::PenJoinStyle iJoin = HB_ISNUM( 5 ) ? ( Qt::PenJoinStyle ) hb_parni( 5 ) : Qt::BevelJoin;
+
+      hb_retptr( ( QPen* ) new QPen( *hbqt_par_QBrush( 1 ), hb_parnd( 2 ), iStyle, iCap, iJoin ) );
    }   
    else
    {
