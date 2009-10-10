@@ -58,6 +58,7 @@
 Inherits = QTextObject
 Type     = Core
 New      = 
+Destructor = no
 </CLASS>
 
 <CODE>

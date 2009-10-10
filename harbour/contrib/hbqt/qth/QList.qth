@@ -58,6 +58,7 @@
 Inherits = 
 Type     = Core
 New      = 
+List     = yes
 </CLASS>
 
 <CODE>

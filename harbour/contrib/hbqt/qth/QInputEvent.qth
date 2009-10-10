@@ -70,8 +70,7 @@ New      =
  */
 HB_FUNC( QT_QINPUTEVENT )
 {
-   hb_retptr( ( QInputEvent* ) new QInputEvent( ( QEvent::Type ) hb_parni( 1 ), 
-                                   ( Qt::KeyboardModifiers ) hb_parni( 2 ) ) );
+   hb_retptr( ( QInputEvent* ) new QInputEvent( ( QEvent::Type ) hb_parni( 1 ), ( Qt::KeyboardModifiers ) hb_parni( 2 ) ) );
 }
 </CODE>
 

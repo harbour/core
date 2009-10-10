@@ -98,9 +98,7 @@ HB_FUNC( QT_QCURSOR )
 
       if( objName == ( QString ) "QPixmap" )
       {
-         hb_retptr( ( QCursor* ) new QCursor( *hbqt_par_QPixmap( 2 ), 
-                                              HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1,
-                                              HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) );
+         hb_retptr( ( QCursor* ) new QCursor( *hbqt_par_QPixmap( 2 ), HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1, HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) );
       }
       else
       {
@@ -109,9 +107,7 @@ HB_FUNC( QT_QCURSOR )
    }
    else if( hb_pcount() >= 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      hb_retptr( ( QCursor* ) new QCursor( *hbqt_par_QBitmap( 1 ), *hbqt_par_QBitmap( 2 ), 
-                                           HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1,
-                                           HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) );
+      hb_retptr( ( QCursor* ) new QCursor( *hbqt_par_QBitmap( 1 ), *hbqt_par_QBitmap( 2 ), HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1, HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) );
    }
    else
    {

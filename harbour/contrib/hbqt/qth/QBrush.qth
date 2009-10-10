@@ -135,8 +135,7 @@ HB_FUNC( QT_QBRUSH )
       }
       else if( objName == ( QString ) "QColor" )
       {
-         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QColor( 2 ), 
-                                            HB_ISNUM( 3 ) ? ( Qt::BrushStyle ) hb_parni( 3 ) : Qt::SolidPattern ) );
+         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QColor( 2 ), HB_ISNUM( 3 ) ? ( Qt::BrushStyle ) hb_parni( 3 ) : Qt::SolidPattern ) );
       }
       else
       {

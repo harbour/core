@@ -84,7 +84,7 @@ HB_FUNC( QT_QSIZEF )
    {
       hb_retptr( ( QSizeF* ) new QSizeF() );
    }
-   }
+}
 </CODE>
 
 <ENUMS>

@@ -95,25 +95,8 @@ static char ** s_argv;
  * virtual ~QApplication ()
 */
 
-#if 0
 HB_FUNC( QT_QAPPLICATION )
 {
-   int i_argc = 0;
-   char** c_argv = NULL;
-   app = new QApplication( i_argc, c_argv );
-   hb_retptr( ( QApplication* ) app);
-}
-#endif
-
-HB_FUNC( QT_QAPPLICATION )
-{
-#if 0
-   int i_argc;
-   char ** c_argv;
-   i_argc = hb_cmdargARGC();
-   c_argv = hb_cmdargARGV();
-   app = new QApplication( i_argc, c_argv );
-#endif
    hb_retptr( ( QApplication * ) app );
 }
 
@@ -168,23 +151,6 @@ HB_FUNC( QT_QAPPLICATION_QUIT )
 {
    app->quit();
 }
-
-#if 0
-HB_FUNC( QT_QAPPLICATION_EXECUTE )
-{
-   hb_retni( app->exec() );
-}
-
-HB_FUNC( QT_QAPPLICATION_SETSTYLE )
-{
-   app->setStyle( hb_parcx( 2 ) );
-}
-
-HB_FUNC( QT_QAPPLICATION_QUIT )
-{
-   app->quit();
-}
-#endif
 </CODE>
 
 <ENUMS>

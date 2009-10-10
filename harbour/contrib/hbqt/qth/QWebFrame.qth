@@ -58,6 +58,7 @@
 Inherits = QObject
 Type     = Core
 New      = 
+Destructor = no
 </CLASS>
 
 <CODE>
