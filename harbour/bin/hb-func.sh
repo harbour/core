@@ -385,6 +385,10 @@ LN_OPT="${CC_HB_USER_LDFLAGS}"
 CC_OPT="-O3 ${CC_HB_USER_CFLAGS}"
 HB_OPT="${CC_HB_USER_PRGFLAGS}"
 
+if [ "\${HB_PLATFORM}" = "sunos" ]; then
+    HB_STRIP="no"
+fi
+
 [ -n "\$TMPDIR" ] || TMPDIR="\$TMP"
 [ -n "\$TMPDIR" ] || TMPDIR="\$TEMP"
 [ -n "\$TMPDIR" ] || TMPDIR="/tmp"
@@ -642,11 +646,6 @@ else
     HARBOUR_LIBS="-Wl,--start-group \${HARBOUR_LIBS} -Wl,--end-group"
 fi
 
-if [ "\${HB_PLATFORM}" = "darwin" ]; then
-    CC_OPT="\${CC_OPT} -no-cpp-precomp -Wno-long-double"
-elif [ "\${HB_PLATFORM}" = "sunos" ]; then
-    HB_STRIP="no"
-fi
 
 FOUTC="\${DIROUT}/\${FILEOUT%.*}.c"
 FOUTO="\${DIROUT}/\${FILEOUT%.*}.o"
