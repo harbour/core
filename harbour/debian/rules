@@ -7,8 +7,8 @@
 #export DH_VERBOSE := 1
 
 export HB_BIN_INSTALL := /usr/bin
-export HB_LIB_INSTALL := /usr/include/harbour
-export HB_INC_INSTALL := /usr/lib/harbour
+export HB_LIB_INSTALL := /usr/lib/harbour
+export HB_INC_INSTALL := /usr/include/harbour
 export HB_DOC_INSTALL := /usr/share/doc/harbour
 export HB_ETC_INSTALL := /etc/harbour
 export HB_INST_PKGPREF := $(CURDIR)/debian/harbour
