@@ -83,9 +83,9 @@ SSL_CTX * hb_SSL_CTX_par( int iParam )
    return ph ? ( SSL_CTX * ) * ph : NULL;
 }
 
-SSL_METHOD * hb_ssl_method_id_to_ptr( int n )
+const SSL_METHOD * hb_ssl_method_id_to_ptr( int n )
 {
-   SSL_METHOD * p;
+   const SSL_METHOD * p;
 
    switch( n )
    {
@@ -111,7 +111,11 @@ HB_FUNC( SSL_CTX_NEW )
 {
    void ** ph = ( void ** ) hb_gcAlloc( sizeof( SSL_CTX * ), SSL_CTX_release );
 
+#if OPENSSL_VERSION_NUMBER < 0x10000000L
+   SSL_CTX * ctx = SSL_CTX_new( ( SSL_METHOD * ) hb_ssl_method_id_to_ptr( HB_ISNUM( 1 ) ? hb_parni( 1 ) : HB_SSL_CTX_NEW_METHOD_DEFAULT ) );
+#else
    SSL_CTX * ctx = SSL_CTX_new( hb_ssl_method_id_to_ptr( HB_ISNUM( 1 ) ? hb_parni( 1 ) : HB_SSL_CTX_NEW_METHOD_DEFAULT ) );
+#endif
 
    * ph = ( void * ) ctx;
 
@@ -125,7 +129,11 @@ HB_FUNC( SSL_CTX_SET_SSL_VERSION )
       SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
 
       if( ctx )
+#if OPENSSL_VERSION_NUMBER < 0x10000000L
+         hb_retni( SSL_CTX_set_ssl_version( ctx, ( SSL_METHOD * ) hb_ssl_method_id_to_ptr( hb_parni( 2 ) ) ) );
+#else
          hb_retni( SSL_CTX_set_ssl_version( ctx, hb_ssl_method_id_to_ptr( hb_parni( 2 ) ) ) );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

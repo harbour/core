@@ -1308,7 +1308,7 @@ HARBOUR
      Patches are accepted in 'svn diff' or 'diff -u' format.
      Always .zip your patch/source files before attaching them.
      The size limit for e-mails sent to the development list is
-     40KB. If you need more, upload it to a site where we can
+     70KB. If you need more, upload it to a site where we can
      access it, or use the sf.net page to submit it.
    - Given a good history of valuable contributions, you can get
      write access to the source repository.

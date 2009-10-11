@@ -59,7 +59,7 @@
 
 HB_EXTERN_BEGIN
 
-extern SSL_METHOD *       hb_ssl_method_id_to_ptr( int n );
+extern const SSL_METHOD * hb_ssl_method_id_to_ptr( int n );
 
 extern void *             hb_BIO_is( int iParam );
 extern BIO *              hb_BIO_par( int iParam );

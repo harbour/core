@@ -560,7 +560,11 @@ HB_FUNC( SSL_SET_SSL_METHOD )
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
+#if OPENSSL_VERSION_NUMBER < 0x10000000L
+         hb_retni( SSL_set_ssl_method( ssl, ( SSL_METHOD * ) hb_ssl_method_id_to_ptr( hb_parni( 2 ) ) ) );
+#else
          hb_retni( SSL_set_ssl_method( ssl, hb_ssl_method_id_to_ptr( hb_parni( 2 ) ) ) );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -574,7 +578,11 @@ HB_FUNC( SSL_GET_SSL_METHOD )
 
       if( ssl )
       {
+#if OPENSSL_VERSION_NUMBER < 0x10000000L
          SSL_METHOD * p = SSL_get_ssl_method( ssl );
+#else
+         const SSL_METHOD * p = SSL_get_ssl_method( ssl );
+#endif
          int n;
 
          if(      p == SSLv2_method()         ) n = HB_SSL_CTX_NEW_METHOD_SSLV2;
@@ -605,7 +613,7 @@ HB_FUNC( SSL_GET_CURRENT_CIPHER )
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
-         hb_retptr( SSL_get_current_cipher( ssl ) );
+         hb_retptr( ( void * ) SSL_get_current_cipher( ssl ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
