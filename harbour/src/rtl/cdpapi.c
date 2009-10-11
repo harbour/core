@@ -351,7 +351,7 @@ BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                   {
                      cdpage->CharsUpper = ptrUpper = ( char * )
                               memcpy( pszBuffer, cdpage->CharsUpper, nUpper );
-                     pszBuffer += nUpper;
+                     pszBuffer += nUpper + 1;
                   }
                   if( nLower )
                   {
