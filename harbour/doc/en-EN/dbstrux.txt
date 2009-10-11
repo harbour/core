@@ -614,7 +614,7 @@
  *      calls __dbStructFilter() and therefor the latter is the recommended
  *      function to use.
  *
- *      This function is only visible if source/rdd/dbstrux.prg was compiled
+ *      This function is only visible if src/rdd/dbstrux.prg was compiled
  *      with the HB_CLP_UNDOC flag.
  *  $PLATFORMS$
  *      All

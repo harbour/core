@@ -242,7 +242,7 @@
  *      R
  *  $COMPLIANCE$
  *      This function is sensitive to HB_CLP_STRICT settings during the
- *      compilation of source/rtl/at.c
+ *      compilation of src/rtl/at.c
  *
  *      <nStart> and <nEnd> are Harbour extensions and do not exist if
  *      HB_CLP_STRICT is defined. In that case, the whole string is searched.

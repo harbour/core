@@ -228,11 +228,11 @@ final users, because it allow to integrate GUI library with standard
 Clipper screen functions.
 
 How to create such base GUI GT driver?
-See as example GTGUI in source/rtl/gtgui/gtgui.c
+See as example GTGUI in src/rtl/gtgui/gtgui.c
 It supports only TONE and CLIPBOARD operations.
 GUI libraries can use it or create other GT driver inheriting from
 this one.
-NOTE: source/rtl/gtgui/gtdef.c is a hack which overloads the default
+NOTE: src/rtl/gtgui/gtdef.c is a hack which overloads the default
      Harbour build time GT driver and should not be replicated.
 
 

@@ -280,7 +280,7 @@
  *      R
  *  $COMPLIANCE$
  *      This function is sensitive to HB_CLP_STRICT settings during the
- *      compilation of source/rtl/alert.prg
+ *      compilation of src/rtl/alert.prg
  *
  *      <b>defined</b>: <xMessage> accept Character values only and return
  *      NIL if other types are passed.
@@ -294,11 +294,11 @@
  *      <b>undefined</b>: <aOptions> could contain as many as needed options.
  *
  *      If HB_COMPAT_C53 was define during compilation of
- *      source/rtl/alert.prg the Left-Mouse button could be used to select
+ *      src/rtl/alert.prg the Left-Mouse button could be used to select
  *      an option.
  *
  *      The interpretation of the //NOALERT command line switch is done only
- *      if HB_CLP_UNDOC was define during compilation of source/rtl/alert.prg
+ *      if HB_CLP_UNDOC was define during compilation of src/rtl/alert.prg
  *
  *      <cColorNorm> is a Harbour extension, or at least un-documented
  *      in Clipper 5.2 NG.
@@ -692,7 +692,7 @@
  *      specified the default STDERR is used, //STDERR or //STDERR:0 set
  *      OUTERR() to output to the same file handle as OUTSTD(), //STDERR:n
  *      set output to file handle n. Like other undocumented features this
- *      switch is available only if source/rtl/console.c was compiled with
+ *      switch is available only if src/rtl/console.c was compiled with
  *      the HB_CLP_UNDOC flag.
  *  $EXAMPLES$
  *      // write error log information

@@ -318,7 +318,7 @@
  *      to add column for each field by your self.
  *  $EXAMPLES$
  *      for a good example, look at the source code for BROWSE() function
- *      at source/rtl/browse.prg
+ *      at src/rtl/browse.prg
  *  $STATUS$
  *      S
  *  $COMPLIANCE$

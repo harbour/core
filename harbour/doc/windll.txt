@@ -64,7 +64,7 @@ The following is clipped from a msg by Antonio Linares to the Harbour
 developer list explaining some of the details:
 
 Please notice that there are three different Windows DLL entry points:
-   + source/vm/
+   + src/vm/
    * maindll.c     Windows self-contained DLL entry point
    * maindllh.c    Windows Harbour DLL entry point  (harbour.dll)
    * maindllp.c    Windows pcode DLL entry point and VM/RTL routing functions

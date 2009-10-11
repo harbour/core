@@ -55,7 +55,7 @@
  * any existent RDD but if you write / replace / delete something
  * on tables it writes changes in a log file.
  * An example is avalaible at
- * harbour/source/rdd/usrrdd/example/exlog.prg
+ * harbour/src/rdd/usrrdd/example/exlog.prg
  */
 
 #include "rddsys.ch"

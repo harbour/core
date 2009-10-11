@@ -8,7 +8,7 @@
  *    Compile it with Clipper and link with given national sorting module
  *    (usually ntx*.obj) and then execute to generate letters strings for
  *    given national sorting module. Then use this string to define Harbour
- *    CP module in source/codepage/ directory.
+ *    CP module in src/codepage/ directory.
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org

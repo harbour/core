@@ -16,7 +16,7 @@
  *  <b>THE HARBOUR PROJECT COMPILER LICENSE</b>   </par>
  *   ====================================   </par>
  *
- *   Note: This license applies to most of the files in the source/compiler
+ *   Note: This license applies to most of the files in the src/compiler
  *         directory.  </par>
  *
  *   This program is free software; you can redistribute it and/or modify

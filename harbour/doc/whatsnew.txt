@@ -1529,7 +1529,7 @@ The compiler
   Symbol for INIT/EXIT procedure has now '$' suffix - this means that
   such procedures cannot be called from user code (Clipper compatible)
 - Harbour now Run on 64-bits !
-- Some small optimizations in harbour/source/vm/itemapi.c
+- Some small optimizations in harbour/src/vm/itemapi.c
 
 The runtime modules
 -------------------

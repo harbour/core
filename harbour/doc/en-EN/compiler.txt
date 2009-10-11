@@ -314,7 +314,7 @@
  *      2) it guarantees that the same instance variable of the same object
  *      will be changed
  *
- *      (See also: source/compiler/expropt.c)
+ *      (See also: src/compiler/expropt.c)
  *
  *      <b>Initialization of static variables      </b></par>
  *      ==================================      </par>

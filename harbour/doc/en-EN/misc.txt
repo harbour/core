@@ -41,7 +41,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      source/rtl/version.c
+ *      src/rtl/version.c
  *  $END$
  */
 
@@ -76,7 +76,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      source/rtl/version.c
+ *      src/rtl/version.c
  *      Library is rtl
  *  $SEEALSO$
  *      OS()
@@ -120,7 +120,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *     source/rtl/gete.c
+ *     src/rtl/gete.c
  *      Library is rtl
  *  $SEEALSO$
  *     GETE
@@ -166,7 +166,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *     source/rtl/gete.c
+ *     src/rtl/gete.c
  *      Library is rtl
  *  $SEEALSO$
  *     GETENV
@@ -220,7 +220,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      source/rtl/gete.c
+ *      src/rtl/gete.c
  *      Library is rtl
  *  $SEEALSO$
  *     GETENV, GETE
@@ -263,7 +263,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      source/rtl/run.c
+ *      src/rtl/run.c
  *      Library is rtl
  *  $SEEALSO$
  *      RUN
@@ -359,7 +359,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      source/rtl/run.c
+ *      src/rtl/run.c
  *      Library is rtl
  *  $SEEALSO$
  *      RUN

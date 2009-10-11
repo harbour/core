@@ -68,7 +68,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      source/rtl/idle.c
+ *      src/rtl/idle.c
  *  $SEEALSO$
  *      HB_IDLEDEL(),HB_IDLESTATE()
  *  $END$
@@ -111,7 +111,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      source/rtl/idle.c
+ *      src/rtl/idle.c
  *  $SEEALSO$
  *      HB_IDLEADD(),HB_IDLESTATE()
  *  $END$
@@ -158,7 +158,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      source/rtl/idle.c
+ *      src/rtl/idle.c
  *  $SEEALSO$
  *      HB_IDLEADD(),HB_IDLEDEL()
  *  $END$
@@ -200,7 +200,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      source/rtl/idle.c
+ *      src/rtl/idle.c
  *  $SEEALSO$
  *      HB_IDLEADD(),HB_IDLEDEL(),HB_IDLESTATE()
  *  $END$
