@@ -92,23 +92,23 @@ typedef struct _HB_MULTICHAR
 
 typedef struct _HB_CODEPAGE
 {
-   const char *   id;
-   const char *   uniID;
-   PHB_UNITABLE   uniTable;
-   int            nChars;
-   const char *   CharsUpper;
-   const char *   CharsLower;
-   BOOL           lLatin;
-   BOOL           lAccEqual;
-   BOOL           lAccInterleave;
-   BOOL           lSort;
-   BOOL           lChClone;
-   BYTE *         s_chars;
-   BYTE *         s_upper;
-   BYTE *         s_lower;
-   BYTE *         s_accent;
-   int            nMulti;
-   PHB_MULTICHAR  multi;
+   const char *      id;
+   const char *      uniID;
+   PHB_UNITABLE      uniTable;
+   int               nChars;
+   const char *      CharsUpper;
+   const char *      CharsLower;
+   BOOL              lLatin;
+   BOOL              lAccEqual;
+   BOOL              lAccInterleave;
+   BOOL              lSort;
+   unsigned char *   s_chars;
+   unsigned char *   s_upper;
+   unsigned char *   s_lower;
+   unsigned char *   s_accent;
+   unsigned char *   buffer;
+   int               nMulti;
+   PHB_MULTICHAR     multi;
 } HB_CODEPAGE, * PHB_CODEPAGE;
 
 #define HB_CPID_437        "cp437"

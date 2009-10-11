@@ -318,33 +318,50 @@ BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                s_cdpList[iPos] = cdpage;
 
                cdpage->lSort = cdpage->lAccInterleave || cdpage->lAccEqual;
-               cdpage->lChClone = FALSE;
                if( cdpage->nChars )
                {
-                  int nAddLower = cdpage->nChars + ( ( cdpage->lLatin ) ? 6 : 0 );
+                  int nAddLower = cdpage->nChars + ( ( cdpage->lLatin ) ? 6 : 0 ),
+                      size = 0x300, nUpper = 0, nLower = 0;
+                  unsigned char * pszBuffer;
 
-                  cdpage->s_chars = ( BYTE * ) hb_xgrab( 256 );
-                  memset( cdpage->s_chars, '\0', 256 );
-                  cdpage->s_upper = ( BYTE * ) hb_xgrab( 256 );
-                  cdpage->s_lower = ( BYTE * ) hb_xgrab( 256 );
+                  if( cdpage->lAccInterleave )
+                     size += 0x300;
+                  if( strpbrk( cdpage->CharsUpper, "~." ) != NULL )
+                  {
+                     nUpper = ( int ) strlen( cdpage->CharsUpper );
+                     size += nUpper + 1;
+                  }
+                  if( strpbrk( cdpage->CharsLower, "~." ) != NULL )
+                  {
+                     nLower = ( int ) strlen( cdpage->CharsLower );
+                     size += nLower + 1;
+                  }
+                  pszBuffer = cdpage->buffer = ( unsigned char * ) hb_xgrab( size );
+                  memset( pszBuffer, '\0', size );
+                  cdpage->s_chars = pszBuffer;
+                  cdpage->s_upper = pszBuffer + 0x100;
+                  cdpage->s_lower = pszBuffer + 0x200;
+                  pszBuffer += 0x300;
                   if( cdpage->lAccInterleave )
                   {
-                     cdpage->s_accent = ( BYTE * ) hb_xgrab( 256 );
-                     memset( cdpage->s_accent, '\0', 256 );
+                     cdpage->s_accent = pszBuffer;
+                     pszBuffer += 0x100;
                   }
-                  else
-                     cdpage->s_accent = NULL;
-
+                  if( nUpper )
+                  {
+                     cdpage->CharsUpper = ptrUpper = ( char * )
+                              memcpy( pszBuffer, cdpage->CharsUpper, nUpper );
+                     pszBuffer += nUpper;
+                  }
+                  if( nLower )
+                  {
+                     cdpage->CharsLower = ptrLower = ( char * )
+                              memcpy( pszBuffer, cdpage->CharsLower, nLower );
+                  }
                   for( i = 0; i < 256; i++ )
                   {
                      cdpage->s_upper[ i ] = ( char ) HB_TOUPPER( ( UCHAR ) i );
                      cdpage->s_lower[ i ] = ( char ) HB_TOLOWER( ( UCHAR ) i );
-                  }
-                  if( strpbrk( cdpage->CharsUpper, "~." ) != NULL )
-                  {
-                     cdpage->CharsUpper = ptrUpper = hb_strdup( cdpage->CharsUpper );
-                     cdpage->CharsLower = ptrLower = hb_strdup( cdpage->CharsLower );
-                     cdpage->lChClone = TRUE;
                   }
                   for( i = ia = 1; *ptrUpper; i++, ia++, ptrUpper++, ptrLower++ )
                   {
@@ -441,6 +458,60 @@ BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
             }
          }
       }
+   }
+
+   return FALSE;
+}
+
+BOOL hb_charIsDigit( int iChar )
+{
+   return HB_ISDIGIT( ( unsigned char ) iChar );
+}
+
+BOOL hb_charIsAlpha( int iChar )
+{
+   if( HB_ISALPHA( ( unsigned char ) iChar ) )
+      return TRUE;
+   else
+   {
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      /* ( char * ) casting for MSVC */
+      if( cdp && cdp->nChars && iChar &&
+          ( strchr( ( char * ) cdp->CharsUpper, iChar ) ||
+            strchr( ( char * ) cdp->CharsLower, iChar ) ) )
+         return TRUE;
+   }
+
+   return FALSE;
+}
+
+BOOL hb_charIsLower( int iChar )
+{
+   if( HB_ISLOWER( ( unsigned char ) iChar ) )
+      return TRUE;
+   else
+   {
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      /* ( char * ) casting for MSVC */
+      if( cdp && cdp->nChars && iChar &&
+          strchr( ( char * ) cdp->CharsLower, iChar ) )
+         return TRUE;
+   }
+
+   return FALSE;
+}
+
+BOOL hb_charIsUpper( int iChar )
+{
+   if( HB_ISUPPER( ( unsigned char ) iChar ) )
+      return TRUE;
+   else
+   {
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      /* ( char * ) casting for MSVC */
+      if( cdp && cdp->nChars && iChar &&
+          strchr( ( char * ) cdp->CharsUpper, iChar ) )
+         return TRUE;
    }
 
    return FALSE;
@@ -1443,21 +1514,10 @@ void hb_cdpReleaseAll( void )
 
    while( iPos < HB_CDP_MAX_ && s_cdpList[iPos] )
    {
-      if( s_cdpList[iPos]->s_chars )
-         hb_xfree( s_cdpList[iPos]->s_chars );
-      if( s_cdpList[iPos]->s_upper )
-         hb_xfree( s_cdpList[iPos]->s_upper );
-      if( s_cdpList[iPos]->s_lower )
-         hb_xfree( s_cdpList[iPos]->s_lower );
-      if( s_cdpList[iPos]->s_accent )
-         hb_xfree( s_cdpList[iPos]->s_accent );
+      if( s_cdpList[iPos]->buffer )
+         hb_xfree( s_cdpList[iPos]->buffer );
       if( s_cdpList[iPos]->multi )
          hb_xfree( s_cdpList[iPos]->multi );
-      if( s_cdpList[iPos]->lChClone )
-      {
-         hb_xfree( ( void * ) s_cdpList[iPos]->CharsUpper );
-         hb_xfree( ( void * ) s_cdpList[iPos]->CharsLower );
-      }
       iPos++;
    }
 }
@@ -1815,6 +1875,28 @@ HB_FUNC_EXTERN( STRTRAN );
 HB_FUNC( HB_UTF8STRTRAN )
 {
    HB_FUNC_EXEC( STRTRAN )
+}
+
+#else /* !HB_CDP_SUPPORT_OFF */
+
+BOOL hb_charIsDigit( int iChar )
+{
+   return HB_ISDIGIT( ( unsigned char ) iChar );
+}
+
+BOOL hb_charIsAlpha( int iChar )
+{
+   return HB_ISALPHA( ( unsigned char ) iChar );
+}
+
+BOOL hb_charIsLower( int iChar )
+{
+   return HB_ISLOWER( ( unsigned char ) iChar );
+}
+
+BOOL hb_charIsUpper( int iChar )
+{
+   return HB_ISUPPER( ( unsigned char ) iChar );
 }
 
 #endif /* HB_CDP_SUPPORT_OFF */

@@ -51,67 +51,6 @@
  */
 
 #include "hbapi.h"
-#include "hbapicdp.h"
-
-BOOL hb_charIsDigit( int iChar )
-{
-   return HB_ISDIGIT( ( unsigned char ) iChar );
-}
-
-BOOL hb_charIsAlpha( int iChar )
-{
-   if( HB_ISALPHA( ( unsigned char ) iChar ) )
-      hb_retl( TRUE );
-#ifndef HB_CDP_SUPPORT_OFF
-   else
-   {
-      PHB_CODEPAGE cdp = hb_vmCDP();
-      /* ( char * ) casting for MSVC */
-      if( cdp && cdp->nChars && iChar &&
-          ( strchr( ( char * ) cdp->CharsUpper, iChar ) ||
-            strchr( ( char * ) cdp->CharsLower, iChar ) ) )
-         return TRUE;
-   }
-#endif
-
-   return FALSE;
-}
-
-BOOL hb_charIsLower( int iChar )
-{
-   if( HB_ISLOWER( ( unsigned char ) iChar ) )
-      return TRUE;
-#ifndef HB_CDP_SUPPORT_OFF
-   else
-   {
-      PHB_CODEPAGE cdp = hb_vmCDP();
-      /* ( char * ) casting for MSVC */
-      if( cdp && cdp->nChars && iChar &&
-          strchr( ( char * ) cdp->CharsUpper, iChar ) )
-         return TRUE;
-   }
-#endif
-
-   return FALSE;
-}
-
-BOOL hb_charIsUpper( int iChar )
-{
-   if( HB_ISUPPER( ( unsigned char ) iChar ) )
-      return TRUE;
-#ifndef HB_CDP_SUPPORT_OFF
-   else
-   {
-      PHB_CODEPAGE cdp = hb_vmCDP();
-      /* ( char * ) casting for MSVC */
-      if( cdp && cdp->nChars && iChar &&
-          strchr( ( char * ) cdp->CharsLower, iChar ) )
-         return TRUE;
-   }
-#endif
-
-   return FALSE;
-}
 
 /* determines if first char of string is letter */
 
@@ -119,26 +58,7 @@ HB_FUNC( ISALPHA )
 {
    const char * szString = hb_parc( 1 );
 
-   if( szString )
-   {
-      if( HB_ISALPHA( ( unsigned char ) *szString ) )
-         hb_retl( TRUE );
-      else
-      {
-#ifndef HB_CDP_SUPPORT_OFF
-         PHB_CODEPAGE cdp = hb_vmCDP();
-         /* ( char * ) casting for MSVC */
-         if( cdp && cdp->nChars && szString[ 0 ] &&
-             ( strchr( ( char * ) cdp->CharsUpper, *szString ) ||
-               strchr( ( char * ) cdp->CharsLower, *szString ) ) )
-            hb_retl( TRUE );
-         else
-#endif
-            hb_retl( FALSE );
-      }
-   }
-   else
-      hb_retl( FALSE );
+   hb_retl( szString && hb_charIsAlpha( ( unsigned char ) *szString ) );
 }
 
 /* determines if first char of string is digit */
@@ -147,7 +67,7 @@ HB_FUNC( ISDIGIT )
 {
    const char * szString = hb_parc( 1 );
 
-   hb_retl( szString && HB_ISDIGIT( ( unsigned char ) *szString ) );
+   hb_retl( szString && hb_charIsDigit( ( unsigned char ) *szString ) );
 }
 
 /* determines if first char of string is upper-case */
@@ -156,25 +76,7 @@ HB_FUNC( ISUPPER )
 {
    const char * szString = hb_parc( 1 );
 
-   if( szString )
-   {
-      if( HB_ISUPPER( ( unsigned char ) *szString ) )
-         hb_retl( TRUE );
-      else
-      {
-#ifndef HB_CDP_SUPPORT_OFF
-         PHB_CODEPAGE cdp = hb_vmCDP();
-         /* ( char * ) casting for MSVC */
-         if( cdp && cdp->nChars && szString[ 0 ] &&
-             strchr( ( char * ) cdp->CharsUpper, *szString ) )
-            hb_retl( TRUE );
-         else
-#endif
-            hb_retl( FALSE );
-      }
-   }
-   else
-      hb_retl( FALSE );
+   hb_retl( szString && hb_charIsUpper( ( unsigned char ) *szString ) );
 }
 
 /* determines if first char of string is lower-case */
@@ -183,23 +85,5 @@ HB_FUNC( ISLOWER )
 {
    const char * szString = hb_parc( 1 );
 
-   if( szString )
-   {
-      if( HB_ISLOWER( ( unsigned char ) *szString ) )
-         hb_retl( TRUE );
-      else
-      {
-#ifndef HB_CDP_SUPPORT_OFF
-         PHB_CODEPAGE cdp = hb_vmCDP();
-         /* ( char * ) casting for MSVC */
-         if( cdp && cdp->nChars && szString[ 0 ] &&
-             strchr( ( char * ) cdp->CharsLower, *szString ) )
-            hb_retl( TRUE );
-         else
-#endif
-            hb_retl( FALSE );
-      }
-   }
-   else
-      hb_retl( FALSE );
+   hb_retl( szString && hb_charIsLower( ( unsigned char ) *szString ) );
 }

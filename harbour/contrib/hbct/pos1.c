@@ -57,19 +57,6 @@
 
 #include "ct.h"
 
-#ifndef HB_CDP_SUPPORT_OFF
-#   include "hbapicdp.h"
-#   define ISUPPER(c)    ( HB_ISUPPER( ( UCHAR ) c ) || ( cdp->nChars && strchr( cdp->CharsUpper, ( UCHAR ) c ) != NULL ) )
-#   define ISLOWER(c)    ( HB_ISLOWER( ( UCHAR ) c ) || ( cdp->nChars && strchr( cdp->CharsLower, ( UCHAR ) c ) != NULL ) )
-#   define ISALPHA(c)    ( HB_ISALPHA( ( UCHAR ) c ) || ( cdp->nChars && ( strchr( cdp->CharsUpper, ( UCHAR ) c ) != NULL || strchr( cdp->CharsLower, c ) != NULL ) ) )
-#   define HB_CDP_STUB   PHB_CODEPAGE cdp = hb_vmCDP();
-#else
-#   define ISUPPER(c)    HB_ISUPPER( ( UCHAR ) c )
-#   define ISLOWER(c)    HB_ISLOWER( ( UCHAR ) c )
-#   define ISALPHA(c)    HB_ISALPHA( ( UCHAR ) c )
-#   define HB_CDP_STUB
-#endif
-
 /* defines */
 #define DO_POS1_POSALPHA       0
 #define DO_POS1_POSLOWER       1
@@ -85,7 +72,6 @@ static void do_pos1( int iSwitch )
            HB_ISCHAR( 2 ) &&                 /* .. string as 2nd .. */
            HB_ISCHAR( 3 ) ) ) )              /* .. and 3rd param */
    {
-      HB_CDP_STUB
       unsigned char *pcString;
       size_t sStrLen;
       unsigned char *puc, ucChar1 = ' ', ucChar2 = ' ';
@@ -139,11 +125,11 @@ static void do_pos1( int iSwitch )
          switch ( iSwitch )
          {
             case DO_POS1_POSALPHA:
-               iDoRet = ISALPHA( *puc );
+               iDoRet = hb_charIsAlpha( ( UCHAR ) *puc );
                break;
 
             case DO_POS1_POSLOWER:
-               iDoRet = ISLOWER( *puc );
+               iDoRet = hb_charIsLower( ( UCHAR ) *puc );
                break;
 
             case DO_POS1_POSRANGE:
@@ -151,7 +137,7 @@ static void do_pos1( int iSwitch )
                break;
 
             case DO_POS1_POSUPPER:
-               iDoRet = ISUPPER( *puc );
+               iDoRet = hb_charIsUpper( ( UCHAR ) *puc );
                break;
          }
 
