@@ -59,7 +59,7 @@ CREATE CLASS TIPEncoderQP FROM TIPEncoder
 ENDCLASS
 
 METHOD New() CLASS TIPEncoderQP
-   ::cName := "Quoted-Printable"
+   ::cName := "quoted-printable"
    RETURN Self
 
 METHOD Encode( cData ) CLASS TIPEncoderQP

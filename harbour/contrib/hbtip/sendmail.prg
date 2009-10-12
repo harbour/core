@@ -55,7 +55,7 @@
 
 #translate ( <exp1> LIKE <exp2> )   => ( hb_regexLike( (<exp2>), (<exp1>) ) )
 
-FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aFiles, cUser, cPass, cPopServer, nPriority, lRead, bTrace, lPopAuth, lNoAuth, nTimeOut, cReplyTo, lTLS, cSMTPPass, cCharset )
+FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aFiles, cUser, cPass, cPopServer, nPriority, lRead, bTrace, lPopAuth, lNoAuth, nTimeOut, cReplyTo, lTLS, cSMTPPass, cCharset, cEncoding )
    /*
    cServer    -> Required. IP or domain name of the mail server
    nPort      -> Optional. Port used my email server
@@ -136,6 +136,9 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    ENDIF
    IF ! ISCHARACTER( cCharset )
       cCharset := "ISO-8859-1"
+   ENDIF
+   IF ! ISCHARACTER( cEncoding )
+      cEncoding := "quoted-printable"
    ENDIF
 
    cUser := StrTran( cUser, "@", "&at;" )
@@ -230,11 +233,11 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    oUrl:cUserid := StrTran( cUser, "&at;", "@" )
 
    oMail := tipMail():new()
-   oMail:SetEncoder( "7bit" )
+   oMail:SetEncoder( cEncoding )
    oMail:SetCharset( cCharset )
    IF ! Empty( aFiles )
       oAttach := tipMail():new()
-      oAttach:SetEncoder( "7bit" )
+      oAttach:SetEncoder( cEncoding )
       oAttach:SetCharset( cCharset )
 
       IF ( ".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. hb_FileExists( cBody )
@@ -243,7 +246,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
          cBodyTemp := cBody
          cBody     := MemoRead( cBodyTemp ) + Chr( 13 ) + Chr( 10 )
       ELSE
-         oAttach:hHeaders[ "Content-Type" ] := "text/plain; charset=iso8851"
+         oAttach:hHeaders[ "Content-Type" ] := "text/plain; charset=" + cCharset
       ENDIF
       oAttach:SetBody( cBody )
       oMail:Attach( oAttach )
@@ -254,7 +257,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
          cBodyTemp := cBody
          cBody     := MemoRead( cBodyTemp ) + Chr( 13 ) + Chr( 10 )
       ELSE
-         oMail:hHeaders[ "Content-Type" ] := "text/plain; charset=iso8851"
+         oMail:hHeaders[ "Content-Type" ] := "text/plain; charset=" + cCharset
       ENDIF
       oMail:SetBody( cBody )
    ENDIF
@@ -426,7 +429,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
          ( cFile LIKE ".+\.(svr|wrl|wrz|vrt)" ) .OR. Empty( cFExt )
          oAttach:SetEncoder( "base64" )
       ELSE
-         oAttach:SetEncoder( "7-bit" )
+         oAttach:SetEncoder( cEncoding )
       ENDIF
 
       cMimeText := hb_SetMimeType( cFile, cFname, cFext )

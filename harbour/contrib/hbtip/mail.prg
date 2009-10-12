@@ -68,7 +68,7 @@ CREATE CLASS TipMail
    // received fields may be more than once.
    VAR aReceived INIT {}
 
-   METHOD New(cBody, oEncoder )    Constructor
+   METHOD New( cBody, oEncoder )    Constructor
    METHOD SetBody( cBody )
    METHOD GetBody()
    METHOD GetRawBody()              INLINE ::cBody
@@ -143,7 +143,7 @@ METHOD SetEncoder( cEnc ) CLASS TipMail
    ELSE
       ::oEncoder := cEnc
    ENDIF
-   ::hHeaders[ "Content-transfer-encoding" ] := ::oEncoder:cName
+   ::hHeaders[ "Content-Transfer-Encoding" ] := ::oEncoder:cName
    RETURN .T.
 
 METHOD SetBody( cBody ) CLASS TipMail
