@@ -60,8 +60,8 @@ define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dyn_object))
    $(DY) $(DFLAGS) -install_name "harbour$(DYN_EXT)" -compatibility_version $(HB_VER_MAJOR).$(HB_VER_MINOR) -current_version $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ -filelist __dyn__.tmp $(DLIBS) $(DYSTRIP)
-   $(LN) $(DYN_DIR)/$@ $(DYN_FILE2)
-   $(LN) $(DYN_DIR)/$@ $(DYN_DIR)/$(DYN_PREF)$(DYNNAME2).$(HB_VER_MAJOR)$(DYN_EXT)
+   $(LN) $(@F) $(DYN_FILE2)
+   $(LN) $(@F) $(DYN_DIR)/$(DYN_PREF)$(DYNNAME2).$(HB_VER_MAJOR)$(DYN_EXT)
 endef
 
 DY_RULE = $(create_dynlib)
