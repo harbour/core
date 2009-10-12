@@ -56,8 +56,6 @@
 
 #include "hbssl.h"
 
-#include "hbssl.ch"
-
 #include <openssl/evp.h>
 
 HB_FUNC( OPENSSL_ADD_ALL_DIGESTS )

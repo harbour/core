@@ -54,7 +54,7 @@
 #include "hbapierr.h"
 #include "hbapiitm.h"
 
-#include "hbssl.ch"
+#include "hbssl.h"
 
 #include <openssl/evp.h>
 

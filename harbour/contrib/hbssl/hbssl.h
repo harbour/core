@@ -53,6 +53,8 @@
 #ifndef HBSSL_H_
 #define HBSSL_H_
 
+#include "hbapi.h"
+
 #include <openssl/ssl.h>
 
 #include "hbssl.ch"

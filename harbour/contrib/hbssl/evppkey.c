@@ -56,8 +56,6 @@
 
 #include "hbssl.h"
 
-#include "hbssl.ch"
-
 #include <openssl/evp.h>
 
 static HB_GARBAGE_FUNC( EVP_PKEY_release )
