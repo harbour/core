@@ -3,10 +3,10 @@
  */
 
 /*
- * xHarbour Project source code:
- * TIP Class oriented Internet protocol library
+ * Harbour Project source code:
+ * TIP quoted-printable encoder/decoder class
  *
- * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
+ * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -61,3 +61,52 @@ ENDCLASS
 METHOD New() CLASS TIPEncoderQP
    ::cName := "Quoted-Printable"
    RETURN Self
+
+METHOD Encode( cData ) CLASS TIPEncoderQP
+   LOCAL c
+   LOCAL cString := ""
+   LOCAL nLineLen := 0
+
+   FOR EACH c IN cData
+      IF c == Chr( 13 )
+         cString += Chr( 13 ) + Chr( 10 )
+         nLineLen := 0
+      ELSEIF Asc( c ) > 127 .OR. ;
+         c == "=" .OR. ;
+         ( Asc( c ) < 32 .AND. !( c $ Chr( 13 ) + Chr( 10 ) + Chr( 9 ) ) ) .OR. ;
+         ( c $ " " + Chr( 9 ) .AND. SubStr( cData, c:__enumIndex() + 1 ) $ Chr( 13 ) + Chr( 10 ) )
+         IF nLineLen + 3 > 76
+            cString += "=" + Chr( 13 ) + Chr( 10 )
+            nLineLen := 0
+         ENDIF
+         cString += "=" + hb_NumToHex( Asc( c ), 2 )
+         nLineLen += 3
+      ELSEIF !( c == Chr( 10 ) )
+         cString += c
+         nLineLen += 1
+      ENDIF
+   NEXT
+
+   RETURN cString
+
+METHOD Decode( cData ) CLASS TIPEncoderQP
+   LOCAL tmp
+   LOCAL c
+   LOCAL nLen
+   LOCAL cString := ""
+
+   /* delete soft line break. */
+   cData := StrTran( cData, "=" + Chr( 13 ) + Chr( 10 ) )
+
+   nLen := Len( cData )
+   FOR tmp := 1 TO nLen
+      c := SubStr( cData, tmp, 1 )
+      IF c == "=" .AND. Len( SubStr( cData, tmp + 1, 2 ) ) == 2
+         cString += Chr( hb_HexToNum( SubStr( cData, tmp + 1, 2 ) ) )
+         tmp += 2
+      ELSE
+         cString += c
+      ENDIF
+   NEXT
+
+   RETURN cString

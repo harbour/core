@@ -4,10 +4,12 @@
 
 # Copy this file to hmg root dir and include it in hbmk2
 # command line to build an app:
-# > hbmk2 -hb10 test.prg C:\hmg\hmg.hbc
+# > hbmk2 test.prg C:\hmg\hmg.hbc
 
 {win}incpaths=include
-{win}libpaths=lib harbour\lib
+{win}libpaths=lib
+{win}sources=${hb_curdir}*.rc
+{win}sources=resources\minigui.rc
 
 {win}gt=gtgui
 

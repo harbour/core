@@ -87,6 +87,7 @@ CREATE CLASS TipMail
    METHOD GetFieldOption( cField )
    METHOD SetFieldPart( cField, cValue )
    METHOD SetFieldOption( cField, cValue )
+   METHOD SetCharset( cCharset ) INLINE ::cCharset := iif( ISCHARACTER( cCharset ), cCharset, "ISO-8859-1" )
 
    METHOD GetContentType() INLINE ::GetFieldPart( "Content-Type" )
    METHOD GetCharEncoding() INLINE ::GetFieldOption( "Content-Type", "encoding" )
@@ -114,6 +115,7 @@ CREATE CLASS TipMail
    VAR oEncoder
    VAR aAttachments
    VAR nAttachPos   INIT 1
+   VAR cCharset
 
 ENDCLASS
 
@@ -130,6 +132,8 @@ METHOD New( cBody, oEncoder ) CLASS TipMail
    IF cBody != NIL
       ::setBody( cBody )
    ENDIF
+
+   ::SetCharset()
 
    RETURN Self
 
@@ -346,7 +350,7 @@ METHOD ToString() CLASS TipMail
       ELSE
          //GD - if there are attachements the body of the message has to be treated as an attachment.
          cRet += "--" + cBoundary + e"\r\n"
-         cRet += "Content-Type: text/plain; charset=ISO-8859-1; format=flowed" + e"\r\n"
+         cRet += "Content-Type: text/plain; charset=" + ::cCharset + "; format=flowed" + e"\r\n"
          cRet += "Content-Transfer-Encoding: 7bit" + e"\r\n"
          cRet += "Content-Disposition: inline" + e"\r\n" + e"\r\n"
          cRet += ::cBody + e"\r\n"

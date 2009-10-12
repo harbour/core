@@ -55,7 +55,7 @@
 
 #translate ( <exp1> LIKE <exp2> )   => ( hb_regexLike( (<exp2>), (<exp1>) ) )
 
-FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aFiles, cUser, cPass, cPopServer, nPriority, lRead, bTrace, lPopAuth, lNoAuth, nTimeOut, cReplyTo, lTLS, cSMTPPass )
+FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aFiles, cUser, cPass, cPopServer, nPriority, lRead, bTrace, lPopAuth, lNoAuth, nTimeOut, cReplyTo, lTLS, cSMTPPass, cCharset )
    /*
    cServer    -> Required. IP or domain name of the mail server
    nPort      -> Optional. Port used my email server
@@ -133,6 +133,9 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    ENDIF
    IF ! ISCHARACTER( cSMTPPass )
       cSMTPPass := cPass
+   ENDIF
+   IF ! ISCHARACTER( cCharset )
+      cCharset := "ISO-8859-1"
    ENDIF
 
    cUser := StrTran( cUser, "@", "&at;" )
@@ -228,12 +231,14 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
 
    oMail := tipMail():new()
    oMail:SetEncoder( "7bit" )
+   oMail:SetCharset( cCharset )
    IF ! Empty( aFiles )
       oAttach := tipMail():new()
       oAttach:SetEncoder( "7bit" )
+      oAttach:SetCharset( cCharset )
 
       IF ( ".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. hb_FileExists( cBody )
-         cMimeText := "text/html; charset=ISO-8859-1"
+         cMimeText := "text/html; charset=" + cCharset
          oAttach:hHeaders[ "Content-Type" ] := cMimeText
          cBodyTemp := cBody
          cBody     := MemoRead( cBodyTemp ) + Chr( 13 ) + Chr( 10 )
@@ -244,7 +249,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
       oMail:Attach( oAttach )
    ELSE
       IF ( ".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. hb_FileExists( cBody )
-         cMimeText := "text/html ; charset=ISO-8859-1"
+         cMimeText := "text/html ; charset=" + cCharset
          oMail:hHeaders[ "Content-Type" ] := cMimeText
          cBodyTemp := cBody
          cBody     := MemoRead( cBodyTemp ) + Chr( 13 ) + Chr( 10 )
@@ -388,6 +393,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
       cData += Chr( 13 ) + Chr( 10 )
 
       oAttach := TipMail():New()
+      oAttach:SetCharset( cCharset )
 
       hb_FNameSplit( cFile,, @cFname, @cFext )
       cFile := Lower( cFile )
@@ -427,7 +433,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
       // Some EMAIL readers use Content-Type to check for filename
 
       IF ".html" $ Lower( cFext ) .OR. ".htm" $ Lower( cFext )
-         cMimeText += "; charset=ISO-8859-1"
+         cMimeText += "; charset=" + cCharset
       ENDIF
 
       oAttach:hHeaders[ "Content-Type" ] := cMimeText
