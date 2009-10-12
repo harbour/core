@@ -100,12 +100,20 @@ FUNCTION HB_IniNew( lAutoMain )
 
 
 FUNCTION hb_IniRead( cFileSpec, lKeyCaseSens, cSplitters, lAutoMain )
+   LOCAL cData
+
+   cData := hb_IniFileLow( cFileSpec )
+
+   RETURN hb_IniString( cData, lKeyCaseSens, cSplitters, lAutoMain )
+
+FUNCTION hb_IniString( cData, lKeyCaseSens, cSplitters, lAutoMain )
    LOCAL hIni := hb_Hash()
 
    /* Default case sensitiveness for keys */
    DEFAULT lKeyCaseSens TO .T.
-   DEFAULT cSplitters TO "="
-   DEFAULT lAutoMain TO .T.
+   DEFAULT cSplitters   TO "="
+   DEFAULT lAutoMain    TO .T.
+   DEFAULT cData        TO ""
 
    hb_HCaseMatch( hIni, lKeyCaseSens )
 
@@ -113,14 +121,12 @@ FUNCTION hb_IniRead( cFileSpec, lKeyCaseSens, cSplitters, lAutoMain )
       hIni[ "MAIN" ] := hb_Hash()
    ENDIF
 
-   RETURN hb_IniRdLow( hIni, cFileSpec, lKeyCaseSens, cSplitters, lAutoMain )
+   RETURN hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMain )
 
-STATIC FUNCTION hb_IniRdLow( hIni, cFileSpec, lKeyCaseSens, cSplitters, lAutoMain )
+STATIC FUNCTION hb_IniFileLow( cFileSpec )
    LOCAL cFile, nLen
-   LOCAL aKeyVal, hCurrentSection
-   LOCAL hFile, nLineEnd
-   LOCAL cData, cLine
-   LOCAL reComment, reInclude, reSection, reSplitters
+   LOCAL hFile
+   LOCAL cData
    LOCAL aFiles := hb_aTokens( cFileSpec, hb_OSPathListSeparator() )
 
    IF Empty( aFiles )
@@ -140,17 +146,26 @@ STATIC FUNCTION hb_IniRdLow( hIni, cFileSpec, lKeyCaseSens, cSplitters, lAutoMai
       RETURN NIL
    ENDIF
 
-   reComment := hb_RegexComp( s_cHalfLineComment + "|^[ \t]*" + s_cLineComment )
-   reInclude := hb_RegexComp( "include (.*)" )
-   reSection := hb_RegexComp( "[[](.*)[]]" )
-   reSplitters := hb_RegexComp( cSplitters )
-
    /* we'll read the whole file, then we'll break it in lines. */
    cData := Space( FSeek( hFile, 0, FS_END ) )
    FSeek( hFile, 0, FS_SET )
    nLen := FRead( hFile, @cData, Len( cData ) )
    cData := Left( cData, nLen )
    FClose( hFile )
+
+   RETURN cData
+
+STATIC FUNCTION hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMain )
+   LOCAL nLen
+   LOCAL aKeyVal, hCurrentSection
+   LOCAL nLineEnd
+   LOCAL cLine
+   LOCAL reComment, reInclude, reSection, reSplitters
+
+   reComment := hb_RegexComp( s_cHalfLineComment + "|^[ \t]*" + s_cLineComment )
+   reInclude := hb_RegexComp( "include (.*)" )
+   reSection := hb_RegexComp( "[[](.*)[]]" )
+   reSplitters := hb_RegexComp( cSplitters )
 
    /* Always begin with the MAIN section */
    IF lAutoMain
@@ -217,7 +232,7 @@ STATIC FUNCTION hb_IniRdLow( hIni, cFileSpec, lKeyCaseSens, cSplitters, lAutoMai
          IF Len( aKeyVal[ 2 ] ) == 0
             LOOP
          ENDIF
-         hb_IniRdLow( hIni, aKeyVal[ 2 ], lKeyCaseSens, cSplitters, lAutoMain )
+         hb_IniStringLow( hIni, hb_IniFileLow( aKeyVal[ 2 ] ), lKeyCaseSens, cSplitters, lAutoMain )
          cLine := ""
          LOOP
       ENDIF
