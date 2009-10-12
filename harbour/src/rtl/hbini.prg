@@ -104,9 +104,9 @@ FUNCTION hb_IniRead( cFileSpec, lKeyCaseSens, cSplitters, lAutoMain )
 
    cData := hb_IniFileLow( cFileSpec )
 
-   RETURN hb_IniString( cData, lKeyCaseSens, cSplitters, lAutoMain )
+   RETURN hb_IniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
 
-FUNCTION hb_IniString( cData, lKeyCaseSens, cSplitters, lAutoMain )
+FUNCTION hb_IniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
    LOCAL hIni := hb_Hash()
 
    /* Default case sensitiveness for keys */
@@ -161,6 +161,8 @@ STATIC FUNCTION hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
    LOCAL nLineEnd
    LOCAL cLine
    LOCAL reComment, reInclude, reSection, reSplitters
+
+   DEFAULT cData TO ""
 
    reComment := hb_RegexComp( s_cHalfLineComment + "|^[ \t]*" + s_cLineComment )
    reInclude := hb_RegexComp( "include (.*)" )
@@ -275,9 +277,14 @@ STATIC FUNCTION hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
 FUNCTION hb_IniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, lAutoMain )
    LOCAL hFile
    LOCAL lClose
-   LOCAL cNewLine := hb_OSNewLine()
-   LOCAL cSection
    LOCAL cBuffer
+
+   cBuffer := hb_IniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
+
+   // if cBuffer == NIL I have to stop here
+   IF !ISCHARACTER( cBuffer )
+      RETURN .F.
+   ENDIF
 
    IF ISCHARACTER( xFileName )
       hFile := FCreate( xFileName )
@@ -293,30 +300,51 @@ FUNCTION hb_IniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, lAutoMain )
       RETURN .F.
    ENDIF
 
-   IF ! Empty( cCommentBegin )
-      cBuffer := cCommentBegin + cNewLine
-      IF FWrite( hFile, cBuffer ) != Len( cBuffer )
-         IF lClose
-            FClose( hFile )
-         ENDIF
-         RETURN .F.
+   IF FWrite( hFile, cBuffer ) != Len( cBuffer )
+      IF lClose
+         FClose( hFile )
       ENDIF
+      RETURN .F.
+   ENDIF
+
+   IF lClose
+      FClose( hFile )
+   ENDIF
+
+   RETURN .T.
+
+FUNCTION hb_IniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
+   LOCAL cNewLine := hb_OSNewLine()
+   LOCAL cSection
+   LOCAL cBuffer := ""
+
+   IF !HB_ISHASH( hIni )
+      RETURN NIL
+   ENDIF
+
+   IF ! Empty( cCommentBegin )
+      cBuffer += cCommentBegin + cNewLine
    ENDIF
 
    DEFAULT lAutoMain TO .T.
+
+   // Fix if lAutoMain is .T. but I haven't a MAIN section
+   IF lAutoMain .AND. !hb_HHasKey( hIni, "MAIN" )
+      lAutoMain := .F.
+   ENDIF
 
    /* Write toplevel section */
    IF lAutoMain
       /* When automain is on, write the main section */
       hb_HEval( hIni[ "MAIN" ], ;
-               { |cKey, xVal| FWrite( hFile, hb_CStr( cKey ) + " = " + ;
-                                             hb_CStr( xVal ) + cNewLine ) } )
+               { |cKey, xVal| cBuffer += hb_CStr( cKey ) + " = " + ;
+                                             hb_CStr( xVal ) + cNewLine } )
 
    ELSE
       /* When automain is off, just write all the toplevel variables. */
       hb_HEval( hIni, { |cKey, xVal| iif( ! hb_isHash( xVal ),;
-                FWrite( hFile, hb_CStr( cKey ) + " = " + ;
-                               hb_CStr( xVal ) + cNewLine ), /* nothing */ ) } )
+                cBuffer += hb_CStr( cKey ) + " = " + ;
+                           hb_CStr( xVal ) + cNewLine, /* nothing */ ) } )
    ENDIF
 
    FOR EACH cSection IN hIni
@@ -334,31 +362,17 @@ FUNCTION hb_IniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, lAutoMain )
          ENDIF
       ENDIF
 
-      cBuffer := cNewLine + "[" + hb_CStr( cSection:__enumKey ) + "]" + cNewLine
-      IF FWrite( hFile, cBuffer ) != Len( cBuffer )
-         IF lClose
-            FClose( hFile )
-         ENDIF
-         RETURN .F.
-      ENDIF
+      cBuffer += cNewLine + "[" + hb_CStr( cSection:__enumKey ) + "]" + cNewLine
 
       hb_HEval( cSection, ;
-                { |cKey, xVal| FWrite( hFile, hb_CStr( cKey ) + "=" + ;
-                                              hb_CStr( xVal ) + cNewLine ) } )
+                { |cKey, xVal| cBuffer += hb_CStr( cKey ) + "=" + ;
+                                          hb_CStr( xVal ) + cNewLine } )
    NEXT
 
    IF ! Empty( cCommentEnd )
-      cBuffer := cCommentEnd + cNewLine
-      IF FWrite( hFile, cBuffer ) != Len( cBuffer )
-         IF lClose
-            FClose( hFile )
-         ENDIF
-         RETURN .F.
-      ENDIF
+      cBuffer += cCommentEnd + cNewLine
    ENDIF
 
-   IF lClose
-      FClose( hFile )
-   ENDIF
+   RETURN IIF( !Empty( cBuffer ), cBuffer, NIL )
 
-   RETURN .T.
+

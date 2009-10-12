@@ -9,7 +9,7 @@
 *
 
 PROCEDURE Main( cName )
-   LOCAL aIni, aSect
+   LOCAL hIni, aSect, cIni
    LOCAL cSection
    LOCAL cKey
    LOCAL nRow := 1
@@ -25,19 +25,19 @@ PROCEDURE Main( cName )
       @nRow++, 5 SAY "Using default parseini.ini file"
    ENDIF
 
-   aIni := hb_IniRead( cName )
+   hIni := hb_IniRead( cName )
 
    @nRow, 0
 
    ? "Content of " + cName
 
-   IF Empty( aIni )
+   IF Empty( hIni )
       ? "Not a valid .ini file!"
    ELSE
-      FOR EACH cSection IN aIni:Keys
+      FOR EACH cSection IN hIni:Keys
          ?
          ? "Section [" + cSection + "]"
-         aSect := aIni[ cSection ]
+         aSect := hIni[ cSection ]
 
          FOR EACH cKey IN aSect:Keys
             ? cKey + " = " + aSect[ cKey ]
@@ -47,11 +47,11 @@ PROCEDURE Main( cName )
 
    ?
    ? "Adding section 'Added', with key NEW = new"
-   aIni[ "Added" ] := hb_Hash()
-   aIni[ "Added" ][ "NEW" ] := "new"
+   hIni[ "Added" ] := hb_Hash()
+   hIni[ "Added" ][ "NEW" ] := "new"
 
    ? "Writing output to parseini_out.ini"
-   IF hb_IniWrite( "parseini_out.ini", aIni, "#Generated file; don't touch", "#End of file")
+   IF hb_IniWrite( "parseini_out.ini", hIni, "#Generated file; don't touch", "#End of file")
       ? "File written"
    ELSE
       ? "Can't write file"
@@ -59,21 +59,23 @@ PROCEDURE Main( cName )
    ?
    ? "Press any key to next text."
    Inkey(0)
+
+   nRow := 3
+   @nRow, 0 CLEAR
    ?
    ? "REPEATING TESTS WITHOUT AUTOMATIC MAIN SECTION"
+   ?
 
-   aIni := hb_IniRead( cName, /*default case*/ , /*Default key indicators */ , .F. )
-
-   @nRow, 0
+   hIni := hb_IniRead( cName, /*default case*/ , /*Default key indicators */ , .F. )
 
    ? "Content of " + cName
 
-   IF Empty( aIni )
+   IF Empty( hIni )
       ? "Not a valid .ini file!"
    ELSE
-      FOR EACH cSection IN aIni:Keys
+      FOR EACH cSection IN hIni:Keys
          /* Now (without automatic main), toplevel options may be in the root hash */
-         aSect := aIni[ cSection ]
+         aSect := hIni[ cSection ]
 
          IF HB_IsHash( aSect )
             /* It's a section */
@@ -92,11 +94,11 @@ PROCEDURE Main( cName )
 
    ?
    ? "Adding section 'Added', with key NEW = new"
-   aIni[ "Added" ] := hb_Hash()
-   aIni[ "Added" ][ "NEW" ] := "new"
+   hIni[ "Added" ] := hb_Hash()
+   hIni[ "Added" ][ "NEW" ] := "new"
 
    ? "Writing output to parseini_out1.ini"
-   IF hb_IniWrite( "parseini_out1.ini", aIni,;
+   IF hb_IniWrite( "parseini_out1.ini", hIni,;
          "#Generated file without main auto section; don't touch", "#End of file",;
          .F. )
       ? "File written"
@@ -106,5 +108,72 @@ PROCEDURE Main( cName )
    ?
    ? "Press any key to next text."
    Inkey(0)
+
+   nRow := 3
+   @nRow, 0 CLEAR
+   ?
+   ? "WRITING INI TO A STRING"
+   ?
+
+   cIni := hb_IniWriteStr( hIni )
+
+   ? "Content of hIni : "
+   ?
+   ? cIni
+   ?
+   ? "Press any key to next text."
+   Inkey(0)
+
+   nRow := 3
+   @nRow, 0 CLEAR
+   ?
+   ? "READING INI FILE FROM A STRING"
+   ?
+
+   hIni := hb_IniReadStr( cIni, /*default case*/ , /*Default key indicators */ , .F. )
+
+   ? "Content: "
+
+   IF Empty( hIni )
+      ? "Not a valid .ini file!"
+   ELSE
+      FOR EACH cSection IN hIni:Keys
+         /* Now (without automatic main), toplevel options may be in the root hash */
+         aSect := hIni[ cSection ]
+
+         IF HB_IsHash( aSect )
+            /* It's a section */
+            ?
+            ? "Section [" + cSection + "]"
+
+            FOR EACH cKey IN aSect:Keys
+               ? cKey + " = " + aSect[ cKey ]
+            NEXT
+         ELSE
+            /* It's a toplevel option */
+            ? "TOPLEVEL option:", cSection + " = " + aSect
+         ENDIF
+      NEXT
+   ENDIF
+
+   ?
+   ? "Press any key to next text."
+   Inkey(0)
+
+   nRow := 3
+   @nRow, 0 CLEAR
+   ?
+   ? "WRITING INI FILE TO A STRING "
+   ?
+
+   cIni := hb_IniWriteStr( hb_IniRead( cName ) )
+
+   ? "Content of " + cName
+   ?
+   ? cIni
+   ?
+   ? "Press any key to next text."
+   Inkey(0)
+
 
 RETURN
