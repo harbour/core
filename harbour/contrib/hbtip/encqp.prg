@@ -71,8 +71,8 @@ METHOD Encode( cData ) CLASS TIPEncoderQP
       IF c == Chr( 13 )
          cString += Chr( 13 ) + Chr( 10 )
          nLineLen := 0
-      ELSEIF Asc( c ) > 127 .OR. ;
-         c == "=" .OR. ;
+      ELSEIF Asc( c ) > 126 .OR. ;
+         c $ '=?!"#$@[\]^`{|}~' .OR. ;
          ( Asc( c ) < 32 .AND. !( c $ Chr( 13 ) + Chr( 10 ) + Chr( 9 ) ) ) .OR. ;
          ( c $ " " + Chr( 9 ) .AND. SubStr( cData, c:__enumIndex() + 1 ) $ Chr( 13 ) + Chr( 10 ) )
          IF nLineLen + 3 > 76

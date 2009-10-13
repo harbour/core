@@ -95,6 +95,8 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    LOCAL lConnect      := .T.
    LOCAL oPop
 
+   LOCAL cFromRaw := tip_GetRawEMail( cFrom )
+
    IF ! ISCHARACTER( cServer ) .OR. Empty( cServer )
       cServer := "localhost"
    ENDIF
@@ -267,14 +269,14 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    oMail:hHeaders[ "Date" ] := tip_Timestamp()
    oMail:hHeaders[ "From" ] := cFrom
 
+   IF ! Empty( cReplyTo )
+      oMail:hHeaders[ "Reply-to" ] := cReplyTo
+   ENDIF
    IF ! Empty( cCC )
       oMail:hHeaders[ "Cc" ] := cCC
    ENDIF
    IF ! Empty( cBCC )
       oMail:hHeaders[ "Bcc" ] := cBCC
-   ENDIF
-   IF ! Empty( cReplyTo )
-      oMail:hHeaders[ "Reply-To" ] := cReplyTo
    ENDIF
 
    BEGIN SEQUENCE
@@ -365,7 +367,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
 
    ENDIF
 
-   oInMail:oUrl:cUserid := cFrom
+   oInMail:oUrl:cUserid := cFromRaw
 
    oMail:hHeaders[ "To" ] := cTo
    oMail:hHeaders[ "Subject" ] := cSubject
@@ -447,7 +449,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    NEXT
 
    IF lRead
-      oMail:hHeaders[ "Disposition-Notification-To" ] := cFrom
+      oMail:hHeaders[ "Disposition-Notification-To" ] := cFromRaw
    ENDIF
 
    IF nPriority != 3
@@ -461,7 +463,6 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    RETURN lReturn
 
 //-------------------------------------------------------------//
-
 
 FUNCTION hb_SetMimeType( cFile, cFname, cFext )
 

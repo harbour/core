@@ -68,7 +68,7 @@ CREATE CLASS TipMail
    // received fields may be more than once.
    VAR aReceived INIT {}
 
-   METHOD New( cBody, oEncoder )    Constructor
+   METHOD New( cBody, oEncoder )    CONSTRUCTOR
    METHOD SetBody( cBody )
    METHOD GetBody()
    METHOD GetRawBody()              INLINE ::cBody
@@ -282,7 +282,7 @@ METHOD ToString() CLASS TipMail
    ENDIF
 
    IF Len( ::aAttachments ) > 0
-      //Reset failing content type
+      // reset failing content type
       IF At( "multipart/", Lower( ::GetFieldPart( "Content-Type" ) ) ) == 0
          ::hHeaders[ "Content-Type" ] := "multipart/mixed"
       ENDIF
@@ -313,13 +313,13 @@ METHOD ToString() CLASS TipMail
       cRet += "Date: " + ::hHeaders[ "Date" ] + e"\r\n"
    ENDIF
    IF "From" $ ::hHeaders
-      cRet += "From: " + ::hHeaders[ "From" ] + e"\r\n"
+      cRet += "From: " + LTrim( WordEncodeQ( tip_GetNameEMail( ::hHeaders[ "From" ] ), ::cCharset ) + " <" + tip_GetRawEMail( ::hHeaders[ "From" ] ) + ">" ) + e"\r\n"
    ENDIF
    IF "To" $ ::hHeaders
-      cRet += "To: " + ::hHeaders[ "To" ] + e"\r\n"
+      cRet += "To: " + LTrim( WordEncodeQ( tip_GetNameEMail( ::hHeaders[ "To" ] ), ::cCharset ) + " <" + tip_GetRawEMail( ::hHeaders[ "To" ] ) + ">" ) + e"\r\n"
    ENDIF
    IF "Subject" $ ::hHeaders
-      cRet += "Subject: " + ::hHeaders[ "Subject" ] + e"\r\n"
+      cRet += "Subject: " + WordEncodeQ( ::hHeaders[ "Subject" ], ::cCharset ) + e"\r\n"
    ENDIF
    IF Len( ::aAttachments ) > 0
       cRet += "Mime-Version:" + ::hHeaders[ "Mime-Version" ] + e"\r\n"
@@ -516,7 +516,7 @@ METHOD MakeBoundary() CLASS TipMail
 METHOD setHeader( cSubject, cFrom, cTo, cCC, cBCC ) CLASS TipMail
    LOCAL aTo, aCC, aBCC, i, imax
 
-   IF ! ISCHARACTER( csubject )
+   IF ! ISCHARACTER( cSubject )
       cSubject := ""
    ENDIF
 
@@ -662,3 +662,57 @@ METHOD getMultiParts( aParts ) CLASS TipMail
    ENDIF
 
    RETURN aParts
+
+STATIC FUNCTION WordEncodeQ( cData, cCharset )
+   LOCAL c
+   LOCAL cString
+   LOCAL nLineLen := 0
+   LOCAL lToEncode := .F.
+
+   IF Empty( cCharset )
+      RETURN cData
+   ENDIF
+
+   /* TOFIX: Add support to handle long string. */
+
+   cString := "=?" + cCharset + "?" + "Q" + "?"
+
+   FOR EACH c IN cData
+      IF c == " "
+         cString += "_"
+         nLineLen += 1
+      ELSEIF Asc( c ) > 126 .OR. ;
+         c $ '=?!"#$@[\]^`{|}~' .OR. ;
+         Asc( c ) <= 32
+         cString += "=" + hb_NumToHex( Asc( c ), 2 )
+         nLineLen += 3
+         lToEncode := .T.
+      ELSE
+         cString += c
+         nLineLen += 1
+      ENDIF
+   NEXT
+
+   RETURN iif( lToEncode, cString + "?=", cData )
+
+FUNCTION tip_GetRawEMail( cAddress )
+   LOCAL tmp, tmp1
+
+   IF ( tmp := At( "<", cAddress ) ) > 0
+      IF ( tmp1 := hb_At( ">", cAddress, tmp + 1 ) ) > 0
+         RETURN SubStr( cAddress, tmp + 1, tmp1 - tmp - 1 )
+      ENDIF
+   ENDIF
+
+   RETURN cAddress
+
+FUNCTION tip_GetNameEMail( cAddress )
+   LOCAL tmp
+
+   IF ( tmp := At( "<", cAddress ) ) > 0
+      IF hb_At( ">", cAddress, tmp + 1 ) > 0
+         RETURN RTrim( Left( cAddress, tmp - 1 ) )
+      ENDIF
+   ENDIF
+
+   RETURN cAddress

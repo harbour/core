@@ -794,7 +794,7 @@ METHOD Log( ... ) CLASS tIPClient
 
          // Preserves CRLF on result
          IF xVar:__enumIndex() < PCount()
-            cMsg += StrTran( StrTran( AllTrim( hb_CStr( xVar ) ), Chr( 13 ) ), Chr( 10 ) )
+            cMsg += StrTran( StrTran( AllTrim( hb_CStr( xVar ) ), Chr( 13 ), "<cr>" ), Chr( 10 ), "<lf>" )
          ELSE
             cMsg += hb_CStr( xVar )
          ENDIF
