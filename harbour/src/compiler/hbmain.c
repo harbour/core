@@ -3920,10 +3920,15 @@ static void hb_compGenIncluded( HB_COMP_DECL )
             ulLen += ( ULONG ) strlen( pIncFile->szFileName ) + 1;
             pIncFile = pIncFile->pNext;
          }
+         u = HB_COMP_PARAM->ulOutBufSize;
+         if( u != 0 )
+            ++ulLen;
          HB_COMP_PARAM->pOutBuf = ( BYTE * ) hb_xrealloc(
-            HB_COMP_PARAM->pOutBuf, HB_COMP_PARAM->ulOutBufSize + ulLen + 1 );
-         buffer = HB_COMP_PARAM->pOutBuf + HB_COMP_PARAM->ulOutBufSize;
-         HB_COMP_PARAM->ulOutBufSize += ulLen;
+                                       HB_COMP_PARAM->pOutBuf, u + ulLen );
+         buffer = HB_COMP_PARAM->pOutBuf + u;
+         if( u != 0 )
+            *buffer++ = pIncFile ? ' ' : '\t';
+         HB_COMP_PARAM->ulOutBufSize += ulLen - 1;
          pIncFile = HB_COMP_PARAM->incfiles;
          while( pIncFile )
          {
@@ -3931,9 +3936,8 @@ static void hb_compGenIncluded( HB_COMP_DECL )
             memcpy( buffer, pIncFile->szFileName, u );
             buffer +=u;
             pIncFile = pIncFile->pNext;
-            *buffer++ = pIncFile ? ' ' : '\t';
+            *buffer++ = pIncFile ? ' ' : '\0';
          }
-         *buffer = '\0';
       }
       else
       {
