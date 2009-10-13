@@ -97,7 +97,7 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
            "\n          %cq0              quiet and don't display program header",
            "\n          %cr:<max>         set maximum number of preprocessor iterations",
 /* TODO:   "\n          %cr[<lib>]        request linker to search <lib> (or none)", */
-           "\n          %cs               syntax check only",
+           "\n          %cs[m]            syntax check only [and generate dependencies list]",
 /* TODO:   "\n          %ct<path>         path for temp file creation", */
            "\n          %cu[<file>]       use command def set in <file> (or none)",
            "\n          %cu+<file>        add command def set from <file>",
@@ -122,7 +122,7 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
    for( iLine = 0; iLine < ( int ) ( sizeof( szOptions ) / sizeof( char * ) ); iLine++ )
    {
       hb_snprintf( buffer, sizeof( buffer ),
-                szOptions[ iLine ], HB_OS_OPT_DELIM_LIST[ 0 ] );
+                   szOptions[ iLine ], HB_OS_OPT_DELIM_LIST[ 0 ] );
       hb_compOutStd( HB_COMP_PARAM, buffer );
    }
 }

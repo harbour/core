@@ -83,7 +83,10 @@ int hb_compMain( int argc, const char * const argv[],
    {
       if( pBufPtr && pulSize )
       {
-         HB_COMP_PARAM->iLanguage = HB_LANG_PORT_OBJ_BUF;
+         if( HB_COMP_PARAM->iTraceInclude > 0 )
+            HB_COMP_PARAM->iTraceInclude |= 0x100;
+         else
+            HB_COMP_PARAM->iLanguage = HB_LANG_PORT_OBJ_BUF;
       }
 
       if( HB_COMP_PARAM->fLogo )
@@ -430,7 +433,7 @@ void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarT
    {
       char buffer[ 80 ];
       hb_snprintf( buffer, sizeof( buffer ),
-                "Wrong type of codeblock parameter, is: %d, should be: %d\r\n",
+                "Wrong type of codeblock parameter, is: %d, should be: %d\n",
                 HB_COMP_PARAM->iVarScope, VS_PARAMETER );
       hb_compOutErr( HB_COMP_PARAM, buffer );
       /* variable defined in a codeblock */
@@ -3709,6 +3712,8 @@ static void hb_compGenOutput( HB_COMP_DECL, int iLanguage )
          break;
 
       case HB_LANG_PORT_OBJ_BUF:
+         if( HB_COMP_PARAM->pOutBuf )
+            hb_xfree( HB_COMP_PARAM->pOutBuf );
          hb_compGenBufPortObj( HB_COMP_PARAM, &HB_COMP_PARAM->pOutBuf, &HB_COMP_PARAM->ulOutBufSize );
          break;
 
@@ -3831,7 +3836,7 @@ void hb_compCompileEnd( HB_COMP_DECL )
    {
       PEXTERN pExtern = HB_COMP_PARAM->externs;
 
-      HB_COMP_PARAM->externs = HB_COMP_PARAM->externs->pNext;
+      HB_COMP_PARAM->externs = pExtern->pNext;
       hb_xfree( pExtern );
    }
 
@@ -3839,8 +3844,16 @@ void hb_compCompileEnd( HB_COMP_DECL )
    {
       PHB_MODULE pModule = HB_COMP_PARAM->modules;
 
-      HB_COMP_PARAM->modules = HB_COMP_PARAM->modules->pNext;
+      HB_COMP_PARAM->modules = pModule->pNext;
       hb_xfree( pModule );
+   }
+
+   while( HB_COMP_PARAM->incfiles )
+   {
+      PHB_INCLST pIncFile = HB_COMP_PARAM->incfiles;
+
+      HB_COMP_PARAM->incfiles = pIncFile->pNext;
+      hb_xfree( pIncFile );
    }
 
    while( HB_COMP_PARAM->inlines.pFirst )
@@ -3888,6 +3901,54 @@ void hb_compCompileEnd( HB_COMP_DECL )
       PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
       HB_COMP_PARAM->symbols.pFirst = pSym->pNext;
       hb_xfree( ( void * ) pSym );
+   }
+}
+
+static void hb_compGenIncluded( HB_COMP_DECL )
+{
+   if( HB_COMP_PARAM->iTraceInclude > 0 && HB_COMP_PARAM->incfiles )
+   {
+      PHB_INCLST pIncFile = HB_COMP_PARAM->incfiles;
+
+      if( HB_COMP_PARAM->iTraceInclude > 0x100 )
+      {
+         ULONG ulLen = 0, u;
+         BYTE * buffer;
+
+         while( pIncFile )
+         {
+            ulLen += ( ULONG ) strlen( pIncFile->szFileName ) + 1;
+            pIncFile = pIncFile->pNext;
+         }
+         HB_COMP_PARAM->pOutBuf = ( BYTE * ) hb_xrealloc(
+            HB_COMP_PARAM->pOutBuf, HB_COMP_PARAM->ulOutBufSize + ulLen + 1 );
+         buffer = HB_COMP_PARAM->pOutBuf + HB_COMP_PARAM->ulOutBufSize;
+         HB_COMP_PARAM->ulOutBufSize += ulLen;
+         pIncFile = HB_COMP_PARAM->incfiles;
+         while( pIncFile )
+         {
+            u = ( ULONG ) strlen( pIncFile->szFileName );
+            memcpy( buffer, pIncFile->szFileName, u );
+            buffer +=u;
+            pIncFile = pIncFile->pNext;
+            *buffer++ = pIncFile ? ' ' : '\t';
+         }
+         *buffer = '\0';
+      }
+      else
+      {
+         BOOL fFullQuiet = HB_COMP_PARAM->fFullQuiet;
+         HB_COMP_PARAM->fFullQuiet = FALSE;
+         while( pIncFile )
+         {
+            if( pIncFile != HB_COMP_PARAM->incfiles )
+               hb_compOutStd( HB_COMP_PARAM, " " );
+            hb_compOutStd( HB_COMP_PARAM, pIncFile->szFileName );
+            pIncFile = pIncFile->pNext;
+         }
+         hb_compOutStd( HB_COMP_PARAM, "\n" );
+         HB_COMP_PARAM->fFullQuiet = fFullQuiet;
+      }
    }
 }
 
@@ -4150,8 +4211,14 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
          }
       }
 
-      if( ! HB_COMP_PARAM->fSyntaxCheckOnly && fGenCode &&
-          HB_COMP_PARAM->iErrorCount == 0 )
+      if( HB_COMP_PARAM->iTraceInclude > 0 )
+      {
+         if( fGenCode && HB_COMP_PARAM->iErrorCount == 0 )
+            hb_compGenIncluded( HB_COMP_PARAM );
+         fGenCode = FALSE;
+      }
+      else if( ! HB_COMP_PARAM->fSyntaxCheckOnly && fGenCode &&
+               HB_COMP_PARAM->iErrorCount == 0 )
       {
          const char * szFirstFunction = NULL;
          int iFunctionCount = 0;
@@ -4213,7 +4280,8 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
    else
       fGenCode = FALSE;
 
-   if( !fGenCode&& !HB_COMP_PARAM->fExit && !HB_COMP_PARAM->fSyntaxCheckOnly  )
+   if( !fGenCode&& !HB_COMP_PARAM->fExit &&
+       !HB_COMP_PARAM->fSyntaxCheckOnly && HB_COMP_PARAM->iTraceInclude == 0 )
       hb_compOutStd( HB_COMP_PARAM, "\nNo code generated.\n" );
 
    hb_compCompileEnd( HB_COMP_PARAM );

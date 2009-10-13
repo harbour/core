@@ -116,6 +116,11 @@ typedef HB_PP_INLINE_FUNC * PHB_PP_INLINE_FUNC;
 typedef HB_PP_SWITCH_FUNC_( HB_PP_SWITCH_FUNC );
 typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
 
+/* function to register included files */
+#define HB_PP_INC_FUNC_( func ) void func( void *, const char * )
+typedef HB_PP_INC_FUNC_( HB_PP_INC_FUNC );
+typedef HB_PP_INC_FUNC * PHB_PP_INC_FUNC;
+
 
 /* preprocessor tokens */
 #define HB_PP_TOKEN_NUL          0
@@ -620,6 +625,7 @@ typedef struct
    PHB_PP_ERROR_FUNC pErrorFunc; /* function to generate errors */
    PHB_PP_DISP_FUNC  pDispFunc;  /* function to redirect stdout messages */
    PHB_PP_DUMP_FUNC  pDumpFunc;  /* function for catching #pragma dump data */
+   PHB_PP_INC_FUNC   pIncFunc;   /* function to register included files */
    PHB_PP_INLINE_FUNC pInLineFunc; /* function for hb_inLine(...) {...} blocks */
    PHB_PP_SWITCH_FUNC pSwitchFunc; /* function for compiler switches with #pragma ... */
 }
@@ -646,6 +652,7 @@ extern void   hb_pp_init( PHB_PP_STATE pState, BOOL fQuiet,
                   PHB_PP_DUMP_FUNC  pDumpFunc, PHB_PP_INLINE_FUNC pInLineFunc,
                   PHB_PP_SWITCH_FUNC pSwitchFunc );
 extern void   hb_pp_initDynDefines( PHB_PP_STATE pState, BOOL fArchDefs );
+extern void   hb_pp_setIncFunc( PHB_PP_STATE pState, PHB_PP_INC_FUNC pIncFunc );
 extern void   hb_pp_readRules( PHB_PP_STATE pState, const char * szRulesFile );
 extern void   hb_pp_setStdRules( PHB_PP_STATE pState );
 extern void   hb_pp_setStdBase( PHB_PP_STATE pState );

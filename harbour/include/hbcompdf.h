@@ -618,6 +618,13 @@ typedef struct _HB_EXPRLST
 }
 HB_EXPRLST, * PHB_EXPRLST;
 
+typedef struct _HB_INCLST
+{
+   struct _HB_INCLST *pNext;
+   char szFileName[ 1 ];
+}
+HB_INCLST, * PHB_INCLST;
+
 typedef struct _HB_COMP
 {
    /* common to macro compiler members */
@@ -636,6 +643,7 @@ typedef struct _HB_COMP
    PEXTERN           externs;
    PHB_MODULE        modules;
    PHB_VARTYPE       pVarType;
+   PHB_INCLST        incfiles;
 
    PCOMDECLARED      pFirstDeclared;
    PCOMDECLARED      pLastDeclared;
@@ -689,6 +697,7 @@ typedef struct _HB_COMP
    int               iLanguage;           /* default Harbour generated output language */
    int               iGenCOutput;         /* C code generation should be verbose (use comments) or not */
    int               ilastLineErr;        /* line numer with last syntax error */
+   int               iTraceInclude;       /* trace included files and generate dependencies list */
 
    BOOL              fQuiet;              /* be quiet during compilation (-q) */
    BOOL              fFullQuiet;          /* be quiet during compilation disable all messages */

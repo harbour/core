@@ -272,6 +272,31 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
    return fError;
 }
 
+static void hb_pp_fileIncluded( void * cargo, const char * szFileName )
+{
+   HB_COMP_DECL = ( HB_COMP_PTR ) cargo;
+   PHB_INCLST pIncFile, * pIncFilePtr;
+   int iLen;
+
+   pIncFilePtr = &HB_COMP_PARAM->incfiles;
+   while( *pIncFilePtr )
+   {
+#if defined( HB_OS_UNIX )
+      if( strcmp( ( *pIncFilePtr )->szFileName, szFileName ) == 0 )
+         return;
+#else
+      if( hb_stricmp( ( *pIncFilePtr )->szFileName, szFileName ) == 0 )
+         return;
+#endif
+      pIncFilePtr = &( *pIncFilePtr )->pNext;
+   }
+
+   iLen = ( int ) strlen( szFileName );
+   pIncFile = ( PHB_INCLST ) hb_xgrab( sizeof( HB_INCLST ) + iLen );
+   pIncFile->pNext = NULL;
+   memcpy( pIncFile->szFileName, szFileName, iLen + 1 );
+   *pIncFilePtr = pIncFile;
+}
 
 void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[] )
 {
@@ -285,6 +310,9 @@ void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[] )
                   hb_pp_ErrorGen, hb_pp_Disp, hb_pp_PragmaDump,
                   HB_COMP_ISSUPPORTED( HB_COMPFLAG_HB_INLINE ) ?
                   hb_pp_hb_inLine : NULL, hb_pp_CompilerSwitch );
+
+      if( HB_COMP_PARAM->iTraceInclude )
+         hb_pp_setIncFunc( HB_COMP_PARAM->pLex->pPP, hb_pp_fileIncluded );
 
       if( ! HB_COMP_PARAM->szStdCh )
          hb_pp_setStdRules( HB_COMP_PARAM->pLex->pPP );

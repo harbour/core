@@ -1931,6 +1931,9 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, const char * szFileName,
 
       if( ! file_in )
          return NULL;
+
+      if( pState->pIncFunc )
+         ( pState->pIncFunc )( pState->cargo, szFileName );
    }
 
    pFile = ( PHB_PP_FILE ) hb_xgrab( sizeof( HB_PP_FILE ) );
@@ -2150,6 +2153,12 @@ static void hb_pp_pragmaStreamFile( PHB_PP_STATE pState, const char * szFileName
             hb_pp_tokenAddStreamFunc( pState, pState->pFuncEnd,
                                       hb_membufPtr( pState->pStreamBuffer ),
                                       hb_membufLen( pState->pStreamBuffer ) );
+         }
+         if( pState->pFuncOut || pState->pFuncEnd )
+         {
+            hb_pp_tokenAdd( &pState->pNextTokenPtr, "\n", 1, 0, HB_PP_TOKEN_EOL | HB_PP_TOKEN_STATIC );
+            pState->pFile->iTokens++;
+            pState->fNewStatement = TRUE;
          }
          hb_membufFlush( pState->pStreamBuffer );
       }
@@ -5267,6 +5276,11 @@ void hb_pp_init( PHB_PP_STATE pState, BOOL fQuiet, int iCycles, void * cargo,
    pState->pDumpFunc   = pDumpFunc;
    pState->pInLineFunc = pInLineFunc;
    pState->pSwitchFunc = pSwitchFunc;
+}
+
+void hb_pp_setIncFunc( PHB_PP_STATE pState, PHB_PP_INC_FUNC pIncFunc )
+{
+   pState->pIncFunc = pIncFunc;
 }
 
 /*

@@ -537,10 +537,30 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
 
             case 's':
             case 'S':
-               if( *( s + 1 ) == '-' )
-                  HB_COMP_PARAM->fSyntaxCheckOnly = FALSE;
-               else
-                  HB_COMP_PARAM->fSyntaxCheckOnly = TRUE;
+               switch( *( s + 1 ) )
+               {
+                  case '\0':
+                     HB_COMP_PARAM->fSyntaxCheckOnly = TRUE;
+                     break;
+                  case '-':
+                     HB_COMP_PARAM->fSyntaxCheckOnly = FALSE;
+                     HB_COMP_PARAM->iTraceInclude = 0;
+                     break;
+                  case 'm':
+                  case 'M':
+                     if( s[2] == '-' || s[2]=='0' )
+                     {
+                        HB_COMP_PARAM->iTraceInclude = 0;
+                        break;
+                     }
+                     else if ( s[2] == '\0' || s[2] == '1' )
+                     {
+                        HB_COMP_PARAM->iTraceInclude = 1;
+                        break;
+                     }
+                  default:
+                     hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
+               }
                break;
 
             case 't':
@@ -892,7 +912,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
 
                      case 'q':
                      case 'Q':
-                        if( szSwitch[j + 1] && HB_ISDIGIT( szSwitch[j + 1] ) )
+                        if( HB_ISDIGIT( szSwitch[j + 1] ) )
                         {
                            Switch[2] = szSwitch[j + 1];
                            Switch[3] = '\0';
@@ -916,6 +936,19 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                         j = strlen( szSwitch ) - 1;
                         break;
 
+                     case 's':
+                     case 'S':
+                        ++j;
+                        Switch[2] = Switch[3] = Switch[4] = '\0';
+                        if( szSwitch[j] == 'm' || szSwitch[j] == 'M' )
+                        {
+                           Switch[2] = szSwitch[j++];
+                           if( HB_ISDIGIT( szSwitch[j] ) || szSwitch[j] == '-' )
+                              Switch[3] = szSwitch[j++];
+                        }
+                        hb_compChkEnvironVar( HB_COMP_PARAM, Switch );
+                        continue;
+
                      case 'u':
                      case 'U':
                         szSwitch += ( j - 1 );
@@ -927,7 +960,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
 
                      case 'w':
                      case 'W':
-                        if( szSwitch[j + 1] && HB_ISDIGIT( szSwitch[j + 1] ) )
+                        if( HB_ISDIGIT( szSwitch[j + 1] ) )
                         {
                            Switch[2] = szSwitch[j + 1];
                            Switch[3] = '\0';
