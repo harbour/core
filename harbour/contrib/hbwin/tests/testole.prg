@@ -32,6 +32,7 @@ PROCEDURE Main()
       ? "8) OpenOffice Open"
       ? "9) Send mail via CDO"
       ? "a) Read ADODB table"
+      ? "b) SOAP client"
       ? "0) Quit"
       ? "> "
 
@@ -58,6 +59,8 @@ PROCEDURE Main()
          Exm_CDO()
       ELSEIF nOption == Asc( "a" )
          Exm_ADODB()
+      ELSEIF nOption == Asc( "b" )
+         Exm_SOAP()
       ELSEIF nOption == Asc( "0" )
          EXIT
       ENDIF
@@ -424,6 +427,21 @@ STATIC PROCEDURE Exm_ADODB()
       ENDDO
 
       oRs:Close()
+   ENDIF
+
+   RETURN
+
+
+STATIC PROCEDURE Exm_SOAP()
+   LOCAL oSoapClient
+   
+   IF ! Empty( oSoapClient := win_oleCreateObject( "MSSOAP.SoapClient30" ) )
+
+      oSoapClient:msSoapInit( "http://www.dataaccess.com/webservicesserver/textcasing.wso?WSDL" )
+
+      ? oSoapClient:InvertStringCase( "lower UPPER" )
+   ELSE
+      ? "Error: SOAP Toolkit 3.0 not available.", win_oleErrorText()
    ENDIF
 
    RETURN
