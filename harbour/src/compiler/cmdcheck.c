@@ -553,7 +553,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                         HB_COMP_PARAM->iTraceInclude = 0;
                         break;
                      }
-                     else if ( s[2] == '\0' || s[2] == '1' )
+                     else if( s[2] == '\0' || s[2] == '1' )
                      {
                         HB_COMP_PARAM->iTraceInclude = 1;
                         break;
