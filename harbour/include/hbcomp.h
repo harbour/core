@@ -89,6 +89,7 @@ extern void hb_compCompileEnd( HB_COMP_DECL );
 
 extern int  hb_compparse( HB_COMP_DECL );
 extern void hb_compParserStop( HB_COMP_DECL );
+extern void hb_compParserRun( HB_COMP_DECL );
 
 #define VS_NONE       0
 #define VS_LOCAL      1

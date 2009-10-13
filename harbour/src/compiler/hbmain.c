@@ -4102,7 +4102,10 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
          if( !HB_COMP_PARAM->fExit )
          {
             int iExitLevel = HB_COMP_PARAM->iExitLevel;
-            hb_compparse( HB_COMP_PARAM );
+            if( HB_COMP_PARAM->iTraceInclude > 0 )
+               hb_compParserRun( HB_COMP_PARAM );
+            else
+               hb_compparse( HB_COMP_PARAM );
             HB_COMP_PARAM->iExitLevel = HB_MAX( iExitLevel, HB_COMP_PARAM->iExitLevel );
          }
       }

@@ -828,7 +828,8 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                       pToken->pNext->len >= 4 && pToken->pNext->len <= 8 &&
                       hb_strnicmp( "SEQUENCE", pToken->pNext->value, pToken->pNext->len ) == 0 )
                   {
-                     if( HB_COMP_PARAM->functions.pLast->wSeqCounter == 0 )
+                     if( HB_COMP_PARAM->functions.pLast->wSeqCounter == 0 &&
+                         HB_COMP_PARAM->iTraceInclude == 0 )
                         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                          HB_COMP_ERR_ENDIF, NULL, NULL );
                      hb_pp_tokenGet( pLex->pPP );
@@ -869,7 +870,8 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                   }
                }
                /* Clipper accepts ELSE in one context only */
-               if( HB_COMP_PARAM->functions.pLast->wIfCounter == 0 )
+               if( HB_COMP_PARAM->functions.pLast->wIfCounter == 0 &&
+                   HB_COMP_PARAM->iTraceInclude == 0 )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_UNMATCHED_ELSE, NULL, NULL );
                pLex->iState = ELSE;
@@ -887,7 +889,8 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                   }
                }
                /* Clipper accepts ELSEIF in one context only */
-               if( HB_COMP_PARAM->functions.pLast->wIfCounter == 0 )
+               if( HB_COMP_PARAM->functions.pLast->wIfCounter == 0 &&
+                   HB_COMP_PARAM->iTraceInclude == 0 )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_UNMATCHED_ELSEIF, NULL, NULL );
                pLex->iState = ELSEIF;
@@ -904,7 +907,8 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                   }
                }
                /* Clipper accepts ENDIF in one context only */
-               if( HB_COMP_PARAM->functions.pLast->wIfCounter == 0 )
+               if( HB_COMP_PARAM->functions.pLast->wIfCounter == 0 &&
+                   HB_COMP_PARAM->iTraceInclude == 0 )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_ENDIF, NULL, NULL );
                break;
@@ -920,7 +924,8 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                   }
                }
                /* Clipper accepts ENDCASE in one context only */
-               if( HB_COMP_PARAM->functions.pLast->wCaseCounter == 0 )
+               if( HB_COMP_PARAM->functions.pLast->wCaseCounter == 0 &&
+                   HB_COMP_PARAM->iTraceInclude == 0 )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_ENDCASE, NULL, NULL );
                break;
@@ -936,7 +941,8 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                   }
                }
                /* Clipper accepts ENDDO in one context only */
-               if( HB_COMP_PARAM->functions.pLast->wWhileCounter == 0 )
+               if( HB_COMP_PARAM->functions.pLast->wWhileCounter == 0 &&
+                   HB_COMP_PARAM->iTraceInclude == 0 )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_ENDDO, NULL, NULL );
                break;
@@ -998,7 +1004,8 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                      ( iType == CASE && !HB_PP_LEX_NEEDLEFT( pToken->pNext ) ) ) )
                {
                   if( HB_COMP_PARAM->functions.pLast->wCaseCounter == 0 &&
-                      HB_COMP_PARAM->functions.pLast->wSwitchCounter == 0 )
+                      HB_COMP_PARAM->functions.pLast->wSwitchCounter == 0 &&
+                      HB_COMP_PARAM->iTraceInclude == 0 )
                      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                       HB_COMP_ERR_CASE, NULL, NULL );
                   pLex->iState = iType;
@@ -1036,7 +1043,8 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                   if( HB_PP_TOKEN_ISEOC( pToken->pNext ) ||
                       HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD )
                   {
-                     if( HB_COMP_PARAM->functions.pLast->wForCounter == 0 )
+                     if( HB_COMP_PARAM->functions.pLast->wForCounter == 0 &&
+                         HB_COMP_PARAM->iTraceInclude == 0 )
                         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                          HB_COMP_ERR_NEXTFOR, NULL, NULL );
                      pLex->iState = iType;
@@ -1243,7 +1251,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                break;
 
             case PROCREQ:
-               if( pToken->pNext &&
+               if( pLex->iState == LOOKUP && !HB_PP_TOKEN_ISEOC( pToken->pNext ) &&
                    HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_PB )
                {
                   hb_pp_tokenGet( pLex->pPP );
@@ -1357,6 +1365,54 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
       }
       default:
          return ( UCHAR ) pToken->value[ 0 ];
+   }
+}
+
+void hb_compParserRun( HB_COMP_DECL )
+{
+   YYSTYPE yylval;
+   int iToken;
+
+   while( !HB_COMP_PARAM->fExit && HB_COMP_PARAM->iErrorCount == 0 )
+   {
+      iToken = hb_complex( &yylval, HB_COMP_PARAM );
+      if( iToken == 0 )
+         break;
+      if( iToken == DOIDENT )
+         hb_compModuleAdd( HB_COMP_PARAM, yylval.string, FALSE );
+      else if( iToken == PROCREQ )
+      {
+         iToken = hb_complex( &yylval, HB_COMP_PARAM );
+         if( iToken == LITERAL )
+         {
+            const char * szFile, * szExt = NULL;
+
+            if( yylval.valChar.dealloc )
+               szFile = hb_compIdentifierNew( HB_COMP_PARAM, yylval.valChar.string, HB_IDENT_FREE );
+            else
+               szFile = yylval.valChar.string;
+            iToken = hb_complex( &yylval, HB_COMP_PARAM );
+            if( iToken == '+' )
+            {
+               iToken = hb_complex( &yylval, HB_COMP_PARAM );
+               if( iToken == LITERAL )
+               {
+                  if( yylval.valChar.dealloc )
+                     szExt = hb_compIdentifierNew( HB_COMP_PARAM, yylval.valChar.string, HB_IDENT_FREE );
+                  else
+                     szExt = yylval.valChar.string;
+               }
+               iToken = hb_complex( &yylval, HB_COMP_PARAM );
+            }
+            if( iToken == ')' )
+            {
+               if( szExt && *szExt )
+                  szFile = hb_compIdentifierNew( HB_COMP_PARAM,
+                     hb_xstrcpy( NULL, szFile, szExt, NULL ), HB_IDENT_FREE );
+               hb_compModuleAdd( HB_COMP_PARAM, szFile, FALSE );
+            }
+         }
+      }
    }
 }
 

@@ -4644,11 +4644,6 @@ yyreduce:
                ;}
     break;
 
-  case 93:
-#line 470 "harbour.y"
-    { HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_WITH_RETURN; ;}
-    break;
-
   case 94:
 #line 473 "harbour.y"
     {
@@ -6847,7 +6842,7 @@ yyreduce:
 
 
 /* Line 1268 of yacc.c.  */
-#line 6851 "harboury.c"
+#line 6846 "harboury.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);

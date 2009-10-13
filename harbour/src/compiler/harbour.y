@@ -467,7 +467,7 @@ Statement  : ExecFlow CrlfStmnt
                   else
                      hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_DUPL_ANNOUNCE, $2, NULL );
                } Crlf
-           | PROCREQ CompTimeStr ')' Crlf { HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_WITH_RETURN; }
+           | PROCREQ CompTimeStr ')' Crlf
            ;
 
 CompTimeStr : LITERAL {
