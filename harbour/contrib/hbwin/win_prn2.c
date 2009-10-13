@@ -440,7 +440,7 @@ LONG hb_PrintFileRaw( const char * cPrinterName, const char * cFileName, const c
             LPTSTR lpFileName = HB_TCHAR_CONVTO( cFileName );
             HANDLE hFile;
 
-            hFile = CreateFile( ( LPCTSTR ) lpFileName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
+            hFile = CreateFile( ( LPCTSTR ) lpFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
 
             HB_TCHAR_FREE( lpFileName );
 
