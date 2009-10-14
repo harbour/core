@@ -32,7 +32,8 @@ PROCEDURE Main()
       ? "8) OpenOffice Open"
       ? "9) Send mail via CDO"
       ? "a) Read ADODB table"
-      ? "b) SOAP client"
+      ? "b) SOAP Toolkit client"
+      ? "c) PocketSOAP client"
       ? "0) Quit"
       ? "> "
 
@@ -61,6 +62,8 @@ PROCEDURE Main()
          Exm_ADODB()
       ELSEIF nOption == Asc( "b" )
          Exm_SOAP()
+      ELSEIF nOption == Asc( "c" )
+         Exm_PocketSOAP()
       ELSEIF nOption == Asc( "0" )
          EXIT
       ENDIF
@@ -442,6 +445,26 @@ STATIC PROCEDURE Exm_SOAP()
       ? oSoapClient:InvertStringCase( "lower UPPER" )
    ELSE
       ? "Error: SOAP Toolkit 3.0 not available.", win_oleErrorText()
+   ENDIF
+
+   RETURN
+
+
+STATIC PROCEDURE Exm_PocketSOAP()
+   LOCAL oEnvelope := win_oleCreateObject( "PocketSOAP.Envelope.2" )
+   LOCAL oHttp := win_oleCreateObject( "PocketSOAP.HTTPTransport.2" )
+
+   IF ! Empty( oEnvelope ) .OR. ! Empty( oHttp )
+
+      oEnvelope:EncodingStyle := ""
+      oEnvelope:SetMethod( "InvertStringCase", "http://www.dataaccess.com/webservicesserver/" )
+      oEnvelope:Parameters:Create( "sAString", "lower UPPER" )
+      oHttp:Send( "http://www.dataaccess.com/webservicesserver/textcasing.wso?WSDL", oEnvelope:Serialize() )
+      oEnvelope:Parse( oHttp )
+      
+      ? oEnvelope:Parameters:Item( 0 ):Value
+   ELSE
+      ? "Error: PocketSOAP not available.", win_oleErrorText()
    ENDIF
 
    RETURN

@@ -377,17 +377,17 @@ PROCEDURE Main( ... )
       FOR EACH tmp IN aArgsProc
          DO CASE
          CASE Lower( FN_ExtGet( tmp ) ) == ".hbp" .AND. ! lHadTarget
-            nTarget++
+            ++nTarget
             IF nTarget == nTargetTODO
                AAdd( aArgsTarget, tmp )
             ENDIF
          CASE Lower( Left( tmp, Len( "-target=" ) ) ) == "-target="
-            nTarget++
+            ++nTarget
             IF nTarget == nTargetTODO
                AAdd( aArgsTarget, SubStr( tmp, Len( "-target=" ) + 1 ) )
             ENDIF
          CASE Lower( tmp ) == "-target"
-            nTarget++
+            ++nTarget
             lHadTarget := .T.
          CASE Lower( tmp ) == "-alltarget"
             lHadTarget := .F.
@@ -411,7 +411,7 @@ PROCEDURE Main( ... )
          EXIT
       ENDIF
 
-      nTargetTODO++
+      ++nTargetTODO
    ENDDO
 
    IF nResult != 0 .AND. lPause
@@ -4755,6 +4755,69 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
    ENDIF
 
    RETURN headstate[ _HEADSTATE_lAnyNewer ]
+
+STATIC FUNCTION deplst_read( cFileName )
+   LOCAL cFileBody := MemoRead( cFileName )
+   LOCAL cList := "", cLine
+   LOCAL nLine := 0
+   LOCAL hDeps := {=>}
+
+   cFileBody := StrTran( cFileBody, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
+   cFileBody := StrTran( cFileBody, Chr( 9 ), Chr( 32 ) )
+
+   FOR EACH cLine IN hb_ATokens( cFileBody, Chr( 10 ) )
+      ++nLine
+      cLine := AllTrim( cLine )
+      IF cLine == "\" .OR. right( cLine, 2 ) == " \"
+         cList += Left( cLine, Len( cLine ) - 1 )
+      ELSE 
+         cList += cLine
+         IF ! deplst_add( hDeps, cList )
+            hbmk_OutErr( hb_StrFormat( I_( "Error: In %1$s at line %2$s %3$s:" ), cFileName, hb_ntos( nLine ), cList ) )
+            RETURN NIL
+         ENDIF
+         cList := ""
+      ENDIF
+   NEXT
+
+   IF ! deplst_add( hDeps, cList )
+      hbmk_OutErr( hb_StrFormat( I_( "Error: In %1$s at line %2$s %3$s:" ), cFileName, hb_ntos( nLine ), cList ) )
+      RETURN NIL
+   ENDIF
+
+   RETURN hDeps
+
+STATIC FUNCTION deplst_add( hDeps, cList )
+   LOCAL cFile
+   LOCAL aList
+   LOCAL n
+
+   IF ! Empty( cList )
+      n := At( ":", cList )
+      IF n != 0 .AND. ! Empty( cFile := AllTrim( Left( cList, n - 1 ) ) )
+         aList := hb_ATokens( SubStr( cList, n + 1 ) )
+         IF cFile $ hDeps
+            AMerge( hDeps[ cFile ], aList )
+         ELSE
+            hDeps[ cFile ] := aList
+         ENDIF
+      ELSE
+         RETURN .F.
+      ENDIF
+   ENDIF
+
+   RETURN .T.
+
+STATIC FUNCTION AMerge( aDst, aSrc )
+   LOCAL ITEM
+
+   FOR EACH item IN aSrc
+      IF hb_AScan( aDst, item,,, .T. ) == 0
+         AAdd( aDst, item )
+      ENDIF
+   NEXT
+
+   RETURN aDst
 
 STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, aINCTRYPATH )
    LOCAL cDir
