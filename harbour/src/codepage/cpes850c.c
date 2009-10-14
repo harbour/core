@@ -85,8 +85,8 @@
 
 static HB_CODEPAGE s_codepage = { "ES850C",
     HB_CPID_850, HB_UNITB_850, NUMBER_OF_CHARACTERS,
-    "AµBCDEêFGHI÷JKLMN•O‡PQRSTUÈöVWXYZ",
-    "a†bcdeÇfghi°jklmn§o¢pqrstu£Åvwxyz",
+    "AABCDEêFGHIIJKLMN•OOPQRSTUUVWXYöZèéô",
+    "†abcdeÇfgh°ijklmn§¢opqrst£uvwxyÅzÜÑî",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
 HB_CODEPAGE_INIT( ES850C )

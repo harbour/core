@@ -146,7 +146,7 @@ REQUEST hbmk_KEYW
 #define _HEAD_OFF               0
 #define _HEAD_PARTIAL           1
 #define _HEAD_FULL              2
-#define _HEAD_REAL              3
+#define _HEAD_NATIVE            3
 
 #define _COMPDET_bBlock         1
 #define _COMPDET_cCOMP          2
@@ -1513,10 +1513,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
            Left( cParamL, 6 ) == "-head="
 
            DO CASE
-           CASE SubStr( cParamL, 7 ) == "off"  ; hbmk[ _HBMK_nHEAD ] := _HEAD_OFF
-           CASE SubStr( cParamL, 7 ) == "full" ; hbmk[ _HBMK_nHEAD ] := _HEAD_FULL
-           CASE SubStr( cParamL, 7 ) == "real" ; hbmk[ _HBMK_nHEAD ] := _HEAD_REAL
-           OTHERWISE                           ; hbmk[ _HBMK_nHEAD ] := _HEAD_PARTIAL
+           CASE SubStr( cParamL, 7 ) == "off"    ; hbmk[ _HBMK_nHEAD ] := _HEAD_OFF
+           CASE SubStr( cParamL, 7 ) == "full"   ; hbmk[ _HBMK_nHEAD ] := _HEAD_FULL
+           CASE SubStr( cParamL, 7 ) == "native" ; hbmk[ _HBMK_nHEAD ] := _HEAD_NATIVE
+           OTHERWISE                             ; hbmk[ _HBMK_nHEAD ] := _HEAD_PARTIAL
            ENDCASE
 
       CASE cParamL == "-head-" .OR. ;
@@ -4640,9 +4640,11 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
 
    /* TODO: Add filter based on extension to avoid binary files */
 
-   IF ! lCMode .AND. hbmk[ _HBMK_nHEAD ] == _HEAD_REAL
+   IF ! lCMode .AND. hbmk[ _HBMK_nHEAD ] == _HEAD_NATIVE .AND. hbmk[ _HBMK_nHBMODE ] == _HBMODE_NATIVE
 
-      hbmk_OutStd( hb_StrFormat( "debuginc: Calling Harbour compiler to detect dependencies of %1$s", cFileName ) )
+      IF hbmk[ _HBMK_lDEBUGINC ]
+         hbmk_OutStd( hb_StrFormat( "debuginc: Calling Harbour compiler to detect dependencies of %1$s", cFileName ) )
+      ENDIF
 
       aCommand := ArrayAJoin( { { "-q0", "-sm", "-kj" },;
                                 { iif( hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_lCreateDyn ], "-n1", "-n2" ) },;
@@ -4662,7 +4664,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
                IF cDependency:__enumIndex() > 1 .AND. ; /* Skip own (module) name */
                   ! Empty( cDependency )
                   IF hbmk[ _HBMK_lDEBUGINC ]
-                     hbmk_OutStd( hb_StrFormat( "debuginc: HEADER (REAL) %1$s", cDependency ) )
+                     hbmk_OutStd( hb_StrFormat( "debuginc: HEADER (NATIVE) %1$s", cDependency ) )
                   ENDIF
                   IF ! hb_FGetDateTime( cDependency, @tTimeDependency )
                      RETURN .F.
@@ -5764,7 +5766,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          DO CASE
          CASE Lower( cLine ) == "off"     ; hbmk[ _HBMK_nHEAD ] := _HEAD_OFF
          CASE Lower( cLine ) == "full"    ; hbmk[ _HBMK_nHEAD ] := _HEAD_FULL
-         CASE Lower( cLine ) == "real"    ; hbmk[ _HBMK_nHEAD ] := _HEAD_REAL
+         CASE Lower( cLine ) == "native"  ; hbmk[ _HBMK_nHEAD ] := _HEAD_NATIVE
          CASE Lower( cLine ) == "partial" ; hbmk[ _HBMK_nHEAD ] := _HEAD_PARTIAL
          ENDCASE
 
@@ -7190,7 +7192,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-runflag=<f>"      , I_( "pass flag to output executable when -run option is used" ) },;
       { "-jobs=<n>"         , I_( "start n compilation threads (multiprocess platforms only)" ) },;
       { "-inc"              , I_( "enable incremental build mode" ) },;
-      { "-[no]head[=<m>]"   , I_( "control source header parsing (in incremental build mode)\n<m> can be: real, full, partial (default), off" ) },;
+      { "-[no]head[=<m>]"   , I_( "control source header parsing (in incremental build mode)\n<m> can be: native, full, partial (default), off" ) },;
       { "-rebuild"          , I_( "rebuild all (in incremental build mode)" ) },;
       { "-clean"            , I_( "clean (in incremental build mode)" ) },;
       { "-workdir=<dir>"    , hb_StrFormat( I_( "working directory for incremental build mode\n(default: %1$s/plat/comp)" ), _WORKDIR_BASE_ ) },;
@@ -7242,7 +7244,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       hb_StrFormat( I_( "%1$s option file in hbmk2 directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk2 directory. The file format is the same as .hbc." ), _HBMK_CFG_NAME ),;
       hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ),;
       I_( ".hbc config files in current dir are automatically processed." ),;
-      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|real], skip=[yes|no], echo=<text>\nLines starting with '#' char are ignored" ),;
+      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\nLines starting with '#' char are ignored" ),;
       I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<plat>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}" ),;
       I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_plat}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ),;
       I_( 'Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ),;

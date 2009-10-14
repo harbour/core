@@ -85,8 +85,8 @@
 
 static HB_CODEPAGE s_codepage = { "ESWINC",
     HB_CPID_1252, HB_UNITB_1252, NUMBER_OF_CHARACTERS,
-    "AÁBCDEÉFGHIÍJKLMNÑOÓPQRSTUÚÜVWXYZ",
-    "aábcdeéfghiíjklmnñoópqrstuúüvwxyz",
+    "AABCDEÉFGHIIJKLMNÑOOPQRSTUUVWXYÜZÅÄÖ",
+    "áabcdeéfghíijklmnñóopqrstúuvwxyüzåäö",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
 HB_CODEPAGE_INIT( ESWINC )

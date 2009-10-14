@@ -87,7 +87,7 @@ STATIC PROCEDURE Exm_MSExcel()
 
       // Elements of collection can be accessed using :Item() method
       FOR nI := 1 TO nCount
-         ? oWorkBook:WorkSheets:Item(nI):Name
+         ? oWorkBook:WorkSheets:Item( nI ):Name
       NEXT
 
       // OLE also allows to access collection elements by passing
@@ -106,7 +106,7 @@ STATIC PROCEDURE Exm_MSExcel()
       oAS:Cells( 1, 1 ):Font:Size := 16
 
       // oAS:Cells( 1, 1 ) is object, but oAS:Cells( 1, 1 ):Value has value of the cell
-      ? "Object valtype:", VALTYPE(oAS:Cells( 1, 1 )), "Value:", oAS:Cells( 1, 1 ):Value
+      ? "Object valtype:", ValType( oAS:Cells( 1, 1 ) ), "Value:", oAS:Cells( 1, 1 ):Value
 
       oAS:Cells( 3, 1 ):Value := "String:"
       oAS:Cells( 3, 2 ):Value := "Hello, World!"
@@ -145,7 +145,7 @@ STATIC PROCEDURE Exm_MSExcel()
 
       oExcel:Quit()
    ELSE
-      Alert( "Error: MS Excel not available. [" + win_oleErrorText()+ "]" )
+      ? "Error: MS Excel not available. [" + win_oleErrorText()+ "]"
    ENDIF
 
    RETURN
