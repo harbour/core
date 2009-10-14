@@ -2308,13 +2308,21 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_WINTITLE:
          if( pWVT->hWnd )
          {
-            char * szTitle = NULL;
-            if( hb_gt_wvt_GetWindowTitle( pWVT->hWnd, &szTitle ) )
-               pInfo->pResult = hb_itemPutCPtr( pInfo->pResult, szTitle );
+            char * pszTitle = NULL;
+            if( hb_gt_wvt_GetWindowTitle( pWVT->hWnd, &pszTitle ) )
+               pInfo->pResult = hb_itemPutCPtr( pInfo->pResult, pszTitle );
             else
                pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
+
             if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-               hb_gt_wvt_SetWindowTitle( pWVT->hWnd, hb_itemGetCPtr( pInfo->pNewVal ) );
+            {
+               char * pszFreeTitle = NULL;
+
+               hb_gt_wvt_SetWindowTitle( pWVT->hWnd, hb_osEncodeCP( hb_itemGetCPtr( pInfo->pNewVal ), &pszFreeTitle, NULL ) );
+
+               if( pszFreeTitle )
+                  hb_xfree( pszFreeTitle );
+            }
          }
          break;
 
@@ -2508,9 +2516,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                                  ulLen );
             }
             else
-            {
                pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
-            }
          }
          break;
 
@@ -2582,10 +2588,16 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                HMENU hSysMenu = pWVT->hWnd ? GetSystemMenu( pWVT->hWnd, FALSE ) : NULL;
                if( hSysMenu || !pWVT->hWnd )
                {
+                  char * pszFreeTitle = NULL;
+
                   if( pWVT->pszSelectCopy )
                      hb_xfree( pWVT->pszSelectCopy );
-                  pWVT->pszSelectCopy = hb_strdup( hb_itemGetCPtr( pInfo->pNewVal ) );
+
+                  pWVT->pszSelectCopy = hb_strdup( hb_osEncodeCP( hb_itemGetCPtr( pInfo->pNewVal ), &pszFreeTitle, NULL ) );
                   pWVT->bSelectCopy = TRUE;
+
+                  if( pszFreeTitle )
+                     hb_xfree( pszFreeTitle );
 
 #if !defined( HB_OS_WIN_CE )  /* WinCE does not support ModifyMenu */
                   if( hSysMenu )
