@@ -3263,7 +3263,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, ! Empty( hbmk[ _HBMK_aINCTRYPATH ] ), .T., @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, ! Empty( hbmk[ _HBMK_aINCTRYPATH ] ), .T., nCmd_Esc, @headstate ) )
                AAdd( l_aC_TODO, tmp )
             ELSE
                AAdd( l_aC_DONE, tmp )
@@ -3277,7 +3277,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       /* Header dir detection if needed and if FindNewerHeaders() wasn't called yet. */
       IF ! Empty( hbmk[ _HBMK_aINCTRYPATH ] ) .AND. ! Empty( l_aC_TODO ) .AND. headstate == NIL
          FOR EACH tmp IN l_aC_TODO
-            FindNewerHeaders( hbmk, tmp, NIL, NIL, .T., .T., @headstate )
+            FindNewerHeaders( hbmk, tmp, NIL, NIL, .T., .T., nCmd_Esc, @headstate )
          NEXT
       ENDIF
    ENDIF
@@ -3298,7 +3298,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, .F., .F., @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, .F., .F., NIL, @headstate ) )
                AAdd( l_aPRG_TODO, tmp )
             ENDIF
          NEXT
@@ -3656,7 +3656,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cResExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, .F., .T., @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, .F., .T., nCmd_Esc, @headstate ) )
                AAdd( l_aRESSRC_TODO, tmp )
             ENDIF
          NEXT
@@ -3871,8 +3871,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             /* Order is significant */
             cOpt_CompC := StrTran( cOpt_CompC, "{FC}"  , iif( hbmk[ _HBMK_lBLDFLGC ], hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
                                                          GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTC ] ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{FL}"  , iif( hbmk[ _HBMK_lBLDFLGL ], hb_Version( HB_VERSION_FLAG_LINKER ) + " ", "" ) +;
-                                                         GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTL ] ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LR}"  , ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], cWorkDir, cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LO}"  , ArrayToList( ArrayAJoin( { hbmk[ _HBMK_aOBJUSER ], ListCook( l_aPRG_DONE, cObjExt ), ListCook( l_aC_DONE, cObjExt ) } ),, nOpt_Esc, cObjPrefix ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], "", cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, cResPrefix ) )
@@ -4566,7 +4564,7 @@ STATIC FUNCTION SetupForGT( cGT_New, /* @ */ cGT, /* @ */ lGUI )
 #define _HEADSTATE_lAnyNewer    2
 #define _HEADSTATE_MAX_         2
 
-STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lIncTry, lCMode, /* @ */ headstate, nNestingLevel )
+STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lIncTry, lCMode, nEsc, /* @ */ headstate, nNestingLevel )
    LOCAL cFile
    LOCAL fhnd
    LOCAL nPos
@@ -4678,6 +4676,42 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
          ENDIF
       NEXT
 
+   ELSEIF lCMode .AND. hbmk[ _HBMK_nHEAD ] == _HEAD_NATIVE .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin|djgpp|gccomf"
+
+      IF hbmk[ _HBMK_lDEBUGINC ]
+         hbmk_OutStd( hb_StrFormat( "debuginc: Calling C compiler to detect dependencies of %1$s", cFileName ) )
+      ENDIF
+
+      tmp := ""
+      hb_processRun( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + " -MM" +;
+                     " " + iif( hbmk[ _HBMK_lBLDFLGC ], hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
+                           GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTC ] ) +;
+                     " " + FN_Escape( hbmk[ _HBMK_cHB_INC_INSTALL ], nEsc ) +;
+                     " " + cFileName,, @tmp )
+
+      tmp := StrTran( tmp, Chr( 13 ) )
+      tmp := StrTran( tmp, " \" + Chr( 10 ) )
+
+      FOR EACH cModule IN hb_ATokens( tmp, Chr( 10 ) )
+         IF ! Empty( cModule )
+            FOR EACH cDependency IN hb_ATokens( cModule, " " )
+               IF cDependency:__enumIndex() > 2 .AND. ; /* Skip own (module) name as object and source */
+                  ! Empty( cDependency )
+                  IF hbmk[ _HBMK_lDEBUGINC ]
+                     hbmk_OutStd( hb_StrFormat( "debuginc: C HEADER (NATIVE) %1$s", cDependency ) )
+                  ENDIF
+                  IF ! hb_FGetDateTime( cDependency, @tTimeDependency )
+                     RETURN .F.
+                  ENDIF
+                  IF tTimeDependency > tTimeParent
+                     headstate[ _HEADSTATE_lAnyNewer ] := .T.
+                     RETURN .T.
+                  ENDIF
+               ENDIF
+            NEXT
+         ENDIF
+      NEXT
+
    ELSE
       /* NOTE: Beef up this section if you need a more intelligent source
                parser. Notice that this code is meant to process both
@@ -4709,7 +4743,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
          ENDIF
       
          IF cHeader != NIL .AND. ;
-            FindNewerHeaders( hbmk, cHeader, iif( lCMode, FN_DirGet( cFileName ), cParentDir ), tTimeParent, lIncTry, lCMode, @headstate, nNestingLevel + 1 )
+            FindNewerHeaders( hbmk, cHeader, iif( lCMode, FN_DirGet( cFileName ), cParentDir ), tTimeParent, lIncTry, lCMode, nEsc, @headstate, nNestingLevel + 1 )
             headstate[ _HEADSTATE_lAnyNewer ] := .T.
             /* Let it continue if we want to scan for header locations */
             IF ! lIncTry
@@ -4819,7 +4853,7 @@ STATIC FUNCTION LibExists( hbmk, cDir, cLib, cLibExt )
    cDir := DirAddPathSep( PathSepToSelf( cDir ) )
 
    DO CASE
-   CASE hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin" .AND. hbmk[ _HBMK_cPLAT ] $ "win|wce"
+   CASE hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin|gccomf" .AND. hbmk[ _HBMK_cPLAT ] $ "win|wce"
       /* NOTE: ld/gcc option -dll-search-prefix isn't taken into account here,
                So, '<prefix>xxx.dll' format libs won't be found by hbmk. */
       DO CASE
@@ -4994,7 +5028,7 @@ STATIC FUNCTION ListCookLib( hbmk, aLIB, aLIBA, array, cPrefix, cExtNew )
    LOCAL cLibName
    LOCAL cLibNameCooked
 
-   IF hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|djgpp|cygwin"
+   IF hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|djgpp|cygwin|gccomf"
       FOR EACH cLibName IN array
          hb_FNameSplit( cLibName, @cDir )
          IF Empty( cDir )
@@ -6090,7 +6124,7 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
    LOCAL cFuncList, cExecNM, cFuncName, cExt, cLine, n, c
 
    cFuncName := ""
-   IF hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin"
+   IF hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin|gccomf"
       hb_FNameSplit( cFile,,, @cExt )
       IF cExt == ".c"
          FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cFile ), Chr( 13 ), Chr( 10 ) ), Chr( 10 ) )
