@@ -379,6 +379,7 @@ HB_HWGUI=""
 HB_USRLIBS=""
 HB_USRLPATH=""
 HB_GEN=""
+HB_NOC=""
 HB_MODE=""
 HB_EXIT=""
 LN_OPT="${CC_HB_USER_LDFLAGS}"
@@ -429,6 +430,7 @@ while [ \$n -lt \${#P[@]} ]; do
         -g[cohwij])  HB_GEN="\${v#-g}"; p="\${v}" ;;
         -gc[0-9])    HB_GEN="c"; p="\${v}" ;;
         -go[0-9])    HB_GEN="o"; p="\${v}" ;;
+        -sm|-s)      [ \${HB} != "cmp" ] || HB_NOC="yes"; p="\${v}" ;;
         --hbdirlib)  echo "\${HB_LIB_INSTALL}"; HB_EXIT="yes" ;;
         --hbdirinc)  echo "\${HB_INC_INSTALL}"; HB_EXIT="yes" ;;
         --hbdirbin)  echo "\${HB_BIN_INSTALL}"; HB_EXIT="yes" ;;
@@ -673,7 +675,7 @@ hb_cc()
 hb_cmp()
 {
     ${hb_cmpname} "\$@" \${HB_OPT} \${HB_PATHS} && \\
-    ( [ "\${HB_GEN//c/}" != "" ] || \\
+    ( [ "\${HB_GEN//c/}" != "" ] || [ "\${HB_NOC}" = "yes" ] || \\
     ( [ -f "\${FOUTC}" ] && \\
     hb_cc -c "\${FOUTC}" -o "\${FOUTO}" && \\
     ( [ "\${HB_GEN}" = "c" ] || rm -f "\${FOUTC}" ) ) )
