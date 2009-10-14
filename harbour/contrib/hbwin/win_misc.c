@@ -69,12 +69,16 @@
 #define QS_ALLPOSTMESSAGE   0x0100
 #endif
 
-/* TODO: Add hb_osEncodeCP(). */
-
 HB_FUNC( WIN_RUNDETACHED )
 {
-   LPTSTR lpCommandName = HB_ISCHAR( 1 ) ? HB_TCHAR_CONVTO( hb_parc( 1 ) ) : NULL;
-   LPTSTR lpCommandLine = HB_ISCHAR( 2 ) ? HB_TCHAR_CONVTO( hb_parc( 2 ) ) : NULL;
+   char * pszFreeCommandName = NULL;
+   char * pszFreeCommandLine = NULL;
+
+   const char * pszCommandName = HB_ISCHAR( 1 ) ? hb_osEncodeCP( hb_parc( 1 ), &pszFreeCommandName, NULL ) : NULL;
+   const char * pszCommandLine = HB_ISCHAR( 2 ) ? hb_osEncodeCP( hb_parc( 2 ), &pszFreeCommandLine, NULL ) : NULL;
+
+   LPTSTR lpCommandName = pszCommandName ? HB_TCHAR_CONVTO( pszCommandName ) : NULL;
+   LPTSTR lpCommandLine = pszCommandLine ? HB_TCHAR_CONVTO( pszCommandLine ) : NULL;
 
 #if ! defined( HB_OS_WIN_CE )
    STARTUPINFO si;
@@ -123,10 +127,11 @@ HB_FUNC( WIN_RUNDETACHED )
       hb_retl( FALSE );
    }
 
-   if( lpCommandName )
-      HB_TCHAR_FREE( lpCommandName );
-   if( lpCommandLine )
-      HB_TCHAR_FREE( lpCommandLine );
+   if( lpCommandName ) HB_TCHAR_FREE( lpCommandName );
+   if( lpCommandLine ) HB_TCHAR_FREE( lpCommandLine );
+
+   if( pszFreeCommandName ) hb_xfree( pszFreeCommandName );
+   if( pszFreeCommandLine ) hb_xfree( pszFreeCommandLine );
 }
 
 HB_FUNC( WIN_LOADRESOURCE )

@@ -408,7 +408,7 @@ HARBOUR
              (MS-DOS compatible systems also work, like dosemu)
    os2     - OS/2 / eComStation
 
-   You can use HB_COMPILER values to select compilers:
+   You can use HB_COMPILER values to manually select compilers:
 
    linux
    -----

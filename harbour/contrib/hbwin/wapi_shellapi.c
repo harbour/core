@@ -56,17 +56,25 @@
 
 #include <shellapi.h>
 
-/* TODO: Add hb_osEncodeCP(). */
-
 HB_FUNC( WAPI_SHELLEXECUTE )
 {
 #if defined( HB_OS_WIN_CE )
    hb_retnint( -1 );
 #else
-   LPTSTR lpOperation  = HB_ISCHAR( 2 ) ? HB_TCHAR_CONVTO( hb_parc( 2 ) ) : NULL;
-   LPTSTR lpFile       =                  HB_TCHAR_CONVTO( hb_parcx( 3 ) );
-   LPTSTR lpParameters = HB_ISCHAR( 4 ) ? HB_TCHAR_CONVTO( hb_parc( 4 ) ) : NULL;
-   LPTSTR lpDirectory  = HB_ISCHAR( 5 ) ? HB_TCHAR_CONVTO( hb_parc( 5 ) ) : NULL;
+   char * pszFreeOperation  = NULL;
+   char * pszFreeFile       = NULL;
+   char * pszFreeParameters = NULL;
+   char * pszFreeDirectory  = NULL;
+
+   const char * pszOperation  = HB_ISCHAR( 2 ) ? hb_osEncodeCP( hb_parc( 2 ), &pszFreeOperation, NULL ) : NULL;
+   const char * pszFile       = hb_osEncodeCP( hb_parcx( 3 ), &pszFreeFile, NULL );
+   const char * pszParameters = HB_ISCHAR( 4 ) ? hb_osEncodeCP( hb_parc( 4 ), &pszFreeParameters, NULL ) : NULL;
+   const char * pszDirectory  = HB_ISCHAR( 5 ) ? hb_osEncodeCP( hb_parc( 5 ), &pszFreeDirectory, NULL ) : NULL;
+
+   LPTSTR lpOperation  = pszOperation  ? HB_TCHAR_CONVTO( pszOperation  ) : NULL;
+   LPTSTR lpFile       = pszFile       ? HB_TCHAR_CONVTO( pszFile       ) : NULL;
+   LPTSTR lpParameters = pszParameters ? HB_TCHAR_CONVTO( pszParameters ) : NULL;
+   LPTSTR lpDirectory  = pszDirectory  ? HB_TCHAR_CONVTO( pszDirectory  ) : NULL;
 
    hb_retnint( ( HB_PTRDIFF ) ShellExecute( ( HWND ) hb_parptr( 1 ),
                                             ( LPCTSTR ) lpOperation, /* edit, explore, open, print, play?, properties? */
@@ -75,12 +83,15 @@ HB_FUNC( WAPI_SHELLEXECUTE )
                                             ( LPCTSTR ) lpDirectory,
                                             HB_ISNUM( 6 ) ? hb_parni( 6 ) : SW_SHOWNORMAL /* nShowCmd */ ) );
 
-   if( lpOperation )
-      HB_TCHAR_FREE( lpOperation );
-   HB_TCHAR_FREE( lpFile );
-   if( lpParameters )
-      HB_TCHAR_FREE( lpParameters );
-   if( lpDirectory )
-      HB_TCHAR_FREE( lpDirectory );
+   if( lpOperation  ) HB_TCHAR_FREE( lpOperation  );
+   if( lpFile       ) HB_TCHAR_FREE( lpFile       );
+   if( lpParameters ) HB_TCHAR_FREE( lpParameters );
+   if( lpDirectory  ) HB_TCHAR_FREE( lpDirectory  );
+
+   if( pszFreeOperation  ) hb_xfree( pszFreeOperation  );
+   if( pszFreeFile       ) hb_xfree( pszFreeFile       );
+   if( pszFreeParameters ) hb_xfree( pszFreeParameters );
+   if( pszFreeDirectory  ) hb_xfree( pszFreeDirectory  );
+
 #endif
 }
