@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QFONTDATABASE )
 {
-   hb_retptr( ( QFontDatabase* ) new QFontDatabase() );
+   hb_retptr( new QFontDatabase() );
 }
 </CODE>
 

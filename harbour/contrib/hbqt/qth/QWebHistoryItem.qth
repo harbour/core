@@ -73,7 +73,10 @@ New      =
  */
 HB_FUNC( QT_QWEBHISTORYITEM )
 {
-   hb_retptr( ( QWebHistoryItem* ) new QWebHistoryItem( *hbqt_par_QWebHistoryItem( 1 ) ) );
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( new QWebHistoryItem( *hbqt_par_QWebHistoryItem( 1 ) ) );
+   }
 }
 </CODE>
 

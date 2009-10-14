@@ -72,7 +72,10 @@ New      =
  */
 HB_FUNC( QT_QMOUSEEVENT )
 {
-   hb_retptr( ( QMouseEvent * ) new QMouseEvent( *hbqt_par_QMouseEvent( 1 ) ) );
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( new QMouseEvent( *hbqt_par_QMouseEvent( 1 ) ) );
+   }
 }
 </CODE>
 

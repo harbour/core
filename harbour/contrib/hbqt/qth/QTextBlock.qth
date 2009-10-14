@@ -70,7 +70,14 @@ New      =
  */
 HB_FUNC( QT_QTEXTBLOCK )
 {
-   hb_retptr( ( QTextBlock* ) new QTextBlock( *hbqt_par_QTextBlock( 1 ) ) );
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( new QTextBlock( *hbqt_par_QTextBlock( 1 ) ) );
+   }
+   else
+   {
+      hb_retptr( new QTextBlock() );
+   }
 }
 </CODE>
 
