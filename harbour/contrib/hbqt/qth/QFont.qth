@@ -54,8 +54,9 @@
 ;              Header File to Generate QT Wrapper Sources
 ;
 <CLASS>
-New  =
-Type = PlainObject
+QObject  = no
+New      =
+Type     = PlainObject
 </CLASS>
 
 <DOC>

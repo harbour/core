@@ -58,6 +58,7 @@
 ;
 
 <CLASS>
+QObject  = no
 New      = pParent
 </CLASS>
 

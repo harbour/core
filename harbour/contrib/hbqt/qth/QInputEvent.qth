@@ -55,6 +55,7 @@
 ;
 
 <CLASS>
+QObject  = no
 Inherits = QEvent
 Type     = Parameters
 New      = 

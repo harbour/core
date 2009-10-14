@@ -55,6 +55,7 @@
 ;
 
 <CLASS>
+QObject  = no
 Type     = PlainObject
 New      = 
 </CLASS>

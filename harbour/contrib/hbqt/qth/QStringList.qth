@@ -55,6 +55,7 @@
 ;
 
 <CLASS>
+QObject  = no
 Inherits = QList
 Type     = Core
 New      = 

@@ -55,6 +55,7 @@
 ;
 
 <CLASS>
+QObject  = no
 Inherits = 
 Type     = Core
 New      = pTextCodec

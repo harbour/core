@@ -55,6 +55,7 @@
 ;
 
 <CLASS>
+QObject  = no
 Inherits = QLayoutItem
 Type     = Core
 New      = 

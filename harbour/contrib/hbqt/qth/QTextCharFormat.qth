@@ -55,6 +55,7 @@
 ;
 
 <CLASS>
+QObject  = no
 Inherits = QTextFormat
 Type     = Core
 New      = 

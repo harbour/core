@@ -55,6 +55,7 @@
 ;
 
 <CLASS>
+QObject  = no
 Inherits = 
 Type     = Core
 New      = 
@@ -71,7 +72,7 @@ New      =
  */
 HB_FUNC( QT_QMODELINDEX )
 {
-   hb_retptr( ( QModelIndex * ) new QModelIndex() );
+   hb_retptr( new QModelIndex() );
 }
 </CODE>
 

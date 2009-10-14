@@ -55,6 +55,7 @@
 ;
 
 <CLASS>
+QObject  = no
 Inherits = QEvent
 Type     = Core
 New      = 
@@ -70,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QPAINTEVENT )
 {
-   hb_retptr( ( QPaintEvent* ) new QPaintEvent( *hbqt_par_QRect( 1 ) ) );
+   hb_retptr( new QPaintEvent( *hbqt_par_QRect( 1 ) ) );
 }
 </CODE>
 

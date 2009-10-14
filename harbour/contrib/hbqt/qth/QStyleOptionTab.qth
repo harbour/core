@@ -55,6 +55,7 @@
 ;
 
 <CLASS>
+QObject  = no
 Inherits = QStyleOption
 Type     = Core
 New      = 
