@@ -2899,10 +2899,6 @@ BYTE hb_fsCurDrv( void )
 
 /* NOTE: 0=A:, 1=B:, 2=C:, 3=D:, ... */
 
-/* TOFIX: This isn't fully compliant because CA-Cl*pper doesn't access
-          the drive before checking. hb_fsIsDrv only returns TRUE
-          if there is a disk in the drive. */
-
 USHORT hb_fsIsDrv( BYTE nDrive )
 {
    USHORT uiResult;
@@ -2911,18 +2907,9 @@ USHORT hb_fsIsDrv( BYTE nDrive )
 
 #if defined( HB_OS_WIN ) && !defined( HB_OS_WIN_CE )
    {
-      char buffer[ 4 ];
-      UINT type;
-
-      buffer[ 0 ] = nDrive + 'A';
-      buffer[ 1 ] = ':';
-      buffer[ 2 ] = '\\';
-      buffer[ 3 ] = '\0';
-
       hb_vmUnlock();
-      type = GetDriveTypeA( buffer );
+      uiResult = ( ( GetLogicalDrives() >> nDrive ) & 1 ) ? 0 : ( USHORT ) F_ERROR;
       hb_vmLock();
-      uiResult = ( type == DRIVE_UNKNOWN || type == DRIVE_NO_ROOT_DIR ) ? F_ERROR : 0;
       hb_fsSetError( 0 );
    }
 #elif defined( HB_OS_HAS_DRIVE_LETTER )
@@ -2936,17 +2923,9 @@ USHORT hb_fsIsDrv( BYTE nDrive )
       HB_FS_GETDRIVE( uiSave );
       HB_FS_SETDRIVE( nDrive );
       HB_FS_GETDRIVE( uiNewDrive );
-      if( ( UINT ) nDrive != uiNewDrive )
-      {
-         uiResult = ( USHORT ) FS_ERROR;
-         hb_fsSetError( ( USHORT ) FS_ERROR );
-      }
-      else
-      {
-         uiResult = 0;
-         hb_fsSetError( 0 );
-      }
+      uiResult = ( ( UINT ) nDrive == uiNewDrive ) ? 0 : ( USHORT ) FS_ERROR;
       HB_FS_SETDRIVE( uiSave );
+      hb_fsSetError( 0 );
 
       hb_vmLock();
    }
@@ -2954,7 +2933,7 @@ USHORT hb_fsIsDrv( BYTE nDrive )
 
    HB_SYMBOL_UNUSED( nDrive );
    uiResult = ( USHORT ) FS_ERROR;
-   hb_fsSetError( ( USHORT ) FS_ERROR );
+   hb_fsSetError( 0 );
 
 #endif
 
