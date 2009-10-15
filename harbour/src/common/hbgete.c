@@ -72,13 +72,20 @@ char * hb_getenv( const char * szName )
 #if defined( HB_OS_WIN )
 
    {
-      DWORD size = GetEnvironmentVariableA( szName, NULL, 0 );
+      LPTSTR lpName = HB_TCHAR_CONVTO( szName );
+      DWORD size = GetEnvironmentVariable( lpName, NULL, 0 );
 
       if( size != 0 )
       {
-         pszBuffer = ( char * ) hb_xgrab( size );
-         GetEnvironmentVariableA( szName, pszBuffer, size );
+         LPTSTR lpBuffer = ( LPTSTR ) hb_xgrab( size * sizeof( TCHAR ) );
+         GetEnvironmentVariable( lpName, lpBuffer, size );
+         pszBuffer = HB_TCHAR_CONVFROM( lpBuffer );
+#if defined( UNICODE )
+         HB_TCHAR_FREE( lpBuffer );
+#endif
       }
+
+      HB_TCHAR_FREE( lpName );
    }
 
 #elif defined( HB_OS_OS2 )
@@ -110,9 +117,17 @@ BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
    BOOL bRetVal;
 
 #if defined( HB_OS_WIN )
+   {
+      LPTSTR lpName = HB_TCHAR_CONVTO( szName );
+      LPTSTR lpBuffer = ( LPTSTR ) hb_xgrab( nSize * sizeof( TCHAR ) );
 
-   bRetVal = GetEnvironmentVariableA( szName, szBuffer, nSize ) != 0;
+      bRetVal = GetEnvironmentVariable( lpName, lpBuffer, nSize ) != 0;
 
+      HB_TCHAR_GETFROM( szBuffer, lpBuffer, nSize );
+
+      HB_TCHAR_FREE( lpBuffer );
+      HB_TCHAR_FREE( lpName );
+   }
 #elif defined( HB_OS_OS2 )
    {
       PSZ EnvValue = ( PSZ ) "";

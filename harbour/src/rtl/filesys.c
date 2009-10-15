@@ -2729,12 +2729,14 @@ USHORT hb_fsCurDirBuff( USHORT uiDrive, char * pszBuffer, ULONG ulSize )
 #endif
 
 #if defined( HB_OS_WIN )
-
-   hb_vmUnlock();
-   fResult = GetCurrentDirectoryA( ulSize, pszBuffer );
-   hb_fsSetIOError( fResult, 0 );
-   hb_vmLock();
-
+   {
+      LPTSTR lpBuffer = ( LPTSTR ) hb_xgrab( ulSize * sizeof( TCHAR ) );
+      hb_vmUnlock();
+      fResult = GetCurrentDirectory( ulSize, lpBuffer );
+      hb_fsSetIOError( fResult, 0 );
+      hb_vmLock();
+      HB_TCHAR_GETFROM( pszBuffer, lpBuffer, ulSize );
+   }
 #elif defined( HB_OS_OS2 ) && defined( __GNUC__ )
 
    hb_vmUnlock();
