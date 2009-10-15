@@ -81,6 +81,7 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
            "\n          %cgw              output type: Windows/DOS OBJ32 (.obj)",
 #endif
            "\n          %cgh              output type: Harbour Portable Object (.hrb)",
+           "\n          %cgd[.<destext>]  generate dependencies list into (.d) file",
            "\n          %ci<path>         #include file search path",
            "\n          %cj[<file>]       generate i18n gettext file (.pot)",
            "\n          %ck               compilation mode (type -k? for more data)",
@@ -95,9 +96,10 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
            "\n          %cp+              generate pre-processor trace (.ppt) file",
            "\n          %cq               quiet",
            "\n          %cq0              quiet and don't display program header",
+           "\n          %cq2              disable all output messages",
            "\n          %cr:<max>         set maximum number of preprocessor iterations",
 /* TODO:   "\n          %cr[<lib>]        request linker to search <lib> (or none)", */
-           "\n          %cs[m]            syntax check only [and generate dependencies list]",
+           "\n          %cs[m]            syntax check only [minimal for dependencies list]",
 /* TODO:   "\n          %ct<path>         path for temp file creation", */
            "\n          %cu[<file>]       use command def set in <file> (or none)",
            "\n          %cu+<file>        add command def set from <file>",

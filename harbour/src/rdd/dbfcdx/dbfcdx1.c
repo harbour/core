@@ -81,18 +81,7 @@
 #include "hbmath.h"
 #include "rddsys.ch"
 #include "hbregex.h"
-
-#ifndef HB_CDP_SUPPORT_OFF
-   /* for nation sorting support */
-   #include "hbapicdp.h"
-   #define hb_cdpcharcmp( c1, c2, cdpage )  \
-                                       ( ( cdpage && cdpage->lSort )    ? \
-                                         hb_cdpchrcmp( c1, c2, cdpage ) : \
-                                         ( (BYTE)(c1) - (BYTE)(c2) ) )
-/*
-   #define hb_cdpcharcmp( c1, c2, cdpage )     ( (BYTE)(c1) - (BYTE)(c2) )
- */
-#endif
+#include "hbapicdp.h"
 
 /*
  * Tag->fRePos = TURE means that rootPage->...->childLeafPage path is

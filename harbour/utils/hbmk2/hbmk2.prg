@@ -4665,7 +4665,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
          hbmk_OutStd( hb_StrFormat( "debuginc: Calling Harbour compiler to detect dependencies of %1$s", cFileName ) )
       ENDIF
 
-      aCommand := ArrayAJoin( { { "-q0", "-sm", "-kj" },;
+      aCommand := ArrayAJoin( { { "-q0", "-sm" },;
                                 { iif( hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_lCreateDyn ], "-n1", "-n2" ) },;
                                 { cFileName },;
                                 iif( hbmk[ _HBMK_lBLDFLGP ], { " " + hb_Version( HB_VERSION_FLAG_PRG ) }, {} ),;
@@ -4754,7 +4754,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
       cHeader := NIL
       nPos := 1
       DO WHILE .T.
-      
+
          IF ( tmp := hb_At( '#include "', cFile, nPos ) ) > 0
             nPos := tmp + Len( '#include "' )
             IF ( tmp := hb_At( '"', cFile, nPos ) ) > 0
@@ -4763,7 +4763,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
          ELSE
             EXIT
          ENDIF
-      
+
          IF cHeader != NIL .AND. ;
             FindNewerHeaders( hbmk, cHeader, iif( lCMode, FN_DirGet( cFileName ), cParentDir ), tTimeParent, lIncTry, lCMode, nEsc, @headstate, nNestingLevel + 1 )
             headstate[ _HEADSTATE_lAnyNewer ] := .T.
@@ -4790,7 +4790,7 @@ STATIC FUNCTION deplst_read( hDeps, cFileName )
    FOR EACH cLine IN hb_ATokens( cFileBody, Chr( 10 ) )
       ++nLine
       cLine := AllTrim( cLine )
-      IF cLine == "\" .OR. right( cLine, 2 ) == " \"
+      IF cLine == "\" .OR. Right( cLine, 2 ) == " \"
          cList += Left( cLine, Len( cLine ) - 1 )
       ELSE 
          cList += cLine
@@ -4831,7 +4831,7 @@ STATIC FUNCTION deplst_add( hDeps, cList )
    RETURN .T.
 
 STATIC FUNCTION AMerge( aDst, aSrc )
-   LOCAL ITEM
+   LOCAL item
 
    FOR EACH item IN aSrc
       IF hb_AScan( aDst, item,,, .T. ) == 0

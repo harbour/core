@@ -829,7 +829,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                       hb_strnicmp( "SEQUENCE", pToken->pNext->value, pToken->pNext->len ) == 0 )
                   {
                      if( HB_COMP_PARAM->functions.pLast->wSeqCounter == 0 &&
-                         HB_COMP_PARAM->iTraceInclude == 0 )
+                         HB_COMP_PARAM->iSyntaxCheckOnly < 2 )
                         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                          HB_COMP_ERR_ENDIF, NULL, NULL );
                      hb_pp_tokenGet( pLex->pPP );
@@ -871,7 +871,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                }
                /* Clipper accepts ELSE in one context only */
                if( HB_COMP_PARAM->functions.pLast->wIfCounter == 0 &&
-                   HB_COMP_PARAM->iTraceInclude == 0 )
+                   HB_COMP_PARAM->iSyntaxCheckOnly < 2 )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_UNMATCHED_ELSE, NULL, NULL );
                pLex->iState = ELSE;
@@ -890,7 +890,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                }
                /* Clipper accepts ELSEIF in one context only */
                if( HB_COMP_PARAM->functions.pLast->wIfCounter == 0 &&
-                   HB_COMP_PARAM->iTraceInclude == 0 )
+                   HB_COMP_PARAM->iSyntaxCheckOnly < 2 )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_UNMATCHED_ELSEIF, NULL, NULL );
                pLex->iState = ELSEIF;
@@ -908,7 +908,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                }
                /* Clipper accepts ENDIF in one context only */
                if( HB_COMP_PARAM->functions.pLast->wIfCounter == 0 &&
-                   HB_COMP_PARAM->iTraceInclude == 0 )
+                   HB_COMP_PARAM->iSyntaxCheckOnly < 2 )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_ENDIF, NULL, NULL );
                break;
@@ -925,7 +925,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                }
                /* Clipper accepts ENDCASE in one context only */
                if( HB_COMP_PARAM->functions.pLast->wCaseCounter == 0 &&
-                   HB_COMP_PARAM->iTraceInclude == 0 )
+                   HB_COMP_PARAM->iSyntaxCheckOnly < 2 )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_ENDCASE, NULL, NULL );
                break;
@@ -942,7 +942,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                }
                /* Clipper accepts ENDDO in one context only */
                if( HB_COMP_PARAM->functions.pLast->wWhileCounter == 0 &&
-                   HB_COMP_PARAM->iTraceInclude == 0 )
+                   HB_COMP_PARAM->iSyntaxCheckOnly < 2 )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_ENDDO, NULL, NULL );
                break;
@@ -1005,7 +1005,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                {
                   if( HB_COMP_PARAM->functions.pLast->wCaseCounter == 0 &&
                       HB_COMP_PARAM->functions.pLast->wSwitchCounter == 0 &&
-                      HB_COMP_PARAM->iTraceInclude == 0 )
+                      HB_COMP_PARAM->iSyntaxCheckOnly < 2 )
                      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                       HB_COMP_ERR_CASE, NULL, NULL );
                   pLex->iState = iType;
@@ -1044,7 +1044,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                       HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD )
                   {
                      if( HB_COMP_PARAM->functions.pLast->wForCounter == 0 &&
-                         HB_COMP_PARAM->iTraceInclude == 0 )
+                         HB_COMP_PARAM->iSyntaxCheckOnly < 2 )
                         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                          HB_COMP_ERR_NEXTFOR, NULL, NULL );
                      pLex->iState = iType;

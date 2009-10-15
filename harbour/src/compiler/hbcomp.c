@@ -229,10 +229,10 @@ HB_COMP_PTR hb_comp_new( void )
       pComp->fCredits         = FALSE;    /* print credits */
       pComp->fBuildInfo       = FALSE;    /* print build info */
       pComp->fLogo            = TRUE;     /* print logo */
-      pComp->fSyntaxCheckOnly = FALSE;    /* syntax check only */
       pComp->fSingleModule    = FALSE;
       pComp->fError           = FALSE;
 
+      pComp->iSyntaxCheckOnly = 0;        /* syntax check only */
       pComp->iStartProc       = 0;        /* no implicit starting procedure */
       pComp->iWarnings        = 0;        /* enable parse warnings */
       pComp->iErrorCount      = 0;        /* number of compile errors */
@@ -292,6 +292,9 @@ void hb_comp_free( HB_COMP_PTR pComp )
          hb_pp_free( pComp->pLex->pPP );
       hb_xfree( pComp->pLex );
    }
+
+   if( pComp->szDepExt )
+      hb_xfree( pComp->szDepExt );
 
    if( pComp->szStdCh )
       hb_xfree( pComp->szStdCh );

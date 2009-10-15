@@ -283,6 +283,25 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                      HB_COMP_PARAM->iLanguage = HB_LANG_PORT_OBJ;
                      break;
 
+                  case 'd':
+                  case 'D':
+                     if( HB_COMP_PARAM->szDepExt )
+                     {
+                        hb_xfree( HB_COMP_PARAM->szDepExt );
+                        HB_COMP_PARAM->szDepExt = NULL;
+                     }
+                     if( s[2] == '-' )
+                        HB_COMP_PARAM->iTraceInclude = 0;
+                     else if( s[2] == '.' || s[2] == '\0' )
+                     {
+                        HB_COMP_PARAM->iTraceInclude = 2;
+                        if( s[2] != '\0' )
+                           HB_COMP_PARAM->szDepExt = hb_strdup( s + 2 );
+                     }
+                     else
+                        hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
+                     break;
+
 #ifdef HB_GEN_OBJ32
                   case 'w':
                   case 'W':
@@ -540,22 +559,16 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                switch( *( s + 1 ) )
                {
                   case '\0':
-                     HB_COMP_PARAM->fSyntaxCheckOnly = TRUE;
+                     HB_COMP_PARAM->iSyntaxCheckOnly = 1;
                      break;
                   case '-':
-                     HB_COMP_PARAM->fSyntaxCheckOnly = FALSE;
-                     HB_COMP_PARAM->iTraceInclude = 0;
+                     HB_COMP_PARAM->iSyntaxCheckOnly = 0;
                      break;
                   case 'm':
                   case 'M':
-                     if( s[2] == '-' || s[2]=='0' )
+                     if( s[2] == '\0' )
                      {
-                        HB_COMP_PARAM->iTraceInclude = 0;
-                        break;
-                     }
-                     else if( s[2] == '\0' || s[2] == '1' )
-                     {
-                        HB_COMP_PARAM->iTraceInclude = 1;
+                        HB_COMP_PARAM->iSyntaxCheckOnly = 2;
                         break;
                      }
                   default:
@@ -816,27 +829,36 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
 
                      case 'g':
                      case 'G':
-                        /* Required argument */
-                        Switch[2] = szSwitch[j + 1];
-                        if( Switch[2] )
+                        if( szSwitch[j + 1] == 'd' || szSwitch[j + 1] == 'D' )
                         {
-                           if( HB_ISDIGIT( szSwitch[j + 2] ) )
-                           {
-                              /* Optional argument */
-                              Switch[3] = szSwitch[j + 2];
-                              Switch[4] = '\0';
-                              j += 3;
-                           }
-                           else
-                           {
-                              /* No optional argument */
-                              Switch[3] = '\0';
-                              j += 2;
-                           }
-                           hb_compChkEnvironVar( HB_COMP_PARAM, Switch );
+                           szSwitch += ( j - 1 );
+                           hb_compChkEnvironVar( HB_COMP_PARAM, szSwitch );
+                           j = strlen( szSwitch );
                         }
                         else
-                           hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, Switch, NULL );
+                        {
+                           /* Required argument */
+                           Switch[2] = szSwitch[j + 1];
+                           if( Switch[2] )
+                           {
+                              if( HB_ISDIGIT( szSwitch[j + 2] ) )
+                              {
+                                 /* Optional argument */
+                                 Switch[3] = szSwitch[j + 2];
+                                 Switch[4] = '\0';
+                                 j += 3;
+                              }
+                              else
+                              {
+                                 /* No optional argument */
+                                 Switch[3] = '\0';
+                                 j += 2;
+                              }
+                              hb_compChkEnvironVar( HB_COMP_PARAM, Switch );
+                           }
+                           else
+                              hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, Switch, NULL );
+                        }
                         continue;
 
                      case 'i':

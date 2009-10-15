@@ -272,10 +272,11 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
       if( HB_COMP_PARAM->pOutPath->szPath )
          pOut->szPath = HB_COMP_PARAM->pOutPath->szPath;
 
-#if defined( __BORLANDC__ ) || defined( _MSC_VER ) || defined( __WATCOMC__ )
+#if ( defined( HB_OS_DOS ) || defined( HB_OS_WIN ) || defined( HB_OS_OS2 ) ) && \
+    !defined( __GNUC__ )
       pOut->szExtension = ".obj";
 #else
-      pOut->szExtension = ".o";  /* Don't know if we can hardcode it for Un*x */
+      pOut->szExtension = ".o";
 #endif
       hb_fsFNameMerge( pszTemp, pOut );
 

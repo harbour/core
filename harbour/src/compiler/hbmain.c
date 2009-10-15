@@ -81,9 +81,14 @@ int hb_compMain( int argc, const char * const argv[],
    hb_compChkCompilerSwitch( HB_COMP_PARAM, argc, argv );
    if( !HB_COMP_PARAM->fExit )
    {
+      if( HB_COMP_PARAM->iTraceInclude == 0 &&
+          HB_COMP_PARAM->iSyntaxCheckOnly == 2 )
+         HB_COMP_PARAM->iTraceInclude = 1;
+
       if( pBufPtr && pulSize )
       {
-         if( HB_COMP_PARAM->iTraceInclude > 0 )
+         if( HB_COMP_PARAM->iTraceInclude > 0 &&
+             HB_COMP_PARAM->iSyntaxCheckOnly > 0 )
             HB_COMP_PARAM->iTraceInclude |= 0x100;
          else
             HB_COMP_PARAM->iLanguage = HB_LANG_PORT_OBJ_BUF;
@@ -3909,8 +3914,47 @@ static void hb_compGenIncluded( HB_COMP_DECL )
    if( HB_COMP_PARAM->iTraceInclude > 0 && HB_COMP_PARAM->incfiles )
    {
       PHB_INCLST pIncFile = HB_COMP_PARAM->incfiles;
+      char szDestFile[ HB_PATH_MAX ];
+      HB_FNAME FileName;
 
-      if( HB_COMP_PARAM->iTraceInclude > 0x100 )
+      memcpy( &FileName, HB_COMP_PARAM->pFileName, sizeof( HB_FNAME ) );
+      szDestFile[ 0 ] = '\0';
+
+      if( ( HB_COMP_PARAM->iTraceInclude & 0xff ) == 2 )
+      {
+         FileName.szExtension = HB_COMP_PARAM->szDepExt;
+         if( !FileName.szExtension ) switch( HB_COMP_PARAM->iLanguage )
+         {
+            case HB_LANG_C:
+               FileName.szExtension = ".c";
+               break;
+#ifdef HB_GEN_OBJ32
+            case HB_LANG_OBJ32:
+               FileName.szExtension = ".obj";
+               break;
+#endif
+            case HB_LANG_PORT_OBJ:
+            case HB_LANG_PORT_OBJ_BUF:
+               FileName.szExtension = ".hrb";
+               break;
+
+#ifdef HB_LEGACY_LEVEL2
+            case HB_LANG_OBJ_MODULE:
+#  if ( defined( HB_OS_DOS ) || defined( HB_OS_WIN ) || defined( HB_OS_OS2 ) ) && \
+      !defined( __GNUC__ )
+               FileName.szExtension = ".obj";
+#  else
+               FileName.szExtension = ".o";
+#  endif
+               break;
+#endif
+            default:
+               FileName.szExtension = ".c";
+         }
+         hb_fsFNameMerge( szDestFile, &FileName );
+      }
+
+      if( ( HB_COMP_PARAM->iTraceInclude & 0x100 ) != 0 )
       {
          ULONG ulLen = 0, u;
          BYTE * buffer;
@@ -3920,14 +3964,24 @@ static void hb_compGenIncluded( HB_COMP_DECL )
             ulLen += ( ULONG ) strlen( pIncFile->szFileName ) + 1;
             pIncFile = pIncFile->pNext;
          }
-         u = HB_COMP_PARAM->ulOutBufSize;
-         if( u != 0 )
+         if( HB_COMP_PARAM->ulOutBufSize != 0 )
             ++ulLen;
+         u = ( ULONG ) strlen( szDestFile );
+         if( u )
+            ulLen += u + 2;
          HB_COMP_PARAM->pOutBuf = ( BYTE * ) hb_xrealloc(
-                                       HB_COMP_PARAM->pOutBuf, u + ulLen );
-         buffer = HB_COMP_PARAM->pOutBuf + u;
-         if( u != 0 )
-            *buffer++ = pIncFile ? ' ' : '\t';
+                                       HB_COMP_PARAM->pOutBuf,
+                                       HB_COMP_PARAM->ulOutBufSize + ulLen );
+         buffer = HB_COMP_PARAM->pOutBuf + HB_COMP_PARAM->ulOutBufSize;
+         if( HB_COMP_PARAM->ulOutBufSize != 0 )
+            *buffer++ = '\n';
+         if( u )
+         {
+            memcpy( buffer, szDestFile, u );
+            buffer += u;
+            *buffer++ = ':';
+            *buffer++ = ' ';
+         }
          HB_COMP_PARAM->ulOutBufSize += ulLen - 1;
          pIncFile = HB_COMP_PARAM->incfiles;
          while( pIncFile )
@@ -3939,10 +3993,38 @@ static void hb_compGenIncluded( HB_COMP_DECL )
             *buffer++ = pIncFile ? ' ' : '\0';
          }
       }
+      else if( ( HB_COMP_PARAM->iTraceInclude & 0xff ) == 2 )
+      {
+         char szFileName[ HB_PATH_MAX ];
+         FILE * file;
+
+         FileName.szExtension = ".d";
+         hb_fsFNameMerge( szFileName, &FileName );
+         file = hb_fopen( szFileName, "w" );
+         if( file )
+         {
+            if( szDestFile[ 0 ] )
+               fprintf( file, "%s:", szDestFile );
+            while( pIncFile )
+            {
+               fprintf( file, " %s", pIncFile->szFileName );
+               pIncFile = pIncFile->pNext;
+            }
+            fprintf( file, "\n" );
+            fclose( file );
+         }
+         else
+            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_CREATE_OUTPUT, szFileName, NULL );
+      }
       else
       {
          BOOL fFullQuiet = HB_COMP_PARAM->fFullQuiet;
          HB_COMP_PARAM->fFullQuiet = FALSE;
+         if( szDestFile[ 0 ] )
+         {
+            hb_compOutStd( HB_COMP_PARAM, szDestFile );
+            hb_compOutStd( HB_COMP_PARAM, ": " );
+         }
          while( pIncFile )
          {
             if( pIncFile != HB_COMP_PARAM->incfiles )
@@ -4102,7 +4184,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
          if( !HB_COMP_PARAM->fExit )
          {
             int iExitLevel = HB_COMP_PARAM->iExitLevel;
-            if( HB_COMP_PARAM->iTraceInclude > 0 )
+            if( HB_COMP_PARAM->iSyntaxCheckOnly >= 2 )
                hb_compParserRun( HB_COMP_PARAM );
             else
                hb_compparse( HB_COMP_PARAM );
@@ -4218,21 +4300,20 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
          }
       }
 
-      if( HB_COMP_PARAM->iTraceInclude > 0 )
-      {
-         if( fGenCode && HB_COMP_PARAM->iErrorCount == 0 )
-            hb_compGenIncluded( HB_COMP_PARAM );
-         fGenCode = FALSE;
-      }
-      else if( ! HB_COMP_PARAM->fSyntaxCheckOnly && fGenCode &&
-               HB_COMP_PARAM->iErrorCount == 0 )
+      /* we create the output file name */
+      hb_compOutputFile( HB_COMP_PARAM );
+
+      if( fGenCode && HB_COMP_PARAM->iErrorCount == 0 &&
+          HB_COMP_PARAM->iTraceInclude > 0 )
+         hb_compGenIncluded( HB_COMP_PARAM );
+
+      if( HB_COMP_PARAM->iSyntaxCheckOnly == 0 &&
+          fGenCode && HB_COMP_PARAM->iErrorCount == 0 )
       {
          const char * szFirstFunction = NULL;
          int iFunctionCount = 0;
          PFUNCTION pFunc;
 
-         /* we create the output file name */
-         hb_compOutputFile( HB_COMP_PARAM );
 
          pFunc = HB_COMP_PARAM->functions.pFirst;
 
@@ -4287,8 +4368,8 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
    else
       fGenCode = FALSE;
 
-   if( !fGenCode&& !HB_COMP_PARAM->fExit &&
-       !HB_COMP_PARAM->fSyntaxCheckOnly && HB_COMP_PARAM->iTraceInclude == 0 )
+   if( !fGenCode && !HB_COMP_PARAM->fExit &&
+       HB_COMP_PARAM->iSyntaxCheckOnly == 0 )
       hb_compOutStd( HB_COMP_PARAM, "\nNo code generated.\n" );
 
    hb_compCompileEnd( HB_COMP_PARAM );

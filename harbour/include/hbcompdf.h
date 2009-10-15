@@ -678,6 +678,7 @@ typedef struct _HB_COMP
    const char *      szDeclaredFun;
    const char *      szFile;              /* Source file name of compiled module */
    char              szPrefix[ 20 ];      /* holds the prefix added to the generated symbol init function name (in C output currently) */
+   char *            szDepExt;            /* destination file extension used in decencies list */
    char *            szStdCh;             /* standard definitions file name (-u) */
    char **           szStdChExt;          /* extended definitions file names (-u+<file>) */
    int               iStdChExt;           /* number of extended definition files (-u+<file>) */
@@ -698,6 +699,7 @@ typedef struct _HB_COMP
    int               iGenCOutput;         /* C code generation should be verbose (use comments) or not */
    int               ilastLineErr;        /* line numer with last syntax error */
    int               iTraceInclude;       /* trace included files and generate dependencies list */
+   int               iSyntaxCheckOnly;    /* syntax check only */
 
    BOOL              fQuiet;              /* be quiet during compilation (-q) */
    BOOL              fFullQuiet;          /* be quiet during compilation disable all messages */
@@ -713,7 +715,6 @@ typedef struct _HB_COMP
    BOOL              fCredits;            /* print credits */
    BOOL              fBuildInfo;          /* print build info */
    BOOL              fLogo;               /* print logo */
-   BOOL              fSyntaxCheckOnly;    /* syntax check only */
    BOOL              fLongOptimize;       /* optimize PCODEs generated for integers */
    BOOL              fSingleModule;       /* do not automatically compile DO...[WITH...] external modules (-m) */
    BOOL              fError;              /* error appeared during compilation */
