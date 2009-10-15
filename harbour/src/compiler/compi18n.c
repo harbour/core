@@ -327,7 +327,7 @@ BOOL hb_compI18nSave( HB_COMP_DECL, BOOL fFinal )
 
    hb_fsFNameMerge( szFileName, &FileName );
 
-   file = hb_fopen( szFileName, "wb" );
+   file = hb_fopen( szFileName, "w" );
 
    if( ! file )
    {

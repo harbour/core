@@ -170,7 +170,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
       pFileName->szExtension = ".c";
    hb_fsFNameMerge( szFileName, pFileName );
 
-   yyc = hb_fopen( szFileName, "wb" );
+   yyc = hb_fopen( szFileName, "w" );
    if( ! yyc )
    {
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_CREATE_OUTPUT, szFileName, NULL );
