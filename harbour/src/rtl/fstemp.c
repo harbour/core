@@ -150,11 +150,17 @@ static HB_FHANDLE hb_fsCreateTempLow( const char * pszDir, const char * pszPrefi
       else
       {
 #if defined( HB_OS_WIN )
-         if( ! GetTempPathA( ( DWORD ) ( HB_PATH_MAX - 1 ), pszName ) )
+         LPTSTR lpName = ( LPTSTR ) hb_xgrab( HB_PATH_MAX * sizeof( TCHAR ) );
+
+         if( GetTempPath( ( DWORD ) ( HB_PATH_MAX - 1 ), lpName ) )
+            HB_TCHAR_GETFROM( pszName, lpName, HB_PATH_MAX );
+         else
          {
             pszName[ 0 ] = '.';
             pszName[ 1 ] = '\0';
          }
+
+         HB_TCHAR_FREE( lpName );
 #else
          char * pszTmpDir = hb_getenv( "TMPDIR" );
 
@@ -261,21 +267,28 @@ static BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char * p
 
 #if defined( HB_IO_WIN )
    {
-      char szTempDir[ HB_PATH_MAX ];
+      LPTSTR lpPrefix = pszPrefix ? HB_TCHAR_CONVTO( pszPrefix ) : NULL;
+      LPTSTR lpBuffer = ( LPTSTR ) hb_xgrab( HB_PATH_MAX * sizeof( TCHAR ) );
+      TCHAR pTempDir[ HB_PATH_MAX ];
 
       if( pszDir && pszDir[ 0 ] != '\0' )
-         hb_strncpy( szTempDir, pszDir, sizeof( szTempDir ) - 1 );
+         HB_TCHAR_SETTO( pTempDir, pszDir, HB_SIZEOFARRAY( pTempDir ) - 1 );
       else
       {
-         if( ! GetTempPathA( ( DWORD ) HB_PATH_MAX, szTempDir ) )
+         if( ! GetTempPath( ( DWORD ) HB_SIZEOFARRAY( pTempDir ) - 1, pTempDir ) )
          {
             hb_fsSetIOError( FALSE, 0 );
             return FALSE;
          }
       }
-      szTempDir[ HB_PATH_MAX - 1 ] = '\0';
+      pTempDir[ HB_PATH_MAX - 1 ] = L'\0';
 
-      fResult = GetTempFileNameA( szTempDir, pszPrefix ? pszPrefix : "hb", 0, pszBuffer );
+      fResult = GetTempFileName( pTempDir, lpPrefix ? lpPrefix : TEXT( "hb" ), 0, lpBuffer );
+
+      HB_TCHAR_GETFROM( pszBuffer, lpBuffer, HB_PATH_MAX );
+      HB_TCHAR_FREE( lpBuffer );
+      if( lpPrefix )
+         HB_TCHAR_FREE( lpPrefix );
    }
 #else
 

@@ -142,88 +142,98 @@ HB_FUNC( PRINTEREXISTS )
 BOOL hb_GetDefaultPrinter( char * pPrinterName, LPDWORD pdwBufferSize )
 {
    BOOL Result = FALSE;
-   OSVERSIONINFO osvi;
 
-   osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
-   GetVersionEx( &osvi );
-
-   if( osvi.dwPlatformId == VER_PLATFORM_WIN32_NT && osvi.dwMajorVersion >= 5 ) /* Windows 2000 or later */
+   if( pPrinterName && pdwBufferSize )
    {
-      typedef BOOL( WINAPI * DEFPRINTER ) ( LPSTR, LPDWORD );  /* stops warnings */
-      DEFPRINTER fnGetDefaultPrinter;
-      HMODULE hWinSpool = LoadLibrary( TEXT( "winspool.drv" ) );
+      OSVERSIONINFO osvi;
 
-      if( hWinSpool )
+      osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
+      GetVersionEx( &osvi );
+      
+      if( osvi.dwPlatformId == VER_PLATFORM_WIN32_NT && osvi.dwMajorVersion >= 5 ) /* Windows 2000 or later */
       {
-         fnGetDefaultPrinter = ( DEFPRINTER ) GetProcAddress( hWinSpool, "GetDefaultPrinterA" );
-
-         if( fnGetDefaultPrinter )
-            Result = ( *fnGetDefaultPrinter )( pPrinterName, pdwBufferSize );
-
-         FreeLibrary( hWinSpool );
-      }
-   }
-
-   if( !Result )                /* Win9X and Windows NT 4.0 or earlier & 2000+ if necessary for some reason i.e. dll could not load!!!! */
-   {
-      DWORD dwSize = GetProfileStringA( "windows", "device", "", pPrinterName, *pdwBufferSize );
-
-      if( dwSize && dwSize < *pdwBufferSize )
-      {
-         dwSize = 0;
-         while( pPrinterName[ dwSize ] != '\0' && pPrinterName[ dwSize ] != ',' )
-            dwSize++;
-
-         pPrinterName[ dwSize ] = '\0';
-         *pdwBufferSize = dwSize + 1;
-         Result = TRUE;
-      }
-      else
-         *pdwBufferSize = dwSize + 1;
-   }
-
-   if( !Result && osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
-   {
-/*
-      This option should never be required but is included because of this article
-
-          http://support.microsoft.com/kb/246772/en-us
-
-      This option will not enumerate any network printers.
-
-      From the SDK technical reference for EnumPrinters();
-
-      If Level is 2 or 5, Name is a pointer to a null-terminated string that specifies
-      the name of a server whose printers are to be enumerated.
-      If this string is NULL, then the function enumerates the printers installed on the local machine.
-*/
-
-      DWORD dwNeeded, dwReturned;
-
-      if( EnumPrinters( PRINTER_ENUM_DEFAULT, NULL, 2, NULL, 0, &dwNeeded, &dwReturned ) )
-      {
-         if( dwNeeded )
+         typedef BOOL( WINAPI * DEFPRINTER ) ( LPSTR, LPDWORD );  /* stops warnings */
+         DEFPRINTER fnGetDefaultPrinter;
+         HMODULE hWinSpool = LoadLibrary( TEXT( "winspool.drv" ) );
+      
+         if( hWinSpool )
          {
-            PRINTER_INFO_2 * ppi2 = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
+            fnGetDefaultPrinter = ( DEFPRINTER ) GetProcAddress( hWinSpool, "GetDefaultPrinterA" );
+      
+            if( fnGetDefaultPrinter )
+               Result = ( *fnGetDefaultPrinter )( pPrinterName, pdwBufferSize );
+      
+            FreeLibrary( hWinSpool );
+         }
+      }
+      
+      if( ! Result )               /* Win9X and Windows NT 4.0 or earlier & 2000+ if necessary for some reason i.e. dll could not load!!!! */
+      {
+         LPTSTR lpPrinterName = ( LPTSTR ) hb_xgrab( *pdwBufferSize * sizeof( TCHAR ) );
 
-            if( EnumPrinters
-                ( PRINTER_ENUM_DEFAULT, NULL, 2, ( LPBYTE ) ppi2, dwNeeded, &dwNeeded,
-                  &dwReturned ) && dwReturned )
+         DWORD dwSize = GetProfileString( TEXT( "windows" ), TEXT( "device" ), TEXT( "" ), lpPrinterName, *pdwBufferSize );
+      
+         HB_TCHAR_GETFROM( pPrinterName, lpPrinterName, *pdwBufferSize );
+         HB_TCHAR_FREE( lpPrinterName );
+
+         if( dwSize && dwSize < *pdwBufferSize )
+         {
+            dwSize = 0;
+            while( pPrinterName[ dwSize ] != '\0' && pPrinterName[ dwSize ] != ',' )
+               dwSize++;
+      
+            pPrinterName[ dwSize ] = '\0';
+            *pdwBufferSize = dwSize + 1;
+            Result = TRUE;
+         }
+         else
+            *pdwBufferSize = dwSize + 1;
+      }
+      
+      if( ! Result && osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
+      {
+/*    
+         This option should never be required but is included because of this article
+      
+             http://support.microsoft.com/kb/246772/en-us
+      
+         This option will not enumerate any network printers.
+      
+         From the SDK technical reference for EnumPrinters();
+      
+         If Level is 2 or 5, Name is a pointer to a null-terminated string that specifies
+         the name of a server whose printers are to be enumerated.
+         If this string is NULL, then the function enumerates the printers installed on the local machine.
+*/    
+      
+         DWORD dwNeeded, dwReturned;
+      
+         if( EnumPrinters( PRINTER_ENUM_DEFAULT, NULL, 2, NULL, 0, &dwNeeded, &dwReturned ) )
+         {
+            if( dwNeeded )
             {
-               DWORD dwSize = ( DWORD ) lstrlen( ppi2->pPrinterName );
-
-               if( dwSize && dwSize < *pdwBufferSize )
+               PRINTER_INFO_2 * ppi2 = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
+      
+               if( EnumPrinters
+                   ( PRINTER_ENUM_DEFAULT, NULL, 2, ( LPBYTE ) ppi2, dwNeeded, &dwNeeded,
+                     &dwReturned ) && dwReturned )
                {
-                  HB_TCHAR_GETFROM( pPrinterName, ppi2->pPrinterName,
-                                    lstrlen( ppi2->pPrinterName ) );
-                  *pdwBufferSize = dwSize + 1;
-                  Result = TRUE;
+                  DWORD dwSize = ( DWORD ) lstrlen( ppi2->pPrinterName );
+      
+                  if( dwSize && dwSize < *pdwBufferSize )
+                  {
+                     HB_TCHAR_GETFROM( pPrinterName, ppi2->pPrinterName,
+                                       lstrlen( ppi2->pPrinterName ) );
+                     *pdwBufferSize = dwSize + 1;
+                     Result = TRUE;
+                  }
                }
+               hb_xfree( ppi2 );
             }
-            hb_xfree( ppi2 );
          }
       }
    }
+
    return Result;
 }
 

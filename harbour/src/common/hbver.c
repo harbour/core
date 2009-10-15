@@ -257,11 +257,11 @@ char * hb_verPlatform( void )
 #elif defined( HB_OS_WIN )
 
    {
-      OSVERSIONINFOA osVer;
+      OSVERSIONINFO osVer;
 
       osVer.dwOSVersionInfoSize = sizeof( osVer );
 
-      if( GetVersionExA( &osVer ) )
+      if( GetVersionEx( &osVer ) )
       {
          /* NOTE: Unofficial Wine detection.
                   http://www.mail-archive.com/wine-devel@winehq.org/msg48659.html */
@@ -299,11 +299,11 @@ char * hb_verPlatform( void )
 #if !defined( HB_OS_WIN_CE ) && !defined( __DMC__ ) && \
     ( !defined( _MSC_VER ) || _MSC_VER >= 1400 ) && \
     defined( VER_NT_WORKSTATION )
-                  OSVERSIONINFOEXA osVerEx;
+                  OSVERSIONINFOEX osVerEx;
 
                   osVerEx.dwOSVersionInfoSize = sizeof( osVerEx );
 
-                  if( GetVersionExA( ( OSVERSIONINFOA * ) &osVerEx ) )
+                  if( GetVersionEx( ( OSVERSIONINFO * ) &osVerEx ) )
                   {
                      if( osVer.dwMinorVersion == 1 )
                      {
@@ -357,16 +357,19 @@ char * hb_verPlatform( void )
 
          if( osVer.szCSDVersion )
          {
+            char * pszCSDVersion = HB_TCHAR_CONVFROM( osVer.szCSDVersion );
             int i;
 
             /* Skip the leading spaces (Win95B, Win98) */
-            for( i = 0; osVer.szCSDVersion[ i ] != '\0' && HB_ISSPACE( ( int ) osVer.szCSDVersion[ i ] ); i++ ) {};
+            for( i = 0; pszCSDVersion[ i ] != '\0' && HB_ISSPACE( ( int ) pszCSDVersion[ i ] ); i++ ) {};
 
-            if( osVer.szCSDVersion[ i ] != '\0' )
+            if( pszCSDVersion[ i ] != '\0' )
             {
                hb_strncat( pszPlatform, " ", PLATFORM_BUF_SIZE );
-               hb_strncat( pszPlatform, osVer.szCSDVersion + i, PLATFORM_BUF_SIZE );
+               hb_strncat( pszPlatform, pszCSDVersion + i, PLATFORM_BUF_SIZE );
             }
+
+            HB_TCHAR_FREE( pszCSDVersion );
          }
       }
       else
