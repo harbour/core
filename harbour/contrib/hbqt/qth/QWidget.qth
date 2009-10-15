@@ -297,7 +297,7 @@ bool updatesEnabled () const
 QRegion visibleRegion () const
 QString whatsThis () const
 int width () const
-WId winId () const
+//WId winId () const
 QWidget * window () const
 QString windowFilePath () const
 Qt::WindowFlags windowFlags () const

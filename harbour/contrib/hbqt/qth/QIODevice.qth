@@ -71,16 +71,10 @@ New      =
  */
 HB_FUNC( QT_QIODEVICE )
 {
-   #if 0
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( ( QIODevice* ) new QIODevice( hbqt_par_QObject( 1 ) ) );
+      // hb_retptr( new QIODevice( hbqt_par_QObject( 1 ) ) );
    }
-   else
-   {
-      hb_retptr( ( QIODevice* ) new QIODevice() );
-   }
-   #endif
 }
 </CODE>
 
