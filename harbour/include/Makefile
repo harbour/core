@@ -19,6 +19,7 @@ C_HEADERS := \
    hbapirdd.h \
    hbassert.h \
    hbatomic.h \
+   hbbfish.h \
    hbchksum.h \
    hbcomp.h \
    hbcompdf.h \

@@ -68,6 +68,7 @@ C_SOURCES := \
    hardcr.c \
    hbadler.c \
    hbascii.c \
+   hbbfish.c \
    hbbit.c \
    hbbyte.c \
    hbcrc.c \
