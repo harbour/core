@@ -55,14 +55,14 @@
 
 #translate ( <exp1> LIKE <exp2> )   => ( hb_regexLike( (<exp2>), (<exp1>) ) )
 
-FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aFiles, cUser, cPass, cPopServer, nPriority, lRead, bTrace, lPopAuth, lNoAuth, nTimeOut, cReplyTo, lTLS, cSMTPPass, cCharset, cEncoding )
+FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, aFiles, cUser, cPass, cPopServer, nPriority, lRead, bTrace, lPopAuth, lNoAuth, nTimeOut, cReplyTo, lTLS, cSMTPPass, cCharset, cEncoding )
    /*
    cServer    -> Required. IP or domain name of the mail server
    nPort      -> Optional. Port used my email server
    cFrom      -> Required. Email address of the sender
-   aTo        -> Required. Character string or array of email addresses to send the email to
-   aCC        -> Optional. Character string or array of email adresses for CC (Carbon Copy)
-   aBCC       -> Optional. Character string or array of email adresses for BCC (Blind Carbon Copy)
+   xTo        -> Required. Character string or array of email addresses to send the email to
+   xCC        -> Optional. Character string or array of email adresses for CC (Carbon Copy)
+   xBCC       -> Optional. Character string or array of email adresses for BCC (Blind Carbon Copy)
    cBody      -> Optional. The body message of the email as text, or the filename of the HTML message to send.
    cSubject   -> Optional. Subject of the sending email
    aFiles     -> Optional. Array of attachments to the email to send
@@ -79,8 +79,18 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    cReplyTo   -> Optional.
    */
 
-   LOCAL oInMail, cBodyTemp, oUrl, oMail, oAttach, aThisFile, cMimeText,;
-         cFile, cFname, cFext, cData, oUrl1
+   LOCAL oInMail
+   LOCAL cBodyTemp
+   LOCAL oUrl
+   LOCAL oMail
+   LOCAL oAttach
+   LOCAL aThisFile
+   LOCAL cMimeText
+   LOCAL cFile
+   LOCAL cFname
+   LOCAL cFext
+   LOCAL cData
+   LOCAL oUrl1
 
    LOCAL cTmp          := ""
    LOCAL cTo           := ""
@@ -154,53 +164,53 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    ENDIF
 
    // cTo
-   IF ISARRAY( aTo )
-      IF Len( aTo ) > 1
-         FOR EACH cTo IN aTo
+   IF ISARRAY( xTo )
+      IF Len( xTo ) > 1
+         FOR EACH cTo IN xTo
             IF cTo:__enumIndex() != 1
                IF ! Empty( cTo )
-                  cTmp += cTo + ","
+                  cTmp += tip_GetRawEMail( AllTrim( cTo ) ) + ","
                ENDIF
             ENDIF
          NEXT
          cTmp := SubStr( cTmp, 1, Len( cTmp ) - 1 )
       ENDIF
-      cTo := aTo[ 1 ]
+      cTo := tip_GetRawEMail( AllTrim( xTo[ 1 ] ) )
       IF Len( cTmp ) > 0
          cTo += "," + cTmp
       ENDIF
-   ELSEIF ISCHARACTER( aTo )
-      cTo := AllTrim( aTo )
+   ELSEIF ISCHARACTER( xTo )
+      cTo := tip_GetRawEMail( AllTrim( xTo ) )
    ENDIF
 
 
    // CC (Carbon Copy)
-   IF ISARRAY( aCC )
-      IF Len( aCC ) > 0
-         FOR EACH cTmp IN aCC
+   IF ISARRAY( xCC )
+      IF Len( xCC ) > 0
+         FOR EACH cTmp IN xCC
             IF ! Empty( cTmp )
-               cCC += cTmp + ","
+               cCC += tip_GetRawEMail( AllTrim( cTmp ) ) + ","
             ENDIF
          NEXT
          cCC := SubStr( cCC, 1, Len( cCC ) - 1 )
       ENDIF
-   ELSEIF ISCHARACTER( aCC )
-      cCC := AllTrim( aCC )
+   ELSEIF ISCHARACTER( xCC )
+      cCC := tip_GetRawEMail( AllTrim( xCC ) )
    ENDIF
 
 
    // BCC (Blind Carbon Copy)
-   IF ISARRAY( aBCC )
-      IF Len( aBCC ) > 0
-         FOR EACH cTmp IN aBCC
+   IF ISARRAY( xBCC )
+      IF Len( xBCC ) > 0
+         FOR EACH cTmp IN xBCC
             IF ! Empty( cTmp )
-               cBCC += cTmp + ","
+               cBCC += tip_GetRawEMail( AllTrim( cTmp ) ) + ","
             ENDIF
          NEXT
          cBCC := SubStr( cBCC, 1, Len( cBCC ) - 1 )
       ENDIF
-   ELSEIF ISCHARACTER( aBCC )
-      cBCC := AllTrim( aBCC )
+   ELSEIF ISCHARACTER( xBCC )
+      cBCC := tip_GetRawEMail( AllTrim( xBCC ) )
    ENDIF
 
    IF cPopServer != NIL .AND. lPopAuth
@@ -214,7 +224,6 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
       RECOVER
          lReturn := .F.
       END SEQUENCE
-
    ENDIF
 
    IF ! lReturn
@@ -222,7 +231,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    ENDIF
 
    BEGIN SEQUENCE
-      oUrl := tUrl():New( iif( lTLS, "smtps://", "smtp://" ) + cUser + iif( Empty( cSMTPPass ), "", ":" + cSMTPPass ) + "@" + cServer + "/" + cTo )
+      oUrl := tUrl():New( iif( lTLS, "smtps://", "smtp://" ) + cUser + iif( Empty( cSMTPPass ), "", ":" + cSMTPPass ) + "@" + cServer )
    RECOVER
       lReturn := .F.
    END SEQUENCE
@@ -237,6 +246,12 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    oMail := tipMail():new()
    oMail:SetEncoder( cEncoding )
    oMail:SetCharset( cCharset )
+   oMail:SetHeader( cSubject, cFrom, xTo, xCC, xBCC )
+   oMail:hHeaders[ "Date" ] := tip_Timestamp()
+   IF ! Empty( cReplyTo )
+      oMail:hHeaders[ "Reply-to" ] := cReplyTo
+   ENDIF
+
    IF ! Empty( aFiles )
       oAttach := tipMail():new()
       oAttach:SetEncoder( cEncoding )
@@ -265,19 +280,6 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    ENDIF
 
    oUrl:cFile := cTo + iif( Empty( cCC ), "", "," + cCC ) + iif( Empty( cBCC ), "", "," + cBCC )
-
-   oMail:hHeaders[ "Date" ] := tip_Timestamp()
-   oMail:hHeaders[ "From" ] := cFrom
-
-   IF ! Empty( cReplyTo )
-      oMail:hHeaders[ "Reply-to" ] := cReplyTo
-   ENDIF
-   IF ! Empty( cCC )
-      oMail:hHeaders[ "Cc" ] := cCC
-   ENDIF
-   IF ! Empty( cBCC )
-      oMail:hHeaders[ "Bcc" ] := cBCC
-   ENDIF
 
    BEGIN SEQUENCE
       oInmail := tIPClientSMTP():New( oUrl, bTrace )
@@ -369,9 +371,6 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
 
    oInMail:oUrl:cUserid := cFromRaw
 
-   oMail:hHeaders[ "To" ] := cTo
-   oMail:hHeaders[ "Subject" ] := cSubject
-
    FOR EACH aThisFile IN aFiles
 
       IF ISCHARACTER( aThisFile )
@@ -456,7 +455,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
       oMail:hHeaders[ "X-Priority" ] := Str( nPriority, 1 )
    ENDIF
 
-   oInmail:Write( oMail:ToString() )
+   oInMail:Write( oMail:ToString() )
    oInMail:Commit()
    oInMail:Close()
 

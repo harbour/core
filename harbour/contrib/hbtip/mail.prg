@@ -313,13 +313,13 @@ METHOD ToString() CLASS TipMail
       cRet += "Date: " + ::hHeaders[ "Date" ] + e"\r\n"
    ENDIF
    IF "From" $ ::hHeaders
-      cRet += "From: " + LTrim( WordEncodeQ( tip_GetNameEMail( ::hHeaders[ "From" ] ), ::cCharset ) + " <" + tip_GetRawEMail( ::hHeaders[ "From" ] ) + ">" ) + e"\r\n"
+      cRet += "From: " + ::hHeaders[ "From" ] + e"\r\n"
    ENDIF
    IF "To" $ ::hHeaders
-      cRet += "To: " + LTrim( WordEncodeQ( tip_GetNameEMail( ::hHeaders[ "To" ] ), ::cCharset ) + " <" + tip_GetRawEMail( ::hHeaders[ "To" ] ) + ">" ) + e"\r\n"
+      cRet += "To: " + ::hHeaders[ "To" ] + e"\r\n"
    ENDIF
    IF "Subject" $ ::hHeaders
-      cRet += "Subject: " + WordEncodeQ( ::hHeaders[ "Subject" ], ::cCharset ) + e"\r\n"
+      cRet += "Subject: " + ::hHeaders[ "Subject" ] + e"\r\n"
    ENDIF
    IF Len( ::aAttachments ) > 0
       cRet += "Mime-Version:" + ::hHeaders[ "Mime-Version" ] + e"\r\n"
@@ -513,8 +513,9 @@ METHOD MakeBoundary() CLASS TipMail
 
    RETURN cBound
 
-METHOD setHeader( cSubject, cFrom, cTo, cCC, cBCC ) CLASS TipMail
+METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TipMail
    LOCAL aTo, aCC, aBCC, i, imax
+   LOCAL cTo, cCC, cBCC
 
    IF ! ISCHARACTER( cSubject )
       cSubject := ""
@@ -524,66 +525,79 @@ METHOD setHeader( cSubject, cFrom, cTo, cCC, cBCC ) CLASS TipMail
       RETURN .F.
    ENDIF
 
-   IF ISCHARACTER( cTo )
-      aTo := { cTo }
-   ELSEIF ISARRAY( cTo )
-      aTo := cTo
+   IF ISCHARACTER( xTo )
+      aTo := { xTo }
+   ELSEIF ISARRAY( xTo )
+      aTo := xTo
    ENDIF
 
-   IF ISCHARACTER( cCC )
-      aCC := { cCC }
-   ELSEIF ISARRAY( cCC )
-      aCC := cCC
-   ENDIF
-
-   IF ISCHARACTER( cBCC )
-      aBCC := { cBCC }
-   ELSEIF ISARRAY( cBCC )
-      aBCC := cBCC
-   ENDIF
-
-   IF aTO == NIL
+   IF Empty( aTO )
       RETURN .F.
    ENDIF
 
-   IF ! ::setFieldPart( "Subject", cSubject )
+   IF ISCHARACTER( xCC )
+      aCC := { xCC }
+   ELSEIF ISARRAY( xCC )
+      aCC := xCC
+   ENDIF
+
+   IF ISCHARACTER( xBCC )
+      aBCC := { xBCC }
+   ELSEIF ISARRAY( xBCC )
+      aBCC := xBCC
+   ENDIF
+
+   IF ! ::setFieldPart( "Subject", WordEncodeQ( cSubject, ::cCharset ) )
+      RETURN .F.
+   ENDIF
+   
+   IF ! ::setFieldPart( "From", LTrim( WordEncodeQ( tip_GetNameEMail( AllTrim( cFrom ) ), ::cCharset ) + " <" + tip_GetRawEMail( AllTrim( cFrom ) ) + ">" ) )
       RETURN .F.
    ENDIF
 
-   IF ! ::setFieldPart( "From", cFrom )
-      RETURN .F.
-   ENDIF
-
-   cTo := aTO[ 1 ]
+   cTo := ""
    imax := Len( aTO )
-   FOR i := 2 TO imax
-      cTo += "," + hb_inetCrlf() + Chr( 9 ) + aTo[ i ]
+   FOR i := 1 TO imax
+      IF i > 1
+         cTo += "," + hb_inetCrlf() + " "
+      ENDIF
+      cTo += LTrim( WordEncodeQ( tip_GetNameEMail( AllTrim( aTo[ i ] ) ), ::cCharset ) + " <" + tip_GetRawEMail( AllTrim( aTo[ i ] ) ) + ">" )
    NEXT
+
+   IF Empty( cTo )
+      RETURN .F.
+   ENDIF
 
    IF ! ::setFieldPart( "To", cTo )
       RETURN .F.
    ENDIF
 
-   IF aCC != NIL
-      cCC := aCC[ 1 ]
+   IF ! Empty( aCC )
+      cCC := ""
       imax := Len( aCC )
       FOR i := 2 TO imax
-         cCC += "," + hb_inetCrlf() + Chr( 9 ) + aCC[ i ]
+         IF i > 1
+            cCC += "," + hb_inetCrlf() + " "
+         ENDIF
+         cCC += LTrim( WordEncodeQ( tip_GetNameEMail( AllTrim( aCC[ i ] ) ), ::cCharset ) + " <" + tip_GetRawEMail( AllTrim( aCC[ i ] ) ) + ">" )
       NEXT
 
-      IF ! ::setFieldPart( "Cc", cCC )
+      IF ! Empty( cCC ) .AND. ! ::setFieldPart( "Cc", cCC )
          RETURN .F.
       ENDIF
    ENDIF
 
-   IF aBCC != NIL
-      cBCC := aBCC[ 1 ]
+   IF ! Empty( aBCC )
+      cBCC := ""
       imax := Len( aBCC )
       FOR i := 2 TO imax
-         cBCC += "," + hb_inetCrlf() + Chr( 9 ) + aBCC[ i ]
+         IF i > 1
+            cBCC += "," + hb_inetCrlf() + " "
+         ENDIF
+         cBCC += LTrim( WordEncodeQ( tip_GetNameEMail( AllTrim( aBCC[ i ] ) ), ::cCharset ) + " <" + tip_GetRawEMail( AllTrim( aBCC[ i ] ) ) + ">" )
       NEXT
 
-      IF ! ::setFieldPart( "Bcc", cBCC )
+      IF ! Empty( cBCC ) .AND. ! ::setFieldPart( "Bcc", cBCC )
          RETURN .F.
       ENDIF
    ENDIF
@@ -678,11 +692,8 @@ STATIC FUNCTION WordEncodeQ( cData, cCharset )
    cString := "=?" + cCharset + "?" + "Q" + "?"
 
    FOR EACH c IN cData
-      IF c == " "
-         cString += "_"
-         nLineLen += 1
-      ELSEIF Asc( c ) > 126 .OR. ;
-         c $ '=?!"#$@[\]^`{|}~' .OR. ;
+      IF Asc( c ) > 126 .OR. ;
+         c $ '=?!"#$@[\]^`{|}~_' .OR. ;
          Asc( c ) <= 32
          cString += "=" + hb_NumToHex( Asc( c ), 2 )
          nLineLen += 3
