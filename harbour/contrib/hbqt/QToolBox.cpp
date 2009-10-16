@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QToolBox>
 
@@ -74,19 +75,18 @@
  * QToolBox ( QWidget * parent = 0, Qt::WindowFlags f = 0 )
  * ~QToolBox ()
  */
+
 HB_FUNC( QT_QTOOLBOX )
 {
-   hb_retptr( ( QToolBox* ) new QToolBox( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QToolBox > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTOOLBOX_DESTROY )
-{
-   delete hbqt_par_QToolBox( 1 );
-}
+   pObj = ( QToolBox* ) new QToolBox( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * int addItem ( QWidget * widget, const QIcon & iconSet, const QString & text )
  */
@@ -164,7 +164,7 @@ HB_FUNC( QT_QTOOLBOX_ISITEMENABLED )
  */
 HB_FUNC( QT_QTOOLBOX_ITEMICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QToolBox( 1 )->itemIcon( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QToolBox( 1 )->itemIcon( hb_parni( 2 ) ) ) ) );
 }
 
 /*

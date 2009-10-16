@@ -70,7 +70,6 @@ CREATE CLASS QTextBrowser INHERIT QTextEdit
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextBrowser_destroy( ::pPtr )
 
    METHOD  backwardHistoryCount()              INLINE  Qt_QTextBrowser_backwardHistoryCount( ::pPtr )
    METHOD  clearHistory()                      INLINE  Qt_QTextBrowser_clearHistory( ::pPtr )

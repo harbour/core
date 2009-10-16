@@ -80,6 +80,7 @@
  *  // void setDefaultAction ( QAction * act )
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QMenuBar>
 
@@ -88,19 +89,18 @@
  * QMenuBar ( QWidget * parent = 0 )
  * ~QMenuBar ()
  */
+
 HB_FUNC( QT_QMENUBAR )
 {
-   hb_retptr( ( QMenuBar* ) new QMenuBar( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QMenuBar > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QMENUBAR_DESTROY )
-{
-   delete hbqt_par_QMenuBar( 1 );
-}
+   pObj = ( QMenuBar* ) new QMenuBar( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * QAction * activeAction () const
  */

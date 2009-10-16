@@ -65,7 +65,8 @@
 
 #include "hbqt_slots.h"
 
-//         #include <windows.h>   ////////////////////////////////////////////////////
+//         #include <windows.h>   //////////////////////////////////////////
+//         static char str[50];   //////////////////////////////////////////
 
 #include <QWidget>
 #include <QString>
@@ -74,6 +75,8 @@
 #include <QAction>
 #include <QObject>
 #include <QEvent>
+#include <QMessageBox>
+#include <QFileDialog>
 
 static PHB_ITEM s_mutex = NULL;
 
@@ -87,8 +90,6 @@ typedef struct
 static HB_TSD_NEW( s_events, sizeof( HB_EVENTS ), NULL, NULL );
 
 #define hb_getQtEventFilter()       ( ( PHB_EVENTS ) hb_stackGetTSD( &s_events ) )
-
-
 
 typedef struct
 {
@@ -1110,10 +1111,15 @@ void Slots::currentCellChanged( int currentRow, int currentColumn, int previousR
  */
 HB_FUNC( QT_CONNECT_SIGNAL )
 {
-   QObject * object    = ( QObject* ) hb_parptr( 1 );               /* get sender    */
    QString   signal    = hb_parcx( 2 );                             /* get signal    */
    PHB_ITEM  codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK ) );  /* get codeblock */
    bool      ret       = false;                                     /* return value  */
+   QObject * object    = ( QObject* ) hbqt_gcpointer( 1 );          /* get sender    */
+
+   if( !object )
+   {
+      object = ( QObject* ) hb_parptr( 1 );
+   }
 
    qt_setEventSlots();
    Slots   * s_s       = qt_getEventSlots();

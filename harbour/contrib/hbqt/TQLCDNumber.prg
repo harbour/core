@@ -70,7 +70,6 @@ CREATE CLASS QLCDNumber INHERIT QFrame
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QLCDNumber_destroy( ::pPtr )
 
    METHOD  checkOverflow( nNum )               INLINE  Qt_QLCDNumber_checkOverflow( ::pPtr, nNum )
    METHOD  checkOverflow_1( nNum )             INLINE  Qt_QLCDNumber_checkOverflow_1( ::pPtr, nNum )

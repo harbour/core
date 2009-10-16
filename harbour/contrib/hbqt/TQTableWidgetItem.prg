@@ -70,7 +70,6 @@ CREATE CLASS QTableWidgetItem
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTableWidgetItem_destroy( ::pPtr )
 
    METHOD  background()                        INLINE  Qt_QTableWidgetItem_background( ::pPtr )
    METHOD  checkState()                        INLINE  Qt_QTableWidgetItem_checkState( ::pPtr )

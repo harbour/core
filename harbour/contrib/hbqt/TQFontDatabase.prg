@@ -70,7 +70,6 @@ CREATE CLASS QFontDatabase
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QFontDatabase_destroy( ::pPtr )
 
    METHOD  bold( cFamily, cStyle )             INLINE  Qt_QFontDatabase_bold( ::pPtr, cFamily, cStyle )
    METHOD  families( nWritingSystem )          INLINE  Qt_QFontDatabase_families( ::pPtr, nWritingSystem )

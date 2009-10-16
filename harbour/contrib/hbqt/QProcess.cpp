@@ -77,6 +77,7 @@
  *  enum ProcessState { NotRunning, Starting, Running }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QProcess>
 
@@ -85,26 +86,25 @@
  * QProcess ( QObject * parent = 0 )
  * virtual ~QProcess ()
  */
+
 HB_FUNC( QT_QPROCESS )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QProcess > pObj = NULL;
+
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( ( QProcess* ) new QProcess( hbqt_par_QObject( 1 ) ) );
+      pObj = ( QProcess* ) new QProcess( hbqt_par_QObject( 1 ) ) ;
    }
    else
    {
-      hb_retptr( ( QProcess* ) new QProcess() );
+      pObj = ( QProcess* ) new QProcess() ;
    }
-}
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QPROCESS_DESTROY )
-{
-   delete hbqt_par_QProcess( 1 );
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
 /*
  * virtual void close ()
  */
@@ -134,7 +134,7 @@ HB_FUNC( QT_QPROCESS_CLOSEWRITECHANNEL )
  */
 HB_FUNC( QT_QPROCESS_ENVIRONMENT )
 {
-   hb_retptr( new QStringList( hbqt_par_QProcess( 1 )->environment() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QProcess( 1 )->environment() ) ) );
 }
 
 /*
@@ -166,7 +166,7 @@ HB_FUNC( QT_QPROCESS_EXITSTATUS )
  */
 HB_FUNC( QT_QPROCESS_PID )
 {
-   hb_retptr( new Q_PID( hbqt_par_QProcess( 1 )->pid() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new Q_PID( hbqt_par_QProcess( 1 )->pid() ) ) );
 }
 
 /*
@@ -182,7 +182,7 @@ HB_FUNC( QT_QPROCESS_PROCESSCHANNELMODE )
  */
 HB_FUNC( QT_QPROCESS_READALLSTANDARDERROR )
 {
-   hb_retptr( new QByteArray( hbqt_par_QProcess( 1 )->readAllStandardError() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QProcess( 1 )->readAllStandardError() ) ) );
 }
 
 /*
@@ -190,7 +190,7 @@ HB_FUNC( QT_QPROCESS_READALLSTANDARDERROR )
  */
 HB_FUNC( QT_QPROCESS_READALLSTANDARDOUTPUT )
 {
-   hb_retptr( new QByteArray( hbqt_par_QProcess( 1 )->readAllStandardOutput() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QProcess( 1 )->readAllStandardOutput() ) ) );
 }
 
 /*
@@ -362,7 +362,7 @@ HB_FUNC( QT_QPROCESS_STARTDETACHED_2 )
  */
 HB_FUNC( QT_QPROCESS_SYSTEMENVIRONMENT )
 {
-   hb_retptr( new QStringList( hbqt_par_QProcess( 1 )->systemEnvironment() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QProcess( 1 )->systemEnvironment() ) ) );
 }
 
 /*

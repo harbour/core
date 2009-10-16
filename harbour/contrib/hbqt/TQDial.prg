@@ -70,7 +70,6 @@ CREATE CLASS QDial INHERIT QAbstractSlider
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QDial_destroy( ::pPtr )
 
    METHOD  notchSize()                         INLINE  Qt_QDial_notchSize( ::pPtr )
    METHOD  notchTarget()                       INLINE  Qt_QDial_notchTarget( ::pPtr )

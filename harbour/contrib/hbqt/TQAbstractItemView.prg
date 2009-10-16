@@ -70,7 +70,6 @@ CREATE CLASS QAbstractItemView INHERIT QAbstractScrollArea
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QAbstractItemView_destroy( ::pPtr )
 
    METHOD  alternatingRowColors()              INLINE  Qt_QAbstractItemView_alternatingRowColors( ::pPtr )
    METHOD  autoScrollMargin()                  INLINE  Qt_QAbstractItemView_autoScrollMargin( ::pPtr )

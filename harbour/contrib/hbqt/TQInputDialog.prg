@@ -70,7 +70,6 @@ CREATE CLASS QInputDialog INHERIT QDialog
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QInputDialog_destroy( ::pPtr )
 
    METHOD  cancelButtonText()                  INLINE  Qt_QInputDialog_cancelButtonText( ::pPtr )
    METHOD  comboBoxItems()                     INLINE  Qt_QInputDialog_comboBoxItems( ::pPtr )

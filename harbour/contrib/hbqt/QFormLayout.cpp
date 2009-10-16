@@ -72,6 +72,7 @@
  *  enum RowWrapPolicy { DontWrapRows, WrapLongRows, WrapAllRows }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QFormLayout>
 
@@ -80,19 +81,18 @@
  * QFormLayout ( QWidget * parent = 0 )
  * ~QFormLayout ()
  */
+
 HB_FUNC( QT_QFORMLAYOUT )
 {
-   hb_retptr( ( QFormLayout * ) new QFormLayout( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QFormLayout > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QFORMLAYOUT_DESTROY )
-{
-   delete hbqt_par_QFormLayout( 1 );
-}
+   pObj = ( QFormLayout * ) new QFormLayout( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * void addRow ( QWidget * label, QWidget * field )
  */

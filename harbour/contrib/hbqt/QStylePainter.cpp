@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStylePainter>
 
@@ -75,19 +76,15 @@
  * QStylePainter ( QWidget * widget )
  * QStylePainter ( QPaintDevice * pd, QWidget * widget )
  */
+
 HB_FUNC( QT_QSTYLEPAINTER )
 {
-   hb_retptr( ( QStylePainter* ) new QStylePainter() );
+   void * pObj = NULL;
+
+   pObj = ( QStylePainter* ) new QStylePainter() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEPAINTER_DESTROY )
-{
-
-}
-
 /*
  * bool begin ( QWidget * widget )
  */

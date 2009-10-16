@@ -71,6 +71,7 @@
  *  enum TabShape { Rounded, Triangular }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTabWidget>
 
@@ -79,19 +80,18 @@
  * QTabWidget ( QWidget * parent = 0 )
  * ~QTabWidget ()
  */
+
 HB_FUNC( QT_QTABWIDGET )
 {
-   hb_retptr( ( QTabWidget* ) new QTabWidget( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QTabWidget > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTABWIDGET_DESTROY )
-{
-   delete hbqt_par_QTabWidget( 1 );
-}
+   pObj = ( QTabWidget* ) new QTabWidget( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * int addTab ( QWidget * page, const QString & label )
  */
@@ -169,7 +169,7 @@ HB_FUNC( QT_QTABWIDGET_ELIDEMODE )
  */
 HB_FUNC( QT_QTABWIDGET_ICONSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QTabWidget( 1 )->iconSize() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QTabWidget( 1 )->iconSize() ) ) );
 }
 
 /*
@@ -337,7 +337,7 @@ HB_FUNC( QT_QTABWIDGET_SETUSESSCROLLBUTTONS )
  */
 HB_FUNC( QT_QTABWIDGET_TABICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QTabWidget( 1 )->tabIcon( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QTabWidget( 1 )->tabIcon( hb_parni( 2 ) ) ) ) );
 }
 
 /*

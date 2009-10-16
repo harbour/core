@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleFactory>
 
@@ -73,19 +74,15 @@
 /*
  *
  */
+
 HB_FUNC( QT_QSTYLEFACTORY )
 {
-   hb_retptr( new QStyleFactory() );
+   void * pObj = NULL;
+
+   pObj = new QStyleFactory() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEFACTORY_DESTROY )
-{
-
-}
-
 /*
  * QStyle * create ( const QString & key )
  */
@@ -99,7 +96,7 @@ HB_FUNC( QT_QSTYLEFACTORY_CREATE )
  */
 HB_FUNC( QT_QSTYLEFACTORY_KEYS )
 {
-   hb_retptr( new QStringList( hbqt_par_QStyleFactory( 1 )->keys() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QStyleFactory( 1 )->keys() ) ) );
 }
 
 

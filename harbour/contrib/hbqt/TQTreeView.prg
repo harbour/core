@@ -70,7 +70,6 @@ CREATE CLASS QTreeView INHERIT QAbstractItemView
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTreeView_destroy( ::pPtr )
 
    METHOD  allColumnsShowFocus()               INLINE  Qt_QTreeView_allColumnsShowFocus( ::pPtr )
    METHOD  autoExpandDelay()                   INLINE  Qt_QTreeView_autoExpandDelay( ::pPtr )

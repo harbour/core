@@ -70,7 +70,6 @@ CREATE CLASS QStyleOptionComplex INHERIT QStyleOption
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleOptionComplex_destroy( ::pPtr )
 
    METHOD  activeSubControls()                 INLINE  Qt_QStyleOptionComplex_activeSubControls( ::pPtr )
    METHOD  subControls()                       INLINE  Qt_QStyleOptionComplex_subControls( ::pPtr )

@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QDropEvent>
 
@@ -73,19 +74,10 @@
 /*
  * QDropEvent ( const QPoint & pos, Qt::DropActions actions, const QMimeData * data, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Type type = Drop )
  */
+
 HB_FUNC( QT_QDROPEVENT )
 {
-   // hb_retptr( ( QDropEvent* ) new QDropEvent() );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QDROPEVENT_DESTROY )
-{
-
-}
-
 /*
  * void acceptProposedAction ()
  */
@@ -131,7 +123,7 @@ HB_FUNC( QT_QDROPEVENT_MOUSEBUTTONS )
  */
 HB_FUNC( QT_QDROPEVENT_POS )
 {
-   hb_retptr( new QPoint( hbqt_par_QDropEvent( 1 )->pos() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QDropEvent( 1 )->pos() ) ) );
 }
 
 /*

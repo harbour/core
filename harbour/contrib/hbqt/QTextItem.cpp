@@ -71,6 +71,7 @@
  *  flags RenderFlags
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTextItem>
 
@@ -79,19 +80,15 @@
  *
  *
  */
+
 HB_FUNC( QT_QTEXTITEM )
 {
-   hb_retptr( ( QTextItem* ) new QTextItem() );
+   void * pObj = NULL;
+
+   pObj = ( QTextItem* ) new QTextItem() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTITEM_DESTROY )
-{
-
-}
-
 /*
  * qreal ascent () const
  */
@@ -113,7 +110,7 @@ HB_FUNC( QT_QTEXTITEM_DESCENT )
  */
 HB_FUNC( QT_QTEXTITEM_FONT )
 {
-   hb_retptr( new QFont( hbqt_par_QTextItem( 1 )->font() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QTextItem( 1 )->font() ) ) );
 }
 
 /*

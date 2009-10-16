@@ -70,7 +70,6 @@ CREATE CLASS QStyle INHERIT QObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyle_destroy( ::pPtr )
 
    METHOD  combinedLayoutSpacing( nControls1, nControls2, nOrientation, pOption, pWidget )  INLINE  Qt_QStyle_combinedLayoutSpacing( ::pPtr, nControls1, nControls2, nOrientation, pOption, pWidget )
    METHOD  drawComplexControl( nControl, pOption, pPainter, pWidget )  INLINE  Qt_QStyle_drawComplexControl( ::pPtr, nControl, pOption, pPainter, pWidget )

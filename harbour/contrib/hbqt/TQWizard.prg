@@ -70,7 +70,6 @@ CREATE CLASS QWizard INHERIT QDialog
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QWizard_destroy( ::pPtr )
 
    METHOD  addPage( pPage )                    INLINE  Qt_QWizard_addPage( ::pPtr, pPage )
    METHOD  button( nWhich )                    INLINE  Qt_QWizard_button( ::pPtr, nWhich )

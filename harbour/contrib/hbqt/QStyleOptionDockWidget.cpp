@@ -71,6 +71,7 @@
  *  enum StyleOptionVersion { Version }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionDockWidget>
 
@@ -79,19 +80,15 @@
  * QStyleOptionDockWidget ()
  * QStyleOptionDockWidget ( const QStyleOptionDockWidget & other )
  */
+
 HB_FUNC( QT_QSTYLEOPTIONDOCKWIDGET )
 {
-   hb_retptr( ( QStyleOptionDockWidget* ) new QStyleOptionDockWidget() );
+   void * pObj = NULL;
+
+   pObj = ( QStyleOptionDockWidget* ) new QStyleOptionDockWidget() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTIONDOCKWIDGET_DESTROY )
-{
-
-}
-
 /*
  * bool closable
  */

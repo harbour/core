@@ -70,7 +70,6 @@ CREATE CLASS QAction INHERIT QObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QAction_destroy( ::pPtr )
 
    METHOD  actionGroup()                       INLINE  Qt_QAction_actionGroup( ::pPtr )
    METHOD  activate( nEvent )                  INLINE  Qt_QAction_activate( ::pPtr, nEvent )

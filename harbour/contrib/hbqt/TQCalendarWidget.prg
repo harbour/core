@@ -70,7 +70,6 @@ CREATE CLASS QCalendarWidget INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QCalendarWidget_destroy( ::pPtr )
 
    METHOD  dateEditAcceptDelay()               INLINE  Qt_QCalendarWidget_dateEditAcceptDelay( ::pPtr )
    METHOD  dateTextFormat( pDate )             INLINE  Qt_QCalendarWidget_dateTextFormat( ::pPtr, pDate )

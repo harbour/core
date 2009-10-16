@@ -72,6 +72,7 @@
  *  Public Functions
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleHintReturnVariant>
 
@@ -79,19 +80,10 @@
 /*
  * QStyleHintReturnVariant ()
  */
+
 HB_FUNC( QT_QSTYLEHINTRETURNVARIANT )
 {
-
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEHINTRETURNVARIANT_DESTROY )
-{
-
-}
-
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

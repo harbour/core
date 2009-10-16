@@ -70,7 +70,6 @@ CREATE CLASS QWebSecurityOrigin
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QWebSecurityOrigin_destroy( ::pPtr )
 
    METHOD  databaseQuota()                     INLINE  Qt_QWebSecurityOrigin_databaseQuota( ::pPtr )
    METHOD  databaseUsage()                     INLINE  Qt_QWebSecurityOrigin_databaseUsage( ::pPtr )

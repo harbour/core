@@ -70,7 +70,6 @@ CREATE CLASS QListWidget INHERIT QListView
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QListWidget_destroy( ::pPtr )
 
    METHOD  addItem( cLabel )                   INLINE  Qt_QListWidget_addItem( ::pPtr, cLabel )
    METHOD  addItem_1( pItem )                  INLINE  Qt_QListWidget_addItem_1( ::pPtr, pItem )

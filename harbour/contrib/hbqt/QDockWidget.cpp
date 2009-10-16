@@ -71,6 +71,7 @@
  *  flags DockWidgetFeatures
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QDockWidget>
 
@@ -80,19 +81,18 @@
  * QDockWidget ( QWidget * parent = 0, Qt::WindowFlags flags = 0 )
  * ~QDockWidget ()
  */
+
 HB_FUNC( QT_QDOCKWIDGET )
 {
-   hb_retptr( new QDockWidget( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QDockWidget > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QDOCKWIDGET_DESTROY )
-{
-   delete hbqt_par_QDockWidget( 1 );
-}
+   pObj = new QDockWidget( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * Qt::DockWidgetAreas allowedAreas () const
  */

@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QAbstractScrollArea>
 
@@ -74,19 +75,10 @@
  * QAbstractScrollArea ( QWidget * parent = 0 )
  * ~QAbstractScrollArea ()
  */
+
 HB_FUNC( QT_QABSTRACTSCROLLAREA )
 {
-
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QABSTRACTSCROLLAREA_DESTROY )
-{
-   delete hbqt_par_QAbstractScrollArea( 1 );
-}
-
 /*
  * void addScrollBarWidget ( QWidget * widget, Qt::Alignment alignment )
  */
@@ -124,7 +116,7 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_HORIZONTALSCROLLBARPOLICY )
  */
 HB_FUNC( QT_QABSTRACTSCROLLAREA_MAXIMUMVIEWPORTSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QAbstractScrollArea( 1 )->maximumViewportSize() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QAbstractScrollArea( 1 )->maximumViewportSize() ) ) );
 }
 
 /*
@@ -132,7 +124,7 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_MAXIMUMVIEWPORTSIZE )
  */
 HB_FUNC( QT_QABSTRACTSCROLLAREA_SCROLLBARWIDGETS )
 {
-   hb_retptr( new QWidgetList( hbqt_par_QAbstractScrollArea( 1 )->scrollBarWidgets( ( Qt::Alignment ) hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QWidgetList( hbqt_par_QAbstractScrollArea( 1 )->scrollBarWidgets( ( Qt::Alignment ) hb_parni( 2 ) ) ) ) );
 }
 
 /*

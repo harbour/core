@@ -71,6 +71,7 @@
  *  enum StyleOptionVersion { Version }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionTabBarBase>
 
@@ -79,25 +80,21 @@
  * QStyleOptionTabBarBase ()
  * QStyleOptionTabBarBase ( const QStyleOptionTabBarBase & other )
  */
+
 HB_FUNC( QT_QSTYLEOPTIONTABBARBASE )
 {
-   hb_retptr( ( QStyleOptionTabBarBase* ) new QStyleOptionTabBarBase() );
+   void * pObj = NULL;
+
+   pObj = ( QStyleOptionTabBarBase* ) new QStyleOptionTabBarBase() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTIONTABBARBASE_DESTROY )
-{
-
-}
-
 /*
  * QRect selectedTabRect
  */
 HB_FUNC( QT_QSTYLEOPTIONTABBARBASE_SELECTEDTABRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QStyleOptionTabBarBase( 1 )->selectedTabRect ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QStyleOptionTabBarBase( 1 )->selectedTabRect ) ) );
 }
 
 /*
@@ -113,7 +110,7 @@ HB_FUNC( QT_QSTYLEOPTIONTABBARBASE_SHAPE )
  */
 HB_FUNC( QT_QSTYLEOPTIONTABBARBASE_TABBARRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QStyleOptionTabBarBase( 1 )->tabBarRect ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QStyleOptionTabBarBase( 1 )->tabBarRect ) ) );
 }
 
 

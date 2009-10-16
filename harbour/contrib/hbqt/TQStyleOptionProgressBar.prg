@@ -70,7 +70,6 @@ CREATE CLASS QStyleOptionProgressBar INHERIT QStyleOption
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleOptionProgressBar_destroy( ::pPtr )
 
    METHOD  maximum()                           INLINE  Qt_QStyleOptionProgressBar_maximum( ::pPtr )
    METHOD  minimum()                           INLINE  Qt_QStyleOptionProgressBar_minimum( ::pPtr )

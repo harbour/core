@@ -70,7 +70,6 @@ CREATE CLASS QTextStream
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextStream_destroy( ::pPtr )
 
    METHOD  atEnd()                             INLINE  Qt_QTextStream_atEnd( ::pPtr )
    METHOD  autoDetectUnicode()                 INLINE  Qt_QTextStream_autoDetectUnicode( ::pPtr )

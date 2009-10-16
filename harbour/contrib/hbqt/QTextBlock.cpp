@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTextBlock>
 
@@ -73,25 +74,28 @@
 /*
  * QTextBlock ( const QTextBlock & other )
  */
+
 HB_FUNC( QT_QTEXTBLOCK )
 {
-   hb_retptr( ( QTextBlock* ) new QTextBlock( *hbqt_par_QTextBlock( 1 ) ) );
+   void * pObj = NULL;
+
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      pObj = new QTextBlock( *hbqt_par_QTextBlock( 1 ) ) ;
+   }
+   else
+   {
+      pObj = new QTextBlock() ;
+   }
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTBLOCK_DESTROY )
-{
-
-}
-
 /*
  * QTextBlockFormat blockFormat () const
  */
 HB_FUNC( QT_QTEXTBLOCK_BLOCKFORMAT )
 {
-   hb_retptr( new QTextBlockFormat( hbqt_par_QTextBlock( 1 )->blockFormat() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextBlockFormat( hbqt_par_QTextBlock( 1 )->blockFormat() ) ) );
 }
 
 /*
@@ -115,7 +119,7 @@ HB_FUNC( QT_QTEXTBLOCK_BLOCKNUMBER )
  */
 HB_FUNC( QT_QTEXTBLOCK_CHARFORMAT )
 {
-   hb_retptr( new QTextCharFormat( hbqt_par_QTextBlock( 1 )->charFormat() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCharFormat( hbqt_par_QTextBlock( 1 )->charFormat() ) ) );
 }
 
 /*
@@ -203,7 +207,7 @@ HB_FUNC( QT_QTEXTBLOCK_LINECOUNT )
  */
 HB_FUNC( QT_QTEXTBLOCK_NEXT )
 {
-   hb_retptr( new QTextBlock( hbqt_par_QTextBlock( 1 )->next() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextBlock( hbqt_par_QTextBlock( 1 )->next() ) ) );
 }
 
 /*
@@ -219,7 +223,7 @@ HB_FUNC( QT_QTEXTBLOCK_POSITION )
  */
 HB_FUNC( QT_QTEXTBLOCK_PREVIOUS )
 {
-   hb_retptr( new QTextBlock( hbqt_par_QTextBlock( 1 )->previous() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextBlock( hbqt_par_QTextBlock( 1 )->previous() ) ) );
 }
 
 /*

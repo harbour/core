@@ -70,7 +70,6 @@ CREATE CLASS QMenu INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QMenu_destroy( ::pPtr )
 
    METHOD  actionAt( pPt )                     INLINE  Qt_QMenu_actionAt( ::pPtr, pPt )
    METHOD  actionGeometry( pAct )              INLINE  Qt_QMenu_actionGeometry( ::pPtr, pAct )

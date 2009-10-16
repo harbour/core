@@ -78,6 +78,7 @@
  *  QList<QTreeWidgetItem *> selectedItems () const
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTreeWidget>
 
@@ -86,19 +87,18 @@
  * QTreeWidget ( QWidget * parent = 0 )
  * ~QTreeWidget ()
  */
+
 HB_FUNC( QT_QTREEWIDGET )
 {
-   hb_retptr( ( QTreeWidget* ) new QTreeWidget( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QTreeWidget > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTREEWIDGET_DESTROY )
-{
-   delete hbqt_par_QTreeWidget( 1 );
-}
+   pObj = ( QTreeWidget* ) new QTreeWidget( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * void addTopLevelItem ( QTreeWidgetItem * item )
  */
@@ -360,7 +360,7 @@ HB_FUNC( QT_QTREEWIDGET_TOPLEVELITEMCOUNT )
  */
 HB_FUNC( QT_QTREEWIDGET_VISUALITEMRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QTreeWidget( 1 )->visualItemRect( hbqt_par_QTreeWidgetItem( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QTreeWidget( 1 )->visualItemRect( hbqt_par_QTreeWidgetItem( 2 ) ) ) ) );
 }
 
 /*

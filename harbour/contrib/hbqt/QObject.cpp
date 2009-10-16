@@ -82,6 +82,7 @@
  *  //T findChild ( const QString & name = QString() ) const
  */
 
+#include <QtCore/QPointer>
 
 #include <QWidget>
 #include <QtCore/QObject>
@@ -91,19 +92,18 @@
  * Q_INVOKABLE QObject ( QObject * parent = 0 )
  * virtual ~QObject ()
  */
+
 HB_FUNC( QT_QOBJECT )
 {
-   hb_retptr( ( QObject* ) new QObject( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QObject > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QOBJECT_DESTROY )
-{
-   delete hbqt_par_QObject( 1 );
-}
+   pObj = ( QObject* ) new QObject( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * bool blockSignals ( bool block )
  */
@@ -117,7 +117,7 @@ HB_FUNC( QT_QOBJECT_BLOCKSIGNALS )
  */
 HB_FUNC( QT_QOBJECT_CHILDREN )
 {
-   hb_retptr( new QObjectList( hbqt_par_QObject( 1 )->children() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QObjectList( hbqt_par_QObject( 1 )->children() ) ) );
 }
 
 /*
@@ -245,7 +245,7 @@ HB_FUNC( QT_QOBJECT_PARENT )
  */
 HB_FUNC( QT_QOBJECT_PROPERTY )
 {
-   hb_retptr( new QVariant( hbqt_par_QObject( 1 )->property( hbqt_par_char( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QObject( 1 )->property( hbqt_par_char( 2 ) ) ) ) );
 }
 
 /*

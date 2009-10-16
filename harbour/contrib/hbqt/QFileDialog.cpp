@@ -92,6 +92,7 @@
  *  //QString getSaveFileName ( QWidget * parent = 0, const QString & caption = QString(), const QString & dir = QString(), const QString & filter = QString(), QString * selectedFilter = 0, Options options = 0 )
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QFileDialog>
 
@@ -101,19 +102,29 @@
  * QFileDialog ( QWidget * parent = 0, const QString & caption = QString(), const QString & directory = QString(), const QString & filter = QString() )
  * ~QFileDialog ()
  */
+
 HB_FUNC( QT_QFILEDIALOG )
 {
-   hb_retptr( ( QFileDialog* ) new QFileDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QFileDialog > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QFILEDIALOG_DESTROY )
-{
-   delete hbqt_par_QFileDialog( 1 );
-}
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      pObj = new QFileDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) 0 ) ;
+   }
+   else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
+   {
+      pObj = new QFileDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
+   }
+   else
+   {
+      pObj = new QFileDialog() ;
+   }
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * AcceptMode acceptMode () const
  */
@@ -143,7 +154,7 @@ HB_FUNC( QT_QFILEDIALOG_DEFAULTSUFFIX )
  */
 HB_FUNC( QT_QFILEDIALOG_DIRECTORY )
 {
-   hb_retptr( new QDir( hbqt_par_QFileDialog( 1 )->directory() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QDir( hbqt_par_QFileDialog( 1 )->directory() ) ) );
 }
 
 /*
@@ -167,7 +178,7 @@ HB_FUNC( QT_QFILEDIALOG_FILTER )
  */
 HB_FUNC( QT_QFILEDIALOG_HISTORY )
 {
-   hb_retptr( new QStringList( hbqt_par_QFileDialog( 1 )->history() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QFileDialog( 1 )->history() ) ) );
 }
 
 /*
@@ -215,7 +226,7 @@ HB_FUNC( QT_QFILEDIALOG_LABELTEXT )
  */
 HB_FUNC( QT_QFILEDIALOG_NAMEFILTERS )
 {
-   hb_retptr( new QStringList( hbqt_par_QFileDialog( 1 )->nameFilters() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QFileDialog( 1 )->nameFilters() ) ) );
 }
 
 /*
@@ -255,7 +266,7 @@ HB_FUNC( QT_QFILEDIALOG_RESTORESTATE )
  */
 HB_FUNC( QT_QFILEDIALOG_SAVESTATE )
 {
-   hb_retptr( new QByteArray( hbqt_par_QFileDialog( 1 )->saveState() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QFileDialog( 1 )->saveState() ) ) );
 }
 
 /*
@@ -279,7 +290,7 @@ HB_FUNC( QT_QFILEDIALOG_SELECTNAMEFILTER )
  */
 HB_FUNC( QT_QFILEDIALOG_SELECTEDFILES )
 {
-   hb_retptr( new QStringList( hbqt_par_QFileDialog( 1 )->selectedFiles() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QFileDialog( 1 )->selectedFiles() ) ) );
 }
 
 /*

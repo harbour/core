@@ -70,7 +70,6 @@ CREATE CLASS QTextInlineObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextInlineObject_destroy( ::pPtr )
 
    METHOD  ascent()                            INLINE  Qt_QTextInlineObject_ascent( ::pPtr )
    METHOD  descent()                           INLINE  Qt_QTextInlineObject_descent( ::pPtr )

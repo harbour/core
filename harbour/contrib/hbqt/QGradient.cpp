@@ -72,6 +72,7 @@
  *  enum Type { LinearGradient, RadialGradient, ConicalGradient, NoGradient }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QGradient>
 
@@ -79,19 +80,10 @@
 /*
  *
  */
+
 HB_FUNC( QT_QGRADIENT )
 {
-
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QGRADIENT_DESTROY )
-{
-
-}
-
 /*
  * CoordinateMode coordinateMode () const
  */
@@ -145,7 +137,7 @@ HB_FUNC( QT_QGRADIENT_SPREAD )
  */
 HB_FUNC( QT_QGRADIENT_STOPS )
 {
-   hb_retptr( new QGradientStops( hbqt_par_QGradient( 1 )->stops() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QGradientStops( hbqt_par_QGradient( 1 )->stops() ) ) );
 }
 
 /*

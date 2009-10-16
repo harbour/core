@@ -70,7 +70,6 @@ CREATE CLASS QStyleOptionHeader INHERIT QStyleOption
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleOptionHeader_destroy( ::pPtr )
 
    METHOD  icon()                              INLINE  Qt_QStyleOptionHeader_icon( ::pPtr )
    METHOD  iconAlignment()                     INLINE  Qt_QStyleOptionHeader_iconAlignment( ::pPtr )

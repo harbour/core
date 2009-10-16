@@ -70,7 +70,6 @@ CREATE CLASS QEventLoop INHERIT QObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QEventLoop_destroy( ::pPtr )
 
    METHOD  exec( nFlags )                      INLINE  Qt_QEventLoop_exec( ::pPtr, nFlags )
    METHOD  exit( nReturnCode )                 INLINE  Qt_QEventLoop_exit( ::pPtr, nReturnCode )

@@ -71,6 +71,7 @@
  *  enum Edge { Leading, Trailing }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTextLine>
 
@@ -78,19 +79,18 @@
 /*
  * QTextLine ()
  */
+
 HB_FUNC( QT_QTEXTLINE )
 {
-   hb_retptr( ( QTextLine* ) new QTextLine() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
+
+   pObj = ( QTextLine* ) new QTextLine() ;
+
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QTextLine" );
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTLINE_DESTROY )
-{
-
-}
-
 /*
  * qreal ascent () const
  */
@@ -156,7 +156,7 @@ HB_FUNC( QT_QTEXTLINE_LINENUMBER )
  */
 HB_FUNC( QT_QTEXTLINE_NATURALTEXTRECT )
 {
-   hb_retptr( new QRectF( hbqt_par_QTextLine( 1 )->naturalTextRect() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QTextLine( 1 )->naturalTextRect() ) ) );
 }
 
 /*
@@ -172,7 +172,7 @@ HB_FUNC( QT_QTEXTLINE_NATURALTEXTWIDTH )
  */
 HB_FUNC( QT_QTEXTLINE_POSITION )
 {
-   hb_retptr( new QPointF( hbqt_par_QTextLine( 1 )->position() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPointF( hbqt_par_QTextLine( 1 )->position() ) ) );
 }
 
 /*
@@ -180,7 +180,7 @@ HB_FUNC( QT_QTEXTLINE_POSITION )
  */
 HB_FUNC( QT_QTEXTLINE_RECT )
 {
-   hb_retptr( new QRectF( hbqt_par_QTextLine( 1 )->rect() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QTextLine( 1 )->rect() ) ) );
 }
 
 /*

@@ -70,7 +70,6 @@ CREATE CLASS QFontInfo
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QFontInfo_destroy( ::pPtr )
 
    METHOD  bold()                              INLINE  Qt_QFontInfo_bold( ::pPtr )
    METHOD  exactMatch()                        INLINE  Qt_QFontInfo_exactMatch( ::pPtr )

@@ -70,7 +70,6 @@ CREATE CLASS QStylePainter INHERIT QPainter
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStylePainter_destroy( ::pPtr )
 
    METHOD  begin( pWidget )                    INLINE  Qt_QStylePainter_begin( ::pPtr, pWidget )
    METHOD  begin_1( pPd, pWidget )             INLINE  Qt_QStylePainter_begin_1( ::pPtr, pPd, pWidget )

@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QFontInfo>
 
@@ -75,19 +76,25 @@
  * QFontInfo ( const QFontInfo & fi )
  * ~QFontInfo ()
  */
+
 HB_FUNC( QT_QFONTINFO )
 {
-   hb_retptr( new QFontInfo( *hbqt_par_QFont( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QFONTINFO_DESTROY )
-{
-   delete hbqt_par_QFontInfo( 1 );
-}
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      pObj = new QFontInfo( *hbqt_par_QFontInfo( 1 ) ) ;
+   }
+   else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      pObj = new QFontInfo( *hbqt_par_QFont( 2 ) ) ;
+   }
 
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QFontInfo" );
+   hb_retptrGC( p );
+}
 /*
  * bool bold () const
  */

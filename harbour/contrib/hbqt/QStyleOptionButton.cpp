@@ -73,6 +73,7 @@
  *  enum StyleOptionVersion { Version }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionButton>
 
@@ -81,19 +82,15 @@
  * QStyleOptionButton ()
  * QStyleOptionButton ( const QStyleOptionButton & other )
  */
+
 HB_FUNC( QT_QSTYLEOPTIONBUTTON )
 {
-   hb_retptr( ( QStyleOptionButton* ) new QStyleOptionButton() );
+   void * pObj = NULL;
+
+   pObj = ( QStyleOptionButton* ) new QStyleOptionButton() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTIONBUTTON_DESTROY )
-{
-
-}
-
 /*
  * ButtonFeatures features
  */
@@ -107,7 +104,7 @@ HB_FUNC( QT_QSTYLEOPTIONBUTTON_FEATURES )
  */
 HB_FUNC( QT_QSTYLEOPTIONBUTTON_ICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QStyleOptionButton( 1 )->icon ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QStyleOptionButton( 1 )->icon ) ) );
 }
 
 /*
@@ -115,7 +112,7 @@ HB_FUNC( QT_QSTYLEOPTIONBUTTON_ICON )
  */
 HB_FUNC( QT_QSTYLEOPTIONBUTTON_ICONSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QStyleOptionButton( 1 )->iconSize ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QStyleOptionButton( 1 )->iconSize ) ) );
 }
 
 /*

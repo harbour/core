@@ -72,6 +72,7 @@
  *  enum StyleOptionVersion { Version }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOption>
 
@@ -81,19 +82,15 @@
  * QStyleOption ( const QStyleOption & other )
  * ~QStyleOption ()
  */
+
 HB_FUNC( QT_QSTYLEOPTION )
 {
-   hb_retptr( ( QStyleOption* ) new QStyleOption() );
-}
+   void * pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTION_DESTROY )
-{
-   delete hbqt_par_QStyleOption( 1 );
-}
+   pObj = ( QStyleOption* ) new QStyleOption() ;
 
+   hb_retptr( pObj );
+}
 /*
  * void initFrom ( const QWidget * widget )
  */
@@ -115,7 +112,7 @@ HB_FUNC( QT_QSTYLEOPTION_DIRECTION )
  */
 HB_FUNC( QT_QSTYLEOPTION_FONTMETRICS )
 {
-   hb_retptr( new QFontMetrics( hbqt_par_QStyleOption( 1 )->fontMetrics ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QFontMetrics( hbqt_par_QStyleOption( 1 )->fontMetrics ) ) );
 }
 
 /*
@@ -123,7 +120,7 @@ HB_FUNC( QT_QSTYLEOPTION_FONTMETRICS )
  */
 HB_FUNC( QT_QSTYLEOPTION_PALETTE )
 {
-   hb_retptr( new QPalette( hbqt_par_QStyleOption( 1 )->palette ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPalette( hbqt_par_QStyleOption( 1 )->palette ) ) );
 }
 
 /*
@@ -131,7 +128,7 @@ HB_FUNC( QT_QSTYLEOPTION_PALETTE )
  */
 HB_FUNC( QT_QSTYLEOPTION_RECT )
 {
-   hb_retptr( new QRect( hbqt_par_QStyleOption( 1 )->rect ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QStyleOption( 1 )->rect ) ) );
 }
 
 /*

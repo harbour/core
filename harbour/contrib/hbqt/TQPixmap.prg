@@ -70,7 +70,6 @@ CREATE CLASS QPixmap INHERIT QPaintDevice
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QPixmap_destroy( ::pPtr )
 
    METHOD  alphaChannel()                      INLINE  Qt_QPixmap_alphaChannel( ::pPtr )
    METHOD  cacheKey()                          INLINE  Qt_QPixmap_cacheKey( ::pPtr )

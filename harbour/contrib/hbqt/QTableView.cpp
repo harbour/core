@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTableView>
 
@@ -75,10 +76,6 @@
  * QTableView ( QWidget * parent = 0 )
  * ~QTableView ()
  */
-HB_FUNC( QT_QTABLEVIEW )
-{
-   hb_retptr( ( QTableView* ) new QTableView( hbqt_par_QWidget( 1 ) ) );
-}
 
 HB_FUNC( QT_HBTABLEVIEW )
 {
@@ -90,14 +87,17 @@ HB_FUNC( QT_HBTABLEVIEW_NAVIGATE )
    hb_retptr( new QModelIndex( hbqt_par_HbTableView( 1 )->navigate( hb_parni( 2 ) ) ) );
 }
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTABLEVIEW_DESTROY )
+HB_FUNC( QT_QTABLEVIEW )
 {
-   delete hbqt_par_QTableView( 1 );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QTableView > pObj = NULL;
 
+   pObj = ( QTableView* ) new QTableView( hbqt_par_QWidget( 1 ) ) ;
+
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * void clearSpans ()
  */
@@ -159,7 +159,7 @@ HB_FUNC( QT_QTABLEVIEW_HORIZONTALHEADER )
  */
 HB_FUNC( QT_QTABLEVIEW_INDEXAT )
 {
-   hb_retptr( new QModelIndex( hbqt_par_QTableView( 1 )->indexAt( *hbqt_par_QPoint( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QTableView( 1 )->indexAt( *hbqt_par_QPoint( 2 ) ) ) ) );
 }
 
 /*

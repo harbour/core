@@ -70,7 +70,6 @@ CREATE CLASS QToolBox INHERIT QFrame
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QToolBox_destroy( ::pPtr )
 
    METHOD  addItem( pWidget, cIconSet, cText )  INLINE  Qt_QToolBox_addItem( ::pPtr, pWidget, cIconSet, cText )
    METHOD  addItem_1( pW, cText )              INLINE  Qt_QToolBox_addItem_1( ::pPtr, pW, cText )

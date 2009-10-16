@@ -70,7 +70,6 @@ CREATE CLASS QTextFrameFormat INHERIT QTextFormat
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextFrameFormat_destroy( ::pPtr )
 
    METHOD  border()                            INLINE  Qt_QTextFrameFormat_border( ::pPtr )
    METHOD  borderBrush()                       INLINE  Qt_QTextFrameFormat_borderBrush( ::pPtr )

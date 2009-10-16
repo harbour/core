@@ -70,6 +70,7 @@
  *  enum ResizeMode { Interactive, Fixed, Stretch, ResizeToContents, Custom }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QHeaderView>
 
@@ -78,19 +79,18 @@
  * QHeaderView ( Qt::Orientation orientation, QWidget * parent = 0 )
  * virtual ~QHeaderView ()
  */
+
 HB_FUNC( QT_QHEADERVIEW )
 {
-   hb_retptr( new QHeaderView( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QHeaderView > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QHEADERVIEW_DESTROY )
-{
-   delete hbqt_par_QHeaderView( 1 );
-}
+   pObj = new QHeaderView( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * bool cascadingSectionResizes () const
  */
@@ -288,7 +288,7 @@ HB_FUNC( QT_QHEADERVIEW_RESTORESTATE )
  */
 HB_FUNC( QT_QHEADERVIEW_SAVESTATE )
 {
-   hb_retptr( new QByteArray( hbqt_par_QHeaderView( 1 )->saveState() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QHeaderView( 1 )->saveState() ) ) );
 }
 
 /*
@@ -456,7 +456,7 @@ HB_FUNC( QT_QHEADERVIEW_SHOWSECTION )
  */
 HB_FUNC( QT_QHEADERVIEW_SIZEHINT )
 {
-   hb_retptr( new QSize( hbqt_par_QHeaderView( 1 )->sizeHint() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QHeaderView( 1 )->sizeHint() ) ) );
 }
 
 /*

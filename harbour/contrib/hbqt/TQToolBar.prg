@@ -70,7 +70,6 @@ CREATE CLASS QToolBar INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QToolBar_destroy( ::pPtr )
 
    METHOD  actionAt( pP )                      INLINE  Qt_QToolBar_actionAt( ::pPtr, pP )
    METHOD  actionAt_1( nX, nY )                INLINE  Qt_QToolBar_actionAt_1( ::pPtr, nX, nY )

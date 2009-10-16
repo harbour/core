@@ -70,7 +70,6 @@ CREATE CLASS QSizePolicy
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QSizePolicy_destroy( ::pPtr )
 
    METHOD  controlType()                       INLINE  Qt_QSizePolicy_controlType( ::pPtr )
    METHOD  expandingDirections()               INLINE  Qt_QSizePolicy_expandingDirections( ::pPtr )

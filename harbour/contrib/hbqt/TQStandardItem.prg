@@ -70,7 +70,6 @@ CREATE CLASS QStandardItem
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStandardItem_destroy( ::pPtr )
 
    METHOD  accessibleDescription()             INLINE  Qt_QStandardItem_accessibleDescription( ::pPtr )
    METHOD  accessibleText()                    INLINE  Qt_QStandardItem_accessibleText( ::pPtr )

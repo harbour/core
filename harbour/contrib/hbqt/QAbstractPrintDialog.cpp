@@ -81,6 +81,7 @@
  *  void setOptionTabs ( const QList<QWidget *> & tabs )
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QAbstractPrintDialog>
 
@@ -88,19 +89,10 @@
 /*
  * QAbstractPrintDialog ( QPrinter * printer, QWidget * parent = 0 )
  */
+
 HB_FUNC( QT_QABSTRACTPRINTDIALOG )
 {
-
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QABSTRACTPRINTDIALOG_DESTROY )
-{
-
-}
-
 /*
  * virtual int exec () = 0
  */

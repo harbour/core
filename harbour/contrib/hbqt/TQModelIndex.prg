@@ -70,7 +70,6 @@ CREATE CLASS QModelIndex
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QModelIndex_destroy( ::pPtr )
 
    METHOD  child( nRow, nColumn )              INLINE  Qt_QModelIndex_child( ::pPtr, nRow, nColumn )
    METHOD  column()                            INLINE  Qt_QModelIndex_column( ::pPtr )

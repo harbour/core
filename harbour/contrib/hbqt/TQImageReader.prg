@@ -70,7 +70,6 @@ CREATE CLASS QImageReader
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QImageReader_destroy( ::pPtr )
 
    METHOD  autoDetectImageFormat()             INLINE  Qt_QImageReader_autoDetectImageFormat( ::pPtr )
    METHOD  backgroundColor()                   INLINE  Qt_QImageReader_backgroundColor( ::pPtr )

@@ -70,7 +70,6 @@ CREATE CLASS QTextEncoder
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextEncoder_destroy( ::pPtr )
 
    METHOD  fromUnicode( cStr )                 INLINE  Qt_QTextEncoder_fromUnicode( ::pPtr, cStr )
 

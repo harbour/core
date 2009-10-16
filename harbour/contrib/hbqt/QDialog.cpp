@@ -70,6 +70,7 @@
  *  enum DialogCode { Accepted, Rejected }
  */
 
+#include <QtCore/QPointer>
 
 #include  <QtGui/QDialog>
 
@@ -78,19 +79,18 @@
  * QDialog ( QWidget * parent = 0, Qt::WindowFlags f = 0 )
  * ~QDialog ()
  */
+
 HB_FUNC( QT_QDIALOG )
 {
-   hb_retptr( new QDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QDialog > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QDIALOG_DESTROY )
-{
-   delete hbqt_par_QDialog( 1 );
-}
+   pObj = new QDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * bool isSizeGripEnabled () const
  */

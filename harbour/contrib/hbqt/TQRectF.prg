@@ -70,7 +70,6 @@ CREATE CLASS QRectF
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QRectF_destroy( ::pPtr )
 
    METHOD  adjust( nDx1, nDy1, nDx2, nDy2 )    INLINE  Qt_QRectF_adjust( ::pPtr, nDx1, nDy1, nDx2, nDy2 )
    METHOD  adjusted( nDx1, nDy1, nDx2, nDy2 )  INLINE  Qt_QRectF_adjusted( ::pPtr, nDx1, nDy1, nDx2, nDy2 )

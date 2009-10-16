@@ -70,7 +70,6 @@ CREATE CLASS QPicture INHERIT QPaintDevice
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QPicture_destroy( ::pPtr )
 
    METHOD  boundingRect()                      INLINE  Qt_QPicture_boundingRect( ::pPtr )
    METHOD  data()                              INLINE  Qt_QPicture_data( ::pPtr )

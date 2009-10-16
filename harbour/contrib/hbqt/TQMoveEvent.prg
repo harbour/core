@@ -70,7 +70,6 @@ CREATE CLASS QMoveEvent INHERIT QEvent
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QMoveEvent_destroy( ::pPtr )
 
    METHOD  oldPos()                            INLINE  Qt_QMoveEvent_oldPos( ::pPtr )
    METHOD  pos()                               INLINE  Qt_QMoveEvent_pos( ::pPtr )

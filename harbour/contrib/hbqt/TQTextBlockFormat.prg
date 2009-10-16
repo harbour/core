@@ -70,7 +70,6 @@ CREATE CLASS QTextBlockFormat INHERIT QTextFormat
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextBlockFormat_destroy( ::pPtr )
 
    METHOD  alignment()                         INLINE  Qt_QTextBlockFormat_alignment( ::pPtr )
    METHOD  bottomMargin()                      INLINE  Qt_QTextBlockFormat_bottomMargin( ::pPtr )

@@ -70,7 +70,6 @@ CREATE CLASS QGroupBox INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QGroupBox_destroy( ::pPtr )
 
    METHOD  alignment()                         INLINE  Qt_QGroupBox_alignment( ::pPtr )
    METHOD  isCheckable()                       INLINE  Qt_QGroupBox_isCheckable( ::pPtr )

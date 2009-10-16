@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <qvariant.h>
 
@@ -76,25 +77,27 @@
  * QWebHistoryItem ( const QWebHistoryItem & other )
  * ~QWebHistoryItem ()
  */
+
 HB_FUNC( QT_QWEBHISTORYITEM )
 {
-   hb_retptr( ( QWebHistoryItem* ) new QWebHistoryItem( *hbqt_par_QWebHistoryItem( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QWEBHISTORYITEM_DESTROY )
-{
-   delete hbqt_par_QWebHistoryItem( 1 );
-}
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      pObj = new QWebHistoryItem( *hbqt_par_QWebHistoryItem( 1 ) ) ;
+   }
 
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QWebHistoryItem" );
+   hb_retptrGC( p );
+}
 /*
  * QIcon icon () const
  */
 HB_FUNC( QT_QWEBHISTORYITEM_ICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QWebHistoryItem( 1 )->icon() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QWebHistoryItem( 1 )->icon() ) ) );
 }
 
 /*
@@ -110,7 +113,7 @@ HB_FUNC( QT_QWEBHISTORYITEM_ISVALID )
  */
 HB_FUNC( QT_QWEBHISTORYITEM_LASTVISITED )
 {
-   hb_retptr( new QDateTime( hbqt_par_QWebHistoryItem( 1 )->lastVisited() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QWebHistoryItem( 1 )->lastVisited() ) ) );
 }
 
 /*
@@ -118,7 +121,7 @@ HB_FUNC( QT_QWEBHISTORYITEM_LASTVISITED )
  */
 HB_FUNC( QT_QWEBHISTORYITEM_ORIGINALURL )
 {
-   hb_retptr( new QUrl( hbqt_par_QWebHistoryItem( 1 )->originalUrl() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QUrl( hbqt_par_QWebHistoryItem( 1 )->originalUrl() ) ) );
 }
 
 /*
@@ -142,7 +145,7 @@ HB_FUNC( QT_QWEBHISTORYITEM_TITLE )
  */
 HB_FUNC( QT_QWEBHISTORYITEM_URL )
 {
-   hb_retptr( new QUrl( hbqt_par_QWebHistoryItem( 1 )->url() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QUrl( hbqt_par_QWebHistoryItem( 1 )->url() ) ) );
 }
 
 /*
@@ -150,7 +153,7 @@ HB_FUNC( QT_QWEBHISTORYITEM_URL )
  */
 HB_FUNC( QT_QWEBHISTORYITEM_USERDATA )
 {
-   hb_retptr( new QVariant( hbqt_par_QWebHistoryItem( 1 )->userData() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QWebHistoryItem( 1 )->userData() ) ) );
 }
 
 

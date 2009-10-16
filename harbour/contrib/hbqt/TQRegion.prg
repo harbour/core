@@ -70,7 +70,6 @@ CREATE CLASS QRegion
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QRegion_destroy( ::pPtr )
 
    METHOD  boundingRect()                      INLINE  Qt_QRegion_boundingRect( ::pPtr )
    METHOD  contains( pP )                      INLINE  Qt_QRegion_contains( ::pPtr, pP )

@@ -70,7 +70,6 @@ CREATE CLASS QWebView INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QWebView_destroy( ::pPtr )
 
    METHOD  findText( cSubString, nOptions )    INLINE  Qt_QWebView_findText( ::pPtr, cSubString, nOptions )
    METHOD  history()                           INLINE  Qt_QWebView_history( ::pPtr )

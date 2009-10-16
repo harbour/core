@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QCheckBox>
 
@@ -74,26 +75,25 @@
  * QCheckBox ( QWidget * parent = 0 )
  * QCheckBox ( const QString & text, QWidget * parent = 0 )
  */
+
 HB_FUNC( QT_QCHECKBOX )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QCheckBox > pObj = NULL;
+
    if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
    {
-      hb_retptr( ( QCheckBox* ) new QCheckBox( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+      pObj = ( QCheckBox* ) new QCheckBox( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
    }
    else
    {
-      hb_retptr( ( QCheckBox* ) new QCheckBox( hbqt_par_QWidget( 1 ) ) );
+      pObj = ( QCheckBox* ) new QCheckBox( hbqt_par_QWidget( 1 ) ) ;
    }
+
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QCHECKBOX_DESTROY )
-{
-
-}
-
 /*
  * Qt::CheckState checkState () const
  */

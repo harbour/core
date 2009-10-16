@@ -70,7 +70,6 @@ CREATE CLASS QTextImageFormat INHERIT QTextCharFormat
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextImageFormat_destroy( ::pPtr )
 
    METHOD  height()                            INLINE  Qt_QTextImageFormat_height( ::pPtr )
    METHOD  isValid()                           INLINE  Qt_QTextImageFormat_isValid( ::pPtr )

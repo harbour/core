@@ -70,7 +70,6 @@ CREATE CLASS QStandardItemModel INHERIT QAbstractItemModeL
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStandardItemModel_destroy( ::pPtr )
 
    METHOD  appendRow( pItem )                  INLINE  Qt_QStandardItemModel_appendRow( ::pPtr, pItem )
    METHOD  clear()                             INLINE  Qt_QStandardItemModel_clear( ::pPtr )

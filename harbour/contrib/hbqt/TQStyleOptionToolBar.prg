@@ -70,7 +70,6 @@ CREATE CLASS QStyleOptionToolBar INHERIT QStyleOption
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleOptionToolBar_destroy( ::pPtr )
 
    METHOD  features()                          INLINE  Qt_QStyleOptionToolBar_features( ::pPtr )
    METHOD  lineWidth()                         INLINE  Qt_QStyleOptionToolBar_lineWidth( ::pPtr )

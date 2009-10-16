@@ -70,7 +70,6 @@ CREATE CLASS QFocusEvent INHERIT QEvent
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QFocusEvent_destroy( ::pPtr )
 
    METHOD  gotFocus()                          INLINE  Qt_QFocusEvent_gotFocus( ::pPtr )
    METHOD  lostFocus()                         INLINE  Qt_QFocusEvent_lostFocus( ::pPtr )

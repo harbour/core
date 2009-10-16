@@ -83,137 +83,214 @@
  */
 /*----------------------------------------------------------------------*/
 
+#include "common.ch"
+
+STATIC qApp
+
+/*----------------------------------------------------------------------*/
+
 INIT PROCEDURE Qt_Start()
-   qt_qapplication()
+   qApp := QApplication():new()
    RETURN
 
 EXIT PROCEDURE Qt_End()
-   qt_qapplication_quit()
+   qApp:quit()
    RETURN
 
 /*----------------------------------------------------------------------*/
 
 PROCEDURE Main()
-   Local oLabel, oBtn, oDA, oTabBar
-   Local oWnd, oSize
-   Local oMenuBar, pIcon
-   Local oMenuA, pAction
-   LOCAL oPS, oPPrv, oMB, oWZ, oCD, oWP, oSBar, oStyle
+   LOCAL nLoops := 500
+   Local oLabel, oBtn, oDA, oWnd, oProg, oSBar, oStyle, i, oSize, n
+   LOCAL aMenu, aTool, aGrid, aTabs, aList, aObj := array( nLoops )
 
-   oWnd := QMainWindow():new()
+hb_toOutDebug( "---b---" )
+
+   FOR i := 1 TO 1 //10
+      oWnd := QMainWindow():new()
+   NEXT
+   oWnd:show()
    oWnd:setMouseTracking( .t. )
-   oWnd:setWindowTitle( "Testing - QMainWindow, QMenu, QMenuBar and QAction " )
+   oWnd:setWindowTitle( "Harbour-Qt Implementation Test Dialog" )
    oWnd:setWindowIcon( "test" )
-   pIcon := oWnd:windowIcon()
 
-   /* The method 2 */
    oWnd:resize( 900, 500 )
 
-   oDA := QWidget():new( oWnd )
+#if 0
+hb_toOutDebug( "///////////////////////" )
+hb_idleSleep( 5 )
+   FOR i := 1 TO nLoops
+      n := 1
+      aObj[n] := QFont():new( "Arial", 12, 0, .f. ); hb_toOutDebug( "Main 0 %s %i", aObj[n]:defaultFamily(), aObj[n]:pointSize() )
+   NEXT
+   oSize := 3
+hb_toOutDebug( "///////////////////////" )
+hb_idlesleep( 5 )
+#endif
+
+   oDA    := QWidget():new( oWnd )
    oWnd:setCentralWidget( QT_PTROF( oDA ) )
 
-   Build_MenuBar( oWnd )
-   Build_ToolBar( oWnd )
+   aMenu  := Build_MenuBar( oWnd )
 
-   oSBar := QStatusBar():new( QT_PTROF( oWnd ) )
+   aTool  := Build_ToolBar( oWnd )
+
+   oSBar  := QStatusBar():new( QT_PTROF( oWnd ) )
    oWnd:setStatusBar( QT_PTROF( oSBar ) )
    oSBar:showMessage( "Harbour-QT Statusbar Ready!" )
 
-   oStyle := QWindowsXPStyle()
+   oStyle := QWindowsXPStyle():new()
    oStyle:standardIcon( 2 )
    oWnd:setStyle( QT_PTROF( oStyle ) )
 
-   Build_Label( oDA, { 30,190 }, { 300, 30 } )
-   Build_PushButton( oDA, { 30,240 }, { 100,50 } )
-   Build_Grid( oDA, { 30, 30 }, { 450,150 } )
-   Build_Tabs( oDA, { 510, 5 }, { 360, 400 } )
-   Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
-   Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
+   oLabel := Build_Label( oDA, { 30,190 }, { 300, 30 } )
+   oBtn   := Build_PushButton( oDA, { 30,240 }, { 100,50 } )
+   aGrid  := Build_Grid( oDA, { 30, 30 }, { 450,150 } )
+   aTabs  := Build_Tabs( oDA, { 510, 5 }, { 360, 400 } )
+   oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
+   aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
 
    oWnd:Show()
 
-   qt_qapplication_exec()
+   /* Cooment out the following line to see the label going off the dialog and memory is released */
+   //oLabel := 2
+
+   /* Uncomment the following line to see in the debugger how objects are released properly */
+   //Dummies()
+
+   qApp:exec()
+
+hb_toOutDebug( "---e---" )
+
+   RETURN
+
+/*----------------------------------------------------------------------*/
+
+PROCEDURE ExecOneMore()
+   Local oLabel, oBtn, oDA, oWnd, oProg, oSBar, oStyle, i, oSize, n
+   LOCAL aMenu, aTool, aGrid, aTabs, aList, oEventLoop, nStart
+   LOCAL lExit := .f.
+
+   oWnd := QMainWindow():new()
+   oWnd:setMouseTracking( .t. )
+   oWnd:setWindowTitle( "Harbour-Qt Implementation Test Dialog" )
+   oWnd:setWindowIcon( "test" )
+   oWnd:resize( 900, 500 )
+
+   oDA    := QWidget():new( oWnd )
+   oWnd:setCentralWidget( QT_PTROF( oDA ) )
+
+   oWnd:show()
+
+   aMenu  := Build_MenuBar( oWnd )
+
+   aTool  := Build_ToolBar( oWnd )
+
+   oSBar  := QStatusBar():new( QT_PTROF( oWnd ) )
+   oWnd:setStatusBar( QT_PTROF( oSBar ) )
+   oSBar:showMessage( "Harbour-QT Statusbar Ready!" )
+
+   oLabel := Build_Label( oDA, { 30,190 }, { 300, 30 } )
+   oBtn   := Build_PushButton( oDA, { 30,240 }, { 100,50 }, ;
+                                   "CLOSE", "This dialog will be closed now!", @lExit )
+   aGrid  := Build_Grid( oDA, { 30, 30 }, { 450,150 } )
+   aTabs  := Build_Tabs( oDA, { 510, 5 }, { 360, 400 } )
+   oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
+   aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
+
+   oEventLoop := QEventLoop():new( QT_PTROF( oWnd ) )
+
+   nStart := seconds()
+   DO WHILE .t.
+      oEventLoop:processEvents()
+      IF lExit
+         EXIT
+      ENDIF
+   ENDDO
+
    RETURN
 
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_MenuBar( oWnd )
-   LOCAL oMenuBar, oMenu
+   LOCAL oMenuBar, oMenu1, oMenu2, oActNew, oActOpen, oActSave
 
    oMenuBar := QMenuBar():new( QT_PTROF( oWnd ) )
    oMenuBar:resize( oWnd:width(), 25 )
 
-   oMenu := QMenu():new( QT_PTROF( oMenuBar ) )
-   oMenu:setTitle( "&File" )
-   Qt_Connect_Signal( oMenu:addAction_1( "new.png" , "&New"  ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )
-   Qt_Connect_Signal( oMenu:addAction_1( "open.png", "&Open" ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open", w, l ) } )
-   oMenu:addSeparator()
-   Qt_Connect_Signal( oMenu:addAction_1( "save.png", "&Save" ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save", w, l ) } )
-   oMenu:addSeparator()
-   Qt_Connect_Signal( oMenu:addAction( "E&xit" ), QT_EVE_TRIGGERED_B, {|w,l| MsgInfo( "Exit ?" ) } )
-   oMenuBar:addMenu( QT_PTROF( oMenu ) )
+   oMenu1 := QMenu():new( QT_PTROF( oMenuBar ) )
+   oMenu1:setTitle( "&File" )
+   Qt_Connect_Signal( oMenu1:addAction_1( "new.png" , "&New"  ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )
+   Qt_Connect_Signal( oMenu1:addAction_1( "open.png", "&Open" ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open", w, l ) } )
+   oMenu1:addSeparator()
+   Qt_Connect_Signal( oMenu1:addAction_1( "save.png", "&Save" ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save", w, l ) } )
+   oMenu1:addSeparator()
+   Qt_Connect_Signal( oMenu1:addAction( "E&xit" ), QT_EVE_TRIGGERED_B, {|w,l| MsgInfo( "Exit ?" ) } )
+   oMenuBar:addMenu( QT_PTROF( oMenu1 ) )
 
-   oMenu := QMenu():new( QT_PTROF( oMenuBar ) )
-   oMenu:setTitle( "&Dialogs" )
-   Qt_Connect_Signal( oMenu:addAction( "&Colors"    ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Colors"   , w, l ) } )
-   Qt_Connect_Signal( oMenu:addAction( "&Fonts"     ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Fonts"    , w, l ) } )
-   oMenu:addSeparator()
-   Qt_Connect_Signal( oMenu:addAction( "&PageSetup" ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "PageSetup", w, l ) } )
-   Qt_Connect_Signal( oMenu:addAction( "P&review"   ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Preview"  , w, l ) } )
-   oMenu:addSeparator()
-   Qt_Connect_Signal( oMenu:addAction( "&Wizard"    ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Wizard"   , w, l ) } )
-   Qt_Connect_Signal( oMenu:addAction( "W&ebPage"   ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "WebPage"  , w, l ) } )
-   oMenuBar:addMenu( QT_PTROF( oMenu ) )
+   oMenu2 := QMenu():new( QT_PTROF( oMenuBar ) )
+   oMenu2:setTitle( "&Dialogs" )
+   Qt_Connect_Signal( oMenu2:addAction( "&Colors"    ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Colors"   , w, l ) } )
+   Qt_Connect_Signal( oMenu2:addAction( "&Fonts"     ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Fonts"    , w, l ) } )
+   oMenu2:addSeparator()
+   Qt_Connect_Signal( oMenu2:addAction( "&PageSetup" ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "PageSetup", w, l ) } )
+   Qt_Connect_Signal( oMenu2:addAction( "P&review"   ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Preview"  , w, l ) } )
+   oMenu2:addSeparator()
+   Qt_Connect_Signal( oMenu2:addAction( "&Wizard"    ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Wizard"   , w, l ) } )
+   Qt_Connect_Signal( oMenu2:addAction( "W&ebPage"   ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "WebPage"  , w, l ) } )
+   oMenu2:addSeparator()
+   Qt_Connect_Signal( oMenu2:addAction( "&Another Dialog" ), QT_EVE_TRIGGERED_B, {|w,l| ExecOneMore() } )
+   oMenuBar:addMenu( QT_PTROF( oMenu2 ) )
 
    oWnd:setMenuBar( QT_PTROF( oMenuBar ) )
 
-   RETURN nil
+   RETURN { oMenu1, oMenu2, oMenuBar }
 
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_ToolBar( oWnd )
-   LOCAL oTB, oAct
+   LOCAL oTB, oActNew, oActOpen, oActSave
 
    /* Create a Toolbar Object */
    oTB := QToolBar():new( QT_PTROF( oWnd ) )
 
    /* Create an action */
-   oAct := QAction():new( QT_PTROF( oWnd ) )
-   oAct:setText( "&New" )
-   oAct:setIcon( "new.png" )
-   oAct:setToolTip( "A New File" )
+   oActNew := QAction():new( QT_PTROF( oWnd ) )
+   oActNew:setText( "&New" )
+   oActNew:setIcon( "new.png" )
+   oActNew:setToolTip( "A New File" )
    /* Attach codeblock to be triggered */
-   Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )
+   Qt_Connect_Signal( QT_PTROF( oActNew ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )
    /* Attach Action with Toolbar */
-   oTB:addAction( QT_PTROF( oAct ) )
+   oTB:addAction( QT_PTROF( oActNew ) )
 
    /* Create another action */
-   oAct := QAction():new( QT_PTROF( oWnd ) )
-   oAct:setText( "&Open" )
-   oAct:setIcon( "open.png" )
-   oAct:setToolTip( "Select a file to be opened!" )
+   oActOpen := QAction():new( QT_PTROF( oWnd ) )
+   oActOpen:setText( "&Open" )
+   oActOpen:setIcon( "open.png" )
+   oActOpen:setToolTip( "Select a file to be opened!" )
    /* Attach codeblock to be triggered */
-   Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open" , w, l ) } )
+   Qt_Connect_Signal( QT_PTROF( oActOpen ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open" , w, l ) } )
    /* Attach Action with Toolbar */
-   oTB:addAction( QT_PTROF( oAct ) )
+   oTB:addAction( QT_PTROF( oActOpen ) )
 
    oTB:addSeparator()
 
    /* Create another action */
-   oAct := QAction():new( QT_PTROF( oWnd ) )
-   oAct:setText( "&Save" )
-   oAct:setIcon( "save.png" )
-   oAct:setToolTip( "Save this file!" )
+   oActSave := QAction():new( QT_PTROF( oWnd ) )
+   oActSave:setText( "&Save" )
+   oActSave:setIcon( "save.png" )
+   oActSave:setToolTip( "Save this file!" )
    /* Attach codeblock to be triggered */
-   Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save" , w, l ) } )
+   Qt_Connect_Signal( QT_PTROF( oActSave ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save" , w, l ) } )
    /* Attach Action with Toolbar */
-   oTB:addAction( QT_PTROF( oAct ) )
+   oTB:addAction( QT_PTROF( oActSave ) )
 
    /* Add this toolbar with main window */
    oWnd:addToolBar_1( QT_PTROF( oTB ) )
 
    ///////////////////////////////////////////////////////////
-
+#if 0
    /* Build another toolbar - we will have two toolbats now */
    oTB := QToolBar():new( QT_PTROF( oWnd ) )
 
@@ -265,22 +342,25 @@ STATIC FUNCTION Build_ToolBar( oWnd )
 
    /* Add this toolbar with main window */
    oWnd:addToolBar_1( QT_PTROF( oTB ) )
-
-   RETURN nil
+#endif
+   RETURN { oActNew, oActOpen, oActSave, oTB }
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION Build_PushButton( oWnd, aPos, aSize )
+STATIC FUNCTION Build_PushButton( oWnd, aPos, aSize, cLabel, cMsg, lExit )
    LOCAL oBtn
 
+   DEFAULT cLabel TO "Push Button"
+   DEFAULT cMsg   TO "Push Button Pressed"
+
    oBtn := QPushButton():new( QT_PTROF( oWnd ) )
-   oBtn:setText( "Push Button" )
+   oBtn:setText( cLabel )
    oBtn:move( aPos[ 1 ],aPos[ 2 ] )
    oBtn:resize( aSize[ 1 ],aSize[ 2 ] )
    oBtn:show()
-   Qt_Connect_Signal( QT_PTROF( oBtn ), QT_EVE_CLICKED, {|| MsgInfo( "Push Button Pressed" ) } )
+   Qt_Connect_Signal( QT_PTROF( oBtn ), QT_EVE_CLICKED, {|| MsgInfo( cMsg ), lExit := .t. } )
 
-   RETURN nil
+   RETURN oBtn
 
 /*----------------------------------------------------------------------*/
 
@@ -310,12 +390,12 @@ STATIC FUNCTION Build_Grid( oWnd, aPos, aSize )
    //
    oGrid:Show()
 
-   RETURN nil
+   RETURN {  oBrushBackItem0x0, oBrushForeItem0x0, oGridItem0x0, oGrid }
 
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_Tabs( oWnd, aPos, aSize )
-   LOCAL oTabWidget, oTab1, oTab2, oTab3
+   LOCAL oTabWidget, oTab1, oTab2, oTab3, aTree, aCntl, aText
 
    oTabWidget := QTabWidget():new( QT_PTROF( oWnd ) )
 
@@ -331,11 +411,11 @@ STATIC FUNCTION Build_Tabs( oWnd, aPos, aSize )
    oTabWidget:ReSize( aSize[ 1 ], aSize[ 2 ] )
    oTabWidget:show()
 
-   Build_Treeview( oTab1 )
-   Build_Controls( oTab2 )
-   Build_TextBox( oTab3 )
+   aTree := Build_Treeview( oTab1 )
+   aCntl := Build_Controls( oTab2 )
+   aText := Build_TextBox( oTab3 )
 
-   RETURN { oTab1, oTab2, oTab3 }
+   RETURN { oTab1, oTab2, oTab3, oTabWidget, aTree, aCntl, aText }
 
 /*----------------------------------------------------------------------*/
 
@@ -351,12 +431,12 @@ STATIC FUNCTION Build_TreeView( oWnd )
    oTV:resize( 345, 365 )
    OTV:show()
 
-   RETURN nil
+   RETURN { oDirModel, oTV }
 
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
-   LOCAL oListBox, oStrList, oStrModel, oAct
+   LOCAL oListBox, oStrList, oStrModel
 
    oListBox := QListView():New( QT_PTROF( oWnd ) )
    oListBox:setMouseTracking( .t. )
@@ -381,7 +461,7 @@ STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
    oListBox:ReSize( aSize[ 1 ], aSize[ 2 ] )
    oListBox:Show()
 
-   RETURN nil
+   RETURN { oStrList, oStrModel, oListBox }
 
 /*----------------------------------------------------------------------*/
 
@@ -395,7 +475,7 @@ STATIC FUNCTION Build_TextBox( oWnd )
    oTextBox:setPlainText( "This is Harbour QT implementation" )
    oTextBox:Show()
 
-   RETURN nil
+   RETURN oTextBox
 
 /*----------------------------------------------------------------------*/
 
@@ -439,7 +519,7 @@ STATIC FUNCTION Build_Controls( oWnd )
    oRadioButton:ReSize( 345, 30 )
    oRadioButton:Show()
 
-   RETURN nil
+   RETURN { oEdit, oCheckBox, oComboBox, oSpinBox, oRadioButton }
 
 /*----------------------------------------------------------------------*/
 
@@ -453,7 +533,7 @@ STATIC FUNCTION Build_ProgressBar( oWnd, aPos, aSize )
    oProgressBar:ReSize( aSize[ 1 ], aSize[ 2 ] )
    oProgressBar:Show()
 
-   RETURN nil
+   RETURN oProgressBar
 
 /*----------------------------------------------------------------------*/
 
@@ -467,7 +547,7 @@ STATIC FUNCTION Build_Label( oWnd, aPos, aSize )
    oLabel:ReSize( aSize[ 1 ], aSize[ 2 ] )
    oLabel:Show()
 
-   RETURN nil
+   RETURN oLabel
 
 /*----------------------------------------------------------------------*/
 
@@ -477,17 +557,18 @@ STATIC FUNCTION MsgInfo( cMsg )
    oMB := QMessageBox():new()
    oMB:setInformativeText( cMsg )
    oMB:setWindowTitle( "Harbour-QT" )
-   oMB:show()
+   oMB:exec()
 
    RETURN nil
 
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION FileDialog( cType, w, l )
-   LOCAL oFD := QFileDialog():new()
+   LOCAL oFD
 
+   oFD := QFileDialog():new()
    oFD:setWindowTitle( "Select a File" )
-   oFD:show()
+   oFD:exec()
 
    RETURN nil
 
@@ -500,30 +581,30 @@ STATIC FUNCTION Dialogs( cType, w, l )
    CASE cType == "PageSetup"
       oDlg := QPageSetupDialog():new()
       oDlg:setWindowTitle( "Harbour-QT PageSetup Dialog" )
-      oDlg:show()
+      oDlg:exec()
    CASE cType == "Preview"
       oDlg := QPrintPreviewDialog():new()
       oDlg:setWindowTitle( "Harbour-QT Preview Dialog" )
-      oDlg:show()
+      oDlg:exec()
    CASE cType == "Wizard"
       oDlg := QWizard():new()
       oDlg:setWindowTitle( "Harbour-QT Wizard to Show Slides etc." )
-      oDlg:show()
+      oDlg:exec()
    CASE cType == "Colors"
       oDlg := QColorDialog():new()
       oDlg:setWindowTitle( "Harbour-QT Color Selection Dialog" )
-      oDlg:show()
+      oDlg:exec()
    CASE cType == "WebPage"
       oDlg := QWebView():new()
       oUrl := QUrl():new()
       oUrl:setUrl( "http://www.harbour.vouch.info" )
       QT_QWebView_SetUrl( QT_PTROF( oDlg ), QT_PTROF( oUrl ) )
       oDlg:setWindowTitle( "Harbour-QT Web Page Navigator" )
-      oDlg:show()
+      oDlg:exec()
    CASE cType == "Fonts"
       oDlg := QFontDialog():new()
       oDlg:setWindowTitle( "Harbour-QT Font Selector" )
-      oDlg:show()
+      oDlg:exec()
    ENDCASE
 
    RETURN nil
@@ -544,16 +625,20 @@ STATIC FUNCTION Dummies()
    LOCAL oSome
 
    oSome := QAbstractButton():new()
+   oSome := QAbstractItemModel():new()
    oSome := QAbstractItemView():new()
+   oSome := QAbstractListModel():new()
    oSome := QAbstractPrintDialog():new()
    oSome := QAbstractScrollArea():new()
    oSome := QAbstractSlider():new()
    oSome := QAbstractSpinBox():new()
+   oSome := QAbstractTableModel():new()
    oSome := QAction():new()
-   //oSome := QApplication():new()
+//   oSome := QApplication():new()
    oSome := QBitmap():new()
    oSome := QBoxLayout():new()
    oSome := QBrush():new()
+   oSome := QButtonGroup():new()
    oSome := QCalendarWidget():new()
    oSome := QCheckBox():new()
    oSome := QClipboard():new()
@@ -563,24 +648,36 @@ STATIC FUNCTION Dummies()
    oSome := QCommandLinkButton():new()
    oSome := QCommonStyle():new()
    oSome := QConicalGradient():new()
-   //oSome := QCoreApplication():new()
+//   oSome := QCoreApplication():new()
+   oSome := QCursor():new()
    oSome := QDateEdit():new()
+   oSome := QDateTime():new()
    oSome := QDateTimeEdit():new()
    oSome := QDesktopWidget():new()
    oSome := QDial():new()
    oSome := QDialog():new()
    oSome := QDir():new()
+   oSome := QDirModel():new()
    oSome := QDockWidget():new()
    oSome := QDoubleSpinBox():new()
+   oSome := QDropEvent():new()
+   oSome := QDragMoveEvent():new()
+   oSome := QDragEnterEvent():new()
+   oSome := QDragLeaveEvent():new()
    oSome := QErrorMessage():new()
    oSome := QEvent():new()
    oSome := QEventLoop():new()
    oSome := QFileDialog():new()
+   oSome := QFileSystemModel():new()
+   oSome := QFocusEvent():new()
    oSome := QFocusFrame():new()
    oSome := QFont():new()
    oSome := QFontComboBox():new()
+   oSome := QFontDatabase():new()
    oSome := QFontDialog():new()
    oSome := QFontInfo():new()
+   oSome := QFontMetrics():new()
+   oSome := QFontMetricsF():new()
    oSome := QFormLayout():new()
    oSome := QFrame():new()
    oSome := QFtp():new()
@@ -596,13 +693,19 @@ STATIC FUNCTION Dummies()
    oSome := QImageWriter():new()
    oSome := QInputDialog():new()
    oSome := QInputEvent():new()
+   oSome := QIODevice():new()
+   oSome := QKeyEvent():new()
+   oSome := QKeySequence():new()
    oSome := QLabel():new()
+   oSome := QLatin1Char():new()
+   oSome := QLatin1String():new()
    oSome := QLayout():new()
    oSome := QLayoutItem():new()
    oSome := QLCDNumber():new()
    oSome := QLine():new()
    oSome := QLinearGradient():new()
    oSome := QLineEdit():new()
+   oSome := QList():new()
    oSome := QListView():new()
    oSome := QListWidget():new()
    oSome := QListWidgetItem():new()
@@ -610,6 +713,9 @@ STATIC FUNCTION Dummies()
    oSome := QMenu():new()
    oSome := QMenuBar():new()
    oSome := QMessageBox():new()
+   oSome := QModelIndex():new()
+   oSome := QMouseEvent():new()
+   oSome := QMoveEvent():new()
    oSome := QObject():new()
    oSome := QPaintDevice():new()
    oSome := QPageSetupDialog():new()
@@ -622,15 +728,19 @@ STATIC FUNCTION Dummies()
    oSome := QPoint():new()
    oSome := QPointF():new()
    oSome := QPrintDialog():new()
+   oSome := QPrintEngine():new()
+   oSome := QPrinter():new()
    oSome := QPrintPreviewDialog():new()
+   oSome := QProcess():new()
    oSome := QProgressBar():new()
    oSome := QProgressDialog():new()
    oSome := QPushButton():new()
    oSome := QRadialGradient():new()
+   oSome := QRadioButton():new()
    oSome := QRect():new()
    oSome := QRectF():new()
-   oSome := QRadioButton():new()
    oSome := QRegion():new()
+   oSome := QResizeEvent():new()
    oSome := QResource():new()
    oSome := QScrollArea():new()
    oSome := QScrollBar():new()
@@ -647,8 +757,11 @@ STATIC FUNCTION Dummies()
    oSome := QStandardItem():new()
    oSome := QStandardItemModel():new()
    oSome := QStatusBar():new()
+   oSome := QStringList():new()
+   oSome := QStringListModel():new()
    oSome := QStyle():new()
    oSome := QStyledItemDelegate():new()
+   oSome := QStyleFactory():new()
    oSome := QStyleHintReturn():new()
    oSome := QStyleHintReturnMask():new()
    oSome := QStyleHintReturnVariant():new()
@@ -675,6 +788,7 @@ STATIC FUNCTION Dummies()
    oSome := QStyleOptionToolButton():new()
    oSome := QStyleOptionViewItem():new()
    oSome := QStylePainter():new()
+   oSome := QSystemTrayIcon():new()
    oSome := QTabBar():new()
    oSome := QTableView():new()
    oSome := QTableWidget():new()
@@ -717,12 +831,25 @@ STATIC FUNCTION Dummies()
    oSome := QUrl():new()
    oSome := QVariant():new()
    oSome := QVBoxLayout():new()
+   oSome := QWebFrame():new()
+   oSome := QWebHistory():new()
+   oSome := QWebHistoryInterface():new()
+   oSome := QWebHistoryItem():new()
+   oSome := QWebHitTestResult():new()
    oSome := QWebPage():new()
-   oSome := QWidget():new()
+   oSome := QWebPluginFactory():new()
+   oSome := QWebSecurityOrigin():new()
+   oSome := QWebSettings():new()
    oSome := QWebView():new()
+   oSome := QWheelEvent():new()
+   oSome := QWidget():new()
+   oSome := QWidgetAction():new()
+   oSome := QWidgetItem():new()
    oSome := QWindowsStyle():new()
    oSome := QWindowsXPStyle():new()
    oSome := QWizard():new()
+
+   oSome := 1
 
    RETURN nil
 
@@ -748,3 +875,4 @@ FUNCTION ShowInSystemTray( oWnd )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
+

@@ -70,7 +70,6 @@ CREATE CLASS QTreeWidget INHERIT QTreeView
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTreeWidget_destroy( ::pPtr )
 
    METHOD  addTopLevelItem( pItem )            INLINE  Qt_QTreeWidget_addTopLevelItem( ::pPtr, pItem )
    METHOD  closePersistentEditor( pItem, nColumn )  INLINE  Qt_QTreeWidget_closePersistentEditor( ::pPtr, pItem, nColumn )

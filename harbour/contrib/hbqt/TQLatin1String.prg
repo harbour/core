@@ -70,7 +70,6 @@ CREATE CLASS QLatin1String
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QLatin1String_destroy( ::pPtr )
 
    METHOD  latin1()                            INLINE  Qt_QLatin1String_latin1( ::pPtr )
 

@@ -71,6 +71,7 @@
  *  flags PrintDialogOptions
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QPrintDialog>
 
@@ -80,19 +81,18 @@
  * QPrintDialog ( QWidget * parent = 0 )
  * ~QPrintDialog ()
  */
+
 HB_FUNC( QT_QPRINTDIALOG )
 {
-   hb_retptr( ( QPrintDialog* ) new QPrintDialog ( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QPrintDialog > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QPRINTDIALOG_DESTROY )
-{
-   delete hbqt_par_QPrintDialog( 1 );
-}
+   pObj = ( QPrintDialog* ) new QPrintDialog ( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * virtual void done ( int result )
  */

@@ -70,7 +70,6 @@ CREATE CLASS QFont
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QFont_destroy( ::pPtr )
 
    METHOD  bold()                              INLINE  Qt_QFont_bold( ::pPtr )
    METHOD  capitalization()                    INLINE  Qt_QFont_capitalization( ::pPtr )

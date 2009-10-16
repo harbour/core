@@ -70,7 +70,6 @@ CREATE CLASS QButtonGroup INHERIT QObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QButtonGroup_destroy( ::pPtr )
 
    METHOD  addButton( pButton )                INLINE  Qt_QButtonGroup_addButton( ::pPtr, pButton )
    METHOD  addButton_1( pButton, nId )         INLINE  Qt_QButtonGroup_addButton_1( ::pPtr, pButton, nId )

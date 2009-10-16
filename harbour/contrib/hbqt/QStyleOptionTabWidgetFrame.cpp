@@ -71,6 +71,7 @@
  *  enum StyleOptionVersion { Version }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionTabWidgetFrame>
 
@@ -79,25 +80,21 @@
  * QStyleOptionTabWidgetFrame ()
  * QStyleOptionTabWidgetFrame ( const QStyleOptionTabWidgetFrame & other )
  */
+
 HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME )
 {
-   hb_retptr( ( QStyleOptionTabWidgetFrame* ) new QStyleOptionTabWidgetFrame() );
+   void * pObj = NULL;
+
+   pObj = ( QStyleOptionTabWidgetFrame* ) new QStyleOptionTabWidgetFrame() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_DESTROY )
-{
-
-}
-
 /*
  * QSize leftCornerWidgetSize
  */
 HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_LEFTCORNERWIDGETSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->leftCornerWidgetSize ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->leftCornerWidgetSize ) ) );
 }
 
 /*
@@ -121,7 +118,7 @@ HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_MIDLINEWIDTH )
  */
 HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_RIGHTCORNERWIDGETSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->rightCornerWidgetSize ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->rightCornerWidgetSize ) ) );
 }
 
 /*
@@ -137,7 +134,7 @@ HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_SHAPE )
  */
 HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_TABBARSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->tabBarSize ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->tabBarSize ) ) );
 }
 
 

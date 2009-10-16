@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QFocusFrame>
 
@@ -74,19 +75,18 @@
  * QFocusFrame ( QWidget * parent = 0 )
  * ~QFocusFrame ()
  */
+
 HB_FUNC( QT_QFOCUSFRAME )
 {
-   hb_retptr( ( QFocusFrame* ) new QFocusFrame( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QFocusFrame > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QFOCUSFRAME_DESTROY )
-{
-   delete hbqt_par_QFocusFrame( 1 );
-}
+   pObj = ( QFocusFrame* ) new QFocusFrame( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * void setWidget ( QWidget * widget )
  */

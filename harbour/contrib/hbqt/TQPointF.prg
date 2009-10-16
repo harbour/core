@@ -70,7 +70,6 @@ CREATE CLASS QPointF
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QPointF_destroy( ::pPtr )
 
    METHOD  isNull()                            INLINE  Qt_QPointF_isNull( ::pPtr )
    METHOD  rx()                                INLINE  Qt_QPointF_rx( ::pPtr )

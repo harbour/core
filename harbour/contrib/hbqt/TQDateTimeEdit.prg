@@ -70,7 +70,6 @@ CREATE CLASS QDateTimeEdit INHERIT QAbstractSpinBox
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QDateTimeEdit_destroy( ::pPtr )
 
    METHOD  calendarPopup()                     INLINE  Qt_QDateTimeEdit_calendarPopup( ::pPtr )
    METHOD  calendarWidget()                    INLINE  Qt_QDateTimeEdit_calendarWidget( ::pPtr )

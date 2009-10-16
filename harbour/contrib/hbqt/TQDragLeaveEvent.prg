@@ -70,7 +70,6 @@ CREATE CLASS QDragLeaveEvent INHERIT QEvent
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QDragLeaveEvent_destroy( ::pPtr )
 
 
    ENDCLASS

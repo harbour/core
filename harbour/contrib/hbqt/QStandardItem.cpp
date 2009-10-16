@@ -86,6 +86,7 @@
  *  QList<QStandardItem *> takeRow ( int row )
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStandardItem>
 
@@ -97,19 +98,15 @@
  * QStandardItem ( int rows, int columns = 1 )
  * virtual ~QStandardItem ()
  */
+
 HB_FUNC( QT_QSTANDARDITEM )
 {
-   hb_retptr( ( QStandardItem* ) new QStandardItem() );
-}
+   void * pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTANDARDITEM_DESTROY )
-{
-   delete hbqt_par_QStandardItem( 1 );
-}
+   pObj = ( QStandardItem* ) new QStandardItem() ;
 
+   hb_retptr( pObj );
+}
 /*
  * QString accessibleDescription () const
  */
@@ -139,7 +136,7 @@ HB_FUNC( QT_QSTANDARDITEM_APPENDROW )
  */
 HB_FUNC( QT_QSTANDARDITEM_BACKGROUND )
 {
-   hb_retptr( new QBrush( hbqt_par_QStandardItem( 1 )->background() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QBrush( hbqt_par_QStandardItem( 1 )->background() ) ) );
 }
 
 /*
@@ -187,7 +184,7 @@ HB_FUNC( QT_QSTANDARDITEM_COLUMNCOUNT )
  */
 HB_FUNC( QT_QSTANDARDITEM_DATA )
 {
-   hb_retptr( new QVariant( hbqt_par_QStandardItem( 1 )->data( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : Qt::UserRole + 1 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QStandardItem( 1 )->data( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : Qt::UserRole + 1 ) ) ) ) );
 }
 
 /*
@@ -203,7 +200,7 @@ HB_FUNC( QT_QSTANDARDITEM_FLAGS )
  */
 HB_FUNC( QT_QSTANDARDITEM_FONT )
 {
-   hb_retptr( new QFont( hbqt_par_QStandardItem( 1 )->font() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QStandardItem( 1 )->font() ) ) );
 }
 
 /*
@@ -211,7 +208,7 @@ HB_FUNC( QT_QSTANDARDITEM_FONT )
  */
 HB_FUNC( QT_QSTANDARDITEM_FOREGROUND )
 {
-   hb_retptr( new QBrush( hbqt_par_QStandardItem( 1 )->foreground() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QBrush( hbqt_par_QStandardItem( 1 )->foreground() ) ) );
 }
 
 /*
@@ -227,7 +224,7 @@ HB_FUNC( QT_QSTANDARDITEM_HASCHILDREN )
  */
 HB_FUNC( QT_QSTANDARDITEM_ICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QStandardItem( 1 )->icon() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QStandardItem( 1 )->icon() ) ) );
 }
 
 /*
@@ -235,7 +232,7 @@ HB_FUNC( QT_QSTANDARDITEM_ICON )
  */
 HB_FUNC( QT_QSTANDARDITEM_INDEX )
 {
-   hb_retptr( new QModelIndex( hbqt_par_QStandardItem( 1 )->index() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QStandardItem( 1 )->index() ) ) );
 }
 
 /*
@@ -603,7 +600,7 @@ HB_FUNC( QT_QSTANDARDITEM_SETWHATSTHIS )
  */
 HB_FUNC( QT_QSTANDARDITEM_SIZEHINT )
 {
-   hb_retptr( new QSize( hbqt_par_QStandardItem( 1 )->sizeHint() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QStandardItem( 1 )->sizeHint() ) ) );
 }
 
 /*

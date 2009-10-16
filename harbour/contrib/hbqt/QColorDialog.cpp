@@ -71,6 +71,7 @@
  *  flags ColorDialogOptions
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QColorDialog>
 
@@ -79,33 +80,31 @@
  * QColorDialog ( const QColor & initial, QWidget * parent = 0 )
  * ~QColorDialog ()
  */
+
 HB_FUNC( QT_QCOLORDIALOG )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QColorDialog > pObj = NULL;
+
    if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
    {
-      hb_retptr( ( QColorDialog* ) new QColorDialog( hb_parni( 1 ),
-                                            hbqt_par_QWidget( 2 ) ) );
+      pObj = ( QColorDialog* ) new QColorDialog( hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) ;
    }
    else
    {
-      hb_retptr( ( QColorDialog* ) new QColorDialog( hbqt_par_QWidget( 1 ) ) );
+      pObj = ( QColorDialog* ) new QColorDialog( hbqt_par_QWidget( 1 ) ) ;
    }
-}
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QCOLORDIALOG_DESTROY )
-{
-   delete hbqt_par_QColorDialog( 1 );
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
 /*
  * QColor currentColor () const
  */
 HB_FUNC( QT_QCOLORDIALOG_CURRENTCOLOR )
 {
-   hb_retptr( new QColor( hbqt_par_QColorDialog( 1 )->currentColor() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QColorDialog( 1 )->currentColor() ) ) );
 }
 
 /*
@@ -129,7 +128,7 @@ HB_FUNC( QT_QCOLORDIALOG_OPTIONS )
  */
 HB_FUNC( QT_QCOLORDIALOG_SELECTEDCOLOR )
 {
-   hb_retptr( new QColor( hbqt_par_QColorDialog( 1 )->selectedColor() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QColorDialog( 1 )->selectedColor() ) ) );
 }
 
 /*
@@ -193,7 +192,7 @@ HB_FUNC( QT_QCOLORDIALOG_CUSTOMCOUNT )
  */
 HB_FUNC( QT_QCOLORDIALOG_GETCOLOR )
 {
-   hb_retptr( new QColor( hbqt_par_QColorDialog( 1 )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ), hbqt_par_QString( 4 ), ( QColorDialog::ColorDialogOptions ) hb_parni( 5 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QColorDialog( 1 )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ), hbqt_par_QString( 4 ), ( QColorDialog::ColorDialogOptions ) hb_parni( 5 ) ) ) ) );
 }
 
 /*
@@ -201,7 +200,7 @@ HB_FUNC( QT_QCOLORDIALOG_GETCOLOR )
  */
 HB_FUNC( QT_QCOLORDIALOG_GETCOLOR_1 )
 {
-   hb_retptr( new QColor( hbqt_par_QColorDialog( 1 )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QColorDialog( 1 )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ) ) ) ) );
 }
 
 /*

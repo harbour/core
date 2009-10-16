@@ -70,7 +70,6 @@ CREATE CLASS QLayout INHERIT QObject, QLayoutItem
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QLayout_destroy( ::pPtr )
 
    METHOD  activate()                          INLINE  Qt_QLayout_activate( ::pPtr )
    METHOD  addItem( pItem )                    INLINE  Qt_QLayout_addItem( ::pPtr, pItem )

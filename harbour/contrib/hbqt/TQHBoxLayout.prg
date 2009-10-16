@@ -70,7 +70,6 @@ CREATE CLASS QHBoxLayout INHERIT QBoxLayout
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QHBoxLayout_destroy( ::pPtr )
 
 
    ENDCLASS

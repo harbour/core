@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QLine>
 
@@ -75,40 +76,39 @@
  * QLine ( const QPoint & p1, const QPoint & p2 )
  * QLine ( int x1, int y1, int x2, int y2 )
  */
+
 HB_FUNC( QT_QLINE )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
+
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( ( QLine* ) new QLine( *hbqt_par_QLine( 1 ) ) );
+      pObj = ( QLine* ) new QLine( *hbqt_par_QLine( 1 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      hb_retptr( ( QLine* ) new QLine( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) );
+      pObj = ( QLine* ) new QLine( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) ;
    }
    else if( hb_pcount() == 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
    {
-      hb_retptr( ( QLine* ) new QLine( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) );
+      pObj = ( QLine* ) new QLine( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) ;
    }
    else
    {
-      hb_retptr( ( QLine* ) new QLine() );
+      pObj = ( QLine* ) new QLine() ;
    }
+
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QLine" );
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QLINE_DESTROY )
-{
-
-}
-
 /*
  * QPoint p1 () const
  */
 HB_FUNC( QT_QLINE_P1 )
 {
-   hb_retptr( new QPoint( hbqt_par_QLine( 1 )->p1() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QLine( 1 )->p1() ) ) );
 }
 
 /*
@@ -116,7 +116,7 @@ HB_FUNC( QT_QLINE_P1 )
  */
 HB_FUNC( QT_QLINE_P2 )
 {
-   hb_retptr( new QPoint( hbqt_par_QLine( 1 )->p2() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QLine( 1 )->p2() ) ) );
 }
 
 /*
@@ -228,7 +228,7 @@ HB_FUNC( QT_QLINE_TRANSLATE_1 )
  */
 HB_FUNC( QT_QLINE_TRANSLATED )
 {
-   hb_retptr( new QLine( hbqt_par_QLine( 1 )->translated( *hbqt_par_QPoint( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QLine( hbqt_par_QLine( 1 )->translated( *hbqt_par_QPoint( 2 ) ) ) ) );
 }
 
 /*
@@ -236,7 +236,7 @@ HB_FUNC( QT_QLINE_TRANSLATED )
  */
 HB_FUNC( QT_QLINE_TRANSLATED_1 )
 {
-   hb_retptr( new QLine( hbqt_par_QLine( 1 )->translated( hb_parni( 2 ), hb_parni( 3 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QLine( hbqt_par_QLine( 1 )->translated( hb_parni( 2 ), hb_parni( 3 ) ) ) ) );
 }
 
 

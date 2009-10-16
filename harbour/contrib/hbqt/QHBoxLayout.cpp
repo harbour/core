@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QHBoxLayout>
 
@@ -75,19 +76,18 @@
  * QHBoxLayout ( QWidget * parent )
  * ~QHBoxLayout ()
  */
+
 HB_FUNC( QT_QHBOXLAYOUT )
 {
-   hb_retptr( ( QHBoxLayout * ) new QHBoxLayout( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QHBoxLayout > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QHBOXLAYOUT_DESTROY )
-{
-   delete hbqt_par_QHBoxLayout( 1 );
-}
+   pObj = ( QHBoxLayout * ) new QHBoxLayout( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QWidgetItem>
 
@@ -73,19 +74,15 @@
 /*
  * QWidgetItem ( QWidget * widget )
  */
+
 HB_FUNC( QT_QWIDGETITEM )
 {
-   hb_retptr( ( QWidgetItem* ) new QWidgetItem( hbqt_par_QWidget( 1 ) ) );
+   void * pObj = NULL;
+
+   pObj = ( QWidgetItem* ) new QWidgetItem( hbqt_par_QWidget( 1 ) ) ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QWIDGETITEM_DESTROY )
-{
-
-}
-
 /*
  * virtual bool isEmpty () const
  */

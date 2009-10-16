@@ -70,7 +70,6 @@ CREATE CLASS QTextLayout
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextLayout_destroy( ::pPtr )
 
    METHOD  beginLayout()                       INLINE  Qt_QTextLayout_beginLayout( ::pPtr )
    METHOD  boundingRect()                      INLINE  Qt_QTextLayout_boundingRect( ::pPtr )

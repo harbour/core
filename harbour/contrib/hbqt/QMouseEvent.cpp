@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QMouseEvent>
 
@@ -75,19 +76,18 @@
  * QMouseEvent ( Type type, const QPoint & pos, const QPoint & globalPos, Qt::MouseButton button, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers )
  * ~QMouseEvent ()
  */
+
 HB_FUNC( QT_QMOUSEEVENT )
 {
-   hb_retptr( ( QMouseEvent * ) new QMouseEvent( *hbqt_par_QMouseEvent( 1 ) ) );
-}
+   void * pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QMOUSEEVENT_DESTROY )
-{
-   delete hbqt_par_QMouseEvent( 1 );
-}
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      pObj = new QMouseEvent( *hbqt_par_QMouseEvent( 1 ) ) ;
+   }
 
+   hb_retptr( pObj );
+}
 /*
  * Qt::MouseButton button () const
  */
@@ -109,7 +109,7 @@ HB_FUNC( QT_QMOUSEEVENT_BUTTONS )
  */
 HB_FUNC( QT_QMOUSEEVENT_GLOBALPOS )
 {
-   hb_retptr( new QPoint( hbqt_par_QMouseEvent( 1 )->globalPos() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QMouseEvent( 1 )->globalPos() ) ) );
 }
 
 /*
@@ -133,7 +133,7 @@ HB_FUNC( QT_QMOUSEEVENT_GLOBALY )
  */
 HB_FUNC( QT_QMOUSEEVENT_POS )
 {
-   hb_retptr( new QPoint( hbqt_par_QMouseEvent( 1 )->pos() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QMouseEvent( 1 )->pos() ) ) );
 }
 
 /*
@@ -141,7 +141,7 @@ HB_FUNC( QT_QMOUSEEVENT_POS )
  */
 HB_FUNC( QT_QMOUSEEVENT_POSF )
 {
-   hb_retptr( new QPointF( hbqt_par_QMouseEvent( 1 )->posF() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPointF( hbqt_par_QMouseEvent( 1 )->posF() ) ) );
 }
 
 /*

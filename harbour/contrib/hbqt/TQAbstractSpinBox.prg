@@ -70,7 +70,6 @@ CREATE CLASS QAbstractSpinBox INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QAbstractSpinBox_destroy( ::pPtr )
 
    METHOD  alignment()                         INLINE  Qt_QAbstractSpinBox_alignment( ::pPtr )
    METHOD  buttonSymbols()                     INLINE  Qt_QAbstractSpinBox_buttonSymbols( ::pPtr )

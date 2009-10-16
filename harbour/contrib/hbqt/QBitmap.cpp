@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QBitmap>
 
@@ -78,53 +79,52 @@
  * QBitmap ( const QString & fileName, const char * format = 0 )
  * ~QBitmap ()
  */
+
 HB_FUNC( QT_QBITMAP )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
+
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( ( QBitmap* ) new QBitmap( *hbqt_par_QBitmap( 1 ) ) );
+      pObj = ( QBitmap* ) new QBitmap( *hbqt_par_QBitmap( 1 ) ) ;
    }
    else if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
-      hb_retptr( ( QBitmap* ) new QBitmap( hbqt_par_QString( 1 ), ( const char * ) 0 ) );
+      pObj = ( QBitmap* ) new QBitmap( hbqt_par_QString( 1 ), ( const char * ) 0 ) ;
    }
    else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
-      hb_retptr( ( QBitmap* ) new QBitmap( hbqt_par_QString( 1 ), hb_parc( 2 ) ) );
+      pObj = ( QBitmap* ) new QBitmap( hbqt_par_QString( 1 ), hb_parc( 2 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-      hb_retptr( ( QBitmap* ) new QBitmap( hb_parni( 1 ), hb_parni( 2 ) ) );
+      pObj = ( QBitmap* ) new QBitmap( hb_parni( 1 ), hb_parni( 2 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
    {
       if(      ( QString ) "QPixmap" == hbqt_par_QString( 1 ) )
       {
-         hb_retptr( ( QBitmap* ) new QBitmap( *hbqt_par_QPixmap( 2 ) ) );
+         pObj = ( QBitmap* ) new QBitmap( *hbqt_par_QPixmap( 2 ) ) ;
       }
       else if( ( QString ) "QSize"   == hbqt_par_QString( 1 ) )
       {
-         hb_retptr( ( QBitmap* ) new QBitmap( *hbqt_par_QSize( 2 ) ) );
+         pObj = ( QBitmap* ) new QBitmap( *hbqt_par_QSize( 2 ) ) ;
       }
       else
       {
-         hb_retptr( ( QBitmap* ) new QBitmap() );
+         pObj = ( QBitmap* ) new QBitmap() ;
       }
    }
    else
    {
-      hb_retptr( ( QBitmap* ) new QBitmap() );
+      pObj = ( QBitmap* ) new QBitmap() ;
    }
-}
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QBITMAP_DESTROY )
-{
-   delete hbqt_par_QBitmap( 1 );
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QBitmap" );
+   hb_retptrGC( p );
 }
-
 /*
  * void clear ()
  */
@@ -138,7 +138,7 @@ HB_FUNC( QT_QBITMAP_CLEAR )
  */
 HB_FUNC( QT_QBITMAP_TRANSFORMED )
 {
-   hb_retptr( new QBitmap( hbqt_par_QBitmap( 1 )->transformed( *hbqt_par_QTransform( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QBitmap( hbqt_par_QBitmap( 1 )->transformed( *hbqt_par_QTransform( 2 ) ) ) ) );
 }
 
 /*
@@ -146,7 +146,7 @@ HB_FUNC( QT_QBITMAP_TRANSFORMED )
  */
 HB_FUNC( QT_QBITMAP_TRANSFORMED_1 )
 {
-   hb_retptr( new QBitmap( hbqt_par_QBitmap( 1 )->transformed( *hbqt_par_QMatrix( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QBitmap( hbqt_par_QBitmap( 1 )->transformed( *hbqt_par_QMatrix( 2 ) ) ) ) );
 }
 
 /*
@@ -154,7 +154,7 @@ HB_FUNC( QT_QBITMAP_TRANSFORMED_1 )
  */
 HB_FUNC( QT_QBITMAP_FROMIMAGE )
 {
-   hb_retptr( new QBitmap( hbqt_par_QBitmap( 1 )->fromImage( *hbqt_par_QImage( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ImageConversionFlags ) hb_parni( 3 ) : ( Qt::ImageConversionFlags ) Qt::AutoColor ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QBitmap( hbqt_par_QBitmap( 1 )->fromImage( *hbqt_par_QImage( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ImageConversionFlags ) hb_parni( 3 ) : ( Qt::ImageConversionFlags ) Qt::AutoColor ) ) ) ) );
 }
 
 

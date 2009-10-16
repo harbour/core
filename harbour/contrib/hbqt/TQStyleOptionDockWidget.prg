@@ -70,7 +70,6 @@ CREATE CLASS QStyleOptionDockWidget INHERIT QStyleOption
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleOptionDockWidget_destroy( ::pPtr )
 
    METHOD  closable()                          INLINE  Qt_QStyleOptionDockWidget_closable( ::pPtr )
    METHOD  floatable()                         INLINE  Qt_QStyleOptionDockWidget_floatable( ::pPtr )

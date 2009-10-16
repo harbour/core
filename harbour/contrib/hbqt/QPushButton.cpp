@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QPushButton>
 
@@ -76,19 +77,18 @@
  * QPushButton ( const QIcon & icon, const QString & text, QWidget * parent = 0 )
  * ~QPushButton ()
  */
+
 HB_FUNC( QT_QPUSHBUTTON )
 {
-    hb_retptr( ( QPushButton* ) new QPushButton( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QPushButton > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QPUSHBUTTON_DESTROY )
-{
-   delete hbqt_par_QPushButton( 1 );
-}
+    pObj = ( QPushButton* ) new QPushButton( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * bool autoDefault () const
  */

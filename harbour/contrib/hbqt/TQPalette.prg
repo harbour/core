@@ -70,7 +70,6 @@ CREATE CLASS QPalette
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QPalette_destroy( ::pPtr )
 
    METHOD  alternateBase()                     INLINE  Qt_QPalette_alternateBase( ::pPtr )
    METHOD  base()                              INLINE  Qt_QPalette_base( ::pPtr )

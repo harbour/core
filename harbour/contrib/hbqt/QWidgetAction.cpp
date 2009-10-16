@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QWidgetAction>
 
@@ -74,19 +75,18 @@
  * QWidgetAction ( QObject * parent )
  * virtual ~QWidgetAction ()
  */
+
 HB_FUNC( QT_QWIDGETACTION )
 {
-   hb_retptr( ( QWidgetAction* ) new QWidgetAction( hbqt_par_QObject( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QWidgetAction > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QWIDGETACTION_DESTROY )
-{
-   delete hbqt_par_QWidgetAction( 1 );
-}
+   pObj = ( QWidgetAction* ) new QWidgetAction( hbqt_par_QObject( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * QWidget * defaultWidget () const
  */

@@ -81,6 +81,7 @@
  *  QList<QStandardItem *> takeRow ( int row )
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStandardItemModel>
 
@@ -90,19 +91,18 @@
  * QStandardItemModel ( int rows, int columns, QObject * parent = 0 )
  * ~QStandardItemModel ()
  */
+
 HB_FUNC( QT_QSTANDARDITEMMODEL )
 {
-   hb_retptr( ( QStandardItemModel* ) new QStandardItemModel( hbqt_par_QObject( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QStandardItemModel > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTANDARDITEMMODEL_DESTROY )
-{
-   delete hbqt_par_QStandardItemModel( 1 );
-}
+   pObj = ( QStandardItemModel* ) new QStandardItemModel( hbqt_par_QObject( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * void appendRow ( QStandardItem * item )
  */
@@ -132,7 +132,7 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_HORIZONTALHEADERITEM )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_INDEXFROMITEM )
 {
-   hb_retptr( new QModelIndex( hbqt_par_QStandardItemModel( 1 )->indexFromItem( hbqt_par_QStandardItem( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QStandardItemModel( 1 )->indexFromItem( hbqt_par_QStandardItem( 2 ) ) ) ) );
 }
 
 /*

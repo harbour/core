@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStringListModel>
 
@@ -74,25 +75,24 @@
  * QStringListModel ( QObject * parent = 0 )
  * QStringListModel ( const QStringList & strings, QObject * parent = 0 )
  */
+
 HB_FUNC( QT_QSTRINGLISTMODEL )
 {
-   hb_retptr( ( QStringListModel* ) new QStringListModel() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QStringListModel > pObj = NULL;
+
+   pObj = ( QStringListModel* ) new QStringListModel() ;
+
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTRINGLISTMODEL_DESTROY )
-{
-
-}
-
 /*
  * virtual QVariant data ( const QModelIndex & index, int role ) const
  */
 HB_FUNC( QT_QSTRINGLISTMODEL_DATA )
 {
-   hb_retptr( new QVariant( hbqt_par_QStringListModel( 1 )->data( *hbqt_par_QModelIndex( 2 ), hb_parni( 3 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QStringListModel( 1 )->data( *hbqt_par_QModelIndex( 2 ), hb_parni( 3 ) ) ) ) );
 }
 
 /*
@@ -148,7 +148,7 @@ HB_FUNC( QT_QSTRINGLISTMODEL_SETSTRINGLIST )
  */
 HB_FUNC( QT_QSTRINGLISTMODEL_STRINGLIST )
 {
-   hb_retptr( new QStringList( hbqt_par_QStringListModel( 1 )->stringList() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QStringListModel( 1 )->stringList() ) ) );
 }
 
 

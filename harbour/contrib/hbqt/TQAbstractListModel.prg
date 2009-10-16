@@ -70,7 +70,6 @@ CREATE CLASS QAbstractListModel INHERIT QAbstractItemModel
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QAbstractListModel_destroy( ::pPtr )
 
    METHOD  index( nRow, nColumn, pParent )     INLINE  Qt_QAbstractListModel_index( ::pPtr, nRow, nColumn, pParent )
 

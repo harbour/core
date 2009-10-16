@@ -70,6 +70,7 @@
  *  enum Direction { LeftToRight, RightToLeft, TopToBottom, BottomToTop }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QBoxLayout>
 
@@ -78,20 +79,18 @@
  * QBoxLayout ( Direction dir, QWidget * parent = 0 )
  * ~QBoxLayout ()
  */
+
 HB_FUNC( QT_QBOXLAYOUT )
 {
-   hb_retptr( ( QBoxLayout* ) new QBoxLayout( ( QBoxLayout::Direction ) hb_parni( 1 ),
-                                                   hbqt_par_QWidget( 2 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QBoxLayout > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QBOXLAYOUT_DESTROY )
-{
-   delete hbqt_par_QBoxLayout( 1 );
-}
+   pObj = ( QBoxLayout* ) new QBoxLayout( ( QBoxLayout::Direction ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * void addLayout ( QLayout * layout, int stretch = 0 )
  */

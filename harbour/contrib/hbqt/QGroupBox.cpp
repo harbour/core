@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QGroupBox>
 
@@ -75,19 +76,18 @@
  * QGroupBox ( const QString & title, QWidget * parent = 0 )
  * ~QGroupBox ()
  */
+
 HB_FUNC( QT_QGROUPBOX )
 {
-   hb_retptr( ( QGroupBox * ) new QGroupBox( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QGroupBox > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QGROUPBOX_DESTROY )
-{
-   delete hbqt_par_QGroupBox( 1 );
-}
+   pObj = ( QGroupBox * ) new QGroupBox( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * Qt::Alignment alignment () const
  */

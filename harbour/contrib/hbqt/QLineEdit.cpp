@@ -70,6 +70,7 @@
  *  enum EchoMode { Normal, NoEcho, Password, PasswordEchoOnEdit }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QLineEdit>
 
@@ -79,19 +80,18 @@
  * QLineEdit ( const QString & contents, QWidget * parent = 0 )
  * ~QLineEdit ()
  */
+
 HB_FUNC( QT_QLINEEDIT )
 {
-   hb_retptr( ( QLineEdit* ) new QLineEdit( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QLineEdit > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QLINEEDIT_DESTROY )
-{
-   delete hbqt_par_QLineEdit( 1 );
-}
+   pObj = ( QLineEdit* ) new QLineEdit( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * Qt::Alignment alignment () const
  */
@@ -331,7 +331,7 @@ HB_FUNC( QT_QLINEEDIT_MAXLENGTH )
  */
 HB_FUNC( QT_QLINEEDIT_MINIMUMSIZEHINT )
 {
-   hb_retptr( new QSize( hbqt_par_QLineEdit( 1 )->minimumSizeHint() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QLineEdit( 1 )->minimumSizeHint() ) ) );
 }
 
 /*
@@ -459,7 +459,7 @@ HB_FUNC( QT_QLINEEDIT_SETVALIDATOR )
  */
 HB_FUNC( QT_QLINEEDIT_SIZEHINT )
 {
-   hb_retptr( new QSize( hbqt_par_QLineEdit( 1 )->sizeHint() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QLineEdit( 1 )->sizeHint() ) ) );
 }
 
 /*

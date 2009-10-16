@@ -70,7 +70,6 @@ CREATE CLASS QProgressBar INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QProgressBar_destroy( ::pPtr )
 
    METHOD  alignment()                         INLINE  Qt_QProgressBar_alignment( ::pPtr )
    METHOD  format()                            INLINE  Qt_QProgressBar_format( ::pPtr )

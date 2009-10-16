@@ -72,6 +72,7 @@
  *  enum Shape { RoundedNorth, RoundedSouth, RoundedWest, RoundedEast, ..., TriangularEast }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTabBar>
 #include <QtCore/QVariant>
@@ -81,19 +82,18 @@
  * QTabBar ( QWidget * parent = 0 )
  * ~QTabBar ()
  */
+
 HB_FUNC( QT_QTABBAR )
 {
-   hb_retptr( ( QTabBar* ) new QTabBar( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QTabBar > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTABBAR_DESTROY )
-{
-   delete hbqt_par_QTabBar( 1 );
-}
+   pObj = ( QTabBar* ) new QTabBar( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * int addTab ( const QString & text )
  */
@@ -155,7 +155,7 @@ HB_FUNC( QT_QTABBAR_EXPANDING )
  */
 HB_FUNC( QT_QTABBAR_ICONSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QTabBar( 1 )->iconSize() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QTabBar( 1 )->iconSize() ) ) );
 }
 
 /*
@@ -371,7 +371,7 @@ HB_FUNC( QT_QTABBAR_TABBUTTON )
  */
 HB_FUNC( QT_QTABBAR_TABDATA )
 {
-   hb_retptr( new QVariant( hbqt_par_QTabBar( 1 )->tabData( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QTabBar( 1 )->tabData( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -379,7 +379,7 @@ HB_FUNC( QT_QTABBAR_TABDATA )
  */
 HB_FUNC( QT_QTABBAR_TABICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QTabBar( 1 )->tabIcon( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QTabBar( 1 )->tabIcon( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -387,7 +387,7 @@ HB_FUNC( QT_QTABBAR_TABICON )
  */
 HB_FUNC( QT_QTABBAR_TABRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QTabBar( 1 )->tabRect( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QTabBar( 1 )->tabRect( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -403,7 +403,7 @@ HB_FUNC( QT_QTABBAR_TABTEXT )
  */
 HB_FUNC( QT_QTABBAR_TABTEXTCOLOR )
 {
-   hb_retptr( new QColor( hbqt_par_QTabBar( 1 )->tabTextColor( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QTabBar( 1 )->tabTextColor( hb_parni( 2 ) ) ) ) );
 }
 
 /*

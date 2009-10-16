@@ -82,6 +82,7 @@
  *  QList<QAbstractButton *> buttons () const
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QMessageBox>
 
@@ -91,19 +92,18 @@
  * QMessageBox ( Icon icon, const QString & title, const QString & text, StandardButtons buttons = NoButton, QWidget * parent = 0, Qt::WindowFlags f = Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint )
  * ~QMessageBox ()
  */
+
 HB_FUNC( QT_QMESSAGEBOX )
 {
-   hb_retptr( ( QMessageBox* ) new QMessageBox() );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QMessageBox > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QMESSAGEBOX_DESTROY )
-{
-   delete hbqt_par_QMessageBox( 1 );
-}
+   pObj = ( QMessageBox* ) new QMessageBox() ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * void addButton ( QAbstractButton * button, ButtonRole role )
  */
@@ -189,7 +189,7 @@ HB_FUNC( QT_QMESSAGEBOX_ICON )
  */
 HB_FUNC( QT_QMESSAGEBOX_ICONPIXMAP )
 {
-   hb_retptr( new QPixmap( hbqt_par_QMessageBox( 1 )->iconPixmap() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPixmap( hbqt_par_QMessageBox( 1 )->iconPixmap() ) ) );
 }
 
 /*

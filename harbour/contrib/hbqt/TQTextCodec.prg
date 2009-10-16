@@ -70,7 +70,6 @@ CREATE CLASS QTextCodec
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextCodec_destroy( ::pPtr )
 
    METHOD  canEncode( nCh )                    INLINE  Qt_QTextCodec_canEncode( ::pPtr, nCh )
    METHOD  canEncode_1( cS )                   INLINE  Qt_QTextCodec_canEncode_1( ::pPtr, cS )

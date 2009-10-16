@@ -70,7 +70,6 @@ CREATE CLASS QCoreApplication INHERIT QObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QCoreApplication_destroy( ::pPtr )
 
    METHOD  notify( pReceiver, pEvent )         INLINE  Qt_QCoreApplication_notify( ::pPtr, pReceiver, pEvent )
    METHOD  addLibraryPath( cPath )             INLINE  Qt_QCoreApplication_addLibraryPath( ::pPtr, cPath )

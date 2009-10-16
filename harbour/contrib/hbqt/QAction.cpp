@@ -83,6 +83,7 @@
  *  QList<QKeySequence> shortcuts () const
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QAction>
 
@@ -93,24 +94,23 @@
  * QAction ( const QIcon & icon, const QString & text, QObject * parent )
  * ~QAction ()
  */
+
 HB_FUNC( QT_QACTION )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QAction > pObj = NULL;
+
    if( HB_ISPOINTER( 1 ) )
-      hb_retptr( new QAction( hbqt_par_QObject( 1 ) ) );
+      pObj = new QAction( hbqt_par_QObject( 1 ) ) ;
    else if( HB_ISPOINTER( 2 ) )
-      hb_retptr( new QAction( hbqt_par_QString( 1 ), hbqt_par_QObject( 2 ) ) );
+      pObj = new QAction( hbqt_par_QString( 1 ), hbqt_par_QObject( 2 ) ) ;
    else if( HB_ISPOINTER( 3 ) )
-      hb_retptr( new QAction( *hbqt_par_QIcon( 1 ), hbqt_par_QString( 2 ), hbqt_par_QObject( 3 ) ) );
-}
+      pObj = new QAction( *hbqt_par_QIcon( 1 ), hbqt_par_QString( 2 ), hbqt_par_QObject( 3 ) ) ;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QACTION_DESTROY )
-{
-   delete hbqt_par_QAction( 1 );
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
 /*
  * QActionGroup * actionGroup () const
  */
@@ -140,7 +140,7 @@ HB_FUNC( QT_QACTION_AUTOREPEAT )
  */
 HB_FUNC( QT_QACTION_DATA )
 {
-   hb_retptr( new QVariant( hbqt_par_QAction( 1 )->data() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QAction( 1 )->data() ) ) );
 }
 
 /*
@@ -148,7 +148,7 @@ HB_FUNC( QT_QACTION_DATA )
  */
 HB_FUNC( QT_QACTION_FONT )
 {
-   hb_retptr( new QFont( hbqt_par_QAction( 1 )->font() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QAction( 1 )->font() ) ) );
 }
 
 /*
@@ -156,7 +156,7 @@ HB_FUNC( QT_QACTION_FONT )
  */
 HB_FUNC( QT_QACTION_ICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QAction( 1 )->icon() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QAction( 1 )->icon() ) ) );
 }
 
 /*
@@ -388,7 +388,7 @@ HB_FUNC( QT_QACTION_SETWHATSTHIS )
  */
 HB_FUNC( QT_QACTION_SHORTCUT )
 {
-   hb_retptr( new QKeySequence( hbqt_par_QAction( 1 )->shortcut() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QKeySequence( hbqt_par_QAction( 1 )->shortcut() ) ) );
 }
 
 /*

@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTextInlineObject>
 
@@ -74,19 +75,15 @@
  * QTextInlineObject ( int i, QTextEngine * e )
  *
  */
+
 HB_FUNC( QT_QTEXTINLINEOBJECT )
 {
-   hb_retptr( ( QTextInlineObject* ) new QTextInlineObject( hb_parni( 1 ), hbqt_par_QTextEngine( 2 ) ) );
+   void * pObj = NULL;
+
+   pObj = ( QTextInlineObject* ) new QTextInlineObject( hb_parni( 1 ), hbqt_par_QTextEngine( 2 ) ) ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTINLINEOBJECT_DESTROY )
-{
-
-}
-
 /*
  * qreal ascent () const
  */
@@ -108,7 +105,7 @@ HB_FUNC( QT_QTEXTINLINEOBJECT_DESCENT )
  */
 HB_FUNC( QT_QTEXTINLINEOBJECT_FORMAT )
 {
-   hb_retptr( new QTextFormat( hbqt_par_QTextInlineObject( 1 )->format() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextFormat( hbqt_par_QTextInlineObject( 1 )->format() ) ) );
 }
 
 /*
@@ -140,7 +137,7 @@ HB_FUNC( QT_QTEXTINLINEOBJECT_ISVALID )
  */
 HB_FUNC( QT_QTEXTINLINEOBJECT_RECT )
 {
-   hb_retptr( new QRectF( hbqt_par_QTextInlineObject( 1 )->rect() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QTextInlineObject( 1 )->rect() ) ) );
 }
 
 /*

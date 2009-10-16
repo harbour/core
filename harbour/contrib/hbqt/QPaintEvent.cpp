@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QPaintEvent>
 
@@ -74,25 +75,33 @@
  * QPaintEvent ( const QRegion & paintRegion )
  * QPaintEvent ( const QRect & paintRect )
  */
+
 HB_FUNC( QT_QPAINTEVENT )
 {
-   hb_retptr( ( QPaintEvent* ) new QPaintEvent( *hbqt_par_QRect( 1 ) ) );
+   void * pObj = NULL;
+
+   if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      QString objName = ( QString ) hbqt_par_QString( 1 );
+
+      if( objName == ( QString ) "QRect" )
+      {
+         pObj = new QPaintEvent( *hbqt_par_QRect( 1 ) ) ;
+      }
+      else if( objName == ( QString ) "QRegion" )
+      {
+         pObj = new QPaintEvent( *hbqt_par_QRegion( 1 ) ) ;
+      }
+   }
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QPAINTEVENT_DESTROY )
-{
-
-}
-
 /*
  * const QRect & rect () const
  */
 HB_FUNC( QT_QPAINTEVENT_RECT )
 {
-   hb_retptr( new QRect( hbqt_par_QPaintEvent( 1 )->rect() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QPaintEvent( 1 )->rect() ) ) );
 }
 
 /*
@@ -100,7 +109,7 @@ HB_FUNC( QT_QPAINTEVENT_RECT )
  */
 HB_FUNC( QT_QPAINTEVENT_REGION )
 {
-   hb_retptr( new QRegion( hbqt_par_QPaintEvent( 1 )->region() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRegion( hbqt_par_QPaintEvent( 1 )->region() ) ) );
 }
 
 

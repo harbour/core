@@ -70,7 +70,6 @@ CREATE CLASS QStyleOptionViewItem INHERIT QStyleOption
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleOptionViewItem_destroy( ::pPtr )
 
    METHOD  decorationAlignment()               INLINE  Qt_QStyleOptionViewItem_decorationAlignment( ::pPtr )
    METHOD  decorationPosition()                INLINE  Qt_QStyleOptionViewItem_decorationPosition( ::pPtr )

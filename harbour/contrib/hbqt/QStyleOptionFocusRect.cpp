@@ -71,6 +71,7 @@
  *  enum StyleOptionVersion { Version }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionFocusRect>
 
@@ -79,25 +80,21 @@
  * QStyleOptionFocusRect ()
  * QStyleOptionFocusRect ( const QStyleOptionFocusRect & other )
  */
+
 HB_FUNC( QT_QSTYLEOPTIONFOCUSRECT )
 {
-   hb_retptr( ( QStyleOptionFocusRect* ) new QStyleOptionFocusRect() );
+   void * pObj = NULL;
+
+   pObj = ( QStyleOptionFocusRect* ) new QStyleOptionFocusRect() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTIONFOCUSRECT_DESTROY )
-{
-
-}
-
 /*
  * QColor backgroundColor
  */
 HB_FUNC( QT_QSTYLEOPTIONFOCUSRECT_BACKGROUNDCOLOR )
 {
-   hb_retptr( new QColor( hbqt_par_QStyleOptionFocusRect( 1 )->backgroundColor ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QStyleOptionFocusRect( 1 )->backgroundColor ) ) );
 }
 
 

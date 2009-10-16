@@ -70,6 +70,7 @@
  *  enum Type { VariableLength, FixedLength, PercentageLength }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTextLength>
 
@@ -78,19 +79,18 @@
  * QTextLength ()
  * QTextLength ( Type type, qreal value )
  */
+
 HB_FUNC( QT_QTEXTLENGTH )
 {
-   hb_retptr( ( QTextLength* ) new QTextLength() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
+
+   pObj = ( QTextLength* ) new QTextLength() ;
+
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QTextLength" );
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTLENGTH_DESTROY )
-{
-
-}
-
 /*
  * qreal rawValue () const
  */

@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QLabel>
 
@@ -75,19 +76,18 @@
  * QLabel ( const QString & text, QWidget * parent = 0, Qt::WindowFlags f = 0 )
  * ~QLabel ()
  */
+
 HB_FUNC( QT_QLABEL )
 {
-   hb_retptr( ( QLabel* ) new QLabel( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QLabel > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QLABEL_DESTROY )
-{
-   delete hbqt_par_QLabel( 1 );
-}
+   pObj = ( QLabel* ) new QLabel( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * Qt::Alignment alignment () const
  */

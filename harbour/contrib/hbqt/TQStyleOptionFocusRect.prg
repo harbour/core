@@ -70,7 +70,6 @@ CREATE CLASS QStyleOptionFocusRect INHERIT QStyleOption
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleOptionFocusRect_destroy( ::pPtr )
 
    METHOD  backgroundColor()                   INLINE  Qt_QStyleOptionFocusRect_backgroundColor( ::pPtr )
 

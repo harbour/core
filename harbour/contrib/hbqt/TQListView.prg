@@ -70,7 +70,6 @@ CREATE CLASS QListView INHERIT QAbstractItemView
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QListView_destroy( ::pPtr )
 
    METHOD  batchSize()                         INLINE  Qt_QListView_batchSize( ::pPtr )
    METHOD  clearPropertyFlags()                INLINE  Qt_QListView_clearPropertyFlags( ::pPtr )

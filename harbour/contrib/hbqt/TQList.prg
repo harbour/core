@@ -70,7 +70,6 @@ CREATE CLASS QList
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QList_destroy( ::pPtr )
 
    METHOD  append( xValue )                    INLINE  Qt_QList_append( ::pPtr, xValue )
    METHOD  at( nI )                            INLINE  Qt_QList_at( ::pPtr, nI )

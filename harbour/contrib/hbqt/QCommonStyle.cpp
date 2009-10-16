@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QCommonStyle>
 
@@ -73,19 +74,18 @@
 /*
  * QCommonStyle ()
  */
+
 HB_FUNC( QT_QCOMMONSTYLE )
 {
-   hb_retptr( ( QCommonStyle* ) new QCommonStyle() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QCommonStyle > pObj = NULL;
+
+   pObj = ( QCommonStyle* ) new QCommonStyle() ;
+
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QCOMMONSTYLE_DESTROY )
-{
-
-}
-
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

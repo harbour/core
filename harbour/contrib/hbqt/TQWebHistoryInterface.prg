@@ -70,7 +70,6 @@ CREATE CLASS QWebHistoryInterface INHERIT QObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QWebHistoryInterface_destroy( ::pPtr )
 
    METHOD  addHistoryEntry( cUrl )             INLINE  Qt_QWebHistoryInterface_addHistoryEntry( ::pPtr, cUrl )
    METHOD  historyContains( cUrl )             INLINE  Qt_QWebHistoryInterface_historyContains( ::pPtr, cUrl )

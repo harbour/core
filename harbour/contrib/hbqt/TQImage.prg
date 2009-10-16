@@ -70,7 +70,6 @@ CREATE CLASS QImage
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QImage_destroy( ::pPtr )
 
    METHOD  allGray()                           INLINE  Qt_QImage_allGray( ::pPtr )
    METHOD  alphaChannel()                      INLINE  Qt_QImage_alphaChannel( ::pPtr )

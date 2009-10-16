@@ -70,7 +70,6 @@ CREATE CLASS QPaintDevice
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QPaintDevice_destroy( ::pPtr )
 
    METHOD  depth()                             INLINE  Qt_QPaintDevice_depth( ::pPtr )
    METHOD  height()                            INLINE  Qt_QPaintDevice_height( ::pPtr )

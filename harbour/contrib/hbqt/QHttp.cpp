@@ -72,6 +72,7 @@
  *  enum State { Unconnected, HostLookup, Connecting, Sending, ..., Closing }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtNetwork/QHttp>
 
@@ -82,10 +83,6 @@
  * QHttp ( const QString & hostName, ConnectionMode mode, quint16 port = 0, QObject * parent = 0 )
  * virtual ~QHttp ()
  */
-HB_FUNC( QT_QHTTP )
-{
-   hb_retptr( new QHttp( hbqt_par_QObject( 1 ) ) );
-}
 
 /*
  * qint64 read ( char * data, qint64 maxlen )
@@ -102,14 +99,17 @@ HB_FUNC( QT_QHTTP_READ )
       hb_xfree( iData );
 }
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QHTTP_DESTROY )
+HB_FUNC( QT_QHTTP )
 {
-   delete hbqt_par_QHttp( 1 );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QHttp > pObj = NULL;
 
+   pObj = new QHttp( hbqt_par_QObject( 1 ) ) ;
+
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * qint64 bytesAvailable () const
  */
@@ -155,7 +155,7 @@ HB_FUNC( QT_QHTTP_CURRENTID )
  */
 HB_FUNC( QT_QHTTP_CURRENTREQUEST )
 {
-   hb_retptr( new QHttpRequestHeader( hbqt_par_QHttp( 1 )->currentRequest() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QHttpRequestHeader( hbqt_par_QHttp( 1 )->currentRequest() ) ) );
 }
 
 /*
@@ -211,7 +211,7 @@ HB_FUNC( QT_QHTTP_HEAD )
  */
 HB_FUNC( QT_QHTTP_LASTRESPONSE )
 {
-   hb_retptr( new QHttpResponseHeader( hbqt_par_QHttp( 1 )->lastResponse() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QHttpResponseHeader( hbqt_par_QHttp( 1 )->lastResponse() ) ) );
 }
 
 /*
@@ -235,7 +235,7 @@ HB_FUNC( QT_QHTTP_POST_1 )
  */
 HB_FUNC( QT_QHTTP_READALL )
 {
-   hb_retptr( new QByteArray( hbqt_par_QHttp( 1 )->readAll() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QHttp( 1 )->readAll() ) ) );
 }
 
 /*

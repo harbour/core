@@ -70,7 +70,6 @@ CREATE CLASS QFontMetricsF
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QFontMetricsF_destroy( ::pPtr )
 
    METHOD  ascent()                            INLINE  Qt_QFontMetricsF_ascent( ::pPtr )
    METHOD  averageCharWidth()                  INLINE  Qt_QFontMetricsF_averageCharWidth( ::pPtr )

@@ -70,7 +70,6 @@ CREATE CLASS QStyleOptionButton INHERIT QStyleOption
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleOptionButton_destroy( ::pPtr )
 
    METHOD  features()                          INLINE  Qt_QStyleOptionButton_features( ::pPtr )
    METHOD  icon()                              INLINE  Qt_QStyleOptionButton_icon( ::pPtr )

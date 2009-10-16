@@ -70,7 +70,6 @@ CREATE CLASS QStyleOptionComboBox INHERIT QStyleOption
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleOptionComboBox_destroy( ::pPtr )
 
    METHOD  currentIcon()                       INLINE  Qt_QStyleOptionComboBox_currentIcon( ::pPtr )
    METHOD  currentText()                       INLINE  Qt_QStyleOptionComboBox_currentText( ::pPtr )

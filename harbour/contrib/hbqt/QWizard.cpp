@@ -85,6 +85,7 @@
  *  QList<int> visitedPages () const
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QWizard>
 #include <QtCore/QVariant>
@@ -94,19 +95,18 @@
  * QWizard ( QWidget * parent = 0, Qt::WindowFlags flags = 0 )
  * ~QWizard ()
  */
+
 HB_FUNC( QT_QWIZARD )
 {
-   hb_retptr( new QWizard( hbqt_par_QWidget( 2 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QWizard > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QWIZARD_DESTROY )
-{
-   delete hbqt_par_QWizard( 1 );
-}
+   pObj = new QWizard( hbqt_par_QWidget( 2 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * int addPage ( QWizardPage * page )
  */
@@ -152,7 +152,7 @@ HB_FUNC( QT_QWIZARD_CURRENTPAGE )
  */
 HB_FUNC( QT_QWIZARD_FIELD )
 {
-   hb_retptr( new QVariant( hbqt_par_QWizard( 1 )->field( hbqt_par_QString( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QWizard( 1 )->field( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -192,7 +192,7 @@ HB_FUNC( QT_QWIZARD_PAGE )
  */
 HB_FUNC( QT_QWIZARD_PIXMAP )
 {
-   hb_retptr( new QPixmap( hbqt_par_QWizard( 1 )->pixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPixmap( hbqt_par_QWizard( 1 )->pixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ) ) ) ) );
 }
 
 /*

@@ -70,7 +70,6 @@ CREATE CLASS QStringListModel INHERIT QAbstractListModel
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStringListModel_destroy( ::pPtr )
 
    METHOD  data( pIndex, nRole )               INLINE  Qt_QStringListModel_data( ::pPtr, pIndex, nRole )
    METHOD  flags( pIndex )                     INLINE  Qt_QStringListModel_flags( ::pPtr, pIndex )

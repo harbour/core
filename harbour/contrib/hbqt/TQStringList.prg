@@ -70,7 +70,6 @@ CREATE CLASS QStringList INHERIT QList
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStringList_destroy( ::pPtr )
 
    METHOD  append( cValue )                    INLINE  Qt_QStringList_append( ::pPtr, cValue )
    METHOD  filter( cStr, nCs )                 INLINE  Qt_QStringList_filter( ::pPtr, cStr, nCs )

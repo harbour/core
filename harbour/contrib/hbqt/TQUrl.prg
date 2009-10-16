@@ -70,7 +70,6 @@ CREATE CLASS QUrl INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QUrl_destroy( ::pPtr )
 
    METHOD  addEncodedQueryItem( pKey, pValue )  INLINE  Qt_QUrl_addEncodedQueryItem( ::pPtr, pKey, pValue )
    METHOD  addQueryItem( cKey, cValue )        INLINE  Qt_QUrl_addQueryItem( ::pPtr, cKey, cValue )

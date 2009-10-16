@@ -70,7 +70,6 @@ CREATE CLASS QTextCursor
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextCursor_destroy( ::pPtr )
 
    METHOD  anchor()                            INLINE  Qt_QTextCursor_anchor( ::pPtr )
    METHOD  atBlockEnd()                        INLINE  Qt_QTextCursor_atBlockEnd( ::pPtr )

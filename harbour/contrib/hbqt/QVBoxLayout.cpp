@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QVBoxLayout>
 
@@ -75,19 +76,18 @@
  * QVBoxLayout ( QWidget * parent )
  * ~QVBoxLayout ()
  */
+
 HB_FUNC( QT_QVBOXLAYOUT )
 {
-   hb_retptr( ( QVBoxLayout* ) new QVBoxLayout( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QVBoxLayout > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QVBOXLAYOUT_DESTROY )
-{
-   delete hbqt_par_QVBoxLayout( 1 );
-}
+   pObj = ( QVBoxLayout* ) new QVBoxLayout( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

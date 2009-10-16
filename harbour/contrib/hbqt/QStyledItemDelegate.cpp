@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyledItemDelegate>
 
@@ -74,19 +75,18 @@
  * QStyledItemDelegate ( QObject * parent = 0 )
  * ~QStyledItemDelegate ()
  */
+
 HB_FUNC( QT_QSTYLEDITEMDELEGATE )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QStyledItemDelegate > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE_DESTROY )
-{
-   delete hbqt_par_QStyledItemDelegate( 1 );
-}
+   pObj = ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
  */
@@ -148,7 +148,7 @@ HB_FUNC( QT_QSTYLEDITEMDELEGATE_SETMODELDATA )
  */
 HB_FUNC( QT_QSTYLEDITEMDELEGATE_SIZEHINT )
 {
-   hb_retptr( new QSize( hbqt_par_QStyledItemDelegate( 1 )->sizeHint( *hbqt_par_QStyleOptionViewItem( 2 ), *hbqt_par_QModelIndex( 3 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QStyledItemDelegate( 1 )->sizeHint( *hbqt_par_QStyleOptionViewItem( 2 ), *hbqt_par_QModelIndex( 3 ) ) ) ) );
 }
 
 /*

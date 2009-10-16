@@ -70,7 +70,6 @@ CREATE CLASS QApplication INHERIT QCoreApplication
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QApplication_destroy( ::pPtr )
 
    METHOD  commitData( pManager )              INLINE  Qt_QApplication_commitData( ::pPtr, pManager )
    METHOD  inputContext()                      INLINE  Qt_QApplication_inputContext( ::pPtr )

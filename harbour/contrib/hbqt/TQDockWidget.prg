@@ -70,7 +70,6 @@ CREATE CLASS QDockWidget INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QDockWidget_destroy( ::pPtr )
 
    METHOD  allowedAreas()                      INLINE  Qt_QDockWidget_allowedAreas( ::pPtr )
    METHOD  features()                          INLINE  Qt_QDockWidget_features( ::pPtr )

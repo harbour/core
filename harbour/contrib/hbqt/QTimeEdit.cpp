@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTimeEdit>
 
@@ -74,22 +75,21 @@
  * QTimeEdit ( QWidget * parent = 0 )
  * QTimeEdit ( const QTime & time, QWidget * parent = 0 )
  */
+
 HB_FUNC( QT_QTIMEEDIT )
 {
-   hb_retptr( ( QTimeEdit* ) new QTimeEdit( hbqt_par_QWidget( 1 ) ) );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QTimeEdit > pObj = NULL;
+
+   pObj = ( QTimeEdit* ) new QTimeEdit( hbqt_par_QWidget( 1 ) ) ;
    #if 0
-   hb_retptr( (QTimeEdit *) new QTimeEdit( QTime( hbqt_par_QString( 1 ) ), hbqt_par_QWidget( 2 ) ) );
+   pObj = (QTimeEdit *) new QTimeEdit( QTime( hbqt_par_QString( 1 ) ), hbqt_par_QWidget( 2 ) ) ;
    #endif
+
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTIMEEDIT_DESTROY )
-{
-
-}
-
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

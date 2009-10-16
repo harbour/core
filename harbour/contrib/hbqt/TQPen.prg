@@ -70,7 +70,6 @@ CREATE CLASS QPen
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QPen_destroy( ::pPtr )
 
    METHOD  brush()                             INLINE  Qt_QPen_brush( ::pPtr )
    METHOD  capStyle()                          INLINE  Qt_QPen_capStyle( ::pPtr )

@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QGridLayout>
 
@@ -75,19 +76,18 @@
  * QGridLayout ()
  * ~QGridLayout ()
  */
+
 HB_FUNC( QT_QGRIDLAYOUT )
 {
-   hb_retptr( new QGridLayout( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QGridLayout > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QGRIDLAYOUT_DESTROY )
-{
-   delete hbqt_par_QGridLayout( 1 );
-}
+   pObj = new QGridLayout( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * void addItem ( QLayoutItem * item, int row, int column, int rowSpan = 1, int columnSpan = 1, Qt::Alignment alignment = 0 )
  */
@@ -133,7 +133,7 @@ HB_FUNC( QT_QGRIDLAYOUT_ADDWIDGET_1 )
  */
 HB_FUNC( QT_QGRIDLAYOUT_CELLRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QGridLayout( 1 )->cellRect( hb_parni( 2 ), hb_parni( 3 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QGridLayout( 1 )->cellRect( hb_parni( 2 ), hb_parni( 3 ) ) ) ) );
 }
 
 /*

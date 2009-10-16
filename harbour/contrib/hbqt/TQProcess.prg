@@ -70,7 +70,6 @@ CREATE CLASS QProcess INHERIT QIODevice
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QProcess_destroy( ::pPtr )
 
    METHOD  close()                             INLINE  Qt_QProcess_close( ::pPtr )
    METHOD  closeReadChannel( nChannel )        INLINE  Qt_QProcess_closeReadChannel( ::pPtr, nChannel )

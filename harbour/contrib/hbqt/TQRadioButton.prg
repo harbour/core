@@ -70,7 +70,6 @@ CREATE CLASS QRadioButton INHERIT QAbstractButton
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QRadioButton_destroy( ::pPtr )
 
 
    ENDCLASS

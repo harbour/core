@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QSizeF>
 
@@ -76,32 +77,31 @@
  * QSizeF ( qreal width, qreal height )
  * ~QSizeF ()
  */
+
 HB_FUNC( QT_QSIZEF )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
+
    if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-      hb_retptr( ( QSizeF* ) new QSizeF( hb_parnd( 1 ), hb_parnd( 2 ) ) );
+      pObj = ( QSizeF* ) new QSizeF( hb_parnd( 1 ), hb_parnd( 2 ) ) ;
    }
    else
    {
-      hb_retptr( ( QSizeF* ) new QSizeF() );
-   }
+      pObj = ( QSizeF* ) new QSizeF() ;
    }
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSIZEF_DESTROY )
-{
-   delete hbqt_par_QSizeF( 1 );
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QSizeF" );
+   hb_retptrGC( p );
 }
-
 /*
  * QSizeF boundedTo ( const QSizeF & otherSize ) const
  */
 HB_FUNC( QT_QSIZEF_BOUNDEDTO )
 {
-   hb_retptr( new QSizeF( hbqt_par_QSizeF( 1 )->boundedTo( *hbqt_par_QSizeF( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSizeF( hbqt_par_QSizeF( 1 )->boundedTo( *hbqt_par_QSizeF( 2 ) ) ) ) );
 }
 
 /*
@@ -109,7 +109,7 @@ HB_FUNC( QT_QSIZEF_BOUNDEDTO )
  */
 HB_FUNC( QT_QSIZEF_EXPANDEDTO )
 {
-   hb_retptr( new QSizeF( hbqt_par_QSizeF( 1 )->expandedTo( *hbqt_par_QSizeF( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSizeF( hbqt_par_QSizeF( 1 )->expandedTo( *hbqt_par_QSizeF( 2 ) ) ) ) );
 }
 
 /*
@@ -197,7 +197,7 @@ HB_FUNC( QT_QSIZEF_SETWIDTH )
  */
 HB_FUNC( QT_QSIZEF_TOSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QSizeF( 1 )->toSize() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QSizeF( 1 )->toSize() ) ) );
 }
 
 /*

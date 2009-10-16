@@ -70,7 +70,6 @@ CREATE CLASS QWebHistory
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QWebHistory_destroy( ::pPtr )
 
    METHOD  back()                              INLINE  Qt_QWebHistory_back( ::pPtr )
    METHOD  backItem()                          INLINE  Qt_QWebHistory_backItem( ::pPtr )

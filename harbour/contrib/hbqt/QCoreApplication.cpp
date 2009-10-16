@@ -84,6 +84,7 @@
  *  // virtual bool winEventFilter ( MSG * msg, long * result )
  */
 
+#include <QtCore/QPointer>
 
 #include <QStringList>
 #include <QtCore/QCoreApplication>
@@ -93,19 +94,10 @@
  * QCoreApplication ( int & argc, char ** argv )
  * ~QCoreApplication ()
  */
+
 HB_FUNC( QT_QCOREAPPLICATION )
 {
-
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QCOREAPPLICATION_DESTROY )
-{
-   delete hbqt_par_QCoreApplication( 1 );
-}
-
 /*
  * virtual bool notify ( QObject * receiver, QEvent * event )
  */
@@ -167,7 +159,7 @@ HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONVERSION )
  */
 HB_FUNC( QT_QCOREAPPLICATION_ARGUMENTS )
 {
-   hb_retptr( new QStringList( hbqt_par_QCoreApplication( 1 )->arguments() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QCoreApplication( 1 )->arguments() ) ) );
 }
 
 /*
@@ -231,7 +223,7 @@ HB_FUNC( QT_QCOREAPPLICATION_INSTANCE )
  */
 HB_FUNC( QT_QCOREAPPLICATION_LIBRARYPATHS )
 {
-   hb_retptr( new QStringList( hbqt_par_QCoreApplication( 1 )->libraryPaths() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QCoreApplication( 1 )->libraryPaths() ) ) );
 }
 
 /*

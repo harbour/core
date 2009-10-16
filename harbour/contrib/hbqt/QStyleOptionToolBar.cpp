@@ -74,6 +74,7 @@
  *  enum ToolBarPosition { Beginning, Middle, End, OnlyOne }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionToolBar>
 
@@ -82,19 +83,15 @@
  * QStyleOptionToolBar ()
  * QStyleOptionToolBar ( const QStyleOptionToolBar & other )
  */
+
 HB_FUNC( QT_QSTYLEOPTIONTOOLBAR )
 {
-   hb_retptr( ( QStyleOptionToolBar* ) new QStyleOptionToolBar() );
+   void * pObj = NULL;
+
+   pObj = ( QStyleOptionToolBar* ) new QStyleOptionToolBar() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTIONTOOLBAR_DESTROY )
-{
-
-}
-
 /*
  * ToolBarFeatures features
  */

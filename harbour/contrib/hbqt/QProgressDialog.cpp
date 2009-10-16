@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QProgressDialog>
 
@@ -75,19 +76,18 @@
  * QProgressDialog ( const QString & labelText, const QString & cancelButtonText, int minimum, int maximum, QWidget * parent = 0, Qt::WindowFlags f = 0 )
  * ~QProgressDialog ()
  */
+
 HB_FUNC( QT_QPROGRESSDIALOG )
 {
-   hb_retptr( new QProgressDialog( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QProgressDialog > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QPROGRESSDIALOG_DESTROY )
-{
-   delete hbqt_par_QProgressDialog( 1 );
-}
+   pObj = new QProgressDialog( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * bool autoClose () const
  */
@@ -189,7 +189,7 @@ HB_FUNC( QT_QPROGRESSDIALOG_SETLABEL )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_SIZEHINT )
 {
-   hb_retptr( new QSize( hbqt_par_QProgressDialog( 1 )->sizeHint() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QProgressDialog( 1 )->sizeHint() ) ) );
 }
 
 /*

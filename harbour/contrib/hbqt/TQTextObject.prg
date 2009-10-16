@@ -70,7 +70,6 @@ CREATE CLASS QTextObject INHERIT QObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextObject_destroy( ::pPtr )
 
    METHOD  document()                          INLINE  Qt_QTextObject_document( ::pPtr )
    METHOD  format()                            INLINE  Qt_QTextObject_format( ::pPtr )

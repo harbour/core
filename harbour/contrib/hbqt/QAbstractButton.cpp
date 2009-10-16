@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QAbstractButton>
 
@@ -74,19 +75,10 @@
  * QAbstractButton ( QWidget * parent = 0 )
  * ~QAbstractButton ()
  */
+
 HB_FUNC( QT_QABSTRACTBUTTON )
 {
-
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QABSTRACTBUTTON_DESTROY )
-{
-   delete hbqt_par_QAbstractButton( 1 );
-}
-
 /*
  * bool autoExclusive () const
  */
@@ -132,7 +124,7 @@ HB_FUNC( QT_QABSTRACTBUTTON_GROUP )
  */
 HB_FUNC( QT_QABSTRACTBUTTON_ICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QAbstractButton( 1 )->icon() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QAbstractButton( 1 )->icon() ) ) );
 }
 
 /*
@@ -140,7 +132,7 @@ HB_FUNC( QT_QABSTRACTBUTTON_ICON )
  */
 HB_FUNC( QT_QABSTRACTBUTTON_ICONSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QAbstractButton( 1 )->iconSize() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QAbstractButton( 1 )->iconSize() ) ) );
 }
 
 /*
@@ -244,7 +236,7 @@ HB_FUNC( QT_QABSTRACTBUTTON_SETTEXT )
  */
 HB_FUNC( QT_QABSTRACTBUTTON_SHORTCUT )
 {
-   hb_retptr( new QKeySequence( hbqt_par_QAbstractButton( 1 )->shortcut() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QKeySequence( hbqt_par_QAbstractButton( 1 )->shortcut() ) ) );
 }
 
 /*

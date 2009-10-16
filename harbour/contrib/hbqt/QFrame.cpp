@@ -72,6 +72,7 @@
  *  enum StyleMask { Shadow_Mask, Shape_Mask }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QFrame>
 
@@ -80,25 +81,24 @@
  * QFrame ( QWidget * parent = 0, Qt::WindowFlags f = 0 )
  * ~QFrame ()
  */
+
 HB_FUNC( QT_QFRAME )
 {
-   hb_retptr( new QFrame( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QFrame > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QFRAME_DESTROY )
-{
-   delete hbqt_par_QFrame( 1 );
-}
+   pObj = new QFrame( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * QRect frameRect () const
  */
 HB_FUNC( QT_QFRAME_FRAMERECT )
 {
-   hb_retptr( new QRect( hbqt_par_QFrame( 1 )->frameRect() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QFrame( 1 )->frameRect() ) ) );
 }
 
 /*

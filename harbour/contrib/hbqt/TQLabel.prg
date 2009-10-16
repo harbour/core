@@ -70,7 +70,6 @@ CREATE CLASS QLabel INHERIT QFrame
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QLabel_destroy( ::pPtr )
 
    METHOD  alignment()                         INLINE  Qt_QLabel_alignment( ::pPtr )
    METHOD  buddy()                             INLINE  Qt_QLabel_buddy( ::pPtr )

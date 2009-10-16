@@ -70,7 +70,6 @@ CREATE CLASS QPrintEngine
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QPrintEngine_destroy( ::pPtr )
 
    METHOD  abort()                             INLINE  Qt_QPrintEngine_abort( ::pPtr )
    METHOD  metric( nId )                       INLINE  Qt_QPrintEngine_metric( ::pPtr, nId )

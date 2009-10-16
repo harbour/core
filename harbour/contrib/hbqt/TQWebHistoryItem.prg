@@ -70,7 +70,6 @@ CREATE CLASS QWebHistoryItem
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QWebHistoryItem_destroy( ::pPtr )
 
    METHOD  icon()                              INLINE  Qt_QWebHistoryItem_icon( ::pPtr )
    METHOD  isValid()                           INLINE  Qt_QWebHistoryItem_isValid( ::pPtr )

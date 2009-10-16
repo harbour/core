@@ -70,7 +70,6 @@ CREATE CLASS QStyleOptionSizeGrip INHERIT QStyleOptionComplex
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleOptionSizeGrip_destroy( ::pPtr )
 
    METHOD  corner()                            INLINE  Qt_QStyleOptionSizeGrip_corner( ::pPtr )
 

@@ -70,7 +70,6 @@ CREATE CLASS QAbstractPrintDialog INHERIT QDialog
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QAbstractPrintDialog_destroy( ::pPtr )
 
    METHOD  exec()                              INLINE  Qt_QAbstractPrintDialog_exec( ::pPtr )
    METHOD  fromPage()                          INLINE  Qt_QAbstractPrintDialog_fromPage( ::pPtr )

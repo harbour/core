@@ -70,7 +70,6 @@ CREATE CLASS QStyleOptionSpinBox INHERIT QStyleOptionComplex
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleOptionSpinBox_destroy( ::pPtr )
 
    METHOD  buttonSymbols()                     INLINE  Qt_QStyleOptionSpinBox_buttonSymbols( ::pPtr )
    METHOD  frame()                             INLINE  Qt_QStyleOptionSpinBox_frame( ::pPtr )

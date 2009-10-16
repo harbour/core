@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QLatin1String>
 
@@ -73,19 +74,15 @@
 /*
  * QLatin1String ( const char * str )
  */
+
 HB_FUNC( QT_QLATIN1STRING )
 {
-   hb_retptr( ( QLatin1String* ) new QLatin1String( hb_parcx( 1 ) ) );
+   void * pObj = NULL;
+
+   pObj = ( QLatin1String* ) new QLatin1String( hb_parcx( 1 ) ) ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QLATIN1STRING_DESTROY )
-{
-
-}
-
 /*
  * const char * latin1 () const
  */

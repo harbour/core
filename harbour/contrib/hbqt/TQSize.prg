@@ -70,7 +70,6 @@ CREATE CLASS QSize
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QSize_destroy( ::pPtr )
 
    METHOD  height()                            INLINE  Qt_QSize_height( ::pPtr )
    METHOD  isEmpty()                           INLINE  Qt_QSize_isEmpty( ::pPtr )

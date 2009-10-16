@@ -75,6 +75,7 @@
  *  QList<QAbstractButton *> buttons () const
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QButtonGroup>
 
@@ -83,26 +84,25 @@
  * QButtonGroup ( QObject * parent = 0 )
  * ~QButtonGroup ()
  */
+
 HB_FUNC( QT_QBUTTONGROUP )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QButtonGroup > pObj = NULL;
+
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( ( QButtonGroup* ) new QButtonGroup( hbqt_par_QObject( 1 ) ) );
+      pObj = ( QButtonGroup* ) new QButtonGroup( hbqt_par_QObject( 1 ) ) ;
    }
    else
    {
-      hb_retptr( ( QButtonGroup* ) new QButtonGroup() );
+      pObj = ( QButtonGroup* ) new QButtonGroup() ;
    }
-}
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QBUTTONGROUP_DESTROY )
-{
-   delete hbqt_par_QButtonGroup( 1 );
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
 /*
  * void addButton ( QAbstractButton * button )
  */

@@ -70,7 +70,6 @@ CREATE CLASS QDialog INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QDialog_destroy( ::pPtr )
 
    METHOD  isSizeGripEnabled()                 INLINE  Qt_QDialog_isSizeGripEnabled( ::pPtr )
    METHOD  result()                            INLINE  Qt_QDialog_result( ::pPtr )

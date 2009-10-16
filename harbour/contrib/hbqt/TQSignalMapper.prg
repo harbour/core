@@ -70,7 +70,6 @@ CREATE CLASS QSignalMapper INHERIT QObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QSignalMapper_destroy( ::pPtr )
 
    METHOD  mapping( nId )                      INLINE  Qt_QSignalMapper_mapping( ::pPtr, nId )
    METHOD  mapping_1( cId )                    INLINE  Qt_QSignalMapper_mapping_1( ::pPtr, cId )

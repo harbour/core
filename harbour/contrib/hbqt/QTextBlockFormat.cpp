@@ -84,6 +84,7 @@
  *  QList<QTextOption::Tab> tabPositions () const
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTextBlockFormat>
 
@@ -92,26 +93,25 @@
  * QTextBlockFormat ()
  *
  */
+
 HB_FUNC( QT_QTEXTBLOCKFORMAT )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
+
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( ( QTextBlockFormat* ) new QTextBlockFormat( *hbqt_par_QTextBlockFormat( 1 ) ) );
+      pObj = ( QTextBlockFormat* ) new QTextBlockFormat( *hbqt_par_QTextBlockFormat( 1 ) ) ;
    }
    else
    {
-      hb_retptr( ( QTextBlockFormat* ) new QTextBlockFormat() );
+      pObj = ( QTextBlockFormat* ) new QTextBlockFormat() ;
    }
+
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QTextBlockFormat" );
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTBLOCKFORMAT_DESTROY )
-{
-
-}
-
 /*
  * Qt::Alignment alignment () const
  */

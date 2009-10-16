@@ -71,6 +71,7 @@
  *  enum StyleOptionVersion { Version }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionComboBox>
 
@@ -79,25 +80,21 @@
  * QStyleOptionComboBox ()
  * QStyleOptionComboBox ( const QStyleOptionComboBox & other )
  */
+
 HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX )
 {
-   hb_retptr( ( QStyleOptionComboBox* ) new QStyleOptionComboBox() );
+   void * pObj = NULL;
+
+   pObj = ( QStyleOptionComboBox* ) new QStyleOptionComboBox() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_DESTROY )
-{
-
-}
-
 /*
  * QIcon currentIcon
  */
 HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_CURRENTICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QStyleOptionComboBox( 1 )->currentIcon ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QStyleOptionComboBox( 1 )->currentIcon ) ) );
 }
 
 /*
@@ -129,7 +126,7 @@ HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_FRAME )
  */
 HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_ICONSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QStyleOptionComboBox( 1 )->iconSize ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QStyleOptionComboBox( 1 )->iconSize ) ) );
 }
 
 /*
@@ -137,7 +134,7 @@ HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_ICONSIZE )
  */
 HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_POPUPRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QStyleOptionComboBox( 1 )->popupRect ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QStyleOptionComboBox( 1 )->popupRect ) ) );
 }
 
 

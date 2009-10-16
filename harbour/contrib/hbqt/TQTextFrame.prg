@@ -70,7 +70,6 @@ CREATE CLASS QTextFrame INHERIT QTextObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextFrame_destroy( ::pPtr )
 
    METHOD  firstCursorPosition()               INLINE  Qt_QTextFrame_firstCursorPosition( ::pPtr )
    METHOD  firstPosition()                     INLINE  Qt_QTextFrame_firstPosition( ::pPtr )

@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QSignalMapper>
 
@@ -74,19 +75,18 @@
  * QSignalMapper ( QObject * parent = 0 )
  * ~QSignalMapper ()
  */
+
 HB_FUNC( QT_QSIGNALMAPPER )
 {
-   hb_retptr( new QSignalMapper( hbqt_par_QObject( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QSignalMapper > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSIGNALMAPPER_DESTROY )
-{
-   delete hbqt_par_QSignalMapper( 1 );
-}
+   pObj = new QSignalMapper( hbqt_par_QObject( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * QObject * mapping ( int id ) const
  */

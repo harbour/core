@@ -82,6 +82,7 @@
  *  QList<QTreeWidgetItem *> takeChildren ()
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTreeWidgetItem>
 
@@ -98,26 +99,22 @@
  * QTreeWidgetItem ( const QTreeWidgetItem & other )
  * virtual ~QTreeWidgetItem ()
  */
+
 HB_FUNC( QT_QTREEWIDGETITEM )
 {
+   void * pObj = NULL;
+
    if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
    {
-      hb_retptr( ( QTreeWidgetItem* ) new QTreeWidgetItem( hb_parni( 1 ) ) );
+      pObj = ( QTreeWidgetItem* ) new QTreeWidgetItem( hb_parni( 1 ) ) ;
    }
    else
    {
-      hb_retptr( ( QTreeWidgetItem* ) new QTreeWidgetItem( hbqt_par_QTreeWidget( 1 ), hb_parni( 2 ) ) );
+      pObj = ( QTreeWidgetItem* ) new QTreeWidgetItem( hbqt_par_QTreeWidget( 1 ), hb_parni( 2 ) ) ;
    }
-}
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTREEWIDGETITEM_DESTROY )
-{
-   delete hbqt_par_QTreeWidgetItem( 1 );
+   hb_retptr( pObj );
 }
-
 /*
  * void addChild ( QTreeWidgetItem * child )
  */
@@ -131,7 +128,7 @@ HB_FUNC( QT_QTREEWIDGETITEM_ADDCHILD )
  */
 HB_FUNC( QT_QTREEWIDGETITEM_BACKGROUND )
 {
-   hb_retptr( new QBrush( hbqt_par_QTreeWidgetItem( 1 )->background( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QBrush( hbqt_par_QTreeWidgetItem( 1 )->background( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -187,7 +184,7 @@ HB_FUNC( QT_QTREEWIDGETITEM_COLUMNCOUNT )
  */
 HB_FUNC( QT_QTREEWIDGETITEM_DATA )
 {
-   hb_retptr( new QVariant( hbqt_par_QTreeWidgetItem( 1 )->data( hb_parni( 2 ), hb_parni( 3 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QTreeWidgetItem( 1 )->data( hb_parni( 2 ), hb_parni( 3 ) ) ) ) );
 }
 
 /*
@@ -203,7 +200,7 @@ HB_FUNC( QT_QTREEWIDGETITEM_FLAGS )
  */
 HB_FUNC( QT_QTREEWIDGETITEM_FONT )
 {
-   hb_retptr( new QFont( hbqt_par_QTreeWidgetItem( 1 )->font( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QTreeWidgetItem( 1 )->font( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -211,7 +208,7 @@ HB_FUNC( QT_QTREEWIDGETITEM_FONT )
  */
 HB_FUNC( QT_QTREEWIDGETITEM_FOREGROUND )
 {
-   hb_retptr( new QBrush( hbqt_par_QTreeWidgetItem( 1 )->foreground( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QBrush( hbqt_par_QTreeWidgetItem( 1 )->foreground( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -219,7 +216,7 @@ HB_FUNC( QT_QTREEWIDGETITEM_FOREGROUND )
  */
 HB_FUNC( QT_QTREEWIDGETITEM_ICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QTreeWidgetItem( 1 )->icon( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QTreeWidgetItem( 1 )->icon( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -459,7 +456,7 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETWHATSTHIS )
  */
 HB_FUNC( QT_QTREEWIDGETITEM_SIZEHINT )
 {
-   hb_retptr( new QSize( hbqt_par_QTreeWidgetItem( 1 )->sizeHint( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QTreeWidgetItem( 1 )->sizeHint( hb_parni( 2 ) ) ) ) );
 }
 
 /*

@@ -84,6 +84,7 @@
  *  // QStringList & replaceInStrings ( const QRegExp & rx, const QString & after )
  */
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QStringList>
 
@@ -94,19 +95,18 @@
  * QStringList ( const QStringList & other )
  * QStringList ( const QList<QString> & other )
  */
+
 HB_FUNC( QT_QSTRINGLIST )
 {
-   hb_retptr( ( QStringList* ) new QStringList() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
+
+   pObj = ( QStringList* ) new QStringList() ;
+
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QStringList" );
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTRINGLIST_DESTROY )
-{
-
-}
-
 /*
  * void append ( const QString & value )
  */
@@ -120,7 +120,7 @@ HB_FUNC( QT_QSTRINGLIST_APPEND )
  */
 HB_FUNC( QT_QSTRINGLIST_FILTER )
 {
-   hb_retptr( new QStringList( hbqt_par_QStringList( 1 )->filter( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::CaseSensitivity ) hb_parni( 3 ) : ( Qt::CaseSensitivity ) Qt::CaseSensitive ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QStringList( 1 )->filter( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::CaseSensitivity ) hb_parni( 3 ) : ( Qt::CaseSensitivity ) Qt::CaseSensitive ) ) ) ) );
 }
 
 /*
@@ -128,7 +128,7 @@ HB_FUNC( QT_QSTRINGLIST_FILTER )
  */
 HB_FUNC( QT_QSTRINGLIST_FILTER_1 )
 {
-   hb_retptr( new QStringList( hbqt_par_QStringList( 1 )->filter( *hbqt_par_QRegExp( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QStringList( 1 )->filter( *hbqt_par_QRegExp( 2 ) ) ) ) );
 }
 
 /*

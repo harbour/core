@@ -70,7 +70,6 @@ CREATE CLASS QFileDialog INHERIT QDialog
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QFileDialog_destroy( ::pPtr )
 
    METHOD  acceptMode()                        INLINE  Qt_QFileDialog_acceptMode( ::pPtr )
    METHOD  confirmOverwrite()                  INLINE  Qt_QFileDialog_confirmOverwrite( ::pPtr )

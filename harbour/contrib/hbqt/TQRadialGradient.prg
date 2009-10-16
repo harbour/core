@@ -70,7 +70,6 @@ CREATE CLASS QRadialGradient INHERIT QGradient
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QRadialGradient_destroy( ::pPtr )
 
    METHOD  center()                            INLINE  Qt_QRadialGradient_center( ::pPtr )
    METHOD  focalPoint()                        INLINE  Qt_QRadialGradient_focalPoint( ::pPtr )

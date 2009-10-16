@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QWindowsStyle>
 
@@ -75,19 +76,18 @@
  * ~QWindowsStyle ()
  *
  */
+
 HB_FUNC( QT_QWINDOWSSTYLE )
 {
-   hb_retptr( ( QWindowsStyle* ) new QWindowsStyle() );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QWindowsStyle > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QWINDOWSSTYLE_DESTROY )
-{
-   delete hbqt_par_QWindowsStyle( 1 );
-}
+   pObj = ( QWindowsStyle* ) new QWindowsStyle() ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

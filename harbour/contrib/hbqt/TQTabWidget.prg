@@ -70,7 +70,6 @@ CREATE CLASS QTabWidget INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTabWidget_destroy( ::pPtr )
 
    METHOD  addTab( pPage, cLabel )             INLINE  Qt_QTabWidget_addTab( ::pPtr, pPage, cLabel )
    METHOD  addTab_1( pPage, cIcon, cLabel )    INLINE  Qt_QTabWidget_addTab_1( ::pPtr, pPage, cIcon, cLabel )

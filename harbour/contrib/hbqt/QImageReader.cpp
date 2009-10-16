@@ -79,6 +79,7 @@
  *  QList<QByteArray> supportedImageFormats ()
  */
 
+#include <QtCore/QPointer>
 
 #include <QColor>
 #include <QtGui/QImageReader>
@@ -90,19 +91,15 @@
  * QImageReader ( const QString & fileName, const QByteArray & format = QByteArray() )
  * ~QImageReader ()
  */
+
 HB_FUNC( QT_QIMAGEREADER )
 {
-   hb_retptr( ( QImageReader* ) new QImageReader() );
-}
+   void * pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QIMAGEREADER_DESTROY )
-{
-   delete hbqt_par_QImageReader( 1 );
-}
+   pObj = ( QImageReader* ) new QImageReader() ;
 
+   hb_retptr( pObj );
+}
 /*
  * bool autoDetectImageFormat () const
  */
@@ -116,7 +113,7 @@ HB_FUNC( QT_QIMAGEREADER_AUTODETECTIMAGEFORMAT )
  */
 HB_FUNC( QT_QIMAGEREADER_BACKGROUNDCOLOR )
 {
-   hb_retptr( new QColor( hbqt_par_QImageReader( 1 )->backgroundColor() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QImageReader( 1 )->backgroundColor() ) ) );
 }
 
 /*
@@ -132,7 +129,7 @@ HB_FUNC( QT_QIMAGEREADER_CANREAD )
  */
 HB_FUNC( QT_QIMAGEREADER_CLIPRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QImageReader( 1 )->clipRect() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QImageReader( 1 )->clipRect() ) ) );
 }
 
 /*
@@ -148,7 +145,7 @@ HB_FUNC( QT_QIMAGEREADER_CURRENTIMAGENUMBER )
  */
 HB_FUNC( QT_QIMAGEREADER_CURRENTIMAGERECT )
 {
-   hb_retptr( new QRect( hbqt_par_QImageReader( 1 )->currentImageRect() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QImageReader( 1 )->currentImageRect() ) ) );
 }
 
 /*
@@ -188,7 +185,7 @@ HB_FUNC( QT_QIMAGEREADER_FILENAME )
  */
 HB_FUNC( QT_QIMAGEREADER_FORMAT )
 {
-   hb_retptr( new QByteArray( hbqt_par_QImageReader( 1 )->format() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QImageReader( 1 )->format() ) ) );
 }
 
 /*
@@ -252,7 +249,7 @@ HB_FUNC( QT_QIMAGEREADER_QUALITY )
  */
 HB_FUNC( QT_QIMAGEREADER_READ )
 {
-   hb_retptr( new QImage( hbqt_par_QImageReader( 1 )->read() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QImage( hbqt_par_QImageReader( 1 )->read() ) ) );
 }
 
 /*
@@ -268,7 +265,7 @@ HB_FUNC( QT_QIMAGEREADER_READ_1 )
  */
 HB_FUNC( QT_QIMAGEREADER_SCALEDCLIPRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QImageReader( 1 )->scaledClipRect() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QImageReader( 1 )->scaledClipRect() ) ) );
 }
 
 /*
@@ -276,7 +273,7 @@ HB_FUNC( QT_QIMAGEREADER_SCALEDCLIPRECT )
  */
 HB_FUNC( QT_QIMAGEREADER_SCALEDSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QImageReader( 1 )->scaledSize() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QImageReader( 1 )->scaledSize() ) ) );
 }
 
 /*
@@ -356,7 +353,7 @@ HB_FUNC( QT_QIMAGEREADER_SETSCALEDSIZE )
  */
 HB_FUNC( QT_QIMAGEREADER_SIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QImageReader( 1 )->size() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QImageReader( 1 )->size() ) ) );
 }
 
 /*
@@ -388,7 +385,7 @@ HB_FUNC( QT_QIMAGEREADER_TEXT )
  */
 HB_FUNC( QT_QIMAGEREADER_TEXTKEYS )
 {
-   hb_retptr( new QStringList( hbqt_par_QImageReader( 1 )->textKeys() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QImageReader( 1 )->textKeys() ) ) );
 }
 
 /*
@@ -396,7 +393,7 @@ HB_FUNC( QT_QIMAGEREADER_TEXTKEYS )
  */
 HB_FUNC( QT_QIMAGEREADER_IMAGEFORMAT_1 )
 {
-   hb_retptr( new QByteArray( hbqt_par_QImageReader( 1 )->imageFormat( hbqt_par_QString( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QImageReader( 1 )->imageFormat( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -404,7 +401,7 @@ HB_FUNC( QT_QIMAGEREADER_IMAGEFORMAT_1 )
  */
 HB_FUNC( QT_QIMAGEREADER_IMAGEFORMAT_2 )
 {
-   hb_retptr( new QByteArray( hbqt_par_QImageReader( 1 )->imageFormat( hbqt_par_QIODevice( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QImageReader( 1 )->imageFormat( hbqt_par_QIODevice( 2 ) ) ) ) );
 }
 
 

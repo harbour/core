@@ -70,7 +70,6 @@ CREATE CLASS QLine
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QLine_destroy( ::pPtr )
 
    METHOD  p1()                                INLINE  Qt_QLine_p1( ::pPtr )
    METHOD  p2()                                INLINE  Qt_QLine_p2( ::pPtr )

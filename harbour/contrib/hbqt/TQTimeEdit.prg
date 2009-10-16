@@ -70,7 +70,6 @@ CREATE CLASS QTimeEdit INHERIT QDateTimeEdit
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTimeEdit_destroy( ::pPtr )
 
 
    ENDCLASS

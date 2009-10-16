@@ -71,6 +71,7 @@
  *  enum SegmentStyle { Outline, Filled, Flat }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QLCDNumber>
 
@@ -80,19 +81,18 @@
  * QLCDNumber ( uint numDigits, QWidget * parent = 0 )
  * ~QLCDNumber ()
  */
+
 HB_FUNC( QT_QLCDNUMBER )
 {
-   hb_retptr( ( QLCDNumber * ) new QLCDNumber( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QLCDNumber > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QLCDNUMBER_DESTROY )
-{
-   delete hbqt_par_QLCDNumber( 1 );
-}
+   pObj = ( QLCDNumber * ) new QLCDNumber( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * bool checkOverflow ( double num ) const
  */

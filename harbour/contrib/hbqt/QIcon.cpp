@@ -80,6 +80,7 @@
  *  QList<QSize> availableSizes ( Mode mode = Normal, State state = Off ) const
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QIcon>
 
@@ -93,36 +94,35 @@
  * QIcon ( QIconEngineV2 * engine )
  * ~QIcon ()
  */
+
 HB_FUNC( QT_QICON )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
+
    if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
-      hb_retptr( ( QIcon* ) new QIcon( hbqt_par_QString( 1 ) ) );
+      pObj = ( QIcon* ) new QIcon( hbqt_par_QString( 1 ) ) ;
    }
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( ( QIcon* ) new QIcon( *hbqt_par_QPixmap( 1 ) ) );
+      pObj = ( QIcon* ) new QIcon( *hbqt_par_QPixmap( 1 ) ) ;
    }
    else
    {
-      hb_retptr( ( QIcon* ) new QIcon() );
+      pObj = ( QIcon* ) new QIcon() ;
    }
-}
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QICON_DESTROY )
-{
-   delete hbqt_par_QIcon( 1 );
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QIcon" );
+   hb_retptrGC( p );
 }
-
 /*
  * QSize actualSize ( const QSize & size, Mode mode = Normal, State state = Off ) const
  */
 HB_FUNC( QT_QICON_ACTUALSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QIcon( 1 )->actualSize( *hbqt_par_QSize( 2 ), ( HB_ISNUM( 3 ) ? ( QIcon::Mode ) hb_parni( 3 ) : ( QIcon::Mode ) QIcon::Normal ), ( HB_ISNUM( 4 ) ? ( QIcon::State ) hb_parni( 4 ) : ( QIcon::State ) QIcon::Off ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QIcon( 1 )->actualSize( *hbqt_par_QSize( 2 ), ( HB_ISNUM( 3 ) ? ( QIcon::Mode ) hb_parni( 3 ) : ( QIcon::Mode ) QIcon::Normal ), ( HB_ISNUM( 4 ) ? ( QIcon::State ) hb_parni( 4 ) : ( QIcon::State ) QIcon::Off ) ) ) ) );
 }
 
 /*
@@ -178,7 +178,7 @@ HB_FUNC( QT_QICON_PAINT_1 )
  */
 HB_FUNC( QT_QICON_PIXMAP )
 {
-   hb_retptr( new QPixmap( hbqt_par_QIcon( 1 )->pixmap( *hbqt_par_QSize( 2 ), ( HB_ISNUM( 3 ) ? ( QIcon::Mode ) hb_parni( 3 ) : ( QIcon::Mode ) QIcon::Normal ), ( HB_ISNUM( 4 ) ? ( QIcon::State ) hb_parni( 4 ) : ( QIcon::State ) QIcon::Off ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPixmap( hbqt_par_QIcon( 1 )->pixmap( *hbqt_par_QSize( 2 ), ( HB_ISNUM( 3 ) ? ( QIcon::Mode ) hb_parni( 3 ) : ( QIcon::Mode ) QIcon::Normal ), ( HB_ISNUM( 4 ) ? ( QIcon::State ) hb_parni( 4 ) : ( QIcon::State ) QIcon::Off ) ) ) ) );
 }
 
 /*
@@ -186,7 +186,7 @@ HB_FUNC( QT_QICON_PIXMAP )
  */
 HB_FUNC( QT_QICON_PIXMAP_1 )
 {
-   hb_retptr( new QPixmap( hbqt_par_QIcon( 1 )->pixmap( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? ( QIcon::Mode ) hb_parni( 4 ) : ( QIcon::Mode ) QIcon::Normal ), ( HB_ISNUM( 5 ) ? ( QIcon::State ) hb_parni( 5 ) : ( QIcon::State ) QIcon::Off ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPixmap( hbqt_par_QIcon( 1 )->pixmap( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? ( QIcon::Mode ) hb_parni( 4 ) : ( QIcon::Mode ) QIcon::Normal ), ( HB_ISNUM( 5 ) ? ( QIcon::State ) hb_parni( 5 ) : ( QIcon::State ) QIcon::Off ) ) ) ) );
 }
 
 /*
@@ -194,7 +194,7 @@ HB_FUNC( QT_QICON_PIXMAP_1 )
  */
 HB_FUNC( QT_QICON_PIXMAP_2 )
 {
-   hb_retptr( new QPixmap( hbqt_par_QIcon( 1 )->pixmap( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( QIcon::Mode ) hb_parni( 3 ) : ( QIcon::Mode ) QIcon::Normal ), ( HB_ISNUM( 4 ) ? ( QIcon::State ) hb_parni( 4 ) : ( QIcon::State ) QIcon::Off ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPixmap( hbqt_par_QIcon( 1 )->pixmap( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( QIcon::Mode ) hb_parni( 3 ) : ( QIcon::Mode ) QIcon::Normal ), ( HB_ISNUM( 4 ) ? ( QIcon::State ) hb_parni( 4 ) : ( QIcon::State ) QIcon::Off ) ) ) ) );
 }
 
 

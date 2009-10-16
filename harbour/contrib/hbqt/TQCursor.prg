@@ -70,7 +70,6 @@ CREATE CLASS QCursor
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QCursor_destroy( ::pPtr )
 
    METHOD  bitmap()                            INLINE  Qt_QCursor_bitmap( ::pPtr )
    METHOD  hotSpot()                           INLINE  Qt_QCursor_hotSpot( ::pPtr )

@@ -76,6 +76,7 @@
  *  flags FindFlags
  */
 
+#include <QtCore/QPointer>
 
 #include <QtWebKit/QWebPage>
 #include <QtCore/QVariant>
@@ -85,19 +86,18 @@
  * QWebPage ( QObject * parent = 0 )
  * ~QWebPage ()
  */
+
 HB_FUNC( QT_QWEBPAGE )
 {
-   hb_retptr( new QWebPage( hbqt_par_QWidget( 2 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QWebPage > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QWEBPAGE_DESTROY )
-{
-   delete hbqt_par_QWebPage( 1 );
-}
+   pObj = new QWebPage( hbqt_par_QWidget( 2 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * QAction * action ( WebAction action ) const
  */
@@ -167,7 +167,7 @@ HB_FUNC( QT_QWEBPAGE_HISTORY )
  */
 HB_FUNC( QT_QWEBPAGE_INPUTMETHODQUERY )
 {
-   hb_retptr( new QVariant( hbqt_par_QWebPage( 1 )->inputMethodQuery( ( Qt::InputMethodQuery ) hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QWebPage( 1 )->inputMethodQuery( ( Qt::InputMethodQuery ) hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -215,7 +215,7 @@ HB_FUNC( QT_QWEBPAGE_NETWORKACCESSMANAGER )
  */
 HB_FUNC( QT_QWEBPAGE_PALETTE )
 {
-   hb_retptr( new QPalette( hbqt_par_QWebPage( 1 )->palette() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPalette( hbqt_par_QWebPage( 1 )->palette() ) ) );
 }
 
 /*
@@ -367,7 +367,7 @@ HB_FUNC( QT_QWEBPAGE_VIEW )
  */
 HB_FUNC( QT_QWEBPAGE_VIEWPORTSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QWebPage( 1 )->viewportSize() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QWebPage( 1 )->viewportSize() ) ) );
 }
 
 

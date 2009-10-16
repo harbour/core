@@ -70,7 +70,6 @@ CREATE CLASS QResource
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QResource_destroy( ::pPtr )
 
    METHOD  absoluteFilePath()                  INLINE  Qt_QResource_absoluteFilePath( ::pPtr )
    METHOD  data()                              INLINE  Qt_QResource_data( ::pPtr )

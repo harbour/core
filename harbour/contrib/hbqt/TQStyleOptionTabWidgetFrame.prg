@@ -70,7 +70,6 @@ CREATE CLASS QStyleOptionTabWidgetFrame INHERIT QStyleOption
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleOptionTabWidgetFrame_destroy( ::pPtr )
 
    METHOD  leftCornerWidgetSize()              INLINE  Qt_QStyleOptionTabWidgetFrame_leftCornerWidgetSize( ::pPtr )
    METHOD  lineWidth()                         INLINE  Qt_QStyleOptionTabWidgetFrame_lineWidth( ::pPtr )

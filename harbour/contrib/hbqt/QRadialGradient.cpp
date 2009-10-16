@@ -72,6 +72,7 @@
  *  enum Type { LinearGradient, RadialGradient, ConicalGradient, NoGradient }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QRadialGradient>
 
@@ -83,44 +84,40 @@
  * QRadialGradient ( const QPointF & center, qreal radius )
  * QRadialGradient ( qreal cx, qreal cy, qreal radius )
  */
+
 HB_FUNC( QT_QRADIALGRADIENT )
 {
+   void * pObj = NULL;
+
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( ( QRadialGradient* ) new QRadialGradient( *hbqt_par_QRadialGradient( 1 ) ) );
+      pObj = ( QRadialGradient* ) new QRadialGradient( *hbqt_par_QRadialGradient( 1 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
    {
-      hb_retptr( ( QRadialGradient* ) new QRadialGradient( *hbqt_par_QPointF( 1 ), hb_parnd( 2 ) ) );
+      pObj = ( QRadialGradient* ) new QRadialGradient( *hbqt_par_QPointF( 1 ), hb_parnd( 2 ) ) ;
    }
    else if( hb_pcount() == 3 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) && HB_ISPOINTER( 3 ) )
    {
-      hb_retptr( ( QRadialGradient* ) new QRadialGradient( *hbqt_par_QPointF( 1 ), hb_parnd( 2 ), *hbqt_par_QPointF( 3 ) ) );
+      pObj = ( QRadialGradient* ) new QRadialGradient( *hbqt_par_QPointF( 1 ), hb_parnd( 2 ), *hbqt_par_QPointF( 3 ) ) ;
    }
    else if( hb_pcount() == 5 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) && HB_ISNUM( 5 ) )
    {
-      hb_retptr( ( QRadialGradient* ) new QRadialGradient( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ) );
+      pObj = ( QRadialGradient* ) new QRadialGradient( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ) ;
    }
    else
    {
-      hb_retptr( ( QRadialGradient* ) new QRadialGradient() );
+      pObj = ( QRadialGradient* ) new QRadialGradient() ;
    }
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QRADIALGRADIENT_DESTROY )
-{
-
-}
-
 /*
  * QPointF center () const
  */
 HB_FUNC( QT_QRADIALGRADIENT_CENTER )
 {
-   hb_retptr( new QPointF( hbqt_par_QRadialGradient( 1 )->center() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPointF( hbqt_par_QRadialGradient( 1 )->center() ) ) );
 }
 
 /*
@@ -128,7 +125,7 @@ HB_FUNC( QT_QRADIALGRADIENT_CENTER )
  */
 HB_FUNC( QT_QRADIALGRADIENT_FOCALPOINT )
 {
-   hb_retptr( new QPointF( hbqt_par_QRadialGradient( 1 )->focalPoint() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPointF( hbqt_par_QRadialGradient( 1 )->focalPoint() ) ) );
 }
 
 /*

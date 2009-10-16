@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTextBlockGroup>
 
@@ -73,19 +74,10 @@
 /*
  * QTextBlockGroup ( QTextDocument * document )
  */
+
 HB_FUNC( QT_QTEXTBLOCKGROUP )
 {
-   //hb_retptr( ( QTextBlockGroup* ) new QTextBlockGroup( hbqt_par_QTextDocument( 1 ) ) );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTBLOCKGROUP_DESTROY )
-{
-
-}
-
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

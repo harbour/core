@@ -92,6 +92,7 @@
  *  //const_iterator end () const
  */
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QList>
 
@@ -101,20 +102,16 @@
  * QList ( const QList<T> & other )
  * ~QList ()
  */
+
 HB_FUNC( QT_QLIST )
 {
+   void * pObj = NULL;
+
    QList<void*>* list = NULL;
-   hb_retptr( ( QList<void*>* ) list );
-}
+   pObj = ( QList<void*>* ) list ;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QLIST_DESTROY )
-{
-   delete hbqt_par_QList( 1 );
+   hb_retptr( pObj );
 }
-
 /*
  * void append ( const T & value )
  */

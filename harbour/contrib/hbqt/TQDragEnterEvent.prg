@@ -70,7 +70,6 @@ CREATE CLASS QDragEnterEvent INHERIT QDragMoveEvent
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QDragEnterEvent_destroy( ::pPtr )
 
 
    ENDCLASS

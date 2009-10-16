@@ -80,6 +80,7 @@
  *  // virtual QModelIndexList match ( const QModelIndex & start, int role, const QVariant & value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const
  */
 
+#include <QtCore/QPointer>
 
 #include <QSize>
 #include <QStringList>
@@ -91,10 +92,6 @@
  * QAbstractItemModel ( QObject * parent = 0 )
  * virtual ~QAbstractItemModel ()
  */
-HB_FUNC( QT_QABSTRACTITEMMODEL )
-{
-   //hb_retptr( ( QAbstractItemModel* ) new QAbstractItemModel( hbqt_par_QObject( 1 ) ) );
-}
 
 HB_FUNC( QT_HBDBFMODEL )
 {
@@ -117,20 +114,15 @@ HB_FUNC( QT_HBDBFMODEL_HBSETROWCOLUMNS )
 }
 
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QABSTRACTITEMMODEL_DESTROY )
+HB_FUNC( QT_QABSTRACTITEMMODEL )
 {
-   delete hbqt_par_QAbstractItemModel( 1 );
 }
-
 /*
  * virtual QModelIndex buddy ( const QModelIndex & index ) const
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_BUDDY )
 {
-   hb_retptr( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->buddy( *hbqt_par_QModelIndex( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->buddy( *hbqt_par_QModelIndex( 2 ) ) ) ) );
 }
 
 /*
@@ -154,7 +146,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_COLUMNCOUNT )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_DATA )
 {
-   hb_retptr( new QVariant( hbqt_par_QAbstractItemModel( 1 )->data( *hbqt_par_QModelIndex( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::DisplayRole ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QAbstractItemModel( 1 )->data( *hbqt_par_QModelIndex( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::DisplayRole ) ) ) ) );
 }
 
 /*
@@ -202,7 +194,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_HASINDEX )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_HEADERDATA )
 {
-   hb_retptr( new QVariant( hbqt_par_QAbstractItemModel( 1 )->headerData( hb_parni( 2 ), ( Qt::Orientation ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : Qt::DisplayRole ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QAbstractItemModel( 1 )->headerData( hb_parni( 2 ), ( Qt::Orientation ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : Qt::DisplayRole ) ) ) ) );
 }
 
 /*
@@ -210,7 +202,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_HEADERDATA )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_INDEX )
 {
-   hb_retptr( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ) ) );
 }
 
 /*
@@ -258,7 +250,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_MIMEDATA )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_MIMETYPES )
 {
-   hb_retptr( new QStringList( hbqt_par_QAbstractItemModel( 1 )->mimeTypes() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QAbstractItemModel( 1 )->mimeTypes() ) ) );
 }
 
 /*
@@ -266,7 +258,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_MIMETYPES )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_PARENT )
 {
-   hb_retptr( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->parent( *hbqt_par_QModelIndex( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->parent( *hbqt_par_QModelIndex( 2 ) ) ) ) );
 }
 
 /*
@@ -338,7 +330,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_SETSUPPORTEDDRAGACTIONS )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_SIBLING )
 {
-   hb_retptr( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->sibling( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QModelIndex( 4 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->sibling( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QModelIndex( 4 ) ) ) ) );
 }
 
 /*
@@ -354,7 +346,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_SORT )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_SPAN )
 {
-   hb_retptr( new QSize( hbqt_par_QAbstractItemModel( 1 )->span( *hbqt_par_QModelIndex( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QAbstractItemModel( 1 )->span( *hbqt_par_QModelIndex( 2 ) ) ) ) );
 }
 
 /*

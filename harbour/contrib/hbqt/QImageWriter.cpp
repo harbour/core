@@ -79,6 +79,7 @@
  *  QList<QByteArray> supportedImageFormats ()
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QImageWriter>
 
@@ -89,19 +90,15 @@
  * QImageWriter ( const QString & fileName, const QByteArray & format = QByteArray() )
  * ~QImageWriter ()
  */
+
 HB_FUNC( QT_QIMAGEWRITER )
 {
-   hb_retptr( ( QImageWriter* ) new QImageWriter() );
-}
+   void * pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QIMAGEWRITER_DESTROY )
-{
-   delete hbqt_par_QImageWriter( 1 );
-}
+   pObj = ( QImageWriter* ) new QImageWriter() ;
 
+   hb_retptr( pObj );
+}
 /*
  * bool canWrite () const
  */
@@ -155,7 +152,7 @@ HB_FUNC( QT_QIMAGEWRITER_FILENAME )
  */
 HB_FUNC( QT_QIMAGEWRITER_FORMAT )
 {
-   hb_retptr( new QByteArray( hbqt_par_QImageWriter( 1 )->format() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QImageWriter( 1 )->format() ) ) );
 }
 
 /*
@@ -163,7 +160,7 @@ HB_FUNC( QT_QIMAGEWRITER_FORMAT )
  */
 HB_FUNC( QT_QIMAGEWRITER_GAMMA )
 {
-   hb_retptr( new float( hbqt_par_QImageWriter( 1 )->gamma() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new float( hbqt_par_QImageWriter( 1 )->gamma() ) ) );
 }
 
 /*

@@ -70,7 +70,6 @@ CREATE CLASS QTextDocument INHERIT QObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextDocument_destroy( ::pPtr )
 
    METHOD  addResource( nType, pName, pResource )  INLINE  Qt_QTextDocument_addResource( ::pPtr, nType, pName, pResource )
    METHOD  adjustSize()                        INLINE  Qt_QTextDocument_adjustSize( ::pPtr )

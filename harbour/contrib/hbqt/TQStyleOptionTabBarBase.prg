@@ -70,7 +70,6 @@ CREATE CLASS QStyleOptionTabBarBase INHERIT QStyleOption
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleOptionTabBarBase_destroy( ::pPtr )
 
    METHOD  selectedTabRect()                   INLINE  Qt_QStyleOptionTabBarBase_selectedTabRect( ::pPtr )
    METHOD  shape()                             INLINE  Qt_QStyleOptionTabBarBase_shape( ::pPtr )

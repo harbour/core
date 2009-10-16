@@ -76,6 +76,7 @@
  *  enum Position { InFlow, FloatLeft, FloatRight }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTextFrameFormat>
 
@@ -83,19 +84,18 @@
 /*
  * QTextFrameFormat ()
  */
+
 HB_FUNC( QT_QTEXTFRAMEFORMAT )
 {
-   hb_retptr( ( QTextFrameFormat* ) new QTextFrameFormat() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
+
+   pObj = ( QTextFrameFormat* ) new QTextFrameFormat() ;
+
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QTextFrameFormat" );
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTFRAMEFORMAT_DESTROY )
-{
-
-}
-
 /*
  * qreal border () const
  */
@@ -109,7 +109,7 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_BORDER )
  */
 HB_FUNC( QT_QTEXTFRAMEFORMAT_BORDERBRUSH )
 {
-   hb_retptr( new QBrush( hbqt_par_QTextFrameFormat( 1 )->borderBrush() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QBrush( hbqt_par_QTextFrameFormat( 1 )->borderBrush() ) ) );
 }
 
 /*
@@ -133,7 +133,7 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_BOTTOMMARGIN )
  */
 HB_FUNC( QT_QTEXTFRAMEFORMAT_HEIGHT )
 {
-   hb_retptr( new QTextLength( hbqt_par_QTextFrameFormat( 1 )->height() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextLength( hbqt_par_QTextFrameFormat( 1 )->height() ) ) );
 }
 
 /*
@@ -325,7 +325,7 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_TOPMARGIN )
  */
 HB_FUNC( QT_QTEXTFRAMEFORMAT_WIDTH )
 {
-   hb_retptr( new QTextLength( hbqt_par_QTextFrameFormat( 1 )->width() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextLength( hbqt_par_QTextFrameFormat( 1 )->width() ) ) );
 }
 
 

@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QTextDecoder>
 
@@ -74,19 +75,15 @@
  * QTextDecoder ( const QTextCodec * codec )
  * ~QTextDecoder ()
  */
+
 HB_FUNC( QT_QTEXTDECODER )
 {
-   hb_retptr( ( QTextDecoder* ) new QTextDecoder( hbqt_par_QTextCodec( 1 ) ) );
-}
+   void * pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTDECODER_DESTROY )
-{
-   delete hbqt_par_QTextDecoder( 1 );
-}
+   pObj = ( QTextDecoder* ) new QTextDecoder( hbqt_par_QTextCodec( 1 ) ) ;
 
+   hb_retptr( pObj );
+}
 /*
  * QString toUnicode ( const char * chars, int len )
  */

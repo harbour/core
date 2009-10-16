@@ -70,7 +70,6 @@ CREATE CLASS QBrush
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QBrush_destroy( ::pPtr )
 
    METHOD  color()                             INLINE  Qt_QBrush_color( ::pPtr )
    METHOD  isOpaque()                          INLINE  Qt_QBrush_isOpaque( ::pPtr )

@@ -80,6 +80,7 @@
  *  QList<QDockWidget *> tabifiedDockWidgets ( QDockWidget * dockwidget ) const
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QMainWindow>
 
@@ -88,19 +89,18 @@
  * QMainWindow ( QWidget * parent = 0, Qt::WindowFlags flags = 0 )
  * ~QMainWindow ()
  */
+
 HB_FUNC( QT_QMAINWINDOW )
 {
-   hb_retptr( ( QMainWindow* ) new QMainWindow( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QMainWindow > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QMAINWINDOW_DESTROY )
-{
-   delete hbqt_par_QMainWindow( 1 );
-}
+   pObj = ( QMainWindow* ) new QMainWindow( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget )
  */
@@ -202,7 +202,7 @@ HB_FUNC( QT_QMAINWINDOW_DOCUMENTMODE )
  */
 HB_FUNC( QT_QMAINWINDOW_ICONSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QMainWindow( 1 )->iconSize() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QMainWindow( 1 )->iconSize() ) ) );
 }
 
 /*
@@ -298,7 +298,7 @@ HB_FUNC( QT_QMAINWINDOW_RESTORESTATE )
  */
 HB_FUNC( QT_QMAINWINDOW_SAVESTATE )
 {
-   hb_retptr( new QByteArray( hbqt_par_QMainWindow( 1 )->saveState( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QMainWindow( 1 )->saveState( hb_parni( 2 ) ) ) ) );
 }
 
 /*

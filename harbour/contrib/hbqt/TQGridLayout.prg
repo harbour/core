@@ -70,7 +70,6 @@ CREATE CLASS QGridLayout INHERIT QLayout
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QGridLayout_destroy( ::pPtr )
 
    METHOD  addItem( pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )  INLINE  Qt_QGridLayout_addItem( ::pPtr, pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
    METHOD  addLayout( pLayout, nRow, nColumn, nAlignment )  INLINE  Qt_QGridLayout_addLayout( ::pPtr, pLayout, nRow, nColumn, nAlignment )

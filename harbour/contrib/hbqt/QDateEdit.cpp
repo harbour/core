@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QDateEdit>
 
@@ -74,19 +75,18 @@
  * QDateEdit ( QWidget * parent = 0 )
  * QDateEdit ( const QDate & date, QWidget * parent = 0 )
  */
+
 HB_FUNC( QT_QDATEEDIT )
 {
-   hb_retptr( ( QDateEdit* ) new QDateEdit( hbqt_par_QWidget( 1 ) ) );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QDateEdit > pObj = NULL;
+
+   pObj = ( QDateEdit* ) new QDateEdit( hbqt_par_QWidget( 1 ) ) ;
+
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QDATEEDIT_DESTROY )
-{
-
-}
-
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

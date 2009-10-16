@@ -70,7 +70,6 @@ CREATE CLASS QPushButton INHERIT QAbstractButton
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QPushButton_destroy( ::pPtr )
 
    METHOD  autoDefault()                       INLINE  Qt_QPushButton_autoDefault( ::pPtr )
    METHOD  isDefault()                         INLINE  Qt_QPushButton_isDefault( ::pPtr )

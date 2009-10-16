@@ -70,7 +70,6 @@ CREATE CLASS QDragMoveEvent INHERIT QDropEvent
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QDragMoveEvent_destroy( ::pPtr )
 
    METHOD  accept( pRectangle )                INLINE  Qt_QDragMoveEvent_accept( ::pPtr, pRectangle )
    METHOD  accept_1()                          INLINE  Qt_QDragMoveEvent_accept_1( ::pPtr )

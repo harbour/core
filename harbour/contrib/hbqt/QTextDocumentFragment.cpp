@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTextDocumentFragment>
 
@@ -77,19 +78,18 @@
  * QTextDocumentFragment ( const QTextDocumentFragment & other )
  * ~QTextDocumentFragment ()
  */
+
 HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT )
 {
-   hb_retptr( ( QTextDocumentFragment* ) new QTextDocumentFragment() );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_DESTROY )
-{
-   delete hbqt_par_QTextDocumentFragment( 1 );
-}
+   pObj = ( QTextDocumentFragment* ) new QTextDocumentFragment() ;
 
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QTextDocumentFragment" );
+   hb_retptrGC( p );
+}
 /*
  * bool isEmpty () const
  */
@@ -127,7 +127,7 @@ HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_TOPLAINTEXT )
  */
 HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMHTML )
 {
-   hb_retptr( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromHtml( hbqt_par_QString( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromHtml( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -135,7 +135,7 @@ HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMHTML )
  */
 HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMHTML_1 )
 {
-   hb_retptr( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromHtml( hbqt_par_QString( 2 ), hbqt_par_QTextDocument( 3 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromHtml( hbqt_par_QString( 2 ), hbqt_par_QTextDocument( 3 ) ) ) ) );
 }
 
 /*
@@ -143,7 +143,7 @@ HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMHTML_1 )
  */
 HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMPLAINTEXT )
 {
-   hb_retptr( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromPlainText( hbqt_par_QString( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromPlainText( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 

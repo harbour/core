@@ -71,6 +71,7 @@
  *  enum StyleOptionVersion { Version }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionToolBox>
 
@@ -79,25 +80,21 @@
  * QStyleOptionToolBox ()
  * QStyleOptionToolBox ( const QStyleOptionToolBox & other )
  */
+
 HB_FUNC( QT_QSTYLEOPTIONTOOLBOX )
 {
-   hb_retptr( ( QStyleOptionToolBox* ) new QStyleOptionToolBox() );
+   void * pObj = NULL;
+
+   pObj = ( QStyleOptionToolBox* ) new QStyleOptionToolBox() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTIONTOOLBOX_DESTROY )
-{
-
-}
-
 /*
  * QIcon icon
  */
 HB_FUNC( QT_QSTYLEOPTIONTOOLBOX_ICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QStyleOptionToolBox( 1 )->icon ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QStyleOptionToolBox( 1 )->icon ) ) );
 }
 
 /*

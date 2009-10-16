@@ -70,7 +70,6 @@ CREATE CLASS QMenuBar INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QMenuBar_destroy( ::pPtr )
 
    METHOD  activeAction()                      INLINE  Qt_QMenuBar_activeAction( ::pPtr )
    METHOD  addAction( cText )                  INLINE  Qt_QMenuBar_addAction( ::pPtr, cText )

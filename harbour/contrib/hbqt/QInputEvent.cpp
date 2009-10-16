@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QInputEvent>
 #include <QtCore/QEvent>
@@ -74,20 +75,15 @@
  *
  *
  */
+
 HB_FUNC( QT_QINPUTEVENT )
 {
-   hb_retptr( ( QInputEvent* ) new QInputEvent( ( QEvent::Type ) hb_parni( 1 ),
-                                   ( Qt::KeyboardModifiers ) hb_parni( 2 ) ) );
+   void * pObj = NULL;
+
+   pObj = ( QInputEvent* ) new QInputEvent( ( QEvent::Type ) hb_parni( 1 ), ( Qt::KeyboardModifiers ) hb_parni( 2 ) ) ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QINPUTEVENT_DESTROY )
-{
-
-}
-
 /*
  * Qt::KeyboardModifiers modifiers () const
  */

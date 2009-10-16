@@ -70,7 +70,6 @@ CREATE CLASS QTextBoundaryFinder
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextBoundaryFinder_destroy( ::pPtr )
 
    METHOD  boundaryReasons()                   INLINE  Qt_QTextBoundaryFinder_boundaryReasons( ::pPtr )
    METHOD  isAtBoundary()                      INLINE  Qt_QTextBoundaryFinder_isAtBoundary( ::pPtr )

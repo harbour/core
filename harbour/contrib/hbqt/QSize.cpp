@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QSize>
 
@@ -75,30 +76,29 @@
  * QSize ( int width, int height )
  * ~QSize ()
  */
+
 HB_FUNC( QT_QSIZE )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
+
    if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-      hb_retptr( ( QSize* ) new QSize( hb_parni( 1 ), hb_parni( 2 ) ) );
+      pObj = ( QSize* ) new QSize( hb_parni( 1 ), hb_parni( 2 ) ) ;
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( ( QSize* ) new QSize( *hbqt_par_QSize( 1 ) ) );
+      pObj = ( QSize* ) new QSize( *hbqt_par_QSize( 1 ) ) ;
    }
    else
    {
-      hb_retptr( ( QSize* ) new QSize() );
+      pObj = ( QSize* ) new QSize() ;
    }
-}
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSIZE_DESTROY )
-{
-   delete hbqt_par_QSize( 1 );
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QSize" );
+   hb_retptrGC( p );
 }
-
 /*
  * int height () const
  */
@@ -200,7 +200,7 @@ HB_FUNC( QT_QSIZE_WIDTH )
  */
 HB_FUNC( QT_QSIZE_BOUNDEDTO )
 {
-   hb_retptr( new QSize( hbqt_par_QSize( 1 )->boundedTo( *hbqt_par_QSize( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QSize( 1 )->boundedTo( *hbqt_par_QSize( 2 ) ) ) ) );
 }
 
 /*
@@ -208,7 +208,7 @@ HB_FUNC( QT_QSIZE_BOUNDEDTO )
  */
 HB_FUNC( QT_QSIZE_EXPANDEDTO )
 {
-   hb_retptr( new QSize( hbqt_par_QSize( 1 )->expandedTo( *hbqt_par_QSize( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QSize( 1 )->expandedTo( *hbqt_par_QSize( 2 ) ) ) ) );
 }
 
 

@@ -78,6 +78,7 @@
  *  flags EditTriggers
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTreeView>
 
@@ -86,19 +87,18 @@
  * QTreeView ( QWidget * parent = 0 )
  * ~QTreeView ()
  */
+
 HB_FUNC( QT_QTREEVIEW )
 {
-   hb_retptr( ( QTreeView* ) new QTreeView( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QTreeView > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTREEVIEW_DESTROY )
-{
-   delete hbqt_par_QTreeView( 1 );
-}
+   pObj = ( QTreeView* ) new QTreeView( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * bool allColumnsShowFocus () const
  */
@@ -168,7 +168,7 @@ HB_FUNC( QT_QTREEVIEW_INDENTATION )
  */
 HB_FUNC( QT_QTREEVIEW_INDEXABOVE )
 {
-   hb_retptr( new QModelIndex( hbqt_par_QTreeView( 1 )->indexAbove( *hbqt_par_QModelIndex( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QTreeView( 1 )->indexAbove( *hbqt_par_QModelIndex( 2 ) ) ) ) );
 }
 
 /*
@@ -176,7 +176,7 @@ HB_FUNC( QT_QTREEVIEW_INDEXABOVE )
  */
 HB_FUNC( QT_QTREEVIEW_INDEXBELOW )
 {
-   hb_retptr( new QModelIndex( hbqt_par_QTreeView( 1 )->indexBelow( *hbqt_par_QModelIndex( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QTreeView( 1 )->indexBelow( *hbqt_par_QModelIndex( 2 ) ) ) ) );
 }
 
 /*
@@ -416,7 +416,7 @@ HB_FUNC( QT_QTREEVIEW_UNIFORMROWHEIGHTS )
  */
 HB_FUNC( QT_QTREEVIEW_VISUALRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QTreeView( 1 )->visualRect( *hbqt_par_QModelIndex( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QTreeView( 1 )->visualRect( *hbqt_par_QModelIndex( 2 ) ) ) ) );
 }
 
 /*

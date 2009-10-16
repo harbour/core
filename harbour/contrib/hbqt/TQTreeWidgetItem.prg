@@ -70,7 +70,6 @@ CREATE CLASS QTreeWidgetItem
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTreeWidgetItem_destroy( ::pPtr )
 
    METHOD  addChild( pChild )                  INLINE  Qt_QTreeWidgetItem_addChild( ::pPtr, pChild )
    METHOD  background( nColumn )               INLINE  Qt_QTreeWidgetItem_background( ::pPtr, nColumn )

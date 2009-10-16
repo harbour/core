@@ -71,6 +71,7 @@
  *  enum StyleOptionVersion { Version }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionComplex>
 
@@ -79,19 +80,15 @@
  * QStyleOptionComplex ( int version = QStyleOptionComplex::Version, int type = SO_Complex )
  * QStyleOptionComplex ( const QStyleOptionComplex & other )
  */
+
 HB_FUNC( QT_QSTYLEOPTIONCOMPLEX )
 {
-   hb_retptr( ( QStyleOptionComplex* ) new QStyleOptionComplex() );
+   void * pObj = NULL;
+
+   pObj = ( QStyleOptionComplex* ) new QStyleOptionComplex() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTIONCOMPLEX_DESTROY )
-{
-
-}
-
 /*
  * QStyle::SubControls activeSubControls
  */

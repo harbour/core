@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QDragMoveEvent>
 
@@ -74,19 +75,10 @@
  * QDragMoveEvent ( const QPoint & pos, Qt::DropActions actions, const QMimeData * data, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Type type = DragMove )
  * ~QDragMoveEvent ()
  */
+
 HB_FUNC( QT_QDRAGMOVEEVENT )
 {
-   // hb_retptr( ( * ) new () );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QDRAGMOVEEVENT_DESTROY )
-{
-   delete hbqt_par_QDragMoveEvent( 1 );
-}
-
 /*
  * void accept ( const QRect & rectangle )
  */
@@ -108,7 +100,7 @@ HB_FUNC( QT_QDRAGMOVEEVENT_ACCEPT_1 )
  */
 HB_FUNC( QT_QDRAGMOVEEVENT_ANSWERRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QDragMoveEvent( 1 )->answerRect() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QDragMoveEvent( 1 )->answerRect() ) ) );
 }
 
 /*

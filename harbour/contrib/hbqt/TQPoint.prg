@@ -70,7 +70,6 @@ CREATE CLASS QPoint
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QPoint_destroy( ::pPtr )
 
    METHOD  isNull()                            INLINE  Qt_QPoint_isNull( ::pPtr )
    METHOD  manhattanLength()                   INLINE  Qt_QPoint_manhattanLength( ::pPtr )

@@ -70,7 +70,6 @@ CREATE CLASS QDateTime
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QDateTime_destroy( ::pPtr )
 
    METHOD  addDays( nNdays )                   INLINE  Qt_QDateTime_addDays( ::pPtr, nNdays )
    METHOD  addMSecs( nMsecs )                  INLINE  Qt_QDateTime_addMSecs( ::pPtr, nMsecs )

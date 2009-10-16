@@ -70,7 +70,6 @@ CREATE CLASS QWidget INHERIT QObject, QPaintDevice
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QWidget_destroy( ::pPtr )
 
    METHOD  acceptDrops()                       INLINE  Qt_QWidget_acceptDrops( ::pPtr )
    METHOD  accessibleDescription()             INLINE  Qt_QWidget_accessibleDescription( ::pPtr )
@@ -249,7 +248,6 @@ CREATE CLASS QWidget INHERIT QObject, QPaintDevice
    METHOD  visibleRegion()                     INLINE  Qt_QWidget_visibleRegion( ::pPtr )
    METHOD  whatsThis()                         INLINE  Qt_QWidget_whatsThis( ::pPtr )
    METHOD  width()                             INLINE  Qt_QWidget_width( ::pPtr )
-   METHOD  winId()                             INLINE  Qt_QWidget_winId( ::pPtr )
    METHOD  window()                            INLINE  Qt_QWidget_window( ::pPtr )
    METHOD  windowFilePath()                    INLINE  Qt_QWidget_windowFilePath( ::pPtr )
    METHOD  windowFlags()                       INLINE  Qt_QWidget_windowFlags( ::pPtr )

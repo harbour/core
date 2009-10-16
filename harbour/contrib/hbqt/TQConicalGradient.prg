@@ -70,7 +70,6 @@ CREATE CLASS QConicalGradient INHERIT QGradient
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QConicalGradient_destroy( ::pPtr )
 
    METHOD  angle()                             INLINE  Qt_QConicalGradient_angle( ::pPtr )
    METHOD  center()                            INLINE  Qt_QConicalGradient_center( ::pPtr )

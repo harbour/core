@@ -70,7 +70,6 @@ CREATE CLASS QStyleOptionSlider INHERIT QStyleOptionComplex
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleOptionSlider_destroy( ::pPtr )
 
    METHOD  dialWrapping()                      INLINE  Qt_QStyleOptionSlider_dialWrapping( ::pPtr )
    METHOD  maximum()                           INLINE  Qt_QStyleOptionSlider_maximum( ::pPtr )

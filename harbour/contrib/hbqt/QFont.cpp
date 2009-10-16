@@ -76,6 +76,7 @@
  *  enum Weight { Light, Normal, DemiBold, Bold, Black }
  */
 
+#include <QtCore/QPointer>
 
 #include <QStringList>
 #include <QtGui/QFont>
@@ -87,46 +88,45 @@
  * QFont ( const QFont & font )
  * ~QFont ()
  */
+
 HB_FUNC( QT_QFONT )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
+
    if(      hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
-      hb_retptr( ( QFont* ) new QFont( hbqt_par_QString( 1 ), -1, -1, false ) );
+      pObj = ( QFont* ) new QFont( hbqt_par_QString( 1 ), -1, -1, false ) ;
    }
    else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
    {
-      hb_retptr( ( QFont* ) new QFont( hbqt_par_QString( 1 ), hb_parni( 2 ), -1, false ) );
+      pObj = ( QFont* ) new QFont( hbqt_par_QString( 1 ), hb_parni( 2 ), -1, false ) ;
    }
    else if( hb_pcount() == 3 && HB_ISCHAR( 1 ) && HB_ISNUM( 2 )  && HB_ISNUM( 3 ) )
    {
-      hb_retptr( ( QFont* ) new QFont( hbqt_par_QString( 1 ), hb_parni( 2 ), hb_parni( 3 ), false ) );
+      pObj = ( QFont* ) new QFont( hbqt_par_QString( 1 ), hb_parni( 2 ), hb_parni( 3 ), false ) ;
    }
    else if( hb_pcount() == 4 && HB_ISCHAR( 1 ) && HB_ISNUM( 2 )  && HB_ISNUM( 3 ) && HB_ISLOG( 4 ) )
    {
-      hb_retptr( ( QFont* ) new QFont( hbqt_par_QString( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ) ) );
+      pObj = ( QFont* ) new QFont( hbqt_par_QString( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ) ) ;
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( ( QFont* ) new QFont( *hbqt_par_QFont( 1 ) ) );
+      pObj = ( QFont* ) new QFont( *hbqt_par_QFont( 1 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      hb_retptr( ( QFont* ) new QFont( *hbqt_par_QFont( 1 ), hbqt_par_QPaintDevice( 2 ) ) );
+      pObj = ( QFont* ) new QFont( *hbqt_par_QFont( 1 ), hbqt_par_QPaintDevice( 2 ) ) ;
    }
    else
    {
-      hb_retptr( ( QFont* ) new QFont() );
+      pObj = ( QFont* ) new QFont() ;
    }
-}
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QFONT_DESTROY )
-{
-   delete hbqt_par_QFont( 1 );
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QFont" );
+   hb_retptrGC( p );
 }
-
 /*
  * bool bold () const
  */
@@ -580,7 +580,7 @@ HB_FUNC( QT_QFONT_SUBSTITUTE )
  */
 HB_FUNC( QT_QFONT_SUBSTITUTES )
 {
-   hb_retptr( new QStringList( hbqt_par_QFont( 1 )->substitutes( hbqt_par_QString( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QFont( 1 )->substitutes( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -588,7 +588,7 @@ HB_FUNC( QT_QFONT_SUBSTITUTES )
  */
 HB_FUNC( QT_QFONT_SUBSTITUTIONS )
 {
-   hb_retptr( new QStringList( hbqt_par_QFont( 1 )->substitutions() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QFont( 1 )->substitutions() ) ) );
 }
 
 

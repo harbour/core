@@ -70,7 +70,6 @@ CREATE CLASS QFrame INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QFrame_destroy( ::pPtr )
 
    METHOD  frameRect()                         INLINE  Qt_QFrame_frameRect( ::pPtr )
    METHOD  frameShadow()                       INLINE  Qt_QFrame_frameShadow( ::pPtr )

@@ -70,7 +70,6 @@ CREATE CLASS QSlider INHERIT QAbstractSlider
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QSlider_destroy( ::pPtr )
 
    METHOD  setTickInterval( nTi )              INLINE  Qt_QSlider_setTickInterval( ::pPtr, nTi )
    METHOD  setTickPosition( nPosition )        INLINE  Qt_QSlider_setTickPosition( ::pPtr, nPosition )

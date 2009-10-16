@@ -70,7 +70,6 @@ CREATE CLASS QWidgetAction INHERIT QAction
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QWidgetAction_destroy( ::pPtr )
 
    METHOD  defaultWidget()                     INLINE  Qt_QWidgetAction_defaultWidget( ::pPtr )
    METHOD  releaseWidget( pWidget )            INLINE  Qt_QWidgetAction_releaseWidget( ::pPtr, pWidget )

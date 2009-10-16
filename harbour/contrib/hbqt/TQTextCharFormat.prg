@@ -70,7 +70,6 @@ CREATE CLASS QTextCharFormat INHERIT QTextFormat
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextCharFormat_destroy( ::pPtr )
 
    METHOD  anchorHref()                        INLINE  Qt_QTextCharFormat_anchorHref( ::pPtr )
    METHOD  anchorNames()                       INLINE  Qt_QTextCharFormat_anchorNames( ::pPtr )

@@ -71,6 +71,7 @@
  *  enum StyleOptionVersion { Version }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionFrame>
 
@@ -79,19 +80,15 @@
  * QStyleOptionFrame ()
  * QStyleOptionFrame ( const QStyleOptionFrame & other )
  */
+
 HB_FUNC( QT_QSTYLEOPTIONFRAME )
 {
-   hb_retptr( ( QStyleOptionFrame* ) new QStyleOptionFrame() );
+   void * pObj = NULL;
+
+   pObj = ( QStyleOptionFrame* ) new QStyleOptionFrame() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTIONFRAME_DESTROY )
-{
-
-}
-
 /*
  * int lineWidth
  */

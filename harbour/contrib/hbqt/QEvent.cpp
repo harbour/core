@@ -70,6 +70,7 @@
  *  enum Type { None, AccessibilityDescription, AccessibilityHelp, AccessibilityPrepare, ..., MaxUser }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QEvent>
 
@@ -78,19 +79,15 @@
  * QEvent ( Type type )
  * virtual ~QEvent ()
  */
+
 HB_FUNC( QT_QEVENT )
 {
-   hb_retptr( ( QEvent* ) new QEvent( ( QEvent::Type ) hb_parni( 1 ) ) );
-}
+   void * pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QEVENT_DESTROY )
-{
-   delete hbqt_par_QEvent( 1 );
-}
+   pObj = ( QEvent* ) new QEvent( ( QEvent::Type ) hb_parni( 1 ) ) ;
 
+   hb_retptr( pObj );
+}
 /*
  * void accept ()
  */

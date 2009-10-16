@@ -70,6 +70,7 @@
  *  enum SliderAction { SliderNoAction, SliderSingleStepAdd, SliderSingleStepSub, SliderPageStepAdd, ..., SliderMove }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QAbstractSlider>
 
@@ -78,19 +79,10 @@
  * QAbstractSlider ( QWidget * parent = 0 )
  * ~QAbstractSlider ()
  */
+
 HB_FUNC( QT_QABSTRACTSLIDER )
 {
-
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QABSTRACTSLIDER_DESTROY )
-{
-   delete hbqt_par_QAbstractSlider( 1 );
-}
-
 /*
  * bool hasTracking () const
  */

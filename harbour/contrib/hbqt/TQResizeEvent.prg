@@ -70,7 +70,6 @@ CREATE CLASS QResizeEvent INHERIT QEvent
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QResizeEvent_destroy( ::pPtr )
 
    METHOD  oldSize()                           INLINE  Qt_QResizeEvent_oldSize( ::pPtr )
    METHOD  size()                              INLINE  Qt_QResizeEvent_size( ::pPtr )

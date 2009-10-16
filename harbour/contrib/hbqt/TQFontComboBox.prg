@@ -70,7 +70,6 @@ CREATE CLASS QFontComboBox INHERIT QComboBox
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QFontComboBox_destroy( ::pPtr )
 
    METHOD  currentFont()                       INLINE  Qt_QFontComboBox_currentFont( ::pPtr )
    METHOD  fontFilters()                       INLINE  Qt_QFontComboBox_fontFilters( ::pPtr )

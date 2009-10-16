@@ -70,7 +70,6 @@ CREATE CLASS QGradient
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QGradient_destroy( ::pPtr )
 
    METHOD  coordinateMode()                    INLINE  Qt_QGradient_coordinateMode( ::pPtr )
    METHOD  setColorAt( nPosition, pColor )     INLINE  Qt_QGradient_setColorAt( ::pPtr, nPosition, pColor )

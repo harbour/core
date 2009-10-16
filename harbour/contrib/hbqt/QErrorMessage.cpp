@@ -75,6 +75,7 @@
  *  oid showMessage ( const QString & message )
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QErrorMessage>
 
@@ -83,19 +84,18 @@
  * QErrorMessage ( QWidget * parent = 0 )
  * ~QErrorMessage ()
  */
+
 HB_FUNC( QT_QERRORMESSAGE )
 {
-   hb_retptr( ( QErrorMessage* ) new QErrorMessage( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QErrorMessage > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QERRORMESSAGE_DESTROY )
-{
-   delete hbqt_par_QErrorMessage( 1 );
-}
+   pObj = ( QErrorMessage* ) new QErrorMessage( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * void showMessage ( const QString & message, const QString & type )
  */

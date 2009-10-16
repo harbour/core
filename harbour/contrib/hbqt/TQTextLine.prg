@@ -70,7 +70,6 @@ CREATE CLASS QTextLine
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextLine_destroy( ::pPtr )
 
    METHOD  ascent()                            INLINE  Qt_QTextLine_ascent( ::pPtr )
    METHOD  cursorToX( nCursorPos, nEdge )      INLINE  Qt_QTextLine_cursorToX( ::pPtr, nCursorPos, nEdge )

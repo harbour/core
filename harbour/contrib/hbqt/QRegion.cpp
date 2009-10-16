@@ -83,6 +83,7 @@
  *  // Handle handle () const
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QRegion>
 
@@ -96,62 +97,58 @@
  * QRegion ( const QRect & r, RegionType t = Rectangle )
  * ~QRegion ()
  */
+
 HB_FUNC( QT_QREGION )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
+
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( ( QRegion* ) new QRegion( *hbqt_par_QRegion( 1 ) ) );
+      pObj = ( QRegion* ) new QRegion( *hbqt_par_QRegion( 1 ) ) ;
    }
    else if( hb_pcount() >= 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
    {
-      hb_retptr( ( QRegion* ) new QRegion( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ),
-                                           HB_ISNUM( 5 ) ? ( QRegion::RegionType ) hb_parni( 5 ) : QRegion::Rectangle ) );
+      pObj = ( QRegion* ) new QRegion( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), HB_ISNUM( 5 ) ? ( QRegion::RegionType ) hb_parni( 5 ) : QRegion::Rectangle ) ;
    }
    else if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
    {
       if(      ( QString ) "QPolygon" == hbqt_par_QString( 1 ) )
       {
-         hb_retptr( ( QRegion* ) new QRegion( *hbqt_par_QPolygon( 2 ),
-                                              HB_ISNUM( 3 ) ? ( Qt::FillRule ) hb_parni( 3 ) : Qt::OddEvenFill ) );
+         pObj = ( QRegion* ) new QRegion( *hbqt_par_QPolygon( 2 ), HB_ISNUM( 3 ) ? ( Qt::FillRule ) hb_parni( 3 ) : Qt::OddEvenFill ) ;
       }
       else if( ( QString ) "QBitmap"  == hbqt_par_QString( 1 ) )
       {
-         hb_retptr( ( QRegion* ) new QRegion( *hbqt_par_QBitmap( 2 ) ) );
+         pObj = ( QRegion* ) new QRegion( *hbqt_par_QBitmap( 2 ) ) ;
       }
       else if( ( QString ) "QRect"    == hbqt_par_QString( 1 ) )
       {
-         hb_retptr( ( QRegion* ) new QRegion( *hbqt_par_QRect( 2 ),
-                                               HB_ISNUM( 3 ) ? ( QRegion::RegionType ) hb_parni( 3 ) : QRegion::Rectangle ) );
+         pObj = ( QRegion* ) new QRegion( *hbqt_par_QRect( 2 ), HB_ISNUM( 3 ) ? ( QRegion::RegionType ) hb_parni( 3 ) : QRegion::Rectangle ) ;
       }
       else
       {
-         hb_retptr( ( QRegion* ) new QRegion() );
+         pObj = ( QRegion* ) new QRegion() ;
       }
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
    {
-      hb_retptr( ( QRegion* ) new QRegion( *hbqt_par_QRect( 1 ), ( QRegion::RegionType ) hb_parni( 2 ) ) );
+      pObj = ( QRegion* ) new QRegion( *hbqt_par_QRect( 1 ), ( QRegion::RegionType ) hb_parni( 2 ) ) ;
    }
    else
    {
-      hb_retptr( ( QRegion* ) new QRegion() );
+      pObj = ( QRegion* ) new QRegion() ;
    }
-}
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QREGION_DESTROY )
-{
-   delete hbqt_par_QRegion( 1 );
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QRegion" );
+   hb_retptrGC( p );
 }
-
 /*
  * QRect boundingRect () const
  */
 HB_FUNC( QT_QREGION_BOUNDINGRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QRegion( 1 )->boundingRect() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QRegion( 1 )->boundingRect() ) ) );
 }
 
 /*
@@ -175,7 +172,7 @@ HB_FUNC( QT_QREGION_CONTAINS_1 )
  */
 HB_FUNC( QT_QREGION_INTERSECTED )
 {
-   hb_retptr( new QRegion( hbqt_par_QRegion( 1 )->intersected( *hbqt_par_QRegion( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRegion( hbqt_par_QRegion( 1 )->intersected( *hbqt_par_QRegion( 2 ) ) ) ) );
 }
 
 /*
@@ -183,7 +180,7 @@ HB_FUNC( QT_QREGION_INTERSECTED )
  */
 HB_FUNC( QT_QREGION_INTERSECTED_1 )
 {
-   hb_retptr( new QRegion( hbqt_par_QRegion( 1 )->intersected( *hbqt_par_QRect( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRegion( hbqt_par_QRegion( 1 )->intersected( *hbqt_par_QRect( 2 ) ) ) ) );
 }
 
 /*
@@ -231,7 +228,7 @@ HB_FUNC( QT_QREGION_SETRECTS )
  */
 HB_FUNC( QT_QREGION_SUBTRACTED )
 {
-   hb_retptr( new QRegion( hbqt_par_QRegion( 1 )->subtracted( *hbqt_par_QRegion( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRegion( hbqt_par_QRegion( 1 )->subtracted( *hbqt_par_QRegion( 2 ) ) ) ) );
 }
 
 /*
@@ -255,7 +252,7 @@ HB_FUNC( QT_QREGION_TRANSLATE_1 )
  */
 HB_FUNC( QT_QREGION_TRANSLATED )
 {
-   hb_retptr( new QRegion( hbqt_par_QRegion( 1 )->translated( hb_parni( 2 ), hb_parni( 3 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRegion( hbqt_par_QRegion( 1 )->translated( hb_parni( 2 ), hb_parni( 3 ) ) ) ) );
 }
 
 /*
@@ -263,7 +260,7 @@ HB_FUNC( QT_QREGION_TRANSLATED )
  */
 HB_FUNC( QT_QREGION_TRANSLATED_1 )
 {
-   hb_retptr( new QRegion( hbqt_par_QRegion( 1 )->translated( *hbqt_par_QPoint( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRegion( hbqt_par_QRegion( 1 )->translated( *hbqt_par_QPoint( 2 ) ) ) ) );
 }
 
 /*
@@ -271,7 +268,7 @@ HB_FUNC( QT_QREGION_TRANSLATED_1 )
  */
 HB_FUNC( QT_QREGION_UNITED )
 {
-   hb_retptr( new QRegion( hbqt_par_QRegion( 1 )->united( *hbqt_par_QRegion( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRegion( hbqt_par_QRegion( 1 )->united( *hbqt_par_QRegion( 2 ) ) ) ) );
 }
 
 /*
@@ -279,7 +276,7 @@ HB_FUNC( QT_QREGION_UNITED )
  */
 HB_FUNC( QT_QREGION_UNITED_1 )
 {
-   hb_retptr( new QRegion( hbqt_par_QRegion( 1 )->united( *hbqt_par_QRect( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRegion( hbqt_par_QRegion( 1 )->united( *hbqt_par_QRect( 2 ) ) ) ) );
 }
 
 /*
@@ -287,7 +284,7 @@ HB_FUNC( QT_QREGION_UNITED_1 )
  */
 HB_FUNC( QT_QREGION_XORED )
 {
-   hb_retptr( new QRegion( hbqt_par_QRegion( 1 )->xored( *hbqt_par_QRegion( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRegion( hbqt_par_QRegion( 1 )->xored( *hbqt_par_QRegion( 2 ) ) ) ) );
 }
 
 

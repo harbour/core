@@ -81,6 +81,7 @@
  *  QMap<QDate, QTextCharFormat> dateTextFormat () const
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QCalendarWidget>
 #include <QtGui/QTextCharFormat>
@@ -89,19 +90,18 @@
  * QCalendarWidget ( QWidget * parent = 0 )
  * ~QCalendarWidget ()
  */
+
 HB_FUNC( QT_QCALENDARWIDGET )
 {
-   hb_retptr( ( QCalendarWidget* ) new QCalendarWidget( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QCalendarWidget > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QCALENDARWIDGET_DESTROY )
-{
-   delete hbqt_par_QCalendarWidget( 1 );
-}
+   pObj = ( QCalendarWidget* ) new QCalendarWidget( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * int dateEditAcceptDelay () const
  */
@@ -115,7 +115,7 @@ HB_FUNC( QT_QCALENDARWIDGET_DATEEDITACCEPTDELAY )
  */
 HB_FUNC( QT_QCALENDARWIDGET_DATETEXTFORMAT )
 {
-   hb_retptr( new QTextCharFormat( hbqt_par_QCalendarWidget( 1 )->dateTextFormat( *hbqt_par_QDate( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCharFormat( hbqt_par_QCalendarWidget( 1 )->dateTextFormat( *hbqt_par_QDate( 2 ) ) ) ) );
 }
 
 /*
@@ -131,7 +131,7 @@ HB_FUNC( QT_QCALENDARWIDGET_FIRSTDAYOFWEEK )
  */
 HB_FUNC( QT_QCALENDARWIDGET_HEADERTEXTFORMAT )
 {
-   hb_retptr( new QTextCharFormat( hbqt_par_QCalendarWidget( 1 )->headerTextFormat() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCharFormat( hbqt_par_QCalendarWidget( 1 )->headerTextFormat() ) ) );
 }
 
 /*
@@ -171,7 +171,7 @@ HB_FUNC( QT_QCALENDARWIDGET_ISNAVIGATIONBARVISIBLE )
  */
 HB_FUNC( QT_QCALENDARWIDGET_MAXIMUMDATE )
 {
-   hb_retptr( new QDate( hbqt_par_QCalendarWidget( 1 )->maximumDate() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QDate( hbqt_par_QCalendarWidget( 1 )->maximumDate() ) ) );
 }
 
 /*
@@ -179,7 +179,7 @@ HB_FUNC( QT_QCALENDARWIDGET_MAXIMUMDATE )
  */
 HB_FUNC( QT_QCALENDARWIDGET_MINIMUMDATE )
 {
-   hb_retptr( new QDate( hbqt_par_QCalendarWidget( 1 )->minimumDate() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QDate( hbqt_par_QCalendarWidget( 1 )->minimumDate() ) ) );
 }
 
 /*
@@ -195,7 +195,7 @@ HB_FUNC( QT_QCALENDARWIDGET_MONTHSHOWN )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SELECTEDDATE )
 {
-   hb_retptr( new QDate( hbqt_par_QCalendarWidget( 1 )->selectedDate() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QDate( hbqt_par_QCalendarWidget( 1 )->selectedDate() ) ) );
 }
 
 /*
@@ -307,7 +307,7 @@ HB_FUNC( QT_QCALENDARWIDGET_VERTICALHEADERFORMAT )
  */
 HB_FUNC( QT_QCALENDARWIDGET_WEEKDAYTEXTFORMAT )
 {
-   hb_retptr( new QTextCharFormat( hbqt_par_QCalendarWidget( 1 )->weekdayTextFormat( ( Qt::DayOfWeek ) hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCharFormat( hbqt_par_QCalendarWidget( 1 )->weekdayTextFormat( ( Qt::DayOfWeek ) hb_parni( 2 ) ) ) ) );
 }
 
 /*

@@ -70,7 +70,6 @@ CREATE CLASS QFormLayout INHERIT QLayout
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QFormLayout_destroy( ::pPtr )
 
    METHOD  addRow( pLabel, pField )            INLINE  Qt_QFormLayout_addRow( ::pPtr, pLabel, pField )
    METHOD  addRow_1( pLabel, pField )          INLINE  Qt_QFormLayout_addRow_1( ::pPtr, pLabel, pField )

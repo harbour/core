@@ -70,7 +70,6 @@ CREATE CLASS QSplashScreen INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QSplashScreen_destroy( ::pPtr )
 
    METHOD  finish( pMainWin )                  INLINE  Qt_QSplashScreen_finish( ::pPtr, pMainWin )
    METHOD  pixmap()                            INLINE  Qt_QSplashScreen_pixmap( ::pPtr )

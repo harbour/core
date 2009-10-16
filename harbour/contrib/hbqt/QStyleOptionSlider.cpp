@@ -71,6 +71,7 @@
  *  enum StyleOptionVersion { Version }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionSlider>
 
@@ -79,19 +80,15 @@
  * QStyleOptionSlider ()
  * QStyleOptionSlider ( const QStyleOptionSlider & other )
  */
+
 HB_FUNC( QT_QSTYLEOPTIONSLIDER )
 {
-   hb_retptr( ( QStyleOptionSlider* ) new QStyleOptionSlider() );
+   void * pObj = NULL;
+
+   pObj = ( QStyleOptionSlider* ) new QStyleOptionSlider() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTIONSLIDER_DESTROY )
-{
-
-}
-
 /*
  * bool dialWrapping
  */

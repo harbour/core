@@ -70,7 +70,6 @@ CREATE CLASS QStyleFactory
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleFactory_destroy( ::pPtr )
 
    METHOD  create( cKey )                      INLINE  Qt_QStyleFactory_create( ::pPtr, cKey )
    METHOD  keys()                              INLINE  Qt_QStyleFactory_keys( ::pPtr )

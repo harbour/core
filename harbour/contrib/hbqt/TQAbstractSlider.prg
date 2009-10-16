@@ -70,7 +70,6 @@ CREATE CLASS QAbstractSlider INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QAbstractSlider_destroy( ::pPtr )
 
    METHOD  hasTracking()                       INLINE  Qt_QAbstractSlider_hasTracking( ::pPtr )
    METHOD  invertedAppearance()                INLINE  Qt_QAbstractSlider_invertedAppearance( ::pPtr )

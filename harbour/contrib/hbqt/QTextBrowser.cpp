@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTextBrowser>
 
@@ -73,19 +74,18 @@
 /*
  * QTextBrowser ( QWidget * parent = 0 )
  */
+
 HB_FUNC( QT_QTEXTBROWSER )
 {
-   hb_retptr( ( QTextBrowser* ) new QTextBrowser( hbqt_par_QWidget( 1 ) ) );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QTextBrowser > pObj = NULL;
+
+   pObj = ( QTextBrowser* ) new QTextBrowser( hbqt_par_QWidget( 1 ) ) ;
+
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTBROWSER_DESTROY )
-{
-
-}
-
 /*
  * int backwardHistoryCount () const
  */
@@ -123,7 +123,7 @@ HB_FUNC( QT_QTEXTBROWSER_HISTORYTITLE )
  */
 HB_FUNC( QT_QTEXTBROWSER_HISTORYURL )
 {
-   hb_retptr( new QUrl( hbqt_par_QTextBrowser( 1 )->historyUrl( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QUrl( hbqt_par_QTextBrowser( 1 )->historyUrl( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -147,7 +147,7 @@ HB_FUNC( QT_QTEXTBROWSER_ISFORWARDAVAILABLE )
  */
 HB_FUNC( QT_QTEXTBROWSER_LOADRESOURCE )
 {
-   hb_retptr( new QVariant( hbqt_par_QTextBrowser( 1 )->loadResource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QTextBrowser( 1 )->loadResource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ) ) );
 }
 
 /*
@@ -171,7 +171,7 @@ HB_FUNC( QT_QTEXTBROWSER_OPENLINKS )
  */
 HB_FUNC( QT_QTEXTBROWSER_SEARCHPATHS )
 {
-   hb_retptr( new QStringList( hbqt_par_QTextBrowser( 1 )->searchPaths() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QTextBrowser( 1 )->searchPaths() ) ) );
 }
 
 /*
@@ -203,7 +203,7 @@ HB_FUNC( QT_QTEXTBROWSER_SETSEARCHPATHS )
  */
 HB_FUNC( QT_QTEXTBROWSER_SOURCE )
 {
-   hb_retptr( new QUrl( hbqt_par_QTextBrowser( 1 )->source() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QUrl( hbqt_par_QTextBrowser( 1 )->source() ) ) );
 }
 
 /*

@@ -70,7 +70,6 @@ CREATE CLASS QFileSystemModel INHERIT QAbstractItemModel
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QFileSystemModel_destroy( ::pPtr )
 
    METHOD  dropMimeData( pData, nAction, nRow, nColumn, pParent )  INLINE  Qt_QFileSystemModel_dropMimeData( ::pPtr, pData, nAction, nRow, nColumn, pParent )
    METHOD  fileIcon( pIndex )                  INLINE  Qt_QFileSystemModel_fileIcon( ::pPtr, pIndex )

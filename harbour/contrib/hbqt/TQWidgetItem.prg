@@ -70,7 +70,6 @@ CREATE CLASS QWidgetItem INHERIT QLayoutItem
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QWidgetItem_destroy( ::pPtr )
 
    METHOD  isEmpty()                           INLINE  Qt_QWidgetItem_isEmpty( ::pPtr )
    METHOD  widget()                            INLINE  Qt_QWidgetItem_widget( ::pPtr )

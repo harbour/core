@@ -85,6 +85,7 @@
  *  void setProperty ( int propertyId, const QVector<QTextLength> & value )
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTextFormat>
 
@@ -95,25 +96,24 @@
  * QTextFormat ( const QTextFormat & other )
  * ~QTextFormat ()
  */
+
 HB_FUNC( QT_QTEXTFORMAT )
 {
-   hb_retptr( ( QTextFormat* ) new QTextFormat() );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTFORMAT_DESTROY )
-{
-   delete hbqt_par_QTextFormat( 1 );
-}
+   pObj = ( QTextFormat* ) new QTextFormat() ;
 
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QTextFormat" );
+   hb_retptrGC( p );
+}
 /*
  * QBrush background () const
  */
 HB_FUNC( QT_QTEXTFORMAT_BACKGROUND )
 {
-   hb_retptr( new QBrush( hbqt_par_QTextFormat( 1 )->background() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QBrush( hbqt_par_QTextFormat( 1 )->background() ) ) );
 }
 
 /*
@@ -129,7 +129,7 @@ HB_FUNC( QT_QTEXTFORMAT_BOOLPROPERTY )
  */
 HB_FUNC( QT_QTEXTFORMAT_BRUSHPROPERTY )
 {
-   hb_retptr( new QBrush( hbqt_par_QTextFormat( 1 )->brushProperty( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QBrush( hbqt_par_QTextFormat( 1 )->brushProperty( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -161,7 +161,7 @@ HB_FUNC( QT_QTEXTFORMAT_CLEARPROPERTY )
  */
 HB_FUNC( QT_QTEXTFORMAT_COLORPROPERTY )
 {
-   hb_retptr( new QColor( hbqt_par_QTextFormat( 1 )->colorProperty( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QTextFormat( 1 )->colorProperty( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -177,7 +177,7 @@ HB_FUNC( QT_QTEXTFORMAT_DOUBLEPROPERTY )
  */
 HB_FUNC( QT_QTEXTFORMAT_FOREGROUND )
 {
-   hb_retptr( new QBrush( hbqt_par_QTextFormat( 1 )->foreground() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QBrush( hbqt_par_QTextFormat( 1 )->foreground() ) ) );
 }
 
 /*
@@ -273,7 +273,7 @@ HB_FUNC( QT_QTEXTFORMAT_LAYOUTDIRECTION )
  */
 HB_FUNC( QT_QTEXTFORMAT_LENGTHPROPERTY )
 {
-   hb_retptr( new QTextLength( hbqt_par_QTextFormat( 1 )->lengthProperty( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextLength( hbqt_par_QTextFormat( 1 )->lengthProperty( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -305,7 +305,7 @@ HB_FUNC( QT_QTEXTFORMAT_OBJECTTYPE )
  */
 HB_FUNC( QT_QTEXTFORMAT_PENPROPERTY )
 {
-   hb_retptr( new QPen( hbqt_par_QTextFormat( 1 )->penProperty( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPen( hbqt_par_QTextFormat( 1 )->penProperty( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -313,7 +313,7 @@ HB_FUNC( QT_QTEXTFORMAT_PENPROPERTY )
  */
 HB_FUNC( QT_QTEXTFORMAT_PROPERTY )
 {
-   hb_retptr( new QVariant( hbqt_par_QTextFormat( 1 )->property( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QTextFormat( 1 )->property( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -385,7 +385,7 @@ HB_FUNC( QT_QTEXTFORMAT_STRINGPROPERTY )
  */
 HB_FUNC( QT_QTEXTFORMAT_TOBLOCKFORMAT )
 {
-   hb_retptr( new QTextBlockFormat( hbqt_par_QTextFormat( 1 )->toBlockFormat() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextBlockFormat( hbqt_par_QTextFormat( 1 )->toBlockFormat() ) ) );
 }
 
 /*
@@ -393,7 +393,7 @@ HB_FUNC( QT_QTEXTFORMAT_TOBLOCKFORMAT )
  */
 HB_FUNC( QT_QTEXTFORMAT_TOCHARFORMAT )
 {
-   hb_retptr( new QTextCharFormat( hbqt_par_QTextFormat( 1 )->toCharFormat() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCharFormat( hbqt_par_QTextFormat( 1 )->toCharFormat() ) ) );
 }
 
 /*
@@ -401,7 +401,7 @@ HB_FUNC( QT_QTEXTFORMAT_TOCHARFORMAT )
  */
 HB_FUNC( QT_QTEXTFORMAT_TOFRAMEFORMAT )
 {
-   hb_retptr( new QTextFrameFormat( hbqt_par_QTextFormat( 1 )->toFrameFormat() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextFrameFormat( hbqt_par_QTextFormat( 1 )->toFrameFormat() ) ) );
 }
 
 /*
@@ -409,7 +409,7 @@ HB_FUNC( QT_QTEXTFORMAT_TOFRAMEFORMAT )
  */
 HB_FUNC( QT_QTEXTFORMAT_TOIMAGEFORMAT )
 {
-   hb_retptr( new QTextImageFormat( hbqt_par_QTextFormat( 1 )->toImageFormat() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextImageFormat( hbqt_par_QTextFormat( 1 )->toImageFormat() ) ) );
 }
 
 /*
@@ -417,7 +417,7 @@ HB_FUNC( QT_QTEXTFORMAT_TOIMAGEFORMAT )
  */
 HB_FUNC( QT_QTEXTFORMAT_TOLISTFORMAT )
 {
-   hb_retptr( new QTextListFormat( hbqt_par_QTextFormat( 1 )->toListFormat() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextListFormat( hbqt_par_QTextFormat( 1 )->toListFormat() ) ) );
 }
 
 /*
@@ -425,7 +425,7 @@ HB_FUNC( QT_QTEXTFORMAT_TOLISTFORMAT )
  */
 HB_FUNC( QT_QTEXTFORMAT_TOTABLECELLFORMAT )
 {
-   hb_retptr( new QTextTableCellFormat( hbqt_par_QTextFormat( 1 )->toTableCellFormat() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextTableCellFormat( hbqt_par_QTextFormat( 1 )->toTableCellFormat() ) ) );
 }
 
 /*
@@ -433,7 +433,7 @@ HB_FUNC( QT_QTEXTFORMAT_TOTABLECELLFORMAT )
  */
 HB_FUNC( QT_QTEXTFORMAT_TOTABLEFORMAT )
 {
-   hb_retptr( new QTextTableFormat( hbqt_par_QTextFormat( 1 )->toTableFormat() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextTableFormat( hbqt_par_QTextFormat( 1 )->toTableFormat() ) ) );
 }
 
 /*

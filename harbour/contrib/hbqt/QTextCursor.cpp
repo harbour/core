@@ -72,6 +72,7 @@
  *  enum SelectionType { Document, BlockUnderCursor, LineUnderCursor, WordUnderCursor }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTextCursor>
 #include <QtGui/QTextDocumentFragment>
@@ -85,11 +86,15 @@
  * QTextCursor ( const QTextCursor & cursor )
  * ~QTextCursor ()
  */
+
 HB_FUNC( QT_QTEXTCURSOR )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
+
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( ( QTextCursor* ) new QTextCursor( *hbqt_par_QTextCursor( 1 ) ) );
+      pObj = ( QTextCursor* ) new QTextCursor( *hbqt_par_QTextCursor( 1 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
    {
@@ -97,35 +102,30 @@ HB_FUNC( QT_QTEXTCURSOR )
 
       if( object == ( QString ) "QTextDocument" )
       {
-         hb_retptr( ( QTextCursor* ) new QTextCursor( hbqt_par_QTextDocument( 2 ) ) );
+         pObj = ( QTextCursor* ) new QTextCursor( hbqt_par_QTextDocument( 2 ) ) ;
       }
       if( object == ( QString ) "QTextBlock" )
       {
-         hb_retptr( ( QTextCursor* ) new QTextCursor( *hbqt_par_QTextBlock( 2 ) ) );
+         pObj = ( QTextCursor* ) new QTextCursor( *hbqt_par_QTextBlock( 2 ) ) ;
       }
       if( object == ( QString ) "QTextFrame" )
       {
-         hb_retptr( ( QTextCursor* ) new QTextCursor( hbqt_par_QTextFrame( 2 ) ) );
+         pObj = ( QTextCursor* ) new QTextCursor( hbqt_par_QTextFrame( 2 ) ) ;
       }
       else
       {
-         hb_retptr( ( QTextCursor* ) new QTextCursor() );
+         pObj = ( QTextCursor* ) new QTextCursor() ;
       }
    }
    else
    {
-      hb_retptr( ( QTextCursor* ) new QTextCursor() );
+      pObj = ( QTextCursor* ) new QTextCursor() ;
    }
-}
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTCURSOR_DESTROY )
-{
-   delete hbqt_par_QTextCursor( 1 );
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QTextCursor" );
+   hb_retptrGC( p );
 }
-
 /*
  * int anchor () const
  */
@@ -179,7 +179,7 @@ HB_FUNC( QT_QTEXTCURSOR_BEGINEDITBLOCK )
  */
 HB_FUNC( QT_QTEXTCURSOR_BLOCKCHARFORMAT )
 {
-   hb_retptr( new QTextCharFormat( hbqt_par_QTextCursor( 1 )->blockCharFormat() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCharFormat( hbqt_par_QTextCursor( 1 )->blockCharFormat() ) ) );
 }
 
 /*
@@ -187,7 +187,7 @@ HB_FUNC( QT_QTEXTCURSOR_BLOCKCHARFORMAT )
  */
 HB_FUNC( QT_QTEXTCURSOR_BLOCKFORMAT )
 {
-   hb_retptr( new QTextBlockFormat( hbqt_par_QTextCursor( 1 )->blockFormat() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextBlockFormat( hbqt_par_QTextCursor( 1 )->blockFormat() ) ) );
 }
 
 /*
@@ -203,7 +203,7 @@ HB_FUNC( QT_QTEXTCURSOR_BLOCKNUMBER )
  */
 HB_FUNC( QT_QTEXTCURSOR_CHARFORMAT )
 {
-   hb_retptr( new QTextCharFormat( hbqt_par_QTextCursor( 1 )->charFormat() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCharFormat( hbqt_par_QTextCursor( 1 )->charFormat() ) ) );
 }
 
 /*
@@ -549,7 +549,7 @@ HB_FUNC( QT_QTEXTCURSOR_SELECTEDTEXT )
  */
 HB_FUNC( QT_QTEXTCURSOR_SELECTION )
 {
-   hb_retptr( new QTextDocumentFragment( hbqt_par_QTextCursor( 1 )->selection() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextDocumentFragment( hbqt_par_QTextCursor( 1 )->selection() ) ) );
 }
 
 /*

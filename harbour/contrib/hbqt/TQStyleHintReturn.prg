@@ -70,7 +70,6 @@ CREATE CLASS QStyleHintReturn
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleHintReturn_destroy( ::pPtr )
 
 
    ENDCLASS

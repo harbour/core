@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QScrollBar>
 
@@ -75,19 +76,18 @@
  * QScrollBar ( Qt::Orientation orientation, QWidget * parent = 0 )
  * ~QScrollBar ()
  */
+
 HB_FUNC( QT_QSCROLLBAR )
 {
-   hb_retptr( ( QScrollBar* ) new QScrollBar( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QScrollBar > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSCROLLBAR_DESTROY )
-{
-   delete hbqt_par_QScrollBar( 1 );
-}
+   pObj = ( QScrollBar* ) new QScrollBar( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

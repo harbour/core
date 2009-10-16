@@ -71,6 +71,7 @@
  *  flags PageSetupDialogOptions
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QPageSetupDialog>
 
@@ -79,22 +80,21 @@
  * QPageSetupDialog ( QPrinter * printer, QWidget * parent = 0 )
  * QPageSetupDialog ( QWidget * parent = 0 )
  */
+
 HB_FUNC( QT_QPAGESETUPDIALOG )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QPageSetupDialog > pObj = NULL;
+
    if( hb_pcount() >= 2 )
-      hb_retptr( ( QPageSetupDialog* ) new QPageSetupDialog( hbqt_par_QPrinter( 1 ), hbqt_par_QWidget( 1 ) ) );
+      pObj = ( QPageSetupDialog* ) new QPageSetupDialog( hbqt_par_QPrinter( 1 ), hbqt_par_QWidget( 1 ) ) ;
    else
-      hb_retptr( ( QPageSetupDialog* ) new QPageSetupDialog( hbqt_par_QWidget( 1 ) ) );
+      pObj = ( QPageSetupDialog* ) new QPageSetupDialog( hbqt_par_QWidget( 1 ) ) ;
+
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QPAGESETUPDIALOG_DESTROY )
-{
-
-}
-
 /*
  * virtual int exec ()
  */

@@ -70,7 +70,6 @@ CREATE CLASS QWebPluginFactory INHERIT QObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QWebPluginFactory_destroy( ::pPtr )
 
    METHOD  create( cMimeType, pUrl, pArgumentNames, pArgumentValues )  INLINE  Qt_QWebPluginFactory_create( ::pPtr, cMimeType, pUrl, pArgumentNames, pArgumentValues )
    METHOD  refreshPlugins()                    INLINE  Qt_QWebPluginFactory_refreshPlugins( ::pPtr )

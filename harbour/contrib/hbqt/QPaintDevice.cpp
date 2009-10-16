@@ -70,25 +70,17 @@
  *  enum PaintDeviceMetric { PdmWidth, PdmHeight, PdmWidthMM, PdmHeightMM, ..., PdmPhysicalDpiY }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QPaintDevice>
 
 /*
  * virtual ~QPaintDevice ()
  */
+
 HB_FUNC( QT_QPAINTDEVICE )
 {
-
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QPAINTDEVICE_DESTROY )
-{
-   delete hbqt_par_QPaintDevice( 1 );
-}
-
 /*
  * int depth () const
  */

@@ -70,7 +70,6 @@ CREATE CLASS QCommonStyle INHERIT QStyle
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QCommonStyle_destroy( ::pPtr )
 
 
    ENDCLASS

@@ -70,7 +70,6 @@ CREATE CLASS QTextFragment
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextFragment_destroy( ::pPtr )
 
    METHOD  charFormat()                        INLINE  Qt_QTextFragment_charFormat( ::pPtr )
    METHOD  charFormatIndex()                   INLINE  Qt_QTextFragment_charFormatIndex( ::pPtr )

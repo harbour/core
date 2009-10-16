@@ -70,7 +70,6 @@ CREATE CLASS QMainWindow INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QMainWindow_destroy( ::pPtr )
 
    METHOD  addDockWidget( nArea, pDockwidget )  INLINE  Qt_QMainWindow_addDockWidget( ::pPtr, nArea, pDockwidget )
    METHOD  addDockWidget_1( nArea, pDockwidget, nOrientation )  INLINE  Qt_QMainWindow_addDockWidget_1( ::pPtr, nArea, pDockwidget, nOrientation )

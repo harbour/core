@@ -70,7 +70,6 @@ CREATE CLASS QTableWidget INHERIT QTableView
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTableWidget_destroy( ::pPtr )
 
    METHOD  cellWidget( nRow, nColumn )         INLINE  Qt_QTableWidget_cellWidget( ::pPtr, nRow, nColumn )
    METHOD  closePersistentEditor( pItem )      INLINE  Qt_QTableWidget_closePersistentEditor( ::pPtr, pItem )

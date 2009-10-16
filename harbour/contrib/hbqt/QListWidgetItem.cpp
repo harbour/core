@@ -70,6 +70,7 @@
  *  enum ItemType { Type, UserType }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QListWidgetItem>
 
@@ -81,25 +82,21 @@
  * QListWidgetItem ( const QListWidgetItem & other )
  * virtual ~QListWidgetItem ()
  */
+
 HB_FUNC( QT_QLISTWIDGETITEM )
 {
-   hb_retptr( new QListWidgetItem( hbqt_par_QListWidget( 1 ), hb_parni( 2 ) ) );
-}
+   void * pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QLISTWIDGETITEM_DESTROY )
-{
-   delete hbqt_par_QListWidgetItem( 1 );
-}
+   pObj = new QListWidgetItem( hbqt_par_QListWidget( 1 ), hb_parni( 2 ) ) ;
 
+   hb_retptr( pObj );
+}
 /*
  * QBrush background () const
  */
 HB_FUNC( QT_QLISTWIDGETITEM_BACKGROUND )
 {
-   hb_retptr( new QBrush( hbqt_par_QListWidgetItem( 1 )->background() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QBrush( hbqt_par_QListWidgetItem( 1 )->background() ) ) );
 }
 
 /*
@@ -123,7 +120,7 @@ HB_FUNC( QT_QLISTWIDGETITEM_CLONE )
  */
 HB_FUNC( QT_QLISTWIDGETITEM_DATA )
 {
-   hb_retptr( new QVariant( hbqt_par_QListWidgetItem( 1 )->data( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QListWidgetItem( 1 )->data( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -139,7 +136,7 @@ HB_FUNC( QT_QLISTWIDGETITEM_FLAGS )
  */
 HB_FUNC( QT_QLISTWIDGETITEM_FONT )
 {
-   hb_retptr( new QFont( hbqt_par_QListWidgetItem( 1 )->font() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QListWidgetItem( 1 )->font() ) ) );
 }
 
 /*
@@ -147,7 +144,7 @@ HB_FUNC( QT_QLISTWIDGETITEM_FONT )
  */
 HB_FUNC( QT_QLISTWIDGETITEM_FOREGROUND )
 {
-   hb_retptr( new QBrush( hbqt_par_QListWidgetItem( 1 )->foreground() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QBrush( hbqt_par_QListWidgetItem( 1 )->foreground() ) ) );
 }
 
 /*
@@ -155,7 +152,7 @@ HB_FUNC( QT_QLISTWIDGETITEM_FOREGROUND )
  */
 HB_FUNC( QT_QLISTWIDGETITEM_ICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QListWidgetItem( 1 )->icon() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QListWidgetItem( 1 )->icon() ) ) );
 }
 
 /*
@@ -315,7 +312,7 @@ HB_FUNC( QT_QLISTWIDGETITEM_SETWHATSTHIS )
  */
 HB_FUNC( QT_QLISTWIDGETITEM_SIZEHINT )
 {
-   hb_retptr( new QSize( hbqt_par_QListWidgetItem( 1 )->sizeHint() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QListWidgetItem( 1 )->sizeHint() ) ) );
 }
 
 /*

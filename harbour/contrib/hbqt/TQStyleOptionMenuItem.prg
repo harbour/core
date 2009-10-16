@@ -70,7 +70,6 @@ CREATE CLASS QStyleOptionMenuItem INHERIT QStyleOption
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleOptionMenuItem_destroy( ::pPtr )
 
    METHOD  checkType()                         INLINE  Qt_QStyleOptionMenuItem_checkType( ::pPtr )
    METHOD  checked()                           INLINE  Qt_QStyleOptionMenuItem_checked( ::pPtr )

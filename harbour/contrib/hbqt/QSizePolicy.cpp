@@ -73,6 +73,7 @@
  *  flags ControlTypes
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QSizePolicy>
 
@@ -82,19 +83,18 @@
  * QSizePolicy ( Policy horizontal, Policy vertical )
  * QSizePolicy ( Policy horizontal, Policy vertical, ControlType type )
  */
+
 HB_FUNC( QT_QSIZEPOLICY )
 {
-   hb_retptr( ( QSizePolicy* ) new QSizePolicy() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
+
+   pObj = ( QSizePolicy* ) new QSizePolicy() ;
+
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QSizePolicy" );
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSIZEPOLICY_DESTROY )
-{
-
-}
-
 /*
  * ControlType controlType () const
  */

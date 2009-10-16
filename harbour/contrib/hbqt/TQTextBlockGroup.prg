@@ -70,7 +70,6 @@ CREATE CLASS QTextBlockGroup INHERIT QTextObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextBlockGroup_destroy( ::pPtr )
 
 
    ENDCLASS

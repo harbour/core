@@ -70,7 +70,6 @@ CREATE CLASS QPageSetupDialog INHERIT QDialog
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QPageSetupDialog_destroy( ::pPtr )
 
    METHOD  exec()                              INLINE  Qt_QPageSetupDialog_exec( ::pPtr )
    METHOD  open( pReceiver, pMember )          INLINE  Qt_QPageSetupDialog_open( ::pPtr, pReceiver, pMember )

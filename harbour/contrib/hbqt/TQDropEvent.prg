@@ -70,7 +70,6 @@ CREATE CLASS QDropEvent INHERIT QEvent
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QDropEvent_destroy( ::pPtr )
 
    METHOD  acceptProposedAction()              INLINE  Qt_QDropEvent_acceptProposedAction( ::pPtr )
    METHOD  dropAction()                        INLINE  Qt_QDropEvent_dropAction( ::pPtr )

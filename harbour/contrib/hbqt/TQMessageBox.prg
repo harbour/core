@@ -70,7 +70,6 @@ CREATE CLASS QMessageBox INHERIT QDialog
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QMessageBox_destroy( ::pPtr )
 
    METHOD  addButton( pButton, nRole )         INLINE  Qt_QMessageBox_addButton( ::pPtr, pButton, nRole )
    METHOD  addButton_1( cText, nRole )         INLINE  Qt_QMessageBox_addButton_1( ::pPtr, cText, nRole )

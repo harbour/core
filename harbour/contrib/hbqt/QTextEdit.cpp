@@ -85,6 +85,7 @@
  *  void setExtraSelections ( const QList<ExtraSelection> & selections )
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTextEdit>
 
@@ -92,22 +93,21 @@
 /*
 
  */
+
 HB_FUNC( QT_QTEXTEDIT )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QTextEdit > pObj = NULL;
+
    if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
-      hb_retptr( ( QTextEdit* ) new QTextEdit( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+      pObj = ( QTextEdit* ) new QTextEdit( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
    else
-      hb_retptr( ( QTextEdit* ) new QTextEdit( hbqt_par_QWidget( 1 ) ) );
-}
+      pObj = ( QTextEdit* ) new QTextEdit( hbqt_par_QWidget( 1 ) ) ;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTEDIT_DESTROY )
-{
-   delete hbqt_par_QTextEdit( 1 );
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
 /*
  * bool acceptRichText () const
  */
@@ -169,7 +169,7 @@ HB_FUNC( QT_QTEXTEDIT_CREATESTANDARDCONTEXTMENU_1 )
  */
 HB_FUNC( QT_QTEXTEDIT_CURRENTCHARFORMAT )
 {
-   hb_retptr( new QTextCharFormat( hbqt_par_QTextEdit( 1 )->currentCharFormat() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCharFormat( hbqt_par_QTextEdit( 1 )->currentCharFormat() ) ) );
 }
 
 /*
@@ -177,7 +177,7 @@ HB_FUNC( QT_QTEXTEDIT_CURRENTCHARFORMAT )
  */
 HB_FUNC( QT_QTEXTEDIT_CURRENTFONT )
 {
-   hb_retptr( new QFont( hbqt_par_QTextEdit( 1 )->currentFont() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QTextEdit( 1 )->currentFont() ) ) );
 }
 
 /*
@@ -185,7 +185,7 @@ HB_FUNC( QT_QTEXTEDIT_CURRENTFONT )
  */
 HB_FUNC( QT_QTEXTEDIT_CURSORFORPOSITION )
 {
-   hb_retptr( new QTextCursor( hbqt_par_QTextEdit( 1 )->cursorForPosition( *hbqt_par_QPoint( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCursor( hbqt_par_QTextEdit( 1 )->cursorForPosition( *hbqt_par_QPoint( 2 ) ) ) ) );
 }
 
 /*
@@ -193,7 +193,7 @@ HB_FUNC( QT_QTEXTEDIT_CURSORFORPOSITION )
  */
 HB_FUNC( QT_QTEXTEDIT_CURSORRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QTextEdit( 1 )->cursorRect( *hbqt_par_QTextCursor( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QTextEdit( 1 )->cursorRect( *hbqt_par_QTextCursor( 2 ) ) ) ) );
 }
 
 /*
@@ -201,7 +201,7 @@ HB_FUNC( QT_QTEXTEDIT_CURSORRECT )
  */
 HB_FUNC( QT_QTEXTEDIT_CURSORRECT_1 )
 {
-   hb_retptr( new QRect( hbqt_par_QTextEdit( 1 )->cursorRect() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QTextEdit( 1 )->cursorRect() ) ) );
 }
 
 /*
@@ -321,7 +321,7 @@ HB_FUNC( QT_QTEXTEDIT_LINEWRAPMODE )
  */
 HB_FUNC( QT_QTEXTEDIT_LOADRESOURCE )
 {
-   hb_retptr( new QVariant( hbqt_par_QTextEdit( 1 )->loadResource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QTextEdit( 1 )->loadResource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ) ) );
 }
 
 /*
@@ -505,7 +505,7 @@ HB_FUNC( QT_QTEXTEDIT_TABSTOPWIDTH )
  */
 HB_FUNC( QT_QTEXTEDIT_TEXTBACKGROUNDCOLOR )
 {
-   hb_retptr( new QColor( hbqt_par_QTextEdit( 1 )->textBackgroundColor() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QTextEdit( 1 )->textBackgroundColor() ) ) );
 }
 
 /*
@@ -513,7 +513,7 @@ HB_FUNC( QT_QTEXTEDIT_TEXTBACKGROUNDCOLOR )
  */
 HB_FUNC( QT_QTEXTEDIT_TEXTCOLOR )
 {
-   hb_retptr( new QColor( hbqt_par_QTextEdit( 1 )->textColor() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QTextEdit( 1 )->textColor() ) ) );
 }
 
 /*
@@ -521,7 +521,7 @@ HB_FUNC( QT_QTEXTEDIT_TEXTCOLOR )
  */
 HB_FUNC( QT_QTEXTEDIT_TEXTCURSOR )
 {
-   hb_retptr( new QTextCursor( hbqt_par_QTextEdit( 1 )->textCursor() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCursor( hbqt_par_QTextEdit( 1 )->textCursor() ) ) );
 }
 
 /*

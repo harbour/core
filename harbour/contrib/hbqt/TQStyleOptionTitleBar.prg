@@ -70,7 +70,6 @@ CREATE CLASS QStyleOptionTitleBar INHERIT QStyleOptionComplex
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleOptionTitleBar_destroy( ::pPtr )
 
    METHOD  icon()                              INLINE  Qt_QStyleOptionTitleBar_icon( ::pPtr )
    METHOD  text()                              INLINE  Qt_QStyleOptionTitleBar_text( ::pPtr )

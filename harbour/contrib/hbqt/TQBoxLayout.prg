@@ -70,7 +70,6 @@ CREATE CLASS QBoxLayout INHERIT QLayout
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QBoxLayout_destroy( ::pPtr )
 
    METHOD  addLayout( pLayout, nStretch )      INLINE  Qt_QBoxLayout_addLayout( ::pPtr, pLayout, nStretch )
    METHOD  addSpacerItem( pSpacerItem )        INLINE  Qt_QBoxLayout_addSpacerItem( ::pPtr, pSpacerItem )

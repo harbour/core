@@ -73,6 +73,7 @@
  *  enum StepEnabledFlag { StepNone, StepUpEnabled, StepDownEnabled }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QAbstractSpinBox>
 
@@ -81,19 +82,10 @@
  * QAbstractSpinBox ( QWidget * parent = 0 )
  * ~QAbstractSpinBox ()
  */
+
 HB_FUNC( QT_QABSTRACTSPINBOX )
 {
-
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QABSTRACTSPINBOX_DESTROY )
-{
-   delete hbqt_par_QAbstractSpinBox( 1 );
-}
-
 /*
  * Qt::Alignment alignment () const
  */

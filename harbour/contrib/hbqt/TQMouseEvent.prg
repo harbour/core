@@ -70,7 +70,6 @@ CREATE CLASS QMouseEvent INHERIT QInputEvent
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QMouseEvent_destroy( ::pPtr )
 
    METHOD  button()                            INLINE  Qt_QMouseEvent_button( ::pPtr )
    METHOD  buttons()                           INLINE  Qt_QMouseEvent_buttons( ::pPtr )

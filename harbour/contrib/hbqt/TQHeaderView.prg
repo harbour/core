@@ -70,7 +70,6 @@ CREATE CLASS QHeaderView INHERIT QAbstractItemView
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QHeaderView_destroy( ::pPtr )
 
    METHOD  cascadingSectionResizes()           INLINE  Qt_QHeaderView_cascadingSectionResizes( ::pPtr )
    METHOD  count()                             INLINE  Qt_QHeaderView_count( ::pPtr )

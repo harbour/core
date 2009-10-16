@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QMoveEvent>
 
@@ -74,25 +75,16 @@
  * QMoveEvent ( const QPoint & pos, const QPoint & oldPos )
  * ~QMoveEvent ()
  */
+
 HB_FUNC( QT_QMOVEEVENT )
 {
-   // hb_retptr( ( QMoveEvent* ) new QMoveEvent() );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QMOVEEVENT_DESTROY )
-{
-   delete hbqt_par_QMoveEvent( 1 );
-}
-
 /*
  * const QPoint & oldPos () const
  */
 HB_FUNC( QT_QMOVEEVENT_OLDPOS )
 {
-   hb_retptr( new QPoint( hbqt_par_QMoveEvent( 1 )->oldPos() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QMoveEvent( 1 )->oldPos() ) ) );
 }
 
 /*
@@ -100,7 +92,7 @@ HB_FUNC( QT_QMOVEEVENT_OLDPOS )
  */
 HB_FUNC( QT_QMOVEEVENT_POS )
 {
-   hb_retptr( new QPoint( hbqt_par_QMoveEvent( 1 )->pos() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QMoveEvent( 1 )->pos() ) ) );
 }
 
 

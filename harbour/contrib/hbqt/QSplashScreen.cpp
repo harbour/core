@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QSplashScreen>
 
@@ -75,19 +76,18 @@
  * QSplashScreen ( QWidget * parent, const QPixmap & pixmap = QPixmap(), Qt::WindowFlags f = 0 )
  * virtual ~QSplashScreen ()
  */
+
 HB_FUNC( QT_QSPLASHSCREEN )
 {
-   hb_retptr( new QSplashScreen( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QSplashScreen > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSPLASHSCREEN_DESTROY )
-{
-   delete hbqt_par_QSplashScreen( 1 );
-}
+   pObj = new QSplashScreen( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * void finish ( QWidget * mainWin )
  */
@@ -101,7 +101,7 @@ HB_FUNC( QT_QSPLASHSCREEN_FINISH )
  */
 HB_FUNC( QT_QSPLASHSCREEN_PIXMAP )
 {
-   hb_retptr( new QPixmap( hbqt_par_QSplashScreen( 1 )->pixmap() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPixmap( hbqt_par_QSplashScreen( 1 )->pixmap() ) ) );
 }
 
 /*

@@ -71,6 +71,7 @@
  *  enum StyleOptionVersion { Version }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionTitleBar>
 
@@ -79,25 +80,21 @@
  * QStyleOptionTitleBar ()
  * QStyleOptionTitleBar ( const QStyleOptionTitleBar & other )
  */
+
 HB_FUNC( QT_QSTYLEOPTIONTITLEBAR )
 {
-   hb_retptr( ( QStyleOptionTitleBar* ) new QStyleOptionTitleBar() );
+   void * pObj = NULL;
+
+   pObj = ( QStyleOptionTitleBar* ) new QStyleOptionTitleBar() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTIONTITLEBAR_DESTROY )
-{
-
-}
-
 /*
  * QIcon icon
  */
 HB_FUNC( QT_QSTYLEOPTIONTITLEBAR_ICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QStyleOptionTitleBar( 1 )->icon ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QStyleOptionTitleBar( 1 )->icon ) ) );
 }
 
 /*

@@ -70,7 +70,6 @@ CREATE CLASS QFontDialog INHERIT QDialog
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QFontDialog_destroy( ::pPtr )
 
    METHOD  currentFont()                       INLINE  Qt_QFontDialog_currentFont( ::pPtr )
    METHOD  options()                           INLINE  Qt_QFontDialog_options( ::pPtr )

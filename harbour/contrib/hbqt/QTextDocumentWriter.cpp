@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTextDocumentWriter>
 
@@ -76,19 +77,15 @@
  * QTextDocumentWriter ( const QString & fileName, const QByteArray & format = QByteArray() )
  * ~QTextDocumentWriter ()
  */
+
 HB_FUNC( QT_QTEXTDOCUMENTWRITER )
 {
-   hb_retptr( ( QTextDocumentWriter* ) new QTextDocumentWriter() );
-}
+   void * pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTDOCUMENTWRITER_DESTROY )
-{
-   delete hbqt_par_QTextDocumentWriter( 1 );
-}
+   pObj = ( QTextDocumentWriter* ) new QTextDocumentWriter() ;
 
+   hb_retptr( pObj );
+}
 /*
  * QTextCodec * codec () const
  */
@@ -118,7 +115,7 @@ HB_FUNC( QT_QTEXTDOCUMENTWRITER_FILENAME )
  */
 HB_FUNC( QT_QTEXTDOCUMENTWRITER_FORMAT )
 {
-   hb_retptr( new QByteArray( hbqt_par_QTextDocumentWriter( 1 )->format() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QTextDocumentWriter( 1 )->format() ) ) );
 }
 
 /*

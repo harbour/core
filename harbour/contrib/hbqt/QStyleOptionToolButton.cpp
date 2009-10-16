@@ -73,6 +73,7 @@
  *  flags ToolButtonFeatures
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionToolButton>
 
@@ -81,19 +82,15 @@
  * QStyleOptionToolButton ()
  * QStyleOptionToolButton ( const QStyleOptionToolButton & other )
  */
+
 HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON )
 {
-   hb_retptr( ( QStyleOptionToolButton* ) new QStyleOptionToolButton() );
+   void * pObj = NULL;
+
+   pObj = ( QStyleOptionToolButton* ) new QStyleOptionToolButton() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON_DESTROY )
-{
-
-}
-
 /*
  * Qt::ArrowType arrowType
  */
@@ -115,7 +112,7 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON_FEATURES )
  */
 HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON_FONT )
 {
-   hb_retptr( new QFont( hbqt_par_QStyleOptionToolButton( 1 )->font ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QStyleOptionToolButton( 1 )->font ) ) );
 }
 
 /*
@@ -123,7 +120,7 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON_FONT )
  */
 HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON_ICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QStyleOptionToolButton( 1 )->icon ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QStyleOptionToolButton( 1 )->icon ) ) );
 }
 
 /*
@@ -131,7 +128,7 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON_ICON )
  */
 HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON_ICONSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QStyleOptionToolButton( 1 )->iconSize ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QStyleOptionToolButton( 1 )->iconSize ) ) );
 }
 
 /*
@@ -139,7 +136,7 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON_ICONSIZE )
  */
 HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON_POS )
 {
-   hb_retptr( new QPoint( hbqt_par_QStyleOptionToolButton( 1 )->pos ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QStyleOptionToolButton( 1 )->pos ) ) );
 }
 
 /*

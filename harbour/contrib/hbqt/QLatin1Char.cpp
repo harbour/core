@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QLatin1Char>
 
@@ -73,19 +74,15 @@
 /*
  * QLatin1Char ( char c )
  */
+
 HB_FUNC( QT_QLATIN1CHAR )
 {
-   hb_retptr( ( QLatin1Char* ) new QLatin1Char( *hb_parcx( 1 ) ) );
+   void * pObj = NULL;
+
+   pObj = ( QLatin1Char* ) new QLatin1Char( *hb_parcx( 1 ) ) ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QLATIN1CHAR_DESTROY )
-{
-
-}
-
 /*
  * char toLatin1 () const
  */
@@ -99,7 +96,7 @@ HB_FUNC( QT_QLATIN1CHAR_TOLATIN1 )
  */
 HB_FUNC( QT_QLATIN1CHAR_UNICODE )
 {
-   hb_retptr( new ushort( hbqt_par_QLatin1Char( 1 )->unicode() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new ushort( hbqt_par_QLatin1Char( 1 )->unicode() ) ) );
 }
 
 

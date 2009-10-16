@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QPicture>
 
@@ -75,36 +76,32 @@
  * QPicture ( const QPicture & pic )
  * ~QPicture ()
  */
+
 HB_FUNC( QT_QPICTURE )
 {
+   void * pObj = NULL;
+
    if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
    {
-      hb_retptr( ( QPicture* ) new QPicture( hb_parni( 1 ) ) );
+      pObj = new QPicture( hb_parni( 1 ) ) ;
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( ( QPicture* ) new QPicture( *hbqt_par_QPicture( 1 ) ) );
+      pObj = new QPicture( *hbqt_par_QPicture( 1 ) ) ;
    }
    else
    {
-      hb_retptr( ( QPicture* ) new QPicture() );
+      pObj = new QPicture() ;
    }
-}
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QPICTURE_DESTROY )
-{
-   delete hbqt_par_QPicture( 1 );
+   hb_retptr( pObj );
 }
-
 /*
  * QRect boundingRect () const
  */
 HB_FUNC( QT_QPICTURE_BOUNDINGRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QPicture( 1 )->boundingRect() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QPicture( 1 )->boundingRect() ) ) );
 }
 
 /*

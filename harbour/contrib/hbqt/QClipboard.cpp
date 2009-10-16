@@ -70,6 +70,7 @@
  *  enum Mode { Clipboard, Selection, FindBuffer }
  */
 
+#include <QtCore/QPointer>
 
 #include <qpalette.h>
 #include <QtGui/QClipboard>
@@ -79,19 +80,18 @@
  *
  *
  */
+
 HB_FUNC( QT_QCLIPBOARD )
 {
-   hb_retptr( ( QClipboard* ) QApplication::clipboard() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QClipboard > pObj = NULL;
+
+   pObj = ( QClipboard* ) QApplication::clipboard() ;
+
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QCLIPBOARD_DESTROY )
-{
-
-}
-
 /*
  * void clear ( Mode mode = Clipboard )
  */
@@ -105,7 +105,7 @@ HB_FUNC( QT_QCLIPBOARD_CLEAR )
  */
 HB_FUNC( QT_QCLIPBOARD_IMAGE )
 {
-   hb_retptr( new QImage( hbqt_par_QClipboard( 1 )->image( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QImage( hbqt_par_QClipboard( 1 )->image( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ) ) ) );
 }
 
 /*
@@ -145,7 +145,7 @@ HB_FUNC( QT_QCLIPBOARD_OWNSSELECTION )
  */
 HB_FUNC( QT_QCLIPBOARD_PIXMAP )
 {
-   hb_retptr( new QPixmap( hbqt_par_QClipboard( 1 )->pixmap( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPixmap( hbqt_par_QClipboard( 1 )->pixmap( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ) ) ) );
 }
 
 /*

@@ -81,6 +81,7 @@
  *  enum SubElement { SE_PushButtonContents, SE_PushButtonFocusRect, SE_PushButtonLayoutItem, SE_CheckBoxIndicator, ..., SE_TabBarTabText }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyle>
 
@@ -89,19 +90,10 @@
  * QStyle ()
  * virtual ~QStyle ()
  */
+
 HB_FUNC( QT_QSTYLE )
 {
-
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLE_DESTROY )
-{
-   delete hbqt_par_QStyle( 1 );
-}
-
 /*
  * int combinedLayoutSpacing ( QSizePolicy::ControlTypes controls1, QSizePolicy::ControlTypes controls2, Qt::Orientation orientation, QStyleOption * option = 0, QWidget * widget = 0 ) const
  */
@@ -155,7 +147,7 @@ HB_FUNC( QT_QSTYLE_DRAWPRIMITIVE )
  */
 HB_FUNC( QT_QSTYLE_GENERATEDICONPIXMAP )
 {
-   hb_retptr( new QPixmap( hbqt_par_QStyle( 1 )->generatedIconPixmap( ( QIcon::Mode ) hb_parni( 2 ), *hbqt_par_QPixmap( 3 ), hbqt_par_QStyleOption( 4 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPixmap( hbqt_par_QStyle( 1 )->generatedIconPixmap( ( QIcon::Mode ) hb_parni( 2 ), *hbqt_par_QPixmap( 3 ), hbqt_par_QStyleOption( 4 ) ) ) ) );
 }
 
 /*
@@ -171,7 +163,7 @@ HB_FUNC( QT_QSTYLE_HITTESTCOMPLEXCONTROL )
  */
 HB_FUNC( QT_QSTYLE_ITEMPIXMAPRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QStyle( 1 )->itemPixmapRect( *hbqt_par_QRect( 2 ), hb_parni( 3 ), *hbqt_par_QPixmap( 4 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QStyle( 1 )->itemPixmapRect( *hbqt_par_QRect( 2 ), hb_parni( 3 ), *hbqt_par_QPixmap( 4 ) ) ) ) );
 }
 
 /*
@@ -179,7 +171,7 @@ HB_FUNC( QT_QSTYLE_ITEMPIXMAPRECT )
  */
 HB_FUNC( QT_QSTYLE_ITEMTEXTRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QStyle( 1 )->itemTextRect( *hbqt_par_QFontMetrics( 2 ), *hbqt_par_QRect( 3 ), hb_parni( 4 ), hb_parl( 5 ), hbqt_par_QString( 6 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QStyle( 1 )->itemTextRect( *hbqt_par_QFontMetrics( 2 ), *hbqt_par_QRect( 3 ), hb_parni( 4 ), hb_parl( 5 ), hbqt_par_QString( 6 ) ) ) ) );
 }
 
 /*
@@ -227,7 +219,7 @@ HB_FUNC( QT_QSTYLE_POLISH_2 )
  */
 HB_FUNC( QT_QSTYLE_SIZEFROMCONTENTS )
 {
-   hb_retptr( new QSize( hbqt_par_QStyle( 1 )->sizeFromContents( ( QStyle::ContentsType ) hb_parni( 2 ), hbqt_par_QStyleOption( 3 ), *hbqt_par_QSize( 4 ), hbqt_par_QWidget( 5 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QStyle( 1 )->sizeFromContents( ( QStyle::ContentsType ) hb_parni( 2 ), hbqt_par_QStyleOption( 3 ), *hbqt_par_QSize( 4 ), hbqt_par_QWidget( 5 ) ) ) ) );
 }
 
 /*
@@ -235,7 +227,7 @@ HB_FUNC( QT_QSTYLE_SIZEFROMCONTENTS )
  */
 HB_FUNC( QT_QSTYLE_STANDARDICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QStyle( 1 )->standardIcon( ( QStyle::StandardPixmap ) hb_parni( 2 ), hbqt_par_QStyleOption( 3 ), hbqt_par_QWidget( 4 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QStyle( 1 )->standardIcon( ( QStyle::StandardPixmap ) hb_parni( 2 ), hbqt_par_QStyleOption( 3 ), hbqt_par_QWidget( 4 ) ) ) ) );
 }
 
 /*
@@ -243,7 +235,7 @@ HB_FUNC( QT_QSTYLE_STANDARDICON )
  */
 HB_FUNC( QT_QSTYLE_STANDARDPALETTE )
 {
-   hb_retptr( new QPalette( hbqt_par_QStyle( 1 )->standardPalette() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPalette( hbqt_par_QStyle( 1 )->standardPalette() ) ) );
 }
 
 /*
@@ -259,7 +251,7 @@ HB_FUNC( QT_QSTYLE_STYLEHINT )
  */
 HB_FUNC( QT_QSTYLE_SUBCONTROLRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QStyle( 1 )->subControlRect( ( QStyle::ComplexControl ) hb_parni( 2 ), hbqt_par_QStyleOptionComplex( 3 ), ( QStyle::SubControl ) hb_parni( 4 ), hbqt_par_QWidget( 5 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QStyle( 1 )->subControlRect( ( QStyle::ComplexControl ) hb_parni( 2 ), hbqt_par_QStyleOptionComplex( 3 ), ( QStyle::SubControl ) hb_parni( 4 ), hbqt_par_QWidget( 5 ) ) ) ) );
 }
 
 /*
@@ -267,7 +259,7 @@ HB_FUNC( QT_QSTYLE_SUBCONTROLRECT )
  */
 HB_FUNC( QT_QSTYLE_SUBELEMENTRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QStyle( 1 )->subElementRect( ( QStyle::SubElement ) hb_parni( 2 ), hbqt_par_QStyleOption( 3 ), hbqt_par_QWidget( 4 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QStyle( 1 )->subElementRect( ( QStyle::SubElement ) hb_parni( 2 ), hbqt_par_QStyleOption( 3 ), hbqt_par_QWidget( 4 ) ) ) ) );
 }
 
 /*
@@ -291,7 +283,7 @@ HB_FUNC( QT_QSTYLE_UNPOLISH_1 )
  */
 HB_FUNC( QT_QSTYLE_ALIGNEDRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QStyle( 1 )->alignedRect( ( Qt::LayoutDirection ) hb_parni( 2 ), ( Qt::Alignment ) hb_parni( 3 ), *hbqt_par_QSize( 4 ), *hbqt_par_QRect( 5 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QStyle( 1 )->alignedRect( ( Qt::LayoutDirection ) hb_parni( 2 ), ( Qt::Alignment ) hb_parni( 3 ), *hbqt_par_QSize( 4 ), *hbqt_par_QRect( 5 ) ) ) ) );
 }
 
 /*
@@ -323,7 +315,7 @@ HB_FUNC( QT_QSTYLE_VISUALALIGNMENT )
  */
 HB_FUNC( QT_QSTYLE_VISUALPOS )
 {
-   hb_retptr( new QPoint( hbqt_par_QStyle( 1 )->visualPos( ( Qt::LayoutDirection ) hb_parni( 2 ), *hbqt_par_QRect( 3 ), *hbqt_par_QPoint( 4 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QStyle( 1 )->visualPos( ( Qt::LayoutDirection ) hb_parni( 2 ), *hbqt_par_QRect( 3 ), *hbqt_par_QPoint( 4 ) ) ) ) );
 }
 
 /*
@@ -331,7 +323,7 @@ HB_FUNC( QT_QSTYLE_VISUALPOS )
  */
 HB_FUNC( QT_QSTYLE_VISUALRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QStyle( 1 )->visualRect( ( Qt::LayoutDirection ) hb_parni( 2 ), *hbqt_par_QRect( 3 ), *hbqt_par_QRect( 4 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QStyle( 1 )->visualRect( ( Qt::LayoutDirection ) hb_parni( 2 ), *hbqt_par_QRect( 3 ), *hbqt_par_QRect( 4 ) ) ) ) );
 }
 
 

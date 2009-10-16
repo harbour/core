@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QLayoutItem>
 
@@ -74,19 +75,10 @@
  * QLayoutItem ( Qt::Alignment alignment = 0 )
  * virtual ~QLayoutItem ()
  */
+
 HB_FUNC( QT_QLAYOUTITEM )
 {
-
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QLAYOUTITEM_DESTROY )
-{
-   delete hbqt_par_QLayoutItem( 1 );
-}
-
 /*
  * Qt::Alignment alignment () const
  */
@@ -116,7 +108,7 @@ HB_FUNC( QT_QLAYOUTITEM_EXPANDINGDIRECTIONS )
  */
 HB_FUNC( QT_QLAYOUTITEM_GEOMETRY )
 {
-   hb_retptr( new QRect( hbqt_par_QLayoutItem( 1 )->geometry() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QLayoutItem( 1 )->geometry() ) ) );
 }
 
 /*
@@ -164,7 +156,7 @@ HB_FUNC( QT_QLAYOUTITEM_LAYOUT )
  */
 HB_FUNC( QT_QLAYOUTITEM_MAXIMUMSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QLayoutItem( 1 )->maximumSize() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QLayoutItem( 1 )->maximumSize() ) ) );
 }
 
 /*
@@ -180,7 +172,7 @@ HB_FUNC( QT_QLAYOUTITEM_MINIMUMHEIGHTFORWIDTH )
  */
 HB_FUNC( QT_QLAYOUTITEM_MINIMUMSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QLayoutItem( 1 )->minimumSize() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QLayoutItem( 1 )->minimumSize() ) ) );
 }
 
 /*
@@ -204,7 +196,7 @@ HB_FUNC( QT_QLAYOUTITEM_SETGEOMETRY )
  */
 HB_FUNC( QT_QLAYOUTITEM_SIZEHINT )
 {
-   hb_retptr( new QSize( hbqt_par_QLayoutItem( 1 )->sizeHint() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QLayoutItem( 1 )->sizeHint() ) ) );
 }
 
 /*

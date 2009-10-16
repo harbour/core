@@ -72,6 +72,7 @@
  *  flags InputDialogOptions
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QInputDialog>
 
@@ -80,19 +81,18 @@
  * QInputDialog ( QWidget * parent = 0, Qt::WindowFlags flags = 0 )
  * ~QInputDialog ()
  */
+
 HB_FUNC( QT_QINPUTDIALOG )
 {
-   hb_retptr( ( QInputDialog * ) new QInputDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QInputDialog > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QINPUTDIALOG_DESTROY )
-{
-   delete hbqt_par_QInputDialog( 1 );
-}
+   pObj = ( QInputDialog * ) new QInputDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * QString cancelButtonText () const
  */
@@ -106,7 +106,7 @@ HB_FUNC( QT_QINPUTDIALOG_CANCELBUTTONTEXT )
  */
 HB_FUNC( QT_QINPUTDIALOG_COMBOBOXITEMS )
 {
-   hb_retptr( new QStringList( hbqt_par_QInputDialog( 1 )->comboBoxItems() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QInputDialog( 1 )->comboBoxItems() ) ) );
 }
 
 /*

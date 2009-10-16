@@ -70,7 +70,6 @@ CREATE CLASS QSplitter INHERIT QFrame
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QSplitter_destroy( ::pPtr )
 
    METHOD  addWidget( pWidget )                INLINE  Qt_QSplitter_addWidget( ::pPtr, pWidget )
    METHOD  childrenCollapsible()               INLINE  Qt_QSplitter_childrenCollapsible( ::pPtr )

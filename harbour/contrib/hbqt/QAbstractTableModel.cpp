@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QAbstractTableModel>
 
@@ -74,25 +75,16 @@
  * QAbstractTableModel ( QObject * parent = 0 )
  * ~QAbstractTableModel ()
  */
+
 HB_FUNC( QT_QABSTRACTTABLEMODEL )
 {
-   // hb_retptr( ( QAbstractTableModel * ) new QAbstractTableModel() );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QABSTRACTTABLEMODEL_DESTROY )
-{
-   delete hbqt_par_QAbstractTableModel( 1 );
-}
-
 /*
  * virtual QModelIndex index ( int row, int column, const QModelIndex & parent = QModelIndex() ) const
  */
 HB_FUNC( QT_QABSTRACTTABLEMODEL_INDEX )
 {
-   hb_retptr( new QModelIndex( hbqt_par_QAbstractTableModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QAbstractTableModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ) ) );
 }
 
 

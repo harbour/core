@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QPointF>
 
@@ -75,30 +76,29 @@
  * QPointF ( const QPoint & point )
  * QPointF ( qreal x, qreal y )
  */
+
 HB_FUNC( QT_QPOINTF )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
+
    if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-      hb_retptr( ( QPointF* ) new QPointF( ( qreal ) hb_parnd( 1 ), ( qreal ) hb_parnd( 2 ) ) );
+      pObj = ( QPointF* ) new QPointF( ( qreal ) hb_parnd( 1 ), ( qreal ) hb_parnd( 2 ) ) ;
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( ( QPointF* ) new QPointF( *hbqt_par_QPoint( 1 ) ) );
+      pObj = ( QPointF* ) new QPointF( *hbqt_par_QPoint( 1 ) ) ;
    }
    else
    {
-      hb_retptr( ( QPointF* ) new QPointF() );
+      pObj = ( QPointF* ) new QPointF() ;
    }
+
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QPointF" );
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QPOINTF_DESTROY )
-{
-
-}
-
 /*
  * bool isNull () const
  */
@@ -144,7 +144,7 @@ HB_FUNC( QT_QPOINTF_SETY )
  */
 HB_FUNC( QT_QPOINTF_TOPOINT )
 {
-   hb_retptr( new QPoint( hbqt_par_QPointF( 1 )->toPoint() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QPointF( 1 )->toPoint() ) ) );
 }
 
 /*

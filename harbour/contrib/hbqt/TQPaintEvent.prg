@@ -70,7 +70,6 @@ CREATE CLASS QPaintEvent INHERIT QEvent
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QPaintEvent_destroy( ::pPtr )
 
    METHOD  rect()                              INLINE  Qt_QPaintEvent_rect( ::pPtr )
    METHOD  region()                            INLINE  Qt_QPaintEvent_region( ::pPtr )

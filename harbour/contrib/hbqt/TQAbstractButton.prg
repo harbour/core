@@ -70,7 +70,6 @@ CREATE CLASS QAbstractButton INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QAbstractButton_destroy( ::pPtr )
 
    METHOD  autoExclusive()                     INLINE  Qt_QAbstractButton_autoExclusive( ::pPtr )
    METHOD  autoRepeat()                        INLINE  Qt_QAbstractButton_autoRepeat( ::pPtr )

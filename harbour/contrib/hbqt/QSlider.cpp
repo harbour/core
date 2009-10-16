@@ -70,6 +70,7 @@
  *  enum TickPosition { NoTicks, TicksBothSides, TicksAbove, TicksBelow, TicksLeft, TicksRight }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QSlider>
 
@@ -79,22 +80,21 @@
  * QSlider ( Qt::Orientation orientation, QWidget * parent = 0 )
  * ~QSlider ()
  */
+
 HB_FUNC( QT_QSLIDER )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QSlider > pObj = NULL;
+
    if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
-      hb_retptr( ( QSlider* ) new QSlider( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
+      pObj = ( QSlider* ) new QSlider( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) ;
    else
-      hb_retptr( ( QSlider* ) new QSlider( hbqt_par_QWidget( 1 ) ) );
-}
+      pObj = ( QSlider* ) new QSlider( hbqt_par_QWidget( 1 ) ) ;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSLIDER_DESTROY )
-{
-   delete hbqt_par_QSlider( 1 );
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
 /*
  * void setTickInterval ( int ti )
  */

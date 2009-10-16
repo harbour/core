@@ -75,6 +75,7 @@
  *  enum TabPosition { Beginning, Middle, End, OnlyOneTab }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionTab>
 
@@ -83,19 +84,15 @@
  * QStyleOptionTab ()
  * QStyleOptionTab ( const QStyleOptionTab & other )
  */
+
 HB_FUNC( QT_QSTYLEOPTIONTAB )
 {
-   hb_retptr( ( QStyleOptionTab* ) new QStyleOptionTab() );
+   void * pObj = NULL;
+
+   pObj = ( QStyleOptionTab* ) new QStyleOptionTab() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTIONTAB_DESTROY )
-{
-
-}
-
 /*
  * CornerWidgets cornerWidgets
  */
@@ -109,7 +106,7 @@ HB_FUNC( QT_QSTYLEOPTIONTAB_CORNERWIDGETS )
  */
 HB_FUNC( QT_QSTYLEOPTIONTAB_ICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QStyleOptionTab( 1 )->icon ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QStyleOptionTab( 1 )->icon ) ) );
 }
 
 /*

@@ -70,7 +70,6 @@ CREATE CLASS QWebFrame INHERIT QObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QWebFrame_destroy( ::pPtr )
 
    METHOD  addToJavaScriptWindowObject( cName, pObject )  INLINE  Qt_QWebFrame_addToJavaScriptWindowObject( ::pPtr, cName, pObject )
    METHOD  addToJavaScriptWindowObject_1( cName, pObject, nOwn )  INLINE  Qt_QWebFrame_addToJavaScriptWindowObject_1( ::pPtr, cName, pObject, nOwn )

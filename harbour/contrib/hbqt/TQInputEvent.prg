@@ -70,7 +70,6 @@ CREATE CLASS QInputEvent INHERIT QEvent
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QInputEvent_destroy( ::pPtr )
 
    METHOD  modifiers()                         INLINE  Qt_QInputEvent_modifiers( ::pPtr )
 

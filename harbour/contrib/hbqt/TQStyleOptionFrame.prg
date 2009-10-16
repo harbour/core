@@ -70,7 +70,6 @@ CREATE CLASS QStyleOptionFrame INHERIT qStyleOption
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleOptionFrame_destroy( ::pPtr )
 
    METHOD  lineWidth()                         INLINE  Qt_QStyleOptionFrame_lineWidth( ::pPtr )
    METHOD  midLineWidth()                      INLINE  Qt_QStyleOptionFrame_midLineWidth( ::pPtr )

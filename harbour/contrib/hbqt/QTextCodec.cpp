@@ -85,6 +85,7 @@
  *  // QString toUnicode ( const char * input, int size, ConverterState * state = 0 ) const
  */
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QTextCodec>
 
@@ -93,19 +94,10 @@
  *
  *
  */
+
 HB_FUNC( QT_QTEXTCODEC )
 {
-   //hb_retptr( ( QTextCodec* ) new QTextCodec() );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTCODEC_DESTROY )
-{
-
-}
-
 /*
  * bool canEncode ( QChar ch ) const
  */
@@ -127,7 +119,7 @@ HB_FUNC( QT_QTEXTCODEC_CANENCODE_1 )
  */
 HB_FUNC( QT_QTEXTCODEC_FROMUNICODE )
 {
-   hb_retptr( new QByteArray( hbqt_par_QTextCodec( 1 )->fromUnicode( hbqt_par_QString( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QTextCodec( 1 )->fromUnicode( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -159,7 +151,7 @@ HB_FUNC( QT_QTEXTCODEC_MIBENUM )
  */
 HB_FUNC( QT_QTEXTCODEC_NAME )
 {
-   hb_retptr( new QByteArray( hbqt_par_QTextCodec( 1 )->name() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QTextCodec( 1 )->name() ) ) );
 }
 
 /*

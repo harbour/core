@@ -76,6 +76,7 @@
  *  void setDashPattern ( const QVector<qreal> & pattern )
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QPen>
 
@@ -88,15 +89,19 @@
  * QPen ( const QPen & pen )
  * ~QPen ()
  */
+
 HB_FUNC( QT_QPEN )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
+
    if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
    {
-      hb_retptr( ( QPen* ) new QPen( ( Qt::PenStyle ) hb_parni( 1 ) ) );
+      pObj = ( QPen* ) new QPen( ( Qt::PenStyle ) hb_parni( 1 ) ) ;
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( ( QPen* ) new QPen( *hbqt_par_QPen( 1 ) ) );
+      pObj = ( QPen* ) new QPen( *hbqt_par_QPen( 1 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
    {
@@ -104,41 +109,36 @@ HB_FUNC( QT_QPEN )
 
       if( objName == ( QString ) "QColor" )
       {
-         hb_retptr( ( QPen* ) new QPen( *hbqt_par_QColor( 2 ) ) );
+         pObj = ( QPen* ) new QPen( *hbqt_par_QColor( 2 ) ) ;
       }
       else
       {
-         hb_retptr( ( QPen* ) new QPen() );
+         pObj = ( QPen* ) new QPen() ;
       }
    }
    else if( hb_pcount() >= 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
    {
-      hb_retptr( ( QPen* ) new QPen( *hbqt_par_QBrush( 1 ), hb_parnd( 2 ),
-                                     HB_ISNUM( 3 ) ? ( Qt::PenStyle ) hb_parni( 3 ) : Qt::SolidLine,
-                                     HB_ISNUM( 4 ) ? ( Qt::PenCapStyle ) hb_parni( 4 ) : Qt::SquareCap,
-                                     HB_ISNUM( 5 ) ? ( Qt::PenJoinStyle ) hb_parni( 5 ) : Qt::BevelJoin
-                                   ) );
+      Qt::PenStyle iStyle = HB_ISNUM( 3 ) ? ( Qt::PenStyle ) hb_parni( 3 ) : Qt::SolidLine;
+      Qt::PenCapStyle iCap = HB_ISNUM( 4 ) ? ( Qt::PenCapStyle ) hb_parni( 4 ) : Qt::SquareCap;
+      Qt::PenJoinStyle iJoin = HB_ISNUM( 5 ) ? ( Qt::PenJoinStyle ) hb_parni( 5 ) : Qt::BevelJoin;
+
+      pObj = ( QPen* ) new QPen( *hbqt_par_QBrush( 1 ), hb_parnd( 2 ), iStyle, iCap, iJoin ) ;
    }
    else
    {
-      hb_retptr( ( QPen* ) new QPen() );
+      pObj = ( QPen* ) new QPen() ;
    }
-}
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QPEN_DESTROY )
-{
-   delete hbqt_par_QPen( 1 );
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QPen" );
+   hb_retptrGC( p );
 }
-
 /*
  * QBrush brush () const
  */
 HB_FUNC( QT_QPEN_BRUSH )
 {
-   hb_retptr( new QBrush( hbqt_par_QPen( 1 )->brush() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QBrush( hbqt_par_QPen( 1 )->brush() ) ) );
 }
 
 /*
@@ -154,7 +154,7 @@ HB_FUNC( QT_QPEN_CAPSTYLE )
  */
 HB_FUNC( QT_QPEN_COLOR )
 {
-   hb_retptr( new QColor( hbqt_par_QPen( 1 )->color() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QPen( 1 )->color() ) ) );
 }
 
 /*

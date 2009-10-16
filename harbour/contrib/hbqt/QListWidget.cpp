@@ -76,6 +76,7 @@
  *  QList<QListWidgetItem *> selectedItems () const
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QListWidget>
 
@@ -84,19 +85,18 @@
  * QListWidget ( QWidget * parent = 0 )
  * ~QListWidget ()
  */
+
 HB_FUNC( QT_QLISTWIDGET )
 {
-   hb_retptr( new QListWidget( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QListWidget > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QLISTWIDGET_DESTROY )
-{
-   delete hbqt_par_QListWidget( 1 );
-}
+   pObj = new QListWidget( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * void addItem ( const QString & label )
  */
@@ -318,7 +318,7 @@ HB_FUNC( QT_QLISTWIDGET_TAKEITEM )
  */
 HB_FUNC( QT_QLISTWIDGET_VISUALITEMRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QListWidget( 1 )->visualItemRect( hbqt_par_QListWidgetItem( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QListWidget( 1 )->visualItemRect( hbqt_par_QListWidgetItem( 2 ) ) ) ) );
 }
 
 /*

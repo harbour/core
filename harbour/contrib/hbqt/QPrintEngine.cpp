@@ -70,6 +70,7 @@
  *  enum PrintEnginePropertyKey { PPK_CollateCopies, PPK_ColorMode, PPK_Creator, PPK_Duplex, ..., PPK_CustomBase }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QPrintEngine>
 
@@ -77,19 +78,10 @@
 /*
  * virtual ~QPrintEngine ()
  */
+
 HB_FUNC( QT_QPRINTENGINE )
 {
-
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QPRINTENGINE_DESTROY )
-{
-   delete hbqt_par_QPrintEngine( 1 );
-}
-
 /*
  * virtual bool abort ()
  */
@@ -127,7 +119,7 @@ HB_FUNC( QT_QPRINTENGINE_PRINTERSTATE )
  */
 HB_FUNC( QT_QPRINTENGINE_PROPERTY )
 {
-   hb_retptr( new QVariant( hbqt_par_QPrintEngine( 1 )->property( ( QPrintEngine::PrintEnginePropertyKey ) hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QPrintEngine( 1 )->property( ( QPrintEngine::PrintEnginePropertyKey ) hb_parni( 2 ) ) ) ) );
 }
 
 /*

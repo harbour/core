@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStatusBar>
 
@@ -74,19 +75,18 @@
  * QStatusBar ( QWidget * parent = 0 )
  * virtual ~QStatusBar ()
  */
+
 HB_FUNC( QT_QSTATUSBAR )
 {
-   hb_retptr( ( QStatusBar* ) new QStatusBar( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QStatusBar > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTATUSBAR_DESTROY )
-{
-   delete hbqt_par_QStatusBar( 1 );
-}
+   pObj = ( QStatusBar* ) new QStatusBar( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * void addPermanentWidget ( QWidget * widget, int stretch = 0 )
  */

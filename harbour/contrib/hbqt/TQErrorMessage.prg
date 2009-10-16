@@ -70,7 +70,6 @@ CREATE CLASS QErrorMessage INHERIT QDialog
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QErrorMessage_destroy( ::pPtr )
 
    METHOD  showMessage( cMessage, cType )      INLINE  Qt_QErrorMessage_showMessage( ::pPtr, cMessage, cType )
 

@@ -70,7 +70,6 @@ CREATE CLASS QStyleOptionGroupBox INHERIT QStyleOptionComplex
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleOptionGroupBox_destroy( ::pPtr )
 
    METHOD  features()                          INLINE  Qt_QStyleOptionGroupBox_features( ::pPtr )
    METHOD  lineWidth()                         INLINE  Qt_QStyleOptionGroupBox_lineWidth( ::pPtr )

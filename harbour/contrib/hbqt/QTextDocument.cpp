@@ -86,6 +86,7 @@
  *  // QChar characterAt ( int pos ) const
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTextDocument>
 #include <QtGui/QTextBlock>
@@ -97,19 +98,18 @@
  * QTextDocument ( const QString & text, QObject * parent = 0 )
  * ~QTextDocument ()
  */
+
 HB_FUNC( QT_QTEXTDOCUMENT )
 {
-   hb_retptr( ( QTextDocument* ) new QTextDocument( hbqt_par_QObject( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QTextDocument > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTDOCUMENT_DESTROY )
-{
-   delete hbqt_par_QTextDocument( 1 );
-}
+   pObj = ( QTextDocument* ) new QTextDocument( hbqt_par_QObject( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * void addResource ( int type, const QUrl & name, const QVariant & resource )
  */
@@ -131,7 +131,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_ADJUSTSIZE )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_BEGIN )
 {
-   hb_retptr( new QTextBlock( hbqt_par_QTextDocument( 1 )->begin() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextBlock( hbqt_par_QTextDocument( 1 )->begin() ) ) );
 }
 
 /*
@@ -171,7 +171,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_CLONE )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_DEFAULTFONT )
 {
-   hb_retptr( new QFont( hbqt_par_QTextDocument( 1 )->defaultFont() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QTextDocument( 1 )->defaultFont() ) ) );
 }
 
 /*
@@ -187,7 +187,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_DEFAULTSTYLESHEET )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_DEFAULTTEXTOPTION )
 {
-   hb_retptr( new QTextOption( hbqt_par_QTextDocument( 1 )->defaultTextOption() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextOption( hbqt_par_QTextDocument( 1 )->defaultTextOption() ) ) );
 }
 
 /*
@@ -219,7 +219,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_DRAWCONTENTS )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_END )
 {
-   hb_retptr( new QTextBlock( hbqt_par_QTextDocument( 1 )->end() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextBlock( hbqt_par_QTextDocument( 1 )->end() ) ) );
 }
 
 /*
@@ -227,7 +227,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_END )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FIND )
 {
-   hb_retptr( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( hbqt_par_QString( 2 ), *hbqt_par_QTextCursor( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( hbqt_par_QString( 2 ), *hbqt_par_QTextCursor( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) ) );
 }
 
 /*
@@ -235,7 +235,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_FIND )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FIND_1 )
 {
-   hb_retptr( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( *hbqt_par_QRegExp( 2 ), *hbqt_par_QTextCursor( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( *hbqt_par_QRegExp( 2 ), *hbqt_par_QTextCursor( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) ) );
 }
 
 /*
@@ -243,7 +243,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_FIND_1 )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FIND_2 )
 {
-   hb_retptr( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( hbqt_par_QString( 2 ), hb_parni( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( hbqt_par_QString( 2 ), hb_parni( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) ) );
 }
 
 /*
@@ -251,7 +251,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_FIND_2 )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FIND_3 )
 {
-   hb_retptr( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( *hbqt_par_QRegExp( 2 ), hb_parni( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( *hbqt_par_QRegExp( 2 ), hb_parni( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) ) );
 }
 
 /*
@@ -259,7 +259,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_FIND_3 )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FINDBLOCK )
 {
-   hb_retptr( new QTextBlock( hbqt_par_QTextDocument( 1 )->findBlock( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextBlock( hbqt_par_QTextDocument( 1 )->findBlock( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -267,7 +267,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_FINDBLOCK )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FINDBLOCKBYLINENUMBER )
 {
-   hb_retptr( new QTextBlock( hbqt_par_QTextDocument( 1 )->findBlockByLineNumber( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextBlock( hbqt_par_QTextDocument( 1 )->findBlockByLineNumber( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -275,7 +275,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_FINDBLOCKBYLINENUMBER )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FINDBLOCKBYNUMBER )
 {
-   hb_retptr( new QTextBlock( hbqt_par_QTextDocument( 1 )->findBlockByNumber( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextBlock( hbqt_par_QTextDocument( 1 )->findBlockByNumber( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -283,7 +283,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_FINDBLOCKBYNUMBER )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FIRSTBLOCK )
 {
-   hb_retptr( new QTextBlock( hbqt_par_QTextDocument( 1 )->firstBlock() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextBlock( hbqt_par_QTextDocument( 1 )->firstBlock() ) ) );
 }
 
 /*
@@ -347,7 +347,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_ISUNDOREDOENABLED )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_LASTBLOCK )
 {
-   hb_retptr( new QTextBlock( hbqt_par_QTextDocument( 1 )->lastBlock() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextBlock( hbqt_par_QTextDocument( 1 )->lastBlock() ) ) );
 }
 
 /*
@@ -411,7 +411,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_PAGECOUNT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_PAGESIZE )
 {
-   hb_retptr( new QSizeF( hbqt_par_QTextDocument( 1 )->pageSize() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSizeF( hbqt_par_QTextDocument( 1 )->pageSize() ) ) );
 }
 
 /*
@@ -435,7 +435,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_REDO )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_RESOURCE )
 {
-   hb_retptr( new QVariant( hbqt_par_QTextDocument( 1 )->resource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QTextDocument( 1 )->resource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ) ) );
 }
 
 /*
@@ -571,7 +571,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_SETUSEDESIGNMETRICS )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SIZE )
 {
-   hb_retptr( new QSizeF( hbqt_par_QTextDocument( 1 )->size() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSizeF( hbqt_par_QTextDocument( 1 )->size() ) ) );
 }
 
 /*

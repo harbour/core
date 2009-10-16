@@ -81,6 +81,7 @@
  *  void setAdditionalFormats ( const QList<FormatRange> & formatList )
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTextLayout>
 
@@ -91,19 +92,15 @@
  * QTextLayout ( const QString & text, const QFont & font, QPaintDevice * paintdevice = 0 )
  * ~QTextLayout ()
  */
+
 HB_FUNC( QT_QTEXTLAYOUT )
 {
-   hb_retptr( ( QTextLayout* ) new QTextLayout() );
-}
+   void * pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTLAYOUT_DESTROY )
-{
-   delete hbqt_par_QTextLayout( 1 );
-}
+   pObj = ( QTextLayout* ) new QTextLayout() ;
 
+   hb_retptr( pObj );
+}
 /*
  * void beginLayout ()
  */
@@ -117,7 +114,7 @@ HB_FUNC( QT_QTEXTLAYOUT_BEGINLAYOUT )
  */
 HB_FUNC( QT_QTEXTLAYOUT_BOUNDINGRECT )
 {
-   hb_retptr( new QRectF( hbqt_par_QTextLayout( 1 )->boundingRect() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QTextLayout( 1 )->boundingRect() ) ) );
 }
 
 /*
@@ -149,7 +146,7 @@ HB_FUNC( QT_QTEXTLAYOUT_CLEARLAYOUT )
  */
 HB_FUNC( QT_QTEXTLAYOUT_CREATELINE )
 {
-   hb_retptr( new QTextLine( hbqt_par_QTextLayout( 1 )->createLine() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextLine( hbqt_par_QTextLayout( 1 )->createLine() ) ) );
 }
 
 /*
@@ -181,7 +178,7 @@ HB_FUNC( QT_QTEXTLAYOUT_ENDLAYOUT )
  */
 HB_FUNC( QT_QTEXTLAYOUT_FONT )
 {
-   hb_retptr( new QFont( hbqt_par_QTextLayout( 1 )->font() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QTextLayout( 1 )->font() ) ) );
 }
 
 /*
@@ -197,7 +194,7 @@ HB_FUNC( QT_QTEXTLAYOUT_ISVALIDCURSORPOSITION )
  */
 HB_FUNC( QT_QTEXTLAYOUT_LINEAT )
 {
-   hb_retptr( new QTextLine( hbqt_par_QTextLayout( 1 )->lineAt( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextLine( hbqt_par_QTextLayout( 1 )->lineAt( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -213,7 +210,7 @@ HB_FUNC( QT_QTEXTLAYOUT_LINECOUNT )
  */
 HB_FUNC( QT_QTEXTLAYOUT_LINEFORTEXTPOSITION )
 {
-   hb_retptr( new QTextLine( hbqt_par_QTextLayout( 1 )->lineForTextPosition( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextLine( hbqt_par_QTextLayout( 1 )->lineForTextPosition( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -245,7 +242,7 @@ HB_FUNC( QT_QTEXTLAYOUT_NEXTCURSORPOSITION )
  */
 HB_FUNC( QT_QTEXTLAYOUT_POSITION )
 {
-   hb_retptr( new QPointF( hbqt_par_QTextLayout( 1 )->position() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPointF( hbqt_par_QTextLayout( 1 )->position() ) ) );
 }
 
 /*
@@ -333,7 +330,7 @@ HB_FUNC( QT_QTEXTLAYOUT_TEXT )
  */
 HB_FUNC( QT_QTEXTLAYOUT_TEXTOPTION )
 {
-   hb_retptr( new QTextOption( hbqt_par_QTextLayout( 1 )->textOption() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextOption( hbqt_par_QTextLayout( 1 )->textOption() ) ) );
 }
 
 

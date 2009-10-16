@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QPoint>
 
@@ -75,30 +76,26 @@
  * QPoint ( int x, int y )
  * ~QPoint ()
  */
+
 HB_FUNC( QT_QPOINT )
 {
+   void * pObj = NULL;
+
    if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-      hb_retptr( ( QPoint* ) new QPoint( hb_parni( 1 ), hb_parni( 2 ) ) );
+      pObj = ( QPoint* ) new QPoint( hb_parni( 1 ), hb_parni( 2 ) ) ;
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( ( QPoint* ) new QPoint( *hbqt_par_QPoint( 1 ) ) );
+      pObj = ( QPoint* ) new QPoint( *hbqt_par_QPoint( 1 ) ) ;
    }
    else
    {
-      hb_retptr( ( QPoint* ) new QPoint() );
+      pObj = ( QPoint* ) new QPoint() ;
    }
-}
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QPOINT_DESTROY )
-{
-   delete hbqt_par_QPoint( 1 );
+   hb_retptr( pObj );
 }
-
 /*
  * bool isNull () const
  */

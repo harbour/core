@@ -70,7 +70,6 @@ CREATE CLASS QDesktopWidget INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QDesktopWidget_destroy( ::pPtr )
 
    METHOD  availableGeometry( nScreen )        INLINE  Qt_QDesktopWidget_availableGeometry( ::pPtr, nScreen )
    METHOD  availableGeometry_1( pWidget )      INLINE  Qt_QDesktopWidget_availableGeometry_1( ::pPtr, pWidget )

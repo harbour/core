@@ -70,7 +70,6 @@ CREATE CLASS QTextEdit INHERIT QAbstractScrollArea
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextEdit_destroy( ::pPtr )
 
    METHOD  acceptRichText()                    INLINE  Qt_QTextEdit_acceptRichText( ::pPtr )
    METHOD  alignment()                         INLINE  Qt_QTextEdit_alignment( ::pPtr )

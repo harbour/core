@@ -70,7 +70,6 @@ CREATE CLASS QSizeGrip INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QSizeGrip_destroy( ::pPtr )
 
 
    ENDCLASS

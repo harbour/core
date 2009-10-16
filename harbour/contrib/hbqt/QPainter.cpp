@@ -86,6 +86,7 @@
  *  void drawRects ( const QVector<QRect> & rectangles )
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QPainter>
 
@@ -94,32 +95,28 @@
  * QPainter ( QPaintDevice * device )
  * ~QPainter ()
  */
+
 HB_FUNC( QT_QPAINTER )
 {
-  if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
-  {
-     hb_retptr( ( QPainter* ) new QPainter( hbqt_par_QPaintDevice( 1 ) ) );
-  }
-  else
-  {
-     hb_retptr( ( QPainter* ) new QPainter() );
-  }
-}
+   void * pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QPAINTER_DESTROY )
-{
-   delete hbqt_par_QPainter( 1 );
-}
+   if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
+   {
+      pObj = new QPainter( hbqt_par_QPaintDevice( 1 ) ) ;
+   }
+   else
+   {
+      pObj = new QPainter() ;
+   }
 
+   hb_retptr( pObj );
+}
 /*
  * const QBrush & background () const
  */
 HB_FUNC( QT_QPAINTER_BACKGROUND )
 {
-   hb_retptr( new QBrush( hbqt_par_QPainter( 1 )->background() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QBrush( hbqt_par_QPainter( 1 )->background() ) ) );
 }
 
 /*
@@ -143,7 +140,7 @@ HB_FUNC( QT_QPAINTER_BEGIN )
  */
 HB_FUNC( QT_QPAINTER_BOUNDINGRECT )
 {
-   hb_retptr( new QRectF( hbqt_par_QPainter( 1 )->boundingRect( *hbqt_par_QRectF( 2 ), hb_parni( 3 ), hbqt_par_QString( 4 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QPainter( 1 )->boundingRect( *hbqt_par_QRectF( 2 ), hb_parni( 3 ), hbqt_par_QString( 4 ) ) ) ) );
 }
 
 /*
@@ -151,7 +148,7 @@ HB_FUNC( QT_QPAINTER_BOUNDINGRECT )
  */
 HB_FUNC( QT_QPAINTER_BOUNDINGRECT_1 )
 {
-   hb_retptr( new QRect( hbqt_par_QPainter( 1 )->boundingRect( *hbqt_par_QRect( 2 ), hb_parni( 3 ), hbqt_par_QString( 4 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QPainter( 1 )->boundingRect( *hbqt_par_QRect( 2 ), hb_parni( 3 ), hbqt_par_QString( 4 ) ) ) ) );
 }
 
 /*
@@ -159,7 +156,7 @@ HB_FUNC( QT_QPAINTER_BOUNDINGRECT_1 )
  */
 HB_FUNC( QT_QPAINTER_BOUNDINGRECT_2 )
 {
-   hb_retptr( new QRect( hbqt_par_QPainter( 1 )->boundingRect( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), hbqt_par_QString( 7 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QPainter( 1 )->boundingRect( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), hbqt_par_QString( 7 ) ) ) ) );
 }
 
 /*
@@ -167,7 +164,7 @@ HB_FUNC( QT_QPAINTER_BOUNDINGRECT_2 )
  */
 HB_FUNC( QT_QPAINTER_BOUNDINGRECT_3 )
 {
-   hb_retptr( new QRectF( hbqt_par_QPainter( 1 )->boundingRect( *hbqt_par_QRectF( 2 ), hbqt_par_QString( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QTextOption( 4 ) : QTextOption() ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QPainter( 1 )->boundingRect( *hbqt_par_QRectF( 2 ), hbqt_par_QString( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QTextOption( 4 ) : QTextOption() ) ) ) ) );
 }
 
 /*
@@ -175,7 +172,7 @@ HB_FUNC( QT_QPAINTER_BOUNDINGRECT_3 )
  */
 HB_FUNC( QT_QPAINTER_BRUSH )
 {
-   hb_retptr( new QBrush( hbqt_par_QPainter( 1 )->brush() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QBrush( hbqt_par_QPainter( 1 )->brush() ) ) );
 }
 
 /*
@@ -183,7 +180,7 @@ HB_FUNC( QT_QPAINTER_BRUSH )
  */
 HB_FUNC( QT_QPAINTER_BRUSHORIGIN )
 {
-   hb_retptr( new QPoint( hbqt_par_QPainter( 1 )->brushOrigin() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QPainter( 1 )->brushOrigin() ) ) );
 }
 
 /*
@@ -191,7 +188,7 @@ HB_FUNC( QT_QPAINTER_BRUSHORIGIN )
  */
 HB_FUNC( QT_QPAINTER_CLIPPATH )
 {
-   hb_retptr( new QPainterPath( hbqt_par_QPainter( 1 )->clipPath() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPainterPath( hbqt_par_QPainter( 1 )->clipPath() ) ) );
 }
 
 /*
@@ -199,7 +196,7 @@ HB_FUNC( QT_QPAINTER_CLIPPATH )
  */
 HB_FUNC( QT_QPAINTER_CLIPREGION )
 {
-   hb_retptr( new QRegion( hbqt_par_QPainter( 1 )->clipRegion() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRegion( hbqt_par_QPainter( 1 )->clipRegion() ) ) );
 }
 
 /*
@@ -207,7 +204,7 @@ HB_FUNC( QT_QPAINTER_CLIPREGION )
  */
 HB_FUNC( QT_QPAINTER_COMBINEDMATRIX )
 {
-   hb_retptr( new QMatrix( hbqt_par_QPainter( 1 )->combinedMatrix() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QMatrix( hbqt_par_QPainter( 1 )->combinedMatrix() ) ) );
 }
 
 /*
@@ -215,7 +212,7 @@ HB_FUNC( QT_QPAINTER_COMBINEDMATRIX )
  */
 HB_FUNC( QT_QPAINTER_COMBINEDTRANSFORM )
 {
-   hb_retptr( new QTransform( hbqt_par_QPainter( 1 )->combinedTransform() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTransform( hbqt_par_QPainter( 1 )->combinedTransform() ) ) );
 }
 
 /*
@@ -239,7 +236,7 @@ HB_FUNC( QT_QPAINTER_DEVICE )
  */
 HB_FUNC( QT_QPAINTER_DEVICEMATRIX )
 {
-   hb_retptr( new QMatrix( hbqt_par_QPainter( 1 )->deviceMatrix() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QMatrix( hbqt_par_QPainter( 1 )->deviceMatrix() ) ) );
 }
 
 /*
@@ -247,7 +244,7 @@ HB_FUNC( QT_QPAINTER_DEVICEMATRIX )
  */
 HB_FUNC( QT_QPAINTER_DEVICETRANSFORM )
 {
-   hb_retptr( new QTransform( hbqt_par_QPainter( 1 )->deviceTransform() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTransform( hbqt_par_QPainter( 1 )->deviceTransform() ) ) );
 }
 
 /*
@@ -1063,7 +1060,7 @@ HB_FUNC( QT_QPAINTER_FILLRECT_11 )
  */
 HB_FUNC( QT_QPAINTER_FONT )
 {
-   hb_retptr( new QFont( hbqt_par_QPainter( 1 )->font() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QPainter( 1 )->font() ) ) );
 }
 
 /*
@@ -1071,7 +1068,7 @@ HB_FUNC( QT_QPAINTER_FONT )
  */
 HB_FUNC( QT_QPAINTER_FONTINFO )
 {
-   hb_retptr( new QFontInfo( hbqt_par_QPainter( 1 )->fontInfo() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QFontInfo( hbqt_par_QPainter( 1 )->fontInfo() ) ) );
 }
 
 /*
@@ -1079,7 +1076,7 @@ HB_FUNC( QT_QPAINTER_FONTINFO )
  */
 HB_FUNC( QT_QPAINTER_FONTMETRICS )
 {
-   hb_retptr( new QFontMetrics( hbqt_par_QPainter( 1 )->fontMetrics() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QFontMetrics( hbqt_par_QPainter( 1 )->fontMetrics() ) ) );
 }
 
 /*
@@ -1135,7 +1132,7 @@ HB_FUNC( QT_QPAINTER_PAINTENGINE )
  */
 HB_FUNC( QT_QPAINTER_PEN )
 {
-   hb_retptr( new QPen( hbqt_par_QPainter( 1 )->pen() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPen( hbqt_par_QPainter( 1 )->pen() ) ) );
 }
 
 /*
@@ -1471,7 +1468,7 @@ HB_FUNC( QT_QPAINTER_TESTRENDERHINT )
  */
 HB_FUNC( QT_QPAINTER_TRANSFORM )
 {
-   hb_retptr( new QTransform( hbqt_par_QPainter( 1 )->transform() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTransform( hbqt_par_QPainter( 1 )->transform() ) ) );
 }
 
 /*
@@ -1511,7 +1508,7 @@ HB_FUNC( QT_QPAINTER_VIEWTRANSFORMENABLED )
  */
 HB_FUNC( QT_QPAINTER_VIEWPORT )
 {
-   hb_retptr( new QRect( hbqt_par_QPainter( 1 )->viewport() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QPainter( 1 )->viewport() ) ) );
 }
 
 /*
@@ -1519,7 +1516,7 @@ HB_FUNC( QT_QPAINTER_VIEWPORT )
  */
 HB_FUNC( QT_QPAINTER_WINDOW )
 {
-   hb_retptr( new QRect( hbqt_par_QPainter( 1 )->window() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QPainter( 1 )->window() ) ) );
 }
 
 /*
@@ -1527,7 +1524,7 @@ HB_FUNC( QT_QPAINTER_WINDOW )
  */
 HB_FUNC( QT_QPAINTER_WORLDMATRIX )
 {
-   hb_retptr( new QMatrix( hbqt_par_QPainter( 1 )->worldMatrix() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QMatrix( hbqt_par_QPainter( 1 )->worldMatrix() ) ) );
 }
 
 /*
@@ -1543,7 +1540,7 @@ HB_FUNC( QT_QPAINTER_WORLDMATRIXENABLED )
  */
 HB_FUNC( QT_QPAINTER_WORLDTRANSFORM )
 {
-   hb_retptr( new QTransform( hbqt_par_QPainter( 1 )->worldTransform() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTransform( hbqt_par_QPainter( 1 )->worldTransform() ) ) );
 }
 
 /*

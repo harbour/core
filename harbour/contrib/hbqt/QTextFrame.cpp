@@ -80,6 +80,7 @@
  *  //iterator end () const
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTextFrame>
 #include <QtGui/QTextCursor>
@@ -89,25 +90,24 @@
  * QTextFrame ( QTextDocument * document )
  * ~QTextFrame ()
  */
+
 HB_FUNC( QT_QTEXTFRAME )
 {
-   hb_retptr( ( QTextFrame* ) new QTextFrame( hbqt_par_QTextDocument( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QTextFrame > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTFRAME_DESTROY )
-{
-   delete hbqt_par_QTextFrame( 1 );
-}
+   pObj = ( QTextFrame* ) new QTextFrame( hbqt_par_QTextDocument( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * QTextCursor firstCursorPosition () const
  */
 HB_FUNC( QT_QTEXTFRAME_FIRSTCURSORPOSITION )
 {
-   hb_retptr( new QTextCursor( hbqt_par_QTextFrame( 1 )->firstCursorPosition() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCursor( hbqt_par_QTextFrame( 1 )->firstCursorPosition() ) ) );
 }
 
 /*
@@ -123,7 +123,7 @@ HB_FUNC( QT_QTEXTFRAME_FIRSTPOSITION )
  */
 HB_FUNC( QT_QTEXTFRAME_FRAMEFORMAT )
 {
-   hb_retptr( new QTextFrameFormat( hbqt_par_QTextFrame( 1 )->frameFormat() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextFrameFormat( hbqt_par_QTextFrame( 1 )->frameFormat() ) ) );
 }
 
 /*
@@ -131,7 +131,7 @@ HB_FUNC( QT_QTEXTFRAME_FRAMEFORMAT )
  */
 HB_FUNC( QT_QTEXTFRAME_LASTCURSORPOSITION )
 {
-   hb_retptr( new QTextCursor( hbqt_par_QTextFrame( 1 )->lastCursorPosition() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCursor( hbqt_par_QTextFrame( 1 )->lastCursorPosition() ) ) );
 }
 
 /*

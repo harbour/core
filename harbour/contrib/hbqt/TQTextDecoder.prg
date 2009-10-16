@@ -70,7 +70,6 @@ CREATE CLASS QTextDecoder
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextDecoder_destroy( ::pPtr )
 
    METHOD  toUnicode( pChars, nLen )           INLINE  Qt_QTextDecoder_toUnicode( ::pPtr, pChars, nLen )
 

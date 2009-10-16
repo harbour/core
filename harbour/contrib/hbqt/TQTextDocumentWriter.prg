@@ -70,7 +70,6 @@ CREATE CLASS QTextDocumentWriter
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextDocumentWriter_destroy( ::pPtr )
 
    METHOD  codec()                             INLINE  Qt_QTextDocumentWriter_codec( ::pPtr )
    METHOD  device()                            INLINE  Qt_QTextDocumentWriter_device( ::pPtr )

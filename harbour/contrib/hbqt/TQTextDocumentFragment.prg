@@ -70,7 +70,6 @@ CREATE CLASS QTextDocumentFragment
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextDocumentFragment_destroy( ::pPtr )
 
    METHOD  isEmpty()                           INLINE  Qt_QTextDocumentFragment_isEmpty( ::pPtr )
    METHOD  toHtml( pEncoding )                 INLINE  Qt_QTextDocumentFragment_toHtml( ::pPtr, pEncoding )

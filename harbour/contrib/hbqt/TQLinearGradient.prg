@@ -70,7 +70,6 @@ CREATE CLASS QLinearGradient INHERIT QGradient
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QLinearGradient_destroy( ::pPtr )
 
    METHOD  finalStop()                         INLINE  Qt_QLinearGradient_finalStop( ::pPtr )
    METHOD  setFinalStop( pStop )               INLINE  Qt_QLinearGradient_setFinalStop( ::pPtr, pStop )

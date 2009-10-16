@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QToolBar>
 #include <QtGui/QIcon>
@@ -75,22 +76,21 @@
  * QToolBar ( QWidget * parent = 0 )
  * ~QToolBar ()
  */
+
 HB_FUNC( QT_QTOOLBAR )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QToolBar > pObj = NULL;
+
    if( hb_param( 1, HB_IT_STRING ) )
-      hb_retptr( ( QToolBar* ) new QToolBar( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+      pObj = ( QToolBar* ) new QToolBar( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
    else
-      hb_retptr( ( QToolBar* ) new QToolBar( hbqt_par_QWidget( 1 ) ) );
-}
+      pObj = ( QToolBar* ) new QToolBar( hbqt_par_QWidget( 1 ) ) ;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTOOLBAR_DESTROY )
-{
-   delete hbqt_par_QToolBar( 1 );
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
 /*
  * QAction * actionAt ( const QPoint & p ) const
  */
@@ -184,7 +184,7 @@ HB_FUNC( QT_QTOOLBAR_CLEAR )
  */
 HB_FUNC( QT_QTOOLBAR_ICONSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QToolBar( 1 )->iconSize() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QToolBar( 1 )->iconSize() ) ) );
 }
 
 /*

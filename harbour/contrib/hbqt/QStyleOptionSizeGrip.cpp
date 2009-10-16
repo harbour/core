@@ -71,6 +71,7 @@
  *  enum StyleOptionVersion { Version }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionSizeGrip>
 
@@ -79,19 +80,15 @@
  * QStyleOptionSizeGrip ()
  * QStyleOptionSizeGrip ( const QStyleOptionSizeGrip & other )
  */
+
 HB_FUNC( QT_QSTYLEOPTIONSIZEGRIP )
 {
-   hb_retptr( ( QStyleOptionSizeGrip* ) new QStyleOptionSizeGrip() );
+   void * pObj = NULL;
+
+   pObj = ( QStyleOptionSizeGrip* ) new QStyleOptionSizeGrip() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTIONSIZEGRIP_DESTROY )
-{
-
-}
-
 /*
  * Qt::Corner corner
  */

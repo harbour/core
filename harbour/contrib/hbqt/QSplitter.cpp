@@ -76,6 +76,7 @@
  *  QList<int> sizes () const
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QSplitter>
 
@@ -85,22 +86,21 @@
  * QSplitter ( Qt::Orientation orientation, QWidget * parent = 0 )
  * ~QSplitter ()
  */
+
 HB_FUNC( QT_QSPLITTER )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QSplitter > pObj = NULL;
+
    if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
-      hb_retptr( ( QSplitter* ) new QSplitter( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
+      pObj = ( QSplitter* ) new QSplitter( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) ;
    else
-      hb_retptr( ( QSplitter* ) new QSplitter( hbqt_par_QWidget( 1 ) ) );
-}
+      pObj = ( QSplitter* ) new QSplitter( hbqt_par_QWidget( 1 ) ) ;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSPLITTER_DESTROY )
-{
-   delete hbqt_par_QSplitter( 1 );
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
 /*
  * void addWidget ( QWidget * widget )
  */
@@ -216,7 +216,7 @@ HB_FUNC( QT_QSPLITTER_RESTORESTATE )
  */
 HB_FUNC( QT_QSPLITTER_SAVESTATE )
 {
-   hb_retptr( new QByteArray( hbqt_par_QSplitter( 1 )->saveState() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QSplitter( 1 )->saveState() ) ) );
 }
 
 /*

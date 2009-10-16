@@ -97,6 +97,7 @@
  *  // int winPageSize () const
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QPrinter>
 
@@ -106,19 +107,15 @@
  * QPrinter ( const QPrinterInfo & printer, PrinterMode mode = ScreenResolution )
  * ~QPrinter ()
  */
+
 HB_FUNC( QT_QPRINTER )
 {
-   hb_retptr( ( QPrinter* ) new QPrinter() );
-}
+   void * pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QPRINTER_DESTROY )
-{
-   delete hbqt_par_QPrinter( 1 );
-}
+   pObj = ( QPrinter* ) new QPrinter() ;
 
+   hb_retptr( pObj );
+}
 /*
  * bool abort ()
  */
@@ -278,7 +275,7 @@ HB_FUNC( QT_QPRINTER_PAGEORDER )
  */
 HB_FUNC( QT_QPRINTER_PAGERECT )
 {
-   hb_retptr( new QRect( hbqt_par_QPrinter( 1 )->pageRect() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QPrinter( 1 )->pageRect() ) ) );
 }
 
 /*
@@ -286,7 +283,7 @@ HB_FUNC( QT_QPRINTER_PAGERECT )
  */
 HB_FUNC( QT_QPRINTER_PAGERECT_1 )
 {
-   hb_retptr( new QRectF( hbqt_par_QPrinter( 1 )->pageRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QPrinter( 1 )->pageRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -302,7 +299,7 @@ HB_FUNC( QT_QPRINTER_PAINTENGINE )
  */
 HB_FUNC( QT_QPRINTER_PAPERRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QPrinter( 1 )->paperRect() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QPrinter( 1 )->paperRect() ) ) );
 }
 
 /*
@@ -310,7 +307,7 @@ HB_FUNC( QT_QPRINTER_PAPERRECT )
  */
 HB_FUNC( QT_QPRINTER_PAPERRECT_1 )
 {
-   hb_retptr( new QRectF( hbqt_par_QPrinter( 1 )->paperRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QPrinter( 1 )->paperRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -326,7 +323,7 @@ HB_FUNC( QT_QPRINTER_PAPERSIZE )
  */
 HB_FUNC( QT_QPRINTER_PAPERSIZE_1 )
 {
-   hb_retptr( new QSizeF( hbqt_par_QPrinter( 1 )->paperSize( ( QPrinter::Unit ) hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSizeF( hbqt_par_QPrinter( 1 )->paperSize( ( QPrinter::Unit ) hb_parni( 2 ) ) ) ) );
 }
 
 /*

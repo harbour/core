@@ -71,6 +71,7 @@
  *  enum StyleOptionVersion { Version }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionSpinBox>
 
@@ -79,19 +80,15 @@
  * QStyleOptionSpinBox ()
  * QStyleOptionSpinBox ( const QStyleOptionSpinBox & other )
  */
+
 HB_FUNC( QT_QSTYLEOPTIONSPINBOX )
 {
-   hb_retptr( ( QStyleOptionSpinBox* ) new QStyleOptionSpinBox() );
+   void * pObj = NULL;
+
+   pObj = ( QStyleOptionSpinBox* ) new QStyleOptionSpinBox() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTIONSPINBOX_DESTROY )
-{
-
-}
-
 /*
  * QAbstractSpinBox::ButtonSymbols buttonSymbols
  */

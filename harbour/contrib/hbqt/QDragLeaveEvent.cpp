@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QDragLeaveEvent>
 
@@ -73,19 +74,10 @@
 /*
  * QDragLeaveEvent ()
  */
+
 HB_FUNC( QT_QDRAGLEAVEEVENT )
 {
-   // hb_retptr( ( * ) new () );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QDRAGLEAVEEVENT_DESTROY )
-{
-
-}
-
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

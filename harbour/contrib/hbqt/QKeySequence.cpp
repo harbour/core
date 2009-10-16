@@ -81,6 +81,7 @@
  *  QList<QKeySequence> keyBindings ( StandardKey key )
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QKeySequence>
 
@@ -93,26 +94,25 @@
  * QKeySequence ( StandardKey key )
  * ~QKeySequence ()
  */
+
 HB_FUNC( QT_QKEYSEQUENCE )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
+
    if( HB_ISPOINTER( 1 ) )
-      hb_retptr( ( QKeySequence * ) new QKeySequence( *hbqt_par_QKeySequence( 1 ) ) );
+      pObj = ( QKeySequence * ) new QKeySequence( *hbqt_par_QKeySequence( 1 ) ) ;
    else if( HB_ISCHAR( 1 ) )
-      hb_retptr( ( QKeySequence * ) new QKeySequence( hbqt_par_QString( 1 ) ) );
+      pObj = ( QKeySequence * ) new QKeySequence( hbqt_par_QString( 1 ) ) ;
    else if( HB_ISNUM( 1 ) )
-      hb_retptr( ( QKeySequence * ) new QKeySequence( hb_parni( 1 ) ) );
+      pObj = ( QKeySequence * ) new QKeySequence( hb_parni( 1 ) ) ;
    else
-      hb_retptr( ( QKeySequence * ) new QKeySequence() );
-}
+      pObj = ( QKeySequence * ) new QKeySequence() ;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QKEYSEQUENCE_DESTROY )
-{
-   delete hbqt_par_QKeySequence( 1 );
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QKeySequence" );
+   hb_retptrGC( p );
 }
-
 /*
  * uint count () const
  */
@@ -150,7 +150,7 @@ HB_FUNC( QT_QKEYSEQUENCE_TOSTRING )
  */
 HB_FUNC( QT_QKEYSEQUENCE_FROMSTRING )
 {
-   hb_retptr( new QKeySequence( hbqt_par_QKeySequence( 1 )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 3 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QKeySequence( hbqt_par_QKeySequence( 1 )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 3 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ) ) ) );
 }
 
 /*
@@ -158,7 +158,7 @@ HB_FUNC( QT_QKEYSEQUENCE_FROMSTRING )
  */
 HB_FUNC( QT_QKEYSEQUENCE_MNEMONIC )
 {
-   hb_retptr( new QKeySequence( hbqt_par_QKeySequence( 1 )->mnemonic( hbqt_par_QString( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QKeySequence( hbqt_par_QKeySequence( 1 )->mnemonic( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 

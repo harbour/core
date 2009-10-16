@@ -70,7 +70,6 @@ CREATE CLASS QStyleOptionTab INHERIT QStyleOption
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleOptionTab_destroy( ::pPtr )
 
    METHOD  cornerWidgets()                     INLINE  Qt_QStyleOptionTab_cornerWidgets( ::pPtr )
    METHOD  icon()                              INLINE  Qt_QStyleOptionTab_icon( ::pPtr )

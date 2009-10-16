@@ -84,6 +84,7 @@
  *  // virtual bool extension ( Extension extension, const ExtensionOption * option = 0, ExtensionReturn * output = 0 )
  */
 
+#include <QtCore/QPointer>
 
 #include <QtWebKit/QWebPluginFactory>
 
@@ -92,19 +93,10 @@
  * QWebPluginFactory ( QObject * parent = 0 )
  * virtual ~QWebPluginFactory ()
  */
+
 HB_FUNC( QT_QWEBPLUGINFACTORY )
 {
-   //hb_retptr( ( QWebPluginFactory* ) new QWebPluginFactory() );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QWEBPLUGINFACTORY_DESTROY )
-{
-   delete hbqt_par_QWebPluginFactory( 1 );
-}
-
 /*
  * virtual QObject * create ( const QString & mimeType, const QUrl & url, const QStringList & argumentNames, const QStringList & argumentValues ) const = 0
  */

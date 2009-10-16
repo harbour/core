@@ -70,7 +70,6 @@ CREATE CLASS QCommandLinkButton INHERIT QPushButton
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QCommandLinkButton_destroy( ::pPtr )
 
    METHOD  description()                       INLINE  Qt_QCommandLinkButton_description( ::pPtr )
    METHOD  setDescription( cDescription )      INLINE  Qt_QCommandLinkButton_setDescription( ::pPtr, cDescription )

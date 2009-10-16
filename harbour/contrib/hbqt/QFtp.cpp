@@ -74,6 +74,7 @@
  *  enum TransferType { Binary, Ascii }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtNetwork/QFtp>
 
@@ -82,10 +83,6 @@
  * QFtp ( QObject * parent = 0 )
  * virtual ~QFtp ()
  */
-HB_FUNC( QT_QFTP )
-{
-   hb_retptr( new QFtp( hbqt_par_QObject( 1 ) ) );
-}
 
 /*
  * qint64 read ( char * data, qint64 maxlen )
@@ -102,14 +99,17 @@ HB_FUNC( QT_QFTP_READ )
       hb_xfree( iData );
 }
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QFTP_DESTROY )
+HB_FUNC( QT_QFTP )
 {
-   delete hbqt_par_QFtp( 1 );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QFtp > pObj = NULL;
 
+   pObj = new QFtp( hbqt_par_QObject( 1 ) ) ;
+
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * qint64 bytesAvailable () const
  */
@@ -259,7 +259,7 @@ HB_FUNC( QT_QFTP_RAWCOMMAND )
  */
 HB_FUNC( QT_QFTP_READALL )
 {
-   hb_retptr( new QByteArray( hbqt_par_QFtp( 1 )->readAll() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QFtp( 1 )->readAll() ) ) );
 }
 
 /*

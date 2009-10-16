@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTextFragment>
 
@@ -74,25 +75,21 @@
  * QTextFragment ()
  * QTextFragment ( const QTextFragment & other )
  */
+
 HB_FUNC( QT_QTEXTFRAGMENT )
 {
-   hb_retptr( ( QTextFragment* ) new QTextFragment() );
+   void * pObj = NULL;
+
+   pObj = ( QTextFragment* ) new QTextFragment() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTFRAGMENT_DESTROY )
-{
-
-}
-
 /*
  * QTextCharFormat charFormat () const
  */
 HB_FUNC( QT_QTEXTFRAGMENT_CHARFORMAT )
 {
-   hb_retptr( new QTextCharFormat( hbqt_par_QTextFragment( 1 )->charFormat() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCharFormat( hbqt_par_QTextFragment( 1 )->charFormat() ) ) );
 }
 
 /*

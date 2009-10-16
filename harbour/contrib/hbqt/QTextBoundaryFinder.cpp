@@ -72,6 +72,7 @@
  *  enum BoundaryType { Grapheme, Word, Line, Sentence }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QTextBoundaryFinder>
 
@@ -83,19 +84,15 @@
  * QTextBoundaryFinder ( BoundaryType type, const QChar * chars, int length, unsigned char * buffer = 0, int bufferSize = 0 )
  * ~QTextBoundaryFinder ()
  */
+
 HB_FUNC( QT_QTEXTBOUNDARYFINDER )
 {
-   hb_retptr( ( QTextBoundaryFinder* ) new QTextBoundaryFinder() );
-}
+   void * pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTBOUNDARYFINDER_DESTROY )
-{
-   delete hbqt_par_QTextBoundaryFinder( 1 );
-}
+   pObj = ( QTextBoundaryFinder* ) new QTextBoundaryFinder() ;
 
+   hb_retptr( pObj );
+}
 /*
  * BoundaryReasons boundaryReasons () const
  */

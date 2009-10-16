@@ -70,7 +70,6 @@ CREATE CLASS QStyleOption
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyleOption_destroy( ::pPtr )
 
    METHOD  initFrom( pWidget )                 INLINE  Qt_QStyleOption_initFrom( ::pPtr, pWidget )
    METHOD  direction()                         INLINE  Qt_QStyleOption_direction( ::pPtr )

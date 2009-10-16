@@ -70,7 +70,6 @@ CREATE CLASS QLayoutItem
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QLayoutItem_destroy( ::pPtr )
 
    METHOD  alignment()                         INLINE  Qt_QLayoutItem_alignment( ::pPtr )
    METHOD  controlTypes()                      INLINE  Qt_QLayoutItem_controlTypes( ::pPtr )

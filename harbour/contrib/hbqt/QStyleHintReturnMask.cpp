@@ -72,6 +72,7 @@
  *  Public Functions
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleHintReturnMask>
 
@@ -79,19 +80,10 @@
 /*
  * QStyleHintReturnMask ()
  */
+
 HB_FUNC( QT_QSTYLEHINTRETURNMASK )
 {
-
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEHINTRETURNMASK_DESTROY )
-{
-
-}
-
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

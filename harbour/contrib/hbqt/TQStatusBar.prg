@@ -70,7 +70,6 @@ CREATE CLASS QStatusBar INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStatusBar_destroy( ::pPtr )
 
    METHOD  addPermanentWidget( pWidget, nStretch )  INLINE  Qt_QStatusBar_addPermanentWidget( ::pPtr, pWidget, nStretch )
    METHOD  addWidget( pWidget, nStretch )      INLINE  Qt_QStatusBar_addWidget( ::pPtr, pWidget, nStretch )

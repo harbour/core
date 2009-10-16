@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QWindowsXPStyle>
 
@@ -75,23 +76,22 @@
  * ~QWindowsXPStyle ()
  *
  */
+
 HB_FUNC( QT_QWINDOWSXPSTYLE )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QWindowsXPStyle > pObj = NULL;
+
 #if defined( HB_OS_WIN )
-   hb_retptr( ( QWindowsXPStyle* ) new QWindowsXPStyle() );
+   pObj = ( QWindowsXPStyle* ) new QWindowsXPStyle() ;
 #else
-   hb_retptr( NULL );
+   pObj = NULL ;
 #endif
-}
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QWINDOWSXPSTYLE_DESTROY )
-{
-   delete hbqt_par_QWindowsXPStyle( 1 );
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

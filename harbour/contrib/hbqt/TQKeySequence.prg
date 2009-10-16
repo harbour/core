@@ -70,7 +70,6 @@ CREATE CLASS QKeySequence
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QKeySequence_destroy( ::pPtr )
 
    METHOD  count()                             INLINE  Qt_QKeySequence_count( ::pPtr )
    METHOD  isEmpty()                           INLINE  Qt_QKeySequence_isEmpty( ::pPtr )

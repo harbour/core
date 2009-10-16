@@ -70,7 +70,6 @@ CREATE CLASS QObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QObject_destroy( ::pPtr )
 
    METHOD  blockSignals( lBlock )              INLINE  Qt_QObject_blockSignals( ::pPtr, lBlock )
    METHOD  children()                          INLINE  Qt_QObject_children( ::pPtr )

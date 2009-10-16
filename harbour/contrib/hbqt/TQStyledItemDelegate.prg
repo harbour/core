@@ -70,7 +70,6 @@ CREATE CLASS QStyledItemDelegate
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QStyledItemDelegate_destroy( ::pPtr )
 
    METHOD  createEditor( pParent, pOption, pIndex )  INLINE  Qt_QStyledItemDelegate_createEditor( ::pPtr, pParent, pOption, pIndex )
    METHOD  displayText( pValue, pLocale )      INLINE  Qt_QStyledItemDelegate_displayText( ::pPtr, pValue, pLocale )

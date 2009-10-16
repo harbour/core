@@ -74,6 +74,7 @@
  *  enum Status { Ok, ReadPastEnd, ReadCorruptData }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QTextStream>
 
@@ -87,11 +88,6 @@
  * QTextStream ( const QByteArray & array, QIODevice::OpenMode openMode = QIODevice::ReadOnly )
  * virtual ~QTextStream ()
  */
-HB_FUNC( QT_QTEXTSTREAM )
-{
-   hb_retptr( ( QTextStream* ) new QTextStream( hb_parcx( 1 ),
-      ( QIODevice::OpenMode ) ( HB_ISNUM( 2 ) ?  hb_parni( 2 ) : QIODevice::ReadWrite ) ) );
-}
 /*
  * QChar padChar () const
  */
@@ -100,14 +96,14 @@ HB_FUNC( QT_QTEXTSTREAM_PADCHAR )
 
 }
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTSTREAM_DESTROY )
+HB_FUNC( QT_QTEXTSTREAM )
 {
-   delete hbqt_par_QTextStream( 1 );
-}
+   void * pObj = NULL;
 
+   pObj = new QTextStream( hb_parcx( 1 ), ( QIODevice::OpenMode ) ( HB_ISNUM( 2 ) ?  hb_parni( 2 ) : QIODevice::ReadWrite ) ) ;
+
+   hb_retptr( pObj );
+}
 /*
  * bool atEnd () const
  */
@@ -185,7 +181,7 @@ HB_FUNC( QT_QTEXTSTREAM_INTEGERBASE )
  */
 HB_FUNC( QT_QTEXTSTREAM_LOCALE )
 {
-   hb_retptr( new QLocale( hbqt_par_QTextStream( 1 )->locale() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QLocale( hbqt_par_QTextStream( 1 )->locale() ) ) );
 }
 
 /*

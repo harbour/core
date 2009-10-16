@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QRadioButton>
 
@@ -74,22 +75,21 @@
  * QRadioButton ( QWidget * parent = 0 )
  * QRadioButton ( const QString & text, QWidget * parent = 0 )
  */
+
 HB_FUNC( QT_QRADIOBUTTON )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QRadioButton > pObj = NULL;
+
    if( HB_ISCHAR( 1 ) )
-      hb_retptr( ( QRadioButton* ) new QRadioButton( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+      pObj = ( QRadioButton* ) new QRadioButton( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
    else
-      hb_retptr( ( QRadioButton* ) new QRadioButton( hbqt_par_QWidget( 1 ) ) );
+      pObj = ( QRadioButton* ) new QRadioButton( hbqt_par_QWidget( 1 ) ) ;
+
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QRADIOBUTTON_DESTROY )
-{
-
-}
-
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

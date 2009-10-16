@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QResource>
 
@@ -74,19 +75,15 @@
  * QResource ( const QString & file = QString(), const QLocale & locale = QLocale() )
  * ~QResource ()
  */
+
 HB_FUNC( QT_QRESOURCE )
 {
-   hb_retptr( ( QResource* ) new QResource() );
-}
+   void * pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QRESOURCE_DESTROY )
-{
-   delete hbqt_par_QResource( 1 );
-}
+   pObj = ( QResource* ) new QResource() ;
 
+   hb_retptr( pObj );
+}
 /*
  * QString absoluteFilePath () const
  */
@@ -132,7 +129,7 @@ HB_FUNC( QT_QRESOURCE_ISVALID )
  */
 HB_FUNC( QT_QRESOURCE_LOCALE )
 {
-   hb_retptr( new QLocale( hbqt_par_QResource( 1 )->locale() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QLocale( hbqt_par_QResource( 1 )->locale() ) ) );
 }
 
 /*
@@ -172,7 +169,7 @@ HB_FUNC( QT_QRESOURCE_REGISTERRESOURCE )
  */
 HB_FUNC( QT_QRESOURCE_SEARCHPATHS )
 {
-   hb_retptr( new QStringList( hbqt_par_QResource( 1 )->searchPaths() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QResource( 1 )->searchPaths() ) ) );
 }
 
 /*

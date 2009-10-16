@@ -70,7 +70,6 @@ CREATE CLASS QPrinter INHERIT QPaintDevice
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QPrinter_destroy( ::pPtr )
 
    METHOD  abort()                             INLINE  Qt_QPrinter_abort( ::pPtr )
    METHOD  collateCopies()                     INLINE  Qt_QPrinter_collateCopies( ::pPtr )

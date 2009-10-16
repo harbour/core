@@ -70,7 +70,6 @@ CREATE CLASS QProgressDialog INHERIT QDialog
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QProgressDialog_destroy( ::pPtr )
 
    METHOD  autoClose()                         INLINE  Qt_QProgressDialog_autoClose( ::pPtr )
    METHOD  autoReset()                         INLINE  Qt_QProgressDialog_autoReset( ::pPtr )

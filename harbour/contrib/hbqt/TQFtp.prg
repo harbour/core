@@ -70,7 +70,6 @@ CREATE CLASS QFtp INHERIT QObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QFtp_destroy( ::pPtr )
 
    METHOD  bytesAvailable()                    INLINE  Qt_QFtp_bytesAvailable( ::pPtr )
    METHOD  cd( cDir )                          INLINE  Qt_QFtp_cd( ::pPtr, cDir )

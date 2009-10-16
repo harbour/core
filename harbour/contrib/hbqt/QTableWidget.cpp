@@ -77,6 +77,7 @@
  *  QList<QTableWidgetSelectionRange> selectedRanges () const
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTableWidget>
 
@@ -86,22 +87,21 @@
  * QTableWidget ( int rows, int columns, QWidget * parent = 0 )
  * ~QTableWidget ()
  */
+
 HB_FUNC( QT_QTABLEWIDGET )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QTableWidget > pObj = NULL;
+
    if( hb_pcount() >= 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
-      hb_retptr( ( QTableWidget* ) new QTableWidget( hb_parni( 1 ), hb_parni( 2 ), hbqt_par_QWidget( 3 ) ) );
+      pObj = ( QTableWidget* ) new QTableWidget( hb_parni( 1 ), hb_parni( 2 ), hbqt_par_QWidget( 3 ) ) ;
    else
-      hb_retptr( ( QTableWidget* ) new QTableWidget( hbqt_par_QWidget( 1 ) ) );
-}
+      pObj = ( QTableWidget* ) new QTableWidget( hbqt_par_QWidget( 1 ) ) ;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTABLEWIDGET_DESTROY )
-{
-   delete hbqt_par_QTableWidget( 1 );
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
 /*
  * QWidget * cellWidget ( int row, int column ) const
  */
@@ -403,7 +403,7 @@ HB_FUNC( QT_QTABLEWIDGET_VISUALCOLUMN )
  */
 HB_FUNC( QT_QTABLEWIDGET_VISUALITEMRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QTableWidget( 1 )->visualItemRect( hbqt_par_QTableWidgetItem( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QTableWidget( 1 )->visualItemRect( hbqt_par_QTableWidgetItem( 2 ) ) ) ) );
 }
 
 /*

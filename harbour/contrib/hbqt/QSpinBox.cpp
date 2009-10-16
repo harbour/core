@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QSpinBox>
 
@@ -73,19 +74,18 @@
 /*
  * QSpinBox ( QWidget * parent = 0 )
  */
+
 HB_FUNC( QT_QSPINBOX )
 {
-   hb_retptr( ( QSpinBox* ) new QSpinBox( hbqt_par_QWidget( 1 ) ) );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QSpinBox > pObj = NULL;
+
+   pObj = ( QSpinBox* ) new QSpinBox( hbqt_par_QWidget( 1 ) ) ;
+
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSPINBOX_DESTROY )
-{
-
-}
-
 /*
  * QString cleanText () const
  */

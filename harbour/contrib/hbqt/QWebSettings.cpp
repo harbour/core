@@ -73,6 +73,7 @@
  *  enum WebGraphic { MissingImageGraphic, MissingPluginGraphic, DefaultFrameIconGraphic, TextAreaSizeGripCornerGraphic }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtWebKit/QWebSettings>
 #include <QtCore/QUrl>
@@ -81,19 +82,10 @@
 /*
  *
  */
+
 HB_FUNC( QT_QWEBSETTINGS )
 {
-   //hb_retptr( ( QWebSettings* ) new QWebSettings() );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QWEBSETTINGS_DESTROY )
-{
-
-}
-
 /*
  * QString fontFamily ( FontFamily which ) const
  */
@@ -179,7 +171,7 @@ HB_FUNC( QT_QWEBSETTINGS_TESTATTRIBUTE )
  */
 HB_FUNC( QT_QWEBSETTINGS_USERSTYLESHEETURL )
 {
-   hb_retptr( new QUrl( hbqt_par_QWebSettings( 1 )->userStyleSheetUrl() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QUrl( hbqt_par_QWebSettings( 1 )->userStyleSheetUrl() ) ) );
 }
 
 /*
@@ -211,7 +203,7 @@ HB_FUNC( QT_QWEBSETTINGS_ICONDATABASEPATH )
  */
 HB_FUNC( QT_QWEBSETTINGS_ICONFORURL )
 {
-   hb_retptr( new QIcon( hbqt_par_QWebSettings( 1 )->iconForUrl( *hbqt_par_QUrl( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QWebSettings( 1 )->iconForUrl( *hbqt_par_QUrl( 2 ) ) ) ) );
 }
 
 /*
@@ -291,7 +283,7 @@ HB_FUNC( QT_QWEBSETTINGS_SETWEBGRAPHIC )
  */
 HB_FUNC( QT_QWEBSETTINGS_WEBGRAPHIC )
 {
-   hb_retptr( new QPixmap( hbqt_par_QWebSettings( 1 )->webGraphic( ( QWebSettings::WebGraphic ) hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPixmap( hbqt_par_QWebSettings( 1 )->webGraphic( ( QWebSettings::WebGraphic ) hb_parni( 2 ) ) ) ) );
 }
 
 

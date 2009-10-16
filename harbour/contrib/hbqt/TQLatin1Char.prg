@@ -70,7 +70,6 @@ CREATE CLASS QLatin1Char
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QLatin1Char_destroy( ::pPtr )
 
    METHOD  toLatin1()                          INLINE  Qt_QLatin1Char_toLatin1( ::pPtr )
    METHOD  unicode()                           INLINE  Qt_QLatin1Char_unicode( ::pPtr )

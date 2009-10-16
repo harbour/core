@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTextObject>
 
@@ -73,19 +74,10 @@
 /*
  *
  */
+
 HB_FUNC( QT_QTEXTOBJECT )
 {
-
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTOBJECT_DESTROY )
-{
-
-}
-
 /*
  * QTextDocument * document () const
  */
@@ -99,7 +91,7 @@ HB_FUNC( QT_QTEXTOBJECT_DOCUMENT )
  */
 HB_FUNC( QT_QTEXTOBJECT_FORMAT )
 {
-   hb_retptr( new QTextFormat( hbqt_par_QTextObject( 1 )->format() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextFormat( hbqt_par_QTextObject( 1 )->format() ) ) );
 }
 
 /*

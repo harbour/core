@@ -73,6 +73,7 @@
  *  flags SortFlags
  */
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QDir>
 
@@ -83,19 +84,18 @@
  * QDir ( const QString & path, const QString & nameFilter, SortFlags sort = SortFlags( Name | IgnoreCase ), Filters filters = AllEntries )
  * ~QDir ()
  */
+
 HB_FUNC( QT_QDIR )
 {
-   hb_retptr( new QDir( hbqt_par_QString( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QDIR_DESTROY )
-{
-   delete hbqt_par_QDir( 1 );
-}
+   pObj = new QDir( hbqt_par_QString( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QDir" );
+   hb_retptrGC( p );
+}
 /*
  * QString absoluteFilePath ( const QString & fileName ) const
  */
@@ -157,7 +157,7 @@ HB_FUNC( QT_QDIR_DIRNAME )
  */
 HB_FUNC( QT_QDIR_ENTRYINFOLIST )
 {
-   hb_retptr( new QFileInfoList( hbqt_par_QDir( 1 )->entryInfoList( *hbqt_par_QStringList( 2 ), ( HB_ISNUM( 3 ) ? ( QDir::Filters ) hb_parni( 3 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 4 ) ? ( QDir::SortFlags ) hb_parni( 4 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QFileInfoList( hbqt_par_QDir( 1 )->entryInfoList( *hbqt_par_QStringList( 2 ), ( HB_ISNUM( 3 ) ? ( QDir::Filters ) hb_parni( 3 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 4 ) ? ( QDir::SortFlags ) hb_parni( 4 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ) ) );
 }
 
 /*
@@ -165,7 +165,7 @@ HB_FUNC( QT_QDIR_ENTRYINFOLIST )
  */
 HB_FUNC( QT_QDIR_ENTRYINFOLIST_1 )
 {
-   hb_retptr( new QFileInfoList( hbqt_par_QDir( 1 )->entryInfoList( ( HB_ISNUM( 2 ) ? ( QDir::Filters ) hb_parni( 2 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 3 ) ? ( QDir::SortFlags ) hb_parni( 3 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QFileInfoList( hbqt_par_QDir( 1 )->entryInfoList( ( HB_ISNUM( 2 ) ? ( QDir::Filters ) hb_parni( 2 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 3 ) ? ( QDir::SortFlags ) hb_parni( 3 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ) ) );
 }
 
 /*
@@ -173,7 +173,7 @@ HB_FUNC( QT_QDIR_ENTRYINFOLIST_1 )
  */
 HB_FUNC( QT_QDIR_ENTRYLIST )
 {
-   hb_retptr( new QStringList( hbqt_par_QDir( 1 )->entryList( *hbqt_par_QStringList( 2 ), ( HB_ISNUM( 3 ) ? ( QDir::Filters ) hb_parni( 3 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 4 ) ? ( QDir::SortFlags ) hb_parni( 4 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QDir( 1 )->entryList( *hbqt_par_QStringList( 2 ), ( HB_ISNUM( 3 ) ? ( QDir::Filters ) hb_parni( 3 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 4 ) ? ( QDir::SortFlags ) hb_parni( 4 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ) ) );
 }
 
 /*
@@ -181,7 +181,7 @@ HB_FUNC( QT_QDIR_ENTRYLIST )
  */
 HB_FUNC( QT_QDIR_ENTRYLIST_1 )
 {
-   hb_retptr( new QStringList( hbqt_par_QDir( 1 )->entryList( ( HB_ISNUM( 2 ) ? ( QDir::Filters ) hb_parni( 2 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 3 ) ? ( QDir::SortFlags ) hb_parni( 3 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QDir( 1 )->entryList( ( HB_ISNUM( 2 ) ? ( QDir::Filters ) hb_parni( 2 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 3 ) ? ( QDir::SortFlags ) hb_parni( 3 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ) ) );
 }
 
 /*
@@ -277,7 +277,7 @@ HB_FUNC( QT_QDIR_MKPATH )
  */
 HB_FUNC( QT_QDIR_NAMEFILTERS )
 {
-   hb_retptr( new QStringList( hbqt_par_QDir( 1 )->nameFilters() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QDir( 1 )->nameFilters() ) ) );
 }
 
 /*
@@ -397,7 +397,7 @@ HB_FUNC( QT_QDIR_CLEANPATH )
  */
 HB_FUNC( QT_QDIR_CURRENT )
 {
-   hb_retptr( new QDir( hbqt_par_QDir( 1 )->current() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QDir( hbqt_par_QDir( 1 )->current() ) ) );
 }
 
 /*
@@ -413,7 +413,7 @@ HB_FUNC( QT_QDIR_CURRENTPATH )
  */
 HB_FUNC( QT_QDIR_DRIVES )
 {
-   hb_retptr( new QFileInfoList( hbqt_par_QDir( 1 )->drives() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QFileInfoList( hbqt_par_QDir( 1 )->drives() ) ) );
 }
 
 /*
@@ -429,7 +429,7 @@ HB_FUNC( QT_QDIR_FROMNATIVESEPARATORS )
  */
 HB_FUNC( QT_QDIR_HOME )
 {
-   hb_retptr( new QDir( hbqt_par_QDir( 1 )->home() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QDir( hbqt_par_QDir( 1 )->home() ) ) );
 }
 
 /*
@@ -477,7 +477,7 @@ HB_FUNC( QT_QDIR_MATCH_1 )
  */
 HB_FUNC( QT_QDIR_ROOT )
 {
-   hb_retptr( new QDir( hbqt_par_QDir( 1 )->root() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QDir( hbqt_par_QDir( 1 )->root() ) ) );
 }
 
 /*
@@ -493,7 +493,7 @@ HB_FUNC( QT_QDIR_ROOTPATH )
  */
 HB_FUNC( QT_QDIR_SEARCHPATHS )
 {
-   hb_retptr( new QStringList( hbqt_par_QDir( 1 )->searchPaths( hbqt_par_QString( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QDir( 1 )->searchPaths( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -517,7 +517,7 @@ HB_FUNC( QT_QDIR_SETSEARCHPATHS )
  */
 HB_FUNC( QT_QDIR_TEMP )
 {
-   hb_retptr( new QDir( hbqt_par_QDir( 1 )->temp() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QDir( hbqt_par_QDir( 1 )->temp() ) ) );
 }
 
 /*

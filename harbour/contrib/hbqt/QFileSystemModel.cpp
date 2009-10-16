@@ -70,6 +70,7 @@
  *  enum Roles { FileIconRole, FilePathRole, FileNameRole, FilePermissions }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QFileSystemModel>
 #include <QtCore/QDateTime>
@@ -78,19 +79,18 @@
  * QFileSystemModel ( QObject * parent = 0 )
  * ~QFileSystemModel ()
  */
+
 HB_FUNC( QT_QFILESYSTEMMODEL )
 {
-   hb_retptr( ( QFileSystemModel * ) new QFileSystemModel() );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QFileSystemModel > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QFILESYSTEMMODEL_DESTROY )
-{
-   delete hbqt_par_QFileSystemModel( 1 );
-}
+   pObj = ( QFileSystemModel * ) new QFileSystemModel() ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * virtual bool dropMimeData ( const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent )
  */
@@ -104,7 +104,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_DROPMIMEDATA )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_FILEICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QFileSystemModel( 1 )->fileIcon( *hbqt_par_QModelIndex( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QFileSystemModel( 1 )->fileIcon( *hbqt_par_QModelIndex( 2 ) ) ) ) );
 }
 
 /*
@@ -112,7 +112,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_FILEICON )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_FILEINFO )
 {
-   hb_retptr( new QFileInfo( hbqt_par_QFileSystemModel( 1 )->fileInfo( *hbqt_par_QModelIndex( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QFileInfo( hbqt_par_QFileSystemModel( 1 )->fileInfo( *hbqt_par_QModelIndex( 2 ) ) ) ) );
 }
 
 /*
@@ -152,7 +152,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_ICONPROVIDER )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_INDEX )
 {
-   hb_retptr( new QModelIndex( hbqt_par_QFileSystemModel( 1 )->index( hbqt_par_QString( 2 ), hb_parni( 3 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QFileSystemModel( 1 )->index( hbqt_par_QString( 2 ), hb_parni( 3 ) ) ) ) );
 }
 
 /*
@@ -176,7 +176,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_ISREADONLY )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_LASTMODIFIED )
 {
-   hb_retptr( new QDateTime( hbqt_par_QFileSystemModel( 1 )->lastModified( *hbqt_par_QModelIndex( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QFileSystemModel( 1 )->lastModified( *hbqt_par_QModelIndex( 2 ) ) ) ) );
 }
 
 /*
@@ -192,7 +192,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_MIMEDATA )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_MIMETYPES )
 {
-   hb_retptr( new QStringList( hbqt_par_QFileSystemModel( 1 )->mimeTypes() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QFileSystemModel( 1 )->mimeTypes() ) ) );
 }
 
 /*
@@ -200,7 +200,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_MIMETYPES )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_MKDIR )
 {
-   hb_retptr( new QModelIndex( hbqt_par_QFileSystemModel( 1 )->mkdir( *hbqt_par_QModelIndex( 2 ), hbqt_par_QString( 3 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QFileSystemModel( 1 )->mkdir( *hbqt_par_QModelIndex( 2 ), hbqt_par_QString( 3 ) ) ) ) );
 }
 
 /*
@@ -208,7 +208,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_MKDIR )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_MYCOMPUTER )
 {
-   hb_retptr( new QVariant( hbqt_par_QFileSystemModel( 1 )->myComputer( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : Qt::DisplayRole ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QFileSystemModel( 1 )->myComputer( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : Qt::DisplayRole ) ) ) ) );
 }
 
 /*
@@ -224,7 +224,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_NAMEFILTERDISABLES )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_NAMEFILTERS )
 {
-   hb_retptr( new QStringList( hbqt_par_QFileSystemModel( 1 )->nameFilters() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QFileSystemModel( 1 )->nameFilters() ) ) );
 }
 
 /*
@@ -264,7 +264,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_RMDIR )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_ROOTDIRECTORY )
 {
-   hb_retptr( new QDir( hbqt_par_QFileSystemModel( 1 )->rootDirectory() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QDir( hbqt_par_QFileSystemModel( 1 )->rootDirectory() ) ) );
 }
 
 /*
@@ -328,7 +328,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_SETRESOLVESYMLINKS )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_SETROOTPATH )
 {
-   hb_retptr( new QModelIndex( hbqt_par_QFileSystemModel( 1 )->setRootPath( hbqt_par_QString( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QFileSystemModel( 1 )->setRootPath( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*

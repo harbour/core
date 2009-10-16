@@ -70,7 +70,6 @@ CREATE CLASS QKeyEvent INHERIT QInputEvent
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QKeyEvent_destroy( ::pPtr )
 
    METHOD  count()                             INLINE  Qt_QKeyEvent_count( ::pPtr )
    METHOD  isAutoRepeat()                      INLINE  Qt_QKeyEvent_isAutoRepeat( ::pPtr )

@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QResizeEvent>
 
@@ -73,25 +74,16 @@
 /*
  * QResizeEvent ( const QSize & size, const QSize & oldSize )
  */
+
 HB_FUNC( QT_QRESIZEEVENT )
 {
-   // hb_retptr( ( QResizeEvent* ) new QResizeEvent() );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QRESIZEEVENT_DESTROY )
-{
-
-}
-
 /*
  * const QSize & oldSize () const
  */
 HB_FUNC( QT_QRESIZEEVENT_OLDSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QResizeEvent( 1 )->oldSize() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QResizeEvent( 1 )->oldSize() ) ) );
 }
 
 /*
@@ -99,7 +91,7 @@ HB_FUNC( QT_QRESIZEEVENT_OLDSIZE )
  */
 HB_FUNC( QT_QRESIZEEVENT_SIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QResizeEvent( 1 )->size() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QResizeEvent( 1 )->size() ) ) );
 }
 
 

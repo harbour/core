@@ -70,7 +70,6 @@ CREATE CLASS QFocusFrame INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QFocusFrame_destroy( ::pPtr )
 
    METHOD  setWidget( pWidget )                INLINE  Qt_QFocusFrame_setWidget( ::pPtr, pWidget )
    METHOD  widget()                            INLINE  Qt_QFocusFrame_widget( ::pPtr )

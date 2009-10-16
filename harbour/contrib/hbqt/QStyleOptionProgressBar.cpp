@@ -72,6 +72,7 @@
  *  Public Functions
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionProgressBar>
 
@@ -80,19 +81,15 @@
  * QStyleOptionProgressBar ()
  * QStyleOptionProgressBar ( const QStyleOptionProgressBar & other )
  */
+
 HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR )
 {
-   hb_retptr( ( QStyleOptionProgressBar* ) new QStyleOptionProgressBar() );
+   void * pObj = NULL;
+
+   pObj = ( QStyleOptionProgressBar* ) new QStyleOptionProgressBar() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR_DESTROY )
-{
-
-}
-
 /*
  * int maximum
  */

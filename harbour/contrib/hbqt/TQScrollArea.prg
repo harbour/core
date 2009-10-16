@@ -70,7 +70,6 @@ CREATE CLASS QScrollArea INHERIT QAbstractScrollArea
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QScrollArea_destroy( ::pPtr )
 
    METHOD  alignment()                         INLINE  Qt_QScrollArea_alignment( ::pPtr )
    METHOD  ensureVisible( nX, nY, nXmargin, nYmargin )  INLINE  Qt_QScrollArea_ensureVisible( ::pPtr, nX, nY, nXmargin, nYmargin )

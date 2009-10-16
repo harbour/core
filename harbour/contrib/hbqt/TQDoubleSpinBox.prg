@@ -70,7 +70,6 @@ CREATE CLASS QDoubleSpinBox INHERIT QAbstractSpinBox
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QDoubleSpinBox_destroy( ::pPtr )
 
    METHOD  cleanText()                         INLINE  Qt_QDoubleSpinBox_cleanText( ::pPtr )
    METHOD  decimals()                          INLINE  Qt_QDoubleSpinBox_decimals( ::pPtr )

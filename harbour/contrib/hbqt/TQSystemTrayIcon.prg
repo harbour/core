@@ -70,7 +70,6 @@ CREATE CLASS QSystemTrayIcon INHERIT QObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QSystemTrayIcon_destroy( ::pPtr )
 
    METHOD  contextMenu()                       INLINE  Qt_QSystemTrayIcon_contextMenu( ::pPtr )
    METHOD  geometry()                          INLINE  Qt_QSystemTrayIcon_geometry( ::pPtr )

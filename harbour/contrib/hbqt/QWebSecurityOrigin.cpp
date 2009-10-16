@@ -76,6 +76,7 @@
  *  QList<QWebSecurityOrigin> allOrigins ()
  */
 
+#include <QtCore/QPointer>
 
 #include <QtWebKit/QWebSecurityOrigin>
 
@@ -84,19 +85,21 @@
  * QWebSecurityOrigin ( const QWebSecurityOrigin & other )
  * ~QWebSecurityOrigin ()
  */
+
 HB_FUNC( QT_QWEBSECURITYORIGIN )
 {
-   hb_retptr( ( QWebSecurityOrigin* ) new QWebSecurityOrigin( *hbqt_par_QWebSecurityOrigin( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QWEBSECURITYORIGIN_DESTROY )
-{
-   delete hbqt_par_QWebSecurityOrigin( 1 );
-}
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      pObj = new QWebSecurityOrigin( *hbqt_par_QWebSecurityOrigin( 1 ) ) ;
+   }
 
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QWebSecurityOrigin" );
+   hb_retptrGC( p );
+}
 /*
  * qint64 databaseQuota () const
  */

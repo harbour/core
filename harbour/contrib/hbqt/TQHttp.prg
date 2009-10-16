@@ -70,7 +70,6 @@ CREATE CLASS QHttp INHERIT QObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QHttp_destroy( ::pPtr )
 
    METHOD  bytesAvailable()                    INLINE  Qt_QHttp_bytesAvailable( ::pPtr )
    METHOD  clearPendingRequests()              INLINE  Qt_QHttp_clearPendingRequests( ::pPtr )

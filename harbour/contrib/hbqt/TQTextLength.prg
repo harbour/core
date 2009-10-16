@@ -70,7 +70,6 @@ CREATE CLASS QTextLength
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextLength_destroy( ::pPtr )
 
    METHOD  rawValue()                          INLINE  Qt_QTextLength_rawValue( ::pPtr )
    METHOD  type()                              INLINE  Qt_QTextLength_type( ::pPtr )

@@ -70,7 +70,6 @@ CREATE CLASS QTabBar INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTabBar_destroy( ::pPtr )
 
    METHOD  addTab( cText )                     INLINE  Qt_QTabBar_addTab( ::pPtr, cText )
    METHOD  count()                             INLINE  Qt_QTabBar_count( ::pPtr )

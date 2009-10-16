@@ -70,7 +70,6 @@ CREATE CLASS QWebHitTestResult
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QWebHitTestResult_destroy( ::pPtr )
 
    METHOD  alternateText()                     INLINE  Qt_QWebHitTestResult_alternateText( ::pPtr )
    METHOD  boundingRect()                      INLINE  Qt_QWebHitTestResult_boundingRect( ::pPtr )

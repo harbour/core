@@ -70,7 +70,6 @@ CREATE CLASS QPainter
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QPainter_destroy( ::pPtr )
 
    METHOD  background()                        INLINE  Qt_QPainter_background( ::pPtr )
    METHOD  backgroundMode()                    INLINE  Qt_QPainter_backgroundMode( ::pPtr )

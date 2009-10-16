@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtWebKit/QWebView>
 
@@ -75,19 +76,18 @@
  * QWebView ( QWidget * parent = 0 )
  * virtual ~QWebView ()
  */
+
 HB_FUNC( QT_QWEBVIEW )
 {
-   hb_retptr( new QWebView( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QWebView > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QWEBVIEW_DESTROY )
-{
-   delete hbqt_par_QWebView( 1 );
-}
+   pObj = new QWebView( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * bool findText ( const QString & subString, QWebPage::FindFlags options = 0 )
  */
@@ -109,7 +109,7 @@ HB_FUNC( QT_QWEBVIEW_HISTORY )
  */
 HB_FUNC( QT_QWEBVIEW_ICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QWebView( 1 )->icon() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QWebView( 1 )->icon() ) ) );
 }
 
 /*
@@ -245,7 +245,7 @@ HB_FUNC( QT_QWEBVIEW_TRIGGERPAGEACTION )
  */
 HB_FUNC( QT_QWEBVIEW_URL )
 {
-   hb_retptr( new QUrl( hbqt_par_QWebView( 1 )->url() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QUrl( hbqt_par_QWebView( 1 )->url() ) ) );
 }
 
 /*

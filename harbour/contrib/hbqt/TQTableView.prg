@@ -70,7 +70,6 @@ CREATE CLASS QTableView INHERIT QAbstractItemView
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTableView_destroy( ::pPtr )
 
    METHOD  clearSpans()                        INLINE  Qt_QTableView_clearSpans( ::pPtr )
    METHOD  columnAt( nX )                      INLINE  Qt_QTableView_columnAt( ::pPtr, nX )

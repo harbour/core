@@ -71,6 +71,7 @@
  *  flags Sections
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QDateTimeEdit>
 
@@ -81,19 +82,18 @@
  * QDateTimeEdit ( const QDate & date, QWidget * parent = 0 )
  * QDateTimeEdit ( const QTime & time, QWidget * parent = 0 )
  */
+
 HB_FUNC( QT_QDATETIMEEDIT )
 {
-   hb_retptr( ( QDateTimeEdit* ) new QDateTimeEdit( hbqt_par_QWidget( 1 ) ) );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QDateTimeEdit > pObj = NULL;
+
+   pObj = ( QDateTimeEdit* ) new QDateTimeEdit( hbqt_par_QWidget( 1 ) ) ;
+
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QDATETIMEEDIT_DESTROY )
-{
-
-}
-
 /*
  * bool calendarPopup () const
  */
@@ -179,7 +179,7 @@ HB_FUNC( QT_QDATETIMEEDIT_CURRENTSECTIONINDEX )
  */
 HB_FUNC( QT_QDATETIMEEDIT_DATE )
 {
-   hb_retptr( new QDate( hbqt_par_QDateTimeEdit( 1 )->date() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QDate( hbqt_par_QDateTimeEdit( 1 )->date() ) ) );
 }
 
 /*
@@ -187,7 +187,7 @@ HB_FUNC( QT_QDATETIMEEDIT_DATE )
  */
 HB_FUNC( QT_QDATETIMEEDIT_DATETIME )
 {
-   hb_retptr( new QDateTime( hbqt_par_QDateTimeEdit( 1 )->dateTime() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QDateTimeEdit( 1 )->dateTime() ) ) );
 }
 
 /*
@@ -211,7 +211,7 @@ HB_FUNC( QT_QDATETIMEEDIT_DISPLAYEDSECTIONS )
  */
 HB_FUNC( QT_QDATETIMEEDIT_MAXIMUMDATE )
 {
-   hb_retptr( new QDate( hbqt_par_QDateTimeEdit( 1 )->maximumDate() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QDate( hbqt_par_QDateTimeEdit( 1 )->maximumDate() ) ) );
 }
 
 /*
@@ -219,7 +219,7 @@ HB_FUNC( QT_QDATETIMEEDIT_MAXIMUMDATE )
  */
 HB_FUNC( QT_QDATETIMEEDIT_MAXIMUMDATETIME )
 {
-   hb_retptr( new QDateTime( hbqt_par_QDateTimeEdit( 1 )->maximumDateTime() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QDateTimeEdit( 1 )->maximumDateTime() ) ) );
 }
 
 /*
@@ -227,7 +227,7 @@ HB_FUNC( QT_QDATETIMEEDIT_MAXIMUMDATETIME )
  */
 HB_FUNC( QT_QDATETIMEEDIT_MAXIMUMTIME )
 {
-   hb_retptr( new QTime( hbqt_par_QDateTimeEdit( 1 )->maximumTime() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTime( hbqt_par_QDateTimeEdit( 1 )->maximumTime() ) ) );
 }
 
 /*
@@ -235,7 +235,7 @@ HB_FUNC( QT_QDATETIMEEDIT_MAXIMUMTIME )
  */
 HB_FUNC( QT_QDATETIMEEDIT_MINIMUMDATE )
 {
-   hb_retptr( new QDate( hbqt_par_QDateTimeEdit( 1 )->minimumDate() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QDate( hbqt_par_QDateTimeEdit( 1 )->minimumDate() ) ) );
 }
 
 /*
@@ -243,7 +243,7 @@ HB_FUNC( QT_QDATETIMEEDIT_MINIMUMDATE )
  */
 HB_FUNC( QT_QDATETIMEEDIT_MINIMUMDATETIME )
 {
-   hb_retptr( new QDateTime( hbqt_par_QDateTimeEdit( 1 )->minimumDateTime() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QDateTimeEdit( 1 )->minimumDateTime() ) ) );
 }
 
 /*
@@ -251,7 +251,7 @@ HB_FUNC( QT_QDATETIMEEDIT_MINIMUMDATETIME )
  */
 HB_FUNC( QT_QDATETIMEEDIT_MINIMUMTIME )
 {
-   hb_retptr( new QTime( hbqt_par_QDateTimeEdit( 1 )->minimumTime() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTime( hbqt_par_QDateTimeEdit( 1 )->minimumTime() ) ) );
 }
 
 /*
@@ -411,7 +411,7 @@ HB_FUNC( QT_QDATETIMEEDIT_SETTIMESPEC )
  */
 HB_FUNC( QT_QDATETIMEEDIT_TIME )
 {
-   hb_retptr( new QTime( hbqt_par_QDateTimeEdit( 1 )->time() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QTime( hbqt_par_QDateTimeEdit( 1 )->time() ) ) );
 }
 
 /*

@@ -70,7 +70,6 @@ CREATE CLASS QSpinBox INHERIT QAbstractSpinBox
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QSpinBox_destroy( ::pPtr )
 
    METHOD  cleanText()                         INLINE  Qt_QSpinBox_cleanText( ::pPtr )
    METHOD  maximum()                           INLINE  Qt_QSpinBox_maximum( ::pPtr )

@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QKeyEvent>
 
@@ -74,19 +75,10 @@
  * QKeyEvent ( Type type, int key, Qt::KeyboardModifiers modifiers, const QString & text = QString(), bool autorep = false, ushort count = 1 )
  * ~QKeyEvent ()
  */
+
 HB_FUNC( QT_QKEYEVENT )
 {
-   //hb_retptr( ( QKeyEvent * ) new QKeyEvent( *hbqt_par_QKeyEvent( 1 ) ) );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QKEYEVENT_DESTROY )
-{
-   delete hbqt_par_QKeyEvent( 1 );
-}
-
 /*
  * int count () const
  */

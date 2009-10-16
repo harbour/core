@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtWebKit/QWebHitTestResult>
 
@@ -75,19 +76,18 @@
  * QWebHitTestResult ( const QWebHitTestResult & other )
  * ~QWebHitTestResult ()
  */
+
 HB_FUNC( QT_QWEBHITTESTRESULT )
 {
-   hb_retptr( ( QWebHitTestResult* ) new QWebHitTestResult() );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QWEBHITTESTRESULT_DESTROY )
-{
-   delete hbqt_par_QWebHitTestResult( 1 );
-}
+   pObj = ( QWebHitTestResult* ) new QWebHitTestResult() ;
 
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QWebHitTestResult" );
+   hb_retptrGC( p );
+}
 /*
  * QString alternateText () const
  */
@@ -101,7 +101,7 @@ HB_FUNC( QT_QWEBHITTESTRESULT_ALTERNATETEXT )
  */
 HB_FUNC( QT_QWEBHITTESTRESULT_BOUNDINGRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QWebHitTestResult( 1 )->boundingRect() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QWebHitTestResult( 1 )->boundingRect() ) ) );
 }
 
 /*
@@ -117,7 +117,7 @@ HB_FUNC( QT_QWEBHITTESTRESULT_FRAME )
  */
 HB_FUNC( QT_QWEBHITTESTRESULT_IMAGEURL )
 {
-   hb_retptr( new QUrl( hbqt_par_QWebHitTestResult( 1 )->imageUrl() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QUrl( hbqt_par_QWebHitTestResult( 1 )->imageUrl() ) ) );
 }
 
 /*
@@ -165,7 +165,7 @@ HB_FUNC( QT_QWEBHITTESTRESULT_LINKTEXT )
  */
 HB_FUNC( QT_QWEBHITTESTRESULT_LINKTITLE )
 {
-   hb_retptr( new QUrl( hbqt_par_QWebHitTestResult( 1 )->linkTitle() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QUrl( hbqt_par_QWebHitTestResult( 1 )->linkTitle() ) ) );
 }
 
 /*
@@ -173,7 +173,7 @@ HB_FUNC( QT_QWEBHITTESTRESULT_LINKTITLE )
  */
 HB_FUNC( QT_QWEBHITTESTRESULT_LINKURL )
 {
-   hb_retptr( new QUrl( hbqt_par_QWebHitTestResult( 1 )->linkUrl() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QUrl( hbqt_par_QWebHitTestResult( 1 )->linkUrl() ) ) );
 }
 
 /*
@@ -181,7 +181,7 @@ HB_FUNC( QT_QWEBHITTESTRESULT_LINKURL )
  */
 HB_FUNC( QT_QWEBHITTESTRESULT_PIXMAP )
 {
-   hb_retptr( new QPixmap( hbqt_par_QWebHitTestResult( 1 )->pixmap() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPixmap( hbqt_par_QWebHitTestResult( 1 )->pixmap() ) ) );
 }
 
 /*
@@ -189,7 +189,7 @@ HB_FUNC( QT_QWEBHITTESTRESULT_PIXMAP )
  */
 HB_FUNC( QT_QWEBHITTESTRESULT_POS )
 {
-   hb_retptr( new QPoint( hbqt_par_QWebHitTestResult( 1 )->pos() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QWebHitTestResult( 1 )->pos() ) ) );
 }
 
 /*

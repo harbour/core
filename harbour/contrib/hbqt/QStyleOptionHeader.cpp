@@ -74,6 +74,7 @@
  *  enum StyleOptionVersion { Version }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionHeader>
 
@@ -82,25 +83,21 @@
  * QStyleOptionHeader ()
  * QStyleOptionHeader ( const QStyleOptionHeader & other )
  */
+
 HB_FUNC( QT_QSTYLEOPTIONHEADER )
 {
-   hb_retptr( ( QStyleOptionHeader* ) new QStyleOptionHeader() );
+   void * pObj = NULL;
+
+   pObj = ( QStyleOptionHeader* ) new QStyleOptionHeader() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTIONHEADER_DESTROY )
-{
-
-}
-
 /*
  * QIcon icon
  */
 HB_FUNC( QT_QSTYLEOPTIONHEADER_ICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QStyleOptionHeader( 1 )->icon ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QStyleOptionHeader( 1 )->icon ) ) );
 }
 
 /*

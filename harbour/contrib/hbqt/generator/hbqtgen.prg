@@ -1,56 +1,3 @@
-/*
- * $Id$
- */
-
-/*
- * Harbour Project source code:
- * QT Source Generator for Harbour
- *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
- * www - http://www.harbour-project.org
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- *
- * As a special exception, the Harbour Project gives permission for
- * additional uses of the text contained in its release of Harbour.
- *
- * The exception is that, if you link the Harbour libraries with other
- * files to produce an executable, this does not by itself cause the
- * resulting executable to be covered by the GNU General Public License.
- * Your use of that executable is in no way restricted on account of
- * linking the Harbour library code into it.
- *
- * This exception does not however invalidate any other reasons why
- * the executable file might be covered by the GNU General Public License.
- *
- * This exception applies only to the code released by the Harbour
- * Project under the name Harbour.  If you copy code from other
- * Harbour Project or Free Software Foundation releases into a copy of
- * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.  To avoid misleading
- * anyone as to the status of such modified files, you must delete
- * this exception notice from them.
- *
- * If you write modifications of your own for Harbour, it is your choice
- * whether to permit this exception to apply to your modifications.
- * If you do not wish that, delete this exception notice.
- *
- */
-/*----------------------------------------------------------------------*/
-
 #include "common.ch"
 #include "fileio.ch"
 
@@ -58,6 +5,8 @@
 
 STATIC s_NewLine
 STATIC s_PathSep
+STATIC isClassObject
+STATIC zWidget
 
 /*----------------------------------------------------------------------*/
 
@@ -269,13 +218,15 @@ STATIC FUNCTION PullOutSection( cQth, cSec )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
-   LOCAL cFile, cWidget, cExt, cPath, cOrg, cCPP, cPRG
-   LOCAL cQth, cFileCpp
-   LOCAL s, n, nFuncs, nCnvrtd
+   LOCAL cFile, cWidget, cExt, cPath, cOrg, cCPP, cPRG, lConst //, lList, cWgt, lDestructor
+   LOCAL cQth, cFileCpp, s, n, nFuncs, nCnvrtd, n1, i, cFunc, lObject
    LOCAL b_, txt_, enum_, code_, func_, dummy_, cpp_, cmntd_, doc_, varbls_
-   LOCAL class_, cls_, protos_, slots_, enums_, docum_, subCls_
+   LOCAL class_, cls_, protos_, slots_, enums_, docum_, subCls_, new_, old_
 
    hb_fNameSplit( cProFile, @cPath, @cWidget, @cExt )
+
+   isClassObject := IsQObject( cWidget )
+   zWidget := cWidget
 
    IF empty( cPath )
       cFile := cPathIn + s_PathSep + cProFile
@@ -320,6 +271,25 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
 
    /* Pull out Code Section */
    code_   := PullOutSection( @cQth, 'CODE'   )
+
+   /* Separate constructor function */
+   new_:={}
+   cFunc := "HB_FUNC( QT_" + upper( cWidget ) + " )"
+   n := ascan( code_, {|e| cFunc $ e } )
+   FOR i := n TO len( code_ )
+      aadd( new_, code_[ i ] )
+      IF trim( code_[ i ] ) == "}"
+         n1 := i
+         EXIT
+      endif
+   NEXT
+   old_:={}
+   FOR i := 1 TO len( code_ )
+      IF i < n .or. i > n1
+         aadd( old_, code_[ i ] )
+      ENDIF
+   NEXT
+   code_:= old_
 
    /* Pull out Enumerators  */
    enums_  := PullOutSection( @cQth, 'ENUMS'  )
@@ -462,26 +432,66 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
          aadd( cpp_, '' )
       ENDIF
 
-      /* Insert user defined code */
+      /* Insert user defined code - INCLUDEs */
+      aadd( cpp_, "#include <QtCore/QPointer>" )
       IF !empty( code_ )
          aeval( code_, {|e| aadd( cpp_, strtran( e, chr( 13 ), '' ) ) } )
          aadd( cpp_, "" )
       ENDIF
 
-      /* Generate Destructor */
-      aadd( cpp_, '/*'  )
-      aadd( cpp_, ' * DESTRUCTOR ' )
-      aadd( cpp_, ' */' )
-      aadd( cpp_, 'HB_FUNC( QT_' + upper( cWidget ) + '_DESTROY )' )
-      aadd( cpp_, '{ ' )
-      IF ( '~'+cWidget $ cQth )
-         aadd( cpp_, '   delete hbqt_par_' + cWidget + '( 1 );' )
-         //aadd( cpp_, '   hbqt_par_' + cWidget + '( 1 )->~' + cWidget + '();' )
-      ELSE
-         aadd( cpp_, '   ' )
+      //lList       := ascan( cls_, {|e_| lower( e_[ 1 ] ) == "list" .and. lower( e_[ 2 ] ) == "yes" } ) > 0
+      //cWgt        := IF( lList, cWidget +"< void * >", cWidget )
+      //lDestructor := ascan( cls_, {|e_| lower( e_[ 1 ] ) == "destructor" .and. lower( e_[ 2 ] ) == "no"} ) == 0
+      lObject       := ascan( cls_, {|e_| lower( e_[ 1 ] ) == "qobject" .and. lower( e_[ 2 ] ) == "no"} ) == 0
+
+      /* Insert CONSTRUCTOR - if defined */
+      lConst := .f.
+      FOR i := 3 TO len( new_ ) - 1
+         IF left( ltrim( new_[ i ] ), 2 ) != "//"
+            IF "hb_retptr(" $ new_[ i ]
+               lConst := .t.
+               EXIT
+            ENDIF
+         ENDIF
+      NEXT
+      aadd( cpp_, new_[ 1 ] )           // Func definition
+      aadd( cpp_, new_[ 2 ] )           // {
+      IF lConst
+         // lObject := IsQObject( cWidget ) .or. lObject
+         IF lObject .or. IsMemObject( cWidget )
+            aadd( cpp_, "   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );" )
+         ENDIF
+         IF lObject
+            aadd( cpp_, "   QPointer< "+ cWidget +" > pObj = NULL;" )
+         ELSE
+            aadd( cpp_, "   void * pObj = NULL;" )
+         ENDIF
+         aadd( cpp_, "" )
+         FOR i := 3 TO len( new_ ) - 1
+            IF left( ltrim( new_[ i ] ), 2 ) != "//"
+               IF "hb_retptr(" $ new_[ i ]
+                  s := trim( strtran( new_[ i ], "hb_retptr(", "pObj =" ) )
+                  s := strtran( s, ");", ";" )
+                  aadd( cpp_, s )
+               ELSE
+                  aadd( cpp_, new_[ i ] )
+               ENDIF
+            ENDIF
+         NEXT
+         aadd( cpp_, "" )
+         IF lObject .or. IsMemObject( cWidget )
+            aadd( cpp_, "   p->ph = pObj;" )
+            IF lObject
+               aadd( cpp_, "   p->type = 1001;" )
+            ELSE
+               aadd( cpp_, '   p->type = hbqt_getIdByName( ( QString ) "' + cWidget + '" );' )
+            ENDIF
+            aadd( cpp_, "   hb_retptrGC( p );" )
+         ELSE
+            aadd( cpp_, "   hb_retptr( pObj );" )
+         ENDIF
       ENDIF
-      aadd( cpp_, '} ' )
-      aadd( cpp_, '  ' )
+      aadd( cpp_, new_[ len( new_ ) ] ) // }
 
       /* Insert Functions */
       aeval( txt_, {|e| aadd( cpp_, strtran( e, chr( 13 ), '' ) ) } )
@@ -851,7 +861,6 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                cPrgRet := 'c' + cDocNM
 
             CASE aA[ PRT_CAST ] == 'QString'
-               //cCmd := 'hb_retc( ' + cCmn + '.toLatin1().data()' + ' )'
                cCmd := 'hb_retc( ' + cCmn + '.toAscii().data()' + ' )'
                cPrgRet := 'c' + cDocNM
 
@@ -864,11 +873,15 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                cPrgRet := 'p' + cDocNM
 
             CASE aA[ PRT_L_AND ] .AND. aA[ PRT_L_CONST ]
-               cCmd := 'hb_retptr( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ) )'
+//               cCmd := 'hb_retptr( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ) )'
+//               cCmd := 'hb_retptrGC( hbqt_pToGCPointer( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ) ) )'
+               cCmd := Get_Command( aA[ PRT_CAST ], cCmn )
                cPrgRet := 'p' + cDocNM
 
             CASE aA[ PRT_L_CONST ]
-               cCmd := 'hb_retptr( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ) )'
+//               cCmd := 'hb_retptr( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ) )'
+//               cCmd := 'hb_retptrGC( hbqt_pToGCPointer( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ) ) )'
+               cCmd := Get_Command( aA[ PRT_CAST ], cCmn )
                cPrgRet := 'p' + cDocNM
 
             CASE aA[ PRT_L_AND ]
@@ -878,7 +891,9 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
             OTHERWISE
                /* No attribute is attached to return value */
                IF left( aA[ PRT_CAST ], 1 ) == 'Q'
-                  cCmd := 'hb_retptr( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ) )'
+//                  cCmd := 'hb_retptr( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ) )'
+//                  cCmd := 'hb_retptrGC( hbqt_pToGCPointer( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ) ) )'
+                  cCmd := Get_Command( aA[ PRT_CAST ], cCmn )
                   cPrgRet := 'p' + cDocNM
 
                ELSE
@@ -1041,7 +1056,9 @@ STATIC FUNCTION ParseVariables( cProto, cWidget, txt_, doc_, aEnum, func_ )
             OTHERWISE
                /* No attribute is attached to return value */
                IF left( aA[ PRT_CAST ], 1 ) == 'Q'
-                  cCmd := 'hb_retptr( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ) )'
+//                  cCmd := 'hb_retptr( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ) )'
+//                  cCmd := 'hb_retptrGC( hbqt_pToGCPointer( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ) ) )'
+                  cCmd := Get_Command( aA[ PRT_CAST ], cCmn )
                   cPrgRet := 'p' + cDocNM
 
                ELSE
@@ -1279,7 +1296,7 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
    aadd( txt_, '' )
    aadd( txt_, '   METHOD  New()'       )
    aadd( txt_, '   METHOD  Configure( xObject )' )
-   aadd( txt_, '   METHOD  Destroy()                           INLINE  Qt_' + cWidget + '_destroy( ::pPtr )' )
+//   aadd( txt_, '   METHOD  Destroy()                           INLINE  Qt_' + cWidget + '_destroy( ::pPtr )' )
    aadd( txt_, '' )
 
    /* Populate METHODS */
@@ -1390,6 +1407,7 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
    aadd( txt_, "   " + "hbqt_base.cpp \" )
    aadd( txt_, "   " + "hbqt_utils.cpp \" )
    aadd( txt_, "   " + "hbqt_slots.cpp \" )
+   aadd( txt_, "   " + "hbqt_destruct.cpp \" )
    FOR EACH s IN cpp_
       aadd( txt_, "   " + s + ".cpp \" )
    NEXT
@@ -1677,5 +1695,344 @@ FUNCTION Build_HtmlHeader( aHTML )
    aadd( aHtml, '</head>                                                             ' )
 
    RETURN Nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION IsQObject( cWidget )
+   STATIC aTree := {}
+
+   IF empty( aTree )
+      aadd( aTree, "QObject                                       " )
+      aadd( aTree, "   QAbstractEventDispatcher                   " )
+      aadd( aTree, "   QAbstractItemDelegate                      " )
+      aadd( aTree, "      QItemDelegate                           " )
+      aadd( aTree, "          QSqlRelationalDelegate              " )
+      aadd( aTree, "      QStyledItemDelegate                     " )
+      aadd( aTree, "   QAbstractItemModel                         " )
+      aadd( aTree, "      QAbstractListModel                      " )
+      aadd( aTree, "         QStringListModel                     " )
+      aadd( aTree, "            QHelpIndexModel                   " )
+      aadd( aTree, "      QAbstractProxyModel                     " )
+      aadd( aTree, "         QSortFilterProxyModel                " )
+      aadd( aTree, "      QAbstractTableModel                     " )
+      aadd( aTree, "         QSqlQueryModel                       " )
+      aadd( aTree, "            QSqlTableModel                    " )
+      aadd( aTree, "               QSqlRelationalTableModel       " )
+      aadd( aTree, "      QDirModel                               " )
+      aadd( aTree, "      QFileSystemModel                        " )
+      aadd( aTree, "      QHelpContentModel                       " )
+      aadd( aTree, "      QProxyModel                             " )
+      aadd( aTree, "      QStandardItemModel                      " )
+      aadd( aTree, "   QAbstractMessageHandler                    " )
+      aadd( aTree, "   QAbstractNetworkCache                      " )
+      aadd( aTree, "      QNetworkDiskCache                       " )
+      aadd( aTree, "   QAbstractTextDocumentLayout                " )
+      aadd( aTree, "      QPlainTextDocumentLayout                " )
+      aadd( aTree, "   QAbstractUriResolver                       " )
+      aadd( aTree, "   QAccessibleBridgePlugin                    " )
+      aadd( aTree, "   QAccessiblePlugin                          " )
+      aadd( aTree, "   QAction                                    " )
+      aadd( aTree, "      QMenuItem                               " )
+      aadd( aTree, "      QWidgetAction                           " )
+      aadd( aTree, "   QActionGroup                               " )
+      aadd( aTree, "   QAssistantClient                           " )
+      aadd( aTree, "   QAxFactory                                 " )
+      aadd( aTree, "   QAxObject                                  " )
+      aadd( aTree, "   QAxScript                                  " )
+      aadd( aTree, "   QAxScriptManager                           " )
+      aadd( aTree, "   QButtonGroup                               " )
+      aadd( aTree, "   QClipboard                                 " )
+      aadd( aTree, "   QCompleter                                 " )
+      aadd( aTree, "   QCoreApplication                           " )
+      aadd( aTree, "      QApplication                            " )
+      aadd( aTree, "   QDataWidgetMapper                          " )
+      aadd( aTree, "   QDBusAbstractAdaptor                       " )
+      aadd( aTree, "   QDBusAbstractInterface                     " )
+      aadd( aTree, "      QDBusConnectionInterface                " )
+      aadd( aTree, "      QDBusInterface                          " )
+      aadd( aTree, "   QDBusPendingCallWatcher                    " )
+      aadd( aTree, "   QDBusServer                                " )
+      aadd( aTree, "   QDesignerFormEditorInterface               " )
+      aadd( aTree, "   QDesignerFormWindowManagerInterface        " )
+      aadd( aTree, "   QDrag                                      " )
+      aadd( aTree, "   QEventLoop                                 " )
+      aadd( aTree, "   QExtensionFactory                          " )
+      aadd( aTree, "   QExtensionManager                          " )
+      aadd( aTree, "   QFileSystemWatcher                         " )
+      aadd( aTree, "   QFtp                                       " )
+      aadd( aTree, "   QFutureWatcher                             " )
+      aadd( aTree, "   QGraphicsItemAnimation                     " )
+      aadd( aTree, "   QGraphicsScene                             " )
+      aadd( aTree, "   QGraphicsSvgItem                           " )
+      aadd( aTree, "   QGraphicsTextItem                          " )
+      aadd( aTree, "   QGraphicsWidget                            " )
+      aadd( aTree, "   QHelpEngineCore                            " )
+      aadd( aTree, "      QHelpEngine                             " )
+      aadd( aTree, "   QHelpSearchEngine                          " )
+      aadd( aTree, "   QHttp                                      " )
+      aadd( aTree, "   QIconEnginePlugin                          " )
+      aadd( aTree, "   QIconEnginePluginV2                        " )
+      aadd( aTree, "   QImageIOPlugin                             " )
+      aadd( aTree, "   QInputContext                              " )
+      aadd( aTree, "   QInputContextPlugin                        " )
+      aadd( aTree, "   QIODevice                                  " )
+      aadd( aTree, "      Q3Socket                                " )
+      aadd( aTree, "      Q3SocketDevice                          " )
+      aadd( aTree, "      QAbstractSocket                         " )
+      aadd( aTree, "         QTcpSocket                           " )
+      aadd( aTree, "            QSslSocket                        " )
+      aadd( aTree, "         QUdpSocket                           " )
+      aadd( aTree, "      QBuffer                                 " )
+      aadd( aTree, "         QTemporaryFile                       " )
+      aadd( aTree, "      QFile                                   " )
+      aadd( aTree, "      QLocalSocket                            " )
+      aadd( aTree, "      QNetworkReply                           " )
+      aadd( aTree, "      QProcess                                " )
+      aadd( aTree, "   QItemSelectionModel                        " )
+      aadd( aTree, "   QLayout                                    " )
+      aadd( aTree, "      QBoxLayout                              " )
+      aadd( aTree, "         Q3HBoxLayout                         " )
+      aadd( aTree, "         Q3VBoxLayout                         " )
+      aadd( aTree, "         QHBoxLayout                          " )
+      aadd( aTree, "         QVBoxLayout                          " )
+      aadd( aTree, "      QFormLayout                             " )
+      aadd( aTree, "      QGridLayout                             " )
+      aadd( aTree, "      QStackedLayout                          " )
+      aadd( aTree, "   QLibrary                                   " )
+      aadd( aTree, "   QLocalServer                               " )
+      aadd( aTree, "   QMimeData                                  " )
+      aadd( aTree, "   QMovie                                     " )
+      aadd( aTree, "   QNetworkAccessManager                      " )
+      aadd( aTree, "   QNetworkCookieJar                          " )
+      aadd( aTree, "   QObjectCleanupHandler                      " )
+      aadd( aTree, "   QPictureFormatPlugin                       " )
+      aadd( aTree, "   QPluginLoader                              " )
+      aadd( aTree, "   QScriptEngine                              " )
+      aadd( aTree, "   QScriptEngineDebugger                      " )
+      aadd( aTree, "   QScriptExtensionPlugin                     " )
+      aadd( aTree, "   QSessionManager                            " )
+      aadd( aTree, "   QSettings                                  " )
+      aadd( aTree, "   QSharedMemory                              " )
+      aadd( aTree, "   QShortcut                                  " )
+      aadd( aTree, "   QSignalMapper                              " )
+      aadd( aTree, "   QSignalSpy                                 " )
+      aadd( aTree, "   QSocketNotifier                            " )
+      aadd( aTree, "   QSound                                     " )
+      aadd( aTree, "   QSqlDriver                                 " )
+      aadd( aTree, "   QSqlDriverPlugin                           " )
+      aadd( aTree, "   QStyle                                     " )
+      aadd( aTree, "      QCommonStyle                            " )
+      aadd( aTree, "         QMotifStyle                          " )
+      aadd( aTree, "            QCDEStyle                         " )
+      aadd( aTree, "         QWindowsStyle                        " )
+      aadd( aTree, "            QCleanlooksStyle                  " )
+      aadd( aTree, "               QGtkStyle                      " )
+      aadd( aTree, "            QPlastiqueStyle                   " )
+      aadd( aTree, "            QWindowsXPStyle                   " )
+      aadd( aTree, "               QWindowsVistaStyle             " )
+      aadd( aTree, "   QStylePlugin                               " )
+      aadd( aTree, "   QSvgRenderer                               " )
+      aadd( aTree, "   QSyntaxHighlighter                         " )
+      aadd( aTree, "   QSystemTrayIcon                            " )
+      aadd( aTree, "   QTcpServer                                 " )
+      aadd( aTree, "   QTextCodecPlugin                           " )
+      aadd( aTree, "   QTextDocument                              " )
+      aadd( aTree, "   QTextObject                                " )
+      aadd( aTree, "      QTextBlockGroup                         " )
+      aadd( aTree, "         QTextList                            " )
+      aadd( aTree, "      QTextFrame                              " )
+      aadd( aTree, "         QTextTable                           " )
+      aadd( aTree, "   QThread                                    " )
+      aadd( aTree, "   QThreadPool                                " )
+      aadd( aTree, "   QTimeLine                                  " )
+      aadd( aTree, "   QTimer                                     " )
+      aadd( aTree, "   QTranslator                                " )
+      aadd( aTree, "   QUiLoader                                  " )
+      aadd( aTree, "   QUndoGroup                                 " )
+      aadd( aTree, "   QUndoStack                                 " )
+      aadd( aTree, "   QValidator                                 " )
+      aadd( aTree, "   QWebFrame                                  " )
+      aadd( aTree, "   QWebHistoryInterface                       " )
+      aadd( aTree, "   QWebPage                                   " )
+      aadd( aTree, "   QWebPluginFactory                          " )
+      aadd( aTree, "   QWidget                                    " )
+      aadd( aTree, "      QAbstractButton                         " )
+      aadd( aTree, "         Q3Button                             " )
+      aadd( aTree, "         QCheckBox                            " )
+      aadd( aTree, "         QPushButton                          " )
+      aadd( aTree, "            QCommandLinkButton                " )
+      aadd( aTree, "         QRadioButton                         " )
+      aadd( aTree, "         QToolButton                          " )
+      aadd( aTree, "      QAbstractSlider                         " )
+      aadd( aTree, "         QDial                                " )
+      aadd( aTree, "         QScrollBar                           " )
+      aadd( aTree, "         QSlider                              " )
+      aadd( aTree, "      QAbstractSpinBox                        " )
+      aadd( aTree, "         QDateTimeEdit                        " )
+      aadd( aTree, "            QDateEdit                         " )
+      aadd( aTree, "            QTimeEdit                         " )
+      aadd( aTree, "         QDoubleSpinBox                       " )
+      aadd( aTree, "         QSpinBox                             " )
+      aadd( aTree, "      QAxWidget                               " )
+      aadd( aTree, "      QCalendarWidget                         " )
+      aadd( aTree, "      QComboBox                               " )
+      aadd( aTree, "         QFontComboBox                        " )
+      aadd( aTree, "      QDesignerActionEditorInterface          " )
+      aadd( aTree, "      QDesignerFormWindowInterface            " )
+      aadd( aTree, "      QDesignerObjectInspectorInterface       " )
+      aadd( aTree, "      QDesignerPropertyEditorInterface        " )
+      aadd( aTree, "      QDesignerWidgetBoxInterface             " )
+      aadd( aTree, "      QDesktopWidget                          " )
+      aadd( aTree, "      QDialog                                 " )
+      aadd( aTree, "         QAbstractPrintDialog                 " )
+      aadd( aTree, "            QPrintDialog                      " )
+      aadd( aTree, "         QColorDialog                         " )
+      aadd( aTree, "         QErrorMessage                        " )
+      aadd( aTree, "         QFileDialog                          " )
+      aadd( aTree, "         QFontDialog                          " )
+      aadd( aTree, "         QInputDialog                         " )
+      aadd( aTree, "         QMessageBox                          " )
+      aadd( aTree, "         QPageSetupDialog                     " )
+      aadd( aTree, "         QPrintPreviewDialog                  " )
+      aadd( aTree, "         QProgressDialog                      " )
+      aadd( aTree, "         QWizard                              " )
+      aadd( aTree, "      QDialogButtonBox                        " )
+      aadd( aTree, "      QDockWidget                             " )
+      aadd( aTree, "      QFocusFrame                             " )
+      aadd( aTree, "      QFrame                                  " )
+      aadd( aTree, "         QAbstractScrollArea                  " )
+      aadd( aTree, "            QAbstractItemView                 " )
+      aadd( aTree, "               QColumnView                    " )
+      aadd( aTree, "               QHeaderView                    " )
+      aadd( aTree, "               QListView                      " )
+      aadd( aTree, "                  QHelpIndexWidget            " )
+      aadd( aTree, "                  QListWidget                 " )
+      aadd( aTree, "                  QUndoView                   " )
+      aadd( aTree, "               QTableView                     " )
+      aadd( aTree, "                  QTableWidget                " )
+      aadd( aTree, "               QTreeView                      " )
+      aadd( aTree, "                  QHelpContentWidget          " )
+      aadd( aTree, "                  QTreeWidget                 " )
+      aadd( aTree, "            QGraphicsView                     " )
+      aadd( aTree, "            QMdiArea                          " )
+      aadd( aTree, "            QPlainTextEdit                    " )
+      aadd( aTree, "            QScrollArea                       " )
+      aadd( aTree, "            QTextEdit                         " )
+      aadd( aTree, "               QTextBrowser                   " )
+      aadd( aTree, "         QLabel                               " )
+      aadd( aTree, "         QLCDNumber                           " )
+      aadd( aTree, "         QSplitter                            " )
+      aadd( aTree, "         QStackedWidget                       " )
+      aadd( aTree, "         QToolBox                             " )
+      aadd( aTree, "      QGLWidget                               " )
+      aadd( aTree, "      QGroupBox                               " )
+      aadd( aTree, "      QHelpSearchQueryWidget                  " )
+      aadd( aTree, "      QHelpSearchResultWidget                 " )
+      aadd( aTree, "      QLineEdit                               " )
+      aadd( aTree, "      QMainWindow                             " )
+      aadd( aTree, "      QMdiSubWindow                           " )
+      aadd( aTree, "      QMenu                                   " )
+      aadd( aTree, "      QMenuBar                                " )
+      aadd( aTree, "      QPrintPreviewWidget                     " )
+      aadd( aTree, "      QProgressBar                            " )
+      aadd( aTree, "      QRubberBand                             " )
+      aadd( aTree, "      QSizeGrip                               " )
+      aadd( aTree, "      QSplashScreen                           " )
+      aadd( aTree, "      QSplitterHandle                         " )
+      aadd( aTree, "      QStatusBar                              " )
+      aadd( aTree, "      QSvgWidget                              " )
+      aadd( aTree, "      QTabBar                                 " )
+      aadd( aTree, "      QTabWidget                              " )
+      aadd( aTree, "      QToolBar                                " )
+      aadd( aTree, "      QWebView                                " )
+      aadd( aTree, "      QWizardPage                             " )
+      aadd( aTree, "      QWorkspace                              " )
+
+      aeval( aTree, {| e,i | aTree[ i ] := alltrim( e ) } )
+   ENDIF
+
+   RETURN ascan( aTree, {|e| e == cWidget } ) > 0
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION IsMemObject( cWidget )
+   STATIC aObj := {}
+
+   IF empty( aObj )
+      aadd( aObj, "QBitArray             " )
+      aadd( aObj, "QBitmap               " )
+      aadd( aObj, "QBrush                " )
+      aadd( aObj, "QByteArray            " )
+      aadd( aObj, "QColor                " )
+      aadd( aObj, "QCursor               " )
+      aadd( aObj, "QDate                 " )
+      aadd( aObj, "QDateTime             " )
+      aadd( aObj, "QDir                  " )
+      aadd( aObj, "QFileInfoList         " )
+      aadd( aObj, "QFont                 " )
+      aadd( aObj, "QFontInfo             " )
+      aadd( aObj, "QFontMetrics          " )
+      aadd( aObj, "QGradientStops        " )
+      aadd( aObj, "QHttpRequestHeader    " )
+      aadd( aObj, "QHttpResponseHeader   " )
+      aadd( aObj, "QIcon                 " )
+      aadd( aObj, "QImage                " )
+      aadd( aObj, "QKeySequence          " )
+      aadd( aObj, "QLine                 " )
+      aadd( aObj, "QLineF                " )
+      aadd( aObj, "QLocale               " )
+      aadd( aObj, "QMatrix               " )
+      aadd( aObj, "QModelIndex           " )
+      aadd( aObj, "QObjectList           " )
+      aadd( aObj, "QPainterPath          " )
+      aadd( aObj, "QPalette              " )
+      aadd( aObj, "QPen                  " )
+      aadd( aObj, "QPixmap               " )
+      aadd( aObj, "QPointF               " )
+      aadd( aObj, "QRect                 " )
+      aadd( aObj, "QRectF                " )
+      aadd( aObj, "QRegExp               " )
+      aadd( aObj, "QRegion               " )
+      aadd( aObj, "QSize                 " )
+      aadd( aObj, "QSizeF                " )
+      aadd( aObj, "QSizePolicy           " )
+      aadd( aObj, "QStringList           " )
+      aadd( aObj, "QTextBlockFormat      " )
+      aadd( aObj, "QTextCharFormat       " )
+      aadd( aObj, "QTextCursor           " )
+      aadd( aObj, "QTextDocumentFragment " )
+      aadd( aObj, "QTextFormat           " )
+      aadd( aObj, "QTextFrameFormat      " )
+      aadd( aObj, "QTextImageFormat      " )
+      aadd( aObj, "QTextLength           " )
+      aadd( aObj, "QTextLine             " )
+      aadd( aObj, "QTextListFormat       " )
+      aadd( aObj, "QTextOption           " )
+      aadd( aObj, "QTextTableCellFormat  " )
+      aadd( aObj, "QTextTableFormat      " )
+      aadd( aObj, "QTime                 " )
+      aadd( aObj, "QTransform            " )
+      aadd( aObj, "QUrl                  " )
+      aadd( aObj, "QVariant              " )
+      aadd( aObj, "QWebHistoryItem       " )
+      aadd( aObj, "QWebHitTestResult     " )
+      aadd( aObj, "QWebSecurityOrigin    " )
+      aadd( aObj, "QWidgetList           " )
+
+      aeval( aObj, {| e,i | aObj[ i ] := alltrim( e ) } )
+   ENDIF
+
+   RETURN ascan( aObj, {| e | e == cWidget } ) > 0
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Get_Command( cWgt, cCmn )
+   STATIC a_:={}
+
+   IF ascan( a_, cWgt ) == 0
+      aadd( a_, cWgt )
+//hb_ToOutDebug( pad( cWgt,30 ) + "No         " + zWidget )
+   ENDIF
+   RETURN 'hb_retptrGC( hbqt_ptrTOgcpointer( new ' + cWgt + '( ' + cCmn + ' ) ) )'
 
 /*----------------------------------------------------------------------*/

@@ -71,6 +71,7 @@
  *  enum StyleOptionVersion { Version }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionGroupBox>
 
@@ -79,19 +80,15 @@
  * QStyleOptionGroupBox ()
  * QStyleOptionGroupBox ( const QStyleOptionGroupBox & other )
  */
+
 HB_FUNC( QT_QSTYLEOPTIONGROUPBOX )
 {
-   hb_retptr( ( QStyleOptionGroupBox* ) new QStyleOptionGroupBox() );
+   void * pObj = NULL;
+
+   pObj = ( QStyleOptionGroupBox* ) new QStyleOptionGroupBox() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTIONGROUPBOX_DESTROY )
-{
-
-}
-
 /*
  * QStyleOptionFrameV2::FrameFeatures features
  */
@@ -137,7 +134,7 @@ HB_FUNC( QT_QSTYLEOPTIONGROUPBOX_TEXTALIGNMENT )
  */
 HB_FUNC( QT_QSTYLEOPTIONGROUPBOX_TEXTCOLOR )
 {
-   hb_retptr( new QColor( hbqt_par_QStyleOptionGroupBox( 1 )->textColor ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QStyleOptionGroupBox( 1 )->textColor ) ) );
 }
 
 

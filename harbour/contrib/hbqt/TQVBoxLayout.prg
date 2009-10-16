@@ -70,7 +70,6 @@ CREATE CLASS QVBoxLayout INHERIT QBoxLayout
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QVBoxLayout_destroy( ::pPtr )
 
 
    ENDCLASS

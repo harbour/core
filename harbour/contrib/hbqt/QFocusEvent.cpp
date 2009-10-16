@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QFocusEvent>
 
@@ -73,19 +74,10 @@
 /*
  * QFocusEvent ( Type type, Qt::FocusReason reason = Qt::OtherFocusReason )
  */
+
 HB_FUNC( QT_QFOCUSEVENT )
 {
-   // hb_retptr( ( QFocusEvent* ) new QFocusEvent() );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QFOCUSEVENT_DESTROY )
-{
-
-}
-
 /*
  * bool gotFocus () const
  */

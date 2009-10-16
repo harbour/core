@@ -70,7 +70,6 @@ CREATE CLASS QWheelEvent INHERIT QInputEvent
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QWheelEvent_destroy( ::pPtr )
 
    METHOD  buttons()                           INLINE  Qt_QWheelEvent_buttons( ::pPtr )
    METHOD  delta()                             INLINE  Qt_QWheelEvent_delta( ::pPtr )

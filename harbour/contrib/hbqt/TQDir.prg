@@ -70,7 +70,6 @@ CREATE CLASS QDir
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QDir_destroy( ::pPtr )
 
    METHOD  absoluteFilePath( cFileName )       INLINE  Qt_QDir_absoluteFilePath( ::pPtr, cFileName )
    METHOD  absolutePath()                      INLINE  Qt_QDir_absolutePath( ::pPtr )

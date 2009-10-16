@@ -70,7 +70,6 @@ CREATE CLASS QAbstractItemModel INHERIT QObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QAbstractItemModel_destroy( ::pPtr )
 
    METHOD  buddy( pIndex )                     INLINE  Qt_QAbstractItemModel_buddy( ::pPtr, pIndex )
    METHOD  canFetchMore( pParent )             INLINE  Qt_QAbstractItemModel_canFetchMore( ::pPtr, pParent )

@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTextImageFormat>
 
@@ -74,19 +75,18 @@
  * QTextImageFormat ()
  *
  */
+
 HB_FUNC( QT_QTEXTIMAGEFORMAT )
 {
-   hb_retptr( ( QTextImageFormat* ) new QTextImageFormat() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
+
+   pObj = ( QTextImageFormat* ) new QTextImageFormat() ;
+
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QTextImageFormat" );
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTIMAGEFORMAT_DESTROY )
-{
-
-}
-
 /*
  * qreal height () const
  */

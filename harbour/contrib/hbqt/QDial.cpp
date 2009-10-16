@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QDial>
 
@@ -74,19 +75,18 @@
  * QDial ( QWidget * parent = 0 )
  * ~QDial ()
  */
+
 HB_FUNC( QT_QDIAL )
 {
-   hb_retptr( ( QDial* ) new QDial( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QDial > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QDIAL_DESTROY )
-{
-   delete hbqt_par_QDial( 1 );
-}
+   pObj = ( QDial* ) new QDial( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * int notchSize () const
  */

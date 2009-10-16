@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QWheelEvent>
 
@@ -74,19 +75,10 @@
  * QWheelEvent ( const QPoint & pos, int delta, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Qt::Orientation orient = Qt::Vertical )
  * QWheelEvent ( const QPoint & pos, const QPoint & globalPos, int delta, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Qt::Orientation orient = Qt::Vertical )
  */
+
 HB_FUNC( QT_QWHEELEVENT )
 {
-   // hb_retptr( ( QWheelEvent* ) new QWheelEvent() );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QWHEELEVENT_DESTROY )
-{
-
-}
-
 /*
  * Qt::MouseButtons buttons () const
  */
@@ -108,7 +100,7 @@ HB_FUNC( QT_QWHEELEVENT_DELTA )
  */
 HB_FUNC( QT_QWHEELEVENT_GLOBALPOS )
 {
-   hb_retptr( new QPoint( hbqt_par_QWheelEvent( 1 )->globalPos() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QWheelEvent( 1 )->globalPos() ) ) );
 }
 
 /*
@@ -140,7 +132,7 @@ HB_FUNC( QT_QWHEELEVENT_ORIENTATION )
  */
 HB_FUNC( QT_QWHEELEVENT_POS )
 {
-   hb_retptr( new QPoint( hbqt_par_QWheelEvent( 1 )->pos() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QWheelEvent( 1 )->pos() ) ) );
 }
 
 /*

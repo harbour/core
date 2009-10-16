@@ -70,7 +70,6 @@ CREATE CLASS QClipboard INHERIT QObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QClipboard_destroy( ::pPtr )
 
    METHOD  clear( nMode )                      INLINE  Qt_QClipboard_clear( ::pPtr, nMode )
    METHOD  image( nMode )                      INLINE  Qt_QClipboard_image( ::pPtr, nMode )

@@ -70,6 +70,7 @@
  *  enum ToolButtonPopupMode { DelayedPopup, MenuButtonPopup, InstantPopup }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QToolButton>
 
@@ -78,19 +79,18 @@
  * QToolButton ( QWidget * parent = 0 )
  * ~QToolButton ()
  */
+
 HB_FUNC( QT_QTOOLBUTTON )
 {
-   hb_retptr( ( QToolButton* ) new QToolButton( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QToolButton > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTOOLBUTTON_DESTROY )
-{
-   delete hbqt_par_QToolButton( 1 );
-}
+   pObj = ( QToolButton* ) new QToolButton( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * Qt::ArrowType arrowType () const
  */

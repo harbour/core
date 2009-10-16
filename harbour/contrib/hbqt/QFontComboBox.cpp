@@ -71,6 +71,7 @@
  *  flags FontFilters
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QFontComboBox>
 
@@ -79,25 +80,24 @@
  * QFontComboBox ( QWidget * parent = 0 )
  * ~QFontComboBox ()
  */
+
 HB_FUNC( QT_QFONTCOMBOBOX )
 {
-   hb_retptr( ( QFontComboBox * ) new QFontComboBox( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QFontComboBox > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QFONTCOMBOBOX_DESTROY )
-{
-   delete hbqt_par_QFontComboBox( 1 );
-}
+   pObj = ( QFontComboBox * ) new QFontComboBox( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * QFont currentFont () const
  */
 HB_FUNC( QT_QFONTCOMBOBOX_CURRENTFONT )
 {
-   hb_retptr( new QFont( hbqt_par_QFontComboBox( 1 )->currentFont() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QFontComboBox( 1 )->currentFont() ) ) );
 }
 
 /*

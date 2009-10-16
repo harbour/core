@@ -70,7 +70,6 @@ CREATE CLASS QListWidgetItem INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QListWidgetItem_destroy( ::pPtr )
 
    METHOD  background()                        INLINE  Qt_QListWidgetItem_background( ::pPtr )
    METHOD  checkState()                        INLINE  Qt_QListWidgetItem_checkState( ::pPtr )

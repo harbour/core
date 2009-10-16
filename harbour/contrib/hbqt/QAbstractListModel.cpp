@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QAbstractListModel>
 
@@ -74,25 +75,16 @@
  * QAbstractListModel ( QObject * parent = 0 )
  * ~QAbstractListModel ()
  */
+
 HB_FUNC( QT_QABSTRACTLISTMODEL )
 {
-   //hb_retptr( ( QAbstractListModel* ) new QAbstractListModel() );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QABSTRACTLISTMODEL_DESTROY )
-{
-   delete hbqt_par_QAbstractListModel( 1 );
-}
-
 /*
  * virtual QModelIndex index ( int row, int column = 0, const QModelIndex & parent = QModelIndex() ) const
  */
 HB_FUNC( QT_QABSTRACTLISTMODEL_INDEX )
 {
-   hb_retptr( new QModelIndex( hbqt_par_QAbstractListModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QAbstractListModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ) ) );
 }
 
 

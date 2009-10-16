@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QSound>
 
@@ -74,19 +75,18 @@
  * QSound ( const QString & filename, QObject * parent = 0 )
  * ~QSound ()
  */
+
 HB_FUNC( QT_QSOUND )
 {
-   hb_retptr( ( QSound* ) new QSound( hbqt_par_QString( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QSound > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSOUND_DESTROY )
-{
-   delete hbqt_par_QSound( 1 );
-}
+   pObj = ( QSound* ) new QSound( hbqt_par_QString( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * QString fileName () const
  */

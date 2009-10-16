@@ -70,7 +70,6 @@ CREATE CLASS QTimer INHERIT QObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTimer_destroy( ::pPtr )
 
    METHOD  interval()                          INLINE  Qt_QTimer_interval( ::pPtr )
    METHOD  isActive()                          INLINE  Qt_QTimer_isActive( ::pPtr )

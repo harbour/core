@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtWebKit/QWebHistoryInterface>
 
@@ -74,19 +75,10 @@
  * QWebHistoryInterface ( QObject * parent = 0 )
  * ~QWebHistoryInterface ()
  */
+
 HB_FUNC( QT_QWEBHISTORYINTERFACE )
 {
-   //hb_retptr( ( QWebHistoryInterface* ) new QWebHistoryInterface( hbqt_par_QObject( 1 ) ) );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QWEBHISTORYINTERFACE_DESTROY )
-{
-   delete hbqt_par_QWebHistoryInterface( 1 );
-}
-
 /*
  * virtual void addHistoryEntry ( const QString & url ) = 0
  */

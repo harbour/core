@@ -72,6 +72,7 @@
  *  enum StyleOptionVersion { Version }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleHintReturn>
 
@@ -79,19 +80,10 @@
 /*
  * QStyleHintReturn ( int version = QStyleOption::Version, int type = SH_Default )
  */
+
 HB_FUNC( QT_QSTYLEHINTRETURN )
 {
-
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEHINTRETURN_DESTROY )
-{
-
-}
-
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

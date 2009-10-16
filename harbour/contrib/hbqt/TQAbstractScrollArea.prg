@@ -70,7 +70,6 @@ CREATE CLASS QAbstractScrollArea INHERIT QFrame
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QAbstractScrollArea_destroy( ::pPtr )
 
    METHOD  addScrollBarWidget( pWidget, nAlignment )  INLINE  Qt_QAbstractScrollArea_addScrollBarWidget( ::pPtr, pWidget, nAlignment )
    METHOD  cornerWidget()                      INLINE  Qt_QAbstractScrollArea_cornerWidget( ::pPtr )

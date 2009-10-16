@@ -70,6 +70,7 @@
  *  enum Direction { TopToBottom, BottomToTop }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QProgressBar>
 
@@ -77,19 +78,18 @@
 /*
  * QProgressBar ( QWidget * parent = 0 )
  */
+
 HB_FUNC( QT_QPROGRESSBAR )
 {
-   hb_retptr( ( QProgressBar* ) new QProgressBar( hbqt_par_QWidget( 1 ) ) );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QProgressBar > pObj = NULL;
+
+   pObj = ( QProgressBar* ) new QProgressBar( hbqt_par_QWidget( 1 ) ) ;
+
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QPROGRESSBAR_DESTROY )
-{
-
-}
-
 /*
  * Qt::Alignment alignment () const
  */

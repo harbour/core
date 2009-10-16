@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QDragEnterEvent>
 
@@ -73,19 +74,10 @@
 /*
  * QDragEnterEvent ( const QPoint & point, Qt::DropActions actions, const QMimeData * data, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers )
  */
+
 HB_FUNC( QT_QDRAGENTEREVENT )
 {
-   // hb_retptr( ( * ) new () );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QDRAGENTEREVENT_DESTROY )
-{
-
-}
-
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

@@ -70,7 +70,6 @@ CREATE CLASS QWindowsStyle INHERIT QCommonStyle
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QWindowsStyle_destroy( ::pPtr )
 
 
    ENDCLASS

@@ -70,7 +70,6 @@ CREATE CLASS QTextFormat
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextFormat_destroy( ::pPtr )
 
    METHOD  background()                        INLINE  Qt_QTextFormat_background( ::pPtr )
    METHOD  boolProperty( nPropertyId )         INLINE  Qt_QTextFormat_boolProperty( ::pPtr, nPropertyId )

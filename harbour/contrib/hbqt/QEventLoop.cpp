@@ -71,6 +71,7 @@
  *  flags ProcessEventsFlags
  */
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QEventLoop>
 #include <QtCore/QEvent>
@@ -79,19 +80,18 @@
  * QEventLoop ( QObject * parent = 0 )
  * ~QEventLoop ()
  */
+
 HB_FUNC( QT_QEVENTLOOP )
 {
-   hb_retptr( ( QEvent* ) new QEventLoop( hbqt_par_QObject( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QEventLoop > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QEVENTLOOP_DESTROY )
-{
-   delete hbqt_par_QEventLoop( 1 );
-}
+   pObj = new QEventLoop( hbqt_par_QObject( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * int exec ( ProcessEventsFlags flags = AllEvents )
  */

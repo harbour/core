@@ -70,7 +70,6 @@ CREATE CLASS QColorDialog INHERIT QDialog
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QColorDialog_destroy( ::pPtr )
 
    METHOD  currentColor()                      INLINE  Qt_QColorDialog_currentColor( ::pPtr )
    METHOD  open()                              INLINE  Qt_QColorDialog_open( ::pPtr )

@@ -70,7 +70,6 @@ CREATE CLASS QVariant
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QVariant_destroy( ::pPtr )
 
    METHOD  canConvert( nT )                    INLINE  Qt_QVariant_canConvert( ::pPtr, nT )
    METHOD  canConvert_1( nT )                  INLINE  Qt_QVariant_canConvert_1( ::pPtr, nT )

@@ -70,7 +70,6 @@ CREATE CLASS QSound
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QSound_destroy( ::pPtr )
 
    METHOD  fileName()                          INLINE  Qt_QSound_fileName( ::pPtr )
    METHOD  isFinished()                        INLINE  Qt_QSound_isFinished( ::pPtr )

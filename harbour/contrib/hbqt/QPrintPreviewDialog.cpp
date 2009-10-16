@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QPrintPreviewDialog>
 
@@ -75,24 +76,21 @@
  * QPrintPreviewDialog ( QWidget * parent = 0, Qt::WindowFlags flags = 0 )
  * ~QPrintPreviewDialog ()
  */
+
 HB_FUNC( QT_QPRINTPREVIEWDIALOG )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QPrintPreviewDialog > pObj = NULL;
+
    if( hb_pcount() >= 2 && HB_ISPOINTER( 2 ) )
-      hb_retptr( ( QPrintPreviewDialog* ) new QPrintPreviewDialog( hbqt_par_QPrinter( 1 ),
-                             hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) ) );
+      pObj = new QPrintPreviewDialog( hbqt_par_QPrinter( 1 ), hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) ) ;
    else
-      hb_retptr( ( QPrintPreviewDialog* ) new QPrintPreviewDialog( hbqt_par_QWidget( 1 ),
-                                                   ( Qt::WindowFlags ) hb_parni( 2 ) ) );
-}
+      pObj = new QPrintPreviewDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QPRINTPREVIEWDIALOG_DESTROY )
-{
-   delete hbqt_par_QPrintPreviewDialog( 1 );
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
 /*
  * void open ( QObject * receiver, const char * member )
  */

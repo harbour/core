@@ -72,6 +72,7 @@
  *  enum StyleOptionVersion { Version }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionViewItem>
 
@@ -80,19 +81,15 @@
  * QStyleOptionViewItem ()
  * QStyleOptionViewItem ( const QStyleOptionViewItem & other )
  */
+
 HB_FUNC( QT_QSTYLEOPTIONVIEWITEM )
 {
-   hb_retptr( ( QStyleOptionViewItem* ) new QStyleOptionViewItem() );
+   void * pObj = NULL;
+
+   pObj = ( QStyleOptionViewItem* ) new QStyleOptionViewItem() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_DESTROY )
-{
-
-}
-
 /*
  * Qt::Alignment decorationAlignment
  */
@@ -114,7 +111,7 @@ HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_DECORATIONPOSITION )
  */
 HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_DECORATIONSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QStyleOptionViewItem( 1 )->decorationSize ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QStyleOptionViewItem( 1 )->decorationSize ) ) );
 }
 
 /*
@@ -130,7 +127,7 @@ HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_DISPLAYALIGNMENT )
  */
 HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_FONT )
 {
-   hb_retptr( new QFont( hbqt_par_QStyleOptionViewItem( 1 )->font ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QStyleOptionViewItem( 1 )->font ) ) );
 }
 
 /*

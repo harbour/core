@@ -70,7 +70,6 @@ CREATE CLASS QLineEdit INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QLineEdit_destroy( ::pPtr )
 
    METHOD  alignment()                         INLINE  Qt_QLineEdit_alignment( ::pPtr )
    METHOD  backspace()                         INLINE  Qt_QLineEdit_backspace( ::pPtr )

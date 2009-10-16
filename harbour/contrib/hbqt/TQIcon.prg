@@ -70,7 +70,6 @@ CREATE CLASS QIcon
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QIcon_destroy( ::pPtr )
 
    METHOD  actualSize( pSize, nMode, nState )  INLINE  Qt_QIcon_actualSize( ::pPtr, pSize, nMode, nState )
    METHOD  addFile( cFileName, pSize, nMode, nState )  INLINE  Qt_QIcon_addFile( ::pPtr, cFileName, pSize, nMode, nState )

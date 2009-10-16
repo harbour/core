@@ -71,6 +71,7 @@
  *  enum VerticalAlignment { AlignNormal, AlignSuperScript, AlignSubScript, AlignMiddle, AlignBottom, AlignTop }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QTextCharFormat>
 
@@ -79,19 +80,18 @@
  * QTextCharFormat ()
  *
  */
+
 HB_FUNC( QT_QTEXTCHARFORMAT )
 {
-   hb_retptr( ( QTextCharFormat* ) new QTextCharFormat() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   void * pObj = NULL;
+
+   pObj = ( QTextCharFormat* ) new QTextCharFormat() ;
+
+   p->ph = pObj;
+   p->type = hbqt_getIdByName( ( QString ) "QTextCharFormat" );
+   hb_retptrGC( p );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QTEXTCHARFORMAT_DESTROY )
-{
-
-}
-
 /*
  * QString anchorHref () const
  */
@@ -105,7 +105,7 @@ HB_FUNC( QT_QTEXTCHARFORMAT_ANCHORHREF )
  */
 HB_FUNC( QT_QTEXTCHARFORMAT_ANCHORNAMES )
 {
-   hb_retptr( new QStringList( hbqt_par_QTextCharFormat( 1 )->anchorNames() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QTextCharFormat( 1 )->anchorNames() ) ) );
 }
 
 /*
@@ -113,7 +113,7 @@ HB_FUNC( QT_QTEXTCHARFORMAT_ANCHORNAMES )
  */
 HB_FUNC( QT_QTEXTCHARFORMAT_FONT )
 {
-   hb_retptr( new QFont( hbqt_par_QTextCharFormat( 1 )->font() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QTextCharFormat( 1 )->font() ) ) );
 }
 
 /*
@@ -433,7 +433,7 @@ HB_FUNC( QT_QTEXTCHARFORMAT_SETVERTICALALIGNMENT )
  */
 HB_FUNC( QT_QTEXTCHARFORMAT_TEXTOUTLINE )
 {
-   hb_retptr( new QPen( hbqt_par_QTextCharFormat( 1 )->textOutline() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPen( hbqt_par_QTextCharFormat( 1 )->textOutline() ) ) );
 }
 
 /*
@@ -449,7 +449,7 @@ HB_FUNC( QT_QTEXTCHARFORMAT_TOOLTIP )
  */
 HB_FUNC( QT_QTEXTCHARFORMAT_UNDERLINECOLOR )
 {
-   hb_retptr( new QColor( hbqt_par_QTextCharFormat( 1 )->underlineColor() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QTextCharFormat( 1 )->underlineColor() ) ) );
 }
 
 /*

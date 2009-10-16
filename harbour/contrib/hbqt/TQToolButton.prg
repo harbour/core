@@ -70,7 +70,6 @@ CREATE CLASS QToolButton INHERIT QAbstractButton
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QToolButton_destroy( ::pPtr )
 
    METHOD  arrowType()                         INLINE  Qt_QToolButton_arrowType( ::pPtr )
    METHOD  autoRaise()                         INLINE  Qt_QToolButton_autoRaise( ::pPtr )

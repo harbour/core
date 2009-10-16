@@ -70,7 +70,6 @@ CREATE CLASS QIODevice INHERIT QObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QIODevice_destroy( ::pPtr )
 
    METHOD  atEnd()                             INLINE  Qt_QIODevice_atEnd( ::pPtr )
    METHOD  bytesAvailable()                    INLINE  Qt_QIODevice_bytesAvailable( ::pPtr )

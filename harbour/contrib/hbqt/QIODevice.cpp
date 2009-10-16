@@ -71,6 +71,7 @@
  *  enum OpenModeFlag { NotOpen, ReadOnly, WriteOnly, ReadWrite, ..., Unbuffered }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtCore/QIODevice>
 
@@ -80,28 +81,10 @@
  * QIODevice ( QObject * parent )
  * virtual ~QIODevice ()
  */
+
 HB_FUNC( QT_QIODEVICE )
 {
-   #if 0
-   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
-   {
-      hb_retptr( ( QIODevice* ) new QIODevice( hbqt_par_QObject( 1 ) ) );
-   }
-   else
-   {
-      hb_retptr( ( QIODevice* ) new QIODevice() );
-   }
-   #endif
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QIODEVICE_DESTROY )
-{
-   delete hbqt_par_QIODevice( 1 );
-}
-
 /*
  * virtual bool atEnd () const
  */
@@ -227,7 +210,7 @@ HB_FUNC( QT_QIODEVICE_PEEK )
  */
 HB_FUNC( QT_QIODEVICE_PEEK_1 )
 {
-   hb_retptr( new QByteArray( hbqt_par_QIODevice( 1 )->peek( hb_parnint( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QIODevice( 1 )->peek( hb_parnint( 2 ) ) ) ) );
 }
 
 /*
@@ -259,7 +242,7 @@ HB_FUNC( QT_QIODEVICE_READ )
  */
 HB_FUNC( QT_QIODEVICE_READ_1 )
 {
-   hb_retptr( new QByteArray( hbqt_par_QIODevice( 1 )->read( hb_parnint( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QIODevice( 1 )->read( hb_parnint( 2 ) ) ) ) );
 }
 
 /*
@@ -267,7 +250,7 @@ HB_FUNC( QT_QIODEVICE_READ_1 )
  */
 HB_FUNC( QT_QIODEVICE_READALL )
 {
-   hb_retptr( new QByteArray( hbqt_par_QIODevice( 1 )->readAll() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QIODevice( 1 )->readAll() ) ) );
 }
 
 /*
@@ -283,7 +266,7 @@ HB_FUNC( QT_QIODEVICE_READLINE )
  */
 HB_FUNC( QT_QIODEVICE_READLINE_1 )
 {
-   hb_retptr( new QByteArray( hbqt_par_QIODevice( 1 )->readLine( hb_parnint( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QIODevice( 1 )->readLine( hb_parnint( 2 ) ) ) ) );
 }
 
 /*

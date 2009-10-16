@@ -76,6 +76,7 @@
  *  HMENU wceMenu ( bool create = false )
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QMenu>
 
@@ -85,26 +86,25 @@
  * QMenu ( const QString & title, QWidget * parent = 0 )
  * ~QMenu ()
  */
+
 HB_FUNC( QT_QMENU )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QMenu > pObj = NULL;
+
    if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
    {
-      hb_retptr( ( QMenu* ) new QMenu( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+      pObj = ( QMenu* ) new QMenu( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
    }
    else
    {
-      hb_retptr( ( QMenu* ) new QMenu( hbqt_par_QWidget( 1 ) ) );
+      pObj = ( QMenu* ) new QMenu( hbqt_par_QWidget( 1 ) ) ;
    }
-}
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QMENU_DESTROY )
-{
-   delete hbqt_par_QMenu( 1 );
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
 }
-
 /*
  * QAction * actionAt ( const QPoint & pt ) const
  */
@@ -118,7 +118,7 @@ HB_FUNC( QT_QMENU_ACTIONAT )
  */
 HB_FUNC( QT_QMENU_ACTIONGEOMETRY )
 {
-   hb_retptr( new QRect( hbqt_par_QMenu( 1 )->actionGeometry( hbqt_par_QAction( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QMenu( 1 )->actionGeometry( hbqt_par_QAction( 2 ) ) ) ) );
 }
 
 /*
@@ -246,7 +246,7 @@ HB_FUNC( QT_QMENU_HIDETEAROFFMENU )
  */
 HB_FUNC( QT_QMENU_ICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QMenu( 1 )->icon() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QMenu( 1 )->icon() ) ) );
 }
 
 /*

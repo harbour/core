@@ -73,6 +73,7 @@
  *  enum StyleOptionVersion { Version }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionMenuItem>
 
@@ -81,19 +82,15 @@
  * QStyleOptionMenuItem ()
  * QStyleOptionMenuItem ( const QStyleOptionMenuItem & other )
  */
+
 HB_FUNC( QT_QSTYLEOPTIONMENUITEM )
 {
-   hb_retptr( ( QStyleOptionMenuItem* ) new QStyleOptionMenuItem() );
+   void * pObj = NULL;
+
+   pObj = ( QStyleOptionMenuItem* ) new QStyleOptionMenuItem() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSTYLEOPTIONMENUITEM_DESTROY )
-{
-
-}
-
 /*
  * CheckType checkType
  */
@@ -115,7 +112,7 @@ HB_FUNC( QT_QSTYLEOPTIONMENUITEM_CHECKED )
  */
 HB_FUNC( QT_QSTYLEOPTIONMENUITEM_FONT )
 {
-   hb_retptr( new QFont( hbqt_par_QStyleOptionMenuItem( 1 )->font ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QStyleOptionMenuItem( 1 )->font ) ) );
 }
 
 /*
@@ -123,7 +120,7 @@ HB_FUNC( QT_QSTYLEOPTIONMENUITEM_FONT )
  */
 HB_FUNC( QT_QSTYLEOPTIONMENUITEM_ICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QStyleOptionMenuItem( 1 )->icon ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QStyleOptionMenuItem( 1 )->icon ) ) );
 }
 
 /*
@@ -155,7 +152,7 @@ HB_FUNC( QT_QSTYLEOPTIONMENUITEM_MENUITEMTYPE )
  */
 HB_FUNC( QT_QSTYLEOPTIONMENUITEM_MENURECT )
 {
-   hb_retptr( new QRect( hbqt_par_QStyleOptionMenuItem( 1 )->menuRect ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QStyleOptionMenuItem( 1 )->menuRect ) ) );
 }
 
 /*

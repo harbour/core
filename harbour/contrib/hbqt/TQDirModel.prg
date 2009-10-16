@@ -70,7 +70,6 @@ CREATE CLASS QDirModel INHERIT QAbstractItemModel
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QDirModel_destroy( ::pPtr )
 
    METHOD  columnCount( pParent )              INLINE  Qt_QDirModel_columnCount( ::pPtr, pParent )
    METHOD  data( pIndex, nRole )               INLINE  Qt_QDirModel_data( ::pPtr, pIndex, nRole )

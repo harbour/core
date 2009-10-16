@@ -70,7 +70,6 @@ CREATE CLASS QTextBlock
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QTextBlock_destroy( ::pPtr )
 
    METHOD  blockFormat()                       INLINE  Qt_QTextBlock_blockFormat( ::pPtr )
    METHOD  blockFormatIndex()                  INLINE  Qt_QTextBlock_blockFormatIndex( ::pPtr )

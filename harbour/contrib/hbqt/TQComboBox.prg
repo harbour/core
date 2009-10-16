@@ -70,7 +70,6 @@ CREATE CLASS QComboBox INHERIT QWidget
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QComboBox_destroy( ::pPtr )
 
    METHOD  addItem( cText, pUserData )         INLINE  Qt_QComboBox_addItem( ::pPtr, cText, pUserData )
    METHOD  addItem_1( cIcon, cText, pUserData )  INLINE  Qt_QComboBox_addItem_1( ::pPtr, cIcon, cText, pUserData )

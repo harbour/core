@@ -70,6 +70,7 @@
  *  enum SizeConstraint { SetDefaultConstraint, SetFixedSize, SetMinimumSize, SetMaximumSize, SetMinAndMaxSize, SetNoConstraint }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QLayout>
 
@@ -78,19 +79,10 @@
  * QLayout ( QWidget * parent )
  * QLayout ()
  */
+
 HB_FUNC( QT_QLAYOUT )
 {
-
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QLAYOUT_DESTROY )
-{
-
-}
-
 /*
  * bool activate ()
  */
@@ -120,7 +112,7 @@ HB_FUNC( QT_QLAYOUT_ADDWIDGET )
  */
 HB_FUNC( QT_QLAYOUT_CONTENTSRECT )
 {
-   hb_retptr( new QRect( hbqt_par_QLayout( 1 )->contentsRect() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QLayout( 1 )->contentsRect() ) ) );
 }
 
 /*
@@ -186,7 +178,7 @@ HB_FUNC( QT_QLAYOUT_ITEMAT )
  */
 HB_FUNC( QT_QLAYOUT_MAXIMUMSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QLayout( 1 )->maximumSize() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QLayout( 1 )->maximumSize() ) ) );
 }
 
 /*
@@ -202,7 +194,7 @@ HB_FUNC( QT_QLAYOUT_MENUBAR )
  */
 HB_FUNC( QT_QLAYOUT_MINIMUMSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QLayout( 1 )->minimumSize() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QLayout( 1 )->minimumSize() ) ) );
 }
 
 /*
@@ -330,7 +322,7 @@ HB_FUNC( QT_QLAYOUT_UPDATE )
  */
 HB_FUNC( QT_QLAYOUT_CLOSESTACCEPTABLESIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QLayout( 1 )->closestAcceptableSize( hbqt_par_QWidget( 2 ), *hbqt_par_QSize( 3 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QLayout( 1 )->closestAcceptableSize( hbqt_par_QWidget( 2 ), *hbqt_par_QSize( 3 ) ) ) ) );
 }
 
 

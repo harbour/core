@@ -70,7 +70,6 @@ CREATE CLASS QSizeF
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QSizeF_destroy( ::pPtr )
 
    METHOD  boundedTo( pOtherSize )             INLINE  Qt_QSizeF_boundedTo( ::pPtr, pOtherSize )
    METHOD  expandedTo( pOtherSize )            INLINE  Qt_QSizeF_expandedTo( ::pPtr, pOtherSize )

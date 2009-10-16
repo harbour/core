@@ -70,7 +70,6 @@ CREATE CLASS QColor
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QColor_destroy( ::pPtr )
 
    METHOD  alpha()                             INLINE  Qt_QColor_alpha( ::pPtr )
    METHOD  alphaF()                            INLINE  Qt_QColor_alphaF( ::pPtr )

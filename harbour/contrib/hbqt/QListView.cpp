@@ -74,6 +74,7 @@
  *  enum ViewMode { ListMode, IconMode }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QListView>
 
@@ -82,19 +83,18 @@
  * QListView ( QWidget * parent = 0 )
  * ~QListView ()
  */
+
 HB_FUNC( QT_QLISTVIEW )
 {
-   hb_retptr( ( QListView * ) new QListView( hbqt_par_QWidget( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QListView > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QLISTVIEW_DESTROY )
-{
-   delete hbqt_par_QListView( 1 );
-}
+   pObj = ( QListView * ) new QListView( hbqt_par_QWidget( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * int batchSize () const
  */
@@ -124,7 +124,7 @@ HB_FUNC( QT_QLISTVIEW_FLOW )
  */
 HB_FUNC( QT_QLISTVIEW_GRIDSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QListView( 1 )->gridSize() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QListView( 1 )->gridSize() ) ) );
 }
 
 /*

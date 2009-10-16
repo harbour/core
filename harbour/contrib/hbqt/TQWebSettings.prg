@@ -70,7 +70,6 @@ CREATE CLASS QWebSettings
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QWebSettings_destroy( ::pPtr )
 
    METHOD  fontFamily( nWhich )                INLINE  Qt_QWebSettings_fontFamily( ::pPtr, nWhich )
    METHOD  fontSize( nType )                   INLINE  Qt_QWebSettings_fontSize( ::pPtr, nType )

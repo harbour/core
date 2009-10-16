@@ -70,7 +70,6 @@ CREATE CLASS QWebPage INHERIT QObject
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QWebPage_destroy( ::pPtr )
 
    METHOD  action( nAction )                   INLINE  Qt_QWebPage_action( ::pPtr, nAction )
    METHOD  bytesReceived()                     INLINE  Qt_QWebPage_bytesReceived( ::pPtr )

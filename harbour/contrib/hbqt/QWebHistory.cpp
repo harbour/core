@@ -77,6 +77,7 @@
  *  QList<QWebHistoryItem> items () const
  */
 
+#include <QtCore/QPointer>
 
 #include <QtWebKit/QWebHistory>
 
@@ -84,19 +85,10 @@
 /*
  *
  */
+
 HB_FUNC( QT_QWEBHISTORY )
 {
-   //hb_retptr( ( * ) new () );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QWEBHISTORY_DESTROY )
-{
-
-}
-
 /*
  * void back ()
  */
@@ -110,7 +102,7 @@ HB_FUNC( QT_QWEBHISTORY_BACK )
  */
 HB_FUNC( QT_QWEBHISTORY_BACKITEM )
 {
-   hb_retptr( new QWebHistoryItem( hbqt_par_QWebHistory( 1 )->backItem() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QWebHistoryItem( hbqt_par_QWebHistory( 1 )->backItem() ) ) );
 }
 
 /*
@@ -150,7 +142,7 @@ HB_FUNC( QT_QWEBHISTORY_COUNT )
  */
 HB_FUNC( QT_QWEBHISTORY_CURRENTITEM )
 {
-   hb_retptr( new QWebHistoryItem( hbqt_par_QWebHistory( 1 )->currentItem() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QWebHistoryItem( hbqt_par_QWebHistory( 1 )->currentItem() ) ) );
 }
 
 /*
@@ -174,7 +166,7 @@ HB_FUNC( QT_QWEBHISTORY_FORWARD )
  */
 HB_FUNC( QT_QWEBHISTORY_FORWARDITEM )
 {
-   hb_retptr( new QWebHistoryItem( hbqt_par_QWebHistory( 1 )->forwardItem() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QWebHistoryItem( hbqt_par_QWebHistory( 1 )->forwardItem() ) ) );
 }
 
 /*
@@ -190,7 +182,7 @@ HB_FUNC( QT_QWEBHISTORY_GOTOITEM )
  */
 HB_FUNC( QT_QWEBHISTORY_ITEMAT )
 {
-   hb_retptr( new QWebHistoryItem( hbqt_par_QWebHistory( 1 )->itemAt( hb_parni( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QWebHistoryItem( hbqt_par_QWebHistory( 1 )->itemAt( hb_parni( 2 ) ) ) ) );
 }
 
 /*

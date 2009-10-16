@@ -70,7 +70,6 @@ CREATE CLASS QCheckBox INHERIT QAbstractButton
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QCheckBox_destroy( ::pPtr )
 
    METHOD  checkState()                        INLINE  Qt_QCheckBox_checkState( ::pPtr )
    METHOD  isTristate()                        INLINE  Qt_QCheckBox_isTristate( ::pPtr )

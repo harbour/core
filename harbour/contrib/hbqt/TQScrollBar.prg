@@ -70,7 +70,6 @@ CREATE CLASS QScrollBar INHERIT QAbstractSlider
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QScrollBar_destroy( ::pPtr )
 
 
    ENDCLASS

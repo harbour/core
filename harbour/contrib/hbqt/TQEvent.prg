@@ -70,7 +70,6 @@ CREATE CLASS QEvent
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QEvent_destroy( ::pPtr )
 
    METHOD  accept()                            INLINE  Qt_QEvent_accept( ::pPtr )
    METHOD  ignore()                            INLINE  Qt_QEvent_ignore( ::pPtr )

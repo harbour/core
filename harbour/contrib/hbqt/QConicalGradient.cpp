@@ -72,6 +72,7 @@
  *  enum Type { LinearGradient, RadialGradient, ConicalGradient, NoGradient }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QConicalGradient>
 
@@ -81,19 +82,15 @@
  * QConicalGradient ( const QPointF & center, qreal angle )
  * QConicalGradient ( qreal cx, qreal cy, qreal angle )
  */
+
 HB_FUNC( QT_QCONICALGRADIENT )
 {
-   hb_retptr( ( QConicalGradient* ) new QConicalGradient() );
+   void * pObj = NULL;
+
+   pObj = ( QConicalGradient* ) new QConicalGradient() ;
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QCONICALGRADIENT_DESTROY )
-{
-
-}
-
 /*
  * qreal angle () const
  */
@@ -107,7 +104,7 @@ HB_FUNC( QT_QCONICALGRADIENT_ANGLE )
  */
 HB_FUNC( QT_QCONICALGRADIENT_CENTER )
 {
-   hb_retptr( new QPointF( hbqt_par_QConicalGradient( 1 )->center() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPointF( hbqt_par_QConicalGradient( 1 )->center() ) ) );
 }
 
 /*

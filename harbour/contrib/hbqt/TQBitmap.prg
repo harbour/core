@@ -70,7 +70,6 @@ CREATE CLASS QBitmap INHERIT QPixmap
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QBitmap_destroy( ::pPtr )
 
    METHOD  clear()                             INLINE  Qt_QBitmap_clear( ::pPtr )
    METHOD  transformed( pMatrix )              INLINE  Qt_QBitmap_transformed( ::pPtr, pMatrix )

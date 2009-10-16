@@ -72,6 +72,7 @@
  *  enum Type { LinearGradient, RadialGradient, ConicalGradient, NoGradient }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QLinearGradient>
 
@@ -81,40 +82,36 @@
  * QLinearGradient ( const QPointF & start, const QPointF & finalStop )
  * QLinearGradient ( qreal x1, qreal y1, qreal x2, qreal y2 )
  */
+
 HB_FUNC( QT_QLINEARGRADIENT )
 {
+   void * pObj = NULL;
+
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( ( QLinearGradient* ) new QLinearGradient( *hbqt_par_QLinearGradient( 1 ) ) );
+      pObj = ( QLinearGradient* ) new QLinearGradient( *hbqt_par_QLinearGradient( 1 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      hb_retptr( ( QLinearGradient* ) new QLinearGradient( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) );
+      pObj = ( QLinearGradient* ) new QLinearGradient( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) ;
    }
    else if( hb_pcount() == 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
    {
-      hb_retptr( ( QLinearGradient* ) new QLinearGradient( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) ) );
+      pObj = ( QLinearGradient* ) new QLinearGradient( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) ) ;
    }
    else
    {
-      hb_retptr( ( QLinearGradient* ) new QLinearGradient() );
+      pObj = ( QLinearGradient* ) new QLinearGradient() ;
    }
+
+   hb_retptr( pObj );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QLINEARGRADIENT_DESTROY )
-{
-
-}
-
 /*
  * QPointF finalStop () const
  */
 HB_FUNC( QT_QLINEARGRADIENT_FINALSTOP )
 {
-   hb_retptr( new QPointF( hbqt_par_QLinearGradient( 1 )->finalStop() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPointF( hbqt_par_QLinearGradient( 1 )->finalStop() ) ) );
 }
 
 /*
@@ -154,7 +151,7 @@ HB_FUNC( QT_QLINEARGRADIENT_SETSTART_1 )
  */
 HB_FUNC( QT_QLINEARGRADIENT_START )
 {
-   hb_retptr( new QPointF( hbqt_par_QLinearGradient( 1 )->start() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPointF( hbqt_par_QLinearGradient( 1 )->start() ) ) );
 }
 
 

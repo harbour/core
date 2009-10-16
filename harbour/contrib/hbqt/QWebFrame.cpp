@@ -80,6 +80,7 @@
  *  // void load ( const QWebNetworkRequest & req )
  */
 
+#include <QtCore/QPointer>
 
 #include <QtWebKit/QWebFrame>
 #include <QtWebKit/QWebSecurityOrigin>
@@ -87,19 +88,10 @@
 /*
  *
  */
+
 HB_FUNC( QT_QWEBFRAME )
 {
-   // hb_retptr( ( QWebFrame* ) new QWebFrame() );
 }
-
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QWEBFRAME_DESTROY )
-{
-
-}
-
 /*
  * void addToJavaScriptWindowObject ( const QString & name, QObject * object )
  */
@@ -121,7 +113,7 @@ HB_FUNC( QT_QWEBFRAME_ADDTOJAVASCRIPTWINDOWOBJECT_1 )
  */
 HB_FUNC( QT_QWEBFRAME_CONTENTSSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QWebFrame( 1 )->contentsSize() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QWebFrame( 1 )->contentsSize() ) ) );
 }
 
 /*
@@ -137,7 +129,7 @@ HB_FUNC( QT_QWEBFRAME_FRAMENAME )
  */
 HB_FUNC( QT_QWEBFRAME_GEOMETRY )
 {
-   hb_retptr( new QRect( hbqt_par_QWebFrame( 1 )->geometry() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QWebFrame( 1 )->geometry() ) ) );
 }
 
 /*
@@ -145,7 +137,7 @@ HB_FUNC( QT_QWEBFRAME_GEOMETRY )
  */
 HB_FUNC( QT_QWEBFRAME_HITTESTCONTENT )
 {
-   hb_retptr( new QWebHitTestResult( hbqt_par_QWebFrame( 1 )->hitTestContent( *hbqt_par_QPoint( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QWebHitTestResult( hbqt_par_QWebFrame( 1 )->hitTestContent( *hbqt_par_QPoint( 2 ) ) ) ) );
 }
 
 /*
@@ -153,7 +145,7 @@ HB_FUNC( QT_QWEBFRAME_HITTESTCONTENT )
  */
 HB_FUNC( QT_QWEBFRAME_ICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QWebFrame( 1 )->icon() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QWebFrame( 1 )->icon() ) ) );
 }
 
 /*
@@ -185,7 +177,7 @@ HB_FUNC( QT_QWEBFRAME_PARENTFRAME )
  */
 HB_FUNC( QT_QWEBFRAME_POS )
 {
-   hb_retptr( new QPoint( hbqt_par_QWebFrame( 1 )->pos() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QWebFrame( 1 )->pos() ) ) );
 }
 
 /*
@@ -257,7 +249,7 @@ HB_FUNC( QT_QWEBFRAME_SCROLLBARVALUE )
  */
 HB_FUNC( QT_QWEBFRAME_SCROLLPOSITION )
 {
-   hb_retptr( new QPoint( hbqt_par_QWebFrame( 1 )->scrollPosition() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QWebFrame( 1 )->scrollPosition() ) ) );
 }
 
 /*
@@ -265,7 +257,7 @@ HB_FUNC( QT_QWEBFRAME_SCROLLPOSITION )
  */
 HB_FUNC( QT_QWEBFRAME_SECURITYORIGIN )
 {
-   hb_retptr( new QWebSecurityOrigin( hbqt_par_QWebFrame( 1 )->securityOrigin() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QWebSecurityOrigin( hbqt_par_QWebFrame( 1 )->securityOrigin() ) ) );
 }
 
 /*
@@ -369,7 +361,7 @@ HB_FUNC( QT_QWEBFRAME_TOPLAINTEXT )
  */
 HB_FUNC( QT_QWEBFRAME_URL )
 {
-   hb_retptr( new QUrl( hbqt_par_QWebFrame( 1 )->url() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QUrl( hbqt_par_QWebFrame( 1 )->url() ) ) );
 }
 
 /*
@@ -385,7 +377,7 @@ HB_FUNC( QT_QWEBFRAME_ZOOMFACTOR )
  */
 HB_FUNC( QT_QWEBFRAME_EVALUATEJAVASCRIPT )
 {
-   hb_retptr( new QVariant( hbqt_par_QWebFrame( 1 )->evaluateJavaScript( hbqt_par_QString( 2 ) ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QWebFrame( 1 )->evaluateJavaScript( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*

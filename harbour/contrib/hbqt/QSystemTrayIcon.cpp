@@ -71,6 +71,7 @@
  *  enum MessageIcon { NoIcon, Information, Warning, Critical }
  */
 
+#include <QtCore/QPointer>
 
 #include <QtGui/QSystemTrayIcon>
 
@@ -80,19 +81,18 @@
  * QSystemTrayIcon ( const QIcon & icon, QObject * parent = 0 )
  * ~QSystemTrayIcon ()
  */
+
 HB_FUNC( QT_QSYSTEMTRAYICON )
 {
-   hb_retptr( ( QSystemTrayIcon* ) new QSystemTrayIcon( hbqt_par_QObject( 1 ) ) );
-}
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QPointer< QSystemTrayIcon > pObj = NULL;
 
-/*
- * DESTRUCTOR
- */
-HB_FUNC( QT_QSYSTEMTRAYICON_DESTROY )
-{
-   delete hbqt_par_QSystemTrayIcon( 1 );
-}
+   pObj = ( QSystemTrayIcon* ) new QSystemTrayIcon( hbqt_par_QObject( 1 ) ) ;
 
+   p->ph = pObj;
+   p->type = 1001;
+   hb_retptrGC( p );
+}
 /*
  * QMenu * contextMenu () const
  */
@@ -106,7 +106,7 @@ HB_FUNC( QT_QSYSTEMTRAYICON_CONTEXTMENU )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_GEOMETRY )
 {
-   hb_retptr( new QRect( hbqt_par_QSystemTrayIcon( 1 )->geometry() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QSystemTrayIcon( 1 )->geometry() ) ) );
 }
 
 /*
@@ -114,7 +114,7 @@ HB_FUNC( QT_QSYSTEMTRAYICON_GEOMETRY )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_ICON )
 {
-   hb_retptr( new QIcon( hbqt_par_QSystemTrayIcon( 1 )->icon() ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QSystemTrayIcon( 1 )->icon() ) ) );
 }
 
 /*

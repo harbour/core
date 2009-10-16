@@ -13,6 +13,7 @@ CPP_SOURCES := \
    hbqt_base.cpp \
    hbqt_utils.cpp \
    hbqt_slots.cpp \
+   hbqt_destruct.cpp \
    QAbstractButton.cpp \
    QAbstractItemModel.cpp \
    QAbstractItemView.cpp \

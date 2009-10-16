@@ -70,7 +70,6 @@ CREATE CLASS QImageWriter
 
    METHOD  New()
    METHOD  Configure( xObject )
-   METHOD  Destroy()                           INLINE  Qt_QImageWriter_destroy( ::pPtr )
 
    METHOD  canWrite()                          INLINE  Qt_QImageWriter_canWrite( ::pPtr )
    METHOD  compression()                       INLINE  Qt_QImageWriter_compression( ::pPtr )
