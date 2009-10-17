@@ -507,14 +507,14 @@ HB_MEMFS_EXPORT ULONG hb_memfsReadAt( HB_FHANDLE hFile, void * pBuff, ULONG ulCo
       return 0;
 
    HB_MEMFSMT_LOCK
-   if( pInode->llSize >= llOffset + ulCount )
+   if( pInode->llSize >= llOffset + ( HB_FOFFSET ) ulCount )
       ulRead = ulCount;
    else
       ulRead = ( ULONG ) ( pInode->llSize - llOffset );
 
    memcpy( pBuff, pInode->pData + ( ULONG ) llOffset, ulRead );
    HB_MEMFSMT_UNLOCK
-   pFile->llPos = llOffset + ulCount;
+   pFile->llPos = llOffset + ( HB_FOFFSET ) ulCount;
    return ulRead;
 }
 
@@ -537,12 +537,12 @@ HB_MEMFS_EXPORT ULONG hb_memfsWriteAt( HB_FHANDLE hFile, const void * pBuff, ULO
    HB_MEMFSMT_LOCK
 
    /* Reallocate if neccesary */
-   if( pInode->llAlloc < llOffset + ulCount )
+   if( pInode->llAlloc < llOffset + ( HB_FOFFSET ) ulCount )
    {
       HB_FOFFSET  llNewAlloc = pInode->llAlloc + ( pInode->llAlloc >> 1 );
 
-      if( llNewAlloc < llOffset + ulCount )
-         llNewAlloc = llOffset + ulCount;
+      if( llNewAlloc < llOffset + ( HB_FOFFSET ) ulCount )
+         llNewAlloc = llOffset + ( HB_FOFFSET ) ulCount;
 
       pInode->pData = ( char * ) hb_xrealloc( pInode->pData, ( ULONG ) llNewAlloc );
       memset( pInode->pData + ( ULONG ) pInode->llAlloc, 0, llNewAlloc - pInode->llAlloc );
@@ -550,11 +550,11 @@ HB_MEMFS_EXPORT ULONG hb_memfsWriteAt( HB_FHANDLE hFile, const void * pBuff, ULO
    }
    memcpy( pInode->pData + ( ULONG ) llOffset, pBuff, ulCount );
 
-   if( pInode->llSize < llOffset + ulCount )
-      pInode->llSize = llOffset + ulCount;
+   if( pInode->llSize < llOffset + ( HB_FOFFSET ) ulCount )
+      pInode->llSize = llOffset + ( HB_FOFFSET ) ulCount;
 
    HB_MEMFSMT_UNLOCK
-   pFile->llPos = llOffset + ulCount;
+   pFile->llPos = llOffset + ( HB_FOFFSET ) ulCount;
    return ulCount;
 }
 
