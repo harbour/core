@@ -46,13 +46,14 @@
  *      array. This depends, of course, on the data storage type of either
  *      the array or the variable with the same name as the array.
  *  $EXAMPLES$
- *      FUNCTION Main()
+ *      PROCEDURE Main()
  *        LOCAL aArray:=Array(10)
- *        LOCAL x:=1
+ *        LOCAL x
  *        FOR x:=1 to LEN(aArray)
  *          aArray[x]:=Array(x)
  *        NEXT
- *        Return Nil
+ *        // Result is: { { NIL }, { NIL, NIL }, ... }
+ *      RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -82,8 +83,8 @@
  *
  *      <xValue> Element to add to array <aArray>
  *  $RETURNS$
- *      <Value> if specified <xValue>,<xValue> will return , otherwise this
- *      function  returns a NIL value.
+ *      <Value> if specified <xValue>, <xValue> will return , otherwise this
+ *      function returns a NIL value.
  *  $DESCRIPTION$
  *      This function dynamically increases the length of the array named
  *      <aArray> by one element and stores the value of <xValue> to that
@@ -93,10 +94,12 @@
  *      stored to an array's subscript position.
  *  $EXAMPLES$
  *      LOCAL aArray:={}
+ *      LOCAL x
  *      AADD(aArray,10)
  *      FOR x:=1 to 10
  *          AADD(aArray,x)
  *      NEXT
+ *      // Result is: { 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -174,7 +177,7 @@
  *      array or any of the subscript values.
  *  $EXAMPLES$
  *      LOCAL array:= {"Harbour", "is", "Supreme", "Power"}
- *      ? ATAIL(aArray)
+ *      ? ATAIL(aArray) // Result is "Power"
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -259,9 +262,9 @@
  *      become a NIL data type.
  *  $EXAMPLES$
  *     LOCAL aArray
- *      aArray := { "Harbour","is","Power" }      // Result: aArray is
+ *      aArray := {"Harbour", "is", "Power"}
  *
- *      ADEL(aArray, 2)            // Result: aArray is
+ *      ADEL(aArray, 2) // Result: aArray is {"Harbour", "Power"}
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -337,7 +340,7 @@
  *  $SYNTAX$
  *      ASCAN( <aTarget>, <xSearch>, [<nStart>], [<nCount>] ) --> nStoppedAt
  *  $ARGUMENTS$
- *      <aTarget>   Name of array to be scanned.
+ *      <aTarget>   Array to be scanned.
  *
  *      <xSearch>   Expression to search for in <aTarget>
  *
@@ -346,7 +349,7 @@
  *      <nCount>    Number of elements to scan with <aTarget>.
  *  $RETURNS$
  *      <nStoppedAt> A numeric value of subscript position where <xSearch>
- *      was found.
+ *      was found, or 0 if <xSearch> is not found.
  *  $DESCRIPTION$
  *      This function scan the content of array named <aTarget> for the
  *      value of <xSearch>. The return value is the position in the array
@@ -390,7 +393,7 @@
  *  $SUBCATEGORY$
  *      Array
  *  $ONELINER$
- *      Evaluated the subscript element of an array
+ *      Evaluates the subscript element of an array
  *  $SYNTAX$
  *      AEVAL(<aArray>, <bBlock>, [<nStart>], [<nCount>]) --> aArray
  *  $ARGUMENTS$
@@ -398,7 +401,7 @@
  *
  *      <bBlock> Is a code block to evaluate for each element processed.
  *
- *      <nStart> The beginning  array element to evaluate.
+ *      <nStart> The beginning array element index to evaluate.
  *
  *      <nCount> The number of elements to process.
  *  $RETURNS$
@@ -441,8 +444,7 @@
  *  $ONELINER$
  *      Copy elements from one array to another
  *  $SYNTAX$
- *      ACOPY( <aSource>, <aTarget>, [<nStart>], [<nCount>], [<nTargetPos>] )
- *             --> aTarget
+ *      ACOPY( <aSource>, <aTarget>, [<nStart>], [<nCount>], [<nTargetPos>] ) --> aTarget
  *  $ARGUMENTS$
  *      <aSource> is the array to copy elements from.
  *
@@ -458,6 +460,7 @@
  *      <aTarget> an array pointer reference
  *  $DESCRIPTION$
  *      This function copies array elements from <aSource> to <aTarget>.
+ *
  *      <nStart> is the beginning element to be copied from <aSource>;
  *      the default is 1.
  *
@@ -474,7 +477,7 @@
  *      subdimensions will be copied from one array to the next. This must
  *      be accomplished via the ACLONE() function.
  *
- *      Note
+ *      Note:
  *      If array <aSource> is larger then <aTarget>, array elements will
  *      start copying at <nTargetPos> and continue copying until the end
  *      of array <aTarget> is reached. The ACOPY() function doesn't append
@@ -482,7 +485,7 @@
  *      array <aTarget> remains constant.
  *  $EXAMPLES$
  *      LOCAL nCount := 2, nStart := 1, aOne, aTwo
- *      aOne := {"HABOUR"," is ","POWER"}
+ *      aOne := {"HARBOUR"," is ","POWER"}
  *      aTwo := {"CLIPPER"," was ","POWER"}
  *      ACOPY(aOne, aTwo, nStart, nCount)
  *  $STATUS$
@@ -522,9 +525,11 @@
  *  $EXAMPLES$
  *      LOCAL aOne, aTwo
  *      aOne := {"Harbour"," is ","POWER"}
- *      aTwo := ACLONE(aOne)       // Result: aTwo is {1, 2, 3}
- *      aOne[1] := "The Harbour Compiler"              // Result: aOne is {99, 2, 3}
- *                                 // aTwo is still {1, 2, 3}
+ *      aTwo := ACLONE(aOne)       // Result: aTwo is {"Harbour"," is ","POWER"}
+ *      aOne[1] := "The Harbour Compiler"
+ *      // Result:
+ *      // aOne is {"The Harbour Compiler"," is ","POWER"}
+ *      // aTwo is {"Harbour"," is ","POWER"}
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -594,8 +599,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Codeblock calling frequency and order differs from  CA-Cl*pper, since
- *      Harbour uses a different (faster) sorting algorithm (quicksort).
+ *      C(arrayblock)
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$

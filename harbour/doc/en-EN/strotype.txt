@@ -67,20 +67,20 @@
  *      Harbour also offers a hybrid mode, where it can report such type
  *      mismatch problems, even without requiring the programmer to declare
  *      the type of variables. This feature, is referred to as Adaptive Type
- *      Checking. The programmer, is not required to make any changes in his
- *      code, to take advantage of this feature. All of the above 3 errors
+ *      Checking. The programmer is not required to make any changes in his
+ *      code to take advantage of this feature. All of the above 3 errors
  *      would have been reported just as effectively as if the programmer
  *      Strong Typed (declared) Var1. Harbour would have been able to report
- *      such problems at compile time,because the assignment Var1 := "A"
+ *      such problems at compile time because the assignment Var1 := "A"
  *      implied that Var1 is of type CHARACTER,until it will be assigned
- *       another value. Therefore Harbour will "remember" that Var1 "adapted"
+ *      another value. Therefore Harbour will "remember" that Var1 "adapted"
  *      type CHARACTER, and thus the subsequent multiplication Var1 * 3, will
  *      be reported as an error, as soon as you attempt to compile such code.
  *
  *      The nice aspect of this hybrid mode, is that unlike Strong Typed
  *      Variables,you don't have to declare the type, so no code changes
  *      are need, the Type instead is assumed by implication (type of the
- *      assigned value). The other benefit, is that it is completely ok to
+ *      assigned value). The other benefit, is that it is completely OK to
  *      assign a new value of different type, any time, to such undeclared
  *      (variant) variable. As soon as we assign a new type, the Compiler
  *      will than protect us from using the Variable in an incompatible

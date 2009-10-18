@@ -51,7 +51,7 @@ optimized at compile time:
 2. Expresion optimization:
 
 Just like Clipper Harbour compiler can optimize some expresions if
-arguments are well known and can be callculated at compile time:
+arguments are well known and can be calculated at compile time:
 
    - Clipper compatible:
 
@@ -158,14 +158,14 @@ arguments are well known and can be callculated at compile time:
          "" + <expr>             => <expr>
          ( "<alias>" )->         => <alias>->
 
-     In cases when result is miningless Harbour compiler can skip code
+     In cases when result is meaningless Harbour compiler can skip code
      for operation, i.e. for such line of .prg code:
          ( <exp1> <op> <exp2> )
      where result of <op> operation is ignored Harbour reduces the code
      to:
          ( <exp1>, <exp2> )
 
-In Clipper in some places optiomization is not enabled, f.e. Clipper
+In Clipper in some places optimization is not enabled, f.e. Clipper
 does not optimize <exp> in expressions like:
    <exp> : msg( ... )
 Unlike Clipper Harbour tries to optimize all expressions.

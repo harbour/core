@@ -6,10 +6,10 @@ Destructors
 ===========
 
 Destructors are special methods executed just before the object
-will be destroyed. It means that a programmer _has_to_ pay a special
+will be destroyed. It means that a programmer _has_to_ pay special
 attention to the destructor's code and _NEVER_ store the reference
 to SELF object in external items. The piece of memory where
-the instance of class (object) is held, will be freed when
+the instance of class (object) is held will be freed when
 the destructor finishes, so any references to SELF object will
 point to uninitialized memory or memory allocated for other
 structures. Sooner or later (probably in a next GC pass) these
@@ -25,7 +25,7 @@ General destructor activation
 Each object item has a reference counter. When it reaches 0 the object
 is destroyed and if it has destructor message then this message will be
 executed just before freeing the memory. After executing destructor HVM
-checks if a programmer didn't store the reference to the object being 
+checks if a programmer didn't store the reference to the object being
 destroyed somewhere, and if he did then RT error is generated.
 It's possible to detect such situation by simply checking the reference
 counter. Such situation is not dangerous for HVM integrity because the
@@ -60,7 +60,7 @@ This also cannot break HVM integrity for standard object items which are
 represented as arrays. But if the problem is inside cleanup function of
 a GC POINTER item, which has a structure unknown to HVM, then any further
 behavior can be unpredictible if a programmer, who created such pointer
-items, doesn't support such situation himslef in his C code. It's a good 
+items, doesn't support such situation himslef in his C code. It's a good
 practice to add some type of marker to body of memory allocated by
 hb_gcAlloc() to detect bugs in .prg code destructors which may keep
 pointers to freed POINTER item (these could be destructors of differ

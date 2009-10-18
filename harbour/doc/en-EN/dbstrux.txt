@@ -285,8 +285,7 @@
  *  $ONELINER$
  *      Create structure extended file or use one to create new file
  *  $SYNTAX$
- *      __dbCreate( <cFileName>, [<cFileFrom>], [<cRDDName>], [<lNew>],
- *                  [<cAlias>] ) --> lUsed
+ *      __dbCreate( <cFileName>, [<cFileFrom>], [<cRDDName>], [<lNew>], [<cAlias>] ) --> lUsed
  *  $ARGUMENTS$
  *      <cFileName> is the target file name to create and then open. (.dbf)
  *      is the default extension if none is given.
@@ -475,8 +474,7 @@
  *  $ONELINER$
  *      Create new database file from a structure extended file
  *  $SYNTAX$
- *      CREATE <xcFileName> FROM <xcFileFrom> [VIA <xcRDDName>] [NEW]
- *             [ALIAS <xcAlias>]
+ *      CREATE <xcFileName> FROM <xcFileFrom> [VIA <xcRDDName>] [NEW] [ALIAS <xcAlias>]
  *  $ARGUMENTS$
  *      <xcFileName> is the target file name to create and then open. (.dbf)
  *      is the default extension if none is given. It can be specified as

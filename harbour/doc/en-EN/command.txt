@@ -21,7 +21,7 @@
  *  $CATEGORY$
  *      Class
  *  $SUBCATEGORY$
- *
+ *      Definition
  *  $ONELINER$
  *      Define a Class for Object Oriented Programming
  *  $SYNTAX$
@@ -467,13 +467,13 @@
  *  $CATEGORY$
  *      Class
  *  $SUBCATEGORY$
- *
+ *      Definition
  *  $ONELINER$
  *      End the declaration of a class.
  *  $SYNTAX$
  *      ENDCLASS
  *  $ARGUMENTS$
- *
+ *      (This statement has no arguments)
  *  $DESCRIPTION$
  *      ENDCLASS marks the end of a class declaration.
  *      It is usually followed by the class methods that are not INLINE.

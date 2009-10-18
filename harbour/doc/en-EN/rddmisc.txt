@@ -192,7 +192,7 @@
  *  $SYNTAX$
  *      ZAP
  *  $ARGUMENTS$
- *
+ *      (This command has no arguments)
  *  $DESCRIPTION$
  *      This command removes all of the records from the database in the
  *      current work area. This operation also updates any index file in
@@ -227,7 +227,7 @@
  *  $SYNTAX$
  *      DELETED() --> lDeleted
  *  $ARGUMENTS$
- *
+ *      (This command has no arguments)
  *  $RETURNS$
  *      DELETED() return a logical true (.T.) or false (.F.).
  *  $DESCRIPTION$
@@ -268,7 +268,7 @@
  *  $SYNTAX$
  *      EOF() --> <lEnd>
  *  $ARGUMENTS$
- *
+ *      (This command has no arguments)
  *  $RETURNS$
  *      <lEnd> A logical true (.T.) or false (.F.)
  *  $DESCRIPTION$
@@ -543,7 +543,7 @@
  *  $SYNTAX$
  *      FOUND() --> lSuccess
  *  $ARGUMENTS$
- *      None.
+ *      (This function has no arguments)
  *  $RETURNS$
  *      <lSuccess> A logical true (.T.) is successful; otherwise, false (.F.)
  *  $DESCRIPTION$
@@ -659,7 +659,7 @@
  *  $SYNTAX$
  *      LUPDATE() --> dModification
  *  $ARGUMENTS$
- *      None
+ *      (This function has no arguments)
  *  $RETURNS$
  *      <dModification>  The date of the last modification.
  *  $DESCRIPTION$
@@ -751,7 +751,7 @@
  *  $SYNTAX$
  *      RECCOUNT()* | LASTREC() --> nRecords
  *  $ARGUMENTS$
- *      None.
+ *      (This function has no arguments)
  *  $RETURNS$
  *      <nRecords>  The number of records
  *  $DESCRIPTION$*
@@ -793,12 +793,13 @@
  *  $SYNTAX$
  *      RECNO() --> Identity
  *  $ARGUMENTS$
- *      None.
+ *      (This function has no arguments)
  *  $RETURNS$
- *      RECNO() The record number or indentity
+ *      RECNO() The record number or identity
  *  $DESCRIPTION$
  *      This function returns the position of the record pointer in the
  *      currently selected ot designated work area.
+ *
  *      If the database file is empty and if the RDD is the traditional .dbf
  *      file, the value of this function will be 1.
  *  $EXAMPLES$
@@ -834,7 +835,7 @@
  *  $SYNTAX$
  *      RECSIZE() --> nBytes
  *  $ARGUMENTS$
- *      None.
+ *      (This function has no arguments)
  *  $RETURNS$
  *      <nBytes> The record size.
  *  $DESCRIPTION$
@@ -875,7 +876,7 @@
  *  $SYNTAX$
  *      RLOCK() --> lSuccess
  *  $ARGUMENTS$
- *      None
+ *      (This function has no arguments)
  *  $RETURNS$
  *      RLOCK() True (.T.) if record lock is successful; otherwise, it
  *      returns false (.F.).
@@ -973,7 +974,7 @@
  *  $SYNTAX$
  *      USED() --> lDbfOpen
  *  $ARGUMENTS$
- *      None.
+ *      (This function has no arguments)
  *  $RETURNS$
  *      <lDbfOpen> True is a database is Used;otherwise False
  *  $DESCRIPTION$
@@ -1017,7 +1018,7 @@
  *  $SYNTAX$
  *      PACK
  *  $ARGUMENTS$
- *
+ *      (This command has no arguments)
  *  $DESCRIPTION$
  *      This command removes records that were marked for deletion from the
  *      currently selected database. This command does not pack the contents

@@ -72,7 +72,7 @@
  *  $ARGUMENTS$
  *      <nSet> Set Number
  *
- *      <xNewSetting> Any expression to assing a value to the seting
+ *      <xNewSetting> Any expression to assign a value to the setting
  *
  *      <xOption> Logical expression
  *
@@ -915,7 +915,7 @@
  *      This command toggles the highlighted bars in a @...PROMPT command
  *      to wrap around in a bottom-to-top and top-to-bottom manner. If the
  *      value of the logical expression <lWrap> is a logical false (.F.),
- *      the wrapping mode is set OFF;otherwise,it is set ON.
+ *      the wrapping mode is set OFF; otherwise,it is set ON.
  *  $EXAMPLES$
  *      See Tests/menutest.prg
  *  $STATUS$
@@ -1127,11 +1127,11 @@
  *  $SUBCATEGORY$
  *     Environment
  *  $ONELINER$
- *      Assings a date format or chooses a predefined date data set.
+ *      Assigns a date format or chooses a predefined date data set.
  *  $SYNTAX$
  *      SET DATE FORMAT [TO] <cFormat>
- *      SET DATE [TO] [ ANSI / BRITISH / FRENCH / GERMAN / ITALIAN / JAPAN
- *      / USA / AMERICAN]
+ *
+ *      SET DATE [TO] [ANSI / BRITISH / FRENCH / GERMAN / ITALIAN / JAPAN / USA / AMERICAN]
  *  $ARGUMENTS$
  *      <cFormat> Keyword for date format
  *  $DESCRIPTION$
@@ -1179,7 +1179,7 @@
  *  $SUBCATEGORY$
  *     Environment
  *  $ONELINER$
- *      Specifie a base year for interpreting dates
+ *      Specify a base year for interpreting dates
  *  $SYNTAX$
  *      SET EPOCH TO <nEpoch>
  *  $ARGUMENTS$
@@ -1219,7 +1219,7 @@
  *      a logical true (.T.), FIXED will be turned ON; otherwise it will be
  *      turned OFF.
  *
- *      When SET DECIMALS OFF is used, the follow rules apply to the number
+ *      When SET DECIMALS OFF is used, the following rules apply to the number
  *      of decimal placed displayed.
  *
  *      <table>
@@ -1262,7 +1262,7 @@
  *      SET PRINTER (<lPrinter>)
  *      SET PRINTER TO [<cPrinter>] [ADDITIVE]
  *  $ARGUMENTS$
- *      <lFixed>   Logical condition by which to toggle the printer
+ *      <lPrinter>   Logical condition by which to toggle the printer
  *
  *      <cPrinter> A device name or an alternate name
  *  $DESCRIPTION$
@@ -1324,7 +1324,7 @@
  *      or the <-> DEVOUT() function.
  *
  *      If <lConsole> is a logical true (.T.),the console will be turned
- *      ON;otherwise, the console will be turned off.
+ *      ON; otherwise, the console will be turned off.
  *  $EXAMPLES$
  *      SET console on
  *      ? DATE()
@@ -1400,7 +1400,7 @@
  *      less than the last printed row. Finally, if used in conjunction with
  *      the @...GET commands, the values for the GETs will all be ignored.
  *  $EXAMPLES$
- *      SET DEVICE TO SCRENN
+ *      SET DEVICE TO SCREEN
  *      ? 25141251/362
  *      SET DEVICE TO PRINTER
  *      SET PRINTER TO LPT1
