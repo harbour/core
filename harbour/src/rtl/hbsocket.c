@@ -667,6 +667,16 @@ int hb_socketSelect( PHB_ITEM pArrayRD, BOOL fSetRD,
    return -1;
 }
 
+BOOL hb_socketResolveInetAddr( void ** pSockAddr, unsigned * puiLen, const char * szAddr, int iPort )
+{
+   HB_SYMBOL_UNUSED( szAddr );
+   HB_SYMBOL_UNUSED( iPort );
+   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   *pSockAddr = NULL;
+   *puiLen = 0;
+   return FALSE;
+}
+
 char * hb_socketResolveAddr( const char * szAddr, int af )
 {
    HB_SYMBOL_UNUSED( szAddr );
@@ -2631,6 +2641,82 @@ int hb_socketSelect( PHB_ITEM pArrayRD, BOOL fSetRD,
 }
 
 /* DNS functions */
+BOOL hb_socketResolveInetAddr( void ** pSockAddr, unsigned * puiLen, const char * szAddr, int iPort )
+{
+#if defined( AF_INET )
+   struct sockaddr_in sa;
+   BOOL fTrans ;
+
+   memset( &sa, 0, sizeof( sa ) );
+   sa.sin_family = AF_INET;
+   sa.sin_port = htons( ( hbU16 ) iPort );
+   if( !szAddr || !*szAddr )
+   {
+      sa.sin_addr.s_addr = htonl( INADDR_ANY );
+      *pSockAddr = memcpy( hb_xgrab( sizeof( sa ) + 1 ), &sa, sizeof( sa ) );
+      *puiLen = ( unsigned ) sizeof( sa );
+      return TRUE;
+   }
+
+#if defined( HB_HAS_INET_PTON )
+   fTrans = inet_pton( AF_INET, szAddr, &sa.sin_addr ) > 0;
+#elif defined( HB_HAS_INET_ATON )
+   fTrans = inet_aton( szAddr, &sa.sin_addr ) != 0;
+#else
+   sa.sin_addr.s_addr = inet_addr( szAddr );
+   fTrans = sa.sin_addr.s_addr != INADDR_NONE ||
+            strcmp( "255.255.255.255", szAddr ) == 0; /* dirty hack */
+#endif
+
+   if( !fTrans )
+   {
+#if defined( HB_HAS_ADDRINFO )
+      struct addrinfo hints, *res = NULL;
+
+      hb_vmUnlock();
+      memset( &hints, 0, sizeof( hints ) );
+      hints.ai_family = AF_INET;
+      if( getaddrinfo( szAddr, NULL, &hints, &res ) == 0 )
+      {
+         if( res->ai_addrlen >= sizeof( struct sockaddr_in ) &&
+             hb_socketGetAddrFamilly( res->ai_addr, res->ai_addrlen ) == AF_INET )
+         {
+            sa.sin_addr.s_addr = ( ( struct sockaddr_in * ) res->ai_addr )->sin_addr.s_addr;
+            fTrans = TRUE;
+         }
+         freeaddrinfo( res );
+      }
+      hb_vmLock();
+#else
+      struct hostent * he;
+
+      hb_vmUnlock();
+      he = gethostbyname( szAddr );
+      if( he && he->h_addr_list[ 0 ] )
+      {
+         sa.sin_addr.s_addr = ( ( struct in_addr * ) he->h_addr_list[ 0 ] )->s_addr;
+         fTrans = TRUE;
+      }
+      hb_vmLock();
+#endif
+   }
+
+   if( fTrans )
+   {
+      *pSockAddr = memcpy( hb_xgrab( sizeof( sa ) + 1 ), &sa, sizeof( sa ) );
+      *puiLen = ( unsigned ) sizeof( sa );
+      return TRUE;
+   }
+#else
+   HB_SYMBOL_UNUSED( szAddr );
+   HB_SYMBOL_UNUSED( iPort );
+   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+#endif
+   *pSockAddr = NULL;
+   *puiLen = 0;
+   return FALSE;
+}
+
 char * hb_socketResolveAddr( const char * szAddr, int af )
 {
    char * szResult = NULL;
