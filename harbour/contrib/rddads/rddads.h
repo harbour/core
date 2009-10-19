@@ -52,7 +52,7 @@
 
 #include "hbapirdd.h"
 
-#if defined( HB_OS_WIN ) && !defined( WIN32 )
+#if !defined( WIN32 ) && defined( HB_OS_WIN )
    #define WIN32
 #endif
 #if !defined( unix ) && defined( HB_OS_UNIX )
@@ -129,7 +129,6 @@ UNSIGNED32 ENTRYPOINT AdsDeleteFile( ADSHANDLE hConnection, UNSIGNED8 * pucFileN
  *  The Workarea Structure of Advantage Database Server RDD
  *
  */
-
 
 typedef struct _ADSAREA_
 {

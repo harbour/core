@@ -184,7 +184,7 @@ char * strerror( int errnum )
 
 DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size )
 {
-   /* use registry instead of "environment valuable". */
+   /* use registry instead of "environment variable". */
    HKEY hk;
    LONG lret;
    LPBYTE lpData;
@@ -230,7 +230,7 @@ DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size )
 
 DWORD WINAPI GetEnvironmentVariableW( LPCWSTR name, LPWSTR value, DWORD size )
 {
-   /* use registry instead of "environment valuable". */
+   /* use registry instead of "environment variable". */
    HKEY hk;
    LONG lret;
    DWORD dwType = REG_SZ, result = 0;
