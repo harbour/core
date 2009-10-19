@@ -109,12 +109,12 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile )
          oPrinter:NewLine()
          oPrinter:NewLine()
          oPrinter:SetFont("Lucida Console",18, 0)  // Large print
-         oPrinter:SetColor( GREEN )
+         oPrinter:SetColor( RGB_GREEN )
          oPrinter:TextOut("Finally some larger print")
          oPrinter:Box(  0, oPrinter:PosY+100, 100, oPrinter:PosY+200)
          oPrinter:Arc(200, oPrinter:PosY+100, 300, oPrinter:PosY+200)
          oPrinter:Ellipse(400, oPrinter:PosY+100, 500, oPrinter:PosY+200)
-         oPrinter:FillRect(600, oPrinter:PosY+100, 700, oPrinter:PosY+200, RED)
+         oPrinter:FillRect(600, oPrinter:PosY+100, 700, oPrinter:PosY+200, RGB_RED )
 
 //       To print a barcode;
 //       Replace 'BCod39HN' with your own bar code font or any other font
