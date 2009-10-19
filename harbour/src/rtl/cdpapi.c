@@ -997,6 +997,23 @@ ULONG hb_cdpStrnToUTF8n( PHB_CODEPAGE cdp, BOOL fCtrl,
    return n;
 }
 
+ULONG hb_cdpStringInU16Length( PHB_CODEPAGE cdp, BOOL fCtrl,
+                               const char *pSrc, ULONG ulLen )
+{
+   if( cdp && cdp->uniTable )
+   {
+      /*
+       * TODO: add support for multibyte characters
+       */
+   }
+
+   HB_SYMBOL_UNUSED( cdp );
+   HB_SYMBOL_UNUSED( fCtrl );
+   HB_SYMBOL_UNUSED( pSrc );
+
+   return ulLen << 1;
+}
+
 ULONG hb_cdpStrnToU16( PHB_CODEPAGE cdp, BOOL fCtrl,
                        const char * pSrc, ULONG ulLen, char * pDst )
 {
@@ -1035,6 +1052,48 @@ ULONG hb_cdpStrnToU16( PHB_CODEPAGE cdp, BOOL fCtrl,
       if( uniCodes && u < nChars && ( fCtrl || u >= 32 ) )
          u = uniCodes[ u ];
       HB_PUT_BE_UINT16( pDst, u );
+   }
+   return i << 1;
+}
+
+ULONG hb_cdpStrnToU16LE( PHB_CODEPAGE cdp, BOOL fCtrl,
+                         const char * pSrc, ULONG ulLen, char * pDst )
+{
+   USHORT u, *uniCodes, nChars;
+   ULONG i;
+
+   if( cdp && cdp->uniTable )
+   {
+      if( cdp->nMulti || cdp->uniTable->lMulti )
+      {
+         /*
+          * TODO: this translation is bad, please fix me!!!
+          */
+         for( i = 0; i < ulLen; i++, pDst += 2 )
+         {
+            u = hb_cdpGetU16( cdp, fCtrl, ( UCHAR ) pSrc[ i ] );
+            HB_PUT_LE_UINT16( pDst, u );
+         }
+         return i << 1;
+      }
+      else
+      {
+         uniCodes = cdp->uniTable->uniCodes;
+         nChars = ( USHORT ) cdp->uniTable->nChars;
+      }
+   }
+   else
+   {
+      nChars = 0;
+      uniCodes = NULL;
+   }
+
+   for( i = 0; i < ulLen; i++, pDst += 2 )
+   {
+      u = ( UCHAR ) pSrc[ i ];
+      if( uniCodes && u < nChars && ( fCtrl || u >= 32 ) )
+         u = uniCodes[ u ];
+      HB_PUT_LE_UINT16( pDst, u );
    }
    return i << 1;
 }

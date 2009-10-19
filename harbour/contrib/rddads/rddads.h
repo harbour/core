@@ -55,10 +55,10 @@
 #if defined( HB_OS_WIN ) && !defined( WIN32 )
    #define WIN32
 #endif
-#if !defined( unix ) && ( defined( __LINUX__ ) || defined( HB_OS_LINUX ) )
+#if !defined( unix ) && defined( HB_OS_UNIX )
    #define unix
 #endif
-#if defined( __MINGW64__ )
+#if !defined( x64 ) && defined( HB_ARCH_64BIT )
    #define x64
 #endif
 #if defined( __WATCOMC__ ) || defined( __LCC__ )
