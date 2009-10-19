@@ -231,10 +231,23 @@ HB_FUNC( HB_DATETIME )
 
 HB_FUNC( HB_DTOT )
 {
-   long lDate, lTime;
+   long lDate, lTime, lDate2;
 
    if( hb_partdt( &lDate, &lTime, 1 ) )
-      hb_retdl( lDate );
+   {
+      const char * szTime = hb_parc( 2 );
+      if( szTime )
+         hb_timeStampStrGetDT( szTime, &lDate2, &lTime );
+      else if( ISNUM( 2 ) )
+      {
+         lTime = ( long ) ( hb_parnd( 2 ) * 1000 );
+         if( lTime < 0 )
+            lTime = 0;
+      }
+      else
+         lTime = 0;
+      hb_rettdt( lDate, lTime );
+   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -244,7 +257,22 @@ HB_FUNC( HB_TTOD )
    long lDate, lTime;
 
    if( hb_partdt( &lDate, &lTime, 1 ) )
-      hb_rettdt( lDate, lTime );
+   {
+      hb_retdl( lDate );
+      if( ISBYREF( 2 ) )
+      {
+         const char * szTimeFormat = hb_parc( 3 );
+         if( szTimeFormat )
+         {
+            char szBuffer[ 27 ];
+            if( *szTimeFormat == '\0' )
+               szTimeFormat = hb_setGetTimeFormat();
+            hb_storc( hb_timeFormat( szBuffer, szTimeFormat, lTime ), 2 );
+         }
+         else
+            hb_stornd( ( double ) lTime / 1000, 2 );
+      }
+   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
