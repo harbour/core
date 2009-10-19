@@ -15,23 +15,24 @@ optimized at compile time:
 
       AT( <cConst1>, <cConst2> ) // Clipper wrongly calculates
                                  // AT( "", <cConst> ) as 1
+      ASC( <cConst> [ , ... ] )
       CHR( <nConst> )
+      LEN( <cConst> | <aConst> | <hConst> )  // <hConst> is Harbour extension
       UPPER( <cConst> ) // <cConst> cannot contain characters different then
                            [0-9A-Za-z ]
 
    - Harbour extension:
 
       INT( <nConst> )
-      ASC( <cConst> [ , ... ] )
       MIN( <xConst1>, <xConst2> )   // <xConstN> is N, D or L value
       MAX( <xConst1>, <xConst2> )   // <xConstN> is N, D or L value
       EMPTY( <aConst> | <hConst> | <cConst> | <bConst> |
              <nConst> | <dConst>| <lConst> | NIL )
-      LEN( <cConst> | <aConst> | <hConst> )
-      CTOD( <cConst> [ , ... } )
+      CTOD( "" [ , ... ] )
       DTOS( <dConst> ] )
       STOD( [ <cConst> ] )
       HB_STOD( [ <cConst> ] )
+      HB_STOT( [ <cConst> ] )
       HB_BITNOT( <nConst> [, ... ] )
       HB_BITAND( <nConst1>, <nConst2> [, <nConstN> ] )
       HB_BITOR( <nConst1>, <nConst2> [, <nConstN> ] )
@@ -45,6 +46,8 @@ optimized at compile time:
 
       HB_I18N_GETTEXT_NOOP( <cConst1> [ , <cConst2> ] )
       HB_I18N_NGETTEXT_NOOP( <cConst1> | <acConst1> [ , <cConst2> ] )
+      HB_I18N_GETTEXT_NOOP_*( <cConst1> [ , <cConst2> ] )
+      HB_I18N_NGETTEXT_NOOP_*( <cConst1> | <acConst1> [ , <cConst2> ] )
       HB_MUTEXCREATE()
 
 
@@ -171,7 +174,7 @@ does not optimize <exp> in expressions like:
 Unlike Clipper Harbour tries to optimize all expressions.
 
 If some code needs strict Clipper behavior then it can be forced by using
--kc Harbour compiler switch. It disabled Harbour extensions and enables
+-kc Harbour compiler switch. It disables Harbour extensions and enables
 replicating some Clipper bugs like optimizing "" $ <cConst> to .T. at
 compile time (at runtime and in macrocompiler it's always .F. in Clipper
 and Harbour).

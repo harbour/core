@@ -1726,6 +1726,11 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                   if( usCount == 2 )
                      hb_compExprReduceAT( pSelf, HB_COMP_PARAM );
                }
+               else if( strcmp( "ASC", pName->value.asSymbol ) == 0 )
+               {
+                  if( usCount )
+                     hb_compExprReduceASC( pSelf, HB_COMP_PARAM );
+               }
                else if( strcmp( "CHR", pName->value.asSymbol ) == 0 )
                {
                   if( usCount )
@@ -1733,23 +1738,33 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                }
                else if( strcmp( "LEN", pName->value.asSymbol ) == 0 )
                {
-                  if( usCount && HB_SUPPORT_HARBOUR )
+                  if( usCount )
                      hb_compExprReduceLEN( pSelf, HB_COMP_PARAM );
+               }
+               else if( strcmp( "UPPER", pName->value.asSymbol ) == 0 )
+               {
+                  if( usCount )
+                     hb_compExprReduceUPPER( pSelf, HB_COMP_PARAM );
                }
                else if( strcmp( "EMPTY", pName->value.asSymbol ) == 0 )
                {
                   if( usCount && HB_SUPPORT_HARBOUR )
                      hb_compExprReduceEMPTY( pSelf, HB_COMP_PARAM );
                }
-               else if( strcmp( "ASC", pName->value.asSymbol ) == 0 )
-               {
-                  if( usCount && HB_SUPPORT_HARBOUR )
-                     hb_compExprReduceASC( pSelf, HB_COMP_PARAM );
-               }
                else if( strcmp( "INT", pName->value.asSymbol ) == 0 )
                {
                   if( usCount == 1 && HB_SUPPORT_HARBOUR )
                      hb_compExprReduceINT( pSelf, HB_COMP_PARAM );
+               }
+               else if( strcmp( "MIN", pName->value.asSymbol ) == 0 )
+               {
+                  if( usCount == 2 && HB_SUPPORT_HARBOUR )
+                     hb_compExprReduceMIN( pSelf, HB_COMP_PARAM );
+               }
+               else if( strcmp( "MAX", pName->value.asSymbol ) == 0 )
+               {
+                  if( usCount == 2 && HB_SUPPORT_HARBOUR )
+                     hb_compExprReduceMAX( pSelf, HB_COMP_PARAM );
                }
                else if( strcmp( "STOD", pName->value.asSymbol ) == 0 ||
                         strcmp( "HB_STOD", pName->value.asSymbol ) == 0 )
@@ -1770,21 +1785,6 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                {
                   if( usCount && HB_SUPPORT_HARBOUR )
                      hb_compExprReduceCTOD( pSelf, HB_COMP_PARAM );
-               }
-               else if( strcmp( "MIN", pName->value.asSymbol ) == 0 )
-               {
-                  if( usCount == 2 && HB_SUPPORT_HARBOUR )
-                     hb_compExprReduceMIN( pSelf, HB_COMP_PARAM );
-               }
-               else if( strcmp( "MAX", pName->value.asSymbol ) == 0 )
-               {
-                  if( usCount == 2 && HB_SUPPORT_HARBOUR )
-                     hb_compExprReduceMAX( pSelf, HB_COMP_PARAM );
-               }
-               else if( strcmp( "UPPER", pName->value.asSymbol ) == 0 )
-               {
-                  if( usCount )
-                     hb_compExprReduceUPPER( pSelf, HB_COMP_PARAM );
                }
                else if( strncmp( "HB_BIT", pName->value.asSymbol, 6 ) == 0 &&
                         usCount && pParms->value.asList.pExprList->ExprType == HB_ET_NUMERIC )
@@ -1902,16 +1902,14 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                      if( strncmp( "_STRICT", &pName->value.asSymbol[ ulPos ], 7 ) == 0 )
                      {
                         ulPos += 7;
-                        if( !pName->value.asSymbol[ ulPos ] || pName->value.asSymbol[ ulPos ] == '_' )
-                           fI18nFunc = fStrict = TRUE;
+                        fStrict = TRUE;
                      }
                      else if( strncmp( "_NOOP", &pName->value.asSymbol[ ulPos ], 5 ) == 0 )
                      {
                         ulPos += 5;
-                        if( !pName->value.asSymbol[ ulPos ] || pName->value.asSymbol[ ulPos ] == '_' )
-                           fI18nFunc = fNoop = TRUE;
+                        fNoop = TRUE;
                      }
-                     else if( !pName->value.asSymbol[ ulPos ] || pName->value.asSymbol[ ulPos ] == '_' )
+                     if( !pName->value.asSymbol[ ulPos ] || pName->value.asSymbol[ ulPos ] == '_' )
                         fI18nFunc = TRUE;
                   }
                   if( fI18nFunc )

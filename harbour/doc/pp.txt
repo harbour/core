@@ -673,6 +673,11 @@ I had to break Clipper compatibility to keep FLEX working. Just simply
 I cannot generate preprocessed line in exactly the same form as Clipper
 does because FLEX or SIMPLEX will not be able to decode it.
 
+Update:
+New Harbour lexer is simple translator between PP tokens and Harbour
+grammar terminal symbols so it's not necessary to convert preprocessed
+code to strings to pass them to FLEX or SIMPLEX. It works faster and it's
+fully compatible Clipper behavior what fixes above problem.
 
 best regards,
 Przemek
