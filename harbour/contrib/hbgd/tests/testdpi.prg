@@ -17,10 +17,9 @@
 
 PROCEDURE Main()
 
- oI := GDImage():Create( 600, 300 )
+ LOCAL oI := GDImage():Create( 600, 300 )
 
- white := oI:SetColor( 255, 255, 255 )
- black := oI:SetColor( 0, 0, 0 )
+ LOCAL black := oI:SetColor( 0, 0, 0 )
 
  oI:SetColor( black )
  oI:SetFontName("C:\windows\fonts\arial.ttf")

@@ -70,7 +70,7 @@ Function main()
 
     oServer:Commit()
     
-    oQuery := oServer:Query('SELECT code, dept, name, sales, salary, creation FROM test')    
+    oServer:Query('SELECT code, dept, name, sales, salary, creation FROM test')    
     wait
 
     

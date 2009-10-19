@@ -19,7 +19,7 @@
 PROCEDURE Main()
 
    LOCAL im, im2, im3
-   LOCAL black, white, trans
+   LOCAL black, trans
    LOCAL hFile
 
    /*
@@ -33,7 +33,7 @@ PROCEDURE Main()
    im := gdImageCreate(100, 100)
 
    /* Allocate background */
-   white := gdImageColorAllocate(im, 255, 255, 255)
+// white := gdImageColorAllocate(im, 255, 255, 255)
 
    /* Allocate drawing color */
    black := gdImageColorAllocate(im, 0, 0, 0)

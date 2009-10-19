@@ -24,7 +24,7 @@ Function Main( cServer, cDatabase, cUser, cPass )
 
 Procedure Query( conn, cQuery, lCancel )    
     Local pCancel, cErrMsg := space(30)
-    Local res, aTemp, i, x, y, xTime
+    Local res, x, y, xTime
     
     ? "PQSendQuery", PQsendQuery(conn, cQuery)
 

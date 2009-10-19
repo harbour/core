@@ -7,7 +7,8 @@
 
 PROCEDURE Main
    LOCAL oDoc, oNode, oTable, oRow, oCell
-   LOCAL nDll, pApi
+   LOCAL i, j
+
    CLS
 
    BEGIN SEQUENCE

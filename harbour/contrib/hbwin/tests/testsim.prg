@@ -10,7 +10,7 @@
  * www - http://www.harbour-project.org
  */
 
-#include "sim.ch"
+#include "hbsim.ch"
 
 PROCEDURE Main()
 

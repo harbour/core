@@ -92,7 +92,7 @@ HB_FUNC( WIN_COMOPEN )
       HB_TCHAR_CPTO( tszName, szName, sizeof( tszName ) - 1 );
 
       s_PortData[ iPort ].hPort = INVALID_HANDLE_VALUE;
-      s_PortData[ iPort ].iFunction = FCNCREATEFILE;
+      s_PortData[ iPort ].iFunction = WIN_COM_FUN_CREATEFILE;
       s_PortData[ iPort ].dwError = 0;
 
       if( ( hCommPort = CreateFile( tszName,
@@ -143,7 +143,7 @@ HB_FUNC( WIN_COMOPEN )
     /*NewDCB.EvtChar*/
 
       /* function reinitializes all hardware and control settings, but it does not empty output or input queues */
-      s_PortData[ iPort ].iFunction = FCNSETCOMMSTATE;
+      s_PortData[ iPort ].iFunction = WIN_COM_FUN_SETCOMMSTATE;
       s_PortData[ iPort ].dwError = 0;
       if( ! SetCommState( hCommPort, &NewDCB ) )
       {
@@ -174,7 +174,7 @@ HB_FUNC( WIN_COMCLOSE )
 
       s_PortData[ iPort ].hPort = INVALID_HANDLE_VALUE;
 
-      s_PortData[ iPort ].iFunction = FCNCLOSEHANDLE;
+      s_PortData[ iPort ].iFunction = WIN_COM_FUN_CLOSEHANDLE;
       s_PortData[ iPort ].dwError = 0;
 
       hb_retl( CloseHandle( hCommPort ) != 0 );
@@ -195,7 +195,7 @@ HB_FUNC( WIN_COMWRITE )
       DWORD dwNumberofBytesToWrite = ( DWORD ) hb_parclen( 2 );
       DWORD dwNumberofBytesWritten;
 
-      s_PortData[ iPort ].iFunction = FCNWRITEFILE;
+      s_PortData[ iPort ].iFunction = WIN_COM_FUN_WRITEFILE;
       s_PortData[ iPort ].dwError = 0;
       if( WriteFile( hCommPort, lpBuffer, dwNumberofBytesToWrite, &dwNumberofBytesWritten, NULL ) )
          hb_retnl( dwNumberofBytesWritten );
@@ -221,7 +221,7 @@ HB_FUNC( WIN_COMREAD )
       DWORD dwNumberOfBytesRead;
 
       lpBuffer = ( char * ) hb_xgrab( dwNumberOfBytesToRead + 1 );
-      s_PortData[ iPort ].iFunction = FCNREADFILE;
+      s_PortData[ iPort ].iFunction = WIN_COM_FUN_READFILE;
       s_PortData[ iPort ].dwError = 0;
       if( ReadFile( hCommPort, lpBuffer, dwNumberOfBytesToRead, &dwNumberOfBytesRead, NULL ) )
       {
@@ -253,7 +253,7 @@ HB_FUNC( WIN_COMRECV )
       DWORD dwNumberOfBytesRead;
 
       lpBuffer = ( char * ) hb_xgrab( dwNumberOfBytesToRead + 1 );
-      s_PortData[ iPort ].iFunction = FCNREADFILE;
+      s_PortData[ iPort ].iFunction = WIN_COM_FUN_READFILE;
       s_PortData[ iPort ].dwError = 0;
       if( ReadFile( hCommPort, lpBuffer, dwNumberOfBytesToRead, &dwNumberOfBytesRead, NULL ) )
       {
@@ -281,7 +281,7 @@ HB_FUNC( WIN_COMSTATUS )
    {
       DWORD dwModemStat = 0;
 
-      s_PortData[ iPort ].iFunction = FCNGETCOMMMODEMSTATUS;
+      s_PortData[ iPort ].iFunction = WIN_COM_FUN_GETCOMMMODEMSTATUS;
       s_PortData[ iPort ].dwError = 0;
       if( GetCommModemStatus( hCommPort, &dwModemStat ) )
       {
@@ -318,7 +318,7 @@ HB_FUNC( WIN_COMPURGE )
       DWORD dwFlags;
 
       dwFlags = ( hb_parl( 2 ) ? PURGE_RXCLEAR : 0 ) | ( hb_parl( 3 ) ? PURGE_TXCLEAR : 0 );
-      s_PortData[ iPort ].iFunction = FCNPURGECOMM;
+      s_PortData[ iPort ].iFunction = WIN_COM_FUN_PURGECOMM;
       s_PortData[ iPort ].dwError = 0;
       if( PurgeComm( hCommPort, dwFlags ) )
          hb_retl( TRUE );
@@ -342,7 +342,7 @@ HB_FUNC( WIN_COMQUEUESTATUS )
       DWORD dwErrors = 0;
       COMSTAT ComStat;
 
-      s_PortData[ iPort ].iFunction = FCNCLEARCOMMERROR;
+      s_PortData[ iPort ].iFunction = WIN_COM_FUN_CLEARCOMMERROR;
       s_PortData[ iPort ].dwError = 0;
       if( ClearCommError( hCommPort, &dwErrors, &ComStat ) )
       {
@@ -387,7 +387,7 @@ HB_FUNC( WIN_COMSETRTS )
    {
       DWORD dwFunc = hb_parl( 2 ) ? SETRTS : CLRRTS;
 
-      s_PortData[ iPort ].iFunction = ESCAPECOMMFUNCTION;
+      s_PortData[ iPort ].iFunction = WIN_COM_FUN_ESCAPECOMMFUNCTION;
       s_PortData[ iPort ].dwError = 0;
       if( EscapeCommFunction( hCommPort, dwFunc ) )
          hb_retl( TRUE );
@@ -413,7 +413,7 @@ HB_FUNC( WIN_COMSETDTR )
    {
       DWORD dwFunc = hb_parl( 2 ) ? SETDTR : CLRDTR;
 
-      s_PortData[ iPort ].iFunction = ESCAPECOMMFUNCTION;
+      s_PortData[ iPort ].iFunction = WIN_COM_FUN_ESCAPECOMMFUNCTION;
       s_PortData[ iPort ].dwError = 0;
       if( EscapeCommFunction( hCommPort, dwFunc ) )
          hb_retl( TRUE );
@@ -437,7 +437,7 @@ HB_FUNC( WIN_COMRTSFLOW )
       DCB CurDCB;
       int iRtsControl = hb_parni( 2 );
 
-      s_PortData[ iPort ].iFunction = FCNGETCOMMSTATE;
+      s_PortData[ iPort ].iFunction = WIN_COM_FUN_GETCOMMSTATE;
       s_PortData[ iPort ].dwError = 0;
       CurDCB.DCBlength = sizeof( DCB );
       if( ! GetCommState( hCommPort, &CurDCB ) )
@@ -468,7 +468,7 @@ HB_FUNC( WIN_COMRTSFLOW )
          return;
       }
 
-      s_PortData[ iPort ].iFunction = FCNSETCOMMSTATE;
+      s_PortData[ iPort ].iFunction = WIN_COM_FUN_SETCOMMSTATE;
       s_PortData[ iPort ].dwError = 0;
       if( ! SetCommState( hCommPort, &CurDCB ) )
       {
@@ -492,7 +492,7 @@ HB_FUNC( WIN_COMDTRFLOW )
       DCB CurDCB;
       int DtrControl = hb_parni( 2 );
 
-      s_PortData[ iPort ].iFunction = FCNGETCOMMSTATE;
+      s_PortData[ iPort ].iFunction = WIN_COM_FUN_GETCOMMSTATE;
       s_PortData[ iPort ].dwError = 0;
       CurDCB.DCBlength = sizeof( DCB );
       if( ! GetCommState( hCommPort, &CurDCB ) )
@@ -523,7 +523,7 @@ HB_FUNC( WIN_COMDTRFLOW )
          return;
       }
 
-      s_PortData[ iPort ].iFunction = FCNSETCOMMSTATE;
+      s_PortData[ iPort ].iFunction = WIN_COM_FUN_SETCOMMSTATE;
       s_PortData[ iPort ].dwError = 0;
       if( ! SetCommState( hCommPort, &CurDCB ) )
       {
@@ -546,7 +546,7 @@ HB_FUNC( WIN_COMXONXOFFFLOW )
    {
       DCB CurDCB;
 
-      s_PortData[ iPort ].iFunction = FCNGETCOMMSTATE;
+      s_PortData[ iPort ].iFunction = WIN_COM_FUN_GETCOMMSTATE;
       s_PortData[ iPort ].dwError = 0;
       CurDCB.DCBlength = sizeof( DCB );
       if( ! GetCommState( hCommPort, &CurDCB ) )
@@ -567,7 +567,7 @@ HB_FUNC( WIN_COMXONXOFFFLOW )
          CurDCB.fOutX = 0;
       }
 
-      s_PortData[ iPort ].iFunction = FCNSETCOMMSTATE;
+      s_PortData[ iPort ].iFunction = WIN_COM_FUN_SETCOMMSTATE;
       s_PortData[ iPort ].dwError = 0;
       if( ! SetCommState( hCommPort, &CurDCB ) )
       {
@@ -650,7 +650,7 @@ HB_FUNC( WIN_COMSETTIMEOUTS )
       Timeouts.WriteTotalTimeoutMultiplier = HB_ISNUM( 5 ) ? ( DWORD ) hb_parnl( 5 ) : ( DWORD ) -1;
       Timeouts.WriteTotalTimeoutConstant   = HB_ISNUM( 6 ) ? ( DWORD ) hb_parnl( 6 ) : ( DWORD ) -1;
 
-      s_PortData[ iPort ].iFunction = FCNGETCOMMSTATE;
+      s_PortData[ iPort ].iFunction = WIN_COM_FUN_GETCOMMSTATE;
       s_PortData[ iPort ].dwError = 0;
 
       CurDCB.DCBlength = sizeof( DCB );
@@ -661,7 +661,7 @@ HB_FUNC( WIN_COMSETTIMEOUTS )
          return;
       }
 
-      s_PortData[ iPort ].iFunction = FCNSETCOMMTIMEOUTS;
+      s_PortData[ iPort ].iFunction = WIN_COM_FUN_SETCOMMTIMEOUTS;
       s_PortData[ iPort ].dwError = 0;
       if( ! hb_win_ComSetTimeouts( hCommPort, &Timeouts, CurDCB.BaudRate, CurDCB.Parity, CurDCB.ByteSize, CurDCB.StopBits ) )
       {
@@ -682,7 +682,7 @@ HB_FUNC( WIN_COMSETQUEUESIZE )
 
    if( iPort >= 0 && iPort < ( int ) HB_SIZEOFARRAY( s_PortData ) && ( hCommPort = s_PortData[ iPort ].hPort ) != INVALID_HANDLE_VALUE && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
    {
-      s_PortData[ iPort ].iFunction = FCNSETUPCOMM;
+      s_PortData[ iPort ].iFunction = WIN_COM_FUN_SETUPCOMM;
       s_PortData[ iPort ].dwError = 0;
       if( ! SetupComm( hCommPort, hb_parni( 2 ), hb_parni( 3 ) ) )
       {
@@ -726,26 +726,26 @@ HB_FUNC( WIN_COMDEBUGDCB )
 
    if( iPort >= 0 && iPort < ( int ) HB_SIZEOFARRAY( s_PortData ) && ( hCommPort = s_PortData[ iPort ].hPort ) != INVALID_HANDLE_VALUE )
    {
-      int iDebugLevel = HB_ISNUM( 2 ) ? hb_parni( 2 ) : WPDBGBASIC;
+      int iDebugLevel = HB_ISNUM( 2 ) ? hb_parni( 2 ) : WIN_COM_DBGBASIC;
       DCB CurDCB;
       COMMTIMEOUTS CurCOMMTIMEOUTS;
       COMMPROP CurCOMMPROP;
       char szDebugString[ 1024 ] = "";
       char buffer[ 80 ];
 
-      s_PortData[ iPort ].iFunction = FCNGETCOMMSTATE;
+      s_PortData[ iPort ].iFunction = WIN_COM_FUN_GETCOMMSTATE;
       s_PortData[ iPort ].dwError = 0;
       CurDCB.DCBlength = sizeof( DCB );
       if( GetCommState( hCommPort, &CurDCB ) )
       {
-         if( iDebugLevel & WPDBGBASIC )
+         if( iDebugLevel & WIN_COM_DBGBASIC )
          {
             hb_snprintf( buffer, sizeof( buffer ), "Baud     : %lu\n", CurDCB.BaudRate ) ; hb_strncat( szDebugString, buffer, sizeof( szDebugString ) - 1 );
             hb_snprintf( buffer, sizeof( buffer ), "ByteSize : %i\n" , CurDCB.ByteSize ) ; hb_strncat( szDebugString, buffer, sizeof( szDebugString ) - 1 );
             hb_snprintf( buffer, sizeof( buffer ), "Parity   : %i\n" , CurDCB.Parity   ) ; hb_strncat( szDebugString, buffer, sizeof( szDebugString ) - 1 );
             hb_snprintf( buffer, sizeof( buffer ), "StopBits : %i\n" , CurDCB.StopBits ) ; hb_strncat( szDebugString, buffer, sizeof( szDebugString ) - 1 );
          }
-         if( iDebugLevel & WPDBGFLOW )
+         if( iDebugLevel & WIN_COM_DBGFLOW )
          {
             hb_strncat( szDebugString, "fRtsControl : ", sizeof( szDebugString ) - 1 );
             hb_strncat( szDebugString, CurDCB.fRtsControl == RTS_CONTROL_DISABLE ? "RTS_CONTROL_DISABLE\n" :
@@ -763,7 +763,7 @@ HB_FUNC( WIN_COMDEBUGDCB )
             hb_strncat( szDebugString, "fOutxDsrFlow : ", sizeof( szDebugString ) - 1 );
             hb_strncat( szDebugString, CurDCB.fOutxDsrFlow ? "true\n" : "false\n", sizeof( szDebugString ) - 1 );
          }
-         if( iDebugLevel & WPDBGXTRAFLOW )
+         if( iDebugLevel & WIN_COM_DBGXTRAFLOW )
          {
             hb_strncat( szDebugString, "fDsrSensitivity : ", sizeof( szDebugString ) - 1 );
             hb_strncat( szDebugString, CurDCB.fDsrSensitivity ? "true\n" : "false\n", sizeof( szDebugString ) - 1 );
@@ -774,7 +774,7 @@ HB_FUNC( WIN_COMDEBUGDCB )
             hb_snprintf( buffer, sizeof( buffer ), "XonChar : 0x%i\n" , CurDCB.XonChar  ) ; hb_strncat( szDebugString, buffer, sizeof( szDebugString ) - 1 );
             hb_snprintf( buffer, sizeof( buffer ), "XoffChar : 0x%i\n", CurDCB.XoffChar ) ; hb_strncat( szDebugString, buffer, sizeof( szDebugString ) - 1 );
          }
-         if( iDebugLevel & WPDBGOTHER )
+         if( iDebugLevel & WIN_COM_DBGOTHER )
          {
             hb_strncat( szDebugString, "fBinary : ", sizeof( szDebugString ) - 1 );
             hb_strncat( szDebugString, CurDCB.fBinary ? "true\n" : "false\n", sizeof( szDebugString ) - 1 );
@@ -798,9 +798,9 @@ HB_FUNC( WIN_COMDEBUGDCB )
          return;
       }
 
-      if( iDebugLevel & WPDBGTIMEOUTS )
+      if( iDebugLevel & WIN_COM_DBGTIMEOUTS )
       {
-         s_PortData[ iPort ].iFunction = FCNGETCOMMTIMEOUTS;
+         s_PortData[ iPort ].iFunction = WIN_COM_FUN_GETCOMMTIMEOUTS;
          s_PortData[ iPort ].dwError = 0;
          if( GetCommTimeouts( hCommPort, &CurCOMMTIMEOUTS ) )
          {
@@ -818,9 +818,9 @@ HB_FUNC( WIN_COMDEBUGDCB )
          }
       }
 
-      if( iDebugLevel & WPDBGQUEUE )
+      if( iDebugLevel & WIN_COM_DBGQUEUE )
       {
-         s_PortData[ iPort ].iFunction = FCNGETCOMMPROPERTIES;
+         s_PortData[ iPort ].iFunction = WIN_COM_FUN_GETCOMMPROPERTIES;
          s_PortData[ iPort ].dwError = 0;
          if( GetCommProperties( hCommPort, &CurCOMMPROP ) )
          {

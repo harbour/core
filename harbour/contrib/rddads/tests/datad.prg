@@ -14,8 +14,7 @@ FUNCTION MAIN
    local n
    local cErr, cStr
    local aStru := {{ "ID", "A", 1, 0}, {"Name", "C", 50, 0}, {"address", "C", 50, 0}, {"city", "C", 30, 0}, {"Age", "n", 3, 0}}
-   local hConnection1, hConnection2
-   local lIsDict := .f.
+   local hConnection1
 
    CLS
 
@@ -50,11 +49,11 @@ FUNCTION MAIN
       DbCreate("Table2", aStru)
       //now create an index
       USE table1 new
-      INDEX ON id TAG codigo
+      INDEX ON FIELD->id TAG codigo
       USE
 
       USE table2 new
-      INDEX ON id TAG codigo
+      INDEX ON FIELD->id TAG codigo
       USE
    ENDIF
 

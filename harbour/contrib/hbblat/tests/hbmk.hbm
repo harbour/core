@@ -4,6 +4,6 @@
 
 ../hbblat.hbc
 
--w3
+-w3 -es2
 
 -lhbwin

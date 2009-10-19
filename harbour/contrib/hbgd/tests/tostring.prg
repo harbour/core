@@ -17,12 +17,7 @@
 
 PROCEDURE Main()
 
-   LOCAL im, im2
-   LOCAL black, white, blue, red, green, cyan, gray
-   LOCAL aClip, color, font, aRect
-   LOCAL oI, oI2, oI3, oI4, nThick, n, nSecs
-   LOCAL oI5
-   LOCAL oB
+   LOCAL oI
 
    /*
    // Check output directory

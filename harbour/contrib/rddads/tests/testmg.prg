@@ -60,6 +60,7 @@ REQUEST ADS
 function Main()
 
    local i
+   local aRay
 
    rddsetdefault( "ADS" )
    SET SERVER LOCAL    // REMOTE

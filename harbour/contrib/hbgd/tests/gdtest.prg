@@ -17,8 +17,9 @@
 PROCEDURE Main()
 
    LOCAL im, im2
-   LOCAL black, white, blue, red, green, cyan
-   LOCAL aClip, color, font, aRect
+   LOCAL black, blue, red, green, cyan
+   LOCAL color, font
+// LOCAL aClip
 
    // SET GDFONTPATH=C:\windows\fonts
    IF GetEnv( "GDFONTPATH" ) == ""
@@ -43,9 +44,6 @@ PROCEDURE Main()
    im2 := gdImageCreateFromJpeg( IMAGES_IN + "conv_tst.jpg")
 
    /* Now work on first empty image */
-
-   /* Allocate background */
-   white := gdImageColorAllocate(im, 255, 255, 255)
 
    /* Allocate drawing color */
    black := gdImageColorAllocate(im, 0, 0, 0)
@@ -94,7 +92,7 @@ PROCEDURE Main()
    gdImageSetClip(im, 25, 25, 75, 75)
 
    /* Retrieve Clipping rectangle */
-   aClip := gdImageGetClip(im)
+// aClip := gdImageGetClip(im)
 
 //   ? "Clipping rectangle values"
 //   ? hb_DumpVar( aClip )

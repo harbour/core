@@ -23,7 +23,6 @@ RETURN
 STATIC FUNCTION TRP20FTPEnv( cCarpeta )
 
    LOCAL aFiles
-   LOCAL n
    LOCAL cUrl
    LOCAL cStr
    LOCAL lRetorno  := .T.
@@ -33,9 +32,6 @@ STATIC FUNCTION TRP20FTPEnv( cCarpeta )
    LOCAL cServer
    LOCAL cPassword
    LOCAL cFile     := ""
-   LOCAL lElim
-
-   DEFAULT lElim TO .F.
 
    cServer   := "ftpserver" //change ftpserver to the real name  or ip of your ftp server
    cUser     := "ftpuser"  // change ftpuser to an valid user on ftpserer

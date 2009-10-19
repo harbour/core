@@ -139,6 +139,11 @@ RETURN iif( cName2 == "pasw", SQLITE_IGNORE, SQLITE_OK )
 */
 FUNCTION Authorizer3( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
    //
+   HB_SYMBOL_UNUSED( cName1 )
+   HB_SYMBOL_UNUSED( cName2 )
+   HB_SYMBOL_UNUSED( cDatabaseName )
+   HB_SYMBOL_UNUSED( cTriggerOrViewName )
+
 RETURN iif( nAction == SQLITE_SELECT, SQLITE_DENY, SQLITE_OK )
 
 /**

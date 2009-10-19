@@ -21,6 +21,7 @@ FUNCTION Main( cDL, cUL )
    LOCAL tmp
    LOCAL tmp1
    LOCAL f
+   LOCAL a
 
    LOCAL lVerbose := .F.
 

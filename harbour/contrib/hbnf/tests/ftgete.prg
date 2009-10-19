@@ -4,10 +4,12 @@
 
 #include "simpleio.ch"
 
-function main()
+PROCEDURE main()
 
    LOCAL a
    LOCAL c
+
+   LOCAL tmp
 
    a := Array( FT_GETE() )
    FT_GETE( @a )

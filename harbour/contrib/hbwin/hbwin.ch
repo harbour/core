@@ -106,6 +106,14 @@
 #define RTS_CONTROL_HANDSHAKE  0x02
 #define RTS_CONTROL_TOGGLE     0x03
 
+#define WIN_COM_DBGBASIC       0x01
+#define WIN_COM_DBGFLOW        0x02
+#define WIN_COM_DBGXTRAFLOW    0x04
+#define WIN_COM_DBGOTHER       0x08
+#define WIN_COM_DBGTIMEOUTS    0x10
+#define WIN_COM_DBGQUEUE       0x20
+#define WIN_COM_DBGALL         0x3F
+
 /* win_Prn() related values */
 
 #define FORM_A4                9

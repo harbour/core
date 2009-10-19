@@ -19,12 +19,13 @@
 PROCEDURE Main()
 
    LOCAL im, clone, rotated, rotatedEx, rescale, im2, im3
-   LOCAL centerX, centerY, width, height, appo
-   LOCAL bmpinfoheader
+   LOCAL centerX, centerY, width, height
+// LOCAL bmpinfoheader
    LOCAL bmpinfo
-   LOCAL bkcolor
-   LOCAL iccprofile
-   LOCAL x
+// LOCAL bkcolor
+// LOCAL iccprofile
+   LOCAL nH, nLen, cStr
+// LOCAL appo
 
    //? "Press Alt-D + Enter to activate debug"
    //AltD( .T. )
@@ -155,6 +156,7 @@ PROCEDURE Main()
    //? bmpinfoheader:SayMembers(" ", .t., .t.)
 
    //bmpinfo:Pointer( fi_GetInfo( im ) )
+   bmpinfo := NIL // To fix warning
    ? "Info           :", ValToPrg( bmpinfo )
    //? bmpinfo:SayMembers(" ", .t., .t.)
    ? "-----------------------------------------------------"

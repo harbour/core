@@ -5,7 +5,7 @@
 #include "../postgres.ch"
 
 Function main()
-    Local conn, res, aTemp, i, x,y, pFile
+    Local conn, res, aTemp, x, y, pFile
     Local cDb := 'test'
     Local cUser := 'user'
     Local cPass := 'pass'

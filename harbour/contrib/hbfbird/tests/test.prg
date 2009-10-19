@@ -11,10 +11,15 @@ Function Main()
 
    LOCAL trans, qry
 
+   LOCAL db, x, y
+   LOCAL num_cols
+   LOCAL columns 
+   LOCAL fetch_stat
+
    hb_FNameSplit( hb_argv( 0 ), @cDir, @cName, NIL )
    cDBName := hb_FNameMerge( cDir, cName, ".gdb" )
    
-   if File( cDBName )
+   if hb_FileExists( cDBName )
        FErase( cDBName )
    endif
    
@@ -33,7 +38,7 @@ Function Main()
    ? FBClose(db) 
    
    trans := FBStartTransaction(db) 
-   qry := FBQuery(db, 'create table teste (code smallint)', nDialect, trans)
+   FBQuery(db, 'create table teste (code smallint)', nDialect, trans)
    FBCommit(trans)
    
    

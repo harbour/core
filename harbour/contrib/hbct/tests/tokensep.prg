@@ -59,9 +59,7 @@
 procedure main
 
 local cStr := ".,.This.,.is.,.a.,.test!"
-local ni, npos
-local cPre := " "
-local cPost := " "
+local ni
 
  ctinit()
 

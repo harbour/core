@@ -10,7 +10,7 @@
 #include "../postgres.ch"
 
 Function Main( cServer, cDatabase, cUser, cPass )
-    Local conn, res, oRow, i, x
+    Local conn, res, i, x
 
     Local cQuery
 

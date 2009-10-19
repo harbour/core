@@ -115,7 +115,7 @@ PROCEDURE Main( cPortName )
       ELSE
          ? "RTSFlow( RTS_CONTROL_HANDSHAKE ) failed :", oWinPort:Error()
       ENDIF
-      ? oWinPort:DebugDCB(WPDBGFLOW)
+      ? oWinPort:DebugDCB( WIN_COM_DBGFLOW )
       IF oWinPort:SetRTS( .F. )
          ? "SetRTS( .F. ) succeeded (it shouldn't according to docs!)"
       ELSE
@@ -127,7 +127,7 @@ PROCEDURE Main( cPortName )
       ELSE
          ? "RTSFlow( RTS_CONTROL_DISABLE ) failed :", oWinPort:Error()
       ENDIF
-      ? oWinPort:DebugDCB( WPDBGFLOW )
+      ? oWinPort:DebugDCB( WIN_COM_DBGFLOW )
       IF oWinPort:SetRTS( .F. )
          ? "SetRTS( .F. ) succeeded (it should)"
       ELSE
@@ -164,7 +164,7 @@ PROCEDURE Main( cPortName )
    ? "This is going to fail, so no device needed"
    Inkey( 0 )
 
-   oWinPort := WinPort():Init( cPortName, CBR_9600, NOPARITY, 99, ONESTOPBIT )
+   oWinPort := Win_Com():Init( cPortName, CBR_9600, NOPARITY, 99, ONESTOPBIT )
    IF !oWinPort:Open
       ? "Open() failed :", oWinPort:Error()
    ELSE
@@ -176,13 +176,13 @@ PROCEDURE Main( cPortName )
    ?
    Inkey( 0 )
 
-   oWinPort := WinPort():Init( cPortName, CBR_9600, NOPARITY, 8, ONESTOPBIT )
+   oWinPort := Win_Com():Init( cPortName, CBR_9600, NOPARITY, 8, ONESTOPBIT )
    IF ! oWinPort:Open
       ? "Open() failed :", oWinPort:Error()
    ELSE
       ? "Open succeeded"
       ?
-      ? oWinPort:DebugDCB( WPDBGFLOW )
+      ? oWinPort:DebugDCB( WIN_COM_DBGFLOW )
       ? "Printers will probably have CTS, DSR and DCD high, IF they are off they'll all be low"
       IF oWinPort:Status( @lCTS, @lDSR, @lRing, @lDCD )
          ? "Status() succeeded : CTS ", lCTS, ", DSR ", lDSR, ", Ring ", lRing, ", DCD ", lDCD
@@ -223,7 +223,7 @@ PROCEDURE Main( cPortName )
          ? "XonXoffFlow( .T. ) failed :", oWinPort:Error()
       ENDIF
       ?
-      ? oWinPort:DebugDCB( WPDBGFLOW )
+      ? oWinPort:DebugDCB( WIN_COM_DBGFLOW )
 
       ? "If it's on then no Hold status should be on, IF off then probably CTS and DSR"
       IF oWinPort:QueueStatus( @lCTSHold, @lDSRHold, @lDCDHold, @lXoffHold, @lXoffSent, @nInQueue, @nOutQueue )

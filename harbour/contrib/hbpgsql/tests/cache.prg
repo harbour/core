@@ -47,7 +47,6 @@ STATIC aTempDBF   := {}
 Function Main( cServer, cDatabase, cUser, cPass )
     Local i
     Local cQuery
-    Local conn, res
 
     SetMode( 25, 80 )
 
@@ -101,7 +100,6 @@ Return SQLGarbageCollector()
 Function SQLApplyUpdates()
   Local cAlias := Upper(Alias())
   Local i, x
-  Local aField := {}
   Local oQuery
   Local oRow
   Local lUpdate
@@ -280,11 +278,8 @@ Function SQLFetch( fetchall )
   Local oRow
   Local cAlias := Upper(Alias())
   Local i, x, y
-  Local nPos := 0
+  Local nPos
   Local lEof := .F.
-
-  Local cString := ""
-  Local aStruct
 
   Default Fetchall TO .f.
 
@@ -333,15 +328,14 @@ Procedure SQLFetchAll()
 Return
 
 
-Function SQLOpen( cAlias, cQuery, xFetch )
+Function SQLOpen( cAlias, cQuery, xFetch, cOrder )
   Local cFile
   Local Result := .t.
-  Local i, x
+  Local x
   Local oServer
   Local oQuery
   Local aStrudbf
   Local lFetch
-  Local cOrder
 
   oServer := SQLCurrentServer()
   cAlias := Upper(cAlias)
@@ -355,7 +349,10 @@ Function SQLOpen( cAlias, cQuery, xFetch )
   ENDIF
 
   IF cQuery == NIL
-      cQuery := 'SELECT * FROM ' + cAlias + ' ORDER BY ' + cOrder
+      cQuery := 'SELECT * FROM ' + cAlias
+      IF ! Empty( cOrder )
+          cQuery += ' ORDER BY ' + cOrder
+      ENDIF
   ENDIF
 
   cQuery := cQuery
@@ -464,16 +461,7 @@ Function SQLExecQuery( cQuery )
 Return result
 
 
-Function SQLPrepare( cQuery, x01, x02, x03, x04, x05, x06, x07, x08, x09, x10,;
-                             x11, x12, x13, x14, x15, x16, x17, x18, x19, x20,;
-                             x21, x22, x23, x24, x25, x26, x27, x28, x29, x30,;
-                             x31, x32, x33, x34, x35, x36, x37, x38, x39, x40,;
-                             x41, x42, x43, x44, x45, x46, x47, x48, x49, x50,;
-                             x51, x52, x53, x54, x55, x56, x57, x58, x59, x60,;
-                             x61, x62, x63, x64, x65, x66, x67, x68, x69, x70,;
-                             x71, x72, x73, x74, x75, x76, x77, x78, x79, x80,;
-                             x81, x82, x83, x84, x85, x86, x87, x88, x89, x90,;
-                             x91, x92, x93, x94, x95, x96, x97, x98, x99, x100)
+Function SQLPrepare( cQuery, ... )
   Local i, x
 
   if Pcount() >= 2
@@ -539,7 +527,7 @@ Function SQLStartTrans()
 Return nil
 
 
-Function SQLInTrans( lStart )
+Function SQLInTrans()
     Local result
     result := (PQtransactionstatus(oServer:pDB) == PQTRANS_INTRANS)
 Return result

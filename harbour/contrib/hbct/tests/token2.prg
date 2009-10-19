@@ -66,11 +66,10 @@
 procedure main
 
 local cStr1 := "A,BB,CCC,DDDD,EEEEE,FFFFFF"
-local cStr2 := "ZZZZZZ,YYYYY,XXXX,WWW,VV,U"
+//local cStr2 := "ZZZZZZ,YYYYY,XXXX,WWW,VV,U"
 local cStr3 := "0123456789ABCDEFGHIJKLM"
 local cStr4 := "08:09:10:11:12"
 local cStr5 := "05:00+20:00+35:00+50:00"
-local cStr6
 
 local cTE1, cTE2
 

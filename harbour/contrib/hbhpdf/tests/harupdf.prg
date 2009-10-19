@@ -184,7 +184,7 @@ Function DesignHaruPDF( cFileToSave )
 //----------------------------------------------------------------------//
 Static Function Page_Lines( pdf )
    Local page_title := "Line Example"
-   Local font,  page, fname
+   Local font, page
 
    Local DASH_MODE1 := {3}
    Local DASH_MODE2 := {3, 7}
@@ -466,9 +466,10 @@ Static Function draw_line2( page, x, y, label )
    Return NIL
 //----------------------------------------------------------------------//
 Static Function Page_Text( pdf )
-   Local page, page_height, font, rect := array( 4 )
+   Local page, font, rect := array( 4 )
    Local SAMP_TXT := "The quick brown fox jumps over the lazy dog. "
    Local angle1, angle2, rad1, rad2,i,x,y,buf
+// Local page_height
 
    /* add a new page object. */
    page := HPDF_AddPage(pdf)
@@ -476,7 +477,7 @@ Static Function Page_Text( pdf )
 
    //print_grid( pdf, page )
 
-   page_height := HPDF_Page_GetHeight(page)
+// page_height := HPDF_Page_GetHeight(page)
 
    font := HPDF_GetFont(pdf, "Helvetica", NIL)
    HPDF_Page_SetTextLeading(page, 20)
@@ -722,8 +723,8 @@ Static Function Page_TextScaling( pdf )
 
        /* measure the number of characters which included in the page. */
        buf := samp_text
-       len := HPDF_Page_MeasureText(page, samp_text, ;
-                       HPDF_Page_GetWidth(page) - 120, .F., NIL)
+       HPDF_Page_MeasureText(page, samp_text, ;
+                HPDF_Page_GetWidth(page) - 120, .F., NIL)
 
        HPDF_Page_ShowText(page, buf)
 
@@ -965,7 +966,7 @@ static function show_description( page, x, y, text )
 #define CELL_HEADER  10
 
 Static function Page_CodePages( pdf )
-   Local page, outline, font2, font_name, root, i, font, dst, fname
+   Local page, outline, font2, font_name, root, i, font, dst
    Local cResPath := "files" + hb_OSPathSeparator()
    Local cAfm := cResPath+"a010013l.afm"
    Local cPfb := cResPath+"a010013l.pfb"
@@ -1159,7 +1160,7 @@ Static Function Page_Graphics( pdf )
    HPDF_Page_MoveTo(page, 100, 100)
    HPDF_Page_LineTo(page, pos[1], pos[2])
    HPDF_Page_Arc(page, 100, 100, 80, 360 * 0.85, 360)
-   pos := HPDF_Page_GetCurrentPos(page)
+// pos := HPDF_Page_GetCurrentPos(page)
    HPDF_Page_LineTo(page, 100, 100)
    HPDF_Page_Fill(page)
 

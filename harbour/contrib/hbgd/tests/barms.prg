@@ -12,16 +12,16 @@ Function Main()
    local black  := {0,0,0}
    local white  := {255,255,255}
 
-   local blue   := {0,0,255}
-   local yellon := {255,255,128}
+// local blue   := {0,0,255}
+// local yellon := {255,255,128}
 
-   local red    := {255,0,0}
+// local red    := {255,0,0}
 
    local ccode13    := "P48WBQ7BX3M73X8V3WRT7F9JW"
    local ccode8     := "P48WBQ7BX3M73X8V3WRT7F9JW"
    local ccode128   := "P48WBQ7BX3M73X8V3WRT7F9JW"
 
-   local nlower := 1 , nhight := 50
+// local nlower := 1 , nhight := 50
 
    /* here is the list of arguments
    1- Barcode Type 13,8  and 128

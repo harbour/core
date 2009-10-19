@@ -54,7 +54,8 @@
 
 procedure main(cArg)
 
-   local oServer, oQuery, oQuery2, oRow, i, aStru
+   local oServer, oQuery2, oRow, aStru
+   local oQuery
 
    SET CENTURY ON
    SET EPOCH TO 1960
@@ -65,8 +66,8 @@ procedure main(cArg)
    endif
 
    oServer:SelectDB("ims")
-   oQuery:=oServer:Query("SELECT * from maga limit 10")
-   oRow := oQuery:GetRow()
+// oQuery := oServer:Query("SELECT * from maga limit 10")
+// oRow := oQuery:GetRow()
 
    dbUseArea(.T.,, cArg, "wn", .F.)
 
@@ -82,7 +83,7 @@ procedure main(cArg)
    endif
 
    oQuery:=oServer:Query("SELECT C111, C116, C134 from maga limit 10")
-   oRow := oQuery:GetRow()
+// oRow := oQuery:GetRow()
 
    oServer:Destroy()
 

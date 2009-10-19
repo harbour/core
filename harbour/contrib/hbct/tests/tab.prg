@@ -58,7 +58,7 @@
 
 procedure main
 
-local cStr, nLen, ni, cStr1
+local cStr, nLen
 
  ctinit()
 

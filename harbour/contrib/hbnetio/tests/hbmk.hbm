@@ -5,4 +5,4 @@
 ../hbnetio.hbc
 -mt
 
--w3
+-w3 -es2

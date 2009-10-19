@@ -8,7 +8,7 @@
    Donated to the public domain on 2001-03-15 by David G. Holm <dholm@jsd-llc.com>
 */
 
-PROCEDURE Main( cFile )
+PROCEDURE Main()
 LOCAL counter := 0, start_time, stop_time
 LOCAL twirl1 := Twirler():new( 2,  5, "One: " )
 LOCAL twirl2 := Twirler():new( 2, 15, "Two: ", , 0.1 )

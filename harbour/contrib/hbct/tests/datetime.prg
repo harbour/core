@@ -65,7 +65,6 @@
 FUNCTION main ()
 *:--------------------------------------------------------------------
 local cScr
-local cScr2
 local nchoice
 local c    := .T.
 local farr := { "addmonth ( ddate )  Add a month to ddate     ", ;
@@ -1170,7 +1169,6 @@ local nKey
 *:----------------------------------------------------------------
 FUNCTION chkansi (cAnsidate)
 *:----------------------------------------------------------------
-local ddate
 local nYear
 local nMonth
 local nDay

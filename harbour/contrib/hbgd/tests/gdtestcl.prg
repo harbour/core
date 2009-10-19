@@ -16,12 +16,12 @@
 
 PROCEDURE Main()
 
-   LOCAL im, im2
-   LOCAL black, white, blue, red, green, cyan, gray
-   LOCAL aClip, color, font, aRect
+   LOCAL black, blue, red, green, cyan, gray
+   LOCAL color
    LOCAL oI, oI2, oI3, oI4, nThick, n, nSecs
    LOCAL oI5
    LOCAL oB
+// LOCAL aClip
 
    // To set fonts run this command:
    // for windows: SET GDFONTPATH=C:\windows\fonts
@@ -49,9 +49,6 @@ PROCEDURE Main()
    oI5 := GDImage():LoadFromJpeg( IMAGES_IN + "conv_tst.jpg" )
 
    /* Now work on first empty image */
-
-   /* Allocate background */
-   white := oI:SetColor( 255, 255, 255 )
 
    /* Allocate drawing color */
    black := oI:SetColor( 0, 0, 0 )
@@ -130,7 +127,7 @@ PROCEDURE Main()
    oI:SetClippingArea(25, 25, 75, 75)
 
    /* Retrieve Clipping rectangle */
-   aClip := oI:GetClippingArea()
+// aClip := oI:GetClippingArea()
    ? "Clipping rectangle values"
 //   ? hb_DumpVar( aClip )
 
@@ -166,7 +163,7 @@ PROCEDURE Main()
 
    nSecs := Seconds()
    ? "start clone & zoom"
-   oI4:= oI2:Clone():Zoom( 200 )
+   oI2:Clone():Zoom( 200 )
    ? "end", Seconds() - nSecs
 
    nSecs := Seconds()
@@ -227,8 +224,6 @@ PROCEDURE Main()
 
 
    oI5 := GDChart():New( 400, 400 )
-   // Set background
-   white := oI5:SetColor(255, 255, 255)
    // Define piece colors
    blue  := oI5:SetColor(0, 0, 200)
    gray  := oI5:SetColor(30, 30, 30)
@@ -261,8 +256,6 @@ PROCEDURE Main()
    oI5:SaveJpeg( IMAGES_OUT + "pie.jpg" )
 
    oI5 := GDChart():New( 640, 480 )
-   // Set background
-   white := oI5:SetColor(255, 255, 255)
    // Define piece colors
    blue  := oI5:SetColor(0, 0, 200)
    gray  := oI5:SetColor(30, 30, 30)

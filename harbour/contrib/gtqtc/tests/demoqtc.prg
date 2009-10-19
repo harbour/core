@@ -38,9 +38,11 @@ FUNCTION Main()
    LOCAL cVar    := '               '
    LOCAL cVar1   := '               '
    LOCAL getlist := {}
+#if 0
    Local nHeight := 20
    Local nWidth  := Int( nHeight/2 )
    Local cFont   := 'Courier New'
+#endif
    Local nn      := 0
    Local cc      := 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmn'
 
@@ -349,6 +351,8 @@ STATIC FUNCTION TBNext( oTbr )
    LOCAL nSaveRecNum := recno()
    LOCAL lMoved := .T.
 
+   HB_SYMBOL_UNUSED( oTbr )
+
    if Eof()
       lMoved := .F.
    else
@@ -364,6 +368,8 @@ STATIC FUNCTION TBNext( oTbr )
 STATIC FUNCTION TBPrev( oTbr )
    LOCAL nSaveRecNum := Recno()
    LOCAL lMoved := .T.
+
+   HB_SYMBOL_UNUSED( oTbr )
 
    DBSkip( -1 )
 
@@ -444,6 +450,8 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
 /*----------------------------------------------------------------------*/
 
 FUNCTION Qtc_Out( cMsg )
+
+   HB_SYMBOL_UNUSED( cMsg )
 
    //RETURN Qtc_OutputDebugString( cMsg )
    RETURN NIL

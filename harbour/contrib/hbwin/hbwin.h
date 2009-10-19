@@ -50,26 +50,26 @@
  *
  */
 
-#define FCNCREATEFILE               1
-#define FCNGETCOMMSTATE             2
-#define FCNSETCOMMSTATE             3
-#define FCNSETUPCOMM                4
-#define FCNGETCOMMTIMEOUTS          5
-#define FCNSETCOMMTIMEOUTS          6
-#define FCNCLOSEHANDLE              7
-#define FCNWRITEFILE                8
-#define FCNREADFILE                 9
-#define FCNGETCOMMMODEMSTATUS       10    /* win_com:Status() */
-#define FCNPURGECOMM                11
-#define FCNCLEARCOMMERROR           12    /* win_com:QueueStatus() */
-#define ESCAPECOMMFUNCTION          13
-#define FCNGETCOMMPROPERTIES        14
-#define FCNMAX                      14
+#define WIN_COM_FUN_CREATEFILE               1
+#define WIN_COM_FUN_GETCOMMSTATE             2
+#define WIN_COM_FUN_SETCOMMSTATE             3
+#define WIN_COM_FUN_SETUPCOMM                4
+#define WIN_COM_FUN_GETCOMMTIMEOUTS          5
+#define WIN_COM_FUN_SETCOMMTIMEOUTS          6
+#define WIN_COM_FUN_CLOSEHANDLE              7
+#define WIN_COM_FUN_WRITEFILE                8
+#define WIN_COM_FUN_READFILE                 9
+#define WIN_COM_FUN_GETCOMMMODEMSTATUS       10    /* win_com:Status() */
+#define WIN_COM_FUN_PURGECOMM                11
+#define WIN_COM_FUN_CLEARCOMMERROR           12    /* win_com:QueueStatus() */
+#define WIN_COM_FUN_ESCAPECOMMFUNCTION       13
+#define WIN_COM_FUN_GETCOMMPROPERTIES        14
+#define WIN_COM_FUN_MAX                      14
 
-#define WPDBGBASIC                  0x01
-#define WPDBGFLOW                   0x02
-#define WPDBGXTRAFLOW               0x04
-#define WPDBGOTHER                  0x08
-#define WPDBGTIMEOUTS               0x10
-#define WPDBGQUEUE                  0x20
-#define WPDBGALL                    0x3F
+#define WIN_COM_DBGBASIC                     0x01
+#define WIN_COM_DBGFLOW                      0x02
+#define WIN_COM_DBGXTRAFLOW                  0x04
+#define WIN_COM_DBGOTHER                     0x08
+#define WIN_COM_DBGTIMEOUTS                  0x10
+#define WIN_COM_DBGQUEUE                     0x20
+#define WIN_COM_DBGALL                       0x3F

@@ -17,7 +17,7 @@
 PROCEDURE Main()
 
    LOCAL im
-   LOCAL white, blue, black
+   LOCAL white, blue
 
    /*
    // Check output directory
@@ -47,7 +47,7 @@ PROCEDURE Main()
    im := gdImageCreatePalette(100, 100)    // alias of gdImageCreate()
 
    /* First allocate color is Background color */
-   black := gdImageColorAllocate(im, 0, 0, 0)
+// black := gdImageColorAllocate(im, 0, 0, 0)
 
    /* set foreground color */
    blue  := gdImageColorAllocate(im, 0, 0, 255)

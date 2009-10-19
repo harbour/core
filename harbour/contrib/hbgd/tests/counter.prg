@@ -25,8 +25,7 @@
 PROCEDURE Main( cValue, cBaseImage )
 
    LOCAL oI, oIDigits, nWidth, nHeight, nDigits, nNumWidth, oTemp
-   //LOCAL black, white, blue, red, green, cyan, gray
-   LOCAL white
+   //LOCAL black, blue, red, green, cyan, gray
    LOCAL aNumberImages := {}
    LOCAL n, nValue
 
@@ -105,9 +104,6 @@ PROCEDURE Main( cValue, cBaseImage )
    /* Create counter image in memory */
    oI := GDImage():New( nNumWidth * DISPLAY_NUM, nHeight )  // the counter
    ? "Image dimensions: ", oI:Width(), oI:Height()
-
-   /* Allocate background */
-   white := oI:SetColor( 255, 255, 255 )
 
    /* Allocate drawing color */
    //black := oI:SetColor( 0, 0, 0 )

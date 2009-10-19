@@ -58,7 +58,6 @@
 
 procedure main
 
-local aArr
 local nTotal := 0
 
  ctinit()

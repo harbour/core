@@ -21,7 +21,7 @@ PROCEDURE Main(...)
    LOCAL cQuery  := GetEnv( "QUERY_STRING" )
    LOCAL hParams := hb_Hash()
 
-   LOCAL cText, cImg, nPt, nSize, nWidth, nHeight, cPhoto
+   LOCAL cText, cImg, nPt, nWidth, nHeight, cPhoto
 
    IF Empty( aParams )
       IF !Empty( cQuery )
