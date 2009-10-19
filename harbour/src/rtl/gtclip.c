@@ -140,7 +140,7 @@ BOOL hb_gt_winapi_setClipboard( UINT uFormat, const char * szClipData, ULONG ulL
             }
             fResult = TRUE;
          }
-         GlobalUnlock( hglbCopy );
+         ( void ) GlobalUnlock( hglbCopy );
          /* Place the handle on the clipboard. */
          SetClipboardData( uFormat, hglbCopy );
       }
@@ -188,7 +188,7 @@ BOOL hb_gt_winapi_getClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen
                   }
                   break;
             }
-            GlobalUnlock( hglb );
+            ( void ) GlobalUnlock( hglb );
          }
       }
       CloseClipboard();

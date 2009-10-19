@@ -228,6 +228,36 @@ DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size )
    return size;
 }
 
+DWORD WINAPI GetEnvironmentVariableW( LPCWSTR name, LPWSTR value, DWORD size )
+{
+   /* use registry instead of "environment valuable". */
+   HKEY hk;
+   LONG lret;
+   DWORD dwType = REG_SZ, result = 0;
+
+   lret = RegOpenKeyEx( HKEY_LOCAL_MACHINE, TEXT( "Software\\harbour_mswince" ), 0, KEY_QUERY_VALUE, &hk );
+
+   if( lret != ERROR_SUCCESS )
+   {
+      if( value && size )
+         value[ 0 ] = '\0';
+      return 0;
+   }
+
+   result = size * sizeof( TCHAR );
+   lret = RegQueryValueExW( hk, name, NULL, &dwType, ( LPBYTE ) value, &result );
+   RegCloseKey( hk );
+
+   if( lret != ERROR_SUCCESS )
+   {
+      if( value && size )
+         value[ 0 ] = '\0';
+      return value ? 0 : result;
+   }
+
+   return result;
+}
+
 BOOL WINAPI SetEnvironmentVariableA( LPCSTR name, LPCSTR value )
 {
    HB_SYMBOL_UNUSED( name );

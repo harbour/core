@@ -229,6 +229,26 @@ HB_FUNC( HB_DATETIME )
    hb_rettdt( lDate, lTime );
 }
 
+HB_FUNC( HB_DTOT )
+{
+   long lDate, lTime;
+
+   if( hb_partdt( &lDate, &lTime, 1 ) )
+      hb_retdl( lDate );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_TTOD )
+{
+   long lDate, lTime;
+
+   if( hb_partdt( &lDate, &lTime, 1 ) )
+      hb_rettdt( lDate, lTime );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( HB_NTOT )
 {
    PHB_ITEM pNum = hb_param( 1, HB_IT_NUMERIC );
