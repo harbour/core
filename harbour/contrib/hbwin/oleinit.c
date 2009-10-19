@@ -72,12 +72,21 @@ static void hb_ole_exit( void* cargo )
    }
 }
 
-void hb_oleInit()
+BOOL hb_oleInit( void )
 {
+   BOOL fResult = TRUE;
+
    if( ! s_iOleInit )
    {
-      OleInitialize( NULL );
-      hb_vmAtQuit( hb_ole_exit, NULL );
+      fResult = OleInitialize( NULL ) == S_OK;
+      if( fResult )
+      {
+         hb_vmAtQuit( hb_ole_exit, NULL );
+         s_iOleInit++;
+      }
    }
-   s_iOleInit++;
+   else
+      s_iOleInit++;
+
+   return fResult;
 }

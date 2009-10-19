@@ -101,7 +101,7 @@
 
 HB_EXTERN_BEGIN
 
-HB_EXPORT void       hb_oleInit( void );
+HB_EXPORT BOOL       hb_oleInit( void );
 HB_EXPORT HRESULT    hb_oleGetError( void );
 HB_EXPORT void       hb_oleSetError( HRESULT lOleError );
 HB_EXPORT void       hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant );
