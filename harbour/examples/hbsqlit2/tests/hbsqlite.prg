@@ -54,8 +54,7 @@ PROCEDURE MAIN()
 *---------------------------------------------------------------------------
 * Main procedure
 *---------------------------------------------------------------------------
- LOCAL lError := .F.
- LOCAL nError := 0, nOption
+ LOCAL nError, nOption
 
  LOCAL cDbase
  LOCAL cDTable
@@ -71,7 +70,7 @@ PROCEDURE MAIN()
  #include "setcurs.ch"
  #include "box.ch"
  #include "inkey.ch"
- #include "hbsqlite.ch"   // REQUIRED !
+ #include "hbsqlit2.ch"   // REQUIRED !
 
  // basic setup
  SET WRAP    ON
@@ -209,7 +208,7 @@ RETURN // End Main
 *---------------------------------------------------------------------------
 * Shows Information about fields...
 *---------------------------------------------------------------------------
- LOCAL aResult, nChoices, n, aBrowse := {}, nLen, cData := ""
+ LOCAL aResult, n, aBrowse := {}, nLen, cData
  LOCAL nOldCursor, nOldRow, nOldCol, cOldScreen, cOldColor, cDflt
  LOCAL nFrom, nTo
  LOCAL cc, clen
@@ -260,7 +259,6 @@ FOR n := 3 TO nLen
              IIF( aResult[ n ][FLD_PRIMKEY], "TRUE ", "FALSE")
 
     AADD( aBrowse, cData)
-    cData := ""
 NEXT
 
   SETCOLOR( "W+/BG,W+/B,N,N,N/W*" )
@@ -275,7 +273,7 @@ NEXT
   @  8,03 SAY "    Name" + SPACE(21) + "Default Val." + SPACE(3) + "Type" +;
               SPACE(10) + "Len  Primary Key" COLOR "N/W"
 
-  nChoices := ACHOICE( 9, 4, 20, 75, aBrowse )
+  ACHOICE( 9, 4, 20, 75, aBrowse )
 
   * restore status
   RESTSCREEN( 0, 0, MAXROW(), MAXCOL(), cOldScreen )
@@ -598,11 +596,10 @@ RETURN( IIF( nChoices > 0, aResult[ nChoices ], "") )
 *---------------------------------------------------------------------------
 LOCAL cTable := ShowTables(), aOpt := {" Yes ", " No "}
 LOCAL nOpt
-LOCAL aResult
 nOpt := ALERT("Warning!;;The table selected will be erased;" +;
               "without any choice to recover;Continue ? ", aOpt )
 IF nOpt == 1 // Yes
-   aResult := SQLITE_EXECUTE( "drop table " + cTable )
+   SQLITE_EXECUTE( "drop table " + cTable )
 ENDIF
 RETURN 0
 
@@ -653,7 +650,6 @@ RETURN( cData)
 *---------------------------------------------------------------------------
 LOCAL aResult, nFields, nRecc, i, j
 LOCAL cQuery := ".", cQuery1
-LOCAL cQuery2 := SPACE(74)
 
  IF cDBase == NIL .OR. EMPTY(cDBase)
     RETURN 0
@@ -979,7 +975,6 @@ RETURN( lFound )
 
 
 PROCEDURE HELP
- LOCAL nWide := 40
 
   ALERT( "HARBOUR INTERFACE for SQLITE;;"   +;
          "Version: " + HB_HB4SQLITE_VER + ";;" +;

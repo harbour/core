@@ -38,9 +38,13 @@ endif
 ifeq ($(HB_BUILD_MODE),cpp)
    CFLAGS += -TP
 endif
+# Build in C++ mode by default
+ifeq ($(HB_BUILD_MODE),)
+   CFLAGS += -TP
+endif
 
 ifneq ($(HB_BUILD_WARN),no)
-   CFLAGS += -W4
+   CFLAGS += -W4 -wd4127
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)

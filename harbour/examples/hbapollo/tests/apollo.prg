@@ -53,7 +53,7 @@
 #include "apollo.ch"
 
 
-FUNCTION Main()
+PROCEDURE Main()
 LOCAL nAlias
 LOCAL f
 
@@ -81,7 +81,7 @@ LOCAL f
                           6)            // Maximum fields added by sx_CreateField
    IF nAlias == 0
       ? "Error creating database"
-      RETU NIL
+      RETURN
    ENDIF
 
    sx_CreateField("FIRST"   ,"C",40,0)

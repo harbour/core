@@ -99,7 +99,7 @@
 /* TODO: Clean up compiler autodetection and add those few feature only
          found in GNU Make / global.mk, like *nix native autodetection,
          autodetection of watcom cross-build setups, poccarm/pocc64 setups,
-         etc. */
+         clang, etc. */
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -137,6 +137,10 @@ REQUEST hbmk_KEYW
 #define _PAR_cParam             1
 #define _PAR_cFileName          2
 #define _PAR_nLine              3
+
+#define _WARN_DEF               0
+#define _WARN_YES               1
+#define _WARN_NO                2
 
 #define _COMPR_OFF              0
 #define _COMPR_DEF              1
@@ -254,47 +258,48 @@ REQUEST hbmk_KEYW
 #define _HBMK_lSTRIP            43
 #define _HBMK_lOPTIM            44
 #define _HBMK_nCOMPR            45
-#define _HBMK_lRUN              46
-#define _HBMK_lINC              47
-#define _HBMK_lREBUILDPO        48
-#define _HBMK_lMINIPO           49
-#define _HBMK_lUNICODE          50
-#define _HBMK_nCONF             51
-#define _HBMK_lIGNOREERROR      52
-#define _HBMK_lIMPLIB           53
+#define _HBMK_nWARN             46
+#define _HBMK_lRUN              47
+#define _HBMK_lINC              48
+#define _HBMK_lREBUILDPO        49
+#define _HBMK_lMINIPO           50
+#define _HBMK_lUNICODE          51
+#define _HBMK_nCONF             52
+#define _HBMK_lIGNOREERROR      53
+#define _HBMK_lIMPLIB           54
 
-#define _HBMK_lCreateLib        54
-#define _HBMK_lCreateDyn        55
+#define _HBMK_lCreateLib        55
+#define _HBMK_lCreateDyn        56
 
-#define _HBMK_lBLDFLGP          56
-#define _HBMK_lBLDFLGC          57
-#define _HBMK_lBLDFLGL          58
+#define _HBMK_lBLDFLGP          57
+#define _HBMK_lBLDFLGC          58
+#define _HBMK_lBLDFLGL          59
 
-#define _HBMK_cFIRST            59
-#define _HBMK_aPRG              60
-#define _HBMK_aC                61
-#define _HBMK_aRESSRC           62
-#define _HBMK_aRESCMP           63
-#define _HBMK_aOBJUSER          64
-#define _HBMK_aICON             65
-#define _HBMK_hDEPTS            66
+#define _HBMK_cFIRST            60
+#define _HBMK_aPRG              61
+#define _HBMK_aC                62
+#define _HBMK_aRESSRC           63
+#define _HBMK_aRESCMP           64
+#define _HBMK_aOBJUSER          65
+#define _HBMK_aICON             66
+#define _HBMK_hDEPTS            67
 
-#define _HBMK_aPO               67
-#define _HBMK_cHBL              68
-#define _HBMK_cHBLDir           69
-#define _HBMK_aLNG              70
-#define _HBMK_cPO               71
+#define _HBMK_aPO               68
+#define _HBMK_cHBL              69
+#define _HBMK_cHBLDir           70
+#define _HBMK_aLNG              71
+#define _HBMK_cPO               72
 
-#define _HBMK_lDEBUGTIME        72
-#define _HBMK_lDEBUGINC         73
-#define _HBMK_lDEBUGSTUB        74
-#define _HBMK_lDEBUGI18N        75
+#define _HBMK_lDEBUGTIME        73
+#define _HBMK_lDEBUGINC         74
+#define _HBMK_lDEBUGSTUB        75
+#define _HBMK_lDEBUGI18N        76
 
-#define _HBMK_cCCPATH           76
-#define _HBMK_cCCPREFIX         77
-#define _HBMK_cCCPOSTFIX        78
+#define _HBMK_cCCPATH           77
+#define _HBMK_cCCPREFIX         78
+#define _HBMK_cCCPOSTFIX        79
 
-#define _HBMK_MAX_              78
+#define _HBMK_MAX_              79
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -678,6 +683,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
    hbmk[ _HBMK_lBEEP ] := .F.
    hbmk[ _HBMK_lSTRIP ] := .F.
    hbmk[ _HBMK_lOPTIM ] := .T.
+   hbmk[ _HBMK_nWARN ] := _WARN_YES
    hbmk[ _HBMK_nCOMPR ] := _COMPR_OFF
    hbmk[ _HBMK_lRUN ] := .F.
    hbmk[ _HBMK_lINC ] := .F.
@@ -1499,6 +1505,19 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       CASE cParamL == "-strip"           ; hbmk[ _HBMK_lSTRIP ]      := .T.
       CASE cParamL == "-strip-" .OR. ;
            cParamL == "-nostrip"         ; hbmk[ _HBMK_lSTRIP ]      := .F.
+
+      CASE cParamL == "-warn" .OR. ;
+           Left( cParamL, 7 ) == "-warn="
+
+           DO CASE
+           CASE SubStr( cParamL, 8 ) == "def" ; hbmk[ _HBMK_nWARN ] := _WARN_DEF
+           CASE SubStr( cParamL, 8 ) == "no"  ; hbmk[ _HBMK_nWARN ] := _WARN_NO
+           OTHERWISE                          ; hbmk[ _HBMK_nWARN ] := _WARN_YES
+           ENDCASE
+
+      CASE cParamL == "-warn-" .OR. ;
+           cParamL == "-nowarn"               ; hbmk[ _HBMK_nWARN ] := _WARN_NO
+
       CASE cParamL == "-compr" .OR. ;
            Left( cParamL, 7 ) == "-compr="
 
@@ -1509,7 +1528,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
            ENDCASE
 
       CASE cParamL == "-compr-" .OR. ;
-           cParamL == "-nocompr"         ; hbmk[ _HBMK_nCOMPR ]     := _COMPR_OFF
+           cParamL == "-nocompr"              ; hbmk[ _HBMK_nCOMPR ] := _COMPR_OFF
 
       CASE cParamL == "-head" .OR. ;
            Left( cParamL, 6 ) == "-head="
@@ -1522,7 +1541,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
            ENDCASE
 
       CASE cParamL == "-head-" .OR. ;
-           cParamL == "-nohead"          ; hbmk[ _HBMK_nHEAD ]      := _HEAD_OFF
+           cParamL == "-nohead"                  ; hbmk[ _HBMK_nHEAD ] := _HEAD_OFF
 
       CASE Left( cParamL, 5 ) == "-cpp="
 
@@ -2160,6 +2179,15 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
          ENDIF
+         IF hbmk[ _HBMK_cCOMP ] == "icc"
+            IF hbmk[ _HBMK_nWARN ] == _WARN_YES
+               /* AAdd( hbmk[ _HBMK_aOPTC ], "-w2 -Wall" ) */
+            ENDIF
+         ELSE
+            IF hbmk[ _HBMK_nWARN ] == _WARN_YES
+               AAdd( hbmk[ _HBMK_aOPTC ], "-Wall -W" )
+            ENDIF
+         ENDIF
          cOpt_CompC += " {FC}"
          IF hbmk[ _HBMK_lINC ] .AND. ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -o {OO}"
@@ -2336,6 +2364,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                cOpt_CompC += " -fomit-frame-pointer"
             ENDIF
          ENDIF
+         IF hbmk[ _HBMK_nWARN ] == _WARN_YES
+            AAdd( hbmk[ _HBMK_aOPTC ], "-Wall -W" )
+         ENDIF
          cOpt_CompC += " {FC}"
          cOptIncMask := "-I{DI}"
          IF hbmk[ _HBMK_lINC ] .AND. ! Empty( cWorkDir )
@@ -2446,6 +2477,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
          ENDIF
+         IF hbmk[ _HBMK_nWARN ] == _WARN_YES
+            AAdd( hbmk[ _HBMK_aOPTC ], "-Wall -W" )
+         ENDIF
          cOpt_CompC += " {FC}"
          IF hbmk[ _HBMK_lINC ] .AND. ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -o {OO}"
@@ -2535,6 +2569,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
+         ENDIF
+         IF hbmk[ _HBMK_nWARN ] == _WARN_YES
+            AAdd( hbmk[ _HBMK_aOPTC ], "-Wall -W" )
          ENDIF
          cOpt_CompC += " {FC}"
          IF hbmk[ _HBMK_lINC ] .AND. ! Empty( cWorkDir )
@@ -2641,6 +2678,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                cOpt_CompC += " -3s"
             ENDIF
          ENDIF
+         DO CASE
+         CASE hbmk[ _HBMK_nWARN ] == _WARN_YES
+            AAdd( hbmk[ _HBMK_aOPTC ], "-w3" )
+         CASE hbmk[ _HBMK_nWARN ] == _WARN_NO
+            AAdd( hbmk[ _HBMK_aOPTC ], "-w0" )
+         ENDCASE
          DO CASE
          CASE hbmk[ _HBMK_cPLAT ] == "linux" ; cOpt_CompC += " -zq -bt=linux {FC}"
          CASE hbmk[ _HBMK_cPLAT ] == "win"   ; cOpt_CompC += " -zq -bt=nt {FC}"
@@ -2775,6 +2818,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -d -6 -O2 -OS -Ov -Oi -Oc"
          ENDIF
+         DO CASE
+         CASE hbmk[ _HBMK_nWARN ] == _WARN_YES
+            AAdd( hbmk[ _HBMK_aOPTC ], "-w -w-sig- -Q" )
+         CASE hbmk[ _HBMK_nWARN ] == _WARN_NO
+            AAdd( hbmk[ _HBMK_aOPTC ], "-w-" )
+         ENDCASE
          cOpt_CompC += " {FC} {LC}"
          cBin_Res := "brcc32.exe"
          cOpt_Res := "{FR} {IR} -fo{OS}"
@@ -2879,6 +2928,16 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                ELSE
                   cOpt_CompC += " -Ogt2yb1p -GX- -G6 -YX"
                ENDIF
+            ENDIF
+         ENDIF
+         IF hbmk[ _HBMK_cCOMP ] $ "icc|iccia64"
+            IF hbmk[ _HBMK_nWARN ] == _WARN_YES
+               /* -W4 is deadly on icc */
+               AAdd( hbmk[ _HBMK_aOPTC ], "-W3" )
+            ENDIF
+         ELSE
+            IF hbmk[ _HBMK_nWARN ] == _WARN_YES
+               AAdd( hbmk[ _HBMK_aOPTC ], "-W4 -wd4127" )
             ENDIF
          ENDIF
          cOpt_CompC += " {FC} {LC}"
@@ -3004,6 +3063,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_WINCE" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
          ENDCASE
+         DO CASE
+         CASE hbmk[ _HBMK_nWARN ] == _WARN_YES
+            /* -W2 is the max, but it contains too many meaningless warnings. */
+            AAdd( hbmk[ _HBMK_aOPTC ], "-W1" )
+         CASE hbmk[ _HBMK_nWARN ] == _WARN_NO
+            AAdd( hbmk[ _HBMK_aOPTC ], "-W0" )
+         ENDCASE
          cOpt_Res := "{FR} -Fo{OS} {IR}"
          cResExt := ".res"
          cOpt_Lib := "{FA} -out:{OL} {LO}"
@@ -3062,6 +3128,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTD ], "-fast" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-xnolibmopt" )
          ENDIF
+         DO CASE
+         CASE hbmk[ _HBMK_nWARN ] == _WARN_YES
+            AAdd( hbmk[ _HBMK_aOPTC ], "-erroff=%all" )
+         CASE hbmk[ _HBMK_nWARN ] == _WARN_NO
+            AAdd( hbmk[ _HBMK_aOPTC ], "-erroff=%none" )
+         ENDCASE
          IF hbmk[ _HBMK_lINC ] .AND. ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -o {OO}"
          ELSE
@@ -7291,6 +7363,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-nolibgrouping[-]" , I_( "disable library grouping on gcc based compilers" ) },;
       { "-nomiscsyslib[-]"  , I_( "don't add extra list of system libraries to default library list" ) },;
       { "-traceonly"        , I_( "show commands to be executed, but don't execute them" ) },;
+      { "-[no]warn[=lev]"   , I_( "set C compiler warning level\n<lev> can be: yes, no, def (default: yes)" ) },;
       { "-[no]compr[=lev]"  , I_( "compress executable/dynamic lib (needs UPX)\n<lev> can be: min, max, def" ) },;
       { "-[no]run"          , I_( "run/don't run output executable" ) },;
       { "-vcshead=<file>"   , I_( "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial and Bazaar are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) },;

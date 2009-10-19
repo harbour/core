@@ -10,7 +10,7 @@
 
 function Main()
 
-   local cRun, nWidth, nTab, nI, nJ, nK, nCol, nRow, aStyle, aFonts
+   local nWidth, nTab, nI, nJ, nK, nCol, nRow, aStyle, aFonts
    local nTop, nLeft, nBottom, nRight, cText, oPdf
    local aColor := { ;
    "FF0000", "8B0000", "800000", "FF4500", "D2691E", "B8860B", "FF8C00", "FFA500", "DAA520", "808000", "FFD700", "FFFF00", "ADFF2F", "9ACD32", "7FFF00", "7CFC00", "00FF00", "32CD32", "008000", "006400",;
@@ -131,7 +131,7 @@ function Main()
    oPdf:NewPage( "LETTER", "P", 6 )
    oPdf:BookAdd( "JPEG", 2, oPdf:aReport[ REPORTPAGE ], 0 )
    oPdf:Image( 'files\color.jpg', 0, 0, "M" ) // file, row, col, units, height, width
-   oPdf:RJust(oPdf:Underline("JPEG"), nK++, oPdf:aReport[ REPORTWIDTH ], "R")
+   oPdf:RJust(oPdf:Underline("JPEG"), nK, oPdf:aReport[ REPORTWIDTH ], "R")
 
    oPdf:OpenHeader('test.hea')
 
@@ -166,7 +166,7 @@ return nil
 // This function called only used in tstPdf.prg
 //
 static function cton( cString, nBase ) 
-local cTemp, nI, cChar := "", n := 0, nLen
+local cTemp, nI, cChar, n := 0, nLen
 
    nLen := len( cString )
    cTemp := ""

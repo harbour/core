@@ -7,7 +7,7 @@
 procedure main()
 
    local aReport
-   local cRun, nWidth, nTab, nI, nJ, nK, nCol, nRow, aStyle, aFonts
+   local nWidth, nTab, nI, nJ, nK, nCol, nRow, aStyle, aFonts
    local nTop, nLeft, nBottom, nRight, cTestFile
    local aColor := { ;
    "FF0000", "8B0000", "800000", "FF4500", "D2691E", "B8860B", "FF8C00", "FFA500", "DAA520", "808000", "FFD700", "FFFF00", "ADFF2F", "9ACD32", "7FFF00", "7CFC00", "00FF00", "32CD32", "008000", "006400",;
@@ -134,7 +134,7 @@ procedure main()
    pdfNewPage( "LETTER", "P", 6 )
    pdfBookAdd( "JPEG", 2, aReport[ REPORTPAGE ], 0 )
    pdfImage( 'files' + HB_OSPATHSEPARATOR() + 'color.jpg', 0, 0, "M" ) // file, row, col, units, height, width
-   pdfRJust(pdfUnderline("JPEG"), nK++, aReport[ REPORTWIDTH ], "R")
+   pdfRJust(pdfUnderline("JPEG"), nK, aReport[ REPORTWIDTH ], "R")
 
    pdfOpenHeader('test.hea')
 
@@ -160,7 +160,7 @@ procedure main()
    pdfClose()
 
 static function cton( cString, nBase ) // this function called only used in pdf_demo.prg
-local cTemp, nI, cChar := "", n := 0, nLen
+local cTemp, nI, cChar, n := 0, nLen
 
    nLen := len( cString )
    cTemp := ""

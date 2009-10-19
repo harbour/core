@@ -54,7 +54,7 @@
 
 procedure main(cArg)
 
-   local oServer, oQuery, oQuery2, oRow, i, aStru
+   local oServer, oQuery, oQuery2, oRow, aStru
 
    SET CENTURY ON
    SET EPOCH TO 1960
@@ -80,7 +80,7 @@ procedure main(cArg)
 
 
    oQuery:=oServer:Query("SELECT * from test where _rowid = 1")
-   oRow := oQuery:GetBlankRow()
+// oRow := oQuery:GetBlankRow()
 
    while !wn->(eof())
 
