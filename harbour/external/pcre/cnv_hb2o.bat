@@ -21,7 +21,7 @@ rem             don't have to mess with this tool.
 md ori_dst
 del ori_dst\*.* /Y
 
-copy LICENSE    ori_dst\LICENSE
+copy LICENCE    ori_dst\LICENCE
 copy config.h   ori_dst\config.h.generic
 copy pcre.h     ori_dst\pcre.h.generic
 copy pcreinal.h ori_dst\pcre_internal.h

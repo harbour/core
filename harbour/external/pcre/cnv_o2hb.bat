@@ -21,7 +21,7 @@ rem DISCLAIMER: This tool is targeted only to Harbour core
 rem             maintainers. If you're not one of them you
 rem             don't have to mess with this tool.
 
-copy ori_src\LICENSE                LICENSE
+copy ori_src\LICENCE                LICENCE
 copy ori_src\config.h.generic       config.h
 copy ori_src\pcre.h.generic         pcre.h
 copy ori_src\pcre_internal.h        pcreinal.h
