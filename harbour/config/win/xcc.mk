@@ -59,6 +59,12 @@ DFLAGS := -nologo -dll $(LIBPATHS)
 DY_OUT := $(LD_OUT)
 DLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
+ifeq ($(HB_SHELL),sh)
+   DYNFIX = && mv $(DYN_DIR)/$(@:.dll=.LIB) $(LIB_DIR)/$(@:.dll=.lib) && $(RM) $(DYN_DIR)/$(@:.dll=.EXP)
+else
+   DYNFIX :=
+endif
+
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 define dyn_object
    @$(ECHO) $(ECHOQUOTE)$(subst /,\,$(file))$(ECHOQUOTE) >> __dyn__.tmp
@@ -67,7 +73,7 @@ endef
 define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dyn_object))
-   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)"$(subst /,\,$(DYN_DIR)/$@)" @__dyn__.tmp $(DLIBS)
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)"$(subst /,\,$(DYN_DIR)/$@)" @__dyn__.tmp $(DLIBS) $(DYNFIX)
 endef
 
 DY_RULE = $(create_dynlib)
