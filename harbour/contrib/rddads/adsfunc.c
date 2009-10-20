@@ -1685,7 +1685,7 @@ HB_FUNC( ADSCONNECT60 )
    {
       hb_ads_hConnect = hConnect;       /* set new default */
 
-      hb_stornl( hConnect, 6 );
+      hb_stornint( hConnect, 6 );
 
       hb_retl( TRUE );
    }

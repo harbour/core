@@ -182,10 +182,10 @@ typedef ADSAREA * ADSAREAP;
 #  undef ADS_USE_OEM_TRANSLATION
 #endif
 
-#define HB_ADS_PARCONNECTION( n )      ( ISNUM( n ) ? ( ADSHANDLE ) hb_parnl( n ) : hb_ads_hConnect )
-#define HB_ADS_RETCONNECTION( h )      hb_retnl( h )
-#define HB_ADS_GETCONNECTION( p )      ( ( hb_itemType( p ) & HB_IT_NUMERIC ) ? ( ADSHANDLE ) hb_itemGetNL( p ) : hb_ads_hConnect )
-#define HB_ADS_PUTCONNECTION( p, h )   hb_itemPutNL( ( p ), ( LONG ) ( h ) )
+#define HB_ADS_PARCONNECTION( n )      ( ISNUM( n ) ? ( ADSHANDLE ) hb_parnint( n ) : hb_ads_hConnect )
+#define HB_ADS_RETCONNECTION( h )      hb_retnint( h )
+#define HB_ADS_GETCONNECTION( p )      ( ( hb_itemType( p ) & HB_IT_NUMERIC ) ? ( ADSHANDLE ) hb_itemGetNInt( p ) : hb_ads_hConnect )
+#define HB_ADS_PUTCONNECTION( p, h )   hb_itemPutNInt( ( p ), ( HB_PTRDIFF ) ( h ) )
 #define HB_ADS_DEFCONNECTION( v )      ( ( v ) ? ( ADSHANDLE ) ( v ) : hb_ads_hConnect )
 
 extern int        hb_ads_iFileType; /* current global setting */

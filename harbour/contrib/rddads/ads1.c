@@ -2687,7 +2687,7 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
    ADSHANDLE hTable, hConnection;
    UNSIGNED32 uRetVal, u32Length, uiFldLen, uiLen;
    UNSIGNED8 *ucfieldDefs, *ucfieldPtr;
-   UNSIGNED8 ucBuffer[MAX_STR_LEN + 1];
+   UNSIGNED8 ucBuffer[ MAX_STR_LEN + 1 ];
    USHORT uiCount;
    LPFIELD pField;
    const char * cType;
@@ -2824,7 +2824,7 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
 
       if( uiFldLen == 0 )
       {
-         uiFldLen = strlen( ( char * ) ucBuffer );  /* should have been set by hb_snprintf above. */
+         uiFldLen = ( UNSIGNED32 ) strlen( ( char * ) ucBuffer );  /* should have been set by hb_snprintf above. */
       }
       if( uiFldLen >= uiLen )
       {
