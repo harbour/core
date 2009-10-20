@@ -147,7 +147,7 @@ static PHB_ITEM s_pOnceMutex = NULL;
       HB_CRITICAL_LOCK( s_init_mtx );
       if( !critical->fInit )
       {
-         HB_CRITICAL_INIT( critical->critical );
+         HB_CRITICAL_INIT( critical->critical.value );
          critical->fInit = TRUE;
       }
       HB_CRITICAL_UNLOCK( s_init_mtx );
@@ -171,9 +171,9 @@ static PHB_ITEM s_pOnceMutex = NULL;
          HB_CRITICAL_LOCK( s_init_mtx );
          if( !cond->fInit )
          {
-            HB_COND_INIT( cond->cond );
+            HB_COND_INIT( cond->cond.value );
 #     if !defined( HB_COND_OS_SUPPORT )
-            HB_CRITICAL_INIT( cond->critical );
+            HB_CRITICAL_INIT( cond->critical.value );
             cond->waiters = 0;
 #     endif
             cond->fInit = TRUE;
@@ -533,7 +533,7 @@ void hb_threadEnterCriticalSection( HB_CRITICAL_T * critical )
 #elif defined( HB_CRITICAL_NEED_INIT )
    if( !critical->fInit )
       hb_threadCriticalInit( critical );
-   HB_CRITICAL_LOCK( critical->critical );
+   HB_CRITICAL_LOCK( critical->critical.value );
 #else
    HB_CRITICAL_LOCK( *critical );
 #endif
@@ -544,7 +544,7 @@ void hb_threadLeaveCriticalSection( HB_CRITICAL_T * critical )
 #if !defined( HB_MT_VM )
    HB_SYMBOL_UNUSED( critical );
 #elif defined( HB_CRITICAL_NEED_INIT )
-   HB_CRITICAL_UNLOCK( critical->critical );
+   HB_CRITICAL_UNLOCK( critical->critical.value );
 #else
    HB_CRITICAL_UNLOCK( *critical );
 #endif
@@ -579,13 +579,13 @@ BOOL hb_threadCondSignal( HB_COND_T * cond )
    if( !cond->fInit )
       hb_threadCondInit( cond );
 
-   HB_CRITICAL_LOCK( cond->critical );
+   HB_CRITICAL_LOCK( cond->critical.value );
    if( cond->waiters )
    {
-      HB_COND_SIGNAL( cond->cond );
+      HB_COND_SIGNAL( cond->cond.value );
       cond->waiters--;
    }
-   HB_CRITICAL_UNLOCK( cond->critical );
+   HB_CRITICAL_UNLOCK( cond->critical.value );
 
    return TRUE;
 
@@ -621,13 +621,13 @@ BOOL hb_threadCondBroadcast( HB_COND_T * cond )
    if( !cond->fInit )
       hb_threadCondInit( cond );
 
-   HB_CRITICAL_LOCK( cond->critical );
+   HB_CRITICAL_LOCK( cond->critical.value );
    if( cond->waiters )
    {
-      HB_COND_SIGNALN( cond->cond, cond->waiters );
+      HB_COND_SIGNALN( cond->cond.value, cond->waiters );
       cond->waiters = 0;
    }
-   HB_CRITICAL_UNLOCK( cond->critical );
+   HB_CRITICAL_UNLOCK( cond->critical.value );
 
    return TRUE;
 
@@ -656,7 +656,7 @@ BOOL hb_threadCondWait( HB_COND_T * cond, HB_CRITICAL_T * mutex )
 
 #elif defined( HB_COND_HARBOUR_SUPPORT )
 
-   return _hb_thread_cond_wait( cond, &mutex->critical, HB_THREAD_INFINITE_WAIT );
+   return _hb_thread_cond_wait( cond, &mutex->critical.value, HB_THREAD_INFINITE_WAIT );
 
 #else
 
@@ -669,22 +669,22 @@ BOOL hb_threadCondWait( HB_COND_T * cond, HB_CRITICAL_T * mutex )
     * to make initialization test here
     */
 
-   HB_CRITICAL_LOCK( cond->critical );
+   HB_CRITICAL_LOCK( cond->critical.value );
    cond->waiters++;
-   HB_CRITICAL_UNLOCK( cond->critical );
+   HB_CRITICAL_UNLOCK( cond->critical.value );
 
-   HB_CRITICAL_UNLOCK( mutex->critical );
-   fResult = HB_COND_WAIT( cond->cond );
-   HB_CRITICAL_LOCK( mutex->critical );
+   HB_CRITICAL_UNLOCK( mutex->critical.value );
+   fResult = HB_COND_WAIT( cond->cond.value );
+   HB_CRITICAL_LOCK( mutex->critical.value );
    /* There is race condition here and user code should always check if
     * the wait condition is valid after leaving hb_threadCondWait()
     * even if it returns TRUE
     */
    if( !fResult )
    {
-      HB_CRITICAL_LOCK( cond->critical );
+      HB_CRITICAL_LOCK( cond->critical.value );
       cond->waiters--;
-      HB_CRITICAL_UNLOCK( cond->critical );
+      HB_CRITICAL_UNLOCK( cond->critical.value );
    }
 
    return fResult;
@@ -721,7 +721,7 @@ BOOL hb_threadCondTimedWait( HB_COND_T * cond, HB_CRITICAL_T * mutex, ULONG ulMi
 
 #elif defined( HB_COND_HARBOUR_SUPPORT )
 
-   return _hb_thread_cond_wait( cond, &mutex->critical, ulMilliSec );
+   return _hb_thread_cond_wait( cond, &mutex->critical.value, ulMilliSec );
 
 #else
 
@@ -734,22 +734,22 @@ BOOL hb_threadCondTimedWait( HB_COND_T * cond, HB_CRITICAL_T * mutex, ULONG ulMi
     * to make initialization test here
     */
 
-   HB_CRITICAL_LOCK( cond->critical );
+   HB_CRITICAL_LOCK( cond->critical.value );
    cond->waiters++;
-   HB_CRITICAL_UNLOCK( cond->critical );
+   HB_CRITICAL_UNLOCK( cond->critical.value );
 
-   HB_CRITICAL_UNLOCK( mutex->critical );
-   fResult = HB_COND_TIMEDWAIT( cond->cond, ulMilliSec );
-   HB_CRITICAL_LOCK( mutex->critical );
+   HB_CRITICAL_UNLOCK( mutex->critical.value );
+   fResult = HB_COND_TIMEDWAIT( cond->cond.value, ulMilliSec );
+   HB_CRITICAL_LOCK( mutex->critical.value );
    /* There is race condition here and user code should always check if
     * the wait condition is valid after leaving hb_threadCondTimedWait()
     * even if it returns TRUE
     */
    if( !fResult )
    {
-      HB_CRITICAL_LOCK( cond->critical );
+      HB_CRITICAL_LOCK( cond->critical.value );
       cond->waiters--;
-      HB_CRITICAL_UNLOCK( cond->critical );
+      HB_CRITICAL_UNLOCK( cond->critical.value );
    }
 
    return fResult;

@@ -156,7 +156,7 @@ HB_EXTERN_BEGIN
 #     if !defined( HB_CRITICAL_NEED_INIT )
 #        define HB_CRITICAL_NEED_INIT
 #     endif
-#     define HB_CRITICAL_GET(v)        ( &( (v)->critical ) )
+#     define HB_CRITICAL_GET(v)        ( &( (v)->critical.value ) )
 #  endif
 
 #  if defined( PTHREAD_COND_INITIALIZER ) && !defined( HB_COND_NEED_INIT )
@@ -168,7 +168,7 @@ HB_EXTERN_BEGIN
 #     if !defined( HB_COND_NEED_INIT )
 #        define HB_COND_NEED_INIT
 #     endif
-#     define HB_COND_GET(v)            ( &( (v)->cond ) )
+#     define HB_COND_GET(v)            ( &( (v)->cond.value ) )
 #  endif
 
 #elif defined( HB_OS_WIN )
@@ -308,8 +308,8 @@ HB_EXTERN_BEGIN
       union
       {
          int               dummy;
-         HB_RAWCRITICAL_T  critical;
-      };
+         HB_RAWCRITICAL_T  value;
+      } critical;
    } HB_CRITICAL_T;
 #  define HB_CRITICAL_NEW( name )   HB_CRITICAL_T name = { FALSE, { 0 } }
 #endif /* HB_CRITICAL_NEED_INIT */
@@ -322,8 +322,8 @@ HB_EXTERN_BEGIN
          union
          {
             int            dummy;
-            HB_RAWCOND_T   cond;
-         };
+            HB_RAWCOND_T   value;
+         } cond;
       } HB_COND_T;
 #     define HB_COND_NEW( name )       HB_COND_T name = { FALSE, { 0 } }
 #  else
@@ -333,14 +333,14 @@ HB_EXTERN_BEGIN
          int               waiters;
          union
          {
-            int               dummycond;
-            HB_RAWCOND_T      cond;
-         };
+            int               dummy;
+            HB_RAWCOND_T      value;
+         } cond;
          union
          {
             int               dummy;
-            HB_RAWCRITICAL_T  critical;
-         };
+            HB_RAWCRITICAL_T  value;
+         } critical;
       } HB_COND_T;
 #     define HB_COND_NEW( name )       HB_COND_T name = { FALSE, 0, { 0 }, { 0 } }
 #  endif
