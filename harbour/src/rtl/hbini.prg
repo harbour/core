@@ -188,7 +188,7 @@ STATIC FUNCTION hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
             IF nLineEnd == 0
                nLineEnd := At( Chr( 13 ), cData )
                IF nLineEnd == 0
-                  nLineEnd := Len( cData )
+                  nLineEnd := Len( cData ) + 1
                ENDIF
             ENDIF
          ENDIF
