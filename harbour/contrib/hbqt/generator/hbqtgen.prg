@@ -7,6 +7,10 @@ STATIC s_NewLine
 STATIC s_PathSep
 STATIC isClassObject
 STATIC zWidget
+STATIC aCore    := {}
+STATIC aGui     := {}
+STATIC aNetwork := {}
+STATIC aWebkit  := {}
 
 /*----------------------------------------------------------------------*/
 
@@ -191,6 +195,7 @@ STATIC FUNCTION ManageProject( cProFile, cPathIn, cPathOut, cPathDoc )
 
    IF !empty( cpp_ )
       Build_Makefile( cpp_, prg_, cPOut )
+      Build_GarbageFile( cpp_, cPOut )
    ENDIF
 
    RETURN NIL
@@ -218,8 +223,8 @@ STATIC FUNCTION PullOutSection( cQth, cSec )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
-   LOCAL cFile, cWidget, cExt, cPath, cOrg, cCPP, cPRG, lConst //, lList, cWgt, lDestructor
-   LOCAL cQth, cFileCpp, s, n, nFuncs, nCnvrtd, n1, i, cFunc, lObject
+   LOCAL cFile, cWidget, cExt, cPath, cOrg, cCPP, cPRG, lConst //, lList, cWgt
+   LOCAL cQth, cFileCpp, s, n, nFuncs, nCnvrtd, n1, i, cFunc, lObject, lDestructor, lList
    LOCAL b_, txt_, enum_, code_, func_, dummy_, cpp_, cmntd_, doc_, varbls_
    LOCAL class_, cls_, protos_, slots_, enums_, docum_, subCls_, new_, old_
 
@@ -290,6 +295,18 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       ENDIF
    NEXT
    code_:= old_
+
+   /* Mark to which sub library class belongs to */
+   IF "<QtWebKit/" $ cQth
+      aadd( aWebkit, cWidget )
+   ELSEIF "<QtNetwork/" $ cQth
+      aadd( aNetwork, cWidget )
+   ELSEIF "<QtGui/" $ cQth
+      aadd( aGui, cWidget )
+   ELSEIF "<QtCore/" $ cQth
+      aadd( aCore, cWidget )
+   ENDIF
+
 
    /* Pull out Enumerators  */
    enums_  := PullOutSection( @cQth, 'ENUMS'  )
@@ -439,10 +456,41 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
          aadd( cpp_, "" )
       ENDIF
 
-      //lList       := ascan( cls_, {|e_| lower( e_[ 1 ] ) == "list" .and. lower( e_[ 2 ] ) == "yes" } ) > 0
+      lList         := ascan( cls_, {|e_| lower( e_[ 1 ] ) == "list" .and. lower( e_[ 2 ] ) == "yes" } ) > 0
       //cWgt        := IF( lList, cWidget +"< void * >", cWidget )
-      //lDestructor := ascan( cls_, {|e_| lower( e_[ 1 ] ) == "destructor" .and. lower( e_[ 2 ] ) == "no"} ) == 0
+      lDestructor   := ascan( cls_, {|e_| lower( e_[ 1 ] ) == "destructor" .and. lower( e_[ 2 ] ) == "no"} ) == 0
       lObject       := ascan( cls_, {|e_| lower( e_[ 1 ] ) == "qobject" .and. lower( e_[ 2 ] ) == "no"} ) == 0
+
+      aadd( cpp_, "QT_G_FUNC( release_" + cWidget + " )   " )
+      aadd( cpp_, "{                                      " )
+      IF lDestructor
+         aadd( cpp_, "#if defined(__debug__)" )
+         aadd( cpp_, '   hb_snprintf( str, sizeof(str), "' + 'release_' + cWidget + '" );  OutputDebugString( str );' )
+         aadd( cpp_, "#endif" )
+         aadd( cpp_, "   void * ph = ( void * ) Cargo;       " )
+         aadd( cpp_, "   if( ph )                            " )
+         aadd( cpp_, "   {                                   " )
+         IF lObject
+            aadd( cpp_, "      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();" )
+            aadd( cpp_, '      if( ( QString ) m->className() != ( QString ) "QObject" )' )
+            aadd( cpp_, "      {" )
+            aadd( cpp_, "         delete ( ( " + cWidget + IF( lList, "< void * >", "" ) + " * ) ph ); " )
+            aadd( cpp_, "         ph = NULL;" )
+            aadd( cpp_, "      }" )
+            aadd( cpp_, "      else" )
+            aadd( cpp_, "      {" )
+            aadd( cpp_, "#if defined(__debug__)" )
+            aadd( cpp_, '   hb_snprintf( str, sizeof(str), "' + '  Object Name Missing: ' + cWidget + '" );  OutputDebugString( str );' )
+            aadd( cpp_, "#endif" )
+            aadd( cpp_, "      }" )
+         ELSE
+            aadd( cpp_, "      delete ( ( " + cWidget + IF( lList, "< void * >", "" ) + " * ) ph ); " )
+            aadd( cpp_, "      ph = NULL;" )
+         ENDIF
+         aadd( cpp_, "   }" )
+      ENDIF
+      aadd( cpp_, "}                                      " )
+      aadd( cpp_, "                                       " )
 
       /* Insert CONSTRUCTOR - if defined */
       lConst := .f.
@@ -481,11 +529,15 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
          aadd( cpp_, "" )
          IF lObject .or. IsMemObject( cWidget )
             aadd( cpp_, "   p->ph = pObj;" )
+            #if 0
             IF lObject
                aadd( cpp_, "   p->type = 1001;" )
             ELSE
                aadd( cpp_, '   p->type = hbqt_getIdByName( ( QString ) "' + cWidget + '" );' )
             ENDIF
+            #endif
+            aadd( cpp_, "   p->func = release_" + cWidget +";" )
+            aadd( cpp_, " " )
             aadd( cpp_, "   hb_retptrGC( p );" )
          ELSE
             aadd( cpp_, "   hb_retptr( pObj );" )
@@ -505,7 +557,10 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       ENDIF
 
       /* Build Class PRG Source */
-      cFileCpp := cPathOut + s_PathSep + cWidget + '.cpp'
+//      cFileCpp := cPathOut + s_PathSep + cWidget + '.cpp'
+//      CreateTarget( cFileCpp, cpp_ )
+      /* Distribute in specific lib subfolder */
+      cFileCpp := GetSourcePathByLib( cWidget, cPathOut, '.cpp' )
       CreateTarget( cFileCpp, cpp_ )
 
       /* Build CLASS */
@@ -519,6 +574,25 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
    ENDIF
 
    RETURN { cCPP, cPRG }
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION GetSourcePathByLib( cWidget, cPathOut, cExt, cPre )
+   LOCAL cFileOut
+
+   DEFAULT cPre TO ""
+
+   IF ascan( aGui, cWidget ) > 0
+      cFileOut := cPathOut + s_PathSep + "qtgui" + s_pathSep + cPre + cWidget + cExt
+   ELSEIF ascan( aCore, cWidget ) > 0
+      cFileOut := cPathOut + s_PathSep + "qtcore" + s_pathSep + cPre + cWidget + cExt
+   ELSEIF ascan( aWebkit, cWidget ) > 0
+      cFileOut := cPathOut + s_PathSep + "qtwebkit" + s_pathSep + cPre + cWidget + cExt
+   ELSEIF ascan( aNetwork, cWidget ) > 0
+      cFileOut := cPathOut + s_PathSep + "qtnetwork" + s_pathSep + cPre + cWidget + cExt
+   ENDIF
+
+   RETURN cFileOut
 
 /*----------------------------------------------------------------------*/
 
@@ -544,8 +618,8 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
    LOCAL cPre, cPar, cRet, cFun, cParas, cDocs, cCmd, cPas, s, ss
    LOCAL cWdg, cCmn, cPrgRet, cHBFunc, cHBIdx, cDocNM
    LOCAL lSuccess
-   LOCAL cInt := 'int,qint16,quint16,QChar'
-   LOCAL cIntLong := 'qint32,quint32,QRgb'
+   LOCAL cInt         := 'int,qint16,quint16,QChar,short,ushort'
+   LOCAL cIntLong     := 'qint32,quint32,QRgb'
    LOCAL cIntLongLong := 'qint64,quint64,qlonglong,qulonglong'
    LOCAL cFirstParamCast
 
@@ -840,7 +914,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                cCmd := 'hb_retnint( ' + cCmn + ' )'
                cPrgRet := 'n' + cDocNM
 
-            CASE aA[ PRT_CAST ] $ 'double,qreal'
+            CASE aA[ PRT_CAST ] $ 'double,qreal,float'
                cCmd := 'hb_retnd( ' + cCmn + ' )'
                cPrgRet := 'n' + cDocNM
 
@@ -885,7 +959,8 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                cPrgRet := 'p' + cDocNM
 
             CASE aA[ PRT_L_AND ]
-               cCmd := 'hb_retptr( ( ' + aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
+//               cCmd := 'hb_retptr( ( ' + aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
+               cCmd := Get_Command( aA[ PRT_CAST ], cCmn )
                cPrgRet := 'p' + cDocNM
 
             OTHERWISE
@@ -977,8 +1052,8 @@ STATIC FUNCTION ParseVariables( cProto, cWidget, txt_, doc_, aEnum, func_ )
    LOCAL cRet, cFun, cDocs, cCmd
    LOCAL cWdg, cCmn, cPrgRet, cHBFunc, cDocNM
    LOCAL lSuccess
-   LOCAL cInt := 'int,qint16,quint16,QChar'
-   LOCAL cIntLong := 'qint32,quint32,QRgb'
+   LOCAL cInt         := 'int,qint16,quint16,QChar,short,ushort'
+   LOCAL cIntLong     := 'qint32,quint32,QRgb'
    LOCAL cIntLongLong := 'qint64,quint64,qlonglong,qulonglong'
 
    aPre   := {}
@@ -1025,7 +1100,7 @@ STATIC FUNCTION ParseVariables( cProto, cWidget, txt_, doc_, aEnum, func_ )
                cCmd := 'hb_retnint( ' + cCmn + ' )'
                cPrgRet := 'n' + cDocNM
 
-            CASE aA[ PRT_CAST ] $ 'double,qreal'
+            CASE aA[ PRT_CAST ] $ 'double,qreal,float'
                cCmd := 'hb_retnd( ' + cCmn + ' )'
                cPrgRet := 'n' + cDocNM
 
@@ -1189,7 +1264,7 @@ STATIC FUNCTION BuildHeader( txt_, nMode )
    aadd( txt_, ""                                                                              )
    IF nMode == 0
    aadd( txt_, '#include "hbapi.h"'                                                            )
-   aadd( txt_, '#include "hbqt.h"'                                                             )
+   aadd( txt_, '#include "../hbqt.h"'                                                             ) /////////////
    aadd( txt_, ""                                                                              )
    aadd( txt_, "/*----------------------------------------------------------------------*/"    )
    aadd( txt_, "#if QT_VERSION >= 0x040500"                                                    )
@@ -1277,8 +1352,7 @@ STATIC FUNCTION CreateTarget( cFile, txt_ )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
-   LOCAL cFile := cPathOut + s_PathSep + 'T' + cWidget + '.prg'
-   LOCAL s, n, cM, ss, cCall, sm, cClassType
+   LOCAL cFile, s, n, cM, ss, cCall, sm, cClassType
    LOCAL nLen := len( cWidget )
    LOCAL txt_  :={}
 
@@ -1381,33 +1455,73 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
       aadd( txt_, '/*----------------------------------------------------------------------*/ ' )
    ENDIF
 
+   /* Generate .prg */
+//   cFile := cPathOut + s_PathSep + 'T' + cWidget + '.prg'
+//   CreateTarget( cFile, txt_ )
+   /* Distribute in specific lib subfolder */
+   cFile := GetSourcePathByLib( cWidget, cPathOut, '.prg', 'T' )
+   CreateTarget( cFile, txt_ )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION Build_GarbageFile( cpp_, cPathOut )
+   LOCAL cFile := cPathOut + s_PathSep + "hbqt_garbage.h"
+   LOCAL txt_ := {}
+   LOCAL s
+
+   aadd( txt_, "/*" )
+   aadd( txt_, " * $Id$" )
+   aadd( txt_, " * " )
+   aadd( txt_, " * " )
+   aadd( txt_, " * --------------------------------------------------------------------" )
+   aadd( txt_, " * WARNING: Automatically generated source file. DO NOT EDIT!          " )
+   aadd( txt_, " *          Instead, edit corresponding .qth file,                     " )
+   aadd( txt_, " *          or the generator tool itself, and run regenarate.          " )
+   aadd( txt_, " * --------------------------------------------------------------------" )
+   aadd( txt_, " */" )
+   aadd( txt_, " " )
+
+   FOR EACH s IN cpp_
+      aadd( txt_, "extern QT_G_FUNC( release_" + s + " );" )
+   NEXT
+   aadd( txt_, "" )
+
    RETURN CreateTarget( cFile, txt_ )
 
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
-   LOCAL cFile := cPathOut + s_PathSep + "filelist.mk"
-   LOCAL txt_ := {}
-   LOCAL s
+   LOCAL cFile, s, i
+   LOCAL txt_ := {}, hdr_:= {}, aSubs := {}
 
-   aadd( txt_, "#" )
-   aadd( txt_, "# $Id$" )
-   aadd( txt_, "#" )
-   aadd( txt_, "" )
-   aadd( txt_, "# --------------------------------------------------------------------" )
-   aadd( txt_, "# WARNING: Automatically generated source file. DO NOT EDIT!          " )
-   aadd( txt_, "#          Instead, edit corresponding .qth file,                     " )
-   aadd( txt_, "#          or the generator tool itself, and run regenarate.          " )
-   aadd( txt_, "# --------------------------------------------------------------------" )
-   aadd( txt_, "" )
-   aadd( txt_, "CPP_SOURCES := \" )
+   HB_SYMBOL_UNUSED( cpp_ )
+   HB_SYMBOL_UNUSED( prg_ )
+
+   aadd( hdr_, "#" )
+   aadd( hdr_, "# $Id$" )
+   aadd( hdr_, "#" )
+   aadd( hdr_, "" )
+   aadd( hdr_, "# --------------------------------------------------------------------" )
+   aadd( hdr_, "# WARNING: Automatically generated source file. DO NOT EDIT!          " )
+   aadd( hdr_, "#          Instead, edit corresponding .qth file,                     " )
+   aadd( hdr_, "#          or the generator tool itself, and run regenarate.          " )
+   aadd( hdr_, "# --------------------------------------------------------------------" )
+   aadd( hdr_, "" )
 
    /* Insert .cpp sources */
+   txt_:= {}
+   aeval( hdr_, {|e| aadd( txt_, e ) } )
+   aadd( txt_, "CPP_SOURCES := \" )
+   //
    aadd( txt_, "   " + "moc_slots.cpp \" )
    aadd( txt_, "   " + "hbqt_base.cpp \" )
    aadd( txt_, "   " + "hbqt_utils.cpp \" )
    aadd( txt_, "   " + "hbqt_slots.cpp \" )
    aadd( txt_, "   " + "hbqt_destruct.cpp \" )
+   //  We will strip lines below once subs proto is running
+   #if 0
    FOR EACH s IN cpp_
       aadd( txt_, "   " + s + ".cpp \" )
    NEXT
@@ -1420,11 +1534,46 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
          aadd( txt_, "   " + "T" + s + ".prg \" )
       NEXT
    ENDIF
+   #endif
+   // ------------------------------------------------------
    aadd( txt_, "" )
    aadd( txt_, "# Don't delete this comment, it's here to ensure empty" )
    aadd( txt_, "# line above is kept intact." )
+   //
+   cFile := cPathOut + s_PathSep + "filelist.mk"
+   CreateTarget( cFile, txt_ )
 
-   RETURN CreateTarget( cFile, txt_ )
+
+   /* Sub Libraries */
+   aadd( aSubs, { "qtwebkit" , aWebkit  } )
+   aadd( aSubs, { "qtnetwork", aNetwork } )
+   aadd( aSubs, { "qtgui"    , aGui     } )
+   aadd( aSubs, { "qtcore"   , aCore    } )
+   //
+   FOR i := 1 TO len( aSubs )
+      txt_:= {}
+      aeval( hdr_, {|e| aadd( txt_, e ) } )
+      aadd( txt_, "CPP_SOURCES := \" )
+      //
+      FOR EACH s IN aSubs[ i, 2 ]
+         aadd( txt_, "   " + s + ".cpp \" )
+      NEXT
+      aadd( txt_, "" )
+      aadd( txt_, "" )
+      aadd( txt_, "" )
+      aadd( txt_, "PRG_SOURCES := \" )
+      FOR EACH s IN aSubs[ i, 2 ]
+         aadd( txt_, "   " + "T" + s + ".prg \" )
+      NEXT
+      aadd( txt_, "" )
+      aadd( txt_, "# Don't delete this comment, it's here to ensure empty" )
+      aadd( txt_, "# line above is kept intact." )
+      //
+      cFile := cPathOut + s_PathSep + aSubs[ i, 1 ] + s_PathSep + "filelist.mk"
+      CreateTarget( cFile, txt_ )
+   NEXT
+
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -1997,6 +2146,7 @@ FUNCTION IsMemObject( cWidget )
       aadd( aObj, "QSizeF                " )
       aadd( aObj, "QSizePolicy           " )
       aadd( aObj, "QStringList           " )
+      aadd( aObj, "QTableWidgetItem      " )
       aadd( aObj, "QTextBlockFormat      " )
       aadd( aObj, "QTextCharFormat       " )
       aadd( aObj, "QTextCursor           " )
@@ -2033,6 +2183,7 @@ FUNCTION Get_Command( cWgt, cCmn )
       aadd( a_, cWgt )
 //hb_ToOutDebug( pad( cWgt,30 ) + "No         " + zWidget )
    ENDIF
-   RETURN 'hb_retptrGC( hbqt_ptrTOgcpointer( new ' + cWgt + '( ' + cCmn + ' ) ) )'
+   //RETURN 'hb_retptrGC( hbqt_ptrTOgcpointer( new ' + cWgt + '( ' + cCmn + ' ), "' + cWgt +'" ) )'
+   RETURN 'hb_retptrGC( hbqt_ptrTOgcpointer( new ' + cWgt + '( ' + cCmn + ' ), release_' + cWgt +' ) )'
 
 /*----------------------------------------------------------------------*/

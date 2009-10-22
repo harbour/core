@@ -99,16 +99,28 @@ EXIT PROCEDURE Qt_End()
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION My_Events( o,e )
+hb_toOutDebug( "Key Pressed" )
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
 PROCEDURE Main()
    LOCAL nLoops := 500
    Local oLabel, oBtn, oDA, oWnd, oProg, oSBar, oStyle, i, oSize, n
    LOCAL aMenu, aTool, aGrid, aTabs, aList, aObj := array( nLoops )
 
-hb_toOutDebug( "---b---" )
+   Qt_SetEventFilter()
+   Qt_SetEventSlots()
 
-   FOR i := 1 TO 1 //10
+hb_toOutDebug( "  " )
+hb_toOutDebug( "-----------------b-----------------" )
+
+   FOR i := 1 TO 1
       oWnd := QMainWindow():new()
+//      hb_idleSleep( 5 )
    NEXT
+
    oWnd:show()
    oWnd:setMouseTracking( .t. )
    oWnd:setWindowTitle( "Harbour-Qt Implementation Test Dialog" )
@@ -128,27 +140,29 @@ hb_toOutDebug( "///////////////////////" )
 hb_idlesleep( 5 )
 #endif
 
-   oDA    := QWidget():new( oWnd )
+   oDA    := QWidget():new( QT_PTROF( oWnd ) )
    oWnd:setCentralWidget( QT_PTROF( oDA ) )
 
    aMenu  := Build_MenuBar( oWnd )
-
    aTool  := Build_ToolBar( oWnd )
 
    oSBar  := QStatusBar():new( QT_PTROF( oWnd ) )
    oWnd:setStatusBar( QT_PTROF( oSBar ) )
    oSBar:showMessage( "Harbour-QT Statusbar Ready!" )
 
+#if 0
    oStyle := QWindowsXPStyle():new()
    oStyle:standardIcon( 2 )
    oWnd:setStyle( QT_PTROF( oStyle ) )
-
+#endif
    oLabel := Build_Label( oDA, { 30,190 }, { 300, 30 } )
    oBtn   := Build_PushButton( oDA, { 30,240 }, { 100,50 } )
    aGrid  := Build_Grid( oDA, { 30, 30 }, { 450,150 } )
    aTabs  := Build_Tabs( oDA, { 510, 5 }, { 360, 400 } )
    oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
    aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
+
+hb_toOutDebug( "connected: %s", IF( QT_CONNECT_EVENT( QT_PTROF( oWnd ), 6, {|o,e| My_Events( o, e ) } ), "Yes", "No" ) )
 
    oWnd:Show()
 
@@ -159,10 +173,28 @@ hb_idlesleep( 5 )
    //Dummies()
 
    qApp:exec()
+hb_toOutDebug( "-----------------e-----------------" )
+   //
+   xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd } )
 
-hb_toOutDebug( "---e---" )
+hb_toOutDebug( "-----------------f-----------------" )
 
    RETURN
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION xReleaseMemory( aObj )
+   LOCAL i
+
+   FOR i := 1 TO len( aObj )
+      IF hb_isObject( aObj[ i ] )
+         aObj[ i ]:pPtr := 1
+      ELSEIF hb_isArray( aObj[ i ] )
+         xReleaseMemory( aObj[ i ] )
+      ENDIF
+   NEXT
+
+   RETURN nil
 
 /*----------------------------------------------------------------------*/
 
@@ -172,6 +204,7 @@ PROCEDURE ExecOneMore()
    LOCAL lExit := .f.
 
    oWnd := QMainWindow():new()
+
    oWnd:setMouseTracking( .t. )
    oWnd:setWindowTitle( "Harbour-Qt Implementation Test Dialog" )
    oWnd:setWindowIcon( "test" )
@@ -183,13 +216,7 @@ PROCEDURE ExecOneMore()
    oWnd:show()
 
    aMenu  := Build_MenuBar( oWnd )
-
    aTool  := Build_ToolBar( oWnd )
-
-   oSBar  := QStatusBar():new( QT_PTROF( oWnd ) )
-   oWnd:setStatusBar( QT_PTROF( oSBar ) )
-   oSBar:showMessage( "Harbour-QT Statusbar Ready!" )
-
    oLabel := Build_Label( oDA, { 30,190 }, { 300, 30 } )
    oBtn   := Build_PushButton( oDA, { 30,240 }, { 100,50 }, ;
                                    "CLOSE", "This dialog will be closed now!", @lExit )
@@ -197,6 +224,10 @@ PROCEDURE ExecOneMore()
    aTabs  := Build_Tabs( oDA, { 510, 5 }, { 360, 400 } )
    oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
    aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
+
+   oSBar  := QStatusBar():new( QT_PTROF( oWnd ) )
+   oWnd:setStatusBar( QT_PTROF( oSBar ) )
+   oSBar:showMessage( "Harbour-QT Statusbar Ready!" )
 
    oEventLoop := QEventLoop():new( QT_PTROF( oWnd ) )
 
@@ -207,6 +238,10 @@ PROCEDURE ExecOneMore()
          EXIT
       ENDIF
    ENDDO
+   oEventLoop:exit( 0 )
+
+   oEventLoop := 1
+   xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd } )
 
    RETURN
 
@@ -215,10 +250,10 @@ PROCEDURE ExecOneMore()
 STATIC FUNCTION Build_MenuBar( oWnd )
    LOCAL oMenuBar, oMenu1, oMenu2, oActNew, oActOpen, oActSave
 
-   oMenuBar := QMenuBar():new( QT_PTROF( oWnd ) )
+   oMenuBar := QMenuBar():new()
    oMenuBar:resize( oWnd:width(), 25 )
 
-   oMenu1 := QMenu():new( QT_PTROF( oMenuBar ) )
+   oMenu1 := QMenu():new()
    oMenu1:setTitle( "&File" )
    Qt_Connect_Signal( oMenu1:addAction_1( "new.png" , "&New"  ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )
    Qt_Connect_Signal( oMenu1:addAction_1( "open.png", "&Open" ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open", w, l ) } )
@@ -228,7 +263,7 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    Qt_Connect_Signal( oMenu1:addAction( "E&xit" ), QT_EVE_TRIGGERED_B, {|w,l| MsgInfo( "Exit ?" ) } )
    oMenuBar:addMenu( QT_PTROF( oMenu1 ) )
 
-   oMenu2 := QMenu():new( QT_PTROF( oMenuBar ) )
+   oMenu2 := QMenu():new()
    oMenu2:setTitle( "&Dialogs" )
    Qt_Connect_Signal( oMenu2:addAction( "&Colors"    ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Colors"   , w, l ) } )
    Qt_Connect_Signal( oMenu2:addAction( "&Fonts"     ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Fonts"    , w, l ) } )
@@ -252,7 +287,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    LOCAL oTB, oActNew, oActOpen, oActSave
 
    /* Create a Toolbar Object */
-   oTB := QToolBar():new( QT_PTROF( oWnd ) )
+   oTB := QToolBar():new()// QT_PTROF( oWnd ) )
 
    /* Create an action */
    oActNew := QAction():new( QT_PTROF( oWnd ) )
@@ -399,10 +434,15 @@ STATIC FUNCTION Build_Tabs( oWnd, aPos, aSize )
 
    oTabWidget := QTabWidget():new( QT_PTROF( oWnd ) )
 
+   #if 1
+   oTab1 := QWidget():new()// QT_PTROF( oTabWidget ) )
+   oTab2 := QWidget():new()// QT_PTROF( oTabWidget ) )
+   oTab3 := QWidget():new()// QT_PTROF( oTabWidget ) )
+   #else
    oTab1 := QWidget():new( QT_PTROF( oTabWidget ) )
    oTab2 := QWidget():new( QT_PTROF( oTabWidget ) )
    oTab3 := QWidget():new( QT_PTROF( oTabWidget ) )
-
+   #endif
    oTabWidget:addTab( QT_PTROF( oTab1 ), "Folders"  )
    oTabWidget:addTab( QT_PTROF( oTab2 ), "Controls" )
    oTabWidget:addTab( QT_PTROF( oTab3 ), "TextBox"  )
@@ -415,7 +455,9 @@ STATIC FUNCTION Build_Tabs( oWnd, aPos, aSize )
    aCntl := Build_Controls( oTab2 )
    aText := Build_TextBox( oTab3 )
 
-   RETURN { oTab1, oTab2, oTab3, oTabWidget, aTree, aCntl, aText }
+   //RETURN { oTab1, oTab2, oTab3, aTree, aCntl, aText, oTabWidget }
+   //RETURN { aCntl, aTree, aText, oTabWidget, oTab1, oTab2, oTab3 }
+   RETURN { aCntl, aTree, aText, oTab1, oTab2, oTab3, oTabWidget }
 
 /*----------------------------------------------------------------------*/
 
@@ -425,7 +467,7 @@ STATIC FUNCTION Build_TreeView( oWnd )
    oTV := QTreeView():new( QT_PTROF( oWnd ) )
    oTV:setMouseTracking( .t. )
    //Qt_Connect_Signal( QT_PTROF( oTV ), QT_EVE_HOVERED, {|o,i| hb_outDebug( "oTV:hovered" ) } )
-   oDirModel := QDirModel():new( QT_PTROF( oTV ) )
+   oDirModel := QDirModel():new()
    oTV:setModel( QT_PTROF( oDirModel ) )
    oTV:move( 5, 7 )
    oTV:resize( 345, 365 )
@@ -442,7 +484,7 @@ STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
    oListBox:setMouseTracking( .t. )
    //Qt_Connect_Signal( QT_PTROF( oListBox ), QT_EVE_HOVERED, {|o,i| hb_outDebug( "oListBox:hovered" ) } )
 
-   oStrList := QStringList():new( QT_PTROF( oListBox ) )
+   oStrList := QStringList():new()
 
    oStrList:append( "India"          )
    oStrList:append( "United States"  )
@@ -453,7 +495,7 @@ STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
    oStrList:append( "China"          )
    oStrList:sort()
 
-   oStrModel := QStringListModel():new( QT_PTROF( oListBox ) )
+   oStrModel := QStringListModel():new()
    oStrModel:setStringList( QT_PTROF( oStrList ) )
 
    oListBox:setModel( QT_PTROF( oStrModel ) )
@@ -519,7 +561,7 @@ STATIC FUNCTION Build_Controls( oWnd )
    oRadioButton:ReSize( 345, 30 )
    oRadioButton:Show()
 
-   RETURN { oEdit, oCheckBox, oComboBox, oSpinBox, oRadioButton }
+   RETURN { oEdit, oComboBox, oCheckBox, oSpinBox, oRadioButton }
 
 /*----------------------------------------------------------------------*/
 
@@ -875,4 +917,3 @@ FUNCTION ShowInSystemTray( oWnd )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
-

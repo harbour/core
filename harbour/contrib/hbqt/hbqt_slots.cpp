@@ -1115,7 +1115,6 @@ HB_FUNC( QT_CONNECT_SIGNAL )
    PHB_ITEM  codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK ) );  /* get codeblock */
    bool      ret       = false;                                     /* return value  */
    QObject * object    = ( QObject* ) hbqt_gcpointer( 1 );          /* get sender    */
-
    if( !object )
    {
       object = ( QObject* ) hb_parptr( 1 );
@@ -1710,7 +1709,12 @@ HB_FUNC( QT_CONNECT_SIGNAL )
  */
 HB_FUNC( QT_DISCONNECT_SIGNAL )
 {
-   QObject * object = ( QObject* ) hb_parptr( 1 );
+   QObject * object = ( QObject* ) hbqt_gcpointer( 1 );          /* get sender    */
+   if( !object )
+   {
+      object = ( QObject* ) hb_parptr( 1 );
+   }
+
    if( object )
    {
       Slots * s_s = qt_getEventSlots();
@@ -1780,8 +1784,7 @@ Events::~Events()
 bool Events::eventFilter( QObject * object, QEvent * event )
 {
    QEvent::Type eventtype = event->type();
-//char str[ 50 ];
-//hb_snprintf( str, sizeof( str ), "0 Events::eventFilter = %i", ( int ) eventtype ); OutputDebugString( str );
+hb_snprintf( str, sizeof( str ), "0 Events::eventFilter = %i", ( int ) eventtype ); OutputDebugString( str );
 
    if( ( int ) eventtype == 0 )
    {
@@ -1840,10 +1843,15 @@ HB_FUNC( QT_QEVENTFILTER )
 
 HB_FUNC( QT_CONNECT_EVENT )
 {
-   QObject * object    = ( QObject * ) hb_parptr( 1 );
+//   QObject * object    = ( QObject * ) hb_parptr( 1 );
    int       type      = hb_parni( 2 );
    PHB_ITEM  codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK | HB_IT_BYREF ) );
    Events  * s_e       = qt_getEventFilter();
+   QObject * object    = ( QObject* ) hbqt_gcpointer( 1 );          /* get sender    */
+   if( !object )
+   {
+      object = ( QObject* ) hb_parptr( 1 );
+   }
 
    char str[ 20 ];
    hb_snprintf( str, sizeof( str ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
@@ -1859,10 +1867,15 @@ HB_FUNC( QT_CONNECT_EVENT )
 
 HB_FUNC( QT_DISCONNECT_EVENT )
 {
-   QObject * object = ( QObject * ) hb_parptr( 1 );
+//   QObject * object = ( QObject * ) hb_parptr( 1 );
    int       type   = hb_parni( 2 );
    bool      bRet   = false;
    Events  * s_e    = qt_getEventFilter();
+   QObject * object    = ( QObject* ) hbqt_gcpointer( 1 );          /* get sender    */
+   if( !object )
+   {
+      object = ( QObject* ) hb_parptr( 1 );
+   }
 
    char str[ 10 ];
    hb_snprintf( str, sizeof( str ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
