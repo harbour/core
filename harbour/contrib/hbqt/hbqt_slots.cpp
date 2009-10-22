@@ -1784,8 +1784,9 @@ Events::~Events()
 bool Events::eventFilter( QObject * object, QEvent * event )
 {
    QEvent::Type eventtype = event->type();
+#if defined(__debug__)
 hb_snprintf( str, sizeof( str ), "0 Events::eventFilter = %i", ( int ) eventtype ); OutputDebugString( str );
-
+#endif
    if( ( int ) eventtype == 0 )
    {
 //hb_snprintf( str, sizeof( str ), "x Events::eventFilter =            0" ); OutputDebugString( str );
