@@ -55,22 +55,25 @@
 ;
 
 <CLASS>
-Inherits = 
-Type     = Core
-New      = 
+QObject    = no
+Inherits   = 
+Type       = Core
+New        =
+Destructor = 
 </CLASS>
 
 <CODE>
-#include <QtGui/QStyledItemDelegate>
+#include <QtGui/QTableWidgetSelectionRange>
 
 
-/*
- * QStyledItemDelegate ( QObject * parent = 0 )
- * ~QStyledItemDelegate ()
+/* QTableWidgetSelectionRange ()
+ * QTableWidgetSelectionRange ( int top, int left, int bottom, int right )
+ * QTableWidgetSelectionRange ( const QTableWidgetSelectionRange & other )
+ * ~QTableWidgetSelectionRange ()
  */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE )
+HB_FUNC( QT_QTABLEWIDGETSELECTIONRANGE )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   hb_retptr( new QTableWidgetSelectionRange() );
 }
 </CODE>
 
@@ -78,15 +81,12 @@ HB_FUNC( QT_QSTYLEDITEMDELEGATE )
 </ENUMS>
 
 <PROTOS>
-virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual QString displayText ( const QVariant & value, const QLocale & locale ) const
-// QItemEditorFactory * itemEditorFactory () const
-virtual void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void setEditorData ( QWidget * editor, const QModelIndex & index ) const
-// void setItemEditorFactory ( QItemEditorFactory * factory )
-virtual void setModelData ( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const
-virtual QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+int bottomRow () const
+int columnCount () const
+int leftColumn () const
+int rightColumn () const
+int rowCount () const
+int topRow () const
 </PROTOS>
 
 <SLOTS>

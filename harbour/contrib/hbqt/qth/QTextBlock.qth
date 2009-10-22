@@ -107,12 +107,12 @@ QTextBlock previous () const
 int revision () const
 void setLineCount ( int count )
 void setRevision ( int rev )
-void setUserData ( QTextBlockUserData * data )
+// void setUserData ( QTextBlockUserData * data )
 void setUserState ( int state )
 void setVisible ( bool visible )
 QString text () const
 QTextList * textList () const
-QTextBlockUserData * userData () const
+// QTextBlockUserData * userData () const
 int userState () const
 </PROTOS>
 

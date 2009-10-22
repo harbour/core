@@ -55,38 +55,81 @@
 ;
 
 <CLASS>
-Inherits = 
-Type     = Core
-New      = 
+QObject    = no
+Inherits   = 
+Type       = Core
+New        =
+Destructor = 
 </CLASS>
 
 <CODE>
-#include <QtGui/QStyledItemDelegate>
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
+#include <QtCore/QDateTime>
 
 
-/*
- * QStyledItemDelegate ( QObject * parent = 0 )
- * ~QStyledItemDelegate ()
+/* QFileInfo ()
+ * QFileInfo ( const QString & file )
+ * QFileInfo ( const QFile & file )
+ * QFileInfo ( const QDir & dir, const QString & file )
+ * QFileInfo ( const QFileInfo & fileinfo )
+ * ~QFileInfo ()
  */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE )
+HB_FUNC( QT_QFILEINFO )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   hb_retptr( new QFileInfo() );
 }
 </CODE>
 
 <ENUMS>
+flags PermissionSpec
 </ENUMS>
 
 <PROTOS>
-virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual QString displayText ( const QVariant & value, const QLocale & locale ) const
-// QItemEditorFactory * itemEditorFactory () const
-virtual void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void setEditorData ( QWidget * editor, const QModelIndex & index ) const
-// void setItemEditorFactory ( QItemEditorFactory * factory )
-virtual void setModelData ( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const
-virtual QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+QDir absoluteDir () const
+QString absoluteFilePath () const
+QString absolutePath () const
+QString baseName () const
+QString bundleName () const
+bool caching () const
+QString canonicalFilePath () const
+QString canonicalPath () const
+QString completeBaseName () const
+QString completeSuffix () const
+QDateTime created () const
+QDir dir () const
+bool exists () const
+QString fileName () const
+QString filePath () const
+QString group () const
+uint groupId () const
+bool isAbsolute () const
+bool isBundle () const
+bool isDir () const
+bool isExecutable () const
+bool isFile () const
+bool isHidden () const
+bool isReadable () const
+bool isRelative () const
+bool isRoot () const
+bool isSymLink () const
+bool isWritable () const
+QDateTime lastModified () const
+QDateTime lastRead () const
+bool makeAbsolute ()
+QString owner () const
+uint ownerId () const
+QString path () const
+bool permission ( QFile::Permissions permissions ) const
+QFile::Permissions permissions () const
+void refresh ()
+void setCaching ( bool enable )
+void setFile ( const QString & file )
+void setFile ( const QFile & file )
+void setFile ( const QDir & dir, const QString & file )
+qint64 size () const
+QString suffix () const
+QString symLinkTarget () const
 </PROTOS>
 
 <SLOTS>

@@ -76,7 +76,7 @@ CREATE CLASS HbDbfModel INHERIT QAbstractItemModel
 #include <QStringList>
 #include <QtCore/QAbstractItemModel>
 
-#include "hbqt_slots.h"
+#include "../hbqt_slots.h"
 
 /*
  * QAbstractItemModel ( QObject * parent = 0 )
@@ -130,7 +130,7 @@ bool insertRow ( int row, const QModelIndex & parent = QModelIndex() )
 virtual bool insertRows ( int row, int count, const QModelIndex & parent = QModelIndex() )
 virtual QMap<int, QVariant> itemData ( const QModelIndex & index ) const
 // virtual QModelIndexList match ( const QModelIndex & start, int role, const QVariant & value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const
-virtual QMimeData * mimeData ( const QModelIndexList & indexes ) const
+// virtual QMimeData * mimeData ( const QModelIndexList & indexes ) const
 virtual QStringList mimeTypes () const
 virtual QModelIndex parent ( const QModelIndex & index ) const = 0
 bool removeColumn ( int column, const QModelIndex & parent = QModelIndex() )

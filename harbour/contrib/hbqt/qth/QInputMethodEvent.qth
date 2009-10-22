@@ -55,38 +55,38 @@
 ;
 
 <CLASS>
-Inherits = 
-Type     = Core
-New      = 
+QObject    = no
+Inherits   = QEvent 
+Type       = Core
+New        =
+Destructor = 
 </CLASS>
 
 <CODE>
-#include <QtGui/QStyledItemDelegate>
+#include <QtGui/QInputMethodEvent>
 
 
-/*
- * QStyledItemDelegate ( QObject * parent = 0 )
- * ~QStyledItemDelegate ()
+/* QInputMethodEvent ()
+ * QInputMethodEvent ( const QString & preeditText, const QList<Attribute> & attributes )
+ * QInputMethodEvent ( const QInputMethodEvent & other )
  */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE )
+HB_FUNC( QT_QINPUTMETHODEVENT )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   hb_retptr( new QInputMethodEvent() );
 }
 </CODE>
 
 <ENUMS>
+enum AttributeType { TextFormat, Cursor, Language, Ruby }
 </ENUMS>
 
 <PROTOS>
-virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual QString displayText ( const QVariant & value, const QLocale & locale ) const
-// QItemEditorFactory * itemEditorFactory () const
-virtual void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void setEditorData ( QWidget * editor, const QModelIndex & index ) const
-// void setItemEditorFactory ( QItemEditorFactory * factory )
-virtual void setModelData ( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const
-virtual QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+const QList<Attribute> & attributes () const
+const QString & commitString () const
+const QString & preeditString () const
+int replacementLength () const
+int replacementStart () const
+void setCommitString ( const QString & commitString, int replaceFrom = 0, int replaceLength = 0 )
 </PROTOS>
 
 <SLOTS>

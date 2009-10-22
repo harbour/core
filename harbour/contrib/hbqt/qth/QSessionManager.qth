@@ -55,38 +55,47 @@
 ;
 
 <CLASS>
-Inherits = 
-Type     = Core
-New      = 
+QObject    =
+Inherits   = QObject
+Type       = Core
+New        =
+Destructor = no
 </CLASS>
 
 <CODE>
-#include <QtGui/QStyledItemDelegate>
+#include <QtGui/QSessionManager>
 
 
 /*
- * QStyledItemDelegate ( QObject * parent = 0 )
- * ~QStyledItemDelegate ()
+ * 
  */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE )
+HB_FUNC( QT_QSESSIONMANAGER )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   // hb_retptr( new () );
 }
 </CODE>
 
 <ENUMS>
+enum RestartHint { RestartIfRunning, RestartAnyway, RestartImmediately, RestartNever }
 </ENUMS>
 
 <PROTOS>
-virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual QString displayText ( const QVariant & value, const QLocale & locale ) const
-// QItemEditorFactory * itemEditorFactory () const
-virtual void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void setEditorData ( QWidget * editor, const QModelIndex & index ) const
-// void setItemEditorFactory ( QItemEditorFactory * factory )
-virtual void setModelData ( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const
-virtual QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+bool allowsErrorInteraction ()
+bool allowsInteraction ()
+void cancel ()
+QStringList discardCommand () const
+bool isPhase2 () const
+void release ()
+void requestPhase2 ()
+QStringList restartCommand () const
+RestartHint restartHint () const
+QString sessionId () const
+QString sessionKey () const
+void setDiscardCommand ( const QStringList & list )
+void setManagerProperty ( const QString & name, const QStringList & value )
+void setManagerProperty ( const QString & name, const QString & value )
+void setRestartCommand ( const QStringList & command )
+void setRestartHint ( RestartHint hint )
 </PROTOS>
 
 <SLOTS>

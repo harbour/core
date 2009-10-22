@@ -94,8 +94,8 @@ bool cd ( const QString & dirName )
 bool cdUp ()
 uint count () const
 QString dirName () const
-QFileInfoList entryInfoList ( const QStringList & nameFilters, Filters filters = NoFilter, SortFlags sort = NoSort ) const
-QFileInfoList entryInfoList ( Filters filters = NoFilter, SortFlags sort = NoSort ) const
+// QFileInfoList entryInfoList ( const QStringList & nameFilters, Filters filters = NoFilter, SortFlags sort = NoSort ) const
+// QFileInfoList entryInfoList ( Filters filters = NoFilter, SortFlags sort = NoSort ) const
 QStringList entryList ( const QStringList & nameFilters, Filters filters = NoFilter, SortFlags sort = NoSort ) const
 QStringList entryList ( Filters filters = NoFilter, SortFlags sort = NoSort ) const
 bool exists ( const QString & name ) const
@@ -128,7 +128,7 @@ void addSearchPath ( const QString & prefix, const QString & path )
 QString cleanPath ( const QString & path )
 QDir current ()
 QString currentPath ()
-QFileInfoList drives ()
+// QFileInfoList drives ()
 QString fromNativeSeparators ( const QString & pathName )
 QDir home ()
 QString homePath ()

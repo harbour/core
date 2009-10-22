@@ -55,44 +55,77 @@
 ;
 
 <CLASS>
-Inherits = 
-Type     = Core
-New      = 
+QObject    = 
+Inherits   = QObject
+Type       = Core
+New        =
+Destructor = 
 </CLASS>
 
 <CODE>
-#include <QtGui/QStyledItemDelegate>
+#include <QtGui/QMovie>
+#include <QtGui/QColor>
+#include <QtGui/QPixmap>
 
 
-/*
- * QStyledItemDelegate ( QObject * parent = 0 )
- * ~QStyledItemDelegate ()
+/* QMovie ( QObject * parent = 0 )
+ * QMovie ( QIODevice * device, const QByteArray & format = QByteArray(), QObject * parent = 0 )
+ * QMovie ( const QString & fileName, const QByteArray & format = QByteArray(), QObject * parent = 0 )
+ * ~QMovie ()
  */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE )
+HB_FUNC( QT_QMOVIE )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   hb_retptr( new QMovie() );
 }
 </CODE>
 
 <ENUMS>
+enum CacheMode { CacheNone, CacheAll }
+enum MovieState { NotRunning, Paused, Running }
 </ENUMS>
 
 <PROTOS>
-virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual QString displayText ( const QVariant & value, const QLocale & locale ) const
-// QItemEditorFactory * itemEditorFactory () const
-virtual void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void setEditorData ( QWidget * editor, const QModelIndex & index ) const
-// void setItemEditorFactory ( QItemEditorFactory * factory )
-virtual void setModelData ( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const
-virtual QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+QColor backgroundColor () const
+CacheMode cacheMode () const
+int currentFrameNumber () const
+QImage currentImage () const
+QPixmap currentPixmap () const
+QIODevice * device () const
+QString fileName () const
+QByteArray format () const
+int frameCount () const
+QRect frameRect () const
+bool isValid () const
+bool jumpToFrame ( int frameNumber )
+int loopCount () const
+int nextFrameDelay () const
+QSize scaledSize ()
+void setBackgroundColor ( const QColor & color )
+void setCacheMode ( CacheMode mode )
+void setDevice ( QIODevice * device )
+void setFileName ( const QString & fileName )
+void setFormat ( const QByteArray & format )
+void setScaledSize ( const QSize & size )
+int speed () const
+MovieState state () const
 </PROTOS>
 
 <SLOTS>
+bool jumpToNextFrame ()
+void setPaused ( bool paused )
+void setSpeed ( int percentSpeed )
+void start ()
+void stop ()
 </SLOTS>
 
 <SIGNALS>
+void error ( QImageReader::ImageReaderError error )
+void finished ()
+void frameChanged ( int frameNumber )
+void resized ( const QSize & size )
+void started ()
+void stateChanged ( QMovie::MovieState state )
+void updated ( const QRect & rect )
 </SIGNALS>
 
 

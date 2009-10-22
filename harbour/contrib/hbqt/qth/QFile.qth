@@ -55,38 +55,81 @@
 ;
 
 <CLASS>
-Inherits = 
-Type     = Core
-New      = 
+QObject    =
+Inherits   = QIODevice
+Type       = Core
+New        =
+Destructor = 
 </CLASS>
 
 <CODE>
-#include <QtGui/QStyledItemDelegate>
+#include <QtCore/QFile>
 
 
-/*
- * QStyledItemDelegate ( QObject * parent = 0 )
- * ~QStyledItemDelegate ()
+/* QFile ( const QString & name )
+ * QFile ( QObject * parent )
+ * QFile ( const QString & name, QObject * parent )
+ * ~QFile ()
  */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE )
+HB_FUNC( QT_QFILE )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
+   {
+      hb_retptr( new QFile( hbqt_par_QString( 1 ) ) );
+   }
 }
 </CODE>
 
 <ENUMS>
+enum FileError { NoError, ReadError, WriteError, FatalError, ..., CopyError }
+enum MemoryMapFlags { NoOptions }
+enum Permission { ReadOwner, WriteOwner, ExeOwner, ReadUser, ..., ExeOther }
+flags Permissions
+
+flags OpenMode
+enum OpenModeFlag { NotOpen, ReadOnly, WriteOnly, ReadWrite, ..., Unbuffered }
 </ENUMS>
 
 <PROTOS>
-virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual QString displayText ( const QVariant & value, const QLocale & locale ) const
-// QItemEditorFactory * itemEditorFactory () const
-virtual void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void setEditorData ( QWidget * editor, const QModelIndex & index ) const
-// void setItemEditorFactory ( QItemEditorFactory * factory )
-virtual void setModelData ( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const
-virtual QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+virtual bool atEnd () const
+virtual void close ()
+bool copy ( const QString & newName )
+FileError error () const
+bool exists () const
+QString fileName () const
+bool flush ()
+int handle () const
+virtual bool isSequential () const
+bool link ( const QString & linkName )
+uchar * map ( qint64 offset, qint64 size, MemoryMapFlags flags = NoOptions )
+virtual bool open ( OpenMode mode )
+// bool open ( FILE * fh, OpenMode mode )
+bool open ( int fd, OpenMode mode )
+Permissions permissions () const
+bool remove ()
+bool rename ( const QString & newName )
+bool resize ( qint64 sz )
+void setFileName ( const QString & name )
+bool setPermissions ( Permissions permissions )
+virtual qint64 size () const
+QString symLinkTarget () const
+// bool unmap ( uchar * address )
+void unsetError ()
+
+bool copy ( const QString & fileName, const QString & newName )
+QString decodeName ( const QByteArray & localFileName )
+QString decodeName ( const char * localFileName )
+QByteArray encodeName ( const QString & fileName )
+bool exists ( const QString & fileName )
+bool link ( const QString & fileName, const QString & linkName )
+Permissions permissions ( const QString & fileName )
+bool remove ( const QString & fileName )
+bool rename ( const QString & oldName, const QString & newName )
+bool resize ( const QString & fileName, qint64 sz )
+// void setDecodingFunction ( DecoderFn function )
+// void setEncodingFunction ( EncoderFn function )
+bool setPermissions ( const QString & fileName, Permissions permissions )
+QString symLinkTarget ( const QString & fileName )
 </PROTOS>
 
 <SLOTS>

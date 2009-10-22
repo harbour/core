@@ -55,38 +55,46 @@
 ;
 
 <CLASS>
-Inherits = 
-Type     = Core
-New      = 
+QObject    = no
+Inherits   = 
+Type       = Core
+New        =
+Destructor = 
 </CLASS>
 
 <CODE>
-#include <QtGui/QStyledItemDelegate>
+#include <QtNetwork/QNetworkRequest>
 
 
-/*
- * QStyledItemDelegate ( QObject * parent = 0 )
- * ~QStyledItemDelegate ()
+/* QNetworkRequest ( const QUrl & url = QUrl() )
+ * QNetworkRequest ( const QNetworkRequest & other )
+ * ~QNetworkRequest ()
  */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE )
+HB_FUNC( QT_QNETWORKREQUEST )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   hb_retptr( new QNetworkRequest() );
 }
 </CODE>
 
 <ENUMS>
+enum Attribute { HttpStatusCodeAttribute, HttpReasonPhraseAttribute, RedirectionTargetAttribute, ConnectionEncryptedAttribute, ..., UserMax }
+enum CacheLoadControl { AlwaysNetwork, PreferNetwork, PreferCache, AlwaysCache }
+enum KnownHeaders { ContentTypeHeader, ContentLengthHeader, LocationHeader, LastModifiedHeader, CookieHeader, SetCookieHeader }
 </ENUMS>
 
 <PROTOS>
-virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual QString displayText ( const QVariant & value, const QLocale & locale ) const
-// QItemEditorFactory * itemEditorFactory () const
-virtual void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void setEditorData ( QWidget * editor, const QModelIndex & index ) const
-// void setItemEditorFactory ( QItemEditorFactory * factory )
-virtual void setModelData ( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const
-virtual QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+QVariant attribute ( Attribute code, const QVariant & defaultValue = QVariant() ) const
+bool hasRawHeader ( const QByteArray & headerName ) const
+QVariant header ( KnownHeaders header ) const
+QByteArray rawHeader ( const QByteArray & headerName ) const
+QList<QByteArray> rawHeaderList () const
+void setAttribute ( Attribute code, const QVariant & value )
+void setHeader ( KnownHeaders header, const QVariant & value )
+void setRawHeader ( const QByteArray & headerName, const QByteArray & headerValue )
+// void setSslConfiguration ( const QSslConfiguration & config )
+void setUrl ( const QUrl & url )
+// QSslConfiguration sslConfiguration () const
+QUrl url () const
 </PROTOS>
 
 <SLOTS>

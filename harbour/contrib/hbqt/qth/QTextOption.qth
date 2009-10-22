@@ -55,38 +55,53 @@
 ;
 
 <CLASS>
-Inherits = 
-Type     = Core
-New      = 
+QObject    = no
+Inherits   = 
+Type       = Core
+New        =
+Destructor = 
 </CLASS>
 
 <CODE>
-#include <QtGui/QStyledItemDelegate>
+#include <QtGui/QTextOption>
 
 
-/*
- * QStyledItemDelegate ( QObject * parent = 0 )
- * ~QStyledItemDelegate ()
+/* QTextOption ()
+ * QTextOption ( Qt::Alignment alignment )
+ * QTextOption ( const QTextOption & other )
+ * ~QTextOption ()
  */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE )
+HB_FUNC( QT_QTEXTOPTION )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   hb_retptr( new QTextOption() );
 }
 </CODE>
 
 <ENUMS>
+class Tab
+enum Flag { IncludeTrailingSpaces, ShowTabsAndSpaces, ShowLineAndParagraphSeparators, AddSpaceForLineAndParagraphSeparators, SuppressColors }
+flags Flags
+enum TabType { LeftTab, RightTab, CenterTab, DelimiterTab }
+enum WrapMode { NoWrap, WordWrap, ManualWrap, WrapAnywhere, WrapAtWordBoundaryOrAnywhere }
 </ENUMS>
 
 <PROTOS>
-virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual QString displayText ( const QVariant & value, const QLocale & locale ) const
-// QItemEditorFactory * itemEditorFactory () const
-virtual void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void setEditorData ( QWidget * editor, const QModelIndex & index ) const
-// void setItemEditorFactory ( QItemEditorFactory * factory )
-virtual void setModelData ( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const
-virtual QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+Qt::Alignment alignment () const
+Flags flags () const
+void setAlignment ( Qt::Alignment alignment )
+void setFlags ( Flags flags )
+void setTabArray ( QList<qreal> tabStops )
+void setTabStop ( qreal tabStop )
+void setTabs ( QList<Tab> tabStops )
+void setTextDirection ( Qt::LayoutDirection direction )
+void setUseDesignMetrics ( bool enable )
+void setWrapMode ( WrapMode mode )
+QList<qreal> tabArray () const
+qreal tabStop () const
+QList<Tab> tabs () const
+Qt::LayoutDirection textDirection () const
+bool useDesignMetrics () const
+WrapMode wrapMode () const
 </PROTOS>
 
 <SLOTS>

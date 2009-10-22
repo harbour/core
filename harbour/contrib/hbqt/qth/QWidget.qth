@@ -274,7 +274,7 @@ void setWindowModality ( Qt::WindowModality windowModality )
 void setWindowOpacity ( qreal level )
 void setWindowRole ( const QString & role )
 void setWindowState ( Qt::WindowStates windowState )
-void setWindowSurface ( QWindowSurface * surface )   
+// void setWindowSurface ( QWindowSurface * surface )   
 QSize size () const
 virtual QSize sizeHint () const
 QSize sizeIncrement () const
@@ -307,7 +307,7 @@ Qt::WindowModality windowModality () const
 qreal windowOpacity () const
 QString windowRole () const
 Qt::WindowStates windowState () const
-QWindowSurface * windowSurface () const   (preliminary)
+// QWindowSurface * windowSurface () const   (preliminary)
 QString windowTitle () const
 Qt::WindowType windowType () const
 int x () const

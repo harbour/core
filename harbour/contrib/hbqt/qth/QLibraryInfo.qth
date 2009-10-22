@@ -61,32 +61,27 @@ New      =
 </CLASS>
 
 <CODE>
-#include <QtGui/QStyledItemDelegate>
+#include <QtCore/QLibraryInfo>
 
 
 /*
- * QStyledItemDelegate ( QObject * parent = 0 )
- * ~QStyledItemDelegate ()
+ *
  */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE )
+HB_FUNC( QT_QLIBRARYINFO )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   hb_retptr( ( QLibraryInfo* ) new QLibraryInfo() );
 }
 </CODE>
 
 <ENUMS>
+enum LibraryLocation { PrefixPath, DocumentationPath, HeadersPath, LibrariesPath, ..., DemosPath }
 </ENUMS>
 
 <PROTOS>
-virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual QString displayText ( const QVariant & value, const QLocale & locale ) const
-// QItemEditorFactory * itemEditorFactory () const
-virtual void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void setEditorData ( QWidget * editor, const QModelIndex & index ) const
-// void setItemEditorFactory ( QItemEditorFactory * factory )
-virtual void setModelData ( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const
-virtual QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+QString buildKey ()
+QString licensedProducts ()
+QString licensee ()
+QString location ( LibraryLocation loc )
 </PROTOS>
 
 <SLOTS>
@@ -95,6 +90,8 @@ virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem
 <SIGNALS>
 </SIGNALS>
 
+<VARIABLES>
+</VARIABLES>
 
 
 

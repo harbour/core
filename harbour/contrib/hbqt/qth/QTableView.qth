@@ -71,7 +71,7 @@ CREATE CLASS HBTableView INHERIT QTableView
 <CODE>
 #include <QtGui/QTableView>
 
-#include "hbqt_slots.h"
+#include "../hbqt_slots.h"
 
 /*
  * QTableView ( QWidget * parent = 0 )

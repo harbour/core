@@ -55,22 +55,22 @@
 ;
 
 <CLASS>
-Inherits = 
-Type     = Core
-New      = 
+QObject    = 
+Inherits   = QWidget
+Type       = Core
+New        =
+Destructor = 
 </CLASS>
 
 <CODE>
-#include <QtGui/QStyledItemDelegate>
+#include <QtGui/QWizardPage>
 
 
-/*
- * QStyledItemDelegate ( QObject * parent = 0 )
- * ~QStyledItemDelegate ()
+/* QWizardPage ( QWidget * parent = 0 )
  */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE )
+HB_FUNC( QT_QWIZARDPAGE )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   hb_retptr( new QWizardPage() );
 }
 </CODE>
 
@@ -78,21 +78,30 @@ HB_FUNC( QT_QSTYLEDITEMDELEGATE )
 </ENUMS>
 
 <PROTOS>
-virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual QString displayText ( const QVariant & value, const QLocale & locale ) const
-// QItemEditorFactory * itemEditorFactory () const
-virtual void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void setEditorData ( QWidget * editor, const QModelIndex & index ) const
-// void setItemEditorFactory ( QItemEditorFactory * factory )
-virtual void setModelData ( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const
-virtual QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+QString buttonText ( QWizard::WizardButton which ) const
+virtual void cleanupPage ()
+virtual void initializePage ()
+bool isCommitPage () const
+virtual bool isComplete () const
+bool isFinalPage () const
+virtual int nextId () const
+QPixmap pixmap ( QWizard::WizardPixmap which ) const
+void setButtonText ( QWizard::WizardButton which, const QString & text )
+void setCommitPage ( bool commitPage )
+void setFinalPage ( bool finalPage )
+void setPixmap ( QWizard::WizardPixmap which, const QPixmap & pixmap )
+void setSubTitle ( const QString & subTitle )
+void setTitle ( const QString & title )
+QString subTitle () const
+QString title () const
+virtual bool validatePage ()
 </PROTOS>
 
 <SLOTS>
 </SLOTS>
 
 <SIGNALS>
+void completeChanged ()
 </SIGNALS>
 
 

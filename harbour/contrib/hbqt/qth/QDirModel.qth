@@ -97,7 +97,7 @@ QModelIndex index ( const QString & path, int column = 0 ) const
 bool isDir ( const QModelIndex & index ) const
 bool isReadOnly () const
 bool lazyChildCount () const
-virtual QMimeData * mimeData ( const QModelIndexList & indexes ) const
+// virtual QMimeData * mimeData ( const QModelIndexList & indexes ) const
 virtual QStringList mimeTypes () const
 QModelIndex mkdir ( const QModelIndex & parent, const QString & name )
 QStringList nameFilters () const

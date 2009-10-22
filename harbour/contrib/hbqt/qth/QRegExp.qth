@@ -55,38 +55,53 @@
 ;
 
 <CLASS>
-Inherits = 
-Type     = Core
-New      = 
+QObject    = no
+Inherits   = 
+Type       = Core
+New        =
+Destructor = 
 </CLASS>
 
 <CODE>
-#include <QtGui/QStyledItemDelegate>
+#include <QtCore/QRegExp>
+#include <QtCore/QStringList>
 
-
-/*
- * QStyledItemDelegate ( QObject * parent = 0 )
- * ~QStyledItemDelegate ()
+/* QRegExp ()
+ * QRegExp ( const QString & pattern, Qt::CaseSensitivity cs = Qt::CaseSensitive, PatternSyntax syntax = RegExp )
+ * QRegExp ( const QRegExp & rx )
+ * ~QRegExp ()
  */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE )
+HB_FUNC( QT_QREGEXP )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   hb_retptr( new QRegExp() );
 }
 </CODE>
 
 <ENUMS>
+enum CaretMode { CaretAtZero, CaretAtOffset, CaretWontMatch }
+enum PatternSyntax { RegExp, RegExp2, Wildcard, FixedString }
 </ENUMS>
 
 <PROTOS>
-virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual QString displayText ( const QVariant & value, const QLocale & locale ) const
-// QItemEditorFactory * itemEditorFactory () const
-virtual void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void setEditorData ( QWidget * editor, const QModelIndex & index ) const
-// void setItemEditorFactory ( QItemEditorFactory * factory )
-virtual void setModelData ( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const
-virtual QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+QString cap ( int nth = 0 ) const
+QStringList capturedTexts () const
+Qt::CaseSensitivity caseSensitivity () const
+QString errorString () const
+bool exactMatch ( const QString & str ) const
+int indexIn ( const QString & str, int offset = 0, CaretMode caretMode = CaretAtZero ) const
+bool isEmpty () const
+bool isMinimal () const
+bool isValid () const
+int lastIndexIn ( const QString & str, int offset = -1, CaretMode caretMode = CaretAtZero ) const
+int matchedLength () const
+int numCaptures () const
+QString pattern () const
+PatternSyntax patternSyntax () const
+int pos ( int nth = 0 ) const
+void setCaseSensitivity ( Qt::CaseSensitivity cs )
+void setMinimal ( bool minimal )
+void setPattern ( const QString & pattern )
+void setPatternSyntax ( PatternSyntax syntax )
 </PROTOS>
 
 <SLOTS>

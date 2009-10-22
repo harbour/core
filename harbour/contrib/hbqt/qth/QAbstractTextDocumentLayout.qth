@@ -55,22 +55,21 @@
 ;
 
 <CLASS>
-Inherits = 
+Inherits = QObject
 Type     = Core
 New      = 
 </CLASS>
 
 <CODE>
-#include <QtGui/QStyledItemDelegate>
+#include <QtGui/QAbstractTextDocumentLayout>
 
 
-/*
- * QStyledItemDelegate ( QObject * parent = 0 )
- * ~QStyledItemDelegate ()
+/* QAbstractTextDocumentLayout ( QTextDocument * document )
+ * 
  */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE )
+HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   // hb_retptr( new QAbstractTextDocumentLayout( hbqt_par_QTextDocument( 1 ) ) );
 }
 </CODE>
 
@@ -78,21 +77,28 @@ HB_FUNC( QT_QSTYLEDITEMDELEGATE )
 </ENUMS>
 
 <PROTOS>
-virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual QString displayText ( const QVariant & value, const QLocale & locale ) const
-// QItemEditorFactory * itemEditorFactory () const
-virtual void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void setEditorData ( QWidget * editor, const QModelIndex & index ) const
-// void setItemEditorFactory ( QItemEditorFactory * factory )
-virtual void setModelData ( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const
-virtual QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+QString anchorAt ( const QPointF & position ) const
+virtual QRectF blockBoundingRect ( const QTextBlock & block ) const = 0
+QTextDocument * document () const
+virtual QSizeF documentSize () const = 0
+//virtual void draw ( QPainter * painter, const PaintContext & context ) = 0
+virtual QRectF frameBoundingRect ( QTextFrame * frame ) const = 0
+QTextObjectInterface * handlerForObject ( int objectType ) const
+virtual int hitTest ( const QPointF & point, Qt::HitTestAccuracy accuracy ) const = 0
+virtual int pageCount () const = 0
+QPaintDevice * paintDevice () const
+void registerHandler ( int objectType, QObject * component )
+void setPaintDevice ( QPaintDevice * device )
 </PROTOS>
 
 <SLOTS>
 </SLOTS>
 
 <SIGNALS>
+void documentSizeChanged ( const QSizeF & newSize )
+void pageCountChanged ( int newPages )
+void update ( const QRectF & rect = QRectF( 0., 0., 1000000000., 1000000000. ) )
+void updateBlock ( const QTextBlock & block )
 </SIGNALS>
 
 

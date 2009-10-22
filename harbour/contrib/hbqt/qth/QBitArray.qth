@@ -55,22 +55,23 @@
 ;
 
 <CLASS>
+QObject  = no
 Inherits = 
 Type     = Core
 New      = 
 </CLASS>
 
 <CODE>
-#include <QtGui/QStyledItemDelegate>
+#include <QtCore/QBitArray>
 
 
-/*
- * QStyledItemDelegate ( QObject * parent = 0 )
- * ~QStyledItemDelegate ()
+/* QBitArray ()
+ * QBitArray ( int size, bool value = false )
+ * QBitArray ( const QBitArray & other )
  */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE )
+HB_FUNC( QT_QBITARRAY )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   hb_retptr( new QBitArray() );
 }
 </CODE>
 
@@ -78,15 +79,22 @@ HB_FUNC( QT_QSTYLEDITEMDELEGATE )
 </ENUMS>
 
 <PROTOS>
-virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual QString displayText ( const QVariant & value, const QLocale & locale ) const
-// QItemEditorFactory * itemEditorFactory () const
-virtual void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void setEditorData ( QWidget * editor, const QModelIndex & index ) const
-// void setItemEditorFactory ( QItemEditorFactory * factory )
-virtual void setModelData ( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const
-virtual QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+bool at ( int i ) const
+void clear ()
+void clearBit ( int i )
+int count () const
+int count ( bool on ) const
+bool fill ( bool value, int size = -1 )
+void fill ( bool value, int begin, int end )
+bool isEmpty () const
+bool isNull () const
+void resize ( int size )
+void setBit ( int i )
+void setBit ( int i, bool value )
+int size () const
+bool testBit ( int i ) const
+bool toggleBit ( int i )
+void truncate ( int pos )
 </PROTOS>
 
 <SLOTS>

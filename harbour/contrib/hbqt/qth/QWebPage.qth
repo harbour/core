@@ -99,14 +99,14 @@ bool isContentEditable () const
 bool isModified () const
 LinkDelegationPolicy linkDelegationPolicy () const
 QWebFrame * mainFrame () const
-QNetworkAccessManager * networkAccessManager () const
+// QNetworkAccessManager * networkAccessManager () const
 QPalette palette () const
 QWebPluginFactory * pluginFactory () const
 QString selectedText () const
 void setContentEditable ( bool editable )
 void setForwardUnsupportedContent ( bool forward )
 void setLinkDelegationPolicy ( LinkDelegationPolicy policy )
-void setNetworkAccessManager ( QNetworkAccessManager * manager )
+// void setNetworkAccessManager ( QNetworkAccessManager * manager )
 void setPalette ( const QPalette & palette )
 void setPluginFactory ( QWebPluginFactory * factory )
 void setView ( QWidget * view )

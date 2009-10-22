@@ -55,38 +55,51 @@
 ;
 
 <CLASS>
-Inherits = 
-Type     = Core
-New      = 
+QObject    = no
+Inherits   = 
+Type       = Core
+New        =
+Destructor = 
 </CLASS>
 
 <CODE>
-#include <QtGui/QStyledItemDelegate>
+#include <QtCore/QDataStream>
 
 
-/*
- * QStyledItemDelegate ( QObject * parent = 0 )
- * ~QStyledItemDelegate ()
+/* QDataStream ()
+ * QDataStream ( QIODevice * d )
+ * QDataStream ( QByteArray * a, QIODevice::OpenMode mode )
+ * QDataStream ( const QByteArray & a )
+ * virtual ~QDataStream ()
  */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE )
+HB_FUNC( QT_QDATASTREAM )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   hb_retptr( new QDataStream() );
 }
 </CODE>
 
 <ENUMS>
+enum ByteOrder { BigEndian, LittleEndian }
+enum Status { Ok, ReadPastEnd, ReadCorruptData }
+enum Version { Qt_1_0, Qt_2_0, Qt_2_1, Qt_3_0, ..., Qt_4_5 }
 </ENUMS>
 
 <PROTOS>
-virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual QString displayText ( const QVariant & value, const QLocale & locale ) const
-// QItemEditorFactory * itemEditorFactory () const
-virtual void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void setEditorData ( QWidget * editor, const QModelIndex & index ) const
-// void setItemEditorFactory ( QItemEditorFactory * factory )
-virtual void setModelData ( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const
-virtual QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+bool atEnd () const
+ByteOrder byteOrder () const
+QIODevice * device () const
+//QDataStream & readBytes ( char *& s, uint & l )
+int readRawData ( char * s, int len )
+void resetStatus ()
+void setByteOrder ( ByteOrder bo )
+void setDevice ( QIODevice * d )
+void setStatus ( Status status )
+void setVersion ( int v )
+int skipRawData ( int len )
+Status status () const
+int version () const
+//QDataStream & writeBytes ( const char * s, uint len )
+int writeRawData ( const char * s, int len )
 </PROTOS>
 
 <SLOTS>

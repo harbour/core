@@ -83,7 +83,7 @@ QWidget * cornerWidget () const
 QScrollBar * horizontalScrollBar () const
 Qt::ScrollBarPolicy horizontalScrollBarPolicy () const
 QSize maximumViewportSize () const
-QWidgetList scrollBarWidgets ( Qt::Alignment alignment )
+// QWidgetList scrollBarWidgets ( Qt::Alignment alignment )
 void setCornerWidget ( QWidget * widget )
 void setHorizontalScrollBar ( QScrollBar * scrollBar )
 void setHorizontalScrollBarPolicy ( Qt::ScrollBarPolicy )

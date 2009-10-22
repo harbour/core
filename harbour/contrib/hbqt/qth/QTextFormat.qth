@@ -128,7 +128,7 @@ QTextCharFormat toCharFormat () const
 QTextFrameFormat toFrameFormat () const
 QTextImageFormat toImageFormat () const
 QTextListFormat toListFormat () const
-QTextTableCellFormat toTableCellFormat () const
+// QTextTableCellFormat toTableCellFormat () const
 QTextTableFormat toTableFormat () const
 int type () const
 </PROTOS>

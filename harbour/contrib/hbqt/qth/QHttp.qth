@@ -126,8 +126,8 @@ int request ( const QHttpRequestHeader & header, const QByteArray & data, QIODev
 int setHost ( const QString & hostName, quint16 port = 80 )
 int setHost ( const QString & hostName, ConnectionMode mode, quint16 port = 0 )
 int setProxy ( const QString & host, int port, const QString & username = QString(), const QString & password = QString() )
-int setProxy ( const QNetworkProxy & proxy )
-int setSocket ( QTcpSocket * socket )
+// int setProxy ( const QNetworkProxy & proxy )
+// int setSocket ( QTcpSocket * socket )
 int setUser ( const QString & userName, const QString & password = QString() )
 State state () const
 </PROTOS>
@@ -142,7 +142,7 @@ void authenticationRequired ( const QString & hostname, quint16 port, QAuthentic
 void dataReadProgress ( int done, int total )
 void dataSendProgress ( int done, int total )
 void done ( bool error )
-void proxyAuthenticationRequired ( const QNetworkProxy & proxy, QAuthenticator * authenticator )
+// void proxyAuthenticationRequired ( const QNetworkProxy & proxy, QAuthenticator * authenticator )
 void readyRead ( const QHttpResponseHeader & resp )
 void requestFinished ( int id, bool error )
 void requestStarted ( int id )

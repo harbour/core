@@ -55,44 +55,56 @@
 ;
 
 <CLASS>
-Inherits = 
-Type     = Core
-New      = 
+QObject    = 
+Inherits   = QObject
+Type       = Core
+New        =
+Destructor = 
 </CLASS>
 
 <CODE>
-#include <QtGui/QStyledItemDelegate>
+#include <QtCore/QThread>
 
 
-/*
- * QStyledItemDelegate ( QObject * parent = 0 )
- * ~QStyledItemDelegate ()
+/* QThread ( QObject * parent = 0 )
+ * ~QThread ()
  */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE )
+HB_FUNC( QT_QTHREAD )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   hb_retptr( new QThread() );
 }
 </CODE>
 
 <ENUMS>
+enum Priority { IdlePriority, LowestPriority, LowPriority, NormalPriority, ..., InheritPriority }
 </ENUMS>
 
 <PROTOS>
-virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual QString displayText ( const QVariant & value, const QLocale & locale ) const
-// QItemEditorFactory * itemEditorFactory () const
-virtual void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void setEditorData ( QWidget * editor, const QModelIndex & index ) const
-// void setItemEditorFactory ( QItemEditorFactory * factory )
-virtual void setModelData ( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const
-virtual QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+void exit ( int returnCode = 0 )
+bool isFinished () const
+bool isRunning () const
+Priority priority () const
+void setPriority ( Priority priority )
+void setStackSize ( uint stackSize )
+uint stackSize () const
+bool wait ( unsigned long time = ULONG_MAX )
+
+QThread * currentThread ()
+// Qt::HANDLE currentThreadId ()
+int idealThreadCount ()
+void yieldCurrentThread ()
 </PROTOS>
 
 <SLOTS>
+void quit ()
+void start ( Priority priority = InheritPriority )
+void terminate ()
 </SLOTS>
 
 <SIGNALS>
+void finished ()
+void started ()
+void terminated ()
 </SIGNALS>
 
 

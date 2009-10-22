@@ -84,9 +84,9 @@ CoordinateMode coordinateMode () const
 void setColorAt ( qreal position, const QColor & color )
 void setCoordinateMode ( CoordinateMode mode )
 void setSpread ( Spread method )
-void setStops ( const QGradientStops & stopPoints )
+// void setStops ( const QGradientStops & stopPoints )
 Spread spread () const
-QGradientStops stops () const
+// QGradientStops stops () const
 Type type () const
 </PROTOS>
 

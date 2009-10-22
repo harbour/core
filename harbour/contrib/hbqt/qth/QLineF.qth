@@ -55,38 +55,60 @@
 ;
 
 <CLASS>
-Inherits = 
-Type     = Core
-New      = 
+QObject    = no
+Inherits   = 
+Type       = Core
+New        =
+Destructor = 
 </CLASS>
 
 <CODE>
-#include <QtGui/QStyledItemDelegate>
+#include <QtCore/QLineF>
 
 
-/*
- * QStyledItemDelegate ( QObject * parent = 0 )
- * ~QStyledItemDelegate ()
+/* QLineF ()
+ * QLineF ( const QPointF & p1, const QPointF & p2 )
+ * QLineF ( qreal x1, qreal y1, qreal x2, qreal y2 )
+ * QLineF ( const QLine & line )
  */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE )
+HB_FUNC( QT_QLINEF )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   hb_retptr( new QLineF() );
 }
 </CODE>
 
 <ENUMS>
+enum IntersectType { NoIntersection, UnboundedIntersection, BoundedIntersection }
 </ENUMS>
 
 <PROTOS>
-virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual QString displayText ( const QVariant & value, const QLocale & locale ) const
-// QItemEditorFactory * itemEditorFactory () const
-virtual void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void setEditorData ( QWidget * editor, const QModelIndex & index ) const
-// void setItemEditorFactory ( QItemEditorFactory * factory )
-virtual void setModelData ( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const
-virtual QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+QPointF p1 () const
+QPointF p2 () const
+qreal x1 () const
+qreal x2 () const
+qreal y1 () const
+qreal y2 () const
+qreal angle () const
+qreal angleTo ( const QLineF & line ) const
+qreal dx () const
+qreal dy () const
+IntersectType intersect ( const QLineF & line, QPointF * intersectionPoint ) const
+bool isNull () const
+qreal length () const
+QLineF normalVector () const
+QPointF pointAt ( qreal t ) const
+void setP1 ( const QPointF & p1 )
+void setP2 ( const QPointF & p2 )
+void setAngle ( qreal angle )
+void setLength ( qreal length )
+void setLine ( qreal x1, qreal y1, qreal x2, qreal y2 )
+void setPoints ( const QPointF & p1, const QPointF & p2 )
+QLine toLine () const
+void translate ( const QPointF & offset )
+void translate ( qreal dx, qreal dy )
+QLineF translated ( const QPointF & offset ) const
+QLineF translated ( qreal dx, qreal dy ) const
+QLineF unitVector () const
 </PROTOS>
 
 <SLOTS>

@@ -55,38 +55,44 @@
 ;
 
 <CLASS>
-Inherits = 
-Type     = Core
-New      = 
+QObject    =
+Inherits   = QObject
+Type       = Core
+New        =
+Destructor = 
 </CLASS>
 
 <CODE>
-#include <QtGui/QStyledItemDelegate>
+#include <QtGui/QInputContext>
+#include <QtGui/QTextFormat>
 
-
-/*
- * QStyledItemDelegate ( QObject * parent = 0 )
- * ~QStyledItemDelegate ()
+/* QInputContext ( QObject * parent = 0 )
+ * virtual ~QInputContext ()
  */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE )
+HB_FUNC( QT_QINPUTCONTEXT )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   // hb_retptr( new QInputContext() );
 }
 </CODE>
 
 <ENUMS>
+enum StandardFormat { PreeditFormat, SelectionFormat }
 </ENUMS>
 
 <PROTOS>
-virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual QString displayText ( const QVariant & value, const QLocale & locale ) const
-// QItemEditorFactory * itemEditorFactory () const
-virtual void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void setEditorData ( QWidget * editor, const QModelIndex & index ) const
-// void setItemEditorFactory ( QItemEditorFactory * factory )
-virtual void setModelData ( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const
-virtual QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+virtual QList<QAction *> actions ()
+virtual bool filterEvent ( const QEvent * event )
+virtual QFont font () const
+virtual QString identifierName () = 0
+virtual bool isComposing () const = 0
+virtual QString language () = 0
+virtual void mouseHandler ( int x, QMouseEvent * event )
+virtual void reset () = 0
+void sendEvent ( const QInputMethodEvent & event )
+QTextFormat standardFormat ( StandardFormat s ) const
+virtual void update ()
+virtual void widgetDestroyed ( QWidget * widget )
+// virtual bool x11FilterEvent ( QWidget * keywidget, XEvent * event )
 </PROTOS>
 
 <SLOTS>

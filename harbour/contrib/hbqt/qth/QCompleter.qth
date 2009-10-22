@@ -55,44 +55,71 @@
 ;
 
 <CLASS>
-Inherits = 
+Inherits = QObject
 Type     = Core
 New      = 
 </CLASS>
 
 <CODE>
-#include <QtGui/QStyledItemDelegate>
+#include <QtGui/QCompleter>
+#include <QtCore/QStringList>
 
-
-/*
- * QStyledItemDelegate ( QObject * parent = 0 )
- * ~QStyledItemDelegate ()
+/* QCompleter ( QObject * parent = 0 )
+ * QCompleter ( QAbstractItemModel * model, QObject * parent = 0 )
+ * QCompleter ( const QStringList & list, QObject * parent = 0 )
+ * ~QCompleter ()
  */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE )
+HB_FUNC( QT_QCOMPLETER )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   hb_retptr( new QCompleter() );
 }
 </CODE>
 
 <ENUMS>
+enum CompletionMode { PopupCompletion, InlineCompletion, UnfilteredPopupCompletion }
+enum ModelSorting { UnsortedModel, CaseSensitivelySortedModel, CaseInsensitivelySortedModel }
 </ENUMS>
 
 <PROTOS>
-virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual QString displayText ( const QVariant & value, const QLocale & locale ) const
-// QItemEditorFactory * itemEditorFactory () const
-virtual void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void setEditorData ( QWidget * editor, const QModelIndex & index ) const
-// void setItemEditorFactory ( QItemEditorFactory * factory )
-virtual void setModelData ( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const
-virtual QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+Qt::CaseSensitivity caseSensitivity () const
+int completionColumn () const
+int completionCount () const
+CompletionMode completionMode () const
+QAbstractItemModel * completionModel () const
+QString completionPrefix () const
+int completionRole () const
+QString currentCompletion () const
+QModelIndex currentIndex () const
+int currentRow () const
+QAbstractItemModel * model () const
+ModelSorting modelSorting () const
+virtual QString pathFromIndex ( const QModelIndex & index ) const
+QAbstractItemView * popup () const
+void setCaseSensitivity ( Qt::CaseSensitivity caseSensitivity )
+void setCompletionColumn ( int column )
+void setCompletionMode ( CompletionMode mode )
+void setCompletionRole ( int role )
+bool setCurrentRow ( int row )
+void setModel ( QAbstractItemModel * model )
+void setModelSorting ( ModelSorting sorting )
+void setPopup ( QAbstractItemView * popup )
+void setWidget ( QWidget * widget )
+virtual QStringList splitPath ( const QString & path ) const
+QWidget * widget () const
+bool wrapAround () const
 </PROTOS>
 
 <SLOTS>
+void complete ( const QRect & rect = QRect() )
+void setCompletionPrefix ( const QString & prefix )
+void setWrapAround ( bool wrap )
 </SLOTS>
 
 <SIGNALS>
+void activated ( const QString & text )
+void activated ( const QModelIndex & index )
+void highlighted ( const QString & text )
+void highlighted ( const QModelIndex & index )
 </SIGNALS>
 
 

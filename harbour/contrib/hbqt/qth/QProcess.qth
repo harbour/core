@@ -101,7 +101,7 @@ QStringList environment () const
 QProcess::ProcessError error () const
 int exitCode () const
 QProcess::ExitStatus exitStatus () const
-Q_PID pid () const
+// Q_PID pid () const
 ProcessChannelMode processChannelMode () const
 QByteArray readAllStandardError ()
 QByteArray readAllStandardOutput ()

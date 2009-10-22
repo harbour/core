@@ -55,22 +55,23 @@
 ;
 
 <CLASS>
-Inherits = 
-Type     = Core
-New      = 
+QObject    = no
+Inherits   = 
+Type       = Core
+New        =
+Destructor = 
 </CLASS>
 
 <CODE>
-#include <QtGui/QStyledItemDelegate>
+#include <QtCore/QTime>
 
 
-/*
- * QStyledItemDelegate ( QObject * parent = 0 )
- * ~QStyledItemDelegate ()
+/* QTime ()
+ * QTime ( int h, int m, int s = 0, int ms = 0 )
  */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE )
+HB_FUNC( QT_QTIME )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   hb_retptr( new QTime() );
 }
 </CODE>
 
@@ -78,15 +79,27 @@ HB_FUNC( QT_QSTYLEDITEMDELEGATE )
 </ENUMS>
 
 <PROTOS>
-virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual QString displayText ( const QVariant & value, const QLocale & locale ) const
-// QItemEditorFactory * itemEditorFactory () const
-virtual void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void setEditorData ( QWidget * editor, const QModelIndex & index ) const
-// void setItemEditorFactory ( QItemEditorFactory * factory )
-virtual void setModelData ( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const
-virtual QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+QTime addMSecs ( int ms ) const
+QTime addSecs ( int s ) const
+int elapsed () const
+int hour () const
+bool isNull () const
+bool isValid () const
+int minute () const
+int msec () const
+int msecsTo ( const QTime & t ) const
+int restart ()
+int second () const
+int secsTo ( const QTime & t ) const
+bool setHMS ( int h, int m, int s, int ms = 0 )
+void start ()
+QString toString ( const QString & format ) const
+QString toString ( Qt::DateFormat format = Qt::TextDate ) const
+
+QTime currentTime ()
+QTime fromString ( const QString & string, Qt::DateFormat format = Qt::TextDate )
+QTime fromString ( const QString & string, const QString & format )
+bool isValid ( int h, int m, int s, int ms = 0 )
 </PROTOS>
 
 <SLOTS>

@@ -55,22 +55,25 @@
 ;
 
 <CLASS>
-Inherits = 
-Type     = Core
-New      = 
+QObject    = no
+Inherits   = 
+Type       = Core
+New        =
+Destructor = 
 </CLASS>
 
 <CODE>
-#include <QtGui/QStyledItemDelegate>
+#include <QtGui/QMatrix>
+#include <QtGui/QPainterPath>
 
 
-/*
- * QStyledItemDelegate ( QObject * parent = 0 )
- * ~QStyledItemDelegate ()
+/* QMatrix ()
+ * QMatrix ( qreal m11, qreal m12, qreal m21, qreal m22, qreal dx, qreal dy )
+ * QMatrix ( const QMatrix & matrix )
  */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE )
+HB_FUNC( QT_QMATRIX )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   hb_retptr( new QMatrix() );
 }
 </CODE>
 
@@ -78,15 +81,35 @@ HB_FUNC( QT_QSTYLEDITEMDELEGATE )
 </ENUMS>
 
 <PROTOS>
-virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual QString displayText ( const QVariant & value, const QLocale & locale ) const
-// QItemEditorFactory * itemEditorFactory () const
-virtual void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void setEditorData ( QWidget * editor, const QModelIndex & index ) const
-// void setItemEditorFactory ( QItemEditorFactory * factory )
-virtual void setModelData ( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const
-virtual QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+qreal m11 () const
+qreal m12 () const
+qreal m21 () const
+qreal m22 () const
+qreal det () const
+qreal dx () const
+qreal dy () const
+QMatrix inverted ( bool * invertible = 0 ) const
+bool isIdentity () const
+bool isInvertible () const
+void map ( qreal x, qreal y, qreal * tx, qreal * ty ) const
+void map ( int x, int y, int * tx, int * ty ) const
+QPointF map ( const QPointF & point ) const
+QPoint map ( const QPoint & point ) const
+QLineF map ( const QLineF & line ) const
+QLine map ( const QLine & line ) const
+QPolygonF map ( const QPolygonF & polygon ) const
+QPolygon map ( const QPolygon & polygon ) const
+QRegion map ( const QRegion & region ) const
+QPainterPath map ( const QPainterPath & path ) const
+QRectF mapRect ( const QRectF & rectangle ) const
+QRect mapRect ( const QRect & rectangle ) const
+QPolygon mapToPolygon ( const QRect & rectangle ) const
+void reset ()
+QMatrix & rotate ( qreal degrees )
+QMatrix & scale ( qreal sx, qreal sy )
+void setMatrix ( qreal m11, qreal m12, qreal m21, qreal m22, qreal dx, qreal dy )
+QMatrix & shear ( qreal sh, qreal sv )
+QMatrix & translate ( qreal dx, qreal dy )
 </PROTOS>
 
 <SLOTS>

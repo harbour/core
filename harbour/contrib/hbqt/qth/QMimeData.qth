@@ -55,22 +55,24 @@
 ;
 
 <CLASS>
-Inherits = 
-Type     = Core
-New      = 
+QObject    = 
+Inherits   = QObject
+Type       = Core
+New        =
+Destructor = 
 </CLASS>
 
 <CODE>
-#include <QtGui/QStyledItemDelegate>
+#include <QtCore/QMimeData>
+#include <QtCore/QStringList>
 
 
-/*
- * QStyledItemDelegate ( QObject * parent = 0 )
- * ~QStyledItemDelegate ()
+/* QMimeData ()
+ * ~QMimeData ()
  */
-HB_FUNC( QT_QSTYLEDITEMDELEGATE )
+HB_FUNC( QT_QMIMEDATA )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   hb_retptr( new QMimeData() );
 }
 </CODE>
 
@@ -78,15 +80,27 @@ HB_FUNC( QT_QSTYLEDITEMDELEGATE )
 </ENUMS>
 
 <PROTOS>
-virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual QString displayText ( const QVariant & value, const QLocale & locale ) const
-// QItemEditorFactory * itemEditorFactory () const
-virtual void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void setEditorData ( QWidget * editor, const QModelIndex & index ) const
-// void setItemEditorFactory ( QItemEditorFactory * factory )
-virtual void setModelData ( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const
-virtual QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
-virtual void updateEditorGeometry ( QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+void clear ()
+QVariant colorData () const
+QByteArray data ( const QString & mimeType ) const
+virtual QStringList formats () const
+bool hasColor () const
+virtual bool hasFormat ( const QString & mimeType ) const
+bool hasHtml () const
+bool hasImage () const
+bool hasText () const
+bool hasUrls () const
+QString html () const
+QVariant imageData () const
+void removeFormat ( const QString & mimeType )
+void setColorData ( const QVariant & color )
+void setData ( const QString & mimeType, const QByteArray & data )
+void setHtml ( const QString & html )
+void setImageData ( const QVariant & image )
+void setText ( const QString & text )
+void setUrls ( const QList<QUrl> & urls )
+QString text () const
+QList<QUrl> urls () const
 </PROTOS>
 
 <SLOTS>

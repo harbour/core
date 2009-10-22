@@ -85,12 +85,12 @@ QFileInfo fileInfo ( const QModelIndex & index ) const
 QString fileName ( const QModelIndex & index ) const
 QString filePath ( const QModelIndex & index ) const
 QDir::Filters filter () const
-QFileIconProvider * iconProvider () const
+// QFileIconProvider * iconProvider () const
 QModelIndex index ( const QString & path, int column = 0 ) const
 bool isDir ( const QModelIndex & index ) const
 bool isReadOnly () const
 QDateTime lastModified ( const QModelIndex & index ) const
-virtual QMimeData * mimeData ( const QModelIndexList & indexes ) const
+// virtual QMimeData * mimeData ( const QModelIndexList & indexes ) const
 virtual QStringList mimeTypes () const
 QModelIndex mkdir ( const QModelIndex & parent, const QString & name )
 QVariant myComputer ( int role = Qt::DisplayRole ) const
@@ -103,7 +103,7 @@ bool rmdir ( const QModelIndex & index ) const
 QDir rootDirectory () const
 QString rootPath () const
 void setFilter ( QDir::Filters filters )
-void setIconProvider ( QFileIconProvider * provider )
+// void setIconProvider ( QFileIconProvider * provider )
 void setNameFilterDisables ( bool enable )
 void setNameFilters ( const QStringList & filters )
 void setReadOnly ( bool enable )
