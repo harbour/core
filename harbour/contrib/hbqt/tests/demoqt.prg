@@ -99,16 +99,17 @@ EXIT PROCEDURE Qt_End()
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION My_Events( o,e )
+FUNCTION My_Events()
 hb_toOutDebug( "Key Pressed" )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
 
 PROCEDURE Main()
-   LOCAL nLoops := 500
-   Local oLabel, oBtn, oDA, oWnd, oProg, oSBar, oStyle, i, oSize, n
-   LOCAL aMenu, aTool, aGrid, aTabs, aList, aObj := array( nLoops )
+   Local oLabel, oBtn, oDA, oWnd, oProg, oSBar, i
+   LOCAL aMenu, aTool, aGrid, aTabs, aList
+   //LOCAL oStyle, oSize, n, aObj := array( nLoops )
+   //LOCAL nLoops := 500
 
    Qt_SetEventFilter()
    Qt_SetEventSlots()
@@ -199,8 +200,8 @@ FUNCTION xReleaseMemory( aObj )
 /*----------------------------------------------------------------------*/
 
 PROCEDURE ExecOneMore()
-   Local oLabel, oBtn, oDA, oWnd, oProg, oSBar, oStyle, i, oSize, n
-   LOCAL aMenu, aTool, aGrid, aTabs, aList, oEventLoop, nStart
+   Local oLabel, oBtn, oDA, oWnd, oProg, oSBar
+   LOCAL aMenu, aTool, aGrid, aTabs, aList, oEventLoop
    LOCAL lExit := .f.
 
    oWnd := QMainWindow():new()
@@ -231,7 +232,6 @@ PROCEDURE ExecOneMore()
 
    oEventLoop := QEventLoop():new( QT_PTROF( oWnd ) )
 
-   nStart := seconds()
    DO WHILE .t.
       oEventLoop:processEvents()
       IF lExit
@@ -240,15 +240,14 @@ PROCEDURE ExecOneMore()
    ENDDO
    oEventLoop:exit( 0 )
 
-   oEventLoop := 1
-   xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd } )
+   xReleaseMemory( { oEventLoop, oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd } )
 
    RETURN
 
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_MenuBar( oWnd )
-   LOCAL oMenuBar, oMenu1, oMenu2, oActNew, oActOpen, oActSave
+   LOCAL oMenuBar, oMenu1, oMenu2
 
    oMenuBar := QMenuBar():new()
    oMenuBar:resize( oWnd:width(), 25 )
@@ -260,7 +259,7 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    oMenu1:addSeparator()
    Qt_Connect_Signal( oMenu1:addAction_1( "save.png", "&Save" ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save", w, l ) } )
    oMenu1:addSeparator()
-   Qt_Connect_Signal( oMenu1:addAction( "E&xit" ), QT_EVE_TRIGGERED_B, {|w,l| MsgInfo( "Exit ?" ) } )
+   Qt_Connect_Signal( oMenu1:addAction( "E&xit" ), QT_EVE_TRIGGERED_B, {|w,l| w := w, l := l, MsgInfo( "Exit ?" ) } )
    oMenuBar:addMenu( QT_PTROF( oMenu1 ) )
 
    oMenu2 := QMenu():new()
@@ -274,7 +273,7 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    Qt_Connect_Signal( oMenu2:addAction( "&Wizard"    ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Wizard"   , w, l ) } )
    Qt_Connect_Signal( oMenu2:addAction( "W&ebPage"   ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "WebPage"  , w, l ) } )
    oMenu2:addSeparator()
-   Qt_Connect_Signal( oMenu2:addAction( "&Another Dialog" ), QT_EVE_TRIGGERED_B, {|w,l| ExecOneMore() } )
+   Qt_Connect_Signal( oMenu2:addAction( "&Another Dialog" ), QT_EVE_TRIGGERED_B, {|w,l| w := w, l := l, ExecOneMore() } )
    oMenuBar:addMenu( QT_PTROF( oMenu2 ) )
 
    oWnd:setMenuBar( QT_PTROF( oMenuBar ) )
@@ -522,10 +521,10 @@ STATIC FUNCTION Build_TextBox( oWnd )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_Controls( oWnd )
-   LOCAL oEdit, oCheckBox, oComboBox, oSpinBox, oRadioButton, oVariant
+   LOCAL oEdit, oCheckBox, oComboBox, oSpinBox, oRadioButton
 
    oEdit := QLineEdit():new( QT_PTROF( oWnd ) )
-   Qt_Connect_Signal( QT_PTROF( oEdit ), QT_EVE_RETURNPRESSED, {|o,i| MsgInfo( oEdit:text() ) } )
+   Qt_Connect_Signal( QT_PTROF( oEdit ), QT_EVE_RETURNPRESSED, {|o,i| o := o, i := i, MsgInfo( oEdit:text() ) } )
    oEdit:move( 5, 10 )
    oEdit:resize( 345, 30 )
    oEdit:setMaxLength( 40 )
@@ -538,13 +537,13 @@ STATIC FUNCTION Build_Controls( oWnd )
    oComboBox:addItem( "Second" )
    oComboBox:addItem( "Third"  )
    //Qt_Connect_Signal( QT_PTROF( oComboBox ), QT_EVE_HIGHLIGHTED_I        , {|o,i| hb_outDebug( oComboBox:itemText( i ) ) } )
-   Qt_Connect_Signal( QT_PTROF( oComboBox ), QT_EVE_CURRENTINDEXCHANGED_I, {|o,i| MsgInfo( oComboBox:itemText( i ) ) } )
+   Qt_Connect_Signal( QT_PTROF( oComboBox ), QT_EVE_CURRENTINDEXCHANGED_I, {|o,i| o := o, i := i, MsgInfo( oComboBox:itemText( i ) ) } )
    oComboBox:move( 5, 60 )
    oComboBox:resize( 345, 30 )
    oComboBox:show()
 
    oCheckBox := QCheckBox():New( QT_PTROF( oWnd ) )
-   Qt_Connect_Signal( QT_PTROF( oCheckBox ), QT_EVE_STATECHANGED_I, {|o,i| MsgInfo( IF( i == 0,"Uncheckd","Checked" ) ) } )
+   Qt_Connect_Signal( QT_PTROF( oCheckBox ), QT_EVE_STATECHANGED_I, {|o,i| o := o, i := i, MsgInfo( IF( i == 0,"Uncheckd","Checked" ) ) } )
    oCheckBox:setText( "Testing CheckBox HbQt" )
    oCheckBox:move( 5, 110 )
    oCheckBox:resize( 345, 30 )
@@ -556,7 +555,7 @@ STATIC FUNCTION Build_Controls( oWnd )
    oSpinBox:Show()
 
    oRadioButton := QRadioButton():New( QT_PTROF( oWnd ) )
-   Qt_Connect_Signal( QT_PTROF( oRadioButton ), QT_EVE_CLICKED, {|o,i| MsgInfo( "Checked" ) } )
+   Qt_Connect_Signal( QT_PTROF( oRadioButton ), QT_EVE_CLICKED, {|o,i| o := o, i := i, MsgInfo( "Checked" ) } )
    oRadioButton:Move( 5, 210 )
    oRadioButton:ReSize( 345, 30 )
    oRadioButton:Show()
@@ -605,7 +604,7 @@ STATIC FUNCTION MsgInfo( cMsg )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION FileDialog( cType, w, l )
+STATIC FUNCTION FileDialog()
    LOCAL oFD
 
    oFD := QFileDialog():new()
@@ -616,7 +615,7 @@ STATIC FUNCTION FileDialog( cType, w, l )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION Dialogs( cType, w, l )
+STATIC FUNCTION Dialogs( cType )
    LOCAL oDlg, oUrl
 
    DO CASE
@@ -664,7 +663,10 @@ PROCEDURE hb_GtSys()
  * Just to Link Every New Widget
  */
 STATIC FUNCTION Dummies()
+   #if 0
    LOCAL oSome
+
+   HB_SYMBOL_UNUSED( oSome )
 
    oSome := QAbstractButton():new()
    oSome := QAbstractItemModel():new()
@@ -892,7 +894,7 @@ STATIC FUNCTION Dummies()
    oSome := QWizard():new()
 
    oSome := 1
-
+   #endif
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -903,9 +905,9 @@ FUNCTION ShowInSystemTray( oWnd )
 
    oMenu := QMenu():new( QT_PTROF( oWnd ) )
    oMenu:setTitle( "&File" )
-   Qt_Connect_Signal( oMenu:addAction_1( "new.png" , "&Show"  ), QT_EVE_TRIGGERED_B, {|w,l| oWnd:show() } )
+   Qt_Connect_Signal( oMenu:addAction_1( "new.png" , "&Show" ), QT_EVE_TRIGGERED_B, {|| oWnd:show() } )
    oMenu:addSeparator()
-   Qt_Connect_Signal( oMenu:addAction_1( "save.png", "&Hide" ), QT_EVE_TRIGGERED_B, {|w,l| oWnd:hide() } )
+   Qt_Connect_Signal( oMenu:addAction_1( "save.png", "&Hide" ), QT_EVE_TRIGGERED_B, {|| oWnd:hide() } )
 
    oSys := QSystemTrayIcon():new( QT_PTROF( oWnd ) )
    oSys:setIcon( 'new.png' )

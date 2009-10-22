@@ -97,6 +97,7 @@
 
 QT_G_FUNC( release_QTextCodec )
 {
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QTEXTCODEC )

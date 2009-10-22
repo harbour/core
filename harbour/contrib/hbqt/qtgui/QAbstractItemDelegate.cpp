@@ -81,6 +81,7 @@
 
 QT_G_FUNC( release_QAbstractItemDelegate )
 {
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QABSTRACTITEMDELEGATE )

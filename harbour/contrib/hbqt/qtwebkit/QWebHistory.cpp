@@ -88,6 +88,7 @@
 
 QT_G_FUNC( release_QWebHistory )
 {
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QWEBHISTORY )

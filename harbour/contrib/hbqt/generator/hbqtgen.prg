@@ -492,6 +492,8 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
             aadd( cpp_, "      ph = NULL;" )
          ENDIF
          aadd( cpp_, "   }" )
+      ELSE
+         aadd( cpp_, "   HB_SYMBOL_UNUSED( Cargo );" )
       ENDIF
       aadd( cpp_, "}                                      " )
       aadd( cpp_, "                                       " )
