@@ -8,9 +8,6 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := hbqtcore
 
-PRG_HEADERS := \
-   ../hbqt.ch \
-
 # force redetect. needed for _QT_DARWIN trick
 HB_HAS_QT :=
 
@@ -54,7 +51,7 @@ ifneq ($(HB_HAS_QT),)
 
    ifneq ($(filter $(HB_PLATFORM),win wce),)
       ifneq ($(HB_QT_STATIC),)
-         DIRS += hbqts
+         DIRS += qtcores
          include $(TOP)$(ROOT)config/dir.mk
       endif
    endif

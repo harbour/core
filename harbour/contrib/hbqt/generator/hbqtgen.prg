@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #include "common.ch"
 #include "fileio.ch"
 
