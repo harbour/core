@@ -82,13 +82,18 @@ HB_FUNC( HB_BLOWFISHENCRYPT )
          {
             char * pszData;
             HB_BLOWFISH * bf = ( HB_BLOWFISH * ) hb_parc( 1 );
+            BOOL fRaw = hb_parl( 3 );
 
-            /* ANSI X.923 padding */
-            ulSize = ( ( ulLen >> 3 ) + 1 ) << 3;
+            /* In raw mode passed string is padded to 8 bytes with '\0'
+             * otherwise ANSI X.923 padding is using
+             */
+            ulSize = ( fRaw ? ( ( ulLen + 7 ) >> 3 ) :
+                              ( ( ulLen >> 3 ) + 1 ) ) << 3;
             pszData = ( char * ) hb_xgrab( ulSize + 1 );
             memcpy( pszData, hb_itemGetCPtr( pData ), ulLen );
             memset( pszData + ulLen, '\0', ulSize - ulLen );
-            pszData[ ulSize - 1 ] = ( char ) ( ulSize - ulLen );
+            if( !fRaw )
+               pszData[ ulSize - 1 ] = ( char ) ( ulSize - ulLen );
             for( ulLen = 0; ulLen < ulSize; ulLen += 8 )
             {
                UINT32 xl, xr;
@@ -118,23 +123,29 @@ HB_FUNC( HB_BLOWFISHDECRYPT )
 
          if( ulSize >= 8 && ( ulSize & 0x07 ) == 0 )
          {
+            const char * pszSource;
             char * pszData;
             HB_BLOWFISH * bf = ( HB_BLOWFISH * ) hb_parc( 1 );
+            BOOL fRaw = hb_parl( 3 );
 
-            pszData = ( char * ) hb_xgrab( ulSize );
-            memcpy( pszData, hb_itemGetCPtr( pData ), ulSize );
+            pszData = ( char * ) hb_xgrab( ulSize + ( fRaw ? 1 : 0 ) );
+            pszSource = hb_itemGetCPtr( pData );
             for( ulLen = 0; ulLen < ulSize; ulLen += 8 )
             {
                UINT32 xl, xr;
-               xl = HB_GET_BE_UINT32( &pszData[ ulLen ] );
-               xr = HB_GET_BE_UINT32( &pszData[ ulLen + 4 ] );
+               xl = HB_GET_BE_UINT32( &pszSource[ ulLen ] );
+               xr = HB_GET_BE_UINT32( &pszSource[ ulLen + 4 ] );
                hb_blowfishDecrypt( bf, &xl, &xr );
                HB_PUT_BE_UINT32( &pszData[ ulLen ], xl );
                HB_PUT_BE_UINT32( &pszData[ ulLen + 4 ], xr );
             }
-            ulSize = ( unsigned char ) pszData[ ulSize - 1 ];
-            if( ulSize <= 8 )
-               hb_retclen_buffer( pszData, ulLen - ulSize );
+            if( !fRaw )
+            {
+               ulSize = ( unsigned char ) pszData[ ulSize - 1 ];
+               ulLen -= ( ( ulSize - 1 ) & ~0x07 ) == 0 ? ulSize : ulLen;
+            }
+            if( ulLen )
+               hb_retclen_buffer( pszData, ulLen );
             else
                hb_xfree( pszData );
          }
