@@ -108,9 +108,16 @@ static HB_GARBAGE_FUNC( PGconn_release )
    }
 }
 
+static const HB_GC_FUNCS s_gcPGconnFuncs =
+{
+   PGconn_release,
+   hb_gcDummyMark
+};
+
+
 static void PGconn_ret( PGconn * p )
 {
-   void ** ph = ( void ** ) hb_gcAlloc( sizeof( PGconn * ), PGconn_release );
+   void ** ph = ( void ** ) hb_gcAllocate( sizeof( PGconn * ), &s_gcPGconnFuncs );
 
    * ph = p;
 
@@ -120,7 +127,7 @@ static void PGconn_ret( PGconn * p )
 
 static PGconn * PGconn_par( int iParam )
 {
-   void ** ph = ( void ** ) hb_parptrGC( PGconn_release, iParam );
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcPGconnFuncs, iParam );
 
    return ph ? ( PGconn * ) * ph : NULL;
 }
@@ -160,7 +167,7 @@ HB_FUNC( PQSETDBLOGIN )
 
 HB_FUNC( PQCLOSE )
 {
-   void ** ph = ( void ** ) hb_parptrGC( PGconn_release, 1 );
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcPGconnFuncs, 1 );
 
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( ph && * ph )

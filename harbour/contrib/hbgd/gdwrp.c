@@ -121,6 +121,13 @@ static HB_GARBAGE_FUNC( hb_gdImage_Destructor )
    }
 }
 
+static const HB_GC_FUNCS s_gcGDimageFuncs =
+{
+   hb_gdImage_Destructor,
+   hb_gcDummyMark
+};
+
+
 /* ---------------------------------------------------------------------------*/
 
 /* function returns gdImage pointer or NULL when wrong variable is
@@ -129,7 +136,7 @@ static HB_GARBAGE_FUNC( hb_gdImage_Destructor )
 static gdImagePtr hb_parGdImage( int iParam )
 {
    gdImagePtr * imPtr =
-               ( gdImagePtr * ) hb_parptrGC( hb_gdImage_Destructor, iParam );
+               ( gdImagePtr * ) hb_parptrGC( &s_gcGDimageFuncs, iParam );
 
    if( imPtr )
       return * imPtr;
@@ -145,8 +152,8 @@ static void hb_retGdImage( gdImagePtr im )
 {
    gdImagePtr * imPtr;
 
-   imPtr = ( gdImagePtr * ) hb_gcAlloc( sizeof( gdImagePtr ),
-                                        hb_gdImage_Destructor );
+   imPtr = ( gdImagePtr * ) hb_gcAllocate( sizeof( gdImagePtr ),
+                                           &s_gcGDimageFuncs );
    * imPtr = im;
    hb_retptrGC( ( void * ) imPtr );
 }
@@ -160,8 +167,8 @@ static PHB_ITEM hb_gdImageItemNew( gdImagePtr im )
 {
    gdImagePtr * imPtr;
 
-   imPtr = ( gdImagePtr * ) hb_gcAlloc( sizeof( gdImagePtr ),
-                                        hb_gdImage_Destructor );
+   imPtr = ( gdImagePtr * ) hb_gcAllocate( sizeof( gdImagePtr ),
+                                           &s_gcGDimageFuncs );
    * imPtr = im;
    return hb_itemPutPtrGC( NULL, ( void * ) imPtr );
 }
@@ -193,6 +200,12 @@ static HB_GARBAGE_FUNC( hb_gdFont_Destructor )
    }
 }
 
+static const HB_GC_FUNCS s_gcGDfontFuncs =
+{
+   hb_gdFont_Destructor,
+   hb_gcDummyMark
+};
+
 /* ---------------------------------------------------------------------------*/
 
 /* function returns gdFont pointer or NULL when wrong variable is
@@ -201,7 +214,7 @@ static HB_GARBAGE_FUNC( hb_gdFont_Destructor )
 static gdFontPtr hb_parGdFont( int iParam )
 {
    gdFontPtr * fontPtr =
-               ( gdFontPtr * ) hb_parptrGC( hb_gdFont_Destructor, iParam );
+               ( gdFontPtr * ) hb_parptrGC( &s_gcGDfontFuncs, iParam );
 
    if( fontPtr )
       return * fontPtr;
@@ -217,8 +230,8 @@ static void hb_retGdFont( gdFontPtr font )
 {
    gdFontPtr * fontPtr;
 
-   fontPtr = ( gdFontPtr * ) hb_gcAlloc( sizeof( gdFontPtr ),
-                                        hb_gdFont_Destructor );
+   fontPtr = ( gdFontPtr * ) hb_gcAllocate( sizeof( gdFontPtr ),
+                                            &s_gcGDfontFuncs );
    * fontPtr = font;
    hb_retptrGC( ( void * ) fontPtr );
 }
@@ -232,8 +245,8 @@ static PHB_ITEM hb_gdFontItemNew( gdFontPtr font )
 {
    gdFontPtr * fontPtr;
 
-   fontPtr = ( gdFontPtr * ) hb_gcAlloc( sizeof( gdFontPtr ),
-                                        hb_gdFont_Destructor );
+   fontPtr = ( gdFontPtr * ) hb_gcAllocate( sizeof( gdFontPtr ),
+                                            &s_gcGDfontFuncs );
    * fontPtr = font;
    return hb_itemPutPtrGC( NULL, ( void * ) fontPtr );
 }
