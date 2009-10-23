@@ -122,6 +122,12 @@ static HB_GARBAGE_FUNC( hb_pp_Destructor )
    }
 }
 
+static const HB_GC_FUNCS s_gcPPFuncs =
+{
+   hb_pp_Destructor,
+   hb_gcDummyMark
+};
+
 static void hb_pp_StdRules( PHB_ITEM ppItem )
 {
    static BOOL s_fInit = TRUE;
@@ -145,7 +151,7 @@ static void hb_pp_StdRules( PHB_ITEM ppItem )
 PHB_PP_STATE hb_pp_Param( int iParam )
 {
    PHB_PP_STATE * pStatePtr =
-                  ( PHB_PP_STATE * ) hb_parptrGC( hb_pp_Destructor, iParam );
+                  ( PHB_PP_STATE * ) hb_parptrGC( &s_gcPPFuncs, iParam );
 
    if( pStatePtr )
       return * pStatePtr;
@@ -169,8 +175,8 @@ HB_FUNC( __PP_INIT )
       BOOL fArchDefs = !ISLOG( 3 ) || hb_parl( 3 );
       PHB_ITEM ppItem;
 
-      pStatePtr = ( PHB_PP_STATE * ) hb_gcAlloc( sizeof( PHB_PP_STATE ),
-                                                 hb_pp_Destructor );
+      pStatePtr = ( PHB_PP_STATE * ) hb_gcAllocate( sizeof( PHB_PP_STATE ),
+                                                    &s_gcPPFuncs );
       * pStatePtr = pState;
       ppItem = hb_itemPutPtrGC( NULL, ( void * ) pStatePtr );
 

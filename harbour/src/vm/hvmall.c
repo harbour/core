@@ -71,6 +71,10 @@
 #define INCL_DOSPROCESS
 #define INCL_NOPMAPI
 
+/* For Linux and mremap() function */
+#ifndef _GNU_SOURCE
+#  define _GNU_SOURCE
+#endif
 
 /* warning the order of included files is important
  * due to macros used to overload some functions

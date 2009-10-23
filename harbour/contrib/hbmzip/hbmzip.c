@@ -93,10 +93,16 @@ static HB_GARBAGE_FUNC( hb_zipfile_destructor )
    }
 }
 
+static const HB_GC_FUNCS s_gcZipFileFuncs =
+{
+   hb_zipfile_destructor,
+   hb_gcDummyMark
+};
+
 
 static gzFile hb_zipfileParam( int iParam )
 {
-   zipFile*  phZip = ( zipFile* ) hb_parptrGC( hb_zipfile_destructor, iParam );
+   zipFile*  phZip = ( zipFile* ) hb_parptrGC( &s_gcZipFileFuncs, iParam );
 
    if( phZip && * phZip )
       return * phZip;
@@ -117,10 +123,16 @@ static HB_GARBAGE_FUNC( hb_unzipfile_destructor )
    }
 }
 
+static const HB_GC_FUNCS s_gcUnZipFileFuncs =
+{
+   hb_unzipfile_destructor,
+   hb_gcDummyMark
+};
+
 
 static gzFile hb_unzipfileParam( int iParam )
 {
-   unzFile*  phUnzip = ( unzFile* ) hb_parptrGC( hb_unzipfile_destructor, iParam );
+   unzFile*  phUnzip = ( unzFile* ) hb_parptrGC( &s_gcUnZipFileFuncs, iParam );
 
    if( phUnzip && * phUnzip )
       return * phUnzip;
@@ -143,7 +155,7 @@ HB_FUNC( HB_ZIPOPEN )
                                &pszGlobalComment, NULL );
       if( hZip )
       {
-         zipFile* phZip = (zipFile*) hb_gcAlloc( sizeof( zipFile ), hb_zipfile_destructor );
+         zipFile* phZip = (zipFile*) hb_gcAllocate( sizeof( zipFile ), &s_gcZipFileFuncs );
 
          * phZip = hZip;
          hb_retptrGC( phZip );
@@ -160,7 +172,7 @@ HB_FUNC( HB_ZIPOPEN )
 /*  HB_ZipClose( hZip, [ cGlobalComment ] ) --> nError */
 HB_FUNC( HB_ZIPCLOSE )
 {
-   zipFile*  phZip = ( zipFile* ) hb_parptrGC( hb_zipfile_destructor, 1 );
+   zipFile*  phZip = ( zipFile* ) hb_parptrGC( &s_gcZipFileFuncs, 1 );
 
    if( phZip && * phZip )
    {
@@ -273,7 +285,7 @@ HB_FUNC( HB_UNZIPOPEN )
       unzFile hUnzip = unzOpen( szFileName );
       if( hUnzip )
       {
-         unzFile*  phUnzip = (unzFile*) hb_gcAlloc( sizeof( unzFile ), hb_unzipfile_destructor );
+         unzFile*  phUnzip = (unzFile*) hb_gcAllocate( sizeof( unzFile ), &s_gcUnZipFileFuncs );
 
          * phUnzip = hUnzip;
          hb_retptrGC( phUnzip );
@@ -287,7 +299,7 @@ HB_FUNC( HB_UNZIPOPEN )
 /*  HB_UnzipClose( hUnzip ) --> nError */
 HB_FUNC( HB_UNZIPCLOSE )
 {
-   unzFile*  phUnzip = ( unzFile* ) hb_parptrGC( hb_unzipfile_destructor, 1 );
+   unzFile*  phUnzip = ( unzFile* ) hb_parptrGC( &s_gcUnZipFileFuncs, 1 );
 
    if( phUnzip && * phUnzip )
    {

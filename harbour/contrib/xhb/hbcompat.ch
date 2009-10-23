@@ -328,6 +328,11 @@
 
    #xtranslate i18n(<x>)                       => hb_i18n_gettext(<x>)
 
+   /* _SET_TRACE* / TraceLog() */
+   #xtranslate Set(_SET_TRACE [,<x,...>])      => xhb_setTrace( <x> )
+   #xtranslate Set(_SET_TRACEFILE [,<x,...>])  => xhb_setTraceFile( <x> )
+   #xtranslate Set(_SET_TRACESTACK [,<x,...>]) => xhb_setTraceStack( <x> )
+
    /* MT functions */
    #xtranslate hb_MultiThread()                => hb_mtvm()
    #xtranslate GetCurrentThread()              => hb_threadSelf()

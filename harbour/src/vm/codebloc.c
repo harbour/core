@@ -68,11 +68,11 @@ static const BYTE s_pCode[ 2 ] = { HB_P_PUSHNIL, HB_P_ENDBLOCK };
 
 /* Release all allocated memory when called from the garbage collector
  */
-static HB_GARBAGE_FUNC( hb_codeblockDeleteGarbage )
+static HB_GARBAGE_FUNC( hb_codeblockGarbageDelete )
 {
    HB_CODEBLOCK_PTR pCBlock = ( HB_CODEBLOCK_PTR ) Cargo;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockDeleteGarbage(%p)", Cargo));
+   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockGarbageDelete(%p)", Cargo));
 
    /* free space allocated for pcodes - if it was a macro-compiled codeblock
     */
@@ -105,6 +105,29 @@ static HB_GARBAGE_FUNC( hb_codeblockDeleteGarbage )
    }
 }
 
+static HB_GARBAGE_FUNC( hb_codeblockGarbageMark )
+{
+   HB_CODEBLOCK_PTR pCBlock = ( HB_CODEBLOCK_PTR ) Cargo;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockGarbageMark(%p)", Cargo));
+
+   if( pCBlock->uiLocals )
+   {
+      PHB_ITEM pLocals = pCBlock->pLocals;
+      USHORT uiLocals = pCBlock->uiLocals;
+
+      do
+         hb_gcItemRef( &pLocals[ uiLocals] );
+      while( --uiLocals );
+   }
+}
+
+static const HB_GC_FUNCS s_gcCodeblockFuncs =
+{
+   hb_codeblockGarbageDelete,
+   hb_codeblockGarbageMark,
+};
+
 /* Creates the codeblock structure
  *
  * pBuffer -> the buffer with pcodes (without HB_P_PUSHBLOCK)
@@ -129,7 +152,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
    HB_TRACE(HB_TR_DEBUG, ("hb_codeblockNew(%p, %hu, %p, %p, %lu)", pBuffer, uiLocals, pLocalPosTable, pSymbols, ulLen));
 
    /*
-    * allocate memory for code block body and detach items hb_gcAlloc()
+    * allocate memory for code block body and detach items hb_gcAllocRaw()
     * to be safe for automatic GC activation in hb_xgrab() without
     * calling hb_gcLock()/hb_gcUnlock(). [druzus]
     */
@@ -215,7 +238,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
    }
 
    pBase = hb_stackBaseItem();
-   pCBlock = ( HB_CODEBLOCK_PTR ) hb_gcAlloc( sizeof( HB_CODEBLOCK ), hb_codeblockDeleteGarbage );
+   pCBlock = ( HB_CODEBLOCK_PTR ) hb_gcAllocRaw( sizeof( HB_CODEBLOCK ), &s_gcCodeblockFuncs );
 
    pCBlock->pCode     = pCode;
    pCBlock->dynBuffer = ulLen != 0;
@@ -246,14 +269,14 @@ HB_CODEBLOCK_PTR hb_codeblockMacroNew( const BYTE * pBuffer, ULONG ulLen )
     * the passed buffer
     */
    /*
-    * allocate memory for code block body and detach items hb_gcAlloc()
+    * allocate memory for code block body and detach items hb_gcAllocRaw()
     * to be safe for automatic GC activation in hb_xgrab() without
     * calling hb_gcLock()/hb_gcUnlock(). [druzus]
     */
    pCode = ( BYTE * ) hb_xgrab( ulLen );
    memcpy( pCode, pBuffer, ulLen );
 
-   pCBlock = ( HB_CODEBLOCK_PTR ) hb_gcAlloc( sizeof( HB_CODEBLOCK ), hb_codeblockDeleteGarbage );
+   pCBlock = ( HB_CODEBLOCK_PTR ) hb_gcAllocRaw( sizeof( HB_CODEBLOCK ), &s_gcCodeblockFuncs );
    pBase = hb_stackBaseItem();
    /* Store the number of referenced local variables */
    pCBlock->pCode     = pCode;

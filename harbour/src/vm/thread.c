@@ -903,6 +903,12 @@ static HB_GARBAGE_FUNC( hb_threadDestructor )
 #endif
 }
 
+static const HB_GC_FUNCS s_gcThreadFuncs =
+{
+   hb_threadDestructor,
+   hb_gcDummyMark
+};
+
 static HB_THREAD_STARTFUNC( hb_threadStartVM )
 {
 #if defined( HB_MT_VM )
@@ -911,7 +917,7 @@ static HB_THREAD_STARTFUNC( hb_threadStartVM )
    PHB_THREADSTATE pThread;
    BOOL fSend = FALSE;
 
-   pThread = ( PHB_THREADSTATE ) hb_itemGetPtrGC( pThItm, hb_threadDestructor );
+   pThread = ( PHB_THREADSTATE ) hb_itemGetPtrGC( pThItm, &s_gcThreadFuncs );
 
    hb_vmThreadInit( ( void * ) pThread );
 
@@ -994,7 +1000,7 @@ PHB_THREADSTATE hb_threadStateNew( void )
 
    pThItm = hb_itemNew( NULL );
    pThread = ( PHB_THREADSTATE )
-                  hb_gcAlloc( sizeof( HB_THREADSTATE ), hb_threadDestructor );
+                  hb_gcAllocRaw( sizeof( HB_THREADSTATE ), &s_gcThreadFuncs );
    memset( pThread, 0, sizeof( HB_THREADSTATE ) );
    hb_itemPutPtrGC( pThItm, pThread );
 
@@ -1017,7 +1023,7 @@ PHB_THREADSTATE hb_threadStateNew( void )
 static PHB_THREADSTATE hb_thParam( int iParam, int iPos )
 {
    PHB_THREADSTATE pThread = ( PHB_THREADSTATE )
-                             hb_parvptrGC( hb_threadDestructor, iParam, iPos );
+                             hb_parvptrGC( &s_gcThreadFuncs, iParam, iPos );
    if( pThread )
       return pThread;
 
@@ -1641,16 +1647,22 @@ static HB_GARBAGE_FUNC( hb_mutexDestructor )
 #endif
 }
 
+static const HB_GC_FUNCS s_gcMutexFuncs =
+{
+   hb_mutexDestructor,
+   hb_gcDummyMark
+};
+
 static PHB_MUTEX hb_mutexPtr( PHB_ITEM pItem )
 {
-   return ( PHB_MUTEX ) hb_itemGetPtrGC( pItem, hb_mutexDestructor );
+   return ( PHB_MUTEX ) hb_itemGetPtrGC( pItem, &s_gcMutexFuncs );
 }
 
 static PHB_ITEM hb_mutexParam( int iParam )
 {
    PHB_ITEM pItem = hb_param( iParam, HB_IT_POINTER );
 
-   if( hb_itemGetPtrGC( pItem, hb_mutexDestructor ) )
+   if( hb_itemGetPtrGC( pItem, &s_gcMutexFuncs ) )
       return pItem;
 
    hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1663,7 +1675,7 @@ PHB_ITEM hb_threadMutexCreate( BOOL fSync )
    PHB_ITEM pItem;
 
    pItem = hb_itemNew( NULL );
-   pMutex = ( PHB_MUTEX ) hb_gcAlloc( sizeof( HB_MUTEX ), hb_mutexDestructor );
+   pMutex = ( PHB_MUTEX ) hb_gcAllocRaw( sizeof( HB_MUTEX ), &s_gcMutexFuncs );
    memset( pMutex, 0, sizeof( HB_MUTEX ) );
    pItem = hb_itemPutPtrGC( pItem, pMutex );
 

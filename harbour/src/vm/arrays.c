@@ -112,7 +112,7 @@ void hb_arrayPushBase( PHB_BASEARRAY pBaseArray )
 }
 
 /* This releases array when called from the garbage collector */
-static HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
+static HB_GARBAGE_FUNC( hb_arrayGarbageRelease )
 {
    PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) Cargo;
 
@@ -155,6 +155,30 @@ static HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
    hb_arrayReleaseItems( pBaseArray );
 }
 
+static HB_GARBAGE_FUNC( hb_arrayGarbageMark )
+{
+   PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) Cargo;
+
+   if( pBaseArray->ulLen )
+   {
+      ULONG ulLen = pBaseArray->ulLen;
+      HB_ITEM_PTR pItems = pBaseArray->pItems;
+
+      while( ulLen-- )
+      {
+         if( HB_IS_GCITEM( pItems + ulLen ) )
+            hb_gcItemRef( pItems + ulLen );
+      }
+   }
+}
+
+static const HB_GC_FUNCS s_gcArrayFuncs =
+{
+   hb_arrayGarbageRelease,
+   hb_arrayGarbageMark
+};
+
+
 BOOL hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
 {
    PHB_BASEARRAY pBaseArray;
@@ -167,7 +191,7 @@ BOOL hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
       hb_itemClear( pItem );
 
    /*
-    * allocate memory for items before hb_gcAlloc() to be
+    * allocate memory for items before hb_gcAllocRaw() to be
     * safe for automatic GC activation in hb_xgrab() without
     * calling hb_gcLock()/hb_gcUnlock(). [druzus]
     */
@@ -180,7 +204,7 @@ BOOL hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
    else
       pItems = NULL;
 
-   pBaseArray = ( PHB_BASEARRAY ) hb_gcAlloc( sizeof( HB_BASEARRAY ), hb_arrayReleaseGarbage );
+   pBaseArray = ( PHB_BASEARRAY ) hb_gcAllocRaw( sizeof( HB_BASEARRAY ), &s_gcArrayFuncs );
    pBaseArray->pItems     = pItems;
    pBaseArray->ulLen      = ulLen;
    pBaseArray->uiClass    = 0;
@@ -642,12 +666,12 @@ void * hb_arrayGetPtr( PHB_ITEM pArray, ULONG ulIndex )
       return NULL;
 }
 
-void * hb_arrayGetPtrGC( PHB_ITEM pArray, ULONG ulIndex, HB_GARBAGE_FUNC_PTR pFunc )
+void * hb_arrayGetPtrGC( PHB_ITEM pArray, ULONG ulIndex, const HB_GC_FUNCS * pFuncs )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetPtrGC(%p, %lu, %p)", pArray, ulIndex, pFunc));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetPtrGC(%p, %lu, %p)", pArray, ulIndex, pFuncs));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
-      return hb_itemGetPtrGC( pArray->item.asArray.value->pItems + ulIndex - 1, pFunc );
+      return hb_itemGetPtrGC( pArray->item.asArray.value->pItems + ulIndex - 1, pFuncs );
    else
       return NULL;
 }
@@ -1463,13 +1487,10 @@ void hb_cloneNested( PHB_ITEM pDstItem, PHB_ITEM pSrcItem, PHB_NESTED_CLONED pCl
       hb_itemCopy( pDstItem, pSrcItem );
 }
 
-PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
+PHB_ITEM hb_arrayCloneTo( PHB_ITEM pDstArray, PHB_ITEM pSrcArray )
 {
-   PHB_ITEM pDstArray;
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayCloneTo(%p,%p)", pDstArray, pSrcArray));
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayClone(%p)", pSrcArray));
-
-   pDstArray = hb_itemNew( NULL );
    if( HB_IS_ARRAY( pSrcArray ) )
    {
       PHB_NESTED_CLONED pClonedList, pCloned;
@@ -1493,6 +1514,13 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
       while( pClonedList );
    }
    return pDstArray;
+}
+
+PHB_ITEM hb_arrayClone( PHB_ITEM pArray )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayClone(%p)", pArray));
+
+   return hb_arrayCloneTo( hb_itemNew( NULL ), pArray );
 }
 
 PHB_ITEM hb_arrayFromStack( USHORT uiLen )

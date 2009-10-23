@@ -79,9 +79,15 @@ static HB_GARBAGE_FUNC( HPDF_Doc_release )
    }
 }
 
+static const HB_GC_FUNCS s_gcHPDF_DocFuncs =
+{
+   HPDF_Doc_release,
+   hb_gcDummyMark
+};
+
 static HPDF_Doc HPDF_Doc_par( int iParam )
 {
-   void ** ph = ( void ** ) hb_parptrGC( HPDF_Doc_release, iParam );
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcHPDF_DocFuncs, iParam );
 
    return ph ? ( HPDF_Doc ) * ph : NULL;
 }
@@ -95,7 +101,7 @@ static HPDF_Doc HPDF_Doc_par( int iParam )
 */
 HB_FUNC( HPDF_NEW )
 {
-   void ** ph = ( void ** ) hb_gcAlloc( sizeof( HPDF_Doc ), HPDF_Doc_release );
+   void ** ph = ( void ** ) hb_gcAllocate( sizeof( HPDF_Doc ), &s_gcHPDF_DocFuncs );
 
    * ph = ( void * ) HPDF_New( NULL, NULL );
 
@@ -106,7 +112,7 @@ HB_FUNC( HPDF_NEW )
 */
 HB_FUNC( HPDF_FREE )
 {
-   void ** ph = ( void ** ) hb_parptrGC( HPDF_Doc_release, 1 );
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcHPDF_DocFuncs, 1 );
 
    if( ph && * ph )
    {

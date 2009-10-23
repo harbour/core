@@ -100,7 +100,7 @@ extern HB_EXPORT long         hb_itemGetNL     ( PHB_ITEM pItem );
 extern HB_EXPORT HB_LONG      hb_itemGetNInt   ( PHB_ITEM pItem );
 extern HB_EXPORT void         hb_itemGetNLen   ( PHB_ITEM pItem, int * piWidth, int * piDec );
 extern HB_EXPORT void *       hb_itemGetPtr    ( PHB_ITEM pItem );
-extern HB_EXPORT void *       hb_itemGetPtrGC  ( PHB_ITEM pItem, HB_GARBAGE_FUNC_PTR pFunc );
+extern HB_EXPORT void *       hb_itemGetPtrGC  ( PHB_ITEM pItem, const HB_GC_FUNCS * pFuncs );
 extern HB_EXPORT PHB_SYMB     hb_itemGetSymbol ( PHB_ITEM pItem );
 extern HB_EXPORT PHB_ITEM     hb_itemNew       ( PHB_ITEM pNull );
 extern HB_EXPORT void         hb_itemInit      ( PHB_ITEM pItem );
@@ -171,6 +171,7 @@ extern HB_EXPORT PHB_ITEM     hb_itemUnShareString( PHB_ITEM pItem ); /* un-shar
 extern HB_EXPORT PHB_ITEM     hb_itemReSizeString( PHB_ITEM pItem, ULONG ulSize ); /* Resize string buffer of given string item - the pItem have to be valid unrefed string item */
 extern HB_EXPORT BOOL         hb_itemGetWriteCL( PHB_ITEM pItem, char ** pszValue, ULONG * pulLen );
 extern HB_EXPORT PHB_ITEM     hb_itemClone     ( PHB_ITEM pItem ); /* clone the given item */
+extern HB_EXPORT PHB_ITEM     hb_itemCloneTo   ( PHB_ITEM pDest, PHB_ITEM pSource ); /* clone the given item */
 extern HB_EXPORT char *       hb_itemStr       ( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec ); /* convert a number to a string */
 extern HB_EXPORT char *       hb_itemString    ( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq );  /* Convert any scalar to a string */
 extern HB_EXPORT BOOL         hb_itemStrBuf    ( char *szResult, PHB_ITEM pNumber, int iSize, int iDec ); /* convert a number to a string */

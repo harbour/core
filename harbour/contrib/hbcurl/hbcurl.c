@@ -507,22 +507,43 @@ static PHB_CURL PHB_CURL_create( CURL * from )
 
 static HB_GARBAGE_FUNC( PHB_CURL_release )
 {
-   void ** ph = ( void ** ) Cargo;
-
+   PHB_CURL * hb_curl_ptr = ( PHB_CURL * ) Cargo;
    /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && * ph )
+   if( hb_curl_ptr && * hb_curl_ptr )
    {
-      /* Destroy the object */
-      PHB_CURL_free( ( PHB_CURL ) * ph, hbTRUE );
+      PHB_CURL hb_curl = * hb_curl_ptr;
 
       /* set pointer to NULL to avoid multiple freeing */
-      * ph = NULL;
+      * hb_curl_ptr = NULL;
+
+      /* Destroy the object */
+      PHB_CURL_free( hb_curl, hbTRUE );
    }
 }
 
+static HB_GARBAGE_FUNC( PHB_CURL_mark )
+{
+   PHB_CURL * hb_curl_ptr = ( PHB_CURL * ) Cargo;
+
+   if( hb_curl_ptr && * hb_curl_ptr )
+   {
+      PHB_CURL hb_curl = * hb_curl_ptr;
+
+      if( hb_curl->pProgressBlock )
+         hb_gcMark( hb_curl->pProgressBlock );
+   }
+}
+
+static const HB_GC_FUNCS s_gcCURLFuncs =
+{
+   PHB_CURL_release,
+   PHB_CURL_mark
+};
+
+
 static void PHB_CURL_ret( PHB_CURL from )
 {
-   void ** ph = ( void ** ) hb_gcAlloc( sizeof( PHB_CURL ), PHB_CURL_release );
+   void ** ph = ( void ** ) hb_gcAllocate( sizeof( PHB_CURL ), &s_gcCURLFuncs );
 
    * ph = PHB_CURL_create( from );
 
@@ -531,12 +552,12 @@ static void PHB_CURL_ret( PHB_CURL from )
 
 static void * PHB_CURL_is( int iParam )
 {
-   return hb_parptrGC( PHB_CURL_release, iParam );
+   return hb_parptrGC( &s_gcCURLFuncs, iParam );
 }
 
 static PHB_CURL PHB_CURL_par( int iParam )
 {
-   void ** ph = ( void ** ) hb_parptrGC( PHB_CURL_release, iParam );
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcCURLFuncs, iParam );
 
    return ph ? ( PHB_CURL ) * ph : NULL;
 }
@@ -561,15 +582,17 @@ HB_FUNC( CURL_EASY_CLEANUP )
 {
    if( PHB_CURL_is( 1 ) )
    {
-      void ** ph = ( void ** ) hb_parptrGC( PHB_CURL_release, 1 );
+      void ** ph = ( void ** ) hb_parptrGC( &s_gcCURLFuncs, 1 );
 
       if( ph && * ph )
       {
-         /* Destroy the object */
-         PHB_CURL_free( ( PHB_CURL ) * ph, hbTRUE );
+         PHB_CURL hb_curl = ( PHB_CURL ) * ph;
 
          /* set pointer to NULL to avoid multiple freeing */
          * ph = NULL;
+
+         /* Destroy the object */
+         PHB_CURL_free( hb_curl, hbTRUE );
       }
    }
    else
@@ -1365,6 +1388,8 @@ HB_FUNC( CURL_EASY_SETOPT )
                if( pProgressBlock )
                {
                   hb_curl->pProgressBlock = hb_itemNew( pProgressBlock );
+                  /* unlock the item so GC will not mark them as used */
+                  hb_gcUnlock( hb_curl->pProgressBlock );
 
                   curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSFUNCTION, hb_curl_progress_callback );
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSDATA, hb_curl->pProgressBlock );

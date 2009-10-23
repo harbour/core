@@ -232,9 +232,15 @@ static HB_GARBAGE_FUNC( s_consrv_destructor )
    }
 }
 
+static const HB_GC_FUNCS s_gcConSrvFuncs =
+{
+   s_consrv_destructor,
+   hb_gcDummyMark
+};
+
 static PHB_CONSRV s_consrvParam( int iParam )
 {
-   PHB_CONSRV * conn_ptr = ( PHB_CONSRV * ) hb_parptrGC( s_consrv_destructor,
+   PHB_CONSRV * conn_ptr = ( PHB_CONSRV * ) hb_parptrGC( &s_gcConSrvFuncs,
                                                          iParam );
 
    if( conn_ptr && *conn_ptr )
@@ -248,8 +254,8 @@ static void s_consrvRet( PHB_CONSRV conn )
 {
    if( conn )
    {
-      PHB_CONSRV * conn_ptr = ( PHB_CONSRV * ) hb_gcAlloc( sizeof( PHB_CONSRV ),
-                                                           s_consrv_destructor );
+      PHB_CONSRV * conn_ptr = ( PHB_CONSRV * ) hb_gcAllocate( sizeof( PHB_CONSRV ),
+                                                              &s_gcConSrvFuncs );
       *conn_ptr = conn;
       hb_retptrGC( conn_ptr );
    }
@@ -330,10 +336,16 @@ static HB_GARBAGE_FUNC( s_listensd_destructor )
    }
 }
 
+static const HB_GC_FUNCS s_gcListensdFuncs =
+{
+   s_listensd_destructor,
+   hb_gcDummyMark
+};
+
 static PHB_LISTENSD s_listenParam( int iParam, BOOL fError )
 {
    PHB_LISTENSD * lsd_ptr = ( PHB_LISTENSD * )
-                            hb_parptrGC( s_listensd_destructor, iParam );
+                            hb_parptrGC( &s_gcListensdFuncs, iParam );
 
    if( lsd_ptr && *lsd_ptr )
       return *lsd_ptr;
@@ -367,8 +379,8 @@ static void s_listenRet( HB_SOCKET sd, const char * szRootPath )
             lsd->rootPath[ iLen ] = HB_OS_PATH_DELIM_CHR;
          }
       }
-      lsd_ptr = ( PHB_LISTENSD * ) hb_gcAlloc( sizeof( PHB_LISTENSD ),
-                                               s_listensd_destructor );
+      lsd_ptr = ( PHB_LISTENSD * ) hb_gcAllocate( sizeof( PHB_LISTENSD ),
+                                                  &s_gcListensdFuncs );
       *lsd_ptr = lsd;
       hb_retptrGC( lsd_ptr );
    }

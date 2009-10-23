@@ -101,6 +101,11 @@ HB_FUNC( WAPI_CREATEWINDOWEX )
    HB_TCHAR_FREE( lpStr2 );
 }
 
+HB_FUNC( WAPI_DESTROYWINDOW )
+{
+   hb_retl( DestroyWindow( ( HWND ) hb_parptr( 1 ) ) );
+}
+
 /*-----------------------------------------------------------------------/
               BEGIN SCROLLBAR MANIPULATION WINAPI FUNCTIONS
 /-----------------------------------------------------------------------*/

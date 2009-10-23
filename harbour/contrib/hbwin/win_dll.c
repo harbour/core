@@ -726,6 +726,14 @@ static HB_GARBAGE_FUNC( _DLLUnload )
       xec->dwType = 0;
    }
 }
+
+static const HB_GC_FUNCS s_gcDllFuncs =
+{
+   _DLLUnload,
+   hb_gcDummyMark
+};
+
+
 #endif
 
 static LPVOID hb_getprocaddress( HMODULE hDLL, int iProc )
@@ -821,7 +829,7 @@ HB_FUNC( DLLCALL )
 HB_FUNC( DLLPREPARECALL )
 {
 #if ! defined( HB_OS_WIN_CE )
-   PXPP_DLLEXEC xec = ( PXPP_DLLEXEC ) hb_gcAlloc( sizeof( XPP_DLLEXEC ), _DLLUnload );
+   PXPP_DLLEXEC xec = ( PXPP_DLLEXEC ) hb_gcAllocate( sizeof( XPP_DLLEXEC ), &s_gcDllFuncs );
    char * pszErrorText;
 
    memset( xec, 0, sizeof( XPP_DLLEXEC ) );

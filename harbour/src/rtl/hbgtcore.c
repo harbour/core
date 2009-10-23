@@ -3379,9 +3379,15 @@ static HB_GARBAGE_FUNC( hb_gt_Destructor )
    }
 }
 
+static const HB_GC_FUNCS s_gcGTFuncs =
+{
+   hb_gt_Destructor,
+   hb_gcDummyMark
+};
+
 static void * hb_gtParam( int iParam )
 {
-   void ** gtHolder = ( void ** ) hb_parptrGC( hb_gt_Destructor, iParam );
+   void ** gtHolder = ( void ** ) hb_parptrGC( &s_gcGTFuncs, iParam );
 
    if( gtHolder && *gtHolder )
       return *gtHolder;
@@ -3392,7 +3398,7 @@ static void * hb_gtParam( int iParam )
 
 PHB_GT hb_gt_ItemBase( PHB_ITEM pItemGT )
 {
-   void ** gtHolder = ( void ** ) hb_itemGetPtrGC( pItemGT, hb_gt_Destructor );
+   void ** gtHolder = ( void ** ) hb_itemGetPtrGC( pItemGT, &s_gcGTFuncs );
    if( gtHolder && *gtHolder )
    {
       PHB_GT pGT = ( PHB_GT ) *gtHolder;
@@ -3421,7 +3427,7 @@ HB_FUNC( HB_GTCREATE )
 
    if( hGT )
    {
-      void ** gtHolder = ( void ** ) hb_gcAlloc( sizeof( void * ), hb_gt_Destructor );
+      void ** gtHolder = ( void ** ) hb_gcAllocate( sizeof( void * ), &s_gcGTFuncs );
       *gtHolder = hGT;
       hb_retptrGC( gtHolder );
    }
@@ -3446,7 +3452,7 @@ HB_FUNC( HB_GTSELECT )
 
    if( hGT )
    {
-      void ** gtHolder = ( void ** ) hb_gcAlloc( sizeof( void * ), hb_gt_Destructor );
+      void ** gtHolder = ( void ** ) hb_gcAllocate( sizeof( void * ), &s_gcGTFuncs );
       *gtHolder = hGT;
       hb_retptrGC( gtHolder );
    }

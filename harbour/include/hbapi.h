@@ -569,22 +569,30 @@ extern HB_EXPORT void        hb_xvheapunlock( HB_VMHANDLE h, ULONG nOffset );
 typedef HB_GARBAGE_FUNC( HB_GARBAGE_FUNC_ );
 typedef HB_GARBAGE_FUNC_ * HB_GARBAGE_FUNC_PTR;
 
-#define HB_GARBAGE_SWEEPER( hbfunc )   BOOL hbfunc( void * Cargo ) /* callback function for cleaning garbage memory pointer */
-typedef HB_GARBAGE_SWEEPER( HB_GARBAGE_SWEEPER_ );
-typedef HB_GARBAGE_SWEEPER_ * HB_GARBAGE_SWEEPER_PTR;
+typedef struct
+{
+   HB_GARBAGE_FUNC_PTR  clear;
+   HB_GARBAGE_FUNC_PTR  mark;
+}
+HB_GC_FUNCS;
 
-extern void  hb_gcRegisterSweep( HB_GARBAGE_SWEEPER_PTR pSweep, void * Cargo );
+extern HB_EXPORT  void *   hb_gcAllocate( ULONG ulSize, const HB_GC_FUNCS * pFuncs ); /* allocates a memory controlled by the garbage collector */
+extern HB_EXPORT  void     hb_gcFree( void * pAlloc ); /* deallocates a memory allocated by the garbage collector */
+extern HB_EXPORT  void *   hb_gcLock( void * pAlloc ); /* do not release passed memory block */
+extern HB_EXPORT  void *   hb_gcUnlock( void * pAlloc ); /* passed block is allowed to be released */
+extern HB_EXPORT  void     hb_gcMark( void * pAlloc ); /* mark given block as used */
+
+extern HB_EXPORT  void     hb_gcDummyMark( void * Cargo ); /* dummy GC mark function */
 
 extern PHB_ITEM   hb_gcGripGet( HB_ITEM_PTR pItem );
 extern void       hb_gcGripDrop( HB_ITEM_PTR pItem );
 
-extern HB_EXPORT void *hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pFunc ); /* allocates a memory controlled by the garbage collector */
-extern void       hb_gcFree( void *pAlloc ); /* deallocates a memory allocated by the garbage collector */
-extern void *     hb_gcLock( void *pAlloc ); /* do not release passed memory block */
-extern void *     hb_gcUnlock( void *pAlloc ); /* passed block is allowed to be released */
 #ifdef _HB_API_INTERNAL_
-HB_GARBAGE_FUNC_PTR hb_gcFunc( void *pBlock );  /* return cleanup function pointer */
-extern void       hb_gcItemRef( HB_ITEM_PTR pItem ); /* checks if passed item refers passed memory block pointer */
+extern const HB_GC_FUNCS * hb_gcFuncs( void *pBlock );  /* return cleanup function pointer */
+extern void       hb_gcAttach( void * pBlock );
+extern void *     hb_gcAllocRaw( ULONG ulSize, const HB_GC_FUNCS * pFuncs ); /* allocates a memory controlled by the garbage collector */
+extern void       hb_gcGripMark( void * Cargo ); /* mark complex variables inside given item as used */
+extern void       hb_gcItemRef( HB_ITEM_PTR pItem ); /* mark complex variables inside given item as used */
 extern void       hb_vmIsStackRef( void ); /* hvm.c - mark all local variables as used */
 extern void       hb_vmIsStaticRef( void ); /* hvm.c - mark all static variables as used */
 extern void       hb_gcReleaseAll( void ); /* release all memory blocks unconditionally */
@@ -631,7 +639,7 @@ extern HB_EXPORT long         hb_parnl( int iParam ); /* retrieve a numeric para
 extern HB_EXPORT long         hb_parnldef( int iParam, long lDefValue ); /* retrieve a numeric parameter as a long, return default value if parameter isn't numeric */
 extern HB_EXPORT HB_LONG      hb_parnint( int iParam ); /* retrieve a numeric parameter as a HB_LONG */
 extern HB_EXPORT void *       hb_parptr( int iParam ); /* retrieve a parameter as a pointer */
-extern HB_EXPORT void *       hb_parptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam ); /* retrieve a parameter as a pointer if it's a pointer to GC allocated block */
+extern HB_EXPORT void *       hb_parptrGC( const HB_GC_FUNCS * pFuncs, int iParam ); /* retrieve a parameter as a pointer if it's a pointer to GC allocated block */
 #ifndef HB_LONG_LONG_OFF
 extern HB_EXPORT LONGLONG     hb_parnll( int iParam ); /* retrieve a numeric parameter as a long long */
 #endif
@@ -651,7 +659,7 @@ extern HB_EXPORT int          hb_parvni( int iParam, ... ); /* retrieve a numeri
 extern HB_EXPORT long         hb_parvnl( int iParam, ... ); /* retrieve a numeric parameter as a long */
 extern HB_EXPORT HB_LONG      hb_parvnint( int iParam, ... ); /* retrieve a numeric parameter as a HB_LONG */
 extern HB_EXPORT void *       hb_parvptr( int iParam, ... ); /* retrieve a parameter as a pointer */
-extern HB_EXPORT void *       hb_parvptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam, ... ); /* retrieve a parameter as a pointer if it's a pointer to GC allocated block */
+extern HB_EXPORT void *       hb_parvptrGC( const HB_GC_FUNCS * pFuncs, int iParam, ... ); /* retrieve a parameter as a pointer if it's a pointer to GC allocated block */
 #ifndef HB_LONG_LONG_OFF
 extern HB_EXPORT LONGLONG     hb_parvnll( int iParam, ... ); /* retrieve a numeric parameter as a long long */
 #endif
@@ -790,7 +798,7 @@ extern HB_EXPORT char *       hb_arrayGetC( PHB_ITEM pArray, ULONG ulIndex ); /*
 extern HB_EXPORT const char * hb_arrayGetCPtr( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string pointer on an array element */
 extern HB_EXPORT ULONG        hb_arrayGetCLen( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string length contained on an array element */
 extern HB_EXPORT void *       hb_arrayGetPtr( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the pointer contained on an array element */
-extern HB_EXPORT void *       hb_arrayGetPtrGC( PHB_ITEM pArray, ULONG ulIndex, HB_GARBAGE_FUNC_PTR pFunc ); /* retrieves the GC pointer contained on an array element */
+extern HB_EXPORT void *       hb_arrayGetPtrGC( PHB_ITEM pArray, ULONG ulIndex, const HB_GC_FUNCS * pFuncs ); /* retrieves the GC pointer contained on an array element */
 extern HB_EXPORT PHB_SYMB     hb_arrayGetSymbol( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves symbol contained on an array element */
 extern HB_EXPORT BOOL         hb_arrayGetL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the logical value contained on an array element */
 extern HB_EXPORT int          hb_arrayGetNI( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the int value contained on an array element */
@@ -828,6 +836,7 @@ extern HB_EXPORT ULONG        hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue,
 extern HB_EXPORT BOOL         hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * pulCount ); /* execute a code-block for every element of an array item */
 extern HB_EXPORT BOOL         hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart, ULONG * pulCount, ULONG * pulTarget ); /* copy items from one array to another */
 extern HB_EXPORT PHB_ITEM     hb_arrayClone( PHB_ITEM pArray ); /* returns a duplicate of an existing array, including all nested items */
+extern HB_EXPORT PHB_ITEM     hb_arrayCloneTo( PHB_ITEM pDest, PHB_ITEM pArray ); /* returns a duplicate of an existing array, including all nested items */
 extern HB_EXPORT BOOL         hb_arraySort( PHB_ITEM pArray, ULONG * pulStart, ULONG * pulCount, PHB_ITEM pBlock ); /* sorts an array item */
 extern HB_EXPORT PHB_ITEM     hb_arrayFromStack( USHORT uiLen ); /* Creates and returns an Array of n Elements from the Eval Stack - Does NOT pop the items. */
 extern HB_EXPORT PHB_ITEM     hb_arrayFromParams( int iLevel ); /* Creates and returns an Array of Generic Parameters for a given call level */
@@ -853,7 +862,8 @@ extern HB_EXPORT BOOL      hb_hashAddNew( PHB_ITEM pHash, PHB_ITEM pKey, PHB_ITE
 extern HB_EXPORT BOOL      hb_hashRemove( PHB_ITEM pHash, PHB_ITEM pItem );
 extern HB_EXPORT BOOL      hb_hashAllocNewPair( PHB_ITEM pHash, PHB_ITEM * pKeyPtr, PHB_ITEM * pValPtr );
 extern HB_EXPORT void      hb_hashSort( PHB_ITEM pHash );
-extern HB_EXPORT PHB_ITEM  hb_hashClone( PHB_ITEM pSource );
+extern HB_EXPORT PHB_ITEM  hb_hashClone( PHB_ITEM pHash );
+extern HB_EXPORT PHB_ITEM  hb_hashCloneTo( PHB_ITEM pDest, PHB_ITEM pHash );
 extern HB_EXPORT void      hb_hashJoin( PHB_ITEM pDest, PHB_ITEM pSource, int iType );
 extern HB_EXPORT BOOL      hb_hashScan( PHB_ITEM pHash, PHB_ITEM pKey, ULONG * pulPos );
 extern HB_EXPORT void      hb_hashPreallocate( PHB_ITEM pHash, ULONG ulNewSize );
@@ -889,11 +899,6 @@ extern HB_EXPORT BOOL      hb_hashDelAt( PHB_ITEM pHash, ULONG ulPos );
 
 #define HB_HASH_FLAG_MASK           0xFFFF
 #define HB_HASH_FLAG_DEFAULT        ( HB_HASH_AUTOADD_ASSIGN | HB_HASH_BINARY )
-
-#ifdef _HB_API_INTERNAL_
-/* internal hash API not exported */
-extern void hb_hashRefGrabage( PHB_ITEM pHash );
-#endif
 
 #define HB_HASH_UNION      0  /* logical OR  on items in two hash tables */
 #define HB_HASH_INTERSECT  1  /* logical AND on items in two hash tables */

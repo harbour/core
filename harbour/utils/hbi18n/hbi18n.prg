@@ -57,6 +57,9 @@
 #define _HB_I18N_GENHBL 2
 #define _HB_I18N_TRANS  3
 
+ANNOUNCE HB_GTSYS
+REQUEST HB_GT_CGI_DEFAULT
+
 PROCEDURE Main( ... )
    LOCAL aParams, aFiles
    LOCAL cFileOut, cFileIn, cExt

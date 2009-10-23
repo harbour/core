@@ -106,7 +106,7 @@ typedef int  ( * HB_REG_COMP )( PHB_REGEX, const char * );
 typedef int  ( * HB_REG_EXEC )( PHB_REGEX, const char *, ULONG, int, HB_REGMATCH * );
 
 extern void hb_regexInit( HB_REG_FREE pFree, HB_REG_COMP pComp, HB_REG_EXEC pExec );
-extern HB_GARBAGE_FUNC( hb_regexRelease );
+extern BOOL hb_regexIs( PHB_ITEM pItem );
 
 #ifndef REG_EXTENDED
 #  define REG_EXTENDED  0x00

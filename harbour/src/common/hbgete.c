@@ -114,19 +114,40 @@ char * hb_getenv( const char * szName )
 
 BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
 {
-   BOOL bRetVal;
+   BOOL fRetVal;
 
 #if defined( HB_OS_WIN )
    {
-      LPTSTR lpName = HB_TCHAR_CONVTO( szName );
-      LPTSTR lpBuffer = ( LPTSTR ) hb_xgrab( nSize * sizeof( TCHAR ) );
+#if defined( UNICODE )
+      TCHAR name[ 128 ];
+      TCHAR buffer[ 128 ];
+      LPTSTR lpName, lpBuffer;
+      ULONG nLen = ( ULONG ) strlen( szName ) + 1;
 
-      bRetVal = GetEnvironmentVariable( lpName, lpBuffer, nSize ) != 0;
+      if( nLen * sizeof( TCHAR ) <= sizeof( name ) )
+         lpName = name;
+      else
+         lpName = ( LPTSTR ) hb_xgrab( nLen * sizeof( TCHAR ) );
+      hb_mbtowcset( lpName, szName, nLen );
 
-      HB_TCHAR_GETFROM( szBuffer, lpBuffer, nSize );
+      if( szBuffer == NULL )
+         lpBuffer = NULL;
+      else if( nSize * sizeof( TCHAR ) <= sizeof( buffer ) )
+         lpBuffer = buffer;
+      else
+         lpBuffer = ( LPTSTR ) hb_xgrab( nSize * sizeof( TCHAR ) );
 
-      HB_TCHAR_FREE( lpBuffer );
-      HB_TCHAR_FREE( lpName );
+      fRetVal = GetEnvironmentVariable( lpName, lpBuffer, nSize ) != 0;
+
+      hb_wctombget( szBuffer, lpBuffer, nSize );
+
+      if( lpName != name )
+         hb_xfree( lpName );
+      if( lpBuffer && lpBuffer != buffer )
+         hb_xfree( lpBuffer );
+#else
+      fRetVal = GetEnvironmentVariableA( szName, szBuffer, nSize ) != 0;
+#endif
    }
 #elif defined( HB_OS_OS2 )
    {
@@ -134,12 +155,12 @@ BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
 
       if( DosScanEnv( ( PCSZ ) szName, &EnvValue ) == NO_ERROR )
       {
-         bRetVal = TRUE;
+         fRetVal = TRUE;
          if( szBuffer != NULL && nSize != 0 )
             hb_strncpy( szBuffer, ( char * ) EnvValue, nSize - 1 );
       }
       else
-         bRetVal = FALSE;
+         fRetVal = FALSE;
    }
 #else
    {
@@ -147,19 +168,19 @@ BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
 
       if( pszTemp != NULL )
       {
-         bRetVal = TRUE;
+         fRetVal = TRUE;
          if( szBuffer != NULL && nSize != 0 )
             hb_strncpy( szBuffer, pszTemp, nSize - 1 );
       }
       else
-         bRetVal = FALSE;
+         fRetVal = FALSE;
    }
 #endif
 
-   if( !bRetVal && szBuffer != NULL && nSize != 0 )
+   if( !fRetVal && szBuffer != NULL && nSize != 0 )
       szBuffer[ 0 ] = '\0';
 
-   return bRetVal;
+   return fRetVal;
 }
 
 /* set current process environment variable, if szValue is NULL delete

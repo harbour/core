@@ -446,9 +446,15 @@ static HB_GARBAGE_FUNC( hb_i18n_destructor )
    }
 }
 
+static const HB_GC_FUNCS s_gcI18NFuncs =
+{
+   hb_i18n_destructor,
+   hb_gcDummyMark
+};
+
 static PHB_I18N_TRANS hb_i18n_param( int * piParam, BOOL fActive )
 {
-   PHB_I18N_TRANS * pI18NHolder = ( PHB_I18N_TRANS * ) hb_parptrGC( hb_i18n_destructor, *piParam );
+   PHB_I18N_TRANS * pI18NHolder = ( PHB_I18N_TRANS * ) hb_parptrGC( &s_gcI18NFuncs, *piParam );
 
    if( pI18NHolder )
    {
@@ -467,7 +473,7 @@ static PHB_ITEM hb_i18n_newitem( PHB_I18N_TRANS pI18N )
    if( !pI18N )
       pI18N = hb_i18n_new();
    pI18NHolder = ( PHB_I18N_TRANS * )
-                  hb_gcAlloc( sizeof( PHB_I18N_TRANS ), hb_i18n_destructor );
+                  hb_gcAllocate( sizeof( PHB_I18N_TRANS ), &s_gcI18NFuncs );
    *pI18NHolder = pI18N;
 
    return hb_itemPutPtrGC( pItem, pI18NHolder );
@@ -1055,7 +1061,8 @@ HB_FUNC( __I18N_HASHTABLE )
 
    if( pTable )
    {
-      pI18N = hb_i18n_initialize( hb_itemNew( pTable ) );
+      pTable = hb_itemNew( pTable );
+      pI18N = hb_i18n_initialize( pTable );
       if( pI18N )
          hb_itemReturnRelease( hb_i18n_newitem( pI18N ) );
       else

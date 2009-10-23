@@ -157,6 +157,13 @@ static HB_GARBAGE_FUNC( hb_sqlite3_destructor )
    }
 }
 
+static const HB_GC_FUNCS s_gcSqlite3Funcs =
+{
+   hb_sqlite3_destructor,
+   hb_gcDummyMark
+};
+
+
 PHB_ITEM hb_sqlite3_itemPut( PHB_ITEM pItem, void *pMemAddr, int iType )
 {
    PHB_SQLITE3_HOLDER   pStructHolder;
@@ -173,7 +180,7 @@ PHB_ITEM hb_sqlite3_itemPut( PHB_ITEM pItem, void *pMemAddr, int iType )
       pItem = hb_itemNew( pItem );
    }
 
-   pStructHolder = ( PHB_SQLITE3_HOLDER ) hb_gcAlloc( sizeof(HB_SQLITE3_HOLDER), hb_sqlite3_destructor );
+   pStructHolder = ( PHB_SQLITE3_HOLDER ) hb_gcAllocate( sizeof(HB_SQLITE3_HOLDER), &s_gcSqlite3Funcs );
    pStructHolder->hbsqlite3 = ( HB_SQLITE3 * ) pMemAddr;
    pStructHolder->type = iType;
 
@@ -182,7 +189,7 @@ PHB_ITEM hb_sqlite3_itemPut( PHB_ITEM pItem, void *pMemAddr, int iType )
 
 void *hb_sqlite3_itemGet( PHB_ITEM pItem, int iType, BOOL fError )
 {
-   PHB_SQLITE3_HOLDER   pStructHolder = ( PHB_SQLITE3_HOLDER ) hb_itemGetPtrGC( pItem, hb_sqlite3_destructor );
+   PHB_SQLITE3_HOLDER   pStructHolder = ( PHB_SQLITE3_HOLDER ) hb_itemGetPtrGC( pItem, &s_gcSqlite3Funcs );
    int                  iError = 0;
 
    HB_SYMBOL_UNUSED( iError );

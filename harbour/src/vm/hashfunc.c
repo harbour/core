@@ -313,7 +313,7 @@ HB_FUNC( HB_HCLONE )
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
 
    if( pHash )
-      hb_itemReturnRelease( hb_hashClone( pHash ) );
+      hb_hashCloneTo( hb_stackReturnItem(), pHash );
    else
       hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

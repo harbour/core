@@ -311,7 +311,8 @@ HB_OLE_PARAM_REF;
 
 static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFIID riid,
                                          LCID lcid, WORD wFlags, DISPPARAMS* pParams,
-                                         VARIANT* pVarResult, EXCEPINFO* pExcepInfo, UINT* puArgErr )
+                                         VARIANT* pVarResult, EXCEPINFO* pExcepInfo,
+                                         UINT* puArgErr )
 {
    int i, iCount, ii, iRefs;
    PHB_ITEM pAction, pKey = NULL;
@@ -395,7 +396,7 @@ static const IDispatchVtbl ISink_Vtbl = {
 };
 
 
-HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler ) --> pSink */
+HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler [, cID] ) --> pSink */
 {
    IDispatch * pDisp = hb_oleParam( 1 );
 

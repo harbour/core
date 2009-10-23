@@ -645,11 +645,11 @@ void * hb_parptr( int iParam )
    return NULL;
 }
 
-void * hb_parptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam )
+void * hb_parptrGC( const HB_GC_FUNCS * pFuncs, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parptrGC(%p,%d)", pFunc, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parptrGC(%p,%d)", pFuncs, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -659,7 +659,7 @@ void * hb_parptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_POINTER( pItem ) && pItem->item.asPointer.collect &&
-          hb_gcFunc( pItem->item.asPointer.value ) == pFunc )
+          hb_gcFuncs( pItem->item.asPointer.value ) == pFuncs )
          return pItem->item.asPointer.value;
    }
 
@@ -1235,11 +1235,11 @@ void * hb_parvptr( int iParam, ... )
    return NULL;
 }
 
-void * hb_parvptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam, ... )
+void * hb_parvptrGC( const HB_GC_FUNCS * pFuncs, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parvptrGC(%p,%d, ...)", pFunc, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parvptrGC(%p,%d, ...)", pFuncs, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1251,7 +1251,7 @@ void * hb_parvptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam, ... )
       if( HB_IS_POINTER( pItem ) )
       {
          if( pItem->item.asPointer.collect &&
-             hb_gcFunc( pItem->item.asPointer.value ) == pFunc )
+             hb_gcFuncs( pItem->item.asPointer.value ) == pFuncs )
             return pItem->item.asPointer.value;
       }
       else if( HB_IS_ARRAY( pItem ) )
@@ -1266,7 +1266,7 @@ void * hb_parvptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam, ... )
          pItem = hb_arrayGetItemPtr( pItem, ulArrayIndex );
          if( pItem && HB_IS_POINTER( pItem ) &&
              pItem->item.asPointer.collect &&
-             hb_gcFunc( pItem->item.asPointer.value ) == pFunc )
+             hb_gcFuncs( pItem->item.asPointer.value ) == pFuncs )
             return pItem->item.asPointer.value;
       }
    }

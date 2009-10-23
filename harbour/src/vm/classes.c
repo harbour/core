@@ -2910,9 +2910,8 @@ static BOOL hb_clsAddMsg( USHORT uiClass, const char * szMessage,
                    * and will operate on this value so it's not necessary
                    * to keep the init value. [druzus]
                    */
-                  pInit = hb_itemClone( pInit );
-                  hb_arraySet( pClass->pSharedDatas, pNewMeth->uiData, pInit );
-                  hb_itemRelease( pInit );
+                  hb_itemCloneTo( hb_arrayGetItemPtr( pClass->pSharedDatas,
+                                                      pNewMeth->uiData ), pInit );
                }
                pNewMeth->pFuncSym = &s___msgGetShrData;
             }
@@ -3506,11 +3505,8 @@ static PHB_ITEM hb_clsInst( USHORT uiClass )
                pDestItm = NULL;
 
             if( pDestItm )
-            {
-               PHB_ITEM pInit = hb_itemClone( pInitData->pInitValue );
-               hb_itemMove( pDestItm, pInit );
-               hb_itemRelease( pInit );
-            }
+               hb_itemCloneTo( pDestItm, pInitData->pInitValue );
+
             ++pInitData;
          }
          while( --ui );
@@ -3742,18 +3738,13 @@ HB_FUNC( __OBJSENDMSG )
  */
 HB_FUNC( __OBJCLONE )
 {
-   PHB_ITEM pSrcObject = hb_param( 1, HB_IT_OBJECT );
-   PHB_ITEM pDstObject;
+   HB_STACK_TLS_PRELOAD
+   PHB_ITEM pObject = hb_param( 1, HB_IT_OBJECT );
 
-   if( pSrcObject )
-   {
-      pDstObject = hb_arrayClone( pSrcObject );
-      hb_itemReturnRelease( pDstObject );
-   }
+   if( pObject )
+      hb_arrayCloneTo( hb_stackReturnItem(), pObject );
    else
-   {
       hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, 0 );
-   }
 }
 
 /*

@@ -98,9 +98,16 @@ static HB_GARBAGE_FUNC( win_HDC_release )
    }
 }
 
+static const HB_GC_FUNCS s_gc_HDC_funcs =
+{
+   win_HDC_release,
+   hb_gcDummyMark
+};
+
+
 static HDC win_HDC_par( int iParam )
 {
-   void ** ph = ( void ** ) hb_parptrGC( win_HDC_release, iParam );
+   void ** ph = ( void ** ) hb_parptrGC( &s_gc_HDC_funcs, iParam );
 
    return ph ? ( HDC ) * ph : ( HDC ) hb_parptr( iParam );
 }
@@ -120,12 +127,18 @@ static HB_GARBAGE_FUNC( win_HPEN_release )
    }
 }
 
+static const HB_GC_FUNCS s_gc_HPEN_funcs =
+{
+   win_HPEN_release,
+   hb_gcDummyMark
+};
+
 HB_FUNC( WIN_CREATEDC )
 {
    if( HB_ISCHAR( 1 ) )
    {
       LPTSTR lpText = HB_TCHAR_CONVTO( hb_parc( 1 ) );
-      void ** ph = ( void ** ) hb_gcAlloc( sizeof( HDC * ), win_HDC_release );
+      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HDC * ), &s_gc_HDC_funcs );
       *ph = ( void * ) CreateDC( TEXT( "" ), lpText, NULL, NULL );
       hb_retptrGC( ph );
       HB_TCHAR_FREE( lpText );
@@ -183,7 +196,7 @@ HB_FUNC( WIN_ABORTDOC )
 
 HB_FUNC( WIN_DELETEDC )
 {
-   void ** phDC = ( void ** ) hb_parptrGC( win_HDC_release, 1 );
+   void ** phDC = ( void ** ) hb_parptrGC( &s_gc_HDC_funcs, 1 );
 
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( phDC && * phDC )
@@ -596,7 +609,7 @@ HB_FUNC( WIN_SETPEN )
    HDC hDC = win_HDC_par( 1 );
    HPEN hOldPen;
 
-   void ** ph = ( void ** ) hb_gcAlloc( sizeof( HPEN * ), win_HPEN_release );
+   void ** ph = ( void ** ) hb_gcAllocate( sizeof( HPEN * ), &s_gc_HPEN_funcs );
 
    * ph = ( void * ) CreatePen( hb_parni( 2 ),                /* pen style */
                                 hb_parni( 3 ),                /* pen width */

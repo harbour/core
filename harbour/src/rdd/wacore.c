@@ -489,6 +489,12 @@ static HB_GARBAGE_FUNC( hb_waHolderDestructor )
    }
 }
 
+static const HB_GC_FUNCS s_gcWAFuncs =
+{
+   hb_waHolderDestructor,
+   hb_gcDummyMark
+};
+
 void hb_rddCloseDetachedAreas( void )
 {
    PHB_ITEM pDetachedArea;
@@ -556,7 +562,7 @@ HB_ERRCODE hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo )
    hb_arrayNew( pDetachedArea, 2 );
    if( pCargo )
       hb_arraySet( pDetachedArea, 2, pCargo );
-   pHolder = ( AREAP * ) hb_gcAlloc( sizeof( AREAP ), hb_waHolderDestructor );
+   pHolder = ( AREAP * ) hb_gcAllocate( sizeof( AREAP ), &s_gcWAFuncs );
    *pHolder = pArea;
    hb_arraySetPtrGC( pDetachedArea, 1, pHolder );
    /* siagnal waiting processes that new area is available */

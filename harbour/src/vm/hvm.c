@@ -4366,11 +4366,14 @@ static void hb_vmForTest( void )        /* Test to check the end point of the FO
 /* Begin Sequence WITH block auto destructor */
 static HB_GARBAGE_FUNC( hb_SeqBlockDestructor )
 {
-   PHB_ITEM * pBlockPtr = ( PHB_ITEM * ) Cargo;
-
-   hb_itemMove( hb_errorBlock(), * pBlockPtr );
-   hb_itemRelease( * pBlockPtr );
+   hb_itemMove( hb_errorBlock(), ( PHB_ITEM ) Cargo );
 }
+
+static const HB_GC_FUNCS s_gcSeqBlockFuncs =
+{
+   hb_SeqBlockDestructor,
+   hb_gcGripMark
+};
 
 static void hb_vmSeqBlock( void )
 {
@@ -4382,16 +4385,15 @@ static void hb_vmSeqBlock( void )
    pItem = hb_stackItemFromTop( -1 );
    if( HB_IS_BLOCK( pItem ) )
    {
-      PHB_ITEM * pBlockPtr, pBlock, pHolder;
+      PHB_ITEM pBlockCopy, pBlock;
 
       pBlock = hb_errorBlock();
-      pHolder = hb_itemNew( pBlock );
-      hb_itemMove( pBlock, pItem );
-      pBlockPtr = ( PHB_ITEM * ) hb_gcAlloc( sizeof( PHB_ITEM ),
-                                             hb_SeqBlockDestructor );
-      * pBlockPtr = pHolder;
+      pBlockCopy = ( PHB_ITEM ) hb_gcAllocRaw( sizeof( HB_ITEM ),
+                                               &s_gcSeqBlockFuncs );
+      hb_itemRawCpy( pBlockCopy, pBlock );
+      hb_itemRawCpy( pBlock, pItem );
       pItem->type = HB_IT_POINTER;
-      pItem->item.asPointer.value = pBlockPtr;
+      pItem->item.asPointer.value = pBlockCopy;
       pItem->item.asPointer.collect = pItem->item.asPointer.single = TRUE;
    }
 }
@@ -4404,6 +4406,13 @@ static HB_GARBAGE_FUNC( hb_withObjectDestructor )
    hb_stackWithObjectSetOffset( * plWithObjectBase );
 }
 
+static const HB_GC_FUNCS s_gcWithObjectFuncs =
+{
+   hb_withObjectDestructor,
+   hb_gcDummyMark
+};
+
+
 static void hb_vmWithObjectStart( void )
 {
    HB_STACK_TLS_PRELOAD
@@ -4413,8 +4422,8 @@ static void hb_vmWithObjectStart( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmWithObjectStart()"));
 
    pItem = hb_stackAllocItem();
-   plWithObjectBase = ( LONG * ) hb_gcAlloc( sizeof( LONG ),
-                                             hb_withObjectDestructor );
+   plWithObjectBase = ( LONG * ) hb_gcAllocRaw( sizeof( LONG ),
+                                                &s_gcWithObjectFuncs );
    * plWithObjectBase = hb_stackWithObjectOffset();
    pItem->type = HB_IT_POINTER;
    pItem->item.asPointer.value = plWithObjectBase;
@@ -6298,14 +6307,7 @@ static PHB_ITEM hb_vmTSVRefRead( PHB_ITEM pRefer )
    if( !pItem )
    {
       pItem = ( PHB_ITEM ) hb_stackGetTSD( &pTSVRef->threadData );
-      if( HB_ITEM_TYPERAW( &pTSVRef->source ) & ( HB_IT_ARRAY | HB_IT_HASH ) )
-      {
-         PHB_ITEM pClone = hb_itemClone( &pTSVRef->source );
-         hb_itemCopy( pItem, pClone );
-         hb_itemRelease( pClone );
-      }
-      else
-         hb_itemCopy( pItem, &pTSVRef->source );
+      hb_itemCloneTo( pItem, &pTSVRef->source );
    }
    return pItem;
 }

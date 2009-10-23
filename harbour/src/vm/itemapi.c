@@ -715,13 +715,13 @@ void * hb_itemGetPtr( PHB_ITEM pItem )
       return NULL;
 }
 
-void * hb_itemGetPtrGC( PHB_ITEM pItem, HB_GARBAGE_FUNC_PTR pFunc )
+void * hb_itemGetPtrGC( PHB_ITEM pItem, const HB_GC_FUNCS * pFuncs )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemGetPtrGC(%p,%p)", pItem, pFunc));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemGetPtrGC(%p,%p)", pItem, pFuncs));
 
    if( pItem && HB_IS_POINTER( pItem ) &&
        pItem->item.asPointer.collect &&
-       hb_gcFunc( pItem->item.asPointer.value ) == pFunc )
+       hb_gcFuncs( pItem->item.asPointer.value ) == pFuncs )
       return pItem->item.asPointer.value;
    else
       return NULL;
@@ -1301,6 +1301,8 @@ PHB_ITEM hb_itemPutPtrGC( PHB_ITEM pItem, void * pValue )
    pItem->item.asPointer.value = pValue;
    pItem->item.asPointer.collect = TRUE;
    pItem->item.asPointer.single = FALSE;
+
+   hb_gcAttach( pValue );
 
    return pItem;
 }
@@ -2031,17 +2033,27 @@ PHB_ITEM hb_itemClone( PHB_ITEM pItem )
    HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_itemClone(%p)", pItem));
 
    if( HB_IS_ARRAY( pItem ) )
-   {
       return hb_arrayClone( pItem );
-   }
+
    else if( HB_IS_HASH( pItem ) )
-   {
       return hb_hashClone( pItem );
-   }
+
    else
-   {
       return hb_itemNew( pItem );
-   }
+}
+
+PHB_ITEM hb_itemCloneTo( PHB_ITEM pDest, PHB_ITEM pSource )
+{
+   HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_itemCloneTo(%p,%p)", pDest, pSource));
+
+   if( HB_IS_ARRAY( pSource ) )
+      return hb_arrayCloneTo( pDest, pSource );
+
+   else if( HB_IS_HASH( pSource ) )
+      return hb_hashCloneTo( pDest, pSource );
+
+   hb_itemCopy( pDest, pSource );
+   return pDest;
 }
 
 

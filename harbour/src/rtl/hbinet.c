@@ -93,12 +93,12 @@ typedef struct
 
 #define HB_INET_INITIALIZE()  if( s_initialize ) hb_inetAutoInit()
 
-#define HB_PARSOCKET( n )     ( ( PHB_SOCKET_STRUCT ) hb_parptrGC( hb_inetSocketFinalize, n ) )
+#define HB_PARSOCKET( n )     ( ( PHB_SOCKET_STRUCT ) hb_parptrGC( &s_gcInetFuncs, n ) )
 
 #define HB_SOCKET_INIT( s, p ) \
       do { \
          HB_INET_INITIALIZE(); \
-         s = ( PHB_SOCKET_STRUCT ) hb_gcAlloc( sizeof( HB_SOCKET_STRUCT ), hb_inetSocketFinalize ); \
+         s = ( PHB_SOCKET_STRUCT ) hb_gcAllocate( sizeof( HB_SOCKET_STRUCT ), &s_gcInetFuncs ); \
          memset( s, 0, sizeof( HB_SOCKET_STRUCT ) ); \
          s->sd = HB_NO_SOCKET; \
          s->readahead = HB_INET_BUFFER_LEN; \
@@ -174,6 +174,20 @@ static HB_GARBAGE_FUNC( hb_inetSocketFinalize )
       socket->buffer = NULL;
    }
 }
+
+static HB_GARBAGE_FUNC( hb_inetSocketMark )
+{
+   PHB_SOCKET_STRUCT socket = ( PHB_SOCKET_STRUCT ) Cargo;
+
+   if( socket->pPeriodicBlock )
+      hb_gcMark( socket->pPeriodicBlock );
+}
+
+static const HB_GC_FUNCS s_gcInetFuncs =
+{
+   hb_inetSocketFinalize,
+   hb_inetSocketMark
+};
 
 /*****************************************************
 * Socket Initialization
@@ -444,6 +458,7 @@ HB_FUNC( HB_INETPERIODCALLBACK )
          if( socket->pPeriodicBlock )
             hb_itemRelease( socket->pPeriodicBlock );
          socket->pPeriodicBlock = hb_itemClone( pExec );
+         hb_gcUnlock( socket->pPeriodicBlock );
       }
    }
    else

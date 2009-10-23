@@ -127,6 +127,12 @@ static HB_GARBAGE_FUNC( hb_ole_destructor )
    }
 }
 
+static const HB_GC_FUNCS s_gcOleFuncs =
+{
+   hb_ole_destructor,
+   hb_gcDummyMark
+};
+
 
 static HB_GARBAGE_FUNC( hb_oleenum_destructor )
 {
@@ -139,10 +145,16 @@ static HB_GARBAGE_FUNC( hb_oleenum_destructor )
    }
 }
 
+static const HB_GC_FUNCS s_gcOleenumFuncs =
+{
+   hb_oleenum_destructor,
+   hb_gcDummyMark
+};
+
 
 IDispatch* hb_oleParam( int iParam )
 {
-   IDispatch**  ppDisp = ( IDispatch** ) hb_parptrGC( hb_ole_destructor, iParam );
+   IDispatch**  ppDisp = ( IDispatch** ) hb_parptrGC( &s_gcOleFuncs, iParam );
 
    if( ppDisp && *ppDisp )
       return *ppDisp;
@@ -154,7 +166,7 @@ IDispatch* hb_oleParam( int iParam )
 
 IDispatch* hb_oleItemGet( PHB_ITEM pItem )
 {
-   return ( IDispatch* ) hb_itemGetPtrGC( pItem, hb_ole_destructor );
+   return ( IDispatch* ) hb_itemGetPtrGC( pItem, &s_gcOleFuncs );
 }
 
 
@@ -162,7 +174,7 @@ PHB_ITEM hb_oleItemPut( PHB_ITEM pItem, IDispatch* pDisp )
 {
    IDispatch** ppDisp;
 
-   ppDisp = ( IDispatch** ) hb_gcAlloc( sizeof( IDispatch* ), hb_ole_destructor );
+   ppDisp = ( IDispatch** ) hb_gcAllocate( sizeof( IDispatch* ), &s_gcOleFuncs );
    *ppDisp = pDisp;
 
    return hb_itemPutPtrGC( pItem, ppDisp );
@@ -171,7 +183,7 @@ PHB_ITEM hb_oleItemPut( PHB_ITEM pItem, IDispatch* pDisp )
 
 static IEnumVARIANT* hb_oleenumParam( int iParam )
 {
-   IEnumVARIANT**  ppEnum = ( IEnumVARIANT** ) hb_parptrGC( hb_oleenum_destructor, iParam );
+   IEnumVARIANT**  ppEnum = ( IEnumVARIANT** ) hb_parptrGC( &s_gcOleenumFuncs, iParam );
 
    if( ppEnum && *ppEnum )
       return *ppEnum;
@@ -439,7 +451,6 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
          if( pdispVal )
          {
             PHB_ITEM    pObject, pPtrGC;
-            IDispatch** ppDisp;
 
             if( hb_vmRequestReenter() )
             {
@@ -449,12 +460,9 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
 
                pObject = hb_itemNew( hb_stackReturnItem() );
 
-               ppDisp = ( IDispatch** ) hb_gcAlloc( sizeof( IDispatch* ), hb_ole_destructor );
-               *ppDisp = pdispVal;
-               pPtrGC = hb_itemPutPtrGC( NULL, ppDisp );
-
+               pPtrGC = hb_oleItemPut( NULL, pdispVal );
                /* Item is one more copy of the object */
-               HB_VTBL( *ppDisp )->AddRef( HB_THIS( *ppDisp ) );
+               HB_VTBL( pdispVal )->AddRef( HB_THIS( pdispVal ) );
 
                hb_vmPushDynSym( s_pDyns_hObjAssign );
                hb_vmPush( pObject );
@@ -897,7 +905,6 @@ HB_FUNC( __OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
    wchar_t*    cCLSID;
    GUID        ClassID, iid = IID_IDispatch;
    IDispatch*  pDisp = NULL;
-   IDispatch** ppDisp;
    const char* cOleName = hb_parc( 1 );
    const char* cID = hb_parc( 2 );
    HRESULT     lOleError;
@@ -933,11 +940,7 @@ HB_FUNC( __OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 
    hb_oleSetError( lOleError );
    if( lOleError == S_OK )
-   {
-      ppDisp = ( IDispatch** ) hb_gcAlloc( sizeof( IDispatch* ), hb_ole_destructor );
-      *ppDisp = pDisp;
-      hb_retptrGC( ppDisp );
-   }
+      hb_oleItemPut( hb_stackReturnItem(), pDisp );
    else
       hb_ret();
 }
@@ -948,7 +951,6 @@ HB_FUNC( __OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
    BSTR        wCLSID;
    IID         ClassID, iid = IID_IDispatch;
    IDispatch*  pDisp = NULL;
-   IDispatch** ppDisp;
    IUnknown*   pUnk = NULL;
    const char* cOleName = hb_parc( 1 );
    const char* cID = hb_parc( 2 );
@@ -990,11 +992,7 @@ HB_FUNC( __OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 
    hb_oleSetError( lOleError );
    if( lOleError == S_OK )
-   {
-      ppDisp = ( IDispatch** ) hb_gcAlloc( sizeof( IDispatch* ), hb_ole_destructor );
-      *ppDisp = pDisp;
-      hb_retptrGC( ppDisp );
-   }
+      hb_oleItemPut( hb_stackReturnItem(), pDisp );
    else
       hb_ret();
 }
@@ -1051,7 +1049,7 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
 
          hb_oleSetError( S_OK );
 
-         ppEnum = ( IEnumVARIANT** ) hb_gcAlloc( sizeof( IEnumVARIANT* ), hb_oleenum_destructor );
+         ppEnum = ( IEnumVARIANT** ) hb_gcAllocate( sizeof( IEnumVARIANT* ), &s_gcOleenumFuncs );
          *ppEnum = pEnum;
          hb_retptrGC( ppEnum );
          return;

@@ -67,9 +67,15 @@ static HB_GARBAGE_FUNC( hb_gz_Destructor )
    }
 }
 
+static const HB_GC_FUNCS s_gcGZFuncs =
+{
+   hb_gz_Destructor,
+   hb_gcDummyMark
+};
+
 static gzFile hb_gzParam( int iParam )
 {
-   gzFile * gzHolder = ( gzFile * ) hb_parptrGC( hb_gz_Destructor, iParam );
+   gzFile * gzHolder = ( gzFile * ) hb_parptrGC( &s_gcGZFuncs, iParam );
 
    if( gzHolder && * gzHolder )
       return * gzHolder;
@@ -89,8 +95,8 @@ HB_FUNC( HB_GZOPEN )
       gzFile gz = gzopen( cFile, cMode );
       if( gz )
       {
-         gzFile * gzHolder = ( gzFile * ) hb_gcAlloc( sizeof( gzFile ),
-                                                      hb_gz_Destructor );
+         gzFile * gzHolder = ( gzFile * ) hb_gcAllocate( sizeof( gzFile ),
+                                                         &s_gcGZFuncs );
          * gzHolder = gz;
          hb_retptrGC( gzHolder );
       }
@@ -110,8 +116,8 @@ HB_FUNC( HB_GZDOPEN )
       gzFile gz = gzdopen( hb_parni( 1 ), cMode );
       if( gz )
       {
-         gzFile * gzHolder = ( gzFile * ) hb_gcAlloc( sizeof( gzFile ),
-                                                      hb_gz_Destructor );
+         gzFile * gzHolder = ( gzFile * ) hb_gcAllocate( sizeof( gzFile ),
+                                                         &s_gcGZFuncs );
          * gzHolder = gz;
          hb_retptrGC( gzHolder );
       }
@@ -125,7 +131,7 @@ HB_FUNC( HB_GZDOPEN )
  */
 HB_FUNC( HB_GZCLOSE )
 {
-   gzFile * gzHolder = ( gzFile * ) hb_parptrGC( hb_gz_Destructor, 1 );
+   gzFile * gzHolder = ( gzFile * ) hb_parptrGC( &s_gcGZFuncs, 1 );
 
    if( gzHolder )
    {

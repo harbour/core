@@ -50,50 +50,100 @@
  */
 
 #include "set.ch"
+#include "fileio.ch"
 
-#DEFINE  CRLF HB_OsNewLine()
+#define HB_SET_TRACESTACK_NONE    0
+#define HB_SET_TRACESTACK_CURRENT 1
+#define HB_SET_TRACESTACK_ALL     2
+
+#define CRLF HB_OsNewLine()
+
 #xtranslate Write( <cString> ) => FWrite( FileHandle, <cString> ) //;HB_OutDebug( <cString> )
 
-STATIC s_cSET_TRACEFILE := "trace.log"
-STATIC s_nSET_TRACESTACK := 2 /* HB_SET_TRACESTACK_ALL */
-STATIC s_lSET_TRACE := .T.
+STATIC s_lSET_TRACE      := .T.
+STATIC s_cSET_TRACEFILE  := "trace.log"
+STATIC s_nSET_TRACESTACK := HB_SET_TRACESTACK_ALL
+
+FUNCTION xhb_setTrace( xTrace )
+   LOCAL lTrace := s_lSET_TRACE
+
+   IF HB_ISLOGICAL( xTrace )
+      s_lSET_TRACE := xTrace
+   ELSEIF HB_ISSTRING( xTrace )
+      IF Upper( xTrace ) = "ON"
+         s_lSET_TRACE := .T.
+      ELSEIF Upper( xTrace ) = "OFF"
+         s_lSET_TRACE := .F.
+      ENDIF
+   ENDIF
+
+RETURN lTrace
+
+FUNCTION xhb_setTraceFile( xFile, lAppend )
+   LOCAL cTraceFile := s_cSET_TRACEFILE
+
+   IF HB_ISSTRING( xFile )
+      s_cSET_TRACEFILE := xFile
+      IF !HB_ISLOGICAL( lAppend ) .OR. !lAppend
+         FClose( FCreate( s_cSET_TRACEFILE ) )
+      ENDIF
+   ENDIF
+
+RETURN cTraceFile
+
+FUNCTION xhb_setTraceStack( xLevel )
+   LOCAL nTraceLevel := s_nSET_TRACESTACK
+
+   IF HB_ISSTRING( xLevel )
+      IF Upper( xLevel ) == "NONE"
+         s_nSET_TRACESTACK := HB_SET_TRACESTACK_NONE
+      ELSEIF Upper( xLevel ) == "CURRENT"
+         s_nSET_TRACESTACK := HB_SET_TRACESTACK_CURRENT
+      ELSEIF Upper( xLevel ) == "ALL"
+         s_nSET_TRACESTACK := HB_SET_TRACESTACK_ALL
+      ENDIF
+   ELSEIF HB_ISNUMERIC( xLevel )
+      IF xLevel >= 0
+         s_nSET_TRACESTACK := xLevel
+      ENDIF
+   ENDIF
+
+RETURN nTraceLevel
 
 //--------------------------------------------------------------//
+
 FUNCTION TraceLog( ... )
 
    // Using PRIVATE instead of LOCALs so TraceLog() is DIVERT friendly.
-   MEMVAR cFile, FileHandle, nLevel, ProcName, xParam
+   LOCAL cFile, FileHandle, nLevel, ProcName, xParam
 
 #ifdef __XHARBOUR__
    IF ! SET( _SET_TRACE )
       RETURN .T.
    ENDIF
 
-   PRIVATE cFile := SET( _SET_TRACEFILE )
-   PRIVATE nLevel := SET( _SET_TRACESTACK )
+   cFile := SET( _SET_TRACEFILE )
+   nLevel := SET( _SET_TRACESTACK )
 #else
-   IF s_lSET_TRACE
+   IF !s_lSET_TRACE
       RETURN .T.
    ENDIF
 
-   PRIVATE cFile := s_cSET_TRACEFILE
-   PRIVATE nLevel := s_nSET_TRACESTACK
+   cFile := s_cSET_TRACEFILE
+   nLevel := s_nSET_TRACESTACK
 #endif
-
-   PRIVATE FileHandle
-   PRIVATE ProcName, xParam
 
    /* hb_FileExists() and FOpen()/FCreate() make different assumptions rgdg path,
       so we have to make sure cFile contains path to avoid ambiguity */
    cFile := cWithPath( cFile )
 
    IF hb_FileExists( cFile )
-      FileHandle := FOpen( cFile, 1 )
+      FileHandle := FOpen( cFile, FO_WRITE )
    ELSE
       FileHandle := FCreate( cFile )
    ENDIF
 
-   FSeek( FileHandle, 0, 2 )
+   FSeek( FileHandle, 0, FS_END )
 
    IF nLevel > 0
       Write( '[' + ProcFile(1) + "->" + ProcName( 1 ) + '] (' + LTrim( Str( Procline(1) ) ) + ')' )
@@ -115,7 +165,7 @@ FUNCTION TraceLog( ... )
 
    Write( CRLF )
 
-   FClose(FileHandle)
+   FClose( FileHandle )
 
 RETURN .T.
 //--------------------------------------------------------------//

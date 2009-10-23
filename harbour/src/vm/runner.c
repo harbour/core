@@ -646,17 +646,23 @@ static HB_GARBAGE_FUNC( hb_hrb_Destructor )
    }
 }
 
+static const HB_GC_FUNCS s_gcHrbFuncs =
+{
+   hb_hrb_Destructor,
+   hb_gcDummyMark
+};
+
 static PHRB_BODY hb_hrbParam( int iParam )
 {
-   PHRB_BODY * pHrbPtr = ( PHRB_BODY * ) hb_parptrGC( hb_hrb_Destructor, iParam );
+   PHRB_BODY * pHrbPtr = ( PHRB_BODY * ) hb_parptrGC( &s_gcHrbFuncs, iParam );
 
    return pHrbPtr ? *pHrbPtr : NULL;
 }
 
 static void hb_hrbReturn( PHRB_BODY pHrbBody )
 {
-   PHRB_BODY * pHrbPtr = ( PHRB_BODY * ) hb_gcAlloc( sizeof( PHRB_BODY ),
-                                                     hb_hrb_Destructor );
+   PHRB_BODY * pHrbPtr = ( PHRB_BODY * ) hb_gcAllocate( sizeof( PHRB_BODY ),
+                                                        &s_gcHrbFuncs );
    *pHrbPtr = pHrbBody;
    hb_retptrGC( pHrbPtr );
 }
@@ -798,7 +804,7 @@ HB_FUNC( HB_HRBDO )
 
 HB_FUNC( HB_HRBUNLOAD )
 {
-   PHRB_BODY * pHrbPtr = ( PHRB_BODY * ) hb_parptrGC( hb_hrb_Destructor, 1 );
+   PHRB_BODY * pHrbPtr = ( PHRB_BODY * ) hb_parptrGC( &s_gcHrbFuncs, 1 );
 
    if( pHrbPtr )
    {

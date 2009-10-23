@@ -90,9 +90,20 @@ void hb_regexInit( HB_REG_FREE pFree, HB_REG_COMP pComp, HB_REG_EXEC pExec )
 }
 
 /* This releases regex when called from the garbage collector */
-HB_GARBAGE_FUNC( hb_regexRelease )
+static HB_GARBAGE_FUNC( hb_regexRelease )
 {
    ( s_reg_free )( ( PHB_REGEX ) Cargo );
+}
+
+static const HB_GC_FUNCS s_gcRegexFuncs =
+{
+   hb_regexRelease,
+   hb_gcDummyMark
+};
+
+BOOL hb_regexIs( PHB_ITEM pItem )
+{
+   return hb_itemGetPtrGC( pItem, &s_gcRegexFuncs ) != NULL;
 }
 
 PHB_REGEX hb_regexCompile( const char *szRegEx, ULONG ulLen, int iFlags )
@@ -101,8 +112,7 @@ PHB_REGEX hb_regexCompile( const char *szRegEx, ULONG ulLen, int iFlags )
 
    HB_SYMBOL_UNUSED( ulLen );
 
-   pRegEx = ( PHB_REGEX ) hb_gcAlloc( sizeof( HB_REGEX ), hb_regexRelease );
-   hb_gcLock( pRegEx );
+   pRegEx = ( PHB_REGEX ) hb_gcAllocate( sizeof( HB_REGEX ), &s_gcRegexFuncs );
    memset( pRegEx, 0, sizeof( HB_REGEX ) );
    pRegEx->fFree = TRUE;
    pRegEx->iFlags = iFlags;
@@ -124,7 +134,7 @@ PHB_REGEX hb_regexGet( PHB_ITEM pRegExItm, int iFlags )
    {
       if( HB_IS_POINTER( pRegExItm ) )
       {
-         pRegEx = ( PHB_REGEX ) hb_itemGetPtrGC( pRegExItm, hb_regexRelease );
+         pRegEx = ( PHB_REGEX ) hb_itemGetPtrGC( pRegExItm, &s_gcRegexFuncs );
       }
       else if( HB_IS_STRING( pRegExItm ) )
       {

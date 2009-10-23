@@ -589,7 +589,7 @@ typedef unsigned long HB_COUNTER;
    typedef unsigned long HB_PTRUINT;
 #endif
 
-#ifdef HB_LONG_LONG_OFF
+#if defined( HB_LONG_LONG_OFF ) || ULONG_MAX == ULONGLONG_MAX
    typedef LONG HB_FOFFSET;
    /* we can add hack with double as work around what should
       effectively give 52bit file size limit */

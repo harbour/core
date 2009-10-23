@@ -81,6 +81,12 @@ static HB_GARBAGE_FUNC( hb_libRelease )
    HB_SYMBOL_UNUSED( Cargo );
 }
 
+static const HB_GC_FUNCS s_gcDynlibFuncs =
+{
+   hb_libRelease,
+   hb_gcDummyMark
+};
+
 HB_FUNC( HB_LIBLOAD )
 {
    void * hDynLib = NULL;
@@ -136,7 +142,7 @@ HB_FUNC( HB_LIBLOAD )
 
    if( hDynLib )
    {
-      void ** pLibPtr = ( void ** ) hb_gcAlloc( sizeof( void * ), hb_libRelease );
+      void ** pLibPtr = ( void ** ) hb_gcAllocate( sizeof( void * ), &s_gcDynlibFuncs );
       * pLibPtr = hDynLib;
       hb_retptrGC( pLibPtr );
    }
@@ -147,7 +153,7 @@ HB_FUNC( HB_LIBLOAD )
 HB_FUNC( HB_LIBFREE )
 {
    BOOL fResult = FALSE;
-   void ** pDynLibPtr = ( void ** ) hb_parptrGC( hb_libRelease, 1 );
+   void ** pDynLibPtr = ( void ** ) hb_parptrGC( &s_gcDynlibFuncs, 1 );
 
    if( pDynLibPtr && *pDynLibPtr &&
        hb_vmLockModuleSymbols() )

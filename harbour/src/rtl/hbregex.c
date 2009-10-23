@@ -174,14 +174,13 @@ HB_FUNC( HB_REGEXCOMP )
       {
          pRegEx->fFree = FALSE;
          hb_retptrGC( pRegEx );
-         hb_gcUnlock( pRegEx );
       }
    }
 }
 
 HB_FUNC( HB_ISREGEX )
 {
-   hb_retl( hb_parptrGC( hb_regexRelease, 1 ) != NULL );
+   hb_retl( hb_regexIs( hb_param( 1, HB_IT_ANY ) ) );
 }
 
 HB_FUNC( HB_ATX )

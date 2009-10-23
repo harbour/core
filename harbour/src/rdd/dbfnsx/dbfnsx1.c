@@ -5189,7 +5189,7 @@ static void hb_nsxSortAddNodeKey( LPNSXSORTINFO pSort, UCHAR *pKeyVal, ULONG ulR
       {
          pSort->ulLastLeaf = ulPage;
          hb_nsxSetPageType( pSort->NodeList[ 0 ], NSX_LEAFPAGE );
-         hb_nsxSetKeyRecSize( pSort->NodeList[ iLevel ], pSort->recSize );
+         hb_nsxSetKeyRecSize( pSort->NodeList[ 0 ], pSort->recSize );
          pSort->NodeList[ 0 ]->uiOffset = NSX_LEAFKEYOFFSET;
       }
       else
@@ -5614,7 +5614,12 @@ static void hb_nsxSortOut( LPNSXSORTINFO pSort )
 #endif
 
    if( pSort->NodeList[ 0 ] == NULL )
+   {
       pSort->NodeList[ 0 ] = hb_nsxPageNew( pTag, TRUE );
+      hb_nsxSetPageType( pSort->NodeList[ 0 ], NSX_LEAFPAGE );
+      hb_nsxSetKeyRecSize( pSort->NodeList[ 0 ], pSort->recSize );
+      pSort->NodeList[ 0 ]->uiOffset = NSX_LEAFKEYOFFSET;
+   }
 
    iLevel = 0;
    ulPage = 0;
