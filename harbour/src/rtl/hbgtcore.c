@@ -1571,7 +1571,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-      case HB_GTI_CLIPBOARDPAST:
+      case HB_GTI_CLIPBOARDPASTE:
          if( HB_GTSELF_INFO( pGT, HB_GTI_CLIPBOARDDATA, pInfo ) )
             HB_GTSELF_INKEYSETTEXT( pGT, hb_itemGetCPtr( pInfo->pResult ),
                                          hb_itemGetCLen( pInfo->pResult ) );

@@ -80,7 +80,7 @@
 #define HB_GTI_FULLSCREEN       13  /* Is it full screen GT driver? */
 #define HB_GTI_KBDSUPPORT       14  /* Is it keyboard input supported? */
 #define HB_GTI_CLIPBOARDDATA    15  /* Get/Set clipboard */
-#define HB_GTI_CLIPBOARDPAST    16  /* Paste clipboard data into keyboard buffer */
+#define HB_GTI_CLIPBOARDPASTE   16  /* Paste clipboard data into keyboard buffer */
 #define HB_GTI_CURSORBLINKRATE  19  /* Get/Set cursor blinking rate in milliseconds */
 #define HB_GTI_DESKTOPROWS      20  /* Get Size of desktop in character rows */
 #define HB_GTI_DESKTOPCOLS      21  /* Get Size of desktop in character cols */
