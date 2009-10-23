@@ -164,7 +164,7 @@ HB_FUNC( HB_REGEXCOMP )
       int iFlags = HBREG_EXTENDED;
       PHB_REGEX pRegEx;
 
-      if( HB_ISLOG( 2 ) && !hb_parl( 2 ) )
+      if( !hb_parldef( 2, 1 ) )
          iFlags |= HBREG_ICASE;
       if( hb_parl( 3 ) )
          iFlags |= HBREG_NEWLINE;
@@ -201,7 +201,7 @@ HB_FUNC( HB_ATX )
    pszString = hb_itemGetCPtr( pString );
    ulLen     = hb_itemGetCLen( pString );
    pRegEx = hb_regexGet( hb_param( 1, HB_IT_ANY ),
-                         HB_ISLOG( 3 ) && !hb_parl( 3 ) ? HBREG_ICASE : 0 );
+                         !hb_parldef( 3, 1 ) ? HBREG_ICASE : 0 );
    if( !pRegEx )
       return;
 
@@ -258,7 +258,7 @@ static BOOL hb_regex( int iRequest )
       return FALSE;
    }
    pRegEx = hb_regexGet( hb_param( 1, HB_IT_ANY ),
-                         ( HB_ISLOG( 3 ) && !hb_parl( 3 ) ? HBREG_ICASE : 0 ) |
+                         ( !hb_parldef( 3, 1 ) ? HBREG_ICASE : 0 ) |
                          ( hb_parl( 4 ) ? HBREG_NEWLINE : 0 ) );
    if( !pRegEx )
       return FALSE;
@@ -361,7 +361,7 @@ static BOOL hb_regex( int iRequest )
             PHB_ITEM pAtxArray;
             int   iMax       = hb_parni( 5 );   /* max nuber of matches I want, 0 = unlimited */
             int   iGetMatch  = hb_parni( 6 );   /* Gets if want only one single match or a sub-match */
-            BOOL  fOnlyMatch = ! HB_ISLOG( 7 ) || hb_parl( 7 ); /* if TRUE returns only matches and sub-matches, not positions */
+            BOOL  fOnlyMatch = hb_parldef( 7, 1 ); /* if TRUE returns only matches and sub-matches, not positions */
             ULONG ulOffSet   = 0;
             int   iCount     = 0;
             int   iSO, iEO;

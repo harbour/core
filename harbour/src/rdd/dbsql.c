@@ -355,10 +355,10 @@ HB_FUNC( __DBSQL )
       PHB_ITEM pWhile         = hb_param( 6, HB_IT_BLOCK );
       PHB_ITEM pNext          = hb_param( 7, HB_IT_NUMERIC );
       PHB_ITEM pRecord        = HB_ISNIL( 8 ) ? NULL : hb_param( 8, HB_IT_ANY );
-      BOOL fRest              = pWhile != NULL || ( HB_ISLOG( 9 ) && hb_parl( 9 ) );
-      BOOL fAppend            = HB_ISLOG( 10 ) && hb_parl( 10 );
-      BOOL fInsert            = HB_ISLOG( 11 ) && hb_parl( 11 );
-      BOOL fRecno             = HB_ISLOG( 12 ) && hb_parl( 12 );
+      BOOL fRest              = pWhile != NULL || hb_parl( 9 );
+      BOOL fAppend            = hb_parl( 10 );
+      BOOL fInsert            = hb_parl( 11 );
+      BOOL fRecno             = hb_parl( 12 );
       const char * szSep      = hb_parcx( 13 );
       const char * szDelim    = hb_parcx( 14 );
       const char * szEsc      = hb_parcx( 15 );

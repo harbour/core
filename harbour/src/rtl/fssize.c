@@ -145,5 +145,5 @@ HB_FOFFSET hb_fsFSize( const char * pszFileName, BOOL bUseDirEntry )
 HB_FUNC( HB_FSIZE )
 {
    const char * pszFile = hb_parc( 1 );
-   hb_retnint( pszFile ? hb_fsFSize( pszFile, HB_ISLOG( 2 ) ? hb_parl( 2 ) : TRUE ) : 0 );
+   hb_retnint( pszFile ? hb_fsFSize( pszFile, hb_parldef( 2, 1 ) ) : 0 );
 }

@@ -586,8 +586,8 @@ HB_FUNC( ISLEAP )
  */
 HB_FUNC( DAYSTOMONTH )
 {
-   int iMonth = ( HB_ISNUM( 1 ) ? hb_parni( 1 ) : 0 );
-   BOOL bLeap = ( HB_ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
+   int iMonth = hb_parni( 1 );
+   BOOL bLeap = hb_parl( 2 );
 
    hb_retni( ct_daystomonth( iMonth, bLeap ) );
 }
@@ -622,8 +622,8 @@ HB_FUNC( DAYSTOMONTH )
  */
 HB_FUNC( DAYSINMONTH )
 {
-   int iMonth = ( HB_ISNUM( 1 ) ? hb_parni( 1 ) : 0 );
-   BOOL bLeap = ( HB_ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
+   int iMonth = hb_parni( 1 );
+   BOOL bLeap = hb_parl( 2 );
 
    hb_retni( ct_daysinmonth( iMonth, bLeap ) );
 
@@ -838,7 +838,7 @@ HB_FUNC( WEEK )
 {
    int iYear, iMonth, iDay, iWeek;
    long lDate;
-   BOOL bSWN = ( HB_ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
+   BOOL bSWN = hb_parl( 2 );
 
    if( HB_ISDATETIME( 1 ) )
    {

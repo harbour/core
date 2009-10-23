@@ -392,7 +392,7 @@ static void s_listenRet( HB_SOCKET sd, const char * szRootPath )
 HB_FUNC( NETIO_SERVERSTOP )
 {
    PHB_LISTENSD lsd = s_listenParam( 1, FALSE );
-   BOOL fStop = !HB_ISLOG( 2 ) || hb_parl( 2 );
+   BOOL fStop = hb_parldef( 2, 1 );
 
    if( lsd )
       lsd->stop = fStop;

@@ -236,7 +236,7 @@ HB_FUNC( FAHRENHEIT )
 
 HB_FUNC( INFINITY )
 {
-   if( HB_ISLOG( 1 ) && hb_parl( 1 ) )
+   if( hb_parl( 1 ) )
       hb_retnd( DBL_MAX );
    else
       hb_retnd( 93786976294838206460.00 );

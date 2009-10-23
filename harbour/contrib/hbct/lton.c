@@ -55,5 +55,5 @@
 
 HB_FUNC( LTON )
 {
-   hb_retni( HB_ISLOG( 1 ) && hb_parl( 1 ) ? 1 : 0 );
+   hb_retni( hb_parl( 1 ) );
 }

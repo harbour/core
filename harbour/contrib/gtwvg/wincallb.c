@@ -175,8 +175,8 @@ HB_FUNC( _ASCALLBACK )
       return;
    }
 
-   Callback.iFormalParams = HB_ISNUM( 3 ) ? hb_parni( 3 ) : 4 ;      /* default to 4 formal parameters */
-   Callback.bVoid         = HB_ISLOG( 4 ) ? hb_parl ( 4 ) : FALSE;   /* default to non-void function   */
+   Callback.iFormalParams = HB_ISNUM( 3 ) ? hb_parni( 3 ) : 4;    /* default to 4 formal parameters */
+   Callback.bVoid         = hb_parl( 4 );                         /* default to non-void function   */
    Callback.iCargoParams  = hb_pcount() - 4;
 
    Callback.pParams = ( PHB_ITEM * ) hb_xgrab( Callback.iCargoParams * sizeof( PHB_ITEM ) );

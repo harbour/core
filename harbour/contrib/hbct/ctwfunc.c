@@ -121,7 +121,7 @@ HB_FUNC( WSETSHADOW )
 
 HB_FUNC( WSETMOVE )
 {
-   hb_retl( hb_ctwSetMoveMode( HB_ISLOG( 1 ) ? hb_parl( 1 ) : -1 ) != 0 );
+   hb_retl( hb_ctwSetMoveMode( hb_parldef( 1, -1 ) ) != 0 );
 }
 
 HB_FUNC( WSTEP )
@@ -134,10 +134,10 @@ HB_FUNC( WSTEP )
 
 HB_FUNC( WMODE )
 {
-   hb_retni( hb_ctwSetBorderMode( HB_ISLOG( 1 ) ? ( hb_parl( 1 ) ? 1 : 0 ) : -1,
-                                  HB_ISLOG( 2 ) ? ( hb_parl( 2 ) ? 1 : 0 ) : -1,
-                                  HB_ISLOG( 3 ) ? ( hb_parl( 3 ) ? 1 : 0 ) : -1,
-                                  HB_ISLOG( 4 ) ? ( hb_parl( 4 ) ? 1 : 0 ) : -1 ) );
+   hb_retni( hb_ctwSetBorderMode( hb_parldef( 1, -1 ),
+                                  hb_parldef( 2, -1 ),
+                                  hb_parldef( 3, -1 ),
+                                  hb_parldef( 4, -1 ) ) );
 }
 
 HB_FUNC( WBOARD )
@@ -156,7 +156,7 @@ HB_FUNC( WOPEN )
    hb_retni( hb_ctwCreateWindow( hb_parni( 1 ), hb_parni( 2 ),
                                  hb_parni( 3 ), hb_parni( 4 ),
                                  hb_parl( 5 ), iColor,
-                                 !HB_ISLOG( 7 ) || hb_parl( 7 ) ) );
+                                 hb_parldef( 7, 1 ) ) );
 }
 
 HB_FUNC( WCLOSE )
@@ -175,7 +175,7 @@ HB_FUNC( WSELECT )
 {
    /* 2-nd parameter (fBringToTop) is Harbour extension */
    hb_retni( HB_ISNUM( 1 ) ? hb_ctwSelectWindow( hb_parni( 1 ),
-                                              !HB_ISLOG( 2 ) || hb_parl( 2 ) ) :
+                                                 hb_parldef( 2, 1 ) ) :
                           hb_ctwCurrentWindow() );
 }
 
@@ -342,7 +342,7 @@ HB_FUNC( CTWLASTKEY )
 
 HB_FUNC( HBCT_MAXROW ) /* Return the maximum screen/window row number (zero origin) */
 {
-   if( HB_ISLOG( 1 ) && hb_parl( 1 ) )
+   if( hb_parl( 1 ) )
    {
       int iRows, iCols;
       hb_gtScrDim( &iRows, &iCols );
@@ -354,7 +354,7 @@ HB_FUNC( HBCT_MAXROW ) /* Return the maximum screen/window row number (zero orig
 
 HB_FUNC( HBCT_MAXCOL ) /* Return the maximum screen/window column number (zero origin) */
 {
-   if( HB_ISLOG( 1 ) && hb_parl( 1 ) )
+   if( hb_parl( 1 ) )
    {
       int iRows, iCols;
       hb_gtScrDim( &iRows, &iCols );

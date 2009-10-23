@@ -908,8 +908,8 @@ HB_FUNC( HB_I18N_CODEPAGE )
 
    if( pI18N )
       hb_retc( hb_i18n_setcodepage( pI18N, hb_parc( iParam ),
-                                    HB_ISLOG( iParam + 1 ) && hb_parl( iParam + 1 ),
-                                    HB_ISLOG( iParam + 2 ) && hb_parl( iParam + 2 ) ) );
+                                    hb_parl( iParam + 1 ),
+                                    hb_parl( iParam + 2 ) ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 
@@ -925,7 +925,7 @@ HB_FUNC( HB_I18N_PLURALFORM )
    {
       PHB_ITEM pOldForm = hb_itemNew( NULL );
       PHB_ITEM pForm = hb_param( iParam, HB_IT_STRING | HB_IT_BLOCK );
-      BOOL fBase = HB_ISLOG( iParam + 1 ) && hb_parl( iParam + 1 );
+      BOOL fBase = hb_parl( iParam + 1 );
 
       if( hb_i18n_getpluralform( pI18N, pOldForm, fBase ) )
          hb_itemReturn( pOldForm );

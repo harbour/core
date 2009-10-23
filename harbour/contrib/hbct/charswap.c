@@ -93,7 +93,7 @@ static void do_charswap( int iSwitch )
       if( iSwitch == DO_CHARSWAP_WORDSWAP )
       {
          iShift = 4;
-         if( HB_ISLOG( 2 ) && hb_parl( 2 ) )
+         if( hb_parl( 2 ) )
          {
             iSwitch = DO_CHARSWAP_WORDSWAP_CHARSWAP;
          }

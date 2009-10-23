@@ -1305,8 +1305,7 @@ HB_FUNC( HB_SERIALIZE )
       cdpIn = pszCdpIn ? hb_cdpFindExt( pszCdpIn ) : hb_vmCDP();
       cdpOut = pszCdpOut ? hb_cdpFindExt( pszCdpOut ) : hb_vmCDP();
 
-      pBuffer = hb_itemSerializeCP( pItem, HB_ISLOG( 2 ) && hb_parl( 2 ),
-                                    cdpIn, cdpOut, &ulSize );
+      pBuffer = hb_itemSerializeCP( pItem, hb_parl( 2 ), cdpIn, cdpOut, &ulSize );
       hb_retclen_buffer( pBuffer, ulSize );
    }
 }

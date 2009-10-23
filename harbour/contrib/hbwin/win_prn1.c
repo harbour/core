@@ -178,7 +178,7 @@ HB_FUNC( WIN_ENDDOC )
 
    if( hDC )
    {
-      if( HB_ISLOG( 2 ) && hb_parl( 2 ) )
+      if( hb_parl( 2 ) )
          Result = ( AbortDoc( hDC ) > 0 );
       else
          Result = ( EndDoc( hDC ) > 0 );
@@ -297,7 +297,7 @@ HB_FUNC( WIN_GETTEXTSIZE )
 
       GetTextExtentPoint32( hDC, lpData, iLen, &sSize );       /* Get the length of the text in device size */
 
-      if( HB_ISLOG( 4 ) && !hb_parl( 4 ) )
+      if( !hb_parldef( 4, 1 ) )
          Result = ( LONG ) sSize.cy;    /* return the height */
       else
          Result = ( LONG ) sSize.cx;    /* return the width */
@@ -319,7 +319,7 @@ HB_FUNC( WIN_GETCHARSIZE )
       TEXTMETRIC tm;
 
       GetTextMetrics( hDC, &tm );
-      if( HB_ISLOG( 2 ) && hb_parl( 2 ) )
+      if( hb_parl( 2 ) )
          Result = ( LONG ) tm.tmHeight;
       else
          Result = ( LONG ) tm.tmAveCharWidth;

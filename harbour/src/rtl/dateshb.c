@@ -424,7 +424,7 @@ HB_FUNC( HB_TSTOSTR )
       char szBuffer[ 24 ];
 
       hb_timeStampStr( szBuffer, lDate, lTime );
-      if( HB_ISLOG( 2 ) && hb_parl( 2 ) )
+      if( hb_parl( 2 ) )
       {
          if( lTime == 0 )
          {

@@ -1600,7 +1600,7 @@ HB_FUNC( __MVRESTORE )
          bIncludeMask = TRUE;
 #else
          pszMask = hb_memvarGetMask( 3 );
-         bIncludeMask = ! HB_ISLOG( 4 ) || hb_parl( 4 );
+         bIncludeMask = hb_parldef( 4, 1 );
 #endif
 
          while( hb_fsRead( fhnd, buffer, HB_MEM_REC_LEN ) == HB_MEM_REC_LEN )

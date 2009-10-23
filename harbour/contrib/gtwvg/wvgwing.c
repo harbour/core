@@ -881,9 +881,9 @@ HB_FUNC( WVG_CHOOSEFONT )
    Flags = Flags | CF_NOSIMULATIONS;        /* ::synthesizeFonts  == .f. */
    #endif
 
-   if( HB_ISLOG( 5 ) &&  hb_parl( 5 ) )
+   if( hb_parl( 5 ) )
       Flags = Flags | CF_SCREENFONTS;
-   if( HB_ISLOG( 6 ) &&  hb_parl( 6 ) )
+   if( hb_parl( 6 ) )
       Flags = Flags | CF_PRINTERFONTS;
 
    cf.lStructSize      = sizeof( CHOOSEFONT );
@@ -1055,7 +1055,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
          HB_TCHAR_FREE( szCaption );
 
          #if 1
-         if( HB_ISLOG( 6 ) && ( hb_parl( 6 ) ) )
+         if( hb_parl( 6 ) )
          {
             SendMessage( hWndTB, TB_SETMAXTEXTROWS, ( WPARAM ) 0, ( LPARAM ) 0 );
          }

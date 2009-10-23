@@ -422,7 +422,7 @@ HB_FUNC( PRINTERPORTTONAME )
 
    if( HB_ISCHAR( 1 ) && hb_parclen( 1 ) > 0 &&
        hb_GetPrinterNameByPort( szDefaultPrinter, &pdwBufferSize, hb_parcx( 1 ),
-                                HB_ISLOG( 2 ) ? hb_parl( 2 ) : FALSE ) )
+                                hb_parl( 2 ) ) )
       hb_retc( szDefaultPrinter );
    else
       hb_retc_null();
@@ -531,7 +531,7 @@ HB_FUNC( GETPRINTERS )
    if( HB_ISLOG( 1 ) )
       bPrinterNamesOnly = ! hb_parl( 1 );
 
-   bLocalPrintersOnly = HB_ISLOG( 2 ) ? hb_parl( 2 ) : FALSE;
+   bLocalPrintersOnly = hb_parl( 2 );
 
    if( hb_iswinnt() )
    {

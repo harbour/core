@@ -233,7 +233,7 @@ static const char * hb_mlGetParams( int iParAdd, ULONG * pulLen,
          * pulLineLength = 79;
       * pulLen = hb_parclen( 1 );
       * pulTabSize = HB_ISNUM( 3 + iParAdd ) ? hb_parnl( 3 + iParAdd ) : 4;
-      * pfWordWrap = HB_ISLOG( 4 + iParAdd ) ? hb_parl( 4 + iParAdd ) : TRUE;
+      * pfWordWrap = hb_parldef( 4 + iParAdd, 1 );
       * pEOLs = hb_mlGetEOLs( 5 + iParAdd, piEOLs );
 #ifdef HB_CLP_STRICT
       if( * pulLineLength > 254 )

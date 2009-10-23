@@ -140,8 +140,8 @@ HB_FUNC( STRFILE )
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
       hb_retnl( ct_StrFile( hb_parc( 2 ), hb_parc( 1 ),
-                            hb_parclen( 1 ), HB_ISLOG( 3 ) && hb_parl( 3 ),
-                            hb_parnl( 4 ), HB_ISLOG( 5 ) && hb_parl( 5 ) ) );
+                            hb_parclen( 1 ), hb_parl( 3 ),
+                            hb_parnl( 4 ), hb_parl( 5 ) ) );
    }
    else
       hb_retni( 0 );
@@ -158,7 +158,7 @@ HB_FUNC( FILESTR )
          LONG lFileSize = hb_fsSeek( hFile, 0, FS_END );
          LONG lPos = hb_fsSeek( hFile, hb_parnl( 3 ), FS_SET ), lLength;
          char *pcResult, *pCtrlZ;
-         BOOL bCtrlZ = HB_ISLOG( 4 ) && hb_parl( 4 );
+         BOOL bCtrlZ = hb_parl( 4 );
 
          if( HB_ISNUM( 2 ) )
          {
@@ -205,8 +205,8 @@ HB_FUNC( SCREENFILE )
       hb_gtSave( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), pBuffer );
 
       hb_retnl( ct_StrFile( hb_parc( 1 ), pBuffer,
-                            ulSize, HB_ISLOG( 2 ) && hb_parl( 2 ), hb_parnl( 3 ),
-                            HB_ISLOG( 4 ) && hb_parl( 4 ) ) );
+                            ulSize, hb_parl( 2 ), hb_parnl( 3 ),
+                            hb_parl( 4 ) ) );
       hb_xfree( pBuffer );
    }
    else

@@ -170,7 +170,7 @@ HB_FUNC( SAYMOVEIN )
       BOOL fBack;
 
       lDelay = HB_ISNUM( 2 ) ? hb_parnl( 2 ) : 4;
-      fBack = HB_ISLOG( 5 ) && hb_parl( 5 );
+      fBack = hb_parl( 5 );
 
       iMaxRow = hb_gtMaxRow();
       iMaxCol = hb_gtMaxCol();
@@ -426,14 +426,14 @@ HB_FUNC( _HB_CTDSPTIME )
    hb_dateTimeStr( szTime );
    iLen = 8;
 
-   if( HB_ISLOG( 3 ) && hb_parl( 3 ) )
+   if( hb_parl( 3 ) )
       iLen -= 3;
 
-   if( HB_ISLOG( 5 ) && hb_parl( 5 ) )
+   if( hb_parl( 5 ) )
    {
       int iHour = ( szTime[0] - '0' ) * 10 + ( szTime[1] - '0' );
 
-      if( HB_ISLOG( 6 ) && hb_parl( 6 ) )
+      if( hb_parl( 6 ) )
          szTime[iLen++] = iHour >= 12 ? 'p' : 'a';
       if( iHour > 12 )
          iHour -= 12;

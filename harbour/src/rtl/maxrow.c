@@ -79,7 +79,7 @@ HB_FUNC( MAXROW ) /* Return the maximum screen/window row number (zero origin) *
     * in CT3, [druzus]
     */
 
-   if( HB_ISLOG( 1 ) && hb_parl( 1 ) )
+   if( hb_parl( 1 ) )
    {
       int iRows, iCols;
       hb_gtScrDim( &iRows, &iCols );
@@ -94,7 +94,7 @@ HB_FUNC( MAXCOL ) /* Return the maximum screen/window column number (zero origin
 {
 #ifdef HB_COMPAT_CT3
    /* See notes about MaxRow(.T.) above */
-   if( HB_ISLOG( 1 ) && hb_parl( 1 ) )
+   if( hb_parl( 1 ) )
    {
       int iRows, iCols;
       hb_gtScrDim( &iRows, &iCols );

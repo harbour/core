@@ -93,7 +93,7 @@ HB_FUNC( HB_STRCDECODE )
    if( pText )
    {
       ULONG ulLen = hb_itemGetCLen( pText );
-      BOOL fCont = HB_ISLOG( 2 ) && hb_parl( 2 );
+      BOOL fCont = hb_parl( 2 );
       if( ulLen > 0 )
       {
          const char * pszSrc = hb_itemGetCPtr( pText );

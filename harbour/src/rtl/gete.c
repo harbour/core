@@ -166,7 +166,7 @@ HB_FUNC( HB_GETENV )
          szValue = hb_getenv( pszName );
          if( szValue && szValue[ 0 ] != '\0' )
          {
-            if( ! HB_ISLOG( 3 ) || hb_parl( 3 ) )
+            if( hb_parldef( 3, 1 ) )
                szValue = ( char * ) hb_osDecodeCP( szValue, NULL, NULL );
             hb_retc_buffer( szValue );
          }
@@ -196,7 +196,7 @@ HB_FUNC( HB_SETENV )
       const char * pszValue = hb_parc( 2 );
       char * pszFreeName = NULL, * pszFreeVal = NULL;
 
-      if( ( ! HB_ISLOG( 3 ) || hb_parl( 3 ) ) )
+      if( hb_parldef( 3, 1 ) )
       {
          pszName = hb_osEncodeCP( pszName, &pszFreeName, NULL );
          if( pszValue )

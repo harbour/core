@@ -1332,7 +1332,7 @@ HB_FUNC( FT_FWRITEL )
 {
    const char * theData  = hb_parc( 1 );
    int      iDataLen = hb_parclen( 1 );
-   int      lInsert  = ( HB_ISLOG( 2 ) ? hb_parl( 2 ) : 0 );
+   int      lInsert  = hb_parl( 2 );
    int      err;
    int      iLineLen = 0;
    int      iRead, iEOL;

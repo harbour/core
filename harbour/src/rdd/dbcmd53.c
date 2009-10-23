@@ -159,7 +159,7 @@ HB_FUNC( ORDFINDREC )
       memset( &pOrderInfo, 0, sizeof( DBORDERINFO ) );
       pOrderInfo.itmNewVal = hb_param( 1 , HB_IT_NUMERIC );
       pOrderInfo.itmResult = hb_itemPutL( NULL, FALSE );
-      SELF_ORDINFO( pArea, HB_ISLOG( 2 ) && hb_parl( 2 ) ? DBOI_FINDRECCONT :
+      SELF_ORDINFO( pArea, hb_parl( 2 ) ? DBOI_FINDRECCONT :
                                           DBOI_FINDREC, &pOrderInfo );
       hb_itemReturnRelease( pOrderInfo.itmResult );
    }

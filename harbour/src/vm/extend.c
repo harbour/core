@@ -431,6 +431,26 @@ int  hb_parl( int iParam )
    return 0;
 }
 
+int  hb_parldef( int iParam, int iDefValue )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parldef(%d,%d)", iParam, iDefValue));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_LOGICAL( pItem ) )
+         return pItem->item.asLogical.value ? 1 : 0;
+   }
+
+   return iDefValue;
+}
+
 double  hb_parnd( int iParam )
 {
    HB_STACK_TLS_PRELOAD

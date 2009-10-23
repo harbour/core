@@ -4243,9 +4243,9 @@ HB_FUNC_STATIC( msgClassSel )
       USHORT nParam, nScope;
       BOOL lFull;
 
-      nParam = hb_pcount() > 0 ? ( USHORT ) hb_parni( 1 ) : HB_MSGLISTALL;
-      nScope = hb_pcount() > 1 ? ( USHORT ) hb_parni( 2 ) : 0;
-      lFull = hb_pcount() > 2 && HB_ISLOG( 3 ) && hb_parl( 3 );
+      nParam = hb_parnidef( 1, HB_MSGLISTALL );
+      nScope = ( USHORT ) hb_parni( 2 );
+      lFull = hb_parl( 3 );
       pReturn = hb_itemArrayNew( pClass->uiMethods );
 
       do
@@ -4867,7 +4867,7 @@ HB_FUNC( __CLSGETPROPERTIES )
       ULONG ulLimit, ulCount;
       USHORT uiScope = HB_OO_CLSTP_PERSIST;
 
-      if( HB_ISLOG( 2 ) && hb_parl( 2 ) )
+      if( hb_parl( 2 ) )
          uiScope |= HB_OO_CLSTP_EXPORTED;
 
       ulCount = 0;

@@ -1354,7 +1354,7 @@ HB_FUNC( HB_THREADWAIT )
 #if defined( HB_MT_VM )
 #  define HB_THREAD_WAIT_ALLOC  16
    HB_STACK_TLS_PRELOAD
-   BOOL fAll = FALSE;
+   BOOL fAll;
    ULONG ulMilliSec = HB_THREAD_INFINITE_WAIT;
    PHB_THREADSTATE * pThreads, pAlloc[ HB_THREAD_WAIT_ALLOC ];
    int iThreads = -1;
@@ -1397,8 +1397,7 @@ HB_FUNC( HB_THREADWAIT )
          ulMilliSec = dTimeOut > 0 ? ( ULONG ) ( dTimeOut * 1000 ) : 0;
       }
 
-      if( HB_ISLOG( 3 ) )
-         fAll = hb_parl( 3 );
+      fAll = hb_parl( 3 );
 
       hb_retni( hb_threadWait( pThreads, iThreads, fAll, ulMilliSec ) );
    }

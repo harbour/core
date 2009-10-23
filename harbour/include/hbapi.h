@@ -632,6 +632,7 @@ extern HB_EXPORT long         hb_pardl( int iParam ); /* retrieve a date as a lo
 extern HB_EXPORT double       hb_partd( int iParam ); /* retrieve a timestamp as a double number */
 extern HB_EXPORT BOOL         hb_partdt( long * plJulian, long * plMilliSec , int iParam ); /* retrieve a timestamp as two long numbers */
 extern HB_EXPORT int          hb_parl( int iParam ); /* retrieve a logical parameter as an int */
+extern HB_EXPORT int          hb_parldef( int iParam, int iDefValue ); /* retrieve a logical parameter as an int, return default value if parameter isn't logical */
 extern HB_EXPORT double       hb_parnd( int iParam ); /* retrieve a numeric parameter as a double */
 extern HB_EXPORT int          hb_parni( int iParam ); /* retrieve a numeric parameter as a integer */
 extern HB_EXPORT int          hb_parnidef( int iParam, int iDefValue ); /* retrieve a numeric parameter as a integer, return default value if parameter isn't numeric */

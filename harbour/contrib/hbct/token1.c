@@ -792,7 +792,7 @@ HB_FUNC( TOKENSEP )
 {
    char cRet;
 
-   if( HB_ISLOG( 1 ) && hb_parl( 1 ) )
+   if( hb_parl( 1 ) )
    {
       /* return the separator char BEHIND the last token */
       if( siPostSeparator != -1 )

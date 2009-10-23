@@ -200,7 +200,7 @@ HB_FUNC( NTOCOLOR )
 
    if( iColor >= 0x00 && iColor <= 0xff )
    {
-      if( HB_ISLOG( 2 ) && hb_parl( 2 ) )
+      if( hb_parl( 2 ) )
          hb_gtColorsToString( &iColor, 1, szColorString, 10 );
       else
          hb_snprintf( szColorString, 10, "%02d/%02d", iColor & 0x0f, iColor >> 4 );

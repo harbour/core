@@ -85,7 +85,7 @@ HB_FUNC( MSETCURSOR )
 
 HB_FUNC( MROW )
 {
-   if( HB_ISLOG( 1 ) && hb_parl( 1 ) )
+   if( hb_parl( 1 ) )
    {
       int iRow, iCol;
 
@@ -98,7 +98,7 @@ HB_FUNC( MROW )
 
 HB_FUNC( MCOL )
 {
-   if( HB_ISLOG( 1 ) && hb_parl( 1 ) )
+   if( hb_parl( 1 ) )
    {
       int iRow, iCol;
 

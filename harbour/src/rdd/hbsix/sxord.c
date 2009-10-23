@@ -652,7 +652,7 @@ HB_FUNC( SX_SEEKLAST )
    if( pArea && hb_pcount() > 0 )
    {
       PHB_ITEM pKey = hb_param( 1, HB_IT_ANY );
-      BOOL bSoftSeek = HB_ISLOG( 2 ) && hb_parl( 2 );
+      BOOL bSoftSeek = hb_parl( 2 );
 
       if( SELF_SEEK( pArea, bSoftSeek, pKey, TRUE ) == HB_SUCCESS )
       {
@@ -683,7 +683,7 @@ HB_FUNC( SX_WILDSEEK )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
    const char * szPattern = hb_parc( 1 );
-   BOOL fCont = HB_ISLOG( 2 ) && hb_parl( 2 );
+   BOOL fCont = hb_parl( 2 );
    BOOL fFound = FALSE;
    int iOrder = 0;
 

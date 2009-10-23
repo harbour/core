@@ -280,7 +280,7 @@ HB_FUNC( DBAPPEND )
 
    if( pArea )
    {
-      BOOL bUnLockAll = HB_ISLOG( 1 ) ? hb_parl( 1 ) : TRUE;
+      BOOL bUnLockAll = hb_parldef( 1, 1 );
       HB_ERRCODE errCode;
 
       /* Clipper clears NETERR flag before APPEND */
@@ -740,7 +740,7 @@ HB_FUNC( DBSEEK )
       {
          PHB_ITEM pKey = hb_param( 1, HB_IT_ANY );
          BOOL bSoftSeek = HB_ISLOG( 2 ) ? ( BOOL ) hb_parl( 2 ) : hb_setGetSoftSeek();
-         BOOL bFindLast = HB_ISLOG( 3 ) ? hb_parl( 3 ) : FALSE, fFound = FALSE;
+         BOOL bFindLast = hb_parl( 3 ), fFound = FALSE;
          if( SELF_SEEK( pArea, bSoftSeek, pKey, bFindLast ) == HB_SUCCESS )
          {
             if( SELF_FOUND( pArea, &fFound ) != HB_SUCCESS )
@@ -1195,7 +1195,7 @@ HB_FUNC( ORDCONDSET )
       pItem = hb_param( 2, HB_IT_BLOCK );
       lpdbOrdCondInfo->itmCobFor = pItem ? hb_itemNew( pItem ) : NULL;
 
-      lpdbOrdCondInfo->fAll = ! HB_ISLOG( 3 ) || hb_parl( 3 );
+      lpdbOrdCondInfo->fAll = hb_parldef( 3, 1 );
 
       lpdbOrdCondInfo->abWhile = hb_parclen( 17 ) > 0 ?
                                  hb_strdup( hb_parc( 17 ) ) : NULL;
