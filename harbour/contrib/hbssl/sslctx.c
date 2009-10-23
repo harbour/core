@@ -71,14 +71,20 @@ static HB_GARBAGE_FUNC( SSL_CTX_release )
    }
 }
 
+static const HB_GC_FUNCS s_gcSSL_CTX_funcs =
+{
+   SSL_CTX_release,
+   hb_gcDummyMark
+};
+
 void * hb_SSL_CTX_is( int iParam )
 {
-   return hb_parptrGC( SSL_CTX_release, iParam );
+   return hb_parptrGC( &s_gcSSL_CTX_funcs, iParam );
 }
 
 SSL_CTX * hb_SSL_CTX_par( int iParam )
 {
-   void ** ph = ( void ** ) hb_parptrGC( SSL_CTX_release, iParam );
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcSSL_CTX_funcs, iParam );
 
    return ph ? ( SSL_CTX * ) * ph : NULL;
 }
@@ -109,7 +115,7 @@ const SSL_METHOD * hb_ssl_method_id_to_ptr( int n )
 
 HB_FUNC( SSL_CTX_NEW )
 {
-   void ** ph = ( void ** ) hb_gcAlloc( sizeof( SSL_CTX * ), SSL_CTX_release );
+   void ** ph = ( void ** ) hb_gcAllocate( sizeof( SSL_CTX * ), &s_gcSSL_CTX_funcs );
 
 #if OPENSSL_VERSION_NUMBER < 0x10000000L
    SSL_CTX * ctx = SSL_CTX_new( ( SSL_METHOD * ) hb_ssl_method_id_to_ptr( HB_ISNUM( 1 ) ? hb_parni( 1 ) : HB_SSL_CTX_NEW_METHOD_DEFAULT ) );

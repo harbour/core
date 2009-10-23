@@ -70,21 +70,27 @@ static HB_GARBAGE_FUNC( X509_release )
    }
 }
 
+static const HB_GC_FUNCS s_gcX509_funcs =
+{
+   X509_release,
+   hb_gcDummyMark
+};
+
 void * hb_X509_is( int iParam )
 {
-   return hb_parptrGC( X509_release, iParam );
+   return hb_parptrGC( &s_gcX509_funcs, iParam );
 }
 
 X509 * hb_X509_par( int iParam )
 {
-   void ** ph = ( void ** ) hb_parptrGC( X509_release, iParam );
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcX509_funcs, iParam );
 
    return ph ? ( X509 * ) * ph : NULL;
 }
 
 void hb_X509_ret( X509 * x509 )
 {
-   void ** ph = ( void ** ) hb_gcAlloc( sizeof( X509 * ), X509_release );
+   void ** ph = ( void ** ) hb_gcAllocate( sizeof( X509 * ), &s_gcX509_funcs );
 
    * ph = ( void * ) x509;
 

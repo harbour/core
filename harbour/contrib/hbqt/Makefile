@@ -20,17 +20,17 @@ ifneq ($(HB_HAS_QT),)
    include $(TOP)$(ROOT)config/header.mk
    include $(TOP)$(ROOT)config/lib.mk
 
-   DIRS += \
-      qtcore \
-      qtgui \
-      qtnetwork \
-      qtwebkit    
-
    ifneq ($(filter $(HB_PLATFORM),win wce),)
       ifneq ($(HB_QT_STATIC),)
          DIRS += hbqts
       endif
    endif
+
+   DIRS += \
+      qtcore \
+      qtgui \
+      qtnetwork \
+      qtwebkit    
 
    include $(TOP)$(ROOT)config/dir.mk
 endif

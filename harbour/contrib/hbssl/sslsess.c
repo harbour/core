@@ -70,21 +70,27 @@ static HB_GARBAGE_FUNC( SSL_SESSION_release )
    }
 }
 
+static const HB_GC_FUNCS s_gcSSL_SESSION_funcs =
+{
+   SSL_SESSION_release,
+   hb_gcDummyMark
+};
+
 void * hb_SSL_SESSION_is( int iParam )
 {
-   return hb_parptrGC( SSL_SESSION_release, iParam );
+   return hb_parptrGC( &s_gcSSL_SESSION_funcs, iParam );
 }
 
 SSL_SESSION * hb_SSL_SESSION_par( int iParam )
 {
-   void ** ph = ( void ** ) hb_parptrGC( SSL_SESSION_release, iParam );
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcSSL_SESSION_funcs, iParam );
 
    return ph ? ( SSL_SESSION * ) * ph : NULL;
 }
 
 HB_FUNC( SSL_SESSION_NEW )
 {
-   void ** ph = ( void ** ) hb_gcAlloc( sizeof( SSL_SESSION * ), SSL_SESSION_release );
+   void ** ph = ( void ** ) hb_gcAllocate( sizeof( SSL_SESSION * ), &s_gcSSL_SESSION_funcs );
 
    SSL_SESSION * session = SSL_SESSION_new();
 

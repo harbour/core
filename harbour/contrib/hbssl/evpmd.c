@@ -78,14 +78,20 @@ static HB_GARBAGE_FUNC( EVP_MD_CTX_release )
    }
 }
 
+static const HB_GC_FUNCS s_gcEVP_MD_CTX_funcs =
+{
+   EVP_MD_CTX_release,
+   hb_gcDummyMark
+};
+
 static void * hb_EVP_MD_CTX_is( int iParam )
 {
-   return hb_parptrGC( EVP_MD_CTX_release, iParam );
+   return hb_parptrGC( &s_gcEVP_MD_CTX_funcs, iParam );
 }
 
 static EVP_MD_CTX * hb_EVP_MD_CTX_par( int iParam )
 {
-   void ** ph = ( void ** ) hb_parptrGC( EVP_MD_CTX_release, iParam );
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcEVP_MD_CTX_funcs, iParam );
 
    return ph ? ( EVP_MD_CTX * ) * ph : NULL;
 }
@@ -238,7 +244,7 @@ HB_FUNC( EVP_MD_BLOCK_SIZE )
 
 HB_FUNC( EVP_MD_CTX_CREATE )
 {
-   void ** ph = ( void ** ) hb_gcAlloc( sizeof( EVP_MD_CTX * ), EVP_MD_CTX_release );
+   void ** ph = ( void ** ) hb_gcAllocate( sizeof( EVP_MD_CTX * ), &s_gcEVP_MD_CTX_funcs );
 
    EVP_MD_CTX * ctx = EVP_MD_CTX_create();
 

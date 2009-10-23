@@ -80,14 +80,20 @@ static HB_GARBAGE_FUNC( EVP_CIPHER_CTX_release )
    }
 }
 
+static const HB_GC_FUNCS s_gcEVP_CIPHER_CTX_funcs =
+{
+   EVP_CIPHER_CTX_release,
+   hb_gcDummyMark
+};
+
 static void * hb_EVP_CIPHER_CTX_is( int iParam )
 {
-   return hb_parptrGC( EVP_CIPHER_CTX_release, iParam );
+   return hb_parptrGC( &s_gcEVP_CIPHER_CTX_funcs, iParam );
 }
 
 static EVP_CIPHER_CTX * hb_EVP_CIPHER_CTX_par( int iParam )
 {
-   void ** ph = ( void ** ) hb_parptrGC( EVP_CIPHER_CTX_release, iParam );
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcEVP_CIPHER_CTX_funcs, iParam );
 
    return ph ? ( EVP_CIPHER_CTX * ) * ph : NULL;
 }
@@ -426,7 +432,7 @@ HB_FUNC( EVP_CIPHER_TYPE )
 
 HB_FUNC( HB_EVP_CIPHER_CTX_CREATE )
 {
-   void ** ph = ( void ** ) hb_gcAlloc( sizeof( EVP_CIPHER_CTX * ), EVP_CIPHER_CTX_release );
+   void ** ph = ( void ** ) hb_gcAllocate( sizeof( EVP_CIPHER_CTX * ), &s_gcEVP_CIPHER_CTX_funcs );
 
    EVP_CIPHER_CTX * ctx = ( EVP_CIPHER_CTX * ) hb_xgrab( sizeof( EVP_CIPHER_CTX ) );
 

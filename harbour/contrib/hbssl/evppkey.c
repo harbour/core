@@ -73,21 +73,27 @@ static HB_GARBAGE_FUNC( EVP_PKEY_release )
    }
 }
 
+static const HB_GC_FUNCS s_gcEVP_PKEY_funcs =
+{
+   EVP_PKEY_release,
+   hb_gcDummyMark
+};
+
 void * hb_EVP_PKEY_is( int iParam )
 {
-   return hb_parptrGC( EVP_PKEY_release, iParam );
+   return hb_parptrGC( &s_gcEVP_PKEY_funcs, iParam );
 }
 
 EVP_PKEY * hb_EVP_PKEY_par( int iParam )
 {
-   void ** ph = ( void ** ) hb_parptrGC( EVP_PKEY_release, iParam );
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcEVP_PKEY_funcs, iParam );
 
    return ph ? ( EVP_PKEY * ) * ph : NULL;
 }
 
 HB_FUNC( EVP_PKEY_NEW )
 {
-   void ** ph = ( void ** ) hb_gcAlloc( sizeof( EVP_PKEY * ), EVP_PKEY_release );
+   void ** ph = ( void ** ) hb_gcAllocate( sizeof( EVP_PKEY * ), &s_gcEVP_PKEY_funcs );
 
    EVP_PKEY * ctx = EVP_PKEY_new();
 

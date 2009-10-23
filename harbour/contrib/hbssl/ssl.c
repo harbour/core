@@ -104,14 +104,20 @@ static HB_GARBAGE_FUNC( SSL_release )
    }
 }
 
+static const HB_GC_FUNCS s_gcSSL_funcs =
+{
+   SSL_release,
+   hb_gcDummyMark
+};
+
 void * hb_SSL_is( int iParam )
 {
-   return hb_parptrGC( SSL_release, iParam );
+   return hb_parptrGC( &s_gcSSL_funcs, iParam );
 }
 
 SSL * hb_SSL_par( int iParam )
 {
-   void ** ph = ( void ** ) hb_parptrGC( SSL_release, iParam );
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcSSL_funcs, iParam );
 
    return ph ? ( SSL * ) * ph : NULL;
 }
@@ -124,7 +130,7 @@ HB_FUNC( SSL_NEW )
 
       if( ctx )
       {
-         void ** ph = ( void ** ) hb_gcAlloc( sizeof( SSL * ), SSL_release );
+         void ** ph = ( void ** ) hb_gcAllocate( sizeof( SSL * ), &s_gcSSL_funcs );
 
          SSL * ssl = SSL_new( ctx );
 
@@ -145,7 +151,7 @@ HB_FUNC( SSL_DUP )
 
       if( ssl_par )
       {
-         void ** ph = ( void ** ) hb_gcAlloc( sizeof( SSL * ), SSL_release );
+         void ** ph = ( void ** ) hb_gcAllocate( sizeof( SSL * ), &s_gcSSL_funcs );
 
          SSL * ssl = SSL_dup( ssl_par );
 

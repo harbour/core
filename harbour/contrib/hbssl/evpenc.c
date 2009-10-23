@@ -73,21 +73,27 @@ static HB_GARBAGE_FUNC( EVP_ENCODE_CTX_release )
    }
 }
 
+static const HB_GC_FUNCS s_gcEVP_ENCODE_CTX_funcs =
+{
+   EVP_ENCODE_CTX_release,
+   hb_gcDummyMark
+};
+
 static void * hb_EVP_ENCODE_CTX_is( int iParam )
 {
-   return hb_parptrGC( EVP_ENCODE_CTX_release, iParam );
+   return hb_parptrGC( &s_gcEVP_ENCODE_CTX_funcs, iParam );
 }
 
 static EVP_ENCODE_CTX * hb_EVP_ENCODE_CTX_par( int iParam )
 {
-   void ** ph = ( void ** ) hb_parptrGC( EVP_ENCODE_CTX_release, iParam );
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcEVP_ENCODE_CTX_funcs, iParam );
 
    return ph ? ( EVP_ENCODE_CTX * ) * ph : NULL;
 }
 
 HB_FUNC( HB_EVP_ENCODE_CTX_CREATE )
 {
-   void ** ph = ( void ** ) hb_gcAlloc( sizeof( EVP_ENCODE_CTX * ), EVP_ENCODE_CTX_release );
+   void ** ph = ( void ** ) hb_gcAllocate( sizeof( EVP_ENCODE_CTX * ), &s_gcEVP_ENCODE_CTX_funcs );
 
    EVP_ENCODE_CTX * ctx = ( EVP_ENCODE_CTX * ) hb_xgrab( sizeof( EVP_ENCODE_CTX ) );
 
