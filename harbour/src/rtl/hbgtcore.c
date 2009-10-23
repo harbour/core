@@ -1571,6 +1571,22 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
+      case HB_GTI_CLIPBOARDPAST:
+      {
+         /* get Clipboard value */
+         char * pszClipData;
+         ULONG ulLen;
+
+         if( hb_gt_getClipboard( &pszClipData, &ulLen ) )
+         {
+            HB_GTSELF_INKEYSETTEXT( pGT, pszClipData, ulLen );
+            hb_xfree( pszClipData );
+         }
+         else
+            HB_GTSELF_INKEYSETTEXT( pGT, NULL, 0 );
+         break;
+      }
+
       case HB_GTI_NOTIFIERBLOCK:
          if( pGT->pNotifierBlock )
          {
