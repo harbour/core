@@ -435,7 +435,7 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler [, cID] ) --> pSink */
                   pSink = ( ISink* ) hb_xgrab( sizeof( ISink ) );    /* TODO: GlobalAlloc/Free GMEM_FIXED ??? */
 
                   pSink->lpVtbl = ( IDispatchVtbl * ) &ISink_Vtbl;
-                  pSink->count = 1; /* 1 for Harbour collectible pointer [Mindaugas] */
+                  pSink->count = 0;
                   pSink->pItemHandler = hb_itemNew( pItemBlock );
                   pSink->rriid = rriid;
                   lOleError = HB_VTBL( pCP )->Advise( HB_THIS_( pCP ) ( IUnknown* ) pSink, &dwCookie );
