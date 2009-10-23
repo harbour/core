@@ -155,9 +155,6 @@
 #     pragma warn -ngu
 #     pragma warn -prc
 #     pragma warn -rch
-#     if defined( __cplusplus ) && ! defined( USE_DL_PREFIX )
-#        define USE_DL_PREFIX
-#     endif
 #  elif defined( HB_OS_WIN_CE ) && defined( __POCC__ )
 #     define ABORT TerminateProcess( GetCurrentProcess(), 0 )
 #  elif defined( __POCC__ ) && !defined( InterlockedCompareExchangePointer )
@@ -177,6 +174,9 @@
 #     if defined( HB_OS_WIN_CE )
 #        define LACKS_FCNTL_H
 #     endif
+#  endif
+#  if defined( __cplusplus ) && ! defined( USE_DL_PREFIX )
+#     define USE_DL_PREFIX
 #  endif
 #  include "dlmalloc.c"
 #  if defined( __BORLANDC__ )
