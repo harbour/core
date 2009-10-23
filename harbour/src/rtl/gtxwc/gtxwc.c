@@ -2215,6 +2215,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                else if( evt->xselection.target == s_atomTargets && text.format == 32 )
                {
                   Atom aValue;
+
 #ifdef XWC_DEBUG
                   printf("text.nitems=%ld, text.format=%d\r\n", text.nitems, text.format); fflush(stdout);
 #endif
@@ -2226,7 +2227,11 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                      else if( aValue == s_atomString && aNextRequest == None )
                         aNextRequest = s_atomString;
 #ifdef XWC_DEBUG
-                     printf("%ld, %8lx (%s)\r\n", nItem, aValue, XGetAtomName(wnd->dpy, aValue));fflush(stdout);
+                     if( aValue )
+                        printf("%ld, %8lx (%s)\r\n", nItem, aValue, XGetAtomName(wnd->dpy, aValue));
+                     else
+                        printf("%ld, %8lx (NULL)\r\n", nItem, aValue);
+                     fflush(stdout);
 #endif
                   }
                }
@@ -2258,7 +2263,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
          if ( req->target == s_atomTimestamp )
          {
             XChangeProperty( wnd->dpy, req->requestor, req->property,
-                             s_atomInteger, 8 * sizeof( Time ), PropModeReplace,
+                             s_atomInteger, /* 8 * sizeof( Time ) */ 32, PropModeReplace,
                              ( unsigned char * ) &wnd->ClipboardTime, 1 );
          }
          else if ( req->target == s_atomTargets )
@@ -2267,7 +2272,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                              s_atomString, s_atomUTF8String,
                              s_atomCompoundText, s_atomText };
             XChangeProperty( wnd->dpy, req->requestor, req->property,
-                             s_atomAtom, 8 * sizeof( Atom ), PropModeReplace,
+                             s_atomAtom, /* 8 * sizeof( Atom ) */ 32, PropModeReplace,
                              ( unsigned char * ) aProp, sizeof( aProp ) / sizeof( Atom ) );
          }
          else if( req->target == s_atomString )
