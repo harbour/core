@@ -2,14 +2,14 @@
 # $Id$
 #
 
-ROOT := ../../
+ROOT := ../../../../
 
 include $(TOP)$(ROOT)config/global.mk
 
-LIBNAME := hbqt
+vpath %.cpp ../
+vpath %.prg ../
 
-PRG_HEADERS := \
-   hbqt.ch \
+LIBNAME := hbqtguis
 
 # force redetect. needed for _QT_DARWIN trick
 HB_HAS_QT :=
@@ -47,24 +47,12 @@ ifneq ($(HB_HAS_QT),)
       HB_CFLAGS += $(foreach d,$(HB_HAS_QT),-I$(d) -I$(d)/Qt -I$(d)/QtCore -I$(d)/QtGui -I$(d)/QtNetwork -I$(d)/QtWebKit)
    endif
 
-   include $(TOP)$(ROOT)contrib/hbqt/filelist.mk
+   HB_CFLAGS += -DQT_NODLL
+
+   include $(TOP)$(ROOT)contrib/hbqt/qtgui/filelist.mk
 
    include $(TOP)$(ROOT)config/header.mk
    include $(TOP)$(ROOT)config/lib.mk
-
-   DIRS += \
-      qtcore \
-      qtgui \
-      qtnetwork \
-      qtwebkit    
-
-   ifneq ($(filter $(HB_PLATFORM),win wce),)
-      ifneq ($(HB_QT_STATIC),)
-         DIRS += hbqts
-      endif
-   endif
-
-   include $(TOP)$(ROOT)config/dir.mk
 else
    HB_SKIP_REASON := $(_DET_RES_TEXT)
    include $(TOP)$(ROOT)config/none.mk

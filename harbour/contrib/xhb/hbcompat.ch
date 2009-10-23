@@ -505,6 +505,9 @@
    #command @ <row>, <col> PROMPT <prompt> [ MESSAGE <msg> ] [ COLOR <color> ] => ;
       __AtPrompt( <row>, <col>, <prompt>, <msg>, <color> )
 
+   #command SET TRIMFILENAME <x:ON,OFF,&> => Set( _SET_TRIMFILENAME, <(x)> )
+   #command SET TIME FORMAT [TO] <f>      => Set( _SET_TIMEFORMAT, <f> )
+
 #endif
 
 #endif /* __HARBOUR__ */
