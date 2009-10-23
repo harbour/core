@@ -83,6 +83,7 @@ HB_FUNC( HB_BLOWFISHENCRYPT )
             char * pszData;
             HB_BLOWFISH * bf = ( HB_BLOWFISH * ) hb_parc( 1 );
 
+            /* ANSI X.923 padding */
             ulSize = ( ( ulLen >> 3 ) + 1 ) << 3;
             pszData = ( char * ) hb_xgrab( ulSize + 1 );
             memcpy( pszData, hb_itemGetCPtr( pData ), ulLen );

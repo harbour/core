@@ -191,7 +191,7 @@ static HB_ERRCODE fbDisconnect( SQLDDCONNECTION* pConnection )
 {
    ISC_STATUS       status[ 5 ];
 
-   isc_detach_database( status, (isc_db_handle*) &pConnection->hConnection );
+   isc_detach_database( status, (isc_db_handle*) (void*) &pConnection->hConnection );
    return HB_SUCCESS;
 }
 
@@ -219,7 +219,7 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
    int              iType;
 
 
-   if ( isc_start_transaction ( status, &pTrans, 1, (isc_db_handle*) &pArea->pConnection->hConnection, 0, NULL ) )
+   if ( isc_start_transaction ( status, &pTrans, 1, (isc_db_handle*) (void*) &pArea->pConnection->hConnection, 0, NULL ) )
    {
       hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_START, "Start transaction failed", NULL, ( USHORT ) status[ 1 ] );
       return HB_FAILURE;
@@ -229,7 +229,7 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
    pSqlda->sqln = 1;
    pSqlda->version = 1;
 
-   if ( isc_dsql_allocate_statement( status, (isc_db_handle*) &pArea->pConnection->hConnection, &pStmt ) )
+   if ( isc_dsql_allocate_statement( status, (isc_db_handle*) (void*) &pArea->pConnection->hConnection, &pStmt ) )
    {
       hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_STMTALLOC, "Allocate statement failed", NULL, ( USHORT ) status[ 1 ] );
       isc_rollback_transaction( status, &pTrans );

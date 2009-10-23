@@ -194,7 +194,7 @@ static ULONG memfsInodeFind( const char * szName, ULONG * pulPos )
 static PHB_MEMFS_INODE memfsInodeAlloc( const char* szName )
 {
    PHB_MEMFS_INODE  pInode = ( PHB_MEMFS_INODE ) hb_xgrab( sizeof( HB_MEMFS_INODE ) );
-   ULONG            ulInode;
+   ULONG            ulInode = 0;
 
    pInode->llSize = 0;
    pInode->llAlloc = HB_MEMFS_INITSIZE;
