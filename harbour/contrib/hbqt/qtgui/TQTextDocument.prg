@@ -71,95 +71,352 @@ CREATE CLASS QTextDocument INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addResource( nType, pName, pResource )  INLINE  Qt_QTextDocument_addResource( ::pPtr, nType, pName, pResource )
-   METHOD  adjustSize()                        INLINE  Qt_QTextDocument_adjustSize( ::pPtr )
-   METHOD  begin()                             INLINE  Qt_QTextDocument_begin( ::pPtr )
-   METHOD  blockCount()                        INLINE  Qt_QTextDocument_blockCount( ::pPtr )
-   METHOD  characterCount()                    INLINE  Qt_QTextDocument_characterCount( ::pPtr )
-   METHOD  clear()                             INLINE  Qt_QTextDocument_clear( ::pPtr )
-   METHOD  clone( pParent )                    INLINE  Qt_QTextDocument_clone( ::pPtr, pParent )
-   METHOD  defaultFont()                       INLINE  Qt_QTextDocument_defaultFont( ::pPtr )
-   METHOD  defaultStyleSheet()                 INLINE  Qt_QTextDocument_defaultStyleSheet( ::pPtr )
-   METHOD  defaultTextOption()                 INLINE  Qt_QTextDocument_defaultTextOption( ::pPtr )
-   METHOD  documentLayout()                    INLINE  Qt_QTextDocument_documentLayout( ::pPtr )
-   METHOD  documentMargin()                    INLINE  Qt_QTextDocument_documentMargin( ::pPtr )
-   METHOD  drawContents( pP, pRect )           INLINE  Qt_QTextDocument_drawContents( ::pPtr, pP, pRect )
-   METHOD  end()                               INLINE  Qt_QTextDocument_end( ::pPtr )
-   METHOD  find( cSubString, pCursor, nOptions )  INLINE  Qt_QTextDocument_find( ::pPtr, cSubString, pCursor, nOptions )
-   METHOD  find_1( pExpr, pCursor, nOptions )  INLINE  Qt_QTextDocument_find_1( ::pPtr, pExpr, pCursor, nOptions )
-   METHOD  find_2( cSubString, nPosition, nOptions )  INLINE  Qt_QTextDocument_find_2( ::pPtr, cSubString, nPosition, nOptions )
-   METHOD  find_3( pExpr, nPosition, nOptions )  INLINE  Qt_QTextDocument_find_3( ::pPtr, pExpr, nPosition, nOptions )
-   METHOD  findBlock( nPos )                   INLINE  Qt_QTextDocument_findBlock( ::pPtr, nPos )
-   METHOD  findBlockByLineNumber( nLineNumber )  INLINE  Qt_QTextDocument_findBlockByLineNumber( ::pPtr, nLineNumber )
-   METHOD  findBlockByNumber( nBlockNumber )   INLINE  Qt_QTextDocument_findBlockByNumber( ::pPtr, nBlockNumber )
-   METHOD  firstBlock()                        INLINE  Qt_QTextDocument_firstBlock( ::pPtr )
-   METHOD  idealWidth()                        INLINE  Qt_QTextDocument_idealWidth( ::pPtr )
-   METHOD  indentWidth()                       INLINE  Qt_QTextDocument_indentWidth( ::pPtr )
-   METHOD  isEmpty()                           INLINE  Qt_QTextDocument_isEmpty( ::pPtr )
-   METHOD  isModified()                        INLINE  Qt_QTextDocument_isModified( ::pPtr )
-   METHOD  isRedoAvailable()                   INLINE  Qt_QTextDocument_isRedoAvailable( ::pPtr )
-   METHOD  isUndoAvailable()                   INLINE  Qt_QTextDocument_isUndoAvailable( ::pPtr )
-   METHOD  isUndoRedoEnabled()                 INLINE  Qt_QTextDocument_isUndoRedoEnabled( ::pPtr )
-   METHOD  lastBlock()                         INLINE  Qt_QTextDocument_lastBlock( ::pPtr )
-   METHOD  lineCount()                         INLINE  Qt_QTextDocument_lineCount( ::pPtr )
-   METHOD  markContentsDirty( nPosition, nLength )  INLINE  Qt_QTextDocument_markContentsDirty( ::pPtr, nPosition, nLength )
-   METHOD  maximumBlockCount()                 INLINE  Qt_QTextDocument_maximumBlockCount( ::pPtr )
-   METHOD  metaInformation( nInfo )            INLINE  Qt_QTextDocument_metaInformation( ::pPtr, nInfo )
-   METHOD  object( nObjectIndex )              INLINE  Qt_QTextDocument_object( ::pPtr, nObjectIndex )
-   METHOD  objectForFormat( pF )               INLINE  Qt_QTextDocument_objectForFormat( ::pPtr, pF )
-   METHOD  pageCount()                         INLINE  Qt_QTextDocument_pageCount( ::pPtr )
-   METHOD  pageSize()                          INLINE  Qt_QTextDocument_pageSize( ::pPtr )
-   METHOD  print( pPrinter )                   INLINE  Qt_QTextDocument_print( ::pPtr, pPrinter )
-   METHOD  redo( pCursor )                     INLINE  Qt_QTextDocument_redo( ::pPtr, pCursor )
-   METHOD  resource( nType, pName )            INLINE  Qt_QTextDocument_resource( ::pPtr, nType, pName )
-   METHOD  revision()                          INLINE  Qt_QTextDocument_revision( ::pPtr )
-   METHOD  rootFrame()                         INLINE  Qt_QTextDocument_rootFrame( ::pPtr )
-   METHOD  setDefaultFont( pFont )             INLINE  Qt_QTextDocument_setDefaultFont( ::pPtr, pFont )
-   METHOD  setDefaultStyleSheet( cSheet )      INLINE  Qt_QTextDocument_setDefaultStyleSheet( ::pPtr, cSheet )
-   METHOD  setDefaultTextOption( pOption )     INLINE  Qt_QTextDocument_setDefaultTextOption( ::pPtr, pOption )
-   METHOD  setDocumentLayout( pLayout )        INLINE  Qt_QTextDocument_setDocumentLayout( ::pPtr, pLayout )
-   METHOD  setDocumentMargin( nMargin )        INLINE  Qt_QTextDocument_setDocumentMargin( ::pPtr, nMargin )
-   METHOD  setHtml( cHtml )                    INLINE  Qt_QTextDocument_setHtml( ::pPtr, cHtml )
-   METHOD  setIndentWidth( nWidth )            INLINE  Qt_QTextDocument_setIndentWidth( ::pPtr, nWidth )
-   METHOD  setMaximumBlockCount( nMaximum )    INLINE  Qt_QTextDocument_setMaximumBlockCount( ::pPtr, nMaximum )
-   METHOD  setMetaInformation( nInfo, cString )  INLINE  Qt_QTextDocument_setMetaInformation( ::pPtr, nInfo, cString )
-   METHOD  setPageSize( pSize )                INLINE  Qt_QTextDocument_setPageSize( ::pPtr, pSize )
-   METHOD  setPlainText( cText )               INLINE  Qt_QTextDocument_setPlainText( ::pPtr, cText )
-   METHOD  setTextWidth( nWidth )              INLINE  Qt_QTextDocument_setTextWidth( ::pPtr, nWidth )
-   METHOD  setUndoRedoEnabled( lEnable )       INLINE  Qt_QTextDocument_setUndoRedoEnabled( ::pPtr, lEnable )
-   METHOD  setUseDesignMetrics( lB )           INLINE  Qt_QTextDocument_setUseDesignMetrics( ::pPtr, lB )
-   METHOD  size()                              INLINE  Qt_QTextDocument_size( ::pPtr )
-   METHOD  textWidth()                         INLINE  Qt_QTextDocument_textWidth( ::pPtr )
-   METHOD  toHtml( pEncoding )                 INLINE  Qt_QTextDocument_toHtml( ::pPtr, pEncoding )
-   METHOD  toPlainText()                       INLINE  Qt_QTextDocument_toPlainText( ::pPtr )
-   METHOD  undo( pCursor )                     INLINE  Qt_QTextDocument_undo( ::pPtr, pCursor )
-   METHOD  useDesignMetrics()                  INLINE  Qt_QTextDocument_useDesignMetrics( ::pPtr )
-   METHOD  redo_1()                            INLINE  Qt_QTextDocument_redo_1( ::pPtr )
-   METHOD  setModified( lM )                   INLINE  Qt_QTextDocument_setModified( ::pPtr, lM )
-   METHOD  undo_1()                            INLINE  Qt_QTextDocument_undo_1( ::pPtr )
+   METHOD  addResource( nType, pName, pResource )
+   METHOD  adjustSize()
+   METHOD  begin()
+   METHOD  blockCount()
+   METHOD  characterCount()
+   METHOD  clear()
+   METHOD  clone( pParent )
+   METHOD  defaultFont()
+   METHOD  defaultStyleSheet()
+   METHOD  defaultTextOption()
+   METHOD  documentLayout()
+   METHOD  documentMargin()
+   METHOD  drawContents( pP, pRect )
+   METHOD  end()
+   METHOD  find( cSubString, pCursor, nOptions )
+   METHOD  find_1( pExpr, pCursor, nOptions )
+   METHOD  find_2( cSubString, nPosition, nOptions )
+   METHOD  find_3( pExpr, nPosition, nOptions )
+   METHOD  findBlock( nPos )
+   METHOD  findBlockByLineNumber( nLineNumber )
+   METHOD  findBlockByNumber( nBlockNumber )
+   METHOD  firstBlock()
+   METHOD  idealWidth()
+   METHOD  indentWidth()
+   METHOD  isEmpty()
+   METHOD  isModified()
+   METHOD  isRedoAvailable()
+   METHOD  isUndoAvailable()
+   METHOD  isUndoRedoEnabled()
+   METHOD  lastBlock()
+   METHOD  lineCount()
+   METHOD  markContentsDirty( nPosition, nLength )
+   METHOD  maximumBlockCount()
+   METHOD  metaInformation( nInfo )
+   METHOD  object( nObjectIndex )
+   METHOD  objectForFormat( pF )
+   METHOD  pageCount()
+   METHOD  pageSize()
+   METHOD  print( pPrinter )
+   METHOD  redo( pCursor )
+   METHOD  resource( nType, pName )
+   METHOD  revision()
+   METHOD  rootFrame()
+   METHOD  setDefaultFont( pFont )
+   METHOD  setDefaultStyleSheet( cSheet )
+   METHOD  setDefaultTextOption( pOption )
+   METHOD  setDocumentLayout( pLayout )
+   METHOD  setDocumentMargin( nMargin )
+   METHOD  setHtml( cHtml )
+   METHOD  setIndentWidth( nWidth )
+   METHOD  setMaximumBlockCount( nMaximum )
+   METHOD  setMetaInformation( nInfo, cString )
+   METHOD  setPageSize( pSize )
+   METHOD  setPlainText( cText )
+   METHOD  setTextWidth( nWidth )
+   METHOD  setUndoRedoEnabled( lEnable )
+   METHOD  setUseDesignMetrics( lB )
+   METHOD  size()
+   METHOD  textWidth()
+   METHOD  toHtml( pEncoding )
+   METHOD  toPlainText()
+   METHOD  undo( pCursor )
+   METHOD  useDesignMetrics()
+   METHOD  redo_1()
+   METHOD  setModified( lM )
+   METHOD  undo_1()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextDocument
-
+METHOD QTextDocument:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextDocument( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextDocument
-
+METHOD QTextDocument:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextDocument:addResource( nType, pName, pResource )
+   RETURN Qt_QTextDocument_addResource( ::pPtr, nType, pName, pResource )
+
+
+METHOD QTextDocument:adjustSize()
+   RETURN Qt_QTextDocument_adjustSize( ::pPtr )
+
+
+METHOD QTextDocument:begin()
+   RETURN Qt_QTextDocument_begin( ::pPtr )
+
+
+METHOD QTextDocument:blockCount()
+   RETURN Qt_QTextDocument_blockCount( ::pPtr )
+
+
+METHOD QTextDocument:characterCount()
+   RETURN Qt_QTextDocument_characterCount( ::pPtr )
+
+
+METHOD QTextDocument:clear()
+   RETURN Qt_QTextDocument_clear( ::pPtr )
+
+
+METHOD QTextDocument:clone( pParent )
+   RETURN Qt_QTextDocument_clone( ::pPtr, pParent )
+
+
+METHOD QTextDocument:defaultFont()
+   RETURN Qt_QTextDocument_defaultFont( ::pPtr )
+
+
+METHOD QTextDocument:defaultStyleSheet()
+   RETURN Qt_QTextDocument_defaultStyleSheet( ::pPtr )
+
+
+METHOD QTextDocument:defaultTextOption()
+   RETURN Qt_QTextDocument_defaultTextOption( ::pPtr )
+
+
+METHOD QTextDocument:documentLayout()
+   RETURN Qt_QTextDocument_documentLayout( ::pPtr )
+
+
+METHOD QTextDocument:documentMargin()
+   RETURN Qt_QTextDocument_documentMargin( ::pPtr )
+
+
+METHOD QTextDocument:drawContents( pP, pRect )
+   RETURN Qt_QTextDocument_drawContents( ::pPtr, pP, pRect )
+
+
+METHOD QTextDocument:end()
+   RETURN Qt_QTextDocument_end( ::pPtr )
+
+
+METHOD QTextDocument:find( cSubString, pCursor, nOptions )
+   RETURN Qt_QTextDocument_find( ::pPtr, cSubString, pCursor, nOptions )
+
+
+METHOD QTextDocument:find_1( pExpr, pCursor, nOptions )
+   RETURN Qt_QTextDocument_find_1( ::pPtr, pExpr, pCursor, nOptions )
+
+
+METHOD QTextDocument:find_2( cSubString, nPosition, nOptions )
+   RETURN Qt_QTextDocument_find_2( ::pPtr, cSubString, nPosition, nOptions )
+
+
+METHOD QTextDocument:find_3( pExpr, nPosition, nOptions )
+   RETURN Qt_QTextDocument_find_3( ::pPtr, pExpr, nPosition, nOptions )
+
+
+METHOD QTextDocument:findBlock( nPos )
+   RETURN Qt_QTextDocument_findBlock( ::pPtr, nPos )
+
+
+METHOD QTextDocument:findBlockByLineNumber( nLineNumber )
+   RETURN Qt_QTextDocument_findBlockByLineNumber( ::pPtr, nLineNumber )
+
+
+METHOD QTextDocument:findBlockByNumber( nBlockNumber )
+   RETURN Qt_QTextDocument_findBlockByNumber( ::pPtr, nBlockNumber )
+
+
+METHOD QTextDocument:firstBlock()
+   RETURN Qt_QTextDocument_firstBlock( ::pPtr )
+
+
+METHOD QTextDocument:idealWidth()
+   RETURN Qt_QTextDocument_idealWidth( ::pPtr )
+
+
+METHOD QTextDocument:indentWidth()
+   RETURN Qt_QTextDocument_indentWidth( ::pPtr )
+
+
+METHOD QTextDocument:isEmpty()
+   RETURN Qt_QTextDocument_isEmpty( ::pPtr )
+
+
+METHOD QTextDocument:isModified()
+   RETURN Qt_QTextDocument_isModified( ::pPtr )
+
+
+METHOD QTextDocument:isRedoAvailable()
+   RETURN Qt_QTextDocument_isRedoAvailable( ::pPtr )
+
+
+METHOD QTextDocument:isUndoAvailable()
+   RETURN Qt_QTextDocument_isUndoAvailable( ::pPtr )
+
+
+METHOD QTextDocument:isUndoRedoEnabled()
+   RETURN Qt_QTextDocument_isUndoRedoEnabled( ::pPtr )
+
+
+METHOD QTextDocument:lastBlock()
+   RETURN Qt_QTextDocument_lastBlock( ::pPtr )
+
+
+METHOD QTextDocument:lineCount()
+   RETURN Qt_QTextDocument_lineCount( ::pPtr )
+
+
+METHOD QTextDocument:markContentsDirty( nPosition, nLength )
+   RETURN Qt_QTextDocument_markContentsDirty( ::pPtr, nPosition, nLength )
+
+
+METHOD QTextDocument:maximumBlockCount()
+   RETURN Qt_QTextDocument_maximumBlockCount( ::pPtr )
+
+
+METHOD QTextDocument:metaInformation( nInfo )
+   RETURN Qt_QTextDocument_metaInformation( ::pPtr, nInfo )
+
+
+METHOD QTextDocument:object( nObjectIndex )
+   RETURN Qt_QTextDocument_object( ::pPtr, nObjectIndex )
+
+
+METHOD QTextDocument:objectForFormat( pF )
+   RETURN Qt_QTextDocument_objectForFormat( ::pPtr, pF )
+
+
+METHOD QTextDocument:pageCount()
+   RETURN Qt_QTextDocument_pageCount( ::pPtr )
+
+
+METHOD QTextDocument:pageSize()
+   RETURN Qt_QTextDocument_pageSize( ::pPtr )
+
+
+METHOD QTextDocument:print( pPrinter )
+   RETURN Qt_QTextDocument_print( ::pPtr, pPrinter )
+
+
+METHOD QTextDocument:redo( pCursor )
+   RETURN Qt_QTextDocument_redo( ::pPtr, pCursor )
+
+
+METHOD QTextDocument:resource( nType, pName )
+   RETURN Qt_QTextDocument_resource( ::pPtr, nType, pName )
+
+
+METHOD QTextDocument:revision()
+   RETURN Qt_QTextDocument_revision( ::pPtr )
+
+
+METHOD QTextDocument:rootFrame()
+   RETURN Qt_QTextDocument_rootFrame( ::pPtr )
+
+
+METHOD QTextDocument:setDefaultFont( pFont )
+   RETURN Qt_QTextDocument_setDefaultFont( ::pPtr, pFont )
+
+
+METHOD QTextDocument:setDefaultStyleSheet( cSheet )
+   RETURN Qt_QTextDocument_setDefaultStyleSheet( ::pPtr, cSheet )
+
+
+METHOD QTextDocument:setDefaultTextOption( pOption )
+   RETURN Qt_QTextDocument_setDefaultTextOption( ::pPtr, pOption )
+
+
+METHOD QTextDocument:setDocumentLayout( pLayout )
+   RETURN Qt_QTextDocument_setDocumentLayout( ::pPtr, pLayout )
+
+
+METHOD QTextDocument:setDocumentMargin( nMargin )
+   RETURN Qt_QTextDocument_setDocumentMargin( ::pPtr, nMargin )
+
+
+METHOD QTextDocument:setHtml( cHtml )
+   RETURN Qt_QTextDocument_setHtml( ::pPtr, cHtml )
+
+
+METHOD QTextDocument:setIndentWidth( nWidth )
+   RETURN Qt_QTextDocument_setIndentWidth( ::pPtr, nWidth )
+
+
+METHOD QTextDocument:setMaximumBlockCount( nMaximum )
+   RETURN Qt_QTextDocument_setMaximumBlockCount( ::pPtr, nMaximum )
+
+
+METHOD QTextDocument:setMetaInformation( nInfo, cString )
+   RETURN Qt_QTextDocument_setMetaInformation( ::pPtr, nInfo, cString )
+
+
+METHOD QTextDocument:setPageSize( pSize )
+   RETURN Qt_QTextDocument_setPageSize( ::pPtr, pSize )
+
+
+METHOD QTextDocument:setPlainText( cText )
+   RETURN Qt_QTextDocument_setPlainText( ::pPtr, cText )
+
+
+METHOD QTextDocument:setTextWidth( nWidth )
+   RETURN Qt_QTextDocument_setTextWidth( ::pPtr, nWidth )
+
+
+METHOD QTextDocument:setUndoRedoEnabled( lEnable )
+   RETURN Qt_QTextDocument_setUndoRedoEnabled( ::pPtr, lEnable )
+
+
+METHOD QTextDocument:setUseDesignMetrics( lB )
+   RETURN Qt_QTextDocument_setUseDesignMetrics( ::pPtr, lB )
+
+
+METHOD QTextDocument:size()
+   RETURN Qt_QTextDocument_size( ::pPtr )
+
+
+METHOD QTextDocument:textWidth()
+   RETURN Qt_QTextDocument_textWidth( ::pPtr )
+
+
+METHOD QTextDocument:toHtml( pEncoding )
+   RETURN Qt_QTextDocument_toHtml( ::pPtr, pEncoding )
+
+
+METHOD QTextDocument:toPlainText()
+   RETURN Qt_QTextDocument_toPlainText( ::pPtr )
+
+
+METHOD QTextDocument:undo( pCursor )
+   RETURN Qt_QTextDocument_undo( ::pPtr, pCursor )
+
+
+METHOD QTextDocument:useDesignMetrics()
+   RETURN Qt_QTextDocument_useDesignMetrics( ::pPtr )
+
+
+METHOD QTextDocument:redo_1()
+   RETURN Qt_QTextDocument_redo_1( ::pPtr )
+
+
+METHOD QTextDocument:setModified( lM )
+   RETURN Qt_QTextDocument_setModified( ::pPtr, lM )
+
+
+METHOD QTextDocument:undo_1()
+   RETURN Qt_QTextDocument_undo_1( ::pPtr )
+

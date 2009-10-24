@@ -71,37 +71,62 @@ CREATE CLASS QPageSetupDialog INHERIT QDialog
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  exec()                              INLINE  Qt_QPageSetupDialog_exec( ::pPtr )
-   METHOD  open( pReceiver, pMember )          INLINE  Qt_QPageSetupDialog_open( ::pPtr, pReceiver, pMember )
-   METHOD  options()                           INLINE  Qt_QPageSetupDialog_options( ::pPtr )
-   METHOD  printer()                           INLINE  Qt_QPageSetupDialog_printer( ::pPtr )
-   METHOD  setOption( nOption, lOn )           INLINE  Qt_QPageSetupDialog_setOption( ::pPtr, nOption, lOn )
-   METHOD  setOptions( nOptions )              INLINE  Qt_QPageSetupDialog_setOptions( ::pPtr, nOptions )
-   METHOD  setVisible( lVisible )              INLINE  Qt_QPageSetupDialog_setVisible( ::pPtr, lVisible )
-   METHOD  testOption( nOption )               INLINE  Qt_QPageSetupDialog_testOption( ::pPtr, nOption )
+   METHOD  exec()
+   METHOD  open( pReceiver, pMember )
+   METHOD  options()
+   METHOD  printer()
+   METHOD  setOption( nOption, lOn )
+   METHOD  setOptions( nOptions )
+   METHOD  setVisible( lVisible )
+   METHOD  testOption( nOption )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QPageSetupDialog
-
+METHOD QPageSetupDialog:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QPageSetupDialog( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QPageSetupDialog
-
+METHOD QPageSetupDialog:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QPageSetupDialog:exec()
+   RETURN Qt_QPageSetupDialog_exec( ::pPtr )
+
+
+METHOD QPageSetupDialog:open( pReceiver, pMember )
+   RETURN Qt_QPageSetupDialog_open( ::pPtr, pReceiver, pMember )
+
+
+METHOD QPageSetupDialog:options()
+   RETURN Qt_QPageSetupDialog_options( ::pPtr )
+
+
+METHOD QPageSetupDialog:printer()
+   RETURN Qt_QPageSetupDialog_printer( ::pPtr )
+
+
+METHOD QPageSetupDialog:setOption( nOption, lOn )
+   RETURN Qt_QPageSetupDialog_setOption( ::pPtr, nOption, lOn )
+
+
+METHOD QPageSetupDialog:setOptions( nOptions )
+   RETURN Qt_QPageSetupDialog_setOptions( ::pPtr, nOptions )
+
+
+METHOD QPageSetupDialog:setVisible( lVisible )
+   RETURN Qt_QPageSetupDialog_setVisible( ::pPtr, lVisible )
+
+
+METHOD QPageSetupDialog:testOption( nOption )
+   RETURN Qt_QPageSetupDialog_testOption( ::pPtr, nOption )
+

@@ -71,35 +71,52 @@ CREATE CLASS QStyleOptionGroupBox INHERIT QStyleOptionComplex
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  features()                          INLINE  Qt_QStyleOptionGroupBox_features( ::pPtr )
-   METHOD  lineWidth()                         INLINE  Qt_QStyleOptionGroupBox_lineWidth( ::pPtr )
-   METHOD  midLineWidth()                      INLINE  Qt_QStyleOptionGroupBox_midLineWidth( ::pPtr )
-   METHOD  text()                              INLINE  Qt_QStyleOptionGroupBox_text( ::pPtr )
-   METHOD  textAlignment()                     INLINE  Qt_QStyleOptionGroupBox_textAlignment( ::pPtr )
-   METHOD  textColor()                         INLINE  Qt_QStyleOptionGroupBox_textColor( ::pPtr )
+   METHOD  features()
+   METHOD  lineWidth()
+   METHOD  midLineWidth()
+   METHOD  text()
+   METHOD  textAlignment()
+   METHOD  textColor()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyleOptionGroupBox
-
+METHOD QStyleOptionGroupBox:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyleOptionGroupBox( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyleOptionGroupBox
-
+METHOD QStyleOptionGroupBox:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyleOptionGroupBox:features()
+   RETURN Qt_QStyleOptionGroupBox_features( ::pPtr )
+
+
+METHOD QStyleOptionGroupBox:lineWidth()
+   RETURN Qt_QStyleOptionGroupBox_lineWidth( ::pPtr )
+
+
+METHOD QStyleOptionGroupBox:midLineWidth()
+   RETURN Qt_QStyleOptionGroupBox_midLineWidth( ::pPtr )
+
+
+METHOD QStyleOptionGroupBox:text()
+   RETURN Qt_QStyleOptionGroupBox_text( ::pPtr )
+
+
+METHOD QStyleOptionGroupBox:textAlignment()
+   RETURN Qt_QStyleOptionGroupBox_textAlignment( ::pPtr )
+
+
+METHOD QStyleOptionGroupBox:textColor()
+   RETURN Qt_QStyleOptionGroupBox_textColor( ::pPtr )
+

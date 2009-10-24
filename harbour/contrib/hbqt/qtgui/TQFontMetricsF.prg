@@ -71,31 +71,31 @@ CREATE CLASS QFontMetricsF
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  ascent()                            INLINE  Qt_QFontMetricsF_ascent( ::pPtr )
-   METHOD  averageCharWidth()                  INLINE  Qt_QFontMetricsF_averageCharWidth( ::pPtr )
-   METHOD  boundingRect( cText )               INLINE  Qt_QFontMetricsF_boundingRect( ::pPtr, cText )
-   METHOD  boundingRect_1( nCh )               INLINE  Qt_QFontMetricsF_boundingRect_1( ::pPtr, nCh )
-   METHOD  boundingRect_2( pRect, nFlags, cText, nTabStops, nTabArray )  INLINE  Qt_QFontMetricsF_boundingRect_2( ::pPtr, pRect, nFlags, cText, nTabStops, nTabArray )
-   METHOD  descent()                           INLINE  Qt_QFontMetricsF_descent( ::pPtr )
-   METHOD  elidedText( cText, nMode, nWidth, nFlags )  INLINE  Qt_QFontMetricsF_elidedText( ::pPtr, cText, nMode, nWidth, nFlags )
-   METHOD  height()                            INLINE  Qt_QFontMetricsF_height( ::pPtr )
-   METHOD  inFont( nCh )                       INLINE  Qt_QFontMetricsF_inFont( ::pPtr, nCh )
-   METHOD  leading()                           INLINE  Qt_QFontMetricsF_leading( ::pPtr )
-   METHOD  leftBearing( nCh )                  INLINE  Qt_QFontMetricsF_leftBearing( ::pPtr, nCh )
-   METHOD  lineSpacing()                       INLINE  Qt_QFontMetricsF_lineSpacing( ::pPtr )
-   METHOD  lineWidth()                         INLINE  Qt_QFontMetricsF_lineWidth( ::pPtr )
-   METHOD  maxWidth()                          INLINE  Qt_QFontMetricsF_maxWidth( ::pPtr )
-   METHOD  minLeftBearing()                    INLINE  Qt_QFontMetricsF_minLeftBearing( ::pPtr )
-   METHOD  minRightBearing()                   INLINE  Qt_QFontMetricsF_minRightBearing( ::pPtr )
-   METHOD  overlinePos()                       INLINE  Qt_QFontMetricsF_overlinePos( ::pPtr )
-   METHOD  rightBearing( nCh )                 INLINE  Qt_QFontMetricsF_rightBearing( ::pPtr, nCh )
-   METHOD  size( nFlags, cText, nTabStops, nTabArray )  INLINE  Qt_QFontMetricsF_size( ::pPtr, nFlags, cText, nTabStops, nTabArray )
-   METHOD  strikeOutPos()                      INLINE  Qt_QFontMetricsF_strikeOutPos( ::pPtr )
-   METHOD  tightBoundingRect( cText )          INLINE  Qt_QFontMetricsF_tightBoundingRect( ::pPtr, cText )
-   METHOD  underlinePos()                      INLINE  Qt_QFontMetricsF_underlinePos( ::pPtr )
-   METHOD  width( cText )                      INLINE  Qt_QFontMetricsF_width( ::pPtr, cText )
-   METHOD  width_1( nCh )                      INLINE  Qt_QFontMetricsF_width_1( ::pPtr, nCh )
-   METHOD  xHeight()                           INLINE  Qt_QFontMetricsF_xHeight( ::pPtr )
+   METHOD  ascent()
+   METHOD  averageCharWidth()
+   METHOD  boundingRect( cText )
+   METHOD  boundingRect_1( nCh )
+   METHOD  boundingRect_2( pRect, nFlags, cText, nTabStops, nTabArray )
+   METHOD  descent()
+   METHOD  elidedText( cText, nMode, nWidth, nFlags )
+   METHOD  height()
+   METHOD  inFont( nCh )
+   METHOD  leading()
+   METHOD  leftBearing( nCh )
+   METHOD  lineSpacing()
+   METHOD  lineWidth()
+   METHOD  maxWidth()
+   METHOD  minLeftBearing()
+   METHOD  minRightBearing()
+   METHOD  overlinePos()
+   METHOD  rightBearing( nCh )
+   METHOD  size( nFlags, cText, nTabStops, nTabArray )
+   METHOD  strikeOutPos()
+   METHOD  tightBoundingRect( cText )
+   METHOD  underlinePos()
+   METHOD  width( cText )
+   METHOD  width_1( nCh )
+   METHOD  xHeight()
 
    ENDCLASS
 
@@ -107,16 +107,112 @@ METHOD New( ... ) CLASS QFontMetricsF
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QFontMetricsF
-
+METHOD QFontMetricsF:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QFontMetricsF:ascent()
+   RETURN Qt_QFontMetricsF_ascent( ::pPtr )
+
+
+METHOD QFontMetricsF:averageCharWidth()
+   RETURN Qt_QFontMetricsF_averageCharWidth( ::pPtr )
+
+
+METHOD QFontMetricsF:boundingRect( cText )
+   RETURN Qt_QFontMetricsF_boundingRect( ::pPtr, cText )
+
+
+METHOD QFontMetricsF:boundingRect_1( nCh )
+   RETURN Qt_QFontMetricsF_boundingRect_1( ::pPtr, nCh )
+
+
+METHOD QFontMetricsF:boundingRect_2( pRect, nFlags, cText, nTabStops, nTabArray )
+   RETURN Qt_QFontMetricsF_boundingRect_2( ::pPtr, pRect, nFlags, cText, nTabStops, nTabArray )
+
+
+METHOD QFontMetricsF:descent()
+   RETURN Qt_QFontMetricsF_descent( ::pPtr )
+
+
+METHOD QFontMetricsF:elidedText( cText, nMode, nWidth, nFlags )
+   RETURN Qt_QFontMetricsF_elidedText( ::pPtr, cText, nMode, nWidth, nFlags )
+
+
+METHOD QFontMetricsF:height()
+   RETURN Qt_QFontMetricsF_height( ::pPtr )
+
+
+METHOD QFontMetricsF:inFont( nCh )
+   RETURN Qt_QFontMetricsF_inFont( ::pPtr, nCh )
+
+
+METHOD QFontMetricsF:leading()
+   RETURN Qt_QFontMetricsF_leading( ::pPtr )
+
+
+METHOD QFontMetricsF:leftBearing( nCh )
+   RETURN Qt_QFontMetricsF_leftBearing( ::pPtr, nCh )
+
+
+METHOD QFontMetricsF:lineSpacing()
+   RETURN Qt_QFontMetricsF_lineSpacing( ::pPtr )
+
+
+METHOD QFontMetricsF:lineWidth()
+   RETURN Qt_QFontMetricsF_lineWidth( ::pPtr )
+
+
+METHOD QFontMetricsF:maxWidth()
+   RETURN Qt_QFontMetricsF_maxWidth( ::pPtr )
+
+
+METHOD QFontMetricsF:minLeftBearing()
+   RETURN Qt_QFontMetricsF_minLeftBearing( ::pPtr )
+
+
+METHOD QFontMetricsF:minRightBearing()
+   RETURN Qt_QFontMetricsF_minRightBearing( ::pPtr )
+
+
+METHOD QFontMetricsF:overlinePos()
+   RETURN Qt_QFontMetricsF_overlinePos( ::pPtr )
+
+
+METHOD QFontMetricsF:rightBearing( nCh )
+   RETURN Qt_QFontMetricsF_rightBearing( ::pPtr, nCh )
+
+
+METHOD QFontMetricsF:size( nFlags, cText, nTabStops, nTabArray )
+   RETURN Qt_QFontMetricsF_size( ::pPtr, nFlags, cText, nTabStops, nTabArray )
+
+
+METHOD QFontMetricsF:strikeOutPos()
+   RETURN Qt_QFontMetricsF_strikeOutPos( ::pPtr )
+
+
+METHOD QFontMetricsF:tightBoundingRect( cText )
+   RETURN Qt_QFontMetricsF_tightBoundingRect( ::pPtr, cText )
+
+
+METHOD QFontMetricsF:underlinePos()
+   RETURN Qt_QFontMetricsF_underlinePos( ::pPtr )
+
+
+METHOD QFontMetricsF:width( cText )
+   RETURN Qt_QFontMetricsF_width( ::pPtr, cText )
+
+
+METHOD QFontMetricsF:width_1( nCh )
+   RETURN Qt_QFontMetricsF_width_1( ::pPtr, nCh )
+
+
+METHOD QFontMetricsF:xHeight()
+   RETURN Qt_QFontMetricsF_xHeight( ::pPtr )
+

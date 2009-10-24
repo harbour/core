@@ -71,54 +71,147 @@ CREATE CLASS QTextBlock
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  blockFormat()                       INLINE  Qt_QTextBlock_blockFormat( ::pPtr )
-   METHOD  blockFormatIndex()                  INLINE  Qt_QTextBlock_blockFormatIndex( ::pPtr )
-   METHOD  blockNumber()                       INLINE  Qt_QTextBlock_blockNumber( ::pPtr )
-   METHOD  charFormat()                        INLINE  Qt_QTextBlock_charFormat( ::pPtr )
-   METHOD  charFormatIndex()                   INLINE  Qt_QTextBlock_charFormatIndex( ::pPtr )
-   METHOD  clearLayout()                       INLINE  Qt_QTextBlock_clearLayout( ::pPtr )
-   METHOD  contains( nPosition )               INLINE  Qt_QTextBlock_contains( ::pPtr, nPosition )
-   METHOD  document()                          INLINE  Qt_QTextBlock_document( ::pPtr )
-   METHOD  firstLineNumber()                   INLINE  Qt_QTextBlock_firstLineNumber( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QTextBlock_isValid( ::pPtr )
-   METHOD  isVisible()                         INLINE  Qt_QTextBlock_isVisible( ::pPtr )
-   METHOD  layout()                            INLINE  Qt_QTextBlock_layout( ::pPtr )
-   METHOD  length()                            INLINE  Qt_QTextBlock_length( ::pPtr )
-   METHOD  lineCount()                         INLINE  Qt_QTextBlock_lineCount( ::pPtr )
-   METHOD  next()                              INLINE  Qt_QTextBlock_next( ::pPtr )
-   METHOD  position()                          INLINE  Qt_QTextBlock_position( ::pPtr )
-   METHOD  previous()                          INLINE  Qt_QTextBlock_previous( ::pPtr )
-   METHOD  revision()                          INLINE  Qt_QTextBlock_revision( ::pPtr )
-   METHOD  setLineCount( nCount )              INLINE  Qt_QTextBlock_setLineCount( ::pPtr, nCount )
-   METHOD  setRevision( nRev )                 INLINE  Qt_QTextBlock_setRevision( ::pPtr, nRev )
-   METHOD  setUserState( nState )              INLINE  Qt_QTextBlock_setUserState( ::pPtr, nState )
-   METHOD  setVisible( lVisible )              INLINE  Qt_QTextBlock_setVisible( ::pPtr, lVisible )
-   METHOD  text()                              INLINE  Qt_QTextBlock_text( ::pPtr )
-   METHOD  textList()                          INLINE  Qt_QTextBlock_textList( ::pPtr )
-   METHOD  userState()                         INLINE  Qt_QTextBlock_userState( ::pPtr )
+   METHOD  blockFormat()
+   METHOD  blockFormatIndex()
+   METHOD  blockNumber()
+   METHOD  charFormat()
+   METHOD  charFormatIndex()
+   METHOD  clearLayout()
+   METHOD  contains( nPosition )
+   METHOD  document()
+   METHOD  firstLineNumber()
+   METHOD  isValid()
+   METHOD  isVisible()
+   METHOD  layout()
+   METHOD  length()
+   METHOD  lineCount()
+   METHOD  next()
+   METHOD  position()
+   METHOD  previous()
+   METHOD  revision()
+   METHOD  setLineCount( nCount )
+   METHOD  setRevision( nRev )
+   METHOD  setUserState( nState )
+   METHOD  setVisible( lVisible )
+   METHOD  text()
+   METHOD  textList()
+   METHOD  userState()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextBlock
-
+METHOD QTextBlock:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextBlock( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextBlock
-
+METHOD QTextBlock:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextBlock:blockFormat()
+   RETURN Qt_QTextBlock_blockFormat( ::pPtr )
+
+
+METHOD QTextBlock:blockFormatIndex()
+   RETURN Qt_QTextBlock_blockFormatIndex( ::pPtr )
+
+
+METHOD QTextBlock:blockNumber()
+   RETURN Qt_QTextBlock_blockNumber( ::pPtr )
+
+
+METHOD QTextBlock:charFormat()
+   RETURN Qt_QTextBlock_charFormat( ::pPtr )
+
+
+METHOD QTextBlock:charFormatIndex()
+   RETURN Qt_QTextBlock_charFormatIndex( ::pPtr )
+
+
+METHOD QTextBlock:clearLayout()
+   RETURN Qt_QTextBlock_clearLayout( ::pPtr )
+
+
+METHOD QTextBlock:contains( nPosition )
+   RETURN Qt_QTextBlock_contains( ::pPtr, nPosition )
+
+
+METHOD QTextBlock:document()
+   RETURN Qt_QTextBlock_document( ::pPtr )
+
+
+METHOD QTextBlock:firstLineNumber()
+   RETURN Qt_QTextBlock_firstLineNumber( ::pPtr )
+
+
+METHOD QTextBlock:isValid()
+   RETURN Qt_QTextBlock_isValid( ::pPtr )
+
+
+METHOD QTextBlock:isVisible()
+   RETURN Qt_QTextBlock_isVisible( ::pPtr )
+
+
+METHOD QTextBlock:layout()
+   RETURN Qt_QTextBlock_layout( ::pPtr )
+
+
+METHOD QTextBlock:length()
+   RETURN Qt_QTextBlock_length( ::pPtr )
+
+
+METHOD QTextBlock:lineCount()
+   RETURN Qt_QTextBlock_lineCount( ::pPtr )
+
+
+METHOD QTextBlock:next()
+   RETURN Qt_QTextBlock_next( ::pPtr )
+
+
+METHOD QTextBlock:position()
+   RETURN Qt_QTextBlock_position( ::pPtr )
+
+
+METHOD QTextBlock:previous()
+   RETURN Qt_QTextBlock_previous( ::pPtr )
+
+
+METHOD QTextBlock:revision()
+   RETURN Qt_QTextBlock_revision( ::pPtr )
+
+
+METHOD QTextBlock:setLineCount( nCount )
+   RETURN Qt_QTextBlock_setLineCount( ::pPtr, nCount )
+
+
+METHOD QTextBlock:setRevision( nRev )
+   RETURN Qt_QTextBlock_setRevision( ::pPtr, nRev )
+
+
+METHOD QTextBlock:setUserState( nState )
+   RETURN Qt_QTextBlock_setUserState( ::pPtr, nState )
+
+
+METHOD QTextBlock:setVisible( lVisible )
+   RETURN Qt_QTextBlock_setVisible( ::pPtr, lVisible )
+
+
+METHOD QTextBlock:text()
+   RETURN Qt_QTextBlock_text( ::pPtr )
+
+
+METHOD QTextBlock:textList()
+   RETURN Qt_QTextBlock_textList( ::pPtr )
+
+
+METHOD QTextBlock:userState()
+   RETURN Qt_QTextBlock_userState( ::pPtr )
+

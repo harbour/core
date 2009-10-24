@@ -71,58 +71,167 @@ CREATE CLASS QTextLayout
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  beginLayout()                       INLINE  Qt_QTextLayout_beginLayout( ::pPtr )
-   METHOD  boundingRect()                      INLINE  Qt_QTextLayout_boundingRect( ::pPtr )
-   METHOD  cacheEnabled()                      INLINE  Qt_QTextLayout_cacheEnabled( ::pPtr )
-   METHOD  clearAdditionalFormats()            INLINE  Qt_QTextLayout_clearAdditionalFormats( ::pPtr )
-   METHOD  clearLayout()                       INLINE  Qt_QTextLayout_clearLayout( ::pPtr )
-   METHOD  createLine()                        INLINE  Qt_QTextLayout_createLine( ::pPtr )
-   METHOD  drawCursor( pPainter, pPosition, nCursorPosition, nWidth )  INLINE  Qt_QTextLayout_drawCursor( ::pPtr, pPainter, pPosition, nCursorPosition, nWidth )
-   METHOD  drawCursor_1( pPainter, pPosition, nCursorPosition )  INLINE  Qt_QTextLayout_drawCursor_1( ::pPtr, pPainter, pPosition, nCursorPosition )
-   METHOD  endLayout()                         INLINE  Qt_QTextLayout_endLayout( ::pPtr )
-   METHOD  font()                              INLINE  Qt_QTextLayout_font( ::pPtr )
-   METHOD  isValidCursorPosition( nPos )       INLINE  Qt_QTextLayout_isValidCursorPosition( ::pPtr, nPos )
-   METHOD  lineAt( nI )                        INLINE  Qt_QTextLayout_lineAt( ::pPtr, nI )
-   METHOD  lineCount()                         INLINE  Qt_QTextLayout_lineCount( ::pPtr )
-   METHOD  lineForTextPosition( nPos )         INLINE  Qt_QTextLayout_lineForTextPosition( ::pPtr, nPos )
-   METHOD  maximumWidth()                      INLINE  Qt_QTextLayout_maximumWidth( ::pPtr )
-   METHOD  minimumWidth()                      INLINE  Qt_QTextLayout_minimumWidth( ::pPtr )
-   METHOD  nextCursorPosition( nOldPos, nMode )  INLINE  Qt_QTextLayout_nextCursorPosition( ::pPtr, nOldPos, nMode )
-   METHOD  position()                          INLINE  Qt_QTextLayout_position( ::pPtr )
-   METHOD  preeditAreaPosition()               INLINE  Qt_QTextLayout_preeditAreaPosition( ::pPtr )
-   METHOD  preeditAreaText()                   INLINE  Qt_QTextLayout_preeditAreaText( ::pPtr )
-   METHOD  previousCursorPosition( nOldPos, nMode )  INLINE  Qt_QTextLayout_previousCursorPosition( ::pPtr, nOldPos, nMode )
-   METHOD  setCacheEnabled( lEnable )          INLINE  Qt_QTextLayout_setCacheEnabled( ::pPtr, lEnable )
-   METHOD  setFont( pFont )                    INLINE  Qt_QTextLayout_setFont( ::pPtr, pFont )
-   METHOD  setPosition( pP )                   INLINE  Qt_QTextLayout_setPosition( ::pPtr, pP )
-   METHOD  setPreeditArea( nPosition, cText )  INLINE  Qt_QTextLayout_setPreeditArea( ::pPtr, nPosition, cText )
-   METHOD  setText( cString )                  INLINE  Qt_QTextLayout_setText( ::pPtr, cString )
-   METHOD  setTextOption( pOption )            INLINE  Qt_QTextLayout_setTextOption( ::pPtr, pOption )
-   METHOD  text()                              INLINE  Qt_QTextLayout_text( ::pPtr )
-   METHOD  textOption()                        INLINE  Qt_QTextLayout_textOption( ::pPtr )
+   METHOD  beginLayout()
+   METHOD  boundingRect()
+   METHOD  cacheEnabled()
+   METHOD  clearAdditionalFormats()
+   METHOD  clearLayout()
+   METHOD  createLine()
+   METHOD  drawCursor( pPainter, pPosition, nCursorPosition, nWidth )
+   METHOD  drawCursor_1( pPainter, pPosition, nCursorPosition )
+   METHOD  endLayout()
+   METHOD  font()
+   METHOD  isValidCursorPosition( nPos )
+   METHOD  lineAt( nI )
+   METHOD  lineCount()
+   METHOD  lineForTextPosition( nPos )
+   METHOD  maximumWidth()
+   METHOD  minimumWidth()
+   METHOD  nextCursorPosition( nOldPos, nMode )
+   METHOD  position()
+   METHOD  preeditAreaPosition()
+   METHOD  preeditAreaText()
+   METHOD  previousCursorPosition( nOldPos, nMode )
+   METHOD  setCacheEnabled( lEnable )
+   METHOD  setFont( pFont )
+   METHOD  setPosition( pP )
+   METHOD  setPreeditArea( nPosition, cText )
+   METHOD  setText( cString )
+   METHOD  setTextOption( pOption )
+   METHOD  text()
+   METHOD  textOption()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextLayout
-
+METHOD QTextLayout:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextLayout( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextLayout
-
+METHOD QTextLayout:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextLayout:beginLayout()
+   RETURN Qt_QTextLayout_beginLayout( ::pPtr )
+
+
+METHOD QTextLayout:boundingRect()
+   RETURN Qt_QTextLayout_boundingRect( ::pPtr )
+
+
+METHOD QTextLayout:cacheEnabled()
+   RETURN Qt_QTextLayout_cacheEnabled( ::pPtr )
+
+
+METHOD QTextLayout:clearAdditionalFormats()
+   RETURN Qt_QTextLayout_clearAdditionalFormats( ::pPtr )
+
+
+METHOD QTextLayout:clearLayout()
+   RETURN Qt_QTextLayout_clearLayout( ::pPtr )
+
+
+METHOD QTextLayout:createLine()
+   RETURN Qt_QTextLayout_createLine( ::pPtr )
+
+
+METHOD QTextLayout:drawCursor( pPainter, pPosition, nCursorPosition, nWidth )
+   RETURN Qt_QTextLayout_drawCursor( ::pPtr, pPainter, pPosition, nCursorPosition, nWidth )
+
+
+METHOD QTextLayout:drawCursor_1( pPainter, pPosition, nCursorPosition )
+   RETURN Qt_QTextLayout_drawCursor_1( ::pPtr, pPainter, pPosition, nCursorPosition )
+
+
+METHOD QTextLayout:endLayout()
+   RETURN Qt_QTextLayout_endLayout( ::pPtr )
+
+
+METHOD QTextLayout:font()
+   RETURN Qt_QTextLayout_font( ::pPtr )
+
+
+METHOD QTextLayout:isValidCursorPosition( nPos )
+   RETURN Qt_QTextLayout_isValidCursorPosition( ::pPtr, nPos )
+
+
+METHOD QTextLayout:lineAt( nI )
+   RETURN Qt_QTextLayout_lineAt( ::pPtr, nI )
+
+
+METHOD QTextLayout:lineCount()
+   RETURN Qt_QTextLayout_lineCount( ::pPtr )
+
+
+METHOD QTextLayout:lineForTextPosition( nPos )
+   RETURN Qt_QTextLayout_lineForTextPosition( ::pPtr, nPos )
+
+
+METHOD QTextLayout:maximumWidth()
+   RETURN Qt_QTextLayout_maximumWidth( ::pPtr )
+
+
+METHOD QTextLayout:minimumWidth()
+   RETURN Qt_QTextLayout_minimumWidth( ::pPtr )
+
+
+METHOD QTextLayout:nextCursorPosition( nOldPos, nMode )
+   RETURN Qt_QTextLayout_nextCursorPosition( ::pPtr, nOldPos, nMode )
+
+
+METHOD QTextLayout:position()
+   RETURN Qt_QTextLayout_position( ::pPtr )
+
+
+METHOD QTextLayout:preeditAreaPosition()
+   RETURN Qt_QTextLayout_preeditAreaPosition( ::pPtr )
+
+
+METHOD QTextLayout:preeditAreaText()
+   RETURN Qt_QTextLayout_preeditAreaText( ::pPtr )
+
+
+METHOD QTextLayout:previousCursorPosition( nOldPos, nMode )
+   RETURN Qt_QTextLayout_previousCursorPosition( ::pPtr, nOldPos, nMode )
+
+
+METHOD QTextLayout:setCacheEnabled( lEnable )
+   RETURN Qt_QTextLayout_setCacheEnabled( ::pPtr, lEnable )
+
+
+METHOD QTextLayout:setFont( pFont )
+   RETURN Qt_QTextLayout_setFont( ::pPtr, pFont )
+
+
+METHOD QTextLayout:setPosition( pP )
+   RETURN Qt_QTextLayout_setPosition( ::pPtr, pP )
+
+
+METHOD QTextLayout:setPreeditArea( nPosition, cText )
+   RETURN Qt_QTextLayout_setPreeditArea( ::pPtr, nPosition, cText )
+
+
+METHOD QTextLayout:setText( cString )
+   RETURN Qt_QTextLayout_setText( ::pPtr, cString )
+
+
+METHOD QTextLayout:setTextOption( pOption )
+   RETURN Qt_QTextLayout_setTextOption( ::pPtr, pOption )
+
+
+METHOD QTextLayout:text()
+   RETURN Qt_QTextLayout_text( ::pPtr )
+
+
+METHOD QTextLayout:textOption()
+   RETURN Qt_QTextLayout_textOption( ::pPtr )
+

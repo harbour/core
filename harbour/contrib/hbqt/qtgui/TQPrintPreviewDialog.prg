@@ -71,31 +71,32 @@ CREATE CLASS QPrintPreviewDialog INHERIT QDialog
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  open( pReceiver, pMember )          INLINE  Qt_QPrintPreviewDialog_open( ::pPtr, pReceiver, pMember )
-   METHOD  printer()                           INLINE  Qt_QPrintPreviewDialog_printer( ::pPtr )
+   METHOD  open( pReceiver, pMember )
+   METHOD  printer()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QPrintPreviewDialog
-
+METHOD QPrintPreviewDialog:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QPrintPreviewDialog( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QPrintPreviewDialog
-
+METHOD QPrintPreviewDialog:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QPrintPreviewDialog:open( pReceiver, pMember )
+   RETURN Qt_QPrintPreviewDialog_open( ::pPtr, pReceiver, pMember )
+
+
+METHOD QPrintPreviewDialog:printer()
+   RETURN Qt_QPrintPreviewDialog_printer( ::pPtr )
+

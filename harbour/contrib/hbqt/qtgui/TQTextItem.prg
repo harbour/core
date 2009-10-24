@@ -71,35 +71,52 @@ CREATE CLASS QTextItem
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  ascent()                            INLINE  Qt_QTextItem_ascent( ::pPtr )
-   METHOD  descent()                           INLINE  Qt_QTextItem_descent( ::pPtr )
-   METHOD  font()                              INLINE  Qt_QTextItem_font( ::pPtr )
-   METHOD  renderFlags()                       INLINE  Qt_QTextItem_renderFlags( ::pPtr )
-   METHOD  text()                              INLINE  Qt_QTextItem_text( ::pPtr )
-   METHOD  width()                             INLINE  Qt_QTextItem_width( ::pPtr )
+   METHOD  ascent()
+   METHOD  descent()
+   METHOD  font()
+   METHOD  renderFlags()
+   METHOD  text()
+   METHOD  width()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextItem
-
+METHOD QTextItem:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextItem( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextItem
-
+METHOD QTextItem:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextItem:ascent()
+   RETURN Qt_QTextItem_ascent( ::pPtr )
+
+
+METHOD QTextItem:descent()
+   RETURN Qt_QTextItem_descent( ::pPtr )
+
+
+METHOD QTextItem:font()
+   RETURN Qt_QTextItem_font( ::pPtr )
+
+
+METHOD QTextItem:renderFlags()
+   RETURN Qt_QTextItem_renderFlags( ::pPtr )
+
+
+METHOD QTextItem:text()
+   RETURN Qt_QTextItem_text( ::pPtr )
+
+
+METHOD QTextItem:width()
+   RETURN Qt_QTextItem_width( ::pPtr )
+

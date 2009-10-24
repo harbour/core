@@ -162,7 +162,7 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oEventLoop := QEventLoop():new( ::pWidget )
    SetEventLoop( ::oEventLoop )
 
-   #if 0
+   #if 1
    /* Instal Event Filter */
    ::oWidget:installEventFilter( SetEventFilter() )
 
@@ -218,11 +218,8 @@ METHOD XbpDialog:destroy()
 
    SetEventLoop( NIL )
    ::oEventLoop:exit( 0 )
-   ::oEventLoop:destroy()
 
    ::xbpWindow:destroy()
-
-   //   ::oWidget:destroy()
 
    RETURN nil
 

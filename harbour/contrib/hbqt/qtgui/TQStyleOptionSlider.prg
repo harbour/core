@@ -71,41 +71,82 @@ CREATE CLASS QStyleOptionSlider INHERIT QStyleOptionComplex
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  dialWrapping()                      INLINE  Qt_QStyleOptionSlider_dialWrapping( ::pPtr )
-   METHOD  maximum()                           INLINE  Qt_QStyleOptionSlider_maximum( ::pPtr )
-   METHOD  minimum()                           INLINE  Qt_QStyleOptionSlider_minimum( ::pPtr )
-   METHOD  notchTarget()                       INLINE  Qt_QStyleOptionSlider_notchTarget( ::pPtr )
-   METHOD  orientation()                       INLINE  Qt_QStyleOptionSlider_orientation( ::pPtr )
-   METHOD  pageStep()                          INLINE  Qt_QStyleOptionSlider_pageStep( ::pPtr )
-   METHOD  singleStep()                        INLINE  Qt_QStyleOptionSlider_singleStep( ::pPtr )
-   METHOD  sliderPosition()                    INLINE  Qt_QStyleOptionSlider_sliderPosition( ::pPtr )
-   METHOD  sliderValue()                       INLINE  Qt_QStyleOptionSlider_sliderValue( ::pPtr )
-   METHOD  tickInterval()                      INLINE  Qt_QStyleOptionSlider_tickInterval( ::pPtr )
-   METHOD  tickPosition()                      INLINE  Qt_QStyleOptionSlider_tickPosition( ::pPtr )
-   METHOD  upsideDown()                        INLINE  Qt_QStyleOptionSlider_upsideDown( ::pPtr )
+   METHOD  dialWrapping()
+   METHOD  maximum()
+   METHOD  minimum()
+   METHOD  notchTarget()
+   METHOD  orientation()
+   METHOD  pageStep()
+   METHOD  singleStep()
+   METHOD  sliderPosition()
+   METHOD  sliderValue()
+   METHOD  tickInterval()
+   METHOD  tickPosition()
+   METHOD  upsideDown()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyleOptionSlider
-
+METHOD QStyleOptionSlider:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyleOptionSlider( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyleOptionSlider
-
+METHOD QStyleOptionSlider:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyleOptionSlider:dialWrapping()
+   RETURN Qt_QStyleOptionSlider_dialWrapping( ::pPtr )
+
+
+METHOD QStyleOptionSlider:maximum()
+   RETURN Qt_QStyleOptionSlider_maximum( ::pPtr )
+
+
+METHOD QStyleOptionSlider:minimum()
+   RETURN Qt_QStyleOptionSlider_minimum( ::pPtr )
+
+
+METHOD QStyleOptionSlider:notchTarget()
+   RETURN Qt_QStyleOptionSlider_notchTarget( ::pPtr )
+
+
+METHOD QStyleOptionSlider:orientation()
+   RETURN Qt_QStyleOptionSlider_orientation( ::pPtr )
+
+
+METHOD QStyleOptionSlider:pageStep()
+   RETURN Qt_QStyleOptionSlider_pageStep( ::pPtr )
+
+
+METHOD QStyleOptionSlider:singleStep()
+   RETURN Qt_QStyleOptionSlider_singleStep( ::pPtr )
+
+
+METHOD QStyleOptionSlider:sliderPosition()
+   RETURN Qt_QStyleOptionSlider_sliderPosition( ::pPtr )
+
+
+METHOD QStyleOptionSlider:sliderValue()
+   RETURN Qt_QStyleOptionSlider_sliderValue( ::pPtr )
+
+
+METHOD QStyleOptionSlider:tickInterval()
+   RETURN Qt_QStyleOptionSlider_tickInterval( ::pPtr )
+
+
+METHOD QStyleOptionSlider:tickPosition()
+   RETURN Qt_QStyleOptionSlider_tickPosition( ::pPtr )
+
+
+METHOD QStyleOptionSlider:upsideDown()
+   RETURN Qt_QStyleOptionSlider_upsideDown( ::pPtr )
+

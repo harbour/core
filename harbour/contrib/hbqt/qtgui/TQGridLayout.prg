@@ -71,55 +71,152 @@ CREATE CLASS QGridLayout INHERIT QLayout
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addItem( pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )  INLINE  Qt_QGridLayout_addItem( ::pPtr, pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
-   METHOD  addLayout( pLayout, nRow, nColumn, nAlignment )  INLINE  Qt_QGridLayout_addLayout( ::pPtr, pLayout, nRow, nColumn, nAlignment )
-   METHOD  addLayout_1( pLayout, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )  INLINE  Qt_QGridLayout_addLayout_1( ::pPtr, pLayout, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
-   METHOD  addWidget( pWidget, nRow, nColumn, nAlignment )  INLINE  Qt_QGridLayout_addWidget( ::pPtr, pWidget, nRow, nColumn, nAlignment )
-   METHOD  addWidget_1( pWidget, nFromRow, nFromColumn, nRowSpan, nColumnSpan, nAlignment )  INLINE  Qt_QGridLayout_addWidget_1( ::pPtr, pWidget, nFromRow, nFromColumn, nRowSpan, nColumnSpan, nAlignment )
-   METHOD  cellRect( nRow, nColumn )           INLINE  Qt_QGridLayout_cellRect( ::pPtr, nRow, nColumn )
-   METHOD  columnCount()                       INLINE  Qt_QGridLayout_columnCount( ::pPtr )
-   METHOD  columnMinimumWidth( nColumn )       INLINE  Qt_QGridLayout_columnMinimumWidth( ::pPtr, nColumn )
-   METHOD  columnStretch( nColumn )            INLINE  Qt_QGridLayout_columnStretch( ::pPtr, nColumn )
-   METHOD  getItemPosition( nIndex, nRow, nColumn, nRowSpan, nColumnSpan )  INLINE  Qt_QGridLayout_getItemPosition( ::pPtr, nIndex, nRow, nColumn, nRowSpan, nColumnSpan )
-   METHOD  horizontalSpacing()                 INLINE  Qt_QGridLayout_horizontalSpacing( ::pPtr )
-   METHOD  itemAtPosition( nRow, nColumn )     INLINE  Qt_QGridLayout_itemAtPosition( ::pPtr, nRow, nColumn )
-   METHOD  originCorner()                      INLINE  Qt_QGridLayout_originCorner( ::pPtr )
-   METHOD  rowCount()                          INLINE  Qt_QGridLayout_rowCount( ::pPtr )
-   METHOD  rowMinimumHeight( nRow )            INLINE  Qt_QGridLayout_rowMinimumHeight( ::pPtr, nRow )
-   METHOD  rowStretch( nRow )                  INLINE  Qt_QGridLayout_rowStretch( ::pPtr, nRow )
-   METHOD  setColumnMinimumWidth( nColumn, nMinSize )  INLINE  Qt_QGridLayout_setColumnMinimumWidth( ::pPtr, nColumn, nMinSize )
-   METHOD  setColumnStretch( nColumn, nStretch )  INLINE  Qt_QGridLayout_setColumnStretch( ::pPtr, nColumn, nStretch )
-   METHOD  setHorizontalSpacing( nSpacing )    INLINE  Qt_QGridLayout_setHorizontalSpacing( ::pPtr, nSpacing )
-   METHOD  setOriginCorner( nCorner )          INLINE  Qt_QGridLayout_setOriginCorner( ::pPtr, nCorner )
-   METHOD  setRowMinimumHeight( nRow, nMinSize )  INLINE  Qt_QGridLayout_setRowMinimumHeight( ::pPtr, nRow, nMinSize )
-   METHOD  setRowStretch( nRow, nStretch )     INLINE  Qt_QGridLayout_setRowStretch( ::pPtr, nRow, nStretch )
-   METHOD  setSpacing( nSpacing )              INLINE  Qt_QGridLayout_setSpacing( ::pPtr, nSpacing )
-   METHOD  setVerticalSpacing( nSpacing )      INLINE  Qt_QGridLayout_setVerticalSpacing( ::pPtr, nSpacing )
-   METHOD  spacing()                           INLINE  Qt_QGridLayout_spacing( ::pPtr )
-   METHOD  verticalSpacing()                   INLINE  Qt_QGridLayout_verticalSpacing( ::pPtr )
+   METHOD  addItem( pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
+   METHOD  addLayout( pLayout, nRow, nColumn, nAlignment )
+   METHOD  addLayout_1( pLayout, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
+   METHOD  addWidget( pWidget, nRow, nColumn, nAlignment )
+   METHOD  addWidget_1( pWidget, nFromRow, nFromColumn, nRowSpan, nColumnSpan, nAlignment )
+   METHOD  cellRect( nRow, nColumn )
+   METHOD  columnCount()
+   METHOD  columnMinimumWidth( nColumn )
+   METHOD  columnStretch( nColumn )
+   METHOD  getItemPosition( nIndex, nRow, nColumn, nRowSpan, nColumnSpan )
+   METHOD  horizontalSpacing()
+   METHOD  itemAtPosition( nRow, nColumn )
+   METHOD  originCorner()
+   METHOD  rowCount()
+   METHOD  rowMinimumHeight( nRow )
+   METHOD  rowStretch( nRow )
+   METHOD  setColumnMinimumWidth( nColumn, nMinSize )
+   METHOD  setColumnStretch( nColumn, nStretch )
+   METHOD  setHorizontalSpacing( nSpacing )
+   METHOD  setOriginCorner( nCorner )
+   METHOD  setRowMinimumHeight( nRow, nMinSize )
+   METHOD  setRowStretch( nRow, nStretch )
+   METHOD  setSpacing( nSpacing )
+   METHOD  setVerticalSpacing( nSpacing )
+   METHOD  spacing()
+   METHOD  verticalSpacing()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QGridLayout
-
+METHOD QGridLayout:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QGridLayout( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QGridLayout
-
+METHOD QGridLayout:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QGridLayout:addItem( pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
+   RETURN Qt_QGridLayout_addItem( ::pPtr, pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
+
+
+METHOD QGridLayout:addLayout( pLayout, nRow, nColumn, nAlignment )
+   RETURN Qt_QGridLayout_addLayout( ::pPtr, pLayout, nRow, nColumn, nAlignment )
+
+
+METHOD QGridLayout:addLayout_1( pLayout, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
+   RETURN Qt_QGridLayout_addLayout_1( ::pPtr, pLayout, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
+
+
+METHOD QGridLayout:addWidget( pWidget, nRow, nColumn, nAlignment )
+   RETURN Qt_QGridLayout_addWidget( ::pPtr, pWidget, nRow, nColumn, nAlignment )
+
+
+METHOD QGridLayout:addWidget_1( pWidget, nFromRow, nFromColumn, nRowSpan, nColumnSpan, nAlignment )
+   RETURN Qt_QGridLayout_addWidget_1( ::pPtr, pWidget, nFromRow, nFromColumn, nRowSpan, nColumnSpan, nAlignment )
+
+
+METHOD QGridLayout:cellRect( nRow, nColumn )
+   RETURN Qt_QGridLayout_cellRect( ::pPtr, nRow, nColumn )
+
+
+METHOD QGridLayout:columnCount()
+   RETURN Qt_QGridLayout_columnCount( ::pPtr )
+
+
+METHOD QGridLayout:columnMinimumWidth( nColumn )
+   RETURN Qt_QGridLayout_columnMinimumWidth( ::pPtr, nColumn )
+
+
+METHOD QGridLayout:columnStretch( nColumn )
+   RETURN Qt_QGridLayout_columnStretch( ::pPtr, nColumn )
+
+
+METHOD QGridLayout:getItemPosition( nIndex, nRow, nColumn, nRowSpan, nColumnSpan )
+   RETURN Qt_QGridLayout_getItemPosition( ::pPtr, nIndex, nRow, nColumn, nRowSpan, nColumnSpan )
+
+
+METHOD QGridLayout:horizontalSpacing()
+   RETURN Qt_QGridLayout_horizontalSpacing( ::pPtr )
+
+
+METHOD QGridLayout:itemAtPosition( nRow, nColumn )
+   RETURN Qt_QGridLayout_itemAtPosition( ::pPtr, nRow, nColumn )
+
+
+METHOD QGridLayout:originCorner()
+   RETURN Qt_QGridLayout_originCorner( ::pPtr )
+
+
+METHOD QGridLayout:rowCount()
+   RETURN Qt_QGridLayout_rowCount( ::pPtr )
+
+
+METHOD QGridLayout:rowMinimumHeight( nRow )
+   RETURN Qt_QGridLayout_rowMinimumHeight( ::pPtr, nRow )
+
+
+METHOD QGridLayout:rowStretch( nRow )
+   RETURN Qt_QGridLayout_rowStretch( ::pPtr, nRow )
+
+
+METHOD QGridLayout:setColumnMinimumWidth( nColumn, nMinSize )
+   RETURN Qt_QGridLayout_setColumnMinimumWidth( ::pPtr, nColumn, nMinSize )
+
+
+METHOD QGridLayout:setColumnStretch( nColumn, nStretch )
+   RETURN Qt_QGridLayout_setColumnStretch( ::pPtr, nColumn, nStretch )
+
+
+METHOD QGridLayout:setHorizontalSpacing( nSpacing )
+   RETURN Qt_QGridLayout_setHorizontalSpacing( ::pPtr, nSpacing )
+
+
+METHOD QGridLayout:setOriginCorner( nCorner )
+   RETURN Qt_QGridLayout_setOriginCorner( ::pPtr, nCorner )
+
+
+METHOD QGridLayout:setRowMinimumHeight( nRow, nMinSize )
+   RETURN Qt_QGridLayout_setRowMinimumHeight( ::pPtr, nRow, nMinSize )
+
+
+METHOD QGridLayout:setRowStretch( nRow, nStretch )
+   RETURN Qt_QGridLayout_setRowStretch( ::pPtr, nRow, nStretch )
+
+
+METHOD QGridLayout:setSpacing( nSpacing )
+   RETURN Qt_QGridLayout_setSpacing( ::pPtr, nSpacing )
+
+
+METHOD QGridLayout:setVerticalSpacing( nSpacing )
+   RETURN Qt_QGridLayout_setVerticalSpacing( ::pPtr, nSpacing )
+
+
+METHOD QGridLayout:spacing()
+   RETURN Qt_QGridLayout_spacing( ::pPtr )
+
+
+METHOD QGridLayout:verticalSpacing()
+   RETURN Qt_QGridLayout_verticalSpacing( ::pPtr )
+

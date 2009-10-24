@@ -71,66 +71,207 @@ CREATE CLASS QWebFrame INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addToJavaScriptWindowObject( cName, pObject )  INLINE  Qt_QWebFrame_addToJavaScriptWindowObject( ::pPtr, cName, pObject )
-   METHOD  addToJavaScriptWindowObject_1( cName, pObject, nOwn )  INLINE  Qt_QWebFrame_addToJavaScriptWindowObject_1( ::pPtr, cName, pObject, nOwn )
-   METHOD  contentsSize()                      INLINE  Qt_QWebFrame_contentsSize( ::pPtr )
-   METHOD  frameName()                         INLINE  Qt_QWebFrame_frameName( ::pPtr )
-   METHOD  geometry()                          INLINE  Qt_QWebFrame_geometry( ::pPtr )
-   METHOD  hitTestContent( pPos )              INLINE  Qt_QWebFrame_hitTestContent( ::pPtr, pPos )
-   METHOD  icon()                              INLINE  Qt_QWebFrame_icon( ::pPtr )
-   METHOD  load( pUrl )                        INLINE  Qt_QWebFrame_load( ::pPtr, pUrl )
-   METHOD  page()                              INLINE  Qt_QWebFrame_page( ::pPtr )
-   METHOD  parentFrame()                       INLINE  Qt_QWebFrame_parentFrame( ::pPtr )
-   METHOD  pos()                               INLINE  Qt_QWebFrame_pos( ::pPtr )
-   METHOD  render( pPainter, pClip )           INLINE  Qt_QWebFrame_render( ::pPtr, pPainter, pClip )
-   METHOD  render_1( pPainter )                INLINE  Qt_QWebFrame_render_1( ::pPtr, pPainter )
-   METHOD  renderTreeDump()                    INLINE  Qt_QWebFrame_renderTreeDump( ::pPtr )
-   METHOD  scroll( nDx, nDy )                  INLINE  Qt_QWebFrame_scroll( ::pPtr, nDx, nDy )
-   METHOD  scrollBarMaximum( nOrientation )    INLINE  Qt_QWebFrame_scrollBarMaximum( ::pPtr, nOrientation )
-   METHOD  scrollBarMinimum( nOrientation )    INLINE  Qt_QWebFrame_scrollBarMinimum( ::pPtr, nOrientation )
-   METHOD  scrollBarPolicy( nOrientation )     INLINE  Qt_QWebFrame_scrollBarPolicy( ::pPtr, nOrientation )
-   METHOD  scrollBarValue( nOrientation )      INLINE  Qt_QWebFrame_scrollBarValue( ::pPtr, nOrientation )
-   METHOD  scrollPosition()                    INLINE  Qt_QWebFrame_scrollPosition( ::pPtr )
-   METHOD  securityOrigin()                    INLINE  Qt_QWebFrame_securityOrigin( ::pPtr )
-   METHOD  setContent( pData, cMimeType, pBaseUrl )  INLINE  Qt_QWebFrame_setContent( ::pPtr, pData, cMimeType, pBaseUrl )
-   METHOD  setHtml( cHtml, pBaseUrl )          INLINE  Qt_QWebFrame_setHtml( ::pPtr, cHtml, pBaseUrl )
-   METHOD  setScrollBarPolicy( nOrientation, nPolicy )  INLINE  Qt_QWebFrame_setScrollBarPolicy( ::pPtr, nOrientation, nPolicy )
-   METHOD  setScrollBarValue( nOrientation, nValue )  INLINE  Qt_QWebFrame_setScrollBarValue( ::pPtr, nOrientation, nValue )
-   METHOD  setScrollPosition( pPos )           INLINE  Qt_QWebFrame_setScrollPosition( ::pPtr, pPos )
-   METHOD  setTextSizeMultiplier( nFactor )    INLINE  Qt_QWebFrame_setTextSizeMultiplier( ::pPtr, nFactor )
-   METHOD  setUrl( pUrl )                      INLINE  Qt_QWebFrame_setUrl( ::pPtr, pUrl )
-   METHOD  setZoomFactor( nFactor )            INLINE  Qt_QWebFrame_setZoomFactor( ::pPtr, nFactor )
-   METHOD  textSizeMultiplier()                INLINE  Qt_QWebFrame_textSizeMultiplier( ::pPtr )
-   METHOD  title()                             INLINE  Qt_QWebFrame_title( ::pPtr )
-   METHOD  toHtml()                            INLINE  Qt_QWebFrame_toHtml( ::pPtr )
-   METHOD  toPlainText()                       INLINE  Qt_QWebFrame_toPlainText( ::pPtr )
-   METHOD  url()                               INLINE  Qt_QWebFrame_url( ::pPtr )
-   METHOD  zoomFactor()                        INLINE  Qt_QWebFrame_zoomFactor( ::pPtr )
-   METHOD  evaluateJavaScript( cScriptSource )  INLINE  Qt_QWebFrame_evaluateJavaScript( ::pPtr, cScriptSource )
-   METHOD  print( pPrinter )                   INLINE  Qt_QWebFrame_print( ::pPtr, pPrinter )
+   METHOD  addToJavaScriptWindowObject( cName, pObject )
+   METHOD  addToJavaScriptWindowObject_1( cName, pObject, nOwn )
+   METHOD  contentsSize()
+   METHOD  frameName()
+   METHOD  geometry()
+   METHOD  hitTestContent( pPos )
+   METHOD  icon()
+   METHOD  load( pUrl )
+   METHOD  page()
+   METHOD  parentFrame()
+   METHOD  pos()
+   METHOD  render( pPainter, pClip )
+   METHOD  render_1( pPainter )
+   METHOD  renderTreeDump()
+   METHOD  scroll( nDx, nDy )
+   METHOD  scrollBarMaximum( nOrientation )
+   METHOD  scrollBarMinimum( nOrientation )
+   METHOD  scrollBarPolicy( nOrientation )
+   METHOD  scrollBarValue( nOrientation )
+   METHOD  scrollPosition()
+   METHOD  securityOrigin()
+   METHOD  setContent( pData, cMimeType, pBaseUrl )
+   METHOD  setHtml( cHtml, pBaseUrl )
+   METHOD  setScrollBarPolicy( nOrientation, nPolicy )
+   METHOD  setScrollBarValue( nOrientation, nValue )
+   METHOD  setScrollPosition( pPos )
+   METHOD  setTextSizeMultiplier( nFactor )
+   METHOD  setUrl( pUrl )
+   METHOD  setZoomFactor( nFactor )
+   METHOD  textSizeMultiplier()
+   METHOD  title()
+   METHOD  toHtml()
+   METHOD  toPlainText()
+   METHOD  url()
+   METHOD  zoomFactor()
+   METHOD  evaluateJavaScript( cScriptSource )
+   METHOD  print( pPrinter )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QWebFrame
-
+METHOD QWebFrame:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QWebFrame( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QWebFrame
-
+METHOD QWebFrame:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QWebFrame:addToJavaScriptWindowObject( cName, pObject )
+   RETURN Qt_QWebFrame_addToJavaScriptWindowObject( ::pPtr, cName, pObject )
+
+
+METHOD QWebFrame:addToJavaScriptWindowObject_1( cName, pObject, nOwn )
+   RETURN Qt_QWebFrame_addToJavaScriptWindowObject_1( ::pPtr, cName, pObject, nOwn )
+
+
+METHOD QWebFrame:contentsSize()
+   RETURN Qt_QWebFrame_contentsSize( ::pPtr )
+
+
+METHOD QWebFrame:frameName()
+   RETURN Qt_QWebFrame_frameName( ::pPtr )
+
+
+METHOD QWebFrame:geometry()
+   RETURN Qt_QWebFrame_geometry( ::pPtr )
+
+
+METHOD QWebFrame:hitTestContent( pPos )
+   RETURN Qt_QWebFrame_hitTestContent( ::pPtr, pPos )
+
+
+METHOD QWebFrame:icon()
+   RETURN Qt_QWebFrame_icon( ::pPtr )
+
+
+METHOD QWebFrame:load( pUrl )
+   RETURN Qt_QWebFrame_load( ::pPtr, pUrl )
+
+
+METHOD QWebFrame:page()
+   RETURN Qt_QWebFrame_page( ::pPtr )
+
+
+METHOD QWebFrame:parentFrame()
+   RETURN Qt_QWebFrame_parentFrame( ::pPtr )
+
+
+METHOD QWebFrame:pos()
+   RETURN Qt_QWebFrame_pos( ::pPtr )
+
+
+METHOD QWebFrame:render( pPainter, pClip )
+   RETURN Qt_QWebFrame_render( ::pPtr, pPainter, pClip )
+
+
+METHOD QWebFrame:render_1( pPainter )
+   RETURN Qt_QWebFrame_render_1( ::pPtr, pPainter )
+
+
+METHOD QWebFrame:renderTreeDump()
+   RETURN Qt_QWebFrame_renderTreeDump( ::pPtr )
+
+
+METHOD QWebFrame:scroll( nDx, nDy )
+   RETURN Qt_QWebFrame_scroll( ::pPtr, nDx, nDy )
+
+
+METHOD QWebFrame:scrollBarMaximum( nOrientation )
+   RETURN Qt_QWebFrame_scrollBarMaximum( ::pPtr, nOrientation )
+
+
+METHOD QWebFrame:scrollBarMinimum( nOrientation )
+   RETURN Qt_QWebFrame_scrollBarMinimum( ::pPtr, nOrientation )
+
+
+METHOD QWebFrame:scrollBarPolicy( nOrientation )
+   RETURN Qt_QWebFrame_scrollBarPolicy( ::pPtr, nOrientation )
+
+
+METHOD QWebFrame:scrollBarValue( nOrientation )
+   RETURN Qt_QWebFrame_scrollBarValue( ::pPtr, nOrientation )
+
+
+METHOD QWebFrame:scrollPosition()
+   RETURN Qt_QWebFrame_scrollPosition( ::pPtr )
+
+
+METHOD QWebFrame:securityOrigin()
+   RETURN Qt_QWebFrame_securityOrigin( ::pPtr )
+
+
+METHOD QWebFrame:setContent( pData, cMimeType, pBaseUrl )
+   RETURN Qt_QWebFrame_setContent( ::pPtr, pData, cMimeType, pBaseUrl )
+
+
+METHOD QWebFrame:setHtml( cHtml, pBaseUrl )
+   RETURN Qt_QWebFrame_setHtml( ::pPtr, cHtml, pBaseUrl )
+
+
+METHOD QWebFrame:setScrollBarPolicy( nOrientation, nPolicy )
+   RETURN Qt_QWebFrame_setScrollBarPolicy( ::pPtr, nOrientation, nPolicy )
+
+
+METHOD QWebFrame:setScrollBarValue( nOrientation, nValue )
+   RETURN Qt_QWebFrame_setScrollBarValue( ::pPtr, nOrientation, nValue )
+
+
+METHOD QWebFrame:setScrollPosition( pPos )
+   RETURN Qt_QWebFrame_setScrollPosition( ::pPtr, pPos )
+
+
+METHOD QWebFrame:setTextSizeMultiplier( nFactor )
+   RETURN Qt_QWebFrame_setTextSizeMultiplier( ::pPtr, nFactor )
+
+
+METHOD QWebFrame:setUrl( pUrl )
+   RETURN Qt_QWebFrame_setUrl( ::pPtr, pUrl )
+
+
+METHOD QWebFrame:setZoomFactor( nFactor )
+   RETURN Qt_QWebFrame_setZoomFactor( ::pPtr, nFactor )
+
+
+METHOD QWebFrame:textSizeMultiplier()
+   RETURN Qt_QWebFrame_textSizeMultiplier( ::pPtr )
+
+
+METHOD QWebFrame:title()
+   RETURN Qt_QWebFrame_title( ::pPtr )
+
+
+METHOD QWebFrame:toHtml()
+   RETURN Qt_QWebFrame_toHtml( ::pPtr )
+
+
+METHOD QWebFrame:toPlainText()
+   RETURN Qt_QWebFrame_toPlainText( ::pPtr )
+
+
+METHOD QWebFrame:url()
+   RETURN Qt_QWebFrame_url( ::pPtr )
+
+
+METHOD QWebFrame:zoomFactor()
+   RETURN Qt_QWebFrame_zoomFactor( ::pPtr )
+
+
+METHOD QWebFrame:evaluateJavaScript( cScriptSource )
+   RETURN Qt_QWebFrame_evaluateJavaScript( ::pPtr, cScriptSource )
+
+
+METHOD QWebFrame:print( pPrinter )
+   RETURN Qt_QWebFrame_print( ::pPtr, pPrinter )
+

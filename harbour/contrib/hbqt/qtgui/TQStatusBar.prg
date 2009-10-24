@@ -71,39 +71,72 @@ CREATE CLASS QStatusBar INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addPermanentWidget( pWidget, nStretch )  INLINE  Qt_QStatusBar_addPermanentWidget( ::pPtr, pWidget, nStretch )
-   METHOD  addWidget( pWidget, nStretch )      INLINE  Qt_QStatusBar_addWidget( ::pPtr, pWidget, nStretch )
-   METHOD  currentMessage()                    INLINE  Qt_QStatusBar_currentMessage( ::pPtr )
-   METHOD  insertPermanentWidget( nIndex, pWidget, nStretch )  INLINE  Qt_QStatusBar_insertPermanentWidget( ::pPtr, nIndex, pWidget, nStretch )
-   METHOD  insertWidget( nIndex, pWidget, nStretch )  INLINE  Qt_QStatusBar_insertWidget( ::pPtr, nIndex, pWidget, nStretch )
-   METHOD  isSizeGripEnabled()                 INLINE  Qt_QStatusBar_isSizeGripEnabled( ::pPtr )
-   METHOD  removeWidget( pWidget )             INLINE  Qt_QStatusBar_removeWidget( ::pPtr, pWidget )
-   METHOD  setSizeGripEnabled( lBool )         INLINE  Qt_QStatusBar_setSizeGripEnabled( ::pPtr, lBool )
-   METHOD  clearMessage()                      INLINE  Qt_QStatusBar_clearMessage( ::pPtr )
-   METHOD  showMessage( cMessage, nTimeout )   INLINE  Qt_QStatusBar_showMessage( ::pPtr, cMessage, nTimeout )
+   METHOD  addPermanentWidget( pWidget, nStretch )
+   METHOD  addWidget( pWidget, nStretch )
+   METHOD  currentMessage()
+   METHOD  insertPermanentWidget( nIndex, pWidget, nStretch )
+   METHOD  insertWidget( nIndex, pWidget, nStretch )
+   METHOD  isSizeGripEnabled()
+   METHOD  removeWidget( pWidget )
+   METHOD  setSizeGripEnabled( lBool )
+   METHOD  clearMessage()
+   METHOD  showMessage( cMessage, nTimeout )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStatusBar
-
+METHOD QStatusBar:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStatusBar( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStatusBar
-
+METHOD QStatusBar:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStatusBar:addPermanentWidget( pWidget, nStretch )
+   RETURN Qt_QStatusBar_addPermanentWidget( ::pPtr, pWidget, nStretch )
+
+
+METHOD QStatusBar:addWidget( pWidget, nStretch )
+   RETURN Qt_QStatusBar_addWidget( ::pPtr, pWidget, nStretch )
+
+
+METHOD QStatusBar:currentMessage()
+   RETURN Qt_QStatusBar_currentMessage( ::pPtr )
+
+
+METHOD QStatusBar:insertPermanentWidget( nIndex, pWidget, nStretch )
+   RETURN Qt_QStatusBar_insertPermanentWidget( ::pPtr, nIndex, pWidget, nStretch )
+
+
+METHOD QStatusBar:insertWidget( nIndex, pWidget, nStretch )
+   RETURN Qt_QStatusBar_insertWidget( ::pPtr, nIndex, pWidget, nStretch )
+
+
+METHOD QStatusBar:isSizeGripEnabled()
+   RETURN Qt_QStatusBar_isSizeGripEnabled( ::pPtr )
+
+
+METHOD QStatusBar:removeWidget( pWidget )
+   RETURN Qt_QStatusBar_removeWidget( ::pPtr, pWidget )
+
+
+METHOD QStatusBar:setSizeGripEnabled( lBool )
+   RETURN Qt_QStatusBar_setSizeGripEnabled( ::pPtr, lBool )
+
+
+METHOD QStatusBar:clearMessage()
+   RETURN Qt_QStatusBar_clearMessage( ::pPtr )
+
+
+METHOD QStatusBar:showMessage( cMessage, nTimeout )
+   RETURN Qt_QStatusBar_showMessage( ::pPtr, cMessage, nTimeout )
+

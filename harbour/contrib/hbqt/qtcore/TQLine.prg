@@ -71,23 +71,23 @@ CREATE CLASS QLine
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  p1()                                INLINE  Qt_QLine_p1( ::pPtr )
-   METHOD  p2()                                INLINE  Qt_QLine_p2( ::pPtr )
-   METHOD  x1()                                INLINE  Qt_QLine_x1( ::pPtr )
-   METHOD  x2()                                INLINE  Qt_QLine_x2( ::pPtr )
-   METHOD  y1()                                INLINE  Qt_QLine_y1( ::pPtr )
-   METHOD  y2()                                INLINE  Qt_QLine_y2( ::pPtr )
-   METHOD  dx()                                INLINE  Qt_QLine_dx( ::pPtr )
-   METHOD  dy()                                INLINE  Qt_QLine_dy( ::pPtr )
-   METHOD  isNull()                            INLINE  Qt_QLine_isNull( ::pPtr )
-   METHOD  setP1( pP1 )                        INLINE  Qt_QLine_setP1( ::pPtr, pP1 )
-   METHOD  setP2( pP2 )                        INLINE  Qt_QLine_setP2( ::pPtr, pP2 )
-   METHOD  setLine( nX1, nY1, nX2, nY2 )       INLINE  Qt_QLine_setLine( ::pPtr, nX1, nY1, nX2, nY2 )
-   METHOD  setPoints( pP1, pP2 )               INLINE  Qt_QLine_setPoints( ::pPtr, pP1, pP2 )
-   METHOD  translate( pOffset )                INLINE  Qt_QLine_translate( ::pPtr, pOffset )
-   METHOD  translate_1( nDx, nDy )             INLINE  Qt_QLine_translate_1( ::pPtr, nDx, nDy )
-   METHOD  translated( pOffset )               INLINE  Qt_QLine_translated( ::pPtr, pOffset )
-   METHOD  translated_1( nDx, nDy )            INLINE  Qt_QLine_translated_1( ::pPtr, nDx, nDy )
+   METHOD  p1()
+   METHOD  p2()
+   METHOD  x1()
+   METHOD  x2()
+   METHOD  y1()
+   METHOD  y2()
+   METHOD  dx()
+   METHOD  dy()
+   METHOD  isNull()
+   METHOD  setP1( pP1 )
+   METHOD  setP2( pP2 )
+   METHOD  setLine( nX1, nY1, nX2, nY2 )
+   METHOD  setPoints( pP1, pP2 )
+   METHOD  translate( pOffset )
+   METHOD  translate_1( nDx, nDy )
+   METHOD  translated( pOffset )
+   METHOD  translated_1( nDx, nDy )
 
    ENDCLASS
 
@@ -99,16 +99,80 @@ METHOD New( ... ) CLASS QLine
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QLine
-
+METHOD QLine:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QLine:p1()
+   RETURN Qt_QLine_p1( ::pPtr )
+
+
+METHOD QLine:p2()
+   RETURN Qt_QLine_p2( ::pPtr )
+
+
+METHOD QLine:x1()
+   RETURN Qt_QLine_x1( ::pPtr )
+
+
+METHOD QLine:x2()
+   RETURN Qt_QLine_x2( ::pPtr )
+
+
+METHOD QLine:y1()
+   RETURN Qt_QLine_y1( ::pPtr )
+
+
+METHOD QLine:y2()
+   RETURN Qt_QLine_y2( ::pPtr )
+
+
+METHOD QLine:dx()
+   RETURN Qt_QLine_dx( ::pPtr )
+
+
+METHOD QLine:dy()
+   RETURN Qt_QLine_dy( ::pPtr )
+
+
+METHOD QLine:isNull()
+   RETURN Qt_QLine_isNull( ::pPtr )
+
+
+METHOD QLine:setP1( pP1 )
+   RETURN Qt_QLine_setP1( ::pPtr, pP1 )
+
+
+METHOD QLine:setP2( pP2 )
+   RETURN Qt_QLine_setP2( ::pPtr, pP2 )
+
+
+METHOD QLine:setLine( nX1, nY1, nX2, nY2 )
+   RETURN Qt_QLine_setLine( ::pPtr, nX1, nY1, nX2, nY2 )
+
+
+METHOD QLine:setPoints( pP1, pP2 )
+   RETURN Qt_QLine_setPoints( ::pPtr, pP1, pP2 )
+
+
+METHOD QLine:translate( pOffset )
+   RETURN Qt_QLine_translate( ::pPtr, pOffset )
+
+
+METHOD QLine:translate_1( nDx, nDy )
+   RETURN Qt_QLine_translate_1( ::pPtr, nDx, nDy )
+
+
+METHOD QLine:translated( pOffset )
+   RETURN Qt_QLine_translated( ::pPtr, pOffset )
+
+
+METHOD QLine:translated_1( nDx, nDy )
+   RETURN Qt_QLine_translated_1( ::pPtr, nDx, nDy )
+

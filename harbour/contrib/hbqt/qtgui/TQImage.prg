@@ -71,66 +71,66 @@ CREATE CLASS QImage
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  allGray()                           INLINE  Qt_QImage_allGray( ::pPtr )
-   METHOD  alphaChannel()                      INLINE  Qt_QImage_alphaChannel( ::pPtr )
-   METHOD  bits()                              INLINE  Qt_QImage_bits( ::pPtr )
-   METHOD  bits_1()                            INLINE  Qt_QImage_bits_1( ::pPtr )
-   METHOD  bytesPerLine()                      INLINE  Qt_QImage_bytesPerLine( ::pPtr )
-   METHOD  cacheKey()                          INLINE  Qt_QImage_cacheKey( ::pPtr )
-   METHOD  color( nI )                         INLINE  Qt_QImage_color( ::pPtr, nI )
-   METHOD  convertToFormat( nFormat, nFlags )  INLINE  Qt_QImage_convertToFormat( ::pPtr, nFormat, nFlags )
-   METHOD  copy( pRectangle )                  INLINE  Qt_QImage_copy( ::pPtr, pRectangle )
-   METHOD  copy_1( nX, nY, nWidth, nHeight )   INLINE  Qt_QImage_copy_1( ::pPtr, nX, nY, nWidth, nHeight )
-   METHOD  createAlphaMask( nFlags )           INLINE  Qt_QImage_createAlphaMask( ::pPtr, nFlags )
-   METHOD  createHeuristicMask( lClipTight )   INLINE  Qt_QImage_createHeuristicMask( ::pPtr, lClipTight )
-   METHOD  createMaskFromColor( nColor, nMode )  INLINE  Qt_QImage_createMaskFromColor( ::pPtr, nColor, nMode )
-   METHOD  depth()                             INLINE  Qt_QImage_depth( ::pPtr )
-   METHOD  dotsPerMeterX()                     INLINE  Qt_QImage_dotsPerMeterX( ::pPtr )
-   METHOD  dotsPerMeterY()                     INLINE  Qt_QImage_dotsPerMeterY( ::pPtr )
-   METHOD  fill( nPixelValue )                 INLINE  Qt_QImage_fill( ::pPtr, nPixelValue )
-   METHOD  format()                            INLINE  Qt_QImage_format( ::pPtr )
-   METHOD  hasAlphaChannel()                   INLINE  Qt_QImage_hasAlphaChannel( ::pPtr )
-   METHOD  height()                            INLINE  Qt_QImage_height( ::pPtr )
-   METHOD  invertPixels( nMode )               INLINE  Qt_QImage_invertPixels( ::pPtr, nMode )
-   METHOD  isGrayscale()                       INLINE  Qt_QImage_isGrayscale( ::pPtr )
-   METHOD  isNull()                            INLINE  Qt_QImage_isNull( ::pPtr )
-   METHOD  load( cFileName, pFormat )          INLINE  Qt_QImage_load( ::pPtr, cFileName, pFormat )
-   METHOD  load_1( pDevice, pFormat )          INLINE  Qt_QImage_load_1( ::pPtr, pDevice, pFormat )
-   METHOD  loadFromData( pData, pFormat )      INLINE  Qt_QImage_loadFromData( ::pPtr, pData, pFormat )
-   METHOD  mirrored( lHorizontal, lVertical )  INLINE  Qt_QImage_mirrored( ::pPtr, lHorizontal, lVertical )
-   METHOD  numBytes()                          INLINE  Qt_QImage_numBytes( ::pPtr )
-   METHOD  numColors()                         INLINE  Qt_QImage_numColors( ::pPtr )
-   METHOD  offset()                            INLINE  Qt_QImage_offset( ::pPtr )
-   METHOD  pixel( pPosition )                  INLINE  Qt_QImage_pixel( ::pPtr, pPosition )
-   METHOD  pixel_1( nX, nY )                   INLINE  Qt_QImage_pixel_1( ::pPtr, nX, nY )
-   METHOD  pixelIndex( pPosition )             INLINE  Qt_QImage_pixelIndex( ::pPtr, pPosition )
-   METHOD  pixelIndex_1( nX, nY )              INLINE  Qt_QImage_pixelIndex_1( ::pPtr, nX, nY )
-   METHOD  rect()                              INLINE  Qt_QImage_rect( ::pPtr )
-   METHOD  rgbSwapped()                        INLINE  Qt_QImage_rgbSwapped( ::pPtr )
-   METHOD  save( cFileName, pFormat, nQuality )  INLINE  Qt_QImage_save( ::pPtr, cFileName, pFormat, nQuality )
-   METHOD  save_1( pDevice, pFormat, nQuality )  INLINE  Qt_QImage_save_1( ::pPtr, pDevice, pFormat, nQuality )
-   METHOD  scaled( pSize, nAspectRatioMode, nTransformMode )  INLINE  Qt_QImage_scaled( ::pPtr, pSize, nAspectRatioMode, nTransformMode )
-   METHOD  scaled_1( nWidth, nHeight, nAspectRatioMode, nTransformMode )  INLINE  Qt_QImage_scaled_1( ::pPtr, nWidth, nHeight, nAspectRatioMode, nTransformMode )
-   METHOD  scaledToHeight( nHeight, nMode )    INLINE  Qt_QImage_scaledToHeight( ::pPtr, nHeight, nMode )
-   METHOD  scaledToWidth( nWidth, nMode )      INLINE  Qt_QImage_scaledToWidth( ::pPtr, nWidth, nMode )
-   METHOD  scanLine( nI )                      INLINE  Qt_QImage_scanLine( ::pPtr, nI )
-   METHOD  scanLine_1( nI )                    INLINE  Qt_QImage_scanLine_1( ::pPtr, nI )
-   METHOD  setColor( nIndex, nColorValue )     INLINE  Qt_QImage_setColor( ::pPtr, nIndex, nColorValue )
-   METHOD  setDotsPerMeterX( nX )              INLINE  Qt_QImage_setDotsPerMeterX( ::pPtr, nX )
-   METHOD  setDotsPerMeterY( nY )              INLINE  Qt_QImage_setDotsPerMeterY( ::pPtr, nY )
-   METHOD  setNumColors( nNumColors )          INLINE  Qt_QImage_setNumColors( ::pPtr, nNumColors )
-   METHOD  setOffset( pOffset )                INLINE  Qt_QImage_setOffset( ::pPtr, pOffset )
-   METHOD  setPixel( pPosition, nIndex_or_rgb )  INLINE  Qt_QImage_setPixel( ::pPtr, pPosition, nIndex_or_rgb )
-   METHOD  setPixel_1( nX, nY, nIndex_or_rgb )  INLINE  Qt_QImage_setPixel_1( ::pPtr, nX, nY, nIndex_or_rgb )
-   METHOD  setText( cKey, cText )              INLINE  Qt_QImage_setText( ::pPtr, cKey, cText )
-   METHOD  size()                              INLINE  Qt_QImage_size( ::pPtr )
-   METHOD  text( cKey )                        INLINE  Qt_QImage_text( ::pPtr, cKey )
-   METHOD  textKeys()                          INLINE  Qt_QImage_textKeys( ::pPtr )
-   METHOD  transformed( pMatrix, nMode )       INLINE  Qt_QImage_transformed( ::pPtr, pMatrix, nMode )
-   METHOD  transformed_1( pMatrix, nMode )     INLINE  Qt_QImage_transformed_1( ::pPtr, pMatrix, nMode )
-   METHOD  valid( pPos )                       INLINE  Qt_QImage_valid( ::pPtr, pPos )
-   METHOD  valid_1( nX, nY )                   INLINE  Qt_QImage_valid_1( ::pPtr, nX, nY )
-   METHOD  width()                             INLINE  Qt_QImage_width( ::pPtr )
+   METHOD  allGray()
+   METHOD  alphaChannel()
+   METHOD  bits()
+   METHOD  bits_1()
+   METHOD  bytesPerLine()
+   METHOD  cacheKey()
+   METHOD  color( nI )
+   METHOD  convertToFormat( nFormat, nFlags )
+   METHOD  copy( pRectangle )
+   METHOD  copy_1( nX, nY, nWidth, nHeight )
+   METHOD  createAlphaMask( nFlags )
+   METHOD  createHeuristicMask( lClipTight )
+   METHOD  createMaskFromColor( nColor, nMode )
+   METHOD  depth()
+   METHOD  dotsPerMeterX()
+   METHOD  dotsPerMeterY()
+   METHOD  fill( nPixelValue )
+   METHOD  format()
+   METHOD  hasAlphaChannel()
+   METHOD  height()
+   METHOD  invertPixels( nMode )
+   METHOD  isGrayscale()
+   METHOD  isNull()
+   METHOD  load( cFileName, pFormat )
+   METHOD  load_1( pDevice, pFormat )
+   METHOD  loadFromData( pData, pFormat )
+   METHOD  mirrored( lHorizontal, lVertical )
+   METHOD  numBytes()
+   METHOD  numColors()
+   METHOD  offset()
+   METHOD  pixel( pPosition )
+   METHOD  pixel_1( nX, nY )
+   METHOD  pixelIndex( pPosition )
+   METHOD  pixelIndex_1( nX, nY )
+   METHOD  rect()
+   METHOD  rgbSwapped()
+   METHOD  save( cFileName, pFormat, nQuality )
+   METHOD  save_1( pDevice, pFormat, nQuality )
+   METHOD  scaled( pSize, nAspectRatioMode, nTransformMode )
+   METHOD  scaled_1( nWidth, nHeight, nAspectRatioMode, nTransformMode )
+   METHOD  scaledToHeight( nHeight, nMode )
+   METHOD  scaledToWidth( nWidth, nMode )
+   METHOD  scanLine( nI )
+   METHOD  scanLine_1( nI )
+   METHOD  setColor( nIndex, nColorValue )
+   METHOD  setDotsPerMeterX( nX )
+   METHOD  setDotsPerMeterY( nY )
+   METHOD  setNumColors( nNumColors )
+   METHOD  setOffset( pOffset )
+   METHOD  setPixel( pPosition, nIndex_or_rgb )
+   METHOD  setPixel_1( nX, nY, nIndex_or_rgb )
+   METHOD  setText( cKey, cText )
+   METHOD  size()
+   METHOD  text( cKey )
+   METHOD  textKeys()
+   METHOD  transformed( pMatrix, nMode )
+   METHOD  transformed_1( pMatrix, nMode )
+   METHOD  valid( pPos )
+   METHOD  valid_1( nX, nY )
+   METHOD  width()
 
    ENDCLASS
 
@@ -142,16 +142,252 @@ METHOD New( ... ) CLASS QImage
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QImage
-
+METHOD QImage:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QImage:allGray()
+   RETURN Qt_QImage_allGray( ::pPtr )
+
+
+METHOD QImage:alphaChannel()
+   RETURN Qt_QImage_alphaChannel( ::pPtr )
+
+
+METHOD QImage:bits()
+   RETURN Qt_QImage_bits( ::pPtr )
+
+
+METHOD QImage:bits_1()
+   RETURN Qt_QImage_bits_1( ::pPtr )
+
+
+METHOD QImage:bytesPerLine()
+   RETURN Qt_QImage_bytesPerLine( ::pPtr )
+
+
+METHOD QImage:cacheKey()
+   RETURN Qt_QImage_cacheKey( ::pPtr )
+
+
+METHOD QImage:color( nI )
+   RETURN Qt_QImage_color( ::pPtr, nI )
+
+
+METHOD QImage:convertToFormat( nFormat, nFlags )
+   RETURN Qt_QImage_convertToFormat( ::pPtr, nFormat, nFlags )
+
+
+METHOD QImage:copy( pRectangle )
+   RETURN Qt_QImage_copy( ::pPtr, pRectangle )
+
+
+METHOD QImage:copy_1( nX, nY, nWidth, nHeight )
+   RETURN Qt_QImage_copy_1( ::pPtr, nX, nY, nWidth, nHeight )
+
+
+METHOD QImage:createAlphaMask( nFlags )
+   RETURN Qt_QImage_createAlphaMask( ::pPtr, nFlags )
+
+
+METHOD QImage:createHeuristicMask( lClipTight )
+   RETURN Qt_QImage_createHeuristicMask( ::pPtr, lClipTight )
+
+
+METHOD QImage:createMaskFromColor( nColor, nMode )
+   RETURN Qt_QImage_createMaskFromColor( ::pPtr, nColor, nMode )
+
+
+METHOD QImage:depth()
+   RETURN Qt_QImage_depth( ::pPtr )
+
+
+METHOD QImage:dotsPerMeterX()
+   RETURN Qt_QImage_dotsPerMeterX( ::pPtr )
+
+
+METHOD QImage:dotsPerMeterY()
+   RETURN Qt_QImage_dotsPerMeterY( ::pPtr )
+
+
+METHOD QImage:fill( nPixelValue )
+   RETURN Qt_QImage_fill( ::pPtr, nPixelValue )
+
+
+METHOD QImage:format()
+   RETURN Qt_QImage_format( ::pPtr )
+
+
+METHOD QImage:hasAlphaChannel()
+   RETURN Qt_QImage_hasAlphaChannel( ::pPtr )
+
+
+METHOD QImage:height()
+   RETURN Qt_QImage_height( ::pPtr )
+
+
+METHOD QImage:invertPixels( nMode )
+   RETURN Qt_QImage_invertPixels( ::pPtr, nMode )
+
+
+METHOD QImage:isGrayscale()
+   RETURN Qt_QImage_isGrayscale( ::pPtr )
+
+
+METHOD QImage:isNull()
+   RETURN Qt_QImage_isNull( ::pPtr )
+
+
+METHOD QImage:load( cFileName, pFormat )
+   RETURN Qt_QImage_load( ::pPtr, cFileName, pFormat )
+
+
+METHOD QImage:load_1( pDevice, pFormat )
+   RETURN Qt_QImage_load_1( ::pPtr, pDevice, pFormat )
+
+
+METHOD QImage:loadFromData( pData, pFormat )
+   RETURN Qt_QImage_loadFromData( ::pPtr, pData, pFormat )
+
+
+METHOD QImage:mirrored( lHorizontal, lVertical )
+   RETURN Qt_QImage_mirrored( ::pPtr, lHorizontal, lVertical )
+
+
+METHOD QImage:numBytes()
+   RETURN Qt_QImage_numBytes( ::pPtr )
+
+
+METHOD QImage:numColors()
+   RETURN Qt_QImage_numColors( ::pPtr )
+
+
+METHOD QImage:offset()
+   RETURN Qt_QImage_offset( ::pPtr )
+
+
+METHOD QImage:pixel( pPosition )
+   RETURN Qt_QImage_pixel( ::pPtr, pPosition )
+
+
+METHOD QImage:pixel_1( nX, nY )
+   RETURN Qt_QImage_pixel_1( ::pPtr, nX, nY )
+
+
+METHOD QImage:pixelIndex( pPosition )
+   RETURN Qt_QImage_pixelIndex( ::pPtr, pPosition )
+
+
+METHOD QImage:pixelIndex_1( nX, nY )
+   RETURN Qt_QImage_pixelIndex_1( ::pPtr, nX, nY )
+
+
+METHOD QImage:rect()
+   RETURN Qt_QImage_rect( ::pPtr )
+
+
+METHOD QImage:rgbSwapped()
+   RETURN Qt_QImage_rgbSwapped( ::pPtr )
+
+
+METHOD QImage:save( cFileName, pFormat, nQuality )
+   RETURN Qt_QImage_save( ::pPtr, cFileName, pFormat, nQuality )
+
+
+METHOD QImage:save_1( pDevice, pFormat, nQuality )
+   RETURN Qt_QImage_save_1( ::pPtr, pDevice, pFormat, nQuality )
+
+
+METHOD QImage:scaled( pSize, nAspectRatioMode, nTransformMode )
+   RETURN Qt_QImage_scaled( ::pPtr, pSize, nAspectRatioMode, nTransformMode )
+
+
+METHOD QImage:scaled_1( nWidth, nHeight, nAspectRatioMode, nTransformMode )
+   RETURN Qt_QImage_scaled_1( ::pPtr, nWidth, nHeight, nAspectRatioMode, nTransformMode )
+
+
+METHOD QImage:scaledToHeight( nHeight, nMode )
+   RETURN Qt_QImage_scaledToHeight( ::pPtr, nHeight, nMode )
+
+
+METHOD QImage:scaledToWidth( nWidth, nMode )
+   RETURN Qt_QImage_scaledToWidth( ::pPtr, nWidth, nMode )
+
+
+METHOD QImage:scanLine( nI )
+   RETURN Qt_QImage_scanLine( ::pPtr, nI )
+
+
+METHOD QImage:scanLine_1( nI )
+   RETURN Qt_QImage_scanLine_1( ::pPtr, nI )
+
+
+METHOD QImage:setColor( nIndex, nColorValue )
+   RETURN Qt_QImage_setColor( ::pPtr, nIndex, nColorValue )
+
+
+METHOD QImage:setDotsPerMeterX( nX )
+   RETURN Qt_QImage_setDotsPerMeterX( ::pPtr, nX )
+
+
+METHOD QImage:setDotsPerMeterY( nY )
+   RETURN Qt_QImage_setDotsPerMeterY( ::pPtr, nY )
+
+
+METHOD QImage:setNumColors( nNumColors )
+   RETURN Qt_QImage_setNumColors( ::pPtr, nNumColors )
+
+
+METHOD QImage:setOffset( pOffset )
+   RETURN Qt_QImage_setOffset( ::pPtr, pOffset )
+
+
+METHOD QImage:setPixel( pPosition, nIndex_or_rgb )
+   RETURN Qt_QImage_setPixel( ::pPtr, pPosition, nIndex_or_rgb )
+
+
+METHOD QImage:setPixel_1( nX, nY, nIndex_or_rgb )
+   RETURN Qt_QImage_setPixel_1( ::pPtr, nX, nY, nIndex_or_rgb )
+
+
+METHOD QImage:setText( cKey, cText )
+   RETURN Qt_QImage_setText( ::pPtr, cKey, cText )
+
+
+METHOD QImage:size()
+   RETURN Qt_QImage_size( ::pPtr )
+
+
+METHOD QImage:text( cKey )
+   RETURN Qt_QImage_text( ::pPtr, cKey )
+
+
+METHOD QImage:textKeys()
+   RETURN Qt_QImage_textKeys( ::pPtr )
+
+
+METHOD QImage:transformed( pMatrix, nMode )
+   RETURN Qt_QImage_transformed( ::pPtr, pMatrix, nMode )
+
+
+METHOD QImage:transformed_1( pMatrix, nMode )
+   RETURN Qt_QImage_transformed_1( ::pPtr, pMatrix, nMode )
+
+
+METHOD QImage:valid( pPos )
+   RETURN Qt_QImage_valid( ::pPtr, pPos )
+
+
+METHOD QImage:valid_1( nX, nY )
+   RETURN Qt_QImage_valid_1( ::pPtr, nX, nY )
+
+
+METHOD QImage:width()
+   RETURN Qt_QImage_width( ::pPtr )
+

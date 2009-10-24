@@ -71,43 +71,92 @@ CREATE CLASS QClipboard INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  clear( nMode )                      INLINE  Qt_QClipboard_clear( ::pPtr, nMode )
-   METHOD  image( nMode )                      INLINE  Qt_QClipboard_image( ::pPtr, nMode )
-   METHOD  mimeData( nMode )                   INLINE  Qt_QClipboard_mimeData( ::pPtr, nMode )
-   METHOD  ownsClipboard()                     INLINE  Qt_QClipboard_ownsClipboard( ::pPtr )
-   METHOD  ownsFindBuffer()                    INLINE  Qt_QClipboard_ownsFindBuffer( ::pPtr )
-   METHOD  ownsSelection()                     INLINE  Qt_QClipboard_ownsSelection( ::pPtr )
-   METHOD  pixmap( nMode )                     INLINE  Qt_QClipboard_pixmap( ::pPtr, nMode )
-   METHOD  setImage( pImage, nMode )           INLINE  Qt_QClipboard_setImage( ::pPtr, pImage, nMode )
-   METHOD  setMimeData( pSrc, nMode )          INLINE  Qt_QClipboard_setMimeData( ::pPtr, pSrc, nMode )
-   METHOD  setPixmap( pPixmap, nMode )         INLINE  Qt_QClipboard_setPixmap( ::pPtr, pPixmap, nMode )
-   METHOD  setText( cText, nMode )             INLINE  Qt_QClipboard_setText( ::pPtr, cText, nMode )
-   METHOD  supportsFindBuffer()                INLINE  Qt_QClipboard_supportsFindBuffer( ::pPtr )
-   METHOD  supportsSelection()                 INLINE  Qt_QClipboard_supportsSelection( ::pPtr )
-   METHOD  text( nMode )                       INLINE  Qt_QClipboard_text( ::pPtr, nMode )
+   METHOD  clear( nMode )
+   METHOD  image( nMode )
+   METHOD  mimeData( nMode )
+   METHOD  ownsClipboard()
+   METHOD  ownsFindBuffer()
+   METHOD  ownsSelection()
+   METHOD  pixmap( nMode )
+   METHOD  setImage( pImage, nMode )
+   METHOD  setMimeData( pSrc, nMode )
+   METHOD  setPixmap( pPixmap, nMode )
+   METHOD  setText( cText, nMode )
+   METHOD  supportsFindBuffer()
+   METHOD  supportsSelection()
+   METHOD  text( nMode )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QClipboard
-
+METHOD QClipboard:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QClipboard( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QClipboard
-
+METHOD QClipboard:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QClipboard:clear( nMode )
+   RETURN Qt_QClipboard_clear( ::pPtr, nMode )
+
+
+METHOD QClipboard:image( nMode )
+   RETURN Qt_QClipboard_image( ::pPtr, nMode )
+
+
+METHOD QClipboard:mimeData( nMode )
+   RETURN Qt_QClipboard_mimeData( ::pPtr, nMode )
+
+
+METHOD QClipboard:ownsClipboard()
+   RETURN Qt_QClipboard_ownsClipboard( ::pPtr )
+
+
+METHOD QClipboard:ownsFindBuffer()
+   RETURN Qt_QClipboard_ownsFindBuffer( ::pPtr )
+
+
+METHOD QClipboard:ownsSelection()
+   RETURN Qt_QClipboard_ownsSelection( ::pPtr )
+
+
+METHOD QClipboard:pixmap( nMode )
+   RETURN Qt_QClipboard_pixmap( ::pPtr, nMode )
+
+
+METHOD QClipboard:setImage( pImage, nMode )
+   RETURN Qt_QClipboard_setImage( ::pPtr, pImage, nMode )
+
+
+METHOD QClipboard:setMimeData( pSrc, nMode )
+   RETURN Qt_QClipboard_setMimeData( ::pPtr, pSrc, nMode )
+
+
+METHOD QClipboard:setPixmap( pPixmap, nMode )
+   RETURN Qt_QClipboard_setPixmap( ::pPtr, pPixmap, nMode )
+
+
+METHOD QClipboard:setText( cText, nMode )
+   RETURN Qt_QClipboard_setText( ::pPtr, cText, nMode )
+
+
+METHOD QClipboard:supportsFindBuffer()
+   RETURN Qt_QClipboard_supportsFindBuffer( ::pPtr )
+
+
+METHOD QClipboard:supportsSelection()
+   RETURN Qt_QClipboard_supportsSelection( ::pPtr )
+
+
+METHOD QClipboard:text( nMode )
+   RETURN Qt_QClipboard_text( ::pPtr, nMode )
+

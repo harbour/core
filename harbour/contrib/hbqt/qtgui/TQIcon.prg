@@ -71,16 +71,16 @@ CREATE CLASS QIcon
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  actualSize( pSize, nMode, nState )  INLINE  Qt_QIcon_actualSize( ::pPtr, pSize, nMode, nState )
-   METHOD  addFile( cFileName, pSize, nMode, nState )  INLINE  Qt_QIcon_addFile( ::pPtr, cFileName, pSize, nMode, nState )
-   METHOD  addPixmap( pPixmap, nMode, nState )  INLINE  Qt_QIcon_addPixmap( ::pPtr, pPixmap, nMode, nState )
-   METHOD  cacheKey()                          INLINE  Qt_QIcon_cacheKey( ::pPtr )
-   METHOD  isNull()                            INLINE  Qt_QIcon_isNull( ::pPtr )
-   METHOD  paint( pPainter, pRect, nAlignment, nMode, nState )  INLINE  Qt_QIcon_paint( ::pPtr, pPainter, pRect, nAlignment, nMode, nState )
-   METHOD  paint_1( pPainter, nX, nY, nW, nH, nAlignment, nMode, nState )  INLINE  Qt_QIcon_paint_1( ::pPtr, pPainter, nX, nY, nW, nH, nAlignment, nMode, nState )
-   METHOD  pixmap( pSize, nMode, nState )      INLINE  Qt_QIcon_pixmap( ::pPtr, pSize, nMode, nState )
-   METHOD  pixmap_1( nW, nH, nMode, nState )   INLINE  Qt_QIcon_pixmap_1( ::pPtr, nW, nH, nMode, nState )
-   METHOD  pixmap_2( nExtent, nMode, nState )  INLINE  Qt_QIcon_pixmap_2( ::pPtr, nExtent, nMode, nState )
+   METHOD  actualSize( pSize, nMode, nState )
+   METHOD  addFile( cFileName, pSize, nMode, nState )
+   METHOD  addPixmap( pPixmap, nMode, nState )
+   METHOD  cacheKey()
+   METHOD  isNull()
+   METHOD  paint( pPainter, pRect, nAlignment, nMode, nState )
+   METHOD  paint_1( pPainter, nX, nY, nW, nH, nAlignment, nMode, nState )
+   METHOD  pixmap( pSize, nMode, nState )
+   METHOD  pixmap_1( nW, nH, nMode, nState )
+   METHOD  pixmap_2( nExtent, nMode, nState )
 
    ENDCLASS
 
@@ -92,16 +92,52 @@ METHOD New( ... ) CLASS QIcon
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QIcon
-
+METHOD QIcon:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QIcon:actualSize( pSize, nMode, nState )
+   RETURN Qt_QIcon_actualSize( ::pPtr, pSize, nMode, nState )
+
+
+METHOD QIcon:addFile( cFileName, pSize, nMode, nState )
+   RETURN Qt_QIcon_addFile( ::pPtr, cFileName, pSize, nMode, nState )
+
+
+METHOD QIcon:addPixmap( pPixmap, nMode, nState )
+   RETURN Qt_QIcon_addPixmap( ::pPtr, pPixmap, nMode, nState )
+
+
+METHOD QIcon:cacheKey()
+   RETURN Qt_QIcon_cacheKey( ::pPtr )
+
+
+METHOD QIcon:isNull()
+   RETURN Qt_QIcon_isNull( ::pPtr )
+
+
+METHOD QIcon:paint( pPainter, pRect, nAlignment, nMode, nState )
+   RETURN Qt_QIcon_paint( ::pPtr, pPainter, pRect, nAlignment, nMode, nState )
+
+
+METHOD QIcon:paint_1( pPainter, nX, nY, nW, nH, nAlignment, nMode, nState )
+   RETURN Qt_QIcon_paint_1( ::pPtr, pPainter, nX, nY, nW, nH, nAlignment, nMode, nState )
+
+
+METHOD QIcon:pixmap( pSize, nMode, nState )
+   RETURN Qt_QIcon_pixmap( ::pPtr, pSize, nMode, nState )
+
+
+METHOD QIcon:pixmap_1( nW, nH, nMode, nState )
+   RETURN Qt_QIcon_pixmap_1( ::pPtr, nW, nH, nMode, nState )
+
+
+METHOD QIcon:pixmap_2( nExtent, nMode, nState )
+   RETURN Qt_QIcon_pixmap_2( ::pPtr, nExtent, nMode, nState )
+

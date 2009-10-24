@@ -71,39 +71,72 @@ CREATE CLASS QDialog INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  isSizeGripEnabled()                 INLINE  Qt_QDialog_isSizeGripEnabled( ::pPtr )
-   METHOD  result()                            INLINE  Qt_QDialog_result( ::pPtr )
-   METHOD  setModal( lModal )                  INLINE  Qt_QDialog_setModal( ::pPtr, lModal )
-   METHOD  setResult( nI )                     INLINE  Qt_QDialog_setResult( ::pPtr, nI )
-   METHOD  setSizeGripEnabled( lBool )         INLINE  Qt_QDialog_setSizeGripEnabled( ::pPtr, lBool )
-   METHOD  accept()                            INLINE  Qt_QDialog_accept( ::pPtr )
-   METHOD  done( nR )                          INLINE  Qt_QDialog_done( ::pPtr, nR )
-   METHOD  exec()                              INLINE  Qt_QDialog_exec( ::pPtr )
-   METHOD  open()                              INLINE  Qt_QDialog_open( ::pPtr )
-   METHOD  reject()                            INLINE  Qt_QDialog_reject( ::pPtr )
+   METHOD  isSizeGripEnabled()
+   METHOD  result()
+   METHOD  setModal( lModal )
+   METHOD  setResult( nI )
+   METHOD  setSizeGripEnabled( lBool )
+   METHOD  accept()
+   METHOD  done( nR )
+   METHOD  exec()
+   METHOD  open()
+   METHOD  reject()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QDialog
-
+METHOD QDialog:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QDialog( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QDialog
-
+METHOD QDialog:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QDialog:isSizeGripEnabled()
+   RETURN Qt_QDialog_isSizeGripEnabled( ::pPtr )
+
+
+METHOD QDialog:result()
+   RETURN Qt_QDialog_result( ::pPtr )
+
+
+METHOD QDialog:setModal( lModal )
+   RETURN Qt_QDialog_setModal( ::pPtr, lModal )
+
+
+METHOD QDialog:setResult( nI )
+   RETURN Qt_QDialog_setResult( ::pPtr, nI )
+
+
+METHOD QDialog:setSizeGripEnabled( lBool )
+   RETURN Qt_QDialog_setSizeGripEnabled( ::pPtr, lBool )
+
+
+METHOD QDialog:accept()
+   RETURN Qt_QDialog_accept( ::pPtr )
+
+
+METHOD QDialog:done( nR )
+   RETURN Qt_QDialog_done( ::pPtr, nR )
+
+
+METHOD QDialog:exec()
+   RETURN Qt_QDialog_exec( ::pPtr )
+
+
+METHOD QDialog:open()
+   RETURN Qt_QDialog_open( ::pPtr )
+
+
+METHOD QDialog:reject()
+   RETURN Qt_QDialog_reject( ::pPtr )
+

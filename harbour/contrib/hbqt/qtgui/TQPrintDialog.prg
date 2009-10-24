@@ -71,38 +71,67 @@ CREATE CLASS QPrintDialog INHERIT QAbstractPrintDialog
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  done( nResult )                     INLINE  Qt_QPrintDialog_done( ::pPtr, nResult )
-   METHOD  open( pReceiver, pMember )          INLINE  Qt_QPrintDialog_open( ::pPtr, pReceiver, pMember )
-   METHOD  options()                           INLINE  Qt_QPrintDialog_options( ::pPtr )
-   METHOD  printer()                           INLINE  Qt_QPrintDialog_printer( ::pPtr )
-   METHOD  printer_1()                         INLINE  Qt_QPrintDialog_printer_1( ::pPtr )
-   METHOD  setOption( nOption, lOn )           INLINE  Qt_QPrintDialog_setOption( ::pPtr, nOption, lOn )
-   METHOD  setOptions( nOptions )              INLINE  Qt_QPrintDialog_setOptions( ::pPtr, nOptions )
-   METHOD  setVisible( lVisible )              INLINE  Qt_QPrintDialog_setVisible( ::pPtr, lVisible )
-   METHOD  testOption( nOption )               INLINE  Qt_QPrintDialog_testOption( ::pPtr, nOption )
+   METHOD  done( nResult )
+   METHOD  open( pReceiver, pMember )
+   METHOD  options()
+   METHOD  printer()
+   METHOD  printer_1()
+   METHOD  setOption( nOption, lOn )
+   METHOD  setOptions( nOptions )
+   METHOD  setVisible( lVisible )
+   METHOD  testOption( nOption )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QPrintDialog
-
+METHOD QPrintDialog:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QPrintDialog( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QPrintDialog
-
+METHOD QPrintDialog:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QPrintDialog:done( nResult )
+   RETURN Qt_QPrintDialog_done( ::pPtr, nResult )
+
+
+METHOD QPrintDialog:open( pReceiver, pMember )
+   RETURN Qt_QPrintDialog_open( ::pPtr, pReceiver, pMember )
+
+
+METHOD QPrintDialog:options()
+   RETURN Qt_QPrintDialog_options( ::pPtr )
+
+
+METHOD QPrintDialog:printer()
+   RETURN Qt_QPrintDialog_printer( ::pPtr )
+
+
+METHOD QPrintDialog:printer_1()
+   RETURN Qt_QPrintDialog_printer_1( ::pPtr )
+
+
+METHOD QPrintDialog:setOption( nOption, lOn )
+   RETURN Qt_QPrintDialog_setOption( ::pPtr, nOption, lOn )
+
+
+METHOD QPrintDialog:setOptions( nOptions )
+   RETURN Qt_QPrintDialog_setOptions( ::pPtr, nOptions )
+
+
+METHOD QPrintDialog:setVisible( lVisible )
+   RETURN Qt_QPrintDialog_setVisible( ::pPtr, lVisible )
+
+
+METHOD QPrintDialog:testOption( nOption )
+   RETURN Qt_QPrintDialog_testOption( ::pPtr, nOption )
+

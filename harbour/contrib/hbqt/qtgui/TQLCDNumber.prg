@@ -71,48 +71,117 @@ CREATE CLASS QLCDNumber INHERIT QFrame
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  checkOverflow( nNum )               INLINE  Qt_QLCDNumber_checkOverflow( ::pPtr, nNum )
-   METHOD  checkOverflow_1( nNum )             INLINE  Qt_QLCDNumber_checkOverflow_1( ::pPtr, nNum )
-   METHOD  intValue()                          INLINE  Qt_QLCDNumber_intValue( ::pPtr )
-   METHOD  mode()                              INLINE  Qt_QLCDNumber_mode( ::pPtr )
-   METHOD  numDigits()                         INLINE  Qt_QLCDNumber_numDigits( ::pPtr )
-   METHOD  segmentStyle()                      INLINE  Qt_QLCDNumber_segmentStyle( ::pPtr )
-   METHOD  setMode( nMode )                    INLINE  Qt_QLCDNumber_setMode( ::pPtr, nMode )
-   METHOD  setNumDigits( nNDigits )            INLINE  Qt_QLCDNumber_setNumDigits( ::pPtr, nNDigits )
-   METHOD  setSegmentStyle( nSegmentStyle )    INLINE  Qt_QLCDNumber_setSegmentStyle( ::pPtr, nSegmentStyle )
-   METHOD  smallDecimalPoint()                 INLINE  Qt_QLCDNumber_smallDecimalPoint( ::pPtr )
-   METHOD  value()                             INLINE  Qt_QLCDNumber_value( ::pPtr )
-   METHOD  display( cS )                       INLINE  Qt_QLCDNumber_display( ::pPtr, cS )
-   METHOD  display_1( nNum )                   INLINE  Qt_QLCDNumber_display_1( ::pPtr, nNum )
-   METHOD  display_2( nNum )                   INLINE  Qt_QLCDNumber_display_2( ::pPtr, nNum )
-   METHOD  setBinMode()                        INLINE  Qt_QLCDNumber_setBinMode( ::pPtr )
-   METHOD  setDecMode()                        INLINE  Qt_QLCDNumber_setDecMode( ::pPtr )
-   METHOD  setHexMode()                        INLINE  Qt_QLCDNumber_setHexMode( ::pPtr )
-   METHOD  setOctMode()                        INLINE  Qt_QLCDNumber_setOctMode( ::pPtr )
-   METHOD  setSmallDecimalPoint( lBool )       INLINE  Qt_QLCDNumber_setSmallDecimalPoint( ::pPtr, lBool )
+   METHOD  checkOverflow( nNum )
+   METHOD  checkOverflow_1( nNum )
+   METHOD  intValue()
+   METHOD  mode()
+   METHOD  numDigits()
+   METHOD  segmentStyle()
+   METHOD  setMode( nMode )
+   METHOD  setNumDigits( nNDigits )
+   METHOD  setSegmentStyle( nSegmentStyle )
+   METHOD  smallDecimalPoint()
+   METHOD  value()
+   METHOD  display( cS )
+   METHOD  display_1( nNum )
+   METHOD  display_2( nNum )
+   METHOD  setBinMode()
+   METHOD  setDecMode()
+   METHOD  setHexMode()
+   METHOD  setOctMode()
+   METHOD  setSmallDecimalPoint( lBool )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QLCDNumber
-
+METHOD QLCDNumber:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QLCDNumber( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QLCDNumber
-
+METHOD QLCDNumber:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QLCDNumber:checkOverflow( nNum )
+   RETURN Qt_QLCDNumber_checkOverflow( ::pPtr, nNum )
+
+
+METHOD QLCDNumber:checkOverflow_1( nNum )
+   RETURN Qt_QLCDNumber_checkOverflow_1( ::pPtr, nNum )
+
+
+METHOD QLCDNumber:intValue()
+   RETURN Qt_QLCDNumber_intValue( ::pPtr )
+
+
+METHOD QLCDNumber:mode()
+   RETURN Qt_QLCDNumber_mode( ::pPtr )
+
+
+METHOD QLCDNumber:numDigits()
+   RETURN Qt_QLCDNumber_numDigits( ::pPtr )
+
+
+METHOD QLCDNumber:segmentStyle()
+   RETURN Qt_QLCDNumber_segmentStyle( ::pPtr )
+
+
+METHOD QLCDNumber:setMode( nMode )
+   RETURN Qt_QLCDNumber_setMode( ::pPtr, nMode )
+
+
+METHOD QLCDNumber:setNumDigits( nNDigits )
+   RETURN Qt_QLCDNumber_setNumDigits( ::pPtr, nNDigits )
+
+
+METHOD QLCDNumber:setSegmentStyle( nSegmentStyle )
+   RETURN Qt_QLCDNumber_setSegmentStyle( ::pPtr, nSegmentStyle )
+
+
+METHOD QLCDNumber:smallDecimalPoint()
+   RETURN Qt_QLCDNumber_smallDecimalPoint( ::pPtr )
+
+
+METHOD QLCDNumber:value()
+   RETURN Qt_QLCDNumber_value( ::pPtr )
+
+
+METHOD QLCDNumber:display( cS )
+   RETURN Qt_QLCDNumber_display( ::pPtr, cS )
+
+
+METHOD QLCDNumber:display_1( nNum )
+   RETURN Qt_QLCDNumber_display_1( ::pPtr, nNum )
+
+
+METHOD QLCDNumber:display_2( nNum )
+   RETURN Qt_QLCDNumber_display_2( ::pPtr, nNum )
+
+
+METHOD QLCDNumber:setBinMode()
+   RETURN Qt_QLCDNumber_setBinMode( ::pPtr )
+
+
+METHOD QLCDNumber:setDecMode()
+   RETURN Qt_QLCDNumber_setDecMode( ::pPtr )
+
+
+METHOD QLCDNumber:setHexMode()
+   RETURN Qt_QLCDNumber_setHexMode( ::pPtr )
+
+
+METHOD QLCDNumber:setOctMode()
+   RETURN Qt_QLCDNumber_setOctMode( ::pPtr )
+
+
+METHOD QLCDNumber:setSmallDecimalPoint( lBool )
+   RETURN Qt_QLCDNumber_setSmallDecimalPoint( ::pPtr, lBool )
+

@@ -71,35 +71,52 @@ CREATE CLASS QFontComboBox INHERIT QComboBox
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  currentFont()                       INLINE  Qt_QFontComboBox_currentFont( ::pPtr )
-   METHOD  fontFilters()                       INLINE  Qt_QFontComboBox_fontFilters( ::pPtr )
-   METHOD  setFontFilters( nFilters )          INLINE  Qt_QFontComboBox_setFontFilters( ::pPtr, nFilters )
-   METHOD  setWritingSystem( nScript )         INLINE  Qt_QFontComboBox_setWritingSystem( ::pPtr, nScript )
-   METHOD  writingSystem()                     INLINE  Qt_QFontComboBox_writingSystem( ::pPtr )
-   METHOD  setCurrentFont( pFont )             INLINE  Qt_QFontComboBox_setCurrentFont( ::pPtr, pFont )
+   METHOD  currentFont()
+   METHOD  fontFilters()
+   METHOD  setFontFilters( nFilters )
+   METHOD  setWritingSystem( nScript )
+   METHOD  writingSystem()
+   METHOD  setCurrentFont( pFont )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QFontComboBox
-
+METHOD QFontComboBox:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QFontComboBox( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QFontComboBox
-
+METHOD QFontComboBox:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QFontComboBox:currentFont()
+   RETURN Qt_QFontComboBox_currentFont( ::pPtr )
+
+
+METHOD QFontComboBox:fontFilters()
+   RETURN Qt_QFontComboBox_fontFilters( ::pPtr )
+
+
+METHOD QFontComboBox:setFontFilters( nFilters )
+   RETURN Qt_QFontComboBox_setFontFilters( ::pPtr, nFilters )
+
+
+METHOD QFontComboBox:setWritingSystem( nScript )
+   RETURN Qt_QFontComboBox_setWritingSystem( ::pPtr, nScript )
+
+
+METHOD QFontComboBox:writingSystem()
+   RETURN Qt_QFontComboBox_writingSystem( ::pPtr )
+
+
+METHOD QFontComboBox:setCurrentFont( pFont )
+   RETURN Qt_QFontComboBox_setCurrentFont( ::pPtr, pFont )
+

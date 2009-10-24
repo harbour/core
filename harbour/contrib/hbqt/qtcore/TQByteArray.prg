@@ -71,126 +71,507 @@ CREATE CLASS QByteArray
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  append( pBa )                       INLINE  Qt_QByteArray_append( ::pPtr, pBa )
-   METHOD  append_1( cStr )                    INLINE  Qt_QByteArray_append_1( ::pPtr, cStr )
-   METHOD  append_2( pStr )                    INLINE  Qt_QByteArray_append_2( ::pPtr, pStr )
-   METHOD  append_3( pStr, nLen )              INLINE  Qt_QByteArray_append_3( ::pPtr, pStr, nLen )
-   METHOD  append_4( cCh )                     INLINE  Qt_QByteArray_append_4( ::pPtr, cCh )
-   METHOD  at( nI )                            INLINE  Qt_QByteArray_at( ::pPtr, nI )
-   METHOD  capacity()                          INLINE  Qt_QByteArray_capacity( ::pPtr )
-   METHOD  chop( nN )                          INLINE  Qt_QByteArray_chop( ::pPtr, nN )
-   METHOD  clear()                             INLINE  Qt_QByteArray_clear( ::pPtr )
-   METHOD  constData()                         INLINE  Qt_QByteArray_constData( ::pPtr )
-   METHOD  count( pBa )                        INLINE  Qt_QByteArray_count( ::pPtr, pBa )
-   METHOD  count_1( pStr )                     INLINE  Qt_QByteArray_count_1( ::pPtr, pStr )
-   METHOD  count_2( cCh )                      INLINE  Qt_QByteArray_count_2( ::pPtr, cCh )
-   METHOD  count_3()                           INLINE  Qt_QByteArray_count_3( ::pPtr )
-   METHOD  data()                              INLINE  Qt_QByteArray_data( ::pPtr )
-   METHOD  data_1()                            INLINE  Qt_QByteArray_data_1( ::pPtr )
-   METHOD  endsWith( pBa )                     INLINE  Qt_QByteArray_endsWith( ::pPtr, pBa )
-   METHOD  endsWith_1( pStr )                  INLINE  Qt_QByteArray_endsWith_1( ::pPtr, pStr )
-   METHOD  endsWith_2( cCh )                   INLINE  Qt_QByteArray_endsWith_2( ::pPtr, cCh )
-   METHOD  fill( cCh, nSize )                  INLINE  Qt_QByteArray_fill( ::pPtr, cCh, nSize )
-   METHOD  indexOf( pBa, nFrom )               INLINE  Qt_QByteArray_indexOf( ::pPtr, pBa, nFrom )
-   METHOD  indexOf_1( cStr, nFrom )            INLINE  Qt_QByteArray_indexOf_1( ::pPtr, cStr, nFrom )
-   METHOD  indexOf_2( pStr, nFrom )            INLINE  Qt_QByteArray_indexOf_2( ::pPtr, pStr, nFrom )
-   METHOD  indexOf_3( cCh, nFrom )             INLINE  Qt_QByteArray_indexOf_3( ::pPtr, cCh, nFrom )
-   METHOD  insert( nI, pBa )                   INLINE  Qt_QByteArray_insert( ::pPtr, nI, pBa )
-   METHOD  insert_1( nI, cStr )                INLINE  Qt_QByteArray_insert_1( ::pPtr, nI, cStr )
-   METHOD  insert_2( nI, pStr )                INLINE  Qt_QByteArray_insert_2( ::pPtr, nI, pStr )
-   METHOD  insert_3( nI, cCh )                 INLINE  Qt_QByteArray_insert_3( ::pPtr, nI, cCh )
-   METHOD  isEmpty()                           INLINE  Qt_QByteArray_isEmpty( ::pPtr )
-   METHOD  isNull()                            INLINE  Qt_QByteArray_isNull( ::pPtr )
-   METHOD  lastIndexOf( pBa, nFrom )           INLINE  Qt_QByteArray_lastIndexOf( ::pPtr, pBa, nFrom )
-   METHOD  lastIndexOf_1( cStr, nFrom )        INLINE  Qt_QByteArray_lastIndexOf_1( ::pPtr, cStr, nFrom )
-   METHOD  lastIndexOf_2( pStr, nFrom )        INLINE  Qt_QByteArray_lastIndexOf_2( ::pPtr, pStr, nFrom )
-   METHOD  lastIndexOf_3( cCh, nFrom )         INLINE  Qt_QByteArray_lastIndexOf_3( ::pPtr, cCh, nFrom )
-   METHOD  left( nLen )                        INLINE  Qt_QByteArray_left( ::pPtr, nLen )
-   METHOD  leftJustified( nWidth, cFill, lTruncate )  INLINE  Qt_QByteArray_leftJustified( ::pPtr, nWidth, cFill, lTruncate )
-   METHOD  length()                            INLINE  Qt_QByteArray_length( ::pPtr )
-   METHOD  mid( nPos, nLen )                   INLINE  Qt_QByteArray_mid( ::pPtr, nPos, nLen )
-   METHOD  prepend( pBa )                      INLINE  Qt_QByteArray_prepend( ::pPtr, pBa )
-   METHOD  prepend_1( pStr )                   INLINE  Qt_QByteArray_prepend_1( ::pPtr, pStr )
-   METHOD  prepend_2( cCh )                    INLINE  Qt_QByteArray_prepend_2( ::pPtr, cCh )
-   METHOD  push_back( pOther )                 INLINE  Qt_QByteArray_push_back( ::pPtr, pOther )
-   METHOD  push_back_1( pStr )                 INLINE  Qt_QByteArray_push_back_1( ::pPtr, pStr )
-   METHOD  push_back_2( cCh )                  INLINE  Qt_QByteArray_push_back_2( ::pPtr, cCh )
-   METHOD  push_front( pOther )                INLINE  Qt_QByteArray_push_front( ::pPtr, pOther )
-   METHOD  push_front_1( pStr )                INLINE  Qt_QByteArray_push_front_1( ::pPtr, pStr )
-   METHOD  push_front_2( cCh )                 INLINE  Qt_QByteArray_push_front_2( ::pPtr, cCh )
-   METHOD  remove( nPos, nLen )                INLINE  Qt_QByteArray_remove( ::pPtr, nPos, nLen )
-   METHOD  repeated( nTimes )                  INLINE  Qt_QByteArray_repeated( ::pPtr, nTimes )
-   METHOD  replace( nPos, nLen, pAfter )       INLINE  Qt_QByteArray_replace( ::pPtr, nPos, nLen, pAfter )
-   METHOD  replace_1( nPos, nLen, pAfter )     INLINE  Qt_QByteArray_replace_1( ::pPtr, nPos, nLen, pAfter )
-   METHOD  replace_2( pBefore, pAfter )        INLINE  Qt_QByteArray_replace_2( ::pPtr, pBefore, pAfter )
-   METHOD  replace_3( pBefore, pAfter )        INLINE  Qt_QByteArray_replace_3( ::pPtr, pBefore, pAfter )
-   METHOD  replace_4( pBefore, nBsize, pAfter, nAsize )  INLINE  Qt_QByteArray_replace_4( ::pPtr, pBefore, nBsize, pAfter, nAsize )
-   METHOD  replace_5( pBefore, pAfter )        INLINE  Qt_QByteArray_replace_5( ::pPtr, pBefore, pAfter )
-   METHOD  replace_6( cBefore, pAfter )        INLINE  Qt_QByteArray_replace_6( ::pPtr, cBefore, pAfter )
-   METHOD  replace_7( cBefore, pAfter )        INLINE  Qt_QByteArray_replace_7( ::pPtr, cBefore, pAfter )
-   METHOD  replace_8( pBefore, pAfter )        INLINE  Qt_QByteArray_replace_8( ::pPtr, pBefore, pAfter )
-   METHOD  replace_9( cBefore, pAfter )        INLINE  Qt_QByteArray_replace_9( ::pPtr, cBefore, pAfter )
-   METHOD  replace_10( cBefore, cAfter )       INLINE  Qt_QByteArray_replace_10( ::pPtr, cBefore, cAfter )
-   METHOD  replace_11( cBefore, pAfter )       INLINE  Qt_QByteArray_replace_11( ::pPtr, cBefore, pAfter )
-   METHOD  replace_12( cBefore, cAfter )       INLINE  Qt_QByteArray_replace_12( ::pPtr, cBefore, cAfter )
-   METHOD  reserve( nSize )                    INLINE  Qt_QByteArray_reserve( ::pPtr, nSize )
-   METHOD  resize( nSize )                     INLINE  Qt_QByteArray_resize( ::pPtr, nSize )
-   METHOD  right( nLen )                       INLINE  Qt_QByteArray_right( ::pPtr, nLen )
-   METHOD  rightJustified( nWidth, cFill, lTruncate )  INLINE  Qt_QByteArray_rightJustified( ::pPtr, nWidth, cFill, lTruncate )
-   METHOD  setNum( nN, nBase )                 INLINE  Qt_QByteArray_setNum( ::pPtr, nN, nBase )
-   METHOD  setNum_1( nN, nBase )               INLINE  Qt_QByteArray_setNum_1( ::pPtr, nN, nBase )
-   METHOD  setNum_2( nN, nBase )               INLINE  Qt_QByteArray_setNum_2( ::pPtr, nN, nBase )
-   METHOD  setNum_3( nN, nBase )               INLINE  Qt_QByteArray_setNum_3( ::pPtr, nN, nBase )
-   METHOD  setNum_4( nN, nBase )               INLINE  Qt_QByteArray_setNum_4( ::pPtr, nN, nBase )
-   METHOD  setNum_5( nN, nBase )               INLINE  Qt_QByteArray_setNum_5( ::pPtr, nN, nBase )
-   METHOD  setNum_6( nN, cF, nPrec )           INLINE  Qt_QByteArray_setNum_6( ::pPtr, nN, cF, nPrec )
-   METHOD  setNum_7( nN, cF, nPrec )           INLINE  Qt_QByteArray_setNum_7( ::pPtr, nN, cF, nPrec )
-   METHOD  simplified()                        INLINE  Qt_QByteArray_simplified( ::pPtr )
-   METHOD  size()                              INLINE  Qt_QByteArray_size( ::pPtr )
-   METHOD  squeeze()                           INLINE  Qt_QByteArray_squeeze( ::pPtr )
-   METHOD  startsWith( pBa )                   INLINE  Qt_QByteArray_startsWith( ::pPtr, pBa )
-   METHOD  startsWith_1( pStr )                INLINE  Qt_QByteArray_startsWith_1( ::pPtr, pStr )
-   METHOD  startsWith_2( cCh )                 INLINE  Qt_QByteArray_startsWith_2( ::pPtr, cCh )
-   METHOD  toBase64()                          INLINE  Qt_QByteArray_toBase64( ::pPtr )
-   METHOD  toDouble( lOk )                     INLINE  Qt_QByteArray_toDouble( ::pPtr, lOk )
-   METHOD  toFloat( lOk )                      INLINE  Qt_QByteArray_toFloat( ::pPtr, lOk )
-   METHOD  toHex()                             INLINE  Qt_QByteArray_toHex( ::pPtr )
-   METHOD  toInt( lOk, nBase )                 INLINE  Qt_QByteArray_toInt( ::pPtr, lOk, nBase )
-   METHOD  toLong( lOk, nBase )                INLINE  Qt_QByteArray_toLong( ::pPtr, lOk, nBase )
-   METHOD  toLongLong( lOk, nBase )            INLINE  Qt_QByteArray_toLongLong( ::pPtr, lOk, nBase )
-   METHOD  toLower()                           INLINE  Qt_QByteArray_toLower( ::pPtr )
-   METHOD  toPercentEncoding( pExclude, pInclude, cPercent )  INLINE  Qt_QByteArray_toPercentEncoding( ::pPtr, pExclude, pInclude, cPercent )
-   METHOD  toShort( lOk, nBase )               INLINE  Qt_QByteArray_toShort( ::pPtr, lOk, nBase )
-   METHOD  toUInt( lOk, nBase )                INLINE  Qt_QByteArray_toUInt( ::pPtr, lOk, nBase )
-   METHOD  toULong( lOk, nBase )               INLINE  Qt_QByteArray_toULong( ::pPtr, lOk, nBase )
-   METHOD  toULongLong( lOk, nBase )           INLINE  Qt_QByteArray_toULongLong( ::pPtr, lOk, nBase )
-   METHOD  toUShort( lOk, nBase )              INLINE  Qt_QByteArray_toUShort( ::pPtr, lOk, nBase )
-   METHOD  toUpper()                           INLINE  Qt_QByteArray_toUpper( ::pPtr )
-   METHOD  trimmed()                           INLINE  Qt_QByteArray_trimmed( ::pPtr )
-   METHOD  truncate( nPos )                    INLINE  Qt_QByteArray_truncate( ::pPtr, nPos )
+   METHOD  append( pBa )
+   METHOD  append_1( cStr )
+   METHOD  append_2( pStr )
+   METHOD  append_3( pStr, nLen )
+   METHOD  append_4( cCh )
+   METHOD  at( nI )
+   METHOD  capacity()
+   METHOD  chop( nN )
+   METHOD  clear()
+   METHOD  constData()
+   METHOD  count( pBa )
+   METHOD  count_1( pStr )
+   METHOD  count_2( cCh )
+   METHOD  count_3()
+   METHOD  data()
+   METHOD  data_1()
+   METHOD  endsWith( pBa )
+   METHOD  endsWith_1( pStr )
+   METHOD  endsWith_2( cCh )
+   METHOD  fill( cCh, nSize )
+   METHOD  indexOf( pBa, nFrom )
+   METHOD  indexOf_1( cStr, nFrom )
+   METHOD  indexOf_2( pStr, nFrom )
+   METHOD  indexOf_3( cCh, nFrom )
+   METHOD  insert( nI, pBa )
+   METHOD  insert_1( nI, cStr )
+   METHOD  insert_2( nI, pStr )
+   METHOD  insert_3( nI, cCh )
+   METHOD  isEmpty()
+   METHOD  isNull()
+   METHOD  lastIndexOf( pBa, nFrom )
+   METHOD  lastIndexOf_1( cStr, nFrom )
+   METHOD  lastIndexOf_2( pStr, nFrom )
+   METHOD  lastIndexOf_3( cCh, nFrom )
+   METHOD  left( nLen )
+   METHOD  leftJustified( nWidth, cFill, lTruncate )
+   METHOD  length()
+   METHOD  mid( nPos, nLen )
+   METHOD  prepend( pBa )
+   METHOD  prepend_1( pStr )
+   METHOD  prepend_2( cCh )
+   METHOD  push_back( pOther )
+   METHOD  push_back_1( pStr )
+   METHOD  push_back_2( cCh )
+   METHOD  push_front( pOther )
+   METHOD  push_front_1( pStr )
+   METHOD  push_front_2( cCh )
+   METHOD  remove( nPos, nLen )
+   METHOD  repeated( nTimes )
+   METHOD  replace( nPos, nLen, pAfter )
+   METHOD  replace_1( nPos, nLen, pAfter )
+   METHOD  replace_2( pBefore, pAfter )
+   METHOD  replace_3( pBefore, pAfter )
+   METHOD  replace_4( pBefore, nBsize, pAfter, nAsize )
+   METHOD  replace_5( pBefore, pAfter )
+   METHOD  replace_6( cBefore, pAfter )
+   METHOD  replace_7( cBefore, pAfter )
+   METHOD  replace_8( pBefore, pAfter )
+   METHOD  replace_9( cBefore, pAfter )
+   METHOD  replace_10( cBefore, cAfter )
+   METHOD  replace_11( cBefore, pAfter )
+   METHOD  replace_12( cBefore, cAfter )
+   METHOD  reserve( nSize )
+   METHOD  resize( nSize )
+   METHOD  right( nLen )
+   METHOD  rightJustified( nWidth, cFill, lTruncate )
+   METHOD  setNum( nN, nBase )
+   METHOD  setNum_1( nN, nBase )
+   METHOD  setNum_2( nN, nBase )
+   METHOD  setNum_3( nN, nBase )
+   METHOD  setNum_4( nN, nBase )
+   METHOD  setNum_5( nN, nBase )
+   METHOD  setNum_6( nN, cF, nPrec )
+   METHOD  setNum_7( nN, cF, nPrec )
+   METHOD  simplified()
+   METHOD  size()
+   METHOD  squeeze()
+   METHOD  startsWith( pBa )
+   METHOD  startsWith_1( pStr )
+   METHOD  startsWith_2( cCh )
+   METHOD  toBase64()
+   METHOD  toDouble( lOk )
+   METHOD  toFloat( lOk )
+   METHOD  toHex()
+   METHOD  toInt( lOk, nBase )
+   METHOD  toLong( lOk, nBase )
+   METHOD  toLongLong( lOk, nBase )
+   METHOD  toLower()
+   METHOD  toPercentEncoding( pExclude, pInclude, cPercent )
+   METHOD  toShort( lOk, nBase )
+   METHOD  toUInt( lOk, nBase )
+   METHOD  toULong( lOk, nBase )
+   METHOD  toULongLong( lOk, nBase )
+   METHOD  toUShort( lOk, nBase )
+   METHOD  toUpper()
+   METHOD  trimmed()
+   METHOD  truncate( nPos )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QByteArray
-
+METHOD QByteArray:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QByteArray( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QByteArray
-
+METHOD QByteArray:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QByteArray:append( pBa )
+   RETURN Qt_QByteArray_append( ::pPtr, pBa )
+
+
+METHOD QByteArray:append_1( cStr )
+   RETURN Qt_QByteArray_append_1( ::pPtr, cStr )
+
+
+METHOD QByteArray:append_2( pStr )
+   RETURN Qt_QByteArray_append_2( ::pPtr, pStr )
+
+
+METHOD QByteArray:append_3( pStr, nLen )
+   RETURN Qt_QByteArray_append_3( ::pPtr, pStr, nLen )
+
+
+METHOD QByteArray:append_4( cCh )
+   RETURN Qt_QByteArray_append_4( ::pPtr, cCh )
+
+
+METHOD QByteArray:at( nI )
+   RETURN Qt_QByteArray_at( ::pPtr, nI )
+
+
+METHOD QByteArray:capacity()
+   RETURN Qt_QByteArray_capacity( ::pPtr )
+
+
+METHOD QByteArray:chop( nN )
+   RETURN Qt_QByteArray_chop( ::pPtr, nN )
+
+
+METHOD QByteArray:clear()
+   RETURN Qt_QByteArray_clear( ::pPtr )
+
+
+METHOD QByteArray:constData()
+   RETURN Qt_QByteArray_constData( ::pPtr )
+
+
+METHOD QByteArray:count( pBa )
+   RETURN Qt_QByteArray_count( ::pPtr, pBa )
+
+
+METHOD QByteArray:count_1( pStr )
+   RETURN Qt_QByteArray_count_1( ::pPtr, pStr )
+
+
+METHOD QByteArray:count_2( cCh )
+   RETURN Qt_QByteArray_count_2( ::pPtr, cCh )
+
+
+METHOD QByteArray:count_3()
+   RETURN Qt_QByteArray_count_3( ::pPtr )
+
+
+METHOD QByteArray:data()
+   RETURN Qt_QByteArray_data( ::pPtr )
+
+
+METHOD QByteArray:data_1()
+   RETURN Qt_QByteArray_data_1( ::pPtr )
+
+
+METHOD QByteArray:endsWith( pBa )
+   RETURN Qt_QByteArray_endsWith( ::pPtr, pBa )
+
+
+METHOD QByteArray:endsWith_1( pStr )
+   RETURN Qt_QByteArray_endsWith_1( ::pPtr, pStr )
+
+
+METHOD QByteArray:endsWith_2( cCh )
+   RETURN Qt_QByteArray_endsWith_2( ::pPtr, cCh )
+
+
+METHOD QByteArray:fill( cCh, nSize )
+   RETURN Qt_QByteArray_fill( ::pPtr, cCh, nSize )
+
+
+METHOD QByteArray:indexOf( pBa, nFrom )
+   RETURN Qt_QByteArray_indexOf( ::pPtr, pBa, nFrom )
+
+
+METHOD QByteArray:indexOf_1( cStr, nFrom )
+   RETURN Qt_QByteArray_indexOf_1( ::pPtr, cStr, nFrom )
+
+
+METHOD QByteArray:indexOf_2( pStr, nFrom )
+   RETURN Qt_QByteArray_indexOf_2( ::pPtr, pStr, nFrom )
+
+
+METHOD QByteArray:indexOf_3( cCh, nFrom )
+   RETURN Qt_QByteArray_indexOf_3( ::pPtr, cCh, nFrom )
+
+
+METHOD QByteArray:insert( nI, pBa )
+   RETURN Qt_QByteArray_insert( ::pPtr, nI, pBa )
+
+
+METHOD QByteArray:insert_1( nI, cStr )
+   RETURN Qt_QByteArray_insert_1( ::pPtr, nI, cStr )
+
+
+METHOD QByteArray:insert_2( nI, pStr )
+   RETURN Qt_QByteArray_insert_2( ::pPtr, nI, pStr )
+
+
+METHOD QByteArray:insert_3( nI, cCh )
+   RETURN Qt_QByteArray_insert_3( ::pPtr, nI, cCh )
+
+
+METHOD QByteArray:isEmpty()
+   RETURN Qt_QByteArray_isEmpty( ::pPtr )
+
+
+METHOD QByteArray:isNull()
+   RETURN Qt_QByteArray_isNull( ::pPtr )
+
+
+METHOD QByteArray:lastIndexOf( pBa, nFrom )
+   RETURN Qt_QByteArray_lastIndexOf( ::pPtr, pBa, nFrom )
+
+
+METHOD QByteArray:lastIndexOf_1( cStr, nFrom )
+   RETURN Qt_QByteArray_lastIndexOf_1( ::pPtr, cStr, nFrom )
+
+
+METHOD QByteArray:lastIndexOf_2( pStr, nFrom )
+   RETURN Qt_QByteArray_lastIndexOf_2( ::pPtr, pStr, nFrom )
+
+
+METHOD QByteArray:lastIndexOf_3( cCh, nFrom )
+   RETURN Qt_QByteArray_lastIndexOf_3( ::pPtr, cCh, nFrom )
+
+
+METHOD QByteArray:left( nLen )
+   RETURN Qt_QByteArray_left( ::pPtr, nLen )
+
+
+METHOD QByteArray:leftJustified( nWidth, cFill, lTruncate )
+   RETURN Qt_QByteArray_leftJustified( ::pPtr, nWidth, cFill, lTruncate )
+
+
+METHOD QByteArray:length()
+   RETURN Qt_QByteArray_length( ::pPtr )
+
+
+METHOD QByteArray:mid( nPos, nLen )
+   RETURN Qt_QByteArray_mid( ::pPtr, nPos, nLen )
+
+
+METHOD QByteArray:prepend( pBa )
+   RETURN Qt_QByteArray_prepend( ::pPtr, pBa )
+
+
+METHOD QByteArray:prepend_1( pStr )
+   RETURN Qt_QByteArray_prepend_1( ::pPtr, pStr )
+
+
+METHOD QByteArray:prepend_2( cCh )
+   RETURN Qt_QByteArray_prepend_2( ::pPtr, cCh )
+
+
+METHOD QByteArray:push_back( pOther )
+   RETURN Qt_QByteArray_push_back( ::pPtr, pOther )
+
+
+METHOD QByteArray:push_back_1( pStr )
+   RETURN Qt_QByteArray_push_back_1( ::pPtr, pStr )
+
+
+METHOD QByteArray:push_back_2( cCh )
+   RETURN Qt_QByteArray_push_back_2( ::pPtr, cCh )
+
+
+METHOD QByteArray:push_front( pOther )
+   RETURN Qt_QByteArray_push_front( ::pPtr, pOther )
+
+
+METHOD QByteArray:push_front_1( pStr )
+   RETURN Qt_QByteArray_push_front_1( ::pPtr, pStr )
+
+
+METHOD QByteArray:push_front_2( cCh )
+   RETURN Qt_QByteArray_push_front_2( ::pPtr, cCh )
+
+
+METHOD QByteArray:remove( nPos, nLen )
+   RETURN Qt_QByteArray_remove( ::pPtr, nPos, nLen )
+
+
+METHOD QByteArray:repeated( nTimes )
+   RETURN Qt_QByteArray_repeated( ::pPtr, nTimes )
+
+
+METHOD QByteArray:replace( nPos, nLen, pAfter )
+   RETURN Qt_QByteArray_replace( ::pPtr, nPos, nLen, pAfter )
+
+
+METHOD QByteArray:replace_1( nPos, nLen, pAfter )
+   RETURN Qt_QByteArray_replace_1( ::pPtr, nPos, nLen, pAfter )
+
+
+METHOD QByteArray:replace_2( pBefore, pAfter )
+   RETURN Qt_QByteArray_replace_2( ::pPtr, pBefore, pAfter )
+
+
+METHOD QByteArray:replace_3( pBefore, pAfter )
+   RETURN Qt_QByteArray_replace_3( ::pPtr, pBefore, pAfter )
+
+
+METHOD QByteArray:replace_4( pBefore, nBsize, pAfter, nAsize )
+   RETURN Qt_QByteArray_replace_4( ::pPtr, pBefore, nBsize, pAfter, nAsize )
+
+
+METHOD QByteArray:replace_5( pBefore, pAfter )
+   RETURN Qt_QByteArray_replace_5( ::pPtr, pBefore, pAfter )
+
+
+METHOD QByteArray:replace_6( cBefore, pAfter )
+   RETURN Qt_QByteArray_replace_6( ::pPtr, cBefore, pAfter )
+
+
+METHOD QByteArray:replace_7( cBefore, pAfter )
+   RETURN Qt_QByteArray_replace_7( ::pPtr, cBefore, pAfter )
+
+
+METHOD QByteArray:replace_8( pBefore, pAfter )
+   RETURN Qt_QByteArray_replace_8( ::pPtr, pBefore, pAfter )
+
+
+METHOD QByteArray:replace_9( cBefore, pAfter )
+   RETURN Qt_QByteArray_replace_9( ::pPtr, cBefore, pAfter )
+
+
+METHOD QByteArray:replace_10( cBefore, cAfter )
+   RETURN Qt_QByteArray_replace_10( ::pPtr, cBefore, cAfter )
+
+
+METHOD QByteArray:replace_11( cBefore, pAfter )
+   RETURN Qt_QByteArray_replace_11( ::pPtr, cBefore, pAfter )
+
+
+METHOD QByteArray:replace_12( cBefore, cAfter )
+   RETURN Qt_QByteArray_replace_12( ::pPtr, cBefore, cAfter )
+
+
+METHOD QByteArray:reserve( nSize )
+   RETURN Qt_QByteArray_reserve( ::pPtr, nSize )
+
+
+METHOD QByteArray:resize( nSize )
+   RETURN Qt_QByteArray_resize( ::pPtr, nSize )
+
+
+METHOD QByteArray:right( nLen )
+   RETURN Qt_QByteArray_right( ::pPtr, nLen )
+
+
+METHOD QByteArray:rightJustified( nWidth, cFill, lTruncate )
+   RETURN Qt_QByteArray_rightJustified( ::pPtr, nWidth, cFill, lTruncate )
+
+
+METHOD QByteArray:setNum( nN, nBase )
+   RETURN Qt_QByteArray_setNum( ::pPtr, nN, nBase )
+
+
+METHOD QByteArray:setNum_1( nN, nBase )
+   RETURN Qt_QByteArray_setNum_1( ::pPtr, nN, nBase )
+
+
+METHOD QByteArray:setNum_2( nN, nBase )
+   RETURN Qt_QByteArray_setNum_2( ::pPtr, nN, nBase )
+
+
+METHOD QByteArray:setNum_3( nN, nBase )
+   RETURN Qt_QByteArray_setNum_3( ::pPtr, nN, nBase )
+
+
+METHOD QByteArray:setNum_4( nN, nBase )
+   RETURN Qt_QByteArray_setNum_4( ::pPtr, nN, nBase )
+
+
+METHOD QByteArray:setNum_5( nN, nBase )
+   RETURN Qt_QByteArray_setNum_5( ::pPtr, nN, nBase )
+
+
+METHOD QByteArray:setNum_6( nN, cF, nPrec )
+   RETURN Qt_QByteArray_setNum_6( ::pPtr, nN, cF, nPrec )
+
+
+METHOD QByteArray:setNum_7( nN, cF, nPrec )
+   RETURN Qt_QByteArray_setNum_7( ::pPtr, nN, cF, nPrec )
+
+
+METHOD QByteArray:simplified()
+   RETURN Qt_QByteArray_simplified( ::pPtr )
+
+
+METHOD QByteArray:size()
+   RETURN Qt_QByteArray_size( ::pPtr )
+
+
+METHOD QByteArray:squeeze()
+   RETURN Qt_QByteArray_squeeze( ::pPtr )
+
+
+METHOD QByteArray:startsWith( pBa )
+   RETURN Qt_QByteArray_startsWith( ::pPtr, pBa )
+
+
+METHOD QByteArray:startsWith_1( pStr )
+   RETURN Qt_QByteArray_startsWith_1( ::pPtr, pStr )
+
+
+METHOD QByteArray:startsWith_2( cCh )
+   RETURN Qt_QByteArray_startsWith_2( ::pPtr, cCh )
+
+
+METHOD QByteArray:toBase64()
+   RETURN Qt_QByteArray_toBase64( ::pPtr )
+
+
+METHOD QByteArray:toDouble( lOk )
+   RETURN Qt_QByteArray_toDouble( ::pPtr, lOk )
+
+
+METHOD QByteArray:toFloat( lOk )
+   RETURN Qt_QByteArray_toFloat( ::pPtr, lOk )
+
+
+METHOD QByteArray:toHex()
+   RETURN Qt_QByteArray_toHex( ::pPtr )
+
+
+METHOD QByteArray:toInt( lOk, nBase )
+   RETURN Qt_QByteArray_toInt( ::pPtr, lOk, nBase )
+
+
+METHOD QByteArray:toLong( lOk, nBase )
+   RETURN Qt_QByteArray_toLong( ::pPtr, lOk, nBase )
+
+
+METHOD QByteArray:toLongLong( lOk, nBase )
+   RETURN Qt_QByteArray_toLongLong( ::pPtr, lOk, nBase )
+
+
+METHOD QByteArray:toLower()
+   RETURN Qt_QByteArray_toLower( ::pPtr )
+
+
+METHOD QByteArray:toPercentEncoding( pExclude, pInclude, cPercent )
+   RETURN Qt_QByteArray_toPercentEncoding( ::pPtr, pExclude, pInclude, cPercent )
+
+
+METHOD QByteArray:toShort( lOk, nBase )
+   RETURN Qt_QByteArray_toShort( ::pPtr, lOk, nBase )
+
+
+METHOD QByteArray:toUInt( lOk, nBase )
+   RETURN Qt_QByteArray_toUInt( ::pPtr, lOk, nBase )
+
+
+METHOD QByteArray:toULong( lOk, nBase )
+   RETURN Qt_QByteArray_toULong( ::pPtr, lOk, nBase )
+
+
+METHOD QByteArray:toULongLong( lOk, nBase )
+   RETURN Qt_QByteArray_toULongLong( ::pPtr, lOk, nBase )
+
+
+METHOD QByteArray:toUShort( lOk, nBase )
+   RETURN Qt_QByteArray_toUShort( ::pPtr, lOk, nBase )
+
+
+METHOD QByteArray:toUpper()
+   RETURN Qt_QByteArray_toUpper( ::pPtr )
+
+
+METHOD QByteArray:trimmed()
+   RETURN Qt_QByteArray_trimmed( ::pPtr )
+
+
+METHOD QByteArray:truncate( nPos )
+   RETURN Qt_QByteArray_truncate( ::pPtr, nPos )
+

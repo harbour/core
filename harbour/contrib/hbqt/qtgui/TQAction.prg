@@ -71,77 +71,262 @@ CREATE CLASS QAction INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  actionGroup()                       INLINE  Qt_QAction_actionGroup( ::pPtr )
-   METHOD  activate( nEvent )                  INLINE  Qt_QAction_activate( ::pPtr, nEvent )
-   METHOD  autoRepeat()                        INLINE  Qt_QAction_autoRepeat( ::pPtr )
-   METHOD  data()                              INLINE  Qt_QAction_data( ::pPtr )
-   METHOD  font()                              INLINE  Qt_QAction_font( ::pPtr )
-   METHOD  icon()                              INLINE  Qt_QAction_icon( ::pPtr )
-   METHOD  iconText()                          INLINE  Qt_QAction_iconText( ::pPtr )
-   METHOD  isCheckable()                       INLINE  Qt_QAction_isCheckable( ::pPtr )
-   METHOD  isChecked()                         INLINE  Qt_QAction_isChecked( ::pPtr )
-   METHOD  isEnabled()                         INLINE  Qt_QAction_isEnabled( ::pPtr )
-   METHOD  isIconVisibleInMenu()               INLINE  Qt_QAction_isIconVisibleInMenu( ::pPtr )
-   METHOD  isSeparator()                       INLINE  Qt_QAction_isSeparator( ::pPtr )
-   METHOD  isVisible()                         INLINE  Qt_QAction_isVisible( ::pPtr )
-   METHOD  menu()                              INLINE  Qt_QAction_menu( ::pPtr )
-   METHOD  menuRole()                          INLINE  Qt_QAction_menuRole( ::pPtr )
-   METHOD  parentWidget()                      INLINE  Qt_QAction_parentWidget( ::pPtr )
-   METHOD  setActionGroup( pGroup )            INLINE  Qt_QAction_setActionGroup( ::pPtr, pGroup )
-   METHOD  setAutoRepeat( lBool )              INLINE  Qt_QAction_setAutoRepeat( ::pPtr, lBool )
-   METHOD  setCheckable( lBool )               INLINE  Qt_QAction_setCheckable( ::pPtr, lBool )
-   METHOD  setData( pUserData )                INLINE  Qt_QAction_setData( ::pPtr, pUserData )
-   METHOD  setFont( pFont )                    INLINE  Qt_QAction_setFont( ::pPtr, pFont )
-   METHOD  setIcon( cIcon )                    INLINE  Qt_QAction_setIcon( ::pPtr, cIcon )
-   METHOD  setIconText( cText )                INLINE  Qt_QAction_setIconText( ::pPtr, cText )
-   METHOD  setIconVisibleInMenu( lVisible )    INLINE  Qt_QAction_setIconVisibleInMenu( ::pPtr, lVisible )
-   METHOD  setMenu( pMenu )                    INLINE  Qt_QAction_setMenu( ::pPtr, pMenu )
-   METHOD  setMenuRole( nMenuRole )            INLINE  Qt_QAction_setMenuRole( ::pPtr, nMenuRole )
-   METHOD  setSeparator( lB )                  INLINE  Qt_QAction_setSeparator( ::pPtr, lB )
-   METHOD  setShortcut( pShortcut )            INLINE  Qt_QAction_setShortcut( ::pPtr, pShortcut )
-   METHOD  setShortcutContext( nContext )      INLINE  Qt_QAction_setShortcutContext( ::pPtr, nContext )
-   METHOD  setShortcuts( nKey )                INLINE  Qt_QAction_setShortcuts( ::pPtr, nKey )
-   METHOD  setStatusTip( cStatusTip )          INLINE  Qt_QAction_setStatusTip( ::pPtr, cStatusTip )
-   METHOD  setText( cText )                    INLINE  Qt_QAction_setText( ::pPtr, cText )
-   METHOD  setToolTip( cTip )                  INLINE  Qt_QAction_setToolTip( ::pPtr, cTip )
-   METHOD  setWhatsThis( cWhat )               INLINE  Qt_QAction_setWhatsThis( ::pPtr, cWhat )
-   METHOD  shortcut()                          INLINE  Qt_QAction_shortcut( ::pPtr )
-   METHOD  shortcutContext()                   INLINE  Qt_QAction_shortcutContext( ::pPtr )
-   METHOD  showStatusText( pWidget )           INLINE  Qt_QAction_showStatusText( ::pPtr, pWidget )
-   METHOD  statusTip()                         INLINE  Qt_QAction_statusTip( ::pPtr )
-   METHOD  text()                              INLINE  Qt_QAction_text( ::pPtr )
-   METHOD  toolTip()                           INLINE  Qt_QAction_toolTip( ::pPtr )
-   METHOD  whatsThis()                         INLINE  Qt_QAction_whatsThis( ::pPtr )
-   METHOD  hover()                             INLINE  Qt_QAction_hover( ::pPtr )
-   METHOD  setChecked( lBool )                 INLINE  Qt_QAction_setChecked( ::pPtr, lBool )
-   METHOD  setDisabled( lB )                   INLINE  Qt_QAction_setDisabled( ::pPtr, lB )
-   METHOD  setEnabled( lBool )                 INLINE  Qt_QAction_setEnabled( ::pPtr, lBool )
-   METHOD  setVisible( lBool )                 INLINE  Qt_QAction_setVisible( ::pPtr, lBool )
-   METHOD  toggle()                            INLINE  Qt_QAction_toggle( ::pPtr )
-   METHOD  trigger()                           INLINE  Qt_QAction_trigger( ::pPtr )
+   METHOD  actionGroup()
+   METHOD  activate( nEvent )
+   METHOD  autoRepeat()
+   METHOD  data()
+   METHOD  font()
+   METHOD  icon()
+   METHOD  iconText()
+   METHOD  isCheckable()
+   METHOD  isChecked()
+   METHOD  isEnabled()
+   METHOD  isIconVisibleInMenu()
+   METHOD  isSeparator()
+   METHOD  isVisible()
+   METHOD  menu()
+   METHOD  menuRole()
+   METHOD  parentWidget()
+   METHOD  setActionGroup( pGroup )
+   METHOD  setAutoRepeat( lBool )
+   METHOD  setCheckable( lBool )
+   METHOD  setData( pUserData )
+   METHOD  setFont( pFont )
+   METHOD  setIcon( cIcon )
+   METHOD  setIconText( cText )
+   METHOD  setIconVisibleInMenu( lVisible )
+   METHOD  setMenu( pMenu )
+   METHOD  setMenuRole( nMenuRole )
+   METHOD  setSeparator( lB )
+   METHOD  setShortcut( pShortcut )
+   METHOD  setShortcutContext( nContext )
+   METHOD  setShortcuts( nKey )
+   METHOD  setStatusTip( cStatusTip )
+   METHOD  setText( cText )
+   METHOD  setToolTip( cTip )
+   METHOD  setWhatsThis( cWhat )
+   METHOD  shortcut()
+   METHOD  shortcutContext()
+   METHOD  showStatusText( pWidget )
+   METHOD  statusTip()
+   METHOD  text()
+   METHOD  toolTip()
+   METHOD  whatsThis()
+   METHOD  hover()
+   METHOD  setChecked( lBool )
+   METHOD  setDisabled( lB )
+   METHOD  setEnabled( lBool )
+   METHOD  setVisible( lBool )
+   METHOD  toggle()
+   METHOD  trigger()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QAction
-
+METHOD QAction:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QAction( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QAction
-
+METHOD QAction:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QAction:actionGroup()
+   RETURN Qt_QAction_actionGroup( ::pPtr )
+
+
+METHOD QAction:activate( nEvent )
+   RETURN Qt_QAction_activate( ::pPtr, nEvent )
+
+
+METHOD QAction:autoRepeat()
+   RETURN Qt_QAction_autoRepeat( ::pPtr )
+
+
+METHOD QAction:data()
+   RETURN Qt_QAction_data( ::pPtr )
+
+
+METHOD QAction:font()
+   RETURN Qt_QAction_font( ::pPtr )
+
+
+METHOD QAction:icon()
+   RETURN Qt_QAction_icon( ::pPtr )
+
+
+METHOD QAction:iconText()
+   RETURN Qt_QAction_iconText( ::pPtr )
+
+
+METHOD QAction:isCheckable()
+   RETURN Qt_QAction_isCheckable( ::pPtr )
+
+
+METHOD QAction:isChecked()
+   RETURN Qt_QAction_isChecked( ::pPtr )
+
+
+METHOD QAction:isEnabled()
+   RETURN Qt_QAction_isEnabled( ::pPtr )
+
+
+METHOD QAction:isIconVisibleInMenu()
+   RETURN Qt_QAction_isIconVisibleInMenu( ::pPtr )
+
+
+METHOD QAction:isSeparator()
+   RETURN Qt_QAction_isSeparator( ::pPtr )
+
+
+METHOD QAction:isVisible()
+   RETURN Qt_QAction_isVisible( ::pPtr )
+
+
+METHOD QAction:menu()
+   RETURN Qt_QAction_menu( ::pPtr )
+
+
+METHOD QAction:menuRole()
+   RETURN Qt_QAction_menuRole( ::pPtr )
+
+
+METHOD QAction:parentWidget()
+   RETURN Qt_QAction_parentWidget( ::pPtr )
+
+
+METHOD QAction:setActionGroup( pGroup )
+   RETURN Qt_QAction_setActionGroup( ::pPtr, pGroup )
+
+
+METHOD QAction:setAutoRepeat( lBool )
+   RETURN Qt_QAction_setAutoRepeat( ::pPtr, lBool )
+
+
+METHOD QAction:setCheckable( lBool )
+   RETURN Qt_QAction_setCheckable( ::pPtr, lBool )
+
+
+METHOD QAction:setData( pUserData )
+   RETURN Qt_QAction_setData( ::pPtr, pUserData )
+
+
+METHOD QAction:setFont( pFont )
+   RETURN Qt_QAction_setFont( ::pPtr, pFont )
+
+
+METHOD QAction:setIcon( cIcon )
+   RETURN Qt_QAction_setIcon( ::pPtr, cIcon )
+
+
+METHOD QAction:setIconText( cText )
+   RETURN Qt_QAction_setIconText( ::pPtr, cText )
+
+
+METHOD QAction:setIconVisibleInMenu( lVisible )
+   RETURN Qt_QAction_setIconVisibleInMenu( ::pPtr, lVisible )
+
+
+METHOD QAction:setMenu( pMenu )
+   RETURN Qt_QAction_setMenu( ::pPtr, pMenu )
+
+
+METHOD QAction:setMenuRole( nMenuRole )
+   RETURN Qt_QAction_setMenuRole( ::pPtr, nMenuRole )
+
+
+METHOD QAction:setSeparator( lB )
+   RETURN Qt_QAction_setSeparator( ::pPtr, lB )
+
+
+METHOD QAction:setShortcut( pShortcut )
+   RETURN Qt_QAction_setShortcut( ::pPtr, pShortcut )
+
+
+METHOD QAction:setShortcutContext( nContext )
+   RETURN Qt_QAction_setShortcutContext( ::pPtr, nContext )
+
+
+METHOD QAction:setShortcuts( nKey )
+   RETURN Qt_QAction_setShortcuts( ::pPtr, nKey )
+
+
+METHOD QAction:setStatusTip( cStatusTip )
+   RETURN Qt_QAction_setStatusTip( ::pPtr, cStatusTip )
+
+
+METHOD QAction:setText( cText )
+   RETURN Qt_QAction_setText( ::pPtr, cText )
+
+
+METHOD QAction:setToolTip( cTip )
+   RETURN Qt_QAction_setToolTip( ::pPtr, cTip )
+
+
+METHOD QAction:setWhatsThis( cWhat )
+   RETURN Qt_QAction_setWhatsThis( ::pPtr, cWhat )
+
+
+METHOD QAction:shortcut()
+   RETURN Qt_QAction_shortcut( ::pPtr )
+
+
+METHOD QAction:shortcutContext()
+   RETURN Qt_QAction_shortcutContext( ::pPtr )
+
+
+METHOD QAction:showStatusText( pWidget )
+   RETURN Qt_QAction_showStatusText( ::pPtr, pWidget )
+
+
+METHOD QAction:statusTip()
+   RETURN Qt_QAction_statusTip( ::pPtr )
+
+
+METHOD QAction:text()
+   RETURN Qt_QAction_text( ::pPtr )
+
+
+METHOD QAction:toolTip()
+   RETURN Qt_QAction_toolTip( ::pPtr )
+
+
+METHOD QAction:whatsThis()
+   RETURN Qt_QAction_whatsThis( ::pPtr )
+
+
+METHOD QAction:hover()
+   RETURN Qt_QAction_hover( ::pPtr )
+
+
+METHOD QAction:setChecked( lBool )
+   RETURN Qt_QAction_setChecked( ::pPtr, lBool )
+
+
+METHOD QAction:setDisabled( lB )
+   RETURN Qt_QAction_setDisabled( ::pPtr, lB )
+
+
+METHOD QAction:setEnabled( lBool )
+   RETURN Qt_QAction_setEnabled( ::pPtr, lBool )
+
+
+METHOD QAction:setVisible( lBool )
+   RETURN Qt_QAction_setVisible( ::pPtr, lBool )
+
+
+METHOD QAction:toggle()
+   RETURN Qt_QAction_toggle( ::pPtr )
+
+
+METHOD QAction:trigger()
+   RETURN Qt_QAction_trigger( ::pPtr )
+

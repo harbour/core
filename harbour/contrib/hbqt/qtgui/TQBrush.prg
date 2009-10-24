@@ -71,20 +71,20 @@ CREATE CLASS QBrush
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  color()                             INLINE  Qt_QBrush_color( ::pPtr )
-   METHOD  isOpaque()                          INLINE  Qt_QBrush_isOpaque( ::pPtr )
-   METHOD  matrix()                            INLINE  Qt_QBrush_matrix( ::pPtr )
-   METHOD  setColor( pColor )                  INLINE  Qt_QBrush_setColor( ::pPtr, pColor )
-   METHOD  setColor_1( nColor )                INLINE  Qt_QBrush_setColor_1( ::pPtr, nColor )
-   METHOD  setMatrix( pMatrix )                INLINE  Qt_QBrush_setMatrix( ::pPtr, pMatrix )
-   METHOD  setStyle( nStyle )                  INLINE  Qt_QBrush_setStyle( ::pPtr, nStyle )
-   METHOD  setTexture( pPixmap )               INLINE  Qt_QBrush_setTexture( ::pPtr, pPixmap )
-   METHOD  setTextureImage( pImage )           INLINE  Qt_QBrush_setTextureImage( ::pPtr, pImage )
-   METHOD  setTransform( pMatrix )             INLINE  Qt_QBrush_setTransform( ::pPtr, pMatrix )
-   METHOD  style()                             INLINE  Qt_QBrush_style( ::pPtr )
-   METHOD  texture()                           INLINE  Qt_QBrush_texture( ::pPtr )
-   METHOD  textureImage()                      INLINE  Qt_QBrush_textureImage( ::pPtr )
-   METHOD  transform()                         INLINE  Qt_QBrush_transform( ::pPtr )
+   METHOD  color()
+   METHOD  isOpaque()
+   METHOD  matrix()
+   METHOD  setColor( pColor )
+   METHOD  setColor_1( nColor )
+   METHOD  setMatrix( pMatrix )
+   METHOD  setStyle( nStyle )
+   METHOD  setTexture( pPixmap )
+   METHOD  setTextureImage( pImage )
+   METHOD  setTransform( pMatrix )
+   METHOD  style()
+   METHOD  texture()
+   METHOD  textureImage()
+   METHOD  transform()
 
    ENDCLASS
 
@@ -96,16 +96,68 @@ METHOD New( ... ) CLASS QBrush
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QBrush
-
+METHOD QBrush:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QBrush:color()
+   RETURN Qt_QBrush_color( ::pPtr )
+
+
+METHOD QBrush:isOpaque()
+   RETURN Qt_QBrush_isOpaque( ::pPtr )
+
+
+METHOD QBrush:matrix()
+   RETURN Qt_QBrush_matrix( ::pPtr )
+
+
+METHOD QBrush:setColor( pColor )
+   RETURN Qt_QBrush_setColor( ::pPtr, pColor )
+
+
+METHOD QBrush:setColor_1( nColor )
+   RETURN Qt_QBrush_setColor_1( ::pPtr, nColor )
+
+
+METHOD QBrush:setMatrix( pMatrix )
+   RETURN Qt_QBrush_setMatrix( ::pPtr, pMatrix )
+
+
+METHOD QBrush:setStyle( nStyle )
+   RETURN Qt_QBrush_setStyle( ::pPtr, nStyle )
+
+
+METHOD QBrush:setTexture( pPixmap )
+   RETURN Qt_QBrush_setTexture( ::pPtr, pPixmap )
+
+
+METHOD QBrush:setTextureImage( pImage )
+   RETURN Qt_QBrush_setTextureImage( ::pPtr, pImage )
+
+
+METHOD QBrush:setTransform( pMatrix )
+   RETURN Qt_QBrush_setTransform( ::pPtr, pMatrix )
+
+
+METHOD QBrush:style()
+   RETURN Qt_QBrush_style( ::pPtr )
+
+
+METHOD QBrush:texture()
+   RETURN Qt_QBrush_texture( ::pPtr )
+
+
+METHOD QBrush:textureImage()
+   RETURN Qt_QBrush_textureImage( ::pPtr )
+
+
+METHOD QBrush:transform()
+   RETURN Qt_QBrush_transform( ::pPtr )
+

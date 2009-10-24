@@ -71,35 +71,52 @@ CREATE CLASS QKeySequence
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  count()                             INLINE  Qt_QKeySequence_count( ::pPtr )
-   METHOD  isEmpty()                           INLINE  Qt_QKeySequence_isEmpty( ::pPtr )
-   METHOD  matches( pSeq )                     INLINE  Qt_QKeySequence_matches( ::pPtr, pSeq )
-   METHOD  toString( nFormat )                 INLINE  Qt_QKeySequence_toString( ::pPtr, nFormat )
-   METHOD  fromString( cStr, nFormat )         INLINE  Qt_QKeySequence_fromString( ::pPtr, cStr, nFormat )
-   METHOD  mnemonic( cText )                   INLINE  Qt_QKeySequence_mnemonic( ::pPtr, cText )
+   METHOD  count()
+   METHOD  isEmpty()
+   METHOD  matches( pSeq )
+   METHOD  toString( nFormat )
+   METHOD  fromString( cStr, nFormat )
+   METHOD  mnemonic( cText )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QKeySequence
-
+METHOD QKeySequence:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QKeySequence( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QKeySequence
-
+METHOD QKeySequence:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QKeySequence:count()
+   RETURN Qt_QKeySequence_count( ::pPtr )
+
+
+METHOD QKeySequence:isEmpty()
+   RETURN Qt_QKeySequence_isEmpty( ::pPtr )
+
+
+METHOD QKeySequence:matches( pSeq )
+   RETURN Qt_QKeySequence_matches( ::pPtr, pSeq )
+
+
+METHOD QKeySequence:toString( nFormat )
+   RETURN Qt_QKeySequence_toString( ::pPtr, nFormat )
+
+
+METHOD QKeySequence:fromString( cStr, nFormat )
+   RETURN Qt_QKeySequence_fromString( ::pPtr, cStr, nFormat )
+
+
+METHOD QKeySequence:mnemonic( cText )
+   RETURN Qt_QKeySequence_mnemonic( ::pPtr, cText )
+

@@ -71,40 +71,77 @@ CREATE CLASS QAbstractTextDocumentLayout INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  anchorAt( pPosition )               INLINE  Qt_QAbstractTextDocumentLayout_anchorAt( ::pPtr, pPosition )
-   METHOD  blockBoundingRect( pBlock )         INLINE  Qt_QAbstractTextDocumentLayout_blockBoundingRect( ::pPtr, pBlock )
-   METHOD  document()                          INLINE  Qt_QAbstractTextDocumentLayout_document( ::pPtr )
-   METHOD  documentSize()                      INLINE  Qt_QAbstractTextDocumentLayout_documentSize( ::pPtr )
-   METHOD  frameBoundingRect( pFrame )         INLINE  Qt_QAbstractTextDocumentLayout_frameBoundingRect( ::pPtr, pFrame )
-   METHOD  handlerForObject( nObjectType )     INLINE  Qt_QAbstractTextDocumentLayout_handlerForObject( ::pPtr, nObjectType )
-   METHOD  hitTest( pPoint, nAccuracy )        INLINE  Qt_QAbstractTextDocumentLayout_hitTest( ::pPtr, pPoint, nAccuracy )
-   METHOD  pageCount()                         INLINE  Qt_QAbstractTextDocumentLayout_pageCount( ::pPtr )
-   METHOD  paintDevice()                       INLINE  Qt_QAbstractTextDocumentLayout_paintDevice( ::pPtr )
-   METHOD  registerHandler( nObjectType, pComponent )  INLINE  Qt_QAbstractTextDocumentLayout_registerHandler( ::pPtr, nObjectType, pComponent )
-   METHOD  setPaintDevice( pDevice )           INLINE  Qt_QAbstractTextDocumentLayout_setPaintDevice( ::pPtr, pDevice )
+   METHOD  anchorAt( pPosition )
+   METHOD  blockBoundingRect( pBlock )
+   METHOD  document()
+   METHOD  documentSize()
+   METHOD  frameBoundingRect( pFrame )
+   METHOD  handlerForObject( nObjectType )
+   METHOD  hitTest( pPoint, nAccuracy )
+   METHOD  pageCount()
+   METHOD  paintDevice()
+   METHOD  registerHandler( nObjectType, pComponent )
+   METHOD  setPaintDevice( pDevice )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QAbstractTextDocumentLayout
-
+METHOD QAbstractTextDocumentLayout:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QAbstractTextDocumentLayout( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QAbstractTextDocumentLayout
-
+METHOD QAbstractTextDocumentLayout:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QAbstractTextDocumentLayout:anchorAt( pPosition )
+   RETURN Qt_QAbstractTextDocumentLayout_anchorAt( ::pPtr, pPosition )
+
+
+METHOD QAbstractTextDocumentLayout:blockBoundingRect( pBlock )
+   RETURN Qt_QAbstractTextDocumentLayout_blockBoundingRect( ::pPtr, pBlock )
+
+
+METHOD QAbstractTextDocumentLayout:document()
+   RETURN Qt_QAbstractTextDocumentLayout_document( ::pPtr )
+
+
+METHOD QAbstractTextDocumentLayout:documentSize()
+   RETURN Qt_QAbstractTextDocumentLayout_documentSize( ::pPtr )
+
+
+METHOD QAbstractTextDocumentLayout:frameBoundingRect( pFrame )
+   RETURN Qt_QAbstractTextDocumentLayout_frameBoundingRect( ::pPtr, pFrame )
+
+
+METHOD QAbstractTextDocumentLayout:handlerForObject( nObjectType )
+   RETURN Qt_QAbstractTextDocumentLayout_handlerForObject( ::pPtr, nObjectType )
+
+
+METHOD QAbstractTextDocumentLayout:hitTest( pPoint, nAccuracy )
+   RETURN Qt_QAbstractTextDocumentLayout_hitTest( ::pPtr, pPoint, nAccuracy )
+
+
+METHOD QAbstractTextDocumentLayout:pageCount()
+   RETURN Qt_QAbstractTextDocumentLayout_pageCount( ::pPtr )
+
+
+METHOD QAbstractTextDocumentLayout:paintDevice()
+   RETURN Qt_QAbstractTextDocumentLayout_paintDevice( ::pPtr )
+
+
+METHOD QAbstractTextDocumentLayout:registerHandler( nObjectType, pComponent )
+   RETURN Qt_QAbstractTextDocumentLayout_registerHandler( ::pPtr, nObjectType, pComponent )
+
+
+METHOD QAbstractTextDocumentLayout:setPaintDevice( pDevice )
+   RETURN Qt_QAbstractTextDocumentLayout_setPaintDevice( ::pPtr, pDevice )
+

@@ -71,40 +71,77 @@ CREATE CLASS QModelIndex
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  child( nRow, nColumn )              INLINE  Qt_QModelIndex_child( ::pPtr, nRow, nColumn )
-   METHOD  column()                            INLINE  Qt_QModelIndex_column( ::pPtr )
-   METHOD  data( nRole )                       INLINE  Qt_QModelIndex_data( ::pPtr, nRole )
-   METHOD  flags()                             INLINE  Qt_QModelIndex_flags( ::pPtr )
-   METHOD  internalId()                        INLINE  Qt_QModelIndex_internalId( ::pPtr )
-   METHOD  internalPointer()                   INLINE  Qt_QModelIndex_internalPointer( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QModelIndex_isValid( ::pPtr )
-   METHOD  model()                             INLINE  Qt_QModelIndex_model( ::pPtr )
-   METHOD  parent()                            INLINE  Qt_QModelIndex_parent( ::pPtr )
-   METHOD  row()                               INLINE  Qt_QModelIndex_row( ::pPtr )
-   METHOD  sibling( nRow, nColumn )            INLINE  Qt_QModelIndex_sibling( ::pPtr, nRow, nColumn )
+   METHOD  child( nRow, nColumn )
+   METHOD  column()
+   METHOD  data( nRole )
+   METHOD  flags()
+   METHOD  internalId()
+   METHOD  internalPointer()
+   METHOD  isValid()
+   METHOD  model()
+   METHOD  parent()
+   METHOD  row()
+   METHOD  sibling( nRow, nColumn )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QModelIndex
-
+METHOD QModelIndex:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QModelIndex( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QModelIndex
-
+METHOD QModelIndex:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QModelIndex:child( nRow, nColumn )
+   RETURN Qt_QModelIndex_child( ::pPtr, nRow, nColumn )
+
+
+METHOD QModelIndex:column()
+   RETURN Qt_QModelIndex_column( ::pPtr )
+
+
+METHOD QModelIndex:data( nRole )
+   RETURN Qt_QModelIndex_data( ::pPtr, nRole )
+
+
+METHOD QModelIndex:flags()
+   RETURN Qt_QModelIndex_flags( ::pPtr )
+
+
+METHOD QModelIndex:internalId()
+   RETURN Qt_QModelIndex_internalId( ::pPtr )
+
+
+METHOD QModelIndex:internalPointer()
+   RETURN Qt_QModelIndex_internalPointer( ::pPtr )
+
+
+METHOD QModelIndex:isValid()
+   RETURN Qt_QModelIndex_isValid( ::pPtr )
+
+
+METHOD QModelIndex:model()
+   RETURN Qt_QModelIndex_model( ::pPtr )
+
+
+METHOD QModelIndex:parent()
+   RETURN Qt_QModelIndex_parent( ::pPtr )
+
+
+METHOD QModelIndex:row()
+   RETURN Qt_QModelIndex_row( ::pPtr )
+
+
+METHOD QModelIndex:sibling( nRow, nColumn )
+   RETURN Qt_QModelIndex_sibling( ::pPtr, nRow, nColumn )
+

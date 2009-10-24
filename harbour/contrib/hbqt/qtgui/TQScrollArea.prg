@@ -71,38 +71,67 @@ CREATE CLASS QScrollArea INHERIT QAbstractScrollArea
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  alignment()                         INLINE  Qt_QScrollArea_alignment( ::pPtr )
-   METHOD  ensureVisible( nX, nY, nXmargin, nYmargin )  INLINE  Qt_QScrollArea_ensureVisible( ::pPtr, nX, nY, nXmargin, nYmargin )
-   METHOD  ensureWidgetVisible( pChildWidget, nXmargin, nYmargin )  INLINE  Qt_QScrollArea_ensureWidgetVisible( ::pPtr, pChildWidget, nXmargin, nYmargin )
-   METHOD  setAlignment( nQt_Alignment )       INLINE  Qt_QScrollArea_setAlignment( ::pPtr, nQt_Alignment )
-   METHOD  setWidget( pWidget )                INLINE  Qt_QScrollArea_setWidget( ::pPtr, pWidget )
-   METHOD  setWidgetResizable( lResizable )    INLINE  Qt_QScrollArea_setWidgetResizable( ::pPtr, lResizable )
-   METHOD  takeWidget()                        INLINE  Qt_QScrollArea_takeWidget( ::pPtr )
-   METHOD  widget()                            INLINE  Qt_QScrollArea_widget( ::pPtr )
-   METHOD  widgetResizable()                   INLINE  Qt_QScrollArea_widgetResizable( ::pPtr )
+   METHOD  alignment()
+   METHOD  ensureVisible( nX, nY, nXmargin, nYmargin )
+   METHOD  ensureWidgetVisible( pChildWidget, nXmargin, nYmargin )
+   METHOD  setAlignment( nQt_Alignment )
+   METHOD  setWidget( pWidget )
+   METHOD  setWidgetResizable( lResizable )
+   METHOD  takeWidget()
+   METHOD  widget()
+   METHOD  widgetResizable()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QScrollArea
-
+METHOD QScrollArea:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QScrollArea( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QScrollArea
-
+METHOD QScrollArea:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QScrollArea:alignment()
+   RETURN Qt_QScrollArea_alignment( ::pPtr )
+
+
+METHOD QScrollArea:ensureVisible( nX, nY, nXmargin, nYmargin )
+   RETURN Qt_QScrollArea_ensureVisible( ::pPtr, nX, nY, nXmargin, nYmargin )
+
+
+METHOD QScrollArea:ensureWidgetVisible( pChildWidget, nXmargin, nYmargin )
+   RETURN Qt_QScrollArea_ensureWidgetVisible( ::pPtr, pChildWidget, nXmargin, nYmargin )
+
+
+METHOD QScrollArea:setAlignment( nQt_Alignment )
+   RETURN Qt_QScrollArea_setAlignment( ::pPtr, nQt_Alignment )
+
+
+METHOD QScrollArea:setWidget( pWidget )
+   RETURN Qt_QScrollArea_setWidget( ::pPtr, pWidget )
+
+
+METHOD QScrollArea:setWidgetResizable( lResizable )
+   RETURN Qt_QScrollArea_setWidgetResizable( ::pPtr, lResizable )
+
+
+METHOD QScrollArea:takeWidget()
+   RETURN Qt_QScrollArea_takeWidget( ::pPtr )
+
+
+METHOD QScrollArea:widget()
+   RETURN Qt_QScrollArea_widget( ::pPtr )
+
+
+METHOD QScrollArea:widgetResizable()
+   RETURN Qt_QScrollArea_widgetResizable( ::pPtr )
+

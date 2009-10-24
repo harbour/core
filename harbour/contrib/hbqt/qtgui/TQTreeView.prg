@@ -71,78 +71,267 @@ CREATE CLASS QTreeView INHERIT QAbstractItemView
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  allColumnsShowFocus()               INLINE  Qt_QTreeView_allColumnsShowFocus( ::pPtr )
-   METHOD  autoExpandDelay()                   INLINE  Qt_QTreeView_autoExpandDelay( ::pPtr )
-   METHOD  columnAt( nX )                      INLINE  Qt_QTreeView_columnAt( ::pPtr, nX )
-   METHOD  columnViewportPosition( nColumn )   INLINE  Qt_QTreeView_columnViewportPosition( ::pPtr, nColumn )
-   METHOD  columnWidth( nColumn )              INLINE  Qt_QTreeView_columnWidth( ::pPtr, nColumn )
-   METHOD  expandsOnDoubleClick()              INLINE  Qt_QTreeView_expandsOnDoubleClick( ::pPtr )
-   METHOD  header()                            INLINE  Qt_QTreeView_header( ::pPtr )
-   METHOD  indentation()                       INLINE  Qt_QTreeView_indentation( ::pPtr )
-   METHOD  indexAbove( pIndex )                INLINE  Qt_QTreeView_indexAbove( ::pPtr, pIndex )
-   METHOD  indexBelow( pIndex )                INLINE  Qt_QTreeView_indexBelow( ::pPtr, pIndex )
-   METHOD  isAnimated()                        INLINE  Qt_QTreeView_isAnimated( ::pPtr )
-   METHOD  isColumnHidden( nColumn )           INLINE  Qt_QTreeView_isColumnHidden( ::pPtr, nColumn )
-   METHOD  isExpanded( pIndex )                INLINE  Qt_QTreeView_isExpanded( ::pPtr, pIndex )
-   METHOD  isFirstColumnSpanned( nRow, pParent )  INLINE  Qt_QTreeView_isFirstColumnSpanned( ::pPtr, nRow, pParent )
-   METHOD  isHeaderHidden()                    INLINE  Qt_QTreeView_isHeaderHidden( ::pPtr )
-   METHOD  isRowHidden( nRow, pParent )        INLINE  Qt_QTreeView_isRowHidden( ::pPtr, nRow, pParent )
-   METHOD  isSortingEnabled()                  INLINE  Qt_QTreeView_isSortingEnabled( ::pPtr )
-   METHOD  itemsExpandable()                   INLINE  Qt_QTreeView_itemsExpandable( ::pPtr )
-   METHOD  rootIsDecorated()                   INLINE  Qt_QTreeView_rootIsDecorated( ::pPtr )
-   METHOD  scrollTo( pIndex, nHint )           INLINE  Qt_QTreeView_scrollTo( ::pPtr, pIndex, nHint )
-   METHOD  setAllColumnsShowFocus( lEnable )   INLINE  Qt_QTreeView_setAllColumnsShowFocus( ::pPtr, lEnable )
-   METHOD  setAnimated( lEnable )              INLINE  Qt_QTreeView_setAnimated( ::pPtr, lEnable )
-   METHOD  setAutoExpandDelay( nDelay )        INLINE  Qt_QTreeView_setAutoExpandDelay( ::pPtr, nDelay )
-   METHOD  setColumnHidden( nColumn, lHide )   INLINE  Qt_QTreeView_setColumnHidden( ::pPtr, nColumn, lHide )
-   METHOD  setColumnWidth( nColumn, nWidth )   INLINE  Qt_QTreeView_setColumnWidth( ::pPtr, nColumn, nWidth )
-   METHOD  setExpanded( pIndex, lExpanded )    INLINE  Qt_QTreeView_setExpanded( ::pPtr, pIndex, lExpanded )
-   METHOD  setExpandsOnDoubleClick( lEnable )  INLINE  Qt_QTreeView_setExpandsOnDoubleClick( ::pPtr, lEnable )
-   METHOD  setFirstColumnSpanned( nRow, pParent, lSpan )  INLINE  Qt_QTreeView_setFirstColumnSpanned( ::pPtr, nRow, pParent, lSpan )
-   METHOD  setHeader( pHeader )                INLINE  Qt_QTreeView_setHeader( ::pPtr, pHeader )
-   METHOD  setHeaderHidden( lHide )            INLINE  Qt_QTreeView_setHeaderHidden( ::pPtr, lHide )
-   METHOD  setIndentation( nI )                INLINE  Qt_QTreeView_setIndentation( ::pPtr, nI )
-   METHOD  setItemsExpandable( lEnable )       INLINE  Qt_QTreeView_setItemsExpandable( ::pPtr, lEnable )
-   METHOD  setRootIsDecorated( lShow )         INLINE  Qt_QTreeView_setRootIsDecorated( ::pPtr, lShow )
-   METHOD  setRowHidden( nRow, pParent, lHide )  INLINE  Qt_QTreeView_setRowHidden( ::pPtr, nRow, pParent, lHide )
-   METHOD  setSortingEnabled( lEnable )        INLINE  Qt_QTreeView_setSortingEnabled( ::pPtr, lEnable )
-   METHOD  setUniformRowHeights( lUniform )    INLINE  Qt_QTreeView_setUniformRowHeights( ::pPtr, lUniform )
-   METHOD  setWordWrap( lOn )                  INLINE  Qt_QTreeView_setWordWrap( ::pPtr, lOn )
-   METHOD  sortByColumn( nColumn, nOrder )     INLINE  Qt_QTreeView_sortByColumn( ::pPtr, nColumn, nOrder )
-   METHOD  uniformRowHeights()                 INLINE  Qt_QTreeView_uniformRowHeights( ::pPtr )
-   METHOD  visualRect( pIndex )                INLINE  Qt_QTreeView_visualRect( ::pPtr, pIndex )
-   METHOD  wordWrap()                          INLINE  Qt_QTreeView_wordWrap( ::pPtr )
-   METHOD  collapse( pIndex )                  INLINE  Qt_QTreeView_collapse( ::pPtr, pIndex )
-   METHOD  collapseAll()                       INLINE  Qt_QTreeView_collapseAll( ::pPtr )
-   METHOD  expand( pIndex )                    INLINE  Qt_QTreeView_expand( ::pPtr, pIndex )
-   METHOD  expandAll()                         INLINE  Qt_QTreeView_expandAll( ::pPtr )
-   METHOD  expandToDepth( nDepth )             INLINE  Qt_QTreeView_expandToDepth( ::pPtr, nDepth )
-   METHOD  hideColumn( nColumn )               INLINE  Qt_QTreeView_hideColumn( ::pPtr, nColumn )
-   METHOD  resizeColumnToContents( nColumn )   INLINE  Qt_QTreeView_resizeColumnToContents( ::pPtr, nColumn )
-   METHOD  showColumn( nColumn )               INLINE  Qt_QTreeView_showColumn( ::pPtr, nColumn )
+   METHOD  allColumnsShowFocus()
+   METHOD  autoExpandDelay()
+   METHOD  columnAt( nX )
+   METHOD  columnViewportPosition( nColumn )
+   METHOD  columnWidth( nColumn )
+   METHOD  expandsOnDoubleClick()
+   METHOD  header()
+   METHOD  indentation()
+   METHOD  indexAbove( pIndex )
+   METHOD  indexBelow( pIndex )
+   METHOD  isAnimated()
+   METHOD  isColumnHidden( nColumn )
+   METHOD  isExpanded( pIndex )
+   METHOD  isFirstColumnSpanned( nRow, pParent )
+   METHOD  isHeaderHidden()
+   METHOD  isRowHidden( nRow, pParent )
+   METHOD  isSortingEnabled()
+   METHOD  itemsExpandable()
+   METHOD  rootIsDecorated()
+   METHOD  scrollTo( pIndex, nHint )
+   METHOD  setAllColumnsShowFocus( lEnable )
+   METHOD  setAnimated( lEnable )
+   METHOD  setAutoExpandDelay( nDelay )
+   METHOD  setColumnHidden( nColumn, lHide )
+   METHOD  setColumnWidth( nColumn, nWidth )
+   METHOD  setExpanded( pIndex, lExpanded )
+   METHOD  setExpandsOnDoubleClick( lEnable )
+   METHOD  setFirstColumnSpanned( nRow, pParent, lSpan )
+   METHOD  setHeader( pHeader )
+   METHOD  setHeaderHidden( lHide )
+   METHOD  setIndentation( nI )
+   METHOD  setItemsExpandable( lEnable )
+   METHOD  setRootIsDecorated( lShow )
+   METHOD  setRowHidden( nRow, pParent, lHide )
+   METHOD  setSortingEnabled( lEnable )
+   METHOD  setUniformRowHeights( lUniform )
+   METHOD  setWordWrap( lOn )
+   METHOD  sortByColumn( nColumn, nOrder )
+   METHOD  uniformRowHeights()
+   METHOD  visualRect( pIndex )
+   METHOD  wordWrap()
+   METHOD  collapse( pIndex )
+   METHOD  collapseAll()
+   METHOD  expand( pIndex )
+   METHOD  expandAll()
+   METHOD  expandToDepth( nDepth )
+   METHOD  hideColumn( nColumn )
+   METHOD  resizeColumnToContents( nColumn )
+   METHOD  showColumn( nColumn )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTreeView
-
+METHOD QTreeView:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTreeView( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTreeView
-
+METHOD QTreeView:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTreeView:allColumnsShowFocus()
+   RETURN Qt_QTreeView_allColumnsShowFocus( ::pPtr )
+
+
+METHOD QTreeView:autoExpandDelay()
+   RETURN Qt_QTreeView_autoExpandDelay( ::pPtr )
+
+
+METHOD QTreeView:columnAt( nX )
+   RETURN Qt_QTreeView_columnAt( ::pPtr, nX )
+
+
+METHOD QTreeView:columnViewportPosition( nColumn )
+   RETURN Qt_QTreeView_columnViewportPosition( ::pPtr, nColumn )
+
+
+METHOD QTreeView:columnWidth( nColumn )
+   RETURN Qt_QTreeView_columnWidth( ::pPtr, nColumn )
+
+
+METHOD QTreeView:expandsOnDoubleClick()
+   RETURN Qt_QTreeView_expandsOnDoubleClick( ::pPtr )
+
+
+METHOD QTreeView:header()
+   RETURN Qt_QTreeView_header( ::pPtr )
+
+
+METHOD QTreeView:indentation()
+   RETURN Qt_QTreeView_indentation( ::pPtr )
+
+
+METHOD QTreeView:indexAbove( pIndex )
+   RETURN Qt_QTreeView_indexAbove( ::pPtr, pIndex )
+
+
+METHOD QTreeView:indexBelow( pIndex )
+   RETURN Qt_QTreeView_indexBelow( ::pPtr, pIndex )
+
+
+METHOD QTreeView:isAnimated()
+   RETURN Qt_QTreeView_isAnimated( ::pPtr )
+
+
+METHOD QTreeView:isColumnHidden( nColumn )
+   RETURN Qt_QTreeView_isColumnHidden( ::pPtr, nColumn )
+
+
+METHOD QTreeView:isExpanded( pIndex )
+   RETURN Qt_QTreeView_isExpanded( ::pPtr, pIndex )
+
+
+METHOD QTreeView:isFirstColumnSpanned( nRow, pParent )
+   RETURN Qt_QTreeView_isFirstColumnSpanned( ::pPtr, nRow, pParent )
+
+
+METHOD QTreeView:isHeaderHidden()
+   RETURN Qt_QTreeView_isHeaderHidden( ::pPtr )
+
+
+METHOD QTreeView:isRowHidden( nRow, pParent )
+   RETURN Qt_QTreeView_isRowHidden( ::pPtr, nRow, pParent )
+
+
+METHOD QTreeView:isSortingEnabled()
+   RETURN Qt_QTreeView_isSortingEnabled( ::pPtr )
+
+
+METHOD QTreeView:itemsExpandable()
+   RETURN Qt_QTreeView_itemsExpandable( ::pPtr )
+
+
+METHOD QTreeView:rootIsDecorated()
+   RETURN Qt_QTreeView_rootIsDecorated( ::pPtr )
+
+
+METHOD QTreeView:scrollTo( pIndex, nHint )
+   RETURN Qt_QTreeView_scrollTo( ::pPtr, pIndex, nHint )
+
+
+METHOD QTreeView:setAllColumnsShowFocus( lEnable )
+   RETURN Qt_QTreeView_setAllColumnsShowFocus( ::pPtr, lEnable )
+
+
+METHOD QTreeView:setAnimated( lEnable )
+   RETURN Qt_QTreeView_setAnimated( ::pPtr, lEnable )
+
+
+METHOD QTreeView:setAutoExpandDelay( nDelay )
+   RETURN Qt_QTreeView_setAutoExpandDelay( ::pPtr, nDelay )
+
+
+METHOD QTreeView:setColumnHidden( nColumn, lHide )
+   RETURN Qt_QTreeView_setColumnHidden( ::pPtr, nColumn, lHide )
+
+
+METHOD QTreeView:setColumnWidth( nColumn, nWidth )
+   RETURN Qt_QTreeView_setColumnWidth( ::pPtr, nColumn, nWidth )
+
+
+METHOD QTreeView:setExpanded( pIndex, lExpanded )
+   RETURN Qt_QTreeView_setExpanded( ::pPtr, pIndex, lExpanded )
+
+
+METHOD QTreeView:setExpandsOnDoubleClick( lEnable )
+   RETURN Qt_QTreeView_setExpandsOnDoubleClick( ::pPtr, lEnable )
+
+
+METHOD QTreeView:setFirstColumnSpanned( nRow, pParent, lSpan )
+   RETURN Qt_QTreeView_setFirstColumnSpanned( ::pPtr, nRow, pParent, lSpan )
+
+
+METHOD QTreeView:setHeader( pHeader )
+   RETURN Qt_QTreeView_setHeader( ::pPtr, pHeader )
+
+
+METHOD QTreeView:setHeaderHidden( lHide )
+   RETURN Qt_QTreeView_setHeaderHidden( ::pPtr, lHide )
+
+
+METHOD QTreeView:setIndentation( nI )
+   RETURN Qt_QTreeView_setIndentation( ::pPtr, nI )
+
+
+METHOD QTreeView:setItemsExpandable( lEnable )
+   RETURN Qt_QTreeView_setItemsExpandable( ::pPtr, lEnable )
+
+
+METHOD QTreeView:setRootIsDecorated( lShow )
+   RETURN Qt_QTreeView_setRootIsDecorated( ::pPtr, lShow )
+
+
+METHOD QTreeView:setRowHidden( nRow, pParent, lHide )
+   RETURN Qt_QTreeView_setRowHidden( ::pPtr, nRow, pParent, lHide )
+
+
+METHOD QTreeView:setSortingEnabled( lEnable )
+   RETURN Qt_QTreeView_setSortingEnabled( ::pPtr, lEnable )
+
+
+METHOD QTreeView:setUniformRowHeights( lUniform )
+   RETURN Qt_QTreeView_setUniformRowHeights( ::pPtr, lUniform )
+
+
+METHOD QTreeView:setWordWrap( lOn )
+   RETURN Qt_QTreeView_setWordWrap( ::pPtr, lOn )
+
+
+METHOD QTreeView:sortByColumn( nColumn, nOrder )
+   RETURN Qt_QTreeView_sortByColumn( ::pPtr, nColumn, nOrder )
+
+
+METHOD QTreeView:uniformRowHeights()
+   RETURN Qt_QTreeView_uniformRowHeights( ::pPtr )
+
+
+METHOD QTreeView:visualRect( pIndex )
+   RETURN Qt_QTreeView_visualRect( ::pPtr, pIndex )
+
+
+METHOD QTreeView:wordWrap()
+   RETURN Qt_QTreeView_wordWrap( ::pPtr )
+
+
+METHOD QTreeView:collapse( pIndex )
+   RETURN Qt_QTreeView_collapse( ::pPtr, pIndex )
+
+
+METHOD QTreeView:collapseAll()
+   RETURN Qt_QTreeView_collapseAll( ::pPtr )
+
+
+METHOD QTreeView:expand( pIndex )
+   RETURN Qt_QTreeView_expand( ::pPtr, pIndex )
+
+
+METHOD QTreeView:expandAll()
+   RETURN Qt_QTreeView_expandAll( ::pPtr )
+
+
+METHOD QTreeView:expandToDepth( nDepth )
+   RETURN Qt_QTreeView_expandToDepth( ::pPtr, nDepth )
+
+
+METHOD QTreeView:hideColumn( nColumn )
+   RETURN Qt_QTreeView_hideColumn( ::pPtr, nColumn )
+
+
+METHOD QTreeView:resizeColumnToContents( nColumn )
+   RETURN Qt_QTreeView_resizeColumnToContents( ::pPtr, nColumn )
+
+
+METHOD QTreeView:showColumn( nColumn )
+   RETURN Qt_QTreeView_showColumn( ::pPtr, nColumn )
+

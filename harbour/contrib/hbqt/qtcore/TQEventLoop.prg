@@ -71,35 +71,52 @@ CREATE CLASS QEventLoop INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  exec( nFlags )                      INLINE  Qt_QEventLoop_exec( ::pPtr, nFlags )
-   METHOD  exit( nReturnCode )                 INLINE  Qt_QEventLoop_exit( ::pPtr, nReturnCode )
-   METHOD  isRunning()                         INLINE  Qt_QEventLoop_isRunning( ::pPtr )
-   METHOD  processEvents( nFlags )             INLINE  Qt_QEventLoop_processEvents( ::pPtr, nFlags )
-   METHOD  processEvents_1( nFlags, nMaxTime )  INLINE  Qt_QEventLoop_processEvents_1( ::pPtr, nFlags, nMaxTime )
-   METHOD  wakeUp()                            INLINE  Qt_QEventLoop_wakeUp( ::pPtr )
+   METHOD  exec( nFlags )
+   METHOD  exit( nReturnCode )
+   METHOD  isRunning()
+   METHOD  processEvents( nFlags )
+   METHOD  processEvents_1( nFlags, nMaxTime )
+   METHOD  wakeUp()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QEventLoop
-
+METHOD QEventLoop:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QEventLoop( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QEventLoop
-
+METHOD QEventLoop:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QEventLoop:exec( nFlags )
+   RETURN Qt_QEventLoop_exec( ::pPtr, nFlags )
+
+
+METHOD QEventLoop:exit( nReturnCode )
+   RETURN Qt_QEventLoop_exit( ::pPtr, nReturnCode )
+
+
+METHOD QEventLoop:isRunning()
+   RETURN Qt_QEventLoop_isRunning( ::pPtr )
+
+
+METHOD QEventLoop:processEvents( nFlags )
+   RETURN Qt_QEventLoop_processEvents( ::pPtr, nFlags )
+
+
+METHOD QEventLoop:processEvents_1( nFlags, nMaxTime )
+   RETURN Qt_QEventLoop_processEvents_1( ::pPtr, nFlags, nMaxTime )
+
+
+METHOD QEventLoop:wakeUp()
+   RETURN Qt_QEventLoop_wakeUp( ::pPtr )
+

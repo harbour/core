@@ -71,59 +71,172 @@ CREATE CLASS QListWidget INHERIT QListView
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addItem( cLabel )                   INLINE  Qt_QListWidget_addItem( ::pPtr, cLabel )
-   METHOD  addItem_1( pItem )                  INLINE  Qt_QListWidget_addItem_1( ::pPtr, pItem )
-   METHOD  addItems( pLabels )                 INLINE  Qt_QListWidget_addItems( ::pPtr, pLabels )
-   METHOD  closePersistentEditor( pItem )      INLINE  Qt_QListWidget_closePersistentEditor( ::pPtr, pItem )
-   METHOD  count()                             INLINE  Qt_QListWidget_count( ::pPtr )
-   METHOD  currentItem()                       INLINE  Qt_QListWidget_currentItem( ::pPtr )
-   METHOD  currentRow()                        INLINE  Qt_QListWidget_currentRow( ::pPtr )
-   METHOD  editItem( pItem )                   INLINE  Qt_QListWidget_editItem( ::pPtr, pItem )
-   METHOD  insertItem( nRow, pItem )           INLINE  Qt_QListWidget_insertItem( ::pPtr, nRow, pItem )
-   METHOD  insertItem_1( nRow, cLabel )        INLINE  Qt_QListWidget_insertItem_1( ::pPtr, nRow, cLabel )
-   METHOD  insertItems( nRow, pLabels )        INLINE  Qt_QListWidget_insertItems( ::pPtr, nRow, pLabels )
-   METHOD  isSortingEnabled()                  INLINE  Qt_QListWidget_isSortingEnabled( ::pPtr )
-   METHOD  item( nRow )                        INLINE  Qt_QListWidget_item( ::pPtr, nRow )
-   METHOD  itemAt( pP )                        INLINE  Qt_QListWidget_itemAt( ::pPtr, pP )
-   METHOD  itemAt_1( nX, nY )                  INLINE  Qt_QListWidget_itemAt_1( ::pPtr, nX, nY )
-   METHOD  itemWidget( pItem )                 INLINE  Qt_QListWidget_itemWidget( ::pPtr, pItem )
-   METHOD  openPersistentEditor( pItem )       INLINE  Qt_QListWidget_openPersistentEditor( ::pPtr, pItem )
-   METHOD  removeItemWidget( pItem )           INLINE  Qt_QListWidget_removeItemWidget( ::pPtr, pItem )
-   METHOD  row( pItem )                        INLINE  Qt_QListWidget_row( ::pPtr, pItem )
-   METHOD  setCurrentItem( pItem )             INLINE  Qt_QListWidget_setCurrentItem( ::pPtr, pItem )
-   METHOD  setCurrentItem_1( pItem, nCommand )  INLINE  Qt_QListWidget_setCurrentItem_1( ::pPtr, pItem, nCommand )
-   METHOD  setCurrentRow( nRow )               INLINE  Qt_QListWidget_setCurrentRow( ::pPtr, nRow )
-   METHOD  setCurrentRow_1( nRow, nCommand )   INLINE  Qt_QListWidget_setCurrentRow_1( ::pPtr, nRow, nCommand )
-   METHOD  setItemWidget( pItem, pWidget )     INLINE  Qt_QListWidget_setItemWidget( ::pPtr, pItem, pWidget )
-   METHOD  setSortingEnabled( lEnable )        INLINE  Qt_QListWidget_setSortingEnabled( ::pPtr, lEnable )
-   METHOD  sortItems( nOrder )                 INLINE  Qt_QListWidget_sortItems( ::pPtr, nOrder )
-   METHOD  takeItem( nRow )                    INLINE  Qt_QListWidget_takeItem( ::pPtr, nRow )
-   METHOD  visualItemRect( pItem )             INLINE  Qt_QListWidget_visualItemRect( ::pPtr, pItem )
-   METHOD  clear()                             INLINE  Qt_QListWidget_clear( ::pPtr )
-   METHOD  scrollToItem( pItem, nHint )        INLINE  Qt_QListWidget_scrollToItem( ::pPtr, pItem, nHint )
+   METHOD  addItem( cLabel )
+   METHOD  addItem_1( pItem )
+   METHOD  addItems( pLabels )
+   METHOD  closePersistentEditor( pItem )
+   METHOD  count()
+   METHOD  currentItem()
+   METHOD  currentRow()
+   METHOD  editItem( pItem )
+   METHOD  insertItem( nRow, pItem )
+   METHOD  insertItem_1( nRow, cLabel )
+   METHOD  insertItems( nRow, pLabels )
+   METHOD  isSortingEnabled()
+   METHOD  item( nRow )
+   METHOD  itemAt( pP )
+   METHOD  itemAt_1( nX, nY )
+   METHOD  itemWidget( pItem )
+   METHOD  openPersistentEditor( pItem )
+   METHOD  removeItemWidget( pItem )
+   METHOD  row( pItem )
+   METHOD  setCurrentItem( pItem )
+   METHOD  setCurrentItem_1( pItem, nCommand )
+   METHOD  setCurrentRow( nRow )
+   METHOD  setCurrentRow_1( nRow, nCommand )
+   METHOD  setItemWidget( pItem, pWidget )
+   METHOD  setSortingEnabled( lEnable )
+   METHOD  sortItems( nOrder )
+   METHOD  takeItem( nRow )
+   METHOD  visualItemRect( pItem )
+   METHOD  clear()
+   METHOD  scrollToItem( pItem, nHint )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QListWidget
-
+METHOD QListWidget:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QListWidget( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QListWidget
-
+METHOD QListWidget:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QListWidget:addItem( cLabel )
+   RETURN Qt_QListWidget_addItem( ::pPtr, cLabel )
+
+
+METHOD QListWidget:addItem_1( pItem )
+   RETURN Qt_QListWidget_addItem_1( ::pPtr, pItem )
+
+
+METHOD QListWidget:addItems( pLabels )
+   RETURN Qt_QListWidget_addItems( ::pPtr, pLabels )
+
+
+METHOD QListWidget:closePersistentEditor( pItem )
+   RETURN Qt_QListWidget_closePersistentEditor( ::pPtr, pItem )
+
+
+METHOD QListWidget:count()
+   RETURN Qt_QListWidget_count( ::pPtr )
+
+
+METHOD QListWidget:currentItem()
+   RETURN Qt_QListWidget_currentItem( ::pPtr )
+
+
+METHOD QListWidget:currentRow()
+   RETURN Qt_QListWidget_currentRow( ::pPtr )
+
+
+METHOD QListWidget:editItem( pItem )
+   RETURN Qt_QListWidget_editItem( ::pPtr, pItem )
+
+
+METHOD QListWidget:insertItem( nRow, pItem )
+   RETURN Qt_QListWidget_insertItem( ::pPtr, nRow, pItem )
+
+
+METHOD QListWidget:insertItem_1( nRow, cLabel )
+   RETURN Qt_QListWidget_insertItem_1( ::pPtr, nRow, cLabel )
+
+
+METHOD QListWidget:insertItems( nRow, pLabels )
+   RETURN Qt_QListWidget_insertItems( ::pPtr, nRow, pLabels )
+
+
+METHOD QListWidget:isSortingEnabled()
+   RETURN Qt_QListWidget_isSortingEnabled( ::pPtr )
+
+
+METHOD QListWidget:item( nRow )
+   RETURN Qt_QListWidget_item( ::pPtr, nRow )
+
+
+METHOD QListWidget:itemAt( pP )
+   RETURN Qt_QListWidget_itemAt( ::pPtr, pP )
+
+
+METHOD QListWidget:itemAt_1( nX, nY )
+   RETURN Qt_QListWidget_itemAt_1( ::pPtr, nX, nY )
+
+
+METHOD QListWidget:itemWidget( pItem )
+   RETURN Qt_QListWidget_itemWidget( ::pPtr, pItem )
+
+
+METHOD QListWidget:openPersistentEditor( pItem )
+   RETURN Qt_QListWidget_openPersistentEditor( ::pPtr, pItem )
+
+
+METHOD QListWidget:removeItemWidget( pItem )
+   RETURN Qt_QListWidget_removeItemWidget( ::pPtr, pItem )
+
+
+METHOD QListWidget:row( pItem )
+   RETURN Qt_QListWidget_row( ::pPtr, pItem )
+
+
+METHOD QListWidget:setCurrentItem( pItem )
+   RETURN Qt_QListWidget_setCurrentItem( ::pPtr, pItem )
+
+
+METHOD QListWidget:setCurrentItem_1( pItem, nCommand )
+   RETURN Qt_QListWidget_setCurrentItem_1( ::pPtr, pItem, nCommand )
+
+
+METHOD QListWidget:setCurrentRow( nRow )
+   RETURN Qt_QListWidget_setCurrentRow( ::pPtr, nRow )
+
+
+METHOD QListWidget:setCurrentRow_1( nRow, nCommand )
+   RETURN Qt_QListWidget_setCurrentRow_1( ::pPtr, nRow, nCommand )
+
+
+METHOD QListWidget:setItemWidget( pItem, pWidget )
+   RETURN Qt_QListWidget_setItemWidget( ::pPtr, pItem, pWidget )
+
+
+METHOD QListWidget:setSortingEnabled( lEnable )
+   RETURN Qt_QListWidget_setSortingEnabled( ::pPtr, lEnable )
+
+
+METHOD QListWidget:sortItems( nOrder )
+   RETURN Qt_QListWidget_sortItems( ::pPtr, nOrder )
+
+
+METHOD QListWidget:takeItem( nRow )
+   RETURN Qt_QListWidget_takeItem( ::pPtr, nRow )
+
+
+METHOD QListWidget:visualItemRect( pItem )
+   RETURN Qt_QListWidget_visualItemRect( ::pPtr, pItem )
+
+
+METHOD QListWidget:clear()
+   RETURN Qt_QListWidget_clear( ::pPtr )
+
+
+METHOD QListWidget:scrollToItem( pItem, nHint )
+   RETURN Qt_QListWidget_scrollToItem( ::pPtr, pItem, nHint )
+

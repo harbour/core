@@ -71,34 +71,47 @@ CREATE CLASS QDragMoveEvent INHERIT QDropEvent
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  accept( pRectangle )                INLINE  Qt_QDragMoveEvent_accept( ::pPtr, pRectangle )
-   METHOD  accept_1()                          INLINE  Qt_QDragMoveEvent_accept_1( ::pPtr )
-   METHOD  answerRect()                        INLINE  Qt_QDragMoveEvent_answerRect( ::pPtr )
-   METHOD  ignore( pRectangle )                INLINE  Qt_QDragMoveEvent_ignore( ::pPtr, pRectangle )
-   METHOD  ignore_1()                          INLINE  Qt_QDragMoveEvent_ignore_1( ::pPtr )
+   METHOD  accept( pRectangle )
+   METHOD  accept_1()
+   METHOD  answerRect()
+   METHOD  ignore( pRectangle )
+   METHOD  ignore_1()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QDragMoveEvent
-
+METHOD QDragMoveEvent:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QDragMoveEvent( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QDragMoveEvent
-
+METHOD QDragMoveEvent:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QDragMoveEvent:accept( pRectangle )
+   RETURN Qt_QDragMoveEvent_accept( ::pPtr, pRectangle )
+
+
+METHOD QDragMoveEvent:accept_1()
+   RETURN Qt_QDragMoveEvent_accept_1( ::pPtr )
+
+
+METHOD QDragMoveEvent:answerRect()
+   RETURN Qt_QDragMoveEvent_answerRect( ::pPtr )
+
+
+METHOD QDragMoveEvent:ignore( pRectangle )
+   RETURN Qt_QDragMoveEvent_ignore( ::pPtr, pRectangle )
+
+
+METHOD QDragMoveEvent:ignore_1()
+   RETURN Qt_QDragMoveEvent_ignore_1( ::pPtr )
+

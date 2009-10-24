@@ -71,35 +71,52 @@ CREATE CLASS QGradient
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  coordinateMode()                    INLINE  Qt_QGradient_coordinateMode( ::pPtr )
-   METHOD  setColorAt( nPosition, pColor )     INLINE  Qt_QGradient_setColorAt( ::pPtr, nPosition, pColor )
-   METHOD  setCoordinateMode( nMode )          INLINE  Qt_QGradient_setCoordinateMode( ::pPtr, nMode )
-   METHOD  setSpread( nMethod )                INLINE  Qt_QGradient_setSpread( ::pPtr, nMethod )
-   METHOD  spread()                            INLINE  Qt_QGradient_spread( ::pPtr )
-   METHOD  type()                              INLINE  Qt_QGradient_type( ::pPtr )
+   METHOD  coordinateMode()
+   METHOD  setColorAt( nPosition, pColor )
+   METHOD  setCoordinateMode( nMode )
+   METHOD  setSpread( nMethod )
+   METHOD  spread()
+   METHOD  type()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QGradient
-
+METHOD QGradient:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QGradient( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QGradient
-
+METHOD QGradient:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QGradient:coordinateMode()
+   RETURN Qt_QGradient_coordinateMode( ::pPtr )
+
+
+METHOD QGradient:setColorAt( nPosition, pColor )
+   RETURN Qt_QGradient_setColorAt( ::pPtr, nPosition, pColor )
+
+
+METHOD QGradient:setCoordinateMode( nMode )
+   RETURN Qt_QGradient_setCoordinateMode( ::pPtr, nMode )
+
+
+METHOD QGradient:setSpread( nMethod )
+   RETURN Qt_QGradient_setSpread( ::pPtr, nMethod )
+
+
+METHOD QGradient:spread()
+   RETURN Qt_QGradient_spread( ::pPtr )
+
+
+METHOD QGradient:type()
+   RETURN Qt_QGradient_type( ::pPtr )
+

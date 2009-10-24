@@ -71,58 +71,167 @@ CREATE CLASS QMatrix
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  m11()                               INLINE  Qt_QMatrix_m11( ::pPtr )
-   METHOD  m12()                               INLINE  Qt_QMatrix_m12( ::pPtr )
-   METHOD  m21()                               INLINE  Qt_QMatrix_m21( ::pPtr )
-   METHOD  m22()                               INLINE  Qt_QMatrix_m22( ::pPtr )
-   METHOD  det()                               INLINE  Qt_QMatrix_det( ::pPtr )
-   METHOD  dx()                                INLINE  Qt_QMatrix_dx( ::pPtr )
-   METHOD  dy()                                INLINE  Qt_QMatrix_dy( ::pPtr )
-   METHOD  inverted( lInvertible )             INLINE  Qt_QMatrix_inverted( ::pPtr, lInvertible )
-   METHOD  isIdentity()                        INLINE  Qt_QMatrix_isIdentity( ::pPtr )
-   METHOD  isInvertible()                      INLINE  Qt_QMatrix_isInvertible( ::pPtr )
-   METHOD  map( nX, nY, nTx, nTy )             INLINE  Qt_QMatrix_map( ::pPtr, nX, nY, nTx, nTy )
-   METHOD  map_1( nX, nY, nTx, nTy )           INLINE  Qt_QMatrix_map_1( ::pPtr, nX, nY, nTx, nTy )
-   METHOD  map_2( pPoint )                     INLINE  Qt_QMatrix_map_2( ::pPtr, pPoint )
-   METHOD  map_3( pPoint )                     INLINE  Qt_QMatrix_map_3( ::pPtr, pPoint )
-   METHOD  map_4( pLine )                      INLINE  Qt_QMatrix_map_4( ::pPtr, pLine )
-   METHOD  map_5( pLine )                      INLINE  Qt_QMatrix_map_5( ::pPtr, pLine )
-   METHOD  map_6( pPolygon )                   INLINE  Qt_QMatrix_map_6( ::pPtr, pPolygon )
-   METHOD  map_7( pPolygon )                   INLINE  Qt_QMatrix_map_7( ::pPtr, pPolygon )
-   METHOD  map_8( pRegion )                    INLINE  Qt_QMatrix_map_8( ::pPtr, pRegion )
-   METHOD  map_9( pPath )                      INLINE  Qt_QMatrix_map_9( ::pPtr, pPath )
-   METHOD  mapRect( pRectangle )               INLINE  Qt_QMatrix_mapRect( ::pPtr, pRectangle )
-   METHOD  mapRect_1( pRectangle )             INLINE  Qt_QMatrix_mapRect_1( ::pPtr, pRectangle )
-   METHOD  mapToPolygon( pRectangle )          INLINE  Qt_QMatrix_mapToPolygon( ::pPtr, pRectangle )
-   METHOD  reset()                             INLINE  Qt_QMatrix_reset( ::pPtr )
-   METHOD  rotate( nDegrees )                  INLINE  Qt_QMatrix_rotate( ::pPtr, nDegrees )
-   METHOD  scale( nSx, nSy )                   INLINE  Qt_QMatrix_scale( ::pPtr, nSx, nSy )
-   METHOD  setMatrix( nM11, nM12, nM21, nM22, nDx, nDy )  INLINE  Qt_QMatrix_setMatrix( ::pPtr, nM11, nM12, nM21, nM22, nDx, nDy )
-   METHOD  shear( nSh, nSv )                   INLINE  Qt_QMatrix_shear( ::pPtr, nSh, nSv )
-   METHOD  translate( nDx, nDy )               INLINE  Qt_QMatrix_translate( ::pPtr, nDx, nDy )
+   METHOD  m11()
+   METHOD  m12()
+   METHOD  m21()
+   METHOD  m22()
+   METHOD  det()
+   METHOD  dx()
+   METHOD  dy()
+   METHOD  inverted( lInvertible )
+   METHOD  isIdentity()
+   METHOD  isInvertible()
+   METHOD  map( nX, nY, nTx, nTy )
+   METHOD  map_1( nX, nY, nTx, nTy )
+   METHOD  map_2( pPoint )
+   METHOD  map_3( pPoint )
+   METHOD  map_4( pLine )
+   METHOD  map_5( pLine )
+   METHOD  map_6( pPolygon )
+   METHOD  map_7( pPolygon )
+   METHOD  map_8( pRegion )
+   METHOD  map_9( pPath )
+   METHOD  mapRect( pRectangle )
+   METHOD  mapRect_1( pRectangle )
+   METHOD  mapToPolygon( pRectangle )
+   METHOD  reset()
+   METHOD  rotate( nDegrees )
+   METHOD  scale( nSx, nSy )
+   METHOD  setMatrix( nM11, nM12, nM21, nM22, nDx, nDy )
+   METHOD  shear( nSh, nSv )
+   METHOD  translate( nDx, nDy )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QMatrix
-
+METHOD QMatrix:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QMatrix( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QMatrix
-
+METHOD QMatrix:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QMatrix:m11()
+   RETURN Qt_QMatrix_m11( ::pPtr )
+
+
+METHOD QMatrix:m12()
+   RETURN Qt_QMatrix_m12( ::pPtr )
+
+
+METHOD QMatrix:m21()
+   RETURN Qt_QMatrix_m21( ::pPtr )
+
+
+METHOD QMatrix:m22()
+   RETURN Qt_QMatrix_m22( ::pPtr )
+
+
+METHOD QMatrix:det()
+   RETURN Qt_QMatrix_det( ::pPtr )
+
+
+METHOD QMatrix:dx()
+   RETURN Qt_QMatrix_dx( ::pPtr )
+
+
+METHOD QMatrix:dy()
+   RETURN Qt_QMatrix_dy( ::pPtr )
+
+
+METHOD QMatrix:inverted( lInvertible )
+   RETURN Qt_QMatrix_inverted( ::pPtr, lInvertible )
+
+
+METHOD QMatrix:isIdentity()
+   RETURN Qt_QMatrix_isIdentity( ::pPtr )
+
+
+METHOD QMatrix:isInvertible()
+   RETURN Qt_QMatrix_isInvertible( ::pPtr )
+
+
+METHOD QMatrix:map( nX, nY, nTx, nTy )
+   RETURN Qt_QMatrix_map( ::pPtr, nX, nY, nTx, nTy )
+
+
+METHOD QMatrix:map_1( nX, nY, nTx, nTy )
+   RETURN Qt_QMatrix_map_1( ::pPtr, nX, nY, nTx, nTy )
+
+
+METHOD QMatrix:map_2( pPoint )
+   RETURN Qt_QMatrix_map_2( ::pPtr, pPoint )
+
+
+METHOD QMatrix:map_3( pPoint )
+   RETURN Qt_QMatrix_map_3( ::pPtr, pPoint )
+
+
+METHOD QMatrix:map_4( pLine )
+   RETURN Qt_QMatrix_map_4( ::pPtr, pLine )
+
+
+METHOD QMatrix:map_5( pLine )
+   RETURN Qt_QMatrix_map_5( ::pPtr, pLine )
+
+
+METHOD QMatrix:map_6( pPolygon )
+   RETURN Qt_QMatrix_map_6( ::pPtr, pPolygon )
+
+
+METHOD QMatrix:map_7( pPolygon )
+   RETURN Qt_QMatrix_map_7( ::pPtr, pPolygon )
+
+
+METHOD QMatrix:map_8( pRegion )
+   RETURN Qt_QMatrix_map_8( ::pPtr, pRegion )
+
+
+METHOD QMatrix:map_9( pPath )
+   RETURN Qt_QMatrix_map_9( ::pPtr, pPath )
+
+
+METHOD QMatrix:mapRect( pRectangle )
+   RETURN Qt_QMatrix_mapRect( ::pPtr, pRectangle )
+
+
+METHOD QMatrix:mapRect_1( pRectangle )
+   RETURN Qt_QMatrix_mapRect_1( ::pPtr, pRectangle )
+
+
+METHOD QMatrix:mapToPolygon( pRectangle )
+   RETURN Qt_QMatrix_mapToPolygon( ::pPtr, pRectangle )
+
+
+METHOD QMatrix:reset()
+   RETURN Qt_QMatrix_reset( ::pPtr )
+
+
+METHOD QMatrix:rotate( nDegrees )
+   RETURN Qt_QMatrix_rotate( ::pPtr, nDegrees )
+
+
+METHOD QMatrix:scale( nSx, nSy )
+   RETURN Qt_QMatrix_scale( ::pPtr, nSx, nSy )
+
+
+METHOD QMatrix:setMatrix( nM11, nM12, nM21, nM22, nDx, nDy )
+   RETURN Qt_QMatrix_setMatrix( ::pPtr, nM11, nM12, nM21, nM22, nDx, nDy )
+
+
+METHOD QMatrix:shear( nSh, nSv )
+   RETURN Qt_QMatrix_shear( ::pPtr, nSh, nSv )
+
+
+METHOD QMatrix:translate( nDx, nDy )
+   RETURN Qt_QMatrix_translate( ::pPtr, nDx, nDy )
+

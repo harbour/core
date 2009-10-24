@@ -71,30 +71,27 @@ CREATE CLASS QAbstractTableModel INHERIT QAbstractItemModel
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  index( nRow, nColumn, pParent )     INLINE  Qt_QAbstractTableModel_index( ::pPtr, nRow, nColumn, pParent )
+   METHOD  index( nRow, nColumn, pParent )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QAbstractTableModel
-
+METHOD QAbstractTableModel:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QAbstractTableModel( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QAbstractTableModel
-
+METHOD QAbstractTableModel:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QAbstractTableModel:index( nRow, nColumn, pParent )
+   RETURN Qt_QAbstractTableModel_index( ::pPtr, nRow, nColumn, pParent )
+

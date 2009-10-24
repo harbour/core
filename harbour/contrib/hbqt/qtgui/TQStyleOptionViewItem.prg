@@ -71,36 +71,57 @@ CREATE CLASS QStyleOptionViewItem INHERIT QStyleOption
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  decorationAlignment()               INLINE  Qt_QStyleOptionViewItem_decorationAlignment( ::pPtr )
-   METHOD  decorationPosition()                INLINE  Qt_QStyleOptionViewItem_decorationPosition( ::pPtr )
-   METHOD  decorationSize()                    INLINE  Qt_QStyleOptionViewItem_decorationSize( ::pPtr )
-   METHOD  displayAlignment()                  INLINE  Qt_QStyleOptionViewItem_displayAlignment( ::pPtr )
-   METHOD  font()                              INLINE  Qt_QStyleOptionViewItem_font( ::pPtr )
-   METHOD  showDecorationSelected()            INLINE  Qt_QStyleOptionViewItem_showDecorationSelected( ::pPtr )
-   METHOD  textElideMode()                     INLINE  Qt_QStyleOptionViewItem_textElideMode( ::pPtr )
+   METHOD  decorationAlignment()
+   METHOD  decorationPosition()
+   METHOD  decorationSize()
+   METHOD  displayAlignment()
+   METHOD  font()
+   METHOD  showDecorationSelected()
+   METHOD  textElideMode()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyleOptionViewItem
-
+METHOD QStyleOptionViewItem:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyleOptionViewItem( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyleOptionViewItem
-
+METHOD QStyleOptionViewItem:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyleOptionViewItem:decorationAlignment()
+   RETURN Qt_QStyleOptionViewItem_decorationAlignment( ::pPtr )
+
+
+METHOD QStyleOptionViewItem:decorationPosition()
+   RETURN Qt_QStyleOptionViewItem_decorationPosition( ::pPtr )
+
+
+METHOD QStyleOptionViewItem:decorationSize()
+   RETURN Qt_QStyleOptionViewItem_decorationSize( ::pPtr )
+
+
+METHOD QStyleOptionViewItem:displayAlignment()
+   RETURN Qt_QStyleOptionViewItem_displayAlignment( ::pPtr )
+
+
+METHOD QStyleOptionViewItem:font()
+   RETURN Qt_QStyleOptionViewItem_font( ::pPtr )
+
+
+METHOD QStyleOptionViewItem:showDecorationSelected()
+   RETURN Qt_QStyleOptionViewItem_showDecorationSelected( ::pPtr )
+
+
+METHOD QStyleOptionViewItem:textElideMode()
+   RETURN Qt_QStyleOptionViewItem_textElideMode( ::pPtr )
+

@@ -696,12 +696,8 @@ METHOD XbpBrowse:exeBlock( nEvent, p1, p2, p3 )
    CASE nEvent == 2                   /* Mousepress */
       oMouseEvent := QMouseEvent():configure( p1 )
 
-      IF hb_isPointer( QT_PTROF( ::oModelIndex ) )
-         ::oModelIndex:destroy()
-      ENDIF
       oPoint := QPoint():new( oMouseEvent:x(), oMouseEvent:y() )
       ::oModelIndex:configure( ::oTableView:indexAt( QT_PTROF( oPoint ) ) )
-      oPoint:destroy()
 
       /* Reposition the record pointer */
       IF ::oModelIndex:isValid()
@@ -945,6 +941,8 @@ METHOD handleEvent( nEvent, mp1, mp2 ) CLASS XbpBrowse
 /*----------------------------------------------------------------------*/
 
 METHOD XbpBrowse:supplyInfo( nMode, nInfo, p2, p3 )
+
+   //hb_gcAll()
 
 //xbp_debug( 'supplyInfo:',nMode )
    DO CASE
@@ -1201,7 +1199,6 @@ METHOD setCurrentIndex( lReset ) CLASS XbpBrowse
 
    pIndex := ::oDbfModel:index( ::rowPos - 1, ::colPos - 1 )
    ::oTableView:setCurrentIndex( pIndex )
-   Qt_QModelIndex_destroy( pIndex )
 
    RETURN Self
 

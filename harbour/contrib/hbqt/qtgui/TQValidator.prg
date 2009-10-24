@@ -71,31 +71,32 @@ CREATE CLASS QValidator INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  locale()                            INLINE  Qt_QValidator_locale( ::pPtr )
-   METHOD  setLocale( pLocale )                INLINE  Qt_QValidator_setLocale( ::pPtr, pLocale )
+   METHOD  locale()
+   METHOD  setLocale( pLocale )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QValidator
-
+METHOD QValidator:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QValidator( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QValidator
-
+METHOD QValidator:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QValidator:locale()
+   RETURN Qt_QValidator_locale( ::pPtr )
+
+
+METHOD QValidator:setLocale( pLocale )
+   RETURN Qt_QValidator_setLocale( ::pPtr, pLocale )
+

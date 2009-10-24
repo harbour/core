@@ -71,34 +71,47 @@ CREATE CLASS QTextListFormat INHERIT QTextFormat
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  indent()                            INLINE  Qt_QTextListFormat_indent( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QTextListFormat_isValid( ::pPtr )
-   METHOD  setIndent( nIndentation )           INLINE  Qt_QTextListFormat_setIndent( ::pPtr, nIndentation )
-   METHOD  setStyle( nStyle )                  INLINE  Qt_QTextListFormat_setStyle( ::pPtr, nStyle )
-   METHOD  style()                             INLINE  Qt_QTextListFormat_style( ::pPtr )
+   METHOD  indent()
+   METHOD  isValid()
+   METHOD  setIndent( nIndentation )
+   METHOD  setStyle( nStyle )
+   METHOD  style()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextListFormat
-
+METHOD QTextListFormat:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextListFormat( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextListFormat
-
+METHOD QTextListFormat:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextListFormat:indent()
+   RETURN Qt_QTextListFormat_indent( ::pPtr )
+
+
+METHOD QTextListFormat:isValid()
+   RETURN Qt_QTextListFormat_isValid( ::pPtr )
+
+
+METHOD QTextListFormat:setIndent( nIndentation )
+   RETURN Qt_QTextListFormat_setIndent( ::pPtr, nIndentation )
+
+
+METHOD QTextListFormat:setStyle( nStyle )
+   RETURN Qt_QTextListFormat_setStyle( ::pPtr, nStyle )
+
+
+METHOD QTextListFormat:style()
+   RETURN Qt_QTextListFormat_style( ::pPtr )
+

@@ -71,70 +71,227 @@ CREATE CLASS QTextFormat
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  background()                        INLINE  Qt_QTextFormat_background( ::pPtr )
-   METHOD  boolProperty( nPropertyId )         INLINE  Qt_QTextFormat_boolProperty( ::pPtr, nPropertyId )
-   METHOD  brushProperty( nPropertyId )        INLINE  Qt_QTextFormat_brushProperty( ::pPtr, nPropertyId )
-   METHOD  clearBackground()                   INLINE  Qt_QTextFormat_clearBackground( ::pPtr )
-   METHOD  clearForeground()                   INLINE  Qt_QTextFormat_clearForeground( ::pPtr )
-   METHOD  clearProperty( nPropertyId )        INLINE  Qt_QTextFormat_clearProperty( ::pPtr, nPropertyId )
-   METHOD  colorProperty( nPropertyId )        INLINE  Qt_QTextFormat_colorProperty( ::pPtr, nPropertyId )
-   METHOD  doubleProperty( nPropertyId )       INLINE  Qt_QTextFormat_doubleProperty( ::pPtr, nPropertyId )
-   METHOD  foreground()                        INLINE  Qt_QTextFormat_foreground( ::pPtr )
-   METHOD  hasProperty( nPropertyId )          INLINE  Qt_QTextFormat_hasProperty( ::pPtr, nPropertyId )
-   METHOD  intProperty( nPropertyId )          INLINE  Qt_QTextFormat_intProperty( ::pPtr, nPropertyId )
-   METHOD  isBlockFormat()                     INLINE  Qt_QTextFormat_isBlockFormat( ::pPtr )
-   METHOD  isCharFormat()                      INLINE  Qt_QTextFormat_isCharFormat( ::pPtr )
-   METHOD  isFrameFormat()                     INLINE  Qt_QTextFormat_isFrameFormat( ::pPtr )
-   METHOD  isImageFormat()                     INLINE  Qt_QTextFormat_isImageFormat( ::pPtr )
-   METHOD  isListFormat()                      INLINE  Qt_QTextFormat_isListFormat( ::pPtr )
-   METHOD  isTableCellFormat()                 INLINE  Qt_QTextFormat_isTableCellFormat( ::pPtr )
-   METHOD  isTableFormat()                     INLINE  Qt_QTextFormat_isTableFormat( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QTextFormat_isValid( ::pPtr )
-   METHOD  layoutDirection()                   INLINE  Qt_QTextFormat_layoutDirection( ::pPtr )
-   METHOD  lengthProperty( nPropertyId )       INLINE  Qt_QTextFormat_lengthProperty( ::pPtr, nPropertyId )
-   METHOD  merge( pOther )                     INLINE  Qt_QTextFormat_merge( ::pPtr, pOther )
-   METHOD  objectIndex()                       INLINE  Qt_QTextFormat_objectIndex( ::pPtr )
-   METHOD  objectType()                        INLINE  Qt_QTextFormat_objectType( ::pPtr )
-   METHOD  penProperty( nPropertyId )          INLINE  Qt_QTextFormat_penProperty( ::pPtr, nPropertyId )
-   METHOD  property( nPropertyId )             INLINE  Qt_QTextFormat_property( ::pPtr, nPropertyId )
-   METHOD  propertyCount()                     INLINE  Qt_QTextFormat_propertyCount( ::pPtr )
-   METHOD  setBackground( pBrush )             INLINE  Qt_QTextFormat_setBackground( ::pPtr, pBrush )
-   METHOD  setForeground( pBrush )             INLINE  Qt_QTextFormat_setForeground( ::pPtr, pBrush )
-   METHOD  setLayoutDirection( nDirection )    INLINE  Qt_QTextFormat_setLayoutDirection( ::pPtr, nDirection )
-   METHOD  setObjectIndex( nIndex )            INLINE  Qt_QTextFormat_setObjectIndex( ::pPtr, nIndex )
-   METHOD  setObjectType( nType )              INLINE  Qt_QTextFormat_setObjectType( ::pPtr, nType )
-   METHOD  setProperty( nPropertyId, pValue )  INLINE  Qt_QTextFormat_setProperty( ::pPtr, nPropertyId, pValue )
-   METHOD  stringProperty( nPropertyId )       INLINE  Qt_QTextFormat_stringProperty( ::pPtr, nPropertyId )
-   METHOD  toBlockFormat()                     INLINE  Qt_QTextFormat_toBlockFormat( ::pPtr )
-   METHOD  toCharFormat()                      INLINE  Qt_QTextFormat_toCharFormat( ::pPtr )
-   METHOD  toFrameFormat()                     INLINE  Qt_QTextFormat_toFrameFormat( ::pPtr )
-   METHOD  toImageFormat()                     INLINE  Qt_QTextFormat_toImageFormat( ::pPtr )
-   METHOD  toListFormat()                      INLINE  Qt_QTextFormat_toListFormat( ::pPtr )
-   METHOD  toTableFormat()                     INLINE  Qt_QTextFormat_toTableFormat( ::pPtr )
-   METHOD  type()                              INLINE  Qt_QTextFormat_type( ::pPtr )
+   METHOD  background()
+   METHOD  boolProperty( nPropertyId )
+   METHOD  brushProperty( nPropertyId )
+   METHOD  clearBackground()
+   METHOD  clearForeground()
+   METHOD  clearProperty( nPropertyId )
+   METHOD  colorProperty( nPropertyId )
+   METHOD  doubleProperty( nPropertyId )
+   METHOD  foreground()
+   METHOD  hasProperty( nPropertyId )
+   METHOD  intProperty( nPropertyId )
+   METHOD  isBlockFormat()
+   METHOD  isCharFormat()
+   METHOD  isFrameFormat()
+   METHOD  isImageFormat()
+   METHOD  isListFormat()
+   METHOD  isTableCellFormat()
+   METHOD  isTableFormat()
+   METHOD  isValid()
+   METHOD  layoutDirection()
+   METHOD  lengthProperty( nPropertyId )
+   METHOD  merge( pOther )
+   METHOD  objectIndex()
+   METHOD  objectType()
+   METHOD  penProperty( nPropertyId )
+   METHOD  property( nPropertyId )
+   METHOD  propertyCount()
+   METHOD  setBackground( pBrush )
+   METHOD  setForeground( pBrush )
+   METHOD  setLayoutDirection( nDirection )
+   METHOD  setObjectIndex( nIndex )
+   METHOD  setObjectType( nType )
+   METHOD  setProperty( nPropertyId, pValue )
+   METHOD  stringProperty( nPropertyId )
+   METHOD  toBlockFormat()
+   METHOD  toCharFormat()
+   METHOD  toFrameFormat()
+   METHOD  toImageFormat()
+   METHOD  toListFormat()
+   METHOD  toTableFormat()
+   METHOD  type()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextFormat
-
+METHOD QTextFormat:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextFormat( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextFormat
-
+METHOD QTextFormat:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextFormat:background()
+   RETURN Qt_QTextFormat_background( ::pPtr )
+
+
+METHOD QTextFormat:boolProperty( nPropertyId )
+   RETURN Qt_QTextFormat_boolProperty( ::pPtr, nPropertyId )
+
+
+METHOD QTextFormat:brushProperty( nPropertyId )
+   RETURN Qt_QTextFormat_brushProperty( ::pPtr, nPropertyId )
+
+
+METHOD QTextFormat:clearBackground()
+   RETURN Qt_QTextFormat_clearBackground( ::pPtr )
+
+
+METHOD QTextFormat:clearForeground()
+   RETURN Qt_QTextFormat_clearForeground( ::pPtr )
+
+
+METHOD QTextFormat:clearProperty( nPropertyId )
+   RETURN Qt_QTextFormat_clearProperty( ::pPtr, nPropertyId )
+
+
+METHOD QTextFormat:colorProperty( nPropertyId )
+   RETURN Qt_QTextFormat_colorProperty( ::pPtr, nPropertyId )
+
+
+METHOD QTextFormat:doubleProperty( nPropertyId )
+   RETURN Qt_QTextFormat_doubleProperty( ::pPtr, nPropertyId )
+
+
+METHOD QTextFormat:foreground()
+   RETURN Qt_QTextFormat_foreground( ::pPtr )
+
+
+METHOD QTextFormat:hasProperty( nPropertyId )
+   RETURN Qt_QTextFormat_hasProperty( ::pPtr, nPropertyId )
+
+
+METHOD QTextFormat:intProperty( nPropertyId )
+   RETURN Qt_QTextFormat_intProperty( ::pPtr, nPropertyId )
+
+
+METHOD QTextFormat:isBlockFormat()
+   RETURN Qt_QTextFormat_isBlockFormat( ::pPtr )
+
+
+METHOD QTextFormat:isCharFormat()
+   RETURN Qt_QTextFormat_isCharFormat( ::pPtr )
+
+
+METHOD QTextFormat:isFrameFormat()
+   RETURN Qt_QTextFormat_isFrameFormat( ::pPtr )
+
+
+METHOD QTextFormat:isImageFormat()
+   RETURN Qt_QTextFormat_isImageFormat( ::pPtr )
+
+
+METHOD QTextFormat:isListFormat()
+   RETURN Qt_QTextFormat_isListFormat( ::pPtr )
+
+
+METHOD QTextFormat:isTableCellFormat()
+   RETURN Qt_QTextFormat_isTableCellFormat( ::pPtr )
+
+
+METHOD QTextFormat:isTableFormat()
+   RETURN Qt_QTextFormat_isTableFormat( ::pPtr )
+
+
+METHOD QTextFormat:isValid()
+   RETURN Qt_QTextFormat_isValid( ::pPtr )
+
+
+METHOD QTextFormat:layoutDirection()
+   RETURN Qt_QTextFormat_layoutDirection( ::pPtr )
+
+
+METHOD QTextFormat:lengthProperty( nPropertyId )
+   RETURN Qt_QTextFormat_lengthProperty( ::pPtr, nPropertyId )
+
+
+METHOD QTextFormat:merge( pOther )
+   RETURN Qt_QTextFormat_merge( ::pPtr, pOther )
+
+
+METHOD QTextFormat:objectIndex()
+   RETURN Qt_QTextFormat_objectIndex( ::pPtr )
+
+
+METHOD QTextFormat:objectType()
+   RETURN Qt_QTextFormat_objectType( ::pPtr )
+
+
+METHOD QTextFormat:penProperty( nPropertyId )
+   RETURN Qt_QTextFormat_penProperty( ::pPtr, nPropertyId )
+
+
+METHOD QTextFormat:property( nPropertyId )
+   RETURN Qt_QTextFormat_property( ::pPtr, nPropertyId )
+
+
+METHOD QTextFormat:propertyCount()
+   RETURN Qt_QTextFormat_propertyCount( ::pPtr )
+
+
+METHOD QTextFormat:setBackground( pBrush )
+   RETURN Qt_QTextFormat_setBackground( ::pPtr, pBrush )
+
+
+METHOD QTextFormat:setForeground( pBrush )
+   RETURN Qt_QTextFormat_setForeground( ::pPtr, pBrush )
+
+
+METHOD QTextFormat:setLayoutDirection( nDirection )
+   RETURN Qt_QTextFormat_setLayoutDirection( ::pPtr, nDirection )
+
+
+METHOD QTextFormat:setObjectIndex( nIndex )
+   RETURN Qt_QTextFormat_setObjectIndex( ::pPtr, nIndex )
+
+
+METHOD QTextFormat:setObjectType( nType )
+   RETURN Qt_QTextFormat_setObjectType( ::pPtr, nType )
+
+
+METHOD QTextFormat:setProperty( nPropertyId, pValue )
+   RETURN Qt_QTextFormat_setProperty( ::pPtr, nPropertyId, pValue )
+
+
+METHOD QTextFormat:stringProperty( nPropertyId )
+   RETURN Qt_QTextFormat_stringProperty( ::pPtr, nPropertyId )
+
+
+METHOD QTextFormat:toBlockFormat()
+   RETURN Qt_QTextFormat_toBlockFormat( ::pPtr )
+
+
+METHOD QTextFormat:toCharFormat()
+   RETURN Qt_QTextFormat_toCharFormat( ::pPtr )
+
+
+METHOD QTextFormat:toFrameFormat()
+   RETURN Qt_QTextFormat_toFrameFormat( ::pPtr )
+
+
+METHOD QTextFormat:toImageFormat()
+   RETURN Qt_QTextFormat_toImageFormat( ::pPtr )
+
+
+METHOD QTextFormat:toListFormat()
+   RETURN Qt_QTextFormat_toListFormat( ::pPtr )
+
+
+METHOD QTextFormat:toTableFormat()
+   RETURN Qt_QTextFormat_toTableFormat( ::pPtr )
+
+
+METHOD QTextFormat:type()
+   RETURN Qt_QTextFormat_type( ::pPtr )
+

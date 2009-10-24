@@ -71,39 +71,72 @@ CREATE CLASS QStyleOptionMenuItem INHERIT QStyleOption
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  checkType()                         INLINE  Qt_QStyleOptionMenuItem_checkType( ::pPtr )
-   METHOD  checked()                           INLINE  Qt_QStyleOptionMenuItem_checked( ::pPtr )
-   METHOD  font()                              INLINE  Qt_QStyleOptionMenuItem_font( ::pPtr )
-   METHOD  icon()                              INLINE  Qt_QStyleOptionMenuItem_icon( ::pPtr )
-   METHOD  maxIconWidth()                      INLINE  Qt_QStyleOptionMenuItem_maxIconWidth( ::pPtr )
-   METHOD  menuHasCheckableItems()             INLINE  Qt_QStyleOptionMenuItem_menuHasCheckableItems( ::pPtr )
-   METHOD  menuItemType()                      INLINE  Qt_QStyleOptionMenuItem_menuItemType( ::pPtr )
-   METHOD  menuRect()                          INLINE  Qt_QStyleOptionMenuItem_menuRect( ::pPtr )
-   METHOD  tabWidth()                          INLINE  Qt_QStyleOptionMenuItem_tabWidth( ::pPtr )
-   METHOD  text()                              INLINE  Qt_QStyleOptionMenuItem_text( ::pPtr )
+   METHOD  checkType()
+   METHOD  checked()
+   METHOD  font()
+   METHOD  icon()
+   METHOD  maxIconWidth()
+   METHOD  menuHasCheckableItems()
+   METHOD  menuItemType()
+   METHOD  menuRect()
+   METHOD  tabWidth()
+   METHOD  text()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyleOptionMenuItem
-
+METHOD QStyleOptionMenuItem:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyleOptionMenuItem( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyleOptionMenuItem
-
+METHOD QStyleOptionMenuItem:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyleOptionMenuItem:checkType()
+   RETURN Qt_QStyleOptionMenuItem_checkType( ::pPtr )
+
+
+METHOD QStyleOptionMenuItem:checked()
+   RETURN Qt_QStyleOptionMenuItem_checked( ::pPtr )
+
+
+METHOD QStyleOptionMenuItem:font()
+   RETURN Qt_QStyleOptionMenuItem_font( ::pPtr )
+
+
+METHOD QStyleOptionMenuItem:icon()
+   RETURN Qt_QStyleOptionMenuItem_icon( ::pPtr )
+
+
+METHOD QStyleOptionMenuItem:maxIconWidth()
+   RETURN Qt_QStyleOptionMenuItem_maxIconWidth( ::pPtr )
+
+
+METHOD QStyleOptionMenuItem:menuHasCheckableItems()
+   RETURN Qt_QStyleOptionMenuItem_menuHasCheckableItems( ::pPtr )
+
+
+METHOD QStyleOptionMenuItem:menuItemType()
+   RETURN Qt_QStyleOptionMenuItem_menuItemType( ::pPtr )
+
+
+METHOD QStyleOptionMenuItem:menuRect()
+   RETURN Qt_QStyleOptionMenuItem_menuRect( ::pPtr )
+
+
+METHOD QStyleOptionMenuItem:tabWidth()
+   RETURN Qt_QStyleOptionMenuItem_tabWidth( ::pPtr )
+
+
+METHOD QStyleOptionMenuItem:text()
+   RETURN Qt_QStyleOptionMenuItem_text( ::pPtr )
+

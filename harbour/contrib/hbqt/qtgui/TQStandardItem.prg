@@ -71,100 +71,377 @@ CREATE CLASS QStandardItem
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  accessibleDescription()             INLINE  Qt_QStandardItem_accessibleDescription( ::pPtr )
-   METHOD  accessibleText()                    INLINE  Qt_QStandardItem_accessibleText( ::pPtr )
-   METHOD  appendRow( pItem )                  INLINE  Qt_QStandardItem_appendRow( ::pPtr, pItem )
-   METHOD  background()                        INLINE  Qt_QStandardItem_background( ::pPtr )
-   METHOD  checkState()                        INLINE  Qt_QStandardItem_checkState( ::pPtr )
-   METHOD  child( nRow, nColumn )              INLINE  Qt_QStandardItem_child( ::pPtr, nRow, nColumn )
-   METHOD  clone()                             INLINE  Qt_QStandardItem_clone( ::pPtr )
-   METHOD  column()                            INLINE  Qt_QStandardItem_column( ::pPtr )
-   METHOD  columnCount()                       INLINE  Qt_QStandardItem_columnCount( ::pPtr )
-   METHOD  data( nRole )                       INLINE  Qt_QStandardItem_data( ::pPtr, nRole )
-   METHOD  flags()                             INLINE  Qt_QStandardItem_flags( ::pPtr )
-   METHOD  font()                              INLINE  Qt_QStandardItem_font( ::pPtr )
-   METHOD  foreground()                        INLINE  Qt_QStandardItem_foreground( ::pPtr )
-   METHOD  hasChildren()                       INLINE  Qt_QStandardItem_hasChildren( ::pPtr )
-   METHOD  icon()                              INLINE  Qt_QStandardItem_icon( ::pPtr )
-   METHOD  index()                             INLINE  Qt_QStandardItem_index( ::pPtr )
-   METHOD  insertColumns( nColumn, nCount )    INLINE  Qt_QStandardItem_insertColumns( ::pPtr, nColumn, nCount )
-   METHOD  insertRow( nRow, pItem )            INLINE  Qt_QStandardItem_insertRow( ::pPtr, nRow, pItem )
-   METHOD  insertRows( nRow, nCount )          INLINE  Qt_QStandardItem_insertRows( ::pPtr, nRow, nCount )
-   METHOD  isCheckable()                       INLINE  Qt_QStandardItem_isCheckable( ::pPtr )
-   METHOD  isDragEnabled()                     INLINE  Qt_QStandardItem_isDragEnabled( ::pPtr )
-   METHOD  isDropEnabled()                     INLINE  Qt_QStandardItem_isDropEnabled( ::pPtr )
-   METHOD  isEditable()                        INLINE  Qt_QStandardItem_isEditable( ::pPtr )
-   METHOD  isEnabled()                         INLINE  Qt_QStandardItem_isEnabled( ::pPtr )
-   METHOD  isSelectable()                      INLINE  Qt_QStandardItem_isSelectable( ::pPtr )
-   METHOD  isTristate()                        INLINE  Qt_QStandardItem_isTristate( ::pPtr )
-   METHOD  model()                             INLINE  Qt_QStandardItem_model( ::pPtr )
-   METHOD  parent()                            INLINE  Qt_QStandardItem_parent( ::pPtr )
-   METHOD  read( pIn )                         INLINE  Qt_QStandardItem_read( ::pPtr, pIn )
-   METHOD  removeColumn( nColumn )             INLINE  Qt_QStandardItem_removeColumn( ::pPtr, nColumn )
-   METHOD  removeColumns( nColumn, nCount )    INLINE  Qt_QStandardItem_removeColumns( ::pPtr, nColumn, nCount )
-   METHOD  removeRow( nRow )                   INLINE  Qt_QStandardItem_removeRow( ::pPtr, nRow )
-   METHOD  removeRows( nRow, nCount )          INLINE  Qt_QStandardItem_removeRows( ::pPtr, nRow, nCount )
-   METHOD  row()                               INLINE  Qt_QStandardItem_row( ::pPtr )
-   METHOD  rowCount()                          INLINE  Qt_QStandardItem_rowCount( ::pPtr )
-   METHOD  setAccessibleDescription( cAccessibleDescription )  INLINE  Qt_QStandardItem_setAccessibleDescription( ::pPtr, cAccessibleDescription )
-   METHOD  setAccessibleText( cAccessibleText )  INLINE  Qt_QStandardItem_setAccessibleText( ::pPtr, cAccessibleText )
-   METHOD  setBackground( pBrush )             INLINE  Qt_QStandardItem_setBackground( ::pPtr, pBrush )
-   METHOD  setCheckState( nState )             INLINE  Qt_QStandardItem_setCheckState( ::pPtr, nState )
-   METHOD  setCheckable( lCheckable )          INLINE  Qt_QStandardItem_setCheckable( ::pPtr, lCheckable )
-   METHOD  setChild( nRow, nColumn, pItem )    INLINE  Qt_QStandardItem_setChild( ::pPtr, nRow, nColumn, pItem )
-   METHOD  setChild_1( nRow, pItem )           INLINE  Qt_QStandardItem_setChild_1( ::pPtr, nRow, pItem )
-   METHOD  setColumnCount( nColumns )          INLINE  Qt_QStandardItem_setColumnCount( ::pPtr, nColumns )
-   METHOD  setData( pValue, nRole )            INLINE  Qt_QStandardItem_setData( ::pPtr, pValue, nRole )
-   METHOD  setDragEnabled( lDragEnabled )      INLINE  Qt_QStandardItem_setDragEnabled( ::pPtr, lDragEnabled )
-   METHOD  setDropEnabled( lDropEnabled )      INLINE  Qt_QStandardItem_setDropEnabled( ::pPtr, lDropEnabled )
-   METHOD  setEditable( lEditable )            INLINE  Qt_QStandardItem_setEditable( ::pPtr, lEditable )
-   METHOD  setEnabled( lEnabled )              INLINE  Qt_QStandardItem_setEnabled( ::pPtr, lEnabled )
-   METHOD  setFlags( nFlags )                  INLINE  Qt_QStandardItem_setFlags( ::pPtr, nFlags )
-   METHOD  setFont( pFont )                    INLINE  Qt_QStandardItem_setFont( ::pPtr, pFont )
-   METHOD  setForeground( pBrush )             INLINE  Qt_QStandardItem_setForeground( ::pPtr, pBrush )
-   METHOD  setIcon( cIcon )                    INLINE  Qt_QStandardItem_setIcon( ::pPtr, cIcon )
-   METHOD  setRowCount( nRows )                INLINE  Qt_QStandardItem_setRowCount( ::pPtr, nRows )
-   METHOD  setSelectable( lSelectable )        INLINE  Qt_QStandardItem_setSelectable( ::pPtr, lSelectable )
-   METHOD  setSizeHint( pSize )                INLINE  Qt_QStandardItem_setSizeHint( ::pPtr, pSize )
-   METHOD  setStatusTip( cStatusTip )          INLINE  Qt_QStandardItem_setStatusTip( ::pPtr, cStatusTip )
-   METHOD  setText( cText )                    INLINE  Qt_QStandardItem_setText( ::pPtr, cText )
-   METHOD  setTextAlignment( nAlignment )      INLINE  Qt_QStandardItem_setTextAlignment( ::pPtr, nAlignment )
-   METHOD  setToolTip( cToolTip )              INLINE  Qt_QStandardItem_setToolTip( ::pPtr, cToolTip )
-   METHOD  setTristate( lTristate )            INLINE  Qt_QStandardItem_setTristate( ::pPtr, lTristate )
-   METHOD  setWhatsThis( cWhatsThis )          INLINE  Qt_QStandardItem_setWhatsThis( ::pPtr, cWhatsThis )
-   METHOD  sizeHint()                          INLINE  Qt_QStandardItem_sizeHint( ::pPtr )
-   METHOD  sortChildren( nColumn, nOrder )     INLINE  Qt_QStandardItem_sortChildren( ::pPtr, nColumn, nOrder )
-   METHOD  statusTip()                         INLINE  Qt_QStandardItem_statusTip( ::pPtr )
-   METHOD  takeChild( nRow, nColumn )          INLINE  Qt_QStandardItem_takeChild( ::pPtr, nRow, nColumn )
-   METHOD  text()                              INLINE  Qt_QStandardItem_text( ::pPtr )
-   METHOD  textAlignment()                     INLINE  Qt_QStandardItem_textAlignment( ::pPtr )
-   METHOD  toolTip()                           INLINE  Qt_QStandardItem_toolTip( ::pPtr )
-   METHOD  type()                              INLINE  Qt_QStandardItem_type( ::pPtr )
-   METHOD  whatsThis()                         INLINE  Qt_QStandardItem_whatsThis( ::pPtr )
-   METHOD  write( pOut )                       INLINE  Qt_QStandardItem_write( ::pPtr, pOut )
+   METHOD  accessibleDescription()
+   METHOD  accessibleText()
+   METHOD  appendRow( pItem )
+   METHOD  background()
+   METHOD  checkState()
+   METHOD  child( nRow, nColumn )
+   METHOD  clone()
+   METHOD  column()
+   METHOD  columnCount()
+   METHOD  data( nRole )
+   METHOD  flags()
+   METHOD  font()
+   METHOD  foreground()
+   METHOD  hasChildren()
+   METHOD  icon()
+   METHOD  index()
+   METHOD  insertColumns( nColumn, nCount )
+   METHOD  insertRow( nRow, pItem )
+   METHOD  insertRows( nRow, nCount )
+   METHOD  isCheckable()
+   METHOD  isDragEnabled()
+   METHOD  isDropEnabled()
+   METHOD  isEditable()
+   METHOD  isEnabled()
+   METHOD  isSelectable()
+   METHOD  isTristate()
+   METHOD  model()
+   METHOD  parent()
+   METHOD  read( pIn )
+   METHOD  removeColumn( nColumn )
+   METHOD  removeColumns( nColumn, nCount )
+   METHOD  removeRow( nRow )
+   METHOD  removeRows( nRow, nCount )
+   METHOD  row()
+   METHOD  rowCount()
+   METHOD  setAccessibleDescription( cAccessibleDescription )
+   METHOD  setAccessibleText( cAccessibleText )
+   METHOD  setBackground( pBrush )
+   METHOD  setCheckState( nState )
+   METHOD  setCheckable( lCheckable )
+   METHOD  setChild( nRow, nColumn, pItem )
+   METHOD  setChild_1( nRow, pItem )
+   METHOD  setColumnCount( nColumns )
+   METHOD  setData( pValue, nRole )
+   METHOD  setDragEnabled( lDragEnabled )
+   METHOD  setDropEnabled( lDropEnabled )
+   METHOD  setEditable( lEditable )
+   METHOD  setEnabled( lEnabled )
+   METHOD  setFlags( nFlags )
+   METHOD  setFont( pFont )
+   METHOD  setForeground( pBrush )
+   METHOD  setIcon( cIcon )
+   METHOD  setRowCount( nRows )
+   METHOD  setSelectable( lSelectable )
+   METHOD  setSizeHint( pSize )
+   METHOD  setStatusTip( cStatusTip )
+   METHOD  setText( cText )
+   METHOD  setTextAlignment( nAlignment )
+   METHOD  setToolTip( cToolTip )
+   METHOD  setTristate( lTristate )
+   METHOD  setWhatsThis( cWhatsThis )
+   METHOD  sizeHint()
+   METHOD  sortChildren( nColumn, nOrder )
+   METHOD  statusTip()
+   METHOD  takeChild( nRow, nColumn )
+   METHOD  text()
+   METHOD  textAlignment()
+   METHOD  toolTip()
+   METHOD  type()
+   METHOD  whatsThis()
+   METHOD  write( pOut )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStandardItem
-
+METHOD QStandardItem:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStandardItem( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStandardItem
-
+METHOD QStandardItem:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStandardItem:accessibleDescription()
+   RETURN Qt_QStandardItem_accessibleDescription( ::pPtr )
+
+
+METHOD QStandardItem:accessibleText()
+   RETURN Qt_QStandardItem_accessibleText( ::pPtr )
+
+
+METHOD QStandardItem:appendRow( pItem )
+   RETURN Qt_QStandardItem_appendRow( ::pPtr, pItem )
+
+
+METHOD QStandardItem:background()
+   RETURN Qt_QStandardItem_background( ::pPtr )
+
+
+METHOD QStandardItem:checkState()
+   RETURN Qt_QStandardItem_checkState( ::pPtr )
+
+
+METHOD QStandardItem:child( nRow, nColumn )
+   RETURN Qt_QStandardItem_child( ::pPtr, nRow, nColumn )
+
+
+METHOD QStandardItem:clone()
+   RETURN Qt_QStandardItem_clone( ::pPtr )
+
+
+METHOD QStandardItem:column()
+   RETURN Qt_QStandardItem_column( ::pPtr )
+
+
+METHOD QStandardItem:columnCount()
+   RETURN Qt_QStandardItem_columnCount( ::pPtr )
+
+
+METHOD QStandardItem:data( nRole )
+   RETURN Qt_QStandardItem_data( ::pPtr, nRole )
+
+
+METHOD QStandardItem:flags()
+   RETURN Qt_QStandardItem_flags( ::pPtr )
+
+
+METHOD QStandardItem:font()
+   RETURN Qt_QStandardItem_font( ::pPtr )
+
+
+METHOD QStandardItem:foreground()
+   RETURN Qt_QStandardItem_foreground( ::pPtr )
+
+
+METHOD QStandardItem:hasChildren()
+   RETURN Qt_QStandardItem_hasChildren( ::pPtr )
+
+
+METHOD QStandardItem:icon()
+   RETURN Qt_QStandardItem_icon( ::pPtr )
+
+
+METHOD QStandardItem:index()
+   RETURN Qt_QStandardItem_index( ::pPtr )
+
+
+METHOD QStandardItem:insertColumns( nColumn, nCount )
+   RETURN Qt_QStandardItem_insertColumns( ::pPtr, nColumn, nCount )
+
+
+METHOD QStandardItem:insertRow( nRow, pItem )
+   RETURN Qt_QStandardItem_insertRow( ::pPtr, nRow, pItem )
+
+
+METHOD QStandardItem:insertRows( nRow, nCount )
+   RETURN Qt_QStandardItem_insertRows( ::pPtr, nRow, nCount )
+
+
+METHOD QStandardItem:isCheckable()
+   RETURN Qt_QStandardItem_isCheckable( ::pPtr )
+
+
+METHOD QStandardItem:isDragEnabled()
+   RETURN Qt_QStandardItem_isDragEnabled( ::pPtr )
+
+
+METHOD QStandardItem:isDropEnabled()
+   RETURN Qt_QStandardItem_isDropEnabled( ::pPtr )
+
+
+METHOD QStandardItem:isEditable()
+   RETURN Qt_QStandardItem_isEditable( ::pPtr )
+
+
+METHOD QStandardItem:isEnabled()
+   RETURN Qt_QStandardItem_isEnabled( ::pPtr )
+
+
+METHOD QStandardItem:isSelectable()
+   RETURN Qt_QStandardItem_isSelectable( ::pPtr )
+
+
+METHOD QStandardItem:isTristate()
+   RETURN Qt_QStandardItem_isTristate( ::pPtr )
+
+
+METHOD QStandardItem:model()
+   RETURN Qt_QStandardItem_model( ::pPtr )
+
+
+METHOD QStandardItem:parent()
+   RETURN Qt_QStandardItem_parent( ::pPtr )
+
+
+METHOD QStandardItem:read( pIn )
+   RETURN Qt_QStandardItem_read( ::pPtr, pIn )
+
+
+METHOD QStandardItem:removeColumn( nColumn )
+   RETURN Qt_QStandardItem_removeColumn( ::pPtr, nColumn )
+
+
+METHOD QStandardItem:removeColumns( nColumn, nCount )
+   RETURN Qt_QStandardItem_removeColumns( ::pPtr, nColumn, nCount )
+
+
+METHOD QStandardItem:removeRow( nRow )
+   RETURN Qt_QStandardItem_removeRow( ::pPtr, nRow )
+
+
+METHOD QStandardItem:removeRows( nRow, nCount )
+   RETURN Qt_QStandardItem_removeRows( ::pPtr, nRow, nCount )
+
+
+METHOD QStandardItem:row()
+   RETURN Qt_QStandardItem_row( ::pPtr )
+
+
+METHOD QStandardItem:rowCount()
+   RETURN Qt_QStandardItem_rowCount( ::pPtr )
+
+
+METHOD QStandardItem:setAccessibleDescription( cAccessibleDescription )
+   RETURN Qt_QStandardItem_setAccessibleDescription( ::pPtr, cAccessibleDescription )
+
+
+METHOD QStandardItem:setAccessibleText( cAccessibleText )
+   RETURN Qt_QStandardItem_setAccessibleText( ::pPtr, cAccessibleText )
+
+
+METHOD QStandardItem:setBackground( pBrush )
+   RETURN Qt_QStandardItem_setBackground( ::pPtr, pBrush )
+
+
+METHOD QStandardItem:setCheckState( nState )
+   RETURN Qt_QStandardItem_setCheckState( ::pPtr, nState )
+
+
+METHOD QStandardItem:setCheckable( lCheckable )
+   RETURN Qt_QStandardItem_setCheckable( ::pPtr, lCheckable )
+
+
+METHOD QStandardItem:setChild( nRow, nColumn, pItem )
+   RETURN Qt_QStandardItem_setChild( ::pPtr, nRow, nColumn, pItem )
+
+
+METHOD QStandardItem:setChild_1( nRow, pItem )
+   RETURN Qt_QStandardItem_setChild_1( ::pPtr, nRow, pItem )
+
+
+METHOD QStandardItem:setColumnCount( nColumns )
+   RETURN Qt_QStandardItem_setColumnCount( ::pPtr, nColumns )
+
+
+METHOD QStandardItem:setData( pValue, nRole )
+   RETURN Qt_QStandardItem_setData( ::pPtr, pValue, nRole )
+
+
+METHOD QStandardItem:setDragEnabled( lDragEnabled )
+   RETURN Qt_QStandardItem_setDragEnabled( ::pPtr, lDragEnabled )
+
+
+METHOD QStandardItem:setDropEnabled( lDropEnabled )
+   RETURN Qt_QStandardItem_setDropEnabled( ::pPtr, lDropEnabled )
+
+
+METHOD QStandardItem:setEditable( lEditable )
+   RETURN Qt_QStandardItem_setEditable( ::pPtr, lEditable )
+
+
+METHOD QStandardItem:setEnabled( lEnabled )
+   RETURN Qt_QStandardItem_setEnabled( ::pPtr, lEnabled )
+
+
+METHOD QStandardItem:setFlags( nFlags )
+   RETURN Qt_QStandardItem_setFlags( ::pPtr, nFlags )
+
+
+METHOD QStandardItem:setFont( pFont )
+   RETURN Qt_QStandardItem_setFont( ::pPtr, pFont )
+
+
+METHOD QStandardItem:setForeground( pBrush )
+   RETURN Qt_QStandardItem_setForeground( ::pPtr, pBrush )
+
+
+METHOD QStandardItem:setIcon( cIcon )
+   RETURN Qt_QStandardItem_setIcon( ::pPtr, cIcon )
+
+
+METHOD QStandardItem:setRowCount( nRows )
+   RETURN Qt_QStandardItem_setRowCount( ::pPtr, nRows )
+
+
+METHOD QStandardItem:setSelectable( lSelectable )
+   RETURN Qt_QStandardItem_setSelectable( ::pPtr, lSelectable )
+
+
+METHOD QStandardItem:setSizeHint( pSize )
+   RETURN Qt_QStandardItem_setSizeHint( ::pPtr, pSize )
+
+
+METHOD QStandardItem:setStatusTip( cStatusTip )
+   RETURN Qt_QStandardItem_setStatusTip( ::pPtr, cStatusTip )
+
+
+METHOD QStandardItem:setText( cText )
+   RETURN Qt_QStandardItem_setText( ::pPtr, cText )
+
+
+METHOD QStandardItem:setTextAlignment( nAlignment )
+   RETURN Qt_QStandardItem_setTextAlignment( ::pPtr, nAlignment )
+
+
+METHOD QStandardItem:setToolTip( cToolTip )
+   RETURN Qt_QStandardItem_setToolTip( ::pPtr, cToolTip )
+
+
+METHOD QStandardItem:setTristate( lTristate )
+   RETURN Qt_QStandardItem_setTristate( ::pPtr, lTristate )
+
+
+METHOD QStandardItem:setWhatsThis( cWhatsThis )
+   RETURN Qt_QStandardItem_setWhatsThis( ::pPtr, cWhatsThis )
+
+
+METHOD QStandardItem:sizeHint()
+   RETURN Qt_QStandardItem_sizeHint( ::pPtr )
+
+
+METHOD QStandardItem:sortChildren( nColumn, nOrder )
+   RETURN Qt_QStandardItem_sortChildren( ::pPtr, nColumn, nOrder )
+
+
+METHOD QStandardItem:statusTip()
+   RETURN Qt_QStandardItem_statusTip( ::pPtr )
+
+
+METHOD QStandardItem:takeChild( nRow, nColumn )
+   RETURN Qt_QStandardItem_takeChild( ::pPtr, nRow, nColumn )
+
+
+METHOD QStandardItem:text()
+   RETURN Qt_QStandardItem_text( ::pPtr )
+
+
+METHOD QStandardItem:textAlignment()
+   RETURN Qt_QStandardItem_textAlignment( ::pPtr )
+
+
+METHOD QStandardItem:toolTip()
+   RETURN Qt_QStandardItem_toolTip( ::pPtr )
+
+
+METHOD QStandardItem:type()
+   RETURN Qt_QStandardItem_type( ::pPtr )
+
+
+METHOD QStandardItem:whatsThis()
+   RETURN Qt_QStandardItem_whatsThis( ::pPtr )
+
+
+METHOD QStandardItem:write( pOut )
+   RETURN Qt_QStandardItem_write( ::pPtr, pOut )
+

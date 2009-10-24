@@ -71,30 +71,27 @@ CREATE CLASS QStyleOptionFocusRect INHERIT QStyleOption
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  backgroundColor()                   INLINE  Qt_QStyleOptionFocusRect_backgroundColor( ::pPtr )
+   METHOD  backgroundColor()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyleOptionFocusRect
-
+METHOD QStyleOptionFocusRect:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyleOptionFocusRect( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyleOptionFocusRect
-
+METHOD QStyleOptionFocusRect:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyleOptionFocusRect:backgroundColor()
+   RETURN Qt_QStyleOptionFocusRect_backgroundColor( ::pPtr )
+

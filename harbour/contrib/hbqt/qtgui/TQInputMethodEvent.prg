@@ -71,34 +71,47 @@ CREATE CLASS QInputMethodEvent INHERIT QEvent
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  commitString()                      INLINE  Qt_QInputMethodEvent_commitString( ::pPtr )
-   METHOD  preeditString()                     INLINE  Qt_QInputMethodEvent_preeditString( ::pPtr )
-   METHOD  replacementLength()                 INLINE  Qt_QInputMethodEvent_replacementLength( ::pPtr )
-   METHOD  replacementStart()                  INLINE  Qt_QInputMethodEvent_replacementStart( ::pPtr )
-   METHOD  setCommitString( cCommitString, nReplaceFrom, nReplaceLength )  INLINE  Qt_QInputMethodEvent_setCommitString( ::pPtr, cCommitString, nReplaceFrom, nReplaceLength )
+   METHOD  commitString()
+   METHOD  preeditString()
+   METHOD  replacementLength()
+   METHOD  replacementStart()
+   METHOD  setCommitString( cCommitString, nReplaceFrom, nReplaceLength )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QInputMethodEvent
-
+METHOD QInputMethodEvent:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QInputMethodEvent( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QInputMethodEvent
-
+METHOD QInputMethodEvent:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QInputMethodEvent:commitString()
+   RETURN Qt_QInputMethodEvent_commitString( ::pPtr )
+
+
+METHOD QInputMethodEvent:preeditString()
+   RETURN Qt_QInputMethodEvent_preeditString( ::pPtr )
+
+
+METHOD QInputMethodEvent:replacementLength()
+   RETURN Qt_QInputMethodEvent_replacementLength( ::pPtr )
+
+
+METHOD QInputMethodEvent:replacementStart()
+   RETURN Qt_QInputMethodEvent_replacementStart( ::pPtr )
+
+
+METHOD QInputMethodEvent:setCommitString( cCommitString, nReplaceFrom, nReplaceLength )
+   RETURN Qt_QInputMethodEvent_setCommitString( ::pPtr, cCommitString, nReplaceFrom, nReplaceLength )
+

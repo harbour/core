@@ -71,36 +71,57 @@ CREATE CLASS QTextFragment
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  charFormat()                        INLINE  Qt_QTextFragment_charFormat( ::pPtr )
-   METHOD  charFormatIndex()                   INLINE  Qt_QTextFragment_charFormatIndex( ::pPtr )
-   METHOD  contains( nPosition )               INLINE  Qt_QTextFragment_contains( ::pPtr, nPosition )
-   METHOD  isValid()                           INLINE  Qt_QTextFragment_isValid( ::pPtr )
-   METHOD  length()                            INLINE  Qt_QTextFragment_length( ::pPtr )
-   METHOD  position()                          INLINE  Qt_QTextFragment_position( ::pPtr )
-   METHOD  text()                              INLINE  Qt_QTextFragment_text( ::pPtr )
+   METHOD  charFormat()
+   METHOD  charFormatIndex()
+   METHOD  contains( nPosition )
+   METHOD  isValid()
+   METHOD  length()
+   METHOD  position()
+   METHOD  text()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextFragment
-
+METHOD QTextFragment:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextFragment( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextFragment
-
+METHOD QTextFragment:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextFragment:charFormat()
+   RETURN Qt_QTextFragment_charFormat( ::pPtr )
+
+
+METHOD QTextFragment:charFormatIndex()
+   RETURN Qt_QTextFragment_charFormatIndex( ::pPtr )
+
+
+METHOD QTextFragment:contains( nPosition )
+   RETURN Qt_QTextFragment_contains( ::pPtr, nPosition )
+
+
+METHOD QTextFragment:isValid()
+   RETURN Qt_QTextFragment_isValid( ::pPtr )
+
+
+METHOD QTextFragment:length()
+   RETURN Qt_QTextFragment_length( ::pPtr )
+
+
+METHOD QTextFragment:position()
+   RETURN Qt_QTextFragment_position( ::pPtr )
+
+
+METHOD QTextFragment:text()
+   RETURN Qt_QTextFragment_text( ::pPtr )
+

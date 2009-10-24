@@ -71,47 +71,112 @@ CREATE CLASS QDoubleSpinBox INHERIT QAbstractSpinBox
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  cleanText()                         INLINE  Qt_QDoubleSpinBox_cleanText( ::pPtr )
-   METHOD  decimals()                          INLINE  Qt_QDoubleSpinBox_decimals( ::pPtr )
-   METHOD  maximum()                           INLINE  Qt_QDoubleSpinBox_maximum( ::pPtr )
-   METHOD  minimum()                           INLINE  Qt_QDoubleSpinBox_minimum( ::pPtr )
-   METHOD  prefix()                            INLINE  Qt_QDoubleSpinBox_prefix( ::pPtr )
-   METHOD  setDecimals( nPrec )                INLINE  Qt_QDoubleSpinBox_setDecimals( ::pPtr, nPrec )
-   METHOD  setMaximum( nMax )                  INLINE  Qt_QDoubleSpinBox_setMaximum( ::pPtr, nMax )
-   METHOD  setMinimum( nMin )                  INLINE  Qt_QDoubleSpinBox_setMinimum( ::pPtr, nMin )
-   METHOD  setPrefix( cPrefix )                INLINE  Qt_QDoubleSpinBox_setPrefix( ::pPtr, cPrefix )
-   METHOD  setRange( nMinimum, nMaximum )      INLINE  Qt_QDoubleSpinBox_setRange( ::pPtr, nMinimum, nMaximum )
-   METHOD  setSingleStep( nVal )               INLINE  Qt_QDoubleSpinBox_setSingleStep( ::pPtr, nVal )
-   METHOD  setSuffix( cSuffix )                INLINE  Qt_QDoubleSpinBox_setSuffix( ::pPtr, cSuffix )
-   METHOD  singleStep()                        INLINE  Qt_QDoubleSpinBox_singleStep( ::pPtr )
-   METHOD  suffix()                            INLINE  Qt_QDoubleSpinBox_suffix( ::pPtr )
-   METHOD  textFromValue( nValue )             INLINE  Qt_QDoubleSpinBox_textFromValue( ::pPtr, nValue )
-   METHOD  value()                             INLINE  Qt_QDoubleSpinBox_value( ::pPtr )
-   METHOD  valueFromText( cText )              INLINE  Qt_QDoubleSpinBox_valueFromText( ::pPtr, cText )
-   METHOD  setValue( nVal )                    INLINE  Qt_QDoubleSpinBox_setValue( ::pPtr, nVal )
+   METHOD  cleanText()
+   METHOD  decimals()
+   METHOD  maximum()
+   METHOD  minimum()
+   METHOD  prefix()
+   METHOD  setDecimals( nPrec )
+   METHOD  setMaximum( nMax )
+   METHOD  setMinimum( nMin )
+   METHOD  setPrefix( cPrefix )
+   METHOD  setRange( nMinimum, nMaximum )
+   METHOD  setSingleStep( nVal )
+   METHOD  setSuffix( cSuffix )
+   METHOD  singleStep()
+   METHOD  suffix()
+   METHOD  textFromValue( nValue )
+   METHOD  value()
+   METHOD  valueFromText( cText )
+   METHOD  setValue( nVal )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QDoubleSpinBox
-
+METHOD QDoubleSpinBox:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QDoubleSpinBox( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QDoubleSpinBox
-
+METHOD QDoubleSpinBox:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QDoubleSpinBox:cleanText()
+   RETURN Qt_QDoubleSpinBox_cleanText( ::pPtr )
+
+
+METHOD QDoubleSpinBox:decimals()
+   RETURN Qt_QDoubleSpinBox_decimals( ::pPtr )
+
+
+METHOD QDoubleSpinBox:maximum()
+   RETURN Qt_QDoubleSpinBox_maximum( ::pPtr )
+
+
+METHOD QDoubleSpinBox:minimum()
+   RETURN Qt_QDoubleSpinBox_minimum( ::pPtr )
+
+
+METHOD QDoubleSpinBox:prefix()
+   RETURN Qt_QDoubleSpinBox_prefix( ::pPtr )
+
+
+METHOD QDoubleSpinBox:setDecimals( nPrec )
+   RETURN Qt_QDoubleSpinBox_setDecimals( ::pPtr, nPrec )
+
+
+METHOD QDoubleSpinBox:setMaximum( nMax )
+   RETURN Qt_QDoubleSpinBox_setMaximum( ::pPtr, nMax )
+
+
+METHOD QDoubleSpinBox:setMinimum( nMin )
+   RETURN Qt_QDoubleSpinBox_setMinimum( ::pPtr, nMin )
+
+
+METHOD QDoubleSpinBox:setPrefix( cPrefix )
+   RETURN Qt_QDoubleSpinBox_setPrefix( ::pPtr, cPrefix )
+
+
+METHOD QDoubleSpinBox:setRange( nMinimum, nMaximum )
+   RETURN Qt_QDoubleSpinBox_setRange( ::pPtr, nMinimum, nMaximum )
+
+
+METHOD QDoubleSpinBox:setSingleStep( nVal )
+   RETURN Qt_QDoubleSpinBox_setSingleStep( ::pPtr, nVal )
+
+
+METHOD QDoubleSpinBox:setSuffix( cSuffix )
+   RETURN Qt_QDoubleSpinBox_setSuffix( ::pPtr, cSuffix )
+
+
+METHOD QDoubleSpinBox:singleStep()
+   RETURN Qt_QDoubleSpinBox_singleStep( ::pPtr )
+
+
+METHOD QDoubleSpinBox:suffix()
+   RETURN Qt_QDoubleSpinBox_suffix( ::pPtr )
+
+
+METHOD QDoubleSpinBox:textFromValue( nValue )
+   RETURN Qt_QDoubleSpinBox_textFromValue( ::pPtr, nValue )
+
+
+METHOD QDoubleSpinBox:value()
+   RETURN Qt_QDoubleSpinBox_value( ::pPtr )
+
+
+METHOD QDoubleSpinBox:valueFromText( cText )
+   RETURN Qt_QDoubleSpinBox_valueFromText( ::pPtr, cText )
+
+
+METHOD QDoubleSpinBox:setValue( nVal )
+   RETURN Qt_QDoubleSpinBox_setValue( ::pPtr, nVal )
+

@@ -110,8 +110,9 @@ xbp_debug( 2 )
 /*----------------------------------------------------------------------*/
 
 PROCEDURE BuildADialog()
-   LOCAL oDlg, mp1, mp2, oXbp, nEvent, aSize, aTabs, oDa, oHtm
+   LOCAL oDlg, mp1, mp2, oXbp, nEvent, aSize, oDa, aTabs, oHTM
    LOCAL nThread := ThreadID()
+   //LOCAL oStat, aMenu, aTool, aBrow, aChek, a3Sta
 
    /* Create Application Window */
    oDlg := GuiStdDialog( "Harbour - Xbase++ - QT Dialog  [ "+ hb_ntos( nThread )+" ]" )
@@ -119,6 +120,7 @@ PROCEDURE BuildADialog()
    oDlg:close := {|| MsgBox( "You can also close me by pressing [ESC]" ), .T. }
    // oDlg:killDisplayFocus := {|| hb_OutDebug( "Loosing Display Focus" ) }
    SetAppWindow( oDlg )
+   oDlg:Show()
 
    oDa := oDlg:drawingArea
 
@@ -188,7 +190,7 @@ PROCEDURE BuildADialog()
    Build_Rtf( aTabs[ TAB_6 ] )
 
    /* Build HTML Viewer */
-   oHtm := Build_HTMLViewer( aTabs[ TAB_7 ] )
+   oHTM := Build_HTMLViewer( aTabs[ TAB_7 ] )
 
    /* Build Statics */
    Build_Statics( aTabs[ TAB_8 ] )
@@ -825,7 +827,9 @@ FUNCTION Build_SpinButtons( oWnd )
    oSpinRed := XbpSpinButton():new( oWnd,, {nX,nY+00}, {100,40} )
    oSpinRed:align := 2
    oSpinRed:fastSpin := .T.
+
    oSpinRed:create()
+
    oSpinRed:setNumLimits( 0, 255 )
    oSpinRed:endSpin  := bCallback
    oSpinRed:keyboard := bCallback

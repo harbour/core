@@ -71,32 +71,37 @@ CREATE CLASS QSpacerItem INHERIT QLayoutItem
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  changeSize( nW, nH, nHPolicy, nVPolicy )  INLINE  Qt_QSpacerItem_changeSize( ::pPtr, nW, nH, nHPolicy, nVPolicy )
-   METHOD  isEmpty()                           INLINE  Qt_QSpacerItem_isEmpty( ::pPtr )
-   METHOD  spacerItem()                        INLINE  Qt_QSpacerItem_spacerItem( ::pPtr )
+   METHOD  changeSize( nW, nH, nHPolicy, nVPolicy )
+   METHOD  isEmpty()
+   METHOD  spacerItem()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QSpacerItem
-
+METHOD QSpacerItem:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QSpacerItem( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QSpacerItem
-
+METHOD QSpacerItem:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QSpacerItem:changeSize( nW, nH, nHPolicy, nVPolicy )
+   RETURN Qt_QSpacerItem_changeSize( ::pPtr, nW, nH, nHPolicy, nVPolicy )
+
+
+METHOD QSpacerItem:isEmpty()
+   RETURN Qt_QSpacerItem_isEmpty( ::pPtr )
+
+
+METHOD QSpacerItem:spacerItem()
+   RETURN Qt_QSpacerItem_spacerItem( ::pPtr )
+

@@ -71,38 +71,67 @@ CREATE CLASS QWheelEvent INHERIT QInputEvent
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  buttons()                           INLINE  Qt_QWheelEvent_buttons( ::pPtr )
-   METHOD  delta()                             INLINE  Qt_QWheelEvent_delta( ::pPtr )
-   METHOD  globalPos()                         INLINE  Qt_QWheelEvent_globalPos( ::pPtr )
-   METHOD  globalX()                           INLINE  Qt_QWheelEvent_globalX( ::pPtr )
-   METHOD  globalY()                           INLINE  Qt_QWheelEvent_globalY( ::pPtr )
-   METHOD  orientation()                       INLINE  Qt_QWheelEvent_orientation( ::pPtr )
-   METHOD  pos()                               INLINE  Qt_QWheelEvent_pos( ::pPtr )
-   METHOD  x()                                 INLINE  Qt_QWheelEvent_x( ::pPtr )
-   METHOD  y()                                 INLINE  Qt_QWheelEvent_y( ::pPtr )
+   METHOD  buttons()
+   METHOD  delta()
+   METHOD  globalPos()
+   METHOD  globalX()
+   METHOD  globalY()
+   METHOD  orientation()
+   METHOD  pos()
+   METHOD  x()
+   METHOD  y()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QWheelEvent
-
+METHOD QWheelEvent:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QWheelEvent( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QWheelEvent
-
+METHOD QWheelEvent:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QWheelEvent:buttons()
+   RETURN Qt_QWheelEvent_buttons( ::pPtr )
+
+
+METHOD QWheelEvent:delta()
+   RETURN Qt_QWheelEvent_delta( ::pPtr )
+
+
+METHOD QWheelEvent:globalPos()
+   RETURN Qt_QWheelEvent_globalPos( ::pPtr )
+
+
+METHOD QWheelEvent:globalX()
+   RETURN Qt_QWheelEvent_globalX( ::pPtr )
+
+
+METHOD QWheelEvent:globalY()
+   RETURN Qt_QWheelEvent_globalY( ::pPtr )
+
+
+METHOD QWheelEvent:orientation()
+   RETURN Qt_QWheelEvent_orientation( ::pPtr )
+
+
+METHOD QWheelEvent:pos()
+   RETURN Qt_QWheelEvent_pos( ::pPtr )
+
+
+METHOD QWheelEvent:x()
+   RETURN Qt_QWheelEvent_x( ::pPtr )
+
+
+METHOD QWheelEvent:y()
+   RETURN Qt_QWheelEvent_y( ::pPtr )
+

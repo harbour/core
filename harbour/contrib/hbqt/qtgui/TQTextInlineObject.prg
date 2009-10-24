@@ -71,42 +71,87 @@ CREATE CLASS QTextInlineObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  ascent()                            INLINE  Qt_QTextInlineObject_ascent( ::pPtr )
-   METHOD  descent()                           INLINE  Qt_QTextInlineObject_descent( ::pPtr )
-   METHOD  format()                            INLINE  Qt_QTextInlineObject_format( ::pPtr )
-   METHOD  formatIndex()                       INLINE  Qt_QTextInlineObject_formatIndex( ::pPtr )
-   METHOD  height()                            INLINE  Qt_QTextInlineObject_height( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QTextInlineObject_isValid( ::pPtr )
-   METHOD  rect()                              INLINE  Qt_QTextInlineObject_rect( ::pPtr )
-   METHOD  setAscent( nA )                     INLINE  Qt_QTextInlineObject_setAscent( ::pPtr, nA )
-   METHOD  setDescent( nD )                    INLINE  Qt_QTextInlineObject_setDescent( ::pPtr, nD )
-   METHOD  setWidth( nW )                      INLINE  Qt_QTextInlineObject_setWidth( ::pPtr, nW )
-   METHOD  textDirection()                     INLINE  Qt_QTextInlineObject_textDirection( ::pPtr )
-   METHOD  textPosition()                      INLINE  Qt_QTextInlineObject_textPosition( ::pPtr )
-   METHOD  width()                             INLINE  Qt_QTextInlineObject_width( ::pPtr )
+   METHOD  ascent()
+   METHOD  descent()
+   METHOD  format()
+   METHOD  formatIndex()
+   METHOD  height()
+   METHOD  isValid()
+   METHOD  rect()
+   METHOD  setAscent( nA )
+   METHOD  setDescent( nD )
+   METHOD  setWidth( nW )
+   METHOD  textDirection()
+   METHOD  textPosition()
+   METHOD  width()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextInlineObject
-
+METHOD QTextInlineObject:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextInlineObject( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextInlineObject
-
+METHOD QTextInlineObject:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextInlineObject:ascent()
+   RETURN Qt_QTextInlineObject_ascent( ::pPtr )
+
+
+METHOD QTextInlineObject:descent()
+   RETURN Qt_QTextInlineObject_descent( ::pPtr )
+
+
+METHOD QTextInlineObject:format()
+   RETURN Qt_QTextInlineObject_format( ::pPtr )
+
+
+METHOD QTextInlineObject:formatIndex()
+   RETURN Qt_QTextInlineObject_formatIndex( ::pPtr )
+
+
+METHOD QTextInlineObject:height()
+   RETURN Qt_QTextInlineObject_height( ::pPtr )
+
+
+METHOD QTextInlineObject:isValid()
+   RETURN Qt_QTextInlineObject_isValid( ::pPtr )
+
+
+METHOD QTextInlineObject:rect()
+   RETURN Qt_QTextInlineObject_rect( ::pPtr )
+
+
+METHOD QTextInlineObject:setAscent( nA )
+   RETURN Qt_QTextInlineObject_setAscent( ::pPtr, nA )
+
+
+METHOD QTextInlineObject:setDescent( nD )
+   RETURN Qt_QTextInlineObject_setDescent( ::pPtr, nD )
+
+
+METHOD QTextInlineObject:setWidth( nW )
+   RETURN Qt_QTextInlineObject_setWidth( ::pPtr, nW )
+
+
+METHOD QTextInlineObject:textDirection()
+   RETURN Qt_QTextInlineObject_textDirection( ::pPtr )
+
+
+METHOD QTextInlineObject:textPosition()
+   RETURN Qt_QTextInlineObject_textPosition( ::pPtr )
+
+
+METHOD QTextInlineObject:width()
+   RETURN Qt_QTextInlineObject_width( ::pPtr )
+

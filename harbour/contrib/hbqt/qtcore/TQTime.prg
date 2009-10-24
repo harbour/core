@@ -71,49 +71,122 @@ CREATE CLASS QTime
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addMSecs( nMs )                     INLINE  Qt_QTime_addMSecs( ::pPtr, nMs )
-   METHOD  addSecs( nS )                       INLINE  Qt_QTime_addSecs( ::pPtr, nS )
-   METHOD  elapsed()                           INLINE  Qt_QTime_elapsed( ::pPtr )
-   METHOD  hour()                              INLINE  Qt_QTime_hour( ::pPtr )
-   METHOD  isNull()                            INLINE  Qt_QTime_isNull( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QTime_isValid( ::pPtr )
-   METHOD  minute()                            INLINE  Qt_QTime_minute( ::pPtr )
-   METHOD  msec()                              INLINE  Qt_QTime_msec( ::pPtr )
-   METHOD  msecsTo( pT )                       INLINE  Qt_QTime_msecsTo( ::pPtr, pT )
-   METHOD  restart()                           INLINE  Qt_QTime_restart( ::pPtr )
-   METHOD  second()                            INLINE  Qt_QTime_second( ::pPtr )
-   METHOD  secsTo( pT )                        INLINE  Qt_QTime_secsTo( ::pPtr, pT )
-   METHOD  setHMS( nH, nM, nS, nMs )           INLINE  Qt_QTime_setHMS( ::pPtr, nH, nM, nS, nMs )
-   METHOD  start()                             INLINE  Qt_QTime_start( ::pPtr )
-   METHOD  toString( cFormat )                 INLINE  Qt_QTime_toString( ::pPtr, cFormat )
-   METHOD  toString_1( nFormat )               INLINE  Qt_QTime_toString_1( ::pPtr, nFormat )
-   METHOD  currentTime()                       INLINE  Qt_QTime_currentTime( ::pPtr )
-   METHOD  fromString( cString, nFormat )      INLINE  Qt_QTime_fromString( ::pPtr, cString, nFormat )
-   METHOD  fromString_1( cString, cFormat )    INLINE  Qt_QTime_fromString_1( ::pPtr, cString, cFormat )
-   METHOD  isValid_1( nH, nM, nS, nMs )        INLINE  Qt_QTime_isValid_1( ::pPtr, nH, nM, nS, nMs )
+   METHOD  addMSecs( nMs )
+   METHOD  addSecs( nS )
+   METHOD  elapsed()
+   METHOD  hour()
+   METHOD  isNull()
+   METHOD  isValid()
+   METHOD  minute()
+   METHOD  msec()
+   METHOD  msecsTo( pT )
+   METHOD  restart()
+   METHOD  second()
+   METHOD  secsTo( pT )
+   METHOD  setHMS( nH, nM, nS, nMs )
+   METHOD  start()
+   METHOD  toString( cFormat )
+   METHOD  toString_1( nFormat )
+   METHOD  currentTime()
+   METHOD  fromString( cString, nFormat )
+   METHOD  fromString_1( cString, cFormat )
+   METHOD  isValid_1( nH, nM, nS, nMs )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTime
-
+METHOD QTime:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTime( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTime
-
+METHOD QTime:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTime:addMSecs( nMs )
+   RETURN Qt_QTime_addMSecs( ::pPtr, nMs )
+
+
+METHOD QTime:addSecs( nS )
+   RETURN Qt_QTime_addSecs( ::pPtr, nS )
+
+
+METHOD QTime:elapsed()
+   RETURN Qt_QTime_elapsed( ::pPtr )
+
+
+METHOD QTime:hour()
+   RETURN Qt_QTime_hour( ::pPtr )
+
+
+METHOD QTime:isNull()
+   RETURN Qt_QTime_isNull( ::pPtr )
+
+
+METHOD QTime:isValid()
+   RETURN Qt_QTime_isValid( ::pPtr )
+
+
+METHOD QTime:minute()
+   RETURN Qt_QTime_minute( ::pPtr )
+
+
+METHOD QTime:msec()
+   RETURN Qt_QTime_msec( ::pPtr )
+
+
+METHOD QTime:msecsTo( pT )
+   RETURN Qt_QTime_msecsTo( ::pPtr, pT )
+
+
+METHOD QTime:restart()
+   RETURN Qt_QTime_restart( ::pPtr )
+
+
+METHOD QTime:second()
+   RETURN Qt_QTime_second( ::pPtr )
+
+
+METHOD QTime:secsTo( pT )
+   RETURN Qt_QTime_secsTo( ::pPtr, pT )
+
+
+METHOD QTime:setHMS( nH, nM, nS, nMs )
+   RETURN Qt_QTime_setHMS( ::pPtr, nH, nM, nS, nMs )
+
+
+METHOD QTime:start()
+   RETURN Qt_QTime_start( ::pPtr )
+
+
+METHOD QTime:toString( cFormat )
+   RETURN Qt_QTime_toString( ::pPtr, cFormat )
+
+
+METHOD QTime:toString_1( nFormat )
+   RETURN Qt_QTime_toString_1( ::pPtr, nFormat )
+
+
+METHOD QTime:currentTime()
+   RETURN Qt_QTime_currentTime( ::pPtr )
+
+
+METHOD QTime:fromString( cString, nFormat )
+   RETURN Qt_QTime_fromString( ::pPtr, cString, nFormat )
+
+
+METHOD QTime:fromString_1( cString, cFormat )
+   RETURN Qt_QTime_fromString_1( ::pPtr, cString, cFormat )
+
+
+METHOD QTime:isValid_1( nH, nM, nS, nMs )
+   RETURN Qt_QTime_isValid_1( ::pPtr, nH, nM, nS, nMs )
+

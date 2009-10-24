@@ -71,69 +71,222 @@ CREATE CLASS QCoreApplication INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  notify( pReceiver, pEvent )         INLINE  Qt_QCoreApplication_notify( ::pPtr, pReceiver, pEvent )
-   METHOD  addLibraryPath( cPath )             INLINE  Qt_QCoreApplication_addLibraryPath( ::pPtr, cPath )
-   METHOD  applicationDirPath()                INLINE  Qt_QCoreApplication_applicationDirPath( ::pPtr )
-   METHOD  applicationFilePath()               INLINE  Qt_QCoreApplication_applicationFilePath( ::pPtr )
-   METHOD  applicationName()                   INLINE  Qt_QCoreApplication_applicationName( ::pPtr )
-   METHOD  applicationPid()                    INLINE  Qt_QCoreApplication_applicationPid( ::pPtr )
-   METHOD  applicationVersion()                INLINE  Qt_QCoreApplication_applicationVersion( ::pPtr )
-   METHOD  arguments()                         INLINE  Qt_QCoreApplication_arguments( ::pPtr )
-   METHOD  closingDown()                       INLINE  Qt_QCoreApplication_closingDown( ::pPtr )
-   METHOD  exec()                              INLINE  Qt_QCoreApplication_exec( ::pPtr )
-   METHOD  exit( nReturnCode )                 INLINE  Qt_QCoreApplication_exit( ::pPtr, nReturnCode )
-   METHOD  flush()                             INLINE  Qt_QCoreApplication_flush( ::pPtr )
-   METHOD  hasPendingEvents()                  INLINE  Qt_QCoreApplication_hasPendingEvents( ::pPtr )
-   METHOD  installTranslator( pTranslationFile )  INLINE  Qt_QCoreApplication_installTranslator( ::pPtr, pTranslationFile )
-   METHOD  instance()                          INLINE  Qt_QCoreApplication_instance( ::pPtr )
-   METHOD  libraryPaths()                      INLINE  Qt_QCoreApplication_libraryPaths( ::pPtr )
-   METHOD  organizationDomain()                INLINE  Qt_QCoreApplication_organizationDomain( ::pPtr )
-   METHOD  organizationName()                  INLINE  Qt_QCoreApplication_organizationName( ::pPtr )
-   METHOD  postEvent( pReceiver, pEvent )      INLINE  Qt_QCoreApplication_postEvent( ::pPtr, pReceiver, pEvent )
-   METHOD  postEvent_1( pReceiver, pEvent, nPriority )  INLINE  Qt_QCoreApplication_postEvent_1( ::pPtr, pReceiver, pEvent, nPriority )
-   METHOD  processEvents( nFlags )             INLINE  Qt_QCoreApplication_processEvents( ::pPtr, nFlags )
-   METHOD  processEvents_1( nFlags, nMaxtime )  INLINE  Qt_QCoreApplication_processEvents_1( ::pPtr, nFlags, nMaxtime )
-   METHOD  removeLibraryPath( cPath )          INLINE  Qt_QCoreApplication_removeLibraryPath( ::pPtr, cPath )
-   METHOD  removePostedEvents( pReceiver )     INLINE  Qt_QCoreApplication_removePostedEvents( ::pPtr, pReceiver )
-   METHOD  removePostedEvents_1( pReceiver, nEventType )  INLINE  Qt_QCoreApplication_removePostedEvents_1( ::pPtr, pReceiver, nEventType )
-   METHOD  removeTranslator( pTranslationFile )  INLINE  Qt_QCoreApplication_removeTranslator( ::pPtr, pTranslationFile )
-   METHOD  sendEvent( pReceiver, pEvent )      INLINE  Qt_QCoreApplication_sendEvent( ::pPtr, pReceiver, pEvent )
-   METHOD  sendPostedEvents( pReceiver, nEvent_type )  INLINE  Qt_QCoreApplication_sendPostedEvents( ::pPtr, pReceiver, nEvent_type )
-   METHOD  sendPostedEvents_1()                INLINE  Qt_QCoreApplication_sendPostedEvents_1( ::pPtr )
-   METHOD  setApplicationName( cApplication )  INLINE  Qt_QCoreApplication_setApplicationName( ::pPtr, cApplication )
-   METHOD  setApplicationVersion( cVersion )   INLINE  Qt_QCoreApplication_setApplicationVersion( ::pPtr, cVersion )
-   METHOD  setAttribute( nAttribute, lOn )     INLINE  Qt_QCoreApplication_setAttribute( ::pPtr, nAttribute, lOn )
-   METHOD  setLibraryPaths( pPaths )           INLINE  Qt_QCoreApplication_setLibraryPaths( ::pPtr, pPaths )
-   METHOD  setOrganizationDomain( cOrgDomain )  INLINE  Qt_QCoreApplication_setOrganizationDomain( ::pPtr, cOrgDomain )
-   METHOD  setOrganizationName( cOrgName )     INLINE  Qt_QCoreApplication_setOrganizationName( ::pPtr, cOrgName )
-   METHOD  startingUp()                        INLINE  Qt_QCoreApplication_startingUp( ::pPtr )
-   METHOD  testAttribute( nAttribute )         INLINE  Qt_QCoreApplication_testAttribute( ::pPtr, nAttribute )
-   METHOD  translate( pContext, pSourceText, pDisambiguation, nEncoding, nN )  INLINE  Qt_QCoreApplication_translate( ::pPtr, pContext, pSourceText, pDisambiguation, nEncoding, nN )
-   METHOD  translate_1( pContext, pSourceText, pDisambiguation, nEncoding )  INLINE  Qt_QCoreApplication_translate_1( ::pPtr, pContext, pSourceText, pDisambiguation, nEncoding )
-   METHOD  quit()                              INLINE  Qt_QCoreApplication_quit( ::pPtr )
+   METHOD  notify( pReceiver, pEvent )
+   METHOD  addLibraryPath( cPath )
+   METHOD  applicationDirPath()
+   METHOD  applicationFilePath()
+   METHOD  applicationName()
+   METHOD  applicationPid()
+   METHOD  applicationVersion()
+   METHOD  arguments()
+   METHOD  closingDown()
+   METHOD  exec()
+   METHOD  exit( nReturnCode )
+   METHOD  flush()
+   METHOD  hasPendingEvents()
+   METHOD  installTranslator( pTranslationFile )
+   METHOD  instance()
+   METHOD  libraryPaths()
+   METHOD  organizationDomain()
+   METHOD  organizationName()
+   METHOD  postEvent( pReceiver, pEvent )
+   METHOD  postEvent_1( pReceiver, pEvent, nPriority )
+   METHOD  processEvents( nFlags )
+   METHOD  processEvents_1( nFlags, nMaxtime )
+   METHOD  removeLibraryPath( cPath )
+   METHOD  removePostedEvents( pReceiver )
+   METHOD  removePostedEvents_1( pReceiver, nEventType )
+   METHOD  removeTranslator( pTranslationFile )
+   METHOD  sendEvent( pReceiver, pEvent )
+   METHOD  sendPostedEvents( pReceiver, nEvent_type )
+   METHOD  sendPostedEvents_1()
+   METHOD  setApplicationName( cApplication )
+   METHOD  setApplicationVersion( cVersion )
+   METHOD  setAttribute( nAttribute, lOn )
+   METHOD  setLibraryPaths( pPaths )
+   METHOD  setOrganizationDomain( cOrgDomain )
+   METHOD  setOrganizationName( cOrgName )
+   METHOD  startingUp()
+   METHOD  testAttribute( nAttribute )
+   METHOD  translate( pContext, pSourceText, pDisambiguation, nEncoding, nN )
+   METHOD  translate_1( pContext, pSourceText, pDisambiguation, nEncoding )
+   METHOD  quit()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QCoreApplication
-
+METHOD QCoreApplication:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QCoreApplication( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QCoreApplication
-
+METHOD QCoreApplication:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QCoreApplication:notify( pReceiver, pEvent )
+   RETURN Qt_QCoreApplication_notify( ::pPtr, pReceiver, pEvent )
+
+
+METHOD QCoreApplication:addLibraryPath( cPath )
+   RETURN Qt_QCoreApplication_addLibraryPath( ::pPtr, cPath )
+
+
+METHOD QCoreApplication:applicationDirPath()
+   RETURN Qt_QCoreApplication_applicationDirPath( ::pPtr )
+
+
+METHOD QCoreApplication:applicationFilePath()
+   RETURN Qt_QCoreApplication_applicationFilePath( ::pPtr )
+
+
+METHOD QCoreApplication:applicationName()
+   RETURN Qt_QCoreApplication_applicationName( ::pPtr )
+
+
+METHOD QCoreApplication:applicationPid()
+   RETURN Qt_QCoreApplication_applicationPid( ::pPtr )
+
+
+METHOD QCoreApplication:applicationVersion()
+   RETURN Qt_QCoreApplication_applicationVersion( ::pPtr )
+
+
+METHOD QCoreApplication:arguments()
+   RETURN Qt_QCoreApplication_arguments( ::pPtr )
+
+
+METHOD QCoreApplication:closingDown()
+   RETURN Qt_QCoreApplication_closingDown( ::pPtr )
+
+
+METHOD QCoreApplication:exec()
+   RETURN Qt_QCoreApplication_exec( ::pPtr )
+
+
+METHOD QCoreApplication:exit( nReturnCode )
+   RETURN Qt_QCoreApplication_exit( ::pPtr, nReturnCode )
+
+
+METHOD QCoreApplication:flush()
+   RETURN Qt_QCoreApplication_flush( ::pPtr )
+
+
+METHOD QCoreApplication:hasPendingEvents()
+   RETURN Qt_QCoreApplication_hasPendingEvents( ::pPtr )
+
+
+METHOD QCoreApplication:installTranslator( pTranslationFile )
+   RETURN Qt_QCoreApplication_installTranslator( ::pPtr, pTranslationFile )
+
+
+METHOD QCoreApplication:instance()
+   RETURN Qt_QCoreApplication_instance( ::pPtr )
+
+
+METHOD QCoreApplication:libraryPaths()
+   RETURN Qt_QCoreApplication_libraryPaths( ::pPtr )
+
+
+METHOD QCoreApplication:organizationDomain()
+   RETURN Qt_QCoreApplication_organizationDomain( ::pPtr )
+
+
+METHOD QCoreApplication:organizationName()
+   RETURN Qt_QCoreApplication_organizationName( ::pPtr )
+
+
+METHOD QCoreApplication:postEvent( pReceiver, pEvent )
+   RETURN Qt_QCoreApplication_postEvent( ::pPtr, pReceiver, pEvent )
+
+
+METHOD QCoreApplication:postEvent_1( pReceiver, pEvent, nPriority )
+   RETURN Qt_QCoreApplication_postEvent_1( ::pPtr, pReceiver, pEvent, nPriority )
+
+
+METHOD QCoreApplication:processEvents( nFlags )
+   RETURN Qt_QCoreApplication_processEvents( ::pPtr, nFlags )
+
+
+METHOD QCoreApplication:processEvents_1( nFlags, nMaxtime )
+   RETURN Qt_QCoreApplication_processEvents_1( ::pPtr, nFlags, nMaxtime )
+
+
+METHOD QCoreApplication:removeLibraryPath( cPath )
+   RETURN Qt_QCoreApplication_removeLibraryPath( ::pPtr, cPath )
+
+
+METHOD QCoreApplication:removePostedEvents( pReceiver )
+   RETURN Qt_QCoreApplication_removePostedEvents( ::pPtr, pReceiver )
+
+
+METHOD QCoreApplication:removePostedEvents_1( pReceiver, nEventType )
+   RETURN Qt_QCoreApplication_removePostedEvents_1( ::pPtr, pReceiver, nEventType )
+
+
+METHOD QCoreApplication:removeTranslator( pTranslationFile )
+   RETURN Qt_QCoreApplication_removeTranslator( ::pPtr, pTranslationFile )
+
+
+METHOD QCoreApplication:sendEvent( pReceiver, pEvent )
+   RETURN Qt_QCoreApplication_sendEvent( ::pPtr, pReceiver, pEvent )
+
+
+METHOD QCoreApplication:sendPostedEvents( pReceiver, nEvent_type )
+   RETURN Qt_QCoreApplication_sendPostedEvents( ::pPtr, pReceiver, nEvent_type )
+
+
+METHOD QCoreApplication:sendPostedEvents_1()
+   RETURN Qt_QCoreApplication_sendPostedEvents_1( ::pPtr )
+
+
+METHOD QCoreApplication:setApplicationName( cApplication )
+   RETURN Qt_QCoreApplication_setApplicationName( ::pPtr, cApplication )
+
+
+METHOD QCoreApplication:setApplicationVersion( cVersion )
+   RETURN Qt_QCoreApplication_setApplicationVersion( ::pPtr, cVersion )
+
+
+METHOD QCoreApplication:setAttribute( nAttribute, lOn )
+   RETURN Qt_QCoreApplication_setAttribute( ::pPtr, nAttribute, lOn )
+
+
+METHOD QCoreApplication:setLibraryPaths( pPaths )
+   RETURN Qt_QCoreApplication_setLibraryPaths( ::pPtr, pPaths )
+
+
+METHOD QCoreApplication:setOrganizationDomain( cOrgDomain )
+   RETURN Qt_QCoreApplication_setOrganizationDomain( ::pPtr, cOrgDomain )
+
+
+METHOD QCoreApplication:setOrganizationName( cOrgName )
+   RETURN Qt_QCoreApplication_setOrganizationName( ::pPtr, cOrgName )
+
+
+METHOD QCoreApplication:startingUp()
+   RETURN Qt_QCoreApplication_startingUp( ::pPtr )
+
+
+METHOD QCoreApplication:testAttribute( nAttribute )
+   RETURN Qt_QCoreApplication_testAttribute( ::pPtr, nAttribute )
+
+
+METHOD QCoreApplication:translate( pContext, pSourceText, pDisambiguation, nEncoding, nN )
+   RETURN Qt_QCoreApplication_translate( ::pPtr, pContext, pSourceText, pDisambiguation, nEncoding, nN )
+
+
+METHOD QCoreApplication:translate_1( pContext, pSourceText, pDisambiguation, nEncoding )
+   RETURN Qt_QCoreApplication_translate_1( ::pPtr, pContext, pSourceText, pDisambiguation, nEncoding )
+
+
+METHOD QCoreApplication:quit()
+   RETURN Qt_QCoreApplication_quit( ::pPtr )
+

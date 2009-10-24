@@ -71,31 +71,32 @@ CREATE CLASS QLatin1Char
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  toLatin1()                          INLINE  Qt_QLatin1Char_toLatin1( ::pPtr )
-   METHOD  unicode()                           INLINE  Qt_QLatin1Char_unicode( ::pPtr )
+   METHOD  toLatin1()
+   METHOD  unicode()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QLatin1Char
-
+METHOD QLatin1Char:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QLatin1Char( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QLatin1Char
-
+METHOD QLatin1Char:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QLatin1Char:toLatin1()
+   RETURN Qt_QLatin1Char_toLatin1( ::pPtr )
+
+
+METHOD QLatin1Char:unicode()
+   RETURN Qt_QLatin1Char_unicode( ::pPtr )
+

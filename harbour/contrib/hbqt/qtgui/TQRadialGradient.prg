@@ -71,14 +71,14 @@ CREATE CLASS QRadialGradient INHERIT QGradient
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  center()                            INLINE  Qt_QRadialGradient_center( ::pPtr )
-   METHOD  focalPoint()                        INLINE  Qt_QRadialGradient_focalPoint( ::pPtr )
-   METHOD  radius()                            INLINE  Qt_QRadialGradient_radius( ::pPtr )
-   METHOD  setCenter( pCenter )                INLINE  Qt_QRadialGradient_setCenter( ::pPtr, pCenter )
-   METHOD  setCenter_1( nX, nY )               INLINE  Qt_QRadialGradient_setCenter_1( ::pPtr, nX, nY )
-   METHOD  setFocalPoint( pFocalPoint )        INLINE  Qt_QRadialGradient_setFocalPoint( ::pPtr, pFocalPoint )
-   METHOD  setFocalPoint_1( nX, nY )           INLINE  Qt_QRadialGradient_setFocalPoint_1( ::pPtr, nX, nY )
-   METHOD  setRadius( nRadius )                INLINE  Qt_QRadialGradient_setRadius( ::pPtr, nRadius )
+   METHOD  center()
+   METHOD  focalPoint()
+   METHOD  radius()
+   METHOD  setCenter( pCenter )
+   METHOD  setCenter_1( nX, nY )
+   METHOD  setFocalPoint( pFocalPoint )
+   METHOD  setFocalPoint_1( nX, nY )
+   METHOD  setRadius( nRadius )
 
    ENDCLASS
 
@@ -90,16 +90,44 @@ METHOD New( ... ) CLASS QRadialGradient
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QRadialGradient
-
+METHOD QRadialGradient:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QRadialGradient:center()
+   RETURN Qt_QRadialGradient_center( ::pPtr )
+
+
+METHOD QRadialGradient:focalPoint()
+   RETURN Qt_QRadialGradient_focalPoint( ::pPtr )
+
+
+METHOD QRadialGradient:radius()
+   RETURN Qt_QRadialGradient_radius( ::pPtr )
+
+
+METHOD QRadialGradient:setCenter( pCenter )
+   RETURN Qt_QRadialGradient_setCenter( ::pPtr, pCenter )
+
+
+METHOD QRadialGradient:setCenter_1( nX, nY )
+   RETURN Qt_QRadialGradient_setCenter_1( ::pPtr, nX, nY )
+
+
+METHOD QRadialGradient:setFocalPoint( pFocalPoint )
+   RETURN Qt_QRadialGradient_setFocalPoint( ::pPtr, pFocalPoint )
+
+
+METHOD QRadialGradient:setFocalPoint_1( nX, nY )
+   RETURN Qt_QRadialGradient_setFocalPoint_1( ::pPtr, nX, nY )
+
+
+METHOD QRadialGradient:setRadius( nRadius )
+   RETURN Qt_QRadialGradient_setRadius( ::pPtr, nRadius )
+

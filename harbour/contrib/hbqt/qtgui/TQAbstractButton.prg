@@ -71,55 +71,152 @@ CREATE CLASS QAbstractButton INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  autoExclusive()                     INLINE  Qt_QAbstractButton_autoExclusive( ::pPtr )
-   METHOD  autoRepeat()                        INLINE  Qt_QAbstractButton_autoRepeat( ::pPtr )
-   METHOD  autoRepeatDelay()                   INLINE  Qt_QAbstractButton_autoRepeatDelay( ::pPtr )
-   METHOD  autoRepeatInterval()                INLINE  Qt_QAbstractButton_autoRepeatInterval( ::pPtr )
-   METHOD  group()                             INLINE  Qt_QAbstractButton_group( ::pPtr )
-   METHOD  icon()                              INLINE  Qt_QAbstractButton_icon( ::pPtr )
-   METHOD  iconSize()                          INLINE  Qt_QAbstractButton_iconSize( ::pPtr )
-   METHOD  isCheckable()                       INLINE  Qt_QAbstractButton_isCheckable( ::pPtr )
-   METHOD  isChecked()                         INLINE  Qt_QAbstractButton_isChecked( ::pPtr )
-   METHOD  isDown()                            INLINE  Qt_QAbstractButton_isDown( ::pPtr )
-   METHOD  setAutoExclusive( lBool )           INLINE  Qt_QAbstractButton_setAutoExclusive( ::pPtr, lBool )
-   METHOD  setAutoRepeat( lBool )              INLINE  Qt_QAbstractButton_setAutoRepeat( ::pPtr, lBool )
-   METHOD  setAutoRepeatDelay( nInt )          INLINE  Qt_QAbstractButton_setAutoRepeatDelay( ::pPtr, nInt )
-   METHOD  setAutoRepeatInterval( nInt )       INLINE  Qt_QAbstractButton_setAutoRepeatInterval( ::pPtr, nInt )
-   METHOD  setCheckable( lBool )               INLINE  Qt_QAbstractButton_setCheckable( ::pPtr, lBool )
-   METHOD  setDown( lBool )                    INLINE  Qt_QAbstractButton_setDown( ::pPtr, lBool )
-   METHOD  setIcon( cIcon )                    INLINE  Qt_QAbstractButton_setIcon( ::pPtr, cIcon )
-   METHOD  setShortcut( pKey )                 INLINE  Qt_QAbstractButton_setShortcut( ::pPtr, pKey )
-   METHOD  setText( cText )                    INLINE  Qt_QAbstractButton_setText( ::pPtr, cText )
-   METHOD  shortcut()                          INLINE  Qt_QAbstractButton_shortcut( ::pPtr )
-   METHOD  text()                              INLINE  Qt_QAbstractButton_text( ::pPtr )
-   METHOD  animateClick( nMsec )               INLINE  Qt_QAbstractButton_animateClick( ::pPtr, nMsec )
-   METHOD  click()                             INLINE  Qt_QAbstractButton_click( ::pPtr )
-   METHOD  setChecked( lBool )                 INLINE  Qt_QAbstractButton_setChecked( ::pPtr, lBool )
-   METHOD  setIconSize( pSize )                INLINE  Qt_QAbstractButton_setIconSize( ::pPtr, pSize )
-   METHOD  toggle()                            INLINE  Qt_QAbstractButton_toggle( ::pPtr )
+   METHOD  autoExclusive()
+   METHOD  autoRepeat()
+   METHOD  autoRepeatDelay()
+   METHOD  autoRepeatInterval()
+   METHOD  group()
+   METHOD  icon()
+   METHOD  iconSize()
+   METHOD  isCheckable()
+   METHOD  isChecked()
+   METHOD  isDown()
+   METHOD  setAutoExclusive( lBool )
+   METHOD  setAutoRepeat( lBool )
+   METHOD  setAutoRepeatDelay( nInt )
+   METHOD  setAutoRepeatInterval( nInt )
+   METHOD  setCheckable( lBool )
+   METHOD  setDown( lBool )
+   METHOD  setIcon( cIcon )
+   METHOD  setShortcut( pKey )
+   METHOD  setText( cText )
+   METHOD  shortcut()
+   METHOD  text()
+   METHOD  animateClick( nMsec )
+   METHOD  click()
+   METHOD  setChecked( lBool )
+   METHOD  setIconSize( pSize )
+   METHOD  toggle()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QAbstractButton
-
+METHOD QAbstractButton:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QAbstractButton( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QAbstractButton
-
+METHOD QAbstractButton:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QAbstractButton:autoExclusive()
+   RETURN Qt_QAbstractButton_autoExclusive( ::pPtr )
+
+
+METHOD QAbstractButton:autoRepeat()
+   RETURN Qt_QAbstractButton_autoRepeat( ::pPtr )
+
+
+METHOD QAbstractButton:autoRepeatDelay()
+   RETURN Qt_QAbstractButton_autoRepeatDelay( ::pPtr )
+
+
+METHOD QAbstractButton:autoRepeatInterval()
+   RETURN Qt_QAbstractButton_autoRepeatInterval( ::pPtr )
+
+
+METHOD QAbstractButton:group()
+   RETURN Qt_QAbstractButton_group( ::pPtr )
+
+
+METHOD QAbstractButton:icon()
+   RETURN Qt_QAbstractButton_icon( ::pPtr )
+
+
+METHOD QAbstractButton:iconSize()
+   RETURN Qt_QAbstractButton_iconSize( ::pPtr )
+
+
+METHOD QAbstractButton:isCheckable()
+   RETURN Qt_QAbstractButton_isCheckable( ::pPtr )
+
+
+METHOD QAbstractButton:isChecked()
+   RETURN Qt_QAbstractButton_isChecked( ::pPtr )
+
+
+METHOD QAbstractButton:isDown()
+   RETURN Qt_QAbstractButton_isDown( ::pPtr )
+
+
+METHOD QAbstractButton:setAutoExclusive( lBool )
+   RETURN Qt_QAbstractButton_setAutoExclusive( ::pPtr, lBool )
+
+
+METHOD QAbstractButton:setAutoRepeat( lBool )
+   RETURN Qt_QAbstractButton_setAutoRepeat( ::pPtr, lBool )
+
+
+METHOD QAbstractButton:setAutoRepeatDelay( nInt )
+   RETURN Qt_QAbstractButton_setAutoRepeatDelay( ::pPtr, nInt )
+
+
+METHOD QAbstractButton:setAutoRepeatInterval( nInt )
+   RETURN Qt_QAbstractButton_setAutoRepeatInterval( ::pPtr, nInt )
+
+
+METHOD QAbstractButton:setCheckable( lBool )
+   RETURN Qt_QAbstractButton_setCheckable( ::pPtr, lBool )
+
+
+METHOD QAbstractButton:setDown( lBool )
+   RETURN Qt_QAbstractButton_setDown( ::pPtr, lBool )
+
+
+METHOD QAbstractButton:setIcon( cIcon )
+   RETURN Qt_QAbstractButton_setIcon( ::pPtr, cIcon )
+
+
+METHOD QAbstractButton:setShortcut( pKey )
+   RETURN Qt_QAbstractButton_setShortcut( ::pPtr, pKey )
+
+
+METHOD QAbstractButton:setText( cText )
+   RETURN Qt_QAbstractButton_setText( ::pPtr, cText )
+
+
+METHOD QAbstractButton:shortcut()
+   RETURN Qt_QAbstractButton_shortcut( ::pPtr )
+
+
+METHOD QAbstractButton:text()
+   RETURN Qt_QAbstractButton_text( ::pPtr )
+
+
+METHOD QAbstractButton:animateClick( nMsec )
+   RETURN Qt_QAbstractButton_animateClick( ::pPtr, nMsec )
+
+
+METHOD QAbstractButton:click()
+   RETURN Qt_QAbstractButton_click( ::pPtr )
+
+
+METHOD QAbstractButton:setChecked( lBool )
+   RETURN Qt_QAbstractButton_setChecked( ::pPtr, lBool )
+
+
+METHOD QAbstractButton:setIconSize( pSize )
+   RETURN Qt_QAbstractButton_setIconSize( ::pPtr, pSize )
+
+
+METHOD QAbstractButton:toggle()
+   RETURN Qt_QAbstractButton_toggle( ::pPtr )
+

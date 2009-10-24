@@ -71,36 +71,57 @@ CREATE CLASS QAbstractItemDelegate INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  createEditor( pParent, pOption, pIndex )  INLINE  Qt_QAbstractItemDelegate_createEditor( ::pPtr, pParent, pOption, pIndex )
-   METHOD  editorEvent( pEvent, pModel, pOption, pIndex )  INLINE  Qt_QAbstractItemDelegate_editorEvent( ::pPtr, pEvent, pModel, pOption, pIndex )
-   METHOD  paint( pPainter, pOption, pIndex )  INLINE  Qt_QAbstractItemDelegate_paint( ::pPtr, pPainter, pOption, pIndex )
-   METHOD  setEditorData( pEditor, pIndex )    INLINE  Qt_QAbstractItemDelegate_setEditorData( ::pPtr, pEditor, pIndex )
-   METHOD  setModelData( pEditor, pModel, pIndex )  INLINE  Qt_QAbstractItemDelegate_setModelData( ::pPtr, pEditor, pModel, pIndex )
-   METHOD  sizeHint( pOption, pIndex )         INLINE  Qt_QAbstractItemDelegate_sizeHint( ::pPtr, pOption, pIndex )
-   METHOD  updateEditorGeometry( pEditor, pOption, pIndex )  INLINE  Qt_QAbstractItemDelegate_updateEditorGeometry( ::pPtr, pEditor, pOption, pIndex )
+   METHOD  createEditor( pParent, pOption, pIndex )
+   METHOD  editorEvent( pEvent, pModel, pOption, pIndex )
+   METHOD  paint( pPainter, pOption, pIndex )
+   METHOD  setEditorData( pEditor, pIndex )
+   METHOD  setModelData( pEditor, pModel, pIndex )
+   METHOD  sizeHint( pOption, pIndex )
+   METHOD  updateEditorGeometry( pEditor, pOption, pIndex )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QAbstractItemDelegate
-
+METHOD QAbstractItemDelegate:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QAbstractItemDelegate( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QAbstractItemDelegate
-
+METHOD QAbstractItemDelegate:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QAbstractItemDelegate:createEditor( pParent, pOption, pIndex )
+   RETURN Qt_QAbstractItemDelegate_createEditor( ::pPtr, pParent, pOption, pIndex )
+
+
+METHOD QAbstractItemDelegate:editorEvent( pEvent, pModel, pOption, pIndex )
+   RETURN Qt_QAbstractItemDelegate_editorEvent( ::pPtr, pEvent, pModel, pOption, pIndex )
+
+
+METHOD QAbstractItemDelegate:paint( pPainter, pOption, pIndex )
+   RETURN Qt_QAbstractItemDelegate_paint( ::pPtr, pPainter, pOption, pIndex )
+
+
+METHOD QAbstractItemDelegate:setEditorData( pEditor, pIndex )
+   RETURN Qt_QAbstractItemDelegate_setEditorData( ::pPtr, pEditor, pIndex )
+
+
+METHOD QAbstractItemDelegate:setModelData( pEditor, pModel, pIndex )
+   RETURN Qt_QAbstractItemDelegate_setModelData( ::pPtr, pEditor, pModel, pIndex )
+
+
+METHOD QAbstractItemDelegate:sizeHint( pOption, pIndex )
+   RETURN Qt_QAbstractItemDelegate_sizeHint( ::pPtr, pOption, pIndex )
+
+
+METHOD QAbstractItemDelegate:updateEditorGeometry( pEditor, pOption, pIndex )
+   RETURN Qt_QAbstractItemDelegate_updateEditorGeometry( ::pPtr, pEditor, pOption, pIndex )
+

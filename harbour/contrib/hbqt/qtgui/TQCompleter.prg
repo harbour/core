@@ -71,58 +71,167 @@ CREATE CLASS QCompleter INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  caseSensitivity()                   INLINE  Qt_QCompleter_caseSensitivity( ::pPtr )
-   METHOD  completionColumn()                  INLINE  Qt_QCompleter_completionColumn( ::pPtr )
-   METHOD  completionCount()                   INLINE  Qt_QCompleter_completionCount( ::pPtr )
-   METHOD  completionMode()                    INLINE  Qt_QCompleter_completionMode( ::pPtr )
-   METHOD  completionModel()                   INLINE  Qt_QCompleter_completionModel( ::pPtr )
-   METHOD  completionPrefix()                  INLINE  Qt_QCompleter_completionPrefix( ::pPtr )
-   METHOD  completionRole()                    INLINE  Qt_QCompleter_completionRole( ::pPtr )
-   METHOD  currentCompletion()                 INLINE  Qt_QCompleter_currentCompletion( ::pPtr )
-   METHOD  currentIndex()                      INLINE  Qt_QCompleter_currentIndex( ::pPtr )
-   METHOD  currentRow()                        INLINE  Qt_QCompleter_currentRow( ::pPtr )
-   METHOD  model()                             INLINE  Qt_QCompleter_model( ::pPtr )
-   METHOD  modelSorting()                      INLINE  Qt_QCompleter_modelSorting( ::pPtr )
-   METHOD  pathFromIndex( pIndex )             INLINE  Qt_QCompleter_pathFromIndex( ::pPtr, pIndex )
-   METHOD  popup()                             INLINE  Qt_QCompleter_popup( ::pPtr )
-   METHOD  setCaseSensitivity( nCaseSensitivity )  INLINE  Qt_QCompleter_setCaseSensitivity( ::pPtr, nCaseSensitivity )
-   METHOD  setCompletionColumn( nColumn )      INLINE  Qt_QCompleter_setCompletionColumn( ::pPtr, nColumn )
-   METHOD  setCompletionMode( nMode )          INLINE  Qt_QCompleter_setCompletionMode( ::pPtr, nMode )
-   METHOD  setCompletionRole( nRole )          INLINE  Qt_QCompleter_setCompletionRole( ::pPtr, nRole )
-   METHOD  setCurrentRow( nRow )               INLINE  Qt_QCompleter_setCurrentRow( ::pPtr, nRow )
-   METHOD  setModel( pModel )                  INLINE  Qt_QCompleter_setModel( ::pPtr, pModel )
-   METHOD  setModelSorting( nSorting )         INLINE  Qt_QCompleter_setModelSorting( ::pPtr, nSorting )
-   METHOD  setPopup( pPopup )                  INLINE  Qt_QCompleter_setPopup( ::pPtr, pPopup )
-   METHOD  setWidget( pWidget )                INLINE  Qt_QCompleter_setWidget( ::pPtr, pWidget )
-   METHOD  splitPath( cPath )                  INLINE  Qt_QCompleter_splitPath( ::pPtr, cPath )
-   METHOD  widget()                            INLINE  Qt_QCompleter_widget( ::pPtr )
-   METHOD  wrapAround()                        INLINE  Qt_QCompleter_wrapAround( ::pPtr )
-   METHOD  complete( pRect )                   INLINE  Qt_QCompleter_complete( ::pPtr, pRect )
-   METHOD  setCompletionPrefix( cPrefix )      INLINE  Qt_QCompleter_setCompletionPrefix( ::pPtr, cPrefix )
-   METHOD  setWrapAround( lWrap )              INLINE  Qt_QCompleter_setWrapAround( ::pPtr, lWrap )
+   METHOD  caseSensitivity()
+   METHOD  completionColumn()
+   METHOD  completionCount()
+   METHOD  completionMode()
+   METHOD  completionModel()
+   METHOD  completionPrefix()
+   METHOD  completionRole()
+   METHOD  currentCompletion()
+   METHOD  currentIndex()
+   METHOD  currentRow()
+   METHOD  model()
+   METHOD  modelSorting()
+   METHOD  pathFromIndex( pIndex )
+   METHOD  popup()
+   METHOD  setCaseSensitivity( nCaseSensitivity )
+   METHOD  setCompletionColumn( nColumn )
+   METHOD  setCompletionMode( nMode )
+   METHOD  setCompletionRole( nRole )
+   METHOD  setCurrentRow( nRow )
+   METHOD  setModel( pModel )
+   METHOD  setModelSorting( nSorting )
+   METHOD  setPopup( pPopup )
+   METHOD  setWidget( pWidget )
+   METHOD  splitPath( cPath )
+   METHOD  widget()
+   METHOD  wrapAround()
+   METHOD  complete( pRect )
+   METHOD  setCompletionPrefix( cPrefix )
+   METHOD  setWrapAround( lWrap )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QCompleter
-
+METHOD QCompleter:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QCompleter( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QCompleter
-
+METHOD QCompleter:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QCompleter:caseSensitivity()
+   RETURN Qt_QCompleter_caseSensitivity( ::pPtr )
+
+
+METHOD QCompleter:completionColumn()
+   RETURN Qt_QCompleter_completionColumn( ::pPtr )
+
+
+METHOD QCompleter:completionCount()
+   RETURN Qt_QCompleter_completionCount( ::pPtr )
+
+
+METHOD QCompleter:completionMode()
+   RETURN Qt_QCompleter_completionMode( ::pPtr )
+
+
+METHOD QCompleter:completionModel()
+   RETURN Qt_QCompleter_completionModel( ::pPtr )
+
+
+METHOD QCompleter:completionPrefix()
+   RETURN Qt_QCompleter_completionPrefix( ::pPtr )
+
+
+METHOD QCompleter:completionRole()
+   RETURN Qt_QCompleter_completionRole( ::pPtr )
+
+
+METHOD QCompleter:currentCompletion()
+   RETURN Qt_QCompleter_currentCompletion( ::pPtr )
+
+
+METHOD QCompleter:currentIndex()
+   RETURN Qt_QCompleter_currentIndex( ::pPtr )
+
+
+METHOD QCompleter:currentRow()
+   RETURN Qt_QCompleter_currentRow( ::pPtr )
+
+
+METHOD QCompleter:model()
+   RETURN Qt_QCompleter_model( ::pPtr )
+
+
+METHOD QCompleter:modelSorting()
+   RETURN Qt_QCompleter_modelSorting( ::pPtr )
+
+
+METHOD QCompleter:pathFromIndex( pIndex )
+   RETURN Qt_QCompleter_pathFromIndex( ::pPtr, pIndex )
+
+
+METHOD QCompleter:popup()
+   RETURN Qt_QCompleter_popup( ::pPtr )
+
+
+METHOD QCompleter:setCaseSensitivity( nCaseSensitivity )
+   RETURN Qt_QCompleter_setCaseSensitivity( ::pPtr, nCaseSensitivity )
+
+
+METHOD QCompleter:setCompletionColumn( nColumn )
+   RETURN Qt_QCompleter_setCompletionColumn( ::pPtr, nColumn )
+
+
+METHOD QCompleter:setCompletionMode( nMode )
+   RETURN Qt_QCompleter_setCompletionMode( ::pPtr, nMode )
+
+
+METHOD QCompleter:setCompletionRole( nRole )
+   RETURN Qt_QCompleter_setCompletionRole( ::pPtr, nRole )
+
+
+METHOD QCompleter:setCurrentRow( nRow )
+   RETURN Qt_QCompleter_setCurrentRow( ::pPtr, nRow )
+
+
+METHOD QCompleter:setModel( pModel )
+   RETURN Qt_QCompleter_setModel( ::pPtr, pModel )
+
+
+METHOD QCompleter:setModelSorting( nSorting )
+   RETURN Qt_QCompleter_setModelSorting( ::pPtr, nSorting )
+
+
+METHOD QCompleter:setPopup( pPopup )
+   RETURN Qt_QCompleter_setPopup( ::pPtr, pPopup )
+
+
+METHOD QCompleter:setWidget( pWidget )
+   RETURN Qt_QCompleter_setWidget( ::pPtr, pWidget )
+
+
+METHOD QCompleter:splitPath( cPath )
+   RETURN Qt_QCompleter_splitPath( ::pPtr, cPath )
+
+
+METHOD QCompleter:widget()
+   RETURN Qt_QCompleter_widget( ::pPtr )
+
+
+METHOD QCompleter:wrapAround()
+   RETURN Qt_QCompleter_wrapAround( ::pPtr )
+
+
+METHOD QCompleter:complete( pRect )
+   RETURN Qt_QCompleter_complete( ::pPtr, pRect )
+
+
+METHOD QCompleter:setCompletionPrefix( cPrefix )
+   RETURN Qt_QCompleter_setCompletionPrefix( ::pPtr, cPrefix )
+
+
+METHOD QCompleter:setWrapAround( lWrap )
+   RETURN Qt_QCompleter_setWrapAround( ::pPtr, lWrap )
+

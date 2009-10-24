@@ -71,41 +71,82 @@ CREATE CLASS QPaintDevice
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  depth()                             INLINE  Qt_QPaintDevice_depth( ::pPtr )
-   METHOD  height()                            INLINE  Qt_QPaintDevice_height( ::pPtr )
-   METHOD  heightMM()                          INLINE  Qt_QPaintDevice_heightMM( ::pPtr )
-   METHOD  logicalDpiX()                       INLINE  Qt_QPaintDevice_logicalDpiX( ::pPtr )
-   METHOD  logicalDpiY()                       INLINE  Qt_QPaintDevice_logicalDpiY( ::pPtr )
-   METHOD  numColors()                         INLINE  Qt_QPaintDevice_numColors( ::pPtr )
-   METHOD  paintEngine()                       INLINE  Qt_QPaintDevice_paintEngine( ::pPtr )
-   METHOD  paintingActive()                    INLINE  Qt_QPaintDevice_paintingActive( ::pPtr )
-   METHOD  physicalDpiX()                      INLINE  Qt_QPaintDevice_physicalDpiX( ::pPtr )
-   METHOD  physicalDpiY()                      INLINE  Qt_QPaintDevice_physicalDpiY( ::pPtr )
-   METHOD  width()                             INLINE  Qt_QPaintDevice_width( ::pPtr )
-   METHOD  widthMM()                           INLINE  Qt_QPaintDevice_widthMM( ::pPtr )
+   METHOD  depth()
+   METHOD  height()
+   METHOD  heightMM()
+   METHOD  logicalDpiX()
+   METHOD  logicalDpiY()
+   METHOD  numColors()
+   METHOD  paintEngine()
+   METHOD  paintingActive()
+   METHOD  physicalDpiX()
+   METHOD  physicalDpiY()
+   METHOD  width()
+   METHOD  widthMM()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QPaintDevice
-
+METHOD QPaintDevice:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QPaintDevice( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QPaintDevice
-
+METHOD QPaintDevice:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QPaintDevice:depth()
+   RETURN Qt_QPaintDevice_depth( ::pPtr )
+
+
+METHOD QPaintDevice:height()
+   RETURN Qt_QPaintDevice_height( ::pPtr )
+
+
+METHOD QPaintDevice:heightMM()
+   RETURN Qt_QPaintDevice_heightMM( ::pPtr )
+
+
+METHOD QPaintDevice:logicalDpiX()
+   RETURN Qt_QPaintDevice_logicalDpiX( ::pPtr )
+
+
+METHOD QPaintDevice:logicalDpiY()
+   RETURN Qt_QPaintDevice_logicalDpiY( ::pPtr )
+
+
+METHOD QPaintDevice:numColors()
+   RETURN Qt_QPaintDevice_numColors( ::pPtr )
+
+
+METHOD QPaintDevice:paintEngine()
+   RETURN Qt_QPaintDevice_paintEngine( ::pPtr )
+
+
+METHOD QPaintDevice:paintingActive()
+   RETURN Qt_QPaintDevice_paintingActive( ::pPtr )
+
+
+METHOD QPaintDevice:physicalDpiX()
+   RETURN Qt_QPaintDevice_physicalDpiX( ::pPtr )
+
+
+METHOD QPaintDevice:physicalDpiY()
+   RETURN Qt_QPaintDevice_physicalDpiY( ::pPtr )
+
+
+METHOD QPaintDevice:width()
+   RETURN Qt_QPaintDevice_width( ::pPtr )
+
+
+METHOD QPaintDevice:widthMM()
+   RETURN Qt_QPaintDevice_widthMM( ::pPtr )
+

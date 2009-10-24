@@ -71,40 +71,77 @@ CREATE CLASS QInputContext INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  filterEvent( pEvent )               INLINE  Qt_QInputContext_filterEvent( ::pPtr, pEvent )
-   METHOD  font()                              INLINE  Qt_QInputContext_font( ::pPtr )
-   METHOD  identifierName()                    INLINE  Qt_QInputContext_identifierName( ::pPtr )
-   METHOD  isComposing()                       INLINE  Qt_QInputContext_isComposing( ::pPtr )
-   METHOD  language()                          INLINE  Qt_QInputContext_language( ::pPtr )
-   METHOD  mouseHandler( nX, pEvent )          INLINE  Qt_QInputContext_mouseHandler( ::pPtr, nX, pEvent )
-   METHOD  reset()                             INLINE  Qt_QInputContext_reset( ::pPtr )
-   METHOD  sendEvent( pEvent )                 INLINE  Qt_QInputContext_sendEvent( ::pPtr, pEvent )
-   METHOD  standardFormat( nS )                INLINE  Qt_QInputContext_standardFormat( ::pPtr, nS )
-   METHOD  update()                            INLINE  Qt_QInputContext_update( ::pPtr )
-   METHOD  widgetDestroyed( pWidget )          INLINE  Qt_QInputContext_widgetDestroyed( ::pPtr, pWidget )
+   METHOD  filterEvent( pEvent )
+   METHOD  font()
+   METHOD  identifierName()
+   METHOD  isComposing()
+   METHOD  language()
+   METHOD  mouseHandler( nX, pEvent )
+   METHOD  reset()
+   METHOD  sendEvent( pEvent )
+   METHOD  standardFormat( nS )
+   METHOD  update()
+   METHOD  widgetDestroyed( pWidget )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QInputContext
-
+METHOD QInputContext:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QInputContext( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QInputContext
-
+METHOD QInputContext:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QInputContext:filterEvent( pEvent )
+   RETURN Qt_QInputContext_filterEvent( ::pPtr, pEvent )
+
+
+METHOD QInputContext:font()
+   RETURN Qt_QInputContext_font( ::pPtr )
+
+
+METHOD QInputContext:identifierName()
+   RETURN Qt_QInputContext_identifierName( ::pPtr )
+
+
+METHOD QInputContext:isComposing()
+   RETURN Qt_QInputContext_isComposing( ::pPtr )
+
+
+METHOD QInputContext:language()
+   RETURN Qt_QInputContext_language( ::pPtr )
+
+
+METHOD QInputContext:mouseHandler( nX, pEvent )
+   RETURN Qt_QInputContext_mouseHandler( ::pPtr, nX, pEvent )
+
+
+METHOD QInputContext:reset()
+   RETURN Qt_QInputContext_reset( ::pPtr )
+
+
+METHOD QInputContext:sendEvent( pEvent )
+   RETURN Qt_QInputContext_sendEvent( ::pPtr, pEvent )
+
+
+METHOD QInputContext:standardFormat( nS )
+   RETURN Qt_QInputContext_standardFormat( ::pPtr, nS )
+
+
+METHOD QInputContext:update()
+   RETURN Qt_QInputContext_update( ::pPtr )
+
+
+METHOD QInputContext:widgetDestroyed( pWidget )
+   RETURN Qt_QInputContext_widgetDestroyed( ::pPtr, pWidget )
+

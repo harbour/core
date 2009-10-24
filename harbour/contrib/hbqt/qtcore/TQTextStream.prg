@@ -71,65 +71,202 @@ CREATE CLASS QTextStream
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  atEnd()                             INLINE  Qt_QTextStream_atEnd( ::pPtr )
-   METHOD  autoDetectUnicode()                 INLINE  Qt_QTextStream_autoDetectUnicode( ::pPtr )
-   METHOD  codec()                             INLINE  Qt_QTextStream_codec( ::pPtr )
-   METHOD  device()                            INLINE  Qt_QTextStream_device( ::pPtr )
-   METHOD  fieldAlignment()                    INLINE  Qt_QTextStream_fieldAlignment( ::pPtr )
-   METHOD  fieldWidth()                        INLINE  Qt_QTextStream_fieldWidth( ::pPtr )
-   METHOD  flush()                             INLINE  Qt_QTextStream_flush( ::pPtr )
-   METHOD  generateByteOrderMark()             INLINE  Qt_QTextStream_generateByteOrderMark( ::pPtr )
-   METHOD  integerBase()                       INLINE  Qt_QTextStream_integerBase( ::pPtr )
-   METHOD  locale()                            INLINE  Qt_QTextStream_locale( ::pPtr )
-   METHOD  numberFlags()                       INLINE  Qt_QTextStream_numberFlags( ::pPtr )
-   METHOD  pos()                               INLINE  Qt_QTextStream_pos( ::pPtr )
-   METHOD  read( nMaxlen )                     INLINE  Qt_QTextStream_read( ::pPtr, nMaxlen )
-   METHOD  readAll()                           INLINE  Qt_QTextStream_readAll( ::pPtr )
-   METHOD  readLine( nMaxlen )                 INLINE  Qt_QTextStream_readLine( ::pPtr, nMaxlen )
-   METHOD  realNumberNotation()                INLINE  Qt_QTextStream_realNumberNotation( ::pPtr )
-   METHOD  realNumberPrecision()               INLINE  Qt_QTextStream_realNumberPrecision( ::pPtr )
-   METHOD  reset()                             INLINE  Qt_QTextStream_reset( ::pPtr )
-   METHOD  resetStatus()                       INLINE  Qt_QTextStream_resetStatus( ::pPtr )
-   METHOD  seek( nPos )                        INLINE  Qt_QTextStream_seek( ::pPtr, nPos )
-   METHOD  setAutoDetectUnicode( lEnabled )    INLINE  Qt_QTextStream_setAutoDetectUnicode( ::pPtr, lEnabled )
-   METHOD  setCodec( pCodec )                  INLINE  Qt_QTextStream_setCodec( ::pPtr, pCodec )
-   METHOD  setCodec_1( pCodecName )            INLINE  Qt_QTextStream_setCodec_1( ::pPtr, pCodecName )
-   METHOD  setDevice( pDevice )                INLINE  Qt_QTextStream_setDevice( ::pPtr, pDevice )
-   METHOD  setFieldAlignment( nMode )          INLINE  Qt_QTextStream_setFieldAlignment( ::pPtr, nMode )
-   METHOD  setFieldWidth( nWidth )             INLINE  Qt_QTextStream_setFieldWidth( ::pPtr, nWidth )
-   METHOD  setGenerateByteOrderMark( lGenerate )  INLINE  Qt_QTextStream_setGenerateByteOrderMark( ::pPtr, lGenerate )
-   METHOD  setIntegerBase( nBase )             INLINE  Qt_QTextStream_setIntegerBase( ::pPtr, nBase )
-   METHOD  setLocale( pLocale )                INLINE  Qt_QTextStream_setLocale( ::pPtr, pLocale )
-   METHOD  setNumberFlags( nFlags )            INLINE  Qt_QTextStream_setNumberFlags( ::pPtr, nFlags )
-   METHOD  setPadChar( nCh )                   INLINE  Qt_QTextStream_setPadChar( ::pPtr, nCh )
-   METHOD  setRealNumberNotation( nNotation )  INLINE  Qt_QTextStream_setRealNumberNotation( ::pPtr, nNotation )
-   METHOD  setRealNumberPrecision( nPrecision )  INLINE  Qt_QTextStream_setRealNumberPrecision( ::pPtr, nPrecision )
-   METHOD  setStatus( nStatus )                INLINE  Qt_QTextStream_setStatus( ::pPtr, nStatus )
-   METHOD  skipWhiteSpace()                    INLINE  Qt_QTextStream_skipWhiteSpace( ::pPtr )
-   METHOD  status()                            INLINE  Qt_QTextStream_status( ::pPtr )
+   METHOD  atEnd()
+   METHOD  autoDetectUnicode()
+   METHOD  codec()
+   METHOD  device()
+   METHOD  fieldAlignment()
+   METHOD  fieldWidth()
+   METHOD  flush()
+   METHOD  generateByteOrderMark()
+   METHOD  integerBase()
+   METHOD  locale()
+   METHOD  numberFlags()
+   METHOD  pos()
+   METHOD  read( nMaxlen )
+   METHOD  readAll()
+   METHOD  readLine( nMaxlen )
+   METHOD  realNumberNotation()
+   METHOD  realNumberPrecision()
+   METHOD  reset()
+   METHOD  resetStatus()
+   METHOD  seek( nPos )
+   METHOD  setAutoDetectUnicode( lEnabled )
+   METHOD  setCodec( pCodec )
+   METHOD  setCodec_1( pCodecName )
+   METHOD  setDevice( pDevice )
+   METHOD  setFieldAlignment( nMode )
+   METHOD  setFieldWidth( nWidth )
+   METHOD  setGenerateByteOrderMark( lGenerate )
+   METHOD  setIntegerBase( nBase )
+   METHOD  setLocale( pLocale )
+   METHOD  setNumberFlags( nFlags )
+   METHOD  setPadChar( nCh )
+   METHOD  setRealNumberNotation( nNotation )
+   METHOD  setRealNumberPrecision( nPrecision )
+   METHOD  setStatus( nStatus )
+   METHOD  skipWhiteSpace()
+   METHOD  status()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextStream
-
+METHOD QTextStream:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextStream( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextStream
-
+METHOD QTextStream:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextStream:atEnd()
+   RETURN Qt_QTextStream_atEnd( ::pPtr )
+
+
+METHOD QTextStream:autoDetectUnicode()
+   RETURN Qt_QTextStream_autoDetectUnicode( ::pPtr )
+
+
+METHOD QTextStream:codec()
+   RETURN Qt_QTextStream_codec( ::pPtr )
+
+
+METHOD QTextStream:device()
+   RETURN Qt_QTextStream_device( ::pPtr )
+
+
+METHOD QTextStream:fieldAlignment()
+   RETURN Qt_QTextStream_fieldAlignment( ::pPtr )
+
+
+METHOD QTextStream:fieldWidth()
+   RETURN Qt_QTextStream_fieldWidth( ::pPtr )
+
+
+METHOD QTextStream:flush()
+   RETURN Qt_QTextStream_flush( ::pPtr )
+
+
+METHOD QTextStream:generateByteOrderMark()
+   RETURN Qt_QTextStream_generateByteOrderMark( ::pPtr )
+
+
+METHOD QTextStream:integerBase()
+   RETURN Qt_QTextStream_integerBase( ::pPtr )
+
+
+METHOD QTextStream:locale()
+   RETURN Qt_QTextStream_locale( ::pPtr )
+
+
+METHOD QTextStream:numberFlags()
+   RETURN Qt_QTextStream_numberFlags( ::pPtr )
+
+
+METHOD QTextStream:pos()
+   RETURN Qt_QTextStream_pos( ::pPtr )
+
+
+METHOD QTextStream:read( nMaxlen )
+   RETURN Qt_QTextStream_read( ::pPtr, nMaxlen )
+
+
+METHOD QTextStream:readAll()
+   RETURN Qt_QTextStream_readAll( ::pPtr )
+
+
+METHOD QTextStream:readLine( nMaxlen )
+   RETURN Qt_QTextStream_readLine( ::pPtr, nMaxlen )
+
+
+METHOD QTextStream:realNumberNotation()
+   RETURN Qt_QTextStream_realNumberNotation( ::pPtr )
+
+
+METHOD QTextStream:realNumberPrecision()
+   RETURN Qt_QTextStream_realNumberPrecision( ::pPtr )
+
+
+METHOD QTextStream:reset()
+   RETURN Qt_QTextStream_reset( ::pPtr )
+
+
+METHOD QTextStream:resetStatus()
+   RETURN Qt_QTextStream_resetStatus( ::pPtr )
+
+
+METHOD QTextStream:seek( nPos )
+   RETURN Qt_QTextStream_seek( ::pPtr, nPos )
+
+
+METHOD QTextStream:setAutoDetectUnicode( lEnabled )
+   RETURN Qt_QTextStream_setAutoDetectUnicode( ::pPtr, lEnabled )
+
+
+METHOD QTextStream:setCodec( pCodec )
+   RETURN Qt_QTextStream_setCodec( ::pPtr, pCodec )
+
+
+METHOD QTextStream:setCodec_1( pCodecName )
+   RETURN Qt_QTextStream_setCodec_1( ::pPtr, pCodecName )
+
+
+METHOD QTextStream:setDevice( pDevice )
+   RETURN Qt_QTextStream_setDevice( ::pPtr, pDevice )
+
+
+METHOD QTextStream:setFieldAlignment( nMode )
+   RETURN Qt_QTextStream_setFieldAlignment( ::pPtr, nMode )
+
+
+METHOD QTextStream:setFieldWidth( nWidth )
+   RETURN Qt_QTextStream_setFieldWidth( ::pPtr, nWidth )
+
+
+METHOD QTextStream:setGenerateByteOrderMark( lGenerate )
+   RETURN Qt_QTextStream_setGenerateByteOrderMark( ::pPtr, lGenerate )
+
+
+METHOD QTextStream:setIntegerBase( nBase )
+   RETURN Qt_QTextStream_setIntegerBase( ::pPtr, nBase )
+
+
+METHOD QTextStream:setLocale( pLocale )
+   RETURN Qt_QTextStream_setLocale( ::pPtr, pLocale )
+
+
+METHOD QTextStream:setNumberFlags( nFlags )
+   RETURN Qt_QTextStream_setNumberFlags( ::pPtr, nFlags )
+
+
+METHOD QTextStream:setPadChar( nCh )
+   RETURN Qt_QTextStream_setPadChar( ::pPtr, nCh )
+
+
+METHOD QTextStream:setRealNumberNotation( nNotation )
+   RETURN Qt_QTextStream_setRealNumberNotation( ::pPtr, nNotation )
+
+
+METHOD QTextStream:setRealNumberPrecision( nPrecision )
+   RETURN Qt_QTextStream_setRealNumberPrecision( ::pPtr, nPrecision )
+
+
+METHOD QTextStream:setStatus( nStatus )
+   RETURN Qt_QTextStream_setStatus( ::pPtr, nStatus )
+
+
+METHOD QTextStream:skipWhiteSpace()
+   RETURN Qt_QTextStream_skipWhiteSpace( ::pPtr )
+
+
+METHOD QTextStream:status()
+   RETURN Qt_QTextStream_status( ::pPtr )
+

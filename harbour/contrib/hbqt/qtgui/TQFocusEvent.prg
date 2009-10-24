@@ -71,32 +71,37 @@ CREATE CLASS QFocusEvent INHERIT QEvent
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  gotFocus()                          INLINE  Qt_QFocusEvent_gotFocus( ::pPtr )
-   METHOD  lostFocus()                         INLINE  Qt_QFocusEvent_lostFocus( ::pPtr )
-   METHOD  reason()                            INLINE  Qt_QFocusEvent_reason( ::pPtr )
+   METHOD  gotFocus()
+   METHOD  lostFocus()
+   METHOD  reason()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QFocusEvent
-
+METHOD QFocusEvent:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QFocusEvent( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QFocusEvent
-
+METHOD QFocusEvent:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QFocusEvent:gotFocus()
+   RETURN Qt_QFocusEvent_gotFocus( ::pPtr )
+
+
+METHOD QFocusEvent:lostFocus()
+   RETURN Qt_QFocusEvent_lostFocus( ::pPtr )
+
+
+METHOD QFocusEvent:reason()
+   RETURN Qt_QFocusEvent_reason( ::pPtr )
+

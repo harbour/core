@@ -71,33 +71,42 @@ CREATE CLASS QSlider INHERIT QAbstractSlider
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  setTickInterval( nTi )              INLINE  Qt_QSlider_setTickInterval( ::pPtr, nTi )
-   METHOD  setTickPosition( nPosition )        INLINE  Qt_QSlider_setTickPosition( ::pPtr, nPosition )
-   METHOD  tickInterval()                      INLINE  Qt_QSlider_tickInterval( ::pPtr )
-   METHOD  tickPosition()                      INLINE  Qt_QSlider_tickPosition( ::pPtr )
+   METHOD  setTickInterval( nTi )
+   METHOD  setTickPosition( nPosition )
+   METHOD  tickInterval()
+   METHOD  tickPosition()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QSlider
-
+METHOD QSlider:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QSlider( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QSlider
-
+METHOD QSlider:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QSlider:setTickInterval( nTi )
+   RETURN Qt_QSlider_setTickInterval( ::pPtr, nTi )
+
+
+METHOD QSlider:setTickPosition( nPosition )
+   RETURN Qt_QSlider_setTickPosition( ::pPtr, nPosition )
+
+
+METHOD QSlider:tickInterval()
+   RETURN Qt_QSlider_tickInterval( ::pPtr )
+
+
+METHOD QSlider:tickPosition()
+   RETURN Qt_QSlider_tickPosition( ::pPtr )
+

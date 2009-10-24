@@ -71,58 +71,167 @@ CREATE CLASS QLabel INHERIT QFrame
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  alignment()                         INLINE  Qt_QLabel_alignment( ::pPtr )
-   METHOD  buddy()                             INLINE  Qt_QLabel_buddy( ::pPtr )
-   METHOD  hasScaledContents()                 INLINE  Qt_QLabel_hasScaledContents( ::pPtr )
-   METHOD  indent()                            INLINE  Qt_QLabel_indent( ::pPtr )
-   METHOD  margin()                            INLINE  Qt_QLabel_margin( ::pPtr )
-   METHOD  movie()                             INLINE  Qt_QLabel_movie( ::pPtr )
-   METHOD  openExternalLinks()                 INLINE  Qt_QLabel_openExternalLinks( ::pPtr )
-   METHOD  picture()                           INLINE  Qt_QLabel_picture( ::pPtr )
-   METHOD  pixmap()                            INLINE  Qt_QLabel_pixmap( ::pPtr )
-   METHOD  setAlignment( nQt_Alignment )       INLINE  Qt_QLabel_setAlignment( ::pPtr, nQt_Alignment )
-   METHOD  setBuddy( pBuddy )                  INLINE  Qt_QLabel_setBuddy( ::pPtr, pBuddy )
-   METHOD  setIndent( nInt )                   INLINE  Qt_QLabel_setIndent( ::pPtr, nInt )
-   METHOD  setMargin( nInt )                   INLINE  Qt_QLabel_setMargin( ::pPtr, nInt )
-   METHOD  setOpenExternalLinks( lOpen )       INLINE  Qt_QLabel_setOpenExternalLinks( ::pPtr, lOpen )
-   METHOD  setScaledContents( lBool )          INLINE  Qt_QLabel_setScaledContents( ::pPtr, lBool )
-   METHOD  setTextFormat( nQt_TextFormat )     INLINE  Qt_QLabel_setTextFormat( ::pPtr, nQt_TextFormat )
-   METHOD  setTextInteractionFlags( nFlags )   INLINE  Qt_QLabel_setTextInteractionFlags( ::pPtr, nFlags )
-   METHOD  setWordWrap( lOn )                  INLINE  Qt_QLabel_setWordWrap( ::pPtr, lOn )
-   METHOD  text()                              INLINE  Qt_QLabel_text( ::pPtr )
-   METHOD  textFormat()                        INLINE  Qt_QLabel_textFormat( ::pPtr )
-   METHOD  textInteractionFlags()              INLINE  Qt_QLabel_textInteractionFlags( ::pPtr )
-   METHOD  wordWrap()                          INLINE  Qt_QLabel_wordWrap( ::pPtr )
-   METHOD  clear()                             INLINE  Qt_QLabel_clear( ::pPtr )
-   METHOD  setMovie( pMovie )                  INLINE  Qt_QLabel_setMovie( ::pPtr, pMovie )
-   METHOD  setNum( nNum )                      INLINE  Qt_QLabel_setNum( ::pPtr, nNum )
-   METHOD  setNum_1( nNum )                    INLINE  Qt_QLabel_setNum_1( ::pPtr, nNum )
-   METHOD  setPicture( pPicture )              INLINE  Qt_QLabel_setPicture( ::pPtr, pPicture )
-   METHOD  setPixmap( pQPixmap )               INLINE  Qt_QLabel_setPixmap( ::pPtr, pQPixmap )
-   METHOD  setText( cQString )                 INLINE  Qt_QLabel_setText( ::pPtr, cQString )
+   METHOD  alignment()
+   METHOD  buddy()
+   METHOD  hasScaledContents()
+   METHOD  indent()
+   METHOD  margin()
+   METHOD  movie()
+   METHOD  openExternalLinks()
+   METHOD  picture()
+   METHOD  pixmap()
+   METHOD  setAlignment( nQt_Alignment )
+   METHOD  setBuddy( pBuddy )
+   METHOD  setIndent( nInt )
+   METHOD  setMargin( nInt )
+   METHOD  setOpenExternalLinks( lOpen )
+   METHOD  setScaledContents( lBool )
+   METHOD  setTextFormat( nQt_TextFormat )
+   METHOD  setTextInteractionFlags( nFlags )
+   METHOD  setWordWrap( lOn )
+   METHOD  text()
+   METHOD  textFormat()
+   METHOD  textInteractionFlags()
+   METHOD  wordWrap()
+   METHOD  clear()
+   METHOD  setMovie( pMovie )
+   METHOD  setNum( nNum )
+   METHOD  setNum_1( nNum )
+   METHOD  setPicture( pPicture )
+   METHOD  setPixmap( pQPixmap )
+   METHOD  setText( cQString )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QLabel
-
+METHOD QLabel:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QLabel( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QLabel
-
+METHOD QLabel:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QLabel:alignment()
+   RETURN Qt_QLabel_alignment( ::pPtr )
+
+
+METHOD QLabel:buddy()
+   RETURN Qt_QLabel_buddy( ::pPtr )
+
+
+METHOD QLabel:hasScaledContents()
+   RETURN Qt_QLabel_hasScaledContents( ::pPtr )
+
+
+METHOD QLabel:indent()
+   RETURN Qt_QLabel_indent( ::pPtr )
+
+
+METHOD QLabel:margin()
+   RETURN Qt_QLabel_margin( ::pPtr )
+
+
+METHOD QLabel:movie()
+   RETURN Qt_QLabel_movie( ::pPtr )
+
+
+METHOD QLabel:openExternalLinks()
+   RETURN Qt_QLabel_openExternalLinks( ::pPtr )
+
+
+METHOD QLabel:picture()
+   RETURN Qt_QLabel_picture( ::pPtr )
+
+
+METHOD QLabel:pixmap()
+   RETURN Qt_QLabel_pixmap( ::pPtr )
+
+
+METHOD QLabel:setAlignment( nQt_Alignment )
+   RETURN Qt_QLabel_setAlignment( ::pPtr, nQt_Alignment )
+
+
+METHOD QLabel:setBuddy( pBuddy )
+   RETURN Qt_QLabel_setBuddy( ::pPtr, pBuddy )
+
+
+METHOD QLabel:setIndent( nInt )
+   RETURN Qt_QLabel_setIndent( ::pPtr, nInt )
+
+
+METHOD QLabel:setMargin( nInt )
+   RETURN Qt_QLabel_setMargin( ::pPtr, nInt )
+
+
+METHOD QLabel:setOpenExternalLinks( lOpen )
+   RETURN Qt_QLabel_setOpenExternalLinks( ::pPtr, lOpen )
+
+
+METHOD QLabel:setScaledContents( lBool )
+   RETURN Qt_QLabel_setScaledContents( ::pPtr, lBool )
+
+
+METHOD QLabel:setTextFormat( nQt_TextFormat )
+   RETURN Qt_QLabel_setTextFormat( ::pPtr, nQt_TextFormat )
+
+
+METHOD QLabel:setTextInteractionFlags( nFlags )
+   RETURN Qt_QLabel_setTextInteractionFlags( ::pPtr, nFlags )
+
+
+METHOD QLabel:setWordWrap( lOn )
+   RETURN Qt_QLabel_setWordWrap( ::pPtr, lOn )
+
+
+METHOD QLabel:text()
+   RETURN Qt_QLabel_text( ::pPtr )
+
+
+METHOD QLabel:textFormat()
+   RETURN Qt_QLabel_textFormat( ::pPtr )
+
+
+METHOD QLabel:textInteractionFlags()
+   RETURN Qt_QLabel_textInteractionFlags( ::pPtr )
+
+
+METHOD QLabel:wordWrap()
+   RETURN Qt_QLabel_wordWrap( ::pPtr )
+
+
+METHOD QLabel:clear()
+   RETURN Qt_QLabel_clear( ::pPtr )
+
+
+METHOD QLabel:setMovie( pMovie )
+   RETURN Qt_QLabel_setMovie( ::pPtr, pMovie )
+
+
+METHOD QLabel:setNum( nNum )
+   RETURN Qt_QLabel_setNum( ::pPtr, nNum )
+
+
+METHOD QLabel:setNum_1( nNum )
+   RETURN Qt_QLabel_setNum_1( ::pPtr, nNum )
+
+
+METHOD QLabel:setPicture( pPicture )
+   RETURN Qt_QLabel_setPicture( ::pPtr, pPicture )
+
+
+METHOD QLabel:setPixmap( pQPixmap )
+   RETURN Qt_QLabel_setPixmap( ::pPtr, pQPixmap )
+
+
+METHOD QLabel:setText( cQString )
+   RETURN Qt_QLabel_setText( ::pPtr, cQString )
+

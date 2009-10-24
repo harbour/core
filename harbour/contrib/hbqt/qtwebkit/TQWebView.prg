@@ -71,55 +71,152 @@ CREATE CLASS QWebView INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  findText( cSubString, nOptions )    INLINE  Qt_QWebView_findText( ::pPtr, cSubString, nOptions )
-   METHOD  history()                           INLINE  Qt_QWebView_history( ::pPtr )
-   METHOD  icon()                              INLINE  Qt_QWebView_icon( ::pPtr )
-   METHOD  isModified()                        INLINE  Qt_QWebView_isModified( ::pPtr )
-   METHOD  load( pUrl )                        INLINE  Qt_QWebView_load( ::pPtr, pUrl )
-   METHOD  load_1( pRequest, nOperation, pBody )  INLINE  Qt_QWebView_load_1( ::pPtr, pRequest, nOperation, pBody )
-   METHOD  page()                              INLINE  Qt_QWebView_page( ::pPtr )
-   METHOD  pageAction( nAction )               INLINE  Qt_QWebView_pageAction( ::pPtr, nAction )
-   METHOD  selectedText()                      INLINE  Qt_QWebView_selectedText( ::pPtr )
-   METHOD  setContent( pData, cMimeType, pBaseUrl )  INLINE  Qt_QWebView_setContent( ::pPtr, pData, cMimeType, pBaseUrl )
-   METHOD  setHtml( cHtml, pBaseUrl )          INLINE  Qt_QWebView_setHtml( ::pPtr, cHtml, pBaseUrl )
-   METHOD  setPage( pPage )                    INLINE  Qt_QWebView_setPage( ::pPtr, pPage )
-   METHOD  setTextSizeMultiplier( nFactor )    INLINE  Qt_QWebView_setTextSizeMultiplier( ::pPtr, nFactor )
-   METHOD  setUrl( pUrl )                      INLINE  Qt_QWebView_setUrl( ::pPtr, pUrl )
-   METHOD  setZoomFactor( nFactor )            INLINE  Qt_QWebView_setZoomFactor( ::pPtr, nFactor )
-   METHOD  settings()                          INLINE  Qt_QWebView_settings( ::pPtr )
-   METHOD  textSizeMultiplier()                INLINE  Qt_QWebView_textSizeMultiplier( ::pPtr )
-   METHOD  title()                             INLINE  Qt_QWebView_title( ::pPtr )
-   METHOD  triggerPageAction( nAction, lChecked )  INLINE  Qt_QWebView_triggerPageAction( ::pPtr, nAction, lChecked )
-   METHOD  url()                               INLINE  Qt_QWebView_url( ::pPtr )
-   METHOD  zoomFactor()                        INLINE  Qt_QWebView_zoomFactor( ::pPtr )
-   METHOD  back()                              INLINE  Qt_QWebView_back( ::pPtr )
-   METHOD  forward()                           INLINE  Qt_QWebView_forward( ::pPtr )
-   METHOD  print( pPrinter )                   INLINE  Qt_QWebView_print( ::pPtr, pPrinter )
-   METHOD  reload()                            INLINE  Qt_QWebView_reload( ::pPtr )
-   METHOD  stop()                              INLINE  Qt_QWebView_stop( ::pPtr )
+   METHOD  findText( cSubString, nOptions )
+   METHOD  history()
+   METHOD  icon()
+   METHOD  isModified()
+   METHOD  load( pUrl )
+   METHOD  load_1( pRequest, nOperation, pBody )
+   METHOD  page()
+   METHOD  pageAction( nAction )
+   METHOD  selectedText()
+   METHOD  setContent( pData, cMimeType, pBaseUrl )
+   METHOD  setHtml( cHtml, pBaseUrl )
+   METHOD  setPage( pPage )
+   METHOD  setTextSizeMultiplier( nFactor )
+   METHOD  setUrl( pUrl )
+   METHOD  setZoomFactor( nFactor )
+   METHOD  settings()
+   METHOD  textSizeMultiplier()
+   METHOD  title()
+   METHOD  triggerPageAction( nAction, lChecked )
+   METHOD  url()
+   METHOD  zoomFactor()
+   METHOD  back()
+   METHOD  forward()
+   METHOD  print( pPrinter )
+   METHOD  reload()
+   METHOD  stop()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QWebView
-
+METHOD QWebView:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QWebView( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QWebView
-
+METHOD QWebView:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QWebView:findText( cSubString, nOptions )
+   RETURN Qt_QWebView_findText( ::pPtr, cSubString, nOptions )
+
+
+METHOD QWebView:history()
+   RETURN Qt_QWebView_history( ::pPtr )
+
+
+METHOD QWebView:icon()
+   RETURN Qt_QWebView_icon( ::pPtr )
+
+
+METHOD QWebView:isModified()
+   RETURN Qt_QWebView_isModified( ::pPtr )
+
+
+METHOD QWebView:load( pUrl )
+   RETURN Qt_QWebView_load( ::pPtr, pUrl )
+
+
+METHOD QWebView:load_1( pRequest, nOperation, pBody )
+   RETURN Qt_QWebView_load_1( ::pPtr, pRequest, nOperation, pBody )
+
+
+METHOD QWebView:page()
+   RETURN Qt_QWebView_page( ::pPtr )
+
+
+METHOD QWebView:pageAction( nAction )
+   RETURN Qt_QWebView_pageAction( ::pPtr, nAction )
+
+
+METHOD QWebView:selectedText()
+   RETURN Qt_QWebView_selectedText( ::pPtr )
+
+
+METHOD QWebView:setContent( pData, cMimeType, pBaseUrl )
+   RETURN Qt_QWebView_setContent( ::pPtr, pData, cMimeType, pBaseUrl )
+
+
+METHOD QWebView:setHtml( cHtml, pBaseUrl )
+   RETURN Qt_QWebView_setHtml( ::pPtr, cHtml, pBaseUrl )
+
+
+METHOD QWebView:setPage( pPage )
+   RETURN Qt_QWebView_setPage( ::pPtr, pPage )
+
+
+METHOD QWebView:setTextSizeMultiplier( nFactor )
+   RETURN Qt_QWebView_setTextSizeMultiplier( ::pPtr, nFactor )
+
+
+METHOD QWebView:setUrl( pUrl )
+   RETURN Qt_QWebView_setUrl( ::pPtr, pUrl )
+
+
+METHOD QWebView:setZoomFactor( nFactor )
+   RETURN Qt_QWebView_setZoomFactor( ::pPtr, nFactor )
+
+
+METHOD QWebView:settings()
+   RETURN Qt_QWebView_settings( ::pPtr )
+
+
+METHOD QWebView:textSizeMultiplier()
+   RETURN Qt_QWebView_textSizeMultiplier( ::pPtr )
+
+
+METHOD QWebView:title()
+   RETURN Qt_QWebView_title( ::pPtr )
+
+
+METHOD QWebView:triggerPageAction( nAction, lChecked )
+   RETURN Qt_QWebView_triggerPageAction( ::pPtr, nAction, lChecked )
+
+
+METHOD QWebView:url()
+   RETURN Qt_QWebView_url( ::pPtr )
+
+
+METHOD QWebView:zoomFactor()
+   RETURN Qt_QWebView_zoomFactor( ::pPtr )
+
+
+METHOD QWebView:back()
+   RETURN Qt_QWebView_back( ::pPtr )
+
+
+METHOD QWebView:forward()
+   RETURN Qt_QWebView_forward( ::pPtr )
+
+
+METHOD QWebView:print( pPrinter )
+   RETURN Qt_QWebView_print( ::pPtr, pPrinter )
+
+
+METHOD QWebView:reload()
+   RETURN Qt_QWebView_reload( ::pPtr )
+
+
+METHOD QWebView:stop()
+   RETURN Qt_QWebView_stop( ::pPtr )
+

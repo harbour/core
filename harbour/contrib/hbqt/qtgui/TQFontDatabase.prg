@@ -71,49 +71,122 @@ CREATE CLASS QFontDatabase
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  bold( cFamily, cStyle )             INLINE  Qt_QFontDatabase_bold( ::pPtr, cFamily, cStyle )
-   METHOD  families( nWritingSystem )          INLINE  Qt_QFontDatabase_families( ::pPtr, nWritingSystem )
-   METHOD  font( cFamily, cStyle, nPointSize )  INLINE  Qt_QFontDatabase_font( ::pPtr, cFamily, cStyle, nPointSize )
-   METHOD  isBitmapScalable( cFamily, cStyle )  INLINE  Qt_QFontDatabase_isBitmapScalable( ::pPtr, cFamily, cStyle )
-   METHOD  isFixedPitch( cFamily, cStyle )     INLINE  Qt_QFontDatabase_isFixedPitch( ::pPtr, cFamily, cStyle )
-   METHOD  isScalable( cFamily, cStyle )       INLINE  Qt_QFontDatabase_isScalable( ::pPtr, cFamily, cStyle )
-   METHOD  isSmoothlyScalable( cFamily, cStyle )  INLINE  Qt_QFontDatabase_isSmoothlyScalable( ::pPtr, cFamily, cStyle )
-   METHOD  italic( cFamily, cStyle )           INLINE  Qt_QFontDatabase_italic( ::pPtr, cFamily, cStyle )
-   METHOD  styleString( pFont )                INLINE  Qt_QFontDatabase_styleString( ::pPtr, pFont )
-   METHOD  styleString_1( pFontInfo )          INLINE  Qt_QFontDatabase_styleString_1( ::pPtr, pFontInfo )
-   METHOD  styles( cFamily )                   INLINE  Qt_QFontDatabase_styles( ::pPtr, cFamily )
-   METHOD  weight( cFamily, cStyle )           INLINE  Qt_QFontDatabase_weight( ::pPtr, cFamily, cStyle )
-   METHOD  addApplicationFont( cFileName )     INLINE  Qt_QFontDatabase_addApplicationFont( ::pPtr, cFileName )
-   METHOD  addApplicationFontFromData( pFontData )  INLINE  Qt_QFontDatabase_addApplicationFontFromData( ::pPtr, pFontData )
-   METHOD  applicationFontFamilies( nId )      INLINE  Qt_QFontDatabase_applicationFontFamilies( ::pPtr, nId )
-   METHOD  removeAllApplicationFonts()         INLINE  Qt_QFontDatabase_removeAllApplicationFonts( ::pPtr )
-   METHOD  removeApplicationFont( nId )        INLINE  Qt_QFontDatabase_removeApplicationFont( ::pPtr, nId )
-   METHOD  supportsThreadedFontRendering()     INLINE  Qt_QFontDatabase_supportsThreadedFontRendering( ::pPtr )
-   METHOD  writingSystemName( nWritingSystem )  INLINE  Qt_QFontDatabase_writingSystemName( ::pPtr, nWritingSystem )
-   METHOD  writingSystemSample( nWritingSystem )  INLINE  Qt_QFontDatabase_writingSystemSample( ::pPtr, nWritingSystem )
+   METHOD  bold( cFamily, cStyle )
+   METHOD  families( nWritingSystem )
+   METHOD  font( cFamily, cStyle, nPointSize )
+   METHOD  isBitmapScalable( cFamily, cStyle )
+   METHOD  isFixedPitch( cFamily, cStyle )
+   METHOD  isScalable( cFamily, cStyle )
+   METHOD  isSmoothlyScalable( cFamily, cStyle )
+   METHOD  italic( cFamily, cStyle )
+   METHOD  styleString( pFont )
+   METHOD  styleString_1( pFontInfo )
+   METHOD  styles( cFamily )
+   METHOD  weight( cFamily, cStyle )
+   METHOD  addApplicationFont( cFileName )
+   METHOD  addApplicationFontFromData( pFontData )
+   METHOD  applicationFontFamilies( nId )
+   METHOD  removeAllApplicationFonts()
+   METHOD  removeApplicationFont( nId )
+   METHOD  supportsThreadedFontRendering()
+   METHOD  writingSystemName( nWritingSystem )
+   METHOD  writingSystemSample( nWritingSystem )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QFontDatabase
-
+METHOD QFontDatabase:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QFontDatabase( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QFontDatabase
-
+METHOD QFontDatabase:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QFontDatabase:bold( cFamily, cStyle )
+   RETURN Qt_QFontDatabase_bold( ::pPtr, cFamily, cStyle )
+
+
+METHOD QFontDatabase:families( nWritingSystem )
+   RETURN Qt_QFontDatabase_families( ::pPtr, nWritingSystem )
+
+
+METHOD QFontDatabase:font( cFamily, cStyle, nPointSize )
+   RETURN Qt_QFontDatabase_font( ::pPtr, cFamily, cStyle, nPointSize )
+
+
+METHOD QFontDatabase:isBitmapScalable( cFamily, cStyle )
+   RETURN Qt_QFontDatabase_isBitmapScalable( ::pPtr, cFamily, cStyle )
+
+
+METHOD QFontDatabase:isFixedPitch( cFamily, cStyle )
+   RETURN Qt_QFontDatabase_isFixedPitch( ::pPtr, cFamily, cStyle )
+
+
+METHOD QFontDatabase:isScalable( cFamily, cStyle )
+   RETURN Qt_QFontDatabase_isScalable( ::pPtr, cFamily, cStyle )
+
+
+METHOD QFontDatabase:isSmoothlyScalable( cFamily, cStyle )
+   RETURN Qt_QFontDatabase_isSmoothlyScalable( ::pPtr, cFamily, cStyle )
+
+
+METHOD QFontDatabase:italic( cFamily, cStyle )
+   RETURN Qt_QFontDatabase_italic( ::pPtr, cFamily, cStyle )
+
+
+METHOD QFontDatabase:styleString( pFont )
+   RETURN Qt_QFontDatabase_styleString( ::pPtr, pFont )
+
+
+METHOD QFontDatabase:styleString_1( pFontInfo )
+   RETURN Qt_QFontDatabase_styleString_1( ::pPtr, pFontInfo )
+
+
+METHOD QFontDatabase:styles( cFamily )
+   RETURN Qt_QFontDatabase_styles( ::pPtr, cFamily )
+
+
+METHOD QFontDatabase:weight( cFamily, cStyle )
+   RETURN Qt_QFontDatabase_weight( ::pPtr, cFamily, cStyle )
+
+
+METHOD QFontDatabase:addApplicationFont( cFileName )
+   RETURN Qt_QFontDatabase_addApplicationFont( ::pPtr, cFileName )
+
+
+METHOD QFontDatabase:addApplicationFontFromData( pFontData )
+   RETURN Qt_QFontDatabase_addApplicationFontFromData( ::pPtr, pFontData )
+
+
+METHOD QFontDatabase:applicationFontFamilies( nId )
+   RETURN Qt_QFontDatabase_applicationFontFamilies( ::pPtr, nId )
+
+
+METHOD QFontDatabase:removeAllApplicationFonts()
+   RETURN Qt_QFontDatabase_removeAllApplicationFonts( ::pPtr )
+
+
+METHOD QFontDatabase:removeApplicationFont( nId )
+   RETURN Qt_QFontDatabase_removeApplicationFont( ::pPtr, nId )
+
+
+METHOD QFontDatabase:supportsThreadedFontRendering()
+   RETURN Qt_QFontDatabase_supportsThreadedFontRendering( ::pPtr )
+
+
+METHOD QFontDatabase:writingSystemName( nWritingSystem )
+   RETURN Qt_QFontDatabase_writingSystemName( ::pPtr, nWritingSystem )
+
+
+METHOD QFontDatabase:writingSystemSample( nWritingSystem )
+   RETURN Qt_QFontDatabase_writingSystemSample( ::pPtr, nWritingSystem )
+

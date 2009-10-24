@@ -71,15 +71,15 @@ CREATE CLASS QCursor
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  bitmap()                            INLINE  Qt_QCursor_bitmap( ::pPtr )
-   METHOD  hotSpot()                           INLINE  Qt_QCursor_hotSpot( ::pPtr )
-   METHOD  mask()                              INLINE  Qt_QCursor_mask( ::pPtr )
-   METHOD  pixmap()                            INLINE  Qt_QCursor_pixmap( ::pPtr )
-   METHOD  setShape( nShape )                  INLINE  Qt_QCursor_setShape( ::pPtr, nShape )
-   METHOD  shape()                             INLINE  Qt_QCursor_shape( ::pPtr )
-   METHOD  pos()                               INLINE  Qt_QCursor_pos( ::pPtr )
-   METHOD  setPos( nX, nY )                    INLINE  Qt_QCursor_setPos( ::pPtr, nX, nY )
-   METHOD  setPos_1( pP )                      INLINE  Qt_QCursor_setPos_1( ::pPtr, pP )
+   METHOD  bitmap()
+   METHOD  hotSpot()
+   METHOD  mask()
+   METHOD  pixmap()
+   METHOD  setShape( nShape )
+   METHOD  shape()
+   METHOD  pos()
+   METHOD  setPos( nX, nY )
+   METHOD  setPos_1( pP )
 
    ENDCLASS
 
@@ -91,16 +91,48 @@ METHOD New( ... ) CLASS QCursor
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QCursor
-
+METHOD QCursor:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QCursor:bitmap()
+   RETURN Qt_QCursor_bitmap( ::pPtr )
+
+
+METHOD QCursor:hotSpot()
+   RETURN Qt_QCursor_hotSpot( ::pPtr )
+
+
+METHOD QCursor:mask()
+   RETURN Qt_QCursor_mask( ::pPtr )
+
+
+METHOD QCursor:pixmap()
+   RETURN Qt_QCursor_pixmap( ::pPtr )
+
+
+METHOD QCursor:setShape( nShape )
+   RETURN Qt_QCursor_setShape( ::pPtr, nShape )
+
+
+METHOD QCursor:shape()
+   RETURN Qt_QCursor_shape( ::pPtr )
+
+
+METHOD QCursor:pos()
+   RETURN Qt_QCursor_pos( ::pPtr )
+
+
+METHOD QCursor:setPos( nX, nY )
+   RETURN Qt_QCursor_setPos( ::pPtr, nX, nY )
+
+
+METHOD QCursor:setPos_1( pP )
+   RETURN Qt_QCursor_setPos_1( ::pPtr, pP )
+

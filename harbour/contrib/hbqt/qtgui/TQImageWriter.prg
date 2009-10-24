@@ -71,47 +71,112 @@ CREATE CLASS QImageWriter
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  canWrite()                          INLINE  Qt_QImageWriter_canWrite( ::pPtr )
-   METHOD  compression()                       INLINE  Qt_QImageWriter_compression( ::pPtr )
-   METHOD  device()                            INLINE  Qt_QImageWriter_device( ::pPtr )
-   METHOD  error()                             INLINE  Qt_QImageWriter_error( ::pPtr )
-   METHOD  errorString()                       INLINE  Qt_QImageWriter_errorString( ::pPtr )
-   METHOD  fileName()                          INLINE  Qt_QImageWriter_fileName( ::pPtr )
-   METHOD  format()                            INLINE  Qt_QImageWriter_format( ::pPtr )
-   METHOD  gamma()                             INLINE  Qt_QImageWriter_gamma( ::pPtr )
-   METHOD  quality()                           INLINE  Qt_QImageWriter_quality( ::pPtr )
-   METHOD  setCompression( nCompression )      INLINE  Qt_QImageWriter_setCompression( ::pPtr, nCompression )
-   METHOD  setDevice( pDevice )                INLINE  Qt_QImageWriter_setDevice( ::pPtr, pDevice )
-   METHOD  setFileName( cFileName )            INLINE  Qt_QImageWriter_setFileName( ::pPtr, cFileName )
-   METHOD  setFormat( pFormat )                INLINE  Qt_QImageWriter_setFormat( ::pPtr, pFormat )
-   METHOD  setGamma( nGamma )                  INLINE  Qt_QImageWriter_setGamma( ::pPtr, nGamma )
-   METHOD  setQuality( nQuality )              INLINE  Qt_QImageWriter_setQuality( ::pPtr, nQuality )
-   METHOD  setText( cKey, cText )              INLINE  Qt_QImageWriter_setText( ::pPtr, cKey, cText )
-   METHOD  supportsOption( nOption )           INLINE  Qt_QImageWriter_supportsOption( ::pPtr, nOption )
-   METHOD  write( pImage )                     INLINE  Qt_QImageWriter_write( ::pPtr, pImage )
+   METHOD  canWrite()
+   METHOD  compression()
+   METHOD  device()
+   METHOD  error()
+   METHOD  errorString()
+   METHOD  fileName()
+   METHOD  format()
+   METHOD  gamma()
+   METHOD  quality()
+   METHOD  setCompression( nCompression )
+   METHOD  setDevice( pDevice )
+   METHOD  setFileName( cFileName )
+   METHOD  setFormat( pFormat )
+   METHOD  setGamma( nGamma )
+   METHOD  setQuality( nQuality )
+   METHOD  setText( cKey, cText )
+   METHOD  supportsOption( nOption )
+   METHOD  write( pImage )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QImageWriter
-
+METHOD QImageWriter:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QImageWriter( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QImageWriter
-
+METHOD QImageWriter:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QImageWriter:canWrite()
+   RETURN Qt_QImageWriter_canWrite( ::pPtr )
+
+
+METHOD QImageWriter:compression()
+   RETURN Qt_QImageWriter_compression( ::pPtr )
+
+
+METHOD QImageWriter:device()
+   RETURN Qt_QImageWriter_device( ::pPtr )
+
+
+METHOD QImageWriter:error()
+   RETURN Qt_QImageWriter_error( ::pPtr )
+
+
+METHOD QImageWriter:errorString()
+   RETURN Qt_QImageWriter_errorString( ::pPtr )
+
+
+METHOD QImageWriter:fileName()
+   RETURN Qt_QImageWriter_fileName( ::pPtr )
+
+
+METHOD QImageWriter:format()
+   RETURN Qt_QImageWriter_format( ::pPtr )
+
+
+METHOD QImageWriter:gamma()
+   RETURN Qt_QImageWriter_gamma( ::pPtr )
+
+
+METHOD QImageWriter:quality()
+   RETURN Qt_QImageWriter_quality( ::pPtr )
+
+
+METHOD QImageWriter:setCompression( nCompression )
+   RETURN Qt_QImageWriter_setCompression( ::pPtr, nCompression )
+
+
+METHOD QImageWriter:setDevice( pDevice )
+   RETURN Qt_QImageWriter_setDevice( ::pPtr, pDevice )
+
+
+METHOD QImageWriter:setFileName( cFileName )
+   RETURN Qt_QImageWriter_setFileName( ::pPtr, cFileName )
+
+
+METHOD QImageWriter:setFormat( pFormat )
+   RETURN Qt_QImageWriter_setFormat( ::pPtr, pFormat )
+
+
+METHOD QImageWriter:setGamma( nGamma )
+   RETURN Qt_QImageWriter_setGamma( ::pPtr, nGamma )
+
+
+METHOD QImageWriter:setQuality( nQuality )
+   RETURN Qt_QImageWriter_setQuality( ::pPtr, nQuality )
+
+
+METHOD QImageWriter:setText( cKey, cText )
+   RETURN Qt_QImageWriter_setText( ::pPtr, cKey, cText )
+
+
+METHOD QImageWriter:supportsOption( nOption )
+   RETURN Qt_QImageWriter_supportsOption( ::pPtr, nOption )
+
+
+METHOD QImageWriter:write( pImage )
+   RETURN Qt_QImageWriter_write( ::pPtr, pImage )
+

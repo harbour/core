@@ -71,55 +71,152 @@ CREATE CLASS QDateTime
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addDays( nNdays )                   INLINE  Qt_QDateTime_addDays( ::pPtr, nNdays )
-   METHOD  addMSecs( nMsecs )                  INLINE  Qt_QDateTime_addMSecs( ::pPtr, nMsecs )
-   METHOD  addMonths( nNmonths )               INLINE  Qt_QDateTime_addMonths( ::pPtr, nNmonths )
-   METHOD  addSecs( nS )                       INLINE  Qt_QDateTime_addSecs( ::pPtr, nS )
-   METHOD  addYears( nNyears )                 INLINE  Qt_QDateTime_addYears( ::pPtr, nNyears )
-   METHOD  date()                              INLINE  Qt_QDateTime_date( ::pPtr )
-   METHOD  daysTo( pOther )                    INLINE  Qt_QDateTime_daysTo( ::pPtr, pOther )
-   METHOD  isNull()                            INLINE  Qt_QDateTime_isNull( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QDateTime_isValid( ::pPtr )
-   METHOD  secsTo( pOther )                    INLINE  Qt_QDateTime_secsTo( ::pPtr, pOther )
-   METHOD  setDate( pDate )                    INLINE  Qt_QDateTime_setDate( ::pPtr, pDate )
-   METHOD  setTime( pTime )                    INLINE  Qt_QDateTime_setTime( ::pPtr, pTime )
-   METHOD  setTimeSpec( nSpec )                INLINE  Qt_QDateTime_setTimeSpec( ::pPtr, nSpec )
-   METHOD  setTime_t( nSeconds )               INLINE  Qt_QDateTime_setTime_t( ::pPtr, nSeconds )
-   METHOD  time()                              INLINE  Qt_QDateTime_time( ::pPtr )
-   METHOD  timeSpec()                          INLINE  Qt_QDateTime_timeSpec( ::pPtr )
-   METHOD  toLocalTime()                       INLINE  Qt_QDateTime_toLocalTime( ::pPtr )
-   METHOD  toString( cFormat )                 INLINE  Qt_QDateTime_toString( ::pPtr, cFormat )
-   METHOD  toString_1( nFormat )               INLINE  Qt_QDateTime_toString_1( ::pPtr, nFormat )
-   METHOD  toTimeSpec( nSpecification )        INLINE  Qt_QDateTime_toTimeSpec( ::pPtr, nSpecification )
-   METHOD  toTime_t()                          INLINE  Qt_QDateTime_toTime_t( ::pPtr )
-   METHOD  toUTC()                             INLINE  Qt_QDateTime_toUTC( ::pPtr )
-   METHOD  currentDateTime()                   INLINE  Qt_QDateTime_currentDateTime( ::pPtr )
-   METHOD  fromString( cString, nFormat )      INLINE  Qt_QDateTime_fromString( ::pPtr, cString, nFormat )
-   METHOD  fromString_1( cString, cFormat )    INLINE  Qt_QDateTime_fromString_1( ::pPtr, cString, cFormat )
-   METHOD  fromTime_t( nSeconds )              INLINE  Qt_QDateTime_fromTime_t( ::pPtr, nSeconds )
+   METHOD  addDays( nNdays )
+   METHOD  addMSecs( nMsecs )
+   METHOD  addMonths( nNmonths )
+   METHOD  addSecs( nS )
+   METHOD  addYears( nNyears )
+   METHOD  date()
+   METHOD  daysTo( pOther )
+   METHOD  isNull()
+   METHOD  isValid()
+   METHOD  secsTo( pOther )
+   METHOD  setDate( pDate )
+   METHOD  setTime( pTime )
+   METHOD  setTimeSpec( nSpec )
+   METHOD  setTime_t( nSeconds )
+   METHOD  time()
+   METHOD  timeSpec()
+   METHOD  toLocalTime()
+   METHOD  toString( cFormat )
+   METHOD  toString_1( nFormat )
+   METHOD  toTimeSpec( nSpecification )
+   METHOD  toTime_t()
+   METHOD  toUTC()
+   METHOD  currentDateTime()
+   METHOD  fromString( cString, nFormat )
+   METHOD  fromString_1( cString, cFormat )
+   METHOD  fromTime_t( nSeconds )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QDateTime
-
+METHOD QDateTime:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QDateTime( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QDateTime
-
+METHOD QDateTime:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QDateTime:addDays( nNdays )
+   RETURN Qt_QDateTime_addDays( ::pPtr, nNdays )
+
+
+METHOD QDateTime:addMSecs( nMsecs )
+   RETURN Qt_QDateTime_addMSecs( ::pPtr, nMsecs )
+
+
+METHOD QDateTime:addMonths( nNmonths )
+   RETURN Qt_QDateTime_addMonths( ::pPtr, nNmonths )
+
+
+METHOD QDateTime:addSecs( nS )
+   RETURN Qt_QDateTime_addSecs( ::pPtr, nS )
+
+
+METHOD QDateTime:addYears( nNyears )
+   RETURN Qt_QDateTime_addYears( ::pPtr, nNyears )
+
+
+METHOD QDateTime:date()
+   RETURN Qt_QDateTime_date( ::pPtr )
+
+
+METHOD QDateTime:daysTo( pOther )
+   RETURN Qt_QDateTime_daysTo( ::pPtr, pOther )
+
+
+METHOD QDateTime:isNull()
+   RETURN Qt_QDateTime_isNull( ::pPtr )
+
+
+METHOD QDateTime:isValid()
+   RETURN Qt_QDateTime_isValid( ::pPtr )
+
+
+METHOD QDateTime:secsTo( pOther )
+   RETURN Qt_QDateTime_secsTo( ::pPtr, pOther )
+
+
+METHOD QDateTime:setDate( pDate )
+   RETURN Qt_QDateTime_setDate( ::pPtr, pDate )
+
+
+METHOD QDateTime:setTime( pTime )
+   RETURN Qt_QDateTime_setTime( ::pPtr, pTime )
+
+
+METHOD QDateTime:setTimeSpec( nSpec )
+   RETURN Qt_QDateTime_setTimeSpec( ::pPtr, nSpec )
+
+
+METHOD QDateTime:setTime_t( nSeconds )
+   RETURN Qt_QDateTime_setTime_t( ::pPtr, nSeconds )
+
+
+METHOD QDateTime:time()
+   RETURN Qt_QDateTime_time( ::pPtr )
+
+
+METHOD QDateTime:timeSpec()
+   RETURN Qt_QDateTime_timeSpec( ::pPtr )
+
+
+METHOD QDateTime:toLocalTime()
+   RETURN Qt_QDateTime_toLocalTime( ::pPtr )
+
+
+METHOD QDateTime:toString( cFormat )
+   RETURN Qt_QDateTime_toString( ::pPtr, cFormat )
+
+
+METHOD QDateTime:toString_1( nFormat )
+   RETURN Qt_QDateTime_toString_1( ::pPtr, nFormat )
+
+
+METHOD QDateTime:toTimeSpec( nSpecification )
+   RETURN Qt_QDateTime_toTimeSpec( ::pPtr, nSpecification )
+
+
+METHOD QDateTime:toTime_t()
+   RETURN Qt_QDateTime_toTime_t( ::pPtr )
+
+
+METHOD QDateTime:toUTC()
+   RETURN Qt_QDateTime_toUTC( ::pPtr )
+
+
+METHOD QDateTime:currentDateTime()
+   RETURN Qt_QDateTime_currentDateTime( ::pPtr )
+
+
+METHOD QDateTime:fromString( cString, nFormat )
+   RETURN Qt_QDateTime_fromString( ::pPtr, cString, nFormat )
+
+
+METHOD QDateTime:fromString_1( cString, cFormat )
+   RETURN Qt_QDateTime_fromString_1( ::pPtr, cString, cFormat )
+
+
+METHOD QDateTime:fromTime_t( nSeconds )
+   RETURN Qt_QDateTime_fromTime_t( ::pPtr, nSeconds )
+

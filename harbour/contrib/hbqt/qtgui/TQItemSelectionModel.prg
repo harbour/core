@@ -71,44 +71,97 @@ CREATE CLASS QItemSelectionModel INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  columnIntersectsSelection( nColumn, pParent )  INLINE  Qt_QItemSelectionModel_columnIntersectsSelection( ::pPtr, nColumn, pParent )
-   METHOD  currentIndex()                      INLINE  Qt_QItemSelectionModel_currentIndex( ::pPtr )
-   METHOD  hasSelection()                      INLINE  Qt_QItemSelectionModel_hasSelection( ::pPtr )
-   METHOD  isColumnSelected( nColumn, pParent )  INLINE  Qt_QItemSelectionModel_isColumnSelected( ::pPtr, nColumn, pParent )
-   METHOD  isRowSelected( nRow, pParent )      INLINE  Qt_QItemSelectionModel_isRowSelected( ::pPtr, nRow, pParent )
-   METHOD  isSelected( pIndex )                INLINE  Qt_QItemSelectionModel_isSelected( ::pPtr, pIndex )
-   METHOD  model()                             INLINE  Qt_QItemSelectionModel_model( ::pPtr )
-   METHOD  rowIntersectsSelection( nRow, pParent )  INLINE  Qt_QItemSelectionModel_rowIntersectsSelection( ::pPtr, nRow, pParent )
-   METHOD  selection()                         INLINE  Qt_QItemSelectionModel_selection( ::pPtr )
-   METHOD  clear()                             INLINE  Qt_QItemSelectionModel_clear( ::pPtr )
-   METHOD  clearSelection()                    INLINE  Qt_QItemSelectionModel_clearSelection( ::pPtr )
-   METHOD  reset()                             INLINE  Qt_QItemSelectionModel_reset( ::pPtr )
-   METHOD  select( pIndex, nCommand )          INLINE  Qt_QItemSelectionModel_select( ::pPtr, pIndex, nCommand )
-   METHOD  select_1( pSelection, nCommand )    INLINE  Qt_QItemSelectionModel_select_1( ::pPtr, pSelection, nCommand )
-   METHOD  setCurrentIndex( pIndex, nCommand )  INLINE  Qt_QItemSelectionModel_setCurrentIndex( ::pPtr, pIndex, nCommand )
+   METHOD  columnIntersectsSelection( nColumn, pParent )
+   METHOD  currentIndex()
+   METHOD  hasSelection()
+   METHOD  isColumnSelected( nColumn, pParent )
+   METHOD  isRowSelected( nRow, pParent )
+   METHOD  isSelected( pIndex )
+   METHOD  model()
+   METHOD  rowIntersectsSelection( nRow, pParent )
+   METHOD  selection()
+   METHOD  clear()
+   METHOD  clearSelection()
+   METHOD  reset()
+   METHOD  select( pIndex, nCommand )
+   METHOD  select_1( pSelection, nCommand )
+   METHOD  setCurrentIndex( pIndex, nCommand )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QItemSelectionModel
-
+METHOD QItemSelectionModel:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QItemSelectionModel( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QItemSelectionModel
-
+METHOD QItemSelectionModel:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QItemSelectionModel:columnIntersectsSelection( nColumn, pParent )
+   RETURN Qt_QItemSelectionModel_columnIntersectsSelection( ::pPtr, nColumn, pParent )
+
+
+METHOD QItemSelectionModel:currentIndex()
+   RETURN Qt_QItemSelectionModel_currentIndex( ::pPtr )
+
+
+METHOD QItemSelectionModel:hasSelection()
+   RETURN Qt_QItemSelectionModel_hasSelection( ::pPtr )
+
+
+METHOD QItemSelectionModel:isColumnSelected( nColumn, pParent )
+   RETURN Qt_QItemSelectionModel_isColumnSelected( ::pPtr, nColumn, pParent )
+
+
+METHOD QItemSelectionModel:isRowSelected( nRow, pParent )
+   RETURN Qt_QItemSelectionModel_isRowSelected( ::pPtr, nRow, pParent )
+
+
+METHOD QItemSelectionModel:isSelected( pIndex )
+   RETURN Qt_QItemSelectionModel_isSelected( ::pPtr, pIndex )
+
+
+METHOD QItemSelectionModel:model()
+   RETURN Qt_QItemSelectionModel_model( ::pPtr )
+
+
+METHOD QItemSelectionModel:rowIntersectsSelection( nRow, pParent )
+   RETURN Qt_QItemSelectionModel_rowIntersectsSelection( ::pPtr, nRow, pParent )
+
+
+METHOD QItemSelectionModel:selection()
+   RETURN Qt_QItemSelectionModel_selection( ::pPtr )
+
+
+METHOD QItemSelectionModel:clear()
+   RETURN Qt_QItemSelectionModel_clear( ::pPtr )
+
+
+METHOD QItemSelectionModel:clearSelection()
+   RETURN Qt_QItemSelectionModel_clearSelection( ::pPtr )
+
+
+METHOD QItemSelectionModel:reset()
+   RETURN Qt_QItemSelectionModel_reset( ::pPtr )
+
+
+METHOD QItemSelectionModel:select( pIndex, nCommand )
+   RETURN Qt_QItemSelectionModel_select( ::pPtr, pIndex, nCommand )
+
+
+METHOD QItemSelectionModel:select_1( pSelection, nCommand )
+   RETURN Qt_QItemSelectionModel_select_1( ::pPtr, pSelection, nCommand )
+
+
+METHOD QItemSelectionModel:setCurrentIndex( pIndex, nCommand )
+   RETURN Qt_QItemSelectionModel_setCurrentIndex( ::pPtr, pIndex, nCommand )
+

@@ -71,58 +71,167 @@ CREATE CLASS QFileSystemModel INHERIT QAbstractItemModel
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  dropMimeData( pData, nAction, nRow, nColumn, pParent )  INLINE  Qt_QFileSystemModel_dropMimeData( ::pPtr, pData, nAction, nRow, nColumn, pParent )
-   METHOD  fileIcon( pIndex )                  INLINE  Qt_QFileSystemModel_fileIcon( ::pPtr, pIndex )
-   METHOD  fileInfo( pIndex )                  INLINE  Qt_QFileSystemModel_fileInfo( ::pPtr, pIndex )
-   METHOD  fileName( pIndex )                  INLINE  Qt_QFileSystemModel_fileName( ::pPtr, pIndex )
-   METHOD  filePath( pIndex )                  INLINE  Qt_QFileSystemModel_filePath( ::pPtr, pIndex )
-   METHOD  filter()                            INLINE  Qt_QFileSystemModel_filter( ::pPtr )
-   METHOD  index( cPath, nColumn )             INLINE  Qt_QFileSystemModel_index( ::pPtr, cPath, nColumn )
-   METHOD  isDir( pIndex )                     INLINE  Qt_QFileSystemModel_isDir( ::pPtr, pIndex )
-   METHOD  isReadOnly()                        INLINE  Qt_QFileSystemModel_isReadOnly( ::pPtr )
-   METHOD  lastModified( pIndex )              INLINE  Qt_QFileSystemModel_lastModified( ::pPtr, pIndex )
-   METHOD  mimeTypes()                         INLINE  Qt_QFileSystemModel_mimeTypes( ::pPtr )
-   METHOD  mkdir( pParent, cName )             INLINE  Qt_QFileSystemModel_mkdir( ::pPtr, pParent, cName )
-   METHOD  myComputer( nRole )                 INLINE  Qt_QFileSystemModel_myComputer( ::pPtr, nRole )
-   METHOD  nameFilterDisables()                INLINE  Qt_QFileSystemModel_nameFilterDisables( ::pPtr )
-   METHOD  nameFilters()                       INLINE  Qt_QFileSystemModel_nameFilters( ::pPtr )
-   METHOD  permissions( pIndex )               INLINE  Qt_QFileSystemModel_permissions( ::pPtr, pIndex )
-   METHOD  remove( pIndex )                    INLINE  Qt_QFileSystemModel_remove( ::pPtr, pIndex )
-   METHOD  resolveSymlinks()                   INLINE  Qt_QFileSystemModel_resolveSymlinks( ::pPtr )
-   METHOD  rmdir( pIndex )                     INLINE  Qt_QFileSystemModel_rmdir( ::pPtr, pIndex )
-   METHOD  rootDirectory()                     INLINE  Qt_QFileSystemModel_rootDirectory( ::pPtr )
-   METHOD  rootPath()                          INLINE  Qt_QFileSystemModel_rootPath( ::pPtr )
-   METHOD  setFilter( nFilters )               INLINE  Qt_QFileSystemModel_setFilter( ::pPtr, nFilters )
-   METHOD  setNameFilterDisables( lEnable )    INLINE  Qt_QFileSystemModel_setNameFilterDisables( ::pPtr, lEnable )
-   METHOD  setNameFilters( pFilters )          INLINE  Qt_QFileSystemModel_setNameFilters( ::pPtr, pFilters )
-   METHOD  setReadOnly( lEnable )              INLINE  Qt_QFileSystemModel_setReadOnly( ::pPtr, lEnable )
-   METHOD  setResolveSymlinks( lEnable )       INLINE  Qt_QFileSystemModel_setResolveSymlinks( ::pPtr, lEnable )
-   METHOD  setRootPath( cNewPath )             INLINE  Qt_QFileSystemModel_setRootPath( ::pPtr, cNewPath )
-   METHOD  size( pIndex )                      INLINE  Qt_QFileSystemModel_size( ::pPtr, pIndex )
-   METHOD  type( pIndex )                      INLINE  Qt_QFileSystemModel_type( ::pPtr, pIndex )
+   METHOD  dropMimeData( pData, nAction, nRow, nColumn, pParent )
+   METHOD  fileIcon( pIndex )
+   METHOD  fileInfo( pIndex )
+   METHOD  fileName( pIndex )
+   METHOD  filePath( pIndex )
+   METHOD  filter()
+   METHOD  index( cPath, nColumn )
+   METHOD  isDir( pIndex )
+   METHOD  isReadOnly()
+   METHOD  lastModified( pIndex )
+   METHOD  mimeTypes()
+   METHOD  mkdir( pParent, cName )
+   METHOD  myComputer( nRole )
+   METHOD  nameFilterDisables()
+   METHOD  nameFilters()
+   METHOD  permissions( pIndex )
+   METHOD  remove( pIndex )
+   METHOD  resolveSymlinks()
+   METHOD  rmdir( pIndex )
+   METHOD  rootDirectory()
+   METHOD  rootPath()
+   METHOD  setFilter( nFilters )
+   METHOD  setNameFilterDisables( lEnable )
+   METHOD  setNameFilters( pFilters )
+   METHOD  setReadOnly( lEnable )
+   METHOD  setResolveSymlinks( lEnable )
+   METHOD  setRootPath( cNewPath )
+   METHOD  size( pIndex )
+   METHOD  type( pIndex )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QFileSystemModel
-
+METHOD QFileSystemModel:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QFileSystemModel( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QFileSystemModel
-
+METHOD QFileSystemModel:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QFileSystemModel:dropMimeData( pData, nAction, nRow, nColumn, pParent )
+   RETURN Qt_QFileSystemModel_dropMimeData( ::pPtr, pData, nAction, nRow, nColumn, pParent )
+
+
+METHOD QFileSystemModel:fileIcon( pIndex )
+   RETURN Qt_QFileSystemModel_fileIcon( ::pPtr, pIndex )
+
+
+METHOD QFileSystemModel:fileInfo( pIndex )
+   RETURN Qt_QFileSystemModel_fileInfo( ::pPtr, pIndex )
+
+
+METHOD QFileSystemModel:fileName( pIndex )
+   RETURN Qt_QFileSystemModel_fileName( ::pPtr, pIndex )
+
+
+METHOD QFileSystemModel:filePath( pIndex )
+   RETURN Qt_QFileSystemModel_filePath( ::pPtr, pIndex )
+
+
+METHOD QFileSystemModel:filter()
+   RETURN Qt_QFileSystemModel_filter( ::pPtr )
+
+
+METHOD QFileSystemModel:index( cPath, nColumn )
+   RETURN Qt_QFileSystemModel_index( ::pPtr, cPath, nColumn )
+
+
+METHOD QFileSystemModel:isDir( pIndex )
+   RETURN Qt_QFileSystemModel_isDir( ::pPtr, pIndex )
+
+
+METHOD QFileSystemModel:isReadOnly()
+   RETURN Qt_QFileSystemModel_isReadOnly( ::pPtr )
+
+
+METHOD QFileSystemModel:lastModified( pIndex )
+   RETURN Qt_QFileSystemModel_lastModified( ::pPtr, pIndex )
+
+
+METHOD QFileSystemModel:mimeTypes()
+   RETURN Qt_QFileSystemModel_mimeTypes( ::pPtr )
+
+
+METHOD QFileSystemModel:mkdir( pParent, cName )
+   RETURN Qt_QFileSystemModel_mkdir( ::pPtr, pParent, cName )
+
+
+METHOD QFileSystemModel:myComputer( nRole )
+   RETURN Qt_QFileSystemModel_myComputer( ::pPtr, nRole )
+
+
+METHOD QFileSystemModel:nameFilterDisables()
+   RETURN Qt_QFileSystemModel_nameFilterDisables( ::pPtr )
+
+
+METHOD QFileSystemModel:nameFilters()
+   RETURN Qt_QFileSystemModel_nameFilters( ::pPtr )
+
+
+METHOD QFileSystemModel:permissions( pIndex )
+   RETURN Qt_QFileSystemModel_permissions( ::pPtr, pIndex )
+
+
+METHOD QFileSystemModel:remove( pIndex )
+   RETURN Qt_QFileSystemModel_remove( ::pPtr, pIndex )
+
+
+METHOD QFileSystemModel:resolveSymlinks()
+   RETURN Qt_QFileSystemModel_resolveSymlinks( ::pPtr )
+
+
+METHOD QFileSystemModel:rmdir( pIndex )
+   RETURN Qt_QFileSystemModel_rmdir( ::pPtr, pIndex )
+
+
+METHOD QFileSystemModel:rootDirectory()
+   RETURN Qt_QFileSystemModel_rootDirectory( ::pPtr )
+
+
+METHOD QFileSystemModel:rootPath()
+   RETURN Qt_QFileSystemModel_rootPath( ::pPtr )
+
+
+METHOD QFileSystemModel:setFilter( nFilters )
+   RETURN Qt_QFileSystemModel_setFilter( ::pPtr, nFilters )
+
+
+METHOD QFileSystemModel:setNameFilterDisables( lEnable )
+   RETURN Qt_QFileSystemModel_setNameFilterDisables( ::pPtr, lEnable )
+
+
+METHOD QFileSystemModel:setNameFilters( pFilters )
+   RETURN Qt_QFileSystemModel_setNameFilters( ::pPtr, pFilters )
+
+
+METHOD QFileSystemModel:setReadOnly( lEnable )
+   RETURN Qt_QFileSystemModel_setReadOnly( ::pPtr, lEnable )
+
+
+METHOD QFileSystemModel:setResolveSymlinks( lEnable )
+   RETURN Qt_QFileSystemModel_setResolveSymlinks( ::pPtr, lEnable )
+
+
+METHOD QFileSystemModel:setRootPath( cNewPath )
+   RETURN Qt_QFileSystemModel_setRootPath( ::pPtr, cNewPath )
+
+
+METHOD QFileSystemModel:size( pIndex )
+   RETURN Qt_QFileSystemModel_size( ::pPtr, pIndex )
+
+
+METHOD QFileSystemModel:type( pIndex )
+   RETURN Qt_QFileSystemModel_type( ::pPtr, pIndex )
+

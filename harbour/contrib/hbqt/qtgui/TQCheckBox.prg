@@ -71,33 +71,42 @@ CREATE CLASS QCheckBox INHERIT QAbstractButton
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  checkState()                        INLINE  Qt_QCheckBox_checkState( ::pPtr )
-   METHOD  isTristate()                        INLINE  Qt_QCheckBox_isTristate( ::pPtr )
-   METHOD  setCheckState( nState )             INLINE  Qt_QCheckBox_setCheckState( ::pPtr, nState )
-   METHOD  setTristate( lY )                   INLINE  Qt_QCheckBox_setTristate( ::pPtr, lY )
+   METHOD  checkState()
+   METHOD  isTristate()
+   METHOD  setCheckState( nState )
+   METHOD  setTristate( lY )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QCheckBox
-
+METHOD QCheckBox:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QCheckBox( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QCheckBox
-
+METHOD QCheckBox:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QCheckBox:checkState()
+   RETURN Qt_QCheckBox_checkState( ::pPtr )
+
+
+METHOD QCheckBox:isTristate()
+   RETURN Qt_QCheckBox_isTristate( ::pPtr )
+
+
+METHOD QCheckBox:setCheckState( nState )
+   RETURN Qt_QCheckBox_setCheckState( ::pPtr, nState )
+
+
+METHOD QCheckBox:setTristate( lY )
+   RETURN Qt_QCheckBox_setTristate( ::pPtr, lY )
+

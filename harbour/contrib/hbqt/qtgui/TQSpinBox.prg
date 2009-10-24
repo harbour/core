@@ -71,43 +71,92 @@ CREATE CLASS QSpinBox INHERIT QAbstractSpinBox
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  cleanText()                         INLINE  Qt_QSpinBox_cleanText( ::pPtr )
-   METHOD  maximum()                           INLINE  Qt_QSpinBox_maximum( ::pPtr )
-   METHOD  minimum()                           INLINE  Qt_QSpinBox_minimum( ::pPtr )
-   METHOD  prefix()                            INLINE  Qt_QSpinBox_prefix( ::pPtr )
-   METHOD  setMaximum( nMax )                  INLINE  Qt_QSpinBox_setMaximum( ::pPtr, nMax )
-   METHOD  setMinimum( nMin )                  INLINE  Qt_QSpinBox_setMinimum( ::pPtr, nMin )
-   METHOD  setPrefix( cPrefix )                INLINE  Qt_QSpinBox_setPrefix( ::pPtr, cPrefix )
-   METHOD  setRange( nMinimum, nMaximum )      INLINE  Qt_QSpinBox_setRange( ::pPtr, nMinimum, nMaximum )
-   METHOD  setSingleStep( nVal )               INLINE  Qt_QSpinBox_setSingleStep( ::pPtr, nVal )
-   METHOD  setSuffix( cSuffix )                INLINE  Qt_QSpinBox_setSuffix( ::pPtr, cSuffix )
-   METHOD  singleStep()                        INLINE  Qt_QSpinBox_singleStep( ::pPtr )
-   METHOD  suffix()                            INLINE  Qt_QSpinBox_suffix( ::pPtr )
-   METHOD  value()                             INLINE  Qt_QSpinBox_value( ::pPtr )
-   METHOD  setValue( nVal )                    INLINE  Qt_QSpinBox_setValue( ::pPtr, nVal )
+   METHOD  cleanText()
+   METHOD  maximum()
+   METHOD  minimum()
+   METHOD  prefix()
+   METHOD  setMaximum( nMax )
+   METHOD  setMinimum( nMin )
+   METHOD  setPrefix( cPrefix )
+   METHOD  setRange( nMinimum, nMaximum )
+   METHOD  setSingleStep( nVal )
+   METHOD  setSuffix( cSuffix )
+   METHOD  singleStep()
+   METHOD  suffix()
+   METHOD  value()
+   METHOD  setValue( nVal )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QSpinBox
-
+METHOD QSpinBox:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QSpinBox( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QSpinBox
-
+METHOD QSpinBox:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QSpinBox:cleanText()
+   RETURN Qt_QSpinBox_cleanText( ::pPtr )
+
+
+METHOD QSpinBox:maximum()
+   RETURN Qt_QSpinBox_maximum( ::pPtr )
+
+
+METHOD QSpinBox:minimum()
+   RETURN Qt_QSpinBox_minimum( ::pPtr )
+
+
+METHOD QSpinBox:prefix()
+   RETURN Qt_QSpinBox_prefix( ::pPtr )
+
+
+METHOD QSpinBox:setMaximum( nMax )
+   RETURN Qt_QSpinBox_setMaximum( ::pPtr, nMax )
+
+
+METHOD QSpinBox:setMinimum( nMin )
+   RETURN Qt_QSpinBox_setMinimum( ::pPtr, nMin )
+
+
+METHOD QSpinBox:setPrefix( cPrefix )
+   RETURN Qt_QSpinBox_setPrefix( ::pPtr, cPrefix )
+
+
+METHOD QSpinBox:setRange( nMinimum, nMaximum )
+   RETURN Qt_QSpinBox_setRange( ::pPtr, nMinimum, nMaximum )
+
+
+METHOD QSpinBox:setSingleStep( nVal )
+   RETURN Qt_QSpinBox_setSingleStep( ::pPtr, nVal )
+
+
+METHOD QSpinBox:setSuffix( cSuffix )
+   RETURN Qt_QSpinBox_setSuffix( ::pPtr, cSuffix )
+
+
+METHOD QSpinBox:singleStep()
+   RETURN Qt_QSpinBox_singleStep( ::pPtr )
+
+
+METHOD QSpinBox:suffix()
+   RETURN Qt_QSpinBox_suffix( ::pPtr )
+
+
+METHOD QSpinBox:value()
+   RETURN Qt_QSpinBox_value( ::pPtr )
+
+
+METHOD QSpinBox:setValue( nVal )
+   RETURN Qt_QSpinBox_setValue( ::pPtr, nVal )
+

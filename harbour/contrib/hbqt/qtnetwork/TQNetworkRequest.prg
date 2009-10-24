@@ -71,38 +71,67 @@ CREATE CLASS QNetworkRequest
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  attribute( nCode, pDefaultValue )   INLINE  Qt_QNetworkRequest_attribute( ::pPtr, nCode, pDefaultValue )
-   METHOD  hasRawHeader( pHeaderName )         INLINE  Qt_QNetworkRequest_hasRawHeader( ::pPtr, pHeaderName )
-   METHOD  header( nHeader )                   INLINE  Qt_QNetworkRequest_header( ::pPtr, nHeader )
-   METHOD  rawHeader( pHeaderName )            INLINE  Qt_QNetworkRequest_rawHeader( ::pPtr, pHeaderName )
-   METHOD  setAttribute( nCode, pValue )       INLINE  Qt_QNetworkRequest_setAttribute( ::pPtr, nCode, pValue )
-   METHOD  setHeader( nHeader, pValue )        INLINE  Qt_QNetworkRequest_setHeader( ::pPtr, nHeader, pValue )
-   METHOD  setRawHeader( pHeaderName, pHeaderValue )  INLINE  Qt_QNetworkRequest_setRawHeader( ::pPtr, pHeaderName, pHeaderValue )
-   METHOD  setUrl( pUrl )                      INLINE  Qt_QNetworkRequest_setUrl( ::pPtr, pUrl )
-   METHOD  url()                               INLINE  Qt_QNetworkRequest_url( ::pPtr )
+   METHOD  attribute( nCode, pDefaultValue )
+   METHOD  hasRawHeader( pHeaderName )
+   METHOD  header( nHeader )
+   METHOD  rawHeader( pHeaderName )
+   METHOD  setAttribute( nCode, pValue )
+   METHOD  setHeader( nHeader, pValue )
+   METHOD  setRawHeader( pHeaderName, pHeaderValue )
+   METHOD  setUrl( pUrl )
+   METHOD  url()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QNetworkRequest
-
+METHOD QNetworkRequest:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QNetworkRequest( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QNetworkRequest
-
+METHOD QNetworkRequest:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QNetworkRequest:attribute( nCode, pDefaultValue )
+   RETURN Qt_QNetworkRequest_attribute( ::pPtr, nCode, pDefaultValue )
+
+
+METHOD QNetworkRequest:hasRawHeader( pHeaderName )
+   RETURN Qt_QNetworkRequest_hasRawHeader( ::pPtr, pHeaderName )
+
+
+METHOD QNetworkRequest:header( nHeader )
+   RETURN Qt_QNetworkRequest_header( ::pPtr, nHeader )
+
+
+METHOD QNetworkRequest:rawHeader( pHeaderName )
+   RETURN Qt_QNetworkRequest_rawHeader( ::pPtr, pHeaderName )
+
+
+METHOD QNetworkRequest:setAttribute( nCode, pValue )
+   RETURN Qt_QNetworkRequest_setAttribute( ::pPtr, nCode, pValue )
+
+
+METHOD QNetworkRequest:setHeader( nHeader, pValue )
+   RETURN Qt_QNetworkRequest_setHeader( ::pPtr, nHeader, pValue )
+
+
+METHOD QNetworkRequest:setRawHeader( pHeaderName, pHeaderValue )
+   RETURN Qt_QNetworkRequest_setRawHeader( ::pPtr, pHeaderName, pHeaderValue )
+
+
+METHOD QNetworkRequest:setUrl( pUrl )
+   RETURN Qt_QNetworkRequest_setUrl( ::pPtr, pUrl )
+
+
+METHOD QNetworkRequest:url()
+   RETURN Qt_QNetworkRequest_url( ::pPtr )
+

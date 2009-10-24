@@ -71,50 +71,127 @@ CREATE CLASS QProgressBar INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  alignment()                         INLINE  Qt_QProgressBar_alignment( ::pPtr )
-   METHOD  format()                            INLINE  Qt_QProgressBar_format( ::pPtr )
-   METHOD  invertedAppearance()                INLINE  Qt_QProgressBar_invertedAppearance( ::pPtr )
-   METHOD  isTextVisible()                     INLINE  Qt_QProgressBar_isTextVisible( ::pPtr )
-   METHOD  maximum()                           INLINE  Qt_QProgressBar_maximum( ::pPtr )
-   METHOD  minimum()                           INLINE  Qt_QProgressBar_minimum( ::pPtr )
-   METHOD  orientation()                       INLINE  Qt_QProgressBar_orientation( ::pPtr )
-   METHOD  setAlignment( nAlignment )          INLINE  Qt_QProgressBar_setAlignment( ::pPtr, nAlignment )
-   METHOD  setFormat( cFormat )                INLINE  Qt_QProgressBar_setFormat( ::pPtr, cFormat )
-   METHOD  setInvertedAppearance( lInvert )    INLINE  Qt_QProgressBar_setInvertedAppearance( ::pPtr, lInvert )
-   METHOD  setTextDirection( nTextDirection )  INLINE  Qt_QProgressBar_setTextDirection( ::pPtr, nTextDirection )
-   METHOD  setTextVisible( lVisible )          INLINE  Qt_QProgressBar_setTextVisible( ::pPtr, lVisible )
-   METHOD  text()                              INLINE  Qt_QProgressBar_text( ::pPtr )
-   METHOD  textDirection()                     INLINE  Qt_QProgressBar_textDirection( ::pPtr )
-   METHOD  value()                             INLINE  Qt_QProgressBar_value( ::pPtr )
-   METHOD  reset()                             INLINE  Qt_QProgressBar_reset( ::pPtr )
-   METHOD  setMaximum( nMaximum )              INLINE  Qt_QProgressBar_setMaximum( ::pPtr, nMaximum )
-   METHOD  setMinimum( nMinimum )              INLINE  Qt_QProgressBar_setMinimum( ::pPtr, nMinimum )
-   METHOD  setOrientation( nQt_Orientation )   INLINE  Qt_QProgressBar_setOrientation( ::pPtr, nQt_Orientation )
-   METHOD  setRange( nMinimum, nMaximum )      INLINE  Qt_QProgressBar_setRange( ::pPtr, nMinimum, nMaximum )
-   METHOD  setValue( nValue )                  INLINE  Qt_QProgressBar_setValue( ::pPtr, nValue )
+   METHOD  alignment()
+   METHOD  format()
+   METHOD  invertedAppearance()
+   METHOD  isTextVisible()
+   METHOD  maximum()
+   METHOD  minimum()
+   METHOD  orientation()
+   METHOD  setAlignment( nAlignment )
+   METHOD  setFormat( cFormat )
+   METHOD  setInvertedAppearance( lInvert )
+   METHOD  setTextDirection( nTextDirection )
+   METHOD  setTextVisible( lVisible )
+   METHOD  text()
+   METHOD  textDirection()
+   METHOD  value()
+   METHOD  reset()
+   METHOD  setMaximum( nMaximum )
+   METHOD  setMinimum( nMinimum )
+   METHOD  setOrientation( nQt_Orientation )
+   METHOD  setRange( nMinimum, nMaximum )
+   METHOD  setValue( nValue )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QProgressBar
-
+METHOD QProgressBar:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QProgressBar( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QProgressBar
-
+METHOD QProgressBar:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QProgressBar:alignment()
+   RETURN Qt_QProgressBar_alignment( ::pPtr )
+
+
+METHOD QProgressBar:format()
+   RETURN Qt_QProgressBar_format( ::pPtr )
+
+
+METHOD QProgressBar:invertedAppearance()
+   RETURN Qt_QProgressBar_invertedAppearance( ::pPtr )
+
+
+METHOD QProgressBar:isTextVisible()
+   RETURN Qt_QProgressBar_isTextVisible( ::pPtr )
+
+
+METHOD QProgressBar:maximum()
+   RETURN Qt_QProgressBar_maximum( ::pPtr )
+
+
+METHOD QProgressBar:minimum()
+   RETURN Qt_QProgressBar_minimum( ::pPtr )
+
+
+METHOD QProgressBar:orientation()
+   RETURN Qt_QProgressBar_orientation( ::pPtr )
+
+
+METHOD QProgressBar:setAlignment( nAlignment )
+   RETURN Qt_QProgressBar_setAlignment( ::pPtr, nAlignment )
+
+
+METHOD QProgressBar:setFormat( cFormat )
+   RETURN Qt_QProgressBar_setFormat( ::pPtr, cFormat )
+
+
+METHOD QProgressBar:setInvertedAppearance( lInvert )
+   RETURN Qt_QProgressBar_setInvertedAppearance( ::pPtr, lInvert )
+
+
+METHOD QProgressBar:setTextDirection( nTextDirection )
+   RETURN Qt_QProgressBar_setTextDirection( ::pPtr, nTextDirection )
+
+
+METHOD QProgressBar:setTextVisible( lVisible )
+   RETURN Qt_QProgressBar_setTextVisible( ::pPtr, lVisible )
+
+
+METHOD QProgressBar:text()
+   RETURN Qt_QProgressBar_text( ::pPtr )
+
+
+METHOD QProgressBar:textDirection()
+   RETURN Qt_QProgressBar_textDirection( ::pPtr )
+
+
+METHOD QProgressBar:value()
+   RETURN Qt_QProgressBar_value( ::pPtr )
+
+
+METHOD QProgressBar:reset()
+   RETURN Qt_QProgressBar_reset( ::pPtr )
+
+
+METHOD QProgressBar:setMaximum( nMaximum )
+   RETURN Qt_QProgressBar_setMaximum( ::pPtr, nMaximum )
+
+
+METHOD QProgressBar:setMinimum( nMinimum )
+   RETURN Qt_QProgressBar_setMinimum( ::pPtr, nMinimum )
+
+
+METHOD QProgressBar:setOrientation( nQt_Orientation )
+   RETURN Qt_QProgressBar_setOrientation( ::pPtr, nQt_Orientation )
+
+
+METHOD QProgressBar:setRange( nMinimum, nMaximum )
+   RETURN Qt_QProgressBar_setRange( ::pPtr, nMinimum, nMaximum )
+
+
+METHOD QProgressBar:setValue( nValue )
+   RETURN Qt_QProgressBar_setValue( ::pPtr, nValue )
+

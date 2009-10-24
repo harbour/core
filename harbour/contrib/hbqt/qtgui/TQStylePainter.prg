@@ -71,37 +71,62 @@ CREATE CLASS QStylePainter INHERIT QPainter
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  begin( pWidget )                    INLINE  Qt_QStylePainter_begin( ::pPtr, pWidget )
-   METHOD  begin_1( pPd, pWidget )             INLINE  Qt_QStylePainter_begin_1( ::pPtr, pPd, pWidget )
-   METHOD  drawComplexControl( nCc, pOption )  INLINE  Qt_QStylePainter_drawComplexControl( ::pPtr, nCc, pOption )
-   METHOD  drawControl( nCe, pOption )         INLINE  Qt_QStylePainter_drawControl( ::pPtr, nCe, pOption )
-   METHOD  drawItemPixmap( pRect, nFlags, pPixmap )  INLINE  Qt_QStylePainter_drawItemPixmap( ::pPtr, pRect, nFlags, pPixmap )
-   METHOD  drawItemText( pRect, nFlags, pPal, lEnabled, cText, nTextRole )  INLINE  Qt_QStylePainter_drawItemText( ::pPtr, pRect, nFlags, pPal, lEnabled, cText, nTextRole )
-   METHOD  drawPrimitive( nPe, pOption )       INLINE  Qt_QStylePainter_drawPrimitive( ::pPtr, nPe, pOption )
-   METHOD  style()                             INLINE  Qt_QStylePainter_style( ::pPtr )
+   METHOD  begin( pWidget )
+   METHOD  begin_1( pPd, pWidget )
+   METHOD  drawComplexControl( nCc, pOption )
+   METHOD  drawControl( nCe, pOption )
+   METHOD  drawItemPixmap( pRect, nFlags, pPixmap )
+   METHOD  drawItemText( pRect, nFlags, pPal, lEnabled, cText, nTextRole )
+   METHOD  drawPrimitive( nPe, pOption )
+   METHOD  style()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStylePainter
-
+METHOD QStylePainter:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStylePainter( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStylePainter
-
+METHOD QStylePainter:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStylePainter:begin( pWidget )
+   RETURN Qt_QStylePainter_begin( ::pPtr, pWidget )
+
+
+METHOD QStylePainter:begin_1( pPd, pWidget )
+   RETURN Qt_QStylePainter_begin_1( ::pPtr, pPd, pWidget )
+
+
+METHOD QStylePainter:drawComplexControl( nCc, pOption )
+   RETURN Qt_QStylePainter_drawComplexControl( ::pPtr, nCc, pOption )
+
+
+METHOD QStylePainter:drawControl( nCe, pOption )
+   RETURN Qt_QStylePainter_drawControl( ::pPtr, nCe, pOption )
+
+
+METHOD QStylePainter:drawItemPixmap( pRect, nFlags, pPixmap )
+   RETURN Qt_QStylePainter_drawItemPixmap( ::pPtr, pRect, nFlags, pPixmap )
+
+
+METHOD QStylePainter:drawItemText( pRect, nFlags, pPal, lEnabled, cText, nTextRole )
+   RETURN Qt_QStylePainter_drawItemText( ::pPtr, pRect, nFlags, pPal, lEnabled, cText, nTextRole )
+
+
+METHOD QStylePainter:drawPrimitive( nPe, pOption )
+   RETURN Qt_QStylePainter_drawPrimitive( ::pPtr, nPe, pOption )
+
+
+METHOD QStylePainter:style()
+   RETURN Qt_QStylePainter_style( ::pPtr )
+

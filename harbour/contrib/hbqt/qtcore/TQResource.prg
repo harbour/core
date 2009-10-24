@@ -71,41 +71,82 @@ CREATE CLASS QResource
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  absoluteFilePath()                  INLINE  Qt_QResource_absoluteFilePath( ::pPtr )
-   METHOD  data()                              INLINE  Qt_QResource_data( ::pPtr )
-   METHOD  fileName()                          INLINE  Qt_QResource_fileName( ::pPtr )
-   METHOD  isCompressed()                      INLINE  Qt_QResource_isCompressed( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QResource_isValid( ::pPtr )
-   METHOD  locale()                            INLINE  Qt_QResource_locale( ::pPtr )
-   METHOD  setFileName( cFile )                INLINE  Qt_QResource_setFileName( ::pPtr, cFile )
-   METHOD  setLocale( pLocale )                INLINE  Qt_QResource_setLocale( ::pPtr, pLocale )
-   METHOD  size()                              INLINE  Qt_QResource_size( ::pPtr )
-   METHOD  registerResource( cRccFileName, cMapRoot )  INLINE  Qt_QResource_registerResource( ::pPtr, cRccFileName, cMapRoot )
-   METHOD  searchPaths()                       INLINE  Qt_QResource_searchPaths( ::pPtr )
-   METHOD  unregisterResource( cRccFileName, cMapRoot )  INLINE  Qt_QResource_unregisterResource( ::pPtr, cRccFileName, cMapRoot )
+   METHOD  absoluteFilePath()
+   METHOD  data()
+   METHOD  fileName()
+   METHOD  isCompressed()
+   METHOD  isValid()
+   METHOD  locale()
+   METHOD  setFileName( cFile )
+   METHOD  setLocale( pLocale )
+   METHOD  size()
+   METHOD  registerResource( cRccFileName, cMapRoot )
+   METHOD  searchPaths()
+   METHOD  unregisterResource( cRccFileName, cMapRoot )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QResource
-
+METHOD QResource:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QResource( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QResource
-
+METHOD QResource:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QResource:absoluteFilePath()
+   RETURN Qt_QResource_absoluteFilePath( ::pPtr )
+
+
+METHOD QResource:data()
+   RETURN Qt_QResource_data( ::pPtr )
+
+
+METHOD QResource:fileName()
+   RETURN Qt_QResource_fileName( ::pPtr )
+
+
+METHOD QResource:isCompressed()
+   RETURN Qt_QResource_isCompressed( ::pPtr )
+
+
+METHOD QResource:isValid()
+   RETURN Qt_QResource_isValid( ::pPtr )
+
+
+METHOD QResource:locale()
+   RETURN Qt_QResource_locale( ::pPtr )
+
+
+METHOD QResource:setFileName( cFile )
+   RETURN Qt_QResource_setFileName( ::pPtr, cFile )
+
+
+METHOD QResource:setLocale( pLocale )
+   RETURN Qt_QResource_setLocale( ::pPtr, pLocale )
+
+
+METHOD QResource:size()
+   RETURN Qt_QResource_size( ::pPtr )
+
+
+METHOD QResource:registerResource( cRccFileName, cMapRoot )
+   RETURN Qt_QResource_registerResource( ::pPtr, cRccFileName, cMapRoot )
+
+
+METHOD QResource:searchPaths()
+   RETURN Qt_QResource_searchPaths( ::pPtr )
+
+
+METHOD QResource:unregisterResource( cRccFileName, cMapRoot )
+   RETURN Qt_QResource_unregisterResource( ::pPtr, cRccFileName, cMapRoot )
+

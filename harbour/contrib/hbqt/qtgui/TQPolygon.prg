@@ -71,42 +71,87 @@ CREATE CLASS QPolygon
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  boundingRect()                      INLINE  Qt_QPolygon_boundingRect( ::pPtr )
-   METHOD  containsPoint( pPoint, nFillRule )  INLINE  Qt_QPolygon_containsPoint( ::pPtr, pPoint, nFillRule )
-   METHOD  intersected( pR )                   INLINE  Qt_QPolygon_intersected( ::pPtr, pR )
-   METHOD  point( nIndex, nX, nY )             INLINE  Qt_QPolygon_point( ::pPtr, nIndex, nX, nY )
-   METHOD  point_1( nIndex )                   INLINE  Qt_QPolygon_point_1( ::pPtr, nIndex )
-   METHOD  putPoints( nIndex, nNPoints, pFromPolygon, nFromIndex )  INLINE  Qt_QPolygon_putPoints( ::pPtr, nIndex, nNPoints, pFromPolygon, nFromIndex )
-   METHOD  setPoint( nIndex, nX, nY )          INLINE  Qt_QPolygon_setPoint( ::pPtr, nIndex, nX, nY )
-   METHOD  setPoint_1( nIndex, pPoint )        INLINE  Qt_QPolygon_setPoint_1( ::pPtr, nIndex, pPoint )
-   METHOD  setPoints( nNPoints, nPoints )      INLINE  Qt_QPolygon_setPoints( ::pPtr, nNPoints, nPoints )
-   METHOD  subtracted( pR )                    INLINE  Qt_QPolygon_subtracted( ::pPtr, pR )
-   METHOD  translate( nDx, nDy )               INLINE  Qt_QPolygon_translate( ::pPtr, nDx, nDy )
-   METHOD  translate_1( pOffset )              INLINE  Qt_QPolygon_translate_1( ::pPtr, pOffset )
-   METHOD  united( pR )                        INLINE  Qt_QPolygon_united( ::pPtr, pR )
+   METHOD  boundingRect()
+   METHOD  containsPoint( pPoint, nFillRule )
+   METHOD  intersected( pR )
+   METHOD  point( nIndex, nX, nY )
+   METHOD  point_1( nIndex )
+   METHOD  putPoints( nIndex, nNPoints, pFromPolygon, nFromIndex )
+   METHOD  setPoint( nIndex, nX, nY )
+   METHOD  setPoint_1( nIndex, pPoint )
+   METHOD  setPoints( nNPoints, nPoints )
+   METHOD  subtracted( pR )
+   METHOD  translate( nDx, nDy )
+   METHOD  translate_1( pOffset )
+   METHOD  united( pR )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QPolygon
-
+METHOD QPolygon:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QPolygon( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QPolygon
-
+METHOD QPolygon:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QPolygon:boundingRect()
+   RETURN Qt_QPolygon_boundingRect( ::pPtr )
+
+
+METHOD QPolygon:containsPoint( pPoint, nFillRule )
+   RETURN Qt_QPolygon_containsPoint( ::pPtr, pPoint, nFillRule )
+
+
+METHOD QPolygon:intersected( pR )
+   RETURN Qt_QPolygon_intersected( ::pPtr, pR )
+
+
+METHOD QPolygon:point( nIndex, nX, nY )
+   RETURN Qt_QPolygon_point( ::pPtr, nIndex, nX, nY )
+
+
+METHOD QPolygon:point_1( nIndex )
+   RETURN Qt_QPolygon_point_1( ::pPtr, nIndex )
+
+
+METHOD QPolygon:putPoints( nIndex, nNPoints, pFromPolygon, nFromIndex )
+   RETURN Qt_QPolygon_putPoints( ::pPtr, nIndex, nNPoints, pFromPolygon, nFromIndex )
+
+
+METHOD QPolygon:setPoint( nIndex, nX, nY )
+   RETURN Qt_QPolygon_setPoint( ::pPtr, nIndex, nX, nY )
+
+
+METHOD QPolygon:setPoint_1( nIndex, pPoint )
+   RETURN Qt_QPolygon_setPoint_1( ::pPtr, nIndex, pPoint )
+
+
+METHOD QPolygon:setPoints( nNPoints, nPoints )
+   RETURN Qt_QPolygon_setPoints( ::pPtr, nNPoints, nPoints )
+
+
+METHOD QPolygon:subtracted( pR )
+   RETURN Qt_QPolygon_subtracted( ::pPtr, pR )
+
+
+METHOD QPolygon:translate( nDx, nDy )
+   RETURN Qt_QPolygon_translate( ::pPtr, nDx, nDy )
+
+
+METHOD QPolygon:translate_1( pOffset )
+   RETURN Qt_QPolygon_translate_1( ::pPtr, pOffset )
+
+
+METHOD QPolygon:united( pR )
+   RETURN Qt_QPolygon_united( ::pPtr, pR )
+

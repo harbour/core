@@ -71,98 +71,367 @@ CREATE CLASS QUrl INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addEncodedQueryItem( pKey, pValue )  INLINE  Qt_QUrl_addEncodedQueryItem( ::pPtr, pKey, pValue )
-   METHOD  addQueryItem( cKey, cValue )        INLINE  Qt_QUrl_addQueryItem( ::pPtr, cKey, cValue )
-   METHOD  allQueryItemValues( cKey )          INLINE  Qt_QUrl_allQueryItemValues( ::pPtr, cKey )
-   METHOD  authority()                         INLINE  Qt_QUrl_authority( ::pPtr )
-   METHOD  clear()                             INLINE  Qt_QUrl_clear( ::pPtr )
-   METHOD  encodedFragment()                   INLINE  Qt_QUrl_encodedFragment( ::pPtr )
-   METHOD  encodedHost()                       INLINE  Qt_QUrl_encodedHost( ::pPtr )
-   METHOD  encodedPassword()                   INLINE  Qt_QUrl_encodedPassword( ::pPtr )
-   METHOD  encodedPath()                       INLINE  Qt_QUrl_encodedPath( ::pPtr )
-   METHOD  encodedQuery()                      INLINE  Qt_QUrl_encodedQuery( ::pPtr )
-   METHOD  encodedQueryItemValue( pKey )       INLINE  Qt_QUrl_encodedQueryItemValue( ::pPtr, pKey )
-   METHOD  encodedUserName()                   INLINE  Qt_QUrl_encodedUserName( ::pPtr )
-   METHOD  errorString()                       INLINE  Qt_QUrl_errorString( ::pPtr )
-   METHOD  fragment()                          INLINE  Qt_QUrl_fragment( ::pPtr )
-   METHOD  hasEncodedQueryItem( pKey )         INLINE  Qt_QUrl_hasEncodedQueryItem( ::pPtr, pKey )
-   METHOD  hasFragment()                       INLINE  Qt_QUrl_hasFragment( ::pPtr )
-   METHOD  hasQuery()                          INLINE  Qt_QUrl_hasQuery( ::pPtr )
-   METHOD  hasQueryItem( cKey )                INLINE  Qt_QUrl_hasQueryItem( ::pPtr, cKey )
-   METHOD  host()                              INLINE  Qt_QUrl_host( ::pPtr )
-   METHOD  isEmpty()                           INLINE  Qt_QUrl_isEmpty( ::pPtr )
-   METHOD  isParentOf( pChildUrl )             INLINE  Qt_QUrl_isParentOf( ::pPtr, pChildUrl )
-   METHOD  isRelative()                        INLINE  Qt_QUrl_isRelative( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QUrl_isValid( ::pPtr )
-   METHOD  password()                          INLINE  Qt_QUrl_password( ::pPtr )
-   METHOD  path()                              INLINE  Qt_QUrl_path( ::pPtr )
-   METHOD  port()                              INLINE  Qt_QUrl_port( ::pPtr )
-   METHOD  port_1( nDefaultPort )              INLINE  Qt_QUrl_port_1( ::pPtr, nDefaultPort )
-   METHOD  queryItemValue( cKey )              INLINE  Qt_QUrl_queryItemValue( ::pPtr, cKey )
-   METHOD  queryPairDelimiter()                INLINE  Qt_QUrl_queryPairDelimiter( ::pPtr )
-   METHOD  queryValueDelimiter()               INLINE  Qt_QUrl_queryValueDelimiter( ::pPtr )
-   METHOD  removeAllEncodedQueryItems( pKey )  INLINE  Qt_QUrl_removeAllEncodedQueryItems( ::pPtr, pKey )
-   METHOD  removeAllQueryItems( cKey )         INLINE  Qt_QUrl_removeAllQueryItems( ::pPtr, cKey )
-   METHOD  removeEncodedQueryItem( pKey )      INLINE  Qt_QUrl_removeEncodedQueryItem( ::pPtr, pKey )
-   METHOD  removeQueryItem( cKey )             INLINE  Qt_QUrl_removeQueryItem( ::pPtr, cKey )
-   METHOD  resolved( pRelative )               INLINE  Qt_QUrl_resolved( ::pPtr, pRelative )
-   METHOD  scheme()                            INLINE  Qt_QUrl_scheme( ::pPtr )
-   METHOD  setAuthority( cAuthority )          INLINE  Qt_QUrl_setAuthority( ::pPtr, cAuthority )
-   METHOD  setEncodedFragment( pFragment )     INLINE  Qt_QUrl_setEncodedFragment( ::pPtr, pFragment )
-   METHOD  setEncodedHost( pHost )             INLINE  Qt_QUrl_setEncodedHost( ::pPtr, pHost )
-   METHOD  setEncodedPassword( pPassword )     INLINE  Qt_QUrl_setEncodedPassword( ::pPtr, pPassword )
-   METHOD  setEncodedPath( pPath )             INLINE  Qt_QUrl_setEncodedPath( ::pPtr, pPath )
-   METHOD  setEncodedQuery( pQuery )           INLINE  Qt_QUrl_setEncodedQuery( ::pPtr, pQuery )
-   METHOD  setEncodedUrl( pEncodedUrl )        INLINE  Qt_QUrl_setEncodedUrl( ::pPtr, pEncodedUrl )
-   METHOD  setEncodedUrl_1( pEncodedUrl, nParsingMode )  INLINE  Qt_QUrl_setEncodedUrl_1( ::pPtr, pEncodedUrl, nParsingMode )
-   METHOD  setEncodedUserName( pUserName )     INLINE  Qt_QUrl_setEncodedUserName( ::pPtr, pUserName )
-   METHOD  setFragment( cFragment )            INLINE  Qt_QUrl_setFragment( ::pPtr, cFragment )
-   METHOD  setHost( cHost )                    INLINE  Qt_QUrl_setHost( ::pPtr, cHost )
-   METHOD  setPassword( cPassword )            INLINE  Qt_QUrl_setPassword( ::pPtr, cPassword )
-   METHOD  setPath( cPath )                    INLINE  Qt_QUrl_setPath( ::pPtr, cPath )
-   METHOD  setPort( nPort )                    INLINE  Qt_QUrl_setPort( ::pPtr, nPort )
-   METHOD  setScheme( cScheme )                INLINE  Qt_QUrl_setScheme( ::pPtr, cScheme )
-   METHOD  setUrl( cUrl )                      INLINE  Qt_QUrl_setUrl( ::pPtr, cUrl )
-   METHOD  setUrl_1( cUrl, nParsingMode )      INLINE  Qt_QUrl_setUrl_1( ::pPtr, cUrl, nParsingMode )
-   METHOD  setUserInfo( cUserInfo )            INLINE  Qt_QUrl_setUserInfo( ::pPtr, cUserInfo )
-   METHOD  setUserName( cUserName )            INLINE  Qt_QUrl_setUserName( ::pPtr, cUserName )
-   METHOD  toEncoded( nOptions )               INLINE  Qt_QUrl_toEncoded( ::pPtr, nOptions )
-   METHOD  toLocalFile()                       INLINE  Qt_QUrl_toLocalFile( ::pPtr )
-   METHOD  toString( nOptions )                INLINE  Qt_QUrl_toString( ::pPtr, nOptions )
-   METHOD  userInfo()                          INLINE  Qt_QUrl_userInfo( ::pPtr )
-   METHOD  userName()                          INLINE  Qt_QUrl_userName( ::pPtr )
-   METHOD  fromAce( pDomain )                  INLINE  Qt_QUrl_fromAce( ::pPtr, pDomain )
-   METHOD  fromEncoded( pInput )               INLINE  Qt_QUrl_fromEncoded( ::pPtr, pInput )
-   METHOD  fromEncoded_1( pInput, nParsingMode )  INLINE  Qt_QUrl_fromEncoded_1( ::pPtr, pInput, nParsingMode )
-   METHOD  fromLocalFile( cLocalFile )         INLINE  Qt_QUrl_fromLocalFile( ::pPtr, cLocalFile )
-   METHOD  fromPercentEncoding( pInput )       INLINE  Qt_QUrl_fromPercentEncoding( ::pPtr, pInput )
-   METHOD  idnWhitelist()                      INLINE  Qt_QUrl_idnWhitelist( ::pPtr )
-   METHOD  setIdnWhitelist( pList )            INLINE  Qt_QUrl_setIdnWhitelist( ::pPtr, pList )
-   METHOD  toAce( cDomain )                    INLINE  Qt_QUrl_toAce( ::pPtr, cDomain )
-   METHOD  toPercentEncoding( cInput, pExclude, pInclude )  INLINE  Qt_QUrl_toPercentEncoding( ::pPtr, cInput, pExclude, pInclude )
+   METHOD  addEncodedQueryItem( pKey, pValue )
+   METHOD  addQueryItem( cKey, cValue )
+   METHOD  allQueryItemValues( cKey )
+   METHOD  authority()
+   METHOD  clear()
+   METHOD  encodedFragment()
+   METHOD  encodedHost()
+   METHOD  encodedPassword()
+   METHOD  encodedPath()
+   METHOD  encodedQuery()
+   METHOD  encodedQueryItemValue( pKey )
+   METHOD  encodedUserName()
+   METHOD  errorString()
+   METHOD  fragment()
+   METHOD  hasEncodedQueryItem( pKey )
+   METHOD  hasFragment()
+   METHOD  hasQuery()
+   METHOD  hasQueryItem( cKey )
+   METHOD  host()
+   METHOD  isEmpty()
+   METHOD  isParentOf( pChildUrl )
+   METHOD  isRelative()
+   METHOD  isValid()
+   METHOD  password()
+   METHOD  path()
+   METHOD  port()
+   METHOD  port_1( nDefaultPort )
+   METHOD  queryItemValue( cKey )
+   METHOD  queryPairDelimiter()
+   METHOD  queryValueDelimiter()
+   METHOD  removeAllEncodedQueryItems( pKey )
+   METHOD  removeAllQueryItems( cKey )
+   METHOD  removeEncodedQueryItem( pKey )
+   METHOD  removeQueryItem( cKey )
+   METHOD  resolved( pRelative )
+   METHOD  scheme()
+   METHOD  setAuthority( cAuthority )
+   METHOD  setEncodedFragment( pFragment )
+   METHOD  setEncodedHost( pHost )
+   METHOD  setEncodedPassword( pPassword )
+   METHOD  setEncodedPath( pPath )
+   METHOD  setEncodedQuery( pQuery )
+   METHOD  setEncodedUrl( pEncodedUrl )
+   METHOD  setEncodedUrl_1( pEncodedUrl, nParsingMode )
+   METHOD  setEncodedUserName( pUserName )
+   METHOD  setFragment( cFragment )
+   METHOD  setHost( cHost )
+   METHOD  setPassword( cPassword )
+   METHOD  setPath( cPath )
+   METHOD  setPort( nPort )
+   METHOD  setScheme( cScheme )
+   METHOD  setUrl( cUrl )
+   METHOD  setUrl_1( cUrl, nParsingMode )
+   METHOD  setUserInfo( cUserInfo )
+   METHOD  setUserName( cUserName )
+   METHOD  toEncoded( nOptions )
+   METHOD  toLocalFile()
+   METHOD  toString( nOptions )
+   METHOD  userInfo()
+   METHOD  userName()
+   METHOD  fromAce( pDomain )
+   METHOD  fromEncoded( pInput )
+   METHOD  fromEncoded_1( pInput, nParsingMode )
+   METHOD  fromLocalFile( cLocalFile )
+   METHOD  fromPercentEncoding( pInput )
+   METHOD  idnWhitelist()
+   METHOD  setIdnWhitelist( pList )
+   METHOD  toAce( cDomain )
+   METHOD  toPercentEncoding( cInput, pExclude, pInclude )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QUrl
-
+METHOD QUrl:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QUrl( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QUrl
-
+METHOD QUrl:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QUrl:addEncodedQueryItem( pKey, pValue )
+   RETURN Qt_QUrl_addEncodedQueryItem( ::pPtr, pKey, pValue )
+
+
+METHOD QUrl:addQueryItem( cKey, cValue )
+   RETURN Qt_QUrl_addQueryItem( ::pPtr, cKey, cValue )
+
+
+METHOD QUrl:allQueryItemValues( cKey )
+   RETURN Qt_QUrl_allQueryItemValues( ::pPtr, cKey )
+
+
+METHOD QUrl:authority()
+   RETURN Qt_QUrl_authority( ::pPtr )
+
+
+METHOD QUrl:clear()
+   RETURN Qt_QUrl_clear( ::pPtr )
+
+
+METHOD QUrl:encodedFragment()
+   RETURN Qt_QUrl_encodedFragment( ::pPtr )
+
+
+METHOD QUrl:encodedHost()
+   RETURN Qt_QUrl_encodedHost( ::pPtr )
+
+
+METHOD QUrl:encodedPassword()
+   RETURN Qt_QUrl_encodedPassword( ::pPtr )
+
+
+METHOD QUrl:encodedPath()
+   RETURN Qt_QUrl_encodedPath( ::pPtr )
+
+
+METHOD QUrl:encodedQuery()
+   RETURN Qt_QUrl_encodedQuery( ::pPtr )
+
+
+METHOD QUrl:encodedQueryItemValue( pKey )
+   RETURN Qt_QUrl_encodedQueryItemValue( ::pPtr, pKey )
+
+
+METHOD QUrl:encodedUserName()
+   RETURN Qt_QUrl_encodedUserName( ::pPtr )
+
+
+METHOD QUrl:errorString()
+   RETURN Qt_QUrl_errorString( ::pPtr )
+
+
+METHOD QUrl:fragment()
+   RETURN Qt_QUrl_fragment( ::pPtr )
+
+
+METHOD QUrl:hasEncodedQueryItem( pKey )
+   RETURN Qt_QUrl_hasEncodedQueryItem( ::pPtr, pKey )
+
+
+METHOD QUrl:hasFragment()
+   RETURN Qt_QUrl_hasFragment( ::pPtr )
+
+
+METHOD QUrl:hasQuery()
+   RETURN Qt_QUrl_hasQuery( ::pPtr )
+
+
+METHOD QUrl:hasQueryItem( cKey )
+   RETURN Qt_QUrl_hasQueryItem( ::pPtr, cKey )
+
+
+METHOD QUrl:host()
+   RETURN Qt_QUrl_host( ::pPtr )
+
+
+METHOD QUrl:isEmpty()
+   RETURN Qt_QUrl_isEmpty( ::pPtr )
+
+
+METHOD QUrl:isParentOf( pChildUrl )
+   RETURN Qt_QUrl_isParentOf( ::pPtr, pChildUrl )
+
+
+METHOD QUrl:isRelative()
+   RETURN Qt_QUrl_isRelative( ::pPtr )
+
+
+METHOD QUrl:isValid()
+   RETURN Qt_QUrl_isValid( ::pPtr )
+
+
+METHOD QUrl:password()
+   RETURN Qt_QUrl_password( ::pPtr )
+
+
+METHOD QUrl:path()
+   RETURN Qt_QUrl_path( ::pPtr )
+
+
+METHOD QUrl:port()
+   RETURN Qt_QUrl_port( ::pPtr )
+
+
+METHOD QUrl:port_1( nDefaultPort )
+   RETURN Qt_QUrl_port_1( ::pPtr, nDefaultPort )
+
+
+METHOD QUrl:queryItemValue( cKey )
+   RETURN Qt_QUrl_queryItemValue( ::pPtr, cKey )
+
+
+METHOD QUrl:queryPairDelimiter()
+   RETURN Qt_QUrl_queryPairDelimiter( ::pPtr )
+
+
+METHOD QUrl:queryValueDelimiter()
+   RETURN Qt_QUrl_queryValueDelimiter( ::pPtr )
+
+
+METHOD QUrl:removeAllEncodedQueryItems( pKey )
+   RETURN Qt_QUrl_removeAllEncodedQueryItems( ::pPtr, pKey )
+
+
+METHOD QUrl:removeAllQueryItems( cKey )
+   RETURN Qt_QUrl_removeAllQueryItems( ::pPtr, cKey )
+
+
+METHOD QUrl:removeEncodedQueryItem( pKey )
+   RETURN Qt_QUrl_removeEncodedQueryItem( ::pPtr, pKey )
+
+
+METHOD QUrl:removeQueryItem( cKey )
+   RETURN Qt_QUrl_removeQueryItem( ::pPtr, cKey )
+
+
+METHOD QUrl:resolved( pRelative )
+   RETURN Qt_QUrl_resolved( ::pPtr, pRelative )
+
+
+METHOD QUrl:scheme()
+   RETURN Qt_QUrl_scheme( ::pPtr )
+
+
+METHOD QUrl:setAuthority( cAuthority )
+   RETURN Qt_QUrl_setAuthority( ::pPtr, cAuthority )
+
+
+METHOD QUrl:setEncodedFragment( pFragment )
+   RETURN Qt_QUrl_setEncodedFragment( ::pPtr, pFragment )
+
+
+METHOD QUrl:setEncodedHost( pHost )
+   RETURN Qt_QUrl_setEncodedHost( ::pPtr, pHost )
+
+
+METHOD QUrl:setEncodedPassword( pPassword )
+   RETURN Qt_QUrl_setEncodedPassword( ::pPtr, pPassword )
+
+
+METHOD QUrl:setEncodedPath( pPath )
+   RETURN Qt_QUrl_setEncodedPath( ::pPtr, pPath )
+
+
+METHOD QUrl:setEncodedQuery( pQuery )
+   RETURN Qt_QUrl_setEncodedQuery( ::pPtr, pQuery )
+
+
+METHOD QUrl:setEncodedUrl( pEncodedUrl )
+   RETURN Qt_QUrl_setEncodedUrl( ::pPtr, pEncodedUrl )
+
+
+METHOD QUrl:setEncodedUrl_1( pEncodedUrl, nParsingMode )
+   RETURN Qt_QUrl_setEncodedUrl_1( ::pPtr, pEncodedUrl, nParsingMode )
+
+
+METHOD QUrl:setEncodedUserName( pUserName )
+   RETURN Qt_QUrl_setEncodedUserName( ::pPtr, pUserName )
+
+
+METHOD QUrl:setFragment( cFragment )
+   RETURN Qt_QUrl_setFragment( ::pPtr, cFragment )
+
+
+METHOD QUrl:setHost( cHost )
+   RETURN Qt_QUrl_setHost( ::pPtr, cHost )
+
+
+METHOD QUrl:setPassword( cPassword )
+   RETURN Qt_QUrl_setPassword( ::pPtr, cPassword )
+
+
+METHOD QUrl:setPath( cPath )
+   RETURN Qt_QUrl_setPath( ::pPtr, cPath )
+
+
+METHOD QUrl:setPort( nPort )
+   RETURN Qt_QUrl_setPort( ::pPtr, nPort )
+
+
+METHOD QUrl:setScheme( cScheme )
+   RETURN Qt_QUrl_setScheme( ::pPtr, cScheme )
+
+
+METHOD QUrl:setUrl( cUrl )
+   RETURN Qt_QUrl_setUrl( ::pPtr, cUrl )
+
+
+METHOD QUrl:setUrl_1( cUrl, nParsingMode )
+   RETURN Qt_QUrl_setUrl_1( ::pPtr, cUrl, nParsingMode )
+
+
+METHOD QUrl:setUserInfo( cUserInfo )
+   RETURN Qt_QUrl_setUserInfo( ::pPtr, cUserInfo )
+
+
+METHOD QUrl:setUserName( cUserName )
+   RETURN Qt_QUrl_setUserName( ::pPtr, cUserName )
+
+
+METHOD QUrl:toEncoded( nOptions )
+   RETURN Qt_QUrl_toEncoded( ::pPtr, nOptions )
+
+
+METHOD QUrl:toLocalFile()
+   RETURN Qt_QUrl_toLocalFile( ::pPtr )
+
+
+METHOD QUrl:toString( nOptions )
+   RETURN Qt_QUrl_toString( ::pPtr, nOptions )
+
+
+METHOD QUrl:userInfo()
+   RETURN Qt_QUrl_userInfo( ::pPtr )
+
+
+METHOD QUrl:userName()
+   RETURN Qt_QUrl_userName( ::pPtr )
+
+
+METHOD QUrl:fromAce( pDomain )
+   RETURN Qt_QUrl_fromAce( ::pPtr, pDomain )
+
+
+METHOD QUrl:fromEncoded( pInput )
+   RETURN Qt_QUrl_fromEncoded( ::pPtr, pInput )
+
+
+METHOD QUrl:fromEncoded_1( pInput, nParsingMode )
+   RETURN Qt_QUrl_fromEncoded_1( ::pPtr, pInput, nParsingMode )
+
+
+METHOD QUrl:fromLocalFile( cLocalFile )
+   RETURN Qt_QUrl_fromLocalFile( ::pPtr, cLocalFile )
+
+
+METHOD QUrl:fromPercentEncoding( pInput )
+   RETURN Qt_QUrl_fromPercentEncoding( ::pPtr, pInput )
+
+
+METHOD QUrl:idnWhitelist()
+   RETURN Qt_QUrl_idnWhitelist( ::pPtr )
+
+
+METHOD QUrl:setIdnWhitelist( pList )
+   RETURN Qt_QUrl_setIdnWhitelist( ::pPtr, pList )
+
+
+METHOD QUrl:toAce( cDomain )
+   RETURN Qt_QUrl_toAce( ::pPtr, cDomain )
+
+
+METHOD QUrl:toPercentEncoding( cInput, pExclude, pInclude )
+   RETURN Qt_QUrl_toPercentEncoding( ::pPtr, cInput, pExclude, pInclude )
+

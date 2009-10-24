@@ -71,33 +71,42 @@ CREATE CLASS QStyleOptionDockWidget INHERIT QStyleOption
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  closable()                          INLINE  Qt_QStyleOptionDockWidget_closable( ::pPtr )
-   METHOD  floatable()                         INLINE  Qt_QStyleOptionDockWidget_floatable( ::pPtr )
-   METHOD  movable()                           INLINE  Qt_QStyleOptionDockWidget_movable( ::pPtr )
-   METHOD  title()                             INLINE  Qt_QStyleOptionDockWidget_title( ::pPtr )
+   METHOD  closable()
+   METHOD  floatable()
+   METHOD  movable()
+   METHOD  title()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyleOptionDockWidget
-
+METHOD QStyleOptionDockWidget:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyleOptionDockWidget( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyleOptionDockWidget
-
+METHOD QStyleOptionDockWidget:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyleOptionDockWidget:closable()
+   RETURN Qt_QStyleOptionDockWidget_closable( ::pPtr )
+
+
+METHOD QStyleOptionDockWidget:floatable()
+   RETURN Qt_QStyleOptionDockWidget_floatable( ::pPtr )
+
+
+METHOD QStyleOptionDockWidget:movable()
+   RETURN Qt_QStyleOptionDockWidget_movable( ::pPtr )
+
+
+METHOD QStyleOptionDockWidget:title()
+   RETURN Qt_QStyleOptionDockWidget_title( ::pPtr )
+

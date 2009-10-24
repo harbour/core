@@ -71,43 +71,92 @@ CREATE CLASS QWebHitTestResult
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  alternateText()                     INLINE  Qt_QWebHitTestResult_alternateText( ::pPtr )
-   METHOD  boundingRect()                      INLINE  Qt_QWebHitTestResult_boundingRect( ::pPtr )
-   METHOD  frame()                             INLINE  Qt_QWebHitTestResult_frame( ::pPtr )
-   METHOD  imageUrl()                          INLINE  Qt_QWebHitTestResult_imageUrl( ::pPtr )
-   METHOD  isContentEditable()                 INLINE  Qt_QWebHitTestResult_isContentEditable( ::pPtr )
-   METHOD  isContentSelected()                 INLINE  Qt_QWebHitTestResult_isContentSelected( ::pPtr )
-   METHOD  isNull()                            INLINE  Qt_QWebHitTestResult_isNull( ::pPtr )
-   METHOD  linkTargetFrame()                   INLINE  Qt_QWebHitTestResult_linkTargetFrame( ::pPtr )
-   METHOD  linkText()                          INLINE  Qt_QWebHitTestResult_linkText( ::pPtr )
-   METHOD  linkTitle()                         INLINE  Qt_QWebHitTestResult_linkTitle( ::pPtr )
-   METHOD  linkUrl()                           INLINE  Qt_QWebHitTestResult_linkUrl( ::pPtr )
-   METHOD  pixmap()                            INLINE  Qt_QWebHitTestResult_pixmap( ::pPtr )
-   METHOD  pos()                               INLINE  Qt_QWebHitTestResult_pos( ::pPtr )
-   METHOD  title()                             INLINE  Qt_QWebHitTestResult_title( ::pPtr )
+   METHOD  alternateText()
+   METHOD  boundingRect()
+   METHOD  frame()
+   METHOD  imageUrl()
+   METHOD  isContentEditable()
+   METHOD  isContentSelected()
+   METHOD  isNull()
+   METHOD  linkTargetFrame()
+   METHOD  linkText()
+   METHOD  linkTitle()
+   METHOD  linkUrl()
+   METHOD  pixmap()
+   METHOD  pos()
+   METHOD  title()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QWebHitTestResult
-
+METHOD QWebHitTestResult:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QWebHitTestResult( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QWebHitTestResult
-
+METHOD QWebHitTestResult:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QWebHitTestResult:alternateText()
+   RETURN Qt_QWebHitTestResult_alternateText( ::pPtr )
+
+
+METHOD QWebHitTestResult:boundingRect()
+   RETURN Qt_QWebHitTestResult_boundingRect( ::pPtr )
+
+
+METHOD QWebHitTestResult:frame()
+   RETURN Qt_QWebHitTestResult_frame( ::pPtr )
+
+
+METHOD QWebHitTestResult:imageUrl()
+   RETURN Qt_QWebHitTestResult_imageUrl( ::pPtr )
+
+
+METHOD QWebHitTestResult:isContentEditable()
+   RETURN Qt_QWebHitTestResult_isContentEditable( ::pPtr )
+
+
+METHOD QWebHitTestResult:isContentSelected()
+   RETURN Qt_QWebHitTestResult_isContentSelected( ::pPtr )
+
+
+METHOD QWebHitTestResult:isNull()
+   RETURN Qt_QWebHitTestResult_isNull( ::pPtr )
+
+
+METHOD QWebHitTestResult:linkTargetFrame()
+   RETURN Qt_QWebHitTestResult_linkTargetFrame( ::pPtr )
+
+
+METHOD QWebHitTestResult:linkText()
+   RETURN Qt_QWebHitTestResult_linkText( ::pPtr )
+
+
+METHOD QWebHitTestResult:linkTitle()
+   RETURN Qt_QWebHitTestResult_linkTitle( ::pPtr )
+
+
+METHOD QWebHitTestResult:linkUrl()
+   RETURN Qt_QWebHitTestResult_linkUrl( ::pPtr )
+
+
+METHOD QWebHitTestResult:pixmap()
+   RETURN Qt_QWebHitTestResult_pixmap( ::pPtr )
+
+
+METHOD QWebHitTestResult:pos()
+   RETURN Qt_QWebHitTestResult_pos( ::pPtr )
+
+
+METHOD QWebHitTestResult:title()
+   RETURN Qt_QWebHitTestResult_title( ::pPtr )
+

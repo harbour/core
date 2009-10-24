@@ -71,74 +71,235 @@ CREATE CLASS QTableView INHERIT QAbstractItemView
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  clearSpans()                        INLINE  Qt_QTableView_clearSpans( ::pPtr )
-   METHOD  columnAt( nX )                      INLINE  Qt_QTableView_columnAt( ::pPtr, nX )
-   METHOD  columnSpan( nRow, nColumn )         INLINE  Qt_QTableView_columnSpan( ::pPtr, nRow, nColumn )
-   METHOD  columnViewportPosition( nColumn )   INLINE  Qt_QTableView_columnViewportPosition( ::pPtr, nColumn )
-   METHOD  columnWidth( nColumn )              INLINE  Qt_QTableView_columnWidth( ::pPtr, nColumn )
-   METHOD  gridStyle()                         INLINE  Qt_QTableView_gridStyle( ::pPtr )
-   METHOD  horizontalHeader()                  INLINE  Qt_QTableView_horizontalHeader( ::pPtr )
-   METHOD  indexAt( pPos )                     INLINE  Qt_QTableView_indexAt( ::pPtr, pPos )
-   METHOD  isColumnHidden( nColumn )           INLINE  Qt_QTableView_isColumnHidden( ::pPtr, nColumn )
-   METHOD  isCornerButtonEnabled()             INLINE  Qt_QTableView_isCornerButtonEnabled( ::pPtr )
-   METHOD  isRowHidden( nRow )                 INLINE  Qt_QTableView_isRowHidden( ::pPtr, nRow )
-   METHOD  isSortingEnabled()                  INLINE  Qt_QTableView_isSortingEnabled( ::pPtr )
-   METHOD  rowAt( nY )                         INLINE  Qt_QTableView_rowAt( ::pPtr, nY )
-   METHOD  rowHeight( nRow )                   INLINE  Qt_QTableView_rowHeight( ::pPtr, nRow )
-   METHOD  rowSpan( nRow, nColumn )            INLINE  Qt_QTableView_rowSpan( ::pPtr, nRow, nColumn )
-   METHOD  rowViewportPosition( nRow )         INLINE  Qt_QTableView_rowViewportPosition( ::pPtr, nRow )
-   METHOD  setColumnHidden( nColumn, lHide )   INLINE  Qt_QTableView_setColumnHidden( ::pPtr, nColumn, lHide )
-   METHOD  setColumnWidth( nColumn, nWidth )   INLINE  Qt_QTableView_setColumnWidth( ::pPtr, nColumn, nWidth )
-   METHOD  setCornerButtonEnabled( lEnable )   INLINE  Qt_QTableView_setCornerButtonEnabled( ::pPtr, lEnable )
-   METHOD  setGridStyle( nStyle )              INLINE  Qt_QTableView_setGridStyle( ::pPtr, nStyle )
-   METHOD  setHorizontalHeader( pHeader )      INLINE  Qt_QTableView_setHorizontalHeader( ::pPtr, pHeader )
-   METHOD  setRowHeight( nRow, nHeight )       INLINE  Qt_QTableView_setRowHeight( ::pPtr, nRow, nHeight )
-   METHOD  setRowHidden( nRow, lHide )         INLINE  Qt_QTableView_setRowHidden( ::pPtr, nRow, lHide )
-   METHOD  setSortingEnabled( lEnable )        INLINE  Qt_QTableView_setSortingEnabled( ::pPtr, lEnable )
-   METHOD  setSpan( nRow, nColumn, nRowSpanCount, nColumnSpanCount )  INLINE  Qt_QTableView_setSpan( ::pPtr, nRow, nColumn, nRowSpanCount, nColumnSpanCount )
-   METHOD  setVerticalHeader( pHeader )        INLINE  Qt_QTableView_setVerticalHeader( ::pPtr, pHeader )
-   METHOD  setWordWrap( lOn )                  INLINE  Qt_QTableView_setWordWrap( ::pPtr, lOn )
-   METHOD  showGrid()                          INLINE  Qt_QTableView_showGrid( ::pPtr )
-   METHOD  sortByColumn( nColumn, nOrder )     INLINE  Qt_QTableView_sortByColumn( ::pPtr, nColumn, nOrder )
-   METHOD  verticalHeader()                    INLINE  Qt_QTableView_verticalHeader( ::pPtr )
-   METHOD  wordWrap()                          INLINE  Qt_QTableView_wordWrap( ::pPtr )
-   METHOD  hideColumn( nColumn )               INLINE  Qt_QTableView_hideColumn( ::pPtr, nColumn )
-   METHOD  hideRow( nRow )                     INLINE  Qt_QTableView_hideRow( ::pPtr, nRow )
-   METHOD  resizeColumnToContents( nColumn )   INLINE  Qt_QTableView_resizeColumnToContents( ::pPtr, nColumn )
-   METHOD  resizeColumnsToContents()           INLINE  Qt_QTableView_resizeColumnsToContents( ::pPtr )
-   METHOD  resizeRowToContents( nRow )         INLINE  Qt_QTableView_resizeRowToContents( ::pPtr, nRow )
-   METHOD  resizeRowsToContents()              INLINE  Qt_QTableView_resizeRowsToContents( ::pPtr )
-   METHOD  selectColumn( nColumn )             INLINE  Qt_QTableView_selectColumn( ::pPtr, nColumn )
-   METHOD  selectRow( nRow )                   INLINE  Qt_QTableView_selectRow( ::pPtr, nRow )
-   METHOD  setShowGrid( lShow )                INLINE  Qt_QTableView_setShowGrid( ::pPtr, lShow )
-   METHOD  showColumn( nColumn )               INLINE  Qt_QTableView_showColumn( ::pPtr, nColumn )
-   METHOD  showRow( nRow )                     INLINE  Qt_QTableView_showRow( ::pPtr, nRow )
+   METHOD  clearSpans()
+   METHOD  columnAt( nX )
+   METHOD  columnSpan( nRow, nColumn )
+   METHOD  columnViewportPosition( nColumn )
+   METHOD  columnWidth( nColumn )
+   METHOD  gridStyle()
+   METHOD  horizontalHeader()
+   METHOD  indexAt( pPos )
+   METHOD  isColumnHidden( nColumn )
+   METHOD  isCornerButtonEnabled()
+   METHOD  isRowHidden( nRow )
+   METHOD  isSortingEnabled()
+   METHOD  rowAt( nY )
+   METHOD  rowHeight( nRow )
+   METHOD  rowSpan( nRow, nColumn )
+   METHOD  rowViewportPosition( nRow )
+   METHOD  setColumnHidden( nColumn, lHide )
+   METHOD  setColumnWidth( nColumn, nWidth )
+   METHOD  setCornerButtonEnabled( lEnable )
+   METHOD  setGridStyle( nStyle )
+   METHOD  setHorizontalHeader( pHeader )
+   METHOD  setRowHeight( nRow, nHeight )
+   METHOD  setRowHidden( nRow, lHide )
+   METHOD  setSortingEnabled( lEnable )
+   METHOD  setSpan( nRow, nColumn, nRowSpanCount, nColumnSpanCount )
+   METHOD  setVerticalHeader( pHeader )
+   METHOD  setWordWrap( lOn )
+   METHOD  showGrid()
+   METHOD  sortByColumn( nColumn, nOrder )
+   METHOD  verticalHeader()
+   METHOD  wordWrap()
+   METHOD  hideColumn( nColumn )
+   METHOD  hideRow( nRow )
+   METHOD  resizeColumnToContents( nColumn )
+   METHOD  resizeColumnsToContents()
+   METHOD  resizeRowToContents( nRow )
+   METHOD  resizeRowsToContents()
+   METHOD  selectColumn( nColumn )
+   METHOD  selectRow( nRow )
+   METHOD  setShowGrid( lShow )
+   METHOD  showColumn( nColumn )
+   METHOD  showRow( nRow )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTableView
-
+METHOD QTableView:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTableView( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTableView
-
+METHOD QTableView:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTableView:clearSpans()
+   RETURN Qt_QTableView_clearSpans( ::pPtr )
+
+
+METHOD QTableView:columnAt( nX )
+   RETURN Qt_QTableView_columnAt( ::pPtr, nX )
+
+
+METHOD QTableView:columnSpan( nRow, nColumn )
+   RETURN Qt_QTableView_columnSpan( ::pPtr, nRow, nColumn )
+
+
+METHOD QTableView:columnViewportPosition( nColumn )
+   RETURN Qt_QTableView_columnViewportPosition( ::pPtr, nColumn )
+
+
+METHOD QTableView:columnWidth( nColumn )
+   RETURN Qt_QTableView_columnWidth( ::pPtr, nColumn )
+
+
+METHOD QTableView:gridStyle()
+   RETURN Qt_QTableView_gridStyle( ::pPtr )
+
+
+METHOD QTableView:horizontalHeader()
+   RETURN Qt_QTableView_horizontalHeader( ::pPtr )
+
+
+METHOD QTableView:indexAt( pPos )
+   RETURN Qt_QTableView_indexAt( ::pPtr, pPos )
+
+
+METHOD QTableView:isColumnHidden( nColumn )
+   RETURN Qt_QTableView_isColumnHidden( ::pPtr, nColumn )
+
+
+METHOD QTableView:isCornerButtonEnabled()
+   RETURN Qt_QTableView_isCornerButtonEnabled( ::pPtr )
+
+
+METHOD QTableView:isRowHidden( nRow )
+   RETURN Qt_QTableView_isRowHidden( ::pPtr, nRow )
+
+
+METHOD QTableView:isSortingEnabled()
+   RETURN Qt_QTableView_isSortingEnabled( ::pPtr )
+
+
+METHOD QTableView:rowAt( nY )
+   RETURN Qt_QTableView_rowAt( ::pPtr, nY )
+
+
+METHOD QTableView:rowHeight( nRow )
+   RETURN Qt_QTableView_rowHeight( ::pPtr, nRow )
+
+
+METHOD QTableView:rowSpan( nRow, nColumn )
+   RETURN Qt_QTableView_rowSpan( ::pPtr, nRow, nColumn )
+
+
+METHOD QTableView:rowViewportPosition( nRow )
+   RETURN Qt_QTableView_rowViewportPosition( ::pPtr, nRow )
+
+
+METHOD QTableView:setColumnHidden( nColumn, lHide )
+   RETURN Qt_QTableView_setColumnHidden( ::pPtr, nColumn, lHide )
+
+
+METHOD QTableView:setColumnWidth( nColumn, nWidth )
+   RETURN Qt_QTableView_setColumnWidth( ::pPtr, nColumn, nWidth )
+
+
+METHOD QTableView:setCornerButtonEnabled( lEnable )
+   RETURN Qt_QTableView_setCornerButtonEnabled( ::pPtr, lEnable )
+
+
+METHOD QTableView:setGridStyle( nStyle )
+   RETURN Qt_QTableView_setGridStyle( ::pPtr, nStyle )
+
+
+METHOD QTableView:setHorizontalHeader( pHeader )
+   RETURN Qt_QTableView_setHorizontalHeader( ::pPtr, pHeader )
+
+
+METHOD QTableView:setRowHeight( nRow, nHeight )
+   RETURN Qt_QTableView_setRowHeight( ::pPtr, nRow, nHeight )
+
+
+METHOD QTableView:setRowHidden( nRow, lHide )
+   RETURN Qt_QTableView_setRowHidden( ::pPtr, nRow, lHide )
+
+
+METHOD QTableView:setSortingEnabled( lEnable )
+   RETURN Qt_QTableView_setSortingEnabled( ::pPtr, lEnable )
+
+
+METHOD QTableView:setSpan( nRow, nColumn, nRowSpanCount, nColumnSpanCount )
+   RETURN Qt_QTableView_setSpan( ::pPtr, nRow, nColumn, nRowSpanCount, nColumnSpanCount )
+
+
+METHOD QTableView:setVerticalHeader( pHeader )
+   RETURN Qt_QTableView_setVerticalHeader( ::pPtr, pHeader )
+
+
+METHOD QTableView:setWordWrap( lOn )
+   RETURN Qt_QTableView_setWordWrap( ::pPtr, lOn )
+
+
+METHOD QTableView:showGrid()
+   RETURN Qt_QTableView_showGrid( ::pPtr )
+
+
+METHOD QTableView:sortByColumn( nColumn, nOrder )
+   RETURN Qt_QTableView_sortByColumn( ::pPtr, nColumn, nOrder )
+
+
+METHOD QTableView:verticalHeader()
+   RETURN Qt_QTableView_verticalHeader( ::pPtr )
+
+
+METHOD QTableView:wordWrap()
+   RETURN Qt_QTableView_wordWrap( ::pPtr )
+
+
+METHOD QTableView:hideColumn( nColumn )
+   RETURN Qt_QTableView_hideColumn( ::pPtr, nColumn )
+
+
+METHOD QTableView:hideRow( nRow )
+   RETURN Qt_QTableView_hideRow( ::pPtr, nRow )
+
+
+METHOD QTableView:resizeColumnToContents( nColumn )
+   RETURN Qt_QTableView_resizeColumnToContents( ::pPtr, nColumn )
+
+
+METHOD QTableView:resizeColumnsToContents()
+   RETURN Qt_QTableView_resizeColumnsToContents( ::pPtr )
+
+
+METHOD QTableView:resizeRowToContents( nRow )
+   RETURN Qt_QTableView_resizeRowToContents( ::pPtr, nRow )
+
+
+METHOD QTableView:resizeRowsToContents()
+   RETURN Qt_QTableView_resizeRowsToContents( ::pPtr )
+
+
+METHOD QTableView:selectColumn( nColumn )
+   RETURN Qt_QTableView_selectColumn( ::pPtr, nColumn )
+
+
+METHOD QTableView:selectRow( nRow )
+   RETURN Qt_QTableView_selectRow( ::pPtr, nRow )
+
+
+METHOD QTableView:setShowGrid( lShow )
+   RETURN Qt_QTableView_setShowGrid( ::pPtr, lShow )
+
+
+METHOD QTableView:showColumn( nColumn )
+   RETURN Qt_QTableView_showColumn( ::pPtr, nColumn )
+
+
+METHOD QTableView:showRow( nRow )
+   RETURN Qt_QTableView_showRow( ::pPtr, nRow )
+
 
 
 CREATE CLASS HBTableView INHERIT QTableView
@@ -148,4 +309,3 @@ CREATE CLASS HBTableView INHERIT QTableView
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/

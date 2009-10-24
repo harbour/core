@@ -71,30 +71,27 @@ CREATE CLASS QTextEncoder
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  fromUnicode( cStr )                 INLINE  Qt_QTextEncoder_fromUnicode( ::pPtr, cStr )
+   METHOD  fromUnicode( cStr )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextEncoder
-
+METHOD QTextEncoder:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextEncoder( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextEncoder
-
+METHOD QTextEncoder:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextEncoder:fromUnicode( cStr )
+   RETURN Qt_QTextEncoder_fromUnicode( ::pPtr, cStr )
+

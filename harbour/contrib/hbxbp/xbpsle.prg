@@ -146,10 +146,12 @@ METHOD XbpSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oWidget:setFrame( ::border )
    ::oWidget:setMaxLength( ::bufferLength )
 
+   #if 0
    QT_QObject_InstallEventFilter( ::pWidget, SetEventFilter() )
 
    ::connectEvent( ::pWidget, QEvent_FocusIn , {|o,e| ::exeBlock( 7, e, o ) } )
    ::connectEvent( ::pWidget, QEvent_FocusOut, {|o,e| ::exeBlock( 8, e, o ) } )
+   #endif
 
    ::connect( ::pWidget, "cursorPositionChanged(int,int)" , {|o,i,ii| ::exeBlock( 1, i, ii, o ) } )
    // ::connect( ::pWidget, "editingFinished()"              , {|      | ::exeBlock( 2 ) } )

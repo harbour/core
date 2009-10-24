@@ -71,49 +71,122 @@ CREATE CLASS QTextBrowser INHERIT QTextEdit
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  backwardHistoryCount()              INLINE  Qt_QTextBrowser_backwardHistoryCount( ::pPtr )
-   METHOD  clearHistory()                      INLINE  Qt_QTextBrowser_clearHistory( ::pPtr )
-   METHOD  forwardHistoryCount()               INLINE  Qt_QTextBrowser_forwardHistoryCount( ::pPtr )
-   METHOD  historyTitle( nI )                  INLINE  Qt_QTextBrowser_historyTitle( ::pPtr, nI )
-   METHOD  historyUrl( nI )                    INLINE  Qt_QTextBrowser_historyUrl( ::pPtr, nI )
-   METHOD  isBackwardAvailable()               INLINE  Qt_QTextBrowser_isBackwardAvailable( ::pPtr )
-   METHOD  isForwardAvailable()                INLINE  Qt_QTextBrowser_isForwardAvailable( ::pPtr )
-   METHOD  loadResource( nType, pName )        INLINE  Qt_QTextBrowser_loadResource( ::pPtr, nType, pName )
-   METHOD  openExternalLinks()                 INLINE  Qt_QTextBrowser_openExternalLinks( ::pPtr )
-   METHOD  openLinks()                         INLINE  Qt_QTextBrowser_openLinks( ::pPtr )
-   METHOD  searchPaths()                       INLINE  Qt_QTextBrowser_searchPaths( ::pPtr )
-   METHOD  setOpenExternalLinks( lOpen )       INLINE  Qt_QTextBrowser_setOpenExternalLinks( ::pPtr, lOpen )
-   METHOD  setOpenLinks( lOpen )               INLINE  Qt_QTextBrowser_setOpenLinks( ::pPtr, lOpen )
-   METHOD  setSearchPaths( pPaths )            INLINE  Qt_QTextBrowser_setSearchPaths( ::pPtr, pPaths )
-   METHOD  source()                            INLINE  Qt_QTextBrowser_source( ::pPtr )
-   METHOD  backward()                          INLINE  Qt_QTextBrowser_backward( ::pPtr )
-   METHOD  forward()                           INLINE  Qt_QTextBrowser_forward( ::pPtr )
-   METHOD  home()                              INLINE  Qt_QTextBrowser_home( ::pPtr )
-   METHOD  reload()                            INLINE  Qt_QTextBrowser_reload( ::pPtr )
-   METHOD  setSource( pName )                  INLINE  Qt_QTextBrowser_setSource( ::pPtr, pName )
+   METHOD  backwardHistoryCount()
+   METHOD  clearHistory()
+   METHOD  forwardHistoryCount()
+   METHOD  historyTitle( nI )
+   METHOD  historyUrl( nI )
+   METHOD  isBackwardAvailable()
+   METHOD  isForwardAvailable()
+   METHOD  loadResource( nType, pName )
+   METHOD  openExternalLinks()
+   METHOD  openLinks()
+   METHOD  searchPaths()
+   METHOD  setOpenExternalLinks( lOpen )
+   METHOD  setOpenLinks( lOpen )
+   METHOD  setSearchPaths( pPaths )
+   METHOD  source()
+   METHOD  backward()
+   METHOD  forward()
+   METHOD  home()
+   METHOD  reload()
+   METHOD  setSource( pName )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextBrowser
-
+METHOD QTextBrowser:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextBrowser( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextBrowser
-
+METHOD QTextBrowser:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextBrowser:backwardHistoryCount()
+   RETURN Qt_QTextBrowser_backwardHistoryCount( ::pPtr )
+
+
+METHOD QTextBrowser:clearHistory()
+   RETURN Qt_QTextBrowser_clearHistory( ::pPtr )
+
+
+METHOD QTextBrowser:forwardHistoryCount()
+   RETURN Qt_QTextBrowser_forwardHistoryCount( ::pPtr )
+
+
+METHOD QTextBrowser:historyTitle( nI )
+   RETURN Qt_QTextBrowser_historyTitle( ::pPtr, nI )
+
+
+METHOD QTextBrowser:historyUrl( nI )
+   RETURN Qt_QTextBrowser_historyUrl( ::pPtr, nI )
+
+
+METHOD QTextBrowser:isBackwardAvailable()
+   RETURN Qt_QTextBrowser_isBackwardAvailable( ::pPtr )
+
+
+METHOD QTextBrowser:isForwardAvailable()
+   RETURN Qt_QTextBrowser_isForwardAvailable( ::pPtr )
+
+
+METHOD QTextBrowser:loadResource( nType, pName )
+   RETURN Qt_QTextBrowser_loadResource( ::pPtr, nType, pName )
+
+
+METHOD QTextBrowser:openExternalLinks()
+   RETURN Qt_QTextBrowser_openExternalLinks( ::pPtr )
+
+
+METHOD QTextBrowser:openLinks()
+   RETURN Qt_QTextBrowser_openLinks( ::pPtr )
+
+
+METHOD QTextBrowser:searchPaths()
+   RETURN Qt_QTextBrowser_searchPaths( ::pPtr )
+
+
+METHOD QTextBrowser:setOpenExternalLinks( lOpen )
+   RETURN Qt_QTextBrowser_setOpenExternalLinks( ::pPtr, lOpen )
+
+
+METHOD QTextBrowser:setOpenLinks( lOpen )
+   RETURN Qt_QTextBrowser_setOpenLinks( ::pPtr, lOpen )
+
+
+METHOD QTextBrowser:setSearchPaths( pPaths )
+   RETURN Qt_QTextBrowser_setSearchPaths( ::pPtr, pPaths )
+
+
+METHOD QTextBrowser:source()
+   RETURN Qt_QTextBrowser_source( ::pPtr )
+
+
+METHOD QTextBrowser:backward()
+   RETURN Qt_QTextBrowser_backward( ::pPtr )
+
+
+METHOD QTextBrowser:forward()
+   RETURN Qt_QTextBrowser_forward( ::pPtr )
+
+
+METHOD QTextBrowser:home()
+   RETURN Qt_QTextBrowser_home( ::pPtr )
+
+
+METHOD QTextBrowser:reload()
+   RETURN Qt_QTextBrowser_reload( ::pPtr )
+
+
+METHOD QTextBrowser:setSource( pName )
+   RETURN Qt_QTextBrowser_setSource( ::pPtr, pName )
+

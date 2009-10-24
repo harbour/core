@@ -71,35 +71,52 @@ CREATE CLASS QStyleOptionProgressBar INHERIT QStyleOption
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  maximum()                           INLINE  Qt_QStyleOptionProgressBar_maximum( ::pPtr )
-   METHOD  minimum()                           INLINE  Qt_QStyleOptionProgressBar_minimum( ::pPtr )
-   METHOD  progress()                          INLINE  Qt_QStyleOptionProgressBar_progress( ::pPtr )
-   METHOD  text()                              INLINE  Qt_QStyleOptionProgressBar_text( ::pPtr )
-   METHOD  textAlignment()                     INLINE  Qt_QStyleOptionProgressBar_textAlignment( ::pPtr )
-   METHOD  textVisible()                       INLINE  Qt_QStyleOptionProgressBar_textVisible( ::pPtr )
+   METHOD  maximum()
+   METHOD  minimum()
+   METHOD  progress()
+   METHOD  text()
+   METHOD  textAlignment()
+   METHOD  textVisible()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyleOptionProgressBar
-
+METHOD QStyleOptionProgressBar:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyleOptionProgressBar( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyleOptionProgressBar
-
+METHOD QStyleOptionProgressBar:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyleOptionProgressBar:maximum()
+   RETURN Qt_QStyleOptionProgressBar_maximum( ::pPtr )
+
+
+METHOD QStyleOptionProgressBar:minimum()
+   RETURN Qt_QStyleOptionProgressBar_minimum( ::pPtr )
+
+
+METHOD QStyleOptionProgressBar:progress()
+   RETURN Qt_QStyleOptionProgressBar_progress( ::pPtr )
+
+
+METHOD QStyleOptionProgressBar:text()
+   RETURN Qt_QStyleOptionProgressBar_text( ::pPtr )
+
+
+METHOD QStyleOptionProgressBar:textAlignment()
+   RETURN Qt_QStyleOptionProgressBar_textAlignment( ::pPtr )
+
+
+METHOD QStyleOptionProgressBar:textVisible()
+   RETURN Qt_QStyleOptionProgressBar_textVisible( ::pPtr )
+

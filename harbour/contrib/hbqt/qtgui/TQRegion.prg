@@ -71,24 +71,24 @@ CREATE CLASS QRegion
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  boundingRect()                      INLINE  Qt_QRegion_boundingRect( ::pPtr )
-   METHOD  contains( pP )                      INLINE  Qt_QRegion_contains( ::pPtr, pP )
-   METHOD  contains_1( pR )                    INLINE  Qt_QRegion_contains_1( ::pPtr, pR )
-   METHOD  intersected( pR )                   INLINE  Qt_QRegion_intersected( ::pPtr, pR )
-   METHOD  intersected_1( pRect )              INLINE  Qt_QRegion_intersected_1( ::pPtr, pRect )
-   METHOD  intersects( pRegion )               INLINE  Qt_QRegion_intersects( ::pPtr, pRegion )
-   METHOD  intersects_1( pRect )               INLINE  Qt_QRegion_intersects_1( ::pPtr, pRect )
-   METHOD  isEmpty()                           INLINE  Qt_QRegion_isEmpty( ::pPtr )
-   METHOD  numRects()                          INLINE  Qt_QRegion_numRects( ::pPtr )
-   METHOD  setRects( pRects, nNumber )         INLINE  Qt_QRegion_setRects( ::pPtr, pRects, nNumber )
-   METHOD  subtracted( pR )                    INLINE  Qt_QRegion_subtracted( ::pPtr, pR )
-   METHOD  translate( nDx, nDy )               INLINE  Qt_QRegion_translate( ::pPtr, nDx, nDy )
-   METHOD  translate_1( pPoint )               INLINE  Qt_QRegion_translate_1( ::pPtr, pPoint )
-   METHOD  translated( nDx, nDy )              INLINE  Qt_QRegion_translated( ::pPtr, nDx, nDy )
-   METHOD  translated_1( pP )                  INLINE  Qt_QRegion_translated_1( ::pPtr, pP )
-   METHOD  united( pR )                        INLINE  Qt_QRegion_united( ::pPtr, pR )
-   METHOD  united_1( pRect )                   INLINE  Qt_QRegion_united_1( ::pPtr, pRect )
-   METHOD  xored( pR )                         INLINE  Qt_QRegion_xored( ::pPtr, pR )
+   METHOD  boundingRect()
+   METHOD  contains( pP )
+   METHOD  contains_1( pR )
+   METHOD  intersected( pR )
+   METHOD  intersected_1( pRect )
+   METHOD  intersects( pRegion )
+   METHOD  intersects_1( pRect )
+   METHOD  isEmpty()
+   METHOD  numRects()
+   METHOD  setRects( pRects, nNumber )
+   METHOD  subtracted( pR )
+   METHOD  translate( nDx, nDy )
+   METHOD  translate_1( pPoint )
+   METHOD  translated( nDx, nDy )
+   METHOD  translated_1( pP )
+   METHOD  united( pR )
+   METHOD  united_1( pRect )
+   METHOD  xored( pR )
 
    ENDCLASS
 
@@ -100,16 +100,84 @@ METHOD New( ... ) CLASS QRegion
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QRegion
-
+METHOD QRegion:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QRegion:boundingRect()
+   RETURN Qt_QRegion_boundingRect( ::pPtr )
+
+
+METHOD QRegion:contains( pP )
+   RETURN Qt_QRegion_contains( ::pPtr, pP )
+
+
+METHOD QRegion:contains_1( pR )
+   RETURN Qt_QRegion_contains_1( ::pPtr, pR )
+
+
+METHOD QRegion:intersected( pR )
+   RETURN Qt_QRegion_intersected( ::pPtr, pR )
+
+
+METHOD QRegion:intersected_1( pRect )
+   RETURN Qt_QRegion_intersected_1( ::pPtr, pRect )
+
+
+METHOD QRegion:intersects( pRegion )
+   RETURN Qt_QRegion_intersects( ::pPtr, pRegion )
+
+
+METHOD QRegion:intersects_1( pRect )
+   RETURN Qt_QRegion_intersects_1( ::pPtr, pRect )
+
+
+METHOD QRegion:isEmpty()
+   RETURN Qt_QRegion_isEmpty( ::pPtr )
+
+
+METHOD QRegion:numRects()
+   RETURN Qt_QRegion_numRects( ::pPtr )
+
+
+METHOD QRegion:setRects( pRects, nNumber )
+   RETURN Qt_QRegion_setRects( ::pPtr, pRects, nNumber )
+
+
+METHOD QRegion:subtracted( pR )
+   RETURN Qt_QRegion_subtracted( ::pPtr, pR )
+
+
+METHOD QRegion:translate( nDx, nDy )
+   RETURN Qt_QRegion_translate( ::pPtr, nDx, nDy )
+
+
+METHOD QRegion:translate_1( pPoint )
+   RETURN Qt_QRegion_translate_1( ::pPtr, pPoint )
+
+
+METHOD QRegion:translated( nDx, nDy )
+   RETURN Qt_QRegion_translated( ::pPtr, nDx, nDy )
+
+
+METHOD QRegion:translated_1( pP )
+   RETURN Qt_QRegion_translated_1( ::pPtr, pP )
+
+
+METHOD QRegion:united( pR )
+   RETURN Qt_QRegion_united( ::pPtr, pR )
+
+
+METHOD QRegion:united_1( pRect )
+   RETURN Qt_QRegion_united_1( ::pPtr, pRect )
+
+
+METHOD QRegion:xored( pR )
+   RETURN Qt_QRegion_xored( ::pPtr, pR )
+

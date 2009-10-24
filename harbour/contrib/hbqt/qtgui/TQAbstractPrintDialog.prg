@@ -71,39 +71,72 @@ CREATE CLASS QAbstractPrintDialog INHERIT QDialog
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  exec()                              INLINE  Qt_QAbstractPrintDialog_exec( ::pPtr )
-   METHOD  fromPage()                          INLINE  Qt_QAbstractPrintDialog_fromPage( ::pPtr )
-   METHOD  maxPage()                           INLINE  Qt_QAbstractPrintDialog_maxPage( ::pPtr )
-   METHOD  minPage()                           INLINE  Qt_QAbstractPrintDialog_minPage( ::pPtr )
-   METHOD  printRange()                        INLINE  Qt_QAbstractPrintDialog_printRange( ::pPtr )
-   METHOD  printer()                           INLINE  Qt_QAbstractPrintDialog_printer( ::pPtr )
-   METHOD  setFromTo( nFrom, nTo )             INLINE  Qt_QAbstractPrintDialog_setFromTo( ::pPtr, nFrom, nTo )
-   METHOD  setMinMax( nMin, nMax )             INLINE  Qt_QAbstractPrintDialog_setMinMax( ::pPtr, nMin, nMax )
-   METHOD  setPrintRange( nRange )             INLINE  Qt_QAbstractPrintDialog_setPrintRange( ::pPtr, nRange )
-   METHOD  toPage()                            INLINE  Qt_QAbstractPrintDialog_toPage( ::pPtr )
+   METHOD  exec()
+   METHOD  fromPage()
+   METHOD  maxPage()
+   METHOD  minPage()
+   METHOD  printRange()
+   METHOD  printer()
+   METHOD  setFromTo( nFrom, nTo )
+   METHOD  setMinMax( nMin, nMax )
+   METHOD  setPrintRange( nRange )
+   METHOD  toPage()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QAbstractPrintDialog
-
+METHOD QAbstractPrintDialog:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QAbstractPrintDialog( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QAbstractPrintDialog
-
+METHOD QAbstractPrintDialog:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QAbstractPrintDialog:exec()
+   RETURN Qt_QAbstractPrintDialog_exec( ::pPtr )
+
+
+METHOD QAbstractPrintDialog:fromPage()
+   RETURN Qt_QAbstractPrintDialog_fromPage( ::pPtr )
+
+
+METHOD QAbstractPrintDialog:maxPage()
+   RETURN Qt_QAbstractPrintDialog_maxPage( ::pPtr )
+
+
+METHOD QAbstractPrintDialog:minPage()
+   RETURN Qt_QAbstractPrintDialog_minPage( ::pPtr )
+
+
+METHOD QAbstractPrintDialog:printRange()
+   RETURN Qt_QAbstractPrintDialog_printRange( ::pPtr )
+
+
+METHOD QAbstractPrintDialog:printer()
+   RETURN Qt_QAbstractPrintDialog_printer( ::pPtr )
+
+
+METHOD QAbstractPrintDialog:setFromTo( nFrom, nTo )
+   RETURN Qt_QAbstractPrintDialog_setFromTo( ::pPtr, nFrom, nTo )
+
+
+METHOD QAbstractPrintDialog:setMinMax( nMin, nMax )
+   RETURN Qt_QAbstractPrintDialog_setMinMax( ::pPtr, nMin, nMax )
+
+
+METHOD QAbstractPrintDialog:setPrintRange( nRange )
+   RETURN Qt_QAbstractPrintDialog_setPrintRange( ::pPtr, nRange )
+
+
+METHOD QAbstractPrintDialog:toPage()
+   RETURN Qt_QAbstractPrintDialog_toPage( ::pPtr )
+

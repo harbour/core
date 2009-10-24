@@ -71,30 +71,27 @@ CREATE CLASS QInputEvent INHERIT QEvent
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  modifiers()                         INLINE  Qt_QInputEvent_modifiers( ::pPtr )
+   METHOD  modifiers()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QInputEvent
-
+METHOD QInputEvent:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QInputEvent( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QInputEvent
-
+METHOD QInputEvent:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QInputEvent:modifiers()
+   RETURN Qt_QInputEvent_modifiers( ::pPtr )
+

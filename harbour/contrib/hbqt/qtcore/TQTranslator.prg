@@ -71,33 +71,42 @@ CREATE CLASS QTranslator INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  isEmpty()                           INLINE  Qt_QTranslator_isEmpty( ::pPtr )
-   METHOD  load( cFilename, cDirectory, cSearch_delimiters, cSuffix )  INLINE  Qt_QTranslator_load( ::pPtr, cFilename, cDirectory, cSearch_delimiters, cSuffix )
-   METHOD  translate( pContext, pSourceText, pDisambiguation )  INLINE  Qt_QTranslator_translate( ::pPtr, pContext, pSourceText, pDisambiguation )
-   METHOD  translate_1( pContext, pSourceText, pDisambiguation, nN )  INLINE  Qt_QTranslator_translate_1( ::pPtr, pContext, pSourceText, pDisambiguation, nN )
+   METHOD  isEmpty()
+   METHOD  load( cFilename, cDirectory, cSearch_delimiters, cSuffix )
+   METHOD  translate( pContext, pSourceText, pDisambiguation )
+   METHOD  translate_1( pContext, pSourceText, pDisambiguation, nN )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTranslator
-
+METHOD QTranslator:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTranslator( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTranslator
-
+METHOD QTranslator:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTranslator:isEmpty()
+   RETURN Qt_QTranslator_isEmpty( ::pPtr )
+
+
+METHOD QTranslator:load( cFilename, cDirectory, cSearch_delimiters, cSuffix )
+   RETURN Qt_QTranslator_load( ::pPtr, cFilename, cDirectory, cSearch_delimiters, cSuffix )
+
+
+METHOD QTranslator:translate( pContext, pSourceText, pDisambiguation )
+   RETURN Qt_QTranslator_translate( ::pPtr, pContext, pSourceText, pDisambiguation )
+
+
+METHOD QTranslator:translate_1( pContext, pSourceText, pDisambiguation, nN )
+   RETURN Qt_QTranslator_translate_1( ::pPtr, pContext, pSourceText, pDisambiguation, nN )
+

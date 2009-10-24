@@ -71,42 +71,87 @@ CREATE CLASS QDataStream
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  atEnd()                             INLINE  Qt_QDataStream_atEnd( ::pPtr )
-   METHOD  byteOrder()                         INLINE  Qt_QDataStream_byteOrder( ::pPtr )
-   METHOD  device()                            INLINE  Qt_QDataStream_device( ::pPtr )
-   METHOD  readRawData( cS, nLen )             INLINE  Qt_QDataStream_readRawData( ::pPtr, cS, nLen )
-   METHOD  resetStatus()                       INLINE  Qt_QDataStream_resetStatus( ::pPtr )
-   METHOD  setByteOrder( nBo )                 INLINE  Qt_QDataStream_setByteOrder( ::pPtr, nBo )
-   METHOD  setDevice( pD )                     INLINE  Qt_QDataStream_setDevice( ::pPtr, pD )
-   METHOD  setStatus( nStatus )                INLINE  Qt_QDataStream_setStatus( ::pPtr, nStatus )
-   METHOD  setVersion( nV )                    INLINE  Qt_QDataStream_setVersion( ::pPtr, nV )
-   METHOD  skipRawData( nLen )                 INLINE  Qt_QDataStream_skipRawData( ::pPtr, nLen )
-   METHOD  status()                            INLINE  Qt_QDataStream_status( ::pPtr )
-   METHOD  version()                           INLINE  Qt_QDataStream_version( ::pPtr )
-   METHOD  writeRawData( pS, nLen )            INLINE  Qt_QDataStream_writeRawData( ::pPtr, pS, nLen )
+   METHOD  atEnd()
+   METHOD  byteOrder()
+   METHOD  device()
+   METHOD  readRawData( cS, nLen )
+   METHOD  resetStatus()
+   METHOD  setByteOrder( nBo )
+   METHOD  setDevice( pD )
+   METHOD  setStatus( nStatus )
+   METHOD  setVersion( nV )
+   METHOD  skipRawData( nLen )
+   METHOD  status()
+   METHOD  version()
+   METHOD  writeRawData( pS, nLen )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QDataStream
-
+METHOD QDataStream:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QDataStream( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QDataStream
-
+METHOD QDataStream:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QDataStream:atEnd()
+   RETURN Qt_QDataStream_atEnd( ::pPtr )
+
+
+METHOD QDataStream:byteOrder()
+   RETURN Qt_QDataStream_byteOrder( ::pPtr )
+
+
+METHOD QDataStream:device()
+   RETURN Qt_QDataStream_device( ::pPtr )
+
+
+METHOD QDataStream:readRawData( cS, nLen )
+   RETURN Qt_QDataStream_readRawData( ::pPtr, cS, nLen )
+
+
+METHOD QDataStream:resetStatus()
+   RETURN Qt_QDataStream_resetStatus( ::pPtr )
+
+
+METHOD QDataStream:setByteOrder( nBo )
+   RETURN Qt_QDataStream_setByteOrder( ::pPtr, nBo )
+
+
+METHOD QDataStream:setDevice( pD )
+   RETURN Qt_QDataStream_setDevice( ::pPtr, pD )
+
+
+METHOD QDataStream:setStatus( nStatus )
+   RETURN Qt_QDataStream_setStatus( ::pPtr, nStatus )
+
+
+METHOD QDataStream:setVersion( nV )
+   RETURN Qt_QDataStream_setVersion( ::pPtr, nV )
+
+
+METHOD QDataStream:skipRawData( nLen )
+   RETURN Qt_QDataStream_skipRawData( ::pPtr, nLen )
+
+
+METHOD QDataStream:status()
+   RETURN Qt_QDataStream_status( ::pPtr )
+
+
+METHOD QDataStream:version()
+   RETURN Qt_QDataStream_version( ::pPtr )
+
+
+METHOD QDataStream:writeRawData( pS, nLen )
+   RETURN Qt_QDataStream_writeRawData( ::pPtr, pS, nLen )
+

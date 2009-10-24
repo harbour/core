@@ -71,30 +71,27 @@ CREATE CLASS QAbstractListModel INHERIT QAbstractItemModel
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  index( nRow, nColumn, pParent )     INLINE  Qt_QAbstractListModel_index( ::pPtr, nRow, nColumn, pParent )
+   METHOD  index( nRow, nColumn, pParent )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QAbstractListModel
-
+METHOD QAbstractListModel:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QAbstractListModel( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QAbstractListModel
-
+METHOD QAbstractListModel:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QAbstractListModel:index( nRow, nColumn, pParent )
+   RETURN Qt_QAbstractListModel_index( ::pPtr, nRow, nColumn, pParent )
+

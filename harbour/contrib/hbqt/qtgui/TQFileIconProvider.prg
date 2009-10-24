@@ -71,32 +71,37 @@ CREATE CLASS QFileIconProvider
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  icon( nType )                       INLINE  Qt_QFileIconProvider_icon( ::pPtr, nType )
-   METHOD  icon_1( pInfo )                     INLINE  Qt_QFileIconProvider_icon_1( ::pPtr, pInfo )
-   METHOD  type( pInfo )                       INLINE  Qt_QFileIconProvider_type( ::pPtr, pInfo )
+   METHOD  icon( nType )
+   METHOD  icon_1( pInfo )
+   METHOD  type( pInfo )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QFileIconProvider
-
+METHOD QFileIconProvider:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QFileIconProvider( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QFileIconProvider
-
+METHOD QFileIconProvider:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QFileIconProvider:icon( nType )
+   RETURN Qt_QFileIconProvider_icon( ::pPtr, nType )
+
+
+METHOD QFileIconProvider:icon_1( pInfo )
+   RETURN Qt_QFileIconProvider_icon_1( ::pPtr, pInfo )
+
+
+METHOD QFileIconProvider:type( pInfo )
+   RETURN Qt_QFileIconProvider_type( ::pPtr, pInfo )
+

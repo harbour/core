@@ -71,46 +71,107 @@ CREATE CLASS QLayoutItem
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  alignment()                         INLINE  Qt_QLayoutItem_alignment( ::pPtr )
-   METHOD  controlTypes()                      INLINE  Qt_QLayoutItem_controlTypes( ::pPtr )
-   METHOD  expandingDirections()               INLINE  Qt_QLayoutItem_expandingDirections( ::pPtr )
-   METHOD  geometry()                          INLINE  Qt_QLayoutItem_geometry( ::pPtr )
-   METHOD  hasHeightForWidth()                 INLINE  Qt_QLayoutItem_hasHeightForWidth( ::pPtr )
-   METHOD  heightForWidth( nW )                INLINE  Qt_QLayoutItem_heightForWidth( ::pPtr, nW )
-   METHOD  invalidate()                        INLINE  Qt_QLayoutItem_invalidate( ::pPtr )
-   METHOD  isEmpty()                           INLINE  Qt_QLayoutItem_isEmpty( ::pPtr )
-   METHOD  layout()                            INLINE  Qt_QLayoutItem_layout( ::pPtr )
-   METHOD  maximumSize()                       INLINE  Qt_QLayoutItem_maximumSize( ::pPtr )
-   METHOD  minimumHeightForWidth( nW )         INLINE  Qt_QLayoutItem_minimumHeightForWidth( ::pPtr, nW )
-   METHOD  minimumSize()                       INLINE  Qt_QLayoutItem_minimumSize( ::pPtr )
-   METHOD  setAlignment( nAlignment )          INLINE  Qt_QLayoutItem_setAlignment( ::pPtr, nAlignment )
-   METHOD  setGeometry( pR )                   INLINE  Qt_QLayoutItem_setGeometry( ::pPtr, pR )
-   METHOD  sizeHint()                          INLINE  Qt_QLayoutItem_sizeHint( ::pPtr )
-   METHOD  spacerItem()                        INLINE  Qt_QLayoutItem_spacerItem( ::pPtr )
-   METHOD  widget()                            INLINE  Qt_QLayoutItem_widget( ::pPtr )
+   METHOD  alignment()
+   METHOD  controlTypes()
+   METHOD  expandingDirections()
+   METHOD  geometry()
+   METHOD  hasHeightForWidth()
+   METHOD  heightForWidth( nW )
+   METHOD  invalidate()
+   METHOD  isEmpty()
+   METHOD  layout()
+   METHOD  maximumSize()
+   METHOD  minimumHeightForWidth( nW )
+   METHOD  minimumSize()
+   METHOD  setAlignment( nAlignment )
+   METHOD  setGeometry( pR )
+   METHOD  sizeHint()
+   METHOD  spacerItem()
+   METHOD  widget()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QLayoutItem
-
+METHOD QLayoutItem:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QLayoutItem( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QLayoutItem
-
+METHOD QLayoutItem:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QLayoutItem:alignment()
+   RETURN Qt_QLayoutItem_alignment( ::pPtr )
+
+
+METHOD QLayoutItem:controlTypes()
+   RETURN Qt_QLayoutItem_controlTypes( ::pPtr )
+
+
+METHOD QLayoutItem:expandingDirections()
+   RETURN Qt_QLayoutItem_expandingDirections( ::pPtr )
+
+
+METHOD QLayoutItem:geometry()
+   RETURN Qt_QLayoutItem_geometry( ::pPtr )
+
+
+METHOD QLayoutItem:hasHeightForWidth()
+   RETURN Qt_QLayoutItem_hasHeightForWidth( ::pPtr )
+
+
+METHOD QLayoutItem:heightForWidth( nW )
+   RETURN Qt_QLayoutItem_heightForWidth( ::pPtr, nW )
+
+
+METHOD QLayoutItem:invalidate()
+   RETURN Qt_QLayoutItem_invalidate( ::pPtr )
+
+
+METHOD QLayoutItem:isEmpty()
+   RETURN Qt_QLayoutItem_isEmpty( ::pPtr )
+
+
+METHOD QLayoutItem:layout()
+   RETURN Qt_QLayoutItem_layout( ::pPtr )
+
+
+METHOD QLayoutItem:maximumSize()
+   RETURN Qt_QLayoutItem_maximumSize( ::pPtr )
+
+
+METHOD QLayoutItem:minimumHeightForWidth( nW )
+   RETURN Qt_QLayoutItem_minimumHeightForWidth( ::pPtr, nW )
+
+
+METHOD QLayoutItem:minimumSize()
+   RETURN Qt_QLayoutItem_minimumSize( ::pPtr )
+
+
+METHOD QLayoutItem:setAlignment( nAlignment )
+   RETURN Qt_QLayoutItem_setAlignment( ::pPtr, nAlignment )
+
+
+METHOD QLayoutItem:setGeometry( pR )
+   RETURN Qt_QLayoutItem_setGeometry( ::pPtr, pR )
+
+
+METHOD QLayoutItem:sizeHint()
+   RETURN Qt_QLayoutItem_sizeHint( ::pPtr )
+
+
+METHOD QLayoutItem:spacerItem()
+   RETURN Qt_QLayoutItem_spacerItem( ::pPtr )
+
+
+METHOD QLayoutItem:widget()
+   RETURN Qt_QLayoutItem_widget( ::pPtr )
+

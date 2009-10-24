@@ -71,45 +71,102 @@ CREATE CLASS QBitArray
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  at( nI )                            INLINE  Qt_QBitArray_at( ::pPtr, nI )
-   METHOD  clear()                             INLINE  Qt_QBitArray_clear( ::pPtr )
-   METHOD  clearBit( nI )                      INLINE  Qt_QBitArray_clearBit( ::pPtr, nI )
-   METHOD  count()                             INLINE  Qt_QBitArray_count( ::pPtr )
-   METHOD  count_1( lOn )                      INLINE  Qt_QBitArray_count_1( ::pPtr, lOn )
-   METHOD  fill( lValue, nSize )               INLINE  Qt_QBitArray_fill( ::pPtr, lValue, nSize )
-   METHOD  fill_1( lValue, nBegin, nEnd )      INLINE  Qt_QBitArray_fill_1( ::pPtr, lValue, nBegin, nEnd )
-   METHOD  isEmpty()                           INLINE  Qt_QBitArray_isEmpty( ::pPtr )
-   METHOD  isNull()                            INLINE  Qt_QBitArray_isNull( ::pPtr )
-   METHOD  resize( nSize )                     INLINE  Qt_QBitArray_resize( ::pPtr, nSize )
-   METHOD  setBit( nI )                        INLINE  Qt_QBitArray_setBit( ::pPtr, nI )
-   METHOD  setBit_1( nI, lValue )              INLINE  Qt_QBitArray_setBit_1( ::pPtr, nI, lValue )
-   METHOD  size()                              INLINE  Qt_QBitArray_size( ::pPtr )
-   METHOD  testBit( nI )                       INLINE  Qt_QBitArray_testBit( ::pPtr, nI )
-   METHOD  toggleBit( nI )                     INLINE  Qt_QBitArray_toggleBit( ::pPtr, nI )
-   METHOD  truncate( nPos )                    INLINE  Qt_QBitArray_truncate( ::pPtr, nPos )
+   METHOD  at( nI )
+   METHOD  clear()
+   METHOD  clearBit( nI )
+   METHOD  count()
+   METHOD  count_1( lOn )
+   METHOD  fill( lValue, nSize )
+   METHOD  fill_1( lValue, nBegin, nEnd )
+   METHOD  isEmpty()
+   METHOD  isNull()
+   METHOD  resize( nSize )
+   METHOD  setBit( nI )
+   METHOD  setBit_1( nI, lValue )
+   METHOD  size()
+   METHOD  testBit( nI )
+   METHOD  toggleBit( nI )
+   METHOD  truncate( nPos )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QBitArray
-
+METHOD QBitArray:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QBitArray( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QBitArray
-
+METHOD QBitArray:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QBitArray:at( nI )
+   RETURN Qt_QBitArray_at( ::pPtr, nI )
+
+
+METHOD QBitArray:clear()
+   RETURN Qt_QBitArray_clear( ::pPtr )
+
+
+METHOD QBitArray:clearBit( nI )
+   RETURN Qt_QBitArray_clearBit( ::pPtr, nI )
+
+
+METHOD QBitArray:count()
+   RETURN Qt_QBitArray_count( ::pPtr )
+
+
+METHOD QBitArray:count_1( lOn )
+   RETURN Qt_QBitArray_count_1( ::pPtr, lOn )
+
+
+METHOD QBitArray:fill( lValue, nSize )
+   RETURN Qt_QBitArray_fill( ::pPtr, lValue, nSize )
+
+
+METHOD QBitArray:fill_1( lValue, nBegin, nEnd )
+   RETURN Qt_QBitArray_fill_1( ::pPtr, lValue, nBegin, nEnd )
+
+
+METHOD QBitArray:isEmpty()
+   RETURN Qt_QBitArray_isEmpty( ::pPtr )
+
+
+METHOD QBitArray:isNull()
+   RETURN Qt_QBitArray_isNull( ::pPtr )
+
+
+METHOD QBitArray:resize( nSize )
+   RETURN Qt_QBitArray_resize( ::pPtr, nSize )
+
+
+METHOD QBitArray:setBit( nI )
+   RETURN Qt_QBitArray_setBit( ::pPtr, nI )
+
+
+METHOD QBitArray:setBit_1( nI, lValue )
+   RETURN Qt_QBitArray_setBit_1( ::pPtr, nI, lValue )
+
+
+METHOD QBitArray:size()
+   RETURN Qt_QBitArray_size( ::pPtr )
+
+
+METHOD QBitArray:testBit( nI )
+   RETURN Qt_QBitArray_testBit( ::pPtr, nI )
+
+
+METHOD QBitArray:toggleBit( nI )
+   RETURN Qt_QBitArray_toggleBit( ::pPtr, nI )
+
+
+METHOD QBitArray:truncate( nPos )
+   RETURN Qt_QBitArray_truncate( ::pPtr, nPos )
+

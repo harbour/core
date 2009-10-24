@@ -71,62 +71,187 @@ CREATE CLASS QWizard INHERIT QDialog
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addPage( pPage )                    INLINE  Qt_QWizard_addPage( ::pPtr, pPage )
-   METHOD  button( nWhich )                    INLINE  Qt_QWizard_button( ::pPtr, nWhich )
-   METHOD  buttonText( nWhich )                INLINE  Qt_QWizard_buttonText( ::pPtr, nWhich )
-   METHOD  currentId()                         INLINE  Qt_QWizard_currentId( ::pPtr )
-   METHOD  currentPage()                       INLINE  Qt_QWizard_currentPage( ::pPtr )
-   METHOD  field( cName )                      INLINE  Qt_QWizard_field( ::pPtr, cName )
-   METHOD  hasVisitedPage( nId )               INLINE  Qt_QWizard_hasVisitedPage( ::pPtr, nId )
-   METHOD  nextId()                            INLINE  Qt_QWizard_nextId( ::pPtr )
-   METHOD  options()                           INLINE  Qt_QWizard_options( ::pPtr )
-   METHOD  page( nId )                         INLINE  Qt_QWizard_page( ::pPtr, nId )
-   METHOD  pixmap( nWhich )                    INLINE  Qt_QWizard_pixmap( ::pPtr, nWhich )
-   METHOD  removePage( nId )                   INLINE  Qt_QWizard_removePage( ::pPtr, nId )
-   METHOD  setButton( nWhich, pButton )        INLINE  Qt_QWizard_setButton( ::pPtr, nWhich, pButton )
-   METHOD  setButtonText( nWhich, cText )      INLINE  Qt_QWizard_setButtonText( ::pPtr, nWhich, cText )
-   METHOD  setDefaultProperty( pClassName, pProperty, pChangedSignal )  INLINE  Qt_QWizard_setDefaultProperty( ::pPtr, pClassName, pProperty, pChangedSignal )
-   METHOD  setField( cName, pValue )           INLINE  Qt_QWizard_setField( ::pPtr, cName, pValue )
-   METHOD  setOption( nOption, lOn )           INLINE  Qt_QWizard_setOption( ::pPtr, nOption, lOn )
-   METHOD  setOptions( nOptions )              INLINE  Qt_QWizard_setOptions( ::pPtr, nOptions )
-   METHOD  setPage( nId, pPage )               INLINE  Qt_QWizard_setPage( ::pPtr, nId, pPage )
-   METHOD  setPixmap( nWhich, pPixmap )        INLINE  Qt_QWizard_setPixmap( ::pPtr, nWhich, pPixmap )
-   METHOD  setStartId( nId )                   INLINE  Qt_QWizard_setStartId( ::pPtr, nId )
-   METHOD  setSubTitleFormat( nFormat )        INLINE  Qt_QWizard_setSubTitleFormat( ::pPtr, nFormat )
-   METHOD  setTitleFormat( nFormat )           INLINE  Qt_QWizard_setTitleFormat( ::pPtr, nFormat )
-   METHOD  setWizardStyle( nStyle )            INLINE  Qt_QWizard_setWizardStyle( ::pPtr, nStyle )
-   METHOD  startId()                           INLINE  Qt_QWizard_startId( ::pPtr )
-   METHOD  subTitleFormat()                    INLINE  Qt_QWizard_subTitleFormat( ::pPtr )
-   METHOD  testOption( nOption )               INLINE  Qt_QWizard_testOption( ::pPtr, nOption )
-   METHOD  titleFormat()                       INLINE  Qt_QWizard_titleFormat( ::pPtr )
-   METHOD  validateCurrentPage()               INLINE  Qt_QWizard_validateCurrentPage( ::pPtr )
-   METHOD  wizardStyle()                       INLINE  Qt_QWizard_wizardStyle( ::pPtr )
-   METHOD  back()                              INLINE  Qt_QWizard_back( ::pPtr )
-   METHOD  next()                              INLINE  Qt_QWizard_next( ::pPtr )
-   METHOD  restart()                           INLINE  Qt_QWizard_restart( ::pPtr )
+   METHOD  addPage( pPage )
+   METHOD  button( nWhich )
+   METHOD  buttonText( nWhich )
+   METHOD  currentId()
+   METHOD  currentPage()
+   METHOD  field( cName )
+   METHOD  hasVisitedPage( nId )
+   METHOD  nextId()
+   METHOD  options()
+   METHOD  page( nId )
+   METHOD  pixmap( nWhich )
+   METHOD  removePage( nId )
+   METHOD  setButton( nWhich, pButton )
+   METHOD  setButtonText( nWhich, cText )
+   METHOD  setDefaultProperty( pClassName, pProperty, pChangedSignal )
+   METHOD  setField( cName, pValue )
+   METHOD  setOption( nOption, lOn )
+   METHOD  setOptions( nOptions )
+   METHOD  setPage( nId, pPage )
+   METHOD  setPixmap( nWhich, pPixmap )
+   METHOD  setStartId( nId )
+   METHOD  setSubTitleFormat( nFormat )
+   METHOD  setTitleFormat( nFormat )
+   METHOD  setWizardStyle( nStyle )
+   METHOD  startId()
+   METHOD  subTitleFormat()
+   METHOD  testOption( nOption )
+   METHOD  titleFormat()
+   METHOD  validateCurrentPage()
+   METHOD  wizardStyle()
+   METHOD  back()
+   METHOD  next()
+   METHOD  restart()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QWizard
-
+METHOD QWizard:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QWizard( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QWizard
-
+METHOD QWizard:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QWizard:addPage( pPage )
+   RETURN Qt_QWizard_addPage( ::pPtr, pPage )
+
+
+METHOD QWizard:button( nWhich )
+   RETURN Qt_QWizard_button( ::pPtr, nWhich )
+
+
+METHOD QWizard:buttonText( nWhich )
+   RETURN Qt_QWizard_buttonText( ::pPtr, nWhich )
+
+
+METHOD QWizard:currentId()
+   RETURN Qt_QWizard_currentId( ::pPtr )
+
+
+METHOD QWizard:currentPage()
+   RETURN Qt_QWizard_currentPage( ::pPtr )
+
+
+METHOD QWizard:field( cName )
+   RETURN Qt_QWizard_field( ::pPtr, cName )
+
+
+METHOD QWizard:hasVisitedPage( nId )
+   RETURN Qt_QWizard_hasVisitedPage( ::pPtr, nId )
+
+
+METHOD QWizard:nextId()
+   RETURN Qt_QWizard_nextId( ::pPtr )
+
+
+METHOD QWizard:options()
+   RETURN Qt_QWizard_options( ::pPtr )
+
+
+METHOD QWizard:page( nId )
+   RETURN Qt_QWizard_page( ::pPtr, nId )
+
+
+METHOD QWizard:pixmap( nWhich )
+   RETURN Qt_QWizard_pixmap( ::pPtr, nWhich )
+
+
+METHOD QWizard:removePage( nId )
+   RETURN Qt_QWizard_removePage( ::pPtr, nId )
+
+
+METHOD QWizard:setButton( nWhich, pButton )
+   RETURN Qt_QWizard_setButton( ::pPtr, nWhich, pButton )
+
+
+METHOD QWizard:setButtonText( nWhich, cText )
+   RETURN Qt_QWizard_setButtonText( ::pPtr, nWhich, cText )
+
+
+METHOD QWizard:setDefaultProperty( pClassName, pProperty, pChangedSignal )
+   RETURN Qt_QWizard_setDefaultProperty( ::pPtr, pClassName, pProperty, pChangedSignal )
+
+
+METHOD QWizard:setField( cName, pValue )
+   RETURN Qt_QWizard_setField( ::pPtr, cName, pValue )
+
+
+METHOD QWizard:setOption( nOption, lOn )
+   RETURN Qt_QWizard_setOption( ::pPtr, nOption, lOn )
+
+
+METHOD QWizard:setOptions( nOptions )
+   RETURN Qt_QWizard_setOptions( ::pPtr, nOptions )
+
+
+METHOD QWizard:setPage( nId, pPage )
+   RETURN Qt_QWizard_setPage( ::pPtr, nId, pPage )
+
+
+METHOD QWizard:setPixmap( nWhich, pPixmap )
+   RETURN Qt_QWizard_setPixmap( ::pPtr, nWhich, pPixmap )
+
+
+METHOD QWizard:setStartId( nId )
+   RETURN Qt_QWizard_setStartId( ::pPtr, nId )
+
+
+METHOD QWizard:setSubTitleFormat( nFormat )
+   RETURN Qt_QWizard_setSubTitleFormat( ::pPtr, nFormat )
+
+
+METHOD QWizard:setTitleFormat( nFormat )
+   RETURN Qt_QWizard_setTitleFormat( ::pPtr, nFormat )
+
+
+METHOD QWizard:setWizardStyle( nStyle )
+   RETURN Qt_QWizard_setWizardStyle( ::pPtr, nStyle )
+
+
+METHOD QWizard:startId()
+   RETURN Qt_QWizard_startId( ::pPtr )
+
+
+METHOD QWizard:subTitleFormat()
+   RETURN Qt_QWizard_subTitleFormat( ::pPtr )
+
+
+METHOD QWizard:testOption( nOption )
+   RETURN Qt_QWizard_testOption( ::pPtr, nOption )
+
+
+METHOD QWizard:titleFormat()
+   RETURN Qt_QWizard_titleFormat( ::pPtr )
+
+
+METHOD QWizard:validateCurrentPage()
+   RETURN Qt_QWizard_validateCurrentPage( ::pPtr )
+
+
+METHOD QWizard:wizardStyle()
+   RETURN Qt_QWizard_wizardStyle( ::pPtr )
+
+
+METHOD QWizard:back()
+   RETURN Qt_QWizard_back( ::pPtr )
+
+
+METHOD QWizard:next()
+   RETURN Qt_QWizard_next( ::pPtr )
+
+
+METHOD QWizard:restart()
+   RETURN Qt_QWizard_restart( ::pPtr )
+

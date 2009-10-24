@@ -71,31 +71,32 @@ CREATE CLASS QFocusFrame INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  setWidget( pWidget )                INLINE  Qt_QFocusFrame_setWidget( ::pPtr, pWidget )
-   METHOD  widget()                            INLINE  Qt_QFocusFrame_widget( ::pPtr )
+   METHOD  setWidget( pWidget )
+   METHOD  widget()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QFocusFrame
-
+METHOD QFocusFrame:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QFocusFrame( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QFocusFrame
-
+METHOD QFocusFrame:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QFocusFrame:setWidget( pWidget )
+   RETURN Qt_QFocusFrame_setWidget( ::pPtr, pWidget )
+
+
+METHOD QFocusFrame:widget()
+   RETURN Qt_QFocusFrame_widget( ::pPtr )
+

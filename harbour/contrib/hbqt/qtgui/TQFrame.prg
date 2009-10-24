@@ -71,42 +71,87 @@ CREATE CLASS QFrame INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  frameRect()                         INLINE  Qt_QFrame_frameRect( ::pPtr )
-   METHOD  frameShadow()                       INLINE  Qt_QFrame_frameShadow( ::pPtr )
-   METHOD  frameShape()                        INLINE  Qt_QFrame_frameShape( ::pPtr )
-   METHOD  frameStyle()                        INLINE  Qt_QFrame_frameStyle( ::pPtr )
-   METHOD  frameWidth()                        INLINE  Qt_QFrame_frameWidth( ::pPtr )
-   METHOD  lineWidth()                         INLINE  Qt_QFrame_lineWidth( ::pPtr )
-   METHOD  midLineWidth()                      INLINE  Qt_QFrame_midLineWidth( ::pPtr )
-   METHOD  setFrameRect( pQRect )              INLINE  Qt_QFrame_setFrameRect( ::pPtr, pQRect )
-   METHOD  setFrameShadow( nShadow )           INLINE  Qt_QFrame_setFrameShadow( ::pPtr, nShadow )
-   METHOD  setFrameShape( nShape )             INLINE  Qt_QFrame_setFrameShape( ::pPtr, nShape )
-   METHOD  setFrameStyle( nStyle )             INLINE  Qt_QFrame_setFrameStyle( ::pPtr, nStyle )
-   METHOD  setLineWidth( nInt )                INLINE  Qt_QFrame_setLineWidth( ::pPtr, nInt )
-   METHOD  setMidLineWidth( nInt )             INLINE  Qt_QFrame_setMidLineWidth( ::pPtr, nInt )
+   METHOD  frameRect()
+   METHOD  frameShadow()
+   METHOD  frameShape()
+   METHOD  frameStyle()
+   METHOD  frameWidth()
+   METHOD  lineWidth()
+   METHOD  midLineWidth()
+   METHOD  setFrameRect( pQRect )
+   METHOD  setFrameShadow( nShadow )
+   METHOD  setFrameShape( nShape )
+   METHOD  setFrameStyle( nStyle )
+   METHOD  setLineWidth( nInt )
+   METHOD  setMidLineWidth( nInt )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QFrame
-
+METHOD QFrame:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QFrame( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QFrame
-
+METHOD QFrame:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QFrame:frameRect()
+   RETURN Qt_QFrame_frameRect( ::pPtr )
+
+
+METHOD QFrame:frameShadow()
+   RETURN Qt_QFrame_frameShadow( ::pPtr )
+
+
+METHOD QFrame:frameShape()
+   RETURN Qt_QFrame_frameShape( ::pPtr )
+
+
+METHOD QFrame:frameStyle()
+   RETURN Qt_QFrame_frameStyle( ::pPtr )
+
+
+METHOD QFrame:frameWidth()
+   RETURN Qt_QFrame_frameWidth( ::pPtr )
+
+
+METHOD QFrame:lineWidth()
+   RETURN Qt_QFrame_lineWidth( ::pPtr )
+
+
+METHOD QFrame:midLineWidth()
+   RETURN Qt_QFrame_midLineWidth( ::pPtr )
+
+
+METHOD QFrame:setFrameRect( pQRect )
+   RETURN Qt_QFrame_setFrameRect( ::pPtr, pQRect )
+
+
+METHOD QFrame:setFrameShadow( nShadow )
+   RETURN Qt_QFrame_setFrameShadow( ::pPtr, nShadow )
+
+
+METHOD QFrame:setFrameShape( nShape )
+   RETURN Qt_QFrame_setFrameShape( ::pPtr, nShape )
+
+
+METHOD QFrame:setFrameStyle( nStyle )
+   RETURN Qt_QFrame_setFrameStyle( ::pPtr, nStyle )
+
+
+METHOD QFrame:setLineWidth( nInt )
+   RETURN Qt_QFrame_setLineWidth( ::pPtr, nInt )
+
+
+METHOD QFrame:setMidLineWidth( nInt )
+   RETURN Qt_QFrame_setMidLineWidth( ::pPtr, nInt )
+

@@ -71,37 +71,62 @@ CREATE CLASS QStringListModel INHERIT QAbstractListModel
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  data( pIndex, nRole )               INLINE  Qt_QStringListModel_data( ::pPtr, pIndex, nRole )
-   METHOD  flags( pIndex )                     INLINE  Qt_QStringListModel_flags( ::pPtr, pIndex )
-   METHOD  insertRows( nRow, nCount, pParent )  INLINE  Qt_QStringListModel_insertRows( ::pPtr, nRow, nCount, pParent )
-   METHOD  removeRows( nRow, nCount, pParent )  INLINE  Qt_QStringListModel_removeRows( ::pPtr, nRow, nCount, pParent )
-   METHOD  rowCount( pParent )                 INLINE  Qt_QStringListModel_rowCount( ::pPtr, pParent )
-   METHOD  setData( pIndex, pValue, nRole )    INLINE  Qt_QStringListModel_setData( ::pPtr, pIndex, pValue, nRole )
-   METHOD  setStringList( pStrings )           INLINE  Qt_QStringListModel_setStringList( ::pPtr, pStrings )
-   METHOD  stringList()                        INLINE  Qt_QStringListModel_stringList( ::pPtr )
+   METHOD  data( pIndex, nRole )
+   METHOD  flags( pIndex )
+   METHOD  insertRows( nRow, nCount, pParent )
+   METHOD  removeRows( nRow, nCount, pParent )
+   METHOD  rowCount( pParent )
+   METHOD  setData( pIndex, pValue, nRole )
+   METHOD  setStringList( pStrings )
+   METHOD  stringList()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStringListModel
-
+METHOD QStringListModel:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStringListModel( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStringListModel
-
+METHOD QStringListModel:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStringListModel:data( pIndex, nRole )
+   RETURN Qt_QStringListModel_data( ::pPtr, pIndex, nRole )
+
+
+METHOD QStringListModel:flags( pIndex )
+   RETURN Qt_QStringListModel_flags( ::pPtr, pIndex )
+
+
+METHOD QStringListModel:insertRows( nRow, nCount, pParent )
+   RETURN Qt_QStringListModel_insertRows( ::pPtr, nRow, nCount, pParent )
+
+
+METHOD QStringListModel:removeRows( nRow, nCount, pParent )
+   RETURN Qt_QStringListModel_removeRows( ::pPtr, nRow, nCount, pParent )
+
+
+METHOD QStringListModel:rowCount( pParent )
+   RETURN Qt_QStringListModel_rowCount( ::pPtr, pParent )
+
+
+METHOD QStringListModel:setData( pIndex, pValue, nRole )
+   RETURN Qt_QStringListModel_setData( ::pPtr, pIndex, pValue, nRole )
+
+
+METHOD QStringListModel:setStringList( pStrings )
+   RETURN Qt_QStringListModel_setStringList( ::pPtr, pStrings )
+
+
+METHOD QStringListModel:stringList()
+   RETURN Qt_QStringListModel_stringList( ::pPtr )
+

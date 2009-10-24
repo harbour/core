@@ -71,55 +71,152 @@ CREATE CLASS QAbstractSpinBox INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  alignment()                         INLINE  Qt_QAbstractSpinBox_alignment( ::pPtr )
-   METHOD  buttonSymbols()                     INLINE  Qt_QAbstractSpinBox_buttonSymbols( ::pPtr )
-   METHOD  correctionMode()                    INLINE  Qt_QAbstractSpinBox_correctionMode( ::pPtr )
-   METHOD  hasAcceptableInput()                INLINE  Qt_QAbstractSpinBox_hasAcceptableInput( ::pPtr )
-   METHOD  hasFrame()                          INLINE  Qt_QAbstractSpinBox_hasFrame( ::pPtr )
-   METHOD  interpretText()                     INLINE  Qt_QAbstractSpinBox_interpretText( ::pPtr )
-   METHOD  isAccelerated()                     INLINE  Qt_QAbstractSpinBox_isAccelerated( ::pPtr )
-   METHOD  isReadOnly()                        INLINE  Qt_QAbstractSpinBox_isReadOnly( ::pPtr )
-   METHOD  keyboardTracking()                  INLINE  Qt_QAbstractSpinBox_keyboardTracking( ::pPtr )
-   METHOD  setAccelerated( lOn )               INLINE  Qt_QAbstractSpinBox_setAccelerated( ::pPtr, lOn )
-   METHOD  setAlignment( nFlag )               INLINE  Qt_QAbstractSpinBox_setAlignment( ::pPtr, nFlag )
-   METHOD  setButtonSymbols( nBs )             INLINE  Qt_QAbstractSpinBox_setButtonSymbols( ::pPtr, nBs )
-   METHOD  setCorrectionMode( nCm )            INLINE  Qt_QAbstractSpinBox_setCorrectionMode( ::pPtr, nCm )
-   METHOD  setFrame( lBool )                   INLINE  Qt_QAbstractSpinBox_setFrame( ::pPtr, lBool )
-   METHOD  setKeyboardTracking( lKt )          INLINE  Qt_QAbstractSpinBox_setKeyboardTracking( ::pPtr, lKt )
-   METHOD  setReadOnly( lR )                   INLINE  Qt_QAbstractSpinBox_setReadOnly( ::pPtr, lR )
-   METHOD  setSpecialValueText( cTxt )         INLINE  Qt_QAbstractSpinBox_setSpecialValueText( ::pPtr, cTxt )
-   METHOD  setWrapping( lW )                   INLINE  Qt_QAbstractSpinBox_setWrapping( ::pPtr, lW )
-   METHOD  specialValueText()                  INLINE  Qt_QAbstractSpinBox_specialValueText( ::pPtr )
-   METHOD  stepBy( nSteps )                    INLINE  Qt_QAbstractSpinBox_stepBy( ::pPtr, nSteps )
-   METHOD  text()                              INLINE  Qt_QAbstractSpinBox_text( ::pPtr )
-   METHOD  wrapping()                          INLINE  Qt_QAbstractSpinBox_wrapping( ::pPtr )
-   METHOD  clear()                             INLINE  Qt_QAbstractSpinBox_clear( ::pPtr )
-   METHOD  selectAll()                         INLINE  Qt_QAbstractSpinBox_selectAll( ::pPtr )
-   METHOD  stepDown()                          INLINE  Qt_QAbstractSpinBox_stepDown( ::pPtr )
-   METHOD  stepUp()                            INLINE  Qt_QAbstractSpinBox_stepUp( ::pPtr )
+   METHOD  alignment()
+   METHOD  buttonSymbols()
+   METHOD  correctionMode()
+   METHOD  hasAcceptableInput()
+   METHOD  hasFrame()
+   METHOD  interpretText()
+   METHOD  isAccelerated()
+   METHOD  isReadOnly()
+   METHOD  keyboardTracking()
+   METHOD  setAccelerated( lOn )
+   METHOD  setAlignment( nFlag )
+   METHOD  setButtonSymbols( nBs )
+   METHOD  setCorrectionMode( nCm )
+   METHOD  setFrame( lBool )
+   METHOD  setKeyboardTracking( lKt )
+   METHOD  setReadOnly( lR )
+   METHOD  setSpecialValueText( cTxt )
+   METHOD  setWrapping( lW )
+   METHOD  specialValueText()
+   METHOD  stepBy( nSteps )
+   METHOD  text()
+   METHOD  wrapping()
+   METHOD  clear()
+   METHOD  selectAll()
+   METHOD  stepDown()
+   METHOD  stepUp()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QAbstractSpinBox
-
+METHOD QAbstractSpinBox:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QAbstractSpinBox( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QAbstractSpinBox
-
+METHOD QAbstractSpinBox:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QAbstractSpinBox:alignment()
+   RETURN Qt_QAbstractSpinBox_alignment( ::pPtr )
+
+
+METHOD QAbstractSpinBox:buttonSymbols()
+   RETURN Qt_QAbstractSpinBox_buttonSymbols( ::pPtr )
+
+
+METHOD QAbstractSpinBox:correctionMode()
+   RETURN Qt_QAbstractSpinBox_correctionMode( ::pPtr )
+
+
+METHOD QAbstractSpinBox:hasAcceptableInput()
+   RETURN Qt_QAbstractSpinBox_hasAcceptableInput( ::pPtr )
+
+
+METHOD QAbstractSpinBox:hasFrame()
+   RETURN Qt_QAbstractSpinBox_hasFrame( ::pPtr )
+
+
+METHOD QAbstractSpinBox:interpretText()
+   RETURN Qt_QAbstractSpinBox_interpretText( ::pPtr )
+
+
+METHOD QAbstractSpinBox:isAccelerated()
+   RETURN Qt_QAbstractSpinBox_isAccelerated( ::pPtr )
+
+
+METHOD QAbstractSpinBox:isReadOnly()
+   RETURN Qt_QAbstractSpinBox_isReadOnly( ::pPtr )
+
+
+METHOD QAbstractSpinBox:keyboardTracking()
+   RETURN Qt_QAbstractSpinBox_keyboardTracking( ::pPtr )
+
+
+METHOD QAbstractSpinBox:setAccelerated( lOn )
+   RETURN Qt_QAbstractSpinBox_setAccelerated( ::pPtr, lOn )
+
+
+METHOD QAbstractSpinBox:setAlignment( nFlag )
+   RETURN Qt_QAbstractSpinBox_setAlignment( ::pPtr, nFlag )
+
+
+METHOD QAbstractSpinBox:setButtonSymbols( nBs )
+   RETURN Qt_QAbstractSpinBox_setButtonSymbols( ::pPtr, nBs )
+
+
+METHOD QAbstractSpinBox:setCorrectionMode( nCm )
+   RETURN Qt_QAbstractSpinBox_setCorrectionMode( ::pPtr, nCm )
+
+
+METHOD QAbstractSpinBox:setFrame( lBool )
+   RETURN Qt_QAbstractSpinBox_setFrame( ::pPtr, lBool )
+
+
+METHOD QAbstractSpinBox:setKeyboardTracking( lKt )
+   RETURN Qt_QAbstractSpinBox_setKeyboardTracking( ::pPtr, lKt )
+
+
+METHOD QAbstractSpinBox:setReadOnly( lR )
+   RETURN Qt_QAbstractSpinBox_setReadOnly( ::pPtr, lR )
+
+
+METHOD QAbstractSpinBox:setSpecialValueText( cTxt )
+   RETURN Qt_QAbstractSpinBox_setSpecialValueText( ::pPtr, cTxt )
+
+
+METHOD QAbstractSpinBox:setWrapping( lW )
+   RETURN Qt_QAbstractSpinBox_setWrapping( ::pPtr, lW )
+
+
+METHOD QAbstractSpinBox:specialValueText()
+   RETURN Qt_QAbstractSpinBox_specialValueText( ::pPtr )
+
+
+METHOD QAbstractSpinBox:stepBy( nSteps )
+   RETURN Qt_QAbstractSpinBox_stepBy( ::pPtr, nSteps )
+
+
+METHOD QAbstractSpinBox:text()
+   RETURN Qt_QAbstractSpinBox_text( ::pPtr )
+
+
+METHOD QAbstractSpinBox:wrapping()
+   RETURN Qt_QAbstractSpinBox_wrapping( ::pPtr )
+
+
+METHOD QAbstractSpinBox:clear()
+   RETURN Qt_QAbstractSpinBox_clear( ::pPtr )
+
+
+METHOD QAbstractSpinBox:selectAll()
+   RETURN Qt_QAbstractSpinBox_selectAll( ::pPtr )
+
+
+METHOD QAbstractSpinBox:stepDown()
+   RETURN Qt_QAbstractSpinBox_stepDown( ::pPtr )
+
+
+METHOD QAbstractSpinBox:stepUp()
+   RETURN Qt_QAbstractSpinBox_stepUp( ::pPtr )
+

@@ -71,44 +71,97 @@ CREATE CLASS QColorDialog INHERIT QDialog
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  currentColor()                      INLINE  Qt_QColorDialog_currentColor( ::pPtr )
-   METHOD  open()                              INLINE  Qt_QColorDialog_open( ::pPtr )
-   METHOD  options()                           INLINE  Qt_QColorDialog_options( ::pPtr )
-   METHOD  selectedColor()                     INLINE  Qt_QColorDialog_selectedColor( ::pPtr )
-   METHOD  setCurrentColor( pColor )           INLINE  Qt_QColorDialog_setCurrentColor( ::pPtr, pColor )
-   METHOD  setOption( nOption, lOn )           INLINE  Qt_QColorDialog_setOption( ::pPtr, nOption, lOn )
-   METHOD  setOptions( nOptions )              INLINE  Qt_QColorDialog_setOptions( ::pPtr, nOptions )
-   METHOD  setVisible( lVisible )              INLINE  Qt_QColorDialog_setVisible( ::pPtr, lVisible )
-   METHOD  testOption( nOption )               INLINE  Qt_QColorDialog_testOption( ::pPtr, nOption )
-   METHOD  customColor( nIndex )               INLINE  Qt_QColorDialog_customColor( ::pPtr, nIndex )
-   METHOD  customCount()                       INLINE  Qt_QColorDialog_customCount( ::pPtr )
-   METHOD  getColor( pInitial, pParent, cTitle, nOptions )  INLINE  Qt_QColorDialog_getColor( ::pPtr, pInitial, pParent, cTitle, nOptions )
-   METHOD  getColor_1( pInitial, pParent )     INLINE  Qt_QColorDialog_getColor_1( ::pPtr, pInitial, pParent )
-   METHOD  setCustomColor( nIndex, nColor )    INLINE  Qt_QColorDialog_setCustomColor( ::pPtr, nIndex, nColor )
-   METHOD  setStandardColor( nIndex, nColor )  INLINE  Qt_QColorDialog_setStandardColor( ::pPtr, nIndex, nColor )
+   METHOD  currentColor()
+   METHOD  open()
+   METHOD  options()
+   METHOD  selectedColor()
+   METHOD  setCurrentColor( pColor )
+   METHOD  setOption( nOption, lOn )
+   METHOD  setOptions( nOptions )
+   METHOD  setVisible( lVisible )
+   METHOD  testOption( nOption )
+   METHOD  customColor( nIndex )
+   METHOD  customCount()
+   METHOD  getColor( pInitial, pParent, cTitle, nOptions )
+   METHOD  getColor_1( pInitial, pParent )
+   METHOD  setCustomColor( nIndex, nColor )
+   METHOD  setStandardColor( nIndex, nColor )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QColorDialog
-
+METHOD QColorDialog:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QColorDialog( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QColorDialog
-
+METHOD QColorDialog:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QColorDialog:currentColor()
+   RETURN Qt_QColorDialog_currentColor( ::pPtr )
+
+
+METHOD QColorDialog:open()
+   RETURN Qt_QColorDialog_open( ::pPtr )
+
+
+METHOD QColorDialog:options()
+   RETURN Qt_QColorDialog_options( ::pPtr )
+
+
+METHOD QColorDialog:selectedColor()
+   RETURN Qt_QColorDialog_selectedColor( ::pPtr )
+
+
+METHOD QColorDialog:setCurrentColor( pColor )
+   RETURN Qt_QColorDialog_setCurrentColor( ::pPtr, pColor )
+
+
+METHOD QColorDialog:setOption( nOption, lOn )
+   RETURN Qt_QColorDialog_setOption( ::pPtr, nOption, lOn )
+
+
+METHOD QColorDialog:setOptions( nOptions )
+   RETURN Qt_QColorDialog_setOptions( ::pPtr, nOptions )
+
+
+METHOD QColorDialog:setVisible( lVisible )
+   RETURN Qt_QColorDialog_setVisible( ::pPtr, lVisible )
+
+
+METHOD QColorDialog:testOption( nOption )
+   RETURN Qt_QColorDialog_testOption( ::pPtr, nOption )
+
+
+METHOD QColorDialog:customColor( nIndex )
+   RETURN Qt_QColorDialog_customColor( ::pPtr, nIndex )
+
+
+METHOD QColorDialog:customCount()
+   RETURN Qt_QColorDialog_customCount( ::pPtr )
+
+
+METHOD QColorDialog:getColor( pInitial, pParent, cTitle, nOptions )
+   RETURN Qt_QColorDialog_getColor( ::pPtr, pInitial, pParent, cTitle, nOptions )
+
+
+METHOD QColorDialog:getColor_1( pInitial, pParent )
+   RETURN Qt_QColorDialog_getColor_1( ::pPtr, pInitial, pParent )
+
+
+METHOD QColorDialog:setCustomColor( nIndex, nColor )
+   RETURN Qt_QColorDialog_setCustomColor( ::pPtr, nIndex, nColor )
+
+
+METHOD QColorDialog:setStandardColor( nIndex, nColor )
+   RETURN Qt_QColorDialog_setStandardColor( ::pPtr, nIndex, nColor )
+

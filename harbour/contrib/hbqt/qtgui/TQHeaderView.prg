@@ -71,86 +71,307 @@ CREATE CLASS QHeaderView INHERIT QAbstractItemView
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  cascadingSectionResizes()           INLINE  Qt_QHeaderView_cascadingSectionResizes( ::pPtr )
-   METHOD  count()                             INLINE  Qt_QHeaderView_count( ::pPtr )
-   METHOD  defaultAlignment()                  INLINE  Qt_QHeaderView_defaultAlignment( ::pPtr )
-   METHOD  defaultSectionSize()                INLINE  Qt_QHeaderView_defaultSectionSize( ::pPtr )
-   METHOD  hiddenSectionCount()                INLINE  Qt_QHeaderView_hiddenSectionCount( ::pPtr )
-   METHOD  hideSection( nLogicalIndex )        INLINE  Qt_QHeaderView_hideSection( ::pPtr, nLogicalIndex )
-   METHOD  highlightSections()                 INLINE  Qt_QHeaderView_highlightSections( ::pPtr )
-   METHOD  isClickable()                       INLINE  Qt_QHeaderView_isClickable( ::pPtr )
-   METHOD  isMovable()                         INLINE  Qt_QHeaderView_isMovable( ::pPtr )
-   METHOD  isSectionHidden( nLogicalIndex )    INLINE  Qt_QHeaderView_isSectionHidden( ::pPtr, nLogicalIndex )
-   METHOD  isSortIndicatorShown()              INLINE  Qt_QHeaderView_isSortIndicatorShown( ::pPtr )
-   METHOD  length()                            INLINE  Qt_QHeaderView_length( ::pPtr )
-   METHOD  logicalIndex( nVisualIndex )        INLINE  Qt_QHeaderView_logicalIndex( ::pPtr, nVisualIndex )
-   METHOD  logicalIndexAt( nPosition )         INLINE  Qt_QHeaderView_logicalIndexAt( ::pPtr, nPosition )
-   METHOD  logicalIndexAt_1( nX, nY )          INLINE  Qt_QHeaderView_logicalIndexAt_1( ::pPtr, nX, nY )
-   METHOD  logicalIndexAt_2( pPos )            INLINE  Qt_QHeaderView_logicalIndexAt_2( ::pPtr, pPos )
-   METHOD  minimumSectionSize()                INLINE  Qt_QHeaderView_minimumSectionSize( ::pPtr )
-   METHOD  moveSection( nFrom, nTo )           INLINE  Qt_QHeaderView_moveSection( ::pPtr, nFrom, nTo )
-   METHOD  offset()                            INLINE  Qt_QHeaderView_offset( ::pPtr )
-   METHOD  orientation()                       INLINE  Qt_QHeaderView_orientation( ::pPtr )
-   METHOD  resizeMode( nLogicalIndex )         INLINE  Qt_QHeaderView_resizeMode( ::pPtr, nLogicalIndex )
-   METHOD  resizeSection( nLogicalIndex, nSize )  INLINE  Qt_QHeaderView_resizeSection( ::pPtr, nLogicalIndex, nSize )
-   METHOD  resizeSections( nMode )             INLINE  Qt_QHeaderView_resizeSections( ::pPtr, nMode )
-   METHOD  restoreState( pState )              INLINE  Qt_QHeaderView_restoreState( ::pPtr, pState )
-   METHOD  saveState()                         INLINE  Qt_QHeaderView_saveState( ::pPtr )
-   METHOD  sectionPosition( nLogicalIndex )    INLINE  Qt_QHeaderView_sectionPosition( ::pPtr, nLogicalIndex )
-   METHOD  sectionSize( nLogicalIndex )        INLINE  Qt_QHeaderView_sectionSize( ::pPtr, nLogicalIndex )
-   METHOD  sectionSizeHint( nLogicalIndex )    INLINE  Qt_QHeaderView_sectionSizeHint( ::pPtr, nLogicalIndex )
-   METHOD  sectionViewportPosition( nLogicalIndex )  INLINE  Qt_QHeaderView_sectionViewportPosition( ::pPtr, nLogicalIndex )
-   METHOD  sectionsHidden()                    INLINE  Qt_QHeaderView_sectionsHidden( ::pPtr )
-   METHOD  sectionsMoved()                     INLINE  Qt_QHeaderView_sectionsMoved( ::pPtr )
-   METHOD  setCascadingSectionResizes( lEnable )  INLINE  Qt_QHeaderView_setCascadingSectionResizes( ::pPtr, lEnable )
-   METHOD  setClickable( lClickable )          INLINE  Qt_QHeaderView_setClickable( ::pPtr, lClickable )
-   METHOD  setDefaultAlignment( nAlignment )   INLINE  Qt_QHeaderView_setDefaultAlignment( ::pPtr, nAlignment )
-   METHOD  setDefaultSectionSize( nSize )      INLINE  Qt_QHeaderView_setDefaultSectionSize( ::pPtr, nSize )
-   METHOD  setHighlightSections( lHighlight )  INLINE  Qt_QHeaderView_setHighlightSections( ::pPtr, lHighlight )
-   METHOD  setMinimumSectionSize( nSize )      INLINE  Qt_QHeaderView_setMinimumSectionSize( ::pPtr, nSize )
-   METHOD  setMovable( lMovable )              INLINE  Qt_QHeaderView_setMovable( ::pPtr, lMovable )
-   METHOD  setResizeMode( nMode )              INLINE  Qt_QHeaderView_setResizeMode( ::pPtr, nMode )
-   METHOD  setResizeMode_1( nLogicalIndex, nMode )  INLINE  Qt_QHeaderView_setResizeMode_1( ::pPtr, nLogicalIndex, nMode )
-   METHOD  setSectionHidden( nLogicalIndex, lHide )  INLINE  Qt_QHeaderView_setSectionHidden( ::pPtr, nLogicalIndex, lHide )
-   METHOD  setSortIndicator( nLogicalIndex, nOrder )  INLINE  Qt_QHeaderView_setSortIndicator( ::pPtr, nLogicalIndex, nOrder )
-   METHOD  setSortIndicatorShown( lShow )      INLINE  Qt_QHeaderView_setSortIndicatorShown( ::pPtr, lShow )
-   METHOD  setStretchLastSection( lStretch )   INLINE  Qt_QHeaderView_setStretchLastSection( ::pPtr, lStretch )
-   METHOD  showSection( nLogicalIndex )        INLINE  Qt_QHeaderView_showSection( ::pPtr, nLogicalIndex )
-   METHOD  sizeHint()                          INLINE  Qt_QHeaderView_sizeHint( ::pPtr )
-   METHOD  sortIndicatorOrder()                INLINE  Qt_QHeaderView_sortIndicatorOrder( ::pPtr )
-   METHOD  sortIndicatorSection()              INLINE  Qt_QHeaderView_sortIndicatorSection( ::pPtr )
-   METHOD  stretchLastSection()                INLINE  Qt_QHeaderView_stretchLastSection( ::pPtr )
-   METHOD  stretchSectionCount()               INLINE  Qt_QHeaderView_stretchSectionCount( ::pPtr )
-   METHOD  swapSections( nFirst, nSecond )     INLINE  Qt_QHeaderView_swapSections( ::pPtr, nFirst, nSecond )
-   METHOD  visualIndex( nLogicalIndex )        INLINE  Qt_QHeaderView_visualIndex( ::pPtr, nLogicalIndex )
-   METHOD  visualIndexAt( nPosition )          INLINE  Qt_QHeaderView_visualIndexAt( ::pPtr, nPosition )
-   METHOD  headerDataChanged( nOrientation, nLogicalFirst, nLogicalLast )  INLINE  Qt_QHeaderView_headerDataChanged( ::pPtr, nOrientation, nLogicalFirst, nLogicalLast )
-   METHOD  setOffset( nOffset )                INLINE  Qt_QHeaderView_setOffset( ::pPtr, nOffset )
-   METHOD  setOffsetToLastSection()            INLINE  Qt_QHeaderView_setOffsetToLastSection( ::pPtr )
-   METHOD  setOffsetToSectionPosition( nVisualIndex )  INLINE  Qt_QHeaderView_setOffsetToSectionPosition( ::pPtr, nVisualIndex )
+   METHOD  cascadingSectionResizes()
+   METHOD  count()
+   METHOD  defaultAlignment()
+   METHOD  defaultSectionSize()
+   METHOD  hiddenSectionCount()
+   METHOD  hideSection( nLogicalIndex )
+   METHOD  highlightSections()
+   METHOD  isClickable()
+   METHOD  isMovable()
+   METHOD  isSectionHidden( nLogicalIndex )
+   METHOD  isSortIndicatorShown()
+   METHOD  length()
+   METHOD  logicalIndex( nVisualIndex )
+   METHOD  logicalIndexAt( nPosition )
+   METHOD  logicalIndexAt_1( nX, nY )
+   METHOD  logicalIndexAt_2( pPos )
+   METHOD  minimumSectionSize()
+   METHOD  moveSection( nFrom, nTo )
+   METHOD  offset()
+   METHOD  orientation()
+   METHOD  resizeMode( nLogicalIndex )
+   METHOD  resizeSection( nLogicalIndex, nSize )
+   METHOD  resizeSections( nMode )
+   METHOD  restoreState( pState )
+   METHOD  saveState()
+   METHOD  sectionPosition( nLogicalIndex )
+   METHOD  sectionSize( nLogicalIndex )
+   METHOD  sectionSizeHint( nLogicalIndex )
+   METHOD  sectionViewportPosition( nLogicalIndex )
+   METHOD  sectionsHidden()
+   METHOD  sectionsMoved()
+   METHOD  setCascadingSectionResizes( lEnable )
+   METHOD  setClickable( lClickable )
+   METHOD  setDefaultAlignment( nAlignment )
+   METHOD  setDefaultSectionSize( nSize )
+   METHOD  setHighlightSections( lHighlight )
+   METHOD  setMinimumSectionSize( nSize )
+   METHOD  setMovable( lMovable )
+   METHOD  setResizeMode( nMode )
+   METHOD  setResizeMode_1( nLogicalIndex, nMode )
+   METHOD  setSectionHidden( nLogicalIndex, lHide )
+   METHOD  setSortIndicator( nLogicalIndex, nOrder )
+   METHOD  setSortIndicatorShown( lShow )
+   METHOD  setStretchLastSection( lStretch )
+   METHOD  showSection( nLogicalIndex )
+   METHOD  sizeHint()
+   METHOD  sortIndicatorOrder()
+   METHOD  sortIndicatorSection()
+   METHOD  stretchLastSection()
+   METHOD  stretchSectionCount()
+   METHOD  swapSections( nFirst, nSecond )
+   METHOD  visualIndex( nLogicalIndex )
+   METHOD  visualIndexAt( nPosition )
+   METHOD  headerDataChanged( nOrientation, nLogicalFirst, nLogicalLast )
+   METHOD  setOffset( nOffset )
+   METHOD  setOffsetToLastSection()
+   METHOD  setOffsetToSectionPosition( nVisualIndex )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QHeaderView
-
+METHOD QHeaderView:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QHeaderView( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QHeaderView
-
+METHOD QHeaderView:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QHeaderView:cascadingSectionResizes()
+   RETURN Qt_QHeaderView_cascadingSectionResizes( ::pPtr )
+
+
+METHOD QHeaderView:count()
+   RETURN Qt_QHeaderView_count( ::pPtr )
+
+
+METHOD QHeaderView:defaultAlignment()
+   RETURN Qt_QHeaderView_defaultAlignment( ::pPtr )
+
+
+METHOD QHeaderView:defaultSectionSize()
+   RETURN Qt_QHeaderView_defaultSectionSize( ::pPtr )
+
+
+METHOD QHeaderView:hiddenSectionCount()
+   RETURN Qt_QHeaderView_hiddenSectionCount( ::pPtr )
+
+
+METHOD QHeaderView:hideSection( nLogicalIndex )
+   RETURN Qt_QHeaderView_hideSection( ::pPtr, nLogicalIndex )
+
+
+METHOD QHeaderView:highlightSections()
+   RETURN Qt_QHeaderView_highlightSections( ::pPtr )
+
+
+METHOD QHeaderView:isClickable()
+   RETURN Qt_QHeaderView_isClickable( ::pPtr )
+
+
+METHOD QHeaderView:isMovable()
+   RETURN Qt_QHeaderView_isMovable( ::pPtr )
+
+
+METHOD QHeaderView:isSectionHidden( nLogicalIndex )
+   RETURN Qt_QHeaderView_isSectionHidden( ::pPtr, nLogicalIndex )
+
+
+METHOD QHeaderView:isSortIndicatorShown()
+   RETURN Qt_QHeaderView_isSortIndicatorShown( ::pPtr )
+
+
+METHOD QHeaderView:length()
+   RETURN Qt_QHeaderView_length( ::pPtr )
+
+
+METHOD QHeaderView:logicalIndex( nVisualIndex )
+   RETURN Qt_QHeaderView_logicalIndex( ::pPtr, nVisualIndex )
+
+
+METHOD QHeaderView:logicalIndexAt( nPosition )
+   RETURN Qt_QHeaderView_logicalIndexAt( ::pPtr, nPosition )
+
+
+METHOD QHeaderView:logicalIndexAt_1( nX, nY )
+   RETURN Qt_QHeaderView_logicalIndexAt_1( ::pPtr, nX, nY )
+
+
+METHOD QHeaderView:logicalIndexAt_2( pPos )
+   RETURN Qt_QHeaderView_logicalIndexAt_2( ::pPtr, pPos )
+
+
+METHOD QHeaderView:minimumSectionSize()
+   RETURN Qt_QHeaderView_minimumSectionSize( ::pPtr )
+
+
+METHOD QHeaderView:moveSection( nFrom, nTo )
+   RETURN Qt_QHeaderView_moveSection( ::pPtr, nFrom, nTo )
+
+
+METHOD QHeaderView:offset()
+   RETURN Qt_QHeaderView_offset( ::pPtr )
+
+
+METHOD QHeaderView:orientation()
+   RETURN Qt_QHeaderView_orientation( ::pPtr )
+
+
+METHOD QHeaderView:resizeMode( nLogicalIndex )
+   RETURN Qt_QHeaderView_resizeMode( ::pPtr, nLogicalIndex )
+
+
+METHOD QHeaderView:resizeSection( nLogicalIndex, nSize )
+   RETURN Qt_QHeaderView_resizeSection( ::pPtr, nLogicalIndex, nSize )
+
+
+METHOD QHeaderView:resizeSections( nMode )
+   RETURN Qt_QHeaderView_resizeSections( ::pPtr, nMode )
+
+
+METHOD QHeaderView:restoreState( pState )
+   RETURN Qt_QHeaderView_restoreState( ::pPtr, pState )
+
+
+METHOD QHeaderView:saveState()
+   RETURN Qt_QHeaderView_saveState( ::pPtr )
+
+
+METHOD QHeaderView:sectionPosition( nLogicalIndex )
+   RETURN Qt_QHeaderView_sectionPosition( ::pPtr, nLogicalIndex )
+
+
+METHOD QHeaderView:sectionSize( nLogicalIndex )
+   RETURN Qt_QHeaderView_sectionSize( ::pPtr, nLogicalIndex )
+
+
+METHOD QHeaderView:sectionSizeHint( nLogicalIndex )
+   RETURN Qt_QHeaderView_sectionSizeHint( ::pPtr, nLogicalIndex )
+
+
+METHOD QHeaderView:sectionViewportPosition( nLogicalIndex )
+   RETURN Qt_QHeaderView_sectionViewportPosition( ::pPtr, nLogicalIndex )
+
+
+METHOD QHeaderView:sectionsHidden()
+   RETURN Qt_QHeaderView_sectionsHidden( ::pPtr )
+
+
+METHOD QHeaderView:sectionsMoved()
+   RETURN Qt_QHeaderView_sectionsMoved( ::pPtr )
+
+
+METHOD QHeaderView:setCascadingSectionResizes( lEnable )
+   RETURN Qt_QHeaderView_setCascadingSectionResizes( ::pPtr, lEnable )
+
+
+METHOD QHeaderView:setClickable( lClickable )
+   RETURN Qt_QHeaderView_setClickable( ::pPtr, lClickable )
+
+
+METHOD QHeaderView:setDefaultAlignment( nAlignment )
+   RETURN Qt_QHeaderView_setDefaultAlignment( ::pPtr, nAlignment )
+
+
+METHOD QHeaderView:setDefaultSectionSize( nSize )
+   RETURN Qt_QHeaderView_setDefaultSectionSize( ::pPtr, nSize )
+
+
+METHOD QHeaderView:setHighlightSections( lHighlight )
+   RETURN Qt_QHeaderView_setHighlightSections( ::pPtr, lHighlight )
+
+
+METHOD QHeaderView:setMinimumSectionSize( nSize )
+   RETURN Qt_QHeaderView_setMinimumSectionSize( ::pPtr, nSize )
+
+
+METHOD QHeaderView:setMovable( lMovable )
+   RETURN Qt_QHeaderView_setMovable( ::pPtr, lMovable )
+
+
+METHOD QHeaderView:setResizeMode( nMode )
+   RETURN Qt_QHeaderView_setResizeMode( ::pPtr, nMode )
+
+
+METHOD QHeaderView:setResizeMode_1( nLogicalIndex, nMode )
+   RETURN Qt_QHeaderView_setResizeMode_1( ::pPtr, nLogicalIndex, nMode )
+
+
+METHOD QHeaderView:setSectionHidden( nLogicalIndex, lHide )
+   RETURN Qt_QHeaderView_setSectionHidden( ::pPtr, nLogicalIndex, lHide )
+
+
+METHOD QHeaderView:setSortIndicator( nLogicalIndex, nOrder )
+   RETURN Qt_QHeaderView_setSortIndicator( ::pPtr, nLogicalIndex, nOrder )
+
+
+METHOD QHeaderView:setSortIndicatorShown( lShow )
+   RETURN Qt_QHeaderView_setSortIndicatorShown( ::pPtr, lShow )
+
+
+METHOD QHeaderView:setStretchLastSection( lStretch )
+   RETURN Qt_QHeaderView_setStretchLastSection( ::pPtr, lStretch )
+
+
+METHOD QHeaderView:showSection( nLogicalIndex )
+   RETURN Qt_QHeaderView_showSection( ::pPtr, nLogicalIndex )
+
+
+METHOD QHeaderView:sizeHint()
+   RETURN Qt_QHeaderView_sizeHint( ::pPtr )
+
+
+METHOD QHeaderView:sortIndicatorOrder()
+   RETURN Qt_QHeaderView_sortIndicatorOrder( ::pPtr )
+
+
+METHOD QHeaderView:sortIndicatorSection()
+   RETURN Qt_QHeaderView_sortIndicatorSection( ::pPtr )
+
+
+METHOD QHeaderView:stretchLastSection()
+   RETURN Qt_QHeaderView_stretchLastSection( ::pPtr )
+
+
+METHOD QHeaderView:stretchSectionCount()
+   RETURN Qt_QHeaderView_stretchSectionCount( ::pPtr )
+
+
+METHOD QHeaderView:swapSections( nFirst, nSecond )
+   RETURN Qt_QHeaderView_swapSections( ::pPtr, nFirst, nSecond )
+
+
+METHOD QHeaderView:visualIndex( nLogicalIndex )
+   RETURN Qt_QHeaderView_visualIndex( ::pPtr, nLogicalIndex )
+
+
+METHOD QHeaderView:visualIndexAt( nPosition )
+   RETURN Qt_QHeaderView_visualIndexAt( ::pPtr, nPosition )
+
+
+METHOD QHeaderView:headerDataChanged( nOrientation, nLogicalFirst, nLogicalLast )
+   RETURN Qt_QHeaderView_headerDataChanged( ::pPtr, nOrientation, nLogicalFirst, nLogicalLast )
+
+
+METHOD QHeaderView:setOffset( nOffset )
+   RETURN Qt_QHeaderView_setOffset( ::pPtr, nOffset )
+
+
+METHOD QHeaderView:setOffsetToLastSection()
+   RETURN Qt_QHeaderView_setOffsetToLastSection( ::pPtr )
+
+
+METHOD QHeaderView:setOffsetToSectionPosition( nVisualIndex )
+   RETURN Qt_QHeaderView_setOffsetToSectionPosition( ::pPtr, nVisualIndex )
+

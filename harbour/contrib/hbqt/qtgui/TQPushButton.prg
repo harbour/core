@@ -71,38 +71,67 @@ CREATE CLASS QPushButton INHERIT QAbstractButton
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  autoDefault()                       INLINE  Qt_QPushButton_autoDefault( ::pPtr )
-   METHOD  isDefault()                         INLINE  Qt_QPushButton_isDefault( ::pPtr )
-   METHOD  isFlat()                            INLINE  Qt_QPushButton_isFlat( ::pPtr )
-   METHOD  menu()                              INLINE  Qt_QPushButton_menu( ::pPtr )
-   METHOD  setAutoDefault( lBool )             INLINE  Qt_QPushButton_setAutoDefault( ::pPtr, lBool )
-   METHOD  setDefault( lBool )                 INLINE  Qt_QPushButton_setDefault( ::pPtr, lBool )
-   METHOD  setFlat( lBool )                    INLINE  Qt_QPushButton_setFlat( ::pPtr, lBool )
-   METHOD  setMenu( pMenu )                    INLINE  Qt_QPushButton_setMenu( ::pPtr, pMenu )
-   METHOD  showMenu()                          INLINE  Qt_QPushButton_showMenu( ::pPtr )
+   METHOD  autoDefault()
+   METHOD  isDefault()
+   METHOD  isFlat()
+   METHOD  menu()
+   METHOD  setAutoDefault( lBool )
+   METHOD  setDefault( lBool )
+   METHOD  setFlat( lBool )
+   METHOD  setMenu( pMenu )
+   METHOD  showMenu()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QPushButton
-
+METHOD QPushButton:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QPushButton( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QPushButton
-
+METHOD QPushButton:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QPushButton:autoDefault()
+   RETURN Qt_QPushButton_autoDefault( ::pPtr )
+
+
+METHOD QPushButton:isDefault()
+   RETURN Qt_QPushButton_isDefault( ::pPtr )
+
+
+METHOD QPushButton:isFlat()
+   RETURN Qt_QPushButton_isFlat( ::pPtr )
+
+
+METHOD QPushButton:menu()
+   RETURN Qt_QPushButton_menu( ::pPtr )
+
+
+METHOD QPushButton:setAutoDefault( lBool )
+   RETURN Qt_QPushButton_setAutoDefault( ::pPtr, lBool )
+
+
+METHOD QPushButton:setDefault( lBool )
+   RETURN Qt_QPushButton_setDefault( ::pPtr, lBool )
+
+
+METHOD QPushButton:setFlat( lBool )
+   RETURN Qt_QPushButton_setFlat( ::pPtr, lBool )
+
+
+METHOD QPushButton:setMenu( pMenu )
+   RETURN Qt_QPushButton_setMenu( ::pPtr, pMenu )
+
+
+METHOD QPushButton:showMenu()
+   RETURN Qt_QPushButton_showMenu( ::pPtr )
+

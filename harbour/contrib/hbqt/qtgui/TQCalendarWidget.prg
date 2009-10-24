@@ -71,67 +71,212 @@ CREATE CLASS QCalendarWidget INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  dateEditAcceptDelay()               INLINE  Qt_QCalendarWidget_dateEditAcceptDelay( ::pPtr )
-   METHOD  dateTextFormat( pDate )             INLINE  Qt_QCalendarWidget_dateTextFormat( ::pPtr, pDate )
-   METHOD  firstDayOfWeek()                    INLINE  Qt_QCalendarWidget_firstDayOfWeek( ::pPtr )
-   METHOD  headerTextFormat()                  INLINE  Qt_QCalendarWidget_headerTextFormat( ::pPtr )
-   METHOD  horizontalHeaderFormat()            INLINE  Qt_QCalendarWidget_horizontalHeaderFormat( ::pPtr )
-   METHOD  isDateEditEnabled()                 INLINE  Qt_QCalendarWidget_isDateEditEnabled( ::pPtr )
-   METHOD  isGridVisible()                     INLINE  Qt_QCalendarWidget_isGridVisible( ::pPtr )
-   METHOD  isNavigationBarVisible()            INLINE  Qt_QCalendarWidget_isNavigationBarVisible( ::pPtr )
-   METHOD  maximumDate()                       INLINE  Qt_QCalendarWidget_maximumDate( ::pPtr )
-   METHOD  minimumDate()                       INLINE  Qt_QCalendarWidget_minimumDate( ::pPtr )
-   METHOD  monthShown()                        INLINE  Qt_QCalendarWidget_monthShown( ::pPtr )
-   METHOD  selectedDate()                      INLINE  Qt_QCalendarWidget_selectedDate( ::pPtr )
-   METHOD  selectionMode()                     INLINE  Qt_QCalendarWidget_selectionMode( ::pPtr )
-   METHOD  setDateEditAcceptDelay( nDelay )    INLINE  Qt_QCalendarWidget_setDateEditAcceptDelay( ::pPtr, nDelay )
-   METHOD  setDateEditEnabled( lEnable )       INLINE  Qt_QCalendarWidget_setDateEditEnabled( ::pPtr, lEnable )
-   METHOD  setDateTextFormat( pDate, pFormat )  INLINE  Qt_QCalendarWidget_setDateTextFormat( ::pPtr, pDate, pFormat )
-   METHOD  setFirstDayOfWeek( nDayOfWeek )     INLINE  Qt_QCalendarWidget_setFirstDayOfWeek( ::pPtr, nDayOfWeek )
-   METHOD  setHeaderTextFormat( pFormat )      INLINE  Qt_QCalendarWidget_setHeaderTextFormat( ::pPtr, pFormat )
-   METHOD  setHorizontalHeaderFormat( nFormat )  INLINE  Qt_QCalendarWidget_setHorizontalHeaderFormat( ::pPtr, nFormat )
-   METHOD  setMaximumDate( pDate )             INLINE  Qt_QCalendarWidget_setMaximumDate( ::pPtr, pDate )
-   METHOD  setMinimumDate( pDate )             INLINE  Qt_QCalendarWidget_setMinimumDate( ::pPtr, pDate )
-   METHOD  setSelectionMode( nMode )           INLINE  Qt_QCalendarWidget_setSelectionMode( ::pPtr, nMode )
-   METHOD  setVerticalHeaderFormat( nFormat )  INLINE  Qt_QCalendarWidget_setVerticalHeaderFormat( ::pPtr, nFormat )
-   METHOD  setWeekdayTextFormat( nDayOfWeek, pFormat )  INLINE  Qt_QCalendarWidget_setWeekdayTextFormat( ::pPtr, nDayOfWeek, pFormat )
-   METHOD  verticalHeaderFormat()              INLINE  Qt_QCalendarWidget_verticalHeaderFormat( ::pPtr )
-   METHOD  weekdayTextFormat( nDayOfWeek )     INLINE  Qt_QCalendarWidget_weekdayTextFormat( ::pPtr, nDayOfWeek )
-   METHOD  yearShown()                         INLINE  Qt_QCalendarWidget_yearShown( ::pPtr )
-   METHOD  setCurrentPage( nYear, nMonth )     INLINE  Qt_QCalendarWidget_setCurrentPage( ::pPtr, nYear, nMonth )
-   METHOD  setDateRange( pMin, pMax )          INLINE  Qt_QCalendarWidget_setDateRange( ::pPtr, pMin, pMax )
-   METHOD  setGridVisible( lShow )             INLINE  Qt_QCalendarWidget_setGridVisible( ::pPtr, lShow )
-   METHOD  setNavigationBarVisible( lVisible )  INLINE  Qt_QCalendarWidget_setNavigationBarVisible( ::pPtr, lVisible )
-   METHOD  setSelectedDate( pDate )            INLINE  Qt_QCalendarWidget_setSelectedDate( ::pPtr, pDate )
-   METHOD  showNextMonth()                     INLINE  Qt_QCalendarWidget_showNextMonth( ::pPtr )
-   METHOD  showNextYear()                      INLINE  Qt_QCalendarWidget_showNextYear( ::pPtr )
-   METHOD  showPreviousMonth()                 INLINE  Qt_QCalendarWidget_showPreviousMonth( ::pPtr )
-   METHOD  showPreviousYear()                  INLINE  Qt_QCalendarWidget_showPreviousYear( ::pPtr )
-   METHOD  showSelectedDate()                  INLINE  Qt_QCalendarWidget_showSelectedDate( ::pPtr )
-   METHOD  showToday()                         INLINE  Qt_QCalendarWidget_showToday( ::pPtr )
+   METHOD  dateEditAcceptDelay()
+   METHOD  dateTextFormat( pDate )
+   METHOD  firstDayOfWeek()
+   METHOD  headerTextFormat()
+   METHOD  horizontalHeaderFormat()
+   METHOD  isDateEditEnabled()
+   METHOD  isGridVisible()
+   METHOD  isNavigationBarVisible()
+   METHOD  maximumDate()
+   METHOD  minimumDate()
+   METHOD  monthShown()
+   METHOD  selectedDate()
+   METHOD  selectionMode()
+   METHOD  setDateEditAcceptDelay( nDelay )
+   METHOD  setDateEditEnabled( lEnable )
+   METHOD  setDateTextFormat( pDate, pFormat )
+   METHOD  setFirstDayOfWeek( nDayOfWeek )
+   METHOD  setHeaderTextFormat( pFormat )
+   METHOD  setHorizontalHeaderFormat( nFormat )
+   METHOD  setMaximumDate( pDate )
+   METHOD  setMinimumDate( pDate )
+   METHOD  setSelectionMode( nMode )
+   METHOD  setVerticalHeaderFormat( nFormat )
+   METHOD  setWeekdayTextFormat( nDayOfWeek, pFormat )
+   METHOD  verticalHeaderFormat()
+   METHOD  weekdayTextFormat( nDayOfWeek )
+   METHOD  yearShown()
+   METHOD  setCurrentPage( nYear, nMonth )
+   METHOD  setDateRange( pMin, pMax )
+   METHOD  setGridVisible( lShow )
+   METHOD  setNavigationBarVisible( lVisible )
+   METHOD  setSelectedDate( pDate )
+   METHOD  showNextMonth()
+   METHOD  showNextYear()
+   METHOD  showPreviousMonth()
+   METHOD  showPreviousYear()
+   METHOD  showSelectedDate()
+   METHOD  showToday()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QCalendarWidget
-
+METHOD QCalendarWidget:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QCalendarWidget( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QCalendarWidget
-
+METHOD QCalendarWidget:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QCalendarWidget:dateEditAcceptDelay()
+   RETURN Qt_QCalendarWidget_dateEditAcceptDelay( ::pPtr )
+
+
+METHOD QCalendarWidget:dateTextFormat( pDate )
+   RETURN Qt_QCalendarWidget_dateTextFormat( ::pPtr, pDate )
+
+
+METHOD QCalendarWidget:firstDayOfWeek()
+   RETURN Qt_QCalendarWidget_firstDayOfWeek( ::pPtr )
+
+
+METHOD QCalendarWidget:headerTextFormat()
+   RETURN Qt_QCalendarWidget_headerTextFormat( ::pPtr )
+
+
+METHOD QCalendarWidget:horizontalHeaderFormat()
+   RETURN Qt_QCalendarWidget_horizontalHeaderFormat( ::pPtr )
+
+
+METHOD QCalendarWidget:isDateEditEnabled()
+   RETURN Qt_QCalendarWidget_isDateEditEnabled( ::pPtr )
+
+
+METHOD QCalendarWidget:isGridVisible()
+   RETURN Qt_QCalendarWidget_isGridVisible( ::pPtr )
+
+
+METHOD QCalendarWidget:isNavigationBarVisible()
+   RETURN Qt_QCalendarWidget_isNavigationBarVisible( ::pPtr )
+
+
+METHOD QCalendarWidget:maximumDate()
+   RETURN Qt_QCalendarWidget_maximumDate( ::pPtr )
+
+
+METHOD QCalendarWidget:minimumDate()
+   RETURN Qt_QCalendarWidget_minimumDate( ::pPtr )
+
+
+METHOD QCalendarWidget:monthShown()
+   RETURN Qt_QCalendarWidget_monthShown( ::pPtr )
+
+
+METHOD QCalendarWidget:selectedDate()
+   RETURN Qt_QCalendarWidget_selectedDate( ::pPtr )
+
+
+METHOD QCalendarWidget:selectionMode()
+   RETURN Qt_QCalendarWidget_selectionMode( ::pPtr )
+
+
+METHOD QCalendarWidget:setDateEditAcceptDelay( nDelay )
+   RETURN Qt_QCalendarWidget_setDateEditAcceptDelay( ::pPtr, nDelay )
+
+
+METHOD QCalendarWidget:setDateEditEnabled( lEnable )
+   RETURN Qt_QCalendarWidget_setDateEditEnabled( ::pPtr, lEnable )
+
+
+METHOD QCalendarWidget:setDateTextFormat( pDate, pFormat )
+   RETURN Qt_QCalendarWidget_setDateTextFormat( ::pPtr, pDate, pFormat )
+
+
+METHOD QCalendarWidget:setFirstDayOfWeek( nDayOfWeek )
+   RETURN Qt_QCalendarWidget_setFirstDayOfWeek( ::pPtr, nDayOfWeek )
+
+
+METHOD QCalendarWidget:setHeaderTextFormat( pFormat )
+   RETURN Qt_QCalendarWidget_setHeaderTextFormat( ::pPtr, pFormat )
+
+
+METHOD QCalendarWidget:setHorizontalHeaderFormat( nFormat )
+   RETURN Qt_QCalendarWidget_setHorizontalHeaderFormat( ::pPtr, nFormat )
+
+
+METHOD QCalendarWidget:setMaximumDate( pDate )
+   RETURN Qt_QCalendarWidget_setMaximumDate( ::pPtr, pDate )
+
+
+METHOD QCalendarWidget:setMinimumDate( pDate )
+   RETURN Qt_QCalendarWidget_setMinimumDate( ::pPtr, pDate )
+
+
+METHOD QCalendarWidget:setSelectionMode( nMode )
+   RETURN Qt_QCalendarWidget_setSelectionMode( ::pPtr, nMode )
+
+
+METHOD QCalendarWidget:setVerticalHeaderFormat( nFormat )
+   RETURN Qt_QCalendarWidget_setVerticalHeaderFormat( ::pPtr, nFormat )
+
+
+METHOD QCalendarWidget:setWeekdayTextFormat( nDayOfWeek, pFormat )
+   RETURN Qt_QCalendarWidget_setWeekdayTextFormat( ::pPtr, nDayOfWeek, pFormat )
+
+
+METHOD QCalendarWidget:verticalHeaderFormat()
+   RETURN Qt_QCalendarWidget_verticalHeaderFormat( ::pPtr )
+
+
+METHOD QCalendarWidget:weekdayTextFormat( nDayOfWeek )
+   RETURN Qt_QCalendarWidget_weekdayTextFormat( ::pPtr, nDayOfWeek )
+
+
+METHOD QCalendarWidget:yearShown()
+   RETURN Qt_QCalendarWidget_yearShown( ::pPtr )
+
+
+METHOD QCalendarWidget:setCurrentPage( nYear, nMonth )
+   RETURN Qt_QCalendarWidget_setCurrentPage( ::pPtr, nYear, nMonth )
+
+
+METHOD QCalendarWidget:setDateRange( pMin, pMax )
+   RETURN Qt_QCalendarWidget_setDateRange( ::pPtr, pMin, pMax )
+
+
+METHOD QCalendarWidget:setGridVisible( lShow )
+   RETURN Qt_QCalendarWidget_setGridVisible( ::pPtr, lShow )
+
+
+METHOD QCalendarWidget:setNavigationBarVisible( lVisible )
+   RETURN Qt_QCalendarWidget_setNavigationBarVisible( ::pPtr, lVisible )
+
+
+METHOD QCalendarWidget:setSelectedDate( pDate )
+   RETURN Qt_QCalendarWidget_setSelectedDate( ::pPtr, pDate )
+
+
+METHOD QCalendarWidget:showNextMonth()
+   RETURN Qt_QCalendarWidget_showNextMonth( ::pPtr )
+
+
+METHOD QCalendarWidget:showNextYear()
+   RETURN Qt_QCalendarWidget_showNextYear( ::pPtr )
+
+
+METHOD QCalendarWidget:showPreviousMonth()
+   RETURN Qt_QCalendarWidget_showPreviousMonth( ::pPtr )
+
+
+METHOD QCalendarWidget:showPreviousYear()
+   RETURN Qt_QCalendarWidget_showPreviousYear( ::pPtr )
+
+
+METHOD QCalendarWidget:showSelectedDate()
+   RETURN Qt_QCalendarWidget_showSelectedDate( ::pPtr )
+
+
+METHOD QCalendarWidget:showToday()
+   RETURN Qt_QCalendarWidget_showToday( ::pPtr )
+

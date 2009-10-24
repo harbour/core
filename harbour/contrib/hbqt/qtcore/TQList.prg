@@ -71,69 +71,222 @@ CREATE CLASS QList
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  append( xValue )                    INLINE  Qt_QList_append( ::pPtr, xValue )
-   METHOD  at( nI )                            INLINE  Qt_QList_at( ::pPtr, nI )
-   METHOD  back()                              INLINE  Qt_QList_back( ::pPtr )
-   METHOD  back_1()                            INLINE  Qt_QList_back_1( ::pPtr )
-   METHOD  clear()                             INLINE  Qt_QList_clear( ::pPtr )
-   METHOD  count( xValue )                     INLINE  Qt_QList_count( ::pPtr, xValue )
-   METHOD  count_1()                           INLINE  Qt_QList_count_1( ::pPtr )
-   METHOD  empty()                             INLINE  Qt_QList_empty( ::pPtr )
-   METHOD  endsWith( xValue )                  INLINE  Qt_QList_endsWith( ::pPtr, xValue )
-   METHOD  first()                             INLINE  Qt_QList_first( ::pPtr )
-   METHOD  first_1()                           INLINE  Qt_QList_first_1( ::pPtr )
-   METHOD  front()                             INLINE  Qt_QList_front( ::pPtr )
-   METHOD  front_1()                           INLINE  Qt_QList_front_1( ::pPtr )
-   METHOD  indexOf( xValue, nFrom )            INLINE  Qt_QList_indexOf( ::pPtr, xValue, nFrom )
-   METHOD  insert( nI, xValue )                INLINE  Qt_QList_insert( ::pPtr, nI, xValue )
-   METHOD  isEmpty()                           INLINE  Qt_QList_isEmpty( ::pPtr )
-   METHOD  last()                              INLINE  Qt_QList_last( ::pPtr )
-   METHOD  last_1()                            INLINE  Qt_QList_last_1( ::pPtr )
-   METHOD  lastIndexOf( xValue, nFrom )        INLINE  Qt_QList_lastIndexOf( ::pPtr, xValue, nFrom )
-   METHOD  length()                            INLINE  Qt_QList_length( ::pPtr )
-   METHOD  move( nFrom, nTo )                  INLINE  Qt_QList_move( ::pPtr, nFrom, nTo )
-   METHOD  pop_back()                          INLINE  Qt_QList_pop_back( ::pPtr )
-   METHOD  pop_front()                         INLINE  Qt_QList_pop_front( ::pPtr )
-   METHOD  prepend( xValue )                   INLINE  Qt_QList_prepend( ::pPtr, xValue )
-   METHOD  push_back( xValue )                 INLINE  Qt_QList_push_back( ::pPtr, xValue )
-   METHOD  push_front( xValue )                INLINE  Qt_QList_push_front( ::pPtr, xValue )
-   METHOD  removeAll( xValue )                 INLINE  Qt_QList_removeAll( ::pPtr, xValue )
-   METHOD  removeAt( nI )                      INLINE  Qt_QList_removeAt( ::pPtr, nI )
-   METHOD  removeFirst()                       INLINE  Qt_QList_removeFirst( ::pPtr )
-   METHOD  removeLast()                        INLINE  Qt_QList_removeLast( ::pPtr )
-   METHOD  removeOne( xValue )                 INLINE  Qt_QList_removeOne( ::pPtr, xValue )
-   METHOD  replace( nI, xValue )               INLINE  Qt_QList_replace( ::pPtr, nI, xValue )
-   METHOD  size()                              INLINE  Qt_QList_size( ::pPtr )
-   METHOD  startsWith( xValue )                INLINE  Qt_QList_startsWith( ::pPtr, xValue )
-   METHOD  swap( nI, nJ )                      INLINE  Qt_QList_swap( ::pPtr, nI, nJ )
-   METHOD  takeAt( nI )                        INLINE  Qt_QList_takeAt( ::pPtr, nI )
-   METHOD  takeFirst()                         INLINE  Qt_QList_takeFirst( ::pPtr )
-   METHOD  takeLast()                          INLINE  Qt_QList_takeLast( ::pPtr )
-   METHOD  value( nI )                         INLINE  Qt_QList_value( ::pPtr, nI )
-   METHOD  value_1( nI, xDefaultValue )        INLINE  Qt_QList_value_1( ::pPtr, nI, xDefaultValue )
+   METHOD  append( xValue )
+   METHOD  at( nI )
+   METHOD  back()
+   METHOD  back_1()
+   METHOD  clear()
+   METHOD  count( xValue )
+   METHOD  count_1()
+   METHOD  empty()
+   METHOD  endsWith( xValue )
+   METHOD  first()
+   METHOD  first_1()
+   METHOD  front()
+   METHOD  front_1()
+   METHOD  indexOf( xValue, nFrom )
+   METHOD  insert( nI, xValue )
+   METHOD  isEmpty()
+   METHOD  last()
+   METHOD  last_1()
+   METHOD  lastIndexOf( xValue, nFrom )
+   METHOD  length()
+   METHOD  move( nFrom, nTo )
+   METHOD  pop_back()
+   METHOD  pop_front()
+   METHOD  prepend( xValue )
+   METHOD  push_back( xValue )
+   METHOD  push_front( xValue )
+   METHOD  removeAll( xValue )
+   METHOD  removeAt( nI )
+   METHOD  removeFirst()
+   METHOD  removeLast()
+   METHOD  removeOne( xValue )
+   METHOD  replace( nI, xValue )
+   METHOD  size()
+   METHOD  startsWith( xValue )
+   METHOD  swap( nI, nJ )
+   METHOD  takeAt( nI )
+   METHOD  takeFirst()
+   METHOD  takeLast()
+   METHOD  value( nI )
+   METHOD  value_1( nI, xDefaultValue )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QList
-
+METHOD QList:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QList( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QList
-
+METHOD QList:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QList:append( xValue )
+   RETURN Qt_QList_append( ::pPtr, xValue )
+
+
+METHOD QList:at( nI )
+   RETURN Qt_QList_at( ::pPtr, nI )
+
+
+METHOD QList:back()
+   RETURN Qt_QList_back( ::pPtr )
+
+
+METHOD QList:back_1()
+   RETURN Qt_QList_back_1( ::pPtr )
+
+
+METHOD QList:clear()
+   RETURN Qt_QList_clear( ::pPtr )
+
+
+METHOD QList:count( xValue )
+   RETURN Qt_QList_count( ::pPtr, xValue )
+
+
+METHOD QList:count_1()
+   RETURN Qt_QList_count_1( ::pPtr )
+
+
+METHOD QList:empty()
+   RETURN Qt_QList_empty( ::pPtr )
+
+
+METHOD QList:endsWith( xValue )
+   RETURN Qt_QList_endsWith( ::pPtr, xValue )
+
+
+METHOD QList:first()
+   RETURN Qt_QList_first( ::pPtr )
+
+
+METHOD QList:first_1()
+   RETURN Qt_QList_first_1( ::pPtr )
+
+
+METHOD QList:front()
+   RETURN Qt_QList_front( ::pPtr )
+
+
+METHOD QList:front_1()
+   RETURN Qt_QList_front_1( ::pPtr )
+
+
+METHOD QList:indexOf( xValue, nFrom )
+   RETURN Qt_QList_indexOf( ::pPtr, xValue, nFrom )
+
+
+METHOD QList:insert( nI, xValue )
+   RETURN Qt_QList_insert( ::pPtr, nI, xValue )
+
+
+METHOD QList:isEmpty()
+   RETURN Qt_QList_isEmpty( ::pPtr )
+
+
+METHOD QList:last()
+   RETURN Qt_QList_last( ::pPtr )
+
+
+METHOD QList:last_1()
+   RETURN Qt_QList_last_1( ::pPtr )
+
+
+METHOD QList:lastIndexOf( xValue, nFrom )
+   RETURN Qt_QList_lastIndexOf( ::pPtr, xValue, nFrom )
+
+
+METHOD QList:length()
+   RETURN Qt_QList_length( ::pPtr )
+
+
+METHOD QList:move( nFrom, nTo )
+   RETURN Qt_QList_move( ::pPtr, nFrom, nTo )
+
+
+METHOD QList:pop_back()
+   RETURN Qt_QList_pop_back( ::pPtr )
+
+
+METHOD QList:pop_front()
+   RETURN Qt_QList_pop_front( ::pPtr )
+
+
+METHOD QList:prepend( xValue )
+   RETURN Qt_QList_prepend( ::pPtr, xValue )
+
+
+METHOD QList:push_back( xValue )
+   RETURN Qt_QList_push_back( ::pPtr, xValue )
+
+
+METHOD QList:push_front( xValue )
+   RETURN Qt_QList_push_front( ::pPtr, xValue )
+
+
+METHOD QList:removeAll( xValue )
+   RETURN Qt_QList_removeAll( ::pPtr, xValue )
+
+
+METHOD QList:removeAt( nI )
+   RETURN Qt_QList_removeAt( ::pPtr, nI )
+
+
+METHOD QList:removeFirst()
+   RETURN Qt_QList_removeFirst( ::pPtr )
+
+
+METHOD QList:removeLast()
+   RETURN Qt_QList_removeLast( ::pPtr )
+
+
+METHOD QList:removeOne( xValue )
+   RETURN Qt_QList_removeOne( ::pPtr, xValue )
+
+
+METHOD QList:replace( nI, xValue )
+   RETURN Qt_QList_replace( ::pPtr, nI, xValue )
+
+
+METHOD QList:size()
+   RETURN Qt_QList_size( ::pPtr )
+
+
+METHOD QList:startsWith( xValue )
+   RETURN Qt_QList_startsWith( ::pPtr, xValue )
+
+
+METHOD QList:swap( nI, nJ )
+   RETURN Qt_QList_swap( ::pPtr, nI, nJ )
+
+
+METHOD QList:takeAt( nI )
+   RETURN Qt_QList_takeAt( ::pPtr, nI )
+
+
+METHOD QList:takeFirst()
+   RETURN Qt_QList_takeFirst( ::pPtr )
+
+
+METHOD QList:takeLast()
+   RETURN Qt_QList_takeLast( ::pPtr )
+
+
+METHOD QList:value( nI )
+   RETURN Qt_QList_value( ::pPtr, nI )
+
+
+METHOD QList:value_1( nI, xDefaultValue )
+   RETURN Qt_QList_value_1( ::pPtr, nI, xDefaultValue )
+

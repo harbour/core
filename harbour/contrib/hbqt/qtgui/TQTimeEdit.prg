@@ -76,24 +76,17 @@ CREATE CLASS QTimeEdit INHERIT QDateTimeEdit
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTimeEdit
-
+METHOD QTimeEdit:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTimeEdit( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTimeEdit
-
+METHOD QTimeEdit:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/

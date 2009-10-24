@@ -71,33 +71,42 @@ CREATE CLASS QTextObject INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  document()                          INLINE  Qt_QTextObject_document( ::pPtr )
-   METHOD  format()                            INLINE  Qt_QTextObject_format( ::pPtr )
-   METHOD  formatIndex()                       INLINE  Qt_QTextObject_formatIndex( ::pPtr )
-   METHOD  objectIndex()                       INLINE  Qt_QTextObject_objectIndex( ::pPtr )
+   METHOD  document()
+   METHOD  format()
+   METHOD  formatIndex()
+   METHOD  objectIndex()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextObject
-
+METHOD QTextObject:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextObject( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextObject
-
+METHOD QTextObject:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextObject:document()
+   RETURN Qt_QTextObject_document( ::pPtr )
+
+
+METHOD QTextObject:format()
+   RETURN Qt_QTextObject_format( ::pPtr )
+
+
+METHOD QTextObject:formatIndex()
+   RETURN Qt_QTextObject_formatIndex( ::pPtr )
+
+
+METHOD QTextObject:objectIndex()
+   RETURN Qt_QTextObject_objectIndex( ::pPtr )
+

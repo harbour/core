@@ -71,36 +71,57 @@ CREATE CLASS QStyledItemDelegate
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  createEditor( pParent, pOption, pIndex )  INLINE  Qt_QStyledItemDelegate_createEditor( ::pPtr, pParent, pOption, pIndex )
-   METHOD  displayText( pValue, pLocale )      INLINE  Qt_QStyledItemDelegate_displayText( ::pPtr, pValue, pLocale )
-   METHOD  paint( pPainter, pOption, pIndex )  INLINE  Qt_QStyledItemDelegate_paint( ::pPtr, pPainter, pOption, pIndex )
-   METHOD  setEditorData( pEditor, pIndex )    INLINE  Qt_QStyledItemDelegate_setEditorData( ::pPtr, pEditor, pIndex )
-   METHOD  setModelData( pEditor, pModel, pIndex )  INLINE  Qt_QStyledItemDelegate_setModelData( ::pPtr, pEditor, pModel, pIndex )
-   METHOD  sizeHint( pOption, pIndex )         INLINE  Qt_QStyledItemDelegate_sizeHint( ::pPtr, pOption, pIndex )
-   METHOD  updateEditorGeometry( pEditor, pOption, pIndex )  INLINE  Qt_QStyledItemDelegate_updateEditorGeometry( ::pPtr, pEditor, pOption, pIndex )
+   METHOD  createEditor( pParent, pOption, pIndex )
+   METHOD  displayText( pValue, pLocale )
+   METHOD  paint( pPainter, pOption, pIndex )
+   METHOD  setEditorData( pEditor, pIndex )
+   METHOD  setModelData( pEditor, pModel, pIndex )
+   METHOD  sizeHint( pOption, pIndex )
+   METHOD  updateEditorGeometry( pEditor, pOption, pIndex )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyledItemDelegate
-
+METHOD QStyledItemDelegate:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyledItemDelegate( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyledItemDelegate
-
+METHOD QStyledItemDelegate:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyledItemDelegate:createEditor( pParent, pOption, pIndex )
+   RETURN Qt_QStyledItemDelegate_createEditor( ::pPtr, pParent, pOption, pIndex )
+
+
+METHOD QStyledItemDelegate:displayText( pValue, pLocale )
+   RETURN Qt_QStyledItemDelegate_displayText( ::pPtr, pValue, pLocale )
+
+
+METHOD QStyledItemDelegate:paint( pPainter, pOption, pIndex )
+   RETURN Qt_QStyledItemDelegate_paint( ::pPtr, pPainter, pOption, pIndex )
+
+
+METHOD QStyledItemDelegate:setEditorData( pEditor, pIndex )
+   RETURN Qt_QStyledItemDelegate_setEditorData( ::pPtr, pEditor, pIndex )
+
+
+METHOD QStyledItemDelegate:setModelData( pEditor, pModel, pIndex )
+   RETURN Qt_QStyledItemDelegate_setModelData( ::pPtr, pEditor, pModel, pIndex )
+
+
+METHOD QStyledItemDelegate:sizeHint( pOption, pIndex )
+   RETURN Qt_QStyledItemDelegate_sizeHint( ::pPtr, pOption, pIndex )
+
+
+METHOD QStyledItemDelegate:updateEditorGeometry( pEditor, pOption, pIndex )
+   RETURN Qt_QStyledItemDelegate_updateEditorGeometry( ::pPtr, pEditor, pOption, pIndex )
+

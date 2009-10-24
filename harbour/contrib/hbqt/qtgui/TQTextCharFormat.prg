@@ -71,76 +71,257 @@ CREATE CLASS QTextCharFormat INHERIT QTextFormat
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  anchorHref()                        INLINE  Qt_QTextCharFormat_anchorHref( ::pPtr )
-   METHOD  anchorNames()                       INLINE  Qt_QTextCharFormat_anchorNames( ::pPtr )
-   METHOD  font()                              INLINE  Qt_QTextCharFormat_font( ::pPtr )
-   METHOD  fontCapitalization()                INLINE  Qt_QTextCharFormat_fontCapitalization( ::pPtr )
-   METHOD  fontFamily()                        INLINE  Qt_QTextCharFormat_fontFamily( ::pPtr )
-   METHOD  fontFixedPitch()                    INLINE  Qt_QTextCharFormat_fontFixedPitch( ::pPtr )
-   METHOD  fontItalic()                        INLINE  Qt_QTextCharFormat_fontItalic( ::pPtr )
-   METHOD  fontKerning()                       INLINE  Qt_QTextCharFormat_fontKerning( ::pPtr )
-   METHOD  fontLetterSpacing()                 INLINE  Qt_QTextCharFormat_fontLetterSpacing( ::pPtr )
-   METHOD  fontOverline()                      INLINE  Qt_QTextCharFormat_fontOverline( ::pPtr )
-   METHOD  fontPointSize()                     INLINE  Qt_QTextCharFormat_fontPointSize( ::pPtr )
-   METHOD  fontStrikeOut()                     INLINE  Qt_QTextCharFormat_fontStrikeOut( ::pPtr )
-   METHOD  fontStyleHint()                     INLINE  Qt_QTextCharFormat_fontStyleHint( ::pPtr )
-   METHOD  fontStyleStrategy()                 INLINE  Qt_QTextCharFormat_fontStyleStrategy( ::pPtr )
-   METHOD  fontUnderline()                     INLINE  Qt_QTextCharFormat_fontUnderline( ::pPtr )
-   METHOD  fontWeight()                        INLINE  Qt_QTextCharFormat_fontWeight( ::pPtr )
-   METHOD  fontWordSpacing()                   INLINE  Qt_QTextCharFormat_fontWordSpacing( ::pPtr )
-   METHOD  isAnchor()                          INLINE  Qt_QTextCharFormat_isAnchor( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QTextCharFormat_isValid( ::pPtr )
-   METHOD  setAnchor( lAnchor )                INLINE  Qt_QTextCharFormat_setAnchor( ::pPtr, lAnchor )
-   METHOD  setAnchorHref( cValue )             INLINE  Qt_QTextCharFormat_setAnchorHref( ::pPtr, cValue )
-   METHOD  setAnchorNames( pNames )            INLINE  Qt_QTextCharFormat_setAnchorNames( ::pPtr, pNames )
-   METHOD  setFont( pFont )                    INLINE  Qt_QTextCharFormat_setFont( ::pPtr, pFont )
-   METHOD  setFontCapitalization( nCapitalization )  INLINE  Qt_QTextCharFormat_setFontCapitalization( ::pPtr, nCapitalization )
-   METHOD  setFontFamily( cFamily )            INLINE  Qt_QTextCharFormat_setFontFamily( ::pPtr, cFamily )
-   METHOD  setFontFixedPitch( lFixedPitch )    INLINE  Qt_QTextCharFormat_setFontFixedPitch( ::pPtr, lFixedPitch )
-   METHOD  setFontItalic( lItalic )            INLINE  Qt_QTextCharFormat_setFontItalic( ::pPtr, lItalic )
-   METHOD  setFontKerning( lEnable )           INLINE  Qt_QTextCharFormat_setFontKerning( ::pPtr, lEnable )
-   METHOD  setFontLetterSpacing( nSpacing )    INLINE  Qt_QTextCharFormat_setFontLetterSpacing( ::pPtr, nSpacing )
-   METHOD  setFontOverline( lOverline )        INLINE  Qt_QTextCharFormat_setFontOverline( ::pPtr, lOverline )
-   METHOD  setFontPointSize( nSize )           INLINE  Qt_QTextCharFormat_setFontPointSize( ::pPtr, nSize )
-   METHOD  setFontStrikeOut( lStrikeOut )      INLINE  Qt_QTextCharFormat_setFontStrikeOut( ::pPtr, lStrikeOut )
-   METHOD  setFontStyleHint( nHint, nStrategy )  INLINE  Qt_QTextCharFormat_setFontStyleHint( ::pPtr, nHint, nStrategy )
-   METHOD  setFontStyleStrategy( nStrategy )   INLINE  Qt_QTextCharFormat_setFontStyleStrategy( ::pPtr, nStrategy )
-   METHOD  setFontUnderline( lUnderline )      INLINE  Qt_QTextCharFormat_setFontUnderline( ::pPtr, lUnderline )
-   METHOD  setFontWeight( nWeight )            INLINE  Qt_QTextCharFormat_setFontWeight( ::pPtr, nWeight )
-   METHOD  setFontWordSpacing( nSpacing )      INLINE  Qt_QTextCharFormat_setFontWordSpacing( ::pPtr, nSpacing )
-   METHOD  setTextOutline( pPen )              INLINE  Qt_QTextCharFormat_setTextOutline( ::pPtr, pPen )
-   METHOD  setToolTip( cText )                 INLINE  Qt_QTextCharFormat_setToolTip( ::pPtr, cText )
-   METHOD  setUnderlineColor( pColor )         INLINE  Qt_QTextCharFormat_setUnderlineColor( ::pPtr, pColor )
-   METHOD  setUnderlineStyle( nStyle )         INLINE  Qt_QTextCharFormat_setUnderlineStyle( ::pPtr, nStyle )
-   METHOD  setVerticalAlignment( nAlignment )  INLINE  Qt_QTextCharFormat_setVerticalAlignment( ::pPtr, nAlignment )
-   METHOD  textOutline()                       INLINE  Qt_QTextCharFormat_textOutline( ::pPtr )
-   METHOD  toolTip()                           INLINE  Qt_QTextCharFormat_toolTip( ::pPtr )
-   METHOD  underlineColor()                    INLINE  Qt_QTextCharFormat_underlineColor( ::pPtr )
-   METHOD  underlineStyle()                    INLINE  Qt_QTextCharFormat_underlineStyle( ::pPtr )
-   METHOD  verticalAlignment()                 INLINE  Qt_QTextCharFormat_verticalAlignment( ::pPtr )
+   METHOD  anchorHref()
+   METHOD  anchorNames()
+   METHOD  font()
+   METHOD  fontCapitalization()
+   METHOD  fontFamily()
+   METHOD  fontFixedPitch()
+   METHOD  fontItalic()
+   METHOD  fontKerning()
+   METHOD  fontLetterSpacing()
+   METHOD  fontOverline()
+   METHOD  fontPointSize()
+   METHOD  fontStrikeOut()
+   METHOD  fontStyleHint()
+   METHOD  fontStyleStrategy()
+   METHOD  fontUnderline()
+   METHOD  fontWeight()
+   METHOD  fontWordSpacing()
+   METHOD  isAnchor()
+   METHOD  isValid()
+   METHOD  setAnchor( lAnchor )
+   METHOD  setAnchorHref( cValue )
+   METHOD  setAnchorNames( pNames )
+   METHOD  setFont( pFont )
+   METHOD  setFontCapitalization( nCapitalization )
+   METHOD  setFontFamily( cFamily )
+   METHOD  setFontFixedPitch( lFixedPitch )
+   METHOD  setFontItalic( lItalic )
+   METHOD  setFontKerning( lEnable )
+   METHOD  setFontLetterSpacing( nSpacing )
+   METHOD  setFontOverline( lOverline )
+   METHOD  setFontPointSize( nSize )
+   METHOD  setFontStrikeOut( lStrikeOut )
+   METHOD  setFontStyleHint( nHint, nStrategy )
+   METHOD  setFontStyleStrategy( nStrategy )
+   METHOD  setFontUnderline( lUnderline )
+   METHOD  setFontWeight( nWeight )
+   METHOD  setFontWordSpacing( nSpacing )
+   METHOD  setTextOutline( pPen )
+   METHOD  setToolTip( cText )
+   METHOD  setUnderlineColor( pColor )
+   METHOD  setUnderlineStyle( nStyle )
+   METHOD  setVerticalAlignment( nAlignment )
+   METHOD  textOutline()
+   METHOD  toolTip()
+   METHOD  underlineColor()
+   METHOD  underlineStyle()
+   METHOD  verticalAlignment()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextCharFormat
-
+METHOD QTextCharFormat:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextCharFormat( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextCharFormat
-
+METHOD QTextCharFormat:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextCharFormat:anchorHref()
+   RETURN Qt_QTextCharFormat_anchorHref( ::pPtr )
+
+
+METHOD QTextCharFormat:anchorNames()
+   RETURN Qt_QTextCharFormat_anchorNames( ::pPtr )
+
+
+METHOD QTextCharFormat:font()
+   RETURN Qt_QTextCharFormat_font( ::pPtr )
+
+
+METHOD QTextCharFormat:fontCapitalization()
+   RETURN Qt_QTextCharFormat_fontCapitalization( ::pPtr )
+
+
+METHOD QTextCharFormat:fontFamily()
+   RETURN Qt_QTextCharFormat_fontFamily( ::pPtr )
+
+
+METHOD QTextCharFormat:fontFixedPitch()
+   RETURN Qt_QTextCharFormat_fontFixedPitch( ::pPtr )
+
+
+METHOD QTextCharFormat:fontItalic()
+   RETURN Qt_QTextCharFormat_fontItalic( ::pPtr )
+
+
+METHOD QTextCharFormat:fontKerning()
+   RETURN Qt_QTextCharFormat_fontKerning( ::pPtr )
+
+
+METHOD QTextCharFormat:fontLetterSpacing()
+   RETURN Qt_QTextCharFormat_fontLetterSpacing( ::pPtr )
+
+
+METHOD QTextCharFormat:fontOverline()
+   RETURN Qt_QTextCharFormat_fontOverline( ::pPtr )
+
+
+METHOD QTextCharFormat:fontPointSize()
+   RETURN Qt_QTextCharFormat_fontPointSize( ::pPtr )
+
+
+METHOD QTextCharFormat:fontStrikeOut()
+   RETURN Qt_QTextCharFormat_fontStrikeOut( ::pPtr )
+
+
+METHOD QTextCharFormat:fontStyleHint()
+   RETURN Qt_QTextCharFormat_fontStyleHint( ::pPtr )
+
+
+METHOD QTextCharFormat:fontStyleStrategy()
+   RETURN Qt_QTextCharFormat_fontStyleStrategy( ::pPtr )
+
+
+METHOD QTextCharFormat:fontUnderline()
+   RETURN Qt_QTextCharFormat_fontUnderline( ::pPtr )
+
+
+METHOD QTextCharFormat:fontWeight()
+   RETURN Qt_QTextCharFormat_fontWeight( ::pPtr )
+
+
+METHOD QTextCharFormat:fontWordSpacing()
+   RETURN Qt_QTextCharFormat_fontWordSpacing( ::pPtr )
+
+
+METHOD QTextCharFormat:isAnchor()
+   RETURN Qt_QTextCharFormat_isAnchor( ::pPtr )
+
+
+METHOD QTextCharFormat:isValid()
+   RETURN Qt_QTextCharFormat_isValid( ::pPtr )
+
+
+METHOD QTextCharFormat:setAnchor( lAnchor )
+   RETURN Qt_QTextCharFormat_setAnchor( ::pPtr, lAnchor )
+
+
+METHOD QTextCharFormat:setAnchorHref( cValue )
+   RETURN Qt_QTextCharFormat_setAnchorHref( ::pPtr, cValue )
+
+
+METHOD QTextCharFormat:setAnchorNames( pNames )
+   RETURN Qt_QTextCharFormat_setAnchorNames( ::pPtr, pNames )
+
+
+METHOD QTextCharFormat:setFont( pFont )
+   RETURN Qt_QTextCharFormat_setFont( ::pPtr, pFont )
+
+
+METHOD QTextCharFormat:setFontCapitalization( nCapitalization )
+   RETURN Qt_QTextCharFormat_setFontCapitalization( ::pPtr, nCapitalization )
+
+
+METHOD QTextCharFormat:setFontFamily( cFamily )
+   RETURN Qt_QTextCharFormat_setFontFamily( ::pPtr, cFamily )
+
+
+METHOD QTextCharFormat:setFontFixedPitch( lFixedPitch )
+   RETURN Qt_QTextCharFormat_setFontFixedPitch( ::pPtr, lFixedPitch )
+
+
+METHOD QTextCharFormat:setFontItalic( lItalic )
+   RETURN Qt_QTextCharFormat_setFontItalic( ::pPtr, lItalic )
+
+
+METHOD QTextCharFormat:setFontKerning( lEnable )
+   RETURN Qt_QTextCharFormat_setFontKerning( ::pPtr, lEnable )
+
+
+METHOD QTextCharFormat:setFontLetterSpacing( nSpacing )
+   RETURN Qt_QTextCharFormat_setFontLetterSpacing( ::pPtr, nSpacing )
+
+
+METHOD QTextCharFormat:setFontOverline( lOverline )
+   RETURN Qt_QTextCharFormat_setFontOverline( ::pPtr, lOverline )
+
+
+METHOD QTextCharFormat:setFontPointSize( nSize )
+   RETURN Qt_QTextCharFormat_setFontPointSize( ::pPtr, nSize )
+
+
+METHOD QTextCharFormat:setFontStrikeOut( lStrikeOut )
+   RETURN Qt_QTextCharFormat_setFontStrikeOut( ::pPtr, lStrikeOut )
+
+
+METHOD QTextCharFormat:setFontStyleHint( nHint, nStrategy )
+   RETURN Qt_QTextCharFormat_setFontStyleHint( ::pPtr, nHint, nStrategy )
+
+
+METHOD QTextCharFormat:setFontStyleStrategy( nStrategy )
+   RETURN Qt_QTextCharFormat_setFontStyleStrategy( ::pPtr, nStrategy )
+
+
+METHOD QTextCharFormat:setFontUnderline( lUnderline )
+   RETURN Qt_QTextCharFormat_setFontUnderline( ::pPtr, lUnderline )
+
+
+METHOD QTextCharFormat:setFontWeight( nWeight )
+   RETURN Qt_QTextCharFormat_setFontWeight( ::pPtr, nWeight )
+
+
+METHOD QTextCharFormat:setFontWordSpacing( nSpacing )
+   RETURN Qt_QTextCharFormat_setFontWordSpacing( ::pPtr, nSpacing )
+
+
+METHOD QTextCharFormat:setTextOutline( pPen )
+   RETURN Qt_QTextCharFormat_setTextOutline( ::pPtr, pPen )
+
+
+METHOD QTextCharFormat:setToolTip( cText )
+   RETURN Qt_QTextCharFormat_setToolTip( ::pPtr, cText )
+
+
+METHOD QTextCharFormat:setUnderlineColor( pColor )
+   RETURN Qt_QTextCharFormat_setUnderlineColor( ::pPtr, pColor )
+
+
+METHOD QTextCharFormat:setUnderlineStyle( nStyle )
+   RETURN Qt_QTextCharFormat_setUnderlineStyle( ::pPtr, nStyle )
+
+
+METHOD QTextCharFormat:setVerticalAlignment( nAlignment )
+   RETURN Qt_QTextCharFormat_setVerticalAlignment( ::pPtr, nAlignment )
+
+
+METHOD QTextCharFormat:textOutline()
+   RETURN Qt_QTextCharFormat_textOutline( ::pPtr )
+
+
+METHOD QTextCharFormat:toolTip()
+   RETURN Qt_QTextCharFormat_toolTip( ::pPtr )
+
+
+METHOD QTextCharFormat:underlineColor()
+   RETURN Qt_QTextCharFormat_underlineColor( ::pPtr )
+
+
+METHOD QTextCharFormat:underlineStyle()
+   RETURN Qt_QTextCharFormat_underlineStyle( ::pPtr )
+
+
+METHOD QTextCharFormat:verticalAlignment()
+   RETURN Qt_QTextCharFormat_verticalAlignment( ::pPtr )
+

@@ -71,58 +71,167 @@ CREATE CLASS QListView INHERIT QAbstractItemView
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  batchSize()                         INLINE  Qt_QListView_batchSize( ::pPtr )
-   METHOD  clearPropertyFlags()                INLINE  Qt_QListView_clearPropertyFlags( ::pPtr )
-   METHOD  flow()                              INLINE  Qt_QListView_flow( ::pPtr )
-   METHOD  gridSize()                          INLINE  Qt_QListView_gridSize( ::pPtr )
-   METHOD  isRowHidden( nRow )                 INLINE  Qt_QListView_isRowHidden( ::pPtr, nRow )
-   METHOD  isSelectionRectVisible()            INLINE  Qt_QListView_isSelectionRectVisible( ::pPtr )
-   METHOD  isWrapping()                        INLINE  Qt_QListView_isWrapping( ::pPtr )
-   METHOD  layoutMode()                        INLINE  Qt_QListView_layoutMode( ::pPtr )
-   METHOD  modelColumn()                       INLINE  Qt_QListView_modelColumn( ::pPtr )
-   METHOD  movement()                          INLINE  Qt_QListView_movement( ::pPtr )
-   METHOD  resizeMode()                        INLINE  Qt_QListView_resizeMode( ::pPtr )
-   METHOD  setBatchSize( nBatchSize )          INLINE  Qt_QListView_setBatchSize( ::pPtr, nBatchSize )
-   METHOD  setFlow( nFlow )                    INLINE  Qt_QListView_setFlow( ::pPtr, nFlow )
-   METHOD  setGridSize( pSize )                INLINE  Qt_QListView_setGridSize( ::pPtr, pSize )
-   METHOD  setLayoutMode( nMode )              INLINE  Qt_QListView_setLayoutMode( ::pPtr, nMode )
-   METHOD  setModelColumn( nColumn )           INLINE  Qt_QListView_setModelColumn( ::pPtr, nColumn )
-   METHOD  setMovement( nMovement )            INLINE  Qt_QListView_setMovement( ::pPtr, nMovement )
-   METHOD  setResizeMode( nMode )              INLINE  Qt_QListView_setResizeMode( ::pPtr, nMode )
-   METHOD  setRowHidden( nRow, lHide )         INLINE  Qt_QListView_setRowHidden( ::pPtr, nRow, lHide )
-   METHOD  setSelectionRectVisible( lShow )    INLINE  Qt_QListView_setSelectionRectVisible( ::pPtr, lShow )
-   METHOD  setSpacing( nSpace )                INLINE  Qt_QListView_setSpacing( ::pPtr, nSpace )
-   METHOD  setUniformItemSizes( lEnable )      INLINE  Qt_QListView_setUniformItemSizes( ::pPtr, lEnable )
-   METHOD  setViewMode( nMode )                INLINE  Qt_QListView_setViewMode( ::pPtr, nMode )
-   METHOD  setWordWrap( lOn )                  INLINE  Qt_QListView_setWordWrap( ::pPtr, lOn )
-   METHOD  setWrapping( lEnable )              INLINE  Qt_QListView_setWrapping( ::pPtr, lEnable )
-   METHOD  spacing()                           INLINE  Qt_QListView_spacing( ::pPtr )
-   METHOD  uniformItemSizes()                  INLINE  Qt_QListView_uniformItemSizes( ::pPtr )
-   METHOD  viewMode()                          INLINE  Qt_QListView_viewMode( ::pPtr )
-   METHOD  wordWrap()                          INLINE  Qt_QListView_wordWrap( ::pPtr )
+   METHOD  batchSize()
+   METHOD  clearPropertyFlags()
+   METHOD  flow()
+   METHOD  gridSize()
+   METHOD  isRowHidden( nRow )
+   METHOD  isSelectionRectVisible()
+   METHOD  isWrapping()
+   METHOD  layoutMode()
+   METHOD  modelColumn()
+   METHOD  movement()
+   METHOD  resizeMode()
+   METHOD  setBatchSize( nBatchSize )
+   METHOD  setFlow( nFlow )
+   METHOD  setGridSize( pSize )
+   METHOD  setLayoutMode( nMode )
+   METHOD  setModelColumn( nColumn )
+   METHOD  setMovement( nMovement )
+   METHOD  setResizeMode( nMode )
+   METHOD  setRowHidden( nRow, lHide )
+   METHOD  setSelectionRectVisible( lShow )
+   METHOD  setSpacing( nSpace )
+   METHOD  setUniformItemSizes( lEnable )
+   METHOD  setViewMode( nMode )
+   METHOD  setWordWrap( lOn )
+   METHOD  setWrapping( lEnable )
+   METHOD  spacing()
+   METHOD  uniformItemSizes()
+   METHOD  viewMode()
+   METHOD  wordWrap()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QListView
-
+METHOD QListView:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QListView( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QListView
-
+METHOD QListView:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QListView:batchSize()
+   RETURN Qt_QListView_batchSize( ::pPtr )
+
+
+METHOD QListView:clearPropertyFlags()
+   RETURN Qt_QListView_clearPropertyFlags( ::pPtr )
+
+
+METHOD QListView:flow()
+   RETURN Qt_QListView_flow( ::pPtr )
+
+
+METHOD QListView:gridSize()
+   RETURN Qt_QListView_gridSize( ::pPtr )
+
+
+METHOD QListView:isRowHidden( nRow )
+   RETURN Qt_QListView_isRowHidden( ::pPtr, nRow )
+
+
+METHOD QListView:isSelectionRectVisible()
+   RETURN Qt_QListView_isSelectionRectVisible( ::pPtr )
+
+
+METHOD QListView:isWrapping()
+   RETURN Qt_QListView_isWrapping( ::pPtr )
+
+
+METHOD QListView:layoutMode()
+   RETURN Qt_QListView_layoutMode( ::pPtr )
+
+
+METHOD QListView:modelColumn()
+   RETURN Qt_QListView_modelColumn( ::pPtr )
+
+
+METHOD QListView:movement()
+   RETURN Qt_QListView_movement( ::pPtr )
+
+
+METHOD QListView:resizeMode()
+   RETURN Qt_QListView_resizeMode( ::pPtr )
+
+
+METHOD QListView:setBatchSize( nBatchSize )
+   RETURN Qt_QListView_setBatchSize( ::pPtr, nBatchSize )
+
+
+METHOD QListView:setFlow( nFlow )
+   RETURN Qt_QListView_setFlow( ::pPtr, nFlow )
+
+
+METHOD QListView:setGridSize( pSize )
+   RETURN Qt_QListView_setGridSize( ::pPtr, pSize )
+
+
+METHOD QListView:setLayoutMode( nMode )
+   RETURN Qt_QListView_setLayoutMode( ::pPtr, nMode )
+
+
+METHOD QListView:setModelColumn( nColumn )
+   RETURN Qt_QListView_setModelColumn( ::pPtr, nColumn )
+
+
+METHOD QListView:setMovement( nMovement )
+   RETURN Qt_QListView_setMovement( ::pPtr, nMovement )
+
+
+METHOD QListView:setResizeMode( nMode )
+   RETURN Qt_QListView_setResizeMode( ::pPtr, nMode )
+
+
+METHOD QListView:setRowHidden( nRow, lHide )
+   RETURN Qt_QListView_setRowHidden( ::pPtr, nRow, lHide )
+
+
+METHOD QListView:setSelectionRectVisible( lShow )
+   RETURN Qt_QListView_setSelectionRectVisible( ::pPtr, lShow )
+
+
+METHOD QListView:setSpacing( nSpace )
+   RETURN Qt_QListView_setSpacing( ::pPtr, nSpace )
+
+
+METHOD QListView:setUniformItemSizes( lEnable )
+   RETURN Qt_QListView_setUniformItemSizes( ::pPtr, lEnable )
+
+
+METHOD QListView:setViewMode( nMode )
+   RETURN Qt_QListView_setViewMode( ::pPtr, nMode )
+
+
+METHOD QListView:setWordWrap( lOn )
+   RETURN Qt_QListView_setWordWrap( ::pPtr, lOn )
+
+
+METHOD QListView:setWrapping( lEnable )
+   RETURN Qt_QListView_setWrapping( ::pPtr, lEnable )
+
+
+METHOD QListView:spacing()
+   RETURN Qt_QListView_spacing( ::pPtr )
+
+
+METHOD QListView:uniformItemSizes()
+   RETURN Qt_QListView_uniformItemSizes( ::pPtr )
+
+
+METHOD QListView:viewMode()
+   RETURN Qt_QListView_viewMode( ::pPtr )
+
+
+METHOD QListView:wordWrap()
+   RETURN Qt_QListView_wordWrap( ::pPtr )
+

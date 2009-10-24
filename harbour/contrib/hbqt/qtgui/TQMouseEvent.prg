@@ -71,38 +71,67 @@ CREATE CLASS QMouseEvent INHERIT QInputEvent
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  button()                            INLINE  Qt_QMouseEvent_button( ::pPtr )
-   METHOD  buttons()                           INLINE  Qt_QMouseEvent_buttons( ::pPtr )
-   METHOD  globalPos()                         INLINE  Qt_QMouseEvent_globalPos( ::pPtr )
-   METHOD  globalX()                           INLINE  Qt_QMouseEvent_globalX( ::pPtr )
-   METHOD  globalY()                           INLINE  Qt_QMouseEvent_globalY( ::pPtr )
-   METHOD  pos()                               INLINE  Qt_QMouseEvent_pos( ::pPtr )
-   METHOD  posF()                              INLINE  Qt_QMouseEvent_posF( ::pPtr )
-   METHOD  x()                                 INLINE  Qt_QMouseEvent_x( ::pPtr )
-   METHOD  y()                                 INLINE  Qt_QMouseEvent_y( ::pPtr )
+   METHOD  button()
+   METHOD  buttons()
+   METHOD  globalPos()
+   METHOD  globalX()
+   METHOD  globalY()
+   METHOD  pos()
+   METHOD  posF()
+   METHOD  x()
+   METHOD  y()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QMouseEvent
-
+METHOD QMouseEvent:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QMouseEvent( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QMouseEvent
-
+METHOD QMouseEvent:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QMouseEvent:button()
+   RETURN Qt_QMouseEvent_button( ::pPtr )
+
+
+METHOD QMouseEvent:buttons()
+   RETURN Qt_QMouseEvent_buttons( ::pPtr )
+
+
+METHOD QMouseEvent:globalPos()
+   RETURN Qt_QMouseEvent_globalPos( ::pPtr )
+
+
+METHOD QMouseEvent:globalX()
+   RETURN Qt_QMouseEvent_globalX( ::pPtr )
+
+
+METHOD QMouseEvent:globalY()
+   RETURN Qt_QMouseEvent_globalY( ::pPtr )
+
+
+METHOD QMouseEvent:pos()
+   RETURN Qt_QMouseEvent_pos( ::pPtr )
+
+
+METHOD QMouseEvent:posF()
+   RETURN Qt_QMouseEvent_posF( ::pPtr )
+
+
+METHOD QMouseEvent:x()
+   RETURN Qt_QMouseEvent_x( ::pPtr )
+
+
+METHOD QMouseEvent:y()
+   RETURN Qt_QMouseEvent_y( ::pPtr )
+

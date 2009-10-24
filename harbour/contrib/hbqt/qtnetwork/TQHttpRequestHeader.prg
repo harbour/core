@@ -71,34 +71,47 @@ CREATE CLASS QHttpRequestHeader INHERIT QHttpHeader
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  majorVersion()                      INLINE  Qt_QHttpRequestHeader_majorVersion( ::pPtr )
-   METHOD  method()                            INLINE  Qt_QHttpRequestHeader_method( ::pPtr )
-   METHOD  minorVersion()                      INLINE  Qt_QHttpRequestHeader_minorVersion( ::pPtr )
-   METHOD  path()                              INLINE  Qt_QHttpRequestHeader_path( ::pPtr )
-   METHOD  setRequest( cMethod, cPath, nMajorVer, nMinorVer )  INLINE  Qt_QHttpRequestHeader_setRequest( ::pPtr, cMethod, cPath, nMajorVer, nMinorVer )
+   METHOD  majorVersion()
+   METHOD  method()
+   METHOD  minorVersion()
+   METHOD  path()
+   METHOD  setRequest( cMethod, cPath, nMajorVer, nMinorVer )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QHttpRequestHeader
-
+METHOD QHttpRequestHeader:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QHttpRequestHeader( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QHttpRequestHeader
-
+METHOD QHttpRequestHeader:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QHttpRequestHeader:majorVersion()
+   RETURN Qt_QHttpRequestHeader_majorVersion( ::pPtr )
+
+
+METHOD QHttpRequestHeader:method()
+   RETURN Qt_QHttpRequestHeader_method( ::pPtr )
+
+
+METHOD QHttpRequestHeader:minorVersion()
+   RETURN Qt_QHttpRequestHeader_minorVersion( ::pPtr )
+
+
+METHOD QHttpRequestHeader:path()
+   RETURN Qt_QHttpRequestHeader_path( ::pPtr )
+
+
+METHOD QHttpRequestHeader:setRequest( cMethod, cPath, nMajorVer, nMinorVer )
+   RETURN Qt_QHttpRequestHeader_setRequest( ::pPtr, cMethod, cPath, nMajorVer, nMinorVer )
+

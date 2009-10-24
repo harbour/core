@@ -71,32 +71,37 @@ CREATE CLASS QItemSelection INHERIT QList
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  contains( pIndex )                  INLINE  Qt_QItemSelection_contains( ::pPtr, pIndex )
-   METHOD  merge( pOther, nCommand )           INLINE  Qt_QItemSelection_merge( ::pPtr, pOther, nCommand )
-   METHOD  select( pTopLeft, pBottomRight )    INLINE  Qt_QItemSelection_select( ::pPtr, pTopLeft, pBottomRight )
+   METHOD  contains( pIndex )
+   METHOD  merge( pOther, nCommand )
+   METHOD  select( pTopLeft, pBottomRight )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QItemSelection
-
+METHOD QItemSelection:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QItemSelection( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QItemSelection
-
+METHOD QItemSelection:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QItemSelection:contains( pIndex )
+   RETURN Qt_QItemSelection_contains( ::pPtr, pIndex )
+
+
+METHOD QItemSelection:merge( pOther, nCommand )
+   RETURN Qt_QItemSelection_merge( ::pPtr, pOther, nCommand )
+
+
+METHOD QItemSelection:select( pTopLeft, pBottomRight )
+   RETURN Qt_QItemSelection_select( ::pPtr, pTopLeft, pBottomRight )
+

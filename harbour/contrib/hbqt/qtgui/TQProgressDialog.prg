@@ -71,53 +71,142 @@ CREATE CLASS QProgressDialog INHERIT QDialog
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  autoClose()                         INLINE  Qt_QProgressDialog_autoClose( ::pPtr )
-   METHOD  autoReset()                         INLINE  Qt_QProgressDialog_autoReset( ::pPtr )
-   METHOD  labelText()                         INLINE  Qt_QProgressDialog_labelText( ::pPtr )
-   METHOD  maximum()                           INLINE  Qt_QProgressDialog_maximum( ::pPtr )
-   METHOD  minimum()                           INLINE  Qt_QProgressDialog_minimum( ::pPtr )
-   METHOD  minimumDuration()                   INLINE  Qt_QProgressDialog_minimumDuration( ::pPtr )
-   METHOD  open( pReceiver, pMember )          INLINE  Qt_QProgressDialog_open( ::pPtr, pReceiver, pMember )
-   METHOD  setAutoClose( lClose )              INLINE  Qt_QProgressDialog_setAutoClose( ::pPtr, lClose )
-   METHOD  setAutoReset( lReset )              INLINE  Qt_QProgressDialog_setAutoReset( ::pPtr, lReset )
-   METHOD  setBar( pBar )                      INLINE  Qt_QProgressDialog_setBar( ::pPtr, pBar )
-   METHOD  setCancelButton( pCancelButton )    INLINE  Qt_QProgressDialog_setCancelButton( ::pPtr, pCancelButton )
-   METHOD  setLabel( pLabel )                  INLINE  Qt_QProgressDialog_setLabel( ::pPtr, pLabel )
-   METHOD  sizeHint()                          INLINE  Qt_QProgressDialog_sizeHint( ::pPtr )
-   METHOD  value()                             INLINE  Qt_QProgressDialog_value( ::pPtr )
-   METHOD  wasCanceled()                       INLINE  Qt_QProgressDialog_wasCanceled( ::pPtr )
-   METHOD  cancel()                            INLINE  Qt_QProgressDialog_cancel( ::pPtr )
-   METHOD  reset()                             INLINE  Qt_QProgressDialog_reset( ::pPtr )
-   METHOD  setCancelButtonText( cCancelButtonText )  INLINE  Qt_QProgressDialog_setCancelButtonText( ::pPtr, cCancelButtonText )
-   METHOD  setLabelText( cText )               INLINE  Qt_QProgressDialog_setLabelText( ::pPtr, cText )
-   METHOD  setMaximum( nMaximum )              INLINE  Qt_QProgressDialog_setMaximum( ::pPtr, nMaximum )
-   METHOD  setMinimum( nMinimum )              INLINE  Qt_QProgressDialog_setMinimum( ::pPtr, nMinimum )
-   METHOD  setMinimumDuration( nMs )           INLINE  Qt_QProgressDialog_setMinimumDuration( ::pPtr, nMs )
-   METHOD  setRange( nMinimum, nMaximum )      INLINE  Qt_QProgressDialog_setRange( ::pPtr, nMinimum, nMaximum )
-   METHOD  setValue( nProgress )               INLINE  Qt_QProgressDialog_setValue( ::pPtr, nProgress )
+   METHOD  autoClose()
+   METHOD  autoReset()
+   METHOD  labelText()
+   METHOD  maximum()
+   METHOD  minimum()
+   METHOD  minimumDuration()
+   METHOD  open( pReceiver, pMember )
+   METHOD  setAutoClose( lClose )
+   METHOD  setAutoReset( lReset )
+   METHOD  setBar( pBar )
+   METHOD  setCancelButton( pCancelButton )
+   METHOD  setLabel( pLabel )
+   METHOD  sizeHint()
+   METHOD  value()
+   METHOD  wasCanceled()
+   METHOD  cancel()
+   METHOD  reset()
+   METHOD  setCancelButtonText( cCancelButtonText )
+   METHOD  setLabelText( cText )
+   METHOD  setMaximum( nMaximum )
+   METHOD  setMinimum( nMinimum )
+   METHOD  setMinimumDuration( nMs )
+   METHOD  setRange( nMinimum, nMaximum )
+   METHOD  setValue( nProgress )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QProgressDialog
-
+METHOD QProgressDialog:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QProgressDialog( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QProgressDialog
-
+METHOD QProgressDialog:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QProgressDialog:autoClose()
+   RETURN Qt_QProgressDialog_autoClose( ::pPtr )
+
+
+METHOD QProgressDialog:autoReset()
+   RETURN Qt_QProgressDialog_autoReset( ::pPtr )
+
+
+METHOD QProgressDialog:labelText()
+   RETURN Qt_QProgressDialog_labelText( ::pPtr )
+
+
+METHOD QProgressDialog:maximum()
+   RETURN Qt_QProgressDialog_maximum( ::pPtr )
+
+
+METHOD QProgressDialog:minimum()
+   RETURN Qt_QProgressDialog_minimum( ::pPtr )
+
+
+METHOD QProgressDialog:minimumDuration()
+   RETURN Qt_QProgressDialog_minimumDuration( ::pPtr )
+
+
+METHOD QProgressDialog:open( pReceiver, pMember )
+   RETURN Qt_QProgressDialog_open( ::pPtr, pReceiver, pMember )
+
+
+METHOD QProgressDialog:setAutoClose( lClose )
+   RETURN Qt_QProgressDialog_setAutoClose( ::pPtr, lClose )
+
+
+METHOD QProgressDialog:setAutoReset( lReset )
+   RETURN Qt_QProgressDialog_setAutoReset( ::pPtr, lReset )
+
+
+METHOD QProgressDialog:setBar( pBar )
+   RETURN Qt_QProgressDialog_setBar( ::pPtr, pBar )
+
+
+METHOD QProgressDialog:setCancelButton( pCancelButton )
+   RETURN Qt_QProgressDialog_setCancelButton( ::pPtr, pCancelButton )
+
+
+METHOD QProgressDialog:setLabel( pLabel )
+   RETURN Qt_QProgressDialog_setLabel( ::pPtr, pLabel )
+
+
+METHOD QProgressDialog:sizeHint()
+   RETURN Qt_QProgressDialog_sizeHint( ::pPtr )
+
+
+METHOD QProgressDialog:value()
+   RETURN Qt_QProgressDialog_value( ::pPtr )
+
+
+METHOD QProgressDialog:wasCanceled()
+   RETURN Qt_QProgressDialog_wasCanceled( ::pPtr )
+
+
+METHOD QProgressDialog:cancel()
+   RETURN Qt_QProgressDialog_cancel( ::pPtr )
+
+
+METHOD QProgressDialog:reset()
+   RETURN Qt_QProgressDialog_reset( ::pPtr )
+
+
+METHOD QProgressDialog:setCancelButtonText( cCancelButtonText )
+   RETURN Qt_QProgressDialog_setCancelButtonText( ::pPtr, cCancelButtonText )
+
+
+METHOD QProgressDialog:setLabelText( cText )
+   RETURN Qt_QProgressDialog_setLabelText( ::pPtr, cText )
+
+
+METHOD QProgressDialog:setMaximum( nMaximum )
+   RETURN Qt_QProgressDialog_setMaximum( ::pPtr, nMaximum )
+
+
+METHOD QProgressDialog:setMinimum( nMinimum )
+   RETURN Qt_QProgressDialog_setMinimum( ::pPtr, nMinimum )
+
+
+METHOD QProgressDialog:setMinimumDuration( nMs )
+   RETURN Qt_QProgressDialog_setMinimumDuration( ::pPtr, nMs )
+
+
+METHOD QProgressDialog:setRange( nMinimum, nMaximum )
+   RETURN Qt_QProgressDialog_setRange( ::pPtr, nMinimum, nMaximum )
+
+
+METHOD QProgressDialog:setValue( nProgress )
+   RETURN Qt_QProgressDialog_setValue( ::pPtr, nProgress )
+

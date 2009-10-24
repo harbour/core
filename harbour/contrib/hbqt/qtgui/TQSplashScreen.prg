@@ -71,35 +71,52 @@ CREATE CLASS QSplashScreen INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  finish( pMainWin )                  INLINE  Qt_QSplashScreen_finish( ::pPtr, pMainWin )
-   METHOD  pixmap()                            INLINE  Qt_QSplashScreen_pixmap( ::pPtr )
-   METHOD  repaint()                           INLINE  Qt_QSplashScreen_repaint( ::pPtr )
-   METHOD  setPixmap( pPixmap )                INLINE  Qt_QSplashScreen_setPixmap( ::pPtr, pPixmap )
-   METHOD  clearMessage()                      INLINE  Qt_QSplashScreen_clearMessage( ::pPtr )
-   METHOD  showMessage( cMessage, nAlignment, pColor )  INLINE  Qt_QSplashScreen_showMessage( ::pPtr, cMessage, nAlignment, pColor )
+   METHOD  finish( pMainWin )
+   METHOD  pixmap()
+   METHOD  repaint()
+   METHOD  setPixmap( pPixmap )
+   METHOD  clearMessage()
+   METHOD  showMessage( cMessage, nAlignment, pColor )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QSplashScreen
-
+METHOD QSplashScreen:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QSplashScreen( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QSplashScreen
-
+METHOD QSplashScreen:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QSplashScreen:finish( pMainWin )
+   RETURN Qt_QSplashScreen_finish( ::pPtr, pMainWin )
+
+
+METHOD QSplashScreen:pixmap()
+   RETURN Qt_QSplashScreen_pixmap( ::pPtr )
+
+
+METHOD QSplashScreen:repaint()
+   RETURN Qt_QSplashScreen_repaint( ::pPtr )
+
+
+METHOD QSplashScreen:setPixmap( pPixmap )
+   RETURN Qt_QSplashScreen_setPixmap( ::pPtr, pPixmap )
+
+
+METHOD QSplashScreen:clearMessage()
+   RETURN Qt_QSplashScreen_clearMessage( ::pPtr )
+
+
+METHOD QSplashScreen:showMessage( cMessage, nAlignment, pColor )
+   RETURN Qt_QSplashScreen_showMessage( ::pPtr, cMessage, nAlignment, pColor )
+

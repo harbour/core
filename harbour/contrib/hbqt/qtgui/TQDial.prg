@@ -71,36 +71,57 @@ CREATE CLASS QDial INHERIT QAbstractSlider
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  notchSize()                         INLINE  Qt_QDial_notchSize( ::pPtr )
-   METHOD  notchTarget()                       INLINE  Qt_QDial_notchTarget( ::pPtr )
-   METHOD  notchesVisible()                    INLINE  Qt_QDial_notchesVisible( ::pPtr )
-   METHOD  setNotchTarget( nTarget )           INLINE  Qt_QDial_setNotchTarget( ::pPtr, nTarget )
-   METHOD  wrapping()                          INLINE  Qt_QDial_wrapping( ::pPtr )
-   METHOD  setNotchesVisible( lVisible )       INLINE  Qt_QDial_setNotchesVisible( ::pPtr, lVisible )
-   METHOD  setWrapping( lOn )                  INLINE  Qt_QDial_setWrapping( ::pPtr, lOn )
+   METHOD  notchSize()
+   METHOD  notchTarget()
+   METHOD  notchesVisible()
+   METHOD  setNotchTarget( nTarget )
+   METHOD  wrapping()
+   METHOD  setNotchesVisible( lVisible )
+   METHOD  setWrapping( lOn )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QDial
-
+METHOD QDial:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QDial( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QDial
-
+METHOD QDial:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QDial:notchSize()
+   RETURN Qt_QDial_notchSize( ::pPtr )
+
+
+METHOD QDial:notchTarget()
+   RETURN Qt_QDial_notchTarget( ::pPtr )
+
+
+METHOD QDial:notchesVisible()
+   RETURN Qt_QDial_notchesVisible( ::pPtr )
+
+
+METHOD QDial:setNotchTarget( nTarget )
+   RETURN Qt_QDial_setNotchTarget( ::pPtr, nTarget )
+
+
+METHOD QDial:wrapping()
+   RETURN Qt_QDial_wrapping( ::pPtr )
+
+
+METHOD QDial:setNotchesVisible( lVisible )
+   RETURN Qt_QDial_setNotchesVisible( ::pPtr, lVisible )
+
+
+METHOD QDial:setWrapping( lOn )
+   RETURN Qt_QDial_setWrapping( ::pPtr, lOn )
+

@@ -71,10 +71,10 @@ CREATE CLASS QBitmap INHERIT QPixmap
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  clear()                             INLINE  Qt_QBitmap_clear( ::pPtr )
-   METHOD  transformed( pMatrix )              INLINE  Qt_QBitmap_transformed( ::pPtr, pMatrix )
-   METHOD  transformed_1( pMatrix )            INLINE  Qt_QBitmap_transformed_1( ::pPtr, pMatrix )
-   METHOD  fromImage( pImage, nFlags )         INLINE  Qt_QBitmap_fromImage( ::pPtr, pImage, nFlags )
+   METHOD  clear()
+   METHOD  transformed( pMatrix )
+   METHOD  transformed_1( pMatrix )
+   METHOD  fromImage( pImage, nFlags )
 
    ENDCLASS
 
@@ -86,16 +86,28 @@ METHOD New( ... ) CLASS QBitmap
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QBitmap
-
+METHOD QBitmap:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QBitmap:clear()
+   RETURN Qt_QBitmap_clear( ::pPtr )
+
+
+METHOD QBitmap:transformed( pMatrix )
+   RETURN Qt_QBitmap_transformed( ::pPtr, pMatrix )
+
+
+METHOD QBitmap:transformed_1( pMatrix )
+   RETURN Qt_QBitmap_transformed_1( ::pPtr, pMatrix )
+
+
+METHOD QBitmap:fromImage( pImage, nFlags )
+   RETURN Qt_QBitmap_fromImage( ::pPtr, pImage, nFlags )
+

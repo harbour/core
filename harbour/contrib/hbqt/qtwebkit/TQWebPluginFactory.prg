@@ -71,32 +71,37 @@ CREATE CLASS QWebPluginFactory INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  create( cMimeType, pUrl, pArgumentNames, pArgumentValues )  INLINE  Qt_QWebPluginFactory_create( ::pPtr, cMimeType, pUrl, pArgumentNames, pArgumentValues )
-   METHOD  refreshPlugins()                    INLINE  Qt_QWebPluginFactory_refreshPlugins( ::pPtr )
-   METHOD  supportsExtension( nExtension )     INLINE  Qt_QWebPluginFactory_supportsExtension( ::pPtr, nExtension )
+   METHOD  create( cMimeType, pUrl, pArgumentNames, pArgumentValues )
+   METHOD  refreshPlugins()
+   METHOD  supportsExtension( nExtension )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QWebPluginFactory
-
+METHOD QWebPluginFactory:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QWebPluginFactory( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QWebPluginFactory
-
+METHOD QWebPluginFactory:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QWebPluginFactory:create( cMimeType, pUrl, pArgumentNames, pArgumentValues )
+   RETURN Qt_QWebPluginFactory_create( ::pPtr, cMimeType, pUrl, pArgumentNames, pArgumentValues )
+
+
+METHOD QWebPluginFactory:refreshPlugins()
+   RETURN Qt_QWebPluginFactory_refreshPlugins( ::pPtr )
+
+
+METHOD QWebPluginFactory:supportsExtension( nExtension )
+   RETURN Qt_QWebPluginFactory_supportsExtension( ::pPtr, nExtension )
+

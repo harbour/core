@@ -71,50 +71,127 @@ CREATE CLASS QSplitter INHERIT QFrame
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addWidget( pWidget )                INLINE  Qt_QSplitter_addWidget( ::pPtr, pWidget )
-   METHOD  childrenCollapsible()               INLINE  Qt_QSplitter_childrenCollapsible( ::pPtr )
-   METHOD  count()                             INLINE  Qt_QSplitter_count( ::pPtr )
-   METHOD  getRange( nIndex, nMin, nMax )      INLINE  Qt_QSplitter_getRange( ::pPtr, nIndex, nMin, nMax )
-   METHOD  handle( nIndex )                    INLINE  Qt_QSplitter_handle( ::pPtr, nIndex )
-   METHOD  handleWidth()                       INLINE  Qt_QSplitter_handleWidth( ::pPtr )
-   METHOD  indexOf( pWidget )                  INLINE  Qt_QSplitter_indexOf( ::pPtr, pWidget )
-   METHOD  insertWidget( nIndex, pWidget )     INLINE  Qt_QSplitter_insertWidget( ::pPtr, nIndex, pWidget )
-   METHOD  isCollapsible( nIndex )             INLINE  Qt_QSplitter_isCollapsible( ::pPtr, nIndex )
-   METHOD  opaqueResize()                      INLINE  Qt_QSplitter_opaqueResize( ::pPtr )
-   METHOD  orientation()                       INLINE  Qt_QSplitter_orientation( ::pPtr )
-   METHOD  refresh()                           INLINE  Qt_QSplitter_refresh( ::pPtr )
-   METHOD  restoreState( pState )              INLINE  Qt_QSplitter_restoreState( ::pPtr, pState )
-   METHOD  saveState()                         INLINE  Qt_QSplitter_saveState( ::pPtr )
-   METHOD  setChildrenCollapsible( lBool )     INLINE  Qt_QSplitter_setChildrenCollapsible( ::pPtr, lBool )
-   METHOD  setCollapsible( nIndex, lCollapse )  INLINE  Qt_QSplitter_setCollapsible( ::pPtr, nIndex, lCollapse )
-   METHOD  setHandleWidth( nInt )              INLINE  Qt_QSplitter_setHandleWidth( ::pPtr, nInt )
-   METHOD  setOpaqueResize( lOpaque )          INLINE  Qt_QSplitter_setOpaqueResize( ::pPtr, lOpaque )
-   METHOD  setOrientation( nQt_Orientation )   INLINE  Qt_QSplitter_setOrientation( ::pPtr, nQt_Orientation )
-   METHOD  setStretchFactor( nIndex, nStretch )  INLINE  Qt_QSplitter_setStretchFactor( ::pPtr, nIndex, nStretch )
-   METHOD  widget( nIndex )                    INLINE  Qt_QSplitter_widget( ::pPtr, nIndex )
+   METHOD  addWidget( pWidget )
+   METHOD  childrenCollapsible()
+   METHOD  count()
+   METHOD  getRange( nIndex, nMin, nMax )
+   METHOD  handle( nIndex )
+   METHOD  handleWidth()
+   METHOD  indexOf( pWidget )
+   METHOD  insertWidget( nIndex, pWidget )
+   METHOD  isCollapsible( nIndex )
+   METHOD  opaqueResize()
+   METHOD  orientation()
+   METHOD  refresh()
+   METHOD  restoreState( pState )
+   METHOD  saveState()
+   METHOD  setChildrenCollapsible( lBool )
+   METHOD  setCollapsible( nIndex, lCollapse )
+   METHOD  setHandleWidth( nInt )
+   METHOD  setOpaqueResize( lOpaque )
+   METHOD  setOrientation( nQt_Orientation )
+   METHOD  setStretchFactor( nIndex, nStretch )
+   METHOD  widget( nIndex )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QSplitter
-
+METHOD QSplitter:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QSplitter( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QSplitter
-
+METHOD QSplitter:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QSplitter:addWidget( pWidget )
+   RETURN Qt_QSplitter_addWidget( ::pPtr, pWidget )
+
+
+METHOD QSplitter:childrenCollapsible()
+   RETURN Qt_QSplitter_childrenCollapsible( ::pPtr )
+
+
+METHOD QSplitter:count()
+   RETURN Qt_QSplitter_count( ::pPtr )
+
+
+METHOD QSplitter:getRange( nIndex, nMin, nMax )
+   RETURN Qt_QSplitter_getRange( ::pPtr, nIndex, nMin, nMax )
+
+
+METHOD QSplitter:handle( nIndex )
+   RETURN Qt_QSplitter_handle( ::pPtr, nIndex )
+
+
+METHOD QSplitter:handleWidth()
+   RETURN Qt_QSplitter_handleWidth( ::pPtr )
+
+
+METHOD QSplitter:indexOf( pWidget )
+   RETURN Qt_QSplitter_indexOf( ::pPtr, pWidget )
+
+
+METHOD QSplitter:insertWidget( nIndex, pWidget )
+   RETURN Qt_QSplitter_insertWidget( ::pPtr, nIndex, pWidget )
+
+
+METHOD QSplitter:isCollapsible( nIndex )
+   RETURN Qt_QSplitter_isCollapsible( ::pPtr, nIndex )
+
+
+METHOD QSplitter:opaqueResize()
+   RETURN Qt_QSplitter_opaqueResize( ::pPtr )
+
+
+METHOD QSplitter:orientation()
+   RETURN Qt_QSplitter_orientation( ::pPtr )
+
+
+METHOD QSplitter:refresh()
+   RETURN Qt_QSplitter_refresh( ::pPtr )
+
+
+METHOD QSplitter:restoreState( pState )
+   RETURN Qt_QSplitter_restoreState( ::pPtr, pState )
+
+
+METHOD QSplitter:saveState()
+   RETURN Qt_QSplitter_saveState( ::pPtr )
+
+
+METHOD QSplitter:setChildrenCollapsible( lBool )
+   RETURN Qt_QSplitter_setChildrenCollapsible( ::pPtr, lBool )
+
+
+METHOD QSplitter:setCollapsible( nIndex, lCollapse )
+   RETURN Qt_QSplitter_setCollapsible( ::pPtr, nIndex, lCollapse )
+
+
+METHOD QSplitter:setHandleWidth( nInt )
+   RETURN Qt_QSplitter_setHandleWidth( ::pPtr, nInt )
+
+
+METHOD QSplitter:setOpaqueResize( lOpaque )
+   RETURN Qt_QSplitter_setOpaqueResize( ::pPtr, lOpaque )
+
+
+METHOD QSplitter:setOrientation( nQt_Orientation )
+   RETURN Qt_QSplitter_setOrientation( ::pPtr, nQt_Orientation )
+
+
+METHOD QSplitter:setStretchFactor( nIndex, nStretch )
+   RETURN Qt_QSplitter_setStretchFactor( ::pPtr, nIndex, nStretch )
+
+
+METHOD QSplitter:widget( nIndex )
+   RETURN Qt_QSplitter_widget( ::pPtr, nIndex )
+

@@ -71,46 +71,46 @@ CREATE CLASS QPixmap INHERIT QPaintDevice
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  alphaChannel()                      INLINE  Qt_QPixmap_alphaChannel( ::pPtr )
-   METHOD  cacheKey()                          INLINE  Qt_QPixmap_cacheKey( ::pPtr )
-   METHOD  copy( pRectangle )                  INLINE  Qt_QPixmap_copy( ::pPtr, pRectangle )
-   METHOD  copy_1( nX, nY, nWidth, nHeight )   INLINE  Qt_QPixmap_copy_1( ::pPtr, nX, nY, nWidth, nHeight )
-   METHOD  createHeuristicMask( lClipTight )   INLINE  Qt_QPixmap_createHeuristicMask( ::pPtr, lClipTight )
-   METHOD  createMaskFromColor( pMaskColor, nMode )  INLINE  Qt_QPixmap_createMaskFromColor( ::pPtr, pMaskColor, nMode )
-   METHOD  createMaskFromColor_1( pMaskColor )  INLINE  Qt_QPixmap_createMaskFromColor_1( ::pPtr, pMaskColor )
-   METHOD  depth()                             INLINE  Qt_QPixmap_depth( ::pPtr )
-   METHOD  detach()                            INLINE  Qt_QPixmap_detach( ::pPtr )
-   METHOD  fill( pColor )                      INLINE  Qt_QPixmap_fill( ::pPtr, pColor )
-   METHOD  fill_1( pWidget, pOffset )          INLINE  Qt_QPixmap_fill_1( ::pPtr, pWidget, pOffset )
-   METHOD  fill_2( pWidget, nX, nY )           INLINE  Qt_QPixmap_fill_2( ::pPtr, pWidget, nX, nY )
-   METHOD  hasAlpha()                          INLINE  Qt_QPixmap_hasAlpha( ::pPtr )
-   METHOD  hasAlphaChannel()                   INLINE  Qt_QPixmap_hasAlphaChannel( ::pPtr )
-   METHOD  height()                            INLINE  Qt_QPixmap_height( ::pPtr )
-   METHOD  isNull()                            INLINE  Qt_QPixmap_isNull( ::pPtr )
-   METHOD  isQBitmap()                         INLINE  Qt_QPixmap_isQBitmap( ::pPtr )
-   METHOD  load( cFileName, pFormat, nFlags )  INLINE  Qt_QPixmap_load( ::pPtr, cFileName, pFormat, nFlags )
-   METHOD  loadFromData( pData, pFormat, nFlags )  INLINE  Qt_QPixmap_loadFromData( ::pPtr, pData, pFormat, nFlags )
-   METHOD  mask()                              INLINE  Qt_QPixmap_mask( ::pPtr )
-   METHOD  rect()                              INLINE  Qt_QPixmap_rect( ::pPtr )
-   METHOD  save( cFileName, pFormat, nQuality )  INLINE  Qt_QPixmap_save( ::pPtr, cFileName, pFormat, nQuality )
-   METHOD  save_1( pDevice, pFormat, nQuality )  INLINE  Qt_QPixmap_save_1( ::pPtr, pDevice, pFormat, nQuality )
-   METHOD  scaled( nWidth, nHeight, nAspectRatioMode, nTransformMode )  INLINE  Qt_QPixmap_scaled( ::pPtr, nWidth, nHeight, nAspectRatioMode, nTransformMode )
-   METHOD  scaled_1( pSize, nAspectRatioMode, nTransformMode )  INLINE  Qt_QPixmap_scaled_1( ::pPtr, pSize, nAspectRatioMode, nTransformMode )
-   METHOD  scaledToHeight( nHeight, nMode )    INLINE  Qt_QPixmap_scaledToHeight( ::pPtr, nHeight, nMode )
-   METHOD  scaledToWidth( nWidth, nMode )      INLINE  Qt_QPixmap_scaledToWidth( ::pPtr, nWidth, nMode )
-   METHOD  setAlphaChannel( pAlphaChannel )    INLINE  Qt_QPixmap_setAlphaChannel( ::pPtr, pAlphaChannel )
-   METHOD  setMask( pMask )                    INLINE  Qt_QPixmap_setMask( ::pPtr, pMask )
-   METHOD  size()                              INLINE  Qt_QPixmap_size( ::pPtr )
-   METHOD  toImage()                           INLINE  Qt_QPixmap_toImage( ::pPtr )
-   METHOD  transformed( pTransform, nMode )    INLINE  Qt_QPixmap_transformed( ::pPtr, pTransform, nMode )
-   METHOD  transformed_1( pMatrix, nMode )     INLINE  Qt_QPixmap_transformed_1( ::pPtr, pMatrix, nMode )
-   METHOD  width()                             INLINE  Qt_QPixmap_width( ::pPtr )
-   METHOD  defaultDepth()                      INLINE  Qt_QPixmap_defaultDepth( ::pPtr )
-   METHOD  fromImage( pImage, nFlags )         INLINE  Qt_QPixmap_fromImage( ::pPtr, pImage, nFlags )
-   METHOD  grabWidget( pWidget, pRectangle )   INLINE  Qt_QPixmap_grabWidget( ::pPtr, pWidget, pRectangle )
-   METHOD  grabWidget_1( pWidget, nX, nY, nWidth, nHeight )  INLINE  Qt_QPixmap_grabWidget_1( ::pPtr, pWidget, nX, nY, nWidth, nHeight )
-   METHOD  trueMatrix( pMatrix, nWidth, nHeight )  INLINE  Qt_QPixmap_trueMatrix( ::pPtr, pMatrix, nWidth, nHeight )
-   METHOD  trueMatrix_1( pM, nW, nH )          INLINE  Qt_QPixmap_trueMatrix_1( ::pPtr, pM, nW, nH )
+   METHOD  alphaChannel()
+   METHOD  cacheKey()
+   METHOD  copy( pRectangle )
+   METHOD  copy_1( nX, nY, nWidth, nHeight )
+   METHOD  createHeuristicMask( lClipTight )
+   METHOD  createMaskFromColor( pMaskColor, nMode )
+   METHOD  createMaskFromColor_1( pMaskColor )
+   METHOD  depth()
+   METHOD  detach()
+   METHOD  fill( pColor )
+   METHOD  fill_1( pWidget, pOffset )
+   METHOD  fill_2( pWidget, nX, nY )
+   METHOD  hasAlpha()
+   METHOD  hasAlphaChannel()
+   METHOD  height()
+   METHOD  isNull()
+   METHOD  isQBitmap()
+   METHOD  load( cFileName, pFormat, nFlags )
+   METHOD  loadFromData( pData, pFormat, nFlags )
+   METHOD  mask()
+   METHOD  rect()
+   METHOD  save( cFileName, pFormat, nQuality )
+   METHOD  save_1( pDevice, pFormat, nQuality )
+   METHOD  scaled( nWidth, nHeight, nAspectRatioMode, nTransformMode )
+   METHOD  scaled_1( pSize, nAspectRatioMode, nTransformMode )
+   METHOD  scaledToHeight( nHeight, nMode )
+   METHOD  scaledToWidth( nWidth, nMode )
+   METHOD  setAlphaChannel( pAlphaChannel )
+   METHOD  setMask( pMask )
+   METHOD  size()
+   METHOD  toImage()
+   METHOD  transformed( pTransform, nMode )
+   METHOD  transformed_1( pMatrix, nMode )
+   METHOD  width()
+   METHOD  defaultDepth()
+   METHOD  fromImage( pImage, nFlags )
+   METHOD  grabWidget( pWidget, pRectangle )
+   METHOD  grabWidget_1( pWidget, nX, nY, nWidth, nHeight )
+   METHOD  trueMatrix( pMatrix, nWidth, nHeight )
+   METHOD  trueMatrix_1( pM, nW, nH )
 
    ENDCLASS
 
@@ -122,16 +122,172 @@ METHOD New( ... ) CLASS QPixmap
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QPixmap
-
+METHOD QPixmap:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QPixmap:alphaChannel()
+   RETURN Qt_QPixmap_alphaChannel( ::pPtr )
+
+
+METHOD QPixmap:cacheKey()
+   RETURN Qt_QPixmap_cacheKey( ::pPtr )
+
+
+METHOD QPixmap:copy( pRectangle )
+   RETURN Qt_QPixmap_copy( ::pPtr, pRectangle )
+
+
+METHOD QPixmap:copy_1( nX, nY, nWidth, nHeight )
+   RETURN Qt_QPixmap_copy_1( ::pPtr, nX, nY, nWidth, nHeight )
+
+
+METHOD QPixmap:createHeuristicMask( lClipTight )
+   RETURN Qt_QPixmap_createHeuristicMask( ::pPtr, lClipTight )
+
+
+METHOD QPixmap:createMaskFromColor( pMaskColor, nMode )
+   RETURN Qt_QPixmap_createMaskFromColor( ::pPtr, pMaskColor, nMode )
+
+
+METHOD QPixmap:createMaskFromColor_1( pMaskColor )
+   RETURN Qt_QPixmap_createMaskFromColor_1( ::pPtr, pMaskColor )
+
+
+METHOD QPixmap:depth()
+   RETURN Qt_QPixmap_depth( ::pPtr )
+
+
+METHOD QPixmap:detach()
+   RETURN Qt_QPixmap_detach( ::pPtr )
+
+
+METHOD QPixmap:fill( pColor )
+   RETURN Qt_QPixmap_fill( ::pPtr, pColor )
+
+
+METHOD QPixmap:fill_1( pWidget, pOffset )
+   RETURN Qt_QPixmap_fill_1( ::pPtr, pWidget, pOffset )
+
+
+METHOD QPixmap:fill_2( pWidget, nX, nY )
+   RETURN Qt_QPixmap_fill_2( ::pPtr, pWidget, nX, nY )
+
+
+METHOD QPixmap:hasAlpha()
+   RETURN Qt_QPixmap_hasAlpha( ::pPtr )
+
+
+METHOD QPixmap:hasAlphaChannel()
+   RETURN Qt_QPixmap_hasAlphaChannel( ::pPtr )
+
+
+METHOD QPixmap:height()
+   RETURN Qt_QPixmap_height( ::pPtr )
+
+
+METHOD QPixmap:isNull()
+   RETURN Qt_QPixmap_isNull( ::pPtr )
+
+
+METHOD QPixmap:isQBitmap()
+   RETURN Qt_QPixmap_isQBitmap( ::pPtr )
+
+
+METHOD QPixmap:load( cFileName, pFormat, nFlags )
+   RETURN Qt_QPixmap_load( ::pPtr, cFileName, pFormat, nFlags )
+
+
+METHOD QPixmap:loadFromData( pData, pFormat, nFlags )
+   RETURN Qt_QPixmap_loadFromData( ::pPtr, pData, pFormat, nFlags )
+
+
+METHOD QPixmap:mask()
+   RETURN Qt_QPixmap_mask( ::pPtr )
+
+
+METHOD QPixmap:rect()
+   RETURN Qt_QPixmap_rect( ::pPtr )
+
+
+METHOD QPixmap:save( cFileName, pFormat, nQuality )
+   RETURN Qt_QPixmap_save( ::pPtr, cFileName, pFormat, nQuality )
+
+
+METHOD QPixmap:save_1( pDevice, pFormat, nQuality )
+   RETURN Qt_QPixmap_save_1( ::pPtr, pDevice, pFormat, nQuality )
+
+
+METHOD QPixmap:scaled( nWidth, nHeight, nAspectRatioMode, nTransformMode )
+   RETURN Qt_QPixmap_scaled( ::pPtr, nWidth, nHeight, nAspectRatioMode, nTransformMode )
+
+
+METHOD QPixmap:scaled_1( pSize, nAspectRatioMode, nTransformMode )
+   RETURN Qt_QPixmap_scaled_1( ::pPtr, pSize, nAspectRatioMode, nTransformMode )
+
+
+METHOD QPixmap:scaledToHeight( nHeight, nMode )
+   RETURN Qt_QPixmap_scaledToHeight( ::pPtr, nHeight, nMode )
+
+
+METHOD QPixmap:scaledToWidth( nWidth, nMode )
+   RETURN Qt_QPixmap_scaledToWidth( ::pPtr, nWidth, nMode )
+
+
+METHOD QPixmap:setAlphaChannel( pAlphaChannel )
+   RETURN Qt_QPixmap_setAlphaChannel( ::pPtr, pAlphaChannel )
+
+
+METHOD QPixmap:setMask( pMask )
+   RETURN Qt_QPixmap_setMask( ::pPtr, pMask )
+
+
+METHOD QPixmap:size()
+   RETURN Qt_QPixmap_size( ::pPtr )
+
+
+METHOD QPixmap:toImage()
+   RETURN Qt_QPixmap_toImage( ::pPtr )
+
+
+METHOD QPixmap:transformed( pTransform, nMode )
+   RETURN Qt_QPixmap_transformed( ::pPtr, pTransform, nMode )
+
+
+METHOD QPixmap:transformed_1( pMatrix, nMode )
+   RETURN Qt_QPixmap_transformed_1( ::pPtr, pMatrix, nMode )
+
+
+METHOD QPixmap:width()
+   RETURN Qt_QPixmap_width( ::pPtr )
+
+
+METHOD QPixmap:defaultDepth()
+   RETURN Qt_QPixmap_defaultDepth( ::pPtr )
+
+
+METHOD QPixmap:fromImage( pImage, nFlags )
+   RETURN Qt_QPixmap_fromImage( ::pPtr, pImage, nFlags )
+
+
+METHOD QPixmap:grabWidget( pWidget, pRectangle )
+   RETURN Qt_QPixmap_grabWidget( ::pPtr, pWidget, pRectangle )
+
+
+METHOD QPixmap:grabWidget_1( pWidget, nX, nY, nWidth, nHeight )
+   RETURN Qt_QPixmap_grabWidget_1( ::pPtr, pWidget, nX, nY, nWidth, nHeight )
+
+
+METHOD QPixmap:trueMatrix( pMatrix, nWidth, nHeight )
+   RETURN Qt_QPixmap_trueMatrix( ::pPtr, pMatrix, nWidth, nHeight )
+
+
+METHOD QPixmap:trueMatrix_1( pM, nW, nH )
+   RETURN Qt_QPixmap_trueMatrix_1( ::pPtr, pM, nW, nH )
+

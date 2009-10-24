@@ -71,38 +71,67 @@ CREATE CLASS QPolygonF
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  boundingRect()                      INLINE  Qt_QPolygonF_boundingRect( ::pPtr )
-   METHOD  containsPoint( pPoint, nFillRule )  INLINE  Qt_QPolygonF_containsPoint( ::pPtr, pPoint, nFillRule )
-   METHOD  intersected( pR )                   INLINE  Qt_QPolygonF_intersected( ::pPtr, pR )
-   METHOD  isClosed()                          INLINE  Qt_QPolygonF_isClosed( ::pPtr )
-   METHOD  subtracted( pR )                    INLINE  Qt_QPolygonF_subtracted( ::pPtr, pR )
-   METHOD  toPolygon()                         INLINE  Qt_QPolygonF_toPolygon( ::pPtr )
-   METHOD  translate( pOffset )                INLINE  Qt_QPolygonF_translate( ::pPtr, pOffset )
-   METHOD  translate_1( nDx, nDy )             INLINE  Qt_QPolygonF_translate_1( ::pPtr, nDx, nDy )
-   METHOD  united( pR )                        INLINE  Qt_QPolygonF_united( ::pPtr, pR )
+   METHOD  boundingRect()
+   METHOD  containsPoint( pPoint, nFillRule )
+   METHOD  intersected( pR )
+   METHOD  isClosed()
+   METHOD  subtracted( pR )
+   METHOD  toPolygon()
+   METHOD  translate( pOffset )
+   METHOD  translate_1( nDx, nDy )
+   METHOD  united( pR )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QPolygonF
-
+METHOD QPolygonF:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QPolygonF( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QPolygonF
-
+METHOD QPolygonF:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QPolygonF:boundingRect()
+   RETURN Qt_QPolygonF_boundingRect( ::pPtr )
+
+
+METHOD QPolygonF:containsPoint( pPoint, nFillRule )
+   RETURN Qt_QPolygonF_containsPoint( ::pPtr, pPoint, nFillRule )
+
+
+METHOD QPolygonF:intersected( pR )
+   RETURN Qt_QPolygonF_intersected( ::pPtr, pR )
+
+
+METHOD QPolygonF:isClosed()
+   RETURN Qt_QPolygonF_isClosed( ::pPtr )
+
+
+METHOD QPolygonF:subtracted( pR )
+   RETURN Qt_QPolygonF_subtracted( ::pPtr, pR )
+
+
+METHOD QPolygonF:toPolygon()
+   RETURN Qt_QPolygonF_toPolygon( ::pPtr )
+
+
+METHOD QPolygonF:translate( pOffset )
+   RETURN Qt_QPolygonF_translate( ::pPtr, pOffset )
+
+
+METHOD QPolygonF:translate_1( nDx, nDy )
+   RETURN Qt_QPolygonF_translate_1( ::pPtr, nDx, nDy )
+
+
+METHOD QPolygonF:united( pR )
+   RETURN Qt_QPolygonF_united( ::pPtr, pR )
+

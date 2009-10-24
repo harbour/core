@@ -71,37 +71,62 @@ CREATE CLASS QStyleOptionToolButton INHERIT QStyleOptionComplex
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  arrowType()                         INLINE  Qt_QStyleOptionToolButton_arrowType( ::pPtr )
-   METHOD  features()                          INLINE  Qt_QStyleOptionToolButton_features( ::pPtr )
-   METHOD  font()                              INLINE  Qt_QStyleOptionToolButton_font( ::pPtr )
-   METHOD  icon()                              INLINE  Qt_QStyleOptionToolButton_icon( ::pPtr )
-   METHOD  iconSize()                          INLINE  Qt_QStyleOptionToolButton_iconSize( ::pPtr )
-   METHOD  pos()                               INLINE  Qt_QStyleOptionToolButton_pos( ::pPtr )
-   METHOD  text()                              INLINE  Qt_QStyleOptionToolButton_text( ::pPtr )
-   METHOD  toolButtonStyle()                   INLINE  Qt_QStyleOptionToolButton_toolButtonStyle( ::pPtr )
+   METHOD  arrowType()
+   METHOD  features()
+   METHOD  font()
+   METHOD  icon()
+   METHOD  iconSize()
+   METHOD  pos()
+   METHOD  text()
+   METHOD  toolButtonStyle()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyleOptionToolButton
-
+METHOD QStyleOptionToolButton:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyleOptionToolButton( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyleOptionToolButton
-
+METHOD QStyleOptionToolButton:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyleOptionToolButton:arrowType()
+   RETURN Qt_QStyleOptionToolButton_arrowType( ::pPtr )
+
+
+METHOD QStyleOptionToolButton:features()
+   RETURN Qt_QStyleOptionToolButton_features( ::pPtr )
+
+
+METHOD QStyleOptionToolButton:font()
+   RETURN Qt_QStyleOptionToolButton_font( ::pPtr )
+
+
+METHOD QStyleOptionToolButton:icon()
+   RETURN Qt_QStyleOptionToolButton_icon( ::pPtr )
+
+
+METHOD QStyleOptionToolButton:iconSize()
+   RETURN Qt_QStyleOptionToolButton_iconSize( ::pPtr )
+
+
+METHOD QStyleOptionToolButton:pos()
+   RETURN Qt_QStyleOptionToolButton_pos( ::pPtr )
+
+
+METHOD QStyleOptionToolButton:text()
+   RETURN Qt_QStyleOptionToolButton_text( ::pPtr )
+
+
+METHOD QStyleOptionToolButton:toolButtonStyle()
+   RETURN Qt_QStyleOptionToolButton_toolButtonStyle( ::pPtr )
+

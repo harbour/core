@@ -71,35 +71,52 @@ CREATE CLASS QTableWidgetSelectionRange
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  bottomRow()                         INLINE  Qt_QTableWidgetSelectionRange_bottomRow( ::pPtr )
-   METHOD  columnCount()                       INLINE  Qt_QTableWidgetSelectionRange_columnCount( ::pPtr )
-   METHOD  leftColumn()                        INLINE  Qt_QTableWidgetSelectionRange_leftColumn( ::pPtr )
-   METHOD  rightColumn()                       INLINE  Qt_QTableWidgetSelectionRange_rightColumn( ::pPtr )
-   METHOD  rowCount()                          INLINE  Qt_QTableWidgetSelectionRange_rowCount( ::pPtr )
-   METHOD  topRow()                            INLINE  Qt_QTableWidgetSelectionRange_topRow( ::pPtr )
+   METHOD  bottomRow()
+   METHOD  columnCount()
+   METHOD  leftColumn()
+   METHOD  rightColumn()
+   METHOD  rowCount()
+   METHOD  topRow()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTableWidgetSelectionRange
-
+METHOD QTableWidgetSelectionRange:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTableWidgetSelectionRange( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTableWidgetSelectionRange
-
+METHOD QTableWidgetSelectionRange:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTableWidgetSelectionRange:bottomRow()
+   RETURN Qt_QTableWidgetSelectionRange_bottomRow( ::pPtr )
+
+
+METHOD QTableWidgetSelectionRange:columnCount()
+   RETURN Qt_QTableWidgetSelectionRange_columnCount( ::pPtr )
+
+
+METHOD QTableWidgetSelectionRange:leftColumn()
+   RETURN Qt_QTableWidgetSelectionRange_leftColumn( ::pPtr )
+
+
+METHOD QTableWidgetSelectionRange:rightColumn()
+   RETURN Qt_QTableWidgetSelectionRange_rightColumn( ::pPtr )
+
+
+METHOD QTableWidgetSelectionRange:rowCount()
+   RETURN Qt_QTableWidgetSelectionRange_rowCount( ::pPtr )
+
+
+METHOD QTableWidgetSelectionRange:topRow()
+   RETURN Qt_QTableWidgetSelectionRange_topRow( ::pPtr )
+

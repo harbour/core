@@ -199,7 +199,9 @@ METHOD XbpRtf:exeBlock( nEvent, p1 )
    DO CASE
    CASE nEvent == 1
    CASE nEvent == 2
+xbp_debug( "XbpRtf:exeBlock", 2 )
    CASE nEvent == 3
+xbp_debug( "XbpRtf:exeBlock", 3 )
       ::oTextCursor:configure( ::oWidget:textCursor() )
       ::oCurCursor := ::oTextCursor
    CASE nEvent == 4
@@ -208,11 +210,13 @@ METHOD XbpRtf:exeBlock( nEvent, p1 )
       ::changed := .t.                                  // .f. only at save
       ::change()
    CASE nEvent == 7    /* Xbase++ Implements */
+xbp_debug( "XbpRtf:exeBlock", 7 )
       ::oTextCursor:configure( ::oWidget:textCursor() )
       ::oCurCursor := ::oTextCursor
       ::selChange()
    ENDCASE
 
+   hb_gcAll( .t. )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -400,7 +404,7 @@ METHOD XbpRtf:selChange( ... )
 
 METHOD XbpRtf:selAlignment( ... )                           // XBPRTF_ALIGN_LEFT
    LOCAL xRet := XBPRTF_ALIGN_LEFT
-   LOCAL aP := hb_aParams()
+   LOCAL aP   := hb_aParams()
    LOCAL oTBFormat
 
    IF len( aP ) >= 1 .and. hb_isNumeric( aP[ 1 ] )
@@ -449,7 +453,7 @@ METHOD XbpRtf:selCharOffset( ... )                          // 0
       ::oTextCharFormat:pPtr := ::oCurCursor:charFormat()
       IF ::oTextCharFormat:isValid()
          nAlign := IF( aP[ 1 ] < 0, -1, IF( aP[ 1 ] > 0, 1, 0 ) )
-         xRet := ::oTextCharFormat:verticalAlignment()
+         xRet   := ::oTextCharFormat:verticalAlignment()
          ::oTextCharFormat:setVerticalAlignment( ConvertAFact( "RtfVerticalAlign", XBTOQT_FROM_XB, nAlign ) )
          ::oCurCursor:setCharFormat( QT_PTROF( ::oTextCharFormat ) )
       ENDIF
@@ -460,15 +464,16 @@ METHOD XbpRtf:selCharOffset( ... )                          // 0
 
 METHOD XbpRtf:selColor( ... )
    LOCAL xRet := 0
-   LOCAL oBrush, nColor
+   LOCAL oBrush, nColor, oColor
    LOCAL aP := hb_aParams()
 
    IF len( aP ) >= 1 .and. hb_isNumeric( aP[ 1 ] )
       ::oTextCharFormat:pPtr := ::oCurCursor:charFormat()
       IF ::oTextCharFormat:isValid()
-         xRet := ::oTextCharFormat:foreground()
+         xRet   := ::oTextCharFormat:foreground()
          nColor := ConvertAFact( "COLOR", XBTOQT_FROM_XB, aP[ 1 ] )
-         oBrush := QBrush():new( "QColor", QT_PTROF( QColor():new( nColor ) ) )
+         oColor := QColor():new( nColor )
+         oBrush := QBrush():new( "QColor", QT_PTROF( oColor ) )
          ::oTextCharFormat:setForeground( QT_PTROF( oBrush ) )
          ::oCurCursor:setCharFormat( QT_PTROF( ::oTextCharFormat ) )
       ENDIF

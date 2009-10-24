@@ -71,110 +71,427 @@ CREATE CLASS QTextEdit INHERIT QAbstractScrollArea
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  acceptRichText()                    INLINE  Qt_QTextEdit_acceptRichText( ::pPtr )
-   METHOD  alignment()                         INLINE  Qt_QTextEdit_alignment( ::pPtr )
-   METHOD  anchorAt( pPos )                    INLINE  Qt_QTextEdit_anchorAt( ::pPtr, pPos )
-   METHOD  autoFormatting()                    INLINE  Qt_QTextEdit_autoFormatting( ::pPtr )
-   METHOD  canPaste()                          INLINE  Qt_QTextEdit_canPaste( ::pPtr )
-   METHOD  createStandardContextMenu()         INLINE  Qt_QTextEdit_createStandardContextMenu( ::pPtr )
-   METHOD  createStandardContextMenu_1( pPosition )  INLINE  Qt_QTextEdit_createStandardContextMenu_1( ::pPtr, pPosition )
-   METHOD  currentCharFormat()                 INLINE  Qt_QTextEdit_currentCharFormat( ::pPtr )
-   METHOD  currentFont()                       INLINE  Qt_QTextEdit_currentFont( ::pPtr )
-   METHOD  cursorForPosition( pPos )           INLINE  Qt_QTextEdit_cursorForPosition( ::pPtr, pPos )
-   METHOD  cursorRect( pCursor )               INLINE  Qt_QTextEdit_cursorRect( ::pPtr, pCursor )
-   METHOD  cursorRect_1()                      INLINE  Qt_QTextEdit_cursorRect_1( ::pPtr )
-   METHOD  cursorWidth()                       INLINE  Qt_QTextEdit_cursorWidth( ::pPtr )
-   METHOD  document()                          INLINE  Qt_QTextEdit_document( ::pPtr )
-   METHOD  documentTitle()                     INLINE  Qt_QTextEdit_documentTitle( ::pPtr )
-   METHOD  ensureCursorVisible()               INLINE  Qt_QTextEdit_ensureCursorVisible( ::pPtr )
-   METHOD  find( cExp, nOptions )              INLINE  Qt_QTextEdit_find( ::pPtr, cExp, nOptions )
-   METHOD  fontFamily()                        INLINE  Qt_QTextEdit_fontFamily( ::pPtr )
-   METHOD  fontItalic()                        INLINE  Qt_QTextEdit_fontItalic( ::pPtr )
-   METHOD  fontPointSize()                     INLINE  Qt_QTextEdit_fontPointSize( ::pPtr )
-   METHOD  fontUnderline()                     INLINE  Qt_QTextEdit_fontUnderline( ::pPtr )
-   METHOD  fontWeight()                        INLINE  Qt_QTextEdit_fontWeight( ::pPtr )
-   METHOD  isReadOnly()                        INLINE  Qt_QTextEdit_isReadOnly( ::pPtr )
-   METHOD  isUndoRedoEnabled()                 INLINE  Qt_QTextEdit_isUndoRedoEnabled( ::pPtr )
-   METHOD  lineWrapColumnOrWidth()             INLINE  Qt_QTextEdit_lineWrapColumnOrWidth( ::pPtr )
-   METHOD  lineWrapMode()                      INLINE  Qt_QTextEdit_lineWrapMode( ::pPtr )
-   METHOD  loadResource( nType, pName )        INLINE  Qt_QTextEdit_loadResource( ::pPtr, nType, pName )
-   METHOD  mergeCurrentCharFormat( pModifier )  INLINE  Qt_QTextEdit_mergeCurrentCharFormat( ::pPtr, pModifier )
-   METHOD  moveCursor( nOperation, nMode )     INLINE  Qt_QTextEdit_moveCursor( ::pPtr, nOperation, nMode )
-   METHOD  overwriteMode()                     INLINE  Qt_QTextEdit_overwriteMode( ::pPtr )
-   METHOD  print( pPrinter )                   INLINE  Qt_QTextEdit_print( ::pPtr, pPrinter )
-   METHOD  setAcceptRichText( lAccept )        INLINE  Qt_QTextEdit_setAcceptRichText( ::pPtr, lAccept )
-   METHOD  setAutoFormatting( nFeatures )      INLINE  Qt_QTextEdit_setAutoFormatting( ::pPtr, nFeatures )
-   METHOD  setCurrentCharFormat( pFormat )     INLINE  Qt_QTextEdit_setCurrentCharFormat( ::pPtr, pFormat )
-   METHOD  setCursorWidth( nWidth )            INLINE  Qt_QTextEdit_setCursorWidth( ::pPtr, nWidth )
-   METHOD  setDocument( pDocument )            INLINE  Qt_QTextEdit_setDocument( ::pPtr, pDocument )
-   METHOD  setDocumentTitle( cTitle )          INLINE  Qt_QTextEdit_setDocumentTitle( ::pPtr, cTitle )
-   METHOD  setLineWrapColumnOrWidth( nW )      INLINE  Qt_QTextEdit_setLineWrapColumnOrWidth( ::pPtr, nW )
-   METHOD  setLineWrapMode( nMode )            INLINE  Qt_QTextEdit_setLineWrapMode( ::pPtr, nMode )
-   METHOD  setOverwriteMode( lOverwrite )      INLINE  Qt_QTextEdit_setOverwriteMode( ::pPtr, lOverwrite )
-   METHOD  setReadOnly( lRo )                  INLINE  Qt_QTextEdit_setReadOnly( ::pPtr, lRo )
-   METHOD  setTabChangesFocus( lB )            INLINE  Qt_QTextEdit_setTabChangesFocus( ::pPtr, lB )
-   METHOD  setTabStopWidth( nWidth )           INLINE  Qt_QTextEdit_setTabStopWidth( ::pPtr, nWidth )
-   METHOD  setTextCursor( pCursor )            INLINE  Qt_QTextEdit_setTextCursor( ::pPtr, pCursor )
-   METHOD  setTextInteractionFlags( nFlags )   INLINE  Qt_QTextEdit_setTextInteractionFlags( ::pPtr, nFlags )
-   METHOD  setUndoRedoEnabled( lEnable )       INLINE  Qt_QTextEdit_setUndoRedoEnabled( ::pPtr, lEnable )
-   METHOD  setWordWrapMode( nPolicy )          INLINE  Qt_QTextEdit_setWordWrapMode( ::pPtr, nPolicy )
-   METHOD  tabChangesFocus()                   INLINE  Qt_QTextEdit_tabChangesFocus( ::pPtr )
-   METHOD  tabStopWidth()                      INLINE  Qt_QTextEdit_tabStopWidth( ::pPtr )
-   METHOD  textBackgroundColor()               INLINE  Qt_QTextEdit_textBackgroundColor( ::pPtr )
-   METHOD  textColor()                         INLINE  Qt_QTextEdit_textColor( ::pPtr )
-   METHOD  textCursor()                        INLINE  Qt_QTextEdit_textCursor( ::pPtr )
-   METHOD  textInteractionFlags()              INLINE  Qt_QTextEdit_textInteractionFlags( ::pPtr )
-   METHOD  toHtml()                            INLINE  Qt_QTextEdit_toHtml( ::pPtr )
-   METHOD  toPlainText()                       INLINE  Qt_QTextEdit_toPlainText( ::pPtr )
-   METHOD  wordWrapMode()                      INLINE  Qt_QTextEdit_wordWrapMode( ::pPtr )
-   METHOD  append( cText )                     INLINE  Qt_QTextEdit_append( ::pPtr, cText )
-   METHOD  clear()                             INLINE  Qt_QTextEdit_clear( ::pPtr )
-   METHOD  copy()                              INLINE  Qt_QTextEdit_copy( ::pPtr )
-   METHOD  cut()                               INLINE  Qt_QTextEdit_cut( ::pPtr )
-   METHOD  insertHtml( cText )                 INLINE  Qt_QTextEdit_insertHtml( ::pPtr, cText )
-   METHOD  insertPlainText( cText )            INLINE  Qt_QTextEdit_insertPlainText( ::pPtr, cText )
-   METHOD  paste()                             INLINE  Qt_QTextEdit_paste( ::pPtr )
-   METHOD  redo()                              INLINE  Qt_QTextEdit_redo( ::pPtr )
-   METHOD  scrollToAnchor( cName )             INLINE  Qt_QTextEdit_scrollToAnchor( ::pPtr, cName )
-   METHOD  selectAll()                         INLINE  Qt_QTextEdit_selectAll( ::pPtr )
-   METHOD  setAlignment( nA )                  INLINE  Qt_QTextEdit_setAlignment( ::pPtr, nA )
-   METHOD  setCurrentFont( pF )                INLINE  Qt_QTextEdit_setCurrentFont( ::pPtr, pF )
-   METHOD  setFontFamily( cFontFamily )        INLINE  Qt_QTextEdit_setFontFamily( ::pPtr, cFontFamily )
-   METHOD  setFontItalic( lItalic )            INLINE  Qt_QTextEdit_setFontItalic( ::pPtr, lItalic )
-   METHOD  setFontPointSize( nS )              INLINE  Qt_QTextEdit_setFontPointSize( ::pPtr, nS )
-   METHOD  setFontUnderline( lUnderline )      INLINE  Qt_QTextEdit_setFontUnderline( ::pPtr, lUnderline )
-   METHOD  setFontWeight( nWeight )            INLINE  Qt_QTextEdit_setFontWeight( ::pPtr, nWeight )
-   METHOD  setHtml( cText )                    INLINE  Qt_QTextEdit_setHtml( ::pPtr, cText )
-   METHOD  setPlainText( cText )               INLINE  Qt_QTextEdit_setPlainText( ::pPtr, cText )
-   METHOD  setText( cText )                    INLINE  Qt_QTextEdit_setText( ::pPtr, cText )
-   METHOD  setTextBackgroundColor( pC )        INLINE  Qt_QTextEdit_setTextBackgroundColor( ::pPtr, pC )
-   METHOD  setTextColor( pC )                  INLINE  Qt_QTextEdit_setTextColor( ::pPtr, pC )
-   METHOD  undo()                              INLINE  Qt_QTextEdit_undo( ::pPtr )
-   METHOD  zoomIn( nRange )                    INLINE  Qt_QTextEdit_zoomIn( ::pPtr, nRange )
-   METHOD  zoomOut( nRange )                   INLINE  Qt_QTextEdit_zoomOut( ::pPtr, nRange )
+   METHOD  acceptRichText()
+   METHOD  alignment()
+   METHOD  anchorAt( pPos )
+   METHOD  autoFormatting()
+   METHOD  canPaste()
+   METHOD  createStandardContextMenu()
+   METHOD  createStandardContextMenu_1( pPosition )
+   METHOD  currentCharFormat()
+   METHOD  currentFont()
+   METHOD  cursorForPosition( pPos )
+   METHOD  cursorRect( pCursor )
+   METHOD  cursorRect_1()
+   METHOD  cursorWidth()
+   METHOD  document()
+   METHOD  documentTitle()
+   METHOD  ensureCursorVisible()
+   METHOD  find( cExp, nOptions )
+   METHOD  fontFamily()
+   METHOD  fontItalic()
+   METHOD  fontPointSize()
+   METHOD  fontUnderline()
+   METHOD  fontWeight()
+   METHOD  isReadOnly()
+   METHOD  isUndoRedoEnabled()
+   METHOD  lineWrapColumnOrWidth()
+   METHOD  lineWrapMode()
+   METHOD  loadResource( nType, pName )
+   METHOD  mergeCurrentCharFormat( pModifier )
+   METHOD  moveCursor( nOperation, nMode )
+   METHOD  overwriteMode()
+   METHOD  print( pPrinter )
+   METHOD  setAcceptRichText( lAccept )
+   METHOD  setAutoFormatting( nFeatures )
+   METHOD  setCurrentCharFormat( pFormat )
+   METHOD  setCursorWidth( nWidth )
+   METHOD  setDocument( pDocument )
+   METHOD  setDocumentTitle( cTitle )
+   METHOD  setLineWrapColumnOrWidth( nW )
+   METHOD  setLineWrapMode( nMode )
+   METHOD  setOverwriteMode( lOverwrite )
+   METHOD  setReadOnly( lRo )
+   METHOD  setTabChangesFocus( lB )
+   METHOD  setTabStopWidth( nWidth )
+   METHOD  setTextCursor( pCursor )
+   METHOD  setTextInteractionFlags( nFlags )
+   METHOD  setUndoRedoEnabled( lEnable )
+   METHOD  setWordWrapMode( nPolicy )
+   METHOD  tabChangesFocus()
+   METHOD  tabStopWidth()
+   METHOD  textBackgroundColor()
+   METHOD  textColor()
+   METHOD  textCursor()
+   METHOD  textInteractionFlags()
+   METHOD  toHtml()
+   METHOD  toPlainText()
+   METHOD  wordWrapMode()
+   METHOD  append( cText )
+   METHOD  clear()
+   METHOD  copy()
+   METHOD  cut()
+   METHOD  insertHtml( cText )
+   METHOD  insertPlainText( cText )
+   METHOD  paste()
+   METHOD  redo()
+   METHOD  scrollToAnchor( cName )
+   METHOD  selectAll()
+   METHOD  setAlignment( nA )
+   METHOD  setCurrentFont( pF )
+   METHOD  setFontFamily( cFontFamily )
+   METHOD  setFontItalic( lItalic )
+   METHOD  setFontPointSize( nS )
+   METHOD  setFontUnderline( lUnderline )
+   METHOD  setFontWeight( nWeight )
+   METHOD  setHtml( cText )
+   METHOD  setPlainText( cText )
+   METHOD  setText( cText )
+   METHOD  setTextBackgroundColor( pC )
+   METHOD  setTextColor( pC )
+   METHOD  undo()
+   METHOD  zoomIn( nRange )
+   METHOD  zoomOut( nRange )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextEdit
-
+METHOD QTextEdit:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextEdit( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextEdit
-
+METHOD QTextEdit:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextEdit:acceptRichText()
+   RETURN Qt_QTextEdit_acceptRichText( ::pPtr )
+
+
+METHOD QTextEdit:alignment()
+   RETURN Qt_QTextEdit_alignment( ::pPtr )
+
+
+METHOD QTextEdit:anchorAt( pPos )
+   RETURN Qt_QTextEdit_anchorAt( ::pPtr, pPos )
+
+
+METHOD QTextEdit:autoFormatting()
+   RETURN Qt_QTextEdit_autoFormatting( ::pPtr )
+
+
+METHOD QTextEdit:canPaste()
+   RETURN Qt_QTextEdit_canPaste( ::pPtr )
+
+
+METHOD QTextEdit:createStandardContextMenu()
+   RETURN Qt_QTextEdit_createStandardContextMenu( ::pPtr )
+
+
+METHOD QTextEdit:createStandardContextMenu_1( pPosition )
+   RETURN Qt_QTextEdit_createStandardContextMenu_1( ::pPtr, pPosition )
+
+
+METHOD QTextEdit:currentCharFormat()
+   RETURN Qt_QTextEdit_currentCharFormat( ::pPtr )
+
+
+METHOD QTextEdit:currentFont()
+   RETURN Qt_QTextEdit_currentFont( ::pPtr )
+
+
+METHOD QTextEdit:cursorForPosition( pPos )
+   RETURN Qt_QTextEdit_cursorForPosition( ::pPtr, pPos )
+
+
+METHOD QTextEdit:cursorRect( pCursor )
+   RETURN Qt_QTextEdit_cursorRect( ::pPtr, pCursor )
+
+
+METHOD QTextEdit:cursorRect_1()
+   RETURN Qt_QTextEdit_cursorRect_1( ::pPtr )
+
+
+METHOD QTextEdit:cursorWidth()
+   RETURN Qt_QTextEdit_cursorWidth( ::pPtr )
+
+
+METHOD QTextEdit:document()
+   RETURN Qt_QTextEdit_document( ::pPtr )
+
+
+METHOD QTextEdit:documentTitle()
+   RETURN Qt_QTextEdit_documentTitle( ::pPtr )
+
+
+METHOD QTextEdit:ensureCursorVisible()
+   RETURN Qt_QTextEdit_ensureCursorVisible( ::pPtr )
+
+
+METHOD QTextEdit:find( cExp, nOptions )
+   RETURN Qt_QTextEdit_find( ::pPtr, cExp, nOptions )
+
+
+METHOD QTextEdit:fontFamily()
+   RETURN Qt_QTextEdit_fontFamily( ::pPtr )
+
+
+METHOD QTextEdit:fontItalic()
+   RETURN Qt_QTextEdit_fontItalic( ::pPtr )
+
+
+METHOD QTextEdit:fontPointSize()
+   RETURN Qt_QTextEdit_fontPointSize( ::pPtr )
+
+
+METHOD QTextEdit:fontUnderline()
+   RETURN Qt_QTextEdit_fontUnderline( ::pPtr )
+
+
+METHOD QTextEdit:fontWeight()
+   RETURN Qt_QTextEdit_fontWeight( ::pPtr )
+
+
+METHOD QTextEdit:isReadOnly()
+   RETURN Qt_QTextEdit_isReadOnly( ::pPtr )
+
+
+METHOD QTextEdit:isUndoRedoEnabled()
+   RETURN Qt_QTextEdit_isUndoRedoEnabled( ::pPtr )
+
+
+METHOD QTextEdit:lineWrapColumnOrWidth()
+   RETURN Qt_QTextEdit_lineWrapColumnOrWidth( ::pPtr )
+
+
+METHOD QTextEdit:lineWrapMode()
+   RETURN Qt_QTextEdit_lineWrapMode( ::pPtr )
+
+
+METHOD QTextEdit:loadResource( nType, pName )
+   RETURN Qt_QTextEdit_loadResource( ::pPtr, nType, pName )
+
+
+METHOD QTextEdit:mergeCurrentCharFormat( pModifier )
+   RETURN Qt_QTextEdit_mergeCurrentCharFormat( ::pPtr, pModifier )
+
+
+METHOD QTextEdit:moveCursor( nOperation, nMode )
+   RETURN Qt_QTextEdit_moveCursor( ::pPtr, nOperation, nMode )
+
+
+METHOD QTextEdit:overwriteMode()
+   RETURN Qt_QTextEdit_overwriteMode( ::pPtr )
+
+
+METHOD QTextEdit:print( pPrinter )
+   RETURN Qt_QTextEdit_print( ::pPtr, pPrinter )
+
+
+METHOD QTextEdit:setAcceptRichText( lAccept )
+   RETURN Qt_QTextEdit_setAcceptRichText( ::pPtr, lAccept )
+
+
+METHOD QTextEdit:setAutoFormatting( nFeatures )
+   RETURN Qt_QTextEdit_setAutoFormatting( ::pPtr, nFeatures )
+
+
+METHOD QTextEdit:setCurrentCharFormat( pFormat )
+   RETURN Qt_QTextEdit_setCurrentCharFormat( ::pPtr, pFormat )
+
+
+METHOD QTextEdit:setCursorWidth( nWidth )
+   RETURN Qt_QTextEdit_setCursorWidth( ::pPtr, nWidth )
+
+
+METHOD QTextEdit:setDocument( pDocument )
+   RETURN Qt_QTextEdit_setDocument( ::pPtr, pDocument )
+
+
+METHOD QTextEdit:setDocumentTitle( cTitle )
+   RETURN Qt_QTextEdit_setDocumentTitle( ::pPtr, cTitle )
+
+
+METHOD QTextEdit:setLineWrapColumnOrWidth( nW )
+   RETURN Qt_QTextEdit_setLineWrapColumnOrWidth( ::pPtr, nW )
+
+
+METHOD QTextEdit:setLineWrapMode( nMode )
+   RETURN Qt_QTextEdit_setLineWrapMode( ::pPtr, nMode )
+
+
+METHOD QTextEdit:setOverwriteMode( lOverwrite )
+   RETURN Qt_QTextEdit_setOverwriteMode( ::pPtr, lOverwrite )
+
+
+METHOD QTextEdit:setReadOnly( lRo )
+   RETURN Qt_QTextEdit_setReadOnly( ::pPtr, lRo )
+
+
+METHOD QTextEdit:setTabChangesFocus( lB )
+   RETURN Qt_QTextEdit_setTabChangesFocus( ::pPtr, lB )
+
+
+METHOD QTextEdit:setTabStopWidth( nWidth )
+   RETURN Qt_QTextEdit_setTabStopWidth( ::pPtr, nWidth )
+
+
+METHOD QTextEdit:setTextCursor( pCursor )
+   RETURN Qt_QTextEdit_setTextCursor( ::pPtr, pCursor )
+
+
+METHOD QTextEdit:setTextInteractionFlags( nFlags )
+   RETURN Qt_QTextEdit_setTextInteractionFlags( ::pPtr, nFlags )
+
+
+METHOD QTextEdit:setUndoRedoEnabled( lEnable )
+   RETURN Qt_QTextEdit_setUndoRedoEnabled( ::pPtr, lEnable )
+
+
+METHOD QTextEdit:setWordWrapMode( nPolicy )
+   RETURN Qt_QTextEdit_setWordWrapMode( ::pPtr, nPolicy )
+
+
+METHOD QTextEdit:tabChangesFocus()
+   RETURN Qt_QTextEdit_tabChangesFocus( ::pPtr )
+
+
+METHOD QTextEdit:tabStopWidth()
+   RETURN Qt_QTextEdit_tabStopWidth( ::pPtr )
+
+
+METHOD QTextEdit:textBackgroundColor()
+   RETURN Qt_QTextEdit_textBackgroundColor( ::pPtr )
+
+
+METHOD QTextEdit:textColor()
+   RETURN Qt_QTextEdit_textColor( ::pPtr )
+
+
+METHOD QTextEdit:textCursor()
+   RETURN Qt_QTextEdit_textCursor( ::pPtr )
+
+
+METHOD QTextEdit:textInteractionFlags()
+   RETURN Qt_QTextEdit_textInteractionFlags( ::pPtr )
+
+
+METHOD QTextEdit:toHtml()
+   RETURN Qt_QTextEdit_toHtml( ::pPtr )
+
+
+METHOD QTextEdit:toPlainText()
+   RETURN Qt_QTextEdit_toPlainText( ::pPtr )
+
+
+METHOD QTextEdit:wordWrapMode()
+   RETURN Qt_QTextEdit_wordWrapMode( ::pPtr )
+
+
+METHOD QTextEdit:append( cText )
+   RETURN Qt_QTextEdit_append( ::pPtr, cText )
+
+
+METHOD QTextEdit:clear()
+   RETURN Qt_QTextEdit_clear( ::pPtr )
+
+
+METHOD QTextEdit:copy()
+   RETURN Qt_QTextEdit_copy( ::pPtr )
+
+
+METHOD QTextEdit:cut()
+   RETURN Qt_QTextEdit_cut( ::pPtr )
+
+
+METHOD QTextEdit:insertHtml( cText )
+   RETURN Qt_QTextEdit_insertHtml( ::pPtr, cText )
+
+
+METHOD QTextEdit:insertPlainText( cText )
+   RETURN Qt_QTextEdit_insertPlainText( ::pPtr, cText )
+
+
+METHOD QTextEdit:paste()
+   RETURN Qt_QTextEdit_paste( ::pPtr )
+
+
+METHOD QTextEdit:redo()
+   RETURN Qt_QTextEdit_redo( ::pPtr )
+
+
+METHOD QTextEdit:scrollToAnchor( cName )
+   RETURN Qt_QTextEdit_scrollToAnchor( ::pPtr, cName )
+
+
+METHOD QTextEdit:selectAll()
+   RETURN Qt_QTextEdit_selectAll( ::pPtr )
+
+
+METHOD QTextEdit:setAlignment( nA )
+   RETURN Qt_QTextEdit_setAlignment( ::pPtr, nA )
+
+
+METHOD QTextEdit:setCurrentFont( pF )
+   RETURN Qt_QTextEdit_setCurrentFont( ::pPtr, pF )
+
+
+METHOD QTextEdit:setFontFamily( cFontFamily )
+   RETURN Qt_QTextEdit_setFontFamily( ::pPtr, cFontFamily )
+
+
+METHOD QTextEdit:setFontItalic( lItalic )
+   RETURN Qt_QTextEdit_setFontItalic( ::pPtr, lItalic )
+
+
+METHOD QTextEdit:setFontPointSize( nS )
+   RETURN Qt_QTextEdit_setFontPointSize( ::pPtr, nS )
+
+
+METHOD QTextEdit:setFontUnderline( lUnderline )
+   RETURN Qt_QTextEdit_setFontUnderline( ::pPtr, lUnderline )
+
+
+METHOD QTextEdit:setFontWeight( nWeight )
+   RETURN Qt_QTextEdit_setFontWeight( ::pPtr, nWeight )
+
+
+METHOD QTextEdit:setHtml( cText )
+   RETURN Qt_QTextEdit_setHtml( ::pPtr, cText )
+
+
+METHOD QTextEdit:setPlainText( cText )
+   RETURN Qt_QTextEdit_setPlainText( ::pPtr, cText )
+
+
+METHOD QTextEdit:setText( cText )
+   RETURN Qt_QTextEdit_setText( ::pPtr, cText )
+
+
+METHOD QTextEdit:setTextBackgroundColor( pC )
+   RETURN Qt_QTextEdit_setTextBackgroundColor( ::pPtr, pC )
+
+
+METHOD QTextEdit:setTextColor( pC )
+   RETURN Qt_QTextEdit_setTextColor( ::pPtr, pC )
+
+
+METHOD QTextEdit:undo()
+   RETURN Qt_QTextEdit_undo( ::pPtr )
+
+
+METHOD QTextEdit:zoomIn( nRange )
+   RETURN Qt_QTextEdit_zoomIn( ::pPtr, nRange )
+
+
+METHOD QTextEdit:zoomOut( nRange )
+   RETURN Qt_QTextEdit_zoomOut( ::pPtr, nRange )
+

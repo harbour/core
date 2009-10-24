@@ -71,48 +71,117 @@ CREATE CLASS QTextBlockFormat INHERIT QTextFormat
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  alignment()                         INLINE  Qt_QTextBlockFormat_alignment( ::pPtr )
-   METHOD  bottomMargin()                      INLINE  Qt_QTextBlockFormat_bottomMargin( ::pPtr )
-   METHOD  indent()                            INLINE  Qt_QTextBlockFormat_indent( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QTextBlockFormat_isValid( ::pPtr )
-   METHOD  leftMargin()                        INLINE  Qt_QTextBlockFormat_leftMargin( ::pPtr )
-   METHOD  nonBreakableLines()                 INLINE  Qt_QTextBlockFormat_nonBreakableLines( ::pPtr )
-   METHOD  pageBreakPolicy()                   INLINE  Qt_QTextBlockFormat_pageBreakPolicy( ::pPtr )
-   METHOD  rightMargin()                       INLINE  Qt_QTextBlockFormat_rightMargin( ::pPtr )
-   METHOD  setAlignment( nAlignment )          INLINE  Qt_QTextBlockFormat_setAlignment( ::pPtr, nAlignment )
-   METHOD  setBottomMargin( nMargin )          INLINE  Qt_QTextBlockFormat_setBottomMargin( ::pPtr, nMargin )
-   METHOD  setIndent( nIndentation )           INLINE  Qt_QTextBlockFormat_setIndent( ::pPtr, nIndentation )
-   METHOD  setLeftMargin( nMargin )            INLINE  Qt_QTextBlockFormat_setLeftMargin( ::pPtr, nMargin )
-   METHOD  setNonBreakableLines( lB )          INLINE  Qt_QTextBlockFormat_setNonBreakableLines( ::pPtr, lB )
-   METHOD  setPageBreakPolicy( nPolicy )       INLINE  Qt_QTextBlockFormat_setPageBreakPolicy( ::pPtr, nPolicy )
-   METHOD  setRightMargin( nMargin )           INLINE  Qt_QTextBlockFormat_setRightMargin( ::pPtr, nMargin )
-   METHOD  setTextIndent( nIndent )            INLINE  Qt_QTextBlockFormat_setTextIndent( ::pPtr, nIndent )
-   METHOD  setTopMargin( nMargin )             INLINE  Qt_QTextBlockFormat_setTopMargin( ::pPtr, nMargin )
-   METHOD  textIndent()                        INLINE  Qt_QTextBlockFormat_textIndent( ::pPtr )
-   METHOD  topMargin()                         INLINE  Qt_QTextBlockFormat_topMargin( ::pPtr )
+   METHOD  alignment()
+   METHOD  bottomMargin()
+   METHOD  indent()
+   METHOD  isValid()
+   METHOD  leftMargin()
+   METHOD  nonBreakableLines()
+   METHOD  pageBreakPolicy()
+   METHOD  rightMargin()
+   METHOD  setAlignment( nAlignment )
+   METHOD  setBottomMargin( nMargin )
+   METHOD  setIndent( nIndentation )
+   METHOD  setLeftMargin( nMargin )
+   METHOD  setNonBreakableLines( lB )
+   METHOD  setPageBreakPolicy( nPolicy )
+   METHOD  setRightMargin( nMargin )
+   METHOD  setTextIndent( nIndent )
+   METHOD  setTopMargin( nMargin )
+   METHOD  textIndent()
+   METHOD  topMargin()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextBlockFormat
-
+METHOD QTextBlockFormat:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextBlockFormat( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextBlockFormat
-
+METHOD QTextBlockFormat:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextBlockFormat:alignment()
+   RETURN Qt_QTextBlockFormat_alignment( ::pPtr )
+
+
+METHOD QTextBlockFormat:bottomMargin()
+   RETURN Qt_QTextBlockFormat_bottomMargin( ::pPtr )
+
+
+METHOD QTextBlockFormat:indent()
+   RETURN Qt_QTextBlockFormat_indent( ::pPtr )
+
+
+METHOD QTextBlockFormat:isValid()
+   RETURN Qt_QTextBlockFormat_isValid( ::pPtr )
+
+
+METHOD QTextBlockFormat:leftMargin()
+   RETURN Qt_QTextBlockFormat_leftMargin( ::pPtr )
+
+
+METHOD QTextBlockFormat:nonBreakableLines()
+   RETURN Qt_QTextBlockFormat_nonBreakableLines( ::pPtr )
+
+
+METHOD QTextBlockFormat:pageBreakPolicy()
+   RETURN Qt_QTextBlockFormat_pageBreakPolicy( ::pPtr )
+
+
+METHOD QTextBlockFormat:rightMargin()
+   RETURN Qt_QTextBlockFormat_rightMargin( ::pPtr )
+
+
+METHOD QTextBlockFormat:setAlignment( nAlignment )
+   RETURN Qt_QTextBlockFormat_setAlignment( ::pPtr, nAlignment )
+
+
+METHOD QTextBlockFormat:setBottomMargin( nMargin )
+   RETURN Qt_QTextBlockFormat_setBottomMargin( ::pPtr, nMargin )
+
+
+METHOD QTextBlockFormat:setIndent( nIndentation )
+   RETURN Qt_QTextBlockFormat_setIndent( ::pPtr, nIndentation )
+
+
+METHOD QTextBlockFormat:setLeftMargin( nMargin )
+   RETURN Qt_QTextBlockFormat_setLeftMargin( ::pPtr, nMargin )
+
+
+METHOD QTextBlockFormat:setNonBreakableLines( lB )
+   RETURN Qt_QTextBlockFormat_setNonBreakableLines( ::pPtr, lB )
+
+
+METHOD QTextBlockFormat:setPageBreakPolicy( nPolicy )
+   RETURN Qt_QTextBlockFormat_setPageBreakPolicy( ::pPtr, nPolicy )
+
+
+METHOD QTextBlockFormat:setRightMargin( nMargin )
+   RETURN Qt_QTextBlockFormat_setRightMargin( ::pPtr, nMargin )
+
+
+METHOD QTextBlockFormat:setTextIndent( nIndent )
+   RETURN Qt_QTextBlockFormat_setTextIndent( ::pPtr, nIndent )
+
+
+METHOD QTextBlockFormat:setTopMargin( nMargin )
+   RETURN Qt_QTextBlockFormat_setTopMargin( ::pPtr, nMargin )
+
+
+METHOD QTextBlockFormat:textIndent()
+   RETURN Qt_QTextBlockFormat_textIndent( ::pPtr )
+
+
+METHOD QTextBlockFormat:topMargin()
+   RETURN Qt_QTextBlockFormat_topMargin( ::pPtr )
+

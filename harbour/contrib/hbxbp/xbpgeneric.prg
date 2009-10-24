@@ -101,7 +101,7 @@ INIT PROCEDURE Qt_Start()
    ts_mutex  := hb_mutexCreate()
    oDummy    := XbpObject():new()
 
-   qt_qapplication()
+//   qt_qapplication()
    oApp := QApplication():new()
    RETURN
 
@@ -250,7 +250,6 @@ FUNCTION MsgBox( cMsg, cTitle )
    //SetAppWindow():oWidget:setFocus()
    oMB:exec()
 
-   oMB:destroy()
    RETURN nil
 
 /*----------------------------------------------------------------------*/

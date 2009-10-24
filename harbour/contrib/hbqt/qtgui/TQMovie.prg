@@ -71,57 +71,162 @@ CREATE CLASS QMovie INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  backgroundColor()                   INLINE  Qt_QMovie_backgroundColor( ::pPtr )
-   METHOD  cacheMode()                         INLINE  Qt_QMovie_cacheMode( ::pPtr )
-   METHOD  currentFrameNumber()                INLINE  Qt_QMovie_currentFrameNumber( ::pPtr )
-   METHOD  currentImage()                      INLINE  Qt_QMovie_currentImage( ::pPtr )
-   METHOD  currentPixmap()                     INLINE  Qt_QMovie_currentPixmap( ::pPtr )
-   METHOD  device()                            INLINE  Qt_QMovie_device( ::pPtr )
-   METHOD  fileName()                          INLINE  Qt_QMovie_fileName( ::pPtr )
-   METHOD  format()                            INLINE  Qt_QMovie_format( ::pPtr )
-   METHOD  frameCount()                        INLINE  Qt_QMovie_frameCount( ::pPtr )
-   METHOD  frameRect()                         INLINE  Qt_QMovie_frameRect( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QMovie_isValid( ::pPtr )
-   METHOD  jumpToFrame( nFrameNumber )         INLINE  Qt_QMovie_jumpToFrame( ::pPtr, nFrameNumber )
-   METHOD  loopCount()                         INLINE  Qt_QMovie_loopCount( ::pPtr )
-   METHOD  nextFrameDelay()                    INLINE  Qt_QMovie_nextFrameDelay( ::pPtr )
-   METHOD  scaledSize()                        INLINE  Qt_QMovie_scaledSize( ::pPtr )
-   METHOD  setBackgroundColor( pColor )        INLINE  Qt_QMovie_setBackgroundColor( ::pPtr, pColor )
-   METHOD  setCacheMode( nMode )               INLINE  Qt_QMovie_setCacheMode( ::pPtr, nMode )
-   METHOD  setDevice( pDevice )                INLINE  Qt_QMovie_setDevice( ::pPtr, pDevice )
-   METHOD  setFileName( cFileName )            INLINE  Qt_QMovie_setFileName( ::pPtr, cFileName )
-   METHOD  setFormat( pFormat )                INLINE  Qt_QMovie_setFormat( ::pPtr, pFormat )
-   METHOD  setScaledSize( pSize )              INLINE  Qt_QMovie_setScaledSize( ::pPtr, pSize )
-   METHOD  speed()                             INLINE  Qt_QMovie_speed( ::pPtr )
-   METHOD  state()                             INLINE  Qt_QMovie_state( ::pPtr )
-   METHOD  jumpToNextFrame()                   INLINE  Qt_QMovie_jumpToNextFrame( ::pPtr )
-   METHOD  setPaused( lPaused )                INLINE  Qt_QMovie_setPaused( ::pPtr, lPaused )
-   METHOD  setSpeed( nPercentSpeed )           INLINE  Qt_QMovie_setSpeed( ::pPtr, nPercentSpeed )
-   METHOD  start()                             INLINE  Qt_QMovie_start( ::pPtr )
-   METHOD  stop()                              INLINE  Qt_QMovie_stop( ::pPtr )
+   METHOD  backgroundColor()
+   METHOD  cacheMode()
+   METHOD  currentFrameNumber()
+   METHOD  currentImage()
+   METHOD  currentPixmap()
+   METHOD  device()
+   METHOD  fileName()
+   METHOD  format()
+   METHOD  frameCount()
+   METHOD  frameRect()
+   METHOD  isValid()
+   METHOD  jumpToFrame( nFrameNumber )
+   METHOD  loopCount()
+   METHOD  nextFrameDelay()
+   METHOD  scaledSize()
+   METHOD  setBackgroundColor( pColor )
+   METHOD  setCacheMode( nMode )
+   METHOD  setDevice( pDevice )
+   METHOD  setFileName( cFileName )
+   METHOD  setFormat( pFormat )
+   METHOD  setScaledSize( pSize )
+   METHOD  speed()
+   METHOD  state()
+   METHOD  jumpToNextFrame()
+   METHOD  setPaused( lPaused )
+   METHOD  setSpeed( nPercentSpeed )
+   METHOD  start()
+   METHOD  stop()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QMovie
-
+METHOD QMovie:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QMovie( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QMovie
-
+METHOD QMovie:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QMovie:backgroundColor()
+   RETURN Qt_QMovie_backgroundColor( ::pPtr )
+
+
+METHOD QMovie:cacheMode()
+   RETURN Qt_QMovie_cacheMode( ::pPtr )
+
+
+METHOD QMovie:currentFrameNumber()
+   RETURN Qt_QMovie_currentFrameNumber( ::pPtr )
+
+
+METHOD QMovie:currentImage()
+   RETURN Qt_QMovie_currentImage( ::pPtr )
+
+
+METHOD QMovie:currentPixmap()
+   RETURN Qt_QMovie_currentPixmap( ::pPtr )
+
+
+METHOD QMovie:device()
+   RETURN Qt_QMovie_device( ::pPtr )
+
+
+METHOD QMovie:fileName()
+   RETURN Qt_QMovie_fileName( ::pPtr )
+
+
+METHOD QMovie:format()
+   RETURN Qt_QMovie_format( ::pPtr )
+
+
+METHOD QMovie:frameCount()
+   RETURN Qt_QMovie_frameCount( ::pPtr )
+
+
+METHOD QMovie:frameRect()
+   RETURN Qt_QMovie_frameRect( ::pPtr )
+
+
+METHOD QMovie:isValid()
+   RETURN Qt_QMovie_isValid( ::pPtr )
+
+
+METHOD QMovie:jumpToFrame( nFrameNumber )
+   RETURN Qt_QMovie_jumpToFrame( ::pPtr, nFrameNumber )
+
+
+METHOD QMovie:loopCount()
+   RETURN Qt_QMovie_loopCount( ::pPtr )
+
+
+METHOD QMovie:nextFrameDelay()
+   RETURN Qt_QMovie_nextFrameDelay( ::pPtr )
+
+
+METHOD QMovie:scaledSize()
+   RETURN Qt_QMovie_scaledSize( ::pPtr )
+
+
+METHOD QMovie:setBackgroundColor( pColor )
+   RETURN Qt_QMovie_setBackgroundColor( ::pPtr, pColor )
+
+
+METHOD QMovie:setCacheMode( nMode )
+   RETURN Qt_QMovie_setCacheMode( ::pPtr, nMode )
+
+
+METHOD QMovie:setDevice( pDevice )
+   RETURN Qt_QMovie_setDevice( ::pPtr, pDevice )
+
+
+METHOD QMovie:setFileName( cFileName )
+   RETURN Qt_QMovie_setFileName( ::pPtr, cFileName )
+
+
+METHOD QMovie:setFormat( pFormat )
+   RETURN Qt_QMovie_setFormat( ::pPtr, pFormat )
+
+
+METHOD QMovie:setScaledSize( pSize )
+   RETURN Qt_QMovie_setScaledSize( ::pPtr, pSize )
+
+
+METHOD QMovie:speed()
+   RETURN Qt_QMovie_speed( ::pPtr )
+
+
+METHOD QMovie:state()
+   RETURN Qt_QMovie_state( ::pPtr )
+
+
+METHOD QMovie:jumpToNextFrame()
+   RETURN Qt_QMovie_jumpToNextFrame( ::pPtr )
+
+
+METHOD QMovie:setPaused( lPaused )
+   RETURN Qt_QMovie_setPaused( ::pPtr, lPaused )
+
+
+METHOD QMovie:setSpeed( nPercentSpeed )
+   RETURN Qt_QMovie_setSpeed( ::pPtr, nPercentSpeed )
+
+
+METHOD QMovie:start()
+   RETURN Qt_QMovie_start( ::pPtr )
+
+
+METHOD QMovie:stop()
+   RETURN Qt_QMovie_stop( ::pPtr )
+

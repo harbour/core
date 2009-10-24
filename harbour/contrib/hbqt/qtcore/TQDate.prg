@@ -71,48 +71,117 @@ CREATE CLASS QDate
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addDays( nNdays )                   INLINE  Qt_QDate_addDays( ::pPtr, nNdays )
-   METHOD  addMonths( nNmonths )               INLINE  Qt_QDate_addMonths( ::pPtr, nNmonths )
-   METHOD  addYears( nNyears )                 INLINE  Qt_QDate_addYears( ::pPtr, nNyears )
-   METHOD  day()                               INLINE  Qt_QDate_day( ::pPtr )
-   METHOD  dayOfWeek()                         INLINE  Qt_QDate_dayOfWeek( ::pPtr )
-   METHOD  dayOfYear()                         INLINE  Qt_QDate_dayOfYear( ::pPtr )
-   METHOD  daysInMonth()                       INLINE  Qt_QDate_daysInMonth( ::pPtr )
-   METHOD  daysInYear()                        INLINE  Qt_QDate_daysInYear( ::pPtr )
-   METHOD  daysTo( pD )                        INLINE  Qt_QDate_daysTo( ::pPtr, pD )
-   METHOD  getDate( nYear, nMonth, nDay )      INLINE  Qt_QDate_getDate( ::pPtr, nYear, nMonth, nDay )
-   METHOD  isNull()                            INLINE  Qt_QDate_isNull( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QDate_isValid( ::pPtr )
-   METHOD  month()                             INLINE  Qt_QDate_month( ::pPtr )
-   METHOD  setDate( nYear, nMonth, nDay )      INLINE  Qt_QDate_setDate( ::pPtr, nYear, nMonth, nDay )
-   METHOD  toJulianDay()                       INLINE  Qt_QDate_toJulianDay( ::pPtr )
-   METHOD  toString( cFormat )                 INLINE  Qt_QDate_toString( ::pPtr, cFormat )
-   METHOD  toString_1( nFormat )               INLINE  Qt_QDate_toString_1( ::pPtr, nFormat )
-   METHOD  weekNumber( nYearNumber )           INLINE  Qt_QDate_weekNumber( ::pPtr, nYearNumber )
-   METHOD  year()                              INLINE  Qt_QDate_year( ::pPtr )
+   METHOD  addDays( nNdays )
+   METHOD  addMonths( nNmonths )
+   METHOD  addYears( nNyears )
+   METHOD  day()
+   METHOD  dayOfWeek()
+   METHOD  dayOfYear()
+   METHOD  daysInMonth()
+   METHOD  daysInYear()
+   METHOD  daysTo( pD )
+   METHOD  getDate( nYear, nMonth, nDay )
+   METHOD  isNull()
+   METHOD  isValid()
+   METHOD  month()
+   METHOD  setDate( nYear, nMonth, nDay )
+   METHOD  toJulianDay()
+   METHOD  toString( cFormat )
+   METHOD  toString_1( nFormat )
+   METHOD  weekNumber( nYearNumber )
+   METHOD  year()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QDate
-
+METHOD QDate:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QDate( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QDate
-
+METHOD QDate:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QDate:addDays( nNdays )
+   RETURN Qt_QDate_addDays( ::pPtr, nNdays )
+
+
+METHOD QDate:addMonths( nNmonths )
+   RETURN Qt_QDate_addMonths( ::pPtr, nNmonths )
+
+
+METHOD QDate:addYears( nNyears )
+   RETURN Qt_QDate_addYears( ::pPtr, nNyears )
+
+
+METHOD QDate:day()
+   RETURN Qt_QDate_day( ::pPtr )
+
+
+METHOD QDate:dayOfWeek()
+   RETURN Qt_QDate_dayOfWeek( ::pPtr )
+
+
+METHOD QDate:dayOfYear()
+   RETURN Qt_QDate_dayOfYear( ::pPtr )
+
+
+METHOD QDate:daysInMonth()
+   RETURN Qt_QDate_daysInMonth( ::pPtr )
+
+
+METHOD QDate:daysInYear()
+   RETURN Qt_QDate_daysInYear( ::pPtr )
+
+
+METHOD QDate:daysTo( pD )
+   RETURN Qt_QDate_daysTo( ::pPtr, pD )
+
+
+METHOD QDate:getDate( nYear, nMonth, nDay )
+   RETURN Qt_QDate_getDate( ::pPtr, nYear, nMonth, nDay )
+
+
+METHOD QDate:isNull()
+   RETURN Qt_QDate_isNull( ::pPtr )
+
+
+METHOD QDate:isValid()
+   RETURN Qt_QDate_isValid( ::pPtr )
+
+
+METHOD QDate:month()
+   RETURN Qt_QDate_month( ::pPtr )
+
+
+METHOD QDate:setDate( nYear, nMonth, nDay )
+   RETURN Qt_QDate_setDate( ::pPtr, nYear, nMonth, nDay )
+
+
+METHOD QDate:toJulianDay()
+   RETURN Qt_QDate_toJulianDay( ::pPtr )
+
+
+METHOD QDate:toString( cFormat )
+   RETURN Qt_QDate_toString( ::pPtr, cFormat )
+
+
+METHOD QDate:toString_1( nFormat )
+   RETURN Qt_QDate_toString_1( ::pPtr, nFormat )
+
+
+METHOD QDate:weekNumber( nYearNumber )
+   RETURN Qt_QDate_weekNumber( ::pPtr, nYearNumber )
+
+
+METHOD QDate:year()
+   RETURN Qt_QDate_year( ::pPtr )
+

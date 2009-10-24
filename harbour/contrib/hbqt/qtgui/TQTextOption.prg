@@ -71,41 +71,82 @@ CREATE CLASS QTextOption
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  alignment()                         INLINE  Qt_QTextOption_alignment( ::pPtr )
-   METHOD  flags()                             INLINE  Qt_QTextOption_flags( ::pPtr )
-   METHOD  setAlignment( nAlignment )          INLINE  Qt_QTextOption_setAlignment( ::pPtr, nAlignment )
-   METHOD  setFlags( nFlags )                  INLINE  Qt_QTextOption_setFlags( ::pPtr, nFlags )
-   METHOD  setTabStop( nTabStop )              INLINE  Qt_QTextOption_setTabStop( ::pPtr, nTabStop )
-   METHOD  setTextDirection( nDirection )      INLINE  Qt_QTextOption_setTextDirection( ::pPtr, nDirection )
-   METHOD  setUseDesignMetrics( lEnable )      INLINE  Qt_QTextOption_setUseDesignMetrics( ::pPtr, lEnable )
-   METHOD  setWrapMode( nMode )                INLINE  Qt_QTextOption_setWrapMode( ::pPtr, nMode )
-   METHOD  tabStop()                           INLINE  Qt_QTextOption_tabStop( ::pPtr )
-   METHOD  textDirection()                     INLINE  Qt_QTextOption_textDirection( ::pPtr )
-   METHOD  useDesignMetrics()                  INLINE  Qt_QTextOption_useDesignMetrics( ::pPtr )
-   METHOD  wrapMode()                          INLINE  Qt_QTextOption_wrapMode( ::pPtr )
+   METHOD  alignment()
+   METHOD  flags()
+   METHOD  setAlignment( nAlignment )
+   METHOD  setFlags( nFlags )
+   METHOD  setTabStop( nTabStop )
+   METHOD  setTextDirection( nDirection )
+   METHOD  setUseDesignMetrics( lEnable )
+   METHOD  setWrapMode( nMode )
+   METHOD  tabStop()
+   METHOD  textDirection()
+   METHOD  useDesignMetrics()
+   METHOD  wrapMode()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextOption
-
+METHOD QTextOption:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextOption( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextOption
-
+METHOD QTextOption:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextOption:alignment()
+   RETURN Qt_QTextOption_alignment( ::pPtr )
+
+
+METHOD QTextOption:flags()
+   RETURN Qt_QTextOption_flags( ::pPtr )
+
+
+METHOD QTextOption:setAlignment( nAlignment )
+   RETURN Qt_QTextOption_setAlignment( ::pPtr, nAlignment )
+
+
+METHOD QTextOption:setFlags( nFlags )
+   RETURN Qt_QTextOption_setFlags( ::pPtr, nFlags )
+
+
+METHOD QTextOption:setTabStop( nTabStop )
+   RETURN Qt_QTextOption_setTabStop( ::pPtr, nTabStop )
+
+
+METHOD QTextOption:setTextDirection( nDirection )
+   RETURN Qt_QTextOption_setTextDirection( ::pPtr, nDirection )
+
+
+METHOD QTextOption:setUseDesignMetrics( lEnable )
+   RETURN Qt_QTextOption_setUseDesignMetrics( ::pPtr, lEnable )
+
+
+METHOD QTextOption:setWrapMode( nMode )
+   RETURN Qt_QTextOption_setWrapMode( ::pPtr, nMode )
+
+
+METHOD QTextOption:tabStop()
+   RETURN Qt_QTextOption_tabStop( ::pPtr )
+
+
+METHOD QTextOption:textDirection()
+   RETURN Qt_QTextOption_textDirection( ::pPtr )
+
+
+METHOD QTextOption:useDesignMetrics()
+   RETURN Qt_QTextOption_useDesignMetrics( ::pPtr )
+
+
+METHOD QTextOption:wrapMode()
+   RETURN Qt_QTextOption_wrapMode( ::pPtr )
+

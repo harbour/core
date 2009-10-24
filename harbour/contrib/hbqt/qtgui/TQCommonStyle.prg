@@ -76,24 +76,17 @@ CREATE CLASS QCommonStyle INHERIT QStyle
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QCommonStyle
-
+METHOD QCommonStyle:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QCommonStyle( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QCommonStyle
-
+METHOD QCommonStyle:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/

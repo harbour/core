@@ -71,35 +71,52 @@ CREATE CLASS QStyleOptionToolBar INHERIT QStyleOption
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  features()                          INLINE  Qt_QStyleOptionToolBar_features( ::pPtr )
-   METHOD  lineWidth()                         INLINE  Qt_QStyleOptionToolBar_lineWidth( ::pPtr )
-   METHOD  midLineWidth()                      INLINE  Qt_QStyleOptionToolBar_midLineWidth( ::pPtr )
-   METHOD  positionOfLine()                    INLINE  Qt_QStyleOptionToolBar_positionOfLine( ::pPtr )
-   METHOD  positionWithinLine()                INLINE  Qt_QStyleOptionToolBar_positionWithinLine( ::pPtr )
-   METHOD  toolBarArea()                       INLINE  Qt_QStyleOptionToolBar_toolBarArea( ::pPtr )
+   METHOD  features()
+   METHOD  lineWidth()
+   METHOD  midLineWidth()
+   METHOD  positionOfLine()
+   METHOD  positionWithinLine()
+   METHOD  toolBarArea()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyleOptionToolBar
-
+METHOD QStyleOptionToolBar:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyleOptionToolBar( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyleOptionToolBar
-
+METHOD QStyleOptionToolBar:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyleOptionToolBar:features()
+   RETURN Qt_QStyleOptionToolBar_features( ::pPtr )
+
+
+METHOD QStyleOptionToolBar:lineWidth()
+   RETURN Qt_QStyleOptionToolBar_lineWidth( ::pPtr )
+
+
+METHOD QStyleOptionToolBar:midLineWidth()
+   RETURN Qt_QStyleOptionToolBar_midLineWidth( ::pPtr )
+
+
+METHOD QStyleOptionToolBar:positionOfLine()
+   RETURN Qt_QStyleOptionToolBar_positionOfLine( ::pPtr )
+
+
+METHOD QStyleOptionToolBar:positionWithinLine()
+   RETURN Qt_QStyleOptionToolBar_positionWithinLine( ::pPtr )
+
+
+METHOD QStyleOptionToolBar:toolBarArea()
+   RETURN Qt_QStyleOptionToolBar_toolBarArea( ::pPtr )
+

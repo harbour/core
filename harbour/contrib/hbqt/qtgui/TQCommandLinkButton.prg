@@ -71,31 +71,32 @@ CREATE CLASS QCommandLinkButton INHERIT QPushButton
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  description()                       INLINE  Qt_QCommandLinkButton_description( ::pPtr )
-   METHOD  setDescription( cDescription )      INLINE  Qt_QCommandLinkButton_setDescription( ::pPtr, cDescription )
+   METHOD  description()
+   METHOD  setDescription( cDescription )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QCommandLinkButton
-
+METHOD QCommandLinkButton:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QCommandLinkButton( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QCommandLinkButton
-
+METHOD QCommandLinkButton:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QCommandLinkButton:description()
+   RETURN Qt_QCommandLinkButton_description( ::pPtr )
+
+
+METHOD QCommandLinkButton:setDescription( cDescription )
+   RETURN Qt_QCommandLinkButton_setDescription( ::pPtr, cDescription )
+

@@ -71,48 +71,117 @@ CREATE CLASS QMimeData INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  clear()                             INLINE  Qt_QMimeData_clear( ::pPtr )
-   METHOD  colorData()                         INLINE  Qt_QMimeData_colorData( ::pPtr )
-   METHOD  data( cMimeType )                   INLINE  Qt_QMimeData_data( ::pPtr, cMimeType )
-   METHOD  formats()                           INLINE  Qt_QMimeData_formats( ::pPtr )
-   METHOD  hasColor()                          INLINE  Qt_QMimeData_hasColor( ::pPtr )
-   METHOD  hasFormat( cMimeType )              INLINE  Qt_QMimeData_hasFormat( ::pPtr, cMimeType )
-   METHOD  hasHtml()                           INLINE  Qt_QMimeData_hasHtml( ::pPtr )
-   METHOD  hasImage()                          INLINE  Qt_QMimeData_hasImage( ::pPtr )
-   METHOD  hasText()                           INLINE  Qt_QMimeData_hasText( ::pPtr )
-   METHOD  hasUrls()                           INLINE  Qt_QMimeData_hasUrls( ::pPtr )
-   METHOD  html()                              INLINE  Qt_QMimeData_html( ::pPtr )
-   METHOD  imageData()                         INLINE  Qt_QMimeData_imageData( ::pPtr )
-   METHOD  removeFormat( cMimeType )           INLINE  Qt_QMimeData_removeFormat( ::pPtr, cMimeType )
-   METHOD  setColorData( pColor )              INLINE  Qt_QMimeData_setColorData( ::pPtr, pColor )
-   METHOD  setData( cMimeType, pData )         INLINE  Qt_QMimeData_setData( ::pPtr, cMimeType, pData )
-   METHOD  setHtml( cHtml )                    INLINE  Qt_QMimeData_setHtml( ::pPtr, cHtml )
-   METHOD  setImageData( pImage )              INLINE  Qt_QMimeData_setImageData( ::pPtr, pImage )
-   METHOD  setText( cText )                    INLINE  Qt_QMimeData_setText( ::pPtr, cText )
-   METHOD  text()                              INLINE  Qt_QMimeData_text( ::pPtr )
+   METHOD  clear()
+   METHOD  colorData()
+   METHOD  data( cMimeType )
+   METHOD  formats()
+   METHOD  hasColor()
+   METHOD  hasFormat( cMimeType )
+   METHOD  hasHtml()
+   METHOD  hasImage()
+   METHOD  hasText()
+   METHOD  hasUrls()
+   METHOD  html()
+   METHOD  imageData()
+   METHOD  removeFormat( cMimeType )
+   METHOD  setColorData( pColor )
+   METHOD  setData( cMimeType, pData )
+   METHOD  setHtml( cHtml )
+   METHOD  setImageData( pImage )
+   METHOD  setText( cText )
+   METHOD  text()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QMimeData
-
+METHOD QMimeData:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QMimeData( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QMimeData
-
+METHOD QMimeData:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QMimeData:clear()
+   RETURN Qt_QMimeData_clear( ::pPtr )
+
+
+METHOD QMimeData:colorData()
+   RETURN Qt_QMimeData_colorData( ::pPtr )
+
+
+METHOD QMimeData:data( cMimeType )
+   RETURN Qt_QMimeData_data( ::pPtr, cMimeType )
+
+
+METHOD QMimeData:formats()
+   RETURN Qt_QMimeData_formats( ::pPtr )
+
+
+METHOD QMimeData:hasColor()
+   RETURN Qt_QMimeData_hasColor( ::pPtr )
+
+
+METHOD QMimeData:hasFormat( cMimeType )
+   RETURN Qt_QMimeData_hasFormat( ::pPtr, cMimeType )
+
+
+METHOD QMimeData:hasHtml()
+   RETURN Qt_QMimeData_hasHtml( ::pPtr )
+
+
+METHOD QMimeData:hasImage()
+   RETURN Qt_QMimeData_hasImage( ::pPtr )
+
+
+METHOD QMimeData:hasText()
+   RETURN Qt_QMimeData_hasText( ::pPtr )
+
+
+METHOD QMimeData:hasUrls()
+   RETURN Qt_QMimeData_hasUrls( ::pPtr )
+
+
+METHOD QMimeData:html()
+   RETURN Qt_QMimeData_html( ::pPtr )
+
+
+METHOD QMimeData:imageData()
+   RETURN Qt_QMimeData_imageData( ::pPtr )
+
+
+METHOD QMimeData:removeFormat( cMimeType )
+   RETURN Qt_QMimeData_removeFormat( ::pPtr, cMimeType )
+
+
+METHOD QMimeData:setColorData( pColor )
+   RETURN Qt_QMimeData_setColorData( ::pPtr, pColor )
+
+
+METHOD QMimeData:setData( cMimeType, pData )
+   RETURN Qt_QMimeData_setData( ::pPtr, cMimeType, pData )
+
+
+METHOD QMimeData:setHtml( cHtml )
+   RETURN Qt_QMimeData_setHtml( ::pPtr, cHtml )
+
+
+METHOD QMimeData:setImageData( pImage )
+   RETURN Qt_QMimeData_setImageData( ::pPtr, pImage )
+
+
+METHOD QMimeData:setText( cText )
+   RETURN Qt_QMimeData_setText( ::pPtr, cText )
+
+
+METHOD QMimeData:text()
+   RETURN Qt_QMimeData_text( ::pPtr )
+

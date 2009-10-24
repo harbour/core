@@ -71,84 +71,297 @@ CREATE CLASS QPrinter INHERIT QPaintDevice
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  abort()                             INLINE  Qt_QPrinter_abort( ::pPtr )
-   METHOD  collateCopies()                     INLINE  Qt_QPrinter_collateCopies( ::pPtr )
-   METHOD  colorMode()                         INLINE  Qt_QPrinter_colorMode( ::pPtr )
-   METHOD  creator()                           INLINE  Qt_QPrinter_creator( ::pPtr )
-   METHOD  docName()                           INLINE  Qt_QPrinter_docName( ::pPtr )
-   METHOD  doubleSidedPrinting()               INLINE  Qt_QPrinter_doubleSidedPrinting( ::pPtr )
-   METHOD  duplex()                            INLINE  Qt_QPrinter_duplex( ::pPtr )
-   METHOD  fontEmbeddingEnabled()              INLINE  Qt_QPrinter_fontEmbeddingEnabled( ::pPtr )
-   METHOD  fromPage()                          INLINE  Qt_QPrinter_fromPage( ::pPtr )
-   METHOD  fullPage()                          INLINE  Qt_QPrinter_fullPage( ::pPtr )
-   METHOD  getPageMargins( nLeft, nTop, nRight, nBottom, nUnit )  INLINE  Qt_QPrinter_getPageMargins( ::pPtr, nLeft, nTop, nRight, nBottom, nUnit )
-   METHOD  isValid()                           INLINE  Qt_QPrinter_isValid( ::pPtr )
-   METHOD  newPage()                           INLINE  Qt_QPrinter_newPage( ::pPtr )
-   METHOD  numCopies()                         INLINE  Qt_QPrinter_numCopies( ::pPtr )
-   METHOD  orientation()                       INLINE  Qt_QPrinter_orientation( ::pPtr )
-   METHOD  outputFileName()                    INLINE  Qt_QPrinter_outputFileName( ::pPtr )
-   METHOD  outputFormat()                      INLINE  Qt_QPrinter_outputFormat( ::pPtr )
-   METHOD  pageOrder()                         INLINE  Qt_QPrinter_pageOrder( ::pPtr )
-   METHOD  pageRect()                          INLINE  Qt_QPrinter_pageRect( ::pPtr )
-   METHOD  pageRect_1( nUnit )                 INLINE  Qt_QPrinter_pageRect_1( ::pPtr, nUnit )
-   METHOD  paintEngine()                       INLINE  Qt_QPrinter_paintEngine( ::pPtr )
-   METHOD  paperRect()                         INLINE  Qt_QPrinter_paperRect( ::pPtr )
-   METHOD  paperRect_1( nUnit )                INLINE  Qt_QPrinter_paperRect_1( ::pPtr, nUnit )
-   METHOD  paperSize()                         INLINE  Qt_QPrinter_paperSize( ::pPtr )
-   METHOD  paperSize_1( nUnit )                INLINE  Qt_QPrinter_paperSize_1( ::pPtr, nUnit )
-   METHOD  paperSource()                       INLINE  Qt_QPrinter_paperSource( ::pPtr )
-   METHOD  printEngine()                       INLINE  Qt_QPrinter_printEngine( ::pPtr )
-   METHOD  printProgram()                      INLINE  Qt_QPrinter_printProgram( ::pPtr )
-   METHOD  printRange()                        INLINE  Qt_QPrinter_printRange( ::pPtr )
-   METHOD  printerName()                       INLINE  Qt_QPrinter_printerName( ::pPtr )
-   METHOD  printerState()                      INLINE  Qt_QPrinter_printerState( ::pPtr )
-   METHOD  resolution()                        INLINE  Qt_QPrinter_resolution( ::pPtr )
-   METHOD  setCollateCopies( lCollate )        INLINE  Qt_QPrinter_setCollateCopies( ::pPtr, lCollate )
-   METHOD  setColorMode( nNewColorMode )       INLINE  Qt_QPrinter_setColorMode( ::pPtr, nNewColorMode )
-   METHOD  setCreator( cCreator )              INLINE  Qt_QPrinter_setCreator( ::pPtr, cCreator )
-   METHOD  setDocName( cName )                 INLINE  Qt_QPrinter_setDocName( ::pPtr, cName )
-   METHOD  setDoubleSidedPrinting( lDoubleSided )  INLINE  Qt_QPrinter_setDoubleSidedPrinting( ::pPtr, lDoubleSided )
-   METHOD  setDuplex( nDuplex )                INLINE  Qt_QPrinter_setDuplex( ::pPtr, nDuplex )
-   METHOD  setFontEmbeddingEnabled( lEnable )  INLINE  Qt_QPrinter_setFontEmbeddingEnabled( ::pPtr, lEnable )
-   METHOD  setFromTo( nFrom, nTo )             INLINE  Qt_QPrinter_setFromTo( ::pPtr, nFrom, nTo )
-   METHOD  setFullPage( lFp )                  INLINE  Qt_QPrinter_setFullPage( ::pPtr, lFp )
-   METHOD  setNumCopies( nNumCopies )          INLINE  Qt_QPrinter_setNumCopies( ::pPtr, nNumCopies )
-   METHOD  setOrientation( nOrientation )      INLINE  Qt_QPrinter_setOrientation( ::pPtr, nOrientation )
-   METHOD  setOutputFileName( cFileName )      INLINE  Qt_QPrinter_setOutputFileName( ::pPtr, cFileName )
-   METHOD  setOutputFormat( nFormat )          INLINE  Qt_QPrinter_setOutputFormat( ::pPtr, nFormat )
-   METHOD  setPageMargins( nLeft, nTop, nRight, nBottom, nUnit )  INLINE  Qt_QPrinter_setPageMargins( ::pPtr, nLeft, nTop, nRight, nBottom, nUnit )
-   METHOD  setPageOrder( nPageOrder )          INLINE  Qt_QPrinter_setPageOrder( ::pPtr, nPageOrder )
-   METHOD  setPaperSize( nNewPaperSize )       INLINE  Qt_QPrinter_setPaperSize( ::pPtr, nNewPaperSize )
-   METHOD  setPaperSize_1( pPaperSize, nUnit )  INLINE  Qt_QPrinter_setPaperSize_1( ::pPtr, pPaperSize, nUnit )
-   METHOD  setPaperSource( nSource )           INLINE  Qt_QPrinter_setPaperSource( ::pPtr, nSource )
-   METHOD  setPrintProgram( cPrintProg )       INLINE  Qt_QPrinter_setPrintProgram( ::pPtr, cPrintProg )
-   METHOD  setPrintRange( nRange )             INLINE  Qt_QPrinter_setPrintRange( ::pPtr, nRange )
-   METHOD  setPrinterName( cName )             INLINE  Qt_QPrinter_setPrinterName( ::pPtr, cName )
-   METHOD  setResolution( nDpi )               INLINE  Qt_QPrinter_setResolution( ::pPtr, nDpi )
-   METHOD  toPage()                            INLINE  Qt_QPrinter_toPage( ::pPtr )
+   METHOD  abort()
+   METHOD  collateCopies()
+   METHOD  colorMode()
+   METHOD  creator()
+   METHOD  docName()
+   METHOD  doubleSidedPrinting()
+   METHOD  duplex()
+   METHOD  fontEmbeddingEnabled()
+   METHOD  fromPage()
+   METHOD  fullPage()
+   METHOD  getPageMargins( nLeft, nTop, nRight, nBottom, nUnit )
+   METHOD  isValid()
+   METHOD  newPage()
+   METHOD  numCopies()
+   METHOD  orientation()
+   METHOD  outputFileName()
+   METHOD  outputFormat()
+   METHOD  pageOrder()
+   METHOD  pageRect()
+   METHOD  pageRect_1( nUnit )
+   METHOD  paintEngine()
+   METHOD  paperRect()
+   METHOD  paperRect_1( nUnit )
+   METHOD  paperSize()
+   METHOD  paperSize_1( nUnit )
+   METHOD  paperSource()
+   METHOD  printEngine()
+   METHOD  printProgram()
+   METHOD  printRange()
+   METHOD  printerName()
+   METHOD  printerState()
+   METHOD  resolution()
+   METHOD  setCollateCopies( lCollate )
+   METHOD  setColorMode( nNewColorMode )
+   METHOD  setCreator( cCreator )
+   METHOD  setDocName( cName )
+   METHOD  setDoubleSidedPrinting( lDoubleSided )
+   METHOD  setDuplex( nDuplex )
+   METHOD  setFontEmbeddingEnabled( lEnable )
+   METHOD  setFromTo( nFrom, nTo )
+   METHOD  setFullPage( lFp )
+   METHOD  setNumCopies( nNumCopies )
+   METHOD  setOrientation( nOrientation )
+   METHOD  setOutputFileName( cFileName )
+   METHOD  setOutputFormat( nFormat )
+   METHOD  setPageMargins( nLeft, nTop, nRight, nBottom, nUnit )
+   METHOD  setPageOrder( nPageOrder )
+   METHOD  setPaperSize( nNewPaperSize )
+   METHOD  setPaperSize_1( pPaperSize, nUnit )
+   METHOD  setPaperSource( nSource )
+   METHOD  setPrintProgram( cPrintProg )
+   METHOD  setPrintRange( nRange )
+   METHOD  setPrinterName( cName )
+   METHOD  setResolution( nDpi )
+   METHOD  toPage()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QPrinter
-
+METHOD QPrinter:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QPrinter( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QPrinter
-
+METHOD QPrinter:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QPrinter:abort()
+   RETURN Qt_QPrinter_abort( ::pPtr )
+
+
+METHOD QPrinter:collateCopies()
+   RETURN Qt_QPrinter_collateCopies( ::pPtr )
+
+
+METHOD QPrinter:colorMode()
+   RETURN Qt_QPrinter_colorMode( ::pPtr )
+
+
+METHOD QPrinter:creator()
+   RETURN Qt_QPrinter_creator( ::pPtr )
+
+
+METHOD QPrinter:docName()
+   RETURN Qt_QPrinter_docName( ::pPtr )
+
+
+METHOD QPrinter:doubleSidedPrinting()
+   RETURN Qt_QPrinter_doubleSidedPrinting( ::pPtr )
+
+
+METHOD QPrinter:duplex()
+   RETURN Qt_QPrinter_duplex( ::pPtr )
+
+
+METHOD QPrinter:fontEmbeddingEnabled()
+   RETURN Qt_QPrinter_fontEmbeddingEnabled( ::pPtr )
+
+
+METHOD QPrinter:fromPage()
+   RETURN Qt_QPrinter_fromPage( ::pPtr )
+
+
+METHOD QPrinter:fullPage()
+   RETURN Qt_QPrinter_fullPage( ::pPtr )
+
+
+METHOD QPrinter:getPageMargins( nLeft, nTop, nRight, nBottom, nUnit )
+   RETURN Qt_QPrinter_getPageMargins( ::pPtr, nLeft, nTop, nRight, nBottom, nUnit )
+
+
+METHOD QPrinter:isValid()
+   RETURN Qt_QPrinter_isValid( ::pPtr )
+
+
+METHOD QPrinter:newPage()
+   RETURN Qt_QPrinter_newPage( ::pPtr )
+
+
+METHOD QPrinter:numCopies()
+   RETURN Qt_QPrinter_numCopies( ::pPtr )
+
+
+METHOD QPrinter:orientation()
+   RETURN Qt_QPrinter_orientation( ::pPtr )
+
+
+METHOD QPrinter:outputFileName()
+   RETURN Qt_QPrinter_outputFileName( ::pPtr )
+
+
+METHOD QPrinter:outputFormat()
+   RETURN Qt_QPrinter_outputFormat( ::pPtr )
+
+
+METHOD QPrinter:pageOrder()
+   RETURN Qt_QPrinter_pageOrder( ::pPtr )
+
+
+METHOD QPrinter:pageRect()
+   RETURN Qt_QPrinter_pageRect( ::pPtr )
+
+
+METHOD QPrinter:pageRect_1( nUnit )
+   RETURN Qt_QPrinter_pageRect_1( ::pPtr, nUnit )
+
+
+METHOD QPrinter:paintEngine()
+   RETURN Qt_QPrinter_paintEngine( ::pPtr )
+
+
+METHOD QPrinter:paperRect()
+   RETURN Qt_QPrinter_paperRect( ::pPtr )
+
+
+METHOD QPrinter:paperRect_1( nUnit )
+   RETURN Qt_QPrinter_paperRect_1( ::pPtr, nUnit )
+
+
+METHOD QPrinter:paperSize()
+   RETURN Qt_QPrinter_paperSize( ::pPtr )
+
+
+METHOD QPrinter:paperSize_1( nUnit )
+   RETURN Qt_QPrinter_paperSize_1( ::pPtr, nUnit )
+
+
+METHOD QPrinter:paperSource()
+   RETURN Qt_QPrinter_paperSource( ::pPtr )
+
+
+METHOD QPrinter:printEngine()
+   RETURN Qt_QPrinter_printEngine( ::pPtr )
+
+
+METHOD QPrinter:printProgram()
+   RETURN Qt_QPrinter_printProgram( ::pPtr )
+
+
+METHOD QPrinter:printRange()
+   RETURN Qt_QPrinter_printRange( ::pPtr )
+
+
+METHOD QPrinter:printerName()
+   RETURN Qt_QPrinter_printerName( ::pPtr )
+
+
+METHOD QPrinter:printerState()
+   RETURN Qt_QPrinter_printerState( ::pPtr )
+
+
+METHOD QPrinter:resolution()
+   RETURN Qt_QPrinter_resolution( ::pPtr )
+
+
+METHOD QPrinter:setCollateCopies( lCollate )
+   RETURN Qt_QPrinter_setCollateCopies( ::pPtr, lCollate )
+
+
+METHOD QPrinter:setColorMode( nNewColorMode )
+   RETURN Qt_QPrinter_setColorMode( ::pPtr, nNewColorMode )
+
+
+METHOD QPrinter:setCreator( cCreator )
+   RETURN Qt_QPrinter_setCreator( ::pPtr, cCreator )
+
+
+METHOD QPrinter:setDocName( cName )
+   RETURN Qt_QPrinter_setDocName( ::pPtr, cName )
+
+
+METHOD QPrinter:setDoubleSidedPrinting( lDoubleSided )
+   RETURN Qt_QPrinter_setDoubleSidedPrinting( ::pPtr, lDoubleSided )
+
+
+METHOD QPrinter:setDuplex( nDuplex )
+   RETURN Qt_QPrinter_setDuplex( ::pPtr, nDuplex )
+
+
+METHOD QPrinter:setFontEmbeddingEnabled( lEnable )
+   RETURN Qt_QPrinter_setFontEmbeddingEnabled( ::pPtr, lEnable )
+
+
+METHOD QPrinter:setFromTo( nFrom, nTo )
+   RETURN Qt_QPrinter_setFromTo( ::pPtr, nFrom, nTo )
+
+
+METHOD QPrinter:setFullPage( lFp )
+   RETURN Qt_QPrinter_setFullPage( ::pPtr, lFp )
+
+
+METHOD QPrinter:setNumCopies( nNumCopies )
+   RETURN Qt_QPrinter_setNumCopies( ::pPtr, nNumCopies )
+
+
+METHOD QPrinter:setOrientation( nOrientation )
+   RETURN Qt_QPrinter_setOrientation( ::pPtr, nOrientation )
+
+
+METHOD QPrinter:setOutputFileName( cFileName )
+   RETURN Qt_QPrinter_setOutputFileName( ::pPtr, cFileName )
+
+
+METHOD QPrinter:setOutputFormat( nFormat )
+   RETURN Qt_QPrinter_setOutputFormat( ::pPtr, nFormat )
+
+
+METHOD QPrinter:setPageMargins( nLeft, nTop, nRight, nBottom, nUnit )
+   RETURN Qt_QPrinter_setPageMargins( ::pPtr, nLeft, nTop, nRight, nBottom, nUnit )
+
+
+METHOD QPrinter:setPageOrder( nPageOrder )
+   RETURN Qt_QPrinter_setPageOrder( ::pPtr, nPageOrder )
+
+
+METHOD QPrinter:setPaperSize( nNewPaperSize )
+   RETURN Qt_QPrinter_setPaperSize( ::pPtr, nNewPaperSize )
+
+
+METHOD QPrinter:setPaperSize_1( pPaperSize, nUnit )
+   RETURN Qt_QPrinter_setPaperSize_1( ::pPtr, pPaperSize, nUnit )
+
+
+METHOD QPrinter:setPaperSource( nSource )
+   RETURN Qt_QPrinter_setPaperSource( ::pPtr, nSource )
+
+
+METHOD QPrinter:setPrintProgram( cPrintProg )
+   RETURN Qt_QPrinter_setPrintProgram( ::pPtr, cPrintProg )
+
+
+METHOD QPrinter:setPrintRange( nRange )
+   RETURN Qt_QPrinter_setPrintRange( ::pPtr, nRange )
+
+
+METHOD QPrinter:setPrinterName( cName )
+   RETURN Qt_QPrinter_setPrinterName( ::pPtr, cName )
+
+
+METHOD QPrinter:setResolution( nDpi )
+   RETURN Qt_QPrinter_setResolution( ::pPtr, nDpi )
+
+
+METHOD QPrinter:toPage()
+   RETURN Qt_QPrinter_toPage( ::pPtr )
+

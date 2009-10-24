@@ -76,24 +76,17 @@ CREATE CLASS QTextBlockGroup INHERIT QTextObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextBlockGroup
-
+METHOD QTextBlockGroup:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextBlockGroup( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextBlockGroup
-
+METHOD QTextBlockGroup:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/

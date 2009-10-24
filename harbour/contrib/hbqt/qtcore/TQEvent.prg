@@ -71,36 +71,57 @@ CREATE CLASS QEvent
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  accept()                            INLINE  Qt_QEvent_accept( ::pPtr )
-   METHOD  ignore()                            INLINE  Qt_QEvent_ignore( ::pPtr )
-   METHOD  isAccepted()                        INLINE  Qt_QEvent_isAccepted( ::pPtr )
-   METHOD  setAccepted( lAccepted )            INLINE  Qt_QEvent_setAccepted( ::pPtr, lAccepted )
-   METHOD  spontaneous()                       INLINE  Qt_QEvent_spontaneous( ::pPtr )
-   METHOD  type()                              INLINE  Qt_QEvent_type( ::pPtr )
-   METHOD  registerEventType( nHint )          INLINE  Qt_QEvent_registerEventType( ::pPtr, nHint )
+   METHOD  accept()
+   METHOD  ignore()
+   METHOD  isAccepted()
+   METHOD  setAccepted( lAccepted )
+   METHOD  spontaneous()
+   METHOD  type()
+   METHOD  registerEventType( nHint )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QEvent
-
+METHOD QEvent:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QEvent( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QEvent
-
+METHOD QEvent:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QEvent:accept()
+   RETURN Qt_QEvent_accept( ::pPtr )
+
+
+METHOD QEvent:ignore()
+   RETURN Qt_QEvent_ignore( ::pPtr )
+
+
+METHOD QEvent:isAccepted()
+   RETURN Qt_QEvent_isAccepted( ::pPtr )
+
+
+METHOD QEvent:setAccepted( lAccepted )
+   RETURN Qt_QEvent_setAccepted( ::pPtr, lAccepted )
+
+
+METHOD QEvent:spontaneous()
+   RETURN Qt_QEvent_spontaneous( ::pPtr )
+
+
+METHOD QEvent:type()
+   RETURN Qt_QEvent_type( ::pPtr )
+
+
+METHOD QEvent:registerEventType( nHint )
+   RETURN Qt_QEvent_registerEventType( ::pPtr, nHint )
+

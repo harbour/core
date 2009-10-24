@@ -71,32 +71,37 @@ CREATE CLASS QTextLength
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  rawValue()                          INLINE  Qt_QTextLength_rawValue( ::pPtr )
-   METHOD  type()                              INLINE  Qt_QTextLength_type( ::pPtr )
-   METHOD  value( nMaximumLength )             INLINE  Qt_QTextLength_value( ::pPtr, nMaximumLength )
+   METHOD  rawValue()
+   METHOD  type()
+   METHOD  value( nMaximumLength )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextLength
-
+METHOD QTextLength:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextLength( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextLength
-
+METHOD QTextLength:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextLength:rawValue()
+   RETURN Qt_QTextLength_rawValue( ::pPtr )
+
+
+METHOD QTextLength:type()
+   RETURN Qt_QTextLength_type( ::pPtr )
+
+
+METHOD QTextLength:value( nMaximumLength )
+   RETURN Qt_QTextLength_value( ::pPtr, nMaximumLength )
+

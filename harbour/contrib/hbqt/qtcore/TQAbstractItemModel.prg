@@ -71,64 +71,185 @@ CREATE CLASS QAbstractItemModel INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  buddy( pIndex )                     INLINE  Qt_QAbstractItemModel_buddy( ::pPtr, pIndex )
-   METHOD  canFetchMore( pParent )             INLINE  Qt_QAbstractItemModel_canFetchMore( ::pPtr, pParent )
-   METHOD  columnCount( pParent )              INLINE  Qt_QAbstractItemModel_columnCount( ::pPtr, pParent )
-   METHOD  data( pIndex, nRole )               INLINE  Qt_QAbstractItemModel_data( ::pPtr, pIndex, nRole )
-   METHOD  dropMimeData( pData, nAction, nRow, nColumn, pParent )  INLINE  Qt_QAbstractItemModel_dropMimeData( ::pPtr, pData, nAction, nRow, nColumn, pParent )
-   METHOD  fetchMore( pParent )                INLINE  Qt_QAbstractItemModel_fetchMore( ::pPtr, pParent )
-   METHOD  flags( pIndex )                     INLINE  Qt_QAbstractItemModel_flags( ::pPtr, pIndex )
-   METHOD  hasChildren( pParent )              INLINE  Qt_QAbstractItemModel_hasChildren( ::pPtr, pParent )
-   METHOD  hasIndex( nRow, nColumn, pParent )  INLINE  Qt_QAbstractItemModel_hasIndex( ::pPtr, nRow, nColumn, pParent )
-   METHOD  headerData( nSection, nOrientation, nRole )  INLINE  Qt_QAbstractItemModel_headerData( ::pPtr, nSection, nOrientation, nRole )
-   METHOD  index( nRow, nColumn, pParent )     INLINE  Qt_QAbstractItemModel_index( ::pPtr, nRow, nColumn, pParent )
-   METHOD  insertColumn( nColumn, pParent )    INLINE  Qt_QAbstractItemModel_insertColumn( ::pPtr, nColumn, pParent )
-   METHOD  insertColumns( nColumn, nCount, pParent )  INLINE  Qt_QAbstractItemModel_insertColumns( ::pPtr, nColumn, nCount, pParent )
-   METHOD  insertRow( nRow, pParent )          INLINE  Qt_QAbstractItemModel_insertRow( ::pPtr, nRow, pParent )
-   METHOD  insertRows( nRow, nCount, pParent )  INLINE  Qt_QAbstractItemModel_insertRows( ::pPtr, nRow, nCount, pParent )
-   METHOD  mimeTypes()                         INLINE  Qt_QAbstractItemModel_mimeTypes( ::pPtr )
-   METHOD  parent( pIndex )                    INLINE  Qt_QAbstractItemModel_parent( ::pPtr, pIndex )
-   METHOD  removeColumn( nColumn, pParent )    INLINE  Qt_QAbstractItemModel_removeColumn( ::pPtr, nColumn, pParent )
-   METHOD  removeColumns( nColumn, nCount, pParent )  INLINE  Qt_QAbstractItemModel_removeColumns( ::pPtr, nColumn, nCount, pParent )
-   METHOD  removeRow( nRow, pParent )          INLINE  Qt_QAbstractItemModel_removeRow( ::pPtr, nRow, pParent )
-   METHOD  removeRows( nRow, nCount, pParent )  INLINE  Qt_QAbstractItemModel_removeRows( ::pPtr, nRow, nCount, pParent )
-   METHOD  rowCount( pParent )                 INLINE  Qt_QAbstractItemModel_rowCount( ::pPtr, pParent )
-   METHOD  setData( pIndex, pValue, nRole )    INLINE  Qt_QAbstractItemModel_setData( ::pPtr, pIndex, pValue, nRole )
-   METHOD  setHeaderData( nSection, nOrientation, pValue, nRole )  INLINE  Qt_QAbstractItemModel_setHeaderData( ::pPtr, nSection, nOrientation, pValue, nRole )
-   METHOD  setSupportedDragActions( nActions )  INLINE  Qt_QAbstractItemModel_setSupportedDragActions( ::pPtr, nActions )
-   METHOD  sibling( nRow, nColumn, pIndex )    INLINE  Qt_QAbstractItemModel_sibling( ::pPtr, nRow, nColumn, pIndex )
-   METHOD  sort( nColumn, nOrder )             INLINE  Qt_QAbstractItemModel_sort( ::pPtr, nColumn, nOrder )
-   METHOD  span( pIndex )                      INLINE  Qt_QAbstractItemModel_span( ::pPtr, pIndex )
-   METHOD  supportedDragActions()              INLINE  Qt_QAbstractItemModel_supportedDragActions( ::pPtr )
-   METHOD  supportedDropActions()              INLINE  Qt_QAbstractItemModel_supportedDropActions( ::pPtr )
-   METHOD  revert()                            INLINE  Qt_QAbstractItemModel_revert( ::pPtr )
-   METHOD  submit()                            INLINE  Qt_QAbstractItemModel_submit( ::pPtr )
+   METHOD  buddy( pIndex )
+   METHOD  canFetchMore( pParent )
+   METHOD  columnCount( pParent )
+   METHOD  data( pIndex, nRole )
+   METHOD  dropMimeData( pData, nAction, nRow, nColumn, pParent )
+   METHOD  fetchMore( pParent )
+   METHOD  flags( pIndex )
+   METHOD  hasChildren( pParent )
+   METHOD  hasIndex( nRow, nColumn, pParent )
+   METHOD  headerData( nSection, nOrientation, nRole )
+   METHOD  index( nRow, nColumn, pParent )
+   METHOD  insertColumn( nColumn, pParent )
+   METHOD  insertColumns( nColumn, nCount, pParent )
+   METHOD  insertRow( nRow, pParent )
+   METHOD  insertRows( nRow, nCount, pParent )
+   METHOD  mimeTypes()
+   METHOD  parent( pIndex )
+   METHOD  removeColumn( nColumn, pParent )
+   METHOD  removeColumns( nColumn, nCount, pParent )
+   METHOD  removeRow( nRow, pParent )
+   METHOD  removeRows( nRow, nCount, pParent )
+   METHOD  rowCount( pParent )
+   METHOD  setData( pIndex, pValue, nRole )
+   METHOD  setHeaderData( nSection, nOrientation, pValue, nRole )
+   METHOD  setSupportedDragActions( nActions )
+   METHOD  sibling( nRow, nColumn, pIndex )
+   METHOD  sort( nColumn, nOrder )
+   METHOD  span( pIndex )
+   METHOD  supportedDragActions()
+   METHOD  supportedDropActions()
+   METHOD  revert()
+   METHOD  submit()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QAbstractItemModel
-
+METHOD QAbstractItemModel:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QAbstractItemModel( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QAbstractItemModel
-
+METHOD QAbstractItemModel:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QAbstractItemModel:buddy( pIndex )
+   RETURN Qt_QAbstractItemModel_buddy( ::pPtr, pIndex )
+
+
+METHOD QAbstractItemModel:canFetchMore( pParent )
+   RETURN Qt_QAbstractItemModel_canFetchMore( ::pPtr, pParent )
+
+
+METHOD QAbstractItemModel:columnCount( pParent )
+   RETURN Qt_QAbstractItemModel_columnCount( ::pPtr, pParent )
+
+
+METHOD QAbstractItemModel:data( pIndex, nRole )
+   RETURN Qt_QAbstractItemModel_data( ::pPtr, pIndex, nRole )
+
+
+METHOD QAbstractItemModel:dropMimeData( pData, nAction, nRow, nColumn, pParent )
+   RETURN Qt_QAbstractItemModel_dropMimeData( ::pPtr, pData, nAction, nRow, nColumn, pParent )
+
+
+METHOD QAbstractItemModel:fetchMore( pParent )
+   RETURN Qt_QAbstractItemModel_fetchMore( ::pPtr, pParent )
+
+
+METHOD QAbstractItemModel:flags( pIndex )
+   RETURN Qt_QAbstractItemModel_flags( ::pPtr, pIndex )
+
+
+METHOD QAbstractItemModel:hasChildren( pParent )
+   RETURN Qt_QAbstractItemModel_hasChildren( ::pPtr, pParent )
+
+
+METHOD QAbstractItemModel:hasIndex( nRow, nColumn, pParent )
+   RETURN Qt_QAbstractItemModel_hasIndex( ::pPtr, nRow, nColumn, pParent )
+
+
+METHOD QAbstractItemModel:headerData( nSection, nOrientation, nRole )
+   RETURN Qt_QAbstractItemModel_headerData( ::pPtr, nSection, nOrientation, nRole )
+
+
+METHOD QAbstractItemModel:index( nRow, nColumn, pParent )
+   RETURN Qt_QAbstractItemModel_index( ::pPtr, nRow, nColumn, pParent )
+
+
+METHOD QAbstractItemModel:insertColumn( nColumn, pParent )
+   RETURN Qt_QAbstractItemModel_insertColumn( ::pPtr, nColumn, pParent )
+
+
+METHOD QAbstractItemModel:insertColumns( nColumn, nCount, pParent )
+   RETURN Qt_QAbstractItemModel_insertColumns( ::pPtr, nColumn, nCount, pParent )
+
+
+METHOD QAbstractItemModel:insertRow( nRow, pParent )
+   RETURN Qt_QAbstractItemModel_insertRow( ::pPtr, nRow, pParent )
+
+
+METHOD QAbstractItemModel:insertRows( nRow, nCount, pParent )
+   RETURN Qt_QAbstractItemModel_insertRows( ::pPtr, nRow, nCount, pParent )
+
+
+METHOD QAbstractItemModel:mimeTypes()
+   RETURN Qt_QAbstractItemModel_mimeTypes( ::pPtr )
+
+
+METHOD QAbstractItemModel:parent( pIndex )
+   RETURN Qt_QAbstractItemModel_parent( ::pPtr, pIndex )
+
+
+METHOD QAbstractItemModel:removeColumn( nColumn, pParent )
+   RETURN Qt_QAbstractItemModel_removeColumn( ::pPtr, nColumn, pParent )
+
+
+METHOD QAbstractItemModel:removeColumns( nColumn, nCount, pParent )
+   RETURN Qt_QAbstractItemModel_removeColumns( ::pPtr, nColumn, nCount, pParent )
+
+
+METHOD QAbstractItemModel:removeRow( nRow, pParent )
+   RETURN Qt_QAbstractItemModel_removeRow( ::pPtr, nRow, pParent )
+
+
+METHOD QAbstractItemModel:removeRows( nRow, nCount, pParent )
+   RETURN Qt_QAbstractItemModel_removeRows( ::pPtr, nRow, nCount, pParent )
+
+
+METHOD QAbstractItemModel:rowCount( pParent )
+   RETURN Qt_QAbstractItemModel_rowCount( ::pPtr, pParent )
+
+
+METHOD QAbstractItemModel:setData( pIndex, pValue, nRole )
+   RETURN Qt_QAbstractItemModel_setData( ::pPtr, pIndex, pValue, nRole )
+
+
+METHOD QAbstractItemModel:setHeaderData( nSection, nOrientation, pValue, nRole )
+   RETURN Qt_QAbstractItemModel_setHeaderData( ::pPtr, nSection, nOrientation, pValue, nRole )
+
+
+METHOD QAbstractItemModel:setSupportedDragActions( nActions )
+   RETURN Qt_QAbstractItemModel_setSupportedDragActions( ::pPtr, nActions )
+
+
+METHOD QAbstractItemModel:sibling( nRow, nColumn, pIndex )
+   RETURN Qt_QAbstractItemModel_sibling( ::pPtr, nRow, nColumn, pIndex )
+
+
+METHOD QAbstractItemModel:sort( nColumn, nOrder )
+   RETURN Qt_QAbstractItemModel_sort( ::pPtr, nColumn, nOrder )
+
+
+METHOD QAbstractItemModel:span( pIndex )
+   RETURN Qt_QAbstractItemModel_span( ::pPtr, pIndex )
+
+
+METHOD QAbstractItemModel:supportedDragActions()
+   RETURN Qt_QAbstractItemModel_supportedDragActions( ::pPtr )
+
+
+METHOD QAbstractItemModel:supportedDropActions()
+   RETURN Qt_QAbstractItemModel_supportedDropActions( ::pPtr )
+
+
+METHOD QAbstractItemModel:revert()
+   RETURN Qt_QAbstractItemModel_revert( ::pPtr )
+
+
+METHOD QAbstractItemModel:submit()
+   RETURN Qt_QAbstractItemModel_submit( ::pPtr )
+
 
 
 CREATE CLASS HbDbfModel INHERIT QAbstractItemModel
@@ -140,4 +261,3 @@ CREATE CLASS HbDbfModel INHERIT QAbstractItemModel
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/

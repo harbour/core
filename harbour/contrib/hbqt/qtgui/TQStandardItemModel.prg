@@ -71,55 +71,152 @@ CREATE CLASS QStandardItemModel INHERIT QAbstractItemModeL
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  appendRow( pItem )                  INLINE  Qt_QStandardItemModel_appendRow( ::pPtr, pItem )
-   METHOD  clear()                             INLINE  Qt_QStandardItemModel_clear( ::pPtr )
-   METHOD  horizontalHeaderItem( nColumn )     INLINE  Qt_QStandardItemModel_horizontalHeaderItem( ::pPtr, nColumn )
-   METHOD  indexFromItem( pItem )              INLINE  Qt_QStandardItemModel_indexFromItem( ::pPtr, pItem )
-   METHOD  insertColumn( nColumn, pParent )    INLINE  Qt_QStandardItemModel_insertColumn( ::pPtr, nColumn, pParent )
-   METHOD  insertRow( nRow, pParent )          INLINE  Qt_QStandardItemModel_insertRow( ::pPtr, nRow, pParent )
-   METHOD  insertRow_1( nRow, pItem )          INLINE  Qt_QStandardItemModel_insertRow_1( ::pPtr, nRow, pItem )
-   METHOD  invisibleRootItem()                 INLINE  Qt_QStandardItemModel_invisibleRootItem( ::pPtr )
-   METHOD  item( nRow, nColumn )               INLINE  Qt_QStandardItemModel_item( ::pPtr, nRow, nColumn )
-   METHOD  itemFromIndex( pIndex )             INLINE  Qt_QStandardItemModel_itemFromIndex( ::pPtr, pIndex )
-   METHOD  itemPrototype()                     INLINE  Qt_QStandardItemModel_itemPrototype( ::pPtr )
-   METHOD  setColumnCount( nColumns )          INLINE  Qt_QStandardItemModel_setColumnCount( ::pPtr, nColumns )
-   METHOD  setHorizontalHeaderItem( nColumn, pItem )  INLINE  Qt_QStandardItemModel_setHorizontalHeaderItem( ::pPtr, nColumn, pItem )
-   METHOD  setHorizontalHeaderLabels( pLabels )  INLINE  Qt_QStandardItemModel_setHorizontalHeaderLabels( ::pPtr, pLabels )
-   METHOD  setItem( nRow, nColumn, pItem )     INLINE  Qt_QStandardItemModel_setItem( ::pPtr, nRow, nColumn, pItem )
-   METHOD  setItem_1( nRow, pItem )            INLINE  Qt_QStandardItemModel_setItem_1( ::pPtr, nRow, pItem )
-   METHOD  setItemPrototype( pItem )           INLINE  Qt_QStandardItemModel_setItemPrototype( ::pPtr, pItem )
-   METHOD  setRowCount( nRows )                INLINE  Qt_QStandardItemModel_setRowCount( ::pPtr, nRows )
-   METHOD  setSortRole( nRole )                INLINE  Qt_QStandardItemModel_setSortRole( ::pPtr, nRole )
-   METHOD  setVerticalHeaderItem( nRow, pItem )  INLINE  Qt_QStandardItemModel_setVerticalHeaderItem( ::pPtr, nRow, pItem )
-   METHOD  setVerticalHeaderLabels( pLabels )  INLINE  Qt_QStandardItemModel_setVerticalHeaderLabels( ::pPtr, pLabels )
-   METHOD  sortRole()                          INLINE  Qt_QStandardItemModel_sortRole( ::pPtr )
-   METHOD  takeHorizontalHeaderItem( nColumn )  INLINE  Qt_QStandardItemModel_takeHorizontalHeaderItem( ::pPtr, nColumn )
-   METHOD  takeItem( nRow, nColumn )           INLINE  Qt_QStandardItemModel_takeItem( ::pPtr, nRow, nColumn )
-   METHOD  takeVerticalHeaderItem( nRow )      INLINE  Qt_QStandardItemModel_takeVerticalHeaderItem( ::pPtr, nRow )
-   METHOD  verticalHeaderItem( nRow )          INLINE  Qt_QStandardItemModel_verticalHeaderItem( ::pPtr, nRow )
+   METHOD  appendRow( pItem )
+   METHOD  clear()
+   METHOD  horizontalHeaderItem( nColumn )
+   METHOD  indexFromItem( pItem )
+   METHOD  insertColumn( nColumn, pParent )
+   METHOD  insertRow( nRow, pParent )
+   METHOD  insertRow_1( nRow, pItem )
+   METHOD  invisibleRootItem()
+   METHOD  item( nRow, nColumn )
+   METHOD  itemFromIndex( pIndex )
+   METHOD  itemPrototype()
+   METHOD  setColumnCount( nColumns )
+   METHOD  setHorizontalHeaderItem( nColumn, pItem )
+   METHOD  setHorizontalHeaderLabels( pLabels )
+   METHOD  setItem( nRow, nColumn, pItem )
+   METHOD  setItem_1( nRow, pItem )
+   METHOD  setItemPrototype( pItem )
+   METHOD  setRowCount( nRows )
+   METHOD  setSortRole( nRole )
+   METHOD  setVerticalHeaderItem( nRow, pItem )
+   METHOD  setVerticalHeaderLabels( pLabels )
+   METHOD  sortRole()
+   METHOD  takeHorizontalHeaderItem( nColumn )
+   METHOD  takeItem( nRow, nColumn )
+   METHOD  takeVerticalHeaderItem( nRow )
+   METHOD  verticalHeaderItem( nRow )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStandardItemModel
-
+METHOD QStandardItemModel:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStandardItemModel( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStandardItemModel
-
+METHOD QStandardItemModel:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStandardItemModel:appendRow( pItem )
+   RETURN Qt_QStandardItemModel_appendRow( ::pPtr, pItem )
+
+
+METHOD QStandardItemModel:clear()
+   RETURN Qt_QStandardItemModel_clear( ::pPtr )
+
+
+METHOD QStandardItemModel:horizontalHeaderItem( nColumn )
+   RETURN Qt_QStandardItemModel_horizontalHeaderItem( ::pPtr, nColumn )
+
+
+METHOD QStandardItemModel:indexFromItem( pItem )
+   RETURN Qt_QStandardItemModel_indexFromItem( ::pPtr, pItem )
+
+
+METHOD QStandardItemModel:insertColumn( nColumn, pParent )
+   RETURN Qt_QStandardItemModel_insertColumn( ::pPtr, nColumn, pParent )
+
+
+METHOD QStandardItemModel:insertRow( nRow, pParent )
+   RETURN Qt_QStandardItemModel_insertRow( ::pPtr, nRow, pParent )
+
+
+METHOD QStandardItemModel:insertRow_1( nRow, pItem )
+   RETURN Qt_QStandardItemModel_insertRow_1( ::pPtr, nRow, pItem )
+
+
+METHOD QStandardItemModel:invisibleRootItem()
+   RETURN Qt_QStandardItemModel_invisibleRootItem( ::pPtr )
+
+
+METHOD QStandardItemModel:item( nRow, nColumn )
+   RETURN Qt_QStandardItemModel_item( ::pPtr, nRow, nColumn )
+
+
+METHOD QStandardItemModel:itemFromIndex( pIndex )
+   RETURN Qt_QStandardItemModel_itemFromIndex( ::pPtr, pIndex )
+
+
+METHOD QStandardItemModel:itemPrototype()
+   RETURN Qt_QStandardItemModel_itemPrototype( ::pPtr )
+
+
+METHOD QStandardItemModel:setColumnCount( nColumns )
+   RETURN Qt_QStandardItemModel_setColumnCount( ::pPtr, nColumns )
+
+
+METHOD QStandardItemModel:setHorizontalHeaderItem( nColumn, pItem )
+   RETURN Qt_QStandardItemModel_setHorizontalHeaderItem( ::pPtr, nColumn, pItem )
+
+
+METHOD QStandardItemModel:setHorizontalHeaderLabels( pLabels )
+   RETURN Qt_QStandardItemModel_setHorizontalHeaderLabels( ::pPtr, pLabels )
+
+
+METHOD QStandardItemModel:setItem( nRow, nColumn, pItem )
+   RETURN Qt_QStandardItemModel_setItem( ::pPtr, nRow, nColumn, pItem )
+
+
+METHOD QStandardItemModel:setItem_1( nRow, pItem )
+   RETURN Qt_QStandardItemModel_setItem_1( ::pPtr, nRow, pItem )
+
+
+METHOD QStandardItemModel:setItemPrototype( pItem )
+   RETURN Qt_QStandardItemModel_setItemPrototype( ::pPtr, pItem )
+
+
+METHOD QStandardItemModel:setRowCount( nRows )
+   RETURN Qt_QStandardItemModel_setRowCount( ::pPtr, nRows )
+
+
+METHOD QStandardItemModel:setSortRole( nRole )
+   RETURN Qt_QStandardItemModel_setSortRole( ::pPtr, nRole )
+
+
+METHOD QStandardItemModel:setVerticalHeaderItem( nRow, pItem )
+   RETURN Qt_QStandardItemModel_setVerticalHeaderItem( ::pPtr, nRow, pItem )
+
+
+METHOD QStandardItemModel:setVerticalHeaderLabels( pLabels )
+   RETURN Qt_QStandardItemModel_setVerticalHeaderLabels( ::pPtr, pLabels )
+
+
+METHOD QStandardItemModel:sortRole()
+   RETURN Qt_QStandardItemModel_sortRole( ::pPtr )
+
+
+METHOD QStandardItemModel:takeHorizontalHeaderItem( nColumn )
+   RETURN Qt_QStandardItemModel_takeHorizontalHeaderItem( ::pPtr, nColumn )
+
+
+METHOD QStandardItemModel:takeItem( nRow, nColumn )
+   RETURN Qt_QStandardItemModel_takeItem( ::pPtr, nRow, nColumn )
+
+
+METHOD QStandardItemModel:takeVerticalHeaderItem( nRow )
+   RETURN Qt_QStandardItemModel_takeVerticalHeaderItem( ::pPtr, nRow )
+
+
+METHOD QStandardItemModel:verticalHeaderItem( nRow )
+   RETURN Qt_QStandardItemModel_verticalHeaderItem( ::pPtr, nRow )
+

@@ -71,35 +71,52 @@ CREATE CLASS QWebSecurityOrigin
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  databaseQuota()                     INLINE  Qt_QWebSecurityOrigin_databaseQuota( ::pPtr )
-   METHOD  databaseUsage()                     INLINE  Qt_QWebSecurityOrigin_databaseUsage( ::pPtr )
-   METHOD  host()                              INLINE  Qt_QWebSecurityOrigin_host( ::pPtr )
-   METHOD  port()                              INLINE  Qt_QWebSecurityOrigin_port( ::pPtr )
-   METHOD  scheme()                            INLINE  Qt_QWebSecurityOrigin_scheme( ::pPtr )
-   METHOD  setDatabaseQuota( nQuota )          INLINE  Qt_QWebSecurityOrigin_setDatabaseQuota( ::pPtr, nQuota )
+   METHOD  databaseQuota()
+   METHOD  databaseUsage()
+   METHOD  host()
+   METHOD  port()
+   METHOD  scheme()
+   METHOD  setDatabaseQuota( nQuota )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QWebSecurityOrigin
-
+METHOD QWebSecurityOrigin:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QWebSecurityOrigin( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QWebSecurityOrigin
-
+METHOD QWebSecurityOrigin:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QWebSecurityOrigin:databaseQuota()
+   RETURN Qt_QWebSecurityOrigin_databaseQuota( ::pPtr )
+
+
+METHOD QWebSecurityOrigin:databaseUsage()
+   RETURN Qt_QWebSecurityOrigin_databaseUsage( ::pPtr )
+
+
+METHOD QWebSecurityOrigin:host()
+   RETURN Qt_QWebSecurityOrigin_host( ::pPtr )
+
+
+METHOD QWebSecurityOrigin:port()
+   RETURN Qt_QWebSecurityOrigin_port( ::pPtr )
+
+
+METHOD QWebSecurityOrigin:scheme()
+   RETURN Qt_QWebSecurityOrigin_scheme( ::pPtr )
+
+
+METHOD QWebSecurityOrigin:setDatabaseQuota( nQuota )
+   RETURN Qt_QWebSecurityOrigin_setDatabaseQuota( ::pPtr, nQuota )
+

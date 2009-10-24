@@ -71,30 +71,27 @@ CREATE CLASS QStyleOptionSizeGrip INHERIT QStyleOptionComplex
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  corner()                            INLINE  Qt_QStyleOptionSizeGrip_corner( ::pPtr )
+   METHOD  corner()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyleOptionSizeGrip
-
+METHOD QStyleOptionSizeGrip:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyleOptionSizeGrip( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyleOptionSizeGrip
-
+METHOD QStyleOptionSizeGrip:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyleOptionSizeGrip:corner()
+   RETURN Qt_QStyleOptionSizeGrip_corner( ::pPtr )
+

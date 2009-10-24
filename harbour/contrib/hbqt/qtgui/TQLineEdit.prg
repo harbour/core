@@ -71,84 +71,297 @@ CREATE CLASS QLineEdit INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  alignment()                         INLINE  Qt_QLineEdit_alignment( ::pPtr )
-   METHOD  backspace()                         INLINE  Qt_QLineEdit_backspace( ::pPtr )
-   METHOD  completer()                         INLINE  Qt_QLineEdit_completer( ::pPtr )
-   METHOD  createStandardContextMenu()         INLINE  Qt_QLineEdit_createStandardContextMenu( ::pPtr )
-   METHOD  cursorBackward( lMark, nSteps )     INLINE  Qt_QLineEdit_cursorBackward( ::pPtr, lMark, nSteps )
-   METHOD  cursorForward( lMark, nSteps )      INLINE  Qt_QLineEdit_cursorForward( ::pPtr, lMark, nSteps )
-   METHOD  cursorPosition()                    INLINE  Qt_QLineEdit_cursorPosition( ::pPtr )
-   METHOD  cursorPositionAt( pPos )            INLINE  Qt_QLineEdit_cursorPositionAt( ::pPtr, pPos )
-   METHOD  cursorWordBackward( lMark )         INLINE  Qt_QLineEdit_cursorWordBackward( ::pPtr, lMark )
-   METHOD  cursorWordForward( lMark )          INLINE  Qt_QLineEdit_cursorWordForward( ::pPtr, lMark )
-   METHOD  del()                               INLINE  Qt_QLineEdit_del( ::pPtr )
-   METHOD  deselect()                          INLINE  Qt_QLineEdit_deselect( ::pPtr )
-   METHOD  displayText()                       INLINE  Qt_QLineEdit_displayText( ::pPtr )
-   METHOD  dragEnabled()                       INLINE  Qt_QLineEdit_dragEnabled( ::pPtr )
-   METHOD  echoMode()                          INLINE  Qt_QLineEdit_echoMode( ::pPtr )
-   METHOD  end( lMark )                        INLINE  Qt_QLineEdit_end( ::pPtr, lMark )
-   METHOD  getTextMargins( nLeft, nTop, nRight, nBottom )  INLINE  Qt_QLineEdit_getTextMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
-   METHOD  hasAcceptableInput()                INLINE  Qt_QLineEdit_hasAcceptableInput( ::pPtr )
-   METHOD  hasFrame()                          INLINE  Qt_QLineEdit_hasFrame( ::pPtr )
-   METHOD  hasSelectedText()                   INLINE  Qt_QLineEdit_hasSelectedText( ::pPtr )
-   METHOD  home( lMark )                       INLINE  Qt_QLineEdit_home( ::pPtr, lMark )
-   METHOD  inputMask()                         INLINE  Qt_QLineEdit_inputMask( ::pPtr )
-   METHOD  insert( cNewText )                  INLINE  Qt_QLineEdit_insert( ::pPtr, cNewText )
-   METHOD  isModified()                        INLINE  Qt_QLineEdit_isModified( ::pPtr )
-   METHOD  isReadOnly()                        INLINE  Qt_QLineEdit_isReadOnly( ::pPtr )
-   METHOD  isRedoAvailable()                   INLINE  Qt_QLineEdit_isRedoAvailable( ::pPtr )
-   METHOD  isUndoAvailable()                   INLINE  Qt_QLineEdit_isUndoAvailable( ::pPtr )
-   METHOD  maxLength()                         INLINE  Qt_QLineEdit_maxLength( ::pPtr )
-   METHOD  minimumSizeHint()                   INLINE  Qt_QLineEdit_minimumSizeHint( ::pPtr )
-   METHOD  selectedText()                      INLINE  Qt_QLineEdit_selectedText( ::pPtr )
-   METHOD  selectionStart()                    INLINE  Qt_QLineEdit_selectionStart( ::pPtr )
-   METHOD  setAlignment( nFlag )               INLINE  Qt_QLineEdit_setAlignment( ::pPtr, nFlag )
-   METHOD  setCompleter( pC )                  INLINE  Qt_QLineEdit_setCompleter( ::pPtr, pC )
-   METHOD  setCursorPosition( nInt )           INLINE  Qt_QLineEdit_setCursorPosition( ::pPtr, nInt )
-   METHOD  setDragEnabled( lB )                INLINE  Qt_QLineEdit_setDragEnabled( ::pPtr, lB )
-   METHOD  setEchoMode( nEchoMode )            INLINE  Qt_QLineEdit_setEchoMode( ::pPtr, nEchoMode )
-   METHOD  setFrame( lBool )                   INLINE  Qt_QLineEdit_setFrame( ::pPtr, lBool )
-   METHOD  setInputMask( cInputMask )          INLINE  Qt_QLineEdit_setInputMask( ::pPtr, cInputMask )
-   METHOD  setMaxLength( nInt )                INLINE  Qt_QLineEdit_setMaxLength( ::pPtr, nInt )
-   METHOD  setModified( lBool )                INLINE  Qt_QLineEdit_setModified( ::pPtr, lBool )
-   METHOD  setReadOnly( lBool )                INLINE  Qt_QLineEdit_setReadOnly( ::pPtr, lBool )
-   METHOD  setSelection( nStart, nLength )     INLINE  Qt_QLineEdit_setSelection( ::pPtr, nStart, nLength )
-   METHOD  setTextMargins( nLeft, nTop, nRight, nBottom )  INLINE  Qt_QLineEdit_setTextMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
-   METHOD  setValidator( pV )                  INLINE  Qt_QLineEdit_setValidator( ::pPtr, pV )
-   METHOD  sizeHint()                          INLINE  Qt_QLineEdit_sizeHint( ::pPtr )
-   METHOD  text()                              INLINE  Qt_QLineEdit_text( ::pPtr )
-   METHOD  validator()                         INLINE  Qt_QLineEdit_validator( ::pPtr )
-   METHOD  clear()                             INLINE  Qt_QLineEdit_clear( ::pPtr )
-   METHOD  copy()                              INLINE  Qt_QLineEdit_copy( ::pPtr )
-   METHOD  cut()                               INLINE  Qt_QLineEdit_cut( ::pPtr )
-   METHOD  paste()                             INLINE  Qt_QLineEdit_paste( ::pPtr )
-   METHOD  redo()                              INLINE  Qt_QLineEdit_redo( ::pPtr )
-   METHOD  selectAll()                         INLINE  Qt_QLineEdit_selectAll( ::pPtr )
-   METHOD  setText( cQString )                 INLINE  Qt_QLineEdit_setText( ::pPtr, cQString )
-   METHOD  undo()                              INLINE  Qt_QLineEdit_undo( ::pPtr )
+   METHOD  alignment()
+   METHOD  backspace()
+   METHOD  completer()
+   METHOD  createStandardContextMenu()
+   METHOD  cursorBackward( lMark, nSteps )
+   METHOD  cursorForward( lMark, nSteps )
+   METHOD  cursorPosition()
+   METHOD  cursorPositionAt( pPos )
+   METHOD  cursorWordBackward( lMark )
+   METHOD  cursorWordForward( lMark )
+   METHOD  del()
+   METHOD  deselect()
+   METHOD  displayText()
+   METHOD  dragEnabled()
+   METHOD  echoMode()
+   METHOD  end( lMark )
+   METHOD  getTextMargins( nLeft, nTop, nRight, nBottom )
+   METHOD  hasAcceptableInput()
+   METHOD  hasFrame()
+   METHOD  hasSelectedText()
+   METHOD  home( lMark )
+   METHOD  inputMask()
+   METHOD  insert( cNewText )
+   METHOD  isModified()
+   METHOD  isReadOnly()
+   METHOD  isRedoAvailable()
+   METHOD  isUndoAvailable()
+   METHOD  maxLength()
+   METHOD  minimumSizeHint()
+   METHOD  selectedText()
+   METHOD  selectionStart()
+   METHOD  setAlignment( nFlag )
+   METHOD  setCompleter( pC )
+   METHOD  setCursorPosition( nInt )
+   METHOD  setDragEnabled( lB )
+   METHOD  setEchoMode( nEchoMode )
+   METHOD  setFrame( lBool )
+   METHOD  setInputMask( cInputMask )
+   METHOD  setMaxLength( nInt )
+   METHOD  setModified( lBool )
+   METHOD  setReadOnly( lBool )
+   METHOD  setSelection( nStart, nLength )
+   METHOD  setTextMargins( nLeft, nTop, nRight, nBottom )
+   METHOD  setValidator( pV )
+   METHOD  sizeHint()
+   METHOD  text()
+   METHOD  validator()
+   METHOD  clear()
+   METHOD  copy()
+   METHOD  cut()
+   METHOD  paste()
+   METHOD  redo()
+   METHOD  selectAll()
+   METHOD  setText( cQString )
+   METHOD  undo()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QLineEdit
-
+METHOD QLineEdit:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QLineEdit( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QLineEdit
-
+METHOD QLineEdit:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QLineEdit:alignment()
+   RETURN Qt_QLineEdit_alignment( ::pPtr )
+
+
+METHOD QLineEdit:backspace()
+   RETURN Qt_QLineEdit_backspace( ::pPtr )
+
+
+METHOD QLineEdit:completer()
+   RETURN Qt_QLineEdit_completer( ::pPtr )
+
+
+METHOD QLineEdit:createStandardContextMenu()
+   RETURN Qt_QLineEdit_createStandardContextMenu( ::pPtr )
+
+
+METHOD QLineEdit:cursorBackward( lMark, nSteps )
+   RETURN Qt_QLineEdit_cursorBackward( ::pPtr, lMark, nSteps )
+
+
+METHOD QLineEdit:cursorForward( lMark, nSteps )
+   RETURN Qt_QLineEdit_cursorForward( ::pPtr, lMark, nSteps )
+
+
+METHOD QLineEdit:cursorPosition()
+   RETURN Qt_QLineEdit_cursorPosition( ::pPtr )
+
+
+METHOD QLineEdit:cursorPositionAt( pPos )
+   RETURN Qt_QLineEdit_cursorPositionAt( ::pPtr, pPos )
+
+
+METHOD QLineEdit:cursorWordBackward( lMark )
+   RETURN Qt_QLineEdit_cursorWordBackward( ::pPtr, lMark )
+
+
+METHOD QLineEdit:cursorWordForward( lMark )
+   RETURN Qt_QLineEdit_cursorWordForward( ::pPtr, lMark )
+
+
+METHOD QLineEdit:del()
+   RETURN Qt_QLineEdit_del( ::pPtr )
+
+
+METHOD QLineEdit:deselect()
+   RETURN Qt_QLineEdit_deselect( ::pPtr )
+
+
+METHOD QLineEdit:displayText()
+   RETURN Qt_QLineEdit_displayText( ::pPtr )
+
+
+METHOD QLineEdit:dragEnabled()
+   RETURN Qt_QLineEdit_dragEnabled( ::pPtr )
+
+
+METHOD QLineEdit:echoMode()
+   RETURN Qt_QLineEdit_echoMode( ::pPtr )
+
+
+METHOD QLineEdit:end( lMark )
+   RETURN Qt_QLineEdit_end( ::pPtr, lMark )
+
+
+METHOD QLineEdit:getTextMargins( nLeft, nTop, nRight, nBottom )
+   RETURN Qt_QLineEdit_getTextMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
+
+
+METHOD QLineEdit:hasAcceptableInput()
+   RETURN Qt_QLineEdit_hasAcceptableInput( ::pPtr )
+
+
+METHOD QLineEdit:hasFrame()
+   RETURN Qt_QLineEdit_hasFrame( ::pPtr )
+
+
+METHOD QLineEdit:hasSelectedText()
+   RETURN Qt_QLineEdit_hasSelectedText( ::pPtr )
+
+
+METHOD QLineEdit:home( lMark )
+   RETURN Qt_QLineEdit_home( ::pPtr, lMark )
+
+
+METHOD QLineEdit:inputMask()
+   RETURN Qt_QLineEdit_inputMask( ::pPtr )
+
+
+METHOD QLineEdit:insert( cNewText )
+   RETURN Qt_QLineEdit_insert( ::pPtr, cNewText )
+
+
+METHOD QLineEdit:isModified()
+   RETURN Qt_QLineEdit_isModified( ::pPtr )
+
+
+METHOD QLineEdit:isReadOnly()
+   RETURN Qt_QLineEdit_isReadOnly( ::pPtr )
+
+
+METHOD QLineEdit:isRedoAvailable()
+   RETURN Qt_QLineEdit_isRedoAvailable( ::pPtr )
+
+
+METHOD QLineEdit:isUndoAvailable()
+   RETURN Qt_QLineEdit_isUndoAvailable( ::pPtr )
+
+
+METHOD QLineEdit:maxLength()
+   RETURN Qt_QLineEdit_maxLength( ::pPtr )
+
+
+METHOD QLineEdit:minimumSizeHint()
+   RETURN Qt_QLineEdit_minimumSizeHint( ::pPtr )
+
+
+METHOD QLineEdit:selectedText()
+   RETURN Qt_QLineEdit_selectedText( ::pPtr )
+
+
+METHOD QLineEdit:selectionStart()
+   RETURN Qt_QLineEdit_selectionStart( ::pPtr )
+
+
+METHOD QLineEdit:setAlignment( nFlag )
+   RETURN Qt_QLineEdit_setAlignment( ::pPtr, nFlag )
+
+
+METHOD QLineEdit:setCompleter( pC )
+   RETURN Qt_QLineEdit_setCompleter( ::pPtr, pC )
+
+
+METHOD QLineEdit:setCursorPosition( nInt )
+   RETURN Qt_QLineEdit_setCursorPosition( ::pPtr, nInt )
+
+
+METHOD QLineEdit:setDragEnabled( lB )
+   RETURN Qt_QLineEdit_setDragEnabled( ::pPtr, lB )
+
+
+METHOD QLineEdit:setEchoMode( nEchoMode )
+   RETURN Qt_QLineEdit_setEchoMode( ::pPtr, nEchoMode )
+
+
+METHOD QLineEdit:setFrame( lBool )
+   RETURN Qt_QLineEdit_setFrame( ::pPtr, lBool )
+
+
+METHOD QLineEdit:setInputMask( cInputMask )
+   RETURN Qt_QLineEdit_setInputMask( ::pPtr, cInputMask )
+
+
+METHOD QLineEdit:setMaxLength( nInt )
+   RETURN Qt_QLineEdit_setMaxLength( ::pPtr, nInt )
+
+
+METHOD QLineEdit:setModified( lBool )
+   RETURN Qt_QLineEdit_setModified( ::pPtr, lBool )
+
+
+METHOD QLineEdit:setReadOnly( lBool )
+   RETURN Qt_QLineEdit_setReadOnly( ::pPtr, lBool )
+
+
+METHOD QLineEdit:setSelection( nStart, nLength )
+   RETURN Qt_QLineEdit_setSelection( ::pPtr, nStart, nLength )
+
+
+METHOD QLineEdit:setTextMargins( nLeft, nTop, nRight, nBottom )
+   RETURN Qt_QLineEdit_setTextMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
+
+
+METHOD QLineEdit:setValidator( pV )
+   RETURN Qt_QLineEdit_setValidator( ::pPtr, pV )
+
+
+METHOD QLineEdit:sizeHint()
+   RETURN Qt_QLineEdit_sizeHint( ::pPtr )
+
+
+METHOD QLineEdit:text()
+   RETURN Qt_QLineEdit_text( ::pPtr )
+
+
+METHOD QLineEdit:validator()
+   RETURN Qt_QLineEdit_validator( ::pPtr )
+
+
+METHOD QLineEdit:clear()
+   RETURN Qt_QLineEdit_clear( ::pPtr )
+
+
+METHOD QLineEdit:copy()
+   RETURN Qt_QLineEdit_copy( ::pPtr )
+
+
+METHOD QLineEdit:cut()
+   RETURN Qt_QLineEdit_cut( ::pPtr )
+
+
+METHOD QLineEdit:paste()
+   RETURN Qt_QLineEdit_paste( ::pPtr )
+
+
+METHOD QLineEdit:redo()
+   RETURN Qt_QLineEdit_redo( ::pPtr )
+
+
+METHOD QLineEdit:selectAll()
+   RETURN Qt_QLineEdit_selectAll( ::pPtr )
+
+
+METHOD QLineEdit:setText( cQString )
+   RETURN Qt_QLineEdit_setText( ::pPtr, cQString )
+
+
+METHOD QLineEdit:undo()
+   RETURN Qt_QLineEdit_undo( ::pPtr )
+

@@ -71,43 +71,92 @@ CREATE CLASS QThread INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  exit( nReturnCode )                 INLINE  Qt_QThread_exit( ::pPtr, nReturnCode )
-   METHOD  isFinished()                        INLINE  Qt_QThread_isFinished( ::pPtr )
-   METHOD  isRunning()                         INLINE  Qt_QThread_isRunning( ::pPtr )
-   METHOD  priority()                          INLINE  Qt_QThread_priority( ::pPtr )
-   METHOD  setPriority( nPriority )            INLINE  Qt_QThread_setPriority( ::pPtr, nPriority )
-   METHOD  setStackSize( nStackSize )          INLINE  Qt_QThread_setStackSize( ::pPtr, nStackSize )
-   METHOD  stackSize()                         INLINE  Qt_QThread_stackSize( ::pPtr )
-   METHOD  wait()                              INLINE  Qt_QThread_wait( ::pPtr )
-   METHOD  currentThread()                     INLINE  Qt_QThread_currentThread( ::pPtr )
-   METHOD  idealThreadCount()                  INLINE  Qt_QThread_idealThreadCount( ::pPtr )
-   METHOD  yieldCurrentThread()                INLINE  Qt_QThread_yieldCurrentThread( ::pPtr )
-   METHOD  quit()                              INLINE  Qt_QThread_quit( ::pPtr )
-   METHOD  start( nPriority )                  INLINE  Qt_QThread_start( ::pPtr, nPriority )
-   METHOD  terminate()                         INLINE  Qt_QThread_terminate( ::pPtr )
+   METHOD  exit( nReturnCode )
+   METHOD  isFinished()
+   METHOD  isRunning()
+   METHOD  priority()
+   METHOD  setPriority( nPriority )
+   METHOD  setStackSize( nStackSize )
+   METHOD  stackSize()
+   METHOD  wait()
+   METHOD  currentThread()
+   METHOD  idealThreadCount()
+   METHOD  yieldCurrentThread()
+   METHOD  quit()
+   METHOD  start( nPriority )
+   METHOD  terminate()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QThread
-
+METHOD QThread:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QThread( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QThread
-
+METHOD QThread:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QThread:exit( nReturnCode )
+   RETURN Qt_QThread_exit( ::pPtr, nReturnCode )
+
+
+METHOD QThread:isFinished()
+   RETURN Qt_QThread_isFinished( ::pPtr )
+
+
+METHOD QThread:isRunning()
+   RETURN Qt_QThread_isRunning( ::pPtr )
+
+
+METHOD QThread:priority()
+   RETURN Qt_QThread_priority( ::pPtr )
+
+
+METHOD QThread:setPriority( nPriority )
+   RETURN Qt_QThread_setPriority( ::pPtr, nPriority )
+
+
+METHOD QThread:setStackSize( nStackSize )
+   RETURN Qt_QThread_setStackSize( ::pPtr, nStackSize )
+
+
+METHOD QThread:stackSize()
+   RETURN Qt_QThread_stackSize( ::pPtr )
+
+
+METHOD QThread:wait()
+   RETURN Qt_QThread_wait( ::pPtr )
+
+
+METHOD QThread:currentThread()
+   RETURN Qt_QThread_currentThread( ::pPtr )
+
+
+METHOD QThread:idealThreadCount()
+   RETURN Qt_QThread_idealThreadCount( ::pPtr )
+
+
+METHOD QThread:yieldCurrentThread()
+   RETURN Qt_QThread_yieldCurrentThread( ::pPtr )
+
+
+METHOD QThread:quit()
+   RETURN Qt_QThread_quit( ::pPtr )
+
+
+METHOD QThread:start( nPriority )
+   RETURN Qt_QThread_start( ::pPtr, nPriority )
+
+
+METHOD QThread:terminate()
+   RETURN Qt_QThread_terminate( ::pPtr )
+

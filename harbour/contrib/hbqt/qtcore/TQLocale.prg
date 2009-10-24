@@ -71,77 +71,262 @@ CREATE CLASS QLocale
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  amText()                            INLINE  Qt_QLocale_amText( ::pPtr )
-   METHOD  country()                           INLINE  Qt_QLocale_country( ::pPtr )
-   METHOD  dateFormat( nFormat )               INLINE  Qt_QLocale_dateFormat( ::pPtr, nFormat )
-   METHOD  dateTimeFormat( nFormat )           INLINE  Qt_QLocale_dateTimeFormat( ::pPtr, nFormat )
-   METHOD  dayName( nDay, nType )              INLINE  Qt_QLocale_dayName( ::pPtr, nDay, nType )
-   METHOD  language()                          INLINE  Qt_QLocale_language( ::pPtr )
-   METHOD  measurementSystem()                 INLINE  Qt_QLocale_measurementSystem( ::pPtr )
-   METHOD  monthName( nMonth, nType )          INLINE  Qt_QLocale_monthName( ::pPtr, nMonth, nType )
-   METHOD  name()                              INLINE  Qt_QLocale_name( ::pPtr )
-   METHOD  numberOptions()                     INLINE  Qt_QLocale_numberOptions( ::pPtr )
-   METHOD  pmText()                            INLINE  Qt_QLocale_pmText( ::pPtr )
-   METHOD  setNumberOptions( nOptions )        INLINE  Qt_QLocale_setNumberOptions( ::pPtr, nOptions )
-   METHOD  standaloneDayName( nDay, nType )    INLINE  Qt_QLocale_standaloneDayName( ::pPtr, nDay, nType )
-   METHOD  standaloneMonthName( nMonth, nType )  INLINE  Qt_QLocale_standaloneMonthName( ::pPtr, nMonth, nType )
-   METHOD  timeFormat( nFormat )               INLINE  Qt_QLocale_timeFormat( ::pPtr, nFormat )
-   METHOD  toDate( cString, nFormat )          INLINE  Qt_QLocale_toDate( ::pPtr, cString, nFormat )
-   METHOD  toDate_1( cString, cFormat )        INLINE  Qt_QLocale_toDate_1( ::pPtr, cString, cFormat )
-   METHOD  toDateTime( cString, nFormat )      INLINE  Qt_QLocale_toDateTime( ::pPtr, cString, nFormat )
-   METHOD  toDateTime_1( cString, cFormat )    INLINE  Qt_QLocale_toDateTime_1( ::pPtr, cString, cFormat )
-   METHOD  toDouble( cS, lOk )                 INLINE  Qt_QLocale_toDouble( ::pPtr, cS, lOk )
-   METHOD  toFloat( cS, lOk )                  INLINE  Qt_QLocale_toFloat( ::pPtr, cS, lOk )
-   METHOD  toInt( cS, lOk, nBase )             INLINE  Qt_QLocale_toInt( ::pPtr, cS, lOk, nBase )
-   METHOD  toLongLong( cS, lOk, nBase )        INLINE  Qt_QLocale_toLongLong( ::pPtr, cS, lOk, nBase )
-   METHOD  toShort( cS, lOk, nBase )           INLINE  Qt_QLocale_toShort( ::pPtr, cS, lOk, nBase )
-   METHOD  toString( nI )                      INLINE  Qt_QLocale_toString( ::pPtr, nI )
-   METHOD  toString_1( pDate, cFormat )        INLINE  Qt_QLocale_toString_1( ::pPtr, pDate, cFormat )
-   METHOD  toString_2( pDate, nFormat )        INLINE  Qt_QLocale_toString_2( ::pPtr, pDate, nFormat )
-   METHOD  toString_3( pTime, cFormat )        INLINE  Qt_QLocale_toString_3( ::pPtr, pTime, cFormat )
-   METHOD  toString_4( pTime, nFormat )        INLINE  Qt_QLocale_toString_4( ::pPtr, pTime, nFormat )
-   METHOD  toString_5( pDateTime, nFormat )    INLINE  Qt_QLocale_toString_5( ::pPtr, pDateTime, nFormat )
-   METHOD  toString_6( pDateTime, cFormat )    INLINE  Qt_QLocale_toString_6( ::pPtr, pDateTime, cFormat )
-   METHOD  toString_7( nI )                    INLINE  Qt_QLocale_toString_7( ::pPtr, nI )
-   METHOD  toString_8( nI, cF, nPrec )         INLINE  Qt_QLocale_toString_8( ::pPtr, nI, cF, nPrec )
-   METHOD  toString_9( nI )                    INLINE  Qt_QLocale_toString_9( ::pPtr, nI )
-   METHOD  toString_10( nI )                   INLINE  Qt_QLocale_toString_10( ::pPtr, nI )
-   METHOD  toString_11( nI )                   INLINE  Qt_QLocale_toString_11( ::pPtr, nI )
-   METHOD  toString_12( nI )                   INLINE  Qt_QLocale_toString_12( ::pPtr, nI )
-   METHOD  toString_13( nI, cF, nPrec )        INLINE  Qt_QLocale_toString_13( ::pPtr, nI, cF, nPrec )
-   METHOD  toTime( cString, nFormat )          INLINE  Qt_QLocale_toTime( ::pPtr, cString, nFormat )
-   METHOD  toTime_1( cString, cFormat )        INLINE  Qt_QLocale_toTime_1( ::pPtr, cString, cFormat )
-   METHOD  toUInt( cS, lOk, nBase )            INLINE  Qt_QLocale_toUInt( ::pPtr, cS, lOk, nBase )
-   METHOD  toULongLong( cS, lOk, nBase )       INLINE  Qt_QLocale_toULongLong( ::pPtr, cS, lOk, nBase )
-   METHOD  toUShort( cS, lOk, nBase )          INLINE  Qt_QLocale_toUShort( ::pPtr, cS, lOk, nBase )
-   METHOD  c()                                 INLINE  Qt_QLocale_c( ::pPtr )
-   METHOD  countryToString( nCountry )         INLINE  Qt_QLocale_countryToString( ::pPtr, nCountry )
-   METHOD  languageToString( nLanguage )       INLINE  Qt_QLocale_languageToString( ::pPtr, nLanguage )
-   METHOD  setDefault( pLocale )               INLINE  Qt_QLocale_setDefault( ::pPtr, pLocale )
-   METHOD  system()                            INLINE  Qt_QLocale_system( ::pPtr )
+   METHOD  amText()
+   METHOD  country()
+   METHOD  dateFormat( nFormat )
+   METHOD  dateTimeFormat( nFormat )
+   METHOD  dayName( nDay, nType )
+   METHOD  language()
+   METHOD  measurementSystem()
+   METHOD  monthName( nMonth, nType )
+   METHOD  name()
+   METHOD  numberOptions()
+   METHOD  pmText()
+   METHOD  setNumberOptions( nOptions )
+   METHOD  standaloneDayName( nDay, nType )
+   METHOD  standaloneMonthName( nMonth, nType )
+   METHOD  timeFormat( nFormat )
+   METHOD  toDate( cString, nFormat )
+   METHOD  toDate_1( cString, cFormat )
+   METHOD  toDateTime( cString, nFormat )
+   METHOD  toDateTime_1( cString, cFormat )
+   METHOD  toDouble( cS, lOk )
+   METHOD  toFloat( cS, lOk )
+   METHOD  toInt( cS, lOk, nBase )
+   METHOD  toLongLong( cS, lOk, nBase )
+   METHOD  toShort( cS, lOk, nBase )
+   METHOD  toString( nI )
+   METHOD  toString_1( pDate, cFormat )
+   METHOD  toString_2( pDate, nFormat )
+   METHOD  toString_3( pTime, cFormat )
+   METHOD  toString_4( pTime, nFormat )
+   METHOD  toString_5( pDateTime, nFormat )
+   METHOD  toString_6( pDateTime, cFormat )
+   METHOD  toString_7( nI )
+   METHOD  toString_8( nI, cF, nPrec )
+   METHOD  toString_9( nI )
+   METHOD  toString_10( nI )
+   METHOD  toString_11( nI )
+   METHOD  toString_12( nI )
+   METHOD  toString_13( nI, cF, nPrec )
+   METHOD  toTime( cString, nFormat )
+   METHOD  toTime_1( cString, cFormat )
+   METHOD  toUInt( cS, lOk, nBase )
+   METHOD  toULongLong( cS, lOk, nBase )
+   METHOD  toUShort( cS, lOk, nBase )
+   METHOD  c()
+   METHOD  countryToString( nCountry )
+   METHOD  languageToString( nLanguage )
+   METHOD  setDefault( pLocale )
+   METHOD  system()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QLocale
-
+METHOD QLocale:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QLocale( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QLocale
-
+METHOD QLocale:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QLocale:amText()
+   RETURN Qt_QLocale_amText( ::pPtr )
+
+
+METHOD QLocale:country()
+   RETURN Qt_QLocale_country( ::pPtr )
+
+
+METHOD QLocale:dateFormat( nFormat )
+   RETURN Qt_QLocale_dateFormat( ::pPtr, nFormat )
+
+
+METHOD QLocale:dateTimeFormat( nFormat )
+   RETURN Qt_QLocale_dateTimeFormat( ::pPtr, nFormat )
+
+
+METHOD QLocale:dayName( nDay, nType )
+   RETURN Qt_QLocale_dayName( ::pPtr, nDay, nType )
+
+
+METHOD QLocale:language()
+   RETURN Qt_QLocale_language( ::pPtr )
+
+
+METHOD QLocale:measurementSystem()
+   RETURN Qt_QLocale_measurementSystem( ::pPtr )
+
+
+METHOD QLocale:monthName( nMonth, nType )
+   RETURN Qt_QLocale_monthName( ::pPtr, nMonth, nType )
+
+
+METHOD QLocale:name()
+   RETURN Qt_QLocale_name( ::pPtr )
+
+
+METHOD QLocale:numberOptions()
+   RETURN Qt_QLocale_numberOptions( ::pPtr )
+
+
+METHOD QLocale:pmText()
+   RETURN Qt_QLocale_pmText( ::pPtr )
+
+
+METHOD QLocale:setNumberOptions( nOptions )
+   RETURN Qt_QLocale_setNumberOptions( ::pPtr, nOptions )
+
+
+METHOD QLocale:standaloneDayName( nDay, nType )
+   RETURN Qt_QLocale_standaloneDayName( ::pPtr, nDay, nType )
+
+
+METHOD QLocale:standaloneMonthName( nMonth, nType )
+   RETURN Qt_QLocale_standaloneMonthName( ::pPtr, nMonth, nType )
+
+
+METHOD QLocale:timeFormat( nFormat )
+   RETURN Qt_QLocale_timeFormat( ::pPtr, nFormat )
+
+
+METHOD QLocale:toDate( cString, nFormat )
+   RETURN Qt_QLocale_toDate( ::pPtr, cString, nFormat )
+
+
+METHOD QLocale:toDate_1( cString, cFormat )
+   RETURN Qt_QLocale_toDate_1( ::pPtr, cString, cFormat )
+
+
+METHOD QLocale:toDateTime( cString, nFormat )
+   RETURN Qt_QLocale_toDateTime( ::pPtr, cString, nFormat )
+
+
+METHOD QLocale:toDateTime_1( cString, cFormat )
+   RETURN Qt_QLocale_toDateTime_1( ::pPtr, cString, cFormat )
+
+
+METHOD QLocale:toDouble( cS, lOk )
+   RETURN Qt_QLocale_toDouble( ::pPtr, cS, lOk )
+
+
+METHOD QLocale:toFloat( cS, lOk )
+   RETURN Qt_QLocale_toFloat( ::pPtr, cS, lOk )
+
+
+METHOD QLocale:toInt( cS, lOk, nBase )
+   RETURN Qt_QLocale_toInt( ::pPtr, cS, lOk, nBase )
+
+
+METHOD QLocale:toLongLong( cS, lOk, nBase )
+   RETURN Qt_QLocale_toLongLong( ::pPtr, cS, lOk, nBase )
+
+
+METHOD QLocale:toShort( cS, lOk, nBase )
+   RETURN Qt_QLocale_toShort( ::pPtr, cS, lOk, nBase )
+
+
+METHOD QLocale:toString( nI )
+   RETURN Qt_QLocale_toString( ::pPtr, nI )
+
+
+METHOD QLocale:toString_1( pDate, cFormat )
+   RETURN Qt_QLocale_toString_1( ::pPtr, pDate, cFormat )
+
+
+METHOD QLocale:toString_2( pDate, nFormat )
+   RETURN Qt_QLocale_toString_2( ::pPtr, pDate, nFormat )
+
+
+METHOD QLocale:toString_3( pTime, cFormat )
+   RETURN Qt_QLocale_toString_3( ::pPtr, pTime, cFormat )
+
+
+METHOD QLocale:toString_4( pTime, nFormat )
+   RETURN Qt_QLocale_toString_4( ::pPtr, pTime, nFormat )
+
+
+METHOD QLocale:toString_5( pDateTime, nFormat )
+   RETURN Qt_QLocale_toString_5( ::pPtr, pDateTime, nFormat )
+
+
+METHOD QLocale:toString_6( pDateTime, cFormat )
+   RETURN Qt_QLocale_toString_6( ::pPtr, pDateTime, cFormat )
+
+
+METHOD QLocale:toString_7( nI )
+   RETURN Qt_QLocale_toString_7( ::pPtr, nI )
+
+
+METHOD QLocale:toString_8( nI, cF, nPrec )
+   RETURN Qt_QLocale_toString_8( ::pPtr, nI, cF, nPrec )
+
+
+METHOD QLocale:toString_9( nI )
+   RETURN Qt_QLocale_toString_9( ::pPtr, nI )
+
+
+METHOD QLocale:toString_10( nI )
+   RETURN Qt_QLocale_toString_10( ::pPtr, nI )
+
+
+METHOD QLocale:toString_11( nI )
+   RETURN Qt_QLocale_toString_11( ::pPtr, nI )
+
+
+METHOD QLocale:toString_12( nI )
+   RETURN Qt_QLocale_toString_12( ::pPtr, nI )
+
+
+METHOD QLocale:toString_13( nI, cF, nPrec )
+   RETURN Qt_QLocale_toString_13( ::pPtr, nI, cF, nPrec )
+
+
+METHOD QLocale:toTime( cString, nFormat )
+   RETURN Qt_QLocale_toTime( ::pPtr, cString, nFormat )
+
+
+METHOD QLocale:toTime_1( cString, cFormat )
+   RETURN Qt_QLocale_toTime_1( ::pPtr, cString, cFormat )
+
+
+METHOD QLocale:toUInt( cS, lOk, nBase )
+   RETURN Qt_QLocale_toUInt( ::pPtr, cS, lOk, nBase )
+
+
+METHOD QLocale:toULongLong( cS, lOk, nBase )
+   RETURN Qt_QLocale_toULongLong( ::pPtr, cS, lOk, nBase )
+
+
+METHOD QLocale:toUShort( cS, lOk, nBase )
+   RETURN Qt_QLocale_toUShort( ::pPtr, cS, lOk, nBase )
+
+
+METHOD QLocale:c()
+   RETURN Qt_QLocale_c( ::pPtr )
+
+
+METHOD QLocale:countryToString( nCountry )
+   RETURN Qt_QLocale_countryToString( ::pPtr, nCountry )
+
+
+METHOD QLocale:languageToString( nLanguage )
+   RETURN Qt_QLocale_languageToString( ::pPtr, nLanguage )
+
+
+METHOD QLocale:setDefault( pLocale )
+   RETURN Qt_QLocale_setDefault( ::pPtr, pLocale )
+
+
+METHOD QLocale:system()
+   RETURN Qt_QLocale_system( ::pPtr )
+

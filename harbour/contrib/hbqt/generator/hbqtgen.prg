@@ -1352,9 +1352,9 @@ STATIC FUNCTION CreateTarget( cFile, txt_ )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
-   LOCAL cFile, s, n, cM, ss, cCall, sm, cClassType
+   LOCAL cFile, s, n, cM, ss, cCall, sm, cClassType, i
    LOCAL nLen := len( cWidget )
-   LOCAL txt_  :={}
+   LOCAL txt_ := {}, mth_:= {}
 
    BuildHeader( @txt_, 1 )
 
@@ -1370,7 +1370,6 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
    aadd( txt_, '' )
    aadd( txt_, '   METHOD  New()'       )
    aadd( txt_, '   METHOD  Configure( xObject )' )
-//   aadd( txt_, '   METHOD  Destroy()                           INLINE  Qt_' + cWidget + '_destroy( ::pPtr )' )
    aadd( txt_, '' )
 
    /* Populate METHODS */
@@ -1395,7 +1394,10 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
          ss    := 'p' + cWidget
          cCall := strtran( s, ss, '::pPtr' )
 
-         aadd( txt_, '   METHOD  ' + cM + ' INLINE  ' + cCall )
+         aadd( mth_, { cM, cCall } )
+         //aadd( txt_, '   METHOD  ' + cM + ' INLINE  ' + cCall )
+         aadd( txt_, '   METHOD  ' + cM  )
+
       ENDIF
    NEXT
    aadd( txt_, '' )
@@ -1419,46 +1421,50 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
       aadd( txt_, '' )
       aadd( txt_, '   RETURN Self' )
       aadd( txt_, '' )
-      aadd( txt_, '/*----------------------------------------------------------------------*/' )
-      aadd( txt_, '' )
 
    OTHERWISE
-      aadd( txt_, 'METHOD New( pParent ) CLASS ' + cWidget )
-      aadd( txt_, '' )
+      aadd( txt_, 'METHOD ' + cWidget + ':New( pParent )' )
+      //aadd( txt_, '' )
       aadd( txt_, '   ::pParent := pParent' )
-      aadd( txt_, '' )
+      //aadd( txt_, '' )
       aadd( txt_, '   ::pPtr := Qt_' + cWidget + '( pParent )' )
-      aadd( txt_, '' )
+      //aadd( txt_, '' )
       aadd( txt_, '   RETURN Self' )
       aadd( txt_, '' )
-      aadd( txt_, '/*----------------------------------------------------------------------*/' )
-      aadd( txt_, ''                                                                           )
 
    ENDCASE
+   //aadd( txt_, '/*----------------------------------------------------------------------*/' )
+   aadd( txt_, '' )
 
-   aadd( txt_, 'METHOD Configure( xObject ) CLASS ' + cWidget )
-   aadd( txt_, '                                                                           ' )
+   aadd( txt_, 'METHOD ' + cWidget + ':Configure( xObject )' )
+   //aadd( txt_, '                                                                           ' )
    aadd( txt_, '   IF hb_isObject( xObject )                                               ' )
    aadd( txt_, '      ::pPtr := xObject:pPtr                                               ' )
    aadd( txt_, '   ELSEIF hb_isPointer( xObject )                                          ' )
    aadd( txt_, '      ::pPtr := xObject                                                    ' )
    aadd( txt_, '   ENDIF                                                                   ' )
-   aadd( txt_, '                                                                           ' )
+   //aadd( txt_, '                                                                           ' )
    aadd( txt_, '   RETURN Self                                                             ' )
    aadd( txt_, '                                                                           ' )
-   aadd( txt_, '/*----------------------------------------------------------------------*/ ' )
+   //aadd( txt_, '/*----------------------------------------------------------------------*/ ' )
+
+   /* Define methods */
+   FOR i := 1 TO len( mth_ )
+      aadd( txt_, '                                                                           ' )
+      aadd( txt_, 'METHOD ' + cWidget + ':' + mth_[ i, 1 ] )
+      aadd( txt_, '   RETURN ' + mth_[ i, 2 ] )
+      aadd( txt_, '                                                                           ' )
+      //aadd( txt_, '/*----------------------------------------------------------------------*/ ' )
+   NEXT
 
    IF !empty( subCls_ )
       aadd( txt_, '                                                                           ' )
       aeval( subCls_, {|e| aadd( txt_, e ) } )
       aadd( txt_, '                                                                           ' )
-      aadd( txt_, '/*----------------------------------------------------------------------*/ ' )
+      //aadd( txt_, '/*----------------------------------------------------------------------*/ ' )
    ENDIF
 
    /* Generate .prg */
-//   cFile := cPathOut + s_PathSep + 'T' + cWidget + '.prg'
-//   CreateTarget( cFile, txt_ )
-   /* Distribute in specific lib subfolder */
    cFile := GetSourcePathByLib( cWidget, cPathOut, '.prg', 'T' )
    CreateTarget( cFile, txt_ )
 

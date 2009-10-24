@@ -71,42 +71,87 @@ CREATE CLASS QToolButton INHERIT QAbstractButton
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  arrowType()                         INLINE  Qt_QToolButton_arrowType( ::pPtr )
-   METHOD  autoRaise()                         INLINE  Qt_QToolButton_autoRaise( ::pPtr )
-   METHOD  defaultAction()                     INLINE  Qt_QToolButton_defaultAction( ::pPtr )
-   METHOD  menu()                              INLINE  Qt_QToolButton_menu( ::pPtr )
-   METHOD  popupMode()                         INLINE  Qt_QToolButton_popupMode( ::pPtr )
-   METHOD  setArrowType( nType )               INLINE  Qt_QToolButton_setArrowType( ::pPtr, nType )
-   METHOD  setAutoRaise( lEnable )             INLINE  Qt_QToolButton_setAutoRaise( ::pPtr, lEnable )
-   METHOD  setMenu( pMenu )                    INLINE  Qt_QToolButton_setMenu( ::pPtr, pMenu )
-   METHOD  setPopupMode( nMode )               INLINE  Qt_QToolButton_setPopupMode( ::pPtr, nMode )
-   METHOD  toolButtonStyle()                   INLINE  Qt_QToolButton_toolButtonStyle( ::pPtr )
-   METHOD  setDefaultAction( pAction )         INLINE  Qt_QToolButton_setDefaultAction( ::pPtr, pAction )
-   METHOD  setToolButtonStyle( nStyle )        INLINE  Qt_QToolButton_setToolButtonStyle( ::pPtr, nStyle )
-   METHOD  showMenu()                          INLINE  Qt_QToolButton_showMenu( ::pPtr )
+   METHOD  arrowType()
+   METHOD  autoRaise()
+   METHOD  defaultAction()
+   METHOD  menu()
+   METHOD  popupMode()
+   METHOD  setArrowType( nType )
+   METHOD  setAutoRaise( lEnable )
+   METHOD  setMenu( pMenu )
+   METHOD  setPopupMode( nMode )
+   METHOD  toolButtonStyle()
+   METHOD  setDefaultAction( pAction )
+   METHOD  setToolButtonStyle( nStyle )
+   METHOD  showMenu()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QToolButton
-
+METHOD QToolButton:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QToolButton( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QToolButton
-
+METHOD QToolButton:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QToolButton:arrowType()
+   RETURN Qt_QToolButton_arrowType( ::pPtr )
+
+
+METHOD QToolButton:autoRaise()
+   RETURN Qt_QToolButton_autoRaise( ::pPtr )
+
+
+METHOD QToolButton:defaultAction()
+   RETURN Qt_QToolButton_defaultAction( ::pPtr )
+
+
+METHOD QToolButton:menu()
+   RETURN Qt_QToolButton_menu( ::pPtr )
+
+
+METHOD QToolButton:popupMode()
+   RETURN Qt_QToolButton_popupMode( ::pPtr )
+
+
+METHOD QToolButton:setArrowType( nType )
+   RETURN Qt_QToolButton_setArrowType( ::pPtr, nType )
+
+
+METHOD QToolButton:setAutoRaise( lEnable )
+   RETURN Qt_QToolButton_setAutoRaise( ::pPtr, lEnable )
+
+
+METHOD QToolButton:setMenu( pMenu )
+   RETURN Qt_QToolButton_setMenu( ::pPtr, pMenu )
+
+
+METHOD QToolButton:setPopupMode( nMode )
+   RETURN Qt_QToolButton_setPopupMode( ::pPtr, nMode )
+
+
+METHOD QToolButton:toolButtonStyle()
+   RETURN Qt_QToolButton_toolButtonStyle( ::pPtr )
+
+
+METHOD QToolButton:setDefaultAction( pAction )
+   RETURN Qt_QToolButton_setDefaultAction( ::pPtr, pAction )
+
+
+METHOD QToolButton:setToolButtonStyle( nStyle )
+   RETURN Qt_QToolButton_setToolButtonStyle( ::pPtr, nStyle )
+
+
+METHOD QToolButton:showMenu()
+   RETURN Qt_QToolButton_showMenu( ::pPtr )
+

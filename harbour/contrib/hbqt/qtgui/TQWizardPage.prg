@@ -71,46 +71,107 @@ CREATE CLASS QWizardPage INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  buttonText( nWhich )                INLINE  Qt_QWizardPage_buttonText( ::pPtr, nWhich )
-   METHOD  cleanupPage()                       INLINE  Qt_QWizardPage_cleanupPage( ::pPtr )
-   METHOD  initializePage()                    INLINE  Qt_QWizardPage_initializePage( ::pPtr )
-   METHOD  isCommitPage()                      INLINE  Qt_QWizardPage_isCommitPage( ::pPtr )
-   METHOD  isComplete()                        INLINE  Qt_QWizardPage_isComplete( ::pPtr )
-   METHOD  isFinalPage()                       INLINE  Qt_QWizardPage_isFinalPage( ::pPtr )
-   METHOD  nextId()                            INLINE  Qt_QWizardPage_nextId( ::pPtr )
-   METHOD  pixmap( nWhich )                    INLINE  Qt_QWizardPage_pixmap( ::pPtr, nWhich )
-   METHOD  setButtonText( nWhich, cText )      INLINE  Qt_QWizardPage_setButtonText( ::pPtr, nWhich, cText )
-   METHOD  setCommitPage( lCommitPage )        INLINE  Qt_QWizardPage_setCommitPage( ::pPtr, lCommitPage )
-   METHOD  setFinalPage( lFinalPage )          INLINE  Qt_QWizardPage_setFinalPage( ::pPtr, lFinalPage )
-   METHOD  setPixmap( nWhich, pPixmap )        INLINE  Qt_QWizardPage_setPixmap( ::pPtr, nWhich, pPixmap )
-   METHOD  setSubTitle( cSubTitle )            INLINE  Qt_QWizardPage_setSubTitle( ::pPtr, cSubTitle )
-   METHOD  setTitle( cTitle )                  INLINE  Qt_QWizardPage_setTitle( ::pPtr, cTitle )
-   METHOD  subTitle()                          INLINE  Qt_QWizardPage_subTitle( ::pPtr )
-   METHOD  title()                             INLINE  Qt_QWizardPage_title( ::pPtr )
-   METHOD  validatePage()                      INLINE  Qt_QWizardPage_validatePage( ::pPtr )
+   METHOD  buttonText( nWhich )
+   METHOD  cleanupPage()
+   METHOD  initializePage()
+   METHOD  isCommitPage()
+   METHOD  isComplete()
+   METHOD  isFinalPage()
+   METHOD  nextId()
+   METHOD  pixmap( nWhich )
+   METHOD  setButtonText( nWhich, cText )
+   METHOD  setCommitPage( lCommitPage )
+   METHOD  setFinalPage( lFinalPage )
+   METHOD  setPixmap( nWhich, pPixmap )
+   METHOD  setSubTitle( cSubTitle )
+   METHOD  setTitle( cTitle )
+   METHOD  subTitle()
+   METHOD  title()
+   METHOD  validatePage()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QWizardPage
-
+METHOD QWizardPage:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QWizardPage( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QWizardPage
-
+METHOD QWizardPage:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QWizardPage:buttonText( nWhich )
+   RETURN Qt_QWizardPage_buttonText( ::pPtr, nWhich )
+
+
+METHOD QWizardPage:cleanupPage()
+   RETURN Qt_QWizardPage_cleanupPage( ::pPtr )
+
+
+METHOD QWizardPage:initializePage()
+   RETURN Qt_QWizardPage_initializePage( ::pPtr )
+
+
+METHOD QWizardPage:isCommitPage()
+   RETURN Qt_QWizardPage_isCommitPage( ::pPtr )
+
+
+METHOD QWizardPage:isComplete()
+   RETURN Qt_QWizardPage_isComplete( ::pPtr )
+
+
+METHOD QWizardPage:isFinalPage()
+   RETURN Qt_QWizardPage_isFinalPage( ::pPtr )
+
+
+METHOD QWizardPage:nextId()
+   RETURN Qt_QWizardPage_nextId( ::pPtr )
+
+
+METHOD QWizardPage:pixmap( nWhich )
+   RETURN Qt_QWizardPage_pixmap( ::pPtr, nWhich )
+
+
+METHOD QWizardPage:setButtonText( nWhich, cText )
+   RETURN Qt_QWizardPage_setButtonText( ::pPtr, nWhich, cText )
+
+
+METHOD QWizardPage:setCommitPage( lCommitPage )
+   RETURN Qt_QWizardPage_setCommitPage( ::pPtr, lCommitPage )
+
+
+METHOD QWizardPage:setFinalPage( lFinalPage )
+   RETURN Qt_QWizardPage_setFinalPage( ::pPtr, lFinalPage )
+
+
+METHOD QWizardPage:setPixmap( nWhich, pPixmap )
+   RETURN Qt_QWizardPage_setPixmap( ::pPtr, nWhich, pPixmap )
+
+
+METHOD QWizardPage:setSubTitle( cSubTitle )
+   RETURN Qt_QWizardPage_setSubTitle( ::pPtr, cSubTitle )
+
+
+METHOD QWizardPage:setTitle( cTitle )
+   RETURN Qt_QWizardPage_setTitle( ::pPtr, cTitle )
+
+
+METHOD QWizardPage:subTitle()
+   RETURN Qt_QWizardPage_subTitle( ::pPtr )
+
+
+METHOD QWizardPage:title()
+   RETURN Qt_QWizardPage_title( ::pPtr )
+
+
+METHOD QWizardPage:validatePage()
+   RETURN Qt_QWizardPage_validatePage( ::pPtr )
+

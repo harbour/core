@@ -71,48 +71,117 @@ CREATE CLASS QRegExp
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  cap( nNth )                         INLINE  Qt_QRegExp_cap( ::pPtr, nNth )
-   METHOD  capturedTexts()                     INLINE  Qt_QRegExp_capturedTexts( ::pPtr )
-   METHOD  caseSensitivity()                   INLINE  Qt_QRegExp_caseSensitivity( ::pPtr )
-   METHOD  errorString()                       INLINE  Qt_QRegExp_errorString( ::pPtr )
-   METHOD  exactMatch( cStr )                  INLINE  Qt_QRegExp_exactMatch( ::pPtr, cStr )
-   METHOD  indexIn( cStr, nOffset, nCaretMode )  INLINE  Qt_QRegExp_indexIn( ::pPtr, cStr, nOffset, nCaretMode )
-   METHOD  isEmpty()                           INLINE  Qt_QRegExp_isEmpty( ::pPtr )
-   METHOD  isMinimal()                         INLINE  Qt_QRegExp_isMinimal( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QRegExp_isValid( ::pPtr )
-   METHOD  lastIndexIn( cStr, nOffset, nCaretMode )  INLINE  Qt_QRegExp_lastIndexIn( ::pPtr, cStr, nOffset, nCaretMode )
-   METHOD  matchedLength()                     INLINE  Qt_QRegExp_matchedLength( ::pPtr )
-   METHOD  numCaptures()                       INLINE  Qt_QRegExp_numCaptures( ::pPtr )
-   METHOD  pattern()                           INLINE  Qt_QRegExp_pattern( ::pPtr )
-   METHOD  patternSyntax()                     INLINE  Qt_QRegExp_patternSyntax( ::pPtr )
-   METHOD  pos( nNth )                         INLINE  Qt_QRegExp_pos( ::pPtr, nNth )
-   METHOD  setCaseSensitivity( nCs )           INLINE  Qt_QRegExp_setCaseSensitivity( ::pPtr, nCs )
-   METHOD  setMinimal( lMinimal )              INLINE  Qt_QRegExp_setMinimal( ::pPtr, lMinimal )
-   METHOD  setPattern( cPattern )              INLINE  Qt_QRegExp_setPattern( ::pPtr, cPattern )
-   METHOD  setPatternSyntax( nSyntax )         INLINE  Qt_QRegExp_setPatternSyntax( ::pPtr, nSyntax )
+   METHOD  cap( nNth )
+   METHOD  capturedTexts()
+   METHOD  caseSensitivity()
+   METHOD  errorString()
+   METHOD  exactMatch( cStr )
+   METHOD  indexIn( cStr, nOffset, nCaretMode )
+   METHOD  isEmpty()
+   METHOD  isMinimal()
+   METHOD  isValid()
+   METHOD  lastIndexIn( cStr, nOffset, nCaretMode )
+   METHOD  matchedLength()
+   METHOD  numCaptures()
+   METHOD  pattern()
+   METHOD  patternSyntax()
+   METHOD  pos( nNth )
+   METHOD  setCaseSensitivity( nCs )
+   METHOD  setMinimal( lMinimal )
+   METHOD  setPattern( cPattern )
+   METHOD  setPatternSyntax( nSyntax )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QRegExp
-
+METHOD QRegExp:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QRegExp( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QRegExp
-
+METHOD QRegExp:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QRegExp:cap( nNth )
+   RETURN Qt_QRegExp_cap( ::pPtr, nNth )
+
+
+METHOD QRegExp:capturedTexts()
+   RETURN Qt_QRegExp_capturedTexts( ::pPtr )
+
+
+METHOD QRegExp:caseSensitivity()
+   RETURN Qt_QRegExp_caseSensitivity( ::pPtr )
+
+
+METHOD QRegExp:errorString()
+   RETURN Qt_QRegExp_errorString( ::pPtr )
+
+
+METHOD QRegExp:exactMatch( cStr )
+   RETURN Qt_QRegExp_exactMatch( ::pPtr, cStr )
+
+
+METHOD QRegExp:indexIn( cStr, nOffset, nCaretMode )
+   RETURN Qt_QRegExp_indexIn( ::pPtr, cStr, nOffset, nCaretMode )
+
+
+METHOD QRegExp:isEmpty()
+   RETURN Qt_QRegExp_isEmpty( ::pPtr )
+
+
+METHOD QRegExp:isMinimal()
+   RETURN Qt_QRegExp_isMinimal( ::pPtr )
+
+
+METHOD QRegExp:isValid()
+   RETURN Qt_QRegExp_isValid( ::pPtr )
+
+
+METHOD QRegExp:lastIndexIn( cStr, nOffset, nCaretMode )
+   RETURN Qt_QRegExp_lastIndexIn( ::pPtr, cStr, nOffset, nCaretMode )
+
+
+METHOD QRegExp:matchedLength()
+   RETURN Qt_QRegExp_matchedLength( ::pPtr )
+
+
+METHOD QRegExp:numCaptures()
+   RETURN Qt_QRegExp_numCaptures( ::pPtr )
+
+
+METHOD QRegExp:pattern()
+   RETURN Qt_QRegExp_pattern( ::pPtr )
+
+
+METHOD QRegExp:patternSyntax()
+   RETURN Qt_QRegExp_patternSyntax( ::pPtr )
+
+
+METHOD QRegExp:pos( nNth )
+   RETURN Qt_QRegExp_pos( ::pPtr, nNth )
+
+
+METHOD QRegExp:setCaseSensitivity( nCs )
+   RETURN Qt_QRegExp_setCaseSensitivity( ::pPtr, nCs )
+
+
+METHOD QRegExp:setMinimal( lMinimal )
+   RETURN Qt_QRegExp_setMinimal( ::pPtr, lMinimal )
+
+
+METHOD QRegExp:setPattern( cPattern )
+   RETURN Qt_QRegExp_setPattern( ::pPtr, cPattern )
+
+
+METHOD QRegExp:setPatternSyntax( nSyntax )
+   RETURN Qt_QRegExp_setPatternSyntax( ::pPtr, nSyntax )
+

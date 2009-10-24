@@ -71,78 +71,267 @@ CREATE CLASS QTransform
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  m11()                               INLINE  Qt_QTransform_m11( ::pPtr )
-   METHOD  m12()                               INLINE  Qt_QTransform_m12( ::pPtr )
-   METHOD  m13()                               INLINE  Qt_QTransform_m13( ::pPtr )
-   METHOD  m21()                               INLINE  Qt_QTransform_m21( ::pPtr )
-   METHOD  m22()                               INLINE  Qt_QTransform_m22( ::pPtr )
-   METHOD  m23()                               INLINE  Qt_QTransform_m23( ::pPtr )
-   METHOD  m31()                               INLINE  Qt_QTransform_m31( ::pPtr )
-   METHOD  m32()                               INLINE  Qt_QTransform_m32( ::pPtr )
-   METHOD  m33()                               INLINE  Qt_QTransform_m33( ::pPtr )
-   METHOD  adjoint()                           INLINE  Qt_QTransform_adjoint( ::pPtr )
-   METHOD  det()                               INLINE  Qt_QTransform_det( ::pPtr )
-   METHOD  determinant()                       INLINE  Qt_QTransform_determinant( ::pPtr )
-   METHOD  dx()                                INLINE  Qt_QTransform_dx( ::pPtr )
-   METHOD  dy()                                INLINE  Qt_QTransform_dy( ::pPtr )
-   METHOD  inverted( lInvertible )             INLINE  Qt_QTransform_inverted( ::pPtr, lInvertible )
-   METHOD  isAffine()                          INLINE  Qt_QTransform_isAffine( ::pPtr )
-   METHOD  isIdentity()                        INLINE  Qt_QTransform_isIdentity( ::pPtr )
-   METHOD  isInvertible()                      INLINE  Qt_QTransform_isInvertible( ::pPtr )
-   METHOD  isRotating()                        INLINE  Qt_QTransform_isRotating( ::pPtr )
-   METHOD  isScaling()                         INLINE  Qt_QTransform_isScaling( ::pPtr )
-   METHOD  isTranslating()                     INLINE  Qt_QTransform_isTranslating( ::pPtr )
-   METHOD  map( nX, nY, nTx, nTy )             INLINE  Qt_QTransform_map( ::pPtr, nX, nY, nTx, nTy )
-   METHOD  map_1( pP )                         INLINE  Qt_QTransform_map_1( ::pPtr, pP )
-   METHOD  map_2( pPoint )                     INLINE  Qt_QTransform_map_2( ::pPtr, pPoint )
-   METHOD  map_3( pL )                         INLINE  Qt_QTransform_map_3( ::pPtr, pL )
-   METHOD  map_4( pLine )                      INLINE  Qt_QTransform_map_4( ::pPtr, pLine )
-   METHOD  map_5( pPolygon )                   INLINE  Qt_QTransform_map_5( ::pPtr, pPolygon )
-   METHOD  map_6( pPolygon )                   INLINE  Qt_QTransform_map_6( ::pPtr, pPolygon )
-   METHOD  map_7( pRegion )                    INLINE  Qt_QTransform_map_7( ::pPtr, pRegion )
-   METHOD  map_8( pPath )                      INLINE  Qt_QTransform_map_8( ::pPtr, pPath )
-   METHOD  map_9( nX, nY, nTx, nTy )           INLINE  Qt_QTransform_map_9( ::pPtr, nX, nY, nTx, nTy )
-   METHOD  mapRect( pRectangle )               INLINE  Qt_QTransform_mapRect( ::pPtr, pRectangle )
-   METHOD  mapRect_1( pRectangle )             INLINE  Qt_QTransform_mapRect_1( ::pPtr, pRectangle )
-   METHOD  mapToPolygon( pRectangle )          INLINE  Qt_QTransform_mapToPolygon( ::pPtr, pRectangle )
-   METHOD  reset()                             INLINE  Qt_QTransform_reset( ::pPtr )
-   METHOD  rotate( nAngle, nAxis )             INLINE  Qt_QTransform_rotate( ::pPtr, nAngle, nAxis )
-   METHOD  rotateRadians( nAngle, nAxis )      INLINE  Qt_QTransform_rotateRadians( ::pPtr, nAngle, nAxis )
-   METHOD  scale( nSx, nSy )                   INLINE  Qt_QTransform_scale( ::pPtr, nSx, nSy )
-   METHOD  setMatrix( nM11, nM12, nM13, nM21, nM22, nM23, nM31, nM32, nM33 )  INLINE  Qt_QTransform_setMatrix( ::pPtr, nM11, nM12, nM13, nM21, nM22, nM23, nM31, nM32, nM33 )
-   METHOD  shear( nSh, nSv )                   INLINE  Qt_QTransform_shear( ::pPtr, nSh, nSv )
-   METHOD  toAffine()                          INLINE  Qt_QTransform_toAffine( ::pPtr )
-   METHOD  translate( nDx, nDy )               INLINE  Qt_QTransform_translate( ::pPtr, nDx, nDy )
-   METHOD  transposed()                        INLINE  Qt_QTransform_transposed( ::pPtr )
-   METHOD  type()                              INLINE  Qt_QTransform_type( ::pPtr )
-   METHOD  fromScale( nSx, nSy )               INLINE  Qt_QTransform_fromScale( ::pPtr, nSx, nSy )
-   METHOD  fromTranslate( nDx, nDy )           INLINE  Qt_QTransform_fromTranslate( ::pPtr, nDx, nDy )
-   METHOD  quadToQuad( pOne, pTwo, pTrans )    INLINE  Qt_QTransform_quadToQuad( ::pPtr, pOne, pTwo, pTrans )
-   METHOD  quadToSquare( pQuad, pTrans )       INLINE  Qt_QTransform_quadToSquare( ::pPtr, pQuad, pTrans )
-   METHOD  squareToQuad( pQuad, pTrans )       INLINE  Qt_QTransform_squareToQuad( ::pPtr, pQuad, pTrans )
+   METHOD  m11()
+   METHOD  m12()
+   METHOD  m13()
+   METHOD  m21()
+   METHOD  m22()
+   METHOD  m23()
+   METHOD  m31()
+   METHOD  m32()
+   METHOD  m33()
+   METHOD  adjoint()
+   METHOD  det()
+   METHOD  determinant()
+   METHOD  dx()
+   METHOD  dy()
+   METHOD  inverted( lInvertible )
+   METHOD  isAffine()
+   METHOD  isIdentity()
+   METHOD  isInvertible()
+   METHOD  isRotating()
+   METHOD  isScaling()
+   METHOD  isTranslating()
+   METHOD  map( nX, nY, nTx, nTy )
+   METHOD  map_1( pP )
+   METHOD  map_2( pPoint )
+   METHOD  map_3( pL )
+   METHOD  map_4( pLine )
+   METHOD  map_5( pPolygon )
+   METHOD  map_6( pPolygon )
+   METHOD  map_7( pRegion )
+   METHOD  map_8( pPath )
+   METHOD  map_9( nX, nY, nTx, nTy )
+   METHOD  mapRect( pRectangle )
+   METHOD  mapRect_1( pRectangle )
+   METHOD  mapToPolygon( pRectangle )
+   METHOD  reset()
+   METHOD  rotate( nAngle, nAxis )
+   METHOD  rotateRadians( nAngle, nAxis )
+   METHOD  scale( nSx, nSy )
+   METHOD  setMatrix( nM11, nM12, nM13, nM21, nM22, nM23, nM31, nM32, nM33 )
+   METHOD  shear( nSh, nSv )
+   METHOD  toAffine()
+   METHOD  translate( nDx, nDy )
+   METHOD  transposed()
+   METHOD  type()
+   METHOD  fromScale( nSx, nSy )
+   METHOD  fromTranslate( nDx, nDy )
+   METHOD  quadToQuad( pOne, pTwo, pTrans )
+   METHOD  quadToSquare( pQuad, pTrans )
+   METHOD  squareToQuad( pQuad, pTrans )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTransform
-
+METHOD QTransform:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTransform( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTransform
-
+METHOD QTransform:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTransform:m11()
+   RETURN Qt_QTransform_m11( ::pPtr )
+
+
+METHOD QTransform:m12()
+   RETURN Qt_QTransform_m12( ::pPtr )
+
+
+METHOD QTransform:m13()
+   RETURN Qt_QTransform_m13( ::pPtr )
+
+
+METHOD QTransform:m21()
+   RETURN Qt_QTransform_m21( ::pPtr )
+
+
+METHOD QTransform:m22()
+   RETURN Qt_QTransform_m22( ::pPtr )
+
+
+METHOD QTransform:m23()
+   RETURN Qt_QTransform_m23( ::pPtr )
+
+
+METHOD QTransform:m31()
+   RETURN Qt_QTransform_m31( ::pPtr )
+
+
+METHOD QTransform:m32()
+   RETURN Qt_QTransform_m32( ::pPtr )
+
+
+METHOD QTransform:m33()
+   RETURN Qt_QTransform_m33( ::pPtr )
+
+
+METHOD QTransform:adjoint()
+   RETURN Qt_QTransform_adjoint( ::pPtr )
+
+
+METHOD QTransform:det()
+   RETURN Qt_QTransform_det( ::pPtr )
+
+
+METHOD QTransform:determinant()
+   RETURN Qt_QTransform_determinant( ::pPtr )
+
+
+METHOD QTransform:dx()
+   RETURN Qt_QTransform_dx( ::pPtr )
+
+
+METHOD QTransform:dy()
+   RETURN Qt_QTransform_dy( ::pPtr )
+
+
+METHOD QTransform:inverted( lInvertible )
+   RETURN Qt_QTransform_inverted( ::pPtr, lInvertible )
+
+
+METHOD QTransform:isAffine()
+   RETURN Qt_QTransform_isAffine( ::pPtr )
+
+
+METHOD QTransform:isIdentity()
+   RETURN Qt_QTransform_isIdentity( ::pPtr )
+
+
+METHOD QTransform:isInvertible()
+   RETURN Qt_QTransform_isInvertible( ::pPtr )
+
+
+METHOD QTransform:isRotating()
+   RETURN Qt_QTransform_isRotating( ::pPtr )
+
+
+METHOD QTransform:isScaling()
+   RETURN Qt_QTransform_isScaling( ::pPtr )
+
+
+METHOD QTransform:isTranslating()
+   RETURN Qt_QTransform_isTranslating( ::pPtr )
+
+
+METHOD QTransform:map( nX, nY, nTx, nTy )
+   RETURN Qt_QTransform_map( ::pPtr, nX, nY, nTx, nTy )
+
+
+METHOD QTransform:map_1( pP )
+   RETURN Qt_QTransform_map_1( ::pPtr, pP )
+
+
+METHOD QTransform:map_2( pPoint )
+   RETURN Qt_QTransform_map_2( ::pPtr, pPoint )
+
+
+METHOD QTransform:map_3( pL )
+   RETURN Qt_QTransform_map_3( ::pPtr, pL )
+
+
+METHOD QTransform:map_4( pLine )
+   RETURN Qt_QTransform_map_4( ::pPtr, pLine )
+
+
+METHOD QTransform:map_5( pPolygon )
+   RETURN Qt_QTransform_map_5( ::pPtr, pPolygon )
+
+
+METHOD QTransform:map_6( pPolygon )
+   RETURN Qt_QTransform_map_6( ::pPtr, pPolygon )
+
+
+METHOD QTransform:map_7( pRegion )
+   RETURN Qt_QTransform_map_7( ::pPtr, pRegion )
+
+
+METHOD QTransform:map_8( pPath )
+   RETURN Qt_QTransform_map_8( ::pPtr, pPath )
+
+
+METHOD QTransform:map_9( nX, nY, nTx, nTy )
+   RETURN Qt_QTransform_map_9( ::pPtr, nX, nY, nTx, nTy )
+
+
+METHOD QTransform:mapRect( pRectangle )
+   RETURN Qt_QTransform_mapRect( ::pPtr, pRectangle )
+
+
+METHOD QTransform:mapRect_1( pRectangle )
+   RETURN Qt_QTransform_mapRect_1( ::pPtr, pRectangle )
+
+
+METHOD QTransform:mapToPolygon( pRectangle )
+   RETURN Qt_QTransform_mapToPolygon( ::pPtr, pRectangle )
+
+
+METHOD QTransform:reset()
+   RETURN Qt_QTransform_reset( ::pPtr )
+
+
+METHOD QTransform:rotate( nAngle, nAxis )
+   RETURN Qt_QTransform_rotate( ::pPtr, nAngle, nAxis )
+
+
+METHOD QTransform:rotateRadians( nAngle, nAxis )
+   RETURN Qt_QTransform_rotateRadians( ::pPtr, nAngle, nAxis )
+
+
+METHOD QTransform:scale( nSx, nSy )
+   RETURN Qt_QTransform_scale( ::pPtr, nSx, nSy )
+
+
+METHOD QTransform:setMatrix( nM11, nM12, nM13, nM21, nM22, nM23, nM31, nM32, nM33 )
+   RETURN Qt_QTransform_setMatrix( ::pPtr, nM11, nM12, nM13, nM21, nM22, nM23, nM31, nM32, nM33 )
+
+
+METHOD QTransform:shear( nSh, nSv )
+   RETURN Qt_QTransform_shear( ::pPtr, nSh, nSv )
+
+
+METHOD QTransform:toAffine()
+   RETURN Qt_QTransform_toAffine( ::pPtr )
+
+
+METHOD QTransform:translate( nDx, nDy )
+   RETURN Qt_QTransform_translate( ::pPtr, nDx, nDy )
+
+
+METHOD QTransform:transposed()
+   RETURN Qt_QTransform_transposed( ::pPtr )
+
+
+METHOD QTransform:type()
+   RETURN Qt_QTransform_type( ::pPtr )
+
+
+METHOD QTransform:fromScale( nSx, nSy )
+   RETURN Qt_QTransform_fromScale( ::pPtr, nSx, nSy )
+
+
+METHOD QTransform:fromTranslate( nDx, nDy )
+   RETURN Qt_QTransform_fromTranslate( ::pPtr, nDx, nDy )
+
+
+METHOD QTransform:quadToQuad( pOne, pTwo, pTrans )
+   RETURN Qt_QTransform_quadToQuad( ::pPtr, pOne, pTwo, pTrans )
+
+
+METHOD QTransform:quadToSquare( pQuad, pTrans )
+   RETURN Qt_QTransform_quadToSquare( ::pPtr, pQuad, pTrans )
+
+
+METHOD QTransform:squareToQuad( pQuad, pTrans )
+   RETURN Qt_QTransform_squareToQuad( ::pPtr, pQuad, pTrans )
+

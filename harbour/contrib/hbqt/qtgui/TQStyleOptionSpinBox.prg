@@ -71,32 +71,37 @@ CREATE CLASS QStyleOptionSpinBox INHERIT QStyleOptionComplex
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  buttonSymbols()                     INLINE  Qt_QStyleOptionSpinBox_buttonSymbols( ::pPtr )
-   METHOD  frame()                             INLINE  Qt_QStyleOptionSpinBox_frame( ::pPtr )
-   METHOD  stepEnabled()                       INLINE  Qt_QStyleOptionSpinBox_stepEnabled( ::pPtr )
+   METHOD  buttonSymbols()
+   METHOD  frame()
+   METHOD  stepEnabled()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyleOptionSpinBox
-
+METHOD QStyleOptionSpinBox:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyleOptionSpinBox( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyleOptionSpinBox
-
+METHOD QStyleOptionSpinBox:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyleOptionSpinBox:buttonSymbols()
+   RETURN Qt_QStyleOptionSpinBox_buttonSymbols( ::pPtr )
+
+
+METHOD QStyleOptionSpinBox:frame()
+   RETURN Qt_QStyleOptionSpinBox_frame( ::pPtr )
+
+
+METHOD QStyleOptionSpinBox:stepEnabled()
+   RETURN Qt_QStyleOptionSpinBox_stepEnabled( ::pPtr )
+

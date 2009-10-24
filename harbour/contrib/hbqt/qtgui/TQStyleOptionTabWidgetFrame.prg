@@ -71,35 +71,52 @@ CREATE CLASS QStyleOptionTabWidgetFrame INHERIT QStyleOption
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  leftCornerWidgetSize()              INLINE  Qt_QStyleOptionTabWidgetFrame_leftCornerWidgetSize( ::pPtr )
-   METHOD  lineWidth()                         INLINE  Qt_QStyleOptionTabWidgetFrame_lineWidth( ::pPtr )
-   METHOD  midLineWidth()                      INLINE  Qt_QStyleOptionTabWidgetFrame_midLineWidth( ::pPtr )
-   METHOD  rightCornerWidgetSize()             INLINE  Qt_QStyleOptionTabWidgetFrame_rightCornerWidgetSize( ::pPtr )
-   METHOD  shape()                             INLINE  Qt_QStyleOptionTabWidgetFrame_shape( ::pPtr )
-   METHOD  tabBarSize()                        INLINE  Qt_QStyleOptionTabWidgetFrame_tabBarSize( ::pPtr )
+   METHOD  leftCornerWidgetSize()
+   METHOD  lineWidth()
+   METHOD  midLineWidth()
+   METHOD  rightCornerWidgetSize()
+   METHOD  shape()
+   METHOD  tabBarSize()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyleOptionTabWidgetFrame
-
+METHOD QStyleOptionTabWidgetFrame:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyleOptionTabWidgetFrame( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyleOptionTabWidgetFrame
-
+METHOD QStyleOptionTabWidgetFrame:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyleOptionTabWidgetFrame:leftCornerWidgetSize()
+   RETURN Qt_QStyleOptionTabWidgetFrame_leftCornerWidgetSize( ::pPtr )
+
+
+METHOD QStyleOptionTabWidgetFrame:lineWidth()
+   RETURN Qt_QStyleOptionTabWidgetFrame_lineWidth( ::pPtr )
+
+
+METHOD QStyleOptionTabWidgetFrame:midLineWidth()
+   RETURN Qt_QStyleOptionTabWidgetFrame_midLineWidth( ::pPtr )
+
+
+METHOD QStyleOptionTabWidgetFrame:rightCornerWidgetSize()
+   RETURN Qt_QStyleOptionTabWidgetFrame_rightCornerWidgetSize( ::pPtr )
+
+
+METHOD QStyleOptionTabWidgetFrame:shape()
+   RETURN Qt_QStyleOptionTabWidgetFrame_shape( ::pPtr )
+
+
+METHOD QStyleOptionTabWidgetFrame:tabBarSize()
+   RETURN Qt_QStyleOptionTabWidgetFrame_tabBarSize( ::pPtr )
+

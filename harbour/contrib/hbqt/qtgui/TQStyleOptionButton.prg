@@ -71,33 +71,42 @@ CREATE CLASS QStyleOptionButton INHERIT QStyleOption
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  features()                          INLINE  Qt_QStyleOptionButton_features( ::pPtr )
-   METHOD  icon()                              INLINE  Qt_QStyleOptionButton_icon( ::pPtr )
-   METHOD  iconSize()                          INLINE  Qt_QStyleOptionButton_iconSize( ::pPtr )
-   METHOD  text()                              INLINE  Qt_QStyleOptionButton_text( ::pPtr )
+   METHOD  features()
+   METHOD  icon()
+   METHOD  iconSize()
+   METHOD  text()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyleOptionButton
-
+METHOD QStyleOptionButton:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyleOptionButton( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyleOptionButton
-
+METHOD QStyleOptionButton:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyleOptionButton:features()
+   RETURN Qt_QStyleOptionButton_features( ::pPtr )
+
+
+METHOD QStyleOptionButton:icon()
+   RETURN Qt_QStyleOptionButton_icon( ::pPtr )
+
+
+METHOD QStyleOptionButton:iconSize()
+   RETURN Qt_QStyleOptionButton_iconSize( ::pPtr )
+
+
+METHOD QStyleOptionButton:text()
+   RETURN Qt_QStyleOptionButton_text( ::pPtr )
+

@@ -71,40 +71,77 @@ CREATE CLASS QSignalMapper INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  mapping( nId )                      INLINE  Qt_QSignalMapper_mapping( ::pPtr, nId )
-   METHOD  mapping_1( cId )                    INLINE  Qt_QSignalMapper_mapping_1( ::pPtr, cId )
-   METHOD  mapping_2( pWidget )                INLINE  Qt_QSignalMapper_mapping_2( ::pPtr, pWidget )
-   METHOD  mapping_3( pObject )                INLINE  Qt_QSignalMapper_mapping_3( ::pPtr, pObject )
-   METHOD  removeMappings( pSender )           INLINE  Qt_QSignalMapper_removeMappings( ::pPtr, pSender )
-   METHOD  setMapping( pSender, nId )          INLINE  Qt_QSignalMapper_setMapping( ::pPtr, pSender, nId )
-   METHOD  setMapping_1( pSender, cText )      INLINE  Qt_QSignalMapper_setMapping_1( ::pPtr, pSender, cText )
-   METHOD  setMapping_2( pSender, pWidget )    INLINE  Qt_QSignalMapper_setMapping_2( ::pPtr, pSender, pWidget )
-   METHOD  setMapping_3( pSender, pObject )    INLINE  Qt_QSignalMapper_setMapping_3( ::pPtr, pSender, pObject )
-   METHOD  map()                               INLINE  Qt_QSignalMapper_map( ::pPtr )
-   METHOD  map_1( pSender )                    INLINE  Qt_QSignalMapper_map_1( ::pPtr, pSender )
+   METHOD  mapping( nId )
+   METHOD  mapping_1( cId )
+   METHOD  mapping_2( pWidget )
+   METHOD  mapping_3( pObject )
+   METHOD  removeMappings( pSender )
+   METHOD  setMapping( pSender, nId )
+   METHOD  setMapping_1( pSender, cText )
+   METHOD  setMapping_2( pSender, pWidget )
+   METHOD  setMapping_3( pSender, pObject )
+   METHOD  map()
+   METHOD  map_1( pSender )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QSignalMapper
-
+METHOD QSignalMapper:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QSignalMapper( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QSignalMapper
-
+METHOD QSignalMapper:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QSignalMapper:mapping( nId )
+   RETURN Qt_QSignalMapper_mapping( ::pPtr, nId )
+
+
+METHOD QSignalMapper:mapping_1( cId )
+   RETURN Qt_QSignalMapper_mapping_1( ::pPtr, cId )
+
+
+METHOD QSignalMapper:mapping_2( pWidget )
+   RETURN Qt_QSignalMapper_mapping_2( ::pPtr, pWidget )
+
+
+METHOD QSignalMapper:mapping_3( pObject )
+   RETURN Qt_QSignalMapper_mapping_3( ::pPtr, pObject )
+
+
+METHOD QSignalMapper:removeMappings( pSender )
+   RETURN Qt_QSignalMapper_removeMappings( ::pPtr, pSender )
+
+
+METHOD QSignalMapper:setMapping( pSender, nId )
+   RETURN Qt_QSignalMapper_setMapping( ::pPtr, pSender, nId )
+
+
+METHOD QSignalMapper:setMapping_1( pSender, cText )
+   RETURN Qt_QSignalMapper_setMapping_1( ::pPtr, pSender, cText )
+
+
+METHOD QSignalMapper:setMapping_2( pSender, pWidget )
+   RETURN Qt_QSignalMapper_setMapping_2( ::pPtr, pSender, pWidget )
+
+
+METHOD QSignalMapper:setMapping_3( pSender, pObject )
+   RETURN Qt_QSignalMapper_setMapping_3( ::pPtr, pSender, pObject )
+
+
+METHOD QSignalMapper:map()
+   RETURN Qt_QSignalMapper_map( ::pPtr )
+
+
+METHOD QSignalMapper:map_1( pSender )
+   RETURN Qt_QSignalMapper_map_1( ::pPtr, pSender )
+

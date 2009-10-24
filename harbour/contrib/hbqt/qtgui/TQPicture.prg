@@ -71,17 +71,17 @@ CREATE CLASS QPicture INHERIT QPaintDevice
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  boundingRect()                      INLINE  Qt_QPicture_boundingRect( ::pPtr )
-   METHOD  data()                              INLINE  Qt_QPicture_data( ::pPtr )
-   METHOD  isNull()                            INLINE  Qt_QPicture_isNull( ::pPtr )
-   METHOD  load( cFileName, pFormat )          INLINE  Qt_QPicture_load( ::pPtr, cFileName, pFormat )
-   METHOD  load_1( pDev, pFormat )             INLINE  Qt_QPicture_load_1( ::pPtr, pDev, pFormat )
-   METHOD  play( pPainter )                    INLINE  Qt_QPicture_play( ::pPtr, pPainter )
-   METHOD  save( cFileName, pFormat )          INLINE  Qt_QPicture_save( ::pPtr, cFileName, pFormat )
-   METHOD  save_1( pDev, pFormat )             INLINE  Qt_QPicture_save_1( ::pPtr, pDev, pFormat )
-   METHOD  setBoundingRect( pR )               INLINE  Qt_QPicture_setBoundingRect( ::pPtr, pR )
-   METHOD  setData( pData, nSize )             INLINE  Qt_QPicture_setData( ::pPtr, pData, nSize )
-   METHOD  size()                              INLINE  Qt_QPicture_size( ::pPtr )
+   METHOD  boundingRect()
+   METHOD  data()
+   METHOD  isNull()
+   METHOD  load( cFileName, pFormat )
+   METHOD  load_1( pDev, pFormat )
+   METHOD  play( pPainter )
+   METHOD  save( cFileName, pFormat )
+   METHOD  save_1( pDev, pFormat )
+   METHOD  setBoundingRect( pR )
+   METHOD  setData( pData, nSize )
+   METHOD  size()
 
    ENDCLASS
 
@@ -93,16 +93,56 @@ METHOD New( ... ) CLASS QPicture
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QPicture
-
+METHOD QPicture:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QPicture:boundingRect()
+   RETURN Qt_QPicture_boundingRect( ::pPtr )
+
+
+METHOD QPicture:data()
+   RETURN Qt_QPicture_data( ::pPtr )
+
+
+METHOD QPicture:isNull()
+   RETURN Qt_QPicture_isNull( ::pPtr )
+
+
+METHOD QPicture:load( cFileName, pFormat )
+   RETURN Qt_QPicture_load( ::pPtr, cFileName, pFormat )
+
+
+METHOD QPicture:load_1( pDev, pFormat )
+   RETURN Qt_QPicture_load_1( ::pPtr, pDev, pFormat )
+
+
+METHOD QPicture:play( pPainter )
+   RETURN Qt_QPicture_play( ::pPtr, pPainter )
+
+
+METHOD QPicture:save( cFileName, pFormat )
+   RETURN Qt_QPicture_save( ::pPtr, cFileName, pFormat )
+
+
+METHOD QPicture:save_1( pDev, pFormat )
+   RETURN Qt_QPicture_save_1( ::pPtr, pDev, pFormat )
+
+
+METHOD QPicture:setBoundingRect( pR )
+   RETURN Qt_QPicture_setBoundingRect( ::pPtr, pR )
+
+
+METHOD QPicture:setData( pData, nSize )
+   RETURN Qt_QPicture_setData( ::pPtr, pData, nSize )
+
+
+METHOD QPicture:size()
+   RETURN Qt_QPicture_size( ::pPtr )
+

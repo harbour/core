@@ -71,40 +71,77 @@ CREATE CLASS QTextTableFormat INHERIT QTextFrameFormat
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  alignment()                         INLINE  Qt_QTextTableFormat_alignment( ::pPtr )
-   METHOD  cellPadding()                       INLINE  Qt_QTextTableFormat_cellPadding( ::pPtr )
-   METHOD  cellSpacing()                       INLINE  Qt_QTextTableFormat_cellSpacing( ::pPtr )
-   METHOD  clearColumnWidthConstraints()       INLINE  Qt_QTextTableFormat_clearColumnWidthConstraints( ::pPtr )
-   METHOD  columns()                           INLINE  Qt_QTextTableFormat_columns( ::pPtr )
-   METHOD  headerRowCount()                    INLINE  Qt_QTextTableFormat_headerRowCount( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QTextTableFormat_isValid( ::pPtr )
-   METHOD  setAlignment( nAlignment )          INLINE  Qt_QTextTableFormat_setAlignment( ::pPtr, nAlignment )
-   METHOD  setCellPadding( nPadding )          INLINE  Qt_QTextTableFormat_setCellPadding( ::pPtr, nPadding )
-   METHOD  setCellSpacing( nSpacing )          INLINE  Qt_QTextTableFormat_setCellSpacing( ::pPtr, nSpacing )
-   METHOD  setHeaderRowCount( nCount )         INLINE  Qt_QTextTableFormat_setHeaderRowCount( ::pPtr, nCount )
+   METHOD  alignment()
+   METHOD  cellPadding()
+   METHOD  cellSpacing()
+   METHOD  clearColumnWidthConstraints()
+   METHOD  columns()
+   METHOD  headerRowCount()
+   METHOD  isValid()
+   METHOD  setAlignment( nAlignment )
+   METHOD  setCellPadding( nPadding )
+   METHOD  setCellSpacing( nSpacing )
+   METHOD  setHeaderRowCount( nCount )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextTableFormat
-
+METHOD QTextTableFormat:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextTableFormat( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextTableFormat
-
+METHOD QTextTableFormat:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextTableFormat:alignment()
+   RETURN Qt_QTextTableFormat_alignment( ::pPtr )
+
+
+METHOD QTextTableFormat:cellPadding()
+   RETURN Qt_QTextTableFormat_cellPadding( ::pPtr )
+
+
+METHOD QTextTableFormat:cellSpacing()
+   RETURN Qt_QTextTableFormat_cellSpacing( ::pPtr )
+
+
+METHOD QTextTableFormat:clearColumnWidthConstraints()
+   RETURN Qt_QTextTableFormat_clearColumnWidthConstraints( ::pPtr )
+
+
+METHOD QTextTableFormat:columns()
+   RETURN Qt_QTextTableFormat_columns( ::pPtr )
+
+
+METHOD QTextTableFormat:headerRowCount()
+   RETURN Qt_QTextTableFormat_headerRowCount( ::pPtr )
+
+
+METHOD QTextTableFormat:isValid()
+   RETURN Qt_QTextTableFormat_isValid( ::pPtr )
+
+
+METHOD QTextTableFormat:setAlignment( nAlignment )
+   RETURN Qt_QTextTableFormat_setAlignment( ::pPtr, nAlignment )
+
+
+METHOD QTextTableFormat:setCellPadding( nPadding )
+   RETURN Qt_QTextTableFormat_setCellPadding( ::pPtr, nPadding )
+
+
+METHOD QTextTableFormat:setCellSpacing( nSpacing )
+   RETURN Qt_QTextTableFormat_setCellSpacing( ::pPtr, nSpacing )
+
+
+METHOD QTextTableFormat:setHeaderRowCount( nCount )
+   RETURN Qt_QTextTableFormat_setHeaderRowCount( ::pPtr, nCount )
+

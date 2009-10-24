@@ -71,31 +71,32 @@ CREATE CLASS QWidgetItem INHERIT QLayoutItem
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  isEmpty()                           INLINE  Qt_QWidgetItem_isEmpty( ::pPtr )
-   METHOD  widget()                            INLINE  Qt_QWidgetItem_widget( ::pPtr )
+   METHOD  isEmpty()
+   METHOD  widget()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QWidgetItem
-
+METHOD QWidgetItem:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QWidgetItem( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QWidgetItem
-
+METHOD QWidgetItem:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QWidgetItem:isEmpty()
+   RETURN Qt_QWidgetItem_isEmpty( ::pPtr )
+
+
+METHOD QWidgetItem:widget()
+   RETURN Qt_QWidgetItem_widget( ::pPtr )
+

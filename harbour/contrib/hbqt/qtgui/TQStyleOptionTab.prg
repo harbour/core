@@ -71,36 +71,57 @@ CREATE CLASS QStyleOptionTab INHERIT QStyleOption
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  cornerWidgets()                     INLINE  Qt_QStyleOptionTab_cornerWidgets( ::pPtr )
-   METHOD  icon()                              INLINE  Qt_QStyleOptionTab_icon( ::pPtr )
-   METHOD  position()                          INLINE  Qt_QStyleOptionTab_position( ::pPtr )
-   METHOD  row()                               INLINE  Qt_QStyleOptionTab_row( ::pPtr )
-   METHOD  selectedPosition()                  INLINE  Qt_QStyleOptionTab_selectedPosition( ::pPtr )
-   METHOD  shape()                             INLINE  Qt_QStyleOptionTab_shape( ::pPtr )
-   METHOD  text()                              INLINE  Qt_QStyleOptionTab_text( ::pPtr )
+   METHOD  cornerWidgets()
+   METHOD  icon()
+   METHOD  position()
+   METHOD  row()
+   METHOD  selectedPosition()
+   METHOD  shape()
+   METHOD  text()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyleOptionTab
-
+METHOD QStyleOptionTab:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyleOptionTab( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyleOptionTab
-
+METHOD QStyleOptionTab:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyleOptionTab:cornerWidgets()
+   RETURN Qt_QStyleOptionTab_cornerWidgets( ::pPtr )
+
+
+METHOD QStyleOptionTab:icon()
+   RETURN Qt_QStyleOptionTab_icon( ::pPtr )
+
+
+METHOD QStyleOptionTab:position()
+   RETURN Qt_QStyleOptionTab_position( ::pPtr )
+
+
+METHOD QStyleOptionTab:row()
+   RETURN Qt_QStyleOptionTab_row( ::pPtr )
+
+
+METHOD QStyleOptionTab:selectedPosition()
+   RETURN Qt_QStyleOptionTab_selectedPosition( ::pPtr )
+
+
+METHOD QStyleOptionTab:shape()
+   RETURN Qt_QStyleOptionTab_shape( ::pPtr )
+
+
+METHOD QStyleOptionTab:text()
+   RETURN Qt_QStyleOptionTab_text( ::pPtr )
+

@@ -71,33 +71,42 @@ CREATE CLASS QWidgetAction INHERIT QAction
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  defaultWidget()                     INLINE  Qt_QWidgetAction_defaultWidget( ::pPtr )
-   METHOD  releaseWidget( pWidget )            INLINE  Qt_QWidgetAction_releaseWidget( ::pPtr, pWidget )
-   METHOD  requestWidget( pParent )            INLINE  Qt_QWidgetAction_requestWidget( ::pPtr, pParent )
-   METHOD  setDefaultWidget( pWidget )         INLINE  Qt_QWidgetAction_setDefaultWidget( ::pPtr, pWidget )
+   METHOD  defaultWidget()
+   METHOD  releaseWidget( pWidget )
+   METHOD  requestWidget( pParent )
+   METHOD  setDefaultWidget( pWidget )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QWidgetAction
-
+METHOD QWidgetAction:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QWidgetAction( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QWidgetAction
-
+METHOD QWidgetAction:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QWidgetAction:defaultWidget()
+   RETURN Qt_QWidgetAction_defaultWidget( ::pPtr )
+
+
+METHOD QWidgetAction:releaseWidget( pWidget )
+   RETURN Qt_QWidgetAction_releaseWidget( ::pPtr, pWidget )
+
+
+METHOD QWidgetAction:requestWidget( pParent )
+   RETURN Qt_QWidgetAction_requestWidget( ::pPtr, pParent )
+
+
+METHOD QWidgetAction:setDefaultWidget( pWidget )
+   RETURN Qt_QWidgetAction_setDefaultWidget( ::pPtr, pWidget )
+

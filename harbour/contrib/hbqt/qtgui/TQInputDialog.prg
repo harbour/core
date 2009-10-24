@@ -71,73 +71,242 @@ CREATE CLASS QInputDialog INHERIT QDialog
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  cancelButtonText()                  INLINE  Qt_QInputDialog_cancelButtonText( ::pPtr )
-   METHOD  comboBoxItems()                     INLINE  Qt_QInputDialog_comboBoxItems( ::pPtr )
-   METHOD  done( nResult )                     INLINE  Qt_QInputDialog_done( ::pPtr, nResult )
-   METHOD  doubleDecimals()                    INLINE  Qt_QInputDialog_doubleDecimals( ::pPtr )
-   METHOD  doubleMaximum()                     INLINE  Qt_QInputDialog_doubleMaximum( ::pPtr )
-   METHOD  doubleMinimum()                     INLINE  Qt_QInputDialog_doubleMinimum( ::pPtr )
-   METHOD  doubleValue()                       INLINE  Qt_QInputDialog_doubleValue( ::pPtr )
-   METHOD  inputMode()                         INLINE  Qt_QInputDialog_inputMode( ::pPtr )
-   METHOD  intMaximum()                        INLINE  Qt_QInputDialog_intMaximum( ::pPtr )
-   METHOD  intMinimum()                        INLINE  Qt_QInputDialog_intMinimum( ::pPtr )
-   METHOD  intStep()                           INLINE  Qt_QInputDialog_intStep( ::pPtr )
-   METHOD  intValue()                          INLINE  Qt_QInputDialog_intValue( ::pPtr )
-   METHOD  isComboBoxEditable()                INLINE  Qt_QInputDialog_isComboBoxEditable( ::pPtr )
-   METHOD  labelText()                         INLINE  Qt_QInputDialog_labelText( ::pPtr )
-   METHOD  okButtonText()                      INLINE  Qt_QInputDialog_okButtonText( ::pPtr )
-   METHOD  open( pReceiver, pMember )          INLINE  Qt_QInputDialog_open( ::pPtr, pReceiver, pMember )
-   METHOD  options()                           INLINE  Qt_QInputDialog_options( ::pPtr )
-   METHOD  setCancelButtonText( cText )        INLINE  Qt_QInputDialog_setCancelButtonText( ::pPtr, cText )
-   METHOD  setComboBoxEditable( lEditable )    INLINE  Qt_QInputDialog_setComboBoxEditable( ::pPtr, lEditable )
-   METHOD  setComboBoxItems( pItems )          INLINE  Qt_QInputDialog_setComboBoxItems( ::pPtr, pItems )
-   METHOD  setDoubleDecimals( nDecimals )      INLINE  Qt_QInputDialog_setDoubleDecimals( ::pPtr, nDecimals )
-   METHOD  setDoubleMaximum( nMax )            INLINE  Qt_QInputDialog_setDoubleMaximum( ::pPtr, nMax )
-   METHOD  setDoubleMinimum( nMin )            INLINE  Qt_QInputDialog_setDoubleMinimum( ::pPtr, nMin )
-   METHOD  setDoubleRange( nMin, nMax )        INLINE  Qt_QInputDialog_setDoubleRange( ::pPtr, nMin, nMax )
-   METHOD  setDoubleValue( nValue )            INLINE  Qt_QInputDialog_setDoubleValue( ::pPtr, nValue )
-   METHOD  setInputMode( nMode )               INLINE  Qt_QInputDialog_setInputMode( ::pPtr, nMode )
-   METHOD  setIntMaximum( nMax )               INLINE  Qt_QInputDialog_setIntMaximum( ::pPtr, nMax )
-   METHOD  setIntMinimum( nMin )               INLINE  Qt_QInputDialog_setIntMinimum( ::pPtr, nMin )
-   METHOD  setIntRange( nMin, nMax )           INLINE  Qt_QInputDialog_setIntRange( ::pPtr, nMin, nMax )
-   METHOD  setIntStep( nStep )                 INLINE  Qt_QInputDialog_setIntStep( ::pPtr, nStep )
-   METHOD  setIntValue( nValue )               INLINE  Qt_QInputDialog_setIntValue( ::pPtr, nValue )
-   METHOD  setLabelText( cText )               INLINE  Qt_QInputDialog_setLabelText( ::pPtr, cText )
-   METHOD  setOkButtonText( cText )            INLINE  Qt_QInputDialog_setOkButtonText( ::pPtr, cText )
-   METHOD  setOption( nOption, lOn )           INLINE  Qt_QInputDialog_setOption( ::pPtr, nOption, lOn )
-   METHOD  setOptions( nOptions )              INLINE  Qt_QInputDialog_setOptions( ::pPtr, nOptions )
-   METHOD  setTextEchoMode( nMode )            INLINE  Qt_QInputDialog_setTextEchoMode( ::pPtr, nMode )
-   METHOD  setTextValue( cText )               INLINE  Qt_QInputDialog_setTextValue( ::pPtr, cText )
-   METHOD  testOption( nOption )               INLINE  Qt_QInputDialog_testOption( ::pPtr, nOption )
-   METHOD  textEchoMode()                      INLINE  Qt_QInputDialog_textEchoMode( ::pPtr )
-   METHOD  textValue()                         INLINE  Qt_QInputDialog_textValue( ::pPtr )
-   METHOD  getDouble( pParent, cTitle, cLabel, nValue, nMin, nMax, nDecimals, lOk, nFlags )  INLINE  Qt_QInputDialog_getDouble( ::pPtr, pParent, cTitle, cLabel, nValue, nMin, nMax, nDecimals, lOk, nFlags )
-   METHOD  getInt( pParent, cTitle, cLabel, nValue, nMin, nMax, nStep, lOk, nFlags )  INLINE  Qt_QInputDialog_getInt( ::pPtr, pParent, cTitle, cLabel, nValue, nMin, nMax, nStep, lOk, nFlags )
-   METHOD  getItem( pParent, cTitle, cLabel, pItems, nCurrent, lEditable, lOk, nFlags )  INLINE  Qt_QInputDialog_getItem( ::pPtr, pParent, cTitle, cLabel, pItems, nCurrent, lEditable, lOk, nFlags )
-   METHOD  getText( pParent, cTitle, cLabel, nMode, cText, lOk, nFlags )  INLINE  Qt_QInputDialog_getText( ::pPtr, pParent, cTitle, cLabel, nMode, cText, lOk, nFlags )
+   METHOD  cancelButtonText()
+   METHOD  comboBoxItems()
+   METHOD  done( nResult )
+   METHOD  doubleDecimals()
+   METHOD  doubleMaximum()
+   METHOD  doubleMinimum()
+   METHOD  doubleValue()
+   METHOD  inputMode()
+   METHOD  intMaximum()
+   METHOD  intMinimum()
+   METHOD  intStep()
+   METHOD  intValue()
+   METHOD  isComboBoxEditable()
+   METHOD  labelText()
+   METHOD  okButtonText()
+   METHOD  open( pReceiver, pMember )
+   METHOD  options()
+   METHOD  setCancelButtonText( cText )
+   METHOD  setComboBoxEditable( lEditable )
+   METHOD  setComboBoxItems( pItems )
+   METHOD  setDoubleDecimals( nDecimals )
+   METHOD  setDoubleMaximum( nMax )
+   METHOD  setDoubleMinimum( nMin )
+   METHOD  setDoubleRange( nMin, nMax )
+   METHOD  setDoubleValue( nValue )
+   METHOD  setInputMode( nMode )
+   METHOD  setIntMaximum( nMax )
+   METHOD  setIntMinimum( nMin )
+   METHOD  setIntRange( nMin, nMax )
+   METHOD  setIntStep( nStep )
+   METHOD  setIntValue( nValue )
+   METHOD  setLabelText( cText )
+   METHOD  setOkButtonText( cText )
+   METHOD  setOption( nOption, lOn )
+   METHOD  setOptions( nOptions )
+   METHOD  setTextEchoMode( nMode )
+   METHOD  setTextValue( cText )
+   METHOD  testOption( nOption )
+   METHOD  textEchoMode()
+   METHOD  textValue()
+   METHOD  getDouble( pParent, cTitle, cLabel, nValue, nMin, nMax, nDecimals, lOk, nFlags )
+   METHOD  getInt( pParent, cTitle, cLabel, nValue, nMin, nMax, nStep, lOk, nFlags )
+   METHOD  getItem( pParent, cTitle, cLabel, pItems, nCurrent, lEditable, lOk, nFlags )
+   METHOD  getText( pParent, cTitle, cLabel, nMode, cText, lOk, nFlags )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QInputDialog
-
+METHOD QInputDialog:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QInputDialog( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QInputDialog
-
+METHOD QInputDialog:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QInputDialog:cancelButtonText()
+   RETURN Qt_QInputDialog_cancelButtonText( ::pPtr )
+
+
+METHOD QInputDialog:comboBoxItems()
+   RETURN Qt_QInputDialog_comboBoxItems( ::pPtr )
+
+
+METHOD QInputDialog:done( nResult )
+   RETURN Qt_QInputDialog_done( ::pPtr, nResult )
+
+
+METHOD QInputDialog:doubleDecimals()
+   RETURN Qt_QInputDialog_doubleDecimals( ::pPtr )
+
+
+METHOD QInputDialog:doubleMaximum()
+   RETURN Qt_QInputDialog_doubleMaximum( ::pPtr )
+
+
+METHOD QInputDialog:doubleMinimum()
+   RETURN Qt_QInputDialog_doubleMinimum( ::pPtr )
+
+
+METHOD QInputDialog:doubleValue()
+   RETURN Qt_QInputDialog_doubleValue( ::pPtr )
+
+
+METHOD QInputDialog:inputMode()
+   RETURN Qt_QInputDialog_inputMode( ::pPtr )
+
+
+METHOD QInputDialog:intMaximum()
+   RETURN Qt_QInputDialog_intMaximum( ::pPtr )
+
+
+METHOD QInputDialog:intMinimum()
+   RETURN Qt_QInputDialog_intMinimum( ::pPtr )
+
+
+METHOD QInputDialog:intStep()
+   RETURN Qt_QInputDialog_intStep( ::pPtr )
+
+
+METHOD QInputDialog:intValue()
+   RETURN Qt_QInputDialog_intValue( ::pPtr )
+
+
+METHOD QInputDialog:isComboBoxEditable()
+   RETURN Qt_QInputDialog_isComboBoxEditable( ::pPtr )
+
+
+METHOD QInputDialog:labelText()
+   RETURN Qt_QInputDialog_labelText( ::pPtr )
+
+
+METHOD QInputDialog:okButtonText()
+   RETURN Qt_QInputDialog_okButtonText( ::pPtr )
+
+
+METHOD QInputDialog:open( pReceiver, pMember )
+   RETURN Qt_QInputDialog_open( ::pPtr, pReceiver, pMember )
+
+
+METHOD QInputDialog:options()
+   RETURN Qt_QInputDialog_options( ::pPtr )
+
+
+METHOD QInputDialog:setCancelButtonText( cText )
+   RETURN Qt_QInputDialog_setCancelButtonText( ::pPtr, cText )
+
+
+METHOD QInputDialog:setComboBoxEditable( lEditable )
+   RETURN Qt_QInputDialog_setComboBoxEditable( ::pPtr, lEditable )
+
+
+METHOD QInputDialog:setComboBoxItems( pItems )
+   RETURN Qt_QInputDialog_setComboBoxItems( ::pPtr, pItems )
+
+
+METHOD QInputDialog:setDoubleDecimals( nDecimals )
+   RETURN Qt_QInputDialog_setDoubleDecimals( ::pPtr, nDecimals )
+
+
+METHOD QInputDialog:setDoubleMaximum( nMax )
+   RETURN Qt_QInputDialog_setDoubleMaximum( ::pPtr, nMax )
+
+
+METHOD QInputDialog:setDoubleMinimum( nMin )
+   RETURN Qt_QInputDialog_setDoubleMinimum( ::pPtr, nMin )
+
+
+METHOD QInputDialog:setDoubleRange( nMin, nMax )
+   RETURN Qt_QInputDialog_setDoubleRange( ::pPtr, nMin, nMax )
+
+
+METHOD QInputDialog:setDoubleValue( nValue )
+   RETURN Qt_QInputDialog_setDoubleValue( ::pPtr, nValue )
+
+
+METHOD QInputDialog:setInputMode( nMode )
+   RETURN Qt_QInputDialog_setInputMode( ::pPtr, nMode )
+
+
+METHOD QInputDialog:setIntMaximum( nMax )
+   RETURN Qt_QInputDialog_setIntMaximum( ::pPtr, nMax )
+
+
+METHOD QInputDialog:setIntMinimum( nMin )
+   RETURN Qt_QInputDialog_setIntMinimum( ::pPtr, nMin )
+
+
+METHOD QInputDialog:setIntRange( nMin, nMax )
+   RETURN Qt_QInputDialog_setIntRange( ::pPtr, nMin, nMax )
+
+
+METHOD QInputDialog:setIntStep( nStep )
+   RETURN Qt_QInputDialog_setIntStep( ::pPtr, nStep )
+
+
+METHOD QInputDialog:setIntValue( nValue )
+   RETURN Qt_QInputDialog_setIntValue( ::pPtr, nValue )
+
+
+METHOD QInputDialog:setLabelText( cText )
+   RETURN Qt_QInputDialog_setLabelText( ::pPtr, cText )
+
+
+METHOD QInputDialog:setOkButtonText( cText )
+   RETURN Qt_QInputDialog_setOkButtonText( ::pPtr, cText )
+
+
+METHOD QInputDialog:setOption( nOption, lOn )
+   RETURN Qt_QInputDialog_setOption( ::pPtr, nOption, lOn )
+
+
+METHOD QInputDialog:setOptions( nOptions )
+   RETURN Qt_QInputDialog_setOptions( ::pPtr, nOptions )
+
+
+METHOD QInputDialog:setTextEchoMode( nMode )
+   RETURN Qt_QInputDialog_setTextEchoMode( ::pPtr, nMode )
+
+
+METHOD QInputDialog:setTextValue( cText )
+   RETURN Qt_QInputDialog_setTextValue( ::pPtr, cText )
+
+
+METHOD QInputDialog:testOption( nOption )
+   RETURN Qt_QInputDialog_testOption( ::pPtr, nOption )
+
+
+METHOD QInputDialog:textEchoMode()
+   RETURN Qt_QInputDialog_textEchoMode( ::pPtr )
+
+
+METHOD QInputDialog:textValue()
+   RETURN Qt_QInputDialog_textValue( ::pPtr )
+
+
+METHOD QInputDialog:getDouble( pParent, cTitle, cLabel, nValue, nMin, nMax, nDecimals, lOk, nFlags )
+   RETURN Qt_QInputDialog_getDouble( ::pPtr, pParent, cTitle, cLabel, nValue, nMin, nMax, nDecimals, lOk, nFlags )
+
+
+METHOD QInputDialog:getInt( pParent, cTitle, cLabel, nValue, nMin, nMax, nStep, lOk, nFlags )
+   RETURN Qt_QInputDialog_getInt( ::pPtr, pParent, cTitle, cLabel, nValue, nMin, nMax, nStep, lOk, nFlags )
+
+
+METHOD QInputDialog:getItem( pParent, cTitle, cLabel, pItems, nCurrent, lEditable, lOk, nFlags )
+   RETURN Qt_QInputDialog_getItem( ::pPtr, pParent, cTitle, cLabel, pItems, nCurrent, lEditable, lOk, nFlags )
+
+
+METHOD QInputDialog:getText( pParent, cTitle, cLabel, nMode, cText, lOk, nFlags )
+   RETURN Qt_QInputDialog_getText( ::pPtr, pParent, cTitle, cLabel, nMode, cText, lOk, nFlags )
+

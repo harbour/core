@@ -71,62 +71,187 @@ CREATE CLASS QProcess INHERIT QIODevice
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  close()                             INLINE  Qt_QProcess_close( ::pPtr )
-   METHOD  closeReadChannel( nChannel )        INLINE  Qt_QProcess_closeReadChannel( ::pPtr, nChannel )
-   METHOD  closeWriteChannel()                 INLINE  Qt_QProcess_closeWriteChannel( ::pPtr )
-   METHOD  environment()                       INLINE  Qt_QProcess_environment( ::pPtr )
-   METHOD  error()                             INLINE  Qt_QProcess_error( ::pPtr )
-   METHOD  exitCode()                          INLINE  Qt_QProcess_exitCode( ::pPtr )
-   METHOD  exitStatus()                        INLINE  Qt_QProcess_exitStatus( ::pPtr )
-   METHOD  processChannelMode()                INLINE  Qt_QProcess_processChannelMode( ::pPtr )
-   METHOD  readAllStandardError()              INLINE  Qt_QProcess_readAllStandardError( ::pPtr )
-   METHOD  readAllStandardOutput()             INLINE  Qt_QProcess_readAllStandardOutput( ::pPtr )
-   METHOD  readChannel()                       INLINE  Qt_QProcess_readChannel( ::pPtr )
-   METHOD  setEnvironment( pEnvironment )      INLINE  Qt_QProcess_setEnvironment( ::pPtr, pEnvironment )
-   METHOD  setProcessChannelMode( nMode )      INLINE  Qt_QProcess_setProcessChannelMode( ::pPtr, nMode )
-   METHOD  setReadChannel( nChannel )          INLINE  Qt_QProcess_setReadChannel( ::pPtr, nChannel )
-   METHOD  setStandardErrorFile( cFileName, nMode )  INLINE  Qt_QProcess_setStandardErrorFile( ::pPtr, cFileName, nMode )
-   METHOD  setStandardInputFile( cFileName )   INLINE  Qt_QProcess_setStandardInputFile( ::pPtr, cFileName )
-   METHOD  setStandardOutputFile( cFileName, nMode )  INLINE  Qt_QProcess_setStandardOutputFile( ::pPtr, cFileName, nMode )
-   METHOD  setStandardOutputProcess( pDestination )  INLINE  Qt_QProcess_setStandardOutputProcess( ::pPtr, pDestination )
-   METHOD  setWorkingDirectory( cDir )         INLINE  Qt_QProcess_setWorkingDirectory( ::pPtr, cDir )
-   METHOD  start( cProgram, pArguments, nMode )  INLINE  Qt_QProcess_start( ::pPtr, cProgram, pArguments, nMode )
-   METHOD  start_1( cProgram, nMode )          INLINE  Qt_QProcess_start_1( ::pPtr, cProgram, nMode )
-   METHOD  state()                             INLINE  Qt_QProcess_state( ::pPtr )
-   METHOD  waitForFinished( nMsecs )           INLINE  Qt_QProcess_waitForFinished( ::pPtr, nMsecs )
-   METHOD  waitForStarted( nMsecs )            INLINE  Qt_QProcess_waitForStarted( ::pPtr, nMsecs )
-   METHOD  workingDirectory()                  INLINE  Qt_QProcess_workingDirectory( ::pPtr )
-   METHOD  execute( cProgram, pArguments )     INLINE  Qt_QProcess_execute( ::pPtr, cProgram, pArguments )
-   METHOD  execute_1( cProgram )               INLINE  Qt_QProcess_execute_1( ::pPtr, cProgram )
-   METHOD  startDetached( cProgram, pArguments, cWorkingDirectory, nPid )  INLINE  Qt_QProcess_startDetached( ::pPtr, cProgram, pArguments, cWorkingDirectory, nPid )
-   METHOD  startDetached_1( cProgram, pArguments )  INLINE  Qt_QProcess_startDetached_1( ::pPtr, cProgram, pArguments )
-   METHOD  startDetached_2( cProgram )         INLINE  Qt_QProcess_startDetached_2( ::pPtr, cProgram )
-   METHOD  systemEnvironment()                 INLINE  Qt_QProcess_systemEnvironment( ::pPtr )
-   METHOD  kill()                              INLINE  Qt_QProcess_kill( ::pPtr )
-   METHOD  terminate()                         INLINE  Qt_QProcess_terminate( ::pPtr )
+   METHOD  close()
+   METHOD  closeReadChannel( nChannel )
+   METHOD  closeWriteChannel()
+   METHOD  environment()
+   METHOD  error()
+   METHOD  exitCode()
+   METHOD  exitStatus()
+   METHOD  processChannelMode()
+   METHOD  readAllStandardError()
+   METHOD  readAllStandardOutput()
+   METHOD  readChannel()
+   METHOD  setEnvironment( pEnvironment )
+   METHOD  setProcessChannelMode( nMode )
+   METHOD  setReadChannel( nChannel )
+   METHOD  setStandardErrorFile( cFileName, nMode )
+   METHOD  setStandardInputFile( cFileName )
+   METHOD  setStandardOutputFile( cFileName, nMode )
+   METHOD  setStandardOutputProcess( pDestination )
+   METHOD  setWorkingDirectory( cDir )
+   METHOD  start( cProgram, pArguments, nMode )
+   METHOD  start_1( cProgram, nMode )
+   METHOD  state()
+   METHOD  waitForFinished( nMsecs )
+   METHOD  waitForStarted( nMsecs )
+   METHOD  workingDirectory()
+   METHOD  execute( cProgram, pArguments )
+   METHOD  execute_1( cProgram )
+   METHOD  startDetached( cProgram, pArguments, cWorkingDirectory, nPid )
+   METHOD  startDetached_1( cProgram, pArguments )
+   METHOD  startDetached_2( cProgram )
+   METHOD  systemEnvironment()
+   METHOD  kill()
+   METHOD  terminate()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QProcess
-
+METHOD QProcess:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QProcess( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QProcess
-
+METHOD QProcess:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QProcess:close()
+   RETURN Qt_QProcess_close( ::pPtr )
+
+
+METHOD QProcess:closeReadChannel( nChannel )
+   RETURN Qt_QProcess_closeReadChannel( ::pPtr, nChannel )
+
+
+METHOD QProcess:closeWriteChannel()
+   RETURN Qt_QProcess_closeWriteChannel( ::pPtr )
+
+
+METHOD QProcess:environment()
+   RETURN Qt_QProcess_environment( ::pPtr )
+
+
+METHOD QProcess:error()
+   RETURN Qt_QProcess_error( ::pPtr )
+
+
+METHOD QProcess:exitCode()
+   RETURN Qt_QProcess_exitCode( ::pPtr )
+
+
+METHOD QProcess:exitStatus()
+   RETURN Qt_QProcess_exitStatus( ::pPtr )
+
+
+METHOD QProcess:processChannelMode()
+   RETURN Qt_QProcess_processChannelMode( ::pPtr )
+
+
+METHOD QProcess:readAllStandardError()
+   RETURN Qt_QProcess_readAllStandardError( ::pPtr )
+
+
+METHOD QProcess:readAllStandardOutput()
+   RETURN Qt_QProcess_readAllStandardOutput( ::pPtr )
+
+
+METHOD QProcess:readChannel()
+   RETURN Qt_QProcess_readChannel( ::pPtr )
+
+
+METHOD QProcess:setEnvironment( pEnvironment )
+   RETURN Qt_QProcess_setEnvironment( ::pPtr, pEnvironment )
+
+
+METHOD QProcess:setProcessChannelMode( nMode )
+   RETURN Qt_QProcess_setProcessChannelMode( ::pPtr, nMode )
+
+
+METHOD QProcess:setReadChannel( nChannel )
+   RETURN Qt_QProcess_setReadChannel( ::pPtr, nChannel )
+
+
+METHOD QProcess:setStandardErrorFile( cFileName, nMode )
+   RETURN Qt_QProcess_setStandardErrorFile( ::pPtr, cFileName, nMode )
+
+
+METHOD QProcess:setStandardInputFile( cFileName )
+   RETURN Qt_QProcess_setStandardInputFile( ::pPtr, cFileName )
+
+
+METHOD QProcess:setStandardOutputFile( cFileName, nMode )
+   RETURN Qt_QProcess_setStandardOutputFile( ::pPtr, cFileName, nMode )
+
+
+METHOD QProcess:setStandardOutputProcess( pDestination )
+   RETURN Qt_QProcess_setStandardOutputProcess( ::pPtr, pDestination )
+
+
+METHOD QProcess:setWorkingDirectory( cDir )
+   RETURN Qt_QProcess_setWorkingDirectory( ::pPtr, cDir )
+
+
+METHOD QProcess:start( cProgram, pArguments, nMode )
+   RETURN Qt_QProcess_start( ::pPtr, cProgram, pArguments, nMode )
+
+
+METHOD QProcess:start_1( cProgram, nMode )
+   RETURN Qt_QProcess_start_1( ::pPtr, cProgram, nMode )
+
+
+METHOD QProcess:state()
+   RETURN Qt_QProcess_state( ::pPtr )
+
+
+METHOD QProcess:waitForFinished( nMsecs )
+   RETURN Qt_QProcess_waitForFinished( ::pPtr, nMsecs )
+
+
+METHOD QProcess:waitForStarted( nMsecs )
+   RETURN Qt_QProcess_waitForStarted( ::pPtr, nMsecs )
+
+
+METHOD QProcess:workingDirectory()
+   RETURN Qt_QProcess_workingDirectory( ::pPtr )
+
+
+METHOD QProcess:execute( cProgram, pArguments )
+   RETURN Qt_QProcess_execute( ::pPtr, cProgram, pArguments )
+
+
+METHOD QProcess:execute_1( cProgram )
+   RETURN Qt_QProcess_execute_1( ::pPtr, cProgram )
+
+
+METHOD QProcess:startDetached( cProgram, pArguments, cWorkingDirectory, nPid )
+   RETURN Qt_QProcess_startDetached( ::pPtr, cProgram, pArguments, cWorkingDirectory, nPid )
+
+
+METHOD QProcess:startDetached_1( cProgram, pArguments )
+   RETURN Qt_QProcess_startDetached_1( ::pPtr, cProgram, pArguments )
+
+
+METHOD QProcess:startDetached_2( cProgram )
+   RETURN Qt_QProcess_startDetached_2( ::pPtr, cProgram )
+
+
+METHOD QProcess:systemEnvironment()
+   RETURN Qt_QProcess_systemEnvironment( ::pPtr )
+
+
+METHOD QProcess:kill()
+   RETURN Qt_QProcess_kill( ::pPtr )
+
+
+METHOD QProcess:terminate()
+   RETURN Qt_QProcess_terminate( ::pPtr )
+

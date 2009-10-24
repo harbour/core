@@ -71,39 +71,72 @@ CREATE CLASS QDropEvent INHERIT QEvent
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  acceptProposedAction()              INLINE  Qt_QDropEvent_acceptProposedAction( ::pPtr )
-   METHOD  dropAction()                        INLINE  Qt_QDropEvent_dropAction( ::pPtr )
-   METHOD  keyboardModifiers()                 INLINE  Qt_QDropEvent_keyboardModifiers( ::pPtr )
-   METHOD  mimeData()                          INLINE  Qt_QDropEvent_mimeData( ::pPtr )
-   METHOD  mouseButtons()                      INLINE  Qt_QDropEvent_mouseButtons( ::pPtr )
-   METHOD  pos()                               INLINE  Qt_QDropEvent_pos( ::pPtr )
-   METHOD  possibleActions()                   INLINE  Qt_QDropEvent_possibleActions( ::pPtr )
-   METHOD  proposedAction()                    INLINE  Qt_QDropEvent_proposedAction( ::pPtr )
-   METHOD  setDropAction( nAction )            INLINE  Qt_QDropEvent_setDropAction( ::pPtr, nAction )
-   METHOD  source()                            INLINE  Qt_QDropEvent_source( ::pPtr )
+   METHOD  acceptProposedAction()
+   METHOD  dropAction()
+   METHOD  keyboardModifiers()
+   METHOD  mimeData()
+   METHOD  mouseButtons()
+   METHOD  pos()
+   METHOD  possibleActions()
+   METHOD  proposedAction()
+   METHOD  setDropAction( nAction )
+   METHOD  source()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QDropEvent
-
+METHOD QDropEvent:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QDropEvent( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QDropEvent
-
+METHOD QDropEvent:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QDropEvent:acceptProposedAction()
+   RETURN Qt_QDropEvent_acceptProposedAction( ::pPtr )
+
+
+METHOD QDropEvent:dropAction()
+   RETURN Qt_QDropEvent_dropAction( ::pPtr )
+
+
+METHOD QDropEvent:keyboardModifiers()
+   RETURN Qt_QDropEvent_keyboardModifiers( ::pPtr )
+
+
+METHOD QDropEvent:mimeData()
+   RETURN Qt_QDropEvent_mimeData( ::pPtr )
+
+
+METHOD QDropEvent:mouseButtons()
+   RETURN Qt_QDropEvent_mouseButtons( ::pPtr )
+
+
+METHOD QDropEvent:pos()
+   RETURN Qt_QDropEvent_pos( ::pPtr )
+
+
+METHOD QDropEvent:possibleActions()
+   RETURN Qt_QDropEvent_possibleActions( ::pPtr )
+
+
+METHOD QDropEvent:proposedAction()
+   RETURN Qt_QDropEvent_proposedAction( ::pPtr )
+
+
+METHOD QDropEvent:setDropAction( nAction )
+   RETURN Qt_QDropEvent_setDropAction( ::pPtr, nAction )
+
+
+METHOD QDropEvent:source()
+   RETURN Qt_QDropEvent_source( ::pPtr )
+

@@ -76,24 +76,17 @@ CREATE CLASS QDragLeaveEvent INHERIT QEvent
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QDragLeaveEvent
-
+METHOD QDragLeaveEvent:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QDragLeaveEvent( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QDragLeaveEvent
-
+METHOD QDragLeaveEvent:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/

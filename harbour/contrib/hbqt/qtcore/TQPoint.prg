@@ -71,14 +71,14 @@ CREATE CLASS QPoint
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  isNull()                            INLINE  Qt_QPoint_isNull( ::pPtr )
-   METHOD  manhattanLength()                   INLINE  Qt_QPoint_manhattanLength( ::pPtr )
-   METHOD  rx()                                INLINE  Qt_QPoint_rx( ::pPtr )
-   METHOD  ry()                                INLINE  Qt_QPoint_ry( ::pPtr )
-   METHOD  setX( nX )                          INLINE  Qt_QPoint_setX( ::pPtr, nX )
-   METHOD  setY( nY )                          INLINE  Qt_QPoint_setY( ::pPtr, nY )
-   METHOD  x()                                 INLINE  Qt_QPoint_x( ::pPtr )
-   METHOD  y()                                 INLINE  Qt_QPoint_y( ::pPtr )
+   METHOD  isNull()
+   METHOD  manhattanLength()
+   METHOD  rx()
+   METHOD  ry()
+   METHOD  setX( nX )
+   METHOD  setY( nY )
+   METHOD  x()
+   METHOD  y()
 
    ENDCLASS
 
@@ -90,16 +90,44 @@ METHOD New( ... ) CLASS QPoint
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QPoint
-
+METHOD QPoint:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QPoint:isNull()
+   RETURN Qt_QPoint_isNull( ::pPtr )
+
+
+METHOD QPoint:manhattanLength()
+   RETURN Qt_QPoint_manhattanLength( ::pPtr )
+
+
+METHOD QPoint:rx()
+   RETURN Qt_QPoint_rx( ::pPtr )
+
+
+METHOD QPoint:ry()
+   RETURN Qt_QPoint_ry( ::pPtr )
+
+
+METHOD QPoint:setX( nX )
+   RETURN Qt_QPoint_setX( ::pPtr, nX )
+
+
+METHOD QPoint:setY( nY )
+   RETURN Qt_QPoint_setY( ::pPtr, nY )
+
+
+METHOD QPoint:x()
+   RETURN Qt_QPoint_x( ::pPtr )
+
+
+METHOD QPoint:y()
+   RETURN Qt_QPoint_y( ::pPtr )
+

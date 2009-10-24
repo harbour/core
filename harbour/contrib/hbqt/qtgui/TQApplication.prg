@@ -71,105 +71,402 @@ CREATE CLASS QApplication INHERIT QCoreApplication
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  commitData( pManager )              INLINE  Qt_QApplication_commitData( ::pPtr, pManager )
-   METHOD  inputContext()                      INLINE  Qt_QApplication_inputContext( ::pPtr )
-   METHOD  isSessionRestored()                 INLINE  Qt_QApplication_isSessionRestored( ::pPtr )
-   METHOD  saveState( pManager )               INLINE  Qt_QApplication_saveState( ::pPtr, pManager )
-   METHOD  sessionId()                         INLINE  Qt_QApplication_sessionId( ::pPtr )
-   METHOD  sessionKey()                        INLINE  Qt_QApplication_sessionKey( ::pPtr )
-   METHOD  setInputContext( pInputContext )    INLINE  Qt_QApplication_setInputContext( ::pPtr, pInputContext )
-   METHOD  styleSheet()                        INLINE  Qt_QApplication_styleSheet( ::pPtr )
-   METHOD  activeModalWidget()                 INLINE  Qt_QApplication_activeModalWidget( ::pPtr )
-   METHOD  activePopupWidget()                 INLINE  Qt_QApplication_activePopupWidget( ::pPtr )
-   METHOD  activeWindow()                      INLINE  Qt_QApplication_activeWindow( ::pPtr )
-   METHOD  alert( pWidget, nMsec )             INLINE  Qt_QApplication_alert( ::pPtr, pWidget, nMsec )
-   METHOD  beep()                              INLINE  Qt_QApplication_beep( ::pPtr )
-   METHOD  changeOverrideCursor( pCursor )     INLINE  Qt_QApplication_changeOverrideCursor( ::pPtr, pCursor )
-   METHOD  clipboard()                         INLINE  Qt_QApplication_clipboard( ::pPtr )
-   METHOD  colorSpec()                         INLINE  Qt_QApplication_colorSpec( ::pPtr )
-   METHOD  cursorFlashTime()                   INLINE  Qt_QApplication_cursorFlashTime( ::pPtr )
-   METHOD  desktop()                           INLINE  Qt_QApplication_desktop( ::pPtr )
-   METHOD  desktopSettingsAware()              INLINE  Qt_QApplication_desktopSettingsAware( ::pPtr )
-   METHOD  doubleClickInterval()               INLINE  Qt_QApplication_doubleClickInterval( ::pPtr )
-   METHOD  exec()                              INLINE  Qt_QApplication_exec( ::pPtr )
-   METHOD  focusWidget()                       INLINE  Qt_QApplication_focusWidget( ::pPtr )
-   METHOD  font()                              INLINE  Qt_QApplication_font( ::pPtr )
-   METHOD  font_1( pWidget )                   INLINE  Qt_QApplication_font_1( ::pPtr, pWidget )
-   METHOD  font_2( pClassName )                INLINE  Qt_QApplication_font_2( ::pPtr, pClassName )
-   METHOD  fontMetrics()                       INLINE  Qt_QApplication_fontMetrics( ::pPtr )
-   METHOD  globalStrut()                       INLINE  Qt_QApplication_globalStrut( ::pPtr )
-   METHOD  isEffectEnabled( nEffect )          INLINE  Qt_QApplication_isEffectEnabled( ::pPtr, nEffect )
-   METHOD  isLeftToRight()                     INLINE  Qt_QApplication_isLeftToRight( ::pPtr )
-   METHOD  isRightToLeft()                     INLINE  Qt_QApplication_isRightToLeft( ::pPtr )
-   METHOD  keyboardInputDirection()            INLINE  Qt_QApplication_keyboardInputDirection( ::pPtr )
-   METHOD  keyboardInputInterval()             INLINE  Qt_QApplication_keyboardInputInterval( ::pPtr )
-   METHOD  keyboardInputLocale()               INLINE  Qt_QApplication_keyboardInputLocale( ::pPtr )
-   METHOD  keyboardModifiers()                 INLINE  Qt_QApplication_keyboardModifiers( ::pPtr )
-   METHOD  layoutDirection()                   INLINE  Qt_QApplication_layoutDirection( ::pPtr )
-   METHOD  mouseButtons()                      INLINE  Qt_QApplication_mouseButtons( ::pPtr )
-   METHOD  overrideCursor()                    INLINE  Qt_QApplication_overrideCursor( ::pPtr )
-   METHOD  palette()                           INLINE  Qt_QApplication_palette( ::pPtr )
-   METHOD  palette_1( pWidget )                INLINE  Qt_QApplication_palette_1( ::pPtr, pWidget )
-   METHOD  palette_2( pClassName )             INLINE  Qt_QApplication_palette_2( ::pPtr, pClassName )
-   METHOD  quitOnLastWindowClosed()            INLINE  Qt_QApplication_quitOnLastWindowClosed( ::pPtr )
-   METHOD  restoreOverrideCursor()             INLINE  Qt_QApplication_restoreOverrideCursor( ::pPtr )
-   METHOD  setActiveWindow( pActive )          INLINE  Qt_QApplication_setActiveWindow( ::pPtr, pActive )
-   METHOD  setColorSpec( nSpec )               INLINE  Qt_QApplication_setColorSpec( ::pPtr, nSpec )
-   METHOD  setCursorFlashTime( nInt )          INLINE  Qt_QApplication_setCursorFlashTime( ::pPtr, nInt )
-   METHOD  setDesktopSettingsAware( lOn )      INLINE  Qt_QApplication_setDesktopSettingsAware( ::pPtr, lOn )
-   METHOD  setDoubleClickInterval( nInt )      INLINE  Qt_QApplication_setDoubleClickInterval( ::pPtr, nInt )
-   METHOD  setEffectEnabled( nEffect, lEnable )  INLINE  Qt_QApplication_setEffectEnabled( ::pPtr, nEffect, lEnable )
-   METHOD  setFont( pFont, pClassName )        INLINE  Qt_QApplication_setFont( ::pPtr, pFont, pClassName )
-   METHOD  setGlobalStrut( pQSize )            INLINE  Qt_QApplication_setGlobalStrut( ::pPtr, pQSize )
-   METHOD  setGraphicsSystem( cSystem )        INLINE  Qt_QApplication_setGraphicsSystem( ::pPtr, cSystem )
-   METHOD  setKeyboardInputInterval( nInt )    INLINE  Qt_QApplication_setKeyboardInputInterval( ::pPtr, nInt )
-   METHOD  setLayoutDirection( nDirection )    INLINE  Qt_QApplication_setLayoutDirection( ::pPtr, nDirection )
-   METHOD  setOverrideCursor( pCursor )        INLINE  Qt_QApplication_setOverrideCursor( ::pPtr, pCursor )
-   METHOD  setPalette( pPalette, pClassName )  INLINE  Qt_QApplication_setPalette( ::pPtr, pPalette, pClassName )
-   METHOD  setQuitOnLastWindowClosed( lQuit )  INLINE  Qt_QApplication_setQuitOnLastWindowClosed( ::pPtr, lQuit )
-   METHOD  setStartDragDistance( nL )          INLINE  Qt_QApplication_setStartDragDistance( ::pPtr, nL )
-   METHOD  setStartDragTime( nMs )             INLINE  Qt_QApplication_setStartDragTime( ::pPtr, nMs )
-   METHOD  setStyle( pStyle )                  INLINE  Qt_QApplication_setStyle( ::pPtr, pStyle )
-   METHOD  setStyle_1( cStyle )                INLINE  Qt_QApplication_setStyle_1( ::pPtr, cStyle )
-   METHOD  setWheelScrollLines( nInt )         INLINE  Qt_QApplication_setWheelScrollLines( ::pPtr, nInt )
-   METHOD  setWindowIcon( cIcon )              INLINE  Qt_QApplication_setWindowIcon( ::pPtr, cIcon )
-   METHOD  startDragDistance()                 INLINE  Qt_QApplication_startDragDistance( ::pPtr )
-   METHOD  startDragTime()                     INLINE  Qt_QApplication_startDragTime( ::pPtr )
-   METHOD  style()                             INLINE  Qt_QApplication_style( ::pPtr )
-   METHOD  syncX()                             INLINE  Qt_QApplication_syncX( ::pPtr )
-   METHOD  topLevelAt( pPoint )                INLINE  Qt_QApplication_topLevelAt( ::pPtr, pPoint )
-   METHOD  topLevelAt_1( nX, nY )              INLINE  Qt_QApplication_topLevelAt_1( ::pPtr, nX, nY )
-   METHOD  type()                              INLINE  Qt_QApplication_type( ::pPtr )
-   METHOD  wheelScrollLines()                  INLINE  Qt_QApplication_wheelScrollLines( ::pPtr )
-   METHOD  widgetAt( pPoint )                  INLINE  Qt_QApplication_widgetAt( ::pPtr, pPoint )
-   METHOD  widgetAt_1( nX, nY )                INLINE  Qt_QApplication_widgetAt_1( ::pPtr, nX, nY )
-   METHOD  windowIcon()                        INLINE  Qt_QApplication_windowIcon( ::pPtr )
-   METHOD  aboutQt()                           INLINE  Qt_QApplication_aboutQt( ::pPtr )
-   METHOD  closeAllWindows()                   INLINE  Qt_QApplication_closeAllWindows( ::pPtr )
-   METHOD  setStyleSheet( cSheet )             INLINE  Qt_QApplication_setStyleSheet( ::pPtr, cSheet )
+   METHOD  commitData( pManager )
+   METHOD  inputContext()
+   METHOD  isSessionRestored()
+   METHOD  saveState( pManager )
+   METHOD  sessionId()
+   METHOD  sessionKey()
+   METHOD  setInputContext( pInputContext )
+   METHOD  styleSheet()
+   METHOD  activeModalWidget()
+   METHOD  activePopupWidget()
+   METHOD  activeWindow()
+   METHOD  alert( pWidget, nMsec )
+   METHOD  beep()
+   METHOD  changeOverrideCursor( pCursor )
+   METHOD  clipboard()
+   METHOD  colorSpec()
+   METHOD  cursorFlashTime()
+   METHOD  desktop()
+   METHOD  desktopSettingsAware()
+   METHOD  doubleClickInterval()
+   METHOD  exec()
+   METHOD  focusWidget()
+   METHOD  font()
+   METHOD  font_1( pWidget )
+   METHOD  font_2( pClassName )
+   METHOD  fontMetrics()
+   METHOD  globalStrut()
+   METHOD  isEffectEnabled( nEffect )
+   METHOD  isLeftToRight()
+   METHOD  isRightToLeft()
+   METHOD  keyboardInputDirection()
+   METHOD  keyboardInputInterval()
+   METHOD  keyboardInputLocale()
+   METHOD  keyboardModifiers()
+   METHOD  layoutDirection()
+   METHOD  mouseButtons()
+   METHOD  overrideCursor()
+   METHOD  palette()
+   METHOD  palette_1( pWidget )
+   METHOD  palette_2( pClassName )
+   METHOD  quitOnLastWindowClosed()
+   METHOD  restoreOverrideCursor()
+   METHOD  setActiveWindow( pActive )
+   METHOD  setColorSpec( nSpec )
+   METHOD  setCursorFlashTime( nInt )
+   METHOD  setDesktopSettingsAware( lOn )
+   METHOD  setDoubleClickInterval( nInt )
+   METHOD  setEffectEnabled( nEffect, lEnable )
+   METHOD  setFont( pFont, pClassName )
+   METHOD  setGlobalStrut( pQSize )
+   METHOD  setGraphicsSystem( cSystem )
+   METHOD  setKeyboardInputInterval( nInt )
+   METHOD  setLayoutDirection( nDirection )
+   METHOD  setOverrideCursor( pCursor )
+   METHOD  setPalette( pPalette, pClassName )
+   METHOD  setQuitOnLastWindowClosed( lQuit )
+   METHOD  setStartDragDistance( nL )
+   METHOD  setStartDragTime( nMs )
+   METHOD  setStyle( pStyle )
+   METHOD  setStyle_1( cStyle )
+   METHOD  setWheelScrollLines( nInt )
+   METHOD  setWindowIcon( cIcon )
+   METHOD  startDragDistance()
+   METHOD  startDragTime()
+   METHOD  style()
+   METHOD  syncX()
+   METHOD  topLevelAt( pPoint )
+   METHOD  topLevelAt_1( nX, nY )
+   METHOD  type()
+   METHOD  wheelScrollLines()
+   METHOD  widgetAt( pPoint )
+   METHOD  widgetAt_1( nX, nY )
+   METHOD  windowIcon()
+   METHOD  aboutQt()
+   METHOD  closeAllWindows()
+   METHOD  setStyleSheet( cSheet )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QApplication
-
+METHOD QApplication:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QApplication( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QApplication
-
+METHOD QApplication:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QApplication:commitData( pManager )
+   RETURN Qt_QApplication_commitData( ::pPtr, pManager )
+
+
+METHOD QApplication:inputContext()
+   RETURN Qt_QApplication_inputContext( ::pPtr )
+
+
+METHOD QApplication:isSessionRestored()
+   RETURN Qt_QApplication_isSessionRestored( ::pPtr )
+
+
+METHOD QApplication:saveState( pManager )
+   RETURN Qt_QApplication_saveState( ::pPtr, pManager )
+
+
+METHOD QApplication:sessionId()
+   RETURN Qt_QApplication_sessionId( ::pPtr )
+
+
+METHOD QApplication:sessionKey()
+   RETURN Qt_QApplication_sessionKey( ::pPtr )
+
+
+METHOD QApplication:setInputContext( pInputContext )
+   RETURN Qt_QApplication_setInputContext( ::pPtr, pInputContext )
+
+
+METHOD QApplication:styleSheet()
+   RETURN Qt_QApplication_styleSheet( ::pPtr )
+
+
+METHOD QApplication:activeModalWidget()
+   RETURN Qt_QApplication_activeModalWidget( ::pPtr )
+
+
+METHOD QApplication:activePopupWidget()
+   RETURN Qt_QApplication_activePopupWidget( ::pPtr )
+
+
+METHOD QApplication:activeWindow()
+   RETURN Qt_QApplication_activeWindow( ::pPtr )
+
+
+METHOD QApplication:alert( pWidget, nMsec )
+   RETURN Qt_QApplication_alert( ::pPtr, pWidget, nMsec )
+
+
+METHOD QApplication:beep()
+   RETURN Qt_QApplication_beep( ::pPtr )
+
+
+METHOD QApplication:changeOverrideCursor( pCursor )
+   RETURN Qt_QApplication_changeOverrideCursor( ::pPtr, pCursor )
+
+
+METHOD QApplication:clipboard()
+   RETURN Qt_QApplication_clipboard( ::pPtr )
+
+
+METHOD QApplication:colorSpec()
+   RETURN Qt_QApplication_colorSpec( ::pPtr )
+
+
+METHOD QApplication:cursorFlashTime()
+   RETURN Qt_QApplication_cursorFlashTime( ::pPtr )
+
+
+METHOD QApplication:desktop()
+   RETURN Qt_QApplication_desktop( ::pPtr )
+
+
+METHOD QApplication:desktopSettingsAware()
+   RETURN Qt_QApplication_desktopSettingsAware( ::pPtr )
+
+
+METHOD QApplication:doubleClickInterval()
+   RETURN Qt_QApplication_doubleClickInterval( ::pPtr )
+
+
+METHOD QApplication:exec()
+   RETURN Qt_QApplication_exec( ::pPtr )
+
+
+METHOD QApplication:focusWidget()
+   RETURN Qt_QApplication_focusWidget( ::pPtr )
+
+
+METHOD QApplication:font()
+   RETURN Qt_QApplication_font( ::pPtr )
+
+
+METHOD QApplication:font_1( pWidget )
+   RETURN Qt_QApplication_font_1( ::pPtr, pWidget )
+
+
+METHOD QApplication:font_2( pClassName )
+   RETURN Qt_QApplication_font_2( ::pPtr, pClassName )
+
+
+METHOD QApplication:fontMetrics()
+   RETURN Qt_QApplication_fontMetrics( ::pPtr )
+
+
+METHOD QApplication:globalStrut()
+   RETURN Qt_QApplication_globalStrut( ::pPtr )
+
+
+METHOD QApplication:isEffectEnabled( nEffect )
+   RETURN Qt_QApplication_isEffectEnabled( ::pPtr, nEffect )
+
+
+METHOD QApplication:isLeftToRight()
+   RETURN Qt_QApplication_isLeftToRight( ::pPtr )
+
+
+METHOD QApplication:isRightToLeft()
+   RETURN Qt_QApplication_isRightToLeft( ::pPtr )
+
+
+METHOD QApplication:keyboardInputDirection()
+   RETURN Qt_QApplication_keyboardInputDirection( ::pPtr )
+
+
+METHOD QApplication:keyboardInputInterval()
+   RETURN Qt_QApplication_keyboardInputInterval( ::pPtr )
+
+
+METHOD QApplication:keyboardInputLocale()
+   RETURN Qt_QApplication_keyboardInputLocale( ::pPtr )
+
+
+METHOD QApplication:keyboardModifiers()
+   RETURN Qt_QApplication_keyboardModifiers( ::pPtr )
+
+
+METHOD QApplication:layoutDirection()
+   RETURN Qt_QApplication_layoutDirection( ::pPtr )
+
+
+METHOD QApplication:mouseButtons()
+   RETURN Qt_QApplication_mouseButtons( ::pPtr )
+
+
+METHOD QApplication:overrideCursor()
+   RETURN Qt_QApplication_overrideCursor( ::pPtr )
+
+
+METHOD QApplication:palette()
+   RETURN Qt_QApplication_palette( ::pPtr )
+
+
+METHOD QApplication:palette_1( pWidget )
+   RETURN Qt_QApplication_palette_1( ::pPtr, pWidget )
+
+
+METHOD QApplication:palette_2( pClassName )
+   RETURN Qt_QApplication_palette_2( ::pPtr, pClassName )
+
+
+METHOD QApplication:quitOnLastWindowClosed()
+   RETURN Qt_QApplication_quitOnLastWindowClosed( ::pPtr )
+
+
+METHOD QApplication:restoreOverrideCursor()
+   RETURN Qt_QApplication_restoreOverrideCursor( ::pPtr )
+
+
+METHOD QApplication:setActiveWindow( pActive )
+   RETURN Qt_QApplication_setActiveWindow( ::pPtr, pActive )
+
+
+METHOD QApplication:setColorSpec( nSpec )
+   RETURN Qt_QApplication_setColorSpec( ::pPtr, nSpec )
+
+
+METHOD QApplication:setCursorFlashTime( nInt )
+   RETURN Qt_QApplication_setCursorFlashTime( ::pPtr, nInt )
+
+
+METHOD QApplication:setDesktopSettingsAware( lOn )
+   RETURN Qt_QApplication_setDesktopSettingsAware( ::pPtr, lOn )
+
+
+METHOD QApplication:setDoubleClickInterval( nInt )
+   RETURN Qt_QApplication_setDoubleClickInterval( ::pPtr, nInt )
+
+
+METHOD QApplication:setEffectEnabled( nEffect, lEnable )
+   RETURN Qt_QApplication_setEffectEnabled( ::pPtr, nEffect, lEnable )
+
+
+METHOD QApplication:setFont( pFont, pClassName )
+   RETURN Qt_QApplication_setFont( ::pPtr, pFont, pClassName )
+
+
+METHOD QApplication:setGlobalStrut( pQSize )
+   RETURN Qt_QApplication_setGlobalStrut( ::pPtr, pQSize )
+
+
+METHOD QApplication:setGraphicsSystem( cSystem )
+   RETURN Qt_QApplication_setGraphicsSystem( ::pPtr, cSystem )
+
+
+METHOD QApplication:setKeyboardInputInterval( nInt )
+   RETURN Qt_QApplication_setKeyboardInputInterval( ::pPtr, nInt )
+
+
+METHOD QApplication:setLayoutDirection( nDirection )
+   RETURN Qt_QApplication_setLayoutDirection( ::pPtr, nDirection )
+
+
+METHOD QApplication:setOverrideCursor( pCursor )
+   RETURN Qt_QApplication_setOverrideCursor( ::pPtr, pCursor )
+
+
+METHOD QApplication:setPalette( pPalette, pClassName )
+   RETURN Qt_QApplication_setPalette( ::pPtr, pPalette, pClassName )
+
+
+METHOD QApplication:setQuitOnLastWindowClosed( lQuit )
+   RETURN Qt_QApplication_setQuitOnLastWindowClosed( ::pPtr, lQuit )
+
+
+METHOD QApplication:setStartDragDistance( nL )
+   RETURN Qt_QApplication_setStartDragDistance( ::pPtr, nL )
+
+
+METHOD QApplication:setStartDragTime( nMs )
+   RETURN Qt_QApplication_setStartDragTime( ::pPtr, nMs )
+
+
+METHOD QApplication:setStyle( pStyle )
+   RETURN Qt_QApplication_setStyle( ::pPtr, pStyle )
+
+
+METHOD QApplication:setStyle_1( cStyle )
+   RETURN Qt_QApplication_setStyle_1( ::pPtr, cStyle )
+
+
+METHOD QApplication:setWheelScrollLines( nInt )
+   RETURN Qt_QApplication_setWheelScrollLines( ::pPtr, nInt )
+
+
+METHOD QApplication:setWindowIcon( cIcon )
+   RETURN Qt_QApplication_setWindowIcon( ::pPtr, cIcon )
+
+
+METHOD QApplication:startDragDistance()
+   RETURN Qt_QApplication_startDragDistance( ::pPtr )
+
+
+METHOD QApplication:startDragTime()
+   RETURN Qt_QApplication_startDragTime( ::pPtr )
+
+
+METHOD QApplication:style()
+   RETURN Qt_QApplication_style( ::pPtr )
+
+
+METHOD QApplication:syncX()
+   RETURN Qt_QApplication_syncX( ::pPtr )
+
+
+METHOD QApplication:topLevelAt( pPoint )
+   RETURN Qt_QApplication_topLevelAt( ::pPtr, pPoint )
+
+
+METHOD QApplication:topLevelAt_1( nX, nY )
+   RETURN Qt_QApplication_topLevelAt_1( ::pPtr, nX, nY )
+
+
+METHOD QApplication:type()
+   RETURN Qt_QApplication_type( ::pPtr )
+
+
+METHOD QApplication:wheelScrollLines()
+   RETURN Qt_QApplication_wheelScrollLines( ::pPtr )
+
+
+METHOD QApplication:widgetAt( pPoint )
+   RETURN Qt_QApplication_widgetAt( ::pPtr, pPoint )
+
+
+METHOD QApplication:widgetAt_1( nX, nY )
+   RETURN Qt_QApplication_widgetAt_1( ::pPtr, nX, nY )
+
+
+METHOD QApplication:windowIcon()
+   RETURN Qt_QApplication_windowIcon( ::pPtr )
+
+
+METHOD QApplication:aboutQt()
+   RETURN Qt_QApplication_aboutQt( ::pPtr )
+
+
+METHOD QApplication:closeAllWindows()
+   RETURN Qt_QApplication_closeAllWindows( ::pPtr )
+
+
+METHOD QApplication:setStyleSheet( cSheet )
+   RETURN Qt_QApplication_setStyleSheet( ::pPtr, cSheet )
+

@@ -71,57 +71,162 @@ CREATE CLASS QToolBar INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  actionAt( pP )                      INLINE  Qt_QToolBar_actionAt( ::pPtr, pP )
-   METHOD  actionAt_1( nX, nY )                INLINE  Qt_QToolBar_actionAt_1( ::pPtr, nX, nY )
-   METHOD  addAction( pAction )                INLINE  Qt_QToolBar_addAction( ::pPtr, pAction )
-   METHOD  addAction_1( cText )                INLINE  Qt_QToolBar_addAction_1( ::pPtr, cText )
-   METHOD  addAction_2( cIcon, cText )         INLINE  Qt_QToolBar_addAction_2( ::pPtr, cIcon, cText )
-   METHOD  addAction_3( cText, pReceiver, pMember )  INLINE  Qt_QToolBar_addAction_3( ::pPtr, cText, pReceiver, pMember )
-   METHOD  addAction_4( cIcon, cText, pReceiver, pMember )  INLINE  Qt_QToolBar_addAction_4( ::pPtr, cIcon, cText, pReceiver, pMember )
-   METHOD  addSeparator()                      INLINE  Qt_QToolBar_addSeparator( ::pPtr )
-   METHOD  addWidget( pWidget )                INLINE  Qt_QToolBar_addWidget( ::pPtr, pWidget )
-   METHOD  allowedAreas()                      INLINE  Qt_QToolBar_allowedAreas( ::pPtr )
-   METHOD  clear()                             INLINE  Qt_QToolBar_clear( ::pPtr )
-   METHOD  iconSize()                          INLINE  Qt_QToolBar_iconSize( ::pPtr )
-   METHOD  insertSeparator( pBefore )          INLINE  Qt_QToolBar_insertSeparator( ::pPtr, pBefore )
-   METHOD  insertWidget( pBefore, pWidget )    INLINE  Qt_QToolBar_insertWidget( ::pPtr, pBefore, pWidget )
-   METHOD  isAreaAllowed( nArea )              INLINE  Qt_QToolBar_isAreaAllowed( ::pPtr, nArea )
-   METHOD  isFloatable()                       INLINE  Qt_QToolBar_isFloatable( ::pPtr )
-   METHOD  isFloating()                        INLINE  Qt_QToolBar_isFloating( ::pPtr )
-   METHOD  isMovable()                         INLINE  Qt_QToolBar_isMovable( ::pPtr )
-   METHOD  orientation()                       INLINE  Qt_QToolBar_orientation( ::pPtr )
-   METHOD  setAllowedAreas( nAreas )           INLINE  Qt_QToolBar_setAllowedAreas( ::pPtr, nAreas )
-   METHOD  setFloatable( lFloatable )          INLINE  Qt_QToolBar_setFloatable( ::pPtr, lFloatable )
-   METHOD  setMovable( lMovable )              INLINE  Qt_QToolBar_setMovable( ::pPtr, lMovable )
-   METHOD  setOrientation( nOrientation )      INLINE  Qt_QToolBar_setOrientation( ::pPtr, nOrientation )
-   METHOD  toggleViewAction()                  INLINE  Qt_QToolBar_toggleViewAction( ::pPtr )
-   METHOD  toolButtonStyle()                   INLINE  Qt_QToolBar_toolButtonStyle( ::pPtr )
-   METHOD  widgetForAction( pAction )          INLINE  Qt_QToolBar_widgetForAction( ::pPtr, pAction )
-   METHOD  setIconSize( pIconSize )            INLINE  Qt_QToolBar_setIconSize( ::pPtr, pIconSize )
-   METHOD  setToolButtonStyle( nToolButtonStyle )  INLINE  Qt_QToolBar_setToolButtonStyle( ::pPtr, nToolButtonStyle )
+   METHOD  actionAt( pP )
+   METHOD  actionAt_1( nX, nY )
+   METHOD  addAction( pAction )
+   METHOD  addAction_1( cText )
+   METHOD  addAction_2( cIcon, cText )
+   METHOD  addAction_3( cText, pReceiver, pMember )
+   METHOD  addAction_4( cIcon, cText, pReceiver, pMember )
+   METHOD  addSeparator()
+   METHOD  addWidget( pWidget )
+   METHOD  allowedAreas()
+   METHOD  clear()
+   METHOD  iconSize()
+   METHOD  insertSeparator( pBefore )
+   METHOD  insertWidget( pBefore, pWidget )
+   METHOD  isAreaAllowed( nArea )
+   METHOD  isFloatable()
+   METHOD  isFloating()
+   METHOD  isMovable()
+   METHOD  orientation()
+   METHOD  setAllowedAreas( nAreas )
+   METHOD  setFloatable( lFloatable )
+   METHOD  setMovable( lMovable )
+   METHOD  setOrientation( nOrientation )
+   METHOD  toggleViewAction()
+   METHOD  toolButtonStyle()
+   METHOD  widgetForAction( pAction )
+   METHOD  setIconSize( pIconSize )
+   METHOD  setToolButtonStyle( nToolButtonStyle )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QToolBar
-
+METHOD QToolBar:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QToolBar( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QToolBar
-
+METHOD QToolBar:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QToolBar:actionAt( pP )
+   RETURN Qt_QToolBar_actionAt( ::pPtr, pP )
+
+
+METHOD QToolBar:actionAt_1( nX, nY )
+   RETURN Qt_QToolBar_actionAt_1( ::pPtr, nX, nY )
+
+
+METHOD QToolBar:addAction( pAction )
+   RETURN Qt_QToolBar_addAction( ::pPtr, pAction )
+
+
+METHOD QToolBar:addAction_1( cText )
+   RETURN Qt_QToolBar_addAction_1( ::pPtr, cText )
+
+
+METHOD QToolBar:addAction_2( cIcon, cText )
+   RETURN Qt_QToolBar_addAction_2( ::pPtr, cIcon, cText )
+
+
+METHOD QToolBar:addAction_3( cText, pReceiver, pMember )
+   RETURN Qt_QToolBar_addAction_3( ::pPtr, cText, pReceiver, pMember )
+
+
+METHOD QToolBar:addAction_4( cIcon, cText, pReceiver, pMember )
+   RETURN Qt_QToolBar_addAction_4( ::pPtr, cIcon, cText, pReceiver, pMember )
+
+
+METHOD QToolBar:addSeparator()
+   RETURN Qt_QToolBar_addSeparator( ::pPtr )
+
+
+METHOD QToolBar:addWidget( pWidget )
+   RETURN Qt_QToolBar_addWidget( ::pPtr, pWidget )
+
+
+METHOD QToolBar:allowedAreas()
+   RETURN Qt_QToolBar_allowedAreas( ::pPtr )
+
+
+METHOD QToolBar:clear()
+   RETURN Qt_QToolBar_clear( ::pPtr )
+
+
+METHOD QToolBar:iconSize()
+   RETURN Qt_QToolBar_iconSize( ::pPtr )
+
+
+METHOD QToolBar:insertSeparator( pBefore )
+   RETURN Qt_QToolBar_insertSeparator( ::pPtr, pBefore )
+
+
+METHOD QToolBar:insertWidget( pBefore, pWidget )
+   RETURN Qt_QToolBar_insertWidget( ::pPtr, pBefore, pWidget )
+
+
+METHOD QToolBar:isAreaAllowed( nArea )
+   RETURN Qt_QToolBar_isAreaAllowed( ::pPtr, nArea )
+
+
+METHOD QToolBar:isFloatable()
+   RETURN Qt_QToolBar_isFloatable( ::pPtr )
+
+
+METHOD QToolBar:isFloating()
+   RETURN Qt_QToolBar_isFloating( ::pPtr )
+
+
+METHOD QToolBar:isMovable()
+   RETURN Qt_QToolBar_isMovable( ::pPtr )
+
+
+METHOD QToolBar:orientation()
+   RETURN Qt_QToolBar_orientation( ::pPtr )
+
+
+METHOD QToolBar:setAllowedAreas( nAreas )
+   RETURN Qt_QToolBar_setAllowedAreas( ::pPtr, nAreas )
+
+
+METHOD QToolBar:setFloatable( lFloatable )
+   RETURN Qt_QToolBar_setFloatable( ::pPtr, lFloatable )
+
+
+METHOD QToolBar:setMovable( lMovable )
+   RETURN Qt_QToolBar_setMovable( ::pPtr, lMovable )
+
+
+METHOD QToolBar:setOrientation( nOrientation )
+   RETURN Qt_QToolBar_setOrientation( ::pPtr, nOrientation )
+
+
+METHOD QToolBar:toggleViewAction()
+   RETURN Qt_QToolBar_toggleViewAction( ::pPtr )
+
+
+METHOD QToolBar:toolButtonStyle()
+   RETURN Qt_QToolBar_toolButtonStyle( ::pPtr )
+
+
+METHOD QToolBar:widgetForAction( pAction )
+   RETURN Qt_QToolBar_widgetForAction( ::pPtr, pAction )
+
+
+METHOD QToolBar:setIconSize( pIconSize )
+   RETURN Qt_QToolBar_setIconSize( ::pPtr, pIconSize )
+
+
+METHOD QToolBar:setToolButtonStyle( nToolButtonStyle )
+   RETURN Qt_QToolBar_setToolButtonStyle( ::pPtr, nToolButtonStyle )
+

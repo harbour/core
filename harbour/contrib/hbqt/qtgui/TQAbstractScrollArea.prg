@@ -71,43 +71,92 @@ CREATE CLASS QAbstractScrollArea INHERIT QFrame
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addScrollBarWidget( pWidget, nAlignment )  INLINE  Qt_QAbstractScrollArea_addScrollBarWidget( ::pPtr, pWidget, nAlignment )
-   METHOD  cornerWidget()                      INLINE  Qt_QAbstractScrollArea_cornerWidget( ::pPtr )
-   METHOD  horizontalScrollBar()               INLINE  Qt_QAbstractScrollArea_horizontalScrollBar( ::pPtr )
-   METHOD  horizontalScrollBarPolicy()         INLINE  Qt_QAbstractScrollArea_horizontalScrollBarPolicy( ::pPtr )
-   METHOD  maximumViewportSize()               INLINE  Qt_QAbstractScrollArea_maximumViewportSize( ::pPtr )
-   METHOD  setCornerWidget( pWidget )          INLINE  Qt_QAbstractScrollArea_setCornerWidget( ::pPtr, pWidget )
-   METHOD  setHorizontalScrollBar( pScrollBar )  INLINE  Qt_QAbstractScrollArea_setHorizontalScrollBar( ::pPtr, pScrollBar )
-   METHOD  setHorizontalScrollBarPolicy( nQt_ScrollBarPolicy )  INLINE  Qt_QAbstractScrollArea_setHorizontalScrollBarPolicy( ::pPtr, nQt_ScrollBarPolicy )
-   METHOD  setVerticalScrollBar( pScrollBar )  INLINE  Qt_QAbstractScrollArea_setVerticalScrollBar( ::pPtr, pScrollBar )
-   METHOD  setVerticalScrollBarPolicy( nQt_ScrollBarPolicy )  INLINE  Qt_QAbstractScrollArea_setVerticalScrollBarPolicy( ::pPtr, nQt_ScrollBarPolicy )
-   METHOD  setViewport( pWidget )              INLINE  Qt_QAbstractScrollArea_setViewport( ::pPtr, pWidget )
-   METHOD  verticalScrollBar()                 INLINE  Qt_QAbstractScrollArea_verticalScrollBar( ::pPtr )
-   METHOD  verticalScrollBarPolicy()           INLINE  Qt_QAbstractScrollArea_verticalScrollBarPolicy( ::pPtr )
-   METHOD  viewport()                          INLINE  Qt_QAbstractScrollArea_viewport( ::pPtr )
+   METHOD  addScrollBarWidget( pWidget, nAlignment )
+   METHOD  cornerWidget()
+   METHOD  horizontalScrollBar()
+   METHOD  horizontalScrollBarPolicy()
+   METHOD  maximumViewportSize()
+   METHOD  setCornerWidget( pWidget )
+   METHOD  setHorizontalScrollBar( pScrollBar )
+   METHOD  setHorizontalScrollBarPolicy( nQt_ScrollBarPolicy )
+   METHOD  setVerticalScrollBar( pScrollBar )
+   METHOD  setVerticalScrollBarPolicy( nQt_ScrollBarPolicy )
+   METHOD  setViewport( pWidget )
+   METHOD  verticalScrollBar()
+   METHOD  verticalScrollBarPolicy()
+   METHOD  viewport()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QAbstractScrollArea
-
+METHOD QAbstractScrollArea:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QAbstractScrollArea( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QAbstractScrollArea
-
+METHOD QAbstractScrollArea:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QAbstractScrollArea:addScrollBarWidget( pWidget, nAlignment )
+   RETURN Qt_QAbstractScrollArea_addScrollBarWidget( ::pPtr, pWidget, nAlignment )
+
+
+METHOD QAbstractScrollArea:cornerWidget()
+   RETURN Qt_QAbstractScrollArea_cornerWidget( ::pPtr )
+
+
+METHOD QAbstractScrollArea:horizontalScrollBar()
+   RETURN Qt_QAbstractScrollArea_horizontalScrollBar( ::pPtr )
+
+
+METHOD QAbstractScrollArea:horizontalScrollBarPolicy()
+   RETURN Qt_QAbstractScrollArea_horizontalScrollBarPolicy( ::pPtr )
+
+
+METHOD QAbstractScrollArea:maximumViewportSize()
+   RETURN Qt_QAbstractScrollArea_maximumViewportSize( ::pPtr )
+
+
+METHOD QAbstractScrollArea:setCornerWidget( pWidget )
+   RETURN Qt_QAbstractScrollArea_setCornerWidget( ::pPtr, pWidget )
+
+
+METHOD QAbstractScrollArea:setHorizontalScrollBar( pScrollBar )
+   RETURN Qt_QAbstractScrollArea_setHorizontalScrollBar( ::pPtr, pScrollBar )
+
+
+METHOD QAbstractScrollArea:setHorizontalScrollBarPolicy( nQt_ScrollBarPolicy )
+   RETURN Qt_QAbstractScrollArea_setHorizontalScrollBarPolicy( ::pPtr, nQt_ScrollBarPolicy )
+
+
+METHOD QAbstractScrollArea:setVerticalScrollBar( pScrollBar )
+   RETURN Qt_QAbstractScrollArea_setVerticalScrollBar( ::pPtr, pScrollBar )
+
+
+METHOD QAbstractScrollArea:setVerticalScrollBarPolicy( nQt_ScrollBarPolicy )
+   RETURN Qt_QAbstractScrollArea_setVerticalScrollBarPolicy( ::pPtr, nQt_ScrollBarPolicy )
+
+
+METHOD QAbstractScrollArea:setViewport( pWidget )
+   RETURN Qt_QAbstractScrollArea_setViewport( ::pPtr, pWidget )
+
+
+METHOD QAbstractScrollArea:verticalScrollBar()
+   RETURN Qt_QAbstractScrollArea_verticalScrollBar( ::pPtr )
+
+
+METHOD QAbstractScrollArea:verticalScrollBarPolicy()
+   RETURN Qt_QAbstractScrollArea_verticalScrollBarPolicy( ::pPtr )
+
+
+METHOD QAbstractScrollArea:viewport()
+   RETURN Qt_QAbstractScrollArea_viewport( ::pPtr )
+

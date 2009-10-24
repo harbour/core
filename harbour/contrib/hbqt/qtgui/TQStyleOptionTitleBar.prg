@@ -71,33 +71,42 @@ CREATE CLASS QStyleOptionTitleBar INHERIT QStyleOptionComplex
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  icon()                              INLINE  Qt_QStyleOptionTitleBar_icon( ::pPtr )
-   METHOD  text()                              INLINE  Qt_QStyleOptionTitleBar_text( ::pPtr )
-   METHOD  titleBarFlags()                     INLINE  Qt_QStyleOptionTitleBar_titleBarFlags( ::pPtr )
-   METHOD  titleBarState()                     INLINE  Qt_QStyleOptionTitleBar_titleBarState( ::pPtr )
+   METHOD  icon()
+   METHOD  text()
+   METHOD  titleBarFlags()
+   METHOD  titleBarState()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyleOptionTitleBar
-
+METHOD QStyleOptionTitleBar:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyleOptionTitleBar( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyleOptionTitleBar
-
+METHOD QStyleOptionTitleBar:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyleOptionTitleBar:icon()
+   RETURN Qt_QStyleOptionTitleBar_icon( ::pPtr )
+
+
+METHOD QStyleOptionTitleBar:text()
+   RETURN Qt_QStyleOptionTitleBar_text( ::pPtr )
+
+
+METHOD QStyleOptionTitleBar:titleBarFlags()
+   RETURN Qt_QStyleOptionTitleBar_titleBarFlags( ::pPtr )
+
+
+METHOD QStyleOptionTitleBar:titleBarState()
+   RETURN Qt_QStyleOptionTitleBar_titleBarState( ::pPtr )
+

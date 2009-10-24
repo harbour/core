@@ -71,62 +71,187 @@ CREATE CLASS QIODevice INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  atEnd()                             INLINE  Qt_QIODevice_atEnd( ::pPtr )
-   METHOD  bytesAvailable()                    INLINE  Qt_QIODevice_bytesAvailable( ::pPtr )
-   METHOD  bytesToWrite()                      INLINE  Qt_QIODevice_bytesToWrite( ::pPtr )
-   METHOD  canReadLine()                       INLINE  Qt_QIODevice_canReadLine( ::pPtr )
-   METHOD  close()                             INLINE  Qt_QIODevice_close( ::pPtr )
-   METHOD  errorString()                       INLINE  Qt_QIODevice_errorString( ::pPtr )
-   METHOD  getChar( cC )                       INLINE  Qt_QIODevice_getChar( ::pPtr, cC )
-   METHOD  isOpen()                            INLINE  Qt_QIODevice_isOpen( ::pPtr )
-   METHOD  isReadable()                        INLINE  Qt_QIODevice_isReadable( ::pPtr )
-   METHOD  isSequential()                      INLINE  Qt_QIODevice_isSequential( ::pPtr )
-   METHOD  isTextModeEnabled()                 INLINE  Qt_QIODevice_isTextModeEnabled( ::pPtr )
-   METHOD  isWritable()                        INLINE  Qt_QIODevice_isWritable( ::pPtr )
-   METHOD  open( nMode )                       INLINE  Qt_QIODevice_open( ::pPtr, nMode )
-   METHOD  openMode()                          INLINE  Qt_QIODevice_openMode( ::pPtr )
-   METHOD  peek( cData, nMaxSize )             INLINE  Qt_QIODevice_peek( ::pPtr, cData, nMaxSize )
-   METHOD  peek_1( nMaxSize )                  INLINE  Qt_QIODevice_peek_1( ::pPtr, nMaxSize )
-   METHOD  pos()                               INLINE  Qt_QIODevice_pos( ::pPtr )
-   METHOD  putChar( cC )                       INLINE  Qt_QIODevice_putChar( ::pPtr, cC )
-   METHOD  read( cData, nMaxSize )             INLINE  Qt_QIODevice_read( ::pPtr, cData, nMaxSize )
-   METHOD  read_1( nMaxSize )                  INLINE  Qt_QIODevice_read_1( ::pPtr, nMaxSize )
-   METHOD  readAll()                           INLINE  Qt_QIODevice_readAll( ::pPtr )
-   METHOD  readLine( cData, nMaxSize )         INLINE  Qt_QIODevice_readLine( ::pPtr, cData, nMaxSize )
-   METHOD  readLine_1( nMaxSize )              INLINE  Qt_QIODevice_readLine_1( ::pPtr, nMaxSize )
-   METHOD  reset()                             INLINE  Qt_QIODevice_reset( ::pPtr )
-   METHOD  seek( nPos )                        INLINE  Qt_QIODevice_seek( ::pPtr, nPos )
-   METHOD  setTextModeEnabled( lEnabled )      INLINE  Qt_QIODevice_setTextModeEnabled( ::pPtr, lEnabled )
-   METHOD  size()                              INLINE  Qt_QIODevice_size( ::pPtr )
-   METHOD  ungetChar( cC )                     INLINE  Qt_QIODevice_ungetChar( ::pPtr, cC )
-   METHOD  waitForBytesWritten( nMsecs )       INLINE  Qt_QIODevice_waitForBytesWritten( ::pPtr, nMsecs )
-   METHOD  waitForReadyRead( nMsecs )          INLINE  Qt_QIODevice_waitForReadyRead( ::pPtr, nMsecs )
-   METHOD  write( pData, nMaxSize )            INLINE  Qt_QIODevice_write( ::pPtr, pData, nMaxSize )
-   METHOD  write_1( pData )                    INLINE  Qt_QIODevice_write_1( ::pPtr, pData )
-   METHOD  write_2( pByteArray )               INLINE  Qt_QIODevice_write_2( ::pPtr, pByteArray )
+   METHOD  atEnd()
+   METHOD  bytesAvailable()
+   METHOD  bytesToWrite()
+   METHOD  canReadLine()
+   METHOD  close()
+   METHOD  errorString()
+   METHOD  getChar( cC )
+   METHOD  isOpen()
+   METHOD  isReadable()
+   METHOD  isSequential()
+   METHOD  isTextModeEnabled()
+   METHOD  isWritable()
+   METHOD  open( nMode )
+   METHOD  openMode()
+   METHOD  peek( cData, nMaxSize )
+   METHOD  peek_1( nMaxSize )
+   METHOD  pos()
+   METHOD  putChar( cC )
+   METHOD  read( cData, nMaxSize )
+   METHOD  read_1( nMaxSize )
+   METHOD  readAll()
+   METHOD  readLine( cData, nMaxSize )
+   METHOD  readLine_1( nMaxSize )
+   METHOD  reset()
+   METHOD  seek( nPos )
+   METHOD  setTextModeEnabled( lEnabled )
+   METHOD  size()
+   METHOD  ungetChar( cC )
+   METHOD  waitForBytesWritten( nMsecs )
+   METHOD  waitForReadyRead( nMsecs )
+   METHOD  write( pData, nMaxSize )
+   METHOD  write_1( pData )
+   METHOD  write_2( pByteArray )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QIODevice
-
+METHOD QIODevice:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QIODevice( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QIODevice
-
+METHOD QIODevice:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QIODevice:atEnd()
+   RETURN Qt_QIODevice_atEnd( ::pPtr )
+
+
+METHOD QIODevice:bytesAvailable()
+   RETURN Qt_QIODevice_bytesAvailable( ::pPtr )
+
+
+METHOD QIODevice:bytesToWrite()
+   RETURN Qt_QIODevice_bytesToWrite( ::pPtr )
+
+
+METHOD QIODevice:canReadLine()
+   RETURN Qt_QIODevice_canReadLine( ::pPtr )
+
+
+METHOD QIODevice:close()
+   RETURN Qt_QIODevice_close( ::pPtr )
+
+
+METHOD QIODevice:errorString()
+   RETURN Qt_QIODevice_errorString( ::pPtr )
+
+
+METHOD QIODevice:getChar( cC )
+   RETURN Qt_QIODevice_getChar( ::pPtr, cC )
+
+
+METHOD QIODevice:isOpen()
+   RETURN Qt_QIODevice_isOpen( ::pPtr )
+
+
+METHOD QIODevice:isReadable()
+   RETURN Qt_QIODevice_isReadable( ::pPtr )
+
+
+METHOD QIODevice:isSequential()
+   RETURN Qt_QIODevice_isSequential( ::pPtr )
+
+
+METHOD QIODevice:isTextModeEnabled()
+   RETURN Qt_QIODevice_isTextModeEnabled( ::pPtr )
+
+
+METHOD QIODevice:isWritable()
+   RETURN Qt_QIODevice_isWritable( ::pPtr )
+
+
+METHOD QIODevice:open( nMode )
+   RETURN Qt_QIODevice_open( ::pPtr, nMode )
+
+
+METHOD QIODevice:openMode()
+   RETURN Qt_QIODevice_openMode( ::pPtr )
+
+
+METHOD QIODevice:peek( cData, nMaxSize )
+   RETURN Qt_QIODevice_peek( ::pPtr, cData, nMaxSize )
+
+
+METHOD QIODevice:peek_1( nMaxSize )
+   RETURN Qt_QIODevice_peek_1( ::pPtr, nMaxSize )
+
+
+METHOD QIODevice:pos()
+   RETURN Qt_QIODevice_pos( ::pPtr )
+
+
+METHOD QIODevice:putChar( cC )
+   RETURN Qt_QIODevice_putChar( ::pPtr, cC )
+
+
+METHOD QIODevice:read( cData, nMaxSize )
+   RETURN Qt_QIODevice_read( ::pPtr, cData, nMaxSize )
+
+
+METHOD QIODevice:read_1( nMaxSize )
+   RETURN Qt_QIODevice_read_1( ::pPtr, nMaxSize )
+
+
+METHOD QIODevice:readAll()
+   RETURN Qt_QIODevice_readAll( ::pPtr )
+
+
+METHOD QIODevice:readLine( cData, nMaxSize )
+   RETURN Qt_QIODevice_readLine( ::pPtr, cData, nMaxSize )
+
+
+METHOD QIODevice:readLine_1( nMaxSize )
+   RETURN Qt_QIODevice_readLine_1( ::pPtr, nMaxSize )
+
+
+METHOD QIODevice:reset()
+   RETURN Qt_QIODevice_reset( ::pPtr )
+
+
+METHOD QIODevice:seek( nPos )
+   RETURN Qt_QIODevice_seek( ::pPtr, nPos )
+
+
+METHOD QIODevice:setTextModeEnabled( lEnabled )
+   RETURN Qt_QIODevice_setTextModeEnabled( ::pPtr, lEnabled )
+
+
+METHOD QIODevice:size()
+   RETURN Qt_QIODevice_size( ::pPtr )
+
+
+METHOD QIODevice:ungetChar( cC )
+   RETURN Qt_QIODevice_ungetChar( ::pPtr, cC )
+
+
+METHOD QIODevice:waitForBytesWritten( nMsecs )
+   RETURN Qt_QIODevice_waitForBytesWritten( ::pPtr, nMsecs )
+
+
+METHOD QIODevice:waitForReadyRead( nMsecs )
+   RETURN Qt_QIODevice_waitForReadyRead( ::pPtr, nMsecs )
+
+
+METHOD QIODevice:write( pData, nMaxSize )
+   RETURN Qt_QIODevice_write( ::pPtr, pData, nMaxSize )
+
+
+METHOD QIODevice:write_1( pData )
+   RETURN Qt_QIODevice_write_1( ::pPtr, pData )
+
+
+METHOD QIODevice:write_2( pByteArray )
+   RETURN Qt_QIODevice_write_2( ::pPtr, pByteArray )
+

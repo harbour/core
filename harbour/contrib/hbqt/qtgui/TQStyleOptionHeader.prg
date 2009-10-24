@@ -71,38 +71,67 @@ CREATE CLASS QStyleOptionHeader INHERIT QStyleOption
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  icon()                              INLINE  Qt_QStyleOptionHeader_icon( ::pPtr )
-   METHOD  iconAlignment()                     INLINE  Qt_QStyleOptionHeader_iconAlignment( ::pPtr )
-   METHOD  orientation()                       INLINE  Qt_QStyleOptionHeader_orientation( ::pPtr )
-   METHOD  position()                          INLINE  Qt_QStyleOptionHeader_position( ::pPtr )
-   METHOD  section()                           INLINE  Qt_QStyleOptionHeader_section( ::pPtr )
-   METHOD  selectedPosition()                  INLINE  Qt_QStyleOptionHeader_selectedPosition( ::pPtr )
-   METHOD  sortIndicator()                     INLINE  Qt_QStyleOptionHeader_sortIndicator( ::pPtr )
-   METHOD  text()                              INLINE  Qt_QStyleOptionHeader_text( ::pPtr )
-   METHOD  textAlignment()                     INLINE  Qt_QStyleOptionHeader_textAlignment( ::pPtr )
+   METHOD  icon()
+   METHOD  iconAlignment()
+   METHOD  orientation()
+   METHOD  position()
+   METHOD  section()
+   METHOD  selectedPosition()
+   METHOD  sortIndicator()
+   METHOD  text()
+   METHOD  textAlignment()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyleOptionHeader
-
+METHOD QStyleOptionHeader:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyleOptionHeader( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyleOptionHeader
-
+METHOD QStyleOptionHeader:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyleOptionHeader:icon()
+   RETURN Qt_QStyleOptionHeader_icon( ::pPtr )
+
+
+METHOD QStyleOptionHeader:iconAlignment()
+   RETURN Qt_QStyleOptionHeader_iconAlignment( ::pPtr )
+
+
+METHOD QStyleOptionHeader:orientation()
+   RETURN Qt_QStyleOptionHeader_orientation( ::pPtr )
+
+
+METHOD QStyleOptionHeader:position()
+   RETURN Qt_QStyleOptionHeader_position( ::pPtr )
+
+
+METHOD QStyleOptionHeader:section()
+   RETURN Qt_QStyleOptionHeader_section( ::pPtr )
+
+
+METHOD QStyleOptionHeader:selectedPosition()
+   RETURN Qt_QStyleOptionHeader_selectedPosition( ::pPtr )
+
+
+METHOD QStyleOptionHeader:sortIndicator()
+   RETURN Qt_QStyleOptionHeader_sortIndicator( ::pPtr )
+
+
+METHOD QStyleOptionHeader:text()
+   RETURN Qt_QStyleOptionHeader_text( ::pPtr )
+
+
+METHOD QStyleOptionHeader:textAlignment()
+   RETURN Qt_QStyleOptionHeader_textAlignment( ::pPtr )
+

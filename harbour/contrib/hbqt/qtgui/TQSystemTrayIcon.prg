@@ -71,43 +71,92 @@ CREATE CLASS QSystemTrayIcon INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  contextMenu()                       INLINE  Qt_QSystemTrayIcon_contextMenu( ::pPtr )
-   METHOD  geometry()                          INLINE  Qt_QSystemTrayIcon_geometry( ::pPtr )
-   METHOD  icon()                              INLINE  Qt_QSystemTrayIcon_icon( ::pPtr )
-   METHOD  isVisible()                         INLINE  Qt_QSystemTrayIcon_isVisible( ::pPtr )
-   METHOD  setContextMenu( pMenu )             INLINE  Qt_QSystemTrayIcon_setContextMenu( ::pPtr, pMenu )
-   METHOD  setIcon( cIcon )                    INLINE  Qt_QSystemTrayIcon_setIcon( ::pPtr, cIcon )
-   METHOD  setToolTip( cTip )                  INLINE  Qt_QSystemTrayIcon_setToolTip( ::pPtr, cTip )
-   METHOD  showMessage( cTitle, cMessage, nIcon, nMillisecondsTimeoutHint )  INLINE  Qt_QSystemTrayIcon_showMessage( ::pPtr, cTitle, cMessage, nIcon, nMillisecondsTimeoutHint )
-   METHOD  toolTip()                           INLINE  Qt_QSystemTrayIcon_toolTip( ::pPtr )
-   METHOD  isSystemTrayAvailable()             INLINE  Qt_QSystemTrayIcon_isSystemTrayAvailable( ::pPtr )
-   METHOD  supportsMessages()                  INLINE  Qt_QSystemTrayIcon_supportsMessages( ::pPtr )
-   METHOD  hide()                              INLINE  Qt_QSystemTrayIcon_hide( ::pPtr )
-   METHOD  setVisible( lVisible )              INLINE  Qt_QSystemTrayIcon_setVisible( ::pPtr, lVisible )
-   METHOD  show()                              INLINE  Qt_QSystemTrayIcon_show( ::pPtr )
+   METHOD  contextMenu()
+   METHOD  geometry()
+   METHOD  icon()
+   METHOD  isVisible()
+   METHOD  setContextMenu( pMenu )
+   METHOD  setIcon( cIcon )
+   METHOD  setToolTip( cTip )
+   METHOD  showMessage( cTitle, cMessage, nIcon, nMillisecondsTimeoutHint )
+   METHOD  toolTip()
+   METHOD  isSystemTrayAvailable()
+   METHOD  supportsMessages()
+   METHOD  hide()
+   METHOD  setVisible( lVisible )
+   METHOD  show()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QSystemTrayIcon
-
+METHOD QSystemTrayIcon:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QSystemTrayIcon( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QSystemTrayIcon
-
+METHOD QSystemTrayIcon:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QSystemTrayIcon:contextMenu()
+   RETURN Qt_QSystemTrayIcon_contextMenu( ::pPtr )
+
+
+METHOD QSystemTrayIcon:geometry()
+   RETURN Qt_QSystemTrayIcon_geometry( ::pPtr )
+
+
+METHOD QSystemTrayIcon:icon()
+   RETURN Qt_QSystemTrayIcon_icon( ::pPtr )
+
+
+METHOD QSystemTrayIcon:isVisible()
+   RETURN Qt_QSystemTrayIcon_isVisible( ::pPtr )
+
+
+METHOD QSystemTrayIcon:setContextMenu( pMenu )
+   RETURN Qt_QSystemTrayIcon_setContextMenu( ::pPtr, pMenu )
+
+
+METHOD QSystemTrayIcon:setIcon( cIcon )
+   RETURN Qt_QSystemTrayIcon_setIcon( ::pPtr, cIcon )
+
+
+METHOD QSystemTrayIcon:setToolTip( cTip )
+   RETURN Qt_QSystemTrayIcon_setToolTip( ::pPtr, cTip )
+
+
+METHOD QSystemTrayIcon:showMessage( cTitle, cMessage, nIcon, nMillisecondsTimeoutHint )
+   RETURN Qt_QSystemTrayIcon_showMessage( ::pPtr, cTitle, cMessage, nIcon, nMillisecondsTimeoutHint )
+
+
+METHOD QSystemTrayIcon:toolTip()
+   RETURN Qt_QSystemTrayIcon_toolTip( ::pPtr )
+
+
+METHOD QSystemTrayIcon:isSystemTrayAvailable()
+   RETURN Qt_QSystemTrayIcon_isSystemTrayAvailable( ::pPtr )
+
+
+METHOD QSystemTrayIcon:supportsMessages()
+   RETURN Qt_QSystemTrayIcon_supportsMessages( ::pPtr )
+
+
+METHOD QSystemTrayIcon:hide()
+   RETURN Qt_QSystemTrayIcon_hide( ::pPtr )
+
+
+METHOD QSystemTrayIcon:setVisible( lVisible )
+   RETURN Qt_QSystemTrayIcon_setVisible( ::pPtr, lVisible )
+
+
+METHOD QSystemTrayIcon:show()
+   RETURN Qt_QSystemTrayIcon_show( ::pPtr )
+

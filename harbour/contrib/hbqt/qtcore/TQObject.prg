@@ -71,58 +71,167 @@ CREATE CLASS QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  blockSignals( lBlock )              INLINE  Qt_QObject_blockSignals( ::pPtr, lBlock )
-   METHOD  connect( pSender, pSignal, pMethod, nType )  INLINE  Qt_QObject_connect( ::pPtr, pSender, pSignal, pMethod, nType )
-   METHOD  disconnect( pSignal, pReceiver, pMethod )  INLINE  Qt_QObject_disconnect( ::pPtr, pSignal, pReceiver, pMethod )
-   METHOD  disconnect_1( pReceiver, pMethod )  INLINE  Qt_QObject_disconnect_1( ::pPtr, pReceiver, pMethod )
-   METHOD  dumpObjectInfo()                    INLINE  Qt_QObject_dumpObjectInfo( ::pPtr )
-   METHOD  dumpObjectTree()                    INLINE  Qt_QObject_dumpObjectTree( ::pPtr )
-   METHOD  event( pE )                         INLINE  Qt_QObject_event( ::pPtr, pE )
-   METHOD  eventFilter( pWatched, pEvent )     INLINE  Qt_QObject_eventFilter( ::pPtr, pWatched, pEvent )
-   METHOD  inherits( pClassName )              INLINE  Qt_QObject_inherits( ::pPtr, pClassName )
-   METHOD  installEventFilter( pFilterObj )    INLINE  Qt_QObject_installEventFilter( ::pPtr, pFilterObj )
-   METHOD  isWidgetType()                      INLINE  Qt_QObject_isWidgetType( ::pPtr )
-   METHOD  killTimer( nId )                    INLINE  Qt_QObject_killTimer( ::pPtr, nId )
-   METHOD  metaObject()                        INLINE  Qt_QObject_metaObject( ::pPtr )
-   METHOD  moveToThread( pTargetThread )       INLINE  Qt_QObject_moveToThread( ::pPtr, pTargetThread )
-   METHOD  objectName()                        INLINE  Qt_QObject_objectName( ::pPtr )
-   METHOD  parent()                            INLINE  Qt_QObject_parent( ::pPtr )
-   METHOD  property( pName )                   INLINE  Qt_QObject_property( ::pPtr, pName )
-   METHOD  removeEventFilter( pObj )           INLINE  Qt_QObject_removeEventFilter( ::pPtr, pObj )
-   METHOD  setObjectName( cName )              INLINE  Qt_QObject_setObjectName( ::pPtr, cName )
-   METHOD  setParent( pParent )                INLINE  Qt_QObject_setParent( ::pPtr, pParent )
-   METHOD  setProperty( pName, pValue )        INLINE  Qt_QObject_setProperty( ::pPtr, pName, pValue )
-   METHOD  signalsBlocked()                    INLINE  Qt_QObject_signalsBlocked( ::pPtr )
-   METHOD  startTimer( nInterval )             INLINE  Qt_QObject_startTimer( ::pPtr, nInterval )
-   METHOD  thread()                            INLINE  Qt_QObject_thread( ::pPtr )
-   METHOD  connect_1( pSender, pSignal, pReceiver, pMethod, nType )  INLINE  Qt_QObject_connect_1( ::pPtr, pSender, pSignal, pReceiver, pMethod, nType )
-   METHOD  disconnect_2( pSender, pSignal, pReceiver, pMethod )  INLINE  Qt_QObject_disconnect_2( ::pPtr, pSender, pSignal, pReceiver, pMethod )
-   METHOD  tr( pSourceText, pDisambiguation, nN )  INLINE  Qt_QObject_tr( ::pPtr, pSourceText, pDisambiguation, nN )
-   METHOD  trUtf8( pSourceText, pDisambiguation, nN )  INLINE  Qt_QObject_trUtf8( ::pPtr, pSourceText, pDisambiguation, nN )
-   METHOD  deleteLater()                       INLINE  Qt_QObject_deleteLater( ::pPtr )
+   METHOD  blockSignals( lBlock )
+   METHOD  connect( pSender, pSignal, pMethod, nType )
+   METHOD  disconnect( pSignal, pReceiver, pMethod )
+   METHOD  disconnect_1( pReceiver, pMethod )
+   METHOD  dumpObjectInfo()
+   METHOD  dumpObjectTree()
+   METHOD  event( pE )
+   METHOD  eventFilter( pWatched, pEvent )
+   METHOD  inherits( pClassName )
+   METHOD  installEventFilter( pFilterObj )
+   METHOD  isWidgetType()
+   METHOD  killTimer( nId )
+   METHOD  metaObject()
+   METHOD  moveToThread( pTargetThread )
+   METHOD  objectName()
+   METHOD  parent()
+   METHOD  property( pName )
+   METHOD  removeEventFilter( pObj )
+   METHOD  setObjectName( cName )
+   METHOD  setParent( pParent )
+   METHOD  setProperty( pName, pValue )
+   METHOD  signalsBlocked()
+   METHOD  startTimer( nInterval )
+   METHOD  thread()
+   METHOD  connect_1( pSender, pSignal, pReceiver, pMethod, nType )
+   METHOD  disconnect_2( pSender, pSignal, pReceiver, pMethod )
+   METHOD  tr( pSourceText, pDisambiguation, nN )
+   METHOD  trUtf8( pSourceText, pDisambiguation, nN )
+   METHOD  deleteLater()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QObject
-
+METHOD QObject:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QObject( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QObject
-
+METHOD QObject:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QObject:blockSignals( lBlock )
+   RETURN Qt_QObject_blockSignals( ::pPtr, lBlock )
+
+
+METHOD QObject:connect( pSender, pSignal, pMethod, nType )
+   RETURN Qt_QObject_connect( ::pPtr, pSender, pSignal, pMethod, nType )
+
+
+METHOD QObject:disconnect( pSignal, pReceiver, pMethod )
+   RETURN Qt_QObject_disconnect( ::pPtr, pSignal, pReceiver, pMethod )
+
+
+METHOD QObject:disconnect_1( pReceiver, pMethod )
+   RETURN Qt_QObject_disconnect_1( ::pPtr, pReceiver, pMethod )
+
+
+METHOD QObject:dumpObjectInfo()
+   RETURN Qt_QObject_dumpObjectInfo( ::pPtr )
+
+
+METHOD QObject:dumpObjectTree()
+   RETURN Qt_QObject_dumpObjectTree( ::pPtr )
+
+
+METHOD QObject:event( pE )
+   RETURN Qt_QObject_event( ::pPtr, pE )
+
+
+METHOD QObject:eventFilter( pWatched, pEvent )
+   RETURN Qt_QObject_eventFilter( ::pPtr, pWatched, pEvent )
+
+
+METHOD QObject:inherits( pClassName )
+   RETURN Qt_QObject_inherits( ::pPtr, pClassName )
+
+
+METHOD QObject:installEventFilter( pFilterObj )
+   RETURN Qt_QObject_installEventFilter( ::pPtr, pFilterObj )
+
+
+METHOD QObject:isWidgetType()
+   RETURN Qt_QObject_isWidgetType( ::pPtr )
+
+
+METHOD QObject:killTimer( nId )
+   RETURN Qt_QObject_killTimer( ::pPtr, nId )
+
+
+METHOD QObject:metaObject()
+   RETURN Qt_QObject_metaObject( ::pPtr )
+
+
+METHOD QObject:moveToThread( pTargetThread )
+   RETURN Qt_QObject_moveToThread( ::pPtr, pTargetThread )
+
+
+METHOD QObject:objectName()
+   RETURN Qt_QObject_objectName( ::pPtr )
+
+
+METHOD QObject:parent()
+   RETURN Qt_QObject_parent( ::pPtr )
+
+
+METHOD QObject:property( pName )
+   RETURN Qt_QObject_property( ::pPtr, pName )
+
+
+METHOD QObject:removeEventFilter( pObj )
+   RETURN Qt_QObject_removeEventFilter( ::pPtr, pObj )
+
+
+METHOD QObject:setObjectName( cName )
+   RETURN Qt_QObject_setObjectName( ::pPtr, cName )
+
+
+METHOD QObject:setParent( pParent )
+   RETURN Qt_QObject_setParent( ::pPtr, pParent )
+
+
+METHOD QObject:setProperty( pName, pValue )
+   RETURN Qt_QObject_setProperty( ::pPtr, pName, pValue )
+
+
+METHOD QObject:signalsBlocked()
+   RETURN Qt_QObject_signalsBlocked( ::pPtr )
+
+
+METHOD QObject:startTimer( nInterval )
+   RETURN Qt_QObject_startTimer( ::pPtr, nInterval )
+
+
+METHOD QObject:thread()
+   RETURN Qt_QObject_thread( ::pPtr )
+
+
+METHOD QObject:connect_1( pSender, pSignal, pReceiver, pMethod, nType )
+   RETURN Qt_QObject_connect_1( ::pPtr, pSender, pSignal, pReceiver, pMethod, nType )
+
+
+METHOD QObject:disconnect_2( pSender, pSignal, pReceiver, pMethod )
+   RETURN Qt_QObject_disconnect_2( ::pPtr, pSender, pSignal, pReceiver, pMethod )
+
+
+METHOD QObject:tr( pSourceText, pDisambiguation, nN )
+   RETURN Qt_QObject_tr( ::pPtr, pSourceText, pDisambiguation, nN )
+
+
+METHOD QObject:trUtf8( pSourceText, pDisambiguation, nN )
+   RETURN Qt_QObject_trUtf8( ::pPtr, pSourceText, pDisambiguation, nN )
+
+
+METHOD QObject:deleteLater()
+   RETURN Qt_QObject_deleteLater( ::pPtr )
+

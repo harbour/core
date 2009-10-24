@@ -71,74 +71,247 @@ CREATE CLASS QFileDialog INHERIT QDialog
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  acceptMode()                        INLINE  Qt_QFileDialog_acceptMode( ::pPtr )
-   METHOD  confirmOverwrite()                  INLINE  Qt_QFileDialog_confirmOverwrite( ::pPtr )
-   METHOD  defaultSuffix()                     INLINE  Qt_QFileDialog_defaultSuffix( ::pPtr )
-   METHOD  directory()                         INLINE  Qt_QFileDialog_directory( ::pPtr )
-   METHOD  fileMode()                          INLINE  Qt_QFileDialog_fileMode( ::pPtr )
-   METHOD  filter()                            INLINE  Qt_QFileDialog_filter( ::pPtr )
-   METHOD  history()                           INLINE  Qt_QFileDialog_history( ::pPtr )
-   METHOD  iconProvider()                      INLINE  Qt_QFileDialog_iconProvider( ::pPtr )
-   METHOD  isNameFilterDetailsVisible()        INLINE  Qt_QFileDialog_isNameFilterDetailsVisible( ::pPtr )
-   METHOD  isReadOnly()                        INLINE  Qt_QFileDialog_isReadOnly( ::pPtr )
-   METHOD  itemDelegate()                      INLINE  Qt_QFileDialog_itemDelegate( ::pPtr )
-   METHOD  labelText( nLabel )                 INLINE  Qt_QFileDialog_labelText( ::pPtr, nLabel )
-   METHOD  nameFilters()                       INLINE  Qt_QFileDialog_nameFilters( ::pPtr )
-   METHOD  options()                           INLINE  Qt_QFileDialog_options( ::pPtr )
-   METHOD  proxyModel()                        INLINE  Qt_QFileDialog_proxyModel( ::pPtr )
-   METHOD  resolveSymlinks()                   INLINE  Qt_QFileDialog_resolveSymlinks( ::pPtr )
-   METHOD  restoreState( pState )              INLINE  Qt_QFileDialog_restoreState( ::pPtr, pState )
-   METHOD  saveState()                         INLINE  Qt_QFileDialog_saveState( ::pPtr )
-   METHOD  selectFile( cFilename )             INLINE  Qt_QFileDialog_selectFile( ::pPtr, cFilename )
-   METHOD  selectNameFilter( cFilter )         INLINE  Qt_QFileDialog_selectNameFilter( ::pPtr, cFilter )
-   METHOD  selectedFiles()                     INLINE  Qt_QFileDialog_selectedFiles( ::pPtr )
-   METHOD  selectedNameFilter()                INLINE  Qt_QFileDialog_selectedNameFilter( ::pPtr )
-   METHOD  setAcceptMode( nMode )              INLINE  Qt_QFileDialog_setAcceptMode( ::pPtr, nMode )
-   METHOD  setConfirmOverwrite( lEnabled )     INLINE  Qt_QFileDialog_setConfirmOverwrite( ::pPtr, lEnabled )
-   METHOD  setDefaultSuffix( cSuffix )         INLINE  Qt_QFileDialog_setDefaultSuffix( ::pPtr, cSuffix )
-   METHOD  setDirectory( cDirectory )          INLINE  Qt_QFileDialog_setDirectory( ::pPtr, cDirectory )
-   METHOD  setDirectory_1( pDirectory )        INLINE  Qt_QFileDialog_setDirectory_1( ::pPtr, pDirectory )
-   METHOD  setFileMode( nMode )                INLINE  Qt_QFileDialog_setFileMode( ::pPtr, nMode )
-   METHOD  setFilter( nFilters )               INLINE  Qt_QFileDialog_setFilter( ::pPtr, nFilters )
-   METHOD  setHistory( pPaths )                INLINE  Qt_QFileDialog_setHistory( ::pPtr, pPaths )
-   METHOD  setIconProvider( pProvider )        INLINE  Qt_QFileDialog_setIconProvider( ::pPtr, pProvider )
-   METHOD  setItemDelegate( pDelegate )        INLINE  Qt_QFileDialog_setItemDelegate( ::pPtr, pDelegate )
-   METHOD  setLabelText( nLabel, cText )       INLINE  Qt_QFileDialog_setLabelText( ::pPtr, nLabel, cText )
-   METHOD  setNameFilter( cFilter )            INLINE  Qt_QFileDialog_setNameFilter( ::pPtr, cFilter )
-   METHOD  setNameFilterDetailsVisible( lEnabled )  INLINE  Qt_QFileDialog_setNameFilterDetailsVisible( ::pPtr, lEnabled )
-   METHOD  setNameFilters( pFilters )          INLINE  Qt_QFileDialog_setNameFilters( ::pPtr, pFilters )
-   METHOD  setOption( nOption, lOn )           INLINE  Qt_QFileDialog_setOption( ::pPtr, nOption, lOn )
-   METHOD  setOptions( nOptions )              INLINE  Qt_QFileDialog_setOptions( ::pPtr, nOptions )
-   METHOD  setProxyModel( pProxyModel )        INLINE  Qt_QFileDialog_setProxyModel( ::pPtr, pProxyModel )
-   METHOD  setReadOnly( lEnabled )             INLINE  Qt_QFileDialog_setReadOnly( ::pPtr, lEnabled )
-   METHOD  setResolveSymlinks( lEnabled )      INLINE  Qt_QFileDialog_setResolveSymlinks( ::pPtr, lEnabled )
-   METHOD  setViewMode( nMode )                INLINE  Qt_QFileDialog_setViewMode( ::pPtr, nMode )
-   METHOD  testOption( nOption )               INLINE  Qt_QFileDialog_testOption( ::pPtr, nOption )
-   METHOD  viewMode()                          INLINE  Qt_QFileDialog_viewMode( ::pPtr )
-   METHOD  getExistingDirectory( pParent, cCaption, cDir, nOptions )  INLINE  Qt_QFileDialog_getExistingDirectory( ::pPtr, pParent, cCaption, cDir, nOptions )
+   METHOD  acceptMode()
+   METHOD  confirmOverwrite()
+   METHOD  defaultSuffix()
+   METHOD  directory()
+   METHOD  fileMode()
+   METHOD  filter()
+   METHOD  history()
+   METHOD  iconProvider()
+   METHOD  isNameFilterDetailsVisible()
+   METHOD  isReadOnly()
+   METHOD  itemDelegate()
+   METHOD  labelText( nLabel )
+   METHOD  nameFilters()
+   METHOD  options()
+   METHOD  proxyModel()
+   METHOD  resolveSymlinks()
+   METHOD  restoreState( pState )
+   METHOD  saveState()
+   METHOD  selectFile( cFilename )
+   METHOD  selectNameFilter( cFilter )
+   METHOD  selectedFiles()
+   METHOD  selectedNameFilter()
+   METHOD  setAcceptMode( nMode )
+   METHOD  setConfirmOverwrite( lEnabled )
+   METHOD  setDefaultSuffix( cSuffix )
+   METHOD  setDirectory( cDirectory )
+   METHOD  setDirectory_1( pDirectory )
+   METHOD  setFileMode( nMode )
+   METHOD  setFilter( nFilters )
+   METHOD  setHistory( pPaths )
+   METHOD  setIconProvider( pProvider )
+   METHOD  setItemDelegate( pDelegate )
+   METHOD  setLabelText( nLabel, cText )
+   METHOD  setNameFilter( cFilter )
+   METHOD  setNameFilterDetailsVisible( lEnabled )
+   METHOD  setNameFilters( pFilters )
+   METHOD  setOption( nOption, lOn )
+   METHOD  setOptions( nOptions )
+   METHOD  setProxyModel( pProxyModel )
+   METHOD  setReadOnly( lEnabled )
+   METHOD  setResolveSymlinks( lEnabled )
+   METHOD  setViewMode( nMode )
+   METHOD  testOption( nOption )
+   METHOD  viewMode()
+   METHOD  getExistingDirectory( pParent, cCaption, cDir, nOptions )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QFileDialog
-
+METHOD QFileDialog:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QFileDialog( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QFileDialog
-
+METHOD QFileDialog:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QFileDialog:acceptMode()
+   RETURN Qt_QFileDialog_acceptMode( ::pPtr )
+
+
+METHOD QFileDialog:confirmOverwrite()
+   RETURN Qt_QFileDialog_confirmOverwrite( ::pPtr )
+
+
+METHOD QFileDialog:defaultSuffix()
+   RETURN Qt_QFileDialog_defaultSuffix( ::pPtr )
+
+
+METHOD QFileDialog:directory()
+   RETURN Qt_QFileDialog_directory( ::pPtr )
+
+
+METHOD QFileDialog:fileMode()
+   RETURN Qt_QFileDialog_fileMode( ::pPtr )
+
+
+METHOD QFileDialog:filter()
+   RETURN Qt_QFileDialog_filter( ::pPtr )
+
+
+METHOD QFileDialog:history()
+   RETURN Qt_QFileDialog_history( ::pPtr )
+
+
+METHOD QFileDialog:iconProvider()
+   RETURN Qt_QFileDialog_iconProvider( ::pPtr )
+
+
+METHOD QFileDialog:isNameFilterDetailsVisible()
+   RETURN Qt_QFileDialog_isNameFilterDetailsVisible( ::pPtr )
+
+
+METHOD QFileDialog:isReadOnly()
+   RETURN Qt_QFileDialog_isReadOnly( ::pPtr )
+
+
+METHOD QFileDialog:itemDelegate()
+   RETURN Qt_QFileDialog_itemDelegate( ::pPtr )
+
+
+METHOD QFileDialog:labelText( nLabel )
+   RETURN Qt_QFileDialog_labelText( ::pPtr, nLabel )
+
+
+METHOD QFileDialog:nameFilters()
+   RETURN Qt_QFileDialog_nameFilters( ::pPtr )
+
+
+METHOD QFileDialog:options()
+   RETURN Qt_QFileDialog_options( ::pPtr )
+
+
+METHOD QFileDialog:proxyModel()
+   RETURN Qt_QFileDialog_proxyModel( ::pPtr )
+
+
+METHOD QFileDialog:resolveSymlinks()
+   RETURN Qt_QFileDialog_resolveSymlinks( ::pPtr )
+
+
+METHOD QFileDialog:restoreState( pState )
+   RETURN Qt_QFileDialog_restoreState( ::pPtr, pState )
+
+
+METHOD QFileDialog:saveState()
+   RETURN Qt_QFileDialog_saveState( ::pPtr )
+
+
+METHOD QFileDialog:selectFile( cFilename )
+   RETURN Qt_QFileDialog_selectFile( ::pPtr, cFilename )
+
+
+METHOD QFileDialog:selectNameFilter( cFilter )
+   RETURN Qt_QFileDialog_selectNameFilter( ::pPtr, cFilter )
+
+
+METHOD QFileDialog:selectedFiles()
+   RETURN Qt_QFileDialog_selectedFiles( ::pPtr )
+
+
+METHOD QFileDialog:selectedNameFilter()
+   RETURN Qt_QFileDialog_selectedNameFilter( ::pPtr )
+
+
+METHOD QFileDialog:setAcceptMode( nMode )
+   RETURN Qt_QFileDialog_setAcceptMode( ::pPtr, nMode )
+
+
+METHOD QFileDialog:setConfirmOverwrite( lEnabled )
+   RETURN Qt_QFileDialog_setConfirmOverwrite( ::pPtr, lEnabled )
+
+
+METHOD QFileDialog:setDefaultSuffix( cSuffix )
+   RETURN Qt_QFileDialog_setDefaultSuffix( ::pPtr, cSuffix )
+
+
+METHOD QFileDialog:setDirectory( cDirectory )
+   RETURN Qt_QFileDialog_setDirectory( ::pPtr, cDirectory )
+
+
+METHOD QFileDialog:setDirectory_1( pDirectory )
+   RETURN Qt_QFileDialog_setDirectory_1( ::pPtr, pDirectory )
+
+
+METHOD QFileDialog:setFileMode( nMode )
+   RETURN Qt_QFileDialog_setFileMode( ::pPtr, nMode )
+
+
+METHOD QFileDialog:setFilter( nFilters )
+   RETURN Qt_QFileDialog_setFilter( ::pPtr, nFilters )
+
+
+METHOD QFileDialog:setHistory( pPaths )
+   RETURN Qt_QFileDialog_setHistory( ::pPtr, pPaths )
+
+
+METHOD QFileDialog:setIconProvider( pProvider )
+   RETURN Qt_QFileDialog_setIconProvider( ::pPtr, pProvider )
+
+
+METHOD QFileDialog:setItemDelegate( pDelegate )
+   RETURN Qt_QFileDialog_setItemDelegate( ::pPtr, pDelegate )
+
+
+METHOD QFileDialog:setLabelText( nLabel, cText )
+   RETURN Qt_QFileDialog_setLabelText( ::pPtr, nLabel, cText )
+
+
+METHOD QFileDialog:setNameFilter( cFilter )
+   RETURN Qt_QFileDialog_setNameFilter( ::pPtr, cFilter )
+
+
+METHOD QFileDialog:setNameFilterDetailsVisible( lEnabled )
+   RETURN Qt_QFileDialog_setNameFilterDetailsVisible( ::pPtr, lEnabled )
+
+
+METHOD QFileDialog:setNameFilters( pFilters )
+   RETURN Qt_QFileDialog_setNameFilters( ::pPtr, pFilters )
+
+
+METHOD QFileDialog:setOption( nOption, lOn )
+   RETURN Qt_QFileDialog_setOption( ::pPtr, nOption, lOn )
+
+
+METHOD QFileDialog:setOptions( nOptions )
+   RETURN Qt_QFileDialog_setOptions( ::pPtr, nOptions )
+
+
+METHOD QFileDialog:setProxyModel( pProxyModel )
+   RETURN Qt_QFileDialog_setProxyModel( ::pPtr, pProxyModel )
+
+
+METHOD QFileDialog:setReadOnly( lEnabled )
+   RETURN Qt_QFileDialog_setReadOnly( ::pPtr, lEnabled )
+
+
+METHOD QFileDialog:setResolveSymlinks( lEnabled )
+   RETURN Qt_QFileDialog_setResolveSymlinks( ::pPtr, lEnabled )
+
+
+METHOD QFileDialog:setViewMode( nMode )
+   RETURN Qt_QFileDialog_setViewMode( ::pPtr, nMode )
+
+
+METHOD QFileDialog:testOption( nOption )
+   RETURN Qt_QFileDialog_testOption( ::pPtr, nOption )
+
+
+METHOD QFileDialog:viewMode()
+   RETURN Qt_QFileDialog_viewMode( ::pPtr )
+
+
+METHOD QFileDialog:getExistingDirectory( pParent, cCaption, cDir, nOptions )
+   RETURN Qt_QFileDialog_getExistingDirectory( ::pPtr, pParent, cCaption, cDir, nOptions )
+

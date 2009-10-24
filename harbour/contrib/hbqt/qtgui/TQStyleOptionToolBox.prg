@@ -71,31 +71,32 @@ CREATE CLASS QStyleOptionToolBox INHERIT QStyleOption
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  icon()                              INLINE  Qt_QStyleOptionToolBox_icon( ::pPtr )
-   METHOD  text()                              INLINE  Qt_QStyleOptionToolBox_text( ::pPtr )
+   METHOD  icon()
+   METHOD  text()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyleOptionToolBox
-
+METHOD QStyleOptionToolBox:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyleOptionToolBox( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyleOptionToolBox
-
+METHOD QStyleOptionToolBox:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyleOptionToolBox:icon()
+   RETURN Qt_QStyleOptionToolBox_icon( ::pPtr )
+
+
+METHOD QStyleOptionToolBox:text()
+   RETURN Qt_QStyleOptionToolBox_text( ::pPtr )
+

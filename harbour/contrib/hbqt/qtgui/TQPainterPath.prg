@@ -71,80 +71,277 @@ CREATE CLASS QPainterPath
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addEllipse( pBoundingRectangle )    INLINE  Qt_QPainterPath_addEllipse( ::pPtr, pBoundingRectangle )
-   METHOD  addEllipse_1( nX, nY, nWidth, nHeight )  INLINE  Qt_QPainterPath_addEllipse_1( ::pPtr, nX, nY, nWidth, nHeight )
-   METHOD  addEllipse_2( pCenter, nRx, nRy )   INLINE  Qt_QPainterPath_addEllipse_2( ::pPtr, pCenter, nRx, nRy )
-   METHOD  addPath( pPath )                    INLINE  Qt_QPainterPath_addPath( ::pPtr, pPath )
-   METHOD  addPolygon( pPolygon )              INLINE  Qt_QPainterPath_addPolygon( ::pPtr, pPolygon )
-   METHOD  addRect( pRectangle )               INLINE  Qt_QPainterPath_addRect( ::pPtr, pRectangle )
-   METHOD  addRect_1( nX, nY, nWidth, nHeight )  INLINE  Qt_QPainterPath_addRect_1( ::pPtr, nX, nY, nWidth, nHeight )
-   METHOD  addRegion( pRegion )                INLINE  Qt_QPainterPath_addRegion( ::pPtr, pRegion )
-   METHOD  addRoundedRect( pRect, nXRadius, nYRadius, nMode )  INLINE  Qt_QPainterPath_addRoundedRect( ::pPtr, pRect, nXRadius, nYRadius, nMode )
-   METHOD  addRoundedRect_1( nX, nY, nW, nH, nXRadius, nYRadius, nMode )  INLINE  Qt_QPainterPath_addRoundedRect_1( ::pPtr, nX, nY, nW, nH, nXRadius, nYRadius, nMode )
-   METHOD  addText( pPoint, pFont, cText )     INLINE  Qt_QPainterPath_addText( ::pPtr, pPoint, pFont, cText )
-   METHOD  addText_1( nX, nY, pFont, cText )   INLINE  Qt_QPainterPath_addText_1( ::pPtr, nX, nY, pFont, cText )
-   METHOD  angleAtPercent( nT )                INLINE  Qt_QPainterPath_angleAtPercent( ::pPtr, nT )
-   METHOD  arcMoveTo( pRectangle, nAngle )     INLINE  Qt_QPainterPath_arcMoveTo( ::pPtr, pRectangle, nAngle )
-   METHOD  arcMoveTo_1( nX, nY, nWidth, nHeight, nAngle )  INLINE  Qt_QPainterPath_arcMoveTo_1( ::pPtr, nX, nY, nWidth, nHeight, nAngle )
-   METHOD  arcTo( pRectangle, nStartAngle, nSweepLength )  INLINE  Qt_QPainterPath_arcTo( ::pPtr, pRectangle, nStartAngle, nSweepLength )
-   METHOD  arcTo_1( nX, nY, nWidth, nHeight, nStartAngle, nSweepLength )  INLINE  Qt_QPainterPath_arcTo_1( ::pPtr, nX, nY, nWidth, nHeight, nStartAngle, nSweepLength )
-   METHOD  boundingRect()                      INLINE  Qt_QPainterPath_boundingRect( ::pPtr )
-   METHOD  closeSubpath()                      INLINE  Qt_QPainterPath_closeSubpath( ::pPtr )
-   METHOD  connectPath( pPath )                INLINE  Qt_QPainterPath_connectPath( ::pPtr, pPath )
-   METHOD  contains( pPoint )                  INLINE  Qt_QPainterPath_contains( ::pPtr, pPoint )
-   METHOD  contains_1( pRectangle )            INLINE  Qt_QPainterPath_contains_1( ::pPtr, pRectangle )
-   METHOD  contains_2( pP )                    INLINE  Qt_QPainterPath_contains_2( ::pPtr, pP )
-   METHOD  controlPointRect()                  INLINE  Qt_QPainterPath_controlPointRect( ::pPtr )
-   METHOD  cubicTo( pC1, pC2, pEndPoint )      INLINE  Qt_QPainterPath_cubicTo( ::pPtr, pC1, pC2, pEndPoint )
-   METHOD  cubicTo_1( nC1X, nC1Y, nC2X, nC2Y, nEndPointX, nEndPointY )  INLINE  Qt_QPainterPath_cubicTo_1( ::pPtr, nC1X, nC1Y, nC2X, nC2Y, nEndPointX, nEndPointY )
-   METHOD  currentPosition()                   INLINE  Qt_QPainterPath_currentPosition( ::pPtr )
-   METHOD  elementCount()                      INLINE  Qt_QPainterPath_elementCount( ::pPtr )
-   METHOD  fillRule()                          INLINE  Qt_QPainterPath_fillRule( ::pPtr )
-   METHOD  intersected( pP )                   INLINE  Qt_QPainterPath_intersected( ::pPtr, pP )
-   METHOD  intersects( pRectangle )            INLINE  Qt_QPainterPath_intersects( ::pPtr, pRectangle )
-   METHOD  intersects_1( pP )                  INLINE  Qt_QPainterPath_intersects_1( ::pPtr, pP )
-   METHOD  isEmpty()                           INLINE  Qt_QPainterPath_isEmpty( ::pPtr )
-   METHOD  length()                            INLINE  Qt_QPainterPath_length( ::pPtr )
-   METHOD  lineTo( pEndPoint )                 INLINE  Qt_QPainterPath_lineTo( ::pPtr, pEndPoint )
-   METHOD  lineTo_1( nX, nY )                  INLINE  Qt_QPainterPath_lineTo_1( ::pPtr, nX, nY )
-   METHOD  moveTo( pPoint )                    INLINE  Qt_QPainterPath_moveTo( ::pPtr, pPoint )
-   METHOD  moveTo_1( nX, nY )                  INLINE  Qt_QPainterPath_moveTo_1( ::pPtr, nX, nY )
-   METHOD  percentAtLength( nLen )             INLINE  Qt_QPainterPath_percentAtLength( ::pPtr, nLen )
-   METHOD  pointAtPercent( nT )                INLINE  Qt_QPainterPath_pointAtPercent( ::pPtr, nT )
-   METHOD  quadTo( pC, pEndPoint )             INLINE  Qt_QPainterPath_quadTo( ::pPtr, pC, pEndPoint )
-   METHOD  quadTo_1( nCx, nCy, nEndPointX, nEndPointY )  INLINE  Qt_QPainterPath_quadTo_1( ::pPtr, nCx, nCy, nEndPointX, nEndPointY )
-   METHOD  setElementPositionAt( nIndex, nX, nY )  INLINE  Qt_QPainterPath_setElementPositionAt( ::pPtr, nIndex, nX, nY )
-   METHOD  setFillRule( nFillRule )            INLINE  Qt_QPainterPath_setFillRule( ::pPtr, nFillRule )
-   METHOD  simplified()                        INLINE  Qt_QPainterPath_simplified( ::pPtr )
-   METHOD  slopeAtPercent( nT )                INLINE  Qt_QPainterPath_slopeAtPercent( ::pPtr, nT )
-   METHOD  subtracted( pP )                    INLINE  Qt_QPainterPath_subtracted( ::pPtr, pP )
-   METHOD  toFillPolygon( pMatrix )            INLINE  Qt_QPainterPath_toFillPolygon( ::pPtr, pMatrix )
-   METHOD  toFillPolygon_1( pMatrix )          INLINE  Qt_QPainterPath_toFillPolygon_1( ::pPtr, pMatrix )
-   METHOD  toReversed()                        INLINE  Qt_QPainterPath_toReversed( ::pPtr )
-   METHOD  united( pP )                        INLINE  Qt_QPainterPath_united( ::pPtr, pP )
+   METHOD  addEllipse( pBoundingRectangle )
+   METHOD  addEllipse_1( nX, nY, nWidth, nHeight )
+   METHOD  addEllipse_2( pCenter, nRx, nRy )
+   METHOD  addPath( pPath )
+   METHOD  addPolygon( pPolygon )
+   METHOD  addRect( pRectangle )
+   METHOD  addRect_1( nX, nY, nWidth, nHeight )
+   METHOD  addRegion( pRegion )
+   METHOD  addRoundedRect( pRect, nXRadius, nYRadius, nMode )
+   METHOD  addRoundedRect_1( nX, nY, nW, nH, nXRadius, nYRadius, nMode )
+   METHOD  addText( pPoint, pFont, cText )
+   METHOD  addText_1( nX, nY, pFont, cText )
+   METHOD  angleAtPercent( nT )
+   METHOD  arcMoveTo( pRectangle, nAngle )
+   METHOD  arcMoveTo_1( nX, nY, nWidth, nHeight, nAngle )
+   METHOD  arcTo( pRectangle, nStartAngle, nSweepLength )
+   METHOD  arcTo_1( nX, nY, nWidth, nHeight, nStartAngle, nSweepLength )
+   METHOD  boundingRect()
+   METHOD  closeSubpath()
+   METHOD  connectPath( pPath )
+   METHOD  contains( pPoint )
+   METHOD  contains_1( pRectangle )
+   METHOD  contains_2( pP )
+   METHOD  controlPointRect()
+   METHOD  cubicTo( pC1, pC2, pEndPoint )
+   METHOD  cubicTo_1( nC1X, nC1Y, nC2X, nC2Y, nEndPointX, nEndPointY )
+   METHOD  currentPosition()
+   METHOD  elementCount()
+   METHOD  fillRule()
+   METHOD  intersected( pP )
+   METHOD  intersects( pRectangle )
+   METHOD  intersects_1( pP )
+   METHOD  isEmpty()
+   METHOD  length()
+   METHOD  lineTo( pEndPoint )
+   METHOD  lineTo_1( nX, nY )
+   METHOD  moveTo( pPoint )
+   METHOD  moveTo_1( nX, nY )
+   METHOD  percentAtLength( nLen )
+   METHOD  pointAtPercent( nT )
+   METHOD  quadTo( pC, pEndPoint )
+   METHOD  quadTo_1( nCx, nCy, nEndPointX, nEndPointY )
+   METHOD  setElementPositionAt( nIndex, nX, nY )
+   METHOD  setFillRule( nFillRule )
+   METHOD  simplified()
+   METHOD  slopeAtPercent( nT )
+   METHOD  subtracted( pP )
+   METHOD  toFillPolygon( pMatrix )
+   METHOD  toFillPolygon_1( pMatrix )
+   METHOD  toReversed()
+   METHOD  united( pP )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QPainterPath
-
+METHOD QPainterPath:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QPainterPath( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QPainterPath
-
+METHOD QPainterPath:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QPainterPath:addEllipse( pBoundingRectangle )
+   RETURN Qt_QPainterPath_addEllipse( ::pPtr, pBoundingRectangle )
+
+
+METHOD QPainterPath:addEllipse_1( nX, nY, nWidth, nHeight )
+   RETURN Qt_QPainterPath_addEllipse_1( ::pPtr, nX, nY, nWidth, nHeight )
+
+
+METHOD QPainterPath:addEllipse_2( pCenter, nRx, nRy )
+   RETURN Qt_QPainterPath_addEllipse_2( ::pPtr, pCenter, nRx, nRy )
+
+
+METHOD QPainterPath:addPath( pPath )
+   RETURN Qt_QPainterPath_addPath( ::pPtr, pPath )
+
+
+METHOD QPainterPath:addPolygon( pPolygon )
+   RETURN Qt_QPainterPath_addPolygon( ::pPtr, pPolygon )
+
+
+METHOD QPainterPath:addRect( pRectangle )
+   RETURN Qt_QPainterPath_addRect( ::pPtr, pRectangle )
+
+
+METHOD QPainterPath:addRect_1( nX, nY, nWidth, nHeight )
+   RETURN Qt_QPainterPath_addRect_1( ::pPtr, nX, nY, nWidth, nHeight )
+
+
+METHOD QPainterPath:addRegion( pRegion )
+   RETURN Qt_QPainterPath_addRegion( ::pPtr, pRegion )
+
+
+METHOD QPainterPath:addRoundedRect( pRect, nXRadius, nYRadius, nMode )
+   RETURN Qt_QPainterPath_addRoundedRect( ::pPtr, pRect, nXRadius, nYRadius, nMode )
+
+
+METHOD QPainterPath:addRoundedRect_1( nX, nY, nW, nH, nXRadius, nYRadius, nMode )
+   RETURN Qt_QPainterPath_addRoundedRect_1( ::pPtr, nX, nY, nW, nH, nXRadius, nYRadius, nMode )
+
+
+METHOD QPainterPath:addText( pPoint, pFont, cText )
+   RETURN Qt_QPainterPath_addText( ::pPtr, pPoint, pFont, cText )
+
+
+METHOD QPainterPath:addText_1( nX, nY, pFont, cText )
+   RETURN Qt_QPainterPath_addText_1( ::pPtr, nX, nY, pFont, cText )
+
+
+METHOD QPainterPath:angleAtPercent( nT )
+   RETURN Qt_QPainterPath_angleAtPercent( ::pPtr, nT )
+
+
+METHOD QPainterPath:arcMoveTo( pRectangle, nAngle )
+   RETURN Qt_QPainterPath_arcMoveTo( ::pPtr, pRectangle, nAngle )
+
+
+METHOD QPainterPath:arcMoveTo_1( nX, nY, nWidth, nHeight, nAngle )
+   RETURN Qt_QPainterPath_arcMoveTo_1( ::pPtr, nX, nY, nWidth, nHeight, nAngle )
+
+
+METHOD QPainterPath:arcTo( pRectangle, nStartAngle, nSweepLength )
+   RETURN Qt_QPainterPath_arcTo( ::pPtr, pRectangle, nStartAngle, nSweepLength )
+
+
+METHOD QPainterPath:arcTo_1( nX, nY, nWidth, nHeight, nStartAngle, nSweepLength )
+   RETURN Qt_QPainterPath_arcTo_1( ::pPtr, nX, nY, nWidth, nHeight, nStartAngle, nSweepLength )
+
+
+METHOD QPainterPath:boundingRect()
+   RETURN Qt_QPainterPath_boundingRect( ::pPtr )
+
+
+METHOD QPainterPath:closeSubpath()
+   RETURN Qt_QPainterPath_closeSubpath( ::pPtr )
+
+
+METHOD QPainterPath:connectPath( pPath )
+   RETURN Qt_QPainterPath_connectPath( ::pPtr, pPath )
+
+
+METHOD QPainterPath:contains( pPoint )
+   RETURN Qt_QPainterPath_contains( ::pPtr, pPoint )
+
+
+METHOD QPainterPath:contains_1( pRectangle )
+   RETURN Qt_QPainterPath_contains_1( ::pPtr, pRectangle )
+
+
+METHOD QPainterPath:contains_2( pP )
+   RETURN Qt_QPainterPath_contains_2( ::pPtr, pP )
+
+
+METHOD QPainterPath:controlPointRect()
+   RETURN Qt_QPainterPath_controlPointRect( ::pPtr )
+
+
+METHOD QPainterPath:cubicTo( pC1, pC2, pEndPoint )
+   RETURN Qt_QPainterPath_cubicTo( ::pPtr, pC1, pC2, pEndPoint )
+
+
+METHOD QPainterPath:cubicTo_1( nC1X, nC1Y, nC2X, nC2Y, nEndPointX, nEndPointY )
+   RETURN Qt_QPainterPath_cubicTo_1( ::pPtr, nC1X, nC1Y, nC2X, nC2Y, nEndPointX, nEndPointY )
+
+
+METHOD QPainterPath:currentPosition()
+   RETURN Qt_QPainterPath_currentPosition( ::pPtr )
+
+
+METHOD QPainterPath:elementCount()
+   RETURN Qt_QPainterPath_elementCount( ::pPtr )
+
+
+METHOD QPainterPath:fillRule()
+   RETURN Qt_QPainterPath_fillRule( ::pPtr )
+
+
+METHOD QPainterPath:intersected( pP )
+   RETURN Qt_QPainterPath_intersected( ::pPtr, pP )
+
+
+METHOD QPainterPath:intersects( pRectangle )
+   RETURN Qt_QPainterPath_intersects( ::pPtr, pRectangle )
+
+
+METHOD QPainterPath:intersects_1( pP )
+   RETURN Qt_QPainterPath_intersects_1( ::pPtr, pP )
+
+
+METHOD QPainterPath:isEmpty()
+   RETURN Qt_QPainterPath_isEmpty( ::pPtr )
+
+
+METHOD QPainterPath:length()
+   RETURN Qt_QPainterPath_length( ::pPtr )
+
+
+METHOD QPainterPath:lineTo( pEndPoint )
+   RETURN Qt_QPainterPath_lineTo( ::pPtr, pEndPoint )
+
+
+METHOD QPainterPath:lineTo_1( nX, nY )
+   RETURN Qt_QPainterPath_lineTo_1( ::pPtr, nX, nY )
+
+
+METHOD QPainterPath:moveTo( pPoint )
+   RETURN Qt_QPainterPath_moveTo( ::pPtr, pPoint )
+
+
+METHOD QPainterPath:moveTo_1( nX, nY )
+   RETURN Qt_QPainterPath_moveTo_1( ::pPtr, nX, nY )
+
+
+METHOD QPainterPath:percentAtLength( nLen )
+   RETURN Qt_QPainterPath_percentAtLength( ::pPtr, nLen )
+
+
+METHOD QPainterPath:pointAtPercent( nT )
+   RETURN Qt_QPainterPath_pointAtPercent( ::pPtr, nT )
+
+
+METHOD QPainterPath:quadTo( pC, pEndPoint )
+   RETURN Qt_QPainterPath_quadTo( ::pPtr, pC, pEndPoint )
+
+
+METHOD QPainterPath:quadTo_1( nCx, nCy, nEndPointX, nEndPointY )
+   RETURN Qt_QPainterPath_quadTo_1( ::pPtr, nCx, nCy, nEndPointX, nEndPointY )
+
+
+METHOD QPainterPath:setElementPositionAt( nIndex, nX, nY )
+   RETURN Qt_QPainterPath_setElementPositionAt( ::pPtr, nIndex, nX, nY )
+
+
+METHOD QPainterPath:setFillRule( nFillRule )
+   RETURN Qt_QPainterPath_setFillRule( ::pPtr, nFillRule )
+
+
+METHOD QPainterPath:simplified()
+   RETURN Qt_QPainterPath_simplified( ::pPtr )
+
+
+METHOD QPainterPath:slopeAtPercent( nT )
+   RETURN Qt_QPainterPath_slopeAtPercent( ::pPtr, nT )
+
+
+METHOD QPainterPath:subtracted( pP )
+   RETURN Qt_QPainterPath_subtracted( ::pPtr, pP )
+
+
+METHOD QPainterPath:toFillPolygon( pMatrix )
+   RETURN Qt_QPainterPath_toFillPolygon( ::pPtr, pMatrix )
+
+
+METHOD QPainterPath:toFillPolygon_1( pMatrix )
+   RETURN Qt_QPainterPath_toFillPolygon_1( ::pPtr, pMatrix )
+
+
+METHOD QPainterPath:toReversed()
+   RETURN Qt_QPainterPath_toReversed( ::pPtr )
+
+
+METHOD QPainterPath:united( pP )
+   RETURN Qt_QPainterPath_united( ::pPtr, pP )
+

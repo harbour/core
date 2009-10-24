@@ -71,37 +71,62 @@ CREATE CLASS QStyleOption
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  initFrom( pWidget )                 INLINE  Qt_QStyleOption_initFrom( ::pPtr, pWidget )
-   METHOD  direction()                         INLINE  Qt_QStyleOption_direction( ::pPtr )
-   METHOD  fontMetrics()                       INLINE  Qt_QStyleOption_fontMetrics( ::pPtr )
-   METHOD  palette()                           INLINE  Qt_QStyleOption_palette( ::pPtr )
-   METHOD  rect()                              INLINE  Qt_QStyleOption_rect( ::pPtr )
-   METHOD  state()                             INLINE  Qt_QStyleOption_state( ::pPtr )
-   METHOD  type()                              INLINE  Qt_QStyleOption_type( ::pPtr )
-   METHOD  version()                           INLINE  Qt_QStyleOption_version( ::pPtr )
+   METHOD  initFrom( pWidget )
+   METHOD  direction()
+   METHOD  fontMetrics()
+   METHOD  palette()
+   METHOD  rect()
+   METHOD  state()
+   METHOD  type()
+   METHOD  version()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyleOption
-
+METHOD QStyleOption:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyleOption( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyleOption
-
+METHOD QStyleOption:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyleOption:initFrom( pWidget )
+   RETURN Qt_QStyleOption_initFrom( ::pPtr, pWidget )
+
+
+METHOD QStyleOption:direction()
+   RETURN Qt_QStyleOption_direction( ::pPtr )
+
+
+METHOD QStyleOption:fontMetrics()
+   RETURN Qt_QStyleOption_fontMetrics( ::pPtr )
+
+
+METHOD QStyleOption:palette()
+   RETURN Qt_QStyleOption_palette( ::pPtr )
+
+
+METHOD QStyleOption:rect()
+   RETURN Qt_QStyleOption_rect( ::pPtr )
+
+
+METHOD QStyleOption:state()
+   RETURN Qt_QStyleOption_state( ::pPtr )
+
+
+METHOD QStyleOption:type()
+   RETURN Qt_QStyleOption_type( ::pPtr )
+
+
+METHOD QStyleOption:version()
+   RETURN Qt_QStyleOption_version( ::pPtr )
+

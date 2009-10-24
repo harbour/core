@@ -71,55 +71,152 @@ CREATE CLASS QFtp INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  bytesAvailable()                    INLINE  Qt_QFtp_bytesAvailable( ::pPtr )
-   METHOD  cd( cDir )                          INLINE  Qt_QFtp_cd( ::pPtr, cDir )
-   METHOD  clearPendingCommands()              INLINE  Qt_QFtp_clearPendingCommands( ::pPtr )
-   METHOD  close()                             INLINE  Qt_QFtp_close( ::pPtr )
-   METHOD  connectToHost( cHost, nPort )       INLINE  Qt_QFtp_connectToHost( ::pPtr, cHost, nPort )
-   METHOD  currentCommand()                    INLINE  Qt_QFtp_currentCommand( ::pPtr )
-   METHOD  currentDevice()                     INLINE  Qt_QFtp_currentDevice( ::pPtr )
-   METHOD  currentId()                         INLINE  Qt_QFtp_currentId( ::pPtr )
-   METHOD  error()                             INLINE  Qt_QFtp_error( ::pPtr )
-   METHOD  errorString()                       INLINE  Qt_QFtp_errorString( ::pPtr )
-   METHOD  get( cFile, pDev, nType )           INLINE  Qt_QFtp_get( ::pPtr, cFile, pDev, nType )
-   METHOD  hasPendingCommands()                INLINE  Qt_QFtp_hasPendingCommands( ::pPtr )
-   METHOD  list( cDir )                        INLINE  Qt_QFtp_list( ::pPtr, cDir )
-   METHOD  login( cUser, cPassword )           INLINE  Qt_QFtp_login( ::pPtr, cUser, cPassword )
-   METHOD  mkdir( cDir )                       INLINE  Qt_QFtp_mkdir( ::pPtr, cDir )
-   METHOD  put( pDev, cFile, nType )           INLINE  Qt_QFtp_put( ::pPtr, pDev, cFile, nType )
-   METHOD  put_1( pData, cFile, nType )        INLINE  Qt_QFtp_put_1( ::pPtr, pData, cFile, nType )
-   METHOD  rawCommand( cCommand )              INLINE  Qt_QFtp_rawCommand( ::pPtr, cCommand )
-   METHOD  readAll()                           INLINE  Qt_QFtp_readAll( ::pPtr )
-   METHOD  remove( cFile )                     INLINE  Qt_QFtp_remove( ::pPtr, cFile )
-   METHOD  rename( cOldname, cNewname )        INLINE  Qt_QFtp_rename( ::pPtr, cOldname, cNewname )
-   METHOD  rmdir( cDir )                       INLINE  Qt_QFtp_rmdir( ::pPtr, cDir )
-   METHOD  setProxy( cHost, nPort )            INLINE  Qt_QFtp_setProxy( ::pPtr, cHost, nPort )
-   METHOD  setTransferMode( nMode )            INLINE  Qt_QFtp_setTransferMode( ::pPtr, nMode )
-   METHOD  state()                             INLINE  Qt_QFtp_state( ::pPtr )
-   METHOD  abort()                             INLINE  Qt_QFtp_abort( ::pPtr )
+   METHOD  bytesAvailable()
+   METHOD  cd( cDir )
+   METHOD  clearPendingCommands()
+   METHOD  close()
+   METHOD  connectToHost( cHost, nPort )
+   METHOD  currentCommand()
+   METHOD  currentDevice()
+   METHOD  currentId()
+   METHOD  error()
+   METHOD  errorString()
+   METHOD  get( cFile, pDev, nType )
+   METHOD  hasPendingCommands()
+   METHOD  list( cDir )
+   METHOD  login( cUser, cPassword )
+   METHOD  mkdir( cDir )
+   METHOD  put( pDev, cFile, nType )
+   METHOD  put_1( pData, cFile, nType )
+   METHOD  rawCommand( cCommand )
+   METHOD  readAll()
+   METHOD  remove( cFile )
+   METHOD  rename( cOldname, cNewname )
+   METHOD  rmdir( cDir )
+   METHOD  setProxy( cHost, nPort )
+   METHOD  setTransferMode( nMode )
+   METHOD  state()
+   METHOD  abort()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QFtp
-
+METHOD QFtp:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QFtp( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QFtp
-
+METHOD QFtp:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QFtp:bytesAvailable()
+   RETURN Qt_QFtp_bytesAvailable( ::pPtr )
+
+
+METHOD QFtp:cd( cDir )
+   RETURN Qt_QFtp_cd( ::pPtr, cDir )
+
+
+METHOD QFtp:clearPendingCommands()
+   RETURN Qt_QFtp_clearPendingCommands( ::pPtr )
+
+
+METHOD QFtp:close()
+   RETURN Qt_QFtp_close( ::pPtr )
+
+
+METHOD QFtp:connectToHost( cHost, nPort )
+   RETURN Qt_QFtp_connectToHost( ::pPtr, cHost, nPort )
+
+
+METHOD QFtp:currentCommand()
+   RETURN Qt_QFtp_currentCommand( ::pPtr )
+
+
+METHOD QFtp:currentDevice()
+   RETURN Qt_QFtp_currentDevice( ::pPtr )
+
+
+METHOD QFtp:currentId()
+   RETURN Qt_QFtp_currentId( ::pPtr )
+
+
+METHOD QFtp:error()
+   RETURN Qt_QFtp_error( ::pPtr )
+
+
+METHOD QFtp:errorString()
+   RETURN Qt_QFtp_errorString( ::pPtr )
+
+
+METHOD QFtp:get( cFile, pDev, nType )
+   RETURN Qt_QFtp_get( ::pPtr, cFile, pDev, nType )
+
+
+METHOD QFtp:hasPendingCommands()
+   RETURN Qt_QFtp_hasPendingCommands( ::pPtr )
+
+
+METHOD QFtp:list( cDir )
+   RETURN Qt_QFtp_list( ::pPtr, cDir )
+
+
+METHOD QFtp:login( cUser, cPassword )
+   RETURN Qt_QFtp_login( ::pPtr, cUser, cPassword )
+
+
+METHOD QFtp:mkdir( cDir )
+   RETURN Qt_QFtp_mkdir( ::pPtr, cDir )
+
+
+METHOD QFtp:put( pDev, cFile, nType )
+   RETURN Qt_QFtp_put( ::pPtr, pDev, cFile, nType )
+
+
+METHOD QFtp:put_1( pData, cFile, nType )
+   RETURN Qt_QFtp_put_1( ::pPtr, pData, cFile, nType )
+
+
+METHOD QFtp:rawCommand( cCommand )
+   RETURN Qt_QFtp_rawCommand( ::pPtr, cCommand )
+
+
+METHOD QFtp:readAll()
+   RETURN Qt_QFtp_readAll( ::pPtr )
+
+
+METHOD QFtp:remove( cFile )
+   RETURN Qt_QFtp_remove( ::pPtr, cFile )
+
+
+METHOD QFtp:rename( cOldname, cNewname )
+   RETURN Qt_QFtp_rename( ::pPtr, cOldname, cNewname )
+
+
+METHOD QFtp:rmdir( cDir )
+   RETURN Qt_QFtp_rmdir( ::pPtr, cDir )
+
+
+METHOD QFtp:setProxy( cHost, nPort )
+   RETURN Qt_QFtp_setProxy( ::pPtr, cHost, nPort )
+
+
+METHOD QFtp:setTransferMode( nMode )
+   RETURN Qt_QFtp_setTransferMode( ::pPtr, nMode )
+
+
+METHOD QFtp:state()
+   RETURN Qt_QFtp_state( ::pPtr )
+
+
+METHOD QFtp:abort()
+   RETURN Qt_QFtp_abort( ::pPtr )
+

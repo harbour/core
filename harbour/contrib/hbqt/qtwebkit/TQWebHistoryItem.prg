@@ -71,37 +71,62 @@ CREATE CLASS QWebHistoryItem
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  icon()                              INLINE  Qt_QWebHistoryItem_icon( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QWebHistoryItem_isValid( ::pPtr )
-   METHOD  lastVisited()                       INLINE  Qt_QWebHistoryItem_lastVisited( ::pPtr )
-   METHOD  originalUrl()                       INLINE  Qt_QWebHistoryItem_originalUrl( ::pPtr )
-   METHOD  setUserData( pUserData )            INLINE  Qt_QWebHistoryItem_setUserData( ::pPtr, pUserData )
-   METHOD  title()                             INLINE  Qt_QWebHistoryItem_title( ::pPtr )
-   METHOD  url()                               INLINE  Qt_QWebHistoryItem_url( ::pPtr )
-   METHOD  userData()                          INLINE  Qt_QWebHistoryItem_userData( ::pPtr )
+   METHOD  icon()
+   METHOD  isValid()
+   METHOD  lastVisited()
+   METHOD  originalUrl()
+   METHOD  setUserData( pUserData )
+   METHOD  title()
+   METHOD  url()
+   METHOD  userData()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QWebHistoryItem
-
+METHOD QWebHistoryItem:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QWebHistoryItem( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QWebHistoryItem
-
+METHOD QWebHistoryItem:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QWebHistoryItem:icon()
+   RETURN Qt_QWebHistoryItem_icon( ::pPtr )
+
+
+METHOD QWebHistoryItem:isValid()
+   RETURN Qt_QWebHistoryItem_isValid( ::pPtr )
+
+
+METHOD QWebHistoryItem:lastVisited()
+   RETURN Qt_QWebHistoryItem_lastVisited( ::pPtr )
+
+
+METHOD QWebHistoryItem:originalUrl()
+   RETURN Qt_QWebHistoryItem_originalUrl( ::pPtr )
+
+
+METHOD QWebHistoryItem:setUserData( pUserData )
+   RETURN Qt_QWebHistoryItem_setUserData( ::pPtr, pUserData )
+
+
+METHOD QWebHistoryItem:title()
+   RETURN Qt_QWebHistoryItem_title( ::pPtr )
+
+
+METHOD QWebHistoryItem:url()
+   RETURN Qt_QWebHistoryItem_url( ::pPtr )
+
+
+METHOD QWebHistoryItem:userData()
+   RETURN Qt_QWebHistoryItem_userData( ::pPtr )
+

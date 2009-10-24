@@ -71,39 +71,72 @@ CREATE CLASS QTextDocumentWriter
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  codec()                             INLINE  Qt_QTextDocumentWriter_codec( ::pPtr )
-   METHOD  device()                            INLINE  Qt_QTextDocumentWriter_device( ::pPtr )
-   METHOD  fileName()                          INLINE  Qt_QTextDocumentWriter_fileName( ::pPtr )
-   METHOD  format()                            INLINE  Qt_QTextDocumentWriter_format( ::pPtr )
-   METHOD  setCodec( pCodec )                  INLINE  Qt_QTextDocumentWriter_setCodec( ::pPtr, pCodec )
-   METHOD  setDevice( pDevice )                INLINE  Qt_QTextDocumentWriter_setDevice( ::pPtr, pDevice )
-   METHOD  setFileName( cFileName )            INLINE  Qt_QTextDocumentWriter_setFileName( ::pPtr, cFileName )
-   METHOD  setFormat( pFormat )                INLINE  Qt_QTextDocumentWriter_setFormat( ::pPtr, pFormat )
-   METHOD  write( pDocument )                  INLINE  Qt_QTextDocumentWriter_write( ::pPtr, pDocument )
-   METHOD  write_1( pFragment )                INLINE  Qt_QTextDocumentWriter_write_1( ::pPtr, pFragment )
+   METHOD  codec()
+   METHOD  device()
+   METHOD  fileName()
+   METHOD  format()
+   METHOD  setCodec( pCodec )
+   METHOD  setDevice( pDevice )
+   METHOD  setFileName( cFileName )
+   METHOD  setFormat( pFormat )
+   METHOD  write( pDocument )
+   METHOD  write_1( pFragment )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextDocumentWriter
-
+METHOD QTextDocumentWriter:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextDocumentWriter( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextDocumentWriter
-
+METHOD QTextDocumentWriter:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextDocumentWriter:codec()
+   RETURN Qt_QTextDocumentWriter_codec( ::pPtr )
+
+
+METHOD QTextDocumentWriter:device()
+   RETURN Qt_QTextDocumentWriter_device( ::pPtr )
+
+
+METHOD QTextDocumentWriter:fileName()
+   RETURN Qt_QTextDocumentWriter_fileName( ::pPtr )
+
+
+METHOD QTextDocumentWriter:format()
+   RETURN Qt_QTextDocumentWriter_format( ::pPtr )
+
+
+METHOD QTextDocumentWriter:setCodec( pCodec )
+   RETURN Qt_QTextDocumentWriter_setCodec( ::pPtr, pCodec )
+
+
+METHOD QTextDocumentWriter:setDevice( pDevice )
+   RETURN Qt_QTextDocumentWriter_setDevice( ::pPtr, pDevice )
+
+
+METHOD QTextDocumentWriter:setFileName( cFileName )
+   RETURN Qt_QTextDocumentWriter_setFileName( ::pPtr, cFileName )
+
+
+METHOD QTextDocumentWriter:setFormat( pFormat )
+   RETURN Qt_QTextDocumentWriter_setFormat( ::pPtr, pFormat )
+
+
+METHOD QTextDocumentWriter:write( pDocument )
+   RETURN Qt_QTextDocumentWriter_write( ::pPtr, pDocument )
+
+
+METHOD QTextDocumentWriter:write_1( pFragment )
+   RETURN Qt_QTextDocumentWriter_write_1( ::pPtr, pFragment )
+

@@ -71,35 +71,52 @@ CREATE CLASS QPrintEngine
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  abort()                             INLINE  Qt_QPrintEngine_abort( ::pPtr )
-   METHOD  metric( nId )                       INLINE  Qt_QPrintEngine_metric( ::pPtr, nId )
-   METHOD  newPage()                           INLINE  Qt_QPrintEngine_newPage( ::pPtr )
-   METHOD  printerState()                      INLINE  Qt_QPrintEngine_printerState( ::pPtr )
-   METHOD  property( nKey )                    INLINE  Qt_QPrintEngine_property( ::pPtr, nKey )
-   METHOD  setProperty( nKey, pValue )         INLINE  Qt_QPrintEngine_setProperty( ::pPtr, nKey, pValue )
+   METHOD  abort()
+   METHOD  metric( nId )
+   METHOD  newPage()
+   METHOD  printerState()
+   METHOD  property( nKey )
+   METHOD  setProperty( nKey, pValue )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QPrintEngine
-
+METHOD QPrintEngine:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QPrintEngine( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QPrintEngine
-
+METHOD QPrintEngine:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QPrintEngine:abort()
+   RETURN Qt_QPrintEngine_abort( ::pPtr )
+
+
+METHOD QPrintEngine:metric( nId )
+   RETURN Qt_QPrintEngine_metric( ::pPtr, nId )
+
+
+METHOD QPrintEngine:newPage()
+   RETURN Qt_QPrintEngine_newPage( ::pPtr )
+
+
+METHOD QPrintEngine:printerState()
+   RETURN Qt_QPrintEngine_printerState( ::pPtr )
+
+
+METHOD QPrintEngine:property( nKey )
+   RETURN Qt_QPrintEngine_property( ::pPtr, nKey )
+
+
+METHOD QPrintEngine:setProperty( nKey, pValue )
+   RETURN Qt_QPrintEngine_setProperty( ::pPtr, nKey, pValue )
+

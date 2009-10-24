@@ -71,43 +71,92 @@ CREATE CLASS QMenuBar INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  activeAction()                      INLINE  Qt_QMenuBar_activeAction( ::pPtr )
-   METHOD  addAction( cText )                  INLINE  Qt_QMenuBar_addAction( ::pPtr, cText )
-   METHOD  addAction_1( cText, pReceiver, pMember )  INLINE  Qt_QMenuBar_addAction_1( ::pPtr, cText, pReceiver, pMember )
-   METHOD  addAction_2( pAction )              INLINE  Qt_QMenuBar_addAction_2( ::pPtr, pAction )
-   METHOD  addMenu( pMenu )                    INLINE  Qt_QMenuBar_addMenu( ::pPtr, pMenu )
-   METHOD  addMenu_1( cTitle )                 INLINE  Qt_QMenuBar_addMenu_1( ::pPtr, cTitle )
-   METHOD  addMenu_2( cIcon, cTitle )          INLINE  Qt_QMenuBar_addMenu_2( ::pPtr, cIcon, cTitle )
-   METHOD  addSeparator()                      INLINE  Qt_QMenuBar_addSeparator( ::pPtr )
-   METHOD  clear()                             INLINE  Qt_QMenuBar_clear( ::pPtr )
-   METHOD  insertMenu( pBefore, pMenu )        INLINE  Qt_QMenuBar_insertMenu( ::pPtr, pBefore, pMenu )
-   METHOD  insertSeparator( pBefore )          INLINE  Qt_QMenuBar_insertSeparator( ::pPtr, pBefore )
-   METHOD  isDefaultUp()                       INLINE  Qt_QMenuBar_isDefaultUp( ::pPtr )
-   METHOD  setActiveAction( pAct )             INLINE  Qt_QMenuBar_setActiveAction( ::pPtr, pAct )
-   METHOD  setDefaultUp( lBool )               INLINE  Qt_QMenuBar_setDefaultUp( ::pPtr, lBool )
+   METHOD  activeAction()
+   METHOD  addAction( cText )
+   METHOD  addAction_1( cText, pReceiver, pMember )
+   METHOD  addAction_2( pAction )
+   METHOD  addMenu( pMenu )
+   METHOD  addMenu_1( cTitle )
+   METHOD  addMenu_2( cIcon, cTitle )
+   METHOD  addSeparator()
+   METHOD  clear()
+   METHOD  insertMenu( pBefore, pMenu )
+   METHOD  insertSeparator( pBefore )
+   METHOD  isDefaultUp()
+   METHOD  setActiveAction( pAct )
+   METHOD  setDefaultUp( lBool )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QMenuBar
-
+METHOD QMenuBar:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QMenuBar( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QMenuBar
-
+METHOD QMenuBar:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QMenuBar:activeAction()
+   RETURN Qt_QMenuBar_activeAction( ::pPtr )
+
+
+METHOD QMenuBar:addAction( cText )
+   RETURN Qt_QMenuBar_addAction( ::pPtr, cText )
+
+
+METHOD QMenuBar:addAction_1( cText, pReceiver, pMember )
+   RETURN Qt_QMenuBar_addAction_1( ::pPtr, cText, pReceiver, pMember )
+
+
+METHOD QMenuBar:addAction_2( pAction )
+   RETURN Qt_QMenuBar_addAction_2( ::pPtr, pAction )
+
+
+METHOD QMenuBar:addMenu( pMenu )
+   RETURN Qt_QMenuBar_addMenu( ::pPtr, pMenu )
+
+
+METHOD QMenuBar:addMenu_1( cTitle )
+   RETURN Qt_QMenuBar_addMenu_1( ::pPtr, cTitle )
+
+
+METHOD QMenuBar:addMenu_2( cIcon, cTitle )
+   RETURN Qt_QMenuBar_addMenu_2( ::pPtr, cIcon, cTitle )
+
+
+METHOD QMenuBar:addSeparator()
+   RETURN Qt_QMenuBar_addSeparator( ::pPtr )
+
+
+METHOD QMenuBar:clear()
+   RETURN Qt_QMenuBar_clear( ::pPtr )
+
+
+METHOD QMenuBar:insertMenu( pBefore, pMenu )
+   RETURN Qt_QMenuBar_insertMenu( ::pPtr, pBefore, pMenu )
+
+
+METHOD QMenuBar:insertSeparator( pBefore )
+   RETURN Qt_QMenuBar_insertSeparator( ::pPtr, pBefore )
+
+
+METHOD QMenuBar:isDefaultUp()
+   RETURN Qt_QMenuBar_isDefaultUp( ::pPtr )
+
+
+METHOD QMenuBar:setActiveAction( pAct )
+   RETURN Qt_QMenuBar_setActiveAction( ::pPtr, pAct )
+
+
+METHOD QMenuBar:setDefaultUp( lBool )
+   RETURN Qt_QMenuBar_setDefaultUp( ::pPtr, lBool )
+

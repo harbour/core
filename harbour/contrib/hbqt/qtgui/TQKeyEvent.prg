@@ -71,38 +71,67 @@ CREATE CLASS QKeyEvent INHERIT QInputEvent
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  count()                             INLINE  Qt_QKeyEvent_count( ::pPtr )
-   METHOD  isAutoRepeat()                      INLINE  Qt_QKeyEvent_isAutoRepeat( ::pPtr )
-   METHOD  key()                               INLINE  Qt_QKeyEvent_key( ::pPtr )
-   METHOD  matches( nKey )                     INLINE  Qt_QKeyEvent_matches( ::pPtr, nKey )
-   METHOD  modifiers()                         INLINE  Qt_QKeyEvent_modifiers( ::pPtr )
-   METHOD  nativeModifiers()                   INLINE  Qt_QKeyEvent_nativeModifiers( ::pPtr )
-   METHOD  nativeScanCode()                    INLINE  Qt_QKeyEvent_nativeScanCode( ::pPtr )
-   METHOD  nativeVirtualKey()                  INLINE  Qt_QKeyEvent_nativeVirtualKey( ::pPtr )
-   METHOD  text()                              INLINE  Qt_QKeyEvent_text( ::pPtr )
+   METHOD  count()
+   METHOD  isAutoRepeat()
+   METHOD  key()
+   METHOD  matches( nKey )
+   METHOD  modifiers()
+   METHOD  nativeModifiers()
+   METHOD  nativeScanCode()
+   METHOD  nativeVirtualKey()
+   METHOD  text()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QKeyEvent
-
+METHOD QKeyEvent:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QKeyEvent( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QKeyEvent
-
+METHOD QKeyEvent:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QKeyEvent:count()
+   RETURN Qt_QKeyEvent_count( ::pPtr )
+
+
+METHOD QKeyEvent:isAutoRepeat()
+   RETURN Qt_QKeyEvent_isAutoRepeat( ::pPtr )
+
+
+METHOD QKeyEvent:key()
+   RETURN Qt_QKeyEvent_key( ::pPtr )
+
+
+METHOD QKeyEvent:matches( nKey )
+   RETURN Qt_QKeyEvent_matches( ::pPtr, nKey )
+
+
+METHOD QKeyEvent:modifiers()
+   RETURN Qt_QKeyEvent_modifiers( ::pPtr )
+
+
+METHOD QKeyEvent:nativeModifiers()
+   RETURN Qt_QKeyEvent_nativeModifiers( ::pPtr )
+
+
+METHOD QKeyEvent:nativeScanCode()
+   RETURN Qt_QKeyEvent_nativeScanCode( ::pPtr )
+
+
+METHOD QKeyEvent:nativeVirtualKey()
+   RETURN Qt_QKeyEvent_nativeVirtualKey( ::pPtr )
+
+
+METHOD QKeyEvent:text()
+   RETURN Qt_QKeyEvent_text( ::pPtr )
+

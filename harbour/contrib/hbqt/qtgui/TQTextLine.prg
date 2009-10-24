@@ -71,50 +71,127 @@ CREATE CLASS QTextLine
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  ascent()                            INLINE  Qt_QTextLine_ascent( ::pPtr )
-   METHOD  cursorToX( nCursorPos, nEdge )      INLINE  Qt_QTextLine_cursorToX( ::pPtr, nCursorPos, nEdge )
-   METHOD  cursorToX_1( nCursorPos, nEdge )    INLINE  Qt_QTextLine_cursorToX_1( ::pPtr, nCursorPos, nEdge )
-   METHOD  descent()                           INLINE  Qt_QTextLine_descent( ::pPtr )
-   METHOD  height()                            INLINE  Qt_QTextLine_height( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QTextLine_isValid( ::pPtr )
-   METHOD  lineNumber()                        INLINE  Qt_QTextLine_lineNumber( ::pPtr )
-   METHOD  naturalTextRect()                   INLINE  Qt_QTextLine_naturalTextRect( ::pPtr )
-   METHOD  naturalTextWidth()                  INLINE  Qt_QTextLine_naturalTextWidth( ::pPtr )
-   METHOD  position()                          INLINE  Qt_QTextLine_position( ::pPtr )
-   METHOD  rect()                              INLINE  Qt_QTextLine_rect( ::pPtr )
-   METHOD  setLineWidth( nWidth )              INLINE  Qt_QTextLine_setLineWidth( ::pPtr, nWidth )
-   METHOD  setNumColumns( nNumColumns )        INLINE  Qt_QTextLine_setNumColumns( ::pPtr, nNumColumns )
-   METHOD  setNumColumns_1( nNumColumns, nAlignmentWidth )  INLINE  Qt_QTextLine_setNumColumns_1( ::pPtr, nNumColumns, nAlignmentWidth )
-   METHOD  setPosition( pPos )                 INLINE  Qt_QTextLine_setPosition( ::pPtr, pPos )
-   METHOD  textLength()                        INLINE  Qt_QTextLine_textLength( ::pPtr )
-   METHOD  textStart()                         INLINE  Qt_QTextLine_textStart( ::pPtr )
-   METHOD  width()                             INLINE  Qt_QTextLine_width( ::pPtr )
-   METHOD  x()                                 INLINE  Qt_QTextLine_x( ::pPtr )
-   METHOD  xToCursor( nX, nCpos )              INLINE  Qt_QTextLine_xToCursor( ::pPtr, nX, nCpos )
-   METHOD  y()                                 INLINE  Qt_QTextLine_y( ::pPtr )
+   METHOD  ascent()
+   METHOD  cursorToX( nCursorPos, nEdge )
+   METHOD  cursorToX_1( nCursorPos, nEdge )
+   METHOD  descent()
+   METHOD  height()
+   METHOD  isValid()
+   METHOD  lineNumber()
+   METHOD  naturalTextRect()
+   METHOD  naturalTextWidth()
+   METHOD  position()
+   METHOD  rect()
+   METHOD  setLineWidth( nWidth )
+   METHOD  setNumColumns( nNumColumns )
+   METHOD  setNumColumns_1( nNumColumns, nAlignmentWidth )
+   METHOD  setPosition( pPos )
+   METHOD  textLength()
+   METHOD  textStart()
+   METHOD  width()
+   METHOD  x()
+   METHOD  xToCursor( nX, nCpos )
+   METHOD  y()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextLine
-
+METHOD QTextLine:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextLine( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextLine
-
+METHOD QTextLine:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextLine:ascent()
+   RETURN Qt_QTextLine_ascent( ::pPtr )
+
+
+METHOD QTextLine:cursorToX( nCursorPos, nEdge )
+   RETURN Qt_QTextLine_cursorToX( ::pPtr, nCursorPos, nEdge )
+
+
+METHOD QTextLine:cursorToX_1( nCursorPos, nEdge )
+   RETURN Qt_QTextLine_cursorToX_1( ::pPtr, nCursorPos, nEdge )
+
+
+METHOD QTextLine:descent()
+   RETURN Qt_QTextLine_descent( ::pPtr )
+
+
+METHOD QTextLine:height()
+   RETURN Qt_QTextLine_height( ::pPtr )
+
+
+METHOD QTextLine:isValid()
+   RETURN Qt_QTextLine_isValid( ::pPtr )
+
+
+METHOD QTextLine:lineNumber()
+   RETURN Qt_QTextLine_lineNumber( ::pPtr )
+
+
+METHOD QTextLine:naturalTextRect()
+   RETURN Qt_QTextLine_naturalTextRect( ::pPtr )
+
+
+METHOD QTextLine:naturalTextWidth()
+   RETURN Qt_QTextLine_naturalTextWidth( ::pPtr )
+
+
+METHOD QTextLine:position()
+   RETURN Qt_QTextLine_position( ::pPtr )
+
+
+METHOD QTextLine:rect()
+   RETURN Qt_QTextLine_rect( ::pPtr )
+
+
+METHOD QTextLine:setLineWidth( nWidth )
+   RETURN Qt_QTextLine_setLineWidth( ::pPtr, nWidth )
+
+
+METHOD QTextLine:setNumColumns( nNumColumns )
+   RETURN Qt_QTextLine_setNumColumns( ::pPtr, nNumColumns )
+
+
+METHOD QTextLine:setNumColumns_1( nNumColumns, nAlignmentWidth )
+   RETURN Qt_QTextLine_setNumColumns_1( ::pPtr, nNumColumns, nAlignmentWidth )
+
+
+METHOD QTextLine:setPosition( pPos )
+   RETURN Qt_QTextLine_setPosition( ::pPtr, pPos )
+
+
+METHOD QTextLine:textLength()
+   RETURN Qt_QTextLine_textLength( ::pPtr )
+
+
+METHOD QTextLine:textStart()
+   RETURN Qt_QTextLine_textStart( ::pPtr )
+
+
+METHOD QTextLine:width()
+   RETURN Qt_QTextLine_width( ::pPtr )
+
+
+METHOD QTextLine:x()
+   RETURN Qt_QTextLine_x( ::pPtr )
+
+
+METHOD QTextLine:xToCursor( nX, nCpos )
+   RETURN Qt_QTextLine_xToCursor( ::pPtr, nX, nCpos )
+
+
+METHOD QTextLine:y()
+   RETURN Qt_QTextLine_y( ::pPtr )
+

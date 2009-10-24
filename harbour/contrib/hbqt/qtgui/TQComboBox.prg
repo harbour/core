@@ -71,88 +71,317 @@ CREATE CLASS QComboBox INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addItem( cText, pUserData )         INLINE  Qt_QComboBox_addItem( ::pPtr, cText, pUserData )
-   METHOD  addItem_1( cIcon, cText, pUserData )  INLINE  Qt_QComboBox_addItem_1( ::pPtr, cIcon, cText, pUserData )
-   METHOD  addItems( pTexts )                  INLINE  Qt_QComboBox_addItems( ::pPtr, pTexts )
-   METHOD  completer()                         INLINE  Qt_QComboBox_completer( ::pPtr )
-   METHOD  count()                             INLINE  Qt_QComboBox_count( ::pPtr )
-   METHOD  currentIndex()                      INLINE  Qt_QComboBox_currentIndex( ::pPtr )
-   METHOD  currentText()                       INLINE  Qt_QComboBox_currentText( ::pPtr )
-   METHOD  duplicatesEnabled()                 INLINE  Qt_QComboBox_duplicatesEnabled( ::pPtr )
-   METHOD  findData( pData, nRole, nFlags )    INLINE  Qt_QComboBox_findData( ::pPtr, pData, nRole, nFlags )
-   METHOD  findText( cText, nFlags )           INLINE  Qt_QComboBox_findText( ::pPtr, cText, nFlags )
-   METHOD  hasFrame()                          INLINE  Qt_QComboBox_hasFrame( ::pPtr )
-   METHOD  hidePopup()                         INLINE  Qt_QComboBox_hidePopup( ::pPtr )
-   METHOD  iconSize()                          INLINE  Qt_QComboBox_iconSize( ::pPtr )
-   METHOD  insertItem( nIndex, cText, pUserData )  INLINE  Qt_QComboBox_insertItem( ::pPtr, nIndex, cText, pUserData )
-   METHOD  insertItem_1( nIndex, cIcon, cText, pUserData )  INLINE  Qt_QComboBox_insertItem_1( ::pPtr, nIndex, cIcon, cText, pUserData )
-   METHOD  insertItems( nIndex, pList )        INLINE  Qt_QComboBox_insertItems( ::pPtr, nIndex, pList )
-   METHOD  insertPolicy()                      INLINE  Qt_QComboBox_insertPolicy( ::pPtr )
-   METHOD  insertSeparator( nIndex )           INLINE  Qt_QComboBox_insertSeparator( ::pPtr, nIndex )
-   METHOD  isEditable()                        INLINE  Qt_QComboBox_isEditable( ::pPtr )
-   METHOD  itemData( nIndex, nRole )           INLINE  Qt_QComboBox_itemData( ::pPtr, nIndex, nRole )
-   METHOD  itemDelegate()                      INLINE  Qt_QComboBox_itemDelegate( ::pPtr )
-   METHOD  itemIcon( nIndex )                  INLINE  Qt_QComboBox_itemIcon( ::pPtr, nIndex )
-   METHOD  itemText( nIndex )                  INLINE  Qt_QComboBox_itemText( ::pPtr, nIndex )
-   METHOD  lineEdit()                          INLINE  Qt_QComboBox_lineEdit( ::pPtr )
-   METHOD  maxCount()                          INLINE  Qt_QComboBox_maxCount( ::pPtr )
-   METHOD  maxVisibleItems()                   INLINE  Qt_QComboBox_maxVisibleItems( ::pPtr )
-   METHOD  minimumContentsLength()             INLINE  Qt_QComboBox_minimumContentsLength( ::pPtr )
-   METHOD  model()                             INLINE  Qt_QComboBox_model( ::pPtr )
-   METHOD  modelColumn()                       INLINE  Qt_QComboBox_modelColumn( ::pPtr )
-   METHOD  removeItem( nIndex )                INLINE  Qt_QComboBox_removeItem( ::pPtr, nIndex )
-   METHOD  rootModelIndex()                    INLINE  Qt_QComboBox_rootModelIndex( ::pPtr )
-   METHOD  setCompleter( pCompleter )          INLINE  Qt_QComboBox_setCompleter( ::pPtr, pCompleter )
-   METHOD  setDuplicatesEnabled( lEnable )     INLINE  Qt_QComboBox_setDuplicatesEnabled( ::pPtr, lEnable )
-   METHOD  setEditable( lEditable )            INLINE  Qt_QComboBox_setEditable( ::pPtr, lEditable )
-   METHOD  setFrame( lBool )                   INLINE  Qt_QComboBox_setFrame( ::pPtr, lBool )
-   METHOD  setIconSize( pSize )                INLINE  Qt_QComboBox_setIconSize( ::pPtr, pSize )
-   METHOD  setInsertPolicy( nPolicy )          INLINE  Qt_QComboBox_setInsertPolicy( ::pPtr, nPolicy )
-   METHOD  setItemData( nIndex, pValue, nRole )  INLINE  Qt_QComboBox_setItemData( ::pPtr, nIndex, pValue, nRole )
-   METHOD  setItemDelegate( pDelegate )        INLINE  Qt_QComboBox_setItemDelegate( ::pPtr, pDelegate )
-   METHOD  setItemIcon( nIndex, cIcon )        INLINE  Qt_QComboBox_setItemIcon( ::pPtr, nIndex, cIcon )
-   METHOD  setItemText( nIndex, cText )        INLINE  Qt_QComboBox_setItemText( ::pPtr, nIndex, cText )
-   METHOD  setLineEdit( pEdit )                INLINE  Qt_QComboBox_setLineEdit( ::pPtr, pEdit )
-   METHOD  setMaxCount( nMax )                 INLINE  Qt_QComboBox_setMaxCount( ::pPtr, nMax )
-   METHOD  setMaxVisibleItems( nMaxItems )     INLINE  Qt_QComboBox_setMaxVisibleItems( ::pPtr, nMaxItems )
-   METHOD  setMinimumContentsLength( nCharacters )  INLINE  Qt_QComboBox_setMinimumContentsLength( ::pPtr, nCharacters )
-   METHOD  setModel( pModel )                  INLINE  Qt_QComboBox_setModel( ::pPtr, pModel )
-   METHOD  setModelColumn( nVisibleColumn )    INLINE  Qt_QComboBox_setModelColumn( ::pPtr, nVisibleColumn )
-   METHOD  setRootModelIndex( pIndex )         INLINE  Qt_QComboBox_setRootModelIndex( ::pPtr, pIndex )
-   METHOD  setSizeAdjustPolicy( nPolicy )      INLINE  Qt_QComboBox_setSizeAdjustPolicy( ::pPtr, nPolicy )
-   METHOD  setValidator( pValidator )          INLINE  Qt_QComboBox_setValidator( ::pPtr, pValidator )
-   METHOD  setView( pItemView )                INLINE  Qt_QComboBox_setView( ::pPtr, pItemView )
-   METHOD  showPopup()                         INLINE  Qt_QComboBox_showPopup( ::pPtr )
-   METHOD  sizeAdjustPolicy()                  INLINE  Qt_QComboBox_sizeAdjustPolicy( ::pPtr )
-   METHOD  validator()                         INLINE  Qt_QComboBox_validator( ::pPtr )
-   METHOD  view()                              INLINE  Qt_QComboBox_view( ::pPtr )
-   METHOD  clear()                             INLINE  Qt_QComboBox_clear( ::pPtr )
-   METHOD  clearEditText()                     INLINE  Qt_QComboBox_clearEditText( ::pPtr )
-   METHOD  setCurrentIndex( nIndex )           INLINE  Qt_QComboBox_setCurrentIndex( ::pPtr, nIndex )
-   METHOD  setEditText( cText )                INLINE  Qt_QComboBox_setEditText( ::pPtr, cText )
+   METHOD  addItem( cText, pUserData )
+   METHOD  addItem_1( cIcon, cText, pUserData )
+   METHOD  addItems( pTexts )
+   METHOD  completer()
+   METHOD  count()
+   METHOD  currentIndex()
+   METHOD  currentText()
+   METHOD  duplicatesEnabled()
+   METHOD  findData( pData, nRole, nFlags )
+   METHOD  findText( cText, nFlags )
+   METHOD  hasFrame()
+   METHOD  hidePopup()
+   METHOD  iconSize()
+   METHOD  insertItem( nIndex, cText, pUserData )
+   METHOD  insertItem_1( nIndex, cIcon, cText, pUserData )
+   METHOD  insertItems( nIndex, pList )
+   METHOD  insertPolicy()
+   METHOD  insertSeparator( nIndex )
+   METHOD  isEditable()
+   METHOD  itemData( nIndex, nRole )
+   METHOD  itemDelegate()
+   METHOD  itemIcon( nIndex )
+   METHOD  itemText( nIndex )
+   METHOD  lineEdit()
+   METHOD  maxCount()
+   METHOD  maxVisibleItems()
+   METHOD  minimumContentsLength()
+   METHOD  model()
+   METHOD  modelColumn()
+   METHOD  removeItem( nIndex )
+   METHOD  rootModelIndex()
+   METHOD  setCompleter( pCompleter )
+   METHOD  setDuplicatesEnabled( lEnable )
+   METHOD  setEditable( lEditable )
+   METHOD  setFrame( lBool )
+   METHOD  setIconSize( pSize )
+   METHOD  setInsertPolicy( nPolicy )
+   METHOD  setItemData( nIndex, pValue, nRole )
+   METHOD  setItemDelegate( pDelegate )
+   METHOD  setItemIcon( nIndex, cIcon )
+   METHOD  setItemText( nIndex, cText )
+   METHOD  setLineEdit( pEdit )
+   METHOD  setMaxCount( nMax )
+   METHOD  setMaxVisibleItems( nMaxItems )
+   METHOD  setMinimumContentsLength( nCharacters )
+   METHOD  setModel( pModel )
+   METHOD  setModelColumn( nVisibleColumn )
+   METHOD  setRootModelIndex( pIndex )
+   METHOD  setSizeAdjustPolicy( nPolicy )
+   METHOD  setValidator( pValidator )
+   METHOD  setView( pItemView )
+   METHOD  showPopup()
+   METHOD  sizeAdjustPolicy()
+   METHOD  validator()
+   METHOD  view()
+   METHOD  clear()
+   METHOD  clearEditText()
+   METHOD  setCurrentIndex( nIndex )
+   METHOD  setEditText( cText )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QComboBox
-
+METHOD QComboBox:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QComboBox( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QComboBox
-
+METHOD QComboBox:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QComboBox:addItem( cText, pUserData )
+   RETURN Qt_QComboBox_addItem( ::pPtr, cText, pUserData )
+
+
+METHOD QComboBox:addItem_1( cIcon, cText, pUserData )
+   RETURN Qt_QComboBox_addItem_1( ::pPtr, cIcon, cText, pUserData )
+
+
+METHOD QComboBox:addItems( pTexts )
+   RETURN Qt_QComboBox_addItems( ::pPtr, pTexts )
+
+
+METHOD QComboBox:completer()
+   RETURN Qt_QComboBox_completer( ::pPtr )
+
+
+METHOD QComboBox:count()
+   RETURN Qt_QComboBox_count( ::pPtr )
+
+
+METHOD QComboBox:currentIndex()
+   RETURN Qt_QComboBox_currentIndex( ::pPtr )
+
+
+METHOD QComboBox:currentText()
+   RETURN Qt_QComboBox_currentText( ::pPtr )
+
+
+METHOD QComboBox:duplicatesEnabled()
+   RETURN Qt_QComboBox_duplicatesEnabled( ::pPtr )
+
+
+METHOD QComboBox:findData( pData, nRole, nFlags )
+   RETURN Qt_QComboBox_findData( ::pPtr, pData, nRole, nFlags )
+
+
+METHOD QComboBox:findText( cText, nFlags )
+   RETURN Qt_QComboBox_findText( ::pPtr, cText, nFlags )
+
+
+METHOD QComboBox:hasFrame()
+   RETURN Qt_QComboBox_hasFrame( ::pPtr )
+
+
+METHOD QComboBox:hidePopup()
+   RETURN Qt_QComboBox_hidePopup( ::pPtr )
+
+
+METHOD QComboBox:iconSize()
+   RETURN Qt_QComboBox_iconSize( ::pPtr )
+
+
+METHOD QComboBox:insertItem( nIndex, cText, pUserData )
+   RETURN Qt_QComboBox_insertItem( ::pPtr, nIndex, cText, pUserData )
+
+
+METHOD QComboBox:insertItem_1( nIndex, cIcon, cText, pUserData )
+   RETURN Qt_QComboBox_insertItem_1( ::pPtr, nIndex, cIcon, cText, pUserData )
+
+
+METHOD QComboBox:insertItems( nIndex, pList )
+   RETURN Qt_QComboBox_insertItems( ::pPtr, nIndex, pList )
+
+
+METHOD QComboBox:insertPolicy()
+   RETURN Qt_QComboBox_insertPolicy( ::pPtr )
+
+
+METHOD QComboBox:insertSeparator( nIndex )
+   RETURN Qt_QComboBox_insertSeparator( ::pPtr, nIndex )
+
+
+METHOD QComboBox:isEditable()
+   RETURN Qt_QComboBox_isEditable( ::pPtr )
+
+
+METHOD QComboBox:itemData( nIndex, nRole )
+   RETURN Qt_QComboBox_itemData( ::pPtr, nIndex, nRole )
+
+
+METHOD QComboBox:itemDelegate()
+   RETURN Qt_QComboBox_itemDelegate( ::pPtr )
+
+
+METHOD QComboBox:itemIcon( nIndex )
+   RETURN Qt_QComboBox_itemIcon( ::pPtr, nIndex )
+
+
+METHOD QComboBox:itemText( nIndex )
+   RETURN Qt_QComboBox_itemText( ::pPtr, nIndex )
+
+
+METHOD QComboBox:lineEdit()
+   RETURN Qt_QComboBox_lineEdit( ::pPtr )
+
+
+METHOD QComboBox:maxCount()
+   RETURN Qt_QComboBox_maxCount( ::pPtr )
+
+
+METHOD QComboBox:maxVisibleItems()
+   RETURN Qt_QComboBox_maxVisibleItems( ::pPtr )
+
+
+METHOD QComboBox:minimumContentsLength()
+   RETURN Qt_QComboBox_minimumContentsLength( ::pPtr )
+
+
+METHOD QComboBox:model()
+   RETURN Qt_QComboBox_model( ::pPtr )
+
+
+METHOD QComboBox:modelColumn()
+   RETURN Qt_QComboBox_modelColumn( ::pPtr )
+
+
+METHOD QComboBox:removeItem( nIndex )
+   RETURN Qt_QComboBox_removeItem( ::pPtr, nIndex )
+
+
+METHOD QComboBox:rootModelIndex()
+   RETURN Qt_QComboBox_rootModelIndex( ::pPtr )
+
+
+METHOD QComboBox:setCompleter( pCompleter )
+   RETURN Qt_QComboBox_setCompleter( ::pPtr, pCompleter )
+
+
+METHOD QComboBox:setDuplicatesEnabled( lEnable )
+   RETURN Qt_QComboBox_setDuplicatesEnabled( ::pPtr, lEnable )
+
+
+METHOD QComboBox:setEditable( lEditable )
+   RETURN Qt_QComboBox_setEditable( ::pPtr, lEditable )
+
+
+METHOD QComboBox:setFrame( lBool )
+   RETURN Qt_QComboBox_setFrame( ::pPtr, lBool )
+
+
+METHOD QComboBox:setIconSize( pSize )
+   RETURN Qt_QComboBox_setIconSize( ::pPtr, pSize )
+
+
+METHOD QComboBox:setInsertPolicy( nPolicy )
+   RETURN Qt_QComboBox_setInsertPolicy( ::pPtr, nPolicy )
+
+
+METHOD QComboBox:setItemData( nIndex, pValue, nRole )
+   RETURN Qt_QComboBox_setItemData( ::pPtr, nIndex, pValue, nRole )
+
+
+METHOD QComboBox:setItemDelegate( pDelegate )
+   RETURN Qt_QComboBox_setItemDelegate( ::pPtr, pDelegate )
+
+
+METHOD QComboBox:setItemIcon( nIndex, cIcon )
+   RETURN Qt_QComboBox_setItemIcon( ::pPtr, nIndex, cIcon )
+
+
+METHOD QComboBox:setItemText( nIndex, cText )
+   RETURN Qt_QComboBox_setItemText( ::pPtr, nIndex, cText )
+
+
+METHOD QComboBox:setLineEdit( pEdit )
+   RETURN Qt_QComboBox_setLineEdit( ::pPtr, pEdit )
+
+
+METHOD QComboBox:setMaxCount( nMax )
+   RETURN Qt_QComboBox_setMaxCount( ::pPtr, nMax )
+
+
+METHOD QComboBox:setMaxVisibleItems( nMaxItems )
+   RETURN Qt_QComboBox_setMaxVisibleItems( ::pPtr, nMaxItems )
+
+
+METHOD QComboBox:setMinimumContentsLength( nCharacters )
+   RETURN Qt_QComboBox_setMinimumContentsLength( ::pPtr, nCharacters )
+
+
+METHOD QComboBox:setModel( pModel )
+   RETURN Qt_QComboBox_setModel( ::pPtr, pModel )
+
+
+METHOD QComboBox:setModelColumn( nVisibleColumn )
+   RETURN Qt_QComboBox_setModelColumn( ::pPtr, nVisibleColumn )
+
+
+METHOD QComboBox:setRootModelIndex( pIndex )
+   RETURN Qt_QComboBox_setRootModelIndex( ::pPtr, pIndex )
+
+
+METHOD QComboBox:setSizeAdjustPolicy( nPolicy )
+   RETURN Qt_QComboBox_setSizeAdjustPolicy( ::pPtr, nPolicy )
+
+
+METHOD QComboBox:setValidator( pValidator )
+   RETURN Qt_QComboBox_setValidator( ::pPtr, pValidator )
+
+
+METHOD QComboBox:setView( pItemView )
+   RETURN Qt_QComboBox_setView( ::pPtr, pItemView )
+
+
+METHOD QComboBox:showPopup()
+   RETURN Qt_QComboBox_showPopup( ::pPtr )
+
+
+METHOD QComboBox:sizeAdjustPolicy()
+   RETURN Qt_QComboBox_sizeAdjustPolicy( ::pPtr )
+
+
+METHOD QComboBox:validator()
+   RETURN Qt_QComboBox_validator( ::pPtr )
+
+
+METHOD QComboBox:view()
+   RETURN Qt_QComboBox_view( ::pPtr )
+
+
+METHOD QComboBox:clear()
+   RETURN Qt_QComboBox_clear( ::pPtr )
+
+
+METHOD QComboBox:clearEditText()
+   RETURN Qt_QComboBox_clearEditText( ::pPtr )
+
+
+METHOD QComboBox:setCurrentIndex( nIndex )
+   RETURN Qt_QComboBox_setCurrentIndex( ::pPtr, nIndex )
+
+
+METHOD QComboBox:setEditText( cText )
+   RETURN Qt_QComboBox_setEditText( ::pPtr, cText )
+

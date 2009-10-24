@@ -96,6 +96,7 @@
 
 HB_FUNC( QT_HBDBFMODEL )
 {
+   //hb_retptrGC( hbqt_ptrTOgcpointer( new HbDbfModel( ( PHB_ITEM ) hb_param( 1, HB_IT_BLOCK ) ), release_QAbstractItemModel ) );
    hb_retptr( new HbDbfModel( ( PHB_ITEM ) hb_param( 1, HB_IT_BLOCK ) ) );
 }
 
@@ -106,7 +107,7 @@ HB_FUNC( QT_HBDBFMODEL_RESET )
 
 HB_FUNC( QT_HBDBFMODEL_INDEX )
 {
-   hb_retptr( new QModelIndex( hbqt_par_HbDbfModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), QModelIndex() ) ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_HbDbfModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), QModelIndex() ) ), release_QModelIndex ) );
 }
 
 HB_FUNC( QT_HBDBFMODEL_HBSETROWCOLUMNS )

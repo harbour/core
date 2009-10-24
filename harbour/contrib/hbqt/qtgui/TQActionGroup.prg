@@ -71,41 +71,82 @@ CREATE CLASS QActionGroup INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addAction( pAction )                INLINE  Qt_QActionGroup_addAction( ::pPtr, pAction )
-   METHOD  addAction_1( cText )                INLINE  Qt_QActionGroup_addAction_1( ::pPtr, cText )
-   METHOD  addAction_2( cIcon, cText )         INLINE  Qt_QActionGroup_addAction_2( ::pPtr, cIcon, cText )
-   METHOD  checkedAction()                     INLINE  Qt_QActionGroup_checkedAction( ::pPtr )
-   METHOD  isEnabled()                         INLINE  Qt_QActionGroup_isEnabled( ::pPtr )
-   METHOD  isExclusive()                       INLINE  Qt_QActionGroup_isExclusive( ::pPtr )
-   METHOD  isVisible()                         INLINE  Qt_QActionGroup_isVisible( ::pPtr )
-   METHOD  removeAction( pAction )             INLINE  Qt_QActionGroup_removeAction( ::pPtr, pAction )
-   METHOD  setDisabled( lB )                   INLINE  Qt_QActionGroup_setDisabled( ::pPtr, lB )
-   METHOD  setEnabled( lBool )                 INLINE  Qt_QActionGroup_setEnabled( ::pPtr, lBool )
-   METHOD  setExclusive( lBool )               INLINE  Qt_QActionGroup_setExclusive( ::pPtr, lBool )
-   METHOD  setVisible( lBool )                 INLINE  Qt_QActionGroup_setVisible( ::pPtr, lBool )
+   METHOD  addAction( pAction )
+   METHOD  addAction_1( cText )
+   METHOD  addAction_2( cIcon, cText )
+   METHOD  checkedAction()
+   METHOD  isEnabled()
+   METHOD  isExclusive()
+   METHOD  isVisible()
+   METHOD  removeAction( pAction )
+   METHOD  setDisabled( lB )
+   METHOD  setEnabled( lBool )
+   METHOD  setExclusive( lBool )
+   METHOD  setVisible( lBool )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QActionGroup
-
+METHOD QActionGroup:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QActionGroup( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QActionGroup
-
+METHOD QActionGroup:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QActionGroup:addAction( pAction )
+   RETURN Qt_QActionGroup_addAction( ::pPtr, pAction )
+
+
+METHOD QActionGroup:addAction_1( cText )
+   RETURN Qt_QActionGroup_addAction_1( ::pPtr, cText )
+
+
+METHOD QActionGroup:addAction_2( cIcon, cText )
+   RETURN Qt_QActionGroup_addAction_2( ::pPtr, cIcon, cText )
+
+
+METHOD QActionGroup:checkedAction()
+   RETURN Qt_QActionGroup_checkedAction( ::pPtr )
+
+
+METHOD QActionGroup:isEnabled()
+   RETURN Qt_QActionGroup_isEnabled( ::pPtr )
+
+
+METHOD QActionGroup:isExclusive()
+   RETURN Qt_QActionGroup_isExclusive( ::pPtr )
+
+
+METHOD QActionGroup:isVisible()
+   RETURN Qt_QActionGroup_isVisible( ::pPtr )
+
+
+METHOD QActionGroup:removeAction( pAction )
+   RETURN Qt_QActionGroup_removeAction( ::pPtr, pAction )
+
+
+METHOD QActionGroup:setDisabled( lB )
+   RETURN Qt_QActionGroup_setDisabled( ::pPtr, lB )
+
+
+METHOD QActionGroup:setEnabled( lBool )
+   RETURN Qt_QActionGroup_setEnabled( ::pPtr, lBool )
+
+
+METHOD QActionGroup:setExclusive( lBool )
+   RETURN Qt_QActionGroup_setExclusive( ::pPtr, lBool )
+
+
+METHOD QActionGroup:setVisible( lBool )
+   RETURN Qt_QActionGroup_setVisible( ::pPtr, lBool )
+

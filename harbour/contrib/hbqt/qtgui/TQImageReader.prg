@@ -71,67 +71,212 @@ CREATE CLASS QImageReader
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  autoDetectImageFormat()             INLINE  Qt_QImageReader_autoDetectImageFormat( ::pPtr )
-   METHOD  backgroundColor()                   INLINE  Qt_QImageReader_backgroundColor( ::pPtr )
-   METHOD  canRead()                           INLINE  Qt_QImageReader_canRead( ::pPtr )
-   METHOD  clipRect()                          INLINE  Qt_QImageReader_clipRect( ::pPtr )
-   METHOD  currentImageNumber()                INLINE  Qt_QImageReader_currentImageNumber( ::pPtr )
-   METHOD  currentImageRect()                  INLINE  Qt_QImageReader_currentImageRect( ::pPtr )
-   METHOD  device()                            INLINE  Qt_QImageReader_device( ::pPtr )
-   METHOD  error()                             INLINE  Qt_QImageReader_error( ::pPtr )
-   METHOD  errorString()                       INLINE  Qt_QImageReader_errorString( ::pPtr )
-   METHOD  fileName()                          INLINE  Qt_QImageReader_fileName( ::pPtr )
-   METHOD  format()                            INLINE  Qt_QImageReader_format( ::pPtr )
-   METHOD  imageCount()                        INLINE  Qt_QImageReader_imageCount( ::pPtr )
-   METHOD  imageFormat()                       INLINE  Qt_QImageReader_imageFormat( ::pPtr )
-   METHOD  jumpToImage( nImageNumber )         INLINE  Qt_QImageReader_jumpToImage( ::pPtr, nImageNumber )
-   METHOD  jumpToNextImage()                   INLINE  Qt_QImageReader_jumpToNextImage( ::pPtr )
-   METHOD  loopCount()                         INLINE  Qt_QImageReader_loopCount( ::pPtr )
-   METHOD  nextImageDelay()                    INLINE  Qt_QImageReader_nextImageDelay( ::pPtr )
-   METHOD  quality()                           INLINE  Qt_QImageReader_quality( ::pPtr )
-   METHOD  read()                              INLINE  Qt_QImageReader_read( ::pPtr )
-   METHOD  read_1( pImage )                    INLINE  Qt_QImageReader_read_1( ::pPtr, pImage )
-   METHOD  scaledClipRect()                    INLINE  Qt_QImageReader_scaledClipRect( ::pPtr )
-   METHOD  scaledSize()                        INLINE  Qt_QImageReader_scaledSize( ::pPtr )
-   METHOD  setAutoDetectImageFormat( lEnabled )  INLINE  Qt_QImageReader_setAutoDetectImageFormat( ::pPtr, lEnabled )
-   METHOD  setBackgroundColor( pColor )        INLINE  Qt_QImageReader_setBackgroundColor( ::pPtr, pColor )
-   METHOD  setClipRect( pRect )                INLINE  Qt_QImageReader_setClipRect( ::pPtr, pRect )
-   METHOD  setDevice( pDevice )                INLINE  Qt_QImageReader_setDevice( ::pPtr, pDevice )
-   METHOD  setFileName( cFileName )            INLINE  Qt_QImageReader_setFileName( ::pPtr, cFileName )
-   METHOD  setFormat( pFormat )                INLINE  Qt_QImageReader_setFormat( ::pPtr, pFormat )
-   METHOD  setQuality( nQuality )              INLINE  Qt_QImageReader_setQuality( ::pPtr, nQuality )
-   METHOD  setScaledClipRect( pRect )          INLINE  Qt_QImageReader_setScaledClipRect( ::pPtr, pRect )
-   METHOD  setScaledSize( pSize )              INLINE  Qt_QImageReader_setScaledSize( ::pPtr, pSize )
-   METHOD  size()                              INLINE  Qt_QImageReader_size( ::pPtr )
-   METHOD  supportsAnimation()                 INLINE  Qt_QImageReader_supportsAnimation( ::pPtr )
-   METHOD  supportsOption( nOption )           INLINE  Qt_QImageReader_supportsOption( ::pPtr, nOption )
-   METHOD  text( cKey )                        INLINE  Qt_QImageReader_text( ::pPtr, cKey )
-   METHOD  textKeys()                          INLINE  Qt_QImageReader_textKeys( ::pPtr )
-   METHOD  imageFormat_1( cFileName )          INLINE  Qt_QImageReader_imageFormat_1( ::pPtr, cFileName )
-   METHOD  imageFormat_2( pDevice )            INLINE  Qt_QImageReader_imageFormat_2( ::pPtr, pDevice )
+   METHOD  autoDetectImageFormat()
+   METHOD  backgroundColor()
+   METHOD  canRead()
+   METHOD  clipRect()
+   METHOD  currentImageNumber()
+   METHOD  currentImageRect()
+   METHOD  device()
+   METHOD  error()
+   METHOD  errorString()
+   METHOD  fileName()
+   METHOD  format()
+   METHOD  imageCount()
+   METHOD  imageFormat()
+   METHOD  jumpToImage( nImageNumber )
+   METHOD  jumpToNextImage()
+   METHOD  loopCount()
+   METHOD  nextImageDelay()
+   METHOD  quality()
+   METHOD  read()
+   METHOD  read_1( pImage )
+   METHOD  scaledClipRect()
+   METHOD  scaledSize()
+   METHOD  setAutoDetectImageFormat( lEnabled )
+   METHOD  setBackgroundColor( pColor )
+   METHOD  setClipRect( pRect )
+   METHOD  setDevice( pDevice )
+   METHOD  setFileName( cFileName )
+   METHOD  setFormat( pFormat )
+   METHOD  setQuality( nQuality )
+   METHOD  setScaledClipRect( pRect )
+   METHOD  setScaledSize( pSize )
+   METHOD  size()
+   METHOD  supportsAnimation()
+   METHOD  supportsOption( nOption )
+   METHOD  text( cKey )
+   METHOD  textKeys()
+   METHOD  imageFormat_1( cFileName )
+   METHOD  imageFormat_2( pDevice )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QImageReader
-
+METHOD QImageReader:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QImageReader( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QImageReader
-
+METHOD QImageReader:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QImageReader:autoDetectImageFormat()
+   RETURN Qt_QImageReader_autoDetectImageFormat( ::pPtr )
+
+
+METHOD QImageReader:backgroundColor()
+   RETURN Qt_QImageReader_backgroundColor( ::pPtr )
+
+
+METHOD QImageReader:canRead()
+   RETURN Qt_QImageReader_canRead( ::pPtr )
+
+
+METHOD QImageReader:clipRect()
+   RETURN Qt_QImageReader_clipRect( ::pPtr )
+
+
+METHOD QImageReader:currentImageNumber()
+   RETURN Qt_QImageReader_currentImageNumber( ::pPtr )
+
+
+METHOD QImageReader:currentImageRect()
+   RETURN Qt_QImageReader_currentImageRect( ::pPtr )
+
+
+METHOD QImageReader:device()
+   RETURN Qt_QImageReader_device( ::pPtr )
+
+
+METHOD QImageReader:error()
+   RETURN Qt_QImageReader_error( ::pPtr )
+
+
+METHOD QImageReader:errorString()
+   RETURN Qt_QImageReader_errorString( ::pPtr )
+
+
+METHOD QImageReader:fileName()
+   RETURN Qt_QImageReader_fileName( ::pPtr )
+
+
+METHOD QImageReader:format()
+   RETURN Qt_QImageReader_format( ::pPtr )
+
+
+METHOD QImageReader:imageCount()
+   RETURN Qt_QImageReader_imageCount( ::pPtr )
+
+
+METHOD QImageReader:imageFormat()
+   RETURN Qt_QImageReader_imageFormat( ::pPtr )
+
+
+METHOD QImageReader:jumpToImage( nImageNumber )
+   RETURN Qt_QImageReader_jumpToImage( ::pPtr, nImageNumber )
+
+
+METHOD QImageReader:jumpToNextImage()
+   RETURN Qt_QImageReader_jumpToNextImage( ::pPtr )
+
+
+METHOD QImageReader:loopCount()
+   RETURN Qt_QImageReader_loopCount( ::pPtr )
+
+
+METHOD QImageReader:nextImageDelay()
+   RETURN Qt_QImageReader_nextImageDelay( ::pPtr )
+
+
+METHOD QImageReader:quality()
+   RETURN Qt_QImageReader_quality( ::pPtr )
+
+
+METHOD QImageReader:read()
+   RETURN Qt_QImageReader_read( ::pPtr )
+
+
+METHOD QImageReader:read_1( pImage )
+   RETURN Qt_QImageReader_read_1( ::pPtr, pImage )
+
+
+METHOD QImageReader:scaledClipRect()
+   RETURN Qt_QImageReader_scaledClipRect( ::pPtr )
+
+
+METHOD QImageReader:scaledSize()
+   RETURN Qt_QImageReader_scaledSize( ::pPtr )
+
+
+METHOD QImageReader:setAutoDetectImageFormat( lEnabled )
+   RETURN Qt_QImageReader_setAutoDetectImageFormat( ::pPtr, lEnabled )
+
+
+METHOD QImageReader:setBackgroundColor( pColor )
+   RETURN Qt_QImageReader_setBackgroundColor( ::pPtr, pColor )
+
+
+METHOD QImageReader:setClipRect( pRect )
+   RETURN Qt_QImageReader_setClipRect( ::pPtr, pRect )
+
+
+METHOD QImageReader:setDevice( pDevice )
+   RETURN Qt_QImageReader_setDevice( ::pPtr, pDevice )
+
+
+METHOD QImageReader:setFileName( cFileName )
+   RETURN Qt_QImageReader_setFileName( ::pPtr, cFileName )
+
+
+METHOD QImageReader:setFormat( pFormat )
+   RETURN Qt_QImageReader_setFormat( ::pPtr, pFormat )
+
+
+METHOD QImageReader:setQuality( nQuality )
+   RETURN Qt_QImageReader_setQuality( ::pPtr, nQuality )
+
+
+METHOD QImageReader:setScaledClipRect( pRect )
+   RETURN Qt_QImageReader_setScaledClipRect( ::pPtr, pRect )
+
+
+METHOD QImageReader:setScaledSize( pSize )
+   RETURN Qt_QImageReader_setScaledSize( ::pPtr, pSize )
+
+
+METHOD QImageReader:size()
+   RETURN Qt_QImageReader_size( ::pPtr )
+
+
+METHOD QImageReader:supportsAnimation()
+   RETURN Qt_QImageReader_supportsAnimation( ::pPtr )
+
+
+METHOD QImageReader:supportsOption( nOption )
+   RETURN Qt_QImageReader_supportsOption( ::pPtr, nOption )
+
+
+METHOD QImageReader:text( cKey )
+   RETURN Qt_QImageReader_text( ::pPtr, cKey )
+
+
+METHOD QImageReader:textKeys()
+   RETURN Qt_QImageReader_textKeys( ::pPtr )
+
+
+METHOD QImageReader:imageFormat_1( cFileName )
+   RETURN Qt_QImageReader_imageFormat_1( ::pPtr, cFileName )
+
+
+METHOD QImageReader:imageFormat_2( pDevice )
+   RETURN Qt_QImageReader_imageFormat_2( ::pPtr, pDevice )
+

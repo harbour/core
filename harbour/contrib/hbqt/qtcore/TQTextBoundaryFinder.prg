@@ -71,40 +71,77 @@ CREATE CLASS QTextBoundaryFinder
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  boundaryReasons()                   INLINE  Qt_QTextBoundaryFinder_boundaryReasons( ::pPtr )
-   METHOD  isAtBoundary()                      INLINE  Qt_QTextBoundaryFinder_isAtBoundary( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QTextBoundaryFinder_isValid( ::pPtr )
-   METHOD  position()                          INLINE  Qt_QTextBoundaryFinder_position( ::pPtr )
-   METHOD  setPosition( nPosition )            INLINE  Qt_QTextBoundaryFinder_setPosition( ::pPtr, nPosition )
-   METHOD  string()                            INLINE  Qt_QTextBoundaryFinder_string( ::pPtr )
-   METHOD  toEnd()                             INLINE  Qt_QTextBoundaryFinder_toEnd( ::pPtr )
-   METHOD  toNextBoundary()                    INLINE  Qt_QTextBoundaryFinder_toNextBoundary( ::pPtr )
-   METHOD  toPreviousBoundary()                INLINE  Qt_QTextBoundaryFinder_toPreviousBoundary( ::pPtr )
-   METHOD  toStart()                           INLINE  Qt_QTextBoundaryFinder_toStart( ::pPtr )
-   METHOD  type()                              INLINE  Qt_QTextBoundaryFinder_type( ::pPtr )
+   METHOD  boundaryReasons()
+   METHOD  isAtBoundary()
+   METHOD  isValid()
+   METHOD  position()
+   METHOD  setPosition( nPosition )
+   METHOD  string()
+   METHOD  toEnd()
+   METHOD  toNextBoundary()
+   METHOD  toPreviousBoundary()
+   METHOD  toStart()
+   METHOD  type()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextBoundaryFinder
-
+METHOD QTextBoundaryFinder:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextBoundaryFinder( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextBoundaryFinder
-
+METHOD QTextBoundaryFinder:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextBoundaryFinder:boundaryReasons()
+   RETURN Qt_QTextBoundaryFinder_boundaryReasons( ::pPtr )
+
+
+METHOD QTextBoundaryFinder:isAtBoundary()
+   RETURN Qt_QTextBoundaryFinder_isAtBoundary( ::pPtr )
+
+
+METHOD QTextBoundaryFinder:isValid()
+   RETURN Qt_QTextBoundaryFinder_isValid( ::pPtr )
+
+
+METHOD QTextBoundaryFinder:position()
+   RETURN Qt_QTextBoundaryFinder_position( ::pPtr )
+
+
+METHOD QTextBoundaryFinder:setPosition( nPosition )
+   RETURN Qt_QTextBoundaryFinder_setPosition( ::pPtr, nPosition )
+
+
+METHOD QTextBoundaryFinder:string()
+   RETURN Qt_QTextBoundaryFinder_string( ::pPtr )
+
+
+METHOD QTextBoundaryFinder:toEnd()
+   RETURN Qt_QTextBoundaryFinder_toEnd( ::pPtr )
+
+
+METHOD QTextBoundaryFinder:toNextBoundary()
+   RETURN Qt_QTextBoundaryFinder_toNextBoundary( ::pPtr )
+
+
+METHOD QTextBoundaryFinder:toPreviousBoundary()
+   RETURN Qt_QTextBoundaryFinder_toPreviousBoundary( ::pPtr )
+
+
+METHOD QTextBoundaryFinder:toStart()
+   RETURN Qt_QTextBoundaryFinder_toStart( ::pPtr )
+
+
+METHOD QTextBoundaryFinder:type()
+   RETURN Qt_QTextBoundaryFinder_type( ::pPtr )
+

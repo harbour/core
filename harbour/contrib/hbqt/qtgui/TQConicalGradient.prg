@@ -71,34 +71,47 @@ CREATE CLASS QConicalGradient INHERIT QGradient
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  angle()                             INLINE  Qt_QConicalGradient_angle( ::pPtr )
-   METHOD  center()                            INLINE  Qt_QConicalGradient_center( ::pPtr )
-   METHOD  setAngle( nAngle )                  INLINE  Qt_QConicalGradient_setAngle( ::pPtr, nAngle )
-   METHOD  setCenter( pCenter )                INLINE  Qt_QConicalGradient_setCenter( ::pPtr, pCenter )
-   METHOD  setCenter_1( nX, nY )               INLINE  Qt_QConicalGradient_setCenter_1( ::pPtr, nX, nY )
+   METHOD  angle()
+   METHOD  center()
+   METHOD  setAngle( nAngle )
+   METHOD  setCenter( pCenter )
+   METHOD  setCenter_1( nX, nY )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QConicalGradient
-
+METHOD QConicalGradient:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QConicalGradient( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QConicalGradient
-
+METHOD QConicalGradient:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QConicalGradient:angle()
+   RETURN Qt_QConicalGradient_angle( ::pPtr )
+
+
+METHOD QConicalGradient:center()
+   RETURN Qt_QConicalGradient_center( ::pPtr )
+
+
+METHOD QConicalGradient:setAngle( nAngle )
+   RETURN Qt_QConicalGradient_setAngle( ::pPtr, nAngle )
+
+
+METHOD QConicalGradient:setCenter( pCenter )
+   RETURN Qt_QConicalGradient_setCenter( ::pPtr, pCenter )
+
+
+METHOD QConicalGradient:setCenter_1( nX, nY )
+   RETURN Qt_QConicalGradient_setCenter_1( ::pPtr, nX, nY )
+

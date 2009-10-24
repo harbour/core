@@ -71,58 +71,167 @@ CREATE CLASS QTextFrameFormat INHERIT QTextFormat
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  border()                            INLINE  Qt_QTextFrameFormat_border( ::pPtr )
-   METHOD  borderBrush()                       INLINE  Qt_QTextFrameFormat_borderBrush( ::pPtr )
-   METHOD  borderStyle()                       INLINE  Qt_QTextFrameFormat_borderStyle( ::pPtr )
-   METHOD  bottomMargin()                      INLINE  Qt_QTextFrameFormat_bottomMargin( ::pPtr )
-   METHOD  height()                            INLINE  Qt_QTextFrameFormat_height( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QTextFrameFormat_isValid( ::pPtr )
-   METHOD  leftMargin()                        INLINE  Qt_QTextFrameFormat_leftMargin( ::pPtr )
-   METHOD  margin()                            INLINE  Qt_QTextFrameFormat_margin( ::pPtr )
-   METHOD  padding()                           INLINE  Qt_QTextFrameFormat_padding( ::pPtr )
-   METHOD  pageBreakPolicy()                   INLINE  Qt_QTextFrameFormat_pageBreakPolicy( ::pPtr )
-   METHOD  position()                          INLINE  Qt_QTextFrameFormat_position( ::pPtr )
-   METHOD  rightMargin()                       INLINE  Qt_QTextFrameFormat_rightMargin( ::pPtr )
-   METHOD  setBorder( nWidth )                 INLINE  Qt_QTextFrameFormat_setBorder( ::pPtr, nWidth )
-   METHOD  setBorderBrush( pBrush )            INLINE  Qt_QTextFrameFormat_setBorderBrush( ::pPtr, pBrush )
-   METHOD  setBorderStyle( nStyle )            INLINE  Qt_QTextFrameFormat_setBorderStyle( ::pPtr, nStyle )
-   METHOD  setBottomMargin( nMargin )          INLINE  Qt_QTextFrameFormat_setBottomMargin( ::pPtr, nMargin )
-   METHOD  setHeight( pHeight )                INLINE  Qt_QTextFrameFormat_setHeight( ::pPtr, pHeight )
-   METHOD  setHeight_1( nHeight )              INLINE  Qt_QTextFrameFormat_setHeight_1( ::pPtr, nHeight )
-   METHOD  setLeftMargin( nMargin )            INLINE  Qt_QTextFrameFormat_setLeftMargin( ::pPtr, nMargin )
-   METHOD  setMargin( nMargin )                INLINE  Qt_QTextFrameFormat_setMargin( ::pPtr, nMargin )
-   METHOD  setPadding( nWidth )                INLINE  Qt_QTextFrameFormat_setPadding( ::pPtr, nWidth )
-   METHOD  setPageBreakPolicy( nPolicy )       INLINE  Qt_QTextFrameFormat_setPageBreakPolicy( ::pPtr, nPolicy )
-   METHOD  setPosition( nPolicy )              INLINE  Qt_QTextFrameFormat_setPosition( ::pPtr, nPolicy )
-   METHOD  setRightMargin( nMargin )           INLINE  Qt_QTextFrameFormat_setRightMargin( ::pPtr, nMargin )
-   METHOD  setTopMargin( nMargin )             INLINE  Qt_QTextFrameFormat_setTopMargin( ::pPtr, nMargin )
-   METHOD  setWidth( pWidth )                  INLINE  Qt_QTextFrameFormat_setWidth( ::pPtr, pWidth )
-   METHOD  setWidth_1( nWidth )                INLINE  Qt_QTextFrameFormat_setWidth_1( ::pPtr, nWidth )
-   METHOD  topMargin()                         INLINE  Qt_QTextFrameFormat_topMargin( ::pPtr )
-   METHOD  width()                             INLINE  Qt_QTextFrameFormat_width( ::pPtr )
+   METHOD  border()
+   METHOD  borderBrush()
+   METHOD  borderStyle()
+   METHOD  bottomMargin()
+   METHOD  height()
+   METHOD  isValid()
+   METHOD  leftMargin()
+   METHOD  margin()
+   METHOD  padding()
+   METHOD  pageBreakPolicy()
+   METHOD  position()
+   METHOD  rightMargin()
+   METHOD  setBorder( nWidth )
+   METHOD  setBorderBrush( pBrush )
+   METHOD  setBorderStyle( nStyle )
+   METHOD  setBottomMargin( nMargin )
+   METHOD  setHeight( pHeight )
+   METHOD  setHeight_1( nHeight )
+   METHOD  setLeftMargin( nMargin )
+   METHOD  setMargin( nMargin )
+   METHOD  setPadding( nWidth )
+   METHOD  setPageBreakPolicy( nPolicy )
+   METHOD  setPosition( nPolicy )
+   METHOD  setRightMargin( nMargin )
+   METHOD  setTopMargin( nMargin )
+   METHOD  setWidth( pWidth )
+   METHOD  setWidth_1( nWidth )
+   METHOD  topMargin()
+   METHOD  width()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextFrameFormat
-
+METHOD QTextFrameFormat:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextFrameFormat( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextFrameFormat
-
+METHOD QTextFrameFormat:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextFrameFormat:border()
+   RETURN Qt_QTextFrameFormat_border( ::pPtr )
+
+
+METHOD QTextFrameFormat:borderBrush()
+   RETURN Qt_QTextFrameFormat_borderBrush( ::pPtr )
+
+
+METHOD QTextFrameFormat:borderStyle()
+   RETURN Qt_QTextFrameFormat_borderStyle( ::pPtr )
+
+
+METHOD QTextFrameFormat:bottomMargin()
+   RETURN Qt_QTextFrameFormat_bottomMargin( ::pPtr )
+
+
+METHOD QTextFrameFormat:height()
+   RETURN Qt_QTextFrameFormat_height( ::pPtr )
+
+
+METHOD QTextFrameFormat:isValid()
+   RETURN Qt_QTextFrameFormat_isValid( ::pPtr )
+
+
+METHOD QTextFrameFormat:leftMargin()
+   RETURN Qt_QTextFrameFormat_leftMargin( ::pPtr )
+
+
+METHOD QTextFrameFormat:margin()
+   RETURN Qt_QTextFrameFormat_margin( ::pPtr )
+
+
+METHOD QTextFrameFormat:padding()
+   RETURN Qt_QTextFrameFormat_padding( ::pPtr )
+
+
+METHOD QTextFrameFormat:pageBreakPolicy()
+   RETURN Qt_QTextFrameFormat_pageBreakPolicy( ::pPtr )
+
+
+METHOD QTextFrameFormat:position()
+   RETURN Qt_QTextFrameFormat_position( ::pPtr )
+
+
+METHOD QTextFrameFormat:rightMargin()
+   RETURN Qt_QTextFrameFormat_rightMargin( ::pPtr )
+
+
+METHOD QTextFrameFormat:setBorder( nWidth )
+   RETURN Qt_QTextFrameFormat_setBorder( ::pPtr, nWidth )
+
+
+METHOD QTextFrameFormat:setBorderBrush( pBrush )
+   RETURN Qt_QTextFrameFormat_setBorderBrush( ::pPtr, pBrush )
+
+
+METHOD QTextFrameFormat:setBorderStyle( nStyle )
+   RETURN Qt_QTextFrameFormat_setBorderStyle( ::pPtr, nStyle )
+
+
+METHOD QTextFrameFormat:setBottomMargin( nMargin )
+   RETURN Qt_QTextFrameFormat_setBottomMargin( ::pPtr, nMargin )
+
+
+METHOD QTextFrameFormat:setHeight( pHeight )
+   RETURN Qt_QTextFrameFormat_setHeight( ::pPtr, pHeight )
+
+
+METHOD QTextFrameFormat:setHeight_1( nHeight )
+   RETURN Qt_QTextFrameFormat_setHeight_1( ::pPtr, nHeight )
+
+
+METHOD QTextFrameFormat:setLeftMargin( nMargin )
+   RETURN Qt_QTextFrameFormat_setLeftMargin( ::pPtr, nMargin )
+
+
+METHOD QTextFrameFormat:setMargin( nMargin )
+   RETURN Qt_QTextFrameFormat_setMargin( ::pPtr, nMargin )
+
+
+METHOD QTextFrameFormat:setPadding( nWidth )
+   RETURN Qt_QTextFrameFormat_setPadding( ::pPtr, nWidth )
+
+
+METHOD QTextFrameFormat:setPageBreakPolicy( nPolicy )
+   RETURN Qt_QTextFrameFormat_setPageBreakPolicy( ::pPtr, nPolicy )
+
+
+METHOD QTextFrameFormat:setPosition( nPolicy )
+   RETURN Qt_QTextFrameFormat_setPosition( ::pPtr, nPolicy )
+
+
+METHOD QTextFrameFormat:setRightMargin( nMargin )
+   RETURN Qt_QTextFrameFormat_setRightMargin( ::pPtr, nMargin )
+
+
+METHOD QTextFrameFormat:setTopMargin( nMargin )
+   RETURN Qt_QTextFrameFormat_setTopMargin( ::pPtr, nMargin )
+
+
+METHOD QTextFrameFormat:setWidth( pWidth )
+   RETURN Qt_QTextFrameFormat_setWidth( ::pPtr, pWidth )
+
+
+METHOD QTextFrameFormat:setWidth_1( nWidth )
+   RETURN Qt_QTextFrameFormat_setWidth_1( ::pPtr, nWidth )
+
+
+METHOD QTextFrameFormat:topMargin()
+   RETURN Qt_QTextFrameFormat_topMargin( ::pPtr )
+
+
+METHOD QTextFrameFormat:width()
+   RETURN Qt_QTextFrameFormat_width( ::pPtr )
+

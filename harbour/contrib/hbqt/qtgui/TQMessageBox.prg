@@ -71,67 +71,212 @@ CREATE CLASS QMessageBox INHERIT QDialog
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addButton( pButton, nRole )         INLINE  Qt_QMessageBox_addButton( ::pPtr, pButton, nRole )
-   METHOD  addButton_1( cText, nRole )         INLINE  Qt_QMessageBox_addButton_1( ::pPtr, cText, nRole )
-   METHOD  addButton_2( nButton )              INLINE  Qt_QMessageBox_addButton_2( ::pPtr, nButton )
-   METHOD  button( nWhich )                    INLINE  Qt_QMessageBox_button( ::pPtr, nWhich )
-   METHOD  buttonRole( pButton )               INLINE  Qt_QMessageBox_buttonRole( ::pPtr, pButton )
-   METHOD  clickedButton()                     INLINE  Qt_QMessageBox_clickedButton( ::pPtr )
-   METHOD  defaultButton()                     INLINE  Qt_QMessageBox_defaultButton( ::pPtr )
-   METHOD  detailedText()                      INLINE  Qt_QMessageBox_detailedText( ::pPtr )
-   METHOD  escapeButton()                      INLINE  Qt_QMessageBox_escapeButton( ::pPtr )
-   METHOD  icon()                              INLINE  Qt_QMessageBox_icon( ::pPtr )
-   METHOD  iconPixmap()                        INLINE  Qt_QMessageBox_iconPixmap( ::pPtr )
-   METHOD  informativeText()                   INLINE  Qt_QMessageBox_informativeText( ::pPtr )
-   METHOD  open( pReceiver, pMember )          INLINE  Qt_QMessageBox_open( ::pPtr, pReceiver, pMember )
-   METHOD  removeButton( pButton )             INLINE  Qt_QMessageBox_removeButton( ::pPtr, pButton )
-   METHOD  setDefaultButton( pButton )         INLINE  Qt_QMessageBox_setDefaultButton( ::pPtr, pButton )
-   METHOD  setDefaultButton_1( nButton )       INLINE  Qt_QMessageBox_setDefaultButton_1( ::pPtr, nButton )
-   METHOD  setDetailedText( cText )            INLINE  Qt_QMessageBox_setDetailedText( ::pPtr, cText )
-   METHOD  setEscapeButton( pButton )          INLINE  Qt_QMessageBox_setEscapeButton( ::pPtr, pButton )
-   METHOD  setEscapeButton_1( nButton )        INLINE  Qt_QMessageBox_setEscapeButton_1( ::pPtr, nButton )
-   METHOD  setIcon( nIcon )                    INLINE  Qt_QMessageBox_setIcon( ::pPtr, nIcon )
-   METHOD  setIconPixmap( pPixmap )            INLINE  Qt_QMessageBox_setIconPixmap( ::pPtr, pPixmap )
-   METHOD  setInformativeText( cText )         INLINE  Qt_QMessageBox_setInformativeText( ::pPtr, cText )
-   METHOD  setStandardButtons( nButtons )      INLINE  Qt_QMessageBox_setStandardButtons( ::pPtr, nButtons )
-   METHOD  setText( cText )                    INLINE  Qt_QMessageBox_setText( ::pPtr, cText )
-   METHOD  setTextFormat( nFormat )            INLINE  Qt_QMessageBox_setTextFormat( ::pPtr, nFormat )
-   METHOD  setWindowModality( nWindowModality )  INLINE  Qt_QMessageBox_setWindowModality( ::pPtr, nWindowModality )
-   METHOD  setWindowTitle( cTitle )            INLINE  Qt_QMessageBox_setWindowTitle( ::pPtr, cTitle )
-   METHOD  standardButton( pButton )           INLINE  Qt_QMessageBox_standardButton( ::pPtr, pButton )
-   METHOD  standardButtons()                   INLINE  Qt_QMessageBox_standardButtons( ::pPtr )
-   METHOD  text()                              INLINE  Qt_QMessageBox_text( ::pPtr )
-   METHOD  textFormat()                        INLINE  Qt_QMessageBox_textFormat( ::pPtr )
-   METHOD  about( pParent, cTitle, cText )     INLINE  Qt_QMessageBox_about( ::pPtr, pParent, cTitle, cText )
-   METHOD  aboutQt( pParent, cTitle )          INLINE  Qt_QMessageBox_aboutQt( ::pPtr, pParent, cTitle )
-   METHOD  critical( pParent, cTitle, cText, nButtons, nDefaultButton )  INLINE  Qt_QMessageBox_critical( ::pPtr, pParent, cTitle, cText, nButtons, nDefaultButton )
-   METHOD  information( pParent, cTitle, cText, nButtons, nDefaultButton )  INLINE  Qt_QMessageBox_information( ::pPtr, pParent, cTitle, cText, nButtons, nDefaultButton )
-   METHOD  question( pParent, cTitle, cText, nButtons, nDefaultButton )  INLINE  Qt_QMessageBox_question( ::pPtr, pParent, cTitle, cText, nButtons, nDefaultButton )
-   METHOD  warning( pParent, cTitle, cText, nButtons, nDefaultButton )  INLINE  Qt_QMessageBox_warning( ::pPtr, pParent, cTitle, cText, nButtons, nDefaultButton )
-   METHOD  exec()                              INLINE  Qt_QMessageBox_exec( ::pPtr )
+   METHOD  addButton( pButton, nRole )
+   METHOD  addButton_1( cText, nRole )
+   METHOD  addButton_2( nButton )
+   METHOD  button( nWhich )
+   METHOD  buttonRole( pButton )
+   METHOD  clickedButton()
+   METHOD  defaultButton()
+   METHOD  detailedText()
+   METHOD  escapeButton()
+   METHOD  icon()
+   METHOD  iconPixmap()
+   METHOD  informativeText()
+   METHOD  open( pReceiver, pMember )
+   METHOD  removeButton( pButton )
+   METHOD  setDefaultButton( pButton )
+   METHOD  setDefaultButton_1( nButton )
+   METHOD  setDetailedText( cText )
+   METHOD  setEscapeButton( pButton )
+   METHOD  setEscapeButton_1( nButton )
+   METHOD  setIcon( nIcon )
+   METHOD  setIconPixmap( pPixmap )
+   METHOD  setInformativeText( cText )
+   METHOD  setStandardButtons( nButtons )
+   METHOD  setText( cText )
+   METHOD  setTextFormat( nFormat )
+   METHOD  setWindowModality( nWindowModality )
+   METHOD  setWindowTitle( cTitle )
+   METHOD  standardButton( pButton )
+   METHOD  standardButtons()
+   METHOD  text()
+   METHOD  textFormat()
+   METHOD  about( pParent, cTitle, cText )
+   METHOD  aboutQt( pParent, cTitle )
+   METHOD  critical( pParent, cTitle, cText, nButtons, nDefaultButton )
+   METHOD  information( pParent, cTitle, cText, nButtons, nDefaultButton )
+   METHOD  question( pParent, cTitle, cText, nButtons, nDefaultButton )
+   METHOD  warning( pParent, cTitle, cText, nButtons, nDefaultButton )
+   METHOD  exec()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QMessageBox
-
+METHOD QMessageBox:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QMessageBox( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QMessageBox
-
+METHOD QMessageBox:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QMessageBox:addButton( pButton, nRole )
+   RETURN Qt_QMessageBox_addButton( ::pPtr, pButton, nRole )
+
+
+METHOD QMessageBox:addButton_1( cText, nRole )
+   RETURN Qt_QMessageBox_addButton_1( ::pPtr, cText, nRole )
+
+
+METHOD QMessageBox:addButton_2( nButton )
+   RETURN Qt_QMessageBox_addButton_2( ::pPtr, nButton )
+
+
+METHOD QMessageBox:button( nWhich )
+   RETURN Qt_QMessageBox_button( ::pPtr, nWhich )
+
+
+METHOD QMessageBox:buttonRole( pButton )
+   RETURN Qt_QMessageBox_buttonRole( ::pPtr, pButton )
+
+
+METHOD QMessageBox:clickedButton()
+   RETURN Qt_QMessageBox_clickedButton( ::pPtr )
+
+
+METHOD QMessageBox:defaultButton()
+   RETURN Qt_QMessageBox_defaultButton( ::pPtr )
+
+
+METHOD QMessageBox:detailedText()
+   RETURN Qt_QMessageBox_detailedText( ::pPtr )
+
+
+METHOD QMessageBox:escapeButton()
+   RETURN Qt_QMessageBox_escapeButton( ::pPtr )
+
+
+METHOD QMessageBox:icon()
+   RETURN Qt_QMessageBox_icon( ::pPtr )
+
+
+METHOD QMessageBox:iconPixmap()
+   RETURN Qt_QMessageBox_iconPixmap( ::pPtr )
+
+
+METHOD QMessageBox:informativeText()
+   RETURN Qt_QMessageBox_informativeText( ::pPtr )
+
+
+METHOD QMessageBox:open( pReceiver, pMember )
+   RETURN Qt_QMessageBox_open( ::pPtr, pReceiver, pMember )
+
+
+METHOD QMessageBox:removeButton( pButton )
+   RETURN Qt_QMessageBox_removeButton( ::pPtr, pButton )
+
+
+METHOD QMessageBox:setDefaultButton( pButton )
+   RETURN Qt_QMessageBox_setDefaultButton( ::pPtr, pButton )
+
+
+METHOD QMessageBox:setDefaultButton_1( nButton )
+   RETURN Qt_QMessageBox_setDefaultButton_1( ::pPtr, nButton )
+
+
+METHOD QMessageBox:setDetailedText( cText )
+   RETURN Qt_QMessageBox_setDetailedText( ::pPtr, cText )
+
+
+METHOD QMessageBox:setEscapeButton( pButton )
+   RETURN Qt_QMessageBox_setEscapeButton( ::pPtr, pButton )
+
+
+METHOD QMessageBox:setEscapeButton_1( nButton )
+   RETURN Qt_QMessageBox_setEscapeButton_1( ::pPtr, nButton )
+
+
+METHOD QMessageBox:setIcon( nIcon )
+   RETURN Qt_QMessageBox_setIcon( ::pPtr, nIcon )
+
+
+METHOD QMessageBox:setIconPixmap( pPixmap )
+   RETURN Qt_QMessageBox_setIconPixmap( ::pPtr, pPixmap )
+
+
+METHOD QMessageBox:setInformativeText( cText )
+   RETURN Qt_QMessageBox_setInformativeText( ::pPtr, cText )
+
+
+METHOD QMessageBox:setStandardButtons( nButtons )
+   RETURN Qt_QMessageBox_setStandardButtons( ::pPtr, nButtons )
+
+
+METHOD QMessageBox:setText( cText )
+   RETURN Qt_QMessageBox_setText( ::pPtr, cText )
+
+
+METHOD QMessageBox:setTextFormat( nFormat )
+   RETURN Qt_QMessageBox_setTextFormat( ::pPtr, nFormat )
+
+
+METHOD QMessageBox:setWindowModality( nWindowModality )
+   RETURN Qt_QMessageBox_setWindowModality( ::pPtr, nWindowModality )
+
+
+METHOD QMessageBox:setWindowTitle( cTitle )
+   RETURN Qt_QMessageBox_setWindowTitle( ::pPtr, cTitle )
+
+
+METHOD QMessageBox:standardButton( pButton )
+   RETURN Qt_QMessageBox_standardButton( ::pPtr, pButton )
+
+
+METHOD QMessageBox:standardButtons()
+   RETURN Qt_QMessageBox_standardButtons( ::pPtr )
+
+
+METHOD QMessageBox:text()
+   RETURN Qt_QMessageBox_text( ::pPtr )
+
+
+METHOD QMessageBox:textFormat()
+   RETURN Qt_QMessageBox_textFormat( ::pPtr )
+
+
+METHOD QMessageBox:about( pParent, cTitle, cText )
+   RETURN Qt_QMessageBox_about( ::pPtr, pParent, cTitle, cText )
+
+
+METHOD QMessageBox:aboutQt( pParent, cTitle )
+   RETURN Qt_QMessageBox_aboutQt( ::pPtr, pParent, cTitle )
+
+
+METHOD QMessageBox:critical( pParent, cTitle, cText, nButtons, nDefaultButton )
+   RETURN Qt_QMessageBox_critical( ::pPtr, pParent, cTitle, cText, nButtons, nDefaultButton )
+
+
+METHOD QMessageBox:information( pParent, cTitle, cText, nButtons, nDefaultButton )
+   RETURN Qt_QMessageBox_information( ::pPtr, pParent, cTitle, cText, nButtons, nDefaultButton )
+
+
+METHOD QMessageBox:question( pParent, cTitle, cText, nButtons, nDefaultButton )
+   RETURN Qt_QMessageBox_question( ::pPtr, pParent, cTitle, cText, nButtons, nDefaultButton )
+
+
+METHOD QMessageBox:warning( pParent, cTitle, cText, nButtons, nDefaultButton )
+   RETURN Qt_QMessageBox_warning( ::pPtr, pParent, cTitle, cText, nButtons, nDefaultButton )
+
+
+METHOD QMessageBox:exec()
+   RETURN Qt_QMessageBox_exec( ::pPtr )
+

@@ -71,30 +71,27 @@ CREATE CLASS QTextDecoder
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  toUnicode( pChars, nLen )           INLINE  Qt_QTextDecoder_toUnicode( ::pPtr, pChars, nLen )
+   METHOD  toUnicode( pChars, nLen )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextDecoder
-
+METHOD QTextDecoder:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextDecoder( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextDecoder
-
+METHOD QTextDecoder:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextDecoder:toUnicode( pChars, nLen )
+   RETURN Qt_QTextDecoder_toUnicode( ::pPtr, pChars, nLen )
+

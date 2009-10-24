@@ -71,53 +71,142 @@ CREATE CLASS QHttp INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  bytesAvailable()                    INLINE  Qt_QHttp_bytesAvailable( ::pPtr )
-   METHOD  clearPendingRequests()              INLINE  Qt_QHttp_clearPendingRequests( ::pPtr )
-   METHOD  close()                             INLINE  Qt_QHttp_close( ::pPtr )
-   METHOD  currentDestinationDevice()          INLINE  Qt_QHttp_currentDestinationDevice( ::pPtr )
-   METHOD  currentId()                         INLINE  Qt_QHttp_currentId( ::pPtr )
-   METHOD  currentRequest()                    INLINE  Qt_QHttp_currentRequest( ::pPtr )
-   METHOD  currentSourceDevice()               INLINE  Qt_QHttp_currentSourceDevice( ::pPtr )
-   METHOD  error()                             INLINE  Qt_QHttp_error( ::pPtr )
-   METHOD  errorString()                       INLINE  Qt_QHttp_errorString( ::pPtr )
-   METHOD  get( cPath, pTo )                   INLINE  Qt_QHttp_get( ::pPtr, cPath, pTo )
-   METHOD  hasPendingRequests()                INLINE  Qt_QHttp_hasPendingRequests( ::pPtr )
-   METHOD  head( cPath )                       INLINE  Qt_QHttp_head( ::pPtr, cPath )
-   METHOD  lastResponse()                      INLINE  Qt_QHttp_lastResponse( ::pPtr )
-   METHOD  post( cPath, pData, pTo )           INLINE  Qt_QHttp_post( ::pPtr, cPath, pData, pTo )
-   METHOD  post_1( cPath, pData, pTo )         INLINE  Qt_QHttp_post_1( ::pPtr, cPath, pData, pTo )
-   METHOD  readAll()                           INLINE  Qt_QHttp_readAll( ::pPtr )
-   METHOD  request( pHeader, pData, pTo )      INLINE  Qt_QHttp_request( ::pPtr, pHeader, pData, pTo )
-   METHOD  request_1( pHeader, pData, pTo )    INLINE  Qt_QHttp_request_1( ::pPtr, pHeader, pData, pTo )
-   METHOD  setHost( cHostName, nPort )         INLINE  Qt_QHttp_setHost( ::pPtr, cHostName, nPort )
-   METHOD  setHost_1( cHostName, nMode, nPort )  INLINE  Qt_QHttp_setHost_1( ::pPtr, cHostName, nMode, nPort )
-   METHOD  setProxy( cHost, nPort, cUsername, cPassword )  INLINE  Qt_QHttp_setProxy( ::pPtr, cHost, nPort, cUsername, cPassword )
-   METHOD  setUser( cUserName, cPassword )     INLINE  Qt_QHttp_setUser( ::pPtr, cUserName, cPassword )
-   METHOD  state()                             INLINE  Qt_QHttp_state( ::pPtr )
-   METHOD  abort()                             INLINE  Qt_QHttp_abort( ::pPtr )
+   METHOD  bytesAvailable()
+   METHOD  clearPendingRequests()
+   METHOD  close()
+   METHOD  currentDestinationDevice()
+   METHOD  currentId()
+   METHOD  currentRequest()
+   METHOD  currentSourceDevice()
+   METHOD  error()
+   METHOD  errorString()
+   METHOD  get( cPath, pTo )
+   METHOD  hasPendingRequests()
+   METHOD  head( cPath )
+   METHOD  lastResponse()
+   METHOD  post( cPath, pData, pTo )
+   METHOD  post_1( cPath, pData, pTo )
+   METHOD  readAll()
+   METHOD  request( pHeader, pData, pTo )
+   METHOD  request_1( pHeader, pData, pTo )
+   METHOD  setHost( cHostName, nPort )
+   METHOD  setHost_1( cHostName, nMode, nPort )
+   METHOD  setProxy( cHost, nPort, cUsername, cPassword )
+   METHOD  setUser( cUserName, cPassword )
+   METHOD  state()
+   METHOD  abort()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QHttp
-
+METHOD QHttp:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QHttp( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QHttp
-
+METHOD QHttp:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QHttp:bytesAvailable()
+   RETURN Qt_QHttp_bytesAvailable( ::pPtr )
+
+
+METHOD QHttp:clearPendingRequests()
+   RETURN Qt_QHttp_clearPendingRequests( ::pPtr )
+
+
+METHOD QHttp:close()
+   RETURN Qt_QHttp_close( ::pPtr )
+
+
+METHOD QHttp:currentDestinationDevice()
+   RETURN Qt_QHttp_currentDestinationDevice( ::pPtr )
+
+
+METHOD QHttp:currentId()
+   RETURN Qt_QHttp_currentId( ::pPtr )
+
+
+METHOD QHttp:currentRequest()
+   RETURN Qt_QHttp_currentRequest( ::pPtr )
+
+
+METHOD QHttp:currentSourceDevice()
+   RETURN Qt_QHttp_currentSourceDevice( ::pPtr )
+
+
+METHOD QHttp:error()
+   RETURN Qt_QHttp_error( ::pPtr )
+
+
+METHOD QHttp:errorString()
+   RETURN Qt_QHttp_errorString( ::pPtr )
+
+
+METHOD QHttp:get( cPath, pTo )
+   RETURN Qt_QHttp_get( ::pPtr, cPath, pTo )
+
+
+METHOD QHttp:hasPendingRequests()
+   RETURN Qt_QHttp_hasPendingRequests( ::pPtr )
+
+
+METHOD QHttp:head( cPath )
+   RETURN Qt_QHttp_head( ::pPtr, cPath )
+
+
+METHOD QHttp:lastResponse()
+   RETURN Qt_QHttp_lastResponse( ::pPtr )
+
+
+METHOD QHttp:post( cPath, pData, pTo )
+   RETURN Qt_QHttp_post( ::pPtr, cPath, pData, pTo )
+
+
+METHOD QHttp:post_1( cPath, pData, pTo )
+   RETURN Qt_QHttp_post_1( ::pPtr, cPath, pData, pTo )
+
+
+METHOD QHttp:readAll()
+   RETURN Qt_QHttp_readAll( ::pPtr )
+
+
+METHOD QHttp:request( pHeader, pData, pTo )
+   RETURN Qt_QHttp_request( ::pPtr, pHeader, pData, pTo )
+
+
+METHOD QHttp:request_1( pHeader, pData, pTo )
+   RETURN Qt_QHttp_request_1( ::pPtr, pHeader, pData, pTo )
+
+
+METHOD QHttp:setHost( cHostName, nPort )
+   RETURN Qt_QHttp_setHost( ::pPtr, cHostName, nPort )
+
+
+METHOD QHttp:setHost_1( cHostName, nMode, nPort )
+   RETURN Qt_QHttp_setHost_1( ::pPtr, cHostName, nMode, nPort )
+
+
+METHOD QHttp:setProxy( cHost, nPort, cUsername, cPassword )
+   RETURN Qt_QHttp_setProxy( ::pPtr, cHost, nPort, cUsername, cPassword )
+
+
+METHOD QHttp:setUser( cUserName, cPassword )
+   RETURN Qt_QHttp_setUser( ::pPtr, cUserName, cPassword )
+
+
+METHOD QHttp:state()
+   RETURN Qt_QHttp_state( ::pPtr )
+
+
+METHOD QHttp:abort()
+   RETURN Qt_QHttp_abort( ::pPtr )
+

@@ -71,63 +71,192 @@ CREATE CLASS QFile INHERIT QIODevice
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  atEnd()                             INLINE  Qt_QFile_atEnd( ::pPtr )
-   METHOD  close()                             INLINE  Qt_QFile_close( ::pPtr )
-   METHOD  copy( cNewName )                    INLINE  Qt_QFile_copy( ::pPtr, cNewName )
-   METHOD  error()                             INLINE  Qt_QFile_error( ::pPtr )
-   METHOD  exists()                            INLINE  Qt_QFile_exists( ::pPtr )
-   METHOD  fileName()                          INLINE  Qt_QFile_fileName( ::pPtr )
-   METHOD  flush()                             INLINE  Qt_QFile_flush( ::pPtr )
-   METHOD  handle()                            INLINE  Qt_QFile_handle( ::pPtr )
-   METHOD  isSequential()                      INLINE  Qt_QFile_isSequential( ::pPtr )
-   METHOD  link( cLinkName )                   INLINE  Qt_QFile_link( ::pPtr, cLinkName )
-   METHOD  map( nOffset, nSize, nFlags )       INLINE  Qt_QFile_map( ::pPtr, nOffset, nSize, nFlags )
-   METHOD  open( nMode )                       INLINE  Qt_QFile_open( ::pPtr, nMode )
-   METHOD  open_1( nFd, nMode )                INLINE  Qt_QFile_open_1( ::pPtr, nFd, nMode )
-   METHOD  permissions()                       INLINE  Qt_QFile_permissions( ::pPtr )
-   METHOD  remove()                            INLINE  Qt_QFile_remove( ::pPtr )
-   METHOD  rename( cNewName )                  INLINE  Qt_QFile_rename( ::pPtr, cNewName )
-   METHOD  resize( nSz )                       INLINE  Qt_QFile_resize( ::pPtr, nSz )
-   METHOD  setFileName( cName )                INLINE  Qt_QFile_setFileName( ::pPtr, cName )
-   METHOD  setPermissions( nPermissions )      INLINE  Qt_QFile_setPermissions( ::pPtr, nPermissions )
-   METHOD  size()                              INLINE  Qt_QFile_size( ::pPtr )
-   METHOD  symLinkTarget()                     INLINE  Qt_QFile_symLinkTarget( ::pPtr )
-   METHOD  unsetError()                        INLINE  Qt_QFile_unsetError( ::pPtr )
-   METHOD  copy_1( cFileName, cNewName )       INLINE  Qt_QFile_copy_1( ::pPtr, cFileName, cNewName )
-   METHOD  decodeName( pLocalFileName )        INLINE  Qt_QFile_decodeName( ::pPtr, pLocalFileName )
-   METHOD  decodeName_1( pLocalFileName )      INLINE  Qt_QFile_decodeName_1( ::pPtr, pLocalFileName )
-   METHOD  encodeName( cFileName )             INLINE  Qt_QFile_encodeName( ::pPtr, cFileName )
-   METHOD  exists_1( cFileName )               INLINE  Qt_QFile_exists_1( ::pPtr, cFileName )
-   METHOD  link_1( cFileName, cLinkName )      INLINE  Qt_QFile_link_1( ::pPtr, cFileName, cLinkName )
-   METHOD  permissions_1( cFileName )          INLINE  Qt_QFile_permissions_1( ::pPtr, cFileName )
-   METHOD  remove_1( cFileName )               INLINE  Qt_QFile_remove_1( ::pPtr, cFileName )
-   METHOD  rename_1( cOldName, cNewName )      INLINE  Qt_QFile_rename_1( ::pPtr, cOldName, cNewName )
-   METHOD  resize_1( cFileName, nSz )          INLINE  Qt_QFile_resize_1( ::pPtr, cFileName, nSz )
-   METHOD  setPermissions_1( cFileName, nPermissions )  INLINE  Qt_QFile_setPermissions_1( ::pPtr, cFileName, nPermissions )
-   METHOD  symLinkTarget_1( cFileName )        INLINE  Qt_QFile_symLinkTarget_1( ::pPtr, cFileName )
+   METHOD  atEnd()
+   METHOD  close()
+   METHOD  copy( cNewName )
+   METHOD  error()
+   METHOD  exists()
+   METHOD  fileName()
+   METHOD  flush()
+   METHOD  handle()
+   METHOD  isSequential()
+   METHOD  link( cLinkName )
+   METHOD  map( nOffset, nSize, nFlags )
+   METHOD  open( nMode )
+   METHOD  open_1( nFd, nMode )
+   METHOD  permissions()
+   METHOD  remove()
+   METHOD  rename( cNewName )
+   METHOD  resize( nSz )
+   METHOD  setFileName( cName )
+   METHOD  setPermissions( nPermissions )
+   METHOD  size()
+   METHOD  symLinkTarget()
+   METHOD  unsetError()
+   METHOD  copy_1( cFileName, cNewName )
+   METHOD  decodeName( pLocalFileName )
+   METHOD  decodeName_1( pLocalFileName )
+   METHOD  encodeName( cFileName )
+   METHOD  exists_1( cFileName )
+   METHOD  link_1( cFileName, cLinkName )
+   METHOD  permissions_1( cFileName )
+   METHOD  remove_1( cFileName )
+   METHOD  rename_1( cOldName, cNewName )
+   METHOD  resize_1( cFileName, nSz )
+   METHOD  setPermissions_1( cFileName, nPermissions )
+   METHOD  symLinkTarget_1( cFileName )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QFile
-
+METHOD QFile:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QFile( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QFile
-
+METHOD QFile:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QFile:atEnd()
+   RETURN Qt_QFile_atEnd( ::pPtr )
+
+
+METHOD QFile:close()
+   RETURN Qt_QFile_close( ::pPtr )
+
+
+METHOD QFile:copy( cNewName )
+   RETURN Qt_QFile_copy( ::pPtr, cNewName )
+
+
+METHOD QFile:error()
+   RETURN Qt_QFile_error( ::pPtr )
+
+
+METHOD QFile:exists()
+   RETURN Qt_QFile_exists( ::pPtr )
+
+
+METHOD QFile:fileName()
+   RETURN Qt_QFile_fileName( ::pPtr )
+
+
+METHOD QFile:flush()
+   RETURN Qt_QFile_flush( ::pPtr )
+
+
+METHOD QFile:handle()
+   RETURN Qt_QFile_handle( ::pPtr )
+
+
+METHOD QFile:isSequential()
+   RETURN Qt_QFile_isSequential( ::pPtr )
+
+
+METHOD QFile:link( cLinkName )
+   RETURN Qt_QFile_link( ::pPtr, cLinkName )
+
+
+METHOD QFile:map( nOffset, nSize, nFlags )
+   RETURN Qt_QFile_map( ::pPtr, nOffset, nSize, nFlags )
+
+
+METHOD QFile:open( nMode )
+   RETURN Qt_QFile_open( ::pPtr, nMode )
+
+
+METHOD QFile:open_1( nFd, nMode )
+   RETURN Qt_QFile_open_1( ::pPtr, nFd, nMode )
+
+
+METHOD QFile:permissions()
+   RETURN Qt_QFile_permissions( ::pPtr )
+
+
+METHOD QFile:remove()
+   RETURN Qt_QFile_remove( ::pPtr )
+
+
+METHOD QFile:rename( cNewName )
+   RETURN Qt_QFile_rename( ::pPtr, cNewName )
+
+
+METHOD QFile:resize( nSz )
+   RETURN Qt_QFile_resize( ::pPtr, nSz )
+
+
+METHOD QFile:setFileName( cName )
+   RETURN Qt_QFile_setFileName( ::pPtr, cName )
+
+
+METHOD QFile:setPermissions( nPermissions )
+   RETURN Qt_QFile_setPermissions( ::pPtr, nPermissions )
+
+
+METHOD QFile:size()
+   RETURN Qt_QFile_size( ::pPtr )
+
+
+METHOD QFile:symLinkTarget()
+   RETURN Qt_QFile_symLinkTarget( ::pPtr )
+
+
+METHOD QFile:unsetError()
+   RETURN Qt_QFile_unsetError( ::pPtr )
+
+
+METHOD QFile:copy_1( cFileName, cNewName )
+   RETURN Qt_QFile_copy_1( ::pPtr, cFileName, cNewName )
+
+
+METHOD QFile:decodeName( pLocalFileName )
+   RETURN Qt_QFile_decodeName( ::pPtr, pLocalFileName )
+
+
+METHOD QFile:decodeName_1( pLocalFileName )
+   RETURN Qt_QFile_decodeName_1( ::pPtr, pLocalFileName )
+
+
+METHOD QFile:encodeName( cFileName )
+   RETURN Qt_QFile_encodeName( ::pPtr, cFileName )
+
+
+METHOD QFile:exists_1( cFileName )
+   RETURN Qt_QFile_exists_1( ::pPtr, cFileName )
+
+
+METHOD QFile:link_1( cFileName, cLinkName )
+   RETURN Qt_QFile_link_1( ::pPtr, cFileName, cLinkName )
+
+
+METHOD QFile:permissions_1( cFileName )
+   RETURN Qt_QFile_permissions_1( ::pPtr, cFileName )
+
+
+METHOD QFile:remove_1( cFileName )
+   RETURN Qt_QFile_remove_1( ::pPtr, cFileName )
+
+
+METHOD QFile:rename_1( cOldName, cNewName )
+   RETURN Qt_QFile_rename_1( ::pPtr, cOldName, cNewName )
+
+
+METHOD QFile:resize_1( cFileName, nSz )
+   RETURN Qt_QFile_resize_1( ::pPtr, cFileName, nSz )
+
+
+METHOD QFile:setPermissions_1( cFileName, nPermissions )
+   RETURN Qt_QFile_setPermissions_1( ::pPtr, cFileName, nPermissions )
+
+
+METHOD QFile:symLinkTarget_1( cFileName )
+   RETURN Qt_QFile_symLinkTarget_1( ::pPtr, cFileName )
+

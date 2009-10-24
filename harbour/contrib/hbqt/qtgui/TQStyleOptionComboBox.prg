@@ -71,35 +71,52 @@ CREATE CLASS QStyleOptionComboBox INHERIT QStyleOption
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  currentIcon()                       INLINE  Qt_QStyleOptionComboBox_currentIcon( ::pPtr )
-   METHOD  currentText()                       INLINE  Qt_QStyleOptionComboBox_currentText( ::pPtr )
-   METHOD  editable()                          INLINE  Qt_QStyleOptionComboBox_editable( ::pPtr )
-   METHOD  frame()                             INLINE  Qt_QStyleOptionComboBox_frame( ::pPtr )
-   METHOD  iconSize()                          INLINE  Qt_QStyleOptionComboBox_iconSize( ::pPtr )
-   METHOD  popupRect()                         INLINE  Qt_QStyleOptionComboBox_popupRect( ::pPtr )
+   METHOD  currentIcon()
+   METHOD  currentText()
+   METHOD  editable()
+   METHOD  frame()
+   METHOD  iconSize()
+   METHOD  popupRect()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyleOptionComboBox
-
+METHOD QStyleOptionComboBox:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyleOptionComboBox( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyleOptionComboBox
-
+METHOD QStyleOptionComboBox:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyleOptionComboBox:currentIcon()
+   RETURN Qt_QStyleOptionComboBox_currentIcon( ::pPtr )
+
+
+METHOD QStyleOptionComboBox:currentText()
+   RETURN Qt_QStyleOptionComboBox_currentText( ::pPtr )
+
+
+METHOD QStyleOptionComboBox:editable()
+   RETURN Qt_QStyleOptionComboBox_editable( ::pPtr )
+
+
+METHOD QStyleOptionComboBox:frame()
+   RETURN Qt_QStyleOptionComboBox_frame( ::pPtr )
+
+
+METHOD QStyleOptionComboBox:iconSize()
+   RETURN Qt_QStyleOptionComboBox_iconSize( ::pPtr )
+
+
+METHOD QStyleOptionComboBox:popupRect()
+   RETURN Qt_QStyleOptionComboBox_popupRect( ::pPtr )
+

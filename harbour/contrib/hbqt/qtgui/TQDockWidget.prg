@@ -71,41 +71,82 @@ CREATE CLASS QDockWidget INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  allowedAreas()                      INLINE  Qt_QDockWidget_allowedAreas( ::pPtr )
-   METHOD  features()                          INLINE  Qt_QDockWidget_features( ::pPtr )
-   METHOD  isAreaAllowed( nArea )              INLINE  Qt_QDockWidget_isAreaAllowed( ::pPtr, nArea )
-   METHOD  isFloating()                        INLINE  Qt_QDockWidget_isFloating( ::pPtr )
-   METHOD  setAllowedAreas( nAreas )           INLINE  Qt_QDockWidget_setAllowedAreas( ::pPtr, nAreas )
-   METHOD  setFeatures( nFeatures )            INLINE  Qt_QDockWidget_setFeatures( ::pPtr, nFeatures )
-   METHOD  setFloating( lFloating )            INLINE  Qt_QDockWidget_setFloating( ::pPtr, lFloating )
-   METHOD  setTitleBarWidget( pWidget )        INLINE  Qt_QDockWidget_setTitleBarWidget( ::pPtr, pWidget )
-   METHOD  setWidget( pWidget )                INLINE  Qt_QDockWidget_setWidget( ::pPtr, pWidget )
-   METHOD  titleBarWidget()                    INLINE  Qt_QDockWidget_titleBarWidget( ::pPtr )
-   METHOD  toggleViewAction()                  INLINE  Qt_QDockWidget_toggleViewAction( ::pPtr )
-   METHOD  widget()                            INLINE  Qt_QDockWidget_widget( ::pPtr )
+   METHOD  allowedAreas()
+   METHOD  features()
+   METHOD  isAreaAllowed( nArea )
+   METHOD  isFloating()
+   METHOD  setAllowedAreas( nAreas )
+   METHOD  setFeatures( nFeatures )
+   METHOD  setFloating( lFloating )
+   METHOD  setTitleBarWidget( pWidget )
+   METHOD  setWidget( pWidget )
+   METHOD  titleBarWidget()
+   METHOD  toggleViewAction()
+   METHOD  widget()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QDockWidget
-
+METHOD QDockWidget:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QDockWidget( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QDockWidget
-
+METHOD QDockWidget:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QDockWidget:allowedAreas()
+   RETURN Qt_QDockWidget_allowedAreas( ::pPtr )
+
+
+METHOD QDockWidget:features()
+   RETURN Qt_QDockWidget_features( ::pPtr )
+
+
+METHOD QDockWidget:isAreaAllowed( nArea )
+   RETURN Qt_QDockWidget_isAreaAllowed( ::pPtr, nArea )
+
+
+METHOD QDockWidget:isFloating()
+   RETURN Qt_QDockWidget_isFloating( ::pPtr )
+
+
+METHOD QDockWidget:setAllowedAreas( nAreas )
+   RETURN Qt_QDockWidget_setAllowedAreas( ::pPtr, nAreas )
+
+
+METHOD QDockWidget:setFeatures( nFeatures )
+   RETURN Qt_QDockWidget_setFeatures( ::pPtr, nFeatures )
+
+
+METHOD QDockWidget:setFloating( lFloating )
+   RETURN Qt_QDockWidget_setFloating( ::pPtr, lFloating )
+
+
+METHOD QDockWidget:setTitleBarWidget( pWidget )
+   RETURN Qt_QDockWidget_setTitleBarWidget( ::pPtr, pWidget )
+
+
+METHOD QDockWidget:setWidget( pWidget )
+   RETURN Qt_QDockWidget_setWidget( ::pPtr, pWidget )
+
+
+METHOD QDockWidget:titleBarWidget()
+   RETURN Qt_QDockWidget_titleBarWidget( ::pPtr )
+
+
+METHOD QDockWidget:toggleViewAction()
+   RETURN Qt_QDockWidget_toggleViewAction( ::pPtr )
+
+
+METHOD QDockWidget:widget()
+   RETURN Qt_QDockWidget_widget( ::pPtr )
+

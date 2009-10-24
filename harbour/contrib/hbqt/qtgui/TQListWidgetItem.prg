@@ -71,64 +71,197 @@ CREATE CLASS QListWidgetItem INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  background()                        INLINE  Qt_QListWidgetItem_background( ::pPtr )
-   METHOD  checkState()                        INLINE  Qt_QListWidgetItem_checkState( ::pPtr )
-   METHOD  clone()                             INLINE  Qt_QListWidgetItem_clone( ::pPtr )
-   METHOD  data( nRole )                       INLINE  Qt_QListWidgetItem_data( ::pPtr, nRole )
-   METHOD  flags()                             INLINE  Qt_QListWidgetItem_flags( ::pPtr )
-   METHOD  font()                              INLINE  Qt_QListWidgetItem_font( ::pPtr )
-   METHOD  foreground()                        INLINE  Qt_QListWidgetItem_foreground( ::pPtr )
-   METHOD  icon()                              INLINE  Qt_QListWidgetItem_icon( ::pPtr )
-   METHOD  isHidden()                          INLINE  Qt_QListWidgetItem_isHidden( ::pPtr )
-   METHOD  isSelected()                        INLINE  Qt_QListWidgetItem_isSelected( ::pPtr )
-   METHOD  listWidget()                        INLINE  Qt_QListWidgetItem_listWidget( ::pPtr )
-   METHOD  read( pIn )                         INLINE  Qt_QListWidgetItem_read( ::pPtr, pIn )
-   METHOD  setBackground( pBrush )             INLINE  Qt_QListWidgetItem_setBackground( ::pPtr, pBrush )
-   METHOD  setCheckState( nState )             INLINE  Qt_QListWidgetItem_setCheckState( ::pPtr, nState )
-   METHOD  setData( nRole, pValue )            INLINE  Qt_QListWidgetItem_setData( ::pPtr, nRole, pValue )
-   METHOD  setFlags( nFlags )                  INLINE  Qt_QListWidgetItem_setFlags( ::pPtr, nFlags )
-   METHOD  setFont( pFont )                    INLINE  Qt_QListWidgetItem_setFont( ::pPtr, pFont )
-   METHOD  setForeground( pBrush )             INLINE  Qt_QListWidgetItem_setForeground( ::pPtr, pBrush )
-   METHOD  setHidden( lHide )                  INLINE  Qt_QListWidgetItem_setHidden( ::pPtr, lHide )
-   METHOD  setIcon( cIcon )                    INLINE  Qt_QListWidgetItem_setIcon( ::pPtr, cIcon )
-   METHOD  setSelected( lSelect )              INLINE  Qt_QListWidgetItem_setSelected( ::pPtr, lSelect )
-   METHOD  setSizeHint( pSize )                INLINE  Qt_QListWidgetItem_setSizeHint( ::pPtr, pSize )
-   METHOD  setStatusTip( cStatusTip )          INLINE  Qt_QListWidgetItem_setStatusTip( ::pPtr, cStatusTip )
-   METHOD  setText( cText )                    INLINE  Qt_QListWidgetItem_setText( ::pPtr, cText )
-   METHOD  setTextAlignment( nAlignment )      INLINE  Qt_QListWidgetItem_setTextAlignment( ::pPtr, nAlignment )
-   METHOD  setToolTip( cToolTip )              INLINE  Qt_QListWidgetItem_setToolTip( ::pPtr, cToolTip )
-   METHOD  setWhatsThis( cWhatsThis )          INLINE  Qt_QListWidgetItem_setWhatsThis( ::pPtr, cWhatsThis )
-   METHOD  sizeHint()                          INLINE  Qt_QListWidgetItem_sizeHint( ::pPtr )
-   METHOD  statusTip()                         INLINE  Qt_QListWidgetItem_statusTip( ::pPtr )
-   METHOD  text()                              INLINE  Qt_QListWidgetItem_text( ::pPtr )
-   METHOD  textAlignment()                     INLINE  Qt_QListWidgetItem_textAlignment( ::pPtr )
-   METHOD  toolTip()                           INLINE  Qt_QListWidgetItem_toolTip( ::pPtr )
-   METHOD  type()                              INLINE  Qt_QListWidgetItem_type( ::pPtr )
-   METHOD  whatsThis()                         INLINE  Qt_QListWidgetItem_whatsThis( ::pPtr )
-   METHOD  write( pOut )                       INLINE  Qt_QListWidgetItem_write( ::pPtr, pOut )
+   METHOD  background()
+   METHOD  checkState()
+   METHOD  clone()
+   METHOD  data( nRole )
+   METHOD  flags()
+   METHOD  font()
+   METHOD  foreground()
+   METHOD  icon()
+   METHOD  isHidden()
+   METHOD  isSelected()
+   METHOD  listWidget()
+   METHOD  read( pIn )
+   METHOD  setBackground( pBrush )
+   METHOD  setCheckState( nState )
+   METHOD  setData( nRole, pValue )
+   METHOD  setFlags( nFlags )
+   METHOD  setFont( pFont )
+   METHOD  setForeground( pBrush )
+   METHOD  setHidden( lHide )
+   METHOD  setIcon( cIcon )
+   METHOD  setSelected( lSelect )
+   METHOD  setSizeHint( pSize )
+   METHOD  setStatusTip( cStatusTip )
+   METHOD  setText( cText )
+   METHOD  setTextAlignment( nAlignment )
+   METHOD  setToolTip( cToolTip )
+   METHOD  setWhatsThis( cWhatsThis )
+   METHOD  sizeHint()
+   METHOD  statusTip()
+   METHOD  text()
+   METHOD  textAlignment()
+   METHOD  toolTip()
+   METHOD  type()
+   METHOD  whatsThis()
+   METHOD  write( pOut )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QListWidgetItem
-
+METHOD QListWidgetItem:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QListWidgetItem( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QListWidgetItem
-
+METHOD QListWidgetItem:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QListWidgetItem:background()
+   RETURN Qt_QListWidgetItem_background( ::pPtr )
+
+
+METHOD QListWidgetItem:checkState()
+   RETURN Qt_QListWidgetItem_checkState( ::pPtr )
+
+
+METHOD QListWidgetItem:clone()
+   RETURN Qt_QListWidgetItem_clone( ::pPtr )
+
+
+METHOD QListWidgetItem:data( nRole )
+   RETURN Qt_QListWidgetItem_data( ::pPtr, nRole )
+
+
+METHOD QListWidgetItem:flags()
+   RETURN Qt_QListWidgetItem_flags( ::pPtr )
+
+
+METHOD QListWidgetItem:font()
+   RETURN Qt_QListWidgetItem_font( ::pPtr )
+
+
+METHOD QListWidgetItem:foreground()
+   RETURN Qt_QListWidgetItem_foreground( ::pPtr )
+
+
+METHOD QListWidgetItem:icon()
+   RETURN Qt_QListWidgetItem_icon( ::pPtr )
+
+
+METHOD QListWidgetItem:isHidden()
+   RETURN Qt_QListWidgetItem_isHidden( ::pPtr )
+
+
+METHOD QListWidgetItem:isSelected()
+   RETURN Qt_QListWidgetItem_isSelected( ::pPtr )
+
+
+METHOD QListWidgetItem:listWidget()
+   RETURN Qt_QListWidgetItem_listWidget( ::pPtr )
+
+
+METHOD QListWidgetItem:read( pIn )
+   RETURN Qt_QListWidgetItem_read( ::pPtr, pIn )
+
+
+METHOD QListWidgetItem:setBackground( pBrush )
+   RETURN Qt_QListWidgetItem_setBackground( ::pPtr, pBrush )
+
+
+METHOD QListWidgetItem:setCheckState( nState )
+   RETURN Qt_QListWidgetItem_setCheckState( ::pPtr, nState )
+
+
+METHOD QListWidgetItem:setData( nRole, pValue )
+   RETURN Qt_QListWidgetItem_setData( ::pPtr, nRole, pValue )
+
+
+METHOD QListWidgetItem:setFlags( nFlags )
+   RETURN Qt_QListWidgetItem_setFlags( ::pPtr, nFlags )
+
+
+METHOD QListWidgetItem:setFont( pFont )
+   RETURN Qt_QListWidgetItem_setFont( ::pPtr, pFont )
+
+
+METHOD QListWidgetItem:setForeground( pBrush )
+   RETURN Qt_QListWidgetItem_setForeground( ::pPtr, pBrush )
+
+
+METHOD QListWidgetItem:setHidden( lHide )
+   RETURN Qt_QListWidgetItem_setHidden( ::pPtr, lHide )
+
+
+METHOD QListWidgetItem:setIcon( cIcon )
+   RETURN Qt_QListWidgetItem_setIcon( ::pPtr, cIcon )
+
+
+METHOD QListWidgetItem:setSelected( lSelect )
+   RETURN Qt_QListWidgetItem_setSelected( ::pPtr, lSelect )
+
+
+METHOD QListWidgetItem:setSizeHint( pSize )
+   RETURN Qt_QListWidgetItem_setSizeHint( ::pPtr, pSize )
+
+
+METHOD QListWidgetItem:setStatusTip( cStatusTip )
+   RETURN Qt_QListWidgetItem_setStatusTip( ::pPtr, cStatusTip )
+
+
+METHOD QListWidgetItem:setText( cText )
+   RETURN Qt_QListWidgetItem_setText( ::pPtr, cText )
+
+
+METHOD QListWidgetItem:setTextAlignment( nAlignment )
+   RETURN Qt_QListWidgetItem_setTextAlignment( ::pPtr, nAlignment )
+
+
+METHOD QListWidgetItem:setToolTip( cToolTip )
+   RETURN Qt_QListWidgetItem_setToolTip( ::pPtr, cToolTip )
+
+
+METHOD QListWidgetItem:setWhatsThis( cWhatsThis )
+   RETURN Qt_QListWidgetItem_setWhatsThis( ::pPtr, cWhatsThis )
+
+
+METHOD QListWidgetItem:sizeHint()
+   RETURN Qt_QListWidgetItem_sizeHint( ::pPtr )
+
+
+METHOD QListWidgetItem:statusTip()
+   RETURN Qt_QListWidgetItem_statusTip( ::pPtr )
+
+
+METHOD QListWidgetItem:text()
+   RETURN Qt_QListWidgetItem_text( ::pPtr )
+
+
+METHOD QListWidgetItem:textAlignment()
+   RETURN Qt_QListWidgetItem_textAlignment( ::pPtr )
+
+
+METHOD QListWidgetItem:toolTip()
+   RETURN Qt_QListWidgetItem_toolTip( ::pPtr )
+
+
+METHOD QListWidgetItem:type()
+   RETURN Qt_QListWidgetItem_type( ::pPtr )
+
+
+METHOD QListWidgetItem:whatsThis()
+   RETURN Qt_QListWidgetItem_whatsThis( ::pPtr )
+
+
+METHOD QListWidgetItem:write( pOut )
+   RETURN Qt_QListWidgetItem_write( ::pPtr, pOut )
+

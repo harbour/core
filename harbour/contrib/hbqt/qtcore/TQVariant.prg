@@ -71,65 +71,202 @@ CREATE CLASS QVariant
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  canConvert( nT )                    INLINE  Qt_QVariant_canConvert( ::pPtr, nT )
-   METHOD  canConvert_1( nT )                  INLINE  Qt_QVariant_canConvert_1( ::pPtr, nT )
-   METHOD  clear()                             INLINE  Qt_QVariant_clear( ::pPtr )
-   METHOD  convert( nT )                       INLINE  Qt_QVariant_convert( ::pPtr, nT )
-   METHOD  isNull()                            INLINE  Qt_QVariant_isNull( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QVariant_isValid( ::pPtr )
-   METHOD  setValue( xValue )                  INLINE  Qt_QVariant_setValue( ::pPtr, xValue )
-   METHOD  toBitArray()                        INLINE  Qt_QVariant_toBitArray( ::pPtr )
-   METHOD  toBool()                            INLINE  Qt_QVariant_toBool( ::pPtr )
-   METHOD  toByteArray()                       INLINE  Qt_QVariant_toByteArray( ::pPtr )
-   METHOD  toDate()                            INLINE  Qt_QVariant_toDate( ::pPtr )
-   METHOD  toDateTime()                        INLINE  Qt_QVariant_toDateTime( ::pPtr )
-   METHOD  toDouble( lOk )                     INLINE  Qt_QVariant_toDouble( ::pPtr, lOk )
-   METHOD  toInt( lOk )                        INLINE  Qt_QVariant_toInt( ::pPtr, lOk )
-   METHOD  toLine()                            INLINE  Qt_QVariant_toLine( ::pPtr )
-   METHOD  toLineF()                           INLINE  Qt_QVariant_toLineF( ::pPtr )
-   METHOD  toLocale()                          INLINE  Qt_QVariant_toLocale( ::pPtr )
-   METHOD  toLongLong( lOk )                   INLINE  Qt_QVariant_toLongLong( ::pPtr, lOk )
-   METHOD  toPoint()                           INLINE  Qt_QVariant_toPoint( ::pPtr )
-   METHOD  toPointF()                          INLINE  Qt_QVariant_toPointF( ::pPtr )
-   METHOD  toRect()                            INLINE  Qt_QVariant_toRect( ::pPtr )
-   METHOD  toRectF()                           INLINE  Qt_QVariant_toRectF( ::pPtr )
-   METHOD  toRegExp()                          INLINE  Qt_QVariant_toRegExp( ::pPtr )
-   METHOD  toSize()                            INLINE  Qt_QVariant_toSize( ::pPtr )
-   METHOD  toSizeF()                           INLINE  Qt_QVariant_toSizeF( ::pPtr )
-   METHOD  toString()                          INLINE  Qt_QVariant_toString( ::pPtr )
-   METHOD  toStringList()                      INLINE  Qt_QVariant_toStringList( ::pPtr )
-   METHOD  toTime()                            INLINE  Qt_QVariant_toTime( ::pPtr )
-   METHOD  toUInt( lOk )                       INLINE  Qt_QVariant_toUInt( ::pPtr, lOk )
-   METHOD  toULongLong( lOk )                  INLINE  Qt_QVariant_toULongLong( ::pPtr, lOk )
-   METHOD  toUrl()                             INLINE  Qt_QVariant_toUrl( ::pPtr )
-   METHOD  type()                              INLINE  Qt_QVariant_type( ::pPtr )
-   METHOD  userType()                          INLINE  Qt_QVariant_userType( ::pPtr )
-   METHOD  fromValue( xValue )                 INLINE  Qt_QVariant_fromValue( ::pPtr, xValue )
-   METHOD  nameToType( pName )                 INLINE  Qt_QVariant_nameToType( ::pPtr, pName )
-   METHOD  typeToName( nTyp )                  INLINE  Qt_QVariant_typeToName( ::pPtr, nTyp )
+   METHOD  canConvert( nT )
+   METHOD  canConvert_1( nT )
+   METHOD  clear()
+   METHOD  convert( nT )
+   METHOD  isNull()
+   METHOD  isValid()
+   METHOD  setValue( xValue )
+   METHOD  toBitArray()
+   METHOD  toBool()
+   METHOD  toByteArray()
+   METHOD  toDate()
+   METHOD  toDateTime()
+   METHOD  toDouble( lOk )
+   METHOD  toInt( lOk )
+   METHOD  toLine()
+   METHOD  toLineF()
+   METHOD  toLocale()
+   METHOD  toLongLong( lOk )
+   METHOD  toPoint()
+   METHOD  toPointF()
+   METHOD  toRect()
+   METHOD  toRectF()
+   METHOD  toRegExp()
+   METHOD  toSize()
+   METHOD  toSizeF()
+   METHOD  toString()
+   METHOD  toStringList()
+   METHOD  toTime()
+   METHOD  toUInt( lOk )
+   METHOD  toULongLong( lOk )
+   METHOD  toUrl()
+   METHOD  type()
+   METHOD  userType()
+   METHOD  fromValue( xValue )
+   METHOD  nameToType( pName )
+   METHOD  typeToName( nTyp )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QVariant
-
+METHOD QVariant:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QVariant( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QVariant
-
+METHOD QVariant:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QVariant:canConvert( nT )
+   RETURN Qt_QVariant_canConvert( ::pPtr, nT )
+
+
+METHOD QVariant:canConvert_1( nT )
+   RETURN Qt_QVariant_canConvert_1( ::pPtr, nT )
+
+
+METHOD QVariant:clear()
+   RETURN Qt_QVariant_clear( ::pPtr )
+
+
+METHOD QVariant:convert( nT )
+   RETURN Qt_QVariant_convert( ::pPtr, nT )
+
+
+METHOD QVariant:isNull()
+   RETURN Qt_QVariant_isNull( ::pPtr )
+
+
+METHOD QVariant:isValid()
+   RETURN Qt_QVariant_isValid( ::pPtr )
+
+
+METHOD QVariant:setValue( xValue )
+   RETURN Qt_QVariant_setValue( ::pPtr, xValue )
+
+
+METHOD QVariant:toBitArray()
+   RETURN Qt_QVariant_toBitArray( ::pPtr )
+
+
+METHOD QVariant:toBool()
+   RETURN Qt_QVariant_toBool( ::pPtr )
+
+
+METHOD QVariant:toByteArray()
+   RETURN Qt_QVariant_toByteArray( ::pPtr )
+
+
+METHOD QVariant:toDate()
+   RETURN Qt_QVariant_toDate( ::pPtr )
+
+
+METHOD QVariant:toDateTime()
+   RETURN Qt_QVariant_toDateTime( ::pPtr )
+
+
+METHOD QVariant:toDouble( lOk )
+   RETURN Qt_QVariant_toDouble( ::pPtr, lOk )
+
+
+METHOD QVariant:toInt( lOk )
+   RETURN Qt_QVariant_toInt( ::pPtr, lOk )
+
+
+METHOD QVariant:toLine()
+   RETURN Qt_QVariant_toLine( ::pPtr )
+
+
+METHOD QVariant:toLineF()
+   RETURN Qt_QVariant_toLineF( ::pPtr )
+
+
+METHOD QVariant:toLocale()
+   RETURN Qt_QVariant_toLocale( ::pPtr )
+
+
+METHOD QVariant:toLongLong( lOk )
+   RETURN Qt_QVariant_toLongLong( ::pPtr, lOk )
+
+
+METHOD QVariant:toPoint()
+   RETURN Qt_QVariant_toPoint( ::pPtr )
+
+
+METHOD QVariant:toPointF()
+   RETURN Qt_QVariant_toPointF( ::pPtr )
+
+
+METHOD QVariant:toRect()
+   RETURN Qt_QVariant_toRect( ::pPtr )
+
+
+METHOD QVariant:toRectF()
+   RETURN Qt_QVariant_toRectF( ::pPtr )
+
+
+METHOD QVariant:toRegExp()
+   RETURN Qt_QVariant_toRegExp( ::pPtr )
+
+
+METHOD QVariant:toSize()
+   RETURN Qt_QVariant_toSize( ::pPtr )
+
+
+METHOD QVariant:toSizeF()
+   RETURN Qt_QVariant_toSizeF( ::pPtr )
+
+
+METHOD QVariant:toString()
+   RETURN Qt_QVariant_toString( ::pPtr )
+
+
+METHOD QVariant:toStringList()
+   RETURN Qt_QVariant_toStringList( ::pPtr )
+
+
+METHOD QVariant:toTime()
+   RETURN Qt_QVariant_toTime( ::pPtr )
+
+
+METHOD QVariant:toUInt( lOk )
+   RETURN Qt_QVariant_toUInt( ::pPtr, lOk )
+
+
+METHOD QVariant:toULongLong( lOk )
+   RETURN Qt_QVariant_toULongLong( ::pPtr, lOk )
+
+
+METHOD QVariant:toUrl()
+   RETURN Qt_QVariant_toUrl( ::pPtr )
+
+
+METHOD QVariant:type()
+   RETURN Qt_QVariant_type( ::pPtr )
+
+
+METHOD QVariant:userType()
+   RETURN Qt_QVariant_userType( ::pPtr )
+
+
+METHOD QVariant:fromValue( xValue )
+   RETURN Qt_QVariant_fromValue( ::pPtr, xValue )
+
+
+METHOD QVariant:nameToType( pName )
+   RETURN Qt_QVariant_nameToType( ::pPtr, pName )
+
+
+METHOD QVariant:typeToName( nTyp )
+   RETURN Qt_QVariant_typeToName( ::pPtr, nTyp )
+

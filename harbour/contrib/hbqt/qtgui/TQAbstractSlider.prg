@@ -71,53 +71,142 @@ CREATE CLASS QAbstractSlider INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  hasTracking()                       INLINE  Qt_QAbstractSlider_hasTracking( ::pPtr )
-   METHOD  invertedAppearance()                INLINE  Qt_QAbstractSlider_invertedAppearance( ::pPtr )
-   METHOD  invertedControls()                  INLINE  Qt_QAbstractSlider_invertedControls( ::pPtr )
-   METHOD  isSliderDown()                      INLINE  Qt_QAbstractSlider_isSliderDown( ::pPtr )
-   METHOD  maximum()                           INLINE  Qt_QAbstractSlider_maximum( ::pPtr )
-   METHOD  minimum()                           INLINE  Qt_QAbstractSlider_minimum( ::pPtr )
-   METHOD  orientation()                       INLINE  Qt_QAbstractSlider_orientation( ::pPtr )
-   METHOD  pageStep()                          INLINE  Qt_QAbstractSlider_pageStep( ::pPtr )
-   METHOD  setInvertedAppearance( lBool )      INLINE  Qt_QAbstractSlider_setInvertedAppearance( ::pPtr, lBool )
-   METHOD  setInvertedControls( lBool )        INLINE  Qt_QAbstractSlider_setInvertedControls( ::pPtr, lBool )
-   METHOD  setMaximum( nInt )                  INLINE  Qt_QAbstractSlider_setMaximum( ::pPtr, nInt )
-   METHOD  setMinimum( nInt )                  INLINE  Qt_QAbstractSlider_setMinimum( ::pPtr, nInt )
-   METHOD  setPageStep( nInt )                 INLINE  Qt_QAbstractSlider_setPageStep( ::pPtr, nInt )
-   METHOD  setRange( nMin, nMax )              INLINE  Qt_QAbstractSlider_setRange( ::pPtr, nMin, nMax )
-   METHOD  setSingleStep( nInt )               INLINE  Qt_QAbstractSlider_setSingleStep( ::pPtr, nInt )
-   METHOD  setSliderDown( lBool )              INLINE  Qt_QAbstractSlider_setSliderDown( ::pPtr, lBool )
-   METHOD  setSliderPosition( nInt )           INLINE  Qt_QAbstractSlider_setSliderPosition( ::pPtr, nInt )
-   METHOD  setTracking( lEnable )              INLINE  Qt_QAbstractSlider_setTracking( ::pPtr, lEnable )
-   METHOD  singleStep()                        INLINE  Qt_QAbstractSlider_singleStep( ::pPtr )
-   METHOD  sliderPosition()                    INLINE  Qt_QAbstractSlider_sliderPosition( ::pPtr )
-   METHOD  triggerAction( nAction )            INLINE  Qt_QAbstractSlider_triggerAction( ::pPtr, nAction )
-   METHOD  value()                             INLINE  Qt_QAbstractSlider_value( ::pPtr )
-   METHOD  setOrientation( nQt_Orientation )   INLINE  Qt_QAbstractSlider_setOrientation( ::pPtr, nQt_Orientation )
-   METHOD  setValue( nInt )                    INLINE  Qt_QAbstractSlider_setValue( ::pPtr, nInt )
+   METHOD  hasTracking()
+   METHOD  invertedAppearance()
+   METHOD  invertedControls()
+   METHOD  isSliderDown()
+   METHOD  maximum()
+   METHOD  minimum()
+   METHOD  orientation()
+   METHOD  pageStep()
+   METHOD  setInvertedAppearance( lBool )
+   METHOD  setInvertedControls( lBool )
+   METHOD  setMaximum( nInt )
+   METHOD  setMinimum( nInt )
+   METHOD  setPageStep( nInt )
+   METHOD  setRange( nMin, nMax )
+   METHOD  setSingleStep( nInt )
+   METHOD  setSliderDown( lBool )
+   METHOD  setSliderPosition( nInt )
+   METHOD  setTracking( lEnable )
+   METHOD  singleStep()
+   METHOD  sliderPosition()
+   METHOD  triggerAction( nAction )
+   METHOD  value()
+   METHOD  setOrientation( nQt_Orientation )
+   METHOD  setValue( nInt )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QAbstractSlider
-
+METHOD QAbstractSlider:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QAbstractSlider( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QAbstractSlider
-
+METHOD QAbstractSlider:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QAbstractSlider:hasTracking()
+   RETURN Qt_QAbstractSlider_hasTracking( ::pPtr )
+
+
+METHOD QAbstractSlider:invertedAppearance()
+   RETURN Qt_QAbstractSlider_invertedAppearance( ::pPtr )
+
+
+METHOD QAbstractSlider:invertedControls()
+   RETURN Qt_QAbstractSlider_invertedControls( ::pPtr )
+
+
+METHOD QAbstractSlider:isSliderDown()
+   RETURN Qt_QAbstractSlider_isSliderDown( ::pPtr )
+
+
+METHOD QAbstractSlider:maximum()
+   RETURN Qt_QAbstractSlider_maximum( ::pPtr )
+
+
+METHOD QAbstractSlider:minimum()
+   RETURN Qt_QAbstractSlider_minimum( ::pPtr )
+
+
+METHOD QAbstractSlider:orientation()
+   RETURN Qt_QAbstractSlider_orientation( ::pPtr )
+
+
+METHOD QAbstractSlider:pageStep()
+   RETURN Qt_QAbstractSlider_pageStep( ::pPtr )
+
+
+METHOD QAbstractSlider:setInvertedAppearance( lBool )
+   RETURN Qt_QAbstractSlider_setInvertedAppearance( ::pPtr, lBool )
+
+
+METHOD QAbstractSlider:setInvertedControls( lBool )
+   RETURN Qt_QAbstractSlider_setInvertedControls( ::pPtr, lBool )
+
+
+METHOD QAbstractSlider:setMaximum( nInt )
+   RETURN Qt_QAbstractSlider_setMaximum( ::pPtr, nInt )
+
+
+METHOD QAbstractSlider:setMinimum( nInt )
+   RETURN Qt_QAbstractSlider_setMinimum( ::pPtr, nInt )
+
+
+METHOD QAbstractSlider:setPageStep( nInt )
+   RETURN Qt_QAbstractSlider_setPageStep( ::pPtr, nInt )
+
+
+METHOD QAbstractSlider:setRange( nMin, nMax )
+   RETURN Qt_QAbstractSlider_setRange( ::pPtr, nMin, nMax )
+
+
+METHOD QAbstractSlider:setSingleStep( nInt )
+   RETURN Qt_QAbstractSlider_setSingleStep( ::pPtr, nInt )
+
+
+METHOD QAbstractSlider:setSliderDown( lBool )
+   RETURN Qt_QAbstractSlider_setSliderDown( ::pPtr, lBool )
+
+
+METHOD QAbstractSlider:setSliderPosition( nInt )
+   RETURN Qt_QAbstractSlider_setSliderPosition( ::pPtr, nInt )
+
+
+METHOD QAbstractSlider:setTracking( lEnable )
+   RETURN Qt_QAbstractSlider_setTracking( ::pPtr, lEnable )
+
+
+METHOD QAbstractSlider:singleStep()
+   RETURN Qt_QAbstractSlider_singleStep( ::pPtr )
+
+
+METHOD QAbstractSlider:sliderPosition()
+   RETURN Qt_QAbstractSlider_sliderPosition( ::pPtr )
+
+
+METHOD QAbstractSlider:triggerAction( nAction )
+   RETURN Qt_QAbstractSlider_triggerAction( ::pPtr, nAction )
+
+
+METHOD QAbstractSlider:value()
+   RETURN Qt_QAbstractSlider_value( ::pPtr )
+
+
+METHOD QAbstractSlider:setOrientation( nQt_Orientation )
+   RETURN Qt_QAbstractSlider_setOrientation( ::pPtr, nQt_Orientation )
+
+
+METHOD QAbstractSlider:setValue( nInt )
+   RETURN Qt_QAbstractSlider_setValue( ::pPtr, nInt )
+

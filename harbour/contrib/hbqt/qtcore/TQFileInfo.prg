@@ -71,73 +71,242 @@ CREATE CLASS QFileInfo
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  absoluteDir()                       INLINE  Qt_QFileInfo_absoluteDir( ::pPtr )
-   METHOD  absoluteFilePath()                  INLINE  Qt_QFileInfo_absoluteFilePath( ::pPtr )
-   METHOD  absolutePath()                      INLINE  Qt_QFileInfo_absolutePath( ::pPtr )
-   METHOD  baseName()                          INLINE  Qt_QFileInfo_baseName( ::pPtr )
-   METHOD  bundleName()                        INLINE  Qt_QFileInfo_bundleName( ::pPtr )
-   METHOD  caching()                           INLINE  Qt_QFileInfo_caching( ::pPtr )
-   METHOD  canonicalFilePath()                 INLINE  Qt_QFileInfo_canonicalFilePath( ::pPtr )
-   METHOD  canonicalPath()                     INLINE  Qt_QFileInfo_canonicalPath( ::pPtr )
-   METHOD  completeBaseName()                  INLINE  Qt_QFileInfo_completeBaseName( ::pPtr )
-   METHOD  completeSuffix()                    INLINE  Qt_QFileInfo_completeSuffix( ::pPtr )
-   METHOD  created()                           INLINE  Qt_QFileInfo_created( ::pPtr )
-   METHOD  dir()                               INLINE  Qt_QFileInfo_dir( ::pPtr )
-   METHOD  exists()                            INLINE  Qt_QFileInfo_exists( ::pPtr )
-   METHOD  fileName()                          INLINE  Qt_QFileInfo_fileName( ::pPtr )
-   METHOD  filePath()                          INLINE  Qt_QFileInfo_filePath( ::pPtr )
-   METHOD  group()                             INLINE  Qt_QFileInfo_group( ::pPtr )
-   METHOD  groupId()                           INLINE  Qt_QFileInfo_groupId( ::pPtr )
-   METHOD  isAbsolute()                        INLINE  Qt_QFileInfo_isAbsolute( ::pPtr )
-   METHOD  isBundle()                          INLINE  Qt_QFileInfo_isBundle( ::pPtr )
-   METHOD  isDir()                             INLINE  Qt_QFileInfo_isDir( ::pPtr )
-   METHOD  isExecutable()                      INLINE  Qt_QFileInfo_isExecutable( ::pPtr )
-   METHOD  isFile()                            INLINE  Qt_QFileInfo_isFile( ::pPtr )
-   METHOD  isHidden()                          INLINE  Qt_QFileInfo_isHidden( ::pPtr )
-   METHOD  isReadable()                        INLINE  Qt_QFileInfo_isReadable( ::pPtr )
-   METHOD  isRelative()                        INLINE  Qt_QFileInfo_isRelative( ::pPtr )
-   METHOD  isRoot()                            INLINE  Qt_QFileInfo_isRoot( ::pPtr )
-   METHOD  isSymLink()                         INLINE  Qt_QFileInfo_isSymLink( ::pPtr )
-   METHOD  isWritable()                        INLINE  Qt_QFileInfo_isWritable( ::pPtr )
-   METHOD  lastModified()                      INLINE  Qt_QFileInfo_lastModified( ::pPtr )
-   METHOD  lastRead()                          INLINE  Qt_QFileInfo_lastRead( ::pPtr )
-   METHOD  makeAbsolute()                      INLINE  Qt_QFileInfo_makeAbsolute( ::pPtr )
-   METHOD  owner()                             INLINE  Qt_QFileInfo_owner( ::pPtr )
-   METHOD  ownerId()                           INLINE  Qt_QFileInfo_ownerId( ::pPtr )
-   METHOD  path()                              INLINE  Qt_QFileInfo_path( ::pPtr )
-   METHOD  permission( nPermissions )          INLINE  Qt_QFileInfo_permission( ::pPtr, nPermissions )
-   METHOD  permissions()                       INLINE  Qt_QFileInfo_permissions( ::pPtr )
-   METHOD  refresh()                           INLINE  Qt_QFileInfo_refresh( ::pPtr )
-   METHOD  setCaching( lEnable )               INLINE  Qt_QFileInfo_setCaching( ::pPtr, lEnable )
-   METHOD  setFile( cFile )                    INLINE  Qt_QFileInfo_setFile( ::pPtr, cFile )
-   METHOD  setFile_1( pFile )                  INLINE  Qt_QFileInfo_setFile_1( ::pPtr, pFile )
-   METHOD  setFile_2( pDir, cFile )            INLINE  Qt_QFileInfo_setFile_2( ::pPtr, pDir, cFile )
-   METHOD  size()                              INLINE  Qt_QFileInfo_size( ::pPtr )
-   METHOD  suffix()                            INLINE  Qt_QFileInfo_suffix( ::pPtr )
-   METHOD  symLinkTarget()                     INLINE  Qt_QFileInfo_symLinkTarget( ::pPtr )
+   METHOD  absoluteDir()
+   METHOD  absoluteFilePath()
+   METHOD  absolutePath()
+   METHOD  baseName()
+   METHOD  bundleName()
+   METHOD  caching()
+   METHOD  canonicalFilePath()
+   METHOD  canonicalPath()
+   METHOD  completeBaseName()
+   METHOD  completeSuffix()
+   METHOD  created()
+   METHOD  dir()
+   METHOD  exists()
+   METHOD  fileName()
+   METHOD  filePath()
+   METHOD  group()
+   METHOD  groupId()
+   METHOD  isAbsolute()
+   METHOD  isBundle()
+   METHOD  isDir()
+   METHOD  isExecutable()
+   METHOD  isFile()
+   METHOD  isHidden()
+   METHOD  isReadable()
+   METHOD  isRelative()
+   METHOD  isRoot()
+   METHOD  isSymLink()
+   METHOD  isWritable()
+   METHOD  lastModified()
+   METHOD  lastRead()
+   METHOD  makeAbsolute()
+   METHOD  owner()
+   METHOD  ownerId()
+   METHOD  path()
+   METHOD  permission( nPermissions )
+   METHOD  permissions()
+   METHOD  refresh()
+   METHOD  setCaching( lEnable )
+   METHOD  setFile( cFile )
+   METHOD  setFile_1( pFile )
+   METHOD  setFile_2( pDir, cFile )
+   METHOD  size()
+   METHOD  suffix()
+   METHOD  symLinkTarget()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QFileInfo
-
+METHOD QFileInfo:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QFileInfo( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QFileInfo
-
+METHOD QFileInfo:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QFileInfo:absoluteDir()
+   RETURN Qt_QFileInfo_absoluteDir( ::pPtr )
+
+
+METHOD QFileInfo:absoluteFilePath()
+   RETURN Qt_QFileInfo_absoluteFilePath( ::pPtr )
+
+
+METHOD QFileInfo:absolutePath()
+   RETURN Qt_QFileInfo_absolutePath( ::pPtr )
+
+
+METHOD QFileInfo:baseName()
+   RETURN Qt_QFileInfo_baseName( ::pPtr )
+
+
+METHOD QFileInfo:bundleName()
+   RETURN Qt_QFileInfo_bundleName( ::pPtr )
+
+
+METHOD QFileInfo:caching()
+   RETURN Qt_QFileInfo_caching( ::pPtr )
+
+
+METHOD QFileInfo:canonicalFilePath()
+   RETURN Qt_QFileInfo_canonicalFilePath( ::pPtr )
+
+
+METHOD QFileInfo:canonicalPath()
+   RETURN Qt_QFileInfo_canonicalPath( ::pPtr )
+
+
+METHOD QFileInfo:completeBaseName()
+   RETURN Qt_QFileInfo_completeBaseName( ::pPtr )
+
+
+METHOD QFileInfo:completeSuffix()
+   RETURN Qt_QFileInfo_completeSuffix( ::pPtr )
+
+
+METHOD QFileInfo:created()
+   RETURN Qt_QFileInfo_created( ::pPtr )
+
+
+METHOD QFileInfo:dir()
+   RETURN Qt_QFileInfo_dir( ::pPtr )
+
+
+METHOD QFileInfo:exists()
+   RETURN Qt_QFileInfo_exists( ::pPtr )
+
+
+METHOD QFileInfo:fileName()
+   RETURN Qt_QFileInfo_fileName( ::pPtr )
+
+
+METHOD QFileInfo:filePath()
+   RETURN Qt_QFileInfo_filePath( ::pPtr )
+
+
+METHOD QFileInfo:group()
+   RETURN Qt_QFileInfo_group( ::pPtr )
+
+
+METHOD QFileInfo:groupId()
+   RETURN Qt_QFileInfo_groupId( ::pPtr )
+
+
+METHOD QFileInfo:isAbsolute()
+   RETURN Qt_QFileInfo_isAbsolute( ::pPtr )
+
+
+METHOD QFileInfo:isBundle()
+   RETURN Qt_QFileInfo_isBundle( ::pPtr )
+
+
+METHOD QFileInfo:isDir()
+   RETURN Qt_QFileInfo_isDir( ::pPtr )
+
+
+METHOD QFileInfo:isExecutable()
+   RETURN Qt_QFileInfo_isExecutable( ::pPtr )
+
+
+METHOD QFileInfo:isFile()
+   RETURN Qt_QFileInfo_isFile( ::pPtr )
+
+
+METHOD QFileInfo:isHidden()
+   RETURN Qt_QFileInfo_isHidden( ::pPtr )
+
+
+METHOD QFileInfo:isReadable()
+   RETURN Qt_QFileInfo_isReadable( ::pPtr )
+
+
+METHOD QFileInfo:isRelative()
+   RETURN Qt_QFileInfo_isRelative( ::pPtr )
+
+
+METHOD QFileInfo:isRoot()
+   RETURN Qt_QFileInfo_isRoot( ::pPtr )
+
+
+METHOD QFileInfo:isSymLink()
+   RETURN Qt_QFileInfo_isSymLink( ::pPtr )
+
+
+METHOD QFileInfo:isWritable()
+   RETURN Qt_QFileInfo_isWritable( ::pPtr )
+
+
+METHOD QFileInfo:lastModified()
+   RETURN Qt_QFileInfo_lastModified( ::pPtr )
+
+
+METHOD QFileInfo:lastRead()
+   RETURN Qt_QFileInfo_lastRead( ::pPtr )
+
+
+METHOD QFileInfo:makeAbsolute()
+   RETURN Qt_QFileInfo_makeAbsolute( ::pPtr )
+
+
+METHOD QFileInfo:owner()
+   RETURN Qt_QFileInfo_owner( ::pPtr )
+
+
+METHOD QFileInfo:ownerId()
+   RETURN Qt_QFileInfo_ownerId( ::pPtr )
+
+
+METHOD QFileInfo:path()
+   RETURN Qt_QFileInfo_path( ::pPtr )
+
+
+METHOD QFileInfo:permission( nPermissions )
+   RETURN Qt_QFileInfo_permission( ::pPtr, nPermissions )
+
+
+METHOD QFileInfo:permissions()
+   RETURN Qt_QFileInfo_permissions( ::pPtr )
+
+
+METHOD QFileInfo:refresh()
+   RETURN Qt_QFileInfo_refresh( ::pPtr )
+
+
+METHOD QFileInfo:setCaching( lEnable )
+   RETURN Qt_QFileInfo_setCaching( ::pPtr, lEnable )
+
+
+METHOD QFileInfo:setFile( cFile )
+   RETURN Qt_QFileInfo_setFile( ::pPtr, cFile )
+
+
+METHOD QFileInfo:setFile_1( pFile )
+   RETURN Qt_QFileInfo_setFile_1( ::pPtr, pFile )
+
+
+METHOD QFileInfo:setFile_2( pDir, cFile )
+   RETURN Qt_QFileInfo_setFile_2( ::pPtr, pDir, cFile )
+
+
+METHOD QFileInfo:size()
+   RETURN Qt_QFileInfo_size( ::pPtr )
+
+
+METHOD QFileInfo:suffix()
+   RETURN Qt_QFileInfo_suffix( ::pPtr )
+
+
+METHOD QFileInfo:symLinkTarget()
+   RETURN Qt_QFileInfo_symLinkTarget( ::pPtr )
+

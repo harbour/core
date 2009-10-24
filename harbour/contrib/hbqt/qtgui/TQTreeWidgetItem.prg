@@ -71,81 +71,282 @@ CREATE CLASS QTreeWidgetItem
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addChild( pChild )                  INLINE  Qt_QTreeWidgetItem_addChild( ::pPtr, pChild )
-   METHOD  background( nColumn )               INLINE  Qt_QTreeWidgetItem_background( ::pPtr, nColumn )
-   METHOD  checkState( nColumn )               INLINE  Qt_QTreeWidgetItem_checkState( ::pPtr, nColumn )
-   METHOD  child( nIndex )                     INLINE  Qt_QTreeWidgetItem_child( ::pPtr, nIndex )
-   METHOD  childCount()                        INLINE  Qt_QTreeWidgetItem_childCount( ::pPtr )
-   METHOD  childIndicatorPolicy()              INLINE  Qt_QTreeWidgetItem_childIndicatorPolicy( ::pPtr )
-   METHOD  clone()                             INLINE  Qt_QTreeWidgetItem_clone( ::pPtr )
-   METHOD  columnCount()                       INLINE  Qt_QTreeWidgetItem_columnCount( ::pPtr )
-   METHOD  data( nColumn, nRole )              INLINE  Qt_QTreeWidgetItem_data( ::pPtr, nColumn, nRole )
-   METHOD  flags()                             INLINE  Qt_QTreeWidgetItem_flags( ::pPtr )
-   METHOD  font( nColumn )                     INLINE  Qt_QTreeWidgetItem_font( ::pPtr, nColumn )
-   METHOD  foreground( nColumn )               INLINE  Qt_QTreeWidgetItem_foreground( ::pPtr, nColumn )
-   METHOD  icon( nColumn )                     INLINE  Qt_QTreeWidgetItem_icon( ::pPtr, nColumn )
-   METHOD  indexOfChild( pChild )              INLINE  Qt_QTreeWidgetItem_indexOfChild( ::pPtr, pChild )
-   METHOD  insertChild( nIndex, pChild )       INLINE  Qt_QTreeWidgetItem_insertChild( ::pPtr, nIndex, pChild )
-   METHOD  isDisabled()                        INLINE  Qt_QTreeWidgetItem_isDisabled( ::pPtr )
-   METHOD  isExpanded()                        INLINE  Qt_QTreeWidgetItem_isExpanded( ::pPtr )
-   METHOD  isFirstColumnSpanned()              INLINE  Qt_QTreeWidgetItem_isFirstColumnSpanned( ::pPtr )
-   METHOD  isHidden()                          INLINE  Qt_QTreeWidgetItem_isHidden( ::pPtr )
-   METHOD  isSelected()                        INLINE  Qt_QTreeWidgetItem_isSelected( ::pPtr )
-   METHOD  parent()                            INLINE  Qt_QTreeWidgetItem_parent( ::pPtr )
-   METHOD  read( pIn )                         INLINE  Qt_QTreeWidgetItem_read( ::pPtr, pIn )
-   METHOD  removeChild( pChild )               INLINE  Qt_QTreeWidgetItem_removeChild( ::pPtr, pChild )
-   METHOD  setBackground( nColumn, pBrush )    INLINE  Qt_QTreeWidgetItem_setBackground( ::pPtr, nColumn, pBrush )
-   METHOD  setCheckState( nColumn, nState )    INLINE  Qt_QTreeWidgetItem_setCheckState( ::pPtr, nColumn, nState )
-   METHOD  setChildIndicatorPolicy( nPolicy )  INLINE  Qt_QTreeWidgetItem_setChildIndicatorPolicy( ::pPtr, nPolicy )
-   METHOD  setData( nColumn, nRole, pValue )   INLINE  Qt_QTreeWidgetItem_setData( ::pPtr, nColumn, nRole, pValue )
-   METHOD  setDisabled( lDisabled )            INLINE  Qt_QTreeWidgetItem_setDisabled( ::pPtr, lDisabled )
-   METHOD  setExpanded( lExpand )              INLINE  Qt_QTreeWidgetItem_setExpanded( ::pPtr, lExpand )
-   METHOD  setFirstColumnSpanned( lSpan )      INLINE  Qt_QTreeWidgetItem_setFirstColumnSpanned( ::pPtr, lSpan )
-   METHOD  setFlags( nFlags )                  INLINE  Qt_QTreeWidgetItem_setFlags( ::pPtr, nFlags )
-   METHOD  setFont( nColumn, pFont )           INLINE  Qt_QTreeWidgetItem_setFont( ::pPtr, nColumn, pFont )
-   METHOD  setForeground( nColumn, pBrush )    INLINE  Qt_QTreeWidgetItem_setForeground( ::pPtr, nColumn, pBrush )
-   METHOD  setHidden( lHide )                  INLINE  Qt_QTreeWidgetItem_setHidden( ::pPtr, lHide )
-   METHOD  setIcon( nColumn, cIcon )           INLINE  Qt_QTreeWidgetItem_setIcon( ::pPtr, nColumn, cIcon )
-   METHOD  setSelected( lSelect )              INLINE  Qt_QTreeWidgetItem_setSelected( ::pPtr, lSelect )
-   METHOD  setSizeHint( nColumn, pSize )       INLINE  Qt_QTreeWidgetItem_setSizeHint( ::pPtr, nColumn, pSize )
-   METHOD  setStatusTip( nColumn, cStatusTip )  INLINE  Qt_QTreeWidgetItem_setStatusTip( ::pPtr, nColumn, cStatusTip )
-   METHOD  setText( nColumn, cText )           INLINE  Qt_QTreeWidgetItem_setText( ::pPtr, nColumn, cText )
-   METHOD  setTextAlignment( nColumn, nAlignment )  INLINE  Qt_QTreeWidgetItem_setTextAlignment( ::pPtr, nColumn, nAlignment )
-   METHOD  setToolTip( nColumn, cToolTip )     INLINE  Qt_QTreeWidgetItem_setToolTip( ::pPtr, nColumn, cToolTip )
-   METHOD  setWhatsThis( nColumn, cWhatsThis )  INLINE  Qt_QTreeWidgetItem_setWhatsThis( ::pPtr, nColumn, cWhatsThis )
-   METHOD  sizeHint( nColumn )                 INLINE  Qt_QTreeWidgetItem_sizeHint( ::pPtr, nColumn )
-   METHOD  sortChildren( nColumn, nOrder )     INLINE  Qt_QTreeWidgetItem_sortChildren( ::pPtr, nColumn, nOrder )
-   METHOD  statusTip( nColumn )                INLINE  Qt_QTreeWidgetItem_statusTip( ::pPtr, nColumn )
-   METHOD  takeChild( nIndex )                 INLINE  Qt_QTreeWidgetItem_takeChild( ::pPtr, nIndex )
-   METHOD  text( nColumn )                     INLINE  Qt_QTreeWidgetItem_text( ::pPtr, nColumn )
-   METHOD  textAlignment( nColumn )            INLINE  Qt_QTreeWidgetItem_textAlignment( ::pPtr, nColumn )
-   METHOD  toolTip( nColumn )                  INLINE  Qt_QTreeWidgetItem_toolTip( ::pPtr, nColumn )
-   METHOD  treeWidget()                        INLINE  Qt_QTreeWidgetItem_treeWidget( ::pPtr )
-   METHOD  type()                              INLINE  Qt_QTreeWidgetItem_type( ::pPtr )
-   METHOD  whatsThis( nColumn )                INLINE  Qt_QTreeWidgetItem_whatsThis( ::pPtr, nColumn )
+   METHOD  addChild( pChild )
+   METHOD  background( nColumn )
+   METHOD  checkState( nColumn )
+   METHOD  child( nIndex )
+   METHOD  childCount()
+   METHOD  childIndicatorPolicy()
+   METHOD  clone()
+   METHOD  columnCount()
+   METHOD  data( nColumn, nRole )
+   METHOD  flags()
+   METHOD  font( nColumn )
+   METHOD  foreground( nColumn )
+   METHOD  icon( nColumn )
+   METHOD  indexOfChild( pChild )
+   METHOD  insertChild( nIndex, pChild )
+   METHOD  isDisabled()
+   METHOD  isExpanded()
+   METHOD  isFirstColumnSpanned()
+   METHOD  isHidden()
+   METHOD  isSelected()
+   METHOD  parent()
+   METHOD  read( pIn )
+   METHOD  removeChild( pChild )
+   METHOD  setBackground( nColumn, pBrush )
+   METHOD  setCheckState( nColumn, nState )
+   METHOD  setChildIndicatorPolicy( nPolicy )
+   METHOD  setData( nColumn, nRole, pValue )
+   METHOD  setDisabled( lDisabled )
+   METHOD  setExpanded( lExpand )
+   METHOD  setFirstColumnSpanned( lSpan )
+   METHOD  setFlags( nFlags )
+   METHOD  setFont( nColumn, pFont )
+   METHOD  setForeground( nColumn, pBrush )
+   METHOD  setHidden( lHide )
+   METHOD  setIcon( nColumn, cIcon )
+   METHOD  setSelected( lSelect )
+   METHOD  setSizeHint( nColumn, pSize )
+   METHOD  setStatusTip( nColumn, cStatusTip )
+   METHOD  setText( nColumn, cText )
+   METHOD  setTextAlignment( nColumn, nAlignment )
+   METHOD  setToolTip( nColumn, cToolTip )
+   METHOD  setWhatsThis( nColumn, cWhatsThis )
+   METHOD  sizeHint( nColumn )
+   METHOD  sortChildren( nColumn, nOrder )
+   METHOD  statusTip( nColumn )
+   METHOD  takeChild( nIndex )
+   METHOD  text( nColumn )
+   METHOD  textAlignment( nColumn )
+   METHOD  toolTip( nColumn )
+   METHOD  treeWidget()
+   METHOD  type()
+   METHOD  whatsThis( nColumn )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTreeWidgetItem
-
+METHOD QTreeWidgetItem:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTreeWidgetItem( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTreeWidgetItem
-
+METHOD QTreeWidgetItem:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTreeWidgetItem:addChild( pChild )
+   RETURN Qt_QTreeWidgetItem_addChild( ::pPtr, pChild )
+
+
+METHOD QTreeWidgetItem:background( nColumn )
+   RETURN Qt_QTreeWidgetItem_background( ::pPtr, nColumn )
+
+
+METHOD QTreeWidgetItem:checkState( nColumn )
+   RETURN Qt_QTreeWidgetItem_checkState( ::pPtr, nColumn )
+
+
+METHOD QTreeWidgetItem:child( nIndex )
+   RETURN Qt_QTreeWidgetItem_child( ::pPtr, nIndex )
+
+
+METHOD QTreeWidgetItem:childCount()
+   RETURN Qt_QTreeWidgetItem_childCount( ::pPtr )
+
+
+METHOD QTreeWidgetItem:childIndicatorPolicy()
+   RETURN Qt_QTreeWidgetItem_childIndicatorPolicy( ::pPtr )
+
+
+METHOD QTreeWidgetItem:clone()
+   RETURN Qt_QTreeWidgetItem_clone( ::pPtr )
+
+
+METHOD QTreeWidgetItem:columnCount()
+   RETURN Qt_QTreeWidgetItem_columnCount( ::pPtr )
+
+
+METHOD QTreeWidgetItem:data( nColumn, nRole )
+   RETURN Qt_QTreeWidgetItem_data( ::pPtr, nColumn, nRole )
+
+
+METHOD QTreeWidgetItem:flags()
+   RETURN Qt_QTreeWidgetItem_flags( ::pPtr )
+
+
+METHOD QTreeWidgetItem:font( nColumn )
+   RETURN Qt_QTreeWidgetItem_font( ::pPtr, nColumn )
+
+
+METHOD QTreeWidgetItem:foreground( nColumn )
+   RETURN Qt_QTreeWidgetItem_foreground( ::pPtr, nColumn )
+
+
+METHOD QTreeWidgetItem:icon( nColumn )
+   RETURN Qt_QTreeWidgetItem_icon( ::pPtr, nColumn )
+
+
+METHOD QTreeWidgetItem:indexOfChild( pChild )
+   RETURN Qt_QTreeWidgetItem_indexOfChild( ::pPtr, pChild )
+
+
+METHOD QTreeWidgetItem:insertChild( nIndex, pChild )
+   RETURN Qt_QTreeWidgetItem_insertChild( ::pPtr, nIndex, pChild )
+
+
+METHOD QTreeWidgetItem:isDisabled()
+   RETURN Qt_QTreeWidgetItem_isDisabled( ::pPtr )
+
+
+METHOD QTreeWidgetItem:isExpanded()
+   RETURN Qt_QTreeWidgetItem_isExpanded( ::pPtr )
+
+
+METHOD QTreeWidgetItem:isFirstColumnSpanned()
+   RETURN Qt_QTreeWidgetItem_isFirstColumnSpanned( ::pPtr )
+
+
+METHOD QTreeWidgetItem:isHidden()
+   RETURN Qt_QTreeWidgetItem_isHidden( ::pPtr )
+
+
+METHOD QTreeWidgetItem:isSelected()
+   RETURN Qt_QTreeWidgetItem_isSelected( ::pPtr )
+
+
+METHOD QTreeWidgetItem:parent()
+   RETURN Qt_QTreeWidgetItem_parent( ::pPtr )
+
+
+METHOD QTreeWidgetItem:read( pIn )
+   RETURN Qt_QTreeWidgetItem_read( ::pPtr, pIn )
+
+
+METHOD QTreeWidgetItem:removeChild( pChild )
+   RETURN Qt_QTreeWidgetItem_removeChild( ::pPtr, pChild )
+
+
+METHOD QTreeWidgetItem:setBackground( nColumn, pBrush )
+   RETURN Qt_QTreeWidgetItem_setBackground( ::pPtr, nColumn, pBrush )
+
+
+METHOD QTreeWidgetItem:setCheckState( nColumn, nState )
+   RETURN Qt_QTreeWidgetItem_setCheckState( ::pPtr, nColumn, nState )
+
+
+METHOD QTreeWidgetItem:setChildIndicatorPolicy( nPolicy )
+   RETURN Qt_QTreeWidgetItem_setChildIndicatorPolicy( ::pPtr, nPolicy )
+
+
+METHOD QTreeWidgetItem:setData( nColumn, nRole, pValue )
+   RETURN Qt_QTreeWidgetItem_setData( ::pPtr, nColumn, nRole, pValue )
+
+
+METHOD QTreeWidgetItem:setDisabled( lDisabled )
+   RETURN Qt_QTreeWidgetItem_setDisabled( ::pPtr, lDisabled )
+
+
+METHOD QTreeWidgetItem:setExpanded( lExpand )
+   RETURN Qt_QTreeWidgetItem_setExpanded( ::pPtr, lExpand )
+
+
+METHOD QTreeWidgetItem:setFirstColumnSpanned( lSpan )
+   RETURN Qt_QTreeWidgetItem_setFirstColumnSpanned( ::pPtr, lSpan )
+
+
+METHOD QTreeWidgetItem:setFlags( nFlags )
+   RETURN Qt_QTreeWidgetItem_setFlags( ::pPtr, nFlags )
+
+
+METHOD QTreeWidgetItem:setFont( nColumn, pFont )
+   RETURN Qt_QTreeWidgetItem_setFont( ::pPtr, nColumn, pFont )
+
+
+METHOD QTreeWidgetItem:setForeground( nColumn, pBrush )
+   RETURN Qt_QTreeWidgetItem_setForeground( ::pPtr, nColumn, pBrush )
+
+
+METHOD QTreeWidgetItem:setHidden( lHide )
+   RETURN Qt_QTreeWidgetItem_setHidden( ::pPtr, lHide )
+
+
+METHOD QTreeWidgetItem:setIcon( nColumn, cIcon )
+   RETURN Qt_QTreeWidgetItem_setIcon( ::pPtr, nColumn, cIcon )
+
+
+METHOD QTreeWidgetItem:setSelected( lSelect )
+   RETURN Qt_QTreeWidgetItem_setSelected( ::pPtr, lSelect )
+
+
+METHOD QTreeWidgetItem:setSizeHint( nColumn, pSize )
+   RETURN Qt_QTreeWidgetItem_setSizeHint( ::pPtr, nColumn, pSize )
+
+
+METHOD QTreeWidgetItem:setStatusTip( nColumn, cStatusTip )
+   RETURN Qt_QTreeWidgetItem_setStatusTip( ::pPtr, nColumn, cStatusTip )
+
+
+METHOD QTreeWidgetItem:setText( nColumn, cText )
+   RETURN Qt_QTreeWidgetItem_setText( ::pPtr, nColumn, cText )
+
+
+METHOD QTreeWidgetItem:setTextAlignment( nColumn, nAlignment )
+   RETURN Qt_QTreeWidgetItem_setTextAlignment( ::pPtr, nColumn, nAlignment )
+
+
+METHOD QTreeWidgetItem:setToolTip( nColumn, cToolTip )
+   RETURN Qt_QTreeWidgetItem_setToolTip( ::pPtr, nColumn, cToolTip )
+
+
+METHOD QTreeWidgetItem:setWhatsThis( nColumn, cWhatsThis )
+   RETURN Qt_QTreeWidgetItem_setWhatsThis( ::pPtr, nColumn, cWhatsThis )
+
+
+METHOD QTreeWidgetItem:sizeHint( nColumn )
+   RETURN Qt_QTreeWidgetItem_sizeHint( ::pPtr, nColumn )
+
+
+METHOD QTreeWidgetItem:sortChildren( nColumn, nOrder )
+   RETURN Qt_QTreeWidgetItem_sortChildren( ::pPtr, nColumn, nOrder )
+
+
+METHOD QTreeWidgetItem:statusTip( nColumn )
+   RETURN Qt_QTreeWidgetItem_statusTip( ::pPtr, nColumn )
+
+
+METHOD QTreeWidgetItem:takeChild( nIndex )
+   RETURN Qt_QTreeWidgetItem_takeChild( ::pPtr, nIndex )
+
+
+METHOD QTreeWidgetItem:text( nColumn )
+   RETURN Qt_QTreeWidgetItem_text( ::pPtr, nColumn )
+
+
+METHOD QTreeWidgetItem:textAlignment( nColumn )
+   RETURN Qt_QTreeWidgetItem_textAlignment( ::pPtr, nColumn )
+
+
+METHOD QTreeWidgetItem:toolTip( nColumn )
+   RETURN Qt_QTreeWidgetItem_toolTip( ::pPtr, nColumn )
+
+
+METHOD QTreeWidgetItem:treeWidget()
+   RETURN Qt_QTreeWidgetItem_treeWidget( ::pPtr )
+
+
+METHOD QTreeWidgetItem:type()
+   RETURN Qt_QTreeWidgetItem_type( ::pPtr )
+
+
+METHOD QTreeWidgetItem:whatsThis( nColumn )
+   RETURN Qt_QTreeWidgetItem_whatsThis( ::pPtr, nColumn )
+

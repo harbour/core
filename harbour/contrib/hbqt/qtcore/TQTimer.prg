@@ -71,39 +71,72 @@ CREATE CLASS QTimer INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  interval()                          INLINE  Qt_QTimer_interval( ::pPtr )
-   METHOD  isActive()                          INLINE  Qt_QTimer_isActive( ::pPtr )
-   METHOD  isSingleShot()                      INLINE  Qt_QTimer_isSingleShot( ::pPtr )
-   METHOD  setInterval( nMsec )                INLINE  Qt_QTimer_setInterval( ::pPtr, nMsec )
-   METHOD  setSingleShot( lSingleShot )        INLINE  Qt_QTimer_setSingleShot( ::pPtr, lSingleShot )
-   METHOD  timerId()                           INLINE  Qt_QTimer_timerId( ::pPtr )
-   METHOD  singleShot( nMsec, pReceiver, pMember )  INLINE  Qt_QTimer_singleShot( ::pPtr, nMsec, pReceiver, pMember )
-   METHOD  start()                             INLINE  Qt_QTimer_start( ::pPtr )
-   METHOD  stop()                              INLINE  Qt_QTimer_stop( ::pPtr )
-   METHOD  start_1( nMsec )                    INLINE  Qt_QTimer_start_1( ::pPtr, nMsec )
+   METHOD  interval()
+   METHOD  isActive()
+   METHOD  isSingleShot()
+   METHOD  setInterval( nMsec )
+   METHOD  setSingleShot( lSingleShot )
+   METHOD  timerId()
+   METHOD  singleShot( nMsec, pReceiver, pMember )
+   METHOD  start()
+   METHOD  stop()
+   METHOD  start_1( nMsec )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTimer
-
+METHOD QTimer:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTimer( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTimer
-
+METHOD QTimer:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTimer:interval()
+   RETURN Qt_QTimer_interval( ::pPtr )
+
+
+METHOD QTimer:isActive()
+   RETURN Qt_QTimer_isActive( ::pPtr )
+
+
+METHOD QTimer:isSingleShot()
+   RETURN Qt_QTimer_isSingleShot( ::pPtr )
+
+
+METHOD QTimer:setInterval( nMsec )
+   RETURN Qt_QTimer_setInterval( ::pPtr, nMsec )
+
+
+METHOD QTimer:setSingleShot( lSingleShot )
+   RETURN Qt_QTimer_setSingleShot( ::pPtr, lSingleShot )
+
+
+METHOD QTimer:timerId()
+   RETURN Qt_QTimer_timerId( ::pPtr )
+
+
+METHOD QTimer:singleShot( nMsec, pReceiver, pMember )
+   RETURN Qt_QTimer_singleShot( ::pPtr, nMsec, pReceiver, pMember )
+
+
+METHOD QTimer:start()
+   RETURN Qt_QTimer_start( ::pPtr )
+
+
+METHOD QTimer:stop()
+   RETURN Qt_QTimer_stop( ::pPtr )
+
+
+METHOD QTimer:start_1( nMsec )
+   RETURN Qt_QTimer_start_1( ::pPtr, nMsec )
+

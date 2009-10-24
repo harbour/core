@@ -71,39 +71,72 @@ CREATE CLASS QButtonGroup INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addButton( pButton )                INLINE  Qt_QButtonGroup_addButton( ::pPtr, pButton )
-   METHOD  addButton_1( pButton, nId )         INLINE  Qt_QButtonGroup_addButton_1( ::pPtr, pButton, nId )
-   METHOD  button( nId )                       INLINE  Qt_QButtonGroup_button( ::pPtr, nId )
-   METHOD  checkedButton()                     INLINE  Qt_QButtonGroup_checkedButton( ::pPtr )
-   METHOD  checkedId()                         INLINE  Qt_QButtonGroup_checkedId( ::pPtr )
-   METHOD  exclusive()                         INLINE  Qt_QButtonGroup_exclusive( ::pPtr )
-   METHOD  id( pButton )                       INLINE  Qt_QButtonGroup_id( ::pPtr, pButton )
-   METHOD  removeButton( pButton )             INLINE  Qt_QButtonGroup_removeButton( ::pPtr, pButton )
-   METHOD  setExclusive( lBool )               INLINE  Qt_QButtonGroup_setExclusive( ::pPtr, lBool )
-   METHOD  setId( pButton, nId )               INLINE  Qt_QButtonGroup_setId( ::pPtr, pButton, nId )
+   METHOD  addButton( pButton )
+   METHOD  addButton_1( pButton, nId )
+   METHOD  button( nId )
+   METHOD  checkedButton()
+   METHOD  checkedId()
+   METHOD  exclusive()
+   METHOD  id( pButton )
+   METHOD  removeButton( pButton )
+   METHOD  setExclusive( lBool )
+   METHOD  setId( pButton, nId )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QButtonGroup
-
+METHOD QButtonGroup:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QButtonGroup( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QButtonGroup
-
+METHOD QButtonGroup:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QButtonGroup:addButton( pButton )
+   RETURN Qt_QButtonGroup_addButton( ::pPtr, pButton )
+
+
+METHOD QButtonGroup:addButton_1( pButton, nId )
+   RETURN Qt_QButtonGroup_addButton_1( ::pPtr, pButton, nId )
+
+
+METHOD QButtonGroup:button( nId )
+   RETURN Qt_QButtonGroup_button( ::pPtr, nId )
+
+
+METHOD QButtonGroup:checkedButton()
+   RETURN Qt_QButtonGroup_checkedButton( ::pPtr )
+
+
+METHOD QButtonGroup:checkedId()
+   RETURN Qt_QButtonGroup_checkedId( ::pPtr )
+
+
+METHOD QButtonGroup:exclusive()
+   RETURN Qt_QButtonGroup_exclusive( ::pPtr )
+
+
+METHOD QButtonGroup:id( pButton )
+   RETURN Qt_QButtonGroup_id( ::pPtr, pButton )
+
+
+METHOD QButtonGroup:removeButton( pButton )
+   RETURN Qt_QButtonGroup_removeButton( ::pPtr, pButton )
+
+
+METHOD QButtonGroup:setExclusive( lBool )
+   RETURN Qt_QButtonGroup_setExclusive( ::pPtr, lBool )
+
+
+METHOD QButtonGroup:setId( pButton, nId )
+   RETURN Qt_QButtonGroup_setId( ::pPtr, pButton, nId )
+

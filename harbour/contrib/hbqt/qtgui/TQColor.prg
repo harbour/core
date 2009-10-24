@@ -71,71 +71,71 @@ CREATE CLASS QColor
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  alpha()                             INLINE  Qt_QColor_alpha( ::pPtr )
-   METHOD  alphaF()                            INLINE  Qt_QColor_alphaF( ::pPtr )
-   METHOD  black()                             INLINE  Qt_QColor_black( ::pPtr )
-   METHOD  blackF()                            INLINE  Qt_QColor_blackF( ::pPtr )
-   METHOD  blue()                              INLINE  Qt_QColor_blue( ::pPtr )
-   METHOD  blueF()                             INLINE  Qt_QColor_blueF( ::pPtr )
-   METHOD  convertTo( nColorSpec )             INLINE  Qt_QColor_convertTo( ::pPtr, nColorSpec )
-   METHOD  cyan()                              INLINE  Qt_QColor_cyan( ::pPtr )
-   METHOD  cyanF()                             INLINE  Qt_QColor_cyanF( ::pPtr )
-   METHOD  darker( nFactor )                   INLINE  Qt_QColor_darker( ::pPtr, nFactor )
-   METHOD  getCmyk( nC, nM, nY, nK, nA )       INLINE  Qt_QColor_getCmyk( ::pPtr, nC, nM, nY, nK, nA )
-   METHOD  getCmykF( nC, nM, nY, nK, nA )      INLINE  Qt_QColor_getCmykF( ::pPtr, nC, nM, nY, nK, nA )
-   METHOD  getHsv( nH, nS, nV, nA )            INLINE  Qt_QColor_getHsv( ::pPtr, nH, nS, nV, nA )
-   METHOD  getHsvF( nH, nS, nV, nA )           INLINE  Qt_QColor_getHsvF( ::pPtr, nH, nS, nV, nA )
-   METHOD  getRgb( nR, nG, nB, nA )            INLINE  Qt_QColor_getRgb( ::pPtr, nR, nG, nB, nA )
-   METHOD  getRgbF( nR, nG, nB, nA )           INLINE  Qt_QColor_getRgbF( ::pPtr, nR, nG, nB, nA )
-   METHOD  green()                             INLINE  Qt_QColor_green( ::pPtr )
-   METHOD  greenF()                            INLINE  Qt_QColor_greenF( ::pPtr )
-   METHOD  hue()                               INLINE  Qt_QColor_hue( ::pPtr )
-   METHOD  hueF()                              INLINE  Qt_QColor_hueF( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QColor_isValid( ::pPtr )
-   METHOD  lighter( nFactor )                  INLINE  Qt_QColor_lighter( ::pPtr, nFactor )
-   METHOD  magenta()                           INLINE  Qt_QColor_magenta( ::pPtr )
-   METHOD  magentaF()                          INLINE  Qt_QColor_magentaF( ::pPtr )
-   METHOD  name()                              INLINE  Qt_QColor_name( ::pPtr )
-   METHOD  red()                               INLINE  Qt_QColor_red( ::pPtr )
-   METHOD  redF()                              INLINE  Qt_QColor_redF( ::pPtr )
-   METHOD  rgb()                               INLINE  Qt_QColor_rgb( ::pPtr )
-   METHOD  rgba()                              INLINE  Qt_QColor_rgba( ::pPtr )
-   METHOD  saturation()                        INLINE  Qt_QColor_saturation( ::pPtr )
-   METHOD  saturationF()                       INLINE  Qt_QColor_saturationF( ::pPtr )
-   METHOD  setAlpha( nAlpha )                  INLINE  Qt_QColor_setAlpha( ::pPtr, nAlpha )
-   METHOD  setAlphaF( nAlpha )                 INLINE  Qt_QColor_setAlphaF( ::pPtr, nAlpha )
-   METHOD  setBlue( nBlue )                    INLINE  Qt_QColor_setBlue( ::pPtr, nBlue )
-   METHOD  setBlueF( nBlue )                   INLINE  Qt_QColor_setBlueF( ::pPtr, nBlue )
-   METHOD  setCmyk( nC, nM, nY, nK, nA )       INLINE  Qt_QColor_setCmyk( ::pPtr, nC, nM, nY, nK, nA )
-   METHOD  setCmykF( nC, nM, nY, nK, nA )      INLINE  Qt_QColor_setCmykF( ::pPtr, nC, nM, nY, nK, nA )
-   METHOD  setGreen( nGreen )                  INLINE  Qt_QColor_setGreen( ::pPtr, nGreen )
-   METHOD  setGreenF( nGreen )                 INLINE  Qt_QColor_setGreenF( ::pPtr, nGreen )
-   METHOD  setHsv( nH, nS, nV, nA )            INLINE  Qt_QColor_setHsv( ::pPtr, nH, nS, nV, nA )
-   METHOD  setHsvF( nH, nS, nV, nA )           INLINE  Qt_QColor_setHsvF( ::pPtr, nH, nS, nV, nA )
-   METHOD  setNamedColor( cName )              INLINE  Qt_QColor_setNamedColor( ::pPtr, cName )
-   METHOD  setRed( nRed )                      INLINE  Qt_QColor_setRed( ::pPtr, nRed )
-   METHOD  setRedF( nRed )                     INLINE  Qt_QColor_setRedF( ::pPtr, nRed )
-   METHOD  setRgb( nRgb )                      INLINE  Qt_QColor_setRgb( ::pPtr, nRgb )
-   METHOD  setRgb_1( nR, nG, nB, nA )          INLINE  Qt_QColor_setRgb_1( ::pPtr, nR, nG, nB, nA )
-   METHOD  setRgba( nRgba )                    INLINE  Qt_QColor_setRgba( ::pPtr, nRgba )
-   METHOD  setRgbF( nR, nG, nB, nA )           INLINE  Qt_QColor_setRgbF( ::pPtr, nR, nG, nB, nA )
-   METHOD  spec()                              INLINE  Qt_QColor_spec( ::pPtr )
-   METHOD  toCmyk()                            INLINE  Qt_QColor_toCmyk( ::pPtr )
-   METHOD  toHsv()                             INLINE  Qt_QColor_toHsv( ::pPtr )
-   METHOD  toRgb()                             INLINE  Qt_QColor_toRgb( ::pPtr )
-   METHOD  value()                             INLINE  Qt_QColor_value( ::pPtr )
-   METHOD  valueF()                            INLINE  Qt_QColor_valueF( ::pPtr )
-   METHOD  yellow()                            INLINE  Qt_QColor_yellow( ::pPtr )
-   METHOD  yellowF()                           INLINE  Qt_QColor_yellowF( ::pPtr )
-   METHOD  colorNames()                        INLINE  Qt_QColor_colorNames( ::pPtr )
-   METHOD  fromCmyk( nC, nM, nY, nK, nA )      INLINE  Qt_QColor_fromCmyk( ::pPtr, nC, nM, nY, nK, nA )
-   METHOD  fromCmykF( nC, nM, nY, nK, nA )     INLINE  Qt_QColor_fromCmykF( ::pPtr, nC, nM, nY, nK, nA )
-   METHOD  fromHsv( nH, nS, nV, nA )           INLINE  Qt_QColor_fromHsv( ::pPtr, nH, nS, nV, nA )
-   METHOD  fromHsvF( nH, nS, nV, nA )          INLINE  Qt_QColor_fromHsvF( ::pPtr, nH, nS, nV, nA )
-   METHOD  fromRgb( nRgb )                     INLINE  Qt_QColor_fromRgb( ::pPtr, nRgb )
-   METHOD  fromRgb_1( nR, nG, nB, nA )         INLINE  Qt_QColor_fromRgb_1( ::pPtr, nR, nG, nB, nA )
-   METHOD  fromRgbF( nR, nG, nB, nA )          INLINE  Qt_QColor_fromRgbF( ::pPtr, nR, nG, nB, nA )
-   METHOD  fromRgba( nRgba )                   INLINE  Qt_QColor_fromRgba( ::pPtr, nRgba )
+   METHOD  alpha()
+   METHOD  alphaF()
+   METHOD  black()
+   METHOD  blackF()
+   METHOD  blue()
+   METHOD  blueF()
+   METHOD  convertTo( nColorSpec )
+   METHOD  cyan()
+   METHOD  cyanF()
+   METHOD  darker( nFactor )
+   METHOD  getCmyk( nC, nM, nY, nK, nA )
+   METHOD  getCmykF( nC, nM, nY, nK, nA )
+   METHOD  getHsv( nH, nS, nV, nA )
+   METHOD  getHsvF( nH, nS, nV, nA )
+   METHOD  getRgb( nR, nG, nB, nA )
+   METHOD  getRgbF( nR, nG, nB, nA )
+   METHOD  green()
+   METHOD  greenF()
+   METHOD  hue()
+   METHOD  hueF()
+   METHOD  isValid()
+   METHOD  lighter( nFactor )
+   METHOD  magenta()
+   METHOD  magentaF()
+   METHOD  name()
+   METHOD  red()
+   METHOD  redF()
+   METHOD  rgb()
+   METHOD  rgba()
+   METHOD  saturation()
+   METHOD  saturationF()
+   METHOD  setAlpha( nAlpha )
+   METHOD  setAlphaF( nAlpha )
+   METHOD  setBlue( nBlue )
+   METHOD  setBlueF( nBlue )
+   METHOD  setCmyk( nC, nM, nY, nK, nA )
+   METHOD  setCmykF( nC, nM, nY, nK, nA )
+   METHOD  setGreen( nGreen )
+   METHOD  setGreenF( nGreen )
+   METHOD  setHsv( nH, nS, nV, nA )
+   METHOD  setHsvF( nH, nS, nV, nA )
+   METHOD  setNamedColor( cName )
+   METHOD  setRed( nRed )
+   METHOD  setRedF( nRed )
+   METHOD  setRgb( nRgb )
+   METHOD  setRgb_1( nR, nG, nB, nA )
+   METHOD  setRgba( nRgba )
+   METHOD  setRgbF( nR, nG, nB, nA )
+   METHOD  spec()
+   METHOD  toCmyk()
+   METHOD  toHsv()
+   METHOD  toRgb()
+   METHOD  value()
+   METHOD  valueF()
+   METHOD  yellow()
+   METHOD  yellowF()
+   METHOD  colorNames()
+   METHOD  fromCmyk( nC, nM, nY, nK, nA )
+   METHOD  fromCmykF( nC, nM, nY, nK, nA )
+   METHOD  fromHsv( nH, nS, nV, nA )
+   METHOD  fromHsvF( nH, nS, nV, nA )
+   METHOD  fromRgb( nRgb )
+   METHOD  fromRgb_1( nR, nG, nB, nA )
+   METHOD  fromRgbF( nR, nG, nB, nA )
+   METHOD  fromRgba( nRgba )
 
    ENDCLASS
 
@@ -147,16 +147,272 @@ METHOD New( ... ) CLASS QColor
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QColor
-
+METHOD QColor:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QColor:alpha()
+   RETURN Qt_QColor_alpha( ::pPtr )
+
+
+METHOD QColor:alphaF()
+   RETURN Qt_QColor_alphaF( ::pPtr )
+
+
+METHOD QColor:black()
+   RETURN Qt_QColor_black( ::pPtr )
+
+
+METHOD QColor:blackF()
+   RETURN Qt_QColor_blackF( ::pPtr )
+
+
+METHOD QColor:blue()
+   RETURN Qt_QColor_blue( ::pPtr )
+
+
+METHOD QColor:blueF()
+   RETURN Qt_QColor_blueF( ::pPtr )
+
+
+METHOD QColor:convertTo( nColorSpec )
+   RETURN Qt_QColor_convertTo( ::pPtr, nColorSpec )
+
+
+METHOD QColor:cyan()
+   RETURN Qt_QColor_cyan( ::pPtr )
+
+
+METHOD QColor:cyanF()
+   RETURN Qt_QColor_cyanF( ::pPtr )
+
+
+METHOD QColor:darker( nFactor )
+   RETURN Qt_QColor_darker( ::pPtr, nFactor )
+
+
+METHOD QColor:getCmyk( nC, nM, nY, nK, nA )
+   RETURN Qt_QColor_getCmyk( ::pPtr, nC, nM, nY, nK, nA )
+
+
+METHOD QColor:getCmykF( nC, nM, nY, nK, nA )
+   RETURN Qt_QColor_getCmykF( ::pPtr, nC, nM, nY, nK, nA )
+
+
+METHOD QColor:getHsv( nH, nS, nV, nA )
+   RETURN Qt_QColor_getHsv( ::pPtr, nH, nS, nV, nA )
+
+
+METHOD QColor:getHsvF( nH, nS, nV, nA )
+   RETURN Qt_QColor_getHsvF( ::pPtr, nH, nS, nV, nA )
+
+
+METHOD QColor:getRgb( nR, nG, nB, nA )
+   RETURN Qt_QColor_getRgb( ::pPtr, nR, nG, nB, nA )
+
+
+METHOD QColor:getRgbF( nR, nG, nB, nA )
+   RETURN Qt_QColor_getRgbF( ::pPtr, nR, nG, nB, nA )
+
+
+METHOD QColor:green()
+   RETURN Qt_QColor_green( ::pPtr )
+
+
+METHOD QColor:greenF()
+   RETURN Qt_QColor_greenF( ::pPtr )
+
+
+METHOD QColor:hue()
+   RETURN Qt_QColor_hue( ::pPtr )
+
+
+METHOD QColor:hueF()
+   RETURN Qt_QColor_hueF( ::pPtr )
+
+
+METHOD QColor:isValid()
+   RETURN Qt_QColor_isValid( ::pPtr )
+
+
+METHOD QColor:lighter( nFactor )
+   RETURN Qt_QColor_lighter( ::pPtr, nFactor )
+
+
+METHOD QColor:magenta()
+   RETURN Qt_QColor_magenta( ::pPtr )
+
+
+METHOD QColor:magentaF()
+   RETURN Qt_QColor_magentaF( ::pPtr )
+
+
+METHOD QColor:name()
+   RETURN Qt_QColor_name( ::pPtr )
+
+
+METHOD QColor:red()
+   RETURN Qt_QColor_red( ::pPtr )
+
+
+METHOD QColor:redF()
+   RETURN Qt_QColor_redF( ::pPtr )
+
+
+METHOD QColor:rgb()
+   RETURN Qt_QColor_rgb( ::pPtr )
+
+
+METHOD QColor:rgba()
+   RETURN Qt_QColor_rgba( ::pPtr )
+
+
+METHOD QColor:saturation()
+   RETURN Qt_QColor_saturation( ::pPtr )
+
+
+METHOD QColor:saturationF()
+   RETURN Qt_QColor_saturationF( ::pPtr )
+
+
+METHOD QColor:setAlpha( nAlpha )
+   RETURN Qt_QColor_setAlpha( ::pPtr, nAlpha )
+
+
+METHOD QColor:setAlphaF( nAlpha )
+   RETURN Qt_QColor_setAlphaF( ::pPtr, nAlpha )
+
+
+METHOD QColor:setBlue( nBlue )
+   RETURN Qt_QColor_setBlue( ::pPtr, nBlue )
+
+
+METHOD QColor:setBlueF( nBlue )
+   RETURN Qt_QColor_setBlueF( ::pPtr, nBlue )
+
+
+METHOD QColor:setCmyk( nC, nM, nY, nK, nA )
+   RETURN Qt_QColor_setCmyk( ::pPtr, nC, nM, nY, nK, nA )
+
+
+METHOD QColor:setCmykF( nC, nM, nY, nK, nA )
+   RETURN Qt_QColor_setCmykF( ::pPtr, nC, nM, nY, nK, nA )
+
+
+METHOD QColor:setGreen( nGreen )
+   RETURN Qt_QColor_setGreen( ::pPtr, nGreen )
+
+
+METHOD QColor:setGreenF( nGreen )
+   RETURN Qt_QColor_setGreenF( ::pPtr, nGreen )
+
+
+METHOD QColor:setHsv( nH, nS, nV, nA )
+   RETURN Qt_QColor_setHsv( ::pPtr, nH, nS, nV, nA )
+
+
+METHOD QColor:setHsvF( nH, nS, nV, nA )
+   RETURN Qt_QColor_setHsvF( ::pPtr, nH, nS, nV, nA )
+
+
+METHOD QColor:setNamedColor( cName )
+   RETURN Qt_QColor_setNamedColor( ::pPtr, cName )
+
+
+METHOD QColor:setRed( nRed )
+   RETURN Qt_QColor_setRed( ::pPtr, nRed )
+
+
+METHOD QColor:setRedF( nRed )
+   RETURN Qt_QColor_setRedF( ::pPtr, nRed )
+
+
+METHOD QColor:setRgb( nRgb )
+   RETURN Qt_QColor_setRgb( ::pPtr, nRgb )
+
+
+METHOD QColor:setRgb_1( nR, nG, nB, nA )
+   RETURN Qt_QColor_setRgb_1( ::pPtr, nR, nG, nB, nA )
+
+
+METHOD QColor:setRgba( nRgba )
+   RETURN Qt_QColor_setRgba( ::pPtr, nRgba )
+
+
+METHOD QColor:setRgbF( nR, nG, nB, nA )
+   RETURN Qt_QColor_setRgbF( ::pPtr, nR, nG, nB, nA )
+
+
+METHOD QColor:spec()
+   RETURN Qt_QColor_spec( ::pPtr )
+
+
+METHOD QColor:toCmyk()
+   RETURN Qt_QColor_toCmyk( ::pPtr )
+
+
+METHOD QColor:toHsv()
+   RETURN Qt_QColor_toHsv( ::pPtr )
+
+
+METHOD QColor:toRgb()
+   RETURN Qt_QColor_toRgb( ::pPtr )
+
+
+METHOD QColor:value()
+   RETURN Qt_QColor_value( ::pPtr )
+
+
+METHOD QColor:valueF()
+   RETURN Qt_QColor_valueF( ::pPtr )
+
+
+METHOD QColor:yellow()
+   RETURN Qt_QColor_yellow( ::pPtr )
+
+
+METHOD QColor:yellowF()
+   RETURN Qt_QColor_yellowF( ::pPtr )
+
+
+METHOD QColor:colorNames()
+   RETURN Qt_QColor_colorNames( ::pPtr )
+
+
+METHOD QColor:fromCmyk( nC, nM, nY, nK, nA )
+   RETURN Qt_QColor_fromCmyk( ::pPtr, nC, nM, nY, nK, nA )
+
+
+METHOD QColor:fromCmykF( nC, nM, nY, nK, nA )
+   RETURN Qt_QColor_fromCmykF( ::pPtr, nC, nM, nY, nK, nA )
+
+
+METHOD QColor:fromHsv( nH, nS, nV, nA )
+   RETURN Qt_QColor_fromHsv( ::pPtr, nH, nS, nV, nA )
+
+
+METHOD QColor:fromHsvF( nH, nS, nV, nA )
+   RETURN Qt_QColor_fromHsvF( ::pPtr, nH, nS, nV, nA )
+
+
+METHOD QColor:fromRgb( nRgb )
+   RETURN Qt_QColor_fromRgb( ::pPtr, nRgb )
+
+
+METHOD QColor:fromRgb_1( nR, nG, nB, nA )
+   RETURN Qt_QColor_fromRgb_1( ::pPtr, nR, nG, nB, nA )
+
+
+METHOD QColor:fromRgbF( nR, nG, nB, nA )
+   RETURN Qt_QColor_fromRgbF( ::pPtr, nR, nG, nB, nA )
+
+
+METHOD QColor:fromRgba( nRgba )
+   RETURN Qt_QColor_fromRgba( ::pPtr, nRgba )
+

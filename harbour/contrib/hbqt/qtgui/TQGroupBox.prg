@@ -71,39 +71,72 @@ CREATE CLASS QGroupBox INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  alignment()                         INLINE  Qt_QGroupBox_alignment( ::pPtr )
-   METHOD  isCheckable()                       INLINE  Qt_QGroupBox_isCheckable( ::pPtr )
-   METHOD  isChecked()                         INLINE  Qt_QGroupBox_isChecked( ::pPtr )
-   METHOD  isFlat()                            INLINE  Qt_QGroupBox_isFlat( ::pPtr )
-   METHOD  setAlignment( nAlignment )          INLINE  Qt_QGroupBox_setAlignment( ::pPtr, nAlignment )
-   METHOD  setCheckable( lCheckable )          INLINE  Qt_QGroupBox_setCheckable( ::pPtr, lCheckable )
-   METHOD  setFlat( lFlat )                    INLINE  Qt_QGroupBox_setFlat( ::pPtr, lFlat )
-   METHOD  setTitle( cTitle )                  INLINE  Qt_QGroupBox_setTitle( ::pPtr, cTitle )
-   METHOD  title()                             INLINE  Qt_QGroupBox_title( ::pPtr )
-   METHOD  setChecked( lChecked )              INLINE  Qt_QGroupBox_setChecked( ::pPtr, lChecked )
+   METHOD  alignment()
+   METHOD  isCheckable()
+   METHOD  isChecked()
+   METHOD  isFlat()
+   METHOD  setAlignment( nAlignment )
+   METHOD  setCheckable( lCheckable )
+   METHOD  setFlat( lFlat )
+   METHOD  setTitle( cTitle )
+   METHOD  title()
+   METHOD  setChecked( lChecked )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QGroupBox
-
+METHOD QGroupBox:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QGroupBox( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QGroupBox
-
+METHOD QGroupBox:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QGroupBox:alignment()
+   RETURN Qt_QGroupBox_alignment( ::pPtr )
+
+
+METHOD QGroupBox:isCheckable()
+   RETURN Qt_QGroupBox_isCheckable( ::pPtr )
+
+
+METHOD QGroupBox:isChecked()
+   RETURN Qt_QGroupBox_isChecked( ::pPtr )
+
+
+METHOD QGroupBox:isFlat()
+   RETURN Qt_QGroupBox_isFlat( ::pPtr )
+
+
+METHOD QGroupBox:setAlignment( nAlignment )
+   RETURN Qt_QGroupBox_setAlignment( ::pPtr, nAlignment )
+
+
+METHOD QGroupBox:setCheckable( lCheckable )
+   RETURN Qt_QGroupBox_setCheckable( ::pPtr, lCheckable )
+
+
+METHOD QGroupBox:setFlat( lFlat )
+   RETURN Qt_QGroupBox_setFlat( ::pPtr, lFlat )
+
+
+METHOD QGroupBox:setTitle( cTitle )
+   RETURN Qt_QGroupBox_setTitle( ::pPtr, cTitle )
+
+
+METHOD QGroupBox:title()
+   RETURN Qt_QGroupBox_title( ::pPtr )
+
+
+METHOD QGroupBox:setChecked( lChecked )
+   RETURN Qt_QGroupBox_setChecked( ::pPtr, lChecked )
+

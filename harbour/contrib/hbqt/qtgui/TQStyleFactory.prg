@@ -71,31 +71,32 @@ CREATE CLASS QStyleFactory
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  create( cKey )                      INLINE  Qt_QStyleFactory_create( ::pPtr, cKey )
-   METHOD  keys()                              INLINE  Qt_QStyleFactory_keys( ::pPtr )
+   METHOD  create( cKey )
+   METHOD  keys()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyleFactory
-
+METHOD QStyleFactory:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyleFactory( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyleFactory
-
+METHOD QStyleFactory:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyleFactory:create( cKey )
+   RETURN Qt_QStyleFactory_create( ::pPtr, cKey )
+
+
+METHOD QStyleFactory:keys()
+   RETURN Qt_QStyleFactory_keys( ::pPtr )
+

@@ -71,20 +71,20 @@ CREATE CLASS QSize
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  height()                            INLINE  Qt_QSize_height( ::pPtr )
-   METHOD  isEmpty()                           INLINE  Qt_QSize_isEmpty( ::pPtr )
-   METHOD  isNull()                            INLINE  Qt_QSize_isNull( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QSize_isValid( ::pPtr )
-   METHOD  rheight()                           INLINE  Qt_QSize_rheight( ::pPtr )
-   METHOD  rwidth()                            INLINE  Qt_QSize_rwidth( ::pPtr )
-   METHOD  scale( nWidth, nHeight, nMode )     INLINE  Qt_QSize_scale( ::pPtr, nWidth, nHeight, nMode )
-   METHOD  scale_1( pSize, nMode )             INLINE  Qt_QSize_scale_1( ::pPtr, pSize, nMode )
-   METHOD  setHeight( nHeight )                INLINE  Qt_QSize_setHeight( ::pPtr, nHeight )
-   METHOD  setWidth( nWidth )                  INLINE  Qt_QSize_setWidth( ::pPtr, nWidth )
-   METHOD  transpose()                         INLINE  Qt_QSize_transpose( ::pPtr )
-   METHOD  width()                             INLINE  Qt_QSize_width( ::pPtr )
-   METHOD  boundedTo( pOtherSize )             INLINE  Qt_QSize_boundedTo( ::pPtr, pOtherSize )
-   METHOD  expandedTo( pOtherSize )            INLINE  Qt_QSize_expandedTo( ::pPtr, pOtherSize )
+   METHOD  height()
+   METHOD  isEmpty()
+   METHOD  isNull()
+   METHOD  isValid()
+   METHOD  rheight()
+   METHOD  rwidth()
+   METHOD  scale( nWidth, nHeight, nMode )
+   METHOD  scale_1( pSize, nMode )
+   METHOD  setHeight( nHeight )
+   METHOD  setWidth( nWidth )
+   METHOD  transpose()
+   METHOD  width()
+   METHOD  boundedTo( pOtherSize )
+   METHOD  expandedTo( pOtherSize )
 
    ENDCLASS
 
@@ -96,16 +96,68 @@ METHOD New( ... ) CLASS QSize
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QSize
-
+METHOD QSize:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QSize:height()
+   RETURN Qt_QSize_height( ::pPtr )
+
+
+METHOD QSize:isEmpty()
+   RETURN Qt_QSize_isEmpty( ::pPtr )
+
+
+METHOD QSize:isNull()
+   RETURN Qt_QSize_isNull( ::pPtr )
+
+
+METHOD QSize:isValid()
+   RETURN Qt_QSize_isValid( ::pPtr )
+
+
+METHOD QSize:rheight()
+   RETURN Qt_QSize_rheight( ::pPtr )
+
+
+METHOD QSize:rwidth()
+   RETURN Qt_QSize_rwidth( ::pPtr )
+
+
+METHOD QSize:scale( nWidth, nHeight, nMode )
+   RETURN Qt_QSize_scale( ::pPtr, nWidth, nHeight, nMode )
+
+
+METHOD QSize:scale_1( pSize, nMode )
+   RETURN Qt_QSize_scale_1( ::pPtr, pSize, nMode )
+
+
+METHOD QSize:setHeight( nHeight )
+   RETURN Qt_QSize_setHeight( ::pPtr, nHeight )
+
+
+METHOD QSize:setWidth( nWidth )
+   RETURN Qt_QSize_setWidth( ::pPtr, nWidth )
+
+
+METHOD QSize:transpose()
+   RETURN Qt_QSize_transpose( ::pPtr )
+
+
+METHOD QSize:width()
+   RETURN Qt_QSize_width( ::pPtr )
+
+
+METHOD QSize:boundedTo( pOtherSize )
+   RETURN Qt_QSize_boundedTo( ::pPtr, pOtherSize )
+
+
+METHOD QSize:expandedTo( pOtherSize )
+   RETURN Qt_QSize_expandedTo( ::pPtr, pOtherSize )
+

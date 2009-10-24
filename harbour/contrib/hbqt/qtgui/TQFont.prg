@@ -71,64 +71,64 @@ CREATE CLASS QFont
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  bold()                              INLINE  Qt_QFont_bold( ::pPtr )
-   METHOD  capitalization()                    INLINE  Qt_QFont_capitalization( ::pPtr )
-   METHOD  defaultFamily()                     INLINE  Qt_QFont_defaultFamily( ::pPtr )
-   METHOD  exactMatch()                        INLINE  Qt_QFont_exactMatch( ::pPtr )
-   METHOD  family()                            INLINE  Qt_QFont_family( ::pPtr )
-   METHOD  fixedPitch()                        INLINE  Qt_QFont_fixedPitch( ::pPtr )
-   METHOD  fromString( cDescrip )              INLINE  Qt_QFont_fromString( ::pPtr, cDescrip )
-   METHOD  italic()                            INLINE  Qt_QFont_italic( ::pPtr )
-   METHOD  kerning()                           INLINE  Qt_QFont_kerning( ::pPtr )
-   METHOD  key()                               INLINE  Qt_QFont_key( ::pPtr )
-   METHOD  lastResortFamily()                  INLINE  Qt_QFont_lastResortFamily( ::pPtr )
-   METHOD  lastResortFont()                    INLINE  Qt_QFont_lastResortFont( ::pPtr )
-   METHOD  letterSpacing()                     INLINE  Qt_QFont_letterSpacing( ::pPtr )
-   METHOD  letterSpacingType()                 INLINE  Qt_QFont_letterSpacingType( ::pPtr )
-   METHOD  overline()                          INLINE  Qt_QFont_overline( ::pPtr )
-   METHOD  pixelSize()                         INLINE  Qt_QFont_pixelSize( ::pPtr )
-   METHOD  pointSize()                         INLINE  Qt_QFont_pointSize( ::pPtr )
-   METHOD  pointSizeF()                        INLINE  Qt_QFont_pointSizeF( ::pPtr )
-   METHOD  rawMode()                           INLINE  Qt_QFont_rawMode( ::pPtr )
-   METHOD  rawName()                           INLINE  Qt_QFont_rawName( ::pPtr )
-   METHOD  setBold( lEnable )                  INLINE  Qt_QFont_setBold( ::pPtr, lEnable )
-   METHOD  setCapitalization( nCaps )          INLINE  Qt_QFont_setCapitalization( ::pPtr, nCaps )
-   METHOD  setFamily( cFamily )                INLINE  Qt_QFont_setFamily( ::pPtr, cFamily )
-   METHOD  setFixedPitch( lEnable )            INLINE  Qt_QFont_setFixedPitch( ::pPtr, lEnable )
-   METHOD  setItalic( lEnable )                INLINE  Qt_QFont_setItalic( ::pPtr, lEnable )
-   METHOD  setKerning( lEnable )               INLINE  Qt_QFont_setKerning( ::pPtr, lEnable )
-   METHOD  setLetterSpacing( nType, nSpacing )  INLINE  Qt_QFont_setLetterSpacing( ::pPtr, nType, nSpacing )
-   METHOD  setOverline( lEnable )              INLINE  Qt_QFont_setOverline( ::pPtr, lEnable )
-   METHOD  setPixelSize( nPixelSize )          INLINE  Qt_QFont_setPixelSize( ::pPtr, nPixelSize )
-   METHOD  setPointSize( nPointSize )          INLINE  Qt_QFont_setPointSize( ::pPtr, nPointSize )
-   METHOD  setPointSizeF( nPointSize )         INLINE  Qt_QFont_setPointSizeF( ::pPtr, nPointSize )
-   METHOD  setRawMode( lEnable )               INLINE  Qt_QFont_setRawMode( ::pPtr, lEnable )
-   METHOD  setRawName( cName )                 INLINE  Qt_QFont_setRawName( ::pPtr, cName )
-   METHOD  setStretch( nFactor )               INLINE  Qt_QFont_setStretch( ::pPtr, nFactor )
-   METHOD  setStrikeOut( lEnable )             INLINE  Qt_QFont_setStrikeOut( ::pPtr, lEnable )
-   METHOD  setStyle( nStyle )                  INLINE  Qt_QFont_setStyle( ::pPtr, nStyle )
-   METHOD  setStyleHint( nHint, nStrategy )    INLINE  Qt_QFont_setStyleHint( ::pPtr, nHint, nStrategy )
-   METHOD  setStyleStrategy( nS )              INLINE  Qt_QFont_setStyleStrategy( ::pPtr, nS )
-   METHOD  setUnderline( lEnable )             INLINE  Qt_QFont_setUnderline( ::pPtr, lEnable )
-   METHOD  setWeight( nWeight )                INLINE  Qt_QFont_setWeight( ::pPtr, nWeight )
-   METHOD  setWordSpacing( nSpacing )          INLINE  Qt_QFont_setWordSpacing( ::pPtr, nSpacing )
-   METHOD  stretch()                           INLINE  Qt_QFont_stretch( ::pPtr )
-   METHOD  strikeOut()                         INLINE  Qt_QFont_strikeOut( ::pPtr )
-   METHOD  style()                             INLINE  Qt_QFont_style( ::pPtr )
-   METHOD  styleHint()                         INLINE  Qt_QFont_styleHint( ::pPtr )
-   METHOD  styleStrategy()                     INLINE  Qt_QFont_styleStrategy( ::pPtr )
-   METHOD  toString()                          INLINE  Qt_QFont_toString( ::pPtr )
-   METHOD  underline()                         INLINE  Qt_QFont_underline( ::pPtr )
-   METHOD  weight()                            INLINE  Qt_QFont_weight( ::pPtr )
-   METHOD  wordSpacing()                       INLINE  Qt_QFont_wordSpacing( ::pPtr )
-   METHOD  cleanup()                           INLINE  Qt_QFont_cleanup( ::pPtr )
-   METHOD  initialize()                        INLINE  Qt_QFont_initialize( ::pPtr )
-   METHOD  insertSubstitution( cFamilyName, cSubstituteName )  INLINE  Qt_QFont_insertSubstitution( ::pPtr, cFamilyName, cSubstituteName )
-   METHOD  insertSubstitutions( cFamilyName, pSubstituteNames )  INLINE  Qt_QFont_insertSubstitutions( ::pPtr, cFamilyName, pSubstituteNames )
-   METHOD  removeSubstitution( cFamilyName )   INLINE  Qt_QFont_removeSubstitution( ::pPtr, cFamilyName )
-   METHOD  substitute( cFamilyName )           INLINE  Qt_QFont_substitute( ::pPtr, cFamilyName )
-   METHOD  substitutes( cFamilyName )          INLINE  Qt_QFont_substitutes( ::pPtr, cFamilyName )
-   METHOD  substitutions()                     INLINE  Qt_QFont_substitutions( ::pPtr )
+   METHOD  bold()
+   METHOD  capitalization()
+   METHOD  defaultFamily()
+   METHOD  exactMatch()
+   METHOD  family()
+   METHOD  fixedPitch()
+   METHOD  fromString( cDescrip )
+   METHOD  italic()
+   METHOD  kerning()
+   METHOD  key()
+   METHOD  lastResortFamily()
+   METHOD  lastResortFont()
+   METHOD  letterSpacing()
+   METHOD  letterSpacingType()
+   METHOD  overline()
+   METHOD  pixelSize()
+   METHOD  pointSize()
+   METHOD  pointSizeF()
+   METHOD  rawMode()
+   METHOD  rawName()
+   METHOD  setBold( lEnable )
+   METHOD  setCapitalization( nCaps )
+   METHOD  setFamily( cFamily )
+   METHOD  setFixedPitch( lEnable )
+   METHOD  setItalic( lEnable )
+   METHOD  setKerning( lEnable )
+   METHOD  setLetterSpacing( nType, nSpacing )
+   METHOD  setOverline( lEnable )
+   METHOD  setPixelSize( nPixelSize )
+   METHOD  setPointSize( nPointSize )
+   METHOD  setPointSizeF( nPointSize )
+   METHOD  setRawMode( lEnable )
+   METHOD  setRawName( cName )
+   METHOD  setStretch( nFactor )
+   METHOD  setStrikeOut( lEnable )
+   METHOD  setStyle( nStyle )
+   METHOD  setStyleHint( nHint, nStrategy )
+   METHOD  setStyleStrategy( nS )
+   METHOD  setUnderline( lEnable )
+   METHOD  setWeight( nWeight )
+   METHOD  setWordSpacing( nSpacing )
+   METHOD  stretch()
+   METHOD  strikeOut()
+   METHOD  style()
+   METHOD  styleHint()
+   METHOD  styleStrategy()
+   METHOD  toString()
+   METHOD  underline()
+   METHOD  weight()
+   METHOD  wordSpacing()
+   METHOD  cleanup()
+   METHOD  initialize()
+   METHOD  insertSubstitution( cFamilyName, cSubstituteName )
+   METHOD  insertSubstitutions( cFamilyName, pSubstituteNames )
+   METHOD  removeSubstitution( cFamilyName )
+   METHOD  substitute( cFamilyName )
+   METHOD  substitutes( cFamilyName )
+   METHOD  substitutions()
 
    ENDCLASS
 
@@ -140,16 +140,244 @@ METHOD New( ... ) CLASS QFont
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QFont
-
+METHOD QFont:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QFont:bold()
+   RETURN Qt_QFont_bold( ::pPtr )
+
+
+METHOD QFont:capitalization()
+   RETURN Qt_QFont_capitalization( ::pPtr )
+
+
+METHOD QFont:defaultFamily()
+   RETURN Qt_QFont_defaultFamily( ::pPtr )
+
+
+METHOD QFont:exactMatch()
+   RETURN Qt_QFont_exactMatch( ::pPtr )
+
+
+METHOD QFont:family()
+   RETURN Qt_QFont_family( ::pPtr )
+
+
+METHOD QFont:fixedPitch()
+   RETURN Qt_QFont_fixedPitch( ::pPtr )
+
+
+METHOD QFont:fromString( cDescrip )
+   RETURN Qt_QFont_fromString( ::pPtr, cDescrip )
+
+
+METHOD QFont:italic()
+   RETURN Qt_QFont_italic( ::pPtr )
+
+
+METHOD QFont:kerning()
+   RETURN Qt_QFont_kerning( ::pPtr )
+
+
+METHOD QFont:key()
+   RETURN Qt_QFont_key( ::pPtr )
+
+
+METHOD QFont:lastResortFamily()
+   RETURN Qt_QFont_lastResortFamily( ::pPtr )
+
+
+METHOD QFont:lastResortFont()
+   RETURN Qt_QFont_lastResortFont( ::pPtr )
+
+
+METHOD QFont:letterSpacing()
+   RETURN Qt_QFont_letterSpacing( ::pPtr )
+
+
+METHOD QFont:letterSpacingType()
+   RETURN Qt_QFont_letterSpacingType( ::pPtr )
+
+
+METHOD QFont:overline()
+   RETURN Qt_QFont_overline( ::pPtr )
+
+
+METHOD QFont:pixelSize()
+   RETURN Qt_QFont_pixelSize( ::pPtr )
+
+
+METHOD QFont:pointSize()
+   RETURN Qt_QFont_pointSize( ::pPtr )
+
+
+METHOD QFont:pointSizeF()
+   RETURN Qt_QFont_pointSizeF( ::pPtr )
+
+
+METHOD QFont:rawMode()
+   RETURN Qt_QFont_rawMode( ::pPtr )
+
+
+METHOD QFont:rawName()
+   RETURN Qt_QFont_rawName( ::pPtr )
+
+
+METHOD QFont:setBold( lEnable )
+   RETURN Qt_QFont_setBold( ::pPtr, lEnable )
+
+
+METHOD QFont:setCapitalization( nCaps )
+   RETURN Qt_QFont_setCapitalization( ::pPtr, nCaps )
+
+
+METHOD QFont:setFamily( cFamily )
+   RETURN Qt_QFont_setFamily( ::pPtr, cFamily )
+
+
+METHOD QFont:setFixedPitch( lEnable )
+   RETURN Qt_QFont_setFixedPitch( ::pPtr, lEnable )
+
+
+METHOD QFont:setItalic( lEnable )
+   RETURN Qt_QFont_setItalic( ::pPtr, lEnable )
+
+
+METHOD QFont:setKerning( lEnable )
+   RETURN Qt_QFont_setKerning( ::pPtr, lEnable )
+
+
+METHOD QFont:setLetterSpacing( nType, nSpacing )
+   RETURN Qt_QFont_setLetterSpacing( ::pPtr, nType, nSpacing )
+
+
+METHOD QFont:setOverline( lEnable )
+   RETURN Qt_QFont_setOverline( ::pPtr, lEnable )
+
+
+METHOD QFont:setPixelSize( nPixelSize )
+   RETURN Qt_QFont_setPixelSize( ::pPtr, nPixelSize )
+
+
+METHOD QFont:setPointSize( nPointSize )
+   RETURN Qt_QFont_setPointSize( ::pPtr, nPointSize )
+
+
+METHOD QFont:setPointSizeF( nPointSize )
+   RETURN Qt_QFont_setPointSizeF( ::pPtr, nPointSize )
+
+
+METHOD QFont:setRawMode( lEnable )
+   RETURN Qt_QFont_setRawMode( ::pPtr, lEnable )
+
+
+METHOD QFont:setRawName( cName )
+   RETURN Qt_QFont_setRawName( ::pPtr, cName )
+
+
+METHOD QFont:setStretch( nFactor )
+   RETURN Qt_QFont_setStretch( ::pPtr, nFactor )
+
+
+METHOD QFont:setStrikeOut( lEnable )
+   RETURN Qt_QFont_setStrikeOut( ::pPtr, lEnable )
+
+
+METHOD QFont:setStyle( nStyle )
+   RETURN Qt_QFont_setStyle( ::pPtr, nStyle )
+
+
+METHOD QFont:setStyleHint( nHint, nStrategy )
+   RETURN Qt_QFont_setStyleHint( ::pPtr, nHint, nStrategy )
+
+
+METHOD QFont:setStyleStrategy( nS )
+   RETURN Qt_QFont_setStyleStrategy( ::pPtr, nS )
+
+
+METHOD QFont:setUnderline( lEnable )
+   RETURN Qt_QFont_setUnderline( ::pPtr, lEnable )
+
+
+METHOD QFont:setWeight( nWeight )
+   RETURN Qt_QFont_setWeight( ::pPtr, nWeight )
+
+
+METHOD QFont:setWordSpacing( nSpacing )
+   RETURN Qt_QFont_setWordSpacing( ::pPtr, nSpacing )
+
+
+METHOD QFont:stretch()
+   RETURN Qt_QFont_stretch( ::pPtr )
+
+
+METHOD QFont:strikeOut()
+   RETURN Qt_QFont_strikeOut( ::pPtr )
+
+
+METHOD QFont:style()
+   RETURN Qt_QFont_style( ::pPtr )
+
+
+METHOD QFont:styleHint()
+   RETURN Qt_QFont_styleHint( ::pPtr )
+
+
+METHOD QFont:styleStrategy()
+   RETURN Qt_QFont_styleStrategy( ::pPtr )
+
+
+METHOD QFont:toString()
+   RETURN Qt_QFont_toString( ::pPtr )
+
+
+METHOD QFont:underline()
+   RETURN Qt_QFont_underline( ::pPtr )
+
+
+METHOD QFont:weight()
+   RETURN Qt_QFont_weight( ::pPtr )
+
+
+METHOD QFont:wordSpacing()
+   RETURN Qt_QFont_wordSpacing( ::pPtr )
+
+
+METHOD QFont:cleanup()
+   RETURN Qt_QFont_cleanup( ::pPtr )
+
+
+METHOD QFont:initialize()
+   RETURN Qt_QFont_initialize( ::pPtr )
+
+
+METHOD QFont:insertSubstitution( cFamilyName, cSubstituteName )
+   RETURN Qt_QFont_insertSubstitution( ::pPtr, cFamilyName, cSubstituteName )
+
+
+METHOD QFont:insertSubstitutions( cFamilyName, pSubstituteNames )
+   RETURN Qt_QFont_insertSubstitutions( ::pPtr, cFamilyName, pSubstituteNames )
+
+
+METHOD QFont:removeSubstitution( cFamilyName )
+   RETURN Qt_QFont_removeSubstitution( ::pPtr, cFamilyName )
+
+
+METHOD QFont:substitute( cFamilyName )
+   RETURN Qt_QFont_substitute( ::pPtr, cFamilyName )
+
+
+METHOD QFont:substitutes( cFamilyName )
+   RETURN Qt_QFont_substitutes( ::pPtr, cFamilyName )
+
+
+METHOD QFont:substitutions()
+   RETURN Qt_QFont_substitutions( ::pPtr )
+

@@ -71,70 +71,227 @@ CREATE CLASS QTabWidget INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addTab( pPage, cLabel )             INLINE  Qt_QTabWidget_addTab( ::pPtr, pPage, cLabel )
-   METHOD  addTab_1( pPage, cIcon, cLabel )    INLINE  Qt_QTabWidget_addTab_1( ::pPtr, pPage, cIcon, cLabel )
-   METHOD  clear()                             INLINE  Qt_QTabWidget_clear( ::pPtr )
-   METHOD  cornerWidget( nCorner )             INLINE  Qt_QTabWidget_cornerWidget( ::pPtr, nCorner )
-   METHOD  count()                             INLINE  Qt_QTabWidget_count( ::pPtr )
-   METHOD  currentIndex()                      INLINE  Qt_QTabWidget_currentIndex( ::pPtr )
-   METHOD  currentWidget()                     INLINE  Qt_QTabWidget_currentWidget( ::pPtr )
-   METHOD  documentMode()                      INLINE  Qt_QTabWidget_documentMode( ::pPtr )
-   METHOD  elideMode()                         INLINE  Qt_QTabWidget_elideMode( ::pPtr )
-   METHOD  iconSize()                          INLINE  Qt_QTabWidget_iconSize( ::pPtr )
-   METHOD  indexOf( pW )                       INLINE  Qt_QTabWidget_indexOf( ::pPtr, pW )
-   METHOD  insertTab( nIndex, pPage, cLabel )  INLINE  Qt_QTabWidget_insertTab( ::pPtr, nIndex, pPage, cLabel )
-   METHOD  insertTab_1( nIndex, pPage, cIcon, cLabel )  INLINE  Qt_QTabWidget_insertTab_1( ::pPtr, nIndex, pPage, cIcon, cLabel )
-   METHOD  isMovable()                         INLINE  Qt_QTabWidget_isMovable( ::pPtr )
-   METHOD  isTabEnabled( nIndex )              INLINE  Qt_QTabWidget_isTabEnabled( ::pPtr, nIndex )
-   METHOD  removeTab( nIndex )                 INLINE  Qt_QTabWidget_removeTab( ::pPtr, nIndex )
-   METHOD  setCornerWidget( pWidget, nCorner )  INLINE  Qt_QTabWidget_setCornerWidget( ::pPtr, pWidget, nCorner )
-   METHOD  setDocumentMode( lSet )             INLINE  Qt_QTabWidget_setDocumentMode( ::pPtr, lSet )
-   METHOD  setElideMode( nQt_TextElideMode )   INLINE  Qt_QTabWidget_setElideMode( ::pPtr, nQt_TextElideMode )
-   METHOD  setIconSize( pSize )                INLINE  Qt_QTabWidget_setIconSize( ::pPtr, pSize )
-   METHOD  setMovable( lMovable )              INLINE  Qt_QTabWidget_setMovable( ::pPtr, lMovable )
-   METHOD  setTabEnabled( nIndex, lEnable )    INLINE  Qt_QTabWidget_setTabEnabled( ::pPtr, nIndex, lEnable )
-   METHOD  setTabIcon( nIndex, cIcon )         INLINE  Qt_QTabWidget_setTabIcon( ::pPtr, nIndex, cIcon )
-   METHOD  setTabPosition( nTabPosition )      INLINE  Qt_QTabWidget_setTabPosition( ::pPtr, nTabPosition )
-   METHOD  setTabShape( nS )                   INLINE  Qt_QTabWidget_setTabShape( ::pPtr, nS )
-   METHOD  setTabText( nIndex, cLabel )        INLINE  Qt_QTabWidget_setTabText( ::pPtr, nIndex, cLabel )
-   METHOD  setTabToolTip( nIndex, cTip )       INLINE  Qt_QTabWidget_setTabToolTip( ::pPtr, nIndex, cTip )
-   METHOD  setTabWhatsThis( nIndex, cText )    INLINE  Qt_QTabWidget_setTabWhatsThis( ::pPtr, nIndex, cText )
-   METHOD  setTabsClosable( lCloseable )       INLINE  Qt_QTabWidget_setTabsClosable( ::pPtr, lCloseable )
-   METHOD  setUsesScrollButtons( lUseButtons )  INLINE  Qt_QTabWidget_setUsesScrollButtons( ::pPtr, lUseButtons )
-   METHOD  tabIcon( nIndex )                   INLINE  Qt_QTabWidget_tabIcon( ::pPtr, nIndex )
-   METHOD  tabPosition()                       INLINE  Qt_QTabWidget_tabPosition( ::pPtr )
-   METHOD  tabShape()                          INLINE  Qt_QTabWidget_tabShape( ::pPtr )
-   METHOD  tabText( nIndex )                   INLINE  Qt_QTabWidget_tabText( ::pPtr, nIndex )
-   METHOD  tabToolTip( nIndex )                INLINE  Qt_QTabWidget_tabToolTip( ::pPtr, nIndex )
-   METHOD  tabWhatsThis( nIndex )              INLINE  Qt_QTabWidget_tabWhatsThis( ::pPtr, nIndex )
-   METHOD  tabsClosable()                      INLINE  Qt_QTabWidget_tabsClosable( ::pPtr )
-   METHOD  usesScrollButtons()                 INLINE  Qt_QTabWidget_usesScrollButtons( ::pPtr )
-   METHOD  widget( nIndex )                    INLINE  Qt_QTabWidget_widget( ::pPtr, nIndex )
-   METHOD  setCurrentIndex( nIndex )           INLINE  Qt_QTabWidget_setCurrentIndex( ::pPtr, nIndex )
-   METHOD  setCurrentWidget( pWidget )         INLINE  Qt_QTabWidget_setCurrentWidget( ::pPtr, pWidget )
+   METHOD  addTab( pPage, cLabel )
+   METHOD  addTab_1( pPage, cIcon, cLabel )
+   METHOD  clear()
+   METHOD  cornerWidget( nCorner )
+   METHOD  count()
+   METHOD  currentIndex()
+   METHOD  currentWidget()
+   METHOD  documentMode()
+   METHOD  elideMode()
+   METHOD  iconSize()
+   METHOD  indexOf( pW )
+   METHOD  insertTab( nIndex, pPage, cLabel )
+   METHOD  insertTab_1( nIndex, pPage, cIcon, cLabel )
+   METHOD  isMovable()
+   METHOD  isTabEnabled( nIndex )
+   METHOD  removeTab( nIndex )
+   METHOD  setCornerWidget( pWidget, nCorner )
+   METHOD  setDocumentMode( lSet )
+   METHOD  setElideMode( nQt_TextElideMode )
+   METHOD  setIconSize( pSize )
+   METHOD  setMovable( lMovable )
+   METHOD  setTabEnabled( nIndex, lEnable )
+   METHOD  setTabIcon( nIndex, cIcon )
+   METHOD  setTabPosition( nTabPosition )
+   METHOD  setTabShape( nS )
+   METHOD  setTabText( nIndex, cLabel )
+   METHOD  setTabToolTip( nIndex, cTip )
+   METHOD  setTabWhatsThis( nIndex, cText )
+   METHOD  setTabsClosable( lCloseable )
+   METHOD  setUsesScrollButtons( lUseButtons )
+   METHOD  tabIcon( nIndex )
+   METHOD  tabPosition()
+   METHOD  tabShape()
+   METHOD  tabText( nIndex )
+   METHOD  tabToolTip( nIndex )
+   METHOD  tabWhatsThis( nIndex )
+   METHOD  tabsClosable()
+   METHOD  usesScrollButtons()
+   METHOD  widget( nIndex )
+   METHOD  setCurrentIndex( nIndex )
+   METHOD  setCurrentWidget( pWidget )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTabWidget
-
+METHOD QTabWidget:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTabWidget( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTabWidget
-
+METHOD QTabWidget:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTabWidget:addTab( pPage, cLabel )
+   RETURN Qt_QTabWidget_addTab( ::pPtr, pPage, cLabel )
+
+
+METHOD QTabWidget:addTab_1( pPage, cIcon, cLabel )
+   RETURN Qt_QTabWidget_addTab_1( ::pPtr, pPage, cIcon, cLabel )
+
+
+METHOD QTabWidget:clear()
+   RETURN Qt_QTabWidget_clear( ::pPtr )
+
+
+METHOD QTabWidget:cornerWidget( nCorner )
+   RETURN Qt_QTabWidget_cornerWidget( ::pPtr, nCorner )
+
+
+METHOD QTabWidget:count()
+   RETURN Qt_QTabWidget_count( ::pPtr )
+
+
+METHOD QTabWidget:currentIndex()
+   RETURN Qt_QTabWidget_currentIndex( ::pPtr )
+
+
+METHOD QTabWidget:currentWidget()
+   RETURN Qt_QTabWidget_currentWidget( ::pPtr )
+
+
+METHOD QTabWidget:documentMode()
+   RETURN Qt_QTabWidget_documentMode( ::pPtr )
+
+
+METHOD QTabWidget:elideMode()
+   RETURN Qt_QTabWidget_elideMode( ::pPtr )
+
+
+METHOD QTabWidget:iconSize()
+   RETURN Qt_QTabWidget_iconSize( ::pPtr )
+
+
+METHOD QTabWidget:indexOf( pW )
+   RETURN Qt_QTabWidget_indexOf( ::pPtr, pW )
+
+
+METHOD QTabWidget:insertTab( nIndex, pPage, cLabel )
+   RETURN Qt_QTabWidget_insertTab( ::pPtr, nIndex, pPage, cLabel )
+
+
+METHOD QTabWidget:insertTab_1( nIndex, pPage, cIcon, cLabel )
+   RETURN Qt_QTabWidget_insertTab_1( ::pPtr, nIndex, pPage, cIcon, cLabel )
+
+
+METHOD QTabWidget:isMovable()
+   RETURN Qt_QTabWidget_isMovable( ::pPtr )
+
+
+METHOD QTabWidget:isTabEnabled( nIndex )
+   RETURN Qt_QTabWidget_isTabEnabled( ::pPtr, nIndex )
+
+
+METHOD QTabWidget:removeTab( nIndex )
+   RETURN Qt_QTabWidget_removeTab( ::pPtr, nIndex )
+
+
+METHOD QTabWidget:setCornerWidget( pWidget, nCorner )
+   RETURN Qt_QTabWidget_setCornerWidget( ::pPtr, pWidget, nCorner )
+
+
+METHOD QTabWidget:setDocumentMode( lSet )
+   RETURN Qt_QTabWidget_setDocumentMode( ::pPtr, lSet )
+
+
+METHOD QTabWidget:setElideMode( nQt_TextElideMode )
+   RETURN Qt_QTabWidget_setElideMode( ::pPtr, nQt_TextElideMode )
+
+
+METHOD QTabWidget:setIconSize( pSize )
+   RETURN Qt_QTabWidget_setIconSize( ::pPtr, pSize )
+
+
+METHOD QTabWidget:setMovable( lMovable )
+   RETURN Qt_QTabWidget_setMovable( ::pPtr, lMovable )
+
+
+METHOD QTabWidget:setTabEnabled( nIndex, lEnable )
+   RETURN Qt_QTabWidget_setTabEnabled( ::pPtr, nIndex, lEnable )
+
+
+METHOD QTabWidget:setTabIcon( nIndex, cIcon )
+   RETURN Qt_QTabWidget_setTabIcon( ::pPtr, nIndex, cIcon )
+
+
+METHOD QTabWidget:setTabPosition( nTabPosition )
+   RETURN Qt_QTabWidget_setTabPosition( ::pPtr, nTabPosition )
+
+
+METHOD QTabWidget:setTabShape( nS )
+   RETURN Qt_QTabWidget_setTabShape( ::pPtr, nS )
+
+
+METHOD QTabWidget:setTabText( nIndex, cLabel )
+   RETURN Qt_QTabWidget_setTabText( ::pPtr, nIndex, cLabel )
+
+
+METHOD QTabWidget:setTabToolTip( nIndex, cTip )
+   RETURN Qt_QTabWidget_setTabToolTip( ::pPtr, nIndex, cTip )
+
+
+METHOD QTabWidget:setTabWhatsThis( nIndex, cText )
+   RETURN Qt_QTabWidget_setTabWhatsThis( ::pPtr, nIndex, cText )
+
+
+METHOD QTabWidget:setTabsClosable( lCloseable )
+   RETURN Qt_QTabWidget_setTabsClosable( ::pPtr, lCloseable )
+
+
+METHOD QTabWidget:setUsesScrollButtons( lUseButtons )
+   RETURN Qt_QTabWidget_setUsesScrollButtons( ::pPtr, lUseButtons )
+
+
+METHOD QTabWidget:tabIcon( nIndex )
+   RETURN Qt_QTabWidget_tabIcon( ::pPtr, nIndex )
+
+
+METHOD QTabWidget:tabPosition()
+   RETURN Qt_QTabWidget_tabPosition( ::pPtr )
+
+
+METHOD QTabWidget:tabShape()
+   RETURN Qt_QTabWidget_tabShape( ::pPtr )
+
+
+METHOD QTabWidget:tabText( nIndex )
+   RETURN Qt_QTabWidget_tabText( ::pPtr, nIndex )
+
+
+METHOD QTabWidget:tabToolTip( nIndex )
+   RETURN Qt_QTabWidget_tabToolTip( ::pPtr, nIndex )
+
+
+METHOD QTabWidget:tabWhatsThis( nIndex )
+   RETURN Qt_QTabWidget_tabWhatsThis( ::pPtr, nIndex )
+
+
+METHOD QTabWidget:tabsClosable()
+   RETURN Qt_QTabWidget_tabsClosable( ::pPtr )
+
+
+METHOD QTabWidget:usesScrollButtons()
+   RETURN Qt_QTabWidget_usesScrollButtons( ::pPtr )
+
+
+METHOD QTabWidget:widget( nIndex )
+   RETURN Qt_QTabWidget_widget( ::pPtr, nIndex )
+
+
+METHOD QTabWidget:setCurrentIndex( nIndex )
+   RETURN Qt_QTabWidget_setCurrentIndex( ::pPtr, nIndex )
+
+
+METHOD QTabWidget:setCurrentWidget( pWidget )
+   RETURN Qt_QTabWidget_setCurrentWidget( ::pPtr, pWidget )
+

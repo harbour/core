@@ -71,36 +71,57 @@ CREATE CLASS QContextMenuEvent INHERIT QInputEvent
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  globalPos()                         INLINE  Qt_QContextMenuEvent_globalPos( ::pPtr )
-   METHOD  globalX()                           INLINE  Qt_QContextMenuEvent_globalX( ::pPtr )
-   METHOD  globalY()                           INLINE  Qt_QContextMenuEvent_globalY( ::pPtr )
-   METHOD  pos()                               INLINE  Qt_QContextMenuEvent_pos( ::pPtr )
-   METHOD  reason()                            INLINE  Qt_QContextMenuEvent_reason( ::pPtr )
-   METHOD  x()                                 INLINE  Qt_QContextMenuEvent_x( ::pPtr )
-   METHOD  y()                                 INLINE  Qt_QContextMenuEvent_y( ::pPtr )
+   METHOD  globalPos()
+   METHOD  globalX()
+   METHOD  globalY()
+   METHOD  pos()
+   METHOD  reason()
+   METHOD  x()
+   METHOD  y()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QContextMenuEvent
-
+METHOD QContextMenuEvent:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QContextMenuEvent( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QContextMenuEvent
-
+METHOD QContextMenuEvent:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QContextMenuEvent:globalPos()
+   RETURN Qt_QContextMenuEvent_globalPos( ::pPtr )
+
+
+METHOD QContextMenuEvent:globalX()
+   RETURN Qt_QContextMenuEvent_globalX( ::pPtr )
+
+
+METHOD QContextMenuEvent:globalY()
+   RETURN Qt_QContextMenuEvent_globalY( ::pPtr )
+
+
+METHOD QContextMenuEvent:pos()
+   RETURN Qt_QContextMenuEvent_pos( ::pPtr )
+
+
+METHOD QContextMenuEvent:reason()
+   RETURN Qt_QContextMenuEvent_reason( ::pPtr )
+
+
+METHOD QContextMenuEvent:x()
+   RETURN Qt_QContextMenuEvent_x( ::pPtr )
+
+
+METHOD QContextMenuEvent:y()
+   RETURN Qt_QContextMenuEvent_y( ::pPtr )
+

@@ -139,12 +139,15 @@ METHOD XbpComboBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oSLE := XbpSLE():new():create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
    ::oLB  := XbpListBox():new():create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QComboBox():New( ::pParent )
 
    ::oWidget:setLineEdit( ::XbpSLE:oWidget:pPtr )
+
    ::oWidget:setEditable( ::XbpSLE:editable )
+
    ::oWidget:setFrame( ::XbpSLE:border )
 
    ::connect( ::pWidget, "highlighted(int)"        , {|o,i| ::exeBlock( 1,i,o ) } )

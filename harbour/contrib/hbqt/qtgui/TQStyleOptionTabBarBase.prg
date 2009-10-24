@@ -71,32 +71,37 @@ CREATE CLASS QStyleOptionTabBarBase INHERIT QStyleOption
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  selectedTabRect()                   INLINE  Qt_QStyleOptionTabBarBase_selectedTabRect( ::pPtr )
-   METHOD  shape()                             INLINE  Qt_QStyleOptionTabBarBase_shape( ::pPtr )
-   METHOD  tabBarRect()                        INLINE  Qt_QStyleOptionTabBarBase_tabBarRect( ::pPtr )
+   METHOD  selectedTabRect()
+   METHOD  shape()
+   METHOD  tabBarRect()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QStyleOptionTabBarBase
-
+METHOD QStyleOptionTabBarBase:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QStyleOptionTabBarBase( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QStyleOptionTabBarBase
-
+METHOD QStyleOptionTabBarBase:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QStyleOptionTabBarBase:selectedTabRect()
+   RETURN Qt_QStyleOptionTabBarBase_selectedTabRect( ::pPtr )
+
+
+METHOD QStyleOptionTabBarBase:shape()
+   RETURN Qt_QStyleOptionTabBarBase_shape( ::pPtr )
+
+
+METHOD QStyleOptionTabBarBase:tabBarRect()
+   RETURN Qt_QStyleOptionTabBarBase_tabBarRect( ::pPtr )
+

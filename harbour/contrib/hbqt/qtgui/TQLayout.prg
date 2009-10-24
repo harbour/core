@@ -71,58 +71,167 @@ CREATE CLASS QLayout INHERIT QObject, QLayoutItem
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  activate()                          INLINE  Qt_QLayout_activate( ::pPtr )
-   METHOD  addItem( pItem )                    INLINE  Qt_QLayout_addItem( ::pPtr, pItem )
-   METHOD  addWidget( pW )                     INLINE  Qt_QLayout_addWidget( ::pPtr, pW )
-   METHOD  contentsRect()                      INLINE  Qt_QLayout_contentsRect( ::pPtr )
-   METHOD  count()                             INLINE  Qt_QLayout_count( ::pPtr )
-   METHOD  expandingDirections()               INLINE  Qt_QLayout_expandingDirections( ::pPtr )
-   METHOD  getContentsMargins( nLeft, nTop, nRight, nBottom )  INLINE  Qt_QLayout_getContentsMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
-   METHOD  indexOf( pWidget )                  INLINE  Qt_QLayout_indexOf( ::pPtr, pWidget )
-   METHOD  isEnabled()                         INLINE  Qt_QLayout_isEnabled( ::pPtr )
-   METHOD  itemAt( nIndex )                    INLINE  Qt_QLayout_itemAt( ::pPtr, nIndex )
-   METHOD  maximumSize()                       INLINE  Qt_QLayout_maximumSize( ::pPtr )
-   METHOD  menuBar()                           INLINE  Qt_QLayout_menuBar( ::pPtr )
-   METHOD  minimumSize()                       INLINE  Qt_QLayout_minimumSize( ::pPtr )
-   METHOD  parentWidget()                      INLINE  Qt_QLayout_parentWidget( ::pPtr )
-   METHOD  removeItem( pItem )                 INLINE  Qt_QLayout_removeItem( ::pPtr, pItem )
-   METHOD  removeWidget( pWidget )             INLINE  Qt_QLayout_removeWidget( ::pPtr, pWidget )
-   METHOD  setAlignment( pW, nAlignment )      INLINE  Qt_QLayout_setAlignment( ::pPtr, pW, nAlignment )
-   METHOD  setAlignment_1( nAlignment )        INLINE  Qt_QLayout_setAlignment_1( ::pPtr, nAlignment )
-   METHOD  setAlignment_2( pL, nAlignment )    INLINE  Qt_QLayout_setAlignment_2( ::pPtr, pL, nAlignment )
-   METHOD  setContentsMargins( nLeft, nTop, nRight, nBottom )  INLINE  Qt_QLayout_setContentsMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
-   METHOD  setEnabled( lEnable )               INLINE  Qt_QLayout_setEnabled( ::pPtr, lEnable )
-   METHOD  setMenuBar( pWidget )               INLINE  Qt_QLayout_setMenuBar( ::pPtr, pWidget )
-   METHOD  setSizeConstraint( nSizeConstraint )  INLINE  Qt_QLayout_setSizeConstraint( ::pPtr, nSizeConstraint )
-   METHOD  setSpacing( nInt )                  INLINE  Qt_QLayout_setSpacing( ::pPtr, nInt )
-   METHOD  sizeConstraint()                    INLINE  Qt_QLayout_sizeConstraint( ::pPtr )
-   METHOD  spacing()                           INLINE  Qt_QLayout_spacing( ::pPtr )
-   METHOD  takeAt( nIndex )                    INLINE  Qt_QLayout_takeAt( ::pPtr, nIndex )
-   METHOD  update()                            INLINE  Qt_QLayout_update( ::pPtr )
-   METHOD  closestAcceptableSize( pWidget, pSize )  INLINE  Qt_QLayout_closestAcceptableSize( ::pPtr, pWidget, pSize )
+   METHOD  activate()
+   METHOD  addItem( pItem )
+   METHOD  addWidget( pW )
+   METHOD  contentsRect()
+   METHOD  count()
+   METHOD  expandingDirections()
+   METHOD  getContentsMargins( nLeft, nTop, nRight, nBottom )
+   METHOD  indexOf( pWidget )
+   METHOD  isEnabled()
+   METHOD  itemAt( nIndex )
+   METHOD  maximumSize()
+   METHOD  menuBar()
+   METHOD  minimumSize()
+   METHOD  parentWidget()
+   METHOD  removeItem( pItem )
+   METHOD  removeWidget( pWidget )
+   METHOD  setAlignment( pW, nAlignment )
+   METHOD  setAlignment_1( nAlignment )
+   METHOD  setAlignment_2( pL, nAlignment )
+   METHOD  setContentsMargins( nLeft, nTop, nRight, nBottom )
+   METHOD  setEnabled( lEnable )
+   METHOD  setMenuBar( pWidget )
+   METHOD  setSizeConstraint( nSizeConstraint )
+   METHOD  setSpacing( nInt )
+   METHOD  sizeConstraint()
+   METHOD  spacing()
+   METHOD  takeAt( nIndex )
+   METHOD  update()
+   METHOD  closestAcceptableSize( pWidget, pSize )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QLayout
-
+METHOD QLayout:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QLayout( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QLayout
-
+METHOD QLayout:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QLayout:activate()
+   RETURN Qt_QLayout_activate( ::pPtr )
+
+
+METHOD QLayout:addItem( pItem )
+   RETURN Qt_QLayout_addItem( ::pPtr, pItem )
+
+
+METHOD QLayout:addWidget( pW )
+   RETURN Qt_QLayout_addWidget( ::pPtr, pW )
+
+
+METHOD QLayout:contentsRect()
+   RETURN Qt_QLayout_contentsRect( ::pPtr )
+
+
+METHOD QLayout:count()
+   RETURN Qt_QLayout_count( ::pPtr )
+
+
+METHOD QLayout:expandingDirections()
+   RETURN Qt_QLayout_expandingDirections( ::pPtr )
+
+
+METHOD QLayout:getContentsMargins( nLeft, nTop, nRight, nBottom )
+   RETURN Qt_QLayout_getContentsMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
+
+
+METHOD QLayout:indexOf( pWidget )
+   RETURN Qt_QLayout_indexOf( ::pPtr, pWidget )
+
+
+METHOD QLayout:isEnabled()
+   RETURN Qt_QLayout_isEnabled( ::pPtr )
+
+
+METHOD QLayout:itemAt( nIndex )
+   RETURN Qt_QLayout_itemAt( ::pPtr, nIndex )
+
+
+METHOD QLayout:maximumSize()
+   RETURN Qt_QLayout_maximumSize( ::pPtr )
+
+
+METHOD QLayout:menuBar()
+   RETURN Qt_QLayout_menuBar( ::pPtr )
+
+
+METHOD QLayout:minimumSize()
+   RETURN Qt_QLayout_minimumSize( ::pPtr )
+
+
+METHOD QLayout:parentWidget()
+   RETURN Qt_QLayout_parentWidget( ::pPtr )
+
+
+METHOD QLayout:removeItem( pItem )
+   RETURN Qt_QLayout_removeItem( ::pPtr, pItem )
+
+
+METHOD QLayout:removeWidget( pWidget )
+   RETURN Qt_QLayout_removeWidget( ::pPtr, pWidget )
+
+
+METHOD QLayout:setAlignment( pW, nAlignment )
+   RETURN Qt_QLayout_setAlignment( ::pPtr, pW, nAlignment )
+
+
+METHOD QLayout:setAlignment_1( nAlignment )
+   RETURN Qt_QLayout_setAlignment_1( ::pPtr, nAlignment )
+
+
+METHOD QLayout:setAlignment_2( pL, nAlignment )
+   RETURN Qt_QLayout_setAlignment_2( ::pPtr, pL, nAlignment )
+
+
+METHOD QLayout:setContentsMargins( nLeft, nTop, nRight, nBottom )
+   RETURN Qt_QLayout_setContentsMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
+
+
+METHOD QLayout:setEnabled( lEnable )
+   RETURN Qt_QLayout_setEnabled( ::pPtr, lEnable )
+
+
+METHOD QLayout:setMenuBar( pWidget )
+   RETURN Qt_QLayout_setMenuBar( ::pPtr, pWidget )
+
+
+METHOD QLayout:setSizeConstraint( nSizeConstraint )
+   RETURN Qt_QLayout_setSizeConstraint( ::pPtr, nSizeConstraint )
+
+
+METHOD QLayout:setSpacing( nInt )
+   RETURN Qt_QLayout_setSpacing( ::pPtr, nInt )
+
+
+METHOD QLayout:sizeConstraint()
+   RETURN Qt_QLayout_sizeConstraint( ::pPtr )
+
+
+METHOD QLayout:spacing()
+   RETURN Qt_QLayout_spacing( ::pPtr )
+
+
+METHOD QLayout:takeAt( nIndex )
+   RETURN Qt_QLayout_takeAt( ::pPtr, nIndex )
+
+
+METHOD QLayout:update()
+   RETURN Qt_QLayout_update( ::pPtr )
+
+
+METHOD QLayout:closestAcceptableSize( pWidget, pSize )
+   RETURN Qt_QLayout_closestAcceptableSize( ::pPtr, pWidget, pSize )
+

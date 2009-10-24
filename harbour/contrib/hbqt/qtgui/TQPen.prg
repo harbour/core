@@ -71,27 +71,27 @@ CREATE CLASS QPen
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  brush()                             INLINE  Qt_QPen_brush( ::pPtr )
-   METHOD  capStyle()                          INLINE  Qt_QPen_capStyle( ::pPtr )
-   METHOD  color()                             INLINE  Qt_QPen_color( ::pPtr )
-   METHOD  dashOffset()                        INLINE  Qt_QPen_dashOffset( ::pPtr )
-   METHOD  isCosmetic()                        INLINE  Qt_QPen_isCosmetic( ::pPtr )
-   METHOD  isSolid()                           INLINE  Qt_QPen_isSolid( ::pPtr )
-   METHOD  joinStyle()                         INLINE  Qt_QPen_joinStyle( ::pPtr )
-   METHOD  miterLimit()                        INLINE  Qt_QPen_miterLimit( ::pPtr )
-   METHOD  setBrush( pBrush )                  INLINE  Qt_QPen_setBrush( ::pPtr, pBrush )
-   METHOD  setCapStyle( nStyle )               INLINE  Qt_QPen_setCapStyle( ::pPtr, nStyle )
-   METHOD  setColor( pColor )                  INLINE  Qt_QPen_setColor( ::pPtr, pColor )
-   METHOD  setCosmetic( lCosmetic )            INLINE  Qt_QPen_setCosmetic( ::pPtr, lCosmetic )
-   METHOD  setDashOffset( nOffset )            INLINE  Qt_QPen_setDashOffset( ::pPtr, nOffset )
-   METHOD  setJoinStyle( nStyle )              INLINE  Qt_QPen_setJoinStyle( ::pPtr, nStyle )
-   METHOD  setMiterLimit( nLimit )             INLINE  Qt_QPen_setMiterLimit( ::pPtr, nLimit )
-   METHOD  setStyle( nStyle )                  INLINE  Qt_QPen_setStyle( ::pPtr, nStyle )
-   METHOD  setWidth( nWidth )                  INLINE  Qt_QPen_setWidth( ::pPtr, nWidth )
-   METHOD  setWidthF( nWidth )                 INLINE  Qt_QPen_setWidthF( ::pPtr, nWidth )
-   METHOD  style()                             INLINE  Qt_QPen_style( ::pPtr )
-   METHOD  width()                             INLINE  Qt_QPen_width( ::pPtr )
-   METHOD  widthF()                            INLINE  Qt_QPen_widthF( ::pPtr )
+   METHOD  brush()
+   METHOD  capStyle()
+   METHOD  color()
+   METHOD  dashOffset()
+   METHOD  isCosmetic()
+   METHOD  isSolid()
+   METHOD  joinStyle()
+   METHOD  miterLimit()
+   METHOD  setBrush( pBrush )
+   METHOD  setCapStyle( nStyle )
+   METHOD  setColor( pColor )
+   METHOD  setCosmetic( lCosmetic )
+   METHOD  setDashOffset( nOffset )
+   METHOD  setJoinStyle( nStyle )
+   METHOD  setMiterLimit( nLimit )
+   METHOD  setStyle( nStyle )
+   METHOD  setWidth( nWidth )
+   METHOD  setWidthF( nWidth )
+   METHOD  style()
+   METHOD  width()
+   METHOD  widthF()
 
    ENDCLASS
 
@@ -103,16 +103,96 @@ METHOD New( ... ) CLASS QPen
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QPen
-
+METHOD QPen:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QPen:brush()
+   RETURN Qt_QPen_brush( ::pPtr )
+
+
+METHOD QPen:capStyle()
+   RETURN Qt_QPen_capStyle( ::pPtr )
+
+
+METHOD QPen:color()
+   RETURN Qt_QPen_color( ::pPtr )
+
+
+METHOD QPen:dashOffset()
+   RETURN Qt_QPen_dashOffset( ::pPtr )
+
+
+METHOD QPen:isCosmetic()
+   RETURN Qt_QPen_isCosmetic( ::pPtr )
+
+
+METHOD QPen:isSolid()
+   RETURN Qt_QPen_isSolid( ::pPtr )
+
+
+METHOD QPen:joinStyle()
+   RETURN Qt_QPen_joinStyle( ::pPtr )
+
+
+METHOD QPen:miterLimit()
+   RETURN Qt_QPen_miterLimit( ::pPtr )
+
+
+METHOD QPen:setBrush( pBrush )
+   RETURN Qt_QPen_setBrush( ::pPtr, pBrush )
+
+
+METHOD QPen:setCapStyle( nStyle )
+   RETURN Qt_QPen_setCapStyle( ::pPtr, nStyle )
+
+
+METHOD QPen:setColor( pColor )
+   RETURN Qt_QPen_setColor( ::pPtr, pColor )
+
+
+METHOD QPen:setCosmetic( lCosmetic )
+   RETURN Qt_QPen_setCosmetic( ::pPtr, lCosmetic )
+
+
+METHOD QPen:setDashOffset( nOffset )
+   RETURN Qt_QPen_setDashOffset( ::pPtr, nOffset )
+
+
+METHOD QPen:setJoinStyle( nStyle )
+   RETURN Qt_QPen_setJoinStyle( ::pPtr, nStyle )
+
+
+METHOD QPen:setMiterLimit( nLimit )
+   RETURN Qt_QPen_setMiterLimit( ::pPtr, nLimit )
+
+
+METHOD QPen:setStyle( nStyle )
+   RETURN Qt_QPen_setStyle( ::pPtr, nStyle )
+
+
+METHOD QPen:setWidth( nWidth )
+   RETURN Qt_QPen_setWidth( ::pPtr, nWidth )
+
+
+METHOD QPen:setWidthF( nWidth )
+   RETURN Qt_QPen_setWidthF( ::pPtr, nWidth )
+
+
+METHOD QPen:style()
+   RETURN Qt_QPen_style( ::pPtr )
+
+
+METHOD QPen:width()
+   RETURN Qt_QPen_width( ::pPtr )
+
+
+METHOD QPen:widthF()
+   RETURN Qt_QPen_widthF( ::pPtr )
+

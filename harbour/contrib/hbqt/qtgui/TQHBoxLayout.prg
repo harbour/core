@@ -76,24 +76,17 @@ CREATE CLASS QHBoxLayout INHERIT QBoxLayout
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QHBoxLayout
-
+METHOD QHBoxLayout:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QHBoxLayout( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QHBoxLayout
-
+METHOD QHBoxLayout:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/

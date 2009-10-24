@@ -71,49 +71,122 @@ CREATE CLASS QTextCodec
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  canEncode( nCh )                    INLINE  Qt_QTextCodec_canEncode( ::pPtr, nCh )
-   METHOD  canEncode_1( cS )                   INLINE  Qt_QTextCodec_canEncode_1( ::pPtr, cS )
-   METHOD  fromUnicode( cStr )                 INLINE  Qt_QTextCodec_fromUnicode( ::pPtr, cStr )
-   METHOD  makeDecoder()                       INLINE  Qt_QTextCodec_makeDecoder( ::pPtr )
-   METHOD  makeEncoder()                       INLINE  Qt_QTextCodec_makeEncoder( ::pPtr )
-   METHOD  mibEnum()                           INLINE  Qt_QTextCodec_mibEnum( ::pPtr )
-   METHOD  name()                              INLINE  Qt_QTextCodec_name( ::pPtr )
-   METHOD  toUnicode( pA )                     INLINE  Qt_QTextCodec_toUnicode( ::pPtr, pA )
-   METHOD  toUnicode_1( pChars )               INLINE  Qt_QTextCodec_toUnicode_1( ::pPtr, pChars )
-   METHOD  codecForCStrings()                  INLINE  Qt_QTextCodec_codecForCStrings( ::pPtr )
-   METHOD  codecForHtml( pBa, pDefaultCodec )  INLINE  Qt_QTextCodec_codecForHtml( ::pPtr, pBa, pDefaultCodec )
-   METHOD  codecForHtml_1( pBa )               INLINE  Qt_QTextCodec_codecForHtml_1( ::pPtr, pBa )
-   METHOD  codecForLocale()                    INLINE  Qt_QTextCodec_codecForLocale( ::pPtr )
-   METHOD  codecForMib( nMib )                 INLINE  Qt_QTextCodec_codecForMib( ::pPtr, nMib )
-   METHOD  codecForName( pName )               INLINE  Qt_QTextCodec_codecForName( ::pPtr, pName )
-   METHOD  codecForName_1( pName )             INLINE  Qt_QTextCodec_codecForName_1( ::pPtr, pName )
-   METHOD  codecForTr()                        INLINE  Qt_QTextCodec_codecForTr( ::pPtr )
-   METHOD  setCodecForCStrings( pCodec )       INLINE  Qt_QTextCodec_setCodecForCStrings( ::pPtr, pCodec )
-   METHOD  setCodecForLocale( pC )             INLINE  Qt_QTextCodec_setCodecForLocale( ::pPtr, pC )
-   METHOD  setCodecForTr( pC )                 INLINE  Qt_QTextCodec_setCodecForTr( ::pPtr, pC )
+   METHOD  canEncode( nCh )
+   METHOD  canEncode_1( cS )
+   METHOD  fromUnicode( cStr )
+   METHOD  makeDecoder()
+   METHOD  makeEncoder()
+   METHOD  mibEnum()
+   METHOD  name()
+   METHOD  toUnicode( pA )
+   METHOD  toUnicode_1( pChars )
+   METHOD  codecForCStrings()
+   METHOD  codecForHtml( pBa, pDefaultCodec )
+   METHOD  codecForHtml_1( pBa )
+   METHOD  codecForLocale()
+   METHOD  codecForMib( nMib )
+   METHOD  codecForName( pName )
+   METHOD  codecForName_1( pName )
+   METHOD  codecForTr()
+   METHOD  setCodecForCStrings( pCodec )
+   METHOD  setCodecForLocale( pC )
+   METHOD  setCodecForTr( pC )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextCodec
-
+METHOD QTextCodec:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextCodec( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextCodec
-
+METHOD QTextCodec:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextCodec:canEncode( nCh )
+   RETURN Qt_QTextCodec_canEncode( ::pPtr, nCh )
+
+
+METHOD QTextCodec:canEncode_1( cS )
+   RETURN Qt_QTextCodec_canEncode_1( ::pPtr, cS )
+
+
+METHOD QTextCodec:fromUnicode( cStr )
+   RETURN Qt_QTextCodec_fromUnicode( ::pPtr, cStr )
+
+
+METHOD QTextCodec:makeDecoder()
+   RETURN Qt_QTextCodec_makeDecoder( ::pPtr )
+
+
+METHOD QTextCodec:makeEncoder()
+   RETURN Qt_QTextCodec_makeEncoder( ::pPtr )
+
+
+METHOD QTextCodec:mibEnum()
+   RETURN Qt_QTextCodec_mibEnum( ::pPtr )
+
+
+METHOD QTextCodec:name()
+   RETURN Qt_QTextCodec_name( ::pPtr )
+
+
+METHOD QTextCodec:toUnicode( pA )
+   RETURN Qt_QTextCodec_toUnicode( ::pPtr, pA )
+
+
+METHOD QTextCodec:toUnicode_1( pChars )
+   RETURN Qt_QTextCodec_toUnicode_1( ::pPtr, pChars )
+
+
+METHOD QTextCodec:codecForCStrings()
+   RETURN Qt_QTextCodec_codecForCStrings( ::pPtr )
+
+
+METHOD QTextCodec:codecForHtml( pBa, pDefaultCodec )
+   RETURN Qt_QTextCodec_codecForHtml( ::pPtr, pBa, pDefaultCodec )
+
+
+METHOD QTextCodec:codecForHtml_1( pBa )
+   RETURN Qt_QTextCodec_codecForHtml_1( ::pPtr, pBa )
+
+
+METHOD QTextCodec:codecForLocale()
+   RETURN Qt_QTextCodec_codecForLocale( ::pPtr )
+
+
+METHOD QTextCodec:codecForMib( nMib )
+   RETURN Qt_QTextCodec_codecForMib( ::pPtr, nMib )
+
+
+METHOD QTextCodec:codecForName( pName )
+   RETURN Qt_QTextCodec_codecForName( ::pPtr, pName )
+
+
+METHOD QTextCodec:codecForName_1( pName )
+   RETURN Qt_QTextCodec_codecForName_1( ::pPtr, pName )
+
+
+METHOD QTextCodec:codecForTr()
+   RETURN Qt_QTextCodec_codecForTr( ::pPtr )
+
+
+METHOD QTextCodec:setCodecForCStrings( pCodec )
+   RETURN Qt_QTextCodec_setCodecForCStrings( ::pPtr, pCodec )
+
+
+METHOD QTextCodec:setCodecForLocale( pC )
+   RETURN Qt_QTextCodec_setCodecForLocale( ::pPtr, pC )
+
+
+METHOD QTextCodec:setCodecForTr( pC )
+   RETURN Qt_QTextCodec_setCodecForTr( ::pPtr, pC )
+

@@ -71,12 +71,12 @@ CREATE CLASS QLinearGradient INHERIT QGradient
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  finalStop()                         INLINE  Qt_QLinearGradient_finalStop( ::pPtr )
-   METHOD  setFinalStop( pStop )               INLINE  Qt_QLinearGradient_setFinalStop( ::pPtr, pStop )
-   METHOD  setFinalStop_1( nX, nY )            INLINE  Qt_QLinearGradient_setFinalStop_1( ::pPtr, nX, nY )
-   METHOD  setStart( pStart )                  INLINE  Qt_QLinearGradient_setStart( ::pPtr, pStart )
-   METHOD  setStart_1( nX, nY )                INLINE  Qt_QLinearGradient_setStart_1( ::pPtr, nX, nY )
-   METHOD  start()                             INLINE  Qt_QLinearGradient_start( ::pPtr )
+   METHOD  finalStop()
+   METHOD  setFinalStop( pStop )
+   METHOD  setFinalStop_1( nX, nY )
+   METHOD  setStart( pStart )
+   METHOD  setStart_1( nX, nY )
+   METHOD  start()
 
    ENDCLASS
 
@@ -88,16 +88,36 @@ METHOD New( ... ) CLASS QLinearGradient
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QLinearGradient
-
+METHOD QLinearGradient:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QLinearGradient:finalStop()
+   RETURN Qt_QLinearGradient_finalStop( ::pPtr )
+
+
+METHOD QLinearGradient:setFinalStop( pStop )
+   RETURN Qt_QLinearGradient_setFinalStop( ::pPtr, pStop )
+
+
+METHOD QLinearGradient:setFinalStop_1( nX, nY )
+   RETURN Qt_QLinearGradient_setFinalStop_1( ::pPtr, nX, nY )
+
+
+METHOD QLinearGradient:setStart( pStart )
+   RETURN Qt_QLinearGradient_setStart( ::pPtr, pStart )
+
+
+METHOD QLinearGradient:setStart_1( nX, nY )
+   RETURN Qt_QLinearGradient_setStart_1( ::pPtr, nX, nY )
+
+
+METHOD QLinearGradient:start()
+   RETURN Qt_QLinearGradient_start( ::pPtr )
+

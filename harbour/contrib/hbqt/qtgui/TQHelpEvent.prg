@@ -71,35 +71,52 @@ CREATE CLASS QHelpEvent
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  globalPos()                         INLINE  Qt_QHelpEvent_globalPos( ::pPtr )
-   METHOD  globalX()                           INLINE  Qt_QHelpEvent_globalX( ::pPtr )
-   METHOD  globalY()                           INLINE  Qt_QHelpEvent_globalY( ::pPtr )
-   METHOD  pos()                               INLINE  Qt_QHelpEvent_pos( ::pPtr )
-   METHOD  x()                                 INLINE  Qt_QHelpEvent_x( ::pPtr )
-   METHOD  y()                                 INLINE  Qt_QHelpEvent_y( ::pPtr )
+   METHOD  globalPos()
+   METHOD  globalX()
+   METHOD  globalY()
+   METHOD  pos()
+   METHOD  x()
+   METHOD  y()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QHelpEvent
-
+METHOD QHelpEvent:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QHelpEvent( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QHelpEvent
-
+METHOD QHelpEvent:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QHelpEvent:globalPos()
+   RETURN Qt_QHelpEvent_globalPos( ::pPtr )
+
+
+METHOD QHelpEvent:globalX()
+   RETURN Qt_QHelpEvent_globalX( ::pPtr )
+
+
+METHOD QHelpEvent:globalY()
+   RETURN Qt_QHelpEvent_globalY( ::pPtr )
+
+
+METHOD QHelpEvent:pos()
+   RETURN Qt_QHelpEvent_pos( ::pPtr )
+
+
+METHOD QHelpEvent:x()
+   RETURN Qt_QHelpEvent_x( ::pPtr )
+
+
+METHOD QHelpEvent:y()
+   RETURN Qt_QHelpEvent_y( ::pPtr )
+

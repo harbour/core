@@ -71,31 +71,32 @@ CREATE CLASS QMoveEvent INHERIT QEvent
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  oldPos()                            INLINE  Qt_QMoveEvent_oldPos( ::pPtr )
-   METHOD  pos()                               INLINE  Qt_QMoveEvent_pos( ::pPtr )
+   METHOD  oldPos()
+   METHOD  pos()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QMoveEvent
-
+METHOD QMoveEvent:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QMoveEvent( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QMoveEvent
-
+METHOD QMoveEvent:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QMoveEvent:oldPos()
+   RETURN Qt_QMoveEvent_oldPos( ::pPtr )
+
+
+METHOD QMoveEvent:pos()
+   RETURN Qt_QMoveEvent_pos( ::pPtr )
+

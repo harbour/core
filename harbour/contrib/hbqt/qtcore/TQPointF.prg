@@ -71,14 +71,14 @@ CREATE CLASS QPointF
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  isNull()                            INLINE  Qt_QPointF_isNull( ::pPtr )
-   METHOD  rx()                                INLINE  Qt_QPointF_rx( ::pPtr )
-   METHOD  ry()                                INLINE  Qt_QPointF_ry( ::pPtr )
-   METHOD  setX( nX )                          INLINE  Qt_QPointF_setX( ::pPtr, nX )
-   METHOD  setY( nY )                          INLINE  Qt_QPointF_setY( ::pPtr, nY )
-   METHOD  toPoint()                           INLINE  Qt_QPointF_toPoint( ::pPtr )
-   METHOD  x()                                 INLINE  Qt_QPointF_x( ::pPtr )
-   METHOD  y()                                 INLINE  Qt_QPointF_y( ::pPtr )
+   METHOD  isNull()
+   METHOD  rx()
+   METHOD  ry()
+   METHOD  setX( nX )
+   METHOD  setY( nY )
+   METHOD  toPoint()
+   METHOD  x()
+   METHOD  y()
 
    ENDCLASS
 
@@ -90,16 +90,44 @@ METHOD New( ... ) CLASS QPointF
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QPointF
-
+METHOD QPointF:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QPointF:isNull()
+   RETURN Qt_QPointF_isNull( ::pPtr )
+
+
+METHOD QPointF:rx()
+   RETURN Qt_QPointF_rx( ::pPtr )
+
+
+METHOD QPointF:ry()
+   RETURN Qt_QPointF_ry( ::pPtr )
+
+
+METHOD QPointF:setX( nX )
+   RETURN Qt_QPointF_setX( ::pPtr, nX )
+
+
+METHOD QPointF:setY( nY )
+   RETURN Qt_QPointF_setY( ::pPtr, nY )
+
+
+METHOD QPointF:toPoint()
+   RETURN Qt_QPointF_toPoint( ::pPtr )
+
+
+METHOD QPointF:x()
+   RETURN Qt_QPointF_x( ::pPtr )
+
+
+METHOD QPointF:y()
+   RETURN Qt_QPointF_y( ::pPtr )
+

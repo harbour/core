@@ -71,41 +71,41 @@ CREATE CLASS QPalette
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  alternateBase()                     INLINE  Qt_QPalette_alternateBase( ::pPtr )
-   METHOD  base()                              INLINE  Qt_QPalette_base( ::pPtr )
-   METHOD  brightText()                        INLINE  Qt_QPalette_brightText( ::pPtr )
-   METHOD  brush( nGroup, nRole )              INLINE  Qt_QPalette_brush( ::pPtr, nGroup, nRole )
-   METHOD  brush_1( nRole )                    INLINE  Qt_QPalette_brush_1( ::pPtr, nRole )
-   METHOD  button()                            INLINE  Qt_QPalette_button( ::pPtr )
-   METHOD  buttonText()                        INLINE  Qt_QPalette_buttonText( ::pPtr )
-   METHOD  cacheKey()                          INLINE  Qt_QPalette_cacheKey( ::pPtr )
-   METHOD  color( nGroup, nRole )              INLINE  Qt_QPalette_color( ::pPtr, nGroup, nRole )
-   METHOD  color_1( nRole )                    INLINE  Qt_QPalette_color_1( ::pPtr, nRole )
-   METHOD  currentColorGroup()                 INLINE  Qt_QPalette_currentColorGroup( ::pPtr )
-   METHOD  dark()                              INLINE  Qt_QPalette_dark( ::pPtr )
-   METHOD  highlight()                         INLINE  Qt_QPalette_highlight( ::pPtr )
-   METHOD  highlightedText()                   INLINE  Qt_QPalette_highlightedText( ::pPtr )
-   METHOD  isBrushSet( nCg, nCr )              INLINE  Qt_QPalette_isBrushSet( ::pPtr, nCg, nCr )
-   METHOD  isCopyOf( pP )                      INLINE  Qt_QPalette_isCopyOf( ::pPtr, pP )
-   METHOD  isEqual( nCg1, nCg2 )               INLINE  Qt_QPalette_isEqual( ::pPtr, nCg1, nCg2 )
-   METHOD  light()                             INLINE  Qt_QPalette_light( ::pPtr )
-   METHOD  link()                              INLINE  Qt_QPalette_link( ::pPtr )
-   METHOD  linkVisited()                       INLINE  Qt_QPalette_linkVisited( ::pPtr )
-   METHOD  mid()                               INLINE  Qt_QPalette_mid( ::pPtr )
-   METHOD  midlight()                          INLINE  Qt_QPalette_midlight( ::pPtr )
-   METHOD  resolve( pOther )                   INLINE  Qt_QPalette_resolve( ::pPtr, pOther )
-   METHOD  setBrush( nRole, pBrush )           INLINE  Qt_QPalette_setBrush( ::pPtr, nRole, pBrush )
-   METHOD  setBrush_1( nGroup, nRole, pBrush )  INLINE  Qt_QPalette_setBrush_1( ::pPtr, nGroup, nRole, pBrush )
-   METHOD  setColor( nRole, pColor )           INLINE  Qt_QPalette_setColor( ::pPtr, nRole, pColor )
-   METHOD  setColor_1( nGroup, nRole, pColor )  INLINE  Qt_QPalette_setColor_1( ::pPtr, nGroup, nRole, pColor )
-   METHOD  setColorGroup( nCg, pWindowText, pButton, pLight, pDark, pMid, pText, pBright_text, pBase, pWindow )  INLINE  Qt_QPalette_setColorGroup( ::pPtr, nCg, pWindowText, pButton, pLight, pDark, pMid, pText, pBright_text, pBase, pWindow )
-   METHOD  setCurrentColorGroup( nCg )         INLINE  Qt_QPalette_setCurrentColorGroup( ::pPtr, nCg )
-   METHOD  shadow()                            INLINE  Qt_QPalette_shadow( ::pPtr )
-   METHOD  text()                              INLINE  Qt_QPalette_text( ::pPtr )
-   METHOD  toolTipBase()                       INLINE  Qt_QPalette_toolTipBase( ::pPtr )
-   METHOD  toolTipText()                       INLINE  Qt_QPalette_toolTipText( ::pPtr )
-   METHOD  window()                            INLINE  Qt_QPalette_window( ::pPtr )
-   METHOD  windowText()                        INLINE  Qt_QPalette_windowText( ::pPtr )
+   METHOD  alternateBase()
+   METHOD  base()
+   METHOD  brightText()
+   METHOD  brush( nGroup, nRole )
+   METHOD  brush_1( nRole )
+   METHOD  button()
+   METHOD  buttonText()
+   METHOD  cacheKey()
+   METHOD  color( nGroup, nRole )
+   METHOD  color_1( nRole )
+   METHOD  currentColorGroup()
+   METHOD  dark()
+   METHOD  highlight()
+   METHOD  highlightedText()
+   METHOD  isBrushSet( nCg, nCr )
+   METHOD  isCopyOf( pP )
+   METHOD  isEqual( nCg1, nCg2 )
+   METHOD  light()
+   METHOD  link()
+   METHOD  linkVisited()
+   METHOD  mid()
+   METHOD  midlight()
+   METHOD  resolve( pOther )
+   METHOD  setBrush( nRole, pBrush )
+   METHOD  setBrush_1( nGroup, nRole, pBrush )
+   METHOD  setColor( nRole, pColor )
+   METHOD  setColor_1( nGroup, nRole, pColor )
+   METHOD  setColorGroup( nCg, pWindowText, pButton, pLight, pDark, pMid, pText, pBright_text, pBase, pWindow )
+   METHOD  setCurrentColorGroup( nCg )
+   METHOD  shadow()
+   METHOD  text()
+   METHOD  toolTipBase()
+   METHOD  toolTipText()
+   METHOD  window()
+   METHOD  windowText()
 
    ENDCLASS
 
@@ -117,16 +117,152 @@ METHOD New( ... ) CLASS QPalette
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QPalette
-
+METHOD QPalette:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QPalette:alternateBase()
+   RETURN Qt_QPalette_alternateBase( ::pPtr )
+
+
+METHOD QPalette:base()
+   RETURN Qt_QPalette_base( ::pPtr )
+
+
+METHOD QPalette:brightText()
+   RETURN Qt_QPalette_brightText( ::pPtr )
+
+
+METHOD QPalette:brush( nGroup, nRole )
+   RETURN Qt_QPalette_brush( ::pPtr, nGroup, nRole )
+
+
+METHOD QPalette:brush_1( nRole )
+   RETURN Qt_QPalette_brush_1( ::pPtr, nRole )
+
+
+METHOD QPalette:button()
+   RETURN Qt_QPalette_button( ::pPtr )
+
+
+METHOD QPalette:buttonText()
+   RETURN Qt_QPalette_buttonText( ::pPtr )
+
+
+METHOD QPalette:cacheKey()
+   RETURN Qt_QPalette_cacheKey( ::pPtr )
+
+
+METHOD QPalette:color( nGroup, nRole )
+   RETURN Qt_QPalette_color( ::pPtr, nGroup, nRole )
+
+
+METHOD QPalette:color_1( nRole )
+   RETURN Qt_QPalette_color_1( ::pPtr, nRole )
+
+
+METHOD QPalette:currentColorGroup()
+   RETURN Qt_QPalette_currentColorGroup( ::pPtr )
+
+
+METHOD QPalette:dark()
+   RETURN Qt_QPalette_dark( ::pPtr )
+
+
+METHOD QPalette:highlight()
+   RETURN Qt_QPalette_highlight( ::pPtr )
+
+
+METHOD QPalette:highlightedText()
+   RETURN Qt_QPalette_highlightedText( ::pPtr )
+
+
+METHOD QPalette:isBrushSet( nCg, nCr )
+   RETURN Qt_QPalette_isBrushSet( ::pPtr, nCg, nCr )
+
+
+METHOD QPalette:isCopyOf( pP )
+   RETURN Qt_QPalette_isCopyOf( ::pPtr, pP )
+
+
+METHOD QPalette:isEqual( nCg1, nCg2 )
+   RETURN Qt_QPalette_isEqual( ::pPtr, nCg1, nCg2 )
+
+
+METHOD QPalette:light()
+   RETURN Qt_QPalette_light( ::pPtr )
+
+
+METHOD QPalette:link()
+   RETURN Qt_QPalette_link( ::pPtr )
+
+
+METHOD QPalette:linkVisited()
+   RETURN Qt_QPalette_linkVisited( ::pPtr )
+
+
+METHOD QPalette:mid()
+   RETURN Qt_QPalette_mid( ::pPtr )
+
+
+METHOD QPalette:midlight()
+   RETURN Qt_QPalette_midlight( ::pPtr )
+
+
+METHOD QPalette:resolve( pOther )
+   RETURN Qt_QPalette_resolve( ::pPtr, pOther )
+
+
+METHOD QPalette:setBrush( nRole, pBrush )
+   RETURN Qt_QPalette_setBrush( ::pPtr, nRole, pBrush )
+
+
+METHOD QPalette:setBrush_1( nGroup, nRole, pBrush )
+   RETURN Qt_QPalette_setBrush_1( ::pPtr, nGroup, nRole, pBrush )
+
+
+METHOD QPalette:setColor( nRole, pColor )
+   RETURN Qt_QPalette_setColor( ::pPtr, nRole, pColor )
+
+
+METHOD QPalette:setColor_1( nGroup, nRole, pColor )
+   RETURN Qt_QPalette_setColor_1( ::pPtr, nGroup, nRole, pColor )
+
+
+METHOD QPalette:setColorGroup( nCg, pWindowText, pButton, pLight, pDark, pMid, pText, pBright_text, pBase, pWindow )
+   RETURN Qt_QPalette_setColorGroup( ::pPtr, nCg, pWindowText, pButton, pLight, pDark, pMid, pText, pBright_text, pBase, pWindow )
+
+
+METHOD QPalette:setCurrentColorGroup( nCg )
+   RETURN Qt_QPalette_setCurrentColorGroup( ::pPtr, nCg )
+
+
+METHOD QPalette:shadow()
+   RETURN Qt_QPalette_shadow( ::pPtr )
+
+
+METHOD QPalette:text()
+   RETURN Qt_QPalette_text( ::pPtr )
+
+
+METHOD QPalette:toolTipBase()
+   RETURN Qt_QPalette_toolTipBase( ::pPtr )
+
+
+METHOD QPalette:toolTipText()
+   RETURN Qt_QPalette_toolTipText( ::pPtr )
+
+
+METHOD QPalette:window()
+   RETURN Qt_QPalette_window( ::pPtr )
+
+
+METHOD QPalette:windowText()
+   RETURN Qt_QPalette_windowText( ::pPtr )
+

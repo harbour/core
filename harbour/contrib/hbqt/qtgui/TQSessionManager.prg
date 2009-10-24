@@ -71,45 +71,102 @@ CREATE CLASS QSessionManager INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  allowsErrorInteraction()            INLINE  Qt_QSessionManager_allowsErrorInteraction( ::pPtr )
-   METHOD  allowsInteraction()                 INLINE  Qt_QSessionManager_allowsInteraction( ::pPtr )
-   METHOD  cancel()                            INLINE  Qt_QSessionManager_cancel( ::pPtr )
-   METHOD  discardCommand()                    INLINE  Qt_QSessionManager_discardCommand( ::pPtr )
-   METHOD  isPhase2()                          INLINE  Qt_QSessionManager_isPhase2( ::pPtr )
-   METHOD  release()                           INLINE  Qt_QSessionManager_release( ::pPtr )
-   METHOD  requestPhase2()                     INLINE  Qt_QSessionManager_requestPhase2( ::pPtr )
-   METHOD  restartCommand()                    INLINE  Qt_QSessionManager_restartCommand( ::pPtr )
-   METHOD  restartHint()                       INLINE  Qt_QSessionManager_restartHint( ::pPtr )
-   METHOD  sessionId()                         INLINE  Qt_QSessionManager_sessionId( ::pPtr )
-   METHOD  sessionKey()                        INLINE  Qt_QSessionManager_sessionKey( ::pPtr )
-   METHOD  setDiscardCommand( pList )          INLINE  Qt_QSessionManager_setDiscardCommand( ::pPtr, pList )
-   METHOD  setManagerProperty( cName, pValue )  INLINE  Qt_QSessionManager_setManagerProperty( ::pPtr, cName, pValue )
-   METHOD  setManagerProperty_1( cName, cValue )  INLINE  Qt_QSessionManager_setManagerProperty_1( ::pPtr, cName, cValue )
-   METHOD  setRestartCommand( pCommand )       INLINE  Qt_QSessionManager_setRestartCommand( ::pPtr, pCommand )
-   METHOD  setRestartHint( nHint )             INLINE  Qt_QSessionManager_setRestartHint( ::pPtr, nHint )
+   METHOD  allowsErrorInteraction()
+   METHOD  allowsInteraction()
+   METHOD  cancel()
+   METHOD  discardCommand()
+   METHOD  isPhase2()
+   METHOD  release()
+   METHOD  requestPhase2()
+   METHOD  restartCommand()
+   METHOD  restartHint()
+   METHOD  sessionId()
+   METHOD  sessionKey()
+   METHOD  setDiscardCommand( pList )
+   METHOD  setManagerProperty( cName, pValue )
+   METHOD  setManagerProperty_1( cName, cValue )
+   METHOD  setRestartCommand( pCommand )
+   METHOD  setRestartHint( nHint )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QSessionManager
-
+METHOD QSessionManager:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QSessionManager( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QSessionManager
-
+METHOD QSessionManager:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QSessionManager:allowsErrorInteraction()
+   RETURN Qt_QSessionManager_allowsErrorInteraction( ::pPtr )
+
+
+METHOD QSessionManager:allowsInteraction()
+   RETURN Qt_QSessionManager_allowsInteraction( ::pPtr )
+
+
+METHOD QSessionManager:cancel()
+   RETURN Qt_QSessionManager_cancel( ::pPtr )
+
+
+METHOD QSessionManager:discardCommand()
+   RETURN Qt_QSessionManager_discardCommand( ::pPtr )
+
+
+METHOD QSessionManager:isPhase2()
+   RETURN Qt_QSessionManager_isPhase2( ::pPtr )
+
+
+METHOD QSessionManager:release()
+   RETURN Qt_QSessionManager_release( ::pPtr )
+
+
+METHOD QSessionManager:requestPhase2()
+   RETURN Qt_QSessionManager_requestPhase2( ::pPtr )
+
+
+METHOD QSessionManager:restartCommand()
+   RETURN Qt_QSessionManager_restartCommand( ::pPtr )
+
+
+METHOD QSessionManager:restartHint()
+   RETURN Qt_QSessionManager_restartHint( ::pPtr )
+
+
+METHOD QSessionManager:sessionId()
+   RETURN Qt_QSessionManager_sessionId( ::pPtr )
+
+
+METHOD QSessionManager:sessionKey()
+   RETURN Qt_QSessionManager_sessionKey( ::pPtr )
+
+
+METHOD QSessionManager:setDiscardCommand( pList )
+   RETURN Qt_QSessionManager_setDiscardCommand( ::pPtr, pList )
+
+
+METHOD QSessionManager:setManagerProperty( cName, pValue )
+   RETURN Qt_QSessionManager_setManagerProperty( ::pPtr, cName, pValue )
+
+
+METHOD QSessionManager:setManagerProperty_1( cName, cValue )
+   RETURN Qt_QSessionManager_setManagerProperty_1( ::pPtr, cName, cValue )
+
+
+METHOD QSessionManager:setRestartCommand( pCommand )
+   RETURN Qt_QSessionManager_setRestartCommand( ::pPtr, pCommand )
+
+
+METHOD QSessionManager:setRestartHint( nHint )
+   RETURN Qt_QSessionManager_setRestartHint( ::pPtr, nHint )
+

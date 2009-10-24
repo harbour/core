@@ -71,36 +71,57 @@ CREATE CLASS QSound
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  fileName()                          INLINE  Qt_QSound_fileName( ::pPtr )
-   METHOD  isFinished()                        INLINE  Qt_QSound_isFinished( ::pPtr )
-   METHOD  loops()                             INLINE  Qt_QSound_loops( ::pPtr )
-   METHOD  loopsRemaining()                    INLINE  Qt_QSound_loopsRemaining( ::pPtr )
-   METHOD  setLoops( nNumber )                 INLINE  Qt_QSound_setLoops( ::pPtr, nNumber )
-   METHOD  isAvailable()                       INLINE  Qt_QSound_isAvailable( ::pPtr )
-   METHOD  play( cFilename )                   INLINE  Qt_QSound_play( ::pPtr, cFilename )
+   METHOD  fileName()
+   METHOD  isFinished()
+   METHOD  loops()
+   METHOD  loopsRemaining()
+   METHOD  setLoops( nNumber )
+   METHOD  isAvailable()
+   METHOD  play( cFilename )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QSound
-
+METHOD QSound:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QSound( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QSound
-
+METHOD QSound:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QSound:fileName()
+   RETURN Qt_QSound_fileName( ::pPtr )
+
+
+METHOD QSound:isFinished()
+   RETURN Qt_QSound_isFinished( ::pPtr )
+
+
+METHOD QSound:loops()
+   RETURN Qt_QSound_loops( ::pPtr )
+
+
+METHOD QSound:loopsRemaining()
+   RETURN Qt_QSound_loopsRemaining( ::pPtr )
+
+
+METHOD QSound:setLoops( nNumber )
+   RETURN Qt_QSound_setLoops( ::pPtr, nNumber )
+
+
+METHOD QSound:isAvailable()
+   RETURN Qt_QSound_isAvailable( ::pPtr )
+
+
+METHOD QSound:play( cFilename )
+   RETURN Qt_QSound_play( ::pPtr, cFilename )
+

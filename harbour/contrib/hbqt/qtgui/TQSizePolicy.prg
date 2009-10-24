@@ -71,43 +71,92 @@ CREATE CLASS QSizePolicy
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  controlType()                       INLINE  Qt_QSizePolicy_controlType( ::pPtr )
-   METHOD  expandingDirections()               INLINE  Qt_QSizePolicy_expandingDirections( ::pPtr )
-   METHOD  hasHeightForWidth()                 INLINE  Qt_QSizePolicy_hasHeightForWidth( ::pPtr )
-   METHOD  horizontalPolicy()                  INLINE  Qt_QSizePolicy_horizontalPolicy( ::pPtr )
-   METHOD  horizontalStretch()                 INLINE  Qt_QSizePolicy_horizontalStretch( ::pPtr )
-   METHOD  setControlType( nType )             INLINE  Qt_QSizePolicy_setControlType( ::pPtr, nType )
-   METHOD  setHeightForWidth( lDependent )     INLINE  Qt_QSizePolicy_setHeightForWidth( ::pPtr, lDependent )
-   METHOD  setHorizontalPolicy( nPolicy )      INLINE  Qt_QSizePolicy_setHorizontalPolicy( ::pPtr, nPolicy )
-   METHOD  setHorizontalStretch( nStretchFactor )  INLINE  Qt_QSizePolicy_setHorizontalStretch( ::pPtr, nStretchFactor )
-   METHOD  setVerticalPolicy( nPolicy )        INLINE  Qt_QSizePolicy_setVerticalPolicy( ::pPtr, nPolicy )
-   METHOD  setVerticalStretch( nStretchFactor )  INLINE  Qt_QSizePolicy_setVerticalStretch( ::pPtr, nStretchFactor )
-   METHOD  transpose()                         INLINE  Qt_QSizePolicy_transpose( ::pPtr )
-   METHOD  verticalPolicy()                    INLINE  Qt_QSizePolicy_verticalPolicy( ::pPtr )
-   METHOD  verticalStretch()                   INLINE  Qt_QSizePolicy_verticalStretch( ::pPtr )
+   METHOD  controlType()
+   METHOD  expandingDirections()
+   METHOD  hasHeightForWidth()
+   METHOD  horizontalPolicy()
+   METHOD  horizontalStretch()
+   METHOD  setControlType( nType )
+   METHOD  setHeightForWidth( lDependent )
+   METHOD  setHorizontalPolicy( nPolicy )
+   METHOD  setHorizontalStretch( nStretchFactor )
+   METHOD  setVerticalPolicy( nPolicy )
+   METHOD  setVerticalStretch( nStretchFactor )
+   METHOD  transpose()
+   METHOD  verticalPolicy()
+   METHOD  verticalStretch()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QSizePolicy
-
+METHOD QSizePolicy:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QSizePolicy( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QSizePolicy
-
+METHOD QSizePolicy:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QSizePolicy:controlType()
+   RETURN Qt_QSizePolicy_controlType( ::pPtr )
+
+
+METHOD QSizePolicy:expandingDirections()
+   RETURN Qt_QSizePolicy_expandingDirections( ::pPtr )
+
+
+METHOD QSizePolicy:hasHeightForWidth()
+   RETURN Qt_QSizePolicy_hasHeightForWidth( ::pPtr )
+
+
+METHOD QSizePolicy:horizontalPolicy()
+   RETURN Qt_QSizePolicy_horizontalPolicy( ::pPtr )
+
+
+METHOD QSizePolicy:horizontalStretch()
+   RETURN Qt_QSizePolicy_horizontalStretch( ::pPtr )
+
+
+METHOD QSizePolicy:setControlType( nType )
+   RETURN Qt_QSizePolicy_setControlType( ::pPtr, nType )
+
+
+METHOD QSizePolicy:setHeightForWidth( lDependent )
+   RETURN Qt_QSizePolicy_setHeightForWidth( ::pPtr, lDependent )
+
+
+METHOD QSizePolicy:setHorizontalPolicy( nPolicy )
+   RETURN Qt_QSizePolicy_setHorizontalPolicy( ::pPtr, nPolicy )
+
+
+METHOD QSizePolicy:setHorizontalStretch( nStretchFactor )
+   RETURN Qt_QSizePolicy_setHorizontalStretch( ::pPtr, nStretchFactor )
+
+
+METHOD QSizePolicy:setVerticalPolicy( nPolicy )
+   RETURN Qt_QSizePolicy_setVerticalPolicy( ::pPtr, nPolicy )
+
+
+METHOD QSizePolicy:setVerticalStretch( nStretchFactor )
+   RETURN Qt_QSizePolicy_setVerticalStretch( ::pPtr, nStretchFactor )
+
+
+METHOD QSizePolicy:transpose()
+   RETURN Qt_QSizePolicy_transpose( ::pPtr )
+
+
+METHOD QSizePolicy:verticalPolicy()
+   RETURN Qt_QSizePolicy_verticalPolicy( ::pPtr )
+
+
+METHOD QSizePolicy:verticalStretch()
+   RETURN Qt_QSizePolicy_verticalStretch( ::pPtr )
+

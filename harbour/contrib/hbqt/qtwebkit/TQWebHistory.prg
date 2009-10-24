@@ -71,43 +71,92 @@ CREATE CLASS QWebHistory
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  back()                              INLINE  Qt_QWebHistory_back( ::pPtr )
-   METHOD  backItem()                          INLINE  Qt_QWebHistory_backItem( ::pPtr )
-   METHOD  canGoBack()                         INLINE  Qt_QWebHistory_canGoBack( ::pPtr )
-   METHOD  canGoForward()                      INLINE  Qt_QWebHistory_canGoForward( ::pPtr )
-   METHOD  clear()                             INLINE  Qt_QWebHistory_clear( ::pPtr )
-   METHOD  count()                             INLINE  Qt_QWebHistory_count( ::pPtr )
-   METHOD  currentItem()                       INLINE  Qt_QWebHistory_currentItem( ::pPtr )
-   METHOD  currentItemIndex()                  INLINE  Qt_QWebHistory_currentItemIndex( ::pPtr )
-   METHOD  forward()                           INLINE  Qt_QWebHistory_forward( ::pPtr )
-   METHOD  forwardItem()                       INLINE  Qt_QWebHistory_forwardItem( ::pPtr )
-   METHOD  goToItem( pItem )                   INLINE  Qt_QWebHistory_goToItem( ::pPtr, pItem )
-   METHOD  itemAt( nI )                        INLINE  Qt_QWebHistory_itemAt( ::pPtr, nI )
-   METHOD  maximumItemCount()                  INLINE  Qt_QWebHistory_maximumItemCount( ::pPtr )
-   METHOD  setMaximumItemCount( nCount )       INLINE  Qt_QWebHistory_setMaximumItemCount( ::pPtr, nCount )
+   METHOD  back()
+   METHOD  backItem()
+   METHOD  canGoBack()
+   METHOD  canGoForward()
+   METHOD  clear()
+   METHOD  count()
+   METHOD  currentItem()
+   METHOD  currentItemIndex()
+   METHOD  forward()
+   METHOD  forwardItem()
+   METHOD  goToItem( pItem )
+   METHOD  itemAt( nI )
+   METHOD  maximumItemCount()
+   METHOD  setMaximumItemCount( nCount )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QWebHistory
-
+METHOD QWebHistory:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QWebHistory( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QWebHistory
-
+METHOD QWebHistory:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QWebHistory:back()
+   RETURN Qt_QWebHistory_back( ::pPtr )
+
+
+METHOD QWebHistory:backItem()
+   RETURN Qt_QWebHistory_backItem( ::pPtr )
+
+
+METHOD QWebHistory:canGoBack()
+   RETURN Qt_QWebHistory_canGoBack( ::pPtr )
+
+
+METHOD QWebHistory:canGoForward()
+   RETURN Qt_QWebHistory_canGoForward( ::pPtr )
+
+
+METHOD QWebHistory:clear()
+   RETURN Qt_QWebHistory_clear( ::pPtr )
+
+
+METHOD QWebHistory:count()
+   RETURN Qt_QWebHistory_count( ::pPtr )
+
+
+METHOD QWebHistory:currentItem()
+   RETURN Qt_QWebHistory_currentItem( ::pPtr )
+
+
+METHOD QWebHistory:currentItemIndex()
+   RETURN Qt_QWebHistory_currentItemIndex( ::pPtr )
+
+
+METHOD QWebHistory:forward()
+   RETURN Qt_QWebHistory_forward( ::pPtr )
+
+
+METHOD QWebHistory:forwardItem()
+   RETURN Qt_QWebHistory_forwardItem( ::pPtr )
+
+
+METHOD QWebHistory:goToItem( pItem )
+   RETURN Qt_QWebHistory_goToItem( ::pPtr, pItem )
+
+
+METHOD QWebHistory:itemAt( nI )
+   RETURN Qt_QWebHistory_itemAt( ::pPtr, nI )
+
+
+METHOD QWebHistory:maximumItemCount()
+   RETURN Qt_QWebHistory_maximumItemCount( ::pPtr )
+
+
+METHOD QWebHistory:setMaximumItemCount( nCount )
+   RETURN Qt_QWebHistory_setMaximumItemCount( ::pPtr, nCount )
+

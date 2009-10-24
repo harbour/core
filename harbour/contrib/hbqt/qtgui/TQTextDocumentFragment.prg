@@ -71,36 +71,57 @@ CREATE CLASS QTextDocumentFragment
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  isEmpty()                           INLINE  Qt_QTextDocumentFragment_isEmpty( ::pPtr )
-   METHOD  toHtml( pEncoding )                 INLINE  Qt_QTextDocumentFragment_toHtml( ::pPtr, pEncoding )
-   METHOD  toHtml_1()                          INLINE  Qt_QTextDocumentFragment_toHtml_1( ::pPtr )
-   METHOD  toPlainText()                       INLINE  Qt_QTextDocumentFragment_toPlainText( ::pPtr )
-   METHOD  fromHtml( cText )                   INLINE  Qt_QTextDocumentFragment_fromHtml( ::pPtr, cText )
-   METHOD  fromHtml_1( cText, pResourceProvider )  INLINE  Qt_QTextDocumentFragment_fromHtml_1( ::pPtr, cText, pResourceProvider )
-   METHOD  fromPlainText( cPlainText )         INLINE  Qt_QTextDocumentFragment_fromPlainText( ::pPtr, cPlainText )
+   METHOD  isEmpty()
+   METHOD  toHtml( pEncoding )
+   METHOD  toHtml_1()
+   METHOD  toPlainText()
+   METHOD  fromHtml( cText )
+   METHOD  fromHtml_1( cText, pResourceProvider )
+   METHOD  fromPlainText( cPlainText )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextDocumentFragment
-
+METHOD QTextDocumentFragment:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextDocumentFragment( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextDocumentFragment
-
+METHOD QTextDocumentFragment:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextDocumentFragment:isEmpty()
+   RETURN Qt_QTextDocumentFragment_isEmpty( ::pPtr )
+
+
+METHOD QTextDocumentFragment:toHtml( pEncoding )
+   RETURN Qt_QTextDocumentFragment_toHtml( ::pPtr, pEncoding )
+
+
+METHOD QTextDocumentFragment:toHtml_1()
+   RETURN Qt_QTextDocumentFragment_toHtml_1( ::pPtr )
+
+
+METHOD QTextDocumentFragment:toPlainText()
+   RETURN Qt_QTextDocumentFragment_toPlainText( ::pPtr )
+
+
+METHOD QTextDocumentFragment:fromHtml( cText )
+   RETURN Qt_QTextDocumentFragment_fromHtml( ::pPtr, cText )
+
+
+METHOD QTextDocumentFragment:fromHtml_1( cText, pResourceProvider )
+   RETURN Qt_QTextDocumentFragment_fromHtml_1( ::pPtr, cText, pResourceProvider )
+
+
+METHOD QTextDocumentFragment:fromPlainText( cPlainText )
+   RETURN Qt_QTextDocumentFragment_fromPlainText( ::pPtr, cPlainText )
+

@@ -71,31 +71,32 @@ CREATE CLASS QPaintEvent INHERIT QEvent
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  rect()                              INLINE  Qt_QPaintEvent_rect( ::pPtr )
-   METHOD  region()                            INLINE  Qt_QPaintEvent_region( ::pPtr )
+   METHOD  rect()
+   METHOD  region()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QPaintEvent
-
+METHOD QPaintEvent:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QPaintEvent( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QPaintEvent
-
+METHOD QPaintEvent:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QPaintEvent:rect()
+   RETURN Qt_QPaintEvent_rect( ::pPtr )
+
+
+METHOD QPaintEvent:region()
+   RETURN Qt_QPaintEvent_region( ::pPtr )
+

@@ -71,49 +71,122 @@ CREATE CLASS QBoxLayout INHERIT QLayout
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addLayout( pLayout, nStretch )      INLINE  Qt_QBoxLayout_addLayout( ::pPtr, pLayout, nStretch )
-   METHOD  addSpacerItem( pSpacerItem )        INLINE  Qt_QBoxLayout_addSpacerItem( ::pPtr, pSpacerItem )
-   METHOD  addSpacing( nSize )                 INLINE  Qt_QBoxLayout_addSpacing( ::pPtr, nSize )
-   METHOD  addStretch( nStretch )              INLINE  Qt_QBoxLayout_addStretch( ::pPtr, nStretch )
-   METHOD  addStrut( nSize )                   INLINE  Qt_QBoxLayout_addStrut( ::pPtr, nSize )
-   METHOD  addWidget( pWidget, nStretch, nAlignment )  INLINE  Qt_QBoxLayout_addWidget( ::pPtr, pWidget, nStretch, nAlignment )
-   METHOD  direction()                         INLINE  Qt_QBoxLayout_direction( ::pPtr )
-   METHOD  insertLayout( nIndex, pLayout, nStretch )  INLINE  Qt_QBoxLayout_insertLayout( ::pPtr, nIndex, pLayout, nStretch )
-   METHOD  insertSpacerItem( nIndex, pSpacerItem )  INLINE  Qt_QBoxLayout_insertSpacerItem( ::pPtr, nIndex, pSpacerItem )
-   METHOD  insertSpacing( nIndex, nSize )      INLINE  Qt_QBoxLayout_insertSpacing( ::pPtr, nIndex, nSize )
-   METHOD  insertStretch( nIndex, nStretch )   INLINE  Qt_QBoxLayout_insertStretch( ::pPtr, nIndex, nStretch )
-   METHOD  insertWidget( nIndex, pWidget, nStretch, nAlignment )  INLINE  Qt_QBoxLayout_insertWidget( ::pPtr, nIndex, pWidget, nStretch, nAlignment )
-   METHOD  invalidate()                        INLINE  Qt_QBoxLayout_invalidate( ::pPtr )
-   METHOD  setDirection( nDirection )          INLINE  Qt_QBoxLayout_setDirection( ::pPtr, nDirection )
-   METHOD  setSpacing( nSpacing )              INLINE  Qt_QBoxLayout_setSpacing( ::pPtr, nSpacing )
-   METHOD  setStretch( nIndex, nStretch )      INLINE  Qt_QBoxLayout_setStretch( ::pPtr, nIndex, nStretch )
-   METHOD  setStretchFactor( pWidget, nStretch )  INLINE  Qt_QBoxLayout_setStretchFactor( ::pPtr, pWidget, nStretch )
-   METHOD  setStretchFactor_1( pLayout, nStretch )  INLINE  Qt_QBoxLayout_setStretchFactor_1( ::pPtr, pLayout, nStretch )
-   METHOD  spacing()                           INLINE  Qt_QBoxLayout_spacing( ::pPtr )
-   METHOD  stretch( nIndex )                   INLINE  Qt_QBoxLayout_stretch( ::pPtr, nIndex )
+   METHOD  addLayout( pLayout, nStretch )
+   METHOD  addSpacerItem( pSpacerItem )
+   METHOD  addSpacing( nSize )
+   METHOD  addStretch( nStretch )
+   METHOD  addStrut( nSize )
+   METHOD  addWidget( pWidget, nStretch, nAlignment )
+   METHOD  direction()
+   METHOD  insertLayout( nIndex, pLayout, nStretch )
+   METHOD  insertSpacerItem( nIndex, pSpacerItem )
+   METHOD  insertSpacing( nIndex, nSize )
+   METHOD  insertStretch( nIndex, nStretch )
+   METHOD  insertWidget( nIndex, pWidget, nStretch, nAlignment )
+   METHOD  invalidate()
+   METHOD  setDirection( nDirection )
+   METHOD  setSpacing( nSpacing )
+   METHOD  setStretch( nIndex, nStretch )
+   METHOD  setStretchFactor( pWidget, nStretch )
+   METHOD  setStretchFactor_1( pLayout, nStretch )
+   METHOD  spacing()
+   METHOD  stretch( nIndex )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QBoxLayout
-
+METHOD QBoxLayout:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QBoxLayout( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QBoxLayout
-
+METHOD QBoxLayout:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QBoxLayout:addLayout( pLayout, nStretch )
+   RETURN Qt_QBoxLayout_addLayout( ::pPtr, pLayout, nStretch )
+
+
+METHOD QBoxLayout:addSpacerItem( pSpacerItem )
+   RETURN Qt_QBoxLayout_addSpacerItem( ::pPtr, pSpacerItem )
+
+
+METHOD QBoxLayout:addSpacing( nSize )
+   RETURN Qt_QBoxLayout_addSpacing( ::pPtr, nSize )
+
+
+METHOD QBoxLayout:addStretch( nStretch )
+   RETURN Qt_QBoxLayout_addStretch( ::pPtr, nStretch )
+
+
+METHOD QBoxLayout:addStrut( nSize )
+   RETURN Qt_QBoxLayout_addStrut( ::pPtr, nSize )
+
+
+METHOD QBoxLayout:addWidget( pWidget, nStretch, nAlignment )
+   RETURN Qt_QBoxLayout_addWidget( ::pPtr, pWidget, nStretch, nAlignment )
+
+
+METHOD QBoxLayout:direction()
+   RETURN Qt_QBoxLayout_direction( ::pPtr )
+
+
+METHOD QBoxLayout:insertLayout( nIndex, pLayout, nStretch )
+   RETURN Qt_QBoxLayout_insertLayout( ::pPtr, nIndex, pLayout, nStretch )
+
+
+METHOD QBoxLayout:insertSpacerItem( nIndex, pSpacerItem )
+   RETURN Qt_QBoxLayout_insertSpacerItem( ::pPtr, nIndex, pSpacerItem )
+
+
+METHOD QBoxLayout:insertSpacing( nIndex, nSize )
+   RETURN Qt_QBoxLayout_insertSpacing( ::pPtr, nIndex, nSize )
+
+
+METHOD QBoxLayout:insertStretch( nIndex, nStretch )
+   RETURN Qt_QBoxLayout_insertStretch( ::pPtr, nIndex, nStretch )
+
+
+METHOD QBoxLayout:insertWidget( nIndex, pWidget, nStretch, nAlignment )
+   RETURN Qt_QBoxLayout_insertWidget( ::pPtr, nIndex, pWidget, nStretch, nAlignment )
+
+
+METHOD QBoxLayout:invalidate()
+   RETURN Qt_QBoxLayout_invalidate( ::pPtr )
+
+
+METHOD QBoxLayout:setDirection( nDirection )
+   RETURN Qt_QBoxLayout_setDirection( ::pPtr, nDirection )
+
+
+METHOD QBoxLayout:setSpacing( nSpacing )
+   RETURN Qt_QBoxLayout_setSpacing( ::pPtr, nSpacing )
+
+
+METHOD QBoxLayout:setStretch( nIndex, nStretch )
+   RETURN Qt_QBoxLayout_setStretch( ::pPtr, nIndex, nStretch )
+
+
+METHOD QBoxLayout:setStretchFactor( pWidget, nStretch )
+   RETURN Qt_QBoxLayout_setStretchFactor( ::pPtr, pWidget, nStretch )
+
+
+METHOD QBoxLayout:setStretchFactor_1( pLayout, nStretch )
+   RETURN Qt_QBoxLayout_setStretchFactor_1( ::pPtr, pLayout, nStretch )
+
+
+METHOD QBoxLayout:spacing()
+   RETURN Qt_QBoxLayout_spacing( ::pPtr )
+
+
+METHOD QBoxLayout:stretch( nIndex )
+   RETURN Qt_QBoxLayout_stretch( ::pPtr, nIndex )
+

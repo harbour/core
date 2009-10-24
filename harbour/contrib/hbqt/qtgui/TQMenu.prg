@@ -71,62 +71,187 @@ CREATE CLASS QMenu INHERIT QWidget
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  actionAt( pPt )                     INLINE  Qt_QMenu_actionAt( ::pPtr, pPt )
-   METHOD  actionGeometry( pAct )              INLINE  Qt_QMenu_actionGeometry( ::pPtr, pAct )
-   METHOD  activeAction()                      INLINE  Qt_QMenu_activeAction( ::pPtr )
-   METHOD  addAction( cText )                  INLINE  Qt_QMenu_addAction( ::pPtr, cText )
-   METHOD  addAction_1( cIcon, cText )         INLINE  Qt_QMenu_addAction_1( ::pPtr, cIcon, cText )
-   METHOD  addAction_2( cText, pReceiver, pMember, pShortcut )  INLINE  Qt_QMenu_addAction_2( ::pPtr, cText, pReceiver, pMember, pShortcut )
-   METHOD  addAction_3( cIcon, cText, pReceiver, pMember, pShortcut )  INLINE  Qt_QMenu_addAction_3( ::pPtr, cIcon, cText, pReceiver, pMember, pShortcut )
-   METHOD  addAction_4( pAction )              INLINE  Qt_QMenu_addAction_4( ::pPtr, pAction )
-   METHOD  addMenu( pMenu )                    INLINE  Qt_QMenu_addMenu( ::pPtr, pMenu )
-   METHOD  addMenu_1( cTitle )                 INLINE  Qt_QMenu_addMenu_1( ::pPtr, cTitle )
-   METHOD  addMenu_2( cIcon, cTitle )          INLINE  Qt_QMenu_addMenu_2( ::pPtr, cIcon, cTitle )
-   METHOD  addSeparator()                      INLINE  Qt_QMenu_addSeparator( ::pPtr )
-   METHOD  clear()                             INLINE  Qt_QMenu_clear( ::pPtr )
-   METHOD  defaultAction()                     INLINE  Qt_QMenu_defaultAction( ::pPtr )
-   METHOD  exec()                              INLINE  Qt_QMenu_exec( ::pPtr )
-   METHOD  exec_1( pP, pAction )               INLINE  Qt_QMenu_exec_1( ::pPtr, pP, pAction )
-   METHOD  hideTearOffMenu()                   INLINE  Qt_QMenu_hideTearOffMenu( ::pPtr )
-   METHOD  icon()                              INLINE  Qt_QMenu_icon( ::pPtr )
-   METHOD  insertMenu( pBefore, pMenu )        INLINE  Qt_QMenu_insertMenu( ::pPtr, pBefore, pMenu )
-   METHOD  insertSeparator( pBefore )          INLINE  Qt_QMenu_insertSeparator( ::pPtr, pBefore )
-   METHOD  isEmpty()                           INLINE  Qt_QMenu_isEmpty( ::pPtr )
-   METHOD  isTearOffEnabled()                  INLINE  Qt_QMenu_isTearOffEnabled( ::pPtr )
-   METHOD  isTearOffMenuVisible()              INLINE  Qt_QMenu_isTearOffMenuVisible( ::pPtr )
-   METHOD  menuAction()                        INLINE  Qt_QMenu_menuAction( ::pPtr )
-   METHOD  popup( pP, pAtAction )              INLINE  Qt_QMenu_popup( ::pPtr, pP, pAtAction )
-   METHOD  separatorsCollapsible()             INLINE  Qt_QMenu_separatorsCollapsible( ::pPtr )
-   METHOD  setActiveAction( pAct )             INLINE  Qt_QMenu_setActiveAction( ::pPtr, pAct )
-   METHOD  setDefaultAction( pAct )            INLINE  Qt_QMenu_setDefaultAction( ::pPtr, pAct )
-   METHOD  setIcon( cIcon )                    INLINE  Qt_QMenu_setIcon( ::pPtr, cIcon )
-   METHOD  setSeparatorsCollapsible( lCollapse )  INLINE  Qt_QMenu_setSeparatorsCollapsible( ::pPtr, lCollapse )
-   METHOD  setTearOffEnabled( lBool )          INLINE  Qt_QMenu_setTearOffEnabled( ::pPtr, lBool )
-   METHOD  setTitle( cTitle )                  INLINE  Qt_QMenu_setTitle( ::pPtr, cTitle )
-   METHOD  title()                             INLINE  Qt_QMenu_title( ::pPtr )
+   METHOD  actionAt( pPt )
+   METHOD  actionGeometry( pAct )
+   METHOD  activeAction()
+   METHOD  addAction( cText )
+   METHOD  addAction_1( cIcon, cText )
+   METHOD  addAction_2( cText, pReceiver, pMember, pShortcut )
+   METHOD  addAction_3( cIcon, cText, pReceiver, pMember, pShortcut )
+   METHOD  addAction_4( pAction )
+   METHOD  addMenu( pMenu )
+   METHOD  addMenu_1( cTitle )
+   METHOD  addMenu_2( cIcon, cTitle )
+   METHOD  addSeparator()
+   METHOD  clear()
+   METHOD  defaultAction()
+   METHOD  exec()
+   METHOD  exec_1( pP, pAction )
+   METHOD  hideTearOffMenu()
+   METHOD  icon()
+   METHOD  insertMenu( pBefore, pMenu )
+   METHOD  insertSeparator( pBefore )
+   METHOD  isEmpty()
+   METHOD  isTearOffEnabled()
+   METHOD  isTearOffMenuVisible()
+   METHOD  menuAction()
+   METHOD  popup( pP, pAtAction )
+   METHOD  separatorsCollapsible()
+   METHOD  setActiveAction( pAct )
+   METHOD  setDefaultAction( pAct )
+   METHOD  setIcon( cIcon )
+   METHOD  setSeparatorsCollapsible( lCollapse )
+   METHOD  setTearOffEnabled( lBool )
+   METHOD  setTitle( cTitle )
+   METHOD  title()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QMenu
-
+METHOD QMenu:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QMenu( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QMenu
-
+METHOD QMenu:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QMenu:actionAt( pPt )
+   RETURN Qt_QMenu_actionAt( ::pPtr, pPt )
+
+
+METHOD QMenu:actionGeometry( pAct )
+   RETURN Qt_QMenu_actionGeometry( ::pPtr, pAct )
+
+
+METHOD QMenu:activeAction()
+   RETURN Qt_QMenu_activeAction( ::pPtr )
+
+
+METHOD QMenu:addAction( cText )
+   RETURN Qt_QMenu_addAction( ::pPtr, cText )
+
+
+METHOD QMenu:addAction_1( cIcon, cText )
+   RETURN Qt_QMenu_addAction_1( ::pPtr, cIcon, cText )
+
+
+METHOD QMenu:addAction_2( cText, pReceiver, pMember, pShortcut )
+   RETURN Qt_QMenu_addAction_2( ::pPtr, cText, pReceiver, pMember, pShortcut )
+
+
+METHOD QMenu:addAction_3( cIcon, cText, pReceiver, pMember, pShortcut )
+   RETURN Qt_QMenu_addAction_3( ::pPtr, cIcon, cText, pReceiver, pMember, pShortcut )
+
+
+METHOD QMenu:addAction_4( pAction )
+   RETURN Qt_QMenu_addAction_4( ::pPtr, pAction )
+
+
+METHOD QMenu:addMenu( pMenu )
+   RETURN Qt_QMenu_addMenu( ::pPtr, pMenu )
+
+
+METHOD QMenu:addMenu_1( cTitle )
+   RETURN Qt_QMenu_addMenu_1( ::pPtr, cTitle )
+
+
+METHOD QMenu:addMenu_2( cIcon, cTitle )
+   RETURN Qt_QMenu_addMenu_2( ::pPtr, cIcon, cTitle )
+
+
+METHOD QMenu:addSeparator()
+   RETURN Qt_QMenu_addSeparator( ::pPtr )
+
+
+METHOD QMenu:clear()
+   RETURN Qt_QMenu_clear( ::pPtr )
+
+
+METHOD QMenu:defaultAction()
+   RETURN Qt_QMenu_defaultAction( ::pPtr )
+
+
+METHOD QMenu:exec()
+   RETURN Qt_QMenu_exec( ::pPtr )
+
+
+METHOD QMenu:exec_1( pP, pAction )
+   RETURN Qt_QMenu_exec_1( ::pPtr, pP, pAction )
+
+
+METHOD QMenu:hideTearOffMenu()
+   RETURN Qt_QMenu_hideTearOffMenu( ::pPtr )
+
+
+METHOD QMenu:icon()
+   RETURN Qt_QMenu_icon( ::pPtr )
+
+
+METHOD QMenu:insertMenu( pBefore, pMenu )
+   RETURN Qt_QMenu_insertMenu( ::pPtr, pBefore, pMenu )
+
+
+METHOD QMenu:insertSeparator( pBefore )
+   RETURN Qt_QMenu_insertSeparator( ::pPtr, pBefore )
+
+
+METHOD QMenu:isEmpty()
+   RETURN Qt_QMenu_isEmpty( ::pPtr )
+
+
+METHOD QMenu:isTearOffEnabled()
+   RETURN Qt_QMenu_isTearOffEnabled( ::pPtr )
+
+
+METHOD QMenu:isTearOffMenuVisible()
+   RETURN Qt_QMenu_isTearOffMenuVisible( ::pPtr )
+
+
+METHOD QMenu:menuAction()
+   RETURN Qt_QMenu_menuAction( ::pPtr )
+
+
+METHOD QMenu:popup( pP, pAtAction )
+   RETURN Qt_QMenu_popup( ::pPtr, pP, pAtAction )
+
+
+METHOD QMenu:separatorsCollapsible()
+   RETURN Qt_QMenu_separatorsCollapsible( ::pPtr )
+
+
+METHOD QMenu:setActiveAction( pAct )
+   RETURN Qt_QMenu_setActiveAction( ::pPtr, pAct )
+
+
+METHOD QMenu:setDefaultAction( pAct )
+   RETURN Qt_QMenu_setDefaultAction( ::pPtr, pAct )
+
+
+METHOD QMenu:setIcon( cIcon )
+   RETURN Qt_QMenu_setIcon( ::pPtr, cIcon )
+
+
+METHOD QMenu:setSeparatorsCollapsible( lCollapse )
+   RETURN Qt_QMenu_setSeparatorsCollapsible( ::pPtr, lCollapse )
+
+
+METHOD QMenu:setTearOffEnabled( lBool )
+   RETURN Qt_QMenu_setTearOffEnabled( ::pPtr, lBool )
+
+
+METHOD QMenu:setTitle( cTitle )
+   RETURN Qt_QMenu_setTitle( ::pPtr, cTitle )
+
+
+METHOD QMenu:title()
+   RETURN Qt_QMenu_title( ::pPtr )
+

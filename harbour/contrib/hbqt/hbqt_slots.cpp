@@ -65,9 +65,6 @@
 
 #include "hbqt_slots.h"
 
-//         #include <windows.h>   //////////////////////////////////////////
-//         static char str[50];   //////////////////////////////////////////
-
 #include <QWidget>
 #include <QString>
 #include <QList>
@@ -1115,10 +1112,6 @@ HB_FUNC( QT_CONNECT_SIGNAL )
    PHB_ITEM  codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK ) );  /* get codeblock */
    bool      ret       = false;                                     /* return value  */
    QObject * object    = ( QObject* ) hbqt_gcpointer( 1 );          /* get sender    */
-   if( !object )
-   {
-      object = ( QObject* ) hb_parptr( 1 );
-   }
 
    qt_setEventSlots();
    Slots   * s_s       = qt_getEventSlots();
@@ -1709,11 +1702,7 @@ HB_FUNC( QT_CONNECT_SIGNAL )
  */
 HB_FUNC( QT_DISCONNECT_SIGNAL )
 {
-   QObject * object = ( QObject* ) hbqt_gcpointer( 1 );          /* get sender    */
-   if( !object )
-   {
-      object = ( QObject* ) hb_parptr( 1 );
-   }
+   QObject * object = ( QObject* ) hbqt_gcpointer( 1 );
 
    if( object )
    {
@@ -1785,7 +1774,7 @@ bool Events::eventFilter( QObject * object, QEvent * event )
 {
    QEvent::Type eventtype = event->type();
 #if defined(__debug__)
-hb_snprintf( str, sizeof( str ), "0 Events::eventFilter = %i", ( int ) eventtype ); OutputDebugString( str );
+//hb_snprintf( str, sizeof( str ), "0 Events::eventFilter = %i", ( int ) eventtype ); OutputDebugString( str );
 #endif
    if( ( int ) eventtype == 0 )
    {
@@ -1816,14 +1805,16 @@ hb_snprintf( str, sizeof( str ), "0 Events::eventFilter = %i", ( int ) eventtype
 
       if( eventtype == QEvent::Close )
       {
+         #if 0
          if( ret == true )
             event->accept();
          else
             event->ignore();
+         #endif
+         event->ignore();
       }
    }
 //hb_snprintf( str, sizeof( str ), "1 Events::eventFilter = %i", ( int ) eventtype ); OutputDebugString( str );
-
    return ret;
 }
 
@@ -1844,44 +1835,34 @@ HB_FUNC( QT_QEVENTFILTER )
 
 HB_FUNC( QT_CONNECT_EVENT )
 {
-//   QObject * object    = ( QObject * ) hb_parptr( 1 );
    int       type      = hb_parni( 2 );
    PHB_ITEM  codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK | HB_IT_BYREF ) );
    Events  * s_e       = qt_getEventFilter();
    QObject * object    = ( QObject* ) hbqt_gcpointer( 1 );          /* get sender    */
-   if( !object )
-   {
-      object = ( QObject* ) hb_parptr( 1 );
-   }
 
-   char str[ 20 ];
-   hb_snprintf( str, sizeof( str ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
+   char prop[ 20 ];
+   hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
 
    s_e->listBlock << codeblock;
    s_e->listActv  << true;
    s_e->listObj   << object;
 
-   object->setProperty( str, ( int ) s_e->listBlock.size() );
+   object->setProperty( prop, ( int ) s_e->listBlock.size() );
 
    hb_retl( true );
 }
 
 HB_FUNC( QT_DISCONNECT_EVENT )
 {
-//   QObject * object = ( QObject * ) hb_parptr( 1 );
    int       type   = hb_parni( 2 );
    bool      bRet   = false;
    Events  * s_e    = qt_getEventFilter();
-   QObject * object    = ( QObject* ) hbqt_gcpointer( 1 );          /* get sender    */
-   if( !object )
-   {
-      object = ( QObject* ) hb_parptr( 1 );
-   }
+   QObject * object    = ( QObject* ) hbqt_gcpointer( 1 );
 
-   char str[ 10 ];
-   hb_snprintf( str, sizeof( str ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
+   char prop[ 10 ];
+   hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
 
-   int i = object->property( str ).toInt();
+   int i = object->property( prop ).toInt();
    if( i > 0 && i <= s_e->listBlock.size() )
    {
       hb_itemRelease( s_e->listBlock.at( i - 1 ) );
@@ -2032,7 +2013,7 @@ Qt::ItemFlags HbDbfModel::flags( const QModelIndex & index ) const
 
 QVariant HbDbfModel::data( const QModelIndex & index, int role ) const
 {
-//char str[ 50 ]; hb_snprintf( str, sizeof( str ), "data - row=%i col=%i role=%i", index.row(), index.column(), role );  OutputDebugString( str );
+//hb_snprintf( str, sizeof( str ), "data - row=%i col=%i role=%i", index.row(), index.column(), role );  OutputDebugString( str );
    if( !index.isValid() )
       return( QVariant() );
 
@@ -2081,7 +2062,7 @@ QVariant HbDbfModel::data( const QModelIndex & index, int role ) const
 
 QVariant HbDbfModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-//char str[ 50 ]; hb_snprintf( str, sizeof( str ), "headerData - section=%i orient=%i role=%i name=%s", section, orientation, role, objectName() );  OutputDebugString( str );
+//hb_snprintf( str, sizeof( str ), "headerData - section=%i orient=%i role=%i name=%s", section, orientation, role, objectName() );  OutputDebugString( str );
 
    if( orientation == Qt::Horizontal )
    {
@@ -2177,7 +2158,7 @@ int HbDbfModel::columnCount( const QModelIndex & /*parent = QModelIndex()*/ ) co
 
 QModelIndex HbDbfModel::index( int row, int column, const QModelIndex & parent ) const
 {
-//char str[ 50 ]; hb_snprintf( str, sizeof( str ), "index:  row=%i col=%i", row, column );  OutputDebugString( str );
+//hb_snprintf( str, sizeof( str ), "index:  row=%i col=%i", row, column );  OutputDebugString( str );
    HB_SYMBOL_UNUSED( parent );
 
    return( createIndex( row, column, row * column ) );

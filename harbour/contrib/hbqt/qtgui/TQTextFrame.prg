@@ -71,36 +71,57 @@ CREATE CLASS QTextFrame INHERIT QTextObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  firstCursorPosition()               INLINE  Qt_QTextFrame_firstCursorPosition( ::pPtr )
-   METHOD  firstPosition()                     INLINE  Qt_QTextFrame_firstPosition( ::pPtr )
-   METHOD  frameFormat()                       INLINE  Qt_QTextFrame_frameFormat( ::pPtr )
-   METHOD  lastCursorPosition()                INLINE  Qt_QTextFrame_lastCursorPosition( ::pPtr )
-   METHOD  lastPosition()                      INLINE  Qt_QTextFrame_lastPosition( ::pPtr )
-   METHOD  parentFrame()                       INLINE  Qt_QTextFrame_parentFrame( ::pPtr )
-   METHOD  setFrameFormat( pFormat )           INLINE  Qt_QTextFrame_setFrameFormat( ::pPtr, pFormat )
+   METHOD  firstCursorPosition()
+   METHOD  firstPosition()
+   METHOD  frameFormat()
+   METHOD  lastCursorPosition()
+   METHOD  lastPosition()
+   METHOD  parentFrame()
+   METHOD  setFrameFormat( pFormat )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextFrame
-
+METHOD QTextFrame:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextFrame( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextFrame
-
+METHOD QTextFrame:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextFrame:firstCursorPosition()
+   RETURN Qt_QTextFrame_firstCursorPosition( ::pPtr )
+
+
+METHOD QTextFrame:firstPosition()
+   RETURN Qt_QTextFrame_firstPosition( ::pPtr )
+
+
+METHOD QTextFrame:frameFormat()
+   RETURN Qt_QTextFrame_frameFormat( ::pPtr )
+
+
+METHOD QTextFrame:lastCursorPosition()
+   RETURN Qt_QTextFrame_lastCursorPosition( ::pPtr )
+
+
+METHOD QTextFrame:lastPosition()
+   RETURN Qt_QTextFrame_lastPosition( ::pPtr )
+
+
+METHOD QTextFrame:parentFrame()
+   RETURN Qt_QTextFrame_parentFrame( ::pPtr )
+
+
+METHOD QTextFrame:setFrameFormat( pFormat )
+   RETURN Qt_QTextFrame_setFrameFormat( ::pPtr, pFormat )
+

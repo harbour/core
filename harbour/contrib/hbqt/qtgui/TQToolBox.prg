@@ -71,49 +71,122 @@ CREATE CLASS QToolBox INHERIT QFrame
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addItem( pWidget, cIconSet, cText )  INLINE  Qt_QToolBox_addItem( ::pPtr, pWidget, cIconSet, cText )
-   METHOD  addItem_1( pW, cText )              INLINE  Qt_QToolBox_addItem_1( ::pPtr, pW, cText )
-   METHOD  count()                             INLINE  Qt_QToolBox_count( ::pPtr )
-   METHOD  currentIndex()                      INLINE  Qt_QToolBox_currentIndex( ::pPtr )
-   METHOD  currentWidget()                     INLINE  Qt_QToolBox_currentWidget( ::pPtr )
-   METHOD  indexOf( pWidget )                  INLINE  Qt_QToolBox_indexOf( ::pPtr, pWidget )
-   METHOD  insertItem( nIndex, pWidget, cIcon, cText )  INLINE  Qt_QToolBox_insertItem( ::pPtr, nIndex, pWidget, cIcon, cText )
-   METHOD  insertItem_1( nIndex, pWidget, cText )  INLINE  Qt_QToolBox_insertItem_1( ::pPtr, nIndex, pWidget, cText )
-   METHOD  isItemEnabled( nIndex )             INLINE  Qt_QToolBox_isItemEnabled( ::pPtr, nIndex )
-   METHOD  itemIcon( nIndex )                  INLINE  Qt_QToolBox_itemIcon( ::pPtr, nIndex )
-   METHOD  itemText( nIndex )                  INLINE  Qt_QToolBox_itemText( ::pPtr, nIndex )
-   METHOD  itemToolTip( nIndex )               INLINE  Qt_QToolBox_itemToolTip( ::pPtr, nIndex )
-   METHOD  removeItem( nIndex )                INLINE  Qt_QToolBox_removeItem( ::pPtr, nIndex )
-   METHOD  setItemEnabled( nIndex, lEnabled )  INLINE  Qt_QToolBox_setItemEnabled( ::pPtr, nIndex, lEnabled )
-   METHOD  setItemIcon( nIndex, cIcon )        INLINE  Qt_QToolBox_setItemIcon( ::pPtr, nIndex, cIcon )
-   METHOD  setItemText( nIndex, cText )        INLINE  Qt_QToolBox_setItemText( ::pPtr, nIndex, cText )
-   METHOD  setItemToolTip( nIndex, cToolTip )  INLINE  Qt_QToolBox_setItemToolTip( ::pPtr, nIndex, cToolTip )
-   METHOD  widget( nIndex )                    INLINE  Qt_QToolBox_widget( ::pPtr, nIndex )
-   METHOD  setCurrentIndex( nIndex )           INLINE  Qt_QToolBox_setCurrentIndex( ::pPtr, nIndex )
-   METHOD  setCurrentWidget( pWidget )         INLINE  Qt_QToolBox_setCurrentWidget( ::pPtr, pWidget )
+   METHOD  addItem( pWidget, cIconSet, cText )
+   METHOD  addItem_1( pW, cText )
+   METHOD  count()
+   METHOD  currentIndex()
+   METHOD  currentWidget()
+   METHOD  indexOf( pWidget )
+   METHOD  insertItem( nIndex, pWidget, cIcon, cText )
+   METHOD  insertItem_1( nIndex, pWidget, cText )
+   METHOD  isItemEnabled( nIndex )
+   METHOD  itemIcon( nIndex )
+   METHOD  itemText( nIndex )
+   METHOD  itemToolTip( nIndex )
+   METHOD  removeItem( nIndex )
+   METHOD  setItemEnabled( nIndex, lEnabled )
+   METHOD  setItemIcon( nIndex, cIcon )
+   METHOD  setItemText( nIndex, cText )
+   METHOD  setItemToolTip( nIndex, cToolTip )
+   METHOD  widget( nIndex )
+   METHOD  setCurrentIndex( nIndex )
+   METHOD  setCurrentWidget( pWidget )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QToolBox
-
+METHOD QToolBox:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QToolBox( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QToolBox
-
+METHOD QToolBox:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QToolBox:addItem( pWidget, cIconSet, cText )
+   RETURN Qt_QToolBox_addItem( ::pPtr, pWidget, cIconSet, cText )
+
+
+METHOD QToolBox:addItem_1( pW, cText )
+   RETURN Qt_QToolBox_addItem_1( ::pPtr, pW, cText )
+
+
+METHOD QToolBox:count()
+   RETURN Qt_QToolBox_count( ::pPtr )
+
+
+METHOD QToolBox:currentIndex()
+   RETURN Qt_QToolBox_currentIndex( ::pPtr )
+
+
+METHOD QToolBox:currentWidget()
+   RETURN Qt_QToolBox_currentWidget( ::pPtr )
+
+
+METHOD QToolBox:indexOf( pWidget )
+   RETURN Qt_QToolBox_indexOf( ::pPtr, pWidget )
+
+
+METHOD QToolBox:insertItem( nIndex, pWidget, cIcon, cText )
+   RETURN Qt_QToolBox_insertItem( ::pPtr, nIndex, pWidget, cIcon, cText )
+
+
+METHOD QToolBox:insertItem_1( nIndex, pWidget, cText )
+   RETURN Qt_QToolBox_insertItem_1( ::pPtr, nIndex, pWidget, cText )
+
+
+METHOD QToolBox:isItemEnabled( nIndex )
+   RETURN Qt_QToolBox_isItemEnabled( ::pPtr, nIndex )
+
+
+METHOD QToolBox:itemIcon( nIndex )
+   RETURN Qt_QToolBox_itemIcon( ::pPtr, nIndex )
+
+
+METHOD QToolBox:itemText( nIndex )
+   RETURN Qt_QToolBox_itemText( ::pPtr, nIndex )
+
+
+METHOD QToolBox:itemToolTip( nIndex )
+   RETURN Qt_QToolBox_itemToolTip( ::pPtr, nIndex )
+
+
+METHOD QToolBox:removeItem( nIndex )
+   RETURN Qt_QToolBox_removeItem( ::pPtr, nIndex )
+
+
+METHOD QToolBox:setItemEnabled( nIndex, lEnabled )
+   RETURN Qt_QToolBox_setItemEnabled( ::pPtr, nIndex, lEnabled )
+
+
+METHOD QToolBox:setItemIcon( nIndex, cIcon )
+   RETURN Qt_QToolBox_setItemIcon( ::pPtr, nIndex, cIcon )
+
+
+METHOD QToolBox:setItemText( nIndex, cText )
+   RETURN Qt_QToolBox_setItemText( ::pPtr, nIndex, cText )
+
+
+METHOD QToolBox:setItemToolTip( nIndex, cToolTip )
+   RETURN Qt_QToolBox_setItemToolTip( ::pPtr, nIndex, cToolTip )
+
+
+METHOD QToolBox:widget( nIndex )
+   RETURN Qt_QToolBox_widget( ::pPtr, nIndex )
+
+
+METHOD QToolBox:setCurrentIndex( nIndex )
+   RETURN Qt_QToolBox_setCurrentIndex( ::pPtr, nIndex )
+
+
+METHOD QToolBox:setCurrentWidget( pWidget )
+   RETURN Qt_QToolBox_setCurrentWidget( ::pPtr, pWidget )
+

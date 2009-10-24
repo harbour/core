@@ -71,34 +71,47 @@ CREATE CLASS QHttpResponseHeader INHERIT QHttpHeader
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  majorVersion()                      INLINE  Qt_QHttpResponseHeader_majorVersion( ::pPtr )
-   METHOD  minorVersion()                      INLINE  Qt_QHttpResponseHeader_minorVersion( ::pPtr )
-   METHOD  reasonPhrase()                      INLINE  Qt_QHttpResponseHeader_reasonPhrase( ::pPtr )
-   METHOD  setStatusLine( nCode, cText, nMajorVer, nMinorVer )  INLINE  Qt_QHttpResponseHeader_setStatusLine( ::pPtr, nCode, cText, nMajorVer, nMinorVer )
-   METHOD  statusCode()                        INLINE  Qt_QHttpResponseHeader_statusCode( ::pPtr )
+   METHOD  majorVersion()
+   METHOD  minorVersion()
+   METHOD  reasonPhrase()
+   METHOD  setStatusLine( nCode, cText, nMajorVer, nMinorVer )
+   METHOD  statusCode()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QHttpResponseHeader
-
+METHOD QHttpResponseHeader:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QHttpResponseHeader( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QHttpResponseHeader
-
+METHOD QHttpResponseHeader:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QHttpResponseHeader:majorVersion()
+   RETURN Qt_QHttpResponseHeader_majorVersion( ::pPtr )
+
+
+METHOD QHttpResponseHeader:minorVersion()
+   RETURN Qt_QHttpResponseHeader_minorVersion( ::pPtr )
+
+
+METHOD QHttpResponseHeader:reasonPhrase()
+   RETURN Qt_QHttpResponseHeader_reasonPhrase( ::pPtr )
+
+
+METHOD QHttpResponseHeader:setStatusLine( nCode, cText, nMajorVer, nMinorVer )
+   RETURN Qt_QHttpResponseHeader_setStatusLine( ::pPtr, nCode, cText, nMajorVer, nMinorVer )
+
+
+METHOD QHttpResponseHeader:statusCode()
+   RETURN Qt_QHttpResponseHeader_statusCode( ::pPtr )
+

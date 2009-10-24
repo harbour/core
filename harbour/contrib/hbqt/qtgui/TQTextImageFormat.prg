@@ -71,36 +71,57 @@ CREATE CLASS QTextImageFormat INHERIT QTextCharFormat
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  height()                            INLINE  Qt_QTextImageFormat_height( ::pPtr )
-   METHOD  isValid()                           INLINE  Qt_QTextImageFormat_isValid( ::pPtr )
-   METHOD  name()                              INLINE  Qt_QTextImageFormat_name( ::pPtr )
-   METHOD  setHeight( nHeight )                INLINE  Qt_QTextImageFormat_setHeight( ::pPtr, nHeight )
-   METHOD  setName( cName )                    INLINE  Qt_QTextImageFormat_setName( ::pPtr, cName )
-   METHOD  setWidth( nWidth )                  INLINE  Qt_QTextImageFormat_setWidth( ::pPtr, nWidth )
-   METHOD  width()                             INLINE  Qt_QTextImageFormat_width( ::pPtr )
+   METHOD  height()
+   METHOD  isValid()
+   METHOD  name()
+   METHOD  setHeight( nHeight )
+   METHOD  setName( cName )
+   METHOD  setWidth( nWidth )
+   METHOD  width()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QTextImageFormat
-
+METHOD QTextImageFormat:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QTextImageFormat( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QTextImageFormat
-
+METHOD QTextImageFormat:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QTextImageFormat:height()
+   RETURN Qt_QTextImageFormat_height( ::pPtr )
+
+
+METHOD QTextImageFormat:isValid()
+   RETURN Qt_QTextImageFormat_isValid( ::pPtr )
+
+
+METHOD QTextImageFormat:name()
+   RETURN Qt_QTextImageFormat_name( ::pPtr )
+
+
+METHOD QTextImageFormat:setHeight( nHeight )
+   RETURN Qt_QTextImageFormat_setHeight( ::pPtr, nHeight )
+
+
+METHOD QTextImageFormat:setName( cName )
+   RETURN Qt_QTextImageFormat_setName( ::pPtr, cName )
+
+
+METHOD QTextImageFormat:setWidth( nWidth )
+   RETURN Qt_QTextImageFormat_setWidth( ::pPtr, nWidth )
+
+
+METHOD QTextImageFormat:width()
+   RETURN Qt_QTextImageFormat_width( ::pPtr )
+

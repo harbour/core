@@ -71,61 +71,182 @@ CREATE CLASS QWebPage INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  action( nAction )                   INLINE  Qt_QWebPage_action( ::pPtr, nAction )
-   METHOD  bytesReceived()                     INLINE  Qt_QWebPage_bytesReceived( ::pPtr )
-   METHOD  createStandardContextMenu()         INLINE  Qt_QWebPage_createStandardContextMenu( ::pPtr )
-   METHOD  currentFrame()                      INLINE  Qt_QWebPage_currentFrame( ::pPtr )
-   METHOD  findText( cSubString, nOptions )    INLINE  Qt_QWebPage_findText( ::pPtr, cSubString, nOptions )
-   METHOD  focusNextPrevChild( lNext )         INLINE  Qt_QWebPage_focusNextPrevChild( ::pPtr, lNext )
-   METHOD  forwardUnsupportedContent()         INLINE  Qt_QWebPage_forwardUnsupportedContent( ::pPtr )
-   METHOD  history()                           INLINE  Qt_QWebPage_history( ::pPtr )
-   METHOD  inputMethodQuery( nProperty )       INLINE  Qt_QWebPage_inputMethodQuery( ::pPtr, nProperty )
-   METHOD  isContentEditable()                 INLINE  Qt_QWebPage_isContentEditable( ::pPtr )
-   METHOD  isModified()                        INLINE  Qt_QWebPage_isModified( ::pPtr )
-   METHOD  linkDelegationPolicy()              INLINE  Qt_QWebPage_linkDelegationPolicy( ::pPtr )
-   METHOD  mainFrame()                         INLINE  Qt_QWebPage_mainFrame( ::pPtr )
-   METHOD  palette()                           INLINE  Qt_QWebPage_palette( ::pPtr )
-   METHOD  pluginFactory()                     INLINE  Qt_QWebPage_pluginFactory( ::pPtr )
-   METHOD  selectedText()                      INLINE  Qt_QWebPage_selectedText( ::pPtr )
-   METHOD  setContentEditable( lEditable )     INLINE  Qt_QWebPage_setContentEditable( ::pPtr, lEditable )
-   METHOD  setForwardUnsupportedContent( lForward )  INLINE  Qt_QWebPage_setForwardUnsupportedContent( ::pPtr, lForward )
-   METHOD  setLinkDelegationPolicy( nPolicy )  INLINE  Qt_QWebPage_setLinkDelegationPolicy( ::pPtr, nPolicy )
-   METHOD  setPalette( pPalette )              INLINE  Qt_QWebPage_setPalette( ::pPtr, pPalette )
-   METHOD  setPluginFactory( pFactory )        INLINE  Qt_QWebPage_setPluginFactory( ::pPtr, pFactory )
-   METHOD  setView( pView )                    INLINE  Qt_QWebPage_setView( ::pPtr, pView )
-   METHOD  setViewportSize( pSize )            INLINE  Qt_QWebPage_setViewportSize( ::pPtr, pSize )
-   METHOD  settings()                          INLINE  Qt_QWebPage_settings( ::pPtr )
-   METHOD  supportsExtension( nExtension )     INLINE  Qt_QWebPage_supportsExtension( ::pPtr, nExtension )
-   METHOD  swallowContextMenuEvent( pEvent )   INLINE  Qt_QWebPage_swallowContextMenuEvent( ::pPtr, pEvent )
-   METHOD  totalBytes()                        INLINE  Qt_QWebPage_totalBytes( ::pPtr )
-   METHOD  triggerAction( nAction, lChecked )  INLINE  Qt_QWebPage_triggerAction( ::pPtr, nAction, lChecked )
-   METHOD  undoStack()                         INLINE  Qt_QWebPage_undoStack( ::pPtr )
-   METHOD  updatePositionDependentActions( pPos )  INLINE  Qt_QWebPage_updatePositionDependentActions( ::pPtr, pPos )
-   METHOD  view()                              INLINE  Qt_QWebPage_view( ::pPtr )
-   METHOD  viewportSize()                      INLINE  Qt_QWebPage_viewportSize( ::pPtr )
+   METHOD  action( nAction )
+   METHOD  bytesReceived()
+   METHOD  createStandardContextMenu()
+   METHOD  currentFrame()
+   METHOD  findText( cSubString, nOptions )
+   METHOD  focusNextPrevChild( lNext )
+   METHOD  forwardUnsupportedContent()
+   METHOD  history()
+   METHOD  inputMethodQuery( nProperty )
+   METHOD  isContentEditable()
+   METHOD  isModified()
+   METHOD  linkDelegationPolicy()
+   METHOD  mainFrame()
+   METHOD  palette()
+   METHOD  pluginFactory()
+   METHOD  selectedText()
+   METHOD  setContentEditable( lEditable )
+   METHOD  setForwardUnsupportedContent( lForward )
+   METHOD  setLinkDelegationPolicy( nPolicy )
+   METHOD  setPalette( pPalette )
+   METHOD  setPluginFactory( pFactory )
+   METHOD  setView( pView )
+   METHOD  setViewportSize( pSize )
+   METHOD  settings()
+   METHOD  supportsExtension( nExtension )
+   METHOD  swallowContextMenuEvent( pEvent )
+   METHOD  totalBytes()
+   METHOD  triggerAction( nAction, lChecked )
+   METHOD  undoStack()
+   METHOD  updatePositionDependentActions( pPos )
+   METHOD  view()
+   METHOD  viewportSize()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QWebPage
-
+METHOD QWebPage:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QWebPage( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QWebPage
-
+METHOD QWebPage:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QWebPage:action( nAction )
+   RETURN Qt_QWebPage_action( ::pPtr, nAction )
+
+
+METHOD QWebPage:bytesReceived()
+   RETURN Qt_QWebPage_bytesReceived( ::pPtr )
+
+
+METHOD QWebPage:createStandardContextMenu()
+   RETURN Qt_QWebPage_createStandardContextMenu( ::pPtr )
+
+
+METHOD QWebPage:currentFrame()
+   RETURN Qt_QWebPage_currentFrame( ::pPtr )
+
+
+METHOD QWebPage:findText( cSubString, nOptions )
+   RETURN Qt_QWebPage_findText( ::pPtr, cSubString, nOptions )
+
+
+METHOD QWebPage:focusNextPrevChild( lNext )
+   RETURN Qt_QWebPage_focusNextPrevChild( ::pPtr, lNext )
+
+
+METHOD QWebPage:forwardUnsupportedContent()
+   RETURN Qt_QWebPage_forwardUnsupportedContent( ::pPtr )
+
+
+METHOD QWebPage:history()
+   RETURN Qt_QWebPage_history( ::pPtr )
+
+
+METHOD QWebPage:inputMethodQuery( nProperty )
+   RETURN Qt_QWebPage_inputMethodQuery( ::pPtr, nProperty )
+
+
+METHOD QWebPage:isContentEditable()
+   RETURN Qt_QWebPage_isContentEditable( ::pPtr )
+
+
+METHOD QWebPage:isModified()
+   RETURN Qt_QWebPage_isModified( ::pPtr )
+
+
+METHOD QWebPage:linkDelegationPolicy()
+   RETURN Qt_QWebPage_linkDelegationPolicy( ::pPtr )
+
+
+METHOD QWebPage:mainFrame()
+   RETURN Qt_QWebPage_mainFrame( ::pPtr )
+
+
+METHOD QWebPage:palette()
+   RETURN Qt_QWebPage_palette( ::pPtr )
+
+
+METHOD QWebPage:pluginFactory()
+   RETURN Qt_QWebPage_pluginFactory( ::pPtr )
+
+
+METHOD QWebPage:selectedText()
+   RETURN Qt_QWebPage_selectedText( ::pPtr )
+
+
+METHOD QWebPage:setContentEditable( lEditable )
+   RETURN Qt_QWebPage_setContentEditable( ::pPtr, lEditable )
+
+
+METHOD QWebPage:setForwardUnsupportedContent( lForward )
+   RETURN Qt_QWebPage_setForwardUnsupportedContent( ::pPtr, lForward )
+
+
+METHOD QWebPage:setLinkDelegationPolicy( nPolicy )
+   RETURN Qt_QWebPage_setLinkDelegationPolicy( ::pPtr, nPolicy )
+
+
+METHOD QWebPage:setPalette( pPalette )
+   RETURN Qt_QWebPage_setPalette( ::pPtr, pPalette )
+
+
+METHOD QWebPage:setPluginFactory( pFactory )
+   RETURN Qt_QWebPage_setPluginFactory( ::pPtr, pFactory )
+
+
+METHOD QWebPage:setView( pView )
+   RETURN Qt_QWebPage_setView( ::pPtr, pView )
+
+
+METHOD QWebPage:setViewportSize( pSize )
+   RETURN Qt_QWebPage_setViewportSize( ::pPtr, pSize )
+
+
+METHOD QWebPage:settings()
+   RETURN Qt_QWebPage_settings( ::pPtr )
+
+
+METHOD QWebPage:supportsExtension( nExtension )
+   RETURN Qt_QWebPage_supportsExtension( ::pPtr, nExtension )
+
+
+METHOD QWebPage:swallowContextMenuEvent( pEvent )
+   RETURN Qt_QWebPage_swallowContextMenuEvent( ::pPtr, pEvent )
+
+
+METHOD QWebPage:totalBytes()
+   RETURN Qt_QWebPage_totalBytes( ::pPtr )
+
+
+METHOD QWebPage:triggerAction( nAction, lChecked )
+   RETURN Qt_QWebPage_triggerAction( ::pPtr, nAction, lChecked )
+
+
+METHOD QWebPage:undoStack()
+   RETURN Qt_QWebPage_undoStack( ::pPtr )
+
+
+METHOD QWebPage:updatePositionDependentActions( pPos )
+   RETURN Qt_QWebPage_updatePositionDependentActions( ::pPtr, pPos )
+
+
+METHOD QWebPage:view()
+   RETURN Qt_QWebPage_view( ::pPtr )
+
+
+METHOD QWebPage:viewportSize()
+   RETURN Qt_QWebPage_viewportSize( ::pPtr )
+

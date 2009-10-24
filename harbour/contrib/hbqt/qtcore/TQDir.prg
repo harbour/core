@@ -71,81 +71,282 @@ CREATE CLASS QDir
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  absoluteFilePath( cFileName )       INLINE  Qt_QDir_absoluteFilePath( ::pPtr, cFileName )
-   METHOD  absolutePath()                      INLINE  Qt_QDir_absolutePath( ::pPtr )
-   METHOD  canonicalPath()                     INLINE  Qt_QDir_canonicalPath( ::pPtr )
-   METHOD  cd( cDirName )                      INLINE  Qt_QDir_cd( ::pPtr, cDirName )
-   METHOD  cdUp()                              INLINE  Qt_QDir_cdUp( ::pPtr )
-   METHOD  count()                             INLINE  Qt_QDir_count( ::pPtr )
-   METHOD  dirName()                           INLINE  Qt_QDir_dirName( ::pPtr )
-   METHOD  entryList( pNameFilters, nFilters, nSort )  INLINE  Qt_QDir_entryList( ::pPtr, pNameFilters, nFilters, nSort )
-   METHOD  entryList_1( nFilters, nSort )      INLINE  Qt_QDir_entryList_1( ::pPtr, nFilters, nSort )
-   METHOD  exists( cName )                     INLINE  Qt_QDir_exists( ::pPtr, cName )
-   METHOD  exists_1()                          INLINE  Qt_QDir_exists_1( ::pPtr )
-   METHOD  filePath( cFileName )               INLINE  Qt_QDir_filePath( ::pPtr, cFileName )
-   METHOD  filter()                            INLINE  Qt_QDir_filter( ::pPtr )
-   METHOD  isAbsolute()                        INLINE  Qt_QDir_isAbsolute( ::pPtr )
-   METHOD  isReadable()                        INLINE  Qt_QDir_isReadable( ::pPtr )
-   METHOD  isRelative()                        INLINE  Qt_QDir_isRelative( ::pPtr )
-   METHOD  isRoot()                            INLINE  Qt_QDir_isRoot( ::pPtr )
-   METHOD  makeAbsolute()                      INLINE  Qt_QDir_makeAbsolute( ::pPtr )
-   METHOD  mkdir( cDirName )                   INLINE  Qt_QDir_mkdir( ::pPtr, cDirName )
-   METHOD  mkpath( cDirPath )                  INLINE  Qt_QDir_mkpath( ::pPtr, cDirPath )
-   METHOD  nameFilters()                       INLINE  Qt_QDir_nameFilters( ::pPtr )
-   METHOD  path()                              INLINE  Qt_QDir_path( ::pPtr )
-   METHOD  refresh()                           INLINE  Qt_QDir_refresh( ::pPtr )
-   METHOD  relativeFilePath( cFileName )       INLINE  Qt_QDir_relativeFilePath( ::pPtr, cFileName )
-   METHOD  remove( cFileName )                 INLINE  Qt_QDir_remove( ::pPtr, cFileName )
-   METHOD  rename( cOldName, cNewName )        INLINE  Qt_QDir_rename( ::pPtr, cOldName, cNewName )
-   METHOD  rmdir( cDirName )                   INLINE  Qt_QDir_rmdir( ::pPtr, cDirName )
-   METHOD  rmpath( cDirPath )                  INLINE  Qt_QDir_rmpath( ::pPtr, cDirPath )
-   METHOD  setFilter( nFilters )               INLINE  Qt_QDir_setFilter( ::pPtr, nFilters )
-   METHOD  setNameFilters( pNameFilters )      INLINE  Qt_QDir_setNameFilters( ::pPtr, pNameFilters )
-   METHOD  setPath( cPath )                    INLINE  Qt_QDir_setPath( ::pPtr, cPath )
-   METHOD  setSorting( nSort )                 INLINE  Qt_QDir_setSorting( ::pPtr, nSort )
-   METHOD  sorting()                           INLINE  Qt_QDir_sorting( ::pPtr )
-   METHOD  addSearchPath( cPrefix, cPath )     INLINE  Qt_QDir_addSearchPath( ::pPtr, cPrefix, cPath )
-   METHOD  cleanPath( cPath )                  INLINE  Qt_QDir_cleanPath( ::pPtr, cPath )
-   METHOD  current()                           INLINE  Qt_QDir_current( ::pPtr )
-   METHOD  currentPath()                       INLINE  Qt_QDir_currentPath( ::pPtr )
-   METHOD  fromNativeSeparators( cPathName )   INLINE  Qt_QDir_fromNativeSeparators( ::pPtr, cPathName )
-   METHOD  home()                              INLINE  Qt_QDir_home( ::pPtr )
-   METHOD  homePath()                          INLINE  Qt_QDir_homePath( ::pPtr )
-   METHOD  isAbsolutePath( cPath )             INLINE  Qt_QDir_isAbsolutePath( ::pPtr, cPath )
-   METHOD  isRelativePath( cPath )             INLINE  Qt_QDir_isRelativePath( ::pPtr, cPath )
-   METHOD  match( cFilter, cFileName )         INLINE  Qt_QDir_match( ::pPtr, cFilter, cFileName )
-   METHOD  match_1( pFilters, cFileName )      INLINE  Qt_QDir_match_1( ::pPtr, pFilters, cFileName )
-   METHOD  root()                              INLINE  Qt_QDir_root( ::pPtr )
-   METHOD  rootPath()                          INLINE  Qt_QDir_rootPath( ::pPtr )
-   METHOD  searchPaths( cPrefix )              INLINE  Qt_QDir_searchPaths( ::pPtr, cPrefix )
-   METHOD  setCurrent( cPath )                 INLINE  Qt_QDir_setCurrent( ::pPtr, cPath )
-   METHOD  setSearchPaths( cPrefix, pSearchPaths )  INLINE  Qt_QDir_setSearchPaths( ::pPtr, cPrefix, pSearchPaths )
-   METHOD  temp()                              INLINE  Qt_QDir_temp( ::pPtr )
-   METHOD  tempPath()                          INLINE  Qt_QDir_tempPath( ::pPtr )
-   METHOD  toNativeSeparators( cPathName )     INLINE  Qt_QDir_toNativeSeparators( ::pPtr, cPathName )
+   METHOD  absoluteFilePath( cFileName )
+   METHOD  absolutePath()
+   METHOD  canonicalPath()
+   METHOD  cd( cDirName )
+   METHOD  cdUp()
+   METHOD  count()
+   METHOD  dirName()
+   METHOD  entryList( pNameFilters, nFilters, nSort )
+   METHOD  entryList_1( nFilters, nSort )
+   METHOD  exists( cName )
+   METHOD  exists_1()
+   METHOD  filePath( cFileName )
+   METHOD  filter()
+   METHOD  isAbsolute()
+   METHOD  isReadable()
+   METHOD  isRelative()
+   METHOD  isRoot()
+   METHOD  makeAbsolute()
+   METHOD  mkdir( cDirName )
+   METHOD  mkpath( cDirPath )
+   METHOD  nameFilters()
+   METHOD  path()
+   METHOD  refresh()
+   METHOD  relativeFilePath( cFileName )
+   METHOD  remove( cFileName )
+   METHOD  rename( cOldName, cNewName )
+   METHOD  rmdir( cDirName )
+   METHOD  rmpath( cDirPath )
+   METHOD  setFilter( nFilters )
+   METHOD  setNameFilters( pNameFilters )
+   METHOD  setPath( cPath )
+   METHOD  setSorting( nSort )
+   METHOD  sorting()
+   METHOD  addSearchPath( cPrefix, cPath )
+   METHOD  cleanPath( cPath )
+   METHOD  current()
+   METHOD  currentPath()
+   METHOD  fromNativeSeparators( cPathName )
+   METHOD  home()
+   METHOD  homePath()
+   METHOD  isAbsolutePath( cPath )
+   METHOD  isRelativePath( cPath )
+   METHOD  match( cFilter, cFileName )
+   METHOD  match_1( pFilters, cFileName )
+   METHOD  root()
+   METHOD  rootPath()
+   METHOD  searchPaths( cPrefix )
+   METHOD  setCurrent( cPath )
+   METHOD  setSearchPaths( cPrefix, pSearchPaths )
+   METHOD  temp()
+   METHOD  tempPath()
+   METHOD  toNativeSeparators( cPathName )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QDir
-
+METHOD QDir:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QDir( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QDir
-
+METHOD QDir:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QDir:absoluteFilePath( cFileName )
+   RETURN Qt_QDir_absoluteFilePath( ::pPtr, cFileName )
+
+
+METHOD QDir:absolutePath()
+   RETURN Qt_QDir_absolutePath( ::pPtr )
+
+
+METHOD QDir:canonicalPath()
+   RETURN Qt_QDir_canonicalPath( ::pPtr )
+
+
+METHOD QDir:cd( cDirName )
+   RETURN Qt_QDir_cd( ::pPtr, cDirName )
+
+
+METHOD QDir:cdUp()
+   RETURN Qt_QDir_cdUp( ::pPtr )
+
+
+METHOD QDir:count()
+   RETURN Qt_QDir_count( ::pPtr )
+
+
+METHOD QDir:dirName()
+   RETURN Qt_QDir_dirName( ::pPtr )
+
+
+METHOD QDir:entryList( pNameFilters, nFilters, nSort )
+   RETURN Qt_QDir_entryList( ::pPtr, pNameFilters, nFilters, nSort )
+
+
+METHOD QDir:entryList_1( nFilters, nSort )
+   RETURN Qt_QDir_entryList_1( ::pPtr, nFilters, nSort )
+
+
+METHOD QDir:exists( cName )
+   RETURN Qt_QDir_exists( ::pPtr, cName )
+
+
+METHOD QDir:exists_1()
+   RETURN Qt_QDir_exists_1( ::pPtr )
+
+
+METHOD QDir:filePath( cFileName )
+   RETURN Qt_QDir_filePath( ::pPtr, cFileName )
+
+
+METHOD QDir:filter()
+   RETURN Qt_QDir_filter( ::pPtr )
+
+
+METHOD QDir:isAbsolute()
+   RETURN Qt_QDir_isAbsolute( ::pPtr )
+
+
+METHOD QDir:isReadable()
+   RETURN Qt_QDir_isReadable( ::pPtr )
+
+
+METHOD QDir:isRelative()
+   RETURN Qt_QDir_isRelative( ::pPtr )
+
+
+METHOD QDir:isRoot()
+   RETURN Qt_QDir_isRoot( ::pPtr )
+
+
+METHOD QDir:makeAbsolute()
+   RETURN Qt_QDir_makeAbsolute( ::pPtr )
+
+
+METHOD QDir:mkdir( cDirName )
+   RETURN Qt_QDir_mkdir( ::pPtr, cDirName )
+
+
+METHOD QDir:mkpath( cDirPath )
+   RETURN Qt_QDir_mkpath( ::pPtr, cDirPath )
+
+
+METHOD QDir:nameFilters()
+   RETURN Qt_QDir_nameFilters( ::pPtr )
+
+
+METHOD QDir:path()
+   RETURN Qt_QDir_path( ::pPtr )
+
+
+METHOD QDir:refresh()
+   RETURN Qt_QDir_refresh( ::pPtr )
+
+
+METHOD QDir:relativeFilePath( cFileName )
+   RETURN Qt_QDir_relativeFilePath( ::pPtr, cFileName )
+
+
+METHOD QDir:remove( cFileName )
+   RETURN Qt_QDir_remove( ::pPtr, cFileName )
+
+
+METHOD QDir:rename( cOldName, cNewName )
+   RETURN Qt_QDir_rename( ::pPtr, cOldName, cNewName )
+
+
+METHOD QDir:rmdir( cDirName )
+   RETURN Qt_QDir_rmdir( ::pPtr, cDirName )
+
+
+METHOD QDir:rmpath( cDirPath )
+   RETURN Qt_QDir_rmpath( ::pPtr, cDirPath )
+
+
+METHOD QDir:setFilter( nFilters )
+   RETURN Qt_QDir_setFilter( ::pPtr, nFilters )
+
+
+METHOD QDir:setNameFilters( pNameFilters )
+   RETURN Qt_QDir_setNameFilters( ::pPtr, pNameFilters )
+
+
+METHOD QDir:setPath( cPath )
+   RETURN Qt_QDir_setPath( ::pPtr, cPath )
+
+
+METHOD QDir:setSorting( nSort )
+   RETURN Qt_QDir_setSorting( ::pPtr, nSort )
+
+
+METHOD QDir:sorting()
+   RETURN Qt_QDir_sorting( ::pPtr )
+
+
+METHOD QDir:addSearchPath( cPrefix, cPath )
+   RETURN Qt_QDir_addSearchPath( ::pPtr, cPrefix, cPath )
+
+
+METHOD QDir:cleanPath( cPath )
+   RETURN Qt_QDir_cleanPath( ::pPtr, cPath )
+
+
+METHOD QDir:current()
+   RETURN Qt_QDir_current( ::pPtr )
+
+
+METHOD QDir:currentPath()
+   RETURN Qt_QDir_currentPath( ::pPtr )
+
+
+METHOD QDir:fromNativeSeparators( cPathName )
+   RETURN Qt_QDir_fromNativeSeparators( ::pPtr, cPathName )
+
+
+METHOD QDir:home()
+   RETURN Qt_QDir_home( ::pPtr )
+
+
+METHOD QDir:homePath()
+   RETURN Qt_QDir_homePath( ::pPtr )
+
+
+METHOD QDir:isAbsolutePath( cPath )
+   RETURN Qt_QDir_isAbsolutePath( ::pPtr, cPath )
+
+
+METHOD QDir:isRelativePath( cPath )
+   RETURN Qt_QDir_isRelativePath( ::pPtr, cPath )
+
+
+METHOD QDir:match( cFilter, cFileName )
+   RETURN Qt_QDir_match( ::pPtr, cFilter, cFileName )
+
+
+METHOD QDir:match_1( pFilters, cFileName )
+   RETURN Qt_QDir_match_1( ::pPtr, pFilters, cFileName )
+
+
+METHOD QDir:root()
+   RETURN Qt_QDir_root( ::pPtr )
+
+
+METHOD QDir:rootPath()
+   RETURN Qt_QDir_rootPath( ::pPtr )
+
+
+METHOD QDir:searchPaths( cPrefix )
+   RETURN Qt_QDir_searchPaths( ::pPtr, cPrefix )
+
+
+METHOD QDir:setCurrent( cPath )
+   RETURN Qt_QDir_setCurrent( ::pPtr, cPath )
+
+
+METHOD QDir:setSearchPaths( cPrefix, pSearchPaths )
+   RETURN Qt_QDir_setSearchPaths( ::pPtr, cPrefix, pSearchPaths )
+
+
+METHOD QDir:temp()
+   RETURN Qt_QDir_temp( ::pPtr )
+
+
+METHOD QDir:tempPath()
+   RETURN Qt_QDir_tempPath( ::pPtr )
+
+
+METHOD QDir:toNativeSeparators( cPathName )
+   RETURN Qt_QDir_toNativeSeparators( ::pPtr, cPathName )
+

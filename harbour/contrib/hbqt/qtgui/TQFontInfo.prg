@@ -71,41 +71,82 @@ CREATE CLASS QFontInfo
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  bold()                              INLINE  Qt_QFontInfo_bold( ::pPtr )
-   METHOD  exactMatch()                        INLINE  Qt_QFontInfo_exactMatch( ::pPtr )
-   METHOD  family()                            INLINE  Qt_QFontInfo_family( ::pPtr )
-   METHOD  fixedPitch()                        INLINE  Qt_QFontInfo_fixedPitch( ::pPtr )
-   METHOD  italic()                            INLINE  Qt_QFontInfo_italic( ::pPtr )
-   METHOD  pixelSize()                         INLINE  Qt_QFontInfo_pixelSize( ::pPtr )
-   METHOD  pointSize()                         INLINE  Qt_QFontInfo_pointSize( ::pPtr )
-   METHOD  pointSizeF()                        INLINE  Qt_QFontInfo_pointSizeF( ::pPtr )
-   METHOD  rawMode()                           INLINE  Qt_QFontInfo_rawMode( ::pPtr )
-   METHOD  style()                             INLINE  Qt_QFontInfo_style( ::pPtr )
-   METHOD  styleHint()                         INLINE  Qt_QFontInfo_styleHint( ::pPtr )
-   METHOD  weight()                            INLINE  Qt_QFontInfo_weight( ::pPtr )
+   METHOD  bold()
+   METHOD  exactMatch()
+   METHOD  family()
+   METHOD  fixedPitch()
+   METHOD  italic()
+   METHOD  pixelSize()
+   METHOD  pointSize()
+   METHOD  pointSizeF()
+   METHOD  rawMode()
+   METHOD  style()
+   METHOD  styleHint()
+   METHOD  weight()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QFontInfo
-
+METHOD QFontInfo:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QFontInfo( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QFontInfo
-
+METHOD QFontInfo:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QFontInfo:bold()
+   RETURN Qt_QFontInfo_bold( ::pPtr )
+
+
+METHOD QFontInfo:exactMatch()
+   RETURN Qt_QFontInfo_exactMatch( ::pPtr )
+
+
+METHOD QFontInfo:family()
+   RETURN Qt_QFontInfo_family( ::pPtr )
+
+
+METHOD QFontInfo:fixedPitch()
+   RETURN Qt_QFontInfo_fixedPitch( ::pPtr )
+
+
+METHOD QFontInfo:italic()
+   RETURN Qt_QFontInfo_italic( ::pPtr )
+
+
+METHOD QFontInfo:pixelSize()
+   RETURN Qt_QFontInfo_pixelSize( ::pPtr )
+
+
+METHOD QFontInfo:pointSize()
+   RETURN Qt_QFontInfo_pointSize( ::pPtr )
+
+
+METHOD QFontInfo:pointSizeF()
+   RETURN Qt_QFontInfo_pointSizeF( ::pPtr )
+
+
+METHOD QFontInfo:rawMode()
+   RETURN Qt_QFontInfo_rawMode( ::pPtr )
+
+
+METHOD QFontInfo:style()
+   RETURN Qt_QFontInfo_style( ::pPtr )
+
+
+METHOD QFontInfo:styleHint()
+   RETURN Qt_QFontInfo_styleHint( ::pPtr )
+
+
+METHOD QFontInfo:weight()
+   RETURN Qt_QFontInfo_weight( ::pPtr )
+

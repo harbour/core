@@ -71,33 +71,42 @@ CREATE CLASS QWebHistoryInterface INHERIT QObject
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  addHistoryEntry( cUrl )             INLINE  Qt_QWebHistoryInterface_addHistoryEntry( ::pPtr, cUrl )
-   METHOD  historyContains( cUrl )             INLINE  Qt_QWebHistoryInterface_historyContains( ::pPtr, cUrl )
-   METHOD  defaultInterface()                  INLINE  Qt_QWebHistoryInterface_defaultInterface( ::pPtr )
-   METHOD  setDefaultInterface( pDefaultInterface )  INLINE  Qt_QWebHistoryInterface_setDefaultInterface( ::pPtr, pDefaultInterface )
+   METHOD  addHistoryEntry( cUrl )
+   METHOD  historyContains( cUrl )
+   METHOD  defaultInterface()
+   METHOD  setDefaultInterface( pDefaultInterface )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QWebHistoryInterface
-
+METHOD QWebHistoryInterface:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QWebHistoryInterface( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QWebHistoryInterface
-
+METHOD QWebHistoryInterface:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QWebHistoryInterface:addHistoryEntry( cUrl )
+   RETURN Qt_QWebHistoryInterface_addHistoryEntry( ::pPtr, cUrl )
+
+
+METHOD QWebHistoryInterface:historyContains( cUrl )
+   RETURN Qt_QWebHistoryInterface_historyContains( ::pPtr, cUrl )
+
+
+METHOD QWebHistoryInterface:defaultInterface()
+   RETURN Qt_QWebHistoryInterface_defaultInterface( ::pPtr )
+
+
+METHOD QWebHistoryInterface:setDefaultInterface( pDefaultInterface )
+   RETURN Qt_QWebHistoryInterface_setDefaultInterface( ::pPtr, pDefaultInterface )
+

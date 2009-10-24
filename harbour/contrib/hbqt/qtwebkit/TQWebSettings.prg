@@ -71,54 +71,147 @@ CREATE CLASS QWebSettings
    METHOD  New()
    METHOD  Configure( xObject )
 
-   METHOD  fontFamily( nWhich )                INLINE  Qt_QWebSettings_fontFamily( ::pPtr, nWhich )
-   METHOD  fontSize( nType )                   INLINE  Qt_QWebSettings_fontSize( ::pPtr, nType )
-   METHOD  resetAttribute( nAttribute )        INLINE  Qt_QWebSettings_resetAttribute( ::pPtr, nAttribute )
-   METHOD  resetFontFamily( nWhich )           INLINE  Qt_QWebSettings_resetFontFamily( ::pPtr, nWhich )
-   METHOD  resetFontSize( nType )              INLINE  Qt_QWebSettings_resetFontSize( ::pPtr, nType )
-   METHOD  setAttribute( nAttribute, lOn )     INLINE  Qt_QWebSettings_setAttribute( ::pPtr, nAttribute, lOn )
-   METHOD  setFontFamily( nWhich, cFamily )    INLINE  Qt_QWebSettings_setFontFamily( ::pPtr, nWhich, cFamily )
-   METHOD  setFontSize( nType, nSize )         INLINE  Qt_QWebSettings_setFontSize( ::pPtr, nType, nSize )
-   METHOD  setUserStyleSheetUrl( pLocation )   INLINE  Qt_QWebSettings_setUserStyleSheetUrl( ::pPtr, pLocation )
-   METHOD  testAttribute( nAttribute )         INLINE  Qt_QWebSettings_testAttribute( ::pPtr, nAttribute )
-   METHOD  userStyleSheetUrl()                 INLINE  Qt_QWebSettings_userStyleSheetUrl( ::pPtr )
-   METHOD  clearIconDatabase()                 INLINE  Qt_QWebSettings_clearIconDatabase( ::pPtr )
-   METHOD  globalSettings()                    INLINE  Qt_QWebSettings_globalSettings( ::pPtr )
-   METHOD  iconDatabasePath()                  INLINE  Qt_QWebSettings_iconDatabasePath( ::pPtr )
-   METHOD  iconForUrl( pUrl )                  INLINE  Qt_QWebSettings_iconForUrl( ::pPtr, pUrl )
-   METHOD  maximumPagesInCache()               INLINE  Qt_QWebSettings_maximumPagesInCache( ::pPtr )
-   METHOD  offlineStorageDefaultQuota()        INLINE  Qt_QWebSettings_offlineStorageDefaultQuota( ::pPtr )
-   METHOD  offlineStoragePath()                INLINE  Qt_QWebSettings_offlineStoragePath( ::pPtr )
-   METHOD  setIconDatabasePath( cPath )        INLINE  Qt_QWebSettings_setIconDatabasePath( ::pPtr, cPath )
-   METHOD  setMaximumPagesInCache( nPages )    INLINE  Qt_QWebSettings_setMaximumPagesInCache( ::pPtr, nPages )
-   METHOD  setObjectCacheCapacities( nCacheMinDeadCapacity, nCacheMaxDead, nTotalCapacity )  INLINE  Qt_QWebSettings_setObjectCacheCapacities( ::pPtr, nCacheMinDeadCapacity, nCacheMaxDead, nTotalCapacity )
-   METHOD  setOfflineStorageDefaultQuota( nMaximumSize )  INLINE  Qt_QWebSettings_setOfflineStorageDefaultQuota( ::pPtr, nMaximumSize )
-   METHOD  setOfflineStoragePath( cPath )      INLINE  Qt_QWebSettings_setOfflineStoragePath( ::pPtr, cPath )
-   METHOD  setWebGraphic( nType, pGraphic )    INLINE  Qt_QWebSettings_setWebGraphic( ::pPtr, nType, pGraphic )
-   METHOD  webGraphic( nType )                 INLINE  Qt_QWebSettings_webGraphic( ::pPtr, nType )
+   METHOD  fontFamily( nWhich )
+   METHOD  fontSize( nType )
+   METHOD  resetAttribute( nAttribute )
+   METHOD  resetFontFamily( nWhich )
+   METHOD  resetFontSize( nType )
+   METHOD  setAttribute( nAttribute, lOn )
+   METHOD  setFontFamily( nWhich, cFamily )
+   METHOD  setFontSize( nType, nSize )
+   METHOD  setUserStyleSheetUrl( pLocation )
+   METHOD  testAttribute( nAttribute )
+   METHOD  userStyleSheetUrl()
+   METHOD  clearIconDatabase()
+   METHOD  globalSettings()
+   METHOD  iconDatabasePath()
+   METHOD  iconForUrl( pUrl )
+   METHOD  maximumPagesInCache()
+   METHOD  offlineStorageDefaultQuota()
+   METHOD  offlineStoragePath()
+   METHOD  setIconDatabasePath( cPath )
+   METHOD  setMaximumPagesInCache( nPages )
+   METHOD  setObjectCacheCapacities( nCacheMinDeadCapacity, nCacheMaxDead, nTotalCapacity )
+   METHOD  setOfflineStorageDefaultQuota( nMaximumSize )
+   METHOD  setOfflineStoragePath( cPath )
+   METHOD  setWebGraphic( nType, pGraphic )
+   METHOD  webGraphic( nType )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QWebSettings
-
+METHOD QWebSettings:New( pParent )
    ::pParent := pParent
-
    ::pPtr := Qt_QWebSettings( pParent )
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
 
-METHOD Configure( xObject ) CLASS QWebSettings
-
+METHOD QWebSettings:Configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
-
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+
+METHOD QWebSettings:fontFamily( nWhich )
+   RETURN Qt_QWebSettings_fontFamily( ::pPtr, nWhich )
+
+
+METHOD QWebSettings:fontSize( nType )
+   RETURN Qt_QWebSettings_fontSize( ::pPtr, nType )
+
+
+METHOD QWebSettings:resetAttribute( nAttribute )
+   RETURN Qt_QWebSettings_resetAttribute( ::pPtr, nAttribute )
+
+
+METHOD QWebSettings:resetFontFamily( nWhich )
+   RETURN Qt_QWebSettings_resetFontFamily( ::pPtr, nWhich )
+
+
+METHOD QWebSettings:resetFontSize( nType )
+   RETURN Qt_QWebSettings_resetFontSize( ::pPtr, nType )
+
+
+METHOD QWebSettings:setAttribute( nAttribute, lOn )
+   RETURN Qt_QWebSettings_setAttribute( ::pPtr, nAttribute, lOn )
+
+
+METHOD QWebSettings:setFontFamily( nWhich, cFamily )
+   RETURN Qt_QWebSettings_setFontFamily( ::pPtr, nWhich, cFamily )
+
+
+METHOD QWebSettings:setFontSize( nType, nSize )
+   RETURN Qt_QWebSettings_setFontSize( ::pPtr, nType, nSize )
+
+
+METHOD QWebSettings:setUserStyleSheetUrl( pLocation )
+   RETURN Qt_QWebSettings_setUserStyleSheetUrl( ::pPtr, pLocation )
+
+
+METHOD QWebSettings:testAttribute( nAttribute )
+   RETURN Qt_QWebSettings_testAttribute( ::pPtr, nAttribute )
+
+
+METHOD QWebSettings:userStyleSheetUrl()
+   RETURN Qt_QWebSettings_userStyleSheetUrl( ::pPtr )
+
+
+METHOD QWebSettings:clearIconDatabase()
+   RETURN Qt_QWebSettings_clearIconDatabase( ::pPtr )
+
+
+METHOD QWebSettings:globalSettings()
+   RETURN Qt_QWebSettings_globalSettings( ::pPtr )
+
+
+METHOD QWebSettings:iconDatabasePath()
+   RETURN Qt_QWebSettings_iconDatabasePath( ::pPtr )
+
+
+METHOD QWebSettings:iconForUrl( pUrl )
+   RETURN Qt_QWebSettings_iconForUrl( ::pPtr, pUrl )
+
+
+METHOD QWebSettings:maximumPagesInCache()
+   RETURN Qt_QWebSettings_maximumPagesInCache( ::pPtr )
+
+
+METHOD QWebSettings:offlineStorageDefaultQuota()
+   RETURN Qt_QWebSettings_offlineStorageDefaultQuota( ::pPtr )
+
+
+METHOD QWebSettings:offlineStoragePath()
+   RETURN Qt_QWebSettings_offlineStoragePath( ::pPtr )
+
+
+METHOD QWebSettings:setIconDatabasePath( cPath )
+   RETURN Qt_QWebSettings_setIconDatabasePath( ::pPtr, cPath )
+
+
+METHOD QWebSettings:setMaximumPagesInCache( nPages )
+   RETURN Qt_QWebSettings_setMaximumPagesInCache( ::pPtr, nPages )
+
+
+METHOD QWebSettings:setObjectCacheCapacities( nCacheMinDeadCapacity, nCacheMaxDead, nTotalCapacity )
+   RETURN Qt_QWebSettings_setObjectCacheCapacities( ::pPtr, nCacheMinDeadCapacity, nCacheMaxDead, nTotalCapacity )
+
+
+METHOD QWebSettings:setOfflineStorageDefaultQuota( nMaximumSize )
+   RETURN Qt_QWebSettings_setOfflineStorageDefaultQuota( ::pPtr, nMaximumSize )
+
+
+METHOD QWebSettings:setOfflineStoragePath( cPath )
+   RETURN Qt_QWebSettings_setOfflineStoragePath( ::pPtr, cPath )
+
+
+METHOD QWebSettings:setWebGraphic( nType, pGraphic )
+   RETURN Qt_QWebSettings_setWebGraphic( ::pPtr, nType, pGraphic )
+
+
+METHOD QWebSettings:webGraphic( nType )
+   RETURN Qt_QWebSettings_webGraphic( ::pPtr, nType )
+
