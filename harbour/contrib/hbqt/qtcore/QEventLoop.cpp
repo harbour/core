@@ -106,7 +106,7 @@ QT_G_FUNC( release_QEventLoop )
 
 HB_FUNC( QT_QEVENTLOOP )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QEventLoop > pObj = NULL;
 
    pObj = new QEventLoop( hbqt_par_QObject( 1 ) ) ;

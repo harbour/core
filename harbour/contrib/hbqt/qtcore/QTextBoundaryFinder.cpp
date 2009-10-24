@@ -100,11 +100,15 @@ QT_G_FUNC( release_QTextBoundaryFinder )
 
 HB_FUNC( QT_QTEXTBOUNDARYFINDER )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QTextBoundaryFinder* ) new QTextBoundaryFinder() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QTextBoundaryFinder;
+
+   hb_retptrGC( p );
 }
 /*
  * BoundaryReasons boundaryReasons () const

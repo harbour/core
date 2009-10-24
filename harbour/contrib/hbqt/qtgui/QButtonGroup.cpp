@@ -110,7 +110,7 @@ QT_G_FUNC( release_QButtonGroup )
 
 HB_FUNC( QT_QBUTTONGROUP )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QButtonGroup > pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )

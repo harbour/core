@@ -62,29 +62,6 @@
 
 #if QT_VERSION >= 0x040500
 
-#include <QWidget>
-#include <QString>
-#include <QList>
-#include <QKeyEvent>
-#include <QAction>
-#include <QObject>
-#include <QEvent>
-#include <QMessageBox>
-#include <QFileDialog>
-
-#include <QBitArray>
-#include <QBitmap>
-#include <QDate>
-#include <QHttpRequestHeader>
-#include <QTextCursor>
-#include <QTextDocumentFragment>
-#include <QTextLine>
-#include <QWebHistoryItem>
-#include <QWebSecurityOrigin>
-#include <QWebHitTestResult>
-#include <QLocale>
-#include <QModelIndex>
-
 /*----------------------------------------------------------------------*/
 
 HB_GARBAGE_FUNC( Q_release )
@@ -96,35 +73,40 @@ HB_GARBAGE_FUNC( Q_release )
    }
 }
 
+const HB_GC_FUNCS QT_gcFuncs =
+{
+   Q_release,
+   hb_gcDummyMark
+};
+
+const HB_GC_FUNCS * gcFuncs( void )
+{
+   return &QT_gcFuncs;
+}
+
 void * hbqt_gcpointer( int iParam )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( Q_release, iParam );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( gcFuncs(), iParam );
 
-   #if 0
    if( p && p->ph )
+   {
       return p->ph;
-   hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-   return NULL;
-   #else
-   return ( p && p->ph ? p->ph : hb_parptr( iParam ) );
-   #endif
+   }
+   else
+   {
+      return hb_parptr( iParam );
+   }
 }
 
 void * hbqt_ptrTOgcpointer( void * ptr, QT_G_FUNC_PTR func )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    p->ph = ptr;
    p->func = func;
    return p;
 }
 
-int hbqt_getIdByName( QString name )
-{
-   return 0;
-}
 /*----------------------------------------------------------------------*/
 
 #endif                  // #if QT_VERSION >= 0x040500
-
-
 

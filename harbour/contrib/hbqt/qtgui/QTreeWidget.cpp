@@ -113,7 +113,7 @@ QT_G_FUNC( release_QTreeWidget )
 
 HB_FUNC( QT_QTREEWIDGET )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QTreeWidget > pObj = NULL;
 
    pObj = ( QTreeWidget* ) new QTreeWidget( hbqt_par_QWidget( 1 ) ) ;

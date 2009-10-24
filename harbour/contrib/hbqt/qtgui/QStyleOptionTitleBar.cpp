@@ -96,11 +96,15 @@ QT_G_FUNC( release_QStyleOptionTitleBar )
 
 HB_FUNC( QT_QSTYLEOPTIONTITLEBAR )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOptionTitleBar* ) new QStyleOptionTitleBar() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOptionTitleBar;
+
+   hb_retptrGC( p );
 }
 /*
  * QIcon icon

@@ -124,7 +124,7 @@ QT_G_FUNC( release_QTextDocument )
 
 HB_FUNC( QT_QTEXTDOCUMENT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QTextDocument > pObj = NULL;
 
    pObj = ( QTextDocument* ) new QTextDocument( hbqt_par_QObject( 1 ) ) ;

@@ -101,7 +101,7 @@ QT_G_FUNC( release_QDesktopWidget )
 
 HB_FUNC( QT_QDESKTOPWIDGET )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QDesktopWidget > pObj = NULL;
 
    pObj = new QDesktopWidget() ;

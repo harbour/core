@@ -96,11 +96,15 @@ QT_G_FUNC( release_QStyleOptionGroupBox )
 
 HB_FUNC( QT_QSTYLEOPTIONGROUPBOX )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOptionGroupBox* ) new QStyleOptionGroupBox() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOptionGroupBox;
+
+   hb_retptrGC( p );
 }
 /*
  * QStyleOptionFrameV2::FrameFeatures features

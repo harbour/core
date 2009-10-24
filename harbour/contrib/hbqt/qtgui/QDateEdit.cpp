@@ -101,7 +101,7 @@ QT_G_FUNC( release_QDateEdit )
 
 HB_FUNC( QT_QDATEEDIT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QDateEdit > pObj = NULL;
 
    pObj = ( QDateEdit* ) new QDateEdit( hbqt_par_QWidget( 1 ) ) ;

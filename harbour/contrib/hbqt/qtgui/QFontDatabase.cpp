@@ -108,11 +108,15 @@ QT_G_FUNC( release_QFontDatabase )
 
 HB_FUNC( QT_QFONTDATABASE )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = new QFontDatabase() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QFontDatabase;
+
+   hb_retptrGC( p );
 }
 /*
  * bool bold ( const QString & family, const QString & style ) const

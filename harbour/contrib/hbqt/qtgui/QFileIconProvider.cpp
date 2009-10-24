@@ -94,11 +94,15 @@ QT_G_FUNC( release_QFileIconProvider )
 
 HB_FUNC( QT_QFILEICONPROVIDER )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = new QFileIconProvider() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QFileIconProvider;
+
+   hb_retptrGC( p );
 }
 /*
  * virtual QIcon icon ( IconType type ) const

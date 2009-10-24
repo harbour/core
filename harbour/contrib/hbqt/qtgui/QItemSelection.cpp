@@ -90,11 +90,15 @@ QT_G_FUNC( release_QItemSelection )
 
 HB_FUNC( QT_QITEMSELECTION )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = new QItemSelection() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QItemSelection;
+
+   hb_retptrGC( p );
 }
 /*
  * bool contains ( const QModelIndex & index ) const

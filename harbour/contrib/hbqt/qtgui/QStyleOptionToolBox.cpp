@@ -96,11 +96,15 @@ QT_G_FUNC( release_QStyleOptionToolBox )
 
 HB_FUNC( QT_QSTYLEOPTIONTOOLBOX )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOptionToolBox* ) new QStyleOptionToolBox() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOptionToolBox;
+
+   hb_retptrGC( p );
 }
 /*
  * QIcon icon

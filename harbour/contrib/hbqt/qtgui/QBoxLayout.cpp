@@ -105,7 +105,7 @@ QT_G_FUNC( release_QBoxLayout )
 
 HB_FUNC( QT_QBOXLAYOUT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QBoxLayout > pObj = NULL;
 
    pObj = ( QBoxLayout* ) new QBoxLayout( ( QBoxLayout::Direction ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) ;

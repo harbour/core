@@ -91,7 +91,7 @@ QT_G_FUNC( release_QTextImageFormat )
 
 HB_FUNC( QT_QTEXTIMAGEFORMAT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QTextImageFormat* ) new QTextImageFormat() ;

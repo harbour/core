@@ -91,11 +91,15 @@ QT_G_FUNC( release_QTextFragment )
 
 HB_FUNC( QT_QTEXTFRAGMENT )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QTextFragment* ) new QTextFragment() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QTextFragment;
+
+   hb_retptrGC( p );
 }
 /*
  * QTextCharFormat charFormat () const

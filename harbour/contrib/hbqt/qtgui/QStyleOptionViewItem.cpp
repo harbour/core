@@ -97,11 +97,15 @@ QT_G_FUNC( release_QStyleOptionViewItem )
 
 HB_FUNC( QT_QSTYLEOPTIONVIEWITEM )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOptionViewItem* ) new QStyleOptionViewItem() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOptionViewItem;
+
+   hb_retptrGC( p );
 }
 /*
  * Qt::Alignment decorationAlignment

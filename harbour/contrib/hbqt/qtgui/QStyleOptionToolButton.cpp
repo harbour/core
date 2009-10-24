@@ -98,11 +98,15 @@ QT_G_FUNC( release_QStyleOptionToolButton )
 
 HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOptionToolButton* ) new QStyleOptionToolButton() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOptionToolButton;
+
+   hb_retptrGC( p );
 }
 /*
  * Qt::ArrowType arrowType

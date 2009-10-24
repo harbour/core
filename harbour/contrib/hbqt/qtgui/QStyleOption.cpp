@@ -98,11 +98,15 @@ QT_G_FUNC( release_QStyleOption )
 
 HB_FUNC( QT_QSTYLEOPTION )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOption* ) new QStyleOption() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOption;
+
+   hb_retptrGC( p );
 }
 /*
  * void initFrom ( const QWidget * widget )

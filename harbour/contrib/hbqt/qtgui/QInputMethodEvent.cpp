@@ -104,11 +104,15 @@ QT_G_FUNC( release_QInputMethodEvent )
 
 HB_FUNC( QT_QINPUTMETHODEVENT )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = new QInputMethodEvent() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QInputMethodEvent;
+
+   hb_retptrGC( p );
 }
 /*
  * const QString & commitString () const

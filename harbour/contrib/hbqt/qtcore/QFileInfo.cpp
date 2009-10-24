@@ -100,11 +100,15 @@ QT_G_FUNC( release_QFileInfo )
 
 HB_FUNC( QT_QFILEINFO )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = new QFileInfo() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QFileInfo;
+
+   hb_retptrGC( p );
 }
 /*
  * QDir absoluteDir () const

@@ -125,7 +125,7 @@ QT_G_FUNC( release_QUrl )
 
 HB_FUNC( QT_QURL )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = new QUrl( hbqt_par_QString( 1 ) ) ;

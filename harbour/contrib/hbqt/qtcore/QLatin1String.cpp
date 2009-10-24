@@ -90,11 +90,15 @@ QT_G_FUNC( release_QLatin1String )
 
 HB_FUNC( QT_QLATIN1STRING )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QLatin1String* ) new QLatin1String( hb_parcx( 1 ) ) ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QLatin1String;
+
+   hb_retptrGC( p );
 }
 /*
  * const char * latin1 () const

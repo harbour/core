@@ -118,12 +118,16 @@ QT_G_FUNC( release_QList )
 
 HB_FUNC( QT_QLIST )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    QList<void*>* list = NULL;
    pObj = ( QList<void*>* ) list ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QList;
+
+   hb_retptrGC( p );
 }
 /*
  * void append ( const T & value )

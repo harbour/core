@@ -96,11 +96,15 @@ QT_G_FUNC( release_QStyleOptionSpinBox )
 
 HB_FUNC( QT_QSTYLEOPTIONSPINBOX )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOptionSpinBox* ) new QStyleOptionSpinBox() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOptionSpinBox;
+
+   hb_retptrGC( p );
 }
 /*
  * QAbstractSpinBox::ButtonSymbols buttonSymbols

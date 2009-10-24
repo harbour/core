@@ -96,11 +96,15 @@ QT_G_FUNC( release_QStyleOptionComplex )
 
 HB_FUNC( QT_QSTYLEOPTIONCOMPLEX )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOptionComplex* ) new QStyleOptionComplex() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOptionComplex;
+
+   hb_retptrGC( p );
 }
 /*
  * QStyle::SubControls activeSubControls

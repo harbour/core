@@ -109,7 +109,7 @@ QT_G_FUNC( release_QListView )
 
 HB_FUNC( QT_QLISTVIEW )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QListView > pObj = NULL;
 
    pObj = ( QListView * ) new QListView( hbqt_par_QWidget( 1 ) ) ;

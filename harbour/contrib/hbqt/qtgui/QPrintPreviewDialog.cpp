@@ -102,7 +102,7 @@ QT_G_FUNC( release_QPrintPreviewDialog )
 
 HB_FUNC( QT_QPRINTPREVIEWDIALOG )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QPrintPreviewDialog > pObj = NULL;
 
    if( hb_pcount() >= 2 && HB_ISPOINTER( 2 ) )

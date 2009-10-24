@@ -99,11 +99,15 @@ QT_G_FUNC( release_QStyleOptionToolBar )
 
 HB_FUNC( QT_QSTYLEOPTIONTOOLBAR )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOptionToolBar* ) new QStyleOptionToolBar() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOptionToolBar;
+
+   hb_retptrGC( p );
 }
 /*
  * ToolBarFeatures features

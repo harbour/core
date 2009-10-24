@@ -511,9 +511,9 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       aadd( cpp_, new_[ 1 ] )           // Func definition
       aadd( cpp_, new_[ 2 ] )           // {
       IF lConst
-         // lObject := IsQObject( cWidget ) .or. lObject
-         IF lObject .or. IsMemObject( cWidget )
-            aadd( cpp_, "   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );" )
+         //IF lObject .or. IsMemObject( cWidget )
+         IF lDestructor
+            aadd( cpp_, "   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );" )
          ENDIF
          IF lObject
             aadd( cpp_, "   QPointer< "+ cWidget +" > pObj = NULL;" )
@@ -533,15 +533,9 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
             ENDIF
          NEXT
          aadd( cpp_, "" )
-         IF lObject .or. IsMemObject( cWidget )
+         //IF lObject .or. IsMemObject( cWidget )
+         IF lDestructor
             aadd( cpp_, "   p->ph = pObj;" )
-            #if 0
-            IF lObject
-               aadd( cpp_, "   p->type = 1001;" )
-            ELSE
-               aadd( cpp_, '   p->type = hbqt_getIdByName( ( QString ) "' + cWidget + '" );' )
-            ENDIF
-            #endif
             aadd( cpp_, "   p->func = release_" + cWidget +";" )
             aadd( cpp_, " " )
             aadd( cpp_, "   hb_retptrGC( p );" )

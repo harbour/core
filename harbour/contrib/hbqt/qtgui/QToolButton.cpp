@@ -105,7 +105,7 @@ QT_G_FUNC( release_QToolButton )
 
 HB_FUNC( QT_QTOOLBUTTON )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QToolButton > pObj = NULL;
 
    pObj = ( QToolButton* ) new QToolButton( hbqt_par_QWidget( 1 ) ) ;

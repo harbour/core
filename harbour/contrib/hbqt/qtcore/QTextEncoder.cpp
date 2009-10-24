@@ -91,11 +91,15 @@ QT_G_FUNC( release_QTextEncoder )
 
 HB_FUNC( QT_QTEXTENCODER )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QTextEncoder* ) new QTextEncoder( hbqt_par_QTextCodec( 1 ) ) ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QTextEncoder;
+
+   hb_retptrGC( p );
 }
 /*
  * QByteArray fromUnicode ( const QString & str )

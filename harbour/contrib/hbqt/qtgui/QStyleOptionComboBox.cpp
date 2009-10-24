@@ -96,11 +96,15 @@ QT_G_FUNC( release_QStyleOptionComboBox )
 
 HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOptionComboBox* ) new QStyleOptionComboBox() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOptionComboBox;
+
+   hb_retptrGC( p );
 }
 /*
  * QIcon currentIcon

@@ -113,7 +113,7 @@ QT_G_FUNC( release_QTableWidget )
 
 HB_FUNC( QT_QTABLEWIDGET )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QTableWidget > pObj = NULL;
 
    if( hb_pcount() >= 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )

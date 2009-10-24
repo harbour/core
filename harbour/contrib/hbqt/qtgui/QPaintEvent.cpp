@@ -91,6 +91,7 @@ QT_G_FUNC( release_QPaintEvent )
 
 HB_FUNC( QT_QPAINTEVENT )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
@@ -107,7 +108,10 @@ HB_FUNC( QT_QPAINTEVENT )
       }
    }
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QPaintEvent;
+
+   hb_retptrGC( p );
 }
 /*
  * const QRect & rect () const

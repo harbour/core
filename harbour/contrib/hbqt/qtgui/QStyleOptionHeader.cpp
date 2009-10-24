@@ -99,11 +99,15 @@ QT_G_FUNC( release_QStyleOptionHeader )
 
 HB_FUNC( QT_QSTYLEOPTIONHEADER )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOptionHeader* ) new QStyleOptionHeader() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOptionHeader;
+
+   hb_retptrGC( p );
 }
 /*
  * QIcon icon

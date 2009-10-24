@@ -98,11 +98,15 @@ QT_G_FUNC( release_QConicalGradient )
 
 HB_FUNC( QT_QCONICALGRADIENT )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QConicalGradient* ) new QConicalGradient() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QConicalGradient;
+
+   hb_retptrGC( p );
 }
 /*
  * qreal angle () const

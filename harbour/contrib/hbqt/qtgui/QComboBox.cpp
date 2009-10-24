@@ -106,7 +106,7 @@ QT_G_FUNC( release_QComboBox )
 
 HB_FUNC( QT_QCOMBOBOX )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QComboBox > pObj = NULL;
 
    pObj = ( QComboBox* ) new QComboBox( hbqt_par_QWidget( 1 ) ) ;

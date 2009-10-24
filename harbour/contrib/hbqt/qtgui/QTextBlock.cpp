@@ -90,6 +90,7 @@ QT_G_FUNC( release_QTextBlock )
 
 HB_FUNC( QT_QTEXTBLOCK )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
@@ -101,7 +102,10 @@ HB_FUNC( QT_QTEXTBLOCK )
       pObj = new QTextBlock() ;
    }
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QTextBlock;
+
+   hb_retptrGC( p );
 }
 /*
  * QTextBlockFormat blockFormat () const

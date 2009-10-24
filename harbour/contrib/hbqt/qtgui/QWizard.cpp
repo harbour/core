@@ -121,7 +121,7 @@ QT_G_FUNC( release_QWizard )
 
 HB_FUNC( QT_QWIZARD )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QWizard > pObj = NULL;
 
    pObj = new QWizard( hbqt_par_QWidget( 2 ) ) ;

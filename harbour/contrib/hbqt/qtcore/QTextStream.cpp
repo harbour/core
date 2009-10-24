@@ -111,11 +111,15 @@ QT_G_FUNC( release_QTextStream )
 
 HB_FUNC( QT_QTEXTSTREAM )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = new QTextStream( hb_parcx( 1 ), ( QIODevice::OpenMode ) ( HB_ISNUM( 2 ) ?  hb_parni( 2 ) : QIODevice::ReadWrite ) ) ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QTextStream;
+
+   hb_retptrGC( p );
 }
 /*
  * bool atEnd () const

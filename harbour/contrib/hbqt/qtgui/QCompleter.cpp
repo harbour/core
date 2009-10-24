@@ -107,7 +107,7 @@ QT_G_FUNC( release_QCompleter )
 
 HB_FUNC( QT_QCOMPLETER )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QCompleter > pObj = NULL;
 
    pObj = new QCompleter() ;

@@ -123,11 +123,15 @@ QT_G_FUNC( release_QPrinter )
 
 HB_FUNC( QT_QPRINTER )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QPrinter* ) new QPrinter() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QPrinter;
+
+   hb_retptrGC( p );
 }
 /*
  * bool abort ()

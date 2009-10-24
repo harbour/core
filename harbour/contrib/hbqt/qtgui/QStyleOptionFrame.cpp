@@ -96,11 +96,15 @@ QT_G_FUNC( release_QStyleOptionFrame )
 
 HB_FUNC( QT_QSTYLEOPTIONFRAME )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOptionFrame* ) new QStyleOptionFrame() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOptionFrame;
+
+   hb_retptrGC( p );
 }
 /*
  * int lineWidth

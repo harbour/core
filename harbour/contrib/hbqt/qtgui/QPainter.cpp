@@ -111,6 +111,7 @@ QT_G_FUNC( release_QPainter )
 
 HB_FUNC( QT_QPAINTER )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
@@ -122,7 +123,10 @@ HB_FUNC( QT_QPAINTER )
       pObj = new QPainter() ;
    }
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QPainter;
+
+   hb_retptrGC( p );
 }
 /*
  * const QBrush & background () const

@@ -101,7 +101,7 @@ QT_G_FUNC( release_QWidgetAction )
 
 HB_FUNC( QT_QWIDGETACTION )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QWidgetAction > pObj = NULL;
 
    pObj = ( QWidgetAction* ) new QWidgetAction( hbqt_par_QObject( 1 ) ) ;

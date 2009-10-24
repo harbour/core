@@ -92,6 +92,7 @@ QT_G_FUNC( release_QPicture )
 
 HB_FUNC( QT_QPICTURE )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
@@ -107,7 +108,10 @@ HB_FUNC( QT_QPICTURE )
       pObj = new QPicture() ;
    }
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QPicture;
+
+   hb_retptrGC( p );
 }
 /*
  * QRect boundingRect () const

@@ -102,7 +102,7 @@ QT_G_FUNC( release_QVBoxLayout )
 
 HB_FUNC( QT_QVBOXLAYOUT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QVBoxLayout > pObj = NULL;
 
    pObj = ( QVBoxLayout* ) new QVBoxLayout( hbqt_par_QWidget( 1 ) ) ;

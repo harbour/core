@@ -96,7 +96,7 @@ QT_G_FUNC( release_QTextCharFormat )
 
 HB_FUNC( QT_QTEXTCHARFORMAT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QTextCharFormat* ) new QTextCharFormat() ;

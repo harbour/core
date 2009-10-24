@@ -105,7 +105,7 @@ QT_G_FUNC( release_QPen )
 
 HB_FUNC( QT_QPEN )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISNUM( 1 ) )

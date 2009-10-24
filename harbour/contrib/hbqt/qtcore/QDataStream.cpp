@@ -99,11 +99,15 @@ QT_G_FUNC( release_QDataStream )
 
 HB_FUNC( QT_QDATASTREAM )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = new QDataStream() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QDataStream;
+
+   hb_retptrGC( p );
 }
 /*
  * bool atEnd () const

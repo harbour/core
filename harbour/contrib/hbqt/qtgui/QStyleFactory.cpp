@@ -90,11 +90,15 @@ QT_G_FUNC( release_QStyleFactory )
 
 HB_FUNC( QT_QSTYLEFACTORY )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = new QStyleFactory() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleFactory;
+
+   hb_retptrGC( p );
 }
 /*
  * QStyle * create ( const QString & key )

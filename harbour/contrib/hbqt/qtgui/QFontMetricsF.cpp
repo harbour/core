@@ -94,6 +94,7 @@ QT_G_FUNC( release_QFontMetricsF )
 
 HB_FUNC( QT_QFONTMETRICSF )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
@@ -116,7 +117,10 @@ HB_FUNC( QT_QFONTMETRICSF )
       pObj = ( QFontMetricsF* ) new QFontMetricsF( *hbqt_par_QFont( 1 ), hbqt_par_QPaintDevice( 2 ) ) ;
    }
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QFontMetricsF;
+
+   hb_retptrGC( p );
 }
 /*
  * qreal ascent () const

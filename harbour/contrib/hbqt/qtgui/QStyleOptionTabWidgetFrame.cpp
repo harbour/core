@@ -96,11 +96,15 @@ QT_G_FUNC( release_QStyleOptionTabWidgetFrame )
 
 HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOptionTabWidgetFrame* ) new QStyleOptionTabWidgetFrame() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOptionTabWidgetFrame;
+
+   hb_retptrGC( p );
 }
 /*
  * QSize leftCornerWidgetSize

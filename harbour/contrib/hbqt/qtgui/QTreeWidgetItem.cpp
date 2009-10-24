@@ -115,6 +115,7 @@ QT_G_FUNC( release_QTreeWidgetItem )
 
 HB_FUNC( QT_QTREEWIDGETITEM )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
@@ -126,7 +127,10 @@ HB_FUNC( QT_QTREEWIDGETITEM )
       pObj = ( QTreeWidgetItem* ) new QTreeWidgetItem( hbqt_par_QTreeWidget( 1 ), hb_parni( 2 ) ) ;
    }
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QTreeWidgetItem;
+
+   hb_retptrGC( p );
 }
 /*
  * void addChild ( QTreeWidgetItem * child )

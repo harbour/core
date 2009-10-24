@@ -101,7 +101,7 @@ QT_G_FUNC( release_QStatusBar )
 
 HB_FUNC( QT_QSTATUSBAR )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QStatusBar > pObj = NULL;
 
    pObj = ( QStatusBar* ) new QStatusBar( hbqt_par_QWidget( 1 ) ) ;

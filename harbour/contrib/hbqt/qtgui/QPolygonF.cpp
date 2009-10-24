@@ -95,11 +95,15 @@ QT_G_FUNC( release_QPolygonF )
 
 HB_FUNC( QT_QPOLYGONF )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = new QPolygonF() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QPolygonF;
+
+   hb_retptrGC( p );
 }
 /*
  * QRectF boundingRect () const

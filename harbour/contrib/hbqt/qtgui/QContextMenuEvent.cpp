@@ -95,11 +95,15 @@ QT_G_FUNC( release_QContextMenuEvent )
 
 HB_FUNC( QT_QCONTEXTMENUEVENT )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = new QContextMenuEvent( ( QContextMenuEvent::Reason ) hb_parni( 1 ), *hbqt_par_QPoint( 2 ) ) ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QContextMenuEvent;
+
+   hb_retptrGC( p );
 }
 /*
  * const QPoint & globalPos () const

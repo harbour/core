@@ -90,11 +90,15 @@ QT_G_FUNC( release_QWidgetItem )
 
 HB_FUNC( QT_QWIDGETITEM )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QWidgetItem* ) new QWidgetItem( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QWidgetItem;
+
+   hb_retptrGC( p );
 }
 /*
  * virtual bool isEmpty () const

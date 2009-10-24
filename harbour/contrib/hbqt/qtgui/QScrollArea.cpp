@@ -101,7 +101,7 @@ QT_G_FUNC( release_QScrollArea )
 
 HB_FUNC( QT_QSCROLLAREA )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QScrollArea > pObj = NULL;
 
    pObj = ( QScrollArea* ) new QScrollArea( hbqt_par_QWidget( 1 ) ) ;

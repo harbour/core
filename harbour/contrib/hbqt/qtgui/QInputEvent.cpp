@@ -91,11 +91,15 @@ QT_G_FUNC( release_QInputEvent )
 
 HB_FUNC( QT_QINPUTEVENT )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QInputEvent* ) new QInputEvent( ( QEvent::Type ) hb_parni( 1 ), ( Qt::KeyboardModifiers ) hb_parni( 2 ) ) ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QInputEvent;
+
+   hb_retptrGC( p );
 }
 /*
  * Qt::KeyboardModifiers modifiers () const

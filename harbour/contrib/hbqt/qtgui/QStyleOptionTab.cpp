@@ -100,11 +100,15 @@ QT_G_FUNC( release_QStyleOptionTab )
 
 HB_FUNC( QT_QSTYLEOPTIONTAB )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOptionTab* ) new QStyleOptionTab() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOptionTab;
+
+   hb_retptrGC( p );
 }
 /*
  * CornerWidgets cornerWidgets

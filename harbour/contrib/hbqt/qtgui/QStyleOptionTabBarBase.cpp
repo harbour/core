@@ -96,11 +96,15 @@ QT_G_FUNC( release_QStyleOptionTabBarBase )
 
 HB_FUNC( QT_QSTYLEOPTIONTABBARBASE )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOptionTabBarBase* ) new QStyleOptionTabBarBase() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOptionTabBarBase;
+
+   hb_retptrGC( p );
 }
 /*
  * QRect selectedTabRect

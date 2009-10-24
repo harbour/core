@@ -96,11 +96,15 @@ QT_G_FUNC( release_QStyleOptionFocusRect )
 
 HB_FUNC( QT_QSTYLEOPTIONFOCUSRECT )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOptionFocusRect* ) new QStyleOptionFocusRect() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOptionFocusRect;
+
+   hb_retptrGC( p );
 }
 /*
  * QColor backgroundColor

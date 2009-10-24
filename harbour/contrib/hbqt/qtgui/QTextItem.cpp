@@ -96,11 +96,15 @@ QT_G_FUNC( release_QTextItem )
 
 HB_FUNC( QT_QTEXTITEM )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QTextItem* ) new QTextItem() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QTextItem;
+
+   hb_retptrGC( p );
 }
 /*
  * qreal ascent () const

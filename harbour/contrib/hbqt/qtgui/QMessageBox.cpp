@@ -118,7 +118,7 @@ QT_G_FUNC( release_QMessageBox )
 
 HB_FUNC( QT_QMESSAGEBOX )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QMessageBox > pObj = NULL;
 
    pObj = ( QMessageBox* ) new QMessageBox() ;

@@ -98,11 +98,15 @@ QT_G_FUNC( release_QListWidgetItem )
 
 HB_FUNC( QT_QLISTWIDGETITEM )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = new QListWidgetItem( hbqt_par_QListWidget( 1 ), hb_parni( 2 ) ) ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QListWidgetItem;
+
+   hb_retptrGC( p );
 }
 /*
  * QBrush background () const

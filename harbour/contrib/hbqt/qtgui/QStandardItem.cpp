@@ -114,11 +114,15 @@ QT_G_FUNC( release_QStandardItem )
 
 HB_FUNC( QT_QSTANDARDITEM )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStandardItem* ) new QStandardItem() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStandardItem;
+
+   hb_retptrGC( p );
 }
 /*
  * QString accessibleDescription () const

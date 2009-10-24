@@ -100,7 +100,7 @@ QT_G_FUNC( release_QTranslator )
 
 HB_FUNC( QT_QTRANSLATOR )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QTranslator > pObj = NULL;
 
    pObj = new QTranslator() ;

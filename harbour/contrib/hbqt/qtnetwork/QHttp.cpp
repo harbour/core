@@ -124,7 +124,7 @@ QT_G_FUNC( release_QHttp )
 
 HB_FUNC( QT_QHTTP )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QHttp > pObj = NULL;
 
    pObj = new QHttp( hbqt_par_QObject( 1 ) ) ;

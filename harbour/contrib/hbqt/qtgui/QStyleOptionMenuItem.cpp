@@ -98,11 +98,15 @@ QT_G_FUNC( release_QStyleOptionMenuItem )
 
 HB_FUNC( QT_QSTYLEOPTIONMENUITEM )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOptionMenuItem* ) new QStyleOptionMenuItem() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOptionMenuItem;
+
+   hb_retptrGC( p );
 }
 /*
  * CheckType checkType

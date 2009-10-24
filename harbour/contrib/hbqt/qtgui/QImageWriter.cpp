@@ -106,11 +106,15 @@ QT_G_FUNC( release_QImageWriter )
 
 HB_FUNC( QT_QIMAGEWRITER )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QImageWriter* ) new QImageWriter() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QImageWriter;
+
+   hb_retptrGC( p );
 }
 /*
  * bool canWrite () const

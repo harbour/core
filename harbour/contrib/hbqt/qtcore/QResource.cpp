@@ -91,11 +91,15 @@ QT_G_FUNC( release_QResource )
 
 HB_FUNC( QT_QRESOURCE )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QResource* ) new QResource() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QResource;
+
+   hb_retptrGC( p );
 }
 /*
  * QString absoluteFilePath () const

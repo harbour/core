@@ -108,11 +108,15 @@ QT_G_FUNC( release_QTextLayout )
 
 HB_FUNC( QT_QTEXTLAYOUT )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QTextLayout* ) new QTextLayout() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QTextLayout;
+
+   hb_retptrGC( p );
 }
 /*
  * void beginLayout ()

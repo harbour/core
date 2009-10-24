@@ -112,7 +112,7 @@ QT_G_FUNC( release_QWebPage )
 
 HB_FUNC( QT_QWEBPAGE )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QWebPage > pObj = NULL;
 
    pObj = new QWebPage( hbqt_par_QWidget( 2 ) ) ;

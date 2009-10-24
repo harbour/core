@@ -116,7 +116,7 @@ QT_G_FUNC( release_QCalendarWidget )
 
 HB_FUNC( QT_QCALENDARWIDGET )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QCalendarWidget > pObj = NULL;
 
    pObj = ( QCalendarWidget* ) new QCalendarWidget( hbqt_par_QWidget( 1 ) ) ;

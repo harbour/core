@@ -92,6 +92,7 @@ QT_G_FUNC( release_QMouseEvent )
 
 HB_FUNC( QT_QMOUSEEVENT )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
@@ -99,7 +100,10 @@ HB_FUNC( QT_QMOUSEEVENT )
       pObj = new QMouseEvent( *hbqt_par_QMouseEvent( 1 ) ) ;
    }
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QMouseEvent;
+
+   hb_retptrGC( p );
 }
 /*
  * Qt::MouseButton button () const

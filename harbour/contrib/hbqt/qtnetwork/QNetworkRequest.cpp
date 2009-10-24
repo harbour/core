@@ -111,11 +111,15 @@ QT_G_FUNC( release_QNetworkRequest )
 
 HB_FUNC( QT_QNETWORKREQUEST )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = new QNetworkRequest() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QNetworkRequest;
+
+   hb_retptrGC( p );
 }
 /*
  * QVariant attribute ( Attribute code, const QVariant & defaultValue = QVariant() ) const

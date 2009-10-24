@@ -101,7 +101,7 @@ QT_G_FUNC( release_QDial )
 
 HB_FUNC( QT_QDIAL )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QDial > pObj = NULL;
 
    pObj = ( QDial* ) new QDial( hbqt_par_QWidget( 1 ) ) ;

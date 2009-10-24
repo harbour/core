@@ -112,7 +112,7 @@ QT_G_FUNC( release_QTableView )
 
 HB_FUNC( QT_QTABLEVIEW )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QTableView > pObj = NULL;
 
    pObj = ( QTableView* ) new QTableView( hbqt_par_QWidget( 1 ) ) ;

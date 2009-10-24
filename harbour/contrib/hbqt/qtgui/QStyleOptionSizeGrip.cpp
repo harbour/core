@@ -96,11 +96,15 @@ QT_G_FUNC( release_QStyleOptionSizeGrip )
 
 HB_FUNC( QT_QSTYLEOPTIONSIZEGRIP )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOptionSizeGrip* ) new QStyleOptionSizeGrip() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOptionSizeGrip;
+
+   hb_retptrGC( p );
 }
 /*
  * Qt::Corner corner

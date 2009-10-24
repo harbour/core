@@ -100,7 +100,7 @@ QT_G_FUNC( release_QTextBrowser )
 
 HB_FUNC( QT_QTEXTBROWSER )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QTextBrowser > pObj = NULL;
 
    pObj = ( QTextBrowser* ) new QTextBrowser( hbqt_par_QWidget( 1 ) ) ;

@@ -103,7 +103,7 @@ QT_G_FUNC( release_QPushButton )
 
 HB_FUNC( QT_QPUSHBUTTON )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QPushButton > pObj = NULL;
 
     pObj = ( QPushButton* ) new QPushButton( hbqt_par_QWidget( 1 ) ) ;

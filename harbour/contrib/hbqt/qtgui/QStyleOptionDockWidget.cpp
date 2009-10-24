@@ -96,11 +96,15 @@ QT_G_FUNC( release_QStyleOptionDockWidget )
 
 HB_FUNC( QT_QSTYLEOPTIONDOCKWIDGET )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOptionDockWidget* ) new QStyleOptionDockWidget() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOptionDockWidget;
+
+   hb_retptrGC( p );
 }
 /*
  * bool closable

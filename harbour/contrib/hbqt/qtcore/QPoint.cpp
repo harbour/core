@@ -92,6 +92,7 @@ QT_G_FUNC( release_QPoint )
 
 HB_FUNC( QT_QPOINT )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
@@ -107,7 +108,10 @@ HB_FUNC( QT_QPOINT )
       pObj = ( QPoint* ) new QPoint() ;
    }
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QPoint;
+
+   hb_retptrGC( p );
 }
 /*
  * bool isNull () const

@@ -106,7 +106,7 @@ QT_G_FUNC( release_QTabWidget )
 
 HB_FUNC( QT_QTABWIDGET )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QTabWidget > pObj = NULL;
 
    pObj = ( QTabWidget* ) new QTabWidget( hbqt_par_QWidget( 1 ) ) ;

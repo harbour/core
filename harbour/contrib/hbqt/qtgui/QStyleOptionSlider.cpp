@@ -96,11 +96,15 @@ QT_G_FUNC( release_QStyleOptionSlider )
 
 HB_FUNC( QT_QSTYLEOPTIONSLIDER )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOptionSlider* ) new QStyleOptionSlider() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOptionSlider;
+
+   hb_retptrGC( p );
 }
 /*
  * bool dialWrapping

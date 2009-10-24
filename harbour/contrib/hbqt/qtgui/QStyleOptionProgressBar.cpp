@@ -97,11 +97,15 @@ QT_G_FUNC( release_QStyleOptionProgressBar )
 
 HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOptionProgressBar* ) new QStyleOptionProgressBar() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOptionProgressBar;
+
+   hb_retptrGC( p );
 }
 /*
  * int maximum

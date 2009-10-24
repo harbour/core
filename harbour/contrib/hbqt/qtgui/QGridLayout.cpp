@@ -102,7 +102,7 @@ QT_G_FUNC( release_QGridLayout )
 
 HB_FUNC( QT_QGRIDLAYOUT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QGridLayout > pObj = NULL;
 
    pObj = new QGridLayout( hbqt_par_QWidget( 1 ) ) ;

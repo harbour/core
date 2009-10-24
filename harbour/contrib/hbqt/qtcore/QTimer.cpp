@@ -101,7 +101,7 @@ QT_G_FUNC( release_QTimer )
 
 HB_FUNC( QT_QTIMER )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QTimer > pObj = NULL;
 
    pObj = new QTimer( hbqt_par_QObject( 1 ) ) ;

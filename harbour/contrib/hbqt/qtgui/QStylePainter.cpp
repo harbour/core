@@ -92,11 +92,15 @@ QT_G_FUNC( release_QStylePainter )
 
 HB_FUNC( QT_QSTYLEPAINTER )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStylePainter* ) new QStylePainter() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStylePainter;
+
+   hb_retptrGC( p );
 }
 /*
  * bool begin ( QWidget * widget )

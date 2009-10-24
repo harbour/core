@@ -92,11 +92,15 @@ QT_G_FUNC( release_QTableWidgetSelectionRange )
 
 HB_FUNC( QT_QTABLEWIDGETSELECTIONRANGE )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = new QTableWidgetSelectionRange() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QTableWidgetSelectionRange;
+
+   hb_retptrGC( p );
 }
 /*
  * int bottomRow () const

@@ -101,7 +101,7 @@ QT_G_FUNC( release_QStyledItemDelegate )
 
 HB_FUNC( QT_QSTYLEDITEMDELEGATE )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QStyledItemDelegate > pObj = NULL;
 
    pObj = ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) ;

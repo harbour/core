@@ -98,11 +98,15 @@ QT_G_FUNC( release_QStyleOptionButton )
 
 HB_FUNC( QT_QSTYLEOPTIONBUTTON )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStyleOptionButton* ) new QStyleOptionButton() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QStyleOptionButton;
+
+   hb_retptrGC( p );
 }
 /*
  * ButtonFeatures features

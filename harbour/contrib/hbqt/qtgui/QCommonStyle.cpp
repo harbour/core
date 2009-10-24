@@ -100,7 +100,7 @@ QT_G_FUNC( release_QCommonStyle )
 
 HB_FUNC( QT_QCOMMONSTYLE )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QCommonStyle > pObj = NULL;
 
    pObj = ( QCommonStyle* ) new QCommonStyle() ;

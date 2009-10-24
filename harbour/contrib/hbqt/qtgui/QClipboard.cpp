@@ -88,15 +88,11 @@ QT_G_FUNC( release_QClipboard )
 
 HB_FUNC( QT_QCLIPBOARD )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
    QPointer< QClipboard > pObj = NULL;
 
    pObj = ( QClipboard* ) QApplication::clipboard() ;
 
-   p->ph = pObj;
-   p->func = release_QClipboard;
-
-   hb_retptrGC( p );
+   hb_retptr( pObj );
 }
 /*
  * void clear ( Mode mode = Clipboard )

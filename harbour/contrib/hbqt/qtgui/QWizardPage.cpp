@@ -99,7 +99,7 @@ QT_G_FUNC( release_QWizardPage )
 
 HB_FUNC( QT_QWIZARDPAGE )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QWizardPage > pObj = NULL;
 
    pObj = new QWizardPage() ;

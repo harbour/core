@@ -93,11 +93,15 @@ QT_G_FUNC( release_QTextDocumentWriter )
 
 HB_FUNC( QT_QTEXTDOCUMENTWRITER )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QTextDocumentWriter* ) new QTextDocumentWriter() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QTextDocumentWriter;
+
+   hb_retptrGC( p );
 }
 /*
  * QTextCodec * codec () const

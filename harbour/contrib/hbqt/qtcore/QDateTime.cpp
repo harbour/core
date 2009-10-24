@@ -94,7 +94,7 @@ QT_G_FUNC( release_QDateTime )
 
 HB_FUNC( QT_QDATETIME )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QDateTime* ) new QDateTime() ;

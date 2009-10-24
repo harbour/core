@@ -111,7 +111,7 @@ QT_G_FUNC( release_QStringList )
 
 HB_FUNC( QT_QSTRINGLIST )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QStringList* ) new QStringList() ;

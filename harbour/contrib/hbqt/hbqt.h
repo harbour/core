@@ -81,24 +81,23 @@
 #define hbqt_ret_QAbstractItemModel( p )          ( hb_retptr( ( QAbstractItemModel* ) p ) )
 #define hbqt_ret_QPrinter( p )                    ( hb_retptr( ( QPrinter* ) p ) )
 
+/* For GC Pointers */
 
 #define QT_G_FUNC( hbfunc )   void hbfunc( void * Cargo ) /* callback function for cleaning garbage memory pointer */
 typedef QT_G_FUNC( QT_G_FUNC_ );
 typedef QT_G_FUNC_ * QT_G_FUNC_PTR;
 
-/* For GC Pointers */
-
 typedef struct
 {
   void *        ph;
-  int           type;
   QT_G_FUNC_PTR func;
 } QGC_POINTER;
 
 HB_GARBAGE_FUNC( Q_release );
+
 void * hbqt_gcpointer( int iParam );
 void * hbqt_ptrTOgcpointer( void * p, QT_G_FUNC_PTR func );
-int hbqt_getIdByName( QString obj );
+const HB_GC_FUNCS * gcFuncs( void );
 
 #include "hbqt_garbage.h"
 

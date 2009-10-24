@@ -109,7 +109,7 @@ QT_G_FUNC( release_QActionGroup )
 
 HB_FUNC( QT_QACTIONGROUP )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QActionGroup > pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )

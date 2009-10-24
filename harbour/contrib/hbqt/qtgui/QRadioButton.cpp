@@ -101,7 +101,7 @@ QT_G_FUNC( release_QRadioButton )
 
 HB_FUNC( QT_QRADIOBUTTON )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QRadioButton > pObj = NULL;
 
    if( HB_ISCHAR( 1 ) )

@@ -95,11 +95,15 @@ QT_G_FUNC( release_QEvent )
 
 HB_FUNC( QT_QEVENT )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QEvent* ) new QEvent( ( QEvent::Type ) hb_parni( 1 ) ) ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QEvent;
+
+   hb_retptrGC( p );
 }
 /*
  * void accept ()

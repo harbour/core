@@ -107,11 +107,15 @@ QT_G_FUNC( release_QImageReader )
 
 HB_FUNC( QT_QIMAGEREADER )
 {
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
 
    pObj = ( QImageReader* ) new QImageReader() ;
 
-   hb_retptr( pObj );
+   p->ph = pObj;
+   p->func = release_QImageReader;
+
+   hb_retptrGC( p );
 }
 /*
  * bool autoDetectImageFormat () const

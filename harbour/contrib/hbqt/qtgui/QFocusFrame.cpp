@@ -101,7 +101,7 @@ QT_G_FUNC( release_QFocusFrame )
 
 HB_FUNC( QT_QFOCUSFRAME )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAlloc( sizeof( QGC_POINTER ), Q_release );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QFocusFrame > pObj = NULL;
 
    pObj = ( QFocusFrame* ) new QFocusFrame( hbqt_par_QWidget( 1 ) ) ;
