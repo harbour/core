@@ -780,6 +780,15 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                ENDIF
                aA[ PRT_DOC  ] := 'n' + cDocNM
 
+            CASE aA[ PRT_CAST ] $ "qlonglong,qulonglong"
+               s := '( ' + aA[ PRT_CAST ] + ' ) hb_parnint( ' + cHBIdx + ' )'
+               IF !empty( aA[ PRT_DEFAULT ] ) .AND. !( aA[ PRT_DEFAULT ] == "0" )
+                  aA[ PRT_BODY ] := '( HB_ISNUM( ' + cHBIdx + ' ) ? ' + s + ' : ' + aA[ PRT_DEFAULT ] + ' )'
+               ELSE
+                  aA[ PRT_BODY ] := s
+               ENDIF
+               aA[ PRT_DOC  ] := 'n' + cDocNM
+
             CASE aA[ PRT_CAST ] $ cIntLongLong
                s := 'hb_parnint( ' + cHBIdx + ' )'
                IF !empty( aA[ PRT_DEFAULT ] ) .AND. !( aA[ PRT_DEFAULT ] == "0" )
@@ -947,27 +956,20 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                cPrgRet := 'p' + cDocNM
 
             CASE aA[ PRT_L_AND ] .AND. aA[ PRT_L_CONST ]
-//               cCmd := 'hb_retptr( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ) )'
-//               cCmd := 'hb_retptrGC( hbqt_pToGCPointer( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ) ) )'
                cCmd := Get_Command( aA[ PRT_CAST ], cCmn )
                cPrgRet := 'p' + cDocNM
 
             CASE aA[ PRT_L_CONST ]
-//               cCmd := 'hb_retptr( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ) )'
-//               cCmd := 'hb_retptrGC( hbqt_pToGCPointer( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ) ) )'
                cCmd := Get_Command( aA[ PRT_CAST ], cCmn )
                cPrgRet := 'p' + cDocNM
 
             CASE aA[ PRT_L_AND ]
-//               cCmd := 'hb_retptr( ( ' + aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
                cCmd := Get_Command( aA[ PRT_CAST ], cCmn )
                cPrgRet := 'p' + cDocNM
 
             OTHERWISE
                /* No attribute is attached to return value */
                IF left( aA[ PRT_CAST ], 1 ) == 'Q'
-//                  cCmd := 'hb_retptr( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ) )'
-//                  cCmd := 'hb_retptrGC( hbqt_pToGCPointer( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ) ) )'
                   cCmd := Get_Command( aA[ PRT_CAST ], cCmn )
                   cPrgRet := 'p' + cDocNM
 
