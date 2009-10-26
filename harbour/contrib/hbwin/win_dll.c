@@ -743,13 +743,13 @@ static LPVOID hb_getprocaddress( HMODULE hDLL, int iProc )
    HB_SYMBOL_UNUSED( iProc );
    return NULL;
 #else
-   LPVOID lpFunction = ( LPVOID ) GetProcAddress( hDLL, HB_ISCHAR( iProc ) ? ( LPCSTR ) hb_parc( iProc ) : ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( iProc ) );
+   const char * szProc = hb_parc( iProc );
+   LPVOID lpFunction = ( LPVOID ) GetProcAddress( hDLL, szProc ? szProc : ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( iProc ) );
 
-   if( ! lpFunction && HB_ISCHAR( iProc ) ) /* try with ANSI suffix? */
+   if( ! lpFunction && szProc ) /* try with ANSI suffix? */
    {
-      char * pszFuncName = ( char * ) hb_xgrab( hb_parclen( iProc ) + 2 );
-      hb_strncpy( pszFuncName, hb_parc( iProc ), hb_parclen( iProc ) );
-      lpFunction = ( LPVOID ) GetProcAddress( hDLL, hb_strncat( pszFuncName, "A", hb_parclen( iProc ) + 1 ) );
+      char * pszFuncName = hb_xstrcpy( NULL, szProc, "A", NULL );
+      lpFunction = ( LPVOID ) GetProcAddress( hDLL, pszFuncName );
       hb_xfree( pszFuncName );
    }
 
@@ -761,7 +761,7 @@ HB_FUNC( LOADLIBRARY )
 {
    LPTSTR lpName = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
 
-   hb_retnint( ( HB_PTRDIFF ) LoadLibrary( ( LPCTSTR ) lpName ) );
+   hb_retnint( ( HB_PTRDIFF ) LoadLibrary( lpName ) );
 
    HB_TCHAR_FREE( lpName );
 }
@@ -812,7 +812,7 @@ HB_FUNC( DLLCALL )
    {
       LPTSTR lpName = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
 
-      hDLL = LoadLibrary( ( LPCTSTR ) lpName );
+      hDLL = LoadLibrary( lpName );
 
       HB_TCHAR_FREE( lpName );
    }
@@ -836,11 +836,11 @@ HB_FUNC( DLLPREPARECALL )
 
    if( HB_ISCHAR( 1 ) )
    {
-      LPTSTR lpName = HB_TCHAR_CONVTO( hb_parc( 1 ) );
+      LPTSTR lpName;
 
       xec->cDLL = hb_strdup( hb_parc( 1 ) );
-      xec->hDLL = LoadLibrary( ( LPCTSTR ) lpName );
-
+      lpName = HB_TCHAR_CONVTO( xec->cDLL );
+      xec->hDLL = LoadLibrary( lpName );
       HB_TCHAR_FREE( lpName );
    }
    else if( HB_ISPOINTER( 1 ) )
@@ -850,18 +850,21 @@ HB_FUNC( DLLPREPARECALL )
 
    if( xec->hDLL )
    {
+      ULONG ulLen = 0;
+
       if( HB_ISCHAR( 3 ) )
       {
-         xec->cProc = ( char * ) hb_xgrab( hb_parclen( 3 ) + 2 ); /* Reserving space for possible ANSI "A" suffix. */
-         hb_strncpy( xec->cProc, hb_parc( 3 ), hb_parclen( 3 ) );
+         ulLen = hb_parclen( 3 ) + 1;
+         xec->cProc = ( char * ) hb_xgrab( ulLen + 1 ); /* Reserving space for possible ANSI "A" suffix. */
+         hb_strncpy( xec->cProc, hb_parc( 3 ), ulLen );
       }
       else if( HB_ISNUM( 3 ) )
          xec->wOrdinal = ( WORD ) hb_parni( 3 );
 
-      xec->lpFunc = ( LPVOID ) GetProcAddress( xec->hDLL, xec->cProc ? ( LPCSTR ) xec->cProc : ( LPCSTR ) ( HB_PTRDIFF ) xec->wOrdinal );
+      xec->lpFunc = ( LPVOID ) GetProcAddress( xec->hDLL, xec->cProc ? xec->cProc : ( LPCSTR ) ( HB_PTRDIFF ) xec->wOrdinal );
 
       if( ! xec->lpFunc && xec->cProc ) /* try with ANSI suffix? */
-         xec->lpFunc = ( LPVOID ) GetProcAddress( xec->hDLL, ( LPCSTR ) hb_strncat( xec->cProc, "A", hb_parclen( 3 ) + 1 ) );
+         xec->lpFunc = ( LPVOID ) GetProcAddress( xec->hDLL, hb_strncat( xec->cProc, "A", ulLen ) );
 
       if( xec->lpFunc )
       {

@@ -347,7 +347,7 @@ HB_FUNC( QT_QLOCALE_TOSHORT )
  */
 HB_FUNC( QT_QLOCALE_TOSTRING )
 {
-   hb_retc( hbqt_par_QLocale( 1 )->toString( hb_parnint( 2 ) ).toAscii().data() );
+   hb_retc( hbqt_par_QLocale( 1 )->toString( ( qulonglong ) hb_parnint( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -403,7 +403,7 @@ HB_FUNC( QT_QLOCALE_TOSTRING_6 )
  */
 HB_FUNC( QT_QLOCALE_TOSTRING_7 )
 {
-   hb_retc( hbqt_par_QLocale( 1 )->toString( hb_parnint( 2 ) ).toAscii().data() );
+   hb_retc( hbqt_par_QLocale( 1 )->toString( ( qulonglong ) hb_parnint( 2 ) ).toAscii().data() );
 }
 
 /*
