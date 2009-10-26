@@ -153,6 +153,10 @@ typedef struct
 
 /* Public interface. These should never change, only be added to. */
 
+#ifdef _HB_API_INTERNAL_
+   extern void hb_gtIsGtRef( void );
+#endif
+
 extern HB_EXPORT void   hb_gtStartupInit( void );
 extern HB_EXPORT void * hb_gtAlloc( void * hGT );
 extern HB_EXPORT void   hb_gtRelease( void * hGT );

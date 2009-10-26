@@ -116,6 +116,7 @@ typedef struct
    void     (* Exit) ( HB_GT_PTR );
    void *   (* New) ( HB_GT_PTR );
    void     (* Free) ( HB_GT_PTR );
+   void     (* Mark) ( HB_GT_PTR );
    BOOL     (* Resize) ( HB_GT_PTR, int, int );
    BOOL     (* SetMode) ( HB_GT_PTR, int, int );
    void     (* GetSize) ( HB_GT_PTR, int *, int * );
@@ -341,6 +342,7 @@ typedef struct _HB_GT_BASE
 extern PHB_GT hb_gt_Base( void );
 extern void hb_gt_BaseFree( PHB_GT pGT );
 extern PHB_GT hb_gt_ItemBase( PHB_ITEM pItemGT );
+extern void hb_gt_gcMark( void );
 
 #define HB_GTLOCAL(g)   (g)->pGTData[*HB_GTID_PTR]
 
@@ -350,6 +352,7 @@ extern PHB_GT hb_gt_ItemBase( PHB_ITEM pItemGT );
 #define HB_GTSELF_EXIT(g)                       (g)->pFuncTable->Exit(g)
 #define HB_GTSELF_NEW(g)                        (g)->pFuncTable->New(g)
 #define HB_GTSELF_FREE(g)                       (g)->pFuncTable->Free(g)
+#define HB_GTSELF_MARK(g)                       (g)->pFuncTable->Mark(g)
 #define HB_GTSELF_RESIZE(g,r,c)                 (g)->pFuncTable->Resize(g,r,c)
 #define HB_GTSELF_SETMODE(g,r,c)                (g)->pFuncTable->SetMode(g,r,c)
 #define HB_GTSELF_GETSIZE(g,pr,pc)              (g)->pFuncTable->GetSize(g,pr,pc)
@@ -473,6 +476,7 @@ extern PHB_GT hb_gt_ItemBase( PHB_ITEM pItemGT );
 #define HB_GTSUPER_EXIT(g)                       (HB_GTSUPERTABLE(g))->Exit(g)
 #define HB_GTSUPER_NEW(g)                        (HB_GTSUPERTABLE(g))->New(g)
 #define HB_GTSUPER_FREE(g)                       (HB_GTSUPERTABLE(g))->Free(g)
+#define HB_GTSUPER_MARK(g)                       (HB_GTSUPERTABLE(g))->Mark(g)
 #define HB_GTSUPER_RESIZE(g,r,c)                 (HB_GTSUPERTABLE(g))->Resize(g,r,c)
 #define HB_GTSUPER_SETMODE(g,r,c)                (HB_GTSUPERTABLE(g))->SetMode(g,r,c)
 #define HB_GTSUPER_GETSIZE(g,pr,pc)              (HB_GTSUPERTABLE(g))->GetSize(g,pr,pc)

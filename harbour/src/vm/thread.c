@@ -903,10 +903,18 @@ static HB_GARBAGE_FUNC( hb_threadDestructor )
 #endif
 }
 
+static HB_GARBAGE_FUNC( hb_threadMark )
+{
+   PHB_THREADSTATE pThread = ( PHB_THREADSTATE ) Cargo;
+
+   if( pThread->pResult )
+      hb_gcMark( pThread->pResult );
+}
+
 static const HB_GC_FUNCS s_gcThreadFuncs =
 {
    hb_threadDestructor,
-   hb_gcDummyMark
+   hb_threadMark
 };
 
 static HB_THREAD_STARTFUNC( hb_threadStartVM )
@@ -1646,10 +1654,18 @@ static HB_GARBAGE_FUNC( hb_mutexDestructor )
 #endif
 }
 
+static HB_GARBAGE_FUNC( hb_mutexMark )
+{
+   PHB_MUTEX pMutex = ( PHB_MUTEX ) Cargo;
+
+   if( pMutex->events )
+      hb_gcMark( pMutex->events );
+}
+
 static const HB_GC_FUNCS s_gcMutexFuncs =
 {
    hb_mutexDestructor,
-   hb_gcDummyMark
+   hb_mutexMark
 };
 
 static PHB_MUTEX hb_mutexPtr( PHB_ITEM pItem )
@@ -1714,7 +1730,10 @@ void hb_threadMutexSyncSignal( PHB_ITEM pItemMtx )
          int iCount = pMutex->waiters;
 
          if( !pMutex->events )
+         {
             pMutex->events = hb_itemArrayNew( iCount );
+            hb_gcUnlock( pMutex->events );
+         }
          else
          {
             ULONG ulLen = hb_arrayLen( pMutex->events );
@@ -1728,7 +1747,10 @@ void hb_threadMutexSyncSignal( PHB_ITEM pItemMtx )
             HB_COND_SIGNALN( pMutex->cond_w, iCount );
       }
       else if( !pMutex->events )
+      {
          pMutex->events = hb_itemArrayNew( 1 );
+         hb_gcUnlock( pMutex->events );
+      }
 
       HB_CRITICAL_UNLOCK( pMutex->mutex );
    }
@@ -2042,6 +2064,7 @@ void hb_threadMutexNotify( PHB_ITEM pItem, PHB_ITEM pNotifier, BOOL fWaiting )
          if( !pMutex->events )
          {
             pMutex->events = hb_itemArrayNew( 1 );
+            hb_gcUnlock( pMutex->events );
             if( pNotifier && !HB_IS_NIL( pNotifier ) )
                hb_arraySet( pMutex->events, 1, pNotifier );
          }
@@ -2066,6 +2089,7 @@ void hb_threadMutexNotify( PHB_ITEM pItem, PHB_ITEM pNotifier, BOOL fWaiting )
          {
             ulLen = 0;
             pMutex->events = hb_itemArrayNew( iCount );
+            hb_gcUnlock( pMutex->events );
          }
          if( iCount > 0 )
          {
@@ -2085,6 +2109,7 @@ void hb_threadMutexNotify( PHB_ITEM pItem, PHB_ITEM pNotifier, BOOL fWaiting )
          if( !pMutex->events )
          {
             pMutex->events = hb_itemArrayNew( 1 );
+            hb_gcUnlock( pMutex->events );
             if( pNotifier && !HB_IS_NIL( pNotifier ) )
                hb_arraySet( pMutex->events, 1, pNotifier );
          }
@@ -2111,6 +2136,7 @@ void hb_threadMutexNotify( PHB_ITEM pItem, PHB_ITEM pNotifier, BOOL fWaiting )
          {
             ulLen = 0;
             pMutex->events = hb_itemArrayNew( iCount );
+            hb_gcUnlock( pMutex->events );
          }
          if( iCount > 0 )
          {

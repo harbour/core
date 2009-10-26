@@ -60,6 +60,7 @@
 #include "hbapicls.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
+#include "hbapigt.h"
 #include "hbvm.h"
 #include "error.ch"
 
@@ -390,12 +391,9 @@ HB_GARBAGE_FUNC( hb_gcGripMark )
 
 static HB_GARBAGE_FUNC( hb_gcGripRelease )
 {
-    /* Item was already released in hb_gcGripDrop() - then we have nothing
-     * to do here
-     */
-    HB_SYMBOL_UNUSED( Cargo );
+   if( HB_IS_COMPLEX( ( HB_ITEM_PTR ) Cargo ) )
+      hb_itemClear( ( HB_ITEM_PTR ) Cargo );
 }
-
 
 static const HB_GC_FUNCS s_gcGripFuncs =
 {
@@ -433,31 +431,7 @@ HB_ITEM_PTR hb_gcGripGet( HB_ITEM_PTR pOrigin )
 
 void hb_gcGripDrop( HB_ITEM_PTR pItem )
 {
-   if( pItem )
-   {
-      HB_GARBAGE_PTR pAlloc = HB_GC_PTR( pItem );
-
-      if( hb_xRefDec( pAlloc ) )
-      {
-         if( HB_IS_COMPLEX( pItem ) )
-            hb_itemClear( pItem );    /* clear value stored in this item */
-
-         if( !( pAlloc->used & HB_GC_DELETE ) )
-         {
-            HB_GC_LOCK
-            if( pAlloc->locked )
-               hb_gcUnlink( &s_pLockedBlock, pAlloc );
-            else
-            {
-               hb_gcUnlink( &s_pCurrBlock, pAlloc );
-               HB_GC_AUTO_DEC
-            }
-            HB_GC_UNLOCK
-
-            HB_GARBAGE_FREE( pAlloc );
-         }
-      }
-   }
+   hb_gcRefFree( pItem );
 }
 
 /* Lock a memory pointer so it will not be released if stored
@@ -672,6 +646,7 @@ void hb_gcCollectAll( BOOL fForce )
       hb_vmIsStackRef();
       hb_vmIsStaticRef();
       hb_clsIsClassRef();
+      hb_gtIsGtRef();
 
       /* check list of locked block for blocks referenced from
        * locked block

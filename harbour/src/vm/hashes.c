@@ -138,8 +138,8 @@ static HB_GARBAGE_FUNC( hb_hashGarbageMark )
             hb_gcItemRef( &pPairs[ ulLen ].value );
       }
    }
-   if( pBaseHash->pDefault && HB_IS_GCITEM( pBaseHash->pDefault ) )
-      hb_gcItemRef( pBaseHash->pDefault );
+   if( pBaseHash->pDefault )
+      hb_gcMark( pBaseHash->pDefault );
 }
 
 static const HB_GC_FUNCS s_gcHashFuncs =

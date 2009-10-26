@@ -826,7 +826,10 @@ void hb_vmThreadQuit( void )
          pReturn = hb_itemUnRef( pReturn );
 
       if( !pState->pResult )
+      {
          pState->pResult = hb_itemNew( pReturn );
+         hb_gcUnlock( pState->pResult );
+      }
       else
          hb_itemCopy( pState->pResult, pReturn );
    }

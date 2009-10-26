@@ -110,6 +110,8 @@ static void hb_gt_def_BaseInit( PHB_GT_BASE pGT )
    pGT->inkeyBufferSize = HB_DEFAULT_INKEY_BUFSIZE;
 
    pGT->pMutex       = hb_threadMutexCreate( TRUE );
+   if( pGT->pMutex )
+      hb_gcUnlock( pGT->pMutex );
 }
 
 static void * hb_gt_def_New( PHB_GT pGT )
@@ -175,6 +177,16 @@ static void hb_gt_def_Free( PHB_GT pGT )
       hb_xfree( pGT->pFuncTable );
 
    hb_xfree( pGT );
+}
+
+static void hb_gt_def_Mark( PHB_GT pGT )
+{
+   if( pGT->pNotifierBlock )
+      hb_gcMark( pGT->pNotifierBlock );
+   if( pGT->pCargo )
+      hb_gcMark( pGT->pCargo );
+   if( pGT->pMutex )
+      hb_gcMark( pGT->pMutex );
 }
 
 static BOOL hb_gt_def_Lock( PHB_GT pGT )
@@ -1593,7 +1605,10 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                pGT->pNotifierBlock = NULL;
             }
             if( hb_itemType( pInfo->pNewVal ) & HB_IT_BLOCK )
+            {
                pGT->pNotifierBlock = hb_itemNew( pInfo->pNewVal );
+               hb_gcUnlock( pGT->pNotifierBlock );
+            }
          }
          break;
 
@@ -1613,6 +1628,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                pGT->pCargo = NULL;
             }
             pGT->pCargo = hb_itemNew( pInfo->pNewVal );
+            hb_gcUnlock( pGT->pCargo );
          }
          break;
 
@@ -2868,6 +2884,7 @@ static const HB_GT_FUNCS s_gtCoreFunc =
    Exit                       : hb_gt_def_Exit                          ,
    New                        : hb_gt_def_New                           ,
    Free                       : hb_gt_def_Free                          ,
+   Mark                       : hb_gt_def_Mark                          ,
    Resize                     : hb_gt_def_Resize                        ,
    SetMode                    : hb_gt_def_SetMode                       ,
    GetSize                    : hb_gt_def_GetSize                       ,
@@ -2990,6 +3007,7 @@ static const HB_GT_FUNCS s_gtCoreFunc =
    hb_gt_def_Exit                         ,
    hb_gt_def_New                          ,
    hb_gt_def_Free                         ,
+   hb_gt_def_Mark                         ,
    hb_gt_def_Resize                       ,
    hb_gt_def_SetMode                      ,
    hb_gt_def_GetSize                      ,
@@ -3233,6 +3251,14 @@ PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable )
    return NULL;
 }
 
+void hb_gtIsGtRef( void )
+{
+   PHB_GT pGT = ( PHB_GT ) hb_stackGetGT();
+
+   if( pGT )
+      HB_GTSELF_MARK( pGT );
+}
+
 void * hb_gtAlloc( void * hGT )
 {
    PHB_GT pGT;
@@ -3385,10 +3411,18 @@ static HB_GARBAGE_FUNC( hb_gt_Destructor )
    }
 }
 
+static HB_GARBAGE_FUNC( hb_gt_Mark )
+{
+   void ** gtHolder = ( void ** ) Cargo;
+
+   if( *gtHolder )
+      HB_GTSELF_MARK( ( PHB_GT ) *gtHolder );
+}
+
 static const HB_GC_FUNCS s_gcGTFuncs =
 {
    hb_gt_Destructor,
-   hb_gcDummyMark
+   hb_gt_Mark
 };
 
 static void * hb_gtParam( int iParam )
