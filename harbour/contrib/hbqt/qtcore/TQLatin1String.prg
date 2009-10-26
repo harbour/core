@@ -65,11 +65,10 @@
 
 CREATE CLASS QLatin1String
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  latin1()
 
@@ -77,13 +76,12 @@ CREATE CLASS QLatin1String
 
 /*----------------------------------------------------------------------*/
 
-METHOD QLatin1String:New( pParent )
-   ::pParent := pParent
+METHOD QLatin1String:new( pParent )
    ::pPtr := Qt_QLatin1String( pParent )
    RETURN Self
 
 
-METHOD QLatin1String:Configure( xObject )
+METHOD QLatin1String:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QTabWidget INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addTab( pPage, cLabel )
    METHOD  addTab_1( pPage, cIcon, cLabel )
@@ -117,13 +116,12 @@ CREATE CLASS QTabWidget INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTabWidget:New( pParent )
-   ::pParent := pParent
+METHOD QTabWidget:new( pParent )
    ::pPtr := Qt_QTabWidget( pParent )
    RETURN Self
 
 
-METHOD QTabWidget:Configure( xObject )
+METHOD QTabWidget:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

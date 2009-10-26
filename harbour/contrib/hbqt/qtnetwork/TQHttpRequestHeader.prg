@@ -65,11 +65,10 @@
 
 CREATE CLASS QHttpRequestHeader INHERIT QHttpHeader
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  majorVersion()
    METHOD  method()
@@ -81,13 +80,12 @@ CREATE CLASS QHttpRequestHeader INHERIT QHttpHeader
 
 /*----------------------------------------------------------------------*/
 
-METHOD QHttpRequestHeader:New( pParent )
-   ::pParent := pParent
+METHOD QHttpRequestHeader:new( pParent )
    ::pPtr := Qt_QHttpRequestHeader( pParent )
    RETURN Self
 
 
-METHOD QHttpRequestHeader:Configure( xObject )
+METHOD QHttpRequestHeader:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

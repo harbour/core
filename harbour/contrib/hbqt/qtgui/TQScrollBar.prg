@@ -65,24 +65,22 @@
 
 CREATE CLASS QScrollBar INHERIT QAbstractSlider
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD QScrollBar:New( pParent )
-   ::pParent := pParent
+METHOD QScrollBar:new( pParent )
    ::pPtr := Qt_QScrollBar( pParent )
    RETURN Self
 
 
-METHOD QScrollBar:Configure( xObject )
+METHOD QScrollBar:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

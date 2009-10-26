@@ -65,11 +65,10 @@
 
 CREATE CLASS QStyleOptionComboBox INHERIT QStyleOption
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  currentIcon()
    METHOD  currentText()
@@ -82,13 +81,12 @@ CREATE CLASS QStyleOptionComboBox INHERIT QStyleOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionComboBox:New( pParent )
-   ::pParent := pParent
+METHOD QStyleOptionComboBox:new( pParent )
    ::pPtr := Qt_QStyleOptionComboBox( pParent )
    RETURN Self
 
 
-METHOD QStyleOptionComboBox:Configure( xObject )
+METHOD QStyleOptionComboBox:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

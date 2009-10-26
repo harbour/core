@@ -65,11 +65,10 @@
 
 CREATE CLASS QItemSelectionModel INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  columnIntersectsSelection( nColumn, pParent )
    METHOD  currentIndex()
@@ -91,13 +90,12 @@ CREATE CLASS QItemSelectionModel INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QItemSelectionModel:New( pParent )
-   ::pParent := pParent
+METHOD QItemSelectionModel:new( pParent )
    ::pPtr := Qt_QItemSelectionModel( pParent )
    RETURN Self
 
 
-METHOD QItemSelectionModel:Configure( xObject )
+METHOD QItemSelectionModel:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

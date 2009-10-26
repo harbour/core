@@ -65,11 +65,10 @@
 
 CREATE CLASS QStandardItem
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  accessibleDescription()
    METHOD  accessibleText()
@@ -147,13 +146,12 @@ CREATE CLASS QStandardItem
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStandardItem:New( pParent )
-   ::pParent := pParent
+METHOD QStandardItem:new( pParent )
    ::pPtr := Qt_QStandardItem( pParent )
    RETURN Self
 
 
-METHOD QStandardItem:Configure( xObject )
+METHOD QStandardItem:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

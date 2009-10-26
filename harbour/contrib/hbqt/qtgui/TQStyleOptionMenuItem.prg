@@ -65,11 +65,10 @@
 
 CREATE CLASS QStyleOptionMenuItem INHERIT QStyleOption
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  checkType()
    METHOD  checked()
@@ -86,13 +85,12 @@ CREATE CLASS QStyleOptionMenuItem INHERIT QStyleOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionMenuItem:New( pParent )
-   ::pParent := pParent
+METHOD QStyleOptionMenuItem:new( pParent )
    ::pPtr := Qt_QStyleOptionMenuItem( pParent )
    RETURN Self
 
 
-METHOD QStyleOptionMenuItem:Configure( xObject )
+METHOD QStyleOptionMenuItem:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

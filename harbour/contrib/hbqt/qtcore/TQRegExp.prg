@@ -65,11 +65,10 @@
 
 CREATE CLASS QRegExp
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  cap( nNth )
    METHOD  capturedTexts()
@@ -95,13 +94,12 @@ CREATE CLASS QRegExp
 
 /*----------------------------------------------------------------------*/
 
-METHOD QRegExp:New( pParent )
-   ::pParent := pParent
+METHOD QRegExp:new( pParent )
    ::pPtr := Qt_QRegExp( pParent )
    RETURN Self
 
 
-METHOD QRegExp:Configure( xObject )
+METHOD QRegExp:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

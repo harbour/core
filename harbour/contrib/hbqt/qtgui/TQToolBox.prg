@@ -65,11 +65,10 @@
 
 CREATE CLASS QToolBox INHERIT QFrame
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addItem( pWidget, cIconSet, cText )
    METHOD  addItem_1( pW, cText )
@@ -96,13 +95,12 @@ CREATE CLASS QToolBox INHERIT QFrame
 
 /*----------------------------------------------------------------------*/
 
-METHOD QToolBox:New( pParent )
-   ::pParent := pParent
+METHOD QToolBox:new( pParent )
    ::pPtr := Qt_QToolBox( pParent )
    RETURN Self
 
 
-METHOD QToolBox:Configure( xObject )
+METHOD QToolBox:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

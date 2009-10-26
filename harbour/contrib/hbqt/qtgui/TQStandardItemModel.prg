@@ -65,11 +65,10 @@
 
 CREATE CLASS QStandardItemModel INHERIT QAbstractItemModeL
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  appendRow( pItem )
    METHOD  clear()
@@ -102,13 +101,12 @@ CREATE CLASS QStandardItemModel INHERIT QAbstractItemModeL
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStandardItemModel:New( pParent )
-   ::pParent := pParent
+METHOD QStandardItemModel:new( pParent )
    ::pPtr := Qt_QStandardItemModel( pParent )
    RETURN Self
 
 
-METHOD QStandardItemModel:Configure( xObject )
+METHOD QStandardItemModel:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

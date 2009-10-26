@@ -65,11 +65,10 @@
 
 CREATE CLASS QAbstractSpinBox INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  alignment()
    METHOD  buttonSymbols()
@@ -102,13 +101,12 @@ CREATE CLASS QAbstractSpinBox INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QAbstractSpinBox:New( pParent )
-   ::pParent := pParent
+METHOD QAbstractSpinBox:new( pParent )
    ::pPtr := Qt_QAbstractSpinBox( pParent )
    RETURN Self
 
 
-METHOD QAbstractSpinBox:Configure( xObject )
+METHOD QAbstractSpinBox:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

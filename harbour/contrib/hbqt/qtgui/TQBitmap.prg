@@ -65,11 +65,10 @@
 
 CREATE CLASS QBitmap INHERIT QPixmap
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  clear()
    METHOD  transformed( pMatrix )
@@ -87,7 +86,7 @@ METHOD New( ... ) CLASS QBitmap
    RETURN Self
 
 
-METHOD QBitmap:Configure( xObject )
+METHOD QBitmap:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

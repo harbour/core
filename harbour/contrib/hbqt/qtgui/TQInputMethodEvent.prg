@@ -65,11 +65,10 @@
 
 CREATE CLASS QInputMethodEvent INHERIT QEvent
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  commitString()
    METHOD  preeditString()
@@ -81,13 +80,12 @@ CREATE CLASS QInputMethodEvent INHERIT QEvent
 
 /*----------------------------------------------------------------------*/
 
-METHOD QInputMethodEvent:New( pParent )
-   ::pParent := pParent
+METHOD QInputMethodEvent:new( pParent )
    ::pPtr := Qt_QInputMethodEvent( pParent )
    RETURN Self
 
 
-METHOD QInputMethodEvent:Configure( xObject )
+METHOD QInputMethodEvent:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

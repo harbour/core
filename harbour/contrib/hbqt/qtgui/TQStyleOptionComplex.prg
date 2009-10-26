@@ -65,11 +65,10 @@
 
 CREATE CLASS QStyleOptionComplex INHERIT QStyleOption
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  activeSubControls()
    METHOD  subControls()
@@ -78,13 +77,12 @@ CREATE CLASS QStyleOptionComplex INHERIT QStyleOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionComplex:New( pParent )
-   ::pParent := pParent
+METHOD QStyleOptionComplex:new( pParent )
    ::pPtr := Qt_QStyleOptionComplex( pParent )
    RETURN Self
 
 
-METHOD QStyleOptionComplex:Configure( xObject )
+METHOD QStyleOptionComplex:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

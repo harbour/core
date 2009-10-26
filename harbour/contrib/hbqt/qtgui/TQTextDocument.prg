@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextDocument INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addResource( nType, pName, pResource )
    METHOD  adjustSize()
@@ -142,13 +141,12 @@ CREATE CLASS QTextDocument INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextDocument:New( pParent )
-   ::pParent := pParent
+METHOD QTextDocument:new( pParent )
    ::pPtr := Qt_QTextDocument( pParent )
    RETURN Self
 
 
-METHOD QTextDocument:Configure( xObject )
+METHOD QTextDocument:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

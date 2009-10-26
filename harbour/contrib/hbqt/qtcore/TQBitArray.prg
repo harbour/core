@@ -65,11 +65,10 @@
 
 CREATE CLASS QBitArray
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  at( nI )
    METHOD  clear()
@@ -92,13 +91,12 @@ CREATE CLASS QBitArray
 
 /*----------------------------------------------------------------------*/
 
-METHOD QBitArray:New( pParent )
-   ::pParent := pParent
+METHOD QBitArray:new( pParent )
    ::pPtr := Qt_QBitArray( pParent )
    RETURN Self
 
 
-METHOD QBitArray:Configure( xObject )
+METHOD QBitArray:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

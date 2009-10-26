@@ -65,11 +65,10 @@
 
 CREATE CLASS QFileIconProvider
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  icon( nType )
    METHOD  icon_1( pInfo )
@@ -79,13 +78,12 @@ CREATE CLASS QFileIconProvider
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFileIconProvider:New( pParent )
-   ::pParent := pParent
+METHOD QFileIconProvider:new( pParent )
    ::pPtr := Qt_QFileIconProvider( pParent )
    RETURN Self
 
 
-METHOD QFileIconProvider:Configure( xObject )
+METHOD QFileIconProvider:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

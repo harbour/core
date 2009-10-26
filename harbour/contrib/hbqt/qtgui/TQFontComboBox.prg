@@ -65,11 +65,10 @@
 
 CREATE CLASS QFontComboBox INHERIT QComboBox
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  currentFont()
    METHOD  fontFilters()
@@ -82,13 +81,12 @@ CREATE CLASS QFontComboBox INHERIT QComboBox
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFontComboBox:New( pParent )
-   ::pParent := pParent
+METHOD QFontComboBox:new( pParent )
    ::pPtr := Qt_QFontComboBox( pParent )
    RETURN Self
 
 
-METHOD QFontComboBox:Configure( xObject )
+METHOD QFontComboBox:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

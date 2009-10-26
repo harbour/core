@@ -65,11 +65,10 @@
 
 CREATE CLASS QWebView INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  findText( cSubString, nOptions )
    METHOD  history()
@@ -102,13 +101,12 @@ CREATE CLASS QWebView INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QWebView:New( pParent )
-   ::pParent := pParent
+METHOD QWebView:new( pParent )
    ::pPtr := Qt_QWebView( pParent )
    RETURN Self
 
 
-METHOD QWebView:Configure( xObject )
+METHOD QWebView:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

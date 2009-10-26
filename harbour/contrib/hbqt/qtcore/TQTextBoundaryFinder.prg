@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextBoundaryFinder
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  boundaryReasons()
    METHOD  isAtBoundary()
@@ -87,13 +86,12 @@ CREATE CLASS QTextBoundaryFinder
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextBoundaryFinder:New( pParent )
-   ::pParent := pParent
+METHOD QTextBoundaryFinder:new( pParent )
    ::pPtr := Qt_QTextBoundaryFinder( pParent )
    RETURN Self
 
 
-METHOD QTextBoundaryFinder:Configure( xObject )
+METHOD QTextBoundaryFinder:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

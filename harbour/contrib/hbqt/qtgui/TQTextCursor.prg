@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextCursor
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  anchor()
    METHOD  atBlockEnd()
@@ -143,7 +142,7 @@ METHOD New( ... ) CLASS QTextCursor
    RETURN Self
 
 
-METHOD QTextCursor:Configure( xObject )
+METHOD QTextCursor:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QUrl INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addEncodedQueryItem( pKey, pValue )
    METHOD  addQueryItem( cKey, cValue )
@@ -145,13 +144,12 @@ CREATE CLASS QUrl INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QUrl:New( pParent )
-   ::pParent := pParent
+METHOD QUrl:new( pParent )
    ::pPtr := Qt_QUrl( pParent )
    RETURN Self
 
 
-METHOD QUrl:Configure( xObject )
+METHOD QUrl:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QPageSetupDialog INHERIT QDialog
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  exec()
    METHOD  open( pReceiver, pMember )
@@ -84,13 +83,12 @@ CREATE CLASS QPageSetupDialog INHERIT QDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD QPageSetupDialog:New( pParent )
-   ::pParent := pParent
+METHOD QPageSetupDialog:new( pParent )
    ::pPtr := Qt_QPageSetupDialog( pParent )
    RETURN Self
 
 
-METHOD QPageSetupDialog:Configure( xObject )
+METHOD QPageSetupDialog:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

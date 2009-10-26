@@ -65,11 +65,10 @@
 
 CREATE CLASS QList
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  append( xValue )
    METHOD  at( nI )
@@ -116,13 +115,12 @@ CREATE CLASS QList
 
 /*----------------------------------------------------------------------*/
 
-METHOD QList:New( pParent )
-   ::pParent := pParent
+METHOD QList:new( pParent )
    ::pPtr := Qt_QList( pParent )
    RETURN Self
 
 
-METHOD QList:Configure( xObject )
+METHOD QList:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

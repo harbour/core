@@ -65,11 +65,10 @@
 
 CREATE CLASS QWidget INHERIT QObject, QPaintDevice
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  acceptDrops()
    METHOD  accessibleDescription()
@@ -287,13 +286,12 @@ CREATE CLASS QWidget INHERIT QObject, QPaintDevice
 
 /*----------------------------------------------------------------------*/
 
-METHOD QWidget:New( pParent )
-   ::pParent := pParent
+METHOD QWidget:new( pParent )
    ::pPtr := Qt_QWidget( pParent )
    RETURN Self
 
 
-METHOD QWidget:Configure( xObject )
+METHOD QWidget:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

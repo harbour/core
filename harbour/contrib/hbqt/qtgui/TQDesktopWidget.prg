@@ -65,11 +65,10 @@
 
 CREATE CLASS QDesktopWidget INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  availableGeometry( nScreen )
    METHOD  availableGeometry_1( pWidget )
@@ -88,13 +87,12 @@ CREATE CLASS QDesktopWidget INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDesktopWidget:New( pParent )
-   ::pParent := pParent
+METHOD QDesktopWidget:new( pParent )
    ::pPtr := Qt_QDesktopWidget( pParent )
    RETURN Self
 
 
-METHOD QDesktopWidget:Configure( xObject )
+METHOD QDesktopWidget:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

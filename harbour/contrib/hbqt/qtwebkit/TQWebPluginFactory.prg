@@ -65,11 +65,10 @@
 
 CREATE CLASS QWebPluginFactory INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  create( cMimeType, pUrl, pArgumentNames, pArgumentValues )
    METHOD  refreshPlugins()
@@ -79,13 +78,12 @@ CREATE CLASS QWebPluginFactory INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QWebPluginFactory:New( pParent )
-   ::pParent := pParent
+METHOD QWebPluginFactory:new( pParent )
    ::pPtr := Qt_QWebPluginFactory( pParent )
    RETURN Self
 
 
-METHOD QWebPluginFactory:Configure( xObject )
+METHOD QWebPluginFactory:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

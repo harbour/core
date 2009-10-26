@@ -65,11 +65,10 @@
 
 CREATE CLASS QRegion
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  boundingRect()
    METHOD  contains( pP )
@@ -101,7 +100,7 @@ METHOD New( ... ) CLASS QRegion
    RETURN Self
 
 
-METHOD QRegion:Configure( xObject )
+METHOD QRegion:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

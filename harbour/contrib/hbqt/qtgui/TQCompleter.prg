@@ -65,11 +65,10 @@
 
 CREATE CLASS QCompleter INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  caseSensitivity()
    METHOD  completionColumn()
@@ -105,13 +104,12 @@ CREATE CLASS QCompleter INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QCompleter:New( pParent )
-   ::pParent := pParent
+METHOD QCompleter:new( pParent )
    ::pPtr := Qt_QCompleter( pParent )
    RETURN Self
 
 
-METHOD QCompleter:Configure( xObject )
+METHOD QCompleter:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

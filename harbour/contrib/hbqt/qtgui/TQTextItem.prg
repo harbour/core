@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextItem
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  ascent()
    METHOD  descent()
@@ -82,13 +81,12 @@ CREATE CLASS QTextItem
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextItem:New( pParent )
-   ::pParent := pParent
+METHOD QTextItem:new( pParent )
    ::pPtr := Qt_QTextItem( pParent )
    RETURN Self
 
 
-METHOD QTextItem:Configure( xObject )
+METHOD QTextItem:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

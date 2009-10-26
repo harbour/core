@@ -65,11 +65,10 @@
 
 CREATE CLASS QActionGroup INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addAction( pAction )
    METHOD  addAction_1( cText )
@@ -88,13 +87,12 @@ CREATE CLASS QActionGroup INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QActionGroup:New( pParent )
-   ::pParent := pParent
+METHOD QActionGroup:new( pParent )
    ::pPtr := Qt_QActionGroup( pParent )
    RETURN Self
 
 
-METHOD QActionGroup:Configure( xObject )
+METHOD QActionGroup:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -123,36 +123,27 @@ METHOD XbpTabPage:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    #endif
 
    IF empty( ::oParent:oTabWidget )
-      /* NOTE: First tab will decide the position and size of the Tab Control
-       * One Tab Control per Window can be defined. If another tab control is required then
-       * create another static and place tabs on that
-       */
-      ::oParent:oTabWidget := QTabWidget():new( QT_PTROF( ::oParent:oWidget ) )
-
-      ::Connect( QT_PTROF( ::oParent:oTabWidget ), "currentChanged(int)" , {|o,i| ::exeBlock( i,o ) } )
-
-      ::oParent:oTabWidget:move( ::aPos[ 1 ], ::aPos[ 2 ] )
-      ::oParent:oTabWidget:resize( ::aSize[ 1 ], ::aSize[ 2 ] )
+      ::oParent:oTabWidget := XbpTabWidget():new( ::oParent, , ::aPos, ::aSize, , .t. ):create()
 
       IF ::type == XBPTABPAGE_TAB_BOTTOM
-         ::oParent:oTabWidget:setTabPosition( 1 )
+         ::oParent:oTabWidget:oWidget:setTabPosition( 1 )
       ENDIF
 
-      ::oParent:oTabWidget:show()
    ENDIF
+
    oPar := ::oParent:oTabWidget
 
-   ::oWidget := QWidget():new( ::pParent )
+   ::oWidget := QWidget():new()
 
-   oPar:addTab( ::pWidget, ::caption )
-   aadd( ::oParent:aTabs, self )
+   oPar:oWidget:addTab( ::pWidget, ::caption )
 
    ::setPosAndSize()
    IF ::visible
       ::show()
    ENDIF
 
-   ::oParent:AddChild( SELF )
+   oPar:addChild( SELF )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -211,3 +202,75 @@ METHOD XbpTabPage:destroy()
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                        Class XbpTabWidget()
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+
+CLASS XbpTabWidget  INHERIT  XbpWindow
+
+   METHOD   new()
+   METHOD   create()
+   METHOD   configure()
+   METHOD   destroy()
+   METHOD   exeBlock()
+
+   DATA     aTabs                 INIT {}
+
+   ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpTabWidget:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpTabWidget:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   ::oWidget := QTabWidget():new( ::pParent )
+
+   ::Connect( ::pWidget, "currentChanged(int)" , {|o,i| ::exeBlock( i,o ) } )
+
+   ::setPosAndSize()
+   IF ::visible
+      ::show()
+   ENDIF
+
+   ::oParent:addChild( SELF )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpTabWidget:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpTabWidget:destroy()
+   ::xbpWindow:destroy()
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpTabWidget:exeBlock( iIndex )
+   IF !empty( ::aChildren ) .and. iIndex >= 0 .and. iIndex < len( ::aChildren )
+      IF hb_isBlock( ::aChildren[ iIndex+1 ]:sl_tabActivate )
+         eval( ::aChildren[ iIndex+1 ]:sl_tabActivate, NIL, NIL, ::aChildren[ iIndex+1 ] )
+      ENDIF
+   ENDIF
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+

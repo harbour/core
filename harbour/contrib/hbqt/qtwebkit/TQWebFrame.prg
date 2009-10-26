@@ -65,11 +65,10 @@
 
 CREATE CLASS QWebFrame INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addToJavaScriptWindowObject( cName, pObject )
    METHOD  addToJavaScriptWindowObject_1( cName, pObject, nOwn )
@@ -113,13 +112,12 @@ CREATE CLASS QWebFrame INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QWebFrame:New( pParent )
-   ::pParent := pParent
+METHOD QWebFrame:new( pParent )
    ::pPtr := Qt_QWebFrame( pParent )
    RETURN Self
 
 
-METHOD QWebFrame:Configure( xObject )
+METHOD QWebFrame:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

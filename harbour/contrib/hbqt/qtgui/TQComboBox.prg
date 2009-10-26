@@ -65,11 +65,10 @@
 
 CREATE CLASS QComboBox INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addItem( cText, pUserData )
    METHOD  addItem_1( cIcon, cText, pUserData )
@@ -135,13 +134,12 @@ CREATE CLASS QComboBox INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QComboBox:New( pParent )
-   ::pParent := pParent
+METHOD QComboBox:new( pParent )
    ::pPtr := Qt_QComboBox( pParent )
    RETURN Self
 
 
-METHOD QComboBox:Configure( xObject )
+METHOD QComboBox:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

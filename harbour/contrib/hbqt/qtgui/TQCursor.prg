@@ -65,11 +65,10 @@
 
 CREATE CLASS QCursor
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  bitmap()
    METHOD  hotSpot()
@@ -92,7 +91,7 @@ METHOD New( ... ) CLASS QCursor
    RETURN Self
 
 
-METHOD QCursor:Configure( xObject )
+METHOD QCursor:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

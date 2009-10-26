@@ -65,11 +65,10 @@
 
 CREATE CLASS QDropEvent INHERIT QEvent
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  acceptProposedAction()
    METHOD  dropAction()
@@ -86,13 +85,12 @@ CREATE CLASS QDropEvent INHERIT QEvent
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDropEvent:New( pParent )
-   ::pParent := pParent
+METHOD QDropEvent:new( pParent )
    ::pPtr := Qt_QDropEvent( pParent )
    RETURN Self
 
 
-METHOD QDropEvent:Configure( xObject )
+METHOD QDropEvent:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

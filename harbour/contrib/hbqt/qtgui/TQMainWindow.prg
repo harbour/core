@@ -65,11 +65,10 @@
 
 CREATE CLASS QMainWindow INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addDockWidget( nArea, pDockwidget )
    METHOD  addDockWidget_1( nArea, pDockwidget, nOrientation )
@@ -124,13 +123,12 @@ CREATE CLASS QMainWindow INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QMainWindow:New( pParent )
-   ::pParent := pParent
+METHOD QMainWindow:new( pParent )
    ::pPtr := Qt_QMainWindow( pParent )
    RETURN Self
 
 
-METHOD QMainWindow:Configure( xObject )
+METHOD QMainWindow:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

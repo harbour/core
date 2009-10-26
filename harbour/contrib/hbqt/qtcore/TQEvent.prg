@@ -65,11 +65,10 @@
 
 CREATE CLASS QEvent
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  accept()
    METHOD  ignore()
@@ -83,13 +82,12 @@ CREATE CLASS QEvent
 
 /*----------------------------------------------------------------------*/
 
-METHOD QEvent:New( pParent )
-   ::pParent := pParent
+METHOD QEvent:new( pParent )
    ::pPtr := Qt_QEvent( pParent )
    RETURN Self
 
 
-METHOD QEvent:Configure( xObject )
+METHOD QEvent:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

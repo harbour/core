@@ -65,11 +65,10 @@
 
 CREATE CLASS QStyleOptionSlider INHERIT QStyleOptionComplex
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  dialWrapping()
    METHOD  maximum()
@@ -88,13 +87,12 @@ CREATE CLASS QStyleOptionSlider INHERIT QStyleOptionComplex
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionSlider:New( pParent )
-   ::pParent := pParent
+METHOD QStyleOptionSlider:new( pParent )
    ::pPtr := Qt_QStyleOptionSlider( pParent )
    RETURN Self
 
 
-METHOD QStyleOptionSlider:Configure( xObject )
+METHOD QStyleOptionSlider:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

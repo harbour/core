@@ -65,11 +65,10 @@
 
 CREATE CLASS QStylePainter INHERIT QPainter
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  begin( pWidget )
    METHOD  begin_1( pPd, pWidget )
@@ -84,13 +83,12 @@ CREATE CLASS QStylePainter INHERIT QPainter
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStylePainter:New( pParent )
-   ::pParent := pParent
+METHOD QStylePainter:new( pParent )
    ::pPtr := Qt_QStylePainter( pParent )
    RETURN Self
 
 
-METHOD QStylePainter:Configure( xObject )
+METHOD QStylePainter:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

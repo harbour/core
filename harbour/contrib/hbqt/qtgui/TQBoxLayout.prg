@@ -65,11 +65,10 @@
 
 CREATE CLASS QBoxLayout INHERIT QLayout
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addLayout( pLayout, nStretch )
    METHOD  addSpacerItem( pSpacerItem )
@@ -96,13 +95,12 @@ CREATE CLASS QBoxLayout INHERIT QLayout
 
 /*----------------------------------------------------------------------*/
 
-METHOD QBoxLayout:New( pParent )
-   ::pParent := pParent
+METHOD QBoxLayout:new( pParent )
    ::pPtr := Qt_QBoxLayout( pParent )
    RETURN Self
 
 
-METHOD QBoxLayout:Configure( xObject )
+METHOD QBoxLayout:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

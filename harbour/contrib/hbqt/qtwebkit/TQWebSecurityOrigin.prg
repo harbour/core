@@ -65,11 +65,10 @@
 
 CREATE CLASS QWebSecurityOrigin
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  databaseQuota()
    METHOD  databaseUsage()
@@ -82,13 +81,12 @@ CREATE CLASS QWebSecurityOrigin
 
 /*----------------------------------------------------------------------*/
 
-METHOD QWebSecurityOrigin:New( pParent )
-   ::pParent := pParent
+METHOD QWebSecurityOrigin:new( pParent )
    ::pPtr := Qt_QWebSecurityOrigin( pParent )
    RETURN Self
 
 
-METHOD QWebSecurityOrigin:Configure( xObject )
+METHOD QWebSecurityOrigin:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

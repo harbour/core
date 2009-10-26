@@ -65,11 +65,10 @@
 
 CREATE CLASS QLabel INHERIT QFrame
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  alignment()
    METHOD  buddy()
@@ -105,13 +104,12 @@ CREATE CLASS QLabel INHERIT QFrame
 
 /*----------------------------------------------------------------------*/
 
-METHOD QLabel:New( pParent )
-   ::pParent := pParent
+METHOD QLabel:new( pParent )
    ::pPtr := Qt_QLabel( pParent )
    RETURN Self
 
 
-METHOD QLabel:Configure( xObject )
+METHOD QLabel:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

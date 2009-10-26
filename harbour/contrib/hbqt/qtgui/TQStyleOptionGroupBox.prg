@@ -65,11 +65,10 @@
 
 CREATE CLASS QStyleOptionGroupBox INHERIT QStyleOptionComplex
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  features()
    METHOD  lineWidth()
@@ -82,13 +81,12 @@ CREATE CLASS QStyleOptionGroupBox INHERIT QStyleOptionComplex
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionGroupBox:New( pParent )
-   ::pParent := pParent
+METHOD QStyleOptionGroupBox:new( pParent )
    ::pPtr := Qt_QStyleOptionGroupBox( pParent )
    RETURN Self
 
 
-METHOD QStyleOptionGroupBox:Configure( xObject )
+METHOD QStyleOptionGroupBox:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

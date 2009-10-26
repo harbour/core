@@ -1365,11 +1365,10 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
 
    aadd( txt_, s  )
    aadd( txt_, '' )
-   aadd( txt_, '   VAR     pParent'     )
    aadd( txt_, '   VAR     pPtr'        )
    aadd( txt_, '' )
-   aadd( txt_, '   METHOD  New()'       )
-   aadd( txt_, '   METHOD  Configure( xObject )' )
+   aadd( txt_, '   METHOD  new()'       )
+   aadd( txt_, '   METHOD  configure( xObject )' )
    aadd( txt_, '' )
 
    /* Populate METHODS */
@@ -1423,30 +1422,22 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
       aadd( txt_, '' )
 
    OTHERWISE
-      aadd( txt_, 'METHOD ' + cWidget + ':New( pParent )' )
-      //aadd( txt_, '' )
-      aadd( txt_, '   ::pParent := pParent' )
-      //aadd( txt_, '' )
+      aadd( txt_, 'METHOD ' + cWidget + ':new( pParent )' )
       aadd( txt_, '   ::pPtr := Qt_' + cWidget + '( pParent )' )
-      //aadd( txt_, '' )
       aadd( txt_, '   RETURN Self' )
       aadd( txt_, '' )
 
    ENDCASE
-   //aadd( txt_, '/*----------------------------------------------------------------------*/' )
    aadd( txt_, '' )
 
-   aadd( txt_, 'METHOD ' + cWidget + ':Configure( xObject )' )
-   //aadd( txt_, '                                                                           ' )
+   aadd( txt_, 'METHOD ' + cWidget + ':configure( xObject )' )
    aadd( txt_, '   IF hb_isObject( xObject )                                               ' )
    aadd( txt_, '      ::pPtr := xObject:pPtr                                               ' )
    aadd( txt_, '   ELSEIF hb_isPointer( xObject )                                          ' )
    aadd( txt_, '      ::pPtr := xObject                                                    ' )
    aadd( txt_, '   ENDIF                                                                   ' )
-   //aadd( txt_, '                                                                           ' )
    aadd( txt_, '   RETURN Self                                                             ' )
    aadd( txt_, '                                                                           ' )
-   //aadd( txt_, '/*----------------------------------------------------------------------*/ ' )
 
    /* Define methods */
    FOR i := 1 TO len( mth_ )
@@ -1454,14 +1445,12 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
       aadd( txt_, 'METHOD ' + cWidget + ':' + mth_[ i, 1 ] )
       aadd( txt_, '   RETURN ' + mth_[ i, 2 ] )
       aadd( txt_, '                                                                           ' )
-      //aadd( txt_, '/*----------------------------------------------------------------------*/ ' )
    NEXT
 
    IF !empty( subCls_ )
       aadd( txt_, '                                                                           ' )
       aeval( subCls_, {|e| aadd( txt_, e ) } )
       aadd( txt_, '                                                                           ' )
-      //aadd( txt_, '/*----------------------------------------------------------------------*/ ' )
    ENDIF
 
    /* Generate .prg */

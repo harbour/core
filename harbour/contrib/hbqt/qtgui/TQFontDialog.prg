@@ -65,11 +65,10 @@
 
 CREATE CLASS QFontDialog INHERIT QDialog
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  currentFont()
    METHOD  options()
@@ -88,13 +87,12 @@ CREATE CLASS QFontDialog INHERIT QDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFontDialog:New( pParent )
-   ::pParent := pParent
+METHOD QFontDialog:new( pParent )
    ::pPtr := Qt_QFontDialog( pParent )
    RETURN Self
 
 
-METHOD QFontDialog:Configure( xObject )
+METHOD QFontDialog:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

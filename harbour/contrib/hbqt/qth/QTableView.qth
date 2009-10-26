@@ -62,10 +62,18 @@ New      = pParent
 <SUBCLASS>
 CREATE CLASS HBTableView INHERIT QTableView
 
-   METHOD New( pParent )                        INLINE ::pParent := pParent, ::pPtr := Qt_HbTableView( pParent ), Self
-   METHOD navigate( nCursorAction, nModifiers ) INLINE Qt_HbTableView_navigate( ::pPtr, nCursorAction, nModifiers )
+   METHOD new( pParent )                        
+   METHOD navigate( nCursorAction, nModifiers )
 
    ENDCLASS
+
+METHOD HBTableView:new( pParent )
+   ::pPtr := Qt_HbTableView( pParent )
+   RETURN Self
+
+METHOD HBTableView:navigate( nCursorAction, nModifiers )
+   RETURN Qt_HbTableView_navigate( ::pPtr, nCursorAction, nModifiers )
+
 </SUBCLASS>
 
 <CODE>

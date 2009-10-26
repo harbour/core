@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextFormat
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  background()
    METHOD  boolProperty( nPropertyId )
@@ -117,13 +116,12 @@ CREATE CLASS QTextFormat
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextFormat:New( pParent )
-   ::pParent := pParent
+METHOD QTextFormat:new( pParent )
    ::pPtr := Qt_QTextFormat( pParent )
    RETURN Self
 
 
-METHOD QTextFormat:Configure( xObject )
+METHOD QTextFormat:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

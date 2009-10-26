@@ -65,11 +65,10 @@
 
 CREATE CLASS QByteArray
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  append( pBa )
    METHOD  append_1( cStr )
@@ -173,13 +172,12 @@ CREATE CLASS QByteArray
 
 /*----------------------------------------------------------------------*/
 
-METHOD QByteArray:New( pParent )
-   ::pParent := pParent
+METHOD QByteArray:new( pParent )
    ::pPtr := Qt_QByteArray( pParent )
    RETURN Self
 
 
-METHOD QByteArray:Configure( xObject )
+METHOD QByteArray:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

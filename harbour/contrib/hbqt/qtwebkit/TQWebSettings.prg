@@ -65,11 +65,10 @@
 
 CREATE CLASS QWebSettings
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  fontFamily( nWhich )
    METHOD  fontSize( nType )
@@ -101,13 +100,12 @@ CREATE CLASS QWebSettings
 
 /*----------------------------------------------------------------------*/
 
-METHOD QWebSettings:New( pParent )
-   ::pParent := pParent
+METHOD QWebSettings:new( pParent )
    ::pPtr := Qt_QWebSettings( pParent )
    RETURN Self
 
 
-METHOD QWebSettings:Configure( xObject )
+METHOD QWebSettings:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

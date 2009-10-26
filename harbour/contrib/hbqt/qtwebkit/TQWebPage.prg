@@ -65,11 +65,10 @@
 
 CREATE CLASS QWebPage INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  action( nAction )
    METHOD  bytesReceived()
@@ -108,13 +107,12 @@ CREATE CLASS QWebPage INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QWebPage:New( pParent )
-   ::pParent := pParent
+METHOD QWebPage:new( pParent )
    ::pPtr := Qt_QWebPage( pParent )
    RETURN Self
 
 
-METHOD QWebPage:Configure( xObject )
+METHOD QWebPage:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

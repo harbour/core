@@ -65,11 +65,10 @@
 
 CREATE CLASS QDir
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  absoluteFilePath( cFileName )
    METHOD  absolutePath()
@@ -128,13 +127,12 @@ CREATE CLASS QDir
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDir:New( pParent )
-   ::pParent := pParent
+METHOD QDir:new( pParent )
    ::pPtr := Qt_QDir( pParent )
    RETURN Self
 
 
-METHOD QDir:Configure( xObject )
+METHOD QDir:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

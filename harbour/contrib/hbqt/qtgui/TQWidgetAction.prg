@@ -65,11 +65,10 @@
 
 CREATE CLASS QWidgetAction INHERIT QAction
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  defaultWidget()
    METHOD  releaseWidget( pWidget )
@@ -80,13 +79,12 @@ CREATE CLASS QWidgetAction INHERIT QAction
 
 /*----------------------------------------------------------------------*/
 
-METHOD QWidgetAction:New( pParent )
-   ::pParent := pParent
+METHOD QWidgetAction:new( pParent )
    ::pPtr := Qt_QWidgetAction( pParent )
    RETURN Self
 
 
-METHOD QWidgetAction:Configure( xObject )
+METHOD QWidgetAction:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

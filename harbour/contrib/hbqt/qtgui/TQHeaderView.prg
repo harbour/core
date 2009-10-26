@@ -65,11 +65,10 @@
 
 CREATE CLASS QHeaderView INHERIT QAbstractItemView
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  cascadingSectionResizes()
    METHOD  count()
@@ -133,13 +132,12 @@ CREATE CLASS QHeaderView INHERIT QAbstractItemView
 
 /*----------------------------------------------------------------------*/
 
-METHOD QHeaderView:New( pParent )
-   ::pParent := pParent
+METHOD QHeaderView:new( pParent )
    ::pPtr := Qt_QHeaderView( pParent )
    RETURN Self
 
 
-METHOD QHeaderView:Configure( xObject )
+METHOD QHeaderView:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

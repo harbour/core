@@ -65,11 +65,10 @@
 
 CREATE CLASS QFtp INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  bytesAvailable()
    METHOD  cd( cDir )
@@ -102,13 +101,12 @@ CREATE CLASS QFtp INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFtp:New( pParent )
-   ::pParent := pParent
+METHOD QFtp:new( pParent )
    ::pPtr := Qt_QFtp( pParent )
    RETURN Self
 
 
-METHOD QFtp:Configure( xObject )
+METHOD QFtp:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

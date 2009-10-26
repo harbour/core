@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextLayout
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  beginLayout()
    METHOD  boundingRect()
@@ -105,13 +104,12 @@ CREATE CLASS QTextLayout
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextLayout:New( pParent )
-   ::pParent := pParent
+METHOD QTextLayout:new( pParent )
    ::pPtr := Qt_QTextLayout( pParent )
    RETURN Self
 
 
-METHOD QTextLayout:Configure( xObject )
+METHOD QTextLayout:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

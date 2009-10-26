@@ -65,11 +65,10 @@
 
 CREATE CLASS QMenu INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  actionAt( pPt )
    METHOD  actionGeometry( pAct )
@@ -109,13 +108,12 @@ CREATE CLASS QMenu INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QMenu:New( pParent )
-   ::pParent := pParent
+METHOD QMenu:new( pParent )
    ::pPtr := Qt_QMenu( pParent )
    RETURN Self
 
 
-METHOD QMenu:Configure( xObject )
+METHOD QMenu:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

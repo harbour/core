@@ -627,8 +627,10 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    /*  Attach Model with the View */
    ::oTableView:setModel( QT_PTROF( ::oDbfModel ) )
    /*  Set Initial Column and Row */
+   #if 1
    ::oTableView:setCurrentIndex( QModelIndex():new():sibling( 0,0 ) )
    ::pCurIndex := ::oTableView:currentIndex()
+   #endif
 
    /*  Horizontal Footer */
    ::oFooterView := QHeaderView():new( Qt_Horizontal )
@@ -681,11 +683,20 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION ShowMem( lYes )
+   IF lYes
+      xbp_Debug( "    ." )
+   ENDIF
+   xbp_Debug( "       Mem Used "+IF( lYes, "1001", "    " ), memory( 1001 ) )
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpBrowse:exeBlock( nEvent, p1, p2, p3 )
    LOCAL oWheelEvent, oMouseEvent, i, nRow, nRowPos, nCol, nColPos, oPoint
 
    HB_SYMBOL_UNUSED( p2 )
-//xbp_debug( "        exeblock:", nEvent )
+//xbp_debug( "   XbpBrowse:exeblock:", nEvent, 0, memory( 1001 ) )
    DO CASE
    CASE nEvent == 1                   /* Keypress Event */
       SetAppEvent( xbeP_Keyboard, XbpQKeyEventToAppEvent( p1 ), NIL, self )
@@ -942,9 +953,7 @@ METHOD handleEvent( nEvent, mp1, mp2 ) CLASS XbpBrowse
 
 METHOD XbpBrowse:supplyInfo( nMode, nInfo, p2, p3 )
 
-   //hb_gcAll()
-
-//xbp_debug( 'supplyInfo:',nMode )
+//xbp_debug( 0, 'supplyInfo:', nMode, nInfo, memory( 1001 ) )
    DO CASE
    CASE nMode == 141       /* Main View Header|Data */
       IF nInfo == HBQT_BRW_COLCOUNT
@@ -1185,7 +1194,9 @@ METHOD setCurrentIndex( lReset ) CLASS XbpBrowse
    LOCAL pIndex
 
    DEFAULT lReset TO .t.
-   //
+
+//xbp_DEbug( "   setCurrentIndex ", 0, lReset, memory( 1001 ) )
+
    IF lReset
       ::oDbfModel:reset()                         /* Important */
       //
@@ -1199,6 +1210,8 @@ METHOD setCurrentIndex( lReset ) CLASS XbpBrowse
 
    pIndex := ::oDbfModel:index( ::rowPos - 1, ::colPos - 1 )
    ::oTableView:setCurrentIndex( pIndex )
+
+//xbp_DEbug( "   setCurrentIndex ", 1, lReset, memory( 1001 ) )
 
    RETURN Self
 

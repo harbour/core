@@ -65,11 +65,10 @@
 
 CREATE CLASS QTableWidgetSelectionRange
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  bottomRow()
    METHOD  columnCount()
@@ -82,13 +81,12 @@ CREATE CLASS QTableWidgetSelectionRange
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTableWidgetSelectionRange:New( pParent )
-   ::pParent := pParent
+METHOD QTableWidgetSelectionRange:new( pParent )
    ::pPtr := Qt_QTableWidgetSelectionRange( pParent )
    RETURN Self
 
 
-METHOD QTableWidgetSelectionRange:Configure( xObject )
+METHOD QTableWidgetSelectionRange:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QClipboard INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  clear( nMode )
    METHOD  image( nMode )
@@ -90,13 +89,12 @@ CREATE CLASS QClipboard INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QClipboard:New( pParent )
-   ::pParent := pParent
+METHOD QClipboard:new( pParent )
    ::pPtr := Qt_QClipboard( pParent )
    RETURN Self
 
 
-METHOD QClipboard:Configure( xObject )
+METHOD QClipboard:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

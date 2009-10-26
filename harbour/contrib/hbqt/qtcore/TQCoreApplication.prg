@@ -65,11 +65,10 @@
 
 CREATE CLASS QCoreApplication INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  notify( pReceiver, pEvent )
    METHOD  addLibraryPath( cPath )
@@ -116,13 +115,12 @@ CREATE CLASS QCoreApplication INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QCoreApplication:New( pParent )
-   ::pParent := pParent
+METHOD QCoreApplication:new( pParent )
    ::pPtr := Qt_QCoreApplication( pParent )
    RETURN Self
 
 
-METHOD QCoreApplication:Configure( xObject )
+METHOD QCoreApplication:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

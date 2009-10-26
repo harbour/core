@@ -65,11 +65,10 @@
 
 CREATE CLASS QStyleOptionToolButton INHERIT QStyleOptionComplex
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  arrowType()
    METHOD  features()
@@ -84,13 +83,12 @@ CREATE CLASS QStyleOptionToolButton INHERIT QStyleOptionComplex
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionToolButton:New( pParent )
-   ::pParent := pParent
+METHOD QStyleOptionToolButton:new( pParent )
    ::pPtr := Qt_QStyleOptionToolButton( pParent )
    RETURN Self
 
 
-METHOD QStyleOptionToolButton:Configure( xObject )
+METHOD QStyleOptionToolButton:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QTreeWidget INHERIT QTreeView
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addTopLevelItem( pItem )
    METHOD  closePersistentEditor( pItem, nColumn )
@@ -113,13 +112,12 @@ CREATE CLASS QTreeWidget INHERIT QTreeView
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTreeWidget:New( pParent )
-   ::pParent := pParent
+METHOD QTreeWidget:new( pParent )
    ::pPtr := Qt_QTreeWidget( pParent )
    RETURN Self
 
 
-METHOD QTreeWidget:Configure( xObject )
+METHOD QTreeWidget:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

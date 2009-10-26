@@ -65,11 +65,10 @@
 
 CREATE CLASS QButtonGroup INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addButton( pButton )
    METHOD  addButton_1( pButton, nId )
@@ -86,13 +85,12 @@ CREATE CLASS QButtonGroup INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QButtonGroup:New( pParent )
-   ::pParent := pParent
+METHOD QButtonGroup:new( pParent )
    ::pPtr := Qt_QButtonGroup( pParent )
    RETURN Self
 
 
-METHOD QButtonGroup:Configure( xObject )
+METHOD QButtonGroup:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

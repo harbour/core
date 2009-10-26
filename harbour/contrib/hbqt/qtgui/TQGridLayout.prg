@@ -65,11 +65,10 @@
 
 CREATE CLASS QGridLayout INHERIT QLayout
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addItem( pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
    METHOD  addLayout( pLayout, nRow, nColumn, nAlignment )
@@ -102,13 +101,12 @@ CREATE CLASS QGridLayout INHERIT QLayout
 
 /*----------------------------------------------------------------------*/
 
-METHOD QGridLayout:New( pParent )
-   ::pParent := pParent
+METHOD QGridLayout:new( pParent )
    ::pPtr := Qt_QGridLayout( pParent )
    RETURN Self
 
 
-METHOD QGridLayout:Configure( xObject )
+METHOD QGridLayout:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QLCDNumber INHERIT QFrame
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  checkOverflow( nNum )
    METHOD  checkOverflow_1( nNum )
@@ -95,13 +94,12 @@ CREATE CLASS QLCDNumber INHERIT QFrame
 
 /*----------------------------------------------------------------------*/
 
-METHOD QLCDNumber:New( pParent )
-   ::pParent := pParent
+METHOD QLCDNumber:new( pParent )
    ::pPtr := Qt_QLCDNumber( pParent )
    RETURN Self
 
 
-METHOD QLCDNumber:Configure( xObject )
+METHOD QLCDNumber:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

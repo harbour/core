@@ -65,11 +65,10 @@
 
 CREATE CLASS QTranslator INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  isEmpty()
    METHOD  load( cFilename, cDirectory, cSearch_delimiters, cSuffix )
@@ -80,13 +79,12 @@ CREATE CLASS QTranslator INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTranslator:New( pParent )
-   ::pParent := pParent
+METHOD QTranslator:new( pParent )
    ::pPtr := Qt_QTranslator( pParent )
    RETURN Self
 
 
-METHOD QTranslator:Configure( xObject )
+METHOD QTranslator:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

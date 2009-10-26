@@ -65,11 +65,10 @@
 
 CREATE CLASS QWizard INHERIT QDialog
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addPage( pPage )
    METHOD  button( nWhich )
@@ -109,13 +108,12 @@ CREATE CLASS QWizard INHERIT QDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD QWizard:New( pParent )
-   ::pParent := pParent
+METHOD QWizard:new( pParent )
    ::pPtr := Qt_QWizard( pParent )
    RETURN Self
 
 
-METHOD QWizard:Configure( xObject )
+METHOD QWizard:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

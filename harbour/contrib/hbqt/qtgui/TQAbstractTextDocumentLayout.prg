@@ -65,11 +65,10 @@
 
 CREATE CLASS QAbstractTextDocumentLayout INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  anchorAt( pPosition )
    METHOD  blockBoundingRect( pBlock )
@@ -87,13 +86,12 @@ CREATE CLASS QAbstractTextDocumentLayout INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QAbstractTextDocumentLayout:New( pParent )
-   ::pParent := pParent
+METHOD QAbstractTextDocumentLayout:new( pParent )
    ::pPtr := Qt_QAbstractTextDocumentLayout( pParent )
    RETURN Self
 
 
-METHOD QAbstractTextDocumentLayout:Configure( xObject )
+METHOD QAbstractTextDocumentLayout:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

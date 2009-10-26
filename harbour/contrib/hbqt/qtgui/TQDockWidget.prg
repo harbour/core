@@ -65,11 +65,10 @@
 
 CREATE CLASS QDockWidget INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  allowedAreas()
    METHOD  features()
@@ -88,13 +87,12 @@ CREATE CLASS QDockWidget INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDockWidget:New( pParent )
-   ::pParent := pParent
+METHOD QDockWidget:new( pParent )
    ::pPtr := Qt_QDockWidget( pParent )
    RETURN Self
 
 
-METHOD QDockWidget:Configure( xObject )
+METHOD QDockWidget:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

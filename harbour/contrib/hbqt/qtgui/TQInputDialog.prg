@@ -65,11 +65,10 @@
 
 CREATE CLASS QInputDialog INHERIT QDialog
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  cancelButtonText()
    METHOD  comboBoxItems()
@@ -120,13 +119,12 @@ CREATE CLASS QInputDialog INHERIT QDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD QInputDialog:New( pParent )
-   ::pParent := pParent
+METHOD QInputDialog:new( pParent )
    ::pPtr := Qt_QInputDialog( pParent )
    RETURN Self
 
 
-METHOD QInputDialog:Configure( xObject )
+METHOD QInputDialog:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

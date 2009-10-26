@@ -65,11 +65,10 @@
 
 CREATE CLASS QTime
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addMSecs( nMs )
    METHOD  addSecs( nS )
@@ -96,13 +95,12 @@ CREATE CLASS QTime
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTime:New( pParent )
-   ::pParent := pParent
+METHOD QTime:new( pParent )
    ::pPtr := Qt_QTime( pParent )
    RETURN Self
 
 
-METHOD QTime:Configure( xObject )
+METHOD QTime:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

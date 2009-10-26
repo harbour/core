@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextBrowser INHERIT QTextEdit
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  backwardHistoryCount()
    METHOD  clearHistory()
@@ -96,13 +95,12 @@ CREATE CLASS QTextBrowser INHERIT QTextEdit
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextBrowser:New( pParent )
-   ::pParent := pParent
+METHOD QTextBrowser:new( pParent )
    ::pPtr := Qt_QTextBrowser( pParent )
    RETURN Self
 
 
-METHOD QTextBrowser:Configure( xObject )
+METHOD QTextBrowser:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

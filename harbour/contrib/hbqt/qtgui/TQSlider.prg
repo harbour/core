@@ -65,11 +65,10 @@
 
 CREATE CLASS QSlider INHERIT QAbstractSlider
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  setTickInterval( nTi )
    METHOD  setTickPosition( nPosition )
@@ -80,13 +79,12 @@ CREATE CLASS QSlider INHERIT QAbstractSlider
 
 /*----------------------------------------------------------------------*/
 
-METHOD QSlider:New( pParent )
-   ::pParent := pParent
+METHOD QSlider:new( pParent )
    ::pPtr := Qt_QSlider( pParent )
    RETURN Self
 
 
-METHOD QSlider:Configure( xObject )
+METHOD QSlider:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

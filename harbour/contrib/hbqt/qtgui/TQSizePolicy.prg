@@ -65,11 +65,10 @@
 
 CREATE CLASS QSizePolicy
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  controlType()
    METHOD  expandingDirections()
@@ -90,13 +89,12 @@ CREATE CLASS QSizePolicy
 
 /*----------------------------------------------------------------------*/
 
-METHOD QSizePolicy:New( pParent )
-   ::pParent := pParent
+METHOD QSizePolicy:new( pParent )
    ::pPtr := Qt_QSizePolicy( pParent )
    RETURN Self
 
 
-METHOD QSizePolicy:Configure( xObject )
+METHOD QSizePolicy:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QMatrix
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  m11()
    METHOD  m12()
@@ -105,13 +104,12 @@ CREATE CLASS QMatrix
 
 /*----------------------------------------------------------------------*/
 
-METHOD QMatrix:New( pParent )
-   ::pParent := pParent
+METHOD QMatrix:new( pParent )
    ::pPtr := Qt_QMatrix( pParent )
    RETURN Self
 
 
-METHOD QMatrix:Configure( xObject )
+METHOD QMatrix:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

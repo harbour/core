@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextImageFormat INHERIT QTextCharFormat
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  height()
    METHOD  isValid()
@@ -83,13 +82,12 @@ CREATE CLASS QTextImageFormat INHERIT QTextCharFormat
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextImageFormat:New( pParent )
-   ::pParent := pParent
+METHOD QTextImageFormat:new( pParent )
    ::pPtr := Qt_QTextImageFormat( pParent )
    RETURN Self
 
 
-METHOD QTextImageFormat:Configure( xObject )
+METHOD QTextImageFormat:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

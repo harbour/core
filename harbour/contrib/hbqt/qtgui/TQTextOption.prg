@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextOption
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  alignment()
    METHOD  flags()
@@ -88,13 +87,12 @@ CREATE CLASS QTextOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextOption:New( pParent )
-   ::pParent := pParent
+METHOD QTextOption:new( pParent )
    ::pPtr := Qt_QTextOption( pParent )
    RETURN Self
 
 
-METHOD QTextOption:Configure( xObject )
+METHOD QTextOption:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

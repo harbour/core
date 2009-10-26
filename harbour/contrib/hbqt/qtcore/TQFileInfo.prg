@@ -65,11 +65,10 @@
 
 CREATE CLASS QFileInfo
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  absoluteDir()
    METHOD  absoluteFilePath()
@@ -120,13 +119,12 @@ CREATE CLASS QFileInfo
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFileInfo:New( pParent )
-   ::pParent := pParent
+METHOD QFileInfo:new( pParent )
    ::pPtr := Qt_QFileInfo( pParent )
    RETURN Self
 
 
-METHOD QFileInfo:Configure( xObject )
+METHOD QFileInfo:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

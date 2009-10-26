@@ -65,11 +65,10 @@
 
 CREATE CLASS QLineF
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  p1()
    METHOD  p2()
@@ -103,13 +102,12 @@ CREATE CLASS QLineF
 
 /*----------------------------------------------------------------------*/
 
-METHOD QLineF:New( pParent )
-   ::pParent := pParent
+METHOD QLineF:new( pParent )
    ::pPtr := Qt_QLineF( pParent )
    RETURN Self
 
 
-METHOD QLineF:Configure( xObject )
+METHOD QLineF:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

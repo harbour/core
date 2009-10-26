@@ -65,11 +65,10 @@
 
 CREATE CLASS QErrorMessage INHERIT QDialog
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  showMessage( cMessage, cType )
 
@@ -77,13 +76,12 @@ CREATE CLASS QErrorMessage INHERIT QDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD QErrorMessage:New( pParent )
-   ::pParent := pParent
+METHOD QErrorMessage:new( pParent )
    ::pPtr := Qt_QErrorMessage( pParent )
    RETURN Self
 
 
-METHOD QErrorMessage:Configure( xObject )
+METHOD QErrorMessage:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

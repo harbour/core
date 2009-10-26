@@ -65,11 +65,10 @@
 
 CREATE CLASS QSplitter INHERIT QFrame
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addWidget( pWidget )
    METHOD  childrenCollapsible()
@@ -97,13 +96,12 @@ CREATE CLASS QSplitter INHERIT QFrame
 
 /*----------------------------------------------------------------------*/
 
-METHOD QSplitter:New( pParent )
-   ::pParent := pParent
+METHOD QSplitter:new( pParent )
    ::pPtr := Qt_QSplitter( pParent )
    RETURN Self
 
 
-METHOD QSplitter:Configure( xObject )
+METHOD QSplitter:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

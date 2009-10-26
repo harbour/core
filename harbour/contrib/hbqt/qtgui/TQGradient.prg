@@ -65,11 +65,10 @@
 
 CREATE CLASS QGradient
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  coordinateMode()
    METHOD  setColorAt( nPosition, pColor )
@@ -82,13 +81,12 @@ CREATE CLASS QGradient
 
 /*----------------------------------------------------------------------*/
 
-METHOD QGradient:New( pParent )
-   ::pParent := pParent
+METHOD QGradient:new( pParent )
    ::pPtr := Qt_QGradient( pParent )
    RETURN Self
 
 
-METHOD QGradient:Configure( xObject )
+METHOD QGradient:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

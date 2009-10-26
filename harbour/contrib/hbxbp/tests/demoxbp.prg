@@ -100,9 +100,8 @@ PROCEDURE Main()
 /*----------------------------------------------------------------------*/
 
 FUNCTION _BuildADialog()
-xbp_debug( 1 )
+
    hb_gtReload( 'GUI' )
-xbp_debug( 2 )
    BuildADialog()
 
    RETURN NIL
@@ -203,7 +202,7 @@ PROCEDURE BuildADialog()
       nEvent := AppEvent( @mp1, @mp2, @oXbp )
 
       IF ( nEvent == xbeP_Close ) .OR. ( nEvent == xbeP_Keyboard .and. mp1 == xbeK_ESC )
-hb_outdebug( "      WOW      " )
+hb_outdebug( "                  WOW      " )
          EXIT
       ELSEIF nEvent == xbeP_Keyboard .and. mp1 == xbeK_F1
          oHtm:setHTML( '<html><h1>Direct HTML Injection</h1><p><font color="#ab00ff" size="16">'+;
@@ -216,7 +215,7 @@ hb_outdebug( "      WOW      " )
    /* Very important - destroy resources */
    oDlg:destroy()
 
-hb_outDebug( "------WOW------" )
+hb_outDebug( "----------------- WOW ----------------" )
    RETURN
 
 /*----------------------------------------------------------------------*/

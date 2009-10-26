@@ -65,11 +65,10 @@
 
 CREATE CLASS QImageWriter
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  canWrite()
    METHOD  compression()
@@ -94,13 +93,12 @@ CREATE CLASS QImageWriter
 
 /*----------------------------------------------------------------------*/
 
-METHOD QImageWriter:New( pParent )
-   ::pParent := pParent
+METHOD QImageWriter:new( pParent )
    ::pPtr := Qt_QImageWriter( pParent )
    RETURN Self
 
 
-METHOD QImageWriter:Configure( xObject )
+METHOD QImageWriter:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

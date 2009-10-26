@@ -65,24 +65,22 @@
 
 CREATE CLASS QSizeGrip INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD QSizeGrip:New( pParent )
-   ::pParent := pParent
+METHOD QSizeGrip:new( pParent )
    ::pPtr := Qt_QSizeGrip( pParent )
    RETURN Self
 
 
-METHOD QSizeGrip:Configure( xObject )
+METHOD QSizeGrip:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

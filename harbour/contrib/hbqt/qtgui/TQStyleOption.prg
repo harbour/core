@@ -65,11 +65,10 @@
 
 CREATE CLASS QStyleOption
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  initFrom( pWidget )
    METHOD  direction()
@@ -84,13 +83,12 @@ CREATE CLASS QStyleOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOption:New( pParent )
-   ::pParent := pParent
+METHOD QStyleOption:new( pParent )
    ::pPtr := Qt_QStyleOption( pParent )
    RETURN Self
 
 
-METHOD QStyleOption:Configure( xObject )
+METHOD QStyleOption:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

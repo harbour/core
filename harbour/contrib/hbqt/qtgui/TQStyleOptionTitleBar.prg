@@ -65,11 +65,10 @@
 
 CREATE CLASS QStyleOptionTitleBar INHERIT QStyleOptionComplex
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  icon()
    METHOD  text()
@@ -80,13 +79,12 @@ CREATE CLASS QStyleOptionTitleBar INHERIT QStyleOptionComplex
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionTitleBar:New( pParent )
-   ::pParent := pParent
+METHOD QStyleOptionTitleBar:new( pParent )
    ::pPtr := Qt_QStyleOptionTitleBar( pParent )
    RETURN Self
 
 
-METHOD QStyleOptionTitleBar:Configure( xObject )
+METHOD QStyleOptionTitleBar:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

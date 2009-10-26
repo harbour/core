@@ -65,11 +65,10 @@
 
 CREATE CLASS QWebHistoryInterface INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addHistoryEntry( cUrl )
    METHOD  historyContains( cUrl )
@@ -80,13 +79,12 @@ CREATE CLASS QWebHistoryInterface INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QWebHistoryInterface:New( pParent )
-   ::pParent := pParent
+METHOD QWebHistoryInterface:new( pParent )
    ::pPtr := Qt_QWebHistoryInterface( pParent )
    RETURN Self
 
 
-METHOD QWebHistoryInterface:Configure( xObject )
+METHOD QWebHistoryInterface:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

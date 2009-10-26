@@ -65,11 +65,10 @@
 
 CREATE CLASS QStringList INHERIT QList
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  append( cValue )
    METHOD  filter( cStr, nCs )
@@ -111,13 +110,12 @@ CREATE CLASS QStringList INHERIT QList
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStringList:New( pParent )
-   ::pParent := pParent
+METHOD QStringList:new( pParent )
    ::pPtr := Qt_QStringList( pParent )
    RETURN Self
 
 
-METHOD QStringList:Configure( xObject )
+METHOD QStringList:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

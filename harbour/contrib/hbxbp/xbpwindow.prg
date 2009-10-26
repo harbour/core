@@ -401,7 +401,7 @@ METHOD XbpWindow:connectWindowEvents()
    ::connectEvent( ::pWidget, QEvent_Wheel              , {|o,e| ::grabEvent( QEvent_Wheel              , e, o ) } )
    //
    ::connectEvent( ::pWidget, QEvent_Move               , {|o,e| ::grabEvent( QEvent_Move               , e, o ) } )
-   ::connectEvent( ::pWidget, QEvent_Paint              , {|o,e| ::grabEvent( QEvent_Paint              , e, o ) } )
+//   ::connectEvent( ::pWidget, QEvent_Paint              , {|o,e| ::grabEvent( QEvent_Paint              , e, o ) } )
    ::connectEvent( ::pWidget, QEvent_Resize             , {|o,e| ::grabEvent( QEvent_Resize             , e, o ) } )
    //
    ::connectEvent( ::pWidget, QEvent_FocusIn            , {|o,e| ::grabEvent( QEvent_FocusIn            , e, o ) } )
@@ -681,12 +681,7 @@ METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 METHOD XbpWindow:destroy()
 
 //xbp_Debug( "Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ) )
-#if 0
-   IF Len( ::aChildren ) > 0
-      aeval( ::aChildren, {|o| o:destroy() } )
-      ::aChildren := {}
-   ENDIF
-#endif
+
    IF len( ::aConnections ) > 0
       aeval( ::aConnections, {|e_| Qt_DisConnect_Signal( e_[ 1 ], e_[ 2 ] ) } )
       ::aConnections := {}
@@ -703,7 +698,7 @@ METHOD XbpWindow:destroy()
       ::aChildren := {}
    ENDIF
 
-   ::oWidget:close()
+   ::oWidget:pPtr := 0
 
 //xbp_Debug( "          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ) )
 

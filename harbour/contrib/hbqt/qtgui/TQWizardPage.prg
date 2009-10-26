@@ -65,11 +65,10 @@
 
 CREATE CLASS QWizardPage INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  buttonText( nWhich )
    METHOD  cleanupPage()
@@ -93,13 +92,12 @@ CREATE CLASS QWizardPage INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QWizardPage:New( pParent )
-   ::pParent := pParent
+METHOD QWizardPage:new( pParent )
    ::pPtr := Qt_QWizardPage( pParent )
    RETURN Self
 
 
-METHOD QWizardPage:Configure( xObject )
+METHOD QWizardPage:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

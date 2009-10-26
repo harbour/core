@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextLength
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  rawValue()
    METHOD  type()
@@ -79,13 +78,12 @@ CREATE CLASS QTextLength
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextLength:New( pParent )
-   ::pParent := pParent
+METHOD QTextLength:new( pParent )
    ::pPtr := Qt_QTextLength( pParent )
    RETURN Self
 
 
-METHOD QTextLength:Configure( xObject )
+METHOD QTextLength:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QNetworkRequest
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  attribute( nCode, pDefaultValue )
    METHOD  hasRawHeader( pHeaderName )
@@ -85,13 +84,12 @@ CREATE CLASS QNetworkRequest
 
 /*----------------------------------------------------------------------*/
 
-METHOD QNetworkRequest:New( pParent )
-   ::pParent := pParent
+METHOD QNetworkRequest:new( pParent )
    ::pPtr := Qt_QNetworkRequest( pParent )
    RETURN Self
 
 
-METHOD QNetworkRequest:Configure( xObject )
+METHOD QNetworkRequest:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

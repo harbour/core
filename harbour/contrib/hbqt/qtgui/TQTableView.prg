@@ -65,11 +65,10 @@
 
 CREATE CLASS QTableView INHERIT QAbstractItemView
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  clearSpans()
    METHOD  columnAt( nX )
@@ -118,13 +117,12 @@ CREATE CLASS QTableView INHERIT QAbstractItemView
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTableView:New( pParent )
-   ::pParent := pParent
+METHOD QTableView:new( pParent )
    ::pPtr := Qt_QTableView( pParent )
    RETURN Self
 
 
-METHOD QTableView:Configure( xObject )
+METHOD QTableView:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
@@ -304,8 +302,16 @@ METHOD QTableView:showRow( nRow )
 
 CREATE CLASS HBTableView INHERIT QTableView
 
-   METHOD New( pParent )                        INLINE ::pParent := pParent, ::pPtr := Qt_HbTableView( pParent ), Self
-   METHOD navigate( nCursorAction, nModifiers ) INLINE Qt_HbTableView_navigate( ::pPtr, nCursorAction, nModifiers )
+   METHOD new( pParent )
+   METHOD navigate( nCursorAction, nModifiers )
 
    ENDCLASS
+
+METHOD HBTableView:new( pParent )
+   ::pPtr := Qt_HbTableView( pParent )
+   RETURN Self
+
+METHOD HBTableView:navigate( nCursorAction, nModifiers )
+   RETURN Qt_HbTableView_navigate( ::pPtr, nCursorAction, nModifiers )
+
 

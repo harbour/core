@@ -65,11 +65,10 @@
 
 CREATE CLASS QFileSystemModel INHERIT QAbstractItemModel
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  dropMimeData( pData, nAction, nRow, nColumn, pParent )
    METHOD  fileIcon( pIndex )
@@ -105,13 +104,12 @@ CREATE CLASS QFileSystemModel INHERIT QAbstractItemModel
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFileSystemModel:New( pParent )
-   ::pParent := pParent
+METHOD QFileSystemModel:new( pParent )
    ::pPtr := Qt_QFileSystemModel( pParent )
    RETURN Self
 
 
-METHOD QFileSystemModel:Configure( xObject )
+METHOD QFileSystemModel:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

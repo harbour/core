@@ -65,11 +65,10 @@
 
 CREATE CLASS QDialog INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  isSizeGripEnabled()
    METHOD  result()
@@ -86,13 +85,12 @@ CREATE CLASS QDialog INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDialog:New( pParent )
-   ::pParent := pParent
+METHOD QDialog:new( pParent )
    ::pPtr := Qt_QDialog( pParent )
    RETURN Self
 
 
-METHOD QDialog:Configure( xObject )
+METHOD QDialog:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

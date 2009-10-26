@@ -65,11 +65,10 @@
 
 CREATE CLASS QImageReader
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  autoDetectImageFormat()
    METHOD  backgroundColor()
@@ -114,13 +113,12 @@ CREATE CLASS QImageReader
 
 /*----------------------------------------------------------------------*/
 
-METHOD QImageReader:New( pParent )
-   ::pParent := pParent
+METHOD QImageReader:new( pParent )
    ::pPtr := Qt_QImageReader( pParent )
    RETURN Self
 
 
-METHOD QImageReader:Configure( xObject )
+METHOD QImageReader:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

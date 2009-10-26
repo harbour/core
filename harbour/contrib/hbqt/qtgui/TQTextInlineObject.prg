@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextInlineObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  ascent()
    METHOD  descent()
@@ -89,13 +88,12 @@ CREATE CLASS QTextInlineObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextInlineObject:New( pParent )
-   ::pParent := pParent
+METHOD QTextInlineObject:new( pParent )
    ::pPtr := Qt_QTextInlineObject( pParent )
    RETURN Self
 
 
-METHOD QTextInlineObject:Configure( xObject )
+METHOD QTextInlineObject:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

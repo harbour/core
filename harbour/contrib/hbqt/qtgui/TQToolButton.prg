@@ -65,11 +65,10 @@
 
 CREATE CLASS QToolButton INHERIT QAbstractButton
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  arrowType()
    METHOD  autoRaise()
@@ -89,13 +88,12 @@ CREATE CLASS QToolButton INHERIT QAbstractButton
 
 /*----------------------------------------------------------------------*/
 
-METHOD QToolButton:New( pParent )
-   ::pParent := pParent
+METHOD QToolButton:new( pParent )
    ::pPtr := Qt_QToolButton( pParent )
    RETURN Self
 
 
-METHOD QToolButton:Configure( xObject )
+METHOD QToolButton:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

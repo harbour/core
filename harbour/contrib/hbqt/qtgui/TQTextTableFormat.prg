@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextTableFormat INHERIT QTextFrameFormat
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  alignment()
    METHOD  cellPadding()
@@ -87,13 +86,12 @@ CREATE CLASS QTextTableFormat INHERIT QTextFrameFormat
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextTableFormat:New( pParent )
-   ::pParent := pParent
+METHOD QTextTableFormat:new( pParent )
    ::pPtr := Qt_QTextTableFormat( pParent )
    RETURN Self
 
 
-METHOD QTextTableFormat:Configure( xObject )
+METHOD QTextTableFormat:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QAbstractItemModel INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  buddy( pIndex )
    METHOD  canFetchMore( pParent )
@@ -108,13 +107,12 @@ CREATE CLASS QAbstractItemModel INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QAbstractItemModel:New( pParent )
-   ::pParent := pParent
+METHOD QAbstractItemModel:new( pParent )
    ::pPtr := Qt_QAbstractItemModel( pParent )
    RETURN Self
 
 
-METHOD QAbstractItemModel:Configure( xObject )
+METHOD QAbstractItemModel:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
@@ -254,10 +252,24 @@ METHOD QAbstractItemModel:submit()
 
 CREATE CLASS HbDbfModel INHERIT QAbstractItemModel
 
-   METHOD New( bBlock )                        INLINE ::pPtr := Qt_HbDbfModel( bBlock ), Self
-   METHOD Reset()                              INLINE Qt_HbDbfModel_reset( ::pPtr )
-   METHOD Index( nRow, nCol )                  INLINE Qt_HbDbfModel_index( ::pPtr, nRow, nCol, 0 )
-   METHOD hbSetRowColumns( nRows, nCols )      INLINE Qt_HbDbfModel_hbSetRowColumns( ::pPtr, nRows, nCols )
+   METHOD new( bBlock )
+   METHOD reset()
+   METHOD index( nRow, nCol )
+   METHOD hbSetRowColumns( nRows, nCols )
 
    ENDCLASS
+
+METHOD HbDbfModel:new( bBlock )
+   ::pPtr := Qt_HbDbfModel( bBlock )
+   RETURN Self
+
+METHOD HbDbfModel:reset()
+   RETURN Qt_HbDbfModel_reset( ::pPtr )
+
+METHOD HbDbfModel:index( nRow, nCol )
+   RETURN Qt_HbDbfModel_index( ::pPtr, nRow, nCol, 0 )
+
+METHOD HbDbfModel:hbSetRowColumns( nRows, nCols )
+   RETURN Qt_HbDbfModel_hbSetRowColumns( ::pPtr, nRows, nCols )
+
 

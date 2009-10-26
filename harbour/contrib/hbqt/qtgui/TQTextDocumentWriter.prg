@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextDocumentWriter
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  codec()
    METHOD  device()
@@ -86,13 +85,12 @@ CREATE CLASS QTextDocumentWriter
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextDocumentWriter:New( pParent )
-   ::pParent := pParent
+METHOD QTextDocumentWriter:new( pParent )
    ::pPtr := Qt_QTextDocumentWriter( pParent )
    RETURN Self
 
 
-METHOD QTextDocumentWriter:Configure( xObject )
+METHOD QTextDocumentWriter:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QPalette
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  alternateBase()
    METHOD  base()
@@ -118,7 +117,7 @@ METHOD New( ... ) CLASS QPalette
    RETURN Self
 
 
-METHOD QPalette:Configure( xObject )
+METHOD QPalette:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

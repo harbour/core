@@ -65,11 +65,10 @@
 
 CREATE CLASS QPrinter INHERIT QPaintDevice
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  abort()
    METHOD  collateCopies()
@@ -131,13 +130,12 @@ CREATE CLASS QPrinter INHERIT QPaintDevice
 
 /*----------------------------------------------------------------------*/
 
-METHOD QPrinter:New( pParent )
-   ::pParent := pParent
+METHOD QPrinter:new( pParent )
    ::pPtr := Qt_QPrinter( pParent )
    RETURN Self
 
 
-METHOD QPrinter:Configure( xObject )
+METHOD QPrinter:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

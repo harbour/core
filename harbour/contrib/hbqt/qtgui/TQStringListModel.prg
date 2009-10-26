@@ -65,11 +65,10 @@
 
 CREATE CLASS QStringListModel INHERIT QAbstractListModel
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  data( pIndex, nRole )
    METHOD  flags( pIndex )
@@ -84,13 +83,12 @@ CREATE CLASS QStringListModel INHERIT QAbstractListModel
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStringListModel:New( pParent )
-   ::pParent := pParent
+METHOD QStringListModel:new( pParent )
    ::pPtr := Qt_QStringListModel( pParent )
    RETURN Self
 
 
-METHOD QStringListModel:Configure( xObject )
+METHOD QStringListModel:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

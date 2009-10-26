@@ -65,11 +65,10 @@
 
 CREATE CLASS QLine
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  p1()
    METHOD  p2()
@@ -100,7 +99,7 @@ METHOD New( ... ) CLASS QLine
    RETURN Self
 
 
-METHOD QLine:Configure( xObject )
+METHOD QLine:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

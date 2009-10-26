@@ -65,11 +65,10 @@
 
 CREATE CLASS QAbstractItemView INHERIT QAbstractScrollArea
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  alternatingRowColors()
    METHOD  autoScrollMargin()
@@ -139,13 +138,12 @@ CREATE CLASS QAbstractItemView INHERIT QAbstractScrollArea
 
 /*----------------------------------------------------------------------*/
 
-METHOD QAbstractItemView:New( pParent )
-   ::pParent := pParent
+METHOD QAbstractItemView:new( pParent )
    ::pPtr := Qt_QAbstractItemView( pParent )
    RETURN Self
 
 
-METHOD QAbstractItemView:Configure( xObject )
+METHOD QAbstractItemView:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

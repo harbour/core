@@ -65,11 +65,10 @@
 
 CREATE CLASS QAbstractSlider INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  hasTracking()
    METHOD  invertedAppearance()
@@ -100,13 +99,12 @@ CREATE CLASS QAbstractSlider INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QAbstractSlider:New( pParent )
-   ::pParent := pParent
+METHOD QAbstractSlider:new( pParent )
    ::pPtr := Qt_QAbstractSlider( pParent )
    RETURN Self
 
 
-METHOD QAbstractSlider:Configure( xObject )
+METHOD QAbstractSlider:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

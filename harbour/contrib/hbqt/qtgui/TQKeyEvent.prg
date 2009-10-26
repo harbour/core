@@ -65,11 +65,10 @@
 
 CREATE CLASS QKeyEvent INHERIT QInputEvent
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  count()
    METHOD  isAutoRepeat()
@@ -85,13 +84,12 @@ CREATE CLASS QKeyEvent INHERIT QInputEvent
 
 /*----------------------------------------------------------------------*/
 
-METHOD QKeyEvent:New( pParent )
-   ::pParent := pParent
+METHOD QKeyEvent:new( pParent )
    ::pPtr := Qt_QKeyEvent( pParent )
    RETURN Self
 
 
-METHOD QKeyEvent:Configure( xObject )
+METHOD QKeyEvent:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

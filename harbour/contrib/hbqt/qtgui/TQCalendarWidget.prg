@@ -65,11 +65,10 @@
 
 CREATE CLASS QCalendarWidget INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  dateEditAcceptDelay()
    METHOD  dateTextFormat( pDate )
@@ -114,13 +113,12 @@ CREATE CLASS QCalendarWidget INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QCalendarWidget:New( pParent )
-   ::pParent := pParent
+METHOD QCalendarWidget:new( pParent )
    ::pPtr := Qt_QCalendarWidget( pParent )
    RETURN Self
 
 
-METHOD QCalendarWidget:Configure( xObject )
+METHOD QCalendarWidget:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

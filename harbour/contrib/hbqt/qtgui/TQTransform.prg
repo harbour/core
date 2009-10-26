@@ -65,11 +65,10 @@
 
 CREATE CLASS QTransform
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  m11()
    METHOD  m12()
@@ -125,13 +124,12 @@ CREATE CLASS QTransform
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTransform:New( pParent )
-   ::pParent := pParent
+METHOD QTransform:new( pParent )
    ::pPtr := Qt_QTransform( pParent )
    RETURN Self
 
 
-METHOD QTransform:Configure( xObject )
+METHOD QTransform:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

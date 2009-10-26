@@ -65,11 +65,10 @@
 
 CREATE CLASS QGroupBox INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  alignment()
    METHOD  isCheckable()
@@ -86,13 +85,12 @@ CREATE CLASS QGroupBox INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QGroupBox:New( pParent )
-   ::pParent := pParent
+METHOD QGroupBox:new( pParent )
    ::pPtr := Qt_QGroupBox( pParent )
    RETURN Self
 
 
-METHOD QGroupBox:Configure( xObject )
+METHOD QGroupBox:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

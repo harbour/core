@@ -65,11 +65,10 @@
 
 CREATE CLASS QTableWidget INHERIT QTableView
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  cellWidget( nRow, nColumn )
    METHOD  closePersistentEditor( pItem )
@@ -122,13 +121,12 @@ CREATE CLASS QTableWidget INHERIT QTableView
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTableWidget:New( pParent )
-   ::pParent := pParent
+METHOD QTableWidget:new( pParent )
    ::pPtr := Qt_QTableWidget( pParent )
    RETURN Self
 
 
-METHOD QTableWidget:Configure( xObject )
+METHOD QTableWidget:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextLine
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  ascent()
    METHOD  cursorToX( nCursorPos, nEdge )
@@ -97,13 +96,12 @@ CREATE CLASS QTextLine
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextLine:New( pParent )
-   ::pParent := pParent
+METHOD QTextLine:new( pParent )
    ::pPtr := Qt_QTextLine( pParent )
    RETURN Self
 
 
-METHOD QTextLine:Configure( xObject )
+METHOD QTextLine:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

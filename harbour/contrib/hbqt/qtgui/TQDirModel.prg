@@ -65,11 +65,10 @@
 
 CREATE CLASS QDirModel INHERIT QAbstractItemModel
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  columnCount( pParent )
    METHOD  data( pIndex, nRole )
@@ -113,13 +112,12 @@ CREATE CLASS QDirModel INHERIT QAbstractItemModel
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDirModel:New( pParent )
-   ::pParent := pParent
+METHOD QDirModel:new( pParent )
    ::pPtr := Qt_QDirModel( pParent )
    RETURN Self
 
 
-METHOD QDirModel:Configure( xObject )
+METHOD QDirModel:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QDateTimeEdit INHERIT QAbstractSpinBox
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  calendarPopup()
    METHOD  calendarWidget()
@@ -120,13 +119,12 @@ CREATE CLASS QDateTimeEdit INHERIT QAbstractSpinBox
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDateTimeEdit:New( pParent )
-   ::pParent := pParent
+METHOD QDateTimeEdit:new( pParent )
    ::pPtr := Qt_QDateTimeEdit( pParent )
    RETURN Self
 
 
-METHOD QDateTimeEdit:Configure( xObject )
+METHOD QDateTimeEdit:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

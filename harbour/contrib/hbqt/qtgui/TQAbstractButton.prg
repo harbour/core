@@ -65,11 +65,10 @@
 
 CREATE CLASS QAbstractButton INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  autoExclusive()
    METHOD  autoRepeat()
@@ -102,13 +101,12 @@ CREATE CLASS QAbstractButton INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QAbstractButton:New( pParent )
-   ::pParent := pParent
+METHOD QAbstractButton:new( pParent )
    ::pPtr := Qt_QAbstractButton( pParent )
    RETURN Self
 
 
-METHOD QAbstractButton:Configure( xObject )
+METHOD QAbstractButton:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

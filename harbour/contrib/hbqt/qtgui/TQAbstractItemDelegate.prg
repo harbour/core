@@ -65,11 +65,10 @@
 
 CREATE CLASS QAbstractItemDelegate INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  createEditor( pParent, pOption, pIndex )
    METHOD  editorEvent( pEvent, pModel, pOption, pIndex )
@@ -83,13 +82,12 @@ CREATE CLASS QAbstractItemDelegate INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QAbstractItemDelegate:New( pParent )
-   ::pParent := pParent
+METHOD QAbstractItemDelegate:new( pParent )
    ::pPtr := Qt_QAbstractItemDelegate( pParent )
    RETURN Self
 
 
-METHOD QAbstractItemDelegate:Configure( xObject )
+METHOD QAbstractItemDelegate:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

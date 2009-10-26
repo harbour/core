@@ -65,11 +65,10 @@
 
 CREATE CLASS QPoint
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  isNull()
    METHOD  manhattanLength()
@@ -91,7 +90,7 @@ METHOD New( ... ) CLASS QPoint
    RETURN Self
 
 
-METHOD QPoint:Configure( xObject )
+METHOD QPoint:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

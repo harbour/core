@@ -65,11 +65,10 @@
 
 CREATE CLASS QFormLayout INHERIT QLayout
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addRow( pLabel, pField )
    METHOD  addRow_1( pLabel, pField )
@@ -112,13 +111,12 @@ CREATE CLASS QFormLayout INHERIT QLayout
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFormLayout:New( pParent )
-   ::pParent := pParent
+METHOD QFormLayout:new( pParent )
    ::pPtr := Qt_QFormLayout( pParent )
    RETURN Self
 
 
-METHOD QFormLayout:Configure( xObject )
+METHOD QFormLayout:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

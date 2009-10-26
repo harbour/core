@@ -65,11 +65,10 @@
 
 CREATE CLASS QDateTime
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addDays( nNdays )
    METHOD  addMSecs( nMsecs )
@@ -102,13 +101,12 @@ CREATE CLASS QDateTime
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDateTime:New( pParent )
-   ::pParent := pParent
+METHOD QDateTime:new( pParent )
    ::pPtr := Qt_QDateTime( pParent )
    RETURN Self
 
 
-METHOD QDateTime:Configure( xObject )
+METHOD QDateTime:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QRectF
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  adjust( nDx1, nDy1, nDx2, nDy2 )
    METHOD  adjusted( nDx1, nDy1, nDx2, nDy2 )
@@ -143,7 +142,7 @@ METHOD New( ... ) CLASS QRectF
    RETURN Self
 
 
-METHOD QRectF:Configure( xObject )
+METHOD QRectF:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QStyleFactory
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  create( cKey )
    METHOD  keys()
@@ -78,13 +77,12 @@ CREATE CLASS QStyleFactory
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleFactory:New( pParent )
-   ::pParent := pParent
+METHOD QStyleFactory:new( pParent )
    ::pPtr := Qt_QStyleFactory( pParent )
    RETURN Self
 
 
-METHOD QStyleFactory:Configure( xObject )
+METHOD QStyleFactory:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QAbstractProxyModel INHERIT QAbstractItemModel
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  mapFromSource( pSourceIndex )
    METHOD  mapSelectionFromSource( pSourceSelection )
@@ -82,13 +81,12 @@ CREATE CLASS QAbstractProxyModel INHERIT QAbstractItemModel
 
 /*----------------------------------------------------------------------*/
 
-METHOD QAbstractProxyModel:New( pParent )
-   ::pParent := pParent
+METHOD QAbstractProxyModel:new( pParent )
    ::pPtr := Qt_QAbstractProxyModel( pParent )
    RETURN Self
 
 
-METHOD QAbstractProxyModel:Configure( xObject )
+METHOD QAbstractProxyModel:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

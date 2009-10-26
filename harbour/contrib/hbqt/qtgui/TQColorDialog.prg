@@ -65,11 +65,10 @@
 
 CREATE CLASS QColorDialog INHERIT QDialog
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  currentColor()
    METHOD  open()
@@ -91,13 +90,12 @@ CREATE CLASS QColorDialog INHERIT QDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD QColorDialog:New( pParent )
-   ::pParent := pParent
+METHOD QColorDialog:new( pParent )
    ::pPtr := Qt_QColorDialog( pParent )
    RETURN Self
 
 
-METHOD QColorDialog:Configure( xObject )
+METHOD QColorDialog:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

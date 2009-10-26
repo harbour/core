@@ -65,11 +65,10 @@
 
 CREATE CLASS QHelpEvent
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  globalPos()
    METHOD  globalX()
@@ -82,13 +81,12 @@ CREATE CLASS QHelpEvent
 
 /*----------------------------------------------------------------------*/
 
-METHOD QHelpEvent:New( pParent )
-   ::pParent := pParent
+METHOD QHelpEvent:new( pParent )
    ::pPtr := Qt_QHelpEvent( pParent )
    RETURN Self
 
 
-METHOD QHelpEvent:Configure( xObject )
+METHOD QHelpEvent:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

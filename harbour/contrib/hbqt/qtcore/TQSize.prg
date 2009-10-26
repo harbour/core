@@ -65,11 +65,10 @@
 
 CREATE CLASS QSize
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  height()
    METHOD  isEmpty()
@@ -97,7 +96,7 @@ METHOD New( ... ) CLASS QSize
    RETURN Self
 
 
-METHOD QSize:Configure( xObject )
+METHOD QSize:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

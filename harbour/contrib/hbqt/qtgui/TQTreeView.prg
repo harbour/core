@@ -65,11 +65,10 @@
 
 CREATE CLASS QTreeView INHERIT QAbstractItemView
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  allColumnsShowFocus()
    METHOD  autoExpandDelay()
@@ -125,13 +124,12 @@ CREATE CLASS QTreeView INHERIT QAbstractItemView
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTreeView:New( pParent )
-   ::pParent := pParent
+METHOD QTreeView:new( pParent )
    ::pPtr := Qt_QTreeView( pParent )
    RETURN Self
 
 
-METHOD QTreeView:Configure( xObject )
+METHOD QTreeView:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

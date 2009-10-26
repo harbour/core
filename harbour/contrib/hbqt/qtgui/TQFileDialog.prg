@@ -65,11 +65,10 @@
 
 CREATE CLASS QFileDialog INHERIT QDialog
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  acceptMode()
    METHOD  confirmOverwrite()
@@ -121,13 +120,12 @@ CREATE CLASS QFileDialog INHERIT QDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFileDialog:New( pParent )
-   ::pParent := pParent
+METHOD QFileDialog:new( pParent )
    ::pPtr := Qt_QFileDialog( pParent )
    RETURN Self
 
 
-METHOD QFileDialog:Configure( xObject )
+METHOD QFileDialog:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

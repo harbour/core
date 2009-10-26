@@ -65,11 +65,10 @@
 
 CREATE CLASS QPrintEngine
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  abort()
    METHOD  metric( nId )
@@ -82,13 +81,12 @@ CREATE CLASS QPrintEngine
 
 /*----------------------------------------------------------------------*/
 
-METHOD QPrintEngine:New( pParent )
-   ::pParent := pParent
+METHOD QPrintEngine:new( pParent )
    ::pPtr := Qt_QPrintEngine( pParent )
    RETURN Self
 
 
-METHOD QPrintEngine:Configure( xObject )
+METHOD QPrintEngine:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

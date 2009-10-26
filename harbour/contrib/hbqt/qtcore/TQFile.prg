@@ -65,11 +65,10 @@
 
 CREATE CLASS QFile INHERIT QIODevice
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  atEnd()
    METHOD  close()
@@ -110,13 +109,12 @@ CREATE CLASS QFile INHERIT QIODevice
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFile:New( pParent )
-   ::pParent := pParent
+METHOD QFile:new( pParent )
    ::pPtr := Qt_QFile( pParent )
    RETURN Self
 
 
-METHOD QFile:Configure( xObject )
+METHOD QFile:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

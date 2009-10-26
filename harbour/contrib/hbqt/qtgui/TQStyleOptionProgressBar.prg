@@ -65,11 +65,10 @@
 
 CREATE CLASS QStyleOptionProgressBar INHERIT QStyleOption
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  maximum()
    METHOD  minimum()
@@ -82,13 +81,12 @@ CREATE CLASS QStyleOptionProgressBar INHERIT QStyleOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionProgressBar:New( pParent )
-   ::pParent := pParent
+METHOD QStyleOptionProgressBar:new( pParent )
    ::pPtr := Qt_QStyleOptionProgressBar( pParent )
    RETURN Self
 
 
-METHOD QStyleOptionProgressBar:Configure( xObject )
+METHOD QStyleOptionProgressBar:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QDataStream
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  atEnd()
    METHOD  byteOrder()
@@ -89,13 +88,12 @@ CREATE CLASS QDataStream
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDataStream:New( pParent )
-   ::pParent := pParent
+METHOD QDataStream:new( pParent )
    ::pPtr := Qt_QDataStream( pParent )
    RETURN Self
 
 
-METHOD QDataStream:Configure( xObject )
+METHOD QDataStream:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

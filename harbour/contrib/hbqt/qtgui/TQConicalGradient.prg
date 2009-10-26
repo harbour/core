@@ -65,11 +65,10 @@
 
 CREATE CLASS QConicalGradient INHERIT QGradient
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  angle()
    METHOD  center()
@@ -81,13 +80,12 @@ CREATE CLASS QConicalGradient INHERIT QGradient
 
 /*----------------------------------------------------------------------*/
 
-METHOD QConicalGradient:New( pParent )
-   ::pParent := pParent
+METHOD QConicalGradient:new( pParent )
    ::pPtr := Qt_QConicalGradient( pParent )
    RETURN Self
 
 
-METHOD QConicalGradient:Configure( xObject )
+METHOD QConicalGradient:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

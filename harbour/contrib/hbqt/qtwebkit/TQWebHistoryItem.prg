@@ -65,11 +65,10 @@
 
 CREATE CLASS QWebHistoryItem
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  icon()
    METHOD  isValid()
@@ -84,13 +83,12 @@ CREATE CLASS QWebHistoryItem
 
 /*----------------------------------------------------------------------*/
 
-METHOD QWebHistoryItem:New( pParent )
-   ::pParent := pParent
+METHOD QWebHistoryItem:new( pParent )
    ::pPtr := Qt_QWebHistoryItem( pParent )
    RETURN Self
 
 
-METHOD QWebHistoryItem:Configure( xObject )
+METHOD QWebHistoryItem:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

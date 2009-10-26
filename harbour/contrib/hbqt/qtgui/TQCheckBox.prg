@@ -65,11 +65,10 @@
 
 CREATE CLASS QCheckBox INHERIT QAbstractButton
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  checkState()
    METHOD  isTristate()
@@ -80,13 +79,12 @@ CREATE CLASS QCheckBox INHERIT QAbstractButton
 
 /*----------------------------------------------------------------------*/
 
-METHOD QCheckBox:New( pParent )
-   ::pParent := pParent
+METHOD QCheckBox:new( pParent )
    ::pPtr := Qt_QCheckBox( pParent )
    RETURN Self
 
 
-METHOD QCheckBox:Configure( xObject )
+METHOD QCheckBox:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

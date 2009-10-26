@@ -65,24 +65,22 @@
 
 CREATE CLASS QWindowsStyle INHERIT QCommonStyle
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD QWindowsStyle:New( pParent )
-   ::pParent := pParent
+METHOD QWindowsStyle:new( pParent )
    ::pPtr := Qt_QWindowsStyle( pParent )
    RETURN Self
 
 
-METHOD QWindowsStyle:Configure( xObject )
+METHOD QWindowsStyle:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

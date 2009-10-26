@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextObject INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  document()
    METHOD  format()
@@ -80,13 +79,12 @@ CREATE CLASS QTextObject INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextObject:New( pParent )
-   ::pParent := pParent
+METHOD QTextObject:new( pParent )
    ::pPtr := Qt_QTextObject( pParent )
    RETURN Self
 
 
-METHOD QTextObject:Configure( xObject )
+METHOD QTextObject:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

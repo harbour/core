@@ -65,11 +65,10 @@
 
 CREATE CLASS QSystemTrayIcon INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  contextMenu()
    METHOD  geometry()
@@ -90,13 +89,12 @@ CREATE CLASS QSystemTrayIcon INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QSystemTrayIcon:New( pParent )
-   ::pParent := pParent
+METHOD QSystemTrayIcon:new( pParent )
    ::pPtr := Qt_QSystemTrayIcon( pParent )
    RETURN Self
 
 
-METHOD QSystemTrayIcon:Configure( xObject )
+METHOD QSystemTrayIcon:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

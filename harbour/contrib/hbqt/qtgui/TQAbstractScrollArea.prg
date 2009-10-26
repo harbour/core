@@ -65,11 +65,10 @@
 
 CREATE CLASS QAbstractScrollArea INHERIT QFrame
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addScrollBarWidget( pWidget, nAlignment )
    METHOD  cornerWidget()
@@ -90,13 +89,12 @@ CREATE CLASS QAbstractScrollArea INHERIT QFrame
 
 /*----------------------------------------------------------------------*/
 
-METHOD QAbstractScrollArea:New( pParent )
-   ::pParent := pParent
+METHOD QAbstractScrollArea:new( pParent )
    ::pPtr := Qt_QAbstractScrollArea( pParent )
    RETURN Self
 
 
-METHOD QAbstractScrollArea:Configure( xObject )
+METHOD QAbstractScrollArea:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

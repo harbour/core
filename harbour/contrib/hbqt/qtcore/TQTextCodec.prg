@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextCodec
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  canEncode( nCh )
    METHOD  canEncode_1( cS )
@@ -96,13 +95,12 @@ CREATE CLASS QTextCodec
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextCodec:New( pParent )
-   ::pParent := pParent
+METHOD QTextCodec:new( pParent )
    ::pPtr := Qt_QTextCodec( pParent )
    RETURN Self
 
 
-METHOD QTextCodec:Configure( xObject )
+METHOD QTextCodec:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

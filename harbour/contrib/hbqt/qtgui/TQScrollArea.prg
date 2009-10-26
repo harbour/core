@@ -65,11 +65,10 @@
 
 CREATE CLASS QScrollArea INHERIT QAbstractScrollArea
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  alignment()
    METHOD  ensureVisible( nX, nY, nXmargin, nYmargin )
@@ -85,13 +84,12 @@ CREATE CLASS QScrollArea INHERIT QAbstractScrollArea
 
 /*----------------------------------------------------------------------*/
 
-METHOD QScrollArea:New( pParent )
-   ::pParent := pParent
+METHOD QScrollArea:new( pParent )
    ::pPtr := Qt_QScrollArea( pParent )
    RETURN Self
 
 
-METHOD QScrollArea:Configure( xObject )
+METHOD QScrollArea:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

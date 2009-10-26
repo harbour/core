@@ -65,11 +65,10 @@
 
 CREATE CLASS QMovie INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  backgroundColor()
    METHOD  cacheMode()
@@ -104,13 +103,12 @@ CREATE CLASS QMovie INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QMovie:New( pParent )
-   ::pParent := pParent
+METHOD QMovie:new( pParent )
    ::pPtr := Qt_QMovie( pParent )
    RETURN Self
 
 
-METHOD QMovie:Configure( xObject )
+METHOD QMovie:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

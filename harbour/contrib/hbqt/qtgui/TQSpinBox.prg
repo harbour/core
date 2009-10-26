@@ -65,11 +65,10 @@
 
 CREATE CLASS QSpinBox INHERIT QAbstractSpinBox
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  cleanText()
    METHOD  maximum()
@@ -90,13 +89,12 @@ CREATE CLASS QSpinBox INHERIT QAbstractSpinBox
 
 /*----------------------------------------------------------------------*/
 
-METHOD QSpinBox:New( pParent )
-   ::pParent := pParent
+METHOD QSpinBox:new( pParent )
    ::pPtr := Qt_QSpinBox( pParent )
    RETURN Self
 
 
-METHOD QSpinBox:Configure( xObject )
+METHOD QSpinBox:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

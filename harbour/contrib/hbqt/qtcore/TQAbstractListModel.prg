@@ -65,11 +65,10 @@
 
 CREATE CLASS QAbstractListModel INHERIT QAbstractItemModel
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  index( nRow, nColumn, pParent )
 
@@ -77,13 +76,12 @@ CREATE CLASS QAbstractListModel INHERIT QAbstractItemModel
 
 /*----------------------------------------------------------------------*/
 
-METHOD QAbstractListModel:New( pParent )
-   ::pParent := pParent
+METHOD QAbstractListModel:new( pParent )
    ::pPtr := Qt_QAbstractListModel( pParent )
    RETURN Self
 
 
-METHOD QAbstractListModel:Configure( xObject )
+METHOD QAbstractListModel:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

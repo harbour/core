@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextBlockFormat INHERIT QTextFormat
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  alignment()
    METHOD  bottomMargin()
@@ -95,13 +94,12 @@ CREATE CLASS QTextBlockFormat INHERIT QTextFormat
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextBlockFormat:New( pParent )
-   ::pParent := pParent
+METHOD QTextBlockFormat:new( pParent )
    ::pPtr := Qt_QTextBlockFormat( pParent )
    RETURN Self
 
 
-METHOD QTextBlockFormat:Configure( xObject )
+METHOD QTextBlockFormat:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

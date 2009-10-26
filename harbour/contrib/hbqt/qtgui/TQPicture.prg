@@ -65,11 +65,10 @@
 
 CREATE CLASS QPicture INHERIT QPaintDevice
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  boundingRect()
    METHOD  data()
@@ -94,7 +93,7 @@ METHOD New( ... ) CLASS QPicture
    RETURN Self
 
 
-METHOD QPicture:Configure( xObject )
+METHOD QPicture:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

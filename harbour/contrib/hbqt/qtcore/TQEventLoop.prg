@@ -65,11 +65,10 @@
 
 CREATE CLASS QEventLoop INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  exec( nFlags )
    METHOD  exit( nReturnCode )
@@ -82,13 +81,12 @@ CREATE CLASS QEventLoop INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QEventLoop:New( pParent )
-   ::pParent := pParent
+METHOD QEventLoop:new( pParent )
    ::pPtr := Qt_QEventLoop( pParent )
    RETURN Self
 
 
-METHOD QEventLoop:Configure( xObject )
+METHOD QEventLoop:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

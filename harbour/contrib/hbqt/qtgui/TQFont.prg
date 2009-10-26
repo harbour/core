@@ -65,11 +65,10 @@
 
 CREATE CLASS QFont
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  bold()
    METHOD  capitalization()
@@ -141,7 +140,7 @@ METHOD New( ... ) CLASS QFont
    RETURN Self
 
 
-METHOD QFont:Configure( xObject )
+METHOD QFont:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

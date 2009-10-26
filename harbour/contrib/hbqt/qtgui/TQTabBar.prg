@@ -65,11 +65,10 @@
 
 CREATE CLASS QTabBar INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addTab( cText )
    METHOD  count()
@@ -120,13 +119,12 @@ CREATE CLASS QTabBar INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTabBar:New( pParent )
-   ::pParent := pParent
+METHOD QTabBar:new( pParent )
    ::pPtr := Qt_QTabBar( pParent )
    RETURN Self
 
 
-METHOD QTabBar:Configure( xObject )
+METHOD QTabBar:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

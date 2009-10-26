@@ -65,11 +65,10 @@
 
 CREATE CLASS QLayout INHERIT QObject, QLayoutItem
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  activate()
    METHOD  addItem( pItem )
@@ -105,13 +104,12 @@ CREATE CLASS QLayout INHERIT QObject, QLayoutItem
 
 /*----------------------------------------------------------------------*/
 
-METHOD QLayout:New( pParent )
-   ::pParent := pParent
+METHOD QLayout:new( pParent )
    ::pPtr := Qt_QLayout( pParent )
    RETURN Self
 
 
-METHOD QLayout:Configure( xObject )
+METHOD QLayout:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

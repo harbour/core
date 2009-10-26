@@ -65,11 +65,10 @@
 
 CREATE CLASS QProcess INHERIT QIODevice
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  close()
    METHOD  closeReadChannel( nChannel )
@@ -109,13 +108,12 @@ CREATE CLASS QProcess INHERIT QIODevice
 
 /*----------------------------------------------------------------------*/
 
-METHOD QProcess:New( pParent )
-   ::pParent := pParent
+METHOD QProcess:new( pParent )
    ::pPtr := Qt_QProcess( pParent )
    RETURN Self
 
 
-METHOD QProcess:Configure( xObject )
+METHOD QProcess:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QMouseEvent INHERIT QInputEvent
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  button()
    METHOD  buttons()
@@ -85,13 +84,12 @@ CREATE CLASS QMouseEvent INHERIT QInputEvent
 
 /*----------------------------------------------------------------------*/
 
-METHOD QMouseEvent:New( pParent )
-   ::pParent := pParent
+METHOD QMouseEvent:new( pParent )
    ::pPtr := Qt_QMouseEvent( pParent )
    RETURN Self
 
 
-METHOD QMouseEvent:Configure( xObject )
+METHOD QMouseEvent:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

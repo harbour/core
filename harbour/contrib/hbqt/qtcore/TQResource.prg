@@ -65,11 +65,10 @@
 
 CREATE CLASS QResource
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  absoluteFilePath()
    METHOD  data()
@@ -88,13 +87,12 @@ CREATE CLASS QResource
 
 /*----------------------------------------------------------------------*/
 
-METHOD QResource:New( pParent )
-   ::pParent := pParent
+METHOD QResource:new( pParent )
    ::pPtr := Qt_QResource( pParent )
    RETURN Self
 
 
-METHOD QResource:Configure( xObject )
+METHOD QResource:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextFragment
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  charFormat()
    METHOD  charFormatIndex()
@@ -83,13 +82,12 @@ CREATE CLASS QTextFragment
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextFragment:New( pParent )
-   ::pParent := pParent
+METHOD QTextFragment:new( pParent )
    ::pPtr := Qt_QTextFragment( pParent )
    RETURN Self
 
 
-METHOD QTextFragment:Configure( xObject )
+METHOD QTextFragment:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

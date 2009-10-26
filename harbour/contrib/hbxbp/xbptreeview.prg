@@ -246,8 +246,26 @@ METHOD XbpTreeView:handleEvent( nEvent, mp1, mp2 )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpTreeView:destroy()
+   LOCAL i, s
 
-   ::xbpWindow:destroy()
+   IF Len( ::aItems ) > 0
+      //aeval( ::aItems, {|o| o:destroy() } )
+      //aeval( ::aItems, {|o| xbp_debug( "mmmm" ), o:oWidget:pPtr := 0, o:oWidget:pPtr := NIL } )
+      ::oRootItem:oWidget:pPtr := 0
+
+xbp_debug( "llllllllllllll", len( ::aItems ) )
+      FOR i := 1 TO len( ::aItems )
+         s := __ObjGetClsName( ::aItems[ i ] )
+xbp_debug( i, s )
+         ::aItems[ i ]:oWidget:pPtr := 0
+         ::aItems[ i ]:oWidget:pPtr := NIL
+      NEXT
+      ::aItems := {}
+   ENDIF
+//   ::oRootItem:oWidget:pPtr := 0
+xbp_debug( ";;;;;;;;;;;;;")
+   ::oWidget:pPtr := 0
+   //::xbpWindow:destroy()
 
    RETURN NIL
 
@@ -415,6 +433,15 @@ METHOD XbpTreeViewItem:configure()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpTreeViewItem:destroy()
+   LOCAL i
+
+   FOR i := 1 TO len( ::aChilds )
+      ::aChilds[ i ]:pPtr := 0
+      ::aChilds[ i ]:pPtr := NIL
+   NEXT
+
+   ::oItem:pPtr := 0
+   ::oItem:pPtr := Nil
 
    RETURN NIL
 

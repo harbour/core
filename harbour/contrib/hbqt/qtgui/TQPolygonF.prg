@@ -65,11 +65,10 @@
 
 CREATE CLASS QPolygonF
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  boundingRect()
    METHOD  containsPoint( pPoint, nFillRule )
@@ -85,13 +84,12 @@ CREATE CLASS QPolygonF
 
 /*----------------------------------------------------------------------*/
 
-METHOD QPolygonF:New( pParent )
-   ::pParent := pParent
+METHOD QPolygonF:new( pParent )
    ::pPtr := Qt_QPolygonF( pParent )
    RETURN Self
 
 
-METHOD QPolygonF:Configure( xObject )
+METHOD QPolygonF:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

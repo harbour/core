@@ -65,11 +65,10 @@
 
 CREATE CLASS QBrush
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  color()
    METHOD  isOpaque()
@@ -97,7 +96,7 @@ METHOD New( ... ) CLASS QBrush
    RETURN Self
 
 
-METHOD QBrush:Configure( xObject )
+METHOD QBrush:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

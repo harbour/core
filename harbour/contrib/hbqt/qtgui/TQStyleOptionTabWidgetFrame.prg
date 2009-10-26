@@ -65,11 +65,10 @@
 
 CREATE CLASS QStyleOptionTabWidgetFrame INHERIT QStyleOption
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  leftCornerWidgetSize()
    METHOD  lineWidth()
@@ -82,13 +81,12 @@ CREATE CLASS QStyleOptionTabWidgetFrame INHERIT QStyleOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionTabWidgetFrame:New( pParent )
-   ::pParent := pParent
+METHOD QStyleOptionTabWidgetFrame:new( pParent )
    ::pPtr := Qt_QStyleOptionTabWidgetFrame( pParent )
    RETURN Self
 
 
-METHOD QStyleOptionTabWidgetFrame:Configure( xObject )
+METHOD QStyleOptionTabWidgetFrame:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

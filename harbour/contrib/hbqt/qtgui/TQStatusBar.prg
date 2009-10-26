@@ -65,11 +65,10 @@
 
 CREATE CLASS QStatusBar INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addPermanentWidget( pWidget, nStretch )
    METHOD  addWidget( pWidget, nStretch )
@@ -86,13 +85,12 @@ CREATE CLASS QStatusBar INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStatusBar:New( pParent )
-   ::pParent := pParent
+METHOD QStatusBar:new( pParent )
    ::pPtr := Qt_QStatusBar( pParent )
    RETURN Self
 
 
-METHOD QStatusBar:Configure( xObject )
+METHOD QStatusBar:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

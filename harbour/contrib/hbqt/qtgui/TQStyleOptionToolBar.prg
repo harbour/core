@@ -65,11 +65,10 @@
 
 CREATE CLASS QStyleOptionToolBar INHERIT QStyleOption
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  features()
    METHOD  lineWidth()
@@ -82,13 +81,12 @@ CREATE CLASS QStyleOptionToolBar INHERIT QStyleOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionToolBar:New( pParent )
-   ::pParent := pParent
+METHOD QStyleOptionToolBar:new( pParent )
    ::pPtr := Qt_QStyleOptionToolBar( pParent )
    RETURN Self
 
 
-METHOD QStyleOptionToolBar:Configure( xObject )
+METHOD QStyleOptionToolBar:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

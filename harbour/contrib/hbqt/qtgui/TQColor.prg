@@ -65,11 +65,10 @@
 
 CREATE CLASS QColor
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  alpha()
    METHOD  alphaF()
@@ -148,7 +147,7 @@ METHOD New( ... ) CLASS QColor
    RETURN Self
 
 
-METHOD QColor:Configure( xObject )
+METHOD QColor:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

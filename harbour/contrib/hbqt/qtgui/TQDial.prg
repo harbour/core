@@ -65,11 +65,10 @@
 
 CREATE CLASS QDial INHERIT QAbstractSlider
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  notchSize()
    METHOD  notchTarget()
@@ -83,13 +82,12 @@ CREATE CLASS QDial INHERIT QAbstractSlider
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDial:New( pParent )
-   ::pParent := pParent
+METHOD QDial:new( pParent )
    ::pPtr := Qt_QDial( pParent )
    RETURN Self
 
 
-METHOD QDial:Configure( xObject )
+METHOD QDial:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

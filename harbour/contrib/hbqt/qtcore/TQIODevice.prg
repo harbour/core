@@ -65,11 +65,10 @@
 
 CREATE CLASS QIODevice INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  atEnd()
    METHOD  bytesAvailable()
@@ -109,13 +108,12 @@ CREATE CLASS QIODevice INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QIODevice:New( pParent )
-   ::pParent := pParent
+METHOD QIODevice:new( pParent )
    ::pPtr := Qt_QIODevice( pParent )
    RETURN Self
 
 
-METHOD QIODevice:Configure( xObject )
+METHOD QIODevice:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QContextMenuEvent INHERIT QInputEvent
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  globalPos()
    METHOD  globalX()
@@ -83,13 +82,12 @@ CREATE CLASS QContextMenuEvent INHERIT QInputEvent
 
 /*----------------------------------------------------------------------*/
 
-METHOD QContextMenuEvent:New( pParent )
-   ::pParent := pParent
+METHOD QContextMenuEvent:new( pParent )
    ::pPtr := Qt_QContextMenuEvent( pParent )
    RETURN Self
 
 
-METHOD QContextMenuEvent:Configure( xObject )
+METHOD QContextMenuEvent:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextListFormat INHERIT QTextFormat
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  indent()
    METHOD  isValid()
@@ -81,13 +80,12 @@ CREATE CLASS QTextListFormat INHERIT QTextFormat
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextListFormat:New( pParent )
-   ::pParent := pParent
+METHOD QTextListFormat:new( pParent )
    ::pPtr := Qt_QTextListFormat( pParent )
    RETURN Self
 
 
-METHOD QTextListFormat:Configure( xObject )
+METHOD QTextListFormat:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

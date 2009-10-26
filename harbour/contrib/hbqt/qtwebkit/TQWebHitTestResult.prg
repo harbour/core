@@ -65,11 +65,10 @@
 
 CREATE CLASS QWebHitTestResult
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  alternateText()
    METHOD  boundingRect()
@@ -90,13 +89,12 @@ CREATE CLASS QWebHitTestResult
 
 /*----------------------------------------------------------------------*/
 
-METHOD QWebHitTestResult:New( pParent )
-   ::pParent := pParent
+METHOD QWebHitTestResult:new( pParent )
    ::pPtr := Qt_QWebHitTestResult( pParent )
    RETURN Self
 
 
-METHOD QWebHitTestResult:Configure( xObject )
+METHOD QWebHitTestResult:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

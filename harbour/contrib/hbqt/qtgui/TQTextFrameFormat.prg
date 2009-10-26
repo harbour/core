@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextFrameFormat INHERIT QTextFormat
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  border()
    METHOD  borderBrush()
@@ -105,13 +104,12 @@ CREATE CLASS QTextFrameFormat INHERIT QTextFormat
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextFrameFormat:New( pParent )
-   ::pParent := pParent
+METHOD QTextFrameFormat:new( pParent )
    ::pPtr := Qt_QTextFrameFormat( pParent )
    RETURN Self
 
 
-METHOD QTextFrameFormat:Configure( xObject )
+METHOD QTextFrameFormat:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

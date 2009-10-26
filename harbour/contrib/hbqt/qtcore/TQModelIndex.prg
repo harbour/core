@@ -65,11 +65,10 @@
 
 CREATE CLASS QModelIndex
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  child( nRow, nColumn )
    METHOD  column()
@@ -87,13 +86,12 @@ CREATE CLASS QModelIndex
 
 /*----------------------------------------------------------------------*/
 
-METHOD QModelIndex:New( pParent )
-   ::pParent := pParent
+METHOD QModelIndex:new( pParent )
    ::pPtr := Qt_QModelIndex( pParent )
    RETURN Self
 
 
-METHOD QModelIndex:Configure( xObject )
+METHOD QModelIndex:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

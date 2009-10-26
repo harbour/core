@@ -65,11 +65,10 @@
 
 CREATE CLASS QListWidget INHERIT QListView
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addItem( cLabel )
    METHOD  addItem_1( pItem )
@@ -106,13 +105,12 @@ CREATE CLASS QListWidget INHERIT QListView
 
 /*----------------------------------------------------------------------*/
 
-METHOD QListWidget:New( pParent )
-   ::pParent := pParent
+METHOD QListWidget:new( pParent )
    ::pPtr := Qt_QListWidget( pParent )
    RETURN Self
 
 
-METHOD QListWidget:Configure( xObject )
+METHOD QListWidget:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

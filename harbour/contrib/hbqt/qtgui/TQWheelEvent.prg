@@ -65,11 +65,10 @@
 
 CREATE CLASS QWheelEvent INHERIT QInputEvent
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  buttons()
    METHOD  delta()
@@ -85,13 +84,12 @@ CREATE CLASS QWheelEvent INHERIT QInputEvent
 
 /*----------------------------------------------------------------------*/
 
-METHOD QWheelEvent:New( pParent )
-   ::pParent := pParent
+METHOD QWheelEvent:new( pParent )
    ::pPtr := Qt_QWheelEvent( pParent )
    RETURN Self
 
 
-METHOD QWheelEvent:Configure( xObject )
+METHOD QWheelEvent:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QApplication INHERIT QCoreApplication
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  commitData( pManager )
    METHOD  inputContext()
@@ -152,13 +151,12 @@ CREATE CLASS QApplication INHERIT QCoreApplication
 
 /*----------------------------------------------------------------------*/
 
-METHOD QApplication:New( pParent )
-   ::pParent := pParent
+METHOD QApplication:new( pParent )
    ::pPtr := Qt_QApplication( pParent )
    RETURN Self
 
 
-METHOD QApplication:Configure( xObject )
+METHOD QApplication:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

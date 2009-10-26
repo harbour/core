@@ -65,11 +65,10 @@
 
 CREATE CLASS QFrame INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  frameRect()
    METHOD  frameShadow()
@@ -89,13 +88,12 @@ CREATE CLASS QFrame INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFrame:New( pParent )
-   ::pParent := pParent
+METHOD QFrame:new( pParent )
    ::pPtr := Qt_QFrame( pParent )
    RETURN Self
 
 
-METHOD QFrame:Configure( xObject )
+METHOD QFrame:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

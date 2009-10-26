@@ -65,11 +65,10 @@
 
 CREATE CLASS QPushButton INHERIT QAbstractButton
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  autoDefault()
    METHOD  isDefault()
@@ -85,13 +84,12 @@ CREATE CLASS QPushButton INHERIT QAbstractButton
 
 /*----------------------------------------------------------------------*/
 
-METHOD QPushButton:New( pParent )
-   ::pParent := pParent
+METHOD QPushButton:new( pParent )
    ::pPtr := Qt_QPushButton( pParent )
    RETURN Self
 
 
-METHOD QPushButton:Configure( xObject )
+METHOD QPushButton:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

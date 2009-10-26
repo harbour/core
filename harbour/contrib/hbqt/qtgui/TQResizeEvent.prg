@@ -65,11 +65,10 @@
 
 CREATE CLASS QResizeEvent INHERIT QEvent
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  oldSize()
    METHOD  size()
@@ -78,13 +77,12 @@ CREATE CLASS QResizeEvent INHERIT QEvent
 
 /*----------------------------------------------------------------------*/
 
-METHOD QResizeEvent:New( pParent )
-   ::pParent := pParent
+METHOD QResizeEvent:new( pParent )
    ::pPtr := Qt_QResizeEvent( pParent )
    RETURN Self
 
 
-METHOD QResizeEvent:Configure( xObject )
+METHOD QResizeEvent:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

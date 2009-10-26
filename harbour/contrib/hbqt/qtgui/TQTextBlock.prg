@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextBlock
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  blockFormat()
    METHOD  blockFormatIndex()
@@ -101,13 +100,12 @@ CREATE CLASS QTextBlock
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextBlock:New( pParent )
-   ::pParent := pParent
+METHOD QTextBlock:new( pParent )
    ::pPtr := Qt_QTextBlock( pParent )
    RETURN Self
 
 
-METHOD QTextBlock:Configure( xObject )
+METHOD QTextBlock:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

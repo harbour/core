@@ -65,11 +65,10 @@
 
 CREATE CLASS QMimeData INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  clear()
    METHOD  colorData()
@@ -95,13 +94,12 @@ CREATE CLASS QMimeData INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QMimeData:New( pParent )
-   ::pParent := pParent
+METHOD QMimeData:new( pParent )
    ::pPtr := Qt_QMimeData( pParent )
    RETURN Self
 
 
-METHOD QMimeData:Configure( xObject )
+METHOD QMimeData:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

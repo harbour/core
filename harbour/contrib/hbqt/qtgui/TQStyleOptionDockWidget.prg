@@ -65,11 +65,10 @@
 
 CREATE CLASS QStyleOptionDockWidget INHERIT QStyleOption
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  closable()
    METHOD  floatable()
@@ -80,13 +79,12 @@ CREATE CLASS QStyleOptionDockWidget INHERIT QStyleOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionDockWidget:New( pParent )
-   ::pParent := pParent
+METHOD QStyleOptionDockWidget:new( pParent )
    ::pPtr := Qt_QStyleOptionDockWidget( pParent )
    RETURN Self
 
 
-METHOD QStyleOptionDockWidget:Configure( xObject )
+METHOD QStyleOptionDockWidget:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

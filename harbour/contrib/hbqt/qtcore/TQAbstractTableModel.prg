@@ -65,11 +65,10 @@
 
 CREATE CLASS QAbstractTableModel INHERIT QAbstractItemModel
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  index( nRow, nColumn, pParent )
 
@@ -77,13 +76,12 @@ CREATE CLASS QAbstractTableModel INHERIT QAbstractItemModel
 
 /*----------------------------------------------------------------------*/
 
-METHOD QAbstractTableModel:New( pParent )
-   ::pParent := pParent
+METHOD QAbstractTableModel:new( pParent )
    ::pPtr := Qt_QAbstractTableModel( pParent )
    RETURN Self
 
 
-METHOD QAbstractTableModel:Configure( xObject )
+METHOD QAbstractTableModel:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

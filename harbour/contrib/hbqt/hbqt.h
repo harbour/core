@@ -67,21 +67,23 @@
     static char str[ 50 ];
 #endif
 
-#define hbqt_par_HbDbfModel( n )                  ( ( HbDbfModel* ) hb_parptr( n ) )
-#define hbqt_par_HbTableView( n )                 ( ( HbTableView* ) hb_parptr( n ) )
-#define hbqt_par_MyMainWindow( n )                ( ( MyMainWindow* ) hb_parptr( n ) )
+#if 0
+#include <QMainWIndow>
 
-#define hbqt_par_QString( n )                     ( ( QString ) hb_parcx( n ) )
-#define hbqt_par_QRgb( n )                        ( hb_parnint( n ) )
-#define hbqt_par_Bool( n )                        ( hb_parl( n ) )
-#define hbqt_par_char( n )                        ( hb_parcx( n ) )
+/* global declaration */
+typedef void * ( * QT_PARAM_FUNC ) ( int );
+typedef struct _QT_PARAM_INFO
+{
+   QT_PARAM_FUNC            pFunc;
+   struct _QT_PARAM_INFO  * pNext;
+   BOOL                     fInited;
+} QT_PARAM_INFO;
 
-#define hbqt_ret_QWidget( p )                     ( hb_retptr( ( QWidget* ) p ) )
-#define hbqt_ret_QAbstractItemDelegate( p )       ( hb_retptr( ( QAbstractItemDelegate* ) p ) )
-#define hbqt_ret_QAbstractItemModel( p )          ( hb_retptr( ( QAbstractItemModel* ) p ) )
-#define hbqt_ret_QPrinter( p )                    ( hb_retptr( ( QPrinter* ) p ) )
-
-/* For GC Pointers */
+extern QMainWindow * hbqt_par_QMainWindow( int iParam );
+extern void qt_childregister_QMainWindow( QT_PARAM_INFO * paramInfo );
+QWidget * hbqt_par_QWidget( int iParam );
+extern void qt_childregister_QWidget( QT_PARAM_INFO * paramInfo );
+#endif
 
 #define QT_G_FUNC( hbfunc )   void hbfunc( void * Cargo ) /* callback function for cleaning garbage memory pointer */
 typedef QT_G_FUNC( QT_G_FUNC_ );
@@ -100,15 +102,6 @@ void * hbqt_ptrTOgcpointer( void * p, QT_G_FUNC_PTR func );
 const HB_GC_FUNCS * gcFuncs( void );
 
 #include "hbqt_garbage.h"
-
-#define hbqt_par_QHelpEvent( n )                    ( ( QHelpEvent                  * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QItemSelection( n )                ( ( QItemSelection              * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QBitArray( n )                     ( ( QBitArray                   * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QFileInfo( n )                     ( ( QFileInfo                   * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QFile( n )                         ( ( QFile                       * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QInputMethodEvent( n )             ( ( QInputMethodEvent           * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QHttpResponseHeader( n )           ( ( QHttpResponseHeader         * ) hbqt_gcpointer( n ) )
-
 
 #define hbqt_par_ExtensionOption( n )               ( ( ExtensionOption             * ) hbqt_gcpointer( n ) )
 #define hbqt_par_IUnknown( n )                      ( ( IUnknown                    * ) hbqt_gcpointer( n ) )
@@ -129,6 +122,7 @@ const HB_GC_FUNCS * gcFuncs( void );
 #define hbqt_par_QActionGroup( n )                  ( ( QActionGroup                * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QApplication( n )                  ( ( QApplication                * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QAxBase( n )                       ( ( QAxBase                     * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QBitArray( n )                     ( ( QBitArray                   * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QBitmap( n )                       ( ( QBitmap                     * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QBoxLayout( n )                    ( ( QBoxLayout                  * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QBrush( n )                        ( ( QBrush                      * ) hbqt_gcpointer( n ) )
@@ -167,8 +161,10 @@ const HB_GC_FUNCS * gcFuncs( void );
 #define hbqt_par_QErrorMessage( n )                 ( ( QErrorMessage               * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QEvent( n )                        ( ( QEvent                      * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QEventLoop( n )                    ( ( QEventLoop                  * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QFile( n )                         ( ( QFile                       * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QFileDialog( n )                   ( ( QFileDialog                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QFileIconProvider( n )             ( ( QFileIconProvider           * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QFileInfo( n )                     ( ( QFileInfo                   * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QFileSystemModel( n )              ( ( QFileSystemModel            * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QFocusEvent( n )                   ( ( QFocusEvent                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QFocusFrame( n )                   ( ( QFocusFrame                 * ) hbqt_gcpointer( n ) )
@@ -188,7 +184,9 @@ const HB_GC_FUNCS * gcFuncs( void );
 #define hbqt_par_QGroupBox( n )                     ( ( QGroupBox                   * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QHBoxLayout( n )                   ( ( QHBoxLayout                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QHeaderView( n )                   ( ( QHeaderView                 * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QHelpEvent( n )                    ( ( QHelpEvent                  * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QHttp( n )                         ( ( QHttp                       * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QHttpResponseHeader( n )           ( ( QHttpResponseHeader         * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QHttpRequestHeader( n )            ( ( QHttpRequestHeader          * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QIcon( n )                         ( ( QIcon                       * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QImage( n )                        ( ( QImage                      * ) hbqt_gcpointer( n ) )
@@ -197,8 +195,10 @@ const HB_GC_FUNCS * gcFuncs( void );
 #define hbqt_par_QInputContext( n )                 ( ( QInputContext               * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QInputDialog( n )                  ( ( QInputDialog                * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QInputEvent( n )                   ( ( QInputEvent                 * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QInputMethodEvent( n )             ( ( QInputMethodEvent           * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QIODevice( n )                     ( ( QIODevice                   * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QItemEditorFactory( n )            ( ( QItemEditorFactory          * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QItemSelection( n )                ( ( QItemSelection              * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QItemSelectionModel( n )           ( ( QItemSelectionModel         * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QKeyEvent( n )                     ( ( QKeyEvent                   * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QKeySequence( n )                  ( ( QKeySequence                * ) hbqt_gcpointer( n ) )
@@ -391,6 +391,20 @@ const HB_GC_FUNCS * gcFuncs( void );
 #define hbqt_par_QWizard( n )                       ( ( QWizard                     * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QWizardPage( n )                   ( ( QWizardPage                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QWSEvent( n )                      ( ( QWSEvent                    * ) hbqt_gcpointer( n ) )
+
+#define hbqt_par_HbDbfModel( n )                    ( ( HbDbfModel* ) hb_parptr( n ) )
+#define hbqt_par_HbTableView( n )                   ( ( HbTableView* ) hb_parptr( n ) )
+#define hbqt_par_MyMainWindow( n )                  ( ( MyMainWindow* ) hb_parptr( n ) )
+
+#define hbqt_par_QString( n )                       ( ( QString ) hb_parcx( n ) )
+#define hbqt_par_QRgb( n )                          ( hb_parnint( n ) )
+#define hbqt_par_Bool( n )                          ( hb_parl( n ) )
+#define hbqt_par_char( n )                          ( hb_parcx( n ) )
+
+#define hbqt_ret_QWidget( p )                       ( hb_retptr( ( QWidget* ) p ) )
+#define hbqt_ret_QAbstractItemDelegate( p )         ( hb_retptr( ( QAbstractItemDelegate* ) p ) )
+#define hbqt_ret_QAbstractItemModel( p )            ( hb_retptr( ( QAbstractItemModel* ) p ) )
+#define hbqt_ret_QPrinter( p )                      ( hb_retptr( ( QPrinter* ) p ) )
 
 #endif
 

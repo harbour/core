@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextStream
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  atEnd()
    METHOD  autoDetectUnicode()
@@ -112,13 +111,12 @@ CREATE CLASS QTextStream
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextStream:New( pParent )
-   ::pParent := pParent
+METHOD QTextStream:new( pParent )
    ::pPtr := Qt_QTextStream( pParent )
    RETURN Self
 
 
-METHOD QTextStream:Configure( xObject )
+METHOD QTextStream:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

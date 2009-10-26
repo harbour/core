@@ -65,11 +65,10 @@
 
 CREATE CLASS QSound
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  fileName()
    METHOD  isFinished()
@@ -83,13 +82,12 @@ CREATE CLASS QSound
 
 /*----------------------------------------------------------------------*/
 
-METHOD QSound:New( pParent )
-   ::pParent := pParent
+METHOD QSound:new( pParent )
    ::pPtr := Qt_QSound( pParent )
    RETURN Self
 
 
-METHOD QSound:Configure( xObject )
+METHOD QSound:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QItemSelection INHERIT QList
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  contains( pIndex )
    METHOD  merge( pOther, nCommand )
@@ -79,13 +78,12 @@ CREATE CLASS QItemSelection INHERIT QList
 
 /*----------------------------------------------------------------------*/
 
-METHOD QItemSelection:New( pParent )
-   ::pParent := pParent
+METHOD QItemSelection:new( pParent )
    ::pPtr := Qt_QItemSelection( pParent )
    RETURN Self
 
 
-METHOD QItemSelection:Configure( xObject )
+METHOD QItemSelection:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

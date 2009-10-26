@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextDocumentFragment
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  isEmpty()
    METHOD  toHtml( pEncoding )
@@ -83,13 +82,12 @@ CREATE CLASS QTextDocumentFragment
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextDocumentFragment:New( pParent )
-   ::pParent := pParent
+METHOD QTextDocumentFragment:new( pParent )
    ::pPtr := Qt_QTextDocumentFragment( pParent )
    RETURN Self
 
 
-METHOD QTextDocumentFragment:Configure( xObject )
+METHOD QTextDocumentFragment:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -119,10 +119,11 @@ hb_toOutDebug( "-----------------b-----------------" )
 
    FOR i := 1 TO 1
       oWnd := QMainWindow():new()
-//      hb_idleSleep( 5 )
+      hb_idleSleep( 1 )
    NEXT
-
+//hb_toOutDebug( " 111 %i", win_p2n( oWnd:pPtr ), 3 )
    oWnd:show()
+//hb_toOutDebug( " 112 " )
    oWnd:setMouseTracking( .t. )
    oWnd:setWindowTitle( "Harbour-Qt Implementation Test Dialog" )
    oWnd:setWindowIcon( "test" )
@@ -158,8 +159,10 @@ hb_idlesleep( 5 )
 #endif
    oLabel := Build_Label( oDA, { 30,190 }, { 300, 30 } )
    oBtn   := Build_PushButton( oDA, { 30,240 }, { 100,50 } )
+
    aGrid  := Build_Grid( oDA, { 30, 30 }, { 450,150 } )
    aTabs  := Build_Tabs( oDA, { 510, 5 }, { 360, 400 } )
+
    oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
    aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
 
@@ -174,19 +177,24 @@ hb_toOutDebug( "connected: %s", IF( QT_CONNECT_EVENT( QT_PTROF( oWnd ), 6, {|o,e
    //Dummies()
 
    qApp:exec()
-hb_toOutDebug( "-----------------e-----------------" )
-   //
+
+hb_toOutDebug( "----------------- qApp:exec -----------------" )
+
+   #if 1
+   //aTabs[ 4 ]:clear()
+   #endif
    xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd } )
 
-hb_toOutDebug( "-----------------f-----------------" )
+hb_toOutDebug( "-------------------- exit -------------------" )
 
    RETURN
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION xReleaseMemory( aObj )
+   #if 1
    LOCAL i
-
+hb_toOutDebug( "-----------------  Releasing Memory  -----------------" )
    FOR i := 1 TO len( aObj )
       IF hb_isObject( aObj[ i ] )
          aObj[ i ]:pPtr := 1
@@ -194,7 +202,10 @@ FUNCTION xReleaseMemory( aObj )
          xReleaseMemory( aObj[ i ] )
       ENDIF
    NEXT
-
+hb_toOutDebug( "------------------  Memory Released ------------------" )
+   #else
+      HB_SYMBOL_UNUSED( aObj )
+   #endif
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -239,8 +250,12 @@ PROCEDURE ExecOneMore()
       ENDIF
    ENDDO
    oEventLoop:exit( 0 )
+   oEventLoop := 0
 
-   xReleaseMemory( { oEventLoop, oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd } )
+   #if 1
+   //aTabs[ 4 ]:clear()
+   #endif
+   xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd, oEventLoop } )
 
    RETURN
 
@@ -392,7 +407,11 @@ STATIC FUNCTION Build_PushButton( oWnd, aPos, aSize, cLabel, cMsg, lExit )
    oBtn:move( aPos[ 1 ],aPos[ 2 ] )
    oBtn:resize( aSize[ 1 ],aSize[ 2 ] )
    oBtn:show()
-   Qt_Connect_Signal( QT_PTROF( oBtn ), QT_EVE_CLICKED, {|| MsgInfo( cMsg ), lExit := .t. } )
+   IF hb_isLogical( lExit )
+      Qt_Connect_Signal( QT_PTROF( oBtn ), QT_EVE_CLICKED, {|| lExit := .t. } )
+   ELSE
+      Qt_Connect_Signal( QT_PTROF( oBtn ), QT_EVE_CLICKED, {|| MsgInfo( cMsg ), lExit := .t. } )
+   ENDIF
 
    RETURN oBtn
 
@@ -451,12 +470,15 @@ STATIC FUNCTION Build_Tabs( oWnd, aPos, aSize )
    oTabWidget:show()
 
    aTree := Build_Treeview( oTab1 )
+   aadd( aTree, oTab1 )
    aCntl := Build_Controls( oTab2 )
+   aadd( aCntl, oTab2 )
    aText := Build_TextBox( oTab3 )
+   aadd( aText, oTab3 )
 
    //RETURN { oTab1, oTab2, oTab3, aTree, aCntl, aText, oTabWidget }
-   //RETURN { aCntl, aTree, aText, oTabWidget, oTab1, oTab2, oTab3 }
-   RETURN { aCntl, aTree, aText, oTab1, oTab2, oTab3, oTabWidget }
+   //RETURN { aCntl, aTree, aText, oTab1, oTab2, oTab3, oTabWidget }
+   RETURN { aCntl, aTree, aText, oTabWidget }
 
 /*----------------------------------------------------------------------*/
 
@@ -919,3 +941,4 @@ FUNCTION ShowInSystemTray( oWnd )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
+

@@ -65,11 +65,10 @@
 
 CREATE CLASS QFontDatabase
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  bold( cFamily, cStyle )
    METHOD  families( nWritingSystem )
@@ -96,13 +95,12 @@ CREATE CLASS QFontDatabase
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFontDatabase:New( pParent )
-   ::pParent := pParent
+METHOD QFontDatabase:new( pParent )
    ::pPtr := Qt_QFontDatabase( pParent )
    RETURN Self
 
 
-METHOD QFontDatabase:Configure( xObject )
+METHOD QFontDatabase:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QFontInfo
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  bold()
    METHOD  exactMatch()
@@ -88,13 +87,12 @@ CREATE CLASS QFontInfo
 
 /*----------------------------------------------------------------------*/
 
-METHOD QFontInfo:New( pParent )
-   ::pParent := pParent
+METHOD QFontInfo:new( pParent )
    ::pPtr := Qt_QFontInfo( pParent )
    RETURN Self
 
 
-METHOD QFontInfo:Configure( xObject )
+METHOD QFontInfo:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

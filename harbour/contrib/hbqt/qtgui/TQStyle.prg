@@ -65,11 +65,10 @@
 
 CREATE CLASS QStyle INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  combinedLayoutSpacing( nControls1, nControls2, nOrientation, pOption, pWidget )
    METHOD  drawComplexControl( nControl, pOption, pPainter, pWidget )
@@ -105,13 +104,12 @@ CREATE CLASS QStyle INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyle:New( pParent )
-   ::pParent := pParent
+METHOD QStyle:new( pParent )
    ::pPtr := Qt_QStyle( pParent )
    RETURN Self
 
 
-METHOD QStyle:Configure( xObject )
+METHOD QStyle:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

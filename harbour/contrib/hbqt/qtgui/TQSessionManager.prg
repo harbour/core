@@ -65,11 +65,10 @@
 
 CREATE CLASS QSessionManager INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  allowsErrorInteraction()
    METHOD  allowsInteraction()
@@ -92,13 +91,12 @@ CREATE CLASS QSessionManager INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QSessionManager:New( pParent )
-   ::pParent := pParent
+METHOD QSessionManager:new( pParent )
    ::pPtr := Qt_QSessionManager( pParent )
    RETURN Self
 
 
-METHOD QSessionManager:Configure( xObject )
+METHOD QSessionManager:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QPainter
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  background()
    METHOD  backgroundMode()
@@ -258,13 +257,12 @@ CREATE CLASS QPainter
 
 /*----------------------------------------------------------------------*/
 
-METHOD QPainter:New( pParent )
-   ::pParent := pParent
+METHOD QPainter:new( pParent )
    ::pPtr := Qt_QPainter( pParent )
    RETURN Self
 
 
-METHOD QPainter:Configure( xObject )
+METHOD QPainter:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

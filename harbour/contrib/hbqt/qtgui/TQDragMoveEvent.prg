@@ -65,11 +65,10 @@
 
 CREATE CLASS QDragMoveEvent INHERIT QDropEvent
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  accept( pRectangle )
    METHOD  accept_1()
@@ -81,13 +80,12 @@ CREATE CLASS QDragMoveEvent INHERIT QDropEvent
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDragMoveEvent:New( pParent )
-   ::pParent := pParent
+METHOD QDragMoveEvent:new( pParent )
    ::pPtr := Qt_QDragMoveEvent( pParent )
    RETURN Self
 
 
-METHOD QDragMoveEvent:Configure( xObject )
+METHOD QDragMoveEvent:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

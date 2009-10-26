@@ -65,11 +65,10 @@
 
 CREATE CLASS QToolBar INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  actionAt( pP )
    METHOD  actionAt_1( nX, nY )
@@ -104,13 +103,12 @@ CREATE CLASS QToolBar INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QToolBar:New( pParent )
-   ::pParent := pParent
+METHOD QToolBar:new( pParent )
    ::pPtr := Qt_QToolBar( pParent )
    RETURN Self
 
 
-METHOD QToolBar:Configure( xObject )
+METHOD QToolBar:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QProgressDialog INHERIT QDialog
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  autoClose()
    METHOD  autoReset()
@@ -100,13 +99,12 @@ CREATE CLASS QProgressDialog INHERIT QDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD QProgressDialog:New( pParent )
-   ::pParent := pParent
+METHOD QProgressDialog:new( pParent )
    ::pPtr := Qt_QProgressDialog( pParent )
    RETURN Self
 
 
-METHOD QProgressDialog:Configure( xObject )
+METHOD QProgressDialog:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

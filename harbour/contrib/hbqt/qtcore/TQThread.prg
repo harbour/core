@@ -65,11 +65,10 @@
 
 CREATE CLASS QThread INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  exit( nReturnCode )
    METHOD  isFinished()
@@ -90,13 +89,12 @@ CREATE CLASS QThread INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QThread:New( pParent )
-   ::pParent := pParent
+METHOD QThread:new( pParent )
    ::pPtr := Qt_QThread( pParent )
    RETURN Self
 
 
-METHOD QThread:Configure( xObject )
+METHOD QThread:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

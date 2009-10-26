@@ -65,24 +65,22 @@
 
 CREATE CLASS QVBoxLayout INHERIT QBoxLayout
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD QVBoxLayout:New( pParent )
-   ::pParent := pParent
+METHOD QVBoxLayout:new( pParent )
    ::pPtr := Qt_QVBoxLayout( pParent )
    RETURN Self
 
 
-METHOD QVBoxLayout:Configure( xObject )
+METHOD QVBoxLayout:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

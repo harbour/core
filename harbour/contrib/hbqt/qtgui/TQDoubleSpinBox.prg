@@ -65,11 +65,10 @@
 
 CREATE CLASS QDoubleSpinBox INHERIT QAbstractSpinBox
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  cleanText()
    METHOD  decimals()
@@ -94,13 +93,12 @@ CREATE CLASS QDoubleSpinBox INHERIT QAbstractSpinBox
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDoubleSpinBox:New( pParent )
-   ::pParent := pParent
+METHOD QDoubleSpinBox:new( pParent )
    ::pPtr := Qt_QDoubleSpinBox( pParent )
    RETURN Self
 
 
-METHOD QDoubleSpinBox:Configure( xObject )
+METHOD QDoubleSpinBox:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

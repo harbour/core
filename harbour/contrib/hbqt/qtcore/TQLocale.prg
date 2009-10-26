@@ -65,11 +65,10 @@
 
 CREATE CLASS QLocale
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  amText()
    METHOD  country()
@@ -124,13 +123,12 @@ CREATE CLASS QLocale
 
 /*----------------------------------------------------------------------*/
 
-METHOD QLocale:New( pParent )
-   ::pParent := pParent
+METHOD QLocale:new( pParent )
    ::pPtr := Qt_QLocale( pParent )
    RETURN Self
 
 
-METHOD QLocale:Configure( xObject )
+METHOD QLocale:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

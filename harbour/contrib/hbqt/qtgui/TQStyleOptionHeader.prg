@@ -65,11 +65,10 @@
 
 CREATE CLASS QStyleOptionHeader INHERIT QStyleOption
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  icon()
    METHOD  iconAlignment()
@@ -85,13 +84,12 @@ CREATE CLASS QStyleOptionHeader INHERIT QStyleOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionHeader:New( pParent )
-   ::pParent := pParent
+METHOD QStyleOptionHeader:new( pParent )
    ::pPtr := Qt_QStyleOptionHeader( pParent )
    RETURN Self
 
 
-METHOD QStyleOptionHeader:Configure( xObject )
+METHOD QStyleOptionHeader:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

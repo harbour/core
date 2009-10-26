@@ -65,11 +65,10 @@
 
 CREATE CLASS QMessageBox INHERIT QDialog
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addButton( pButton, nRole )
    METHOD  addButton_1( cText, nRole )
@@ -114,13 +113,12 @@ CREATE CLASS QMessageBox INHERIT QDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD QMessageBox:New( pParent )
-   ::pParent := pParent
+METHOD QMessageBox:new( pParent )
    ::pPtr := Qt_QMessageBox( pParent )
    RETURN Self
 
 
-METHOD QMessageBox:Configure( xObject )
+METHOD QMessageBox:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

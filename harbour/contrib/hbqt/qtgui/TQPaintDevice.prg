@@ -65,11 +65,10 @@
 
 CREATE CLASS QPaintDevice
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  depth()
    METHOD  height()
@@ -88,13 +87,12 @@ CREATE CLASS QPaintDevice
 
 /*----------------------------------------------------------------------*/
 
-METHOD QPaintDevice:New( pParent )
-   ::pParent := pParent
+METHOD QPaintDevice:new( pParent )
    ::pPtr := Qt_QPaintDevice( pParent )
    RETURN Self
 
 
-METHOD QPaintDevice:Configure( xObject )
+METHOD QPaintDevice:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

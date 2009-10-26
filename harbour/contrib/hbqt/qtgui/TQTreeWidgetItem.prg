@@ -65,11 +65,10 @@
 
 CREATE CLASS QTreeWidgetItem
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addChild( pChild )
    METHOD  background( nColumn )
@@ -128,13 +127,12 @@ CREATE CLASS QTreeWidgetItem
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTreeWidgetItem:New( pParent )
-   ::pParent := pParent
+METHOD QTreeWidgetItem:new( pParent )
    ::pPtr := Qt_QTreeWidgetItem( pParent )
    RETURN Self
 
 
-METHOD QTreeWidgetItem:Configure( xObject )
+METHOD QTreeWidgetItem:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

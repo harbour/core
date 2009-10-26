@@ -65,11 +65,10 @@
 
 CREATE CLASS QInputContext INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  filterEvent( pEvent )
    METHOD  font()
@@ -87,13 +86,12 @@ CREATE CLASS QInputContext INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QInputContext:New( pParent )
-   ::pParent := pParent
+METHOD QInputContext:new( pParent )
    ::pPtr := Qt_QInputContext( pParent )
    RETURN Self
 
 
-METHOD QInputContext:Configure( xObject )
+METHOD QInputContext:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

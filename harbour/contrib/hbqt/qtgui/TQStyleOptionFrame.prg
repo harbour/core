@@ -65,11 +65,10 @@
 
 CREATE CLASS QStyleOptionFrame INHERIT qStyleOption
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  lineWidth()
    METHOD  midLineWidth()
@@ -78,13 +77,12 @@ CREATE CLASS QStyleOptionFrame INHERIT qStyleOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionFrame:New( pParent )
-   ::pParent := pParent
+METHOD QStyleOptionFrame:new( pParent )
    ::pPtr := Qt_QStyleOptionFrame( pParent )
    RETURN Self
 
 
-METHOD QStyleOptionFrame:Configure( xObject )
+METHOD QStyleOptionFrame:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

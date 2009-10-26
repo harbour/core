@@ -65,24 +65,22 @@
 
 CREATE CLASS QDragEnterEvent INHERIT QDragMoveEvent
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD QDragEnterEvent:New( pParent )
-   ::pParent := pParent
+METHOD QDragEnterEvent:new( pParent )
    ::pPtr := Qt_QDragEnterEvent( pParent )
    RETURN Self
 
 
-METHOD QDragEnterEvent:Configure( xObject )
+METHOD QDragEnterEvent:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

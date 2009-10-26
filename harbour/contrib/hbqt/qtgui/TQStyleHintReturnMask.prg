@@ -65,24 +65,22 @@
 
 CREATE CLASS QStyleHintReturnMask INHERIT QStyleHintReturn
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleHintReturnMask:New( pParent )
-   ::pParent := pParent
+METHOD QStyleHintReturnMask:new( pParent )
    ::pPtr := Qt_QStyleHintReturnMask( pParent )
    RETURN Self
 
 
-METHOD QStyleHintReturnMask:Configure( xObject )
+METHOD QStyleHintReturnMask:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QHttp INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  bytesAvailable()
    METHOD  clearPendingRequests()
@@ -100,13 +99,12 @@ CREATE CLASS QHttp INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QHttp:New( pParent )
-   ::pParent := pParent
+METHOD QHttp:new( pParent )
    ::pPtr := Qt_QHttp( pParent )
    RETURN Self
 
 
-METHOD QHttp:Configure( xObject )
+METHOD QHttp:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

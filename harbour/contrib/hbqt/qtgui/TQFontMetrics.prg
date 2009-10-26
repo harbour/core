@@ -65,11 +65,10 @@
 
 CREATE CLASS QFontMetrics
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  ascent()
    METHOD  averageCharWidth()
@@ -109,7 +108,7 @@ METHOD New( ... ) CLASS QFontMetrics
    RETURN Self
 
 
-METHOD QFontMetrics:Configure( xObject )
+METHOD QFontMetrics:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

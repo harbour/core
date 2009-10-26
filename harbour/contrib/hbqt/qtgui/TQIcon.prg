@@ -65,11 +65,10 @@
 
 CREATE CLASS QIcon
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  actualSize( pSize, nMode, nState )
    METHOD  addFile( cFileName, pSize, nMode, nState )
@@ -93,7 +92,7 @@ METHOD New( ... ) CLASS QIcon
    RETURN Self
 
 
-METHOD QIcon:Configure( xObject )
+METHOD QIcon:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

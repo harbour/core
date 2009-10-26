@@ -65,11 +65,10 @@
 
 CREATE CLASS QLinearGradient INHERIT QGradient
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  finalStop()
    METHOD  setFinalStop( pStop )
@@ -89,7 +88,7 @@ METHOD New( ... ) CLASS QLinearGradient
    RETURN Self
 
 
-METHOD QLinearGradient:Configure( xObject )
+METHOD QLinearGradient:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

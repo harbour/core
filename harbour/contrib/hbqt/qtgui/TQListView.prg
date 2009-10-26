@@ -65,11 +65,10 @@
 
 CREATE CLASS QListView INHERIT QAbstractItemView
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  batchSize()
    METHOD  clearPropertyFlags()
@@ -105,13 +104,12 @@ CREATE CLASS QListView INHERIT QAbstractItemView
 
 /*----------------------------------------------------------------------*/
 
-METHOD QListView:New( pParent )
-   ::pParent := pParent
+METHOD QListView:new( pParent )
    ::pPtr := Qt_QListView( pParent )
    RETURN Self
 
 
-METHOD QListView:Configure( xObject )
+METHOD QListView:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

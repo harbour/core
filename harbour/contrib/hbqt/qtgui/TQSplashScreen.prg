@@ -65,11 +65,10 @@
 
 CREATE CLASS QSplashScreen INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  finish( pMainWin )
    METHOD  pixmap()
@@ -82,13 +81,12 @@ CREATE CLASS QSplashScreen INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QSplashScreen:New( pParent )
-   ::pParent := pParent
+METHOD QSplashScreen:new( pParent )
    ::pPtr := Qt_QSplashScreen( pParent )
    RETURN Self
 
 
-METHOD QSplashScreen:Configure( xObject )
+METHOD QSplashScreen:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

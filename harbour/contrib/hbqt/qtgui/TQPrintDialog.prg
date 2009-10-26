@@ -65,11 +65,10 @@
 
 CREATE CLASS QPrintDialog INHERIT QAbstractPrintDialog
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  done( nResult )
    METHOD  open( pReceiver, pMember )
@@ -85,13 +84,12 @@ CREATE CLASS QPrintDialog INHERIT QAbstractPrintDialog
 
 /*----------------------------------------------------------------------*/
 
-METHOD QPrintDialog:New( pParent )
-   ::pParent := pParent
+METHOD QPrintDialog:new( pParent )
    ::pPtr := Qt_QPrintDialog( pParent )
    RETURN Self
 
 
-METHOD QPrintDialog:Configure( xObject )
+METHOD QPrintDialog:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

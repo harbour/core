@@ -65,24 +65,22 @@
 
 CREATE CLASS QWindowsXPStyle INHERIT QWindowsStyle
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD QWindowsXPStyle:New( pParent )
-   ::pParent := pParent
+METHOD QWindowsXPStyle:new( pParent )
    ::pPtr := Qt_QWindowsXPStyle( pParent )
    RETURN Self
 
 
-METHOD QWindowsXPStyle:Configure( xObject )
+METHOD QWindowsXPStyle:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

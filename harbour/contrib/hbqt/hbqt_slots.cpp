@@ -1982,14 +1982,13 @@ QVariant fetchRole( PHB_ITEM block, int what, int par1, int par2 )
       hb_itemRelease( p2 );
 
       if( hb_itemType( ret ) & HB_IT_STRING )
-         vv = hb_itemGetC( ret );
+         vv = hb_itemGetCPtr( ret );
       else if( hb_itemType( ret ) & HB_IT_LOGICAL )
          vv = hb_itemGetL( ret );
       else if( hb_itemType( ret ) & HB_IT_DOUBLE  )
          vv = hb_itemGetND( ret );
       else if( hb_itemType( ret ) & HB_IT_NUMERIC )
          vv = hb_itemGetNI( ret );
-
    }
    return vv;
 }

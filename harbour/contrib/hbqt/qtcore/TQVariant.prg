@@ -65,11 +65,10 @@
 
 CREATE CLASS QVariant
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  canConvert( nT )
    METHOD  canConvert_1( nT )
@@ -112,13 +111,12 @@ CREATE CLASS QVariant
 
 /*----------------------------------------------------------------------*/
 
-METHOD QVariant:New( pParent )
-   ::pParent := pParent
+METHOD QVariant:new( pParent )
    ::pPtr := Qt_QVariant( pParent )
    RETURN Self
 
 
-METHOD QVariant:Configure( xObject )
+METHOD QVariant:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

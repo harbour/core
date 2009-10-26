@@ -65,11 +65,10 @@
 
 CREATE CLASS QProgressBar INHERIT QWidget
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  alignment()
    METHOD  format()
@@ -97,13 +96,12 @@ CREATE CLASS QProgressBar INHERIT QWidget
 
 /*----------------------------------------------------------------------*/
 
-METHOD QProgressBar:New( pParent )
-   ::pParent := pParent
+METHOD QProgressBar:new( pParent )
    ::pPtr := Qt_QProgressBar( pParent )
    RETURN Self
 
 
-METHOD QProgressBar:Configure( xObject )
+METHOD QProgressBar:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

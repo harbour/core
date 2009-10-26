@@ -65,11 +65,10 @@
 
 CREATE CLASS QLayoutItem
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  alignment()
    METHOD  controlTypes()
@@ -93,13 +92,12 @@ CREATE CLASS QLayoutItem
 
 /*----------------------------------------------------------------------*/
 
-METHOD QLayoutItem:New( pParent )
-   ::pParent := pParent
+METHOD QLayoutItem:new( pParent )
    ::pPtr := Qt_QLayoutItem( pParent )
    RETURN Self
 
 
-METHOD QLayoutItem:Configure( xObject )
+METHOD QLayoutItem:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

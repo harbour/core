@@ -65,11 +65,10 @@
 
 CREATE CLASS QTableWidgetItem
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  background()
    METHOD  checkState()
@@ -111,13 +110,12 @@ CREATE CLASS QTableWidgetItem
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTableWidgetItem:New( pParent )
-   ::pParent := pParent
+METHOD QTableWidgetItem:new( pParent )
    ::pPtr := Qt_QTableWidgetItem( pParent )
    RETURN Self
 
 
-METHOD QTableWidgetItem:Configure( xObject )
+METHOD QTableWidgetItem:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

@@ -65,11 +65,10 @@
 
 CREATE CLASS QSpacerItem INHERIT QLayoutItem
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  changeSize( nW, nH, nHPolicy, nVPolicy )
    METHOD  isEmpty()
@@ -79,13 +78,12 @@ CREATE CLASS QSpacerItem INHERIT QLayoutItem
 
 /*----------------------------------------------------------------------*/
 
-METHOD QSpacerItem:New( pParent )
-   ::pParent := pParent
+METHOD QSpacerItem:new( pParent )
    ::pPtr := Qt_QSpacerItem( pParent )
    RETURN Self
 
 
-METHOD QSpacerItem:Configure( xObject )
+METHOD QSpacerItem:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

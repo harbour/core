@@ -65,11 +65,10 @@
 
 CREATE CLASS QStyleOptionViewItem INHERIT QStyleOption
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  decorationAlignment()
    METHOD  decorationPosition()
@@ -83,13 +82,12 @@ CREATE CLASS QStyleOptionViewItem INHERIT QStyleOption
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyleOptionViewItem:New( pParent )
-   ::pParent := pParent
+METHOD QStyleOptionViewItem:new( pParent )
    ::pPtr := Qt_QStyleOptionViewItem( pParent )
    RETURN Self
 
 
-METHOD QStyleOptionViewItem:Configure( xObject )
+METHOD QStyleOptionViewItem:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

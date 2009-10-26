@@ -65,11 +65,10 @@
 
 CREATE CLASS QStyledItemDelegate
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  createEditor( pParent, pOption, pIndex )
    METHOD  displayText( pValue, pLocale )
@@ -83,13 +82,12 @@ CREATE CLASS QStyledItemDelegate
 
 /*----------------------------------------------------------------------*/
 
-METHOD QStyledItemDelegate:New( pParent )
-   ::pParent := pParent
+METHOD QStyledItemDelegate:new( pParent )
    ::pPtr := Qt_QStyledItemDelegate( pParent )
    RETURN Self
 
 
-METHOD QStyledItemDelegate:Configure( xObject )
+METHOD QStyledItemDelegate:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

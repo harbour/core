@@ -65,11 +65,10 @@
 
 CREATE CLASS QTimer INHERIT QObject
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  interval()
    METHOD  isActive()
@@ -86,13 +85,12 @@ CREATE CLASS QTimer INHERIT QObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTimer:New( pParent )
-   ::pParent := pParent
+METHOD QTimer:new( pParent )
    ::pPtr := Qt_QTimer( pParent )
    RETURN Self
 
 
-METHOD QTimer:Configure( xObject )
+METHOD QTimer:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

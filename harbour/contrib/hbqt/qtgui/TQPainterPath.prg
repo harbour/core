@@ -65,11 +65,10 @@
 
 CREATE CLASS QPainterPath
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  addEllipse( pBoundingRectangle )
    METHOD  addEllipse_1( nX, nY, nWidth, nHeight )
@@ -127,13 +126,12 @@ CREATE CLASS QPainterPath
 
 /*----------------------------------------------------------------------*/
 
-METHOD QPainterPath:New( pParent )
-   ::pParent := pParent
+METHOD QPainterPath:new( pParent )
    ::pPtr := Qt_QPainterPath( pParent )
    RETURN Self
 
 
-METHOD QPainterPath:Configure( xObject )
+METHOD QPainterPath:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

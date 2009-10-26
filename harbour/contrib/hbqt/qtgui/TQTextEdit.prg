@@ -65,11 +65,10 @@
 
 CREATE CLASS QTextEdit INHERIT QAbstractScrollArea
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  acceptRichText()
    METHOD  alignment()
@@ -157,13 +156,12 @@ CREATE CLASS QTextEdit INHERIT QAbstractScrollArea
 
 /*----------------------------------------------------------------------*/
 
-METHOD QTextEdit:New( pParent )
-   ::pParent := pParent
+METHOD QTextEdit:new( pParent )
    ::pPtr := Qt_QTextEdit( pParent )
    RETURN Self
 
 
-METHOD QTextEdit:Configure( xObject )
+METHOD QTextEdit:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

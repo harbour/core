@@ -65,11 +65,10 @@
 
 CREATE CLASS QKeySequence
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  count()
    METHOD  isEmpty()
@@ -82,13 +81,12 @@ CREATE CLASS QKeySequence
 
 /*----------------------------------------------------------------------*/
 
-METHOD QKeySequence:New( pParent )
-   ::pParent := pParent
+METHOD QKeySequence:new( pParent )
    ::pPtr := Qt_QKeySequence( pParent )
    RETURN Self
 
 
-METHOD QKeySequence:Configure( xObject )
+METHOD QKeySequence:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )

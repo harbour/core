@@ -65,11 +65,10 @@
 
 CREATE CLASS QHttpResponseHeader INHERIT QHttpHeader
 
-   VAR     pParent
    VAR     pPtr
 
-   METHOD  New()
-   METHOD  Configure( xObject )
+   METHOD  new()
+   METHOD  configure( xObject )
 
    METHOD  majorVersion()
    METHOD  minorVersion()
@@ -81,13 +80,12 @@ CREATE CLASS QHttpResponseHeader INHERIT QHttpHeader
 
 /*----------------------------------------------------------------------*/
 
-METHOD QHttpResponseHeader:New( pParent )
-   ::pParent := pParent
+METHOD QHttpResponseHeader:new( pParent )
    ::pPtr := Qt_QHttpResponseHeader( pParent )
    RETURN Self
 
 
-METHOD QHttpResponseHeader:Configure( xObject )
+METHOD QHttpResponseHeader:configure( xObject )
    IF hb_isObject( xObject )
       ::pPtr := xObject:pPtr
    ELSEIF hb_isPointer( xObject )
