@@ -437,14 +437,26 @@ void hb_gcGripDrop( HB_ITEM_PTR pItem )
    {
       HB_GARBAGE_PTR pAlloc = HB_GC_PTR( pItem );
 
-      if( HB_IS_COMPLEX( pItem ) )
-         hb_itemClear( pItem );    /* clear value stored in this item */
+      if( hb_xRefDec( pAlloc ) )
+      {
+         if( HB_IS_COMPLEX( pItem ) )
+            hb_itemClear( pItem );    /* clear value stored in this item */
 
-      HB_GC_LOCK
-      hb_gcUnlink( &s_pLockedBlock, pAlloc );
-      HB_GC_UNLOCK
+         if( !( pAlloc->used & HB_GC_DELETE ) )
+         {
+            HB_GC_LOCK
+            if( pAlloc->locked )
+               hb_gcUnlink( &s_pLockedBlock, pAlloc );
+            else
+            {
+               hb_gcUnlink( &s_pCurrBlock, pAlloc );
+               HB_GC_AUTO_DEC
+            }
+            HB_GC_UNLOCK
 
-      HB_GARBAGE_FREE( pAlloc );
+            HB_GARBAGE_FREE( pAlloc );
+         }
+      }
    }
 }
 

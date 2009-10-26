@@ -11,7 +11,7 @@
  *
  */
 
-/* Harbour MT functions used int hit test */
+/* Harbour MT functions used in this test */
 /*
 #xtranslate hb_mutexSubscribe(      => mt_mutexSubscribe(
 #xtranslate hb_mutexNotify(         => mt_mutexNotify(
