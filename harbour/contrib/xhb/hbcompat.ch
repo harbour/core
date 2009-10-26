@@ -244,6 +244,8 @@
       #define HB_SYMBOL_UNUSED( symbol )  ( symbol := ( symbol ) )
    #endif
 
+   #define HB_GTI_CLIPBOARDPASTE HB_GTI_CLIPBOARDPAST
+
 #else
 
    #if defined( __PLATFORM__WINDOWS ) .AND. !defined( __PLATFORM__Windows )
@@ -262,7 +264,7 @@
    #xtranslate gtSetClipboard(<x>)         => hb_gtInfo( HB_GTI_CLIPBOARDDATA, <x> )
    #xtranslate gtGetClipboard()            => hb_gtInfo( HB_GTI_CLIPBOARDDATA )
    #xtranslate gtGetClipBoardSize()        => Len( hb_gtInfo( HB_GTI_CLIPBOARDDATA ) )
-   #xtranslate gtPasteClipBoard([<n>])     => hb_gtInfo( HB_GTI_CLIPBOARDPAST )
+   #xtranslate gtPasteClipBoard([<n>])     => hb_gtInfo( HB_GTI_CLIPBOARDPASTE )
    #xtranslate gtProcessMessages()         => NextKey()
    #xtranslate gfxPrimitive([<x,...>])     => hb_gfxPrimitive(<x>)
    #xtranslate gfxText([<x,...>])          => hb_gfxText(<x>)
@@ -512,6 +514,8 @@
 
    #command SET TRIMFILENAME <x:ON,OFF,&> => Set( _SET_TRIMFILENAME, <(x)> )
    #command SET TIME FORMAT [TO] <f>      => Set( _SET_TIMEFORMAT, <f> )
+
+   #define HB_GTI_CLIPBOARDPAST HB_GTI_CLIPBOARDPASTE
 
 #endif
 
