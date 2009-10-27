@@ -231,3 +231,60 @@ HB_FUNC( AMERGE )
       hb_errRT_BASE( EG_ARG, 1003, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
 }
+
+HB_FUNC( XHB_ADEL )
+{
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+
+   if( pArray )
+   {
+      long lPos = hb_parnl( 2 );
+
+      if( lPos == 0 )
+         lPos = 1;
+      else if( lPos < 0 )
+         lPos += hb_arrayLen( pArray ) + 1;
+
+      if( hb_arrayDel( pArray, lPos ) )
+      {
+         if( hb_parl( 3 ) )
+            hb_arraySize( pArray, hb_arrayLen( pArray ) - 1 );
+      }
+
+      hb_itemReturn( pArray ); /* ADel() returns the array itself */
+   }
+}
+
+HB_FUNC( XHB_AINS )
+{
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+
+   if( pArray )
+   {
+      long lPos = hb_parnl( 2 );
+
+
+      if( hb_parl( 4 ) )
+      {
+         ULONG ulLen = hb_arrayLen( pArray ) + 1;
+         if( lPos == 0 )
+            lPos = 1;
+         else if( lPos < 0 )
+            lPos += ulLen + 1;
+         if( lPos >= 1 && ( ULONG ) lPos <= ulLen )
+            hb_arraySize( pArray, ulLen );
+      }
+      else if( lPos == 0 )
+         lPos = 1;
+      else if( lPos < 0 )
+         lPos += hb_arrayLen( pArray ) + 1;
+
+      if( hb_arrayIns( pArray, lPos ) )
+      {
+         if( ! HB_ISNIL( 3 ) )
+            hb_arraySet( pArray, lPos, hb_param( 3, HB_IT_ANY ) );
+      }
+
+      hb_itemReturn( pArray ); /* AIns() returns the array itself */
+   }
+}
