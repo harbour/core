@@ -45,7 +45,7 @@ PROCEDURE Main()
    LOCAL hDLL
    LOCAL cData
 
-   IF File( "pscript.dll" )
+   IF hb_FileExists( "pscript.dll" )
       hDLL := DllLoad( "pscript.dll" )
       cData := Space( 24 )
       DllCall( hDll, NIL, "PSGetVersion", @cData )
@@ -69,7 +69,7 @@ PROCEDURE Main()
 
    ? "MsgBox:", DllCall( "user32.dll", NIL, "MessageBoxA", 0, "Hello world!", "Harbour sez", hb_bitOr( MB_OKCANCEL, MB_ICONEXCLAMATION, MB_HELP ) )
 
-   IF File( "libcurl.dll" )
+   IF hb_FileExists( "libcurl.dll" )
       hDLL := DllLoad( "libcurl.dll" )
       ? GetProcAddress( hDLL, "curl_version" )
       // ; This one doesn't work.

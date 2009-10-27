@@ -12,7 +12,7 @@
  * Borland mods by ptucker@sympatico.ca
  * MinGW support by Phil Krylov <phil a t newstar.rinet.ru>
  *
- * www - http://www.harbour-project.org; http://www.xharbour.org
+ * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,79 +65,6 @@
 #include "hbapiitm.h"
 
 #if !defined( HB_NO_ASM ) && defined( HB_OS_WIN ) && !defined( __CYGWIN__ )
-
-#ifdef __XHARBOUR__
-
-#include "hbstack.h"
-#include "hbapicls.h"
-
-static PHB_DYNS s_pHB_CSTRUCTURE = NULL;
-static PHB_DYNS s_pPOINTER;
-static PHB_DYNS s_pVALUE;
-static PHB_DYNS s_pBUFFER;
-static PHB_DYNS s_pDEVALUE;
-
-HB_EXTERN_BEGIN
-char * hb_parcstruct( int iParam, ... );
-HB_EXTERN_END
-
-char * hb_parcstruct( int iParam, ... )
-{
-   HB_THREAD_STUB_ANY
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_parcstruct(%d, ...)", iParam));
-
-   if( s_pHB_CSTRUCTURE == NULL )
-   {
-      s_pHB_CSTRUCTURE = hb_dynsymFind( "HB_CSTRUCTURE" );
-
-      s_pPOINTER       = hb_dynsymGetCase( "POINTER" );
-      s_pVALUE         = hb_dynsymGetCase( "VALUE" );
-      s_pBUFFER        = hb_dynsymGetCase( "BUFFER" );
-      s_pDEVALUE       = hb_dynsymGetCase( "DEVALUE" );
-   }
-
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
-   {
-      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
-      BOOL bRelease = FALSE;
-
-      if( HB_IS_BYREF( pItem ) )
-         pItem = hb_itemUnRef( pItem );
-
-      if( HB_IS_ARRAY( pItem ) && ! HB_IS_OBJECT( pItem ) )
-      {
-         va_list va;
-         ULONG ulArrayIndex;
-         PHB_ITEM pArray = pItem;
-
-         va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
-         va_end( va );
-
-         pItem = hb_itemNew( NULL );
-         bRelease = TRUE;
-
-         hb_arrayGet( pArray, ulArrayIndex, pItem );
-      }
-
-      if( strncmp( hb_objGetClsName( pItem ), "C Structure", 11 ) == 0 )
-      {
-         hb_vmPushDynSym( s_pVALUE );
-         hb_vmPush( pItem );
-         hb_vmSend( 0 );
-
-         if( bRelease )
-            hb_itemRelease( pItem );
-
-         return hb_itemGetCPtr( hb_stackReturnItem() );
-      }
-   }
-
-   return NULL;
-}
-
-#endif
 
 /* ==================================================================
  * DynaCall support comments below
@@ -450,7 +377,6 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
 typedef struct _XPP_DLLEXEC
 {
    DWORD    dwType;     /* type info */
-   char *   cDLL;       /* DLL */
    HMODULE  hDLL;       /* Handle */
    char *   cProc;      /* function name */
    WORD     wOrdinal;   /* function ordinal */
@@ -562,15 +488,6 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
 
                Parm[ iCnt ].dwFlags = DC_FLAG_ARGPTR;  /* use the pointer */
                break;
-#ifdef __XHARBOUR__
-            case HB_IT_ARRAY:
-               if( strncmp( hb_objGetClsName( hb_param( i, HB_IT_ANY ) ), "C Structure", 11 ) == 0 )
-               {
-                  Parm[ iCnt ].nWidth = sizeof( void * );
-                  Parm[ iCnt ].numargs.dwArg = ( DWORD ) hb_parcstruct( i );
-                  break;
-               }
-#endif
             case HB_IT_HASH:
             case HB_IT_SYMBOL:
             case HB_IT_ALIAS:
@@ -619,17 +536,6 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
                   if( ! hb_storclen_buffer( ( char * ) Parm[ iCnt ].pArg, hb_parclen( i ), i ) )
                      hb_xfree( Parm[ iCnt ].pArg );
                   break;
-#ifdef __XHARBOUR__
-               case HB_IT_ARRAY:
-                  if( strncmp( hb_objGetClsName( hb_param( i, HB_IT_ANY ) ), "C Structure", 11 ) == 0 )
-                  {
-                     hb_vmPushDynSym( s_pDEVALUE );
-                     hb_vmPush( hb_param( i, HB_IT_ANY ) );
-                     hb_vmSend( 0 );
-
-                     break;
-                  }
-#endif
                default:
                   hb_errRT_BASE( EG_ARG, 2010, "Unknown reference parameter type to DLL function", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
                   return;
@@ -712,13 +618,8 @@ static HB_GARBAGE_FUNC( _DLLUnload )
 
    if( xec->dwType == _DLLEXEC_SIGNATURE )
    {
-      if( xec->cDLL )
-      {
-         if( xec->hDLL )
-            FreeLibrary( xec->hDLL );
-
-         hb_xfree( xec->cDLL );
-      }
+      if( xec->hDLL )
+         FreeLibrary( xec->hDLL );
 
       if( xec->cProc )
          hb_xfree( xec->cProc );
@@ -836,10 +737,7 @@ HB_FUNC( DLLPREPARECALL )
 
    if( HB_ISCHAR( 1 ) )
    {
-      LPTSTR lpName;
-
-      xec->cDLL = hb_strdup( hb_parc( 1 ) );
-      lpName = HB_TCHAR_CONVTO( xec->cDLL );
+      LPTSTR lpName = HB_TCHAR_CONVTO( hb_parc( 1 ) );
       xec->hDLL = LoadLibrary( lpName );
       HB_TCHAR_FREE( lpName );
    }
