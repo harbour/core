@@ -76,6 +76,12 @@ static PHB_DYNS s_pDyns_hObjAssign;
 
 typedef struct
 {
+   IDispatch*  pDisp;
+   PHB_ITEM*   pCallBack;
+} HB_OLE;
+
+typedef struct
+{
    HRESULT  lOleError;
 } HB_OLEDATA, * PHB_OLEDATA;
 
@@ -118,30 +124,47 @@ static void hb_olecore_init( void* cargo )
 
 static HB_GARBAGE_FUNC( hb_ole_destructor )
 {
-   IDispatch**  ppDisp = ( IDispatch** ) Cargo;
+   HB_OLE * pOle = ( HB_OLE * ) Cargo;
+   IDispatch * pDisp = pOle->pDisp;
 
-   if( *ppDisp )
+   if( pDisp )
    {
-      HB_VTBL( *ppDisp )->Release( HB_THIS( *ppDisp ) );
-      *ppDisp = NULL;
+      pOle->pDisp = NULL;
+      if( pOle->pCallBack && *pOle->pCallBack )
+      {
+         PHB_ITEM pCallBack = *pOle->pCallBack;
+         *pOle->pCallBack = NULL;
+         pOle->pCallBack = NULL;
+         hb_itemRelease( pCallBack );
+      }
+      HB_VTBL( pDisp )->Release( HB_THIS( pDisp ) );
    }
+}
+
+static HB_GARBAGE_FUNC( hb_ole_mark )
+{
+   HB_OLE * pOle = ( HB_OLE * ) Cargo;
+
+   if( pOle->pCallBack && *pOle->pCallBack )
+      hb_gcMark( *pOle->pCallBack );
 }
 
 static const HB_GC_FUNCS s_gcOleFuncs =
 {
    hb_ole_destructor,
-   hb_gcDummyMark
+   hb_ole_mark
 };
 
 
 static HB_GARBAGE_FUNC( hb_oleenum_destructor )
 {
-   IEnumVARIANT**  ppEnum = ( IEnumVARIANT** ) Cargo;
+   IEnumVARIANT** ppEnum = ( IEnumVARIANT** ) Cargo;
+   IEnumVARIANT*  pEnum = *ppEnum;
 
-   if( *ppEnum )
+   if( pEnum )
    {
-      HB_VTBL( *ppEnum )->Release( HB_THIS( *ppEnum ) );
       *ppEnum = NULL;
+      HB_VTBL( pEnum )->Release( HB_THIS( pEnum ) );
    }
 }
 
@@ -154,10 +177,10 @@ static const HB_GC_FUNCS s_gcOleenumFuncs =
 
 IDispatch* hb_oleParam( int iParam )
 {
-   IDispatch**  ppDisp = ( IDispatch** ) hb_parptrGC( &s_gcOleFuncs, iParam );
+   HB_OLE * pOle = ( HB_OLE * ) hb_parptrGC( &s_gcOleFuncs, iParam );
 
-   if( ppDisp && *ppDisp )
-      return *ppDisp;
+   if( pOle && pOle->pDisp )
+      return pOle->pDisp;
 
    hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    return NULL;
@@ -166,18 +189,48 @@ IDispatch* hb_oleParam( int iParam )
 
 IDispatch* hb_oleItemGet( PHB_ITEM pItem )
 {
-   return ( IDispatch* ) hb_itemGetPtrGC( pItem, &s_gcOleFuncs );
+   HB_OLE * pOle = ( HB_OLE * ) hb_itemGetPtrGC( pItem, &s_gcOleFuncs );
+   return pOle ? pOle->pDisp : NULL;
 }
 
 
 PHB_ITEM hb_oleItemPut( PHB_ITEM pItem, IDispatch* pDisp )
 {
-   IDispatch** ppDisp;
+   HB_OLE * pOle = ( HB_OLE * ) hb_gcAllocate( sizeof( HB_OLE ), &s_gcOleFuncs );
 
-   ppDisp = ( IDispatch** ) hb_gcAllocate( sizeof( IDispatch* ), &s_gcOleFuncs );
-   *ppDisp = pDisp;
+   pOle->pDisp = pDisp;
+   pOle->pCallBack = NULL;
 
-   return hb_itemPutPtrGC( pItem, ppDisp );
+   return hb_itemPutPtrGC( pItem, pOle );
+}
+
+
+PHB_ITEM hb_oleItemGetCallBack( PHB_ITEM pItem )
+{
+   HB_OLE * pOle = ( HB_OLE * ) hb_itemGetPtrGC( pItem, &s_gcOleFuncs );
+   return pOle && pOle->pCallBack ? *pOle->pCallBack : NULL;
+}
+
+
+void hb_oleItemSetCallBack( PHB_ITEM pItem, PHB_ITEM* pCallBack )
+{
+   HB_OLE * pOle = ( HB_OLE * ) hb_itemGetPtrGC( pItem, &s_gcOleFuncs );
+
+   if( pOle )
+   {
+      if( pOle->pCallBack && *pOle->pCallBack )
+      {
+         PHB_ITEM pCallBack = *pOle->pCallBack;
+         *pOle->pCallBack = NULL;
+         pOle->pCallBack = NULL;
+         hb_itemRelease( pCallBack );
+      }
+      if( pCallBack )
+      {
+         pOle->pCallBack = pCallBack;
+         hb_gcUnlock( *pCallBack );
+      }
+   }
 }
 
 

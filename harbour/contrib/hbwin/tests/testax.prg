@@ -17,23 +17,22 @@ PROCEDURE Main()
    WAIT "Make sure we are 'Active Window'"
    oMSCAL := HActiveX():Init( WAPI_GetActiveWindow(), "MSCAL.Calendar", 0, 0, 300, 300 )
    WAIT "Press any key to exit"
-   oMSCAL:Close()
    RETURN
 
 CLASS HActiveX
    DATA oOLE
+   DATA hWnd
    METHOD Init
    METHOD Event
    ERROR HANDLER OnError
-// DESTRUCTOR Close
-   METHOD Close
+   DESTRUCTOR Close
 ENDCLASS
 
 METHOD Init( hWnd, cProgId, nTop, nLeft, nWidth, nHeight, cID ) CLASS HActiveX
    LOCAL nStyle := WS_CHILD + WS_VISIBLE + WS_CLIPCHILDREN
    win_AxInit()
-   hWnd := WAPI_CreateWindowEX( 0, "AtlAxWin", cProgId, nStyle, nLeft, nTop, nWidth, nHeight, hWnd, 0 )
-   ::oOLE := WIN_AxGetControl( hWnd, { | event, ... | ::Event( event, ... ) }, cID )
+   ::hWnd := WAPI_CreateWindowEX( 0, "AtlAxWin", cProgId, nStyle, nLeft, nTop, nWidth, nHeight, hWnd, 0 )
+   ::oOLE := WIN_AxGetControl( ::hWnd, { | event, ... | ::Event( event, ... ) }, cID )
    RETURN self
 
 PROCEDURE Event( ... ) CLASS HActiveX
@@ -48,6 +47,8 @@ METHOD OnError() CLASS HActiveX
 
 METHOD Close() CLASS HActiveX
    wapi_OutputDebugString( "Close" )
+   WAPI_DestroyWindow( ::hWnd )
+   ::hWnd := NIL
    ::oOLE := NIL
    wapi_OutputDebugString( "After Close" )
    RETURN NIL

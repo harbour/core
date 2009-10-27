@@ -587,6 +587,10 @@ extern HB_EXPORT  void     hb_gcDummyMark( void * Cargo ); /* dummy GC mark func
 extern PHB_ITEM   hb_gcGripGet( HB_ITEM_PTR pItem );
 extern void       hb_gcGripDrop( HB_ITEM_PTR pItem );
 
+#ifdef HB_LEGACY_LEVEL2
+extern HB_EXPORT  void *   hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pCleanupFunc );
+#endif
+
 #ifdef _HB_API_INTERNAL_
 extern const HB_GC_FUNCS * hb_gcFuncs( void *pBlock );  /* return cleanup function pointer */
 extern void       hb_gcAttach( void * pBlock );

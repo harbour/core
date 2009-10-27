@@ -110,6 +110,8 @@ HB_EXPORT void       hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem );
 HB_EXPORT IDispatch* hb_oleParam( int iParam );
 HB_EXPORT IDispatch* hb_oleItemGet( PHB_ITEM pItem );
 HB_EXPORT PHB_ITEM   hb_oleItemPut( PHB_ITEM pItem, IDispatch* pDisp );
+HB_EXPORT PHB_ITEM   hb_oleItemGetCallBack( PHB_ITEM pItem );
+HB_EXPORT void       hb_oleItemSetCallBack( PHB_ITEM pItem, PHB_ITEM* pCallBack );
 
 /* activex control */
 HB_EXPORT BOOL       hb_oleAxInit( void );
