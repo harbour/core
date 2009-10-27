@@ -343,7 +343,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
 
       iCount = pParams->cArgs;
 
-      for( i = iRefs = 0; i < iCount && iRefs < 32; i++ )
+      for( i = iRefs = 0; i < iCount && iRefs < HB_SIZEOFARRAY( refArray ); i++ )
       {
          if( pParams->rgvarg[ i ].n1.n2.vt & VT_BYREF )
             refArray[ iRefs++ ].item = hb_stackAllocItem();

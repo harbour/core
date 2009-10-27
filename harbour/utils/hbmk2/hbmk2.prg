@@ -659,6 +659,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
    LOCAL nStart := Seconds()
 
+   LOCAL lDoSupportDetection
+
    hbmk[ _HBMK_lCreateLib ] := .F.
    hbmk[ _HBMK_lCreateDyn ] := .F.
 
@@ -1195,14 +1197,26 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             ENDIF
          ELSE
             IF Empty( hbmk[ _HBMK_cCOMP ] ) .AND. ! Empty( aCOMPDET )
+               lDoSupportDetection := Empty( l_cHB_LIB_INSTALL ) .AND. ;
+                                      hb_DirExists( PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) ) + "lib" + hb_osPathSeparator() + hbmk[ _HBMK_cPLAT ] )
                /* Check compilers */
                FOR tmp := 1 TO Len( aCOMPDET )
                   IF ! Empty( cPath_CompC := Eval( aCOMPDET[ tmp ][ _COMPDET_bBlock ] ) )
-                     hbmk[ _HBMK_cCOMP ] := aCOMPDET[ tmp ][ _COMPDET_cCOMP ]
-                     IF Len( aCOMPDET[ tmp ] ) >= _COMPDET_cCCPREFIX
-                        hbmk[ _HBMK_cCCPREFIX ] := aCOMPDET[ tmp ][ _COMPDET_cCCPREFIX ]
+                     IF ! lDoSupportDetection .OR. ;
+                        hb_DirExists( PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) ) + "lib" +;
+                                                     hb_osPathSeparator() + hbmk[ _HBMK_cPLAT ] +;
+                                                     hb_osPathSeparator() + aCOMPDET[ tmp ][ _COMPDET_cCOMP ] +;
+                                                     iif( Empty( hbmk[ _HBMK_cBUILD ] ), "", PathSepToTarget( hbmk, hbmk[ _HBMK_cBUILD ] ) ) )
+                        hbmk[ _HBMK_cCOMP ] := aCOMPDET[ tmp ][ _COMPDET_cCOMP ]
+                        IF Len( aCOMPDET[ tmp ] ) >= _COMPDET_cCCPREFIX
+                           hbmk[ _HBMK_cCCPREFIX ] := aCOMPDET[ tmp ][ _COMPDET_cCCPREFIX ]
+                        ENDIF
+                        EXIT
+                     ELSE
+                        IF hbmk[ _HBMK_lInfo ]
+                           hbmk_OutStd( hb_StrFormat( I_( "Autodetected C compiler '%1$s' skipped because required Harbour core libraries are not found." ), aCOMPDET[ tmp ][ _COMPDET_cCOMP ] ) )
+                        ENDIF
                      ENDIF
-                     EXIT
                   ENDIF
                NEXT
             ENDIF
