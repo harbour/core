@@ -449,6 +449,8 @@ EXPORTED:
    DATA     nLeftFrozen                             INIT   0
    DATA     nRightFrozen                            INIT   0
 
+   METHOD   destroy()
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -627,7 +629,7 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    /*  Attach Model with the View */
    ::oTableView:setModel( QT_PTROF( ::oDbfModel ) )
    /*  Set Initial Column and Row */
-   #if 1
+   #if 0
    ::oTableView:setCurrentIndex( QModelIndex():new():sibling( 0,0 ) )
    ::pCurIndex := ::oTableView:currentIndex()
    #endif
@@ -680,6 +682,45 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oViewport:configure( ::oTableView:viewport() )
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpBrowse:destroy()
+
+   ::disconnect()
+
+   ::oHScrollBar:pPtr := 0
+   ::oVScrollBar:pPtr := 0
+
+   //::oLeftView:destroy()
+   ::oLeftVHeaderView:pPtr := 0
+   ::oLeftHeaderView:pPtr  := 0
+//   ::oLeftDbfModel:destroy()
+   ::oLeftFooterView:pPtr  := 0
+//   ::oLeftFooterModel:destroy()
+
+   //::oRightView:destroy()
+   ::oRightHeaderView:pPtr  := 0
+//   ::oRightDbfModel:destroy()
+   ::oRightFooterView:pPtr  := 0
+//   ::oRightFooterModel:destroy()
+
+   //::oTableView:destroy()
+   ::oVHeaderView:pPtr := 0
+//   ::oDbfModel:destroy()
+
+   ::oFooterView:pPtr := 0
+//   ::oFooterModel:destroy()
+
+   ::oGridLayout:pPtr := 0
+
+   ::oGridLayout  := NIL
+   ::oFooterModel := NIL
+   ::oFooterView  := NIL
+
+   ::xbpWindow:destroy()
+
+   RETURN nil
 
 /*----------------------------------------------------------------------*/
 
@@ -4339,6 +4380,4 @@ METHOD XbpCellGroup:itemSelected()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
-
 

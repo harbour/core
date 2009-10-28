@@ -2001,6 +2001,7 @@ HbDbfModel::HbDbfModel( PHB_ITEM pBlock ) : QAbstractItemModel()
 }
 HbDbfModel::~HbDbfModel()
 {
+   hb_itemRelease( block );
 }
 Qt::ItemFlags HbDbfModel::flags( const QModelIndex & index ) const
 {
@@ -2171,13 +2172,18 @@ QModelIndex HbDbfModel::parent( const QModelIndex & /* child */ ) const
 void HbDbfModel::reset()
 {
    QAbstractItemModel::reset();
-   //emit dataChanged( createIndex( 0, 0, 0 ), createIndex( iRows, iCols, iRows * iCols ) );
 }
 
 void HbDbfModel::hbSetRowColumns( int rows, int cols )
 {
    iRows = rows;
    iCols = cols;
+}
+
+void HbDbfModel::destroy()
+{
+   hb_itemRelease( block );
+   //HbDbfModel::~HbDbfModel();
 }
 
 /*----------------------------------------------------------------------*/

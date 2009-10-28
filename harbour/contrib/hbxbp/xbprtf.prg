@@ -199,9 +199,8 @@ METHOD XbpRtf:exeBlock( nEvent, p1 )
    DO CASE
    CASE nEvent == 1
    CASE nEvent == 2
-xbp_debug( "XbpRtf:exeBlock", 2 )
+
    CASE nEvent == 3
-xbp_debug( "XbpRtf:exeBlock", 3 )
       ::oTextCursor:configure( ::oWidget:textCursor() )
       ::oCurCursor := ::oTextCursor
    CASE nEvent == 4
@@ -210,13 +209,11 @@ xbp_debug( "XbpRtf:exeBlock", 3 )
       ::changed := .t.                                  // .f. only at save
       ::change()
    CASE nEvent == 7    /* Xbase++ Implements */
-xbp_debug( "XbpRtf:exeBlock", 7 )
       ::oTextCursor:configure( ::oWidget:textCursor() )
       ::oCurCursor := ::oTextCursor
       ::selChange()
    ENDCASE
 
-   hb_gcAll( .t. )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -679,7 +676,6 @@ METHOD XbpRtf:text( ... )                                   // ""
    ENDIF
 
    IF len( aP ) >= 1
-
    ENDIF
    RETURN xRet
 

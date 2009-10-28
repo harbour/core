@@ -219,6 +219,8 @@ METHOD XbpDialog:destroy()
    SetEventLoop( NIL )
    ::oEventLoop:exit( 0 )
 
+   ::oEventLoop:pPtr := 0
+
    ::xbpWindow:destroy()
 
    RETURN nil

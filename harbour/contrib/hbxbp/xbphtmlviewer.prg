@@ -98,6 +98,7 @@ CLASS XbpHTMLViewer INHERIT XbpWindow
 
    METHOD   new()
    METHOD   create()
+   METHOD   destroy()
    METHOD   exeBlock()
 
    METHOD   setHTML( cHTML )                      INLINE  ::oWidget:setHTML( cHTML )
@@ -176,6 +177,16 @@ METHOD XbpHTMLViewer:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    ENDIF
    ::oParent:addChild( SELF )
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpHTMLViewer:destroy()
+
+   ::stop()
+   ::disconnect()
+   ::xbpWindow:destroy()
+
+   RETURN nil
 
 /*----------------------------------------------------------------------*/
 

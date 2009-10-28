@@ -148,6 +148,20 @@ METHOD XbpTabPage:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpTabPage:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpTabPage:destroy()
+
+   ::xbpWindow:destroy()
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpTabPage:exeBlock( iIndex )
 
    IF iIndex >= 0  .and. len( ::oParent:aTabs ) > 0
@@ -190,18 +204,6 @@ METHOD XbpTabPage:maximize()
    RETURN .t.
 
 /*----------------------------------------------------------------------*/
-
-METHOD XbpTabPage:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpTabPage:destroy()
-   ::xbpWindow:destroy()
-   RETURN NIL
-
-/*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 /*
@@ -239,7 +241,7 @@ METHOD XbpTabWidget:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
    ::oWidget := QTabWidget():new( ::pParent )
 
-   ::Connect( ::pWidget, "currentChanged(int)" , {|o,i| ::exeBlock( i,o ) } )
+//   ::Connect( ::pWidget, "currentChanged(int)" , {|o,i| ::exeBlock( i,o ) } )
 
    ::setPosAndSize()
    IF ::visible

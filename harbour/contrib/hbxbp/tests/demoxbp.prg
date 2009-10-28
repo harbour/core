@@ -1471,12 +1471,11 @@ FUNCTION Build_Rtf( oWnd )
    oBtn:activate := {|| RtfApplyFont( oRtf ) }
 
 
-
    //-----------------------------------//
    oRTF := XbpRtf():new( oWnd )
    oRTF:create( , , { 10,10 }, { sz_[ 1 ]-23, sz_[ 2 ]-125 } )
-
    oRTF:setColorBG( GraMakeRGBColor( {255,255,200} ) )
+
    oRTF:setFontCompoundName( "12.Times" )
 
    //oRTF:change := {|| /*hb_outDebug( "change"*/ NIL ) }

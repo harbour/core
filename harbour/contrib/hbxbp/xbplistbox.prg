@@ -236,7 +236,16 @@ METHOD XbpListBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 /*----------------------------------------------------------------------*/
 
 METHOD XbpListBox:destroy()
+
+   ::disconnect()
+   ::oStrList:pPtr := 0
+   ::oStrModel:pPtr := 0
+
+   ::oStrList := NIL
+   ::oStrModel := NIL
+
    ::xbpWindow:destroy()
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/

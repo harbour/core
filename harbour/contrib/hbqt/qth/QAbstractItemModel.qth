@@ -67,6 +67,7 @@ CREATE CLASS HbDbfModel INHERIT QAbstractItemModel
    METHOD reset()                              
    METHOD index( nRow, nCol )          
    METHOD hbSetRowColumns( nRows, nCols )    
+   METHOD destroy()
 
    ENDCLASS
 
@@ -82,6 +83,9 @@ METHOD HbDbfModel:index( nRow, nCol )
 
 METHOD HbDbfModel:hbSetRowColumns( nRows, nCols )
    RETURN Qt_HbDbfModel_hbSetRowColumns( ::pPtr, nRows, nCols )
+
+METHOD HbDbfModel:destroy()
+   RETURN Qt_HbDbfModel_destroy()
 
 </SUBCLASS>
 
@@ -120,6 +124,11 @@ HB_FUNC( QT_HBDBFMODEL_INDEX )
 HB_FUNC( QT_HBDBFMODEL_HBSETROWCOLUMNS )
 {
    hbqt_par_HbDbfModel( 1 )->hbSetRowColumns( hb_parni( 2 ), hb_parni( 3 ) );
+}
+
+HB_FUNC( QT_HBDBFMODEL_DESTROY )
+{
+   hbqt_par_HbDbfModel( 1 )->destroy();
 }
 
 </CODE>

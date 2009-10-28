@@ -246,26 +246,20 @@ METHOD XbpTreeView:handleEvent( nEvent, mp1, mp2 )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpTreeView:destroy()
-   LOCAL i, s
+   LOCAL i
 
-   IF Len( ::aItems ) > 0
-      //aeval( ::aItems, {|o| o:destroy() } )
-      //aeval( ::aItems, {|o| xbp_debug( "mmmm" ), o:oWidget:pPtr := 0, o:oWidget:pPtr := NIL } )
-      ::oRootItem:oWidget:pPtr := 0
+   ::disconnect()
 
-xbp_debug( "llllllllllllll", len( ::aItems ) )
-      FOR i := 1 TO len( ::aItems )
-         s := __ObjGetClsName( ::aItems[ i ] )
-xbp_debug( i, s )
-         ::aItems[ i ]:oWidget:pPtr := 0
-         ::aItems[ i ]:oWidget:pPtr := NIL
-      NEXT
-      ::aItems := {}
-   ENDIF
-//   ::oRootItem:oWidget:pPtr := 0
-xbp_debug( ";;;;;;;;;;;;;")
-   ::oWidget:pPtr := 0
-   //::xbpWindow:destroy()
+   FOR i := len( ::aItems ) TO 1 step -1
+//xbp_debug( i, __ObjGetClsName( ::aItems[ i ] ) )
+      aeval( ::aItems[ i ]:aChilds, {|e,j| e := e, ::aItems[ i ]:aChilds[ j ] := NIL } )
+      ::aItems[ i ]:oWidget:pPtr := 0
+   NEXT
+   ::aItems := {}
+
+   //::oRootItem:oWidget:pPtr := 0  // No need as it is a pointer from Qt
+
+   ::xbpWindow:destroy()
 
    RETURN NIL
 

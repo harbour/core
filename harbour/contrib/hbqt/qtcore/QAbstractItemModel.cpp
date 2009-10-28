@@ -115,6 +115,11 @@ HB_FUNC( QT_HBDBFMODEL_HBSETROWCOLUMNS )
    hbqt_par_HbDbfModel( 1 )->hbSetRowColumns( hb_parni( 2 ), hb_parni( 3 ) );
 }
 
+HB_FUNC( QT_HBDBFMODEL_DESTROY )
+{
+   hbqt_par_HbDbfModel( 1 )->destroy();
+}
+
 
 QT_G_FUNC( release_QAbstractItemModel )
 {

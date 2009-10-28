@@ -80,6 +80,7 @@
 /*----------------------------------------------------------------------*/
 
 STATIC ts_mutex
+STATIC oDeskTop
 STATIC oApp
 
 THREAD STATIC aEventLoop
@@ -101,14 +102,18 @@ INIT PROCEDURE Qt_Start()
    ts_mutex  := hb_mutexCreate()
    oDummy    := XbpObject():new()
 
-//   qt_qapplication()
    oApp := QApplication():new()
+
    RETURN
 
 /*----------------------------------------------------------------------*/
 
 EXIT PROCEDURE Qt_End()
-   qt_qapplication_quit()
+
+   oDeskTop:pPtr := 0
+   oApp:quit()
+   oApp:pPtr := 0
+
    RETURN
 
 /*----------------------------------------------------------------------*/
@@ -220,8 +225,6 @@ FUNCTION SetAppFocus( oXbp )
 /*----------------------------------------------------------------------*/
 
 FUNCTION AppDesktop()
-
-   STATIC oDeskTop
 
    IF oDeskTop == NIL
       oDeskTop := XbpWindow():new()

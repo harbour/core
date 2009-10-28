@@ -265,6 +265,7 @@ EXPORTED:
    DATA     xDummy
 
    METHOD   connect()
+   METHOD   disConnect()
    METHOD   connectEvent()
    METHOD   connectWindowEvents()
    DATA     aConnections                          INIT  {}
@@ -361,6 +362,17 @@ METHOD XbpWindow:setQtProperty( cProperty )
    oVariant:setValue( cProperty )
 
    ::oWidget:setProperty( ::qtProperty, QT_PTROF( oVariant ) )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpWindow:disConnect()
+
+   IF len( ::aConnections ) > 0
+      aeval( ::aConnections, {|e_| Qt_DisConnect_Signal( e_[ 1 ], e_[ 2 ] ), e_[ 1 ] := NIL, e_[ 2 ] := NIL } )
+      ::aConnections := {}
+   ENDIF
 
    RETURN Self
 
@@ -680,12 +692,10 @@ METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
 METHOD XbpWindow:destroy()
 
-//xbp_Debug( "Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ) )
+xbp_Debug( ".   " )
+xbp_Debug( memory( 1001 ),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ) )
 
-   IF len( ::aConnections ) > 0
-      aeval( ::aConnections, {|e_| Qt_DisConnect_Signal( e_[ 1 ], e_[ 2 ] ) } )
-      ::aConnections := {}
-   ENDIF
+   ::disconnect()
 
    IF len( ::aEConnections ) > 0
       aeval( ::aEConnections, {|e_| Qt_DisConnect_Event( e_[ 1 ], e_[ 2 ] ) } )
@@ -700,7 +710,10 @@ METHOD XbpWindow:destroy()
 
    ::oWidget:pPtr := 0
 
-//xbp_Debug( "          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ) )
+xbp_Debug( memory( 1001 ),"          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ) )
+
+   ::oWidget := NIL
+   Self := NIL
 
    RETURN NIL
 
