@@ -2959,10 +2959,28 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd )
    HB_XWC_XLIB_LOCK
 
    hb_gt_xwc_UpdateChr( wnd );
+
    if( wnd->fDspTitle )
    {
       wnd->fDspTitle = FALSE;
-      XStoreName( wnd->dpy, wnd->window, wnd->szTitle ? wnd->szTitle : "" );
+      if( wnd->szTitle )
+      {
+         XTextProperty text;
+         char * pBuffer;
+         ULONG ulLen;
+
+         ulLen = hb_cdpStringInUTF8Length( wnd->hostCDP, FALSE, wnd->szTitle, strlen( wnd->szTitle ) );
+         pBuffer = ( char * ) hb_xgrab( ulLen + 1 );
+         hb_cdpStrnToUTF8( wnd->hostCDP, FALSE, wnd->szTitle, strlen( wnd->szTitle ), pBuffer );
+         text.value = ( unsigned char * ) pBuffer;
+         text.encoding = s_atomUTF8String;
+         text.format = 8;
+         text.nitems = strlen( pBuffer );
+         XSetWMName( wnd->dpy, wnd->window, &text );
+         hb_xfree( pBuffer );
+      }
+      else
+         XStoreName( wnd->dpy, wnd->window, "" );
    }
 
 #if 1
