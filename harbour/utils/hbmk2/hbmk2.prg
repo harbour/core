@@ -4119,10 +4119,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                /* We need a way to find and pick libraries according to linker rules. */
                IF lTargetUpToDate
                   FOR EACH tmp IN l_aLIBRAW
-                     IF ! Empty( tmp2 := FindLib( hbmk, tmp, hbmk[ _HBMK_aLIBPATH ], cLibExt ) )
+                     IF ! Empty( tmp2 := FindLib( hbmk, tmp, hbmk[ _HBMK_aLIBPATH ], cLibLibPrefix, cLibLibExt ) )
                         IF hbmk[ _HBMK_lDEBUGINC ]
                            hbmk_OutStd( hb_StrFormat( "debuginc: EXEDEPLIB %1$s", tmp2 ) )
                         ENDIF
+                        ? hb_FGetDateTime( tmp2, @tmp1 ), tmp2, tmp1, tTarget, tmp1 > tTarget
                         IF ! hb_FGetDateTime( tmp2, @tmp1 ) .OR. tmp1 > tTarget
                            lTargetUpToDate := .F.
                            EXIT
@@ -4968,7 +4969,7 @@ STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, aINCTRYPATH )
 
 /* Replicating logic used by compilers. */
 
-STATIC FUNCTION FindLib( hbmk, cLib, aLIBPATH, cLibExt )
+STATIC FUNCTION FindLib( hbmk, cLib, aLIBPATH, cLibPrefix, cLibExt )
    LOCAL cDir
    LOCAL tmp
 
@@ -4989,7 +4990,7 @@ STATIC FUNCTION FindLib( hbmk, cLib, aLIBPATH, cLibExt )
 
    /* Check in current dir */
    IF hbmk[ _HBMK_cCOMP ] $ "msvc|msvc64|msvcarm|bcc|pocc|pocc64|poccarm|watcom"
-      IF ! Empty( tmp := LibExists( hbmk, "", cLib, cLibExt ) )
+      IF ! Empty( tmp := LibExists( hbmk, "", cLib, cLibPrefix, cLibExt ) )
          RETURN tmp
       ENDIF
    ENDIF
@@ -4997,7 +4998,7 @@ STATIC FUNCTION FindLib( hbmk, cLib, aLIBPATH, cLibExt )
    /* Check in libpaths */
    FOR EACH cDir IN aLIBPATH
       IF ! Empty( cDir )
-         IF ! Empty( tmp := LibExists( hbmk, cDir, cLib, cLibExt ) )
+         IF ! Empty( tmp := LibExists( hbmk, cDir, cLib, cLibPrefix, cLibExt ) )
             RETURN tmp
          ENDIF
       ENDIF
@@ -5008,7 +5009,7 @@ STATIC FUNCTION FindLib( hbmk, cLib, aLIBPATH, cLibExt )
    IF hbmk[ _HBMK_cCOMP ] $ "msvc|msvc64|msvcarm"
       FOR EACH cDir IN hb_ATokens( GetEnv( "LIB" ), hb_osPathListSeparator(), .T., .T. )
          IF ! Empty( cDir )
-            IF ! Empty( tmp := LibExists( hbmk, cDir, cLib, cLibExt ) )
+            IF ! Empty( tmp := LibExists( hbmk, cDir, cLib, cLibPrefix, cLibExt ) )
                RETURN tmp
             ENDIF
          ENDIF
@@ -5018,13 +5019,13 @@ STATIC FUNCTION FindLib( hbmk, cLib, aLIBPATH, cLibExt )
 
    RETURN NIL
 
-STATIC FUNCTION LibExists( hbmk, cDir, cLib, cLibExt )
+STATIC FUNCTION LibExists( hbmk, cDir, cLib, cLibPrefix, cLibExt )
    LOCAL tmp
 
    cDir := DirAddPathSep( PathSepToSelf( cDir ) )
 
    DO CASE
-   CASE hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin|gccomf" .AND. hbmk[ _HBMK_cPLAT ] $ "win|wce"
+   CASE hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin" .AND. hbmk[ _HBMK_cPLAT ] $ "win|wce"
       /* NOTE: ld/gcc option -dll-search-prefix isn't taken into account here,
                So, '<prefix>xxx.dll' format libs won't be found by hbmk. */
       DO CASE
@@ -5047,7 +5048,7 @@ STATIC FUNCTION LibExists( hbmk, cDir, cLib, cLibExt )
       ENDCASE
    OTHERWISE
       DO CASE
-      CASE                           hb_FileExists( tmp := cDir +         FN_ExtSet( cLib, cLibExt )  ) ; RETURN tmp
+      CASE                           hb_FileExists( tmp := cDir + cLibPrefix + FN_ExtSet( cLib, cLibExt ) ) ; RETURN tmp
       ENDCASE
    ENDCASE
 
