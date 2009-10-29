@@ -99,10 +99,12 @@ THREAD STATIC oEventLoop
 
 INIT PROCEDURE Qt_Start()
 
+   Qt_MutexCreate()
+
    ts_mutex  := hb_mutexCreate()
    oDummy    := XbpObject():new()
 
-   oApp := QApplication():new()
+   oApp      := QApplication():new()
 
    RETURN
 
@@ -110,9 +112,14 @@ INIT PROCEDURE Qt_Start()
 
 EXIT PROCEDURE Qt_End()
 
+   Qt_MutexDestroy()
+
+   oDummy        := NIL
+   oAppWindow    := NIL
    oDeskTop:pPtr := 0
+
    oApp:quit()
-   oApp:pPtr := 0
+   oApp:pPtr     := 0
 
    RETURN
 

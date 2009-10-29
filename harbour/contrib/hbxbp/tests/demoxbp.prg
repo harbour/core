@@ -101,7 +101,7 @@ PROCEDURE Main()
 
 FUNCTION _BuildADialog()
 
-   hb_gtReload( 'GUI' )
+//   hb_gtReload( 'GUI' )
    BuildADialog()
 
    RETURN NIL
@@ -215,9 +215,12 @@ xbp_debug( ".............................. WOW .................................
 
    /* Very important - destroy resources */
    oDlg:destroy()
-   oDlg := NIL
+
 xbp_debug( "------------------------------ WOW ---------------------------------" )
 xbp_debug( ".  " )
+   oHTM := NIL
+   oMLE := NIL
+   //oDlg := NIL
    RETURN
 
 /*----------------------------------------------------------------------*/

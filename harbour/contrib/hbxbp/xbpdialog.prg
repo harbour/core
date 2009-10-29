@@ -148,8 +148,6 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    SetAppWindow( Self )
 
-   QT_MUTEXCREATE()        //-------------//
-
    /* Initialize Qt's event stacks */
    QT_SetEventSlots()
    QT_SetEventFilter()
@@ -158,11 +156,9 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    InitializeEventBuffer()
 
    /* Install Event Loop per Dialog Basis */
-   /*               Limitng               */
    ::oEventLoop := QEventLoop():new( ::pWidget )
    SetEventLoop( ::oEventLoop )
 
-   #if 1
    /* Instal Event Filter */
    ::oWidget:installEventFilter( SetEventFilter() )
 
@@ -171,7 +167,7 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::connectEvent( ::pWidget, QEvent_Close           , {|o,e| ::exeBlock( QEvent_Close           , e, o ) } )
    ::connectEvent( ::pWidget, QEvent_WindowActivate  , {|o,e| ::exeBlock( QEvent_WindowActivate  , e, o ) } )
    ::connectEvent( ::pWidget, QEvent_WindowDeactivate, {|o,e| ::exeBlock( QEvent_WindowDeactivate, e, o ) } )
-   #endif
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -218,12 +214,19 @@ METHOD XbpDialog:destroy()
 
    SetEventLoop( NIL )
    ::oEventLoop:exit( 0 )
-
    ::oEventLoop:pPtr := 0
-   ::oMenu           := NIL
-   ::drawingArea     := NIL
+
+   SetAppWindow( XbpObject():new() )
+
+   ::oMenu       := NIL
+   ::drawingArea := NIL
 
    ::xbpWindow:destroy()
+
+   Qt_MyMainWindow_destroy( QT_PTROF( ::oWidget ) )
+
+   ::oWidget     := NIL
+   Self          := NIL
 
    RETURN nil
 

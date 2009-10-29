@@ -200,6 +200,11 @@ METHOD XbpToolbar:destroy()
          IF ::aItems[ i,2 ]:hotImage <> NIL
             //Win_DeleteObject( ::aItems[ i,2 ]:hotImage )
          ENDIF
+
+//         QT_DISCONNECT_SIGNAL( QT_PTROF( ::aMenuItems[ i, 5 ] ), "triggered(bool)" )
+//         QT_DISCONNECT_SIGNAL( QT_PTROF( ::aMenuItems[ i, 5 ] ), "hovered()"       )
+         ::aItems[ i,2 ]:oAction:pPtr := 0
+         ::aItems[ i,2 ]:oAction := NIL
       NEXT
    ENDIF
 
@@ -435,3 +440,4 @@ METHOD XbpToolbarButton:new( cCaption, nStyle, cKey )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+

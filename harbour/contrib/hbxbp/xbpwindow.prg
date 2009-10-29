@@ -265,7 +265,6 @@ EXPORTED:
    DATA     xDummy
 
    METHOD   connect()
-   METHOD   disConnect()
    METHOD   connectEvent()
    METHOD   connectWindowEvents()
    DATA     aConnections                          INIT  {}
@@ -275,6 +274,7 @@ EXPORTED:
 
    DATA     lTrack                                INIT  .f.
 
+   METHOD   disConnect()
    METHOD   clearSlots()
    DATA     aPP
 
@@ -313,14 +313,12 @@ METHOD XbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    DEFAULT oOwner      TO ::oOwner
    DEFAULT aPos        TO ::aPos
    DEFAULT aSize       TO ::aSize
-//   DEFAULT aPresParams TO {}
    DEFAULT lVisible    TO ::visible
 
    ::oParent     := oParent
    ::oOwner      := oOwner
    ::aPos        := aPos
    ::aSize       := aSize
-//   ::aPresParams := aPresParams
    ::visible     := lVisible
 
    ::XbpPartHandler:create( oParent, oOwner )
@@ -698,6 +696,7 @@ METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:destroy()
+   LOCAL cXbp := __ObjGetClsName( self )
 
 xbp_Debug( ".   " )
 xbp_Debug( memory( 1001 ),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ) )
@@ -716,27 +715,18 @@ xbp_Debug( memory( 1001 ),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(
       ::aChildren := {}
    ENDIF
 
-   ::oWidget:pPtr := 0
+   IF cXbp != "XBPDIALOG"
+      ::oWidget:pPtr := 0
+      ::oWidget := NIL
+   ENDIF
+   ::XbpPartHandler:destroy()
    ::clearSlots()
-   ::xbpPartHandler:destroy()
 
 xbp_Debug( memory( 1001 ),"          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ) )
 
-   ::oWidget      := NIL
-   Self           := NIL
+//   Self           := NIL
 
    RETURN NIL
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpWindow:disConnect()
-
-   IF len( ::aConnections ) > 0
-      aeval( ::aConnections, {|e_| Qt_DisConnect_Signal( e_[ 1 ], e_[ 2 ] ), e_[ 1 ] := NIL, e_[ 2 ] := NIL } )
-      ::aConnections := {}
-   ENDIF
-
-   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -782,9 +772,19 @@ METHOD XbpWindow:clearSlots()
          ::aPresParams[ i,1 ] := NIL
          ::aPresParams[ i,2 ] := NIL
          ::aPresParams[ i ]   := NIL
-   //xbp_debug( i, "--------- aPresParam -----------" )
       NEXT
-      ::aPresParams           := NIL
+   ENDIF
+   ::aPresParams           := NIL
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpWindow:disconnect()
+
+   IF len( ::aConnections ) > 0
+      aeval( ::aConnections, {|e_| Qt_DisConnect_Signal( e_[ 1 ], e_[ 2 ] ), e_[ 1 ] := NIL, e_[ 2 ] := NIL } )
+      ::aConnections := {}
    ENDIF
 
    RETURN Self

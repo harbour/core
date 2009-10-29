@@ -122,9 +122,6 @@ METHOD XbpStatusBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
       RETURN Self
    ENDIF
 
-   ::oWidget := QToolBar():new( QT_PTROF( oPar:oWidget ) )
-   oPar:oWidget:addToolBar_1( ::pWidget )
-
    ::oWidget := QStatusBar():new( QT_PTROF( oPar:oWidget ) )
    oPar:oWidget:setStatusBar( ::pWidget )
 
@@ -165,6 +162,8 @@ METHOD XbpStatusBar:destroy()
          ::aItems[ i ] := NIL
       NEXT
    ENDIF
+
+   ::oParent := NIL
 
    ::xbpWindow:destroy()
 

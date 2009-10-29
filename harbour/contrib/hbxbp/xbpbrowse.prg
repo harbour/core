@@ -367,10 +367,10 @@ PROTECTED:
    DATA     oDbfModel
    DATA     oModelIndex                           INIT      QModelIndex()
    DATA     oVHeaderView
-   DATA     oHeaderView                       INIT      QHeaderView()
-   DATA     oVScrollBar                        INIT      QScrollBar()
-   DATA     oHScrollBar                        INIT      QScrollBar()
-   DATA     oViewport                       INIT      QWidget()
+   DATA     oHeaderView                           INIT      QHeaderView()
+   DATA     oVScrollBar                           INIT      QScrollBar()
+   DATA     oHScrollBar                           INIT      QScrollBar()
+   DATA     oViewport                             INIT      QWidget()
    DATA     oFont                                 INIT      QFont()
    DATA     pCurIndex
 
@@ -712,42 +712,44 @@ METHOD XbpBrowse:destroy()
    ::sl_xbeBRW_Navigate       := NIL
    ::sl_xbeBRW_Pan            := NIL
 
-
    FOR i := 1 TO ::colCount
       ::columns[ i ]:destroy()
       ::columns[ i ] := NIL
    NEXT
 
-   ::oHScrollBar:pPtr := 0
-   ::oVScrollBar:pPtr := 0
+   IF !empty( ::oModelIndex )
+      ::oModelIndex:pPtr      := 0
+   ENDIF
+
+   ::oHScrollBar:pPtr         := 0
+   ::oVScrollBar:pPtr         := 0
 
    //::oLeftView:destroy()
    ::oLeftDbfModel:destroy()
-   ::oLeftVHeaderView:pPtr := 0
-   ::oLeftHeaderView:pPtr  := 0
-   ::oLeftFooterView:pPtr  := 0
+   ::oLeftVHeaderView:pPtr    := 0
+   ::oLeftHeaderView:pPtr     := 0
+   ::oLeftFooterView:pPtr     := 0
    ::oLeftFooterModel:destroy()
 
    //::oRightView:destroy()
-   ::oRightHeaderView:pPtr  := 0
+   ::oRightHeaderView:pPtr    := 0
    ::oRightDbfModel:destroy()
-   ::oRightFooterView:pPtr  := 0
+   ::oRightFooterView:pPtr    := 0
    ::oRightFooterModel:destroy()
 
    //::oTableView:destroy()
-   ::oVHeaderView:pPtr := 0
+   ::oVHeaderView:pPtr        := 0
    ::oDbfModel:destroy()
 
-   ::oFooterView:pPtr := 0
+   ::oFooterView:pPtr         := 0
    ::oFooterModel:destroy()
 
-   ::oGridLayout:pPtr := 0
+   ::oGridLayout:pPtr         := 0
 
    ::oGridLayout              := NIL
    ::oFooterModel             := NIL
    ::oFooterView              := NIL
 
-   ::clearSlots()
    ::xbpWindow:destroy()
 
    RETURN nil

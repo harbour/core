@@ -218,14 +218,18 @@ METHOD xbpMenuBar:configure( oParent, aPresParams, lVisible )
 /*----------------------------------------------------------------------*/
 
 METHOD xbpMenuBar:destroy()
+   LOCAL i
 
-   #if 0
-   IF !empty( ::oWidget )
-      ::DelAllItems()
-      ::oWidget:close()
-      ::oWidget := NIL
-   ENDIF
-   #endif
+   ::disconnect()
+
+   FOR i := 1 TO len( ::aMenuItems )
+      IF !empty( ::aMenuItems[ i,5 ] )
+         QT_DISCONNECT_SIGNAL( QT_PTROF( ::aMenuItems[ i, 5 ] ), "triggered(bool)" )
+         QT_DISCONNECT_SIGNAL( QT_PTROF( ::aMenuItems[ i, 5 ] ), "hovered()"       )
+         ::aMenuItems[ i, 5 ]:pPtr := 0
+         ::aMenuItems[ i, 5 ] := NIL
+      ENDIF
+   NEXT
 
    ::xbpWindow:destroy()
 
@@ -247,23 +251,25 @@ METHOD xbpMenuBar:delAllItems()
 /*----------------------------------------------------------------------*/
 
 METHOD xbpMenuBar:delItem( nItemIndex )
-   LOCAL lResult:= .F.
+   LOCAL lResult := .T.
+   LOCAL oAction
 
-   HB_SYMBOL_UNUSED( nItemIndex )
+//xbp_debug( nItemIndex, len( ::aMenuItems ), len( ::aMenuItems[ nItemIndex ] ) )
 
-   #if 0
    IF nItemIndex > 0 .AND. nItemIndex <= ::numItems()
-      IF ::aMenuItems[ nItemIndex,QTC_MENU_TYPE ] == QMF_POPUP
-         ::aMenuItems[ nItemIndex,QTC_MENU_MENUOBJ ]:Destroy()
-      ENDIF
-
-      IF ( lResult:= Qtc_DeleteMenu( ::hMenu, nItemIndex-1, QMF_BYPOSITION ) ) /* Remember ZERO base */
-         ADEL( ::aMenuItems, nItemIndex )
-         ASIZE( ::aMenuItems, LEN( ::aMenuItems ) - 1 )
+      IF ::aMenuItems[ nItemIndex, 1 ] == QMF_POPUP
+//xbp_debug( valtype( ::aMenuItems[ nItemIndex, 4 ] ), __ObjGetClsName( ::aMenuItems[ nItemIndex, 4 ] ) )
+         //::aMenuItems[ nItemIndex, 4 ]:destroy()
       ELSE
+         oAction := ::aMenuItems[ nItemIndex, 5 ]
+         QT_DISCONNECT_SIGNAL( QT_PTROF( oAction ), "triggered(bool)" )
+         QT_DISCONNECT_SIGNAL( QT_PTROF( oAction ), "hovered()"       )
+         oAction:pPtr := 0
       ENDIF
+//      ADEL( ::aMenuItems, nItemIndex )
+//      ASIZE( ::aMenuItems, LEN( ::aMenuItems ) - 1 )
    ENDIF
-   #endif
+
    RETURN lResult
 
 /*----------------------------------------------------------------------*/
@@ -290,7 +296,8 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
       ELSE
          oAction:pPtr := ::oWidget:addSeparator()
       ENDIF
-      aItem := { QMF_SEPARATOR, 0, 0, NIL, NIL, oAction }
+      //aItem := { QMF_SEPARATOR, 0, 0, NIL, NIL, oAction }
+      aItem := { QMF_SEPARATOR, 0, 0, NIL, oAction }
 
    CASE cType == "C"
       oAction := QAction():new( QT_PTROF( ::oWidget ) )
@@ -351,7 +358,7 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
 
    CASE cType == "O"
       cCaption := IF( bAction == NIL, xCaption:title, bAction )
-      aItem    := { QMF_POPUP, xCaption:oWidget, cCaption, xCaption }
+      aItem    := { QMF_POPUP, xCaption:oWidget, cCaption, xCaption, NIL }
       IF hb_isChar( cCaption )
          xCaption:oWidget:setTitle( strtran( cCaption, '~','&' ) )
       ENDIF
@@ -363,7 +370,7 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
 
    IF     nMode == QTC_MENUITEM_ADD
       aadd( ::aMenuItems, aItem )
-      aadd( ::aOrgItems , { xCaption, bAction, nStyle, nAttrb } )
+      aadd( ::aOrgItems , { xCaption, bAction, nStyle, nAttrb, NIL } )
 
    ELSEIF nMode == QTC_MENUITEM_INSERT
       asize( ::aMenuItems, ::numItems + 1 )
@@ -371,7 +378,7 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
       ains( ::aMenuItems, nPos )
       ains( ::aOrgItems, nPos )
       ::aMenuItems[ nPos ] := aItem
-      ::aOrgItems[ nPos ] := { xCaption, bAction, nStyle, nAttrb }
+      ::aOrgItems[ nPos ] := { xCaption, bAction, nStyle, nAttrb, NIL }
 
    ELSEIF nMode == QTC_MENUITEM_REPLACE
 

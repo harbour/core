@@ -1697,11 +1697,6 @@ HB_FUNC( QT_CONNECT_SIGNAL )
    }
 }
 
-#if 0
-bool connect ( const QObject * sender, const char * signal, const char * method, Qt::ConnectionType type = Qt::AutoConnection ) const
-bool disconnect (                      const char * signal = 0, const QObject * receiver = 0, const char * method = 0 )
-bool disconnect ( const QObject * receiver, const char * method = 0 )
-#endif
 /*
  * harbour function to disconnect signals
  */
@@ -1722,7 +1717,6 @@ HB_FUNC( QT_DISCONNECT_SIGNAL )
          s_s->listBlock[ i - 1 ] = NULL;
          s_s->listActv[ i - 1 ] = false;
          bFreed = true;
-
          object->disconnect( event );
 #if defined(__debug__)
 hb_snprintf( str, sizeof( str ), "QT_DISCONNECT_SIGNAL: %s", event ); OutputDebugString( str );
@@ -2017,9 +2011,8 @@ HbDbfModel::HbDbfModel( PHB_ITEM pBlock ) : QAbstractItemModel()
 }
 HbDbfModel::~HbDbfModel( void )
 {
-hb_snprintf( str, sizeof( str ), "HbDbfModel::~HbDbfModel() 0" );  OutputDebugString( str );
    hb_itemRelease( block );
-hb_snprintf( str, sizeof( str ), "HbDbfModel::~HbDbfModel() 1" );  OutputDebugString( str );
+   destroy();
 }
 Qt::ItemFlags HbDbfModel::flags( const QModelIndex & index ) const
 {
@@ -2200,10 +2193,7 @@ void HbDbfModel::hbSetRowColumns( int rows, int cols )
 
 void HbDbfModel::destroy()
 {
-hb_snprintf( str, sizeof( str ), "HbDbfModel::destroy() 0" );  OutputDebugString( str );
    hb_itemRelease( block );
-hb_snprintf( str, sizeof( str ), "HbDbfModel::destroy() 1" );  OutputDebugString( str );
-   //HbDbfModel::~HbDbfModel();
 }
 
 /*----------------------------------------------------------------------*/
@@ -2230,6 +2220,8 @@ MyMainWindow::MyMainWindow( PHB_ITEM pBlock, int iThreadID )
 }
 MyMainWindow::~MyMainWindow( void )
 {
+   delete painter;
+   hb_itemRelease( block );
    destroy();
 }
 void MyMainWindow::paintEvent( QPaintEvent * event )
@@ -2430,10 +2422,12 @@ HB_FUNC( QT_MYMAINWINDOW )
    PHB_ITEM bBlock = hb_itemNew( ( PHB_ITEM ) hb_param( 1, HB_IT_BLOCK ) );
    hb_retptr( ( MyMainWindow * ) new MyMainWindow( bBlock, hb_parni( 2 ) ) );
 }
+
 HB_FUNC( QT_MYMAINWINDOW_DESTROY )
 {
-   hb_itemRelease( hbqt_par_MyMainWindow( 1 )->block );
+   hbqt_par_MyMainWindow( 1 )->~MyMainWindow();
 }
+
 HB_FUNC( QT_MUTEXCREATE )
 {
    if( s_mutex == NULL )
@@ -2441,6 +2435,16 @@ HB_FUNC( QT_MUTEXCREATE )
       s_mutex = hb_threadMutexCreate( FALSE );
    }
 }
+
+HB_FUNC( QT_MUTEXDESTROY )
+{
+   if( s_mutex != NULL )
+   {
+      hb_itemRelease( s_mutex );
+      s_mutex = NULL;
+   }
+}
+
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
