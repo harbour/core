@@ -7,6 +7,9 @@ with some references to Clipper and other compatible compilers like xBase++,
 CLIP, FlagShip.
 Many thanks to Pritpal and Viktor for updating this text.
 I hope that it will be updated in the future also by xHarbour developers,
+It describes status of both compiler at the end of October 2009:
+   Harbour 2.0.0 beta3 (revision 12788)
+   xHarbour 1.2.1 (revision 6629)
 
 Przemek,
 
@@ -1887,6 +1890,11 @@ single line in RDD code it works for all core RDDs and also 3-rd
 party ones if they use Harbour RDD IO API (hb_file*() functions).
 Additionally client and server code in HBNETIO are fully MT safe
 so can be used in MT programs without any problems.
+Harbour has also similar library called HBMEMIO which allows to
+use native RDDs with pseudo files stored in memory instead of real
+files.
+This feature was recently copied from Harbour to xHarbour but I
+haven't tested if it works or not. For sure RE*DBF RDDs still exists.
 
 In both compilers maximal file size for tables, memos and indexes is
 limited only by OS and file format structures. Neither Harbour nor
