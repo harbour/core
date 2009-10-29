@@ -518,7 +518,8 @@ char * hb_timeStampFormat( char * szBuffer,
    hb_dateDecStr( szDate, lJulian );
    hb_dateFormat( szDate, szBuffer, szDateFormat );
    szTimeBuffer = szBuffer + strlen( szBuffer );
-   *szTimeBuffer++ = ' ';
+   if( *szBuffer )
+      *szTimeBuffer++ = ' ';
    hb_timeFormat( szTimeBuffer, szTimeFormat, lMilliSec );
 
    return szBuffer;
