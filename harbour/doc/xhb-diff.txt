@@ -1268,8 +1268,8 @@ does not define all classes as "MODULE FRIENDLY".
 
 ###    OOP AND CLASS OBJECT/CLASS MESSAGES    ###
 =================================================
-Neither Harbour nor xHarbour supports class objects and class messages
-and instance variables like Class(y) does.
+Neither Harbour nor xHarbour supports class objects, class messages
+and class instance variables like Class(y) does.
 
 But both compilers support shared variables which can be shared with
 all object of the same class or shared variables which can be
@@ -1553,7 +1553,7 @@ for this feature and why it was introduced. I do not even know if it has
 been finished or not and some modifications/extensions are planned.
 After few tests I can only say that it does not work correctly on case
 sensitive file systems so probably it's not widely used functionality
-if no one reported the problem so it has not been not fixed.
+if no one reported the problem so it has not been fixed.
 If xHarbour developers can make some short description for this feature
 then I'll add it to this text.
 
