@@ -135,7 +135,7 @@ class HbDbfModel : public QAbstractItemModel
 
 public:
    HbDbfModel( PHB_ITEM pBlock );
-   ~HbDbfModel();
+   virtual ~HbDbfModel( void );
 
    PHB_ITEM block;
    int      iRows;

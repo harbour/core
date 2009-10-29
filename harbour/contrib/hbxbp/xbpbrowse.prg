@@ -175,17 +175,17 @@ PROTECTED:
 
    VAR cColorSpec             AS CHARACTER                  // 10. Color table for the TBrowse display
 
-   VAR bSkipBlock             AS BLOCK            INIT {|| NIL } // 11. Code block used to reposition data source
-   VAR bGoTopBlock            AS BLOCK            INIT {|| NIL } // 12. Code block executed by TBrowse:goTop()
-   VAR bGoBottomBlock         AS BLOCK            INIT {|| NIL } // 13. Code block executed by TBrowse:goBottom()
-   VAR bFirstPosBlock         AS BLOCK            INIT {|| NIL }
-   VAR bLastPosBlock          AS BLOCK            INIT {|| NIL }
-   VAR bPhyPosBlock           AS BLOCK            INIT {|| NIL }
-   VAR bPosBlock              AS BLOCK            INIT {|| NIL }
-   VAR bGoPosBlock            AS BLOCK            INIT {|| NIL }
-   VAR bHitBottomBlock        AS BLOCK            INIT {|| NIL }
-   VAR bHitTopBlock           AS BLOCK            INIT {|| NIL }
-   VAR bStableBlock           AS BLOCK            INIT {|| NIL }
+   VAR bSkipBlock                                 INIT {|| NIL } // 11. Code block used to reposition data source
+   VAR bGoTopBlock                                INIT {|| NIL } // 12. Code block executed by TBrowse:goTop()
+   VAR bGoBottomBlock                             INIT {|| NIL } // 13. Code block executed by TBrowse:goBottom()
+   VAR bFirstPosBlock                             INIT {|| NIL }
+   VAR bLastPosBlock                              INIT {|| NIL }
+   VAR bPhyPosBlock                               INIT {|| NIL }
+   VAR bPosBlock                                  INIT {|| NIL }
+   VAR bGoPosBlock                                INIT {|| NIL }
+   VAR bHitBottomBlock                            INIT {|| NIL }
+   VAR bHitTopBlock                               INIT {|| NIL }
+   VAR bStableBlock                               INIT {|| NIL }
 
    VAR dummy                                      INIT ""   // 14. ??? In Clipper it's character variable with internal C level structure containing browse data
    VAR cBorder                AS CHARACTER                  // 15. character value defining characters drawn around object
@@ -454,6 +454,7 @@ EXPORTED:
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
+
 /* Just to retain TBrowse functionality: in the future */
 METHOD new( nTop, nLeft, nBottom, nRight ) CLASS XbpBrowse
 
@@ -686,38 +687,67 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpBrowse:destroy()
+   LOCAL i
 
    ::disconnect()
+
+   ::bSkipBlock               := NIL
+   ::bGoTopBlock              := NIL
+   ::bGoBottomBlock           := NIL
+   ::bFirstPosBlock           := NIL
+   ::bLastPosBlock            := NIL
+   ::bPhyPosBlock             := NIL
+   ::bPosBlock                := NIL
+   ::bGoPosBlock              := NIL
+   ::bHitBottomBlock          := NIL
+   ::bHitTopBlock             := NIL
+   ::bStableBlock             := NIL
+
+   ::sl_xbeBRW_FooterRbDown   := NIL
+   ::sl_xbeBRW_HeaderRbDown   := NIL
+   ::sl_xbeBRW_ItemMarked     := NIL
+   ::sl_xbeBRW_ItemRbDown     := NIL
+   ::sl_xbeBRW_ItemSelected   := NIL
+   ::sl_xbeBRW_ForceStable    := NIL
+   ::sl_xbeBRW_Navigate       := NIL
+   ::sl_xbeBRW_Pan            := NIL
+
+
+   FOR i := 1 TO ::colCount
+      ::columns[ i ]:destroy()
+      ::columns[ i ] := NIL
+   NEXT
 
    ::oHScrollBar:pPtr := 0
    ::oVScrollBar:pPtr := 0
 
    //::oLeftView:destroy()
+   ::oLeftDbfModel:destroy()
    ::oLeftVHeaderView:pPtr := 0
    ::oLeftHeaderView:pPtr  := 0
-//   ::oLeftDbfModel:destroy()
    ::oLeftFooterView:pPtr  := 0
-//   ::oLeftFooterModel:destroy()
+   ::oLeftFooterModel:destroy()
 
    //::oRightView:destroy()
    ::oRightHeaderView:pPtr  := 0
-//   ::oRightDbfModel:destroy()
+   ::oRightDbfModel:destroy()
    ::oRightFooterView:pPtr  := 0
-//   ::oRightFooterModel:destroy()
+   ::oRightFooterModel:destroy()
 
    //::oTableView:destroy()
    ::oVHeaderView:pPtr := 0
-//   ::oDbfModel:destroy()
+   ::oDbfModel:destroy()
 
    ::oFooterView:pPtr := 0
-//   ::oFooterModel:destroy()
+   ::oFooterModel:destroy()
 
    ::oGridLayout:pPtr := 0
 
-   ::oGridLayout  := NIL
-   ::oFooterModel := NIL
-   ::oFooterView  := NIL
+   ::oGridLayout              := NIL
+   ::oFooterModel             := NIL
+   ::oFooterView              := NIL
 
+   ::clearSlots()
    ::xbpWindow:destroy()
 
    RETURN nil
@@ -4003,6 +4033,7 @@ CREATE CLASS XbpColumn  INHERIT XbpWindow, XbpDataRef
    DATA   type                                    INIT      XBPCOL_TYPE_TEXT
    DATA   blankVariable
 
+   METHOD destroy()
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -4156,22 +4187,30 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS XbpCo
    ::valtype       := valtype( ::setData() )
    ::blankVariable := IF( ::valtype == "N", 0, IF( ::valtype == "D", ctod( "" ), IF( ::valtype == "L", .f., "" ) ) )
 
-   ::configure( aPresParams )
+   ::configure()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD configure( aPresParams ) CLASS XbpColumn
-   LOCAL i, n
+METHOD destroy() CLASS XbpColumn
 
-   /* Only pres parameters are to be adjusted again */
+   ::bPreBlock       := NIL
+   ::bPostBlock      := NIL
+   ::bBlock          := NIL
+   ::bColorBlock     := NIL
 
-   IF !empty( aPresParams )
-      FOR i := 1 TO len( aPresParams )
-         Xbp_SetPresParam( ::aPresParams, aPresParams[ i,1 ], aPresParams[ i,2 ] )
-      NEXT
-   ENDIF
+   ::clearSlots()
+   ::xbpPartHandler:destroy()
+
+   //::xbpWindow:destroy()
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+METHOD configure() CLASS XbpColumn
+   LOCAL n
 
    /*  Heading Area */
    IF ( n := ascan( ::aPresParams, {|e_| e_[ 1 ] == XBP_PP_COL_HA_CAPTION } ) ) > 0

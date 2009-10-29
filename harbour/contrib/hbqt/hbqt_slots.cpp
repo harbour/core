@@ -1697,12 +1697,18 @@ HB_FUNC( QT_CONNECT_SIGNAL )
    }
 }
 
+#if 0
+bool connect ( const QObject * sender, const char * signal, const char * method, Qt::ConnectionType type = Qt::AutoConnection ) const
+bool disconnect (                      const char * signal = 0, const QObject * receiver = 0, const char * method = 0 )
+bool disconnect ( const QObject * receiver, const char * method = 0 )
+#endif
 /*
  * harbour function to disconnect signals
  */
 HB_FUNC( QT_DISCONNECT_SIGNAL )
 {
    QObject * object = ( QObject* ) hbqt_gcpointer( 1 );
+   bool bFreed = false;
 
    if( object )
    {
@@ -1715,8 +1721,15 @@ HB_FUNC( QT_DISCONNECT_SIGNAL )
          hb_itemRelease( s_s->listBlock.at( i - 1 ) );
          s_s->listBlock[ i - 1 ] = NULL;
          s_s->listActv[ i - 1 ] = false;
+         bFreed = true;
+
+         object->disconnect( event );
+#if defined(__debug__)
+hb_snprintf( str, sizeof( str ), "QT_DISCONNECT_SIGNAL: %s", event ); OutputDebugString( str );
+#endif
       }
    }
+   hb_retl( bFreed );
 }
 
 
@@ -1857,7 +1870,7 @@ HB_FUNC( QT_DISCONNECT_EVENT )
    int       type   = hb_parni( 2 );
    bool      bRet   = false;
    Events  * s_e    = qt_getEventFilter();
-   QObject * object    = ( QObject* ) hbqt_gcpointer( 1 );
+   QObject * object = ( QObject* ) hbqt_gcpointer( 1 );
 
    char prop[ 10 ];
    hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
@@ -1869,6 +1882,9 @@ HB_FUNC( QT_DISCONNECT_EVENT )
       s_e->listBlock[ i - 1 ] = NULL;
       s_e->listActv[ i - 1 ] = false;
       bRet = true;
+#if defined(__debug__)
+hb_snprintf( str, sizeof( str ), "QT_DISCONNECT_EVENT: %i", type ); OutputDebugString( str );
+#endif
    }
    hb_retl( bRet );
 }
@@ -1999,9 +2015,11 @@ HbDbfModel::HbDbfModel( PHB_ITEM pBlock ) : QAbstractItemModel()
    iRows = 0;
    iCols = 0;
 }
-HbDbfModel::~HbDbfModel()
+HbDbfModel::~HbDbfModel( void )
 {
+hb_snprintf( str, sizeof( str ), "HbDbfModel::~HbDbfModel() 0" );  OutputDebugString( str );
    hb_itemRelease( block );
+hb_snprintf( str, sizeof( str ), "HbDbfModel::~HbDbfModel() 1" );  OutputDebugString( str );
 }
 Qt::ItemFlags HbDbfModel::flags( const QModelIndex & index ) const
 {
@@ -2182,7 +2200,9 @@ void HbDbfModel::hbSetRowColumns( int rows, int cols )
 
 void HbDbfModel::destroy()
 {
+hb_snprintf( str, sizeof( str ), "HbDbfModel::destroy() 0" );  OutputDebugString( str );
    hb_itemRelease( block );
+hb_snprintf( str, sizeof( str ), "HbDbfModel::destroy() 1" );  OutputDebugString( str );
    //HbDbfModel::~HbDbfModel();
 }
 

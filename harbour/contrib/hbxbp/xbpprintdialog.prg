@@ -92,7 +92,7 @@ CLASS XbpPrintDialog INHERIT XbpWindow
    METHOD   new()
    METHOD   create()
    //METHOD   configure()                           VIRTUAL
-   //METHOD   destroy()                             VIRTUAL
+   METHOD   destroy()
    METHOD   display( oXbpPrinter )
 
    DATA     pPrinter                               PROTECTED
@@ -116,8 +116,21 @@ METHOD XbpPrintDialog:create( oParent, oOwner )
 
    ::connect( ::pWidget, "accepted(QPrinter)", {|o,p| o := o, ::pPrinter := p } )
 
-   ::addChild( self )
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpPrintDialog:destroy()
+
+   IF len( ::aConnections ) > 0
+      aeval( ::aConnections, {|e_| Qt_DisConnect_Signal( e_[ 1 ], e_[ 2 ] ), e_[ 1 ] := NIL, e_[ 2 ] := NIL } )
+      ::aConnections := {}
+   ENDIF
+
+   ::oWidget:pPtr := 0
+   ::oWidget := NIL
+
+   RETURN nil
 
 /*----------------------------------------------------------------------*/
 
@@ -173,6 +186,8 @@ METHOD XbpPrintDialog:display( oXbpPrinter )
 
       ::pageRangeSelected := { oXbpPrinter:oWidget:fromPage(), oXbpPrinter:oWidget:toPage() }
    ENDIF
+
+   ::destroy()
 
    RETURN oXbpPrinter
 

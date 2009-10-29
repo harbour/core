@@ -140,12 +140,13 @@ METHOD configure( oParent, oOwner ) CLASS XbpPartHandler
 
 METHOD destroy() CLASS XbpPartHandler
 
-   ::hChildren  := NIL
+   ::aChildren  := NIL
    ::nNameId    := NIL
    ::oParent    := NIL
    ::oOwner     := NIL
+   ::nStatus    := NIL
 
-   RETURN Self
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 

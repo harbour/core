@@ -79,8 +79,8 @@
 
 /*----------------------------------------------------------------------*/
 
-STATIC ts_mutex
 STATIC oDeskTop
+STATIC ts_mutex
 STATIC oApp
 
 THREAD STATIC aEventLoop
@@ -281,7 +281,7 @@ FUNCTION Xbp_Debug( ... )
    LOCAL aP := hb_aParams()
 
    aeval( aP, {|e| s += Xbp_XtoS( e ) + ' ' } )
-   hb_outDebug( s )
+   hb_ToOutDebug( s )
 
    RETURN nil
 

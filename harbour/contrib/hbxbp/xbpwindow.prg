@@ -275,6 +275,9 @@ EXPORTED:
 
    DATA     lTrack                                INIT  .f.
 
+   METHOD   clearSlots()
+   DATA     aPP
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -285,14 +288,14 @@ METHOD XbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    DEFAULT oOwner      TO ::oOwner
    DEFAULT aPos        TO ::aPos
    DEFAULT aSize       TO ::aSize
-   DEFAULT aPresParams TO ::aPresParams
+   DEFAULT aPresParams TO {}
    DEFAULT lVisible    TO ::visible
 
    ::oParent     := oParent
    ::oOwner      := oOwner
    ::aPos        := aPos
    ::aSize       := aSize
-   ::aPresParams := aPresParams
+   ::aPP         := aclone( aPresParams )
    ::visible     := lVisible
 
    ::XbpPartHandler:init( oParent, oOwner )
@@ -304,29 +307,44 @@ METHOD XbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   LOCAL aPP, i, cClass := __objGetClsName( Self )
+   LOCAL i, cClass := __objGetClsName( Self )
 
    DEFAULT oParent     TO ::oParent
    DEFAULT oOwner      TO ::oOwner
    DEFAULT aPos        TO ::aPos
    DEFAULT aSize       TO ::aSize
-   DEFAULT aPresParams TO ::aPresParams
+//   DEFAULT aPresParams TO {}
    DEFAULT lVisible    TO ::visible
 
    ::oParent     := oParent
    ::oOwner      := oOwner
    ::aPos        := aPos
    ::aSize       := aSize
-   ::aPresParams := aPresParams
+//   ::aPresParams := aPresParams
    ::visible     := lVisible
 
    ::XbpPartHandler:create( oParent, oOwner )
 
-   aPP := Xbp_PresParam()
-   FOR i := 1 TO len( ::aPresParams )
-      Xbp_SetPresParam( aPP, ::aPresParams[ i,1 ], ::aPresParams[ i,2 ] )
-   NEXT
-   ::aPresParams := aPP
+   IF !empty( aPresParams )
+      IF !empty( ::aPP )
+         FOR i := 1 TO len( ::aPP )
+            ::aPP[ i, 1 ] := NIL
+            ::aPP[ i, 2 ] := NIL
+            ::aPP[ i ]    := NIL
+         NEXT
+         ::aPP := NIL
+      ENDIF
+      ::aPP := aclone( aPresParams )
+   ENDIF
+   Xbp_PresParam( @::aPresParams )
+   IF !empty( ::aPP )
+      FOR i := 1 TO len( ::aPP )
+         Xbp_SetPresParam( ::aPresParams, ::aPP[ i,1 ], ::aPP[ i,2 ] )
+         ::aPP[ i,1 ] := NIL
+         ::aPP[ i,2 ] := NIL
+      NEXT
+   ENDIF
+   ::aPP := NIL
 
    DO CASE
    CASE cClass $ 'XBPDIALOG,XBPDRAWINGAREA'
@@ -362,17 +380,6 @@ METHOD XbpWindow:setQtProperty( cProperty )
    oVariant:setValue( cProperty )
 
    ::oWidget:setProperty( ::qtProperty, QT_PTROF( oVariant ) )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpWindow:disConnect()
-
-   IF len( ::aConnections ) > 0
-      aeval( ::aConnections, {|e_| Qt_DisConnect_Signal( e_[ 1 ], e_[ 2 ] ), e_[ 1 ] := NIL, e_[ 2 ] := NIL } )
-      ::aConnections := {}
-   ENDIF
 
    RETURN Self
 
@@ -698,8 +705,9 @@ xbp_Debug( memory( 1001 ),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(
    ::disconnect()
 
    IF len( ::aEConnections ) > 0
-      aeval( ::aEConnections, {|e_| Qt_DisConnect_Event( e_[ 1 ], e_[ 2 ] ) } )
-      ::aEConnections := {}
+      aeval( ::aEConnections, {|e_,i| Qt_DisConnect_Event( e_[ 1 ], e_[ 2 ] ), ;
+                               ::aEConnections[ i,1 ] := NIL, ::aEConnections[ i,2 ] := NIL, ::aEConnections[ i ] := NIL } )
+      ::aEConnections := NIL
       ::oWidget:removeEventFilter( SetEventFilter() )
    ENDIF
 
@@ -709,13 +717,77 @@ xbp_Debug( memory( 1001 ),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(
    ENDIF
 
    ::oWidget:pPtr := 0
+   ::clearSlots()
+   ::xbpPartHandler:destroy()
 
 xbp_Debug( memory( 1001 ),"          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ) )
 
-   ::oWidget := NIL
-   Self := NIL
+   ::oWidget      := NIL
+   Self           := NIL
 
    RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpWindow:disConnect()
+
+   IF len( ::aConnections ) > 0
+      aeval( ::aConnections, {|e_| Qt_DisConnect_Signal( e_[ 1 ], e_[ 2 ] ), e_[ 1 ] := NIL, e_[ 2 ] := NIL } )
+      ::aConnections := {}
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpWindow:clearSlots()
+   LOCAL i
+
+   ::sl_enter              := NIL
+   ::sl_leave              := NIL
+   ::sl_lbClick            := NIL
+   ::sl_lbDblClick         := NIL
+   ::sl_lbDown             := NIL
+   ::sl_lbUp               := NIL
+   ::sl_mbClick            := NIL
+   ::sl_mbDblClick         := NIL
+   ::sl_mbDown             := NIL
+   ::sl_mbUp               := NIL
+   ::sl_motion             := NIL
+   ::sl_rbClick            := NIL
+   ::sl_rbDblClick         := NIL
+   ::sl_rbDown             := NIL
+   ::sl_rbUp               := NIL
+   ::sl_wheel              := NIL
+
+   ::sl_helpRequest        := NIL
+   ::sl_keyboard           := NIL
+   ::sl_killInputFocus     := NIL
+   ::sl_move               := NIL
+   ::sl_paint              := NIL
+   ::sl_quit               := NIL
+   ::sl_resize             := NIL
+   ::sl_setInputFocus      := NIL
+   ::sl_dragEnter          := NIL
+   ::sl_dragMotion         := NIL
+   ::sl_dragLeave          := NIL
+   ::sl_dragDrop           := NIL
+
+   ::sl_close              := NIL
+   ::sl_setDisplayFocus    := NIL
+   ::sl_killDisplayFocus   := NIL
+
+   IF !empty( ::aPresParams )
+      FOR i := 1 TO len( ::aPresParams )
+         ::aPresParams[ i,1 ] := NIL
+         ::aPresParams[ i,2 ] := NIL
+         ::aPresParams[ i ]   := NIL
+   //xbp_debug( i, "--------- aPresParam -----------" )
+      NEXT
+      ::aPresParams           := NIL
+   ENDIF
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -1168,9 +1240,10 @@ METHOD XbpWindow:winDevice()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:setPresParam( aPPNew )
-   LOCAL i, aPP
+   LOCAL i
+   //LOCAL aPP
 
-   aPP := aclone( ::aPresParams )
+   //aPP := aclone( ::aPresParams )
 
    IF hb_isArray( aPPNew )
       FOR i := 1 TO len( aPPNew )
@@ -1178,9 +1251,8 @@ METHOD XbpWindow:setPresParam( aPPNew )
       NEXT
    ENDIF
 
-   // Build Style Sheet
-
-   RETURN aPP
+   //RETURN aPP
+   RETURN ::aPresParams
 
 /*----------------------------------------------------------------------*/
 
@@ -1757,8 +1829,7 @@ METHOD xbpWindow:setStyle()
 #endif
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION Xbp_PresParam()
-   LOCAL aPP := {}
+STATIC FUNCTION Xbp_PresParam( aPP )
 
    aadd( aPP, { XBP_PP_FGCLR              , NIL } )
    aadd( aPP, { XBP_PP_BGCLR              , NIL } )
@@ -1779,7 +1850,7 @@ STATIC FUNCTION Xbp_PresParam()
    aadd( aPP, { XBP_PP_ALIGNMENT          , NIL } )
    aadd( aPP, { XBP_PP_ORIGIN             , NIL } )
 
-   RETURN aPP
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 

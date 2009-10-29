@@ -113,7 +113,6 @@ CLASS XbpHTMLViewer INHERIT XbpWindow
 
    METHOD   navigate( cURL, cCGI )
 
-
    DATA     sl_beforeNavigate                                                  PROTECTED
    ACCESS   beforeNavigate                        INLINE ::sl_beforeNavigate
    ASSIGN   beforeNavigate( bBlock )              INLINE ::sl_beforeNavigate := bBlock
@@ -182,8 +181,19 @@ METHOD XbpHTMLViewer:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
 METHOD XbpHTMLViewer:destroy()
 
-   ::stop()
+   ::oWidget:stop()
    ::disconnect()
+   IF !empty( ::oURL )
+      ::oURL:pPtr := 0
+      ::oURL      := NIL
+   ENDIF
+   ::sl_beforeNavigate       := NIL
+   ::sl_navigateComplete     := NIL
+   ::sl_statusTextChange     := NIL
+   ::sl_progressChange       := NIL
+   ::sl_titleChange          := NIL
+   ::sl_documentComplete     := NIL
+
    ::xbpWindow:destroy()
 
    RETURN nil
@@ -226,12 +236,14 @@ hb_outDebug( ::cSelectedText )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpHTMLViewer:navigate( cURL )
-   LOCAL oURL
 
-   oURL := QUrl():new()
-   oURL:setURL( cURL )
+   IF empty( ::oURL )
+      ::oURL := QUrl():new()
+   ENDIF
 
-   ::oWidget:setURL( QT_PTROF( oURL ) )
+   ::oURL:setURL( cURL )
+
+   ::oWidget:setURL( QT_PTROF( ::oURL ) )
 
    RETURN .t.
 

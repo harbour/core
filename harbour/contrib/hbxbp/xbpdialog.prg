@@ -220,6 +220,8 @@ METHOD XbpDialog:destroy()
    ::oEventLoop:exit( 0 )
 
    ::oEventLoop:pPtr := 0
+   ::oMenu           := NIL
+   ::drawingArea     := NIL
 
    ::xbpWindow:destroy()
 

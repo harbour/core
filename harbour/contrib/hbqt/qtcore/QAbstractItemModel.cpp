@@ -117,7 +117,7 @@ HB_FUNC( QT_HBDBFMODEL_HBSETROWCOLUMNS )
 
 HB_FUNC( QT_HBDBFMODEL_DESTROY )
 {
-   hbqt_par_HbDbfModel( 1 )->destroy();
+   hbqt_par_HbDbfModel( 1 )->~HbDbfModel();
 }
 
 

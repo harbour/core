@@ -85,7 +85,7 @@ METHOD HbDbfModel:hbSetRowColumns( nRows, nCols )
    RETURN Qt_HbDbfModel_hbSetRowColumns( ::pPtr, nRows, nCols )
 
 METHOD HbDbfModel:destroy()
-   RETURN Qt_HbDbfModel_destroy()
+   RETURN Qt_HbDbfModel_destroy( ::pPtr )
 
 </SUBCLASS>
 
@@ -128,7 +128,7 @@ HB_FUNC( QT_HBDBFMODEL_HBSETROWCOLUMNS )
 
 HB_FUNC( QT_HBDBFMODEL_DESTROY )
 {
-   hbqt_par_HbDbfModel( 1 )->destroy();
+   hbqt_par_HbDbfModel( 1 )->~HbDbfModel();
 }
 
 </CODE>

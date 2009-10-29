@@ -274,6 +274,6 @@ METHOD HbDbfModel:hbSetRowColumns( nRows, nCols )
    RETURN Qt_HbDbfModel_hbSetRowColumns( ::pPtr, nRows, nCols )
 
 METHOD HbDbfModel:destroy()
-   RETURN Qt_HbDbfModel_destroy()
+   RETURN Qt_HbDbfModel_destroy( ::pPtr )
 
 

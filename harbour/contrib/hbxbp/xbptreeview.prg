@@ -197,7 +197,7 @@ METHOD XbpTreeView:ExeBlock( nMsg, p1, p2 )
    HB_SYMBOL_UNUSED( p1 )
    HB_SYMBOL_UNUSED( p2 )
 
-hb_outDebug( hb_ntos( nMsg ) )
+//hb_outDebug( hb_ntos( nMsg ) )
 
    IF hb_isPointer( p1 )
       IF ( n := ascan( ::aItems, {|o| o:oWidget:pPtr == p1 } ) ) > 0
@@ -255,9 +255,18 @@ METHOD XbpTreeView:destroy()
       aeval( ::aItems[ i ]:aChilds, {|e,j| e := e, ::aItems[ i ]:aChilds[ j ] := NIL } )
       ::aItems[ i ]:oWidget:pPtr := 0
    NEXT
-   ::aItems := {}
-
+   ::aItems := NIL
    //::oRootItem:oWidget:pPtr := 0  // No need as it is a pointer from Qt
+
+   ::sl_itemCollapsed        := NIL
+   ::sl_itemExpanded         := NIL
+   ::sl_itemMarked           := NIL
+   ::oItemSelected           := NIL
+   ::sl_itemSelected         := NIL
+   ::hParentSelected         := NIL
+   ::hItemSelected           := NIL
+   ::textParentSelected      := NIL
+   ::textItemSelected        := NIL
 
    ::xbpWindow:destroy()
 
@@ -377,7 +386,7 @@ METHOD XbpTreeViewItem:addItem( xItem, xNormalImage, xMarkedImage, xExpandedImag
       oItem:oWidget := QTreeWidgetItem():new()
       oItem:oWidget:setText( 0, oItem:caption )
    ELSE
-      oItem := xItem
+      oItem := xItem   // aNode
    ENDIF
 
    oItem:oParent := self
@@ -470,6 +479,7 @@ METHOD XbpTreeViewItem:delItem( oItem )
 
    IF ( n := ascan( ::aChilds, oItem ) ) > 0
       ::oWidget:removeChild( ::aChilds[ n ]:oWidget:pPtr )
+      ::aChilds[ n ]:oWidget:pPtr := 0
       adel( ::aChilds, n )
       asize( ::aChilds, len( ::aChilds )-1 )
    ENDIF

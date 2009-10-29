@@ -156,6 +156,7 @@ METHOD XbpTabPage:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
 METHOD XbpTabPage:destroy()
 
+   ::sl_tabActivate          := NIL
    ::xbpWindow:destroy()
 
    RETURN NIL
@@ -261,7 +262,12 @@ METHOD XbpTabWidget:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisib
 /*----------------------------------------------------------------------*/
 
 METHOD XbpTabWidget:destroy()
+//xbp_debug( "                            XbpTabWidget:destroy()",0 )
+
+   ::disconnect()
+
    ::xbpWindow:destroy()
+//xbp_debug( "                            XbpTabWidget:destroy()",1 )
    RETURN NIL
 
 /*----------------------------------------------------------------------*/

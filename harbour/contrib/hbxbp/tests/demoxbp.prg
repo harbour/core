@@ -202,7 +202,8 @@ PROCEDURE BuildADialog()
       nEvent := AppEvent( @mp1, @mp2, @oXbp )
 
       IF ( nEvent == xbeP_Close ) .OR. ( nEvent == xbeP_Keyboard .and. mp1 == xbeK_ESC )
-hb_outdebug( "                  WOW      " )
+xbp_debug( ".  " )
+xbp_debug( ".............................. WOW ................................." )
          EXIT
       ELSEIF nEvent == xbeP_Keyboard .and. mp1 == xbeK_F1
          oHtm:setHTML( '<html><h1>Direct HTML Injection</h1><p><font color="#ab00ff" size="16">'+;
@@ -214,8 +215,9 @@ hb_outdebug( "                  WOW      " )
 
    /* Very important - destroy resources */
    oDlg:destroy()
-
-hb_outDebug( "----------------- WOW ----------------" )
+   oDlg := NIL
+xbp_debug( "------------------------------ WOW ---------------------------------" )
+xbp_debug( ".  " )
    RETURN
 
 /*----------------------------------------------------------------------*/
@@ -1666,6 +1668,7 @@ FUNCTION Build_Browse( oWnd )
    //
    oXbpBrowse:addColumn( oXbpColumn )
 
+   aeval( aPresParam, {|e_, i| e_[ 1 ] := NIL, e_[ 2 ] := NIL, aPresParam[ i ] := NIL } )
    aPresParam := {}
    aadd( aPresParam, { XBP_PP_COL_HA_CAPTION      , "Last"                     } )
    aadd( aPresParam, { XBP_PP_COL_HA_FGCLR        , XBPSYSCLR_WINDOWSTATICTEXT } )
