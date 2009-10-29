@@ -1231,6 +1231,8 @@ HARBOUR
          http://www.libpng.org/pub/png/libpng.html
       HB_WITH_QT - Nokia QT (GUI) [win, wce, darwin, linux, free, open-source]
          http://qt.nokia.com/products
+         How to build static and MSVC versions:
+            http://doc.trolltech.com/4.5/deployment-windows.html
       HB_WITH_SQLITE3 - sqlite3 [multiplatform, free, open-source]
          http://www.sqlite.org/
       HB_WITH_WATT - Watt-32 (TCP/IP sockets) [dos, free, open-source]
