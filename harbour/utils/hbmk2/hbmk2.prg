@@ -4123,7 +4123,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                         IF hbmk[ _HBMK_lDEBUGINC ]
                            hbmk_OutStd( hb_StrFormat( "debuginc: EXEDEPLIB %1$s", tmp2 ) )
                         ENDIF
-                        ? hb_FGetDateTime( tmp2, @tmp1 ), tmp2, tmp1, tTarget, tmp1 > tTarget
                         IF ! hb_FGetDateTime( tmp2, @tmp1 ) .OR. tmp1 > tTarget
                            lTargetUpToDate := .F.
                            EXIT
