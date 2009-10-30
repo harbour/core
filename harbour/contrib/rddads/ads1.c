@@ -2857,6 +2857,7 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
    if( uRetVal != AE_SUCCESS )
    {
       HB_TRACE(HB_TR_INFO, ("adsCreate() error"));
+      commonError( pArea, EG_CREATE, ( USHORT ) uRetVal, 0, pCreateInfo->abName, 0, NULL );
       return HB_FAILURE;
    }
    /*
@@ -3887,6 +3888,7 @@ static HB_ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pO
    UNSIGNED16 u16len  = MAX_STR_LEN;
    UNSIGNED16 u16     = 0;
    UNSIGNED32 u32     = 0;
+   UNSIGNED32 u32RetVal;
 
    HB_TRACE(HB_TR_DEBUG, ("adsOrderInfo(%p, %hu, %p)", pArea, uiIndex, pOrderInfo));
 
@@ -3899,7 +3901,7 @@ static HB_ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pO
    /* all others need an index handle */
    if( uiIndex != DBOI_ORDERCOUNT && pOrderInfo->itmOrder && !HB_IS_NIL( pOrderInfo->itmOrder ) )
    {
-      UNSIGNED32 u32RetVal = AE_SUCCESS;
+      u32RetVal = AE_SUCCESS;
 
       if( HB_IS_STRING( pOrderInfo->itmOrder ) )
       {
@@ -4152,6 +4154,8 @@ static HB_ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pO
             TODO: If there are child areas that are not at the top of scope,
                   Skip movement may move them to first related record
          */
+         u32RetVal = AE_SUCCESS;
+
          if( hIndex )
          {
             if( pArea->area.dbfi.itmCobExpr )
@@ -4183,19 +4187,27 @@ static HB_ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pO
                   SELF_GOTO( ( AREAP ) pArea, ulRecNo );
                }
                else  /* no scope set */
-                  AdsGetRecordCount( hIndex, ADS_RESPECTFILTERS, &u32 );
+                  u32RetVal = AdsGetRecordCount( hIndex, ADS_RESPECTFILTERS, &u32 );
             }
             else                        /* no filter set */
-               AdsGetRecordCount( hIndex, ADS_RESPECTSCOPES, &u32 );
+               u32RetVal = AdsGetRecordCount( hIndex, ADS_RESPECTSCOPES, &u32 );
          }
          else
-            AdsGetRecordCount( pArea->hTable, ADS_RESPECTFILTERS, &u32 );
+            u32RetVal = AdsGetRecordCount( pArea->hTable, ADS_RESPECTFILTERS, &u32 );
 
+         if( u32RetVal != AE_SUCCESS )
+         {
+            commonError( pArea, EG_CORRUPTION, ( USHORT ) u32RetVal, 0, NULL, 0, NULL );
+         }
          hb_itemPutNL( pOrderInfo->itmResult, u32 );
          break;
 
       case DBOI_KEYCOUNTRAW :           /* ignore filter but RESPECT SCOPE */
-         AdsGetRecordCount( (hIndex ? hIndex : pArea->hTable), ADS_RESPECTSCOPES, &u32 );
+         u32RetVal = AdsGetRecordCount( (hIndex ? hIndex : pArea->hTable), ADS_RESPECTSCOPES, &u32 );
+         if( u32RetVal != AE_SUCCESS )
+         {
+            commonError( pArea, EG_CORRUPTION, ( USHORT ) u32RetVal, 0, NULL, 0, NULL );
+         }
          hb_itemPutNL( pOrderInfo->itmResult, u32 );
          break;
 
