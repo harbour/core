@@ -1255,7 +1255,7 @@ HARBOUR
       GNU Sed (stream editor) [multiplatform, free, open-source]
          Windows binary:
             http://gnuwin32.sourceforge.net/packages/sed.htm
-      UPX (executable compressor) [win, dos, linux, free, open-source]
+      UPX (executable compressor) [win, dos, *nix, free, open-source]
          http://upx.sourceforge.net/
       Nullsoft Installer [win, free, open-source]
          http://nsis.sourceforge.net/

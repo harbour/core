@@ -1434,6 +1434,15 @@ HB_FUNC( ADSCONNECTION )                /* Get/Set func to switch between connec
    hb_ads_hConnect = HB_ADS_PARCONNECTION( 1 );
 }
 
+HB_FUNC( ADSISCONNECTIONALIVE ) /* Determine if passed or default connection is still valid */
+{
+   UNSIGNED16 bConnectionIsAlive = 0;
+
+   AdsIsConnectionAlive( HB_ADS_PARCONNECTION( 1 ), &bConnectionIsAlive );
+
+   hb_retl( bConnectionIsAlive != 0 );
+}
+
 HB_FUNC( ADSGETHANDLETYPE )             /* DD, admin, table */
 {
    UNSIGNED16 usType = AE_INVALID_HANDLE;

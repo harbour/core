@@ -8,6 +8,7 @@ LIBNAME := hbmisc
 
 C_SOURCES := \
    dates2.c \
+   ffind.c \
    hb_f.c \
    spd.c \
    strfmt.c \
