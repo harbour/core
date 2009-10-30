@@ -205,8 +205,8 @@ different way which does not cause any overhead and slowness for other code.
 
 
 
-###    EXTENDED CLODEBLOCKS    ###
-==================================
+###    EXTENDED CODEBLOCKS    ###
+=================================
 Both compilers support compile time extended codeblocks which allow
 to use statements but with a little bit different syntax. Harbour uses
 standard Clipper codeblock delimiters {}, f.e.:
@@ -220,9 +220,9 @@ and xHarbour <>, f.e.:
                 return p1 + p2 + p3
               >, 1, 2, 3 )
 
-In Harbour extended clodeblocks works like nested functions and support
+In Harbour extended codeblocks works like nested functions and support
 all functions attributes, f.e. they can have own static variables or
-other declarations which are local to extended clodeblocks only and
+other declarations which are local to extended codeblocks only and
 do not effect upper function body.
 In xHarbour the compiler was not fully updated for such functionality
 and extended codeblocks were added to existing compiler structures what
@@ -300,9 +300,9 @@ In xHarbour the behavior of references stored in array is reverted in
 comparison to Clipper or Harbour.
 In Clipper and Harbour VM executing code like:
          aVal[ 1 ] := 100
-clears uncoditional 1-st item in aVal array and assing to it value 100.
+clears unconditional 1-st item in aVal array and assign to it value 100.
 xHarbour checks if aVal[ 1 ] is an reference and in such case it resolve
-the reference and then assing 100 to the destination item.
+the reference and then assign 100 to the destination item.
 On access Clipper and Harbour VM executing code like:
          x := aVal[ 1 ]
 copy to x the exact value stored in aVal[ 1 ]. xHarbour checks is aVal[ 1 ]
@@ -419,7 +419,7 @@ the codeblocks will exist after leaving the function when they were
 created. It's potentially very serious problem which have to be resolved
 to avoid internal VM structure corruption. In Clipper, Harbour and
 xHarbour special mechanism is used in such situation. Local variables
-are "detached" from VM stack so thay are still accessible after leaving
+are "detached" from VM stack so they are still accessible after leaving
 the function, f.e.:
       proc make_cb()
          local n := 123
@@ -469,7 +469,7 @@ and xHarbour support multilevel references chains so it works correctly
 also for local parameters passed be reference from parent functions.
 In Clipper only one level references are supported what creates second
 important differences. When Clipper detaches frame with local parameters
-then it has to unref all existing references breaking them. This code
+then it has to unreference all existing references breaking them. This code
 illustrates it:
 
       proc main()
@@ -761,7 +761,7 @@ each hash array separately.
 ###    $ OPERATOR EXTENSIONS (arrays and hashes)    ###
 =======================================================
 In Harbour and xHarbour $ operator can be used to check if some key
-or hash pair belongs to hash array, f.e.:
+or hash pair belongs to hash, f.e.:
       ? "abc" $ { "qwe"=>100, "abc"=>200, "zxc"=>300 }
 In xHarbour $ operator can be also used to check if value belongs
 to array. It works like ASCAN() but with exact comparison for strings,
@@ -816,13 +816,13 @@ operators:
 
 
 
-###    IN, HAS, LIKE OPERATOS    ###
-====================================
+###    IN, HAS, LIKE OPERATORS    ###
+=====================================
 xHarbour has three operators defined as identifier: IN, HAS, LIKE
 IN is synonym of $ operator and it's translated by lexer to $.
 It does not give any new functionality. For portable code use $.
 HAS and LIKE are regular expressions operators. In Harbour they have
-the same functionality as HB_REGEXHAS() and HB_REGEXLIKE() funcions:
+the same functionality as HB_REGEXHAS() and HB_REGEXLIKE() functions:
       <x> HAS <y>    => HB_REGEXHAS( <y>, <x> )
       <x> LIKE <y>   => HB_REGEXLIKE( <y>, <x> )
 
@@ -982,7 +982,7 @@ Harbour supports VFP syntax only in Compiler. It's not supported in
 macrocompiler and it can be disabled in the future so it's not suggested
 to use with Harbour programs.
 
-Both compilers supports also date constans in the form 0dYYYYMMDD f.e.:
+Both compilers supports also date constants in the form 0dYYYYMMDD f.e.:
       0d20090520.
 It's also supported by macrocompilers.
 
@@ -1176,8 +1176,8 @@ then declaring variables or methods as HIDDEN source code modification.
 This code illustrates it. We have two classes and each of them has its own
 _private_ 'temp' instance variable and 'set' method. 3-rd class inherits
 from both of them and executes it's public methods which internally
-access hiden ones but without any explicit casting. In Harbour all is done
-automnatically by HVM:
+access hidden ones but without any explicit casting. In Harbour all is done
+automatically by HVM:
 
       #include "hbclass.ch"
       PROC MAIN()
@@ -1276,7 +1276,7 @@ and class instance variables like Class(y) does.
 
 But both compilers support shared variables which can be shared with
 all object of the same class or shared variables which can be
-shared with oll object of given class and its descendants.
+shared with all object of given class and its descendants.
 Class methods are not supported at all by both compilers (they cannot be
 without class object) though xHarbour wrongly use class messages as normal
 messages.
@@ -1472,8 +1472,8 @@ it's enough to compare time difference:
 
 
 
-###    DIVERT STATMENT    ###
-=============================
+###    DIVERT STATEMENT    ###
+==============================
 xHarbour supports
 
       DIVERT TO <pFuncPointer> | <pMessagePointer> ;
@@ -1540,7 +1540,7 @@ is necessary for .hrb and macrocompiler. To exchange information about
 defined by user namespaces xHarbour generates <namespace>.xns files
 during compilation of .prg ones which define public functions in given
 namespace. These files are automatically included by xHarbour compiler
-if namespace is requested in PRG code. They are also necesary for C
+if namespace is requested in PRG code. They are also necessary for C
 compiler to resolve static bindings so they are explicitly included in
 .c files generated by xHarbour.
 
@@ -1623,7 +1623,7 @@ extensively use multi window functionality like GTWVG, GTQTC.
 
 Not all GTs in Harbour has been adopted to work simultaneously in multi
 thread mode with more then one instance so user should not allocate more
-then one instance of the folowing GTs GTDOS, GTWIN, GTOS2, GTCRS, GTSLN,
+then one instance of the following GTs GTDOS, GTWIN, GTOS2, GTCRS, GTSLN,
 GTPCA, GTALLEG.
 
 These GTs are limited by resources or have alternative GT drivers with
@@ -1936,7 +1936,7 @@ length and it can be bigger in all formats if we introduce support for
 bigger index pages. Of course all such extended formats are not binary
 compatible with original ones and so far can be used only by [x]Harbour
 RDDs though in ADS the .adi format is such extended CDX format so maybe
-in the future it will be possible to .adi indexes in our CDX RDD.
+in the future it will be possible to use .adi indexes in our CDX RDD.
 
 Of course all of the above sizes can be reduced by operating system (OS)
 or file system (FS) limitations so it's necessary to check what is
@@ -2124,7 +2124,7 @@ xHarbour uses SIMPLEX as lexer for compiler and macro compiler.
 Introducing this lexer was next reason of the xHarbour fork.
 Internally SIMPLEX uses a lot of static variables and C compile time
 macros to speed-up some operations. It's faster than lexer used before
-based on code geenrated by FLEX but it's not MT safe and very hard
+based on code generated by FLEX but it's not MT safe and very hard
 to debug due to code hidden by nested C macros. The reduced version of
 SIMPLEX is used by xHarbour in macro compiler.
 
@@ -2227,7 +2227,7 @@ parameters without strict type checking. Such code:
       }
 is not fully safe when array parameter is passed from .prg level, i.e.
       ? NOT( { 5, 4, 7 } )
-In such case the behavior is unpredictable because _parc() function
+In such case the behavior is unpredictable because _parni() function
 tries to access from C function frame unexciting parameter with array
 index. Depending on used hardware (CPU) different things may happen.
 On some platforms _parni( 1 ) always return 0, on some other random
@@ -2248,7 +2248,7 @@ or:
 xHarbour does not have hb_par*() and hb_stor*() functions without
 optional array index parameters so they cannot be safely used to
 access parameters without type checking. It may also create problems
-when xHarbour code is moved to Harbour becasue hb_par*() and
+when xHarbour code is moved to Harbour because hb_par*() and
 hb_stor*() functions in xHarbour work like hb_parv*() and hb_storv*()
 in Harbour. It can be seen in code like:
       int iValue = hb_parni( 1, 1 );
@@ -2314,7 +2314,7 @@ These are only examples and anyone can find many other similar problems
 in xHarbour core code so in my opinion API separation with core code
 cleanup is sth what has to be done in xHarbour in the future.
 Of course such separation does not mean that we can forbid 3-rd party
-programmers to access HVM internals. Programers creating code for Harbour
+programmers to access HVM internals. Programmers creating code for Harbour
 can include before any other Harbour header files "hbvmint.h", i.e.:
       #include "hbvmint.h"
       #include "hbapi.h"
