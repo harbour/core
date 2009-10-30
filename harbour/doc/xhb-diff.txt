@@ -2148,7 +2148,7 @@ Some of xHarbour core libraries like CT, TIP or ODBC are supported by
 Harbour as contrib library. In practice Harbour covers whole xHarbour
 functionality with some fixes and extensions. In contrib tree Harbour
 has also many other libraries which are unique to Harbour, like HBCURL,
-RDDSQL, HBCRYPT, GTWVG, HBQT, HBXBP, ... which give many important
+RDDSQL, HBSSL, GTWVG, HBQT, HBXBP, ... which give many important
 extensions. Some of them can be easily ported to xHarbour but some others
 not due to not fully functional MT model in xHarbour or missing some
 important functionality like thread safe support for many GTs in single

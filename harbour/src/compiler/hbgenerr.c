@@ -191,7 +191,7 @@ void hb_compGenError( HB_COMP_DECL, const char * szErrors[], char cPrefix, int i
    }
 }
 
-void hb_compGenWarning( HB_COMP_DECL, const char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2)
+void hb_compGenWarning( HB_COMP_DECL, const char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2 )
 {
    const char * szText = szWarnings[ iWarning - 1 ];
 
