@@ -52,6 +52,24 @@ HARBOUR
       > hello
       You should see 'Hello world!' on screen.
 
+      NOTE: For Borland C++ users. This information is included in Borland 
+            C++ readme, but we repeat it here because many users don't read 
+            it, and get it wrong. Make sure to have these two configuration 
+            files set as indicated below. Naturally, you have to adapt dirs 
+            to your own environment (and don't include the separator ('---') 
+            lines):
+
+            C:\Borland\BCC55\Bin\bcc32.cfg
+            ---
+            -I"C:\Borland\BCC55\Include"
+            -L"C:\Borland\BCC55\Lib";"C:\Borland\BCC55\Lib\PSDK"
+            ---
+       
+            C:\Borland\BCC55\Bin\ilink32.cfg
+            --- 
+            /L"C:\Borland\BCC55\Lib";"C:\Borland\BCC55\Lib\PSDK"
+            ---
+
    on Windows hosts with POSIX shells (MSYS/Cygwin)
    ----------------------------------
       You can also use these shells to build Harbour on Windows.
