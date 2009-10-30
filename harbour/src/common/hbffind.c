@@ -533,10 +533,11 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             ffind->bFirst = FALSE;
             ffind->szName[ 0 ] = '\0';
 
-            bFound = GetVolumeInformation( lpFileMask, szName, sizeof( szName ) - 1, NULL, NULL, NULL, NULL, 0 );
+            bFound = GetVolumeInformation( lpFileMask, szName, sizeof( szName ), NULL, NULL, NULL, NULL, 0 );
 
             HB_TCHAR_FREE( lpFileMask );
             HB_TCHAR_GETFROM( ffind->szName, szName, sizeof( ffind->szName ) );
+            ffind->szName[ sizeof( ffind->szName ) - 1 ] = '\0';
          }
 #endif
       }

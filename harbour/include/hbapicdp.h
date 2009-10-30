@@ -74,13 +74,14 @@ HB_EXTERN_BEGIN
                                        hb_cdpRegister( &s_codepage ); \
                                        HB_CALL_ON_STARTUP_END( hb_codepage_Init_##id )
 
+typedef USHORT    HB_WCHAR;
 
 typedef struct _HB_UNITABLE
 {
    const char *   uniID;
    int            nChars;
    BOOL           lMulti;
-   USHORT *       uniCodes;
+   HB_WCHAR *     uniCodes;
 } HB_UNITABLE, * PHB_UNITABLE;
 
 typedef struct _HB_MULTICHAR
@@ -327,13 +328,13 @@ extern HB_EXPORT ULONG         hb_cdpnDup2Len( const char *, ULONG, ULONG, PHB_C
 extern HB_EXPORT void          hb_cdpTranslate( char *, PHB_CODEPAGE, PHB_CODEPAGE );
 extern HB_EXPORT void          hb_cdpnTranslate( char *, PHB_CODEPAGE, PHB_CODEPAGE, ULONG );
 
-extern HB_EXPORT USHORT        hb_cdpGetU16( PHB_CODEPAGE, BOOL, UCHAR );
-extern HB_EXPORT UCHAR         hb_cdpGetChar( PHB_CODEPAGE, BOOL, USHORT );
-extern HB_EXPORT BOOL          hb_cdpGetFromUTF8( PHB_CODEPAGE, BOOL, UCHAR, int *, USHORT * );
+extern HB_EXPORT HB_WCHAR      hb_cdpGetU16( PHB_CODEPAGE, BOOL, UCHAR );
+extern HB_EXPORT UCHAR         hb_cdpGetChar( PHB_CODEPAGE, BOOL, HB_WCHAR );
+extern HB_EXPORT BOOL          hb_cdpGetFromUTF8( PHB_CODEPAGE, BOOL, UCHAR, int *, HB_WCHAR * );
 extern HB_EXPORT ULONG         hb_cdpStrnToUTF8( PHB_CODEPAGE, BOOL, const char *, ULONG, char * );
 extern HB_EXPORT ULONG         hb_cdpStrnToUTF8n( PHB_CODEPAGE, BOOL, const char *, ULONG, char *, ULONG );
-extern HB_EXPORT ULONG         hb_cdpStrnToU16( PHB_CODEPAGE, BOOL, const char *, ULONG, char * );
-extern HB_EXPORT ULONG         hb_cdpStrnToU16LE( PHB_CODEPAGE, BOOL, const char *, ULONG, char * );
+extern HB_EXPORT ULONG         hb_cdpStrnToU16( PHB_CODEPAGE, BOOL, const char *, ULONG, HB_WCHAR * );
+extern HB_EXPORT ULONG         hb_cdpStrnToU16LE( PHB_CODEPAGE, BOOL, const char *, ULONG, HB_WCHAR * );
 extern HB_EXPORT ULONG         hb_cdpStringInU16Length( PHB_CODEPAGE, BOOL, const char *, ULONG );
 extern HB_EXPORT ULONG         hb_cdpStringInUTF8Length( PHB_CODEPAGE, BOOL, const char *, ULONG );
 extern HB_EXPORT ULONG         hb_cdpStringInUTF8Length2( PHB_CODEPAGE, BOOL, const char *, ULONG, ULONG );
