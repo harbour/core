@@ -151,15 +151,16 @@ char * hb_netname( void )
 #elif defined( HB_OS_WIN )
 
    DWORD ulLen = MAX_COMPUTERNAME_LENGTH + 1;
-   LPTSTR lpValue = ( LPTSTR ) hb_xgrab( ulLen * sizeof( TCHAR ) );
+   TCHAR lpValue[ MAX_COMPUTERNAME_LENGTH + 1 ];
    char * pszValue;
 
    lpValue[ 0 ] = L'\0';
    GetComputerName( lpValue, &ulLen );
 
-   pszValue = HB_TCHAR_CONVFROM( lpValue );
 #if defined( UNICODE )
-   HB_TCHAR_FREE( lpValue );
+   pszValue = hb_wctomb( lpValue );
+#else
+   pszValue = hb_strdup( lpValue );
 #endif
 
    return pszValue;
@@ -187,15 +188,16 @@ char * hb_username( void )
 #elif defined( HB_OS_WIN )
 
    DWORD ulLen = 256;
-   LPTSTR lpValue = ( LPTSTR ) hb_xgrab( ulLen * sizeof( TCHAR ) );
+   TCHAR lpValue[ 256 ];
    char * pszValue;
 
    lpValue[ 0 ] = L'\0';
    GetUserName( lpValue, &ulLen );
 
-   pszValue = HB_TCHAR_CONVFROM( lpValue );
 #if defined( UNICODE )
-   HB_TCHAR_FREE( lpValue );
+   pszValue = hb_wctomb( lpValue );
+#else
+   pszValue = hb_strdup( lpValue );
 #endif
 
    return pszValue;

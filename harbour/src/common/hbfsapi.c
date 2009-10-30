@@ -312,7 +312,7 @@ BOOL hb_fsNameExists( const char * pszFileName )
    {
       LPTSTR lpFileName = HB_TCHAR_CONVTO( pszFileName );
 
-      fExist = ( GetFileAttributes( ( LPCTSTR ) lpFileName ) != INVALID_FILE_ATTRIBUTES );
+      fExist = ( GetFileAttributes( lpFileName ) != INVALID_FILE_ATTRIBUTES );
 
       HB_TCHAR_FREE( lpFileName );
    }
@@ -370,7 +370,7 @@ BOOL hb_fsFileExists( const char * pszFileName )
       LPTSTR lpFileName = HB_TCHAR_CONVTO( pszFileName );
       DWORD dwAttr;
 
-      dwAttr = GetFileAttributes( ( LPCTSTR ) lpFileName );
+      dwAttr = GetFileAttributes( lpFileName );
       fExist = ( dwAttr != INVALID_FILE_ATTRIBUTES ) &&
                ( dwAttr & ( FILE_ATTRIBUTE_DIRECTORY |
                             FILE_ATTRIBUTE_DEVICE ) ) == 0;
@@ -433,7 +433,7 @@ BOOL hb_fsDirExists( const char * pszDirName )
       LPTSTR lpDirName = HB_TCHAR_CONVTO( pszDirName );
       DWORD dwAttr;
 
-      dwAttr = GetFileAttributes( ( LPCTSTR ) lpDirName );
+      dwAttr = GetFileAttributes( lpDirName );
       fExist = ( dwAttr != INVALID_FILE_ATTRIBUTES ) &&
                ( dwAttr & FILE_ATTRIBUTE_DIRECTORY );
 

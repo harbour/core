@@ -249,12 +249,13 @@ HB_FUNC( HB_DISKSPACE )
             DWORD dwNumberOfFreeClusters;
             DWORD dwTotalNumberOfClusters;
 
-            fResult = GetDiskFreeSpace( ( LPCTSTR ) lpPath,
+            fResult = GetDiskFreeSpace( lpPath,
                                         &dwSectorsPerCluster,
                                         &dwBytesPerSector,
                                         &dwNumberOfFreeClusters,
                                         &dwTotalNumberOfClusters );
             hb_fsSetIOError( fResult, 0 );
+            HB_TCHAR_FREE( lpPath );
             if( fResult )
             {
                switch( uiType )
@@ -279,8 +280,6 @@ HB_FUNC( HB_DISKSPACE )
                      break;
                }
             }
-
-            HB_TCHAR_FREE( lpPath );
          }
 #endif
          SetErrorMode( uiErrMode );

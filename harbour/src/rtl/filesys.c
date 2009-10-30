@@ -661,7 +661,7 @@ HB_FHANDLE hb_fsOpen( const char * pFilename, USHORT uiFlags )
       convert_open_flags( FALSE, FC_NORMAL, uiFlags, &dwMode, &dwShare, &dwCreat, &dwAttr );
 
       hb_vmUnlock();
-      hFile = CreateFile( ( LPCTSTR ) lpFilename, dwMode, dwShare, NULL, dwCreat, dwAttr, NULL );
+      hFile = CreateFile( lpFilename, dwMode, dwShare, NULL, dwCreat, dwAttr, NULL );
       hb_fsSetIOError( hFile != ( HANDLE ) INVALID_HANDLE_VALUE, 0 );
       hb_vmLock();
 
@@ -723,7 +723,7 @@ HB_FHANDLE hb_fsCreate( const char * pFilename, ULONG ulAttr )
       convert_open_flags( TRUE, ulAttr, FO_EXCLUSIVE, &dwMode, &dwShare, &dwCreat, &dwAttr );
 
       hb_vmUnlock();
-      hFile = CreateFile( ( LPCTSTR ) lpFilename, dwMode, dwShare, NULL, dwCreat, dwAttr, NULL );
+      hFile = CreateFile( lpFilename, dwMode, dwShare, NULL, dwCreat, dwAttr, NULL );
       hb_fsSetIOError( hFile != ( HANDLE ) INVALID_HANDLE_VALUE, 0 );
       hb_vmLock();
 
@@ -785,7 +785,7 @@ HB_FHANDLE hb_fsCreateEx( const char * pFilename, ULONG ulAttr, USHORT uiFlags )
       convert_open_flags( TRUE, ulAttr, uiFlags, &dwMode, &dwShare, &dwCreat, &dwAttr );
 
       hb_vmUnlock();
-      hFile = CreateFile( ( LPCTSTR ) lpFilename, dwMode, dwShare, NULL, dwCreat, dwAttr, NULL );
+      hFile = CreateFile( lpFilename, dwMode, dwShare, NULL, dwCreat, dwAttr, NULL );
       hb_fsSetIOError( hFile != ( HANDLE ) INVALID_HANDLE_VALUE, 0 );
       hb_vmLock();
 

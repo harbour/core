@@ -79,12 +79,13 @@ char * hb_getenv( const char * szName )
       {
          LPTSTR lpBuffer = ( LPTSTR ) hb_xgrab( size * sizeof( TCHAR ) );
          GetEnvironmentVariable( lpName, lpBuffer, size );
-         pszBuffer = HB_TCHAR_CONVFROM( lpBuffer );
 #if defined( UNICODE )
-         HB_TCHAR_FREE( lpBuffer );
+         pszBuffer = hb_wctomb( lpBuffer );
+         hb_xfree( lpBuffer );
+#else
+         pszBuffer = lpBuffer;
 #endif
       }
-
       HB_TCHAR_FREE( lpName );
    }
 
@@ -146,7 +147,7 @@ BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
       if( lpBuffer && lpBuffer != buffer )
          hb_xfree( lpBuffer );
 #else
-      fRetVal = GetEnvironmentVariableA( szName, szBuffer, nSize ) != 0;
+      fRetVal = GetEnvironmentVariable( szName, szBuffer, nSize ) != 0;
 #endif
    }
 #elif defined( HB_OS_OS2 )

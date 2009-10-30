@@ -533,10 +533,10 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             ffind->bFirst = FALSE;
             ffind->szName[ 0 ] = '\0';
 
-            bFound = GetVolumeInformation( ( LPCTSTR ) lpFileMask, szName, sizeof( szName ) - 1, NULL, NULL, NULL, NULL, 0 );
+            bFound = GetVolumeInformation( lpFileMask, szName, sizeof( szName ) - 1, NULL, NULL, NULL, NULL, 0 );
 
             HB_TCHAR_FREE( lpFileMask );
-            HB_TCHAR_GETFROM( ffind->szName, szName, sizeof( ffind->szName ) - 1 );
+            HB_TCHAR_GETFROM( ffind->szName, szName, sizeof( ffind->szName ) );
          }
 #endif
       }
@@ -548,7 +548,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
             ffind->bFirst = FALSE;
 
-            info->hFindFile = FindFirstFile( ( LPCTSTR ) lpFileMask, &info->pFindFileData );
+            info->hFindFile = FindFirstFile( lpFileMask, &info->pFindFileData );
             info->dwAttr    = ( DWORD ) hb_fsAttrToRaw( ffind->attrmask );
 
             if( ( info->hFindFile != INVALID_HANDLE_VALUE ) && HB_WIN_MATCH() )

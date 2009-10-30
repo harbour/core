@@ -125,7 +125,7 @@ HB_FUNC( DISKSPACE )
 #if defined( HB_OS_WIN_CE )
       TCHAR lpPath[ 4 ];
 
-      lpPath[ 0 ] = ( TCHAR ) uiDrive + 'A' - 1;
+      lpPath[ 0 ] = ( TCHAR ) ( uiDrive + 'A' - 1 );
       lpPath[ 1 ] = ':';
       lpPath[ 2 ] = '\\';
       lpPath[ 3 ] = '\0';
@@ -164,7 +164,7 @@ HB_FUNC( DISKSPACE )
          DWORD dwNumberOfFreeClusters;
          DWORD dwTotalNumberOfClusters;
 
-         bError = ! GetDiskFreeSpace( ( LPCTSTR ) lpPath,
+         bError = ! GetDiskFreeSpace( lpPath,
                                       &dwSectorsPerCluster,
                                       &dwBytesPerSector,
                                       &dwNumberOfFreeClusters,
