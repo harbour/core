@@ -41,7 +41,7 @@ Tool/lib versions used to create this package:
    Compiler tools
    --------------
 
-   MinGW 4.4.1 (included)
+   MinGW 4.4.1 TDM-2 (included)
    MinGW w64 4.5.0
    MinGW CEGCC 4.4.0
    DJGPP 4.4.1 (2.04b1)
@@ -70,6 +70,7 @@ Changes since previous (2.0.0beta3 20090905) release:
 
 - MinGW CEGCC updated to 4.4.0
 - upx updated to 3.04.
+- MinGW 4.4.1 update to TDM-2 release fixing a performance problem.
 
 Changes since previous (2.0.0beta2 20090624) release:
 -----------------------------------------------------------------------
