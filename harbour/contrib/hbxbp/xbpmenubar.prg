@@ -231,9 +231,20 @@ METHOD xbpMenuBar:destroy()
       ENDIF
    NEXT
 
+   ::sl_beginMenu            := NIL
+   ::sl_endMenu              := NIL
+   ::sl_itemMarked           := NIL
+   ::sl_itemSelected         := NIL
+   ::sl_drawItem             := NIL
+   ::sl_measureItem          := NIL
+   ::sl_onMenuKey            := NIL
+
+   ::aMenuItems              := {}
+   ::aOrgItems               := {}
+
    ::xbpWindow:destroy()
 
-   RETURN .T.
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 

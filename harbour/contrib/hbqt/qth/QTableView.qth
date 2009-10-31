@@ -64,6 +64,7 @@ CREATE CLASS HBTableView INHERIT QTableView
 
    METHOD new( pParent )                        
    METHOD navigate( nCursorAction, nModifiers )
+   METHOD destroy()
 
    ENDCLASS
 
@@ -73,6 +74,9 @@ METHOD HBTableView:new( pParent )
 
 METHOD HBTableView:navigate( nCursorAction, nModifiers )
    RETURN Qt_HbTableView_navigate( ::pPtr, nCursorAction, nModifiers )
+
+METHOD HBTableView:destroy()
+   RETURN Qt_HbTableView_destroy( ::pPtr )
 
 </SUBCLASS>
 
@@ -99,6 +103,12 @@ HB_FUNC( QT_HBTABLEVIEW_NAVIGATE )
 {
    hb_retptr( new QModelIndex( hbqt_par_HbTableView( 1 )->navigate( hb_parni( 2 ) ) ) );
 }
+
+HB_FUNC( QT_HBTABLEVIEW_DESTROY )
+{
+   hbqt_par_HbTableView( 1 )->~HbTableView();
+}
+
 </CODE>
 
 <PROTOS>

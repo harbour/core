@@ -113,9 +113,11 @@ PROCEDURE BuildADialog()
    LOCAL nThread := ThreadID()
    //LOCAL oStat, aMenu, aTool, aBrow, aChek, a3Sta
 
+
+xbp_debug( nThread, "  At Startup of Thread    ", memory( 1001 ) )
    /* Create Application Window */
    oDlg := GuiStdDialog( "Harbour - Xbase++ - QT Dialog  [ "+ hb_ntos( nThread )+" ]" )
-
+xbp_debug( nThread, "  oDlg := GuiStdDialog    ", memory( 1001 ) )
    oDlg:close := {|| MsgBox( "You can also close me by pressing [ESC]" ), .T. }
    // oDlg:killDisplayFocus := {|| hb_OutDebug( "Loosing Display Focus" ) }
    SetAppWindow( oDlg )
@@ -139,61 +141,61 @@ PROCEDURE BuildADialog()
 
    /* Install menu system */
    Build_MenuBar( oDlg )
-
+xbp_debug( nThread, "  Build_MenuBar    ", memory( 1001 ) )
    /* Install Statusbar */
    Build_StatusBar( oDa )
-
+xbp_debug( nThread, "  Build_StatusBar  ", memory( 1001 ) )
    /* Install Toolbar */
    Build_ToolBar( oDa )
-
+xbp_debug( nThread, "  Build_ToolBar    ", memory( 1001 ) )
    /* Install Tab Pages */
    aTabs := Build_TabPages( oDa )
-
+xbp_debug( nThread, "  Build_TabPages   ", memory( 1001 ) )
    /* Build XBPBrowse() */
    Build_Browse( aTabs[ TAB_1 ] )
-
+xbp_debug( nThread, "  Build_Browse     ", memory( 1001 ) )
    /* Install Multi-Line Edit */
    oMLE := Build_MLE( aTabs[ TAB_2 ] )
-
+xbp_debug( nThread, "  Build_MLE        ", memory( 1001 ) )
    /* Install checkboxes */
    Build_CheckBox( aTabs[ TAB_3 ] )
-
+xbp_debug( nThread, "  Build_CheckBox   ", memory( 1001 ) )
    /* Install 3state checkboxes */
    Build_3State( aTabs[ TAB_3 ] )
-
+xbp_debug( nThread, "  Build_3State     ", memory( 1001 ) )
    /* Install Radio Buttons */
    Build_RadioButton( aTabs[ TAB_3 ] )
-
+xbp_debug( nThread, "  Build_RadioButton", memory( 1001 ) )
    /* Install Spin Buttons */
    Build_SpinButtons( aTabs[ TAB_3 ] )
-
+xbp_debug( nThread, "  Build_SpinButton ", memory( 1001 ) )
    /* Install TreeView */
    Build_TreeView( aTabs[ TAB_4 ] )
-
+xbp_debug( nThread, "  Build_TreeView   ", memory( 1001 ) )
    /* Install ListBox */
    Build_ListBox( aTabs[ TAB_5 ] )
-
+xbp_debug( nThread, "  Build_ListBox    ", memory( 1001 ) )
    /* Install Combo Box */
    Build_ComboBox( aTabs[ TAB_5 ] )
-
+xbp_debug( nThread, "  Build_ComboBox   ", memory( 1001 ) )
    /* Install Push Buttons */
    Build_PushButton( aTabs[ TAB_5 ] )
-
+xbp_debug( nThread, "  Build_PushButton ", memory( 1001 ) )
    /* Install Single Line Edits */
    Build_SLEs( aTabs[ TAB_5 ] )
-
+xbp_debug( nThread, "  Build_SLEs       ", memory( 1001 ) )
    /* Install ScrollBar */
    Build_ScrollBar( aTabs[ TAB_5 ] )
-
+xbp_debug( nThread, "  Build_ScrollBars ", memory( 1001 ) )
    /* Build RTF */
    Build_Rtf( aTabs[ TAB_6 ] )
-
+xbp_debug( nThread, "  Build_Rtf        ", memory( 1001 ) )
    /* Build HTML Viewer */
    oHTM := Build_HTMLViewer( aTabs[ TAB_7 ] )
-
+xbp_debug( nThread, "  Build_HTMLViewer ", memory( 1001 ) )
    /* Build Statics */
    Build_Statics( aTabs[ TAB_8 ] )
-
+xbp_debug( nThread, "  Build_Statics    ", memory( 1001 ), hb_getMemUsed() )
    /* Present the dialog on the screen */
    oDlg:Show()
 
@@ -218,9 +220,11 @@ xbp_debug( ".............................. WOW .................................
 
 xbp_debug( "------------------------------ WOW ---------------------------------" )
 xbp_debug( ".  " )
-   oHTM := NIL
-   oMLE := NIL
-   //oDlg := NIL
+//   oHTM := NIL
+//   oMLE := NIL
+//   oDlg := NIL
+//   hb_gcAll( .t. )
+xbp_debug( nThread, "      THE END      ", memory( 1001 ), hb_getMemUsed() )
    RETURN
 
 /*----------------------------------------------------------------------*/
@@ -1610,7 +1614,7 @@ FUNCTION Build_Browse( oWnd )
    #endif
    DbGotop()
 
-   oXbpBrowse := XbpBrowse():new():create( oWnd, , { 10,10 }, { oWnd:currentSize()[1]-25,oWnd:currentSize()[2]-45 } )
+   oXbpBrowse := XbpBrowse():new():create( oWnd, , { 10,10 }, { oWnd:currentSize()[1]-20,oWnd:currentSize()[2]-20 } )
    oXbpBrowse:setFontCompoundName( "10.Courier" )
    //oXbpBrowse:hScroll       := .f.          // OK
    //oXbpBrowse:vScroll       := .f.          // OK

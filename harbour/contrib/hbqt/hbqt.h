@@ -64,7 +64,8 @@
 //#define __debug__
 #if defined(__debug__)
     #include <windows.h>
-    static char str[ 50 ];
+    static char str[ 100 ];
+    int hb_getMemUsed( void );
 #endif
 
 #if 0

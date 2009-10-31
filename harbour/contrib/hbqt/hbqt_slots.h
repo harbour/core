@@ -97,16 +97,12 @@ public:
    void mouseReleaseEvent( QMouseEvent * event );
    void wheelEvent( QWheelEvent * event );
    void resizeEvent( QResizeEvent * event );
-   void paintEvent( QPaintEvent * event );
+   void xpaintEvent( QPaintEvent * event );
    void focusInEvent( QFocusEvent * event );
    void focusOutEvent( QFocusEvent * event );
 
    PHB_ITEM   block;
    int        threadID;
-   bool       activated;
-   QPainter * painter;
-
-   char str[ 50 ];
 };
 
 /*----------------------------------------------------------------------*/

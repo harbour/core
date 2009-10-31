@@ -1897,6 +1897,13 @@ HbTableView::HbTableView( QWidget * parent ) : QTableView( parent )
 }
 HbTableView::~HbTableView()
 {
+#if defined(__debug__)
+hb_snprintf( str, sizeof( str ), "HbTableView::~HbTableView() 0 %i %i", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
+   destroy();
+#if defined(__debug__)
+hb_snprintf( str, sizeof( str ), "HbTableView::~HbTableView() 1 %i %i", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 }
 void HbTableView::keyPressEvent( QKeyEvent * event )
 {
@@ -1928,7 +1935,7 @@ void HbTableView::resizeEvent( QResizeEvent * event )
 }
 QModelIndex HbTableView::moveCursor( HbTableView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers )
 {
-// char str[ 50 ]; hb_snprintf( str, sizeof( str ), "HbTableView: action=%i %i", cursorAction, QAbstractItemView::MoveDown );  OutputDebugString( str );
+//hb_snprintf( str, sizeof( str ), "HbTableView: action=%i %i", cursorAction, QAbstractItemView::MoveDown );  OutputDebugString( str );
 
    //emit sg_moveCursor( cursorAction, modifiers );
    return QTableView::moveCursor( cursorAction, modifiers );
@@ -1943,7 +1950,7 @@ void HbTableView::scrollContentsBy( int x, int y )
 }
 void HbTableView::scrollTo( const QModelIndex & index, QAbstractItemView::ScrollHint hint )
 {
-//char str[ 50 ]; hb_snprintf( str, sizeof( str ), "HbTableView:scrollTo row = %i col = %i", index.row(),index.column() );  OutputDebugString( str );
+//hb_snprintf( str, sizeof( str ), "HbTableView:scrollTo row = %i col = %i", index.row(),index.column() );  OutputDebugString( str );
    QTableView::scrollTo( index, hint );
 }
 
@@ -2215,16 +2222,19 @@ MyMainWindow::MyMainWindow( PHB_ITEM pBlock, int iThreadID )
 
    block     = pBlock;
    threadID  = iThreadID;
-   activated = true;
-   painter   = new QPainter( this );
 }
 MyMainWindow::~MyMainWindow( void )
 {
-   delete painter;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "~MyMainWindow               %i %i", (int) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    hb_itemRelease( block );
    destroy();
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "~MyMainWindow               %i %i", (int) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 }
-void MyMainWindow::paintEvent( QPaintEvent * event )
+void MyMainWindow::xpaintEvent( QPaintEvent * event )
 {
    hb_threadMutexLock( s_mutex );
 
@@ -2260,10 +2270,6 @@ bool MyMainWindow::event( QEvent * event )
 {
    int type = event->type();
 //hb_snprintf( str, sizeof( str ), "                      event(%i) %i", threadID , type );  OutputDebugString( str );
-   if( type == QEvent::WindowActivate || type == QEvent::Enter )
-   {
-      activated = true;
-   }
    hb_threadMutexLock( s_mutex );
    #if 0
    if( hb_vmRequestReenter() )
@@ -2292,7 +2298,6 @@ void MyMainWindow::focusInEvent( QFocusEvent *event )
       hb_itemRelease( p1 );
       hb_vmRequestRestore();
    }
-   activated = true;
    QWidget::focusInEvent( event );
    hb_threadMutexUnlock( s_mutex );
 }
@@ -2480,4 +2485,55 @@ HB_FUNC( QT_MYDRAWINGAREA )
 
 /*----------------------------------------------------------------------*/
 
+#if defined(__debug__)
+
+#include <Psapi.h>
+int hb_getMemUsed( void )
+{
+   HANDLE hProcess;
+   PROCESS_MEMORY_COUNTERS pmc;
+   int size = 0;
+
+   hProcess = OpenProcess(  PROCESS_QUERY_INFORMATION |
+                                    PROCESS_VM_READ,
+                                    FALSE, GetCurrentProcessId() );
+    if (NULL == hProcess)
+        return 0;
+
+    if ( GetProcessMemoryInfo( hProcess, &pmc, sizeof(pmc)) )
+    {
+       #if 0
+        printf( "\tPageFaultCount: 0x%08X\n", pmc.PageFaultCount );
+        printf( "\tPeakWorkingSetSize: 0x%08X\n",
+                  pmc.PeakWorkingSetSize );
+        printf( "\tWorkingSetSize: 0x%08X\n", pmc.WorkingSetSize );
+        printf( "\tQuotaPeakPagedPoolUsage: 0x%08X\n",
+                  pmc.QuotaPeakPagedPoolUsage );
+        printf( "\tQuotaPagedPoolUsage: 0x%08X\n",
+                  pmc.QuotaPagedPoolUsage );
+        printf( "\tQuotaPeakNonPagedPoolUsage: 0x%08X\n",
+                  pmc.QuotaPeakNonPagedPoolUsage );
+        printf( "\tQuotaNonPagedPoolUsage: 0x%08X\n",
+                  pmc.QuotaNonPagedPoolUsage );
+        printf( "\tPagefileUsage: 0x%08X\n", pmc.PagefileUsage );
+        printf( "\tPeakPagefileUsage: 0x%08X\n",
+                  pmc.PeakPagefileUsage );
+        #endif
+
+        size = ( int ) pmc.WorkingSetSize / 1024 ;
+    }
+
+    CloseHandle( hProcess );
+    return size;
+}
+#endif
+
+HB_FUNC( HB_GETMEMUSED )
+{
+#if defined(__debug__)
+   hb_retni( hb_getMemUsed() );
+#else
+   hb_retni( 0 );
+#endif
+}
 #endif

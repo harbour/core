@@ -124,9 +124,13 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::cargo := ThreadID()                               /* To Be Removed */
 
-   //::oWidget := QMainWindow():new()
+   #define __xQMAINWINDOW__
+   //
+   #ifdef __QMAINWINDOW__
+   ::oWidget := QMainWindow():new()
+   #else
    ::oWidget := QMainWindow():configure( QT_MyMainWindow( {|n,p| ::grabEvent( n,p ) }, ThreadID() ) )
-   //::oWidget:setAttribute( Qt_WA_DeleteOnClose )
+   #endif
    //::oWidget:setMouseTracking( .t. )
 
    IF !empty( ::title )
@@ -162,7 +166,9 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    /* Instal Event Filter */
    ::oWidget:installEventFilter( SetEventFilter() )
 
+   #ifdef __QMAINWINDOW__
    ::connectWindowEvents()
+   #endif
 
    ::connectEvent( ::pWidget, QEvent_Close           , {|o,e| ::exeBlock( QEvent_Close           , e, o ) } )
    ::connectEvent( ::pWidget, QEvent_WindowActivate  , {|o,e| ::exeBlock( QEvent_WindowActivate  , e, o ) } )
@@ -227,6 +233,8 @@ METHOD XbpDialog:destroy()
 
    ::oWidget     := NIL
    Self          := NIL
+
+   ClearEventBuffer()
 
    RETURN nil
 

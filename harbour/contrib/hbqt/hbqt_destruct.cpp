@@ -103,6 +103,11 @@ void * hbqt_ptrTOgcpointer( void * ptr, QT_G_FUNC_PTR func )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    p->ph = ptr;
    p->func = func;
+
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "      hbqt_ptrTOgcpointer( %p, %p ) %i %i", ptr, func, ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
+
    return p;
 }
 

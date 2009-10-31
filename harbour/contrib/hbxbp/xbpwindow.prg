@@ -715,16 +715,15 @@ xbp_Debug( memory( 1001 ),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(
       ::aChildren := {}
    ENDIF
 
+   ::XbpPartHandler:destroy()
+   ::clearSlots()
+
    IF cXbp != "XBPDIALOG"
       ::oWidget:pPtr := 0
       ::oWidget := NIL
    ENDIF
-   ::XbpPartHandler:destroy()
-   ::clearSlots()
 
 xbp_Debug( memory( 1001 ),"          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ) )
-
-//   Self           := NIL
 
    RETURN NIL
 

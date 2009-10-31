@@ -469,7 +469,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       aadd( cpp_, "{                                      " )
       IF lDestructor
          aadd( cpp_, "#if defined(__debug__)" )
-         aadd( cpp_, '   hb_snprintf( str, sizeof(str), "' + 'release_' + cWidget + '" );  OutputDebugString( str );' )
+         aadd( cpp_, 'hb_snprintf( str, sizeof(str), "' + 'release_' + pad( cWidget, 27 ) + ' %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );' )
          aadd( cpp_, "#endif" )
          aadd( cpp_, "   void * ph = ( void * ) Cargo;       " )
          aadd( cpp_, "   if( ph )                            " )
@@ -484,13 +484,19 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
             aadd( cpp_, "      else" )
             aadd( cpp_, "      {" )
             aadd( cpp_, "#if defined(__debug__)" )
-            aadd( cpp_, '   hb_snprintf( str, sizeof(str), "' + '  Object Name Missing: ' + cWidget + '" );  OutputDebugString( str );' )
+            aadd( cpp_, 'hb_snprintf( str, sizeof(str), "' + '  Object Name Missing: ' + cWidget + '" );  OutputDebugString( str );' )
             aadd( cpp_, "#endif" )
             aadd( cpp_, "      }" )
          ELSE
             aadd( cpp_, "      delete ( ( " + cWidget + IF( lList, "< void * >", "" ) + " * ) ph ); " )
             aadd( cpp_, "      ph = NULL;" )
          ENDIF
+         aadd( cpp_, "   }" )
+         aadd( cpp_, "   else" )
+         aadd( cpp_, "   {" )
+         aadd( cpp_, "#if defined(__debug__)" )
+         aadd( cpp_, 'hb_snprintf( str, sizeof(str), "' + '! ph____' + cWidget + '" );  OutputDebugString( str );' )
+         aadd( cpp_, "#endif" )
          aadd( cpp_, "   }" )
       ELSE
          aadd( cpp_, "   HB_SYMBOL_UNUSED( Cargo );" )
@@ -520,6 +526,11 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
          ELSE
             aadd( cpp_, "   void * pObj = NULL;" )
          ENDIF
+
+         aadd( cpp_, "#if defined(__debug__)" )
+         aadd( cpp_, 'hb_snprintf( str, sizeof(str), "' + '   ' + IF( lDestructor, 'GC', 'NON-GC' ) + ':  new ' + pad( cWidget, 27 ) + ' %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );' )
+         aadd( cpp_, "#endif" )
+
          aadd( cpp_, "" )
          FOR i := 3 TO len( new_ ) - 1
             IF left( ltrim( new_[ i ] ), 2 ) != "//"
@@ -533,6 +544,11 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
             ENDIF
          NEXT
          aadd( cpp_, "" )
+
+         aadd( cpp_, "#if defined(__debug__)" )
+         aadd( cpp_, 'hb_snprintf( str, sizeof(str), "' + '   ' + IF( lDestructor, 'GC', 'NON-GC' ) + ':      ' + pad( " ", 27 ) + ' %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );' )
+         aadd( cpp_, "#endif" )
+
          //IF lObject .or. IsMemObject( cWidget )
          IF lDestructor
             aadd( cpp_, "   p->ph = pObj;" )

@@ -87,10 +87,16 @@ HB_FUNC( QT_HBTABLEVIEW_NAVIGATE )
    hb_retptr( new QModelIndex( hbqt_par_HbTableView( 1 )->navigate( hb_parni( 2 ) ) ) );
 }
 
+HB_FUNC( QT_HBTABLEVIEW_DESTROY )
+{
+   hbqt_par_HbTableView( 1 )->~HbTableView();
+}
+
+
 QT_G_FUNC( release_QTableView )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QTableView" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QTableView                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -104,9 +110,15 @@ QT_G_FUNC( release_QTableView )
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QTableView" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QTableView" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QTableView" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -114,9 +126,15 @@ HB_FUNC( QT_QTABLEVIEW )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QTableView > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QTableView                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QTableView* ) new QTableView( hbqt_par_QWidget( 1 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QTableView;
 

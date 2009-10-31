@@ -138,6 +138,17 @@ FUNCTION InitializeEventBuffer()
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION ClearEventBuffer()
+
+   IF !empty( ts_events )
+      aeval( ts_events, {|e,i| e := e, ts_events[ i ] := NIL } )
+      ts_events := NIL
+   ENDIF
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION SetEventFilter()
 
    RETURN QT_QEventFilter()
