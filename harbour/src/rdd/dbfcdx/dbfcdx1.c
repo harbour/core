@@ -3221,10 +3221,13 @@ static int hb_cdxPageKeyIntBalance( LPCDXPAGE pPage, int iChildRet )
     */
    if( iKeys > 0 )
    {
+      fForce = pPage->TagParent->MaxKeys == 2 && iBlncKeys > 2 &&
+               iKeys == ( iBlncKeys << 1 ) - 1;
       pPtr = pKeyPool;
       for( i = 0; i < iBlncKeys; i++ )
       {
-         iNodeKeys = ( iKeys + iBlncKeys - i - 1 ) / ( iBlncKeys - i );
+         iNodeKeys = ( fForce && i == 1 ) ? 1 :
+                     ( ( iKeys + iBlncKeys - i - 1 ) / ( iBlncKeys - i ) );
 #ifdef HB_CDX_DBGCODE
          if( iNodeKeys > pPage->TagParent->MaxKeys )
             hb_cdxErrInternal( "hb_cdxPageKeyIntBalance: iNodeKeys calculated wrong!." );
