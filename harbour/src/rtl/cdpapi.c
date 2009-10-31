@@ -1011,7 +1011,27 @@ ULONG hb_cdpStringInU16Length( PHB_CODEPAGE cdp, BOOL fCtrl,
    HB_SYMBOL_UNUSED( fCtrl );
    HB_SYMBOL_UNUSED( pSrc );
 
-   return ulLen << 1;
+   return ulLen;
+}
+
+ULONG hb_cdpStringInU16Length2( PHB_CODEPAGE cdp, BOOL fCtrl,
+                                const char *pSrc, ULONG ulLen, ULONG ulDst )
+{
+   if( cdp && cdp->uniTable )
+   {
+      /*
+       * TODO: add support for multibyte characters
+       */
+   }
+
+   HB_SYMBOL_UNUSED( cdp );
+   HB_SYMBOL_UNUSED( fCtrl );
+   HB_SYMBOL_UNUSED( pSrc );
+
+   if( ulDst < ulLen )
+      ulLen = ulDst;
+
+   return ulLen;
 }
 
 ULONG hb_cdpStrnToU16( PHB_CODEPAGE cdp, BOOL fCtrl,
@@ -1032,7 +1052,7 @@ ULONG hb_cdpStrnToU16( PHB_CODEPAGE cdp, BOOL fCtrl,
             u = hb_cdpGetU16( cdp, fCtrl, ( UCHAR ) pSrc[ i ] );
             HB_PUT_BE_UINT16( pDst, u );
          }
-         return i << 1;
+         return i;
       }
       else
       {
@@ -1056,6 +1076,56 @@ ULONG hb_cdpStrnToU16( PHB_CODEPAGE cdp, BOOL fCtrl,
    return i;
 }
 
+ULONG hb_cdpStrnToU16n( PHB_CODEPAGE cdp, BOOL fCtrl,
+                        const char * pSrc, ULONG ulLen,
+                        HB_WCHAR * pDst, ULONG ulDst )
+{
+   HB_WCHAR u, *uniCodes, nChars;
+   ULONG i;
+
+   if( ulLen > ulDst )
+      ulLen = ulDst;
+
+   if( cdp && cdp->uniTable )
+   {
+      if( cdp->nMulti || cdp->uniTable->lMulti )
+      {
+         /*
+          * TODO: this translation is bad, please fix me!!!
+          */
+         for( i = 0; i < ulLen; i++, pDst++ )
+         {
+            u = hb_cdpGetU16( cdp, fCtrl, ( UCHAR ) pSrc[ i ] );
+            HB_PUT_BE_UINT16( pDst, u );
+         }
+         if( i < ulDst )
+            pDst[ i ] = '\0';
+         return i;
+      }
+      else
+      {
+         uniCodes = cdp->uniTable->uniCodes;
+         nChars = ( HB_WCHAR ) cdp->uniTable->nChars;
+      }
+   }
+   else
+   {
+      nChars = 0;
+      uniCodes = NULL;
+   }
+
+   for( i = 0; i < ulLen; i++, pDst++ )
+   {
+      u = ( UCHAR ) pSrc[ i ];
+      if( uniCodes && u < nChars && ( fCtrl || u >= 32 ) )
+         u = uniCodes[ u ];
+      HB_PUT_BE_UINT16( pDst, u );
+   }
+   if( i < ulDst )
+      pDst[ i ] = '\0';
+   return i;
+}
+
 ULONG hb_cdpStrnToU16LE( PHB_CODEPAGE cdp, BOOL fCtrl,
                          const char * pSrc, ULONG ulLen, HB_WCHAR * pDst )
 {
@@ -1074,7 +1144,7 @@ ULONG hb_cdpStrnToU16LE( PHB_CODEPAGE cdp, BOOL fCtrl,
             u = hb_cdpGetU16( cdp, fCtrl, ( UCHAR ) pSrc[ i ] );
             HB_PUT_LE_UINT16( pDst, u );
          }
-         return i << 1;
+         return i;
       }
       else
       {
@@ -1095,6 +1165,56 @@ ULONG hb_cdpStrnToU16LE( PHB_CODEPAGE cdp, BOOL fCtrl,
          u = uniCodes[ u ];
       HB_PUT_LE_UINT16( pDst, u );
    }
+   return i;
+}
+
+ULONG hb_cdpStrnToU16LEn( PHB_CODEPAGE cdp, BOOL fCtrl,
+                          const char * pSrc, ULONG ulLen,
+                          HB_WCHAR * pDst, ULONG ulDst )
+{
+   HB_WCHAR u, *uniCodes, nChars;
+   ULONG i;
+
+   if( ulLen > ulDst )
+      ulLen = ulDst;
+
+   if( cdp && cdp->uniTable )
+   {
+      if( cdp->nMulti || cdp->uniTable->lMulti )
+      {
+         /*
+          * TODO: this translation is bad, please fix me!!!
+          */
+         for( i = 0; i < ulLen; i++, pDst++ )
+         {
+            u = hb_cdpGetU16( cdp, fCtrl, ( UCHAR ) pSrc[ i ] );
+            HB_PUT_LE_UINT16( pDst, u );
+         }
+         if( i < ulDst )
+            pDst[ i ] = '\0';
+         return i;
+      }
+      else
+      {
+         uniCodes = cdp->uniTable->uniCodes;
+         nChars = ( HB_WCHAR) cdp->uniTable->nChars;
+      }
+   }
+   else
+   {
+      nChars = 0;
+      uniCodes = NULL;
+   }
+
+   for( i = 0; i < ulLen; i++, pDst++ )
+   {
+      u = ( UCHAR ) pSrc[ i ];
+      if( uniCodes && u < nChars && ( fCtrl || u >= 32 ) )
+         u = uniCodes[ u ];
+      HB_PUT_LE_UINT16( pDst, u );
+   }
+   if( i < ulDst )
+      pDst[ i ] = '\0';
    return i;
 }
 
