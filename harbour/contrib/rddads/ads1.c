@@ -1422,11 +1422,13 @@ static HB_ERRCODE adsAppend( ADSAREAP pArea, BOOL fUnLockAll )
    {
       commonError( pArea, EG_READONLY, EDBF_READONLY, 0, NULL, 0, NULL );
    }
+   else if( u32RetVal == 1024 /* Append Lock Failed */ )
+   {
+      commonError( pArea, EG_APPENDLOCK, EDBF_APPENDLOCK, 0, NULL, EF_CANDEFAULT, NULL );
+   }
    else
    {
-      /* 1001 and 7008 are standard ADS Open Errors that will usually be sharing issues */
-      USHORT uiOsCOde = u32RetVal == 1001 || u32RetVal == 7008 ? 32 : 0;
-      commonError( pArea, EG_APPENDLOCK, ( USHORT ) u32RetVal, uiOsCOde, NULL, EF_CANDEFAULT, NULL );
+      commonError( pArea, EG_CORRUPTION, ( USHORT ) u32RetVal, 0, NULL, EF_CANDEFAULT, NULL );
    }
 
    return HB_FAILURE;
