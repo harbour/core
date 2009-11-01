@@ -713,7 +713,7 @@ typedef unsigned int        HB_UINT;
    typedef ULONGLONG           HB_ULONGLONG;
 #endif
 typedef double              HB_DOUBLE;
-typedef long                HB_SIZE;
+typedef ULONG               HB_SIZE;           /* TOFIX: Change to 'long' */
 typedef void *              HB_PTRVAL;         /* TOFIX */
 /* typedef                     HB_POINTER;    */    /* TOFIX */
 
