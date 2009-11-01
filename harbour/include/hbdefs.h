@@ -312,6 +312,11 @@
 #endif
 
 #if USHRT_MAX == 0xFFFF
+   typedef signed short int    HB_I16;
+   typedef unsigned short int  HB_U16;
+   #define HB_I16_MIN          SHRT_MIN
+   #define HB_I16_MAX          SHRT_MAX
+   #define HB_U16_MAX          USHRT_MAX
    typedef signed short int    hbI16;
    typedef unsigned short int  hbU16;
    #define hbI16Min            SHRT_MIN
@@ -333,6 +338,11 @@
 #     define INT16_MIN     SHRT_MIN
 #  endif
 #else
+   typedef short int           HB_I16;
+   typedef unsigned short int  HB_U16;
+   #define HB_I16_MIN          SHRT_MIN
+   #define HB_I16_MAX          SHRT_MAX
+   #define HB_U16_MAX          USHRT_MAX
    typedef short int           hbI16;
    typedef unsigned short int  hbU16;
    #define hbI16Min            SHRT_MIN
@@ -341,6 +351,11 @@
 #endif
 
 #if UINT_MAX == 0xFFFFFFFF
+   typedef signed int          HB_I32;
+   typedef unsigned int        HB_U32;
+   #define HB_I32_MIN          INT_MIN
+   #define HB_I32_MAX          INT_MAX
+   #define HB_U32_MAX          UINT_MAX
    typedef signed int          hbI32;
    typedef unsigned int        hbU32;
    #define hbI32Min            INT_MIN
@@ -362,6 +377,11 @@
 #     define INT32_MIN     INT_MIN
 #  endif
 #elif ULONG_MAX == 0xFFFFFFFF
+   typedef signed long         HB_I32;
+   typedef unsigned long       HB_U32;
+   #define HB_I32_MIN          LONG_MIN
+   #define HB_I32_MAX          LONG_MAX
+   #define HB_U32_MAX          ULONG_MAX
    typedef signed long         hbI32;
    typedef unsigned long       hbU32;
    #define hbI32Min            LONG_MIN
@@ -398,6 +418,11 @@
 #endif
 
 #if defined( HB_ARCH_64BIT ) && !defined( HB_OS_WIN_64 )
+   typedef signed long         HB_I64;
+   typedef unsigned long       HB_U64;
+   #define HB_I64_MIN          LONG_MIN
+   #define HB_I64_MAX          LONG_MAX
+   #define HB_U64_MAX          ULONG_MAX
    typedef signed long         hbI64;
    typedef unsigned long       hbU64;
    #define hbI64Min            LONG_MIN
@@ -419,6 +444,11 @@
 #    define INT64_MIN     LONG_MIN
 #  endif
 #elif !defined( HB_LONG_LONG_OFF )
+   typedef LONGLONG            HB_I64;
+   typedef ULONGLONG           HB_U64;
+   #define HB_I64_MIN          LONGLONG_MIN
+   #define HB_I64_MAX          LONGLONG_MAX
+   #define HB_U64_MAX          ULONGLONG_MAX
    typedef LONGLONG            hbI64;
    typedef ULONGLONG           hbU64;
    #define hbI64Min            LONGLONG_MIN
@@ -691,9 +721,31 @@ typedef unsigned long HB_COUNTER;
 /* http://www.opengroup.org/onlinepubs/009695399/basedefs/stdint.h.html
    http://www.opengroup.org/onlinepubs/009695399/basedefs/stdbool.h.html */
 
-/* TODO: hbBool -> bool
-         hbFALSE / FALSE -> false
-         hbTRUE / TRUE -> true */
+#define HB_FALSE 0
+#define HB_TRUE  (!0)
+
+typedef int                 HB_BOOL;
+typedef char                HB_CHAR;
+typedef signed char         HB_SCHAR;
+typedef unsigned char       HB_UCHAR;
+typedef short               HB_SHORT;
+typedef unsigned short      HB_USHORT;
+typedef int                 HB_INT;
+typedef unsigned int        HB_UINT;
+#if !defined( HB_LONG_LONG_OFF )
+   typedef LONGLONG            HB_LONGLONG;
+   typedef ULONGLONG           HB_ULONGLONG;
+#endif
+typedef double              HB_DOUBLE;
+typedef long                HB_SIZE;
+typedef void *              HB_PTRVAL;         /* TOFIX */
+/* typedef                     HB_POINTER;    */    /* TOFIX */
+
+/* Harbour strict bit types: */
+typedef signed char         HB_I8;
+typedef unsigned char       HB_U8;
+
+/* ---------------- */
 
 #define hbFALSE  0
 #define hbTRUE   (!0)
@@ -1627,9 +1679,8 @@ HB_EXTERN_C_ typedef PHB_FUNC HB_FUNC_PTR;
 
 typedef SHORT HB_SYMBOLSCOPE;   /* stores symbol's scope */
 
-typedef BYTE HB_CHAR;
 typedef BYTE HB_ATTR;
-typedef BYTE HB_COLOR;
+typedef int HB_COLOR;
 
 /* Some common character constants */
 
