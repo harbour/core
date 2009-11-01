@@ -699,6 +699,7 @@ typedef unsigned long HB_COUNTER;
 #define HB_TRUE  (!0)
 
 typedef int                 HB_BOOL;
+typedef unsigned char       HB_BYTE;
 typedef char                HB_CHAR;
 typedef signed char         HB_SCHAR;
 typedef unsigned char       HB_UCHAR;
