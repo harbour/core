@@ -36,7 +36,7 @@
  *    entry point override method and detection code for gcc.
  *    rtlink/blinker link script parsers.
  *    POTMerge(), LoadPOTFilesAsHash(), GenHBL() and AutoTrans().
- *       (with local modifications by hbmk author)
+ *       (with local modifications by hbmk2 author)
  *
  * See COPYING for licensing terms.
  *
@@ -96,10 +96,32 @@
          adding rest of variables). */
 /* TODO: Add a way to fallback to stop if required headers couldn't be found.
          This needs a way to spec what key headers to look for. */
+
 /* TODO: Clean up compiler autodetection and add those few feature only
          found in GNU Make / global.mk, like *nix native autodetection,
          autodetection of watcom cross-build setups, poccarm/pocc64 setups,
          clang, etc. */
+
+/* TODO: Next gen compiler autodetection:
+         1. Gather supported compilers by Harbour installation 
+            (look for lib/<plat>/*[/<name>] subdirs)
+            Show error if nothing is found
+         2. Look if any supported compilers are found embedded or in PATH 
+            for target <plat>.
+            Show error if nothing is found
+         3. If HB_COMPILER is set to one of them, select it.
+            (TODO: handle multiple installations of the same compiler.
+            F.e. embedded mingw and one in PATH, or two versions of MSVC)
+         4. If HB_COMPILER is set, but not to one of them, show warning and 
+            use the highest one on the priority list.
+         5. If HB_COMPILER is not set, or the one set isn't available, 
+            use the highest one on the priority list.
+         NOTES: - compilers in PATH have higher priority than embedded.
+                - Priority list: mingw, msvc, bcc, watcom, pocc, xcc
+                - Compilers of native CPU target have higher priority. (extra)
+                  On x64 Windows: msvc64, msvc, msvcia64, mingw64, mingw, ...
+                  On x86 Windows: msvc, msvc64, msvcia64, mingw, mingw64, ...
+                  On IA64 Windows: msvcia64, msvc, msvc64, mingw, mingw64, ... */
 
 #ifndef _HBMK_EMBEDDED_
 
