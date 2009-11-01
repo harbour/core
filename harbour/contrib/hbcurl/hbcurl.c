@@ -343,7 +343,7 @@ static int hb_curl_progress_callback( void * Cargo, double dltotal, double dlnow
       PHB_ITEM p1 = hb_itemPutND( NULL, ulnow   > 0 ? ulnow   : dlnow   );
       PHB_ITEM p2 = hb_itemPutND( NULL, ultotal > 0 ? ultotal : dltotal );
 
-      hbBool bResult = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) Cargo, 2, p1, p2 ) );
+      HB_BOOL bResult = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) Cargo, 2, p1, p2 ) );
 
       hb_itemRelease( p1 );
       hb_itemRelease( p2 );
@@ -431,7 +431,7 @@ static void hb_curl_buff_dl_free( PHB_CURL hb_curl )
 /* ---------------------------------------------------------------------------- */
 /* Constructor/Destructor */
 
-static void PHB_CURL_free( PHB_CURL hb_curl, hbBool bFree )
+static void PHB_CURL_free( PHB_CURL hb_curl, HB_BOOL bFree )
 {
    curl_easy_setopt( hb_curl->curl, CURLOPT_READFUNCTION, NULL );
    curl_easy_setopt( hb_curl->curl, CURLOPT_READDATA, NULL );
@@ -517,7 +517,7 @@ static HB_GARBAGE_FUNC( PHB_CURL_release )
       * hb_curl_ptr = NULL;
 
       /* Destroy the object */
-      PHB_CURL_free( hb_curl, hbTRUE );
+      PHB_CURL_free( hb_curl, HB_TRUE );
    }
 }
 
@@ -592,7 +592,7 @@ HB_FUNC( CURL_EASY_CLEANUP )
          * ph = NULL;
 
          /* Destroy the object */
-         PHB_CURL_free( hb_curl, hbTRUE );
+         PHB_CURL_free( hb_curl, HB_TRUE );
       }
    }
    else
@@ -608,7 +608,7 @@ HB_FUNC( CURL_EASY_RESET )
       PHB_CURL hb_curl = PHB_CURL_par( 1 );
 
       if( hb_curl )
-         PHB_CURL_free( hb_curl, hbFALSE );
+         PHB_CURL_free( hb_curl, HB_FALSE );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
