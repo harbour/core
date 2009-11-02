@@ -447,6 +447,8 @@ HB_HOST_CPU :=
 ifeq ($(HB_HOST_PLAT),win)
    ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
       HB_HOST_CPU := x86_64
+   else ifeq ($(PROCESSOR_ARCHITEW6432),AMD64)
+      HB_HOST_CPU := x86_64
    else ifeq ($(PROCESSOR_ARCHITECTURE),IA64)
       HB_HOST_CPU := ia64
    else
