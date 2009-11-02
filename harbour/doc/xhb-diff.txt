@@ -104,12 +104,12 @@ file system(s) and with different OS(s).
             ? a, b
          NEXT
    c) it has native support for hashes:
-         FOR EACH x IN {"ABC"=>123,"ASD"=>456,"ZXC"=>789}
+         FOR EACH x IN { "ABC" => 123, "ASD" => 456, "ZXC" => 789 }
             ? x, "@", x:__enumKey()
          NEXT
    d) it allows to assing string items, f.e.:
          s := "abcdefghijk"
-         FOR EACH c IN (@s)
+         FOR EACH c IN @s
             IF c $ "aei"
                c := UPPER( c )
             ENDIF
@@ -118,7 +118,7 @@ file system(s) and with different OS(s).
    e) it gives OOP interface to controll enumerator variables what
       is very important when more then one variable is iterated or
       when FOR EACH is called recursively, f.e.:
-         hVal := {"ABC"=>123,"ASD"=>456,"ZXC"=>789}
+         hVal := { "ABC" => 123, "ASD" => 456, "ZXC" => 789 }
          FOR EACH x IN hVal
             ? x:__enumIndex(), ":", x:__enumKey(), "=>", x:__enumValue(), ;
               "=>", x:__enumBase()[ x:__enumKey() ]
@@ -300,13 +300,13 @@ In xHarbour the behavior of references stored in array is reverted in
 comparison to Clipper or Harbour.
 In Clipper and Harbour VM executing code like:
          aVal[ 1 ] := 100
-clears unconditional 1-st item in aVal array and assign to it value 100.
-xHarbour checks if aVal[ 1 ] is an reference and in such case it resolve
+clears unconditionally 1-st item in aVal array and assign to it value 100.
+xHarbour checks if aVal[ 1 ] is an reference and in such case it resolves
 the reference and then assign 100 to the destination item.
 On access Clipper and Harbour VM executing code like:
          x := aVal[ 1 ]
 copy to x the exact value stored in aVal[ 1 ]. xHarbour checks is aVal[ 1 ]
-is an reference and in such case it resolve the reference and then copy to x
+is an reference and in such case it resolves the reference and then copy to x
 the value of reference destination item.
 It can be seen in code like:
       proc main
@@ -426,11 +426,11 @@ the function, f.e.:
          return {|| ++n  }
 We call such variables "detached locals".
 Here there are two important differences between Clipper and [x]Harbour.
-In Clipper variables are detached when function exists and it does not
-know which variables were used but simply detach whole local variable
-frame from VM stack. It's very important to know that because it can
-be source of serious memory problems in OS like DOS.
-This simply code illustrates it:
+In Clipper variables are detached when function exits (returns) and it
+does not know which variables were used but simply detach whole local
+variable frame from VM stack. It's very important to know that because
+it can be source of serious memory problems in OS like DOS.
+This simple code illustrates it:
 
       // link using RTLINK and run with //e:0 //swapk:0
       // repeat test second time with additional non empty parameter <x>
@@ -461,10 +461,11 @@ is detached with codeblock which uses 'ref' variable and not released as
 long as codeblock is still accessible. It means that in few iterations
 all memory are allocated and program crashes. Clipper's programmers should
 know that and be careful when use detached local and if necessary clear
-explicitly other local variables before exist by setting NIL to them.
+explicitly other local variables before returning from the function by
+setting NIL to them.
 In Harbour and xHarbour only variables explicitly used in codeblocks
 are detached and detaching is done when codeblock is created and original
-local variables are replaced by references. It was possible because Harbour
+local variables are replaced by references. It is possible because Harbour
 and xHarbour support multilevel references chains so it works correctly
 also for local parameters passed be reference from parent functions.
 In Clipper only one level references are supported what creates second

@@ -783,6 +783,10 @@ ULONG hb_cdpUTF8StringLength( const char * pSrc, ULONG ulLen )
    HB_WCHAR uc;
    int n = 0;
 
+   /*
+    * TODO: add support for multibyte characters
+    */
+
    for( ul = ulDst = 0; ul < ulLen; ++ul )
    {
       if( utf8tou16nextchar( ( UCHAR ) pSrc[ ul ], &n, &uc ) )
@@ -1032,6 +1036,98 @@ ULONG hb_cdpStringInU16Length2( PHB_CODEPAGE cdp, BOOL fCtrl,
       ulLen = ulDst;
 
    return ulLen;
+}
+
+char * hb_cdpU16ToStr( PHB_CODEPAGE cdp, BOOL fCtrl,
+                       const HB_WCHAR * pSrc, ULONG ulLen,
+                       char * pDst, ULONG * pulDst )
+{
+   ULONG ulDst, ul;
+   HB_WCHAR wc;
+
+   /*
+    * TODO: add support for multibyte characters
+    */
+
+   if( pDst )
+   {
+      ulDst = *pulDst;
+   }
+   else
+   {
+      ulDst = ulLen + 1;
+      pDst = hb_xgrab( ulDst );
+   }
+
+   for( ul = 0; ul < ulLen && ul < ulDst; ++ul )
+   {
+      wc = HB_GET_BE_UINT16( &pSrc[ ul ] );
+      if( fCtrl || wc >= 32 )
+      {
+         int i;
+         for( i = fCtrl ? 0 : 32; i < cdp->uniTable->nChars; i++ )
+         {
+            if( cdp->uniTable->uniCodes[ i ] == wc )
+            {
+               wc = ( HB_WCHAR ) i;
+               break;
+            }
+         }
+      }
+      pDst[ ul ] = wc >= 0x100 ? '?' : ( UCHAR ) wc;
+   }
+
+   if( ul < ulDst )
+      pDst[ ul ] = 0;
+   *pulDst = ul;
+
+   return pDst;
+}
+
+char * hb_cdpU16LEToStr( PHB_CODEPAGE cdp, BOOL fCtrl,
+                         const HB_WCHAR * pSrc, ULONG ulLen,
+                         char * pDst, ULONG * pulDst )
+{
+   ULONG ulDst, ul;
+   HB_WCHAR wc;
+
+   /*
+    * TODO: add support for multibyte characters
+    */
+
+   if( pDst )
+   {
+      ulDst = *pulDst;
+   }
+   else
+   {
+      ulDst = ulLen + 1;
+      pDst = hb_xgrab( ulDst );
+   }
+
+   for( ul = 0; ul < ulLen && ul < ulDst; ++ul )
+   {
+      wc = HB_GET_LE_UINT16( &pSrc[ ul ] );
+      if( fCtrl || wc >= 32 )
+      {
+         int i;
+         for( i = fCtrl ? 0 : 32; i < cdp->uniTable->nChars; i++ )
+         {
+            if( cdp->uniTable->uniCodes[ i ] == wc )
+            {
+               wc = ( HB_WCHAR ) i;
+               break;
+            }
+         }
+      }
+      pDst[ ul ] = wc >= 0x100 ? '?' : ( UCHAR ) wc;
+   }
+
+   if( ul < ulDst )
+      pDst[ ul ] = 0;
+   *pulDst = ul;
+
+   return pDst;
 }
 
 ULONG hb_cdpStrnToU16( PHB_CODEPAGE cdp, BOOL fCtrl,
