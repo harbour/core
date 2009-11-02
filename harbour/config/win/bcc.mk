@@ -42,9 +42,9 @@ endif
 # Hack to autoconfig bcc, and not require properly set .cfg files in its bin dir.
 # It only works if compiler autodetection is being used.
 ifneq ($(HB_COMP_PATH_PUB),)
-   CFLAGS  += $(subst \,/,-I"$(HB_COMP_PATH_PUB)../Include")
-   LDFLAGS += $(subst \,/,-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
-   DFLAGS  += $(subst \,/,-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
+   HB_CFLAGS += $(subst \,/,-I"$(HB_COMP_PATH_PUB)../Include")
+   LDFLAGS   += $(subst \,/,-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
+   DFLAGS    += $(subst \,/,-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
 endif
 
 LD := bcc32.exe
