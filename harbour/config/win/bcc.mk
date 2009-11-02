@@ -108,7 +108,7 @@ define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dyn_object))
    @$(ECHO) $(ECHOQUOTE), $(subst /,\,$(DYN_DIR)/$@),, $(subst /,\,$(DLIBS)) cw32mt.lib import32.lib$(ECHOQUOTE) >> __dyn__.tmp
-   $(DY) $(DFLAGS) $(HB_DFLAGS) $(HB_USER_DFLAGS) c0d32.obj @__dyn__.tmp
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) c0d32.obj @__dyn__.tmp
    @$(CP) $(subst /,$(DIRSEP),$(DYN_DIR)/$(basename $@)$(LIB_EXT)) $(subst /,$(DIRSEP),$(IMP_FILE))
    @$(RM) $(subst /,$(DIRSEP),$(DYN_DIR)/$(basename $@)$(LIB_EXT))
 endef
