@@ -924,6 +924,10 @@ export HB_COMPILER
 export HB_COMPILER_VER
 export HB_SHELL
 
+ifneq ($(HB_COMP_PATH),)
+   export HB_COMP_PATH_PUB := $(HB_COMP_PATH)
+endif
+
 ifneq ($(filter $(HB_HOST_PLAT),win wce dos os2),)
    HB_HOST_PLAT_UNIX :=
 else
@@ -1025,6 +1029,7 @@ endif
 HB_CFLAGS :=
 HB_LDFLAGS :=
 HB_PRGFLAGS :=
+HB_DFLAGS :=
 
 HB_CROSS_BUILD :=
 ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))

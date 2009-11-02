@@ -17,6 +17,7 @@ CC_OUT := -o
 CPPFLAGS := -I. -I$(HB_INC_COMPILE)
 CFLAGS := -q -tWM
 LDFLAGS :=
+DFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -w -w-sig- -Q
@@ -36,6 +37,14 @@ endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -y -v
+endif
+
+# Hack to autoconfig bcc, and not require properly set .cfg files in its bin dir.
+# It only works if compiler autodetection is being used.
+ifneq ($(HB_COMP_PATH_PUB),)
+   CFLAGS  += $(subst \,/,-I"$(HB_COMP_PATH_PUB)../Include")
+   LDFLAGS += $(subst \,/,-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
+   DFLAGS  += $(subst \,/,-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
 endif
 
 LD := bcc32.exe
@@ -85,7 +94,7 @@ ifneq ($(HB_SHELL),sh)
 endif
 
 DY := ilink32.exe
-DFLAGS := -q -Gn -C -aa -Tpd -Gi -x
+DFLAGS += -q -Gn -C -aa -Tpd -Gi -x
 DY_OUT :=
 DLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib)$(LIB_EXT))
 DLIBS += $(foreach lib,$(SYSLIBS),$(lib)$(LIB_EXT))
@@ -99,7 +108,7 @@ define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dyn_object))
    @$(ECHO) $(ECHOQUOTE), $(subst /,\,$(DYN_DIR)/$@),, $(subst /,\,$(DLIBS)) cw32mt.lib import32.lib$(ECHOQUOTE) >> __dyn__.tmp
-   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) c0d32.obj @__dyn__.tmp
+   $(DY) $(DFLAGS) $(HB_DFLAGS) $(HB_USER_DFLAGS) c0d32.obj @__dyn__.tmp
    @$(CP) $(subst /,$(DIRSEP),$(DYN_DIR)/$(basename $@)$(LIB_EXT)) $(subst /,$(DIRSEP),$(IMP_FILE))
    @$(RM) $(subst /,$(DIRSEP),$(DYN_DIR)/$(basename $@)$(LIB_EXT))
 endef
