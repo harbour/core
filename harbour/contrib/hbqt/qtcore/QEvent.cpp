@@ -83,13 +83,19 @@
 QT_G_FUNC( release_QEvent )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QEvent" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QEvent                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QEvent * ) ph );
+      ( ( QEvent * ) ph )->~QEvent();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QEvent" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -97,9 +103,15 @@ HB_FUNC( QT_QEVENT )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QEvent                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QEvent* ) new QEvent( ( QEvent::Type ) hb_parni( 1 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QEvent;
 

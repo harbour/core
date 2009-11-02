@@ -99,13 +99,19 @@
 QT_G_FUNC( release_QPainter )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QPainter" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QPainter                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QPainter * ) ph );
+      ( ( QPainter * ) ph )->~QPainter();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QPainter" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -113,6 +119,9 @@ HB_FUNC( QT_QPAINTER )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QPainter                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
    {
@@ -123,6 +132,9 @@ HB_FUNC( QT_QPAINTER )
       pObj = new QPainter() ;
    }
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QPainter;
 

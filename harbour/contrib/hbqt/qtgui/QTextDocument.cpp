@@ -102,7 +102,7 @@
 QT_G_FUNC( release_QTextDocument )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QTextDocument" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QTextDocument               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -110,15 +110,21 @@ QT_G_FUNC( release_QTextDocument )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QTextDocument * ) ph );
+         ( ( QTextDocument * ) ph )->~QTextDocument();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QTextDocument" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QTextDocument" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QTextDocument" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -126,9 +132,15 @@ HB_FUNC( QT_QTEXTDOCUMENT )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QTextDocument > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QTextDocument               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QTextDocument* ) new QTextDocument( hbqt_par_QObject( 1 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QTextDocument;
 

@@ -91,7 +91,7 @@
 QT_G_FUNC( release_QTableWidget )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QTableWidget" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QTableWidget                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -99,15 +99,21 @@ QT_G_FUNC( release_QTableWidget )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QTableWidget * ) ph );
+         ( ( QTableWidget * ) ph )->~QTableWidget();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QTableWidget" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QTableWidget" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QTableWidget" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -115,12 +121,18 @@ HB_FUNC( QT_QTABLEWIDGET )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QTableWidget > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QTableWidget                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    if( hb_pcount() >= 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
       pObj = ( QTableWidget* ) new QTableWidget( hb_parni( 1 ), hb_parni( 2 ), hbqt_par_QWidget( 3 ) ) ;
    else
       pObj = ( QTableWidget* ) new QTableWidget( hbqt_par_QWidget( 1 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QTableWidget;
 

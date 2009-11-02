@@ -84,7 +84,7 @@
 QT_G_FUNC( release_QFontDialog )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QFontDialog" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QFontDialog                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -92,15 +92,21 @@ QT_G_FUNC( release_QFontDialog )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QFontDialog * ) ph );
+         ( ( QFontDialog * ) ph )->~QFontDialog();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QFontDialog" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QFontDialog" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QFontDialog" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -108,6 +114,9 @@ HB_FUNC( QT_QFONTDIALOG )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QFontDialog > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QFontDialog                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
@@ -122,6 +131,9 @@ HB_FUNC( QT_QFONTDIALOG )
       pObj = new QFontDialog( 0 ) ;
    }
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QFontDialog;
 

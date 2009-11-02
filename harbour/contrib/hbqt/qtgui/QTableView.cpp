@@ -104,7 +104,7 @@ hb_snprintf( str, sizeof(str), "release_QTableView                  %i B %i KB",
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QTableView * ) ph );
+         ( ( QTableView * ) ph )->~QTableView();
          ph = NULL;
       }
       else

@@ -78,7 +78,7 @@
 QT_G_FUNC( release_QAbstractProxyModel )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QAbstractProxyModel" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QAbstractProxyModel         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -86,15 +86,21 @@ QT_G_FUNC( release_QAbstractProxyModel )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QAbstractProxyModel * ) ph );
+         ( ( QAbstractProxyModel * ) ph )->~QAbstractProxyModel();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QAbstractProxyModel" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QAbstractProxyModel" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QAbstractProxyModel" );  OutputDebugString( str );
+#endif
    }
 }
 

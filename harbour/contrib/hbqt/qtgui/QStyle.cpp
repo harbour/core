@@ -94,7 +94,7 @@
 QT_G_FUNC( release_QStyle )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QStyle" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QStyle                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -102,15 +102,21 @@ QT_G_FUNC( release_QStyle )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QStyle * ) ph );
+         ( ( QStyle * ) ph )->~QStyle();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QStyle" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QStyle" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QStyle" );  OutputDebugString( str );
+#endif
    }
 }
 

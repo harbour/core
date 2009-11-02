@@ -85,7 +85,7 @@
 QT_G_FUNC( release_QDockWidget )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QDockWidget" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QDockWidget                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -93,15 +93,21 @@ QT_G_FUNC( release_QDockWidget )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QDockWidget * ) ph );
+         ( ( QDockWidget * ) ph )->~QDockWidget();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QDockWidget" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QDockWidget" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QDockWidget" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -109,9 +115,15 @@ HB_FUNC( QT_QDOCKWIDGET )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QDockWidget > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QDockWidget                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = new QDockWidget( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QDockWidget;
 

@@ -100,13 +100,19 @@
 QT_G_FUNC( release_QTextOption )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QTextOption" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QTextOption                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QTextOption * ) ph );
+      ( ( QTextOption * ) ph )->~QTextOption();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QTextOption" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -114,9 +120,15 @@ HB_FUNC( QT_QTEXTOPTION )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QTextOption                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = new QTextOption() ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QTextOption;
 

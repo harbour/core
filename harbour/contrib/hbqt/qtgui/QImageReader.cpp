@@ -95,13 +95,19 @@
 QT_G_FUNC( release_QImageReader )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QImageReader" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QImageReader                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QImageReader * ) ph );
+      ( ( QImageReader * ) ph )->~QImageReader();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QImageReader" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -109,9 +115,15 @@ HB_FUNC( QT_QIMAGEREADER )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QImageReader                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QImageReader* ) new QImageReader() ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QImageReader;
 

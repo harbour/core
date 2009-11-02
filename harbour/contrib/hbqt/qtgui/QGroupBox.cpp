@@ -80,7 +80,7 @@
 QT_G_FUNC( release_QGroupBox )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QGroupBox" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QGroupBox                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -88,15 +88,21 @@ QT_G_FUNC( release_QGroupBox )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QGroupBox * ) ph );
+         ( ( QGroupBox * ) ph )->~QGroupBox();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QGroupBox" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QGroupBox" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QGroupBox" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -104,9 +110,15 @@ HB_FUNC( QT_QGROUPBOX )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QGroupBox > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QGroupBox                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QGroupBox * ) new QGroupBox( hbqt_par_QWidget( 1 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QGroupBox;
 

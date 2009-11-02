@@ -111,6 +111,58 @@ hb_snprintf( str, sizeof(str), "      hbqt_ptrTOgcpointer( %p, %p ) %i %i", ptr,
    return p;
 }
 
+#if defined(__debug__)
+
+#include <Psapi.h>
+int hb_getMemUsed( void )
+{
+   HANDLE hProcess;
+   PROCESS_MEMORY_COUNTERS pmc;
+   int size = 0;
+
+   hProcess = OpenProcess(  PROCESS_QUERY_INFORMATION |
+                                    PROCESS_VM_READ,
+                                    FALSE, GetCurrentProcessId() );
+    if (NULL == hProcess)
+        return 0;
+
+    if ( GetProcessMemoryInfo( hProcess, &pmc, sizeof(pmc)) )
+    {
+       #if 0
+        printf( "\tPageFaultCount: 0x%08X\n", pmc.PageFaultCount );
+        printf( "\tPeakWorkingSetSize: 0x%08X\n",
+                  pmc.PeakWorkingSetSize );
+        printf( "\tWorkingSetSize: 0x%08X\n", pmc.WorkingSetSize );
+        printf( "\tQuotaPeakPagedPoolUsage: 0x%08X\n",
+                  pmc.QuotaPeakPagedPoolUsage );
+        printf( "\tQuotaPagedPoolUsage: 0x%08X\n",
+                  pmc.QuotaPagedPoolUsage );
+        printf( "\tQuotaPeakNonPagedPoolUsage: 0x%08X\n",
+                  pmc.QuotaPeakNonPagedPoolUsage );
+        printf( "\tQuotaNonPagedPoolUsage: 0x%08X\n",
+                  pmc.QuotaNonPagedPoolUsage );
+        printf( "\tPagefileUsage: 0x%08X\n", pmc.PagefileUsage );
+        printf( "\tPeakPagefileUsage: 0x%08X\n",
+                  pmc.PeakPagefileUsage );
+        #endif
+
+        size = ( int ) pmc.WorkingSetSize / 1024 ;
+    }
+
+    CloseHandle( hProcess );
+    return size;
+}
+#endif
+
+HB_FUNC( HB_GETMEMUSED )
+{
+#if defined(__debug__)
+   hb_retni( hb_getMemUsed() );
+#else
+   hb_retni( 0 );
+#endif
+}
+
 /*----------------------------------------------------------------------*/
 
 #endif                  // #if QT_VERSION >= 0x040500

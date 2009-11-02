@@ -84,7 +84,7 @@
 QT_G_FUNC( release_QDirModel )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QDirModel" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QDirModel                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -92,15 +92,21 @@ QT_G_FUNC( release_QDirModel )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QDirModel * ) ph );
+         ( ( QDirModel * ) ph )->~QDirModel();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QDirModel" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QDirModel" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QDirModel" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -108,9 +114,15 @@ HB_FUNC( QT_QDIRMODEL )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QDirModel > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QDirModel                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QDirModel* ) new QDirModel( hbqt_par_QObject( 1 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QDirModel;
 

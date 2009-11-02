@@ -79,13 +79,19 @@
 QT_G_FUNC( release_QTextInlineObject )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QTextInlineObject" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QTextInlineObject           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QTextInlineObject * ) ph );
+      ( ( QTextInlineObject * ) ph )->~QTextInlineObject();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QTextInlineObject" );  OutputDebugString( str );
+#endif
    }
 }
 

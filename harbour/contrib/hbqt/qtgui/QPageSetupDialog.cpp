@@ -84,7 +84,7 @@
 QT_G_FUNC( release_QPageSetupDialog )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QPageSetupDialog" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QPageSetupDialog            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -92,15 +92,21 @@ QT_G_FUNC( release_QPageSetupDialog )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QPageSetupDialog * ) ph );
+         ( ( QPageSetupDialog * ) ph )->~QPageSetupDialog();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QPageSetupDialog" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QPageSetupDialog" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QPageSetupDialog" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -108,12 +114,18 @@ HB_FUNC( QT_QPAGESETUPDIALOG )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QPageSetupDialog > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QPageSetupDialog            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    if( hb_pcount() >= 2 )
       pObj = ( QPageSetupDialog* ) new QPageSetupDialog( hbqt_par_QPrinter( 1 ), hbqt_par_QWidget( 1 ) ) ;
    else
       pObj = ( QPageSetupDialog* ) new QPageSetupDialog( hbqt_par_QWidget( 1 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QPageSetupDialog;
 

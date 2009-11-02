@@ -79,7 +79,7 @@
 QT_G_FUNC( release_QWheelEvent )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QWheelEvent" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QWheelEvent                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -87,15 +87,21 @@ QT_G_FUNC( release_QWheelEvent )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QWheelEvent * ) ph );
+         ( ( QWheelEvent * ) ph )->~QWheelEvent();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QWheelEvent" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QWheelEvent" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QWheelEvent" );  OutputDebugString( str );
+#endif
    }
 }
 

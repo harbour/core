@@ -80,13 +80,19 @@
 QT_G_FUNC( release_QMatrix )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QMatrix" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QMatrix                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QMatrix * ) ph );
+      ( ( QMatrix * ) ph )->~QMatrix();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QMatrix" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -94,9 +100,15 @@ HB_FUNC( QT_QMATRIX )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QMatrix                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = new QMatrix() ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QMatrix;
 

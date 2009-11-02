@@ -79,7 +79,7 @@
 QT_G_FUNC( release_QAbstractListModel )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QAbstractListModel" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QAbstractListModel          %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -87,15 +87,21 @@ QT_G_FUNC( release_QAbstractListModel )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QAbstractListModel * ) ph );
+         ( ( QAbstractListModel * ) ph )->~QAbstractListModel();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QAbstractListModel" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QAbstractListModel" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QAbstractListModel" );  OutputDebugString( str );
+#endif
    }
 }
 

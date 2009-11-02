@@ -83,7 +83,7 @@
 QT_G_FUNC( release_QHeaderView )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QHeaderView" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QHeaderView                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -91,15 +91,21 @@ QT_G_FUNC( release_QHeaderView )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QHeaderView * ) ph );
+         ( ( QHeaderView * ) ph )->~QHeaderView();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QHeaderView" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QHeaderView" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QHeaderView" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -107,9 +113,15 @@ HB_FUNC( QT_QHEADERVIEW )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QHeaderView > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QHeaderView                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = new QHeaderView( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QHeaderView;
 

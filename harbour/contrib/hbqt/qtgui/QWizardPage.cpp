@@ -77,7 +77,7 @@
 QT_G_FUNC( release_QWizardPage )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QWizardPage" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QWizardPage                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -85,15 +85,21 @@ QT_G_FUNC( release_QWizardPage )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QWizardPage * ) ph );
+         ( ( QWizardPage * ) ph )->~QWizardPage();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QWizardPage" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QWizardPage" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QWizardPage" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -101,9 +107,15 @@ HB_FUNC( QT_QWIZARDPAGE )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QWizardPage > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QWizardPage                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = new QWizardPage() ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QWizardPage;
 

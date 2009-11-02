@@ -90,7 +90,7 @@
 QT_G_FUNC( release_QWebPage )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QWebPage" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QWebPage                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -98,15 +98,21 @@ QT_G_FUNC( release_QWebPage )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QWebPage * ) ph );
+         ( ( QWebPage * ) ph )->~QWebPage();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QWebPage" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QWebPage" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QWebPage" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -114,9 +120,15 @@ HB_FUNC( QT_QWEBPAGE )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QWebPage > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QWebPage                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = new QWebPage( hbqt_par_QWidget( 2 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QWebPage;
 

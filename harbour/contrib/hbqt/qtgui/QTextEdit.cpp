@@ -97,7 +97,7 @@
 QT_G_FUNC( release_QTextEdit )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QTextEdit" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QTextEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -105,15 +105,21 @@ QT_G_FUNC( release_QTextEdit )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QTextEdit * ) ph );
+         ( ( QTextEdit * ) ph )->~QTextEdit();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QTextEdit" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QTextEdit" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QTextEdit" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -121,12 +127,18 @@ HB_FUNC( QT_QTEXTEDIT )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QTextEdit > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QTextEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
       pObj = ( QTextEdit* ) new QTextEdit( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
    else
       pObj = ( QTextEdit* ) new QTextEdit( hbqt_par_QWidget( 1 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QTextEdit;
 

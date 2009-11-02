@@ -89,7 +89,7 @@
 QT_G_FUNC( release_QMimeData )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QMimeData" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QMimeData                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -97,15 +97,21 @@ QT_G_FUNC( release_QMimeData )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QMimeData * ) ph );
+         ( ( QMimeData * ) ph )->~QMimeData();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QMimeData" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QMimeData" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QMimeData" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -113,9 +119,15 @@ HB_FUNC( QT_QMIMEDATA )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QMimeData > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QMimeData                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = new QMimeData() ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QMimeData;
 

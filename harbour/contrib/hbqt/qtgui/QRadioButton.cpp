@@ -79,7 +79,7 @@
 QT_G_FUNC( release_QRadioButton )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QRadioButton" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QRadioButton                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -87,15 +87,21 @@ QT_G_FUNC( release_QRadioButton )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QRadioButton * ) ph );
+         ( ( QRadioButton * ) ph )->~QRadioButton();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QRadioButton" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QRadioButton" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QRadioButton" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -103,12 +109,18 @@ HB_FUNC( QT_QRADIOBUTTON )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QRadioButton > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QRadioButton                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    if( HB_ISCHAR( 1 ) )
       pObj = ( QRadioButton* ) new QRadioButton( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
    else
       pObj = ( QRadioButton* ) new QRadioButton( hbqt_par_QWidget( 1 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QRadioButton;
 

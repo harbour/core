@@ -124,7 +124,7 @@ HB_FUNC( QT_HBDBFMODEL_DESTROY )
 QT_G_FUNC( release_QAbstractItemModel )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QAbstractItemModel" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QAbstractItemModel          %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -132,15 +132,21 @@ QT_G_FUNC( release_QAbstractItemModel )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QAbstractItemModel * ) ph );
+         ( ( QAbstractItemModel * ) ph )->~QAbstractItemModel();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QAbstractItemModel" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QAbstractItemModel" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QAbstractItemModel" );  OutputDebugString( str );
+#endif
    }
 }
 

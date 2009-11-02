@@ -84,13 +84,19 @@
 QT_G_FUNC( release_QStyleOptionTitleBar )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QStyleOptionTitleBar" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QStyleOptionTitleBar        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QStyleOptionTitleBar * ) ph );
+      ( ( QStyleOptionTitleBar * ) ph )->~QStyleOptionTitleBar();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QStyleOptionTitleBar" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -98,9 +104,15 @@ HB_FUNC( QT_QSTYLEOPTIONTITLEBAR )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QStyleOptionTitleBar        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QStyleOptionTitleBar* ) new QStyleOptionTitleBar() ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QStyleOptionTitleBar;
 

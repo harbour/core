@@ -93,13 +93,19 @@
 QT_G_FUNC( release_QPen )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QPen" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QPen                        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QPen * ) ph );
+      ( ( QPen * ) ph )->~QPen();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QPen" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -107,6 +113,9 @@ HB_FUNC( QT_QPEN )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QPen                        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
    {
@@ -142,6 +151,9 @@ HB_FUNC( QT_QPEN )
       pObj = ( QPen* ) new QPen() ;
    }
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QPen;
 

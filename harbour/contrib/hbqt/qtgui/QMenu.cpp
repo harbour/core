@@ -90,7 +90,7 @@
 QT_G_FUNC( release_QMenu )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QMenu" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QMenu                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -98,15 +98,21 @@ QT_G_FUNC( release_QMenu )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QMenu * ) ph );
+         ( ( QMenu * ) ph )->~QMenu();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QMenu" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QMenu" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QMenu" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -114,6 +120,9 @@ HB_FUNC( QT_QMENU )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QMenu > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QMenu                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
    {
@@ -124,6 +133,9 @@ HB_FUNC( QT_QMENU )
       pObj = ( QMenu* ) new QMenu( hbqt_par_QWidget( 1 ) ) ;
    }
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QMenu;
 

@@ -83,7 +83,7 @@
 QT_G_FUNC( release_QAbstractSlider )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QAbstractSlider" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QAbstractSlider             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -91,15 +91,21 @@ QT_G_FUNC( release_QAbstractSlider )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QAbstractSlider * ) ph );
+         ( ( QAbstractSlider * ) ph )->~QAbstractSlider();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QAbstractSlider" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QAbstractSlider" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QAbstractSlider" );  OutputDebugString( str );
+#endif
    }
 }
 

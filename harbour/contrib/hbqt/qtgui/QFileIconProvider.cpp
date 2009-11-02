@@ -82,13 +82,19 @@
 QT_G_FUNC( release_QFileIconProvider )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QFileIconProvider" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QFileIconProvider           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QFileIconProvider * ) ph );
+      ( ( QFileIconProvider * ) ph )->~QFileIconProvider();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QFileIconProvider" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -96,9 +102,15 @@ HB_FUNC( QT_QFILEICONPROVIDER )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QFileIconProvider           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = new QFileIconProvider() ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QFileIconProvider;
 

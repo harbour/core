@@ -79,7 +79,7 @@
 QT_G_FUNC( release_QScrollArea )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QScrollArea" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QScrollArea                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -87,15 +87,21 @@ QT_G_FUNC( release_QScrollArea )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QScrollArea * ) ph );
+         ( ( QScrollArea * ) ph )->~QScrollArea();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QScrollArea" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QScrollArea" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QScrollArea" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -103,9 +109,15 @@ HB_FUNC( QT_QSCROLLAREA )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QScrollArea > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QScrollArea                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QScrollArea* ) new QScrollArea( hbqt_par_QWidget( 1 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QScrollArea;
 

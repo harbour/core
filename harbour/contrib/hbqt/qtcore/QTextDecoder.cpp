@@ -79,13 +79,19 @@
 QT_G_FUNC( release_QTextDecoder )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QTextDecoder" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QTextDecoder                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QTextDecoder * ) ph );
+      ( ( QTextDecoder * ) ph )->~QTextDecoder();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QTextDecoder" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -93,9 +99,15 @@ HB_FUNC( QT_QTEXTDECODER )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QTextDecoder                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QTextDecoder* ) new QTextDecoder( hbqt_par_QTextCodec( 1 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QTextDecoder;
 

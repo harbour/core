@@ -86,13 +86,19 @@
 QT_G_FUNC( release_QTableWidgetItem )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QTableWidgetItem" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QTableWidgetItem            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QTableWidgetItem * ) ph );
+      ( ( QTableWidgetItem * ) ph )->~QTableWidgetItem();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QTableWidgetItem" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -100,6 +106,9 @@ HB_FUNC( QT_QTABLEWIDGETITEM )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QTableWidgetItem            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
    {
@@ -118,6 +127,9 @@ HB_FUNC( QT_QTABLEWIDGETITEM )
       pObj = new QTableWidgetItem( 0 ) ;
    }
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QTableWidgetItem;
 

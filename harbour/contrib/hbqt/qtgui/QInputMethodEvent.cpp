@@ -92,13 +92,19 @@
 QT_G_FUNC( release_QInputMethodEvent )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QInputMethodEvent" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QInputMethodEvent           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QInputMethodEvent * ) ph );
+      ( ( QInputMethodEvent * ) ph )->~QInputMethodEvent();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QInputMethodEvent" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -106,9 +112,15 @@ HB_FUNC( QT_QINPUTMETHODEVENT )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QInputMethodEvent           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = new QInputMethodEvent() ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QInputMethodEvent;
 

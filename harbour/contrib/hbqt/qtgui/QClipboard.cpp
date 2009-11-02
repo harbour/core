@@ -89,9 +89,15 @@ QT_G_FUNC( release_QClipboard )
 HB_FUNC( QT_QCLIPBOARD )
 {
    QPointer< QClipboard > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   NON-GC:  new QClipboard                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QClipboard* ) QApplication::clipboard() ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   NON-GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    hb_retptr( pObj );
 }
 /*

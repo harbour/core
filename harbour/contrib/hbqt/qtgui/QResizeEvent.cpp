@@ -78,7 +78,7 @@
 QT_G_FUNC( release_QResizeEvent )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QResizeEvent" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QResizeEvent                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -86,15 +86,21 @@ QT_G_FUNC( release_QResizeEvent )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QResizeEvent * ) ph );
+         ( ( QResizeEvent * ) ph )->~QResizeEvent();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QResizeEvent" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QResizeEvent" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QResizeEvent" );  OutputDebugString( str );
+#endif
    }
 }
 

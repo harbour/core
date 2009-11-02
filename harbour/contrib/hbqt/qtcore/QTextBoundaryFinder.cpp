@@ -88,13 +88,19 @@
 QT_G_FUNC( release_QTextBoundaryFinder )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QTextBoundaryFinder" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QTextBoundaryFinder         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QTextBoundaryFinder * ) ph );
+      ( ( QTextBoundaryFinder * ) ph )->~QTextBoundaryFinder();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QTextBoundaryFinder" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -102,9 +108,15 @@ HB_FUNC( QT_QTEXTBOUNDARYFINDER )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QTextBoundaryFinder         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QTextBoundaryFinder* ) new QTextBoundaryFinder() ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QTextBoundaryFinder;
 

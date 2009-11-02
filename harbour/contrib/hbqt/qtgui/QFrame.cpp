@@ -85,7 +85,7 @@
 QT_G_FUNC( release_QFrame )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QFrame" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QFrame                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -93,15 +93,21 @@ QT_G_FUNC( release_QFrame )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QFrame * ) ph );
+         ( ( QFrame * ) ph )->~QFrame();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QFrame" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QFrame" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QFrame" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -109,9 +115,15 @@ HB_FUNC( QT_QFRAME )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QFrame > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QFrame                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = new QFrame( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QFrame;
 

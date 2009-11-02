@@ -78,13 +78,19 @@
 QT_G_FUNC( release_QHelpEvent )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QHelpEvent" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QHelpEvent                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QHelpEvent * ) ph );
+      ( ( QHelpEvent * ) ph )->~QHelpEvent();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QHelpEvent" );  OutputDebugString( str );
+#endif
    }
 }
 

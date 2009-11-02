@@ -82,7 +82,7 @@
 QT_G_FUNC( release_QPrintEngine )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QPrintEngine" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QPrintEngine                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -90,15 +90,21 @@ QT_G_FUNC( release_QPrintEngine )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QPrintEngine * ) ph );
+         ( ( QPrintEngine * ) ph )->~QPrintEngine();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QPrintEngine" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QPrintEngine" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QPrintEngine" );  OutputDebugString( str );
+#endif
    }
 }
 

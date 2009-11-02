@@ -442,6 +442,8 @@ METHOD XbpWindow:grabEvent( nEvent, pEvent, oXbp )
 
    HB_SYMBOL_UNUSED( oXbp )
 
+//xbp_debug(  threadID(), "XbpWindow:grabEvent", nEvent )
+
    SWITCH ( nEvent )
 
    CASE QEvent_MouseMove                     // :motion()
@@ -548,6 +550,27 @@ METHOD XbpWindow:grabEvent( nEvent, pEvent, oXbp )
       nXbpkey := XbpQKeyEventToAppEvent( pEvent )
       SetAppEvent( xbeP_Keyboard, nXbpKey, NIL, self )
       EXIT
+
+   #if 0
+   CASE QEvent_Close
+      IF hb_isBlock( ::sl_close )
+         lRet := eval( ::sl_close, NIL, NIL, Self )
+         IF lRet
+            SetAppEvent( xbeP_Close, NIL, NIL, Self )
+         ENDIF
+      ELSE
+         SetAppEvent( xbeP_Close, NIL, NIL, Self )
+      ENDIF
+      EXIT
+   CASE QEvent_WindowActivate
+      SetAppEvent( xbeP_SetDisplayFocus, NIL, NIL, Self )
+      lRet := .T.
+      EXIT
+   CASE QEvent_WindowDeactivate
+      SetAppEvent( xbeP_KillDisplayFocus, NIL, NIL, Self )
+      lRet := .T.
+      EXIT
+   #endif
    END SWITCH
 
    RETURN lRet
@@ -698,15 +721,27 @@ METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 METHOD XbpWindow:destroy()
    LOCAL cXbp := __ObjGetClsName( self )
 
+#ifdef __debug__
 xbp_Debug( ".   " )
-xbp_Debug( memory( 1001 ),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ) )
+xbp_Debug( ThreadID(),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hb_getMemUsed() )
+#endif
+
+   IF cXbp == "XBPDIALOG"
+      SetEventLoop( NIL )
+      ::oEventLoop:exit( 0 )
+      ::oEventLoop:pPtr := 0
+
+      SetAppWindow( XbpObject():new() )
+
+      ::oMenu := NIL
+   ENDIF
 
    ::disconnect()
 
    IF len( ::aEConnections ) > 0
       aeval( ::aEConnections, {|e_,i| Qt_DisConnect_Event( e_[ 1 ], e_[ 2 ] ), ;
                                ::aEConnections[ i,1 ] := NIL, ::aEConnections[ i,2 ] := NIL, ::aEConnections[ i ] := NIL } )
-      ::aEConnections := NIL
+      ::aEConnections := {}
       ::oWidget:removeEventFilter( SetEventFilter() )
    ENDIF
 
@@ -718,13 +753,19 @@ xbp_Debug( memory( 1001 ),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(
    ::XbpPartHandler:destroy()
    ::clearSlots()
 
-   IF cXbp != "XBPDIALOG"
-      ::oWidget:pPtr := 0
-      ::oWidget := NIL
+   IF cXbp == "XBPDIALOG"
+      ClearEventBuffer()
+      Qt_Slots_Destroy()
+      Qt_Events_Destroy()
+      Qt_MyMainWindow_Destroy( QT_PTROF( ::oWidget ) )
    ENDIF
 
-xbp_Debug( memory( 1001 ),"          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ) )
+   ::oWidget:pPtr := 0
+   ::oWidget := NIL
 
+#ifdef __debug__
+xbp_Debug( ThreadID(),"          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hb_getMemUsed() )
+#endif
    RETURN NIL
 
 /*----------------------------------------------------------------------*/

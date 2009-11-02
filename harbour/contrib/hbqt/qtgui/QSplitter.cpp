@@ -90,7 +90,7 @@
 QT_G_FUNC( release_QSplitter )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QSplitter" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QSplitter                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -98,15 +98,21 @@ QT_G_FUNC( release_QSplitter )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QSplitter * ) ph );
+         ( ( QSplitter * ) ph )->~QSplitter();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QSplitter" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QSplitter" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QSplitter" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -114,12 +120,18 @@ HB_FUNC( QT_QSPLITTER )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QSplitter > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QSplitter                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
       pObj = ( QSplitter* ) new QSplitter( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) ;
    else
       pObj = ( QSplitter* ) new QSplitter( hbqt_par_QWidget( 1 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QSplitter;
 

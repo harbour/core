@@ -97,13 +97,19 @@
 QT_G_FUNC( release_QByteArray )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QByteArray" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QByteArray                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QByteArray * ) ph );
+      ( ( QByteArray * ) ph )->~QByteArray();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QByteArray" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -111,9 +117,15 @@ HB_FUNC( QT_QBYTEARRAY )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QByteArray                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = new QByteArray() ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QByteArray;
 
@@ -684,7 +696,7 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_3 )
  */
 HB_FUNC( QT_QBYTEARRAY_SETNUM_4 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( ( qulonglong ) hb_parnint( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), release_QByteArray ) );
+   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( ( qlonglong ) hb_parnint( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), release_QByteArray ) );
 }
 
 /*

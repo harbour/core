@@ -79,13 +79,19 @@
 QT_G_FUNC( release_QPaintEvent )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QPaintEvent" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QPaintEvent                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QPaintEvent * ) ph );
+      ( ( QPaintEvent * ) ph )->~QPaintEvent();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QPaintEvent" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -93,6 +99,9 @@ HB_FUNC( QT_QPAINTEVENT )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QPaintEvent                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
    {
@@ -108,6 +117,9 @@ HB_FUNC( QT_QPAINTEVENT )
       }
    }
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QPaintEvent;
 

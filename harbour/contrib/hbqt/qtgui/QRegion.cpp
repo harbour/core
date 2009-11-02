@@ -101,13 +101,19 @@
 QT_G_FUNC( release_QRegion )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QRegion" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QRegion                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QRegion * ) ph );
+      ( ( QRegion * ) ph )->~QRegion();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QRegion" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -115,6 +121,9 @@ HB_FUNC( QT_QREGION )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QRegion                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
@@ -152,6 +161,9 @@ HB_FUNC( QT_QREGION )
       pObj = ( QRegion* ) new QRegion() ;
    }
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QRegion;
 

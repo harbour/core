@@ -80,13 +80,19 @@
 QT_G_FUNC( release_QPoint )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QPoint" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QPoint                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QPoint * ) ph );
+      ( ( QPoint * ) ph )->~QPoint();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QPoint" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -94,6 +100,9 @@ HB_FUNC( QT_QPOINT )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QPoint                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
@@ -108,6 +117,9 @@ HB_FUNC( QT_QPOINT )
       pObj = ( QPoint* ) new QPoint() ;
    }
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QPoint;
 

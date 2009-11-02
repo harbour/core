@@ -84,7 +84,7 @@
 QT_G_FUNC( release_QItemSelectionModel )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QItemSelectionModel" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QItemSelectionModel         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -92,15 +92,21 @@ QT_G_FUNC( release_QItemSelectionModel )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QItemSelectionModel * ) ph );
+         ( ( QItemSelectionModel * ) ph )->~QItemSelectionModel();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QItemSelectionModel" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QItemSelectionModel" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QItemSelectionModel" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -108,12 +114,18 @@ HB_FUNC( QT_QITEMSELECTIONMODEL )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QItemSelectionModel > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QItemSelectionModel         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
       pObj = new QItemSelectionModel( hbqt_par_QAbstractItemModel( 1 ) ) ;
    }
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QItemSelectionModel;
 

@@ -78,7 +78,7 @@
 QT_G_FUNC( release_QAbstractTextDocumentLayout )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QAbstractTextDocumentLayout" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QAbstractTextDocumentLayout %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -86,15 +86,21 @@ QT_G_FUNC( release_QAbstractTextDocumentLayout )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QAbstractTextDocumentLayout * ) ph );
+         ( ( QAbstractTextDocumentLayout * ) ph )->~QAbstractTextDocumentLayout();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QAbstractTextDocumentLayout" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QAbstractTextDocumentLayout" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QAbstractTextDocumentLayout" );  OutputDebugString( str );
+#endif
    }
 }
 

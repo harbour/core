@@ -90,7 +90,7 @@
 QT_G_FUNC( release_QProcess )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QProcess" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QProcess                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -98,15 +98,21 @@ QT_G_FUNC( release_QProcess )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QProcess * ) ph );
+         ( ( QProcess * ) ph )->~QProcess();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QProcess" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QProcess" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QProcess" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -114,6 +120,9 @@ HB_FUNC( QT_QPROCESS )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QProcess > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QProcess                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
@@ -124,6 +133,9 @@ HB_FUNC( QT_QPROCESS )
       pObj = ( QProcess* ) new QProcess() ;
    }
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QProcess;
 

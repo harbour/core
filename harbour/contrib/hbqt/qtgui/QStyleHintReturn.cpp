@@ -84,7 +84,7 @@
 QT_G_FUNC( release_QStyleHintReturn )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QStyleHintReturn" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QStyleHintReturn            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -92,15 +92,21 @@ QT_G_FUNC( release_QStyleHintReturn )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QStyleHintReturn * ) ph );
+         ( ( QStyleHintReturn * ) ph )->~QStyleHintReturn();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QStyleHintReturn" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QStyleHintReturn" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QStyleHintReturn" );  OutputDebugString( str );
+#endif
    }
 }
 

@@ -84,13 +84,19 @@
 QT_G_FUNC( release_QStyleOptionComboBox )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QStyleOptionComboBox" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QStyleOptionComboBox        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QStyleOptionComboBox * ) ph );
+      ( ( QStyleOptionComboBox * ) ph )->~QStyleOptionComboBox();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QStyleOptionComboBox" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -98,9 +104,15 @@ HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QStyleOptionComboBox        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QStyleOptionComboBox* ) new QStyleOptionComboBox() ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QStyleOptionComboBox;
 

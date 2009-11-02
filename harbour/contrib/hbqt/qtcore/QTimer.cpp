@@ -79,7 +79,7 @@
 QT_G_FUNC( release_QTimer )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QTimer" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QTimer                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -87,15 +87,21 @@ QT_G_FUNC( release_QTimer )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QTimer * ) ph );
+         ( ( QTimer * ) ph )->~QTimer();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QTimer" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QTimer" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QTimer" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -103,9 +109,15 @@ HB_FUNC( QT_QTIMER )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QTimer > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QTimer                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = new QTimer( hbqt_par_QObject( 1 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QTimer;
 

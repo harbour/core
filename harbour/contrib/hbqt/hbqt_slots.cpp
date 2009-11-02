@@ -131,6 +131,8 @@ Slots::Slots( QObject* parent ) : QObject( parent )
 }
 Slots::~Slots()
 {
+   listBlock.clear();
+   listActv.clear();
 }
 
 static void SlotsExec( QObject* object, char* event )
@@ -1708,22 +1710,28 @@ HB_FUNC( QT_DISCONNECT_SIGNAL )
    if( object )
    {
       Slots * s_s = qt_getEventSlots();
-      const char * event = hb_parcx( 2 );
-      int i = object->property( event ).toInt();
+      const char * signal = hb_parcx( 2 );
+      int i = object->property( signal ).toInt();
 
       if( i > 0 && i <= s_s->listBlock.size() )
       {
          hb_itemRelease( s_s->listBlock.at( i - 1 ) );
          s_s->listBlock[ i - 1 ] = NULL;
          s_s->listActv[ i - 1 ] = false;
+         object->disconnect( signal );
+         object->setProperty( signal, QVariant() );
          bFreed = true;
-         object->disconnect( event );
 #if defined(__debug__)
-hb_snprintf( str, sizeof( str ), "QT_DISCONNECT_SIGNAL: %s", event ); OutputDebugString( str );
+//hb_snprintf( str, sizeof( str ), "      QT_DISCONNECT_SIGNAL: %s", event ); OutputDebugString( str );
 #endif
       }
    }
    hb_retl( bFreed );
+}
+
+HB_FUNC( QT_SLOTS_DESTROY )
+{
+   qt_getEventSlots()->~Slots();
 }
 
 
@@ -1775,14 +1783,16 @@ Events::Events( QObject * parent ) : QObject( parent )
 
 Events::~Events()
 {
+   listBlock.clear();
+   listActv.clear();
 }
 
 bool Events::eventFilter( QObject * object, QEvent * event )
 {
    QEvent::Type eventtype = event->type();
-#if defined(__debug__)
+
 //hb_snprintf( str, sizeof( str ), "0 Events::eventFilter = %i", ( int ) eventtype ); OutputDebugString( str );
-#endif
+
    if( ( int ) eventtype == 0 )
    {
 //hb_snprintf( str, sizeof( str ), "x Events::eventFilter =            0" ); OutputDebugString( str );
@@ -1833,7 +1843,10 @@ HB_FUNC( QT_SETEVENTSLOTS )
 {
    qt_setEventSlots();
 }
-
+HB_FUNC( QT_EVENTS_DESTROY )
+{
+   qt_getEventFilter()->~Events();
+}
 
 HB_FUNC( QT_QEVENTFILTER )
 {
@@ -1874,10 +1887,12 @@ HB_FUNC( QT_DISCONNECT_EVENT )
    {
       hb_itemRelease( s_e->listBlock.at( i - 1 ) );
       s_e->listBlock[ i - 1 ] = NULL;
-      s_e->listActv[ i - 1 ] = false;
+      s_e->listObj[ i - 1 ]   = NULL;
+      s_e->listActv[ i - 1 ]  = false;
+      object->setProperty( prop, QVariant() );
       bRet = true;
 #if defined(__debug__)
-hb_snprintf( str, sizeof( str ), "QT_DISCONNECT_EVENT: %i", type ); OutputDebugString( str );
+//hb_snprintf( str, sizeof( str ), "      QT_DISCONNECT_EVENT: %i", type ); OutputDebugString( str );
 #endif
    }
    hb_retl( bRet );
@@ -2225,16 +2240,9 @@ MyMainWindow::MyMainWindow( PHB_ITEM pBlock, int iThreadID )
 }
 MyMainWindow::~MyMainWindow( void )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "~MyMainWindow               %i %i", (int) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   hb_itemRelease( block );
    destroy();
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "~MyMainWindow               %i %i", (int) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 }
-void MyMainWindow::xpaintEvent( QPaintEvent * event )
+void MyMainWindow::paintEvent( QPaintEvent * event )
 {
    hb_threadMutexLock( s_mutex );
 
@@ -2268,8 +2276,7 @@ void MyMainWindow::xpaintEvent( QPaintEvent * event )
 }
 bool MyMainWindow::event( QEvent * event )
 {
-   int type = event->type();
-//hb_snprintf( str, sizeof( str ), "                      event(%i) %i", threadID , type );  OutputDebugString( str );
+//hb_snprintf( str, sizeof( str ), "                      event(%i) %i", threadID, (int) event->type() );  OutputDebugString( str );
    hb_threadMutexLock( s_mutex );
    #if 0
    if( hb_vmRequestReenter() )
@@ -2421,6 +2428,23 @@ void MyMainWindow::resizeEvent( QResizeEvent * event )
    QWidget::resizeEvent( event );
    hb_threadMutexUnlock( s_mutex );
 }
+void MyMainWindow::closeEvent( QCloseEvent * event )
+{
+#if defined(__debug__)
+hb_snprintf( str, sizeof( str ), "               close event(%i)", threadID );  OutputDebugString( str );
+#endif
+   hb_threadMutexLock( s_mutex );
+   if( hb_vmRequestReenter() )
+   {
+      PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::Close );
+      PHB_ITEM p1  = hb_itemPutPtr( NULL, event );
+      hb_vmEvalBlockV( block, 2, p0, p1 );
+      hb_itemRelease( p0 );
+      hb_itemRelease( p1 );
+      hb_vmRequestRestore();
+   }
+   hb_threadMutexUnlock( s_mutex );
+}
 
 HB_FUNC( QT_MYMAINWINDOW )
 {
@@ -2485,55 +2509,4 @@ HB_FUNC( QT_MYDRAWINGAREA )
 
 /*----------------------------------------------------------------------*/
 
-#if defined(__debug__)
-
-#include <Psapi.h>
-int hb_getMemUsed( void )
-{
-   HANDLE hProcess;
-   PROCESS_MEMORY_COUNTERS pmc;
-   int size = 0;
-
-   hProcess = OpenProcess(  PROCESS_QUERY_INFORMATION |
-                                    PROCESS_VM_READ,
-                                    FALSE, GetCurrentProcessId() );
-    if (NULL == hProcess)
-        return 0;
-
-    if ( GetProcessMemoryInfo( hProcess, &pmc, sizeof(pmc)) )
-    {
-       #if 0
-        printf( "\tPageFaultCount: 0x%08X\n", pmc.PageFaultCount );
-        printf( "\tPeakWorkingSetSize: 0x%08X\n",
-                  pmc.PeakWorkingSetSize );
-        printf( "\tWorkingSetSize: 0x%08X\n", pmc.WorkingSetSize );
-        printf( "\tQuotaPeakPagedPoolUsage: 0x%08X\n",
-                  pmc.QuotaPeakPagedPoolUsage );
-        printf( "\tQuotaPagedPoolUsage: 0x%08X\n",
-                  pmc.QuotaPagedPoolUsage );
-        printf( "\tQuotaPeakNonPagedPoolUsage: 0x%08X\n",
-                  pmc.QuotaPeakNonPagedPoolUsage );
-        printf( "\tQuotaNonPagedPoolUsage: 0x%08X\n",
-                  pmc.QuotaNonPagedPoolUsage );
-        printf( "\tPagefileUsage: 0x%08X\n", pmc.PagefileUsage );
-        printf( "\tPeakPagefileUsage: 0x%08X\n",
-                  pmc.PeakPagefileUsage );
-        #endif
-
-        size = ( int ) pmc.WorkingSetSize / 1024 ;
-    }
-
-    CloseHandle( hProcess );
-    return size;
-}
-#endif
-
-HB_FUNC( HB_GETMEMUSED )
-{
-#if defined(__debug__)
-   hb_retni( hb_getMemUsed() );
-#else
-   hb_retni( 0 );
-#endif
-}
 #endif

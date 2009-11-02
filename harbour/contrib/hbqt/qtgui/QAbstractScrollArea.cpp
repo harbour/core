@@ -79,7 +79,7 @@
 QT_G_FUNC( release_QAbstractScrollArea )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QAbstractScrollArea" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QAbstractScrollArea         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -87,15 +87,21 @@ QT_G_FUNC( release_QAbstractScrollArea )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QAbstractScrollArea * ) ph );
+         ( ( QAbstractScrollArea * ) ph )->~QAbstractScrollArea();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QAbstractScrollArea" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QAbstractScrollArea" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QAbstractScrollArea" );  OutputDebugString( str );
+#endif
    }
 }
 

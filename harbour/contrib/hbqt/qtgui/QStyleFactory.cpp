@@ -78,13 +78,19 @@
 QT_G_FUNC( release_QStyleFactory )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QStyleFactory" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QStyleFactory               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QStyleFactory * ) ph );
+      ( ( QStyleFactory * ) ph )->~QStyleFactory();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QStyleFactory" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -92,9 +98,15 @@ HB_FUNC( QT_QSTYLEFACTORY )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QStyleFactory               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = new QStyleFactory() ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QStyleFactory;
 

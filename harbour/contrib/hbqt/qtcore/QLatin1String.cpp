@@ -78,13 +78,19 @@
 QT_G_FUNC( release_QLatin1String )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QLatin1String" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QLatin1String               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QLatin1String * ) ph );
+      ( ( QLatin1String * ) ph )->~QLatin1String();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QLatin1String" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -92,9 +98,15 @@ HB_FUNC( QT_QLATIN1STRING )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QLatin1String               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QLatin1String* ) new QLatin1String( hb_parcx( 1 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QLatin1String;
 

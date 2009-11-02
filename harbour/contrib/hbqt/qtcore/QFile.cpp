@@ -89,7 +89,7 @@
 QT_G_FUNC( release_QFile )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QFile" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QFile                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -97,15 +97,21 @@ QT_G_FUNC( release_QFile )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QFile * ) ph );
+         ( ( QFile * ) ph )->~QFile();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QFile" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QFile" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QFile" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -113,12 +119,18 @@ HB_FUNC( QT_QFILE )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QFile > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QFile                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
       pObj = new QFile( hbqt_par_QString( 1 ) ) ;
    }
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QFile;
 

@@ -108,13 +108,19 @@
 QT_G_FUNC( release_QLocale )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QLocale" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QLocale                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QLocale * ) ph );
+      ( ( QLocale * ) ph )->~QLocale();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QLocale" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -122,9 +128,15 @@ HB_FUNC( QT_QLOCALE )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QLocale                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = new QLocale() ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QLocale;
 
@@ -347,7 +359,7 @@ HB_FUNC( QT_QLOCALE_TOSHORT )
  */
 HB_FUNC( QT_QLOCALE_TOSTRING )
 {
-   hb_retc( hbqt_par_QLocale( 1 )->toString( ( qulonglong ) hb_parnint( 2 ) ).toAscii().data() );
+   hb_retc( hbqt_par_QLocale( 1 )->toString( ( qlonglong ) hb_parnint( 2 ) ).toAscii().data() );
 }
 
 /*

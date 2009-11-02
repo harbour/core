@@ -102,7 +102,7 @@ HB_FUNC( QT_QHTTP_READ )
 QT_G_FUNC( release_QHttp )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QHttp" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QHttp                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -110,15 +110,21 @@ QT_G_FUNC( release_QHttp )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QHttp * ) ph );
+         ( ( QHttp * ) ph )->~QHttp();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QHttp" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QHttp" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QHttp" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -126,9 +132,15 @@ HB_FUNC( QT_QHTTP )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QHttp > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QHttp                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = new QHttp( hbqt_par_QObject( 1 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QHttp;
 

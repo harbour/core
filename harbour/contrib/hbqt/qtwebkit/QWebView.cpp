@@ -80,7 +80,7 @@
 QT_G_FUNC( release_QWebView )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QWebView" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QWebView                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -88,15 +88,21 @@ QT_G_FUNC( release_QWebView )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QWebView * ) ph );
+         ( ( QWebView * ) ph )->~QWebView();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QWebView" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QWebView" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QWebView" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -104,9 +110,15 @@ HB_FUNC( QT_QWEBVIEW )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QWebView > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QWebView                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = new QWebView( hbqt_par_QWidget( 1 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QWebView;
 

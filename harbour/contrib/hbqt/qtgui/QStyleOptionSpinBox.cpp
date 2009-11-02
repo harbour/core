@@ -84,13 +84,19 @@
 QT_G_FUNC( release_QStyleOptionSpinBox )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QStyleOptionSpinBox" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QStyleOptionSpinBox         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QStyleOptionSpinBox * ) ph );
+      ( ( QStyleOptionSpinBox * ) ph )->~QStyleOptionSpinBox();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QStyleOptionSpinBox" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -98,9 +104,15 @@ HB_FUNC( QT_QSTYLEOPTIONSPINBOX )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QStyleOptionSpinBox         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QStyleOptionSpinBox* ) new QStyleOptionSpinBox() ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QStyleOptionSpinBox;
 

@@ -78,7 +78,7 @@
 QT_G_FUNC( release_QDragLeaveEvent )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QDragLeaveEvent" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QDragLeaveEvent             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -86,15 +86,21 @@ QT_G_FUNC( release_QDragLeaveEvent )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QDragLeaveEvent * ) ph );
+         ( ( QDragLeaveEvent * ) ph )->~QDragLeaveEvent();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QDragLeaveEvent" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QDragLeaveEvent" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QDragLeaveEvent" );  OutputDebugString( str );
+#endif
    }
 }
 

@@ -86,7 +86,7 @@
 QT_G_FUNC( release_QDateTimeEdit )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QDateTimeEdit" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QDateTimeEdit               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -94,15 +94,21 @@ QT_G_FUNC( release_QDateTimeEdit )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QDateTimeEdit * ) ph );
+         ( ( QDateTimeEdit * ) ph )->~QDateTimeEdit();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QDateTimeEdit" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QDateTimeEdit" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QDateTimeEdit" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -110,9 +116,15 @@ HB_FUNC( QT_QDATETIMEEDIT )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QDateTimeEdit > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QDateTimeEdit               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QDateTimeEdit* ) new QDateTimeEdit( hbqt_par_QWidget( 1 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QDateTimeEdit;
 

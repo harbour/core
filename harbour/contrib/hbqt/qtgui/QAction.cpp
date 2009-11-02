@@ -98,7 +98,7 @@
 QT_G_FUNC( release_QAction )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QAction" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QAction                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -106,15 +106,21 @@ QT_G_FUNC( release_QAction )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QAction * ) ph );
+         ( ( QAction * ) ph )->~QAction();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QAction" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QAction" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QAction" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -122,6 +128,9 @@ HB_FUNC( QT_QACTION )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QAction > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QAction                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    if( HB_ISPOINTER( 1 ) )
       pObj = new QAction( hbqt_par_QObject( 1 ) ) ;
@@ -130,6 +139,9 @@ HB_FUNC( QT_QACTION )
    else if( HB_ISPOINTER( 3 ) )
       pObj = new QAction( *hbqt_par_QIcon( 1 ), hbqt_par_QString( 2 ), hbqt_par_QObject( 3 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QAction;
 

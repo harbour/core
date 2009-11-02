@@ -91,7 +91,7 @@
 QT_G_FUNC( release_QTreeView )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QTreeView" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QTreeView                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -99,15 +99,21 @@ QT_G_FUNC( release_QTreeView )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QTreeView * ) ph );
+         ( ( QTreeView * ) ph )->~QTreeView();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QTreeView" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QTreeView" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QTreeView" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -115,9 +121,15 @@ HB_FUNC( QT_QTREEVIEW )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QTreeView > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QTreeView                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QTreeView* ) new QTreeView( hbqt_par_QWidget( 1 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QTreeView;
 

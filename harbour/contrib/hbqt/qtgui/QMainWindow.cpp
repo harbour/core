@@ -93,7 +93,7 @@
 QT_G_FUNC( release_QMainWindow )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QMainWindow" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QMainWindow                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -101,15 +101,21 @@ QT_G_FUNC( release_QMainWindow )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QMainWindow * ) ph );
+         ( ( QMainWindow * ) ph )->~QMainWindow();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QMainWindow" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QMainWindow" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QMainWindow" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -117,9 +123,15 @@ HB_FUNC( QT_QMAINWINDOW )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QMainWindow > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QMainWindow                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QMainWindow* ) new QMainWindow( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QMainWindow;
 

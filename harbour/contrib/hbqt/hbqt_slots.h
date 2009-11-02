@@ -97,9 +97,10 @@ public:
    void mouseReleaseEvent( QMouseEvent * event );
    void wheelEvent( QWheelEvent * event );
    void resizeEvent( QResizeEvent * event );
-   void xpaintEvent( QPaintEvent * event );
+   void paintEvent( QPaintEvent * event );
    void focusInEvent( QFocusEvent * event );
    void focusOutEvent( QFocusEvent * event );
+   void closeEvent( QCloseEvent * event );
 
    PHB_ITEM   block;
    int        threadID;

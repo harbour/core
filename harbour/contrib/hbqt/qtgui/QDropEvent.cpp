@@ -78,13 +78,19 @@
 QT_G_FUNC( release_QDropEvent )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QDropEvent" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QDropEvent                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QDropEvent * ) ph );
+      ( ( QDropEvent * ) ph )->~QDropEvent();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QDropEvent" );  OutputDebugString( str );
+#endif
    }
 }
 

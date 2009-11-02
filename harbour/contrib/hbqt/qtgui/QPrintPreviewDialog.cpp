@@ -80,7 +80,7 @@
 QT_G_FUNC( release_QPrintPreviewDialog )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QPrintPreviewDialog" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QPrintPreviewDialog         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -88,15 +88,21 @@ QT_G_FUNC( release_QPrintPreviewDialog )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QPrintPreviewDialog * ) ph );
+         ( ( QPrintPreviewDialog * ) ph )->~QPrintPreviewDialog();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QPrintPreviewDialog" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QPrintPreviewDialog" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QPrintPreviewDialog" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -104,12 +110,18 @@ HB_FUNC( QT_QPRINTPREVIEWDIALOG )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QPrintPreviewDialog > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QPrintPreviewDialog         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    if( hb_pcount() >= 2 && HB_ISPOINTER( 2 ) )
       pObj = new QPrintPreviewDialog( hbqt_par_QPrinter( 1 ), hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) ) ;
    else
       pObj = new QPrintPreviewDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QPrintPreviewDialog;
 

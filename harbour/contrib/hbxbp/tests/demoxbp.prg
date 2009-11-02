@@ -108,16 +108,31 @@ FUNCTION _BuildADialog()
 
 /*----------------------------------------------------------------------*/
 
+PROCEDURE DispMem( cMessage )
+
+   xbp_debug( ThreadID(), padc( cMessage, 40 ), memory( 1001 ), hb_getMemUsed() )
+
+   RETURN
+
+/*----------------------------------------------------------------------*/
+
 PROCEDURE BuildADialog()
    LOCAL oDlg, mp1, mp2, oXbp, nEvent, aSize, oDa, aTabs, oHTM
    LOCAL nThread := ThreadID()
    //LOCAL oStat, aMenu, aTool, aBrow, aChek, a3Sta
 
+xbp_debug( "  .   " )
+xbp_debug( "  .   " )
+xbp_debug( "  .   " )
+xbp_debug( "  .   " )
 
-xbp_debug( nThread, "  At Startup of Thread    ", memory( 1001 ) )
+DispMem( "At Startup of Thread" )
+
    /* Create Application Window */
    oDlg := GuiStdDialog( "Harbour - Xbase++ - QT Dialog  [ "+ hb_ntos( nThread )+" ]" )
-xbp_debug( nThread, "  oDlg := GuiStdDialog    ", memory( 1001 ) )
+
+DispMem( "oDlg := GuiStdDialog" )
+
    oDlg:close := {|| MsgBox( "You can also close me by pressing [ESC]" ), .T. }
    // oDlg:killDisplayFocus := {|| hb_OutDebug( "Loosing Display Focus" ) }
    SetAppWindow( oDlg )
@@ -141,61 +156,61 @@ xbp_debug( nThread, "  oDlg := GuiStdDialog    ", memory( 1001 ) )
 
    /* Install menu system */
    Build_MenuBar( oDlg )
-xbp_debug( nThread, "  Build_MenuBar    ", memory( 1001 ) )
+DispMem( "Build_MenuBar" )
    /* Install Statusbar */
    Build_StatusBar( oDa )
-xbp_debug( nThread, "  Build_StatusBar  ", memory( 1001 ) )
+DispMem( "Build_StatusBar" )
    /* Install Toolbar */
    Build_ToolBar( oDa )
-xbp_debug( nThread, "  Build_ToolBar    ", memory( 1001 ) )
+DispMem( "Build_ToolBar" )
    /* Install Tab Pages */
    aTabs := Build_TabPages( oDa )
-xbp_debug( nThread, "  Build_TabPages   ", memory( 1001 ) )
+DispMem( "Build_TabPages" )
    /* Build XBPBrowse() */
    Build_Browse( aTabs[ TAB_1 ] )
-xbp_debug( nThread, "  Build_Browse     ", memory( 1001 ) )
+DispMem( "Build_Browse" )
    /* Install Multi-Line Edit */
    oMLE := Build_MLE( aTabs[ TAB_2 ] )
-xbp_debug( nThread, "  Build_MLE        ", memory( 1001 ) )
+DispMem( "Build_MLE" )
    /* Install checkboxes */
    Build_CheckBox( aTabs[ TAB_3 ] )
-xbp_debug( nThread, "  Build_CheckBox   ", memory( 1001 ) )
+DispMem( "Build_CheckBox" )
    /* Install 3state checkboxes */
    Build_3State( aTabs[ TAB_3 ] )
-xbp_debug( nThread, "  Build_3State     ", memory( 1001 ) )
+DispMem( "Build_3State" )
    /* Install Radio Buttons */
    Build_RadioButton( aTabs[ TAB_3 ] )
-xbp_debug( nThread, "  Build_RadioButton", memory( 1001 ) )
+DispMem( "Build_RadioButton" )
    /* Install Spin Buttons */
    Build_SpinButtons( aTabs[ TAB_3 ] )
-xbp_debug( nThread, "  Build_SpinButton ", memory( 1001 ) )
+DispMem( "Build_SpinButton" )
    /* Install TreeView */
    Build_TreeView( aTabs[ TAB_4 ] )
-xbp_debug( nThread, "  Build_TreeView   ", memory( 1001 ) )
+DispMem( "Build_TreeView" )
    /* Install ListBox */
    Build_ListBox( aTabs[ TAB_5 ] )
-xbp_debug( nThread, "  Build_ListBox    ", memory( 1001 ) )
+DispMem( "Build_ListBox" )
    /* Install Combo Box */
    Build_ComboBox( aTabs[ TAB_5 ] )
-xbp_debug( nThread, "  Build_ComboBox   ", memory( 1001 ) )
+DispMem( "Build_ComboBox" )
    /* Install Push Buttons */
    Build_PushButton( aTabs[ TAB_5 ] )
-xbp_debug( nThread, "  Build_PushButton ", memory( 1001 ) )
+DispMem( "Build_PushButton" )
    /* Install Single Line Edits */
    Build_SLEs( aTabs[ TAB_5 ] )
-xbp_debug( nThread, "  Build_SLEs       ", memory( 1001 ) )
+DispMem( "Build_SLEs" )
    /* Install ScrollBar */
    Build_ScrollBar( aTabs[ TAB_5 ] )
-xbp_debug( nThread, "  Build_ScrollBars ", memory( 1001 ) )
+DispMem( "Build_ScrollBars" )
    /* Build RTF */
    Build_Rtf( aTabs[ TAB_6 ] )
-xbp_debug( nThread, "  Build_Rtf        ", memory( 1001 ) )
+DispMem( "Build_Rtf" )
    /* Build HTML Viewer */
-   oHTM := Build_HTMLViewer( aTabs[ TAB_7 ] )
-xbp_debug( nThread, "  Build_HTMLViewer ", memory( 1001 ) )
+   //oHTM := Build_HTMLViewer( aTabs[ TAB_7 ] )
+DispMem( "Build_HTMLViewer" )
    /* Build Statics */
    Build_Statics( aTabs[ TAB_8 ] )
-xbp_debug( nThread, "  Build_Statics    ", memory( 1001 ), hb_getMemUsed() )
+DispMem( "Build_Statics" )
    /* Present the dialog on the screen */
    oDlg:Show()
 
@@ -208,8 +223,10 @@ xbp_debug( ".  " )
 xbp_debug( ".............................. WOW ................................." )
          EXIT
       ELSEIF nEvent == xbeP_Keyboard .and. mp1 == xbeK_F1
+         #if 0
          oHtm:setHTML( '<html><h1>Direct HTML Injection</h1><p><font color="#ab00ff" size="16">'+;
                        'This HTML content</font> is pushed dynamically with<br><br>:setHTML()</br></br>.</html>' )
+         #endif
       ENDIF
 
       oXbp:handleEvent( nEvent, mp1, mp2 )
@@ -218,13 +235,13 @@ xbp_debug( ".............................. WOW .................................
    /* Very important - destroy resources */
    oDlg:destroy()
 
+   oHTM := NIL
+
 xbp_debug( "------------------------------ WOW ---------------------------------" )
 xbp_debug( ".  " )
-//   oHTM := NIL
-//   oMLE := NIL
-//   oDlg := NIL
-//   hb_gcAll( .t. )
-xbp_debug( nThread, "      THE END      ", memory( 1001 ), hb_getMemUsed() )
+
+DispMem( "THE END" )
+
    RETURN
 
 /*----------------------------------------------------------------------*/

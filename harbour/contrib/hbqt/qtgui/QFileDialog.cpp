@@ -106,7 +106,7 @@
 QT_G_FUNC( release_QFileDialog )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QFileDialog" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QFileDialog                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -114,15 +114,21 @@ QT_G_FUNC( release_QFileDialog )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QFileDialog * ) ph );
+         ( ( QFileDialog * ) ph )->~QFileDialog();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QFileDialog" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QFileDialog" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QFileDialog" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -130,6 +136,9 @@ HB_FUNC( QT_QFILEDIALOG )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QFileDialog > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QFileDialog                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
@@ -144,6 +153,9 @@ HB_FUNC( QT_QFILEDIALOG )
       pObj = new QFileDialog() ;
    }
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QFileDialog;
 

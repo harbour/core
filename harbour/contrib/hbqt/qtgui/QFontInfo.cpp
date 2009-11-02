@@ -80,13 +80,19 @@
 QT_G_FUNC( release_QFontInfo )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QFontInfo" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QFontInfo                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QFontInfo * ) ph );
+      ( ( QFontInfo * ) ph )->~QFontInfo();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QFontInfo" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -94,6 +100,9 @@ HB_FUNC( QT_QFONTINFO )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QFontInfo                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
@@ -104,6 +113,9 @@ HB_FUNC( QT_QFONTINFO )
       pObj = new QFontInfo( *hbqt_par_QFont( 2 ) ) ;
    }
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QFontInfo;
 

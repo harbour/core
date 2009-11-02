@@ -94,7 +94,7 @@
 QT_G_FUNC( release_QCalendarWidget )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QCalendarWidget" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QCalendarWidget             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -102,15 +102,21 @@ QT_G_FUNC( release_QCalendarWidget )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QCalendarWidget * ) ph );
+         ( ( QCalendarWidget * ) ph )->~QCalendarWidget();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QCalendarWidget" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QCalendarWidget" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QCalendarWidget" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -118,9 +124,15 @@ HB_FUNC( QT_QCALENDARWIDGET )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QCalendarWidget > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QCalendarWidget             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QCalendarWidget* ) new QCalendarWidget( hbqt_par_QWidget( 1 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QCalendarWidget;
 

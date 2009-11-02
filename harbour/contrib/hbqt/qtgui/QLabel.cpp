@@ -80,7 +80,7 @@
 QT_G_FUNC( release_QLabel )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QLabel" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QLabel                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -88,15 +88,21 @@ QT_G_FUNC( release_QLabel )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QLabel * ) ph );
+         ( ( QLabel * ) ph )->~QLabel();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QLabel" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QLabel" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QLabel" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -104,9 +110,15 @@ HB_FUNC( QT_QLABEL )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QLabel > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QLabel                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QLabel* ) new QLabel( hbqt_par_QWidget( 1 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QLabel;
 

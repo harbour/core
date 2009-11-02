@@ -83,7 +83,7 @@
 QT_G_FUNC( release_QFileSystemModel )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QFileSystemModel" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QFileSystemModel            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -91,15 +91,21 @@ QT_G_FUNC( release_QFileSystemModel )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QFileSystemModel * ) ph );
+         ( ( QFileSystemModel * ) ph )->~QFileSystemModel();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QFileSystemModel" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QFileSystemModel" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QFileSystemModel" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -107,9 +113,15 @@ HB_FUNC( QT_QFILESYSTEMMODEL )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QFileSystemModel > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QFileSystemModel            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QFileSystemModel * ) new QFileSystemModel() ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QFileSystemModel;
 

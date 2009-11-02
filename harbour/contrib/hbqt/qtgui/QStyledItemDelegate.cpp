@@ -79,7 +79,7 @@
 QT_G_FUNC( release_QStyledItemDelegate )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QStyledItemDelegate" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QStyledItemDelegate         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -87,15 +87,21 @@ QT_G_FUNC( release_QStyledItemDelegate )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QStyledItemDelegate * ) ph );
+         ( ( QStyledItemDelegate * ) ph )->~QStyledItemDelegate();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QStyledItemDelegate" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QStyledItemDelegate" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QStyledItemDelegate" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -103,9 +109,15 @@ HB_FUNC( QT_QSTYLEDITEMDELEGATE )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QStyledItemDelegate > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QStyledItemDelegate         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QStyledItemDelegate;
 

@@ -96,7 +96,7 @@
 QT_G_FUNC( release_QMessageBox )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QMessageBox" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QMessageBox                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -104,15 +104,21 @@ QT_G_FUNC( release_QMessageBox )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QMessageBox * ) ph );
+         ( ( QMessageBox * ) ph )->~QMessageBox();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QMessageBox" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QMessageBox" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QMessageBox" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -120,9 +126,15 @@ HB_FUNC( QT_QMESSAGEBOX )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    QPointer< QMessageBox > pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QMessageBox                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = ( QMessageBox* ) new QMessageBox() ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QMessageBox;
 

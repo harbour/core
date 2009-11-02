@@ -103,13 +103,19 @@
 QT_G_FUNC( release_QTreeWidgetItem )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QTreeWidgetItem" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QTreeWidgetItem             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
-   if( ph != NULL )
+   if( ph )
    {
-      delete ( ( QTreeWidgetItem * ) ph );
+      ( ( QTreeWidgetItem * ) ph )->~QTreeWidgetItem();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QTreeWidgetItem" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -117,20 +123,22 @@ HB_FUNC( QT_QTREEWIDGETITEM )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QTreeWidgetItem             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
    {
-      pObj = new QTreeWidgetItem( hb_parni( 1 ) ) ;
-   }
-   else if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
-   {
-      pObj = new QTreeWidgetItem( hbqt_par_QTreeWidget( 1 ), hb_parni( 2 ) ) ;
+      pObj = ( QTreeWidgetItem* ) new QTreeWidgetItem( hb_parni( 1 ) ) ;
    }
    else
    {
-      pObj = new QTreeWidgetItem() ;
+      pObj = ( QTreeWidgetItem* ) new QTreeWidgetItem( hbqt_par_QTreeWidget( 1 ), hb_parni( 2 ) ) ;
    }
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QTreeWidgetItem;
 

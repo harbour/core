@@ -88,7 +88,6 @@ CLASS XbpDialog FROM XbpWindow
    METHOD   new()
    METHOD   create()
    METHOD   configure()
-   METHOD   destroy()
    METHOD   close()                               INLINE NIL
 
    METHOD   showModal()                           INLINE NIL
@@ -124,14 +123,12 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::cargo := ThreadID()                               /* To Be Removed */
 
-   #define __xQMAINWINDOW__
-   //
    #ifdef __QMAINWINDOW__
    ::oWidget := QMainWindow():new()
+   //::oWidget:setMouseTracking( .t. )
    #else
    ::oWidget := QMainWindow():configure( QT_MyMainWindow( {|n,p| ::grabEvent( n,p ) }, ThreadID() ) )
    #endif
-   //::oWidget:setMouseTracking( .t. )
 
    IF !empty( ::title )
       ::oWidget:setWindowTitle( ::title )
@@ -166,10 +163,8 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    /* Instal Event Filter */
    ::oWidget:installEventFilter( SetEventFilter() )
 
-   #ifdef __QMAINWINDOW__
    ::connectWindowEvents()
-   #endif
-
+   //
    ::connectEvent( ::pWidget, QEvent_Close           , {|o,e| ::exeBlock( QEvent_Close           , e, o ) } )
    ::connectEvent( ::pWidget, QEvent_WindowActivate  , {|o,e| ::exeBlock( QEvent_WindowActivate  , e, o ) } )
    ::connectEvent( ::pWidget, QEvent_WindowDeactivate, {|o,e| ::exeBlock( QEvent_WindowDeactivate, e, o ) } )
@@ -213,30 +208,6 @@ METHOD XbpDialog:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    ::xbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpDialog:destroy()
-
-   SetEventLoop( NIL )
-   ::oEventLoop:exit( 0 )
-   ::oEventLoop:pPtr := 0
-
-   SetAppWindow( XbpObject():new() )
-
-   ::oMenu       := NIL
-   ::drawingArea := NIL
-
-   ::xbpWindow:destroy()
-
-   Qt_MyMainWindow_destroy( QT_PTROF( ::oWidget ) )
-
-   ::oWidget     := NIL
-   Self          := NIL
-
-   ClearEventBuffer()
-
-   RETURN nil
 
 /*----------------------------------------------------------------------*/
 

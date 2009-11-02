@@ -85,13 +85,19 @@
 QT_G_FUNC( release_QRegExp )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QRegExp" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QRegExp                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QRegExp * ) ph );
+      ( ( QRegExp * ) ph )->~QRegExp();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QRegExp" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -99,9 +105,15 @@ HB_FUNC( QT_QREGEXP )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QRegExp                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = new QRegExp() ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QRegExp;
 

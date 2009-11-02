@@ -88,13 +88,19 @@
 QT_G_FUNC( release_QFileInfo )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QFileInfo" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QFileInfo                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QFileInfo * ) ph );
+      ( ( QFileInfo * ) ph )->~QFileInfo();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QFileInfo" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -102,9 +108,15 @@ HB_FUNC( QT_QFILEINFO )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QFileInfo                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = new QFileInfo() ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QFileInfo;
 

@@ -82,13 +82,19 @@
 QT_G_FUNC( release_QPolygon )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QPolygon" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QPolygon                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
    {
-      delete ( ( QPolygon * ) ph );
+      ( ( QPolygon * ) ph )->~QPolygon();
       ph = NULL;
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QPolygon" );  OutputDebugString( str );
+#endif
    }
 }
 
@@ -96,9 +102,15 @@ HB_FUNC( QT_QPOLYGON )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:  new QPolygon                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
 
    pObj = new QPolygon() ;
 
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
+#endif
    p->ph = pObj;
    p->func = release_QPolygon;
 

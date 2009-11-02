@@ -86,7 +86,7 @@
 QT_G_FUNC( release_QAbstractSpinBox )
 {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "release_QAbstractSpinBox" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "release_QAbstractSpinBox            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
 #endif
    void * ph = ( void * ) Cargo;
    if( ph )
@@ -94,15 +94,21 @@ QT_G_FUNC( release_QAbstractSpinBox )
       const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         delete ( ( QAbstractSpinBox * ) ph );
+         ( ( QAbstractSpinBox * ) ph )->~QAbstractSpinBox();
          ph = NULL;
       }
       else
       {
 #if defined(__debug__)
-   hb_snprintf( str, sizeof(str), "  Object Name Missing: QAbstractSpinBox" );  OutputDebugString( str );
+hb_snprintf( str, sizeof(str), "  Object Name Missing: QAbstractSpinBox" );  OutputDebugString( str );
 #endif
       }
+   }
+   else
+   {
+#if defined(__debug__)
+hb_snprintf( str, sizeof(str), "! ph____QAbstractSpinBox" );  OutputDebugString( str );
+#endif
    }
 }
 
