@@ -1056,7 +1056,7 @@ char * hb_cdpU16ToStr( PHB_CODEPAGE cdp, BOOL fCtrl,
    else
    {
       ulDst = ulLen + 1;
-      pDst = hb_xgrab( ulDst );
+      pDst = ( char * ) hb_xgrab( ulDst );
    }
 
    for( ul = 0; ul < ulLen && ul < ulDst; ++ul )
@@ -1102,7 +1102,7 @@ char * hb_cdpU16LEToStr( PHB_CODEPAGE cdp, BOOL fCtrl,
    else
    {
       ulDst = ulLen + 1;
-      pDst = hb_xgrab( ulDst );
+      pDst = ( char * ) hb_xgrab( ulDst );
    }
 
    for( ul = 0; ul < ulLen && ul < ulDst; ++ul )

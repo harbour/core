@@ -819,7 +819,7 @@ char * hb_strncat( char * pDest, const char * pSource, ULONG ulLen )
 {
    char *pBuf = pDest;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strncpy(%p, %s, %lu)", pDest, pSource, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncat(%p, %s, %lu)", pDest, pSource, ulLen));
 
    pDest[ ulLen ] = '\0';
 
