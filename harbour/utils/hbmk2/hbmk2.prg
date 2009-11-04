@@ -4920,7 +4920,7 @@ STATIC FUNCTION clpfile_read( cFileName )
 
    aFiles := hb_aTokens( cFileBody,, .t. )
    FOR EACH cFile IN aFiles
-      cFile := FN_ExtSet( StrTran( cFile, '"' ), ".prg" )
+      cFile := FN_ExtDef( StrTran( cFile, '"' ), ".prg" )
    NEXT
 
    RETURN aFiles
@@ -5623,6 +5623,16 @@ STATIC FUNCTION FN_ExtGet( cFileName )
    hb_FNameSplit( cFileName,,, @cExt )
 
    RETURN cExt
+
+STATIC FUNCTION FN_ExtDef( cFileName, cDefExt )
+   LOCAL cDir, cName, cExt
+
+   hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
+   IF Empty( cExt )
+      cExt := cDefExt
+   ENDIF
+
+   RETURN hb_FNameMerge( cDir, cName, cExt )
 
 STATIC FUNCTION FN_ExtSet( cFileName, cExt )
    LOCAL cDir, cName
