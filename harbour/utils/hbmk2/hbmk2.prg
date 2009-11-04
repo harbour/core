@@ -3405,12 +3405,17 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ]
          l_aPRG_TODO := {}
          FOR EACH tmp IN hbmk[ _HBMK_aPRG ]
+            IF LEFTEQUAL( tmp, "@" ) .AND. Lower( FN_ExtGet( tmp ) ) == ".clp"
+               tmp3 := SubStr( tmp, 2 )
+            ELSE
+               tmp3 := tmp
+            ENDIF
             IF hbmk[ _HBMK_lDEBUGINC ]
                hbmk_OutStd( hb_StrFormat( "debuginc: PRG %1$s %2$s",;
-                  tmp, FN_DirExtSet( tmp, cWorkDir, ".c" ) ) )
+                  tmp3, FN_DirExtSet( tmp3, cWorkDir, ".c" ) ) )
             ENDIF
-            IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp2 ) .OR. ;
-               ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
+            IF ! hb_FGetDateTime( FN_DirExtSet( tmp3, cWorkDir, ".c" ), @tmp2 ) .OR. ;
+               ! hb_FGetDateTime( tmp3, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
                ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, .F., .F., NIL, @headstate ) )
                AAdd( l_aPRG_TODO, tmp )
@@ -3950,14 +3955,20 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ]
             l_aPRG_TODO := {}
             l_aPRG_DONE := {}
+
             FOR EACH tmp IN hbmk[ _HBMK_aPRG ]
+               IF LEFTEQUAL( tmp, "@" ) .AND. Lower( FN_ExtGet( tmp ) ) == ".clp"
+                  tmp3 := SubStr( tmp, 2 )
+               ELSE
+                  tmp3 := tmp
+               ENDIF
                IF hbmk[ _HBMK_lDEBUGINC ]
                   hbmk_OutStd( hb_StrFormat( "debuginc: CPRG %1$s %2$s",;
-                     FN_DirExtSet( tmp, cWorkDir, ".c" ),;
-                     FN_DirExtSet( tmp, cWorkDir, cObjExt ) ) )
+                     FN_DirExtSet( tmp3, cWorkDir, ".c" ),;
+                     FN_DirExtSet( tmp3, cWorkDir, cObjExt ) ) )
                ENDIF
-               IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp1 ) .OR. ;
-                  ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
+               IF ! hb_FGetDateTime( FN_DirExtSet( tmp3, cWorkDir, ".c" ), @tmp1 ) .OR. ;
+                  ! hb_FGetDateTime( FN_DirExtSet( tmp3, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
                   tmp1 > tmp2
                   AAdd( l_aPRG_TODO, tmp )
                ELSE
@@ -4783,8 +4794,9 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
       FOR EACH cModule IN hb_ATokens( tmp, Chr( 9 ) )
          IF ! Empty( cModule )
             FOR EACH cDependency IN hb_ATokens( cModule, " " )
-               IF cDependency:__enumIndex() > 1 .AND. ; /* Skip own (module) name */
-                  ! Empty( cDependency )
+               IF ( cDependency:__enumIndex() > 1 .OR. ; /* Skip own (module) name */
+                    ( LEFTEQUAL( cFileName, "@" ) .AND. cExt == ".clp" ) ) .AND. ;
+                    ! Empty( cDependency )
                   IF hbmk[ _HBMK_lDEBUGINC ]
                      hbmk_OutStd( hb_StrFormat( "debuginc: HEADER (NATIVE) %1$s", cDependency ) )
                   ENDIF
@@ -4796,6 +4808,22 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
                   ENDIF
                ENDIF
             NEXT
+         ENDIF
+      NEXT
+
+   ELSEIF ! lCMode .AND. LEFTEQUAL( cFileName, "@" ) .AND. cExt == ".clp"
+
+      FOR EACH cDependency IN clpfile_read( SubStr( cFileName, 2 ) )
+         IF ! Empty( cDependency )
+            IF hbmk[ _HBMK_lDEBUGINC ]
+               hbmk_OutStd( hb_StrFormat( "debuginc: HEADER (CLP) %1$s", cDependency ) )
+            ENDIF
+            IF hb_FGetDateTime( cDependency, @tTimeDependency ) .AND. tTimeDependency > tTimeParent
+               headstate[ _HEADSTATE_lAnyNewer ] := .T.
+               IF ! lIncTry
+                  RETURN .T.
+               ENDIF
+            ENDIF
          ENDIF
       NEXT
 
@@ -4880,6 +4908,22 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
    ENDIF
 
    RETURN headstate[ _HEADSTATE_lAnyNewer ]
+
+STATIC FUNCTION clpfile_read( cFileName )
+   LOCAL cFileBody := MemoRead( cFileName )
+   LOCAL aFiles
+   LOCAL cFile
+
+   cFileBody := StrTran( cFileBody, Chr( 13 ) )
+   cFileBody := StrTran( cFileBody, Chr( 10 ), " " )
+   cFileBody := StrTran( cFileBody, Chr( 9 ), " " )
+
+   aFiles := hb_aTokens( cFileBody,, .t. )
+   FOR EACH cFile IN aFiles
+      cFile := FN_ExtSet( StrTran( cFile, '"' ), ".prg" )
+   NEXT
+
+   RETURN aFiles
 
 STATIC FUNCTION deplst_read( hDeps, cFileName )
    LOCAL cFileBody := MemoRead( cFileName )
