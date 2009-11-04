@@ -2503,11 +2503,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          cLibLibPrefix := "lib"
          cLibPrefix := "-l"
          cLibExt := ""
-         IF hbmk[ _HBMK_cCOMP ] == "gccomf"
-            cObjExt := ".obj"
-         ELSE
-            cObjExt := ".o"
-         ENDIF
+         cObjExt := ".o"
          cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], "g++", "gcc" ) + hbmk[ _HBMK_cCCPOSTFIX ] + cCCEXT
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
@@ -2528,15 +2524,14 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          cOpt_Link := "{LO} {LA} {FL} {DL}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
+         cLibLibExt := ".a"
          IF hbmk[ _HBMK_cCOMP ] == "gccomf"
-            cLibLibExt := ".lib"
             cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "emxomfar" + cCCEXT
 
             AAdd( hbmk[ _HBMK_aOPTC ], "-Zomf" )
             AAdd( hbmk[ _HBMK_aOPTL ], "-Zomf" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-Zomf" )
          ELSE
-            cLibLibExt := ".a"
             cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + cCCEXT
          ENDIF
          cOpt_Lib := "{FA} rcs {OL} {LO}"

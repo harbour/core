@@ -8,15 +8,9 @@ else
    HB_CMP := gcc
 endif
 
-ifeq ($(HB_COMPILER),gccomf)
-   OBJ_EXT := .obj
-   LIB_PREF :=
-   LIB_EXT := .lib
-else
-   OBJ_EXT := .o
-   LIB_PREF :=
-   LIB_EXT := .a
-endif
+OBJ_EXT := .o
+LIB_PREF :=
+LIB_EXT := .a
 
 CC := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 CC_IN := -c
