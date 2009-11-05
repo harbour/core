@@ -103,6 +103,8 @@ static int          s_iRow;
 static int          s_iCol;
 static int          s_iLineBufSize = 0;
 static char *       s_sLineBuf;
+static ULONG        s_ulTransBufSize = 0;
+static char *       s_sTransBuf;
 static const char * s_szCrLf;
 static ULONG        s_ulCrLf;
 static int          s_iCurrentSGR, s_iFgColor, s_iBgColor, s_iBold, s_iBlink, s_iAM;
@@ -436,7 +438,7 @@ static void hb_gt_pca_AnsiInit( void )
    s_iCurrentSGR = s_iRow = s_iCol = s_iCursorStyle = s_iAM = -1;
 }
 
-static void hb_gt_pca_AnsiPutStr( int iRow, int iCol, int iColor, char * szStr, int iLen )
+static void hb_gt_pca_AnsiPutStr( int iRow, int iCol, int iColor, const char * szStr, int iLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_pca_AnsiPutStr(%d,%d,%d,%p,%d)", iRow, iCol, iColor, szStr, iLen));
 
@@ -447,19 +449,13 @@ static void hb_gt_pca_AnsiPutStr( int iRow, int iCol, int iColor, char * szStr, 
    s_iCol += iLen;
 }
 
-static void hb_gt_pca_setKeyTrans( char * pSrcChars, char * pDstChars )
+static void hb_gt_pca_setKeyTrans( PHB_CODEPAGE cdpTerm, PHB_CODEPAGE cdpHost )
 {
    int i;
 
    for( i = 0; i < 256; ++i )
-      s_keyTransTbl[ i ] = ( BYTE ) i;
-
-   if( pSrcChars && pDstChars )
-   {
-      BYTE c;
-      for( i = 0; i < 256 && ( c = ( BYTE ) pSrcChars[ i ] ) != 0; ++i )
-         s_keyTransTbl[ c ] = ( BYTE ) pDstChars[ i ];
-   }
+      s_keyTransTbl[ i ] = ( BYTE )
+                           hb_cdpTranslateChar( i, FALSE, cdpTerm, cdpHost );
 }
 
 static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
@@ -578,6 +574,11 @@ static void hb_gt_pca_Exit( PHB_GT pGT )
    {
       hb_xfree( s_sLineBuf );
       s_iLineBufSize = 0;
+   }
+   if( s_ulTransBufSize > 0 )
+   {
+      hb_xfree( s_sTransBuf );
+      s_ulTransBufSize = 0;
    }
    if( s_iOutBufSize > 0 )
    {
@@ -789,11 +790,10 @@ static BOOL hb_gt_pca_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
       s_cdpTerm = hb_cdpFind( pszTermCDP );
       s_cdpHost = hb_cdpFind( pszHostCDP );
       s_fDispTrans = s_cdpTerm && s_cdpHost && s_cdpTerm != s_cdpHost;
-      return TRUE;
    }
 #endif
 
-   return FALSE;
+   return TRUE;
 }
 
 static BOOL hb_gt_pca_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
@@ -808,31 +808,7 @@ static BOOL hb_gt_pca_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
    if( !pszTermCDP )
       pszTermCDP = pszHostCDP;
 
-   if( pszTermCDP && pszHostCDP )
-   {
-      PHB_CODEPAGE cdpTerm = hb_cdpFind( pszTermCDP ),
-                   cdpHost = hb_cdpFind( pszHostCDP );
-      if( cdpTerm && cdpHost && cdpTerm != cdpHost &&
-          cdpTerm->nChars && cdpTerm->nChars == cdpHost->nChars )
-      {
-         char *pszHostLetters = ( char * ) hb_xgrab( cdpHost->nChars * 2 + 1 );
-         char *pszTermLetters = ( char * ) hb_xgrab( cdpTerm->nChars * 2 + 1 );
-
-         hb_strncpy( pszHostLetters, cdpHost->CharsUpper, cdpHost->nChars * 2 );
-         hb_strncat( pszHostLetters, cdpHost->CharsLower, cdpHost->nChars * 2 );
-         hb_strncpy( pszTermLetters, cdpTerm->CharsUpper, cdpTerm->nChars * 2 );
-         hb_strncat( pszTermLetters, cdpTerm->CharsLower, cdpTerm->nChars * 2 );
-
-         hb_gt_pca_setKeyTrans( pszTermLetters, pszHostLetters );
-
-         hb_xfree( pszHostLetters );
-         hb_xfree( pszTermLetters );
-      }
-      else
-         hb_gt_pca_setKeyTrans( NULL, NULL );
-
-      return TRUE;
-   }
+   hb_gt_pca_setKeyTrans( hb_cdpFind( pszTermCDP ), hb_cdpFind( pszHostCDP ) );
 #endif
 
    return TRUE;
@@ -860,9 +836,11 @@ static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
          if( s_fDispTrans )
          {
             ULONG ulLen = iLen;
-            char * buffer = hb_cdpnDup( s_sLineBuf, &ulLen, s_cdpHost, s_cdpTerm );
+            const char * buffer = hb_cdpnDup3( s_sLineBuf, ulLen,
+                                               s_sTransBuf, &ulLen,
+                                               &s_sTransBuf, &s_ulTransBufSize,
+                                               s_cdpHost, s_cdpTerm );
             hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, buffer, ulLen );
-            hb_xfree( buffer );
          }
          else
 #endif
@@ -882,9 +860,11 @@ static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       if( s_fDispTrans )
       {
          ULONG ulLen = iLen;
-         char * buffer = hb_cdpnDup( s_sLineBuf, &ulLen, s_cdpHost, s_cdpTerm );
+         const char * buffer = hb_cdpnDup3( s_sLineBuf, ulLen,
+                                            s_sTransBuf, &ulLen,
+                                            &s_sTransBuf, &s_ulTransBufSize,
+                                            s_cdpHost, s_cdpTerm );
          hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, buffer, ulLen );
-         hb_xfree( buffer );
       }
       else
 #endif

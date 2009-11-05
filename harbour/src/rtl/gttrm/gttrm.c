@@ -324,7 +324,6 @@ typedef struct _HB_GTTRM
 
 #ifndef HB_CDP_SUPPORT_OFF
    PHB_CODEPAGE cdpHost;
-   PHB_CODEPAGE cdpOut;
    PHB_CODEPAGE cdpBox;
    PHB_CODEPAGE cdpIn;
 #endif
@@ -754,8 +753,9 @@ static void hb_gt_trm_termOutTrans( PHB_GTTRM pTerm, const char * pStr, int iLen
             }
             if( i > iLen )
                i = iLen;
-            pTerm->iOutBufIndex += hb_cdpStrnToUTF8( cdp, TRUE, pStr, i,
-                                       pTerm->pOutBuf + pTerm->iOutBufIndex );
+            pTerm->iOutBufIndex += hb_cdpStrToUTF8( cdp, TRUE, pStr, i,
+                                    pTerm->pOutBuf + pTerm->iOutBufIndex,
+                                    pTerm->iOutBufSize - pTerm->iOutBufIndex );
             pStr += i;
             iLen -= i;
          }
@@ -2229,26 +2229,21 @@ static void hb_gt_trm_ResetPalette( PHB_GTTRM pTerm )
    }
 }
 
-static void hb_gt_trm_SetKeyTrans( PHB_GTTRM pTerm, char * pSrcChars, char * pDstChars )
+static void hb_gt_trm_SetKeyTrans( PHB_GTTRM pTerm, PHB_CODEPAGE cdpTerm, PHB_CODEPAGE cdpHost )
 {
    int i;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_SetKeyTrans(%p,%s,%s)", pTerm, pSrcChars, pDstChars));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_SetKeyTrans(%p,%p,%p)", pTerm, cdpTerm, cdpHost));
 
    for( i = 0; i < 256; ++i )
-      pTerm->keyTransTbl[ i ] = ( UCHAR ) i;
+      pTerm->keyTransTbl[ i ] = ( unsigned char )
+                           hb_cdpTranslateChar( i, FALSE, cdpTerm, cdpHost );
 
-   if( pSrcChars && pDstChars )
-   {
-      UCHAR c;
-      for( i = 0; i < 256 && ( c = ( UCHAR ) pSrcChars[ i ] ) != 0; ++i )
-         pTerm->keyTransTbl[ c ] = ( UCHAR ) pDstChars[ i ];
-   }
+   pTerm->cdpIn = cdpTerm;
 }
 
-static void hb_gt_trm_SetDispTrans( PHB_GTTRM pTerm, char * src, char * dst, int box )
+static void hb_gt_trm_SetDispTrans( PHB_GTTRM pTerm, PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, int box )
 {
-   unsigned char c, d;
    int i, ch, mode;
 
    memset( pTerm->chrattr, 0, sizeof( pTerm->chrattr ) );
@@ -2287,16 +2282,23 @@ static void hb_gt_trm_SetDispTrans( PHB_GTTRM pTerm, char * src, char * dst, int
       pTerm->boxattr[i] |= ch;
    }
 
-   if( src && dst )
+   if( cdpHost && cdpTerm )
    {
-      for( i = 0; i < 256 && ( c = ( unsigned char ) src[i] ) != 0; i++ )
+      for( i = 0; i < 256; ++i )
       {
-         d = ( unsigned char ) dst[i];
-         pTerm->chrattr[c] = d | HB_GTTRM_ATTR_STD;
-         if( box )
-            pTerm->boxattr[c] = d | HB_GTTRM_ATTR_STD;
+         if( hb_cdpIsAlpha( cdpHost, i ) )
+         {
+            unsigned char uc = ( unsigned char )
+                              hb_cdpTranslateChar( i, TRUE, cdpHost, cdpTerm );
+
+            pTerm->chrattr[i] = uc | HB_GTTRM_ATTR_STD;
+            if( box )
+               pTerm->boxattr[i] = uc | HB_GTTRM_ATTR_STD;
+         }
       }
    }
+   pTerm->cdpHost = cdpHost;
+   pTerm->cdpBox = box ? cdpHost : hb_cdpFind( "EN" );
 }
 
 static int addKeyMap( PHB_GTTRM pTerm, int nKey, const char *cdesc )
@@ -3051,7 +3053,7 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
    hb_gt_chrmapinit( pTerm->charmap, szTerm, pTerm->terminal_type == TERM_XTERM );
 
 #ifndef HB_CDP_SUPPORT_OFF
-   pTerm->cdpHost = pTerm->cdpOut = pTerm->cdpIn = NULL;
+   pTerm->cdpHost = pTerm->cdpIn = NULL;
    pTerm->cdpBox = hb_cdpFind( "EN" );
 #endif
    add_efds( pTerm, pTerm->hFilenoStdin, O_RDONLY, NULL, NULL );
@@ -3465,38 +3467,11 @@ static BOOL hb_gt_trm_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
    if( !pszTermCDP )
       pszTermCDP = pszHostCDP;
 
-   if( pszTermCDP && pszHostCDP )
-   {
-      PHB_GTTRM pTerm = HB_GTTRM_GET( pGT );
-
-      pTerm->cdpOut = hb_cdpFind( pszTermCDP );
-      pTerm->cdpHost = hb_cdpFind( pszHostCDP );
-      if( fBox && pTerm->cdpHost )
-         pTerm->cdpBox = pTerm->cdpHost;
-
-      if( pTerm->cdpOut && pTerm->cdpHost &&
-          pTerm->cdpHost->nChars &&
-          pTerm->cdpHost->nChars == pTerm->cdpOut->nChars )
-      {
-         int iChars = pTerm->cdpHost->nChars;
-         char *pszHostLetters = ( char * ) hb_xgrab( iChars * 2 + 1 );
-         char *pszTermLetters = ( char * ) hb_xgrab( iChars * 2 + 1 );
-
-         memcpy( pszHostLetters, pTerm->cdpHost->CharsUpper, iChars );
-         memcpy( pszHostLetters + iChars, pTerm->cdpHost->CharsLower, iChars + 1 );
-         memcpy( pszTermLetters, pTerm->cdpOut->CharsUpper, iChars );
-         memcpy( pszTermLetters + iChars, pTerm->cdpOut->CharsLower, iChars + 1 );
-
-         hb_gt_trm_SetDispTrans( pTerm, pszHostLetters, pszTermLetters, fBox ? 1 : 0 );
-
-         hb_xfree( pszHostLetters );
-         hb_xfree( pszTermLetters );
-      }
-      return TRUE;
-   }
+   hb_gt_trm_SetDispTrans( HB_GTTRM_GET( pGT ), hb_cdpFind( pszHostCDP ),
+                                                hb_cdpFind( pszTermCDP ),
+                                                fBox ? 1 : 0 );
 #endif
-
-   return FALSE;
+   return TRUE;
 }
 
 static BOOL hb_gt_trm_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
@@ -3511,39 +3486,10 @@ static BOOL hb_gt_trm_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
    if( !pszTermCDP )
       pszTermCDP = pszHostCDP;
 
-   if( pszTermCDP && pszHostCDP )
-   {
-      PHB_GTTRM pTerm = HB_GTTRM_GET( pGT );
-      PHB_CODEPAGE cdpTerm = hb_cdpFind( pszTermCDP ),
-                   cdpHost = hb_cdpFind( pszHostCDP );
-      if( cdpTerm && cdpHost && cdpTerm != cdpHost &&
-          cdpTerm->nChars && cdpTerm->nChars == cdpHost->nChars )
-      {
-         char *pszHostLetters = ( char * ) hb_xgrab( ( cdpHost->nChars << 1 ) + 1 );
-         char *pszTermLetters = ( char * ) hb_xgrab( ( cdpTerm->nChars << 1 ) + 1 );
-
-         memcpy( pszHostLetters, cdpHost->CharsUpper, cdpHost->nChars );
-         memcpy( pszHostLetters + cdpHost->nChars, cdpHost->CharsLower, cdpHost->nChars );
-         pszHostLetters[ cdpHost->nChars << 1 ] = '\0';
-         memcpy( pszTermLetters, cdpTerm->CharsUpper, cdpTerm->nChars );
-         memcpy( pszTermLetters + cdpTerm->nChars, cdpTerm->CharsLower, cdpTerm->nChars );
-         pszTermLetters[ cdpTerm->nChars << 1 ] = '\0';
-
-         hb_gt_trm_SetKeyTrans( pTerm, pszTermLetters, pszHostLetters );
-
-         hb_xfree( pszHostLetters );
-         hb_xfree( pszTermLetters );
-      }
-      else
-         hb_gt_trm_SetKeyTrans( pTerm, NULL, NULL );
-
-      pTerm->cdpIn = cdpTerm;
-
-      return TRUE;
-   }
+   hb_gt_trm_SetKeyTrans( HB_GTTRM_GET( pGT ), hb_cdpFind( pszTermCDP ),
+                                               hb_cdpFind( pszHostCDP ) );
 #endif
-
-   return FALSE;
+   return TRUE;
 }
 
 static void hb_gt_trm_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )

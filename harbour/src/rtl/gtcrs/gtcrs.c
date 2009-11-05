@@ -1844,21 +1844,17 @@ static int gt_setsize( InOutBase * ioBase, int rows, int cols )
    return ret;
 }
 
-static void setKeyTrans( InOutBase * ioBase, unsigned char *ksrc, unsigned char *kdst )
+static void setKeyTrans( InOutBase * ioBase, PHB_CODEPAGE cdpTerm, PHB_CODEPAGE cdpHost )
 {
-   unsigned char c;
-   int n;
+   int i;
 
-   if ( ksrc && kdst )
+   if ( cdpTerm && cdpHost && cdpTerm != cdpHost )
    {
       if ( ioBase->in_transtbl == NULL )
          ioBase->in_transtbl = ( unsigned char * ) hb_xgrab( 256 );
 
-      memset( ioBase->in_transtbl, 0, 256 );
-
-      for ( n = 0; n < 256 && ( c = ksrc[n] ); n++ )
-         ioBase->in_transtbl[c] = kdst[n];
-
+      for ( i = 0; i < 256; ++i )
+         ioBase->in_transtbl[i] = hb_cdpTranslateChar( i, FALSE, cdpTerm, cdpHost );
    }
    else if ( ioBase->in_transtbl != NULL )
    {
@@ -1867,14 +1863,12 @@ static void setKeyTrans( InOutBase * ioBase, unsigned char *ksrc, unsigned char 
    }
 }
 
-static void setDispTrans( InOutBase * ioBase, const char *src, const char *dst, int box )
+static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, int box )
 {
-   unsigned char c, d;
-   int i, aSet = 0;
+   int i, aSet;
    chtype ch;
 
-   if ( src && dst )
-      aSet = 1;
+   aSet = ( cdpHost && cdpTerm );
 
    for ( i = 0; i < 256; i++ )
    {
@@ -1920,20 +1914,25 @@ static void setDispTrans( InOutBase * ioBase, const char *src, const char *dst, 
    }
    if ( aSet )
    {
-      for( i = 0; i < 256 && ( c = ( unsigned char ) src[i] ); i++ )
+      for( i = 0; i < 256; ++i )
       {
-         d = ( unsigned char ) dst[i];
-         ioBase->std_chmap[c] = d | A_NORMAL;
-         if( box )
-            ioBase->box_chmap[c] = d | A_NORMAL;
-         if( c != d )
+         if( hb_cdpIsAlpha( cdpHost, i ) )
          {
-            if( ioBase->out_transtbl == NULL )
+            unsigned char uc = ( unsigned char )
+                              hb_cdpTranslateChar( i, TRUE, cdpHost, cdpTerm );
+
+            ioBase->std_chmap[i] = uc | A_NORMAL;
+            if( box )
+               ioBase->box_chmap[i] = uc | A_NORMAL;
+            if( i != ( int ) uc )
             {
-               ioBase->out_transtbl = ( unsigned char * )hb_xgrab( 256 );
-               memset( ioBase->out_transtbl, 0, 256 );
+               if( ioBase->out_transtbl == NULL )
+               {
+                  ioBase->out_transtbl = ( unsigned char * ) hb_xgrab( 256 );
+                  memset( ioBase->out_transtbl, 0, 256 );
+               }
+               ioBase->out_transtbl[i] = uc;
             }
-            ioBase->out_transtbl[c] = d;
          }
       }
    }
@@ -2422,11 +2421,6 @@ int HB_GT_FUNC( gt_WaitKey( double dTimeOut ) )
    return wait_key( s_ioBase, ( int ) ( dTimeOut * 1000.0 ) );
 }
 
-void HB_GT_FUNC( gt_SetKeyTrans( unsigned char *szSrc, unsigned char *szDst ) )
-{
-   setKeyTrans( s_ioBase, szSrc, szDst );
-}
-
 int HB_GT_FUNC( gt_AddKeyMap( int iKey, char *szSequence ) )
 {
    return addKeyMap( s_ioBase, SET_CLIPKEY( iKey ), szSequence );
@@ -2833,47 +2827,20 @@ static BOOL hb_gt_crs_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox ) );
 
+#ifndef HB_CDP_SUPPORT_OFF
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
-#ifndef HB_CDP_SUPPORT_OFF
-   if( !pszHostCDP || !*pszHostCDP )
-   {
+   if( !pszHostCDP )
       pszHostCDP = hb_cdpID();
-      if ( !pszHostCDP )
-         pszHostCDP = pszTermCDP;
-   }
-   if( !pszTermCDP || !*pszTermCDP )
+   if( !pszTermCDP )
       pszTermCDP = pszHostCDP;
 
-   if( pszTermCDP && pszHostCDP && *pszTermCDP && *pszHostCDP )
-   {
-      PHB_CODEPAGE cdpTerm = hb_cdpFind( pszTermCDP ),
-                   cdpHost = hb_cdpFind( pszHostCDP );
-      if( cdpTerm && cdpHost )
-      {
-         if( cdpTerm->nChars && cdpTerm->nChars == cdpHost->nChars )
-         {
-            char *pszHostLetters = ( char * ) hb_xgrab( cdpHost->nChars * 2 + 1 );
-            char *pszTermLetters = ( char * ) hb_xgrab( cdpTerm->nChars * 2 + 1 );
-
-            hb_strncpy( pszHostLetters, cdpHost->CharsUpper, cdpHost->nChars * 2 );
-            hb_strncat( pszHostLetters, cdpHost->CharsLower, cdpHost->nChars * 2 );
-            hb_strncpy( pszTermLetters, cdpTerm->CharsUpper, cdpTerm->nChars * 2 );
-            hb_strncat( pszTermLetters, cdpTerm->CharsLower, cdpTerm->nChars * 2 );
-
-            setDispTrans( s_ioBase, pszHostLetters, pszTermLetters, fBox ? 1 : 0 );
-
-            hb_xfree( pszHostLetters );
-            hb_xfree( pszTermLetters );
-            return TRUE;
-         }
-         else
-            setDispTrans( s_ioBase, "", "", fBox ? 1 : 0 );
-      }
-   }
+   setDispTrans( s_ioBase, hb_cdpFind( pszHostCDP ),
+                           hb_cdpFind( pszTermCDP ), fBox ? 1 : 0 );
+   return TRUE;
+#else
+   return HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 #endif
-
-   return FALSE;
 }
 
 /* *********************************************************************** */
@@ -2882,40 +2849,20 @@ static BOOL hb_gt_crs_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
 
+#ifndef HB_CDP_SUPPORT_OFF
    HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
-#ifndef HB_CDP_SUPPORT_OFF
-   if( !pszHostCDP || !*pszHostCDP )
-   {
+   if( !pszHostCDP )
       pszHostCDP = hb_cdpID();
-   }
+   if( !pszTermCDP )
+      pszTermCDP = pszHostCDP;
 
-   if( pszTermCDP && pszHostCDP && *pszTermCDP && *pszHostCDP )
-   {
-      PHB_CODEPAGE cdpTerm = hb_cdpFind( pszTermCDP ),
-         cdpHost = hb_cdpFind( pszHostCDP );
-      if( cdpTerm && cdpHost && cdpTerm != cdpHost &&
-          cdpTerm->nChars && cdpTerm->nChars == cdpHost->nChars )
-      {
-         char *pszHostLetters = ( char * ) hb_xgrab( cdpHost->nChars * 2 + 1 );
-         char *pszTermLetters = ( char * ) hb_xgrab( cdpTerm->nChars * 2 + 1 );
+   setKeyTrans( s_ioBase, hb_cdpFind( pszTermCDP ), hb_cdpFind( pszHostCDP ) );
 
-         hb_strncpy( pszHostLetters, cdpHost->CharsUpper, cdpHost->nChars * 2 );
-         hb_strncat( pszHostLetters, cdpHost->CharsLower, cdpHost->nChars * 2 );
-         hb_strncpy( pszTermLetters, cdpTerm->CharsUpper, cdpTerm->nChars * 2 );
-         hb_strncat( pszTermLetters, cdpTerm->CharsLower, cdpTerm->nChars * 2 );
-
-         setKeyTrans( s_ioBase, ( unsigned char * ) pszTermLetters,
-                      ( unsigned char * ) pszHostLetters );
-
-         hb_xfree( pszHostLetters );
-         hb_xfree( pszTermLetters );
-         return TRUE;
-      }
-   }
+   return TRUE;
+#else
+   return HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 #endif
-
-   return FALSE;
 }
 
 /* *********************************************************************** */

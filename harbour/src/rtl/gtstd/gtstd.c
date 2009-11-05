@@ -104,6 +104,8 @@ typedef struct _HB_GTSTD
 
    int            iLineBufSize;
    char *         sLineBuf;
+   ULONG          ulTransBufSize;
+   char *         sTransBuf;
    BOOL           fFullRedraw;
    char *         szCrLf;
    ULONG          ulCrLf;
@@ -174,19 +176,13 @@ static void sig_handler( int iSigNo )
 
 #endif
 
-static void hb_gt_std_setKeyTrans( PHB_GTSTD pGTSTD, char * pSrcChars, char * pDstChars )
+static void hb_gt_std_setKeyTrans( PHB_GTSTD pGTSTD, PHB_CODEPAGE cdpTerm, PHB_CODEPAGE cdpHost )
 {
    int i;
 
    for( i = 0; i < 256; ++i )
-      pGTSTD->keyTransTbl[ i ] = ( BYTE ) i;
-
-   if( pSrcChars && pDstChars )
-   {
-      BYTE c;
-      for( i = 0; i < 256 && ( c = ( BYTE ) pSrcChars[ i ] ) != 0; ++i )
-         pGTSTD->keyTransTbl[ c ] = ( BYTE ) pDstChars[ i ];
-   }
+      pGTSTD->keyTransTbl[ i ] = ( BYTE )
+                           hb_cdpTranslateChar( i, FALSE, cdpTerm, cdpHost );
 }
 
 static void hb_gt_std_termOut( PHB_GTSTD pGTSTD, const char * szStr, ULONG ulLen )
@@ -321,6 +317,8 @@ static void hb_gt_std_Exit( PHB_GT pGT )
 #endif
       if( pGTSTD->iLineBufSize > 0 )
          hb_xfree( pGTSTD->sLineBuf );
+      if( pGTSTD->ulTransBufSize > 0 )
+         hb_xfree( pGTSTD->sTransBuf );
       if( pGTSTD->szCrLf )
          hb_xfree( pGTSTD->szCrLf );
       hb_xfree( pGTSTD );
@@ -547,11 +545,9 @@ static BOOL hb_gt_std_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
       pGTSTD->cdpHost = hb_cdpFindExt( pszHostCDP );
       pGTSTD->fDispTrans = pGTSTD->cdpTerm && pGTSTD->cdpHost &&
                            pGTSTD->cdpTerm != pGTSTD->cdpHost;
-      return TRUE;
    }
 #endif
-
-   return FALSE;
+   return TRUE;
 }
 
 static BOOL hb_gt_std_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
@@ -566,34 +562,10 @@ static BOOL hb_gt_std_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
    if( !pszTermCDP )
       pszTermCDP = pszHostCDP;
 
-   if( pszTermCDP && pszHostCDP )
-   {
-      PHB_CODEPAGE cdpTerm = hb_cdpFind( pszTermCDP ),
-                   cdpHost = hb_cdpFind( pszHostCDP );
-      if( cdpTerm && cdpHost && cdpTerm != cdpHost &&
-          cdpTerm->nChars && cdpTerm->nChars == cdpHost->nChars )
-      {
-         char *pszHostLetters = ( char * ) hb_xgrab( cdpHost->nChars * 2 + 1 );
-         char *pszTermLetters = ( char * ) hb_xgrab( cdpTerm->nChars * 2 + 1 );
-
-         hb_strncpy( pszHostLetters, cdpHost->CharsUpper, cdpHost->nChars * 2 );
-         hb_strncat( pszHostLetters, cdpHost->CharsLower, cdpHost->nChars * 2 );
-         hb_strncpy( pszTermLetters, cdpTerm->CharsUpper, cdpTerm->nChars * 2 );
-         hb_strncat( pszTermLetters, cdpTerm->CharsLower, cdpTerm->nChars * 2 );
-
-         hb_gt_std_setKeyTrans( HB_GTSTD_GET( pGT ), pszTermLetters, pszHostLetters );
-
-         hb_xfree( pszHostLetters );
-         hb_xfree( pszTermLetters );
-      }
-      else
-         hb_gt_std_setKeyTrans( HB_GTSTD_GET( pGT ), NULL, NULL );
-
-      return TRUE;
-   }
+   hb_gt_std_setKeyTrans(  HB_GTSTD_GET( pGT ), hb_cdpFind( pszTermCDP ),
+                                                hb_cdpFind( pszHostCDP ) );
 #endif
-
-   return FALSE;
+   return TRUE;
 }
 
 static void hb_gt_std_DispLine( PHB_GT pGT, int iRow )
@@ -616,7 +588,14 @@ static void hb_gt_std_DispLine( PHB_GT pGT, int iRow )
    }
    hb_gt_std_newLine( pGTSTD );
    if( iMin > 0 )
-      hb_gt_std_termOut( pGTSTD, pGTSTD->sLineBuf, iMin );
+   {
+      ULONG ulLen = iMin;
+      const char * buffer = hb_cdpnDup3( pGTSTD->sLineBuf, ulLen,
+                                         pGTSTD->sTransBuf, &ulLen,
+                                         &pGTSTD->sTransBuf, &pGTSTD->ulTransBufSize,
+                                         pGTSTD->cdpHost, pGTSTD->cdpTerm );
+      hb_gt_std_termOut( pGTSTD, buffer, ulLen );
+   }
    pGTSTD->iLastCol = pGTSTD->iCol = iMin;
    pGTSTD->iRow = iRow;
 }
@@ -720,10 +699,11 @@ static void hb_gt_std_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
          if( pGTSTD->fDispTrans )
          {
             ULONG ulLen = iLen;
-            char * buffer = hb_cdpnDup( pGTSTD->sLineBuf, &ulLen,
-                                        pGTSTD->cdpHost, pGTSTD->cdpTerm );
+            const char * buffer = hb_cdpnDup3( pGTSTD->sLineBuf, ulLen,
+                                               pGTSTD->sTransBuf, &ulLen,
+                                               &pGTSTD->sTransBuf, &pGTSTD->ulTransBufSize,
+                                               pGTSTD->cdpHost, pGTSTD->cdpTerm );
             hb_gt_std_termOut( pGTSTD, buffer, ulLen );
-            hb_xfree( buffer );
          }
          else
 #endif

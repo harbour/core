@@ -245,11 +245,10 @@ static BOOL hb_gt_cgi_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
       pGTCGI->cdpHost = hb_cdpFindExt( pszHostCDP );
       pGTCGI->fDispTrans = pGTCGI->cdpTerm && pGTCGI->cdpHost &&
                            pGTCGI->cdpTerm != pGTCGI->cdpHost;
-      return TRUE;
    }
 #endif
 
-   return FALSE;
+   return TRUE;
 }
 
 #ifdef HB_GT_CGI_RAWOUTPUT

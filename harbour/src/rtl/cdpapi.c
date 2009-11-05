@@ -517,6 +517,59 @@ BOOL hb_charIsUpper( int iChar )
    return FALSE;
 }
 
+BOOL hb_cdpIsDigit( PHB_CODEPAGE cdp, int iChar )
+{
+   HB_SYMBOL_UNUSED( cdp );
+
+   return HB_ISDIGIT( ( unsigned char ) iChar );
+}
+
+BOOL hb_cdpIsAlpha( PHB_CODEPAGE cdp, int iChar )
+{
+   if( HB_ISALPHA( ( unsigned char ) iChar ) )
+      return TRUE;
+   else
+   {
+      /* ( char * ) casting for MSVC */
+      if( cdp && cdp->nChars && iChar &&
+          ( strchr( ( char * ) cdp->CharsUpper, iChar ) ||
+            strchr( ( char * ) cdp->CharsLower, iChar ) ) )
+         return TRUE;
+   }
+
+   return FALSE;
+}
+
+BOOL hb_cdpIsLower( PHB_CODEPAGE cdp, int iChar )
+{
+   if( HB_ISLOWER( ( unsigned char ) iChar ) )
+      return TRUE;
+   else
+   {
+      /* ( char * ) casting for MSVC */
+      if( cdp && cdp->nChars && iChar &&
+          strchr( ( char * ) cdp->CharsLower, iChar ) )
+         return TRUE;
+   }
+
+   return FALSE;
+}
+
+BOOL hb_cdpIsUpper( PHB_CODEPAGE cdp, int iChar )
+{
+   if( HB_ISUPPER( ( unsigned char ) iChar ) )
+      return TRUE;
+   else
+   {
+      /* ( char * ) casting for MSVC */
+      if( cdp && cdp->nChars && iChar &&
+          strchr( ( char * ) cdp->CharsUpper, iChar ) )
+         return TRUE;
+   }
+
+   return FALSE;
+}
+
 PHB_CODEPAGE hb_cdpFind( const char *pszID )
 {
    int iPos;
@@ -664,6 +717,27 @@ void hb_cdpnTranslate( char *psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, ULONG
          }
       }
    }
+}
+
+int hb_cdpTranslateChar( int iChar, BOOL fCtrl, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
+{
+   if( cdpIn && cdpOut && cdpIn != cdpOut && cdpIn->nChars == cdpOut->nChars &&
+       iChar >= ( fCtrl ? 32 : 0 ) && iChar < 256 )
+   {
+      /* ( char * ) casting for MSVC */
+      char * ptr = strchr( ( char * ) cdpIn->CharsUpper, iChar );
+      if( ptr )
+         iChar = ( unsigned char ) cdpOut->CharsUpper[ ptr - cdpIn->CharsUpper ];
+      else
+      {
+         /* ( char * ) casting for MSVC */
+         ptr = strchr( ( char * ) cdpIn->CharsLower, iChar );
+         if( ptr )
+            iChar = ( unsigned char ) cdpOut->CharsLower[ ptr - cdpIn->CharsLower ];
+      }
+   }
+
+   return iChar;
 }
 
 HB_WCHAR hb_cdpGetU16( PHB_CODEPAGE cdp, BOOL fCtrl, UCHAR ch )
@@ -1490,12 +1564,12 @@ const char * hb_cdpnDup3( const char * pszSrc, ULONG ulSrc,
       }
       if( pszPrev )
          hb_xfree( pszPrev );
-      if( *pulDst )
+      if( pulDst )
          *pulDst = ulDst;
       return pszDst;
    }
 
-   if( *pulDst )
+   if( pulDst )
       *pulDst = ulSrc;
    return pszSrc;
 }
@@ -2175,3 +2249,69 @@ BOOL hb_charIsUpper( int iChar )
 }
 
 #endif /* HB_CDP_SUPPORT_OFF */
+
+/* converts szText to lower case. Does not create a new string! */
+char * hb_strLower( char * szText, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_strLower(%s, %lu)", szText, ulLen));
+
+   {
+      ULONG i;
+#ifndef HB_CDP_SUPPORT_OFF
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      if( cdp && cdp->nChars )
+         for( i = 0; i < ulLen; i++ )
+            szText[ i ] = ( char ) cdp->s_lower[ ( UCHAR ) szText[ i ] ];
+      else
+#endif
+         for( i = 0; i < ulLen; i++ )
+            szText[ i ] = HB_TOLOWER( szText[ i ] );
+   }
+
+   return szText;
+}
+
+/* converts szText to upper case. Does not create a new string! */
+char * hb_strUpper( char * szText, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_strUpper(%s, %lu)", szText, ulLen));
+
+   {
+      ULONG i;
+#ifndef HB_CDP_SUPPORT_OFF
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      if( cdp && cdp->nChars )
+         for( i = 0; i < ulLen; i++ )
+            szText[ i ] = ( char ) cdp->s_upper[ ( UCHAR ) szText[ i ] ];
+      else
+#endif
+         for( i = 0; i < ulLen; i++ )
+            szText[ i ] = HB_TOUPPER( szText[ i ] );
+   }
+
+   return szText;
+}
+
+/* converts iChar to lower case */
+int hb_charLower( int iChar )
+{
+#ifndef HB_CDP_SUPPORT_OFF
+   PHB_CODEPAGE cdp = hb_vmCDP();
+   if( cdp && cdp->nChars )
+      return ( unsigned char ) cdp->s_lower[ (unsigned char) iChar ];
+   else
+#endif
+      return HB_TOLOWER( iChar );
+}
+
+/* converts iChar to upper case */
+int hb_charUpper( int iChar )
+{
+#ifndef HB_CDP_SUPPORT_OFF
+   PHB_CODEPAGE cdp = hb_vmCDP();
+   if( cdp && cdp->nChars )
+      return ( unsigned char ) cdp->s_upper[ (unsigned char) iChar ];
+   else
+#endif
+      return HB_TOUPPER( iChar );
+}

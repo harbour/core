@@ -2958,8 +2958,7 @@ static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
 #ifndef HB_CDP_SUPPORT_OFF
-
-#if defined( UNICODE )
+#  if defined( UNICODE )
    /*
     * We are displaying text in U16 so pszTermCDP is unimportant.
     * We only have to know what is the internal application codepage
@@ -2972,41 +2971,35 @@ static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
    {
       PHB_CODEPAGE cdpHost = hb_cdpFind( pszHostCDP );
       if( cdpHost )
-         HB_GTWVT_GET( pGT )->hostCDP = cdpHost;
-   }
-
-#else
-
-   if( !pszHostCDP )
-      pszHostCDP = hb_cdpID();
-   if( !pszTermCDP )
-      pszTermCDP = pszHostCDP;
-
-   if( pszTermCDP && pszHostCDP )
-   {
-      PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-      PHB_CODEPAGE cdpTerm = hb_cdpFind( pszTermCDP ),
-                   cdpHost = hb_cdpFind( pszHostCDP );
-      int i;
-
-      for( i = 0; i < 256; ++i )
-         pWVT->chrTransTbl[ i ] = ( BYTE ) i;
-
-      if( cdpTerm && cdpHost && cdpTerm != cdpHost &&
-          cdpTerm->nChars && cdpTerm->nChars == cdpHost->nChars )
       {
-         for( i = 0; i < cdpHost->nChars; ++i )
-         {
-            pWVT->chrTransTbl[ ( BYTE ) cdpHost->CharsUpper[ i ] ] =
-                               ( BYTE ) cdpTerm->CharsUpper[ i ];
-            pWVT->chrTransTbl[ ( BYTE ) cdpHost->CharsLower[ i ] ] =
-                               ( BYTE ) cdpTerm->CharsLower[ i ];
-         }
+         PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+
+         pWVT->hostCDP = cdpHost;
+         pWVT->boxCDP = fBox ? cdpHost : hb_cdpFind( "EN" );
       }
    }
+#  else
+   {
+      PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+      PHB_CODEPAGE cdpTerm, cdpHost;
+      int i;
 
-#endif
+      if( !pszHostCDP )
+         pszHostCDP = hb_cdpID();
 
+      if( !pszTermCDP )
+         pszTermCDP = pszHostCDP;
+
+      cdpTerm = hb_cdpFind( pszTermCDP );
+      cdpHost = hb_cdpFind( pszHostCDP );
+
+      for( i = 0; i < 256; i++ )
+      {
+         pWVT->chrTransTbl[ i ] = ( BYTE )
+                           hb_cdpTranslateChar( i, TRUE, cdpHost, cdpTerm );
+      }
+   }
+#  endif
 #endif
 
    return TRUE;
@@ -3017,8 +3010,7 @@ static BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char 
    HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
 #ifndef HB_CDP_SUPPORT_OFF
-
-#if defined( UNICODE )
+#  if defined( UNICODE )
    /*
     * We are receiving WM_CHAR events in U16 so pszTermCDP is unimportant.
     * We only have to know what is the internal application codepage
@@ -3033,40 +3025,27 @@ static BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char 
       if( cdpHost )
          HB_GTWVT_GET( pGT )->inCDP = cdpHost;
    }
-
-#else
-
-   if( !pszHostCDP )
-      pszHostCDP = hb_cdpID();
-   if( !pszTermCDP )
-      pszTermCDP = pszHostCDP;
-
-   if( pszTermCDP && pszHostCDP )
+#  else
    {
       PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-      PHB_CODEPAGE cdpTerm = hb_cdpFind( pszTermCDP ),
-                   cdpHost = hb_cdpFind( pszHostCDP );
+      PHB_CODEPAGE cdpTerm, cdpHost;
       int i;
 
-      for( i = 0; i < 256; ++i )
-         pWVT->keyTransTbl[ i ] = ( BYTE ) i;
+      if( !pszHostCDP )
+         pszHostCDP = hb_cdpID();
 
-      if( cdpTerm && cdpHost && cdpTerm != cdpHost &&
-          cdpTerm->nChars && cdpTerm->nChars == cdpHost->nChars )
-      {
-         for( i = 0; i < cdpHost->nChars; ++i )
-         {
-            pWVT->keyTransTbl[ ( BYTE ) cdpTerm->CharsUpper[ i ] ] =
-                               ( BYTE ) cdpHost->CharsUpper[ i ];
-            pWVT->keyTransTbl[ ( BYTE ) cdpTerm->CharsLower[ i ] ] =
-                               ( BYTE ) cdpHost->CharsLower[ i ];
-         }
-      }
+      if( !pszTermCDP )
+         pszTermCDP = pszHostCDP;
 
+      cdpTerm = hb_cdpFind( pszTermCDP );
+      cdpHost = hb_cdpFind( pszHostCDP );
+
+      for( i = 0; i < 256; i++ )
+         pWVT->keyTransTbl[ i ] = ( BYTE )
+                           hb_cdpTranslateChar( i, FALSE, cdpTerm, cdpHost );
       pWVT->inCDP = cdpTerm;
    }
-#endif
-
+#  endif
 #endif
 
    return TRUE;

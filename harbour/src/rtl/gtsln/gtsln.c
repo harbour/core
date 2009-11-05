@@ -348,13 +348,14 @@ static void hb_sln_setACSCtrans( void )
 
 static void hb_sln_setCharTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, BOOL fBox )
 {
-   int i, iSrc, iDst;
+   int i, iDst;
 
-#ifdef HB_CDP_SUPPORT_OFF
+#if defined( HB_CDP_SUPPORT_OFF )
    HB_SYMBOL_UNUSED( cdpHost );
    HB_SYMBOL_UNUSED( cdpTerm );
    HB_SYMBOL_UNUSED( fBox );
-   HB_SYMBOL_UNUSED( iSrc );
+#elif !defined( HB_SLN_UNICODE )
+   HB_SYMBOL_UNUSED( cdpTerm );
 #endif
 
    /* build a conversion chars table */
@@ -392,35 +393,24 @@ static void hb_sln_setCharTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, BOO
       memcpy( s_outboxTab, s_outputTab, sizeof( s_outputTab ) );
 
 #ifndef HB_CDP_SUPPORT_OFF
-      if( cdpHost && cdpHost->nChars )
+      if( cdpHost )
       {
-#ifdef HB_SLN_UNICODE
-         HB_SYMBOL_UNUSED( cdpTerm );
-#else
-         BOOL fTrans = cdpTerm && cdpTerm->nChars == cdpHost->nChars;
-#endif
-
-         for( i = 0; i < cdpHost->nChars; i++ )
+         for( i = 0; i < 256; ++i )
          {
-            iSrc = ( unsigned char ) cdpHost->CharsUpper[ i ];
+            if( hb_cdpIsAlpha( cdpHost, i ) )
+            {
 #ifdef HB_SLN_UNICODE
-            iDst = hb_cdpGetU16( cdpHost, TRUE, ( BYTE ) iSrc );
+               iDst = hb_cdpGetU16( cdpHost, TRUE, ( BYTE ) i );
 #else
-            iDst = fTrans ? ( unsigned char ) cdpTerm->CharsUpper[ i ] : iSrc;
+               if( hb_sln_Is_Unicode )
+                  iDst = hb_cdpGetU16( cdpHost, TRUE, ( BYTE ) i );
+               else
+                  iDst = hb_cdpTranslateChar( i, TRUE, cdpHost, cdpTerm );
 #endif
-            HB_SLN_BUILD_RAWCHAR( s_outputTab[ iSrc ], iDst, 0 );
-            if( fBox )
-               s_outboxTab[ iSrc ] = s_outputTab[ iSrc ];
-
-            iSrc = ( unsigned char ) cdpHost->CharsLower[ i ];
-#ifdef HB_SLN_UNICODE
-            iDst = hb_cdpGetU16( cdpHost, TRUE, ( BYTE ) iSrc );
-#else
-            iDst = fTrans ? ( unsigned char ) cdpTerm->CharsLower[ i ] : iSrc;
-#endif
-            HB_SLN_BUILD_RAWCHAR( s_outputTab[ iSrc ], iDst, 0 );
-            if( fBox )
-               s_outboxTab[ iSrc ] = s_outputTab[ iSrc ];
+               HB_SLN_BUILD_RAWCHAR( s_outputTab[ i ], iDst, 0 );
+               if( fBox )
+                  s_outboxTab[ i ] = s_outputTab[ i ];
+            }
          }
       }
 #endif
@@ -433,29 +423,16 @@ static void hb_sln_setKeyTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm )
    char *p;
    int i;
 
-   for ( i = 0; i < 256; i++ )
-      hb_sln_inputTab[ i ] = ( unsigned char ) i;
-
 #ifndef HB_CDP_SUPPORT_OFF
-   if ( cdpHost && cdpTerm && cdpTerm->nChars == cdpHost->nChars )
-   {
-      int iSrc, iDst;
-
-      for ( i = 0; i < cdpHost->nChars; i++ )
-      {
-         iSrc = ( unsigned char ) cdpTerm->CharsUpper[ i ];
-         iDst = ( unsigned char ) cdpHost->CharsUpper[ i ];
-         hb_sln_inputTab[ iSrc ] = iDst;
-
-         iSrc = ( unsigned char ) cdpTerm->CharsLower[ i ];
-         iDst = ( unsigned char ) cdpHost->CharsLower[ i ];
-         hb_sln_inputTab[ iSrc ] = iDst;
-      }
-   }
+   for ( i = 0; i < 256; i++ )
+      hb_sln_inputTab[ i ] = ( unsigned char )
+                           hb_cdpTranslateChar( i, FALSE, cdpTerm, cdpHost );
    hb_sln_cdpIN = cdpTerm ? cdpTerm : cdpHost;
 #else
    HB_SYMBOL_UNUSED( cdpHost );
    HB_SYMBOL_UNUSED( cdpTerm );
+   for ( i = 0; i < 256; i++ )
+      hb_sln_inputTab[ i ] = ( unsigned char ) i;
 #endif
 
    /* init national chars */
@@ -976,22 +953,21 @@ static BOOL hb_gt_sln_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
 static BOOL hb_gt_sln_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP, BOOL fBox )
 {
+   HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
+
 #ifndef HB_CDP_SUPPORT_OFF
    PHB_CODEPAGE cdpTerm = NULL, cdpHost = NULL;
 
-   cdpHost = hb_cdpFind( pszHostCDP );
-   if ( pszHostCDP && *pszHostCDP )
+   if ( pszHostCDP )
       cdpHost = hb_cdpFind( pszHostCDP );
    if ( ! cdpHost )
       cdpHost = hb_vmCDP();
 
-   if ( pszTermCDP && *pszTermCDP )
+   if ( pszTermCDP )
       cdpTerm = hb_cdpFind( pszTermCDP );
 
    hb_sln_setCharTrans( cdpHost, cdpTerm, fBox );
 #endif
-
-   HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
    return TRUE;
 }
@@ -1000,22 +976,21 @@ static BOOL hb_gt_sln_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
 
 static BOOL hb_gt_sln_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP )
 {
+   HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
+
 #ifndef HB_CDP_SUPPORT_OFF
    PHB_CODEPAGE cdpTerm = NULL, cdpHost = NULL;
 
-   cdpHost = hb_cdpFind( pszHostCDP );
-   if ( pszHostCDP && *pszHostCDP )
+   if ( pszHostCDP )
       cdpHost = hb_cdpFind( pszHostCDP );
    if ( ! cdpHost )
       cdpHost = hb_vmCDP();
 
-   if ( pszTermCDP && *pszTermCDP )
+   if ( pszTermCDP )
       cdpTerm = hb_cdpFind( pszTermCDP );
 
    hb_sln_setKeyTrans( cdpHost, cdpTerm );
 #endif
-
-   HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
    return TRUE;
 }

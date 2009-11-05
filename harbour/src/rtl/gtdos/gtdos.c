@@ -1241,39 +1241,36 @@ static BOOL hb_gt_dos_Resume( PHB_GT pGT )
 
 static BOOL hb_gt_dos_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, BOOL fBox )
 {
+   PHB_CODEPAGE cdpTerm, cdpHost;
    int i;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox ) );
 
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
-   for( i = 0; i < 256; i++ )
-      s_charTrans[ i ] = ( BYTE ) i;
-
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
       pszHostCDP = hb_cdpID();
 
-   if( pszTermCDP && pszHostCDP )
-   {
-      PHB_CODEPAGE cdpTerm = hb_cdpFind( pszTermCDP ),
-                   cdpHost = hb_cdpFind( pszHostCDP );
-      if( cdpTerm && cdpHost && cdpTerm != cdpHost &&
-          cdpTerm->nChars && cdpTerm->nChars == cdpHost->nChars )
-      {
-         for( i = 0; i < cdpHost->nChars; ++i )
-         {
-            s_charTrans[ ( BYTE ) cdpHost->CharsUpper[ i ] ] =
-                         ( BYTE ) cdpTerm->CharsUpper[ i ];
-            s_charTrans[ ( BYTE ) cdpHost->CharsLower[ i ] ] =
-                         ( BYTE ) cdpTerm->CharsLower[ i ];
-         }
-      }
-   }
-#endif
+   if( !pszTermCDP )
+      pszTermCDP = pszHostCDP;
+
+   cdpTerm = hb_cdpFind( pszTermCDP );
+   cdpHost = hb_cdpFind( pszHostCDP );
 
    for( i = 0; i < 256; i++ )
-      s_charTransRev[ s_charTrans[ i ] ] = ( BYTE ) i;
+   {
+      s_charTrans[ i ] = ( BYTE )
+                           hb_cdpTranslateChar( i, FALSE, cdpHost, cdpTerm );
+      s_charTransRev[ i ] = ( BYTE )
+                           hb_cdpTranslateChar( i, FALSE, cdpTerm, cdpHost );
+   }
+#else
+   HB_SYMBOL_UNUSED( cdpTerm );
+   HB_SYMBOL_UNUSED( cdpHost );
+   for( i = 0; i < 256; i++ )
+      s_charTransRev[ i ] = s_charTrans[ i ] = ( BYTE ) i;
+#endif
 
    return TRUE;
 }
@@ -1282,37 +1279,33 @@ static BOOL hb_gt_dos_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
 
 static BOOL hb_gt_dos_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
 {
+   PHB_CODEPAGE cdpTerm, cdpHost;
    int i;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
 
    HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
-   for( i = 0; i < 256; i++ )
-      s_keyTrans[ i ] = ( BYTE ) i;
-
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
-   {
       pszHostCDP = hb_cdpID();
-   }
 
-   if( pszTermCDP && pszHostCDP )
+   if( !pszTermCDP )
+      pszTermCDP = pszHostCDP;
+
+   cdpTerm = hb_cdpFind( pszTermCDP );
+   cdpHost = hb_cdpFind( pszHostCDP );
+
+   for( i = 0; i < 256; i++ )
    {
-      PHB_CODEPAGE cdpTerm = hb_cdpFind( pszTermCDP ),
-                   cdpHost = hb_cdpFind( pszHostCDP );
-      if( cdpTerm && cdpHost && cdpTerm != cdpHost &&
-          cdpTerm->nChars && cdpTerm->nChars == cdpHost->nChars )
-      {
-         for( i = 0; i < cdpHost->nChars; ++i )
-         {
-            s_keyTrans[ ( BYTE ) cdpHost->CharsUpper[ i ] ] =
-                        ( BYTE ) cdpTerm->CharsUpper[ i ];
-            s_keyTrans[ ( BYTE ) cdpHost->CharsLower[ i ] ] =
-                        ( BYTE ) cdpTerm->CharsLower[ i ];
-         }
-      }
+      s_keyTrans[ i ] = ( BYTE )
+                           hb_cdpTranslateChar( i, FALSE, cdpTerm, cdpHost );
    }
+#else
+   HB_SYMBOL_UNUSED( cdpTerm );
+   HB_SYMBOL_UNUSED( cdpHost );
+   for( i = 0; i < 256; i++ )
+      s_keyTrans[ i ] = ( BYTE ) i;
 #endif
 
    return TRUE;

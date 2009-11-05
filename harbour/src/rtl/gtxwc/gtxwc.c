@@ -402,6 +402,8 @@ typedef struct tag_x_wnddef
    /* CodePage support */
    PHB_CODEPAGE hostCDP;
    /* PHB_CODEPAGE outCDP; */
+   PHB_CODEPAGE utf8CDP;
+   PHB_CODEPAGE boxCDP;
    PHB_CODEPAGE inCDP;
 
    /* current cursor and color settings */
@@ -2179,13 +2181,10 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 #ifdef XWC_DEBUG
                   printf( "UTF8String='%s'\r\n", text.value ); fflush(stdout);
 #endif
-                  nItem = hb_cdpUTF8StringLength( ( const char * ) text.value, text.nitems );
-                  if( wnd->ClipboardData != NULL )
-                     hb_xfree( wnd->ClipboardData );
-                  wnd->ClipboardData = ( unsigned char * ) hb_xgrab( nItem + 1 );
-                  wnd->ClipboardSize = nItem;
-                  hb_cdpUTF8ToStrn( wnd->hostCDP, FALSE, ( const char * ) text.value, text.nitems,
-                                    ( char * ) wnd->ClipboardData, nItem + 1 );
+                  wnd->ClipboardSize = text.nitems;
+                  wnd->ClipboardData = ( unsigned char * )
+                     hb_cdpnDup( ( const char * ) text.value, &wnd->ClipboardSize,
+                                 wnd->utf8CDP, wnd->hostCDP );
                   wnd->ClipboardTime = evt->xselection.time;
                   wnd->ClipboardRcvd = TRUE;
                }
@@ -2202,8 +2201,8 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                   wnd->ClipboardSize = text.nitems;
 #ifndef HB_CDP_SUPPORT_OFF
                   wnd->ClipboardData = ( unsigned char * )
-                        hb_cdpnDup( ( const char * ) text.value, &wnd->ClipboardSize,
-                                    wnd->inCDP, wnd->hostCDP );
+                     hb_cdpnDup( ( const char * ) text.value, &wnd->ClipboardSize,
+                                 wnd->inCDP, wnd->hostCDP );
 #else
                   wnd->ClipboardData = ( unsigned char * ) hb_xgrab( text.nitems + 1 );
                   memcpy( wnd->ClipboardData, text.value, text.nitems );
@@ -2281,7 +2280,9 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
             if( wnd->inCDP && wnd->hostCDP && wnd->inCDP != wnd->hostCDP )
             {
                ULONG ulLen = wnd->ClipboardSize;
-               unsigned char * pBuffer = ( unsigned char * ) hb_cdpnDup( ( const char * ) wnd->ClipboardData, &ulLen, wnd->hostCDP, wnd->inCDP );
+               unsigned char * pBuffer = ( unsigned char * )
+                     hb_cdpnDup( ( const char * ) wnd->ClipboardData, &ulLen,
+                                 wnd->hostCDP, wnd->inCDP );
 
                XChangeProperty( wnd->dpy, req->requestor, req->property,
                                 s_atomString, 8, PropModeReplace,
@@ -2299,10 +2300,11 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 #ifndef HB_CDP_SUPPORT_OFF
          else if( req->target == s_atomUTF8String )
          {
-            ULONG ulLen = hb_cdpStringInUTF8Length( wnd->hostCDP, FALSE, ( const char * ) wnd->ClipboardData, wnd->ClipboardSize );
-            unsigned char * pBuffer = ( unsigned char * ) hb_xgrab( ulLen + 1 );
+            ULONG ulLen = wnd->ClipboardSize;
+            unsigned char * pBuffer = ( unsigned char * )
+                     hb_cdpnDup( ( const char * ) wnd->ClipboardData, &ulLen,
+                                 wnd->hostCDP, wnd->utf8CDP );
 
-            hb_cdpStrnToUTF8( wnd->hostCDP, FALSE, ( const char * ) wnd->ClipboardData, wnd->ClipboardSize, ( char * ) pBuffer );
 #ifdef XWC_DEBUG
             printf( "SelectionRequest: (%s)->(%s) [%s]\r\n", wnd->ClipboardData, pBuffer, wnd->hostCDP->id ); fflush(stdout);
 #endif
@@ -2967,11 +2969,8 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd )
       {
          XTextProperty text;
          char * pBuffer;
-         ULONG ulLen;
 
-         ulLen = hb_cdpStringInUTF8Length( wnd->hostCDP, FALSE, wnd->szTitle, strlen( wnd->szTitle ) );
-         pBuffer = ( char * ) hb_xgrab( ulLen + 1 );
-         hb_cdpStrnToUTF8( wnd->hostCDP, FALSE, wnd->szTitle, strlen( wnd->szTitle ), pBuffer );
+         pBuffer = hb_cdpDup( wnd->szTitle, wnd->hostCDP, wnd->utf8CDP );
          text.value = ( unsigned char * ) pBuffer;
          text.encoding = s_atomUTF8String;
          text.format = 8;
@@ -3137,6 +3136,8 @@ static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
    wnd->fWinResize = FALSE;
 #ifndef HB_CDP_SUPPORT_OFF
    wnd->hostCDP = hb_vmCDP();
+   wnd->utf8CDP = hb_cdpFind( "UTF8" );
+   wnd->boxCDP = hb_cdpFind( "EN" );
 #endif
    wnd->cursorType = SC_NORMAL;
 
@@ -3803,6 +3804,7 @@ static BOOL hb_gt_xwc_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
       if( cdpHost && cdpHost != wnd->hostCDP )
       {
          wnd->hostCDP = cdpHost;
+         wnd->boxCDP = fBox ? cdpHost : hb_cdpFind( "EN" );
          if( wnd->fInit )
          {
             HB_XWC_XLIB_LOCK

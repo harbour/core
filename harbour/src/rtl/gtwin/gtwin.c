@@ -591,28 +591,29 @@ static void hb_gt_win_xGetScreenContents( PHB_GT pGT, SMALL_RECT * psrWin )
       for( iCol = psrWin->Left; iCol <= psrWin->Right; ++iCol )
       {
 #if defined( HB_CDP_SUPPORT_OFF )
-         HB_GTSELF_PUTSCRCHAR( pGT, iRow, iCol, ( BYTE ) s_pCharInfoScreen[ i ].Attributes, 0,
-                               ( BYTE ) s_pCharInfoScreen[ i ].Char.AsciiChar );
+         HB_GTSELF_PUTSCRCHAR( pGT, iRow, iCol, ( UCHAR ) s_pCharInfoScreen[ i ].Attributes, 0,
+                               ( UCHAR ) s_pCharInfoScreen[ i ].Char.AsciiChar );
 #elif defined( UNICODE )
-         USHORT uc = s_pCharInfoScreen[ i ].Char.UnicodeChar, u2;
+         HB_WCHAR wc = s_pCharInfoScreen[ i ].Char.UnicodeChar;
+         unsigned char uc;
          BYTE bAttr = 0;
 
          /* TODO: optimize it by creating conversion table - it can be
           *       very slow in some cases
           */
 
-         u2 = hb_cdpGetChar( s_cdpHost, FALSE, uc );
-         if( u2 == '?' && uc >= 0x100 && s_cdpHost != s_cdpBox )
+         uc = hb_cdpGetChar( s_cdpHost, FALSE, wc );
+         if( uc == '?' && wc >= 0x100 && s_cdpHost != s_cdpBox )
          {
-            u2 = hb_cdpGetChar( s_cdpBox, FALSE, uc );
-            if( u2 != '?' )
+            uc = hb_cdpGetChar( s_cdpBox, FALSE, wc );
+            if( uc != '?' )
                bAttr |= HB_GT_ATTR_BOX;
          }
-         HB_GTSELF_PUTSCRCHAR( pGT, iRow, iCol, ( BYTE ) s_pCharInfoScreen[ i ].Attributes,
-                               bAttr, u2 );
+         HB_GTSELF_PUTSCRCHAR( pGT, iRow, iCol, ( UCHAR ) s_pCharInfoScreen[ i ].Attributes,
+                               bAttr, uc );
 #else
-         HB_GTSELF_PUTSCRCHAR( pGT, iRow, iCol, ( BYTE ) s_pCharInfoScreen[ i ].Attributes, 0,
-                               s_charTransRev[ ( BYTE ) s_pCharInfoScreen[ i ].Char.AsciiChar ] );
+         HB_GTSELF_PUTSCRCHAR( pGT, iRow, iCol, ( UCHAR ) s_pCharInfoScreen[ i ].Attributes, 0,
+                               s_charTransRev[ ( UCHAR ) s_pCharInfoScreen[ i ].Char.AsciiChar ] );
 #endif
          ++i;
       }
@@ -1488,56 +1489,47 @@ static BOOL hb_gt_win_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
 #ifndef HB_CDP_SUPPORT_OFF
-
-#if defined( UNICODE )
+#  if defined( UNICODE )
    /*
     * We are displaying text in U16 so pszTermCDP is unimportant.
     * We only have to know what is the internal application codepage
     * to make proper translation
     */
-   if( !pszHostCDP || !*pszHostCDP )
+   if( !pszHostCDP )
       pszHostCDP = hb_cdpID();
 
-   if( pszHostCDP && *pszHostCDP )
+   if( pszHostCDP )
    {
       PHB_CODEPAGE cdpHost = hb_cdpFind( pszHostCDP );
       if( cdpHost )
+      {
          s_cdpHost = cdpHost;
+         s_cdpBox = fBox ? cdpHost : hb_cdpFind( "EN" );
+      }
    }
-
-#else
+#  else
    {
+      PHB_CODEPAGE cdpTerm, cdpHost;
       int i;
-
-      for( i = 0; i < 256; i++ )
-         s_charTrans[ i ] = ( BYTE ) i;
 
       if( !pszHostCDP )
          pszHostCDP = hb_cdpID();
 
-      if( pszTermCDP && pszHostCDP )
-      {
-         PHB_CODEPAGE cdpTerm = hb_cdpFind( pszTermCDP ),
-                      cdpHost = hb_cdpFind( pszHostCDP );
-         if( cdpTerm && cdpHost && cdpTerm != cdpHost &&
-             cdpTerm->nChars && cdpTerm->nChars == cdpHost->nChars )
-         {
-            for( i = 0; i < cdpHost->nChars; ++i )
-            {
-               s_charTrans[ ( BYTE ) cdpHost->CharsUpper[ i ] ] =
-                            ( BYTE ) cdpTerm->CharsUpper[ i ];
-               s_charTrans[ ( BYTE ) cdpHost->CharsLower[ i ] ] =
-                            ( BYTE ) cdpTerm->CharsLower[ i ];
-            }
-         }
-      }
+      if( !pszTermCDP )
+         pszTermCDP = pszHostCDP;
+
+      cdpTerm = hb_cdpFind( pszTermCDP );
+      cdpHost = hb_cdpFind( pszHostCDP );
 
       for( i = 0; i < 256; i++ )
-         s_charTransRev[ s_charTrans[ i ] ] = ( BYTE ) i;
-
+      {
+         s_charTrans[ i ] = ( BYTE )
+                           hb_cdpTranslateChar( i, TRUE, cdpHost, cdpTerm );
+         s_charTransRev[ i ] = ( BYTE )
+                           hb_cdpTranslateChar( i, TRUE, cdpTerm, cdpHost );
+      }
    }
-#endif
-
+#  endif
 #endif
 
    return TRUE;
@@ -1553,8 +1545,7 @@ static BOOL hb_gt_win_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
    HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
 #ifndef HB_CDP_SUPPORT_OFF
-
-#if defined( UNICODE )
+#  if defined( UNICODE )
    /*
     * We are receiving WM_CHAR events in U16 so pszTermCDP is unimportant.
     * We only have to know what is the internal application codepage
@@ -1570,35 +1561,25 @@ static BOOL hb_gt_win_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
          s_cdpIn = cdpHost;
    }
 
-#else
+#  else
    {
+      PHB_CODEPAGE cdpTerm, cdpHost;
       int i;
-
-      for( i = 0; i < 256; i++ )
-         s_keyTrans[ i ] = ( BYTE ) i;
 
       if( !pszHostCDP )
          pszHostCDP = hb_cdpID();
 
-      if( pszTermCDP && pszHostCDP )
-      {
-         PHB_CODEPAGE cdpTerm = hb_cdpFind( pszTermCDP ),
-                      cdpHost = hb_cdpFind( pszHostCDP );
-         if( cdpTerm && cdpHost && cdpTerm != cdpHost &&
-             cdpTerm->nChars && cdpTerm->nChars == cdpHost->nChars )
-         {
-            for( i = 0; i < cdpHost->nChars; ++i )
-            {
-               s_keyTrans[ ( BYTE ) cdpHost->CharsUpper[ i ] ] =
-                           ( BYTE ) cdpTerm->CharsUpper[ i ];
-               s_keyTrans[ ( BYTE ) cdpHost->CharsLower[ i ] ] =
-                           ( BYTE ) cdpTerm->CharsLower[ i ];
-            }
-         }
-      }
-   }
-#endif
+      if( !pszTermCDP )
+         pszTermCDP = pszHostCDP;
 
+      cdpTerm = hb_cdpFind( pszTermCDP );
+      cdpHost = hb_cdpFind( pszHostCDP );
+
+      for( i = 0; i < 256; i++ )
+         s_keyTrans[ i ] = ( BYTE )
+                           hb_cdpTranslateChar( i, FALSE, cdpTerm, cdpHost );
+   }
+#  endif
 #endif
 
    return TRUE;
