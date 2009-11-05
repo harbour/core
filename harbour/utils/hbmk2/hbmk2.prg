@@ -2500,7 +2500,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-g" )
          ENDIF
-         cLibLibPrefix := "lib"
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
@@ -2524,14 +2523,16 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          cOpt_Link := "{LO} {LA} {FL} {DL}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
-         cLibLibExt := ".a"
          IF hbmk[ _HBMK_cCOMP ] == "gccomf"
+            cLibLibExt := ".lib"
             cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "emxomfar" + cCCEXT
 
             AAdd( hbmk[ _HBMK_aOPTC ], "-Zomf" )
             AAdd( hbmk[ _HBMK_aOPTL ], "-Zomf" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-Zomf" )
          ELSE
+            cLibLibPrefix := "lib"
+            cLibLibExt := ".a"
             cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + cCCEXT
          ENDIF
          cOpt_Lib := "{FA} rcs {OL} {LO}"

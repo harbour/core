@@ -10,7 +10,11 @@ endif
 
 OBJ_EXT := .o
 LIB_PREF :=
-LIB_EXT := .a
+ifeq ($(HB_COMPILER),gccomf)
+   LIB_EXT := .lib
+else
+   LIB_EXT := .a
+endif
 
 CC := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 CC_IN := -c
