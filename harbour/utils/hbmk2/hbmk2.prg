@@ -2531,7 +2531,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTL ], "-Zomf" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-Zomf" )
          ELSE
-            cLibLibPrefix := "lib"
             cLibLibExt := ".a"
             cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + cCCEXT
          ENDIF
