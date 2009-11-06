@@ -1436,11 +1436,15 @@ HB_FUNC( ADSCONNECTION )                /* Get/Set func to switch between connec
 
 HB_FUNC( ADSISCONNECTIONALIVE ) /* Determine if passed or default connection is still valid */
 {
+#if ADS_LIB_VERSION >= 800
    UNSIGNED16 bConnectionIsAlive = 0;
 
    AdsIsConnectionAlive( HB_ADS_PARCONNECTION( 1 ), &bConnectionIsAlive );
 
    hb_retl( bConnectionIsAlive != 0 );
+#else
+   hb_retl( 0 );
+#endif
 }
 
 HB_FUNC( ADSGETHANDLETYPE )             /* DD, admin, table */
