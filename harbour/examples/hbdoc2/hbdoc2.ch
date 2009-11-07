@@ -63,17 +63,19 @@
 MEMVAR p_aCategories
 MEMVAR p_aNonConformingSources
 MEMVAR p_hsSwitches
-MEMVAR p_hsTemplates
 MEMVAR p_aCompliance
 MEMVAR p_aPlatforms
+MEMVAR p_aStatus
 MEMVAR p_aConversionList
 
 // Template definitions
 #define TPL_START            1
 #define TPL_END              2
-#define TPL_REQUIRED         4
-#define TPL_OPTIONAL         0
-#define TPL_PREFORMATTED    8
-#define TPL_CONSTRAINTLIST  16
+#define TPL_REQUIRED         4 // intentially has a 'required' and 'optional' flag
+#define TPL_OPTIONAL         8
+#define TPL_PREFORMATTED    16
+#define TPL_CONSTRAINTLIST  32
+#define TPL_TEMPLATE        64
+#define TPL_OUTPUT         128
 
 #endif

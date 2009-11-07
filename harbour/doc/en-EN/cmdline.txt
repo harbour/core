@@ -9,6 +9,8 @@
  *      Command line utility
  *  $CATEGORY$
  *      Document
+ *  $SUBCATEGORY$
+ *      Compiler
  *  $ONELINER$
  *      Compiler Options
  *  $DESCRIPTION$

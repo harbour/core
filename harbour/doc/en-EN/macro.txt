@@ -9,6 +9,8 @@
  *      Macro compiler
  *  $CATEGORY$
  *      Document
+ *  $SUBCATEGORY$
+ *      Compiler
  *  $ONELINER$
  *      Macro compiler
  *  $DESCRIPTION$

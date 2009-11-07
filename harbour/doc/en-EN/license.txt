@@ -6,9 +6,11 @@
  *  $TEMPLATE$
  *     Document
  *  $NAME$
- *     License
+ *     Harbour License
  *  $CATEGORY$
  *     Document
+ *  $SUBCATEGORY$
+ *     License
  *  $ONELINER$
  *     Harbour License
  *  $DESCRIPTION$

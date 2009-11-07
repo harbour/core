@@ -57,7 +57,7 @@
 
 /*
 #xcommand TEXT TO VAR <var> => #pragma __stream|<var>:=%s
-#xcommand TEXT INTO <v> => #pragma __text|<v>+=%s+HB_OSNEWLINE();<v>:=""
+#xcommand TEXT INTO <v> => #pragma __text|<v>+=%s+HB_OSNewLine();<v>:=""
 
 text into p_hsTemplates
 this is line 1
@@ -67,7 +67,190 @@ endtext
 ?
 */
 
+#include "hbclass.ch"
+
+/* a class that will hold one entry */
+CLASS Entry
+EXPORTED:
+   CLASSDATA Fields AS ARRAY INIT { ;
+      { "DOC",          "Doc" }, ;
+      { "TEMPLATE",     "Template" }, ;
+      { "NAME",         "" }, ;
+      { "CATEGORY",     "Category" }, ;
+      { "SUBCATEGORY",  "Sub category" }, ;
+      { "ONELINER",     "" },;
+      { "SYNTAX",       "Syntax" },;
+      { "ARGUMENTS",    "Argument(s)" },;
+      { "RETURNS",      "Returns" },;
+      { "DESCRIPTION",  "Description" },;
+      { "DATALINK",     "Data link" },;
+      { "DATANOLINK",   "Data no link" },;
+      { "METHODSLINK",  "Methods link" },;
+      { "METHODSNOLINK","Methods no link" },;
+      { "EXAMPLES",     "Example(s)" },;
+      { "TESTS",        "Test(s)" },;
+      { "STATUS",       "Status" },;      /* p_aStatus is the constraint list */
+      { "COMPLIANCE",   "Compliance" },;  /* p_aCompliance is the constraint list */
+      { "PLATFORMS",    "Platform(s)" },; /* p_aPlatforms is the constraint list */
+      { "FILES",        "File(s)" },;
+      { "SEEALSO",      "See also" }, ;
+      { "END",          "End" } ;
+   }
+
+#define S TPL_START
+#define E TPL_END
+#define T TPL_TEMPLATE
+#define R TPL_REQUIRED
+#define O TPL_OPTIONAL
+#define P TPL_PREFORMATTED
+#define U TPL_OUTPUT
+#define x 0
+
+   // this is best viewed with a fixed-width font
+   // the columns of this array correspond to the elements of Fields
+   CLASSDATA Templates AS ARRAY INIT { ;
+      { "Template"      , { S, T, x+U, x, O, x+U, x+U, x+U, x+U, x+U, x+U, x+U, x+U, x+U, x  +U, x  +U, x+U, x+U, x+U, x+U, x+U, E } }, ;
+      { "Document"      , { S, T, R+U, R, O+U, O+U, x+U, x+U, x+U, R+U, x+U, x+U, x+U, x+U, x  +U, x  +U, x+U, x+U, O+U, O+U, O+U, E } }, ;
+      { "Function"      , { S, T, R+U, R, R, O+U, O+U, O+U, O+U, O+U, x+U, x+U, x+U, x+U, P+O+U, P+O+U, O+U, O+U, O+U, O+U, O+U, E } }, ;
+      { "Procedure"     , { S, T, R+U, R, R, O+U, O+U, O+U,   x, O+U, x+U, x+U, x+U, x+U, P+O+U, P+O+U, O+U, O+U, O+U, O+U, O+U, E } }, ;
+      { "Command"       , { S, T, R+U, R, R, O+U, R+U, R+U, x+U, R+U, x+U, x+U, x+U, x+U, P+O+U, P+O+U, O+U, O+U, O+U, O+U, O+U, E } }, ;
+      { "Class"         , { S, T, R+U, R, R, O+U, R+U, R+U, R+U, R+U, O+U, O+U, O+U, O+U, P+O+U, P+O+U, O+U, O+U, O+U, O+U, O+U, E } }, ;
+      { "Class method"  , { S, T, R+U, R, R, O+U, R+U, R+U, R+U, R+U, x+U, x+U, x+U, x+U, P+O+U, x  +U, x+U, x+U, x+U, x+U, O+U, E } }, ;
+      { "Class data"    , { S, T, R+U, R, R, O+U, R+U, x+U, x+U, R+U, x+U, x+U, x+U, x+U, P+O+U, x  +U, x+U, x+U, x+U, x+U, O+U, E } }, ;
+      { "Run time error", { S, T, R+U, R, x, O+U, x+U, x+U, x+U, R+U, x+U, x+U, x+U, x+U, P+O+U, x  +U, x+U, O+U, x+U, x+U, O+U, E } }, ;
+   }
+
+#undef S
+#undef E
+#undef T
+#undef R
+#undef O
+#undef P
+#undef U
+#undef x
+
+   METHOD New( cType ) CONSTRUCTOR
+   METHOD IsField( c, nType )
+   METHOD IsTemplate( c )
+   METHOD SetTemplate( cType )
+   METHOD IsConstraint( cSectionName, cSection )
+   METHOD IsComplete( cIncompleteFielsList )
+   METHOD IsPreformatted( cField )
+   METHOD IsRequired( cField )
+   METHOD IsOptional( cField )
+   METHOD IsOutput( cField )
+   METHOD FieldName( cField )
+   METHOD CategoryIndex( cCategory )
+   METHOD SubcategoryIndex( cCategory )
+
+   DATA Group AS ARRAY
+   DATA filename AS STRING
+   DATA type_ AS STRING
+   DATA sourcefile_ AS STRING
+   DATA sourcefileversion_ AS STRING
+   DATA uid_ AS STRING
+   CLASSDATA uid__ AS INTEGER INIT 0
+ENDCLASS
+
+METHOD New( cType ) CLASS Entry
+   ::uid_ = HB_NTOS( ++::uid__ )
+   IF .NOT. __ObjHasData( self, self:Fields[ 1 ][ 1 ] )
+      AEval( self:Fields, {|a| __objAddData( self, a[ 1 ] ) } )
+   ENDIF
+   IF cType != NIL
+      self:Group := self:Templates[ HB_AScan( self:Templates, {|a| UPPER( a[ 1 ] ) == UPPER( cType ) } ) ][ 2 ]
+   ENDIF
+   RETURN self
+
+METHOD IsField( c, nType ) CLASS Entry
+   LOCAL idx
+   LOCAL lResult
+
+   IF ( lResult := ( idx := HB_AScan( self:Fields, {|a| UPPER( a[ 1 ] ) == UPPER( c ) } ) ) > 0 )
+      IF self:Group[ idx ] == 0
+         lResult := .F.
+      ELSEIF nType != NIL .AND. HB_BitAnd( self:Group[ idx ], nType ) != nType
+         lResult := .F.
+      ELSE
+      ENDIF
+   ENDIF
+
+   RETURN lResult
+
+METHOD IsTemplate( cType ) CLASS Entry
+   RETURN HB_AScan( self:Templates, {|a| UPPER( a[ 1 ] ) == UPPER( cType ) } ) > 0
+
+METHOD SetTemplate( cTemplate ) CLASS Entry
+   LOCAL aData := Array( Len( self:Fields ) )
+   LOCAL idx
+
+   self:Group := self:Templates[ HB_AScan( self:Templates, {|a| UPPER( a[ 1 ] ) == UPPER( cTemplate ) } ) ][ 2 ]
+   FOR idx := 1 TO Len( aData )
+      IF self:Fields[ idx ][ 1 ] == "TEMPLATE"
+         aData[ idx ] := { self:Fields[ idx ][ 1 ], cTemplate }
+      ELSE
+         aData[ idx ] := { self:Fields[ idx ][ 1 ], IIf( self:Group[ idx ] == TPL_REQUIRED, NIL, "" ) }
+      ENDIF
+   NEXT
+   __ObjSetValueList( self, aData )
+   RETURN self
+
+METHOD IsConstraint( cSectionName, cSection ) CLASS Entry
+   LOCAL lResult
+   LOCAL idx := HB_AScan( self:Fields, {|a| a[ 1 ] == cSectionName } )
+
+   IF HB_BitAnd( self:Group[ idx ], HB_BitAnd( TPL_REQUIRED, TPL_OPTIONAL ) ) == 0
+      lResult := .T.
+   ELSEIF Type( "p_a" + cSectionName ) == "A"
+      lResult := HB_AScan( &( "p_a" + cSectionName ), cSection ) .OR. ;
+                 HB_AScan( &( "p_a" + cSectionName ), Parse( ( cSection ), "," ) )
+   ELSE
+      lResult := .T.
+   ENDIF
+
+   RETURN lResult
+
+METHOD IsComplete( cIncompleteFielsList ) CLASS Entry
+   LOCAL lResult := .T.
+   LOCAL idx
+
+   cIncompleteFielsList := ""
+
+   FOR idx := 1 TO Len( self:Fields )
+      IF HB_BitAnd( self:Group[ idx ], TPL_REQUIRED ) != 0 .AND. Empty( self:&( self:Fields[ idx ][ 1 ] ) )
+         cIncompleteFielsList += "," + self:Fields[ idx ][ 1 ]
+         lResult := .F.
+      ENDIF
+   NEXT
+
+   cIncompleteFielsList := SUBSTR( cIncompleteFielsList, 2 )
+
+   RETURN lResult
+
+METHOD IsPreformatted( cField ) CLASS Entry
+   RETURN HB_BitAnd( self:Group[ HB_AScan( self:Fields, {|a| a[ 1 ] == cField } ) ], TPL_PREFORMATTED ) != 0
+
+METHOD IsRequired( cField ) CLASS Entry
+   RETURN HB_BitAnd( self:Group[ HB_AScan( self:Fields, {|a| a[ 1 ] == cField } ) ], TPL_REQUIRED ) != 0
+
+METHOD IsOptional( cField ) CLASS Entry
+   RETURN HB_BitAnd( self:Group[ HB_AScan( self:Fields, {|a| a[ 1 ] == cField } ) ], TPL_OPTIONAL ) != 0
+
+METHOD IsOutput( cField ) CLASS Entry
+   RETURN HB_BitAnd( self:Group[ HB_AScan( self:Fields, {|a| a[ 1 ] == cField } ) ], TPL_OUTPUT ) != 0
+
+METHOD FieldName( cField ) CLASS Entry
+   RETURN self:Fields[ HB_AScan( self:Fields, {|a| a[ 1 ] == cField } ) ][ 2 ]
+
+METHOD CategoryIndex( cCategory ) CLASS Entry
+   RETURN HB_AScan( p_aCategories, {|a| a[ 1 ] == cCategory } )
+
+METHOD SubcategoryIndex( cCategory, cSubcategory ) CLASS Entry
+   RETURN HB_AScan( p_aCategories[ ::CategoryIndex( cCategory ) ][ 2 ], cSubcategory, , , .T. )
+   //~ RETURN HB_AScan( p_aCategories[ ::CategoryIndex( cCategory ) ][ 2 ], {|c| c == cSubcategory } )
+
 INIT PROCEDURE Templates()
+   LOCAL idx
    LOCAL aSubCategories := { ;
       "Application", ;
       "Array", ;
@@ -85,6 +268,7 @@ INIT PROCEDURE Templates()
       "Garbage collector", ;
       "Hash table", ;
       "Idle states", ;
+      "INET", ;
       "Internal", ;
       "Item", ;
       "Language and Nation", ;
@@ -103,237 +287,79 @@ INIT PROCEDURE Templates()
    }
 
    PUBLIC p_aCategories := { ;
-                  { "API", AClone( aSubCategories ), Array( Len( aSubCategories ) ) }, ;
-                  { "C level API", AClone( aSubCategories ), Array( Len( aSubCategories ) ) }, ;
-                  { "C level API compatability", AClone( aSubCategories ), Array( Len( aSubCategories ) ) }, ;
-                  { "Class", { ;
-                        "", ;
-                        "Access", ;
-                        "Assign", ;
-                        "Data", ;
-                        "Method", ;
-                        "Destructor", ;
-                        "Var", ;
-                        }, Array( 7 ) }, ;
-                  { "Command", AClone( aSubCategories ), Array( Len( aSubCategories ) ) }, ;
-                  /* { "Compile time errors", { {} } }, */ ;
-                  { "Document", { "" }, Array( 1 ) }, ;
-                  { "Run time errors", { "" }, Array( 1 ) }, ;
-               }
+      { "Document", { "License", "Compiler", "" } }, ;
+      { "API", AClone( aSubCategories ) }, ;
+      { "C level API", AClone( aSubCategories ) }, ;
+      { "C level API compatability", AClone( aSubCategories ) }, ;
+      { "Class", { ;
+            "", ;
+            "Access", ;
+            "Assign", ;
+            "Constructor", ;
+            "Data", ;
+            "Definition", ;
+            "Destructor", ;
+            "Method", ;
+            "Var", ;
+            } }, ;
+      { "Command", AClone( aSubCategories ) }, ;
+      /* { "Compile time errors", { {} } }, */ ;
+      { "Run time errors", { "" } }, ;
+   }
+
+   FOR idx := 1 TO Len( p_aCategories )
+      IF .NOT. Empty( p_aCategories[ idx ] )
+         AAdd( p_aCategories[ idx ], Array( Len( p_aCategories[ idx ][ 2 ] ) ) ) // holder array of sub-category entries
+         AAdd( p_aCategories[ idx ], "" ) // holder for sub-category file name
+      ENDIF
+   NEXT
 
    PUBLIC p_aCompliance := { ;
-      "C", ;
-      "C(array)", ;
-      "C(menu)", ;
-      "C52S", ;
-      "C52U", ;
-      "C53", ;
-      "FS", ;
-      "H", ;
-      "NA", ;
-      "XPP" ;
+      { "",         "" }, ;
+      { "C",        "This is CA-Cl*pper v5.2 compliant" }, ;
+      { "C(array)", "This is CA-Cl*pper v5.2 compliant except that arrays in Harbour can have an unlimited number of elements" }, ;
+      { "C(menu)",  "This is CA-Cl*pper v5.2 compliant except that menus (internally arrays) in Harbour can have an unlimited number of elements" }, ;
+      { "C(arrayblock)",  "Codeblock calling frequency and order differs from  CA-Cl*pper, since Harbour uses a different (faster) sorting algorithm (quicksort)" }, ;
+      { "C52S",     "? verbage: This is an CA-Cl*pper v5.2 compliant and is only visible if source was compiled with the HB_C52_STRICT flag" }, ;
+      { "C52U",     "This is an undocumented CA-Cl*pper v5.2 function and is only visible if source was compiled with the HB_C52_UNDOC flag" }, ;
+      { "C53",      "This is CA-Cl*pper v5.3 compliant and is only visible if source was compiled with the HB_COMPAT_C53 flag" }, ;
+      { "FS",       "This a Flagship compatibility function and is only visible if source was compiled with the HB_COMPAT_FLAGSHIP flag" }, ;
+      { "H",        "This is Harbour specific" }, ;
+      { "NA",       "Not applicable" }, ;
+      { "XPP",      "This an Xbase++ compatibility function and is only visible if source was compiled with the HB_COMPAT_XPP flag" } ;
    }
 
    PUBLIC p_aPlatforms := { ;
-      "All", ;
-      "All(64K)", ;
-      "All(GT)", ;
-      "All(LFN)", ;
-      "Linux(GT)", ;
-      "OS2(GT)", ;
-      "Win(GT)", ;
-      "BSD", ;
-      "DARWIN", ;
-      "DOS", ;
-      "HPUX", ;
-      "LINUX", ;
-      "OS2", ;
-      "SUNOS", ;
-      "Unix", ;
-      "Win", ;
-      "Win32", ;
-      "Win64", ;
-      "WinCE" ;
+      { "",          "" }, ;
+      { "All",       "This is available on all platforms" }, ;
+      { "All(64K)",  "This is available on all platforms though some platforms have a string length limit of 64KB" }, ;
+      { "All(GT)",   "This part of the GT API and supported only by some platforms." }, ;
+      { "All(LFN)",  "This is available on all platforms." + HB_OSNewLine() + ;
+                     "If long file names are available Harbour will use/display the first 15 characters " +;
+                     "else Harbour will use/display a 8.3 file name consistent with CA-Cl*pper" }, ;
+      { "Linux(GT)", "Under Linux the number of columns avaliable depends of the current Terminal screen size." }, ;
+      { "OS2(GT)",   "Under OS/2 the number of columns avaliable depends of the current Terminal screen size." }, ;
+      { "Win(GT)",   "Under Windows, the return value of MAXROW() function is only affected if called after an SETMODE() function" }, ;
+      { "BSD",       "This is available on the BSD platform" }, ;
+      { "DARWIN",    "This is available on the DARWIN platform" }, ;
+      { "DOS",       "This is available on the MS-DOS platform" }, ;
+      { "HPUX",      "This is available on the HPUX platform" }, ;
+      { "LINUX",     "This is available on the LINUX platform" }, ;
+      { "OS2",       "This is available on the OS/2 platform" }, ;
+      { "SUNOS",     "This is available on the SUNOS platform" }, ;
+      { "Unix",      "This is available on the Unix platform(s)" }, ;
+      { "Win",       "This is available on the MS-Windows platform(s)" }, ;
+      { "Win32",     "This is available on the MS-Windows (32-bit) platform(s)" }, ;
+      { "Win64",     "This is available on the MS-Windows (64-bit) platform(s)" }, ;
+      { "WinCE",     "This is available on the MS-Windows-CE platform" } ;
    }
 
-   PUBLIC p_hsTemplates := HB_Hash()
-
-   p_hsTemplates[ "orderby" ] := { ;
-      "DOC", ;
-      "TEMPLATE", ;
-      "NAME", ;
-      "CATEGORY", ;
-      "SUBCATEGORY", ;
-      "ONELINER", ;
-      "SYNTAX", ;
-      "ARGUMENTS", ;
-      "RETURNS", ;
-      "DESCRIPTION", ;
-      "DATALINK", ;
-      "DATANOLINK", ;
-      "METHODSLINK", ;
-      "METHODSNOLINK", ;
-      "EXAMPLES", ;
-      "TESTS", ;
-      "STATUS", ;
-      "COMPLIANCE", ;
-      "PLATFORMS", ;
-      "FILES", ;
-      "SEEALSO", ;
-      "END" ;
+   PUBLIC p_aStatus := { ;
+      { "",  "" }, ;
+      { "R", "Ready" }, ;
+      { "S", "Started" }, ;
+      { "N", "Not started" } ;
    }
-
-   p_hsTemplates[ "Template" ] := HB_Hash( ;
-      "DOC", { TPL_START }, ;
-      "TEMPLATE", { TPL_REQUIRED + TPL_CONSTRAINTLIST, { "Template" } }, ;
-      "END", { TPL_END } ;
-   )
-
-   p_hsTemplates[ "Document" ] := HB_Hash( ;
-      "DOC", { TPL_START }, ;
-      "TEMPLATE", { TPL_REQUIRED + TPL_CONSTRAINTLIST, { "Document" } }, ;
-      "NAME", { TPL_REQUIRED }, ;
-      "CATEGORY", { TPL_REQUIRED }, ;
-      "SUBCATEGORY", { TPL_OPTIONAL }, ;
-      "ONELINER", { TPL_REQUIRED }, ;
-      "DESCRIPTION", { TPL_REQUIRED }, ;
-      "PLATFORMS", { TPL_OPTIONAL + TPL_CONSTRAINTLIST, p_aPlatforms }, ;
-      "FILES", { TPL_OPTIONAL }, ;
-      "SEEALSO", { TPL_OPTIONAL }, ;
-      "END", { TPL_END } ;
-   )
-
-   p_hsTemplates[ "Function" ] := HB_Hash( ;
-      "DOC", { TPL_START }, ;
-      "TEMPLATE", { TPL_REQUIRED + TPL_CONSTRAINTLIST, { "Function" } }, ;
-      "NAME", { TPL_REQUIRED }, ;
-      "CATEGORY", { TPL_REQUIRED }, ;
-      "SUBCATEGORY", { TPL_REQUIRED }, ;
-      "ONELINER", { TPL_REQUIRED }, ;
-      "SYNTAX", { TPL_OPTIONAL }, ;
-      "ARGUMENTS", { TPL_OPTIONAL }, ;
-      "RETURNS", { TPL_OPTIONAL }, ;
-      "DESCRIPTION", { TPL_OPTIONAL }, ;
-      "EXAMPLES", { TPL_PREFORMATTED + TPL_OPTIONAL }, ;
-      "TESTS", { TPL_PREFORMATTED + TPL_OPTIONAL }, ;
-      "STATUS", { TPL_OPTIONAL }, ;
-      "COMPLIANCE", { TPL_REQUIRED + TPL_CONSTRAINTLIST, p_aCompliance }, ;
-      "PLATFORMS", { TPL_OPTIONAL + TPL_CONSTRAINTLIST, p_aPlatforms }, ;
-      "FILES", { TPL_OPTIONAL }, ;
-      "SEEALSO", { TPL_OPTIONAL }, ;
-      "END", { TPL_END } ;
-   )
-
-   p_hsTemplates[ "Procedure" ] := HB_Hash( ;
-      "DOC", { TPL_START }, ;
-      "TEMPLATE", { TPL_REQUIRED + TPL_CONSTRAINTLIST, { "Procedure" } }, ;
-      "NAME", { TPL_REQUIRED }, ;
-      "CATEGORY", { TPL_REQUIRED }, ;
-      "SUBCATEGORY", { TPL_REQUIRED }, ;
-      "ONELINER", { TPL_REQUIRED }, ;
-      "SYNTAX", { TPL_OPTIONAL }, ;
-      "ARGUMENTS", { TPL_OPTIONAL }, ;
-      "DESCRIPTION", { TPL_OPTIONAL }, ;
-      "EXAMPLES", { TPL_PREFORMATTED + TPL_OPTIONAL }, ;
-      "TESTS", { TPL_PREFORMATTED + TPL_OPTIONAL }, ;
-      "STATUS", { TPL_OPTIONAL }, ;
-      "COMPLIANCE", { TPL_REQUIRED + TPL_CONSTRAINTLIST, p_aCompliance }, ;
-      "PLATFORMS", { TPL_OPTIONAL + TPL_CONSTRAINTLIST, p_aPlatforms }, ;
-      "FILES", { TPL_OPTIONAL }, ;
-      "SEEALSO", { TPL_OPTIONAL }, ;
-      "END", { TPL_END } ;
-   )
-
-   p_hsTemplates[ "Command" ] := HB_Hash( ;
-      "DOC", { TPL_START }, ;
-      "TEMPLATE", { TPL_REQUIRED + TPL_CONSTRAINTLIST, { "Command" } }, ;
-      "NAME", { TPL_REQUIRED }, ;
-      "CATEGORY", { TPL_REQUIRED }, ;
-      "SUBCATEGORY", { TPL_REQUIRED }, ;
-      "ONELINER", { TPL_REQUIRED }, ;
-      "SYNTAX", { TPL_REQUIRED }, ;
-      "ARGUMENTS", { TPL_REQUIRED }, ;
-      "DESCRIPTION", { TPL_REQUIRED }, ;
-      "EXAMPLES", { TPL_PREFORMATTED + TPL_OPTIONAL }, ;
-      "TESTS", { TPL_PREFORMATTED + TPL_OPTIONAL }, ;
-      "STATUS", { TPL_OPTIONAL }, ;
-      "COMPLIANCE", { TPL_REQUIRED + TPL_CONSTRAINTLIST, p_aCompliance }, ;
-      "PLATFORMS", { TPL_OPTIONAL + TPL_CONSTRAINTLIST, p_aPlatforms }, ;
-      "FILES", { TPL_OPTIONAL }, ;
-      "SEEALSO", { TPL_OPTIONAL }, ;
-      "END", { TPL_END } ;
-   )
-
-   p_hsTemplates[ "Class" ] := HB_Hash( ;
-      "DOC", { TPL_START }, ;
-      "TEMPLATE", { TPL_REQUIRED + TPL_CONSTRAINTLIST, { "Class" } }, ;
-      "NAME", { TPL_REQUIRED }, ;
-      "CATEGORY", { TPL_REQUIRED }, ;
-      "SUBCATEGORY", { TPL_REQUIRED }, ;
-      "ONELINER", { TPL_REQUIRED }, ;
-  /*     "CONSTRUCTOR", { TPL_REQUIRED }, */ ;
-      "SYNTAX", { TPL_REQUIRED }, ;
-      "ARGUMENTS", { TPL_REQUIRED }, ;
-      "RETURNS", { TPL_REQUIRED }, ;
-      "DESCRIPTION", { TPL_REQUIRED }, ;
-      "DATALINK", { TPL_REQUIRED }, ;
-      "DATANOLINK", { TPL_REQUIRED }, ;
-      "METHODSLINK", { TPL_REQUIRED }, ;
-      "METHODSNOLINK", { TPL_REQUIRED }, ;
-      "EXAMPLES", { TPL_PREFORMATTED + TPL_OPTIONAL }, ;
-      "TESTS", { TPL_PREFORMATTED + TPL_OPTIONAL }, ;
-      "STATUS", { TPL_OPTIONAL }, ;
-      "COMPLIANCE", { TPL_REQUIRED + TPL_CONSTRAINTLIST, p_aCompliance }, ;
-      "PLATFORMS", { TPL_OPTIONAL + TPL_CONSTRAINTLIST, p_aPlatforms }, ;
-      "FILES", { TPL_OPTIONAL }, ;
-      "SEEALSO", { TPL_OPTIONAL }, ;
-      "END", { TPL_END } ;
-   )
-
-   p_hsTemplates[ "Class method" ] := HB_Hash( ;
-      "DOC", { TPL_START }, ;
-      "TEMPLATE", { TPL_REQUIRED + TPL_CONSTRAINTLIST, { "Class method" } }, ;
-      "NAME", { TPL_REQUIRED }, ;
-      "CATEGORY", { TPL_REQUIRED }, ;
-      "ONELINER", { TPL_REQUIRED }, ;
-      "SYNTAX", { TPL_REQUIRED }, ;
-      "ARGUMENTS", { TPL_REQUIRED }, ;
-      "RETURNS", { TPL_REQUIRED }, ;
-      "DESCRIPTION", { TPL_REQUIRED }, ;
-      "END", { TPL_END } ;
-   )
-
-   //~ VAR
-   //~ *METHOD
-   //~ *DATA
-   //~ ACCESS
-   //~ ASSIGN
-   //~ FRIEND
-
-   p_hsTemplates[ "Class data" ] := HB_Hash( ;
-      "DOC", { TPL_START }, ;
-      "TEMPLATE", { TPL_REQUIRED + TPL_CONSTRAINTLIST, { "Class data" } }, ;
-      "NAME", { TPL_REQUIRED }, ;
-  /*     "DATA", { TPL_REQUIRED }, */ ;
-      "SYNTAX", { TPL_REQUIRED }, ;
-      "CATEGORY", { TPL_REQUIRED }, ;
-      "ONELINER", { TPL_REQUIRED }, ;
-      "DESCRIPTION", { TPL_REQUIRED }, ;
-      "END", { TPL_END } ;
-   )
-
-   p_hsTemplates[ "Run time error" ] := HB_Hash( ;
-      "DOC", { TPL_START }, ;
-      "TEMPLATE", { TPL_REQUIRED + TPL_CONSTRAINTLIST, { "Run time error" } }, ;
-      "NAME", { TPL_REQUIRED }, ;
-      "CATEGORY", { TPL_REQUIRED }, ;
-      "ONELINER", { TPL_REQUIRED }, ;
-      "DESCRIPTION", { TPL_REQUIRED }, ;
-      "EXAMPLES", { TPL_PREFORMATTED + TPL_OPTIONAL }, ;
-      "COMPLIANCE", { TPL_OPTIONAL + TPL_CONSTRAINTLIST, p_aCompliance }, ;
-      "SEEALSO", { TPL_OPTIONAL }, ;
-      "END", { TPL_END } ;
-   )
 
    PUBLIC p_aConversionList := { ;
       38, "amp", ;
@@ -473,17 +499,14 @@ RETURN
 
 
 PROCEDURE ShowTemplatesHelp( cTemplate )
-   LOCAL idxTemplates, nFrom := 1, nTo := Len( p_hsTemplates )
+   LOCAL o := Entry():New()
+   LOCAL idxTemplates, nFrom := 1, nTo := Len( o:Templates )
    LOCAL cDelimiter := p_hsSwitches[ "DELIMITER" ]
-   LOCAL aKeyValue
-   LOCAL cSection
-   LOCAL nFlags
-   LOCAL nSections
-   LOCAL idxSection
+   LOCAL idx
 
    IF .NOT. Empty( cTemplate ) .AND. cTemplate != "Template"
-      IF HB_HHasKey( p_hsTemplates, cTemplate )
-         nFrom := nTo := HB_HPos( p_hsTemplates, cTemplate )
+      IF o:IsTemplate( cTemplate )
+         nFrom := nTo := HB_AScan( o:Templates, {|a| UPPER( a[ 1 ] ) == UPPER( cTemplate ) } )
       ELSE
          ShowHelp( "Unknown template '" + cTemplate + "'" )
          RETURN
@@ -491,25 +514,27 @@ PROCEDURE ShowTemplatesHelp( cTemplate )
    ENDIF
 
    FOR idxTemplates := nFrom TO nTo
-      aKeyValue := HB_HPairAt( p_hsTemplates, idxTemplates )
-      IF aKeyValue[ 1 ] != "Template"
-         AAdd( aKeyValue, {} )
-         HB_HEval( aKeyValue[ 2 ], {|k,v| AAdd( ATail( aKeyValue ), { cDelimiter + k + cDelimiter, v[ 1 ], HB_AScan( p_hsTemplates[ "orderby" ], k ) } ) } )
-         ASort( ATail( aKeyValue ), , , {|lv,rv| lv[ 3 ] < rv[ 3 ] } )
-         nSections := Len( ATail( aKeyValue ) )
+      IF .NOT. Empty( o:Templates[ idxTemplates ] ) .AND. ;
+         .NOT. Empty( o:Templates[ idxTemplates ][ 1 ] ) .AND. ;
+         o:Templates[ idxTemplates ][ 1 ] != "Template"
 
-         FOR idxSection := 1 TO nSections
-            cSection := ATail( aKeyValue )[ idxSection ][ 1 ]
-            nFlags := ATail( aKeyValue )[ idxSection ][ 2 ]
-            ShowSubHelp( IIf( idxSection == 1, "/", " " ) + "*  " + cSection, 1, 0 )
-            IF cSection == cDelimiter + "TEMPLATE" + cDelimiter
-               ShowSubHelp( " *       " + aKeyValue[ 1 ], 1, 0 )
-            ELSEIF 1 < idxSection .AND. idxSection < nSections
-               ShowSubHelp( " *       " + IIf( HB_BitAnd( nFlags, TPL_REQUIRED ) == TPL_REQUIRED, "<required>", "" ), 1, 0 )
-            ELSEIF idxSection == nSections
-               ShowSubHelp( " */", 1, 0 )
+         //~ IF nFrom != nTo
+            //~ ShowSubHelp( o:Templates[ idxTemplates ][ 1 ], 1, 0 )
+         //~ ENDIF
+
+         o:SetTemplate( o:Templates[ idxTemplates ][ 1 ] )
+
+         FOR idx := 1 TO Len( o:Fields )
+            IF o:Group[ idx ] != 0
+               ShowSubHelp( IIf( idx == 1, "/", " " ) + "*  " + cDelimiter + o:Fields[ idx ][ 1 ] + cDelimiter, 1, 0 )
+               IF o:Fields[ idx ][ 1 ] == "TEMPLATE"
+                  ShowSubHelp( " *      " + o:Template, 1, 0 )
+               ELSEIF o:Group[ idx ] != TPL_START .AND. o:Group[ idx ] != TPL_END .AND. .T.
+                  ShowSubHelp( " *      " + IIf( o:IsRequired( o:Fields[ idx ][ 1 ] ), "<required>", "<optional>" ), 1, 0 )
+               ENDIF
             ENDIF
          NEXT
+         ShowSubHelp( " */", 1, 0 )
          ShowSubHelp( "", 1, 0 )
       ENDIF
    NEXT
@@ -520,16 +545,16 @@ PROCEDURE ShowComplianceHelp()
    LOCAL idx
 
    FOR idx := 1 TO Len( p_aCompliance )
-      ShowSubHelp( p_aCompliance[ idx ], 1, 0, idx )
-      ShowSubHelp( Decode( "Compliance", NIL, p_aCompliance[ idx ] ), 1, 6, idx )
-      OutStd( HB_OSNewLine() )
+      ShowSubHelp( p_aCompliance[ idx ][ 1 ], 1, 0, idx )
+      ShowSubHelp( Decode( "COMPLIANCE", NIL, p_aCompliance[ idx ][ 1 ] ), 1, 6, idx )
+      ShowSubHelp( "", 1, 0 )
    NEXT
 
 PROCEDURE ShowPlatformsHelp
    LOCAL idx
 
    FOR idx := 1 TO Len( p_aPlatforms )
-      ShowSubHelp( p_aPlatforms[ idx ], 1, 0, idx )
-      ShowSubHelp( Decode( "Platforms", NIL, p_aPlatforms[ idx ] ), 1, 6, idx )
-      OutStd( HB_OSNewLine() )
+      ShowSubHelp( p_aPlatforms[ idx ][ 1 ], 1, 0, idx )
+      ShowSubHelp( Decode( "PLATFORMS", NIL, p_aPlatforms[ idx ][ 1 ] ), 1, 6, idx )
+      ShowSubHelp( "", 1, 0 )
    NEXT

@@ -66,62 +66,103 @@ svn propset svn:eol-style native "filename"
 #include "hbdoc2.ch"
 
 CLASS GenerateAscii FROM GenerateText
-
-   METHOD New()
-
+   METHOD NewIndex( cFolder, cFilename, cTitle, cDescription )
+   METHOD NewDocument( cFolder, cFilename, cTitle, cDescription )
 ENDCLASS
 
-METHOD New( cFolder, cFilename, cTitle, cDescription ) CLASS GenerateAscii
-
+METHOD NewDocument( cFolder, cFilename, cTitle, cDescription ) CLASS GenerateAscii
    ::lContinuous := .T.
+   super:NewDocument( cFolder, cFilename, cTitle, cDescription )
+   RETURN self
 
-   super:New( cFolder, cFilename, cTitle, cDescription )
-
+METHOD NewIndex( cFolder, cFilename, cTitle, cDescription ) CLASS GenerateAscii
+   ::lContinuous := .T.
+   super:NewIndex( cFolder, cFilename, cTitle, cDescription )
    RETURN self
 
 CLASS GenerateText FROM TPLGenerate
-
 HIDDEN:
 
 PROTECTED:
-   VAR lContinuous INIT .F.
+   DATA lContinuous AS LOGICAL INIT .F.
 
 EXPORTED:
-   METHOD New(  cFolder, cFilename, cTitle, cDescription )
+   METHOD NewIndex( cFolder, cFilename, cTitle, cDescription )
+   METHOD NewDocument( cFolder, cFilename, cTitle, cDescription )
+   METHOD AddEntry( oEntry )
+   METHOD AddIndex( oEntry ) HIDDEN
+   METHOD BeginSection( cSection, cFilename )
+   //~ METHOD EndSection( cSection, cFilename ) // will use inherited method
    METHOD Generate()
-   METHOD Close()
 
-   METHOD WriteEntry( cCaption, cEntry, lPreformatted, nIndent )
+   METHOD WriteEntry( cCaption, cEntry, lPreformatted ) HIDDEN
 ENDCLASS
 
-METHOD New( cFolder, cFilename, cTitle, cDescription ) CLASS GenerateText
-   super:New( cFolder, cFilename, cTitle, cDescription, "txt" )
-   ::AddEntry( "", cTitle )
-   ::AddEntry( "", cDescription )
+METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateText
+   super:NewDocument( cFolder, cFilename, cTitle, "txt" )
+   ::WriteEntry( "", cTitle + HB_OSNewLine(), .F. )
    RETURN self
 
-METHOD PROCEDURE Close CLASS GenerateText
-   IF .NOT. Empty( ::nHandle )
-      FClose( ::nHandle )
-      ::nHandle := 0
-   ENDIF
-   super:Close()
-   RETURN
-
-METHOD Generate() CLASS GenerateText
-   AEval( ::Buffer, {|ac| ::WriteEntry( ac[ 1 ], ac[ 2 ], ::IsPreformatted( ac[ 1 ], ac[ 2 ] ), ::IsIndented( ac[ 1 ], ac[ 2 ] ) ) } )
-   IF .NOT. ::lContinuous
-      FWrite( ::nHandle, Chr( K_CTRL_L ) + HB_OSNewLine() )
-   ENDIF
+METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateText
+   super:NewIndex( cFolder, cFilename, cTitle, "txt" )
+   ::WriteEntry( "", cTitle + HB_OSNewLine(), .F. )
    RETURN self
 
-METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted, nIndent ) CLASS GenerateText
-   IF .NOT. Empty( cEntry )
-      DEFAULT cCaption TO ""
-      IF Len( cCaption ) > 0 .AND. nIndent > 0
-            FWrite( ::nHandle, cCaption + ": " + HB_OSNewLine() )
+METHOD BeginSection( cSection, cFilename ) CLASS GenerateText
+   IF ::Depth == 0
+      ::WriteEntry( "", cSection + " (see " + cFilename + "." + ::cExtension + "):", .F. )
+   ELSE
+      ::WriteEntry( "", cSection + ":", .F. )
+   ENDIF
+   ::Depth++
+   RETURN self
+
+METHOD AddIndex( oEntry ) CLASS GenerateText
+   ::WriteEntry( oEntry:FieldName( "NAME" ), oEntry:Name + " - " + oEntry:OneLiner, .F. )
+   RETURN self
+
+METHOD AddEntry( oEntry ) CLASS GenerateText
+   LOCAL idx
+
+   IF self:IsIndex()
+      self:AddIndex( oEntry )
+   ELSE
+      FOR idx := 1 TO Len( oEntry:Fields )
+         IF oEntry:IsField( oEntry:Fields[ idx ][ 1 ] ) .AND. oEntry:IsOutput( oEntry:Fields[ idx ][ 1 ] ) .AND. Len( oEntry:&( oEntry:Fields[ idx ][ 1 ] ) ) > 0
+            ::WriteEntry( oEntry:FieldName( oEntry:Fields[ idx ][ 1 ] ), oEntry:&( oEntry:Fields[ idx ][ 1 ] ), oEntry:IsPreformatted( oEntry:Fields[ idx ][ 1 ] ) )
+         ENDIF
+      NEXT
+
+      IF .NOT. ::lContinuous
+         FWrite( ::nHandle, Chr( K_CTRL_L ) + HB_OSNewLine() )
       ENDIF
+   ENDIF
+
+   RETURN self
+
+METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateText
+   LOCAL nIndent
+   IF .NOT. Empty( cEntry )
+      nIndent := IIf( Len( cCaption ) > 0, 6, 0 )
+      IF Len( cCaption ) > 0 .AND. nIndent > 0
+            FWrite( ::nHandle, Space( ::Depth * 6 ) + cCaption + ": " + HB_OSNewLine() )
+      ENDIF
+      nIndent += ::Depth * 6
       DO WHILE Len( cEntry ) > 0
          FWrite( ::nHandle, Indent( Parse( @cEntry, HB_OSNewLine() ), nIndent, 70, lPreformatted ) )
       ENDDO
    ENDIF
+
+METHOD Generate() CLASS GenerateText
+   IF ::IsIndex()
+      IF .NOT. ::lContinuous
+         FWrite( ::nHandle, Chr( K_CTRL_L ) + HB_OSNewLine() )
+      ENDIF
+   ENDIF
+
+   IF .NOT. Empty( ::nHandle )
+      FClose( ::nHandle )
+      ::nHandle := 0
+   ENDIF
+
+   RETURN self

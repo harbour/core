@@ -9,6 +9,8 @@
  *      GNU License
  *  $CATEGORY$
  *      Document
+ *  $SUBCATEGORY$
+ *      License
  *  $ONELINER$
  *      Gnu License File Part 1
  *  $DESCRIPTION$
@@ -224,6 +226,8 @@
  *     GNU License
  *  $CATEGORY$
  *     Document
+ *  $SUBCATEGORY$
+ *      License
  *  $ONELINER$
  *     Gnu License File Part 2
  *  $DESCRIPTION$
@@ -382,7 +386,6 @@
  *      proprietary applications with the library. If this is what you want
  *      to do, use the GNU Library General Public License instead of this
  *      License.
- *
  *
  *      FSF & GNU inquiries & questions to gnu@gnu.org.
  *      Copyright notice above.

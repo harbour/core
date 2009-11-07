@@ -739,15 +739,15 @@
  *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
- *      This function locks the record basedon identify
+ *      This function locks the record based on identity
  *  $SYNTAX$
  *      DBRLOCK([<xIdentity>]) --> lSuccess
  *  $ARGUMENTS$
- *      <xIdentity> Record indetifier
+ *      <xIdentity> Record identifier
  *  $RETURNS$
  *      DBRLOCK() returns a logical true (.T.) if lock was successful
  *  $DESCRIPTION$
- *      This function attempts to lock a record which is indentified
+ *      This function attempts to lock a record which is identified
  *      by <xIdentity> in the active data set. If the lock is successful
  *      the function will return a logical true (.T.) value; otherwise
  *      a logical false (.F.) will be returned. If <xIdentity> is not
@@ -784,7 +784,7 @@
  *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
- *      This function return a list of records in the database work area
+ *      This function return a list of locked records in the database work area
  *  $SYNTAX$
  *      DBRLOCKLIST() --> aRecordLocks
  *  $RETURNS$
@@ -792,7 +792,7 @@
  *  $DESCRIPTION$
  *      This function will return an array of locked records in a given
  *      and active work area. If the return array is an empty array
- *      (meaning no elements in it), then there are no locked record in that
+ *      (meaning no elements in it), then there are no locked records in that
  *      work area.
  *  $EXAMPLES$
  *      FUNCTION Main()
@@ -830,11 +830,11 @@
  *  $SUBCATEGORY$
  *      Database
  *  $ONELINER$
- *      Unlocks a record base on its indentifier
+ *      Unlocks a record based on its identifier
  *  $SYNTAX$
  *      DBRUNLOCK([<xIdentity>])
  *  $ARGUMENTS$
- *      <xIdentity> Record indentifier,tipicaly a record number
+ *      <xIdentity> Record identifier, typically a record number
  *  $DESCRIPTION$
  *      This function will attempt to unlock the record specified as
  *      <xIdentity>, which in a .dbf format is the record number. If not

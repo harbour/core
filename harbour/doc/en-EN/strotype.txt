@@ -9,6 +9,8 @@
  *      Strong Typing
  *  $CATEGORY$
  *      Document
+ *  $SUBCATEGORY$
+ *      Compiler
  *  $ONELINER$
  *      Compile-Time type checking
  *  $DESCRIPTION$

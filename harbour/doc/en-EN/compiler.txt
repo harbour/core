@@ -9,6 +9,8 @@
  *      Compiler Options
  *  $CATEGORY$
  *      Document
+ *  $SUBCATEGORY$
+ *      Compiler
  *  $ONELINER$
  *      Compiler Options
  *  $DESCRIPTION$

@@ -63,42 +63,50 @@ svn propset svn:eol-style native "filename"
 #include "hbclass.ch"
 #include "hbdoc2.ch"
 
+#define DOCUMENT_ 1
+#define INDEX_ 2
+
 CLASS TPLGenerate
 
 EXPORTED:
 //~ PROTECTED:
-   DATA nHandle
-   DATA cFolder
-   DATA cFilename
-   DATA cTitle
-   DATA cDescription
-   DATA cExtension
-   DATA Buffer
+   DATA nHandle AS NUMERIC
+   DATA cFolder AS STRING
+   DATA cFilename AS STRING
+   DATA cTitle AS STRING
+   DATA cExtension AS STRING
 
-   METHOD New( cFolder, cFilename, cTitle, cDescription, cExtension )
+   METHOD NewIndex( cFolder, cFilename, cTitle, cExtension )
+   METHOD NewDocument( cFolder, cFilename, cTitle, cExtension )
+   METHOD AddEntry( oEntry ) INLINE HB_SYMBOL_UNUSED( oEntry ), NIL
+   METHOD AddReference( oEntry ) INLINE HB_SYMBOL_UNUSED( oEntry ), NIL
+   METHOD BeginSection( cSection, cFilename ) INLINE HB_SYMBOL_UNUSED( cSection ), HB_SYMBOL_UNUSED( cFilename ), ::Depth++
+   METHOD EndSection( cSection, cFilename ) INLINE  HB_SYMBOL_UNUSED( cSection ), HB_SYMBOL_UNUSED( cFilename ), ::Depth--
    METHOD Generate() INLINE NIL
-   METHOD Close()
+   METHOD IsIndex() INLINE ( ::nType == INDEX_ )
 
-   METHOD AddEntry( cCaption, cEntry )
-   METHOD WriteEntry( cCaption, cEntry, lPreformatted, nIndent ) INLINE ;
-      HB_SYMBOL_UNUSED( cCaption ), ;
-      HB_SYMBOL_UNUSED( cEntry ), ;
-      HB_SYMBOL_UNUSED( lPreformatted ), ;
-      HB_SYMBOL_UNUSED( nIndent ), ;
-      NIL
-
-   METHOD IsPreformatted( cCaption, cEntry )
-   METHOD IsIndented( cCaption, cEntry )
-
+PROTECTED:
+   METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) HIDDEN
+   DATA nType AS INTEGER
+   DATA Depth AS INTEGER INIT 0
 ENDCLASS
 
-METHOD New( cFolder, cFilename, cTitle, cDescription, cExtension ) CLASS TPLGenerate
+METHOD NewIndex( cFolder, cFilename, cTitle, cExtension ) CLASS TPLGenerate
+   self:New( cFolder, cFilename, cTitle, cExtension, INDEX_ )
+   RETURN self
 
+METHOD NewDocument( cFolder, cFilename, cTitle, cExtension ) CLASS TPLGenerate
+   self:New( cFolder, cFilename, cTitle, cExtension, DOCUMENT_ )
+   RETURN self
+
+METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) CLASS TPLGenerate
+
+   ::nHandle := 0
    ::cFolder := cFolder
    ::cFilename := cFilename
    ::cTitle := cTitle
-   ::cDescription := cDescription
    ::cExtension := cExtension
+   ::nType := nType
 
    IF EMPTY( DIRECTORY( ::cFolder, "D" ) )
       ? "Creating folder " + ::cFolder
@@ -107,30 +115,4 @@ METHOD New( cFolder, cFilename, cTitle, cDescription, cExtension ) CLASS TPLGene
 
    ::nHandle := FCreate( ::cFolder + p_hsSwitches[ "PATH_SEPARATOR" ] + ::cFilename + "." + ::cExtension )
 
-   ::Buffer := {}
-
    RETURN self
-
-METHOD PROCEDURE Close() CLASS TPLGenerate
-   IF ::nHandle > 0
-      FClose( ::nHandle )
-      ::nHandle := 0
-   ENDIF
-   ::Buffer := NIL
-   RETURN
-
-METHOD PROCEDURE AddEntry( cCaption, cEntry ) CLASS TPLGenerate
-   IF Empty( cCaption ) .OR. .NOT. ( Upper( cCaption ) + "|" $ "TEMPLATE|NAME|CATEGORY|SUBCATEGORY|" )
-      IF .NOT. Empty( cEntry )
-         DEFAULT cCaption TO ""
-         AAdd( ::Buffer, { cCaption, cEntry } )
-      ENDIF
-   ENDIF
-
-METHOD IsPreformatted( cCaption, cEntry ) CLASS TPLGenerate
-HB_SYMBOL_UNUSED( cEntry )
-   RETURN Lower( cCaption + "|" ) $ "examples|tests|"
-
-METHOD IsIndented( cCaption, cEntry ) CLASS TPLGenerate
-HB_SYMBOL_UNUSED( cEntry )
-   RETURN IIf( Lower( cCaption + "|" ) $ "oneliner|", 0, 6 )

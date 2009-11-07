@@ -65,82 +65,97 @@ svn propset svn:eol-style native "filename"
 #include "fileio.ch"
 #include "hbdoc2.ch"
 
-//~ CLASS GenerateAscii FROM GenerateXML
-
-   //~ METHOD New()
-
-//~ ENDCLASS
-
-//~ METHOD New( cFolder, cFilename, cTitle, cDescription ) CLASS GenerateAscii
-
-   //~ ::lContinuous := .T.
-
-   //~ super:New( cFolder, cFilename, cTitle, cDescription )
-
-   //~ RETURN self
-
 CLASS GenerateXML FROM TPLGenerate
-
 HIDDEN:
 
 PROTECTED:
-   //~ VAR lContinuous INIT .F.
 
 EXPORTED:
-   METHOD New(  cFolder, cFilename, cTitle, cDescription )
+   METHOD NewIndex( cFolder, cFilename, cTitle )
+   METHOD NewDocument( cFolder, cFilename, cTitle )
+   METHOD AddEntry( oEntry )
+   METHOD AddIndex( oEntry ) HIDDEN
+   METHOD BeginSection( cSection, cFilename )
+   METHOD EndSection( cSection, cFilename )
    METHOD Generate()
-   METHOD Close()
 
-   METHOD WriteEntry( cCaption, cEntry, lPreformatted, nIndent )
+   METHOD WriteEntry( cCaption, cEntry, lPreformatted ) HIDDEN
 ENDCLASS
 
-METHOD New( cFolder, cFilename, cTitle, cDescription ) CLASS GenerateXML
-   super:New( cFolder, cFilename, cTitle, cDescription, "xml" )
-   AAdd( ::Buffer, { "Title", cTitle, , 0 } )
-   AAdd( ::Buffer, { "Description", cDescription, , 0 } )
+METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateXML
+   super:NewDocument( cFolder, cFilename, cTitle, "xml" )
+   FWrite( ::nHandle, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + HB_OSNewLine() )
+   FWrite( ::nHandle, '<HarbourReference>' + HB_OSNewLine() )
    RETURN self
 
-METHOD PROCEDURE Close CLASS GenerateXML
+METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateXML
+   super:NewIndex( cFolder, cFilename, cTitle, "xml" )
+   FWrite( ::nHandle, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + HB_OSNewLine() )
+   FWrite( ::nHandle, '<HarbourReference>' + HB_OSNewLine() )
+   RETURN self
+
+METHOD BeginSection( cSection, cFilename ) CLASS GenerateXML
+   IF ::Depth == 0
+      FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + [<Section name="] + cSection + [" file="] + cFilename + "." + ::cExtension + [">] + HB_OSNewLine() )
+   ELSE
+      FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + [<Section name="] + cSection + [">] + HB_OSNewLine() )
+   ENDIF
+   ::Depth++
+   RETURN self
+
+METHOD EndSection( cSection, cFilename ) CLASS GenerateXML
+HB_SYMBOL_UNUSED( cSection )
+HB_SYMBOL_UNUSED( cFilename )
+   ::Depth--
+   FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + [</Section>] + HB_OSNewLine() )
+   RETURN self
+
+METHOD AddIndex( oEntry ) CLASS GenerateXML
+   ::WriteEntry( "ENTRY", oEntry:Name + " - " + oEntry:OneLiner, .F. )
+   RETURN self
+
+METHOD AddEntry( oEntry ) CLASS GenerateXML
+   LOCAL idx
+
+   IF self:IsIndex()
+      self:AddIndex( oEntry )
+   ELSE
+      FWrite( ::nHandle, '<Entry>' + HB_OSNewLine() )
+      ::Depth++
+      FOR idx := 1 TO Len( oEntry:Fields )
+         ::WriteEntry( oEntry:Fields[ idx ][ 1 ], oEntry:&( oEntry:Fields[ idx ][ 1 ] ), oEntry:IsPreformatted( oEntry:Fields[ idx ][ 1 ] ) )
+      NEXT
+      ::Depth--
+      FWrite( ::nHandle, '</Entry>' + HB_OSNewLine() )
+   ENDIF
+
+   RETURN self
+
+METHOD Generate() CLASS GenerateXML
+   FWrite( ::nHandle, '</HarbourReference>' + HB_OSNewLine() )
+
+   IF ::IsIndex()
+   ENDIF
+
    IF .NOT. Empty( ::nHandle )
       FClose( ::nHandle )
       ::nHandle := 0
    ENDIF
-   super:Close()
-   RETURN
 
-METHOD Generate() CLASS GenerateXML
-   FWrite( ::nHandle, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + HB_OSNewLine() )
-   FWrite( ::nHandle, '<HarbourReference>' + HB_OSNewLine() )
-   AEval( ::Buffer, {|ac| ::WriteEntry( ac[ 1 ], ac[ 2 ], ::IsPreformatted( ac[ 1 ], ac[ 2 ] ), ::IsIndented( ac[ 1 ], ac[ 2 ] ) ) } )
-   FWrite( ::nHandle, '</HarbourReference>' + HB_OSNewLine() )
    RETURN self
 
-METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted , nIndent ) CLASS GenerateXML
+METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateXML
    LOCAL cResult
    LOCAL idx
-HB_SYMBOL_UNUSED( nIndent )
 
    IF .NOT. Empty( cEntry )
-      DEFAULT lPreformatted TO .F.
-
-      FWrite( ::nHandle, "<" + cCaption + IIf( lPreformatted, ' preformatted="yes"', "") + ">" )
-
-      IF HB_OSNewLine() $ cEntry
-         FWrite( ::nHandle, HB_OSNewLine() )
-      ENDIF
-
-      cResult := cEntry
+      cResult := IIf( HB_OSNewLine() $ cEntry, HB_OSNewLine() + cEntry, cEntry )
       FOR idx := 1 TO Len( p_aConversionList ) STEP 2
          cResult := StrTran( cResult, Chr( p_aConversionList[ idx ] ), "&" + p_aConversionList[ idx + 1 ] + ";" )
       NEXT
       cEntry := cResult
 
-      DO WHILE Len( cEntry ) > 0
-         //~ FWrite( ::nHandle, Indent( Parse( @cEntry, HB_OSNewLine() ), nIndent, 70, lPreformatted ) )
-         FWrite( ::nHandle, Parse( @cEntry, HB_OSNewLine() ) )
-         IF Len( cEntry ) > 0
-            FWrite( ::nHandle, HB_OSNewLine() + HB_OSNewLine() )
-         ENDIF
-      ENDDO
-      FWrite( ::nHandle, "</" + cCaption + ">" + HB_OSNewLine() )
+      FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + "<" + cCaption + IIf( lPreformatted, ' preformatted="yes"', "") + ">" )
+      FWrite( ::nHandle, cEntry )
+      FWrite( ::nHandle, /* Replicate( Chr(9), ::Depth ) + */ "</" + cCaption + ">" + HB_OSNewLine() )
    ENDIF
