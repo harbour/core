@@ -896,13 +896,11 @@ FUNCTION Decode( cType, hsBlock, cKey )
          RETURN SubStr( cResult, LEN( HB_OSNewLine() ) + 1 )
       ENDIF
 
-<<<<<<< .mine
       IF ( idx := HB_AScan( p_aCompliance, {|a| a[1] == cCode } ) ) > 0
          RETURN p_aCompliance[ idx ][ 2 ]
       ELSE
          RETURN "Unknown 'COMPLIANCE' code: '" + cCode + "'"
       ENDIF
-=======
       DO CASE
       CASE Empty( cCode ) ;      RETURN cCode
       CASE cCode == "C" ;        RETURN "This is CA-Cl*pper v5.2 compliant"
@@ -917,7 +915,6 @@ FUNCTION Decode( cType, hsBlock, cKey )
       CASE cCode == "XPP" ;      RETURN "This an Xbase++ compatibility function and is only visible if source was compiled with the HB_COMPAT_XPP flag"
       OTHERWISE ;                RETURN "Unknown 'COMPLIANCE' code: '" + cCode + "'"
       ENDCASE
->>>>>>> .r12826
 
    CASE cType == "NAME"
       IF hsBlock == NIL

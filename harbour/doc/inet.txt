@@ -8,7 +8,10 @@
 
         Giancarlo Niccolai <gian@niccolai.ws>
 
-/*  $DOC$
+intentially removed DOC header/footer so that hbdoc/hbdoc2 ignore this file
+
+please see en-EN/hbinet.txt which now replaces this file
+
  *  $TEMPLATE$
  *     Document
  *  $NAME$
@@ -341,5 +344,4 @@
  *        just return the last complete datagram that has been received, up
  *        to nSize bytes.
  *        Returns -1 on error, or the number of bytes actually read on success.
- *  $END$
  */
