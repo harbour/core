@@ -1609,8 +1609,13 @@ typedef unsigned char       HB_U8;
    #define HARBOUR void
 #endif
 
-typedef HARBOUR ( * PHB_FUNC )( void );
-typedef PHB_FUNC HB_FUNC_PTR;
+#if defined( __BORLANDC__ )
+   typedef HARBOUR ( * PHB_FUNC )( void );
+   typedef PHB_FUNC HB_FUNC_PTR;
+#else
+   HB_EXTERN_C_ typedef HARBOUR ( * PHB_FUNC )( void );
+   HB_EXTERN_C_ typedef PHB_FUNC HB_FUNC_PTR;
+#endif
 
 typedef SHORT HB_SYMBOLSCOPE;   /* stores symbol's scope */
 
