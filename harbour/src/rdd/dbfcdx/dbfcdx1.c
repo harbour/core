@@ -226,12 +226,11 @@ static HB_ERRCODE hb_cdxErrorRT( CDXAREAP pArea, USHORT uiGenCode, USHORT uiSubC
 static void hb_cdxMakeSortTab( CDXAREAP pArea )
 {
 #ifndef HB_CDP_SUPPORT_OFF
-   if( pArea->dbfarea.area.cdPage && pArea->dbfarea.area.cdPage->lSort &&
+   if( pArea->dbfarea.area.cdPage && pArea->dbfarea.area.cdPage->sort &&
        !( pArea->fSortCDP || pArea->bCdxSortTab ) )
    {
       if( pArea->dbfarea.area.cdPage->nMulti ||
-          pArea->dbfarea.area.cdPage->lAccEqual ||
-          pArea->dbfarea.area.cdPage->lAccInterleave )
+          pArea->dbfarea.area.cdPage->nACSort )
       {
          pArea->fSortCDP = TRUE;
       }

@@ -276,16 +276,16 @@ static void mixKeyFree( LPMIXKEY pKey )
 
 static BYTE * mixBuildSortTable( PHB_CODEPAGE pCodepage )
 {
-   BYTE*      pSortTable;
-   BYTE*      pChars;
-   int        i, j;
-   BYTE       c;
+   BYTE*       pSortTable;
+   const BYTE* pChars;
+   int         i, j;
+   BYTE        c;
 
    pSortTable = ( BYTE * ) hb_xgrab( 256 );
 
-   if( pCodepage && pCodepage->s_chars )
+   if( pCodepage && pCodepage->sort )
    {
-      pChars = pCodepage->s_chars;
+      pChars = pCodepage->sort;
 
       c = 0;
       for( i = 0; i < 256; i++ )

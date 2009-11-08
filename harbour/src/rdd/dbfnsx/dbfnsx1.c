@@ -871,7 +871,7 @@ static int hb_nsxValCompare( LPTAGINFO pTag, UCHAR * val1, int len1,
       if( iLimit > 0 )
       {
 #ifndef HB_CDP_SUPPORT_OFF
-         if( pTag->pIndex->pArea->dbfarea.area.cdPage->lSort )
+         if( pTag->pIndex->pArea->dbfarea.area.cdPage->sort )
             iResult = hb_cdpcmp( ( const char * ) val1, ( ULONG ) iLimit,
                                  ( const char * ) val2, ( ULONG ) iLimit,
                                  pTag->pIndex->pArea->dbfarea.area.cdPage, 0 );

@@ -228,6 +228,7 @@ static void hb_stack_free( PHB_STACK pStack )
       hb_xfree( pStack->pItems[ i-- ] );
    hb_xfree( pStack->pItems );
    pStack->pItems = pStack->pPos = pStack->pBase = NULL;
+   pStack->wItems = 0;
 #if defined( HB_MT_VM )
    if( pStack->pDirBuffer )
    {
@@ -819,9 +820,19 @@ LONG hb_stackBaseOffset( void )
 #undef hb_stackTotalItems
 LONG hb_stackTotalItems( void )
 {
+#if defined( HB_MT_VM )
+   if( hb_stack_ready() )
+   {
+      HB_STACK_TLS_PRELOAD
+
+      return hb_stack.wItems;
+   }
+   return 0;
+#else
    HB_STACK_TLS_PRELOAD
 
    return hb_stack.wItems;
+#endif
 }
 
 #undef hb_stackDateBuffer

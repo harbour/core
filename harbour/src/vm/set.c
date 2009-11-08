@@ -2104,7 +2104,7 @@ const char * hb_setGetCPtr( HB_set_enum set_specifier )
    }
 
    hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, 0 );
-   return FALSE;
+   return NULL;
 }
 
 int     hb_setGetNI( HB_set_enum set_specifier )
@@ -2206,7 +2206,7 @@ int     hb_setGetNI( HB_set_enum set_specifier )
    }
 
    hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, 0 );
-   return FALSE;
+   return 0;
 }
 
 long    hb_setGetNL( HB_set_enum set_specifier )

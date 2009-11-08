@@ -7,6 +7,7 @@
  * Header file for the CodePages API
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
+ * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -67,7 +68,8 @@ HB_EXTERN_BEGIN
                                        { \
                                           HB_FUNC_EXEC( HB_CODEPAGE_##id ); \
                                        }
-#define HB_CODEPAGE_ANNOUNCE( id )     HB_FUNC( HB_CODEPAGE_##id ) {}
+#define HB_CODEPAGE_ANNOUNCE( id )     HB_CODEPAGE_ANNOUNCE_( id )
+#define HB_CODEPAGE_ANNOUNCE_( id )    HB_FUNC( HB_CODEPAGE_##id ) {}
 
 #define HB_CODEPAGE_INIT( id )         HB_CODEPAGE_ANNOUNCE( id ) \
                                        HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_##id ) \
@@ -78,38 +80,38 @@ typedef USHORT    HB_WCHAR;
 
 typedef struct _HB_UNITABLE
 {
-   const char *   uniID;
-   int            nChars;
-   BOOL           lMulti;
-   HB_WCHAR *     uniCodes;
+   const char *      uniID;
+   HB_WCHAR *        uniCodes;
+   unsigned char *   uniTrans;
+   HB_WCHAR          wcMax;
 } HB_UNITABLE, * PHB_UNITABLE;
 
 typedef struct _HB_MULTICHAR
 {
-   char  cLast[2];
-   char  cFirst[2];
-   int   nCode;
+   char     cFirst[ 2 ];
+   char     cLast[ 2 ];
+   int      sortUp;
+   int      sortLo;
+   HB_WCHAR wcUp;
+   HB_WCHAR wcLo;
 } HB_MULTICHAR, * PHB_MULTICHAR;
 
 typedef struct _HB_CODEPAGE
 {
-   const char *      id;
-   const char *      uniID;
-   PHB_UNITABLE      uniTable;
-   int               nChars;
-   const char *      CharsUpper;
-   const char *      CharsLower;
-   BOOL              lLatin;
-   BOOL              lAccEqual;
-   BOOL              lAccInterleave;
-   BOOL              lSort;
-   unsigned char *   s_chars;
-   unsigned char *   s_upper;
-   unsigned char *   s_lower;
-   unsigned char *   s_accent;
-   unsigned char *   buffer;
-   int               nMulti;
-   PHB_MULTICHAR     multi;
+   const char *            id;
+   const char *            info;
+   PHB_UNITABLE            uniTable;
+   const unsigned char *   flags;
+   const unsigned char *   upper;
+   const unsigned char *   lower;
+   const unsigned char *   sort;
+   const unsigned char *   acc;
+   int                     nACSort;
+   int                     nMulti;
+   int                     nMultiUC;
+   PHB_MULTICHAR           multi;
+   void *                  buffer;
+   struct _HB_CODEPAGE *   next;
 } HB_CODEPAGE, * PHB_CODEPAGE;
 
 #define HB_CPID_437        "cp437"
@@ -305,70 +307,81 @@ extern HB_UNITABLE hb_uniTbl_ATARIST;
 extern HB_UNITABLE hb_uniTbl_NEXTSTEP;
 extern HB_UNITABLE hb_uniTbl_USASCII;
 
-extern HB_EXPORT PHB_CODEPAGE  hb_vmCDP( void );
-extern HB_EXPORT void          hb_vmSetCDP( PHB_CODEPAGE pCDP );
+extern HB_EXPORT PHB_CODEPAGE hb_vmCDP( void );
+extern HB_EXPORT void         hb_vmSetCDP( PHB_CODEPAGE pCDP );
 
-extern HB_EXPORT BOOL          hb_cdpRegister( PHB_CODEPAGE );
-extern HB_EXPORT void          hb_cdpReleaseAll( void );
-extern HB_EXPORT const char *  hb_cdpSelectID( const char * );
-extern HB_EXPORT const char *  hb_cdpID( void );
-extern HB_EXPORT PHB_CODEPAGE  hb_cdpSelect( PHB_CODEPAGE );
-extern HB_EXPORT PHB_CODEPAGE  hb_cdpFind( const char * );
-extern HB_EXPORT PHB_CODEPAGE  hb_cdpFindExt( const char * );
-extern HB_EXPORT BOOL          hb_cdpIsDigit( PHB_CODEPAGE, int );
-extern HB_EXPORT BOOL          hb_cdpIsAlpha( PHB_CODEPAGE, int );
-extern HB_EXPORT BOOL          hb_cdpIsLower( PHB_CODEPAGE, int );
-extern HB_EXPORT BOOL          hb_cdpIsUpper( PHB_CODEPAGE, int );
-extern HB_EXPORT int           hb_cdpcmp( const char *, ULONG, const char *, ULONG, PHB_CODEPAGE, BOOL );
-extern HB_EXPORT int           hb_cdpicmp( const char *, ULONG, const char *, ULONG, PHB_CODEPAGE, BOOL );
-extern HB_EXPORT int           hb_cdpchrcmp( char, char, PHB_CODEPAGE );
-extern HB_EXPORT char *        hb_cdpDup( const char *, PHB_CODEPAGE, PHB_CODEPAGE );
-extern HB_EXPORT char *        hb_cdpnDup( const char *, ULONG *, PHB_CODEPAGE, PHB_CODEPAGE );
-extern HB_EXPORT const char *  hb_cdpnDup2( const char *, ULONG, char *, ULONG *, PHB_CODEPAGE, PHB_CODEPAGE );
-extern HB_EXPORT const char *  hb_cdpnDup3( const char *, ULONG, char *, ULONG *, char **, ULONG *, PHB_CODEPAGE, PHB_CODEPAGE );
-extern HB_EXPORT ULONG         hb_cdpnDupLen( const char *, ULONG, PHB_CODEPAGE, PHB_CODEPAGE );
-extern HB_EXPORT ULONG         hb_cdpnDup2Len( const char *, ULONG, ULONG, PHB_CODEPAGE, PHB_CODEPAGE );
+/* accented character sorting */
+#define HB_CDP_ACSORT_NONE          0     /* no special sorting for accented
+                                             characters */
+#define HB_CDP_ACSORT_EQUAL         1     /* accented characters have the same
+                                             weight as corresponding unaccented
+                                             ones */
+#define HB_CDP_ACSORT_INTERLEAVED   2     /* accented characters sort after
+                                             their unaccented counterparts only
+                                             if the unaccented versions of all
+                                             characters being compared are the
+                                             same ( interleaving ) */
 
-extern HB_EXPORT void          hb_cdpTranslate( char *, PHB_CODEPAGE, PHB_CODEPAGE );
-extern HB_EXPORT void          hb_cdpnTranslate( char *, PHB_CODEPAGE, PHB_CODEPAGE, ULONG );
+extern HB_EXPORT BOOL         hb_cdpRegisterRaw( PHB_CODEPAGE cdp );
+extern HB_EXPORT BOOL         hb_cdpRegisterNew( const char * id,
+                                                 const char * info,
+                                                 PHB_UNITABLE uniTable,
+                                                 const char * pszUpper,
+                                                 const char * pszLower,
+                                                 unsigned int nACSort );
+extern HB_EXPORT void         hb_cdpReleaseAll( void );
+extern HB_EXPORT const char * hb_cdpID( void );
+extern HB_EXPORT PHB_CODEPAGE hb_cdpSelect( PHB_CODEPAGE cdp );
+extern HB_EXPORT const char * hb_cdpSelectID( const char * id );
+extern HB_EXPORT PHB_CODEPAGE hb_cdpFind( const char * id );
+extern HB_EXPORT PHB_CODEPAGE hb_cdpFindExt( const char * id );
 
-extern HB_EXPORT int           hb_cdpTranslateChar( int iChar, BOOL fCtrl, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut );
+extern HB_EXPORT BOOL         hb_cdpIsDigit( PHB_CODEPAGE cdp, int iChar );
+extern HB_EXPORT BOOL         hb_cdpIsAlpha( PHB_CODEPAGE cdp, int iChar );
+extern HB_EXPORT BOOL         hb_cdpIsLower( PHB_CODEPAGE cdp, int iChar );
+extern HB_EXPORT BOOL         hb_cdpIsUpper( PHB_CODEPAGE cdp, int iChar );
+extern HB_EXPORT int          hb_cdpcmp( const char *szFirst, ULONG ulLenFirst, const char *szSecond, ULONG ulLenSecond, PHB_CODEPAGE cdp, BOOL fExact );
+extern HB_EXPORT int          hb_cdpicmp( const char *szFirst, ULONG ulLenFirst, const char *szSecond, ULONG ulLenSecond, PHB_CODEPAGE cdp, BOOL fExact );
+extern HB_EXPORT int          hb_cdpchrcmp( char cFirst, char cSecond, PHB_CODEPAGE cdp );
 
-extern HB_EXPORT HB_WCHAR      hb_cdpGetU16( PHB_CODEPAGE, BOOL, UCHAR );
-extern HB_EXPORT UCHAR         hb_cdpGetChar( PHB_CODEPAGE, BOOL, HB_WCHAR );
-extern HB_EXPORT BOOL          hb_cdpGetFromUTF8( PHB_CODEPAGE, BOOL, UCHAR, int *, HB_WCHAR * );
+extern HB_EXPORT char *       hb_cdpDup( const char *, PHB_CODEPAGE, PHB_CODEPAGE );
+extern HB_EXPORT char *       hb_cdpnDup( const char *, ULONG *, PHB_CODEPAGE, PHB_CODEPAGE );
+extern HB_EXPORT const char * hb_cdpnDup2( const char *, ULONG, char *, ULONG *, PHB_CODEPAGE, PHB_CODEPAGE );
+extern HB_EXPORT const char * hb_cdpnDup3( const char *, ULONG, char *, ULONG *, char **, ULONG *, PHB_CODEPAGE, PHB_CODEPAGE );
+extern HB_EXPORT ULONG        hb_cdpnDupLen( const char *, ULONG, PHB_CODEPAGE, PHB_CODEPAGE );
+extern HB_EXPORT ULONG        hb_cdpnDup2Len( const char *, ULONG, ULONG, PHB_CODEPAGE, PHB_CODEPAGE );
 
-extern HB_EXPORT ULONG         hb_cdpStrnToU16( PHB_CODEPAGE, BOOL, const char *, ULONG, HB_WCHAR * );
-extern HB_EXPORT ULONG         hb_cdpStrnToU16n( PHB_CODEPAGE, BOOL, const char *, ULONG, HB_WCHAR *, ULONG );
-extern HB_EXPORT ULONG         hb_cdpStrnToU16LE( PHB_CODEPAGE, BOOL, const char *, ULONG, HB_WCHAR * );
-extern HB_EXPORT ULONG         hb_cdpStrnToU16LEn( PHB_CODEPAGE, BOOL, const char *, ULONG, HB_WCHAR *, ULONG );
-extern HB_EXPORT ULONG         hb_cdpStringInU16Length( PHB_CODEPAGE, BOOL, const char *, ULONG );
-extern HB_EXPORT ULONG         hb_cdpStringInU16Length2( PHB_CODEPAGE, BOOL, const char *, ULONG, ULONG );
+extern HB_EXPORT int          hb_cdpTranslateChar( int iChar, BOOL fCtrl, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut );
+extern HB_EXPORT ULONG        hb_cdpTransLen( const char * pSrc, ULONG ulSrc, ULONG ulMax, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut );
+extern HB_EXPORT ULONG        hb_cdpTransTo( const char * pSrc, ULONG ulSrc, char * pDst, ULONG ulDst, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut );
 
-extern HB_EXPORT char *        hb_cdpU16ToStr( PHB_CODEPAGE, BOOL, const HB_WCHAR *, ULONG, char *, ULONG * );
-extern HB_EXPORT char *        hb_cdpU16LEToStr( PHB_CODEPAGE, BOOL, const HB_WCHAR *, ULONG, char *, ULONG * );
+extern HB_EXPORT HB_WCHAR     hb_cdpGetU16( PHB_CODEPAGE cdp, BOOL fCtrl, unsigned char ch );
+extern HB_EXPORT UCHAR        hb_cdpGetChar( PHB_CODEPAGE cdp, BOOL fCtrl, HB_WCHAR wc );
+extern HB_EXPORT BOOL         hb_cdpGetFromUTF8( PHB_CODEPAGE cdp, BOOL fCtrl, unsigned char ch, int * n, HB_WCHAR * pwc );
 
-extern HB_EXPORT ULONG         hb_cdpStrnToUTF8( PHB_CODEPAGE, BOOL, const char *, ULONG, char * );
-extern HB_EXPORT ULONG         hb_cdpStrnToUTF8n( PHB_CODEPAGE, BOOL, const char *, ULONG, char *, ULONG );
-extern HB_EXPORT ULONG         hb_cdpStringInUTF8Length( PHB_CODEPAGE, BOOL, const char *, ULONG );
-extern HB_EXPORT ULONG         hb_cdpStringInUTF8Length2( PHB_CODEPAGE, BOOL, const char *, ULONG, ULONG );
+extern HB_EXPORT ULONG        hb_cdpUTF8StringLength( const char * pSrc, ULONG ulLen );
+extern HB_EXPORT ULONG        hb_cdpUTF8StringPeek( const char * pSrc, ULONG ulLen, ULONG ulPos );
+extern HB_EXPORT char *       hb_cdpUTF8StringSubstr( const char * pSrc, ULONG ulLen, ULONG ulFrom, ULONG ulCount, ULONG * pulDest );
 
-extern HB_EXPORT ULONG         hb_cdpUTF8ToStrn( PHB_CODEPAGE, BOOL, const char *, ULONG, char *, ULONG );
-extern HB_EXPORT ULONG         hb_cdpUTF8StringLength( const char *, ULONG );
-extern HB_EXPORT char *        hb_cdpUTF8StringSubstr( const char *, ULONG, ULONG, ULONG, ULONG * );
-extern HB_EXPORT ULONG         hb_cdpUTF8StringPeek( const char *, ULONG, ULONG );
+extern HB_EXPORT ULONG        hb_cdpUTF8AsStrLen( PHB_CODEPAGE cdp, BOOL fCtrl, const char * pSrc, ULONG ulSrc, ULONG ulMax );
+extern HB_EXPORT ULONG        hb_cdpUTF8ToStr( PHB_CODEPAGE cdp, BOOL fCtrl, const char * pSrc, ULONG ulSrc, char * pDst, ULONG ulDst );
+extern HB_EXPORT ULONG        hb_cdpStrAsUTF8Len( PHB_CODEPAGE cdp, BOOL fCtrl, const char * pSrc, ULONG ulSrc, ULONG ulMax );
+extern HB_EXPORT ULONG        hb_cdpStrToUTF8( PHB_CODEPAGE cdp, BOOL fCtrl, const char * pSrc, ULONG ulSrc, char * pDst, ULONG ulDst );
 
-extern HB_EXPORT PHB_ITEM      hb_itemDeserializeCP( const char ** pBufferPtr, ULONG * pulSize, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut );
-extern HB_EXPORT char *        hb_itemSerializeCP( PHB_ITEM pItem, BOOL fNumSize, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, ULONG *pulSize );
+extern HB_EXPORT PHB_ITEM     hb_itemDeserializeCP( const char ** pBufferPtr, ULONG * pulSize, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut );
+extern HB_EXPORT char *       hb_itemSerializeCP( PHB_ITEM pItem, BOOL fNumSize, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, ULONG *pulSize );
 
-#define hb_cdpStrToUTF8( cdp, ctrl, src, slen, dst, dlen ) \
-        hb_cdpStrnToUTF8( cdp, ctrl, src, slen, dst )
+#ifdef HB_LEGACY_LEVEL2
+extern HB_EXPORT void         hb_cdpTranslate( char *, PHB_CODEPAGE, PHB_CODEPAGE );
+extern HB_EXPORT void         hb_cdpnTranslate( char *, PHB_CODEPAGE, PHB_CODEPAGE, ULONG );
+#endif
 
 HB_EXTERN_END
 
 #else
 
 typedef void * PHB_CODEPAGE;
+typedef USHORT    HB_WCHAR;
 
 #endif /* HB_CDP_SUPPORT_OFF */
 

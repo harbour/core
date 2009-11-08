@@ -54,49 +54,12 @@
 /* ISO language code (2 chars): BG */
 /* Codepage: ISO-8859-5 */
 
-#include "hbapi.h"
-#include "hbapicdp.h"
+#define HB_CP_ID        BGISO
+#define HB_CP_INFO      "Bulgarian ISO-8859-5"
+#define HB_CP_UNITB     HB_UNITB_8859_5
+#define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
+#define HB_CP_UPPER     "∞±≤≥¥µ∂∑∏π∫ªºΩæø¿¡¬√ƒ≈∆«»… ÀÃÕŒœ"
+#define HB_CP_LOWER     "–—“”‘’÷◊ÿŸ⁄€‹›ﬁﬂ‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔ"
 
-#define NUMBER_OF_CHARACTERS  32    /* The number of single characters in the
-                                       alphabet, two-as-one aren't considered
-                                       here, accented - are considered. */
-#define IS_LATIN               0    /* Should be 1, if the national alphabet
-                                       is based on Latin */
-#define ACCENTED_EQUAL         0    /* Should be 1, if accented character
-                                       has the same weight as appropriate
-                                       unaccented. */
-#define ACCENTED_INTERLEAVED   0    /* Should be 1, if accented characters
-                                       sort after their unaccented counterparts
-                                       only if the unaccented versions of all
-                                       characters being compared are the same
-                                       ( interleaving ) */
-
-/* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
-   accented characters with the symbol '~' before each of them, for example:
-      a~Ä
-   If there is two-character sequence, which is considered as one, it should
-   be marked with '.' before and after it, for example:
-      ... h.ch.i ...
-
-   The Upper case string and the Lower case string should be absolutely the
-   same excepting the characters case, of course.
- */
-
-static HB_CODEPAGE s_codepage = { "BGISO",
-    HB_CPID_8859_5, HB_UNITB_8859_5, NUMBER_OF_CHARACTERS,
-    "∞±≤≥¥µ∂∑∏π∫ªºΩæø¿¡¬√ƒ≈∆«»… ÀÃÕŒœ",
-    "–—“”‘’÷◊ÿŸ⁄€‹›ﬁﬂ‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔ",
-    IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
-
-HB_CODEPAGE_INIT( BGISO )
-
-#if defined( HB_PRAGMA_STARTUP )
-   #pragma startup hb_codepage_Init_BGISO
-#elif defined( HB_MSC_STARTUP )
-   #if defined( HB_OS_WIN_64 )
-      #pragma section( HB_MSC_START_SEGMENT, long, read )
-   #endif
-   #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_BGISO = hb_codepage_Init_BGISO;
-   #pragma data_seg()
-#endif
+/* include CP registration code */
+#include "hbcdpreg.h"

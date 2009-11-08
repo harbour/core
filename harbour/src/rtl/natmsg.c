@@ -116,14 +116,6 @@ HB_FUNC( __NATMSG )
       hb_retc_null();
 }
 
-HB_FUNC( __NATSORTVER )
-{
-   /* NOTE: CA-Cl*pper 5.2e Intl. will return: "NATSORT v1.2i x14 19/Mar/93" */
-   /* NOTE: CA-Cl*pper 5.3  Intl. will return: "NATSORT v1.3i x19 06/Mar/95" */
-
-   hb_retc_const( "NATSORT (Harbour)" );
-}
-
 HB_FUNC( __NATMSGVER )
 {
    /* NOTE: CA-Cl*pper 5.2e Intl. will return: "NATMSGS v1.2i x14 19/Mar/93" */

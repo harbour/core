@@ -101,13 +101,6 @@
 #ifndef HB_CDP_SUPPORT_OFF
    /* for nation sorting support */
    #include "hbapicdp.h"
-   #define hb_cdpcharcmp( c1, c2, cdpage )  \
-                                       ( ( cdpage && cdpage->lSort )    ? \
-                                         hb_cdpchrcmp( c1, c2, cdpage ) : \
-                                         ( (BYTE)(c1) - (BYTE)(c2) ) )
-/*
-   #define hb_cdpcharcmp( c1, c2, cdpage )     ( (BYTE)(c1) - (BYTE)(c2) )
- */
 #endif
 
 /*
@@ -408,7 +401,7 @@ static HB_ERRCODE hb_cdxErrorRT( CDXAREAP pArea, USHORT uiGenCode, USHORT uiSubC
 static void hb_cdxMakeSortTab( CDXAREAP pArea )
 {
 #ifndef HB_CDP_SUPPORT_OFF
-   if( pArea->dbfarea.area.cdPage && pArea->dbfarea.area.cdPage->lSort && !pArea->bCdxSortTab )
+   if( pArea->dbfarea.area.cdPage && pArea->dbfarea.area.cdPage->sort && !pArea->bCdxSortTab )
    {
       int i, j, l;
       BYTE * pbSort;

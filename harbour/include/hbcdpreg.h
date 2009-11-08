@@ -4,11 +4,10 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module (ES850C - Spanish Clipper compatible)
+ *    code used to register new CP definition
  *
- * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
+ * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
- * Spanish MS-DOS support by Antonio Linares <alinares@fivetechsoft.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,16 +50,28 @@
  *
  */
 
-/* Language name: Spanish */
-/* ISO language code (2 chars): ES */
-/* Codepage: 850 */
+#include "hbapicdp.h"
 
-#define HB_CP_ID        ES850C
-#define HB_CP_INFO      "Spanish CP-850"
-#define HB_CP_UNITB     HB_UNITB_850
-#define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AABCDEêFGHIIJKLMN•OOPQRSTUUVWXYöZèéô"
-#define HB_CP_LOWER     "†abcdeÇfgh°ijklmn§¢opqrst£uvwxyÅzÜÑî"
+HB_CODEPAGE_ANNOUNCE( HB_CP_ID )
 
-/* include CP registration code */
-#include "hbcdpreg.h"
+HB_CALL_ON_STARTUP_BEGIN( _hb_codepage_Init_ )
+
+#if defined( HB_CP_RAW )
+   hb_cdpRegisterRaw( HB_CP_RAW );
+#else
+   hb_cdpRegisterNew( HB_MACRO2STRING( HB_CP_ID ), HB_CP_INFO, HB_CP_UNITB,
+                      HB_CP_UPPER, HB_CP_LOWER, HB_CP_ACSORT );
+#endif /* HB_CP_RAW */
+
+HB_CALL_ON_STARTUP_END( _hb_codepage_Init_ )
+
+#if defined( HB_PRAGMA_STARTUP )
+   #pragma startup _hb_codepage_Init_
+#elif defined( HB_MSC_STARTUP )
+   #if defined( HB_OS_WIN_64 )
+      #pragma section( HB_MSC_START_SEGMENT, long, read )
+   #endif
+   #pragma data_seg( HB_MSC_START_SEGMENT )
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_ = _hb_codepage_Init_;
+   #pragma data_seg()
+#endif

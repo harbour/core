@@ -54,56 +54,12 @@
 /* ISO language code (2 chars): SV */
 /* Codepage: 850 */
 
-#include "hbapi.h"
-#include "hbapicdp.h"
+#define HB_CP_ID        SV850
+#define HB_CP_INFO      "Swedish CP-850"
+#define HB_CP_UNITB     HB_UNITB_850
+#define HB_CP_ACSORT    HB_CDP_ACSORT_INTERLEAVED
+#define HB_CP_UPPER     "A~µ~∑~∂~«BC~ÄDE~ê~‘~“~”FGHI~÷~ﬁ~◊~ÿJKLMN~•O~‡~„~‚~ÂPQRSTU~È~Î~ÍV~WXY~Ì~öZèé~íô~ù"
+#define HB_CP_LOWER     "a~†~Ö~É~∆bc~áde~Ç~ä~à~âfghi~°~ç~å~ãjklmn~§o~¢~ï~ì~‰pqrstu~£~ó~ñv~wxy~Ï~ÅzÜÑ~ëî~õ"
 
-#define NUMBER_OF_CHARACTERS  54    /* The number of single characters in the
-                                       alphabet, two-as-one aren't considered
-                                       here, accented - are considered. */
-#define IS_LATIN               1    /* Should be 1, if the national alphabet
-                                       is based on Latin */
-#define ACCENTED_EQUAL         0    /* Should be 1, if accented character
-                                       has the same weight as appropriate
-                                       unaccented. */
-#define ACCENTED_INTERLEAVED   1    /* Should be 1, if accented characters
-                                       sort after their unaccented counterparts
-                                       only if the unaccented versions of all
-                                       characters being compared are the same
-                                       ( interleaving ) */
-
-/* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
-   accented characters with the symbol '~' before each of them, for example:
-      a~Ä
-   If there is two-character sequence, which is considered as one, it should
-   be marked with '.' before and after it, for example:
-      ... h.ch.i ...
-
-   The Upper case string and the Lower case string should be absolutely the
-   same excepting the characters case, of course.
- */
-
-/* NOTE: The collation sequence below is compatible with the collation rules
-   described in the book "Svenska skrivregler" (Swedish Writing Rules) by
-   Svenska SprÜknamnden (the Swedish Language Council). It is NOT Clipper
-   compatible. If you need to share data between Harbour and Clipper, use
-   the SVCLIP version instead.
- */
-
-static HB_CODEPAGE s_codepage = { "SV850",
-    HB_CPID_850,HB_UNITB_850,NUMBER_OF_CHARACTERS,
-    "A~µ~∑~∂~«BC~ÄDE~ê~‘~“~”FGHI~÷~ﬁ~◊~ÿJKLMN~•O~‡~„~‚~ÂPQRSTU~È~Î~ÍV~WXY~Ì~öZèé~íô~ù",
-    "a~†~Ö~É~∆bc~áde~Ç~ä~à~âfghi~°~ç~å~ãjklmn~§o~¢~ï~ì~‰pqrstu~£~ó~ñv~wxy~Ï~ÅzÜÑ~ëî~õ",
-    IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
-
-HB_CODEPAGE_INIT( SV850 )
-
-#if defined( HB_PRAGMA_STARTUP )
-   #pragma startup hb_codepage_Init_SV850
-#elif defined( HB_MSC_STARTUP )
-   #if defined( HB_OS_WIN_64 )
-      #pragma section( HB_MSC_START_SEGMENT, long, read )
-   #endif
-   #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_SV850 = hb_codepage_Init_SV850;
-   #pragma data_seg()
-#endif
+/* include CP registration code */
+#include "hbcdpreg.h"

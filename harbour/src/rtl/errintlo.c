@@ -55,6 +55,7 @@
 #include "hbapilng.h"
 #include "hbdate.h"
 #include "hbset.h"
+#include "hbstack.h"
 
 /* NOTE: Use as minimal calls from here, as possible.
          Don't allocate memory from this function. [vszakats] */
@@ -63,12 +64,12 @@ void hb_errInternalRaw( ULONG ulIntCode, const char * szText, const char * szPar
 {
    char buffer[ 8192 ];
    char file[ HB_PATH_MAX ];
-   const char * szFile;
+   const char * szFile, * szInfo;
+   BOOL fStack, fLang;
    USHORT uiLine;
    int iLevel;
    FILE * hLog;
 
-   BOOL fLang;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_errInternal(%lu, %s, %s, %s)", ulIntCode, szText, szPar1, szPar2));
 
@@ -78,9 +79,10 @@ void hb_errInternalRaw( ULONG ulIntCode, const char * szText, const char * szPar
    if( szPar2 == NULL )
       szPar2 = "";
 
-   fLang = ( hb_langID() != NULL );
+   fStack = hb_stackId() != NULL;
+   fLang = fStack && hb_langID() != NULL;
 
-   szFile = hb_setGetCPtr( HB_SET_HBOUTLOG );
+   szFile = fStack ? hb_setGetCPtr( HB_SET_HBOUTLOG ) : NULL;
    if( !szFile )
       szFile = "hb_out.log";
 
@@ -95,8 +97,9 @@ void hb_errInternalRaw( ULONG ulIntCode, const char * szText, const char * szPar
 
       fprintf( hLog, "Application Internal Error - %s\n", hb_cmdargARGVN( 0 ) );
       fprintf( hLog, "Terminated at: %04d.%02d.%02d %s\n", iYear, iMonth, iDay, szTime );
-      if( *hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) )
-         fprintf( hLog, "Info: %s\n", hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) );
+      szInfo = fStack ? hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) : NULL;
+      if( szInfo && *szInfo )
+         fprintf( hLog, "Info: %s\n", szInfo );
    }
 
    hb_conOutErr( hb_conNewLine(), 0 );
@@ -122,16 +125,19 @@ void hb_errInternalRaw( ULONG ulIntCode, const char * szText, const char * szPar
    if( hLog )
       fprintf( hLog, "%s\n", buffer );
 
-   iLevel = 0;
-   while( hb_procinfo( iLevel++, buffer, &uiLine, file ) )
+   if( fStack && hb_stackTotalItems() )
    {
-      char msg[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
+      iLevel = 0;
+      while( hb_procinfo( iLevel++, buffer, &uiLine, file ) )
+      {
+         char msg[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
 
-      hb_snprintf( msg, sizeof( msg ), "Called from %s(%hu)%s%s\n", buffer, uiLine, *file ? " in " : "", file );
+         hb_snprintf( msg, sizeof( msg ), "Called from %s(%hu)%s%s\n", buffer, uiLine, *file ? " in " : "", file );
 
-      hb_conOutErr( msg, 0 );
-      if( hLog )
-         fprintf( hLog, "%s", msg );
+         hb_conOutErr( msg, 0 );
+         if( hLog )
+            fprintf( hLog, "%s", msg );
+      }
    }
 
    if( hLog )

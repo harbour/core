@@ -50,12 +50,11 @@
  *
  */
 
-#include "hbapi.h"
 #include "hbapicdp.h"
 
 #define NUMBER_OF_CHARS    256
 
-static HB_WCHAR uniCodes[ NUMBER_OF_CHARS ] =
+static HB_WCHAR s_uniCodes[ NUMBER_OF_CHARS ] =
 {
    0x0020, 0x263A, 0x263B, 0x2665, 0x2666, 0x2663, 0x2660, 0x2022,
    0x25D8, 0x25CB, 0x25D9, 0x2642, 0x2640, 0x266A, 0x266B, 0x263C,
@@ -91,4 +90,4 @@ static HB_WCHAR uniCodes[ NUMBER_OF_CHARS ] =
    0x00AF, 0x02D8, 0x02D9, 0x02DA, 0x00B8, 0x02DD, 0x02DB, 0x02C7
 };
 
-HB_UNITABLE hb_uniTbl_10079 = { HB_CPID_10079, NUMBER_OF_CHARS, FALSE, uniCodes };
+HB_UNITABLE hb_uniTbl_10079 = { HB_CPID_10079, s_uniCodes, NULL, 0 };

@@ -693,7 +693,7 @@ static int hb_ntxValCompare( LPTAGINFO pTag, const char* val1, int len1,
       if( iLimit > 0 )
       {
 #ifndef HB_CDP_SUPPORT_OFF
-         if( pTag->Owner->Owner->dbfarea.area.cdPage->lSort )
+         if( pTag->Owner->Owner->dbfarea.area.cdPage->sort )
             iResult = hb_cdpcmp( val1, ( ULONG ) iLimit, val2, ( ULONG ) iLimit, pTag->Owner->Owner->dbfarea.area.cdPage, 0 );
          else
 #endif

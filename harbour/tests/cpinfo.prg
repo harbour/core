@@ -16,17 +16,24 @@
  */
 
 
-proc main()
-   local cUp, cLo, cOrd, cOrd2, c, i, a, lWarn
+proc main( cdp, info, unicode )
+   local cUp, cLo, cOrd, cOrd2, c, i, a, lWarn, lEqual
 
    set alternate to cpinfo.txt additive
    set alternate on
 
+
 #ifdef __HARBOUR__
    /* for test */
-   REQUEST HB_CODEPAGE_PLMAZ
-   set( _SET_CODEPAGE, "PLMAZ" )
+   set( _SET_CODEPAGE, iif( empty( cdp ), "PLMAZ", upper( cdp ) ) )
+   lEqual := .t.
+#else
+   lEqual := .f.
 #endif
+
+   if !empty( cdp )
+      memowrit( "cp" + lower( cdp ) + ".c", genCP( cdp, info, unicode ) )
+   endif
 
    a := array( 256 )
    for i := 1 to len( a )
@@ -60,6 +67,16 @@ proc main()
          lWarn := .t.
       endif
       c := chr( a[ i ] )
+      if i < len(a)
+         if c + chr( 0 ) > chr( a[ i + 1 ] ) + chr( 0 )
+            ? "character " + charis( c ) + " is wrongly sorted"
+            lWarn := .t.
+         elseif !lEqual .and. c + chr( 0 ) = chr( a[ i + 1 ] ) + chr( 0 )
+            ? "character " + charis( c ) + " and " + chr( a[ i + 1 ] ) + ;
+              " have the same weight"
+            lWarn := .t.
+         endif
+      endif
       cOrd += c
       if isdigit( c )
          if asc( c ) < asc( "0" ) .or. asc( c ) > asc( "9" )
@@ -100,6 +117,20 @@ proc main()
       elseif islower( c ) .or. isupper( c )
          ? "wrongly defined character " + ;
            charval( c ) + ":" + charinfo( c )
+         lWarn := .t.
+      endif
+   next
+   for i := 1 to len( cUp ) - 1
+      c := substr( cUp, i, 1 )
+      if c + chr( 0 ) > substr( cUp, i + 1, 1 ) + chr( 0 )
+         ? "letter " + charis( c ) + " is wrongly sorted"
+         lWarn := .t.
+      endif
+   next
+   for i := 1 to len( cLo ) - 1
+      c := substr( cLo, i, 1 )
+      if c + chr( 0 ) > substr( cLo, i + 1, 1 ) + chr( 0 )
+         ? "letter " + charis( c ) + " is wrongly sorted"
          lWarn := .t.
       endif
    next
@@ -149,3 +180,107 @@ static function charinfo( c )
    cInfo += ", ISLOWER->" + iif( islower( c ), "Y", "N" )
    cInfo += ", ISDIGIT->" + iif( isdigit( c ), "Y", "N" )
 return cInfo
+
+
+#ifdef __HARBOUR__
+   #include "hbextcdp.ch"
+   #define EOL    hb_osNewLine()
+#else
+   #define EOL    chr( 13 ) + chr( 10 )
+#endif
+
+#define HB_CDP_DIGIT    1
+#define HB_CDP_ALPHA    2
+#define HB_CDP_LOWER    4
+#define HB_CDP_UPPER    8
+
+static function genCP( id, info, unicode )
+   local flags[ 256 ], upper[ 256 ], lower[ 256 ], sort[ 256 ], tmp[ 256 ]
+   local i, c
+
+   id := upper( id )
+   if empty( info )
+      info := _natSortVer()
+   endif
+   if empty( unicode )
+      unicode := "437"
+   else
+      unicode := upper( unicode )
+   endif
+
+   for i := 1 to 256
+      c := chr( i - 1 )
+      flags[ i ] := 0
+      if isdigit( c )
+         flags[ i ] += HB_CDP_DIGIT
+      endif
+      if isalpha( c )
+         flags[ i ] += HB_CDP_ALPHA
+      endif
+      if isupper( c )
+         flags[ i ] += HB_CDP_UPPER
+      endif
+      if islower( c )
+         flags[ i ] += HB_CDP_LOWER
+      endif
+      upper[ i ] := asc( upper( c ) )
+      lower[ i ] := asc( lower( c ) )
+      tmp[ i ] := i - 1
+   next
+   asort( tmp,,, { |x,y| chr( x ) + chr( 0 ) < chr( y ) + chr( 0 ) } )
+   for i := 1 to 256
+      sort[ tmp[ i ] + 1 ] := i - 1
+   next
+
+   return genCPfile( id, info, unicode, flags, upper, lower, sort )
+
+static function genCPfile( id, info, unicode, flags, upper, lower, sort )
+   local cDef := ;
+      '/*' + EOL + ' * $Id$' + EOL + ' */' + EOL + EOL + ;
+      '/*' + EOL + ;
+      ' * Harbour Project source code:' + EOL + ;
+      ' * National Collation Support Module ( $1 )' + EOL + ;
+      ' *' + EOL + ;
+      ' * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>' + EOL + ;
+      ' * www - http://www.harbour-project.org' + EOL + ;
+      ' *' + EOL + ;
+      ' * This file is generated automatically by cpinfo.prg' + EOL + ;
+      ' */' + EOL + ;
+      '#include "hbapicdp.h"' + EOL + EOL + ;
+      '#define HB_CP_RAW       &s_codePage' + EOL + EOL + ;
+      'static const unsigned char s_flags[ 256 ] = { $f };' + EOL + ;
+      'static const unsigned char s_upper[ 256 ] = { $u };' + EOL + ;
+      'static const unsigned char s_lower[ 256 ] = { $l };' + EOL + ;
+      'static const unsigned char s_sort [ 256 ] = { $s };' + EOL + ;
+      EOL + ;
+      'static HB_CODEPAGE s_codePage =' + EOL + ;
+      '{' + EOL + ;
+      '   "$1",'        + EOL + ;
+      '   "$2",'        + EOL + ;
+      '   HB_UNITB_$3,' + EOL + ;
+      '   s_flags,'     + EOL + ;
+      '   s_upper,'     + EOL + ;
+      '   s_lower,'     + EOL + ;
+      '   s_sort,'      + EOL + ;
+      '   NULL,'        + EOL + ;
+      '   0,' + EOL + '   0,' + EOL + '   0,' + EOL + ;
+      '   NULL,' + EOL + '   NULL,' + EOL + '   NULL,' + EOL + ;
+      '};' + EOL + EOL + ;
+      '/* include CP registration code */' + EOL + ;
+      '#include "hbcdpreg.h"' + EOL
+
+   cDef := strtran( cDef, "$f", a2def( flags ) )
+   cDef := strtran( cDef, "$u", a2def( upper ) )
+   cDef := strtran( cDef, "$l", a2def( lower ) )
+   cDef := strtran( cDef, "$s", a2def( sort ) )
+   cDef := strtran( cDef, "$1", id )
+   cDef := strtran( cDef, "$2", info )
+   cDef := strtran( cDef, "$3", unicode )
+return cDef
+
+func a2def( a )
+   local i, cData := ""
+   for i := 1 to len( a )
+      cData += iif( i == 1, "", "," ) + ltrim( str( a[ i ] ) )
+   next
+return cData

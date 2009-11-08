@@ -54,49 +54,12 @@
 /* ISO language code (2 chars): SK */
 /* Codepage: Kamenicky ("895") */
 
-#include "hbapi.h"
-#include "hbapicdp.h"
+#define HB_CP_ID        SKKAM
+#define HB_CP_INFO      "Slovak Kamenicky (895)"
+#define HB_CP_UNITB     HB_UNITB_KAM
+#define HB_CP_ACSORT    HB_CDP_ACSORT_INTERLEAVED
+#define HB_CP_UPPER     "A~è~éBCÄD~Ö.DZ..Dí.E~êFGH.CH.I~ãJKL~ä~úMN~•O~ï~ßPQR~´SõT~ÜU~óVWXY~ùZí"
+#define HB_CP_LOWER     "a~†~Ñbcád~É.dz..dë.e~Çfgh.ch.i~°jkl~ç~åmn~§o~¢~ìpqr~™s®t~üu~£vwxy~òzë"
 
-#define NUMBER_OF_CHARACTERS  46    /* The number of single characters in the
-                                       alphabet, two-as-one aren't considered
-                                       here, accented - are considered. */
-#define IS_LATIN               1    /* Should be 1, if the national alphabet
-                                       is based on Latin */
-#define ACCENTED_EQUAL         1    /* Should be 1, if accented character
-                                       has the same weight as appropriate
-                                       unaccented. */
-#define ACCENTED_INTERLEAVED   1    /* Should be 1, if accented characters
-                                       sort after their unaccented counterparts
-                                       only if the unaccented versions of all
-                                       characters being compared are the same
-                                       ( interleaving ) */
-
-/* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
-   accented characters with the symbol '~' before each of them, for example:
-      a~_
-   If there is two-character sequence, which is considered as one, it should
-   be marked with '.' before and after it, for example:
-      ... h.ch.i ...
-
-   The Upper case string and the Lower case string should be absolutely the
-   same excepting the characters case, of course.
- */
-
-static HB_CODEPAGE s_codepage = { "SKKAM",
-    HB_CPID_KAM, HB_UNITB_KAM, NUMBER_OF_CHARACTERS,
-    "A~è~éBCÄD~Ö.DZ..Dí.E~êFGH.CH.I~ãJKL~ä~úMN~•O~ï~ßPQR~´SõT~ÜU~óVWXY~ùZí",
-    "a~†~Ñbcád~É.dz..dë.e~Çfgh.ch.i~°jkl~ç~åmn~§o~¢~ìpqr~™s®t~üu~£vwxy~òzë",
-    IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
-
-HB_CODEPAGE_INIT( SKKAM )
-
-#if defined( HB_PRAGMA_STARTUP )
-   #pragma startup hb_codepage_Init_SKKAM
-#elif defined( HB_MSC_STARTUP )
-   #if defined( HB_OS_WIN_64 )
-      #pragma section( HB_MSC_START_SEGMENT, long, read )
-   #endif
-   #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_SKKAM = hb_codepage_Init_SKKAM;
-   #pragma data_seg()
-#endif
+/* include CP registration code */
+#include "hbcdpreg.h"

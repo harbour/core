@@ -2095,7 +2095,7 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
    {
 #ifndef HB_CDP_SUPPORT_OFF
       PHB_CODEPAGE cdp = hb_vmCDP();
-      if( cdp && cdp->lSort )
+      if( cdp && cdp->sort )
          iRet = hb_cdpcmp( szFirst, ulLenFirst, szSecond, ulLenSecond,
                            cdp, bForceExact );
       else
@@ -2176,7 +2176,7 @@ int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
    {
 #ifndef HB_CDP_SUPPORT_OFF
       PHB_CODEPAGE cdp = hb_vmCDP();
-      if( cdp && cdp->lSort )
+      if( cdp && cdp->sort )
          iRet = hb_cdpicmp( szFirst, ulLenFirst, szSecond, ulLenSecond,
                             cdp, bForceExact );
       else

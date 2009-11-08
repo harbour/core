@@ -843,16 +843,16 @@ static BOOL hb_mixTagDelKey( PMIXTAG pTag, PMIXKEY pKey )
 
 static BYTE* hb_mixBuildSortTable( PHB_CODEPAGE pCodepage )
 {
-   BYTE*      pSortTable;
-   BYTE*      pChars;
-   int        i, j;
-   BYTE       c;
+   BYTE*        pSortTable;
+   const BYTE*  pChars;
+   int          i, j;
+   BYTE         c;
 
    pSortTable = ( BYTE * ) hb_xalloc( 256 );
 
-   if ( pCodepage && pCodepage->s_chars )
+   if ( pCodepage && pCodepage->sort )
    {
-      pChars = pCodepage->s_chars;
+      pChars = pCodepage->sort;
 
       c = 0;
       for ( i = 0; i < 256; i++ )
@@ -909,7 +909,7 @@ static PMIXTAG hb_mixTagCreate( const char* szTagName, PHB_ITEM pKeyExpr, PHB_IT
    /* Use national support */
    if ( bType == 'C' )
    {
-      if( pArea->sqlarea.area.cdPage && pArea->sqlarea.area.cdPage->lSort && !pArea->pSortTable )
+      if( pArea->sqlarea.area.cdPage && pArea->sqlarea.area.cdPage->sort && !pArea->pSortTable )
       {
          pArea->pSortTable = hb_mixBuildSortTable( pArea->sqlarea.area.cdPage );
       }

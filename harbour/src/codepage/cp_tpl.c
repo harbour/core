@@ -54,55 +54,34 @@
 /* ISO language code (2 chars): (please look it up in /doc/lang_id.txt) */
 /* Codepage: <Your codepage> */
 
-#include "hbapi.h"
-#include "hbapicdp.h"
-
-/* NOTE: In order to codepage translate work in Harbour, you must
-         ensure that the NUMBER_OF_CHARACTERS and the order of the
-         lowercase/uppercase chars are exactly matching in every
-         codepage that belong to the same language.
-         [vszakats] */
-
-#define NUMBER_OF_CHARACTERS  26    /* The number of single characters in the
-                                       alphabet, two-as-one aren't considered
-                                       here, accented - are considered. */
-#define IS_LATIN               1    /* Should be 1, if the national alphabet
-                                       is based on Latin */
-#define ACCENTED_EQUAL         0    /* Should be 1, if accented character
-                                       has the same weight as appropriate
-                                       unaccented. */
-#define ACCENTED_INTERLEAVED   0    /* Should be 1, if accented characters
-                                       sort after their unaccented counterparts
-                                       only if the unaccented versions of all
-                                       characters being compared are the same
-                                       ( interleaving ) */
-
-/* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
-   accented characters with the symbol '~' before each of them, for example:
+/*
+   If accented characters need special sorting ( HB_CDP_ACSORT_EQUAL or
+   HB_CDP_ACSORT_INTERLEAVE ) then you need to mark the accented characters
+   with the symbol '~' before each of them, for example:
       a~€
    If there is two-character sequence, which is considered as one, it should
    be marked with '.' before and after it, for example:
       ... h.ch.i ...
+   if such multibyte character has its own Unicode representation then
+   this Unicode value can be set using '=' symbol, for example:
+      ....h.ch=2A7C.i
+   and it will be used in translations.
 
-   The Upper case string and the Lower case string should be absolutely the
-   same excepting the characters case, of course.
+   The Upper case string and the Lower case string should use the same
+   letters. If some characters does not have corresponding upper or lower
+   letter then space ' ' can be used as dummy character, for example in
+   German CPs there is no upper case 'scharfes S' letter so space is used
+   as dummy character.
+
+   otherwise 0
  */
 
-static HB_CODEPAGE s_codepage = { "EN",
-    HB_CPID_437,HB_UNITB_437,NUMBER_OF_CHARACTERS,
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    "abcdefghijklmnopqrstuvwxyz",
-    IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
+#define HB_CP_ID        EN
+#define HB_CP_INFO      "English CP-437"
+#define HB_CP_UNITB     HB_UNITB_437
+#define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
+#define HB_CP_UPPER     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+#define HB_CP_LOWER     "abcdefghijklmnopqrstuvwxyz"
 
-HB_CODEPAGE_INIT( EN )
-
-#if defined( HB_PRAGMA_STARTUP )
-   #pragma startup hb_codepage_Init_EN
-#elif defined( HB_MSC_STARTUP )
-   #if defined( HB_OS_WIN_64 )
-      #pragma section( HB_MSC_START_SEGMENT, long, read )
-   #endif
-   #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_EN = hb_codepage_Init_EN;
-   #pragma data_seg()
-#endif
+/* include CP registration code */
+#include "hbcdpreg.h"

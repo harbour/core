@@ -425,11 +425,11 @@ static int hb_hsxHashVal( int c1, int c2, int iKeyBits,
    if( fNoCase )
    {
 #ifndef HB_CDP_SUPPORT_OFF
-      PHB_CODEPAGE cdp;
-      if( iFilter == 3 && ( cdp = hb_vmCDP() )->nChars )
+      if( iFilter == 3 )
       {
-         c1 = ( UCHAR ) cdp->s_upper[ c1 ];
-         c2 = ( UCHAR ) cdp->s_upper[ c2 ];
+         PHB_CODEPAGE cdp = hb_vmCDP();
+         c1 = ( UCHAR ) cdp->upper[ c1 ];
+         c2 = ( UCHAR ) cdp->upper[ c2 ];
       }
       else
 #endif
@@ -515,11 +515,11 @@ static int hb_hsxStrCmp( const char * pSub, ULONG ulSub, const char * pStr, ULON
          if( fNoCase )
          {
 #ifndef HB_CDP_SUPPORT_OFF
-            PHB_CODEPAGE cdp;
-            if( iFilter == 3 && ( cdp = hb_vmCDP() )->nChars )
+            if( iFilter == 3 )
             {
-               c1 = ( UCHAR ) cdp->s_upper[ c1 ];
-               c2 = ( UCHAR ) cdp->s_upper[ c2 ];
+               PHB_CODEPAGE cdp = hb_vmCDP();
+               c1 = ( UCHAR ) cdp->upper[ c1 ];
+               c2 = ( UCHAR ) cdp->upper[ c2 ];
             }
             else
 #endif

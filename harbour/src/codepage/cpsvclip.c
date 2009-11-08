@@ -54,34 +54,6 @@
 /* ISO language code (2 chars): SV */
 /* Codepage: 437 */
 
-#include "hbapi.h"
-#include "hbapicdp.h"
-
-#define NUMBER_OF_CHARACTERS  31    /* The number of single characters in the
-                                       alphabet, two-as-one aren't considered
-                                       here, accented - are considered. */
-#define IS_LATIN               1    /* Should be 1, if the national alphabet
-                                       is based on Latin */
-#define ACCENTED_EQUAL         0    /* Should be 1, if accented character
-                                       has the same weight as appropriate
-                                       unaccented. */
-#define ACCENTED_INTERLEAVED   0    /* Should be 1, if accented characters
-                                       sort after their unaccented counterparts
-                                       only if the unaccented versions of all
-                                       characters being compared are the same
-                                       ( interleaving ) */
-
-/* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
-   accented characters with the symbol '~' before each of them, for example:
-      a~Ä
-   If there is two-character sequence, which is considered as one, it should
-   be marked with '.' before and after it, for example:
-      ... h.ch.i ...
-
-   The Upper case string and the Lower case string should be absolutely the
-   same excepting the characters case, of course.
- */
-
 /* NOTE: The collation sequence below is almost compatible with Clipper's
    NTXSWE.OBJ which does NOT provide a correct Swedish collation. The most
    notable error in NTXSWE.OBJ is the uppercase E with an acute accent
@@ -104,21 +76,12 @@
    not be Clipper compatible.
  */
 
-static HB_CODEPAGE s_codepage = { "SVCLIP",
-    HB_CPID_437,HB_UNITB_437,NUMBER_OF_CHARACTERS,
-    "ABCDEêFGHIJKLMNOPQRSTUVWXYöZèéô",
-    "abcdeäfghijklmnopqrstuvwxyÅzÜÑî",
-    IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
+#define HB_CP_ID        SVCLIP
+#define HB_CP_INFO      "Swedish CP-437"
+#define HB_CP_UNITB     HB_UNITB_437
+#define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
+#define HB_CP_UPPER     "ABCDEêFGHIJKLMNOPQRSTUVWXYöZèéô"
+#define HB_CP_LOWER     "abcdeäfghijklmnopqrstuvwxyÅzÜÑî"
 
-HB_CODEPAGE_INIT( SVCLIP )
-
-#if defined( HB_PRAGMA_STARTUP )
-   #pragma startup hb_codepage_Init_SVCLIP
-#elif defined( HB_MSC_STARTUP )
-   #if defined( HB_OS_WIN_64 )
-      #pragma section( HB_MSC_START_SEGMENT, long, read )
-   #endif
-   #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_SVCLIP = hb_codepage_Init_SVCLIP;
-   #pragma data_seg()
-#endif
+/* include CP registration code */
+#include "hbcdpreg.h"
