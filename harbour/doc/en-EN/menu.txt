@@ -73,7 +73,7 @@
  *                         item is to be displayed. 0 origin.  Default 0.
  *  $RETURNS$
  *      <nPosition>  - the number of the item to be selected, or 0 if the
- *                   selection was aborted.
+ *      selection was aborted.
  *  $DESCRIPTION$
  *      Allows selection of an element from an array.
  *      Please see standard CA-Cl*pper documentation for ACHOICE for
@@ -121,7 +121,7 @@
  *      <xMsg> define a message to display each time this menu item is
  *      highlighted. <xMsg> could be a character string or code block that
  *      is evaluated to a character string. If <xMsg> is not specified or
- *      got the wrong type, an empty string ("") would be used.
+ *      of the wrong type, an empty string ("") would be used.
  *  $RETURNS$
  *      __AtPrompt() always return .F.
  *  $DESCRIPTION$
@@ -186,7 +186,7 @@
  *      <xMsg> define a message to display each time this menu item is
  *      highlighted. <xMsg> could be a character string or code block that
  *      is evaluated to a character string. If <xMsg> is not specified or
- *      got the wrong type, an empty string ("") would be used.
+ *      of the wrong type, an empty string ("") would be used.
  *  $DESCRIPTION$
  *      With @...Prompt you define and display a menu item, each call to
  *      @...Prompt add another item to the menu, to start the menu itself

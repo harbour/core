@@ -223,6 +223,12 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |
 |   +---guestbk     - Harbour Guests Book.
 |   |
+|   +---hbdoc           - Documentation generation tool.
+|   |
+|   +---hbdoc2          - Documentation generation tool.
+|   |
+|   +---hbextern        - hbextern.ch generator.
+|   |
 |   +---hbsqlit2    - Interface for SQLite 2.x library.
 |   |   |
 |   |   +---tests   - Test programs.
@@ -381,15 +387,11 @@ track of all files (read the FAQ if you don't know what SVN is).
 |
 +---utils               - Utilities and tools that are part of Harbour.
     |
-    +---hbdoc           - Documentation generation tool.
-    |
-    +---hbextern        - hbextern.ch generator.
-    |
     +---hbformat        - Harbour Source Formatter utility.
     |
     +---hbi18n          - Harbour i18n .pot/.hbl file manager.
     |
-    +---hbmk            - Harbour Make utility.
+    +---hbmk2           - Harbour Make utility.
     |   |
     |   +---examples    - Usage examples.
     |
