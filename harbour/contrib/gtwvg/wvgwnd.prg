@@ -367,7 +367,69 @@ METHOD destroy() CLASS WvgWindow
       WVG_DeleteObject( ::hBrushBG )
    ENDIF
 
-   RETURN Self
+   ::hWnd                   := NIL
+   ::pWnd                   := NIL
+   ::aPos                   := NIL
+   ::aSize                  := NIL
+   ::aPresParams            := NIL
+   ::lHasInputFocus         := NIL
+   ::nFrameState            := NIL
+   ::maxCol                 := NIL
+   ::maxRow                 := NIL
+   ::mouseMode              := NIL
+   ::nID                    := NIL
+   ::nControlID             := NIL
+   ::nOldProc               := NIL
+   ::nWndProc               := NIL
+   ::oMenu                  := NIL
+   ::animate                := NIL
+   ::clipChildren           := NIL
+   ::clipParent             := NIL
+   ::clipSiblings           := NIL
+   ::group                  := NIL
+   ::sizeRedraw             := NIL
+   ::tabStop                := NIL
+   ::visible                := NIL
+   ::dropZone               := NIL
+   ::helpLink               := NIL
+   ::tooltipText            := NIL
+   ::clr_FG                 := NIL
+   ::clr_BG                 := NIL
+   ::fnt_COMMPOUNDNAME      := NIL
+   ::fnt_hFont              := NIL
+   ::sl_enter               := NIL
+   ::sl_leave               := NIL
+   ::sl_lbClick             := NIL
+   ::sl_lbDblClick          := NIL
+   ::sl_lbDown              := NIL
+   ::sl_lbUp                := NIL
+   ::sl_mbClick             := NIL
+   ::sl_mbDblClick          := NIL
+   ::sl_mbDown              := NIL
+   ::sl_mbUp                := NIL
+   ::sl_motion              := NIL
+   ::sl_rbClick             := NIL
+   ::sl_rbDblClick          := NIL
+   ::sl_rbDown              := NIL
+   ::sl_rbUp                := NIL
+   ::sl_wheel               := NIL
+   ::sl_helpRequest         := NIL
+   ::sl_keyboard            := NIL
+   ::sl_killInputFocus      := NIL
+   ::sl_move                := NIL
+   ::sl_paint               := NIL
+   ::sl_quit                := NIL
+   ::sl_resize              := NIL
+   ::sl_setInputFocus       := NIL
+   ::sl_dragEnter           := NIL
+   ::sl_dragMotion          := NIL
+   ::sl_dragLeave           := NIL
+   ::sl_dragDrop            := NIL
+   ::sl_close               := NIL
+   ::sl_setDisplayFocus     := NIL
+   ::sl_killDisplayFocus    := NIL
+
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 

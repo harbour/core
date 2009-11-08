@@ -180,7 +180,7 @@ HB_FUNC( WVT_CHOOSEFONT )
 
       PointSize = -MulDiv( lf.lfHeight, 72, GetDeviceCaps( _s->hdc, LOGPIXELSY ) ) ;
 
-      hb_reta( 8 );
+      hb_reta( 9 );
       hb_storvc(  szFaceName        , -1, 1 );
       hb_storvnl( ( LONG ) PointSize, -1, 2 );
       hb_storvni( lf.lfWidth        , -1, 3 );
@@ -189,12 +189,13 @@ HB_FUNC( WVT_CHOOSEFONT )
       hb_storvl(  lf.lfItalic       , -1, 6 );
       hb_storvl(  lf.lfUnderline    , -1, 7 );
       hb_storvl(  lf.lfStrikeOut    , -1, 8 );
+      hb_storvni( cf.rgbColors      , -1, 9 );
 
       HB_TCHAR_FREE( szFaceName );
    }
    else
    {
-      hb_reta( 8 );
+      hb_reta( 9 );
       hb_storvc(  ""        , -1, 1 );
       hb_storvnl( ( LONG ) 0, -1, 2 );
       hb_storvni( 0         , -1, 3 );
@@ -203,6 +204,7 @@ HB_FUNC( WVT_CHOOSEFONT )
       hb_storvl(  0         , -1, 6 );
       hb_storvl(  0         , -1, 7 );
       hb_storvl(  0         , -1, 8 );
+      hb_storvni( 0         , -1, 9 );
    }
 
    return ;
@@ -1349,6 +1351,10 @@ HB_FUNC( WVT_DLGSETICON )
    {
       LPTSTR icon = HB_TCHAR_CONVTO( hb_parc( 2 ) );
       hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, icon, IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+      if ( !hIcon )
+      {
+         hIcon = ( HICON ) LoadImage( GetModuleHandle( NULL ), icon, IMAGE_ICON, 0, 0, NULL );
+      }
       HB_TCHAR_FREE( icon );
    }
 

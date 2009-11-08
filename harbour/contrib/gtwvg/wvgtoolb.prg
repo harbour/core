@@ -190,7 +190,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTo
    #endif
 
    IF !empty( ::hWnd )
-      ::hImageList := WAPI_ImageList_Create( ::imageWidth, ::imageHeight, ILC_COLOR32+ILC_MASK, 0, 50 )
+      ::hImageList := WAPI_ImageList_Create( ::imageWidth, ::imageHeight, ILC_COLOR32+ILC_MASK, 20, 50 )
       ::SendToolbarMessage( TB_SETIMAGELIST, ::hImageList )
 
       ::SendToolbarMessage( TB_BUTTONSTRUCTSIZE )
@@ -336,13 +336,16 @@ METHOD addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey,
    ENDCASE
 
    IF !empty( pBitmap )
-      oBtn:image := pBitmap
+      //oBtn:image := pBitmap
 
       IF !empty( nMapRGB )
          nBtn := WAPI_ImageList_AddMasked( ::hImageList, pBitmap, nMapRGB )
       ELSE
          nBtn := WAPI_ImageList_Add( ::hImageList, pBitmap )
       ENDIF
+
+      WVG_DeleteObject( pBitmap )
+
       WVG_AddToolbarButton( ::pWnd, nBtn, oBtn:caption, oBtn:command, 1, ::showToolTips )
 
       /* Set Button Size */
