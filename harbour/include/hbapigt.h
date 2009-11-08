@@ -153,7 +153,7 @@ typedef struct
 
 /* Public interface. These should never change, only be added to. */
 
-extern void hb_gtIsGtRef( void );
+extern void hb_gtIsGtRef( void * );
 
 extern HB_EXPORT void   hb_gtStartupInit( void );
 extern HB_EXPORT void * hb_gtAlloc( void * hGT );

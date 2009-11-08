@@ -1296,4 +1296,6 @@ void hb_stackIsStackRef( void * pStackId, PHB_TSD_FUNC pCleanFunc )
 
    if( pCleanFunc )
       hb_stackIsTsdRef( pStack, pCleanFunc );
+
+   hb_gtIsGtRef( pStack->hGT );
 }

@@ -3251,9 +3251,9 @@ PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable )
    return NULL;
 }
 
-void hb_gtIsGtRef( void )
+void hb_gtIsGtRef( void * hGT )
 {
-   PHB_GT pGT = ( PHB_GT ) hb_stackGetGT();
+   PHB_GT pGT = ( PHB_GT ) hGT;
 
    if( pGT )
       HB_GTSELF_MARK( pGT );

@@ -646,7 +646,6 @@ void hb_gcCollectAll( BOOL fForce )
       hb_vmIsStackRef();
       hb_vmIsStaticRef();
       hb_clsIsClassRef();
-      hb_gtIsGtRef();
 
       /* check list of locked block for blocks referenced from
        * locked block
