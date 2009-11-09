@@ -101,7 +101,7 @@ typedef struct _MIXTAG
    ULONG            ulRecMax;
    ULONG            ulRecCount;
 
-   BYTE*            pSortTable;  /* National sorttable for character key tags, NULL otherwise */
+   PHB_CODEPAGE     pCodepage;  /* National sorttable for character key tags, NULL otherwise */
 
    ULONG            ulKeyNo;
 } MIXTAG, *LPMIXTAG;
@@ -115,8 +115,6 @@ typedef struct _ADSXAREA_
 
    LPMIXTAG     pTagList;
    LPMIXTAG     pTagCurrent;
-   BYTE*        pSortTable;
-
 } ADSXAREA, *ADSXAREAP;
 
 
@@ -274,55 +272,13 @@ static void mixKeyFree( LPMIXKEY pKey )
 }
 
 
-static BYTE * mixBuildSortTable( PHB_CODEPAGE pCodepage )
-{
-   BYTE*       pSortTable;
-   const BYTE* pChars;
-   int         i, j;
-   BYTE        c;
-
-   pSortTable = ( BYTE * ) hb_xgrab( 256 );
-
-   if( pCodepage && pCodepage->sort )
-   {
-      pChars = pCodepage->sort;
-
-      c = 0;
-      for( i = 0; i < 256; i++ )
-      {
-         for( j = 0; j < 256; j++ )
-         {
-            if( pChars[ j ] == ( BYTE ) i )
-            {
-               pSortTable[ j ] = c;
-               c++;
-            }
-         }
-      }
-   }
-   else
-   {
-      for( i = 0; i < 256; i++ )
-         pSortTable[ i ] = ( BYTE ) i;
-   }
-   return pSortTable;
-}
-
-
-static int mixQSortCompare( LPMIXKEY p1, LPMIXKEY p2, USHORT uiLen, BYTE* pSortTable )
+static int mixQSortCompare( LPMIXKEY p1, LPMIXKEY p2, USHORT uiLen, PHB_CODEPAGE pCodepage )
 {
    int   i;
 
-   if( pSortTable )
+   if( pCodepage )
    {
-      int j = 0;
-
-      i = 0;
-      while( i == 0 && j < (int) uiLen )
-      {
-         i = pSortTable[ p1->val[ j ] ] - pSortTable[ p2->val[ j ] ];
-         j++;
-      }
+      i = hb_cdpcmp( ( const char * ) p1->val, ( ULONG ) uiLen, ( const char * ) p2->val, ( ULONG ) uiLen, pCodepage, 0 );
    }
    else
      i = memcmp( p1->val, p2->val, uiLen );
@@ -345,7 +301,7 @@ static int mixQSortCompare( LPMIXKEY p1, LPMIXKEY p2, USHORT uiLen, BYTE* pSortT
 }
 
 
-static void mixQSort( LPMIXKEY* pKeys, ULONG left, ULONG right, USHORT uiLen, BYTE* pSortTable )
+static void mixQSort( LPMIXKEY* pKeys, ULONG left, ULONG right, USHORT uiLen, PHB_CODEPAGE pCodepage )
 {
    ULONG     l, r;
    LPMIXKEY  x, h;
@@ -356,9 +312,9 @@ static void mixQSort( LPMIXKEY* pKeys, ULONG left, ULONG right, USHORT uiLen, BY
    x = pKeys[ (l + r) / 2 ];
 
    do {
-      while( mixQSortCompare( x, pKeys[ l ], uiLen, pSortTable ) > 0 )
+      while( mixQSortCompare( x, pKeys[ l ], uiLen, pCodepage ) > 0 )
          l++;
-      while( mixQSortCompare( pKeys[ r ], x, uiLen, pSortTable ) > 0 )
+      while( mixQSortCompare( pKeys[ r ], x, uiLen, pCodepage ) > 0 )
          r--;
 
       if( l < r )
@@ -370,10 +326,10 @@ static void mixQSort( LPMIXKEY* pKeys, ULONG left, ULONG right, USHORT uiLen, BY
    while( l < r );
 
    if( left < r && ( r != right ) )
-      mixQSort( pKeys, left, r, uiLen, pSortTable );
+      mixQSort( pKeys, left, r, uiLen, pCodepage );
 
    if( l < right && ( l != left ) )
-      mixQSort( pKeys, l, right, uiLen, pSortTable );
+      mixQSort( pKeys, l, right, uiLen, pCodepage );
 }
 
 
@@ -394,7 +350,7 @@ static LPMIXKEY mixFindKey( LPMIXTAG pTag, LPMIXKEY pKey, ULONG* ulKeyPos )
 
    while( l < r )
    {
-      i = mixQSortCompare( pTag->pKeys[ (l + r) / 2 ], pKey, pTag->uiLen, pTag->pSortTable );
+      i = mixQSortCompare( pTag->pKeys[ (l + r) / 2 ], pKey, pTag->uiLen, pTag->pCodepage );
 
       if( i < 0 )
          l = (l + r) / 2 + 1;
@@ -406,7 +362,7 @@ static LPMIXKEY mixFindKey( LPMIXTAG pTag, LPMIXKEY pKey, ULONG* ulKeyPos )
 
    if( i )
    {
-      i = mixQSortCompare( pTag->pKeys[ l ], pKey, pTag->uiLen, pTag->pSortTable );
+      i = mixQSortCompare( pTag->pKeys[ l ], pKey, pTag->uiLen, pTag->pCodepage );
       if( i < 0 )
          l++;
    }
@@ -420,7 +376,7 @@ static LPMIXKEY mixFindKey( LPMIXTAG pTag, LPMIXKEY pKey, ULONG* ulKeyPos )
 
 static int mixCompareKey( LPMIXTAG pTag, ULONG ulKeyPos, LPMIXKEY pKey )
 {
-   return mixQSortCompare( pTag->pKeys[ ulKeyPos ], pKey, pTag->uiLen, pTag->pSortTable );
+   return mixQSortCompare( pTag->pKeys[ ulKeyPos ], pKey, pTag->uiLen, pTag->pCodepage );
 }
 
 
@@ -455,8 +411,8 @@ static LPMIXTAG mixTagCreate( const char * szTagName, PHB_ITEM pKeyExpr, PHB_ITE
    pTag->uiLen = uiLen;
 
    /* Use national support */
-   if( bType == 'C' )
-      pTag->pSortTable = pArea->pSortTable;
+   if( bType == 'C' && pArea->adsarea.area.cdPage && pArea->adsarea.area.cdPage->sort )
+      pTag->pCodepage = pArea->adsarea.area.cdPage;
 
    pTag->pKeys = (LPMIXKEY*) hb_xgrab( sizeof( LPMIXKEY ) * MIX_KEYPOOLFIRST );
    pTag->ulRecMax = MIX_KEYPOOLFIRST;
@@ -558,7 +514,7 @@ static LPMIXTAG mixTagCreate( const char * szTagName, PHB_ITEM pKeyExpr, PHB_ITE
 
    /* QuickSort */
    if( pTag->ulRecCount >= 2 )
-      mixQSort( pTag->pKeys, 0, pTag->ulRecCount - 1, uiLen, pTag->pSortTable );
+      mixQSort( pTag->pKeys, 0, pTag->ulRecCount - 1, uiLen, pTag->pCodepage );
 
    return pTag;
 }
@@ -831,11 +787,6 @@ static HB_ERRCODE adsxClose( ADSXAREAP pArea )
       pArea->pTagList = pArea->pTagList->pNext;
       mixTagDestroy( pTag );
    }
-   if( pArea->pSortTable )
-   {
-     hb_xfree( pArea->pSortTable );
-     pArea->pSortTable = NULL;
-   }
    return SUPER_CLOSE( (AREAP) pArea );
 }
 
@@ -852,8 +803,6 @@ static HB_ERRCODE adsxCreate( ADSXAREAP pArea, LPDBOPENINFO pCreateInfo )
       }
       else
          pArea->adsarea.area.cdPage = hb_vmCDP();
-
-      pArea->pSortTable = mixBuildSortTable( pArea->adsarea.area.cdPage );
       return HB_SUCCESS;
    }
    return HB_FAILURE;
@@ -872,8 +821,6 @@ static HB_ERRCODE adsxOpen( ADSXAREAP pArea, LPDBOPENINFO pOpenInfo )
       }
       else
          pArea->adsarea.area.cdPage = hb_vmCDP();
-
-      pArea->pSortTable = mixBuildSortTable( pArea->adsarea.area.cdPage );
       return HB_SUCCESS;
    }
    return HB_FAILURE;

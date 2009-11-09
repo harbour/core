@@ -249,54 +249,10 @@ static void hb_mixKeyFree( PMIXKEY pKey )
 }
 
 
-#if 0
-/* This function is unused */
-static int hb_mixKeyCompareValue( PMIXTAG pTag, PMIXKEY pKey1, PMIXKEY pKey2, unsigned int uiLen )
-{
-   BYTE*  pSortTable = pTag->pSortTable;
-   unsigned int  ui, uiSize;
-   int    i;
-
-   if ( ! pKey1->notnul || ! pKey2->notnul )
-   {
-      return (int) pKey1->notnul - (int) pKey2->notnul;
-   }
-
-   i = 0;
-   uiSize = pTag->uiKeyLen > uiLen ? uiLen : pTag->uiKeyLen;
-
-   if ( pSortTable )
-   {
-      ui = 0;
-      while ( i == 0 && ui < uiSize )
-      {
-         i = pSortTable[ pKey1->val[ ui ] ] - pSortTable[ pKey2->val[ ui ] ];
-         ui++;
-      }
-   }
-   else
-   {
-      if ( uiSize > 0 )
-         i = memcmp( pKey1->val, pKey2->val, uiSize );
-   }
-
-   if ( i == 0 )
-   {
-      /* This condition seems inverted, but it's ok for seek last */
-      if ( pTag->uiKeyLen > uiLen )
-         i = -1;
-   }
-   return i;
-}
-#endif
-
-
 static int hb_mixKeyCompare( PMIXTAG pTag, PMIXKEY pKey1, PMIXKEY pKey2, unsigned int uiLen )
 {
-   BYTE*  pSortTable = pTag->pSortTable;
-   unsigned int  ui, uiSize;
+   unsigned int  uiSize;
    int    i;
-
 
    if ( ! pKey1->notnul || ! pKey2->notnul )
    {
@@ -306,14 +262,9 @@ static int hb_mixKeyCompare( PMIXTAG pTag, PMIXKEY pKey1, PMIXKEY pKey2, unsigne
    i = 0;
    uiSize = pTag->uiKeyLen > uiLen ? uiLen : pTag->uiKeyLen;
 
-   if ( pSortTable )
+   if ( pTag->pCodepage )
    {
-      ui = 0;
-      while ( i == 0 && ui < uiSize )
-      {
-         i = pSortTable[ pKey1->val[ ui ] ] - pSortTable[ pKey2->val[ ui ] ];
-         ui++;
-      }
+      i = hb_cdpcmp( ( const char * ) pKey1->val, ( ULONG ) uiSize, ( const char * ) pKey2->val, ( ULONG ) uiSize, pTag->pCodepage, 0 );
    }
    else
    {
@@ -841,41 +792,6 @@ static BOOL hb_mixTagDelKey( PMIXTAG pTag, PMIXKEY pKey )
 }
 
 
-static BYTE* hb_mixBuildSortTable( PHB_CODEPAGE pCodepage )
-{
-   BYTE*        pSortTable;
-   const BYTE*  pChars;
-   int          i, j;
-   BYTE         c;
-
-   pSortTable = ( BYTE * ) hb_xalloc( 256 );
-
-   if ( pCodepage && pCodepage->sort )
-   {
-      pChars = pCodepage->sort;
-
-      c = 0;
-      for ( i = 0; i < 256; i++ )
-      {
-         for ( j = 0; j < 256; j++ )
-         {
-            if ( pChars[ j ] == ( BYTE ) i )
-            {
-               pSortTable[ j ] = c;
-               c++;
-            }
-         }
-      }
-   }
-   else
-   {
-      for ( i = 0; i < 256; i++ )
-         pSortTable[ i ] = ( BYTE ) i;
-   }
-   return pSortTable;
-}
-
-
 static PMIXTAG hb_mixTagCreate( const char* szTagName, PHB_ITEM pKeyExpr, PHB_ITEM pKeyItem, PHB_ITEM pForItem, PHB_ITEM pWhileItem, BYTE bType, unsigned int uiKeyLen, SQLMIXAREAP pArea )
 {
    PMIXTAG            pTag;
@@ -909,11 +825,10 @@ static PMIXTAG hb_mixTagCreate( const char* szTagName, PHB_ITEM pKeyExpr, PHB_IT
    /* Use national support */
    if ( bType == 'C' )
    {
-      if( pArea->sqlarea.area.cdPage && pArea->sqlarea.area.cdPage->sort && !pArea->pSortTable )
+      if( pArea->sqlarea.area.cdPage && pArea->sqlarea.area.cdPage->sort )
       {
-         pArea->pSortTable = hb_mixBuildSortTable( pArea->sqlarea.area.cdPage );
+         pTag->pCodepage = pArea->sqlarea.area.cdPage;
       }
-      pTag->pSortTable = pArea->pSortTable;
    }
 
    pTag->Root = hb_mixTagCreateNode( pTag, TRUE );
@@ -1644,9 +1559,6 @@ static HB_ERRCODE sqlmixClose( SQLMIXAREAP pArea )
 
    if ( SELF_ORDLSTCLEAR( (AREAP) pArea ) == HB_FAILURE )
       return HB_FAILURE;
-
-   if ( pArea->pSortTable )
-     hb_xfree( pArea->pSortTable );
 
    return HB_SUCCESS;
 }
