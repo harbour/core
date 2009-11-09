@@ -914,7 +914,7 @@ void hb_vmInit( BOOL bStartMainProc )
 #if defined( HB_MT_VM )
    hb_threadInit();
    hb_vmStackInit( hb_threadStateNew() ); /* initialize HVM thread stack */
-   s_pSymbolsMtx = hb_threadMutexCreate( FALSE );
+   s_pSymbolsMtx = hb_threadMutexCreate();
 #else
    hb_stackInit();                        /* initialize HVM stack */
 #endif /* HB_MT_VM */

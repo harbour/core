@@ -209,7 +209,7 @@ static PHB_CONCLI s_fileConNew( HB_SOCKET sd, const char * pszServer,
    iLen = ( int ) strlen( pszServer );
    conn = ( PHB_CONCLI ) hb_xgrab( sizeof( HB_CONCLI ) + iLen );
    hb_atomic_set( &conn->used, 1 );
-   conn->mutex = hb_threadMutexCreate( FALSE );
+   conn->mutex = hb_threadMutexCreate();
    conn->sd = sd;
    conn->next = NULL;
    conn->timeout = iTimeOut;

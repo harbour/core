@@ -59,7 +59,7 @@ LDLIBS += $(foreach lib,$(SYSLIBS),$(lib)$(LIB_EXT))
 LDFLAGS += $(LIBPATHS)
 
 AR := tlib.exe
-ARFLAGS := /P64
+ARFLAGS := /P96
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" $(foreach file,$(?F),-+$(file))
 
 ifneq ($(HB_SHELL),sh)

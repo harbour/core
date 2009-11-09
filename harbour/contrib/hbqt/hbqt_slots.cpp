@@ -2461,7 +2461,7 @@ HB_FUNC( QT_MUTEXCREATE )
 {
    if( s_mutex == NULL )
    {
-      s_mutex = hb_threadMutexCreate( FALSE );
+      s_mutex = hb_threadMutexCreate();
    }
 }
 

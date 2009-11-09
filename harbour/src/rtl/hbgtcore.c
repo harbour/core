@@ -109,7 +109,7 @@ static void hb_gt_def_BaseInit( PHB_GT_BASE pGT )
    pGT->inkeyBuffer     = pGT->defaultKeyBuffer;
    pGT->inkeyBufferSize = HB_DEFAULT_INKEY_BUFSIZE;
 
-   pGT->pMutex       = hb_threadMutexCreate( TRUE );
+   pGT->pMutex       = hb_threadMutexCreate();
    if( pGT->pMutex )
       hb_gcUnlock( pGT->pMutex );
 }

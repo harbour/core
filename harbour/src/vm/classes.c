@@ -926,7 +926,7 @@ static void hb_clsCopyClass( PCLASS pClsDst, PCLASS pClsSrc )
    pClsDst->uiMutexOffset = pClsSrc->uiMutexOffset;
    pClsDst->ulOpFlags = pClsSrc->ulOpFlags;
    if( pClsSrc->pMutex )
-      pClsDst->pMutex = hb_threadMutexCreate( FALSE );
+      pClsDst->pMutex = hb_threadMutexCreate();
 
    if( pClsSrc->uiInitDatas )
    {
@@ -1056,7 +1056,7 @@ void hb_clsInit( void )
    s_pClasses[ 0 ] = NULL;
 
 #if defined( HB_MT_VM )
-   s_pClassMtx = hb_threadMutexCreate( FALSE );
+   s_pClassMtx = hb_threadMutexCreate();
 #endif
 }
 
@@ -2990,7 +2990,7 @@ static BOOL hb_clsAddMsg( USHORT uiClass, const char * szMessage,
          if( uiScope & HB_OO_CLSTP_CLASS )
          {
             if( !pClass->pMutex )
-               pClass->pMutex = hb_threadMutexCreate( FALSE );
+               pClass->pMutex = hb_threadMutexCreate();
             pNewMeth->pFuncSym = &s___msgSyncClass;
          }
          else
@@ -3352,7 +3352,7 @@ static USHORT hb_clsNew( const char * szClassName, USHORT uiDatas,
    if( pNewCls->uiMutexOffset )
       pNewCls->uiMutexOffset = pNewCls->uiDatas + 1;
    if( fClsMutex && !pNewCls->pMutex )
-      pNewCls->pMutex = hb_threadMutexCreate( FALSE );
+      pNewCls->pMutex = hb_threadMutexCreate();
 
    return s_uiClasses;
 }
@@ -3478,7 +3478,7 @@ static PHB_ITEM hb_clsInst( USHORT uiClass )
 
       if( pClass->uiMutexOffset )
       {
-         PHB_ITEM pMutex = hb_threadMutexCreate( FALSE );
+         PHB_ITEM pMutex = hb_threadMutexCreate();
          hb_arraySet( pSelf, pClass->uiMutexOffset, pMutex );
          hb_itemRelease( pMutex );
       }

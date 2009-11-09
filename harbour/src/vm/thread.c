@@ -1464,7 +1464,7 @@ HB_FUNC( HB_THREADONCE )
                hb_threadInit();
             HB_CRITICAL_LOCK( s_once_mtx );
             if( !s_pOnceMutex )
-               s_pOnceMutex = hb_threadMutexCreate( FALSE );
+               s_pOnceMutex = hb_threadMutexCreate();
             HB_CRITICAL_UNLOCK( s_once_mtx );
          }
          if( hb_threadMutexLock( s_pOnceMutex ) )
@@ -1498,7 +1498,6 @@ HB_FUNC( HB_THREADONCE )
 
 typedef struct _HB_MUTEX
 {
-   BOOL                 fSync;
    int                  lock_count;
    int                  lockers;
    int                  waiters;
@@ -1512,15 +1511,6 @@ typedef struct _HB_MUTEX
 }
 HB_MUTEX, * PHB_MUTEX;
 
-typedef struct _HB_MTXLST
-{
-   int                  lock_count;
-   PHB_MUTEX            pMutex;
-   struct _HB_MTXLST *  pNext;
-}
-HB_MTXLST, * PHB_MTXLST;
-
-static PHB_MUTEX s_pSyncList = NULL;
 static PHB_MUTEX s_pMutexList = NULL;
 
 static void hb_mutexLink( PHB_MUTEX *pList, PHB_MUTEX pItem )
@@ -1551,12 +1541,12 @@ static void hb_mutexUnlink( PHB_MUTEX *pList, PHB_MUTEX pItem )
 }
 
 #if defined( HB_MT_VM )
-static void hb_mutexListUnlock( PHB_MUTEX * pList, PHB_MTXLST * pStore )
+void hb_threadMutexUnlockAll( void )
 {
    HB_CRITICAL_LOCK( s_mutexlst_mtx );
-   if( *pList )
+   if( s_pMutexList )
    {
-      PHB_MUTEX pMutex = *pList;
+      PHB_MUTEX pMutex = s_pMutexList;
       do
       {
          if( HB_THREAD_EQUAL( pMutex->owner, HB_THREAD_SELF() ) )
@@ -1564,14 +1554,6 @@ static void hb_mutexListUnlock( PHB_MUTEX * pList, PHB_MTXLST * pStore )
             HB_CRITICAL_LOCK( pMutex->mutex );
             if( HB_THREAD_EQUAL( pMutex->owner, HB_THREAD_SELF() ) )
             {
-               if( pStore )
-               {
-                  *pStore = ( PHB_MTXLST ) hb_xgrab( sizeof( HB_MTXLST ) );
-                  (*pStore)->lock_count = pMutex->lock_count;
-                  (*pStore)->pMutex = pMutex;
-                  pStore = &(*pStore)->pNext;
-                  *pStore = NULL;
-               }
                pMutex->lock_count = 0;
                pMutex->owner = ( HB_THREAD_ID ) 0;
                if( pMutex->lockers )
@@ -1581,49 +1563,9 @@ static void hb_mutexListUnlock( PHB_MUTEX * pList, PHB_MTXLST * pStore )
          }
          pMutex = pMutex->pNext;
       }
-      while( pMutex != *pList );
+      while( pMutex != s_pMutexList );
    }
    HB_CRITICAL_UNLOCK( s_mutexlst_mtx );
-}
-
-static void hb_mutexListLock( PHB_MTXLST pList )
-{
-   while( pList )
-   {
-      PHB_MUTEX pMutex = pList->pMutex;
-
-      HB_CRITICAL_LOCK( pMutex->mutex );
-      while( pMutex->lock_count != 0 )
-      {
-         pMutex->lockers++;
-#if defined( HB_PTHREAD_API )
-         pthread_cond_wait( &pMutex->cond_l, &pMutex->mutex );
-#elif defined( HB_TASK_THREAD )
-         hb_taskWait( &pMutex->cond_l, &pMutex->mutex, HB_TASK_INFINITE_WAIT );
-#elif defined( HB_COND_HARBOUR_SUPPORT )
-         _hb_thread_cond_wait( &pMutex->cond_l, &pMutex->mutex, HB_THREAD_INFINITE_WAIT );
-#else
-         HB_CRITICAL_UNLOCK( pMutex->mutex );
-         ( void ) HB_COND_WAIT( pMutex->cond_l );
-         HB_CRITICAL_LOCK( pMutex->mutex );
-#endif
-         pMutex->lockers--;
-      }
-      pMutex->lock_count = pList->lock_count;
-      pMutex->owner = HB_THREAD_SELF();
-      HB_CRITICAL_UNLOCK( pMutex->mutex );
-      {
-         PHB_MTXLST pFree = pList;
-         pList = pList->pNext;
-         hb_xfree( pFree );
-      }
-   }
-}
-
-void hb_threadMutexUnlockAll( void )
-{
-   hb_mutexListUnlock( &s_pMutexList, NULL );
-   hb_mutexListUnlock( &s_pSyncList, NULL );
 }
 
 #endif
@@ -1634,10 +1576,10 @@ static HB_GARBAGE_FUNC( hb_mutexDestructor )
 
 #if defined( HB_MT_VM )
    HB_CRITICAL_LOCK( s_mutexlst_mtx );
-   hb_mutexUnlink( pMutex->fSync ? &s_pSyncList : &s_pMutexList, pMutex );
+   hb_mutexUnlink( &s_pMutexList, pMutex );
    HB_CRITICAL_UNLOCK( s_mutexlst_mtx );
 #else
-   hb_mutexUnlink( pMutex->fSync ? &s_pSyncList : &s_pMutexList, pMutex );
+   hb_mutexUnlink( &s_pMutexList, pMutex );
 #endif
 
    if( pMutex->events )
@@ -1684,7 +1626,7 @@ static PHB_ITEM hb_mutexParam( int iParam )
    return NULL;
 }
 
-PHB_ITEM hb_threadMutexCreate( BOOL fSync )
+PHB_ITEM hb_threadMutexCreate( void )
 {
    PHB_MUTEX pMutex;
    PHB_ITEM pItem;
@@ -1704,13 +1646,12 @@ PHB_ITEM hb_threadMutexCreate( BOOL fSync )
 #  endif
 #endif
 
-   pMutex->fSync = fSync;
 #if defined( HB_MT_VM )
    HB_CRITICAL_LOCK( s_mutexlst_mtx );
-   hb_mutexLink( fSync ? &s_pSyncList : &s_pMutexList, pMutex );
+   hb_mutexLink( &s_pMutexList, pMutex );
    HB_CRITICAL_UNLOCK( s_mutexlst_mtx );
 #else
-   hb_mutexLink( fSync ? &s_pSyncList : &s_pMutexList, pMutex );
+   hb_mutexLink( &s_pMutexList, pMutex );
 #endif
 
    return pItem;
@@ -1782,7 +1723,7 @@ BOOL hb_threadMutexSyncWait( PHB_ITEM pItemMtx, ULONG ulMilliSec,
 
       if( ulMilliSec && !( pMutex->events && hb_arrayLen( pMutex->events ) > 0 ) )
       {
-         /* release own locks from sync mutex */
+         /* release own lock from sync mutex */
          if( pSyncMutex && HB_THREAD_EQUAL( pSyncMutex->owner, HB_THREAD_SELF() ) )
          {
             HB_CRITICAL_LOCK( pSyncMutex->mutex );
@@ -1856,7 +1797,7 @@ BOOL hb_threadMutexSyncWait( PHB_ITEM pItemMtx, ULONG ulMilliSec,
 
       HB_CRITICAL_UNLOCK( pMutex->mutex );
 
-      /* restore the own locks on sync mutex if necessary */
+      /* restore the own lock on sync mutex if necessary */
       if( lock_count )
       {
          HB_CRITICAL_LOCK( pSyncMutex->mutex );
@@ -2179,8 +2120,6 @@ PHB_ITEM hb_threadMutexSubscribe( PHB_ITEM pItem, BOOL fClear )
          }
       }
 #else
-      PHB_MTXLST pSyncList = NULL;
-      BOOL fSync = TRUE;
       int lock_count = 0;
 
       hb_vmUnlock();
@@ -2202,15 +2141,6 @@ PHB_ITEM hb_threadMutexSubscribe( PHB_ITEM pItem, BOOL fClear )
 
       while( !pMutex->events || hb_arrayLen( pMutex->events ) == 0 )
       {
-         if( fSync )
-         {
-            /* SYNC method mutexes cannot be used for subscribe so it's safe
-             * to unlock them when THIS mutex is internally locked
-             */
-            hb_mutexListUnlock( &s_pSyncList, &pSyncList );
-            fSync = FALSE;
-         }
-
          pMutex->waiters++;
 #  if defined( HB_PTHREAD_API )
          pthread_cond_wait( &pMutex->cond_w, &pMutex->mutex );
@@ -2262,8 +2192,6 @@ PHB_ITEM hb_threadMutexSubscribe( PHB_ITEM pItem, BOOL fClear )
 
       HB_CRITICAL_UNLOCK( pMutex->mutex );
 
-      hb_mutexListLock( pSyncList );
-
       hb_vmLock();
 #endif
    }
@@ -2293,7 +2221,6 @@ PHB_ITEM hb_threadMutexTimedSubscribe( PHB_ITEM pItem, ULONG ulMilliSec, BOOL fC
          }
       }
 #else
-      PHB_MTXLST pSyncList = NULL;
       int lock_count = 0;
 
       hb_vmUnlock();
@@ -2314,11 +2241,6 @@ PHB_ITEM hb_threadMutexTimedSubscribe( PHB_ITEM pItem, ULONG ulMilliSec, BOOL fC
             if( pMutex->lockers )
                HB_COND_SIGNAL( pMutex->cond_l );
          }
-
-         /* SYNC method mutexes cannot be used for subscribe so it's safe
-          * to unlock them when THIS mutex is internally locked
-          */
-         hb_mutexListUnlock( &s_pSyncList, &pSyncList );
 
          pMutex->waiters++;
 #  if defined( HB_PTHREAD_API )
@@ -2388,8 +2310,6 @@ PHB_ITEM hb_threadMutexTimedSubscribe( PHB_ITEM pItem, ULONG ulMilliSec, BOOL fC
 
       HB_CRITICAL_UNLOCK( pMutex->mutex );
 
-      hb_mutexListLock( pSyncList );
-
       hb_vmLock();
 #endif
    }
@@ -2398,7 +2318,7 @@ PHB_ITEM hb_threadMutexTimedSubscribe( PHB_ITEM pItem, ULONG ulMilliSec, BOOL fC
 
 HB_FUNC( HB_MUTEXCREATE )
 {
-   hb_itemReturnRelease( hb_threadMutexCreate( FALSE ) );
+   hb_itemReturnRelease( hb_threadMutexCreate() );
 }
 
 HB_FUNC( HB_MUTEXLOCK )

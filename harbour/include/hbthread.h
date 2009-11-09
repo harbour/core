@@ -413,7 +413,7 @@ extern BOOL        hb_threadJoin( HB_THREAD_HANDLE th_h );
 extern BOOL        hb_threadDetach( HB_THREAD_HANDLE th_h );
 
 /* used by .prg code */
-extern PHB_ITEM hb_threadMutexCreate( BOOL fSync );
+extern PHB_ITEM hb_threadMutexCreate( void );
 extern BOOL     hb_threadMutexLock( PHB_ITEM pItem );
 extern BOOL     hb_threadMutexTimedLock( PHB_ITEM pItem, ULONG ulMilliSec );
 extern BOOL     hb_threadMutexUnlock( PHB_ITEM pItem );
