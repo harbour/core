@@ -56,11 +56,11 @@
 /* Codepage: 850 */
 
 #define HB_CP_ID        ES850C
-#define HB_CP_INFO      "Spanish CP-850"
+#define HB_CP_INFO      "Spanish CP-850 (ntxspa.obj compatible)"
 #define HB_CP_UNITB     HB_UNITB_850
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AABCDEêFGHIIJKLMN•OOPQRSTUUVWXYöZèéô"
-#define HB_CP_LOWER     "†abcdeÇfgh°ijklmn§¢opqrst£uvwxyÅzÜÑî"
+#define HB_CP_UPPER     "AABCDEêFGHIIJKLMN•OOPQRSTU VWXYöZèéô"
+#define HB_CP_LOWER     "a†bcdeÇfghi°jklmn§o¢pqrstuóvwxyÅzÜÑî"
 
 /* include CP registration code */
 #include "hbcdpreg.h"

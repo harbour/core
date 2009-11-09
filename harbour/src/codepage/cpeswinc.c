@@ -60,7 +60,7 @@
 #define HB_CP_UNITB     HB_UNITB_1252
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
 #define HB_CP_UPPER     "AABCDEÉFGHIIJKLMNÑOOPQRSTUUVWXYÜZÅÄÖ"
-#define HB_CP_LOWER     "áabcdeéfghíijklmnñóopqrstúuvwxyüzåäö"
+#define HB_CP_LOWER     "aábcdeéfghiíjklmnñoópqrstuúvwxyüzåäö"
 
 /* include CP registration code */
 #include "hbcdpreg.h"

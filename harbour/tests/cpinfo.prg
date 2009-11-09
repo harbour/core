@@ -114,10 +114,18 @@ proc main( cdp, info, unicode )
             ? "character " + charis( c ) + " not defined as upper or lower"
             lWarn := .t.
          endif
-      elseif islower( c ) .or. isupper( c )
-         ? "wrongly defined character " + ;
-           charval( c ) + ":" + charinfo( c )
-         lWarn := .t.
+      else
+         if islower( c ) .or. isupper( c )
+            ? "wrongly defined character " + ;
+              charval( c ) + ":" + charinfo( c )
+            lWarn := .t.
+         endif
+         if ! lower( c ) == upper( c )
+            ? "non alpha character has corresponding " + ;
+              iif( c == lower( c ), "upper", "lower" ) + " character " + ;
+              charval( c ) + ":" + charinfo( c )
+            lWarn := .t.
+         endif
       endif
    next
    for i := 1 to len( cUp ) - 1
@@ -179,6 +187,8 @@ static function charinfo( c )
    cInfo += ", ISUPPER->" + iif( isupper( c ), "Y", "N" )
    cInfo += ", ISLOWER->" + iif( islower( c ), "Y", "N" )
    cInfo += ", ISDIGIT->" + iif( isdigit( c ), "Y", "N" )
+   cInfo += ", UPPER->'" + upper( c ) + "'"
+   cInfo += ", LOWER->'" + lower( c ) + "'"
 return cInfo
 
 

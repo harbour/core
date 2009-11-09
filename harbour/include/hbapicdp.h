@@ -81,7 +81,7 @@ typedef USHORT    HB_WCHAR;
 typedef struct _HB_UNITABLE
 {
    const char *      uniID;
-   HB_WCHAR *        uniCodes;
+   const HB_WCHAR *  uniCodes;
    unsigned char *   uniTrans;
    HB_WCHAR          wcMax;
 } HB_UNITABLE, * PHB_UNITABLE;
