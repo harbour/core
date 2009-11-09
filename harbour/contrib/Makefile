@@ -26,7 +26,6 @@ DIRS := \
    hbtpathy \
    hbwin \
    hbziparc \
-   rddado \
    xhb \
    xpp \
 

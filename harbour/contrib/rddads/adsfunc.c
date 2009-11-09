@@ -1443,7 +1443,7 @@ HB_FUNC( ADSISCONNECTIONALIVE ) /* Determine if passed or default connection is 
 
    hb_retl( bConnectionIsAlive != 0 );
 #else
-   hb_retl( 0 );
+   hb_retl( FALSE );
 #endif
 }
 

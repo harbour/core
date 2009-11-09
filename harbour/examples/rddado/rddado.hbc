@@ -1,0 +1,10 @@
+#
+# $Id$
+#
+
+{!allwin}skip=yes
+
+incpaths=.
+
+libs=rddado
+libs=../hbwin/hbwin.hbc

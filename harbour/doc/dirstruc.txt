@@ -189,10 +189,6 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   |
 |   |   +---tests       - Test programs.
 |   |
-|   +---rddado          - ADORDD - RDD to automatically manage Microsoft ADO.
-|   |   |
-|   |   +---tests       - Test programs.
-|   |
 |   +---rddads          - RDD for Advantage Database Server.
 |   |   |
 |   |   +---doc         - Documents for Advantage Database Server RDD.
@@ -241,7 +237,9 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |
 |   +---pp          - Harbour Preprocessor as a standalone module.
 |   |
-|   +---rdddbt      - DBFDBT RDD.
+|   +---rddado          - ADORDD - RDD to automatically manage Microsoft ADO.
+|   |   |
+|   |   +---tests       - Test programs.
 |   |
 |   +---rl          - Make files (without source) for CA-Cl*pper RL.
 |   |
