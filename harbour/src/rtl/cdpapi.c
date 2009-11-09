@@ -1361,7 +1361,7 @@ const char * hb_cdpnDup2( const char * pSrc, ULONG ulSrc,
                           char * pDst, ULONG * pulDst,
                           PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
-   hb_cdpTransTo( pSrc, ulSrc, pDst, *pulDst, cdpIn, cdpOut );
+   * pulDst = hb_cdpTransTo( pSrc, ulSrc, pDst, *pulDst, cdpIn, cdpOut );
    return pDst;
 }
 
