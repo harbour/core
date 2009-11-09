@@ -911,12 +911,14 @@ mk_hblibso()
                 fi
             else
                 case $HB_LIB_INSTALL in
-                    */usr/lib/*|*/usr/lib64/*|*/usr/local/lib/*|*/usr/local/lib64/*)
+                    /usr/lib/${name}|/usr/lib64/${name}|/usr/local/lib/${name}|/usr/local/lib64/${name})
                         ln -sf ${name}/$l ../$ll
+                        ln -sf ${name}/$l ../$l
                         ;;
-                    */usr/local/*)
+                    /usr/local/${name})
                         mkdir -p ../../lib
                         ln -sf ../${name}/lib/$l ../../lib/$ll
+                        ln -sf ../${name}/lib/$l ../../lib/$l
                         ;;
                     *)
                         ;;
