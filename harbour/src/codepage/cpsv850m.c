@@ -40,4 +40,3 @@ static HB_CODEPAGE s_codePage =
 
 /* include CP registration code */
 #include "hbcdpreg.h"
-

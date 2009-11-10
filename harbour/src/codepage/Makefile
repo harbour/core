@@ -33,7 +33,6 @@ C_SOURCES := \
    cpfriso.c \
    cpfrwin.c \
    cpgr437.c \
-   cpgr851.c \
    cphr437.c \
    cphr852.c \
    cphrwin.c \
