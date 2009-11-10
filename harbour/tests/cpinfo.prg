@@ -15,6 +15,7 @@
  *
  */
 
+#include "fileio.ch"
 
 proc main( cdp, info, unicode )
    local cUp, cLo, cUp2, cLo2, cOrd, cOrd2, c, i, a
@@ -33,7 +34,7 @@ proc main( cdp, info, unicode )
 #endif
 
    if !empty( cdp )
-      memowrit( "cp" + lower( cdp ) + ".c", genCP( cdp, info, unicode ) )
+      my_memowrit( "cp" + lower( cdp ) + ".c", genCP( cdp, info, unicode ) )
    endif
 
    a := array( 256 )
@@ -406,3 +407,12 @@ func a2def( a )
       cData += iif( i == 1, "", "," ) + ltrim( str( a[ i ] ) )
    next
 return cData
+
+static func my_memowrit( fname, data )
+   local f := fcreate( fname )
+   local r := .f.
+   if f != F_ERROR
+      r := ( fwrite( f, data ) == Len( data ) )
+      fclose( f )
+   endif
+return r
