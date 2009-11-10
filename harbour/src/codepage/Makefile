@@ -14,6 +14,7 @@ C_SOURCES := \
    cpcskam.c \
    cpcswin.c \
    cpde850.c \
+   cpde850m.c \
    cpdeiso.c \
    cpdewin.c \
    cpdk865.c \
@@ -22,11 +23,13 @@ C_SOURCES := \
    cpelwin.c \
    cpes850.c \
    cpes850c.c \
+   cpes850m.c \
    cpesiso.c \
    cpeswin.c \
    cpeswinm.c \
    cpfi850.c \
    cpfr850.c \
+   cpfr850m.c \
    cpfriso.c \
    cpfrwin.c \
    cpgr437.c \
@@ -42,11 +45,13 @@ C_SOURCES := \
    cpis861.c \
    cpit437.c \
    cpit850.c \
+   cpit850m.c \
    cpitisb.c \
    cpitiso.c \
    cpitwin.c \
    cpltwin.c \
    cpnl850.c \
+   cpnl850m.c \
    cpno865.c \
    cppl852.c \
    cppliso.c \
@@ -73,6 +78,7 @@ C_SOURCES := \
    cpsrwin.c \
    cpsv437c.c \
    cpsv850.c \
+   cpsv850m.c \
    cpsviso.c \
    cpsvwin.c \
    cptr857.c \
