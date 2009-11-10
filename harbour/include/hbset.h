@@ -331,6 +331,7 @@ extern HB_EXPORT BOOL         hb_setGetTrimFileName( void );
 extern HB_EXPORT const char * hb_setGetHBOUTLOG( void );
 extern HB_EXPORT const char * hb_setGetHBOUTLOGINFO( void );
 extern HB_EXPORT const char * hb_setGetOSCODEPAGE( void );
+extern HB_EXPORT void *       hb_setGetOSCP( void );
 
 HB_EXTERN_END
 

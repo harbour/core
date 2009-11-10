@@ -2610,6 +2610,12 @@ const char * hb_setGetOSCODEPAGE( void )
    return hb_stackSetStruct()->HB_SET_OSCODEPAGE;
 }
 
+void * hb_setGetOSCP( void )
+{
+   HB_STACK_TLS_PRELOAD
+   return hb_stackSetStruct()->hb_set_oscp;
+}
+
 const char * hb_osEncodeCP( const char * szName, char ** pszFree, ULONG * pulSize )
 {
    HB_STACK_TLS_PRELOAD
