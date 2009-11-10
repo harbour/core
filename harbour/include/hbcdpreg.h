@@ -67,7 +67,7 @@ HB_CALL_ON_STARTUP_BEGIN( _hb_codepage_Init_ )
       s_lower,
       s_sort,
       NULL,
-      0,
+      HB_CDP_ACSORT_NONE,
       0,
       0,
       NULL,

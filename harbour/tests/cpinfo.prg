@@ -33,10 +33,6 @@ proc main( cdp, info, unicode )
    lEqual := .f.
 #endif
 
-   if !empty( cdp )
-      my_memowrit( "cp" + lower( cdp ) + ".c", genCP( cdp, info, unicode ) )
-   endif
-
    a := array( 256 )
    for i := 1 to len( a )
       a[ i ] := i - 1
@@ -246,6 +242,12 @@ proc main( cdp, info, unicode )
    endif
    ? repl( "=", 50 )
    ?
+
+   if !empty( cdp )
+      write_file( "cp" + lower( cdp ) + ".c", ;
+                  genCP( cdp, info, unicode, lBin, lWarn, cUp, cLo ) )
+   endif
+
 return
 
 static function pad_letters( cUp, cLo )
@@ -315,7 +317,19 @@ return cInfo
 #define HB_CDP_LOWER    4
 #define HB_CDP_UPPER    8
 
-static function genCP( id, info, unicode )
+static function write_file( cName, cBody )
+   local lRet := .f.
+   local hFile
+
+   hFile := fcreate( cName )
+   if hFile != F_ERROR
+      lRet := fwrite( hFile, cBody, len( cBody ) ) == len( cBody )
+      fclose( hFile )
+   endif
+
+return lRet
+
+static function genCP( id, info, unicode, lBin, lWarn, cUp, cLo )
    local flags[ 256 ], upper[ 256 ], lower[ 256 ], sort[ 256 ], tmp[ 256 ]
    local i, c
 
@@ -366,10 +380,14 @@ static function genCP( id, info, unicode )
       sort[ tmp[ i ] + 1 ] := i - 1
    next
 
-   return genCPfile( id, info, unicode, flags, upper, lower, sort )
+   return genCPfile( id, info, unicode, flags, upper, lower, sort, ;
+                     lBin, lWarn, cUp, cLo )
 
-static function genCPfile( id, info, unicode, flags, upper, lower, sort )
-   local cDef := ;
+static function genCPfile( id, info, unicode, flags, upper, lower, sort, ;
+                           lBin, lWarn, cUp, cLo )
+   local cDef
+
+   cDef := ;
       '/*' + EOL + ' * $Id$' + EOL + ' */' + EOL + EOL + ;
       '/*' + EOL + ;
       ' * Harbour Project source code:' + EOL + ;
@@ -382,13 +400,34 @@ static function genCPfile( id, info, unicode, flags, upper, lower, sort )
       ' */' + EOL + EOL + ;
       '#define HB_CP_ID        $1' + EOL + ;
       '#define HB_CP_INFO      "$2"' + EOL + ;
-      '#define HB_CP_UNITB     HB_UNITB_$3' + EOL + EOL + ;
-      '#define HB_CP_RAW' + EOL + EOL + ;
-      'static const unsigned char s_flags[ 256 ] = { $f };' + EOL + ;
-      'static const unsigned char s_upper[ 256 ] = { $u };' + EOL + ;
-      'static const unsigned char s_lower[ 256 ] = { $l };' + EOL + ;
-      'static const unsigned char s_sort [ 256 ] = { $s };' + EOL + ;
-      EOL + ;
+      '#define HB_CP_UNITB     HB_UNITB_$3' + EOL
+   if !lBin
+      cDef += ;
+         '#define HB_CP_ACSORT    HB_CDP_ACSORT_NONE' + EOL + ;
+         '#define HB_CP_UPPER     "' + cUp + '"' + EOL + ;
+         '#define HB_CP_LOWER     "' + cLo + '"' + EOL + ;
+         EOL
+      if lWarn
+         cDef += ;
+            '#if 0 /* TOVERIFY: binary tables */' + EOL
+      endif
+   endif
+   if lBin .or. lWarn
+      cDef += ;
+         EOL + ;
+         '#define HB_CP_RAW' + EOL + EOL + ;
+         'static const unsigned char s_flags[ 256 ] = { $f };' + EOL + ;
+         'static const unsigned char s_upper[ 256 ] = { $u };' + EOL + ;
+         'static const unsigned char s_lower[ 256 ] = { $l };' + EOL + ;
+         'static const unsigned char s_sort [ 256 ] = { $s };' + EOL + ;
+         EOL
+      if !lBin
+         cDef += ;
+            '#endif' + EOL + EOL
+            EOL
+      endif
+   endif
+   cDef += ;
       '/* include CP registration code */' + EOL + ;
       '#include "hbcdpreg.h"' + EOL
 
@@ -407,12 +446,3 @@ func a2def( a )
       cData += iif( i == 1, "", "," ) + ltrim( str( a[ i ] ) )
    next
 return cData
-
-static func my_memowrit( fname, data )
-   local f := fcreate( fname )
-   local r := .f.
-   if f != F_ERROR
-      r := ( fwrite( f, data ) == Len( data ) )
-      fclose( f )
-   endif
-return r
