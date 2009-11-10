@@ -220,7 +220,7 @@ METHOD xbpMenuBar:configure( oParent, aPresParams, lVisible )
 METHOD xbpMenuBar:destroy()
    LOCAL i
 
-   ::disconnect()
+//   ::disconnect()
 
    FOR i := 1 TO len( ::aMenuItems )
       IF !empty( ::aMenuItems[ i,5 ] )

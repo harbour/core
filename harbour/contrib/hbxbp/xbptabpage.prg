@@ -264,7 +264,8 @@ METHOD XbpTabWidget:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisib
 METHOD XbpTabWidget:destroy()
 //xbp_debug( "                            XbpTabWidget:destroy()",0 )
 
-   ::disconnect()
+   ::oParent:oTabWidget := NIL
+//   ::disconnect()
 
    ::xbpWindow:destroy()
 //xbp_debug( "                            XbpTabWidget:destroy()",1 )

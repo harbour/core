@@ -116,10 +116,10 @@ EXIT PROCEDURE Qt_End()
 
    oDummy        := NIL
    oAppWindow    := NIL
-   oDeskTop:pPtr := 0
+   oDeskTop:oWidget:pPtr := 0
 
    oApp:quit()
-   oApp:pPtr     := 0
+   oApp:oWidget:pPtr := 0
 
    RETURN
 

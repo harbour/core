@@ -1699,6 +1699,243 @@ HB_FUNC( QT_CONNECT_SIGNAL )
    }
 }
 
+bool disconnect_signal( QObject * object, const char * signal )
+{
+//   Slots * s_s = qt_getEventSlots();
+   bool    ret = false;
+
+   if( signal == ( QString ) "clicked()" )
+      ret = object->disconnect( SIGNAL( clicked() ) );
+   if( signal == ( QString ) "returnPressed()" )
+      ret = object->disconnect( SIGNAL( returnPressed() ) );
+   if( signal == ( QString ) "triggered()" )
+      ret = object->disconnect( SIGNAL( triggered() ) );
+   if( signal == ( QString ) "hovered()" )
+      ret = object->disconnect( SIGNAL( hovered() ) );
+   if( signal == ( QString ) "viewportEntered()" )
+      ret = object->disconnect( SIGNAL( viewportEntered() ) );
+   if( signal == ( QString ) "pressed()" )
+      ret = object->disconnect( SIGNAL( pressed() ) );
+   if( signal == ( QString ) "released()" )
+      ret = object->disconnect( SIGNAL( released() ) );
+   if( signal == ( QString ) "stateChanged(int)" )
+      ret = object->disconnect( SIGNAL( stateChanged( int ) ) );
+   if( signal == ( QString ) "activated(int)" )
+      ret = object->disconnect( SIGNAL( activated( int ) ) );
+   if( signal == ( QString ) "currentIndexChanged(int)" )
+      ret = object->disconnect( SIGNAL( currentIndexChanged( int ) ) );
+   if( signal == ( QString ) "highlighted(int)" )
+      ret = object->disconnect( SIGNAL( highlighted( int ) ) );
+   if( signal == ( QString ) "triggered(bool)" )
+      ret = object->disconnect( SIGNAL( triggered( bool ) ) );
+   if( signal == ( QString ) "clicked(QModelIndex)" )
+      ret = object->disconnect( SIGNAL( clicked( const QModelIndex & ) ) );
+   if( signal == ( QString ) "doubleClicked(QModelIndex)" )
+      ret = object->disconnect( SIGNAL( doubleClicked( const QModelIndex & ) ) );
+   if( signal == ( QString ) "entered(QModelIndex)" )
+      ret = object->disconnect( SIGNAL( entered( const QModelIndex & ) ) );
+   if( signal == ( QString ) "hovered(action)" )
+      ret = object->disconnect( SIGNAL( hovered( QAction * ) ) );
+   if( signal == ( QString ) "currentChanged(int)" )
+      ret = object->disconnect( SIGNAL( currentChanged( int ) ) );
+   if( signal == ( QString ) "actionTriggered(int)" )
+      ret = object->disconnect(  SIGNAL( actionTriggered(int) ) );
+   if( signal == ( QString ) "rangeChanged(int,int)" )
+      ret = object->disconnect(  SIGNAL( rangeChanged(int,int) ) );
+   if( signal == ( QString ) "sliderMoved(int)" )
+      ret = object->disconnect(  SIGNAL( sliderMoved(int) ) );
+   if( signal == ( QString ) "sliderPressed()" )
+      ret = object->disconnect(  SIGNAL( sliderPressed() ) );
+   if( signal == ( QString ) "sliderReleased()" )
+      ret = object->disconnect(  SIGNAL( sliderReleased() ) );
+   if( signal == ( QString ) "valueChanged(int)" )
+      ret = object->disconnect(  SIGNAL( valueChanged(int) ) );
+   if( signal == ( QString ) "cursorPositionChanged(int,int)" )
+      ret = object->disconnect(  SIGNAL( cursorPositionChanged(int,int) ) );
+   if( signal == ( QString ) "editingFinished()" )
+      ret = object->disconnect(  SIGNAL( editingFinished() ) );
+   if( signal == ( QString ) "returnPressed()" )
+      ret = object->disconnect(  SIGNAL( returnPressed() ) );
+   if( signal == ( QString ) "selectionChanged()" )
+      ret = object->disconnect(  SIGNAL( selectionChanged() ) );
+   if( signal == ( QString ) "textChanged(QString)" )
+      ret = object->disconnect(  SIGNAL( textChanged( const QString &) ) );
+   if( signal == ( QString ) "textEdited(QString)" )
+      ret = object->disconnect(  SIGNAL( textEdited( const QString &) ) );
+   if( signal == ( QString ) "currentItemChanged(QTWItem)" )
+      ret = object->disconnect(  SIGNAL( currentItemChanged( QTreeWidgetItem *, QTreeWidgetItem * ) ) );
+   if( signal == ( QString ) "itemActivated(QTWItem)" )
+      ret = object->disconnect(  SIGNAL( itemActivated( QTreeWidgetItem *, int ) ) );
+   if( signal == ( QString ) "itemChanged(QTWItem)" )
+      ret = object->disconnect(  SIGNAL( itemChanged( QTreeWidgetItem *, int ) ) );
+   if( signal == ( QString ) "itemClicked(QTWItem)" )
+      ret = object->disconnect(  SIGNAL( itemClicked( QTreeWidgetItem *, int ) ) );
+   if( signal == ( QString ) "itemCollapsed(QTWItem)" )
+      ret = object->disconnect(  SIGNAL( itemCollapsed( QTreeWidgetItem * ) ) );
+   if( signal == ( QString ) "itemDoubleClicked(QTWItem)" )
+      ret = object->disconnect(  SIGNAL( itemDoubleClicked( QTreeWidgetItem *, int ) ) );
+   if( signal == ( QString ) "itemEntered(QTWItem)" )
+      ret = object->disconnect(  SIGNAL( itemEntered( QTreeWidgetItem *, int ) ) );
+   if( signal == ( QString ) "itemExpanded(QTWItem)" )
+      ret = object->disconnect(  SIGNAL( itemExpanded( QTreeWidgetItem * ) ) );
+   if( signal == ( QString ) "itemPressed(QTWItem)" )
+      ret = object->disconnect(  SIGNAL( itemPressed( QTreeWidgetItem *, int ) ) );
+   if( signal == ( QString ) "itemSelectionChanged()" )
+      ret = object->disconnect(  SIGNAL( itemSelectionChanged() ) );
+   if( signal == ( QString ) "iconChanged()" )
+      ret = object->disconnect(  SIGNAL( iconChanged() ) );
+   if( signal == ( QString ) "titleChanged(QString)" )
+      ret = object->disconnect(  SIGNAL( titleChanged( const QString & ) ) );
+   if( signal == ( QString ) "urlChanged(QUrl)" )
+      ret = object->disconnect(  SIGNAL( urlChanged( const QUrl & ) ) );
+   if( signal == ( QString ) "contentsChanged()" )
+      ret = object->disconnect(  SIGNAL( contentsChanged() ) );
+   if( signal == ( QString ) "databaseQuotaExceeded(QWebFrame,QString)" )
+      ret = object->disconnect(  SIGNAL( databaseQuotaExceeded( QWebFrame, QString ) ) );
+   if( signal == ( QString ) "downloadRequested(QNetworkRequest)" )
+      ret = object->disconnect(  SIGNAL( downloadRequested( const QNetworkRequest & ) ) );
+   if( signal == ( QString ) "frameCreated(QWebFrame)" )
+      ret = object->disconnect(  SIGNAL( frameCreated( QWebFrame * ) ) );
+   if( signal == ( QString ) "geometryChangeRequested(QRect)" )
+      ret = object->disconnect(  SIGNAL( geometryChangeRequested( const QRect & ) ) );
+   if( signal == ( QString ) "linkClicked(QUrl)" )
+      ret = object->disconnect(  SIGNAL( linkClicked( const QUrl & ) ) );
+   if( signal == ( QString ) "linkHovered(QString,QString,QString)" )
+      ret = object->disconnect(  SIGNAL( linkHovered( const QString &, const QString &, const QString & ) ) );
+   if( signal == ( QString ) "loadFinished(bool)" )
+      ret = object->disconnect(  SIGNAL( loadFinished( bool ) ) );
+   if( signal == ( QString ) "loadProgress(int)" )
+      ret = object->disconnect(  SIGNAL( loadProgress( int ) ) );
+   if( signal == ( QString ) "loadStarted()" )
+      ret = object->disconnect(  SIGNAL( loadStarted() ) );
+   if( signal == ( QString ) "menuBarVisibilityChangeRequested(bool)" )
+      ret = object->disconnect(  SIGNAL( menuBarVisibilityChangeRequested( bool ) ) );
+   if( signal == ( QString ) "microFocusChanged()" )
+      ret = object->disconnect(  SIGNAL( microFocusChanged() ) );
+   if( signal == ( QString ) "printRequested(QWebFrame)" )
+      ret = object->disconnect(  SIGNAL( printRequested( QWebFrame * ) ) );
+   if( signal == ( QString ) "repaintRequested(QRect)" )
+      ret = object->disconnect(  SIGNAL( repaintRequested( const QRect & ) ) );
+   if( signal == ( QString ) "restoreFrameStateRequested(QWebFrame)" )
+      ret = object->disconnect(  SIGNAL( restoreFrameStateRequested( QWebFrame * ) ) );
+   if( signal == ( QString ) "saveFrameStateRequested(QWebFrame,QWebHistoryItem)" )
+      ret = object->disconnect(  SIGNAL( saveFrameStateRequested( QWebFrame *, QWebHistoryItem * ) ) );
+   if( signal == ( QString ) "scrollRequested(int,int,QRect)" )
+      ret = object->disconnect(  SIGNAL( scrollRequested( int dx, int dy, const QRect & ) ) );
+   if( signal == ( QString ) "statusBarMessage(QString)" )
+      ret = object->disconnect(  SIGNAL( statusBarMessage( const QString & ) ) );
+   if( signal == ( QString ) "statusBarVisibilityChangeRequested(bool)" )
+      ret = object->disconnect(  SIGNAL( statusBarVisibilityChangeRequested( bool ) ) );
+   if( signal == ( QString ) "toolBarVisibilityChangeRequested(bool)" )
+      ret = object->disconnect(  SIGNAL( toolBarVisibilityChangeRequested( bool ) ) );
+   if( signal == ( QString ) "unsupportedContent(QNetworkReply)" )
+      ret = object->disconnect(  SIGNAL( unsupportedContent( QNetworkReply * ) ) );
+   if( signal == ( QString ) "windowCloseRequested()" )
+      ret = object->disconnect(  SIGNAL( windowCloseRequested() ) );
+   if( signal == ( QString ) "currentFontChanged(QFont)" )
+      ret = object->disconnect(  SIGNAL( currentFontChanged( const QFont & ) ) );
+   if( signal == ( QString ) "fontSelected(QFont)" )
+      ret = object->disconnect(  SIGNAL( fontSelected( const QFont & ) ) );
+   if( signal == ( QString ) "accepted()" )
+      ret = object->disconnect(  SIGNAL( accepted() ) );
+   if( signal == ( QString ) "finished(int)" )
+      ret = object->disconnect(  SIGNAL( finished( int ) ) );
+   if( signal == ( QString ) "rejected()" )
+      ret = object->disconnect(  SIGNAL( rejected() ) );
+   if( signal == ( QString ) "currentChanged(QString)" )
+      ret = object->disconnect(  SIGNAL( currentChanged( const QString & ) ) );
+   if( signal == ( QString ) "directoryEntered(QString)" )
+      ret = object->disconnect(  SIGNAL( directoryEntered( const QString & ) ) );
+   if( signal == ( QString ) "fileSelected(QString)" )
+      ret = object->disconnect(  SIGNAL( fileSelected( const QString & ) ) );
+   if( signal == ( QString ) "filesSelected(QStringList)" )
+      ret = object->disconnect(  SIGNAL( filesSelected( const QStringList & ) ) );
+   if( signal == ( QString ) "filterSelected(QString)" )
+      ret = object->disconnect(  SIGNAL( filterSelected( const QString & ) ) );
+   if( signal == ( QString ) "accepted(QPrinter)" )
+      ret = object->disconnect(  SIGNAL( accepted( QPrinter * ) ) );
+   if( signal == ( QString ) "copyAvailable(bool)" )
+      ret = object->disconnect(  SIGNAL( copyAvailable( bool ) ) );
+   if( signal == ( QString ) "currentCharFormatChanged(QTextCharFormat)" )
+      ret = object->disconnect(  SIGNAL( currentCharFormatChanged( const QTextCharFormat & ) ) );
+   if( signal == ( QString ) "cursorPositionChanged()" )
+      ret = object->disconnect(  SIGNAL( cursorPositionChanged() ) );
+   if( signal == ( QString ) "redoAvailable(bool)" )
+      ret = object->disconnect(  SIGNAL( redoAvailable( bool ) ) );
+   if( signal == ( QString ) "textChanged()" )
+      ret = object->disconnect(  SIGNAL( textChanged() ) );
+   if( signal == ( QString ) "undoAvailable(available)" )
+      ret = object->disconnect(  SIGNAL( undoAvailable( bool ) ) );
+   if( signal == ( QString ) "timeout()" )
+      ret = object->disconnect(  SIGNAL( timeout() ) );
+   if( signal == ( QString ) "keyPressEvent()" )
+      ret = object->disconnect( SIGNAL( sg_keyPressEvent( QKeyEvent * ) ) );
+   if( signal == ( QString ) "keyReleaseEvent()" )
+      ret = object->disconnect( SIGNAL( sg_keyReleaseEvent( QKeyEvent * ) ) );
+   if( signal == ( QString ) "mouseMoveEvent()" )
+      ret = object->disconnect( SIGNAL( sg_mouseMoveEvent( QMouseEvent * ) ) );
+   if( signal == ( QString ) "mouseDoubleClickEvent()" )
+      ret = object->disconnect( SIGNAL( sg_mouseDoubleClickEvent( QMouseEvent * ) ) );
+   if( signal == ( QString ) "mousePressEvent()" )
+      ret = object->disconnect( SIGNAL( sg_mousePressEvent( QMouseEvent * ) ) );
+   if( signal == ( QString ) "mouseReleaseEvent()" )
+      ret = object->disconnect( SIGNAL( sg_mouseReleaseEvent( QMouseEvent * ) ) );
+   if( signal == ( QString ) "wheelEvent()" )
+      ret = object->disconnect( SIGNAL( sg_wheelEvent( QWheelEvent * ) ) );
+   if( signal == ( QString ) "resizeEvent()" )
+      ret = object->disconnect( SIGNAL( sg_resizeEvent( QResizeEvent * ) ) );
+   if( signal == ( QString ) "scrollContentsBy(int,int)" )
+      ret = object->disconnect( SIGNAL( sg_scrollContentsBy( int, int ) ) );
+   if( signal == ( QString ) "geometriesChanged()" )
+      ret = object->disconnect( SIGNAL( geometriesChanged() ) );
+   if( signal == ( QString ) "sectionAutoResize(int,int)" )
+      ret = object->disconnect( SIGNAL( sectionAutoResize( int, QHeaderView::ResizeMode ) ) );
+   if( signal == ( QString ) "sectionClicked(int)" )
+      ret = object->disconnect( SIGNAL( sectionClicked( int ) ) );
+   if( signal == ( QString ) "sectionCountChanged(int,int)" )
+      ret = object->disconnect( SIGNAL( sectionCountChanged( int, int ) ) );
+   if( signal == ( QString ) "sectionDoubleClicked(int)" )
+      ret = object->disconnect( SIGNAL( sectionDoubleClicked( int ) ) );
+   if( signal == ( QString ) "sectionEntered(int)" )
+      ret = object->disconnect( SIGNAL( sectionEntered( int ) ) );
+   if( signal == ( QString ) "sectionHandleDoubleClicked(int)" )
+      ret = object->disconnect( SIGNAL( sectionHandleDoubleClicked( int ) ) );
+   if( signal == ( QString ) "sectionMoved(int,int,int)" )
+      ret = object->disconnect( SIGNAL( sectionMoved( int, int, int ) ) );
+   if( signal == ( QString ) "sectionPressed(int)" )
+      ret = object->disconnect( SIGNAL( sectionPressed( int ) ) );
+   if( signal == ( QString ) "sectionResized(int,int,int)" )
+      ret = object->disconnect( SIGNAL( sectionResized( int, int, int ) ) );
+   if( signal == ( QString ) "sortIndicatorChanged(int,int)" )
+      ret = object->disconnect( SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) ) );
+   if( signal == ( QString ) "buttonClicked(int)" )
+      ret = object->disconnect( SIGNAL( buttonClicked( int ) ) );
+   if( signal == ( QString ) "buttonPressed(int)" )
+      ret = object->disconnect( SIGNAL( buttonPressed( int ) ) );
+   if( signal == ( QString ) "buttonReleased(int)" )
+      ret = object->disconnect( SIGNAL( buttonReleased( int ) ) );
+   if( signal == ( QString ) "linkActivated(QString)" )
+      ret = object->disconnect( SIGNAL( linkActivated( const QString & ) ) );
+   if( signal == ( QString ) "linkHovered(QString)" )
+      ret = object->disconnect( SIGNAL( linkHovered( const QString & ) ) );
+   if( signal == ( QString ) "cellActivated(int,int)" )
+      ret = object->disconnect( SIGNAL( cellActivated( int, int ) ) );
+   if( signal == ( QString ) "cellChanged(int,int)" )
+      ret = object->disconnect( SIGNAL( cellChanged( int, int ) ) );
+   if( signal == ( QString ) "cellClicked(int,int)" )
+      ret = object->disconnect( SIGNAL( cellClicked( int, int ) ) );
+   if( signal == ( QString ) "cellDoubleClicked(int,int)" )
+      ret = object->disconnect( SIGNAL( cellDoubleClicked( int, int ) ) );
+   if( signal == ( QString ) "cellEntered(int,int)" )
+      ret = object->disconnect( SIGNAL( cellEntered( int, int ) ) );
+   if( signal == ( QString ) "cellPressed(int,int)" )
+      ret = object->disconnect( SIGNAL( cellPressed( int, int ) ) );
+   if( signal == ( QString ) "currentCellChanged(int,int,int,int)" )
+      ret = object->disconnect( SIGNAL( currentCellChanged( int, int, int, int ) ) );
+
+   return ret;
+}
+
 /*
  * harbour function to disconnect signals
  */
@@ -1712,17 +1949,19 @@ HB_FUNC( QT_DISCONNECT_SIGNAL )
       Slots * s_s = qt_getEventSlots();
       const char * signal = hb_parcx( 2 );
       int i = object->property( signal ).toInt();
+      bool ret;
 
       if( i > 0 && i <= s_s->listBlock.size() )
       {
          hb_itemRelease( s_s->listBlock.at( i - 1 ) );
          s_s->listBlock[ i - 1 ] = NULL;
          s_s->listActv[ i - 1 ] = false;
-         object->disconnect( signal );
-         object->setProperty( signal, QVariant() );
+         ret = disconnect_signal( object, signal );
+         //object->disconnect( signal );
+         //object->setProperty( signal, QVariant() );
          bFreed = true;
 #if defined(__debug__)
-//hb_snprintf( str, sizeof( str ), "      QT_DISCONNECT_SIGNAL: %s", event ); OutputDebugString( str );
+hb_snprintf( str, sizeof( str ), "      QT_DISCONNECT_SIGNAL: %s    %s", signal, ret ? "YES" : "NO" ); OutputDebugString( str );
 #endif
       }
    }
@@ -1892,7 +2131,7 @@ HB_FUNC( QT_DISCONNECT_EVENT )
       object->setProperty( prop, QVariant() );
       bRet = true;
 #if defined(__debug__)
-//hb_snprintf( str, sizeof( str ), "      QT_DISCONNECT_EVENT: %i", type ); OutputDebugString( str );
+hb_snprintf( str, sizeof( str ), "      QT_DISCONNECT_EVENT: %i", type ); OutputDebugString( str );
 #endif
    }
    hb_retl( bRet );
@@ -2240,7 +2479,14 @@ MyMainWindow::MyMainWindow( PHB_ITEM pBlock, int iThreadID )
 }
 MyMainWindow::~MyMainWindow( void )
 {
+#if defined(__debug__)
+hb_snprintf( str, sizeof( str ), "               MyMainWindow::~MyMainWindow 0" );  OutputDebugString( str );
+#endif
+   hb_itemRelease( block );
    destroy();
+#if defined(__debug__)
+hb_snprintf( str, sizeof( str ), "               MyMainWindow::~MyMainWindow 1" );  OutputDebugString( str );
+#endif
 }
 void MyMainWindow::paintEvent( QPaintEvent * event )
 {
