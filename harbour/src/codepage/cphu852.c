@@ -52,27 +52,16 @@
 
 /* Language name: Hungarian */
 /* ISO language code (2 chars): HU */
-/* Codepage: 852 (ntxhu852 compatible) */
+/* Codepage: 852 */
 
-/* NOTE: Several chars have been added above the standard 852 Hungarian
-         ones to make it 100% compatible with ntxhu852.obj for CA-Cl*pper 5.x.
-         Moreover the extra chars had to be replicated in the alternative
-         codepages (WIN, ISO) too, to keep the Harbour codepage translation
-         work. [vszakats] */
-
-/* NOTE: Since there is no possibility in Harbour to have different number
-         of uppercase and lowercase accented chars, a simple workaround
-         was used to solve the problem; notice that some uppercase chars
-         have the same lowercase values. Testing showed that both the
-         ordering and Lower()/Upper() functions worked alright.
-         [20070410] [vszakats] */
+/* NOTE: é/Ñ has been added to work like sixhu852.obj for S*ccessWare SIx Driver. [vszakats] */
 
 #define HB_CP_ID        HU852
-#define HB_CP_INFO      "Hungarian CP-852 (ntxhu852 compatible)"
+#define HB_CP_INFO      "Hungarian CP-852"
 #define HB_CP_UNITB     HB_UNITB_852
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AèµéBCDEêFGHIç÷JKLMNOï‡ôßäPQRSTUóÈöòÎVWXYZ"
-#define HB_CP_LOWER     "a††ÑbcdeÇfghi°°jklmno¢¢îìãpqrstu££Åñ˚vwxyz"
+#define HB_CP_UPPER     "AµéBCDEêFGHI÷JKLMNO‡ôäPQRSTUÈöÎVWXYZ"
+#define HB_CP_LOWER     "a†ÑbcdeÇfghi°jklmno¢îãpqrstu£Å˚vwxyz"
 
 /* include CP registration code */
 #include "hbcdpreg.h"

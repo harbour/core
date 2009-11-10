@@ -33,7 +33,7 @@ C_SOURCES := \
    cphr852.c \
    cphrwin.c \
    cphu852.c \
-   cphu852s.c \
+   cphu852c.c \
    cphuiso.c \
    cphuwin.c \
    cpit437.c \
