@@ -57,7 +57,24 @@ HB_CODEPAGE_ANNOUNCE( HB_CP_ID )
 HB_CALL_ON_STARTUP_BEGIN( _hb_codepage_Init_ )
 
 #if defined( HB_CP_RAW )
-   hb_cdpRegisterRaw( HB_CP_RAW );
+   static HB_CODEPAGE s_codePage =
+   {
+      HB_MACRO2STRING( HB_CP_ID ),
+      HB_CP_INFO,
+      HB_CP_UNITB,
+      s_flags,
+      s_upper,
+      s_lower,
+      s_sort,
+      NULL,
+      0,
+      0,
+      0,
+      NULL,
+      NULL,
+      NULL,
+   };
+   hb_cdpRegisterRaw( &s_codePage );
 #else
    hb_cdpRegisterNew( HB_MACRO2STRING( HB_CP_ID ), HB_CP_INFO, HB_CP_UNITB,
                       HB_CP_UPPER, HB_CP_LOWER, HB_CP_ACSORT );

@@ -159,7 +159,7 @@ typedef struct _HB_CODEPAGE
 #define HB_CPID_KOI_8      "koi-8"
 #define HB_CPID_KOI_8U     "koi-8u"
 #define HB_CPID_KAM        "kamenicky"
-#define HB_CPID_MAZ        "plmaz"
+#define HB_CPID_MAZ        "mazovia"
 #define HB_CPID_MIK        "bg-mik"
 #define HB_CPID_037        "cp037"
 #define HB_CPID_424        "cp424"
