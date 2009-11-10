@@ -1229,7 +1229,7 @@ ULONG hb_cdpU16AsStrLen( PHB_CODEPAGE cdp, BOOL fCtrl,
                          ULONG ulMax )
 {
    unsigned char * uniTrans;
-   HB_WCHAR wcMax, wc = 0;
+   HB_WCHAR wcMax, wc;
    ULONG ulS, ulD;
    int i;
 
@@ -1269,7 +1269,7 @@ ULONG hb_cdpU16ToStr( PHB_CODEPAGE cdp, BOOL fCtrl, int iEndian,
                       char * pDst, ULONG ulDst )
 {
    unsigned char * uniTrans;
-   HB_WCHAR wcMax, wc = 0;
+   HB_WCHAR wcMax, wc;
    ULONG ulS, ulD;
    int i;
 
