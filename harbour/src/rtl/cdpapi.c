@@ -1107,6 +1107,234 @@ unsigned char hb_cdpGetChar( PHB_CODEPAGE cdp, BOOL fCtrl, HB_WCHAR wc )
    return wc >= 0x100 ? '?' : ( UCHAR ) wc;
 }
 
+ULONG hb_cdpStrAsU16Len( PHB_CODEPAGE cdp, BOOL fCtrl,
+                         const char * pSrc, ULONG ulSrc,
+                         ULONG ulMax )
+{
+   if( cdp->nMultiUC )
+   {
+      ULONG ulS, ulD;
+      int i;
+
+      for( ulS = ulD = 0; ulS < ulSrc; ++ulS )
+      {
+         unsigned char uc = ( unsigned char ) pSrc[ ulS ];
+
+         if( fCtrl || uc >= 32 )
+         {
+            if( ( cdp->flags[ uc ] & HB_CDP_MULTI1 ) != 0 &&
+                ulS + 1 < ulSrc &&
+                ( cdp->flags[ ( unsigned char ) pSrc[ ulS + 1 ] ] & HB_CDP_MULTI2 ) != 0 )
+            {
+               for( i = 0; i < cdp->nMulti; ++i )
+               {
+                  if( pSrc[ ulS + 1 ] == cdp->multi[ i ].cLast[ 0 ] ||
+                      pSrc[ ulS + 1 ] == cdp->multi[ i ].cLast[ 1 ] )
+                  {
+                     if( pSrc[ ulS ]  == cdp->multi[ i ].cFirst[ 0 ] )
+                     {
+                        ++ulS;
+                        break;
+                     }
+                     else if( pSrc[ ulS ]  == cdp->multi[ i ].cFirst[ 1 ] )
+                     {
+                        ++ulS;
+                        break;
+                     }
+                  }
+               }
+            }
+         }
+         ++ulD;
+         if( ulMax && ulD >= ulMax )
+            break;
+      }
+      return ulD;
+   }
+
+   return ulSrc;
+}
+
+ULONG hb_cdpStrToU16( PHB_CODEPAGE cdp, BOOL fCtrl, int iEndian,
+                      const char * pSrc, ULONG ulSrc,
+                      HB_WCHAR * pDst, ULONG ulDst )
+{
+   const HB_WCHAR * uniCodes;
+   ULONG ulS, ulD;
+   int i;
+
+   uniCodes = cdp->uniTable->uniCodes;
+   for( ulS = ulD = 0; ulS < ulSrc && ulD < ulDst; ++ulS )
+   {
+      unsigned char uc = ( unsigned char ) pSrc[ ulS ];
+      HB_WCHAR wc;
+
+      if( !fCtrl && uc < 32 )
+         wc = uc;
+      else
+      {
+         wc = uniCodes[ uc ];
+         if( cdp->nMultiUC &&
+             ( cdp->flags[ uc ] & HB_CDP_MULTI1 ) != 0 &&
+             ulS + 1 < ulSrc &&
+             ( cdp->flags[ ( unsigned char ) pSrc[ ulS + 1 ] ] & HB_CDP_MULTI2 ) != 0 )
+         {
+            for( i = 0; i < cdp->nMulti; ++i )
+            {
+               if( pSrc[ ulS + 1 ] == cdp->multi[ i ].cLast[ 0 ] ||
+                   pSrc[ ulS + 1 ] == cdp->multi[ i ].cLast[ 1 ] )
+               {
+                  if( pSrc[ ulS ]  == cdp->multi[ i ].cFirst[ 0 ] )
+                  {
+                     wc = cdp->multi[ i ].wcUp;
+                     ++ulS;
+                     break;
+                  }
+                  else if( pSrc[ ulS ]  == cdp->multi[ i ].cFirst[ 1 ] )
+                  {
+                     wc = cdp->multi[ i ].wcLo;
+                     ++ulS;
+                     break;
+                  }
+               }
+            }
+         }
+      }
+#if !defined( HB_BIG_ENDIAN ) && !defined( HB_LITTLE_ENDIAN )
+      if( iEndian == HB_CDP_ENDIAN_LITTLE )
+         HB_PUT_LE_UINT16( &pDst[ ulD ], wc );
+      else if( iEndian == HB_CDP_ENDIAN_BIG )
+         HB_PUT_BE_UINT16( &pDst[ ulD ], wc );
+      else
+         pDst[ ulD ] = wc;
+      ++ulD;
+#else
+#  if defined( HB_BIG_ENDIAN )
+      if( iEndian == HB_CDP_ENDIAN_LITTLE )
+#  else
+      if( iEndian == HB_CDP_ENDIAN_BIG )
+#  endif
+         wc = HB_SWAP_UINT16( wc );
+      pDst[ ulD++ ] = wc;
+#endif
+   }
+   if( ulD < ulDst )
+      pDst[ ulD ] = '\0';
+
+   return ulD;
+}
+
+ULONG hb_cdpU16AsStrLen( PHB_CODEPAGE cdp, BOOL fCtrl,
+                         const HB_WCHAR * pSrc, ULONG ulSrc,
+                         ULONG ulMax )
+{
+   unsigned char * uniTrans;
+   HB_WCHAR wcMax, wc = 0;
+   ULONG ulS, ulD;
+   int i;
+
+   if( cdp->uniTable->uniTrans == NULL )
+      hb_cdpBuildTransTable( cdp->uniTable );
+   uniTrans = cdp->uniTable->uniTrans;
+   wcMax = cdp->uniTable->wcMax;
+
+   for( ulS = ulD = 0; ulS < ulSrc; ++ulS )
+   {
+      wc = pSrc[ ulS ];
+      ++ulD;
+      if( ulMax && ulD >= ulMax )
+         break;
+      if( wc && cdp->nMultiUC && ( fCtrl || wc >= 32 ) &&
+          ( wc > wcMax || uniTrans[ wc ] == 0 ) )
+      {
+         for( i = 0; i < cdp->nMulti; ++i )
+         {
+            if( wc == cdp->multi[ i ].wcUp ||
+                wc == cdp->multi[ i ].wcLo )
+            {
+               ++ulD;
+               break;
+            }
+         }
+         if( ulMax && ulD >= ulMax )
+            break;
+      }
+   }
+
+   return ulD;
+}
+
+ULONG hb_cdpU16ToStr( PHB_CODEPAGE cdp, BOOL fCtrl, int iEndian,
+                      const HB_WCHAR * pSrc, ULONG ulSrc,
+                      char * pDst, ULONG ulDst )
+{
+   unsigned char * uniTrans;
+   HB_WCHAR wcMax, wc = 0;
+   ULONG ulS, ulD;
+   int i;
+
+   if( cdp->uniTable->uniTrans == NULL )
+      hb_cdpBuildTransTable( cdp->uniTable );
+   uniTrans = cdp->uniTable->uniTrans;
+   wcMax = cdp->uniTable->wcMax;
+
+   for( ulS = ulD = 0; ulS < ulSrc && ulD < ulDst; ++ulS )
+   {
+#if !defined( HB_BIG_ENDIAN ) && !defined( HB_LITTLE_ENDIAN )
+      if( iEndian == HB_CDP_ENDIAN_LITTLE )
+         wc = HB_GET_LE_UINT16( &pSrc[ ulS ] );
+      else if( iEndian == HB_CDP_ENDIAN_BIG )
+         wc = HB_GET_BE_UINT16( &pSrc[ ulS ] );
+      else
+         wc = pSrc[ ulS ];
+#else
+      wc = pSrc[ ulS ];
+#  if defined( HB_BIG_ENDIAN )
+      if( iEndian == HB_CDP_ENDIAN_LITTLE )
+#  else
+      if( iEndian == HB_CDP_ENDIAN_BIG )
+#  endif
+         wc = HB_SWAP_UINT16( wc );
+#endif
+      if( !fCtrl && wc < 32 )
+         pDst[ ulD++ ] = ( unsigned char ) wc;
+      else if( wc <= wcMax && uniTrans[ wc ] )
+         pDst[ ulD++ ] = uniTrans[ wc ];
+      else
+      {
+         if( wc && cdp->nMultiUC )
+         {
+            for( i = 0; i < cdp->nMulti; ++i )
+            {
+               if( wc == cdp->multi[ i ].wcUp )
+               {
+                  pDst[ ulD++ ] = cdp->multi[ i ].cFirst[ 0 ];
+                  if( ulD < ulDst )
+                     pDst[ ulD++ ] = cdp->multi[ i ].cLast[ 0 ];
+                  break;
+               }
+               if( wc == cdp->multi[ i ].wcLo )
+               {
+                  pDst[ ulD++ ] = cdp->multi[ i ].cFirst[ 1 ];
+                  if( ulD < ulDst )
+                     pDst[ ulD++ ] = cdp->multi[ i ].cLast[ 1 ];
+                  break;
+               }
+            }
+            if( i < cdp->nMulti )
+               continue;
+         }
+         pDst[ ulD++ ] = wc >= 0x100 ? '?' : ( unsigned char ) wc;
+      }
+   }
+
+   if( ulD < ulDst )
+      pDst[ ulD ] = '\0';
+
+   return ulD;
+}
+
+
 /*
  * CP translations
  */

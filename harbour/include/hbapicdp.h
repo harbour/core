@@ -322,6 +322,11 @@ extern HB_EXPORT void         hb_vmSetCDP( PHB_CODEPAGE pCDP );
                                              characters being compared are the
                                              same ( interleaving ) */
 
+/* byte order */
+#define HB_CDP_ENDIAN_NATIVE        0
+#define HB_CDP_ENDIAN_LITTLE        1
+#define HB_CDP_ENDIAN_BIG           2
+
 extern HB_EXPORT BOOL         hb_cdpRegisterRaw( PHB_CODEPAGE cdp );
 extern HB_EXPORT BOOL         hb_cdpRegisterNew( const char * id,
                                                  const char * info,
@@ -367,6 +372,11 @@ extern HB_EXPORT ULONG        hb_cdpUTF8AsStrLen( PHB_CODEPAGE cdp, BOOL fCtrl, 
 extern HB_EXPORT ULONG        hb_cdpUTF8ToStr( PHB_CODEPAGE cdp, BOOL fCtrl, const char * pSrc, ULONG ulSrc, char * pDst, ULONG ulDst );
 extern HB_EXPORT ULONG        hb_cdpStrAsUTF8Len( PHB_CODEPAGE cdp, BOOL fCtrl, const char * pSrc, ULONG ulSrc, ULONG ulMax );
 extern HB_EXPORT ULONG        hb_cdpStrToUTF8( PHB_CODEPAGE cdp, BOOL fCtrl, const char * pSrc, ULONG ulSrc, char * pDst, ULONG ulDst );
+
+extern HB_EXPORT ULONG        hb_cdpU16AsStrLen( PHB_CODEPAGE cdp, BOOL fCtrl, const HB_WCHAR * pSrc, ULONG ulSrc, ULONG ulMax );
+extern HB_EXPORT ULONG        hb_cdpU16ToStr( PHB_CODEPAGE cdp, BOOL fCtrl, int iEndian, const HB_WCHAR * pSrc, ULONG ulSrc, char * pDst, ULONG ulDst );
+extern HB_EXPORT ULONG        hb_cdpStrAsU16Len( PHB_CODEPAGE cdp, BOOL fCtrl, const char * pSrc, ULONG ulSrc, ULONG ulMax );
+extern HB_EXPORT ULONG        hb_cdpStrToU16( PHB_CODEPAGE cdp, BOOL fCtrl, int iEndian, const char * pSrc, ULONG ulSrc, HB_WCHAR * pDst, ULONG ulDst );
 
 extern HB_EXPORT PHB_ITEM     hb_itemDeserializeCP( const char ** pBufferPtr, ULONG * pulSize, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut );
 extern HB_EXPORT char *       hb_itemSerializeCP( PHB_ITEM pItem, BOOL fNumSize, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, ULONG *pulSize );

@@ -1353,7 +1353,7 @@ HB_FUNC( WVT_DLGSETICON )
       hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, icon, IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
       if ( !hIcon )
       {
-         hIcon = ( HICON ) LoadImage( GetModuleHandle( NULL ), icon, IMAGE_ICON, 0, 0, NULL );
+         hIcon = ( HICON ) LoadImage( GetModuleHandle( NULL ), icon, IMAGE_ICON, 0, 0, 0 );
       }
       HB_TCHAR_FREE( icon );
    }
