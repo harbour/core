@@ -165,11 +165,49 @@ proc main( cdp, info, unicode )
    if lWarn
       ? "Warning: irregular CP which needs special definition in Harbour"
    endif
-   ? 'upper: "' + cUp + '"'
-   ? 'lower: "' + cLo + '"'
+   ? '      upper: "' + cUp + '"'
+   ? '      lower: "' + cLo + '"'
+   if pad_letters( @cUp, @cLo )
+      ? 'HB_CP_UPPER: "' + cUp + '"'
+      ? 'HB_CP_LOWER: "' + cLo + '"'
+   endif
    ? repl( "=", 50 )
    ?
 return
+
+static function pad_letters( cUp, cLo )
+   local lRet, cUp2, cLo2, cU, cL, i, j
+
+   cUp2 := cLo2 := ""
+
+   i := j := 1
+   while i <= len( cUp ) .or. j <= len( cLo )
+      cU := substr( cUp, i, 1 )
+      cL := substr( cLo, j, 1 )
+      if upper( cL ) == cU .and. lower( cU ) == cL
+         ++i
+         ++j
+      elseif cL == "" .or. !islower( lower( cU ) )
+         cL := " "
+         ++i
+      elseif cU == "" .or. !isupper( upper( cL ) )
+         cU := " "
+         ++j
+      elseif upper( cL ) $ substr( cUp, i + 1 )
+         cL := lower( cU )
+         ++i
+      else
+         cU := upper( cL )
+         ++j
+      endif
+      cUp2 += cU
+      cLo2 += cL
+   enddo
+
+   lRet := !( cUp == cUp2 .and. cLo == cLo2 )
+   cUp := cUp2
+   cLo := cLo2
+return lRet
 
 static function charval( c )
 return "'" + c + "' (" + ltrim( str( asc( c ) ) ) + ")"
