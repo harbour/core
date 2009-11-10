@@ -204,7 +204,7 @@ static function pad_letters( cUp, cLo )
       if upper( cL ) == cU .and. lower( cU ) == cL
          ++i
          ++j
-      elseif cL == "" .or. !islower( lower( cU ) )
+      elseif cL == "" .or. ( ! cU == "" .and. !islower( lower( cU ) ) )
          cL := " "
          ++i
       elseif cU == "" .or. !isupper( upper( cL ) )
