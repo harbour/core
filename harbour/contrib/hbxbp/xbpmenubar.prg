@@ -220,12 +220,8 @@ METHOD xbpMenuBar:configure( oParent, aPresParams, lVisible )
 METHOD xbpMenuBar:destroy()
    LOCAL i
 
-//   ::disconnect()
-
    FOR i := 1 TO len( ::aMenuItems )
       IF !empty( ::aMenuItems[ i,5 ] )
-         QT_DISCONNECT_SIGNAL( QT_PTROF( ::aMenuItems[ i, 5 ] ), "triggered(bool)" )
-         QT_DISCONNECT_SIGNAL( QT_PTROF( ::aMenuItems[ i, 5 ] ), "hovered()"       )
          ::aMenuItems[ i, 5 ]:pPtr := 0
          ::aMenuItems[ i, 5 ] := NIL
       ENDIF
