@@ -107,7 +107,7 @@ file system(s) and with different OS(s).
          FOR EACH x IN { "ABC" => 123, "ASD" => 456, "ZXC" => 789 }
             ? x, "@", x:__enumKey()
          NEXT
-   d) it allows to assing string items, f.e.:
+   d) it allows to assign string items, f.e.:
          s := "abcdefghijk"
          FOR EACH c IN @s
             IF c $ "aei"
@@ -115,7 +115,7 @@ file system(s) and with different OS(s).
             ENDIF
          NEXT
          ? s      // AbcdEfghIjk
-   e) it gives OOP interface to controll enumerator variables what
+   e) it gives OOP interface to control enumerator variables what
       is very important when more then one variable is iterated or
       when FOR EACH is called recursively, f.e.:
          hVal := { "ABC" => 123, "ASD" => 456, "ZXC" => 789 }
@@ -783,7 +783,7 @@ can compile and execute this code:
       return
 
 Warning! XBase++ also support $ operator for arrays but it makes non
-         exact comparision so ` "a" $ { "abc" } ' gives .T. in XBase++
+         exact comparison so ` "a" $ { "abc" } ' gives .T. in XBase++
          and .F. in xHarbour or in Harbour when xHarbour compatibility
          library is used. Harbour users who need strict XBase++ compatibility
          should create own code to overload $ operators used for arrays
@@ -1023,7 +1023,7 @@ not support strings with embedded 0 so they are not fully functional here.
 Harbour support SYMBOL items ( VALTYPE(funcSym) == "S" ) which can be used
 as function or message references. They have similar functionality to
 SYMBOL objects in Class(y) and understands NAME, EXEC and EVAL messages.
-They can be created literaly by compiler using @<funcName>(), f.e:
+They can be created literally by compiler using @<funcName>(), f.e:
       funcSym := @str()
 and in such case they also create explicit reference (link time binding)
 to given functions or by macro compiler, f.e.:
@@ -1091,7 +1091,7 @@ on module symbol table.
 
 ###    OOP AND MULTIINHERITANCE    ###
 ======================================
-Harbour and xHarbour support multiinheritance just like Class(y).
+Harbour and xHarbour support multiple inheritance just like Class(y).
 Anyhow only Harbour correctly resolves possible name conflicts
 by casting. xHarbour and Class(y) in Clipper does not work correctly
 if few ancestors have instance variables with the same name even if
@@ -1830,7 +1830,7 @@ such form for the following reasons:
          implemented by user without touching core code.
       6. it's possible that in the future HVM will support asynchronous
          events what is more general mechanism and also allows to easy
-         implement bkg tasks without touching core code.
+         implement background tasks without touching core code.
 
 
 
