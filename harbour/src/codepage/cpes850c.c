@@ -23,7 +23,7 @@ static const unsigned char s_sort [ 256 ] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14
 static HB_CODEPAGE s_codePage =
 {
    "ES850",
-   "Spanish CP-852 (ntxspa.obj compatible)",
+   "Spanish CP-850 (ntxspa.obj compatible)",
    HB_UNITB_850,
    s_flags,
    s_upper,
