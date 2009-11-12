@@ -577,6 +577,7 @@ HARBOUR
                                <ver> format:
                                    <09><00>[.<00>] = <major><minor>[.<revision>]
                                Default: filled by autodetection or empty
+   - HB_USER_LIBS              Add user libs to link process
    - HB_REBUILD_PARSER=yes     Rebuild language parser sources. Typically
                                you only need this if your are Harbour core
                                developer modifying grammar rules (.y).
@@ -1330,7 +1331,7 @@ HARBOUR
      Patches are accepted in 'svn diff' or 'diff -u' format.
      Always .zip your patch/source files before attaching them.
      The size limit for e-mails sent to the development list is
-     70KB. If you need more, upload it to a site where we can
+     40KB. If you need more, upload it to a site where we can
      access it, or use the sf.net page to submit it.
    - Given a good history of valuable contributions, you can get
      write access to the source repository.

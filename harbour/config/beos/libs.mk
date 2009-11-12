@@ -2,7 +2,6 @@
 # $Id$
 #
 
-SYSLIBS :=
 SYSLIBPATHS := /system/lib
 
 ifneq ($(HB_LINKING_RTL),)

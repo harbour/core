@@ -19,4 +19,4 @@ endif
 # ws2_32: hbsocket
 # advapi32: GetUserName()
 # gdi32: gtwvt
-SYSLIBS := kernel32 user32 ws2_32 advapi32 gdi32
+SYSLIBS += kernel32 user32 ws2_32 advapi32 gdi32

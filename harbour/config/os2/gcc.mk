@@ -52,7 +52,6 @@ ifneq ($(filter $(HB_BUILD_STRIP),all bin),)
    DYSTRIP := -s
 endif
 
-SYSLIBS :=
 SYSLIBPATHS :=
 
 ifneq ($(HB_LINKING_RTL),)

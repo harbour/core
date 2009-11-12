@@ -101,7 +101,7 @@ endif
 
 ifneq ($(HB_PLATFORM_UNIX),)
    ifeq ($(BUILD_SHARED),yes)
-      SYSLIBS :=
+      SYSLIBS := $(HB_USER_LIBS)
       SYSLIBPATHS :=
    endif
 endif

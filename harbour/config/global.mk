@@ -276,6 +276,9 @@ ifeq ($(HB_INIT_DONE),)
       ifneq ($(HB_USER_DFLAGS),)
          $(info ! HB_USER_AFLAGS: $(HB_USER_DFLAGS))
       endif
+      ifneq ($(HB_USER_LIBS),)
+         $(info ! HB_USER_LIBS: $(HB_USER_LIBS))
+      endif
       ifneq ($(HB_INSTALL_PREFIX),)
          $(info ! HB_INSTALL_PREFIX: $(HB_INSTALL_PREFIX))
       endif
@@ -1112,6 +1115,8 @@ endif
 ifneq ($(HB_HAS_X11),)
    HB_GT_LIBS += gtxwc
 endif
+
+SYSLIBS := $(HB_USER_LIBS)
 
 # Names of valid RDD libraries
 HB_RDD_LIBS := \
