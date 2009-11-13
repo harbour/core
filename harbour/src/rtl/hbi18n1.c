@@ -183,7 +183,7 @@ static long hb_i18n_pluralindex( int iForm, PHB_ITEM pNum )
       case HB_I18N_PLURAL_LT:
          n10 = fmod( n, 10.0 );
          n100 = fmod( n, 100.0 );
-         return n100 >= 10 && n100 < 20 ? 2 : ( n10 == 1 ? 1 : 3 );
+         return n10 == 1 && n100 != 11 ? 1 : (n10 != 0 && (n100 < 10 || n100 >= 20) ? 2 : 3);
 
       case HB_I18N_PLURAL_EN:
       default:
