@@ -67,6 +67,18 @@
 
 #ifndef _HBQT_CH
 
+#if defined( __HB_OUTDEBUG__ )
+   #if defined( __PLATFORM__WINDOWS ) .AND. defined( __HB_WINDEBUG__ )
+      #xtranslate HB_OUTDEBUG( [<x>] ) => wapi_OutputDebugString( <x> )
+   #else
+      #xtranslate HB_OUTDEBUG( [<x>] ) => hb_TraceString( <x> )
+   #endif
+#else
+   #xtranslate HB_OUTDEBUG( [<x>] ) => iif( .T.,, )
+#endif
+
+#define QT_PTROF( oObj )  ( oObj:pPtr )
+
 #define QEvent_None                                0        // Not an event.
 #define QEvent_Timer                               1        // Regular timer events (QTimerEvent).
 #define QEvent_MouseButtonPress                    2        // Mouse press (QMouseEvent).

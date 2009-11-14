@@ -52,7 +52,7 @@
  */
 /*----------------------------------------------------------------------*/
 
-#define QT_PTROF( oObj )  ( oObj:pPtr )
+#include "hbqt.ch"
 
 #define QT_EVE_TRIGGERED             "triggered()"
 #define QT_EVE_TRIGGERED_B           "triggered(bool)"
@@ -100,17 +100,9 @@ EXIT PROCEDURE Qt_End()
 /*----------------------------------------------------------------------*/
 
 FUNCTION My_Events()
-q_toOutDebug( "Key Pressed" )
+HB_OUTDEBUG( "Key Pressed" )
    RETURN nil
 
-/*----------------------------------------------------------------------*/
-#ifdef __PLATFORM__WINDOWS
-FUNCTION q_toOutDebug( ... )
-   hb_toOutDebug( ... )
-   RETURN nil
-#else
-   RETURN nil
-#endif
 /*----------------------------------------------------------------------*/
 
 PROCEDURE Main()
@@ -122,8 +114,8 @@ PROCEDURE Main()
    Qt_SetEventFilter()
    Qt_SetEventSlots()
 
-q_toOutDebug( "  " )
-q_toOutDebug( "-----------------b-----------------" )
+HB_OUTDEBUG( "  " )
+HB_OUTDEBUG( "-----------------b-----------------" )
 
    FOR i := 1 TO 1
       oWnd := QMainWindow():new()
@@ -157,17 +149,17 @@ q_toOutDebug( "-----------------b-----------------" )
    oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
    aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
 
-q_toOutDebug( "connected: %s", IF( QT_CONNECT_EVENT( QT_PTROF( oWnd ), 6, {|o,e| My_Events( o, e ) } ), "Yes", "No" ) )
+HB_OUTDEBUG( "connected: "  + IIF( QT_CONNECT_EVENT( QT_PTROF( oWnd ), 6, {|o,e| My_Events( o, e ) } ), "Yes", "No" ) )
 
    oWnd:Show()
 
    qApp:exec()
 
-q_toOutDebug( "----------------- qApp:exec -----------------" )
+HB_OUTDEBUG( "----------------- qApp:exec -----------------" )
 
    xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd } )
 
-q_toOutDebug( "-------------------- exit -------------------" )
+HB_OUTDEBUG( "-------------------- exit -------------------" )
 
    RETURN
 
@@ -176,7 +168,7 @@ q_toOutDebug( "-------------------- exit -------------------" )
 FUNCTION xReleaseMemory( aObj )
    #if 1
    LOCAL i
-q_toOutDebug( "-----------------  Releasing Memory  -----------------" )
+HB_OUTDEBUG( "-----------------  Releasing Memory  -----------------" )
    FOR i := 1 TO len( aObj )
       IF hb_isObject( aObj[ i ] )
          aObj[ i ]:pPtr := 1
@@ -184,7 +176,7 @@ q_toOutDebug( "-----------------  Releasing Memory  -----------------" )
          xReleaseMemory( aObj[ i ] )
       ENDIF
    NEXT
-q_toOutDebug( "------------------  Memory Released ------------------" )
+HB_OUTDEBUG( "------------------  Memory Released ------------------" )
    #else
       HB_SYMBOL_UNUSED( aObj )
    #endif
