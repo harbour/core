@@ -236,7 +236,7 @@ proc main( cdp, info, unicode )
    endif
    ? '      upper: "' + cUp + '"'
    ? '      lower: "' + cLo + '"'
-   if pad_letters( @cUp, @cLo )
+   if pad_letters( @cUp, @cLo, @lBin )
       ? 'HB_CP_UPPER: "' + cUp + '"'
       ? 'HB_CP_LOWER: "' + cLo + '"'
    endif
@@ -250,7 +250,7 @@ proc main( cdp, info, unicode )
 
 return
 
-static function pad_letters( cUp, cLo )
+static function pad_letters( cUp, cLo, lBin )
    local lRet, cUp2, cLo2, cU, cL, i, j
 
    cUp2 := cLo2 := ""
@@ -274,6 +274,10 @@ static function pad_letters( cUp, cLo )
       else
          cU := upper( cL )
          ++j
+      endif
+      if !lBin .and. ( cU == " " .or. cU $ cUp2 ) .and. ;
+                     ( cL == " " .or. cL $ cLo2 )
+         lBin := .t.
       endif
       cUp2 += cU
       cLo2 += cL

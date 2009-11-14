@@ -276,15 +276,15 @@ char * hb_strUpper( char * szText, ULONG ulLen )
  */
 int hb_cdpchrcmp( char cFirst, char cSecond, PHB_CODEPAGE cdp )
 {
-   int n1, n2;
-
    if( cFirst == cSecond )
       return 0;
 
    if( cdp->sort )
    {
-      if( ( n1 = cdp->sort[ ( unsigned char ) cFirst ] ) != 0 &&
-          ( n2 = cdp->sort[ ( unsigned char ) cSecond ] ) != 0 )
+      int n1 = cdp->sort[ ( unsigned char ) cFirst ],
+          n2 = cdp->sort[ ( unsigned char ) cSecond ];
+
+      if( !cdp->nMulti || ( n1 != 0 && n2 != 0 ) )
       {
          if( n1 == n2 )
          {
@@ -402,14 +402,9 @@ int hb_cdpcmp( const char *szFirst, ULONG ulLenFirst,
       {
          if( *szFirst != *szSecond )
          {
-            if( ( n1 = ( unsigned char ) cdp->sort[ ( unsigned char ) * szFirst ] ) == 0 ||
-                ( n2 = ( unsigned char ) cdp->sort[ ( unsigned char ) * szSecond ] ) == 0 )
-            {
-               /* One of characters doesn't belong to the national characters */
-               iRet = ( ( unsigned char ) * szFirst < ( unsigned char ) * szSecond ) ? -1 : 1;
-               break;
-            }
-            else if( n1 != n2 )
+            n1 = ( unsigned char ) cdp->sort[ ( unsigned char ) * szFirst ];
+            n2 = ( unsigned char ) cdp->sort[ ( unsigned char ) * szSecond ];
+            if( n1 != n2 )
             {
                iRet = ( n1 < n2 ) ? -1 : 1;
                break;
@@ -557,14 +552,9 @@ int hb_cdpicmp( const char *szFirst, ULONG ulLenFirst,
 
          if( u1 != u2 )
          {
-            if( ( n1 = ( unsigned char ) cdp->sort[ u1 ] ) == 0 ||
-                ( n2 = ( unsigned char ) cdp->sort[ u2 ] ) == 0 )
-            {
-               /* One of characters doesn't belong to the national characters */
-               iRet = ( u1 < u2 ) ? -1 : 1;
-               break;
-            }
-            else if( n1 != n2 )
+            n1 = ( unsigned char ) cdp->sort[ u1 ];
+            n2 = ( unsigned char ) cdp->sort[ u2 ];
+            if( n1 != n2 )
             {
                iRet = ( n1 < n2 ) ? -1 : 1;
                break;
