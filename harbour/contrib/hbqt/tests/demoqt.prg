@@ -100,9 +100,17 @@ EXIT PROCEDURE Qt_End()
 /*----------------------------------------------------------------------*/
 
 FUNCTION My_Events()
-hb_toOutDebug( "Key Pressed" )
+q_toOutDebug( "Key Pressed" )
    RETURN nil
 
+/*----------------------------------------------------------------------*/
+#ifdef __PLATFORM__WINDOWS
+FUNCTION q_toOutDebug( ... )
+   hb_toOutDebug( ... )
+   RETURN nil
+#else
+   RETURN nil
+#endif
 /*----------------------------------------------------------------------*/
 
 PROCEDURE Main()
@@ -114,33 +122,21 @@ PROCEDURE Main()
    Qt_SetEventFilter()
    Qt_SetEventSlots()
 
-hb_toOutDebug( "  " )
-hb_toOutDebug( "-----------------b-----------------" )
+q_toOutDebug( "  " )
+q_toOutDebug( "-----------------b-----------------" )
 
    FOR i := 1 TO 1
       oWnd := QMainWindow():new()
       hb_idleSleep( 1 )
    NEXT
-//hb_toOutDebug( " 111 %i", win_p2n( oWnd:pPtr ), 3 )
+
    oWnd:show()
-//hb_toOutDebug( " 112 " )
+
    oWnd:setMouseTracking( .t. )
    oWnd:setWindowTitle( "Harbour-Qt Implementation Test Dialog" )
    oWnd:setWindowIcon( "test" )
 
    oWnd:resize( 900, 500 )
-
-#if 0
-hb_toOutDebug( "///////////////////////" )
-hb_idleSleep( 5 )
-   FOR i := 1 TO nLoops
-      n := 1
-      aObj[n] := QFont():new( "Arial", 12, 0, .f. ); hb_toOutDebug( "Main 0 %s %i", aObj[n]:defaultFamily(), aObj[n]:pointSize() )
-   NEXT
-   oSize := 3
-hb_toOutDebug( "///////////////////////" )
-hb_idlesleep( 5 )
-#endif
 
    oDA    := QWidget():new( QT_PTROF( oWnd ) )
    oWnd:setCentralWidget( QT_PTROF( oDA ) )
@@ -152,11 +148,6 @@ hb_idlesleep( 5 )
    oWnd:setStatusBar( QT_PTROF( oSBar ) )
    oSBar:showMessage( "Harbour-QT Statusbar Ready!" )
 
-#if 0
-   oStyle := QWindowsXPStyle():new()
-   oStyle:standardIcon( 2 )
-   oWnd:setStyle( QT_PTROF( oStyle ) )
-#endif
    oLabel := Build_Label( oDA, { 30,190 }, { 300, 30 } )
    oBtn   := Build_PushButton( oDA, { 30,240 }, { 100,50 } )
 
@@ -166,26 +157,17 @@ hb_idlesleep( 5 )
    oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
    aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
 
-hb_toOutDebug( "connected: %s", IF( QT_CONNECT_EVENT( QT_PTROF( oWnd ), 6, {|o,e| My_Events( o, e ) } ), "Yes", "No" ) )
+q_toOutDebug( "connected: %s", IF( QT_CONNECT_EVENT( QT_PTROF( oWnd ), 6, {|o,e| My_Events( o, e ) } ), "Yes", "No" ) )
 
    oWnd:Show()
 
-   /* Cooment out the following line to see the label going off the dialog and memory is released */
-   //oLabel := 2
-
-   /* Uncomment the following line to see in the debugger how objects are released properly */
-   //Dummies()
-
    qApp:exec()
 
-hb_toOutDebug( "----------------- qApp:exec -----------------" )
+q_toOutDebug( "----------------- qApp:exec -----------------" )
 
-   #if 1
-   //aTabs[ 4 ]:clear()
-   #endif
    xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd } )
 
-hb_toOutDebug( "-------------------- exit -------------------" )
+q_toOutDebug( "-------------------- exit -------------------" )
 
    RETURN
 
@@ -194,7 +176,7 @@ hb_toOutDebug( "-------------------- exit -------------------" )
 FUNCTION xReleaseMemory( aObj )
    #if 1
    LOCAL i
-hb_toOutDebug( "-----------------  Releasing Memory  -----------------" )
+q_toOutDebug( "-----------------  Releasing Memory  -----------------" )
    FOR i := 1 TO len( aObj )
       IF hb_isObject( aObj[ i ] )
          aObj[ i ]:pPtr := 1
@@ -202,7 +184,7 @@ hb_toOutDebug( "-----------------  Releasing Memory  -----------------" )
          xReleaseMemory( aObj[ i ] )
       ENDIF
    NEXT
-hb_toOutDebug( "------------------  Memory Released ------------------" )
+q_toOutDebug( "------------------  Memory Released ------------------" )
    #else
       HB_SYMBOL_UNUSED( aObj )
    #endif
@@ -252,9 +234,6 @@ PROCEDURE ExecOneMore()
    oEventLoop:exit( 0 )
    oEventLoop := 0
 
-   #if 1
-   //aTabs[ 4 ]:clear()
-   #endif
    xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd, oEventLoop } )
 
    RETURN
@@ -452,15 +431,10 @@ STATIC FUNCTION Build_Tabs( oWnd, aPos, aSize )
 
    oTabWidget := QTabWidget():new( QT_PTROF( oWnd ) )
 
-   #if 1
-   oTab1 := QWidget():new()// QT_PTROF( oTabWidget ) )
-   oTab2 := QWidget():new()// QT_PTROF( oTabWidget ) )
-   oTab3 := QWidget():new()// QT_PTROF( oTabWidget ) )
-   #else
-   oTab1 := QWidget():new( QT_PTROF( oTabWidget ) )
-   oTab2 := QWidget():new( QT_PTROF( oTabWidget ) )
-   oTab3 := QWidget():new( QT_PTROF( oTabWidget ) )
-   #endif
+   oTab1 := QWidget():new()
+   oTab2 := QWidget():new()
+   oTab3 := QWidget():new()
+
    oTabWidget:addTab( QT_PTROF( oTab1 ), "Folders"  )
    oTabWidget:addTab( QT_PTROF( oTab2 ), "Controls" )
    oTabWidget:addTab( QT_PTROF( oTab3 ), "TextBox"  )
@@ -476,8 +450,6 @@ STATIC FUNCTION Build_Tabs( oWnd, aPos, aSize )
    aText := Build_TextBox( oTab3 )
    aadd( aText, oTab3 )
 
-   //RETURN { oTab1, oTab2, oTab3, aTree, aCntl, aText, oTabWidget }
-   //RETURN { aCntl, aTree, aText, oTab1, oTab2, oTab3, oTabWidget }
    RETURN { aCntl, aTree, aText, oTabWidget }
 
 /*----------------------------------------------------------------------*/
@@ -638,7 +610,7 @@ STATIC FUNCTION FileDialog()
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Dialogs( cType )
-   LOCAL oDlg, oUrl
+   LOCAL oDlg //, oUrl
 
    DO CASE
    CASE cType == "PageSetup"
@@ -658,12 +630,14 @@ STATIC FUNCTION Dialogs( cType )
       oDlg:setWindowTitle( "Harbour-QT Color Selection Dialog" )
       oDlg:exec()
    CASE cType == "WebPage"
+      #if 0    // Till we resolve for oDlg:show()
       oDlg := QWebView():new()
       oUrl := QUrl():new()
       oUrl:setUrl( "http://www.harbour.vouch.info" )
       QT_QWebView_SetUrl( QT_PTROF( oDlg ), QT_PTROF( oUrl ) )
       oDlg:setWindowTitle( "Harbour-QT Web Page Navigator" )
       oDlg:exec()
+      #endif
    CASE cType == "Fonts"
       oDlg := QFontDialog():new()
       oDlg:setWindowTitle( "Harbour-QT Font Selector" )
@@ -700,7 +674,7 @@ STATIC FUNCTION Dummies()
    oSome := QAbstractSpinBox():new()
    oSome := QAbstractTableModel():new()
    oSome := QAction():new()
-//   oSome := QApplication():new()
+   oSome := QApplication():new()
    oSome := QBitmap():new()
    oSome := QBoxLayout():new()
    oSome := QBrush():new()
@@ -714,7 +688,7 @@ STATIC FUNCTION Dummies()
    oSome := QCommandLinkButton():new()
    oSome := QCommonStyle():new()
    oSome := QConicalGradient():new()
-//   oSome := QCoreApplication():new()
+   oSome := QCoreApplication():new()
    oSome := QCursor():new()
    oSome := QDateEdit():new()
    oSome := QDateTime():new()
