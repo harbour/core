@@ -98,6 +98,23 @@
 #define HB_I18N_PLURAL_EN     1
 #define HB_I18N_PLURAL_PL     2
 #define HB_I18N_PLURAL_LT     3
+#define HB_I18N_PLURAL_CS     4
+#define HB_I18N_PLURAL_FR     5
+#define HB_I18N_PLURAL_GA     6
+#define HB_I18N_PLURAL_HR     7
+#define HB_I18N_PLURAL_HU     8
+#define HB_I18N_PLURAL_JA     9
+#define HB_I18N_PLURAL_KO     10
+#define HB_I18N_PLURAL_LV     11
+#define HB_I18N_PLURAL_PT_BR  12
+#define HB_I18N_PLURAL_RO     13
+#define HB_I18N_PLURAL_RU     14
+#define HB_I18N_PLURAL_SK     15
+#define HB_I18N_PLURAL_SL     16
+#define HB_I18N_PLURAL_SR     17
+#define HB_I18N_PLURAL_TR     18
+#define HB_I18N_PLURAL_UK     19
+#define HB_I18N_PLURAL_VI     20
 
 typedef struct _HB_PLURAL_FORMS
 {
@@ -108,9 +125,26 @@ HB_PLURAL_FORMS, *PHB_PLURAL_FORMS;
 
 static const HB_PLURAL_FORMS s_plural_forms[] =
 {
-   { "EN", HB_I18N_PLURAL_EN },
-   { "PL", HB_I18N_PLURAL_PL },
-   { "LT", HB_I18N_PLURAL_LT }
+   { "EN"   , HB_I18N_PLURAL_EN    },
+   { "PL"   , HB_I18N_PLURAL_PL    },
+   { "LT"   , HB_I18N_PLURAL_LT    },
+   { "CS"   , HB_I18N_PLURAL_CS    },
+   { "FR"   , HB_I18N_PLURAL_FR    },
+   { "GA"   , HB_I18N_PLURAL_GA    },
+   { "HR"   , HB_I18N_PLURAL_HR    },
+   { "HU"   , HB_I18N_PLURAL_HU    },
+   { "JA"   , HB_I18N_PLURAL_JA    },
+   { "KO"   , HB_I18N_PLURAL_KO    },
+   { "LV"   , HB_I18N_PLURAL_LV    },
+   { "PT-BR", HB_I18N_PLURAL_PT_BR },
+   { "RO"   , HB_I18N_PLURAL_RO    },
+   { "RU"   , HB_I18N_PLURAL_RU    },
+   { "SK"   , HB_I18N_PLURAL_SK    },
+   { "SL"   , HB_I18N_PLURAL_SL    },
+   { "SR"   , HB_I18N_PLURAL_SR    },
+   { "TR"   , HB_I18N_PLURAL_TR    },
+   { "UK"   , HB_I18N_PLURAL_UK    },
+   { "VI"   , HB_I18N_PLURAL_VI    }
 };
 
 #define HB_PLURAL_FOMRS_COUNT ( sizeof( s_plural_forms ) / sizeof( HB_PLURAL_FORMS ) )
@@ -168,6 +202,10 @@ static const char * hb_i18n_pluralformid( int iForm )
    return NULL;
 }
 
+/* NOTE: Source:
+         http://www.gnu.org/software/hello/manual/gettext/Plural-forms.html
+         [vszakats] */
+
 static long hb_i18n_pluralindex( int iForm, PHB_ITEM pNum )
 {
    double n = hb_numRound( hb_itemGetND( pNum ), 10 ), n10, n100;
@@ -180,12 +218,52 @@ static long hb_i18n_pluralindex( int iForm, PHB_ITEM pNum )
          return n == 1 ? 1 : ( n10 >= 2 && n10 <= 4 &&
                                ( n100 < 10 || n100 >= 20 ) ? 2 : 3 );
 
+      case HB_I18N_PLURAL_RO:
+         n100 = fmod( n, 100.0 );
+         return n == 1 ? 1 : ( n == 0 || ( n100 > 0 && n100 < 20 ) ) ? 2 : 3;
+
+      case HB_I18N_PLURAL_HR:
+      case HB_I18N_PLURAL_SR:
+      case HB_I18N_PLURAL_RU:
+      case HB_I18N_PLURAL_UK:
+         n10 = fmod( n, 10.0 );
+         n100 = fmod( n, 100.0 );
+         return n10 == 1 && n100 != 11 ? 1 : n10 >= 2 && n10 <= 4 && ( n100 < 10 || n100 >= 20 ) ? 2 : 3;
+
+      case HB_I18N_PLURAL_CS:
+      case HB_I18N_PLURAL_SK:
+         return n == 1 ? 1 : ( ( n >= 2 && n <= 4 ) ? 2 : 3 );
+
+      case HB_I18N_PLURAL_SL:
+         n10 = fmod( n, 10.0 );
+         n100 = fmod( n, 100.0 );
+         return n100 == 1 ? 1 : ( n100 == 2 ? 1 : ( n100 == 3 || n100 == 4 ? 3 : 4 ) );
+
       case HB_I18N_PLURAL_LT:
          n10 = fmod( n, 10.0 );
          n100 = fmod( n, 100.0 );
-         return n10 == 1 && n100 != 11 ? 1 : (n10 != 0 && (n100 < 10 || n100 >= 20) ? 2 : 3);
+         return n10 == 1 && n100 != 11 ? 1 : ( n10 != 0 && ( n100 < 10 || n100 >= 20 ) ? 2 : 3 );
+
+      case HB_I18N_PLURAL_LV:
+         n10 = fmod( n, 10.0 );
+         n100 = fmod( n, 100.0 );
+         return ( n10 == 1 && n100 != 11 ) ? 1 : ( n != 0 ? 2 : 3 );
+
+      case HB_I18N_PLURAL_GA:
+         return n == 1 ? 1 : ( n == 2 ? 2 : 3 );
+
+      case HB_I18N_PLURAL_JA:
+      case HB_I18N_PLURAL_KO:
+      case HB_I18N_PLURAL_VI:
+      case HB_I18N_PLURAL_TR:
+         return 1;
+
+      case HB_I18N_PLURAL_FR:
+      case HB_I18N_PLURAL_PT_BR:
+         return n <= 1 ? 1 : 2;
 
       case HB_I18N_PLURAL_EN:
+      case HB_I18N_PLURAL_HU:
       default:
          return n == 1 ? 1 : 2;
    }

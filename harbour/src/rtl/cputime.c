@@ -102,7 +102,7 @@ double hb_secondsCPU( int n )
    {
       struct tms tm;
 
-      times(&tm);
+      times( &tm );
 
       if( n > 10 )
       {
@@ -119,7 +119,7 @@ double hb_secondsCPU( int n )
 
       /* In POSIX-1996 the CLK_TCK symbol is mentioned as obsolescent */
       /* d /= CLK_TCK; */
-      d /= (double) sysconf(_SC_CLK_TCK);
+      d /= ( double ) sysconf( _SC_CLK_TCK );
    }
 #else
    if( n > 10 )
