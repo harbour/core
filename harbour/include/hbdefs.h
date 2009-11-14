@@ -609,7 +609,7 @@ typedef unsigned long HB_COUNTER;
 #else
    typedef void * HB_FHANDLE;
 #endif
-   typedef HB_PTRDIFF HB_NHANDLE;
+   typedef HB_PTRUINT HB_NHANDLE;
 #  define hb_numToHandle( h )   ( ( HB_FHANDLE ) ( HB_NHANDLE ) ( h ) )
 #else
    typedef int HB_FHANDLE;

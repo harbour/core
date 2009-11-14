@@ -424,7 +424,6 @@ static function genCPfile( id, info, unicode, flags, upper, lower, sort, ;
       if !lBin
          cDef += ;
             '#endif' + EOL + EOL
-            EOL
       endif
    endif
    cDef += ;

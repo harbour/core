@@ -3298,13 +3298,13 @@ static HB_ERRCODE hb_dbfInfo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case DBI_FILEHANDLE:
-         hb_itemPutNInt( pItem, pArea->pDataFile ?
-               ( HB_NHANDLE ) hb_fileHandle( pArea->pDataFile ) : FS_ERROR );
+         hb_itemPutNInt( pItem, !pArea->pDataFile ? FS_ERROR :
+               ( HB_LONG ) ( HB_NHANDLE ) hb_fileHandle( pArea->pDataFile ) );
          break;
 
       case DBI_MEMOHANDLE:
-         hb_itemPutNInt( pItem, pArea->pMemoFile ?
-               ( HB_NHANDLE ) hb_fileHandle( pArea->pMemoFile ) : FS_ERROR );
+         hb_itemPutNInt( pItem, ! pArea->pMemoFile ? FS_ERROR :
+               ( HB_LONG ) ( HB_NHANDLE ) hb_fileHandle( pArea->pMemoFile ) );
          break;
 
       case DBI_SHARED:
