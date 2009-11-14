@@ -2018,5 +2018,128 @@
 #define R2_LAST                                   16
 
 /*----------------------------------------------------------------------*/
+
+#define TOOLTIPS_CLASS                            "tooltips_class32"
+
+#define TTS_ALWAYSTIP                             0x01
+#define TTS_NOPREFIX                              0x02
+#define TTS_NOANIMATE                             0x10
+#define TTS_NOFADE                                0x20
+#define TTS_BALLOON                               0x40
+
+#define TTF_IDISHWND                              0x0001
+
+#define TTF_CENTERTIP                             0x0002
+#define TTF_RTLREADING                            0x0004
+#define TTF_SUBCLASS                              0x0010
+#define TTF_TRACK                                 0x0020
+#define TTF_ABSOLUTE                              0x0080
+#define TTF_TRANSPARENT                           0x0100
+#define TTF_DI_SETITEM                            0x8000       // valid only on the TTN_NEEDTEXT callback
+
+#define TTDT_AUTOMATIC                            0
+#define TTDT_RESHOW                               1
+#define TTDT_AUTOPOP                              2
+#define TTDT_INITIAL                              3
+
+#define TTI_NONE                                  0
+#define TTI_INFO                                  1
+#define TTI_WARNING                               2
+#define TTI_ERROR                                 3
+
+#define TTM_ACTIVATE                              (WM_USER + 1)
+#define TTM_SETDELAYTIME                          (WM_USER + 3)
+#define TTM_ADDTOOLA                              (WM_USER + 4)
+#define TTM_ADDTOOLW                              (WM_USER + 50)
+#define TTM_DELTOOLA                              (WM_USER + 5)
+#define TTM_DELTOOLW                              (WM_USER + 51)
+#define TTM_NEWTOOLRECTA                          (WM_USER + 6)
+#define TTM_NEWTOOLRECTW                          (WM_USER + 52)
+#define TTM_RELAYEVENT                            (WM_USER + 7)
+
+#define TTM_GETTOOLINFOA                          (WM_USER + 8)
+#define TTM_GETTOOLINFOW                          (WM_USER + 53)
+
+#define TTM_SETTOOLINFOA                          (WM_USER + 9)
+#define TTM_SETTOOLINFOW                          (WM_USER + 54)
+
+#define TTM_HITTESTA                              (WM_USER +10)
+#define TTM_HITTESTW                              (WM_USER +55)
+#define TTM_GETTEXTA                              (WM_USER +11)
+#define TTM_GETTEXTW                              (WM_USER +56)
+#define TTM_UPDATETIPTEXTA                        (WM_USER +12)
+#define TTM_UPDATETIPTEXTW                        (WM_USER +57)
+#define TTM_GETTOOLCOUNT                          (WM_USER +13)
+#define TTM_ENUMTOOLSA                            (WM_USER +14)
+#define TTM_ENUMTOOLSW                            (WM_USER +58)
+#define TTM_GETCURRENTTOOLA                       (WM_USER + 15)
+#define TTM_GETCURRENTTOOLW                       (WM_USER + 59)
+#define TTM_WINDOWFROMPOINT                       (WM_USER + 16)
+#define TTM_TRACKACTIVATE                         (WM_USER + 17)  // wParam = TRUE/FALSE start end  lparam = LPTOOLINFO
+#define TTM_TRACKPOSITION                         (WM_USER + 18)  // lParam = dwPos
+#define TTM_SETTIPBKCOLOR                         (WM_USER + 19)
+#define TTM_SETTIPTEXTCOLOR                       (WM_USER + 20)
+#define TTM_GETDELAYTIME                          (WM_USER + 21)
+#define TTM_GETTIPBKCOLOR                         (WM_USER + 22)
+#define TTM_GETTIPTEXTCOLOR                       (WM_USER + 23)
+#define TTM_SETMAXTIPWIDTH                        (WM_USER + 24)
+#define TTM_GETMAXTIPWIDTH                        (WM_USER + 25)
+#define TTM_SETMARGIN                             (WM_USER + 26)  // lParam = lprc
+#define TTM_GETMARGIN                             (WM_USER + 27)  // lParam = lprc
+#define TTM_POP                                   (WM_USER + 28)
+#define TTM_UPDATE                                (WM_USER + 29)
+#define TTM_GETBUBBLESIZE                         (WM_USER + 30)
+#define TTM_ADJUSTRECT                            (WM_USER + 31)
+#define TTM_SETTITLEA                             (WM_USER + 32)  // wParam = TTI_*, lParam = char* szTitle
+#define TTM_SETTITLEW                             (WM_USER + 33)  // wParam = TTI_*, lParam = wchar* szTitle
+
+#ifdef UNICODE
+#define TTM_ADDTOOL                               TTM_ADDTOOLW
+#define TTM_DELTOOL                               TTM_DELTOOLW
+#define TTM_NEWTOOLRECT                           TTM_NEWTOOLRECTW
+#define TTM_GETTOOLINFO                           TTM_GETTOOLINFOW
+#define TTM_SETTOOLINFO                           TTM_SETTOOLINFOW
+#define TTM_HITTEST                               TTM_HITTESTW
+#define TTM_GETTEXT                               TTM_GETTEXTW
+#define TTM_UPDATETIPTEXT                         TTM_UPDATETIPTEXTW
+#define TTM_ENUMTOOLS                             TTM_ENUMTOOLSW
+#define TTM_GETCURRENTTOOL                        TTM_GETCURRENTTOOLW
+#define TTM_SETTITLE                              TTM_SETTITLEW
+#else
+#define TTM_ADDTOOL                               TTM_ADDTOOLA
+#define TTM_DELTOOL                               TTM_DELTOOLA
+#define TTM_NEWTOOLRECT                           TTM_NEWTOOLRECTA
+#define TTM_GETTOOLINFO                           TTM_GETTOOLINFOA
+#define TTM_SETTOOLINFO                           TTM_SETTOOLINFOA
+#define TTM_HITTEST                               TTM_HITTESTA
+#define TTM_GETTEXT                               TTM_GETTEXTA
+#define TTM_UPDATETIPTEXT                         TTM_UPDATETIPTEXTA
+#define TTM_ENUMTOOLS                             TTM_ENUMTOOLSA
+#define TTM_GETCURRENTTOOL                        TTM_GETCURRENTTOOLA
+#define TTM_SETTITLE                              TTM_SETTITLEA
+#endif
+
+/*----------------------------------------------------------------------*/
+
+#define CW_USEDEFAULT                             (0x80000000)
+
+#define HWND_TOP                                  (0)
+#define HWND_BOTTOM                               (1)
+#define HWND_TOPMOST                              (-1)
+#define HWND_NOTOPMOST                            (-2)
+
+#define SWP_NOSIZE                                0x0001
+#define SWP_NOMOVE                                0x0002
+#define SWP_NOZORDER                              0x0004
+#define SWP_NOREDRAW                              0x0008
+#define SWP_NOACTIVATE                            0x0010
+#define SWP_FRAMECHANGED                          0x0020  /* The frame changed: send WM_NCCALCSIZE */
+#define SWP_SHOWWINDOW                            0x0040
+#define SWP_HIDEWINDOW                            0x0080
+#define SWP_NOCOPYBITS                            0x0100
+#define SWP_NOOWNERZORDER                         0x0200  /* Don't do owner Z ordering */
+#define SWP_NOSENDCHANGING                        0x0400  /* Don't send WM_WINDOWPOSCHANGING */
+
+/*----------------------------------------------------------------------*/
 #endif
 /*----------------------------------------------------------------------*/
