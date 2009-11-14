@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Hungarian */
-/* ISO language code (2 chars): HU */
-/* Codepage: Windows-1250 */
-
 /* NOTE: Ä/ä has been added to work like sixhu852.obj for S*ccessWare SIx Driver. [vszakats] */
 
 #define HB_CP_ID        HUWIN

@@ -52,12 +52,8 @@
  *
  */
 
-/* Language name: Croatien */
-/* ISO language code (2 chars): HR */
-/* Codepage: 852 */
-
 #define HB_CP_ID        HR852
-#define HB_CP_INFO      "Croatien CP-852"
+#define HB_CP_INFO      "Croatian CP-852"
 #define HB_CP_UNITB     HB_UNITB_852
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
 #define HB_CP_UPPER     "ABC¨èD—EFGHIJKLMNOPQRSÊTUVWZ¶XY"

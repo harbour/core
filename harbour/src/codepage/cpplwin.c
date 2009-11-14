@@ -51,10 +51,6 @@
  *
  */
 
-/* Language name: Polish */
-/* ISO language code (2 chars): PL */
-/* Codepage: Windows-1250 */
-
 #define HB_CP_ID        PLWIN
 #define HB_CP_INFO      "Polish Windows-1250"
 #define HB_CP_UNITB     HB_UNITB_1250

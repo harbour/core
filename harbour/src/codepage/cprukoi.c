@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Russian */
-/* ISO language code (2 chars): RU */
-/* Codepage: KOI-8 */
-
 #define HB_CP_ID        RUKOI8
 #define HB_CP_INFO      "Russian KOI-8"
 #define HB_CP_UNITB     HB_UNITB_KOI_8

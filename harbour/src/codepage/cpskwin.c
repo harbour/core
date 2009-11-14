@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Slovak */
-/* ISO language code (2 chars): SK */
-/* Codepage: Windows-1250 */
-
 #define HB_CP_ID        SKWIN
 #define HB_CP_INFO      "Slovak Windows-1250"
 #define HB_CP_UNITB     HB_UNITB_1250

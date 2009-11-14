@@ -52,12 +52,8 @@
  *
  */
 
-/* Language name: Croatien */
-/* ISO language code (2 chars): HR */
-/* Codepage: Windows-1250 */
-
 #define HB_CP_ID        HRWIN
-#define HB_CP_INFO      "Croatien Windows-1250"
+#define HB_CP_INFO      "Croatian Windows-1250"
 #define HB_CP_UNITB     HB_UNITB_1250
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
 #define HB_CP_UPPER     "ABCÈÆDÐEFGHIJKLMNOPQRSŠTUVWZŽXY"

@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Bulgarian */
-/* ISO language code (2 chars): BG */
-/* Codepage: Windows-1251 */
-
 #define HB_CP_ID        BGWIN
 #define HB_CP_INFO      "Bulgarian Windows-1251"
 #define HB_CP_UNITB     HB_UNITB_1251

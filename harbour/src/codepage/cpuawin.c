@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Ukrainian */
-/* ISO language code (2 chars): UA */
-/* Codepage: Windows-1251 */
-
 #define HB_CP_ID        UA1251
 #define HB_CP_INFO      "Ukrainian Windows-1251"
 #define HB_CP_UNITB     HB_UNITB_1251

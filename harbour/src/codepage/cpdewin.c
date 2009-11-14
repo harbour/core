@@ -51,10 +51,6 @@
  *
  */
 
-/* Language name: German */
-/* ISO language code (2 chars): DE (please look it up in /doc/lang_id.txt) */
-/* Codepage: Windows-1252 */
-
 #define HB_CP_ID        DEWIN
 #define HB_CP_INFO      "German Windows-1252"
 #define HB_CP_UNITB     HB_UNITB_1252

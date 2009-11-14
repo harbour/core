@@ -51,10 +51,6 @@
  *
  */
 
-/* Language name: Greek */
-/* ISO language code (2 chars): EL */
-/* Codepage: ISO-8859-7 */
-
 #define HB_CP_ID        ELISO
 #define HB_CP_INFO      "Greek ISO-8859-7"
 #define HB_CP_UNITB     HB_UNITB_8859_7

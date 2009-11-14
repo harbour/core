@@ -50,12 +50,8 @@
  *
  */
 
-/* Language name: Croatien */
-/* ISO language code (2 chars): HR */
-/* Codepage: 437 */
-
 #define HB_CP_ID        HR437
-#define HB_CP_INFO      "Croatien CP-437"
+#define HB_CP_INFO      "Croatian CP-437"
 #define HB_CP_UNITB     HB_UNITB_437
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
 #define HB_CP_UPPER     "ABC^]D\\EFGHIJKLMNOPQRS[TUVWZ@XY"

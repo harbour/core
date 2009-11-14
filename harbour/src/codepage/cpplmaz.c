@@ -51,10 +51,6 @@
  *
  */
 
-/* Language name: Polish */
-/* ISO language code (2 chars): PL */
-/* Codepage: Mazovia */
-
 #define HB_CP_ID        PLMAZ
 #define HB_CP_INFO      "Polish Mazovia"
 #define HB_CP_UNITB     HB_UNITB_MAZ

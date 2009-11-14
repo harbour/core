@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Hungarian */
-/* ISO language code (2 chars): HU */
-/* Codepage: ISO-8859-2 */
-
 /* NOTE: Ä/ä has been added to work like sixhu852.obj for S*ccessWare SIx Driver. [vszakats] */
 
 #define HB_CP_ID        HUISO

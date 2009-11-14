@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: <Greek dos> */
-/* ISO language code (2 chars): EL */
-/* Codepage: 737 */
-
 #define HB_CP_ID        EL737
 #define HB_CP_INFO      "Greek DOS CP-737"
 #define HB_CP_UNITB     HB_UNITB_737

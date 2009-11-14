@@ -87,6 +87,7 @@ C_SOURCES := \
    cpua866.c \
    cpuakoi.c \
    cpuawin.c \
+   \
    uc1125.c \
    uc1250.c \
    uc1251.c \

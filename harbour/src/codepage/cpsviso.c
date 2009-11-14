@@ -51,10 +51,6 @@
  *
  */
 
-/* Language name: Swedish */
-/* ISO language code (2 chars): SV */
-/* Codepage: ISO-8859-1 */
-
 #define HB_CP_ID        SVISO
 #define HB_CP_INFO      "Swedish ISO-8859-1"
 #define HB_CP_UNITB     HB_UNITB_8859_1

@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Russian */
-/* ISO language code (2 chars): RU */
-/* Codepage: ISO-8859-5 */
-
 #define HB_CP_ID        RUISO
 #define HB_CP_INFO      "Russian ISO-8859-5"
 #define HB_CP_UNITB     HB_UNITB_8859_5

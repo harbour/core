@@ -52,10 +52,6 @@
  *
  */
 
-/* Language name: Portuguese       */
-/* ISO language code (2 chars): PT */
-/* Codepage: iso-8859-1            */
-
 #define HB_CP_ID        PTISO
 #define HB_CP_INFO      "Portuguese ISO-8859-1"
 #define HB_CP_UNITB     HB_UNITB_8859_1

@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Russian */
-/* ISO language code (2 chars): RU */
-/* Codepage: Windows-1251 */
-
 #define HB_CP_ID        RU1251
 #define HB_CP_INFO      "Russian Windows-1251"
 #define HB_CP_UNITB     HB_UNITB_1251

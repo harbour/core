@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Swedish */
-/* ISO language code (2 chars): SV */
-/* Codepage: 437 */
-
 /* NOTE: The collation sequence below is almost compatible with Clipper's
    NTXSWE.OBJ which does NOT provide a correct Swedish collation. The most
    notable error in NTXSWE.OBJ is the uppercase E with an acute accent

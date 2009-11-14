@@ -51,10 +51,6 @@
  *
  */
 
-/* Language name: Slovenian */
-/* ISO language code (2 chars): SL */
-/* Codepage: 437 */
-
 #define HB_CP_ID        SL437
 #define HB_CP_INFO      "Slovenian CP-437"
 #define HB_CP_UNITB     HB_UNITB_437

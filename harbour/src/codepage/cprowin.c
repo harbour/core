@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Romanian */
-/* ISO language code (2 chars): RO */
-/* Codepage: Windows-1250 */
-
 #define HB_CP_ID        ROWIN
 #define HB_CP_INFO      "Romanian Windows-1250"
 #define HB_CP_UNITB     HB_UNITB_1250

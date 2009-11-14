@@ -51,10 +51,6 @@
  *
  */
 
-/* Language name: Greek WIN*/
-/* ISO language code (2 chars): EL */
-/* Codepage: ANSI (1253) */
-
 #define HB_CP_ID        ELWIN
 #define HB_CP_INFO      "Greek ANSI CP-1253"
 #define HB_CP_UNITB     HB_UNITB_1253

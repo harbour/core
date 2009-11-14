@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: French */
-/* ISO language code (2 chars): FR */
-/* Codepage: ISO-8859-1 */
-
 #define HB_CP_ID        FRISO
 #define HB_CP_INFO      "French ISO-8859-1"
 #define HB_CP_UNITB     HB_UNITB_8859_1

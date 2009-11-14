@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Slovak */
-/* ISO language code (2 chars): SK */
-/* Codepage: Kamenicky ("895") */
-
 #define HB_CP_ID        SKKAM
 #define HB_CP_INFO      "Slovak Kamenicky (895)"
 #define HB_CP_UNITB     HB_UNITB_KAM

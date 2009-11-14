@@ -51,10 +51,6 @@
  *
  */
 
-/* Language name: Spanish (Modern)*/
-/* ISO language code (2 chars): ES */
-/* Codepage: Windows-1252 */
-
 #define HB_CP_ID        ESWIN
 #define HB_CP_INFO      "Spanish (Modern) Windows-1252"
 #define HB_CP_UNITB     HB_UNITB_1252

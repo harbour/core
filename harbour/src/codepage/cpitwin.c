@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Italian */
-/* ISO language code (2 chars): IT */
-/* Codepage: Windows-1252 */
-
 #define HB_CP_ID        ITWIN
 #define HB_CP_INFO      "Italian Windows-1252"
 #define HB_CP_UNITB     HB_UNITB_1252

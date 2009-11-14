@@ -51,10 +51,6 @@
  *
  */
 
-/* Language name: Slovenian */
-/* ISO language code (2 chars): SL */
-/* Codepage: 1250 */
-
 #define HB_CP_ID        SLWIN
 #define HB_CP_INFO      "Slovenian CP-1250"
 #define HB_CP_UNITB     HB_UNITB_1250

@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Turkish */
-/* ISO language code TR : ( please look it up in /doc/lang_id.txt ) */
-/* Codepage: 857 */
-
 #define HB_CP_ID        TR857
 #define HB_CP_INFO      "Turkish CP-857"
 #define HB_CP_UNITB     HB_UNITB_857

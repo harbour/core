@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Ukrainian */
-/* ISO language code (2 chars): UA */
-/* Codepage: 866 */
-
 #define HB_CP_ID        UA866
 #define HB_CP_INFO      "Ukrainian CP-866"
 #define HB_CP_UNITB     HB_UNITB_866

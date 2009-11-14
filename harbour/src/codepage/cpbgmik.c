@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Bulgarian */
-/* ISO language code (2 chars): BG */
-/* Codepage: MIK */
-
 #define HB_CP_ID        BGMIK
 #define HB_CP_INFO      "Bulgarian MIK"
 #define HB_CP_UNITB     HB_UNITB_MIK

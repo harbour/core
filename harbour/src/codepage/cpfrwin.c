@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: French */
-/* ISO language code (2 chars): FR */
-/* Codepage: Windows-1252 */
-
 #define HB_CP_ID        FRWIN
 #define HB_CP_INFO      "French Windows-1252"
 #define HB_CP_UNITB     HB_UNITB_1252

@@ -51,10 +51,6 @@
  *
  */
 
-/* Language name: Polish */
-/* ISO language code (2 chars): PL */
-/* Codepage: ISO-8859-2 */
-
 #define HB_CP_ID        PLISO
 #define HB_CP_INFO      "Polish ISO-8859-2"
 #define HB_CP_UNITB     HB_UNITB_8859_2

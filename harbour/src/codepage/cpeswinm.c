@@ -52,10 +52,6 @@
  *
  */
 
-/* Language name: Spanish (Modern)*/
-/* ISO language code (2 chars): ES */
-/* Codepage: ISO-8859-1 */
-
 #define HB_CP_ID        ESMWIN
 #define HB_CP_INFO      "Spanish (Modern) ISO-8859-1"
 #define HB_CP_UNITB     HB_UNITB_8859_1

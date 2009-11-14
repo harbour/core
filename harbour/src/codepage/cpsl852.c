@@ -51,10 +51,6 @@
  *
  */
 
-/* Language name: Slovenian */
-/* ISO language code (2 chars): SL */
-/* Codepage: 852 */
-
 #define HB_CP_ID        SL852
 #define HB_CP_INFO      "Slovenian CP-852"
 #define HB_CP_UNITB     HB_UNITB_852

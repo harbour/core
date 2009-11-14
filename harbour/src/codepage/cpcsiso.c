@@ -51,10 +51,6 @@
  *
  */
 
-/* Language name: Czech */
-/* ISO language code (2 chars): CS */
-/* Codepage: ISO-8859-2 */
-
 #define HB_CP_ID        CSISO
 #define HB_CP_INFO      "Czech ISO-8859-2"
 #define HB_CP_UNITB     HB_UNITB_8859_2

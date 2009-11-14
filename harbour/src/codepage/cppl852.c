@@ -51,10 +51,6 @@
  *
  */
 
-/* Language name: Polish */
-/* ISO language code (2 chars): PL */
-/* Codepage: 852 */
-
 #define HB_CP_ID        PL852
 #define HB_CP_INFO      "Polish CP-852"
 #define HB_CP_UNITB     HB_UNITB_852

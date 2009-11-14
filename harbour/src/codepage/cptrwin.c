@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Turkish */
-/* ISO language code TR : (please look it up in /doc/lang_id.txt) */
-/* Codepage: 1254 */
-
 #define HB_CP_ID        TRWIN
 #define HB_CP_INFO      "Turkish Windows-1254"
 #define HB_CP_UNITB     HB_UNITB_1254

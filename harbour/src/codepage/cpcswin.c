@@ -51,10 +51,6 @@
  *
  */
 
-/* Language name: Czech */
-/* ISO language code (2 chars): CS */
-/* Codepage: Windows-1250 */
-
 #define HB_CP_ID        CSWIN
 #define HB_CP_INFO      "Czech Windows-1250"
 #define HB_CP_UNITB     HB_UNITB_1250

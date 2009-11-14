@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Swedish */
-/* ISO language code (2 chars): SV */
-/* Codepage: Windows-1252 */
-
 #define HB_CP_ID        SVWIN
 #define HB_CP_INFO      "Swedish Windows-1252"
 #define HB_CP_UNITB     HB_UNITB_1252

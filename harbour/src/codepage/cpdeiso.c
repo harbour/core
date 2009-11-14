@@ -51,10 +51,6 @@
  *
  */
 
-/* Language name: German */
-/* ISO language code (2 chars): DE (please look it up in /doc/lang_id.txt) */
-/* Codepage: ISO-8859-1 */
-
 #define HB_CP_ID        DEISO
 #define HB_CP_INFO      "German ISO-8859-1"
 #define HB_CP_UNITB     HB_UNITB_8859_1

@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Slovak */
-/* ISO language code (2 chars): SK */
-/* Codepage: ISO-8859-2 */
-
 #define HB_CP_ID        SKISO
 #define HB_CP_INFO      "Slovak ISO-8859-2"
 #define HB_CP_UNITB     HB_UNITB_8859_2

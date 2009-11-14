@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Ukrainian */
-/* ISO language code (2 chars): UA */
-/* Codepage: KOI8-U */
-
 #define HB_CP_ID        UAKOI8
 #define HB_CP_INFO      "Ukrainian KOI8-U"
 #define HB_CP_UNITB     HB_UNITB_KOI_8U

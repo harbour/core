@@ -52,10 +52,6 @@
  *
  */
 
-/* Language name: Lithuanian */
-/* ISO language code (2 chars): LT */
-/* Codepage: Windows-1257 */
-
 #define HB_CP_ID        LTWIN
 #define HB_CP_INFO      "Lithuanian Windows-1257"
 #define HB_CP_UNITB     HB_UNITB_1257

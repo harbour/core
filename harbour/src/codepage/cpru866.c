@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Russian */
-/* ISO language code (2 chars): RU */
-/* Codepage: 866 */
-
 #define HB_CP_ID        RU866
 #define HB_CP_INFO      "Russian CP-866"
 #define HB_CP_UNITB     HB_UNITB_866

@@ -49,10 +49,6 @@
  *
  */
 
-/* Language name: Italian */
-/* ISO language code (2 chars): IT */
-/* Codepage: 437 */
-
 #define HB_CP_ID        IT437
 #define HB_CP_INFO      "Italian CP-437"
 #define HB_CP_UNITB     HB_UNITB_437

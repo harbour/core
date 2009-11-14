@@ -51,10 +51,6 @@
  *
  */
 
-/* Language name: Czech */
-/* ISO language code (2 chars): CS */
-/* Codepage: 895(KAM) */
-
 #define HB_CP_ID        CSKAM
 #define HB_CP_INFO      "Czech Kamenicky (895)"
 #define HB_CP_UNITB     HB_UNITB_KAM

@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: <Your language> */
-/* ISO language code (2 chars): (please look it up in /doc/lang_id.txt) */
-/* Codepage: <Your codepage> */
-
 /*
    If accented characters need special sorting ( HB_CDP_ACSORT_EQUAL or
    HB_CDP_ACSORT_INTERLEAVE ) then you need to mark the accented characters

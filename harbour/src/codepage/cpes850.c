@@ -51,10 +51,6 @@
  *
  */
 
-/* Language name: Spanish (Modern)*/
-/* ISO language code (2 chars): ES */
-/* Codepage: 850 */
-
 #define HB_CP_ID        ES850
 #define HB_CP_INFO      "Spanish (Modern) CP-850"
 #define HB_CP_UNITB     HB_UNITB_850

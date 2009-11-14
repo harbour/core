@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Bulgarian */
-/* ISO language code (2 chars): BG */
-/* Codepage: CP-866 */
-
 #define HB_CP_ID        BG866
 #define HB_CP_INFO      "Bulgarian CP-866"
 #define HB_CP_UNITB     HB_UNITB_866

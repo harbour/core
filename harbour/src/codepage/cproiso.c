@@ -50,10 +50,6 @@
  *
  */
 
-/* Language name: Romanian */
-/* ISO language code (2 chars): RO */
-/* Codepage: ISO-8859-2 */
-
 #define HB_CP_ID        ROISO
 #define HB_CP_INFO      "Romanian ISO-8859-2"
 #define HB_CP_UNITB     HB_UNITB_8859_2

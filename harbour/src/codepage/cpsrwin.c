@@ -51,10 +51,6 @@
  *
  */
 
-/* Language name: Serbian */
-/* ISO language code (2 chars): SR */
-/* Codepage: Windows-1251 */
-
 #define HB_CP_ID        SRWIN
 #define HB_CP_INFO      "Serbian Windows-1251"
 #define HB_CP_UNITB     HB_UNITB_1251
