@@ -78,21 +78,7 @@
 
 QT_G_FUNC( release_QDragMoveEvent )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QDragMoveEvent              %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
-   {
-      ( ( QDragMoveEvent * ) ph )->~QDragMoveEvent();
-      ph = NULL;
-   }
-   else
-   {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QDragMoveEvent" );  OutputDebugString( str );
-#endif
-   }
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QDRAGMOVEEVENT )
@@ -119,7 +105,7 @@ HB_FUNC( QT_QDRAGMOVEEVENT_ACCEPT_1 )
  */
 HB_FUNC( QT_QDRAGMOVEEVENT_ANSWERRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QDragMoveEvent( 1 )->answerRect() ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QDragMoveEvent( 1 )->answerRect() ) ) );
 }
 
 /*

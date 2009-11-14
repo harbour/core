@@ -98,40 +98,48 @@ HB_FUNC( QT_QTEXTSTREAM_PADCHAR )
 
 QT_G_FUNC( release_QTextStream )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTextStream                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextStream                  p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextStream                 ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QTextStream * ) ph )->~QTextStream();
-      ph = NULL;
+      ( ( QTextStream * ) p->ph )->~QTextStream();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextStream                 Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QTextStream                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTextStream" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextStream                 Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTextStream" );
+      #endif
    }
+}
+
+void * gcAllocate_QTextStream( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTextStream;
+   #if defined(__debug__)
+      just_debug( "          new_QTextStream                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTEXTSTREAM )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTextStream                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = new QTextStream( hb_parcx( 1 ), ( QIODevice::OpenMode ) ( HB_ISNUM( 2 ) ?  hb_parni( 2 ) : QIODevice::ReadWrite ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTextStream;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTextStream( pObj ) );
 }
 /*
  * bool atEnd () const
@@ -210,7 +218,7 @@ HB_FUNC( QT_QTEXTSTREAM_INTEGERBASE )
  */
 HB_FUNC( QT_QTEXTSTREAM_LOCALE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QLocale( hbqt_par_QTextStream( 1 )->locale() ), release_QLocale ) );
+   hb_retptrGC( gcAllocate_QLocale( new QLocale( hbqt_par_QTextStream( 1 )->locale() ) ) );
 }
 
 /*

@@ -103,42 +103,65 @@
  * ~QFileDialog ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QFileDialog > pq;
+} QGC_POINTER_QFileDialog;
+
 QT_G_FUNC( release_QFileDialog )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QFileDialog                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QFileDialog * p = ( QGC_POINTER_QFileDialog * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFileDialog                  p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFileDialog                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QFileDialog * ) ph )->~QFileDialog();
-         ph = NULL;
+         ( ( QFileDialog * ) p->ph )->~QFileDialog();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QFileDialog                 Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QFileDialog                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QFileDialog" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QFileDialog                 Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QFileDialog" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QFileDialog" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QFileDialog                 Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QFileDialog" );
+      #endif
    }
+}
+
+void * gcAllocate_QFileDialog( void * pObj )
+{
+   QGC_POINTER_QFileDialog * p = ( QGC_POINTER_QFileDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QFileDialog ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QFileDialog;
+   new( & p->pq ) QPointer< QFileDialog >( ( QFileDialog * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QFileDialog                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QFILEDIALOG )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QFileDialog > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QFileDialog                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
@@ -153,13 +176,7 @@ hb_snprintf( str, sizeof(str), "   GC:  new QFileDialog                 %i B %i 
       pObj = new QFileDialog() ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QFileDialog;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QFileDialog( pObj ) );
 }
 /*
  * AcceptMode acceptMode () const
@@ -190,7 +207,7 @@ HB_FUNC( QT_QFILEDIALOG_DEFAULTSUFFIX )
  */
 HB_FUNC( QT_QFILEDIALOG_DIRECTORY )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDir( hbqt_par_QFileDialog( 1 )->directory() ), release_QDir ) );
+   hb_retptrGC( gcAllocate_QDir( new QDir( hbqt_par_QFileDialog( 1 )->directory() ) ) );
 }
 
 /*
@@ -214,7 +231,7 @@ HB_FUNC( QT_QFILEDIALOG_FILTER )
  */
 HB_FUNC( QT_QFILEDIALOG_HISTORY )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QFileDialog( 1 )->history() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QFileDialog( 1 )->history() ) ) );
 }
 
 /*
@@ -262,7 +279,7 @@ HB_FUNC( QT_QFILEDIALOG_LABELTEXT )
  */
 HB_FUNC( QT_QFILEDIALOG_NAMEFILTERS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QFileDialog( 1 )->nameFilters() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QFileDialog( 1 )->nameFilters() ) ) );
 }
 
 /*
@@ -302,7 +319,7 @@ HB_FUNC( QT_QFILEDIALOG_RESTORESTATE )
  */
 HB_FUNC( QT_QFILEDIALOG_SAVESTATE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QFileDialog( 1 )->saveState() ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QFileDialog( 1 )->saveState() ) ) );
 }
 
 /*
@@ -326,7 +343,7 @@ HB_FUNC( QT_QFILEDIALOG_SELECTNAMEFILTER )
  */
 HB_FUNC( QT_QFILEDIALOG_SELECTEDFILES )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QFileDialog( 1 )->selectedFiles() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QFileDialog( 1 )->selectedFiles() ) ) );
 }
 
 /*

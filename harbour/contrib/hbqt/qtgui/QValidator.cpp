@@ -81,31 +81,7 @@
 
 QT_G_FUNC( release_QValidator )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QValidator                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
-   {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
-      {
-         ( ( QValidator * ) ph )->~QValidator();
-         ph = NULL;
-      }
-      else
-      {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QValidator" );  OutputDebugString( str );
-#endif
-      }
-   }
-   else
-   {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QValidator" );  OutputDebugString( str );
-#endif
-   }
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QVALIDATOR )
@@ -116,7 +92,7 @@ HB_FUNC( QT_QVALIDATOR )
  */
 HB_FUNC( QT_QVALIDATOR_LOCALE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QLocale( hbqt_par_QValidator( 1 )->locale() ), release_QLocale ) );
+   hb_retptrGC( gcAllocate_QLocale( new QLocale( hbqt_par_QValidator( 1 )->locale() ) ) );
 }
 
 /*

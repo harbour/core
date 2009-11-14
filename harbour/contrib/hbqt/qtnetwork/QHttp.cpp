@@ -99,52 +99,69 @@ HB_FUNC( QT_QHTTP_READ )
       hb_xfree( iData );
 }
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QHttp > pq;
+} QGC_POINTER_QHttp;
+
 QT_G_FUNC( release_QHttp )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QHttp                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QHttp * p = ( QGC_POINTER_QHttp * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QHttp                        p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QHttp                       ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QHttp * ) ph )->~QHttp();
-         ph = NULL;
+         ( ( QHttp * ) p->ph )->~QHttp();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QHttp                       Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QHttp                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QHttp" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QHttp                       Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QHttp" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QHttp" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QHttp                       Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QHttp" );
+      #endif
    }
+}
+
+void * gcAllocate_QHttp( void * pObj )
+{
+   QGC_POINTER_QHttp * p = ( QGC_POINTER_QHttp * ) hb_gcAllocate( sizeof( QGC_POINTER_QHttp ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QHttp;
+   new( & p->pq ) QPointer< QHttp >( ( QHttp * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QHttp                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QHTTP )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QHttp > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QHttp                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = new QHttp( hbqt_par_QObject( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QHttp;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QHttp( pObj ) );
 }
 /*
  * qint64 bytesAvailable () const
@@ -191,7 +208,7 @@ HB_FUNC( QT_QHTTP_CURRENTID )
  */
 HB_FUNC( QT_QHTTP_CURRENTREQUEST )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QHttpRequestHeader( hbqt_par_QHttp( 1 )->currentRequest() ), release_QHttpRequestHeader ) );
+   hb_retptrGC( gcAllocate_QHttpRequestHeader( new QHttpRequestHeader( hbqt_par_QHttp( 1 )->currentRequest() ) ) );
 }
 
 /*
@@ -247,7 +264,7 @@ HB_FUNC( QT_QHTTP_HEAD )
  */
 HB_FUNC( QT_QHTTP_LASTRESPONSE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QHttpResponseHeader( hbqt_par_QHttp( 1 )->lastResponse() ), release_QHttpResponseHeader ) );
+   hb_retptrGC( gcAllocate_QHttpResponseHeader( new QHttpResponseHeader( hbqt_par_QHttp( 1 )->lastResponse() ) ) );
 }
 
 /*
@@ -271,7 +288,7 @@ HB_FUNC( QT_QHTTP_POST_1 )
  */
 HB_FUNC( QT_QHTTP_READALL )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QHttp( 1 )->readAll() ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QHttp( 1 )->readAll() ) ) );
 }
 
 /*

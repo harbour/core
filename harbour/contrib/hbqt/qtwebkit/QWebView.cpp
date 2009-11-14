@@ -77,52 +77,69 @@
  * virtual ~QWebView ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QWebView > pq;
+} QGC_POINTER_QWebView;
+
 QT_G_FUNC( release_QWebView )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QWebView                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QWebView * p = ( QGC_POINTER_QWebView * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QWebView                     p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QWebView                    ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QWebView * ) ph )->~QWebView();
-         ph = NULL;
+         ( ( QWebView * ) p->ph )->~QWebView();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QWebView                    Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QWebView                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QWebView" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QWebView                    Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QWebView" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QWebView" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QWebView                    Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QWebView" );
+      #endif
    }
+}
+
+void * gcAllocate_QWebView( void * pObj )
+{
+   QGC_POINTER_QWebView * p = ( QGC_POINTER_QWebView * ) hb_gcAllocate( sizeof( QGC_POINTER_QWebView ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QWebView;
+   new( & p->pq ) QPointer< QWebView >( ( QWebView * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QWebView                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QWEBVIEW )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QWebView > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QWebView                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = new QWebView( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QWebView;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QWebView( pObj ) );
 }
 /*
  * bool findText ( const QString & subString, QWebPage::FindFlags options = 0 )
@@ -145,7 +162,7 @@ HB_FUNC( QT_QWEBVIEW_HISTORY )
  */
 HB_FUNC( QT_QWEBVIEW_ICON )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QWebView( 1 )->icon() ), release_QIcon ) );
+   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QWebView( 1 )->icon() ) ) );
 }
 
 /*
@@ -281,7 +298,7 @@ HB_FUNC( QT_QWEBVIEW_TRIGGERPAGEACTION )
  */
 HB_FUNC( QT_QWEBVIEW_URL )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QUrl( hbqt_par_QWebView( 1 )->url() ), release_QUrl ) );
+   hb_retptrGC( gcAllocate_QUrl( new QUrl( hbqt_par_QWebView( 1 )->url() ) ) );
 }
 
 /*

@@ -99,40 +99,48 @@
 
 QT_G_FUNC( release_QPainterPath )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QPainterPath                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QPainterPath                 p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QPainterPath                ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QPainterPath * ) ph )->~QPainterPath();
-      ph = NULL;
+      ( ( QPainterPath * ) p->ph )->~QPainterPath();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QPainterPath                Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QPainterPath                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QPainterPath" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QPainterPath                Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QPainterPath" );
+      #endif
    }
+}
+
+void * gcAllocate_QPainterPath( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QPainterPath;
+   #if defined(__debug__)
+      just_debug( "          new_QPainterPath                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QPAINTERPATH )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QPainterPath                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = new QPainterPath() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QPainterPath;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QPainterPath( pObj ) );
 }
 /*
  * void addEllipse ( const QRectF & boundingRectangle )
@@ -275,7 +283,7 @@ HB_FUNC( QT_QPAINTERPATH_ARCTO_1 )
  */
 HB_FUNC( QT_QPAINTERPATH_BOUNDINGRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QPainterPath( 1 )->boundingRect() ), release_QRectF ) );
+   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QPainterPath( 1 )->boundingRect() ) ) );
 }
 
 /*
@@ -323,7 +331,7 @@ HB_FUNC( QT_QPAINTERPATH_CONTAINS_2 )
  */
 HB_FUNC( QT_QPAINTERPATH_CONTROLPOINTRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QPainterPath( 1 )->controlPointRect() ), release_QRectF ) );
+   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QPainterPath( 1 )->controlPointRect() ) ) );
 }
 
 /*
@@ -347,7 +355,7 @@ HB_FUNC( QT_QPAINTERPATH_CUBICTO_1 )
  */
 HB_FUNC( QT_QPAINTERPATH_CURRENTPOSITION )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPointF( hbqt_par_QPainterPath( 1 )->currentPosition() ), release_QPointF ) );
+   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QPainterPath( 1 )->currentPosition() ) ) );
 }
 
 /*
@@ -371,7 +379,7 @@ HB_FUNC( QT_QPAINTERPATH_FILLRULE )
  */
 HB_FUNC( QT_QPAINTERPATH_INTERSECTED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPainterPath( hbqt_par_QPainterPath( 1 )->intersected( *hbqt_par_QPainterPath( 2 ) ) ), release_QPainterPath ) );
+   hb_retptrGC( gcAllocate_QPainterPath( new QPainterPath( hbqt_par_QPainterPath( 1 )->intersected( *hbqt_par_QPainterPath( 2 ) ) ) ) );
 }
 
 /*
@@ -451,7 +459,7 @@ HB_FUNC( QT_QPAINTERPATH_PERCENTATLENGTH )
  */
 HB_FUNC( QT_QPAINTERPATH_POINTATPERCENT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPointF( hbqt_par_QPainterPath( 1 )->pointAtPercent( hb_parnd( 2 ) ) ), release_QPointF ) );
+   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QPainterPath( 1 )->pointAtPercent( hb_parnd( 2 ) ) ) ) );
 }
 
 /*
@@ -491,7 +499,7 @@ HB_FUNC( QT_QPAINTERPATH_SETFILLRULE )
  */
 HB_FUNC( QT_QPAINTERPATH_SIMPLIFIED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPainterPath( hbqt_par_QPainterPath( 1 )->simplified() ), release_QPainterPath ) );
+   hb_retptrGC( gcAllocate_QPainterPath( new QPainterPath( hbqt_par_QPainterPath( 1 )->simplified() ) ) );
 }
 
 /*
@@ -507,7 +515,7 @@ HB_FUNC( QT_QPAINTERPATH_SLOPEATPERCENT )
  */
 HB_FUNC( QT_QPAINTERPATH_SUBTRACTED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPainterPath( hbqt_par_QPainterPath( 1 )->subtracted( *hbqt_par_QPainterPath( 2 ) ) ), release_QPainterPath ) );
+   hb_retptrGC( gcAllocate_QPainterPath( new QPainterPath( hbqt_par_QPainterPath( 1 )->subtracted( *hbqt_par_QPainterPath( 2 ) ) ) ) );
 }
 
 /*
@@ -515,7 +523,7 @@ HB_FUNC( QT_QPAINTERPATH_SUBTRACTED )
  */
 HB_FUNC( QT_QPAINTERPATH_TOFILLPOLYGON )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPolygonF( hbqt_par_QPainterPath( 1 )->toFillPolygon( *hbqt_par_QTransform( 2 ) ) ), release_QPolygonF ) );
+   hb_retptrGC( gcAllocate_QPolygonF( new QPolygonF( hbqt_par_QPainterPath( 1 )->toFillPolygon( *hbqt_par_QTransform( 2 ) ) ) ) );
 }
 
 /*
@@ -523,7 +531,7 @@ HB_FUNC( QT_QPAINTERPATH_TOFILLPOLYGON )
  */
 HB_FUNC( QT_QPAINTERPATH_TOFILLPOLYGON_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPolygonF( hbqt_par_QPainterPath( 1 )->toFillPolygon( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QMatrix( 2 ) : QMatrix() ) ) ), release_QPolygonF ) );
+   hb_retptrGC( gcAllocate_QPolygonF( new QPolygonF( hbqt_par_QPainterPath( 1 )->toFillPolygon( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QMatrix( 2 ) : QMatrix() ) ) ) ) );
 }
 
 /*
@@ -531,7 +539,7 @@ HB_FUNC( QT_QPAINTERPATH_TOFILLPOLYGON_1 )
  */
 HB_FUNC( QT_QPAINTERPATH_TOREVERSED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPainterPath( hbqt_par_QPainterPath( 1 )->toReversed() ), release_QPainterPath ) );
+   hb_retptrGC( gcAllocate_QPainterPath( new QPainterPath( hbqt_par_QPainterPath( 1 )->toReversed() ) ) );
 }
 
 /*
@@ -539,7 +547,7 @@ HB_FUNC( QT_QPAINTERPATH_TOREVERSED )
  */
 HB_FUNC( QT_QPAINTERPATH_UNITED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPainterPath( hbqt_par_QPainterPath( 1 )->united( *hbqt_par_QPainterPath( 2 ) ) ), release_QPainterPath ) );
+   hb_retptrGC( gcAllocate_QPainterPath( new QPainterPath( hbqt_par_QPainterPath( 1 )->united( *hbqt_par_QPainterPath( 2 ) ) ) ) );
 }
 
 

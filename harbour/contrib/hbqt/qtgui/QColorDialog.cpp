@@ -81,42 +81,65 @@
  * ~QColorDialog ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QColorDialog > pq;
+} QGC_POINTER_QColorDialog;
+
 QT_G_FUNC( release_QColorDialog )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QColorDialog                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QColorDialog * p = ( QGC_POINTER_QColorDialog * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QColorDialog                 p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QColorDialog                ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QColorDialog * ) ph )->~QColorDialog();
-         ph = NULL;
+         ( ( QColorDialog * ) p->ph )->~QColorDialog();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QColorDialog                Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QColorDialog                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QColorDialog" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QColorDialog                Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QColorDialog" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QColorDialog" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QColorDialog                Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QColorDialog" );
+      #endif
    }
+}
+
+void * gcAllocate_QColorDialog( void * pObj )
+{
+   QGC_POINTER_QColorDialog * p = ( QGC_POINTER_QColorDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QColorDialog ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QColorDialog;
+   new( & p->pq ) QPointer< QColorDialog >( ( QColorDialog * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QColorDialog                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QCOLORDIALOG )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QColorDialog > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QColorDialog                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
    {
@@ -127,20 +150,14 @@ hb_snprintf( str, sizeof(str), "   GC:  new QColorDialog                %i B %i 
       pObj = ( QColorDialog* ) new QColorDialog( hbqt_par_QWidget( 1 ) ) ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QColorDialog;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QColorDialog( pObj ) );
 }
 /*
  * QColor currentColor () const
  */
 HB_FUNC( QT_QCOLORDIALOG_CURRENTCOLOR )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QColorDialog( 1 )->currentColor() ), release_QColor ) );
+   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->currentColor() ) ) );
 }
 
 /*
@@ -164,7 +181,7 @@ HB_FUNC( QT_QCOLORDIALOG_OPTIONS )
  */
 HB_FUNC( QT_QCOLORDIALOG_SELECTEDCOLOR )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QColorDialog( 1 )->selectedColor() ), release_QColor ) );
+   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->selectedColor() ) ) );
 }
 
 /*
@@ -228,7 +245,7 @@ HB_FUNC( QT_QCOLORDIALOG_CUSTOMCOUNT )
  */
 HB_FUNC( QT_QCOLORDIALOG_GETCOLOR )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QColorDialog( 1 )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ), hbqt_par_QString( 4 ), ( QColorDialog::ColorDialogOptions ) hb_parni( 5 ) ) ), release_QColor ) );
+   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ), hbqt_par_QString( 4 ), ( QColorDialog::ColorDialogOptions ) hb_parni( 5 ) ) ) ) );
 }
 
 /*
@@ -236,7 +253,7 @@ HB_FUNC( QT_QCOLORDIALOG_GETCOLOR )
  */
 HB_FUNC( QT_QCOLORDIALOG_GETCOLOR_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QColorDialog( 1 )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ) ) ), release_QColor ) );
+   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ) ) ) ) );
 }
 
 /*

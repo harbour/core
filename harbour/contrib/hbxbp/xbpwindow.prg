@@ -721,6 +721,7 @@ METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 METHOD XbpWindow:destroy()
    LOCAL cXbp := __ObjGetClsName( self )
 
+//#define __debug__
 #ifdef __debug__
 xbp_Debug( ".   " )
 xbp_Debug( ThreadID(),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hb_getMemUsed() )
@@ -730,6 +731,7 @@ xbp_Debug( ThreadID(),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::ca
       SetEventLoop( NIL )
       ::oEventLoop:exit( 0 )
       ::oEventLoop:pPtr := 0
+      //::oWidget:removeEventFilter( SetEventFilter() )
 
       SetAppWindow( XbpObject():new() )
 

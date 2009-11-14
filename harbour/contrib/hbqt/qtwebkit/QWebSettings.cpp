@@ -176,7 +176,7 @@ HB_FUNC( QT_QWEBSETTINGS_TESTATTRIBUTE )
  */
 HB_FUNC( QT_QWEBSETTINGS_USERSTYLESHEETURL )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QUrl( hbqt_par_QWebSettings( 1 )->userStyleSheetUrl() ), release_QUrl ) );
+   hb_retptrGC( gcAllocate_QUrl( new QUrl( hbqt_par_QWebSettings( 1 )->userStyleSheetUrl() ) ) );
 }
 
 /*
@@ -208,7 +208,7 @@ HB_FUNC( QT_QWEBSETTINGS_ICONDATABASEPATH )
  */
 HB_FUNC( QT_QWEBSETTINGS_ICONFORURL )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QWebSettings( 1 )->iconForUrl( *hbqt_par_QUrl( 2 ) ) ), release_QIcon ) );
+   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QWebSettings( 1 )->iconForUrl( *hbqt_par_QUrl( 2 ) ) ) ) );
 }
 
 /*
@@ -288,7 +288,7 @@ HB_FUNC( QT_QWEBSETTINGS_SETWEBGRAPHIC )
  */
 HB_FUNC( QT_QWEBSETTINGS_WEBGRAPHIC )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPixmap( hbqt_par_QWebSettings( 1 )->webGraphic( ( QWebSettings::WebGraphic ) hb_parni( 2 ) ) ), release_QPixmap ) );
+   hb_retptrGC( gcAllocate_QPixmap( new QPixmap( hbqt_par_QWebSettings( 1 )->webGraphic( ( QWebSettings::WebGraphic ) hb_parni( 2 ) ) ) ) );
 }
 
 

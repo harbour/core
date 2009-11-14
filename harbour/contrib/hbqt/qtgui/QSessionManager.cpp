@@ -116,7 +116,7 @@ HB_FUNC( QT_QSESSIONMANAGER_CANCEL )
  */
 HB_FUNC( QT_QSESSIONMANAGER_DISCARDCOMMAND )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QSessionManager( 1 )->discardCommand() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QSessionManager( 1 )->discardCommand() ) ) );
 }
 
 /*
@@ -148,7 +148,7 @@ HB_FUNC( QT_QSESSIONMANAGER_REQUESTPHASE2 )
  */
 HB_FUNC( QT_QSESSIONMANAGER_RESTARTCOMMAND )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QSessionManager( 1 )->restartCommand() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QSessionManager( 1 )->restartCommand() ) ) );
 }
 
 /*

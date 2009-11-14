@@ -75,52 +75,69 @@
  * ~QTranslator ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QTranslator > pq;
+} QGC_POINTER_QTranslator;
+
 QT_G_FUNC( release_QTranslator )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTranslator                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QTranslator * p = ( QGC_POINTER_QTranslator * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTranslator                  p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTranslator                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QTranslator * ) ph )->~QTranslator();
-         ph = NULL;
+         ( ( QTranslator * ) p->ph )->~QTranslator();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTranslator                 Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QTranslator                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QTranslator" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTranslator                 Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QTranslator" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTranslator" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTranslator                 Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTranslator" );
+      #endif
    }
+}
+
+void * gcAllocate_QTranslator( void * pObj )
+{
+   QGC_POINTER_QTranslator * p = ( QGC_POINTER_QTranslator * ) hb_gcAllocate( sizeof( QGC_POINTER_QTranslator ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTranslator;
+   new( & p->pq ) QPointer< QTranslator >( ( QTranslator * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QTranslator                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTRANSLATOR )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QTranslator > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTranslator                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = new QTranslator() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTranslator;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTranslator( pObj ) );
 }
 /*
  * virtual bool isEmpty () const

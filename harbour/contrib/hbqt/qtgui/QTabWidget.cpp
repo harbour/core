@@ -81,52 +81,69 @@
  * ~QTabWidget ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QTabWidget > pq;
+} QGC_POINTER_QTabWidget;
+
 QT_G_FUNC( release_QTabWidget )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTabWidget                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QTabWidget * p = ( QGC_POINTER_QTabWidget * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTabWidget                   p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTabWidget                  ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QTabWidget * ) ph )->~QTabWidget();
-         ph = NULL;
+         ( ( QTabWidget * ) p->ph )->~QTabWidget();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTabWidget                  Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QTabWidget                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QTabWidget" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTabWidget                  Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QTabWidget" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTabWidget" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTabWidget                  Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTabWidget" );
+      #endif
    }
+}
+
+void * gcAllocate_QTabWidget( void * pObj )
+{
+   QGC_POINTER_QTabWidget * p = ( QGC_POINTER_QTabWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QTabWidget ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTabWidget;
+   new( & p->pq ) QPointer< QTabWidget >( ( QTabWidget * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QTabWidget                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTABWIDGET )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QTabWidget > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTabWidget                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QTabWidget* ) new QTabWidget( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTabWidget;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTabWidget( pObj ) );
 }
 /*
  * int addTab ( QWidget * page, const QString & label )
@@ -205,7 +222,7 @@ HB_FUNC( QT_QTABWIDGET_ELIDEMODE )
  */
 HB_FUNC( QT_QTABWIDGET_ICONSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QTabWidget( 1 )->iconSize() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QTabWidget( 1 )->iconSize() ) ) );
 }
 
 /*
@@ -373,7 +390,7 @@ HB_FUNC( QT_QTABWIDGET_SETUSESSCROLLBUTTONS )
  */
 HB_FUNC( QT_QTABWIDGET_TABICON )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QTabWidget( 1 )->tabIcon( hb_parni( 2 ) ) ), release_QIcon ) );
+   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QTabWidget( 1 )->tabIcon( hb_parni( 2 ) ) ) ) );
 }
 
 /*

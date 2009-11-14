@@ -76,52 +76,69 @@
  * ~QSignalMapper ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QSignalMapper > pq;
+} QGC_POINTER_QSignalMapper;
+
 QT_G_FUNC( release_QSignalMapper )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QSignalMapper               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QSignalMapper * p = ( QGC_POINTER_QSignalMapper * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QSignalMapper                p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QSignalMapper               ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QSignalMapper * ) ph )->~QSignalMapper();
-         ph = NULL;
+         ( ( QSignalMapper * ) p->ph )->~QSignalMapper();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QSignalMapper               Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QSignalMapper               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QSignalMapper" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QSignalMapper               Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QSignalMapper" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QSignalMapper" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QSignalMapper               Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QSignalMapper" );
+      #endif
    }
+}
+
+void * gcAllocate_QSignalMapper( void * pObj )
+{
+   QGC_POINTER_QSignalMapper * p = ( QGC_POINTER_QSignalMapper * ) hb_gcAllocate( sizeof( QGC_POINTER_QSignalMapper ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QSignalMapper;
+   new( & p->pq ) QPointer< QSignalMapper >( ( QSignalMapper * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QSignalMapper               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSIGNALMAPPER )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QSignalMapper > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QSignalMapper               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = new QSignalMapper( hbqt_par_QObject( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QSignalMapper;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QSignalMapper( pObj ) );
 }
 /*
  * QObject * mapping ( int id ) const

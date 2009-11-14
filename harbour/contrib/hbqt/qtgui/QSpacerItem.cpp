@@ -77,43 +77,51 @@
 
 QT_G_FUNC( release_QSpacerItem )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QSpacerItem                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QSpacerItem                  p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QSpacerItem                 ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QSpacerItem * ) ph )->~QSpacerItem();
-      ph = NULL;
+      ( ( QSpacerItem * ) p->ph )->~QSpacerItem();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QSpacerItem                 Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QSpacerItem                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QSpacerItem" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QSpacerItem                 Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QSpacerItem" );
+      #endif
    }
+}
+
+void * gcAllocate_QSpacerItem( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QSpacerItem;
+   #if defined(__debug__)
+      just_debug( "          new_QSpacerItem                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSPACERITEM )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QSpacerItem                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
       pObj = new QSpacerItem( *hbqt_par_QSpacerItem( 1 ) ) ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QSpacerItem;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QSpacerItem( pObj ) );
 }
 /*
  * void changeSize ( int w, int h, QSizePolicy::Policy hPolicy = QSizePolicy::Minimum, QSizePolicy::Policy vPolicy = QSizePolicy::Minimum )

@@ -76,52 +76,69 @@
  * ~QDial ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QDial > pq;
+} QGC_POINTER_QDial;
+
 QT_G_FUNC( release_QDial )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QDial                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QDial * p = ( QGC_POINTER_QDial * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QDial                        p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QDial                       ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QDial * ) ph )->~QDial();
-         ph = NULL;
+         ( ( QDial * ) p->ph )->~QDial();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QDial                       Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QDial                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QDial" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QDial                       Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QDial" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QDial" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QDial                       Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QDial" );
+      #endif
    }
+}
+
+void * gcAllocate_QDial( void * pObj )
+{
+   QGC_POINTER_QDial * p = ( QGC_POINTER_QDial * ) hb_gcAllocate( sizeof( QGC_POINTER_QDial ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QDial;
+   new( & p->pq ) QPointer< QDial >( ( QDial * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QDial                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QDIAL )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QDial > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QDial                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QDial* ) new QDial( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QDial;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QDial( pObj ) );
 }
 /*
  * int notchSize () const

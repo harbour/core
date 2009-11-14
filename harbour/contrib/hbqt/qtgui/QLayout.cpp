@@ -82,31 +82,7 @@
 
 QT_G_FUNC( release_QLayout )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QLayout                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
-   {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
-      {
-         ( ( QLayout * ) ph )->~QLayout();
-         ph = NULL;
-      }
-      else
-      {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QLayout" );  OutputDebugString( str );
-#endif
-      }
-   }
-   else
-   {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QLayout" );  OutputDebugString( str );
-#endif
-   }
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QLAYOUT )
@@ -141,7 +117,7 @@ HB_FUNC( QT_QLAYOUT_ADDWIDGET )
  */
 HB_FUNC( QT_QLAYOUT_CONTENTSRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QLayout( 1 )->contentsRect() ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QLayout( 1 )->contentsRect() ) ) );
 }
 
 /*
@@ -207,7 +183,7 @@ HB_FUNC( QT_QLAYOUT_ITEMAT )
  */
 HB_FUNC( QT_QLAYOUT_MAXIMUMSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QLayout( 1 )->maximumSize() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QLayout( 1 )->maximumSize() ) ) );
 }
 
 /*
@@ -223,7 +199,7 @@ HB_FUNC( QT_QLAYOUT_MENUBAR )
  */
 HB_FUNC( QT_QLAYOUT_MINIMUMSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QLayout( 1 )->minimumSize() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QLayout( 1 )->minimumSize() ) ) );
 }
 
 /*
@@ -351,7 +327,7 @@ HB_FUNC( QT_QLAYOUT_UPDATE )
  */
 HB_FUNC( QT_QLAYOUT_CLOSESTACCEPTABLESIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QLayout( 1 )->closestAcceptableSize( hbqt_par_QWidget( 2 ), *hbqt_par_QSize( 3 ) ) ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QLayout( 1 )->closestAcceptableSize( hbqt_par_QWidget( 2 ), *hbqt_par_QSize( 3 ) ) ) ) );
 }
 
 

@@ -78,31 +78,7 @@
 
 QT_G_FUNC( release_QAbstractTableModel )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QAbstractTableModel         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
-   {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
-      {
-         ( ( QAbstractTableModel * ) ph )->~QAbstractTableModel();
-         ph = NULL;
-      }
-      else
-      {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QAbstractTableModel" );  OutputDebugString( str );
-#endif
-      }
-   }
-   else
-   {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QAbstractTableModel" );  OutputDebugString( str );
-#endif
-   }
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QABSTRACTTABLEMODEL )
@@ -113,7 +89,7 @@ HB_FUNC( QT_QABSTRACTTABLEMODEL )
  */
 HB_FUNC( QT_QABSTRACTTABLEMODEL_INDEX )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QAbstractTableModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractTableModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ) ) );
 }
 
 

@@ -80,52 +80,69 @@
  * ~QDialog ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QDialog > pq;
+} QGC_POINTER_QDialog;
+
 QT_G_FUNC( release_QDialog )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QDialog                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QDialog * p = ( QGC_POINTER_QDialog * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QDialog                      p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QDialog                     ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QDialog * ) ph )->~QDialog();
-         ph = NULL;
+         ( ( QDialog * ) p->ph )->~QDialog();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QDialog                     Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QDialog                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QDialog" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QDialog                     Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QDialog" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QDialog" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QDialog                     Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QDialog" );
+      #endif
    }
+}
+
+void * gcAllocate_QDialog( void * pObj )
+{
+   QGC_POINTER_QDialog * p = ( QGC_POINTER_QDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QDialog ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QDialog;
+   new( & p->pq ) QPointer< QDialog >( ( QDialog * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QDialog                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QDIALOG )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QDialog > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QDialog                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = new QDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QDialog;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QDialog( pObj ) );
 }
 /*
  * bool isSizeGripEnabled () const

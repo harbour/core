@@ -83,47 +83,55 @@
 
 QT_G_FUNC( release_QStyleOptionComboBox )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QStyleOptionComboBox        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionComboBox         p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionComboBox        ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QStyleOptionComboBox * ) ph )->~QStyleOptionComboBox();
-      ph = NULL;
+      ( ( QStyleOptionComboBox * ) p->ph )->~QStyleOptionComboBox();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionComboBox        Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QStyleOptionComboBox        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QStyleOptionComboBox" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionComboBox        Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QStyleOptionComboBox" );
+      #endif
    }
+}
+
+void * gcAllocate_QStyleOptionComboBox( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QStyleOptionComboBox;
+   #if defined(__debug__)
+      just_debug( "          new_QStyleOptionComboBox        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QStyleOptionComboBox        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QStyleOptionComboBox* ) new QStyleOptionComboBox() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QStyleOptionComboBox;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QStyleOptionComboBox( pObj ) );
 }
 /*
  * QIcon currentIcon
  */
 HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_CURRENTICON )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QStyleOptionComboBox( 1 )->currentIcon ), release_QIcon ) );
+   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QStyleOptionComboBox( 1 )->currentIcon ) ) );
 }
 
 /*
@@ -155,7 +163,7 @@ HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_FRAME )
  */
 HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_ICONSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QStyleOptionComboBox( 1 )->iconSize ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionComboBox( 1 )->iconSize ) ) );
 }
 
 /*
@@ -163,7 +171,7 @@ HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_ICONSIZE )
  */
 HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_POPUPRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QStyleOptionComboBox( 1 )->popupRect ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QStyleOptionComboBox( 1 )->popupRect ) ) );
 }
 
 

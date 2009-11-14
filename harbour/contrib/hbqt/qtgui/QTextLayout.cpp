@@ -95,40 +95,48 @@
 
 QT_G_FUNC( release_QTextLayout )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTextLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextLayout                  p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextLayout                 ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QTextLayout * ) ph )->~QTextLayout();
-      ph = NULL;
+      ( ( QTextLayout * ) p->ph )->~QTextLayout();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextLayout                 Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QTextLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTextLayout" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextLayout                 Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTextLayout" );
+      #endif
    }
+}
+
+void * gcAllocate_QTextLayout( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTextLayout;
+   #if defined(__debug__)
+      just_debug( "          new_QTextLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTEXTLAYOUT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTextLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QTextLayout* ) new QTextLayout() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTextLayout;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTextLayout( pObj ) );
 }
 /*
  * void beginLayout ()
@@ -143,7 +151,7 @@ HB_FUNC( QT_QTEXTLAYOUT_BEGINLAYOUT )
  */
 HB_FUNC( QT_QTEXTLAYOUT_BOUNDINGRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QTextLayout( 1 )->boundingRect() ), release_QRectF ) );
+   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QTextLayout( 1 )->boundingRect() ) ) );
 }
 
 /*
@@ -175,7 +183,7 @@ HB_FUNC( QT_QTEXTLAYOUT_CLEARLAYOUT )
  */
 HB_FUNC( QT_QTEXTLAYOUT_CREATELINE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextLine( hbqt_par_QTextLayout( 1 )->createLine() ), release_QTextLine ) );
+   hb_retptrGC( gcAllocate_QTextLine( new QTextLine( hbqt_par_QTextLayout( 1 )->createLine() ) ) );
 }
 
 /*
@@ -207,7 +215,7 @@ HB_FUNC( QT_QTEXTLAYOUT_ENDLAYOUT )
  */
 HB_FUNC( QT_QTEXTLAYOUT_FONT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QTextLayout( 1 )->font() ), release_QFont ) );
+   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QTextLayout( 1 )->font() ) ) );
 }
 
 /*
@@ -223,7 +231,7 @@ HB_FUNC( QT_QTEXTLAYOUT_ISVALIDCURSORPOSITION )
  */
 HB_FUNC( QT_QTEXTLAYOUT_LINEAT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextLine( hbqt_par_QTextLayout( 1 )->lineAt( hb_parni( 2 ) ) ), release_QTextLine ) );
+   hb_retptrGC( gcAllocate_QTextLine( new QTextLine( hbqt_par_QTextLayout( 1 )->lineAt( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -239,7 +247,7 @@ HB_FUNC( QT_QTEXTLAYOUT_LINECOUNT )
  */
 HB_FUNC( QT_QTEXTLAYOUT_LINEFORTEXTPOSITION )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextLine( hbqt_par_QTextLayout( 1 )->lineForTextPosition( hb_parni( 2 ) ) ), release_QTextLine ) );
+   hb_retptrGC( gcAllocate_QTextLine( new QTextLine( hbqt_par_QTextLayout( 1 )->lineForTextPosition( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -271,7 +279,7 @@ HB_FUNC( QT_QTEXTLAYOUT_NEXTCURSORPOSITION )
  */
 HB_FUNC( QT_QTEXTLAYOUT_POSITION )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPointF( hbqt_par_QTextLayout( 1 )->position() ), release_QPointF ) );
+   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QTextLayout( 1 )->position() ) ) );
 }
 
 /*
@@ -359,7 +367,7 @@ HB_FUNC( QT_QTEXTLAYOUT_TEXT )
  */
 HB_FUNC( QT_QTEXTLAYOUT_TEXTOPTION )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextOption( hbqt_par_QTextLayout( 1 )->textOption() ), release_QTextOption ) );
+   hb_retptrGC( gcAllocate_QTextOption( new QTextOption( hbqt_par_QTextLayout( 1 )->textOption() ) ) );
 }
 
 

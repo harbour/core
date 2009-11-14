@@ -107,7 +107,8 @@ HB_FUNC( QT_HBDBFMODEL_RESET )
 
 HB_FUNC( QT_HBDBFMODEL_INDEX )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_HbDbfModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), QModelIndex() ) ), release_QModelIndex ) );
+// BI  hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_HbDbfModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), QModelIndex() ) ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_HbDbfModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), QModelIndex() ) ) ) );
 }
 
 HB_FUNC( QT_HBDBFMODEL_HBSETROWCOLUMNS )
@@ -117,37 +118,15 @@ HB_FUNC( QT_HBDBFMODEL_HBSETROWCOLUMNS )
 
 HB_FUNC( QT_HBDBFMODEL_DESTROY )
 {
+// BI:TODO fix the GPF  hbqt_par_HbDbfModel( 1 )->~HbDbfModel();
+//     BUT WITHOUT THIS FM STATISTICS GENERATE A BIG LOG SO THIS IS NOT THE OPTION NOW
    hbqt_par_HbDbfModel( 1 )->~HbDbfModel();
 }
 
 
 QT_G_FUNC( release_QAbstractItemModel )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QAbstractItemModel          %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
-   {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
-      {
-         ( ( QAbstractItemModel * ) ph )->~QAbstractItemModel();
-         ph = NULL;
-      }
-      else
-      {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QAbstractItemModel" );  OutputDebugString( str );
-#endif
-      }
-   }
-   else
-   {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QAbstractItemModel" );  OutputDebugString( str );
-#endif
-   }
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QABSTRACTITEMMODEL )
@@ -158,7 +137,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_BUDDY )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->buddy( *hbqt_par_QModelIndex( 2 ) ) ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->buddy( *hbqt_par_QModelIndex( 2 ) ) ) ) );
 }
 
 /*
@@ -182,7 +161,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_COLUMNCOUNT )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_DATA )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QAbstractItemModel( 1 )->data( *hbqt_par_QModelIndex( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::DisplayRole ) ) ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QAbstractItemModel( 1 )->data( *hbqt_par_QModelIndex( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::DisplayRole ) ) ) ) );
 }
 
 /*
@@ -230,7 +209,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_HASINDEX )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_HEADERDATA )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QAbstractItemModel( 1 )->headerData( hb_parni( 2 ), ( Qt::Orientation ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : Qt::DisplayRole ) ) ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QAbstractItemModel( 1 )->headerData( hb_parni( 2 ), ( Qt::Orientation ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : Qt::DisplayRole ) ) ) ) );
 }
 
 /*
@@ -238,7 +217,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_HEADERDATA )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_INDEX )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ) ) );
 }
 
 /*
@@ -278,7 +257,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_INSERTROWS )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_MIMETYPES )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QAbstractItemModel( 1 )->mimeTypes() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QAbstractItemModel( 1 )->mimeTypes() ) ) );
 }
 
 /*
@@ -286,7 +265,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_MIMETYPES )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_PARENT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->parent( *hbqt_par_QModelIndex( 2 ) ) ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->parent( *hbqt_par_QModelIndex( 2 ) ) ) ) );
 }
 
 /*
@@ -358,7 +337,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_SETSUPPORTEDDRAGACTIONS )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_SIBLING )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->sibling( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QModelIndex( 4 ) ) ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->sibling( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QModelIndex( 4 ) ) ) ) );
 }
 
 /*
@@ -374,7 +353,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_SORT )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_SPAN )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QAbstractItemModel( 1 )->span( *hbqt_par_QModelIndex( 2 ) ) ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QAbstractItemModel( 1 )->span( *hbqt_par_QModelIndex( 2 ) ) ) ) );
 }
 
 /*

@@ -78,31 +78,7 @@
 
 QT_G_FUNC( release_QAbstractListModel )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QAbstractListModel          %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
-   {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
-      {
-         ( ( QAbstractListModel * ) ph )->~QAbstractListModel();
-         ph = NULL;
-      }
-      else
-      {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QAbstractListModel" );  OutputDebugString( str );
-#endif
-      }
-   }
-   else
-   {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QAbstractListModel" );  OutputDebugString( str );
-#endif
-   }
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QABSTRACTLISTMODEL )
@@ -113,7 +89,7 @@ HB_FUNC( QT_QABSTRACTLISTMODEL )
  */
 HB_FUNC( QT_QABSTRACTLISTMODEL_INDEX )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QAbstractListModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractListModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ) ) );
 }
 
 

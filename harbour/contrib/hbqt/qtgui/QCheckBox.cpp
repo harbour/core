@@ -76,42 +76,65 @@
  * QCheckBox ( const QString & text, QWidget * parent = 0 )
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QCheckBox > pq;
+} QGC_POINTER_QCheckBox;
+
 QT_G_FUNC( release_QCheckBox )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QCheckBox                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QCheckBox * p = ( QGC_POINTER_QCheckBox * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QCheckBox                    p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QCheckBox                   ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QCheckBox * ) ph )->~QCheckBox();
-         ph = NULL;
+         ( ( QCheckBox * ) p->ph )->~QCheckBox();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QCheckBox                   Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QCheckBox                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QCheckBox" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QCheckBox                   Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QCheckBox" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QCheckBox" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QCheckBox                   Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QCheckBox" );
+      #endif
    }
+}
+
+void * gcAllocate_QCheckBox( void * pObj )
+{
+   QGC_POINTER_QCheckBox * p = ( QGC_POINTER_QCheckBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QCheckBox ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QCheckBox;
+   new( & p->pq ) QPointer< QCheckBox >( ( QCheckBox * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QCheckBox                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QCHECKBOX )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QCheckBox > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QCheckBox                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
    {
@@ -122,13 +145,7 @@ hb_snprintf( str, sizeof(str), "   GC:  new QCheckBox                   %i B %i 
       pObj = ( QCheckBox* ) new QCheckBox( hbqt_par_QWidget( 1 ) ) ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QCheckBox;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QCheckBox( pObj ) );
 }
 /*
  * Qt::CheckState checkState () const

@@ -96,52 +96,69 @@
  * ~QWizard ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QWizard > pq;
+} QGC_POINTER_QWizard;
+
 QT_G_FUNC( release_QWizard )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QWizard                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QWizard * p = ( QGC_POINTER_QWizard * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QWizard                      p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QWizard                     ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QWizard * ) ph )->~QWizard();
-         ph = NULL;
+         ( ( QWizard * ) p->ph )->~QWizard();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QWizard                     Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QWizard                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QWizard" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QWizard                     Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QWizard" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QWizard" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QWizard                     Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QWizard" );
+      #endif
    }
+}
+
+void * gcAllocate_QWizard( void * pObj )
+{
+   QGC_POINTER_QWizard * p = ( QGC_POINTER_QWizard * ) hb_gcAllocate( sizeof( QGC_POINTER_QWizard ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QWizard;
+   new( & p->pq ) QPointer< QWizard >( ( QWizard * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QWizard                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QWIZARD )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QWizard > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QWizard                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = new QWizard( hbqt_par_QWidget( 2 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QWizard;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QWizard( pObj ) );
 }
 /*
  * int addPage ( QWizardPage * page )
@@ -188,7 +205,7 @@ HB_FUNC( QT_QWIZARD_CURRENTPAGE )
  */
 HB_FUNC( QT_QWIZARD_FIELD )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QWizard( 1 )->field( hbqt_par_QString( 2 ) ) ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QWizard( 1 )->field( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -228,7 +245,7 @@ HB_FUNC( QT_QWIZARD_PAGE )
  */
 HB_FUNC( QT_QWIZARD_PIXMAP )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPixmap( hbqt_par_QWizard( 1 )->pixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ) ) ), release_QPixmap ) );
+   hb_retptrGC( gcAllocate_QPixmap( new QPixmap( hbqt_par_QWizard( 1 )->pixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ) ) ) ) );
 }
 
 /*

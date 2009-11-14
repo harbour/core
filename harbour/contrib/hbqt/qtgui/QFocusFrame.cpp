@@ -76,52 +76,69 @@
  * ~QFocusFrame ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QFocusFrame > pq;
+} QGC_POINTER_QFocusFrame;
+
 QT_G_FUNC( release_QFocusFrame )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QFocusFrame                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QFocusFrame * p = ( QGC_POINTER_QFocusFrame * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFocusFrame                  p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFocusFrame                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QFocusFrame * ) ph )->~QFocusFrame();
-         ph = NULL;
+         ( ( QFocusFrame * ) p->ph )->~QFocusFrame();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QFocusFrame                 Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QFocusFrame                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QFocusFrame" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QFocusFrame                 Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QFocusFrame" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QFocusFrame" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QFocusFrame                 Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QFocusFrame" );
+      #endif
    }
+}
+
+void * gcAllocate_QFocusFrame( void * pObj )
+{
+   QGC_POINTER_QFocusFrame * p = ( QGC_POINTER_QFocusFrame * ) hb_gcAllocate( sizeof( QGC_POINTER_QFocusFrame ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QFocusFrame;
+   new( & p->pq ) QPointer< QFocusFrame >( ( QFocusFrame * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QFocusFrame                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QFOCUSFRAME )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QFocusFrame > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QFocusFrame                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QFocusFrame* ) new QFocusFrame( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QFocusFrame;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QFocusFrame( pObj ) );
 }
 /*
  * void setWidget ( QWidget * widget )

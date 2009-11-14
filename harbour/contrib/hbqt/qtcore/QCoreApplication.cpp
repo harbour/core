@@ -97,31 +97,7 @@
 
 QT_G_FUNC( release_QCoreApplication )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QCoreApplication            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
-   {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
-      {
-         ( ( QCoreApplication * ) ph )->~QCoreApplication();
-         ph = NULL;
-      }
-      else
-      {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QCoreApplication" );  OutputDebugString( str );
-#endif
-      }
-   }
-   else
-   {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QCoreApplication" );  OutputDebugString( str );
-#endif
-   }
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QCOREAPPLICATION )
@@ -188,7 +164,7 @@ HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONVERSION )
  */
 HB_FUNC( QT_QCOREAPPLICATION_ARGUMENTS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QCoreApplication( 1 )->arguments() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QCoreApplication( 1 )->arguments() ) ) );
 }
 
 /*
@@ -252,7 +228,7 @@ HB_FUNC( QT_QCOREAPPLICATION_INSTANCE )
  */
 HB_FUNC( QT_QCOREAPPLICATION_LIBRARYPATHS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QCoreApplication( 1 )->libraryPaths() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QCoreApplication( 1 )->libraryPaths() ) ) );
 }
 
 /*

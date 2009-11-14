@@ -118,7 +118,7 @@ HB_FUNC( QT_QWEBFRAME_ADDTOJAVASCRIPTWINDOWOBJECT_1 )
  */
 HB_FUNC( QT_QWEBFRAME_CONTENTSSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QWebFrame( 1 )->contentsSize() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QWebFrame( 1 )->contentsSize() ) ) );
 }
 
 /*
@@ -134,7 +134,7 @@ HB_FUNC( QT_QWEBFRAME_FRAMENAME )
  */
 HB_FUNC( QT_QWEBFRAME_GEOMETRY )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QWebFrame( 1 )->geometry() ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QWebFrame( 1 )->geometry() ) ) );
 }
 
 /*
@@ -142,7 +142,7 @@ HB_FUNC( QT_QWEBFRAME_GEOMETRY )
  */
 HB_FUNC( QT_QWEBFRAME_HITTESTCONTENT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QWebHitTestResult( hbqt_par_QWebFrame( 1 )->hitTestContent( *hbqt_par_QPoint( 2 ) ) ), release_QWebHitTestResult ) );
+   hb_retptrGC( gcAllocate_QWebHitTestResult( new QWebHitTestResult( hbqt_par_QWebFrame( 1 )->hitTestContent( *hbqt_par_QPoint( 2 ) ) ) ) );
 }
 
 /*
@@ -150,7 +150,7 @@ HB_FUNC( QT_QWEBFRAME_HITTESTCONTENT )
  */
 HB_FUNC( QT_QWEBFRAME_ICON )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QWebFrame( 1 )->icon() ), release_QIcon ) );
+   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QWebFrame( 1 )->icon() ) ) );
 }
 
 /*
@@ -182,7 +182,7 @@ HB_FUNC( QT_QWEBFRAME_PARENTFRAME )
  */
 HB_FUNC( QT_QWEBFRAME_POS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QWebFrame( 1 )->pos() ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QWebFrame( 1 )->pos() ) ) );
 }
 
 /*
@@ -254,7 +254,7 @@ HB_FUNC( QT_QWEBFRAME_SCROLLBARVALUE )
  */
 HB_FUNC( QT_QWEBFRAME_SCROLLPOSITION )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QWebFrame( 1 )->scrollPosition() ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QWebFrame( 1 )->scrollPosition() ) ) );
 }
 
 /*
@@ -262,7 +262,7 @@ HB_FUNC( QT_QWEBFRAME_SCROLLPOSITION )
  */
 HB_FUNC( QT_QWEBFRAME_SECURITYORIGIN )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QWebSecurityOrigin( hbqt_par_QWebFrame( 1 )->securityOrigin() ), release_QWebSecurityOrigin ) );
+   hb_retptrGC( gcAllocate_QWebSecurityOrigin( new QWebSecurityOrigin( hbqt_par_QWebFrame( 1 )->securityOrigin() ) ) );
 }
 
 /*
@@ -366,7 +366,7 @@ HB_FUNC( QT_QWEBFRAME_TOPLAINTEXT )
  */
 HB_FUNC( QT_QWEBFRAME_URL )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QUrl( hbqt_par_QWebFrame( 1 )->url() ), release_QUrl ) );
+   hb_retptrGC( gcAllocate_QUrl( new QUrl( hbqt_par_QWebFrame( 1 )->url() ) ) );
 }
 
 /*
@@ -382,7 +382,7 @@ HB_FUNC( QT_QWEBFRAME_ZOOMFACTOR )
  */
 HB_FUNC( QT_QWEBFRAME_EVALUATEJAVASCRIPT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QWebFrame( 1 )->evaluateJavaScript( hbqt_par_QString( 2 ) ) ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QWebFrame( 1 )->evaluateJavaScript( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*

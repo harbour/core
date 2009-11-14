@@ -101,7 +101,7 @@ PROCEDURE Main()
 
 FUNCTION _BuildADialog()
 
-//   hb_gtReload( 'GUI' )
+   hb_gtReload( 'GUI' )
    BuildADialog()
 
    RETURN NIL

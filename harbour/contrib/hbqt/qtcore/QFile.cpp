@@ -86,55 +86,72 @@
  * ~QFile ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QFile > pq;
+} QGC_POINTER_QFile;
+
 QT_G_FUNC( release_QFile )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QFile                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QFile * p = ( QGC_POINTER_QFile * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFile                        p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFile                       ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QFile * ) ph )->~QFile();
-         ph = NULL;
+         ( ( QFile * ) p->ph )->~QFile();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QFile                       Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QFile                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QFile" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QFile                       Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QFile" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QFile" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QFile                       Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QFile" );
+      #endif
    }
+}
+
+void * gcAllocate_QFile( void * pObj )
+{
+   QGC_POINTER_QFile * p = ( QGC_POINTER_QFile * ) hb_gcAllocate( sizeof( QGC_POINTER_QFile ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QFile;
+   new( & p->pq ) QPointer< QFile >( ( QFile * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QFile                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QFILE )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QFile > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QFile                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
       pObj = new QFile( hbqt_par_QString( 1 ) ) ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QFile;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QFile( pObj ) );
 }
 /*
  * virtual bool atEnd () const
@@ -341,7 +358,7 @@ HB_FUNC( QT_QFILE_DECODENAME_1 )
  */
 HB_FUNC( QT_QFILE_ENCODENAME )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QFile( 1 )->encodeName( hbqt_par_QString( 2 ) ) ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QFile( 1 )->encodeName( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*

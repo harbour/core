@@ -95,42 +95,65 @@
  * ~QAction ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QAction > pq;
+} QGC_POINTER_QAction;
+
 QT_G_FUNC( release_QAction )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QAction                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QAction * p = ( QGC_POINTER_QAction * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QAction                      p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QAction                     ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QAction * ) ph )->~QAction();
-         ph = NULL;
+         ( ( QAction * ) p->ph )->~QAction();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QAction                     Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QAction                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QAction" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QAction                     Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QAction" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QAction" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QAction                     Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QAction" );
+      #endif
    }
+}
+
+void * gcAllocate_QAction( void * pObj )
+{
+   QGC_POINTER_QAction * p = ( QGC_POINTER_QAction * ) hb_gcAllocate( sizeof( QGC_POINTER_QAction ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QAction;
+   new( & p->pq ) QPointer< QAction >( ( QAction * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QAction                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QACTION )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QAction > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QAction                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    if( HB_ISPOINTER( 1 ) )
       pObj = new QAction( hbqt_par_QObject( 1 ) ) ;
@@ -139,13 +162,7 @@ hb_snprintf( str, sizeof(str), "   GC:  new QAction                     %i B %i 
    else if( HB_ISPOINTER( 3 ) )
       pObj = new QAction( *hbqt_par_QIcon( 1 ), hbqt_par_QString( 2 ), hbqt_par_QObject( 3 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QAction;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QAction( pObj ) );
 }
 /*
  * QActionGroup * actionGroup () const
@@ -176,7 +193,7 @@ HB_FUNC( QT_QACTION_AUTOREPEAT )
  */
 HB_FUNC( QT_QACTION_DATA )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QAction( 1 )->data() ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QAction( 1 )->data() ) ) );
 }
 
 /*
@@ -184,7 +201,7 @@ HB_FUNC( QT_QACTION_DATA )
  */
 HB_FUNC( QT_QACTION_FONT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QAction( 1 )->font() ), release_QFont ) );
+   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QAction( 1 )->font() ) ) );
 }
 
 /*
@@ -192,7 +209,7 @@ HB_FUNC( QT_QACTION_FONT )
  */
 HB_FUNC( QT_QACTION_ICON )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QAction( 1 )->icon() ), release_QIcon ) );
+   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QAction( 1 )->icon() ) ) );
 }
 
 /*
@@ -424,7 +441,7 @@ HB_FUNC( QT_QACTION_SETWHATSTHIS )
  */
 HB_FUNC( QT_QACTION_SHORTCUT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QKeySequence( hbqt_par_QAction( 1 )->shortcut() ), release_QKeySequence ) );
+   hb_retptrGC( gcAllocate_QKeySequence( new QKeySequence( hbqt_par_QAction( 1 )->shortcut() ) ) );
 }
 
 /*

@@ -83,47 +83,55 @@
 
 QT_G_FUNC( release_QStyleOptionTabBarBase )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QStyleOptionTabBarBase      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionTabBarBase       p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionTabBarBase      ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QStyleOptionTabBarBase * ) ph )->~QStyleOptionTabBarBase();
-      ph = NULL;
+      ( ( QStyleOptionTabBarBase * ) p->ph )->~QStyleOptionTabBarBase();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionTabBarBase      Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QStyleOptionTabBarBase      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QStyleOptionTabBarBase" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionTabBarBase      Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QStyleOptionTabBarBase" );
+      #endif
    }
+}
+
+void * gcAllocate_QStyleOptionTabBarBase( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QStyleOptionTabBarBase;
+   #if defined(__debug__)
+      just_debug( "          new_QStyleOptionTabBarBase      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSTYLEOPTIONTABBARBASE )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QStyleOptionTabBarBase      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QStyleOptionTabBarBase* ) new QStyleOptionTabBarBase() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QStyleOptionTabBarBase;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QStyleOptionTabBarBase( pObj ) );
 }
 /*
  * QRect selectedTabRect
  */
 HB_FUNC( QT_QSTYLEOPTIONTABBARBASE_SELECTEDTABRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QStyleOptionTabBarBase( 1 )->selectedTabRect ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QStyleOptionTabBarBase( 1 )->selectedTabRect ) ) );
 }
 
 /*
@@ -139,7 +147,7 @@ HB_FUNC( QT_QSTYLEOPTIONTABBARBASE_SHAPE )
  */
 HB_FUNC( QT_QSTYLEOPTIONTABBARBASE_TABBARRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QStyleOptionTabBarBase( 1 )->tabBarRect ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QStyleOptionTabBarBase( 1 )->tabBarRect ) ) );
 }
 
 

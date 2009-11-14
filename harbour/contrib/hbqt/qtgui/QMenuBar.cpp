@@ -90,52 +90,69 @@
  * ~QMenuBar ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QMenuBar > pq;
+} QGC_POINTER_QMenuBar;
+
 QT_G_FUNC( release_QMenuBar )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QMenuBar                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QMenuBar * p = ( QGC_POINTER_QMenuBar * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QMenuBar                     p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QMenuBar                    ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QMenuBar * ) ph )->~QMenuBar();
-         ph = NULL;
+         ( ( QMenuBar * ) p->ph )->~QMenuBar();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QMenuBar                    Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QMenuBar                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QMenuBar" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QMenuBar                    Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QMenuBar" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QMenuBar" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QMenuBar                    Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QMenuBar" );
+      #endif
    }
+}
+
+void * gcAllocate_QMenuBar( void * pObj )
+{
+   QGC_POINTER_QMenuBar * p = ( QGC_POINTER_QMenuBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QMenuBar ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QMenuBar;
+   new( & p->pq ) QPointer< QMenuBar >( ( QMenuBar * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QMenuBar                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QMENUBAR )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QMenuBar > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QMenuBar                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QMenuBar* ) new QMenuBar( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QMenuBar;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QMenuBar( pObj ) );
 }
 /*
  * QAction * activeAction () const

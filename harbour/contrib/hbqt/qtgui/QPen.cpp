@@ -92,30 +92,44 @@
 
 QT_G_FUNC( release_QPen )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QPen                        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QPen                         p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QPen                        ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QPen * ) ph )->~QPen();
-      ph = NULL;
+      ( ( QPen * ) p->ph )->~QPen();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QPen                        Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QPen                        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QPen" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QPen                        Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QPen" );
+      #endif
    }
+}
+
+void * gcAllocate_QPen( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QPen;
+   #if defined(__debug__)
+      just_debug( "          new_QPen                        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QPEN )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QPen                        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
    {
@@ -151,20 +165,14 @@ hb_snprintf( str, sizeof(str), "   GC:  new QPen                        %i B %i 
       pObj = ( QPen* ) new QPen() ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QPen;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QPen( pObj ) );
 }
 /*
  * QBrush brush () const
  */
 HB_FUNC( QT_QPEN_BRUSH )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QBrush( hbqt_par_QPen( 1 )->brush() ), release_QBrush ) );
+   hb_retptrGC( gcAllocate_QBrush( new QBrush( hbqt_par_QPen( 1 )->brush() ) ) );
 }
 
 /*
@@ -180,7 +188,7 @@ HB_FUNC( QT_QPEN_CAPSTYLE )
  */
 HB_FUNC( QT_QPEN_COLOR )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QPen( 1 )->color() ), release_QColor ) );
+   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QPen( 1 )->color() ) ) );
 }
 
 /*

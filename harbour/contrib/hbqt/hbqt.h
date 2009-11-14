@@ -61,29 +61,10 @@
 
 #if QT_VERSION >= 0x040500
 
-//#define __debug__
+// #define __debug__
 #if defined(__debug__)
-    #include <windows.h>
-    static char str[ 100 ];
-    int hb_getMemUsed( void );
-#endif
-
-#if 0
-#include <QMainWIndow>
-
-/* global declaration */
-typedef void * ( * QT_PARAM_FUNC ) ( int );
-typedef struct _QT_PARAM_INFO
-{
-   QT_PARAM_FUNC            pFunc;
-   struct _QT_PARAM_INFO  * pNext;
-   BOOL                     fInited;
-} QT_PARAM_INFO;
-
-extern QMainWindow * hbqt_par_QMainWindow( int iParam );
-extern void qt_childregister_QMainWindow( QT_PARAM_INFO * paramInfo );
-QWidget * hbqt_par_QWidget( int iParam );
-extern void qt_childregister_QWidget( QT_PARAM_INFO * paramInfo );
+   int hb_getMemUsed( void );
+   void just_debug( const char * sTraceMsg, ... );
 #endif
 
 #define QT_G_FUNC( hbfunc )   void hbfunc( void * Cargo ) /* callback function for cleaning garbage memory pointer */
@@ -99,7 +80,6 @@ typedef struct
 HB_GARBAGE_FUNC( Q_release );
 
 void * hbqt_gcpointer( int iParam );
-void * hbqt_ptrTOgcpointer( void * p, QT_G_FUNC_PTR func );
 const HB_GC_FUNCS * gcFuncs( void );
 
 #include "hbqt_garbage.h"

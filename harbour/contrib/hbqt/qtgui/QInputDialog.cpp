@@ -82,52 +82,69 @@
  * ~QInputDialog ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QInputDialog > pq;
+} QGC_POINTER_QInputDialog;
+
 QT_G_FUNC( release_QInputDialog )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QInputDialog                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QInputDialog * p = ( QGC_POINTER_QInputDialog * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QInputDialog                 p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QInputDialog                ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QInputDialog * ) ph )->~QInputDialog();
-         ph = NULL;
+         ( ( QInputDialog * ) p->ph )->~QInputDialog();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QInputDialog                Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QInputDialog                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QInputDialog" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QInputDialog                Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QInputDialog" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QInputDialog" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QInputDialog                Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QInputDialog" );
+      #endif
    }
+}
+
+void * gcAllocate_QInputDialog( void * pObj )
+{
+   QGC_POINTER_QInputDialog * p = ( QGC_POINTER_QInputDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QInputDialog ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QInputDialog;
+   new( & p->pq ) QPointer< QInputDialog >( ( QInputDialog * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QInputDialog                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QINPUTDIALOG )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QInputDialog > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QInputDialog                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QInputDialog * ) new QInputDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QInputDialog;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QInputDialog( pObj ) );
 }
 /*
  * QString cancelButtonText () const
@@ -142,7 +159,7 @@ HB_FUNC( QT_QINPUTDIALOG_CANCELBUTTONTEXT )
  */
 HB_FUNC( QT_QINPUTDIALOG_COMBOBOXITEMS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QInputDialog( 1 )->comboBoxItems() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QInputDialog( 1 )->comboBoxItems() ) ) );
 }
 
 /*

@@ -79,52 +79,69 @@
  * ~QThread ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QThread > pq;
+} QGC_POINTER_QThread;
+
 QT_G_FUNC( release_QThread )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QThread                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QThread * p = ( QGC_POINTER_QThread * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QThread                      p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QThread                     ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QThread * ) ph )->~QThread();
-         ph = NULL;
+         ( ( QThread * ) p->ph )->~QThread();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QThread                     Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QThread                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QThread" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QThread                     Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QThread" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QThread" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QThread                     Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QThread" );
+      #endif
    }
+}
+
+void * gcAllocate_QThread( void * pObj )
+{
+   QGC_POINTER_QThread * p = ( QGC_POINTER_QThread * ) hb_gcAllocate( sizeof( QGC_POINTER_QThread ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QThread;
+   new( & p->pq ) QPointer< QThread >( ( QThread * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QThread                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTHREAD )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QThread > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QThread                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = new QThread() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QThread;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QThread( pObj ) );
 }
 /*
  * void exit ( int returnCode = 0 )

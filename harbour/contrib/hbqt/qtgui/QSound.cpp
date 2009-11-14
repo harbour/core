@@ -76,52 +76,69 @@
  * ~QSound ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QSound > pq;
+} QGC_POINTER_QSound;
+
 QT_G_FUNC( release_QSound )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QSound                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QSound * p = ( QGC_POINTER_QSound * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QSound                       p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QSound                      ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QSound * ) ph )->~QSound();
-         ph = NULL;
+         ( ( QSound * ) p->ph )->~QSound();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QSound                      Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QSound                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QSound" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QSound                      Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QSound" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QSound" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QSound                      Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QSound" );
+      #endif
    }
+}
+
+void * gcAllocate_QSound( void * pObj )
+{
+   QGC_POINTER_QSound * p = ( QGC_POINTER_QSound * ) hb_gcAllocate( sizeof( QGC_POINTER_QSound ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QSound;
+   new( & p->pq ) QPointer< QSound >( ( QSound * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QSound                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSOUND )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QSound > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QSound                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QSound* ) new QSound( hbqt_par_QString( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QSound;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QSound( pObj ) );
 }
 /*
  * QString fileName () const

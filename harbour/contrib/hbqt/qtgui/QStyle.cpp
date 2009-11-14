@@ -93,31 +93,7 @@
 
 QT_G_FUNC( release_QStyle )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QStyle                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
-   {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
-      {
-         ( ( QStyle * ) ph )->~QStyle();
-         ph = NULL;
-      }
-      else
-      {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QStyle" );  OutputDebugString( str );
-#endif
-      }
-   }
-   else
-   {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QStyle" );  OutputDebugString( str );
-#endif
-   }
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QSTYLE )
@@ -176,7 +152,7 @@ HB_FUNC( QT_QSTYLE_DRAWPRIMITIVE )
  */
 HB_FUNC( QT_QSTYLE_GENERATEDICONPIXMAP )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPixmap( hbqt_par_QStyle( 1 )->generatedIconPixmap( ( QIcon::Mode ) hb_parni( 2 ), *hbqt_par_QPixmap( 3 ), hbqt_par_QStyleOption( 4 ) ) ), release_QPixmap ) );
+   hb_retptrGC( gcAllocate_QPixmap( new QPixmap( hbqt_par_QStyle( 1 )->generatedIconPixmap( ( QIcon::Mode ) hb_parni( 2 ), *hbqt_par_QPixmap( 3 ), hbqt_par_QStyleOption( 4 ) ) ) ) );
 }
 
 /*
@@ -192,7 +168,7 @@ HB_FUNC( QT_QSTYLE_HITTESTCOMPLEXCONTROL )
  */
 HB_FUNC( QT_QSTYLE_ITEMPIXMAPRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QStyle( 1 )->itemPixmapRect( *hbqt_par_QRect( 2 ), hb_parni( 3 ), *hbqt_par_QPixmap( 4 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QStyle( 1 )->itemPixmapRect( *hbqt_par_QRect( 2 ), hb_parni( 3 ), *hbqt_par_QPixmap( 4 ) ) ) ) );
 }
 
 /*
@@ -200,7 +176,7 @@ HB_FUNC( QT_QSTYLE_ITEMPIXMAPRECT )
  */
 HB_FUNC( QT_QSTYLE_ITEMTEXTRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QStyle( 1 )->itemTextRect( *hbqt_par_QFontMetrics( 2 ), *hbqt_par_QRect( 3 ), hb_parni( 4 ), hb_parl( 5 ), hbqt_par_QString( 6 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QStyle( 1 )->itemTextRect( *hbqt_par_QFontMetrics( 2 ), *hbqt_par_QRect( 3 ), hb_parni( 4 ), hb_parl( 5 ), hbqt_par_QString( 6 ) ) ) ) );
 }
 
 /*
@@ -248,7 +224,7 @@ HB_FUNC( QT_QSTYLE_POLISH_2 )
  */
 HB_FUNC( QT_QSTYLE_SIZEFROMCONTENTS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QStyle( 1 )->sizeFromContents( ( QStyle::ContentsType ) hb_parni( 2 ), hbqt_par_QStyleOption( 3 ), *hbqt_par_QSize( 4 ), hbqt_par_QWidget( 5 ) ) ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QStyle( 1 )->sizeFromContents( ( QStyle::ContentsType ) hb_parni( 2 ), hbqt_par_QStyleOption( 3 ), *hbqt_par_QSize( 4 ), hbqt_par_QWidget( 5 ) ) ) ) );
 }
 
 /*
@@ -256,7 +232,7 @@ HB_FUNC( QT_QSTYLE_SIZEFROMCONTENTS )
  */
 HB_FUNC( QT_QSTYLE_STANDARDICON )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QStyle( 1 )->standardIcon( ( QStyle::StandardPixmap ) hb_parni( 2 ), hbqt_par_QStyleOption( 3 ), hbqt_par_QWidget( 4 ) ) ), release_QIcon ) );
+   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QStyle( 1 )->standardIcon( ( QStyle::StandardPixmap ) hb_parni( 2 ), hbqt_par_QStyleOption( 3 ), hbqt_par_QWidget( 4 ) ) ) ) );
 }
 
 /*
@@ -264,7 +240,7 @@ HB_FUNC( QT_QSTYLE_STANDARDICON )
  */
 HB_FUNC( QT_QSTYLE_STANDARDPALETTE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPalette( hbqt_par_QStyle( 1 )->standardPalette() ), release_QPalette ) );
+   hb_retptrGC( gcAllocate_QPalette( new QPalette( hbqt_par_QStyle( 1 )->standardPalette() ) ) );
 }
 
 /*
@@ -280,7 +256,7 @@ HB_FUNC( QT_QSTYLE_STYLEHINT )
  */
 HB_FUNC( QT_QSTYLE_SUBCONTROLRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QStyle( 1 )->subControlRect( ( QStyle::ComplexControl ) hb_parni( 2 ), hbqt_par_QStyleOptionComplex( 3 ), ( QStyle::SubControl ) hb_parni( 4 ), hbqt_par_QWidget( 5 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QStyle( 1 )->subControlRect( ( QStyle::ComplexControl ) hb_parni( 2 ), hbqt_par_QStyleOptionComplex( 3 ), ( QStyle::SubControl ) hb_parni( 4 ), hbqt_par_QWidget( 5 ) ) ) ) );
 }
 
 /*
@@ -288,7 +264,7 @@ HB_FUNC( QT_QSTYLE_SUBCONTROLRECT )
  */
 HB_FUNC( QT_QSTYLE_SUBELEMENTRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QStyle( 1 )->subElementRect( ( QStyle::SubElement ) hb_parni( 2 ), hbqt_par_QStyleOption( 3 ), hbqt_par_QWidget( 4 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QStyle( 1 )->subElementRect( ( QStyle::SubElement ) hb_parni( 2 ), hbqt_par_QStyleOption( 3 ), hbqt_par_QWidget( 4 ) ) ) ) );
 }
 
 /*
@@ -312,7 +288,7 @@ HB_FUNC( QT_QSTYLE_UNPOLISH_1 )
  */
 HB_FUNC( QT_QSTYLE_ALIGNEDRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QStyle( 1 )->alignedRect( ( Qt::LayoutDirection ) hb_parni( 2 ), ( Qt::Alignment ) hb_parni( 3 ), *hbqt_par_QSize( 4 ), *hbqt_par_QRect( 5 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QStyle( 1 )->alignedRect( ( Qt::LayoutDirection ) hb_parni( 2 ), ( Qt::Alignment ) hb_parni( 3 ), *hbqt_par_QSize( 4 ), *hbqt_par_QRect( 5 ) ) ) ) );
 }
 
 /*
@@ -344,7 +320,7 @@ HB_FUNC( QT_QSTYLE_VISUALALIGNMENT )
  */
 HB_FUNC( QT_QSTYLE_VISUALPOS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QStyle( 1 )->visualPos( ( Qt::LayoutDirection ) hb_parni( 2 ), *hbqt_par_QRect( 3 ), *hbqt_par_QPoint( 4 ) ) ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QStyle( 1 )->visualPos( ( Qt::LayoutDirection ) hb_parni( 2 ), *hbqt_par_QRect( 3 ), *hbqt_par_QPoint( 4 ) ) ) ) );
 }
 
 /*
@@ -352,7 +328,7 @@ HB_FUNC( QT_QSTYLE_VISUALPOS )
  */
 HB_FUNC( QT_QSTYLE_VISUALRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QStyle( 1 )->visualRect( ( Qt::LayoutDirection ) hb_parni( 2 ), *hbqt_par_QRect( 3 ), *hbqt_par_QRect( 4 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QStyle( 1 )->visualRect( ( Qt::LayoutDirection ) hb_parni( 2 ), *hbqt_par_QRect( 3 ), *hbqt_par_QRect( 4 ) ) ) ) );
 }
 
 

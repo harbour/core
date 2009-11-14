@@ -84,40 +84,48 @@
 
 QT_G_FUNC( release_QStyleOptionProgressBar )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QStyleOptionProgressBar     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionProgressBar      p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionProgressBar     ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QStyleOptionProgressBar * ) ph )->~QStyleOptionProgressBar();
-      ph = NULL;
+      ( ( QStyleOptionProgressBar * ) p->ph )->~QStyleOptionProgressBar();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionProgressBar     Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QStyleOptionProgressBar     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QStyleOptionProgressBar" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionProgressBar     Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QStyleOptionProgressBar" );
+      #endif
    }
+}
+
+void * gcAllocate_QStyleOptionProgressBar( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QStyleOptionProgressBar;
+   #if defined(__debug__)
+      just_debug( "          new_QStyleOptionProgressBar     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QStyleOptionProgressBar     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QStyleOptionProgressBar* ) new QStyleOptionProgressBar() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QStyleOptionProgressBar;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QStyleOptionProgressBar( pObj ) );
 }
 /*
  * int maximum

@@ -77,52 +77,69 @@
  * virtual ~QSplashScreen ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QSplashScreen > pq;
+} QGC_POINTER_QSplashScreen;
+
 QT_G_FUNC( release_QSplashScreen )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QSplashScreen               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QSplashScreen * p = ( QGC_POINTER_QSplashScreen * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QSplashScreen                p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QSplashScreen               ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QSplashScreen * ) ph )->~QSplashScreen();
-         ph = NULL;
+         ( ( QSplashScreen * ) p->ph )->~QSplashScreen();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QSplashScreen               Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QSplashScreen               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QSplashScreen" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QSplashScreen               Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QSplashScreen" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QSplashScreen" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QSplashScreen               Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QSplashScreen" );
+      #endif
    }
+}
+
+void * gcAllocate_QSplashScreen( void * pObj )
+{
+   QGC_POINTER_QSplashScreen * p = ( QGC_POINTER_QSplashScreen * ) hb_gcAllocate( sizeof( QGC_POINTER_QSplashScreen ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QSplashScreen;
+   new( & p->pq ) QPointer< QSplashScreen >( ( QSplashScreen * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QSplashScreen               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSPLASHSCREEN )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QSplashScreen > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QSplashScreen               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = new QSplashScreen( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QSplashScreen;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QSplashScreen( pObj ) );
 }
 /*
  * void finish ( QWidget * mainWin )
@@ -137,7 +154,7 @@ HB_FUNC( QT_QSPLASHSCREEN_FINISH )
  */
 HB_FUNC( QT_QSPLASHSCREEN_PIXMAP )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPixmap( hbqt_par_QSplashScreen( 1 )->pixmap() ), release_QPixmap ) );
+   hb_retptrGC( gcAllocate_QPixmap( new QPixmap( hbqt_par_QSplashScreen( 1 )->pixmap() ) ) );
 }
 
 /*

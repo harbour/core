@@ -83,47 +83,55 @@
 
 QT_G_FUNC( release_QStyleOptionTabWidgetFrame )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QStyleOptionTabWidgetFrame  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionTabWidgetFrame   p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionTabWidgetFrame  ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QStyleOptionTabWidgetFrame * ) ph )->~QStyleOptionTabWidgetFrame();
-      ph = NULL;
+      ( ( QStyleOptionTabWidgetFrame * ) p->ph )->~QStyleOptionTabWidgetFrame();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionTabWidgetFrame  Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QStyleOptionTabWidgetFrame  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QStyleOptionTabWidgetFrame" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionTabWidgetFrame  Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QStyleOptionTabWidgetFrame" );
+      #endif
    }
+}
+
+void * gcAllocate_QStyleOptionTabWidgetFrame( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QStyleOptionTabWidgetFrame;
+   #if defined(__debug__)
+      just_debug( "          new_QStyleOptionTabWidgetFrame  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QStyleOptionTabWidgetFrame  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QStyleOptionTabWidgetFrame* ) new QStyleOptionTabWidgetFrame() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QStyleOptionTabWidgetFrame;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QStyleOptionTabWidgetFrame( pObj ) );
 }
 /*
  * QSize leftCornerWidgetSize
  */
 HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_LEFTCORNERWIDGETSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->leftCornerWidgetSize ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->leftCornerWidgetSize ) ) );
 }
 
 /*
@@ -147,7 +155,7 @@ HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_MIDLINEWIDTH )
  */
 HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_RIGHTCORNERWIDGETSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->rightCornerWidgetSize ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->rightCornerWidgetSize ) ) );
 }
 
 /*
@@ -163,7 +171,7 @@ HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_SHAPE )
  */
 HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_TABBARSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->tabBarSize ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->tabBarSize ) ) );
 }
 
 

@@ -94,40 +94,48 @@
 
 QT_G_FUNC( release_QImageReader )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QImageReader                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QImageReader                 p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QImageReader                ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QImageReader * ) ph )->~QImageReader();
-      ph = NULL;
+      ( ( QImageReader * ) p->ph )->~QImageReader();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QImageReader                Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QImageReader                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QImageReader" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QImageReader                Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QImageReader" );
+      #endif
    }
+}
+
+void * gcAllocate_QImageReader( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QImageReader;
+   #if defined(__debug__)
+      just_debug( "          new_QImageReader                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QIMAGEREADER )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QImageReader                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QImageReader* ) new QImageReader() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QImageReader;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QImageReader( pObj ) );
 }
 /*
  * bool autoDetectImageFormat () const
@@ -142,7 +150,7 @@ HB_FUNC( QT_QIMAGEREADER_AUTODETECTIMAGEFORMAT )
  */
 HB_FUNC( QT_QIMAGEREADER_BACKGROUNDCOLOR )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QImageReader( 1 )->backgroundColor() ), release_QColor ) );
+   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QImageReader( 1 )->backgroundColor() ) ) );
 }
 
 /*
@@ -158,7 +166,7 @@ HB_FUNC( QT_QIMAGEREADER_CANREAD )
  */
 HB_FUNC( QT_QIMAGEREADER_CLIPRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QImageReader( 1 )->clipRect() ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QImageReader( 1 )->clipRect() ) ) );
 }
 
 /*
@@ -174,7 +182,7 @@ HB_FUNC( QT_QIMAGEREADER_CURRENTIMAGENUMBER )
  */
 HB_FUNC( QT_QIMAGEREADER_CURRENTIMAGERECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QImageReader( 1 )->currentImageRect() ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QImageReader( 1 )->currentImageRect() ) ) );
 }
 
 /*
@@ -214,7 +222,7 @@ HB_FUNC( QT_QIMAGEREADER_FILENAME )
  */
 HB_FUNC( QT_QIMAGEREADER_FORMAT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QImageReader( 1 )->format() ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QImageReader( 1 )->format() ) ) );
 }
 
 /*
@@ -278,7 +286,7 @@ HB_FUNC( QT_QIMAGEREADER_QUALITY )
  */
 HB_FUNC( QT_QIMAGEREADER_READ )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QImage( hbqt_par_QImageReader( 1 )->read() ), release_QImage ) );
+   hb_retptrGC( gcAllocate_QImage( new QImage( hbqt_par_QImageReader( 1 )->read() ) ) );
 }
 
 /*
@@ -294,7 +302,7 @@ HB_FUNC( QT_QIMAGEREADER_READ_1 )
  */
 HB_FUNC( QT_QIMAGEREADER_SCALEDCLIPRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QImageReader( 1 )->scaledClipRect() ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QImageReader( 1 )->scaledClipRect() ) ) );
 }
 
 /*
@@ -302,7 +310,7 @@ HB_FUNC( QT_QIMAGEREADER_SCALEDCLIPRECT )
  */
 HB_FUNC( QT_QIMAGEREADER_SCALEDSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QImageReader( 1 )->scaledSize() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QImageReader( 1 )->scaledSize() ) ) );
 }
 
 /*
@@ -382,7 +390,7 @@ HB_FUNC( QT_QIMAGEREADER_SETSCALEDSIZE )
  */
 HB_FUNC( QT_QIMAGEREADER_SIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QImageReader( 1 )->size() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QImageReader( 1 )->size() ) ) );
 }
 
 /*
@@ -414,7 +422,7 @@ HB_FUNC( QT_QIMAGEREADER_TEXT )
  */
 HB_FUNC( QT_QIMAGEREADER_TEXTKEYS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QImageReader( 1 )->textKeys() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QImageReader( 1 )->textKeys() ) ) );
 }
 
 /*
@@ -422,7 +430,7 @@ HB_FUNC( QT_QIMAGEREADER_TEXTKEYS )
  */
 HB_FUNC( QT_QIMAGEREADER_IMAGEFORMAT_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QImageReader( 1 )->imageFormat( hbqt_par_QString( 2 ) ) ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QImageReader( 1 )->imageFormat( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -430,7 +438,7 @@ HB_FUNC( QT_QIMAGEREADER_IMAGEFORMAT_1 )
  */
 HB_FUNC( QT_QIMAGEREADER_IMAGEFORMAT_2 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QImageReader( 1 )->imageFormat( hbqt_par_QIODevice( 2 ) ) ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QImageReader( 1 )->imageFormat( hbqt_par_QIODevice( 2 ) ) ) ) );
 }
 
 

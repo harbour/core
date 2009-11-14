@@ -90,52 +90,69 @@
  * ~QMainWindow ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QMainWindow > pq;
+} QGC_POINTER_QMainWindow;
+
 QT_G_FUNC( release_QMainWindow )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QMainWindow                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QMainWindow * p = ( QGC_POINTER_QMainWindow * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QMainWindow                  p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QMainWindow                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QMainWindow * ) ph )->~QMainWindow();
-         ph = NULL;
+         ( ( QMainWindow * ) p->ph )->~QMainWindow();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QMainWindow                 Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QMainWindow                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QMainWindow" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QMainWindow                 Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QMainWindow" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QMainWindow" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QMainWindow                 Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QMainWindow" );
+      #endif
    }
+}
+
+void * gcAllocate_QMainWindow( void * pObj )
+{
+   QGC_POINTER_QMainWindow * p = ( QGC_POINTER_QMainWindow * ) hb_gcAllocate( sizeof( QGC_POINTER_QMainWindow ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QMainWindow;
+   new( & p->pq ) QPointer< QMainWindow >( ( QMainWindow * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QMainWindow                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QMAINWINDOW )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QMainWindow > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QMainWindow                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QMainWindow* ) new QMainWindow( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QMainWindow;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QMainWindow( pObj ) );
 }
 /*
  * void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget )
@@ -238,7 +255,7 @@ HB_FUNC( QT_QMAINWINDOW_DOCUMENTMODE )
  */
 HB_FUNC( QT_QMAINWINDOW_ICONSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QMainWindow( 1 )->iconSize() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QMainWindow( 1 )->iconSize() ) ) );
 }
 
 /*
@@ -334,7 +351,7 @@ HB_FUNC( QT_QMAINWINDOW_RESTORESTATE )
  */
 HB_FUNC( QT_QMAINWINDOW_SAVESTATE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QMainWindow( 1 )->saveState( hb_parni( 2 ) ) ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QMainWindow( 1 )->saveState( hb_parni( 2 ) ) ) ) );
 }
 
 /*

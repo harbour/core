@@ -87,47 +87,55 @@
 
 QT_G_FUNC( release_QFileInfo )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QFileInfo                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFileInfo                    p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFileInfo                   ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QFileInfo * ) ph )->~QFileInfo();
-      ph = NULL;
+      ( ( QFileInfo * ) p->ph )->~QFileInfo();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QFileInfo                   Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QFileInfo                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QFileInfo" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QFileInfo                   Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QFileInfo" );
+      #endif
    }
+}
+
+void * gcAllocate_QFileInfo( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QFileInfo;
+   #if defined(__debug__)
+      just_debug( "          new_QFileInfo                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QFILEINFO )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QFileInfo                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = new QFileInfo() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QFileInfo;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QFileInfo( pObj ) );
 }
 /*
  * QDir absoluteDir () const
  */
 HB_FUNC( QT_QFILEINFO_ABSOLUTEDIR )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDir( hbqt_par_QFileInfo( 1 )->absoluteDir() ), release_QDir ) );
+   hb_retptrGC( gcAllocate_QDir( new QDir( hbqt_par_QFileInfo( 1 )->absoluteDir() ) ) );
 }
 
 /*
@@ -207,7 +215,7 @@ HB_FUNC( QT_QFILEINFO_COMPLETESUFFIX )
  */
 HB_FUNC( QT_QFILEINFO_CREATED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QFileInfo( 1 )->created() ), release_QDateTime ) );
+   hb_retptrGC( gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileInfo( 1 )->created() ) ) );
 }
 
 /*
@@ -215,7 +223,7 @@ HB_FUNC( QT_QFILEINFO_CREATED )
  */
 HB_FUNC( QT_QFILEINFO_DIR )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDir( hbqt_par_QFileInfo( 1 )->dir() ), release_QDir ) );
+   hb_retptrGC( gcAllocate_QDir( new QDir( hbqt_par_QFileInfo( 1 )->dir() ) ) );
 }
 
 /*
@@ -351,7 +359,7 @@ HB_FUNC( QT_QFILEINFO_ISWRITABLE )
  */
 HB_FUNC( QT_QFILEINFO_LASTMODIFIED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QFileInfo( 1 )->lastModified() ), release_QDateTime ) );
+   hb_retptrGC( gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileInfo( 1 )->lastModified() ) ) );
 }
 
 /*
@@ -359,7 +367,7 @@ HB_FUNC( QT_QFILEINFO_LASTMODIFIED )
  */
 HB_FUNC( QT_QFILEINFO_LASTREAD )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QFileInfo( 1 )->lastRead() ), release_QDateTime ) );
+   hb_retptrGC( gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileInfo( 1 )->lastRead() ) ) );
 }
 
 /*

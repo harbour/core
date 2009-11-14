@@ -81,31 +81,7 @@
 
 QT_G_FUNC( release_QPrintEngine )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QPrintEngine                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
-   {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
-      {
-         ( ( QPrintEngine * ) ph )->~QPrintEngine();
-         ph = NULL;
-      }
-      else
-      {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QPrintEngine" );  OutputDebugString( str );
-#endif
-      }
-   }
-   else
-   {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QPrintEngine" );  OutputDebugString( str );
-#endif
-   }
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QPRINTENGINE )
@@ -148,7 +124,7 @@ HB_FUNC( QT_QPRINTENGINE_PRINTERSTATE )
  */
 HB_FUNC( QT_QPRINTENGINE_PROPERTY )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QPrintEngine( 1 )->property( ( QPrintEngine::PrintEnginePropertyKey ) hb_parni( 2 ) ) ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QPrintEngine( 1 )->property( ( QPrintEngine::PrintEnginePropertyKey ) hb_parni( 2 ) ) ) ) );
 }
 
 /*

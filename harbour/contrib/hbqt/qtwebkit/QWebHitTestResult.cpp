@@ -79,40 +79,48 @@
 
 QT_G_FUNC( release_QWebHitTestResult )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QWebHitTestResult           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QWebHitTestResult            p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QWebHitTestResult           ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QWebHitTestResult * ) ph )->~QWebHitTestResult();
-      ph = NULL;
+      ( ( QWebHitTestResult * ) p->ph )->~QWebHitTestResult();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QWebHitTestResult           Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QWebHitTestResult           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QWebHitTestResult" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QWebHitTestResult           Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QWebHitTestResult" );
+      #endif
    }
+}
+
+void * gcAllocate_QWebHitTestResult( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QWebHitTestResult;
+   #if defined(__debug__)
+      just_debug( "          new_QWebHitTestResult           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QWEBHITTESTRESULT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QWebHitTestResult           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QWebHitTestResult* ) new QWebHitTestResult() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QWebHitTestResult;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QWebHitTestResult( pObj ) );
 }
 /*
  * QString alternateText () const
@@ -127,7 +135,7 @@ HB_FUNC( QT_QWEBHITTESTRESULT_ALTERNATETEXT )
  */
 HB_FUNC( QT_QWEBHITTESTRESULT_BOUNDINGRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QWebHitTestResult( 1 )->boundingRect() ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QWebHitTestResult( 1 )->boundingRect() ) ) );
 }
 
 /*
@@ -143,7 +151,7 @@ HB_FUNC( QT_QWEBHITTESTRESULT_FRAME )
  */
 HB_FUNC( QT_QWEBHITTESTRESULT_IMAGEURL )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QUrl( hbqt_par_QWebHitTestResult( 1 )->imageUrl() ), release_QUrl ) );
+   hb_retptrGC( gcAllocate_QUrl( new QUrl( hbqt_par_QWebHitTestResult( 1 )->imageUrl() ) ) );
 }
 
 /*
@@ -191,7 +199,7 @@ HB_FUNC( QT_QWEBHITTESTRESULT_LINKTEXT )
  */
 HB_FUNC( QT_QWEBHITTESTRESULT_LINKTITLE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QUrl( hbqt_par_QWebHitTestResult( 1 )->linkTitle() ), release_QUrl ) );
+   hb_retptrGC( gcAllocate_QUrl( new QUrl( hbqt_par_QWebHitTestResult( 1 )->linkTitle() ) ) );
 }
 
 /*
@@ -199,7 +207,7 @@ HB_FUNC( QT_QWEBHITTESTRESULT_LINKTITLE )
  */
 HB_FUNC( QT_QWEBHITTESTRESULT_LINKURL )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QUrl( hbqt_par_QWebHitTestResult( 1 )->linkUrl() ), release_QUrl ) );
+   hb_retptrGC( gcAllocate_QUrl( new QUrl( hbqt_par_QWebHitTestResult( 1 )->linkUrl() ) ) );
 }
 
 /*
@@ -207,7 +215,7 @@ HB_FUNC( QT_QWEBHITTESTRESULT_LINKURL )
  */
 HB_FUNC( QT_QWEBHITTESTRESULT_PIXMAP )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPixmap( hbqt_par_QWebHitTestResult( 1 )->pixmap() ), release_QPixmap ) );
+   hb_retptrGC( gcAllocate_QPixmap( new QPixmap( hbqt_par_QWebHitTestResult( 1 )->pixmap() ) ) );
 }
 
 /*
@@ -215,7 +223,7 @@ HB_FUNC( QT_QWEBHITTESTRESULT_PIXMAP )
  */
 HB_FUNC( QT_QWEBHITTESTRESULT_POS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QWebHitTestResult( 1 )->pos() ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QWebHitTestResult( 1 )->pos() ) ) );
 }
 
 /*

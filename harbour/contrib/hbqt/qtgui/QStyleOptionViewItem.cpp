@@ -84,40 +84,48 @@
 
 QT_G_FUNC( release_QStyleOptionViewItem )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QStyleOptionViewItem        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionViewItem         p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionViewItem        ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QStyleOptionViewItem * ) ph )->~QStyleOptionViewItem();
-      ph = NULL;
+      ( ( QStyleOptionViewItem * ) p->ph )->~QStyleOptionViewItem();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionViewItem        Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QStyleOptionViewItem        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QStyleOptionViewItem" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionViewItem        Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QStyleOptionViewItem" );
+      #endif
    }
+}
+
+void * gcAllocate_QStyleOptionViewItem( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QStyleOptionViewItem;
+   #if defined(__debug__)
+      just_debug( "          new_QStyleOptionViewItem        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSTYLEOPTIONVIEWITEM )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QStyleOptionViewItem        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QStyleOptionViewItem* ) new QStyleOptionViewItem() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QStyleOptionViewItem;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QStyleOptionViewItem( pObj ) );
 }
 /*
  * Qt::Alignment decorationAlignment
@@ -140,7 +148,7 @@ HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_DECORATIONPOSITION )
  */
 HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_DECORATIONSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QStyleOptionViewItem( 1 )->decorationSize ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionViewItem( 1 )->decorationSize ) ) );
 }
 
 /*
@@ -156,7 +164,7 @@ HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_DISPLAYALIGNMENT )
  */
 HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_FONT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QStyleOptionViewItem( 1 )->font ), release_QFont ) );
+   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QStyleOptionViewItem( 1 )->font ) ) );
 }
 
 /*

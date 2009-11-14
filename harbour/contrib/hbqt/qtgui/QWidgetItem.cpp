@@ -77,40 +77,48 @@
 
 QT_G_FUNC( release_QWidgetItem )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QWidgetItem                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QWidgetItem                  p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QWidgetItem                 ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QWidgetItem * ) ph )->~QWidgetItem();
-      ph = NULL;
+      ( ( QWidgetItem * ) p->ph )->~QWidgetItem();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QWidgetItem                 Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QWidgetItem                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QWidgetItem" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QWidgetItem                 Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QWidgetItem" );
+      #endif
    }
+}
+
+void * gcAllocate_QWidgetItem( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QWidgetItem;
+   #if defined(__debug__)
+      just_debug( "          new_QWidgetItem                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QWIDGETITEM )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QWidgetItem                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QWidgetItem* ) new QWidgetItem( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QWidgetItem;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QWidgetItem( pObj ) );
 }
 /*
  * virtual bool isEmpty () const

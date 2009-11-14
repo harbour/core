@@ -93,52 +93,69 @@ HB_FUNC( QT_HBTABLEVIEW_DESTROY )
 }
 
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QTableView > pq;
+} QGC_POINTER_QTableView;
+
 QT_G_FUNC( release_QTableView )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTableView                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QTableView * p = ( QGC_POINTER_QTableView * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTableView                   p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTableView                  ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QTableView * ) ph )->~QTableView();
-         ph = NULL;
+         ( ( QTableView * ) p->ph )->~QTableView();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTableView                  Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QTableView                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QTableView" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTableView                  Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QTableView" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTableView" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTableView                  Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTableView" );
+      #endif
    }
+}
+
+void * gcAllocate_QTableView( void * pObj )
+{
+   QGC_POINTER_QTableView * p = ( QGC_POINTER_QTableView * ) hb_gcAllocate( sizeof( QGC_POINTER_QTableView ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTableView;
+   new( & p->pq ) QPointer< QTableView >( ( QTableView * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QTableView                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTABLEVIEW )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QTableView > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTableView                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QTableView* ) new QTableView( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTableView;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTableView( pObj ) );
 }
 /*
  * void clearSpans ()
@@ -201,7 +218,7 @@ HB_FUNC( QT_QTABLEVIEW_HORIZONTALHEADER )
  */
 HB_FUNC( QT_QTABLEVIEW_INDEXAT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QTableView( 1 )->indexAt( *hbqt_par_QPoint( 2 ) ) ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QTableView( 1 )->indexAt( *hbqt_par_QPoint( 2 ) ) ) ) );
 }
 
 /*

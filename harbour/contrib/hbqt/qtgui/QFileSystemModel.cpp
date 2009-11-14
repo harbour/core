@@ -80,52 +80,69 @@
  * ~QFileSystemModel ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QFileSystemModel > pq;
+} QGC_POINTER_QFileSystemModel;
+
 QT_G_FUNC( release_QFileSystemModel )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QFileSystemModel            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QFileSystemModel * p = ( QGC_POINTER_QFileSystemModel * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFileSystemModel             p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFileSystemModel            ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QFileSystemModel * ) ph )->~QFileSystemModel();
-         ph = NULL;
+         ( ( QFileSystemModel * ) p->ph )->~QFileSystemModel();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QFileSystemModel            Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QFileSystemModel            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QFileSystemModel" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QFileSystemModel            Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QFileSystemModel" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QFileSystemModel" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QFileSystemModel            Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QFileSystemModel" );
+      #endif
    }
+}
+
+void * gcAllocate_QFileSystemModel( void * pObj )
+{
+   QGC_POINTER_QFileSystemModel * p = ( QGC_POINTER_QFileSystemModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QFileSystemModel ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QFileSystemModel;
+   new( & p->pq ) QPointer< QFileSystemModel >( ( QFileSystemModel * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QFileSystemModel            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QFILESYSTEMMODEL )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QFileSystemModel > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QFileSystemModel            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QFileSystemModel * ) new QFileSystemModel() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QFileSystemModel;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QFileSystemModel( pObj ) );
 }
 /*
  * virtual bool dropMimeData ( const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent )
@@ -140,7 +157,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_DROPMIMEDATA )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_FILEICON )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QFileSystemModel( 1 )->fileIcon( *hbqt_par_QModelIndex( 2 ) ) ), release_QIcon ) );
+   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QFileSystemModel( 1 )->fileIcon( *hbqt_par_QModelIndex( 2 ) ) ) ) );
 }
 
 /*
@@ -148,7 +165,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_FILEICON )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_FILEINFO )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QFileInfo( hbqt_par_QFileSystemModel( 1 )->fileInfo( *hbqt_par_QModelIndex( 2 ) ) ), release_QFileInfo ) );
+   hb_retptrGC( gcAllocate_QFileInfo( new QFileInfo( hbqt_par_QFileSystemModel( 1 )->fileInfo( *hbqt_par_QModelIndex( 2 ) ) ) ) );
 }
 
 /*
@@ -180,7 +197,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_FILTER )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_INDEX )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QFileSystemModel( 1 )->index( hbqt_par_QString( 2 ), hb_parni( 3 ) ) ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QFileSystemModel( 1 )->index( hbqt_par_QString( 2 ), hb_parni( 3 ) ) ) ) );
 }
 
 /*
@@ -204,7 +221,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_ISREADONLY )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_LASTMODIFIED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QFileSystemModel( 1 )->lastModified( *hbqt_par_QModelIndex( 2 ) ) ), release_QDateTime ) );
+   hb_retptrGC( gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileSystemModel( 1 )->lastModified( *hbqt_par_QModelIndex( 2 ) ) ) ) );
 }
 
 /*
@@ -212,7 +229,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_LASTMODIFIED )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_MIMETYPES )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QFileSystemModel( 1 )->mimeTypes() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QFileSystemModel( 1 )->mimeTypes() ) ) );
 }
 
 /*
@@ -220,7 +237,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_MIMETYPES )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_MKDIR )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QFileSystemModel( 1 )->mkdir( *hbqt_par_QModelIndex( 2 ), hbqt_par_QString( 3 ) ) ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QFileSystemModel( 1 )->mkdir( *hbqt_par_QModelIndex( 2 ), hbqt_par_QString( 3 ) ) ) ) );
 }
 
 /*
@@ -228,7 +245,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_MKDIR )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_MYCOMPUTER )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QFileSystemModel( 1 )->myComputer( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : Qt::DisplayRole ) ) ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QFileSystemModel( 1 )->myComputer( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : Qt::DisplayRole ) ) ) ) );
 }
 
 /*
@@ -244,7 +261,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_NAMEFILTERDISABLES )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_NAMEFILTERS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QFileSystemModel( 1 )->nameFilters() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QFileSystemModel( 1 )->nameFilters() ) ) );
 }
 
 /*
@@ -284,7 +301,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_RMDIR )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_ROOTDIRECTORY )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDir( hbqt_par_QFileSystemModel( 1 )->rootDirectory() ), release_QDir ) );
+   hb_retptrGC( gcAllocate_QDir( new QDir( hbqt_par_QFileSystemModel( 1 )->rootDirectory() ) ) );
 }
 
 /*
@@ -340,7 +357,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_SETRESOLVESYMLINKS )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_SETROOTPATH )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QFileSystemModel( 1 )->setRootPath( hbqt_par_QString( 2 ) ) ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QFileSystemModel( 1 )->setRootPath( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*

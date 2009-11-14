@@ -83,40 +83,48 @@
 
 QT_G_FUNC( release_QStyleOptionFrame )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QStyleOptionFrame           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionFrame            p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionFrame           ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QStyleOptionFrame * ) ph )->~QStyleOptionFrame();
-      ph = NULL;
+      ( ( QStyleOptionFrame * ) p->ph )->~QStyleOptionFrame();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionFrame           Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QStyleOptionFrame           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QStyleOptionFrame" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionFrame           Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QStyleOptionFrame" );
+      #endif
    }
+}
+
+void * gcAllocate_QStyleOptionFrame( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QStyleOptionFrame;
+   #if defined(__debug__)
+      just_debug( "          new_QStyleOptionFrame           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSTYLEOPTIONFRAME )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QStyleOptionFrame           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QStyleOptionFrame* ) new QStyleOptionFrame() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QStyleOptionFrame;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QStyleOptionFrame( pObj ) );
 }
 /*
  * int lineWidth

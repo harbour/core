@@ -80,40 +80,48 @@
 
 QT_G_FUNC( release_QTextDocumentWriter )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTextDocumentWriter         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextDocumentWriter          p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextDocumentWriter         ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QTextDocumentWriter * ) ph )->~QTextDocumentWriter();
-      ph = NULL;
+      ( ( QTextDocumentWriter * ) p->ph )->~QTextDocumentWriter();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextDocumentWriter         Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QTextDocumentWriter         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTextDocumentWriter" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextDocumentWriter         Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTextDocumentWriter" );
+      #endif
    }
+}
+
+void * gcAllocate_QTextDocumentWriter( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTextDocumentWriter;
+   #if defined(__debug__)
+      just_debug( "          new_QTextDocumentWriter         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTEXTDOCUMENTWRITER )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTextDocumentWriter         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QTextDocumentWriter* ) new QTextDocumentWriter() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTextDocumentWriter;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTextDocumentWriter( pObj ) );
 }
 /*
  * QTextCodec * codec () const
@@ -144,7 +152,7 @@ HB_FUNC( QT_QTEXTDOCUMENTWRITER_FILENAME )
  */
 HB_FUNC( QT_QTEXTDOCUMENTWRITER_FORMAT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QTextDocumentWriter( 1 )->format() ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QTextDocumentWriter( 1 )->format() ) ) );
 }
 
 /*

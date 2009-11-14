@@ -79,47 +79,55 @@
 
 QT_G_FUNC( release_QModelIndex )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QModelIndex                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QModelIndex                  p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QModelIndex                 ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QModelIndex * ) ph )->~QModelIndex();
-      ph = NULL;
+      ( ( QModelIndex * ) p->ph )->~QModelIndex();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QModelIndex                 Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QModelIndex                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QModelIndex" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QModelIndex                 Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QModelIndex" );
+      #endif
    }
+}
+
+void * gcAllocate_QModelIndex( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QModelIndex;
+   #if defined(__debug__)
+      just_debug( "          new_QModelIndex                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QMODELINDEX )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QModelIndex                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = new QModelIndex() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QModelIndex;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QModelIndex( pObj ) );
 }
 /*
  * QModelIndex child ( int row, int column ) const
  */
 HB_FUNC( QT_QMODELINDEX_CHILD )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QModelIndex( 1 )->child( hb_parni( 2 ), hb_parni( 3 ) ) ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QModelIndex( 1 )->child( hb_parni( 2 ), hb_parni( 3 ) ) ) ) );
 }
 
 /*
@@ -135,7 +143,7 @@ HB_FUNC( QT_QMODELINDEX_COLUMN )
  */
 HB_FUNC( QT_QMODELINDEX_DATA )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QModelIndex( 1 )->data( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : Qt::DisplayRole ) ) ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QModelIndex( 1 )->data( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : Qt::DisplayRole ) ) ) ) );
 }
 
 /*
@@ -183,7 +191,7 @@ HB_FUNC( QT_QMODELINDEX_MODEL )
  */
 HB_FUNC( QT_QMODELINDEX_PARENT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QModelIndex( 1 )->parent() ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QModelIndex( 1 )->parent() ) ) );
 }
 
 /*
@@ -199,7 +207,7 @@ HB_FUNC( QT_QMODELINDEX_ROW )
  */
 HB_FUNC( QT_QMODELINDEX_SIBLING )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QModelIndex( 1 )->sibling( hb_parni( 2 ), hb_parni( 3 ) ) ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QModelIndex( 1 )->sibling( hb_parni( 2 ), hb_parni( 3 ) ) ) ) );
 }
 
 

@@ -76,52 +76,69 @@
  * ~QSizeGrip ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QSizeGrip > pq;
+} QGC_POINTER_QSizeGrip;
+
 QT_G_FUNC( release_QSizeGrip )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QSizeGrip                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QSizeGrip * p = ( QGC_POINTER_QSizeGrip * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QSizeGrip                    p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QSizeGrip                   ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QSizeGrip * ) ph )->~QSizeGrip();
-         ph = NULL;
+         ( ( QSizeGrip * ) p->ph )->~QSizeGrip();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QSizeGrip                   Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QSizeGrip                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QSizeGrip" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QSizeGrip                   Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QSizeGrip" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QSizeGrip" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QSizeGrip                   Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QSizeGrip" );
+      #endif
    }
+}
+
+void * gcAllocate_QSizeGrip( void * pObj )
+{
+   QGC_POINTER_QSizeGrip * p = ( QGC_POINTER_QSizeGrip * ) hb_gcAllocate( sizeof( QGC_POINTER_QSizeGrip ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QSizeGrip;
+   new( & p->pq ) QPointer< QSizeGrip >( ( QSizeGrip * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QSizeGrip                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSIZEGRIP )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QSizeGrip > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QSizeGrip                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QSizeGrip* ) new QSizeGrip( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QSizeGrip;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QSizeGrip( pObj ) );
 }
 
 /*----------------------------------------------------------------------*/

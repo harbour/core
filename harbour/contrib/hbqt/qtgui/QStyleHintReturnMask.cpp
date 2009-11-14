@@ -83,31 +83,7 @@
 
 QT_G_FUNC( release_QStyleHintReturnMask )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QStyleHintReturnMask        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
-   {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
-      {
-         ( ( QStyleHintReturnMask * ) ph )->~QStyleHintReturnMask();
-         ph = NULL;
-      }
-      else
-      {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QStyleHintReturnMask" );  OutputDebugString( str );
-#endif
-      }
-   }
-   else
-   {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QStyleHintReturnMask" );  OutputDebugString( str );
-#endif
-   }
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QSTYLEHINTRETURNMASK )

@@ -98,40 +98,48 @@
 
 QT_G_FUNC( release_QStringList )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QStringList                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStringList                  p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStringList                 ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QStringList * ) ph )->~QStringList();
-      ph = NULL;
+      ( ( QStringList * ) p->ph )->~QStringList();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStringList                 Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QStringList                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QStringList" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStringList                 Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QStringList" );
+      #endif
    }
+}
+
+void * gcAllocate_QStringList( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QStringList;
+   #if defined(__debug__)
+      just_debug( "          new_QStringList                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSTRINGLIST )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QStringList                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QStringList* ) new QStringList() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QStringList;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QStringList( pObj ) );
 }
 /*
  * void append ( const QString & value )
@@ -146,7 +154,7 @@ HB_FUNC( QT_QSTRINGLIST_APPEND )
  */
 HB_FUNC( QT_QSTRINGLIST_FILTER )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QStringList( 1 )->filter( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::CaseSensitivity ) hb_parni( 3 ) : ( Qt::CaseSensitivity ) Qt::CaseSensitive ) ) ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QStringList( 1 )->filter( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::CaseSensitivity ) hb_parni( 3 ) : ( Qt::CaseSensitivity ) Qt::CaseSensitive ) ) ) ) );
 }
 
 /*
@@ -154,7 +162,7 @@ HB_FUNC( QT_QSTRINGLIST_FILTER )
  */
 HB_FUNC( QT_QSTRINGLIST_FILTER_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QStringList( 1 )->filter( *hbqt_par_QRegExp( 2 ) ) ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QStringList( 1 )->filter( *hbqt_par_QRegExp( 2 ) ) ) ) );
 }
 
 /*

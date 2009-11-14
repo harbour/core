@@ -161,52 +161,69 @@ HB_FUNC( QT_QAPPLICATION_QUIT )
    app->quit();
 }
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QApplication > pq;
+} QGC_POINTER_QApplication;
+
 QT_G_FUNC( release_QApplication )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QApplication                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QApplication * p = ( QGC_POINTER_QApplication * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QApplication                 p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QApplication                ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QApplication * ) ph )->~QApplication();
-         ph = NULL;
+         ( ( QApplication * ) p->ph )->~QApplication();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QApplication                Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QApplication                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QApplication" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QApplication                Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QApplication" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QApplication" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QApplication                Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QApplication" );
+      #endif
    }
+}
+
+void * gcAllocate_QApplication( void * pObj )
+{
+   QGC_POINTER_QApplication * p = ( QGC_POINTER_QApplication * ) hb_gcAllocate( sizeof( QGC_POINTER_QApplication ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QApplication;
+   new( & p->pq ) QPointer< QApplication >( ( QApplication * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QApplication                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QAPPLICATION )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QApplication > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QApplication                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QApplication * ) app ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QApplication;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QApplication( pObj ) );
 }
 /*
  * virtual void commitData ( QSessionManager & manager )
@@ -389,7 +406,7 @@ HB_FUNC( QT_QAPPLICATION_FOCUSWIDGET )
  */
 HB_FUNC( QT_QAPPLICATION_FONT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QApplication( 1 )->font() ), release_QFont ) );
+   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QApplication( 1 )->font() ) ) );
 }
 
 /*
@@ -397,7 +414,7 @@ HB_FUNC( QT_QAPPLICATION_FONT )
  */
 HB_FUNC( QT_QAPPLICATION_FONT_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QApplication( 1 )->font( hbqt_par_QWidget( 2 ) ) ), release_QFont ) );
+   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QApplication( 1 )->font( hbqt_par_QWidget( 2 ) ) ) ) );
 }
 
 /*
@@ -405,7 +422,7 @@ HB_FUNC( QT_QAPPLICATION_FONT_1 )
  */
 HB_FUNC( QT_QAPPLICATION_FONT_2 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QApplication( 1 )->font( hbqt_par_char( 2 ) ) ), release_QFont ) );
+   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QApplication( 1 )->font( hbqt_par_char( 2 ) ) ) ) );
 }
 
 /*
@@ -413,7 +430,7 @@ HB_FUNC( QT_QAPPLICATION_FONT_2 )
  */
 HB_FUNC( QT_QAPPLICATION_FONTMETRICS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QFontMetrics( hbqt_par_QApplication( 1 )->fontMetrics() ), release_QFontMetrics ) );
+   hb_retptrGC( gcAllocate_QFontMetrics( new QFontMetrics( hbqt_par_QApplication( 1 )->fontMetrics() ) ) );
 }
 
 /*
@@ -421,7 +438,7 @@ HB_FUNC( QT_QAPPLICATION_FONTMETRICS )
  */
 HB_FUNC( QT_QAPPLICATION_GLOBALSTRUT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QApplication( 1 )->globalStrut() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QApplication( 1 )->globalStrut() ) ) );
 }
 
 /*
@@ -469,7 +486,7 @@ HB_FUNC( QT_QAPPLICATION_KEYBOARDINPUTINTERVAL )
  */
 HB_FUNC( QT_QAPPLICATION_KEYBOARDINPUTLOCALE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QLocale( hbqt_par_QApplication( 1 )->keyboardInputLocale() ), release_QLocale ) );
+   hb_retptrGC( gcAllocate_QLocale( new QLocale( hbqt_par_QApplication( 1 )->keyboardInputLocale() ) ) );
 }
 
 /*
@@ -509,7 +526,7 @@ HB_FUNC( QT_QAPPLICATION_OVERRIDECURSOR )
  */
 HB_FUNC( QT_QAPPLICATION_PALETTE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPalette( hbqt_par_QApplication( 1 )->palette() ), release_QPalette ) );
+   hb_retptrGC( gcAllocate_QPalette( new QPalette( hbqt_par_QApplication( 1 )->palette() ) ) );
 }
 
 /*
@@ -517,7 +534,7 @@ HB_FUNC( QT_QAPPLICATION_PALETTE )
  */
 HB_FUNC( QT_QAPPLICATION_PALETTE_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPalette( hbqt_par_QApplication( 1 )->palette( hbqt_par_QWidget( 2 ) ) ), release_QPalette ) );
+   hb_retptrGC( gcAllocate_QPalette( new QPalette( hbqt_par_QApplication( 1 )->palette( hbqt_par_QWidget( 2 ) ) ) ) );
 }
 
 /*
@@ -525,7 +542,7 @@ HB_FUNC( QT_QAPPLICATION_PALETTE_1 )
  */
 HB_FUNC( QT_QAPPLICATION_PALETTE_2 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPalette( hbqt_par_QApplication( 1 )->palette( hbqt_par_char( 2 ) ) ), release_QPalette ) );
+   hb_retptrGC( gcAllocate_QPalette( new QPalette( hbqt_par_QApplication( 1 )->palette( hbqt_par_char( 2 ) ) ) ) );
 }
 
 /*
@@ -789,7 +806,7 @@ HB_FUNC( QT_QAPPLICATION_WIDGETAT_1 )
  */
 HB_FUNC( QT_QAPPLICATION_WINDOWICON )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QApplication( 1 )->windowIcon() ), release_QIcon ) );
+   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QApplication( 1 )->windowIcon() ) ) );
 }
 
 /*

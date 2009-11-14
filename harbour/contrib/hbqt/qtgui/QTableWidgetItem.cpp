@@ -85,30 +85,44 @@
 
 QT_G_FUNC( release_QTableWidgetItem )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTableWidgetItem            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTableWidgetItem             p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTableWidgetItem            ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QTableWidgetItem * ) ph )->~QTableWidgetItem();
-      ph = NULL;
+      ( ( QTableWidgetItem * ) p->ph )->~QTableWidgetItem();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTableWidgetItem            Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QTableWidgetItem            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTableWidgetItem" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTableWidgetItem            Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTableWidgetItem" );
+      #endif
    }
+}
+
+void * gcAllocate_QTableWidgetItem( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTableWidgetItem;
+   #if defined(__debug__)
+      just_debug( "          new_QTableWidgetItem            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTABLEWIDGETITEM )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTableWidgetItem            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
    {
@@ -127,20 +141,14 @@ hb_snprintf( str, sizeof(str), "   GC:  new QTableWidgetItem            %i B %i 
       pObj = new QTableWidgetItem( 0 ) ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTableWidgetItem;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTableWidgetItem( pObj ) );
 }
 /*
  * QBrush background () const
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_BACKGROUND )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QBrush( hbqt_par_QTableWidgetItem( 1 )->background() ), release_QBrush ) );
+   hb_retptrGC( gcAllocate_QBrush( new QBrush( hbqt_par_QTableWidgetItem( 1 )->background() ) ) );
 }
 
 /*
@@ -172,7 +180,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_COLUMN )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_DATA )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QTableWidgetItem( 1 )->data( hb_parni( 2 ) ) ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QTableWidgetItem( 1 )->data( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -188,7 +196,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_FLAGS )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_FONT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QTableWidgetItem( 1 )->font() ), release_QFont ) );
+   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QTableWidgetItem( 1 )->font() ) ) );
 }
 
 /*
@@ -196,7 +204,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_FONT )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_FOREGROUND )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QBrush( hbqt_par_QTableWidgetItem( 1 )->foreground() ), release_QBrush ) );
+   hb_retptrGC( gcAllocate_QBrush( new QBrush( hbqt_par_QTableWidgetItem( 1 )->foreground() ) ) );
 }
 
 /*
@@ -204,7 +212,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_FOREGROUND )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_ICON )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QTableWidgetItem( 1 )->icon() ), release_QIcon ) );
+   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QTableWidgetItem( 1 )->icon() ) ) );
 }
 
 /*
@@ -348,7 +356,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_SETWHATSTHIS )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_SIZEHINT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QTableWidgetItem( 1 )->sizeHint() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QTableWidgetItem( 1 )->sizeHint() ) ) );
 }
 
 /*

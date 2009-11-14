@@ -99,52 +99,69 @@
  * ~QTextDocument ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QTextDocument > pq;
+} QGC_POINTER_QTextDocument;
+
 QT_G_FUNC( release_QTextDocument )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTextDocument               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QTextDocument * p = ( QGC_POINTER_QTextDocument * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextDocument                p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextDocument               ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QTextDocument * ) ph )->~QTextDocument();
-         ph = NULL;
+         ( ( QTextDocument * ) p->ph )->~QTextDocument();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTextDocument               Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QTextDocument               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QTextDocument" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTextDocument               Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QTextDocument" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTextDocument" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextDocument               Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTextDocument" );
+      #endif
    }
+}
+
+void * gcAllocate_QTextDocument( void * pObj )
+{
+   QGC_POINTER_QTextDocument * p = ( QGC_POINTER_QTextDocument * ) hb_gcAllocate( sizeof( QGC_POINTER_QTextDocument ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTextDocument;
+   new( & p->pq ) QPointer< QTextDocument >( ( QTextDocument * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QTextDocument               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTEXTDOCUMENT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QTextDocument > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTextDocument               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QTextDocument* ) new QTextDocument( hbqt_par_QObject( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTextDocument;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTextDocument( pObj ) );
 }
 /*
  * void addResource ( int type, const QUrl & name, const QVariant & resource )
@@ -167,7 +184,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_ADJUSTSIZE )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_BEGIN )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextBlock( hbqt_par_QTextDocument( 1 )->begin() ), release_QTextBlock ) );
+   hb_retptrGC( gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextDocument( 1 )->begin() ) ) );
 }
 
 /*
@@ -207,7 +224,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_CLONE )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_DEFAULTFONT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QTextDocument( 1 )->defaultFont() ), release_QFont ) );
+   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QTextDocument( 1 )->defaultFont() ) ) );
 }
 
 /*
@@ -223,7 +240,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_DEFAULTSTYLESHEET )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_DEFAULTTEXTOPTION )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextOption( hbqt_par_QTextDocument( 1 )->defaultTextOption() ), release_QTextOption ) );
+   hb_retptrGC( gcAllocate_QTextOption( new QTextOption( hbqt_par_QTextDocument( 1 )->defaultTextOption() ) ) );
 }
 
 /*
@@ -255,7 +272,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_DRAWCONTENTS )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_END )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextBlock( hbqt_par_QTextDocument( 1 )->end() ), release_QTextBlock ) );
+   hb_retptrGC( gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextDocument( 1 )->end() ) ) );
 }
 
 /*
@@ -263,7 +280,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_END )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FIND )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( hbqt_par_QString( 2 ), *hbqt_par_QTextCursor( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ), release_QTextCursor ) );
+   hb_retptrGC( gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( hbqt_par_QString( 2 ), *hbqt_par_QTextCursor( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) ) );
 }
 
 /*
@@ -271,7 +288,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_FIND )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FIND_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( *hbqt_par_QRegExp( 2 ), *hbqt_par_QTextCursor( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ), release_QTextCursor ) );
+   hb_retptrGC( gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( *hbqt_par_QRegExp( 2 ), *hbqt_par_QTextCursor( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) ) );
 }
 
 /*
@@ -279,7 +296,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_FIND_1 )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FIND_2 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( hbqt_par_QString( 2 ), hb_parni( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ), release_QTextCursor ) );
+   hb_retptrGC( gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( hbqt_par_QString( 2 ), hb_parni( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) ) );
 }
 
 /*
@@ -287,7 +304,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_FIND_2 )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FIND_3 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( *hbqt_par_QRegExp( 2 ), hb_parni( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ), release_QTextCursor ) );
+   hb_retptrGC( gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( *hbqt_par_QRegExp( 2 ), hb_parni( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) ) );
 }
 
 /*
@@ -295,7 +312,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_FIND_3 )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FINDBLOCK )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextBlock( hbqt_par_QTextDocument( 1 )->findBlock( hb_parni( 2 ) ) ), release_QTextBlock ) );
+   hb_retptrGC( gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextDocument( 1 )->findBlock( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -303,7 +320,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_FINDBLOCK )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FINDBLOCKBYLINENUMBER )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextBlock( hbqt_par_QTextDocument( 1 )->findBlockByLineNumber( hb_parni( 2 ) ) ), release_QTextBlock ) );
+   hb_retptrGC( gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextDocument( 1 )->findBlockByLineNumber( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -311,7 +328,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_FINDBLOCKBYLINENUMBER )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FINDBLOCKBYNUMBER )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextBlock( hbqt_par_QTextDocument( 1 )->findBlockByNumber( hb_parni( 2 ) ) ), release_QTextBlock ) );
+   hb_retptrGC( gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextDocument( 1 )->findBlockByNumber( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -319,7 +336,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_FINDBLOCKBYNUMBER )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FIRSTBLOCK )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextBlock( hbqt_par_QTextDocument( 1 )->firstBlock() ), release_QTextBlock ) );
+   hb_retptrGC( gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextDocument( 1 )->firstBlock() ) ) );
 }
 
 /*
@@ -383,7 +400,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_ISUNDOREDOENABLED )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_LASTBLOCK )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextBlock( hbqt_par_QTextDocument( 1 )->lastBlock() ), release_QTextBlock ) );
+   hb_retptrGC( gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextDocument( 1 )->lastBlock() ) ) );
 }
 
 /*
@@ -447,7 +464,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_PAGECOUNT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_PAGESIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSizeF( hbqt_par_QTextDocument( 1 )->pageSize() ), release_QSizeF ) );
+   hb_retptrGC( gcAllocate_QSizeF( new QSizeF( hbqt_par_QTextDocument( 1 )->pageSize() ) ) );
 }
 
 /*
@@ -471,7 +488,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_REDO )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_RESOURCE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QTextDocument( 1 )->resource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QTextDocument( 1 )->resource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ) ) );
 }
 
 /*
@@ -607,7 +624,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_SETUSEDESIGNMETRICS )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSizeF( hbqt_par_QTextDocument( 1 )->size() ), release_QSizeF ) );
+   hb_retptrGC( gcAllocate_QSizeF( new QSizeF( hbqt_par_QTextDocument( 1 )->size() ) ) );
 }
 
 /*

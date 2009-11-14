@@ -84,31 +84,7 @@
 
 QT_G_FUNC( release_QIODevice )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QIODevice                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
-   {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
-      {
-         ( ( QIODevice * ) ph )->~QIODevice();
-         ph = NULL;
-      }
-      else
-      {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QIODevice" );  OutputDebugString( str );
-#endif
-      }
-   }
-   else
-   {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QIODevice" );  OutputDebugString( str );
-#endif
-   }
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QIODEVICE )
@@ -239,7 +215,7 @@ HB_FUNC( QT_QIODEVICE_PEEK )
  */
 HB_FUNC( QT_QIODEVICE_PEEK_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QIODevice( 1 )->peek( hb_parnint( 2 ) ) ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QIODevice( 1 )->peek( hb_parnint( 2 ) ) ) ) );
 }
 
 /*
@@ -271,7 +247,7 @@ HB_FUNC( QT_QIODEVICE_READ )
  */
 HB_FUNC( QT_QIODEVICE_READ_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QIODevice( 1 )->read( hb_parnint( 2 ) ) ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QIODevice( 1 )->read( hb_parnint( 2 ) ) ) ) );
 }
 
 /*
@@ -279,7 +255,7 @@ HB_FUNC( QT_QIODEVICE_READ_1 )
  */
 HB_FUNC( QT_QIODEVICE_READALL )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QIODevice( 1 )->readAll() ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QIODevice( 1 )->readAll() ) ) );
 }
 
 /*
@@ -295,7 +271,7 @@ HB_FUNC( QT_QIODEVICE_READLINE )
  */
 HB_FUNC( QT_QIODEVICE_READLINE_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QIODevice( 1 )->readLine( hb_parnint( 2 ) ) ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QIODevice( 1 )->readLine( hb_parnint( 2 ) ) ) ) );
 }
 
 /*

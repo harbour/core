@@ -86,40 +86,48 @@
 
 QT_G_FUNC( release_QStyleOptionToolBar )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QStyleOptionToolBar         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionToolBar          p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionToolBar         ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QStyleOptionToolBar * ) ph )->~QStyleOptionToolBar();
-      ph = NULL;
+      ( ( QStyleOptionToolBar * ) p->ph )->~QStyleOptionToolBar();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionToolBar         Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QStyleOptionToolBar         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QStyleOptionToolBar" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionToolBar         Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QStyleOptionToolBar" );
+      #endif
    }
+}
+
+void * gcAllocate_QStyleOptionToolBar( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QStyleOptionToolBar;
+   #if defined(__debug__)
+      just_debug( "          new_QStyleOptionToolBar         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSTYLEOPTIONTOOLBAR )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QStyleOptionToolBar         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QStyleOptionToolBar* ) new QStyleOptionToolBar() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QStyleOptionToolBar;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QStyleOptionToolBar( pObj ) );
 }
 /*
  * ToolBarFeatures features

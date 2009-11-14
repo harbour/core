@@ -80,30 +80,44 @@
 
 QT_G_FUNC( release_QSizeF )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QSizeF                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QSizeF                       p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QSizeF                      ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QSizeF * ) ph )->~QSizeF();
-      ph = NULL;
+      ( ( QSizeF * ) p->ph )->~QSizeF();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QSizeF                      Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QSizeF                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QSizeF" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QSizeF                      Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QSizeF" );
+      #endif
    }
+}
+
+void * gcAllocate_QSizeF( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QSizeF;
+   #if defined(__debug__)
+      just_debug( "          new_QSizeF                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSIZEF )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QSizeF                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
@@ -114,20 +128,14 @@ hb_snprintf( str, sizeof(str), "   GC:  new QSizeF                      %i B %i 
       pObj = ( QSizeF* ) new QSizeF() ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QSizeF;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QSizeF( pObj ) );
 }
 /*
  * QSizeF boundedTo ( const QSizeF & otherSize ) const
  */
 HB_FUNC( QT_QSIZEF_BOUNDEDTO )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSizeF( hbqt_par_QSizeF( 1 )->boundedTo( *hbqt_par_QSizeF( 2 ) ) ), release_QSizeF ) );
+   hb_retptrGC( gcAllocate_QSizeF( new QSizeF( hbqt_par_QSizeF( 1 )->boundedTo( *hbqt_par_QSizeF( 2 ) ) ) ) );
 }
 
 /*
@@ -135,7 +143,7 @@ HB_FUNC( QT_QSIZEF_BOUNDEDTO )
  */
 HB_FUNC( QT_QSIZEF_EXPANDEDTO )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSizeF( hbqt_par_QSizeF( 1 )->expandedTo( *hbqt_par_QSizeF( 2 ) ) ), release_QSizeF ) );
+   hb_retptrGC( gcAllocate_QSizeF( new QSizeF( hbqt_par_QSizeF( 1 )->expandedTo( *hbqt_par_QSizeF( 2 ) ) ) ) );
 }
 
 /*
@@ -223,7 +231,7 @@ HB_FUNC( QT_QSIZEF_SETWIDTH )
  */
 HB_FUNC( QT_QSIZEF_TOSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QSizeF( 1 )->toSize() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QSizeF( 1 )->toSize() ) ) );
 }
 
 /*

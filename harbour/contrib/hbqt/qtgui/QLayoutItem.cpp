@@ -78,31 +78,7 @@
 
 QT_G_FUNC( release_QLayoutItem )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QLayoutItem                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
-   {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
-      {
-         ( ( QLayoutItem * ) ph )->~QLayoutItem();
-         ph = NULL;
-      }
-      else
-      {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QLayoutItem" );  OutputDebugString( str );
-#endif
-      }
-   }
-   else
-   {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QLayoutItem" );  OutputDebugString( str );
-#endif
-   }
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QLAYOUTITEM )
@@ -137,7 +113,7 @@ HB_FUNC( QT_QLAYOUTITEM_EXPANDINGDIRECTIONS )
  */
 HB_FUNC( QT_QLAYOUTITEM_GEOMETRY )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QLayoutItem( 1 )->geometry() ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QLayoutItem( 1 )->geometry() ) ) );
 }
 
 /*
@@ -185,7 +161,7 @@ HB_FUNC( QT_QLAYOUTITEM_LAYOUT )
  */
 HB_FUNC( QT_QLAYOUTITEM_MAXIMUMSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QLayoutItem( 1 )->maximumSize() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QLayoutItem( 1 )->maximumSize() ) ) );
 }
 
 /*
@@ -201,7 +177,7 @@ HB_FUNC( QT_QLAYOUTITEM_MINIMUMHEIGHTFORWIDTH )
  */
 HB_FUNC( QT_QLAYOUTITEM_MINIMUMSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QLayoutItem( 1 )->minimumSize() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QLayoutItem( 1 )->minimumSize() ) ) );
 }
 
 /*
@@ -225,7 +201,7 @@ HB_FUNC( QT_QLAYOUTITEM_SETGEOMETRY )
  */
 HB_FUNC( QT_QLAYOUTITEM_SIZEHINT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QLayoutItem( 1 )->sizeHint() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QLayoutItem( 1 )->sizeHint() ) ) );
 }
 
 /*

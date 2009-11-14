@@ -81,47 +81,55 @@
 
 QT_G_FUNC( release_QDateTime )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QDateTime                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QDateTime                    p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QDateTime                   ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QDateTime * ) ph )->~QDateTime();
-      ph = NULL;
+      ( ( QDateTime * ) p->ph )->~QDateTime();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QDateTime                   Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QDateTime                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QDateTime" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QDateTime                   Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QDateTime" );
+      #endif
    }
+}
+
+void * gcAllocate_QDateTime( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QDateTime;
+   #if defined(__debug__)
+      just_debug( "          new_QDateTime                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QDATETIME )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QDateTime                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QDateTime* ) new QDateTime() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QDateTime;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QDateTime( pObj ) );
 }
 /*
  * QDateTime addDays ( int ndays ) const
  */
 HB_FUNC( QT_QDATETIME_ADDDAYS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QDateTime( 1 )->addDays( hb_parni( 2 ) ) ), release_QDateTime ) );
+   hb_retptrGC( gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->addDays( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -129,7 +137,7 @@ HB_FUNC( QT_QDATETIME_ADDDAYS )
  */
 HB_FUNC( QT_QDATETIME_ADDMSECS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QDateTime( 1 )->addMSecs( hb_parnint( 2 ) ) ), release_QDateTime ) );
+   hb_retptrGC( gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->addMSecs( hb_parnint( 2 ) ) ) ) );
 }
 
 /*
@@ -137,7 +145,7 @@ HB_FUNC( QT_QDATETIME_ADDMSECS )
  */
 HB_FUNC( QT_QDATETIME_ADDMONTHS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QDateTime( 1 )->addMonths( hb_parni( 2 ) ) ), release_QDateTime ) );
+   hb_retptrGC( gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->addMonths( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -145,7 +153,7 @@ HB_FUNC( QT_QDATETIME_ADDMONTHS )
  */
 HB_FUNC( QT_QDATETIME_ADDSECS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QDateTime( 1 )->addSecs( hb_parni( 2 ) ) ), release_QDateTime ) );
+   hb_retptrGC( gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->addSecs( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -153,7 +161,7 @@ HB_FUNC( QT_QDATETIME_ADDSECS )
  */
 HB_FUNC( QT_QDATETIME_ADDYEARS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QDateTime( 1 )->addYears( hb_parni( 2 ) ) ), release_QDateTime ) );
+   hb_retptrGC( gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->addYears( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -161,7 +169,7 @@ HB_FUNC( QT_QDATETIME_ADDYEARS )
  */
 HB_FUNC( QT_QDATETIME_DATE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDate( hbqt_par_QDateTime( 1 )->date() ), release_QDate ) );
+   hb_retptrGC( gcAllocate_QDate( new QDate( hbqt_par_QDateTime( 1 )->date() ) ) );
 }
 
 /*
@@ -233,7 +241,7 @@ HB_FUNC( QT_QDATETIME_SETTIME_T )
  */
 HB_FUNC( QT_QDATETIME_TIME )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTime( hbqt_par_QDateTime( 1 )->time() ), release_QTime ) );
+   hb_retptrGC( gcAllocate_QTime( new QTime( hbqt_par_QDateTime( 1 )->time() ) ) );
 }
 
 /*
@@ -249,7 +257,7 @@ HB_FUNC( QT_QDATETIME_TIMESPEC )
  */
 HB_FUNC( QT_QDATETIME_TOLOCALTIME )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QDateTime( 1 )->toLocalTime() ), release_QDateTime ) );
+   hb_retptrGC( gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->toLocalTime() ) ) );
 }
 
 /*
@@ -273,7 +281,7 @@ HB_FUNC( QT_QDATETIME_TOSTRING_1 )
  */
 HB_FUNC( QT_QDATETIME_TOTIMESPEC )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QDateTime( 1 )->toTimeSpec( ( Qt::TimeSpec ) hb_parni( 2 ) ) ), release_QDateTime ) );
+   hb_retptrGC( gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->toTimeSpec( ( Qt::TimeSpec ) hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -289,7 +297,7 @@ HB_FUNC( QT_QDATETIME_TOTIME_T )
  */
 HB_FUNC( QT_QDATETIME_TOUTC )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QDateTime( 1 )->toUTC() ), release_QDateTime ) );
+   hb_retptrGC( gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->toUTC() ) ) );
 }
 
 /*
@@ -297,7 +305,7 @@ HB_FUNC( QT_QDATETIME_TOUTC )
  */
 HB_FUNC( QT_QDATETIME_CURRENTDATETIME )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QDateTime( 1 )->currentDateTime() ), release_QDateTime ) );
+   hb_retptrGC( gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->currentDateTime() ) ) );
 }
 
 /*
@@ -305,7 +313,7 @@ HB_FUNC( QT_QDATETIME_CURRENTDATETIME )
  */
 HB_FUNC( QT_QDATETIME_FROMSTRING )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QDateTime( 1 )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::DateFormat ) hb_parni( 3 ) : ( Qt::DateFormat ) Qt::TextDate ) ) ), release_QDateTime ) );
+   hb_retptrGC( gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::DateFormat ) hb_parni( 3 ) : ( Qt::DateFormat ) Qt::TextDate ) ) ) ) );
 }
 
 /*
@@ -313,7 +321,7 @@ HB_FUNC( QT_QDATETIME_FROMSTRING )
  */
 HB_FUNC( QT_QDATETIME_FROMSTRING_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QDateTime( 1 )->fromString( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ), release_QDateTime ) );
+   hb_retptrGC( gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->fromString( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ) ) );
 }
 
 /*
@@ -321,7 +329,7 @@ HB_FUNC( QT_QDATETIME_FROMSTRING_1 )
  */
 HB_FUNC( QT_QDATETIME_FROMTIME_T )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QDateTime( 1 )->fromTime_t( hb_parni( 2 ) ) ), release_QDateTime ) );
+   hb_retptrGC( gcAllocate_QDateTime( new QDateTime( hbqt_par_QDateTime( 1 )->fromTime_t( hb_parni( 2 ) ) ) ) );
 }
 
 

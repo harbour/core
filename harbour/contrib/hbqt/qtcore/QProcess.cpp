@@ -87,42 +87,65 @@
  * virtual ~QProcess ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QProcess > pq;
+} QGC_POINTER_QProcess;
+
 QT_G_FUNC( release_QProcess )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QProcess                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QProcess * p = ( QGC_POINTER_QProcess * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QProcess                     p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QProcess                    ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QProcess * ) ph )->~QProcess();
-         ph = NULL;
+         ( ( QProcess * ) p->ph )->~QProcess();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QProcess                    Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QProcess                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QProcess" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QProcess                    Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QProcess" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QProcess" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QProcess                    Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QProcess" );
+      #endif
    }
+}
+
+void * gcAllocate_QProcess( void * pObj )
+{
+   QGC_POINTER_QProcess * p = ( QGC_POINTER_QProcess * ) hb_gcAllocate( sizeof( QGC_POINTER_QProcess ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QProcess;
+   new( & p->pq ) QPointer< QProcess >( ( QProcess * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QProcess                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QPROCESS )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QProcess > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QProcess                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
@@ -133,13 +156,7 @@ hb_snprintf( str, sizeof(str), "   GC:  new QProcess                    %i B %i 
       pObj = ( QProcess* ) new QProcess() ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QProcess;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QProcess( pObj ) );
 }
 /*
  * virtual void close ()
@@ -170,7 +187,7 @@ HB_FUNC( QT_QPROCESS_CLOSEWRITECHANNEL )
  */
 HB_FUNC( QT_QPROCESS_ENVIRONMENT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QProcess( 1 )->environment() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QProcess( 1 )->environment() ) ) );
 }
 
 /*
@@ -210,7 +227,7 @@ HB_FUNC( QT_QPROCESS_PROCESSCHANNELMODE )
  */
 HB_FUNC( QT_QPROCESS_READALLSTANDARDERROR )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QProcess( 1 )->readAllStandardError() ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QProcess( 1 )->readAllStandardError() ) ) );
 }
 
 /*
@@ -218,7 +235,7 @@ HB_FUNC( QT_QPROCESS_READALLSTANDARDERROR )
  */
 HB_FUNC( QT_QPROCESS_READALLSTANDARDOUTPUT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QProcess( 1 )->readAllStandardOutput() ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QProcess( 1 )->readAllStandardOutput() ) ) );
 }
 
 /*
@@ -390,7 +407,7 @@ HB_FUNC( QT_QPROCESS_STARTDETACHED_2 )
  */
 HB_FUNC( QT_QPROCESS_SYSTEMENVIRONMENT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QProcess( 1 )->systemEnvironment() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QProcess( 1 )->systemEnvironment() ) ) );
 }
 
 /*

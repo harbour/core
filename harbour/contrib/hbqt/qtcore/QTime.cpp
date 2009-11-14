@@ -77,47 +77,55 @@
 
 QT_G_FUNC( release_QTime )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTime                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTime                        p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTime                       ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QTime * ) ph )->~QTime();
-      ph = NULL;
+      ( ( QTime * ) p->ph )->~QTime();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTime                       Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QTime                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTime" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTime                       Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTime" );
+      #endif
    }
+}
+
+void * gcAllocate_QTime( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTime;
+   #if defined(__debug__)
+      just_debug( "          new_QTime                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTIME )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTime                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = new QTime() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTime;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTime( pObj ) );
 }
 /*
  * QTime addMSecs ( int ms ) const
  */
 HB_FUNC( QT_QTIME_ADDMSECS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTime( hbqt_par_QTime( 1 )->addMSecs( hb_parni( 2 ) ) ), release_QTime ) );
+   hb_retptrGC( gcAllocate_QTime( new QTime( hbqt_par_QTime( 1 )->addMSecs( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -125,7 +133,7 @@ HB_FUNC( QT_QTIME_ADDMSECS )
  */
 HB_FUNC( QT_QTIME_ADDSECS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTime( hbqt_par_QTime( 1 )->addSecs( hb_parni( 2 ) ) ), release_QTime ) );
+   hb_retptrGC( gcAllocate_QTime( new QTime( hbqt_par_QTime( 1 )->addSecs( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -245,7 +253,7 @@ HB_FUNC( QT_QTIME_TOSTRING_1 )
  */
 HB_FUNC( QT_QTIME_CURRENTTIME )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTime( hbqt_par_QTime( 1 )->currentTime() ), release_QTime ) );
+   hb_retptrGC( gcAllocate_QTime( new QTime( hbqt_par_QTime( 1 )->currentTime() ) ) );
 }
 
 /*
@@ -253,7 +261,7 @@ HB_FUNC( QT_QTIME_CURRENTTIME )
  */
 HB_FUNC( QT_QTIME_FROMSTRING )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTime( hbqt_par_QTime( 1 )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::DateFormat ) hb_parni( 3 ) : ( Qt::DateFormat ) Qt::TextDate ) ) ), release_QTime ) );
+   hb_retptrGC( gcAllocate_QTime( new QTime( hbqt_par_QTime( 1 )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::DateFormat ) hb_parni( 3 ) : ( Qt::DateFormat ) Qt::TextDate ) ) ) ) );
 }
 
 /*
@@ -261,7 +269,7 @@ HB_FUNC( QT_QTIME_FROMSTRING )
  */
 HB_FUNC( QT_QTIME_FROMSTRING_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTime( hbqt_par_QTime( 1 )->fromString( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ), release_QTime ) );
+   hb_retptrGC( gcAllocate_QTime( new QTime( hbqt_par_QTime( 1 )->fromString( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ) ) );
 }
 
 /*

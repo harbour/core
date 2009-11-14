@@ -84,40 +84,48 @@
 
 QT_G_FUNC( release_QRegExp )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QRegExp                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QRegExp                      p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QRegExp                     ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QRegExp * ) ph )->~QRegExp();
-      ph = NULL;
+      ( ( QRegExp * ) p->ph )->~QRegExp();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QRegExp                     Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QRegExp                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QRegExp" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QRegExp                     Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QRegExp" );
+      #endif
    }
+}
+
+void * gcAllocate_QRegExp( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QRegExp;
+   #if defined(__debug__)
+      just_debug( "          new_QRegExp                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QREGEXP )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QRegExp                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = new QRegExp() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QRegExp;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QRegExp( pObj ) );
 }
 /*
  * QString cap ( int nth = 0 ) const
@@ -132,7 +140,7 @@ HB_FUNC( QT_QREGEXP_CAP )
  */
 HB_FUNC( QT_QREGEXP_CAPTUREDTEXTS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QRegExp( 1 )->capturedTexts() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QRegExp( 1 )->capturedTexts() ) ) );
 }
 
 /*

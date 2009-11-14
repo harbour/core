@@ -107,7 +107,7 @@ HB_FUNC( QT_QWEBHISTORY_BACK )
  */
 HB_FUNC( QT_QWEBHISTORY_BACKITEM )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QWebHistoryItem( hbqt_par_QWebHistory( 1 )->backItem() ), release_QWebHistoryItem ) );
+   hb_retptrGC( gcAllocate_QWebHistoryItem( new QWebHistoryItem( hbqt_par_QWebHistory( 1 )->backItem() ) ) );
 }
 
 /*
@@ -147,7 +147,7 @@ HB_FUNC( QT_QWEBHISTORY_COUNT )
  */
 HB_FUNC( QT_QWEBHISTORY_CURRENTITEM )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QWebHistoryItem( hbqt_par_QWebHistory( 1 )->currentItem() ), release_QWebHistoryItem ) );
+   hb_retptrGC( gcAllocate_QWebHistoryItem( new QWebHistoryItem( hbqt_par_QWebHistory( 1 )->currentItem() ) ) );
 }
 
 /*
@@ -171,7 +171,7 @@ HB_FUNC( QT_QWEBHISTORY_FORWARD )
  */
 HB_FUNC( QT_QWEBHISTORY_FORWARDITEM )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QWebHistoryItem( hbqt_par_QWebHistory( 1 )->forwardItem() ), release_QWebHistoryItem ) );
+   hb_retptrGC( gcAllocate_QWebHistoryItem( new QWebHistoryItem( hbqt_par_QWebHistory( 1 )->forwardItem() ) ) );
 }
 
 /*
@@ -187,7 +187,7 @@ HB_FUNC( QT_QWEBHISTORY_GOTOITEM )
  */
 HB_FUNC( QT_QWEBHISTORY_ITEMAT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QWebHistoryItem( hbqt_par_QWebHistory( 1 )->itemAt( hb_parni( 2 ) ) ), release_QWebHistoryItem ) );
+   hb_retptrGC( gcAllocate_QWebHistoryItem( new QWebHistoryItem( hbqt_par_QWebHistory( 1 )->itemAt( hb_parni( 2 ) ) ) ) );
 }
 
 /*

@@ -98,47 +98,55 @@
 
 QT_G_FUNC( release_QNetworkRequest )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QNetworkRequest             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QNetworkRequest              p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QNetworkRequest             ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QNetworkRequest * ) ph )->~QNetworkRequest();
-      ph = NULL;
+      ( ( QNetworkRequest * ) p->ph )->~QNetworkRequest();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QNetworkRequest             Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QNetworkRequest             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QNetworkRequest" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QNetworkRequest             Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QNetworkRequest" );
+      #endif
    }
+}
+
+void * gcAllocate_QNetworkRequest( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QNetworkRequest;
+   #if defined(__debug__)
+      just_debug( "          new_QNetworkRequest             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QNETWORKREQUEST )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QNetworkRequest             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = new QNetworkRequest() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QNetworkRequest;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QNetworkRequest( pObj ) );
 }
 /*
  * QVariant attribute ( Attribute code, const QVariant & defaultValue = QVariant() ) const
  */
 HB_FUNC( QT_QNETWORKREQUEST_ATTRIBUTE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QNetworkRequest( 1 )->attribute( ( QNetworkRequest::Attribute ) hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QVariant( 3 ) : QVariant() ) ) ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QNetworkRequest( 1 )->attribute( ( QNetworkRequest::Attribute ) hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QVariant( 3 ) : QVariant() ) ) ) ) );
 }
 
 /*
@@ -154,7 +162,7 @@ HB_FUNC( QT_QNETWORKREQUEST_HASRAWHEADER )
  */
 HB_FUNC( QT_QNETWORKREQUEST_HEADER )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QNetworkRequest( 1 )->header( ( QNetworkRequest::KnownHeaders ) hb_parni( 2 ) ) ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QNetworkRequest( 1 )->header( ( QNetworkRequest::KnownHeaders ) hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -162,7 +170,7 @@ HB_FUNC( QT_QNETWORKREQUEST_HEADER )
  */
 HB_FUNC( QT_QNETWORKREQUEST_RAWHEADER )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QNetworkRequest( 1 )->rawHeader( *hbqt_par_QByteArray( 2 ) ) ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QNetworkRequest( 1 )->rawHeader( *hbqt_par_QByteArray( 2 ) ) ) ) );
 }
 
 /*
@@ -202,7 +210,7 @@ HB_FUNC( QT_QNETWORKREQUEST_SETURL )
  */
 HB_FUNC( QT_QNETWORKREQUEST_URL )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QUrl( hbqt_par_QNetworkRequest( 1 )->url() ), release_QUrl ) );
+   hb_retptrGC( gcAllocate_QUrl( new QUrl( hbqt_par_QNetworkRequest( 1 )->url() ) ) );
 }
 
 

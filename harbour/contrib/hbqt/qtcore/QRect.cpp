@@ -81,30 +81,44 @@
 
 QT_G_FUNC( release_QRect )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QRect                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QRect                        p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QRect                       ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QRect * ) ph )->~QRect();
-      ph = NULL;
+      ( ( QRect * ) p->ph )->~QRect();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QRect                       Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QRect                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QRect" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QRect                       Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QRect" );
+      #endif
    }
+}
+
+void * gcAllocate_QRect( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QRect;
+   #if defined(__debug__)
+      just_debug( "          new_QRect                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QRECT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QRect                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
@@ -123,13 +137,7 @@ hb_snprintf( str, sizeof(str), "   GC:  new QRect                       %i B %i 
       pObj = ( QRect* ) new QRect() ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QRect;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QRect( pObj ) );
 }
 /*
  * void adjust ( int dx1, int dy1, int dx2, int dy2 )
@@ -144,7 +152,7 @@ HB_FUNC( QT_QRECT_ADJUST )
  */
 HB_FUNC( QT_QRECT_ADJUSTED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QRect( 1 )->adjusted( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QRect( 1 )->adjusted( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ) ) ) );
 }
 
 /*
@@ -160,7 +168,7 @@ HB_FUNC( QT_QRECT_BOTTOM )
  */
 HB_FUNC( QT_QRECT_BOTTOMLEFT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QRect( 1 )->bottomLeft() ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QRect( 1 )->bottomLeft() ) ) );
 }
 
 /*
@@ -168,7 +176,7 @@ HB_FUNC( QT_QRECT_BOTTOMLEFT )
  */
 HB_FUNC( QT_QRECT_BOTTOMRIGHT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QRect( 1 )->bottomRight() ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QRect( 1 )->bottomRight() ) ) );
 }
 
 /*
@@ -176,7 +184,7 @@ HB_FUNC( QT_QRECT_BOTTOMRIGHT )
  */
 HB_FUNC( QT_QRECT_CENTER )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QRect( 1 )->center() ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QRect( 1 )->center() ) ) );
 }
 
 /*
@@ -260,7 +268,7 @@ HB_FUNC( QT_QRECT_HEIGHT )
  */
 HB_FUNC( QT_QRECT_INTERSECTED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QRect( 1 )->intersected( *hbqt_par_QRect( 2 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QRect( 1 )->intersected( *hbqt_par_QRect( 2 ) ) ) ) );
 }
 
 /*
@@ -396,7 +404,7 @@ HB_FUNC( QT_QRECT_MOVETOPRIGHT )
  */
 HB_FUNC( QT_QRECT_NORMALIZED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QRect( 1 )->normalized() ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QRect( 1 )->normalized() ) ) );
 }
 
 /*
@@ -532,7 +540,7 @@ HB_FUNC( QT_QRECT_SETY )
  */
 HB_FUNC( QT_QRECT_SIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QRect( 1 )->size() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QRect( 1 )->size() ) ) );
 }
 
 /*
@@ -548,7 +556,7 @@ HB_FUNC( QT_QRECT_TOP )
  */
 HB_FUNC( QT_QRECT_TOPLEFT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QRect( 1 )->topLeft() ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QRect( 1 )->topLeft() ) ) );
 }
 
 /*
@@ -556,7 +564,7 @@ HB_FUNC( QT_QRECT_TOPLEFT )
  */
 HB_FUNC( QT_QRECT_TOPRIGHT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QRect( 1 )->topRight() ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QRect( 1 )->topRight() ) ) );
 }
 
 /*
@@ -580,7 +588,7 @@ HB_FUNC( QT_QRECT_TRANSLATE_1 )
  */
 HB_FUNC( QT_QRECT_TRANSLATED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QRect( 1 )->translated( hb_parni( 2 ), hb_parni( 3 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QRect( 1 )->translated( hb_parni( 2 ), hb_parni( 3 ) ) ) ) );
 }
 
 /*
@@ -588,7 +596,7 @@ HB_FUNC( QT_QRECT_TRANSLATED )
  */
 HB_FUNC( QT_QRECT_TRANSLATED_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QRect( 1 )->translated( *hbqt_par_QPoint( 2 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QRect( 1 )->translated( *hbqt_par_QPoint( 2 ) ) ) ) );
 }
 
 /*
@@ -596,7 +604,7 @@ HB_FUNC( QT_QRECT_TRANSLATED_1 )
  */
 HB_FUNC( QT_QRECT_UNITED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QRect( 1 )->united( *hbqt_par_QRect( 2 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QRect( 1 )->united( *hbqt_par_QRect( 2 ) ) ) ) );
 }
 
 /*

@@ -79,40 +79,48 @@
 
 QT_G_FUNC( release_QMatrix )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QMatrix                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QMatrix                      p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QMatrix                     ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QMatrix * ) ph )->~QMatrix();
-      ph = NULL;
+      ( ( QMatrix * ) p->ph )->~QMatrix();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QMatrix                     Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QMatrix                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QMatrix" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QMatrix                     Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QMatrix" );
+      #endif
    }
+}
+
+void * gcAllocate_QMatrix( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QMatrix;
+   #if defined(__debug__)
+      just_debug( "          new_QMatrix                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QMATRIX )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QMatrix                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = new QMatrix() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QMatrix;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QMatrix( pObj ) );
 }
 /*
  * qreal m11 () const
@@ -177,7 +185,7 @@ HB_FUNC( QT_QMATRIX_INVERTED )
 {
    bool iInvertible = 0;
 
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QMatrix( hbqt_par_QMatrix( 1 )->inverted( &iInvertible ) ), release_QMatrix ) );
+   hb_retptrGC( gcAllocate_QMatrix( new QMatrix( hbqt_par_QMatrix( 1 )->inverted( &iInvertible ) ) ) );
 
    hb_stornl( iInvertible, 2 );
 }
@@ -231,7 +239,7 @@ HB_FUNC( QT_QMATRIX_MAP_1 )
  */
 HB_FUNC( QT_QMATRIX_MAP_2 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPointF( hbqt_par_QMatrix( 1 )->map( *hbqt_par_QPointF( 2 ) ) ), release_QPointF ) );
+   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QMatrix( 1 )->map( *hbqt_par_QPointF( 2 ) ) ) ) );
 }
 
 /*
@@ -239,7 +247,7 @@ HB_FUNC( QT_QMATRIX_MAP_2 )
  */
 HB_FUNC( QT_QMATRIX_MAP_3 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QMatrix( 1 )->map( *hbqt_par_QPoint( 2 ) ) ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QMatrix( 1 )->map( *hbqt_par_QPoint( 2 ) ) ) ) );
 }
 
 /*
@@ -247,7 +255,7 @@ HB_FUNC( QT_QMATRIX_MAP_3 )
  */
 HB_FUNC( QT_QMATRIX_MAP_4 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QLineF( hbqt_par_QMatrix( 1 )->map( *hbqt_par_QLineF( 2 ) ) ), release_QLineF ) );
+   hb_retptrGC( gcAllocate_QLineF( new QLineF( hbqt_par_QMatrix( 1 )->map( *hbqt_par_QLineF( 2 ) ) ) ) );
 }
 
 /*
@@ -255,7 +263,7 @@ HB_FUNC( QT_QMATRIX_MAP_4 )
  */
 HB_FUNC( QT_QMATRIX_MAP_5 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QLine( hbqt_par_QMatrix( 1 )->map( *hbqt_par_QLine( 2 ) ) ), release_QLine ) );
+   hb_retptrGC( gcAllocate_QLine( new QLine( hbqt_par_QMatrix( 1 )->map( *hbqt_par_QLine( 2 ) ) ) ) );
 }
 
 /*
@@ -263,7 +271,7 @@ HB_FUNC( QT_QMATRIX_MAP_5 )
  */
 HB_FUNC( QT_QMATRIX_MAP_6 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPolygonF( hbqt_par_QMatrix( 1 )->map( *hbqt_par_QPolygonF( 2 ) ) ), release_QPolygonF ) );
+   hb_retptrGC( gcAllocate_QPolygonF( new QPolygonF( hbqt_par_QMatrix( 1 )->map( *hbqt_par_QPolygonF( 2 ) ) ) ) );
 }
 
 /*
@@ -271,7 +279,7 @@ HB_FUNC( QT_QMATRIX_MAP_6 )
  */
 HB_FUNC( QT_QMATRIX_MAP_7 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPolygon( hbqt_par_QMatrix( 1 )->map( *hbqt_par_QPolygon( 2 ) ) ), release_QPolygon ) );
+   hb_retptrGC( gcAllocate_QPolygon( new QPolygon( hbqt_par_QMatrix( 1 )->map( *hbqt_par_QPolygon( 2 ) ) ) ) );
 }
 
 /*
@@ -279,7 +287,7 @@ HB_FUNC( QT_QMATRIX_MAP_7 )
  */
 HB_FUNC( QT_QMATRIX_MAP_8 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRegion( hbqt_par_QMatrix( 1 )->map( *hbqt_par_QRegion( 2 ) ) ), release_QRegion ) );
+   hb_retptrGC( gcAllocate_QRegion( new QRegion( hbqt_par_QMatrix( 1 )->map( *hbqt_par_QRegion( 2 ) ) ) ) );
 }
 
 /*
@@ -287,7 +295,7 @@ HB_FUNC( QT_QMATRIX_MAP_8 )
  */
 HB_FUNC( QT_QMATRIX_MAP_9 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPainterPath( hbqt_par_QMatrix( 1 )->map( *hbqt_par_QPainterPath( 2 ) ) ), release_QPainterPath ) );
+   hb_retptrGC( gcAllocate_QPainterPath( new QPainterPath( hbqt_par_QMatrix( 1 )->map( *hbqt_par_QPainterPath( 2 ) ) ) ) );
 }
 
 /*
@@ -295,7 +303,7 @@ HB_FUNC( QT_QMATRIX_MAP_9 )
  */
 HB_FUNC( QT_QMATRIX_MAPRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QMatrix( 1 )->mapRect( *hbqt_par_QRectF( 2 ) ) ), release_QRectF ) );
+   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QMatrix( 1 )->mapRect( *hbqt_par_QRectF( 2 ) ) ) ) );
 }
 
 /*
@@ -303,7 +311,7 @@ HB_FUNC( QT_QMATRIX_MAPRECT )
  */
 HB_FUNC( QT_QMATRIX_MAPRECT_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QMatrix( 1 )->mapRect( *hbqt_par_QRect( 2 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QMatrix( 1 )->mapRect( *hbqt_par_QRect( 2 ) ) ) ) );
 }
 
 /*
@@ -311,7 +319,7 @@ HB_FUNC( QT_QMATRIX_MAPRECT_1 )
  */
 HB_FUNC( QT_QMATRIX_MAPTOPOLYGON )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPolygon( hbqt_par_QMatrix( 1 )->mapToPolygon( *hbqt_par_QRect( 2 ) ) ), release_QPolygon ) );
+   hb_retptrGC( gcAllocate_QPolygon( new QPolygon( hbqt_par_QMatrix( 1 )->mapToPolygon( *hbqt_par_QRect( 2 ) ) ) ) );
 }
 
 /*
@@ -327,7 +335,7 @@ HB_FUNC( QT_QMATRIX_RESET )
  */
 HB_FUNC( QT_QMATRIX_ROTATE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QMatrix( hbqt_par_QMatrix( 1 )->rotate( hb_parnd( 2 ) ) ), release_QMatrix ) );
+   hb_retptrGC( gcAllocate_QMatrix( new QMatrix( hbqt_par_QMatrix( 1 )->rotate( hb_parnd( 2 ) ) ) ) );
 }
 
 /*
@@ -335,7 +343,7 @@ HB_FUNC( QT_QMATRIX_ROTATE )
  */
 HB_FUNC( QT_QMATRIX_SCALE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QMatrix( hbqt_par_QMatrix( 1 )->scale( hb_parnd( 2 ), hb_parnd( 3 ) ) ), release_QMatrix ) );
+   hb_retptrGC( gcAllocate_QMatrix( new QMatrix( hbqt_par_QMatrix( 1 )->scale( hb_parnd( 2 ), hb_parnd( 3 ) ) ) ) );
 }
 
 /*
@@ -351,7 +359,7 @@ HB_FUNC( QT_QMATRIX_SETMATRIX )
  */
 HB_FUNC( QT_QMATRIX_SHEAR )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QMatrix( hbqt_par_QMatrix( 1 )->shear( hb_parnd( 2 ), hb_parnd( 3 ) ) ), release_QMatrix ) );
+   hb_retptrGC( gcAllocate_QMatrix( new QMatrix( hbqt_par_QMatrix( 1 )->shear( hb_parnd( 2 ), hb_parnd( 3 ) ) ) ) );
 }
 
 /*
@@ -359,7 +367,7 @@ HB_FUNC( QT_QMATRIX_SHEAR )
  */
 HB_FUNC( QT_QMATRIX_TRANSLATE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QMatrix( hbqt_par_QMatrix( 1 )->translate( hb_parnd( 2 ), hb_parnd( 3 ) ) ), release_QMatrix ) );
+   hb_retptrGC( gcAllocate_QMatrix( new QMatrix( hbqt_par_QMatrix( 1 )->translate( hb_parnd( 2 ), hb_parnd( 3 ) ) ) ) );
 }
 
 

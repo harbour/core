@@ -87,40 +87,48 @@
 
 QT_G_FUNC( release_QDir )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QDir                        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QDir                         p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QDir                        ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QDir * ) ph )->~QDir();
-      ph = NULL;
+      ( ( QDir * ) p->ph )->~QDir();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QDir                        Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QDir                        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QDir" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QDir                        Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QDir" );
+      #endif
    }
+}
+
+void * gcAllocate_QDir( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QDir;
+   #if defined(__debug__)
+      just_debug( "          new_QDir                        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QDIR )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QDir                        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = new QDir( hbqt_par_QString( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QDir;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QDir( pObj ) );
 }
 /*
  * QString absoluteFilePath ( const QString & fileName ) const
@@ -183,7 +191,7 @@ HB_FUNC( QT_QDIR_DIRNAME )
  */
 HB_FUNC( QT_QDIR_ENTRYLIST )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QDir( 1 )->entryList( *hbqt_par_QStringList( 2 ), ( HB_ISNUM( 3 ) ? ( QDir::Filters ) hb_parni( 3 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 4 ) ? ( QDir::SortFlags ) hb_parni( 4 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QDir( 1 )->entryList( *hbqt_par_QStringList( 2 ), ( HB_ISNUM( 3 ) ? ( QDir::Filters ) hb_parni( 3 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 4 ) ? ( QDir::SortFlags ) hb_parni( 4 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ) ) );
 }
 
 /*
@@ -191,7 +199,7 @@ HB_FUNC( QT_QDIR_ENTRYLIST )
  */
 HB_FUNC( QT_QDIR_ENTRYLIST_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QDir( 1 )->entryList( ( HB_ISNUM( 2 ) ? ( QDir::Filters ) hb_parni( 2 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 3 ) ? ( QDir::SortFlags ) hb_parni( 3 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QDir( 1 )->entryList( ( HB_ISNUM( 2 ) ? ( QDir::Filters ) hb_parni( 2 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 3 ) ? ( QDir::SortFlags ) hb_parni( 3 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ) ) );
 }
 
 /*
@@ -287,7 +295,7 @@ HB_FUNC( QT_QDIR_MKPATH )
  */
 HB_FUNC( QT_QDIR_NAMEFILTERS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QDir( 1 )->nameFilters() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QDir( 1 )->nameFilters() ) ) );
 }
 
 /*
@@ -407,7 +415,7 @@ HB_FUNC( QT_QDIR_CLEANPATH )
  */
 HB_FUNC( QT_QDIR_CURRENT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDir( hbqt_par_QDir( 1 )->current() ), release_QDir ) );
+   hb_retptrGC( gcAllocate_QDir( new QDir( hbqt_par_QDir( 1 )->current() ) ) );
 }
 
 /*
@@ -431,7 +439,7 @@ HB_FUNC( QT_QDIR_FROMNATIVESEPARATORS )
  */
 HB_FUNC( QT_QDIR_HOME )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDir( hbqt_par_QDir( 1 )->home() ), release_QDir ) );
+   hb_retptrGC( gcAllocate_QDir( new QDir( hbqt_par_QDir( 1 )->home() ) ) );
 }
 
 /*
@@ -479,7 +487,7 @@ HB_FUNC( QT_QDIR_MATCH_1 )
  */
 HB_FUNC( QT_QDIR_ROOT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDir( hbqt_par_QDir( 1 )->root() ), release_QDir ) );
+   hb_retptrGC( gcAllocate_QDir( new QDir( hbqt_par_QDir( 1 )->root() ) ) );
 }
 
 /*
@@ -495,7 +503,7 @@ HB_FUNC( QT_QDIR_ROOTPATH )
  */
 HB_FUNC( QT_QDIR_SEARCHPATHS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QDir( 1 )->searchPaths( hbqt_par_QString( 2 ) ) ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QDir( 1 )->searchPaths( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -519,7 +527,7 @@ HB_FUNC( QT_QDIR_SETSEARCHPATHS )
  */
 HB_FUNC( QT_QDIR_TEMP )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDir( hbqt_par_QDir( 1 )->temp() ), release_QDir ) );
+   hb_retptrGC( gcAllocate_QDir( new QDir( hbqt_par_QDir( 1 )->temp() ) ) );
 }
 
 /*

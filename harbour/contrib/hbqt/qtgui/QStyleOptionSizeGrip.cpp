@@ -83,40 +83,48 @@
 
 QT_G_FUNC( release_QStyleOptionSizeGrip )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QStyleOptionSizeGrip        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionSizeGrip         p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionSizeGrip        ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QStyleOptionSizeGrip * ) ph )->~QStyleOptionSizeGrip();
-      ph = NULL;
+      ( ( QStyleOptionSizeGrip * ) p->ph )->~QStyleOptionSizeGrip();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionSizeGrip        Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QStyleOptionSizeGrip        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QStyleOptionSizeGrip" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionSizeGrip        Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QStyleOptionSizeGrip" );
+      #endif
    }
+}
+
+void * gcAllocate_QStyleOptionSizeGrip( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QStyleOptionSizeGrip;
+   #if defined(__debug__)
+      just_debug( "          new_QStyleOptionSizeGrip        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSTYLEOPTIONSIZEGRIP )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QStyleOptionSizeGrip        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QStyleOptionSizeGrip* ) new QStyleOptionSizeGrip() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QStyleOptionSizeGrip;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QStyleOptionSizeGrip( pObj ) );
 }
 /*
  * Qt::Corner corner

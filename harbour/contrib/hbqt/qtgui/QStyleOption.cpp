@@ -85,40 +85,48 @@
 
 QT_G_FUNC( release_QStyleOption )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QStyleOption                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOption                 p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOption                ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QStyleOption * ) ph )->~QStyleOption();
-      ph = NULL;
+      ( ( QStyleOption * ) p->ph )->~QStyleOption();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOption                Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QStyleOption                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QStyleOption" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOption                Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QStyleOption" );
+      #endif
    }
+}
+
+void * gcAllocate_QStyleOption( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QStyleOption;
+   #if defined(__debug__)
+      just_debug( "          new_QStyleOption                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSTYLEOPTION )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QStyleOption                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QStyleOption* ) new QStyleOption() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QStyleOption;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QStyleOption( pObj ) );
 }
 /*
  * void initFrom ( const QWidget * widget )
@@ -141,7 +149,7 @@ HB_FUNC( QT_QSTYLEOPTION_DIRECTION )
  */
 HB_FUNC( QT_QSTYLEOPTION_FONTMETRICS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QFontMetrics( hbqt_par_QStyleOption( 1 )->fontMetrics ), release_QFontMetrics ) );
+   hb_retptrGC( gcAllocate_QFontMetrics( new QFontMetrics( hbqt_par_QStyleOption( 1 )->fontMetrics ) ) );
 }
 
 /*
@@ -149,7 +157,7 @@ HB_FUNC( QT_QSTYLEOPTION_FONTMETRICS )
  */
 HB_FUNC( QT_QSTYLEOPTION_PALETTE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPalette( hbqt_par_QStyleOption( 1 )->palette ), release_QPalette ) );
+   hb_retptrGC( gcAllocate_QPalette( new QPalette( hbqt_par_QStyleOption( 1 )->palette ) ) );
 }
 
 /*
@@ -157,7 +165,7 @@ HB_FUNC( QT_QSTYLEOPTION_PALETTE )
  */
 HB_FUNC( QT_QSTYLEOPTION_RECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QStyleOption( 1 )->rect ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QStyleOption( 1 )->rect ) ) );
 }
 
 /*

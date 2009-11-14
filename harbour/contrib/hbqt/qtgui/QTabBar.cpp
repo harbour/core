@@ -83,52 +83,69 @@
  * ~QTabBar ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QTabBar > pq;
+} QGC_POINTER_QTabBar;
+
 QT_G_FUNC( release_QTabBar )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTabBar                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QTabBar * p = ( QGC_POINTER_QTabBar * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTabBar                      p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTabBar                     ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QTabBar * ) ph )->~QTabBar();
-         ph = NULL;
+         ( ( QTabBar * ) p->ph )->~QTabBar();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTabBar                     Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QTabBar                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QTabBar" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTabBar                     Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QTabBar" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTabBar" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTabBar                     Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTabBar" );
+      #endif
    }
+}
+
+void * gcAllocate_QTabBar( void * pObj )
+{
+   QGC_POINTER_QTabBar * p = ( QGC_POINTER_QTabBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QTabBar ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTabBar;
+   new( & p->pq ) QPointer< QTabBar >( ( QTabBar * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QTabBar                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTABBAR )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QTabBar > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTabBar                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QTabBar* ) new QTabBar( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTabBar;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTabBar( pObj ) );
 }
 /*
  * int addTab ( const QString & text )
@@ -191,7 +208,7 @@ HB_FUNC( QT_QTABBAR_EXPANDING )
  */
 HB_FUNC( QT_QTABBAR_ICONSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QTabBar( 1 )->iconSize() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QTabBar( 1 )->iconSize() ) ) );
 }
 
 /*
@@ -407,7 +424,7 @@ HB_FUNC( QT_QTABBAR_TABBUTTON )
  */
 HB_FUNC( QT_QTABBAR_TABDATA )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QTabBar( 1 )->tabData( hb_parni( 2 ) ) ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QTabBar( 1 )->tabData( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -415,7 +432,7 @@ HB_FUNC( QT_QTABBAR_TABDATA )
  */
 HB_FUNC( QT_QTABBAR_TABICON )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QTabBar( 1 )->tabIcon( hb_parni( 2 ) ) ), release_QIcon ) );
+   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QTabBar( 1 )->tabIcon( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -423,7 +440,7 @@ HB_FUNC( QT_QTABBAR_TABICON )
  */
 HB_FUNC( QT_QTABBAR_TABRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QTabBar( 1 )->tabRect( hb_parni( 2 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QTabBar( 1 )->tabRect( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -439,7 +456,7 @@ HB_FUNC( QT_QTABBAR_TABTEXT )
  */
 HB_FUNC( QT_QTABBAR_TABTEXTCOLOR )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QTabBar( 1 )->tabTextColor( hb_parni( 2 ) ) ), release_QColor ) );
+   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QTabBar( 1 )->tabTextColor( hb_parni( 2 ) ) ) ) );
 }
 
 /*

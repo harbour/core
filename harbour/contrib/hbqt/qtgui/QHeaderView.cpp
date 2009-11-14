@@ -80,52 +80,69 @@
  * virtual ~QHeaderView ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QHeaderView > pq;
+} QGC_POINTER_QHeaderView;
+
 QT_G_FUNC( release_QHeaderView )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QHeaderView                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QHeaderView * p = ( QGC_POINTER_QHeaderView * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QHeaderView                  p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QHeaderView                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QHeaderView * ) ph )->~QHeaderView();
-         ph = NULL;
+         ( ( QHeaderView * ) p->ph )->~QHeaderView();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QHeaderView                 Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QHeaderView                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QHeaderView" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QHeaderView                 Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QHeaderView" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QHeaderView" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QHeaderView                 Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QHeaderView" );
+      #endif
    }
+}
+
+void * gcAllocate_QHeaderView( void * pObj )
+{
+   QGC_POINTER_QHeaderView * p = ( QGC_POINTER_QHeaderView * ) hb_gcAllocate( sizeof( QGC_POINTER_QHeaderView ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QHeaderView;
+   new( & p->pq ) QPointer< QHeaderView >( ( QHeaderView * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QHeaderView                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QHEADERVIEW )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QHeaderView > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QHeaderView                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = new QHeaderView( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QHeaderView;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QHeaderView( pObj ) );
 }
 /*
  * bool cascadingSectionResizes () const
@@ -324,7 +341,7 @@ HB_FUNC( QT_QHEADERVIEW_RESTORESTATE )
  */
 HB_FUNC( QT_QHEADERVIEW_SAVESTATE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QHeaderView( 1 )->saveState() ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QHeaderView( 1 )->saveState() ) ) );
 }
 
 /*
@@ -492,7 +509,7 @@ HB_FUNC( QT_QHEADERVIEW_SHOWSECTION )
  */
 HB_FUNC( QT_QHEADERVIEW_SIZEHINT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QHeaderView( 1 )->sizeHint() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QHeaderView( 1 )->sizeHint() ) ) );
 }
 
 /*

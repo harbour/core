@@ -82,52 +82,69 @@
  * ~QFormLayout ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QFormLayout > pq;
+} QGC_POINTER_QFormLayout;
+
 QT_G_FUNC( release_QFormLayout )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QFormLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QFormLayout * p = ( QGC_POINTER_QFormLayout * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFormLayout                  p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFormLayout                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QFormLayout * ) ph )->~QFormLayout();
-         ph = NULL;
+         ( ( QFormLayout * ) p->ph )->~QFormLayout();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QFormLayout                 Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QFormLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QFormLayout" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QFormLayout                 Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QFormLayout" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QFormLayout" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QFormLayout                 Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QFormLayout" );
+      #endif
    }
+}
+
+void * gcAllocate_QFormLayout( void * pObj )
+{
+   QGC_POINTER_QFormLayout * p = ( QGC_POINTER_QFormLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QFormLayout ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QFormLayout;
+   new( & p->pq ) QPointer< QFormLayout >( ( QFormLayout * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QFormLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QFORMLAYOUT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QFormLayout > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QFormLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QFormLayout * ) new QFormLayout( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QFormLayout;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QFormLayout( pObj ) );
 }
 /*
  * void addRow ( QWidget * label, QWidget * field )

@@ -87,30 +87,44 @@
 
 QT_G_FUNC( release_QRadialGradient )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QRadialGradient             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QRadialGradient              p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QRadialGradient             ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QRadialGradient * ) ph )->~QRadialGradient();
-      ph = NULL;
+      ( ( QRadialGradient * ) p->ph )->~QRadialGradient();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QRadialGradient             Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QRadialGradient             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QRadialGradient" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QRadialGradient             Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QRadialGradient" );
+      #endif
    }
+}
+
+void * gcAllocate_QRadialGradient( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QRadialGradient;
+   #if defined(__debug__)
+      just_debug( "          new_QRadialGradient             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QRADIALGRADIENT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QRadialGradient             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
@@ -133,20 +147,14 @@ hb_snprintf( str, sizeof(str), "   GC:  new QRadialGradient             %i B %i 
       pObj = ( QRadialGradient* ) new QRadialGradient() ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QRadialGradient;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QRadialGradient( pObj ) );
 }
 /*
  * QPointF center () const
  */
 HB_FUNC( QT_QRADIALGRADIENT_CENTER )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPointF( hbqt_par_QRadialGradient( 1 )->center() ), release_QPointF ) );
+   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QRadialGradient( 1 )->center() ) ) );
 }
 
 /*
@@ -154,7 +162,7 @@ HB_FUNC( QT_QRADIALGRADIENT_CENTER )
  */
 HB_FUNC( QT_QRADIALGRADIENT_FOCALPOINT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPointF( hbqt_par_QRadialGradient( 1 )->focalPoint() ), release_QPointF ) );
+   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QRadialGradient( 1 )->focalPoint() ) ) );
 }
 
 /*

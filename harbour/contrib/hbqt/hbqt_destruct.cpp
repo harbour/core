@@ -69,7 +69,7 @@ HB_GARBAGE_FUNC( Q_release )
    QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
    if( p && p->ph )
    {
-      p->func( p->ph );
+      p->func( p );
    }
 }
 
@@ -98,54 +98,39 @@ void * hbqt_gcpointer( int iParam )
    }
 }
 
-void * hbqt_ptrTOgcpointer( void * ptr, QT_G_FUNC_PTR func )
-{
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   p->ph = ptr;
-   p->func = func;
-
 #if defined(__debug__)
-hb_snprintf( str, sizeof(str), "      hbqt_ptrTOgcpointer( %p, %p ) %i %i", ptr, func, ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
-   return p;
+#include <windows.h>
+#include <Psapi.h>
+
+void just_debug( const char * sTraceMsg, ... )
+{
+   if( sTraceMsg )
+   {
+     char buffer[ 1024 ];
+     va_list ap;
+
+     va_start( ap, sTraceMsg );
+     hb_vsnprintf( buffer, sizeof( buffer ), sTraceMsg, ap );
+     va_end( ap );
+
+     OutputDebugString( buffer );
+   }
 }
 
-#if defined(__debug__)
-
-#include <Psapi.h>
 int hb_getMemUsed( void )
 {
    HANDLE hProcess;
    PROCESS_MEMORY_COUNTERS pmc;
    int size = 0;
 
-   hProcess = OpenProcess(  PROCESS_QUERY_INFORMATION |
-                                    PROCESS_VM_READ,
-                                    FALSE, GetCurrentProcessId() );
-    if (NULL == hProcess)
+   hProcess = OpenProcess(  PROCESS_QUERY_INFORMATION | PROCESS_VM_READ,
+                                         FALSE, GetCurrentProcessId() );
+    if ( NULL == hProcess )
         return 0;
 
     if ( GetProcessMemoryInfo( hProcess, &pmc, sizeof(pmc)) )
     {
-       #if 0
-        printf( "\tPageFaultCount: 0x%08X\n", pmc.PageFaultCount );
-        printf( "\tPeakWorkingSetSize: 0x%08X\n",
-                  pmc.PeakWorkingSetSize );
-        printf( "\tWorkingSetSize: 0x%08X\n", pmc.WorkingSetSize );
-        printf( "\tQuotaPeakPagedPoolUsage: 0x%08X\n",
-                  pmc.QuotaPeakPagedPoolUsage );
-        printf( "\tQuotaPagedPoolUsage: 0x%08X\n",
-                  pmc.QuotaPagedPoolUsage );
-        printf( "\tQuotaPeakNonPagedPoolUsage: 0x%08X\n",
-                  pmc.QuotaPeakNonPagedPoolUsage );
-        printf( "\tQuotaNonPagedPoolUsage: 0x%08X\n",
-                  pmc.QuotaNonPagedPoolUsage );
-        printf( "\tPagefileUsage: 0x%08X\n", pmc.PagefileUsage );
-        printf( "\tPeakPagefileUsage: 0x%08X\n",
-                  pmc.PeakPagefileUsage );
-        #endif
-
         size = ( int ) pmc.WorkingSetSize / 1024 ;
     }
 

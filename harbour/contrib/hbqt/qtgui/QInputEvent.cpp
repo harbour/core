@@ -78,40 +78,48 @@
 
 QT_G_FUNC( release_QInputEvent )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QInputEvent                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QInputEvent                  p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QInputEvent                 ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QInputEvent * ) ph )->~QInputEvent();
-      ph = NULL;
+      ( ( QInputEvent * ) p->ph )->~QInputEvent();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QInputEvent                 Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QInputEvent                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QInputEvent" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QInputEvent                 Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QInputEvent" );
+      #endif
    }
+}
+
+void * gcAllocate_QInputEvent( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QInputEvent;
+   #if defined(__debug__)
+      just_debug( "          new_QInputEvent                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QINPUTEVENT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QInputEvent                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QInputEvent* ) new QInputEvent( ( QEvent::Type ) hb_parni( 1 ), ( Qt::KeyboardModifiers ) hb_parni( 2 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QInputEvent;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QInputEvent( pObj ) );
 }
 /*
  * Qt::KeyboardModifiers modifiers () const

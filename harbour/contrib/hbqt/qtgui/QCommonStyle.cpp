@@ -75,52 +75,69 @@
  * QCommonStyle ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QCommonStyle > pq;
+} QGC_POINTER_QCommonStyle;
+
 QT_G_FUNC( release_QCommonStyle )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QCommonStyle                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QCommonStyle * p = ( QGC_POINTER_QCommonStyle * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QCommonStyle                 p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QCommonStyle                ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QCommonStyle * ) ph )->~QCommonStyle();
-         ph = NULL;
+         ( ( QCommonStyle * ) p->ph )->~QCommonStyle();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QCommonStyle                Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QCommonStyle                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QCommonStyle" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QCommonStyle                Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QCommonStyle" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QCommonStyle" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QCommonStyle                Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QCommonStyle" );
+      #endif
    }
+}
+
+void * gcAllocate_QCommonStyle( void * pObj )
+{
+   QGC_POINTER_QCommonStyle * p = ( QGC_POINTER_QCommonStyle * ) hb_gcAllocate( sizeof( QGC_POINTER_QCommonStyle ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QCommonStyle;
+   new( & p->pq ) QPointer< QCommonStyle >( ( QCommonStyle * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QCommonStyle                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QCOMMONSTYLE )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QCommonStyle > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QCommonStyle                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QCommonStyle* ) new QCommonStyle() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QCommonStyle;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QCommonStyle( pObj ) );
 }
 
 /*----------------------------------------------------------------------*/

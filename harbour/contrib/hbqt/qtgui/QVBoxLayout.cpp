@@ -77,52 +77,69 @@
  * ~QVBoxLayout ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QVBoxLayout > pq;
+} QGC_POINTER_QVBoxLayout;
+
 QT_G_FUNC( release_QVBoxLayout )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QVBoxLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QVBoxLayout * p = ( QGC_POINTER_QVBoxLayout * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QVBoxLayout                  p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QVBoxLayout                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QVBoxLayout * ) ph )->~QVBoxLayout();
-         ph = NULL;
+         ( ( QVBoxLayout * ) p->ph )->~QVBoxLayout();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QVBoxLayout                 Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QVBoxLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QVBoxLayout" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QVBoxLayout                 Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QVBoxLayout" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QVBoxLayout" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QVBoxLayout                 Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QVBoxLayout" );
+      #endif
    }
+}
+
+void * gcAllocate_QVBoxLayout( void * pObj )
+{
+   QGC_POINTER_QVBoxLayout * p = ( QGC_POINTER_QVBoxLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QVBoxLayout ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QVBoxLayout;
+   new( & p->pq ) QPointer< QVBoxLayout >( ( QVBoxLayout * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QVBoxLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QVBOXLAYOUT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QVBoxLayout > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QVBoxLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QVBoxLayout* ) new QVBoxLayout( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QVBoxLayout;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QVBoxLayout( pObj ) );
 }
 
 /*----------------------------------------------------------------------*/

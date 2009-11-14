@@ -94,55 +94,72 @@
 
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QTextEdit > pq;
+} QGC_POINTER_QTextEdit;
+
 QT_G_FUNC( release_QTextEdit )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTextEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QTextEdit * p = ( QGC_POINTER_QTextEdit * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextEdit                    p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextEdit                   ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QTextEdit * ) ph )->~QTextEdit();
-         ph = NULL;
+         ( ( QTextEdit * ) p->ph )->~QTextEdit();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTextEdit                   Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QTextEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QTextEdit" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTextEdit                   Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QTextEdit" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTextEdit" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextEdit                   Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTextEdit" );
+      #endif
    }
+}
+
+void * gcAllocate_QTextEdit( void * pObj )
+{
+   QGC_POINTER_QTextEdit * p = ( QGC_POINTER_QTextEdit * ) hb_gcAllocate( sizeof( QGC_POINTER_QTextEdit ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTextEdit;
+   new( & p->pq ) QPointer< QTextEdit >( ( QTextEdit * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QTextEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTEXTEDIT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QTextEdit > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTextEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
       pObj = ( QTextEdit* ) new QTextEdit( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
    else
       pObj = ( QTextEdit* ) new QTextEdit( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTextEdit;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTextEdit( pObj ) );
 }
 /*
  * bool acceptRichText () const
@@ -205,7 +222,7 @@ HB_FUNC( QT_QTEXTEDIT_CREATESTANDARDCONTEXTMENU_1 )
  */
 HB_FUNC( QT_QTEXTEDIT_CURRENTCHARFORMAT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCharFormat( hbqt_par_QTextEdit( 1 )->currentCharFormat() ), release_QTextCharFormat ) );
+   hb_retptrGC( gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QTextEdit( 1 )->currentCharFormat() ) ) );
 }
 
 /*
@@ -213,7 +230,7 @@ HB_FUNC( QT_QTEXTEDIT_CURRENTCHARFORMAT )
  */
 HB_FUNC( QT_QTEXTEDIT_CURRENTFONT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QTextEdit( 1 )->currentFont() ), release_QFont ) );
+   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QTextEdit( 1 )->currentFont() ) ) );
 }
 
 /*
@@ -221,7 +238,7 @@ HB_FUNC( QT_QTEXTEDIT_CURRENTFONT )
  */
 HB_FUNC( QT_QTEXTEDIT_CURSORFORPOSITION )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCursor( hbqt_par_QTextEdit( 1 )->cursorForPosition( *hbqt_par_QPoint( 2 ) ) ), release_QTextCursor ) );
+   hb_retptrGC( gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextEdit( 1 )->cursorForPosition( *hbqt_par_QPoint( 2 ) ) ) ) );
 }
 
 /*
@@ -229,7 +246,7 @@ HB_FUNC( QT_QTEXTEDIT_CURSORFORPOSITION )
  */
 HB_FUNC( QT_QTEXTEDIT_CURSORRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QTextEdit( 1 )->cursorRect( *hbqt_par_QTextCursor( 2 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QTextEdit( 1 )->cursorRect( *hbqt_par_QTextCursor( 2 ) ) ) ) );
 }
 
 /*
@@ -237,7 +254,7 @@ HB_FUNC( QT_QTEXTEDIT_CURSORRECT )
  */
 HB_FUNC( QT_QTEXTEDIT_CURSORRECT_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QTextEdit( 1 )->cursorRect() ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QTextEdit( 1 )->cursorRect() ) ) );
 }
 
 /*
@@ -357,7 +374,7 @@ HB_FUNC( QT_QTEXTEDIT_LINEWRAPMODE )
  */
 HB_FUNC( QT_QTEXTEDIT_LOADRESOURCE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QTextEdit( 1 )->loadResource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QTextEdit( 1 )->loadResource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ) ) );
 }
 
 /*
@@ -541,7 +558,7 @@ HB_FUNC( QT_QTEXTEDIT_TABSTOPWIDTH )
  */
 HB_FUNC( QT_QTEXTEDIT_TEXTBACKGROUNDCOLOR )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QTextEdit( 1 )->textBackgroundColor() ), release_QColor ) );
+   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QTextEdit( 1 )->textBackgroundColor() ) ) );
 }
 
 /*
@@ -549,7 +566,7 @@ HB_FUNC( QT_QTEXTEDIT_TEXTBACKGROUNDCOLOR )
  */
 HB_FUNC( QT_QTEXTEDIT_TEXTCOLOR )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QTextEdit( 1 )->textColor() ), release_QColor ) );
+   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QTextEdit( 1 )->textColor() ) ) );
 }
 
 /*
@@ -557,7 +574,7 @@ HB_FUNC( QT_QTEXTEDIT_TEXTCOLOR )
  */
 HB_FUNC( QT_QTEXTEDIT_TEXTCURSOR )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCursor( hbqt_par_QTextEdit( 1 )->textCursor() ), release_QTextCursor ) );
+   hb_retptrGC( gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextEdit( 1 )->textCursor() ) ) );
 }
 
 /*

@@ -77,31 +77,7 @@
 
 QT_G_FUNC( release_QAbstractTextDocumentLayout )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QAbstractTextDocumentLayout %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
-   {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
-      {
-         ( ( QAbstractTextDocumentLayout * ) ph )->~QAbstractTextDocumentLayout();
-         ph = NULL;
-      }
-      else
-      {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QAbstractTextDocumentLayout" );  OutputDebugString( str );
-#endif
-      }
-   }
-   else
-   {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QAbstractTextDocumentLayout" );  OutputDebugString( str );
-#endif
-   }
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT )
@@ -120,7 +96,7 @@ HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_ANCHORAT )
  */
 HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_BLOCKBOUNDINGRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QAbstractTextDocumentLayout( 1 )->blockBoundingRect( *hbqt_par_QTextBlock( 2 ) ) ), release_QRectF ) );
+   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QAbstractTextDocumentLayout( 1 )->blockBoundingRect( *hbqt_par_QTextBlock( 2 ) ) ) ) );
 }
 
 /*
@@ -136,7 +112,7 @@ HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_DOCUMENT )
  */
 HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_DOCUMENTSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSizeF( hbqt_par_QAbstractTextDocumentLayout( 1 )->documentSize() ), release_QSizeF ) );
+   hb_retptrGC( gcAllocate_QSizeF( new QSizeF( hbqt_par_QAbstractTextDocumentLayout( 1 )->documentSize() ) ) );
 }
 
 /*
@@ -144,7 +120,7 @@ HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_DOCUMENTSIZE )
  */
 HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_FRAMEBOUNDINGRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QAbstractTextDocumentLayout( 1 )->frameBoundingRect( hbqt_par_QTextFrame( 2 ) ) ), release_QRectF ) );
+   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QAbstractTextDocumentLayout( 1 )->frameBoundingRect( hbqt_par_QTextFrame( 2 ) ) ) ) );
 }
 
 /*

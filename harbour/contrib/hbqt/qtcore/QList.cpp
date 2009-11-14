@@ -105,41 +105,49 @@
 
 QT_G_FUNC( release_QList )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QList                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QList                        p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QList                       ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QList< void * > * ) ph )->~QList();
-      ph = NULL;
+      ( ( QList< void * > * ) p->ph )->~QList();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QList                       Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QList                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QList" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QList                       Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QList" );
+      #endif
    }
+}
+
+void * gcAllocate_QList( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QList;
+   #if defined(__debug__)
+      just_debug( "          new_QList                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QLIST )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QList                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    QList<void*>* list = NULL;
    pObj = ( QList<void*>* ) list ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QList;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QList( pObj ) );
 }
 /*
  * void append ( const T & value )

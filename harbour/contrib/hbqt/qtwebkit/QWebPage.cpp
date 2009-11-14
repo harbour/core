@@ -87,52 +87,69 @@
  * ~QWebPage ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QWebPage > pq;
+} QGC_POINTER_QWebPage;
+
 QT_G_FUNC( release_QWebPage )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QWebPage                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QWebPage * p = ( QGC_POINTER_QWebPage * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QWebPage                     p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QWebPage                    ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QWebPage * ) ph )->~QWebPage();
-         ph = NULL;
+         ( ( QWebPage * ) p->ph )->~QWebPage();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QWebPage                    Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QWebPage                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QWebPage" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QWebPage                    Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QWebPage" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QWebPage" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QWebPage                    Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QWebPage" );
+      #endif
    }
+}
+
+void * gcAllocate_QWebPage( void * pObj )
+{
+   QGC_POINTER_QWebPage * p = ( QGC_POINTER_QWebPage * ) hb_gcAllocate( sizeof( QGC_POINTER_QWebPage ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QWebPage;
+   new( & p->pq ) QPointer< QWebPage >( ( QWebPage * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QWebPage                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QWEBPAGE )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QWebPage > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QWebPage                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = new QWebPage( hbqt_par_QWidget( 2 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QWebPage;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QWebPage( pObj ) );
 }
 /*
  * QAction * action ( WebAction action ) const
@@ -203,7 +220,7 @@ HB_FUNC( QT_QWEBPAGE_HISTORY )
  */
 HB_FUNC( QT_QWEBPAGE_INPUTMETHODQUERY )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QWebPage( 1 )->inputMethodQuery( ( Qt::InputMethodQuery ) hb_parni( 2 ) ) ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QWebPage( 1 )->inputMethodQuery( ( Qt::InputMethodQuery ) hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -243,7 +260,7 @@ HB_FUNC( QT_QWEBPAGE_MAINFRAME )
  */
 HB_FUNC( QT_QWEBPAGE_PALETTE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPalette( hbqt_par_QWebPage( 1 )->palette() ), release_QPalette ) );
+   hb_retptrGC( gcAllocate_QPalette( new QPalette( hbqt_par_QWebPage( 1 )->palette() ) ) );
 }
 
 /*
@@ -387,7 +404,7 @@ HB_FUNC( QT_QWEBPAGE_VIEW )
  */
 HB_FUNC( QT_QWEBPAGE_VIEWPORTSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QWebPage( 1 )->viewportSize() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QWebPage( 1 )->viewportSize() ) ) );
 }
 
 

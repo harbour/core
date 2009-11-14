@@ -76,59 +76,76 @@
  * ~QDesktopWidget ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QDesktopWidget > pq;
+} QGC_POINTER_QDesktopWidget;
+
 QT_G_FUNC( release_QDesktopWidget )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QDesktopWidget              %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QDesktopWidget * p = ( QGC_POINTER_QDesktopWidget * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QDesktopWidget               p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QDesktopWidget              ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QDesktopWidget * ) ph )->~QDesktopWidget();
-         ph = NULL;
+         ( ( QDesktopWidget * ) p->ph )->~QDesktopWidget();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QDesktopWidget              Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QDesktopWidget              %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QDesktopWidget" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QDesktopWidget              Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QDesktopWidget" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QDesktopWidget" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QDesktopWidget              Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QDesktopWidget" );
+      #endif
    }
+}
+
+void * gcAllocate_QDesktopWidget( void * pObj )
+{
+   QGC_POINTER_QDesktopWidget * p = ( QGC_POINTER_QDesktopWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QDesktopWidget ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QDesktopWidget;
+   new( & p->pq ) QPointer< QDesktopWidget >( ( QDesktopWidget * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QDesktopWidget              %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QDESKTOPWIDGET )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QDesktopWidget > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QDesktopWidget              %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = new QDesktopWidget() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QDesktopWidget;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QDesktopWidget( pObj ) );
 }
 /*
  * const QRect availableGeometry ( int screen = -1 ) const
  */
 HB_FUNC( QT_QDESKTOPWIDGET_AVAILABLEGEOMETRY )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QDesktopWidget( 1 )->availableGeometry( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : -1 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QDesktopWidget( 1 )->availableGeometry( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : -1 ) ) ) ) );
 }
 
 /*
@@ -136,7 +153,7 @@ HB_FUNC( QT_QDESKTOPWIDGET_AVAILABLEGEOMETRY )
  */
 HB_FUNC( QT_QDESKTOPWIDGET_AVAILABLEGEOMETRY_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QDesktopWidget( 1 )->availableGeometry( hbqt_par_QWidget( 2 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QDesktopWidget( 1 )->availableGeometry( hbqt_par_QWidget( 2 ) ) ) ) );
 }
 
 /*
@@ -144,7 +161,7 @@ HB_FUNC( QT_QDESKTOPWIDGET_AVAILABLEGEOMETRY_1 )
  */
 HB_FUNC( QT_QDESKTOPWIDGET_AVAILABLEGEOMETRY_2 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QDesktopWidget( 1 )->availableGeometry( *hbqt_par_QPoint( 2 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QDesktopWidget( 1 )->availableGeometry( *hbqt_par_QPoint( 2 ) ) ) ) );
 }
 
 /*
@@ -184,7 +201,7 @@ HB_FUNC( QT_QDESKTOPWIDGET_SCREEN )
  */
 HB_FUNC( QT_QDESKTOPWIDGET_SCREENGEOMETRY )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QDesktopWidget( 1 )->screenGeometry( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : -1 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QDesktopWidget( 1 )->screenGeometry( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : -1 ) ) ) ) );
 }
 
 /*
@@ -192,7 +209,7 @@ HB_FUNC( QT_QDESKTOPWIDGET_SCREENGEOMETRY )
  */
 HB_FUNC( QT_QDESKTOPWIDGET_SCREENGEOMETRY_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QDesktopWidget( 1 )->screenGeometry( hbqt_par_QWidget( 2 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QDesktopWidget( 1 )->screenGeometry( hbqt_par_QWidget( 2 ) ) ) ) );
 }
 
 /*
@@ -200,7 +217,7 @@ HB_FUNC( QT_QDESKTOPWIDGET_SCREENGEOMETRY_1 )
  */
 HB_FUNC( QT_QDESKTOPWIDGET_SCREENGEOMETRY_2 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QDesktopWidget( 1 )->screenGeometry( *hbqt_par_QPoint( 2 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QDesktopWidget( 1 )->screenGeometry( *hbqt_par_QPoint( 2 ) ) ) ) );
 }
 
 /*

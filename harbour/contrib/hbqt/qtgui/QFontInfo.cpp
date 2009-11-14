@@ -79,30 +79,44 @@
 
 QT_G_FUNC( release_QFontInfo )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QFontInfo                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFontInfo                    p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFontInfo                   ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QFontInfo * ) ph )->~QFontInfo();
-      ph = NULL;
+      ( ( QFontInfo * ) p->ph )->~QFontInfo();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QFontInfo                   Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QFontInfo                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QFontInfo" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QFontInfo                   Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QFontInfo" );
+      #endif
    }
+}
+
+void * gcAllocate_QFontInfo( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QFontInfo;
+   #if defined(__debug__)
+      just_debug( "          new_QFontInfo                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QFONTINFO )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QFontInfo                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
@@ -113,13 +127,7 @@ hb_snprintf( str, sizeof(str), "   GC:  new QFontInfo                   %i B %i 
       pObj = new QFontInfo( *hbqt_par_QFont( 2 ) ) ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QFontInfo;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QFontInfo( pObj ) );
 }
 /*
  * bool bold () const

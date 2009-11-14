@@ -81,30 +81,44 @@
 
 QT_G_FUNC( release_QFontMetricsF )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QFontMetricsF               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFontMetricsF                p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFontMetricsF               ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QFontMetricsF * ) ph )->~QFontMetricsF();
-      ph = NULL;
+      ( ( QFontMetricsF * ) p->ph )->~QFontMetricsF();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QFontMetricsF               Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QFontMetricsF               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QFontMetricsF" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QFontMetricsF               Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QFontMetricsF" );
+      #endif
    }
+}
+
+void * gcAllocate_QFontMetricsF( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QFontMetricsF;
+   #if defined(__debug__)
+      just_debug( "          new_QFontMetricsF               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QFONTMETRICSF )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QFontMetricsF               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
@@ -126,13 +140,7 @@ hb_snprintf( str, sizeof(str), "   GC:  new QFontMetricsF               %i B %i 
       pObj = ( QFontMetricsF* ) new QFontMetricsF( *hbqt_par_QFont( 1 ), hbqt_par_QPaintDevice( 2 ) ) ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QFontMetricsF;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QFontMetricsF( pObj ) );
 }
 /*
  * qreal ascent () const
@@ -155,7 +163,7 @@ HB_FUNC( QT_QFONTMETRICSF_AVERAGECHARWIDTH )
  */
 HB_FUNC( QT_QFONTMETRICSF_BOUNDINGRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QFontMetricsF( 1 )->boundingRect( hbqt_par_QString( 2 ) ) ), release_QRectF ) );
+   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QFontMetricsF( 1 )->boundingRect( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -163,7 +171,7 @@ HB_FUNC( QT_QFONTMETRICSF_BOUNDINGRECT )
  */
 HB_FUNC( QT_QFONTMETRICSF_BOUNDINGRECT_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QFontMetricsF( 1 )->boundingRect( hb_parni( 2 ) ) ), release_QRectF ) );
+   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QFontMetricsF( 1 )->boundingRect( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -173,7 +181,7 @@ HB_FUNC( QT_QFONTMETRICSF_BOUNDINGRECT_2 )
 {
    int iTabArray = 0;
 
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QFontMetricsF( 1 )->boundingRect( *hbqt_par_QRectF( 2 ), hb_parni( 3 ), hbqt_par_QString( 4 ), hb_parni( 5 ), &iTabArray ) ), release_QRectF ) );
+   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QFontMetricsF( 1 )->boundingRect( *hbqt_par_QRectF( 2 ), hb_parni( 3 ), hbqt_par_QString( 4 ), hb_parni( 5 ), &iTabArray ) ) ) );
 
    hb_storni( iTabArray, 6 );
 }
@@ -289,7 +297,7 @@ HB_FUNC( QT_QFONTMETRICSF_SIZE )
 {
    int iTabArray = 0;
 
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSizeF( hbqt_par_QFontMetricsF( 1 )->size( hb_parni( 2 ), hbqt_par_QString( 3 ), hb_parni( 4 ), &iTabArray ) ), release_QSizeF ) );
+   hb_retptrGC( gcAllocate_QSizeF( new QSizeF( hbqt_par_QFontMetricsF( 1 )->size( hb_parni( 2 ), hbqt_par_QString( 3 ), hb_parni( 4 ), &iTabArray ) ) ) );
 
    hb_storni( iTabArray, 5 );
 }
@@ -307,7 +315,7 @@ HB_FUNC( QT_QFONTMETRICSF_STRIKEOUTPOS )
  */
 HB_FUNC( QT_QFONTMETRICSF_TIGHTBOUNDINGRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QFontMetricsF( 1 )->tightBoundingRect( hbqt_par_QString( 2 ) ) ), release_QRectF ) );
+   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QFontMetricsF( 1 )->tightBoundingRect( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*

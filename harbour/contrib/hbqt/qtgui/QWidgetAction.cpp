@@ -76,52 +76,69 @@
  * virtual ~QWidgetAction ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QWidgetAction > pq;
+} QGC_POINTER_QWidgetAction;
+
 QT_G_FUNC( release_QWidgetAction )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QWidgetAction               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QWidgetAction * p = ( QGC_POINTER_QWidgetAction * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QWidgetAction                p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QWidgetAction               ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QWidgetAction * ) ph )->~QWidgetAction();
-         ph = NULL;
+         ( ( QWidgetAction * ) p->ph )->~QWidgetAction();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QWidgetAction               Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QWidgetAction               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QWidgetAction" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QWidgetAction               Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QWidgetAction" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QWidgetAction" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QWidgetAction               Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QWidgetAction" );
+      #endif
    }
+}
+
+void * gcAllocate_QWidgetAction( void * pObj )
+{
+   QGC_POINTER_QWidgetAction * p = ( QGC_POINTER_QWidgetAction * ) hb_gcAllocate( sizeof( QGC_POINTER_QWidgetAction ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QWidgetAction;
+   new( & p->pq ) QPointer< QWidgetAction >( ( QWidgetAction * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QWidgetAction               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QWIDGETACTION )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QWidgetAction > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QWidgetAction               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QWidgetAction* ) new QWidgetAction( hbqt_par_QObject( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QWidgetAction;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QWidgetAction( pObj ) );
 }
 /*
  * QWidget * defaultWidget () const

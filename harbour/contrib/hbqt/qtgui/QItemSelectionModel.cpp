@@ -81,55 +81,72 @@
  * virtual ~QItemSelectionModel ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QItemSelectionModel > pq;
+} QGC_POINTER_QItemSelectionModel;
+
 QT_G_FUNC( release_QItemSelectionModel )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QItemSelectionModel         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QItemSelectionModel * p = ( QGC_POINTER_QItemSelectionModel * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QItemSelectionModel          p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QItemSelectionModel         ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QItemSelectionModel * ) ph )->~QItemSelectionModel();
-         ph = NULL;
+         ( ( QItemSelectionModel * ) p->ph )->~QItemSelectionModel();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QItemSelectionModel         Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QItemSelectionModel         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QItemSelectionModel" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QItemSelectionModel         Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QItemSelectionModel" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QItemSelectionModel" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QItemSelectionModel         Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QItemSelectionModel" );
+      #endif
    }
+}
+
+void * gcAllocate_QItemSelectionModel( void * pObj )
+{
+   QGC_POINTER_QItemSelectionModel * p = ( QGC_POINTER_QItemSelectionModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QItemSelectionModel ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QItemSelectionModel;
+   new( & p->pq ) QPointer< QItemSelectionModel >( ( QItemSelectionModel * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QItemSelectionModel         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QITEMSELECTIONMODEL )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QItemSelectionModel > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QItemSelectionModel         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
       pObj = new QItemSelectionModel( hbqt_par_QAbstractItemModel( 1 ) ) ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QItemSelectionModel;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QItemSelectionModel( pObj ) );
 }
 /*
  * bool columnIntersectsSelection ( int column, const QModelIndex & parent ) const
@@ -144,7 +161,7 @@ HB_FUNC( QT_QITEMSELECTIONMODEL_COLUMNINTERSECTSSELECTION )
  */
 HB_FUNC( QT_QITEMSELECTIONMODEL_CURRENTINDEX )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QItemSelectionModel( 1 )->currentIndex() ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QItemSelectionModel( 1 )->currentIndex() ) ) );
 }
 
 /*
@@ -200,7 +217,7 @@ HB_FUNC( QT_QITEMSELECTIONMODEL_ROWINTERSECTSSELECTION )
  */
 HB_FUNC( QT_QITEMSELECTIONMODEL_SELECTION )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QItemSelection( hbqt_par_QItemSelectionModel( 1 )->selection() ), release_QItemSelection ) );
+   hb_retptrGC( gcAllocate_QItemSelection( new QItemSelection( hbqt_par_QItemSelectionModel( 1 )->selection() ) ) );
 }
 
 /*

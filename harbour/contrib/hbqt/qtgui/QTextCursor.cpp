@@ -89,30 +89,44 @@
 
 QT_G_FUNC( release_QTextCursor )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTextCursor                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextCursor                  p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextCursor                 ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QTextCursor * ) ph )->~QTextCursor();
-      ph = NULL;
+      ( ( QTextCursor * ) p->ph )->~QTextCursor();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextCursor                 Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QTextCursor                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTextCursor" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextCursor                 Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTextCursor" );
+      #endif
    }
+}
+
+void * gcAllocate_QTextCursor( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTextCursor;
+   #if defined(__debug__)
+      just_debug( "          new_QTextCursor                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTEXTCURSOR )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTextCursor                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
@@ -144,13 +158,7 @@ hb_snprintf( str, sizeof(str), "   GC:  new QTextCursor                 %i B %i 
       pObj = ( QTextCursor* ) new QTextCursor() ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTextCursor;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTextCursor( pObj ) );
 }
 /*
  * int anchor () const
@@ -205,7 +213,7 @@ HB_FUNC( QT_QTEXTCURSOR_BEGINEDITBLOCK )
  */
 HB_FUNC( QT_QTEXTCURSOR_BLOCKCHARFORMAT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCharFormat( hbqt_par_QTextCursor( 1 )->blockCharFormat() ), release_QTextCharFormat ) );
+   hb_retptrGC( gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QTextCursor( 1 )->blockCharFormat() ) ) );
 }
 
 /*
@@ -213,7 +221,7 @@ HB_FUNC( QT_QTEXTCURSOR_BLOCKCHARFORMAT )
  */
 HB_FUNC( QT_QTEXTCURSOR_BLOCKFORMAT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextBlockFormat( hbqt_par_QTextCursor( 1 )->blockFormat() ), release_QTextBlockFormat ) );
+   hb_retptrGC( gcAllocate_QTextBlockFormat( new QTextBlockFormat( hbqt_par_QTextCursor( 1 )->blockFormat() ) ) );
 }
 
 /*
@@ -229,7 +237,7 @@ HB_FUNC( QT_QTEXTCURSOR_BLOCKNUMBER )
  */
 HB_FUNC( QT_QTEXTCURSOR_CHARFORMAT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCharFormat( hbqt_par_QTextCursor( 1 )->charFormat() ), release_QTextCharFormat ) );
+   hb_retptrGC( gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QTextCursor( 1 )->charFormat() ) ) );
 }
 
 /*
@@ -575,7 +583,7 @@ HB_FUNC( QT_QTEXTCURSOR_SELECTEDTEXT )
  */
 HB_FUNC( QT_QTEXTCURSOR_SELECTION )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextDocumentFragment( hbqt_par_QTextCursor( 1 )->selection() ), release_QTextDocumentFragment ) );
+   hb_retptrGC( gcAllocate_QTextDocumentFragment( new QTextDocumentFragment( hbqt_par_QTextCursor( 1 )->selection() ) ) );
 }
 
 /*

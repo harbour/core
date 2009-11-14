@@ -83,47 +83,55 @@
 
 QT_G_FUNC( release_QStyleOptionFocusRect )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QStyleOptionFocusRect       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionFocusRect        p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionFocusRect       ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QStyleOptionFocusRect * ) ph )->~QStyleOptionFocusRect();
-      ph = NULL;
+      ( ( QStyleOptionFocusRect * ) p->ph )->~QStyleOptionFocusRect();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionFocusRect       Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QStyleOptionFocusRect       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QStyleOptionFocusRect" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionFocusRect       Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QStyleOptionFocusRect" );
+      #endif
    }
+}
+
+void * gcAllocate_QStyleOptionFocusRect( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QStyleOptionFocusRect;
+   #if defined(__debug__)
+      just_debug( "          new_QStyleOptionFocusRect       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSTYLEOPTIONFOCUSRECT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QStyleOptionFocusRect       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QStyleOptionFocusRect* ) new QStyleOptionFocusRect() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QStyleOptionFocusRect;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QStyleOptionFocusRect( pObj ) );
 }
 /*
  * QColor backgroundColor
  */
 HB_FUNC( QT_QSTYLEOPTIONFOCUSRECT_BACKGROUNDCOLOR )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QStyleOptionFocusRect( 1 )->backgroundColor ), release_QColor ) );
+   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QStyleOptionFocusRect( 1 )->backgroundColor ) ) );
 }
 
 

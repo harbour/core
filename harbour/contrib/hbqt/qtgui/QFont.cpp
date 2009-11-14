@@ -91,30 +91,44 @@
 
 QT_G_FUNC( release_QFont )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QFont                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFont                        p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFont                       ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QFont * ) ph )->~QFont();
-      ph = NULL;
+      ( ( QFont * ) p->ph )->~QFont();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QFont                       Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QFont                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QFont" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QFont                       Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QFont" );
+      #endif
    }
+}
+
+void * gcAllocate_QFont( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QFont;
+   #if defined(__debug__)
+      just_debug( "          new_QFont                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QFONT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QFont                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    if(      hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
@@ -145,13 +159,7 @@ hb_snprintf( str, sizeof(str), "   GC:  new QFont                       %i B %i 
       pObj = ( QFont* ) new QFont() ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QFont;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QFont( pObj ) );
 }
 /*
  * bool bold () const
@@ -606,7 +614,7 @@ HB_FUNC( QT_QFONT_SUBSTITUTE )
  */
 HB_FUNC( QT_QFONT_SUBSTITUTES )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QFont( 1 )->substitutes( hbqt_par_QString( 2 ) ) ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QFont( 1 )->substitutes( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -614,7 +622,7 @@ HB_FUNC( QT_QFONT_SUBSTITUTES )
  */
 HB_FUNC( QT_QFONT_SUBSTITUTIONS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QFont( 1 )->substitutions() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QFont( 1 )->substitutions() ) ) );
 }
 
 

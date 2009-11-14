@@ -99,52 +99,69 @@ HB_FUNC( QT_QFTP_READ )
       hb_xfree( iData );
 }
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QFtp > pq;
+} QGC_POINTER_QFtp;
+
 QT_G_FUNC( release_QFtp )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QFtp                        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QFtp * p = ( QGC_POINTER_QFtp * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFtp                         p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFtp                        ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QFtp * ) ph )->~QFtp();
-         ph = NULL;
+         ( ( QFtp * ) p->ph )->~QFtp();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QFtp                        Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QFtp                        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QFtp" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QFtp                        Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QFtp" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QFtp" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QFtp                        Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QFtp" );
+      #endif
    }
+}
+
+void * gcAllocate_QFtp( void * pObj )
+{
+   QGC_POINTER_QFtp * p = ( QGC_POINTER_QFtp * ) hb_gcAllocate( sizeof( QGC_POINTER_QFtp ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QFtp;
+   new( & p->pq ) QPointer< QFtp >( ( QFtp * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QFtp                        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QFTP )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QFtp > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QFtp                        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = new QFtp( hbqt_par_QObject( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QFtp;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QFtp( pObj ) );
 }
 /*
  * qint64 bytesAvailable () const
@@ -295,7 +312,7 @@ HB_FUNC( QT_QFTP_RAWCOMMAND )
  */
 HB_FUNC( QT_QFTP_READALL )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QFtp( 1 )->readAll() ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QFtp( 1 )->readAll() ) ) );
 }
 
 /*

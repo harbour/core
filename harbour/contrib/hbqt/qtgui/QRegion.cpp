@@ -100,30 +100,44 @@
 
 QT_G_FUNC( release_QRegion )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QRegion                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QRegion                      p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QRegion                     ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QRegion * ) ph )->~QRegion();
-      ph = NULL;
+      ( ( QRegion * ) p->ph )->~QRegion();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QRegion                     Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QRegion                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QRegion" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QRegion                     Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QRegion" );
+      #endif
    }
+}
+
+void * gcAllocate_QRegion( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QRegion;
+   #if defined(__debug__)
+      just_debug( "          new_QRegion                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QREGION )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QRegion                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
@@ -161,20 +175,14 @@ hb_snprintf( str, sizeof(str), "   GC:  new QRegion                     %i B %i 
       pObj = ( QRegion* ) new QRegion() ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QRegion;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QRegion( pObj ) );
 }
 /*
  * QRect boundingRect () const
  */
 HB_FUNC( QT_QREGION_BOUNDINGRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QRegion( 1 )->boundingRect() ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QRegion( 1 )->boundingRect() ) ) );
 }
 
 /*
@@ -198,7 +206,7 @@ HB_FUNC( QT_QREGION_CONTAINS_1 )
  */
 HB_FUNC( QT_QREGION_INTERSECTED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRegion( hbqt_par_QRegion( 1 )->intersected( *hbqt_par_QRegion( 2 ) ) ), release_QRegion ) );
+   hb_retptrGC( gcAllocate_QRegion( new QRegion( hbqt_par_QRegion( 1 )->intersected( *hbqt_par_QRegion( 2 ) ) ) ) );
 }
 
 /*
@@ -206,7 +214,7 @@ HB_FUNC( QT_QREGION_INTERSECTED )
  */
 HB_FUNC( QT_QREGION_INTERSECTED_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRegion( hbqt_par_QRegion( 1 )->intersected( *hbqt_par_QRect( 2 ) ) ), release_QRegion ) );
+   hb_retptrGC( gcAllocate_QRegion( new QRegion( hbqt_par_QRegion( 1 )->intersected( *hbqt_par_QRect( 2 ) ) ) ) );
 }
 
 /*
@@ -254,7 +262,7 @@ HB_FUNC( QT_QREGION_SETRECTS )
  */
 HB_FUNC( QT_QREGION_SUBTRACTED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRegion( hbqt_par_QRegion( 1 )->subtracted( *hbqt_par_QRegion( 2 ) ) ), release_QRegion ) );
+   hb_retptrGC( gcAllocate_QRegion( new QRegion( hbqt_par_QRegion( 1 )->subtracted( *hbqt_par_QRegion( 2 ) ) ) ) );
 }
 
 /*
@@ -278,7 +286,7 @@ HB_FUNC( QT_QREGION_TRANSLATE_1 )
  */
 HB_FUNC( QT_QREGION_TRANSLATED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRegion( hbqt_par_QRegion( 1 )->translated( hb_parni( 2 ), hb_parni( 3 ) ) ), release_QRegion ) );
+   hb_retptrGC( gcAllocate_QRegion( new QRegion( hbqt_par_QRegion( 1 )->translated( hb_parni( 2 ), hb_parni( 3 ) ) ) ) );
 }
 
 /*
@@ -286,7 +294,7 @@ HB_FUNC( QT_QREGION_TRANSLATED )
  */
 HB_FUNC( QT_QREGION_TRANSLATED_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRegion( hbqt_par_QRegion( 1 )->translated( *hbqt_par_QPoint( 2 ) ) ), release_QRegion ) );
+   hb_retptrGC( gcAllocate_QRegion( new QRegion( hbqt_par_QRegion( 1 )->translated( *hbqt_par_QPoint( 2 ) ) ) ) );
 }
 
 /*
@@ -294,7 +302,7 @@ HB_FUNC( QT_QREGION_TRANSLATED_1 )
  */
 HB_FUNC( QT_QREGION_UNITED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRegion( hbqt_par_QRegion( 1 )->united( *hbqt_par_QRegion( 2 ) ) ), release_QRegion ) );
+   hb_retptrGC( gcAllocate_QRegion( new QRegion( hbqt_par_QRegion( 1 )->united( *hbqt_par_QRegion( 2 ) ) ) ) );
 }
 
 /*
@@ -302,7 +310,7 @@ HB_FUNC( QT_QREGION_UNITED )
  */
 HB_FUNC( QT_QREGION_UNITED_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRegion( hbqt_par_QRegion( 1 )->united( *hbqt_par_QRect( 2 ) ) ), release_QRegion ) );
+   hb_retptrGC( gcAllocate_QRegion( new QRegion( hbqt_par_QRegion( 1 )->united( *hbqt_par_QRect( 2 ) ) ) ) );
 }
 
 /*
@@ -310,7 +318,7 @@ HB_FUNC( QT_QREGION_UNITED_1 )
  */
 HB_FUNC( QT_QREGION_XORED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRegion( hbqt_par_QRegion( 1 )->xored( *hbqt_par_QRegion( 2 ) ) ), release_QRegion ) );
+   hb_retptrGC( gcAllocate_QRegion( new QRegion( hbqt_par_QRegion( 1 )->xored( *hbqt_par_QRegion( 2 ) ) ) ) );
 }
 
 

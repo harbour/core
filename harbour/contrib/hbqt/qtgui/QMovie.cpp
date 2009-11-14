@@ -84,59 +84,76 @@
  * ~QMovie ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QMovie > pq;
+} QGC_POINTER_QMovie;
+
 QT_G_FUNC( release_QMovie )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QMovie                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QMovie * p = ( QGC_POINTER_QMovie * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QMovie                       p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QMovie                      ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QMovie * ) ph )->~QMovie();
-         ph = NULL;
+         ( ( QMovie * ) p->ph )->~QMovie();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QMovie                      Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QMovie                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QMovie" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QMovie                      Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QMovie" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QMovie" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QMovie                      Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QMovie" );
+      #endif
    }
+}
+
+void * gcAllocate_QMovie( void * pObj )
+{
+   QGC_POINTER_QMovie * p = ( QGC_POINTER_QMovie * ) hb_gcAllocate( sizeof( QGC_POINTER_QMovie ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QMovie;
+   new( & p->pq ) QPointer< QMovie >( ( QMovie * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QMovie                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QMOVIE )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QMovie > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QMovie                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = new QMovie() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QMovie;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QMovie( pObj ) );
 }
 /*
  * QColor backgroundColor () const
  */
 HB_FUNC( QT_QMOVIE_BACKGROUNDCOLOR )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QMovie( 1 )->backgroundColor() ), release_QColor ) );
+   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QMovie( 1 )->backgroundColor() ) ) );
 }
 
 /*
@@ -160,7 +177,7 @@ HB_FUNC( QT_QMOVIE_CURRENTFRAMENUMBER )
  */
 HB_FUNC( QT_QMOVIE_CURRENTIMAGE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QImage( hbqt_par_QMovie( 1 )->currentImage() ), release_QImage ) );
+   hb_retptrGC( gcAllocate_QImage( new QImage( hbqt_par_QMovie( 1 )->currentImage() ) ) );
 }
 
 /*
@@ -168,7 +185,7 @@ HB_FUNC( QT_QMOVIE_CURRENTIMAGE )
  */
 HB_FUNC( QT_QMOVIE_CURRENTPIXMAP )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPixmap( hbqt_par_QMovie( 1 )->currentPixmap() ), release_QPixmap ) );
+   hb_retptrGC( gcAllocate_QPixmap( new QPixmap( hbqt_par_QMovie( 1 )->currentPixmap() ) ) );
 }
 
 /*
@@ -192,7 +209,7 @@ HB_FUNC( QT_QMOVIE_FILENAME )
  */
 HB_FUNC( QT_QMOVIE_FORMAT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QMovie( 1 )->format() ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QMovie( 1 )->format() ) ) );
 }
 
 /*
@@ -208,7 +225,7 @@ HB_FUNC( QT_QMOVIE_FRAMECOUNT )
  */
 HB_FUNC( QT_QMOVIE_FRAMERECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QMovie( 1 )->frameRect() ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QMovie( 1 )->frameRect() ) ) );
 }
 
 /*
@@ -248,7 +265,7 @@ HB_FUNC( QT_QMOVIE_NEXTFRAMEDELAY )
  */
 HB_FUNC( QT_QMOVIE_SCALEDSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QMovie( 1 )->scaledSize() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QMovie( 1 )->scaledSize() ) ) );
 }
 
 /*

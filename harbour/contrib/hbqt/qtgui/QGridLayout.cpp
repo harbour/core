@@ -77,52 +77,69 @@
  * ~QGridLayout ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QGridLayout > pq;
+} QGC_POINTER_QGridLayout;
+
 QT_G_FUNC( release_QGridLayout )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QGridLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QGridLayout * p = ( QGC_POINTER_QGridLayout * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QGridLayout                  p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QGridLayout                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QGridLayout * ) ph )->~QGridLayout();
-         ph = NULL;
+         ( ( QGridLayout * ) p->ph )->~QGridLayout();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QGridLayout                 Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QGridLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QGridLayout" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QGridLayout                 Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QGridLayout" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QGridLayout" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QGridLayout                 Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QGridLayout" );
+      #endif
    }
+}
+
+void * gcAllocate_QGridLayout( void * pObj )
+{
+   QGC_POINTER_QGridLayout * p = ( QGC_POINTER_QGridLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QGridLayout ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QGridLayout;
+   new( & p->pq ) QPointer< QGridLayout >( ( QGridLayout * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QGridLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QGRIDLAYOUT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QGridLayout > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QGridLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = new QGridLayout( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QGridLayout;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QGridLayout( pObj ) );
 }
 /*
  * void addItem ( QLayoutItem * item, int row, int column, int rowSpan = 1, int columnSpan = 1, Qt::Alignment alignment = 0 )
@@ -169,7 +186,7 @@ HB_FUNC( QT_QGRIDLAYOUT_ADDWIDGET_1 )
  */
 HB_FUNC( QT_QGRIDLAYOUT_CELLRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QGridLayout( 1 )->cellRect( hb_parni( 2 ), hb_parni( 3 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QGridLayout( 1 )->cellRect( hb_parni( 2 ), hb_parni( 3 ) ) ) ) );
 }
 
 /*

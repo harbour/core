@@ -86,52 +86,69 @@
  * ~QMimeData ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QMimeData > pq;
+} QGC_POINTER_QMimeData;
+
 QT_G_FUNC( release_QMimeData )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QMimeData                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QMimeData * p = ( QGC_POINTER_QMimeData * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QMimeData                    p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QMimeData                   ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QMimeData * ) ph )->~QMimeData();
-         ph = NULL;
+         ( ( QMimeData * ) p->ph )->~QMimeData();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QMimeData                   Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QMimeData                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QMimeData" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QMimeData                   Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QMimeData" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QMimeData" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QMimeData                   Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QMimeData" );
+      #endif
    }
+}
+
+void * gcAllocate_QMimeData( void * pObj )
+{
+   QGC_POINTER_QMimeData * p = ( QGC_POINTER_QMimeData * ) hb_gcAllocate( sizeof( QGC_POINTER_QMimeData ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QMimeData;
+   new( & p->pq ) QPointer< QMimeData >( ( QMimeData * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QMimeData                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QMIMEDATA )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QMimeData > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QMimeData                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = new QMimeData() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QMimeData;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QMimeData( pObj ) );
 }
 /*
  * void clear ()
@@ -146,7 +163,7 @@ HB_FUNC( QT_QMIMEDATA_CLEAR )
  */
 HB_FUNC( QT_QMIMEDATA_COLORDATA )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QMimeData( 1 )->colorData() ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QMimeData( 1 )->colorData() ) ) );
 }
 
 /*
@@ -154,7 +171,7 @@ HB_FUNC( QT_QMIMEDATA_COLORDATA )
  */
 HB_FUNC( QT_QMIMEDATA_DATA )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QMimeData( 1 )->data( hbqt_par_QString( 2 ) ) ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QMimeData( 1 )->data( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -162,7 +179,7 @@ HB_FUNC( QT_QMIMEDATA_DATA )
  */
 HB_FUNC( QT_QMIMEDATA_FORMATS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QMimeData( 1 )->formats() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QMimeData( 1 )->formats() ) ) );
 }
 
 /*
@@ -226,7 +243,7 @@ HB_FUNC( QT_QMIMEDATA_HTML )
  */
 HB_FUNC( QT_QMIMEDATA_IMAGEDATA )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QMimeData( 1 )->imageData() ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QMimeData( 1 )->imageData() ) ) );
 }
 
 /*

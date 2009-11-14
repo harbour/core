@@ -91,52 +91,69 @@
  * ~QCalendarWidget ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QCalendarWidget > pq;
+} QGC_POINTER_QCalendarWidget;
+
 QT_G_FUNC( release_QCalendarWidget )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QCalendarWidget             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QCalendarWidget * p = ( QGC_POINTER_QCalendarWidget * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QCalendarWidget              p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QCalendarWidget             ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QCalendarWidget * ) ph )->~QCalendarWidget();
-         ph = NULL;
+         ( ( QCalendarWidget * ) p->ph )->~QCalendarWidget();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QCalendarWidget             Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QCalendarWidget             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QCalendarWidget" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QCalendarWidget             Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QCalendarWidget" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QCalendarWidget" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QCalendarWidget             Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QCalendarWidget" );
+      #endif
    }
+}
+
+void * gcAllocate_QCalendarWidget( void * pObj )
+{
+   QGC_POINTER_QCalendarWidget * p = ( QGC_POINTER_QCalendarWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QCalendarWidget ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QCalendarWidget;
+   new( & p->pq ) QPointer< QCalendarWidget >( ( QCalendarWidget * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QCalendarWidget             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QCALENDARWIDGET )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QCalendarWidget > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QCalendarWidget             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QCalendarWidget* ) new QCalendarWidget( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QCalendarWidget;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QCalendarWidget( pObj ) );
 }
 /*
  * int dateEditAcceptDelay () const
@@ -151,7 +168,7 @@ HB_FUNC( QT_QCALENDARWIDGET_DATEEDITACCEPTDELAY )
  */
 HB_FUNC( QT_QCALENDARWIDGET_DATETEXTFORMAT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCharFormat( hbqt_par_QCalendarWidget( 1 )->dateTextFormat( *hbqt_par_QDate( 2 ) ) ), release_QTextCharFormat ) );
+   hb_retptrGC( gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QCalendarWidget( 1 )->dateTextFormat( *hbqt_par_QDate( 2 ) ) ) ) );
 }
 
 /*
@@ -167,7 +184,7 @@ HB_FUNC( QT_QCALENDARWIDGET_FIRSTDAYOFWEEK )
  */
 HB_FUNC( QT_QCALENDARWIDGET_HEADERTEXTFORMAT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCharFormat( hbqt_par_QCalendarWidget( 1 )->headerTextFormat() ), release_QTextCharFormat ) );
+   hb_retptrGC( gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QCalendarWidget( 1 )->headerTextFormat() ) ) );
 }
 
 /*
@@ -207,7 +224,7 @@ HB_FUNC( QT_QCALENDARWIDGET_ISNAVIGATIONBARVISIBLE )
  */
 HB_FUNC( QT_QCALENDARWIDGET_MAXIMUMDATE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDate( hbqt_par_QCalendarWidget( 1 )->maximumDate() ), release_QDate ) );
+   hb_retptrGC( gcAllocate_QDate( new QDate( hbqt_par_QCalendarWidget( 1 )->maximumDate() ) ) );
 }
 
 /*
@@ -215,7 +232,7 @@ HB_FUNC( QT_QCALENDARWIDGET_MAXIMUMDATE )
  */
 HB_FUNC( QT_QCALENDARWIDGET_MINIMUMDATE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDate( hbqt_par_QCalendarWidget( 1 )->minimumDate() ), release_QDate ) );
+   hb_retptrGC( gcAllocate_QDate( new QDate( hbqt_par_QCalendarWidget( 1 )->minimumDate() ) ) );
 }
 
 /*
@@ -231,7 +248,7 @@ HB_FUNC( QT_QCALENDARWIDGET_MONTHSHOWN )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SELECTEDDATE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDate( hbqt_par_QCalendarWidget( 1 )->selectedDate() ), release_QDate ) );
+   hb_retptrGC( gcAllocate_QDate( new QDate( hbqt_par_QCalendarWidget( 1 )->selectedDate() ) ) );
 }
 
 /*
@@ -343,7 +360,7 @@ HB_FUNC( QT_QCALENDARWIDGET_VERTICALHEADERFORMAT )
  */
 HB_FUNC( QT_QCALENDARWIDGET_WEEKDAYTEXTFORMAT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCharFormat( hbqt_par_QCalendarWidget( 1 )->weekdayTextFormat( ( Qt::DayOfWeek ) hb_parni( 2 ) ) ), release_QTextCharFormat ) );
+   hb_retptrGC( gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QCalendarWidget( 1 )->weekdayTextFormat( ( Qt::DayOfWeek ) hb_parni( 2 ) ) ) ) );
 }
 
 /*

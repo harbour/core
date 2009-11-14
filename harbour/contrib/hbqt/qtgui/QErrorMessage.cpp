@@ -85,52 +85,69 @@
  * ~QErrorMessage ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QErrorMessage > pq;
+} QGC_POINTER_QErrorMessage;
+
 QT_G_FUNC( release_QErrorMessage )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QErrorMessage               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QErrorMessage * p = ( QGC_POINTER_QErrorMessage * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QErrorMessage                p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QErrorMessage               ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QErrorMessage * ) ph )->~QErrorMessage();
-         ph = NULL;
+         ( ( QErrorMessage * ) p->ph )->~QErrorMessage();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QErrorMessage               Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QErrorMessage               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QErrorMessage" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QErrorMessage               Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QErrorMessage" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QErrorMessage" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QErrorMessage               Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QErrorMessage" );
+      #endif
    }
+}
+
+void * gcAllocate_QErrorMessage( void * pObj )
+{
+   QGC_POINTER_QErrorMessage * p = ( QGC_POINTER_QErrorMessage * ) hb_gcAllocate( sizeof( QGC_POINTER_QErrorMessage ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QErrorMessage;
+   new( & p->pq ) QPointer< QErrorMessage >( ( QErrorMessage * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QErrorMessage               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QERRORMESSAGE )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QErrorMessage > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QErrorMessage               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QErrorMessage* ) new QErrorMessage( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QErrorMessage;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QErrorMessage( pObj ) );
 }
 /*
  * void showMessage ( const QString & message, const QString & type )

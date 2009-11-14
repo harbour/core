@@ -76,52 +76,69 @@
  * virtual ~QStatusBar ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QStatusBar > pq;
+} QGC_POINTER_QStatusBar;
+
 QT_G_FUNC( release_QStatusBar )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QStatusBar                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QStatusBar * p = ( QGC_POINTER_QStatusBar * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStatusBar                   p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStatusBar                  ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QStatusBar * ) ph )->~QStatusBar();
-         ph = NULL;
+         ( ( QStatusBar * ) p->ph )->~QStatusBar();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QStatusBar                  Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QStatusBar                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QStatusBar" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QStatusBar                  Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QStatusBar" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QStatusBar" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStatusBar                  Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QStatusBar" );
+      #endif
    }
+}
+
+void * gcAllocate_QStatusBar( void * pObj )
+{
+   QGC_POINTER_QStatusBar * p = ( QGC_POINTER_QStatusBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QStatusBar ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QStatusBar;
+   new( & p->pq ) QPointer< QStatusBar >( ( QStatusBar * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QStatusBar                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSTATUSBAR )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QStatusBar > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QStatusBar                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QStatusBar* ) new QStatusBar( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QStatusBar;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QStatusBar( pObj ) );
 }
 /*
  * void addPermanentWidget ( QWidget * widget, int stretch = 0 )

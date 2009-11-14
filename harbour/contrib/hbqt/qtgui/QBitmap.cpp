@@ -82,30 +82,44 @@
 
 QT_G_FUNC( release_QBitmap )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QBitmap                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QBitmap                      p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QBitmap                     ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QBitmap * ) ph )->~QBitmap();
-      ph = NULL;
+      ( ( QBitmap * ) p->ph )->~QBitmap();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QBitmap                     Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QBitmap                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QBitmap" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QBitmap                     Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QBitmap" );
+      #endif
    }
+}
+
+void * gcAllocate_QBitmap( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QBitmap;
+   #if defined(__debug__)
+      just_debug( "          new_QBitmap                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QBITMAP )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QBitmap                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
@@ -143,13 +157,7 @@ hb_snprintf( str, sizeof(str), "   GC:  new QBitmap                     %i B %i 
       pObj = ( QBitmap* ) new QBitmap() ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QBitmap;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QBitmap( pObj ) );
 }
 /*
  * void clear ()
@@ -164,7 +172,7 @@ HB_FUNC( QT_QBITMAP_CLEAR )
  */
 HB_FUNC( QT_QBITMAP_TRANSFORMED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QBitmap( hbqt_par_QBitmap( 1 )->transformed( *hbqt_par_QTransform( 2 ) ) ), release_QBitmap ) );
+   hb_retptrGC( gcAllocate_QBitmap( new QBitmap( hbqt_par_QBitmap( 1 )->transformed( *hbqt_par_QTransform( 2 ) ) ) ) );
 }
 
 /*
@@ -172,7 +180,7 @@ HB_FUNC( QT_QBITMAP_TRANSFORMED )
  */
 HB_FUNC( QT_QBITMAP_TRANSFORMED_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QBitmap( hbqt_par_QBitmap( 1 )->transformed( *hbqt_par_QMatrix( 2 ) ) ), release_QBitmap ) );
+   hb_retptrGC( gcAllocate_QBitmap( new QBitmap( hbqt_par_QBitmap( 1 )->transformed( *hbqt_par_QMatrix( 2 ) ) ) ) );
 }
 
 /*
@@ -180,7 +188,7 @@ HB_FUNC( QT_QBITMAP_TRANSFORMED_1 )
  */
 HB_FUNC( QT_QBITMAP_FROMIMAGE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QBitmap( hbqt_par_QBitmap( 1 )->fromImage( *hbqt_par_QImage( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ImageConversionFlags ) hb_parni( 3 ) : ( Qt::ImageConversionFlags ) Qt::AutoColor ) ) ), release_QBitmap ) );
+   hb_retptrGC( gcAllocate_QBitmap( new QBitmap( hbqt_par_QBitmap( 1 )->fromImage( *hbqt_par_QImage( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ImageConversionFlags ) hb_parni( 3 ) : ( Qt::ImageConversionFlags ) Qt::AutoColor ) ) ) ) );
 }
 
 

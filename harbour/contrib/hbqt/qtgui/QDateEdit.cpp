@@ -76,52 +76,69 @@
  * QDateEdit ( const QDate & date, QWidget * parent = 0 )
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QDateEdit > pq;
+} QGC_POINTER_QDateEdit;
+
 QT_G_FUNC( release_QDateEdit )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QDateEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QDateEdit * p = ( QGC_POINTER_QDateEdit * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QDateEdit                    p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QDateEdit                   ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QDateEdit * ) ph )->~QDateEdit();
-         ph = NULL;
+         ( ( QDateEdit * ) p->ph )->~QDateEdit();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QDateEdit                   Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QDateEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QDateEdit" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QDateEdit                   Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QDateEdit" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QDateEdit" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QDateEdit                   Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QDateEdit" );
+      #endif
    }
+}
+
+void * gcAllocate_QDateEdit( void * pObj )
+{
+   QGC_POINTER_QDateEdit * p = ( QGC_POINTER_QDateEdit * ) hb_gcAllocate( sizeof( QGC_POINTER_QDateEdit ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QDateEdit;
+   new( & p->pq ) QPointer< QDateEdit >( ( QDateEdit * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QDateEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QDATEEDIT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QDateEdit > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QDateEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QDateEdit* ) new QDateEdit( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QDateEdit;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QDateEdit( pObj ) );
 }
 
 /*----------------------------------------------------------------------*/

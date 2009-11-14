@@ -77,55 +77,72 @@
  * ~QPrintPreviewDialog ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QPrintPreviewDialog > pq;
+} QGC_POINTER_QPrintPreviewDialog;
+
 QT_G_FUNC( release_QPrintPreviewDialog )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QPrintPreviewDialog         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QPrintPreviewDialog * p = ( QGC_POINTER_QPrintPreviewDialog * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QPrintPreviewDialog          p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QPrintPreviewDialog         ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QPrintPreviewDialog * ) ph )->~QPrintPreviewDialog();
-         ph = NULL;
+         ( ( QPrintPreviewDialog * ) p->ph )->~QPrintPreviewDialog();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QPrintPreviewDialog         Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QPrintPreviewDialog         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QPrintPreviewDialog" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QPrintPreviewDialog         Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QPrintPreviewDialog" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QPrintPreviewDialog" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QPrintPreviewDialog         Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QPrintPreviewDialog" );
+      #endif
    }
+}
+
+void * gcAllocate_QPrintPreviewDialog( void * pObj )
+{
+   QGC_POINTER_QPrintPreviewDialog * p = ( QGC_POINTER_QPrintPreviewDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QPrintPreviewDialog ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QPrintPreviewDialog;
+   new( & p->pq ) QPointer< QPrintPreviewDialog >( ( QPrintPreviewDialog * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QPrintPreviewDialog         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QPRINTPREVIEWDIALOG )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QPrintPreviewDialog > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QPrintPreviewDialog         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    if( hb_pcount() >= 2 && HB_ISPOINTER( 2 ) )
       pObj = new QPrintPreviewDialog( hbqt_par_QPrinter( 1 ), hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) ) ;
    else
       pObj = new QPrintPreviewDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QPrintPreviewDialog;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QPrintPreviewDialog( pObj ) );
 }
 /*
  * void open ( QObject * receiver, const char * member )

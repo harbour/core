@@ -88,31 +88,7 @@
 
 QT_G_FUNC( release_QAbstractItemView )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QAbstractItemView           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
-   {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
-      {
-         ( ( QAbstractItemView * ) ph )->~QAbstractItemView();
-         ph = NULL;
-      }
-      else
-      {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QAbstractItemView" );  OutputDebugString( str );
-#endif
-      }
-   }
-   else
-   {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QAbstractItemView" );  OutputDebugString( str );
-#endif
-   }
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QABSTRACTITEMVIEW )
@@ -147,7 +123,7 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_CLOSEPERSISTENTEDITOR )
  */
 HB_FUNC( QT_QABSTRACTITEMVIEW_CURRENTINDEX )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QAbstractItemView( 1 )->currentIndex() ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractItemView( 1 )->currentIndex() ) ) );
 }
 
 /*
@@ -203,7 +179,7 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_HORIZONTALSCROLLMODE )
  */
 HB_FUNC( QT_QABSTRACTITEMVIEW_ICONSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QAbstractItemView( 1 )->iconSize() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QAbstractItemView( 1 )->iconSize() ) ) );
 }
 
 /*
@@ -211,7 +187,7 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_ICONSIZE )
  */
 HB_FUNC( QT_QABSTRACTITEMVIEW_INDEXAT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QAbstractItemView( 1 )->indexAt( *hbqt_par_QPoint( 2 ) ) ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractItemView( 1 )->indexAt( *hbqt_par_QPoint( 2 ) ) ) ) );
 }
 
 /*
@@ -283,7 +259,7 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_OPENPERSISTENTEDITOR )
  */
 HB_FUNC( QT_QABSTRACTITEMVIEW_ROOTINDEX )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QAbstractItemView( 1 )->rootIndex() ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractItemView( 1 )->rootIndex() ) ) );
 }
 
 /*
@@ -507,7 +483,7 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SIZEHINTFORCOLUMN )
  */
 HB_FUNC( QT_QABSTRACTITEMVIEW_SIZEHINTFORINDEX )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QAbstractItemView( 1 )->sizeHintForIndex( *hbqt_par_QModelIndex( 2 ) ) ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QAbstractItemView( 1 )->sizeHintForIndex( *hbqt_par_QModelIndex( 2 ) ) ) ) );
 }
 
 /*
@@ -547,7 +523,7 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_VERTICALSCROLLMODE )
  */
 HB_FUNC( QT_QABSTRACTITEMVIEW_VISUALRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QAbstractItemView( 1 )->visualRect( *hbqt_par_QModelIndex( 2 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QAbstractItemView( 1 )->visualRect( *hbqt_par_QModelIndex( 2 ) ) ) ) );
 }
 
 /*

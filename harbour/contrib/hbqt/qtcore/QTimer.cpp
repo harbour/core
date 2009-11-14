@@ -76,52 +76,69 @@
  * ~QTimer ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QTimer > pq;
+} QGC_POINTER_QTimer;
+
 QT_G_FUNC( release_QTimer )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTimer                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QTimer * p = ( QGC_POINTER_QTimer * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTimer                       p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTimer                      ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QTimer * ) ph )->~QTimer();
-         ph = NULL;
+         ( ( QTimer * ) p->ph )->~QTimer();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTimer                      Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QTimer                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QTimer" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTimer                      Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QTimer" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTimer" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTimer                      Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTimer" );
+      #endif
    }
+}
+
+void * gcAllocate_QTimer( void * pObj )
+{
+   QGC_POINTER_QTimer * p = ( QGC_POINTER_QTimer * ) hb_gcAllocate( sizeof( QGC_POINTER_QTimer ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTimer;
+   new( & p->pq ) QPointer< QTimer >( ( QTimer * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QTimer                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTIMER )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QTimer > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTimer                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = new QTimer( hbqt_par_QObject( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTimer;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTimer( pObj ) );
 }
 /*
  * int interval () const

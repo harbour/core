@@ -96,30 +96,44 @@
 
 QT_G_FUNC( release_QTextBlockFormat )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTextBlockFormat            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextBlockFormat             p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextBlockFormat            ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QTextBlockFormat * ) ph )->~QTextBlockFormat();
-      ph = NULL;
+      ( ( QTextBlockFormat * ) p->ph )->~QTextBlockFormat();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextBlockFormat            Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QTextBlockFormat            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTextBlockFormat" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextBlockFormat            Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTextBlockFormat" );
+      #endif
    }
+}
+
+void * gcAllocate_QTextBlockFormat( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTextBlockFormat;
+   #if defined(__debug__)
+      just_debug( "          new_QTextBlockFormat            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTEXTBLOCKFORMAT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTextBlockFormat            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
@@ -130,13 +144,7 @@ hb_snprintf( str, sizeof(str), "   GC:  new QTextBlockFormat            %i B %i 
       pObj = ( QTextBlockFormat* ) new QTextBlockFormat() ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTextBlockFormat;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTextBlockFormat( pObj ) );
 }
 /*
  * Qt::Alignment alignment () const

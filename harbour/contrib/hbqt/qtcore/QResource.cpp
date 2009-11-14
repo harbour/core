@@ -78,40 +78,48 @@
 
 QT_G_FUNC( release_QResource )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QResource                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QResource                    p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QResource                   ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QResource * ) ph )->~QResource();
-      ph = NULL;
+      ( ( QResource * ) p->ph )->~QResource();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QResource                   Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QResource                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QResource" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QResource                   Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QResource" );
+      #endif
    }
+}
+
+void * gcAllocate_QResource( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QResource;
+   #if defined(__debug__)
+      just_debug( "          new_QResource                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QRESOURCE )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QResource                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QResource* ) new QResource() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QResource;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QResource( pObj ) );
 }
 /*
  * QString absoluteFilePath () const
@@ -158,7 +166,7 @@ HB_FUNC( QT_QRESOURCE_ISVALID )
  */
 HB_FUNC( QT_QRESOURCE_LOCALE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QLocale( hbqt_par_QResource( 1 )->locale() ), release_QLocale ) );
+   hb_retptrGC( gcAllocate_QLocale( new QLocale( hbqt_par_QResource( 1 )->locale() ) ) );
 }
 
 /*
@@ -198,7 +206,7 @@ HB_FUNC( QT_QRESOURCE_REGISTERRESOURCE )
  */
 HB_FUNC( QT_QRESOURCE_SEARCHPATHS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QResource( 1 )->searchPaths() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QResource( 1 )->searchPaths() ) ) );
 }
 
 /*

@@ -75,52 +75,69 @@
  * QSpinBox ( QWidget * parent = 0 )
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QSpinBox > pq;
+} QGC_POINTER_QSpinBox;
+
 QT_G_FUNC( release_QSpinBox )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QSpinBox                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QSpinBox * p = ( QGC_POINTER_QSpinBox * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QSpinBox                     p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QSpinBox                    ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QSpinBox * ) ph )->~QSpinBox();
-         ph = NULL;
+         ( ( QSpinBox * ) p->ph )->~QSpinBox();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QSpinBox                    Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QSpinBox                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QSpinBox" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QSpinBox                    Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QSpinBox" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QSpinBox" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QSpinBox                    Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QSpinBox" );
+      #endif
    }
+}
+
+void * gcAllocate_QSpinBox( void * pObj )
+{
+   QGC_POINTER_QSpinBox * p = ( QGC_POINTER_QSpinBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QSpinBox ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QSpinBox;
+   new( & p->pq ) QPointer< QSpinBox >( ( QSpinBox * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QSpinBox                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSPINBOX )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QSpinBox > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QSpinBox                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QSpinBox* ) new QSpinBox( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QSpinBox;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QSpinBox( pObj ) );
 }
 /*
  * QString cleanText () const

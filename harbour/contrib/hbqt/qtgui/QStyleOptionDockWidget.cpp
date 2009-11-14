@@ -83,40 +83,48 @@
 
 QT_G_FUNC( release_QStyleOptionDockWidget )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QStyleOptionDockWidget      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionDockWidget       p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionDockWidget      ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QStyleOptionDockWidget * ) ph )->~QStyleOptionDockWidget();
-      ph = NULL;
+      ( ( QStyleOptionDockWidget * ) p->ph )->~QStyleOptionDockWidget();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionDockWidget      Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QStyleOptionDockWidget      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QStyleOptionDockWidget" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionDockWidget      Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QStyleOptionDockWidget" );
+      #endif
    }
+}
+
+void * gcAllocate_QStyleOptionDockWidget( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QStyleOptionDockWidget;
+   #if defined(__debug__)
+      just_debug( "          new_QStyleOptionDockWidget      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSTYLEOPTIONDOCKWIDGET )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QStyleOptionDockWidget      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QStyleOptionDockWidget* ) new QStyleOptionDockWidget() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QStyleOptionDockWidget;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QStyleOptionDockWidget( pObj ) );
 }
 /*
  * bool closable

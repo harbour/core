@@ -78,31 +78,7 @@
 
 QT_G_FUNC( release_QWheelEvent )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QWheelEvent                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
-   {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
-      {
-         ( ( QWheelEvent * ) ph )->~QWheelEvent();
-         ph = NULL;
-      }
-      else
-      {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QWheelEvent" );  OutputDebugString( str );
-#endif
-      }
-   }
-   else
-   {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QWheelEvent" );  OutputDebugString( str );
-#endif
-   }
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QWHEELEVENT )
@@ -129,7 +105,7 @@ HB_FUNC( QT_QWHEELEVENT_DELTA )
  */
 HB_FUNC( QT_QWHEELEVENT_GLOBALPOS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QWheelEvent( 1 )->globalPos() ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QWheelEvent( 1 )->globalPos() ) ) );
 }
 
 /*
@@ -161,7 +137,7 @@ HB_FUNC( QT_QWHEELEVENT_ORIENTATION )
  */
 HB_FUNC( QT_QWHEELEVENT_POS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QWheelEvent( 1 )->pos() ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QWheelEvent( 1 )->pos() ) ) );
 }
 
 /*

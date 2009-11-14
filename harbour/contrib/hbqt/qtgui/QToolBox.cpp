@@ -76,52 +76,69 @@
  * ~QToolBox ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QToolBox > pq;
+} QGC_POINTER_QToolBox;
+
 QT_G_FUNC( release_QToolBox )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QToolBox                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QToolBox * p = ( QGC_POINTER_QToolBox * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QToolBox                     p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QToolBox                    ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QToolBox * ) ph )->~QToolBox();
-         ph = NULL;
+         ( ( QToolBox * ) p->ph )->~QToolBox();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QToolBox                    Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QToolBox                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QToolBox" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QToolBox                    Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QToolBox" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QToolBox" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QToolBox                    Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QToolBox" );
+      #endif
    }
+}
+
+void * gcAllocate_QToolBox( void * pObj )
+{
+   QGC_POINTER_QToolBox * p = ( QGC_POINTER_QToolBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QToolBox ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QToolBox;
+   new( & p->pq ) QPointer< QToolBox >( ( QToolBox * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QToolBox                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTOOLBOX )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QToolBox > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QToolBox                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QToolBox* ) new QToolBox( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QToolBox;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QToolBox( pObj ) );
 }
 /*
  * int addItem ( QWidget * widget, const QIcon & iconSet, const QString & text )
@@ -200,7 +217,7 @@ HB_FUNC( QT_QTOOLBOX_ISITEMENABLED )
  */
 HB_FUNC( QT_QTOOLBOX_ITEMICON )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QToolBox( 1 )->itemIcon( hb_parni( 2 ) ) ), release_QIcon ) );
+   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QToolBox( 1 )->itemIcon( hb_parni( 2 ) ) ) ) );
 }
 
 /*

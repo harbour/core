@@ -85,42 +85,65 @@
  * ~QButtonGroup ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QButtonGroup > pq;
+} QGC_POINTER_QButtonGroup;
+
 QT_G_FUNC( release_QButtonGroup )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QButtonGroup                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QButtonGroup * p = ( QGC_POINTER_QButtonGroup * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QButtonGroup                 p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QButtonGroup                ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QButtonGroup * ) ph )->~QButtonGroup();
-         ph = NULL;
+         ( ( QButtonGroup * ) p->ph )->~QButtonGroup();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QButtonGroup                Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QButtonGroup                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QButtonGroup" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QButtonGroup                Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QButtonGroup" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QButtonGroup" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QButtonGroup                Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QButtonGroup" );
+      #endif
    }
+}
+
+void * gcAllocate_QButtonGroup( void * pObj )
+{
+   QGC_POINTER_QButtonGroup * p = ( QGC_POINTER_QButtonGroup * ) hb_gcAllocate( sizeof( QGC_POINTER_QButtonGroup ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QButtonGroup;
+   new( & p->pq ) QPointer< QButtonGroup >( ( QButtonGroup * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QButtonGroup                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QBUTTONGROUP )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QButtonGroup > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QButtonGroup                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
@@ -131,13 +154,7 @@ hb_snprintf( str, sizeof(str), "   GC:  new QButtonGroup                %i B %i 
       pObj = ( QButtonGroup* ) new QButtonGroup() ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QButtonGroup;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QButtonGroup( pObj ) );
 }
 /*
  * void addButton ( QAbstractButton * button )

@@ -81,52 +81,69 @@
  * ~QLineEdit ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QLineEdit > pq;
+} QGC_POINTER_QLineEdit;
+
 QT_G_FUNC( release_QLineEdit )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QLineEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QLineEdit * p = ( QGC_POINTER_QLineEdit * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QLineEdit                    p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QLineEdit                   ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QLineEdit * ) ph )->~QLineEdit();
-         ph = NULL;
+         ( ( QLineEdit * ) p->ph )->~QLineEdit();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QLineEdit                   Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QLineEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QLineEdit" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QLineEdit                   Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QLineEdit" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QLineEdit" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QLineEdit                   Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QLineEdit" );
+      #endif
    }
+}
+
+void * gcAllocate_QLineEdit( void * pObj )
+{
+   QGC_POINTER_QLineEdit * p = ( QGC_POINTER_QLineEdit * ) hb_gcAllocate( sizeof( QGC_POINTER_QLineEdit ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QLineEdit;
+   new( & p->pq ) QPointer< QLineEdit >( ( QLineEdit * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QLineEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QLINEEDIT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QLineEdit > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QLineEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QLineEdit* ) new QLineEdit( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QLineEdit;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QLineEdit( pObj ) );
 }
 /*
  * Qt::Alignment alignment () const
@@ -367,7 +384,7 @@ HB_FUNC( QT_QLINEEDIT_MAXLENGTH )
  */
 HB_FUNC( QT_QLINEEDIT_MINIMUMSIZEHINT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QLineEdit( 1 )->minimumSizeHint() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QLineEdit( 1 )->minimumSizeHint() ) ) );
 }
 
 /*
@@ -495,7 +512,7 @@ HB_FUNC( QT_QLINEEDIT_SETVALIDATOR )
  */
 HB_FUNC( QT_QLINEEDIT_SIZEHINT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QLineEdit( 1 )->sizeHint() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QLineEdit( 1 )->sizeHint() ) ) );
 }
 
 /*

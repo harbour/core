@@ -95,40 +95,48 @@
 
 QT_G_FUNC( release_QFontDatabase )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QFontDatabase               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFontDatabase                p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QFontDatabase               ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QFontDatabase * ) ph )->~QFontDatabase();
-      ph = NULL;
+      ( ( QFontDatabase * ) p->ph )->~QFontDatabase();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QFontDatabase               Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QFontDatabase               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QFontDatabase" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QFontDatabase               Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QFontDatabase" );
+      #endif
    }
+}
+
+void * gcAllocate_QFontDatabase( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QFontDatabase;
+   #if defined(__debug__)
+      just_debug( "          new_QFontDatabase               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QFONTDATABASE )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QFontDatabase               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = new QFontDatabase() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QFontDatabase;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QFontDatabase( pObj ) );
 }
 /*
  * bool bold ( const QString & family, const QString & style ) const
@@ -143,7 +151,7 @@ HB_FUNC( QT_QFONTDATABASE_BOLD )
  */
 HB_FUNC( QT_QFONTDATABASE_FAMILIES )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QFontDatabase( 1 )->families( ( HB_ISNUM( 2 ) ? ( QFontDatabase::WritingSystem ) hb_parni( 2 ) : ( QFontDatabase::WritingSystem ) QFontDatabase::Any ) ) ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QFontDatabase( 1 )->families( ( HB_ISNUM( 2 ) ? ( QFontDatabase::WritingSystem ) hb_parni( 2 ) : ( QFontDatabase::WritingSystem ) QFontDatabase::Any ) ) ) ) );
 }
 
 /*
@@ -151,7 +159,7 @@ HB_FUNC( QT_QFONTDATABASE_FAMILIES )
  */
 HB_FUNC( QT_QFONTDATABASE_FONT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QFontDatabase( 1 )->font( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ), hb_parni( 4 ) ) ), release_QFont ) );
+   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QFontDatabase( 1 )->font( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ), hb_parni( 4 ) ) ) ) );
 }
 
 /*
@@ -215,7 +223,7 @@ HB_FUNC( QT_QFONTDATABASE_STYLESTRING_1 )
  */
 HB_FUNC( QT_QFONTDATABASE_STYLES )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QFontDatabase( 1 )->styles( hbqt_par_QString( 2 ) ) ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QFontDatabase( 1 )->styles( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -247,7 +255,7 @@ HB_FUNC( QT_QFONTDATABASE_ADDAPPLICATIONFONTFROMDATA )
  */
 HB_FUNC( QT_QFONTDATABASE_APPLICATIONFONTFAMILIES )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QFontDatabase( 1 )->applicationFontFamilies( hb_parni( 2 ) ) ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QFontDatabase( 1 )->applicationFontFamilies( hb_parni( 2 ) ) ) ) );
 }
 
 /*

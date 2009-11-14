@@ -96,7 +96,7 @@ HB_FUNC( QT_QTEXTOBJECT_DOCUMENT )
  */
 HB_FUNC( QT_QTEXTOBJECT_FORMAT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextFormat( hbqt_par_QTextObject( 1 )->format() ), release_QTextFormat ) );
+   hb_retptrGC( gcAllocate_QTextFormat( new QTextFormat( hbqt_par_QTextObject( 1 )->format() ) ) );
 }
 
 /*

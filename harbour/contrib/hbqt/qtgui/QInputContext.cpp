@@ -94,31 +94,7 @@
 
 QT_G_FUNC( release_QInputContext )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QInputContext               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
-   {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
-      {
-         ( ( QInputContext * ) ph )->~QInputContext();
-         ph = NULL;
-      }
-      else
-      {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QInputContext" );  OutputDebugString( str );
-#endif
-      }
-   }
-   else
-   {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QInputContext" );  OutputDebugString( str );
-#endif
-   }
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QINPUTCONTEXT )
@@ -137,7 +113,7 @@ HB_FUNC( QT_QINPUTCONTEXT_FILTEREVENT )
  */
 HB_FUNC( QT_QINPUTCONTEXT_FONT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QInputContext( 1 )->font() ), release_QFont ) );
+   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QInputContext( 1 )->font() ) ) );
 }
 
 /*
@@ -193,7 +169,7 @@ HB_FUNC( QT_QINPUTCONTEXT_SENDEVENT )
  */
 HB_FUNC( QT_QINPUTCONTEXT_STANDARDFORMAT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextFormat( hbqt_par_QInputContext( 1 )->standardFormat( ( QInputContext::StandardFormat ) hb_parni( 2 ) ) ), release_QTextFormat ) );
+   hb_retptrGC( gcAllocate_QTextFormat( new QTextFormat( hbqt_par_QInputContext( 1 )->standardFormat( ( QInputContext::StandardFormat ) hb_parni( 2 ) ) ) ) );
 }
 
 /*

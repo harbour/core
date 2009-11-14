@@ -79,52 +79,69 @@
  * QProgressBar ( QWidget * parent = 0 )
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QProgressBar > pq;
+} QGC_POINTER_QProgressBar;
+
 QT_G_FUNC( release_QProgressBar )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QProgressBar                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QProgressBar * p = ( QGC_POINTER_QProgressBar * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QProgressBar                 p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QProgressBar                ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QProgressBar * ) ph )->~QProgressBar();
-         ph = NULL;
+         ( ( QProgressBar * ) p->ph )->~QProgressBar();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QProgressBar                Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QProgressBar                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QProgressBar" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QProgressBar                Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QProgressBar" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QProgressBar" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QProgressBar                Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QProgressBar" );
+      #endif
    }
+}
+
+void * gcAllocate_QProgressBar( void * pObj )
+{
+   QGC_POINTER_QProgressBar * p = ( QGC_POINTER_QProgressBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QProgressBar ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QProgressBar;
+   new( & p->pq ) QPointer< QProgressBar >( ( QProgressBar * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QProgressBar                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QPROGRESSBAR )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QProgressBar > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QProgressBar                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QProgressBar* ) new QProgressBar( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QProgressBar;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QProgressBar( pObj ) );
 }
 /*
  * Qt::Alignment alignment () const

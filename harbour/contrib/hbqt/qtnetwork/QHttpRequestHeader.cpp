@@ -79,40 +79,48 @@
 
 QT_G_FUNC( release_QHttpRequestHeader )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QHttpRequestHeader          %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QHttpRequestHeader           p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QHttpRequestHeader          ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QHttpRequestHeader * ) ph )->~QHttpRequestHeader();
-      ph = NULL;
+      ( ( QHttpRequestHeader * ) p->ph )->~QHttpRequestHeader();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QHttpRequestHeader          Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QHttpRequestHeader          %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QHttpRequestHeader" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QHttpRequestHeader          Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QHttpRequestHeader" );
+      #endif
    }
+}
+
+void * gcAllocate_QHttpRequestHeader( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QHttpRequestHeader;
+   #if defined(__debug__)
+      just_debug( "          new_QHttpRequestHeader          %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QHTTPREQUESTHEADER )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QHttpRequestHeader          %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = new QHttpRequestHeader() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QHttpRequestHeader;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QHttpRequestHeader( pObj ) );
 }
 /*
  * virtual int majorVersion () const

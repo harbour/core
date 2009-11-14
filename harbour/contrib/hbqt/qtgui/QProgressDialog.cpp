@@ -77,52 +77,69 @@
  * ~QProgressDialog ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QProgressDialog > pq;
+} QGC_POINTER_QProgressDialog;
+
 QT_G_FUNC( release_QProgressDialog )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QProgressDialog             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QProgressDialog * p = ( QGC_POINTER_QProgressDialog * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QProgressDialog              p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QProgressDialog             ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QProgressDialog * ) ph )->~QProgressDialog();
-         ph = NULL;
+         ( ( QProgressDialog * ) p->ph )->~QProgressDialog();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QProgressDialog             Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QProgressDialog             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QProgressDialog" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QProgressDialog             Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QProgressDialog" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QProgressDialog" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QProgressDialog             Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QProgressDialog" );
+      #endif
    }
+}
+
+void * gcAllocate_QProgressDialog( void * pObj )
+{
+   QGC_POINTER_QProgressDialog * p = ( QGC_POINTER_QProgressDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QProgressDialog ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QProgressDialog;
+   new( & p->pq ) QPointer< QProgressDialog >( ( QProgressDialog * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QProgressDialog             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QPROGRESSDIALOG )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QProgressDialog > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QProgressDialog             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = new QProgressDialog( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QProgressDialog;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QProgressDialog( pObj ) );
 }
 /*
  * bool autoClose () const
@@ -225,7 +242,7 @@ HB_FUNC( QT_QPROGRESSDIALOG_SETLABEL )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_SIZEHINT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QProgressDialog( 1 )->sizeHint() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QProgressDialog( 1 )->sizeHint() ) ) );
 }
 
 /*

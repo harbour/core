@@ -102,30 +102,44 @@
 
 QT_G_FUNC( release_QTreeWidgetItem )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTreeWidgetItem             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTreeWidgetItem              p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTreeWidgetItem             ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QTreeWidgetItem * ) ph )->~QTreeWidgetItem();
-      ph = NULL;
+      ( ( QTreeWidgetItem * ) p->ph )->~QTreeWidgetItem();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTreeWidgetItem             Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QTreeWidgetItem             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTreeWidgetItem" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTreeWidgetItem             Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTreeWidgetItem" );
+      #endif
    }
+}
+
+void * gcAllocate_QTreeWidgetItem( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTreeWidgetItem;
+   #if defined(__debug__)
+      just_debug( "          new_QTreeWidgetItem             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTREEWIDGETITEM )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTreeWidgetItem             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
    {
@@ -136,13 +150,7 @@ hb_snprintf( str, sizeof(str), "   GC:  new QTreeWidgetItem             %i B %i 
       pObj = ( QTreeWidgetItem* ) new QTreeWidgetItem( hbqt_par_QTreeWidget( 1 ), hb_parni( 2 ) ) ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTreeWidgetItem;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTreeWidgetItem( pObj ) );
 }
 /*
  * void addChild ( QTreeWidgetItem * child )
@@ -157,7 +165,7 @@ HB_FUNC( QT_QTREEWIDGETITEM_ADDCHILD )
  */
 HB_FUNC( QT_QTREEWIDGETITEM_BACKGROUND )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QBrush( hbqt_par_QTreeWidgetItem( 1 )->background( hb_parni( 2 ) ) ), release_QBrush ) );
+   hb_retptrGC( gcAllocate_QBrush( new QBrush( hbqt_par_QTreeWidgetItem( 1 )->background( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -213,7 +221,7 @@ HB_FUNC( QT_QTREEWIDGETITEM_COLUMNCOUNT )
  */
 HB_FUNC( QT_QTREEWIDGETITEM_DATA )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QTreeWidgetItem( 1 )->data( hb_parni( 2 ), hb_parni( 3 ) ) ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QTreeWidgetItem( 1 )->data( hb_parni( 2 ), hb_parni( 3 ) ) ) ) );
 }
 
 /*
@@ -229,7 +237,7 @@ HB_FUNC( QT_QTREEWIDGETITEM_FLAGS )
  */
 HB_FUNC( QT_QTREEWIDGETITEM_FONT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QTreeWidgetItem( 1 )->font( hb_parni( 2 ) ) ), release_QFont ) );
+   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QTreeWidgetItem( 1 )->font( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -237,7 +245,7 @@ HB_FUNC( QT_QTREEWIDGETITEM_FONT )
  */
 HB_FUNC( QT_QTREEWIDGETITEM_FOREGROUND )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QBrush( hbqt_par_QTreeWidgetItem( 1 )->foreground( hb_parni( 2 ) ) ), release_QBrush ) );
+   hb_retptrGC( gcAllocate_QBrush( new QBrush( hbqt_par_QTreeWidgetItem( 1 )->foreground( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -245,7 +253,7 @@ HB_FUNC( QT_QTREEWIDGETITEM_FOREGROUND )
  */
 HB_FUNC( QT_QTREEWIDGETITEM_ICON )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QTreeWidgetItem( 1 )->icon( hb_parni( 2 ) ) ), release_QIcon ) );
+   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QTreeWidgetItem( 1 )->icon( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -485,7 +493,7 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETWHATSTHIS )
  */
 HB_FUNC( QT_QTREEWIDGETITEM_SIZEHINT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QTreeWidgetItem( 1 )->sizeHint( hb_parni( 2 ) ) ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QTreeWidgetItem( 1 )->sizeHint( hb_parni( 2 ) ) ) ) );
 }
 
 /*

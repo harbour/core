@@ -91,59 +91,76 @@
  * ~QTextFrame ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QTextFrame > pq;
+} QGC_POINTER_QTextFrame;
+
 QT_G_FUNC( release_QTextFrame )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTextFrame                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QTextFrame * p = ( QGC_POINTER_QTextFrame * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextFrame                   p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextFrame                  ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QTextFrame * ) ph )->~QTextFrame();
-         ph = NULL;
+         ( ( QTextFrame * ) p->ph )->~QTextFrame();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTextFrame                  Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QTextFrame                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QTextFrame" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTextFrame                  Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QTextFrame" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTextFrame" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextFrame                  Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTextFrame" );
+      #endif
    }
+}
+
+void * gcAllocate_QTextFrame( void * pObj )
+{
+   QGC_POINTER_QTextFrame * p = ( QGC_POINTER_QTextFrame * ) hb_gcAllocate( sizeof( QGC_POINTER_QTextFrame ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTextFrame;
+   new( & p->pq ) QPointer< QTextFrame >( ( QTextFrame * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QTextFrame                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTEXTFRAME )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QTextFrame > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTextFrame                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QTextFrame* ) new QTextFrame( hbqt_par_QTextDocument( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTextFrame;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTextFrame( pObj ) );
 }
 /*
  * QTextCursor firstCursorPosition () const
  */
 HB_FUNC( QT_QTEXTFRAME_FIRSTCURSORPOSITION )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCursor( hbqt_par_QTextFrame( 1 )->firstCursorPosition() ), release_QTextCursor ) );
+   hb_retptrGC( gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextFrame( 1 )->firstCursorPosition() ) ) );
 }
 
 /*
@@ -159,7 +176,7 @@ HB_FUNC( QT_QTEXTFRAME_FIRSTPOSITION )
  */
 HB_FUNC( QT_QTEXTFRAME_FRAMEFORMAT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextFrameFormat( hbqt_par_QTextFrame( 1 )->frameFormat() ), release_QTextFrameFormat ) );
+   hb_retptrGC( gcAllocate_QTextFrameFormat( new QTextFrameFormat( hbqt_par_QTextFrame( 1 )->frameFormat() ) ) );
 }
 
 /*
@@ -167,7 +184,7 @@ HB_FUNC( QT_QTEXTFRAME_FRAMEFORMAT )
  */
 HB_FUNC( QT_QTEXTFRAME_LASTCURSORPOSITION )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCursor( hbqt_par_QTextFrame( 1 )->lastCursorPosition() ), release_QTextCursor ) );
+   hb_retptrGC( gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextFrame( 1 )->lastCursorPosition() ) ) );
 }
 
 /*

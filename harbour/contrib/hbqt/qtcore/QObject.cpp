@@ -94,52 +94,69 @@
  * virtual ~QObject ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QObject > pq;
+} QGC_POINTER_QObject;
+
 QT_G_FUNC( release_QObject )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QObject                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QObject * p = ( QGC_POINTER_QObject * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QObject                      p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QObject                     ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QObject * ) ph )->~QObject();
-         ph = NULL;
+         ( ( QObject * ) p->ph )->~QObject();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QObject                     Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QObject                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QObject" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QObject                     Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QObject" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QObject" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QObject                     Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QObject" );
+      #endif
    }
+}
+
+void * gcAllocate_QObject( void * pObj )
+{
+   QGC_POINTER_QObject * p = ( QGC_POINTER_QObject * ) hb_gcAllocate( sizeof( QGC_POINTER_QObject ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QObject;
+   new( & p->pq ) QPointer< QObject >( ( QObject * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QObject                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QOBJECT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QObject > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QObject                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QObject* ) new QObject( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QObject;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QObject( pObj ) );
 }
 /*
  * bool blockSignals ( bool block )
@@ -274,7 +291,7 @@ HB_FUNC( QT_QOBJECT_PARENT )
  */
 HB_FUNC( QT_QOBJECT_PROPERTY )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QObject( 1 )->property( hbqt_par_char( 2 ) ) ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QObject( 1 )->property( hbqt_par_char( 2 ) ) ) ) );
 }
 
 /*

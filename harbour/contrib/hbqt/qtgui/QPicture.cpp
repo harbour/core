@@ -79,30 +79,44 @@
 
 QT_G_FUNC( release_QPicture )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QPicture                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QPicture                     p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QPicture                    ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QPicture * ) ph )->~QPicture();
-      ph = NULL;
+      ( ( QPicture * ) p->ph )->~QPicture();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QPicture                    Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QPicture                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QPicture" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QPicture                    Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QPicture" );
+      #endif
    }
+}
+
+void * gcAllocate_QPicture( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QPicture;
+   #if defined(__debug__)
+      just_debug( "          new_QPicture                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QPICTURE )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QPicture                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
    {
@@ -117,20 +131,14 @@ hb_snprintf( str, sizeof(str), "   GC:  new QPicture                    %i B %i 
       pObj = new QPicture() ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QPicture;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QPicture( pObj ) );
 }
 /*
  * QRect boundingRect () const
  */
 HB_FUNC( QT_QPICTURE_BOUNDINGRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QPicture( 1 )->boundingRect() ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QPicture( 1 )->boundingRect() ) ) );
 }
 
 /*

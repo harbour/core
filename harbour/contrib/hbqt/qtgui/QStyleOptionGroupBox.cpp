@@ -83,40 +83,48 @@
 
 QT_G_FUNC( release_QStyleOptionGroupBox )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QStyleOptionGroupBox        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionGroupBox         p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionGroupBox        ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QStyleOptionGroupBox * ) ph )->~QStyleOptionGroupBox();
-      ph = NULL;
+      ( ( QStyleOptionGroupBox * ) p->ph )->~QStyleOptionGroupBox();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionGroupBox        Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QStyleOptionGroupBox        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QStyleOptionGroupBox" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionGroupBox        Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QStyleOptionGroupBox" );
+      #endif
    }
+}
+
+void * gcAllocate_QStyleOptionGroupBox( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QStyleOptionGroupBox;
+   #if defined(__debug__)
+      just_debug( "          new_QStyleOptionGroupBox        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSTYLEOPTIONGROUPBOX )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QStyleOptionGroupBox        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QStyleOptionGroupBox* ) new QStyleOptionGroupBox() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QStyleOptionGroupBox;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QStyleOptionGroupBox( pObj ) );
 }
 /*
  * QStyleOptionFrameV2::FrameFeatures features
@@ -163,7 +171,7 @@ HB_FUNC( QT_QSTYLEOPTIONGROUPBOX_TEXTALIGNMENT )
  */
 HB_FUNC( QT_QSTYLEOPTIONGROUPBOX_TEXTCOLOR )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QStyleOptionGroupBox( 1 )->textColor ), release_QColor ) );
+   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QStyleOptionGroupBox( 1 )->textColor ) ) );
 }
 
 

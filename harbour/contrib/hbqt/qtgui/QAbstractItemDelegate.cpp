@@ -132,7 +132,7 @@ HB_FUNC( QT_QABSTRACTITEMDELEGATE_SETMODELDATA )
  */
 HB_FUNC( QT_QABSTRACTITEMDELEGATE_SIZEHINT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QAbstractItemDelegate( 1 )->sizeHint( *hbqt_par_QStyleOptionViewItem( 2 ), *hbqt_par_QModelIndex( 3 ) ) ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QAbstractItemDelegate( 1 )->sizeHint( *hbqt_par_QStyleOptionViewItem( 2 ), *hbqt_par_QModelIndex( 3 ) ) ) ) );
 }
 
 /*

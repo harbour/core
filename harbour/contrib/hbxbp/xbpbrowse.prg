@@ -629,11 +629,6 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oDbfModel := HbDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 141, p1, p2, p3, p4 ) } )
    /*  Attach Model with the View */
    ::oTableView:setModel( QT_PTROF( ::oDbfModel ) )
-   /*  Set Initial Column and Row */
-   #if 0
-   ::oTableView:setCurrentIndex( QModelIndex():new():sibling( 0,0 ) )
-   ::pCurIndex := ::oTableView:currentIndex()
-   #endif
 
    /*  Horizontal Footer */
    ::oFooterView := QHeaderView():new( Qt_Horizontal )
@@ -1285,7 +1280,6 @@ METHOD setCurrentIndex( lReset ) CLASS XbpBrowse
    ::oTableView:setCurrentIndex( pIndex )
 
 //xbp_DEbug( "   setCurrentIndex ", 1, lReset, memory( 1001 ) )
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/

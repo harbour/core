@@ -97,30 +97,44 @@
 
 QT_G_FUNC( release_QKeySequence )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QKeySequence                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QKeySequence                 p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QKeySequence                ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QKeySequence * ) ph )->~QKeySequence();
-      ph = NULL;
+      ( ( QKeySequence * ) p->ph )->~QKeySequence();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QKeySequence                Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QKeySequence                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QKeySequence" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QKeySequence                Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QKeySequence" );
+      #endif
    }
+}
+
+void * gcAllocate_QKeySequence( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QKeySequence;
+   #if defined(__debug__)
+      just_debug( "          new_QKeySequence                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QKEYSEQUENCE )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QKeySequence                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    if( HB_ISPOINTER( 1 ) )
       pObj = ( QKeySequence * ) new QKeySequence( *hbqt_par_QKeySequence( 1 ) ) ;
@@ -131,13 +145,7 @@ hb_snprintf( str, sizeof(str), "   GC:  new QKeySequence                %i B %i 
    else
       pObj = ( QKeySequence * ) new QKeySequence() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QKeySequence;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QKeySequence( pObj ) );
 }
 /*
  * uint count () const
@@ -176,7 +184,7 @@ HB_FUNC( QT_QKEYSEQUENCE_TOSTRING )
  */
 HB_FUNC( QT_QKEYSEQUENCE_FROMSTRING )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QKeySequence( hbqt_par_QKeySequence( 1 )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 3 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ) ), release_QKeySequence ) );
+   hb_retptrGC( gcAllocate_QKeySequence( new QKeySequence( hbqt_par_QKeySequence( 1 )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 3 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ) ) ) );
 }
 
 /*
@@ -184,7 +192,7 @@ HB_FUNC( QT_QKEYSEQUENCE_FROMSTRING )
  */
 HB_FUNC( QT_QKEYSEQUENCE_MNEMONIC )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QKeySequence( hbqt_par_QKeySequence( 1 )->mnemonic( hbqt_par_QString( 2 ) ) ), release_QKeySequence ) );
+   hb_retptrGC( gcAllocate_QKeySequence( new QKeySequence( hbqt_par_QKeySequence( 1 )->mnemonic( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 

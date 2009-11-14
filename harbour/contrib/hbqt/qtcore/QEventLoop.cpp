@@ -81,52 +81,69 @@
  * ~QEventLoop ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QEventLoop > pq;
+} QGC_POINTER_QEventLoop;
+
 QT_G_FUNC( release_QEventLoop )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QEventLoop                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QEventLoop * p = ( QGC_POINTER_QEventLoop * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QEventLoop                   p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QEventLoop                  ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QEventLoop * ) ph )->~QEventLoop();
-         ph = NULL;
+         ( ( QEventLoop * ) p->ph )->~QEventLoop();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QEventLoop                  Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QEventLoop                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QEventLoop" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QEventLoop                  Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QEventLoop" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QEventLoop" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QEventLoop                  Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QEventLoop" );
+      #endif
    }
+}
+
+void * gcAllocate_QEventLoop( void * pObj )
+{
+   QGC_POINTER_QEventLoop * p = ( QGC_POINTER_QEventLoop * ) hb_gcAllocate( sizeof( QGC_POINTER_QEventLoop ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QEventLoop;
+   new( & p->pq ) QPointer< QEventLoop >( ( QEventLoop * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QEventLoop                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QEVENTLOOP )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QEventLoop > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QEventLoop                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = new QEventLoop( hbqt_par_QObject( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QEventLoop;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QEventLoop( pObj ) );
 }
 /*
  * int exec ( ProcessEventsFlags flags = AllEvents )

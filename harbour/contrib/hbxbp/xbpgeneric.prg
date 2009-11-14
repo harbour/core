@@ -76,6 +76,7 @@
 /*----------------------------------------------------------------------*/
 
 #define EVENT_BUFFER    200
+#define CRLF            chr( 13 )+chr( 10 )
 
 /*----------------------------------------------------------------------*/
 
@@ -116,11 +117,15 @@ EXIT PROCEDURE Qt_End()
 
    oDummy        := NIL
    oAppWindow    := NIL
-   oDeskTop:oWidget:pPtr := 0
+
+   IF hb_isObject( oDeskTop )
+      oDeskTop:oWidget:pPtr := 0
+   endif
 
    oApp:quit()
+   #if 0
    oApp:oWidget:pPtr := 0
-
+   #endif
    RETURN
 
 /*----------------------------------------------------------------------*/
@@ -170,9 +175,9 @@ FUNCTION SetAppEvent( nEvent, mp1, mp2, oXbp )
    IF ++nEventIn > EVENT_BUFFER
       nEventIn := 1
    ENDIF
-#if 0
-xbp_debug( 0, "SetAppEvent ... ", threadID(), nEvent, xbeP_Paint )
-#endif
+
+//xbp_debug( 0, "SetAppEvent ... ", threadID(), nEvent, xbeP_Paint )
+
    ts_events[ nEventIn,1 ] := nEvent
    ts_events[ nEventIn,2 ] := mp1
    ts_events[ nEventIn,3 ] := mp2
@@ -268,7 +273,7 @@ FUNCTION MsgBox( cMsg, cTitle )
    oMB:setParent( SetAppWindow():pWidget )
    oMB:setWindowFlags( Qt_Dialog )
    oMB:setWindowTitle( cTitle )
-   //SetAppWindow():oWidget:setFocus()
+
    oMB:exec()
 
    RETURN nil
@@ -291,16 +296,15 @@ FUNCTION GraMakeRGBColor( aRGB )
    RETURN nRGB
 
 /*----------------------------------------------------------------------*/
-
-#define CRLF   chr( 13 )+chr( 10 )
-
+// #define __debug__
 FUNCTION Xbp_Debug( ... )
+   #ifdef __debug__
    LOCAL s  := ""
    LOCAL aP := hb_aParams()
 
    aeval( aP, {|e| s += Xbp_XtoS( e ) + ' ' } )
    hb_ToOutDebug( s )
-
+   #endif
    RETURN nil
 
 /*----------------------------------------------------------------------*/

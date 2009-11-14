@@ -110,40 +110,48 @@
 
 QT_G_FUNC( release_QPrinter )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QPrinter                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QPrinter                     p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QPrinter                    ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QPrinter * ) ph )->~QPrinter();
-      ph = NULL;
+      ( ( QPrinter * ) p->ph )->~QPrinter();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QPrinter                    Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QPrinter                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QPrinter" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QPrinter                    Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QPrinter" );
+      #endif
    }
+}
+
+void * gcAllocate_QPrinter( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QPrinter;
+   #if defined(__debug__)
+      just_debug( "          new_QPrinter                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QPRINTER )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QPrinter                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QPrinter* ) new QPrinter() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QPrinter;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QPrinter( pObj ) );
 }
 /*
  * bool abort ()
@@ -304,7 +312,7 @@ HB_FUNC( QT_QPRINTER_PAGEORDER )
  */
 HB_FUNC( QT_QPRINTER_PAGERECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QPrinter( 1 )->pageRect() ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QPrinter( 1 )->pageRect() ) ) );
 }
 
 /*
@@ -312,7 +320,7 @@ HB_FUNC( QT_QPRINTER_PAGERECT )
  */
 HB_FUNC( QT_QPRINTER_PAGERECT_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QPrinter( 1 )->pageRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ), release_QRectF ) );
+   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QPrinter( 1 )->pageRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -328,7 +336,7 @@ HB_FUNC( QT_QPRINTER_PAINTENGINE )
  */
 HB_FUNC( QT_QPRINTER_PAPERRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QPrinter( 1 )->paperRect() ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QPrinter( 1 )->paperRect() ) ) );
 }
 
 /*
@@ -336,7 +344,7 @@ HB_FUNC( QT_QPRINTER_PAPERRECT )
  */
 HB_FUNC( QT_QPRINTER_PAPERRECT_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QPrinter( 1 )->paperRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ), release_QRectF ) );
+   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QPrinter( 1 )->paperRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -352,7 +360,7 @@ HB_FUNC( QT_QPRINTER_PAPERSIZE )
  */
 HB_FUNC( QT_QPRINTER_PAPERSIZE_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSizeF( hbqt_par_QPrinter( 1 )->paperSize( ( QPrinter::Unit ) hb_parni( 2 ) ) ), release_QSizeF ) );
+   hb_retptrGC( gcAllocate_QSizeF( new QSizeF( hbqt_par_QPrinter( 1 )->paperSize( ( QPrinter::Unit ) hb_parni( 2 ) ) ) ) );
 }
 
 /*

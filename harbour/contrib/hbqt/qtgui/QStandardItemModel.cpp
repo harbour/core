@@ -92,52 +92,69 @@
  * ~QStandardItemModel ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QStandardItemModel > pq;
+} QGC_POINTER_QStandardItemModel;
+
 QT_G_FUNC( release_QStandardItemModel )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QStandardItemModel          %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QStandardItemModel * p = ( QGC_POINTER_QStandardItemModel * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStandardItemModel           p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStandardItemModel          ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QStandardItemModel * ) ph )->~QStandardItemModel();
-         ph = NULL;
+         ( ( QStandardItemModel * ) p->ph )->~QStandardItemModel();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QStandardItemModel          Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QStandardItemModel          %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QStandardItemModel" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QStandardItemModel          Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QStandardItemModel" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QStandardItemModel" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStandardItemModel          Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QStandardItemModel" );
+      #endif
    }
+}
+
+void * gcAllocate_QStandardItemModel( void * pObj )
+{
+   QGC_POINTER_QStandardItemModel * p = ( QGC_POINTER_QStandardItemModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QStandardItemModel ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QStandardItemModel;
+   new( & p->pq ) QPointer< QStandardItemModel >( ( QStandardItemModel * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QStandardItemModel          %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSTANDARDITEMMODEL )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QStandardItemModel > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QStandardItemModel          %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QStandardItemModel* ) new QStandardItemModel( hbqt_par_QObject( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QStandardItemModel;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QStandardItemModel( pObj ) );
 }
 /*
  * void appendRow ( QStandardItem * item )
@@ -168,7 +185,7 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_HORIZONTALHEADERITEM )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_INDEXFROMITEM )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QStandardItemModel( 1 )->indexFromItem( hbqt_par_QStandardItem( 2 ) ) ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QStandardItemModel( 1 )->indexFromItem( hbqt_par_QStandardItem( 2 ) ) ) ) );
 }
 
 /*

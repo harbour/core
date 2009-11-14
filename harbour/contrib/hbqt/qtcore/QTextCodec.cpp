@@ -124,7 +124,7 @@ HB_FUNC( QT_QTEXTCODEC_CANENCODE_1 )
  */
 HB_FUNC( QT_QTEXTCODEC_FROMUNICODE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QTextCodec( 1 )->fromUnicode( hbqt_par_QString( 2 ) ) ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QTextCodec( 1 )->fromUnicode( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -156,7 +156,7 @@ HB_FUNC( QT_QTEXTCODEC_MIBENUM )
  */
 HB_FUNC( QT_QTEXTCODEC_NAME )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QTextCodec( 1 )->name() ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QTextCodec( 1 )->name() ) ) );
 }
 
 /*

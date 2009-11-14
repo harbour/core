@@ -77,52 +77,69 @@
  *
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QWindowsStyle > pq;
+} QGC_POINTER_QWindowsStyle;
+
 QT_G_FUNC( release_QWindowsStyle )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QWindowsStyle               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QWindowsStyle * p = ( QGC_POINTER_QWindowsStyle * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QWindowsStyle                p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QWindowsStyle               ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QWindowsStyle * ) ph )->~QWindowsStyle();
-         ph = NULL;
+         ( ( QWindowsStyle * ) p->ph )->~QWindowsStyle();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QWindowsStyle               Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QWindowsStyle               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QWindowsStyle" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QWindowsStyle               Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QWindowsStyle" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QWindowsStyle" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QWindowsStyle               Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QWindowsStyle" );
+      #endif
    }
+}
+
+void * gcAllocate_QWindowsStyle( void * pObj )
+{
+   QGC_POINTER_QWindowsStyle * p = ( QGC_POINTER_QWindowsStyle * ) hb_gcAllocate( sizeof( QGC_POINTER_QWindowsStyle ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QWindowsStyle;
+   new( & p->pq ) QPointer< QWindowsStyle >( ( QWindowsStyle * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QWindowsStyle               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QWINDOWSSTYLE )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QWindowsStyle > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QWindowsStyle               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QWindowsStyle* ) new QWindowsStyle() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QWindowsStyle;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QWindowsStyle( pObj ) );
 }
 
 /*----------------------------------------------------------------------*/

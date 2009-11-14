@@ -78,47 +78,55 @@
 
 QT_G_FUNC( release_QTextEncoder )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTextEncoder                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextEncoder                 p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextEncoder                ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QTextEncoder * ) ph )->~QTextEncoder();
-      ph = NULL;
+      ( ( QTextEncoder * ) p->ph )->~QTextEncoder();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextEncoder                Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QTextEncoder                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTextEncoder" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextEncoder                Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTextEncoder" );
+      #endif
    }
+}
+
+void * gcAllocate_QTextEncoder( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTextEncoder;
+   #if defined(__debug__)
+      just_debug( "          new_QTextEncoder                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTEXTENCODER )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTextEncoder                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QTextEncoder* ) new QTextEncoder( hbqt_par_QTextCodec( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTextEncoder;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTextEncoder( pObj ) );
 }
 /*
  * QByteArray fromUnicode ( const QString & str )
  */
 HB_FUNC( QT_QTEXTENCODER_FROMUNICODE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QTextEncoder( 1 )->fromUnicode( hbqt_par_QString( 2 ) ) ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QTextEncoder( 1 )->fromUnicode( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 

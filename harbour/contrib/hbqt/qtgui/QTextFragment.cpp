@@ -78,47 +78,55 @@
 
 QT_G_FUNC( release_QTextFragment )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTextFragment               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextFragment                p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextFragment               ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QTextFragment * ) ph )->~QTextFragment();
-      ph = NULL;
+      ( ( QTextFragment * ) p->ph )->~QTextFragment();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextFragment               Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QTextFragment               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTextFragment" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextFragment               Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTextFragment" );
+      #endif
    }
+}
+
+void * gcAllocate_QTextFragment( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTextFragment;
+   #if defined(__debug__)
+      just_debug( "          new_QTextFragment               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTEXTFRAGMENT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTextFragment               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QTextFragment* ) new QTextFragment() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTextFragment;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTextFragment( pObj ) );
 }
 /*
  * QTextCharFormat charFormat () const
  */
 HB_FUNC( QT_QTEXTFRAGMENT_CHARFORMAT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextCharFormat( hbqt_par_QTextFragment( 1 )->charFormat() ), release_QTextCharFormat ) );
+   hb_retptrGC( gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QTextFragment( 1 )->charFormat() ) ) );
 }
 
 /*

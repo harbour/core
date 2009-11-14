@@ -86,40 +86,48 @@
 
 QT_G_FUNC( release_QDataStream )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QDataStream                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QDataStream                  p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QDataStream                 ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QDataStream * ) ph )->~QDataStream();
-      ph = NULL;
+      ( ( QDataStream * ) p->ph )->~QDataStream();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QDataStream                 Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QDataStream                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QDataStream" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QDataStream                 Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QDataStream" );
+      #endif
    }
+}
+
+void * gcAllocate_QDataStream( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QDataStream;
+   #if defined(__debug__)
+      just_debug( "          new_QDataStream                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QDATASTREAM )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QDataStream                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = new QDataStream() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QDataStream;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QDataStream( pObj ) );
 }
 /*
  * bool atEnd () const

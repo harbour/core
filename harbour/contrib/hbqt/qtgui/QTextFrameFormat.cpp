@@ -87,40 +87,48 @@
 
 QT_G_FUNC( release_QTextFrameFormat )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTextFrameFormat            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextFrameFormat             p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextFrameFormat            ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QTextFrameFormat * ) ph )->~QTextFrameFormat();
-      ph = NULL;
+      ( ( QTextFrameFormat * ) p->ph )->~QTextFrameFormat();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextFrameFormat            Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QTextFrameFormat            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTextFrameFormat" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextFrameFormat            Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTextFrameFormat" );
+      #endif
    }
+}
+
+void * gcAllocate_QTextFrameFormat( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTextFrameFormat;
+   #if defined(__debug__)
+      just_debug( "          new_QTextFrameFormat            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTEXTFRAMEFORMAT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTextFrameFormat            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QTextFrameFormat* ) new QTextFrameFormat() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTextFrameFormat;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTextFrameFormat( pObj ) );
 }
 /*
  * qreal border () const
@@ -135,7 +143,7 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_BORDER )
  */
 HB_FUNC( QT_QTEXTFRAMEFORMAT_BORDERBRUSH )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QBrush( hbqt_par_QTextFrameFormat( 1 )->borderBrush() ), release_QBrush ) );
+   hb_retptrGC( gcAllocate_QBrush( new QBrush( hbqt_par_QTextFrameFormat( 1 )->borderBrush() ) ) );
 }
 
 /*
@@ -159,7 +167,7 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_BOTTOMMARGIN )
  */
 HB_FUNC( QT_QTEXTFRAMEFORMAT_HEIGHT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextLength( hbqt_par_QTextFrameFormat( 1 )->height() ), release_QTextLength ) );
+   hb_retptrGC( gcAllocate_QTextLength( new QTextLength( hbqt_par_QTextFrameFormat( 1 )->height() ) ) );
 }
 
 /*
@@ -351,7 +359,7 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_TOPMARGIN )
  */
 HB_FUNC( QT_QTEXTFRAMEFORMAT_WIDTH )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextLength( hbqt_par_QTextFrameFormat( 1 )->width() ), release_QTextLength ) );
+   hb_retptrGC( gcAllocate_QTextLength( new QTextLength( hbqt_par_QTextFrameFormat( 1 )->width() ) ) );
 }
 
 

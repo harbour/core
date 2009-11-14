@@ -78,31 +78,7 @@
 
 QT_G_FUNC( release_QMoveEvent )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QMoveEvent                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
-   {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
-      {
-         ( ( QMoveEvent * ) ph )->~QMoveEvent();
-         ph = NULL;
-      }
-      else
-      {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QMoveEvent" );  OutputDebugString( str );
-#endif
-      }
-   }
-   else
-   {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QMoveEvent" );  OutputDebugString( str );
-#endif
-   }
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QMOVEEVENT )
@@ -113,7 +89,7 @@ HB_FUNC( QT_QMOVEEVENT )
  */
 HB_FUNC( QT_QMOVEEVENT_OLDPOS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QMoveEvent( 1 )->oldPos() ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QMoveEvent( 1 )->oldPos() ) ) );
 }
 
 /*
@@ -121,7 +97,7 @@ HB_FUNC( QT_QMOVEEVENT_OLDPOS )
  */
 HB_FUNC( QT_QMOVEEVENT_POS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QMoveEvent( 1 )->pos() ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QMoveEvent( 1 )->pos() ) ) );
 }
 
 

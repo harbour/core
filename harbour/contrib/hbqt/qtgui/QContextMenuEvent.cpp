@@ -82,47 +82,55 @@
 
 QT_G_FUNC( release_QContextMenuEvent )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QContextMenuEvent           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QContextMenuEvent            p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QContextMenuEvent           ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QContextMenuEvent * ) ph )->~QContextMenuEvent();
-      ph = NULL;
+      ( ( QContextMenuEvent * ) p->ph )->~QContextMenuEvent();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QContextMenuEvent           Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QContextMenuEvent           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QContextMenuEvent" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QContextMenuEvent           Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QContextMenuEvent" );
+      #endif
    }
+}
+
+void * gcAllocate_QContextMenuEvent( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QContextMenuEvent;
+   #if defined(__debug__)
+      just_debug( "          new_QContextMenuEvent           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QCONTEXTMENUEVENT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QContextMenuEvent           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = new QContextMenuEvent( ( QContextMenuEvent::Reason ) hb_parni( 1 ), *hbqt_par_QPoint( 2 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QContextMenuEvent;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QContextMenuEvent( pObj ) );
 }
 /*
  * const QPoint & globalPos () const
  */
 HB_FUNC( QT_QCONTEXTMENUEVENT_GLOBALPOS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QContextMenuEvent( 1 )->globalPos() ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QContextMenuEvent( 1 )->globalPos() ) ) );
 }
 
 /*
@@ -146,7 +154,7 @@ HB_FUNC( QT_QCONTEXTMENUEVENT_GLOBALY )
  */
 HB_FUNC( QT_QCONTEXTMENUEVENT_POS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QContextMenuEvent( 1 )->pos() ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QContextMenuEvent( 1 )->pos() ) ) );
 }
 
 /*

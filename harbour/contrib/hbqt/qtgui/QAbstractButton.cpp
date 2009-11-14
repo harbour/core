@@ -78,31 +78,7 @@
 
 QT_G_FUNC( release_QAbstractButton )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QAbstractButton             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
-   {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
-      {
-         ( ( QAbstractButton * ) ph )->~QAbstractButton();
-         ph = NULL;
-      }
-      else
-      {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QAbstractButton" );  OutputDebugString( str );
-#endif
-      }
-   }
-   else
-   {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QAbstractButton" );  OutputDebugString( str );
-#endif
-   }
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QABSTRACTBUTTON )
@@ -153,7 +129,7 @@ HB_FUNC( QT_QABSTRACTBUTTON_GROUP )
  */
 HB_FUNC( QT_QABSTRACTBUTTON_ICON )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QAbstractButton( 1 )->icon() ), release_QIcon ) );
+   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QAbstractButton( 1 )->icon() ) ) );
 }
 
 /*
@@ -161,7 +137,7 @@ HB_FUNC( QT_QABSTRACTBUTTON_ICON )
  */
 HB_FUNC( QT_QABSTRACTBUTTON_ICONSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QAbstractButton( 1 )->iconSize() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QAbstractButton( 1 )->iconSize() ) ) );
 }
 
 /*
@@ -265,7 +241,7 @@ HB_FUNC( QT_QABSTRACTBUTTON_SETTEXT )
  */
 HB_FUNC( QT_QABSTRACTBUTTON_SHORTCUT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QKeySequence( hbqt_par_QAbstractButton( 1 )->shortcut() ), release_QKeySequence ) );
+   hb_retptrGC( gcAllocate_QKeySequence( new QKeySequence( hbqt_par_QAbstractButton( 1 )->shortcut() ) ) );
 }
 
 /*

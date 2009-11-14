@@ -81,47 +81,55 @@
 
 QT_G_FUNC( release_QDate )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QDate                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QDate                        p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QDate                       ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QDate * ) ph )->~QDate();
-      ph = NULL;
+      ( ( QDate * ) p->ph )->~QDate();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QDate                       Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QDate                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QDate" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QDate                       Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QDate" );
+      #endif
    }
+}
+
+void * gcAllocate_QDate( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QDate;
+   #if defined(__debug__)
+      just_debug( "          new_QDate                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QDATE )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QDate                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = new QDate() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QDate;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QDate( pObj ) );
 }
 /*
  * QDate addDays ( int ndays ) const
  */
 HB_FUNC( QT_QDATE_ADDDAYS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDate( hbqt_par_QDate( 1 )->addDays( hb_parni( 2 ) ) ), release_QDate ) );
+   hb_retptrGC( gcAllocate_QDate( new QDate( hbqt_par_QDate( 1 )->addDays( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -129,7 +137,7 @@ HB_FUNC( QT_QDATE_ADDDAYS )
  */
 HB_FUNC( QT_QDATE_ADDMONTHS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDate( hbqt_par_QDate( 1 )->addMonths( hb_parni( 2 ) ) ), release_QDate ) );
+   hb_retptrGC( gcAllocate_QDate( new QDate( hbqt_par_QDate( 1 )->addMonths( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -137,7 +145,7 @@ HB_FUNC( QT_QDATE_ADDMONTHS )
  */
 HB_FUNC( QT_QDATE_ADDYEARS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDate( hbqt_par_QDate( 1 )->addYears( hb_parni( 2 ) ) ), release_QDate ) );
+   hb_retptrGC( gcAllocate_QDate( new QDate( hbqt_par_QDate( 1 )->addYears( hb_parni( 2 ) ) ) ) );
 }
 
 /*

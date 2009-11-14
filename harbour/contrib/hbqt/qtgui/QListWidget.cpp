@@ -86,52 +86,69 @@
  * ~QListWidget ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QListWidget > pq;
+} QGC_POINTER_QListWidget;
+
 QT_G_FUNC( release_QListWidget )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QListWidget                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QListWidget * p = ( QGC_POINTER_QListWidget * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QListWidget                  p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QListWidget                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QListWidget * ) ph )->~QListWidget();
-         ph = NULL;
+         ( ( QListWidget * ) p->ph )->~QListWidget();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QListWidget                 Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QListWidget                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QListWidget" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QListWidget                 Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QListWidget" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QListWidget" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QListWidget                 Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QListWidget" );
+      #endif
    }
+}
+
+void * gcAllocate_QListWidget( void * pObj )
+{
+   QGC_POINTER_QListWidget * p = ( QGC_POINTER_QListWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QListWidget ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QListWidget;
+   new( & p->pq ) QPointer< QListWidget >( ( QListWidget * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QListWidget                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QLISTWIDGET )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QListWidget > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QListWidget                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = new QListWidget( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QListWidget;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QListWidget( pObj ) );
 }
 /*
  * void addItem ( const QString & label )
@@ -354,7 +371,7 @@ HB_FUNC( QT_QLISTWIDGET_TAKEITEM )
  */
 HB_FUNC( QT_QLISTWIDGET_VISUALITEMRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QListWidget( 1 )->visualItemRect( hbqt_par_QListWidgetItem( 2 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QListWidget( 1 )->visualItemRect( hbqt_par_QListWidgetItem( 2 ) ) ) ) );
 }
 
 /*

@@ -81,55 +81,72 @@
  * ~QSlider ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QSlider > pq;
+} QGC_POINTER_QSlider;
+
 QT_G_FUNC( release_QSlider )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QSlider                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QSlider * p = ( QGC_POINTER_QSlider * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QSlider                      p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QSlider                     ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QSlider * ) ph )->~QSlider();
-         ph = NULL;
+         ( ( QSlider * ) p->ph )->~QSlider();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QSlider                     Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QSlider                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QSlider" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QSlider                     Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QSlider" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QSlider" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QSlider                     Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QSlider" );
+      #endif
    }
+}
+
+void * gcAllocate_QSlider( void * pObj )
+{
+   QGC_POINTER_QSlider * p = ( QGC_POINTER_QSlider * ) hb_gcAllocate( sizeof( QGC_POINTER_QSlider ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QSlider;
+   new( & p->pq ) QPointer< QSlider >( ( QSlider * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QSlider                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSLIDER )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QSlider > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QSlider                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
       pObj = ( QSlider* ) new QSlider( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) ;
    else
       pObj = ( QSlider* ) new QSlider( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QSlider;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QSlider( pObj ) );
 }
 /*
  * void setTickInterval ( int ti )

@@ -78,21 +78,7 @@
 
 QT_G_FUNC( release_QTextInlineObject )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTextInlineObject           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
-   {
-      ( ( QTextInlineObject * ) ph )->~QTextInlineObject();
-      ph = NULL;
-   }
-   else
-   {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTextInlineObject" );  OutputDebugString( str );
-#endif
-   }
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QTEXTINLINEOBJECT )
@@ -119,7 +105,7 @@ HB_FUNC( QT_QTEXTINLINEOBJECT_DESCENT )
  */
 HB_FUNC( QT_QTEXTINLINEOBJECT_FORMAT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextFormat( hbqt_par_QTextInlineObject( 1 )->format() ), release_QTextFormat ) );
+   hb_retptrGC( gcAllocate_QTextFormat( new QTextFormat( hbqt_par_QTextInlineObject( 1 )->format() ) ) );
 }
 
 /*
@@ -151,7 +137,7 @@ HB_FUNC( QT_QTEXTINLINEOBJECT_ISVALID )
  */
 HB_FUNC( QT_QTEXTINLINEOBJECT_RECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QTextInlineObject( 1 )->rect() ), release_QRectF ) );
+   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QTextInlineObject( 1 )->rect() ) ) );
 }
 
 /*

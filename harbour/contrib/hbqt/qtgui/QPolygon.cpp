@@ -81,47 +81,55 @@
 
 QT_G_FUNC( release_QPolygon )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QPolygon                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QPolygon                     p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QPolygon                    ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QPolygon * ) ph )->~QPolygon();
-      ph = NULL;
+      ( ( QPolygon * ) p->ph )->~QPolygon();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QPolygon                    Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QPolygon                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QPolygon" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QPolygon                    Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QPolygon" );
+      #endif
    }
+}
+
+void * gcAllocate_QPolygon( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QPolygon;
+   #if defined(__debug__)
+      just_debug( "          new_QPolygon                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QPOLYGON )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QPolygon                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = new QPolygon() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QPolygon;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QPolygon( pObj ) );
 }
 /*
  * QRect boundingRect () const
  */
 HB_FUNC( QT_QPOLYGON_BOUNDINGRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QPolygon( 1 )->boundingRect() ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QPolygon( 1 )->boundingRect() ) ) );
 }
 
 /*
@@ -137,7 +145,7 @@ HB_FUNC( QT_QPOLYGON_CONTAINSPOINT )
  */
 HB_FUNC( QT_QPOLYGON_INTERSECTED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPolygon( hbqt_par_QPolygon( 1 )->intersected( *hbqt_par_QPolygon( 2 ) ) ), release_QPolygon ) );
+   hb_retptrGC( gcAllocate_QPolygon( new QPolygon( hbqt_par_QPolygon( 1 )->intersected( *hbqt_par_QPolygon( 2 ) ) ) ) );
 }
 
 /*
@@ -159,7 +167,7 @@ HB_FUNC( QT_QPOLYGON_POINT )
  */
 HB_FUNC( QT_QPOLYGON_POINT_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QPolygon( 1 )->point( hb_parni( 2 ) ) ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QPolygon( 1 )->point( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -203,7 +211,7 @@ HB_FUNC( QT_QPOLYGON_SETPOINTS )
  */
 HB_FUNC( QT_QPOLYGON_SUBTRACTED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPolygon( hbqt_par_QPolygon( 1 )->subtracted( *hbqt_par_QPolygon( 2 ) ) ), release_QPolygon ) );
+   hb_retptrGC( gcAllocate_QPolygon( new QPolygon( hbqt_par_QPolygon( 1 )->subtracted( *hbqt_par_QPolygon( 2 ) ) ) ) );
 }
 
 /*
@@ -227,7 +235,7 @@ HB_FUNC( QT_QPOLYGON_TRANSLATE_1 )
  */
 HB_FUNC( QT_QPOLYGON_UNITED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPolygon( hbqt_par_QPolygon( 1 )->united( *hbqt_par_QPolygon( 2 ) ) ), release_QPolygon ) );
+   hb_retptrGC( gcAllocate_QPolygon( new QPolygon( hbqt_par_QPolygon( 1 )->united( *hbqt_par_QPolygon( 2 ) ) ) ) );
 }
 
 

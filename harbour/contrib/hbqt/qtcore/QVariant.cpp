@@ -141,40 +141,48 @@ QVariant ( const QRegExp & regExp )
 
 QT_G_FUNC( release_QVariant )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QVariant                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QVariant                     p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QVariant                    ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QVariant * ) ph )->~QVariant();
-      ph = NULL;
+      ( ( QVariant * ) p->ph )->~QVariant();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QVariant                    Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QVariant                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QVariant" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QVariant                    Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QVariant" );
+      #endif
    }
+}
+
+void * gcAllocate_QVariant( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QVariant;
+   #if defined(__debug__)
+      just_debug( "          new_QVariant                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QVARIANT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QVariant                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QVariant* ) new QVariant() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QVariant;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QVariant( pObj ) );
 }
 /*
  * bool canConvert ( Type t ) const
@@ -237,7 +245,7 @@ HB_FUNC( QT_QVARIANT_SETVALUE )
  */
 HB_FUNC( QT_QVARIANT_TOBITARRAY )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QBitArray( hbqt_par_QVariant( 1 )->toBitArray() ), release_QBitArray ) );
+   hb_retptrGC( gcAllocate_QBitArray( new QBitArray( hbqt_par_QVariant( 1 )->toBitArray() ) ) );
 }
 
 /*
@@ -253,7 +261,7 @@ HB_FUNC( QT_QVARIANT_TOBOOL )
  */
 HB_FUNC( QT_QVARIANT_TOBYTEARRAY )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QByteArray( hbqt_par_QVariant( 1 )->toByteArray() ), release_QByteArray ) );
+   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QVariant( 1 )->toByteArray() ) ) );
 }
 
 /*
@@ -261,7 +269,7 @@ HB_FUNC( QT_QVARIANT_TOBYTEARRAY )
  */
 HB_FUNC( QT_QVARIANT_TODATE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDate( hbqt_par_QVariant( 1 )->toDate() ), release_QDate ) );
+   hb_retptrGC( gcAllocate_QDate( new QDate( hbqt_par_QVariant( 1 )->toDate() ) ) );
 }
 
 /*
@@ -269,7 +277,7 @@ HB_FUNC( QT_QVARIANT_TODATE )
  */
 HB_FUNC( QT_QVARIANT_TODATETIME )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QDateTime( hbqt_par_QVariant( 1 )->toDateTime() ), release_QDateTime ) );
+   hb_retptrGC( gcAllocate_QDateTime( new QDateTime( hbqt_par_QVariant( 1 )->toDateTime() ) ) );
 }
 
 /*
@@ -301,7 +309,7 @@ HB_FUNC( QT_QVARIANT_TOINT )
  */
 HB_FUNC( QT_QVARIANT_TOLINE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QLine( hbqt_par_QVariant( 1 )->toLine() ), release_QLine ) );
+   hb_retptrGC( gcAllocate_QLine( new QLine( hbqt_par_QVariant( 1 )->toLine() ) ) );
 }
 
 /*
@@ -309,7 +317,7 @@ HB_FUNC( QT_QVARIANT_TOLINE )
  */
 HB_FUNC( QT_QVARIANT_TOLINEF )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QLineF( hbqt_par_QVariant( 1 )->toLineF() ), release_QLineF ) );
+   hb_retptrGC( gcAllocate_QLineF( new QLineF( hbqt_par_QVariant( 1 )->toLineF() ) ) );
 }
 
 /*
@@ -317,7 +325,7 @@ HB_FUNC( QT_QVARIANT_TOLINEF )
  */
 HB_FUNC( QT_QVARIANT_TOLOCALE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QLocale( hbqt_par_QVariant( 1 )->toLocale() ), release_QLocale ) );
+   hb_retptrGC( gcAllocate_QLocale( new QLocale( hbqt_par_QVariant( 1 )->toLocale() ) ) );
 }
 
 /*
@@ -337,7 +345,7 @@ HB_FUNC( QT_QVARIANT_TOLONGLONG )
  */
 HB_FUNC( QT_QVARIANT_TOPOINT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QVariant( 1 )->toPoint() ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QVariant( 1 )->toPoint() ) ) );
 }
 
 /*
@@ -345,7 +353,7 @@ HB_FUNC( QT_QVARIANT_TOPOINT )
  */
 HB_FUNC( QT_QVARIANT_TOPOINTF )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPointF( hbqt_par_QVariant( 1 )->toPointF() ), release_QPointF ) );
+   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QVariant( 1 )->toPointF() ) ) );
 }
 
 /*
@@ -353,7 +361,7 @@ HB_FUNC( QT_QVARIANT_TOPOINTF )
  */
 HB_FUNC( QT_QVARIANT_TORECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QVariant( 1 )->toRect() ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QVariant( 1 )->toRect() ) ) );
 }
 
 /*
@@ -361,7 +369,7 @@ HB_FUNC( QT_QVARIANT_TORECT )
  */
 HB_FUNC( QT_QVARIANT_TORECTF )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRectF( hbqt_par_QVariant( 1 )->toRectF() ), release_QRectF ) );
+   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QVariant( 1 )->toRectF() ) ) );
 }
 
 /*
@@ -369,7 +377,7 @@ HB_FUNC( QT_QVARIANT_TORECTF )
  */
 HB_FUNC( QT_QVARIANT_TOREGEXP )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRegExp( hbqt_par_QVariant( 1 )->toRegExp() ), release_QRegExp ) );
+   hb_retptrGC( gcAllocate_QRegExp( new QRegExp( hbqt_par_QVariant( 1 )->toRegExp() ) ) );
 }
 
 /*
@@ -377,7 +385,7 @@ HB_FUNC( QT_QVARIANT_TOREGEXP )
  */
 HB_FUNC( QT_QVARIANT_TOSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QVariant( 1 )->toSize() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QVariant( 1 )->toSize() ) ) );
 }
 
 /*
@@ -385,7 +393,7 @@ HB_FUNC( QT_QVARIANT_TOSIZE )
  */
 HB_FUNC( QT_QVARIANT_TOSIZEF )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSizeF( hbqt_par_QVariant( 1 )->toSizeF() ), release_QSizeF ) );
+   hb_retptrGC( gcAllocate_QSizeF( new QSizeF( hbqt_par_QVariant( 1 )->toSizeF() ) ) );
 }
 
 /*
@@ -401,7 +409,7 @@ HB_FUNC( QT_QVARIANT_TOSTRING )
  */
 HB_FUNC( QT_QVARIANT_TOSTRINGLIST )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QVariant( 1 )->toStringList() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QVariant( 1 )->toStringList() ) ) );
 }
 
 /*
@@ -409,7 +417,7 @@ HB_FUNC( QT_QVARIANT_TOSTRINGLIST )
  */
 HB_FUNC( QT_QVARIANT_TOTIME )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTime( hbqt_par_QVariant( 1 )->toTime() ), release_QTime ) );
+   hb_retptrGC( gcAllocate_QTime( new QTime( hbqt_par_QVariant( 1 )->toTime() ) ) );
 }
 
 /*
@@ -441,7 +449,7 @@ HB_FUNC( QT_QVARIANT_TOULONGLONG )
  */
 HB_FUNC( QT_QVARIANT_TOURL )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QUrl( hbqt_par_QVariant( 1 )->toUrl() ), release_QUrl ) );
+   hb_retptrGC( gcAllocate_QUrl( new QUrl( hbqt_par_QVariant( 1 )->toUrl() ) ) );
 }
 
 /*
@@ -465,7 +473,7 @@ HB_FUNC( QT_QVARIANT_USERTYPE )
  */
 HB_FUNC( QT_QVARIANT_FROMVALUE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QVariant( 1 )->fromValue( hb_param( 2, HB_IT_ANY ) ) ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QVariant( 1 )->fromValue( hb_param( 2, HB_IT_ANY ) ) ) ) );
 }
 
 /*

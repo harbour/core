@@ -81,40 +81,48 @@
 
 QT_G_FUNC( release_QTextDocumentFragment )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTextDocumentFragment       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextDocumentFragment        p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextDocumentFragment       ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QTextDocumentFragment * ) ph )->~QTextDocumentFragment();
-      ph = NULL;
+      ( ( QTextDocumentFragment * ) p->ph )->~QTextDocumentFragment();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextDocumentFragment       Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QTextDocumentFragment       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTextDocumentFragment" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextDocumentFragment       Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTextDocumentFragment" );
+      #endif
    }
+}
+
+void * gcAllocate_QTextDocumentFragment( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTextDocumentFragment;
+   #if defined(__debug__)
+      just_debug( "          new_QTextDocumentFragment       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTextDocumentFragment       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QTextDocumentFragment* ) new QTextDocumentFragment() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTextDocumentFragment;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTextDocumentFragment( pObj ) );
 }
 /*
  * bool isEmpty () const
@@ -153,7 +161,7 @@ HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_TOPLAINTEXT )
  */
 HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMHTML )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromHtml( hbqt_par_QString( 2 ) ) ), release_QTextDocumentFragment ) );
+   hb_retptrGC( gcAllocate_QTextDocumentFragment( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromHtml( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -161,7 +169,7 @@ HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMHTML )
  */
 HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMHTML_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromHtml( hbqt_par_QString( 2 ), hbqt_par_QTextDocument( 3 ) ) ), release_QTextDocumentFragment ) );
+   hb_retptrGC( gcAllocate_QTextDocumentFragment( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromHtml( hbqt_par_QString( 2 ), hbqt_par_QTextDocument( 3 ) ) ) ) );
 }
 
 /*
@@ -169,7 +177,7 @@ HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMHTML_1 )
  */
 HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMPLAINTEXT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromPlainText( hbqt_par_QString( 2 ) ) ), release_QTextDocumentFragment ) );
+   hb_retptrGC( gcAllocate_QTextDocumentFragment( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromPlainText( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 

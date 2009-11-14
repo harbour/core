@@ -83,40 +83,48 @@
 
 QT_G_FUNC( release_QTextCharFormat )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTextCharFormat             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextCharFormat              p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextCharFormat             ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QTextCharFormat * ) ph )->~QTextCharFormat();
-      ph = NULL;
+      ( ( QTextCharFormat * ) p->ph )->~QTextCharFormat();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextCharFormat             Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QTextCharFormat             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTextCharFormat" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextCharFormat             Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTextCharFormat" );
+      #endif
    }
+}
+
+void * gcAllocate_QTextCharFormat( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTextCharFormat;
+   #if defined(__debug__)
+      just_debug( "          new_QTextCharFormat             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTEXTCHARFORMAT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTextCharFormat             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QTextCharFormat* ) new QTextCharFormat() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTextCharFormat;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTextCharFormat( pObj ) );
 }
 /*
  * QString anchorHref () const
@@ -131,7 +139,7 @@ HB_FUNC( QT_QTEXTCHARFORMAT_ANCHORHREF )
  */
 HB_FUNC( QT_QTEXTCHARFORMAT_ANCHORNAMES )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QTextCharFormat( 1 )->anchorNames() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QTextCharFormat( 1 )->anchorNames() ) ) );
 }
 
 /*
@@ -139,7 +147,7 @@ HB_FUNC( QT_QTEXTCHARFORMAT_ANCHORNAMES )
  */
 HB_FUNC( QT_QTEXTCHARFORMAT_FONT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QFont( hbqt_par_QTextCharFormat( 1 )->font() ), release_QFont ) );
+   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QTextCharFormat( 1 )->font() ) ) );
 }
 
 /*
@@ -459,7 +467,7 @@ HB_FUNC( QT_QTEXTCHARFORMAT_SETVERTICALALIGNMENT )
  */
 HB_FUNC( QT_QTEXTCHARFORMAT_TEXTOUTLINE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPen( hbqt_par_QTextCharFormat( 1 )->textOutline() ), release_QPen ) );
+   hb_retptrGC( gcAllocate_QPen( new QPen( hbqt_par_QTextCharFormat( 1 )->textOutline() ) ) );
 }
 
 /*
@@ -475,7 +483,7 @@ HB_FUNC( QT_QTEXTCHARFORMAT_TOOLTIP )
  */
 HB_FUNC( QT_QTEXTCHARFORMAT_UNDERLINECOLOR )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QTextCharFormat( 1 )->underlineColor() ), release_QColor ) );
+   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QTextCharFormat( 1 )->underlineColor() ) ) );
 }
 
 /*

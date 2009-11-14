@@ -81,52 +81,69 @@
  * ~QComboBox ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QComboBox > pq;
+} QGC_POINTER_QComboBox;
+
 QT_G_FUNC( release_QComboBox )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QComboBox                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QComboBox * p = ( QGC_POINTER_QComboBox * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QComboBox                    p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QComboBox                   ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QComboBox * ) ph )->~QComboBox();
-         ph = NULL;
+         ( ( QComboBox * ) p->ph )->~QComboBox();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QComboBox                   Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QComboBox                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QComboBox" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QComboBox                   Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QComboBox" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QComboBox" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QComboBox                   Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QComboBox" );
+      #endif
    }
+}
+
+void * gcAllocate_QComboBox( void * pObj )
+{
+   QGC_POINTER_QComboBox * p = ( QGC_POINTER_QComboBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QComboBox ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QComboBox;
+   new( & p->pq ) QPointer< QComboBox >( ( QComboBox * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QComboBox                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QCOMBOBOX )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QComboBox > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QComboBox                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QComboBox* ) new QComboBox( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QComboBox;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QComboBox( pObj ) );
 }
 /*
  * void addItem ( const QString & text, const QVariant & userData = QVariant() )
@@ -229,7 +246,7 @@ HB_FUNC( QT_QCOMBOBOX_HIDEPOPUP )
  */
 HB_FUNC( QT_QCOMBOBOX_ICONSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QComboBox( 1 )->iconSize() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QComboBox( 1 )->iconSize() ) ) );
 }
 
 /*
@@ -285,7 +302,7 @@ HB_FUNC( QT_QCOMBOBOX_ISEDITABLE )
  */
 HB_FUNC( QT_QCOMBOBOX_ITEMDATA )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QComboBox( 1 )->itemData( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::UserRole ) ) ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QComboBox( 1 )->itemData( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::UserRole ) ) ) ) );
 }
 
 /*
@@ -301,7 +318,7 @@ HB_FUNC( QT_QCOMBOBOX_ITEMDELEGATE )
  */
 HB_FUNC( QT_QCOMBOBOX_ITEMICON )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QComboBox( 1 )->itemIcon( hb_parni( 2 ) ) ), release_QIcon ) );
+   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QComboBox( 1 )->itemIcon( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -373,7 +390,7 @@ HB_FUNC( QT_QCOMBOBOX_REMOVEITEM )
  */
 HB_FUNC( QT_QCOMBOBOX_ROOTMODELINDEX )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QComboBox( 1 )->rootModelIndex() ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QComboBox( 1 )->rootModelIndex() ) ) );
 }
 
 /*

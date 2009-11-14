@@ -82,52 +82,69 @@
  * ~QCompleter ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QCompleter > pq;
+} QGC_POINTER_QCompleter;
+
 QT_G_FUNC( release_QCompleter )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QCompleter                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QCompleter * p = ( QGC_POINTER_QCompleter * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QCompleter                   p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QCompleter                  ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QCompleter * ) ph )->~QCompleter();
-         ph = NULL;
+         ( ( QCompleter * ) p->ph )->~QCompleter();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QCompleter                  Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QCompleter                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QCompleter" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QCompleter                  Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QCompleter" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QCompleter" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QCompleter                  Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QCompleter" );
+      #endif
    }
+}
+
+void * gcAllocate_QCompleter( void * pObj )
+{
+   QGC_POINTER_QCompleter * p = ( QGC_POINTER_QCompleter * ) hb_gcAllocate( sizeof( QGC_POINTER_QCompleter ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QCompleter;
+   new( & p->pq ) QPointer< QCompleter >( ( QCompleter * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QCompleter                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QCOMPLETER )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QCompleter > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QCompleter                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = new QCompleter() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QCompleter;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QCompleter( pObj ) );
 }
 /*
  * Qt::CaseSensitivity caseSensitivity () const
@@ -198,7 +215,7 @@ HB_FUNC( QT_QCOMPLETER_CURRENTCOMPLETION )
  */
 HB_FUNC( QT_QCOMPLETER_CURRENTINDEX )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_QCompleter( 1 )->currentIndex() ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QCompleter( 1 )->currentIndex() ) ) );
 }
 
 /*
@@ -318,7 +335,7 @@ HB_FUNC( QT_QCOMPLETER_SETWIDGET )
  */
 HB_FUNC( QT_QCOMPLETER_SPLITPATH )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QCompleter( 1 )->splitPath( hbqt_par_QString( 2 ) ) ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QCompleter( 1 )->splitPath( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*

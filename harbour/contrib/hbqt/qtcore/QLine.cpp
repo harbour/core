@@ -79,30 +79,44 @@
 
 QT_G_FUNC( release_QLine )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QLine                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QLine                        p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QLine                       ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QLine * ) ph )->~QLine();
-      ph = NULL;
+      ( ( QLine * ) p->ph )->~QLine();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QLine                       Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QLine                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QLine" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QLine                       Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QLine" );
+      #endif
    }
+}
+
+void * gcAllocate_QLine( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QLine;
+   #if defined(__debug__)
+      just_debug( "          new_QLine                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QLINE )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QLine                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
@@ -121,20 +135,14 @@ hb_snprintf( str, sizeof(str), "   GC:  new QLine                       %i B %i 
       pObj = ( QLine* ) new QLine() ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QLine;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QLine( pObj ) );
 }
 /*
  * QPoint p1 () const
  */
 HB_FUNC( QT_QLINE_P1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QLine( 1 )->p1() ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QLine( 1 )->p1() ) ) );
 }
 
 /*
@@ -142,7 +150,7 @@ HB_FUNC( QT_QLINE_P1 )
  */
 HB_FUNC( QT_QLINE_P2 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QLine( 1 )->p2() ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QLine( 1 )->p2() ) ) );
 }
 
 /*
@@ -254,7 +262,7 @@ HB_FUNC( QT_QLINE_TRANSLATE_1 )
  */
 HB_FUNC( QT_QLINE_TRANSLATED )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QLine( hbqt_par_QLine( 1 )->translated( *hbqt_par_QPoint( 2 ) ) ), release_QLine ) );
+   hb_retptrGC( gcAllocate_QLine( new QLine( hbqt_par_QLine( 1 )->translated( *hbqt_par_QPoint( 2 ) ) ) ) );
 }
 
 /*
@@ -262,7 +270,7 @@ HB_FUNC( QT_QLINE_TRANSLATED )
  */
 HB_FUNC( QT_QLINE_TRANSLATED_1 )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QLine( hbqt_par_QLine( 1 )->translated( hb_parni( 2 ), hb_parni( 3 ) ) ), release_QLine ) );
+   hb_retptrGC( gcAllocate_QLine( new QLine( hbqt_par_QLine( 1 )->translated( hb_parni( 2 ), hb_parni( 3 ) ) ) ) );
 }
 
 

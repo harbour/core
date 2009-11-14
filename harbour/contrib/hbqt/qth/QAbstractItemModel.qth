@@ -118,7 +118,8 @@ HB_FUNC( QT_HBDBFMODEL_RESET )
 
 HB_FUNC( QT_HBDBFMODEL_INDEX )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_HbDbfModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), QModelIndex() ) ), release_QModelIndex ) );
+// BI  hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_HbDbfModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), QModelIndex() ) ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_HbDbfModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), QModelIndex() ) ) ) );
 }
 
 HB_FUNC( QT_HBDBFMODEL_HBSETROWCOLUMNS )
@@ -128,6 +129,8 @@ HB_FUNC( QT_HBDBFMODEL_HBSETROWCOLUMNS )
 
 HB_FUNC( QT_HBDBFMODEL_DESTROY )
 {
+// BI:TODO fix the GPF  hbqt_par_HbDbfModel( 1 )->~HbDbfModel();
+//     BUT WITHOUT THIS FM STATISTICS GENERATE A BIG LOG SO THIS IS NOT THE OPTION NOW
    hbqt_par_HbDbfModel( 1 )->~HbDbfModel();
 }
 

@@ -99,40 +99,48 @@
 
 QT_G_FUNC( release_QTextOption )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTextOption                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextOption                  p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextOption                 ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QTextOption * ) ph )->~QTextOption();
-      ph = NULL;
+      ( ( QTextOption * ) p->ph )->~QTextOption();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextOption                 Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QTextOption                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTextOption" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextOption                 Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTextOption" );
+      #endif
    }
+}
+
+void * gcAllocate_QTextOption( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTextOption;
+   #if defined(__debug__)
+      just_debug( "          new_QTextOption                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTEXTOPTION )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTextOption                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = new QTextOption() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTextOption;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTextOption( pObj ) );
 }
 /*
  * Qt::Alignment alignment () const

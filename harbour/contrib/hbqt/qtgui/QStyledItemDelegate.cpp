@@ -76,52 +76,69 @@
  * ~QStyledItemDelegate ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QStyledItemDelegate > pq;
+} QGC_POINTER_QStyledItemDelegate;
+
 QT_G_FUNC( release_QStyledItemDelegate )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QStyledItemDelegate         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QStyledItemDelegate * p = ( QGC_POINTER_QStyledItemDelegate * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyledItemDelegate          p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyledItemDelegate         ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QStyledItemDelegate * ) ph )->~QStyledItemDelegate();
-         ph = NULL;
+         ( ( QStyledItemDelegate * ) p->ph )->~QStyledItemDelegate();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QStyledItemDelegate         Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QStyledItemDelegate         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QStyledItemDelegate" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QStyledItemDelegate         Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QStyledItemDelegate" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QStyledItemDelegate" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyledItemDelegate         Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QStyledItemDelegate" );
+      #endif
    }
+}
+
+void * gcAllocate_QStyledItemDelegate( void * pObj )
+{
+   QGC_POINTER_QStyledItemDelegate * p = ( QGC_POINTER_QStyledItemDelegate * ) hb_gcAllocate( sizeof( QGC_POINTER_QStyledItemDelegate ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QStyledItemDelegate;
+   new( & p->pq ) QPointer< QStyledItemDelegate >( ( QStyledItemDelegate * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QStyledItemDelegate         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSTYLEDITEMDELEGATE )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QStyledItemDelegate > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QStyledItemDelegate         %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QStyledItemDelegate;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QStyledItemDelegate( pObj ) );
 }
 /*
  * virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
@@ -168,7 +185,7 @@ HB_FUNC( QT_QSTYLEDITEMDELEGATE_SETMODELDATA )
  */
 HB_FUNC( QT_QSTYLEDITEMDELEGATE_SIZEHINT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QStyledItemDelegate( 1 )->sizeHint( *hbqt_par_QStyleOptionViewItem( 2 ), *hbqt_par_QModelIndex( 3 ) ) ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QStyledItemDelegate( 1 )->sizeHint( *hbqt_par_QStyleOptionViewItem( 2 ), *hbqt_par_QModelIndex( 3 ) ) ) ) );
 }
 
 /*

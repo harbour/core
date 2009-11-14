@@ -87,30 +87,44 @@
 
 QT_G_FUNC( release_QBrush )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QBrush                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QBrush                       p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QBrush                      ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QBrush * ) ph )->~QBrush();
-      ph = NULL;
+      ( ( QBrush * ) p->ph )->~QBrush();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QBrush                      Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QBrush                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QBrush" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QBrush                      Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QBrush" );
+      #endif
    }
+}
+
+void * gcAllocate_QBrush( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QBrush;
+   #if defined(__debug__)
+      just_debug( "          new_QBrush                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QBRUSH )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QBrush                      %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
@@ -166,20 +180,14 @@ hb_snprintf( str, sizeof(str), "   GC:  new QBrush                      %i B %i 
       pObj = ( QBrush* ) new QBrush() ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QBrush;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QBrush( pObj ) );
 }
 /*
  * const QColor & color () const
  */
 HB_FUNC( QT_QBRUSH_COLOR )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QColor( hbqt_par_QBrush( 1 )->color() ), release_QColor ) );
+   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QBrush( 1 )->color() ) ) );
 }
 
 /*
@@ -195,7 +203,7 @@ HB_FUNC( QT_QBRUSH_ISOPAQUE )
  */
 HB_FUNC( QT_QBRUSH_MATRIX )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QMatrix( hbqt_par_QBrush( 1 )->matrix() ), release_QMatrix ) );
+   hb_retptrGC( gcAllocate_QMatrix( new QMatrix( hbqt_par_QBrush( 1 )->matrix() ) ) );
 }
 
 /*
@@ -267,7 +275,7 @@ HB_FUNC( QT_QBRUSH_STYLE )
  */
 HB_FUNC( QT_QBRUSH_TEXTURE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPixmap( hbqt_par_QBrush( 1 )->texture() ), release_QPixmap ) );
+   hb_retptrGC( gcAllocate_QPixmap( new QPixmap( hbqt_par_QBrush( 1 )->texture() ) ) );
 }
 
 /*
@@ -275,7 +283,7 @@ HB_FUNC( QT_QBRUSH_TEXTURE )
  */
 HB_FUNC( QT_QBRUSH_TEXTUREIMAGE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QImage( hbqt_par_QBrush( 1 )->textureImage() ), release_QImage ) );
+   hb_retptrGC( gcAllocate_QImage( new QImage( hbqt_par_QBrush( 1 )->textureImage() ) ) );
 }
 
 /*
@@ -283,7 +291,7 @@ HB_FUNC( QT_QBRUSH_TEXTUREIMAGE )
  */
 HB_FUNC( QT_QBRUSH_TRANSFORM )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QTransform( hbqt_par_QBrush( 1 )->transform() ), release_QTransform ) );
+   hb_retptrGC( gcAllocate_QTransform( new QTransform( hbqt_par_QBrush( 1 )->transform() ) ) );
 }
 
 

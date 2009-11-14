@@ -76,59 +76,76 @@
  * QStringListModel ( const QStringList & strings, QObject * parent = 0 )
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QStringListModel > pq;
+} QGC_POINTER_QStringListModel;
+
 QT_G_FUNC( release_QStringListModel )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QStringListModel            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QStringListModel * p = ( QGC_POINTER_QStringListModel * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStringListModel             p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStringListModel            ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QStringListModel * ) ph )->~QStringListModel();
-         ph = NULL;
+         ( ( QStringListModel * ) p->ph )->~QStringListModel();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QStringListModel            Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QStringListModel            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QStringListModel" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QStringListModel            Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QStringListModel" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QStringListModel" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStringListModel            Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QStringListModel" );
+      #endif
    }
+}
+
+void * gcAllocate_QStringListModel( void * pObj )
+{
+   QGC_POINTER_QStringListModel * p = ( QGC_POINTER_QStringListModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QStringListModel ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QStringListModel;
+   new( & p->pq ) QPointer< QStringListModel >( ( QStringListModel * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QStringListModel            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSTRINGLISTMODEL )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QStringListModel > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QStringListModel            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QStringListModel* ) new QStringListModel() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QStringListModel;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QStringListModel( pObj ) );
 }
 /*
  * virtual QVariant data ( const QModelIndex & index, int role ) const
  */
 HB_FUNC( QT_QSTRINGLISTMODEL_DATA )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QStringListModel( 1 )->data( *hbqt_par_QModelIndex( 2 ), hb_parni( 3 ) ) ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QStringListModel( 1 )->data( *hbqt_par_QModelIndex( 2 ), hb_parni( 3 ) ) ) ) );
 }
 
 /*
@@ -184,7 +201,7 @@ HB_FUNC( QT_QSTRINGLISTMODEL_SETSTRINGLIST )
  */
 HB_FUNC( QT_QSTRINGLISTMODEL_STRINGLIST )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QStringListModel( 1 )->stringList() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QStringListModel( 1 )->stringList() ) ) );
 }
 
 

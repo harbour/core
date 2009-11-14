@@ -85,30 +85,44 @@
 
 QT_G_FUNC( release_QLinearGradient )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QLinearGradient             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QLinearGradient              p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QLinearGradient             ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QLinearGradient * ) ph )->~QLinearGradient();
-      ph = NULL;
+      ( ( QLinearGradient * ) p->ph )->~QLinearGradient();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QLinearGradient             Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QLinearGradient             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QLinearGradient" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QLinearGradient             Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QLinearGradient" );
+      #endif
    }
+}
+
+void * gcAllocate_QLinearGradient( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QLinearGradient;
+   #if defined(__debug__)
+      just_debug( "          new_QLinearGradient             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QLINEARGRADIENT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QLinearGradient             %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
@@ -127,20 +141,14 @@ hb_snprintf( str, sizeof(str), "   GC:  new QLinearGradient             %i B %i 
       pObj = ( QLinearGradient* ) new QLinearGradient() ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QLinearGradient;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QLinearGradient( pObj ) );
 }
 /*
  * QPointF finalStop () const
  */
 HB_FUNC( QT_QLINEARGRADIENT_FINALSTOP )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPointF( hbqt_par_QLinearGradient( 1 )->finalStop() ), release_QPointF ) );
+   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QLinearGradient( 1 )->finalStop() ) ) );
 }
 
 /*
@@ -180,7 +188,7 @@ HB_FUNC( QT_QLINEARGRADIENT_SETSTART_1 )
  */
 HB_FUNC( QT_QLINEARGRADIENT_START )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPointF( hbqt_par_QLinearGradient( 1 )->start() ), release_QPointF ) );
+   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QLinearGradient( 1 )->start() ) ) );
 }
 
 

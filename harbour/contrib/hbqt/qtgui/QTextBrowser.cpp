@@ -75,52 +75,69 @@
  * QTextBrowser ( QWidget * parent = 0 )
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QTextBrowser > pq;
+} QGC_POINTER_QTextBrowser;
+
 QT_G_FUNC( release_QTextBrowser )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTextBrowser                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QTextBrowser * p = ( QGC_POINTER_QTextBrowser * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextBrowser                 p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTextBrowser                ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QTextBrowser * ) ph )->~QTextBrowser();
-         ph = NULL;
+         ( ( QTextBrowser * ) p->ph )->~QTextBrowser();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTextBrowser                Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QTextBrowser                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QTextBrowser" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTextBrowser                Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QTextBrowser" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTextBrowser" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTextBrowser                Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTextBrowser" );
+      #endif
    }
+}
+
+void * gcAllocate_QTextBrowser( void * pObj )
+{
+   QGC_POINTER_QTextBrowser * p = ( QGC_POINTER_QTextBrowser * ) hb_gcAllocate( sizeof( QGC_POINTER_QTextBrowser ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTextBrowser;
+   new( & p->pq ) QPointer< QTextBrowser >( ( QTextBrowser * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QTextBrowser                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTEXTBROWSER )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QTextBrowser > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTextBrowser                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QTextBrowser* ) new QTextBrowser( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTextBrowser;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTextBrowser( pObj ) );
 }
 /*
  * int backwardHistoryCount () const
@@ -159,7 +176,7 @@ HB_FUNC( QT_QTEXTBROWSER_HISTORYTITLE )
  */
 HB_FUNC( QT_QTEXTBROWSER_HISTORYURL )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QUrl( hbqt_par_QTextBrowser( 1 )->historyUrl( hb_parni( 2 ) ) ), release_QUrl ) );
+   hb_retptrGC( gcAllocate_QUrl( new QUrl( hbqt_par_QTextBrowser( 1 )->historyUrl( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -183,7 +200,7 @@ HB_FUNC( QT_QTEXTBROWSER_ISFORWARDAVAILABLE )
  */
 HB_FUNC( QT_QTEXTBROWSER_LOADRESOURCE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QVariant( hbqt_par_QTextBrowser( 1 )->loadResource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ), release_QVariant ) );
+   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QTextBrowser( 1 )->loadResource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ) ) );
 }
 
 /*
@@ -207,7 +224,7 @@ HB_FUNC( QT_QTEXTBROWSER_OPENLINKS )
  */
 HB_FUNC( QT_QTEXTBROWSER_SEARCHPATHS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QStringList( hbqt_par_QTextBrowser( 1 )->searchPaths() ), release_QStringList ) );
+   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QTextBrowser( 1 )->searchPaths() ) ) );
 }
 
 /*
@@ -239,7 +256,7 @@ HB_FUNC( QT_QTEXTBROWSER_SETSEARCHPATHS )
  */
 HB_FUNC( QT_QTEXTBROWSER_SOURCE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QUrl( hbqt_par_QTextBrowser( 1 )->source() ), release_QUrl ) );
+   hb_retptrGC( gcAllocate_QUrl( new QUrl( hbqt_par_QTextBrowser( 1 )->source() ) ) );
 }
 
 /*

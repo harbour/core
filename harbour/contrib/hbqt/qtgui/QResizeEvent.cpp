@@ -77,31 +77,7 @@
 
 QT_G_FUNC( release_QResizeEvent )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QResizeEvent                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
-   {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
-      if( ( QString ) m->className() != ( QString ) "QObject" )
-      {
-         ( ( QResizeEvent * ) ph )->~QResizeEvent();
-         ph = NULL;
-      }
-      else
-      {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QResizeEvent" );  OutputDebugString( str );
-#endif
-      }
-   }
-   else
-   {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QResizeEvent" );  OutputDebugString( str );
-#endif
-   }
+   HB_SYMBOL_UNUSED( Cargo );
 }
 
 HB_FUNC( QT_QRESIZEEVENT )
@@ -112,7 +88,7 @@ HB_FUNC( QT_QRESIZEEVENT )
  */
 HB_FUNC( QT_QRESIZEEVENT_OLDSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QResizeEvent( 1 )->oldSize() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QResizeEvent( 1 )->oldSize() ) ) );
 }
 
 /*
@@ -120,7 +96,7 @@ HB_FUNC( QT_QRESIZEEVENT_OLDSIZE )
  */
 HB_FUNC( QT_QRESIZEEVENT_SIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QResizeEvent( 1 )->size() ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QResizeEvent( 1 )->size() ) ) );
 }
 
 

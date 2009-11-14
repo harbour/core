@@ -85,40 +85,48 @@
 
 QT_G_FUNC( release_QStyleOptionButton )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QStyleOptionButton          %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionButton           p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionButton          ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QStyleOptionButton * ) ph )->~QStyleOptionButton();
-      ph = NULL;
+      ( ( QStyleOptionButton * ) p->ph )->~QStyleOptionButton();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionButton          Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QStyleOptionButton          %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QStyleOptionButton" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionButton          Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QStyleOptionButton" );
+      #endif
    }
+}
+
+void * gcAllocate_QStyleOptionButton( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QStyleOptionButton;
+   #if defined(__debug__)
+      just_debug( "          new_QStyleOptionButton          %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QSTYLEOPTIONBUTTON )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QStyleOptionButton          %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    pObj = ( QStyleOptionButton* ) new QStyleOptionButton() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QStyleOptionButton;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QStyleOptionButton( pObj ) );
 }
 /*
  * ButtonFeatures features
@@ -133,7 +141,7 @@ HB_FUNC( QT_QSTYLEOPTIONBUTTON_FEATURES )
  */
 HB_FUNC( QT_QSTYLEOPTIONBUTTON_ICON )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QIcon( hbqt_par_QStyleOptionButton( 1 )->icon ), release_QIcon ) );
+   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QStyleOptionButton( 1 )->icon ) ) );
 }
 
 /*
@@ -141,7 +149,7 @@ HB_FUNC( QT_QSTYLEOPTIONBUTTON_ICON )
  */
 HB_FUNC( QT_QSTYLEOPTIONBUTTON_ICONSIZE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QSize( hbqt_par_QStyleOptionButton( 1 )->iconSize ), release_QSize ) );
+   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionButton( 1 )->iconSize ) ) );
 }
 
 /*

@@ -88,16 +88,10 @@ QT_G_FUNC( release_QClipboard )
 
 HB_FUNC( QT_QCLIPBOARD )
 {
-   QPointer< QClipboard > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   NON-GC:  new QClipboard                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QClipboard* ) QApplication::clipboard() ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   NON-GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
    hb_retptr( pObj );
 }
 /*
@@ -113,7 +107,7 @@ HB_FUNC( QT_QCLIPBOARD_CLEAR )
  */
 HB_FUNC( QT_QCLIPBOARD_IMAGE )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QImage( hbqt_par_QClipboard( 1 )->image( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ) ), release_QImage ) );
+   hb_retptrGC( gcAllocate_QImage( new QImage( hbqt_par_QClipboard( 1 )->image( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ) ) ) );
 }
 
 /*
@@ -153,7 +147,7 @@ HB_FUNC( QT_QCLIPBOARD_OWNSSELECTION )
  */
 HB_FUNC( QT_QCLIPBOARD_PIXMAP )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPixmap( hbqt_par_QClipboard( 1 )->pixmap( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ) ), release_QPixmap ) );
+   hb_retptrGC( gcAllocate_QPixmap( new QPixmap( hbqt_par_QClipboard( 1 )->pixmap( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ) ) ) );
 }
 
 /*

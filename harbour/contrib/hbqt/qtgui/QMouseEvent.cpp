@@ -79,43 +79,51 @@
 
 QT_G_FUNC( release_QMouseEvent )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QMouseEvent                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QMouseEvent                  p=%p", p ) );
+   HB_TRACE( HB_TR_DEBUG, ( "release_QMouseEvent                 ph=%p", p->ph ) );
+
+   if( p && p->ph )
    {
-      ( ( QMouseEvent * ) ph )->~QMouseEvent();
-      ph = NULL;
+      ( ( QMouseEvent * ) p->ph )->~QMouseEvent();
+      p->ph = NULL;
+      HB_TRACE( HB_TR_DEBUG, ( "release_QMouseEvent                 Object deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  YES release_QMouseEvent                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #endif
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QMouseEvent" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QMouseEvent                 Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QMouseEvent" );
+      #endif
    }
+}
+
+void * gcAllocate_QMouseEvent( void * pObj )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QMouseEvent;
+   #if defined(__debug__)
+      just_debug( "          new_QMouseEvent                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QMOUSEEVENT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
    void * pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QMouseEvent                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
       pObj = new QMouseEvent( *hbqt_par_QMouseEvent( 1 ) ) ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QMouseEvent;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QMouseEvent( pObj ) );
 }
 /*
  * Qt::MouseButton button () const
@@ -138,7 +146,7 @@ HB_FUNC( QT_QMOUSEEVENT_BUTTONS )
  */
 HB_FUNC( QT_QMOUSEEVENT_GLOBALPOS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QMouseEvent( 1 )->globalPos() ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QMouseEvent( 1 )->globalPos() ) ) );
 }
 
 /*
@@ -162,7 +170,7 @@ HB_FUNC( QT_QMOUSEEVENT_GLOBALY )
  */
 HB_FUNC( QT_QMOUSEEVENT_POS )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPoint( hbqt_par_QMouseEvent( 1 )->pos() ), release_QPoint ) );
+   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QMouseEvent( 1 )->pos() ) ) );
 }
 
 /*
@@ -170,7 +178,7 @@ HB_FUNC( QT_QMOUSEEVENT_POS )
  */
 HB_FUNC( QT_QMOUSEEVENT_POSF )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QPointF( hbqt_par_QMouseEvent( 1 )->posF() ), release_QPointF ) );
+   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QMouseEvent( 1 )->posF() ) ) );
 }
 
 /*

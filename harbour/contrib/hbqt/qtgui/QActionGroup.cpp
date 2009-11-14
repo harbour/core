@@ -84,55 +84,72 @@
  * ~QActionGroup ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QActionGroup > pq;
+} QGC_POINTER_QActionGroup;
+
 QT_G_FUNC( release_QActionGroup )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QActionGroup                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QActionGroup * p = ( QGC_POINTER_QActionGroup * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QActionGroup                 p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QActionGroup                ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QActionGroup * ) ph )->~QActionGroup();
-         ph = NULL;
+         ( ( QActionGroup * ) p->ph )->~QActionGroup();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QActionGroup                Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QActionGroup                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QActionGroup" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QActionGroup                Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QActionGroup" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QActionGroup" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QActionGroup                Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QActionGroup" );
+      #endif
    }
+}
+
+void * gcAllocate_QActionGroup( void * pObj )
+{
+   QGC_POINTER_QActionGroup * p = ( QGC_POINTER_QActionGroup * ) hb_gcAllocate( sizeof( QGC_POINTER_QActionGroup ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QActionGroup;
+   new( & p->pq ) QPointer< QActionGroup >( ( QActionGroup * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QActionGroup                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QACTIONGROUP )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QActionGroup > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QActionGroup                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
       pObj = new QActionGroup( hbqt_par_QObject( 1 ) ) ;
    }
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QActionGroup;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QActionGroup( pObj ) );
 }
 /*
  * QAction * addAction ( QAction * action )

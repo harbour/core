@@ -77,52 +77,69 @@
  * QCommandLinkButton ( const QString & text, const QString & description, QWidget * parent = 0 )
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QCommandLinkButton > pq;
+} QGC_POINTER_QCommandLinkButton;
+
 QT_G_FUNC( release_QCommandLinkButton )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QCommandLinkButton          %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QCommandLinkButton * p = ( QGC_POINTER_QCommandLinkButton * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QCommandLinkButton           p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QCommandLinkButton          ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QCommandLinkButton * ) ph )->~QCommandLinkButton();
-         ph = NULL;
+         ( ( QCommandLinkButton * ) p->ph )->~QCommandLinkButton();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QCommandLinkButton          Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QCommandLinkButton          %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QCommandLinkButton" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QCommandLinkButton          Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QCommandLinkButton" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QCommandLinkButton" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QCommandLinkButton          Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QCommandLinkButton" );
+      #endif
    }
+}
+
+void * gcAllocate_QCommandLinkButton( void * pObj )
+{
+   QGC_POINTER_QCommandLinkButton * p = ( QGC_POINTER_QCommandLinkButton * ) hb_gcAllocate( sizeof( QGC_POINTER_QCommandLinkButton ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QCommandLinkButton;
+   new( & p->pq ) QPointer< QCommandLinkButton >( ( QCommandLinkButton * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QCommandLinkButton          %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QCOMMANDLINKBUTTON )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QCommandLinkButton > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QCommandLinkButton          %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QCommandLinkButton* ) new QCommandLinkButton( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QCommandLinkButton;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QCommandLinkButton( pObj ) );
 }
 /*
  * QString description () const

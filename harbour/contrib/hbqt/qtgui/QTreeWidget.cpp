@@ -88,52 +88,69 @@
  * ~QTreeWidget ()
  */
 
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< QTreeWidget > pq;
+} QGC_POINTER_QTreeWidget;
+
 QT_G_FUNC( release_QTreeWidget )
 {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "release_QTreeWidget                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   void * ph = ( void * ) Cargo;
-   if( ph )
+   QGC_POINTER_QTreeWidget * p = ( QGC_POINTER_QTreeWidget * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTreeWidget                  p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_QTreeWidget                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
    {
-      const QMetaObject * m = ( ( QObject * ) ph )->metaObject();
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QTreeWidget * ) ph )->~QTreeWidget();
-         ph = NULL;
+         ( ( QTreeWidget * ) p->ph )->~QTreeWidget();
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTreeWidget                 Object deleted!" ) );
+         #if defined(__debug__)
+            just_debug( "  YES release_QTreeWidget                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #endif
       }
       else
       {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "  Object Name Missing: QTreeWidget" );  OutputDebugString( str );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTreeWidget                 Object Name Missing!" ) );
+         #if defined(__debug__)
+            just_debug( "  NO  release_QTreeWidget" );
+         #endif
       }
    }
    else
    {
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "! ph____QTreeWidget" );  OutputDebugString( str );
-#endif
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTreeWidget                 Object Allready deleted!" ) );
+      #if defined(__debug__)
+         just_debug( "  DEL release_QTreeWidget" );
+      #endif
    }
+}
+
+void * gcAllocate_QTreeWidget( void * pObj )
+{
+   QGC_POINTER_QTreeWidget * p = ( QGC_POINTER_QTreeWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QTreeWidget ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_QTreeWidget;
+   new( & p->pq ) QPointer< QTreeWidget >( ( QTreeWidget * ) pObj );
+   #if defined(__debug__)
+      just_debug( "          new_QTreeWidget                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #endif
+   return( p );
 }
 
 HB_FUNC( QT_QTREEWIDGET )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
-   QPointer< QTreeWidget > pObj = NULL;
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:  new QTreeWidget                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
+   void * pObj = NULL;
 
    pObj = ( QTreeWidget* ) new QTreeWidget( hbqt_par_QWidget( 1 ) ) ;
 
-#if defined(__debug__)
-hb_snprintf( str, sizeof(str), "   GC:                                  %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );  OutputDebugString( str );
-#endif
-   p->ph = pObj;
-   p->func = release_QTreeWidget;
-
-   hb_retptrGC( p );
+   hb_retptrGC( gcAllocate_QTreeWidget( pObj ) );
 }
 /*
  * void addTopLevelItem ( QTreeWidgetItem * item )
@@ -396,7 +413,7 @@ HB_FUNC( QT_QTREEWIDGET_TOPLEVELITEMCOUNT )
  */
 HB_FUNC( QT_QTREEWIDGET_VISUALITEMRECT )
 {
-   hb_retptrGC( hbqt_ptrTOgcpointer( new QRect( hbqt_par_QTreeWidget( 1 )->visualItemRect( hbqt_par_QTreeWidgetItem( 2 ) ) ), release_QRect ) );
+   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QTreeWidget( 1 )->visualItemRect( hbqt_par_QTreeWidgetItem( 2 ) ) ) ) );
 }
 
 /*
