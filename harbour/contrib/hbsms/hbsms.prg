@@ -71,39 +71,15 @@
 
 #include "common.ch"
 
-#if ! defined( HB_HAS_TELEPATHY ) .AND. ;
-    ( defined( __PLATFORM__UNIX ) .OR. ;
-      defined( __PLATFORM__OS2 ) )
-   #define HB_HAS_TELEPATHY
-#endif
-
-#if   defined( HB_HAS_TELEPATHY )
-   #include "telepath.ch"
-#elif defined( __PLATFORM__WINDOWS )
-   #include "hbwin.ch"
-#endif
+#include "telepath.ch"
 
 STATIC FUNCTION port_send( h, s, t )
-#if   defined( HB_HAS_TELEPATHY )
    RETURN tp_send( h, s, t )
-#elif defined( __PLATFORM__WINDOWS )
-   HB_SYMBOL_UNUSED( t )
-   RETURN win_ComWrite( h, s )
-#else
-   RETURN 0
-#endif
 
 STATIC FUNCTION port_rece( h, n, t )
    DEFAULT n TO 64
    DEFAULT t TO 0.2
-#if   defined( HB_HAS_TELEPATHY )
    RETURN tp_recv( h, n, t )
-#elif defined( __PLATFORM__WINDOWS )
-   hb_idleSleep( t )
-   RETURN win_ComRecv( h, n )
-#else
-   RETURN 0
-#endif
 
 FUNCTION sms_Send( cPort, cPhoneNo, cText, lNotification, cPIN )
    LOCAL smsctx
@@ -142,22 +118,10 @@ FUNCTION sms_ReceiveAll( cPort, cPIN )
 FUNCTION smsctx_New( cPort )
    LOCAL smsctx[ _SMSCTX_MAX_ ]
 
-#if   defined( HB_HAS_TELEPATHY )
    smsctx[ _SMSCTX_xHnd ] := 1
    IF tp_open( smsctx[ _SMSCTX_xHnd ], NIL, NIL, 9600, 8, "N", 1, cPort ) == 0
       RETURN smsctx
    ENDIF
-#elif defined( __PLATFORM__WINDOWS )
-   IF !( Upper( Left( cPort, 3 ) ) == "COM" )
-      RETURN NIL
-   ENDIF
-
-   smsctx[ _SMSCTX_xHnd ] := Val( SubStr( cPort, 4 ) ) - 1
-
-   IF win_ComOpen( smsctx[ _SMSCTX_xHnd ], CBR_9600, NOPARITY, 8, ONESTOPBIT ) != -1
-      RETURN smsctx
-   ENDIF
-#endif
 
    RETURN NIL
 
@@ -264,13 +228,7 @@ FUNCTION smsctx_Close( smsctx )
       RETURN .F.
    ENDIF
 
-#if   defined( HB_HAS_TELEPATHY )
    RETURN tp_close( smsctx[ _SMSCTX_xHnd ] ) == 0
-#elif defined( __PLATFORM__WINDOWS )
-   RETURN win_ComClose( smsctx[ _SMSCTX_xHnd ] )
-#else
-   RETURN .F.
-#endif
 
 STATIC FUNCTION StripCR( cString )
    RETURN StrTran( cString, Chr( 13 ) )
