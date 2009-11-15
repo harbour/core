@@ -148,7 +148,6 @@ public:
    QModelIndex   index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
    QModelIndex   parent(const QModelIndex &child) const;
    void          reset();
-   void          destroy();
 };
 
 /*----------------------------------------------------------------------*/

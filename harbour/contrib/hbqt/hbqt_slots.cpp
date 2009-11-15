@@ -2289,8 +2289,11 @@ HbDbfModel::HbDbfModel( PHB_ITEM pBlock ) : QAbstractItemModel()
 }
 HbDbfModel::~HbDbfModel( void )
 {
-   hb_itemRelease( block );
-   destroy();
+   if( block )
+   {
+      hb_itemRelease( block );
+      block = NULL;
+   }
 }
 Qt::ItemFlags HbDbfModel::flags( const QModelIndex & index ) const
 {
@@ -2468,11 +2471,6 @@ void HbDbfModel::hbSetRowColumns( int rows, int cols )
 {
    iRows = rows;
    iCols = cols;
-}
-
-void HbDbfModel::destroy()
-{
-   hb_itemRelease( block );
 }
 
 /*----------------------------------------------------------------------*/
