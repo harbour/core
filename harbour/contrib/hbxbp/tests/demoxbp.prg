@@ -110,6 +110,7 @@ FUNCTION _BuildADialog()
 
 PROCEDURE DispMem( cMessage )
 
+   HB_SYMBOL_UNUSED( cMessage )
    HBXBP_DEBUG( ThreadID(), padc( cMessage, 40 ), memory( 1001 ), hb_getMemUsed() )
 
    RETURN
@@ -1655,7 +1656,7 @@ FUNCTION Build_Browse( oWnd )
       oXbpBrowse:phyPosBlock   := {| | OrdKeyNo()       }
    ENDIF
 
-   oXbpBrowse:headerRbDown  := {|mp1, mp2, o| mp1 := mp1, HBXBP_DEBUG( o:getColumn( mp2 ):heading ) }
+   oXbpBrowse:headerRbDown  := {|mp1, mp2, o| HB_SYMBOL_UNUSED( mp1 ), HB_SYMBOL_UNUSED( mp2 ), HB_SYMBOL_UNUSED( o ), HBXBP_DEBUG( o:getColumn( mp2 ):heading ) }
    oXbpBrowse:itemSelected  := {|| HBXBP_DEBUG( 'itemSelected' ) }
 
    #ifdef __HARBOUR__

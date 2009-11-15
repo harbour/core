@@ -74,25 +74,24 @@
 /*----------------------------------------------------------------------*/
 
 #define EVENT_BUFFER    200
-#define CRLF            chr( 13 )+chr( 10 )
 
 /*----------------------------------------------------------------------*/
 
-STATIC oDeskTop
-STATIC ts_mutex
-STATIC oApp
+STATIC s_oDeskTop
+STATIC s_mutex := hb_mutexCreate()
+STATIC s_oApp
 
-THREAD STATIC aEventLoop
+THREAD STATIC t_aEventLoop
 
-THREAD STATIC ts_events
+THREAD STATIC t_events
 
-THREAD STATIC nEventIn  := 0
-THREAD STATIC nEventOut := 0
-THREAD STATIC oDummy
+THREAD STATIC t_nEventIn  := 0
+THREAD STATIC t_nEventOut := 0
+THREAD STATIC t_oDummy
 
-THREAD STATIC oAppWindow
+THREAD STATIC t_oAppWindow
 
-THREAD STATIC oEventLoop
+THREAD STATIC t_oEventLoop
 
 /*----------------------------------------------------------------------*/
 
@@ -100,10 +99,9 @@ INIT PROCEDURE Qt_Start()
 
    Qt_MutexCreate()
 
-   ts_mutex  := hb_mutexCreate()
-   oDummy    := XbpObject():new()
+   t_oDummy := XbpObject():new()
 
-   oApp      := QApplication():new()
+   s_oApp   := QApplication():new()
 
    RETURN
 
@@ -113,16 +111,16 @@ EXIT PROCEDURE Qt_End()
 
    Qt_MutexDestroy()
 
-   oDummy        := NIL
-   oAppWindow    := NIL
+   t_oDummy      := NIL
+   t_oAppWindow  := NIL
 
-   IF hb_isObject( oDeskTop )
-      oDeskTop:oWidget:pPtr := 0
+   IF hb_isObject( s_oDeskTop )
+      s_oDeskTop:oWidget:pPtr := 0
    endif
 
-   oApp:quit()
+   s_oApp:quit()
    #if 0
-   oApp:oWidget:pPtr := 0
+   s_oApp:oWidget:pPtr := 0
    #endif
    RETURN
 
@@ -132,9 +130,9 @@ EXIT PROCEDURE Qt_End()
  */
 FUNCTION InitializeEventBuffer()
 
-   IF empty( ts_events )
-      ts_events := array( EVENT_BUFFER )
-      aeval( ts_events, {|e,i| e := e, ts_events[ i ] := { 0, NIL, NIL, NIL } } )
+   IF empty( t_events )
+      t_events := array( EVENT_BUFFER )
+      aeval( t_events, {|e,i| e := e, t_events[ i ] := { 0, NIL, NIL, NIL } } )
    ENDIF
 
    RETURN nil
@@ -143,9 +141,9 @@ FUNCTION InitializeEventBuffer()
 
 FUNCTION ClearEventBuffer()
 
-   IF !empty( ts_events )
-      aeval( ts_events, {|e,i| e := e, ts_events[ i ] := NIL } )
-      ts_events := NIL
+   IF !empty( t_events )
+      aeval( t_events, {|e,i| e := e, t_events[ i ] := NIL } )
+      t_events := NIL
    ENDIF
 
    RETURN nil
@@ -160,7 +158,7 @@ FUNCTION SetEventFilter()
 
 FUNCTION SetEventLoop( oELoop )
 
-   oEventLoop := oELoop
+   t_oEventLoop := oELoop
 
    RETURN nil
 
@@ -170,16 +168,16 @@ FUNCTION SetEventLoop( oELoop )
  */
 FUNCTION SetAppEvent( nEvent, mp1, mp2, oXbp )
 
-   IF ++nEventIn > EVENT_BUFFER
-      nEventIn := 1
+   IF ++t_nEventIn > EVENT_BUFFER
+      t_nEventIn := 1
    ENDIF
 
 //HBXBP_DEBUG( 0, "SetAppEvent ... ", threadID(), nEvent, xbeP_Paint )
 
-   ts_events[ nEventIn,1 ] := nEvent
-   ts_events[ nEventIn,2 ] := mp1
-   ts_events[ nEventIn,3 ] := mp2
-   ts_events[ nEventIn,4 ] := oXbp
+   t_events[ t_nEventIn, 1 ] := nEvent
+   t_events[ t_nEventIn, 2 ] := mp1
+   t_events[ t_nEventIn, 3 ] := mp2
+   t_events[ t_nEventIn, 4 ] := oXbp
 
 //HBXBP_DEBUG( 1, "SetAppEvent ... ", threadID(), nEvent )
    RETURN nil
@@ -193,22 +191,22 @@ FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
    //DEFAULT nTimeout TO 0
    HB_SYMBOL_UNUSED( nTimeOut )
 
-   IF ++nEventOut > EVENT_BUFFER
-      nEventOut := 1
+   IF ++t_nEventOut > EVENT_BUFFER
+      t_nEventOut := 1
    ENDIF
-//HBXBP_DEBUG( "            AppEvent ... ", nThreadID, nEventOut )
-   DO WHILE !empty( oEventLoop ) //.t.
-      oEventLoop:processEvents( QEventLoop_AllEvents )
+//HBXBP_DEBUG( "            AppEvent ... ", nThreadID, t_nEventOut )
+   DO WHILE !empty( t_oEventLoop ) //.t.
+      t_oEventLoop:processEvents( QEventLoop_AllEvents )
 
-      IF !empty( ts_events[ nEventOut,4 ] )
-         nEvent := ts_events[ nEventOut,1 ]
-         mp1    := ts_events[ nEventOut,2 ]
-         mp2    := ts_events[ nEventOut,3 ]
-         oXbp   := ts_events[ nEventOut,4 ]
-         ts_events[ nEventOut,4 ] := NIL
+      IF !empty( t_events[ t_nEventOut, 4 ] )
+         nEvent := t_events[ t_nEventOut, 1 ]
+         mp1    := t_events[ t_nEventOut, 2 ]
+         mp2    := t_events[ t_nEventOut, 3 ]
+         oXbp   := t_events[ t_nEventOut, 4 ]
+         t_events[ t_nEventOut, 4 ] := NIL
          EXIT
       ENDIF
-      hb_idleSleep( 0.01 )                  /* Releases CPU cycles */
+      hb_releaseCPU()
    ENDDO
 //HBXBP_DEBUG( "..........................", threadID() )
 
@@ -219,10 +217,10 @@ FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
 FUNCTION SetAppWindow( oXbp )
    LOCAL oldAppWindow
 
-   oldAppWindow := oAppWindow
+   oldAppWindow := t_oAppWindow
 
    IF hb_isObject( oXbp )
-      oAppWindow := oXbp
+      t_oAppWindow := oXbp
    ENDIF
 
    RETURN oldAppWindow
@@ -232,12 +230,12 @@ FUNCTION SetAppWindow( oXbp )
 FUNCTION SetAppFocus( oXbp )
    LOCAL oldXbpInFocus
 
-   THREAD STATIC oXbpInFocus
+   THREAD STATIC t_oXbpInFocus
 
-   oldXbpInFocus := oXbpInFocus
+   oldXbpInFocus := t_oXbpInFocus
 
    IF hb_isObject( oXbp )
-      oXbpInFocus := oXbp
+      t_oXbpInFocus := oXbp
       oXbp:oWidget:setFocus()
    ENDIF
 
@@ -247,12 +245,12 @@ FUNCTION SetAppFocus( oXbp )
 
 FUNCTION AppDesktop()
 
-   IF oDeskTop == NIL
-      oDeskTop := XbpWindow():new()
-      oDeskTop:oWidget := QDesktopWidget():new()
+   IF s_oDeskTop == NIL
+      s_oDeskTop := XbpWindow():new()
+      s_oDeskTop:oWidget := QDesktopWidget():new()
    ENDIF
 
-   RETURN oDeskTop
+   RETURN s_oDeskTop
 
 /*----------------------------------------------------------------------*/
 
@@ -361,7 +359,7 @@ FUNCTION ConvertAFact( cMode, nFrom, xValue )
 
 #if defined( __HB_DEBUG__ )
 
-FUNCTION _HBXBP_DEBUG( ... )
+PROCEDURE _HBXBP_DEBUG( ... )
    LOCAL cString := ""
 
    AEval( hb_AParams(), {| x | cString += ValType( x ) + ":" + iif( ISARRAY( x ), "[" + hb_ntos( Len( x ) ) + "]", hb_ValToStr( x ) ) + " " } )
@@ -372,7 +370,7 @@ FUNCTION _HBXBP_DEBUG( ... )
       hb_TraceString( cString )
    #endif
 
-   RETURN NIL
+   RETURN
 
 #endif
 

@@ -624,7 +624,7 @@ USHORT hb_errLaunch( PHB_ITEM pError )
    handler is expected to return a value to be substituted as the result of
    a failed operation. [vszakats] */
 
-/* NOTE: This should only be called when the EF_CANSUBSTITUE flag was set
+/* NOTE: This should only be called when the EF_CANSUBSTITUTE flag was set
          Since it this case the error handler will return the value
          to be substituted. [vszakats] */
 
@@ -643,7 +643,7 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
       USHORT uiFlags = hb_errGetFlags( pError );
 
       /* Check if we have a valid error handler */
-      if( !pErrData->errorBlock || hb_itemType( pErrData->errorBlock ) != HB_IT_BLOCK )
+      if( ! pErrData->errorBlock || hb_itemType( pErrData->errorBlock ) != HB_IT_BLOCK )
          hb_errInternal( HB_EI_ERRNOBLOCK, NULL, NULL, NULL );
 
       /* Check if the error launcher was called too many times recursively */
@@ -949,7 +949,7 @@ PHB_ITEM hb_errRT_New(
    hb_errPutGenCode( pError, ( USHORT ) ulGenCode );
    hb_errPutSubCode( pError, ( USHORT ) ulSubCode );
    hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetItem( HB_LANG_ITEM_BASE_ERRDESC + ulGenCode ) );
-   hb_errPutOperation( pError, szOperation ? szOperation : "" );
+   hb_errPutOperation( pError, szOperation );
    hb_errPutOsCode( pError, uiOsCode );
    hb_errPutFlags( pError, uiFlags );
 
@@ -973,14 +973,14 @@ PHB_ITEM hb_errRT_New_Subst(
    hb_errPutGenCode( pError, ( USHORT ) ulGenCode );
    hb_errPutSubCode( pError, ( USHORT ) ulSubCode );
    hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetItem( HB_LANG_ITEM_BASE_ERRDESC + ulGenCode ) );
-   hb_errPutOperation( pError, szOperation ? szOperation : "" );
+   hb_errPutOperation( pError, szOperation );
    hb_errPutOsCode( pError, uiOsCode );
    hb_errPutFlags( pError, ( USHORT ) ( uiFlags | EF_CANSUBSTITUTE ) );
 
    return pError;
 }
 
-PHB_ITEM hb_errRT_SubstParams( const char *szSubSystem, ULONG ulGenCode, ULONG ulSubCode, const char * szDescription, const char * szOperation )
+PHB_ITEM hb_errRT_SubstParams( const char * szSubSystem, ULONG ulGenCode, ULONG ulSubCode, const char * szDescription, const char * szOperation )
 {
    PHB_ITEM pRetVal;
    PHB_ITEM pError;
@@ -1306,7 +1306,7 @@ USHORT hb_errRT_DBCMD_Ext( ULONG ulGenCode, ULONG ulSubCode, const char * szDesc
    USHORT uiAction;
    PHB_ITEM pError;
 
-   pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_DBCMD, ulGenCode, ulSubCode, (const char *)szDescription, (const char *)szOperation, 0, uiFlags );
+   pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_DBCMD, ulGenCode, ulSubCode, szDescription, szOperation, 0, uiFlags );
 
    uiAction = hb_errLaunch( pError );
 

@@ -54,7 +54,7 @@
 
 #if defined( __HB_DEBUG__ )
 
-FUNCTION _HBQT_DEBUG( ... )
+PROCEDURE _HBQT_DEBUG( ... )
    LOCAL cString := ""
 
    AEval( hb_AParams(), {| x | cString += ValType( x ) + ":" + iif( ISARRAY( x ), "[" + hb_ntos( Len( x ) ) + "]", hb_ValToStr( x ) ) + " " } )
@@ -65,6 +65,6 @@ FUNCTION _HBQT_DEBUG( ... )
       hb_TraceString( cString )
    #endif
 
-   RETURN NIL
+   RETURN
 
 #endif
