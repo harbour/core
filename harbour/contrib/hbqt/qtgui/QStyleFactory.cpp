@@ -87,15 +87,15 @@ QT_G_FUNC( release_QStyleFactory )
       ( ( QStyleFactory * ) p->ph )->~QStyleFactory();
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QStyleFactory               Object deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  YES release_QStyleFactory               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  YES release_QStyleFactory               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
       #endif
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "release_QStyleFactory               Object Allready deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  DEL release_QStyleFactory" );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QStyleFactory" );
       #endif
    }
 }
@@ -106,8 +106,8 @@ void * gcAllocate_QStyleFactory( void * pObj )
 
    p->ph = pObj;
    p->func = release_QStyleFactory;
-   #if defined(__debug__)
-      just_debug( "          new_QStyleFactory               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QStyleFactory               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
    #endif
    return( p );
 }

@@ -93,15 +93,15 @@ QT_G_FUNC( release_QStyleOptionFrame )
       ( ( QStyleOptionFrame * ) p->ph )->~QStyleOptionFrame();
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionFrame           Object deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  YES release_QStyleOptionFrame           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  YES release_QStyleOptionFrame           %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
       #endif
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionFrame           Object Allready deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  DEL release_QStyleOptionFrame" );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QStyleOptionFrame" );
       #endif
    }
 }
@@ -112,8 +112,8 @@ void * gcAllocate_QStyleOptionFrame( void * pObj )
 
    p->ph = pObj;
    p->func = release_QStyleOptionFrame;
-   #if defined(__debug__)
-      just_debug( "          new_QStyleOptionFrame           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QStyleOptionFrame           %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
    #endif
    return( p );
 }

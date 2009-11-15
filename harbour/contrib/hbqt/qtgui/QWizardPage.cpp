@@ -96,23 +96,23 @@ QT_G_FUNC( release_QWizardPage )
          ( ( QWizardPage * ) p->ph )->~QWizardPage();
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QWizardPage                 Object deleted!" ) );
-         #if defined(__debug__)
-            just_debug( "  YES release_QWizardPage                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  YES release_QWizardPage                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
          #endif
       }
       else
       {
          HB_TRACE( HB_TR_DEBUG, ( "release_QWizardPage                 Object Name Missing!" ) );
-         #if defined(__debug__)
-            just_debug( "  NO  release_QWizardPage" );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  NO  release_QWizardPage" );
          #endif
       }
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "release_QWizardPage                 Object Allready deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  DEL release_QWizardPage" );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QWizardPage" );
       #endif
    }
 }
@@ -124,8 +124,8 @@ void * gcAllocate_QWizardPage( void * pObj )
    p->ph = pObj;
    p->func = release_QWizardPage;
    new( & p->pq ) QPointer< QWizardPage >( ( QWizardPage * ) pObj );
-   #if defined(__debug__)
-      just_debug( "          new_QWizardPage                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QWizardPage                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
    #endif
    return( p );
 }

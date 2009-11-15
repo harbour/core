@@ -94,15 +94,15 @@ QT_G_FUNC( release_QCursor )
       ( ( QCursor * ) p->ph )->~QCursor();
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QCursor                     Object deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  YES release_QCursor                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  YES release_QCursor                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
       #endif
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "release_QCursor                     Object Allready deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  DEL release_QCursor" );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QCursor" );
       #endif
    }
 }
@@ -113,8 +113,8 @@ void * gcAllocate_QCursor( void * pObj )
 
    p->ph = pObj;
    p->func = release_QCursor;
-   #if defined(__debug__)
-      just_debug( "          new_QCursor                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QCursor                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
    #endif
    return( p );
 }

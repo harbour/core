@@ -103,23 +103,23 @@ QT_G_FUNC( release_QFontDialog )
          ( ( QFontDialog * ) p->ph )->~QFontDialog();
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QFontDialog                 Object deleted!" ) );
-         #if defined(__debug__)
-            just_debug( "  YES release_QFontDialog                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  YES release_QFontDialog                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
          #endif
       }
       else
       {
          HB_TRACE( HB_TR_DEBUG, ( "release_QFontDialog                 Object Name Missing!" ) );
-         #if defined(__debug__)
-            just_debug( "  NO  release_QFontDialog" );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  NO  release_QFontDialog" );
          #endif
       }
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "release_QFontDialog                 Object Allready deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  DEL release_QFontDialog" );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QFontDialog" );
       #endif
    }
 }
@@ -131,8 +131,8 @@ void * gcAllocate_QFontDialog( void * pObj )
    p->ph = pObj;
    p->func = release_QFontDialog;
    new( & p->pq ) QPointer< QFontDialog >( ( QFontDialog * ) pObj );
-   #if defined(__debug__)
-      just_debug( "          new_QFontDialog                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QFontDialog                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
    #endif
    return( p );
 }

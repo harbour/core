@@ -89,15 +89,15 @@ QT_G_FUNC( release_QSize )
       ( ( QSize * ) p->ph )->~QSize();
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QSize                       Object deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  YES release_QSize                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  YES release_QSize                       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
       #endif
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "release_QSize                       Object Allready deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  DEL release_QSize" );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QSize" );
       #endif
    }
 }
@@ -108,8 +108,8 @@ void * gcAllocate_QSize( void * pObj )
 
    p->ph = pObj;
    p->func = release_QSize;
-   #if defined(__debug__)
-      just_debug( "          new_QSize                       %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QSize                       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
    #endif
    return( p );
 }

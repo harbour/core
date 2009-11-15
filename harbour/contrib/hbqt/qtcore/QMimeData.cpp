@@ -108,23 +108,23 @@ QT_G_FUNC( release_QMimeData )
          ( ( QMimeData * ) p->ph )->~QMimeData();
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QMimeData                   Object deleted!" ) );
-         #if defined(__debug__)
-            just_debug( "  YES release_QMimeData                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  YES release_QMimeData                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
          #endif
       }
       else
       {
          HB_TRACE( HB_TR_DEBUG, ( "release_QMimeData                   Object Name Missing!" ) );
-         #if defined(__debug__)
-            just_debug( "  NO  release_QMimeData" );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  NO  release_QMimeData" );
          #endif
       }
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "release_QMimeData                   Object Allready deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  DEL release_QMimeData" );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QMimeData" );
       #endif
    }
 }
@@ -136,8 +136,8 @@ void * gcAllocate_QMimeData( void * pObj )
    p->ph = pObj;
    p->func = release_QMimeData;
    new( & p->pq ) QPointer< QMimeData >( ( QMimeData * ) pObj );
-   #if defined(__debug__)
-      just_debug( "          new_QMimeData                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QMimeData                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
    #endif
    return( p );
 }

@@ -109,15 +109,15 @@ QT_G_FUNC( release_QPainterPath )
       ( ( QPainterPath * ) p->ph )->~QPainterPath();
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QPainterPath                Object deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  YES release_QPainterPath                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  YES release_QPainterPath                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
       #endif
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "release_QPainterPath                Object Allready deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  DEL release_QPainterPath" );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QPainterPath" );
       #endif
    }
 }
@@ -128,8 +128,8 @@ void * gcAllocate_QPainterPath( void * pObj )
 
    p->ph = pObj;
    p->func = release_QPainterPath;
-   #if defined(__debug__)
-      just_debug( "          new_QPainterPath                %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QPainterPath                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
    #endif
    return( p );
 }

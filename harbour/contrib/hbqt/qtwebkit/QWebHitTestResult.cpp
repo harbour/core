@@ -89,15 +89,15 @@ QT_G_FUNC( release_QWebHitTestResult )
       ( ( QWebHitTestResult * ) p->ph )->~QWebHitTestResult();
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QWebHitTestResult           Object deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  YES release_QWebHitTestResult           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  YES release_QWebHitTestResult           %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
       #endif
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "release_QWebHitTestResult           Object Allready deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  DEL release_QWebHitTestResult" );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QWebHitTestResult" );
       #endif
    }
 }
@@ -108,8 +108,8 @@ void * gcAllocate_QWebHitTestResult( void * pObj )
 
    p->ph = pObj;
    p->func = release_QWebHitTestResult;
-   #if defined(__debug__)
-      just_debug( "          new_QWebHitTestResult           %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QWebHitTestResult           %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
    #endif
    return( p );
 }

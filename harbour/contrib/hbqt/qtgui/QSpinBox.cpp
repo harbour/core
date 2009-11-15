@@ -97,23 +97,23 @@ QT_G_FUNC( release_QSpinBox )
          ( ( QSpinBox * ) p->ph )->~QSpinBox();
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QSpinBox                    Object deleted!" ) );
-         #if defined(__debug__)
-            just_debug( "  YES release_QSpinBox                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  YES release_QSpinBox                    %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
          #endif
       }
       else
       {
          HB_TRACE( HB_TR_DEBUG, ( "release_QSpinBox                    Object Name Missing!" ) );
-         #if defined(__debug__)
-            just_debug( "  NO  release_QSpinBox" );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  NO  release_QSpinBox" );
          #endif
       }
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "release_QSpinBox                    Object Allready deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  DEL release_QSpinBox" );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QSpinBox" );
       #endif
    }
 }
@@ -125,8 +125,8 @@ void * gcAllocate_QSpinBox( void * pObj )
    p->ph = pObj;
    p->func = release_QSpinBox;
    new( & p->pq ) QPointer< QSpinBox >( ( QSpinBox * ) pObj );
-   #if defined(__debug__)
-      just_debug( "          new_QSpinBox                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QSpinBox                    %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
    #endif
    return( p );
 }

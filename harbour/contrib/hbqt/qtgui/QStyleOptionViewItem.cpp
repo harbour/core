@@ -94,15 +94,15 @@ QT_G_FUNC( release_QStyleOptionViewItem )
       ( ( QStyleOptionViewItem * ) p->ph )->~QStyleOptionViewItem();
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionViewItem        Object deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  YES release_QStyleOptionViewItem        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  YES release_QStyleOptionViewItem        %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
       #endif
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionViewItem        Object Allready deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  DEL release_QStyleOptionViewItem" );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QStyleOptionViewItem" );
       #endif
    }
 }
@@ -113,8 +113,8 @@ void * gcAllocate_QStyleOptionViewItem( void * pObj )
 
    p->ph = pObj;
    p->func = release_QStyleOptionViewItem;
-   #if defined(__debug__)
-      just_debug( "          new_QStyleOptionViewItem        %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QStyleOptionViewItem        %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
    #endif
    return( p );
 }

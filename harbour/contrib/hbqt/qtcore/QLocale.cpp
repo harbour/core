@@ -117,15 +117,15 @@ QT_G_FUNC( release_QLocale )
       ( ( QLocale * ) p->ph )->~QLocale();
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QLocale                     Object deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  YES release_QLocale                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  YES release_QLocale                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
       #endif
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "release_QLocale                     Object Allready deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  DEL release_QLocale" );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QLocale" );
       #endif
    }
 }
@@ -136,8 +136,8 @@ void * gcAllocate_QLocale( void * pObj )
 
    p->ph = pObj;
    p->func = release_QLocale;
-   #if defined(__debug__)
-      just_debug( "          new_QLocale                     %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QLocale                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
    #endif
    return( p );
 }

@@ -88,15 +88,15 @@ QT_G_FUNC( release_QTextImageFormat )
       ( ( QTextImageFormat * ) p->ph )->~QTextImageFormat();
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QTextImageFormat            Object deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  YES release_QTextImageFormat            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  YES release_QTextImageFormat            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
       #endif
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "release_QTextImageFormat            Object Allready deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  DEL release_QTextImageFormat" );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QTextImageFormat" );
       #endif
    }
 }
@@ -107,8 +107,8 @@ void * gcAllocate_QTextImageFormat( void * pObj )
 
    p->ph = pObj;
    p->func = release_QTextImageFormat;
-   #if defined(__debug__)
-      just_debug( "          new_QTextImageFormat            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QTextImageFormat            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
    #endif
    return( p );
 }

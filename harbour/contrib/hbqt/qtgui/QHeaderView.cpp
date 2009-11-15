@@ -102,23 +102,23 @@ QT_G_FUNC( release_QHeaderView )
          ( ( QHeaderView * ) p->ph )->~QHeaderView();
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QHeaderView                 Object deleted!" ) );
-         #if defined(__debug__)
-            just_debug( "  YES release_QHeaderView                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  YES release_QHeaderView                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
          #endif
       }
       else
       {
          HB_TRACE( HB_TR_DEBUG, ( "release_QHeaderView                 Object Name Missing!" ) );
-         #if defined(__debug__)
-            just_debug( "  NO  release_QHeaderView" );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  NO  release_QHeaderView" );
          #endif
       }
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "release_QHeaderView                 Object Allready deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  DEL release_QHeaderView" );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QHeaderView" );
       #endif
    }
 }
@@ -130,8 +130,8 @@ void * gcAllocate_QHeaderView( void * pObj )
    p->ph = pObj;
    p->func = release_QHeaderView;
    new( & p->pq ) QPointer< QHeaderView >( ( QHeaderView * ) pObj );
-   #if defined(__debug__)
-      just_debug( "          new_QHeaderView                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QHeaderView                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
    #endif
    return( p );
 }

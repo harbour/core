@@ -120,15 +120,15 @@ QT_G_FUNC( release_QPrinter )
       ( ( QPrinter * ) p->ph )->~QPrinter();
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QPrinter                    Object deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  YES release_QPrinter                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  YES release_QPrinter                    %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
       #endif
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "release_QPrinter                    Object Allready deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  DEL release_QPrinter" );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QPrinter" );
       #endif
    }
 }
@@ -139,8 +139,8 @@ void * gcAllocate_QPrinter( void * pObj )
 
    p->ph = pObj;
    p->func = release_QPrinter;
-   #if defined(__debug__)
-      just_debug( "          new_QPrinter                    %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QPrinter                    %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
    #endif
    return( p );
 }

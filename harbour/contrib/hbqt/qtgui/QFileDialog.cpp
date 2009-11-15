@@ -125,23 +125,23 @@ QT_G_FUNC( release_QFileDialog )
          ( ( QFileDialog * ) p->ph )->~QFileDialog();
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QFileDialog                 Object deleted!" ) );
-         #if defined(__debug__)
-            just_debug( "  YES release_QFileDialog                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  YES release_QFileDialog                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
          #endif
       }
       else
       {
          HB_TRACE( HB_TR_DEBUG, ( "release_QFileDialog                 Object Name Missing!" ) );
-         #if defined(__debug__)
-            just_debug( "  NO  release_QFileDialog" );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  NO  release_QFileDialog" );
          #endif
       }
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "release_QFileDialog                 Object Allready deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  DEL release_QFileDialog" );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QFileDialog" );
       #endif
    }
 }
@@ -153,8 +153,8 @@ void * gcAllocate_QFileDialog( void * pObj )
    p->ph = pObj;
    p->func = release_QFileDialog;
    new( & p->pq ) QPointer< QFileDialog >( ( QFileDialog * ) pObj );
-   #if defined(__debug__)
-      just_debug( "          new_QFileDialog                 %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QFileDialog                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
    #endif
    return( p );
 }

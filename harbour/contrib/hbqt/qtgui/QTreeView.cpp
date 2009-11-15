@@ -110,23 +110,23 @@ QT_G_FUNC( release_QTreeView )
          ( ( QTreeView * ) p->ph )->~QTreeView();
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QTreeView                   Object deleted!" ) );
-         #if defined(__debug__)
-            just_debug( "  YES release_QTreeView                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  YES release_QTreeView                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
          #endif
       }
       else
       {
          HB_TRACE( HB_TR_DEBUG, ( "release_QTreeView                   Object Name Missing!" ) );
-         #if defined(__debug__)
-            just_debug( "  NO  release_QTreeView" );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  NO  release_QTreeView" );
          #endif
       }
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "release_QTreeView                   Object Allready deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  DEL release_QTreeView" );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QTreeView" );
       #endif
    }
 }
@@ -138,8 +138,8 @@ void * gcAllocate_QTreeView( void * pObj )
    p->ph = pObj;
    p->func = release_QTreeView;
    new( & p->pq ) QPointer< QTreeView >( ( QTreeView * ) pObj );
-   #if defined(__debug__)
-      just_debug( "          new_QTreeView                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QTreeView                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
    #endif
    return( p );
 }

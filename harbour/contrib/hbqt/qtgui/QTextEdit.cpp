@@ -116,23 +116,23 @@ QT_G_FUNC( release_QTextEdit )
          ( ( QTextEdit * ) p->ph )->~QTextEdit();
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QTextEdit                   Object deleted!" ) );
-         #if defined(__debug__)
-            just_debug( "  YES release_QTextEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  YES release_QTextEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
          #endif
       }
       else
       {
          HB_TRACE( HB_TR_DEBUG, ( "release_QTextEdit                   Object Name Missing!" ) );
-         #if defined(__debug__)
-            just_debug( "  NO  release_QTextEdit" );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  NO  release_QTextEdit" );
          #endif
       }
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "release_QTextEdit                   Object Allready deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  DEL release_QTextEdit" );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QTextEdit" );
       #endif
    }
 }
@@ -144,8 +144,8 @@ void * gcAllocate_QTextEdit( void * pObj )
    p->ph = pObj;
    p->func = release_QTextEdit;
    new( & p->pq ) QPointer< QTextEdit >( ( QTextEdit * ) pObj );
-   #if defined(__debug__)
-      just_debug( "          new_QTextEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QTextEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
    #endif
    return( p );
 }

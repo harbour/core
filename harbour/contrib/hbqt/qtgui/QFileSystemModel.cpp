@@ -102,23 +102,23 @@ QT_G_FUNC( release_QFileSystemModel )
          ( ( QFileSystemModel * ) p->ph )->~QFileSystemModel();
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QFileSystemModel            Object deleted!" ) );
-         #if defined(__debug__)
-            just_debug( "  YES release_QFileSystemModel            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  YES release_QFileSystemModel            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
          #endif
       }
       else
       {
          HB_TRACE( HB_TR_DEBUG, ( "release_QFileSystemModel            Object Name Missing!" ) );
-         #if defined(__debug__)
-            just_debug( "  NO  release_QFileSystemModel" );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  NO  release_QFileSystemModel" );
          #endif
       }
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "release_QFileSystemModel            Object Allready deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  DEL release_QFileSystemModel" );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QFileSystemModel" );
       #endif
    }
 }
@@ -130,8 +130,8 @@ void * gcAllocate_QFileSystemModel( void * pObj )
    p->ph = pObj;
    p->func = release_QFileSystemModel;
    new( & p->pq ) QPointer< QFileSystemModel >( ( QFileSystemModel * ) pObj );
-   #if defined(__debug__)
-      just_debug( "          new_QFileSystemModel            %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QFileSystemModel            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
    #endif
    return( p );
 }

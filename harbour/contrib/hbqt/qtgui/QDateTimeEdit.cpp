@@ -105,23 +105,23 @@ QT_G_FUNC( release_QDateTimeEdit )
          ( ( QDateTimeEdit * ) p->ph )->~QDateTimeEdit();
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QDateTimeEdit               Object deleted!" ) );
-         #if defined(__debug__)
-            just_debug( "  YES release_QDateTimeEdit               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  YES release_QDateTimeEdit               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
          #endif
       }
       else
       {
          HB_TRACE( HB_TR_DEBUG, ( "release_QDateTimeEdit               Object Name Missing!" ) );
-         #if defined(__debug__)
-            just_debug( "  NO  release_QDateTimeEdit" );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  NO  release_QDateTimeEdit" );
          #endif
       }
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "release_QDateTimeEdit               Object Allready deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  DEL release_QDateTimeEdit" );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QDateTimeEdit" );
       #endif
    }
 }
@@ -133,8 +133,8 @@ void * gcAllocate_QDateTimeEdit( void * pObj )
    p->ph = pObj;
    p->func = release_QDateTimeEdit;
    new( & p->pq ) QPointer< QDateTimeEdit >( ( QDateTimeEdit * ) pObj );
-   #if defined(__debug__)
-      just_debug( "          new_QDateTimeEdit               %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QDateTimeEdit               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
    #endif
    return( p );
 }
