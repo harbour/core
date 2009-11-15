@@ -61,7 +61,8 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 endif
 LDFLAGS += SYS linux
 
-LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
+LDLIBS := $(HB_USER_LIBS)
+LDLIBS += $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 
 DY := $(LD)
 DFLAGS := OP quiet FORM elf dll LIBPATH $(WATCOM)/lib386 LIBPATH $(WATCOM)/lib386/linux OP exportall

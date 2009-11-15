@@ -47,7 +47,7 @@ LD_OUT := -out:
 SYSLIBS += corelibc
 
 LIBPATHS := -libpath:$(LIB_DIR)
-LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
+LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
 LDFLAGS += -subsystem:windows
 LDFLAGS += $(LIBPATHS)

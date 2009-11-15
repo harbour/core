@@ -63,7 +63,8 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 endif
 LDFLAGS += SYS nt
 
-LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
+LDLIBS := $(foreach lib,$(HB_USER_LIBS),$(lib))
+LDLIBS += $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 LDLIBS += $(foreach lib,$(SYSLIBS),$(lib))
 
 DY := $(LD)

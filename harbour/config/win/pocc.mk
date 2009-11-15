@@ -42,7 +42,7 @@ LD := polink.exe
 LD_OUT := -out:
 
 LIBPATHS := -libpath:$(LIB_DIR)
-LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
+LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
 LDFLAGS += -subsystem:console
 LDFLAGS += $(LIBPATHS)

@@ -65,7 +65,7 @@ LD_OUT := -Fe
 SYSLIBS += corelibc
 
 LIBPATHS := -libpath:$(LIB_DIR)
-LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
+LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
 LDFLAGS += -nologo -link -subsystem:windowsce -nodefaultlib:oldnames.lib -nodefaultlib:kernel32.lib
 ifeq ($(filter $(HB_COMPILER_VER),600 700 710),)

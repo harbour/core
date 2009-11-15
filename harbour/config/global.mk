@@ -1109,6 +1109,8 @@ endif
 
 include $(TOP)$(ROOT)config/detect.mk
 
+SYSLIBS :=
+
 # Names of portable GT drivers
 HB_GT_LIBS := \
    gtcgi \
@@ -1125,8 +1127,6 @@ endif
 ifneq ($(HB_HAS_X11),)
    HB_GT_LIBS += gtxwc
 endif
-
-SYSLIBS := $(HB_USER_LIBS)
 
 # Names of valid RDD libraries
 HB_RDD_LIBS := \

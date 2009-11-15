@@ -101,10 +101,12 @@ endif
 
 ifneq ($(HB_PLATFORM_UNIX),)
    ifeq ($(BUILD_SHARED),yes)
-      SYSLIBS := $(HB_USER_LIBS)
+      SYSLIBS :=
       SYSLIBPATHS :=
    endif
 endif
+
+LIBS := $(HB_USER_LIBS) $(LIBS)
 
 include $(TOP)$(ROOT)config/$(HB_PLATFORM)/$(HB_COMPILER).mk
 include $(TOP)$(ROOT)config/c.mk

@@ -51,7 +51,7 @@ LD := $(HB_CCACHE) $(HB_CMP)
 LD_OUT := -o
 
 LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),-L$(dir))
-LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),-l$(lib))
+LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 
 LDFLAGS += $(LIBPATHS)
 

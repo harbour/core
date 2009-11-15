@@ -65,7 +65,8 @@ else
    LDFLAGS += SYS dos4g OP stub=wstubq.exe
 endif
 
-LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
+LDLIBS := $(HB_USER_LIBS)
+LDLIBS += $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 
 ifneq ($(HB_LINKING_RTL),)
    ifneq ($(HB_HAS_WATT),)

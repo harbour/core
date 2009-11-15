@@ -54,7 +54,8 @@ LD_RULE = $(LD) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) c0x32.obj $(^F), $(s
 LIBPATHS := -L$(LIB_DIR)
 # It's probably not necessary in native Windows but I need it
 # for my Linux box because -L<path> seems to not work with WINE
-LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib)$(LIB_EXT))
+LDLIBS := $(foreach lib,$(HB_USER_LIBS),$(lib)$(LIB_EXT))
+LDLIBS += $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib)$(LIB_EXT))
 LDLIBS += $(foreach lib,$(SYSLIBS),$(lib)$(LIB_EXT))
 
 AR := tlib.exe

@@ -50,6 +50,8 @@
  *
  */
 
+#include "common.ch"
+
 #if defined( __HB_DEBUG__ )
 
 FUNCTION _HBQT_DEBUG( ... )

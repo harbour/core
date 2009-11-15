@@ -63,7 +63,8 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 endif
 LDFLAGS += SYS os2v2
 
-LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
+LDLIBS := $(HB_USER_LIBS)
+LDLIBS += $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 
 DY := $(LD)
 DFLAGS := OP quiet SYS os2v2_dll

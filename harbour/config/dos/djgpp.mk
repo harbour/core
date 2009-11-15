@@ -63,7 +63,7 @@ LD := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 LD_OUT := -o
 
 LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),-L$(dir))
-LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),-l$(lib))
+LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 #       It causes that every command will be separated by LF

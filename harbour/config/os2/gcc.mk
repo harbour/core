@@ -62,7 +62,7 @@ LD := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 LD_OUT := -o$(subst x,x, )
 
 LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),-L$(dir))
-LDLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),-l$(lib))
+LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 
 LDFLAGS += $(LIBPATHS)
 
