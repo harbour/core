@@ -3450,7 +3450,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          FOR EACH aTODO IN ArraySplit( l_aPRG_TODO, l_nJOBS )
             aCommand := ArrayAJoin( { { iif( hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_lCreateDyn ], "-n1", "-n2" ) },;
                                       aTODO,;
-                                      iif( hbmk[ _HBMK_lBLDFLGP ], { " " + hb_Version( HB_VERSION_FLAG_PRG ) }, {} ),;
+                                      iif( hbmk[ _HBMK_lBLDFLGP ], { hb_Version( HB_VERSION_FLAG_PRG ) }, {} ),;
                                       ListToArray( iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) ),;
                                       hbmk[ _HBMK_aOPTPRG ] } )
 
@@ -4782,7 +4782,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
       aCommand := ArrayAJoin( { { "-q0", "-sm" },;
                                 { iif( hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_lCreateDyn ], "-n1", "-n2" ) },;
                                 { cFileName },;
-                                iif( hbmk[ _HBMK_lBLDFLGP ], { " " + hb_Version( HB_VERSION_FLAG_PRG ) }, {} ),;
+                                iif( hbmk[ _HBMK_lBLDFLGP ], { hb_Version( HB_VERSION_FLAG_PRG ) }, {} ),;
                                 ListToArray( iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) ),;
                                 hbmk[ _HBMK_aOPTPRG ] } )
 
