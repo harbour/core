@@ -716,7 +716,6 @@ typedef unsigned int        HB_UINT;
 typedef double              HB_DOUBLE;
 typedef ULONG               HB_SIZE;           /* TOFIX: Change to 'long' */
 typedef void *              HB_PTRVAL;         /* TOFIX */
-typedef USHORT              HB_ERRCODE;        /* TOFIX: Change to 'unsigned int' */
 /* typedef                     HB_POINTER;    */    /* TOFIX */
 
 /* Harbour strict bit types: */
