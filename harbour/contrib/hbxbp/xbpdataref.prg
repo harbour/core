@@ -70,7 +70,6 @@
 
 #include "xbp.ch"
 #include "appevent.ch"
-#include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -144,7 +143,7 @@ METHOD XbpDataRef:setData( xValue, mp2 )
 
    HB_SYMBOL_UNUSED( mp2 )
 
-//hb_outDebug( cClass +' '+ ::cargo +"..."+ IF(empty(xValue)," empty ",valtype(xValue)) )
+//HBXBP_DEBUG( cClass +' '+ ::cargo +"..."+ IF(empty(xValue)," empty ",valtype(xValue)) )
 
    IF hb_isBlock( ::dataLink )
       ::sl_editBuffer := eval( ::dataLink, xValue  )

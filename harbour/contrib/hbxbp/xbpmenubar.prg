@@ -72,7 +72,6 @@
 
 #include "xbp.ch"
 #include "appevent.ch"
-#include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -261,11 +260,11 @@ METHOD xbpMenuBar:delItem( nItemIndex )
    LOCAL lResult := .T.
    LOCAL oAction
 
-//xbp_debug( nItemIndex, len( ::aMenuItems ), len( ::aMenuItems[ nItemIndex ] ) )
+//HBXBP_DEBUG( nItemIndex, len( ::aMenuItems ), len( ::aMenuItems[ nItemIndex ] ) )
 
    IF nItemIndex > 0 .AND. nItemIndex <= ::numItems()
       IF ::aMenuItems[ nItemIndex, 1 ] == QMF_POPUP
-//xbp_debug( valtype( ::aMenuItems[ nItemIndex, 4 ] ), __ObjGetClsName( ::aMenuItems[ nItemIndex, 4 ] ) )
+//HBXBP_DEBUG( valtype( ::aMenuItems[ nItemIndex, 4 ] ), __ObjGetClsName( ::aMenuItems[ nItemIndex, 4 ] ) )
          //::aMenuItems[ nItemIndex, 4 ]:destroy()
       ELSE
          oAction := ::aMenuItems[ nItemIndex, 5 ]

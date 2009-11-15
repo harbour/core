@@ -4,19 +4,15 @@
 
 #ifndef _XBP_CH
 
-#if defined( __HB_OUTDEBUG__ )
-   #if defined( __PLATFORM__WINDOWS ) .AND. defined( __HB_WINDEBUG__ )
-      #xtranslate HB_OUTDEBUG( [<x>] ) => wapi_OutputDebugString( <x> )
-   #else
-      #xtranslate HB_OUTDEBUG( [<x>] ) => hb_TraceString( <x> )
-   #endif
+#if defined( __HB_DEBUG__ )
+   #xtranslate HBXBP_DEBUG( [<x,...>] ) => _HBXBP_DEBUG( <x> )
 #else
-   #xtranslate HB_OUTDEBUG( [<x>] ) => iif( .T.,, )
+   #xtranslate HBXBP_DEBUG( [<x,...>] ) => iif( .T.,, )
 #endif
 
 /*----------------------------------------------------------------------*/
 
-#define QT_PTROF( oObj )                          ( oObj:pPtr )
+#include "hbqt.ch"
 
 #define HBXBP_EVENT_HANDLED                       0
 #define HBXBP_EVENT_UNHANDLED                     1

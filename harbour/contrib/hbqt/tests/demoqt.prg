@@ -100,7 +100,7 @@ EXIT PROCEDURE Qt_End()
 /*----------------------------------------------------------------------*/
 
 FUNCTION My_Events()
-HB_OUTDEBUG( "Key Pressed" )
+HBQT_DEBUG( "Key Pressed" )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -114,8 +114,8 @@ PROCEDURE Main()
    Qt_SetEventFilter()
    Qt_SetEventSlots()
 
-HB_OUTDEBUG( "  " )
-HB_OUTDEBUG( "-----------------b-----------------" )
+HBQT_DEBUG( "  " )
+HBQT_DEBUG( "-----------------b-----------------" )
 
    FOR i := 1 TO 1
       oWnd := QMainWindow():new()
@@ -149,17 +149,17 @@ HB_OUTDEBUG( "-----------------b-----------------" )
    oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
    aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
 
-HB_OUTDEBUG( "connected: "  + IIF( QT_CONNECT_EVENT( QT_PTROF( oWnd ), 6, {|o,e| My_Events( o, e ) } ), "Yes", "No" ) )
+HBQT_DEBUG( "connected: "  + IIF( QT_CONNECT_EVENT( QT_PTROF( oWnd ), 6, {|o,e| My_Events( o, e ) } ), "Yes", "No" ) )
 
    oWnd:Show()
 
    qApp:exec()
 
-HB_OUTDEBUG( "----------------- qApp:exec -----------------" )
+HBQT_DEBUG( "----------------- qApp:exec -----------------" )
 
    xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd } )
 
-HB_OUTDEBUG( "-------------------- exit -------------------" )
+HBQT_DEBUG( "-------------------- exit -------------------" )
 
    RETURN
 
@@ -168,7 +168,7 @@ HB_OUTDEBUG( "-------------------- exit -------------------" )
 FUNCTION xReleaseMemory( aObj )
    #if 1
    LOCAL i
-HB_OUTDEBUG( "-----------------  Releasing Memory  -----------------" )
+HBQT_DEBUG( "-----------------  Releasing Memory  -----------------" )
    FOR i := 1 TO len( aObj )
       IF hb_isObject( aObj[ i ] )
          aObj[ i ]:pPtr := 1
@@ -176,7 +176,7 @@ HB_OUTDEBUG( "-----------------  Releasing Memory  -----------------" )
          xReleaseMemory( aObj[ i ] )
       ENDIF
    NEXT
-HB_OUTDEBUG( "------------------  Memory Released ------------------" )
+HBQT_DEBUG( "------------------  Memory Released ------------------" )
    #else
       HB_SYMBOL_UNUSED( aObj )
    #endif
@@ -451,7 +451,7 @@ STATIC FUNCTION Build_TreeView( oWnd )
 
    oTV := QTreeView():new( QT_PTROF( oWnd ) )
    oTV:setMouseTracking( .t. )
-   //Qt_Connect_Signal( QT_PTROF( oTV ), QT_EVE_HOVERED, {|o,i| hb_outDebug( "oTV:hovered" ) } )
+   //Qt_Connect_Signal( QT_PTROF( oTV ), QT_EVE_HOVERED, {|o,i| HBQT_DEBUG( "oTV:hovered" ) } )
    oDirModel := QDirModel():new()
    oTV:setModel( QT_PTROF( oDirModel ) )
    oTV:move( 5, 7 )
@@ -467,7 +467,7 @@ STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
 
    oListBox := QListView():New( QT_PTROF( oWnd ) )
    oListBox:setMouseTracking( .t. )
-   //Qt_Connect_Signal( QT_PTROF( oListBox ), QT_EVE_HOVERED, {|o,i| hb_outDebug( "oListBox:hovered" ) } )
+   //Qt_Connect_Signal( QT_PTROF( oListBox ), QT_EVE_HOVERED, {|o,i| HBQT_DEBUG( "oListBox:hovered" ) } )
 
    oStrList := QStringList():new()
 
@@ -522,7 +522,7 @@ STATIC FUNCTION Build_Controls( oWnd )
    oComboBox:addItem( "First"  )
    oComboBox:addItem( "Second" )
    oComboBox:addItem( "Third"  )
-   //Qt_Connect_Signal( QT_PTROF( oComboBox ), QT_EVE_HIGHLIGHTED_I        , {|o,i| hb_outDebug( oComboBox:itemText( i ) ) } )
+   //Qt_Connect_Signal( QT_PTROF( oComboBox ), QT_EVE_HIGHLIGHTED_I        , {|o,i| HBQT_DEBUG( oComboBox:itemText( i ) ) } )
    Qt_Connect_Signal( QT_PTROF( oComboBox ), QT_EVE_CURRENTINDEXCHANGED_I, {|o,i| o := o, i := i, MsgInfo( oComboBox:itemText( i ) ) } )
    oComboBox:move( 5, 60 )
    oComboBox:resize( 345, 30 )

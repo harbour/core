@@ -1958,8 +1958,8 @@ HB_FUNC( QT_DISCONNECT_SIGNAL )
          s_s->listActv[ i - 1 ] = false;
          ret = disconnect_signal( object, signal );
          bFreed = true;
-#if defined(__debug__)
-just_debug( "      QT_DISCONNECT_SIGNAL: %s    %s", ret ? "YES" : "NO", signal );
+#if defined( __HB_DEBUG__ )
+hbqt_debug( "      QT_DISCONNECT_SIGNAL: %s    %s", ret ? "YES" : "NO", signal );
 #endif
       }
    }
@@ -2026,13 +2026,13 @@ Events::~Events()
 bool Events::eventFilter( QObject * object, QEvent * event )
 {
    QEvent::Type eventtype = event->type();
-#if defined(__debug__)
-//just_debug( "0 Events::eventFilter = %i", ( int ) eventtype );
+#if defined( __HB_DEBUG__ )
+//hbqt_debug( "0 Events::eventFilter = %i", ( int ) eventtype );
 #endif
    if( ( int ) eventtype == 0 )
    {
-#if defined(__debug__)
-//just_debug( "x Events::eventFilter =            0" );
+#if defined( __HB_DEBUG__ )
+//hbqt_debug( "x Events::eventFilter =            0" );
 #endif
       return false;
    }
@@ -2042,8 +2042,8 @@ bool Events::eventFilter( QObject * object, QEvent * event )
    int found = object->property( prop ).toInt();
    if( found == 0 )
    {
-#if defined(__debug__)
-//just_debug( "f Events::eventFilter = %s  %i", "       found=0", ( int ) eventtype );
+#if defined( __HB_DEBUG__ )
+//hbqt_debug( "f Events::eventFilter = %s  %i", "       found=0", ( int ) eventtype );
 #endif
       return false;
    }
@@ -2054,12 +2054,12 @@ bool Events::eventFilter( QObject * object, QEvent * event )
    {
       PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
       PHB_ITEM pEvent  = hb_itemPutPtr( NULL, event  );
-#if defined(__debug__)
-//just_debug( "0 Events::eventFilter = %i", ( int ) eventtype );
+#if defined( __HB_DEBUG__ )
+//hbqt_debug( "0 Events::eventFilter = %i", ( int ) eventtype );
 #endif
       ret = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 2, pObject, pEvent ) );
-#if defined(__debug__)
-//just_debug( "1 Events::eventFilter = %s", ret ? "   yes" : "   no" );
+#if defined( __HB_DEBUG__ )
+//hbqt_debug( "1 Events::eventFilter = %s", ret ? "   yes" : "   no" );
 #endif
       hb_itemRelease( pObject );
       hb_itemRelease( pEvent  );
@@ -2075,8 +2075,8 @@ bool Events::eventFilter( QObject * object, QEvent * event )
          event->ignore();
       }
    }
-#if defined(__debug__)
-//just_debug( "1 Events::eventFilter = %i", ( int ) eventtype );
+#if defined( __HB_DEBUG__ )
+//hbqt_debug( "1 Events::eventFilter = %i", ( int ) eventtype );
 #endif
    return ret;
 }
@@ -2137,8 +2137,8 @@ HB_FUNC( QT_DISCONNECT_EVENT )
       s_e->listActv[ i - 1 ]  = false;
       object->setProperty( prop, QVariant() );
       bRet = true;
-#if defined(__debug__)
-just_debug( "      QT_DISCONNECT_EVENT: %i", type );
+#if defined( __HB_DEBUG__ )
+hbqt_debug( "      QT_DISCONNECT_EVENT: %i", type );
 #endif
    }
    hb_retl( bRet );
@@ -2151,12 +2151,12 @@ HbTableView::HbTableView( QWidget * parent ) : QTableView( parent )
 }
 HbTableView::~HbTableView()
 {
-#if defined(__debug__)
-just_debug( "HbTableView::~HbTableView() 0 %i %i", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+#if defined( __HB_DEBUG__ )
+hbqt_debug( "HbTableView::~HbTableView() 0 %i %i", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
 #endif
    destroy();
-#if defined(__debug__)
-just_debug( "HbTableView::~HbTableView() 1 %i %i", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+#if defined( __HB_DEBUG__ )
+hbqt_debug( "HbTableView::~HbTableView() 1 %i %i", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
 #endif
 }
 void HbTableView::keyPressEvent( QKeyEvent * event )
@@ -2189,7 +2189,7 @@ void HbTableView::resizeEvent( QResizeEvent * event )
 }
 QModelIndex HbTableView::moveCursor( HbTableView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers )
 {
-//just_debug( "HbTableView: action=%i %i", cursorAction, QAbstractItemView::MoveDown );
+//hbqt_debug( "HbTableView: action=%i %i", cursorAction, QAbstractItemView::MoveDown );
 
    //emit sg_moveCursor( cursorAction, modifiers );
    return QTableView::moveCursor( cursorAction, modifiers );
@@ -2204,7 +2204,7 @@ void HbTableView::scrollContentsBy( int x, int y )
 }
 void HbTableView::scrollTo( const QModelIndex & index, QAbstractItemView::ScrollHint hint )
 {
-//just_debug( "HbTableView:scrollTo row = %i col = %i", index.row(),index.column() );
+//hbqt_debug( "HbTableView:scrollTo row = %i col = %i", index.row(),index.column() );
    QTableView::scrollTo( index, hint );
 }
 
@@ -2252,29 +2252,29 @@ QVariant fetchRole( PHB_ITEM block, int what, int par1, int par2 )
          #else
          vv = hb_itemGetCPtr( ret );
          #endif
-#if defined(__debug__)
-//just_debug( "   fetchRole[ s = %s ]",  hb_itemGetCPtr( ret ) );
+#if defined( __HB_DEBUG__ )
+//hbqt_debug( "   fetchRole[ s = %s ]",  hb_itemGetCPtr( ret ) );
 #endif
       }
       else if( hb_itemType( ret ) & HB_IT_LOGICAL )
       {
          vv = hb_itemGetL( ret );
-#if defined(__debug__)
-just_debug( "   fetchRole[ l = %i ]",  hb_itemGetL( ret ) );
+#if defined( __HB_DEBUG__ )
+hbqt_debug( "   fetchRole[ l = %i ]",  hb_itemGetL( ret ) );
 #endif
       }
       else if( hb_itemType( ret ) & HB_IT_DOUBLE  )
       {
          vv = hb_itemGetND( ret );
-#if defined(__debug__)
-just_debug( "   fetchRole[ d = %i ]",  hb_itemGetND( ret ) );
+#if defined( __HB_DEBUG__ )
+hbqt_debug( "   fetchRole[ d = %i ]",  hb_itemGetND( ret ) );
 #endif
       }
       else if( hb_itemType( ret ) & HB_IT_NUMERIC )
       {
          vv = hb_itemGetNI( ret );
-#if defined(__debug__)
-//just_debug( "   fetchRole[ n = %i ]",  hb_itemGetNI( ret ) );
+#if defined( __HB_DEBUG__ )
+//hbqt_debug( "   fetchRole[ n = %i ]",  hb_itemGetNI( ret ) );
 #endif
       }
    }
@@ -2305,8 +2305,8 @@ Qt::ItemFlags HbDbfModel::flags( const QModelIndex & index ) const
 
 QVariant HbDbfModel::data( const QModelIndex & index, int role ) const
 {
-#if defined(__debug__)
-//just_debug( "data - row=%i col=%i role=%i", index.row(), index.column(), role );
+#if defined( __HB_DEBUG__ )
+//hbqt_debug( "data - row=%i col=%i role=%i", index.row(), index.column(), role );
 #endif
    if( !index.isValid() )
       return( QVariant() );
@@ -2356,8 +2356,8 @@ QVariant HbDbfModel::data( const QModelIndex & index, int role ) const
 
 QVariant HbDbfModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-#if defined(__debug__)
-//just_debug( "headerData - section=%i orient=%i role=%i name=%s", section, orientation, role, objectName() );
+#if defined( __HB_DEBUG__ )
+//hbqt_debug( "headerData - section=%i orient=%i role=%i name=%s", section, orientation, role, objectName() );
 #endif
    if( orientation == Qt::Horizontal )
    {
@@ -2495,13 +2495,13 @@ MyMainWindow::MyMainWindow( PHB_ITEM pBlock, int iThreadID )
 }
 MyMainWindow::~MyMainWindow( void )
 {
-#if defined(__debug__)
-just_debug( "               MyMainWindow::~MyMainWindow 0" );
+#if defined( __HB_DEBUG__ )
+hbqt_debug( "               MyMainWindow::~MyMainWindow 0" );
 #endif
    hb_itemRelease( block );
    destroy();
-#if defined(__debug__)
-just_debug( "               MyMainWindow::~MyMainWindow 1" );
+#if defined( __HB_DEBUG__ )
+hbqt_debug( "               MyMainWindow::~MyMainWindow 1" );
 #endif
 }
 void MyMainWindow::paintEvent( QPaintEvent * event )
@@ -2538,7 +2538,7 @@ void MyMainWindow::paintEvent( QPaintEvent * event )
 }
 bool MyMainWindow::event( QEvent * event )
 {
-//just_debug( "                      event(%i) %i", threadID, (int) event->type() );
+//hbqt_debug( "                      event(%i) %i", threadID, (int) event->type() );
    hb_threadMutexLock( s_mutex );
    #if 0
    if( hb_vmRequestReenter() )
@@ -2692,8 +2692,8 @@ void MyMainWindow::resizeEvent( QResizeEvent * event )
 }
 void MyMainWindow::closeEvent( QCloseEvent * event )
 {
-#if defined(__debug__)
-just_debug( "               close event(%i)", threadID );
+#if defined( __HB_DEBUG__ )
+hbqt_debug( "               close event(%i)", threadID );
 #endif
    hb_threadMutexLock( s_mutex );
    if( hb_vmRequestReenter() )

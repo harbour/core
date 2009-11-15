@@ -70,7 +70,6 @@
 
 #include "xbp.ch"
 #include "appevent.ch"
-#include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -156,7 +155,7 @@ METHOD XbpSpinButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    #if 0   ////////////////////////////////////
    QT_QObject_InstallEventFilter( ::pWidget, SetEventFilter() )
-hb_outDebug( "XbpSpinButton:create  2" )
+HBXBP_DEBUG( "XbpSpinButton:create  2" )
    ::connectEvent( ::pWidget, QEvent_FocusIn , {|o,e| ::exeBlock( 7, e, o ) } )
    ::connectEvent( ::pWidget, QEvent_FocusOut, {|o,e| ::exeBlock( 8, e, o ) } )
    ::connectEvent( ::pWidget, QEvent_KeyPress, {|o,e| ::exeBlock( 9, e, o ) } )

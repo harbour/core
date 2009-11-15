@@ -51,7 +51,7 @@
  */
 /*----------------------------------------------------------------------*/
 
-#if defined(__debug__)
+#if defined( __HB_DEBUG__ )
    #define HB_OS_WIN_USED
 #endif
 
@@ -102,30 +102,42 @@ void * hbqt_gcpointer( int iParam )
    }
 }
 
-#if defined(__debug__)
+#if defined( __HB_DEBUG__ )
 
 #if defined( HB_OS_WIN )
-   #include <Psapi.h>
+   #include <psapi.h>
 #endif
 
-void just_debug( const char * sTraceMsg, ... )
+void hbqt_debug( const char * sTraceMsg, ... )
 {
 #if defined( HB_OS_WIN )
    if( sTraceMsg )
    {
-     char buffer[ 1024 ];
-     va_list ap;
+      char buffer[ 1024 ];
+      va_list ap;
+  
+      va_start( ap, sTraceMsg );
+      hb_vsnprintf( buffer, sizeof( buffer ), sTraceMsg, ap );
+      va_end( ap );
 
-     va_start( ap, sTraceMsg );
-     hb_vsnprintf( buffer, sizeof( buffer ), sTraceMsg, ap );
-     va_end( ap );
-
-     OutputDebugString( buffer );
+      #if defined( UNICODE )  
+      {
+         LPTSTR lpOutputString = HB_TCHAR_CONVTO( buffer );
+         OutputDebugString( lpOutputString );
+         HB_TCHAR_FREE( lpOutputString );
+      }
+      #else
+         OutputDebugString( buffer );
+      #endif
    }
 #endif
 }
 
-int hb_getMemUsed( void )
+#endif
+
+#if defined( __HB_DEBUG__ )
+
+int hbqt_getmemused( void )
 {
    int size = 0;
 #if defined( HB_OS_WIN )
@@ -146,10 +158,10 @@ int hb_getMemUsed( void )
 
 #endif
 
-HB_FUNC( HB_GETMEMUSED )
+HB_FUNC( HBQT_GETMEMUSED )
 {
-#if defined(__debug__)
-   hb_retni( hb_getMemUsed() );
+#if defined( __HB_DEBUG__ )
+   hb_retni( hbqt_getmemused() );
 #else
    hb_retni( 0 );
 #endif

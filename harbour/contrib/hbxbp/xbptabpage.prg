@@ -70,7 +70,6 @@
 
 #include "xbp.ch"
 #include "appevent.ch"
-#include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -262,13 +261,13 @@ METHOD XbpTabWidget:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisib
 /*----------------------------------------------------------------------*/
 
 METHOD XbpTabWidget:destroy()
-//xbp_debug( "                            XbpTabWidget:destroy()",0 )
+//HBXBP_DEBUG( "                            XbpTabWidget:destroy()",0 )
 
    ::oParent:oTabWidget := NIL
 //   ::disconnect()
 
    ::xbpWindow:destroy()
-//xbp_debug( "                            XbpTabWidget:destroy()",1 )
+//HBXBP_DEBUG( "                            XbpTabWidget:destroy()",1 )
    RETURN NIL
 
 /*----------------------------------------------------------------------*/

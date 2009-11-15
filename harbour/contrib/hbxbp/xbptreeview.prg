@@ -70,7 +70,6 @@
 
 #include "xbp.ch"
 #include "appevent.ch"
-#include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -197,7 +196,7 @@ METHOD XbpTreeView:ExeBlock( nMsg, p1, p2 )
    HB_SYMBOL_UNUSED( p1 )
    HB_SYMBOL_UNUSED( p2 )
 
-//hb_outDebug( hb_ntos( nMsg ) )
+//HBXBP_DEBUG( hb_ntos( nMsg ) )
 
    IF hb_isPointer( p1 )
       IF ( n := ascan( ::aItems, {|o| o:oWidget:pPtr == p1 } ) ) > 0
@@ -251,7 +250,7 @@ METHOD XbpTreeView:destroy()
    ::disconnect()
 
    FOR i := len( ::aItems ) TO 1 step -1
-//xbp_debug( i, __ObjGetClsName( ::aItems[ i ] ) )
+//HBXBP_DEBUG( i, __ObjGetClsName( ::aItems[ i ] ) )
       aeval( ::aItems[ i ]:aChilds, {|e,j| e := e, ::aItems[ i ]:aChilds[ j ] := NIL } )
       ::aItems[ i ]:oWidget:pPtr := 0
    NEXT

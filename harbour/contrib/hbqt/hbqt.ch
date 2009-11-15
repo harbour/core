@@ -67,14 +67,10 @@
 
 #ifndef _HBQT_CH
 
-#if defined( __HB_OUTDEBUG__ )
-   #if defined( __PLATFORM__WINDOWS ) .AND. defined( __HB_WINDEBUG__ )
-      #xtranslate HB_OUTDEBUG( [<x>] ) => wapi_OutputDebugString( <x> )
-   #else
-      #xtranslate HB_OUTDEBUG( [<x>] ) => hb_TraceString( <x> )
-   #endif
+#if defined( __HB_DEBUG__ )
+   #xtranslate HBQT_DEBUG( [<x,...>] ) => _HBQT_DEBUG( <x> )
 #else
-   #xtranslate HB_OUTDEBUG( [<x>] ) => iif( .T.,, )
+   #xtranslate HBQT_DEBUG( [<x,...>] ) => iif( .T.,, )
 #endif
 
 #define QT_PTROF( oObj )  ( oObj:pPtr )

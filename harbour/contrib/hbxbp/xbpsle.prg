@@ -70,7 +70,6 @@
 
 #include "xbp.ch"
 #include "appevent.ch"
-#include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -177,7 +176,7 @@ METHOD XbpSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 METHOD XbpSLE:exeBlock( nMsg, p1, p2 )
    LOCAL lRet := .F.
 
-//hb_OutDebug( 'XbpSLE: '+hb_ntos( nMsg ) )
+//HBXBP_DEBUG( 'XbpSLE: '+hb_ntos( nMsg ) )
    HB_SYMBOL_UNUSED( p1 )
 
    DO CASE

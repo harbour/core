@@ -11,6 +11,9 @@ LIBNAME := hbqt
 PRG_HEADERS := \
    hbqt.ch \
 
+PRG_SOURCES := \
+   hbqt_misc.prg
+
 include $(TOP)$(ROOT)contrib/hbqt/detect.mk
 
 ifneq ($(HB_HAS_QT),)

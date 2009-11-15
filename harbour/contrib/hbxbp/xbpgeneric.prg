@@ -71,8 +71,6 @@
 #include "gra.ch"
 #include "appevent.ch"
 
-#include "hbqt.ch"
-
 /*----------------------------------------------------------------------*/
 
 #define EVENT_BUFFER    200
@@ -176,14 +174,14 @@ FUNCTION SetAppEvent( nEvent, mp1, mp2, oXbp )
       nEventIn := 1
    ENDIF
 
-//xbp_debug( 0, "SetAppEvent ... ", threadID(), nEvent, xbeP_Paint )
+//HBXBP_DEBUG( 0, "SetAppEvent ... ", threadID(), nEvent, xbeP_Paint )
 
    ts_events[ nEventIn,1 ] := nEvent
    ts_events[ nEventIn,2 ] := mp1
    ts_events[ nEventIn,3 ] := mp2
    ts_events[ nEventIn,4 ] := oXbp
 
-//xbp_debug( 1, "SetAppEvent ... ", threadID(), nEvent )
+//HBXBP_DEBUG( 1, "SetAppEvent ... ", threadID(), nEvent )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -198,7 +196,7 @@ FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
    IF ++nEventOut > EVENT_BUFFER
       nEventOut := 1
    ENDIF
-//xbp_debug( "            AppEvent ... ", nThreadID, nEventOut )
+//HBXBP_DEBUG( "            AppEvent ... ", nThreadID, nEventOut )
    DO WHILE !empty( oEventLoop ) //.t.
       oEventLoop:processEvents( QEventLoop_AllEvents )
 
@@ -212,7 +210,7 @@ FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
       ENDIF
       hb_idleSleep( 0.01 )                  /* Releases CPU cycles */
    ENDDO
-//xbp_debug( "..........................", threadID() )
+//HBXBP_DEBUG( "..........................", threadID() )
 
    RETURN nEvent
 
@@ -296,45 +294,6 @@ FUNCTION GraMakeRGBColor( aRGB )
    RETURN nRGB
 
 /*----------------------------------------------------------------------*/
-// #define __debug__
-FUNCTION Xbp_Debug( ... )
-   #ifdef __debug__
-   LOCAL s  := ""
-   LOCAL aP := hb_aParams()
-
-   aeval( aP, {|e| s += Xbp_XtoS( e ) + ' ' } )
-   hb_ToOutDebug( s )
-   #endif
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION Xbp_XtoS( xVar )
-   LOCAL cType
-
-   cType := valtype( xVar )
-   DO CASE
-   CASE cType == "N"
-      RETURN str( xVar )
-   CASE cType == "D"
-      RETURN dtoc( xVar )
-   CASE cType == "L"
-      RETURN IF( xVar, "Yes", "No" )
-   CASE cType == "M"
-      RETURN xVar
-   CASE cType == "C"
-      RETURN xVar
-   CASE cType == "A"
-      RETURN "A:"+hb_ntos( len( xVar ) )
-   CASE cType == "O"
-      RETURN "<OBJECT>"
-   OTHERWISE
-      RETURN "<"+cType+">"
-   ENDCASE
-
-   RETURN xVar
-
-/*----------------------------------------------------------------------*/
 
 FUNCTION ConvertAFact( cMode, nFrom, xValue )
    LOCAL n, a_:= {}
@@ -397,5 +356,24 @@ FUNCTION ConvertAFact( cMode, nFrom, xValue )
    ENDIF
 
    RETURN xValue
+
+/*----------------------------------------------------------------------*/
+
+#if defined( __HB_DEBUG__ )
+
+FUNCTION _HBXBP_DEBUG( ... )
+   LOCAL cString := ""
+
+   AEval( hb_AParams(), {| x | cString += ValType( x ) + ":" + iif( ISARRAY( x ), "[" + hb_ntos( Len( x ) ) + "]", hb_ValToStr( x ) ) + " " } )
+
+   #if defined( __PLATFORM__WINDOWS ) .AND. defined( __HB_WINDEBUG__ )
+      wapi_OutputDebugString( cString )
+   #else
+      hb_TraceString( cString )
+   #endif
+
+   RETURN NIL
+
+#endif
 
 /*----------------------------------------------------------------------*/

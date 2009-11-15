@@ -71,7 +71,6 @@
 #include "xbp.ch"
 #include "gra.ch"
 #include "appevent.ch"
-#include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
 

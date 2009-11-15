@@ -71,7 +71,6 @@
 
 #include "xbp.ch"
 #include "appevent.ch"
-#include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -442,7 +441,7 @@ METHOD XbpWindow:grabEvent( nEvent, pEvent, oXbp )
 
    HB_SYMBOL_UNUSED( oXbp )
 
-//xbp_debug(  threadID(), "XbpWindow:grabEvent", nEvent )
+//HBXBP_DEBUG(  threadID(), "XbpWindow:grabEvent", nEvent )
 
    SWITCH ( nEvent )
 
@@ -721,11 +720,8 @@ METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 METHOD XbpWindow:destroy()
    LOCAL cXbp := __ObjGetClsName( self )
 
-//#define __debug__
-#ifdef __debug__
-xbp_Debug( ".   " )
-xbp_Debug( ThreadID(),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hb_getMemUsed() )
-#endif
+HBXBP_DEBUG( ".   " )
+HBXBP_DEBUG( ThreadID(),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hb_getMemUsed() )
 
    IF cXbp == "XBPDIALOG"
       SetEventLoop( NIL )
@@ -765,9 +761,8 @@ xbp_Debug( ThreadID(),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::ca
    ::oWidget:pPtr := 0
    ::oWidget := NIL
 
-#ifdef __debug__
-xbp_Debug( ThreadID(),"          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hb_getMemUsed() )
-#endif
+HBXBP_DEBUG( ThreadID(),"          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hb_getMemUsed() )
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/

@@ -75,7 +75,6 @@
 #include "xbp.ch"
 #include "gra.ch"
 #include "appevent.ch"
-#include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -753,9 +752,9 @@ METHOD XbpBrowse:destroy()
 
 FUNCTION ShowMem( lYes )
    IF lYes
-      xbp_Debug( "    ." )
+      HBXBP_DEBUG( "    ." )
    ENDIF
-   xbp_Debug( "       Mem Used "+IF( lYes, "1001", "    " ), memory( 1001 ) )
+   HBXBP_DEBUG( "       Mem Used "+IF( lYes, "1001", "    " ), memory( 1001 ) )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -764,7 +763,7 @@ METHOD XbpBrowse:exeBlock( nEvent, p1, p2, p3 )
    LOCAL oWheelEvent, oMouseEvent, i, nRow, nRowPos, nCol, nColPos, oPoint
 
    HB_SYMBOL_UNUSED( p2 )
-//xbp_debug( "   XbpBrowse:exeblock:", nEvent, 0, memory( 1001 ) )
+//HBXBP_DEBUG( "   XbpBrowse:exeblock:", nEvent, 0, memory( 1001 ) )
    DO CASE
    CASE nEvent == 1                   /* Keypress Event */
       SetAppEvent( xbeP_Keyboard, XbpQKeyEventToAppEvent( p1 ), NIL, self )
@@ -1021,7 +1020,7 @@ METHOD handleEvent( nEvent, mp1, mp2 ) CLASS XbpBrowse
 
 METHOD XbpBrowse:supplyInfo( nMode, nInfo, p2, p3 )
 
-//xbp_debug( 0, 'supplyInfo:', nMode, nInfo, memory( 1001 ) )
+//HBXBP_DEBUG( 0, 'supplyInfo:', nMode, nInfo, memory( 1001 ) )
    DO CASE
    CASE nMode == 141       /* Main View Header|Data */
       IF nInfo == HBQT_BRW_COLCOUNT
@@ -1263,7 +1262,7 @@ METHOD setCurrentIndex( lReset ) CLASS XbpBrowse
 
    DEFAULT lReset TO .t.
 
-//xbp_DEbug( "   setCurrentIndex ", 0, lReset, memory( 1001 ) )
+//HBXBP_DEBUG( "   setCurrentIndex ", 0, lReset, memory( 1001 ) )
 
    IF lReset
       ::oDbfModel:reset()                         /* Important */
@@ -1279,7 +1278,7 @@ METHOD setCurrentIndex( lReset ) CLASS XbpBrowse
    pIndex := ::oDbfModel:index( ::rowPos - 1, ::colPos - 1 )
    ::oTableView:setCurrentIndex( pIndex )
 
-//xbp_DEbug( "   setCurrentIndex ", 1, lReset, memory( 1001 ) )
+//HBXBP_DEBUG( "   setCurrentIndex ", 1, lReset, memory( 1001 ) )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

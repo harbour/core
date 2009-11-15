@@ -70,7 +70,6 @@
 
 #include "xbp.ch"
 #include "appevent.ch"
-#include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -224,7 +223,7 @@ METHOD XbpHTMLViewer:exeBlock( nEvent, p1 )
    CASE nEvent == 7
    CASE nEvent == 8
       ::cSelectedText := ::oWidget:selectedText()
-hb_outDebug( ::cSelectedText )
+HBXBP_DEBUG( ::cSelectedText )
    CASE nEvent == 9
       IF hb_isBlock( ::sl_statusTextChange )
          eval( ::sl_statusTextChange, p1, NIL, Self )
