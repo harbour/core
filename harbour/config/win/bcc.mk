@@ -40,7 +40,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 endif
 
 # Hack to autoconfig bcc, and not require properly set .cfg files in its bin dir.
-# It only works if compiler autodetection is being used.
+# It only works if we know compiler location.
 ifneq ($(HB_COMP_PATH_PUB),)
    HB_CFLAGS += $(subst /,$(DIRSEP),-I"$(HB_COMP_PATH_PUB)../Include")
    LDFLAGS   += $(subst /,$(DIRSEP),-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")

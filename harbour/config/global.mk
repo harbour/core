@@ -931,6 +931,16 @@ ifneq ($(HB_COMP_PATH),)
    export HB_COMP_PATH_PUB := $(HB_COMP_PATH)
 endif
 
+# Always autodetect bcc location (hack)
+ifeq ($(HB_PLATFORM)-$(HB_COMPILER),win-bcc)
+   ifeq ($(HB_COMP_PATH_PUB),)
+      HB_COMP_PATH := $(call find_in_path,bcc32)
+      ifneq ($(HB_COMP_PATH),)
+         export HB_COMP_PATH_PUB := $(subst $(substpat), ,$(dir $(firstword $(subst $(subst x, ,x),$(substpat),$(HB_COMP_PATH)))))
+      endif
+   endif
+endif
+
 ifneq ($(filter $(HB_HOST_PLAT),win wce dos os2),)
    HB_HOST_PLAT_UNIX :=
 else
