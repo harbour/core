@@ -51,6 +51,10 @@
  */
 /*----------------------------------------------------------------------*/
 
+#if defined(__debug__)
+   #define HB_OS_WIN_USED
+#endif
+
 #include "hbapi.h"
 #include "hbvm.h"
 #include "hbapiitm.h"
@@ -100,11 +104,13 @@ void * hbqt_gcpointer( int iParam )
 
 #if defined(__debug__)
 
-#include <windows.h>
-#include <Psapi.h>
+#if defined( HB_OS_WIN )
+   #include <Psapi.h>
+#endif
 
 void just_debug( const char * sTraceMsg, ... )
 {
+#if defined( HB_OS_WIN )
    if( sTraceMsg )
    {
      char buffer[ 1024 ];
@@ -116,27 +122,28 @@ void just_debug( const char * sTraceMsg, ... )
 
      OutputDebugString( buffer );
    }
+#endif
 }
 
 int hb_getMemUsed( void )
 {
+   int size = 0;
+#if defined( HB_OS_WIN )
    HANDLE hProcess;
    PROCESS_MEMORY_COUNTERS pmc;
-   int size = 0;
 
-   hProcess = OpenProcess(  PROCESS_QUERY_INFORMATION | PROCESS_VM_READ,
-                                         FALSE, GetCurrentProcessId() );
-    if ( NULL == hProcess )
-        return 0;
+   hProcess = OpenProcess( PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, GetCurrentProcessId() );
+   if( hProcess == NULL )
+      return 0;
 
-    if ( GetProcessMemoryInfo( hProcess, &pmc, sizeof(pmc)) )
-    {
-        size = ( int ) pmc.WorkingSetSize / 1024 ;
-    }
+   if( GetProcessMemoryInfo( hProcess, &pmc, sizeof( pmc ) ) )
+      size = ( int ) pmc.WorkingSetSize / 1024;
 
-    CloseHandle( hProcess );
-    return size;
+   CloseHandle( hProcess );
+#endif
+   return size;
 }
+
 #endif
 
 HB_FUNC( HB_GETMEMUSED )
