@@ -235,7 +235,6 @@ static long hb_i18n_pluralindex( int iForm, PHB_ITEM pNum )
          return n == 1 ? 1 : ( ( n >= 2 && n <= 4 ) ? 2 : 3 );
 
       case HB_I18N_PLURAL_SL:
-         n10 = fmod( n, 10.0 );
          n100 = fmod( n, 100.0 );
          return n100 == 1 ? 1 : ( n100 == 2 ? 1 : ( n100 == 3 || n100 == 4 ? 3 : 4 ) );
 

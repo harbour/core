@@ -54,7 +54,7 @@ PRG_HEADERS := \
 
 HB_SUPPORTED := no
 ifeq ($(HB_PLATFORM),win)
-   ifneq ($(filter $(HB_COMPILER),mingw msvc watcom pocc icc bcc),)
+   ifneq ($(filter $(HB_COMPILER),mingw msvc msvc64 watcom pocc pocc64 icc bcc),)
       HB_SUPPORTED := yes
    endif
 endif

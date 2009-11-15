@@ -1555,13 +1555,13 @@ STATIC FUNCTION MyDialogOne_X( oCrt )
    cTxt := cTxt + "Enjoy - Pritpal Bedi, INDIA"
 
    aImg_:={}
-   aadd( aImg_, "v_lock.bmp"   )
-   aadd( aImg_, "v_new.bmp"    )
-   aadd( aImg_, "v_clclt.bmp"  )
-   aadd( aImg_, "v_calend.bmp" )
-   aadd( aImg_, "v_index.bmp"  )
-   aadd( aImg_, "v_notes1.bmp" )
-   aadd( aImg_, "v_selct1.bmp" )
+   aadd( aImg_, hb_DirBase() + "v_lock.bmp"   )
+   aadd( aImg_, hb_DirBase() + "v_new.bmp"    )
+   aadd( aImg_, hb_DirBase() + "v_clclt.bmp"  )
+   aadd( aImg_, hb_DirBase() + "v_calend.bmp" )
+   aadd( aImg_, hb_DirBase() + "v_index.bmp"  )
+   aadd( aImg_, hb_DirBase() + "v_notes1.bmp" )
+   aadd( aImg_, hb_DirBase() + "v_selct1.bmp" )
    ? '.'
    Wvt_ShowWindow( 1 )
    nWinRows  := 55
@@ -2692,13 +2692,13 @@ STATIC FUNCTION ActiveXBuildToolBar( oDA, nActiveX )
    // After setting properties, create toolbar.
    oTBar:create()
 
-   oTBar:addItem( "New"       , 'v_new.bmp'    )
-   oTBar:addItem( "Select"    , 'v_selct1.bmp' )
-   oTBar:addItem( "Calendar"  , 'v_calend.bmp' )
-   oTBar:addItem( "Tools"     , 'v_lock.bmp'   )
-   oTBar:addItem( "Index"     , 'v_index.bmp'  )
-   oTBar:addItem( "Show"      , 'v_clclt.bmp'  )
-   oTBar:addItem( "Hide"      , 'v_notes1.bmp' )
+   oTBar:addItem( "New"       , hb_DirBase() + 'v_new.bmp'    )
+   oTBar:addItem( "Select"    , hb_DirBase() + 'v_selct1.bmp' )
+   oTBar:addItem( "Calendar"  , hb_DirBase() + 'v_calend.bmp' )
+   oTBar:addItem( "Tools"     , hb_DirBase() + 'v_lock.bmp'   )
+   oTBar:addItem( "Index"     , hb_DirBase() + 'v_index.bmp'  )
+   oTBar:addItem( "Show"      , hb_DirBase() + 'v_clclt.bmp'  )
+   oTBar:addItem( "Hide"      , hb_DirBase() + 'v_notes1.bmp' )
 
    RETURN oTBar
 //----------------------------------------------------------------------//
