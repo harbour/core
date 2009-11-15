@@ -2674,7 +2674,7 @@ static void hb_compGenCReadable( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
    genc_info.bVerbose = ( HB_COMP_PARAM->iGenCOutput == HB_COMPGENC_VERBOSE );
    genc_info.yyc = yyc;
 
-   fprintf( yyc, "{\n   static const BYTE pcode[] =\n   {\n" );
+   fprintf( yyc, "{\n   static const HB_BYTE pcode[] =\n   {\n" );
    hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) pFuncTable, ( void * ) &genc_info );
 
    if( genc_info.bVerbose )
@@ -2688,7 +2688,7 @@ static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc )
    ULONG lPCodePos = 0;
    int nChar;
 
-   fprintf( yyc, "{\n\tstatic const BYTE pcode[] =\n\t{\n\t\t" );
+   fprintf( yyc, "{\n\tstatic const HB_BYTE pcode[] =\n\t{\n\t\t" );
 
    nChar = 0;
    while( lPCodePos < pFunc->lPCodePos )

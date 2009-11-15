@@ -21,6 +21,7 @@ DIRS := \
    hbnetio \
    hbnf \
    hbodbc \
+   hbsms \
    hbsqlit3 \
    hbtip \
    hbtpathy \
