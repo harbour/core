@@ -3666,7 +3666,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                   cFile += 'HB_CALL_ON_STARTUP_END( _hb_hbmk_setdef_ )'                           + Chr( 10 ) +;
                            ''                                                                     + Chr( 10 ) +;
                            '#if defined( HB_PRAGMA_STARTUP )'                                     + Chr( 10 ) +;
-                           '   #pragma startup_hb_lnk_SetDefault_hbmk_'                           + Chr( 10 ) +;
+                           '   #pragma startup _hb_hbmk_setdef_'                                  + Chr( 10 ) +;
                            '#elif defined( HB_MSC_STARTUP )'                                      + Chr( 10 ) +;
                            '   #if defined( HB_OS_WIN_64 )'                                       + Chr( 10 ) +;
                            '      #pragma section( HB_MSC_START_SEGMENT, long, read )'            + Chr( 10 ) +;
