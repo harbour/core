@@ -42,21 +42,20 @@ endif
 # Hack to autoconfig bcc, and not require properly set .cfg files in its bin dir.
 # It only works if compiler autodetection is being used.
 ifneq ($(HB_COMP_PATH_PUB),)
-   HB_CFLAGS += $(subst \,/,-I"$(HB_COMP_PATH_PUB)../Include")
-   LDFLAGS   += $(subst \,/,-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
-   DFLAGS    += $(subst \,/,-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
+   HB_CFLAGS += $(subst /,$(DIRSEP),-I"$(HB_COMP_PATH_PUB)../Include")
+   LDFLAGS   += $(subst /,$(DIRSEP),-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
+   DFLAGS    += $(subst /,$(DIRSEP),-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
 endif
 
-LD := bcc32.exe
-LD_OUT := -e
+LD := ilink32.exe
+LDFLAGS += -Gn -Tpe $(LIBPATHS)
+LD_RULE = $(LD) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) c0x32.obj $(^F), $(subst /,$(DIRSEP),$(BIN_DIR)/$@), nul, $(subst /,$(DIRSEP),$(LDLIBS)) cw32mt.lib import32.lib $(LDSTRIP)
 
 LIBPATHS := -L$(LIB_DIR)
 # It's probably not necessary in native Windows but I need it
 # for my Linux box because -L<path> seems to not work with WINE
 LDLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib)$(LIB_EXT))
 LDLIBS += $(foreach lib,$(SYSLIBS),$(lib)$(LIB_EXT))
-
-LDFLAGS += $(LIBPATHS)
 
 AR := tlib.exe
 ARFLAGS := /P128
