@@ -836,6 +836,49 @@ PHB_ITEM wvg_logfontTOarray( LPLOGFONT lf, BOOL bEmpty )
 }
 
 /*----------------------------------------------------------------------*/
+//                   An Alternative to WndProc Callbacks
+/*----------------------------------------------------------------------*/
+
+BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
+{
+   BOOL     bret = FALSE;
+   BOOL     binit = FALSE;
+   PHB_ITEM block;
+
+   if( msg == WM_INITDIALOG )
+   {
+      CHOOSEFONT * cf = ( CHOOSEFONT * ) lParam;
+      PHB_ITEM pBlock = ( PHB_ITEM ) hb_itemNew( ( PHB_ITEM ) cf->lCustData );
+      SetProp( hwnd, TEXT( "DIALOGPROC" ), pBlock );
+      binit = TRUE;
+   }
+
+   block = ( PHB_ITEM ) GetProp( hwnd, TEXT( "DIALOGPROC" ) );
+
+   if( block )
+   {
+      hb_vmPushSymbol( &hb_symEval );
+      hb_vmPush( block );
+      hb_vmPushLong( ( long ) hwnd );
+      hb_vmPushInteger( msg );
+      hb_vmPushLong( ( long ) wParam );
+      hb_vmPushLong( ( long ) lParam );
+      hb_vmDo( 4 );
+      bret = hb_parnl( -1 );
+
+      if( msg == WM_NCDESTROY )
+      {
+         RemoveProp( hwnd, TEXT( "DIALOGPROC" ) );
+         hb_itemRelease( block );
+      }
+   }
+   if( binit )
+      return TRUE;
+
+   return bret;
+}
+
+/*----------------------------------------------------------------------*/
 /*
  * Wvg_ChooseFont( hWnd, nWndProc, familyName, nominalPointSize,;
  *                 viewScreenFonts, viewPrinterFonts )
@@ -893,8 +936,10 @@ HB_FUNC( WVG_CHOOSEFONT )
    cf.iPointSize       = PointSize;
    cf.Flags            = Flags;
    cf.rgbColors        = RGB( 0,0,0 );
-   cf.lCustData        = 0L;
-   cf.lpfnHook         = ( LPCFHOOKPROC ) wvg_parwndproc( 2 );
+
+   cf.lCustData        = ( HB_PTRDIFF ) hb_param( 2, HB_IT_BLOCK );
+   cf.lpfnHook         = ( LPCFHOOKPROC ) WvgDialogProcChooseFont;
+
    cf.lpTemplateName   = ( LPTSTR ) NULL;
    cf.hInstance        = ( HINSTANCE ) NULL;
    cf.lpszStyle        = ( LPTSTR ) szStyle;

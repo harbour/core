@@ -266,7 +266,6 @@ EXPORTED:
    METHOD   Initialize()
 
    DATA     nOldProc                              INIT   0
-   DATA     nWndProc
 
    DATA     oMenu
    METHOD   HandleEvent()                         INLINE ( 1 )
@@ -349,19 +348,11 @@ METHOD destroy() CLASS WvgWindow
       ::aChildren := {}
    ENDIF
 
-   #ifdef __BYSETPROP__
    WVG_ReleaseWindowProcBlock( ::pWnd )
-   #endif
 
    IF WVG_IsWindow( ::hWnd )
       WVG_DestroyWindow( ::hWnd )
    ENDIF
-
-   #ifdef __BYASCALLBACK__
-   IF !empty( ::nWndProc )
-      hb_FreeCallBack( ::nWndProc )
-   ENDIF
-   #endif
 
    IF ::hBrushBG <> NIL
       WVG_DeleteObject( ::hBrushBG )
@@ -380,7 +371,6 @@ METHOD destroy() CLASS WvgWindow
    ::nID                    := NIL
    ::nControlID             := NIL
    ::nOldProc               := NIL
-   ::nWndProc               := NIL
    ::oMenu                  := NIL
    ::animate                := NIL
    ::clipChildren           := NIL
@@ -435,14 +425,7 @@ METHOD destroy() CLASS WvgWindow
 
 METHOD SetWindowProcCallback() CLASS WvgWindow
 
-   #ifdef __BYASCALLBACK__
-   ::nWndProc := hb_AsCallBack( "CONTROLWNDPROC", Self )
-   ::nOldProc := WVG_SetWndProc( ::hWnd, ::nWndProc )
-   #endif
-
-   #ifdef __BYSETPROP__
    ::nOldProc := WVG_SetWindowProcBlock( ::pWnd, {|h,m,w,l| ::ControlWndProc( h,m,w,l ) } )
-   #endif
 
    RETURN Self
 

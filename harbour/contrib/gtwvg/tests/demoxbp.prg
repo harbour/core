@@ -427,9 +427,16 @@ STATIC FUNCTION ExeFontDialog( oCrt )
    oWvgFont := oFontDlg:display( ++nMode % 2 )
 //   hb_ToOutDebug( '%s  %i', oWvgFont:compoundName, oWvgFont:nominalPointSize )
 
+   JustToAvoid( oWvgFont )
+
    oFontDlg:destroy()
 
    RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION JustToAvoid()
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 

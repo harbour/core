@@ -16,7 +16,6 @@ C_SOURCES := \
    wvgwing.c \
    wvgsink.c \
    wvggui.c \
-   wincallb.c \
    wvgcuig.c \
 
 PRG_SOURCES := \
@@ -35,7 +34,6 @@ PRG_SOURCES := \
    wvgstatb.prg \
    wvgstatc.prg \
    wvgtreev.prg \
-   wincback.prg \
    wvgcheck.prg \
    wvgdatar.prg \
    wvgradio.prg \
