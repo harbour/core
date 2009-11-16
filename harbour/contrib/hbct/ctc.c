@@ -59,8 +59,8 @@
 
 /* throwing a CT-subsystem error without value substitution
    - function adapted from errorapi.c */
-USHORT ct_error( USHORT uiSeverity, ULONG ulGenCode, ULONG ulSubCode,
-                 const char *szDescription, const char *szOperation, USHORT uiOsCode, USHORT uiFlags, ULONG ulArgCount, ... )
+USHORT ct_error( USHORT uiSeverity, HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode,
+                 const char * szDescription, const char * szOperation, HB_ERRCODE uiOsCode, USHORT uiFlags, ULONG ulArgCount, ... )
 {
    USHORT uiAction;
    PHB_ITEM pError;
@@ -126,8 +126,8 @@ USHORT ct_error( USHORT uiSeverity, ULONG ulGenCode, ULONG ulSubCode,
 
 /* throwing a CT-subsystem error with value substitution
    - function adapted from errorapi.c */
-PHB_ITEM ct_error_subst( USHORT uiSeverity, ULONG ulGenCode, ULONG ulSubCode,
-                         const char *szDescription, const char *szOperation, USHORT uiOsCode, USHORT uiFlags, ULONG ulArgCount, ... )
+PHB_ITEM ct_error_subst( USHORT uiSeverity, HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode,
+                         const char * szDescription, const char * szOperation, HB_ERRCODE uiOsCode, USHORT uiFlags, ULONG ulArgCount, ... )
 {
    PHB_ITEM pRetVal;
    PHB_ITEM pError;

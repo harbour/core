@@ -61,7 +61,7 @@
 #define DO_REMOVE_REMLEFT     1
 #define DO_REMOVE_REMRIGHT    2
 
-static const ULONG sulErrorSubcodes[3] = {
+static const HB_ERRCODE sulErrorSubcodes[] = {
    CT_ERROR_REMALL,
    CT_ERROR_REMLEFT,
    CT_ERROR_REMRIGHT
@@ -122,7 +122,7 @@ static void do_remove( int iSwitch )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  sulErrorSubcodes[iSwitch],
+                                  sulErrorSubcodes[ iSwitch ],
                                   NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }

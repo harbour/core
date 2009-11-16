@@ -61,7 +61,7 @@
 #define DO_REPLACE_REPLLEFT     1
 #define DO_REPLACE_REPLRIGHT    2
 
-static const ULONG sulErrorSubcodes[] = {
+static const HB_ERRCODE sulErrorSubcodes[] = {
    CT_ERROR_REPLALL,
    CT_ERROR_REPLLEFT,
    CT_ERROR_REPLRIGHT
@@ -145,7 +145,7 @@ static void do_replace( int iSwitch )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  sulErrorSubcodes[iSwitch],
+                                  sulErrorSubcodes[ iSwitch ],
                                   NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }

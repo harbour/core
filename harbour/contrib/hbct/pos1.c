@@ -152,7 +152,8 @@ static void do_pos1( int iSwitch )
    else                         /* ISCHAR (1) etc. */
    {
       PHB_ITEM pSubst = NULL;
-      int iArgErrorMode = ct_getargerrormode(), iError = 0;
+      int iArgErrorMode = ct_getargerrormode();
+      HB_ERRCODE iError = 0;
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
