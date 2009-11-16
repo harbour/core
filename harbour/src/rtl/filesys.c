@@ -2872,7 +2872,7 @@ HB_ERRCODE hb_fsChDrv( BYTE nDrive )
 
 #endif
 
-   return HB_ERRCODE;
+   return uiResult;
 }
 
 /* NOTE: 0=A:, 1=B:, 2=C:, 3=D:, ... */
