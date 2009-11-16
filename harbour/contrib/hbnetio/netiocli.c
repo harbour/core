@@ -186,7 +186,7 @@ static BOOL s_fileSendMsg( PHB_CONCLI conn, BYTE * msgbuf,
             if( iResult != NETIO_SYNC )
             {
                if( iResult == NETIO_ERROR )
-                  hb_fsSetError( HB_GET_LE_UINT16( &msgbuf[ 4 ] ) );
+                  hb_fsSetError( ( HB_ERRCODE ) HB_GET_LE_UINT32( &msgbuf[ 4 ] ) );
                else if( iResult == iMsg )
                   fResult = TRUE;
                break;
@@ -635,7 +635,7 @@ static PHB_FILE s_fileOpen( const char * pFilename, const char * pDefExt,
       if( pFile == NULL )
       {
          hb_errPutOsCode( pError, hb_fsError() );
-         hb_errPutGenCode( pError, ( USHORT ) ( ( uiExFlags & FXO_TRUNCATE ) ? EG_CREATE : EG_OPEN ) );
+         hb_errPutGenCode( pError, ( HB_ERRCODE ) ( ( uiExFlags & FXO_TRUNCATE ) ? EG_CREATE : EG_OPEN ) );
       }
    }
 
@@ -673,7 +673,9 @@ static BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
       HB_PUT_LE_UINT64( &msgbuf[  6 ], ulStart );
       HB_PUT_LE_UINT64( &msgbuf[ 14 ], ulLen );
       HB_PUT_LE_UINT16( &msgbuf[ 22 ], ( USHORT ) iType );
+#if NETIO_MSGLEN > 24
       memset( msgbuf + 24, '\0', sizeof( msgbuf ) - 24 );
+#endif
 
       fResult = s_fileSendMsg( pFile->conn, msgbuf, NULL, 0, !fUnLock );
       s_fileConUnlock( pFile->conn );
@@ -706,7 +708,7 @@ static ULONG s_fileReadAt( PHB_FILE pFile, void * data, ULONG ulSize,
                ulResult = ulSize;
             ulResult = s_fileRecvAll( pFile->conn, data, ulResult );
          }
-         hb_fsSetError( HB_GET_LE_UINT16( &msgbuf[ 8 ] ) );
+         hb_fsSetError( ( HB_ERRCODE ) HB_GET_LE_UINT32( &msgbuf[ 8 ] ) );
       }
       s_fileConUnlock( pFile->conn );
    }
@@ -732,7 +734,7 @@ static ULONG s_fileWriteAt( PHB_FILE pFile, const void * data, ULONG ulSize,
       if( s_fileSendMsg( pFile->conn, msgbuf, data, ulSize, TRUE ) )
       {
          ulResult = HB_GET_LE_UINT32( &msgbuf[ 4 ] );
-         hb_fsSetError( HB_GET_LE_UINT16( &msgbuf[ 8 ] ) );
+         hb_fsSetError( ( HB_ERRCODE ) HB_GET_LE_UINT32( &msgbuf[ 8 ] ) );
       }
       s_fileConUnlock( pFile->conn );
    }
@@ -775,7 +777,7 @@ static HB_FOFFSET s_fileSize( PHB_FILE pFile )
       if( s_fileSendMsg( pFile->conn, msgbuf, NULL, 0, TRUE ) )
       {
          llOffset = HB_GET_LE_UINT64( &msgbuf[ 4 ] );
-         hb_fsSetError( HB_GET_LE_UINT16( &msgbuf[ 12 ] ) );
+         hb_fsSetError( ( HB_ERRCODE ) HB_GET_LE_UINT32( &msgbuf[ 12 ] ) );
       }
       s_fileConUnlock( pFile->conn );
    }

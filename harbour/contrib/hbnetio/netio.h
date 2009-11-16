@@ -99,16 +99,16 @@
 /* { NETIO_DELETE, len[ 2 ]... } + filename[ len ] -> { NETIO_DELETE, ... } */
 /* { NETIO_RENAME, len[ 2 ], len2[ 2 ]... } + filename[ len ] + filename[ len2 ] -> { NETIO_RENAME, ... } */
 /* { NETIO_OPEN,   len[ 2 ], flags[ 2 ], def_ext[], 0, ... } + filename[ len ] -> { NETIO_OPEN, file_no[2], ... } */
-/* { NETIO_READ,   file_no[2], size[ 4 ], offset[ 8 ], ... } -> { NETIO_READ, read[ 4 ], err[ 2 ], ... } + data[ read ] */
-/* { NETIO_WRITE,  file_no[2], size[ 4 ], offset[ 8 ], ... } + data[ size ] -> { NETIO_WRITE, written[ 4 ], err[ 2 ], ... } */
+/* { NETIO_READ,   file_no[2], size[ 4 ], offset[ 8 ], ... } -> { NETIO_READ, read[ 4 ], err[ 4 ], ... } + data[ read ] */
+/* { NETIO_WRITE,  file_no[2], size[ 4 ], offset[ 8 ], ... } + data[ size ] -> { NETIO_WRITE, written[ 4 ], err[ 4 ], ... } */
 /* { NETIO_LOCK,   file_no[2], start[ 8 ], len[ 8 ], flags[ 2 ], ... } -> { NETIO_LOCK, ... } */
 /* { NETIO_TRUNC,  file_no[2], offset[ 8 ], ... } -> { NETIO_TRUNC, ... } */
-/* { NETIO_SIZE,   file_no[2], ... } -> { NETIO_SIZE, size[ 8 ], err[ 2 ], ... } */
+/* { NETIO_SIZE,   file_no[2], ... } -> { NETIO_SIZE, size[ 8 ], err[ 4 ], ... } */
 /* { NETIO_COMMIT, file_no[2], ... } -> { NETIO_SYNC, ... } */
 /* { NETIO_CLOSE,  file_no[2], ... } -> { NETIO_CLOSE, ... } */
 /* { NETIO_UNLOCK, file_no[2], start[ 8 ], len[ 8 ], flags[ 2 ], ... } -> { NETIO_SYNC, ... } */
 /* { NETIO_SYNC, ... } -> NULL */
-/* alternative answer for all messages: -> { NETIO_ERROR,  err[ 2 ], ... } */
+/* alternative answer for all messages: -> { NETIO_ERROR,  err[ 4 ], ... } */
 
 /* netio errors */
 #define NETIO_ERR_UNKNOWN_COMMAND   0xff01

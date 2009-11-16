@@ -145,12 +145,12 @@ static const char * s_consrvFilePath( char * pszFileName, PHB_CONSRV conn )
    return pszFileName;
 }
 
-static int s_srvFsError( void )
+static HB_ERRCODE s_srvFsError( void )
 {
-   int iError = hb_fsError();
-   if( iError == 0 )
-      iError = NETIO_ERR_FILE_IO;
-   return iError;
+   HB_ERRCODE errCode = hb_fsError();
+   if( errCode == 0 )
+      errCode = NETIO_ERR_FILE_IO;
+   return errCode;
 }
 
 static int s_srvFileNew( PHB_CONSRV conn, PHB_FILE pFile )
@@ -504,9 +504,10 @@ HB_FUNC( NETIO_SERVER )
       {
          BYTE msgbuf[ NETIO_MSGLEN ], buffer[ 2048 ], * ptr = NULL, * msg;
          BOOL fNoAnswer = FALSE;
+         HB_ERRCODE errCode = 0, errFsCode;
          long len = 0, size, size2;
-         int iError = 0, iFileNo;
-         USHORT uiFalgs, uiFsError;
+         int iFileNo;
+         USHORT uiFalgs;
          char * szExt;
          PHB_FILE pFile;
          HB_FOFFSET llOffset, llSize;
@@ -521,22 +522,22 @@ HB_FUNC( NETIO_SERVER )
             case NETIO_EXISTS:
                size = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
                if( size <= 0 )
-                  iError = NETIO_ERR_WRONG_PARAM;
+                  errCode = NETIO_ERR_WRONG_PARAM;
                else
                {
                   if( size + conn->rootPathLen >= ( long ) sizeof( buffer ) )
                      ptr = msg = ( BYTE * ) hb_xgrab( size + conn->rootPathLen + 1 );
                   msg[ size ] = '\0';
                   if( s_srvRecvAll( conn, msg, size ) != size )
-                     iError = NETIO_ERR_READ;
+                     errCode = NETIO_ERR_READ;
                   else
                   {
                      const char * szFile = s_consrvFilePath( ( char * ) msg, conn );
 
                      if( !szFile )
-                        iError = NETIO_ERR_WRONG_FILE_PATH;
+                        errCode = NETIO_ERR_WRONG_FILE_PATH;
                      else if( !hb_fileExists( szFile, NULL ) )
-                        iError = s_srvFsError();
+                        errCode = s_srvFsError();
                      else
                      {
                         HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_EXISTS );
@@ -549,22 +550,22 @@ HB_FUNC( NETIO_SERVER )
             case NETIO_DELETE:
                size = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
                if( size <= 0 )
-                  iError = NETIO_ERR_WRONG_PARAM;
+                  errCode = NETIO_ERR_WRONG_PARAM;
                else
                {
                   if( size + conn->rootPathLen >= ( long ) sizeof( buffer ) )
                      ptr = msg = ( BYTE * ) hb_xgrab( size + conn->rootPathLen + 1 );
                   msg[ size ] = '\0';
                   if( s_srvRecvAll( conn, msg, size ) != size )
-                     iError = NETIO_ERR_READ;
+                     errCode = NETIO_ERR_READ;
                   else
                   {
                      const char * szFile = s_consrvFilePath( ( char * ) msg, conn );
 
                      if( !szFile )
-                        iError = NETIO_ERR_WRONG_FILE_PATH;
+                        errCode = NETIO_ERR_WRONG_FILE_PATH;
                      else if( !hb_fileDelete( szFile ) )
-                        iError = s_srvFsError();
+                        errCode = s_srvFsError();
                      else
                      {
                         HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_DELETE );
@@ -578,14 +579,14 @@ HB_FUNC( NETIO_SERVER )
                size = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
                size2 = HB_GET_LE_UINT16( &msgbuf[ 6 ] );
                if( size <= 0 || size2 <= 0 )
-                  iError = NETIO_ERR_WRONG_PARAM;
+                  errCode = NETIO_ERR_WRONG_PARAM;
                else
                {
                   if( HB_MAX( size, size2 ) + conn->rootPathLen >= ( long ) sizeof( buffer ) )
                      ptr = msg = ( BYTE * ) hb_xgrab( HB_MAX( size, size2 ) + conn->rootPathLen + 1 );
                   msg[ size ] = '\0';
                   if( s_srvRecvAll( conn, msg, size ) != size )
-                     iError = NETIO_ERR_READ;
+                     errCode = NETIO_ERR_READ;
                   else
                   {
                      char * szOldName = NULL;
@@ -596,16 +597,16 @@ HB_FUNC( NETIO_SERVER )
 
                      msg[ size2 ] = '\0';
                      if( s_srvRecvAll( conn, msg, size2 ) != size2 )
-                        iError = NETIO_ERR_READ;
+                        errCode = NETIO_ERR_READ;
                      else if( !szOldName )
-                        iError = NETIO_ERR_WRONG_FILE_PATH;
+                        errCode = NETIO_ERR_WRONG_FILE_PATH;
                      else
                      {
                         szFile = s_consrvFilePath( ( char * ) msg, conn );
                         if( !szFile )
-                           iError = NETIO_ERR_WRONG_FILE_PATH;
+                           errCode = NETIO_ERR_WRONG_FILE_PATH;
                         else if( !hb_fileRename( szOldName, szFile ) )
-                           iError = s_srvFsError();
+                           errCode = s_srvFsError();
                         else
                         {
                            HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_RENAME );
@@ -624,33 +625,33 @@ HB_FUNC( NETIO_SERVER )
                                                  NETIO_MSGLEN - 8 ) : NULL;
                size = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
                if( size <= 0 )
-                  iError = NETIO_ERR_WRONG_PARAM;
+                  errCode = NETIO_ERR_WRONG_PARAM;
                else
                {
                   if( size + conn->rootPathLen >= ( long ) sizeof( buffer ) )
                      ptr = msg = ( BYTE * ) hb_xgrab( size + conn->rootPathLen + 1 );
                   msg[ size ] = '\0';
                   if( s_srvRecvAll( conn, msg, size ) != size )
-                     iError = NETIO_ERR_READ;
+                     errCode = NETIO_ERR_READ;
                   else if( conn->filesCount >= NETIO_FILES_MAX )
-                     iError = NETIO_ERR_FILES_MAX;
+                     errCode = NETIO_ERR_FILES_MAX;
                   else
                   {
                      const char * szFile = s_consrvFilePath( ( char * ) msg, conn );
 
                      if( !szFile )
-                        iError = NETIO_ERR_WRONG_FILE_PATH;
+                        errCode = NETIO_ERR_WRONG_FILE_PATH;
                      else
                      {
                         pFile = hb_fileExtOpen( szFile, szExt, uiFalgs, NULL, NULL );
                         if( !pFile )
-                           iError = s_srvFsError();
+                           errCode = s_srvFsError();
                         else
                         {
                            iFileNo = s_srvFileNew( conn, pFile );
                            if( iFileNo < 0 )
                            {
-                              iError = NETIO_ERR_FILES_MAX;
+                              errCode = NETIO_ERR_FILES_MAX;
                               hb_fileClose( pFile );
                            }
                            else
@@ -672,22 +673,22 @@ HB_FUNC( NETIO_SERVER )
                size = HB_GET_LE_UINT32( &msgbuf[ 6 ] );
                llOffset = HB_GET_LE_INT64( &msgbuf[ 10 ] );
                if( size < 0 )
-                  iError = NETIO_ERR_WRONG_PARAM;
+                  errCode = NETIO_ERR_WRONG_PARAM;
                else
                {
                   if( size >= ( long ) ( sizeof( buffer ) - NETIO_MSGLEN ) )
                      ptr = msg = ( BYTE * ) hb_xgrab( size + NETIO_MSGLEN );
                   pFile = s_srvFileGet( conn, iFileNo );
                   if( pFile == NULL )
-                     iError = NETIO_ERR_WRONG_FILE_HANDLE;
+                     errCode = NETIO_ERR_WRONG_FILE_HANDLE;
                   else
                   {
                      len = hb_fileReadAt( pFile, msg + NETIO_MSGLEN, size, llOffset );
-                     uiFsError = hb_fsError();
+                     errFsCode = hb_fsError();
                      HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_READ );
                      HB_PUT_LE_UINT32( &msg[ 4 ], len );
-                     HB_PUT_LE_UINT32( &msg[ 8 ], uiFsError );
-                     memset( msg + 10, '\0', NETIO_MSGLEN - 10 );
+                     HB_PUT_LE_UINT32( &msg[ 8 ], errFsCode );
+                     memset( msg + 12, '\0', NETIO_MSGLEN - 12 );
                   }
                }
                break;
@@ -697,26 +698,26 @@ HB_FUNC( NETIO_SERVER )
                size = HB_GET_LE_UINT32( &msgbuf[ 6 ] );
                llOffset = HB_GET_LE_INT64( &msgbuf[ 10 ] );
                if( size < 0 )
-                  iError = NETIO_ERR_WRONG_PARAM;
+                  errCode = NETIO_ERR_WRONG_PARAM;
                else
                {
                   if( size >= ( long ) sizeof( buffer ) )
                      ptr = msg = ( BYTE * ) hb_xgrab( size );
                   if( s_srvRecvAll( conn, msg, size ) != size )
-                     iError = NETIO_ERR_READ;
+                     errCode = NETIO_ERR_READ;
                   else
                   {
                      pFile = s_srvFileGet( conn, iFileNo );
                      if( pFile == NULL )
-                        iError = NETIO_ERR_WRONG_FILE_HANDLE;
+                        errCode = NETIO_ERR_WRONG_FILE_HANDLE;
                      else
                      {
                         size = hb_fileWriteAt( pFile, msg, size, llOffset );
-                        uiFsError = hb_fsError();
+                        errFsCode = hb_fsError();
                         HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_WRITE );
                         HB_PUT_LE_UINT32( &msg[ 4 ], size );
-                        HB_PUT_LE_UINT32( &msg[ 8 ], uiFsError );
-                        memset( msg + 10, '\0', NETIO_MSGLEN - 10 );
+                        HB_PUT_LE_UINT32( &msg[ 8 ], errFsCode );
+                        memset( msg + 12, '\0', NETIO_MSGLEN - 12 );
                      }
                   }
                }
@@ -731,9 +732,9 @@ HB_FUNC( NETIO_SERVER )
                uiFalgs = HB_GET_LE_UINT16( &msgbuf[ 22 ] );
                pFile = s_srvFileGet( conn, iFileNo );
                if( pFile == NULL )
-                  iError = NETIO_ERR_WRONG_FILE_HANDLE;
+                  errCode = NETIO_ERR_WRONG_FILE_HANDLE;
                else if( !hb_fileLock( pFile, llOffset, llSize, uiFalgs ) )
-                  iError = s_srvFsError();
+                  errCode = s_srvFsError();
                else if( !fNoAnswer )
                {
                   UINT32 uiMsg = HB_GET_LE_UINT32( msgbuf );
@@ -747,9 +748,9 @@ HB_FUNC( NETIO_SERVER )
                llOffset = HB_GET_LE_INT64( &msgbuf[ 6 ] );
                pFile = s_srvFileGet( conn, iFileNo );
                if( pFile == NULL )
-                  iError = NETIO_ERR_WRONG_FILE_HANDLE;
+                  errCode = NETIO_ERR_WRONG_FILE_HANDLE;
                else if( !hb_fileTruncAt( pFile, llOffset ) )
-                  iError = s_srvFsError();
+                  errCode = s_srvFsError();
                else
                {
                   HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_TRUNC );
@@ -761,15 +762,15 @@ HB_FUNC( NETIO_SERVER )
                iFileNo = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
                pFile = s_srvFileGet( conn, iFileNo );
                if( pFile == NULL )
-                  iError = NETIO_ERR_WRONG_FILE_HANDLE;
+                  errCode = NETIO_ERR_WRONG_FILE_HANDLE;
                else
                {
                   llOffset = hb_fileSize( pFile );
-                  uiFsError = hb_fsError();
+                  errFsCode = hb_fsError();
                   HB_PUT_LE_UINT32( &msg[  0 ], NETIO_SIZE );
                   HB_PUT_LE_UINT64( &msg[  4 ], llOffset );
-                  HB_PUT_LE_UINT32( &msg[ 12 ], uiFsError );
-                  memset( msg + 14, '\0', NETIO_MSGLEN - 14 );
+                  HB_PUT_LE_UINT32( &msg[ 12 ], errFsCode );
+                  memset( msg + 16, '\0', NETIO_MSGLEN - 16 );
                }
                break;
 
@@ -777,7 +778,7 @@ HB_FUNC( NETIO_SERVER )
                iFileNo = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
                pFile = s_srvFileFree( conn, iFileNo );
                if( pFile == NULL )
-                  iError = NETIO_ERR_WRONG_FILE_HANDLE;
+                  errCode = NETIO_ERR_WRONG_FILE_HANDLE;
                else
                {
                   hb_fileClose( pFile );
@@ -798,7 +799,7 @@ HB_FUNC( NETIO_SERVER )
                continue;
 
             default: /* unkown message */
-               iError = NETIO_ERR_UNKNOWN_COMMAND;
+               errCode = NETIO_ERR_UNKNOWN_COMMAND;
                break;
          }
 
@@ -808,22 +809,22 @@ HB_FUNC( NETIO_SERVER )
             memset( msg + 4, '\0', NETIO_MSGLEN - 4 );
             len = NETIO_MSGLEN;
          }
-         else if( iError != 0 )
+         else if( errCode != 0 )
          {
             HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_ERROR );
-            HB_PUT_LE_UINT16( &msg[ 4 ], iError );
-            memset( msg + 6, '\0', NETIO_MSGLEN - 6 );
+            HB_PUT_LE_UINT32( &msg[ 4 ], errCode );
+            memset( msg + 8, '\0', NETIO_MSGLEN - 8 );
             len = NETIO_MSGLEN;
          }
          else
             len += NETIO_MSGLEN;
 
-         iError = s_srvSendAll( conn, msg, len ) != len;
+         errCode = s_srvSendAll( conn, msg, len ) != len;
 
          if( ptr )
             hb_xfree( ptr );
 
-         if( iError )
+         if( errCode )
             break;
       }
    }
