@@ -325,14 +325,14 @@ void hb_xexit( void )
 
 /* NOTE: Use as minimal calls from here, as possible.
          Don't allocate memory from this function. [vszakats] */
-void hb_errInternal( ULONG ulIntCode, const char * szText, const char * szPar1, const char * szPar2 )
+void hb_errInternal( HB_ERRCODE errCode, const char * szText, const char * szPar1, const char * szPar2 )
 {
    char buffer[ 1024 ];
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_errInternal(%lu, %s, %s, %s)", ulIntCode, szText, szPar1, szPar2));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errInternal(%d, %s, %s, %s)", errCode, szText, szPar1, szPar2));
 
    hb_conOutErr( hb_conNewLine(), 0 );
-   hb_snprintf( buffer, sizeof( buffer ), "Unrecoverable error %lu: ", ulIntCode );
+   hb_snprintf( buffer, sizeof( buffer ), "Unrecoverable error %d: ", errCode );
    hb_conOutErr( buffer, 0 );
    if( szText )
    {
