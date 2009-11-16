@@ -60,7 +60,7 @@
 /* NOTE: Use as minimal calls from here, as possible.
          Don't allocate memory from this function. [vszakats] */
 
-void hb_errInternalRaw( ULONG ulIntCode, const char * szText, const char * szPar1, const char * szPar2 )
+void hb_errInternalRaw( HB_ERRCODE errCode, const char * szText, const char * szPar1, const char * szPar2 )
 {
    char buffer[ 8192 ];
    char file[ HB_PATH_MAX ];
@@ -71,7 +71,7 @@ void hb_errInternalRaw( ULONG ulIntCode, const char * szText, const char * szPar
    FILE * hLog;
 
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_errInternal(%lu, %s, %s, %s)", ulIntCode, szText, szPar1, szPar2));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errInternal(%d, %s, %s, %s)", errCode, szText, szPar1, szPar2));
 
    if( szPar1 == NULL )
       szPar1 = "";
@@ -104,16 +104,16 @@ void hb_errInternalRaw( ULONG ulIntCode, const char * szText, const char * szPar
 
    hb_conOutErr( hb_conNewLine(), 0 );
    if( fLang )
-      hb_snprintf( buffer, sizeof( buffer ), hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR ), ulIntCode );
+      hb_snprintf( buffer, sizeof( buffer ), hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR ), errCode );
    else
-      hb_snprintf( buffer, sizeof( buffer ), "Unrecoverable error %lu: ", ulIntCode );
+      hb_snprintf( buffer, sizeof( buffer ), "Unrecoverable error %d: ", errCode );
 
    hb_conOutErr( buffer, 0 );
    if( hLog )
       fprintf( hLog, "%s", buffer );
 
    if( !szText && fLang )
-      szText = hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR + ulIntCode - 9000 );
+      szText = hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR + errCode - 9000 );
 
    if( szText )
       hb_snprintf( buffer, sizeof( buffer ), szText, szPar1, szPar2 );

@@ -167,8 +167,8 @@ extern HB_EXPORT USHORT    hb_errRT_TERM        ( HB_ERRCODE ulGenCode, HB_ERRCO
 extern HB_EXPORT USHORT    hb_errRT_DBCMD       ( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * szDescription, const char * szOperation );
 extern HB_EXPORT USHORT    hb_errRT_DBCMD_Ext   ( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * szDescription, const char * szOperation, USHORT uiFlags );
 
-extern HB_EXPORT void      hb_errInternal       ( ULONG ulIntCode, const char * szText, const char * szPar1, const char * szPar2 ) HB_NORETURN_ATTR;
-extern           void      hb_errInternalRaw    ( ULONG ulIntCode, const char * szText, const char * szPar1, const char * szPar2 );
+extern HB_EXPORT void      hb_errInternal       ( HB_ERRCODE errCode, const char * szText, const char * szPar1, const char * szPar2 ) HB_NORETURN_ATTR;
+extern           void      hb_errInternalRaw    ( HB_ERRCODE errCode, const char * szText, const char * szPar1, const char * szPar2 );
 
 /* Low-level error handling */
 struct HB_ERROR_INFO_;   /* forward declaration */

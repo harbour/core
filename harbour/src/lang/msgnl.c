@@ -165,7 +165,7 @@ static HB_LANG s_lang =
 
       /* Internal error names */
 
-      "Onherstelbare fout %lu: ",
+      "Onherstelbare fout %d: ",
       "Fout herstellen mislukt",
       "Geen ERRORBLOCK() voor fout",
       "Teveel herhalende fout behandelings aanroepen",

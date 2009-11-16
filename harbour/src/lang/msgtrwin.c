@@ -165,7 +165,7 @@ static HB_LANG s_lang =
 
       /* Internal error names */
 
-      "Kurtarýlamaz hata%lu: ",
+      "Kurtarýlamaz hata%d: ",
       "Hata kurtarma baþarýsýz",
       "Hata için ERRORBLOCK() yok",
       "Çok fazla içiçe hata tutucu çaðrýsý",

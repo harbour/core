@@ -165,7 +165,7 @@ static HB_LANG s_lang =
 
       /* Internal error names */
 
-      "Kezelhetetlen hiba %lu: ",
+      "Kezelhetetlen hiba %d: ",
       "Hiba kezel‚si hiba",
       "Nincs ERRORBLOCK() a hiba kezel‚s‚hez",
       "T£l sok rekurz¡v hiba kezel‹ h¡v s",

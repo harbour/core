@@ -165,7 +165,7 @@ static HB_LANG s_lang =
 
       /* Internal error names */
 
-      "Ανεπανόρθωτο σφάλμα %lu: ",
+      "Ανεπανόρθωτο σφάλμα %d: ",
       "Αποτυχία διόρθωσης σφάλματος",
       "No ERRORBLOCK() for error",
       "Too many recursive error handler calls",

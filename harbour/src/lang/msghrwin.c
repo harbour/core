@@ -167,7 +167,7 @@ static HB_LANG s_lang =
 
       /* Internal error names */
 
-      "Nepopravljiva greška %lu: ",
+      "Nepopravljiva greška %d: ",
       "Greška obnavljanje neuspješno",
       "Nema ERRORBLOCK() za grešku",
       "Previše povratnih poziva upravljaca grešaka",

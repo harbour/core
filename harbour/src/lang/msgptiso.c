@@ -177,7 +177,7 @@ static HB_LANG s_lang =
 
       /* Internal error names */
 
-      "Erro irrecuperável %lu: ",
+      "Erro irrecuperável %d: ",
       "Erro na recuperaçao do erro",
       "ERRORBLOCK() para erro ausente",
       "Muitas chamadas recursivas ao manipulador de erros",

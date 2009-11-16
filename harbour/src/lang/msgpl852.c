@@ -165,7 +165,7 @@ static HB_LANG s_lang =
 
       /* Internal error names */
 
-      "Nienaprawialny bˆ¥d nr %lu: ",
+      "Nienaprawialny bˆ¥d nr %d: ",
       "Nieudana pr¢ba naprawy bˆ©du",
       "Brak kodu obsˆugi ERRORBLOCK()",
       "Zbyt wiele zagnie¾d¾onych bˆ©d¢w",
