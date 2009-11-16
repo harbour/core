@@ -52,7 +52,7 @@ PRG_HEADERS := \
 # lib doesn't need QT external component directly.
 ifeq ($(filter $(HB_PLATFORM),dos os2),)
    ifeq ($(filter $(HB_COMPILER),mingw64 watcom bcc pocc pocc64 poccarm),)
-      ifneq ($(HB_INC_QT),no)
+      ifneq ($(HB_WITH_QT),no)
 
          HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/hbqt
 
