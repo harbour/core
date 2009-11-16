@@ -980,7 +980,7 @@ PHB_ITEM hb_errRT_New_Subst(
    return pError;
 }
 
-PHB_ITEM hb_errRT_SubstParams( const char * szSubSystem, ULONG ulGenCode, ULONG ulSubCode, const char * szDescription, const char * szOperation )
+PHB_ITEM hb_errRT_SubstParams( const char * szSubSystem, HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * szDescription, const char * szOperation )
 {
    PHB_ITEM pRetVal;
    PHB_ITEM pError;
@@ -1165,7 +1165,7 @@ USHORT hb_errRT_BASE_Ext1( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const cha
    return uiAction;
 }
 
-PHB_ITEM hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, const char * szDescription, const char * szOperation, ULONG ulArgCount, ... )
+PHB_ITEM hb_errRT_BASE_Subst( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * szDescription, const char * szOperation, ULONG ulArgCount, ... )
 {
    PHB_ITEM pRetVal;
    PHB_ITEM pError;
@@ -1222,7 +1222,7 @@ PHB_ITEM hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, const char * szD
    return pRetVal;
 }
 
-void hb_errRT_BASE_SubstR( ULONG ulGenCode, ULONG ulSubCode, const char * szDescription, const char * szOperation, ULONG ulArgCount, ... )
+void hb_errRT_BASE_SubstR( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * szDescription, const char * szOperation, ULONG ulArgCount, ... )
 {
    PHB_ITEM pError;
 

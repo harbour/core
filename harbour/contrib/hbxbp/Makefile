@@ -60,11 +60,14 @@ ifeq ($(filter $(HB_PLATFORM),dos os2),)
          include $(TOP)$(ROOT)config/lib.mk
 
       else
+         HB_SKIP_REASON := component explicitly disabled
          include $(TOP)$(ROOT)config/none.mk
       endif
    else
+      HB_SKIP_REASON := compiler not supported
       include $(TOP)$(ROOT)config/none.mk
    endif
 else
+   HB_SKIP_REASON := platform not supported
    include $(TOP)$(ROOT)config/none.mk
 endif

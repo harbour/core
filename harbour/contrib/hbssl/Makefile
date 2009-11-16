@@ -46,5 +46,6 @@ ifneq ($(HB_HAS_OPENSSL),)
       include $(TOP)$(ROOT)config/dir.mk
    endif
 else
+   HB_SKIP_REASON := component not found
    include $(TOP)$(ROOT)config/none.mk
 endif
