@@ -111,7 +111,7 @@ FUNCTION _BuildADialog()
 PROCEDURE DispMem( cMessage )
 
    HB_SYMBOL_UNUSED( cMessage )
-   HBXBP_DEBUG( ThreadID(), padc( cMessage, 40 ), memory( 1001 ), hb_getMemUsed() )
+   HBXBP_DEBUG( ThreadID(), padc( cMessage, 40 ), memory( 1001 ), hbqt_getMemUsed() )
 
    RETURN
 
