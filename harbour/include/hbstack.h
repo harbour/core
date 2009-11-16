@@ -90,11 +90,11 @@ HB_TSD, * PHB_TSD;
 
 typedef struct
 {
-   USHORT   uiFError;
-   USHORT   uiErrorLast;
-   USHORT   uiOsErrorLast;
-   USHORT   uiSocketError;
-   int      iSocketOsError;
+   HB_ERRCODE uiFError;
+   HB_ERRCODE uiErrorLast;
+   HB_ERRCODE uiOsErrorLast;
+   HB_ERRCODE uiSocketError;
+   int        iSocketOsError;
 }
 HB_IOERRORS, * PHB_IOERRORS;
 

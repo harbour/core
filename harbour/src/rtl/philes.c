@@ -112,7 +112,7 @@ HB_FUNC( HB_FCREATE )
 HB_FUNC( FREAD )
 {
    PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
-   USHORT uiError = 0;
+   HB_ERRCODE uiError = 0;
    ULONG ulRead = 0, ulSize;
    char * buffer;
 
@@ -141,7 +141,7 @@ HB_FUNC( FREAD )
 
 HB_FUNC( FWRITE )
 {
-   USHORT uiError = 0;
+   HB_ERRCODE uiError = 0;
 
    if( HB_ISNUM( 1 ) && HB_ISCHAR( 2 ) )
    {
@@ -169,7 +169,7 @@ HB_FUNC( FERROR )
 
 HB_FUNC( FCLOSE )
 {
-   USHORT uiError = 0;
+   HB_ERRCODE uiError = 0;
    if( HB_ISNUM( 1 ) )
    {
       hb_fsClose( hb_numToHandle( hb_parnint( 1 ) ) );
@@ -183,7 +183,7 @@ HB_FUNC( FCLOSE )
 
 HB_FUNC( FERASE )
 {
-   USHORT uiError = 3;
+   HB_ERRCODE uiError = 3;
    const char * szFile = hb_parc( 1 );
 
    if( szFile )
@@ -198,7 +198,7 @@ HB_FUNC( FERASE )
 
 HB_FUNC( FRENAME )
 {
-   USHORT uiError = 2;
+   HB_ERRCODE uiError = 2;
    const char * szFileOld = hb_parc( 1 ),
               * szFileNew = hb_parc( 2 );
 
@@ -214,7 +214,7 @@ HB_FUNC( FRENAME )
 
 HB_FUNC( FSEEK )
 {
-   USHORT uiError = 0;
+   HB_ERRCODE uiError = 0;
 
    if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
@@ -231,7 +231,7 @@ HB_FUNC( FSEEK )
 
 HB_FUNC( FREADSTR )
 {
-   USHORT uiError = 0;
+   HB_ERRCODE uiError = 0;
 
    if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
@@ -313,7 +313,7 @@ HB_FUNC( HB_DIRBASE )
 
 HB_FUNC( HB_FCOMMIT )
 {
-   USHORT uiError = 6;
+   HB_ERRCODE uiError = 6;
 
    if( HB_ISNUM( 1 ) )
    {
@@ -326,7 +326,7 @@ HB_FUNC( HB_FCOMMIT )
 
 HB_FUNC( HB_FLOCK )
 {
-   USHORT uiError = 0;
+   HB_ERRCODE uiError = 0;
    BOOL fResult = FALSE;
 
    if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
@@ -343,7 +343,7 @@ HB_FUNC( HB_FLOCK )
 
 HB_FUNC( HB_FUNLOCK )
 {
-   USHORT uiError = 0;
+   HB_ERRCODE uiError = 0;
    BOOL fResult = FALSE;
 
    if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
@@ -419,7 +419,7 @@ HB_FUNC( HB_FGETDATETIME )
 
 HB_FUNC( HB_OSERROR )
 {
-   hb_retni( hb_fsOsError() );
+   hb_retnl( hb_fsOsError() );
 }
 
 HB_FUNC( HB_OSPATHSEPARATOR )

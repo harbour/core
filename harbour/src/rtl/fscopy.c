@@ -108,7 +108,7 @@ BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
 
 HB_FUNC( HB_FCOPY )
 {
-   USHORT uiError = 2;
+   HB_ERRCODE uiError = 2;
    const char * pszSource = hb_parc( 1 ), * pszDest = hb_parc( 2 );
 
    if( pszSource && pszDest )

@@ -55,7 +55,7 @@
 
 HB_FUNC( HB_FEOF )
 {
-   USHORT uiError = 6;
+   HB_ERRCODE uiError = 6;
 
    if( HB_ISNUM( 1 ) )
    {
@@ -64,5 +64,6 @@ HB_FUNC( HB_FEOF )
    }
    else
       hb_retl( TRUE );
+
    hb_fsSetFError( uiError );
 }

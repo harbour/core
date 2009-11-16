@@ -368,7 +368,7 @@ static PHB_FILE s_fileExtOpen( const char * pFilename, const char * pDefExt,
          if( !fResult )
          {
             hb_errPutOsCode( pError, hb_fsError() );
-            hb_errPutGenCode( pError, ( USHORT ) ( ( uiExFlags & FXO_TRUNCATE ) ? EG_CREATE : EG_OPEN ) );
+            hb_errPutGenCode( pError, ( HB_ERRCODE ) ( ( uiExFlags & FXO_TRUNCATE ) ? EG_CREATE : EG_OPEN ) );
          }
       }
    }

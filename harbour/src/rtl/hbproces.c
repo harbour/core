@@ -373,7 +373,7 @@ static int hb_fsProcessExec( const char *pszFilename,
    HB_SYMBOL_UNUSED( hStdout );
    HB_SYMBOL_UNUSED( hStderr );
 
-   hb_fsSetError( ( USHORT ) FS_ERROR );
+   hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
 }
 #endif
 
@@ -782,7 +782,7 @@ HB_FHANDLE hb_fsProcessOpen( const char *pszFilename,
    HB_SYMBOL_UNUSED( fDetach );
    HB_SYMBOL_UNUSED( pulPID );
 
-   hb_fsSetError( ( USHORT ) FS_ERROR );
+   hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
 }
 #endif
 
@@ -819,7 +819,7 @@ int hb_fsProcessValue( HB_FHANDLE hProcess, BOOL fWait )
       hb_vmLock();
    }
    else
-      hb_fsSetError( ( USHORT ) FS_ERROR );
+      hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
 }
 #elif defined( HB_OS_UNIX ) || ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )
 {
@@ -844,7 +844,7 @@ int hb_fsProcessValue( HB_FHANDLE hProcess, BOOL fWait )
       hb_vmLock();
    }
    else
-      hb_fsSetError( ( USHORT ) FS_ERROR );
+      hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
 }
 #elif defined( HB_OS_OS2 ) || defined( HB_OS_WIN )
 {
@@ -866,7 +866,7 @@ int hb_fsProcessValue( HB_FHANDLE hProcess, BOOL fWait )
       hb_vmLock();
    }
    else
-      hb_fsSetError( ( USHORT ) FS_ERROR );
+      hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
 }
 #else
 {
@@ -874,7 +874,7 @@ int hb_fsProcessValue( HB_FHANDLE hProcess, BOOL fWait )
 
    HB_SYMBOL_UNUSED( hProcess );
    HB_SYMBOL_UNUSED( fWait );
-   hb_fsSetError( ( USHORT ) FS_ERROR );
+   hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
 }
 #endif
    return iRetStatus;
@@ -900,7 +900,7 @@ BOOL hb_fsProcessClose( HB_FHANDLE hProcess, BOOL fGentle )
       hb_fsSetIOError( fResult, 0 );
    }
    else
-      hb_fsSetError( ( USHORT ) FS_ERROR );
+      hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
 }
 #elif defined( HB_OS_UNIX ) || ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )
 {
@@ -912,7 +912,7 @@ BOOL hb_fsProcessClose( HB_FHANDLE hProcess, BOOL fGentle )
       hb_fsSetIOError( fResult, 0 );
    }
    else
-      hb_fsSetError( ( USHORT ) FS_ERROR );
+      hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
 }
 #elif defined( HB_OS_WIN )
 {
@@ -926,7 +926,7 @@ BOOL hb_fsProcessClose( HB_FHANDLE hProcess, BOOL fGentle )
       CloseHandle( hProc );
    }
    else
-      hb_fsSetError( ( USHORT ) FS_ERROR );
+      hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
 }
 #else
 {
@@ -934,7 +934,7 @@ BOOL hb_fsProcessClose( HB_FHANDLE hProcess, BOOL fGentle )
 
    HB_SYMBOL_UNUSED( hProcess );
    HB_SYMBOL_UNUSED( fGentle );
-   hb_fsSetError( ( USHORT ) FS_ERROR );
+   hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
 }
 #endif
    return fResult;

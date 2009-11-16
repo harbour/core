@@ -155,7 +155,7 @@ HB_EXTERN_BEGIN
                                 HB_FA_POSIX_SID(a) )
 
 extern HB_EXPORT BOOL       hb_fsChDir       ( const char * pszDirName ); /* change working directory */
-extern HB_EXPORT USHORT     hb_fsChDrv       ( BYTE nDrive ); /* change working drive */
+extern HB_EXPORT HB_ERRCODE hb_fsChDrv       ( BYTE nDrive ); /* change working drive */
 extern HB_EXPORT void       hb_fsClose       ( HB_FHANDLE hFileHandle ); /* close a file */
 extern HB_EXPORT void       hb_fsCommit      ( HB_FHANDLE hFileHandle ); /* commit updates of a file */
 extern HB_EXPORT HB_FHANDLE hb_fsCreate      ( const char * pszFileName, ULONG ulAttr ); /* create a file */
@@ -163,13 +163,13 @@ extern HB_EXPORT HB_FHANDLE hb_fsCreateEx    ( const char * pszFilename, ULONG u
 extern HB_EXPORT HB_FHANDLE hb_fsCreateTemp  ( const char * pszDir, const char * pszPrefix, ULONG ulAttr, char * pszName ); /* create a temporary file from components */
 extern HB_EXPORT HB_FHANDLE hb_fsCreateTempEx( char * pszName, const char * pszDir, const char * pszPrefix, const char * pszExt, ULONG ulAttr ); /* create a temporary file from components */
 extern HB_EXPORT const char * hb_fsCurDir    ( USHORT uiDrive ); /* retrieve a static pointer containing current directory for specified drive */
-extern HB_EXPORT USHORT     hb_fsCurDirBuff  ( USHORT uiDrive, char * pbyBuffer, ULONG ulLen ); /* copy current directory for given drive into a buffer */
+extern HB_EXPORT HB_ERRCODE hb_fsCurDirBuff  ( USHORT uiDrive, char * pbyBuffer, ULONG ulLen ); /* copy current directory for given drive into a buffer */
 extern HB_EXPORT void       hb_fsBaseDirBuff ( char * pbyBuffer ); /* retrieve the base dir of the executable */
 extern HB_EXPORT BYTE       hb_fsCurDrv      ( void ); /* retrieve current drive number */
 extern HB_EXPORT BOOL       hb_fsDelete      ( const char * pszFileName ); /* delete a file */
 extern HB_EXPORT BOOL       hb_fsEof         ( HB_FHANDLE hFileHandle ); /* determine if an open file is position at end-of-file */
-extern HB_EXPORT USHORT     hb_fsError       ( void ); /* retrieve file system error */
-extern HB_EXPORT USHORT     hb_fsOsError     ( void ); /* retrieve system dependant file system error */
+extern HB_EXPORT HB_ERRCODE hb_fsError       ( void ); /* retrieve file system error */
+extern HB_EXPORT HB_ERRCODE hb_fsOsError     ( void ); /* retrieve system dependant file system error */
 extern HB_EXPORT BOOL       hb_fsFile        ( const char * pszFileName ); /* determine if a file exists */
 extern HB_EXPORT BOOL       hb_fsIsDirectory ( const char * pszFilename );
 extern HB_EXPORT HB_FOFFSET hb_fsFSize       ( const char * pszFileName, BOOL bUseDirEntry ); /* determine the size of a file */
@@ -177,7 +177,7 @@ extern HB_EXPORT HB_FHANDLE hb_fsExtOpen     ( const char * pszFileName, const c
                                                USHORT uiFlags, const char * pPaths, PHB_ITEM pError ); /* open a file using default extension and a list of paths */
 extern HB_EXPORT char *     hb_fsExtName     ( const char * pFilename, const char * pDefExt,
                                                USHORT uiExFlags, const char * pPaths ); /* convert file name for hb_fsExtOpen, caller must free the returned buffer */
-extern HB_EXPORT USHORT     hb_fsIsDrv       ( BYTE nDrive ); /* determine if a drive number is a valid drive */
+extern HB_EXPORT HB_ERRCODE hb_fsIsDrv       ( BYTE nDrive ); /* determine if a drive number is a valid drive */
 extern HB_EXPORT BOOL       hb_fsIsDevice    ( HB_FHANDLE hFileHandle ); /* determine if a file is attached to a device (console?) */
 extern HB_EXPORT BOOL       hb_fsLock        ( HB_FHANDLE hFileHandle, ULONG ulStart, ULONG ulLength, USHORT uiMode ); /* request a lock on a portion of a file */
 extern HB_EXPORT BOOL       hb_fsLockLarge   ( HB_FHANDLE hFileHandle, HB_FOFFSET ulStart,
@@ -197,7 +197,7 @@ extern HB_EXPORT BOOL       hb_fsGetFileTime ( const char * pszFileName, long * 
 extern HB_EXPORT BOOL       hb_fsSetFileTime ( const char * pszFileName, long lJulian, long lMillisec );
 extern HB_EXPORT BOOL       hb_fsGetAttr     ( const char * pszFileName, ULONG * pulAttr );
 extern HB_EXPORT BOOL       hb_fsSetAttr     ( const char * pszFileName, ULONG ulAttr );
-extern HB_EXPORT void       hb_fsSetError    ( USHORT uiError ); /* set the file system DOS error number */
+extern HB_EXPORT void       hb_fsSetError    ( HB_ERRCODE uiError ); /* set the file system DOS error number */
 extern HB_EXPORT void       hb_fsSetIOError  ( BOOL fResult, USHORT uiOperation ); /* set the file system error number after IO operation */
 extern HB_EXPORT BOOL       hb_fsTruncAt     ( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset ); /* truncate file to given size */
 extern HB_EXPORT USHORT     hb_fsWrite       ( HB_FHANDLE hFileHandle, const void * pBuff, USHORT ulCount ); /* write to an open file from a buffer (<=64K) */
@@ -205,8 +205,8 @@ extern HB_EXPORT ULONG      hb_fsWriteLarge  ( HB_FHANDLE hFileHandle, const voi
 extern HB_EXPORT ULONG      hb_fsWriteAt     ( HB_FHANDLE hFileHandle, const void * pBuff, ULONG ulCount, HB_FOFFSET llOffset ); /* write to an open file at given offset from a buffer (>64K) */
 extern HB_EXPORT HB_FHANDLE hb_fsPOpen       ( const char * pFilename, const char * pMode );
 extern HB_EXPORT HB_FHANDLE hb_fsGetOsHandle ( HB_FHANDLE hFileHandle );
-extern HB_EXPORT USHORT     hb_fsGetFError   ( void ); /* get FERROR() flag */
-extern HB_EXPORT void       hb_fsSetFError   ( USHORT uiError ); /* set FERROR() flag */
+extern HB_EXPORT HB_ERRCODE hb_fsGetFError   ( void ); /* get FERROR() flag */
+extern HB_EXPORT void       hb_fsSetFError   ( HB_ERRCODE uiError ); /* set FERROR() flag */
 extern HB_EXPORT BOOL       hb_fsNameExists  ( const char * pszFileName ); /* check if a name exists in the filesystem (wildcard chars not accepted). */
 extern HB_EXPORT BOOL       hb_fsFileExists  ( const char * pszFileName ); /* check if a file exists (wildcard chars not accepted). */
 extern HB_EXPORT BOOL       hb_fsDirExists   ( const char * pszDirName ); /* check if a directory exists (wildcard chars not accepted). */

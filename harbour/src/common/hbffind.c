@@ -726,7 +726,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
       bFound = FALSE;
 
-      hb_fsSetError( ( USHORT ) FS_ERROR );
+      hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
    }
 
 #endif

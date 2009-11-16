@@ -335,7 +335,7 @@ const char * hb_socketErrorStr( int iError )
 static void hb_socketSetRawError( int err )
 {
    PHB_IOERRORS pError = hb_stackIOErrors();
-   pError->uiSocketError = ( USHORT ) err;
+   pError->uiSocketError = ( HB_ERRCODE ) err;
    pError->iSocketOsError = 0;
 }
 
@@ -778,7 +778,7 @@ void hb_socketCleanup( void )
 static void hb_socketSetOsError( int err )
 {
    PHB_IOERRORS pError = hb_stackIOErrors();
-   USHORT uiErr;
+   HB_ERRCODE uiErr;
 
 #if defined( HB_OS_WIN )
    switch( err )
