@@ -560,7 +560,7 @@ HARBOUR
    - HB_BUILD_EXTDEF=no        Controls autodetection of external components
                                on default systems locations. Default: yes
    - HB_CONTRIBLIBS=no         Don't build any contrib libraries. Default: yes
-   - HB_CONTRIBLIBS=[<list>]   Build space delimited <list> of contrib
+   - HB_CONTRIBLIBS=[<list>]   Build space separated <list> of contrib
                                libraries. Build all if left empty.
    - HB_CONTRIB_ADDONS=<list>  Build space separated <list> of additional
                                libraries stored in the contrib directory.

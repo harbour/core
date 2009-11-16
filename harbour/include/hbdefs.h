@@ -481,6 +481,9 @@
 #  define PFHL                   "l"
 #endif
 
+typedef HB_MAXINT    HB_VMMAXINT;
+typedef HB_MAXUINT   HB_VMMAXUINT;
+
 #define HB_DBL_LIM_INT(d)     ( HB_INT_MIN <= (d) && (d) <= HB_INT_MAX )
 #define HB_DBL_LIM_LONG(d)    ( (HB_MAXDBL) HB_LONG_MIN <= (HB_MAXDBL) (d) && (HB_MAXDBL) (d) <= (HB_MAXDBL) HB_LONG_MAX )
 #define HB_LIM_INT(l)         ( HB_INT_MIN <= (l) && (l) <= HB_INT_MAX )
