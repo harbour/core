@@ -735,6 +735,9 @@ static HB_ERRCODE sqlbaseInfo( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pIte
       case DBI_QUERY:
          hb_itemPutC( pItem, pArea->szQuery );
          break;
+
+      default:
+         return SUPER_INFO( ( AREAP ) pArea, uiIndex, pItem );
    }
 
    return HB_SUCCESS;
