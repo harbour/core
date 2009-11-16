@@ -77,7 +77,8 @@ endif
 DY := $(LD)
 DFLAGS := OP quiet SYS cwdllr
 DY_OUT :=
-DLIBS := $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
+DLIBS := $(foreach lib,$(HB_USER_LIBS),$(lib))
+DLIBS += $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 DLIBS += $(foreach lib,$(SYSLIBS),$(lib))
 DLIBS := $(strip $(DLIBS))
 

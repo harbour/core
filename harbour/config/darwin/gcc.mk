@@ -60,7 +60,7 @@ AR_RULE = ( $(AR) -static $(ARFLAGS) $(HB_USER_AFLAGS) -o $(LIB_DIR)/$@ $(^F) $(
 DY := $(AR)
 DFLAGS := -dynamic -flat_namespace -undefined warning -multiply_defined suppress -single_module $(LIBPATHS)
 DY_OUT := -o$(subst x,x, )
-DLIBS := $(foreach lib,$(SYSLIBS),-l$(lib))
+DLIBS := $(foreach lib,$(HB_USER_LIBS) $(SYSLIBS),-l$(lib))
 
 DY_RULE = $(DY) $(DFLAGS) -install_name "harbour$(DYN_EXT)" -compatibility_version $(HB_VER_MAJOR).$(HB_VER_MINOR) -current_version $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ $^ $(DLIBS) $(DYSTRIP) && $(LN) $(@F) $(DYN_FILE2) && $(LN) $(@F) $(DYN_DIR)/$(DYN_PREF)$(DYNNAME2).$(HB_VER_MAJOR)$(DYN_EXT)
 

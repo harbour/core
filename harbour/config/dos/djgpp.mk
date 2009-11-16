@@ -106,7 +106,7 @@ LD_RULE = $(link_exe_file)
 #DY := $(CC)
 #DFLAGS := -Wl,-shared $(LIBPATHS)
 #DY_OUT := -o$(subst x,x, )
-#DLIBS := $(foreach lib,$(SYSLIBS),-l$(lib))
+#DLIBS := $(foreach lib,$(HB_USER_LIBS) $(SYSLIBS),-l$(lib))
 #
 ## NOTE: The empty line directly before 'endef' HAVE TO exist!
 #define dyn_object

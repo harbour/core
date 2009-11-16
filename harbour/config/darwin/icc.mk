@@ -49,7 +49,7 @@ AR_RULE = ( $(AR) -static $(ARFLAGS) $(HB_USER_AFLAGS) -o $(LIB_DIR)/$@ $(^F) $(
 DY := $(AR)
 DFLAGS := -dynamic -flat_namespace -undefined warning -multiply_defined suppress -single_module $(LIBPATHS)
 DY_OUT := -o$(subst x,x, )
-DLIBS := $(foreach lib,$(SYSLIBS),-l$(lib))
+DLIBS := $(foreach lib,$(HB_USER_LIBS) $(SYSLIBS),-l$(lib))
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 define dyn_object

@@ -19,7 +19,7 @@
 #define HB_CP_UPPER     "ABCDEêFGHIJKLMNOPQRSTUVWXYöZí ùè"
 #define HB_CP_LOWER     "abcdeäfghijklmnopqrstuvwxyÅzëÇõÜ"
 
-#if 0 /* TOVERIFY: binary tables */
+#if 0 /* VERIFIED: 20091116 */
 
 #define HB_CP_RAW
 

@@ -53,7 +53,7 @@ AR_RULE = ( $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) rc $(LIB_DIR)/$@ $(^F) $(ARSTRIP)
 DY := $(CC)
 DFLAGS := -shared $(LIBPATHS)
 DY_OUT := -o$(subst x,x, )
-DLIBS := $(foreach lib,$(SYSLIBS),-l$(lib))
+DLIBS := $(foreach lib,$(HB_USER_LIBS) $(SYSLIBS),-l$(lib))
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 define dyn_object

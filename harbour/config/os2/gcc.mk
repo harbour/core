@@ -116,7 +116,7 @@ ifeq ($(HB_COMPILER),gccomf)
    DFLAGS += -Zomf
 endif
 DY_OUT := $(LD_OUT)
-DLIBS := $(foreach lib,$(LIBS) $(SYSLIBS),-l$(lib))
+DLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 
 # NOTE: The empty line directly before 'endef' HAS TO exist!
 define dyn_object
