@@ -137,8 +137,8 @@ extern HB_EXPORT PHB_ITEM  hb_errLaunchSubst( PHB_ITEM pError );
 
 extern HB_EXPORT PHB_ITEM  hb_errRT_New( USHORT uiSeverity,
                                          const char * szSubSystem,
-                                         HB_ERRCODE ulGenCode,
-                                         HB_ERRCODE ulSubCode,
+                                         HB_ERRCODE errGenCode,
+                                         HB_ERRCODE errSubCode,
                                          const char * szDescription,
                                          const char * szOperation,
                                          HB_ERRCODE uiOsCode,
@@ -146,26 +146,26 @@ extern HB_EXPORT PHB_ITEM  hb_errRT_New( USHORT uiSeverity,
 
 extern HB_EXPORT PHB_ITEM  hb_errRT_New_Subst( USHORT uiSeverity,
                                          const char * szSubSystem,
-                                         HB_ERRCODE ulGenCode,
-                                         HB_ERRCODE ulSubCode,
+                                         HB_ERRCODE errGenCode,
+                                         HB_ERRCODE errSubCode,
                                          const char * szDescription,
                                          const char * szOperation,
                                          HB_ERRCODE uiOsCode,
                                          USHORT uiFlags );
 
-extern HB_EXPORT PHB_ITEM  hb_errRT_SubstParams( const char * szSubSystem, HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * szDescription, const char * szOperation );
+extern HB_EXPORT PHB_ITEM  hb_errRT_SubstParams( const char * szSubSystem, HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation );
 
 extern HB_EXPORT PHB_ITEM hb_errRT_FileError( PHB_ITEM pError, const char * szSubSystem,
-                                              HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode,
+                                              HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
                                               const char * szFileName );
 
-extern HB_EXPORT USHORT    hb_errRT_BASE        ( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * szDescription, const char * szOperation, ULONG ulArgCount, ... );
-extern HB_EXPORT USHORT    hb_errRT_BASE_Ext1   ( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE uiOsCode, USHORT uiFlags, ULONG ulArgCount, ... );
-extern HB_EXPORT PHB_ITEM  hb_errRT_BASE_Subst  ( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * szDescription, const char * szOperation, ULONG ulArgCount, ... );
-extern HB_EXPORT void      hb_errRT_BASE_SubstR ( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * szDescription, const char * szOperation, ULONG ulArgCount, ... );
-extern HB_EXPORT USHORT    hb_errRT_TERM        ( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE uiOSCode, USHORT uiFlags );
-extern HB_EXPORT USHORT    hb_errRT_DBCMD       ( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * szDescription, const char * szOperation );
-extern HB_EXPORT USHORT    hb_errRT_DBCMD_Ext   ( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * szDescription, const char * szOperation, USHORT uiFlags );
+extern HB_EXPORT USHORT    hb_errRT_BASE        ( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, ULONG ulArgCount, ... );
+extern HB_EXPORT USHORT    hb_errRT_BASE_Ext1   ( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE uiOsCode, USHORT uiFlags, ULONG ulArgCount, ... );
+extern HB_EXPORT PHB_ITEM  hb_errRT_BASE_Subst  ( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, ULONG ulArgCount, ... );
+extern HB_EXPORT void      hb_errRT_BASE_SubstR ( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, ULONG ulArgCount, ... );
+extern HB_EXPORT USHORT    hb_errRT_TERM        ( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE uiOSCode, USHORT uiFlags );
+extern HB_EXPORT USHORT    hb_errRT_DBCMD       ( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation );
+extern HB_EXPORT USHORT    hb_errRT_DBCMD_Ext   ( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, USHORT uiFlags );
 
 extern HB_EXPORT void      hb_errInternal       ( HB_ERRCODE errCode, const char * szText, const char * szPar1, const char * szPar2 ) HB_NORETURN_ATTR;
 extern           void      hb_errInternalRaw    ( HB_ERRCODE errCode, const char * szText, const char * szPar1, const char * szPar2 );

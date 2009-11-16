@@ -935,8 +935,8 @@ PHB_ITEM hb_errPutArgs( PHB_ITEM pError, ULONG ulArgCount, ... )
 PHB_ITEM hb_errRT_New(
    USHORT uiSeverity,
    const char * szSubSystem,
-   HB_ERRCODE ulGenCode,
-   HB_ERRCODE ulSubCode,
+   HB_ERRCODE errGenCode,
+   HB_ERRCODE errSubCode,
    const char * szDescription,
    const char * szOperation,
    HB_ERRCODE uiOsCode,
@@ -946,9 +946,9 @@ PHB_ITEM hb_errRT_New(
 
    hb_errPutSeverity( pError, uiSeverity );
    hb_errPutSubSystem( pError, szSubSystem ? szSubSystem : HB_ERR_SS_BASE );
-   hb_errPutGenCode( pError, ulGenCode );
-   hb_errPutSubCode( pError, ulSubCode );
-   hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetItem( HB_LANG_ITEM_BASE_ERRDESC + ulGenCode ) );
+   hb_errPutGenCode( pError, errGenCode );
+   hb_errPutSubCode( pError, errSubCode );
+   hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetItem( HB_LANG_ITEM_BASE_ERRDESC + errGenCode ) );
    hb_errPutOperation( pError, szOperation );
    hb_errPutOsCode( pError, uiOsCode );
    hb_errPutFlags( pError, uiFlags );
@@ -959,8 +959,8 @@ PHB_ITEM hb_errRT_New(
 PHB_ITEM hb_errRT_New_Subst(
    USHORT uiSeverity,
    const char * szSubSystem,
-   HB_ERRCODE ulGenCode,
-   HB_ERRCODE ulSubCode,
+   HB_ERRCODE errGenCode,
+   HB_ERRCODE errSubCode,
    const char * szDescription,
    const char * szOperation,
    HB_ERRCODE uiOsCode,
@@ -970,9 +970,9 @@ PHB_ITEM hb_errRT_New_Subst(
 
    hb_errPutSeverity( pError, uiSeverity );
    hb_errPutSubSystem( pError, szSubSystem ? szSubSystem : HB_ERR_SS_BASE );
-   hb_errPutGenCode( pError, ulGenCode );
-   hb_errPutSubCode( pError, ulSubCode );
-   hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetItem( HB_LANG_ITEM_BASE_ERRDESC + ulGenCode ) );
+   hb_errPutGenCode( pError, errGenCode );
+   hb_errPutSubCode( pError, errSubCode );
+   hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetItem( HB_LANG_ITEM_BASE_ERRDESC + errGenCode ) );
    hb_errPutOperation( pError, szOperation );
    hb_errPutOsCode( pError, uiOsCode );
    hb_errPutFlags( pError, ( USHORT ) ( uiFlags | EF_CANSUBSTITUTE ) );
@@ -980,7 +980,7 @@ PHB_ITEM hb_errRT_New_Subst(
    return pError;
 }
 
-PHB_ITEM hb_errRT_SubstParams( const char * szSubSystem, HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * szDescription, const char * szOperation )
+PHB_ITEM hb_errRT_SubstParams( const char * szSubSystem, HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation )
 {
    PHB_ITEM pRetVal;
    PHB_ITEM pError;
@@ -989,7 +989,7 @@ PHB_ITEM hb_errRT_SubstParams( const char * szSubSystem, HB_ERRCODE ulGenCode, H
    HB_TRACE_STEALTH( HB_TR_DEBUG, ( "hb_errRT_SubstParams()") );
 
    pError = hb_errRT_New_Subst( ES_ERROR, szSubSystem ? szSubSystem : HB_ERR_SS_BASE,
-               ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+               errGenCode, errSubCode, szDescription, szOperation, 0, EF_NONE );
 
    pArray = hb_arrayBaseParams();
 
@@ -1008,7 +1008,7 @@ PHB_ITEM hb_errRT_SubstParams( const char * szSubSystem, HB_ERRCODE ulGenCode, H
 }
 
 PHB_ITEM hb_errRT_FileError( PHB_ITEM pError, const char * szSubSystem,
-                             HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode,
+                             HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
                              const char * szFileName )
 {
    if( ! pError )
@@ -1019,9 +1019,9 @@ PHB_ITEM hb_errRT_FileError( PHB_ITEM pError, const char * szSubSystem,
       hb_errPutFlags( pError, EF_CANRETRY | EF_CANDEFAULT );
       hb_errPutFileName( pError, szFileName );
    }
-   hb_errPutGenCode( pError, ulGenCode );
-   hb_errPutDescription( pError, hb_langDGetErrorDesc( ulGenCode ) );
-   hb_errPutSubCode( pError, ulSubCode );
+   hb_errPutGenCode( pError, errGenCode );
+   hb_errPutDescription( pError, hb_langDGetErrorDesc( errGenCode ) );
+   hb_errPutSubCode( pError, errSubCode );
    hb_errPutOsCode( pError, hb_fsError() );
 
    return pError;
@@ -1047,7 +1047,7 @@ HB_FUNC( __ERRRT_SBASE )
                          hb_param( 6, HB_IT_ANY ) );
 }
 
-USHORT hb_errRT_BASE( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * szDescription, const char * szOperation, ULONG ulArgCount, ... )
+USHORT hb_errRT_BASE( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, ULONG ulArgCount, ... )
 {
    USHORT uiAction;
    PHB_ITEM pError;
@@ -1059,7 +1059,7 @@ USHORT hb_errRT_BASE( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * s
    /* I replaced EF_CANRETRY with EF_NONE for Clipper compatibility
     * If it's wrong and I missed sth please fix me, Druzus.
     */
-   pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE /* EF_CANRETRY */ );
+   pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, errGenCode, errSubCode, szDescription, szOperation, 0, EF_NONE /* EF_CANRETRY */ );
 
    /* Build the array from the passed arguments. */
    if( ulArgCount == 0 )
@@ -1108,7 +1108,7 @@ USHORT hb_errRT_BASE( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * s
    return uiAction;
 }
 
-USHORT hb_errRT_BASE_Ext1( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE uiOsCode, USHORT uiFlags, ULONG ulArgCount, ... )
+USHORT hb_errRT_BASE_Ext1( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE uiOsCode, USHORT uiFlags, ULONG ulArgCount, ... )
 {
    USHORT uiAction;
    PHB_ITEM pError;
@@ -1117,7 +1117,7 @@ USHORT hb_errRT_BASE_Ext1( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const cha
    va_list va;
    ULONG ulArgPos;
 
-   pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, uiOsCode, uiFlags );
+   pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, errGenCode, errSubCode, szDescription, szOperation, uiOsCode, uiFlags );
 
    /* Build the array from the passed arguments. */
    if( ulArgCount == 0 )
@@ -1165,7 +1165,7 @@ USHORT hb_errRT_BASE_Ext1( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const cha
    return uiAction;
 }
 
-PHB_ITEM hb_errRT_BASE_Subst( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * szDescription, const char * szOperation, ULONG ulArgCount, ... )
+PHB_ITEM hb_errRT_BASE_Subst( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, ULONG ulArgCount, ... )
 {
    PHB_ITEM pRetVal;
    PHB_ITEM pError;
@@ -1174,7 +1174,7 @@ PHB_ITEM hb_errRT_BASE_Subst( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const 
    va_list va;
    ULONG ulArgPos;
 
-   pError = hb_errRT_New_Subst( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+   pError = hb_errRT_New_Subst( ES_ERROR, HB_ERR_SS_BASE, errGenCode, errSubCode, szDescription, szOperation, 0, EF_NONE );
 
    /* Build the array from the passed arguments. */
    if( ulArgCount == 0 )
@@ -1222,7 +1222,7 @@ PHB_ITEM hb_errRT_BASE_Subst( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const 
    return pRetVal;
 }
 
-void hb_errRT_BASE_SubstR( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * szDescription, const char * szOperation, ULONG ulArgCount, ... )
+void hb_errRT_BASE_SubstR( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, ULONG ulArgCount, ... )
 {
    PHB_ITEM pError;
 
@@ -1230,7 +1230,7 @@ void hb_errRT_BASE_SubstR( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const cha
    va_list va;
    ULONG ulArgPos;
 
-   pError = hb_errRT_New_Subst( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+   pError = hb_errRT_New_Subst( ES_ERROR, HB_ERR_SS_BASE, errGenCode, errSubCode, szDescription, szOperation, 0, EF_NONE );
 
    /* Build the array from the passed arguments. */
    if( ulArgCount == 0 )
@@ -1275,11 +1275,11 @@ void hb_errRT_BASE_SubstR( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const cha
    hb_errRelease( pError );
 }
 
-USHORT hb_errRT_TERM( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE uiOSCode, USHORT uiFlags )
+USHORT hb_errRT_TERM( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE uiOSCode, USHORT uiFlags )
 {
    USHORT uiAction;
    PHB_ITEM pError =
-      hb_errRT_New( ES_ERROR, HB_ERR_SS_TERMINAL, ulGenCode, ulSubCode, szDescription, szOperation, uiOSCode, uiFlags );
+      hb_errRT_New( ES_ERROR, HB_ERR_SS_TERMINAL, errGenCode, errSubCode, szDescription, szOperation, uiOSCode, uiFlags );
 
    uiAction = hb_errLaunch( pError );
 
@@ -1288,11 +1288,11 @@ USHORT hb_errRT_TERM( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * s
    return uiAction;
 }
 
-USHORT hb_errRT_DBCMD( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * szDescription, const char * szOperation )
+USHORT hb_errRT_DBCMD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation )
 {
    USHORT uiAction;
    PHB_ITEM pError =
-      hb_errRT_New( ES_ERROR, HB_ERR_SS_DBCMD, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+      hb_errRT_New( ES_ERROR, HB_ERR_SS_DBCMD, errGenCode, errSubCode, szDescription, szOperation, 0, EF_NONE );
 
    uiAction = hb_errLaunch( pError );
 
@@ -1301,12 +1301,12 @@ USHORT hb_errRT_DBCMD( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * 
    return uiAction;
 }
 
-USHORT hb_errRT_DBCMD_Ext( HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode, const char * szDescription, const char * szOperation, USHORT uiFlags )
+USHORT hb_errRT_DBCMD_Ext( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, USHORT uiFlags )
 {
    USHORT uiAction;
    PHB_ITEM pError;
 
-   pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_DBCMD, ulGenCode, ulSubCode, szDescription, szOperation, 0, uiFlags );
+   pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_DBCMD, errGenCode, errSubCode, szDescription, szOperation, 0, uiFlags );
 
    uiAction = hb_errLaunch( pError );
 
