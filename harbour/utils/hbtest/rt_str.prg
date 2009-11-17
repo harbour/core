@@ -60,6 +60,13 @@
 #endif
 
 PROCEDURE Main_STR()
+   LOCAL l64
+
+#ifdef __HARBOUR__
+   l64 := hb_version( HB_VERSION_BITWIDTH ) >= 64
+#else
+   l64 := .F.
+#endif
 
    /* VAL() */
 
@@ -67,19 +74,36 @@ PROCEDURE Main_STR()
    TEST_LINE( Val( 10 )                       , "E 1 BASE 1098 Argument error (VAL) OS:0 #:0 A:1:N:10 F:S" )
 
 #ifndef RT_NO_C
-   TEST_LINE( Str(R_PASSENL(  1860637360 ))   , "          1860637360"                 )
-   TEST_LINE( Str(R_PASSENL(         100 ))   , "       100"                           )
-   TEST_LINE( Str(R_PASSENL(   999999999 ))   , " 999999999"                           )
-   TEST_LINE( Str(R_PASSENL(  1000000000 ))   , "          1000000000"                 )
-   TEST_LINE( Str(R_PASSENL(  2147483647 ))   , "          2147483647"                 )
-   TEST_LINE( Str(R_PASSENL(  2147483648 ))   , "         -2147483648"                 )
-   TEST_LINE( Str(R_PASSENL(          -1 ))   , "        -1"                           )
-   TEST_LINE( Str(R_PASSENL(  -999999999 ))   , "-999999999"                           )
-   TEST_LINE( Str(R_PASSENL( -1000000000 ))   , "         -1000000000"                 )
-   TEST_LINE( Str(R_PASSENL(   -99999999 ))   , " -99999999"                           )
-   TEST_LINE( Str(R_PASSENL(  -100000000 ))   , "-100000000"                           )
 
-   TEST_LINE( Str(R_PASSENLC())               , "          1000000000"                 )
+   IF l64
+      TEST_LINE( Str(R_PASSENL(  1860637360 ))   , "1860637360"                           )
+      TEST_LINE( Str(R_PASSENL(         100 ))   , "       100"                           )
+      TEST_LINE( Str(R_PASSENL(   999999999 ))   , " 999999999"                           )
+      TEST_LINE( Str(R_PASSENL(  1000000000 ))   , "1000000000"                           )
+      TEST_LINE( Str(R_PASSENL(  2147483647 ))   , "2147483647"                           )
+      TEST_LINE( Str(R_PASSENL(  2147483648 ))   , "2147483648"                           )
+      TEST_LINE( Str(R_PASSENL(          -1 ))   , "        -1"                           )
+      TEST_LINE( Str(R_PASSENL(  -999999999 ))   , "-999999999"                           )
+      TEST_LINE( Str(R_PASSENL( -1000000000 ))   , "         -1000000000"                 )
+      TEST_LINE( Str(R_PASSENL(   -99999999 ))   , " -99999999"                           )
+      TEST_LINE( Str(R_PASSENL(  -100000000 ))   , "-100000000"                           )
+
+      TEST_LINE( Str(R_PASSENLC())               , "1000000000"                           )
+   ELSE
+      TEST_LINE( Str(R_PASSENL(  1860637360 ))   , "          1860637360"                 )
+      TEST_LINE( Str(R_PASSENL(         100 ))   , "       100"                           )
+      TEST_LINE( Str(R_PASSENL(   999999999 ))   , " 999999999"                           )
+      TEST_LINE( Str(R_PASSENL(  1000000000 ))   , "          1000000000"                 )
+      TEST_LINE( Str(R_PASSENL(  2147483647 ))   , "          2147483647"                 )
+      TEST_LINE( Str(R_PASSENL(  2147483648 ))   , "         -2147483648"                 )
+      TEST_LINE( Str(R_PASSENL(          -1 ))   , "        -1"                           )
+      TEST_LINE( Str(R_PASSENL(  -999999999 ))   , "-999999999"                           )
+      TEST_LINE( Str(R_PASSENL( -1000000000 ))   , "         -1000000000"                 )
+      TEST_LINE( Str(R_PASSENL(   -99999999 ))   , " -99999999"                           )
+      TEST_LINE( Str(R_PASSENL(  -100000000 ))   , "-100000000"                           )
+
+      TEST_LINE( Str(R_PASSENLC())               , "          1000000000"                 )
+   ENDIF
 #endif
 
    TEST_LINE( Str(Val(""))                    , "         0"                           )
@@ -534,7 +558,7 @@ PROCEDURE Main_STR()
    /* REPLICATE() */
 
 #ifdef __HARBOUR__
-   IF hb_version( HB_VERSION_BITWIDTH ) >= 64
+   IF l64
       TEST_LINE( Replicate("XXX", 9000000000000000000) , "E 3 BASE 1234 String overflow (REPLICATE) OS:0 #:0 A:2:C:XXX;N:9000000000000000000 F:S" )
    ELSE
       TEST_LINE( Replicate("XXX", 2000000000)    , "E 3 BASE 1234 String overflow (REPLICATE) OS:0 #:0 A:2:C:XXX;N:2000000000 F:S" )
