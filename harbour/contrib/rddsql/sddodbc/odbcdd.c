@@ -312,6 +312,9 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
          case SQL_CHAR:
          case SQL_VARCHAR:
          case SQL_LONGVARCHAR:
+         case SQL_WCHAR:
+         case SQL_WVARCHAR:
+         case SQL_WLONGVARCHAR:
            pFieldInfo.uiType = HB_FT_STRING;
            break;
 

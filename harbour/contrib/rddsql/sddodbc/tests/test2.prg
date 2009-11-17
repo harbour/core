@@ -12,7 +12,7 @@ LOCAL nConnection, nI, aI
 
    RDDSETDEFAULT( "SQLMIX" )
    SET( _SET_DATEFORMAT, "yyyy-mm-dd" )
-   nConnection := RDDINFO( RDDI_CONNECT, { "ODBC", "DBQ=Server=localhost;Driver={MySQL ODBC 5.1 Driver};dsn=;User=test;database=test;" } )
+   nConnection := RDDINFO( RDDI_CONNECT, { "ODBC", "Server=localhost;Driver={MySQL ODBC 5.1 Driver};dsn=;User=test;database=test;" } )
    IF nConnection == 0
       ? "Unable connect to server"
       RETURN
