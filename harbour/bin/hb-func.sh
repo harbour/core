@@ -130,7 +130,7 @@ mk_hbgetlibsctb()
             libs="$libs gtwin"
         fi
         echo "$libs ${HB_DB_DRVEXT} hbct hbnf hbmzip hbnetio hbtip xhb hbgd hbfimage rddsql sddfb sddmy sddpg hbodbc hbpgsql hbmysql hbfbird rddads rddado hbhpdf hbvpdf hbcurl hbwin gtwvg gtalleg hbsqlit3 hbbtree $HB_USER_LIBS"
-        #"hbgf hbgt hbbmcdx hbmisc hbtpathy hbwhat hbziparc hbmsql"
+        #"hbgf hbgt hbbmcdx hbmisc hbsms hbtpathy hbwhat hbziparc hbmsql"
     else
         echo "$@"
     fi

@@ -612,7 +612,7 @@ HARBOUR
    If you leave this value empty, the make system will try to autodetect it,
    so in practice all you have to do is to create a native build first (no
    'install' required), then create the cross-build. If you set this value
-   manually, it may be useful to know that only harbour, hbpp and hbmk2
+   manually, it may be useful to know that only harbour, hbpp, hbmk2, hbrun
    executables are required for a cross-build process to succeed.
 
 
@@ -1011,6 +1011,13 @@ HARBOUR
         set PATH=C:\<compilerdir>
    - Remove all old, unnecessary environment variables from your environment.
      Use only those documented in this file.
+     Some environment variable settings which are commonly believed by 
+     users to be useful, but which in reality are either not needed or 
+     not even used by Harbour build process and hbmk2. You can delete them:
+        set HB_PATH=<Harbour root dir>
+        set HRB_DIR=<Some Harbour dir>
+        set INCLUDE=<Harbour include dir>
+        set LIB=<Harbour lib dir>
    - Try to do no or only small modifications at once to command examples
      included in this file. If it doesn't work, fall back to documented
      examples as is.
@@ -1074,7 +1081,7 @@ HARBOUR
           - List all available options:
             'hbmk2 -help'
             Besides the ones listed, you can use all regular Harbour
-            compiler command line options, like:
+            compiler command line options, f.e.:
                '-l', '-b', '-n', '-w3' (etc...)
           - To make it easier to work with Harbour, it's recommended to
             put Harbour binary directory into the PATH:
@@ -1209,14 +1216,14 @@ HARBOUR
          http://www.openwatcom.org/
       XCode [darwin, free, closed-source]
          http://developer.apple.com/TOOLS/Xcode/
-      MS Windows SDK [win, free]:
+      MS Windows SDK [win, free, closed-source]
          http://msdn.microsoft.com/en-us/windowsserver/bb980924.aspx
          (7.0 contains compilers for x86, x86_64 and IA-64)
       MS Visual Studio Express [win, free, closed-source]
          http://www.microsoft.com/express/
       MS Visual Studio [win, commercial, closed-source]
          http://www.microsoft.com/visualstudio/
-      MS Windows Mobile SDK [wce, free]:
+      MS Windows Mobile SDK [wce, free]
          http://www.microsoft.com/downloads/details.aspx?familyid=83A52AF2-F524-4EC5-9155-717CBE5D25ED
       Pelles C [win, wce, free, closed-source]
          http://www.smorgasbordet.com/pellesc/
@@ -1266,7 +1273,7 @@ HARBOUR
 
    Tools:
 
-      Subversion (Version Control System) [multiplatform, free, open-source]:
+      Subversion (Version Control System) [multiplatform, free, open-source]
          http://subversion.tigris.org/
       GNU Flex (lexical analyzer) [multiplatform, free, open-source]
          Windows binary:
@@ -1322,6 +1329,11 @@ HARBOUR
             http://download.smedley.info/buildenv_20071022.zip
             (included in Harbour as os2mkdir.exe, os2rm.exe, os2cp.exe)
 
+   Documentation:
+
+      Netiquette Guidelines
+         http://tools.ietf.org/html/rfc1855
+
 
 13. HOW TO PARTICIPATE
 ======================
@@ -1348,35 +1360,35 @@ HARBOUR
 ========================
 
    Homepage:
-   http://www.harbour-project.org/
+      http://www.harbour-project.org/
 
    User Forums:
-   http://sourceforge.net/apps/phpbb/harbour-project/
+      http://sourceforge.net/apps/phpbb/harbour-project/
 
    Sourceforge Page:
-   http://sourceforge.net/projects/harbour-project/
+      http://sourceforge.net/projects/harbour-project/
 
    Developers' Mailing List Archives:
-   http://lists.harbour-project.org/pipermail/harbour/
+      http://lists.harbour-project.org/pipermail/harbour/
 
    Development Timeline:
-   http://sourceforge.net/apps/trac/harbour-project/timeline
+      http://sourceforge.net/apps/trac/harbour-project/timeline
 
    Bug Tracker:
-   https://sourceforge.net/tracker/?group_id=681
+      https://sourceforge.net/tracker/?group_id=681
 
    Source Repository Browser:
-   http://harbour-project.svn.sourceforge.net/viewvc/harbour-project/
+      http://harbour-project.svn.sourceforge.net/viewvc/harbour-project/
 
    Source Repository Checkout (anonymous) [needs Subversion]:
-   svn co https://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
+      svn co https://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
 
    Miscellaneous documents:
-   /doc directory under this directory.
+      /doc directory under this directory.
 
 
 
-[ Copyright (c) 2009 Viktor Szakats (harbour.01 syenar.hu)
+[ Copyright (c) 2009-2010 Viktor Szakats (harbour.01 syenar.hu)
   Licensed under Creative Commons Attribution-ShareAlike 3.0:
   http://creativecommons.org/licenses/by-sa/3.0/
   See COPYING. ]

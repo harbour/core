@@ -625,6 +625,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbbmcdx.a
 %{_libdir}/%{name}/libhbclipsm.a
 %{_libdir}/%{name}/librddsql.a
+%{_libdir}/%{name}/libhbsms.a
 %{_libdir}/%{name}/libhbtpathy.a
 %{_libdir}/%{name}/libhbziparc.a
 
