@@ -165,6 +165,7 @@ CPP_SOURCES := \
    QStyleOptionToolButton.cpp \
    QStyleOptionViewItem.cpp \
    QStylePainter.cpp \
+   QSyntaxHighlighter.cpp \
    QSystemTrayIcon.cpp \
    QTabBar.cpp \
    QTableView.cpp \
@@ -374,6 +375,7 @@ PRG_SOURCES := \
    TQStyleOptionToolButton.prg \
    TQStyleOptionViewItem.prg \
    TQStylePainter.prg \
+   TQSyntaxHighlighter.prg \
    TQSystemTrayIcon.prg \
    TQTabBar.prg \
    TQTableView.prg \

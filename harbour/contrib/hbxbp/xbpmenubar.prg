@@ -260,11 +260,8 @@ METHOD xbpMenuBar:delItem( nItemIndex )
    LOCAL lResult := .T.
    LOCAL oAction
 
-//HBXBP_DEBUG( nItemIndex, len( ::aMenuItems ), len( ::aMenuItems[ nItemIndex ] ) )
-
    IF nItemIndex > 0 .AND. nItemIndex <= ::numItems()
       IF ::aMenuItems[ nItemIndex, 1 ] == QMF_POPUP
-//HBXBP_DEBUG( valtype( ::aMenuItems[ nItemIndex, 4 ] ), __ObjGetClsName( ::aMenuItems[ nItemIndex, 4 ] ) )
          //::aMenuItems[ nItemIndex, 4 ]:destroy()
       ELSE
          oAction := ::aMenuItems[ nItemIndex, 5 ]
@@ -272,8 +269,8 @@ METHOD xbpMenuBar:delItem( nItemIndex )
          QT_DISCONNECT_SIGNAL( QT_PTROF( oAction ), "hovered()"       )
          oAction:pPtr := 0
       ENDIF
-//      ADEL( ::aMenuItems, nItemIndex )
-//      ASIZE( ::aMenuItems, LEN( ::aMenuItems ) - 1 )
+      ADEL( ::aMenuItems, nItemIndex )
+      ASIZE( ::aMenuItems, LEN( ::aMenuItems ) - 1 )
    ENDIF
 
    RETURN lResult
@@ -302,7 +299,6 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
       ELSE
          oAction:pPtr := ::oWidget:addSeparator()
       ENDIF
-      //aItem := { QMF_SEPARATOR, 0, 0, NIL, NIL, oAction }
       aItem := { QMF_SEPARATOR, 0, 0, NIL, oAction }
 
    CASE cType == "C"

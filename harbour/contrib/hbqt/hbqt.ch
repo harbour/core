@@ -73,7 +73,8 @@
    #xtranslate HBQT_DEBUG( [<x,...>] ) => iif( .T.,, )
 #endif
 
-#define QT_PTROF( oObj )  ( oObj:pPtr )
+#define QT_PTROF( oObj )     ( oObj:pPtr )
+#define QT_PTROFXBP( oXbp )  ( oXbp:oWidget:pPtr )
 
 #define QEvent_None                                0        // Not an event.
 #define QEvent_Timer                               1        // Regular timer events (QTimerEvent).
@@ -2129,6 +2130,12 @@
 #define QEventLoop_WaitForMoreEvents              0x04   // Wait for events if no pending events are available.
 #define QEventLoop_DeferredDeletion               0x10   // deprecated - do not use.
 // The ProcessEventsFlags type is a typedef for QFlags<ProcessEventsFlag>. It stores an OR combination of ProcessEventsFlag values.
+
+#define QTextEdit_NoWrap                          0
+#define QTextEdit_WidgetWidth                     1
+#define QTextEdit_FixedPixelWidth                 2
+#define QTextEdit_FixedColumnWidth                3
+
 /*----------------------------------------------------------------------*/
 
 #define _HBQT_CH

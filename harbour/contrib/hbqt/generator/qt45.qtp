@@ -211,6 +211,7 @@ QStyleOptionToolBox.qth
 QStyleOptionToolButton.qth
 QStyleOptionViewItem.qth
 QStylePainter.qth
+QSyntaxHighlighter.qth
 QSystemTrayIcon.qth
 QTabBar.qth
 QTableView.qth

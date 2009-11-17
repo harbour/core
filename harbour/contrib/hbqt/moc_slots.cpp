@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'hbqt_slots.h'
 **
-** Created: Sun Nov 1 13:17:43 2009
+** Created: Sun Nov 15 13:20:23 2009
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -721,6 +721,49 @@ void *Events::qt_metacast(const char *_clname)
 int Events::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QObject::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    return _id;
+}
+static const uint qt_meta_data_HbSyntaxHighlighter[] = {
+
+ // content:
+       2,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+
+       0        // eod
+};
+
+static const char qt_meta_stringdata_HbSyntaxHighlighter[] = {
+    "HbSyntaxHighlighter\0"
+};
+
+const QMetaObject HbSyntaxHighlighter::staticMetaObject = {
+    { &QSyntaxHighlighter::staticMetaObject, qt_meta_stringdata_HbSyntaxHighlighter,
+      qt_meta_data_HbSyntaxHighlighter, 0 }
+};
+
+const QMetaObject *HbSyntaxHighlighter::metaObject() const
+{
+    return &staticMetaObject;
+}
+
+void *HbSyntaxHighlighter::qt_metacast(const char *_clname)
+{
+    if (!_clname) return 0;
+    if (!strcmp(_clname, qt_meta_stringdata_HbSyntaxHighlighter))
+        return static_cast<void*>(const_cast< HbSyntaxHighlighter*>(this));
+    return QSyntaxHighlighter::qt_metacast(_clname);
+}
+
+int HbSyntaxHighlighter::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = QSyntaxHighlighter::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
     return _id;

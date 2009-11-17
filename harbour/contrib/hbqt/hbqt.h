@@ -291,6 +291,7 @@ const HB_GC_FUNCS * gcFuncs( void );
 #define hbqt_par_QStyleOptionViewItem( n )          ( ( QStyleOptionViewItem        * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QStyleOptionViewItem( n )          ( ( QStyleOptionViewItem        * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QStylePainter( n )                 ( ( QStylePainter               * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QSyntaxHighlighter( n )            ( ( QSyntaxHighlighter          * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QSystemTrayIcon( n )               ( ( QSystemTrayIcon             * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QTabBar( n )                       ( ( QTabBar                     * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QTableView( n )                    ( ( QTableView                  * ) hbqt_gcpointer( n ) )

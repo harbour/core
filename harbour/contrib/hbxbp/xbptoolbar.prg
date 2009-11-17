@@ -179,7 +179,6 @@ METHOD XbpToolbar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::show()
    ENDIF
 
-   ::setStyle()
    ::oParent:AddChild( SELF )
    RETURN Self
 
@@ -200,15 +199,11 @@ METHOD XbpToolbar:destroy()
             //Win_DeleteObject( ::aItems[ i,2 ]:hotImage )
          ENDIF
 
-//         QT_DISCONNECT_SIGNAL( QT_PTROF( ::aMenuItems[ i, 5 ] ), "triggered(bool)" )
-//         QT_DISCONNECT_SIGNAL( QT_PTROF( ::aMenuItems[ i, 5 ] ), "hovered()"       )
-         ::aItems[ i,2 ]:oAction:pPtr := 0
-         ::aItems[ i,2 ]:oAction := NIL
+         IF ::aItems[ i,3 ] == XBPTOOLBAR_BUTTON_DEFAULT
+            ::aItems[ i,2 ]:oAction:pPtr := 0
+            ::aItems[ i,2 ]:oAction := NIL
+         ENDIF
       NEXT
-   ENDIF
-
-   IF !empty( ::hImageList )
-      //WAPI_ImageList_Destroy( ::hImageList )
    ENDIF
 
    ::xbpWindow:destroy()
@@ -239,26 +234,34 @@ METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
    HB_SYMBOL_UNUSED( cDLL )
    HB_SYMBOL_UNUSED( nMapRGB )
 
+   DEFAULT nStyle TO XBPTOOLBAR_BUTTON_DEFAULT
+
    oBtn := XbpToolbarButton():new( cCaption, nStyle, cKey )
 
    oBtn:index   := ::numItems + 1
    oBtn:command := 100 + oBtn:index
 
-   /* Create an action */
-   oBtn:oAction := QAction():new( QT_PTROF( ::oWidget ) )
-   oBtn:oAction:setText( cCaption )
+   IF nStyle == XBPTOOLBAR_BUTTON_SEPARATOR
+      ::oWidget:addSeparator()
 
-   IF valtype( xImage ) == "C" .and. hb_FileExists( xImage )
-      oBtn:oAction:setIcon( xImage )
+   ELSE
+      /* Create an action */
+      oBtn:oAction := QAction():new( QT_PTROF( ::oWidget ) )
+      oBtn:oAction:setText( cCaption )
+
+      IF valtype( xImage ) == "C" .and. hb_FileExists( xImage )
+         oBtn:oAction:setIcon( xImage )
+      ENDIF
+
+      /* Attach codeblock to be triggered */
+      ::Connect( QT_PTROF( oBtn:oAction ), "triggered(bool)", {|| ::exeBlock( oBtn ) } )
+
+      /* Attach Action with Toolbar */
+      ::oWidget:addAction( QT_PTROF( oBtn:oAction ) )
+
    ENDIF
 
-   /* Attach codeblock to be triggered */
-   ::Connect( QT_PTROF( oBtn:oAction ), "triggered(bool)", {|| ::exeBlock( oBtn ) } )
-
-   /* Attach Action with Toolbar */
-   ::oWidget:addAction( QT_PTROF( oBtn:oAction ) )
-
-   aadd( ::aItems, { oBtn:command, oBtn } )
+   aadd( ::aItems, { oBtn:command, oBtn, nStyle } )
 
    RETURN oBtn
 

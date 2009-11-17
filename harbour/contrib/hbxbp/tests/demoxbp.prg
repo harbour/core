@@ -432,7 +432,7 @@ STATIC FUNCTION MyFunctionXbp( nMode )
 /*----------------------------------------------------------------------*/
 
 FUNCTION Build_ToolBar( oDA )
-   LOCAL oTBar
+   LOCAL oTBar, s, txt_:= {}
 
    // Create an XbpToolBar object and
    // add it at the top of the dialog
@@ -465,6 +465,24 @@ FUNCTION Build_ToolBar( oDA )
 
    oTBar:transparentColor := GRA_CLR_INVALID
    oTBar:buttonClick := {|oButton| ExeToolbar( oButton, oDa ) }
+
+   #ifdef __HARBOUR__
+   aadd( txt_, ' ' )
+   aadd( txt_, ' QToolBar {                                                    ' )
+   aadd( txt_, '     background: cyan;                                         ' )
+   aadd( txt_, '     spacing: 3px; /* spacing between items in the tool bar */ ' )
+   aadd( txt_, ' }                                                             ' )
+   aadd( txt_, '                                                               ' )
+   aadd( txt_, ' QToolBar::handle {                                            ' )
+   aadd( txt_, '     image: url(save.png);                                     ' )
+   aadd( txt_, ' }                                                             ' )
+   aadd( txt_, ' ' )
+
+   s := ""
+   aeval( txt_, {|e| s += e + chr( 13 )+chr( 10 ) } )
+
+   oTBar:setStyleSheet( s )
+   #endif
 
    RETURN nil
 
