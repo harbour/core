@@ -932,9 +932,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
          hb_fsClose( hFile );
       }
       else
-      {
          iResult = -200 - hb_fsError();
-      }
    }
    hb_xfree( szZipName );
    return iResult;
@@ -1123,9 +1121,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
          hb_fsClose( hFile );
       }
       else
-      {
          iResult = -200 - hb_fsError();
-      }
    }
    unzCloseCurrentFile( hUnzip );
 

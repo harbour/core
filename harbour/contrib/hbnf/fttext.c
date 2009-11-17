@@ -204,7 +204,7 @@ static long       last_off[TEXT_WORKAREAS];
 static long       lastbyte[TEXT_WORKAREAS];
 static int        isBof[   TEXT_WORKAREAS];
 static int        isEof[   TEXT_WORKAREAS];
-static int        error[   TEXT_WORKAREAS];
+static HB_ERRCODE error[   TEXT_WORKAREAS];
 
 /* for debugging purposes */
 static int doInt = 0;
@@ -518,7 +518,7 @@ HB_FUNC( FT_FGOTOP )
 
 HB_FUNC( FT_FERROR )
 {
-   hb_retni( error[area] );
+   hb_retnl( error[area] );
 }
 
 
@@ -1072,7 +1072,7 @@ HB_FUNC( FT_FDELETE )
 
    hb_xfree( ( void * ) Buff );
 
-   hb_retl( (error[area]) ? 0 : 1 );
+   hb_retl( error[area] ? 0 : 1 );
 }
 
 
@@ -1262,7 +1262,7 @@ HB_FUNC( FT_FAPPEND )
 
    hb_xfree( ( void * ) buff );
 
-   hb_retl( (error[area]) ? 0 : 1 );
+   hb_retl( error[area] ? 0 : 1 );
 
 }
 

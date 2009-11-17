@@ -250,8 +250,8 @@ static ULONG hb_ntxGetKeyRec( LPPAGEINFO pPage, SHORT iKey )
 /*
  * generate Run-Time error
  */
-static HB_ERRCODE hb_ntxErrorRT( NTXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode,
-                                 const char * szFileName, USHORT uiOsCode,
+static HB_ERRCODE hb_ntxErrorRT( NTXAREAP pArea, HB_ERRCODE uiGenCode, HB_ERRCODE uiSubCode,
+                                 const char * szFileName, HB_ERRCODE uiOsCode,
                                  USHORT uiFlags, PHB_ITEM * pErrorPtr )
 {
    PHB_ITEM pError;

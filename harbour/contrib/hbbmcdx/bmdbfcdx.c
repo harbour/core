@@ -363,8 +363,8 @@ static void hb_cdxErrInternal( const char * szMsg )
 /*
  * generate Run-Time error
  */
-static HB_ERRCODE hb_cdxErrorRT( CDXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode,
-                              const char * filename, USHORT uiOsCode,
+static HB_ERRCODE hb_cdxErrorRT( CDXAREAP pArea, HB_ERRCODE uiGenCode, HB_ERRCODE uiSubCode,
+                              const char * filename, HB_ERRCODE uiOsCode,
                               USHORT uiFlags, PHB_ITEM * pErrorPtr )
 {
    PHB_ITEM pError;

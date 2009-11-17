@@ -214,7 +214,7 @@ HB_FUNC( HB_CHECKSUM )
 
 HB_FUNC( HB_F_EOF )
 {
-   USHORT uiError = 6;
+   HB_ERRCODE uiError = 6;
 
    if( HB_ISNUM( 1 ) )
    {
@@ -222,9 +222,8 @@ HB_FUNC( HB_F_EOF )
       uiError = hb_fsError();
    }
    else
-   {
       hb_retl( TRUE );
-   }
+
    hb_fsSetFError( uiError );
 }
 

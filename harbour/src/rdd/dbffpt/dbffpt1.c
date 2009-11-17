@@ -95,8 +95,8 @@ static RDDFUNCS fptSuper;
 /*
  * generate Run-Time error
  */
-static HB_ERRCODE hb_memoErrorRT( FPTAREAP pArea, USHORT uiGenCode, USHORT uiSubCode,
-                                  char * szFileName, USHORT uiOsCode, USHORT uiFlags )
+static HB_ERRCODE hb_memoErrorRT( FPTAREAP pArea, HB_ERRCODE uiGenCode, HB_ERRCODE uiSubCode,
+                                  char * szFileName, HB_ERRCODE uiOsCode, USHORT uiFlags )
 {
    HB_ERRCODE errCode = HB_FAILURE;
 
