@@ -29,16 +29,7 @@ C_SOURCES := \
    pngwtran.c \
    pngwutil.c \
 
-# decide if it's supported at all
-HB_SUPPORTED := yes
-ifeq ($(HB_COMPILER),poccarm)
-   HB_SUPPORTED := no
-endif
-ifeq ($(HB_COMPILER),xcc)
-   HB_SUPPORTED := no
-endif
-
-ifeq ($(HB_SUPPORTED),yes)
+ifeq ($(filter $(HB_COMPILER),poccarm xcc),)
 
    _DET_DSP_NAME := libpng
    _DET_VAR_INC_ := HB_INC_PNG
@@ -70,6 +61,6 @@ ifeq ($(HB_SUPPORTED),yes)
       include $(TOP)$(ROOT)config/none.mk
    endif
 else
-   HB_SKIP_REASON := platform or compiler not supported
+   HB_SKIP_REASON := compiler not supported
    include $(TOP)$(ROOT)config/none.mk
 endif
