@@ -48,8 +48,8 @@ ifneq ($(HB_COMP_PATH_PUB),)
 endif
 
 LD := ilink32.exe
-LIBPATHS := "$(subst /,\,-L$(LIB_DIR))"
-LDFLAGS += -Gn -Tpe $(LIBPATHS)
+LIBPATHS := $(subst /,\,-L"$(LIB_DIR)")
+LDFLAGS += $(LIBPATHS) -Gn -Tpe
 LD_RULE = $(LD) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) c0x32.obj $(^F), "$(subst /,\,$(BIN_DIR)/$@)", nul, $(LDLIBS) cw32mt import32 $(LDSTRIP)
 
 LDLIBS := $(strip $(HB_USER_LIBS) $(LIBS) $(SYSLIBS))

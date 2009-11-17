@@ -127,8 +127,10 @@ static RDDFUNCS adsxSuper;
 *  Misc functions
 ************************************************************************/
 
-static HB_ERRCODE hb_mixErrorRT( ADSXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode,
-                              char* filename, USHORT uiOsCode, USHORT uiFlags )
+static HB_ERRCODE hb_mixErrorRT( ADSXAREAP pArea,
+                                 HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
+                                 char* filename, HB_ERRCODE errOsCode,
+                                 USHORT uiFlags )
 {
    PHB_ITEM pError;
    HB_ERRCODE iRet = HB_FAILURE;
@@ -136,10 +138,10 @@ static HB_ERRCODE hb_mixErrorRT( ADSXAREAP pArea, USHORT uiGenCode, USHORT uiSub
    if( hb_vmRequestQuery() == 0 )
    {
       pError = hb_errNew();
-      hb_errPutGenCode( pError, uiGenCode );
-      hb_errPutSubCode( pError, uiSubCode );
-      hb_errPutOsCode( pError, uiOsCode );
-      hb_errPutDescription( pError, hb_langDGetErrorDesc( uiGenCode ) );
+      hb_errPutGenCode( pError, errGenCode );
+      hb_errPutSubCode( pError, errSubCode );
+      hb_errPutOsCode( pError, errOsCode );
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( errGenCode ) );
       if( filename )
          hb_errPutFileName( pError, filename );
       if( uiFlags )

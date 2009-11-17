@@ -149,7 +149,7 @@ static HB_ERRCODE hb_waSkip( AREAP pArea, LONG lToSkip )
 static HB_ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
 {
    BOOL fBottom, fDeleted;
-   HB_ERRCODE uiError;
+   HB_ERRCODE errCode;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waSkipFilter(%p, %ld)", pArea, lUpDown));
 
@@ -217,20 +217,20 @@ static HB_ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
             are out of filter so I do not want to do that. I will prefer
             explicit add SELF_GOEOF() method
           */
-         uiError = SELF_GOTO( pArea, 0 );
+         errCode = SELF_GOTO( pArea, 0 );
       }
       else
       {
-         uiError = SELF_GOTOP( pArea );
+         errCode = SELF_GOTOP( pArea );
          pArea->fBof = TRUE;
       }
    }
    else
    {
-      uiError = HB_SUCCESS;
+      errCode = HB_SUCCESS;
    }
 
-   return uiError;
+   return errCode;
 }
 
 /*

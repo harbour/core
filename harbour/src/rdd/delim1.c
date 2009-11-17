@@ -641,7 +641,7 @@ static HB_ERRCODE hb_delimGetValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM p
 static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    char szBuffer[ 256 ];
-   HB_ERRCODE uiError;
+   HB_ERRCODE errCode;
    LPFIELD pField;
    ULONG ulSize;
 
@@ -653,7 +653,7 @@ static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM p
    if( !pArea->fRecordChanged )
       return HB_FAILURE;
 
-   uiError = HB_SUCCESS;
+   errCode = HB_SUCCESS;
    --uiIndex;
    pField = pArea->area.lpFields + uiIndex;
    if( pField->uiType != HB_FT_MEMO && pField->uiType != HB_FT_NONE )
@@ -684,7 +684,7 @@ static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM p
                        ' ', pField->uiLen - ulSize );
          }
          else
-            uiError = EDBF_DATATYPE;
+            errCode = EDBF_DATATYPE;
       }
       else if( HB_IS_DATETIME( pItem ) )
       {
@@ -705,7 +705,7 @@ static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM p
             memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ], szBuffer, pField->uiLen );
          }
          else
-            uiError = EDBF_DATATYPE;
+            errCode = EDBF_DATATYPE;
       }
       else if( HB_IS_NUMBER( pItem ) )
       {
@@ -718,38 +718,38 @@ static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM p
             }
             else
             {
-               uiError = EDBF_DATAWIDTH;
+               errCode = EDBF_DATAWIDTH;
                memset( pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                        '*', pField->uiLen );
             }
          }
          else
-            uiError = EDBF_DATATYPE;
+            errCode = EDBF_DATATYPE;
       }
       else if( HB_IS_LOGICAL( pItem ) )
       {
          if( pField->uiType == HB_FT_LOGICAL )
             pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ] = hb_itemGetL( pItem ) ? 'T' : 'F';
          else
-            uiError = EDBF_DATATYPE;
+            errCode = EDBF_DATATYPE;
       }
       else
-         uiError = EDBF_DATATYPE;
+         errCode = EDBF_DATATYPE;
    }
 
-   if( uiError != HB_SUCCESS )
+   if( errCode != HB_SUCCESS )
    {
       PHB_ITEM pError= hb_errNew();
-      USHORT uiGenCode = uiError == EDBF_DATAWIDTH ? EG_DATAWIDTH : EDBF_DATATYPE;
+      HB_ERRCODE errGenCode = errCode == EDBF_DATAWIDTH ? EG_DATAWIDTH : EDBF_DATATYPE;
 
-      hb_errPutGenCode( pError, uiGenCode );
-      hb_errPutDescription( pError, hb_langDGetErrorDesc( uiGenCode ) );
+      hb_errPutGenCode( pError, errGenCode );
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( errGenCode ) );
       hb_errPutOperation( pError, hb_dynsymName( ( PHB_DYNS ) pField->sym ) );
-      hb_errPutSubCode( pError, uiError );
+      hb_errPutSubCode( pError, errCode );
       hb_errPutFlags( pError, EF_CANDEFAULT );
-      uiError = SELF_ERROR( ( AREAP ) pArea, pError );
+      errCode = SELF_ERROR( ( AREAP ) pArea, pError );
       hb_itemRelease( pError );
-      return uiError == E_DEFAULT ? HB_SUCCESS : HB_FAILURE;
+      return errCode == E_DEFAULT ? HB_SUCCESS : HB_FAILURE;
    }
 
    return HB_SUCCESS;
@@ -878,11 +878,11 @@ static HB_ERRCODE hb_delimGoHot( DELIMAREAP pArea )
  */
 static HB_ERRCODE hb_delimFlush( DELIMAREAP pArea )
 {
-   HB_ERRCODE uiError;
+   HB_ERRCODE errCode;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_delimFlush(%p)", pArea));
 
-   uiError = SELF_GOCOLD( ( AREAP ) pArea );
+   errCode = SELF_GOCOLD( ( AREAP ) pArea );
 
    if( pArea->fFlush )
    {
@@ -894,7 +894,7 @@ static HB_ERRCODE hb_delimFlush( DELIMAREAP pArea )
       }
    }
 
-   return uiError;
+   return errCode;
 }
 
 /*

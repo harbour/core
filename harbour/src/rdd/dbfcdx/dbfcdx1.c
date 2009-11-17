@@ -188,8 +188,9 @@ static void hb_cdxErrInternal( const char * szMsg )
 /*
  * generate Run-Time error
  */
-static HB_ERRCODE hb_cdxErrorRT( CDXAREAP pArea, HB_ERRCODE uiGenCode, HB_ERRCODE uiSubCode,
-                                 const char * filename, HB_ERRCODE uiOsCode,
+static HB_ERRCODE hb_cdxErrorRT( CDXAREAP pArea,
+                                 HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
+                                 const char * filename, HB_ERRCODE errOsCode,
                                  USHORT uiFlags, PHB_ITEM * pErrorPtr )
 {
    PHB_ITEM pError;
@@ -205,10 +206,10 @@ static HB_ERRCODE hb_cdxErrorRT( CDXAREAP pArea, HB_ERRCODE uiGenCode, HB_ERRCOD
       }
       else
          pError = hb_errNew();
-      hb_errPutGenCode( pError, uiGenCode );
-      hb_errPutSubCode( pError, uiSubCode );
-      hb_errPutOsCode( pError, uiOsCode );
-      hb_errPutDescription( pError, hb_langDGetErrorDesc( uiGenCode ) );
+      hb_errPutGenCode( pError, errGenCode );
+      hb_errPutSubCode( pError, errSubCode );
+      hb_errPutOsCode( pError, errOsCode );
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( errGenCode ) );
       if( filename )
          hb_errPutFileName( pError, filename );
       if( uiFlags )
@@ -6757,14 +6758,14 @@ static HB_ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip )
 static HB_ERRCODE hb_cdxFlush( CDXAREAP pArea )
 {
    LPCDXINDEX pIndex;
-   HB_ERRCODE uiError;
+   HB_ERRCODE errCode;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxFlush(%p)", pArea));
 
    if( SELF_GOCOLD( ( AREAP ) pArea ) == HB_FAILURE )
       return HB_FAILURE;
 
-   uiError = SUPER_FLUSH( ( AREAP ) pArea );
+   errCode = SUPER_FLUSH( ( AREAP ) pArea );
 
    if( hb_setGetHardCommit() )
    {
@@ -6780,7 +6781,7 @@ static HB_ERRCODE hb_cdxFlush( CDXAREAP pArea )
       }
    }
 
-   return uiError;
+   return errCode;
 }
 
 /* ( DBENTRYP_PP )    hb_cdxGetRec          : NULL */

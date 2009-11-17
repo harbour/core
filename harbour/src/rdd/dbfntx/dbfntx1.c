@@ -250,8 +250,9 @@ static ULONG hb_ntxGetKeyRec( LPPAGEINFO pPage, SHORT iKey )
 /*
  * generate Run-Time error
  */
-static HB_ERRCODE hb_ntxErrorRT( NTXAREAP pArea, HB_ERRCODE uiGenCode, HB_ERRCODE uiSubCode,
-                                 const char * szFileName, HB_ERRCODE uiOsCode,
+static HB_ERRCODE hb_ntxErrorRT( NTXAREAP pArea,
+                                 HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
+                                 const char * szFileName, HB_ERRCODE errOsCode,
                                  USHORT uiFlags, PHB_ITEM * pErrorPtr )
 {
    PHB_ITEM pError;
@@ -267,10 +268,10 @@ static HB_ERRCODE hb_ntxErrorRT( NTXAREAP pArea, HB_ERRCODE uiGenCode, HB_ERRCOD
       }
       else
          pError = hb_errNew();
-      hb_errPutGenCode( pError, uiGenCode );
-      hb_errPutSubCode( pError, uiSubCode );
-      hb_errPutOsCode( pError, uiOsCode );
-      hb_errPutDescription( pError, hb_langDGetErrorDesc( uiGenCode ) );
+      hb_errPutGenCode( pError, errGenCode );
+      hb_errPutSubCode( pError, errSubCode );
+      hb_errPutOsCode( pError, errOsCode );
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( errGenCode ) );
       if( szFileName )
          hb_errPutFileName( pError, szFileName );
       if( uiFlags )
@@ -5835,14 +5836,14 @@ static HB_ERRCODE hb_ntxSkipRaw( NTXAREAP pArea, LONG lToSkip )
  */
 static HB_ERRCODE hb_ntxFlush( NTXAREAP pArea )
 {
-   HB_ERRCODE uiError;
+   HB_ERRCODE errCode;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ntxFlush(%p)", pArea));
 
-   uiError = SELF_GOCOLD( ( AREAP ) pArea );
-   if( uiError == HB_SUCCESS )
+   errCode = SELF_GOCOLD( ( AREAP ) pArea );
+   if( errCode == HB_SUCCESS )
    {
-      uiError = SUPER_FLUSH( ( AREAP ) pArea );
+      errCode = SUPER_FLUSH( ( AREAP ) pArea );
 
       if( hb_setGetHardCommit() )
       {
@@ -5859,7 +5860,7 @@ static HB_ERRCODE hb_ntxFlush( NTXAREAP pArea )
       }
    }
 
-   return uiError;
+   return errCode;
 }
 
 #define hb_ntxGetRec                NULL

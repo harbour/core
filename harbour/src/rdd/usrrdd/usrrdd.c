@@ -3052,7 +3052,7 @@ HB_FUNC( USRRDD_SETBOTTOM )
    }
 }
 
-static HB_ERRCODE hb_usrErrorRT( AREAP pArea, USHORT uiGenCode, USHORT uiSubCode )
+static HB_ERRCODE hb_usrErrorRT( AREAP pArea, HB_ERRCODE errGenCode, HB_ERRCODE errSubCode )
 {
    PHB_ITEM pError;
    HB_ERRCODE iRet = HB_FAILURE;
@@ -3060,9 +3060,9 @@ static HB_ERRCODE hb_usrErrorRT( AREAP pArea, USHORT uiGenCode, USHORT uiSubCode
    if( hb_vmRequestQuery() == 0 )
    {
       pError = hb_errNew();
-      hb_errPutGenCode( pError, uiGenCode );
-      hb_errPutSubCode( pError, uiSubCode );
-      hb_errPutDescription( pError, hb_langDGetErrorDesc( uiGenCode ) );
+      hb_errPutGenCode( pError, errGenCode );
+      hb_errPutSubCode( pError, errSubCode );
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( errGenCode ) );
       iRet = SELF_ERROR( pArea, pError );
       hb_errRelease( pError );
    }

@@ -123,8 +123,8 @@ static HB_FHANDLE hb_sxSemOpen( char * szFileName, BOOL * pfNewFile )
       }
       else
       {
-         USHORT uiError = hb_fsError();
-         if( uiError != 5 && uiError != 32 && uiError != 33 )
+         HB_ERRCODE errCode = hb_fsError();
+         if( errCode != 5 && errCode != 32 && errCode != 33 )
             break;
       }
 
