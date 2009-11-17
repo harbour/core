@@ -227,6 +227,33 @@ HB_FUNC( HB_F_EOF )
    hb_fsSetFError( uiError );
 }
 
+HB_FUNC( CURDIRX )
+{
+   HB_ERRCODE uiErrorOld = hb_fsError();
+   char * pbyBuffer = ( char * ) hb_xgrab( HB_PATH_MAX + 1 );
+   PHB_ITEM pDrv = hb_param( 1, HB_IT_STRING );
+   BYTE cCurDrv = hb_fsCurDrv();
+   BYTE cDrv;
+
+   if( pDrv && hb_parclen( 1 ) > 0 )
+   {
+      cDrv = ( BYTE ) ( HB_TOUPPER( *hb_itemGetCPtr( pDrv ) ) - 'A' );
+      if( cDrv != cCurDrv )
+         hb_fsChDrv( cDrv );
+   }
+   else
+      cDrv = cCurDrv;
+
+   /* NOTE: hb_fsCurDirBuffEx() in xhb, but I couldn't decipher the difference. [vszakats] */
+   hb_fsCurDirBuff( cDrv, pbyBuffer, HB_PATH_MAX );
+
+   hb_retc_buffer( pbyBuffer );
+
+   hb_fsChDrv( cCurDrv );
+
+   hb_fsSetError( uiErrorOld );
+}
+
 HB_FUNC_EXTERN( HB_CSTR );
 
 HB_FUNC( CSTR )
