@@ -93,5 +93,6 @@
 #include "thread.c"
 #include "garbage.c"
 #include "fm.c"
+#include "strapi.c"
 #include "extend.c"
 #include "estack.c"

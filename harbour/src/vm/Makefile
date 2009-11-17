@@ -75,6 +75,7 @@ C_SOURCES := \
    garbage.c \
    hashes.c \
    itemapi.c \
+   strapi.c \
    macro.c \
    memvars.c \
    set.c \
