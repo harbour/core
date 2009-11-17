@@ -419,7 +419,7 @@ HB_FUNC( HB_FGETDATETIME )
 
 HB_FUNC( HB_OSERROR )
 {
-   hb_retnl( hb_fsOsError() );
+   hb_retni( hb_fsOsError() );
 }
 
 HB_FUNC( HB_OSPATHSEPARATOR )

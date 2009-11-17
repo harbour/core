@@ -518,7 +518,7 @@ HB_FUNC( FT_FGOTOP )
 
 HB_FUNC( FT_FERROR )
 {
-   hb_retnl( error[area] );
+   hb_retni( error[area] );
 }
 
 
