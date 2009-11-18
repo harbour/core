@@ -1159,6 +1159,7 @@ HARBOUR
    x darwin -> wce/mingwarm  arm
    x darwin -> wce/mingw     x86
    x darwin -> win/mingw     x86
+   x darwin -> win/mingw64   x86-64
    x darwin -> dos/djgpp     x86
      hpux   -> hpux/gcc      (CPU cross-builds possible)
      beos   -> beos/gcc      x86

@@ -792,6 +792,14 @@ ifeq ($(HB_COMPILER),)
                                                             ifneq ($(HB_COMP_PATH),)
                                                                HB_COMPILER := mingw64
                                                                HB_CCPREFIX := i686-w64-mingw32-
+                                                            else
+                                                               ifeq ($(HB_HOST_CPU),x86_64)
+                                                                  HB_COMP_PATH := $(call find_in_path,x86_64-w64-mingw32-gcc)
+                                                                  ifneq ($(HB_COMP_PATH),)
+                                                                     HB_COMPILER := mingw64
+                                                                     HB_CCPREFIX := x86_64-w64-mingw32-
+                                                                  endif
+                                                               endif
                                                             endif
                                                          endif
                                                       endif

@@ -859,10 +859,10 @@ BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARA
    {
       hb_vmPushSymbol( &hb_symEval );
       hb_vmPush( block );
-      hb_vmPushLong( ( long ) hwnd );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) hwnd );
       hb_vmPushInteger( msg );
-      hb_vmPushLong( ( long ) wParam );
-      hb_vmPushLong( ( long ) lParam );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) wParam );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) lParam );
       hb_vmDo( 4 );
       bret = hb_parnl( -1 );
 
@@ -1088,9 +1088,9 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
          /* set bitmap */
          tbab.hInst = NULL;
 #if (_WIN32_IE >= 0x0500)
-         tbab.nID   = ( UINT_PTR ) ( HBITMAP ) hb_parni( 2 );
+         tbab.nID   = ( UINT_PTR ) ( HBITMAP ) hb_parnint( 2 );
 #else
-         tbab.nID   = ( UINT ) ( HBITMAP ) hb_parni( 2 );
+         tbab.nID   = ( UINT ) ( HBITMAP ) hb_parnint( 2 );
 #endif
          iNewBitmap = ( int ) SendMessage( hWndTB, TB_ADDBITMAP, ( WPARAM ) 1, ( LPARAM ) &tbab );
 

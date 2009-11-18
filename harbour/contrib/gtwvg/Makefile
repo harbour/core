@@ -53,7 +53,7 @@ PRG_HEADERS := \
    wvgparts.ch \
 
 ifeq ($(HB_PLATFORM),win)
-   ifneq ($(filter $(HB_COMPILER),mingw msvc msvc64 watcom pocc pocc64 icc bcc),)
+   ifeq ($(filter $(HB_COMPILER),xcc),)
    
       HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/hbwin
    
