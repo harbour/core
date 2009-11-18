@@ -321,6 +321,7 @@ public slots:
    void cellEntered( int row, int column );
    void cellPressed( int row, int column );
    void currentCellChanged( int currentRow, int currentColumn, int previousRow, int previousColumn );
+   void tabCloseRequested( int index );
 };
 
 class Events: public QObject

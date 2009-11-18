@@ -163,6 +163,16 @@ FUNCTION SetEventLoop( oELoop )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION PostAppEvent( nEvent, mp1, mp2, oXbp )
+   LOCAL lSuccess := .T.
+
+   SetAppEvent( nEvent, mp1, mp2, oXbp )
+
+   RETURN lSuccess
+
+/*----------------------------------------------------------------------*/
+
 /*
  *  Internal to the XbpParts , Must NOT be called from Application Code
  */

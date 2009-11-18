@@ -94,6 +94,9 @@ CLASS XbpTabPage  INHERIT  XbpWindow
 
    DATA     sl_tabActivate
    METHOD   tabActivate()                         SETGET
+   /* Harbour extension */
+   DATA     sl_closeRequested
+   METHOD   closeRequested()                      SETGET
 
    METHOD   handleEvent()
    METHOD   exeBlock()
@@ -154,6 +157,12 @@ METHOD XbpTabPage:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 /*----------------------------------------------------------------------*/
 
 METHOD XbpTabPage:destroy()
+   LOCAL nIndex
+
+   IF ( nIndex := ascan( ::oParent:aChildren, self ) ) > 0
+      adel( ::aChildren, nIndex )
+      asize( ::aChildren, len( ::aChildren ) - 1 )
+   ENDIF
 
    ::sl_tabActivate          := NIL
    ::xbpWindow:destroy()
@@ -187,6 +196,16 @@ METHOD XbpTabPage:tabActivate( xParam )
 
    IF hb_isBlock( xParam )
       ::sl_tabActivate := xParam
+   ENDIF
+
+   RETURN self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpTabPage:closeRequested( xParam )
+
+   IF hb_isBlock( xParam )
+      ::sl_closeRequested := xParam
    ENDIF
 
    RETURN self
@@ -241,7 +260,8 @@ METHOD XbpTabWidget:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
    ::oWidget := QTabWidget():new( ::pParent )
 
-//   ::Connect( ::pWidget, "currentChanged(int)" , {|o,i| ::exeBlock( i,o ) } )
+   ::Connect( ::pWidget, "currentChanged(int)"    , {|o,i| ::exeBlock( 1,i,o ) } )
+   ::Connect( ::pWidget, "tabCloseRequested(int)" , {|o,i| ::exeBlock( 2,i,o ) } )
 
    ::setPosAndSize()
    IF ::visible
@@ -272,12 +292,25 @@ METHOD XbpTabWidget:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpTabWidget:exeBlock( iIndex )
+METHOD XbpTabWidget:exeBlock( nMode, iIndex )
+
    IF !empty( ::aChildren ) .and. iIndex >= 0 .and. iIndex < len( ::aChildren )
-      IF hb_isBlock( ::aChildren[ iIndex+1 ]:sl_tabActivate )
-         eval( ::aChildren[ iIndex+1 ]:sl_tabActivate, NIL, NIL, ::aChildren[ iIndex+1 ] )
-      ENDIF
+      DO CASE
+      CASE nMode == 1
+         HBXBP_DEBUG( "Tab Clicked", iIndex )
+         IF hb_isBlock( ::aChildren[ iIndex+1 ]:sl_tabActivate )
+            eval( ::aChildren[ iIndex+1 ]:sl_tabActivate, NIL, NIL, ::aChildren[ iIndex+1 ] )
+         ENDIF
+
+      CASE nMode == 2
+         HBXBP_DEBUG( "Tab Close Requested", iIndex )
+         IF hb_isBlock( ::aChildren[ iIndex+1 ]:sl_closeRequested )
+            eval( ::aChildren[ iIndex+1 ]:sl_closeRequested, NIL, NIL, ::aChildren[ iIndex+1 ] )
+         ENDIF
+
+      ENDCASE
    ENDIF
+
    RETURN nil
 
 /*----------------------------------------------------------------------*/

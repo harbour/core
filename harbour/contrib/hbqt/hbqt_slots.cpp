@@ -1103,6 +1103,11 @@ void Slots::currentCellChanged( int currentRow, int currentColumn, int previousR
    QObject *object = qobject_cast<QObject *>( sender() );
    SlotsExecIntIntIntInt( object, ( char* ) "currentCellChanged(int,int,int,int)", currentRow, currentColumn, previousRow, previousColumn );
 }
+void Slots::tabCloseRequested( int index )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecInt( object, ( char* ) "tabCloseRequested(int)", index );
+}
 
 
 /*
@@ -1687,6 +1692,11 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       ret = object->connect( object, SIGNAL( currentCellChanged( int, int, int, int ) ),
                              s_s, SLOT( currentCellChanged( int, int, int, int ) ), Qt::AutoConnection );
    }
+   if( signal == ( QString ) "tabCloseRequested(int)" )
+   {
+      ret = object->connect( object, SIGNAL( tabCloseRequested( int ) ),
+                             s_s, SLOT( tabCloseRequested( int ) ), Qt::AutoConnection );
+   }
 
 
    hb_retl( ret );
@@ -1932,6 +1942,8 @@ bool disconnect_signal( QObject * object, const char * signal )
       ret = object->disconnect( SIGNAL( cellPressed( int, int ) ) );
    if( signal == ( QString ) "currentCellChanged(int,int,int,int)" )
       ret = object->disconnect( SIGNAL( currentCellChanged( int, int, int, int ) ) );
+   if( signal == ( QString ) "tabCloseRequested(int)" )
+      ret = object->disconnect( SIGNAL( tabCloseRequested( int ) ) );
 
    return ret;
 }

@@ -1,8 +1,8 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'hbqt_slots.h'
 **
-** Created: Sun Nov 15 13:20:23 2009
-**      by: The Qt Meta Object Compiler version 61 (Qt 4.5.2)
+** Created: Tue Nov 17 13:17:44 2009
+**      by: The Qt Meta Object Compiler version 61 (Qt 4.5.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -11,7 +11,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'hbqt_slots.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 61
-#error "This file was generated using the moc from 4.5.2. It"
+#error "This file was generated using the moc from 4.5.0. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -321,7 +321,7 @@ static const uint qt_meta_data_Slots[] = {
        2,       // revision
        0,       // classname
        0,    0, // classinfo
-     113,   12, // methods
+     114,   12, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -440,6 +440,7 @@ static const uint qt_meta_data_Slots[] = {
     3175, 3072,    6,    6, 0x0a,
     3196, 3072,    6,    6, 0x0a,
     3269, 3217,    6,    6, 0x0a,
+    3305,  108,    6,    6, 0x0a,
 
        0        // eod
 };
@@ -536,6 +537,7 @@ static const char qt_meta_stringdata_Slots[] = {
     "cellEntered(int,int)\0cellPressed(int,int)\0"
     "currentRow,currentColumn,previousRow,previousColumn\0"
     "currentCellChanged(int,int,int,int)\0"
+    "tabCloseRequested(int)\0"
 };
 
 const QMetaObject Slots::staticMetaObject = {
@@ -676,9 +678,10 @@ int Slots::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 110: cellEntered((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         case 111: cellPressed((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         case 112: currentCellChanged((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< int(*)>(_a[4]))); break;
+        case 113: tabCloseRequested((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
-        _id -= 113;
+        _id -= 114;
     }
     return _id;
 }

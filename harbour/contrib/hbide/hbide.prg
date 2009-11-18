@@ -49,6 +49,20 @@
  *
  */
 /*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                                EkOnkar
+ *                          ( The LORD is ONE )
+ *
+ *                            Harbour-Qt IDE
+ *
+ *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                               17Nov2009
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #include "common.ch"
 #include "xbp.ch"
@@ -99,6 +113,11 @@ PROCEDURE AppSys()
 
 /*----------------------------------------------------------------------*/
 
+PROCEDURE JustACall()
+   RETURN
+
+/*----------------------------------------------------------------------*/
+
 CLASS HbIde
 
    DATA   oDlg
@@ -110,6 +129,7 @@ CLASS HbIde
    DATA   aTabs                                   INIT {}
    DATA   cProjFile
 
+   DATA   oCurTab                                 INIT NIL
    DATA   nCurTab                                 INIT 0
    DATA   nPrevTab                                INIT 0
 
@@ -126,13 +146,14 @@ CLASS HbIde
    METHOD buildToolbar()
    METHOD manageToolBar()
    METHOD manageMenu()
-   METHOD editSource()
    METHOD buildTabPage()
-   #if 0
-   METHOD ()
-   METHOD ()
-   METHOD ()
-   #endif
+
+   METHOD editSource()
+   METHOD selectSource()
+   METHOD closeSource()
+   METHOD closeAllSources()
+   METHOD saveSource()
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -154,7 +175,7 @@ METHOD HbIde:new( cProjectOrSource )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:create( cProjectOrSource )
-   LOCAL aSize
+   //LOCAL aSize
 
    IF hb_isChar( cProjectOrSource )
       ::cProjFile := cProjectOrSource
@@ -182,11 +203,14 @@ METHOD HbIde:create( cProjectOrSource )
 
    ::oDa:oWidget:setLayout( QT_PTROF( ::qLayout ) )
 
+   #if 0
    /* Obtain desktop dimensions */
    aSize := AppDesktop():currentSize()
    /* Place on the center of desktop */
    ::oDlg:setPos( { ( aSize[ 1 ] - ::oDlg:currentSize()[ 1 ] ) / 2, ;
                     ( aSize[ 2 ] - ::oDlg:currentSize()[ 2 ] ) / 2 } )
+   #endif
+   ::oDlg:setPos( { 100, 60 } )
 
    /* Editor's Font */
    ::oFont := XbpFont():new()
@@ -209,9 +233,22 @@ METHOD HbIde:create( cProjectOrSource )
    /* Enter Xbase++ Event Loop - working */
    DO WHILE .t.
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
-      IF ( ::nEvent == xbeP_Close ) .OR. ( ::nEvent == xbeP_Keyboard .and. ::mp1 == xbeK_ESC )
+      IF ::nEvent == xbeP_Quit
          EXIT
       ENDIF
+
+      IF ( ::nEvent == xbeP_Close ) .OR. ( ::nEvent == xbeP_Keyboard .and. ::mp1 == xbeK_ESC )
+         IF ::nEvent == xbeP_Close
+            ::closeAllSources()
+            EXIT
+         ELSE
+            ::closeSource( ::nCurTab, .t. )
+            IF empty( ::aTabs )
+               EXIT
+            ENDIF
+         ENDIF
+      ENDIF
+
       ::oXbp:handleEvent( ::nEvent, ::mp1, ::mp2 )
    ENDDO
 
@@ -238,7 +275,7 @@ METHOD HbIde:buildDialog()
 METHOD HbIde:buildTabPage( oWnd, cSource )
    LOCAL aPos    := { 5,5 }
    LOCAL aSize   := { 890, 420 }
-   LOCAL oTab
+   LOCAL oTab, o
    LOCAL cPath, cFile, cExt//, qIcon
    LOCAL nIndex  := len( ::aTabs )
 
@@ -259,6 +296,10 @@ METHOD HbIde:buildTabPage( oWnd, cSource )
    ENDIF
    ::oDa:oTabWidget:oWidget:setTabTooltip( nIndex, cSource )
 
+   oTab:tabActivate    := {|mp1,mp2,oXbp| HB_SYMBOL_UNUSED( mp1 ), o := oXbp, ;
+                                mp2 := ascan( ::aTabs, {|e_| e_[ 1 ] == o } ), ::nCurTab := mp2 }
+   oTab:closeRequested := {|mp1,mp2,oXbp| HB_SYMBOL_UNUSED( mp1 ), o := oXbp, ;
+                                mp2 := ascan( ::aTabs, {|e_| e_[ 1 ] == o } ), ::nCurTab := mp2, ::closeSource( ::nCurTab, .t. ) }
    RETURN oTab
 
 /*----------------------------------------------------------------------*/
@@ -272,7 +313,7 @@ METHOD HbIde:editSource( cSourceFile )
 
    qEdit := QTextEdit():new( QT_PTROFXBP( oTab ) )
    qEdit:setLineWrapMode( QTextEdit_NoWrap )
-   qEdit:setPlainText( memoread( ::cProjFile ) )
+   qEdit:setPlainText( memoread( cSourceFile ) )
    qEdit:setFont( QT_PTROFXBP( ::oFont ) )
    qEdit:setTextBackgroundColor( QT_PTROF( QColor():new( 255,255,255 ) ) )
 
@@ -291,8 +332,93 @@ METHOD HbIde:editSource( cSourceFile )
 
    ::nPrevTab := ::nCurTab
    ::nCurTab  := len( ::aTabs )
+   ::oDa:oTabWidget:oWidget:setCurrentIndex( ::nCurTab - 1 )
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:saveSource( nTab )
+   LOCAL cBuffer
+   LOCAL qDocument := QTextDocument():configure( ::aTabs[ nTab, 2 ]:document() )
+
+   IF qDocument:isModified()
+      HBXBP_DEBUG( "Document be Saved", "YES", ::aTabs[ nTab, 5 ] )
+      cBuffer := ::aTabs[ nTab, 2 ]:toPlainText()
+      memowrit( ::aTabs[ nTab, 5 ], cBuffer )
+   ELSE
+      HBXBP_DEBUG( "Document Modified", "NO ", ::aTabs[ nTab, 5 ] )
+   ENDIF
+
+   RETURN self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:closeSource( nTab, lDel )
+
+   DEFAULT lDel TO .T.
+
+   HBXBP_DEBUG( "  .  " )
+   HBXBP_DEBUG( "HbIde:closeSource( nTab, lDel )", nTab, lDel )
+
+   IF !empty( ::aTabs ) .and. !empty( nTab )
+      ::saveSource( nTab )
+
+      /* Destroy at Qt level */
+      ::oDa:oTabWidget:oWidget:removeTab( nTab - 1 )
+
+      /* Destroy at XBP level */
+      ::aTabs[ nTab,1 ]:destroy()
+
+      /* Destroy at this object level */
+      IF lDel
+         adel( ::aTabs, nTab )
+         asize( ::aTabs, len( ::aTabs ) - 1 )
+      ENDIF
+
+      IF empty( ::aTabs )
+         PostAppEvent( xbeP_Quit )
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:closeAllSources()
+   LOCAL nTab
+
+   FOR nTab := len( ::aTabs ) TO 1 STEP -1
+      ::closeSource( nTab, .f. )
+   NEXT
+   ::aTabs := {}
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:selectSource( cMode )
+   LOCAL oDlg, cFile//, aFiles
+
+   oDlg := XbpFileDialog():new():create( ::oDa, , { 10,10 } )
+   IF cMode == "open"
+      oDlg:title       := "Select a Source File"
+      oDlg:center      := .t.
+      oDlg:fileFilters := { { "PRG Sources", "*.prg" }, { "C Sources", "*.c" }, { "CPP Sources", "*.cpp" }, ;
+                                                            { "H Headers", "*.h" }, { "CH Headers", "*.ch" } }
+
+      cFile := oDlg:open( CurDrive() +":\"+ CurDir(), , .f. )
+   ELSE
+      oDlg:title       := "Save this Database"
+      oDlg:fileFilters := { { "Database Files", "*.dbf" } }
+      oDlg:quit        := {|| MsgBox( "Quitting the Dialog" ), 1 }
+      cFile := oDlg:saveAs( "c:\temp\myfile.dbf" )
+      IF !empty( cFile )
+         HBXBP_DEBUG( cFile )
+      ENDIF
+   ENDIF
+
+   RETURN cFile
 
 /*----------------------------------------------------------------------*/
 
@@ -346,9 +472,10 @@ METHOD HbIde:buildToolBar()
    ::oTBar:addItem( "Build and Launch Project"   , s_resPath + "buildlaunch.png"    , , , , , "8"  )
    ::oTBar:addItem( "Rebuild Project"            , s_resPath + "rebuild.png"        , , , , , "9"  )
    ::oTBar:addItem( "Rebuild and Launch Project" , s_resPath + "rebuildlaunch.png"  , , , , , "10" )
+   ::oTBar:addItem( "Show/Hide Build Error Info" , s_resPath + "builderror.png"     , , , , , "12" )
+   ::oTBar:addItem( "Module Function List"       , s_resPath + "modulelist.png"     , , , , , "11" )
+   //
    ::oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
-   //
-   //
    ::oTBar:addItem( "Undo"                       , s_resPath + "undo.png"           , , , , , "13" )
    ::oTBar:addItem( "Redo"                       , s_resPath + "redo.png"           , , , , , "14" )
    ::oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
@@ -379,10 +506,20 @@ METHOD HbIde:buildToolBar()
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:manageToolbar( oButton )
+   LOCAL cFile
 
    DO CASE
-   CASE oButton:caption == "Save"
-   CASE oButton:caption == "Open"
+   CASE oButton:key == "3"
+      IF !empty( cFile := ::selectSource( "open" ) )
+         ::editSource( cFile )
+      ENDIF
+
+   CASE oButton:key == "4"
+      ::saveSource( ::nCurTab )
+
+   CASE oButton:key == "5"
+      ::closeSource( ::nCurTab, .t. )
+
    ENDCASE
 
    RETURN nil
@@ -403,3 +540,4 @@ METHOD HbIde:buildStatusBar()
 
 /*----------------------------------------------------------------------*/
 
+
