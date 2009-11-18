@@ -127,8 +127,6 @@
 
 #include "hbextcdp.ch"
 
-#pragma linenumber=on
-
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
 

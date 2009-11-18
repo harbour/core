@@ -470,7 +470,8 @@ typedef struct _HB_NESTED_CLONED
 
 
 /* RDD method return codes */
-typedef USHORT HB_ERRCODE;
+typedef unsigned int HB_ERRCODE;
+
 #define HB_SUCCESS         0
 #define HB_FAILURE         1
 

@@ -396,17 +396,17 @@ HARBOUR
 
    You can use HB_PLATFORM values to select platforms:
 
-   linux   - Linux
-   darwin  - Mac OS X
-   bsd     - FreeBSD / OpenBSD / NetBSD / *BSD
-   beos    - BeOS / Haiku
-   hpux    - HP-UX
-   sunos   - Sun Solaris / OpenSolaris
-   win     - MS Windows (all flavors)
-   wce     - MS Windows CE
-   dos     - MS-DOS (32-bit protected mode only)
-             (MS-DOS compatible systems also work, like dosemu)
-   os2     - OS/2 / eComStation
+   linux    - Linux
+   darwin   - Mac OS X
+   bsd      - FreeBSD / OpenBSD / NetBSD / *BSD
+   beos     - BeOS / Haiku
+   hpux     - HP-UX
+   sunos    - Sun Solaris / OpenSolaris
+   win      - MS Windows (all flavors)
+   wce      - MS Windows CE
+   dos      - MS-DOS (32-bit protected mode only)
+              (MS-DOS compatible systems also work, like dosemu)
+   os2      - OS/2 / eComStation
 
    You can use HB_COMPILER values to manually select compilers:
 
