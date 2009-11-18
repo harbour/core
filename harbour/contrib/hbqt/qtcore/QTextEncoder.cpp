@@ -85,7 +85,7 @@ QT_G_FUNC( release_QTextEncoder )
 
    if( p && p->ph )
    {
-      ( ( QTextEncoder * ) p->ph )->~QTextEncoder();
+      delete ( ( QTextEncoder * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QTextEncoder                Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

@@ -88,7 +88,7 @@ QT_G_FUNC( release_QRect )
 
    if( p && p->ph )
    {
-      ( ( QRect * ) p->ph )->~QRect();
+      delete ( ( QRect * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QRect                       Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

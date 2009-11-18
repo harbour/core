@@ -90,7 +90,7 @@ QT_G_FUNC( release_QStyleOptionFocusRect )
 
    if( p && p->ph )
    {
-      ( ( QStyleOptionFocusRect * ) p->ph )->~QStyleOptionFocusRect();
+      delete ( ( QStyleOptionFocusRect * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionFocusRect       Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

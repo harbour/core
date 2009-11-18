@@ -108,7 +108,7 @@ QT_G_FUNC( release_QStandardItem )
 
    if( p && p->ph )
    {
-      ( ( QStandardItem * ) p->ph )->~QStandardItem();
+      delete ( ( QStandardItem * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QStandardItem               Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

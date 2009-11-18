@@ -93,7 +93,7 @@ QT_G_FUNC( release_QStyleOptionToolBar )
 
    if( p && p->ph )
    {
-      ( ( QStyleOptionToolBar * ) p->ph )->~QStyleOptionToolBar();
+      delete ( ( QStyleOptionToolBar * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionToolBar         Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

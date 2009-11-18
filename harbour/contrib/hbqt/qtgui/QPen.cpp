@@ -99,7 +99,7 @@ QT_G_FUNC( release_QPen )
 
    if( p && p->ph )
    {
-      ( ( QPen * ) p->ph )->~QPen();
+      delete ( ( QPen * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QPen                        Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

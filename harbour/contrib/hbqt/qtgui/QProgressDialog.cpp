@@ -96,7 +96,18 @@ QT_G_FUNC( release_QProgressDialog )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QProgressDialog * ) p->ph )->~QProgressDialog();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QProgressDialog * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QProgressDialog * ) p->ph )->~QProgressDialog();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QProgressDialog * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QProgressDialog             Object deleted!" ) );
          #if defined( __HB_DEBUG__ )

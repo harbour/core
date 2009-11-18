@@ -88,7 +88,7 @@ QT_G_FUNC( release_QFontMetricsF )
 
    if( p && p->ph )
    {
-      ( ( QFontMetricsF * ) p->ph )->~QFontMetricsF();
+      delete ( ( QFontMetricsF * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QFontMetricsF               Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

@@ -95,7 +95,18 @@ QT_G_FUNC( release_QCheckBox )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QCheckBox * ) p->ph )->~QCheckBox();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QCheckBox * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QCheckBox * ) p->ph )->~QCheckBox();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QCheckBox * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QCheckBox                   Object deleted!" ) );
          #if defined( __HB_DEBUG__ )

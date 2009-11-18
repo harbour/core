@@ -86,7 +86,7 @@ QT_G_FUNC( release_QMatrix )
 
    if( p && p->ph )
    {
-      ( ( QMatrix * ) p->ph )->~QMatrix();
+      delete ( ( QMatrix * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QMatrix                     Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

@@ -95,7 +95,7 @@ QT_G_FUNC( release_QPalette )
 
    if( p && p->ph )
    {
-      ( ( QPalette * ) p->ph )->~QPalette();
+      delete ( ( QPalette * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QPalette                    Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

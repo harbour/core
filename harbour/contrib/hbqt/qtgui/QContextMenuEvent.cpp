@@ -89,7 +89,7 @@ QT_G_FUNC( release_QContextMenuEvent )
 
    if( p && p->ph )
    {
-      ( ( QContextMenuEvent * ) p->ph )->~QContextMenuEvent();
+      delete ( ( QContextMenuEvent * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QContextMenuEvent           Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

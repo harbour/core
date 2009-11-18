@@ -86,7 +86,7 @@ QT_G_FUNC( release_QPointF )
 
    if( p && p->ph )
    {
-      ( ( QPointF * ) p->ph )->~QPointF();
+      delete ( ( QPointF * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QPointF                     Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

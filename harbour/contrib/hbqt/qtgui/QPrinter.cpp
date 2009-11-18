@@ -117,7 +117,7 @@ QT_G_FUNC( release_QPrinter )
 
    if( p && p->ph )
    {
-      ( ( QPrinter * ) p->ph )->~QPrinter();
+      delete ( ( QPrinter * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QPrinter                    Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

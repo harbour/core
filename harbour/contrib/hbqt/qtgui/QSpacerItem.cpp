@@ -84,7 +84,7 @@ QT_G_FUNC( release_QSpacerItem )
 
    if( p && p->ph )
    {
-      ( ( QSpacerItem * ) p->ph )->~QSpacerItem();
+      delete ( ( QSpacerItem * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QSpacerItem                 Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

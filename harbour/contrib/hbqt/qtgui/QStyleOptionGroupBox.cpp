@@ -90,7 +90,7 @@ QT_G_FUNC( release_QStyleOptionGroupBox )
 
    if( p && p->ph )
    {
-      ( ( QStyleOptionGroupBox * ) p->ph )->~QStyleOptionGroupBox();
+      delete ( ( QStyleOptionGroupBox * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionGroupBox        Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

@@ -114,6 +114,20 @@ PROCEDURE Main()
    Qt_SetEventFilter()
    Qt_SetEventSlots()
 
+   DO CASE
+   CASE HbQt_Set_Release_Method() == HBQT_RELEASE_WITH_DELETE
+HBQT_DEBUG( "HbQt_Set_Release_Method DEFAULT   : HBQT_RELEASE_WITH_DELETE" )
+   CASE HbQt_Set_Release_Method() == HBQT_RELEASE_WITH_DESTRUTOR
+HBQT_DEBUG( "HbQt_Set_Release_Method DEFAULT   : HBQT_RELEASE_WITH_DESTRUTOR" )
+   CASE HbQt_Set_Release_Method() == HBQT_RELEASE_WITH_DELETE_LATER
+HBQT_DEBUG( "HbQt_Set_Release_Method DEFAULT   : HBQT_RELEASE_WITH_DELETE_LATER" )
+   ENDCASE
+
+//   HbQt_Set_Release_Method( HBQT_RELEASE_WITH_DELETE_LATER )
+//HBQT_DEBUG( "HbQt_Set_Release_Method SET       : HBQT_RELEASE_WITH_DELETE_LATER" )
+   HbQt_Set_Release_Method( HBQT_RELEASE_WITH_DELETE )
+HBQT_DEBUG( "HbQt_Set_Release_Method SET       : HBQT_RELEASE_WITH_DELETE" )
+
 HBQT_DEBUG( "  " )
 HBQT_DEBUG( "-----------------b-----------------" )
 
@@ -156,6 +170,9 @@ HBQT_DEBUG( "connected: "  + IIF( QT_CONNECT_EVENT( QT_PTROF( oWnd ), 6, {|o,e| 
    qApp:exec()
 
 HBQT_DEBUG( "----------------- qApp:exec -----------------" )
+
+   HbQt_Set_Release_Method( HBQT_RELEASE_WITH_DELETE )
+HBQT_DEBUG( "HbQt_Set_Release_Method SET       : HBQT_RELEASE_WITH_DELETE" )
 
    xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd } )
 
@@ -227,6 +244,8 @@ PROCEDURE ExecOneMore()
    oEventLoop := 0
 
    xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd, oEventLoop } )
+
+   HB_GCALL( .T.)
 
    RETURN
 
@@ -586,6 +605,9 @@ STATIC FUNCTION MsgInfo( cMsg )
    oMB:setWindowTitle( "Harbour-QT" )
    oMB:exec()
 
+   oMB := NIL
+   HB_GCALL( .T.)
+
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -596,6 +618,9 @@ STATIC FUNCTION FileDialog()
    oFD := QFileDialog():new()
    oFD:setWindowTitle( "Select a File" )
    oFD:exec()
+
+   oFD := NIL
+   HB_GCALL( .T.)
 
    RETURN nil
 
@@ -635,6 +660,9 @@ STATIC FUNCTION Dialogs( cType )
       oDlg:setWindowTitle( "Harbour-QT Font Selector" )
       oDlg:exec()
    ENDCASE
+
+   oDlg := NIL
+   HB_GCALL( .T.)
 
    RETURN nil
 

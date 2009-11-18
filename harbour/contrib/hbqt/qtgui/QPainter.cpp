@@ -105,7 +105,7 @@ QT_G_FUNC( release_QPainter )
 
    if( p && p->ph )
    {
-      ( ( QPainter * ) p->ph )->~QPainter();
+      delete ( ( QPainter * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QPainter                    Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

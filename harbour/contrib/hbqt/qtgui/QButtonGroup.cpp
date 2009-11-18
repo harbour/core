@@ -104,7 +104,18 @@ QT_G_FUNC( release_QButtonGroup )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QButtonGroup * ) p->ph )->~QButtonGroup();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QButtonGroup * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QButtonGroup * ) p->ph )->~QButtonGroup();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QButtonGroup * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QButtonGroup                Object deleted!" ) );
          #if defined( __HB_DEBUG__ )

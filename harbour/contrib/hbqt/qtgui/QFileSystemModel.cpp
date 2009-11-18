@@ -99,7 +99,18 @@ QT_G_FUNC( release_QFileSystemModel )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QFileSystemModel * ) p->ph )->~QFileSystemModel();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QFileSystemModel * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QFileSystemModel * ) p->ph )->~QFileSystemModel();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QFileSystemModel * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QFileSystemModel            Object deleted!" ) );
          #if defined( __HB_DEBUG__ )

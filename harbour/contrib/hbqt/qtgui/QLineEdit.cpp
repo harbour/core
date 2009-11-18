@@ -100,7 +100,18 @@ QT_G_FUNC( release_QLineEdit )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QLineEdit * ) p->ph )->~QLineEdit();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QLineEdit * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QLineEdit * ) p->ph )->~QLineEdit();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QLineEdit * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QLineEdit                   Object deleted!" ) );
          #if defined( __HB_DEBUG__ )

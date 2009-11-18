@@ -86,7 +86,7 @@ QT_G_FUNC( release_QModelIndex )
 
    if( p && p->ph )
    {
-      ( ( QModelIndex * ) p->ph )->~QModelIndex();
+      delete ( ( QModelIndex * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QModelIndex                 Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

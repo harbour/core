@@ -105,7 +105,7 @@ QT_G_FUNC( release_QTextStream )
 
    if( p && p->ph )
    {
-      ( ( QTextStream * ) p->ph )->~QTextStream();
+      delete ( ( QTextStream * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QTextStream                 Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

@@ -103,7 +103,7 @@ QT_G_FUNC( release_QByteArray )
 
    if( p && p->ph )
    {
-      ( ( QByteArray * ) p->ph )->~QByteArray();
+      delete ( ( QByteArray * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QByteArray                  Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

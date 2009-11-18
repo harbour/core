@@ -85,7 +85,7 @@ QT_G_FUNC( release_QTextImageFormat )
 
    if( p && p->ph )
    {
-      ( ( QTextImageFormat * ) p->ph )->~QTextImageFormat();
+      delete ( ( QTextImageFormat * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QTextImageFormat            Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

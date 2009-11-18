@@ -92,7 +92,7 @@ QT_G_FUNC( release_QTableWidgetItem )
 
    if( p && p->ph )
    {
-      ( ( QTableWidgetItem * ) p->ph )->~QTableWidgetItem();
+      delete ( ( QTableWidgetItem * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QTableWidgetItem            Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

@@ -94,7 +94,7 @@ QT_G_FUNC( release_QTextFrameFormat )
 
    if( p && p->ph )
    {
-      ( ( QTextFrameFormat * ) p->ph )->~QTextFrameFormat();
+      delete ( ( QTextFrameFormat * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QTextFrameFormat            Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

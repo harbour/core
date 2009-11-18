@@ -85,7 +85,7 @@ QT_G_FUNC( release_QInputEvent )
 
    if( p && p->ph )
    {
-      ( ( QInputEvent * ) p->ph )->~QInputEvent();
+      delete ( ( QInputEvent * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QInputEvent                 Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

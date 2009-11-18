@@ -85,7 +85,7 @@ QT_G_FUNC( release_QPaintEvent )
 
    if( p && p->ph )
    {
-      ( ( QPaintEvent * ) p->ph )->~QPaintEvent();
+      delete ( ( QPaintEvent * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QPaintEvent                 Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

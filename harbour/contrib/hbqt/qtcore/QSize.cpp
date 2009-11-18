@@ -86,7 +86,7 @@ QT_G_FUNC( release_QSize )
 
    if( p && p->ph )
    {
-      ( ( QSize * ) p->ph )->~QSize();
+      delete ( ( QSize * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QSize                       Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

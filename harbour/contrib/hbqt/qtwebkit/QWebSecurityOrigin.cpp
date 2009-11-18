@@ -95,7 +95,7 @@ QT_G_FUNC( release_QWebSecurityOrigin )
 
    if( p && p->ph )
    {
-      ( ( QWebSecurityOrigin * ) p->ph )->~QWebSecurityOrigin();
+      delete ( ( QWebSecurityOrigin * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QWebSecurityOrigin          Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

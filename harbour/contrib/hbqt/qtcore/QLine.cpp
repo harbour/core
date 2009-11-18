@@ -86,7 +86,7 @@ QT_G_FUNC( release_QLine )
 
    if( p && p->ph )
    {
-      ( ( QLine * ) p->ph )->~QLine();
+      delete ( ( QLine * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QLine                       Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

@@ -92,7 +92,7 @@ QT_G_FUNC( release_QStyleOptionMenuItem )
 
    if( p && p->ph )
    {
-      ( ( QStyleOptionMenuItem * ) p->ph )->~QStyleOptionMenuItem();
+      delete ( ( QStyleOptionMenuItem * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionMenuItem        Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

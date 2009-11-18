@@ -91,7 +91,7 @@ QT_G_FUNC( release_QStyleOptionProgressBar )
 
    if( p && p->ph )
    {
-      ( ( QStyleOptionProgressBar * ) p->ph )->~QStyleOptionProgressBar();
+      delete ( ( QStyleOptionProgressBar * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionProgressBar     Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

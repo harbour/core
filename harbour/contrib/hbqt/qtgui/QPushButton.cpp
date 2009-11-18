@@ -97,7 +97,18 @@ QT_G_FUNC( release_QPushButton )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QPushButton * ) p->ph )->~QPushButton();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QPushButton * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QPushButton * ) p->ph )->~QPushButton();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QPushButton * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QPushButton                 Object deleted!" ) );
          #if defined( __HB_DEBUG__ )

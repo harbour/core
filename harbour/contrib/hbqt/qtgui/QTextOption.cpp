@@ -106,7 +106,7 @@ QT_G_FUNC( release_QTextOption )
 
    if( p && p->ph )
    {
-      ( ( QTextOption * ) p->ph )->~QTextOption();
+      delete ( ( QTextOption * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QTextOption                 Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

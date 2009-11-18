@@ -89,7 +89,7 @@ QT_G_FUNC( release_QTextLength )
 
    if( p && p->ph )
    {
-      ( ( QTextLength * ) p->ph )->~QTextLength();
+      delete ( ( QTextLength * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QTextLength                 Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

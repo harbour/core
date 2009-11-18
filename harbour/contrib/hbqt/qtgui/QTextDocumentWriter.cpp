@@ -87,7 +87,7 @@ QT_G_FUNC( release_QTextDocumentWriter )
 
    if( p && p->ph )
    {
-      ( ( QTextDocumentWriter * ) p->ph )->~QTextDocumentWriter();
+      delete ( ( QTextDocumentWriter * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QTextDocumentWriter         Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

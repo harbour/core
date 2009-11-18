@@ -90,7 +90,7 @@ QT_G_FUNC( release_QStyleOptionComboBox )
 
    if( p && p->ph )
    {
-      ( ( QStyleOptionComboBox * ) p->ph )->~QStyleOptionComboBox();
+      delete ( ( QStyleOptionComboBox * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionComboBox        Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

@@ -96,7 +96,7 @@ QT_G_FUNC( release_QTextCursor )
 
    if( p && p->ph )
    {
-      ( ( QTextCursor * ) p->ph )->~QTextCursor();
+      delete ( ( QTextCursor * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QTextCursor                 Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

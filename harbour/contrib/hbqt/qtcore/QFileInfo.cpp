@@ -94,7 +94,7 @@ QT_G_FUNC( release_QFileInfo )
 
    if( p && p->ph )
    {
-      ( ( QFileInfo * ) p->ph )->~QFileInfo();
+      delete ( ( QFileInfo * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QFileInfo                   Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

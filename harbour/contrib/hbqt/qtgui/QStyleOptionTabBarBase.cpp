@@ -90,7 +90,7 @@ QT_G_FUNC( release_QStyleOptionTabBarBase )
 
    if( p && p->ph )
    {
-      ( ( QStyleOptionTabBarBase * ) p->ph )->~QStyleOptionTabBarBase();
+      delete ( ( QStyleOptionTabBarBase * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionTabBarBase      Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

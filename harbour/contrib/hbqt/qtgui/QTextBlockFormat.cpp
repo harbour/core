@@ -103,7 +103,7 @@ QT_G_FUNC( release_QTextBlockFormat )
 
    if( p && p->ph )
    {
-      ( ( QTextBlockFormat * ) p->ph )->~QTextBlockFormat();
+      delete ( ( QTextBlockFormat * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QTextBlockFormat            Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

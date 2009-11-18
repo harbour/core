@@ -106,7 +106,7 @@ QT_G_FUNC( release_QPainterPath )
 
    if( p && p->ph )
    {
-      ( ( QPainterPath * ) p->ph )->~QPainterPath();
+      delete ( ( QPainterPath * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QPainterPath                Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

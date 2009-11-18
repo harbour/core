@@ -86,7 +86,7 @@ QT_G_FUNC( release_QFontInfo )
 
    if( p && p->ph )
    {
-      ( ( QFontInfo * ) p->ph )->~QFontInfo();
+      delete ( ( QFontInfo * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QFontInfo                   Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

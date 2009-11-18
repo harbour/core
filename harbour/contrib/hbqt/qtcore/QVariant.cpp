@@ -148,7 +148,7 @@ QT_G_FUNC( release_QVariant )
 
    if( p && p->ph )
    {
-      ( ( QVariant * ) p->ph )->~QVariant();
+      delete ( ( QVariant * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QVariant                    Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

@@ -102,7 +102,7 @@ QT_G_FUNC( release_QFontDatabase )
 
    if( p && p->ph )
    {
-      ( ( QFontDatabase * ) p->ph )->~QFontDatabase();
+      delete ( ( QFontDatabase * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QFontDatabase               Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

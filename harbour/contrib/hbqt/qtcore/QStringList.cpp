@@ -105,7 +105,7 @@ QT_G_FUNC( release_QStringList )
 
    if( p && p->ph )
    {
-      ( ( QStringList * ) p->ph )->~QStringList();
+      delete ( ( QStringList * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QStringList                 Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

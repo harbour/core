@@ -99,7 +99,18 @@ QT_G_FUNC( release_QHeaderView )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QHeaderView * ) p->ph )->~QHeaderView();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QHeaderView * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QHeaderView * ) p->ph )->~QHeaderView();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QHeaderView * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QHeaderView                 Object deleted!" ) );
          #if defined( __HB_DEBUG__ )

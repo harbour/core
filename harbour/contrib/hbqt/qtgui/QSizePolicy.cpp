@@ -93,7 +93,7 @@ QT_G_FUNC( release_QSizePolicy )
 
    if( p && p->ph )
    {
-      ( ( QSizePolicy * ) p->ph )->~QSizePolicy();
+      delete ( ( QSizePolicy * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QSizePolicy                 Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

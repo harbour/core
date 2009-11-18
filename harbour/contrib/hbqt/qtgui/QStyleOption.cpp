@@ -92,7 +92,7 @@ QT_G_FUNC( release_QStyleOption )
 
    if( p && p->ph )
    {
-      ( ( QStyleOption * ) p->ph )->~QStyleOption();
+      delete ( ( QStyleOption * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOption                Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

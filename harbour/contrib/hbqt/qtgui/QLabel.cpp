@@ -96,7 +96,18 @@ QT_G_FUNC( release_QLabel )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QLabel * ) p->ph )->~QLabel();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QLabel * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QLabel * ) p->ph )->~QLabel();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QLabel * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QLabel                      Object deleted!" ) );
          #if defined( __HB_DEBUG__ )

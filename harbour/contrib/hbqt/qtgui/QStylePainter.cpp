@@ -86,7 +86,7 @@ QT_G_FUNC( release_QStylePainter )
 
    if( p && p->ph )
    {
-      ( ( QStylePainter * ) p->ph )->~QStylePainter();
+      delete ( ( QStylePainter * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QStylePainter               Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

@@ -88,7 +88,7 @@ QT_G_FUNC( release_QTextListFormat )
 
    if( p && p->ph )
    {
-      ( ( QTextListFormat * ) p->ph )->~QTextListFormat();
+      delete ( ( QTextListFormat * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QTextListFormat             Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

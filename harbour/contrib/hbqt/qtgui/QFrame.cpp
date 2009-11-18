@@ -101,7 +101,18 @@ QT_G_FUNC( release_QFrame )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QFrame * ) p->ph )->~QFrame();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QFrame * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QFrame * ) p->ph )->~QFrame();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QFrame * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QFrame                      Object deleted!" ) );
          #if defined( __HB_DEBUG__ )

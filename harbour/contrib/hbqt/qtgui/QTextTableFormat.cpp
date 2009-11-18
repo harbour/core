@@ -93,7 +93,7 @@ QT_G_FUNC( release_QTextTableFormat )
 
    if( p && p->ph )
    {
-      ( ( QTextTableFormat * ) p->ph )->~QTextTableFormat();
+      delete ( ( QTextTableFormat * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QTextTableFormat            Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

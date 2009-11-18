@@ -66,6 +66,8 @@
 
 #if QT_VERSION >= 0x040500
 
+static int s_iObjectReleaseMethod = HBQT_RELEASE_WITH_DELETE_LATER;
+
 /*----------------------------------------------------------------------*/
 
 HB_GARBAGE_FUNC( Q_release )
@@ -100,6 +102,23 @@ void * hbqt_gcpointer( int iParam )
    {
       return hb_parptr( iParam );
    }
+}
+
+int hbqt_get_object_release_method()
+{
+   return ( s_iObjectReleaseMethod );
+}
+
+HB_FUNC( HBQT_SET_RELEASE_METHOD )
+{
+   if( (hb_pcount() == 1) && HB_ISNUM( 1 ) )
+   {
+      if ( ( hb_parni( 1 ) >= 0) && ( hb_parni( 1 ) <= HBQT_RELEASE_WITH_DELETE_LATER ) )
+      {
+         s_iObjectReleaseMethod = hb_parni( 1 );
+      }
+   }
+   hb_retni( s_iObjectReleaseMethod );
 }
 
 #if defined( __HB_DEBUG__ )
@@ -139,18 +158,46 @@ void hbqt_debug( const char * sTraceMsg, ... )
 
 int hbqt_getmemused( void )
 {
+#if defined( HB_OS_WIN )
+#if (_WIN32_WINNT >= 0x0501)
+#ifdef __GNUC__
+// MingW32 doesn't have this struct in psapi.h
+typedef struct _PROCESS_MEMORY_COUNTERS_EX
+{
+   DWORD  cb;
+   DWORD  PageFaultCount;
+   SIZE_T PeakWorkingSetSize;
+   SIZE_T WorkingSetSize;
+   SIZE_T QuotaPeakPagedPoolUsage;
+   SIZE_T QuotaPagedPoolUsage;
+   SIZE_T QuotaPeakNonPagedPoolUsage;
+   SIZE_T QuotaNonPagedPoolUsage;
+   SIZE_T PagefileUsage;
+   SIZE_T PeakPagefileUsage;
+   SIZE_T PrivateUsage;
+}PROCESS_MEMORY_COUNTERS_EX, *PPROCESS_MEMORY_COUNTERS_EX;
+#endif
+#endif
+#endif
    int size = 0;
 #if defined( HB_OS_WIN )
    HANDLE hProcess;
+#if (_WIN32_WINNT >= 0x0501)
+   PROCESS_MEMORY_COUNTERS_EX pmc;
+#else
    PROCESS_MEMORY_COUNTERS pmc;
-
+#endif
    hProcess = OpenProcess( PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, GetCurrentProcessId() );
    if( hProcess == NULL )
       return 0;
 
-   if( GetProcessMemoryInfo( hProcess, &pmc, sizeof( pmc ) ) )
+   pmc.cb = sizeof(pmc);
+   if( GetProcessMemoryInfo( hProcess, (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof( pmc ) ) )
+#if (_WIN32_WINNT >= 0x0501)
+      size = ( int ) pmc.PrivateUsage / 1024;    
+#else
       size = ( int ) pmc.WorkingSetSize / 1024;
-
+#endif
    CloseHandle( hProcess );
 #endif
    return size;

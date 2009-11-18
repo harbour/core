@@ -90,7 +90,7 @@ QT_G_FUNC( release_QTextCharFormat )
 
    if( p && p->ph )
    {
-      ( ( QTextCharFormat * ) p->ph )->~QTextCharFormat();
+      delete ( ( QTextCharFormat * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QTextCharFormat             Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

@@ -100,7 +100,18 @@ QT_G_FUNC( release_QFontDialog )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QFontDialog * ) p->ph )->~QFontDialog();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QFontDialog * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QFontDialog * ) p->ph )->~QFontDialog();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QFontDialog * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QFontDialog                 Object deleted!" ) );
          #if defined( __HB_DEBUG__ )

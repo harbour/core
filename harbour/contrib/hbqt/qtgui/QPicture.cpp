@@ -86,7 +86,7 @@ QT_G_FUNC( release_QPicture )
 
    if( p && p->ph )
    {
-      ( ( QPicture * ) p->ph )->~QPicture();
+      delete ( ( QPicture * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QPicture                    Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

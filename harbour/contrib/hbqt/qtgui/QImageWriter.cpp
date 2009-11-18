@@ -100,7 +100,7 @@ QT_G_FUNC( release_QImageWriter )
 
    if( p && p->ph )
    {
-      ( ( QImageWriter * ) p->ph )->~QImageWriter();
+      delete ( ( QImageWriter * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QImageWriter                Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

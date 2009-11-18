@@ -90,7 +90,7 @@ QT_G_FUNC( release_QStyleOptionTitleBar )
 
    if( p && p->ph )
    {
-      ( ( QStyleOptionTitleBar * ) p->ph )->~QStyleOptionTitleBar();
+      delete ( ( QStyleOptionTitleBar * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionTitleBar        Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

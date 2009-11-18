@@ -84,7 +84,7 @@ QT_G_FUNC( release_QLatin1Char )
 
    if( p && p->ph )
    {
-      ( ( QLatin1Char * ) p->ph )->~QLatin1Char();
+      delete ( ( QLatin1Char * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QLatin1Char                 Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

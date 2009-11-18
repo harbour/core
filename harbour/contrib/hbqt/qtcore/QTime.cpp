@@ -84,7 +84,7 @@ QT_G_FUNC( release_QTime )
 
    if( p && p->ph )
    {
-      ( ( QTime * ) p->ph )->~QTime();
+      delete ( ( QTime * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QTime                       Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

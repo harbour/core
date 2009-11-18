@@ -90,7 +90,7 @@ QT_G_FUNC( release_QStyleOptionSpinBox )
 
    if( p && p->ph )
    {
-      ( ( QStyleOptionSpinBox * ) p->ph )->~QStyleOptionSpinBox();
+      delete ( ( QStyleOptionSpinBox * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionSpinBox         Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

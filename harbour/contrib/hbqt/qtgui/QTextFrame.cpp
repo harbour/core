@@ -110,7 +110,18 @@ QT_G_FUNC( release_QTextFrame )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QTextFrame * ) p->ph )->~QTextFrame();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QTextFrame * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QTextFrame * ) p->ph )->~QTextFrame();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QTextFrame * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QTextFrame                  Object deleted!" ) );
          #if defined( __HB_DEBUG__ )

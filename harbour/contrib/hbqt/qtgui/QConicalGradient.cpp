@@ -92,7 +92,7 @@ QT_G_FUNC( release_QConicalGradient )
 
    if( p && p->ph )
    {
-      ( ( QConicalGradient * ) p->ph )->~QConicalGradient();
+      delete ( ( QConicalGradient * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QConicalGradient            Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

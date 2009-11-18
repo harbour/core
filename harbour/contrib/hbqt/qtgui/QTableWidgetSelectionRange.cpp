@@ -86,7 +86,7 @@ QT_G_FUNC( release_QTableWidgetSelectionRange )
 
    if( p && p->ph )
    {
-      ( ( QTableWidgetSelectionRange * ) p->ph )->~QTableWidgetSelectionRange();
+      delete ( ( QTableWidgetSelectionRange * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QTableWidgetSelectionRange  Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

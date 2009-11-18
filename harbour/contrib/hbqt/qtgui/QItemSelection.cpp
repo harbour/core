@@ -84,7 +84,7 @@ QT_G_FUNC( release_QItemSelection )
 
    if( p && p->ph )
    {
-      ( ( QItemSelection * ) p->ph )->~QItemSelection();
+      delete ( ( QItemSelection * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QItemSelection              Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

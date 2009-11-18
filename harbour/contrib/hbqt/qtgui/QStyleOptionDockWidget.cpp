@@ -90,7 +90,7 @@ QT_G_FUNC( release_QStyleOptionDockWidget )
 
    if( p && p->ph )
    {
-      ( ( QStyleOptionDockWidget * ) p->ph )->~QStyleOptionDockWidget();
+      delete ( ( QStyleOptionDockWidget * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionDockWidget      Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

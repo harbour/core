@@ -96,7 +96,18 @@ QT_G_FUNC( release_QPrintPreviewDialog )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QPrintPreviewDialog * ) p->ph )->~QPrintPreviewDialog();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QPrintPreviewDialog * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QPrintPreviewDialog * ) p->ph )->~QPrintPreviewDialog();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QPrintPreviewDialog * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QPrintPreviewDialog         Object deleted!" ) );
          #if defined( __HB_DEBUG__ )

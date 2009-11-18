@@ -90,7 +90,7 @@ QT_G_FUNC( release_QStyleOptionSlider )
 
    if( p && p->ph )
    {
-      ( ( QStyleOptionSlider * ) p->ph )->~QStyleOptionSlider();
+      delete ( ( QStyleOptionSlider * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionSlider          Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

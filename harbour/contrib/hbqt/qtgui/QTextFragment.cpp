@@ -85,7 +85,7 @@ QT_G_FUNC( release_QTextFragment )
 
    if( p && p->ph )
    {
-      ( ( QTextFragment * ) p->ph )->~QTextFragment();
+      delete ( ( QTextFragment * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QTextFragment               Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

@@ -85,7 +85,7 @@ QT_G_FUNC( release_QResource )
 
    if( p && p->ph )
    {
-      ( ( QResource * ) p->ph )->~QResource();
+      delete ( ( QResource * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QResource                   Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

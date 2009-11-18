@@ -90,7 +90,7 @@ QT_G_FUNC( release_QTransform )
 
    if( p && p->ph )
    {
-      ( ( QTransform * ) p->ph )->~QTransform();
+      delete ( ( QTransform * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QTransform                  Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

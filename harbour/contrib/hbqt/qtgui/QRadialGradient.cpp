@@ -94,7 +94,7 @@ QT_G_FUNC( release_QRadialGradient )
 
    if( p && p->ph )
    {
-      ( ( QRadialGradient * ) p->ph )->~QRadialGradient();
+      delete ( ( QRadialGradient * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QRadialGradient             Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

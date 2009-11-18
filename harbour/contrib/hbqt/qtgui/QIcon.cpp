@@ -104,7 +104,7 @@ QT_G_FUNC( release_QIcon )
 
    if( p && p->ph )
    {
-      ( ( QIcon * ) p->ph )->~QIcon();
+      delete ( ( QIcon * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QIcon                       Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

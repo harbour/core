@@ -100,7 +100,18 @@ QT_G_FUNC( release_QItemSelectionModel )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QItemSelectionModel * ) p->ph )->~QItemSelectionModel();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QItemSelectionModel * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QItemSelectionModel * ) p->ph )->~QItemSelectionModel();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QItemSelectionModel * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QItemSelectionModel         Object deleted!" ) );
          #if defined( __HB_DEBUG__ )

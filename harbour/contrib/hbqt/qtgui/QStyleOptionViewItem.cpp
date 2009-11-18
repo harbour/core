@@ -91,7 +91,7 @@ QT_G_FUNC( release_QStyleOptionViewItem )
 
    if( p && p->ph )
    {
-      ( ( QStyleOptionViewItem * ) p->ph )->~QStyleOptionViewItem();
+      delete ( ( QStyleOptionViewItem * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionViewItem        Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

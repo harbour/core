@@ -89,7 +89,7 @@ QT_G_FUNC( release_QBitmap )
 
    if( p && p->ph )
    {
-      ( ( QBitmap * ) p->ph )->~QBitmap();
+      delete ( ( QBitmap * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QBitmap                     Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

@@ -89,7 +89,7 @@ QT_G_FUNC( release_QEvent )
 
    if( p && p->ph )
    {
-      ( ( QEvent * ) p->ph )->~QEvent();
+      delete ( ( QEvent * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QEvent                      Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

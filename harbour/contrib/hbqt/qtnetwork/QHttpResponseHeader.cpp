@@ -86,7 +86,7 @@ QT_G_FUNC( release_QHttpResponseHeader )
 
    if( p && p->ph )
    {
-      ( ( QHttpResponseHeader * ) p->ph )->~QHttpResponseHeader();
+      delete ( ( QHttpResponseHeader * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QHttpResponseHeader         Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

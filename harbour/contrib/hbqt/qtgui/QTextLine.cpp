@@ -89,7 +89,7 @@ QT_G_FUNC( release_QTextLine )
 
    if( p && p->ph )
    {
-      ( ( QTextLine * ) p->ph )->~QTextLine();
+      delete ( ( QTextLine * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QTextLine                   Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

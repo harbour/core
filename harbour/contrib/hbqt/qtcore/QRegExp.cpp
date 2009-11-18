@@ -91,7 +91,7 @@ QT_G_FUNC( release_QRegExp )
 
    if( p && p->ph )
    {
-      ( ( QRegExp * ) p->ph )->~QRegExp();
+      delete ( ( QRegExp * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QRegExp                     Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

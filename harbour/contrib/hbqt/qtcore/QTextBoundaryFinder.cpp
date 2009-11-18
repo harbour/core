@@ -94,7 +94,7 @@ QT_G_FUNC( release_QTextBoundaryFinder )
 
    if( p && p->ph )
    {
-      ( ( QTextBoundaryFinder * ) p->ph )->~QTextBoundaryFinder();
+      delete ( ( QTextBoundaryFinder * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QTextBoundaryFinder         Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

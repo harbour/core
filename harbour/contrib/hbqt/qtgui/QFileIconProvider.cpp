@@ -88,7 +88,7 @@ QT_G_FUNC( release_QFileIconProvider )
 
    if( p && p->ph )
    {
-      ( ( QFileIconProvider * ) p->ph )->~QFileIconProvider();
+      delete ( ( QFileIconProvider * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QFileIconProvider           Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

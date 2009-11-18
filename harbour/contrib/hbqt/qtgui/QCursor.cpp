@@ -91,7 +91,7 @@ QT_G_FUNC( release_QCursor )
 
    if( p && p->ph )
    {
-      ( ( QCursor * ) p->ph )->~QCursor();
+      delete ( ( QCursor * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QCursor                     Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

@@ -99,7 +99,18 @@ QT_G_FUNC( release_QToolButton )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QToolButton * ) p->ph )->~QToolButton();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QToolButton * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QToolButton * ) p->ph )->~QToolButton();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QToolButton * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QToolButton                 Object deleted!" ) );
          #if defined( __HB_DEBUG__ )

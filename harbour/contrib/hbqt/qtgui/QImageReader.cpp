@@ -101,7 +101,7 @@ QT_G_FUNC( release_QImageReader )
 
    if( p && p->ph )
    {
-      ( ( QImageReader * ) p->ph )->~QImageReader();
+      delete ( ( QImageReader * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QImageReader                Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

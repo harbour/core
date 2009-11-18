@@ -88,7 +88,7 @@ QT_G_FUNC( release_QDate )
 
    if( p && p->ph )
    {
-      ( ( QDate * ) p->ph )->~QDate();
+      delete ( ( QDate * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QDate                       Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

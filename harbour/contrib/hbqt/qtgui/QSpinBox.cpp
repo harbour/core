@@ -94,7 +94,18 @@ QT_G_FUNC( release_QSpinBox )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QSpinBox * ) p->ph )->~QSpinBox();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QSpinBox * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QSpinBox * ) p->ph )->~QSpinBox();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QSpinBox * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QSpinBox                    Object deleted!" ) );
          #if defined( __HB_DEBUG__ )

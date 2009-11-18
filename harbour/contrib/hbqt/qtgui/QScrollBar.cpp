@@ -96,7 +96,18 @@ QT_G_FUNC( release_QScrollBar )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QScrollBar * ) p->ph )->~QScrollBar();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QScrollBar * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QScrollBar * ) p->ph )->~QScrollBar();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QScrollBar * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QScrollBar                  Object deleted!" ) );
          #if defined( __HB_DEBUG__ )

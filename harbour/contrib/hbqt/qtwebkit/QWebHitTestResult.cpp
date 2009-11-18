@@ -86,7 +86,7 @@ QT_G_FUNC( release_QWebHitTestResult )
 
    if( p && p->ph )
    {
-      ( ( QWebHitTestResult * ) p->ph )->~QWebHitTestResult();
+      delete ( ( QWebHitTestResult * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QWebHitTestResult           Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

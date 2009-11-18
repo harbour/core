@@ -95,7 +95,18 @@ QT_G_FUNC( release_QSound )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QSound * ) p->ph )->~QSound();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QSound * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QSound * ) p->ph )->~QSound();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QSound * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QSound                      Object deleted!" ) );
          #if defined( __HB_DEBUG__ )

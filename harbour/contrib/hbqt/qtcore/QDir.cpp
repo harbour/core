@@ -94,7 +94,7 @@ QT_G_FUNC( release_QDir )
 
    if( p && p->ph )
    {
-      ( ( QDir * ) p->ph )->~QDir();
+      delete ( ( QDir * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QDir                        Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

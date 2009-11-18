@@ -109,7 +109,7 @@ QT_G_FUNC( release_QTreeWidgetItem )
 
    if( p && p->ph )
    {
-      ( ( QTreeWidgetItem * ) p->ph )->~QTreeWidgetItem();
+      delete ( ( QTreeWidgetItem * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QTreeWidgetItem             Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

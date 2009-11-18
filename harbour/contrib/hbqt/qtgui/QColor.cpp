@@ -94,7 +94,7 @@ QT_G_FUNC( release_QColor )
 
    if( p && p->ph )
    {
-      ( ( QColor * ) p->ph )->~QColor();
+      delete ( ( QColor * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QColor                      Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

@@ -105,7 +105,7 @@ QT_G_FUNC( release_QNetworkRequest )
 
    if( p && p->ph )
    {
-      ( ( QNetworkRequest * ) p->ph )->~QNetworkRequest();
+      delete ( ( QNetworkRequest * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QNetworkRequest             Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

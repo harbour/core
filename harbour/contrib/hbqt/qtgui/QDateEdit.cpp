@@ -95,7 +95,18 @@ QT_G_FUNC( release_QDateEdit )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QDateEdit * ) p->ph )->~QDateEdit();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QDateEdit * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QDateEdit * ) p->ph )->~QDateEdit();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QDateEdit * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QDateEdit                   Object deleted!" ) );
          #if defined( __HB_DEBUG__ )

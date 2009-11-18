@@ -103,7 +103,18 @@ QT_G_FUNC( release_QMovie )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QMovie * ) p->ph )->~QMovie();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QMovie * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QMovie * ) p->ph )->~QMovie();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QMovie * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QMovie                      Object deleted!" ) );
          #if defined( __HB_DEBUG__ )

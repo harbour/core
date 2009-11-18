@@ -112,7 +112,7 @@ QT_G_FUNC( release_QList )
 
    if( p && p->ph )
    {
-      ( ( QList< void * > * ) p->ph )->~QList();
+      delete ( ( QList< void * > * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QList                       Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

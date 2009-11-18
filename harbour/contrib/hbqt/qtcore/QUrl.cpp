@@ -119,7 +119,7 @@ QT_G_FUNC( release_QUrl )
 
    if( p && p->ph )
    {
-      ( ( QUrl * ) p->ph )->~QUrl();
+      delete ( ( QUrl * ) p->ph );
       p->ph = NULL;
       HB_TRACE( HB_TR_DEBUG, ( "release_QUrl                        Object deleted!" ) );
       #if defined( __HB_DEBUG__ )

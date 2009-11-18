@@ -95,7 +95,18 @@ QT_G_FUNC( release_QScrollArea )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QScrollArea * ) p->ph )->~QScrollArea();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QScrollArea * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QScrollArea * ) p->ph )->~QScrollArea();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QScrollArea * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QScrollArea                 Object deleted!" ) );
          #if defined( __HB_DEBUG__ )

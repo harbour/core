@@ -101,7 +101,18 @@ QT_G_FUNC( release_QPrintDialog )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QPrintDialog * ) p->ph )->~QPrintDialog();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QPrintDialog * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QPrintDialog * ) p->ph )->~QPrintDialog();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QPrintDialog * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QPrintDialog                Object deleted!" ) );
          #if defined( __HB_DEBUG__ )
