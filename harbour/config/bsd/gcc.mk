@@ -42,7 +42,7 @@ LDFLAGS += $(LIBPATHS)
 
 AR := $(HB_CCPREFIX)ar
 ARFLAGS :=
-AR_RULE = ( $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) r $(LIB_DIR)/$@ $(^F) $(ARSTRIP) ) || $(RM) $(LIB_DIR)/$@
+AR_RULE = ( $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) r $(LIB_DIR)/$@ $(^F) $(ARSTRIP) ) || ( $(RM) $(LIB_DIR)/$@ && false )
 
 DY := $(CC)
 DFLAGS := -shared $(LIBPATHS)
