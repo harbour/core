@@ -201,7 +201,7 @@ typedef struct
 #     else
          extern HB_TLS_KEY hb_stack_key;
 #        if defined( __BORLANDC__ ) && defined( HB_STACK_PRELOAD ) && \
-            !defined( HB_OS_WIN_64 ) && !defined( HB_OS_WIN_CE )
+            !defined( HB_OS_WIN_64 ) && !defined( HB_OS_WIN_CE ) && 0
             static __inline void * hb_stack_ptr_from_tls( void )
             {
                /* mov ecx,hb_stack_key */
@@ -215,7 +215,7 @@ typedef struct
             }
 #           define hb_stack_ptr_get()    hb_stack_ptr_from_tls()
 #        elif defined( __MINGW32__ ) && \
-              !defined( HB_OS_WIN_64 ) && !defined( HB_OS_WIN_CE )
+              !defined( HB_OS_WIN_64 ) && !defined( HB_OS_WIN_CE ) && 0
             static __inline__  __attribute__ ((pure, malloc)) void * hb_stack_ptr_from_tls( void )
             {
                void * p;

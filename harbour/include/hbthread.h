@@ -430,7 +430,7 @@ extern BOOL hb_threadMutexSyncWait( PHB_ITEM pItemMtx, ULONG ulMilliSec, PHB_ITE
 #if defined( HB_NO_TLS ) || defined( HB_TASK_THREAD )
 #  undef HB_USE_TLS
 #elif !defined( HB_USE_TLS )
-   /* enable native compiler TLS support be default for this compilers
+   /* enable native compiler TLS support by default for this compilers
     * which are known that it will work correctly
     */
 #  if defined( _MSC_VER ) && !defined( __POCC__ ) && !defined( __XCC__ )

@@ -1395,45 +1395,47 @@ static int win32munmap(void* ptr, size_t size) {
     unique mparams values are initialized only once.
 */
 
-#ifndef WIN32
-#ifdef HB_OS_OS2
-#include "hbthread.h"
-#include "hbatomic.h"
-#ifdef HB_SPINLOCK_T
+#if defined( HB_OS_OS2 ) || defined( HB_OS_WIN )
+#  ifndef HB_SPINLOCK_USE
+#     define HB_SPINLOCK_USE
+#  endif
+#endif
+
+#ifdef HB_SPINLOCK_USE
+#  include "hbthread.h"
+#  include "hbatomic.h"
+#endif
+
+#ifndef HB_SPINLOCK_T
+#  undef HB_SPINLOCK_USE
+#endif
+
+#ifdef HB_SPINLOCK_USE
+
 #define MLOCK_T HB_SPINLOCK_T
 #define INITIAL_LOCK(l)      *(l)=HB_SPINLOCK_INIT
 #define ACQUIRE_LOCK(l)      HB_SPINLOCK_ACQUIRE(l)
 #define RELEASE_LOCK(l)      HB_SPINLOCK_RELEASE(l)
+#define MLOCK_INIT           HB_SPINLOCK_INIT
 
-#if HAVE_MORECORE
-static MLOCK_T morecore_mutex = HB_SPINLOCK_INIT;
-#endif /* HAVE_MORECORE */
-static MLOCK_T magic_init_mutex = HB_SPINLOCK_INIT;
-#else /* !HB_SPINLOCK_T */
+#elif defined( HB_OS_OS2 )
+
 #define MLOCK_T HB_RAWCRITICAL_T
 #define INITIAL_LOCK(l)      HB_CRITICAL_INIT(*(l))
 #define ACQUIRE_LOCK(l)      HB_CRITICAL_LOCK(*(l))
 #define RELEASE_LOCK(l)      HB_CRITICAL_UNLOCK(*(l))
+#define MLOCK_INIT           { 0 }
 
-#if HAVE_MORECORE
-static MLOCK_T morecore_mutex;
-#endif /* HAVE_MORECORE */
-static MLOCK_T magic_init_mutex;
-#endif /* HB_SPINLOCK_T */
-#else /* !OS2 */
+#elif !defined( WIN32 )
+
 /* By default use posix locks */
 #include <pthread.h>
 #define MLOCK_T pthread_mutex_t
 #define INITIAL_LOCK(l)      pthread_mutex_init(l, NULL)
 #define ACQUIRE_LOCK(l)      pthread_mutex_lock(l)
 #define RELEASE_LOCK(l)      pthread_mutex_unlock(l)
+#define MLOCK_INIT           PTHREAD_MUTEX_INITIALIZER
 
-#if HAVE_MORECORE
-static MLOCK_T morecore_mutex = PTHREAD_MUTEX_INITIALIZER;
-#endif /* HAVE_MORECORE */
-
-static MLOCK_T magic_init_mutex = PTHREAD_MUTEX_INITIALIZER;
-#endif /* OS2 */
 #else /* WIN32 */
 /*
    Because lock-protected regions have bounded times, and there
@@ -1461,11 +1463,14 @@ static void win32_release_lock (MLOCK_T *sl) {
 #define INITIAL_LOCK(l)      *(l)=0
 #define ACQUIRE_LOCK(l)      win32_acquire_lock(l)
 #define RELEASE_LOCK(l)      win32_release_lock(l)
-#if HAVE_MORECORE
-static MLOCK_T morecore_mutex;
-#endif /* HAVE_MORECORE */
-static MLOCK_T magic_init_mutex;
+#define MLOCK_INIT           0
+
 #endif /* WIN32 */
+
+#if HAVE_MORECORE
+static MLOCK_T morecore_mutex = MLOCK_INIT;
+#endif /* HAVE_MORECORE */
+static MLOCK_T magic_init_mutex = MLOCK_INIT;
 
 #define USE_LOCK_BIT               (2U)
 #else  /* USE_LOCKS */
