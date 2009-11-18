@@ -372,7 +372,8 @@ FUNCTION ConvertAFact( cMode, nFrom, xValue )
 PROCEDURE _HBXBP_DEBUG( ... )
    LOCAL cString := ""
 
-   AEval( hb_AParams(), {| x | cString += ValType( x ) + ":" + iif( ISARRAY( x ), "[" + hb_ntos( Len( x ) ) + "]", hb_ValToStr( x ) ) + " " } )
+   //AEval( hb_AParams(), {| x | cString += ValType( x ) + ":" + iif( ISARRAY( x ), "[" + hb_ntos( Len( x ) ) + "]", hb_ValToStr( x ) ) + " " } )
+   AEval( hb_AParams(), {| x | cString += iif( ISARRAY( x ), "[" + hb_ntos( Len( x ) ) + "]", hb_ValToStr( x ) ) + "   " } )
 
    #if defined( __PLATFORM__WINDOWS ) .AND. defined( __HB_WINDEBUG__ )
       wapi_OutputDebugString( cString )

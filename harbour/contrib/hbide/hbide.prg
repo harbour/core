@@ -120,12 +120,7 @@ PROCEDURE JustACall()
 
 CLASS HbIde
 
-   DATA   oDlg
    DATA   mp1, mp2, oXbp, nEvent
-   DATA   oDa
-   DATA   oSBar
-   DATA   oMenu
-   DATA   oTBar
    DATA   aTabs                                   INIT {}
    DATA   cProjFile
 
@@ -133,8 +128,19 @@ CLASS HbIde
    DATA   nCurTab                                 INIT 0
    DATA   nPrevTab                                INIT 0
 
+   /* HBQT Objects */
    DATA   qLayout
+   DATA   qSplitter
+
+   /* XBP Objects */
+   DATA   oDlg
+   DATA   oDa
+   DATA   oSBar
+   DATA   oMenu
+   DATA   oTBar
    DATA   oFont
+   DATA   oProjTree
+   DATA   oProjRoot
 
    METHOD new( cProjectOrSource )
    METHOD create( cProjectOrSource )
@@ -192,15 +198,34 @@ METHOD HbIde:create( cProjectOrSource )
 
    ::oDa := ::oDlg:drawingArea
 
-   ::oDa:oTabWidget := XbpTabWidget():new( ::oDa, , ::oDa:aPos, ::oDa:aSize, , .t. ):create()
+   ::oDa:oTabWidget := XbpTabWidget():new():create( ::oDa, , ::oDa:aPos, ::oDa:aSize, , .t. )
    ::oDa:oTabWidget:oWidget:setTabsClosable( .t. )
 
-   ::qLayout := QBoxLayout():new()
-   ::qLayout:setDirection( 0 )
+   ::qSplitter := QSplitter():new( QT_PTROF( ::oDa:oWidget ) )
+
+   ::oProjTree := XbpTreeView():new()
+   ::oProjTree:hasLines   := .T.
+   ::oProjTree:hasButtons := .T.
+   ::oProjTree:create( ::oDa, , { 0,0 }, { 10,10 }, , .t. )
+   ::oProjRoot := ::oProjTree:rootItem:addItem( "Untitled" )
+   IF !empty( ::cProjFile )
+      ::oProjRoot:addItem( ::cProjFile )
+   ENDIF
+   ::oProjTree:setColorBG( GraMakeRGBColor( { 223,240,255 } ) )
+   ::oProjTree:oWidget:setMaximumWidth( 200 )
+
+   ::qLayout := QGridLayout():new()
    ::qLayout:setContentsMargins( 0,0,0,0 )
-
-   ::qLayout:addWidget( QT_PTROFXBP( ::oDa:oTabWidget ) )
-
+   ::qLayout:setHorizontalSpacing( 0 )
+   ::qLayout:setVerticalSpacing( 0 )
+   #if 0
+   ::qLayout:addWidget_1( QT_PTROFXBP( ::oProjTree      ), 0, 0, 1, 1 )
+   ::qLayout:addWidget_1( QT_PTROFXBP( ::oDa:oTabWidget ), 0, 1, 1, 1 )
+   #else
+   ::qLayout:addWidget_1( QT_PTROF( ::qSplitter ), 0, 0, 1, 1 )
+   ::qSplitter:addWidget( QT_PTROFXBP( ::oProjTree      ) )
+   ::qSplitter:addWidget( QT_PTROFXBP( ::oDa:oTabWidget ) )
+   #endif
    ::oDa:oWidget:setLayout( QT_PTROF( ::qLayout ) )
 
    #if 0
@@ -209,8 +234,9 @@ METHOD HbIde:create( cProjectOrSource )
    /* Place on the center of desktop */
    ::oDlg:setPos( { ( aSize[ 1 ] - ::oDlg:currentSize()[ 1 ] ) / 2, ;
                     ( aSize[ 2 ] - ::oDlg:currentSize()[ 2 ] ) / 2 } )
-   #endif
+   #else
    ::oDlg:setPos( { 100, 60 } )
+   #endif
 
    /* Editor's Font */
    ::oFont := XbpFont():new()
@@ -226,7 +252,8 @@ METHOD HbIde:create( cProjectOrSource )
    /* Install Toolbar */
    ::buildToolBar()
 
-   ::editSource()
+   /* This is only for demonstration. Final version will follow another mechanism */
+   ::editSource( ::cProjFile )
 
    ::oDlg:Show()
 
@@ -236,6 +263,8 @@ METHOD HbIde:create( cProjectOrSource )
       IF ::nEvent == xbeP_Quit
          EXIT
       ENDIF
+
+      HBXBP_DEBUG( ::nEvent, ::mp1, ::mp2 )
 
       IF ( ::nEvent == xbeP_Close ) .OR. ( ::nEvent == xbeP_Keyboard .and. ::mp1 == xbeK_ESC )
          IF ::nEvent == xbeP_Close
@@ -256,19 +285,6 @@ METHOD HbIde:create( cProjectOrSource )
    ::oDlg:destroy()
 
    RETURN self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:buildDialog()
-
-   ::oDlg := XbpDialog():new( , , {10,10}, {900,500}, , .f. )
-
-   ::oDlg:icon := s_resPath + "vr.png" //"hbide.ico"
-   ::oDlg:title := "Harbour-Qt IDE"
-
-   ::oDlg:create()
-
-   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -422,23 +438,6 @@ METHOD HbIde:selectSource( cMode )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:buildMenu()
-   LOCAL oMenuBar, oSubMenu
-
-   oMenuBar := SetAppWindow():MenuBar()
-
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
-   oSubMenu:title := "~File"
-   oSubMenu:addItem( { "Open", {|| ::manageMenu( 1 ) } } )
-   oSubMenu:addItem( { "Save", {|| ::manageMenu( 2 ) } } )
-   oSubMenu:addItem( { NIL, NIL, XBPMENUBAR_MIS_SEPARATOR, NIL } )
-   oSubMenu:addItem( { "Exit", {|| ::manageMenu( 3 ) } } )
-   oMenuBar:addItem( { oSubMenu, NIL } )
-
-   Return Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD HbIde:manageMenu( nMode )
 
    DO CASE
@@ -450,6 +449,28 @@ METHOD HbIde:manageMenu( nMode )
 
 /*----------------------------------------------------------------------*/
 
+METHOD HbIde:manageToolbar( oButton )
+   LOCAL cFile
+
+   DO CASE
+   CASE oButton:key == "3"
+      IF !empty( cFile := ::selectSource( "open" ) )
+         ::oProjRoot:addItem( cFile )
+         ::editSource( cFile )
+      ENDIF
+
+   CASE oButton:key == "4"
+      ::saveSource( ::nCurTab )
+
+   CASE oButton:key == "5"
+      ::closeSource( ::nCurTab, .t. )
+
+   ENDCASE
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
 METHOD HbIde:buildToolBar()
 
    ::oTBar := XbpToolBar():new( ::oDA )
@@ -458,6 +479,8 @@ METHOD HbIde:buildToolBar()
 
    ::oTBar:imageWidth  := 20
    ::oTBar:imageHeight := 20
+
+   ::oTBar:oWidget:setMaximumHeight( 30 )
 
    ::oTBar:addItem( "Exit"                       , s_resPath + "exit.png"           , , , , , "1"  )
    ::oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
@@ -505,24 +528,20 @@ METHOD HbIde:buildToolBar()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:manageToolbar( oButton )
-   LOCAL cFile
+METHOD HbIde:buildMenu()
+   LOCAL oMenuBar, oSubMenu
 
-   DO CASE
-   CASE oButton:key == "3"
-      IF !empty( cFile := ::selectSource( "open" ) )
-         ::editSource( cFile )
-      ENDIF
+   oMenuBar := SetAppWindow():MenuBar()
 
-   CASE oButton:key == "4"
-      ::saveSource( ::nCurTab )
+   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu:title := "~File"
+   oSubMenu:addItem( { "Open", {|| ::manageMenu( 1 ) } } )
+   oSubMenu:addItem( { "Save", {|| ::manageMenu( 2 ) } } )
+   oSubMenu:addItem( { NIL, NIL, XBPMENUBAR_MIS_SEPARATOR, NIL } )
+   oSubMenu:addItem( { "Exit", {|| ::manageMenu( 3 ) } } )
+   oMenuBar:addItem( { oSubMenu, NIL } )
 
-   CASE oButton:key == "5"
-      ::closeSource( ::nCurTab, .t. )
-
-   ENDCASE
-
-   RETURN nil
+   Return Self
 
 /*----------------------------------------------------------------------*/
 
@@ -540,4 +559,16 @@ METHOD HbIde:buildStatusBar()
 
 /*----------------------------------------------------------------------*/
 
-
+METHOD HbIde:buildDialog()
+
+   ::oDlg := XbpDialog():new( , , {10,10}, {900,500}, , .f. )
+
+   ::oDlg:icon := s_resPath + "vr.png" //"hbide.ico"
+   ::oDlg:title := "Harbour-Qt IDE"
+
+   ::oDlg:create()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
