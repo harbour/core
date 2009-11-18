@@ -1412,9 +1412,15 @@ static int win32munmap(void* ptr, size_t size) {
 
 #ifdef HB_SPINLOCK_USE
 
+static int spin_acquire_lock( HB_SPINLOCK_T *l )
+{
+   HB_SPINLOCK_ACQUIRE( l );
+   return 0;
+}
+
 #define MLOCK_T HB_SPINLOCK_T
 #define INITIAL_LOCK(l)      *(l)=HB_SPINLOCK_INIT
-#define ACQUIRE_LOCK(l)      HB_SPINLOCK_ACQUIRE(l)
+#define ACQUIRE_LOCK(l)      spin_acquire_lock(l)
 #define RELEASE_LOCK(l)      HB_SPINLOCK_RELEASE(l)
 #define MLOCK_INIT           HB_SPINLOCK_INIT
 
