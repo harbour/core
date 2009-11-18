@@ -306,8 +306,8 @@ HB_FUNC( FILEDELETE )
 
 HB_FUNC( FILEMOVE )
 {
-   hb_retni( hb_fsRename( hb_parcx( 1 ),
-                          hb_parcx( 2 ) ) ? 0 : -hb_fsOsError() );
+   hb_retnint( hb_fsRename( hb_parcx( 1 ),
+                            hb_parcx( 2 ) ) ? 0 : - ( HB_LONG ) hb_fsOsError() );
 }
 
 
@@ -319,7 +319,7 @@ HB_FUNC( RENAMEFILE )
 
 HB_FUNC( DELETEFILE )
 {
-   hb_retni( hb_fsDelete( hb_parcx( 1 ) ) ? 0 : -hb_fsOsError() );
+   hb_retnint( hb_fsDelete( hb_parcx( 1 ) ) ? 0 : - ( HB_LONG ) hb_fsOsError() );
 }
 
 

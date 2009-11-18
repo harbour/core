@@ -92,7 +92,7 @@ HB_FUNC( DIRMAKE )
    if( hb_fsMkDir( pFileName ) )
       hb_retni( 0 );
    else
-      hb_retni( -hb_fsOsError() );
+      hb_retnint( - ( HB_LONG ) hb_fsOsError() );
 }
 
 HB_FUNC( DIRNAME )

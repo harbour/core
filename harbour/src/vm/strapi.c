@@ -190,10 +190,10 @@ ULONG hb_itemCopyStr( PHB_ITEM pItem, void * cdp, char * pStrBuffer, ULONG ulSiz
 
    if( HB_IS_STRING( pItem ) )
    {
-      ulSize = hb_cdpTransTo( pItem->item.asString.value,
-                              pItem->item.asString.length,
-                              pStrBuffer, ulSize,
-                              hb_vmCDP(), ( PHB_CODEPAGE ) cdp );
+      return hb_cdpTransTo( pItem->item.asString.value,
+                            pItem->item.asString.length,
+                            pStrBuffer, ulSize,
+                            hb_vmCDP(), ( PHB_CODEPAGE ) cdp );
    }
 
    return 0;
