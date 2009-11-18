@@ -7400,7 +7400,8 @@ STATIC PROCEDURE ShowHeader( hbmk )
            "Copyright (c) 1999-2009, Viktor Szakats" + hb_osNewLine() +;
            "http://www.harbour-project.org/" + hb_osNewLine() )
 
-   IF !( hbmk[ _HBMK_cUILNG ] == "en-EN" )
+   IF !( hbmk[ _HBMK_cUILNG ] == "en-EN" ) .AND. ;
+      !( hbmk[ _HBMK_cUILNG ] == "en-US" )
       OutStd( hb_StrFormat( I_( "Translation (%1$s): (add your name here)" ), hbmk[ _HBMK_cUILNG ] ) + hb_osNewLine() )
    ENDIF
 

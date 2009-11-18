@@ -1288,7 +1288,7 @@ function WvtLines()
    @ 15,8 Say "D"
    @ 16,9 Say "E"
 
-   do while ( inkey(0) != 27 )
+   do while ( inkey(0) != K_ESC )
    enddo
 
    //  Restore Environments
@@ -2601,7 +2601,7 @@ Function ExecuteActiveX( nActiveX, xParam )
    #else
    oCrt:show()
    DO WHILE .t.
-      IF inkey() == 27
+      IF inkey() == K_ESC
          EXIT
       ENDIF
    ENDDO
@@ -2973,7 +2973,7 @@ Static Function ExeActiveX( nActiveX, oCom, xParam )
 
       endif
 
-      if nKey == 27
+      if nKey == K_ESC
          exit
       endif
    enddo
@@ -3280,7 +3280,7 @@ FUNCTION demoxbp()
    oCrt:show()
 
    DO WHILE .t.
-      IF inkey() == 27
+      IF inkey() == K_ESC
          EXIT
       ENDIF
    ENDDO
@@ -3701,7 +3701,7 @@ FUNCTION demoxbp()
    oCrt:show()
 
    DO WHILE .t.
-      IF inkey() == 27
+      IF inkey() == K_ESC
          EXIT
       ENDIF
    ENDDO
@@ -4023,7 +4023,7 @@ Function Editmemo()
 
    DO WHILE .T.
       cText := MEMOEDIT( cText, 3,6,20,76, lEditMode, "EditFunc", 50 )
-      if lastkey() == 27
+      if lastkey() == K_ESC
          exit
       endif
    ENDDO
