@@ -18,6 +18,15 @@ include $(TOP)$(ROOT)contrib/hbqt/detect.mk
 
 ifneq ($(HB_HAS_QT),)
 
+   ifneq ($(filter $(HB_PLATFORM),win wce),)
+      MOC_BIN := $(HB_WITH_QT)\..\bin\moc.exe
+   else
+      MOC_BIN := moc
+   endif
+
+moc_slots.cpp : $(TOP)$(ROOT)contrib/hbqt/hbqt_slots.h
+	$(MOC_BIN) $(TOP)$(ROOT)contrib/hbqt/hbqt_slots.h > moc_slots.cpp
+
    include $(TOP)$(ROOT)contrib/hbqt/filelist.mk
 
    include $(TOP)$(ROOT)config/header.mk
