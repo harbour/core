@@ -1241,7 +1241,7 @@ static void mouse_init( InOutBase * ioBase )
       memset( ( void * ) &ioBase->mLastEvt, 0, sizeof( ioBase->mLastEvt ) );
       ioBase->mLastEvt.click_delay = DBLCLK_DELAY;
       /* curses mouse buttons check */
-      ioBase->mButtons = tigetnum( "btns" );
+      ioBase->mButtons = tigetnum( ( char * ) "btns" );
       if ( ioBase->mButtons < 1 )
          ioBase->mButtons = 3;
    }

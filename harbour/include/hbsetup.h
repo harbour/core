@@ -482,19 +482,20 @@
    #define HB_EXTERN_END
 #endif
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && ( __GNUC__ - 0 >= 3 )
+
    #define HB_PRINTF_FORMAT( _nStr, _nParam ) \
                      __attribute__ (( format (printf, _nStr, _nParam)))
-#  if ( __GNUC__ >= 3 )
    #define HB_MALLOC_ATTR \
                      __attribute__ (( malloc ))
-#  else
-   #define HB_MALLOC_ATTR
-#  endif
    #define HB_HOT_ATTR \
                      __attribute__ (( hot ))
    #define HB_COLD_ATTR \
                      __attribute__ (( cold ))
+   #define HB_PURE_ATTR \
+                     __attribute__ (( pure ))
+   #define HB_CONST_ATTR \
+                     __attribute__ (( const ))
 #  if 0
    #define HB_NORETURN_ATTR \
                      __attribute__ (( noreturn ))
@@ -516,12 +517,15 @@
    #define HB_ALLOC_SIZE_ATTR( _nParam )
 #  endif
    #define HB_RESTRICT  __restrict
+
 #else
    #define HB_PRINTF_FORMAT( _nStr, _nParam )
    #define HB_MALLOC_ATTR
    #define HB_NORETURN_ATTR
    #define HB_HOT_ATTR
    #define HB_COLD_ATTR
+   #define HB_PURE_ATTR
+   #define HB_CONST_ATTR
    #define HB_FLATTEN_ATTR
    #define HB_ALLOC_SIZE_ATTR( _nParam )
    #define HB_RESTRICT

@@ -59,8 +59,9 @@
 
 /* throwing a CT-subsystem error without value substitution
    - function adapted from errorapi.c */
-USHORT ct_error( USHORT uiSeverity, HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode,
-                 const char * szDescription, const char * szOperation, HB_ERRCODE uiOsCode, USHORT uiFlags, ULONG ulArgCount, ... )
+USHORT ct_error( USHORT uiSeverity, HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
+                 const char * szDescription, const char * szOperation,
+                 HB_ERRCODE errOsCode, USHORT uiFlags, ULONG ulArgCount, ... )
 {
    USHORT uiAction;
    PHB_ITEM pError;
@@ -70,9 +71,9 @@ USHORT ct_error( USHORT uiSeverity, HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode,
    ULONG ulArgPos;
 
    HB_TRACE( HB_TR_DEBUG, ( "ct_error(%hu, %d, %d, %s, %s, %d, %hu, %lu)",
-             uiSeverity, ulGenCode, ulSubCode, szDescription, szOperation, uiOsCode, uiFlags, ulArgCount ) );
+             uiSeverity, errGenCode, errSubCode, szDescription, szOperation, errOsCode, uiFlags, ulArgCount ) );
 
-   pError = hb_errRT_New( uiSeverity, CT_SUBSYSTEM, ulGenCode, ulSubCode, szDescription, szOperation, uiOsCode, uiFlags );
+   pError = hb_errRT_New( uiSeverity, CT_SUBSYSTEM, errGenCode, errSubCode, szDescription, szOperation, errOsCode, uiFlags );
 
    /* Build the array from the passed arguments. */
    if( ulArgCount == 0 )
@@ -126,8 +127,9 @@ USHORT ct_error( USHORT uiSeverity, HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode,
 
 /* throwing a CT-subsystem error with value substitution
    - function adapted from errorapi.c */
-PHB_ITEM ct_error_subst( USHORT uiSeverity, HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode,
-                         const char * szDescription, const char * szOperation, HB_ERRCODE uiOsCode, USHORT uiFlags, ULONG ulArgCount, ... )
+PHB_ITEM ct_error_subst( USHORT uiSeverity, HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
+                         const char * szDescription, const char * szOperation,
+                         HB_ERRCODE errOsCode, USHORT uiFlags, ULONG ulArgCount, ... )
 {
    PHB_ITEM pRetVal;
    PHB_ITEM pError;
@@ -137,9 +139,9 @@ PHB_ITEM ct_error_subst( USHORT uiSeverity, HB_ERRCODE ulGenCode, HB_ERRCODE ulS
    ULONG ulArgPos;
 
    HB_TRACE( HB_TR_DEBUG, ( "ct_error_subst(%hu, %d, %d, %s, %s, %d, %hu, %lu)",
-             uiSeverity, ulGenCode, ulSubCode, szDescription, szOperation, uiOsCode, uiFlags, ulArgCount ) );
+             uiSeverity, errGenCode, errSubCode, szDescription, szOperation, errOsCode, uiFlags, ulArgCount ) );
 
-   pError = hb_errRT_New_Subst( uiSeverity, CT_SUBSYSTEM, ulGenCode, ulSubCode, szDescription, szOperation, uiOsCode, uiFlags );
+   pError = hb_errRT_New_Subst( uiSeverity, CT_SUBSYSTEM, errGenCode, errSubCode, szDescription, szOperation, errOsCode, uiFlags );
 
    /* Build the array from the passed arguments. */
    if( ulArgCount == 0 )

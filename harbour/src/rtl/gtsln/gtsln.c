@@ -956,17 +956,19 @@ static BOOL hb_gt_sln_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
 #ifndef HB_CDP_SUPPORT_OFF
-   PHB_CODEPAGE cdpTerm = NULL, cdpHost = NULL;
+   {
+      PHB_CODEPAGE cdpTerm = NULL, cdpHost = NULL;
 
-   if ( pszHostCDP )
-      cdpHost = hb_cdpFind( pszHostCDP );
-   if ( ! cdpHost )
-      cdpHost = hb_vmCDP();
+      if ( pszHostCDP )
+         cdpHost = hb_cdpFind( pszHostCDP );
+      if ( ! cdpHost )
+         cdpHost = hb_vmCDP();
 
-   if ( pszTermCDP )
-      cdpTerm = hb_cdpFind( pszTermCDP );
+      if ( pszTermCDP )
+         cdpTerm = hb_cdpFind( pszTermCDP );
 
-   hb_sln_setCharTrans( cdpHost, cdpTerm, fBox );
+      hb_sln_setCharTrans( cdpHost, cdpTerm, fBox );
+   }
 #endif
 
    return TRUE;
@@ -979,17 +981,19 @@ static BOOL hb_gt_sln_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char 
    HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
 #ifndef HB_CDP_SUPPORT_OFF
-   PHB_CODEPAGE cdpTerm = NULL, cdpHost = NULL;
+   {
+      PHB_CODEPAGE cdpTerm = NULL, cdpHost = NULL;
 
-   if ( pszHostCDP )
-      cdpHost = hb_cdpFind( pszHostCDP );
-   if ( ! cdpHost )
-      cdpHost = hb_vmCDP();
+      if ( pszHostCDP )
+         cdpHost = hb_cdpFind( pszHostCDP );
+      if ( ! cdpHost )
+         cdpHost = hb_vmCDP();
 
-   if ( pszTermCDP )
-      cdpTerm = hb_cdpFind( pszTermCDP );
+      if ( pszTermCDP )
+         cdpTerm = hb_cdpFind( pszTermCDP );
 
-   hb_sln_setKeyTrans( cdpHost, cdpTerm );
+      hb_sln_setKeyTrans( cdpHost, cdpTerm );
+   }
 #endif
 
    return TRUE;
