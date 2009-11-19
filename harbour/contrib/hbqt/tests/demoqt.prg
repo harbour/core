@@ -133,7 +133,7 @@ HBQT_DEBUG( "-----------------b-----------------" )
 
    FOR i := 1 TO 1
       oWnd := QMainWindow():new()
-      hb_idleSleep( 1 )
+      // hb_idleSleep( 1 )
    NEXT
 
    oWnd:show()

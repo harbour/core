@@ -2543,7 +2543,7 @@ void MyMainWindow::paintEvent( QPaintEvent * event )
     * interface in Harbour. So sad...
     */
    #if defined( QT_EXECUTE_IN_THREADS )
-      hb_idleSleep( 0.2 );
+      hb_releaseCPU();
    #endif
 
    hb_threadMutexUnlock( s_mutex );

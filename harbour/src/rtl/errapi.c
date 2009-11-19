@@ -777,7 +777,7 @@ HB_ERRCODE hb_errGetGenCode( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutGenCode( PHB_ITEM pError, HB_ERRCODE uiGenCode )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_errPutGenCode(%p, %hu)", pError, uiGenCode));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errPutGenCode(%p, %d)", pError, uiGenCode));
 
    hb_arraySetNI( pError, HB_TERROR_GENCODE, uiGenCode );
 
@@ -816,7 +816,7 @@ HB_ERRCODE hb_errGetOsCode( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutOsCode( PHB_ITEM pError, HB_ERRCODE uiOsCode )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_errPutOsCode(%p, %hu)", pError, uiOsCode));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errPutOsCode(%p, %d)", pError, uiOsCode));
 
    hb_arraySetNI( pError, HB_TERROR_OSCODE, uiOsCode );
 
@@ -848,7 +848,7 @@ HB_ERRCODE hb_errGetSubCode( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutSubCode( PHB_ITEM pError, HB_ERRCODE uiSubCode )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_errPutSubCode(%p, %hu)", pError, uiSubCode));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errPutSubCode(%p, %d)", pError, uiSubCode));
 
    hb_arraySetNI( pError, HB_TERROR_SUBCODE, uiSubCode );
 
