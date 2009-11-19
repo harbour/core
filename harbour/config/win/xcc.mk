@@ -15,7 +15,7 @@ CC_IN := -c
 CC_OUT := -Fo
 
 CFLAGS :=
-CPPFLAGS := -I. -I$(TOP) -I$(TOP)/../ -I$(HB_INC_COMPILE)
+CPPFLAGS := -I. -I$(TOP). -I$(TOP).. -I$(HB_INC_COMPILE)
 ifeq ($(HB_SHELL),sh)
    CPPFLAGS := $(subst /,\\,$(CPPFLAGS))
 else

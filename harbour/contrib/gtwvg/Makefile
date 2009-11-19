@@ -53,16 +53,11 @@ PRG_HEADERS := \
    wvgparts.ch \
 
 ifeq ($(HB_PLATFORM),win)
-   ifeq ($(filter $(HB_COMPILER),xcc),)
    
-      HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/hbwin
+   HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/hbwin
    
-      include $(TOP)$(ROOT)config/header.mk
-      include $(TOP)$(ROOT)config/lib.mk
-   else
-      HB_SKIP_REASON := compiler not supported
-      include $(TOP)$(ROOT)config/none.mk
-   endif
+   include $(TOP)$(ROOT)config/header.mk
+   include $(TOP)$(ROOT)config/lib.mk
 else
    HB_SKIP_REASON := platform not supported
    include $(TOP)$(ROOT)config/none.mk

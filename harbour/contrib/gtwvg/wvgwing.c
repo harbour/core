@@ -1090,7 +1090,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
 #if (_WIN32_IE >= 0x0500)
          tbab.nID   = ( UINT_PTR ) ( HBITMAP ) hb_parnint( 2 );
 #else
-         tbab.nID   = ( UINT ) ( HBITMAP ) hb_parnint( 2 );
+         tbab.nID   = ( UINT ) ( HBITMAP ) hb_parnl( 2 );
 #endif
          iNewBitmap = ( int ) SendMessage( hWndTB, TB_ADDBITMAP, ( WPARAM ) 1, ( LPARAM ) &tbab );
 
