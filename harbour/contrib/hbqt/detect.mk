@@ -40,7 +40,7 @@ ifneq ($(HB_HAS_QT),)
    # Locate 'moc' executable
    ifeq ($(MOC_BIN),)
       ifeq ($(HB_QT_MOC_BIN),)
-         ifneq ($(filter $(HB_PLATFORM),win wce),)
+         ifeq ($(HB_HOST_PLAT),win)
             MOC_BIN := $(HB_HAS_QT)\..\bin\moc.exe
          else
             MOC_BIN := $(firstword $(call find_in_path_par,moc,$(PATH) /opt/qtsdk/qt/bin))

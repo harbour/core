@@ -70,7 +70,6 @@ void hb_errInternalRaw( HB_ERRCODE errCode, const char * szText, const char * sz
    int iLevel;
    FILE * hLog;
 
-
    HB_TRACE(HB_TR_DEBUG, ("hb_errInternal(%d, %s, %s, %s)", errCode, szText, szPar1, szPar2));
 
    if( szPar1 == NULL )
