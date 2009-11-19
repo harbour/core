@@ -37,10 +37,26 @@ ifneq ($(HB_HAS_QT),)
       HB_CFLAGS += $(foreach d,$(HB_HAS_QT),-I$(d) -I$(d)/Qt -I$(d)/QtCore -I$(d)/QtGui -I$(d)/QtNetwork -I$(d)/QtWebKit)
    endif
 
-   ifneq ($(filter $(HB_PLATFORM),win wce),)
-      MOC_BIN := $(HB_HAS_QT)\..\bin\moc.exe
-   else
-      MOC_BIN := moc
+   # Locate 'moc' executable
+   ifeq ($(MOC_BIN),)
+      ifeq ($(HB_QT_MOC_BIN),)
+         ifneq ($(filter $(HB_PLATFORM),win wce),)
+            MOC_BIN := $(HB_HAS_QT)\..\bin\moc.exe
+         else
+            MOC_BIN := $(firstword $(call find_in_path_par,moc,$(PATH) /opt/qtsdk/qt/bin))
+            ifeq ($(MOC_BIN),)
+               MOC_BIN := $(firstword $(call find_in_path_par,moc-qt4,$(PATH) /opt/qtsdk/qt/bin))
+               ifeq ($(MOC_BIN),)
+                  $(error ! HB_QT_MOC_BIN not set, could not autodetect)
+               endif
+            endif
+         endif
+         $(info ! Using QT 'moc' bin: $(MOC_BIN) (autodetected))
+      else
+         MOC_BIN := $(HB_QT_MOC_BIN)
+         $(info ! Using QT 'moc' bin: $(MOC_BIN))
+      endif
+      export MOC_BIN
    endif
 else
    HB_SKIP_REASON := $(_DET_RES_TEXT)
