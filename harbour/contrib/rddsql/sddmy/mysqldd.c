@@ -54,7 +54,7 @@
 #include "hbapiitm.h"
 #include "hbvm.h"
 #if defined( __XCC__ ) || defined( __LCC__ )
-#  include "..\hbrddsql.h"
+#  include "hbrddsql.h"
 #else
 #  include "../hbrddsql.h"
 #endif

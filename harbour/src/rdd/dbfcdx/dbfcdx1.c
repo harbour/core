@@ -84,7 +84,7 @@
 #include "hbapicdp.h"
 
 /*
- * Tag->fRePos = TURE means that rootPage->...->childLeafPage path is
+ * Tag->fRePos = TRUE means that rootPage->...->childLeafPage path is
  * bad and has to be reloaded
  * CurKey->rec == 0 means that there is no correct CurKey
  */
