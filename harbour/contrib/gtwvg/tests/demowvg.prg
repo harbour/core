@@ -149,7 +149,7 @@ EXIT PROCEDURE KillGTs()
 
 PROCEDURE Main()
 
-   LOCAL aLastPaint, clr, scr, a_:={}
+   LOCAL aLastPaint, clr, scr
    LOCAL dDate   := ctod( "" )
    LOCAL cName   := Pad( "Pritpal Bedi", 35 )
    LOCAL cAdd1   := Pad( "60, New Professor Colony", 35 )
@@ -167,7 +167,6 @@ PROCEDURE Main()
    LOCAL nBtnRow := nMaxRows - 1
    LOCAL cLabel  := "(x)Harbour simulated GUI."
    LOCAL aObjects:= WvtSetObjects( {} )
-   LOCAL aObj    := {}
    LOCAL hPopup
    LOCAL oMenu
 
@@ -348,7 +347,6 @@ PROCEDURE WvtNextGetsConsole()
    LOCAL nSlry      := 0
    LOCAL nColGet    := 8
    LOCAL GetList    := {}
-   LOCAL cLabel     := "VOUCH, that GROWS with you"
 
    SetMode( 20,51 )
    SetColor( "N/W,N/GR*,,,N/W*" )
@@ -397,14 +395,6 @@ PROCEDURE WvtNextGets_X()
    LOCAL aBlocks    := {}
    LOCAL nColGet    := 8
    LOCAL GetList    := {}
-   LOCAL nTop       := 4
-   LOCAL nLft       := 4
-   LOCAL nBtm       := 20
-   LOCAL nRgt       := 75
-   LOCAL kf2        := SetKey( K_F2, {|| WvtGets() } )
-   LOCAL kf3        := SetKey( K_F3, {|| WvtWindowExpand(  1 ) } )
-   LOCAL kf4        := SetKey( K_F4, {|| WvtWindowExpand( -1 ) } )
-   LOCAL cLabel     := "VOUCH, that GROWS with you"
    LOCAL aPalette   := Wvt_GetPalette()
    LOCAL aNewPalette:= aclone( aPalette )
    LOCAL aObjects   := WvtSetObjects( {} )
@@ -775,7 +765,7 @@ FUNCTION WvtMyBrowse_X( oCrt )
    LOCAL nKey, bBlock, oBrowse , aLastPaint, i, aLastPaint1
    LOCAL lEnd    := .f.
    LOCAL aBlocks := {}
-   LOCAL info_   := {}
+   LOCAL info_   
    LOCAL nTop    :=  4
    LOCAL nLeft   :=  3
    LOCAL nBottom := maxrow() - 2
@@ -786,7 +776,7 @@ FUNCTION WvtMyBrowse_X( oCrt )
    LOCAL cColor  := SetColor( "N/W*,N/GR*,,,N/W*" )
    LOCAL aObjects:= WvtSetObjects( {} )
    LOCAL hPopup  := Wvt_SetPopupMenu()
-   LOCAL stru_:={}, cFileIndex, cFileDbf, cRDD, nIndex, oTBar
+   LOCAL cFileIndex, cFileDbf, cRDD, nIndex, oTBar
    LOCAL cScr
 
    STATIC nStyle := 0
@@ -1936,7 +1926,9 @@ STATIC FUNCTION ExeProgressBar( oPBar, oPBar3 )
 //-------------------------------------------------------------------//
 
 Function DynDialog_2( nInfo )
-   Local hDlg, aDlg, nStyle, nTimerTicks, cDlgIcon, cDlgProc, lOnTop, hMenu, bDlgProc
+   Local hDlg, aDlg, nStyle, cDlgIcon, cDlgProc, lOnTop, hMenu
+// Local bDlgProc
+// Local nTimerTicks
 
    nStyle := DS_SETFONT + WS_VISIBLE + WS_POPUP + WS_CAPTION + WS_SYSMENU + WS_THICKFRAME + WS_MINIMIZEBOX
 
@@ -2005,9 +1997,9 @@ Function DynDialog_2( nInfo )
 
    lOnTop      := .f.
    cDlgProc    := "DynDlgProc_2"
-   bDlgProc    := {|a,b,c,d| DYNDLGPROC_2(a,b,c,d) }
+// bDlgProc    := {|a,b,c,d| DYNDLGPROC_2(a,b,c,d) }
    cDlgIcon    := "v_notes.ico"
-   nTimerTicks := 1000  // 1 second
+// nTimerTicks := 1000  // 1 second
 
    if nInfo == 2
       // Modal Dialog
@@ -2028,7 +2020,7 @@ Function DynDialog_2( nInfo )
 //-------------------------------------------------------------------//
 
 Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
-   Local cText, lClicked, cPrompt, nIndex, hFont
+   Local lClicked, cPrompt, nIndex, hFont
 
    Switch ( nMsg )
 
@@ -2155,8 +2147,7 @@ Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
       // Do whatevert you want to do with cText
       // Each box will retrieve its own text.
       //
-      cText := WVG_GetDlgItemText( hDlg, ID_MLE )
-      cText := nil
+      /* cText := */ WVG_GetDlgItemText( hDlg, ID_MLE )
       exit
 
    end
@@ -2392,11 +2383,12 @@ FUNCTION GoogleMap()
 //
 Function ExecuteActiveX( nActiveX, xParam )
    Local oCrt, oTBar, oSBar, oStatic, oCom, oXbp, oTree, oItem1, oItem2
-   LOCAL oListBox, oCheck, oRadio, oStatic2, oMLE, oDA
-   LOCAL oPanel, oPanel1, oPanel2, cText
-   LOCAL cVarA  := "Test A", cVarB := "Test B"
-   LOCAL aState := {"not selected", "selected", "undefined"}
+   LOCAL oListBox, oStatic2, oDA
+   LOCAL oPanel, oPanel1, oPanel2
+// LOCAL cVarA  := "Test A", cVarB := "Test B"
+// LOCAL aState := {"not selected", "selected", "undefined"}
    LOCAL aParts := {}
+// LOCAL oCheck, oRadio, oMLE, cText
 
    HB_SYMBOL_UNUSED( xParam )
    HB_SYMBOL_UNUSED( oCom )
@@ -2611,15 +2603,16 @@ Function ExecuteActiveX( nActiveX, xParam )
    Return nil
 //----------------------------------------------------------------------//
 STATIC FUNCTION ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree )
-   LOCAL aCrt, aTBar, aSBar, aStatic, aCom, aTree
+   LOCAL aCrt, aTBar, aSBar
    LOCAL nH, nT
+// LOCAL aStatic, aCom, aTree
 
    aCrt    := oCrt:currentSize()
    aTBar   := oTBar:currentSize()
    aSBar   := oSBar:currentSize()
-   aStatic := oStatic:currentSize()
-   aTree   := oTree:currentSize()
-   aCom    := oCom:currentSize()
+// aStatic := oStatic:currentSize()
+// aTree   := oTree:currentSize()
+// aCom    := oCom:currentSize()
 
    nT := aTBar[2]
    nH := aCrt[2]-aTBar[2]-aSBar[2]
@@ -3435,7 +3428,7 @@ Static Function MyFunctionXbp( nMode )
 //----------------------------------------------------------------------//
 
 STATIC FUNCTION ExeFontDialog( oCrt )
-   LOCAL oFontDlg, oWvgFont
+   LOCAL oFontDlg
 
    STATIC nMode := 0
 
@@ -3458,8 +3451,7 @@ STATIC FUNCTION ExeFontDialog( oCrt )
 
    #if 1
    //  Every 2nd FontDialog will be MODAL
-   oWvgFont := oFontDlg:display( ++nMode % 2 )
-//   hb_ToOutDebug( '%s  %i', oWvgFont:compoundName, oWvgFont:nominalPointSize )
+   oFontDlg:display( ++nMode % 2 )
    #endif
 
    oFontDlg:destroy()
@@ -3843,7 +3835,7 @@ Static Function MyFunctionXbp( nMode )
 //----------------------------------------------------------------------//
 
 STATIC FUNCTION ExeFontDialogXbp( oCrt )
-   LOCAL oFontDlg, oWvgFont
+   LOCAL oFontDlg
 
    STATIC nMode := 0
 
@@ -3865,8 +3857,7 @@ STATIC FUNCTION ExeFontDialogXbp( oCrt )
    oFontDlg:create()
 
    //  Every 2nd FontDialog will be MODAL
-   oWvgFont := oFontDlg:display( ++nMode % 2 )
-//   hb_ToOutDebug( '%s  %i', oWvgFont:compoundName, oWvgFont:nominalPointSize )
+   oFontDlg:display( ++nMode % 2 )
 
    oFontDlg:destroy()
 
@@ -3903,8 +3894,7 @@ PROCEDURE GCUIConsole( oCrt )
    LOCAL nSlry      := 9000
    LOCAL nColGet    := 8
    LOCAL GetList    := {}
-   LOCAL cLabel     := "VOUCH, that GROWS with you"
-   LOCAL oTab, oStat, hBoxR, hTxt
+   LOCAL hBoxR, hTxt
 
    SET SCOREBOARD OFF
 
@@ -4136,14 +4126,14 @@ Function My_Alert( cMessage, aOptions, cCaption, nInit, nTime )
 
 
 FUNCTION Vou_AlertDialog( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
-   local nLinesRqd, nColRqd, nLeft, nBottom, nRight, oCrt, nCOff
+   local nLinesRqd, nColRqd, nLeft, nBottom, nRight, oCrt
    local nColTxt, nColCap, nColBut, nBtnRow
    local i, nTopReq, lGo, nKey, nMCol, nMRow, nTrg
    local maxCol  := maxcol()
    local maxRow  := maxrow()
-   local nBtnCol_:={}, a_:={}, oCrt_:={}
+   local nBtnCol_
    local pal_    := {"w+/n","w/r","n/w","n/bg","r/bg","N/W","n/B","w+/B"}
-   local aTrg_   :={}, lWin := .f., x_:={}
+   local aTrg_   , x_:={}
 
    DEFAULT cCaption  TO "Your Attention Please!"
    DEFAULT aButtons_ TO {"OK"}
@@ -4186,7 +4176,6 @@ FUNCTION Vou_AlertDialog( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTi
 
    nLeft     := IF( maxCol > nColRqd, int( ( maxCol - nColRqd ) / 2 ), 0 )
    nRight    := nLeft+nColRqd
-   nBtnRow   := nTop+1+len( aText_ )+if( len( aText_ )==0,1,2 )
 
    aTrg_:= array( len( aButtons_ ) )
    for i := 1 to len( aButtons_ )
@@ -4197,7 +4186,6 @@ FUNCTION Vou_AlertDialog( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTi
    //
    B_CRT nTop, nLeft, nBottom-1, nRight MODAL ICON "dia_excl.ico" TITLE '  '+cCaption INTO oCrt
 
-   nCOff   := nLeft
    nTop    := -1
    nLeft   := 0
    nBottom := nTop + nLinesRqd - 1
