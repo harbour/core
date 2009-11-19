@@ -36,6 +36,12 @@ ifneq ($(HB_HAS_QT),)
    else
       HB_CFLAGS += $(foreach d,$(HB_HAS_QT),-I$(d) -I$(d)/Qt -I$(d)/QtCore -I$(d)/QtGui -I$(d)/QtNetwork -I$(d)/QtWebKit)
    endif
+
+   ifneq ($(filter $(HB_PLATFORM),win wce),)
+      MOC_BIN := $(HB_HAS_QT)\..\bin\moc.exe
+   else
+      MOC_BIN := moc
+   endif
 else
    HB_SKIP_REASON := $(_DET_RES_TEXT)
    include $(TOP)$(ROOT)config/none.mk
