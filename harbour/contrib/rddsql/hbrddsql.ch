@@ -49,6 +49,8 @@
  *
  */
 
+/* NOTE: This file is also used by C code. */
+
 #ifndef HB_RDDSQL_CH_
 #define HB_RDDSQL_CH_
 

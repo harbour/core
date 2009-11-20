@@ -5,7 +5,7 @@
 #include "dbinfo.ch"
 #include "error.ch"
 
-#include "../../hbrddsql.ch"
+#include "hbrddsql.ch"
 
 REQUEST SDDMY, SQLMIX
 

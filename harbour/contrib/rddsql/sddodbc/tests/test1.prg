@@ -2,7 +2,7 @@
  * $Id$
  */
 
-#include "../../hbrddsql.ch"
+#include "hbrddsql.ch"
 
 REQUEST SDDODBC, SQLMIX
 
