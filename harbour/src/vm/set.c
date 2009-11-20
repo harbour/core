@@ -577,7 +577,7 @@ HB_FUNC( SET )
          break;
       case HB_SET_CURSOR:
          if( args >= 2 && HB_IS_NUMERIC( pArg2 ) )
-            hb_retni( hb_conSetCursor( TRUE, ( USHORT ) hb_itemGetNI( pArg2 ) ) );
+            hb_retni( hb_conSetCursor( TRUE, hb_itemGetNI( pArg2 ) ) );
          else
             hb_retni( hb_conSetCursor( FALSE, 0 ) );
          break;
@@ -1578,7 +1578,7 @@ BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
          case HB_SET_CURSOR:
             if( HB_IS_NUMERIC( pItem ) )
             {
-               hb_conSetCursor( TRUE, ( USHORT ) hb_itemGetNI( pItem ) );
+               hb_conSetCursor( TRUE, hb_itemGetNI( pItem ) );
                fResult = TRUE;
             }
             break;

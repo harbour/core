@@ -2027,7 +2027,7 @@ struct malloc_state {
   mchunkptr  top;
   size_t     trim_check;
   size_t     magic;
-  mchunkptr  smallbins[(NSMALLBINS+1)*2];
+  mchunk     smallbins[NSMALLBINS];
   tbinptr    treebins[NTREEBINS];
   size_t     footprint;
   size_t     max_footprint;
@@ -2238,7 +2238,7 @@ static size_t traverse_and_check(mstate m);
 #define MIN_SMALL_INDEX     (small_index(MIN_CHUNK_SIZE))
 
 /* addressing by index. See above about smallbin repositioning */
-#define smallbin_at(M, i)   ((sbinptr)((char*)&((M)->smallbins[(i)<<1])))
+#define smallbin_at(M, i)   (&((M)->smallbins[(i)]))
 #define treebin_at(M,i)     (&((M)->treebins[i]))
 
 /* assign tree index for size S to variable I */
