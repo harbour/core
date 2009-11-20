@@ -2851,7 +2851,8 @@ static const RDDFUNCS rddFuncTable =
 HB_FUNC( USRRDD_GETFUNCTABLE )
 {
    RDDFUNCS * pSelfTable, * pSuperTable;
-   USHORT * puiCount, uiResult, uiCount, uiSize;
+   USHORT * puiCount, uiCount, uiSize;
+   HB_ERRCODE uiResult;
    const char * szSuperRDD;
    PHB_ITEM pMethods;
 
