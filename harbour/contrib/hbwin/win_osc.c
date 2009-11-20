@@ -130,6 +130,13 @@ HB_FUNC( OS_ISWINVISTA )
    hb_retl( osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 0 );
 }
 
+HB_FUNC( OS_ISWIN7 )
+{
+   OSVERSIONINFO osvi;
+   getwinver( &osvi );
+   hb_retl( osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 1 );
+}
+
 HB_FUNC( OS_ISWIN9X )
 {
    OSVERSIONINFO osvi;

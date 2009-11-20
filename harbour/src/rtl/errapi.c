@@ -775,11 +775,11 @@ HB_ERRCODE hb_errGetGenCode( PHB_ITEM pError )
    return ( HB_ERRCODE ) hb_arrayGetNI( pError, HB_TERROR_GENCODE );
 }
 
-PHB_ITEM hb_errPutGenCode( PHB_ITEM pError, HB_ERRCODE uiGenCode )
+PHB_ITEM hb_errPutGenCode( PHB_ITEM pError, HB_ERRCODE errGenCode )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_errPutGenCode(%p, %d)", pError, uiGenCode));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errPutGenCode(%p, %d)", pError, errGenCode));
 
-   hb_arraySetNI( pError, HB_TERROR_GENCODE, uiGenCode );
+   hb_arraySetNI( pError, HB_TERROR_GENCODE, errGenCode );
 
    return pError;
 }
@@ -814,11 +814,11 @@ HB_ERRCODE hb_errGetOsCode( PHB_ITEM pError )
    return ( HB_ERRCODE ) hb_arrayGetNI( pError, HB_TERROR_OSCODE );
 }
 
-PHB_ITEM hb_errPutOsCode( PHB_ITEM pError, HB_ERRCODE uiOsCode )
+PHB_ITEM hb_errPutOsCode( PHB_ITEM pError, HB_ERRCODE errOsCode )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_errPutOsCode(%p, %d)", pError, uiOsCode));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errPutOsCode(%p, %d)", pError, errOsCode));
 
-   hb_arraySetNI( pError, HB_TERROR_OSCODE, uiOsCode );
+   hb_arraySetNI( pError, HB_TERROR_OSCODE, errOsCode );
 
    return pError;
 }
@@ -846,11 +846,11 @@ HB_ERRCODE hb_errGetSubCode( PHB_ITEM pError )
    return ( HB_ERRCODE ) hb_arrayGetNI( pError, HB_TERROR_SUBCODE );
 }
 
-PHB_ITEM hb_errPutSubCode( PHB_ITEM pError, HB_ERRCODE uiSubCode )
+PHB_ITEM hb_errPutSubCode( PHB_ITEM pError, HB_ERRCODE errSubCode )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_errPutSubCode(%p, %d)", pError, uiSubCode));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errPutSubCode(%p, %d)", pError, errSubCode));
 
-   hb_arraySetNI( pError, HB_TERROR_SUBCODE, uiSubCode );
+   hb_arraySetNI( pError, HB_TERROR_SUBCODE, errSubCode );
 
    return pError;
 }
@@ -939,7 +939,7 @@ PHB_ITEM hb_errRT_New(
    HB_ERRCODE errSubCode,
    const char * szDescription,
    const char * szOperation,
-   HB_ERRCODE uiOsCode,
+   HB_ERRCODE errOsCode,
    USHORT uiFlags )
 {
    PHB_ITEM pError = hb_errNew();
@@ -950,7 +950,7 @@ PHB_ITEM hb_errRT_New(
    hb_errPutSubCode( pError, errSubCode );
    hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetItem( HB_LANG_ITEM_BASE_ERRDESC + errGenCode ) );
    hb_errPutOperation( pError, szOperation );
-   hb_errPutOsCode( pError, uiOsCode );
+   hb_errPutOsCode( pError, errOsCode );
    hb_errPutFlags( pError, uiFlags );
 
    return pError;
@@ -963,7 +963,7 @@ PHB_ITEM hb_errRT_New_Subst(
    HB_ERRCODE errSubCode,
    const char * szDescription,
    const char * szOperation,
-   HB_ERRCODE uiOsCode,
+   HB_ERRCODE errOsCode,
    USHORT uiFlags )
 {
    PHB_ITEM pError = hb_errNew();
@@ -974,7 +974,7 @@ PHB_ITEM hb_errRT_New_Subst(
    hb_errPutSubCode( pError, errSubCode );
    hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetItem( HB_LANG_ITEM_BASE_ERRDESC + errGenCode ) );
    hb_errPutOperation( pError, szOperation );
-   hb_errPutOsCode( pError, uiOsCode );
+   hb_errPutOsCode( pError, errOsCode );
    hb_errPutFlags( pError, ( USHORT ) ( uiFlags | EF_CANSUBSTITUTE ) );
 
    return pError;
@@ -1108,7 +1108,7 @@ USHORT hb_errRT_BASE( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char *
    return uiAction;
 }
 
-USHORT hb_errRT_BASE_Ext1( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE uiOsCode, USHORT uiFlags, ULONG ulArgCount, ... )
+USHORT hb_errRT_BASE_Ext1( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode, USHORT uiFlags, ULONG ulArgCount, ... )
 {
    USHORT uiAction;
    PHB_ITEM pError;
@@ -1117,7 +1117,7 @@ USHORT hb_errRT_BASE_Ext1( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const c
    va_list va;
    ULONG ulArgPos;
 
-   pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, errGenCode, errSubCode, szDescription, szOperation, uiOsCode, uiFlags );
+   pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, errGenCode, errSubCode, szDescription, szOperation, errOsCode, uiFlags );
 
    /* Build the array from the passed arguments. */
    if( ulArgCount == 0 )
@@ -1275,11 +1275,11 @@ void hb_errRT_BASE_SubstR( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const c
    hb_errRelease( pError );
 }
 
-USHORT hb_errRT_TERM( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE uiOSCode, USHORT uiFlags )
+USHORT hb_errRT_TERM( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode, USHORT uiFlags )
 {
    USHORT uiAction;
    PHB_ITEM pError =
-      hb_errRT_New( ES_ERROR, HB_ERR_SS_TERMINAL, errGenCode, errSubCode, szDescription, szOperation, uiOSCode, uiFlags );
+      hb_errRT_New( ES_ERROR, HB_ERR_SS_TERMINAL, errGenCode, errSubCode, szDescription, szOperation, errOsCode, uiFlags );
 
    uiAction = hb_errLaunch( pError );
 
