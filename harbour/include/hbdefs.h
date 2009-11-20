@@ -453,10 +453,10 @@
 #  define HB_LONG_MAX            LONG_MAX
 #  define HB_LONG_MIN            LONG_MIN
 #  define HB_ULONG_MAX           ULONG_MAX
-   typedef LONG                  HB_LONG;    /* legacy */
-   typedef ULONG                 HB_ULONG;   /* legacy */
-   typedef LONG                  HB_MAXINT; 
-   typedef ULONG                 HB_MAXUINT;
+   typedef long                  HB_LONG;    /* legacy */
+   typedef unsigned long         HB_ULONG;   /* legacy */
+   typedef long                  HB_MAXINT; 
+   typedef unsigned long         HB_MAXUINT;
 #  define PFHL                   "l"
 #elif !defined( HB_LONG_LONG_OFF ) && ULONG_MAX == UINT_MAX
 #  define HB_INT_MAX             INT_MAX
@@ -474,10 +474,10 @@
 #  define HB_LONG_MAX            LONG_MAX
 #  define HB_LONG_MIN            LONG_MIN
 #  define HB_ULONG_MAX           ULONG_MAX
-   typedef LONG                  HB_LONG;    /* legacy */
-   typedef ULONG                 HB_ULONG;   /* legacy */
-   typedef LONG                  HB_MAXINT; 
-   typedef ULONG                 HB_MAXUINT;
+   typedef long                  HB_LONG;    /* legacy */
+   typedef unsigned long         HB_ULONG;   /* legacy */
+   typedef long                  HB_MAXINT; 
+   typedef unsigned long         HB_MAXUINT;
 #  define PFHL                   "l"
 #endif
 
@@ -717,7 +717,7 @@ typedef unsigned int        HB_UINT;
    typedef ULONGLONG           HB_ULONGLONG;
 #endif
 typedef double              HB_DOUBLE;
-typedef ULONG               HB_SIZE;           /* TOFIX: Change to 'long' */
+typedef unsigned long       HB_SIZE;           /* TOFIX: Currently ULONG, to be changed to 'long' */
 typedef void *              HB_PTRVAL;         /* TOFIX */
 /* typedef                     HB_POINTER;    */    /* TOFIX */
 

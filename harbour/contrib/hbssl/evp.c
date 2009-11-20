@@ -60,10 +60,10 @@
 char * hb_openssl_strdup( const char * pszText )
 {
    char * pszDup;
-   ULONG ulLen = strlen( pszText ) + 1;
+   size_t len = strlen( pszText ) + 1;
 
-   pszDup = ( char * ) OPENSSL_malloc( ulLen );
-   memcpy( pszDup, pszText, ulLen );
+   pszDup = ( char * ) OPENSSL_malloc( len );
+   memcpy( pszDup, pszText, len );
 
    return pszDup;
 }

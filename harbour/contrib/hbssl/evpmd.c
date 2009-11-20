@@ -378,7 +378,7 @@ HB_FUNC( EVP_DIGESTFINAL )
 
          if( size > 0 )
          {
-            if( ! hb_storclen_buffer( ( char * ) buffer, ( ULONG ) size, 2 ) )
+            if( ! hb_storclen_buffer( ( char * ) buffer, ( HB_SIZE ) size, 2 ) )
                hb_xfree( buffer );
          }
          else
@@ -407,7 +407,7 @@ HB_FUNC( EVP_DIGESTFINAL_EX )
 
          if( size > 0 )
          {
-            if( ! hb_storclen_buffer( ( char * ) buffer, ( ULONG ) size, 2 ) )
+            if( ! hb_storclen_buffer( ( char * ) buffer, ( HB_SIZE ) size, 2 ) )
                hb_xfree( buffer );
          }
          else
@@ -479,7 +479,7 @@ HB_FUNC( EVP_SIGNFINAL )
 
          if( size > 0 )
          {
-            if( ! hb_storclen_buffer( ( char * ) buffer, ( ULONG ) size, 2 ) )
+            if( ! hb_storclen_buffer( ( char * ) buffer, ( HB_SIZE ) size, 2 ) )
                hb_xfree( buffer );
          }
          else

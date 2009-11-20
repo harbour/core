@@ -468,7 +468,7 @@ HB_FUNC( SSL_READ )
          {
             nRead = HB_ISNUM( 3 ) ? hb_parni( 3 ) : ( int ) hb_parclen( 2 );
 
-            if( ( ULONG ) nRead <= hb_parcsiz( 2 ) )
+            if( ( HB_SIZE ) nRead <= hb_parcsiz( 2 ) )
             {
                pBuffer = hb_itemUnShareString( pBuffer );
 
@@ -502,7 +502,7 @@ HB_FUNC( SSL_PEEK )
          {
             nRead = HB_ISNUM( 3 ) ? hb_parni( 3 ) : ( int ) hb_parclen( 2 );
 
-            if( ( ULONG ) nRead <= hb_parcsiz( 2 ) )
+            if( ( HB_SIZE ) nRead <= hb_parcsiz( 2 ) )
             {
                pBuffer = hb_itemUnShareString( pBuffer );
 
@@ -543,11 +543,11 @@ HB_FUNC( SSL_WRITE )
       if( ssl )
       {
          PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
-         ULONG nLen = hb_itemGetCLen( pBuffer );
+         HB_SIZE nLen = hb_itemGetCLen( pBuffer );
 
          if( HB_ISNUM( 3 ) )
          {
-            ULONG nWrite = ( ULONG ) hb_parnl( 3 );
+            HB_SIZE nWrite = ( HB_SIZE ) hb_parnl( 3 );
             if( nWrite < nLen )
                nLen = nWrite;
          }
@@ -1483,7 +1483,7 @@ static void hb_ssl_msg_callback( int write_p, int version, int content_type, con
       PHB_ITEM p1 = hb_itemPutL( NULL, write_p );
       PHB_ITEM p2 = hb_itemPutNI( NULL, version );
       PHB_ITEM p3 = hb_itemPutNI( NULL, content_type );
-      PHB_ITEM p4 = hb_itemPutCL( NULL, ( const char * ) buf, ( ULONG ) len );
+      PHB_ITEM p4 = hb_itemPutCL( NULL, ( const char * ) buf, ( HB_SIZE ) len );
 
       hb_vmEvalBlockV( ( PHB_ITEM ) userdata, 4, p1, p2, p3, p4 );
 
