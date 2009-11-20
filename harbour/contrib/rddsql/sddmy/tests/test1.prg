@@ -5,17 +5,7 @@
 #include "dbinfo.ch"
 #include "error.ch"
 
-#define DBI_QUERY             1001
-
-#define RDDI_CONNECT          1001
-#define RDDI_DISCONNECT       1002
-#define RDDI_EXECUTE          1003
-#define RDDI_ERROR            1004
-#define RDDI_ERRORNO          1005
-#define RDDI_NEWID            1006
-#define RDDI_AFFECTEDROWS     1007
-#define RDDI_QUERY            1008
-
+#include "../../hbrddsql.ch"
 
 REQUEST SDDMY, SQLMIX
 

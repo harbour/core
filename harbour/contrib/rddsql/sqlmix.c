@@ -68,27 +68,27 @@
 
 
 #define MIX_KEY( tag, node, index ) \
-   ( (PMIXKEY) & ( (BYTE*) (node) ) [ ( (node)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (index) * (tag)->uiTotalLen ] )
+   ( ( PMIXKEY ) & ( ( BYTE * ) (node) ) [ ( (node)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (index) * (tag)->uiTotalLen ] )
 
 #define MIX_COPY_KEYS_INTERNAL( tag, node, dst, src, count ) \
-   memmove( ( (BYTE*) (node) ) + ( (node)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (dst) * (tag)->uiTotalLen, \
-            ( (BYTE*) (node) ) + ( (node)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (src) * (tag)->uiTotalLen, \
+   memmove( ( ( BYTE * ) (node) ) + ( (node)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (dst) * (tag)->uiTotalLen, \
+            ( ( BYTE * ) (node) ) + ( (node)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (src) * (tag)->uiTotalLen, \
             (count) * (tag)->uiTotalLen )
 
 #define MIX_COPY_KEYS_EXTERNAL( tag, ndst, dst, nsrc, src, count ) \
-   memmove( ( (BYTE*) (ndst) ) + ( (ndst)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (dst) * (tag)->uiTotalLen, \
-            ( (BYTE*) (nsrc) ) + ( (nsrc)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (src) * (tag)->uiTotalLen, \
+   memmove( ( ( BYTE * ) (ndst) ) + ( (ndst)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (dst) * (tag)->uiTotalLen, \
+            ( ( BYTE * ) (nsrc) ) + ( (nsrc)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (src) * (tag)->uiTotalLen, \
             (count) * (tag)->uiTotalLen )
 
 #define MIX_ASSIGN_KEY( tag, node, dst, src ) \
-   memmove( ( (BYTE*) (node) ) + ( (node)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (dst) * (tag)->uiTotalLen, \
+   memmove( ( ( BYTE * ) (node) ) + ( (node)->Leaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + (dst) * (tag)->uiTotalLen, \
             (src), (tag)->uiTotalLen )
 
 #define MIX_COPY_CHILDS_INTERNAL( tag, node, dst, src, count ) \
-   memmove( & ((node)->Child[ (dst) ]), & ((node)->Child[ (src) ]), (count) * sizeof( void* ) )
+   memmove( & ((node)->Child[ (dst) ]), & ((node)->Child[ (src) ]), (count) * sizeof( void * ) )
 
 #define MIX_COPY_CHILDS_EXTERNAL( tag, ndst, dst, nsrc, src, count ) \
-   memmove( & ((ndst)->Child[ (dst) ]), & ((nsrc)->Child[ (src) ]), (count) * sizeof( void* ) )
+   memmove( & ((ndst)->Child[ (dst) ]), & ((nsrc)->Child[ (src) ]), (count) * sizeof( void * ) )
 
 
 
@@ -104,7 +104,7 @@ static RDDFUNCS sqlmixSuper;
 */
 
 
-static HB_ERRCODE sqlmixErrorRT( SQLMIXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode, char* filename, USHORT uiOsCode, USHORT uiFlags )
+static HB_ERRCODE sqlmixErrorRT( SQLMIXAREAP pArea, HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, char * filename, HB_ERRCODE errOsCode, USHORT uiFlags )
 {
    PHB_ITEM pError;
    HB_ERRCODE iRet = HB_FAILURE;
@@ -112,15 +112,15 @@ static HB_ERRCODE sqlmixErrorRT( SQLMIXAREAP pArea, USHORT uiGenCode, USHORT uiS
    if ( hb_vmRequestQuery() == 0 )
    {
       pError = hb_errNew();
-      hb_errPutGenCode( pError, uiGenCode );
-      hb_errPutSubCode( pError, uiSubCode );
-      hb_errPutOsCode( pError, uiOsCode );
-      hb_errPutDescription( pError, hb_langDGetErrorDesc( uiGenCode ) );
+      hb_errPutGenCode( pError, errGenCode );
+      hb_errPutSubCode( pError, errSubCode );
+      hb_errPutOsCode( pError, errOsCode );
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( errGenCode ) );
       if ( filename )
          hb_errPutFileName( pError, filename );
       if ( uiFlags )
          hb_errPutFlags( pError, uiFlags );
-      iRet = SELF_ERROR( (AREAP) pArea, pError );
+      iRet = SELF_ERROR( ( AREAP ) pArea, pError );
       hb_errRelease( pError );
    }
    return iRet;
@@ -160,13 +160,13 @@ static PMIXKEY hb_mixKeyPutItem( PMIXKEY pKey, PHB_ITEM pItem, ULONG ulRecNo, PM
       case 'C':
          ul = hb_itemGetCLen( pItem );
 
-         if ( ul > (ULONG) pTag->uiKeyLen )
+         if ( ul > ( ULONG ) pTag->uiKeyLen )
             ul = pTag->uiKeyLen;
 
          memcpy( pKey->val, hb_itemGetCPtr( pItem ), ul );
 
-         if ( ul < (ULONG) pTag->uiKeyLen )
-            memset( pKey->val + ul, ' ', (ULONG) pTag->uiKeyLen - ul );
+         if ( ul < ( ULONG ) pTag->uiKeyLen )
+            memset( pKey->val + ul, ' ', ( ULONG ) pTag->uiKeyLen - ul );
 
          break;
 
@@ -177,7 +177,7 @@ static PMIXKEY hb_mixKeyPutItem( PMIXKEY pKey, PHB_ITEM pItem, ULONG ulRecNo, PM
          break;
 
       case 'D':
-         dbl = (double) hb_itemGetDL( pItem );
+         dbl = ( double ) hb_itemGetDL( pItem );
          HB_DBL2ORD( &dbl, buf );
          memcpy( pKey->val, buf, 8 );
          break;
@@ -256,7 +256,7 @@ static int hb_mixKeyCompare( PMIXTAG pTag, PMIXKEY pKey1, PMIXKEY pKey2, unsigne
 
    if ( ! pKey1->notnul || ! pKey2->notnul )
    {
-      return (int) pKey1->notnul - (int) pKey2->notnul;
+      return ( int ) pKey1->notnul - ( int ) pKey2->notnul;
    }
 
    i = 0;
@@ -274,7 +274,7 @@ static int hb_mixKeyCompare( PMIXTAG pTag, PMIXKEY pKey1, PMIXKEY pKey2, unsigne
 
    if ( i == 0 )
    {
-      if ( pKey2->rec == (ULONG) -1 )
+      if ( pKey2->rec == ( ULONG ) -1 )
       {
          /* This condition seems inverted, but it's ok for seek last */
          if ( pTag->uiKeyLen > uiLen )
@@ -876,11 +876,11 @@ static PMIXTAG hb_mixTagCreate( const char* szTagName, PHB_ITEM pKeyExpr, PHB_IT
 
    if ( ulStartRec )
    {
-      SELF_GOTO( (AREAP) pArea, ulStartRec );
+      SELF_GOTO( ( AREAP ) pArea, ulStartRec );
    }
    else
    {
-      SELF_GOTOP( (AREAP) pArea );
+      SELF_GOTOP( ( AREAP ) pArea );
    }
 
    while ( ! pArea->sqlarea.area.fEof )
@@ -1234,7 +1234,7 @@ static ULONG hb_mixDBOIKeyCount( PMIXTAG pTag, BOOL fFilter )
          hb_mixTagSkip( pTag, 1 );
       }
       hb_mixTagSetCurrent( pTag, pNode, uiPos );
-      SELF_GOTO( (AREAP) pTag->pArea, ulRecNo );
+      SELF_GOTO( ( AREAP ) pTag->pArea, ulRecNo );
 
    }
    else
@@ -1348,11 +1348,11 @@ static HB_ERRCODE sqlmixSeek( SQLMIXAREAP pArea, BOOL fSoftSeek, PHB_ITEM pItem,
    }
    else
    {
-      PMIXKEY   pKey;
-      HB_ERRCODE   retval = HB_SUCCESS;
-      BOOL      fEOF;
-      PMIXTAG   pTag = pArea->pTag;
-      PMIXNODE  pNode;
+      PMIXKEY       pKey;
+      HB_ERRCODE    errCode = HB_SUCCESS;
+      BOOL          fEOF;
+      PMIXTAG       pTag = pArea->pTag;
+      PMIXNODE      pNode;
       unsigned int  uiKeyLen, ui;
 
       if ( pArea->sqlarea.lpdbPendingRel && pArea->sqlarea.lpdbPendingRel->isScoped )
@@ -1361,7 +1361,7 @@ static HB_ERRCODE sqlmixSeek( SQLMIXAREAP pArea, BOOL fSoftSeek, PHB_ITEM pItem,
       pArea->sqlarea.area.fTop = pArea->sqlarea.area.fBottom = FALSE;
       pArea->sqlarea.area.fEof = FALSE;
 
-      pKey = hb_mixKeyPutItem( NULL, pItem, fFindLast ? (ULONG) -1 : 0, pTag );
+      pKey = hb_mixKeyPutItem( NULL, pItem, fFindLast ? ( ULONG ) -1 : 0, pTag );
 
       uiKeyLen = pTag->uiKeyLen;
       if ( pTag->bType == 'C' )
@@ -1381,40 +1381,40 @@ static HB_ERRCODE sqlmixSeek( SQLMIXAREAP pArea, BOOL fSoftSeek, PHB_ITEM pItem,
          else
             hb_mixTagSkip( pTag, -1 );
 
-         pArea->sqlarea.area.fFound = ! pTag->fEof && ( uiKeyLen == 0 || memcmp( pTag->CurKey->val, pKey->val, (ULONG) uiKeyLen ) == 0 );
+         pArea->sqlarea.area.fFound = ! pTag->fEof && ( uiKeyLen == 0 || memcmp( pTag->CurKey->val, pKey->val, ( ULONG ) uiKeyLen ) == 0 );
 
          if ( ! pArea->sqlarea.area.fFound )
             hb_mixTagSetCurrent( pTag, pNode, ui );
       }
       else
       {
-         pArea->sqlarea.area.fFound = ! pTag->fEof && ( uiKeyLen == 0 || memcmp( pTag->CurKey->val, pKey->val, (ULONG) uiKeyLen ) == 0 );
+         pArea->sqlarea.area.fFound = ! pTag->fEof && ( uiKeyLen == 0 || memcmp( pTag->CurKey->val, pKey->val, ( ULONG ) uiKeyLen ) == 0 );
       }
 
       fEOF = pTag->fEof;
 
       if ( !fEOF )
       {
-         retval = SELF_GOTO( ( AREAP ) pArea, pTag->CurKey->rec );
-         if ( retval != HB_FAILURE && pArea->sqlarea.fPositioned )
+         errCode = SELF_GOTO( ( AREAP ) pArea, pTag->CurKey->rec );
+         if ( errCode != HB_FAILURE && pArea->sqlarea.fPositioned )
          {
-            retval = SELF_SKIPFILTER( ( AREAP ) pArea, fFindLast ? -1 : 1 );
-            if ( retval != HB_FAILURE && pArea->sqlarea.fPositioned )
+            errCode = SELF_SKIPFILTER( ( AREAP ) pArea, fFindLast ? -1 : 1 );
+            if ( errCode != HB_FAILURE && pArea->sqlarea.fPositioned )
             {
-               pArea->sqlarea.area.fFound = ( uiKeyLen == 0 || memcmp( pTag->CurKey->val, pKey->val, (ULONG) uiKeyLen ) == 0 );
+               pArea->sqlarea.area.fFound = ( uiKeyLen == 0 || memcmp( pTag->CurKey->val, pKey->val, ( ULONG ) uiKeyLen ) == 0 );
                if ( ! pArea->sqlarea.area.fFound && ! fSoftSeek )
                   fEOF = TRUE;
             }
          }
       }
-      if ( retval != HB_FAILURE && fEOF )
+      if ( errCode != HB_FAILURE && fEOF )
       {
-         retval = SELF_GOTO( ( AREAP ) pArea, 0 );
+         errCode = SELF_GOTO( ( AREAP ) pArea, 0 );
       }
       pArea->sqlarea.area.fBof = FALSE;
 
       hb_mixKeyFree( pKey );
-      return retval;
+      return errCode;
    }
 }
 
@@ -1532,7 +1532,7 @@ static HB_ERRCODE sqlmixGoHot( SQLMIXAREAP pArea )
       printf( "sqlmixGoHot: multiple marking buffer as hot." );
 */
 
-   if ( SUPER_GOHOT( (AREAP) pArea ) == HB_FAILURE )
+   if ( SUPER_GOHOT( ( AREAP ) pArea ) == HB_FAILURE )
       return HB_FAILURE;
 
    pTag = pArea->pTagList;
@@ -1551,13 +1551,13 @@ static HB_ERRCODE sqlmixGoHot( SQLMIXAREAP pArea )
 
 static HB_ERRCODE sqlmixClose( SQLMIXAREAP pArea )
 {
-   if ( SELF_GOCOLD( (AREAP) pArea ) == HB_FAILURE )
+   if ( SELF_GOCOLD( ( AREAP ) pArea ) == HB_FAILURE )
       return HB_FAILURE;
 
-   if ( SUPER_CLOSE( (AREAP) pArea ) == HB_FAILURE )
+   if ( SUPER_CLOSE( ( AREAP ) pArea ) == HB_FAILURE )
       return HB_FAILURE;
 
-   if ( SELF_ORDLSTCLEAR( (AREAP) pArea ) == HB_FAILURE )
+   if ( SELF_ORDLSTCLEAR( ( AREAP ) pArea ) == HB_FAILURE )
       return HB_FAILURE;
 
    return HB_SUCCESS;
@@ -1618,7 +1618,7 @@ static HB_ERRCODE sqlmixOrderCreate( SQLMIXAREAP pArea, LPDBORDERCREATEINFO pOrd
    }
    else
    {
-      if ( SELF_COMPILE( (AREAP) pArea, hb_itemGetCPtr( pOrderInfo->abExpr ) ) == HB_FAILURE )
+      if ( SELF_COMPILE( ( AREAP ) pArea, hb_itemGetCPtr( pOrderInfo->abExpr ) ) == HB_FAILURE )
          return HB_FAILURE;
       pKeyItem = pArea->sqlarea.area.valResult;
       pArea->sqlarea.area.valResult = NULL;
@@ -1626,11 +1626,11 @@ static HB_ERRCODE sqlmixOrderCreate( SQLMIXAREAP pArea, LPDBORDERCREATEINFO pOrd
 
    /* Test key codeblock on EOF */
    ulRecNo = pArea->sqlarea.ulRecNo;
-   SELF_GOTO( (AREAP) pArea, 0 );
-   if ( SELF_EVALBLOCK( (AREAP) pArea, pKeyItem ) == HB_FAILURE )
+   SELF_GOTO( ( AREAP ) pArea, 0 );
+   if ( SELF_EVALBLOCK( ( AREAP ) pArea, pKeyItem ) == HB_FAILURE )
    {
       hb_vmDestroyBlockOrMacro( pKeyItem );
-      SELF_GOTO( (AREAP) pArea, ulRecNo );
+      SELF_GOTO( ( AREAP ) pArea, ulRecNo );
       return HB_FAILURE;
    }
 
@@ -1642,7 +1642,7 @@ static HB_ERRCODE sqlmixOrderCreate( SQLMIXAREAP pArea, LPDBORDERCREATEINFO pOrd
       case HB_IT_STRING:
       case HB_IT_STRING | HB_IT_MEMO:
          bType = 'C';
-         uiLen = (USHORT) hb_itemGetCLen( pResult );
+         uiLen = ( USHORT ) hb_itemGetCLen( pResult );
          if ( uiLen > MIX_MAXKEYLEN )  uiLen = MIX_MAXKEYLEN;
          break;
 
@@ -1672,7 +1672,7 @@ static HB_ERRCODE sqlmixOrderCreate( SQLMIXAREAP pArea, LPDBORDERCREATEINFO pOrd
    if ( bType == 'U' || uiLen == 0 )
    {
       hb_vmDestroyBlockOrMacro( pKeyItem );
-      SELF_GOTO( (AREAP) pArea, ulRecNo );
+      SELF_GOTO( ( AREAP ) pArea, ulRecNo );
       sqlmixErrorRT( pArea, bType == 'U' ? EG_DATATYPE : EG_DATAWIDTH, 1026, NULL, 0, 0 );
       return HB_FAILURE;
    }
@@ -1686,10 +1686,10 @@ static HB_ERRCODE sqlmixOrderCreate( SQLMIXAREAP pArea, LPDBORDERCREATEINFO pOrd
       }
       else if ( pArea->sqlarea.area.lpdbOrdCondInfo->abFor )
       {
-         if ( SELF_COMPILE( (AREAP) pArea, pArea->sqlarea.area.lpdbOrdCondInfo->abFor ) == HB_FAILURE )
+         if ( SELF_COMPILE( ( AREAP ) pArea, pArea->sqlarea.area.lpdbOrdCondInfo->abFor ) == HB_FAILURE )
          {
             hb_vmDestroyBlockOrMacro( pKeyItem );
-            SELF_GOTO( (AREAP) pArea, ulRecNo );
+            SELF_GOTO( ( AREAP ) pArea, ulRecNo );
             return HB_FAILURE;
          }
          pForItem = pArea->sqlarea.area.valResult;
@@ -1703,12 +1703,12 @@ static HB_ERRCODE sqlmixOrderCreate( SQLMIXAREAP pArea, LPDBORDERCREATEINFO pOrd
       }
       else if ( pArea->sqlarea.area.lpdbOrdCondInfo->abWhile )
       {
-         if ( SELF_COMPILE( (AREAP) pArea, pArea->sqlarea.area.lpdbOrdCondInfo->abWhile ) == HB_FAILURE )
+         if ( SELF_COMPILE( ( AREAP ) pArea, pArea->sqlarea.area.lpdbOrdCondInfo->abWhile ) == HB_FAILURE )
          {
             hb_vmDestroyBlockOrMacro( pKeyItem );
             if ( pForItem )
                hb_vmDestroyBlockOrMacro( pForItem );
-            SELF_GOTO( (AREAP) pArea, ulRecNo );
+            SELF_GOTO( ( AREAP ) pArea, ulRecNo );
             return HB_FAILURE;
          }
          pWhileItem = pArea->sqlarea.area.valResult;
@@ -1719,13 +1719,13 @@ static HB_ERRCODE sqlmixOrderCreate( SQLMIXAREAP pArea, LPDBORDERCREATEINFO pOrd
    /* Test FOR codeblock on EOF */
    if ( pForItem )
    {
-      if ( SELF_EVALBLOCK( (AREAP) pArea, pForItem ) == HB_FAILURE )
+      if ( SELF_EVALBLOCK( ( AREAP ) pArea, pForItem ) == HB_FAILURE )
       {
          hb_vmDestroyBlockOrMacro( pKeyItem );
          hb_vmDestroyBlockOrMacro( pForItem );
          if ( pWhileItem )
             hb_vmDestroyBlockOrMacro( pWhileItem );
-         SELF_GOTO( (AREAP) pArea, ulRecNo );
+         SELF_GOTO( ( AREAP ) pArea, ulRecNo );
          return HB_FAILURE;
       }
       if ( hb_itemType( pArea->sqlarea.area.valResult ) != HB_IT_LOGICAL )
@@ -1736,7 +1736,7 @@ static HB_ERRCODE sqlmixOrderCreate( SQLMIXAREAP pArea, LPDBORDERCREATEINFO pOrd
          hb_vmDestroyBlockOrMacro( pForItem );
          if ( pWhileItem )
             hb_vmDestroyBlockOrMacro( pWhileItem );
-         SELF_GOTO( (AREAP) pArea, ulRecNo );
+         SELF_GOTO( ( AREAP ) pArea, ulRecNo );
          sqlmixErrorRT( pArea, EG_DATATYPE, EDBF_INVALIDFOR, NULL, 0, 0 );
          return HB_FAILURE;
       }
@@ -1746,7 +1746,7 @@ static HB_ERRCODE sqlmixOrderCreate( SQLMIXAREAP pArea, LPDBORDERCREATEINFO pOrd
 
    /* TODO: WHILE condition is not tested, like in DBFCDX. Why? Compatibility with Clipper? */
 
-   SELF_GOTO( (AREAP) pArea, ulRecNo );
+   SELF_GOTO( ( AREAP ) pArea, ulRecNo );
 
    pTagNew = hb_mixTagCreate( pOrderInfo->atomBagName, pOrderInfo->abExpr, pKeyItem, pForItem, pWhileItem, bType, uiLen, pArea );
 
@@ -1778,7 +1778,6 @@ static HB_ERRCODE sqlmixOrderInfo( SQLMIXAREAP pArea, USHORT uiIndex, LPDBORDERI
    PMIXTAG   pTag;
    USHORT    uiTag = 0;
 
-
    switch( uiIndex )
    {
       case DBOI_EVALSTEP:
@@ -1797,16 +1796,13 @@ static HB_ERRCODE sqlmixOrderInfo( SQLMIXAREAP pArea, USHORT uiIndex, LPDBORDERI
          return HB_SUCCESS;
    }
 
-
    if ( SELF_GOCOLD( ( AREAP ) pArea ) == HB_FAILURE )
       return HB_FAILURE;
-
 
    if ( pOrderInfo->itmOrder )
       pTag = hb_mixFindTag( pArea, pOrderInfo->itmOrder );
    else
       pTag = pArea->pTag;
-
 
    switch( uiIndex )
    {
@@ -1828,12 +1824,12 @@ static HB_ERRCODE sqlmixOrderInfo( SQLMIXAREAP pArea, USHORT uiIndex, LPDBORDERI
             {
                const char* pForExpr = hb_itemGetCPtr( pOrderInfo->itmNewVal );
 
-               if ( SELF_COMPILE( (AREAP) pArea, pForExpr ) == HB_SUCCESS )
+               if ( SELF_COMPILE( ( AREAP ) pArea, pForExpr ) == HB_SUCCESS )
                {
                   PHB_ITEM   pForItem = pArea->sqlarea.area.valResult;
 
                   pArea->sqlarea.area.valResult = NULL;
-                  if ( SELF_EVALBLOCK( (AREAP) pArea, pForItem ) == HB_SUCCESS )
+                  if ( SELF_EVALBLOCK( ( AREAP ) pArea, pForItem ) == HB_SUCCESS )
                   {
                      if ( hb_itemType( pArea->sqlarea.area.valResult ) == HB_IT_LOGICAL )
                      {
@@ -2054,6 +2050,14 @@ static HB_ERRCODE sqlmixOrderInfo( SQLMIXAREAP pArea, USHORT uiIndex, LPDBORDERI
 }
 
 
+static HB_ERRCODE sqlmixInit( LPRDDNODE pRDD )
+{
+   /* This empty method is used to avoid duplicated sqlbase init call */
+   HB_SYMBOL_UNUSED( pRDD );
+   return HB_SUCCESS;
+}
+
+
 static HB_ERRCODE sqlmixExit( LPRDDNODE pRDD )
 {
    /* This empty method is used to avoid duplicated sqlbase exit call */
@@ -2156,7 +2160,7 @@ static RDDFUNCS sqlmixTable =
         ( DBENTRYP_SCCS ) NULL,                   /* sqlmixPutValueFile */
         ( DBENTRYP_V )    NULL,                   /* sqlmixReadDBHeader */
         ( DBENTRYP_V )    NULL,                   /* sqlmixWriteDBHeader */
-        ( DBENTRYP_R )    NULL,                   /* sqlmixInit */
+        ( DBENTRYP_R )    sqlmixInit,
         ( DBENTRYP_R )    sqlmixExit,
         ( DBENTRYP_RVVL)  NULL,                   /* sqlmixDrop */
         ( DBENTRYP_RVVL)  NULL,                   /* sqlmixExists */

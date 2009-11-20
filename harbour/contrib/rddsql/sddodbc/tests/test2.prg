@@ -2,8 +2,7 @@
  * $Id$
  */
 
-#define RDDI_CONNECT          1001
-#define RDDI_EXECUTE          1003
+#include "../../hbrddsql.ch"
 
 REQUEST SQLMIX, SDDODBC
 
@@ -14,7 +13,7 @@ LOCAL nConnection, nI, aI
    SET( _SET_DATEFORMAT, "yyyy-mm-dd" )
    nConnection := RDDINFO( RDDI_CONNECT, { "ODBC", "Server=localhost;Driver={MySQL ODBC 5.1 Driver};dsn=;User=test;database=test;" } )
    IF nConnection == 0
-      ? "Unable connect to server"
+      ? "Unable connect to server", RDDINFO( RDDI_ERRORNO ), RDDINFO( RDDI_ERROR )
       RETURN
    ENDIF
    ? nConnection

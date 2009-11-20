@@ -2,10 +2,10 @@
  * $Id$
  */
 
+#include "../../hbrddsql.ch"
+
 REQUEST SDDODBC, SQLMIX
 
-#define RDDI_CONNECT          1001
- 
 PROC main()
    RDDSETDEFAULT( "SQLMIX" )
    SET( _SET_DATEFORMAT, "yyyy-mm-dd" )
