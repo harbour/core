@@ -247,6 +247,23 @@ static void SlotsExecIntIntIntInt( QObject* object, char* event, int iValue1, in
    }
 }
 
+static void SlotsExecString( QObject* object, char* event, const QString & string )
+{
+   if( object )
+   {
+      Slots * s_s = qt_getEventSlots();
+      int i = object->property( event ).toInt();
+      if( i > 0 && i <= s_s->listBlock.size() && hb_vmRequestReenter() )
+      {
+         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
+         PHB_ITEM pString = hb_itemPutC( NULL, string.toAscii().data() );
+         hb_vmEvalBlockV( s_s->listBlock.at( i - 1 ), 2, pObject, pString );
+         hb_itemRelease( pObject );
+         hb_itemRelease( pString );
+      }
+   }
+}
+#if 0
 static void SlotsExecIntIntRect( QObject* object, char* event, int iValue1, int iValue2, const QRect & rect )
 {
    if( object )
@@ -269,23 +286,6 @@ static void SlotsExecIntIntRect( QObject* object, char* event, int iValue1, int 
    }
 }
 
-static void SlotsExecString( QObject* object, char* event, const QString & string )
-{
-   if( object )
-   {
-      Slots * s_s = qt_getEventSlots();
-      int i = object->property( event ).toInt();
-      if( i > 0 && i <= s_s->listBlock.size() && hb_vmRequestReenter() )
-      {
-         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
-         PHB_ITEM pString = hb_itemPutC( NULL, string.toAscii().data() );
-         hb_vmEvalBlockV( s_s->listBlock.at( i - 1 ), 2, pObject, pString );
-         hb_itemRelease( pObject );
-         hb_itemRelease( pString );
-      }
-   }
-}
-#if 0
 static void SlotsExecString2( QObject* object, char* event, const QString & s1, const QString & s2 )
 {
    if( object )
@@ -304,7 +304,7 @@ static void SlotsExecString2( QObject* object, char* event, const QString & s1, 
       }
    }
 }
-#endif
+
 static void SlotsExecString3( QObject* object, char* event, const QString & s1, const QString & s2, const QString & s3 )
 {
    if( object )
@@ -322,24 +322,6 @@ static void SlotsExecString3( QObject* object, char* event, const QString & s1, 
          hb_itemRelease( pS1 );
          hb_itemRelease( pS2 );
          hb_itemRelease( pS3 );
-      }
-   }
-}
-
-static void SlotsExecModel( QObject* object, char* event, const QModelIndex & index )
-{
-   if( object )
-   {
-      Slots * s_s = qt_getEventSlots();
-      int i = object->property( event ).toInt();
-      if( i > 0 && i <= s_s->listBlock.size() && hb_vmRequestReenter() )
-      {
-         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
-         PHB_ITEM pState = hb_itemPutPtr( NULL, ( QModelIndex * ) new QModelIndex( index ) );
-         hb_vmEvalBlockV( s_s->listBlock.at( i - 1 ), 2, pObject, pState );
-         hb_itemRelease( pObject );
-         delete ( ( QModelIndex * ) hb_itemGetPtr( pState ) );
-         hb_itemRelease( pState );
       }
    }
 }
@@ -376,6 +358,24 @@ static void SlotsExecUrl( QObject* object, char* event, const QUrl & url )
          hb_itemRelease( pObject );
          delete ( ( QUrl * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );
+      }
+   }
+}
+#endif
+static void SlotsExecModel( QObject* object, char* event, const QModelIndex & index )
+{
+   if( object )
+   {
+      Slots * s_s = qt_getEventSlots();
+      int i = object->property( event ).toInt();
+      if( i > 0 && i <= s_s->listBlock.size() && hb_vmRequestReenter() )
+      {
+         PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
+         PHB_ITEM pState = hb_itemPutPtr( NULL, ( QModelIndex * ) new QModelIndex( index ) );
+         hb_vmEvalBlockV( s_s->listBlock.at( i - 1 ), 2, pObject, pState );
+         hb_itemRelease( pObject );
+         delete ( ( QModelIndex * ) hb_itemGetPtr( pState ) );
+         hb_itemRelease( pState );
       }
    }
 }
@@ -433,7 +433,7 @@ static void SlotsExecStringList( QObject* object, char* event, const QStringList
       }
    }
 }
-
+#if 0
 static void SlotsExecNetworkRequest( QObject* object, char* event, const QNetworkRequest & request )
 {
    if( object )
@@ -451,7 +451,7 @@ static void SlotsExecNetworkRequest( QObject* object, char* event, const QNetwor
       }
    }
 }
-
+#endif
 static void SlotsExecPointer( QObject* object, char* event, void * p1 )
 {
    if( object )
@@ -468,7 +468,7 @@ static void SlotsExecPointer( QObject* object, char* event, void * p1 )
       }
    }
 }
-
+#if 0
 static void SlotsExecPointerString( QObject* object, char* event, void * p1, QString s1 )
 {
    if( object )
@@ -487,7 +487,7 @@ static void SlotsExecPointerString( QObject* object, char* event, void * p1, QSt
       }
    }
 }
-
+#endif
 static void SlotsExecPointerInt( QObject* object, char* event, void * p1, int iInt )
 {
    if( object )

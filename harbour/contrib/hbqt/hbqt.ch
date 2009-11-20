@@ -2140,6 +2140,12 @@
 #define QTextEdit_FixedPixelWidth                 2
 #define QTextEdit_FixedColumnWidth                3
 
+#define QDockWidget_DockWidgetClosable            0x01   // The dock widget can be closed. On some systems the dock widget always has a close button when it's floating (for example on MacOS 10.5).
+#define QDockWidget_DockWidgetMovable             0x02   // The dock widget can be moved between docks by the user.
+#define QDockWidget_DockWidgetFloatable           0x04   // The dock widget can be detached from the main window, and floated as an independent window.
+#define QDockWidget_DockWidgetVerticalTitleBar    0x08   // The dock widget displays a vertical title bar on its left side. This can be used to increase the amount of vertical space in a QMainWindow.
+#define QDockWidget_NoDockWidgetFeatures          0x00   // The dock widget cannot be closed, moved, or floated.
+
 /*----------------------------------------------------------------------*/
 
 #define _HBQT_CH

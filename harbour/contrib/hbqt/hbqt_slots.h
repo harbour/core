@@ -69,7 +69,7 @@
 #include <QLineEdit>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
-#include <QWebFrame>
+//#include <QWebFrame>
 #include <QNetworkRequest>
 #include <QTableView>
 #include <QTableWidget>
