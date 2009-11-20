@@ -2146,6 +2146,19 @@
 #define QDockWidget_DockWidgetVerticalTitleBar    0x08   // The dock widget displays a vertical title bar on its left side. This can be used to increase the amount of vertical space in a QMainWindow.
 #define QDockWidget_NoDockWidgetFeatures          0x00   // The dock widget cannot be closed, moved, or floated.
 
+#define QMainWindow_AnimatedDocks                 0x01   // Identical to the animated property.
+#define QMainWindow_AllowNestedDocks              0x02   // Identical to the dockNestingEnabled property.
+#define QMainWindow_AllowTabbedDocks              0x04   // The user can drop one dock widget "on top" of another. The two widgets are stacked and a tab bar appears for selecting which one is visible.
+#define QMainWindow_ForceTabbedDocks              0x08   // Each dock area contains a single stack of tabbed dock widgets. In other words, dock widgets cannot be placed next to each other in a dock area. If this option is set, AllowNestedDocks has no effect.
+#define QMainWindow_VerticalTabs                  0x10   // The two vertical dock areas on the sides of the main window show their tabs vertically. If this option is not set, all dock areas show their tabs at the bottom. Implies AllowTabbedDocks. See also setTabPosition().
+
+#define QTabWidget_North                          0      // The tabs are drawn above the pages.
+#define QTabWidget_South                          1      // The tabs are drawn below the pages.
+#define QTabWidget_West                           2      // The tabs are drawn to the left of the pages.
+#define QTabWidget_East                           3      // The tabs are drawn to the right of the pages.
+#define QTabWidget_Rounded                        0      // The tabs are drawn with a rounded look. This is the default shape.
+#define QTabWidget_Triangular                     1      // The tabs are drawn with a triangular look.
+
 /*----------------------------------------------------------------------*/
 
 #define _HBQT_CH

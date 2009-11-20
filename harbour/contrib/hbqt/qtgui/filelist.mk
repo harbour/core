@@ -212,7 +212,6 @@ CPP_SOURCES := \
    QWidgetAction.cpp \
    QWidgetItem.cpp \
    QWindowsStyle.cpp \
-   QWindowsXPStyle.cpp \
    QWizard.cpp \
    QWizardPage.cpp \
 
@@ -422,7 +421,6 @@ PRG_SOURCES := \
    TQWidgetAction.prg \
    TQWidgetItem.prg \
    TQWindowsStyle.prg \
-   TQWindowsXPStyle.prg \
    TQWizard.prg \
    TQWizardPage.prg \
 

@@ -279,7 +279,6 @@ QWidget.qth
 QWidgetAction.qth
 QWidgetItem.qth
 QWindowsStyle.qth
-QWindowsXPStyle.qth
 QWizard.qth
 QWizardPage.qth
 

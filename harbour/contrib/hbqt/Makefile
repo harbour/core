@@ -35,8 +35,7 @@ moc_slots.cpp : $(TOP)$(ROOT)contrib/hbqt/hbqt_slots.h
    DIRS += \
       qtcore \
       qtgui \
-      qtnetwork \
-      qtwebkit    
+      qtnetwork 
 
    include $(TOP)$(ROOT)config/dir.mk
 endif
