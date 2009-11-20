@@ -448,7 +448,7 @@ char * hb_parvdsbuff( char * szDate, int iParam, ... ) /* retrieve a date as a s
          return ( ( HB_PARDSBUFF ) pParDsBuff )( szDate, iParam );
    }
 
-   return "";
+   return szDate;
 }
 
 int hb_parvl( int iParam, ... ) /* retrieve a logical parameter as an int */
