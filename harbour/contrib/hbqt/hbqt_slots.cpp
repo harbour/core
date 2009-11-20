@@ -763,6 +763,7 @@ void Slots::itemSelectionChanged()
    QObject *object = qobject_cast<QObject *>( sender() );
    SlotsExec( object, ( char* ) "itemSelectionChanged()" );
 }
+#if 0
 /* QWebPage */
 void Slots::contentsChanged()
 {
@@ -890,6 +891,7 @@ void Slots::urlChanged( const QUrl & url )
    QObject *object = qobject_cast<QObject *>( sender() );
    SlotsExecUrl( object, ( char* ) "urlChanged(QUrl)", url );
 }
+#endif
 /* QDialog (s)*/
 void Slots::currentFontChanged( const QFont & font )
 {
@@ -1313,6 +1315,7 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       ret = object->connect( object,  SIGNAL( itemSelectionChanged() ),
                              s_s, SLOT( itemSelectionChanged() ), Qt::AutoConnection );
    }
+#if 0
    /* QWebView */
    if( signal == ( QString ) "iconChanged()" )
    {
@@ -1440,6 +1443,7 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       ret = object->connect( object,  SIGNAL( windowCloseRequested() ),
                              s_s, SLOT( windowCloseRequested() ), Qt::AutoConnection );
    }
+#endif
    /* QDialog (s) QFontDialog, QFileDialog */
    if( signal == ( QString ) "currentFontChanged(QFont)" )
    {
@@ -1798,6 +1802,7 @@ bool disconnect_signal( QObject * object, const char * signal )
       ret = object->disconnect(  SIGNAL( titleChanged( const QString & ) ) );
    if( signal == ( QString ) "urlChanged(QUrl)" )
       ret = object->disconnect(  SIGNAL( urlChanged( const QUrl & ) ) );
+#if 0
    if( signal == ( QString ) "contentsChanged()" )
       ret = object->disconnect(  SIGNAL( contentsChanged() ) );
    if( signal == ( QString ) "databaseQuotaExceeded(QWebFrame,QString)" )
@@ -1842,6 +1847,7 @@ bool disconnect_signal( QObject * object, const char * signal )
       ret = object->disconnect(  SIGNAL( unsupportedContent( QNetworkReply * ) ) );
    if( signal == ( QString ) "windowCloseRequested()" )
       ret = object->disconnect(  SIGNAL( windowCloseRequested() ) );
+#endif
    if( signal == ( QString ) "currentFontChanged(QFont)" )
       ret = object->disconnect(  SIGNAL( currentFontChanged( const QFont & ) ) );
    if( signal == ( QString ) "fontSelected(QFont)" )

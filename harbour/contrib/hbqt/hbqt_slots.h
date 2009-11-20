@@ -242,6 +242,7 @@ public slots:
    void itemPressed( QTreeWidgetItem * item, int column );
    void itemSelectionChanged();
    /* QWebPage */
+#if 0
    void contentsChanged();
    void databaseQuotaExceeded( QWebFrame * frame, QString databaseName );
    void downloadRequested( const QNetworkRequest & request );
@@ -268,6 +269,7 @@ public slots:
    void iconChanged();
    void titleChanged( const QString & title );
    void urlChanged( const QUrl & url );
+#endif
    /* QDialog - QFontDialog QFileDialog */
    void currentFontChanged( const QFont & font );
    void fontSelected( const QFont & font );

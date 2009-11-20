@@ -154,6 +154,7 @@ METHOD XbpHTMLViewer:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
+   #if 0  /* Discontinued till QWebKit is integrated separately - Pritpal */
    ::oWidget := QWebView():new( ::pParent )
 
    ::Connect( QT_PTROF( ::oWidget ), "iconChanged()"            , {|o,p| ::exeBlock( 1,p,o ) } )
@@ -174,6 +175,9 @@ METHOD XbpHTMLViewer:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
       ::show()
    ENDIF
    ::oParent:addChild( SELF )
+
+   #endif
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
