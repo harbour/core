@@ -236,7 +236,7 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
 {
    PHB_ITEM pError = NULL;
    HB_FHANDLE handle, * handle_ptr;
-   USHORT uiError;
+   HB_ERRCODE uiError;
    char * szFileName = NULL, ** set_value;
    const char * def_ext;
    BOOL bPipe = FALSE;
