@@ -99,7 +99,7 @@ METHOD New( oUrl, bTrace, oCredentials ) CLASS tIPClientSMTP
    ::super:New( oUrl, bTrace, oCredentials )
 
    ::nDefaultPort := iif( ::oUrl:cProto == "smtps", 465, 25 )
-   ::nConnTimeout := 5000
+   ::nConnTimeout := 50000
    ::nAccessMode := TIP_WO  // a write only
 
    RETURN Self
@@ -107,6 +107,10 @@ METHOD New( oUrl, bTrace, oCredentials ) CLASS tIPClientSMTP
 METHOD Open( cUrl, lTLS ) CLASS tIPClientSMTP
 
    IF ! ::super:Open( cUrl )
+      RETURN .F.
+   ENDIF
+
+   IF ! ::GetOk()
       RETURN .F.
    ENDIF
 
@@ -126,6 +130,10 @@ METHOD Open( cUrl, lTLS ) CLASS tIPClientSMTP
 METHOD OpenSecure( cUrl, lTLS ) CLASS tIPClientSMTP
 
    IF ! ::super:Open( cUrl )
+      RETURN .F.
+   ENDIF
+
+   IF ! ::GetOk()
       RETURN .F.
    ENDIF
 
