@@ -623,6 +623,12 @@ char * hb_verCompiler( void )
       pszName = "EMX/RSXNT/Win32 GNU C";
    #elif defined( __EMX__ )
       pszName = "EMX GNU C";
+   #elif defined( __clang__ )
+      #if defined( __llvm__ )
+         pszName = "Clang/LLVM C";
+      #else
+         pszName = "Clang/GNU C";
+      #endif
    #else
       pszName = "GNU C";
    #endif

@@ -23,7 +23,7 @@ endif
 #       Now solved with '$(subst x,x, )' expression.
 CC_OUT := -o$(subst x,x, )
 
-CPPFLAGS := -I. -I$(HB_INC_COMPILE) -DHB_CC_CLANG
+CPPFLAGS := -I. -I$(HB_INC_COMPILE)
 
 # -fno-common enables building .dylib files
 CPPFLAGS += -fno-common
