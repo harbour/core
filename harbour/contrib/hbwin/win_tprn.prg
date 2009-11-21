@@ -205,6 +205,8 @@ ENDCLASS
 
 METHOD New( cPrinter ) CLASS WIN_PRN
    ::PrinterName := iif( Empty( cPrinter ), GetDefaultPrinter(), cPrinter )
+   /* Initialized with the current properties of the printer [jarabal] */
+   ::GetDocumentProperties()
    RETURN Self
 
 METHOD Create() CLASS WIN_PRN

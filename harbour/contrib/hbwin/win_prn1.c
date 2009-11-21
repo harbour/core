@@ -470,6 +470,47 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
    hb_retl( Result );
 }
 
+HB_FUNC( WIN_GETDOCUMENTPROPERTIES )
+{
+   BOOL Result = FALSE;
+   HANDLE hPrinter;
+   const char * pszPrinterName = hb_parc( 1 );
+   LPTSTR lpPrinterName = pszPrinterName ? HB_TCHAR_CONVTO( pszPrinterName ) : NULL;
+
+   if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) )
+   {
+      PDEVMODE pDevMode = NULL;
+      LONG lSize = DocumentProperties( 0, hPrinter, lpPrinterName, pDevMode, pDevMode, 0 );
+
+      if( lSize > 0 )
+      {
+         pDevMode = ( PDEVMODE ) hb_xgrab( lSize );
+
+         if( pDevMode )
+         {
+            DocumentProperties( 0, hPrinter, lpPrinterName, pDevMode, pDevMode, DM_OUT_BUFFER );
+
+            hb_stornl( pDevMode->dmPaperSize, 2 );
+            hb_storl( pDevMode->dmOrientation == 2, 3 );
+            hb_stornl( pDevMode->dmCopies, 4 );
+            hb_stornl( pDevMode->dmDefaultSource, 5 );
+            hb_stornl( pDevMode->dmDuplex, 6 );
+            hb_stornl( pDevMode->dmPrintQuality, 7 );
+            Result = TRUE;
+
+            hb_xfree( pDevMode );
+         }
+      }
+
+      ClosePrinter( hPrinter );
+   }
+
+   if( lpPrinterName )
+      HB_TCHAR_FREE( lpPrinterName );
+
+   hb_retl( Result );
+}
+
 /* Functions for Loading & Printing bitmaps */
 
 HB_FUNC( WIN_LOADBITMAPFILE )
@@ -582,15 +623,6 @@ HB_FUNC( WIN_ENUMFONTS )
    }
 }
 
-HB_FUNC( WIN_GETEXEFILENAME )
-{
-   unsigned char pBuf[ 1024 ];
-
-   GetModuleFileName( NULL, ( LPTSTR ) pBuf, 1023 );
-
-   hb_retc( ( char * ) pBuf );
-}
-
 HB_FUNC( WIN_SETCOLOR )
 {
    HDC hDC = win_HDC_par( 1 );
@@ -627,17 +659,13 @@ HB_FUNC( WIN_SETPEN )
 HB_FUNC( WIN_FILLRECT )
 {
    HDC hDC = win_HDC_par( 1 );
-   int x1 = hb_parni( 2 );
-   int y1 = hb_parni( 3 );
-   int x2 = hb_parni( 4 );
-   int y2 = hb_parni( 5 );
    HBRUSH hBrush = CreateSolidBrush( ( COLORREF ) hb_parnl( 6 ) );
    RECT rct;
 
-   rct.top = y1;
-   rct.left = x1;
-   rct.bottom = y2;
-   rct.right = x2;
+   rct.left = hb_parni( 2 );
+   rct.top = hb_parni( 3 );
+   rct.right = hb_parni( 4 );
+   rct.bottom = hb_parni( 5 );
 
    FillRect( hDC, &rct, hBrush );
 
@@ -675,24 +703,24 @@ HB_FUNC( WIN_RECTANGLE )
 
 HB_FUNC( WIN_ARC )
 {
-   HDC hDC = win_HDC_par( 1 );
-   int x1 = hb_parni( 2 );
-   int y1 = hb_parni( 3 );
-   int x2 = hb_parni( 4 );
-   int y2 = hb_parni( 5 );
-
-   hb_retl( Arc( hDC, x1, y1, x2, y2, 0, 0, 0, 0 ) );
+   hb_retl( Arc( win_HDC_par( 1 ) /* hDC */,
+                 hb_parni( 2 ) /* x1 */,
+                 hb_parni( 3 ) /* y1 */,
+                 hb_parni( 4 ) /* x2 */,
+                 hb_parni( 5 ) /* y2 */,
+                 0,
+                 0,
+                 0,
+                 0 ) );
 }
 
 HB_FUNC( WIN_ELLIPSE )
 {
-   HDC hDC = win_HDC_par( 1 );
-   int x1 = hb_parni( 2 );
-   int y1 = hb_parni( 3 );
-   int x2 = hb_parni( 4 );
-   int y2 = hb_parni( 5 );
-
-   hb_retl( Ellipse( hDC, x1, y1, x2, y2 ) );
+   hb_retl( Ellipse( win_HDC_par( 1 ) /* hDC */,
+                     hb_parni( 2 ) /* x1 */,
+                     hb_parni( 3 ) /* y1 */,
+                     hb_parni( 4 ) /* x2 */,
+                     hb_parni( 5 ) /* y2 */ ) );
 }
 
 HB_FUNC( WIN_SETBKMODE )

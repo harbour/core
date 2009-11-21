@@ -342,6 +342,9 @@ METHOD OleValueNotEqual( xArg ) CLASS TOLEAUTO
 FUNCTION CreateOLEObject( ... )
    RETURN __OleCreateObject( ... )
 
+FUNCTION win_GetExeFileName()
+   RETURN hb_ArgV( 0 )
+
 CREATE CLASS Win32Prn FROM WIN_PRN
 ENDCLASS
 
