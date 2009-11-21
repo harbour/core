@@ -3376,7 +3376,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, ! Empty( hbmk[ _HBMK_aINCTRYPATH ] ), .T., nCmd_Esc, @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, ! Empty( hbmk[ _HBMK_aINCTRYPATH ] ), .T., cBin_CompC, nCmd_Esc, @headstate ) )
                AAdd( l_aC_TODO, tmp )
             ELSE
                AAdd( l_aC_DONE, tmp )
@@ -3390,7 +3390,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       /* Header dir detection if needed and if FindNewerHeaders() wasn't called yet. */
       IF ! Empty( hbmk[ _HBMK_aINCTRYPATH ] ) .AND. ! Empty( l_aC_TODO ) .AND. headstate == NIL
          FOR EACH tmp IN l_aC_TODO
-            FindNewerHeaders( hbmk, tmp, NIL, NIL, .T., .T., nCmd_Esc, @headstate )
+            FindNewerHeaders( hbmk, tmp, NIL, NIL, .T., .T., cBin_CompC, nCmd_Esc, @headstate )
          NEXT
       ENDIF
    ENDIF
@@ -3416,7 +3416,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp3, cWorkDir, ".c" ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp3, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, .F., .F., NIL, @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, .F., .F., cBin_CompC, NIL, @headstate ) )
                AAdd( l_aPRG_TODO, tmp )
             ENDIF
          NEXT
@@ -3774,7 +3774,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cResExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, .F., .T., nCmd_Esc, @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, .F., .T., cBin_CompC, nCmd_Esc, @headstate ) )
                AAdd( l_aRESSRC_TODO, tmp )
             ENDIF
          NEXT
@@ -4688,7 +4688,7 @@ STATIC FUNCTION SetupForGT( cGT_New, /* @ */ cGT, /* @ */ lGUI )
 #define _HEADSTATE_lAnyNewer    2
 #define _HEADSTATE_MAX_         2
 
-STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lIncTry, lCMode, nEsc, /* @ */ headstate, nNestingLevel )
+STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lIncTry, lCMode, cBin_CompC, nEsc, /* @ */ headstate, nNestingLevel )
    LOCAL cFile
    LOCAL fhnd
    LOCAL nPos
@@ -4826,14 +4826,14 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
          ENDIF
       NEXT
 
-   ELSEIF lCMode .AND. hbmk[ _HBMK_nHEAD ] == _HEAD_NATIVE .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin|djgpp|gccomf"
+   ELSEIF lCMode .AND. hbmk[ _HBMK_nHEAD ] == _HEAD_NATIVE .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin|djgpp|gccomf|clang"
 
       IF hbmk[ _HBMK_lDEBUGINC ]
          hbmk_OutStd( hb_StrFormat( "debuginc: Calling C compiler to detect dependencies of %1$s", cFileName ) )
       ENDIF
 
       tmp := ""
-      hb_processRun( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + " -MM" +;
+      hb_processRun( cBin_CompC + " -MM" +;
                      " " + iif( hbmk[ _HBMK_lBLDFLGC ], hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
                            GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTC ] ) +;
                      " " + FN_Escape( hbmk[ _HBMK_cHB_INC_INSTALL ], nEsc ) +;
@@ -4895,7 +4895,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
          ENDIF
 
          IF cHeader != NIL .AND. ;
-            FindNewerHeaders( hbmk, cHeader, iif( lCMode, FN_DirGet( cFileName ), cParentDir ), tTimeParent, lIncTry, lCMode, nEsc, @headstate, nNestingLevel + 1 )
+            FindNewerHeaders( hbmk, cHeader, iif( lCMode, FN_DirGet( cFileName ), cParentDir ), tTimeParent, lIncTry, lCMode, cBin_CompC, nEsc, @headstate, nNestingLevel + 1 )
             headstate[ _HEADSTATE_lAnyNewer ] := .T.
             /* Let it continue if we want to scan for header locations */
             IF ! lIncTry
@@ -5280,7 +5280,7 @@ STATIC FUNCTION ListCookLib( hbmk, aLIB, aLIBA, array, cPrefix, cExtNew )
    LOCAL cLibName
    LOCAL cLibNameCooked
 
-   IF hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|djgpp|cygwin|gccomf"
+   IF hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|djgpp|cygwin|gccomf|clang"
       FOR EACH cLibName IN array
          hb_FNameSplit( cLibName, @cDir )
          IF Empty( cDir )
@@ -7243,12 +7243,12 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword )
    ENDIF
 
    IF ( cKeyword == "unix"     .AND. ( hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|beos|linux" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" ) ) .OR. ;
-      ( cKeyword == "allwin"   .AND. hbmk[ _HBMK_cPLAT ] $ "win|wce"                                             ) .OR. ;
-      ( cKeyword == "allgcc"   .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin|djgpp|gccomf"      ) .OR. ;
-      ( cKeyword == "allmingw" .AND. hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"                              ) .OR. ;
-      ( cKeyword == "allmsvc"  .AND. hbmk[ _HBMK_cCOMP ] $ "msvc|msvc64|msvcia64|msvcarm"                        ) .OR. ;
-      ( cKeyword == "allpocc"  .AND. hbmk[ _HBMK_cCOMP ] $ "pocc|pocc64|poccarm"                                 ) .OR. ;
-      ( cKeyword == "allicc"   .AND. hbmk[ _HBMK_cCOMP ] $ "icc|iccia64"                                         )
+      ( cKeyword == "allwin"   .AND. hbmk[ _HBMK_cPLAT ] $ "win|wce"                                              ) .OR. ;
+      ( cKeyword == "allgcc"   .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin|djgpp|gccomf|clang" ) .OR. ;
+      ( cKeyword == "allmingw" .AND. hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"                               ) .OR. ;
+      ( cKeyword == "allmsvc"  .AND. hbmk[ _HBMK_cCOMP ] $ "msvc|msvc64|msvcia64|msvcarm"                         ) .OR. ;
+      ( cKeyword == "allpocc"  .AND. hbmk[ _HBMK_cCOMP ] $ "pocc|pocc64|poccarm"                                  ) .OR. ;
+      ( cKeyword == "allicc"   .AND. hbmk[ _HBMK_cCOMP ] $ "icc|iccia64"                                          )
       RETURN .T.
    ENDIF
 
