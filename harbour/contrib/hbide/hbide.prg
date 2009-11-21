@@ -129,8 +129,16 @@ CLASS HbIde
    DATA   nPrevTab                                INIT 0
 
    /* HBQT Objects */
+   DATA   qLeftArea
+   DATA   qMidArea
+   DATA   qRightArea
+   DATA   qLeftLayout
+   DATA   qMidLayout
+   DATA   qRightLayout
    DATA   qLayout
    DATA   qSplitter
+   DATA   qSplitterL
+   DATA   qSplitterR
 
    /* XBP Objects */
    DATA   oDlg
@@ -140,7 +148,23 @@ CLASS HbIde
    DATA   oTBar
    DATA   oFont
    DATA   oProjTree
+   DATA   oDockR
+   DATA   oDockB
+   DATA   oDockB1
+   DATA   oDockB2
+   DATA   oFuncList
+   DATA   oOutputResult
+   DATA   oCompileResult
+   DATA   oLinkResult
+
    DATA   oProjRoot
+   DATA   oExes
+   DATA   oLibs
+   DATA   oDlls
+   DATA   aProjData                               INIT {}
+
+   DATA   lDockRVisible                           INIT .t.
+   DATA   lDockBVisible                           INIT .t.
 
    METHOD new( cProjectOrSource )
    METHOD create( cProjectOrSource )
@@ -150,9 +174,15 @@ CLASS HbIde
    METHOD buildMenu()
    METHOD buildStatusBar()
    METHOD buildToolbar()
-   METHOD manageToolBar()
-   METHOD manageMenu()
+   METHOD executeAction()
    METHOD buildTabPage()
+   METHOD buildProjectTree()
+
+   METHOD buildFuncList()
+   METHOD buildBottomArea()
+   METHOD buildCompileResults()
+   METHOD buildLinkResults()
+   METHOD buildOutputResults()
 
    METHOD editSource()
    METHOD selectSource()
@@ -160,14 +190,19 @@ CLASS HbIde
    METHOD closeAllSources()
    METHOD saveSource()
 
+   METHOD updateFuncList()
+   METHOD fetchNewProject()
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:destroy()
+
    ::oSBar := NIL
    ::oMenu := NIL
    ::oTBar := NIL
+
    RETURN self
 
 /*----------------------------------------------------------------------*/
@@ -181,79 +216,84 @@ METHOD HbIde:new( cProjectOrSource )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:create( cProjectOrSource )
-   //LOCAL aSize
+   // LOCAL qWidget
 
    IF hb_isChar( cProjectOrSource )
       ::cProjFile := cProjectOrSource
    ENDIF
 
-   /* Create Application Window */
    ::BuildDialog()
-
-   /* In this block just ceck if any of the documents are edited and are not saved */
-   ::oDlg:close := {|| MsgBox( "You can also close me by pressing [ESC]" ), .T. }
-
+   ::oDa := ::oDlg:drawingArea
    SetAppWindow( ::oDlg )
    ::oDlg:Show()
 
-   ::oDa := ::oDlg:drawingArea
-
-   ::oDa:oTabWidget := XbpTabWidget():new():create( ::oDa, , ::oDa:aPos, ::oDa:aSize, , .t. )
+   ::oDa:oTabWidget := XbpTabWidget():new():create( ::oDa, , {0,0}, {10,10}, , .t. )
    ::oDa:oTabWidget:oWidget:setTabsClosable( .t. )
+
+   ::buildProjectTree()
+   ::buildFuncList()
+   ::buildBottomArea()
+
+#if 0
+   ::qLeftLayout := QGridLayout():new()
+   ::qLeftLayout:setContentsMargins( 0,0,0,0 )
+   ::qLeftLayout:setHorizontalSpacing( 0 )
+   ::qLeftLayout:setVerticalSpacing( 0 )
+
+   ::qMidLayout  := QGridLayout():new()
+   ::qMidLayout:setContentsMargins( 0,0,0,0 )
+   ::qMidLayout:setHorizontalSpacing( 0 )
+   ::qMidLayout:setVerticalSpacing( 0 )
+
+   ::qLeftArea   := QWidget():new()
+   ::qLeftArea:setLayout( QT_PTROF( ::qLeftLayout ) )
+//   qWidget:oWidget:setLayout( QT_PTROF( ::qLeftLayout ) )
+   ::qMidArea    := QWidget():new()
+   ::qMidArea:setLayout( QT_PTROF( ::qMidLayout ) )
+
+   ::qLeftLayout:addWidget_1( QT_PTROFXBP( ::oProjTree ), 0, 0, 1, 1 )
+   ::qLeftLayout:addWidget_1( QT_PTROFXBP( qWidget ), 1, 0, 1, 1 )
+
+   ::qMidLayout:addWidget_1( QT_PTROFXBP( ::oDa:oTabWidget ), 0, 0, 1, 1 )
 
    ::qSplitter := QSplitter():new( QT_PTROF( ::oDa:oWidget ) )
 
-   ::oProjTree := XbpTreeView():new()
-   ::oProjTree:hasLines   := .T.
-   ::oProjTree:hasButtons := .T.
-   ::oProjTree:create( ::oDa, , { 0,0 }, { 10,10 }, , .t. )
-   ::oProjRoot := ::oProjTree:rootItem:addItem( "Untitled" )
-   IF !empty( ::cProjFile )
-      ::oProjRoot:addItem( ::cProjFile )
-   ENDIF
-   ::oProjTree:setColorBG( GraMakeRGBColor( { 223,240,255 } ) )
-   ::oProjTree:oWidget:setMaximumWidth( 200 )
+   ::qSplitter:addWidget( QT_PTROF( ::qLeftArea   ) )
+   ::qSplitter:addWidget( QT_PTROF( ::qMidArea    ) )
 
+   ::qSplitter:show()
+
+#else
    ::qLayout := QGridLayout():new()
    ::qLayout:setContentsMargins( 0,0,0,0 )
    ::qLayout:setHorizontalSpacing( 0 )
    ::qLayout:setVerticalSpacing( 0 )
-   #if 0
-   ::qLayout:addWidget_1( QT_PTROFXBP( ::oProjTree      ), 0, 0, 1, 1 )
-   ::qLayout:addWidget_1( QT_PTROFXBP( ::oDa:oTabWidget ), 0, 1, 1, 1 )
-   #else
-   ::qLayout:addWidget_1( QT_PTROF( ::qSplitter ), 0, 0, 1, 1 )
-   ::qSplitter:addWidget( QT_PTROFXBP( ::oProjTree      ) )
-   ::qSplitter:addWidget( QT_PTROFXBP( ::oDa:oTabWidget ) )
-   #endif
+
    ::oDa:oWidget:setLayout( QT_PTROF( ::qLayout ) )
 
-   #if 0
-   /* Obtain desktop dimensions */
-   aSize := AppDesktop():currentSize()
-   /* Place on the center of desktop */
-   ::oDlg:setPos( { ( aSize[ 1 ] - ::oDlg:currentSize()[ 1 ] ) / 2, ;
-                    ( aSize[ 2 ] - ::oDlg:currentSize()[ 2 ] ) / 2 } )
-   #else
+   ::qSplitter := QSplitter():new( QT_PTROF( ::oDa:oWidget ) )
+
+   ::qLayout:addWidget_1( QT_PTROF( ::qSplitter ), 0, 0, 1, 1 )
+
+   ::qSplitter:addWidget( QT_PTROFXBP( ::oProjTree      ) )
+   ::qSplitter:addWidget( QT_PTROFXBP( ::oDa:oTabWidget ) )
+
+   ::qSplitter:show()
+#endif
+
    ::oDlg:setPos( { 100, 60 } )
-   #endif
 
    /* Editor's Font */
    ::oFont := XbpFont():new()
    ::oFont:fixed := .t.
    ::oFont:create( "10.Courier" )
 
-   /* Install menu system */
    ::buildMenu()
-
-   /* Install Statusbar */
    ::buildStatusBar()
-
-   /* Install Toolbar */
    ::buildToolBar()
 
-   /* This is only for demonstration. Final version will follow another mechanism */
    ::editSource( ::cProjFile )
+   ::updateFuncList()
 
    ::oDlg:Show()
 
@@ -438,32 +478,112 @@ METHOD HbIde:selectSource( cMode )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:manageMenu( nMode )
+METHOD HbIde:buildProjectTree()
+   LOCAL aExe, aExeD, i, j, aPrjs
 
-   DO CASE
-   CASE nMode == 1
-   CASE nMode == 2
-   ENDCASE
+   ::oProjTree := XbpTreeView():new()
+   ::oProjTree:hasLines   := .T.
+   ::oProjTree:hasButtons := .T.
+   ::oProjTree:create( ::oDa, , { 0,0 }, { 10,10 }, , .t. )
+   ::oProjTree:setColorBG( GraMakeRGBColor( { 223,240,255 } ) )
+
+   ::oProjTree:oWidget:setMaximumWidth( 200 )
+
+   ::oProjRoot := ::oProjTree:rootItem:addItem( "Projects" )
+
+   aadd( ::aProjData, { ::oProjRoot:addItem( "Executables" ), "Executables", NIL, NIL } )
+   aadd( ::aProjData, { ::oProjRoot:addItem( "Libs" )       , "Libs"       , NIL, NIL } )
+   aadd( ::aProjData, { ::oProjRoot:addItem( "Dlls" )       , "Dlls"       , NIL, NIL } )
+
+   ::oProjRoot:expand( .t. )
+
+   /* Just a prototype : to be filled with project data */
+
+   /* Executables */
+   aExeD := {}
+   aExe  := ::aProjData[ 1 ]
+   aPrjs := { "Vouch", "CacheMGR" }
+   FOR i := 1 TO len( aPrjs )
+      aadd( aExeD, { aExe[ 1 ]:addItem( aPrjs[ i ] ), aPrjs[ i ], NIL, NIL } )
+   NEXT
+   ::aProjData[ 1,3 ] := aExeD
+   ::aProjData[ 1,1 ]:expand( .t. )
+
+   /* Libs */
+   aExeD := {}
+   aExe  := ::aProjData[ 2 ]
+   aPrjs := { "V32Lib", "Vouch32", "CacheRDD" }
+   FOR i := 1 TO len( aPrjs )
+      aadd( aExeD, { aExe[ 1 ]:addItem( aPrjs[ i ] ), aPrjs[ i ], NIL, NIL } )
+   NEXT
+   ::aProjData[ 2,3 ] := aExeD
+   ::aProjData[ 2,1 ]:expand( .t. )
+
+   /* Libs */
+   aExeD := {}
+   aExe  := ::aProjData[ 3 ]
+   aPrjs := { "VouchActiveX" }
+   FOR i := 1 TO len( aPrjs )
+      aadd( aExeD, { aExe[ 1 ]:addItem( aPrjs[ i ] ), aPrjs[ i ], NIL, NIL } )
+   NEXT
+   ::aProjData[ 3,3 ] := aExeD
+   ::aProjData[ 3,1 ]:expand( .t. )
+#if 1
+   /* Next classification by type of source */
+   aExe  := ::aProjData[ 1,3 ]
+   aPrjs := { "PRG Sources", "C Sources", "CPP Sources", "CH Headers", "H Headers" }
+   FOR j := 1 TO len( aExe )
+      aExeD := {}
+      FOR i := 1 TO len( aPrjs )
+         aadd( aExeD, { aExe[ j,1 ]:addItem( aPrjs[ i ] ), aPrjs[ i ], NIL, NIL } )
+      NEXT
+      aExe[ j,3 ] := aExeD
+      aExe[ j,1 ]:expand( .t. )
+   NEXT
+#endif
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:manageToolbar( oButton )
+METHOD HbIde:executeAction( cKey )
    LOCAL cFile
 
    DO CASE
-   CASE oButton:key == "3"
+   CASE cKey == "3"
       IF !empty( cFile := ::selectSource( "open" ) )
          ::oProjRoot:addItem( cFile )
          ::editSource( cFile )
       ENDIF
 
-   CASE oButton:key == "4"
+   CASE cKey == "4"
       ::saveSource( ::nCurTab )
 
-   CASE oButton:key == "5"
+   CASE cKey == "5"
       ::closeSource( ::nCurTab, .t. )
+
+   CASE cKey == "11"
+      IF ::lDockBVisible
+         ::oDockB:hide()
+         ::oDockB1:hide()
+         ::oDockB2:hide()
+      ELSE
+         ::oDockB:show()
+         ::oDockB1:show()
+         ::oDockB2:show()
+      ENDIF
+      ::lDockBVisible := !( ::lDockBVisible )
+
+   CASE cKey == "12"
+      IF ::lDockRVisible
+         ::oDockR:hide()
+      ELSE
+         ::oDockR:show()
+      ENDIF
+      ::lDockRVisible := !( ::lDockRVisible )
+
+   CASE cKey == "NewProject"
+      ::fetchNewProject()
 
    ENDCASE
 
@@ -495,8 +615,8 @@ METHOD HbIde:buildToolBar()
    ::oTBar:addItem( "Build and Launch Project"   , s_resPath + "buildlaunch.png"    , , , , , "8"  )
    ::oTBar:addItem( "Rebuild Project"            , s_resPath + "rebuild.png"        , , , , , "9"  )
    ::oTBar:addItem( "Rebuild and Launch Project" , s_resPath + "rebuildlaunch.png"  , , , , , "10" )
-   ::oTBar:addItem( "Show/Hide Build Error Info" , s_resPath + "builderror.png"     , , , , , "12" )
-   ::oTBar:addItem( "Module Function List"       , s_resPath + "modulelist.png"     , , , , , "11" )
+   ::oTBar:addItem( "Show/Hide Build Error Info" , s_resPath + "builderror.png"     , , , , , "11" )
+   ::oTBar:addItem( "Module Function List"       , s_resPath + "modulelist.png"     , , , , , "12" )
    //
    ::oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
    ::oTBar:addItem( "Undo"                       , s_resPath + "undo.png"           , , , , , "13" )
@@ -522,7 +642,7 @@ METHOD HbIde:buildToolBar()
    ::oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
 
    ::oTBar:transparentColor := GraMakeRGBColor( { 0,255,255 } ) // GRA_CLR_INVALID
-   ::oTBar:buttonClick := {|oButton| ::manageToolbar( oButton ) }
+   ::oTBar:buttonClick := {|oButton| ::executeAction( oButton:key ) }
 
    RETURN nil
 
@@ -535,10 +655,26 @@ METHOD HbIde:buildMenu()
 
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~File"
-   oSubMenu:addItem( { "Open", {|| ::manageMenu( 1 ) } } )
-   oSubMenu:addItem( { "Save", {|| ::manageMenu( 2 ) } } )
-   oSubMenu:addItem( { NIL, NIL, XBPMENUBAR_MIS_SEPARATOR, NIL } )
-   oSubMenu:addItem( { "Exit", {|| ::manageMenu( 3 ) } } )
+   oSubMenu:addItem( { "Open"                         , {|| ::executeAction( "Open"               ) } } )
+   oSubMenu:addItem( { "Save"                         , {|| ::executeAction( "Save"               ) } } )
+   MenuAddSep( oSubMenu )
+   oSubMenu:addItem( { "Exit"                         , {|| ::executeAction( "Exit"               ) } } )
+   oMenuBar:addItem( { oSubMenu, NIL } )
+
+   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu:title := "~Project"
+   oSubMenu:addItem( { "New"                          , {|| ::executeAction( "NewProject"         ) } } )
+   MenuAddSep( oSubMenu )
+   oSubMenu:addItem( { "Save and Build"               , {|| ::executeAction( "SaveBuild"          ) } } )
+   oSubMenu:addItem( { "Save, Build and Launch"       , {|| ::executeAction( "SaveBuildLaunch"    ) } } )
+   oSubMenu:addItem( { "Save and Re-build"            , {|| ::executeAction( "SaveRebuild"        ) } } )
+   oSubMenu:addItem( { "Save, Re-build and Launch"    , {|| ::executeAction( "SaveRebuildLaunch"  ) } } )
+   MenuAddSep( oSubMenu )
+   oSubMenu:addItem( { "Save and Compile Current File", {|| ::executeAction( "SaveCompileCurrent" ) } } )
+   oSubMenu:addItem( { "Save and Create PPO Output"   , {|| ::executeAction( "SavePPO"            ) } } )
+   MenuAddSep( oSubMenu )
+   oSubMenu:addItem( { "Project Properties"           , {|| ::executeAction( "Properties"         ) } } )
+
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    Return Self
@@ -561,14 +697,187 @@ METHOD HbIde:buildStatusBar()
 
 METHOD HbIde:buildDialog()
 
-   ::oDlg := XbpDialog():new( , , {10,10}, {900,500}, , .f. )
+   ::oDlg := XbpDialog():new( , , {10,10}, {1100,700}, , .f. )
 
    ::oDlg:icon := s_resPath + "vr.png" //"hbide.ico"
    ::oDlg:title := "Harbour-Qt IDE"
 
    ::oDlg:create()
 
+   ::oDlg:close := {|| MsgBox( "You can also close me by pressing [ESC]" ), .T. }
+   ::oDlg:oWidget:setDockOptions( QMainWindow_AllowTabbedDocks + QMainWindow_ForceTabbedDocks )
+   ::oDlg:oWidget:setTabPosition( Qt_BottomDockWidgetArea, QTabWidget_South )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
+METHOD HbIde:updateFuncList()
+
+   ::oFuncList:addItem( "Procedure Main"   )
+   ::oFuncList:addItem( "Class HBIDE"      )
+   ::oFuncList:addItem( "Method HbIde:new" )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:buildFuncList()
+
+   ::oDockR := XbpWindow():new( ::oDa )
+   ::oDockR:oWidget := QDockWidget():new( QT_PTROFXBP( ::oDlg ) )
+   ::oDlg:addChild( ::oDockR )
+   ::oDockR:oWidget:setFeatures( QDockWidget_DockWidgetClosable + QDockWidget_DockWidgetMovable )
+   ::oDockR:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
+   ::oDockR:oWidget:setWindowTitle( "Module Function List" )
+   ::oDockR:oWidget:setMinimumWidth( 100 )
+   ::oDockR:oWidget:setMaximumWidth( 150 )
+
+   ::oFuncList := XbpListBox():new( ::oDockR ):create( , , { 0,0 }, { 100,400 }, , .t. )
+   ::oFuncList:setStyleSheet( GetStyleSheet( "QListView" ) )
+
+   ::oDockR:oWidget:setWidget( QT_PTROFXBP( ::oFuncList ) )
+
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, QT_PTROFXBP( ::oDockR ), Qt_Horizontal )
+   //::oDockR:hide()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:buildBottomArea()
+
+   ::buildCompileResults()
+   ::buildLinkResults()
+   ::buildOutputResults()
+
+   ::oDlg:oWidget:tabifyDockWidget( QT_PTROFXBP( ::oDockB ), QT_PTROFXBP( ::oDockB1 ) )
+   ::oDlg:oWidget:tabifyDockWidget( QT_PTROFXBP( ::oDockB1 ), QT_PTROFXBP( ::oDockB2 ) )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:buildCompileResults()
+
+   ::oDockB := XbpWindow():new( ::oDa )
+   ::oDockB:oWidget := QDockWidget():new( QT_PTROFXBP( ::oDlg ) )
+   ::oDlg:addChild( ::oDockB )
+   ::oDockB:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
+   ::oDockB:oWidget:setAllowedAreas( Qt_BottomDockWidgetArea )
+   ::oDockB:oWidget:setWindowTitle( "Compile Results" )
+   ::oDockB:oWidget:setMinimumHeight(  75 )
+   ::oDockB:oWidget:setMaximumHeight( 100 )
+
+   ::oCompileResult := XbpMLE():new( ::oDockB ):create( , , { 0,0 }, { 100,400 }, , .t. )
+   ::oDockB:oWidget:setWidget( QT_PTROFXBP( ::oCompileResult ) )
+
+   ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, QT_PTROFXBP( ::oDockB ), Qt_Vertical )
+   //::oDockB:hide()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:buildLinkResults()
+
+   ::oDockB1 := XbpWindow():new( ::oDa )
+   ::oDockB1:oWidget := QDockWidget():new( QT_PTROFXBP( ::oDlg ) )
+   ::oDlg:addChild( ::oDockB1 )
+   ::oDockB1:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
+   ::oDockB1:oWidget:setAllowedAreas( Qt_BottomDockWidgetArea )
+   ::oDockB1:oWidget:setWindowTitle( "Link Results" )
+   ::oDockB1:oWidget:setMinimumHeight(  75 )
+   ::oDockB1:oWidget:setMaximumHeight( 100 )
+
+   ::oLinkResult := XbpMLE():new( ::oDockB1 ):create( , , { 0,0 }, { 100, 400 }, , .t. )
+   ::oDockB1:oWidget:setWidget( QT_PTROFXBP( ::oLinkResult ) )
+
+   ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, QT_PTROFXBP( ::oDockB1 ), Qt_Vertical )
+   //::oDockB1:hide()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:buildOutputResults()
+
+   ::oDockB2 := XbpWindow():new( ::oDa )
+   ::oDockB2:oWidget := QDockWidget():new( QT_PTROFXBP( ::oDlg ) )
+   ::oDlg:addChild( ::oDockB2 )
+   ::oDockB2:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
+   ::oDockB2:oWidget:setAllowedAreas( Qt_BottomDockWidgetArea )
+   ::oDockB2:oWidget:setWindowTitle( "Output Console" )
+   ::oDockB2:oWidget:setMinimumHeight(  75 )
+   ::oDockB2:oWidget:setMaximumHeight( 100 )
+
+   ::oOutputResult := XbpMLE():new( ::oDockB2 ):create( , , { 0,0 }, { 100, 400 }, , .t. )
+   ::oDockB2:oWidget:setWidget( QT_PTROFXBP( ::oOutputResult ) )
+
+   ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, QT_PTROFXBP( ::oDockB2 ), Qt_Vertical )
+   //::oDockB2:hide()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:fetchNewProject()
+
+   RETURN self
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION GetStyleSheet( cWidget )
+   LOCAL s, txt_:={}
+
+   DO CASE
+   CASE cWidget == "QListView"
+      aadd( txt_, '                                                                                             ' )
+      aadd( txt_, ' QListView {                                                                                 ' )
+      aadd( txt_, '     alternate-background-color: yellow;                                                     ' )
+      aadd( txt_, ' }                                                                                           ' )
+      aadd( txt_, '                                                                                             ' )
+      aadd( txt_, ' QListView {                                                                                 ' )
+      aadd( txt_, '     show-decoration-selected: 1; /* make the selection span the entire width of the view */ ' )
+      aadd( txt_, ' }                                                                                           ' )
+      aadd( txt_, '                                                                                             ' )
+      aadd( txt_, ' QListView::item:alternate {                                                                 ' )
+      aadd( txt_, '     background: #EEEEEE;                                                                    ' )
+      aadd( txt_, ' }                                                                                           ' )
+      aadd( txt_, '                                                                                             ' )
+      aadd( txt_, ' QListView::item:selected {                                                                  ' )
+      aadd( txt_, '     border: 1px solid #6a6ea9;                                                              ' )
+      aadd( txt_, ' }                                                                                           ' )
+      aadd( txt_, '                                                                                             ' )
+      aadd( txt_, ' QListView::item:selected:!active {                                                          ' )
+      aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                                 ' )
+      aadd( txt_, '                                 stop: 0 #ABAFE5, stop: 1 #8588B2);                          ' )
+      aadd( txt_, ' }                                                                                           ' )
+      aadd( txt_, '                                                                                             ' )
+      aadd( txt_, ' QListView::item:selected:active {                                                           ' )
+      aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                                 ' )
+      aadd( txt_, '                                 stop: 0 #6a6ea9, stop: 1 #888dd9);                          ' )
+      aadd( txt_, ' }                                                                                           ' )
+      aadd( txt_, '                                                                                             ' )
+      aadd( txt_, ' QListView::item:hover {                                                                     ' )
+      aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                                 ' )
+      aadd( txt_, '                                 stop: 0 #FAFBFE, stop: 1 #DCDEF1);                          ' )
+      aadd( txt_, '}                                                                                            ' )
+      aadd( txt_, '                                                                                             ' )
+
+   ENDCASE
+
+   s := ""
+   aeval( txt_, {|e| s += e + chr( 13 )+chr( 10 ) } )
+
+   RETURN s
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION MenuAddSep( oMenu )
+
+   oMenu:addItem( { NIL, NIL, XBPMENUBAR_MIS_SEPARATOR, NIL } )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/

@@ -189,7 +189,7 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::show()
    ENDIF
 
-   ::setStyle()
+   //::setStyle()
    ::oParent:AddChild( SELF )
    RETURN Self
 
