@@ -68,21 +68,21 @@
 
 #define MAXBUFFERSIZE 255
 
-BOOL hb_isLegacyDevice( LPCSTR pPrinterName )
+static BOOL hb_isLegacyDevice( LPCSTR pPrinterName )
 {
-   BOOL bLegacyDev = FALSE;
-   int n = 0;
-   LPCSTR pszPrnDev[] =
-      { "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "com1", "com2", "com3", "com4", NULL };
-   while( pszPrnDev[ n ] && !bLegacyDev )
+   static LPCSTR s_pszPrnDev[] = { "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "com1", "com2", "com3", "com4", NULL };
+   int n;
+
+   for( n = 0; s_pszPrnDev[ n ]; ++n )
    {
-      bLegacyDev = ( hb_strnicmp( pPrinterName, pszPrnDev[n], strlen( pszPrnDev[n] ) ) == 0 );
-      n++;
+      if( hb_strnicmp( pPrinterName, s_pszPrnDev[ n ], strlen( s_pszPrnDev[ n ] ) ) == 0 )
+         return TRUE;
    }
-   return bLegacyDev;
+
+   return FALSE;
 }
 
-BOOL hb_PrinterExists( LPCSTR pPrinterName )
+static BOOL hb_PrinterExists( LPCSTR pPrinterName )
 {
    BOOL Result = FALSE;
 
@@ -108,7 +108,7 @@ BOOL hb_PrinterExists( LPCSTR pPrinterName )
             {
                ULONG a;
 
-               for( a = 0; ! Result && a < returned; ++a, pPrinterEnum4++ )
+               for( a = 0; ! Result && a < returned; ++a, ++pPrinterEnum4 )
                {
                   Result = strcmp( ( const char * ) pPrinterName,
                                    ( const char * ) pPrinterEnum4->pPrinterName ) == 0;
@@ -138,7 +138,7 @@ HB_FUNC( PRINTEREXISTS )
    hb_retl( HB_ISCHAR( 1 ) && hb_PrinterExists( hb_parc( 1 ) ) );
 }
 
-BOOL hb_GetDefaultPrinter( char * pPrinterName, LPDWORD pdwBufferSize )
+static BOOL hb_GetDefaultPrinter( char * pPrinterName, LPDWORD pdwBufferSize )
 {
    BOOL Result = FALSE;
 
@@ -213,8 +213,7 @@ BOOL hb_GetDefaultPrinter( char * pPrinterName, LPDWORD pdwBufferSize )
             {
                PRINTER_INFO_2 * ppi2 = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
       
-               if( EnumPrinters
-                   ( PRINTER_ENUM_DEFAULT, NULL, 2, ( LPBYTE ) ppi2, dwNeeded, &dwNeeded,
+               if( EnumPrinters( PRINTER_ENUM_DEFAULT, NULL, 2, ( LPBYTE ) ppi2, dwNeeded, &dwNeeded,
                      &dwReturned ) && dwReturned )
                {
                   DWORD dwSize = ( DWORD ) lstrlen( ppi2->pPrinterName );
@@ -249,7 +248,7 @@ HB_FUNC( GETDEFAULTPRINTER )
 
 static DWORD IsPrinterError( HANDLE hPrinter )
 {
-   BOOL Result = -1;
+   DWORD Result = ( DWORD ) -1;
    DWORD cByteNeeded;
 
    GetPrinter( hPrinter, 2, NULL, 0, &cByteNeeded );
@@ -269,7 +268,7 @@ static DWORD IsPrinterError( HANDLE hPrinter )
 
 static BOOL GetJobs( HANDLE hPrinter, JOB_INFO_2 ** ppJobInfo, int * pcJobs )
 {
-   DWORD Result = FALSE;
+   BOOL Result = FALSE;
    DWORD cByteNeeded;
 
    GetPrinter( hPrinter, 2, NULL, 0, &cByteNeeded );
@@ -366,8 +365,8 @@ HB_FUNC( XISPRINTER )
    hb_retnl( hb_printerIsReadyn( pszPrinterName ) );
 }
 
-BOOL hb_GetPrinterNameByPort( char * pPrinterName, LPDWORD pdwBufferSize,
-                              const char * pPortName, BOOL bSubStr )
+static BOOL hb_GetPrinterNameByPort( char * pPrinterName, LPDWORD pdwBufferSize,
+                                     const char * pPortName, BOOL bSubStr )
 {
    BOOL Result = FALSE, bFound = FALSE;
    ULONG needed, returned;
@@ -428,9 +427,9 @@ HB_FUNC( PRINTERPORTTONAME )
       hb_retc_null();
 }
 
-#   define BIG_PRINT_BUFFER (1024*32)
+#define BIG_PRINT_BUFFER ( 1024 * 32 )
 
-long hb_PrintFileRaw( const char * cPrinterName, const char * cFileName, const char * cDocName )
+static long hb_PrintFileRaw( const char * cPrinterName, const char * cFileName, const char * cDocName )
 {
    HANDLE hPrinter;
    long Result;
