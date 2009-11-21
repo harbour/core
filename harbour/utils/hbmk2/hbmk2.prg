@@ -2077,10 +2077,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
       DEFAULT hbmk[ _HBMK_lSHAREDDIST ] TO lSysLoc
 
-      IF hbmk[ _HBMK_lSHAREDDIST ] .OR. !( hbmk[ _HBMK_cCOMP ] == "gcc" )
+      IF hbmk[ _HBMK_lSHAREDDIST ] .OR. !( hbmk[ _HBMK_cCOMP ] $ "gcc|clang" )
          cPrefix := ""
       ELSE
-         /* Only supported by gcc compilers. */
+         /* Only supported by gcc, clang compilers. */
          cPrefix := DirAddPathSep( l_cHB_DYN_INSTALL )
       ENDIF
 #if 1
