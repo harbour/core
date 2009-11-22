@@ -393,7 +393,6 @@ HB_FUNC( PRINTFILERAW )
       const char * pszDocName = HB_ISCHAR( 3 ) ? hb_parc( 3 ) : hb_parc( 2 );
 
       HANDLE hPrinter;
-      int iResult;
       LPTSTR lpPrinterName = HB_TCHAR_CONVTO( pszPrinterName );
 
       if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) != 0 )
