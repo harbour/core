@@ -66,6 +66,8 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
+#define _ENUMPRN_FLAGS_             ( PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS )
+
 #define MAXBUFFERSIZE 255
 
 static BOOL hb_isLegacyDevice( const char * pszPrinterName )
@@ -92,18 +94,17 @@ static BOOL hb_PrinterExists( const char * pszPrinterName )
    {                            /* Don't bother with test if '\' in string */
       if( hb_iswinnt() )
       {                         /* Use EnumPrinter() here because much faster than OpenPrinter() */
-         DWORD Flags = PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS;
-         ULONG needed = 0, returned = 0;
+         DWORD needed = 0, returned = 0;
 
-         EnumPrinters( Flags, NULL, 4, ( LPBYTE ) NULL, 0, &needed, &returned );
+         EnumPrinters( _ENUMPRN_FLAGS_, NULL, 4, ( LPBYTE ) NULL, 0, &needed, &returned );
          if( needed )
          {
             PRINTER_INFO_4 * pPrinterEnumBak;
             PRINTER_INFO_4 * pPrinterEnum = pPrinterEnumBak = ( PRINTER_INFO_4 * ) hb_xgrab( needed );
 
-            if( EnumPrinters( Flags, NULL, 4, ( LPBYTE ) pPrinterEnum, needed, &needed, &returned ) )
+            if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 4, ( LPBYTE ) pPrinterEnum, needed, &needed, &returned ) )
             {
-               ULONG a;
+               DWORD a;
 
                for( a = 0; ! Result && a < returned; ++a, ++pPrinterEnum )
                {
@@ -365,7 +366,7 @@ static BOOL hb_GetPrinterNameByPort( char * pPrinterName, ULONG * pulBufferSize,
                                      const char * pPortName, BOOL bSubStr )
 {
    BOOL Result = FALSE, bFound = FALSE;
-   ULONG needed, returned;
+   DWORD needed, returned;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_GetPrinterNameByPort(%p,%p)", pPrinterName, pPortName ) );
 
@@ -379,7 +380,7 @@ static BOOL hb_GetPrinterNameByPort( char * pPrinterName, ULONG * pulBufferSize,
       if( EnumPrinters( PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS, NULL, 5,
                         ( LPBYTE ) pPrinterEnum, needed, &needed, &returned ) )
       {
-         ULONG a;
+         DWORD a;
 
          for( a = 0; a < returned && ! bFound; ++a, ++pPrinterEnum )
          {
@@ -416,7 +417,7 @@ HB_FUNC( PRINTERPORTTONAME )
    ULONG ulBufferSize = sizeof( szDefaultPrinter );
 
    if( HB_ISCHAR( 1 ) && hb_parclen( 1 ) > 0 &&
-       hb_GetPrinterNameByPort( szDefaultPrinter, &ulBufferSize, hb_parcx( 1 ),
+       hb_GetPrinterNameByPort( szDefaultPrinter, &ulBufferSize, hb_parc( 1 ),
                                 hb_parl( 2 ) ) )
       hb_retc( szDefaultPrinter );
    else
@@ -506,10 +507,9 @@ HB_FUNC( PRINTFILERAW )
 HB_FUNC( GETPRINTERS )
 {
    HANDLE hPrinter;
-   DWORD Flags = PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS;
    BOOL bPrinterNamesOnly = HB_ISLOG( 1 ) ? ! hb_parl( 1 ) : TRUE;
    BOOL bLocalPrintersOnly = hb_parl( 2 );
-   ULONG needed = 0, returned = 0, a;
+   DWORD needed = 0, returned = 0, a;
    PHB_ITEM SubItems = hb_itemNew( NULL );
    PHB_ITEM pPrinterName = hb_itemNew( NULL );
    PHB_ITEM ArrayPrinter = hb_itemNew( NULL );
@@ -517,16 +517,16 @@ HB_FUNC( GETPRINTERS )
 
    hb_arrayNew( ArrayPrinter, 0 );
 
-   EnumPrinters( Flags, NULL, 4, ( LPBYTE ) NULL, 0, &needed, &returned );
-
-   if( needed )
+   if( hb_iswinnt() )
    {
-      if( hb_iswinnt() )
+      EnumPrinters( _ENUMPRN_FLAGS_, NULL, 4, ( LPBYTE ) NULL, 0, &needed, &returned );
+
+      if( needed )
       {
          PRINTER_INFO_4 * pPrinterEnumBak;
          PRINTER_INFO_4 * pPrinterEnum = pPrinterEnumBak = ( PRINTER_INFO_4 * ) hb_xgrab( needed );
 
-         if( EnumPrinters( Flags, NULL, 4, ( LPBYTE ) pPrinterEnum, needed, &needed, &returned ) )
+         if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 4, ( LPBYTE ) pPrinterEnum, needed, &needed, &returned ) )
          {
             for( a = 0; a < returned; ++a, ++pPrinterEnum )
             {
@@ -590,12 +590,17 @@ HB_FUNC( GETPRINTERS )
          }
          hb_xfree( pPrinterEnumBak );
       }
-      else
+   }
+   else
+   {
+      EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) NULL, 0, &needed, &returned );
+
+      if( needed )
       {
          PRINTER_INFO_5 * pPrinterEnumBak;
          PRINTER_INFO_5 * pPrinterEnum = pPrinterEnumBak = ( PRINTER_INFO_5 * ) hb_xgrab( needed );
       
-         if( EnumPrinters( Flags, NULL, 5, ( LPBYTE ) pPrinterEnum, needed, &needed, &returned ) )
+         if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) pPrinterEnum, needed, &needed, &returned ) )
          {
             for( a = 0; a < returned; ++a, ++pPrinterEnum )
             {
