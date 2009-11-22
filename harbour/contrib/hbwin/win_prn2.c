@@ -97,17 +97,17 @@ HB_FUNC( PRINTEREXISTS )
       if( ! strchr( pszPrinterName, HB_OS_PATH_LIST_SEP_CHR ) && ! hb_IsLegacyDevice( pszPrinterName ) )
       {
          DWORD dwNeeded = 0, dwReturned = 0;
-      
+
          EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) NULL, 0, &dwNeeded, &dwReturned );
          if( dwNeeded )
          {
             PRINTER_INFO_5 * pPrinterEnumBak;
             PRINTER_INFO_5 * pPrinterEnum = pPrinterEnumBak = ( PRINTER_INFO_5 * ) hb_xgrab( dwNeeded );
-      
+
             if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) pPrinterEnum, dwNeeded, &dwNeeded, &dwReturned ) )
             {
                DWORD i;
-      
+
                for( i = 0; ! bResult && i < dwReturned; ++i, ++pPrinterEnum )
                {
                   char * pszData = HB_TCHAR_CONVFROM( pPrinterEnum->pPrinterName );
@@ -168,7 +168,7 @@ static BOOL hb_GetDefaultPrinter( char * pszPrinterName, HB_SIZE * pulBufferSize
             dwSize = 0;
             while( pszPrinterName[ dwSize ] != '\0' && pszPrinterName[ dwSize ] != ',' )
                dwSize++;
-      
+
             pszPrinterName[ dwSize ] = '\0';
             *pulBufferSize = dwSize + 1;
             bResult = TRUE;
@@ -288,28 +288,28 @@ HB_FUNC( XISPRINTER )
       if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) )
       {
          DWORD dwByteNeeded = 0;
-         
+
          GetPrinter( hPrinter, 2, NULL, 0, &dwByteNeeded );
-         
+
          if( dwByteNeeded )
          {
             PRINTER_INFO_2 * pPrinterInfo = ( PRINTER_INFO_2 * ) hb_xgrab( dwByteNeeded );
-         
+
             if( GetPrinter( hPrinter, 2, ( LPBYTE ) pPrinterInfo, dwByteNeeded, &dwByteNeeded ) )
                nStatus = ( long ) pPrinterInfo->Status;
-         
+
             hb_xfree( pPrinterInfo );
          }
-         
+
          if( nStatus == 0 )
          {
             JOB_INFO_2 * pJobs;
             long lJobs = 0;
-         
+
             if( hb_GetJobs( hPrinter, &pJobs, &lJobs ) )
             {
                long i;
-         
+
                for( i = 0; nStatus == 0 && i < lJobs; ++i )
                {
                   if( pJobs[ i ].Status & JOB_STATUS_ERROR )
@@ -344,29 +344,29 @@ HB_FUNC( PRINTERPORTTONAME )
       BOOL bSubStr = hb_parl( 2 );
 
       DWORD dwNeeded = 0, dwReturned = 0;
-      
+
       EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) NULL, 0, &dwNeeded, &dwReturned );
       if( dwNeeded )
       {
          PRINTER_INFO_5 * pPrinterEnumBak;
          PRINTER_INFO_5 * pPrinterEnum = pPrinterEnumBak = ( PRINTER_INFO_5 * ) hb_xgrab( dwNeeded );
-      
+
          if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) pPrinterEnum, dwNeeded, &dwNeeded, &dwReturned ) )
          {
             BOOL bFound = FALSE;
             DWORD i;
-      
+
             for( i = 0; i < dwReturned && ! bFound; ++i, ++pPrinterEnum )
             {
                char * pszPortName = HB_TCHAR_CONVFROM( pPrinterEnum->pPortName );
-      
+
                if( bSubStr )
                   bFound = ( hb_strnicmp( pszPortName, pszPortNameFind, ( HB_SIZE ) strlen( pszPortNameFind ) ) == 0 );
                else
                   bFound = ( hb_stricmp( pszPortName, pszPortNameFind ) == 0 );
-      
+
                HB_TCHAR_FREE( pszPortName );
-      
+
                if( bFound )
                {
                   char * pszPrinterName = HB_TCHAR_CONVFROM( pPrinterEnum->pPrinterName );
@@ -395,7 +395,7 @@ HB_FUNC( PRINTFILERAW )
       HANDLE hPrinter;
       int iResult;
       LPTSTR lpPrinterName = HB_TCHAR_CONVTO( pszPrinterName );
-      
+
       if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) != 0 )
       {
          LPTSTR lpDocName = HB_TCHAR_CONVTO( pszDocName );
@@ -408,13 +408,13 @@ HB_FUNC( PRINTFILERAW )
             if( StartPagePrinter( hPrinter ) != 0 )
             {
                HB_FHANDLE fhnd = hb_fsOpen( pszFileName, FO_READ | FO_SHARED );
-      
+
                if( fhnd != FS_ERROR )
                {
                   BYTE pbyBuffer[ 32 * 1024 ];
                   DWORD dwWritten = 0;
                   USHORT nRead;
-      
+
                   while( ( nRead = hb_fsRead( fhnd, pbyBuffer, sizeof( pbyBuffer ) ) ) > 0 )
                   {
                      /* TOFIX: This check seems wrong for any input files
@@ -423,7 +423,7 @@ HB_FUNC( PRINTFILERAW )
                                means it will corrupt it. [vszakats] */
                      if( pbyBuffer[ nRead - 1 ] == 26 )
                         nRead--;   /* Skip the EOF() character */
-      
+
                      WritePrinter( hPrinter, pbyBuffer, nRead, &dwWritten );
                   }
                   iResult = 1;
@@ -444,7 +444,7 @@ HB_FUNC( PRINTFILERAW )
       }
       else
          iResult = -2;
-      
+
       HB_TCHAR_FREE( lpPrinterName );
    }
 
