@@ -65,7 +65,7 @@ HARBOUR
       > hello
       You should see 'Hello world!' on screen.
 
-      NOTE: When building for Borland C++ make sure that GNU Make 
+      NOTE: When building for Borland C++ make sure that GNU Make
             is executed when typing 'make', Borland Make has the same name.
 
    on MS-DOS hosts
@@ -319,7 +319,7 @@ HARBOUR
 
       1.) Install MacPorts, follow their instructions:
           https://www.macports.org/
-      2.) $ sudo port install pcre slang allegro freeimage gd2 mysql5-devel postgresql84 
+      2.) $ sudo port install pcre slang allegro freeimage gd2 mysql5-devel postgresql84
           $ sudo port install upx
 
    Linux (generic)
@@ -572,15 +572,15 @@ HARBOUR
                                libraries stored in the external directory.
    - HB_UTIL_ADDONS=<list>     Build space separated <list> of additional
                                utilities stored in the utils directory.
-   - HB_COMPILER_VER=[<ver>]   Set C compiler version. This is used with msvc 
-                               targets currently, and in the case of this 
+   - HB_COMPILER_VER=[<ver>]   Set C compiler version. This is used with msvc
+                               targets currently, and in the case of this
                                compiler, it will be autodetected.
                                <ver> format:
                                    <09><00>[.<00>] = <major><minor>[.<revision>]
                                Default: filled by autodetection or empty
    - HB_USER_LIBS=[<list>]     Add space separated <list> of libs to link process.
                                Lib names should be without extension and path.
-                               You only need this in special cases, like CodeGuard 
+                               You only need this in special cases, like CodeGuard
                                build with bcc.
    - HB_REBUILD_PARSER=yes     Rebuild language parser sources. Typically
                                you only need this if your are Harbour core
@@ -837,9 +837,9 @@ HARBOUR
    for Windows x64 (x86-64) hosts
    ------------------------------
 
-      Same as regular Windows, but you'll have to change %ProgramFiles% to 
-      %ProgramFiles(x86)% for 32-bit and mixed tools, you can build for 
-      both x86 and x64 without building a native target first, and potential 
+      Same as regular Windows, but you'll have to change %ProgramFiles% to
+      %ProgramFiles(x86)% for 32-bit and mixed tools, you can build for
+      both x86 and x64 without building a native target first, and potential
       differences in compilers to use native binaries if they are available.
 
       --- Windows SDK 7
@@ -1012,8 +1012,8 @@ HARBOUR
         set PATH=C:\<compilerdir>
    - Remove all old, unnecessary environment variables from your environment.
      Use only those documented in this file.
-     Some environment variable settings which are commonly believed by 
-     users to be useful, but which in reality are either not needed or 
+     Some environment variable settings which are commonly believed by
+     users to be useful, but which in reality are either not needed or
      not even used by Harbour build process and hbmk2. You can delete them:
         set HB_PATH=<Harbour root dir>
         set HRB_DIR=<Some Harbour dir>
@@ -1351,6 +1351,8 @@ HARBOUR
      The size limit for e-mails sent to the development list is
      40KB. If you need more, upload it to a site where we can
      access it, or use the sf.net page to submit it.
+     Please use the same coding style as you find in the files
+     you're patching.
    - Given a good history of valuable contributions, you can get
      write access to the source repository.
    - Of course there is more into Harbour contribution than writing

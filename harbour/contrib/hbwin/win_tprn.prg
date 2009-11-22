@@ -156,6 +156,7 @@ CREATE CLASS WIN_PRN
    VAR Copies           INIT 1
 
    VAR SetFontOk        INIT .F.
+   VAR hFont            INIT 0
    VAR FontName         INIT ""                       // Current Point size for font
    VAR FontPointSize    INIT 12                       // Point size for font
    VAR FontWidth        INIT { 0, 0 }                 // {Mul, Div} Calc width: nWidth:= MulDiv(nMul, GetDeviceCaps(shDC,LOGPIXELSX), nDiv)
@@ -384,7 +385,7 @@ METHOD SetFont( cFontName, nPointSize, nWidth, nBold, lUnderline, lItalic, nChar
    IF nCharSet != NIL
       ::fCharSet := nCharSet
    ENDIF
-   IF ( ::SetFontOk := win_CreateFont( ::hPrinterDC, ::FontName, ::FontPointSize, ::FontWidth[1], ::FontWidth[2], ::fBold, ::fUnderLine, ::fItalic, ::fCharSet ) )
+   IF ( ::SetFontOk := ! Empty( ::hFont := win_CreateFont( ::hPrinterDC, ::FontName, ::FontPointSize, ::FontWidth[ 1 ], ::FontWidth[ 2 ], ::fBold, ::fUnderLine, ::fItalic, ::fCharSet ) ) )
       ::fCharWidth  := ::GetCharWidth()
       ::CharWidth   := ABS( ::fCharWidth )
       ::CharHeight  := ::GetCharHeight()
@@ -603,7 +604,7 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnd
       ELSEIF cType == "N" .AND. ! Empty( nWidth )
          nDiv := 1
       ENDIF
-      lCreated := win_CreateFont( ::hPrinterDC, cFont, nPointSize, nDiv, nWidth, nBold, lUnderLine, lItalic, nCharSet )
+      lCreated := ! Empty( ::hFont := win_CreateFont( ::hPrinterDC, cFont, nPointSize, nDiv, nWidth, nBold, lUnderLine, lItalic, nCharSet ) )
    ENDIF
    IF nColor != NIL
       nColor := SetColor( ::hPrinterDC, nColor )
