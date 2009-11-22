@@ -80,26 +80,24 @@ CREATE CLASS win_Com
    PROTECT cPortName INIT ""
 
    METHOD Init( cPortName, nBaudRate, nParity, nByteSize, nStopBits )
-   METHOD QueueSize( nInQueue, nOutQueue )  INLINE win_ComSetQueueSize( ::nPort, nInQueue, nOutQueue )
-   METHOD TimeOuts( nReadInterval, nReadMultiplier, nReadConstant, nWriteMultiplier, nWriteConstant ) ;
-                                            INLINE win_ComSetTimeOuts( ::nPort, nReadInterval, nReadMultiplier, nReadConstant, nWriteMultiplier, nWriteConstant )
+   METHOD QueueSize( nInQueue, nOutQueue )
+   METHOD TimeOuts( nReadInterval, nReadMultiplier, nReadConstant, nWriteMultiplier, nWriteConstant )
    METHOD Read( /* @ */ cString, nLength )
-   METHOD Recv( nLength, nResult )          INLINE win_ComRecv( ::nPort, nLength, @nResult )
+   METHOD Recv( nLength, nResult )
    METHOD RecvTo( cDelim, nMaxlen )
-   METHOD Write( cString )                  INLINE win_ComWrite( ::nPort, cString )
-   METHOD Status( lCTS, lDSR, lRing, lDCD ) INLINE win_ComStatus( ::nPort, @lCTS, @lDSR, @lRing, @lDCD )
-   METHOD QueueStatus( lCTSHold, lDSRHold, lDCDHold, lXoffHold, lXoffSent, nInQueue, nOutQueue ) ;
-                                            INLINE win_ComQueueStatus( ::nPort, @lCTSHold, @lDSRHold, @lDCDHold, @lXoffHold, @lXoffSent, @nInQueue, @nOutQueue )
-   METHOD SetRTS( lCTS )                    INLINE win_ComSetRTS( ::nPort, lCTS ) /* boolean return is the status of the call not the line! */
-   METHOD SetDTR( lDTR )                    INLINE win_ComSetDTR( ::nPort, lDTR ) /* boolean return is the status of the call not the line! */
-   METHOD RTSFlow( nRTS )                   INLINE win_ComRTSFlow( ::nPort, nRTS )
-   METHOD DTRFlow( nDTR )                   INLINE win_ComDTRFlow( ::nPort, nDTR )
-   METHOD XonXoffFlow( lXonXoff )           INLINE win_ComXonXoffFlow( ::nPort, lXonXoff )
-   METHOD Purge( lRXBuffer, lTXBuffer )     INLINE win_ComPurge( ::nPort, lRXBuffer, lTXBuffer )
-   METHOD PurgeRX()                         INLINE win_ComPurge( ::nPort, .T., .F. )
-   METHOD PurgeTX()                         INLINE win_ComPurge( ::nPort, .F., .T. )
-   METHOD Close( nDrain )                   INLINE win_ComClose( ::nPort, iif( Empty( nDrain ), 0, nDrain ) )
-   METHOD DebugDCB( nDebug )                INLINE win_ComDebugDCB( ::nPort, nDebug )
+   METHOD Write( cString )
+   METHOD Status( lCTS, lDSR, lRing, lDCD )
+   METHOD QueueStatus( lCTSHold, lDSRHold, lDCDHold, lXoffHold, lXoffSent, nInQueue, nOutQueue )
+   METHOD SetRTS( lCTS )
+   METHOD SetDTR( lDTR )
+   METHOD RTSFlow( nRTS )
+   METHOD DTRFlow( nDTR )
+   METHOD XonXoffFlow( lXonXoff )
+   METHOD Purge( lRXBuffer, lTXBuffer )
+   METHOD PurgeRX()
+   METHOD PurgeTX()
+   METHOD Close( nDrain )
+   METHOD DebugDCB( nDebug )
    METHOD ErrorText()
 
 ENDCLASS
@@ -117,11 +115,20 @@ METHOD Init( cPortName, nBaudRate, nParity, nByteSize, nStopBits ) CLASS win_Com
 
    RETURN self
 
+METHOD QueueSize( nInQueue, nOutQueue ) CLASS win_Com
+   RETURN win_ComSetQueueSize( ::nPort, nInQueue, nOutQueue )
+
+METHOD TimeOuts( nReadInterval, nReadMultiplier, nReadConstant, nWriteMultiplier, nWriteConstant ) CLASS win_Com
+   RETURN win_ComSetTimeOuts( ::nPort, nReadInterval, nReadMultiplier, nReadConstant, nWriteMultiplier, nWriteConstant )
+
 METHOD Read( /* @ */ cString, nLength ) CLASS win_Com
 
    cString := Space( nlength )
 
    RETURN win_ComRead( ::nPort, @cString )
+
+METHOD Recv( nLength, nResult ) CLASS win_Com
+   RETURN win_ComRecv( ::nPort, nLength, @nResult )
 
 METHOD RecvTo( cDelim, nMaxlen ) CLASS win_Com
    LOCAL nResult
@@ -149,6 +156,45 @@ METHOD RecvTo( cDelim, nMaxlen ) CLASS win_Com
    ENDDO
 
    RETURN cRecv
+
+METHOD Write( cString ) CLASS win_Com
+   RETURN win_ComWrite( ::nPort, cString )
+
+METHOD Status( lCTS, lDSR, lRing, lDCD ) CLASS win_Com
+   RETURN win_ComStatus( ::nPort, @lCTS, @lDSR, @lRing, @lDCD )
+
+METHOD QueueStatus( lCTSHold, lDSRHold, lDCDHold, lXoffHold, lXoffSent, nInQueue, nOutQueue ) CLASS win_Com
+   RETURN win_ComQueueStatus( ::nPort, @lCTSHold, @lDSRHold, @lDCDHold, @lXoffHold, @lXoffSent, @nInQueue, @nOutQueue )
+
+METHOD SetRTS( lCTS ) CLASS win_Com
+   RETURN win_ComSetRTS( ::nPort, lCTS ) /* boolean return is the status of the call not the line! */
+
+METHOD SetDTR( lDTR ) CLASS win_Com
+   RETURN win_ComSetDTR( ::nPort, lDTR ) /* boolean return is the status of the call not the line! */
+
+METHOD RTSFlow( nRTS ) CLASS win_Com
+   RETURN win_ComRTSFlow( ::nPort, nRTS )
+
+METHOD DTRFlow( nDTR ) CLASS win_Com
+   RETURN win_ComDTRFlow( ::nPort, nDTR )
+
+METHOD XonXoffFlow( lXonXoff ) CLASS win_Com
+   RETURN win_ComXonXoffFlow( ::nPort, lXonXoff )
+
+METHOD Purge( lRXBuffer, lTXBuffer ) CLASS win_Com
+   RETURN win_ComPurge( ::nPort, lRXBuffer, lTXBuffer )
+
+METHOD PurgeRX() CLASS win_Com
+   RETURN win_ComPurge( ::nPort, .T., .F. )
+
+METHOD PurgeTX() CLASS win_Com
+   RETURN win_ComPurge( ::nPort, .F., .T. )
+
+METHOD Close( nDrain ) CLASS win_Com
+   RETURN win_ComClose( ::nPort, iif( Empty( nDrain ), 0, nDrain ) )
+
+METHOD DebugDCB( nDebug ) CLASS win_Com
+   RETURN win_ComDebugDCB( ::nPort, nDebug )
 
 /* Since the win_Com functions are an amalgamation of Win functions this allows
    you to see what call did the deed when things go wrong. */

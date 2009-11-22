@@ -596,10 +596,10 @@ static int CALLBACK FontEnumCallBack( LOGFONT * lplf, TEXTMETRIC * lpntm, DWORD 
    char * pszFaceName = HB_TCHAR_CONVFROM( lplf->lfFaceName );
 
    hb_arrayNew( SubItems, 4 );
-   hb_itemPutC( hb_arrayGetItemPtr( SubItems, 1 ), pszFaceName );
-   hb_itemPutL( hb_arrayGetItemPtr( SubItems, 2 ), lplf->lfPitchAndFamily & FIXED_PITCH );
-   hb_itemPutL( hb_arrayGetItemPtr( SubItems, 3 ), FontType & TRUETYPE_FONTTYPE );
-   hb_itemPutNL( hb_arrayGetItemPtr( SubItems, 4 ), lpntm->tmCharSet );
+   hb_arraySetC( SubItems, 1, pszFaceName );
+   hb_arraySetL( SubItems, 2, lplf->lfPitchAndFamily & FIXED_PITCH );
+   hb_arraySetL( SubItems, 3, FontType & TRUETYPE_FONTTYPE );
+   hb_arraySetNL( SubItems, 4, lpntm->tmCharSet );
    hb_arrayAddForward( ( PHB_ITEM ) pArray, SubItems );
    hb_itemRelease( SubItems );
    HB_TCHAR_FREE( pszFaceName );

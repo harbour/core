@@ -84,6 +84,7 @@ CREATE CLASS WIN_PRN
    METHOD EndPage( lStartNewPage )  // If lStartNewPage == .T. then StartPage() is called for the next page of output
    METHOD NewLine()
    METHOD NewPage()
+   METHOD GetDocumentProperties()
    METHOD SetFont( cFontName, nPointSize, nWidth, nBold, lUnderline, lItalic, nCharSet )
                                                                  // NB: nWidth is in "CharactersPerInch"
                                                                  //     _OR_ { nMul, nDiv } which equates to "CharactersPerInch"
@@ -103,22 +104,18 @@ CREATE CLASS WIN_PRN
 
 
    METHOD SetPos( nX, nY )                             // **WARNING** : ( Col, Row ) _NOT_ ( Row, Col )
-   METHOD SetColor( nClrText, nClrPane, nAlign ) INLINE (;
-          ::TextColor := nClrText, ::BkColor := nClrPane, ::TextAlign := nAlign,;
-          win_SetColor( ::hPrinterDC, nClrText, nClrPane, nAlign ) )
+   METHOD SetColor( nClrText, nClrPane, nAlign )
 
    METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign )     // nAlign : 0 == left, 1 == right, 2 == centered
    METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign ) // **WARNING** : ( Col, Row ) _NOT_ ( Row, Col )
 
 
-   METHOD SetPen( nStyle, nWidth, nColor ) INLINE (;
-          ::PenStyle := nStyle, ::PenWidth := nWidth, ::PenColor := nColor,;
-          win_SetPen(::hPrinterDC, nStyle, nWidth, nColor ) )
-   METHOD Line( nX1, nY1, nX2, nY2 ) INLINE win_LineTo( ::hPrinterDC, nX1, nY1, nX2, nY2 )
-   METHOD Box( nX1, nY1, nX2, nY2, nWidth, nHeight ) INLINE win_Rectangle( ::hPrinterDC, nX1, nY1, nX2, nY2, nWidth, nHeight )
-   METHOD Arc( nX1, nY1, nX2, nY2 ) INLINE win_Arc( ::hPrinterDC, nX1, nY1, nX2, nY2 )
-   METHOD Ellipse( nX1, nY1, nX2, nY2 ) INLINE win_Ellipse( ::hPrinterDC, nX1, nY1, nX2, nY2 )
-   METHOD FillRect( nX1, nY1, nX2, nY2, nColor ) INLINE win_FillRect( ::hPrinterDC, nX1, nY1, nX2, nY2, nColor )
+   METHOD SetPen( nStyle, nWidth, nColor )
+   METHOD Line( nX1, nY1, nX2, nY2 )
+   METHOD Box( nX1, nY1, nX2, nY2, nWidth, nHeight )
+   METHOD Arc( nX1, nY1, nX2, nY2 )
+   METHOD Ellipse( nX1, nY1, nX2, nY2 )
+   METHOD FillRect( nX1, nY1, nX2, nY2, nColor )
    METHOD GetCharWidth()
    METHOD GetCharHeight()
    METHOD GetTextWidth( cString )
@@ -141,10 +138,10 @@ CREATE CLASS WIN_PRN
                       nWidth, nBold, lUnderLine, lItalic, lNewLine,; // in specified font and color.
                       lUpdatePosX, nColor, nAlign )                  // Restore original font and colour
                                                                      // after printing.
-   METHOD SetBkMode( nMode )  INLINE win_SetBkMode( ::hPrinterDc, nMode ) // OPAQUE == 2 or TRANSPARENT == 1
-                                                                      // Set Background mode
+   METHOD SetBkMode( nMode )                                         // OPAQUE == 2 or TRANSPARENT == 1
+                                                                     // Set Background mode
 
-   METHOD GetDeviceCaps( nCaps ) INLINE win_GetDeviceCaps( ::hPrinterDC, nCaps)
+   METHOD GetDeviceCaps( nCaps )
 
    VAR PrinterName      INIT ""
    VAR Printing         INIT .F.
@@ -350,6 +347,9 @@ METHOD NewPage() CLASS WIN_PRN
    ::EndPage( .T. )
    RETURN .T.
 
+METHOD GetDocumentProperties() CLASS WIN_PRN
+   RETURN win_GetDocumentProperties( ::PrinterName, @::FormType, @::Landscape, @::Copies, @::BinNumber, @::fDuplexType, @::fPrintQuality )
+
 // If font width is specified it is in "characters per inch" to emulate DotMatrix
 // An array {nMul,nDiv} is used to get precise size such a the Dot Matric equivalent
 // of Compressed print == 16.67 char per inch == { 3,-50 }
@@ -392,7 +392,7 @@ METHOD SetFont( cFontName, nPointSize, nWidth, nBold, lUnderline, lItalic, nChar
    ::FontName := win_GetPrinterFontName( ::hPrinterDC )  // Get the font name that Windows actually used
    RETURN ::SetFontOk
 
-METHOD SetDefaultFont()
+METHOD SetDefaultFont() CLASS WIN_PRN
    RETURN ::SetFont( "Courier New", 12, { 1, 10 }, 0, .F., .F., 0 )
 
 METHOD Bold( nWeight ) CLASS WIN_PRN
@@ -470,6 +470,14 @@ METHOD SetPos( nPosX, nPosY ) CLASS WIN_PRN
 
    RETURN aOldValue
 
+METHOD SetColor( nClrText, nClrPane, nAlign ) CLASS WIN_PRN
+
+   ::TextColor := nClrText
+   ::BkColor := nClrPane
+   ::TextAlign := nAlign
+
+   RETURN win_SetColor( ::hPrinterDC, nClrText, nClrPane, nAlign )
+
 METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS WIN_PRN
    LOCAL nPosX
 
@@ -497,6 +505,27 @@ METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign ) CLASS W
    ::SetPos( nPosX, nPosY )
    ::TextOut( cString, lNewLine, lUpdatePosX, nAlign )
    RETURN .T.
+
+METHOD SetPen( nStyle, nWidth, nColor ) CLASS WIN_PRN
+   ::PenStyle := nStyle
+   ::PenWidth := nWidth
+   ::PenColor := nColor
+   RETURN win_SetPen(::hPrinterDC, nStyle, nWidth, nColor )
+
+METHOD Line( nX1, nY1, nX2, nY2 ) CLASS WIN_PRN
+   RETURN win_LineTo( ::hPrinterDC, nX1, nY1, nX2, nY2 )
+
+METHOD Box( nX1, nY1, nX2, nY2, nWidth, nHeight ) CLASS WIN_PRN
+   RETURN win_Rectangle( ::hPrinterDC, nX1, nY1, nX2, nY2, nWidth, nHeight )
+
+METHOD Arc( nX1, nY1, nX2, nY2 ) CLASS WIN_PRN
+   RETURN win_Arc( ::hPrinterDC, nX1, nY1, nX2, nY2 )
+
+METHOD Ellipse( nX1, nY1, nX2, nY2 ) CLASS WIN_PRN
+   RETURN win_Ellipse( ::hPrinterDC, nX1, nY1, nX2, nY2 )
+
+METHOD FillRect( nX1, nY1, nX2, nY2, nColor ) CLASS WIN_PRN
+   RETURN win_FillRect( ::hPrinterDC, nX1, nY1, nX2, nY2, nColor )
 
 METHOD GetCharWidth() CLASS WIN_PRN
    LOCAL nWidth
@@ -587,6 +616,12 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnd
       SetColor( ::hPrinterDC, nColor )  // Reset Color
    ENDIF
    RETURN .T.
+
+METHOD SetBkMode( nMode ) CLASS WIN_PRN
+   RETURN win_SetBkMode( ::hPrinterDc, nMode )
+
+METHOD GetDeviceCaps( nCaps ) CLASS WIN_PRN
+   RETURN win_GetDeviceCaps( ::hPrinterDC, nCaps)
 
 // Bitmap class
 

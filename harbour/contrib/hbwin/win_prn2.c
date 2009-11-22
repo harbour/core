@@ -108,7 +108,7 @@ static BOOL hb_PrinterExists( const char * pszPrinterName )
                for( a = 0; ! Result && a < returned; ++a, ++pPrinterEnum )
                {
                   char * pszData = HB_TCHAR_CONVFROM( pPrinterEnum->pPrinterName );
-                  Result = strcmp( pszPrinterName, pszData ) == 0;
+                  Result = ( strcmp( pszPrinterName, pszData ) == 0 );
                   HB_TCHAR_FREE( pszData );
                }
             }
