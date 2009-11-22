@@ -85,41 +85,42 @@ static BOOL hb_IsLegacyDevice( const char * pszPrinterName )
    return FALSE;
 }
 
-static BOOL hb_PrinterExists( const char * pszPrinterName )
+HB_FUNC( PRINTEREXISTS )
 {
    BOOL bResult = FALSE;
 
-   /* Don't bother with test if '\' in string */
-   if( ! strchr( pszPrinterName, HB_OS_PATH_LIST_SEP_CHR ) && ! hb_IsLegacyDevice( pszPrinterName ) )
+   if( HB_ISCHAR( 1 ) )
    {
-      DWORD dwNeeded = 0, dwReturned = 0;
+      const char * pszPrinterName = hb_parc( 1 );
 
-      EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) NULL, 0, &dwNeeded, &dwReturned );
-      if( dwNeeded )
+      /* Don't bother with test if '\' in string */
+      if( ! strchr( pszPrinterName, HB_OS_PATH_LIST_SEP_CHR ) && ! hb_IsLegacyDevice( pszPrinterName ) )
       {
-         PRINTER_INFO_5 * pPrinterEnumBak;
-         PRINTER_INFO_5 * pPrinterEnum = pPrinterEnumBak = ( PRINTER_INFO_5 * ) hb_xgrab( dwNeeded );
-
-         if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) pPrinterEnum, dwNeeded, &dwNeeded, &dwReturned ) )
+         DWORD dwNeeded = 0, dwReturned = 0;
+      
+         EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) NULL, 0, &dwNeeded, &dwReturned );
+         if( dwNeeded )
          {
-            DWORD i;
-
-            for( i = 0; ! bResult && i < dwReturned; ++i, ++pPrinterEnum )
+            PRINTER_INFO_5 * pPrinterEnumBak;
+            PRINTER_INFO_5 * pPrinterEnum = pPrinterEnumBak = ( PRINTER_INFO_5 * ) hb_xgrab( dwNeeded );
+      
+            if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) pPrinterEnum, dwNeeded, &dwNeeded, &dwReturned ) )
             {
-               char * pszData = HB_TCHAR_CONVFROM( pPrinterEnum->pPrinterName );
-               bResult = ( strcmp( pszPrinterName, pszData ) == 0 );
-               HB_TCHAR_FREE( pszData );
+               DWORD i;
+      
+               for( i = 0; ! bResult && i < dwReturned; ++i, ++pPrinterEnum )
+               {
+                  char * pszData = HB_TCHAR_CONVFROM( pPrinterEnum->pPrinterName );
+                  bResult = ( strcmp( pszPrinterName, pszData ) == 0 );
+                  HB_TCHAR_FREE( pszData );
+               }
             }
+            hb_xfree( pPrinterEnumBak );
          }
-         hb_xfree( pPrinterEnumBak );
       }
    }
-   return bResult;
-}
 
-HB_FUNC( PRINTEREXISTS )
-{
-   hb_retl( HB_ISCHAR( 1 ) && hb_PrinterExists( hb_parc( 1 ) ) );
+   hb_retl( bResult );
 }
 
 static BOOL hb_GetDefaultPrinter( char * pszPrinterName, HB_SIZE * pulBufferSize )
@@ -230,20 +231,20 @@ HB_FUNC( GETDEFAULTPRINTER )
       hb_retc_null();
 }
 
-static BOOL hb_GetJobs( HANDLE hPrinter, JOB_INFO_2 ** ppJobInfo, int * piJobs )
+static BOOL hb_GetJobs( HANDLE hPrinter, JOB_INFO_2 ** ppJobInfo, long * plJobs )
 {
    BOOL bResult = FALSE;
-   DWORD dwByteNeeded;
+   DWORD dwByteNeeded = 0;
 
    GetPrinter( hPrinter, 2, NULL, 0, &dwByteNeeded );
    if( dwByteNeeded )
    {
       PRINTER_INFO_2 * pPrinterInfo = ( PRINTER_INFO_2 * ) hb_xgrab( dwByteNeeded );
-      DWORD dwByteUsed;
+      DWORD dwByteUsed = 0;
 
       if( GetPrinter( hPrinter, 2, ( LPBYTE ) pPrinterInfo, dwByteNeeded, &dwByteUsed ) )
       {
-         DWORD dwReturned;
+         DWORD dwReturned = 0;
 
          EnumJobs( hPrinter, 0, pPrinterInfo->cJobs, 2, NULL, 0, &dwByteNeeded, &dwReturned );
 
@@ -253,7 +254,7 @@ static BOOL hb_GetJobs( HANDLE hPrinter, JOB_INFO_2 ** ppJobInfo, int * piJobs )
 
             if( EnumJobs( hPrinter, 0, dwReturned, 2, ( LPBYTE ) pJobStorage, dwByteNeeded, &dwByteUsed, &dwReturned ) )
             {
-               *piJobs = ( int ) dwReturned;
+               *plJobs = ( long ) dwReturned;
                *ppJobInfo = pJobStorage;
                bResult = TRUE;
             }
@@ -266,60 +267,18 @@ static BOOL hb_GetJobs( HANDLE hPrinter, JOB_INFO_2 ** ppJobInfo, int * piJobs )
    return bResult;
 }
 
-static DWORD hb_GetPrinterStatus( HANDLE hPrinter )
+HB_FUNC( XISPRINTER )
 {
-   DWORD dwResult = ( DWORD ) -1;
-   DWORD dwByteNeeded;
+   char szDefaultPrinter[ MAXBUFFERSIZE ];
+   HB_SIZE ulBufferSize = sizeof( szDefaultPrinter );
+   const char * pszPrinterName = hb_parc( 1 );
+   long nStatus = -1;
 
-   GetPrinter( hPrinter, 2, NULL, 0, &dwByteNeeded );
-
-   if( dwByteNeeded )
+   if( hb_parclen( 1 ) == 0 )
    {
-      PRINTER_INFO_2 * pPrinterInfo = ( PRINTER_INFO_2 * ) hb_xgrab( dwByteNeeded );
-
-      if( GetPrinter( hPrinter, 2, ( LPBYTE ) pPrinterInfo, dwByteNeeded, &dwByteNeeded ) )
-         dwResult = pPrinterInfo->Status;
-
-      hb_xfree( pPrinterInfo );
+      hb_GetDefaultPrinter( szDefaultPrinter, &ulBufferSize );
+      pszPrinterName = szDefaultPrinter;
    }
-
-   return dwResult;
-}
-
-static DWORD hb_IsPrinterErrorn( HANDLE hPrinter )
-{
-   DWORD dwError = hb_GetPrinterStatus( hPrinter );
-
-   if( dwError == 0 )
-   {
-      JOB_INFO_2 * pJobs;
-      int iJobs;
-
-      if( hb_GetJobs( hPrinter, &pJobs, &iJobs ) )
-      {
-         int i;
-
-         for( i = 0; dwError == 0 && i < iJobs; ++i )
-         {
-            if( pJobs[ i ].Status & JOB_STATUS_ERROR )
-               dwError = ( DWORD ) -20;
-            else if( pJobs[ i ].Status & JOB_STATUS_OFFLINE )
-               dwError = ( DWORD ) -21;
-            else if( pJobs[ i ].Status & JOB_STATUS_PAPEROUT )
-               dwError = ( DWORD ) -22;
-            else if( pJobs[ i ].Status & JOB_STATUS_BLOCKED_DEVQ )
-               dwError = ( DWORD ) -23;
-         }
-         hb_xfree( pJobs );
-      }
-   }
-
-   return dwError;
-}
-
-static DWORD hb_PrinterIsReadyn( const char * pszPrinterName )
-{
-   DWORD dwPrinter = ( DWORD ) -1;
 
    if( *pszPrinterName )
    {
@@ -328,150 +287,99 @@ static DWORD hb_PrinterIsReadyn( const char * pszPrinterName )
 
       if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) )
       {
-         dwPrinter = hb_IsPrinterErrorn( hPrinter );
+         DWORD dwByteNeeded = 0;
+         
+         GetPrinter( hPrinter, 2, NULL, 0, &dwByteNeeded );
+         
+         if( dwByteNeeded )
+         {
+            PRINTER_INFO_2 * pPrinterInfo = ( PRINTER_INFO_2 * ) hb_xgrab( dwByteNeeded );
+         
+            if( GetPrinter( hPrinter, 2, ( LPBYTE ) pPrinterInfo, dwByteNeeded, &dwByteNeeded ) )
+               nStatus = ( long ) pPrinterInfo->Status;
+         
+            hb_xfree( pPrinterInfo );
+         }
+         
+         if( nStatus == 0 )
+         {
+            JOB_INFO_2 * pJobs;
+            long lJobs = 0;
+         
+            if( hb_GetJobs( hPrinter, &pJobs, &lJobs ) )
+            {
+               long i;
+         
+               for( i = 0; nStatus == 0 && i < lJobs; ++i )
+               {
+                  if( pJobs[ i ].Status & JOB_STATUS_ERROR )
+                     nStatus = -20;
+                  else if( pJobs[ i ].Status & JOB_STATUS_OFFLINE )
+                     nStatus = -21;
+                  else if( pJobs[ i ].Status & JOB_STATUS_PAPEROUT )
+                     nStatus = -22;
+                  else if( pJobs[ i ].Status & JOB_STATUS_BLOCKED_DEVQ )
+                     nStatus = -23;
+               }
+               hb_xfree( pJobs );
+            }
+         }
+
          CloseHandle( hPrinter );
       }
 
       HB_TCHAR_FREE( lpPrinterName );
    }
-   return dwPrinter;
-}
 
-HB_FUNC( XISPRINTER )
-{
-   char szDefaultPrinter[ MAXBUFFERSIZE ];
-   HB_SIZE ulBufferSize = sizeof( szDefaultPrinter );
-   const char * pszPrinterName = hb_parc( 1 );
-
-   if( hb_parclen( 1 ) == 0 )
-   {
-      hb_GetDefaultPrinter( szDefaultPrinter, &ulBufferSize );
-      pszPrinterName = szDefaultPrinter;
-   }
-
-   hb_retnl( hb_PrinterIsReadyn( pszPrinterName ) );
-}
-
-static BOOL hb_GetPrinterNameByPort( char * pszPrinterName, HB_SIZE * pulBufferSize,
-                                      const char * pszPortNameFind, BOOL bSubStr )
-{
-   BOOL bResult = FALSE;
-   DWORD dwNeeded = 0, dwReturned = 0;
-
-   EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) NULL, 0, &dwNeeded, &dwReturned );
-   if( dwNeeded )
-   {
-      PRINTER_INFO_5 * pPrinterEnumBak;
-      PRINTER_INFO_5 * pPrinterEnum = pPrinterEnumBak = ( PRINTER_INFO_5 * ) hb_xgrab( dwNeeded );
-
-      if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) pPrinterEnum, dwNeeded, &dwNeeded, &dwReturned ) )
-      {
-         BOOL bFound = FALSE;
-         DWORD i;
-
-         for( i = 0; i < dwReturned && ! bFound; ++i, ++pPrinterEnum )
-         {
-            char * pszPortName = HB_TCHAR_CONVFROM( pPrinterEnum->pPortName );
-
-            if( bSubStr )
-               bFound = ( hb_strnicmp( pszPortName, pszPortNameFind, ( HB_SIZE ) strlen( pszPortNameFind ) ) == 0 );
-            else
-               bFound = ( hb_stricmp( pszPortName, pszPortNameFind ) == 0 );
-
-            HB_TCHAR_FREE( pszPortName );
-
-            if( bFound )
-            {
-               char * szPrinterName = HB_TCHAR_CONVFROM( pPrinterEnum->pPrinterName );
-               if( *pulBufferSize >= strlen( szPrinterName ) + 1 )
-               {
-                  hb_strncpy( pszPrinterName, szPrinterName, *pulBufferSize );
-                  bResult = TRUE;
-               }
-               /* Store name length + \0 char for return */
-               *pulBufferSize = ( HB_SIZE ) strlen( szPrinterName ) + 1;
-               HB_TCHAR_FREE( szPrinterName );
-            }
-         }
-      }
-      hb_xfree( pPrinterEnumBak );
-   }
-   return bResult;
+   hb_retnl( nStatus );
 }
 
 HB_FUNC( PRINTERPORTTONAME )
 {
-   char szDefaultPrinter[ MAXBUFFERSIZE ];
-   HB_SIZE ulBufferSize = sizeof( szDefaultPrinter );
+   hb_retc_null();
 
-   if( hb_parclen( 1 ) > 0 &&
-       hb_GetPrinterNameByPort( szDefaultPrinter,
-                                &ulBufferSize,
-                                hb_parc( 1 ),
-                                hb_parl( 2 ) ) )
-      hb_retc( szDefaultPrinter );
-   else
-      hb_retc_null();
-}
-
-static int hb_PrintFileRaw( const char * pszPrinterName, const char * pszFileName, const char * pszDocName )
-{
-   HANDLE hPrinter;
-   int iResult;
-   LPTSTR lpPrinterName = HB_TCHAR_CONVTO( pszPrinterName );
-
-   if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) != 0 )
+   if( hb_parclen( 1 ) > 0 )
    {
-      LPTSTR lpDocName = HB_TCHAR_CONVTO( pszDocName );
-      DOC_INFO_1 DocInfo;
-      DocInfo.pDocName = lpDocName;
-      DocInfo.pOutputFile = NULL;
-      DocInfo.pDatatype = TEXT( "RAW" );
-      if( StartDocPrinter( hPrinter, 1, ( LPBYTE ) &DocInfo ) != 0 )
+      const char * pszPortNameFind = hb_parc( 1 );
+      BOOL bSubStr = hb_parl( 2 );
+
+      DWORD dwNeeded = 0, dwReturned = 0;
+      
+      EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) NULL, 0, &dwNeeded, &dwReturned );
+      if( dwNeeded )
       {
-         if( StartPagePrinter( hPrinter ) != 0 )
+         PRINTER_INFO_5 * pPrinterEnumBak;
+         PRINTER_INFO_5 * pPrinterEnum = pPrinterEnumBak = ( PRINTER_INFO_5 * ) hb_xgrab( dwNeeded );
+      
+         if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) pPrinterEnum, dwNeeded, &dwNeeded, &dwReturned ) )
          {
-            HB_FHANDLE fhnd = hb_fsOpen( pszFileName, FO_READ | FO_SHARED );
-
-            if( fhnd != FS_ERROR )
+            BOOL bFound = FALSE;
+            DWORD i;
+      
+            for( i = 0; i < dwReturned && ! bFound; ++i, ++pPrinterEnum )
             {
-               BYTE pbyBuffer[ 32 * 1024 ];
-               DWORD dwWritten = 0;
-               USHORT nRead;
-
-               while( ( nRead = hb_fsRead( fhnd, pbyBuffer, sizeof( pbyBuffer ) ) ) > 0 )
+               char * pszPortName = HB_TCHAR_CONVFROM( pPrinterEnum->pPortName );
+      
+               if( bSubStr )
+                  bFound = ( hb_strnicmp( pszPortName, pszPortNameFind, ( HB_SIZE ) strlen( pszPortNameFind ) ) == 0 );
+               else
+                  bFound = ( hb_stricmp( pszPortName, pszPortNameFind ) == 0 );
+      
+               HB_TCHAR_FREE( pszPortName );
+      
+               if( bFound )
                {
-                  /* TOFIX: This check seems wrong for any input files
-                            larger than our read buffer, in such case it
-                            will strip Chr( 26 ) from inside the file, which
-                            means it will corrupt it. [vszakats] */
-                  if( pbyBuffer[ nRead - 1 ] == 26 )
-                     nRead--;   /* Skip the EOF() character */
+                  char * pszPrinterName = HB_TCHAR_CONVFROM( pPrinterEnum->pPrinterName );
 
-                  WritePrinter( hPrinter, pbyBuffer, nRead, &dwWritten );
+                  hb_retc( pszPrinterName );
+
+                  HB_TCHAR_FREE( pszPrinterName );
                }
-               iResult = 1;
-               hb_fsClose( fhnd );
             }
-            else
-               iResult = -6;
-            EndPagePrinter( hPrinter );
          }
-         else
-            iResult = -4;
-         EndDocPrinter( hPrinter );
+         hb_xfree( pPrinterEnumBak );
       }
-      else
-         iResult = -3;
-      HB_TCHAR_FREE( lpDocName );
-      ClosePrinter( hPrinter );
    }
-   else
-      iResult = -2;
-
-   HB_TCHAR_FREE( lpPrinterName );
-
-   return iResult;
 }
 
 HB_FUNC( PRINTFILERAW )
@@ -479,9 +387,66 @@ HB_FUNC( PRINTFILERAW )
    int iResult = -1;
 
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
-      iResult = hb_PrintFileRaw( hb_parc( 1 ) /* pszPrinterName */,
-                                 hb_parc( 2 ) /* pszFileName */,
-                                 HB_ISCHAR( 3 ) ? hb_parc( 3 ) : hb_parc( 2 ) /* pszDocName */ );
+   {
+      const char * pszPrinterName = hb_parc( 1 );
+      const char * pszFileName = hb_parc( 2 );
+      const char * pszDocName = HB_ISCHAR( 3 ) ? hb_parc( 3 ) : hb_parc( 2 );
+
+      HANDLE hPrinter;
+      int iResult;
+      LPTSTR lpPrinterName = HB_TCHAR_CONVTO( pszPrinterName );
+      
+      if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) != 0 )
+      {
+         LPTSTR lpDocName = HB_TCHAR_CONVTO( pszDocName );
+         DOC_INFO_1 DocInfo;
+         DocInfo.pDocName = lpDocName;
+         DocInfo.pOutputFile = NULL;
+         DocInfo.pDatatype = TEXT( "RAW" );
+         if( StartDocPrinter( hPrinter, 1, ( LPBYTE ) &DocInfo ) != 0 )
+         {
+            if( StartPagePrinter( hPrinter ) != 0 )
+            {
+               HB_FHANDLE fhnd = hb_fsOpen( pszFileName, FO_READ | FO_SHARED );
+      
+               if( fhnd != FS_ERROR )
+               {
+                  BYTE pbyBuffer[ 32 * 1024 ];
+                  DWORD dwWritten = 0;
+                  USHORT nRead;
+      
+                  while( ( nRead = hb_fsRead( fhnd, pbyBuffer, sizeof( pbyBuffer ) ) ) > 0 )
+                  {
+                     /* TOFIX: This check seems wrong for any input files
+                               larger than our read buffer, in such case it
+                               will strip Chr( 26 ) from inside the file, which
+                               means it will corrupt it. [vszakats] */
+                     if( pbyBuffer[ nRead - 1 ] == 26 )
+                        nRead--;   /* Skip the EOF() character */
+      
+                     WritePrinter( hPrinter, pbyBuffer, nRead, &dwWritten );
+                  }
+                  iResult = 1;
+                  hb_fsClose( fhnd );
+               }
+               else
+                  iResult = -6;
+               EndPagePrinter( hPrinter );
+            }
+            else
+               iResult = -4;
+            EndDocPrinter( hPrinter );
+         }
+         else
+            iResult = -3;
+         HB_TCHAR_FREE( lpDocName );
+         ClosePrinter( hPrinter );
+      }
+      else
+         iResult = -2;
+      
+      HB_TCHAR_FREE( lpPrinterName );
+   }
 
    hb_retni( iResult );
 }
