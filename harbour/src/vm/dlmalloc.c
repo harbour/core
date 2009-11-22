@@ -467,11 +467,13 @@ DEFAULT_MMAP_THRESHOLD       default: 256K
 #endif  /* HAVE_MORECORE */
 #endif  /* DARWIN */
 
-#if defined(HB_OS_OS2) && defined(__WATCOMC__)
-#ifndef HAVE_MMAP
+#if defined(__WATCOMC__) && !defined(WIN32)
 #define HAVE_MMAP 0
-#endif
+#define HAVE_MORECORE 0
+#if !defined(HB_OS_OS2)
+#define LACKS_SYS_PARAM_H
 #endif  /* OS2 */
+#endif  /* __WATCOMC__ */
 
 #ifndef LACKS_SYS_TYPES_H
 #include <sys/types.h>  /* For size_t */
@@ -1395,7 +1397,7 @@ static int win32munmap(void* ptr, size_t size) {
     unique mparams values are initialized only once.
 */
 
-#if defined( HB_OS_OS2 ) || defined( HB_OS_WIN )
+#if defined( HB_OS_OS2 ) || defined( HB_OS_WIN ) || defined( __WATCOMC__ )
 #  ifndef HB_SPINLOCK_USE
 #     define HB_SPINLOCK_USE
 #  endif

@@ -114,6 +114,7 @@
 
 #if defined( HB_FM_STD_ALLOC )
 #  undef HB_FM_DL_ALLOC
+#  undef HB_FM_DLMT_ALLOC
 #  undef HB_FM_WIN_ALLOC
 #elif !defined( HB_FM_DL_ALLOC ) && !defined( HB_FM_WIN_ALLOC )
 #  if defined( _MSC_VER ) || defined( __BORLANDC__ ) || defined( __MINGW32__ ) || \
@@ -135,6 +136,10 @@
 /* #define HB_PARANOID_MEM_CHECK */
 
 #if defined( HB_FM_DL_ALLOC )
+#  if !defined( HB_FM_DLMT_ALLOC ) && !defined( HB_FM_DLMT_ALLOC_OFF ) && \
+      defined( HB_MT_VM )
+#     define HB_FM_DLMT_ALLOC
+#  endif
 /* #  define NO_MALLINFO 1 */
 /* #  define INSECURE */
 /* #  define USE_DL_PREFIX */

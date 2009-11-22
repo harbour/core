@@ -337,6 +337,55 @@ HB_EXTERN_BEGIN
 
 #     endif
 
+      static inline int hb_spinlock_trylock( volatile int * p )
+      {
+         int i = 1;
+         _asm {
+            mov eax, i
+            mov edx, p
+            xchg eax, dword ptr [edx]
+            mov i, eax
+         }
+         return i;
+      }
+
+      static inline void hb_spinlock_acquire( volatile int * l )
+      {
+         for( ;; )
+         {
+            if( !hb_spinlock_trylock( l ) )
+               return;
+
+            #ifdef HB_SPINLOCK_SLEEP
+               if( !hb_spinlock_trylock( l ) )
+                  return;
+               #if defined( HB_TASK_THREAD )
+                  hb_taskYield();
+               #elif defined( HB_OS_WIN )
+                  Sleep( 0 );
+               #elif defined( HB_OS_OS2 )
+                  DosSleep( 0 );
+               #elif defined( __SVR4 )
+                  thr_yield();
+               #elif defined( HB_OS_UNIX )
+                  sched_yield();
+               #else
+                  sleep( 0 );
+               #endif
+            #endif
+         }
+      }
+
+      static inline void hb_spinlock_release( volatile int * l )
+      {
+         *l = 0;
+      }
+
+#     define HB_SPINLOCK_T          volatile int
+#     define HB_SPINLOCK_INIT       0
+#     define HB_SPINLOCK_ACQUIRE(l) hb_spinlock_acquire(l)
+#     define HB_SPINLOCK_RELEASE(l) hb_spinlock_release(l)
+
 #  endif    /* x86 */
 
 #endif  /* ??? C compiler ??? */
