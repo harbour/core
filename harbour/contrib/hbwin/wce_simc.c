@@ -89,7 +89,7 @@ HB_FUNC( SIMREADPHONEBOOKENTRY ) /* hSim, nLocation, nPos, @aEntry */
    HSIM hSim = ( HSIM ) hb_parptr( 1 );
    DWORD dwIndex = ( DWORD ) hb_parnl( 3 );
    SIMPHONEBOOKENTRY PhoneEntry;
-   PHB_ITEM pArray = hb_itemNew( NULL );
+   PHB_ITEM pArray;
    char * szAddress;
    char * szText;
 
@@ -99,7 +99,7 @@ HB_FUNC( SIMREADPHONEBOOKENTRY ) /* hSim, nLocation, nPos, @aEntry */
    szAddress = HB_TCHAR_CONVFROM( PhoneEntry.lpszAddress );
    szText = HB_TCHAR_CONVFROM( PhoneEntry.lpszText );
 
-   hb_arrayNew( pArray, 5 );
+   pArray = hb_itemArrayNew( 5 );
 
    hb_arraySetC( pArray, 1, szAddress );
    hb_arraySetC( pArray, 2, szText );

@@ -113,8 +113,8 @@ HB_FUNC( ASPLICE )
 
       for( ulIndex = ulStart + 1; ( ulIndex - ulStart ) <= ulRemove; ulIndex++ )
       {
-         hb_itemForwardValue( hb_arrayGetItemPtr( pReturn, ulIndex - ulStart ),
-                              hb_arrayGetItemPtr( pArray, ulIndex ) );
+         hb_itemMove( hb_arrayGetItemPtr( pReturn, ulIndex - ulStart ),
+                      hb_arrayGetItemPtr( pArray, ulIndex ) );
       }
 
       if( hb_pcount() > 3 )
@@ -132,15 +132,15 @@ HB_FUNC( ASPLICE )
             /* Shift right BEFORE adding, so that new items will not override existing values. */
             for( ulIndex = ulLen; ulIndex && --ulShift; --ulIndex )
             {
-               hb_itemForwardValue( hb_arrayGetItemPtr( pArray, ulIndex + ulMore ),
-                                    hb_arrayGetItemPtr( pArray, ulIndex ) );
+               hb_itemMove( hb_arrayGetItemPtr( pArray, ulIndex + ulMore ),
+                            hb_arrayGetItemPtr( pArray, ulIndex ) );
             }
 
             /* Now insert new values into emptied space. */
             for( ulIndex = ulStart; ++ulNew <= ulAdd; ulIndex++ )
             {
-               hb_itemForwardValue( hb_arrayGetItemPtr( pArray, ulIndex + 1 ),
-                                    hb_param( 3 + ulNew, HB_IT_ANY ) );
+               hb_itemMove( hb_arrayGetItemPtr( pArray, ulIndex + 1 ),
+                            hb_param( 3 + ulNew, HB_IT_ANY ) );
             }
          }
          else
@@ -148,7 +148,7 @@ HB_FUNC( ASPLICE )
             /* Insert over the space emptied by removed items */
             for( ulIndex = ulStart; ++ulNew <= ulAdd; ulIndex++ )
             {
-               hb_itemForwardValue( hb_arrayGetItemPtr( pArray, ulIndex + 1 ), hb_param( 3 + ulNew, HB_IT_ANY ) );
+               hb_itemMove( hb_arrayGetItemPtr( pArray, ulIndex + 1 ), hb_param( 3 + ulNew, HB_IT_ANY ) );
             }
 
             if( ulRemove > ulAdd )
@@ -158,8 +158,8 @@ HB_FUNC( ASPLICE )
                /* Shift left to compact the emptied hole. */
                for( ulIndex = ulStart + ulAdd + 1; ulIndex + ulRemove <= ulLen; ulIndex++ )
                {
-                  hb_itemForwardValue( hb_arrayGetItemPtr( pArray, ulIndex ),
-                                       hb_arrayGetItemPtr( pArray, ulIndex + ulRemove ) );
+                  hb_itemMove( hb_arrayGetItemPtr( pArray, ulIndex ),
+                               hb_arrayGetItemPtr( pArray, ulIndex + ulRemove ) );
                }
             }
          }
@@ -168,8 +168,8 @@ HB_FUNC( ASPLICE )
       {
          for( ulIndex = ulStart + 1; ulIndex + ulRemove <= ulLen; ulIndex++ )
          {
-            hb_itemForwardValue( hb_arrayGetItemPtr( pArray, ulIndex ),
-                                 hb_arrayGetItemPtr( pArray, ulIndex + ulRemove ) );
+            hb_itemMove( hb_arrayGetItemPtr( pArray, ulIndex ),
+                         hb_arrayGetItemPtr( pArray, ulIndex + ulRemove ) );
          }
 
          hb_arraySize( pArray, ulLen - ulRemove );
@@ -209,8 +209,8 @@ HB_FUNC( AMERGE )
          /* Shift right BEFORE merging, so that merged items will not override existing values. */
          for( ulIndex = ulLen; ulIndex > ulStart; --ulIndex )
          {
-            hb_itemForwardValue( hb_arrayGetItemPtr( pArray1, ulIndex + ulAdd ),
-                                 hb_arrayGetItemPtr( pArray1, ulIndex ) );
+            hb_itemMove( hb_arrayGetItemPtr( pArray1, ulIndex + ulAdd ),
+                         hb_arrayGetItemPtr( pArray1, ulIndex ) );
          }
       }
       else

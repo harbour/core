@@ -2064,8 +2064,7 @@ HB_FUNC( ADSDIRECTORY )
    PHB_ITEM   pitmDir;
    ADSHANDLE  hConnect = HB_ADS_PARCONNECTION( 2 );
 
-   pitmDir = hb_itemNew( NULL );
-   hb_arrayNew( pitmDir, 0 );
+   pitmDir = hb_itemArrayNew( 0 );
 
    ulRetVal = AdsFindFirstTable( hConnect,
                                  ( UNSIGNED8 * ) hb_parcx( 1 ),

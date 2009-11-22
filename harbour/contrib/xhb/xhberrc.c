@@ -85,7 +85,7 @@ LONG WINAPI PRGUnhandledExceptionFilter( EXCEPTION_POINTERS *ExceptionInfo )
             HB_ITEM_NEW( Buffer );
             HB_ITEM Adopt;
 
-            hb_itemForwardValue( &Exception, hb_stackReturnItem() );
+            hb_itemMove( &Exception, hb_stackReturnItem() );
 
             hb_itemPutCLStatic( &Buffer, (char *) ExceptionInfo, sizeof( EXCEPTION_POINTERS ) );
 

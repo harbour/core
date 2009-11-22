@@ -1203,7 +1203,7 @@ static PHB_ITEM StructureToArray( BYTE* Buffer, unsigned long ulBufferLen, PHB_I
             else if( !bAdoptNested )
             {
                /* TraceLog( NULL, "Static: %s\n", *( (char **) ( Buffer + uiOffset ) ) ); */
-               hb_itemPutCStatic( pBaseVar->pItems + ulIndex , *( (char **) ( Buffer + uiOffset ) ) );
+               hb_itemPutCConst( pBaseVar->pItems + ulIndex , *( (char **) ( Buffer + uiOffset ) ) );
             }
             else
             {
@@ -1220,7 +1220,7 @@ static PHB_ITEM StructureToArray( BYTE* Buffer, unsigned long ulBufferLen, PHB_I
             else if( !bAdoptNested )
             {
                /* TraceLog( NULL, "Static: %s\n", *( (char **) ( Buffer + uiOffset ) ) ); */
-               hb_itemPutCStatic( pBaseVar->pItems + ulIndex , *( (char **) ( Buffer + uiOffset ) ) );
+               hb_itemPutCConst( pBaseVar->pItems + ulIndex , *( (char **) ( Buffer + uiOffset ) ) );
             }
             else
             {
@@ -1350,7 +1350,7 @@ static PHB_ITEM StructureToArray( BYTE* Buffer, unsigned long ulBufferLen, PHB_I
                /* TraceLog( NULL, "After Devalue\n" ); */
             }
 
-            hb_itemForwardValue( pBaseVar->pItems + ulIndex, pStructure );
+            hb_itemMove( pBaseVar->pItems + ulIndex, pStructure );
 
             hb_itemRelease( pStructure );
          }

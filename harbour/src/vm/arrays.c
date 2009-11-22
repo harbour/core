@@ -354,7 +354,7 @@ BOOL hb_arrayAddForward( PHB_ITEM pArray, PHB_ITEM pValue )
       {
          hb_arraySize( pArray, pBaseArray->ulLen + 1 );
          pBaseArray = ( PHB_BASEARRAY ) pArray->item.asArray.value;
-         hb_itemForwardValue( pBaseArray->pItems + ( pBaseArray->ulLen - 1 ), pValue );
+         hb_itemMove( pBaseArray->pItems + ( pBaseArray->ulLen - 1 ), pValue );
 
          return TRUE;
       }

@@ -7025,9 +7025,7 @@ HB_FUNC( BM_DBSEEKWILD )
           bAll      = HB_ISLOG( 5 ) ? hb_parl( 5 ) : FALSE;
           if( bAll)
           {
-             PHB_ITEM pList;
-             pList = hb_itemNew( NULL );
-             hb_arrayNew( pList, 0 );
+             PHB_ITEM pList = hb_itemArrayNew( 0 );
              SELF_GOTOP( ( AREAP ) pArea );
              if( hb_cdxSeekWild( (CDXAREAP) pArea, bSoftSeek, pKey, bFindLast, FALSE, bAll ) == HB_SUCCESS &&
                      pArea->fEof == FALSE &&
@@ -7041,8 +7039,7 @@ HB_FUNC( BM_DBSEEKWILD )
                      hb_arrayAdd( pList, hb_itemPutNL( NULL, ((CDXAREAP) pArea)->dbfarea.ulRecNo ) );
                  }
              }
-             hb_itemReturn( pList );
-             hb_itemRelease( pList );
+             hb_itemReturnRelease( pList );
              return;
           }
           else

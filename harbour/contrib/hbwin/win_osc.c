@@ -170,7 +170,7 @@ HB_FUNC( OS_ISWINME )
 
 HB_FUNC( OS_ISWTSCLIENT )
 {
-   BOOL iResult = FALSE;
+   HB_BOOL bResult = FALSE;
    OSVERSIONINFO osvi;
    getwinver( &osvi );
    if( osvi.dwPlatformId == VER_PLATFORM_WIN32_NT && osvi.dwMajorVersion >= 4 )
@@ -179,9 +179,9 @@ HB_FUNC( OS_ISWTSCLIENT )
       #ifndef SM_REMOTESESSION
          #define SM_REMOTESESSION        0x1000
       #endif
-      iResult = GetSystemMetrics( SM_REMOTESESSION ) != 0;
+      bResult = GetSystemMetrics( SM_REMOTESESSION ) != 0;
    }
-   hb_retl( iResult );
+   hb_retl( bResult );
 }
 
 HB_FUNC( OS_VERSIONINFO )

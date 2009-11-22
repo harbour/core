@@ -981,7 +981,7 @@ static PHB_ITEM hb_dbgEvalMacro( const char *szExpr, PHB_ITEM pItem )
    }
    hb_vmPushString( szExpr, strlen( szExpr ) );
    hb_macroGetValue( hb_stackItemFromTop( -1 ), 0, HB_SM_RT_MACRO );
-   hb_itemForwardValue( pItem, hb_stackItemFromTop( -1 ) );
+   hb_itemMove( pItem, hb_stackItemFromTop( -1 ) );
    hb_stackPop();
    return pItem;
 }

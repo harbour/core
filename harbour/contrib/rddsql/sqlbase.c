@@ -507,8 +507,7 @@ static HB_ERRCODE sqlbaseGoHot( SQLBASEAREAP pArea )
    PHB_ITEM   pArray, pItem;
    USHORT     us;
 
-   pArray = hb_itemNew( NULL );
-   hb_arrayNew( pArray, pArea->area.uiFieldCount );
+   pArray = hb_itemArrayNew( pArea->area.uiFieldCount );
    for ( us = 1; us <= pArea->area.uiFieldCount; us++ )
    {
       pItem = hb_itemNew( NULL );

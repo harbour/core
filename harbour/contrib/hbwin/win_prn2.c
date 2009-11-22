@@ -464,9 +464,7 @@ HB_FUNC( GETPRINTERS )
    HB_BOOL bLocalPrintersOnly = hb_parl( 2 );
    DWORD dwNeeded = 0, dwReturned = 0, i;
    PHB_ITEM pTempItem = hb_itemNew( NULL );
-   PHB_ITEM pPrinterArray = hb_itemNew( NULL );
-
-   hb_arrayNew( pPrinterArray, 0 );
+   PHB_ITEM pPrinterArray = hb_itemArrayNew( 0 );
 
    EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) NULL, 0, &dwNeeded, &dwReturned );
 

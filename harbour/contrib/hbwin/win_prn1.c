@@ -611,16 +611,16 @@ HB_FUNC( WIN_DRAWBITMAP )
 static int CALLBACK FontEnumCallBack( LOGFONT * lplf, TEXTMETRIC * lpntm, DWORD FontType,
                                       LPVOID pArray )
 {
-   PHB_ITEM SubItems = hb_itemNew( NULL );
    char * pszFaceName = HB_TCHAR_CONVFROM( lplf->lfFaceName );
+   PHB_ITEM pSubItems = hb_itemArrayNew( 4 );
 
-   hb_arrayNew( SubItems, 4 );
-   hb_arraySetC( SubItems, 1, pszFaceName );
-   hb_arraySetL( SubItems, 2, lplf->lfPitchAndFamily & FIXED_PITCH );
-   hb_arraySetL( SubItems, 3, FontType & TRUETYPE_FONTTYPE );
-   hb_arraySetNL( SubItems, 4, lpntm->tmCharSet );
-   hb_arrayAddForward( ( PHB_ITEM ) pArray, SubItems );
-   hb_itemRelease( SubItems );
+   hb_arraySetC( pSubItems, 1, pszFaceName );
+   hb_arraySetL( pSubItems, 2, lplf->lfPitchAndFamily & FIXED_PITCH );
+   hb_arraySetL( pSubItems, 3, FontType & TRUETYPE_FONTTYPE );
+   hb_arraySetNL( pSubItems, 4, lpntm->tmCharSet );
+   hb_arrayAddForward( ( PHB_ITEM ) pArray, pSubItems );
+
+   hb_itemRelease( pSubItems );
    HB_TCHAR_FREE( pszFaceName );
 
    return TRUE;
@@ -632,9 +632,7 @@ HB_FUNC( WIN_ENUMFONTS )
 
    if( hDC )
    {
-      PHB_ITEM pArray = hb_itemNew( NULL );
-
-      hb_arrayNew( pArray, 0 );
+      PHB_ITEM pArray = hb_itemArrayNew( 0 );
 
       EnumFonts( hDC, ( LPCTSTR ) NULL, ( FONTENUMPROC ) FontEnumCallBack, ( LPARAM ) pArray );
 

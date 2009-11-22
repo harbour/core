@@ -387,7 +387,7 @@ METHOD SetFont( cFontName, nPointSize, nWidth, nBold, lUnderline, lItalic, nChar
    ENDIF
    IF ( ::SetFontOk := ! Empty( ::hFont := win_CreateFont( ::hPrinterDC, ::FontName, ::FontPointSize, ::FontWidth[ 1 ], ::FontWidth[ 2 ], ::fBold, ::fUnderLine, ::fItalic, ::fCharSet ) ) )
       ::fCharWidth  := ::GetCharWidth()
-      ::CharWidth   := ABS( ::fCharWidth )
+      ::CharWidth   := Abs( ::fCharWidth )
       ::CharHeight  := ::GetCharHeight()
    ENDIF
    ::FontName := win_GetPrinterFontName( ::hPrinterDC )  // Get the font name that Windows actually used
@@ -488,7 +488,7 @@ METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS WIN_PRN
       DEFAULT lUpdatePosX TO .T.
       DEFAULT nAlign TO 0
 
-      nPosX := win_TextOut( ::hPrinterDC, ::PosX, ::PosY, cString, LEN( cString ), ::fCharWidth, nAlign )
+      nPosX := win_TextOut( ::hPrinterDC, ::PosX, ::PosY, cString, Len( cString ), ::fCharWidth, nAlign )
 
       ::HavePrinted := .T.
 
@@ -543,14 +543,14 @@ METHOD GetCharHeight() CLASS WIN_PRN
 METHOD GetTextWidth( cString ) CLASS WIN_PRN
    LOCAL nWidth
    IF ::FontWidth[ 2 ] < 0 .AND. ! Empty( ::FontWidth[ 1 ] )
-      nWidth := LEN( cString ) * ::CharWidth
+      nWidth := Len( cString ) * ::CharWidth
    ELSE
-      nWidth := win_GetTextSize( ::hPrinterDC, cString, LEN( cString ) )  // Return Width in device units
+      nWidth := win_GetTextSize( ::hPrinterDC, cString, Len( cString ) )  // Return Width in device units
    ENDIF
    RETURN nWidth
 
 METHOD GetTextHeight( cString ) CLASS WIN_PRN
-   RETURN win_GetTextSize( ::hPrinterDC, cString, LEN( cString ), .F. )  // Return Height in device units
+   RETURN win_GetTextSize( ::hPrinterDC, cString, Len( cString ), .F. )  // Return Height in device units
 
 METHOD DrawBitMap( oBmp ) CLASS WIN_PRN
    LOCAL lResult := .F.
