@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Harbour THarbourPrinter C++ Class for Harbour print support
+ * Harbour Windows Printing support functions
  *
- * Copyright 2002 Luiz Rafael Culik<culikr@uol.com.br>
+ * Copyright 2002 Luiz Rafael Culik <culikr@uol.com.br>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -71,7 +71,7 @@
 
 #define MAXBUFFERSIZE 255
 
-static BOOL hb_isLegacyDevice( const char * pszPrinterName )
+static BOOL hb_IsLegacyDevice( const char * pszPrinterName )
 {
    static const char * s_pszPrnDev[] = { "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "com1", "com2", "com3", "com4", NULL };
    int n;
@@ -91,10 +91,11 @@ static BOOL hb_PrinterExists( const char * pszPrinterName )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_PrinterExists(%s)", pszPrinterName ) );
 
-   if( ! strchr( pszPrinterName, HB_OS_PATH_LIST_SEP_CHR ) && ! hb_isLegacyDevice( pszPrinterName ) )
-   {                            /* Don't bother with test if '\' in string */
-      if( hb_iswinnt() )
-      {                         /* Use EnumPrinter() here because much faster than OpenPrinter() */
+   /* Don't bother with test if '\' in string */
+   if( ! strchr( pszPrinterName, HB_OS_PATH_LIST_SEP_CHR ) && ! hb_IsLegacyDevice( pszPrinterName ) )
+   {
+      if( hb_iswinnt() ) /* Use EnumPrinter() here because much faster than OpenPrinter() */
+      {
          DWORD needed = 0, returned = 0;
 
          EnumPrinters( _ENUMPRN_FLAGS_, NULL, 4, ( LPBYTE ) NULL, 0, &needed, &returned );
@@ -105,9 +106,9 @@ static BOOL hb_PrinterExists( const char * pszPrinterName )
 
             if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 4, ( LPBYTE ) pPrinterEnum, needed, &needed, &returned ) )
             {
-               DWORD a;
+               DWORD i;
 
-               for( a = 0; ! bResult && a < returned; ++a, ++pPrinterEnum )
+               for( i = 0; ! bResult && i < returned; ++i, ++pPrinterEnum )
                {
                   char * pszData = HB_TCHAR_CONVFROM( pPrinterEnum->pPrinterName );
                   bResult = ( strcmp( pszPrinterName, pszData ) == 0 );
@@ -243,27 +244,7 @@ HB_FUNC( GETDEFAULTPRINTER )
       hb_retc_null();
 }
 
-static DWORD IsPrinterError( HANDLE hPrinter )
-{
-   DWORD dwResult = ( DWORD ) -1;
-   DWORD cByteNeeded;
-
-   GetPrinter( hPrinter, 2, NULL, 0, &cByteNeeded );
-
-   if( cByteNeeded )
-   {
-      PRINTER_INFO_2 * pPrinterInfo = ( PRINTER_INFO_2 * ) hb_xgrab( cByteNeeded );
-
-      if( GetPrinter( hPrinter, 2, ( LPBYTE ) pPrinterInfo, cByteNeeded, &cByteNeeded ) )
-         dwResult = pPrinterInfo->Status;
-
-      hb_xfree( pPrinterInfo );
-   }
-
-   return dwResult;
-}
-
-static BOOL GetJobs( HANDLE hPrinter, JOB_INFO_2 ** ppJobInfo, int * pcJobs )
+static BOOL hb_GetJobs( HANDLE hPrinter, JOB_INFO_2 ** ppJobInfo, int * pcJobs )
 {
    BOOL bResult = FALSE;
    DWORD cByteNeeded;
@@ -299,20 +280,40 @@ static BOOL GetJobs( HANDLE hPrinter, JOB_INFO_2 ** ppJobInfo, int * pcJobs )
    return bResult;
 }
 
-static DWORD IsPrinterErrorn( HANDLE hPrinter )
+static DWORD hb_GetPrinterStatus( HANDLE hPrinter )
 {
-   DWORD dwError = IsPrinterError( hPrinter );  /* Just return the PrinterStatus */
+   DWORD dwResult = ( DWORD ) -1;
+   DWORD cByteNeeded;
 
-   if( !dwError )
+   GetPrinter( hPrinter, 2, NULL, 0, &cByteNeeded );
+
+   if( cByteNeeded )
+   {
+      PRINTER_INFO_2 * pPrinterInfo = ( PRINTER_INFO_2 * ) hb_xgrab( cByteNeeded );
+
+      if( GetPrinter( hPrinter, 2, ( LPBYTE ) pPrinterInfo, cByteNeeded, &cByteNeeded ) )
+         dwResult = pPrinterInfo->Status;
+
+      hb_xfree( pPrinterInfo );
+   }
+
+   return dwResult;
+}
+
+static DWORD hb_IsPrinterErrorn( HANDLE hPrinter )
+{
+   DWORD dwError = hb_GetPrinterStatus( hPrinter );
+
+   if( dwError == 0 )
    {
       JOB_INFO_2 * pJobs;
-      int cJobs;
+      int iJobs;
 
-      if( GetJobs( hPrinter, &pJobs, &cJobs ) )
+      if( hb_GetJobs( hPrinter, &pJobs, &iJobs ) )
       {
          int i;
 
-         for( i = 0; ! dwError && i < cJobs; i++ )
+         for( i = 0; dwError == 0 && i < iJobs; ++i )
          {
             if( pJobs[ i ].Status & JOB_STATUS_ERROR )
                dwError = ( DWORD ) -20;
@@ -326,10 +327,11 @@ static DWORD IsPrinterErrorn( HANDLE hPrinter )
          hb_xfree( pJobs );
       }
    }
+
    return dwError;
 }
 
-static DWORD hb_printerIsReadyn( const char * pszPrinterName )
+static DWORD hb_PrinterIsReadyn( const char * pszPrinterName )
 {
    DWORD dwPrinter = ( DWORD ) -1;
    HANDLE hPrinter;
@@ -339,7 +341,7 @@ static DWORD hb_printerIsReadyn( const char * pszPrinterName )
       LPTSTR lpPrinterName = HB_TCHAR_CONVTO( pszPrinterName );
       if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) )
       {
-         dwPrinter = IsPrinterErrorn( hPrinter );
+         dwPrinter = hb_IsPrinterErrorn( hPrinter );
          CloseHandle( hPrinter );
       }
       HB_TCHAR_FREE( lpPrinterName );
@@ -359,7 +361,7 @@ HB_FUNC( XISPRINTER )
       pszPrinterName = szDefaultPrinter;
    }
 
-   hb_retnl( hb_printerIsReadyn( pszPrinterName ) );
+   hb_retnl( hb_PrinterIsReadyn( pszPrinterName ) );
 }
 
 static BOOL hb_GetPrinterNameByPort( char * pszPrinterName, HB_SIZE * pulBufferSize,
@@ -379,9 +381,9 @@ static BOOL hb_GetPrinterNameByPort( char * pszPrinterName, HB_SIZE * pulBufferS
       if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) pPrinterEnum, needed, &needed, &returned ) )
       {
          BOOL bFound = FALSE;
-         DWORD a;
+         DWORD i;
 
-         for( a = 0; a < returned && ! bFound; ++a, ++pPrinterEnum )
+         for( i = 0; i < returned && ! bFound; ++i, ++pPrinterEnum )
          {
             char * pszPortName = HB_TCHAR_CONVFROM( pPrinterEnum->pPortName );
 
@@ -507,7 +509,7 @@ HB_FUNC( GETPRINTERS )
 {
    BOOL bPrinterNamesOnly = HB_ISLOG( 1 ) ? ! hb_parl( 1 ) : TRUE;
    BOOL bLocalPrintersOnly = hb_parl( 2 );
-   DWORD needed = 0, returned = 0, a;
+   DWORD needed = 0, returned = 0, i;
    PHB_ITEM pTempItem = hb_itemNew( NULL );
    PHB_ITEM ArrayPrinter = hb_itemNew( NULL );
 
@@ -522,7 +524,7 @@ HB_FUNC( GETPRINTERS )
    
       if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) pPrinterEnum, needed, &needed, &returned ) )
       {
-         for( a = 0; a < returned; ++a, ++pPrinterEnum )
+         for( i = 0; i < returned; ++i, ++pPrinterEnum )
          {
             char * pszData;
 
