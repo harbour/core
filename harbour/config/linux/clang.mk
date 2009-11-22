@@ -1,5 +1,5 @@
 #
-# $Id: clang.mk 12957 2009-11-21 10:11:32Z vszakats $
+# $Id$
 #
 
 ifeq ($(HB_BUILD_MODE),cpp)

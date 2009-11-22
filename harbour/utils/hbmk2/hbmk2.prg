@@ -947,9 +947,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
    CASE hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|beos|linux" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" /* Separated to avoid match with 'win' */
       DO CASE
       CASE hbmk[ _HBMK_cPLAT ] == "linux"
-         aCOMPSUP := { "gcc", "watcom", "icc", "sunpro" }
+         aCOMPSUP := { "gcc", "clang", "icc", "watcom", "sunpro" }
       CASE hbmk[ _HBMK_cPLAT ] == "darwin"
-         aCOMPSUP := { "gcc", "icc", "clang" }
+         aCOMPSUP := { "gcc", "clang", "icc" }
       CASE hbmk[ _HBMK_cPLAT ] == "sunos"
          aCOMPSUP := { "gcc", "sunpro" }
       OTHERWISE
@@ -2175,6 +2175,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
            ( hbmk[ _HBMK_cPLAT ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "icc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "icc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "beos"   .AND. hbmk[ _HBMK_cCOMP ] == "gcc" )
 
@@ -7423,8 +7424,8 @@ STATIC PROCEDURE ShowHelp( lLong )
    LOCAL aText_Supp := {;
       "",;
       I_( "Supported <comp> values for each supported <plat> value:" ),;
-      "  - linux  : gcc, watcom, icc, sunpro",;
-      "  - darwin : gcc, icc, clang",;
+      "  - linux  : gcc, clang, icc, watcom, sunpro",;
+      "  - darwin : gcc, clang, icc",;
       "  - win    : mingw, msvc, bcc, watcom, icc, pocc, cygwin, xcc,",;
       "  -          mingw64, msvc64, msvcia64, iccia64, pocc64",;
       "  - wce    : mingwarm, mingw, msvcarm, poccarm",;
