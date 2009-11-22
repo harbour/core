@@ -413,6 +413,7 @@ HARBOUR
    linux
    -----
    gcc      - GNU C
+   clang    - Clang compiler frontend
    watcom   - Open Watcom C++
    icc      - Intel(R) C/C++
    sunpro   - Sun Studio C/C++
@@ -420,8 +421,8 @@ HARBOUR
    darwin
    ------
    gcc      - GNU C
-   icc      - Intel(R) C/C++
    clang    - Clang compiler frontend
+   icc      - Intel(R) C/C++
 
    bsd
    ---
@@ -1138,6 +1139,7 @@ HARBOUR
    x os2    -> dos/watcom    x86
    x os2    -> linux/watcom  x86
      linux  -> linux/gcc     (CPU cross-builds possible)
+     linux  -> linux/clang   (CPU cross-builds possible)
      linux  -> linux/icc     (CPU cross-builds possible: x86, x86-64, ia64)
      linux  -> linux/sunpro  (CPU cross-builds possible: x86, x86-64)
    x linux  -> wce/mingwarm  arm

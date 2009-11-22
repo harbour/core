@@ -64,6 +64,7 @@
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
+#include "hbapifs.h"
 #include "hbapiitm.h"
 
 #define _ENUMPRN_FLAGS_             ( PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS )
@@ -192,7 +193,6 @@ static BOOL hb_GetDefaultPrinter( char * pszPrinterName, HB_SIZE * pulBufferSize
       {
 /*    
          This option should never be required but is included because of this article
-      
              http://support.microsoft.com/kb/246772/en-us
       
          This option will not enumerate any network printers.
@@ -210,20 +210,20 @@ static BOOL hb_GetDefaultPrinter( char * pszPrinterName, HB_SIZE * pulBufferSize
          {
             if( dwNeeded )
             {
-               PRINTER_INFO_2 * ppi2 = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
+               PRINTER_INFO_2 * pPrinterInfo = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
       
-               if( EnumPrinters( PRINTER_ENUM_DEFAULT, NULL, 2, ( LPBYTE ) ppi2, dwNeeded, &dwNeeded, &dwReturned ) && dwReturned )
+               if( EnumPrinters( PRINTER_ENUM_DEFAULT, NULL, 2, ( LPBYTE ) pPrinterInfo, dwNeeded, &dwNeeded, &dwReturned ) && dwReturned )
                {
-                  DWORD dwSize = ( DWORD ) lstrlen( ppi2->pPrinterName );
+                  DWORD dwSize = ( DWORD ) lstrlen( pPrinterInfo->pPrinterName );
       
                   if( dwSize && dwSize < *pulBufferSize )
                   {
-                     HB_TCHAR_GETFROM( pszPrinterName, ppi2->pPrinterName, lstrlen( ppi2->pPrinterName ) );
+                     HB_TCHAR_GETFROM( pszPrinterName, pPrinterInfo->pPrinterName, lstrlen( pPrinterInfo->pPrinterName ) );
                      *pulBufferSize = dwSize + 1;
                      bResult = TRUE;
                   }
                }
-               hb_xfree( ppi2 );
+               hb_xfree( pPrinterInfo );
             }
          }
       }
@@ -425,8 +425,6 @@ HB_FUNC( PRINTERPORTTONAME )
       hb_retc_null();
 }
 
-#define BIG_PRINT_BUFFER ( 1024 * 32 )
-
 static int hb_PrintFileRaw( const char * pszPrinterName, const char * pszFileName, const char * pszDocName )
 {
    HANDLE hPrinter;
@@ -444,26 +442,27 @@ static int hb_PrintFileRaw( const char * pszPrinterName, const char * pszFileNam
       {
          if( StartPagePrinter( hPrinter ) != 0 )
          {
-            LPTSTR lpFileName = HB_TCHAR_CONVTO( pszFileName );
-            /* TOFIX: Use Harbour FS API */
-            HANDLE hFile = CreateFile( lpFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
+            HB_FHANDLE fhnd = hb_fsOpen( pszFileName, FO_READ | FO_SHARED );
 
-            HB_TCHAR_FREE( lpFileName );
-
-            if( hFile != INVALID_HANDLE_VALUE )
+            if( fhnd != FS_ERROR )
             {
-               BYTE printBuffer[ BIG_PRINT_BUFFER ];
-               DWORD nRead, nWritten = 0;
+               BYTE pbyBuffer[ 32 * 1024 ];
+               DWORD nWritten = 0;
+               USHORT nRead;
 
-               while( ReadFile( hFile, printBuffer, sizeof( printBuffer ), &nRead, NULL ) && nRead > 0 )
+               while( ( nRead = hb_fsRead( fhnd, pbyBuffer, sizeof( pbyBuffer ) ) ) > 0 )
                {
-                  if( printBuffer[ nRead - 1 ] == 26 )
+                  /* TOFIX: This check seems wrong for any input files 
+                            larger than our read buffer, in such case it 
+                            will strip Chr( 26 ) from inside the file, which 
+                            means it will corrupt it. [vszakats] */
+                  if( pbyBuffer[ nRead - 1 ] == 26 )
                      nRead--;   /* Skip the EOF() character */
 
-                  WritePrinter( hPrinter, printBuffer, nRead, &nWritten );
+                  WritePrinter( hPrinter, pbyBuffer, nRead, &nWritten );
                }
                iResult = 1;
-               CloseHandle( hFile );
+               hb_fsClose( fhnd );
             }
             else
                iResult = -6;
