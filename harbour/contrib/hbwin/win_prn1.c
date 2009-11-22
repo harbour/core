@@ -104,7 +104,6 @@ static const HB_GC_FUNCS s_gc_HDC_funcs =
    hb_gcDummyMark
 };
 
-
 static HDC win_HDC_par( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gc_HDC_funcs, iParam );
@@ -172,7 +171,7 @@ HB_FUNC( WIN_STARTDOC )
 {
    HDC hDC = win_HDC_par( 1 );
    DOCINFO sDoc;
-   BOOL bResult = FALSE;
+   HB_BOOL bResult = FALSE;
 
    if( hDC )
    {
@@ -183,7 +182,7 @@ HB_FUNC( WIN_STARTDOC )
       sDoc.lpszOutput = NULL;
       sDoc.lpszDatatype = NULL;
       sDoc.fwType = 0;
-      bResult = ( BOOL ) ( StartDoc( hDC, &sDoc ) > 0 );
+      bResult = ( StartDoc( hDC, &sDoc ) > 0 );
 
       if( lpDocName )
          HB_TCHAR_FREE( lpDocName );
@@ -194,7 +193,7 @@ HB_FUNC( WIN_STARTDOC )
 
 HB_FUNC( WIN_ENDDOC )
 {
-   BOOL bResult = FALSE;
+   HB_BOOL bResult = FALSE;
    HDC hDC = win_HDC_par( 1 );
 
    if( hDC )
@@ -434,7 +433,7 @@ HB_FUNC( WIN_BITMAPSOK )
 
 HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
 {
-   BOOL bResult = FALSE;
+   HB_BOOL bResult = FALSE;
    HDC hDC = win_HDC_par( 1 );
 
    if( hDC )
@@ -492,7 +491,7 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
 
 HB_FUNC( WIN_GETDOCUMENTPROPERTIES )
 {
-   BOOL bResult = FALSE;
+   HB_BOOL bResult = FALSE;
    HANDLE hPrinter;
    const char * pszPrinterName = hb_parc( 1 );
    LPTSTR lpPrinterName = pszPrinterName ? HB_TCHAR_CONVTO( pszPrinterName ) : NULL;
@@ -536,11 +535,12 @@ HB_FUNC( WIN_GETDOCUMENTPROPERTIES )
 HB_FUNC( WIN_LOADBITMAPFILE )
 {
    LPTSTR lpFileName = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
-   BOOL bSuccess = FALSE;
+   HB_BOOL bSuccess = FALSE;
    DWORD dwFileSize = 0, dwHighSize, dwBytesRead;
    HANDLE hFile;
    BITMAPFILEHEADER * pbmfh = NULL;
 
+   /* TOFIX: To use Harbour File I/O API here. */
    hFile = CreateFile( ( LPCTSTR ) lpFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING,
                        FILE_FLAG_SEQUENTIAL_SCAN, NULL );
 
@@ -565,7 +565,7 @@ HB_FUNC( WIN_LOADBITMAPFILE )
    }
 
    if( bSuccess )
-      hb_retclen( ( char * ) pbmfh, dwFileSize );
+      hb_retclen( ( char * ) pbmfh, ( HB_SIZE ) dwFileSize );
    else
       hb_retc_null();
 

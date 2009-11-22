@@ -71,7 +71,7 @@
 
 #define MAXBUFFERSIZE 255
 
-static BOOL hb_IsLegacyDevice( const char * pszPrinterName )
+static HB_BOOL hb_IsLegacyDevice( const char * pszPrinterName )
 {
    static const char * s_pszPrnDev[] = { "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "com1", "com2", "com3", "com4", NULL };
    int i;
@@ -87,7 +87,7 @@ static BOOL hb_IsLegacyDevice( const char * pszPrinterName )
 
 HB_FUNC( PRINTEREXISTS )
 {
-   BOOL bResult = FALSE;
+   HB_BOOL bResult = FALSE;
 
    if( HB_ISCHAR( 1 ) )
    {
@@ -123,9 +123,9 @@ HB_FUNC( PRINTEREXISTS )
    hb_retl( bResult );
 }
 
-static BOOL hb_GetDefaultPrinter( char * pszPrinterName, HB_SIZE * pulBufferSize )
+static HB_BOOL hb_GetDefaultPrinter( char * pszPrinterName, HB_SIZE * pulBufferSize )
 {
-   BOOL bResult = FALSE;
+   HB_BOOL bResult = FALSE;
 
    if( pszPrinterName && pulBufferSize )
    {
@@ -231,9 +231,9 @@ HB_FUNC( GETDEFAULTPRINTER )
       hb_retc_null();
 }
 
-static BOOL hb_GetJobs( HANDLE hPrinter, JOB_INFO_2 ** ppJobInfo, long * plJobs )
+static HB_BOOL hb_GetJobs( HANDLE hPrinter, JOB_INFO_2 ** ppJobInfo, long * plJobs )
 {
-   BOOL bResult = FALSE;
+   HB_BOOL bResult = FALSE;
    DWORD dwByteNeeded = 0;
 
    GetPrinter( hPrinter, 2, NULL, 0, &dwByteNeeded );
@@ -341,7 +341,7 @@ HB_FUNC( PRINTERPORTTONAME )
    if( hb_parclen( 1 ) > 0 )
    {
       const char * pszPortNameFind = hb_parc( 1 );
-      BOOL bSubStr = hb_parl( 2 );
+      HB_BOOL bSubStr = hb_parl( 2 );
 
       DWORD dwNeeded = 0, dwReturned = 0;
 
@@ -353,7 +353,7 @@ HB_FUNC( PRINTERPORTTONAME )
 
          if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) pPrinterEnum, dwNeeded, &dwNeeded, &dwReturned ) )
          {
-            BOOL bFound = FALSE;
+            HB_BOOL bFound = FALSE;
             DWORD i;
 
             for( i = 0; i < dwReturned && ! bFound; ++i, ++pPrinterEnum )
@@ -461,8 +461,8 @@ HB_FUNC( PRINTFILERAW )
 
 HB_FUNC( GETPRINTERS )
 {
-   BOOL bPrinterNamesOnly = HB_ISLOG( 1 ) ? ! hb_parl( 1 ) : TRUE;
-   BOOL bLocalPrintersOnly = hb_parl( 2 );
+   HB_BOOL bPrinterNamesOnly = HB_ISLOG( 1 ) ? ! hb_parl( 1 ) : TRUE;
+   HB_BOOL bLocalPrintersOnly = hb_parl( 2 );
    DWORD dwNeeded = 0, dwReturned = 0, i;
    PHB_ITEM pTempItem = hb_itemNew( NULL );
    PHB_ITEM pPrinterArray = hb_itemNew( NULL );
