@@ -115,14 +115,11 @@ HB_FUNC( DISKSPACE )
                                     ( ( ( double ) 0xFFFFFFFF ) + 1 ) )
 #endif
 
-      typedef BOOL ( WINAPI * P_GDFSE )( LPCSTR, PULARGE_INTEGER,
-                                         PULARGE_INTEGER, PULARGE_INTEGER );
       ULARGE_INTEGER i64FreeBytesToCaller, i64TotalBytes, i64FreeBytes;
       USHORT uiParam = ( USHORT ) hb_parni( 1 );
       USHORT uiDrive = uiParam == 0 ? hb_fsCurDrv() + 1 : uiParam;
       UINT uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
 
-#if defined( HB_OS_WIN_CE )
       TCHAR lpPath[ 4 ];
 
       lpPath[ 0 ] = ( TCHAR ) ( uiDrive + 'A' - 1 );
@@ -130,51 +127,52 @@ HB_FUNC( DISKSPACE )
       lpPath[ 2 ] = '\\';
       lpPath[ 3 ] = '\0';
 
-      bError = !GetDiskFreeSpaceEx( lpPath,
-                                    ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
-                                    ( PULARGE_INTEGER ) &i64TotalBytes,
-                                    ( PULARGE_INTEGER ) &i64FreeBytes );
-      if( !bError )
+#if defined( HB_OS_WIN_CE )
+
+      bError = ! GetDiskFreeSpaceEx( lpPath,
+                                     ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
+                                     ( PULARGE_INTEGER ) &i64TotalBytes,
+                                     ( PULARGE_INTEGER ) &i64FreeBytes );
+      if( ! bError )
          dSpace = HB_GET_LARGE_UINT( i64FreeBytesToCaller );
 #else
-      char szPath[ 4 ];
-      P_GDFSE pGetDiskFreeSpaceEx = ( P_GDFSE )
-                           GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
-                                           "GetDiskFreeSpaceExA" );
-      szPath[ 0 ] = ( char ) uiDrive + 'A' - 1;
-      szPath[ 1 ] = ':';
-      szPath[ 2 ] = '\\';
-      szPath[ 3 ] = '\0';
-
-      if( pGetDiskFreeSpaceEx )
       {
-         bError = !pGetDiskFreeSpaceEx( szPath,
-                                        ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
-                                        ( PULARGE_INTEGER ) &i64TotalBytes,
-                                        ( PULARGE_INTEGER ) &i64FreeBytes );
-         if( !bError )
-            dSpace = HB_GET_LARGE_UINT( i64FreeBytesToCaller );
-      }
-      else
-      {
-         LPTSTR lpPath = HB_TCHAR_CONVTO( szPath );
+         typedef BOOL ( WINAPI * P_GDFSE )( LPCTSTR, PULARGE_INTEGER,
+                                            PULARGE_INTEGER, PULARGE_INTEGER );
+         P_GDFSE pGetDiskFreeSpaceEx = ( P_GDFSE )
+                              GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
+#if defined( UNICODE )
+                                              "GetDiskFreeSpaceExW" );
+#else
+                                              "GetDiskFreeSpaceExA" );
+#endif
 
-         DWORD dwSectorsPerCluster;
-         DWORD dwBytesPerSector;
-         DWORD dwNumberOfFreeClusters;
-         DWORD dwTotalNumberOfClusters;
+         if( pGetDiskFreeSpaceEx )
+         {
+            bError = ! pGetDiskFreeSpaceEx( lpPath,
+                                            ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
+                                            ( PULARGE_INTEGER ) &i64TotalBytes,
+                                            ( PULARGE_INTEGER ) &i64FreeBytes );
+            if( ! bError )
+               dSpace = HB_GET_LARGE_UINT( i64FreeBytesToCaller );
+         }
+         else
+         {
+            DWORD dwSectorsPerCluster;
+            DWORD dwBytesPerSector;
+            DWORD dwNumberOfFreeClusters;
+            DWORD dwTotalNumberOfClusters;
 
-         bError = ! GetDiskFreeSpace( lpPath,
-                                      &dwSectorsPerCluster,
-                                      &dwBytesPerSector,
-                                      &dwNumberOfFreeClusters,
-                                      &dwTotalNumberOfClusters );
-         if( !bError )
-            dSpace = ( double ) dwNumberOfFreeClusters *
-                     ( double ) dwSectorsPerCluster *
-                     ( double ) dwBytesPerSector;
-
-         HB_TCHAR_FREE( lpPath );
+            bError = ! GetDiskFreeSpace( lpPath,
+                                         &dwSectorsPerCluster,
+                                         &dwBytesPerSector,
+                                         &dwNumberOfFreeClusters,
+                                         &dwTotalNumberOfClusters );
+            if( !bError )
+               dSpace = ( double ) dwNumberOfFreeClusters *
+                        ( double ) dwSectorsPerCluster *
+                        ( double ) dwBytesPerSector;
+         }
       }
 #endif
       SetErrorMode( uiErrMode );

@@ -138,16 +138,28 @@ static HB_BOOL hb_GetDefaultPrinter( char * pszPrinterName, HB_SIZE * pulBufferS
 
       if( osvi.dwPlatformId == VER_PLATFORM_WIN32_NT && osvi.dwMajorVersion >= 5 ) /* Windows 2000 or later */
       {
-         typedef BOOL( WINAPI * DEFPRINTER ) ( LPSTR, LPDWORD );
+         typedef BOOL( WINAPI * DEFPRINTER ) ( LPTSTR, LPDWORD );
          DEFPRINTER fnGetDefaultPrinter;
          HMODULE hWinSpool = LoadLibrary( TEXT( "winspool.drv" ) );
 
          if( hWinSpool )
          {
+#if defined( UNICODE )
+            fnGetDefaultPrinter = ( DEFPRINTER ) GetProcAddress( hWinSpool, "GetDefaultPrinterW" );
+#else
             fnGetDefaultPrinter = ( DEFPRINTER ) GetProcAddress( hWinSpool, "GetDefaultPrinterA" );
+#endif
 
             if( fnGetDefaultPrinter )
-               bResult = ( *fnGetDefaultPrinter )( pszPrinterName, pulBufferSize );
+            {
+               LPTSTR lpPrinterName = ( LPTSTR ) hb_xgrab( *pulBufferSize * sizeof( TCHAR ) );
+
+               bResult = ( *fnGetDefaultPrinter )( lpPrinterName, pulBufferSize );
+
+               HB_TCHAR_GETFROM( pszPrinterName, lpPrinterName, *pulBufferSize );
+
+               hb_xfree( lpPrinterName );
+            }
 
             FreeLibrary( hWinSpool );
          }

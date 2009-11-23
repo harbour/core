@@ -166,24 +166,22 @@ HB_FUNC( HB_DISKSPACE )
                                     ( ( ( double ) 0xFFFFFFFF ) + 1 ) )
 #endif
 
-      typedef BOOL ( WINAPI * P_GDFSE )( LPCSTR, PULARGE_INTEGER,
-                                         PULARGE_INTEGER, PULARGE_INTEGER );
-
       for( ;; )
       {
          ULARGE_INTEGER i64FreeBytesToCaller, i64TotalBytes, i64FreeBytes;
          UINT uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
          BOOL fResult;
 
-#if defined( HB_OS_WIN_CE )
          LPTSTR lpPath = HB_TCHAR_CONVTO( szPath );
+
+#if defined( HB_OS_WIN_CE )
 
          fResult = GetDiskFreeSpaceEx( lpPath,
                                        ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
                                        ( PULARGE_INTEGER ) &i64TotalBytes,
                                        ( PULARGE_INTEGER ) &i64FreeBytes );
          hb_fsSetIOError( fResult, 0 );
-         HB_TCHAR_FREE( lpPath );
+
          if( fResult )
          {
             switch( uiType )
@@ -207,81 +205,91 @@ HB_FUNC( HB_DISKSPACE )
             }
          }
 #else
-         P_GDFSE pGetDiskFreeSpaceEx = ( P_GDFSE )
-                           GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
-                                           "GetDiskFreeSpaceExA" );
-         if( pGetDiskFreeSpaceEx )
          {
-            fResult = pGetDiskFreeSpaceEx( szPath,
-                                           ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
-                                           ( PULARGE_INTEGER ) &i64TotalBytes,
-                                           ( PULARGE_INTEGER ) &i64FreeBytes );
-            hb_fsSetIOError( fResult, 0 );
-            if( fResult )
+
+            typedef BOOL ( WINAPI * P_GDFSE )( LPCTSTR, PULARGE_INTEGER,
+                                               PULARGE_INTEGER, PULARGE_INTEGER );
+
+            P_GDFSE pGetDiskFreeSpaceEx = ( P_GDFSE )
+                              GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
+#if defined( UNICODE )
+                                              "GetDiskFreeSpaceExW" );
+#else
+                                              "GetDiskFreeSpaceExA" );
+#endif
+
+            if( pGetDiskFreeSpaceEx )
             {
-               switch( uiType )
+               fResult = pGetDiskFreeSpaceEx( lpPath,
+                                              ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
+                                              ( PULARGE_INTEGER ) &i64TotalBytes,
+                                              ( PULARGE_INTEGER ) &i64FreeBytes );
+               hb_fsSetIOError( fResult, 0 );
+               if( fResult )
                {
-                  case HB_DISK_AVAIL:
-                     dSpace = HB_GET_LARGE_UINT( i64FreeBytesToCaller );
-                     break;
+                  switch( uiType )
+                  {
+                     case HB_DISK_AVAIL:
+                        dSpace = HB_GET_LARGE_UINT( i64FreeBytesToCaller );
+                        break;
 
-                  case HB_DISK_FREE:
-                     dSpace = HB_GET_LARGE_UINT( i64FreeBytes );
-                     break;
+                     case HB_DISK_FREE:
+                        dSpace = HB_GET_LARGE_UINT( i64FreeBytes );
+                        break;
 
-                  case HB_DISK_TOTAL:
-                     dSpace = HB_GET_LARGE_UINT( i64TotalBytes );
-                     break;
+                     case HB_DISK_TOTAL:
+                        dSpace = HB_GET_LARGE_UINT( i64TotalBytes );
+                        break;
 
-                  case HB_DISK_USED:
-                     dSpace = HB_GET_LARGE_UINT( i64TotalBytes ) -
-                              HB_GET_LARGE_UINT( i64FreeBytes );
-                     break;
+                     case HB_DISK_USED:
+                        dSpace = HB_GET_LARGE_UINT( i64TotalBytes ) -
+                                 HB_GET_LARGE_UINT( i64FreeBytes );
+                        break;
+                  }
                }
             }
-         }
-         else
-         {
-            LPTSTR lpPath = HB_TCHAR_CONVTO( szPath );
-
-            DWORD dwSectorsPerCluster;
-            DWORD dwBytesPerSector;
-            DWORD dwNumberOfFreeClusters;
-            DWORD dwTotalNumberOfClusters;
-
-            fResult = GetDiskFreeSpace( lpPath,
-                                        &dwSectorsPerCluster,
-                                        &dwBytesPerSector,
-                                        &dwNumberOfFreeClusters,
-                                        &dwTotalNumberOfClusters );
-            hb_fsSetIOError( fResult, 0 );
-            HB_TCHAR_FREE( lpPath );
-            if( fResult )
+            else
             {
-               switch( uiType )
+               DWORD dwSectorsPerCluster;
+               DWORD dwBytesPerSector;
+               DWORD dwNumberOfFreeClusters;
+               DWORD dwTotalNumberOfClusters;
+
+               fResult = GetDiskFreeSpace( lpPath,
+                                           &dwSectorsPerCluster,
+                                           &dwBytesPerSector,
+                                           &dwNumberOfFreeClusters,
+                                           &dwTotalNumberOfClusters );
+               hb_fsSetIOError( fResult, 0 );
+
+               if( fResult )
                {
-                  case HB_DISK_AVAIL:
-                  case HB_DISK_FREE:
-                     dSpace = ( double ) dwNumberOfFreeClusters *
-                              ( double ) dwSectorsPerCluster *
-                              ( double ) dwBytesPerSector;
-                     break;
+                  switch( uiType )
+                  {
+                     case HB_DISK_AVAIL:
+                     case HB_DISK_FREE:
+                        dSpace = ( double ) dwNumberOfFreeClusters *
+                                 ( double ) dwSectorsPerCluster *
+                                 ( double ) dwBytesPerSector;
+                        break;
 
-                  case HB_DISK_USED:
-                  case HB_DISK_TOTAL:
-                     dSpace  = ( double ) dwTotalNumberOfClusters *
-                               ( double ) dwSectorsPerCluster *
-                               ( double ) dwBytesPerSector;
-
-                     if( uiType == HB_DISK_USED )
-                        dSpace -= ( double ) dwNumberOfFreeClusters *
+                     case HB_DISK_USED:
+                     case HB_DISK_TOTAL:
+                        dSpace  = ( double ) dwTotalNumberOfClusters *
                                   ( double ) dwSectorsPerCluster *
                                   ( double ) dwBytesPerSector;
-                     break;
+
+                        if( uiType == HB_DISK_USED )
+                           dSpace -= ( double ) dwNumberOfFreeClusters *
+                                     ( double ) dwSectorsPerCluster *
+                                     ( double ) dwBytesPerSector;
+                        break;
+                  }
                }
             }
          }
 #endif
+         HB_TCHAR_FREE( lpPath );
          SetErrorMode( uiErrMode );
          break;
       }
