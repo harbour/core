@@ -631,7 +631,11 @@ static HB_ERRCODE sqlbaseClose( SQLBASEAREAP pArea )
       hb_xfree( pArea->szQuery );
       pArea->szQuery = NULL;
    }
-   pArea->pConnection->uiAreaCount--;
+   if( pArea->pConnection )
+   {
+      /* It is possible to have areas without connection and SDD driver. Ex., arrayrdd. [Mindaugas] */
+      pArea->pConnection->uiAreaCount--;
+   }
    return HB_SUCCESS;
 }
 
