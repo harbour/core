@@ -2731,13 +2731,20 @@ HB_ERRCODE hb_fsCurDirBuff( USHORT uiDrive, char * pszBuffer, ULONG ulSize )
 
 #if defined( HB_OS_WIN )
    {
+#if defined( UNICODE )
       LPTSTR lpBuffer = ( LPTSTR ) hb_xgrab( ulSize * sizeof( TCHAR ) );
       hb_vmUnlock();
       fResult = GetCurrentDirectory( ulSize, lpBuffer );
       hb_fsSetIOError( fResult, 0 );
       hb_vmLock();
-      HB_TCHAR_GETFROM( pszBuffer, lpBuffer, ulSize );
+      hb_wctombget( pszBuffer, lpBuffer, ulSize );
       hb_xfree( lpBuffer );
+#else
+      hb_vmUnlock();
+      fResult = GetCurrentDirectory( ulSize, pszBuffer );
+      hb_fsSetIOError( fResult, 0 );
+      hb_vmLock();
+#endif
    }
 #elif defined( HB_OS_OS2 ) && defined( __GNUC__ )
 
