@@ -6,8 +6,7 @@
 
 -inc
 
--w3 
--es2
+-w3 -es2
 
 -ohbide
 
@@ -17,5 +16,3 @@ idetags.prg
 
 freadlin.c
 ideparseexpr.c
-
-

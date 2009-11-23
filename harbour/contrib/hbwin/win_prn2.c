@@ -456,7 +456,8 @@ HB_FUNC( PRINTFILERAW )
 #define HB_WINPRN_PORT              2
 #define HB_WINPRN_TYPE              3
 #define HB_WINPRN_DRIVER            4
-#define HB_WINPRN_LEN_              4
+#define HB_WINPRN_SHARE             5
+#define HB_WINPRN_LEN_              5
 
 HB_FUNC( GETPRINTERS )
 {
@@ -514,11 +515,15 @@ HB_FUNC( GETPRINTERS )
                               pszData = HB_TCHAR_CONVFROM( pPrinterInfo2->pDriverName );
                               hb_arraySetC( pTempItem, HB_WINPRN_DRIVER, pszData );
                               HB_TCHAR_FREE( pszData );
+                              pszData = HB_TCHAR_CONVFROM( pPrinterInfo2->pShareName );
+                              hb_arraySetC( pTempItem, HB_WINPRN_SHARE, pszData );
+                              HB_TCHAR_FREE( pszData );
                            }
                            else
                            {
                               hb_arraySetC( pTempItem, HB_WINPRN_PORT, NULL );
                               hb_arraySetC( pTempItem, HB_WINPRN_DRIVER, NULL );
+                              hb_arraySetC( pTempItem, HB_WINPRN_SHARE, NULL );
                            }
 
                            hb_xfree( pPrinterInfo2 );

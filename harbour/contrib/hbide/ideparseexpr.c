@@ -100,9 +100,9 @@ UINT linearfind( char** array, char* cText, UINT lenarray, UINT lentext, int lMa
    {
       for( i = 0 ; i < lenarray ; i++ )
       {
-         if( strnicmp( cText, array[ i ], lentext + 1 ) == 0 )
+         if( hb_strnicmp( cText, array[ i ], lentext + 1 ) == 0 )
          {
-           return( i++ );
+            return( i++ );
          }
       }
 
@@ -354,4 +354,3 @@ HB_FUNC( PARSEXPR )
 }
 
 /*----------------------------------------------------------------------*/
-
