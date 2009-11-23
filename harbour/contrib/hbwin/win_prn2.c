@@ -429,12 +429,14 @@ HB_FUNC( PRINTFILERAW )
 
                   while( ( nRead = hb_fsRead( fhnd, pbyBuffer, sizeof( pbyBuffer ) ) ) > 0 )
                   {
+#if 0
                      /* TOFIX: This check seems wrong for any input files
                                larger than our read buffer, in such case it
                                will strip Chr( 26 ) from inside the file, which
                                means it will corrupt it. [vszakats] */
                      if( pbyBuffer[ nRead - 1 ] == 26 )
                         nRead--;   /* Skip the EOF() character */
+#endif
 
                      WritePrinter( hPrinter, pbyBuffer, nRead, &dwWritten );
                   }

@@ -542,12 +542,12 @@ METHOD HbIde:selectSource( cMode )
       oDlg:fileFilters := { { "PRG Sources", "*.prg" }, { "C Sources", "*.c" }, { "CPP Sources", "*.cpp" }, ;
                                                             { "H Headers", "*.h" }, { "CH Headers", "*.ch" } }
 
-      cFile := oDlg:open( CurDrive() +":\"+ CurDir(), , .f. )
+      cFile := oDlg:open( , , .f. )
    ELSE
       oDlg:title       := "Save this Database"
       oDlg:fileFilters := { { "Database Files", "*.dbf" } }
       oDlg:quit        := {|| MsgBox( "Quitting the Dialog" ), 1 }
-      cFile := oDlg:saveAs( "c:\temp\myfile.dbf" )
+      cFile := oDlg:saveAs( "myfile.dbf" )
       IF !empty( cFile )
          HBXBP_DEBUG( cFile )
       ENDIF
@@ -958,4 +958,3 @@ METHOD HbIde:fetchNewProject()
    RETURN self
 
 /*----------------------------------------------------------------------*/
-
