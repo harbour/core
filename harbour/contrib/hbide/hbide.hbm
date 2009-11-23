@@ -1,0 +1,21 @@
+#
+# $Id$
+#
+
+../hbxbp/hbxbp.hbc
+
+-inc
+
+-w3 
+-es2
+
+-ohbide
+
+hbide.prg
+idestylesheets.prg
+idetags.prg
+
+freadlin.c
+ideparseexpr.c
+
+

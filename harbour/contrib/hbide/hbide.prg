@@ -80,15 +80,6 @@
 
 /*----------------------------------------------------------------------*/
 
-#define TAB_1   1
-#define TAB_2   2
-#define TAB_3   3
-#define TAB_4   4
-#define TAB_5   5
-#define TAB_6   6
-#define TAB_7   7
-#define TAB_8   8
-
 #define CRLF    chr( 13 )+chr( 10 )
 
 STATIC s_resPath
@@ -139,6 +130,7 @@ CLASS HbIde
    DATA   qSplitter
    DATA   qSplitterL
    DATA   qSplitterR
+   DATA   qTabWidget
 
    /* XBP Objects */
    DATA   oDlg
@@ -156,6 +148,8 @@ CLASS HbIde
    DATA   oOutputResult
    DATA   oCompileResult
    DATA   oLinkResult
+   DATA   oNewDlg
+   DATA   oTabWidget
 
    DATA   oProjRoot
    DATA   oExes
@@ -165,6 +159,7 @@ CLASS HbIde
 
    DATA   lDockRVisible                           INIT .t.
    DATA   lDockBVisible                           INIT .t.
+   DATA   lTabCloseRequested                      INIT .f.
 
    METHOD new( cProjectOrSource )
    METHOD create( cProjectOrSource )
@@ -191,7 +186,21 @@ CLASS HbIde
    METHOD saveSource()
 
    METHOD updateFuncList()
+   METHOD gotoFunction()
    METHOD fetchNewProject()
+   METHOD closeTab()
+   METHOD activateTab()
+   METHOD getCurrentTab()
+   METHOD getYesNo()
+
+   DATA   aTags                                   INIT {}
+   DATA   aText                                   INIT {}
+   DATA   aSources                                INIT {}
+   DATA   aFuncList                               INIT {}
+   DATA   aLines                                  INIT {}
+   DATA   aComments                               INIT {}
+
+   METHOD createTags()
 
    ENDCLASS
 
@@ -228,7 +237,10 @@ METHOD HbIde:create( cProjectOrSource )
    ::oDlg:Show()
 
    ::oDa:oTabWidget := XbpTabWidget():new():create( ::oDa, , {0,0}, {10,10}, , .t. )
-   ::oDa:oTabWidget:oWidget:setTabsClosable( .t. )
+//   ::oDa:oTabWidget:oWidget:setTabsClosable( .t. )
+   ::oDa:oTabWidget:oWidget:setUsesScrollButtons( .f. )
+   ::oTabWidget := ::oDa:oTabWidget
+   ::qTabWidget := ::oDa:oTabWidget:oWidget
 
    ::buildProjectTree()
    ::buildFuncList()
@@ -293,29 +305,29 @@ METHOD HbIde:create( cProjectOrSource )
    ::buildToolBar()
 
    ::editSource( ::cProjFile )
-   ::updateFuncList()
 
    ::oDlg:Show()
 
    /* Enter Xbase++ Event Loop - working */
    DO WHILE .t.
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
+
       IF ::nEvent == xbeP_Quit
          EXIT
       ENDIF
 
-      HBXBP_DEBUG( ::nEvent, ::mp1, ::mp2 )
+      // HBXBP_DEBUG( ::nEvent, ::mp1, ::mp2 )
 
-      IF ( ::nEvent == xbeP_Close ) .OR. ( ::nEvent == xbeP_Keyboard .and. ::mp1 == xbeK_ESC )
-         IF ::nEvent == xbeP_Close
-            ::closeAllSources()
+      IF ::nEvent == xbeP_Close
+         ::closeAllSources()
+         EXIT
+
+      ELSEIF ( ::nEvent == xbeP_Keyboard .and. ::mp1 == xbeK_ESC )
+         ::closeSource()
+         IF ::qTabWidget:count() == 0
             EXIT
-         ELSE
-            ::closeSource( ::nCurTab, .t. )
-            IF empty( ::aTabs )
-               EXIT
-            ENDIF
          ENDIF
+
       ENDIF
 
       ::oXbp:handleEvent( ::nEvent, ::mp1, ::mp2 )
@@ -328,11 +340,21 @@ METHOD HbIde:create( cProjectOrSource )
 
 /*----------------------------------------------------------------------*/
 
+METHOD HbIde:updateFuncList()
+
+   ::oFuncList:clear()
+   IF !empty( ::aTags )
+      aeval( ::aTags, {|e| ::oFuncList:addItem( e[ 2 ] + " " + e[ 5 ] ) } )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD HbIde:buildTabPage( oWnd, cSource )
+   LOCAL oTab, cPath, cFile, cExt
    LOCAL aPos    := { 5,5 }
    LOCAL aSize   := { 890, 420 }
-   LOCAL oTab, o
-   LOCAL cPath, cFile, cExt//, qIcon
    LOCAL nIndex  := len( ::aTabs )
 
    DEFAULT cSource TO "Untitled"
@@ -346,16 +368,15 @@ METHOD HbIde:buildTabPage( oWnd, cSource )
    oTab:create()
 
    IF lower( cExt ) $ ".c;.cpp"
-      ::oDa:oTabWidget:oWidget:setTabIcon( nIndex, s_resPath + "filec.png" )
+      ::qTabWidget:setTabIcon( nIndex, s_resPath + "filec.png" )
    ELSE
-      ::oDa:oTabWidget:oWidget:setTabIcon( nIndex, s_resPath + "fileprg.png" )
+      ::qTabWidget:setTabIcon( nIndex, s_resPath + "fileprg.png" )
    ENDIF
-   ::oDa:oTabWidget:oWidget:setTabTooltip( nIndex, cSource )
+   ::qTabWidget:setTabTooltip( nIndex, cSource )
 
-   oTab:tabActivate    := {|mp1,mp2,oXbp| HB_SYMBOL_UNUSED( mp1 ), o := oXbp, ;
-                                mp2 := ascan( ::aTabs, {|e_| e_[ 1 ] == o } ), ::nCurTab := mp2 }
-   oTab:closeRequested := {|mp1,mp2,oXbp| HB_SYMBOL_UNUSED( mp1 ), o := oXbp, ;
-                                mp2 := ascan( ::aTabs, {|e_| e_[ 1 ] == o } ), ::nCurTab := mp2, ::closeSource( ::nCurTab, .t. ) }
+   oTab:tabActivate    := {|mp1,mp2,oXbp| ::activateTab( mp1, mp2, oXbp ) }
+   oTab:closeRequested := {|mp1,mp2,oXbp| ::closeTab( mp1, mp2, oXbp ) }
+
    RETURN oTab
 
 /*----------------------------------------------------------------------*/
@@ -388,53 +409,60 @@ METHOD HbIde:editSource( cSourceFile )
 
    ::nPrevTab := ::nCurTab
    ::nCurTab  := len( ::aTabs )
-   ::oDa:oTabWidget:oWidget:setCurrentIndex( ::nCurTab - 1 )
+   ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( QT_PTROFXBP( oTab ) ) )
+
+   ::aSources := { cSourceFile }
+   ::createTags()
+   ::updateFuncList()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:saveSource( nTab )
-   LOCAL cBuffer
-   LOCAL qDocument := QTextDocument():configure( ::aTabs[ nTab, 2 ]:document() )
+METHOD HbIde:closeTab( mp1, mp2, oXbp )
 
-   IF qDocument:isModified()
-      HBXBP_DEBUG( "Document be Saved", "YES", ::aTabs[ nTab, 5 ] )
-      cBuffer := ::aTabs[ nTab, 2 ]:toPlainText()
-      memowrit( ::aTabs[ nTab, 5 ], cBuffer )
-   ELSE
-      HBXBP_DEBUG( "Document Modified", "NO ", ::aTabs[ nTab, 5 ] )
+   HB_SYMBOL_UNUSED( mp1 )
+
+   IF ( mp2 := ascan( ::aTabs, {|e_| e_[ 1 ] == oXbp } ) ) > 0
+      ::closeSource( mp2, .t. )
    ENDIF
 
-   RETURN self
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:closeSource( nTab, lDel )
+METHOD HbIde:activateTab( mp1, mp2, oXbp )
 
-   DEFAULT lDel TO .T.
+   HB_SYMBOL_UNUSED( mp1 )
 
-   HBXBP_DEBUG( "  .  " )
-   HBXBP_DEBUG( "HbIde:closeSource( nTab, lDel )", nTab, lDel )
+   IF ( mp2 := ascan( ::aTabs, {|e_| e_[ 1 ] == oXbp } ) ) > 0
+      ::nCurTab  := mp2
+      ::aSources := { ::aTabs[ ::nCurTab, 5 ] }
+      ::createTags()
+      ::updateFuncList()
+   ENDIF
 
-   IF !empty( ::aTabs ) .and. !empty( nTab )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:getCurrentTab()
+   LOCAL qTab, nTab
+
+   qTab := ::qTabWidget:currentWidget()
+   nTab := ascan( ::aTabs, {|e_| HBQT_QTPTR_FROM_GCPOINTER( e_[ 1 ]:oWidget:pPtr ) == qTab } )
+
+   RETURN nTab
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:closeSource()
+   LOCAL nTab
+
+   IF !empty( nTab := ::getCurrentTab() )
       ::saveSource( nTab )
-
       /* Destroy at Qt level */
-      ::oDa:oTabWidget:oWidget:removeTab( nTab - 1 )
-
-      /* Destroy at XBP level */
-      ::aTabs[ nTab,1 ]:destroy()
-
-      /* Destroy at this object level */
-      IF lDel
-         adel( ::aTabs, nTab )
-         asize( ::aTabs, len( ::aTabs ) - 1 )
-      ENDIF
-
-      IF empty( ::aTabs )
-         PostAppEvent( xbeP_Quit )
-      ENDIF
+      ::qTabWidget:removeTab( ::qTabWidget:currentIndex() )
    ENDIF
 
    RETURN Self
@@ -443,11 +471,61 @@ METHOD HbIde:closeSource( nTab, lDel )
 
 METHOD HbIde:closeAllSources()
    LOCAL nTab
+   LOCAL nTabs := ::qTabWidget:count()
 
-   FOR nTab := len( ::aTabs ) TO 1 STEP -1
-      ::closeSource( nTab, .f. )
+   FOR nTab := 1 TO nTabs
+      ::closeSource()
    NEXT
    ::aTabs := {}
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:getYesNo( cMsg, cInfo, cTitle )
+   LOCAL oMB
+
+   DEFAULT cTitle TO "Option Please!"
+
+   oMB := QMessageBox():new()
+   oMB:setText( "<b>"+ cMsg +"</b>" )
+   IF !empty( cInfo )
+      oMB:setInformativeText( cInfo )
+   ENDIF
+   oMB:setIcon( QMessageBox_Information )
+   oMB:setParent( SetAppWindow():pWidget )
+   oMB:setWindowFlags( Qt_Dialog )
+   oMB:setWindowTitle( cTitle )
+   oMB:setStandardButtons( QMessageBox_Yes + QMessageBox_No )
+
+   RETURN ( oMB:exec() == QMessageBox_Yes )
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:saveSource( nTab, lConfirm )
+   LOCAL cBuffer, qDocument
+   LOCAL lSave := .t.
+
+   DEFAULT lConfirm TO .t.
+
+   IF nTab > 0
+      qDocument := QTextDocument():configure( ::aTabs[ nTab, 2 ]:document() )
+
+      IF qDocument:isModified()
+         IF lConfirm .and. !::getYesNo( ::aTabs[ nTab, 5 ] + " : has changed !", "Save this source ?" )
+            lSave := .f.
+         ENDIF
+
+         IF lSave
+            cBuffer := ::aTabs[ nTab, 2 ]:toPlainText()
+            memowrit( ::aTabs[ nTab, 5 ], cBuffer )
+            qDocument:setModified( .f. )
+            ::createTags()
+            ::updateFuncList()
+         ELSE
+         ENDIF
+      ENDIF
+   ENDIF
 
    RETURN Self
 
@@ -528,7 +606,7 @@ METHOD HbIde:buildProjectTree()
    NEXT
    ::aProjData[ 3,3 ] := aExeD
    ::aProjData[ 3,1 ]:expand( .t. )
-#if 1
+
    /* Next classification by type of source */
    aExe  := ::aProjData[ 1,3 ]
    aPrjs := { "PRG Sources", "C Sources", "CPP Sources", "CH Headers", "H Headers" }
@@ -540,7 +618,6 @@ METHOD HbIde:buildProjectTree()
       aExe[ j,3 ] := aExeD
       aExe[ j,1 ]:expand( .t. )
    NEXT
-#endif
 
    RETURN Self
 
@@ -550,14 +627,17 @@ METHOD HbIde:executeAction( cKey )
    LOCAL cFile
 
    DO CASE
-   CASE cKey == "3"
+   CASE cKey == "NewProject"
+      ::fetchNewProject()
+
+   CASE cKey == "Open"
       IF !empty( cFile := ::selectSource( "open" ) )
          ::oProjRoot:addItem( cFile )
          ::editSource( cFile )
       ENDIF
 
-   CASE cKey == "4"
-      ::saveSource( ::nCurTab )
+   CASE cKey == "Save"
+      ::saveSource( ::getCurrentTab(), .f. )
 
    CASE cKey == "5"
       ::closeSource( ::nCurTab, .t. )
@@ -582,9 +662,6 @@ METHOD HbIde:executeAction( cKey )
       ENDIF
       ::lDockRVisible := !( ::lDockRVisible )
 
-   CASE cKey == "NewProject"
-      ::fetchNewProject()
-
    ENDCASE
 
    RETURN nil
@@ -594,8 +671,7 @@ METHOD HbIde:executeAction( cKey )
 METHOD HbIde:buildToolBar()
 
    ::oTBar := XbpToolBar():new( ::oDA )
-   ::oTBar:create( , , { 0, ::oDa:currentSize()[ 2 ]-60 }, ;
-                                 { ::oDa:currentSize()[ 1 ], 60 } )
+   ::oTBar:create( , , { 0, ::oDa:currentSize()[ 2 ]-60 }, { ::oDa:currentSize()[ 1 ], 60 } )
 
    ::oTBar:imageWidth  := 20
    ::oTBar:imageHeight := 20
@@ -604,9 +680,9 @@ METHOD HbIde:buildToolBar()
 
    ::oTBar:addItem( "Exit"                       , s_resPath + "exit.png"           , , , , , "1"  )
    ::oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
-   ::oTBar:addItem( "Properties"                 , s_resPath + "properties.png"     , , , , , "2"  )
-   ::oTBar:addItem( "Open"                       , s_resPath + "open.png"           , , , , , "3"  )
-   ::oTBar:addItem( "Save"                       , s_resPath + "save.png"           , , , , , "4"  )
+   ::oTBar:addItem( "New Project"                , s_resPath + "properties.png"     , , , , , "NewProject"  )
+   ::oTBar:addItem( "Open"                       , s_resPath + "open.png"           , , , , , "Open"     )
+   ::oTBar:addItem( "Save"                       , s_resPath + "save.png"           , , , , , "Save"  )
    ::oTBar:addItem( "Close"                      , s_resPath + "close.png"          , , , , , "5"  )
    ::oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
    ::oTBar:addItem( "Compile"                    , s_resPath + "compile.png"        , , , , , "5"  )
@@ -712,12 +788,17 @@ METHOD HbIde:buildDialog()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:updateFuncList()
+METHOD HbIde:gotoFunction( mp1, mp2, oListBox )
+   LOCAL n, cAnchor
 
-   ::oFuncList:addItem( "Procedure Main"   )
-   ::oFuncList:addItem( "Class HBIDE"      )
-   ::oFuncList:addItem( "Method HbIde:new" )
-
+   mp1 := oListBox:getData()
+   mp2 := oListBox:getItem( mp1 )
+   IF ( n := ascan( ::aTags, {|e| mp2 == e[ 2 ] + " " + e[ 5 ] } ) ) > 0
+      cAnchor := trim( ::aText[ ::aTags[ n,3 ] ] )
+      IF !( ::aTabs[ ::nCurTab, 2 ]:find( cAnchor, QTextDocument_FindCaseSensitively ) )
+         ::aTabs[ ::nCurTab, 2 ]:find( cAnchor, QTextDocument_FindBackward + QTextDocument_FindCaseSensitively )
+      ENDIF
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -735,6 +816,8 @@ METHOD HbIde:buildFuncList()
 
    ::oFuncList := XbpListBox():new( ::oDockR ):create( , , { 0,0 }, { 100,400 }, , .t. )
    ::oFuncList:setStyleSheet( GetStyleSheet( "QListView" ) )
+   ::oFuncList:setColorBG( GraMakeRGBColor( { 210,120,220 } ) )
+   ::oFuncList:ItemMarked := {|mp1, mp2, oXbp| ::gotoFunction( mp1, mp2, oXbp ) }
 
    ::oDockR:oWidget:setWidget( QT_PTROFXBP( ::oFuncList ) )
 
@@ -821,59 +904,6 @@ METHOD HbIde:buildOutputResults()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:fetchNewProject()
-
-   RETURN self
-
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION GetStyleSheet( cWidget )
-   LOCAL s, txt_:={}
-
-   DO CASE
-   CASE cWidget == "QListView"
-      aadd( txt_, '                                                                                             ' )
-      aadd( txt_, ' QListView {                                                                                 ' )
-      aadd( txt_, '     alternate-background-color: yellow;                                                     ' )
-      aadd( txt_, ' }                                                                                           ' )
-      aadd( txt_, '                                                                                             ' )
-      aadd( txt_, ' QListView {                                                                                 ' )
-      aadd( txt_, '     show-decoration-selected: 1; /* make the selection span the entire width of the view */ ' )
-      aadd( txt_, ' }                                                                                           ' )
-      aadd( txt_, '                                                                                             ' )
-      aadd( txt_, ' QListView::item:alternate {                                                                 ' )
-      aadd( txt_, '     background: #EEEEEE;                                                                    ' )
-      aadd( txt_, ' }                                                                                           ' )
-      aadd( txt_, '                                                                                             ' )
-      aadd( txt_, ' QListView::item:selected {                                                                  ' )
-      aadd( txt_, '     border: 1px solid #6a6ea9;                                                              ' )
-      aadd( txt_, ' }                                                                                           ' )
-      aadd( txt_, '                                                                                             ' )
-      aadd( txt_, ' QListView::item:selected:!active {                                                          ' )
-      aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                                 ' )
-      aadd( txt_, '                                 stop: 0 #ABAFE5, stop: 1 #8588B2);                          ' )
-      aadd( txt_, ' }                                                                                           ' )
-      aadd( txt_, '                                                                                             ' )
-      aadd( txt_, ' QListView::item:selected:active {                                                           ' )
-      aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                                 ' )
-      aadd( txt_, '                                 stop: 0 #6a6ea9, stop: 1 #888dd9);                          ' )
-      aadd( txt_, ' }                                                                                           ' )
-      aadd( txt_, '                                                                                             ' )
-      aadd( txt_, ' QListView::item:hover {                                                                     ' )
-      aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                                 ' )
-      aadd( txt_, '                                 stop: 0 #FAFBFE, stop: 1 #DCDEF1);                          ' )
-      aadd( txt_, '}                                                                                            ' )
-      aadd( txt_, '                                                                                             ' )
-
-   ENDCASE
-
-   s := ""
-   aeval( txt_, {|e| s += e + chr( 13 )+chr( 10 ) } )
-
-   RETURN s
-
-/*----------------------------------------------------------------------*/
-
 STATIC FUNCTION MenuAddSep( oMenu )
 
    oMenu:addItem( { NIL, NIL, XBPMENUBAR_MIS_SEPARATOR, NIL } )
@@ -881,3 +911,48 @@ STATIC FUNCTION MenuAddSep( oMenu )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
+
+METHOD HbIde:CreateTags()
+   LOCAL aSumData := ""
+   LOCAL cComments, aSummary, i, cPath, cSource, cExt
+
+   ::aTags := {}
+
+   FOR i := 1 TO Len( ::aSources )
+      HB_FNameSplit( ::aSources[ i ], @cPath, @cSource, @cExt )
+
+      IF Upper( cExt ) $ ".PRG.CPP"
+         IF !empty( ::aText := ReadSource( ::aSources[ i ] ) )
+            aSumData  := {}
+
+            cComments := CheckComments( ::aText )
+            aSummary  := Summarize( ::aText, cComments, @aSumData , IIf( Upper( cExt ) == ".PRG", 9, 1 ) )
+            ::aTags   := UpdateTags( ::aSources[ i ], aSummary, aSumData, @::aFuncList, @::aLines )
+
+            #if 0
+            IF !empty( aTags )
+               aeval( aTags, {|e_| aadd( ::aTags, e_ ) } )
+               ::hData[ cSource+cExt ] := { a[ i ], aTags, aclone( ::aText ), cComments, ::aFuncList, ::aLines }
+               aadd( ::aSrcLines, ::aText   )
+               aadd( ::aComments, cComments )
+            ENDIF
+            #endif
+         ENDIF
+      ENDIF
+   NEXT
+
+   RETURN ( NIL )
+
+//----------------------------------------------------------------------//
+
+METHOD HbIde:fetchNewProject()
+#if 1  // In Development
+   ::oNewDlg := XbpWindow():new( ::oDlg )
+   ::oNewDlg:oWidget := QDialog():new( QT_PTROFXBP( ::oDlg ) )
+   ::oNewDlg:oWidget:exec()
+
+#endif
+   RETURN self
+
+/*----------------------------------------------------------------------*/
+

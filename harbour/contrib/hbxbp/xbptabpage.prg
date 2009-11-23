@@ -281,34 +281,38 @@ METHOD XbpTabWidget:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisib
 /*----------------------------------------------------------------------*/
 
 METHOD XbpTabWidget:destroy()
-//HBXBP_DEBUG( "                            XbpTabWidget:destroy()",0 )
 
    ::oParent:oTabWidget := NIL
-//   ::disconnect()
-
    ::xbpWindow:destroy()
-//HBXBP_DEBUG( "                            XbpTabWidget:destroy()",1 )
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpTabWidget:exeBlock( nMode, iIndex )
+   LOCAL qTab, nIndex, oTab
 
    IF !empty( ::aChildren ) .and. iIndex >= 0 .and. iIndex < len( ::aChildren )
-      DO CASE
-      CASE nMode == 1
-         HBXBP_DEBUG( "Tab Clicked", iIndex )
-         IF hb_isBlock( ::aChildren[ iIndex+1 ]:sl_tabActivate )
-            eval( ::aChildren[ iIndex+1 ]:sl_tabActivate, NIL, NIL, ::aChildren[ iIndex+1 ] )
-         ENDIF
+      qTab := ::oWidget:widget( iIndex )
 
-      CASE nMode == 2
-         HBXBP_DEBUG( "Tab Close Requested", iIndex )
-         IF hb_isBlock( ::aChildren[ iIndex+1 ]:sl_closeRequested )
-            eval( ::aChildren[ iIndex+1 ]:sl_closeRequested, NIL, NIL, ::aChildren[ iIndex+1 ] )
-         ENDIF
+      IF ( nIndex := ascan( ::aChildren, {|o| HBQT_QTPTR_FROM_GCPOINTER( o:oWidget:pPtr ) == qTab } ) ) > 0
+         oTab := ::aChildren[ nIndex ]
 
-      ENDCASE
+         DO CASE
+         CASE nMode == 1
+            HBXBP_DEBUG( "Tab Index Changed", nIndex )
+            IF hb_isBlock( oTab:sl_tabActivate )
+               eval( oTab:sl_tabActivate, NIL, NIL, oTab )
+            ENDIF
+
+         CASE nMode == 2
+            HBXBP_DEBUG( "Tab Close Requested", nIndex )
+            IF hb_isBlock( oTab:sl_closeRequested )
+               eval( oTab:sl_closeRequested, NIL, NIL, oTab )
+            ENDIF
+
+         ENDCASE
+      ENDIF
    ENDIF
 
    RETURN nil

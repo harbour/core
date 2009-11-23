@@ -121,6 +121,16 @@ HB_FUNC( HBQT_SET_RELEASE_METHOD )
    hb_retni( s_iObjectReleaseMethod );
 }
 
+HB_FUNC( HBQT_QTPTR_FROM_GCPOINTER )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( gcFuncs(), 1 );
+
+   if( p && p->ph )
+   {
+      hb_retptr( p->ph );
+   }
+}
+
 #if defined( __HB_DEBUG__ )
 
 #if defined( HB_OS_WIN )
@@ -134,12 +144,12 @@ void hbqt_debug( const char * sTraceMsg, ... )
    {
       char buffer[ 1024 ];
       va_list ap;
-  
+
       va_start( ap, sTraceMsg );
       hb_vsnprintf( buffer, sizeof( buffer ), sTraceMsg, ap );
       va_end( ap );
 
-      #if defined( UNICODE )  
+      #if defined( UNICODE )
       {
          LPTSTR lpOutputString = HB_TCHAR_CONVTO( buffer );
          OutputDebugString( lpOutputString );
@@ -194,7 +204,7 @@ typedef struct _PROCESS_MEMORY_COUNTERS_EX
    pmc.cb = sizeof(pmc);
    if( GetProcessMemoryInfo( hProcess, (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof( pmc ) ) )
 #if (_WIN32_WINNT >= 0x0501)
-      size = ( int ) pmc.PrivateUsage / 1024;    
+      size = ( int ) pmc.PrivateUsage / 1024;
 #else
       size = ( int ) pmc.WorkingSetSize / 1024;
 #endif

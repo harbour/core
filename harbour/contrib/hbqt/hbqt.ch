@@ -2159,6 +2159,16 @@
 #define QTabWidget_Rounded                        0      // The tabs are drawn with a rounded look. This is the default shape.
 #define QTabWidget_Triangular                     1      // The tabs are drawn with a triangular look.
 
+#define QTextDocument_FindBackward                0x00001   // Search backwards instead of forwards.
+#define QTextDocument_FindCaseSensitively         0x00002   // By default find works case insensitive. Specifying this option changes the behaviour to a case sensitive find operation.
+#define QTextDocument_FindWholeWords              0x00004   // Makes find match only complete words.
+#define QTextDocument_DocumentTitle               0         // The title of the document.
+#define QTextDocument_DocumentUrl                 1         // The url of the document. The loadResource() function uses this url as the base when loading relative resources.
+#define QTextDocument_HtmlResource                1         // The resource contains HTML.
+#define QTextDocument_ImageResource               2         // The resource contains image data. Currently supported data types are QVariant::Pixmap and QVariant::Image. If the corresponding variant is of type QVariant::ByteArray then Qt attempts to load the image using QImage::loadFromData. QVariant::Icon is currently not supported. The icon needs to be converted to one of the supported types first, for example using QIcon::pixmap.
+#define QTextDocument_StyleSheetResource          3         // The resource contains CSS.
+#define QTextDocument_UserResource                100       // The first available value for user defined resource types.
+
 /*----------------------------------------------------------------------*/
 
 #define _HBQT_CH
