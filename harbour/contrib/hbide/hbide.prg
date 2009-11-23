@@ -344,7 +344,8 @@ METHOD HbIde:updateFuncList()
 
    ::oFuncList:clear()
    IF !empty( ::aTags )
-      aeval( ::aTags, {|e| ::oFuncList:addItem( e[ 2 ] + " " + e[ 5 ] ) } )
+//      aeval( ::aTags, {|e| ::oFuncList:addItem( e[ 2 ] + " " + e[ 5 ] ) } )
+      aeval( ::aTags, {|e_| ::oFuncList:addItem( e_[ 7 ] ) } )
    ENDIF
 
    RETURN Self
@@ -793,7 +794,8 @@ METHOD HbIde:gotoFunction( mp1, mp2, oListBox )
 
    mp1 := oListBox:getData()
    mp2 := oListBox:getItem( mp1 )
-   IF ( n := ascan( ::aTags, {|e| mp2 == e[ 2 ] + " " + e[ 5 ] } ) ) > 0
+   //IF ( n := ascan( ::aTags, {|e| mp2 == e[ 2 ] + " " + e[ 5 ] } ) ) > 0
+   IF ( n := ascan( ::aTags, {|e_| mp2 == e_[ 7 ] } ) ) > 0
       cAnchor := trim( ::aText[ ::aTags[ n,3 ] ] )
       IF !( ::aTabs[ ::nCurTab, 2 ]:find( cAnchor, QTextDocument_FindCaseSensitively ) )
          ::aTabs[ ::nCurTab, 2 ]:find( cAnchor, QTextDocument_FindBackward + QTextDocument_FindCaseSensitively )
@@ -818,6 +820,7 @@ METHOD HbIde:buildFuncList()
    ::oFuncList:setStyleSheet( GetStyleSheet( "QListView" ) )
    ::oFuncList:setColorBG( GraMakeRGBColor( { 210,120,220 } ) )
    ::oFuncList:ItemMarked := {|mp1, mp2, oXbp| ::gotoFunction( mp1, mp2, oXbp ) }
+   ::oFuncList:oWidget:setEditTriggers( QAbstractItemView_NoEditTriggers )
 
    ::oDockR:oWidget:setWidget( QT_PTROFXBP( ::oFuncList ) )
 

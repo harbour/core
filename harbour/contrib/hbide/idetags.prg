@@ -173,8 +173,8 @@ FUNCTION UpdateTags( cModule, aSummary, aSumData, aFuncList, aLines )
                         aSumData[ i,2 ],;
                         cModule        ,;
                         cSyntax        ,;
-                        0              ,;
-                        cSource         ;
+                        cType          ,;
+                        Iif( cType = "METH", ":", "" ) + cSyntax ;
                      };
              )
       ENDIF
