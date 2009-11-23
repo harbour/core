@@ -103,18 +103,18 @@
          clang, etc. */
 
 /* TODO: Next gen compiler autodetection:
-         1. Gather supported compilers by Harbour installation 
+         1. Gather supported compilers by Harbour installation
             (look for lib/<plat>/*[/<name>] subdirs)
             Show error if nothing is found
-         2. Look if any supported compilers are found embedded or in PATH 
+         2. Look if any supported compilers are found embedded or in PATH
             for target <plat>.
             Show error if nothing is found
          3. If HB_COMPILER is set to one of them, select it.
             (TODO: handle multiple installations of the same compiler.
             F.e. embedded mingw and one in PATH, or two versions of MSVC)
-         4. If HB_COMPILER is set, but not to one of them, show warning and 
+         4. If HB_COMPILER is set, but not to one of them, show warning and
             use the highest one on the priority list.
-         5. If HB_COMPILER is not set, or the one set isn't available, 
+         5. If HB_COMPILER is not set, or the one set isn't available,
             use the highest one on the priority list.
          NOTES: - compilers in PATH have higher priority than embedded.
                 - Priority list: mingw, msvc, bcc, watcom, pocc, xcc
@@ -2865,6 +2865,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          cOpt_Dyn  := '-Gn -Tpd -L{DL} {FD} ' +                          "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} cw32mt.lib import32.lib,, {LS}{SCRIPT}"
          cLibPathPrefix := ""
          cLibPathSep := ";"
+         IF hbmk[ _HBMK_lMAP ]
+            /* Switch detailed map on */
+            AAdd( hbmk[ _HBMK_aOPTL ], "-s" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-s" )
+         ENDIF
          IF hbmk[ _HBMK_lGUI ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-aa" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-aa" )
@@ -4939,7 +4944,7 @@ STATIC FUNCTION deplst_read( hDeps, cFileName )
       cLine := AllTrim( cLine )
       IF cLine == "\" .OR. Right( cLine, 2 ) == " \"
          cList += Left( cLine, Len( cLine ) - 1 )
-      ELSE 
+      ELSE
          cList += cLine
          IF ! deplst_add( hDeps, cList )
             hbmk_OutErr( hb_StrFormat( I_( "Error: In %1$s at line %2$s %3$s:" ), cFileName, hb_ntos( nLine ), cList ) )
