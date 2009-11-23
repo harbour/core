@@ -19,8 +19,7 @@ ifneq ($(filter --analyze, $(HB_USER_CFLAGS)),)
 else
    CC_IN := -c
 endif
-# NOTE: The ending space after -o is important, please preserve it.
-#       Now solved with '$(subst x,x, )' expression.
+# NOTE: Works also without the ending space after -o.
 CC_OUT := -o$(subst x,x, )
 
 CFLAGS := -I. -I$(HB_INC_COMPILE)

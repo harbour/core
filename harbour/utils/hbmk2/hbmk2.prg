@@ -2226,7 +2226,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ENDIF
          cOpt_CompC += " {FC}"
          IF hbmk[ _HBMK_lINC ] .AND. ! Empty( cWorkDir )
-            cOpt_CompC += " {IC} -o {OO}"
+            IF hbmk[ _HBMK_cPLAT ] == "linux" .AND. hbmk[ _HBMK_cCOMP ] == "clang"
+               /* NOTE: It's also accepted by darwin/clang */
+               cOpt_CompC += " {IC} -o{OO}"
+            ELSE
+               cOpt_CompC += " {IC} -o {OO}"
+            ENDIF
          ELSE
             cOpt_CompC += " {LC}"
          ENDIF

@@ -33,14 +33,6 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
-ifneq ($(filter $(HB_BUILD_STRIP),all lib),)
-   ARSTRIP = && strip -S $(LIB_DIR)/$@
-endif
-ifneq ($(filter $(HB_BUILD_STRIP),all bin),)
-   LDSTRIP := -s
-   DYSTRIP := -s
-endif
-
 LD := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 LD_OUT := -o
 
