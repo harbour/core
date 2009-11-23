@@ -195,6 +195,7 @@ CREATE CLASS WIN_PRN
    VAR BkColor
    VAR TextAlign
 
+   VAR hPen             INIT 0
    VAR PenStyle
    VAR PenWidth
    VAR PenColor
@@ -511,7 +512,7 @@ METHOD SetPen( nStyle, nWidth, nColor ) CLASS WIN_PRN
    ::PenStyle := nStyle
    ::PenWidth := nWidth
    ::PenColor := nColor
-   RETURN win_SetPen(::hPrinterDC, nStyle, nWidth, nColor )
+   RETURN ! Empty( ::hPen := win_SetPen(::hPrinterDC, nStyle, nWidth, nColor ) )
 
 METHOD Line( nX1, nY1, nX2, nY2 ) CLASS WIN_PRN
    RETURN win_LineTo( ::hPrinterDC, nX1, nY1, nX2, nY2 )
@@ -565,10 +566,10 @@ METHOD SetPrc( nRow, nCol ) CLASS WIN_PRN
    ::SetPos( ( nCol * ::CharWidth ) + ::LeftMArgin, ( nRow * ::LineHeight ) + ::TopMargin )
    RETURN NIL
 
-METHOD PROW() CLASS WIN_PRN
+METHOD PRow() CLASS WIN_PRN
    RETURN Int( ( ::PosY- ::TopMargin ) / ::LineHeight )   // No test for Div by ZERO
 
-METHOD PCOL() CLASS WIN_PRN
+METHOD PCol() CLASS WIN_PRN
    RETURN Int( ( ::PosX - ::LeftMargin ) / ::CharWidth )   // Uses width of current character
 
 METHOD MaxRow() CLASS WIN_PRN
@@ -577,16 +578,16 @@ METHOD MaxRow() CLASS WIN_PRN
 METHOD MaxCol() CLASS WIN_PRN
    RETURN Int( ( ( ::RightMargin - ::LeftMargin ) + 1 ) / ::CharWidth ) - 1
 
-METHOD MM_TO_POSX( nMm ) CLASS WIN_PRN
+METHOD MM_To_PosX( nMm ) CLASS WIN_PRN
    RETURN Int( ( ( nMM * ::PixelsPerInchX ) / MM_TO_INCH ) - ::LeftMargin )
 
-METHOD MM_TO_POSY( nMm ) CLASS WIN_PRN
+METHOD MM_To_PosY( nMm ) CLASS WIN_PRN
    RETURN Int( ( ( nMM * ::PixelsPerInchY ) / MM_TO_INCH ) - ::TopMargin )
 
-METHOD INCH_TO_POSX( nInch ) CLASS WIN_PRN
+METHOD Inch_To_PosX( nInch ) CLASS WIN_PRN
    RETURN Int( ( nInch * ::PixelsPerInchX  ) - ::LeftMargin )
 
-METHOD INCH_TO_POSY( nInch ) CLASS WIN_PRN
+METHOD Inch_To_PosY( nInch ) CLASS WIN_PRN
    RETURN Int( ( nInch * ::PixelsPerInchY ) - ::TopMargin )
 
 METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnderLine, lItalic, nCharSet, lNewLine, lUpdatePosX, nColor, nAlign ) CLASS WIN_PRN

@@ -14,8 +14,7 @@ CC := pocc.exe
 CC_IN := -c
 CC_OUT := -Fo
 
-CFLAGS := -I.
-CFLAGS += -Ze -Go
+CFLAGS := -I. -I$(HB_INC_COMPILE) -Ze -Go
 LDFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
@@ -31,10 +30,6 @@ endif
 
 # For Pocket PC and ARM processors (including XScale)
 CFLAGS += -Tarm-coff -D_M_ARM -D_WINCE
-
-ifneq ($(HB_INC_COMPILE),)
-   CFLAGS += -I$(HB_INC_COMPILE)
-endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -Zi

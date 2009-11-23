@@ -120,7 +120,7 @@ static HB_GARBAGE_FUNC( win_HPEN_release )
    if( ph && * ph )
    {
       /* Destroy the object */
-      DeleteObject( ( HDC ) * ph );
+      DeleteObject( ( HPEN ) * ph );
 
       /* set pointer to NULL to avoid multiple freeing */
       * ph = NULL;
@@ -159,9 +159,18 @@ HB_FUNC( WIN_CREATEDC )
    if( HB_ISCHAR( 1 ) )
    {
       LPTSTR lpText = HB_TCHAR_CONVTO( hb_parc( 1 ) );
-      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HDC * ), &s_gc_HDC_funcs );
-      *ph = ( void * ) CreateDC( TEXT( "" ), lpText, NULL, NULL );
-      hb_retptrGC( ph );
+      HDC hDC = CreateDC( TEXT( "" ), lpText, NULL, NULL );
+
+      if( hDC )
+      {
+         void ** ph = ( void ** ) hb_gcAllocate( sizeof( HDC * ), &s_gc_HDC_funcs );
+
+         *ph = hDC;
+         hb_retptrGC( ph );
+      }
+      else
+         hb_retptr( NULL );
+
       HB_TCHAR_FREE( lpText );
    }
    else
@@ -663,21 +672,23 @@ HB_FUNC( WIN_SETPEN )
 
    if( hDC )
    {
-      HPEN hOldPen;
+      HPEN hPen;
 
-      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HPEN * ), &s_gc_HPEN_funcs );
+      hPen = CreatePen( hb_parni( 2 ),                /* pen style */
+                        hb_parni( 3 ),                /* pen width */
+                        ( COLORREF ) hb_parnl( 4 )    /* pen color */
+                      );
 
-      * ph = ( void * ) CreatePen( hb_parni( 2 ),                /* pen style */
-                                   hb_parni( 3 ),                /* pen width */
-                                   ( COLORREF ) hb_parnl( 4 )    /* pen color */
-                                 );
+      if( hPen )
+      {
+         void ** ph = ( void ** ) hb_gcAllocate( sizeof( HPEN * ), &s_gc_HPEN_funcs );
 
-      hOldPen = ( HPEN ) SelectObject( hDC, ( HPEN ) * ph );
-
-      if( hOldPen )
-         DeleteObject( hOldPen );
-
-      hb_retptrGC( ph );
+         *ph = hPen;
+         SelectObject( hDC, hPen );
+         hb_retptrGC( ph );
+      }
+      else
+         hb_retptr( NULL );
 
    }
    else

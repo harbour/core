@@ -14,7 +14,7 @@ CC := pocc.exe
 CC_IN := -c
 CC_OUT := -Fo
 
-CFLAGS := -I. -Ze -Go -MT
+CFLAGS := -I. -I$(HB_INC_COMPILE) -Ze -Go -MT
 LDFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
@@ -26,10 +26,6 @@ endif
 ifneq ($(HB_BUILD_OPTIM),no)
    CFLAGS += -Ot
    # -Ox: can cause GPF in 4.50/5.00, so it's disabled.
-endif
-
-ifneq ($(HB_INC_COMPILE),)
-   CFLAGS += -I$(HB_INC_COMPILE)
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
