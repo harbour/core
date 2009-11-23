@@ -52,7 +52,8 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
-*/
+ *
+ */
 
 /* NOTE: I'm not totally familiar with how Xbase++ works. This functionality
          was derived from the context in which the functions are used. [pt] */
@@ -580,7 +581,7 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
 
       case CTYPE_UNSIGNED_INT:
       case CTYPE_UNSIGNED_LONG:
-         hb_retnint( ( ULONG ) rc.Long );
+         hb_retnint( ( unsigned long ) rc.Long );
          break;
 
       case CTYPE_INT_PTR:
@@ -748,7 +749,7 @@ HB_FUNC( DLLPREPARECALL )
 
    if( xec->hDLL )
    {
-      ULONG ulLen = 0;
+      HB_SIZE ulLen = 0;
 
       if( HB_ISCHAR( 3 ) )
       {

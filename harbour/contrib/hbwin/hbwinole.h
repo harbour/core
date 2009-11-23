@@ -101,7 +101,7 @@
 
 HB_EXTERN_BEGIN
 
-HB_EXPORT BOOL       hb_oleInit( void );
+HB_EXPORT HB_BOOL    hb_oleInit( void );
 HB_EXPORT HRESULT    hb_oleGetError( void );
 HB_EXPORT void       hb_oleSetError( HRESULT lOleError );
 HB_EXPORT void       hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant );
@@ -114,7 +114,7 @@ HB_EXPORT PHB_ITEM   hb_oleItemGetCallBack( PHB_ITEM pItem );
 HB_EXPORT void       hb_oleItemSetCallBack( PHB_ITEM pItem, PHB_ITEM* pCallBack );
 
 /* activex control */
-HB_EXPORT BOOL       hb_oleAxInit( void );
+HB_EXPORT HB_BOOL    hb_oleAxInit( void );
 HB_EXPORT PHB_ITEM   hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd );
 
 HB_EXTERN_END

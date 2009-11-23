@@ -81,7 +81,7 @@ static void hb_oleAxExit( void* cargo )
    }
 }
 
-BOOL hb_oleAxInit( void )
+HB_BOOL hb_oleAxInit( void )
 {
    if( s_hLib == NULL )
    {
@@ -91,7 +91,7 @@ BOOL hb_oleAxInit( void )
       if( ( unsigned long ) ( HB_PTRDIFF ) s_hLib <= 32 )
       {
          s_hLib = NULL;
-         return 0;
+         return FALSE;
       }
       pAtlAxWinInit      = ( PHB_AX_WININIT ) GetProcAddress( s_hLib, HBTEXT( "AtlAxWinInit" ) );
       s_pAtlAxGetControl = ( PHB_AX_GETCTRL ) GetProcAddress( s_hLib, HBTEXT( "AtlAxGetControl" ) );
@@ -101,7 +101,7 @@ BOOL hb_oleAxInit( void )
 
       hb_vmAtQuit( hb_oleAxExit, NULL );
    }
-   return 1;
+   return TRUE;
 }
 
 

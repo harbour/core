@@ -979,7 +979,7 @@ HB_FUNC( __OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
             lOleError = CLSIDFromString( ( LPOLESTR ) cCLSID, &iid );
             hb_xfree( cCLSID );
          }
-         else if( hb_parclen( 2 ) == ( ULONG ) sizeof( iid ) )
+         else if( hb_parclen( 2 ) == ( HB_SIZE ) sizeof( iid ) )
          {
             memcpy( ( LPVOID ) &iid, cID, sizeof( iid ) );
          }
@@ -1026,7 +1026,7 @@ HB_FUNC( __OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
             lOleError = CLSIDFromString( wCLSID, &iid );
             hb_xfree( wCLSID );
          }
-         else if( hb_parclen( 2 ) == ( ULONG ) sizeof( iid ) )
+         else if( hb_parclen( 2 ) == ( HB_SIZE ) sizeof( iid ) )
          {
             memcpy( ( LPVOID ) &iid, cID, sizeof( iid ) );
          }

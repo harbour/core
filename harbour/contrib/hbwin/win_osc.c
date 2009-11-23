@@ -48,18 +48,7 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
-
-*/
-
-/*
- * Operating system functions for Windows
  *
- * Program to check and set Windows Registry settings
- * for safe networking - all versions of Windows to XP SP2
- *
- *
- * Also includes check for buggy VREDIR.VXD under Win95
- * and if the correct patch file is found - run it.
  */
 
 #define HB_OS_WIN_USED

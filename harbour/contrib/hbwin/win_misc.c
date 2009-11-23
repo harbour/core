@@ -211,7 +211,7 @@ HB_FUNC( WIN_GETCOMMANDLINEPARAM )
 
 HB_FUNC( WIN_ANSITOWIDE )
 {
-   unsigned long nLen = hb_parclen( 1 );
+   HB_SIZE nLen = hb_parclen( 1 );
    BSTR wString = hb_mbntowc( hb_parcx( 1 ), nLen );
 
    hb_retclen_buffer( ( char * ) wString, nLen * sizeof( wchar_t ) );
@@ -219,7 +219,7 @@ HB_FUNC( WIN_ANSITOWIDE )
 
 HB_FUNC( WIN_WIDETOANSI )
 {
-   unsigned long nLen = hb_parclen( 1 );
+   HB_SIZE nLen = hb_parclen( 1 );
    char * cString = hb_wcntomb( ( wchar_t * ) hb_parcx( 1 ), nLen );
 
    hb_retclen_buffer( cString, nLen / sizeof( wchar_t ) );

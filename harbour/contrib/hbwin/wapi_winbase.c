@@ -168,7 +168,7 @@ HB_FUNC( WAPI_OUTPUTDEBUGSTRING )
 HB_FUNC( WAPI_FORMATMESSAGE )
 {
    LPTSTR lpSource = HB_ISCHAR( 2 ) ? HB_TCHAR_CONVTO( hb_parc( 2 ) ) : NULL;
-   ULONG nBufferLen = hb_parclen( 5 );
+   HB_SIZE nBufferLen = hb_parclen( 5 );
    LPTSTR lpBuffer = nBufferLen > 0 ? ( LPTSTR ) hb_xgrab( nBufferLen * sizeof( LPTSTR ) ) : NULL;
 
    hb_retnl( FormatMessage( ( DWORD ) hb_parnldef( 1, FORMAT_MESSAGE_FROM_SYSTEM ) /* dwFlags */,
@@ -176,7 +176,7 @@ HB_FUNC( WAPI_FORMATMESSAGE )
                             HB_ISNUM( 3 ) ? ( DWORD ) hb_parnl( 3 ) : GetLastError() /* dwMessageId */,
                             ( DWORD ) hb_parnldef( 4, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ) ) /* dwLanguageId */,
                             ( LPTSTR ) lpBuffer,
-                            nBufferLen,
+                            ( DWORD ) nBufferLen,
                             NULL /* TODO: Add support for this parameter. */ ) );
 
    if( lpBuffer )

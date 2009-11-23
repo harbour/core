@@ -71,11 +71,10 @@ HB_FUNC( SMSSENDMESSAGE ) /* cMessage, cNumber */
 
       wchar_t * sztMessage     = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
       wchar_t * sztPhoneNumber = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
-      BOOL bInternational      = ( *sztPhoneNumber == '+' );
 
       /* Create the destination address */
       memset( &smsaDestination, 0, sizeof( smsaDestination ) );
-      smsaDestination.smsatAddressType = bInternational ? SMSAT_INTERNATIONAL : SMSAT_NATIONAL;
+      smsaDestination.smsatAddressType = ( *sztPhoneNumber == '+' ) ? SMSAT_INTERNATIONAL : SMSAT_NATIONAL;
       /* TOFIX: lstrcpy() unsafe and may cause buffer overrun.
                 Worked around using hb_parclen( 2 ) check against SMS_MAX_ADDRESS_LENGTH.
                 [vszakats]. */
