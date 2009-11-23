@@ -47,7 +47,7 @@ get_rpmmacro()
     echo -n "${R}"
 }
 
-for d in /usr /usr/local /opt/xmingw
+for d in /usr /usr/local /opt/xmingw /opt/cross
 do
     if [ -z "${TARGET}" ]
     then
