@@ -123,11 +123,11 @@ HB_FUNC( PRINTEREXISTS )
    hb_retl( bResult );
 }
 
-static HB_BOOL hb_GetDefaultPrinter( char * pszPrinterName, HB_SIZE * pulBufferSize )
+static HB_BOOL hb_GetDefaultPrinter( char * pszPrinterName, HB_SIZE * pnBufferSize )
 {
    HB_BOOL bResult = FALSE;
 
-   if( pszPrinterName && pulBufferSize )
+   if( pszPrinterName && pnBufferSize )
    {
       OSVERSIONINFO osvi;
 
@@ -144,19 +144,20 @@ static HB_BOOL hb_GetDefaultPrinter( char * pszPrinterName, HB_SIZE * pulBufferS
 
          if( hWinSpool )
          {
+            fnGetDefaultPrinter = ( DEFPRINTER ) GetProcAddress( hWinSpool,
 #if defined( UNICODE )
-            fnGetDefaultPrinter = ( DEFPRINTER ) GetProcAddress( hWinSpool, "GetDefaultPrinterW" );
+               "GetDefaultPrinterW" );
 #else
-            fnGetDefaultPrinter = ( DEFPRINTER ) GetProcAddress( hWinSpool, "GetDefaultPrinterA" );
+               "GetDefaultPrinterA" );
 #endif
 
             if( fnGetDefaultPrinter )
             {
-               LPTSTR lpPrinterName = ( LPTSTR ) hb_xgrab( *pulBufferSize * sizeof( TCHAR ) );
+               LPTSTR lpPrinterName = ( LPTSTR ) hb_xgrab( *pnBufferSize * sizeof( TCHAR ) );
 
-               bResult = ( *fnGetDefaultPrinter )( lpPrinterName, pulBufferSize );
+               bResult = ( *fnGetDefaultPrinter )( lpPrinterName, pnBufferSize );
 
-               HB_TCHAR_GETFROM( pszPrinterName, lpPrinterName, *pulBufferSize );
+               HB_TCHAR_GETFROM( pszPrinterName, lpPrinterName, *pnBufferSize );
 
                hb_xfree( lpPrinterName );
             }
@@ -167,26 +168,26 @@ static HB_BOOL hb_GetDefaultPrinter( char * pszPrinterName, HB_SIZE * pulBufferS
 
       if( ! bResult ) /* Win9x and Windows NT 4.0 or earlier & 2000+ if necessary for some reason i.e. dll could not load! */
       {
-         LPTSTR lpPrinterName = ( LPTSTR ) hb_xgrab( *pulBufferSize * sizeof( TCHAR ) );
+         LPTSTR lpPrinterName = ( LPTSTR ) hb_xgrab( *pnBufferSize * sizeof( TCHAR ) );
 
-         DWORD dwSize = GetProfileString( TEXT( "windows" ), TEXT( "device" ), TEXT( "" ), lpPrinterName, ( DWORD ) *pulBufferSize );
+         DWORD dwSize = GetProfileString( TEXT( "windows" ), TEXT( "device" ), TEXT( "" ), lpPrinterName, ( DWORD ) *pnBufferSize );
 
-         HB_TCHAR_GETFROM( pszPrinterName, lpPrinterName, *pulBufferSize );
+         HB_TCHAR_GETFROM( pszPrinterName, lpPrinterName, *pnBufferSize );
 
          hb_xfree( lpPrinterName );
 
-         if( dwSize && dwSize < *pulBufferSize )
+         if( dwSize && dwSize < *pnBufferSize )
          {
             dwSize = 0;
             while( pszPrinterName[ dwSize ] != '\0' && pszPrinterName[ dwSize ] != ',' )
                dwSize++;
 
             pszPrinterName[ dwSize ] = '\0';
-            *pulBufferSize = dwSize + 1;
+            *pnBufferSize = dwSize + 1;
             bResult = TRUE;
          }
          else
-            *pulBufferSize = dwSize + 1;
+            *pnBufferSize = dwSize + 1;
       }
 
       if( ! bResult && osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
@@ -216,10 +217,10 @@ static HB_BOOL hb_GetDefaultPrinter( char * pszPrinterName, HB_SIZE * pulBufferS
                {
                   DWORD dwSize = ( DWORD ) lstrlen( pPrinterInfo->pPrinterName );
 
-                  if( dwSize && dwSize < *pulBufferSize )
+                  if( dwSize && dwSize < *pnBufferSize )
                   {
                      HB_TCHAR_GETFROM( pszPrinterName, pPrinterInfo->pPrinterName, lstrlen( pPrinterInfo->pPrinterName ) );
-                     *pulBufferSize = dwSize + 1;
+                     *pnBufferSize = dwSize + 1;
                      bResult = TRUE;
                   }
                }
@@ -235,10 +236,10 @@ static HB_BOOL hb_GetDefaultPrinter( char * pszPrinterName, HB_SIZE * pulBufferS
 HB_FUNC( GETDEFAULTPRINTER )
 {
    char szDefaultPrinter[ MAXBUFFERSIZE ];
-   HB_SIZE ulBufferSize = sizeof( szDefaultPrinter );
+   HB_SIZE nBufferSize = sizeof( szDefaultPrinter );
 
-   if( hb_GetDefaultPrinter( szDefaultPrinter, &ulBufferSize ) )
-      hb_retclen( szDefaultPrinter, ulBufferSize - 1 );
+   if( hb_GetDefaultPrinter( szDefaultPrinter, &nBufferSize ) )
+      hb_retclen( szDefaultPrinter, nBufferSize - 1 );
    else
       hb_retc_null();
 }
@@ -282,13 +283,13 @@ static HB_BOOL hb_GetJobs( HANDLE hPrinter, JOB_INFO_2 ** ppJobInfo, long * plJo
 HB_FUNC( XISPRINTER )
 {
    char szDefaultPrinter[ MAXBUFFERSIZE ];
-   HB_SIZE ulBufferSize = sizeof( szDefaultPrinter );
+   HB_SIZE nBufferSize = sizeof( szDefaultPrinter );
    const char * pszPrinterName = hb_parc( 1 );
    long nStatus = -1;
 
    if( hb_parclen( 1 ) == 0 )
    {
-      hb_GetDefaultPrinter( szDefaultPrinter, &ulBufferSize );
+      hb_GetDefaultPrinter( szDefaultPrinter, &nBufferSize );
       pszPrinterName = szDefaultPrinter;
    }
 

@@ -2737,6 +2737,7 @@ HB_ERRCODE hb_fsCurDirBuff( USHORT uiDrive, char * pszBuffer, ULONG ulSize )
       hb_fsSetIOError( fResult, 0 );
       hb_vmLock();
       HB_TCHAR_GETFROM( pszBuffer, lpBuffer, ulSize );
+      hb_xfree( lpBuffer );
    }
 #elif defined( HB_OS_OS2 ) && defined( __GNUC__ )
 
