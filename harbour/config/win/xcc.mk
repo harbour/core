@@ -14,29 +14,28 @@ CC := xcc.exe
 CC_IN := -c
 CC_OUT := -Fo
 
-CFLAGS :=
-CPPFLAGS := -I. -I$(TOP). -I$(TOP).. -I$(HB_INC_COMPILE)
+CFLAGS := -I. -I$(TOP). -I$(TOP).. -I$(HB_INC_COMPILE)
 ifeq ($(HB_SHELL),sh)
-   CPPFLAGS := $(subst /,\\,$(CPPFLAGS))
+   CFLAGS := $(subst /,\\,$(CFLAGS))
 else
-   CPPFLAGS := $(subst /,\,$(CPPFLAGS))
+   CFLAGS := $(subst /,\,$(CFLAGS))
 endif
-CPPFLAGS += -MT
+CFLAGS += -MT
 LDFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
-   CPPFLAGS += -W1
+   CFLAGS += -W1
 else
-   CPPFLAGS += -W0
+   CFLAGS += -W0
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
    # disabled - it produces bad code
-   #CPPFLAGS += -Ot
+   #CFLAGS += -Ot
 endif
 
 # For Pocket PC and ARM processors (including XScale)
-#CPPFLAGS += -Tarm-coff
+#CFLAGS += -Tarm-coff
 
 ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -Zi

@@ -20,8 +20,7 @@ CC := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 CC_IN := -c
 CC_OUT := -o
 
-CPPFLAGS := -I. -I$(HB_INC_COMPILE)
-CFLAGS :=
+CFLAGS := -I. -I$(HB_INC_COMPILE)
 LDFLAGS :=
 
 ifeq ($(HB_COMPILER),gccomf)
@@ -71,9 +70,9 @@ ifeq ($(HB_COMPILER),gccomf)
    #       It causes that every command will be separated by LF
    define lib_object
       $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -p128 r $(LIB_DIR)/$@ $(file)$(ECHOQUOTE)
-  
+
    endef
-  
+
    define create_library
       $(if $(wildcard $(subst /,$(DIRSEP),$(LIB_FILE))),@$(RM) $(subst /,$(DIRSEP),$(LIB_FILE)),)
       $(foreach file,$^,$(lib_object))
@@ -83,7 +82,7 @@ else
    #       It causes that every command will be separated by LF
    define lib_object
       @$(ECHO) $(ECHOQUOTE)ADDMOD $(file)$(ECHOQUOTE) >> __lib__.tmp
-   
+
    endef
 
    # We have to use a script to overcome the AR limit of max 850 characters

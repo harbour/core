@@ -20,8 +20,7 @@ CC_IN := -c
 #       Now solved with '$(subst x,x, )' expression.
 CC_OUT := -o$(subst x,x, )
 
-CPPFLAGS := -I. -I$(HB_INC_COMPILE)
-CFLAGS :=
+CFLAGS := -I. -I$(HB_INC_COMPILE)
 LDFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)

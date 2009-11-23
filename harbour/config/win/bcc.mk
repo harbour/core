@@ -14,8 +14,7 @@ CC := bcc32.exe
 CC_IN := -c
 CC_OUT := -o
 
-CPPFLAGS := -I. -I$(HB_INC_COMPILE)
-CFLAGS := -q -tWM
+CFLAGS := -I. -I$(HB_INC_COMPILE) -q -tWM
 LDFLAGS :=
 DFLAGS :=
 

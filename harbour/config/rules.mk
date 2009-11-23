@@ -33,7 +33,7 @@ HB_RULE = $(HB) $? $(HB_INC_DEPEND) -i$(HB_INC_COMPILE) $(HB_FLAGS) $(HB_USER_PR
 
 # Use default rules if platform/compiler specific rule is not defined
 
-CC_FLAGS := $(HB_INC_DEPEND) $(CPPFLAGS) $(CFLAGS) $(HB_CFLAGS)
+CC_FLAGS := $(HB_INC_DEPEND) $(CFLAGS) $(HB_CFLAGS)
 
 # The rule to compile a C source file.
 ifeq ($(CC_RULE),)

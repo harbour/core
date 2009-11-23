@@ -14,28 +14,26 @@ CC := pocc.exe
 CC_IN := -c
 CC_OUT := -Fo
 
-CPPFLAGS := -I.
-CPPFLAGS += -Ze -Go -MT
-CFLAGS :=
+CFLAGS := -I. -Ze -Go -MT
 LDFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
-   CPPFLAGS += -W1
+   CFLAGS += -W1
 else
-   CPPFLAGS += -W0
+   CFLAGS += -W0
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-   CPPFLAGS += -Ot
+   CFLAGS += -Ot
    # -Ox: can cause GPF in 4.50/5.00, so it's disabled.
 endif
 
 ifneq ($(HB_INC_COMPILE),)
-   CPPFLAGS += -I$(HB_INC_COMPILE)
+   CFLAGS += -I$(HB_INC_COMPILE)
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-   CPPFLAGS += -Zi
+   CFLAGS += -Zi
 endif
 
 LD := polink.exe

@@ -15,29 +15,28 @@ CC := icl.exe
 CC_IN := -c
 CC_OUT := -Fo
 
-CPPFLAGS := -nologo -I. -I$(HB_INC_COMPILE) -Gs
-CFLAGS :=
+CFLAGS := -nologo -I. -I$(HB_INC_COMPILE) -Gs
 LDFLAGS :=
 
 ifeq ($(HB_BUILD_MODE),c)
-   CPPFLAGS += -TC
+   CFLAGS += -TC
 endif
 ifeq ($(HB_BUILD_MODE),cpp)
-   CPPFLAGS += -TP
+   CFLAGS += -TP
 endif
 
 ifneq ($(HB_BUILD_WARN),no)
-   CPPFLAGS += -W3
+   CFLAGS += -W3
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
    # maximum optimizations
-   # CPPFLAGS += -Ox
-   CPPFLAGS += -O3
+   # CFLAGS += -Ox
+   CFLAGS += -O3
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-   CPPFLAGS += -Zi
+   CFLAGS += -Zi
 endif
 
 LD := xilink.exe

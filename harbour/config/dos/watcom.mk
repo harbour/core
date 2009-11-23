@@ -21,36 +21,35 @@ endif
 CC_IN :=
 CC_OUT := -fo=
 
-CPPFLAGS := -zq -bt=dos
-CFLAGS :=
+CFLAGS := -zq -bt=dos
 LDFLAGS := OP quiet
 
 ifneq ($(HB_BUILD_WARN),no)
-   CPPFLAGS += -w3
+   CFLAGS += -w3
 else
-   CPPFLAGS += -w0
+   CFLAGS += -w0
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
    # architecture flags
-   CPPFLAGS += -5r -fp5
+   CFLAGS += -5r -fp5
 
    # optimization flags
    # don't enable -ol optimization in OpenWatcom 1.1 - gives buggy code
    # -oxaht
-   CPPFLAGS += -onaehtr -s -ei -zp4 -zt0
-   #CPPFLAGS += -obl+m
+   CFLAGS += -onaehtr -s -ei -zp4 -zt0
+   #CFLAGS += -obl+m
    ifeq ($(CC),wpp386)
-      CPPFLAGS += -oi+
+      CFLAGS += -oi+
    else
-      CPPFLAGS += -oi
+      CFLAGS += -oi
    endif
 endif
 
-CPPFLAGS += -i. -i$(HB_INC_COMPILE)
+CFLAGS += -i. -i$(HB_INC_COMPILE)
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-   CPPFLAGS += -d2
+   CFLAGS += -d2
 endif
 
 LD := wlink

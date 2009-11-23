@@ -27,8 +27,7 @@ CC_OUT := -o$(subst x,x, )
 
 CXX := $(HB_CCACHE) $(HB_CCPATH)$(HB_CCPREFIX)sunCC$(HB_CCPOSTFIX)
 
-CPPFLAGS := -I. -I$(HB_INC_COMPILE)
-CFLAGS :=
+CFLAGS := -I. -I$(HB_INC_COMPILE)
 LDFLAGS :=
 
 # try to keep `-fast' as left as possible, as later optim

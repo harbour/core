@@ -20,13 +20,13 @@ CC_IN := -c
 #       Now solved with '$(subst x,x, )' expression.
 CC_OUT := -o$(subst x,x, )
 
-CPPFLAGS := -I. -I$(HB_INC_COMPILE)
+CFLAGS := -I. -I$(HB_INC_COMPILE)
 
 # -no-cpp-precomp prevents from using buggy precompiled headers
-# CPPFLAGS += -no-cpp-precomp
+# CFLAGS += -no-cpp-precomp
 
 # -fno-common enables building .dylib files
-CFLAGS := -fno-common
+CFLAGS += -fno-common
 LDFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)

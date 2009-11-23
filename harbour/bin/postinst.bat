@@ -79,7 +79,7 @@ if "%HB_SHELL%" == "nt" goto _SH_NT
    rem       without including the whole root path in filenames; you have to 'cd' into it.
    rem       Even with zip 3.0. For this reason we need absolute path in HB_TOP. There is also
    rem       no zip 2.x compatible way to force creation of a new .zip, so we have to delete it
-   rem       first to avoid mixing in an existing .zip files. [vszakats]
+   rem       first to avoid mixing in an existing .zip file. [vszakats]
 
    echo ! Making Harbour .zip install package: '%HB_TOP%\%HB_PKGNAME%.zip'
    if exist "%HB_TOP%\%HB_PKGNAME%.zip" del "%HB_TOP%\%HB_PKGNAME%.zip"

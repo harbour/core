@@ -190,7 +190,7 @@ HARBOUR
 
    If you want to [re]build only a specific part of Harbour, like
    one library, all contrib libs or core libs, you have to do
-   everything the same as for a full build, the only difference
+   everything the same way as for a full build, the only difference
    is that you first have to go into the specific source directory
    you want to [re]build. When starting GNU Make, all components
    under that dir will be built:
@@ -842,7 +842,7 @@ HARBOUR
       both x86 and x64 without building a native target first, and potential
       differences in compilers to use native binaries if they are available.
 
-      --- Windows SDK 7
+      --- Windows SDK 7 for Windows x86
       call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\bin\vcvars32.bat"
       mingw32-make
       ---
@@ -852,7 +852,7 @@ HARBOUR
       mingw32-make
       ---
 
-      --- MSVC 2008
+      --- MSVC 2008 for Windows x86
       call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"
       mingw32-make
       ---

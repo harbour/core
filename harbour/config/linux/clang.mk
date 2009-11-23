@@ -23,8 +23,7 @@ else
 endif
 CC_OUT := -o
 
-CPPFLAGS := -I. -I$(HB_INC_COMPILE)
-CFLAGS :=
+CFLAGS := -I. -I$(HB_INC_COMPILE)
 LDFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)

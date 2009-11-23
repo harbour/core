@@ -23,27 +23,27 @@ endif
 #       Now solved with '$(subst x,x, )' expression.
 CC_OUT := -o$(subst x,x, )
 
-CPPFLAGS := -I. -I$(HB_INC_COMPILE)
+CFLAGS := -I. -I$(HB_INC_COMPILE)
 
 # -fno-common enables building .dylib files
-CPPFLAGS += -fno-common
+CFLAGS += -fno-common
 LDFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
-   CPPFLAGS += -Wall -W
+   CFLAGS += -Wall -W
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-   CPPFLAGS += -O3
+   CFLAGS += -O3
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-   CPPFLAGS += -g
+   CFLAGS += -g
 endif
 
 # It's to avoid warning message generated when 'long double' is used
 # remove it if you have newer compiler version
-#CPPFLAGS += -Wno-long-double
+#CFLAGS += -Wno-long-double
 
 LD := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 LD_OUT := -o$(subst x,x, )
