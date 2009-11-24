@@ -13,7 +13,7 @@
 # USAGE:
 #    ON CALL:
 #       _DET_DSP_NAME - human readable name of external component.
-#       _DET_VAR_INC_ - variable name containing user component control (typically "HB_INC_*").
+#       _DET_VAR_INC_ - variable name containing user component control (typically "HB_WITH_*").
 #       _DET_VAR_HAS_ - variable name receiving detection result (typically "HB_HAS_*").
 #       _DET_FLT_PLAT - positive and negative platform filters. Prefix negative ones with '!' char.
 #       _DET_FLT_COMP - positive and negative compiler filters. Prefix negative ones with '!' char.
@@ -22,7 +22,7 @@
 #       _DET_INC_LOCL - embedded location to look at.
 #                       (you must use absolute paths only.)
 #       _DET_INC_HEAD - header filename to look for. Unless looking for a directory, prefix with forward slash.
-#       - variable name specified by _DET_VAR_INC_ (typically "HB_INC_*") containing:
+#       - variable name specified by _DET_VAR_INC_ (typically "HB_WITH_*") containing:
 #          (empty) or yes - will enable external component if found on default locations.
 #          no             - will disable external component.
 #          force          - will forcibly enable external component, bypassing location checks,
@@ -95,6 +95,9 @@ ifeq ($($(_DET_VAR_HAS_)),)
                         $(_DET_VAR_HAS_) := $(strip $(firstword $(foreach d,$($(_DET_VAR_HAS_)),$(if $(wildcard $(d)$(_DET_INC_HEAD)),$(d),))))
                         ifeq ($($(_DET_VAR_HAS_)),)
                            _DET_RES_TEXT := '$(_DET_DSP_NAME)' not found
+                           ifneq ($(HB_HOST_PLAT_UNIX),yes)
+                              _DET_RES_TEXT := $(_DET_RES_TEXT). Configure with $(subst HB_INC_,HB_WITH_,$(_DET_VAR_INC_)).
+                           endif
                            $(call do_info,$(_DET_RES_TEXT))
                         else
                            # detect if the component was found in locally hosted dir

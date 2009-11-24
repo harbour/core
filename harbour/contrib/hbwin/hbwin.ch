@@ -139,6 +139,43 @@
 #define MM_LOENGLISH           4
 #define MM_HIENGLISH           5
 
+#define FW_DONTCARE            0
+#define FW_THIN                100
+#define FW_EXTRALIGHT          200
+#define FW_ULTRALIGHT          FW_EXTRALIGHT
+#define FW_LIGHT               300
+#define FW_NORMAL              400
+#define FW_REGULAR             FW_NORMAL
+#define FW_MEDIUM              500
+#define FW_SEMIBOLD            600
+#define FW_DEMIBOLD            FW_SEMIBOLD
+#define FW_BOLD                700
+#define FW_EXTRABOLD           800
+#define FW_ULTRABOLD           FW_EXTRABOLD
+#define FW_HEAVY               900
+#define FW_BLACK               FW_HEAVY
+
+#define ANSI_CHARSET           0
+#define DEFAULT_CHARSET        1
+#define SYMBOL_CHARSET         2
+#define MAC_CHARSET            77
+#define SHIFTJIS_CHARSET       128
+#define HANGEUL_CHARSET        129
+#define HANGUL_CHARSET         129
+#define JOHAB_CHARSET          130
+#define GB2312_CHARSET         134
+#define CHINESEBIG5_CHARSET    136
+#define GREEK_CHARSET          161
+#define TURKISH_CHARSET        162
+#define VIETNAMESE_CHARSET     163
+#define HEBREW_CHARSET         177
+#define ARABIC_CHARSET         178
+#define BALTIC_CHARSET         186
+#define RUSSIAN_CHARSET        204
+#define THAI_CHARSET           222
+#define EASTEUROPE_CHARSET     238
+#define OEM_CHARSET            255
+
 /* Device Parameters for win_GetDeviceCaps() */
 
 #define HORZSIZE               4   // Horizontal size in millimeters
