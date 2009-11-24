@@ -55,6 +55,15 @@
 #ifndef HBWIN_CH_
 #define HBWIN_CH_
 
+/* Positions for GETPRINTERS() array */
+
+#define HB_WINPRN_NAME         1
+#define HB_WINPRN_PORT         2
+#define HB_WINPRN_TYPE         3
+#define HB_WINPRN_DRIVER       4
+#define HB_WINPRN_SHARE        5
+#define HB_WINPRN_LEN_         5
+
 /* Registry related values */
 
 #define HKEY_CLASSES_ROOT      0x80000000
