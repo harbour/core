@@ -247,7 +247,7 @@ static HB_BOOL hb_SetDefaultPrinter( LPTSTR lpPrinterName )
    return HB_TRUE;
 }
 
-HB_FUNC( SETDEFAULTPRINTER )
+HB_FUNC( WIN_SETDEFAULTPRINTER )
 {
    if( hb_parclen( 1 ) > 0 )
    {

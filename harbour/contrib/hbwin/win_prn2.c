@@ -85,7 +85,7 @@ static HB_BOOL hb_IsLegacyDevice( const char * pszPrinterName )
    return FALSE;
 }
 
-HB_FUNC( PRINTEREXISTS )
+HB_FUNC( WIN_PRINTEREXISTS )
 {
    HB_BOOL bResult = FALSE;
 
@@ -233,7 +233,7 @@ static HB_BOOL hb_GetDefaultPrinter( char * pszPrinterName, HB_SIZE * pnBufferSi
    return bResult;
 }
 
-HB_FUNC( GETDEFAULTPRINTER )
+HB_FUNC( WIN_GETDEFAULTPRINTER )
 {
    char szDefaultPrinter[ MAXBUFFERSIZE ];
    HB_SIZE nBufferSize = sizeof( szDefaultPrinter );
@@ -280,7 +280,7 @@ static HB_BOOL hb_GetJobs( HANDLE hPrinter, JOB_INFO_2 ** ppJobInfo, long * plJo
    return bResult;
 }
 
-HB_FUNC( XISPRINTER )
+HB_FUNC( WIN_PRINTERSTATUS )
 {
    char szDefaultPrinter[ MAXBUFFERSIZE ];
    HB_SIZE nBufferSize = sizeof( szDefaultPrinter );
@@ -347,7 +347,7 @@ HB_FUNC( XISPRINTER )
    hb_retnl( nStatus );
 }
 
-HB_FUNC( PRINTERPORTTONAME )
+HB_FUNC( WIN_PRINTERPORTTONAME )
 {
    hb_retc_null();
 
@@ -395,7 +395,7 @@ HB_FUNC( PRINTERPORTTONAME )
    }
 }
 
-HB_FUNC( PRINTFILERAW )
+HB_FUNC( WIN_PRINTFILERAW )
 {
    int iResult = -1;
 
@@ -474,7 +474,7 @@ HB_FUNC( PRINTFILERAW )
 #define HB_WINPRN_SHARE             5
 #define HB_WINPRN_LEN_              5
 
-HB_FUNC( GETPRINTERS )
+HB_FUNC( WIN_GETPRINTERS )
 {
    HB_BOOL bPrinterNamesOnly = HB_ISLOG( 1 ) ? ! hb_parl( 1 ) : TRUE;
    HB_BOOL bLocalPrintersOnly = hb_parl( 2 );

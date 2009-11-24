@@ -14,6 +14,7 @@ C_SOURCES := \
    axcore.c \
    legacycd.c \
    legacyco.c \
+   legacycp.c \
    wce_simc.c \
    wce_smsc.c \
    win_com.c \
