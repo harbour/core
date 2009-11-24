@@ -258,7 +258,7 @@ HB_FUNC( WIN_PRINTERSETDEFAULT )
       HB_TCHAR_FREE( lpPrinterName );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 #endif

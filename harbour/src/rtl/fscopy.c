@@ -66,9 +66,9 @@ BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
    HB_FHANDLE fhndSource;
    HB_FHANDLE fhndDest;
 
-   if( ( fhndSource = hb_fsOpen( pszSource, FO_READ | FO_DENYNONE ) ) != FS_ERROR )
+   if( ( fhndSource = hb_fsExtOpen( pszSource, NULL, FO_READ | FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL ) ) != FS_ERROR )
    {
-      if( ( fhndDest = hb_fsCreate( pszDest, FC_NORMAL ) ) != FS_ERROR )
+      if( ( fhndDest = hb_fsExtOpen( pszDest, NULL, FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE | FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL ) ) != FS_ERROR )
       {
 #if defined( HB_OS_UNIX )
          struct stat struFileInfo;
