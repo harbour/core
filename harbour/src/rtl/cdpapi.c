@@ -1543,7 +1543,7 @@ int hb_cdpTranslateChar( int iChar, BOOL fCtrl, PHB_CODEPAGE cdpIn, PHB_CODEPAGE
          hb_cdpBuildTransTable( cdpOut->uniTable );
 
       wc = cdpIn->uniTable->uniCodes[ iChar ];
-      if( wc && wc <= cdpIn->uniTable->wcMax &&
+      if( wc && wc <= cdpOut->uniTable->wcMax &&
           cdpOut->uniTable->uniTrans[ wc ] )
          iChar = cdpOut->uniTable->uniTrans[ wc ];
    }
