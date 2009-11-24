@@ -23,7 +23,7 @@ endif
 CC_IN :=
 CC_OUT := -fo=
 
-CFLAGS := -zq -bt=os2
+CFLAGS := -zq -bt=os2 -bm
 LDFLAGS := OP quiet
 
 ifneq ($(HB_BUILD_WARN),no)
