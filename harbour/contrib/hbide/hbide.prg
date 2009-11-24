@@ -955,12 +955,28 @@ METHOD HbIde:CreateTags()
 //----------------------------------------------------------------------//
 
 METHOD HbIde:fetchNewProject()
-#if 1  // In Development
+   LOCAL oBtnOK, oBtnCancel, qLayout
+
    ::oNewDlg := XbpWindow():new( ::oDlg )
    ::oNewDlg:oWidget := QDialog():new( QT_PTROFXBP( ::oDlg ) )
+
+   oBtnCancel := XbpPushButton():new( ::oNewDlg, , {0,0}, {100,30}, , .t. ):create()
+   oBtnCancel:setCaption( "Cancel" )
+
+   oBtnOK := XbpPushButton():new( ::oNewDlg, , {0,100}, {100,30}, , .t. ):create()
+   oBtnOK:setCaption( "Ok" )
+
+   qLayout := QGridLayout():new()
+   //qLayout:setColumnStretch( 1,1 )
+   qLayout:setColumnMinimumWidth( 1,250 )
+
+   qLayout:addWidget_1( QT_PTROFXBP( oBtnOK     ), 0, 0 )
+   qLayout:addWidget_1( QT_PTROFXBP( oBtnCancel ), 1, 0 )
+
+   ::oNewDlg:oWidget:setLayout( QT_PTROF( qLayout ) )
+
    ::oNewDlg:oWidget:exec()
 
-#endif
    RETURN self
 
 /*----------------------------------------------------------------------*/
