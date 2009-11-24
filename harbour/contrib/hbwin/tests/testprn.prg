@@ -7,7 +7,7 @@
 PROCEDURE Main()
    LOCAL nPrn := 1
    LOCAL cBMPFile := Space( 40 )
-   LOCAL aPrn := GetPrinters()
+   LOCAL aPrn := WIN_PRINTERLIST()
    LOCAL GetList := {}
 
    CLS

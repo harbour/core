@@ -13,10 +13,10 @@
 #include "simpleio.ch"
 
 PROCEDURE Main()
-   LOCAL a := GETDEFAULTPRINTER()
+   LOCAL a := WIN_PRINTERGETDEFAULT()
 
    ? ">" + a + "<"
 
-   ? SETDEFAULTPRINTER( a )
+   ? WIN_PRINTERSETDEFAULT( a )
 
    RETURN

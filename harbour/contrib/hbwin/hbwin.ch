@@ -62,7 +62,8 @@
 #define HB_WINPRN_TYPE         3
 #define HB_WINPRN_DRIVER       4
 #define HB_WINPRN_SHARE        5
-#define HB_WINPRN_LEN_         5
+#define HB_WINPRN_SERVER       6
+#define HB_WINPRN_LEN_         6
 
 /* Registry related values */
 

@@ -233,7 +233,7 @@ static HB_BOOL hb_GetDefaultPrinter( char * pszPrinterName, HB_SIZE * pnBufferSi
    return bResult;
 }
 
-HB_FUNC( WIN_GETDEFAULTPRINTER )
+HB_FUNC( WIN_PRINTERGETDEFAULT )
 {
    char szDefaultPrinter[ MAXBUFFERSIZE ];
    HB_SIZE nBufferSize = sizeof( szDefaultPrinter );
@@ -467,14 +467,15 @@ HB_FUNC( WIN_PRINTFILERAW )
 
 /* Positions for GETPRINTERS() array */
 
-#define HB_WINPRN_NAME              1
-#define HB_WINPRN_PORT              2
-#define HB_WINPRN_TYPE              3
-#define HB_WINPRN_DRIVER            4
-#define HB_WINPRN_SHARE             5
-#define HB_WINPRN_LEN_              5
+#define HB_WINPRN_NAME         1
+#define HB_WINPRN_PORT         2
+#define HB_WINPRN_TYPE         3
+#define HB_WINPRN_DRIVER       4
+#define HB_WINPRN_SHARE        5
+#define HB_WINPRN_SERVER       6
+#define HB_WINPRN_LEN_         6
 
-HB_FUNC( WIN_GETPRINTERS )
+HB_FUNC( WIN_PRINTERLIST )
 {
    HB_BOOL bPrinterNamesOnly = HB_ISLOG( 1 ) ? ! hb_parl( 1 ) : TRUE;
    HB_BOOL bLocalPrintersOnly = hb_parl( 2 );
@@ -533,12 +534,16 @@ HB_FUNC( WIN_GETPRINTERS )
                               pszData = HB_TCHAR_CONVFROM( pPrinterInfo2->pShareName );
                               hb_arraySetC( pTempItem, HB_WINPRN_SHARE, pszData );
                               HB_TCHAR_FREE( pszData );
+                              pszData = HB_TCHAR_CONVFROM( pPrinterInfo2->pServerName );
+                              hb_arraySetC( pTempItem, HB_WINPRN_SERVER, pszData );
+                              HB_TCHAR_FREE( pszData );
                            }
                            else
                            {
                               hb_arraySetC( pTempItem, HB_WINPRN_PORT, NULL );
                               hb_arraySetC( pTempItem, HB_WINPRN_DRIVER, NULL );
                               hb_arraySetC( pTempItem, HB_WINPRN_SHARE, NULL );
+                              hb_arraySetC( pTempItem, HB_WINPRN_SERVER, NULL );
                            }
 
                            hb_xfree( pPrinterInfo2 );

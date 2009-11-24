@@ -14,13 +14,13 @@
 
 PROCEDURE Main()
 
-   Dump( GetPrinters( .F., .F. ) )
-   Dump( GetPrinters( .F., .T. ) )
-   Dump( GetPrinters( .T., .F. ) )
-   Dump( GetPrinters( .T., .T. ) )
+   Dump( WIN_PRINTERLIST( .F., .F. ) )
+   Dump( WIN_PRINTERLIST( .F., .T. ) )
+   Dump( WIN_PRINTERLIST( .T., .F. ) )
+   Dump( WIN_PRINTERLIST( .T., .T. ) )
 
-   ? "GETDEFAULTPRINTER:", ">" + GETDEFAULTPRINTER() + "<"
-   ? "XISPRINTER:", XISPRINTER()
+   ? "WIN_PRINTERGETDEFAULT:", ">" + WIN_PRINTERGETDEFAULT() + "<"
+   ? "WIN_PRINTERSTATUS:", WIN_PRINTERSTATUS()
 
    RETURN
 
@@ -28,18 +28,19 @@ STATIC PROCEDURE Dump( a )
    LOCAL b, c
 
    ? "=================="
-   ?
    FOR EACH b IN a
+      ?
       IF ValType( b ) == "A"
          FOR EACH c IN b
-            ?? c
+            ?? c:__enumIndex(), c
             IF c:__enumIndex() == 2
-               ?? ">>" + PRINTERPORTTONAME( c ) + "<<",  "|>>" + PRINTERPORTTONAME( c, .T. ) + "<<|"
+               ?? ">>" + WIN_PRINTERPORTTONAME( c ) + "<<",  "|>>" + WIN_PRINTERPORTTONAME( c, .T. ) + "<<|"
             ENDIF
             ?
          NEXT
+         ? "-----"
       ELSE
-         ? b, PRINTEREXISTS( b ), XISPRINTER( b )
+         ? b, WIN_PRINTEREXISTS( b ), WIN_PRINTERSTATUS( b )
       ENDIF
    NEXT
 
