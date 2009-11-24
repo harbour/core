@@ -22,6 +22,7 @@ C_SOURCES := \
    win_osc.c \
    win_prn1.c \
    win_prn2.c \
+   win_prn3.c \
    win_regc.c \
    wapi_commctrl.c \
    wapi_shellapi.c \

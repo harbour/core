@@ -5,16 +5,14 @@
 /*
  * Harbour Project source code:
  *
- * Copyright 2008 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
  *
  */
 
 #include "simpleio.ch"
 
-#include "hbwin.ch"
-
-PROC MAIN()
+PROCEDURE Main()
 
    Dump( GetPrinters( .F., .F. ) )
    Dump( GetPrinters( .F., .T. ) )
