@@ -348,6 +348,7 @@
 
 #elif defined( __amd64__ ) || \
       defined( __amd64 ) || \
+      defined( __AMD64__ ) || \
       defined( __x86_64__ ) || \
       defined( __x86_64 ) || \
       defined( _M_AMD64 ) || \
@@ -369,7 +370,10 @@
 #elif defined( i386 ) || \
       defined( __i386__ ) || \
       defined( __i386 ) || \
+      defined( __386__ ) || \
       defined( _M_IX86 ) || \
+      defined( _M_I86 ) || \
+      defined( M_I86 ) || \
       defined( __X86__ ) || \
       defined( _X86_ ) || \
       defined( __I86__ ) || \
