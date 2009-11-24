@@ -835,6 +835,19 @@ LONG hb_stackTotalItems( void )
 #endif
 }
 
+#if defined( HB_MT_VM )
+void * hb_stackAllocator( void )
+{
+   if( hb_stack_ready() )
+   {
+      HB_STACK_TLS_PRELOAD
+
+      return hb_stack.allocator;
+   }
+   return NULL;
+}
+#endif
+
 #undef hb_stackDateBuffer
 char * hb_stackDateBuffer( void )
 {

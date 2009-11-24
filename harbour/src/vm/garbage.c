@@ -68,8 +68,6 @@
 
 #if defined( HB_MT_VM )
 
-#  define HB_SPINLOCK_SLEEP
-
 #  include "hbthread.h"
 #  include "hbatomic.h"
 

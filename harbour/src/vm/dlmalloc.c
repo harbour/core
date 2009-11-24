@@ -1449,20 +1449,20 @@ static int win32munmap(void* ptr, size_t size) {
     unique mparams values are initialized only once.
 */
 
-#if defined( HB_OS_OS2 ) || defined( HB_OS_WIN ) || defined( __WATCOMC__ )
+#ifdef HB_MT_VM
 #  ifndef HB_SPINLOCK_USE
 #     define HB_SPINLOCK_USE
-#  endif
-#endif
+#  endif  /* HB_SPINLOCK_USE */
+#endif  /* HB_MT_VM */
 
 #ifdef HB_SPINLOCK_USE
 #  include "hbthread.h"
 #  include "hbatomic.h"
-#endif
+#endif  /* HB_SPINLOCK_USE */
 
 #ifndef HB_SPINLOCK_T
 #  undef HB_SPINLOCK_USE
-#endif
+#endif  /* HB_SPINLOCK_T */
 
 #ifdef HB_SPINLOCK_USE
 

@@ -381,10 +381,10 @@ static HB_MSPACE s_mspool[ HB_MSPACE_COUNT ];
 
 static mspace hb_mspace( void )
 {
-   HB_STACK_TLS_PRELOAD
+   PHB_MSPACE pm = ( PHB_MSPACE ) hb_stackAllocator();
 
-   if( hb_stackId() && hb_stack.allocator )
-      return ( ( PHB_MSPACE ) hb_stack.allocator )->ms;
+   if( pm )
+      return pm->ms;
 
    if( !s_gm )
       s_gm = create_mspace( 0, 1 );

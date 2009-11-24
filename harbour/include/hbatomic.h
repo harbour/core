@@ -72,6 +72,22 @@
 
 HB_EXTERN_BEGIN
 
+/* yield the processor */
+#if defined( HB_TASK_THREAD )
+#  define HB_SCHED_YIELD()    hb_taskYield()
+#elif defined( HB_OS_WIN )
+#  define HB_SCHED_YIELD()    Sleep( 0 )
+#elif defined( HB_OS_OS2 )
+#  define HB_SCHED_YIELD()    DosSleep( 0 )
+#elif defined( __SVR4 )
+#  define HB_SCHED_YIELD()    thr_yield()
+#elif defined( HB_OS_UNIX )
+#  define HB_SCHED_YIELD()    sched_yield()
+#else
+#  define HB_SCHED_YIELD()    sleep( 0 );
+#endif
+
+
 /* Inline assembler version of atomic operations on memory reference counters */
 #if defined( __GNUC__ )
 
@@ -150,23 +166,11 @@ HB_EXTERN_BEGIN
             if( !hb_spinlock_trylock( l ) )
                return;
 
-            #ifdef HB_SPINLOCK_SLEEP
+            #ifdef HB_SPINLOCK_REPEAT
                if( !hb_spinlock_trylock( l ) )
                   return;
-               #if defined( HB_TASK_THREAD )
-                  hb_taskYield();
-               #elif defined( HB_OS_WIN )
-                  Sleep( 0 );
-               #elif defined( HB_OS_OS2 )
-                  DosSleep( 0 );
-               #elif defined( __SVR4 )
-                  thr_yield();
-               #elif defined( HB_OS_UNIX )
-                  sched_yield();
-               #else
-                  sleep( 0 );
-               #endif
             #endif
+            HB_SCHED_YIELD();
          }
       }
 
@@ -195,23 +199,11 @@ HB_EXTERN_BEGIN
             if( !__sync_lock_test_and_set( l, 1 ) )
                return;
 
-            #ifdef HB_SPINLOCK_SLEEP
+            #ifdef HB_SPINLOCK_REPEAT
                if( !__sync_lock_test_and_set( l, 1 ) )
                   return;
-               #if defined( HB_TASK_THREAD )
-                  hb_taskYield();
-               #elif defined( HB_OS_WIN )
-                  Sleep( 0 );
-               #elif defined( HB_OS_OS2 )
-                  DosSleep( 0 );
-               #elif defined( __SVR4 )
-                  thr_yield();
-               #elif defined( HB_OS_UNIX )
-                  sched_yield();
-               #else
-                  sleep( 0 );
-               #endif
             #endif
+            HB_SCHED_YIELD();
          }
       }
 
@@ -356,23 +348,11 @@ HB_EXTERN_BEGIN
             if( !hb_spinlock_trylock( l ) )
                return;
 
-            #ifdef HB_SPINLOCK_SLEEP
+            #ifdef HB_SPINLOCK_REPEAT
                if( !hb_spinlock_trylock( l ) )
                   return;
-               #if defined( HB_TASK_THREAD )
-                  hb_taskYield();
-               #elif defined( HB_OS_WIN )
-                  Sleep( 0 );
-               #elif defined( HB_OS_OS2 )
-                  DosSleep( 0 );
-               #elif defined( __SVR4 )
-                  thr_yield();
-               #elif defined( HB_OS_UNIX )
-                  sched_yield();
-               #else
-                  sleep( 0 );
-               #endif
             #endif
+            HB_SCHED_YIELD();
          }
       }
 
@@ -416,16 +396,21 @@ HB_EXTERN_BEGIN
 #  if !defined( HB_SPINLOCK_T )
 #     define HB_SPINLOCK_T          volatile LONG
 #     define HB_SPINLOCK_INIT       0
-#     define HB_SPINLOCK_ACQUIRE(l) do { \
-                                       for( ;; ) \
-                                       { \
+#     ifdef HB_SPINLOCK_REPEAT
+#        define HB_SPINLOCK_ACQUIRE(l) do { \
                                           if( !InterlockedExchange( (LONG*)(l), 1 ) ) \
                                              break; \
                                           if( !InterlockedExchange( (LONG*)(l), 1 ) ) \
                                              break; \
                                           Sleep( 0 ); \
-                                       } \
-                                    } while(0)
+                                       } while(1)
+#     else
+#        define HB_SPINLOCK_ACQUIRE(l) do { \
+                                          if( !InterlockedExchange( (LONG*)(l), 1 ) ) \
+                                             break; \
+                                          Sleep( 0 ); \
+                                       } while(1)
+#     endif
 #     define HB_SPINLOCK_RELEASE(l) do { *(l) = 0; } while(0)
 #  endif
 
@@ -480,16 +465,21 @@ HB_EXTERN_BEGIN
 #  if !defined( HB_SPINLOCK_T )
 #     define HB_SPINLOCK_T          volatile uint_t
 #     define HB_SPINLOCK_INIT       0
-#     define HB_SPINLOCK_ACQUIRE(l) do { \
-                                       for( ;; ) \
-                                       { \
+#     ifdef HB_SPINLOCK_REPEAT
+#        define HB_SPINLOCK_ACQUIRE(l) do { \
                                           if( !atomic_swap_uint( (l), 1 ) ) \
                                              break; \
                                           if( !atomic_swap_uint( (l), 1 ) ) \
                                              break; \
                                           thr_yield(); \
-                                       } \
-                                    } while(0)
+                                       } while(1)
+#     else
+#        define HB_SPINLOCK_ACQUIRE(l) do { \
+                                          if( !atomic_swap_uint( (l), 1 ) ) \
+                                             break; \
+                                          thr_yield(); \
+                                       } while(1)
+#     endif
 #     define HB_SPINLOCK_RELEASE(l) do { *(l) = 0; } while(0)
 #  endif
 

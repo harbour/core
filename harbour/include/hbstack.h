@@ -357,6 +357,7 @@ extern void        hb_stackIsStackRef( void *, PHB_TSD_FUNC );
    extern void             hb_stackSetQuitState( USHORT uiState );
    extern int              hb_stackUnlock( void );
    extern int              hb_stackLock( void );
+   extern void *           hb_stackAllocator( void );
 #endif
 
 #endif /* _HB_API_INTERNAL_ */
@@ -372,7 +373,7 @@ extern void        hb_stackIsStackRef( void *, PHB_TSD_FUNC );
 #define hb_stackItemFromBase( n )   ( * ( hb_stack.pBase + ( int ) ( n ) + 1 ) )
 #define hb_stackTopOffset( )        ( hb_stack.pPos - hb_stack.pItems )
 #define hb_stackBaseOffset( )       ( hb_stack.pBase - hb_stack.pItems + 1 )
-#define hb_stackTotalItems( )       ( hb_stack.wItems )
+/* #define hb_stackTotalItems( )       ( hb_stack.wItems ) */
 #define hb_stackBaseItem( )         ( * hb_stack.pBase )
 #define hb_stackSelfItem( )         ( * ( hb_stack.pBase + 1 ) )
 #define hb_stackItem( iItemPos )    ( * ( hb_stack.pItems + ( long ) ( iItemPos ) ) )
