@@ -146,6 +146,7 @@ CLASS XbpListBox  INHERIT  XbpWindow, XbpDataRef
    METHOD   getCurItem()                          INLINE ::getItem( ::nCurSelected )
 
    ENDCLASS
+
 /*----------------------------------------------------------------------*/
 
 METHOD XbpListBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -175,6 +176,11 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget  := QListView():New( ::pParent )
 
+   /* Window Events */
+   ::oWidget:installEventFilter( SetEventFilter() )
+   Qt_Connect_Event( ::pWidget, QEvent_ContextMenu, {|o,e| ::exeBlock( 4, e, o ) } )
+
+   /* Signal-slots */
    ::Connect( ::pWidget, "clicked(QModelIndex)"      , {|o,i| ::exeBlock( 1,i,o ) } )
    ::Connect( ::pWidget, "doubleClicked(QModelIndex)", {|o,i| ::exeBlock( 2,i,o ) } )
    ::Connect( ::pWidget, "entered(QModelIndex)"      , {|o,i| ::exeBlock( 3,i,o ) } )
@@ -188,8 +194,6 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    IF ::visible
       ::show()
    ENDIF
-
-   //::setStyle()
    ::oParent:AddChild( SELF )
    RETURN Self
 
@@ -199,8 +203,7 @@ METHOD XbpListBox:exeBlock( nMode, pModel )
    LOCAL oModel
 
    IF hb_isPointer( pModel )
-      oModel := QModelIndex():new()
-      oModel:pPtr := pModel
+      oModel := QModelIndex():configure( pModel )
       ::nCurSelected := oModel:row()+1
       ::sl_editBuffer := oModel:row()+1
    ENDIF
@@ -211,6 +214,11 @@ METHOD XbpListBox:exeBlock( nMode, pModel )
    ELSEIF nMode == 2 .or. nMode == 3
       IF hb_isBlock( ::sl_itemSelected )
          eval( ::sl_itemSelected, NIL, NIL, self )
+      ENDIF
+   ELSEIF nMode == 4 /* Context Menu */
+      IF hb_isBlock( ::hb_contextMenu )
+         oModel := QContextMenuEvent():configure( pModel )
+         eval( ::hb_contextMenu, { oModel:globalX(), oModel:globalY() }, NIL, Self )
       ENDIF
    ENDIF
 

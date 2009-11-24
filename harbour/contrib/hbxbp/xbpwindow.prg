@@ -137,6 +137,8 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    DATA     sl_setDisplayFocus
    DATA     sl_killDisplayFocus
 
+   DATA     hb_contextMenu
+
 EXPORTED:
    /*  LIFE CYCLE  */
    METHOD   init()
@@ -276,6 +278,8 @@ EXPORTED:
    METHOD   disConnect()
    METHOD   clearSlots()
    DATA     aPP
+
+   METHOD   hbContextMenu                         SETGET
 
    ENDCLASS
 
@@ -429,6 +433,8 @@ METHOD XbpWindow:connectWindowEvents()
    ::connectEvent( ::pWidget, QEvent_WhatsThis          , {|o,e| ::grabEvent( QEvent_WhatsThis          , e, o ) } )
    ::connectEvent( ::pWidget, QEvent_KeyPress           , {|o,e| ::grabEvent( QEvent_KeyPress           , e, o ) } )
 
+   ::connectEvent( ::pWidget, QEvent_ContextMenu        , {|o,e| ::grabEvent( QEvent_ContextMenu        , e, o ) } )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -482,6 +488,11 @@ METHOD XbpWindow:grabEvent( nEvent, pEvent, oXbp )
       CASE oEvent:button() == Qt_RightButton
          SetAppEvent( xbeM_RbDblClick, { oEvent:x(), oEvent:y() }, NIL, self )
       ENDCASE
+      EXIT
+   CASE QEvent_ContextMenu                   //
+      oEvent      := QContextMenuEvent():configure( pEvent )
+      //SetAppEvent( xbeM_Context, { oEvent:globalX(), oEvent:globalY() }, NIL, self )
+      ::hbContextMenu( { oEvent:globalX(), oEvent:globalY() } )
       EXIT
    CASE QEvent_Enter                         // :enter()
       IF ( ::lTrack )
@@ -727,10 +738,7 @@ HBXBP_DEBUG( ThreadID(),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::
       SetEventLoop( NIL )
       ::oEventLoop:exit( 0 )
       ::oEventLoop:pPtr := 0
-      //::oWidget:removeEventFilter( SetEventFilter() )
-
       SetAppWindow( XbpObject():new() )
-
       ::oMenu := NIL
    ENDIF
 
@@ -1799,6 +1807,21 @@ METHOD XbpWindow:dragDrop( xParam, xParam1 )
    endif
 
    RETURN ::sl_dragDrop
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpWindow:hbContextMenu( xParam )
+
+   if hb_isBlock( ::hb_contextMenu )
+      eval( ::hb_contextMenu, xParam, NIL, Self )
+      RETURN NIL
+   endif
+
+   if hb_isBlock( xParam )
+      ::hb_contextMenu := xParam
+   endif
+
+   RETURN ::hb_contextMenu
 
 /*----------------------------------------------------------------------*/
 

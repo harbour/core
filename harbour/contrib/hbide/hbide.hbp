@@ -13,6 +13,7 @@
 hbide.prg
 idestylesheets.prg
 idetags.prg
+idemisc.prg
 
 freadlin.c
 ideparseexpr.c

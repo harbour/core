@@ -167,6 +167,9 @@ METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    oW:pPtr              := ::oWidget:invisibleRootItem()
    ::oRootItem:oWidget  := oW
 
+   /* Window Events */
+   ::oWidget:installEventFilter( SetEventFilter() )
+   Qt_Connect_Event( ::pWidget, QEvent_ContextMenu, {|o,e| ::exeBlock( 4, e, o ) } )
 
    //::connect( ::pWidget, "currentItemChanged(QTWItem)" , {|o,p1,p2| ::exeBlock(  1, p1, p2, o ) } )
    //::connect( ::pWidget, "itemActivated(QTWItem)"      , {|o,p1,p2| ::exeBlock(  2, p1, p2, o ) } )
@@ -183,7 +186,6 @@ METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    IF ::visible
       ::show()
    ENDIF
-//   ::setStyle()
    ::oParent:AddChild( SELF )
    RETURN Self
 
@@ -195,8 +197,6 @@ METHOD XbpTreeView:ExeBlock( nMsg, p1, p2 )
    HB_SYMBOL_UNUSED( nMsg )
    HB_SYMBOL_UNUSED( p1 )
    HB_SYMBOL_UNUSED( p2 )
-
-//HBXBP_DEBUG( hb_ntos( nMsg ) )
 
    IF hb_isPointer( p1 )
       IF ( n := ascan( ::aItems, {|o| o:oWidget:pPtr == p1 } ) ) > 0
@@ -250,12 +250,10 @@ METHOD XbpTreeView:destroy()
    ::disconnect()
 
    FOR i := len( ::aItems ) TO 1 step -1
-//HBXBP_DEBUG( i, __ObjGetClsName( ::aItems[ i ] ) )
       aeval( ::aItems[ i ]:aChilds, {|e,j| e := e, ::aItems[ i ]:aChilds[ j ] := NIL } )
       ::aItems[ i ]:oWidget:pPtr := 0
    NEXT
    ::aItems := NIL
-   //::oRootItem:oWidget:pPtr := 0  // No need as it is a pointer from Qt
 
    ::sl_itemCollapsed        := NIL
    ::sl_itemExpanded         := NIL

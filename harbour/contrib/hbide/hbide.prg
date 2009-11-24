@@ -99,16 +99,6 @@ PROCEDURE Main( cProjectOrSource )
 
 /*----------------------------------------------------------------------*/
 
-PROCEDURE AppSys()
-   RETURN
-
-/*----------------------------------------------------------------------*/
-
-PROCEDURE JustACall()
-   RETURN
-
-/*----------------------------------------------------------------------*/
-
 CLASS HbIde
 
    DATA   mp1, mp2, oXbp, nEvent
@@ -173,6 +163,7 @@ CLASS HbIde
    METHOD buildTabPage()
    METHOD buildProjectTree()
 
+   METHOD manageFuncContext()
    METHOD buildFuncList()
    METHOD buildBottomArea()
    METHOD buildCompileResults()
@@ -776,7 +767,7 @@ METHOD HbIde:buildDialog()
 
    ::oDlg := XbpDialog():new( , , {10,10}, {1100,700}, , .f. )
 
-   ::oDlg:icon := s_resPath + "vr.png" //"hbide.ico"
+   ::oDlg:icon := s_resPath + "vr.png" // "hbide.png"
    ::oDlg:title := "Harbour-Qt IDE"
 
    ::oDlg:create()
@@ -794,13 +785,28 @@ METHOD HbIde:gotoFunction( mp1, mp2, oListBox )
 
    mp1 := oListBox:getData()
    mp2 := oListBox:getItem( mp1 )
-   //IF ( n := ascan( ::aTags, {|e| mp2 == e[ 2 ] + " " + e[ 5 ] } ) ) > 0
+
    IF ( n := ascan( ::aTags, {|e_| mp2 == e_[ 7 ] } ) ) > 0
       cAnchor := trim( ::aText[ ::aTags[ n,3 ] ] )
       IF !( ::aTabs[ ::nCurTab, 2 ]:find( cAnchor, QTextDocument_FindCaseSensitively ) )
          ::aTabs[ ::nCurTab, 2 ]:find( cAnchor, QTextDocument_FindBackward + QTextDocument_FindCaseSensitively )
       ENDIF
    ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:manageFuncContext( mp1 )
+   LOCAL aPops := {}
+
+   aadd( aPops, { 'Comment out'           , {|| NIL } } )
+   aadd( aPops, { 'Reformat'              , {|| NIL } } )
+   aadd( aPops, { 'Print'                 , {|| NIL } } )
+   aadd( aPops, { 'Delete'                , {|| NIL } } )
+   aadd( aPops, { 'Move to another source', {|| NIL } } )
+
+   ExecPopup( aPops, mp1 )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -815,11 +821,16 @@ METHOD HbIde:buildFuncList()
    ::oDockR:oWidget:setWindowTitle( "Module Function List" )
    ::oDockR:oWidget:setMinimumWidth( 100 )
    ::oDockR:oWidget:setMaximumWidth( 150 )
+   ::oDockR:oWidget:setFocusPolicy( Qt_NoFocus )
 
    ::oFuncList := XbpListBox():new( ::oDockR ):create( , , { 0,0 }, { 100,400 }, , .t. )
    ::oFuncList:setStyleSheet( GetStyleSheet( "QListView" ) )
    ::oFuncList:setColorBG( GraMakeRGBColor( { 210,120,220 } ) )
-   ::oFuncList:ItemMarked := {|mp1, mp2, oXbp| ::gotoFunction( mp1, mp2, oXbp ) }
+   //::oFuncList:ItemMarked := {|mp1, mp2, oXbp| ::gotoFunction( mp1, mp2, oXbp ) }
+   ::oFuncList:ItemSelected  := {|mp1, mp2, oXbp| ::gotoFunction( mp1, mp2, oXbp ) }
+   /* Harbour Extension : prefixed with "hb" */
+   ::oFuncList:hbContextMenu := {|mp1, mp2, oXbp| ::manageFuncContext( mp1, mp2, oXbp ) }
+
    ::oFuncList:oWidget:setEditTriggers( QAbstractItemView_NoEditTriggers )
 
    ::oDockR:oWidget:setWidget( QT_PTROFXBP( ::oFuncList ) )
@@ -854,6 +865,7 @@ METHOD HbIde:buildCompileResults()
    ::oDockB:oWidget:setWindowTitle( "Compile Results" )
    ::oDockB:oWidget:setMinimumHeight(  75 )
    ::oDockB:oWidget:setMaximumHeight( 100 )
+   ::oDockB:oWidget:setFocusPolicy( Qt_NoFocus )
 
    ::oCompileResult := XbpMLE():new( ::oDockB ):create( , , { 0,0 }, { 100,400 }, , .t. )
    ::oDockB:oWidget:setWidget( QT_PTROFXBP( ::oCompileResult ) )
@@ -875,6 +887,7 @@ METHOD HbIde:buildLinkResults()
    ::oDockB1:oWidget:setWindowTitle( "Link Results" )
    ::oDockB1:oWidget:setMinimumHeight(  75 )
    ::oDockB1:oWidget:setMaximumHeight( 100 )
+   ::oDockB1:oWidget:setFocusPolicy( Qt_NoFocus )
 
    ::oLinkResult := XbpMLE():new( ::oDockB1 ):create( , , { 0,0 }, { 100, 400 }, , .t. )
    ::oDockB1:oWidget:setWidget( QT_PTROFXBP( ::oLinkResult ) )
@@ -896,6 +909,7 @@ METHOD HbIde:buildOutputResults()
    ::oDockB2:oWidget:setWindowTitle( "Output Console" )
    ::oDockB2:oWidget:setMinimumHeight(  75 )
    ::oDockB2:oWidget:setMaximumHeight( 100 )
+   ::oDockB2:oWidget:setFocusPolicy( Qt_NoFocus )
 
    ::oOutputResult := XbpMLE():new( ::oDockB2 ):create( , , { 0,0 }, { 100, 400 }, , .t. )
    ::oDockB2:oWidget:setWidget( QT_PTROFXBP( ::oOutputResult ) )
@@ -904,14 +918,6 @@ METHOD HbIde:buildOutputResults()
    //::oDockB2:hide()
 
    RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION MenuAddSep( oMenu )
-
-   oMenu:addItem( { NIL, NIL, XBPMENUBAR_MIS_SEPARATOR, NIL } )
-
-   RETURN nil
 
 /*----------------------------------------------------------------------*/
 
