@@ -169,7 +169,7 @@ METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    /* Window Events */
    ::oWidget:installEventFilter( SetEventFilter() )
-   Qt_Connect_Event( ::pWidget, QEvent_ContextMenu, {|o,e| ::exeBlock( 4, e, o ) } )
+   ::connectEvent( ::pWidget, QEvent_ContextMenu, {|o,e| ::grabEvent( QEvent_ContextMenu, e, o ) } )
 
    //::connect( ::pWidget, "currentItemChanged(QTWItem)" , {|o,p1,p2| ::exeBlock(  1, p1, p2, o ) } )
    //::connect( ::pWidget, "itemActivated(QTWItem)"      , {|o,p1,p2| ::exeBlock(  2, p1, p2, o ) } )
@@ -195,11 +195,11 @@ METHOD XbpTreeView:ExeBlock( nMsg, p1, p2 )
    LOCAL oItem, n
 
    HB_SYMBOL_UNUSED( nMsg )
-   HB_SYMBOL_UNUSED( p1 )
-   HB_SYMBOL_UNUSED( p2 )
+   HB_SYMBOL_UNUSED( p1   )
+   HB_SYMBOL_UNUSED( p2   )
 
    IF hb_isPointer( p1 )
-      IF ( n := ascan( ::aItems, {|o| o:oWidget:pPtr == p1 } ) ) > 0
+      IF ( n := ascan( ::aItems, {|o| o:qPointer == p1 } ) ) > 0
          oItem := ::aItems[ n ]
       ENDIF
    ENDIF
@@ -346,6 +346,7 @@ CLASS XbpTreeViewItem  INHERIT  XbpDataRef
    DATA     hItem
    DATA     oParent
    DATA     oXbpTree
+   DATA     qPointer
 
    DATA     aChilds                               INIT {}
 
@@ -382,6 +383,7 @@ METHOD XbpTreeViewItem:addItem( xItem, xNormalImage, xMarkedImage, xExpandedImag
       oItem:caption := xItem
       oItem:oWidget := QTreeWidgetItem():new()
       oItem:oWidget:setText( 0, oItem:caption )
+      oItem:qPointer := HBQT_QTPTR_FROM_GCPOINTER( oItem:oWidget:pPtr )
    ELSE
       oItem := xItem   // aNode
    ENDIF

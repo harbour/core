@@ -178,7 +178,7 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    /* Window Events */
    ::oWidget:installEventFilter( SetEventFilter() )
-   Qt_Connect_Event( ::pWidget, QEvent_ContextMenu, {|o,e| ::exeBlock( 4, e, o ) } )
+   ::connectEvent( ::pWidget, QEvent_ContextMenu, {|o,e| ::grabEvent( QEvent_ContextMenu, e, o ) } )
 
    /* Signal-slots */
    ::Connect( ::pWidget, "clicked(QModelIndex)"      , {|o,i| ::exeBlock( 1,i,o ) } )
@@ -214,11 +214,6 @@ METHOD XbpListBox:exeBlock( nMode, pModel )
    ELSEIF nMode == 2 .or. nMode == 3
       IF hb_isBlock( ::sl_itemSelected )
          eval( ::sl_itemSelected, NIL, NIL, self )
-      ENDIF
-   ELSEIF nMode == 4 /* Context Menu */
-      IF hb_isBlock( ::hb_contextMenu )
-         oModel := QContextMenuEvent():configure( pModel )
-         eval( ::hb_contextMenu, { oModel:globalX(), oModel:globalY() }, NIL, Self )
       ENDIF
    ENDIF
 

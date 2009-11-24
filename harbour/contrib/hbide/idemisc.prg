@@ -80,7 +80,7 @@ PROCEDURE JustACall()
 /*----------------------------------------------------------------------*/
 
 FUNCTION ExecPopup( aPops, aPos )
-   LOCAL i, qPop, qPoint, qAct, nAct, cAct, xRet
+   LOCAL i, qPop, qPoint, qAct, nAct, cAct, xRet, pAct
 
    qPop := QMenu():new()
 
@@ -89,13 +89,15 @@ FUNCTION ExecPopup( aPops, aPos )
    NEXT
 
    qPoint := QPoint():new( aPos[ 1 ], aPos[ 2 ] )
-   qAct   := QAction():configure( qPop:exec_1( QT_PTROF( qPoint ) ) )
-
-   IF !empty( cAct := qAct:text() )
+   pAct := qPop:exec_1( QT_PTROF( qPoint ) )
+   qAct := QAction():configure( pAct )
+   IF !empty( qAct:pPtr ) .and. !empty( cAct := qAct:text() )
       IF ( nAct := ascan( aPops, {|e_| e_[ 1 ] == cAct } ) ) > 0
          xRet := eval( aPops[ nAct,2 ] )
       ENDIF
    ENDIF
+
+   qPop:pPtr := 0
 
    RETURN xRet
 

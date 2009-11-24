@@ -141,6 +141,8 @@ CLASS HbIde
    DATA   oNewDlg
    DATA   oTabWidget
 
+   DATA   oCurProjItem
+
    DATA   oProjRoot
    DATA   oExes
    DATA   oLibs
@@ -156,14 +158,14 @@ CLASS HbIde
    METHOD destroy()
 
    METHOD buildDialog()
-   METHOD buildMenu()
    METHOD buildStatusBar()
-   METHOD buildToolbar()
    METHOD executeAction()
    METHOD buildTabPage()
    METHOD buildProjectTree()
 
    METHOD manageFuncContext()
+   METHOD manageProjectContext()
+
    METHOD buildFuncList()
    METHOD buildBottomArea()
    METHOD buildCompileResults()
@@ -192,6 +194,7 @@ CLASS HbIde
    DATA   aComments                               INIT {}
 
    METHOD createTags()
+   METHOD loadUI()
 
    ENDCLASS
 
@@ -284,6 +287,8 @@ METHOD HbIde:create( cProjectOrSource )
    ::qSplitter:show()
 #endif
 
+   ::loadUI( "newproject" )
+
    ::oDlg:setPos( { 100, 60 } )
 
    /* Editor's Font */
@@ -291,9 +296,9 @@ METHOD HbIde:create( cProjectOrSource )
    ::oFont:fixed := .t.
    ::oFont:create( "10.Courier" )
 
-   ::buildMenu()
+   buildMainMenu( ::oDlg, Self )
+   ::oTBar := buildToolBar( ::oDlg, Self )
    ::buildStatusBar()
-   ::buildToolBar()
 
    ::editSource( ::cProjFile )
 
@@ -304,25 +309,30 @@ METHOD HbIde:create( cProjectOrSource )
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
 
       IF ::nEvent == xbeP_Quit
+         HBXBP_DEBUG( "xbeP_Quit" )
          EXIT
       ENDIF
 
       // HBXBP_DEBUG( ::nEvent, ::mp1, ::mp2 )
 
       IF ::nEvent == xbeP_Close
+         HBXBP_DEBUG( "xbeP_Close" )
          ::closeAllSources()
          EXIT
 
       ELSEIF ( ::nEvent == xbeP_Keyboard .and. ::mp1 == xbeK_ESC )
          ::closeSource()
+         #if 0
          IF ::qTabWidget:count() == 0
             EXIT
          ENDIF
-
+         #endif
       ENDIF
 
       ::oXbp:handleEvent( ::nEvent, ::mp1, ::mp2 )
    ENDDO
+
+   HBXBP_DEBUG( "EXITING.................." )
 
    /* Very important - destroy resources */
    ::oDlg:destroy()
@@ -335,7 +345,6 @@ METHOD HbIde:updateFuncList()
 
    ::oFuncList:clear()
    IF !empty( ::aTags )
-//      aeval( ::aTags, {|e| ::oFuncList:addItem( e[ 2 ] + " " + e[ 5 ] ) } )
       aeval( ::aTags, {|e_| ::oFuncList:addItem( e_[ 7 ] ) } )
    ENDIF
 
@@ -556,6 +565,8 @@ METHOD HbIde:buildProjectTree()
    ::oProjTree:hasButtons := .T.
    ::oProjTree:create( ::oDa, , { 0,0 }, { 10,10 }, , .t. )
    ::oProjTree:setColorBG( GraMakeRGBColor( { 223,240,255 } ) )
+   ::oProjTree:itemMarked    := {|oItem| ::oCurProjItem := oItem }
+   ::oProjTree:hbContextMenu := {|mp1, mp2, oXbp| ::manageProjectContext( mp1, mp2, oXbp ) }
 
    ::oProjTree:oWidget:setMaximumWidth( 200 )
 
@@ -619,6 +630,10 @@ METHOD HbIde:executeAction( cKey )
    LOCAL cFile
 
    DO CASE
+
+   CASE cKey == "Exit"
+      PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
+
    CASE cKey == "NewProject"
       ::fetchNewProject()
 
@@ -631,8 +646,8 @@ METHOD HbIde:executeAction( cKey )
    CASE cKey == "Save"
       ::saveSource( ::getCurrentTab(), .f. )
 
-   CASE cKey == "5"
-      ::closeSource( ::nCurTab, .t. )
+   CASE cKey == "Close"
+      ::closeSource()
 
    CASE cKey == "11"
       IF ::lDockBVisible
@@ -657,95 +672,6 @@ METHOD HbIde:executeAction( cKey )
    ENDCASE
 
    RETURN nil
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:buildToolBar()
-
-   ::oTBar := XbpToolBar():new( ::oDA )
-   ::oTBar:create( , , { 0, ::oDa:currentSize()[ 2 ]-60 }, { ::oDa:currentSize()[ 1 ], 60 } )
-
-   ::oTBar:imageWidth  := 20
-   ::oTBar:imageHeight := 20
-
-   ::oTBar:oWidget:setMaximumHeight( 30 )
-
-   ::oTBar:addItem( "Exit"                       , s_resPath + "exit.png"           , , , , , "1"  )
-   ::oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
-   ::oTBar:addItem( "New Project"                , s_resPath + "properties.png"     , , , , , "NewProject"  )
-   ::oTBar:addItem( "Open"                       , s_resPath + "open.png"           , , , , , "Open"     )
-   ::oTBar:addItem( "Save"                       , s_resPath + "save.png"           , , , , , "Save"  )
-   ::oTBar:addItem( "Close"                      , s_resPath + "close.png"          , , , , , "5"  )
-   ::oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
-   ::oTBar:addItem( "Compile"                    , s_resPath + "compile.png"        , , , , , "5"  )
-   ::oTBar:addItem( "Compile to PPO"             , s_resPath + "ppo.png"            , , , , , "6"  )
-   ::oTBar:addItem( "Build Project"              , s_resPath + "build.png"          , , , , , "7"  )
-   ::oTBar:addItem( "Build and Launch Project"   , s_resPath + "buildlaunch.png"    , , , , , "8"  )
-   ::oTBar:addItem( "Rebuild Project"            , s_resPath + "rebuild.png"        , , , , , "9"  )
-   ::oTBar:addItem( "Rebuild and Launch Project" , s_resPath + "rebuildlaunch.png"  , , , , , "10" )
-   ::oTBar:addItem( "Show/Hide Build Error Info" , s_resPath + "builderror.png"     , , , , , "11" )
-   ::oTBar:addItem( "Module Function List"       , s_resPath + "modulelist.png"     , , , , , "12" )
-   //
-   ::oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
-   ::oTBar:addItem( "Undo"                       , s_resPath + "undo.png"           , , , , , "13" )
-   ::oTBar:addItem( "Redo"                       , s_resPath + "redo.png"           , , , , , "14" )
-   ::oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
-   ::oTBar:addItem( "Cut"                        , s_resPath + "cut.png"            , , , , , "15" )
-   ::oTBar:addItem( "Copy"                       , s_resPath + "copy.png"           , , , , , "16" )
-   ::oTBar:addItem( "Paste"                      , s_resPath + "paste.png"          , , , , , "17" )
-   ::oTBar:addItem( "Select All"                 , s_resPath + "selectall.png"      , , , , , "18" )
-   ::oTBar:addItem( "Column/Stream Selection"    , s_resPath + "stream.png"         , , , , , "19" )
-   ::oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
-   ::oTBar:addItem( "Find"                       , s_resPath + "find.png"           , , , , , "20" )
-   ::oTBar:addItem( "Search"                     , s_resPath + "search.png"         , , , , , "21" )
-   ::oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
-   ::oTBar:addItem( "Place/Remove Mark"          , s_resPath + "placeremovemark.png", , , , , "22" )
-   ::oTBar:addItem( "Goto Mark"                  , s_resPath + "gotomark.png"       , , , , , "23" )
-   ::oTBar:addItem( "Goto Line"                  , s_resPath + "gotoline.png"       , , , , , "24" )
-   ::oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
-   ::oTBar:addItem( "To Upper"                   , s_resPath + "toupper.png"        , , , , , "25" )
-   ::oTBar:addItem( "To Lower"                   , s_resPath + "tolower.png"        , , , , , "26" )
-   ::oTBar:addItem( "Invert Case"                , s_resPath + "invertcase.png"     , , , , , "27" )
-   ::oTBar:addItem( "Match Pairs"                , s_resPath + "matchobj.png"       , , , , , "28" )
-   ::oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
-
-   ::oTBar:transparentColor := GraMakeRGBColor( { 0,255,255 } ) // GRA_CLR_INVALID
-   ::oTBar:buttonClick := {|oButton| ::executeAction( oButton:key ) }
-
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:buildMenu()
-   LOCAL oMenuBar, oSubMenu
-
-   oMenuBar := SetAppWindow():MenuBar()
-
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
-   oSubMenu:title := "~File"
-   oSubMenu:addItem( { "Open"                         , {|| ::executeAction( "Open"               ) } } )
-   oSubMenu:addItem( { "Save"                         , {|| ::executeAction( "Save"               ) } } )
-   MenuAddSep( oSubMenu )
-   oSubMenu:addItem( { "Exit"                         , {|| ::executeAction( "Exit"               ) } } )
-   oMenuBar:addItem( { oSubMenu, NIL } )
-
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
-   oSubMenu:title := "~Project"
-   oSubMenu:addItem( { "New"                          , {|| ::executeAction( "NewProject"         ) } } )
-   MenuAddSep( oSubMenu )
-   oSubMenu:addItem( { "Save and Build"               , {|| ::executeAction( "SaveBuild"          ) } } )
-   oSubMenu:addItem( { "Save, Build and Launch"       , {|| ::executeAction( "SaveBuildLaunch"    ) } } )
-   oSubMenu:addItem( { "Save and Re-build"            , {|| ::executeAction( "SaveRebuild"        ) } } )
-   oSubMenu:addItem( { "Save, Re-build and Launch"    , {|| ::executeAction( "SaveRebuildLaunch"  ) } } )
-   MenuAddSep( oSubMenu )
-   oSubMenu:addItem( { "Save and Compile Current File", {|| ::executeAction( "SaveCompileCurrent" ) } } )
-   oSubMenu:addItem( { "Save and Create PPO Output"   , {|| ::executeAction( "SavePPO"            ) } } )
-   MenuAddSep( oSubMenu )
-   oSubMenu:addItem( { "Project Properties"           , {|| ::executeAction( "Properties"         ) } } )
-
-   oMenuBar:addItem( { oSubMenu, NIL } )
-
-   Return Self
 
 /*----------------------------------------------------------------------*/
 
@@ -792,6 +718,23 @@ METHOD HbIde:gotoFunction( mp1, mp2, oListBox )
          ::aTabs[ ::nCurTab, 2 ]:find( cAnchor, QTextDocument_FindBackward + QTextDocument_FindCaseSensitively )
       ENDIF
    ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:manageProjectContext( mp1 )
+   LOCAL aPops := {}
+
+   /* Decide the contex options from */
+
+   IF !empty( ::oCurProjItem )
+      aadd( aPops, { ::oCurProjItem:caption, {|| NIL } } )
+      aadd( aPops, { ::oCurProjItem:caption, {|| NIL } } )
+      aadd( aPops, { ::oCurProjItem:caption, {|| NIL } } )
+
+      ExecPopup( aPops, mp1 )
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -955,28 +898,98 @@ METHOD HbIde:CreateTags()
 //----------------------------------------------------------------------//
 
 METHOD HbIde:fetchNewProject()
-   LOCAL oBtnOK, oBtnCancel, qLayout
+   #if 1
+   LOCAL oDlg, oBtnOK, oBtnCn, qLayout, nRet
+   LOCAL oPrjName
+   LOCAL qPrjLabel, qTypLabel
 
-   ::oNewDlg := XbpWindow():new( ::oDlg )
-   ::oNewDlg:oWidget := QDialog():new( QT_PTROFXBP( ::oDlg ) )
+   oDlg := XbpWindow():new()
+   oDlg:oWidget := QDialog():new( QT_PTROFXBP( ::oDlg ) )
+   oDlg:oWidget:setWindowTitle( "New Project Properties" )
 
-   oBtnCancel := XbpPushButton():new( ::oNewDlg, , {0,0}, {100,30}, , .t. ):create()
-   oBtnCancel:setCaption( "Cancel" )
+   qPrjLabel := QLabel():new()
+   qPrjLabel:setText( "Project Title" )
 
-   oBtnOK := XbpPushButton():new( ::oNewDlg, , {0,100}, {100,30}, , .t. ):create()
-   oBtnOK:setCaption( "Ok" )
+   qTypLabel := QLabel():new()
+   qTypLabel:setText( "Project Type" )
+
+   oPrjName := XbpSLE():new():create( oDlg, , {0,0}, {10,10}, , .t. )
+
+   oBtnOk := XbpPushButton():new( oDlg, , {0,0}, {10,30}, , .t. ):create()
+   oBtnOk:setCaption( "Ok" )
+   oBtnOk:activate := {|| oDlg:oWidget:done( 1 ) }
+
+   oBtnCn := XbpPushButton():new( oDlg, , {0,0}, {10,30}, , .t. ):create()
+   oBtnCn:setCaption( "Cancel" )
+   oBtnCn:activate := {|| oDlg:oWidget:done( 2 ) }
 
    qLayout := QGridLayout():new()
-   //qLayout:setColumnStretch( 1,1 )
+   qLayout:setColumnStretch( 0,1 )
+   qLayout:setColumnMinimumWidth( 0,100 )
+   qLayout:setColumnMinimumWidth( 1,250 )
+   //                                           R  C
+   qLayout:addWidget( QT_PTROF( qPrjLabel )   , 0, 0 )
+   qLayout:addWidget( QT_PTROF( qTypLabel )   , 1, 0 )
+   qLayout:addWidget( QT_PTROFXBP( oPrjName  ), 0, 1 )
+   //
+   qLayout:addWidget( QT_PTROFXBP( oBtnOK    ), 2, 1 )
+   qLayout:addWidget( QT_PTROFXBP( oBtnCn    ), 3, 1 )
+
+   oDlg:oWidget:setLayout( QT_PTROF( qLayout ) )
+
+   nRet := oDlg:oWidget:exec()
+
+   HBXBP_DEBUG( "Done", nRet )
+
+   oDlg:destroy()
+
+   #else
+
+   LOCAL qBtnOk, qBtnCn, qLayout, qDlg
+
+   qDlg := QDialog():new()
+
+   qBtnOk := QPushButton():new()
+   qBtnOk:setText( "Ok" )
+
+   qBtnCn := QPushButton():new()
+   qBtnCn:setText( "Cancel" )
+
+   qLayout := QGridLayout():new()
+   qLayout:setColumnStretch( 1,1 )
    qLayout:setColumnMinimumWidth( 1,250 )
 
-   qLayout:addWidget_1( QT_PTROFXBP( oBtnOK     ), 0, 0 )
-   qLayout:addWidget_1( QT_PTROFXBP( oBtnCancel ), 1, 0 )
+   qLayout:addWidget( QT_PTROF( qBtnOK ), 0, 0 )
+   qLayout:addWidget( QT_PTROF( qBtnCn ), 1, 0 )
 
-   ::oNewDlg:oWidget:setLayout( QT_PTROF( qLayout ) )
+   qDlg:setLayout( QT_PTROF( qLayout ) )
 
-   ::oNewDlg:oWidget:exec()
-
+   qDlg:exec()
+   #endif
    RETURN self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:loadUI( cUi )
+
+   HB_SYMBOL_UNUSED( cUi )
+
+   #if 0
+   LOCAL qUiLoader, qStrList
+   LOCAL cUiFull := s_resPath + cUi + ".ui"
+
+   HBXBP_DEBUG( 0, cUiFull )
+   qUiLoader := QUiLoader():new()
+   HBXBP_DEBUG( 1 )
+   qUiLoader:load( cUiFull, QT_PTROFXBP( ::oDlg ) )
+   HBXBP_DEBUG( 2 )
+   qStrList := QStringList():configure( qUiLoader:availableWidgets() )
+   HBXBP_DEBUG( 3 )
+   HBXBP_DEBUG( qStrList:count() )
+   HBXBP_DEBUG( 4 )
+   HBXBP_DEBUG( qUiLoader:workingDirectory() )
+   #endif
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
