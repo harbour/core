@@ -121,6 +121,7 @@ CLASS HbIde
    DATA   qSplitterL
    DATA   qSplitterR
    DATA   qTabWidget
+   ACCESS qCurEdit                                INLINE iif( ::getCurrentTab() > 0, ::aTabs[ ::getCurrentTab(), 2 ], NIL )
 
    /* XBP Objects */
    DATA   oDlg
@@ -149,8 +150,8 @@ CLASS HbIde
    DATA   oDlls
    DATA   aProjData                               INIT {}
 
-   DATA   lDockRVisible                           INIT .t.
-   DATA   lDockBVisible                           INIT .t.
+   DATA   lDockRVisible                           INIT .f.
+   DATA   lDockBVisible                           INIT .f.
    DATA   lTabCloseRequested                      INIT .f.
 
    METHOD new( cProjectOrSource )
@@ -195,6 +196,8 @@ CLASS HbIde
 
    METHOD createTags()
    METHOD loadUI()
+   METHOD manageFocusInEditor()
+   METHOD convertSelection()
 
    ENDCLASS
 
@@ -322,11 +325,10 @@ METHOD HbIde:create( cProjectOrSource )
 
       ELSEIF ( ::nEvent == xbeP_Keyboard .and. ::mp1 == xbeK_ESC )
          ::closeSource()
-         #if 0
          IF ::qTabWidget:count() == 0
-            EXIT
+            ::oDockR:hide()
+            ::lDockRVisible := .f.
          ENDIF
-         #endif
       ENDIF
 
       ::oXbp:handleEvent( ::nEvent, ::mp1, ::mp2 )
@@ -336,6 +338,144 @@ METHOD HbIde:create( cProjectOrSource )
 
    /* Very important - destroy resources */
    ::oDlg:destroy()
+
+   RETURN self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:executeAction( cKey )
+   LOCAL cFile
+
+   DO CASE
+
+   CASE cKey == "Exit"
+      PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
+
+   CASE cKey == "NewProject"
+      ::fetchNewProject()
+
+   CASE cKey == "Open"
+      IF !empty( cFile := ::selectSource( "open" ) )
+         ::oProjRoot:addItem( cFile )
+         ::editSource( cFile )
+      ENDIF
+
+   CASE cKey == "Save"
+      ::saveSource( ::getCurrentTab(), .f. )
+
+   CASE cKey == "Close"
+      ::closeSource()
+
+   CASE cKey == "Undo"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:undo()
+      ENDIF
+   CASE cKey == "Redo"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:redo()
+      ENDIF
+   CASE cKey == "Cut"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:cut()
+      ENDIF
+   CASE cKey == "Copy"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:copy()
+      ENDIF
+   CASE cKey == "Paste"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:paste()
+      ENDIF
+   CASE cKey == "SelectAll"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:selectAll()
+      ENDIF
+   CASE cKey == "ToUpper"
+      ::convertSelection( cKey )
+   CASE cKey == "ToLower"
+      ::convertSelection( cKey )
+   CASE cKey == "Invert"
+      ::convertSelection( cKey )
+   CASE cKey == "ZoomIn"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:zoomIn()
+      ENDIF
+   CASE cKey == "ZoomOut"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:zoomOut()
+      ENDIF
+
+   CASE cKey == "11"
+      IF ::lDockBVisible
+         ::oDockB:hide()
+         ::oDockB1:hide()
+         ::oDockB2:hide()
+         ::lDockBVisible := .f.
+      ELSEIF ::qTabWidget:count() > 0
+         ::oDockB:show()
+         ::oDockB1:show()
+         ::oDockB2:show()
+         ::lDockBVisible := .t.
+      ENDIF
+
+   CASE cKey == "12"
+      IF ::lDockRVisible
+         ::oDockR:hide()
+      ELSE
+         ::oDockR:show()
+      ENDIF
+      ::lDockRVisible := !( ::lDockRVisible )
+
+   ENDCASE
+
+   ::manageFocusInEditor()
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:convertSelection( cKey )
+   LOCAL qCursor, cBuffer, i, s, nLen, c
+   //LOCAL nB, nE
+
+   IF !empty( ::qCurEdit )
+      qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
+      IF qCursor:hasSelection() .and. !empty( cBuffer := qCursor:selectedText() )
+         DO CASE
+         CASE cKey == "ToUpper"
+            cBuffer := upper( cBuffer )
+         CASE cKey == "ToLower"
+            cBuffer := lower( cBuffer )
+         CASE cKey == "Invert"
+            s := ""
+            nLen := len( cBuffer )
+            FOR i := 1 TO nLen
+               c := substr( cBuffer, i, 1 )
+               s += IF( isUpper( c ), lower( c ), upper( c ) )
+            NEXT
+            cBuffer := s
+         ENDCASE
+         //nB := qCursor:selectionStart()
+         //nE := qCursor:selectionEnd()
+         qCursor:removeSelectedText()
+         //qCursor:beginEditBlock()
+         qCursor:insertText( cBuffer )
+         //qCursor:select( QTextCursor_BlockUnderCursor )
+         //qCursor:endEditBlock()
+         //qCursor:setPosition( nB-len(cBuffer)+1, QTextCursor_MoveAnchor )
+         //::qCurEdit:find( cBuffer )
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:manageFocusInEditor()
+
+   IF ::getCurrentTab() > 0
+      ::aTabs[ ::getCurrentTab(), 2 ]:setFocus()
+   ENDIF
 
    RETURN self
 
@@ -415,6 +555,7 @@ METHOD HbIde:editSource( cSourceFile )
    ::aSources := { cSourceFile }
    ::createTags()
    ::updateFuncList()
+   ::manageFocusInEditor()
 
    RETURN Self
 
@@ -461,6 +602,7 @@ METHOD HbIde:closeSource()
    LOCAL nTab
 
    IF !empty( nTab := ::getCurrentTab() )
+      ::oFuncList:clear()
       ::saveSource( nTab )
       /* Destroy at Qt level */
       ::qTabWidget:removeTab( ::qTabWidget:currentIndex() )
@@ -626,55 +768,6 @@ METHOD HbIde:buildProjectTree()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:executeAction( cKey )
-   LOCAL cFile
-
-   DO CASE
-
-   CASE cKey == "Exit"
-      PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
-
-   CASE cKey == "NewProject"
-      ::fetchNewProject()
-
-   CASE cKey == "Open"
-      IF !empty( cFile := ::selectSource( "open" ) )
-         ::oProjRoot:addItem( cFile )
-         ::editSource( cFile )
-      ENDIF
-
-   CASE cKey == "Save"
-      ::saveSource( ::getCurrentTab(), .f. )
-
-   CASE cKey == "Close"
-      ::closeSource()
-
-   CASE cKey == "11"
-      IF ::lDockBVisible
-         ::oDockB:hide()
-         ::oDockB1:hide()
-         ::oDockB2:hide()
-      ELSE
-         ::oDockB:show()
-         ::oDockB1:show()
-         ::oDockB2:show()
-      ENDIF
-      ::lDockBVisible := !( ::lDockBVisible )
-
-   CASE cKey == "12"
-      IF ::lDockRVisible
-         ::oDockR:hide()
-      ELSE
-         ::oDockR:show()
-      ENDIF
-      ::lDockRVisible := !( ::lDockRVisible )
-
-   ENDCASE
-
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
-
 METHOD HbIde:buildStatusBar()
    LOCAL oPanel
 
@@ -732,7 +825,9 @@ METHOD HbIde:manageProjectContext( mp1 )
       aadd( aPops, { ::oCurProjItem:caption, {|| NIL } } )
       aadd( aPops, { ::oCurProjItem:caption, {|| NIL } } )
 
-      ExecPopup( aPops, mp1 )
+      ExecPopup( aPops, mp1, ::oProjTree:oWidget )
+
+      ::manageFocusInEditor()
    ENDIF
 
    RETURN Self
@@ -742,14 +837,17 @@ METHOD HbIde:manageProjectContext( mp1 )
 METHOD HbIde:manageFuncContext( mp1 )
    LOCAL aPops := {}
 
-   aadd( aPops, { 'Comment out'           , {|| NIL } } )
-   aadd( aPops, { 'Reformat'              , {|| NIL } } )
-   aadd( aPops, { 'Print'                 , {|| NIL } } )
-   aadd( aPops, { 'Delete'                , {|| NIL } } )
-   aadd( aPops, { 'Move to another source', {|| NIL } } )
+   IF ::oFuncList:numItems() > 0
+      aadd( aPops, { 'Comment out'           , {|| NIL } } )
+      aadd( aPops, { 'Reformat'              , {|| NIL } } )
+      aadd( aPops, { 'Print'                 , {|| NIL } } )
+      aadd( aPops, { 'Delete'                , {|| NIL } } )
+      aadd( aPops, { 'Move to another source', {|| NIL } } )
 
-   ExecPopup( aPops, mp1 )
+      ExecPopup( aPops, mp1, ::oFuncList:oWidget )
 
+      ::manageFocusInEditor()
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -768,7 +866,7 @@ METHOD HbIde:buildFuncList()
 
    ::oFuncList := XbpListBox():new( ::oDockR ):create( , , { 0,0 }, { 100,400 }, , .t. )
    ::oFuncList:setStyleSheet( GetStyleSheet( "QListView" ) )
-   ::oFuncList:setColorBG( GraMakeRGBColor( { 210,120,220 } ) )
+
    //::oFuncList:ItemMarked := {|mp1, mp2, oXbp| ::gotoFunction( mp1, mp2, oXbp ) }
    ::oFuncList:ItemSelected  := {|mp1, mp2, oXbp| ::gotoFunction( mp1, mp2, oXbp ) }
    /* Harbour Extension : prefixed with "hb" */
@@ -779,7 +877,7 @@ METHOD HbIde:buildFuncList()
    ::oDockR:oWidget:setWidget( QT_PTROFXBP( ::oFuncList ) )
 
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, QT_PTROFXBP( ::oDockR ), Qt_Horizontal )
-   //::oDockR:hide()
+   ::oDockR:hide()
 
    RETURN Self
 
@@ -814,7 +912,7 @@ METHOD HbIde:buildCompileResults()
    ::oDockB:oWidget:setWidget( QT_PTROFXBP( ::oCompileResult ) )
 
    ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, QT_PTROFXBP( ::oDockB ), Qt_Vertical )
-   //::oDockB:hide()
+   ::oDockB:hide()
 
    RETURN Self
 
@@ -836,7 +934,7 @@ METHOD HbIde:buildLinkResults()
    ::oDockB1:oWidget:setWidget( QT_PTROFXBP( ::oLinkResult ) )
 
    ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, QT_PTROFXBP( ::oDockB1 ), Qt_Vertical )
-   //::oDockB1:hide()
+   ::oDockB1:hide()
 
    RETURN Self
 
@@ -858,7 +956,7 @@ METHOD HbIde:buildOutputResults()
    ::oDockB2:oWidget:setWidget( QT_PTROFXBP( ::oOutputResult ) )
 
    ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, QT_PTROFXBP( ::oDockB2 ), Qt_Vertical )
-   //::oDockB2:hide()
+   ::oDockB2:hide()
 
    RETURN Self
 
@@ -938,6 +1036,8 @@ METHOD HbIde:fetchNewProject()
    oDlg:oWidget:setLayout( QT_PTROF( qLayout ) )
 
    nRet := oDlg:oWidget:exec()
+
+   JustACall( nRet )
 
    HBXBP_DEBUG( "Done", nRet )
 

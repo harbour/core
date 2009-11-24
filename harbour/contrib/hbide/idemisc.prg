@@ -79,10 +79,10 @@ PROCEDURE JustACall()
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION ExecPopup( aPops, aPos )
+FUNCTION ExecPopup( aPops, aPos, qParent )
    LOCAL i, qPop, qPoint, qAct, nAct, cAct, xRet, pAct
 
-   qPop := QMenu():new()
+   qPop := QMenu():new( IF( hb_isObject( qParent ), QT_PTROF( qParent ), NIL ) )
 
    FOR i := 1 TO len( aPops )
       qPop:addAction( aPops[ i, 1 ] )

@@ -98,7 +98,7 @@ CLASS XbpListBox  INHERIT  XbpWindow, XbpDataRef
    METHOD   getItemHeight()                       VIRTUAL
    METHOD   getTopItem()                          VIRTUAL
    METHOD   getVisibleItems()                     VIRTUAL
-   METHOD   numItems()                            VIRTUAL
+   METHOD   numItems()                            INLINE  ::oStrList:size()
    METHOD   setTopItem( nIndex )                  VIRTUAL
 
    METHOD   addItem( cItem )                      INLINE  ::oStrList:append( cItem ),;
