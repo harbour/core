@@ -459,6 +459,21 @@ DEFAULT_MMAP_THRESHOLD       default: 256K
 #define MMAP_CLEARS 0 /* WINCE and some others apparently don't clear */
 #endif  /* WIN32 */
 
+#ifdef HB_OS_OS2
+#define INCL_DOSMEMMGR
+#include <os2.h>
+/* #include <bsememf.h> */
+#define HAVE_MMAP 1
+#define HAVE_MORECORE 0
+#define LACKS_SYS_MMAN_H
+#endif  /* HB_OS_OS2 */
+
+#if defined(__WATCOMC__) && !defined(HB_OS_OS2)
+#ifndef LACKS_SYS_PARAM_H
+#define LACKS_SYS_PARAM_H
+#endif  /* LACKS_SYS_PARAM_H */
+#endif  /* __WATCOMC__ && !OS2 */
+
 #if defined(DARWIN) || defined(_DARWIN)
 /* Mac OSX docs advise not to use sbrk; it seems better to use mmap */
 #ifndef HAVE_MORECORE
@@ -466,14 +481,6 @@ DEFAULT_MMAP_THRESHOLD       default: 256K
 #define HAVE_MMAP 1
 #endif  /* HAVE_MORECORE */
 #endif  /* DARWIN */
-
-#if defined(__WATCOMC__) && !defined(WIN32)
-#define HAVE_MMAP 0
-#define HAVE_MORECORE 0
-#if !defined(HB_OS_OS2)
-#define LACKS_SYS_PARAM_H
-#endif  /* OS2 */
-#endif  /* __WATCOMC__ */
 
 #ifndef LACKS_SYS_TYPES_H
 #include <sys/types.h>  /* For size_t */
@@ -1298,7 +1305,8 @@ extern void*     sbrk(ptrdiff_t);
 #define IS_MMAPPED_BIT       (SIZE_T_ONE)
 #define USE_MMAP_BIT         (SIZE_T_ONE)
 
-#ifndef WIN32
+#if !defined( WIN32 ) && !defined( HB_OS_OS2 )
+
 #define CALL_MUNMAP(a, s)    munmap((a), (s))
 #define MMAP_PROT            (PROT_READ|PROT_WRITE)
 #if !defined(MAP_ANONYMOUS) && defined(MAP_ANON)
@@ -1321,6 +1329,50 @@ static int dev_zero_fd = -1; /* Cached file descriptor for /dev/zero. */
 #endif /* MAP_ANONYMOUS */
 
 #define DIRECT_MMAP(s)       CALL_MMAP(s)
+
+#elif defined( HB_OS_OS2 )
+
+/* OS/2 MMAP via DosAllocMem */
+static void* os2mmap(size_t size) {
+  void* ptr;
+  if (DosAllocMem(&ptr, size, PAG_COMMIT|PAG_READ|PAG_WRITE) != 0 )
+    return MFAIL;
+  return ptr;
+}
+
+#if 0
+/* For direct MMAP, use OBJ_TILE to minimize interference */
+static void* os2direct_mmap(size_t size) {
+  void* ptr;
+  if (DosAllocMem(&ptr, size, PAG_COMMIT|PAG_READ|PAG_WRITE|OBJ_TILE) != 0 )
+    return MFAIL;
+  return ptr;
+}
+#else
+#define os2direct_mmap(n)     os2mmap(n)
+#endif
+
+/* This function supports releasing coalesed segments */
+static int os2munmap(void* ptr, size_t size) {
+  while (size) {
+    ULONG ulSize = size, ulFlags = 0;
+    if (DosQueryMem(ptr, &ulSize, &ulFlags) != 0)
+      return -1;
+    if ((ulFlags & PAG_BASE) == 0 ||(ulFlags & PAG_COMMIT) == 0 ||
+        ulSize > size)
+      return -1;
+    if (DosFreeMem(ptr) != 0)
+      return -1;
+    ptr = ( void * ) ( ( char * ) ptr + ulSize );
+    size -= ulSize;
+  }
+  return 0;
+}
+
+#define CALL_MMAP(s)         os2mmap(s)
+#define CALL_MUNMAP(a, s)    os2munmap((a), (s))
+#define DIRECT_MMAP(s)       os2direct_mmap(s)
+
 #else /* WIN32 */
 
 /* Win32 MMAP via VirtualAlloc */

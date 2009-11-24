@@ -67,8 +67,7 @@
 #define INCL_DOSDATETIME
 #define INCL_DOSSEMAPHORES
 #define INCL_DOSPROCESS
-#define INCL_DOSSEMAPHORES
-#define INCL_DOSPROCESS
+#define INCL_DOSMEMMGR
 #define INCL_NOPMAPI
 
 /* For Linux and mremap() function */
