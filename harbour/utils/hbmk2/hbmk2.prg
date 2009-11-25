@@ -2762,7 +2762,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          cOpt_Lib := "-q {FA} {OL} {LO}{SCRIPT}"
          cLibLibExt := cLibExt
          cLibObjPrefix := "-+ "
-         IF hbmk[ _HBMK_lMT ] .AND. hbmk[ _HBMK_cPLAT ] $ "linux|win|os2"
+         IF hbmk[ _HBMK_lMT ] .AND. hbmk[ _HBMK_cPLAT ] $ "win|os2"
             AAdd( hbmk[ _HBMK_aOPTC ], "-bm" )
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "win"
