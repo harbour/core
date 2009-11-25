@@ -181,7 +181,7 @@ CLASS HbIde
 
    METHOD updateFuncList()
    METHOD gotoFunction()
-   METHOD fetchNewProject()
+   METHOD fetchProjectProperties()
    METHOD closeTab()
    METHOD activateTab()
    METHOD getCurrentTab()
@@ -352,7 +352,7 @@ METHOD HbIde:executeAction( cKey )
       PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
 
    CASE cKey == "NewProject"
-      ::fetchNewProject()
+      ::fetchProjectProperties( .t. )
 
    CASE cKey == "Open"
       IF !empty( cFile := ::selectSource( "open" ) )
@@ -821,9 +821,22 @@ METHOD HbIde:manageProjectContext( mp1 )
    /* Decide the contex options from */
 
    IF !empty( ::oCurProjItem )
-      aadd( aPops, { ::oCurProjItem:caption, {|| NIL } } )
-      aadd( aPops, { ::oCurProjItem:caption, {|| NIL } } )
-      aadd( aPops, { ::oCurProjItem:caption, {|| NIL } } )
+      IF ::oCurProjItem:caption == "Projects"
+         aadd( aPops, { "Properties", {|| ::fetchProjectProperties( .f. ) } } )
+
+      ELSEIF ::oCurProjItem:caption == "Executables"
+      ELSEIF ::oCurProjItem:caption == "Libs"
+      ELSEIF ::oCurProjItem:caption == "Dlls"
+      ELSEIF ::oCurProjItem:caption == "PRG Sources"
+      ELSEIF ::oCurProjItem:caption == "C Sources"
+      ELSEIF ::oCurProjItem:caption == "CPP Sources"
+      ELSEIF ::oCurProjItem:caption == "CH Headers"
+      ELSEIF ::oCurProjItem:caption == "H Headers"
+      ELSE
+         aadd( aPops, { ::oCurProjItem:caption, {|| NIL } } )
+         aadd( aPops, { ::oCurProjItem:caption, {|| NIL } } )
+         aadd( aPops, { ::oCurProjItem:caption, {|| NIL } } )
+      ENDIF
 
       ExecPopup( aPops, mp1, ::oProjTree:oWidget )
 
@@ -995,43 +1008,80 @@ METHOD HbIde:CreateTags()
 
 //----------------------------------------------------------------------//
 
-METHOD HbIde:fetchNewProject()
-   #if 1
-   LOCAL oDlg, oBtnOK, oBtnCn, qLayout, nRet
-   LOCAL oPrjName
-   LOCAL qPrjLabel, qTypLabel
+METHOD HbIde:fetchProjectProperties( lNewProject )
+   LOCAL nRet
+   LOCAL qLayout, qHBLayout
+   LOCAL oDlg, oBtnOK, oBtnCn
+   LOCAL qPrjType , oPrjTtl  , oPrjLoc  , oPrjWrk  , oPrjDst  , oPrjOut  , oPrjInc  , oPrjLau  , oPrjLEx
+   LOCAL qTypLabel, qPrjLabel, qLocLabel, qWrkLabel, qDstLabel, qOutLabel, qIncLabel, qLauLabel, qLExLabel
+
+   DEFAULT lNewProject TO .t.
+
+   HB_SYMBOL_UNUSED( lNewProject )
 
    oDlg := XbpWindow():new()
    oDlg:oWidget := QDialog():new( QT_PTROFXBP( ::oDlg ) )
    oDlg:oWidget:setWindowTitle( "New Project Properties" )
 
-   qPrjLabel := QLabel():new()
-   qPrjLabel:setText( "Project Title" )
+   qTypLabel := QLabel():new() ; qTypLabel:setText( "<b>Project Type</b>"     )
+   qPrjLabel := QLabel():new() ; qPrjLabel:setText( "Project Title"           )
+   qLocLabel := QLabel():new() ; qLocLabel:setText( "Project Location"        )
+   qWrkLabel := QLabel():new() ; qWrkLabel:setText( "Working Directory"       )
+   qDstLabel := QLabel():new() ; qDstLabel:setText( "Destination Directory"   )
+   qOutLabel := QLabel():new() ; qOutLabel:setText( "Output Name"             )
+   qIncLabel := QLabel():new() ; qIncLabel:setText( "Compile/Link Flags"      )
+   qLauLabel := QLabel():new() ; qLauLabel:setText( "Launch Parameters"       )
+   qLExLabel := QLabel():new() ; qLExLabel:setText( "Launch Program"          )
 
-   qTypLabel := QLabel():new()
-   qTypLabel:setText( "Project Type" )
+   qPrjType := QComboBox():New()
+   qPrjType:addItem( "Executable" )
+   qPrjType:addItem( "Library"    )
+   qPrjType:addItem( "Dll"        )
+   //
+   oPrjTtl := XbpSLE():new():create( oDlg, , {0,0}, {10,10}, , .t. )
+   oPrjLoc := XbpSLE():new():create( oDlg, , {0,0}, {10,10}, , .t. )
+   oPrjWrk := XbpSLE():new():create( oDlg, , {0,0}, {10,10}, , .t. )
+   oPrjDst := XbpSLE():new():create( oDlg, , {0,0}, {10,10}, , .t. )
+   oPrjOut := XbpSLE():new():create( oDlg, , {0,0}, {10,10}, , .t. )
+   oPrjInc := XbpMLE():new():create( oDlg, , {0,0}, {10,10}, , .t. )
+   oPrjLau := XbpSLE():new():create( oDlg, , {0,0}, {10,10}, , .t. )
+   oPrjLEx := XbpSLE():new():create( oDlg, , {0,0}, {10,10}, , .t. )
 
-   oPrjName := XbpSLE():new():create( oDlg, , {0,0}, {10,10}, , .t. )
-
+   /* Buttons at lower right end */
+   qHBLayout := QHBoxLayout():new()
+   qHBLayout:setSpacing( 10 )
+   //
    oBtnOk := XbpPushButton():new( oDlg, , {0,0}, {10,30}, , .t. ):create()
    oBtnOk:setCaption( "Ok" )
    oBtnOk:activate := {|| oDlg:oWidget:done( 1 ) }
-
+   //
    oBtnCn := XbpPushButton():new( oDlg, , {0,0}, {10,30}, , .t. ):create()
    oBtnCn:setCaption( "Cancel" )
    oBtnCn:activate := {|| oDlg:oWidget:done( 2 ) }
+   //
+   qHBLayout:addWidget( QT_PTROFXBP( oBtnOK ) )
+   qHBLayout:addWidget( QT_PTROFXBP( oBtnCN ) )
 
+   /*  Grid layout and */
    qLayout := QGridLayout():new()
    qLayout:setColumnStretch( 0,1 )
-   qLayout:setColumnMinimumWidth( 0,100 )
-   qLayout:setColumnMinimumWidth( 1,250 )
-   //                                           R  C
-   qLayout:addWidget( QT_PTROF( qPrjLabel )   , 0, 0 )
-   qLayout:addWidget( QT_PTROF( qTypLabel )   , 1, 0 )
-   qLayout:addWidget( QT_PTROFXBP( oPrjName  ), 0, 1 )
+   qLayout:setColumnMinimumWidth( 0,75 )
+   qLayout:setColumnMinimumWidth( 1,200 )
+   qLayout:setVerticalSpacing( 5 )
+   qLayout:setHorizontalSpacing( 5 )
+   //                                        R  C                                                 R  C
+   qLayout:addWidget( QT_PTROF( qTypLabel ), 0, 0 ) ; qLayout:addWidget( QT_PTROF( qPrjType )   , 0, 1 )
+   qLayout:addWidget( QT_PTROF( qPrjLabel ), 1, 0 ) ; qLayout:addWidget( QT_PTROFXBP( oPrjTtl ) , 1, 1 )
+   qLayout:addWidget( QT_PTROF( qLocLabel ), 2, 0 ) ; qLayout:addWidget( QT_PTROFXBP( oPrjLoc  ), 2, 1 )
+   qLayout:addWidget( QT_PTROF( qWrkLabel ), 3, 0 ) ; qLayout:addWidget( QT_PTROFXBP( oPrjWrk  ), 3, 1 )
+   qLayout:addWidget( QT_PTROF( qDstLabel ), 4, 0 ) ; qLayout:addWidget( QT_PTROFXBP( oPrjDst  ), 4, 1 )
+   qLayout:addWidget( QT_PTROF( qOutLabel ), 5, 0 ) ; qLayout:addWidget( QT_PTROFXBP( oPrjOut  ), 5, 1 )
+   qLayout:addWidget( QT_PTROF( qIncLabel ), 6, 0 ) ; qLayout:addWidget( QT_PTROFXBP( oPrjInc  ), 6, 1 )
+   qLayout:addWidget( QT_PTROF( qLauLabel ), 7, 0 ) ; qLayout:addWidget( QT_PTROFXBP( oPrjLau  ), 7, 1 )
+   qLayout:addWidget( QT_PTROF( qLExLabel ), 8, 0 ) ; qLayout:addWidget( QT_PTROFXBP( oPrjLEx  ), 8, 1 )
    //
-   qLayout:addWidget( QT_PTROFXBP( oBtnOK    ), 2, 1 )
-   qLayout:addWidget( QT_PTROFXBP( oBtnCn    ), 3, 1 )
+   qLayout:addWidget( QT_PTROF( QWidget():new() ), 12, 1 )
+   qLayout:addLayout( QT_PTROF( qHBLayout )      , 13, 1 )
 
    oDlg:oWidget:setLayout( QT_PTROF( qLayout ) )
 
@@ -1043,29 +1093,6 @@ METHOD HbIde:fetchNewProject()
 
    oDlg:destroy()
 
-   #else
-
-   LOCAL qBtnOk, qBtnCn, qLayout, qDlg
-
-   qDlg := QDialog():new()
-
-   qBtnOk := QPushButton():new()
-   qBtnOk:setText( "Ok" )
-
-   qBtnCn := QPushButton():new()
-   qBtnCn:setText( "Cancel" )
-
-   qLayout := QGridLayout():new()
-   qLayout:setColumnStretch( 1,1 )
-   qLayout:setColumnMinimumWidth( 1,250 )
-
-   qLayout:addWidget( QT_PTROF( qBtnOK ), 0, 0 )
-   qLayout:addWidget( QT_PTROF( qBtnCn ), 1, 0 )
-
-   qDlg:setLayout( QT_PTROF( qLayout ) )
-
-   qDlg:exec()
-   #endif
    RETURN self
 
 /*----------------------------------------------------------------------*/
