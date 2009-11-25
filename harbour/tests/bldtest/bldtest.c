@@ -92,12 +92,7 @@ int main()
    }
 
    n = (char)255;
-   printf( "n=%d -> (char) type is %ssinged %s\n", n, n < 0 ? "" : "un",
-            n < 0 ? "OK" : "BAD" );
-   if ( n >= 0 )
-   {
-      iRet = 1;
-   }
+   printf( "n=%d -> (char) type is %ssigned\n", n, n < 0 ? "" : "un" );
 
    if ( iRet )
    {
