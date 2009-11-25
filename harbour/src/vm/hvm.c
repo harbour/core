@@ -10725,22 +10725,23 @@ static void hb_vmArrayItemPush( ULONG ulIndex )
    }
    else if( HB_IS_HASH( pArray ) )
    {
-      PHB_ITEM pValue;
+      PHB_ITEM pValue, pIndex;
 
       hb_vmPushNumInt( ulIndex );
-      pValue = hb_hashGetItemPtr( pArray, hb_stackItemFromTop( -1 ), HB_HASH_AUTOADD_ACCESS );
+      pIndex = hb_stackItemFromTop( -1 );
+      pValue = hb_hashGetItemPtr( pArray, pIndex, HB_HASH_AUTOADD_ACCESS );
 
       if( pValue )
       {
-         hb_itemCopy( hb_stackItemFromTop( -1 ), pValue );
-         hb_itemMove( pArray, hb_stackItemFromTop( -1 ) );
+         hb_itemCopy( pIndex, pValue );
+         hb_itemMove( pArray, pIndex );
          hb_stackDec();
       }
       else if( hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pArray, pArray,
-                                   hb_stackItemFromTop( -1 ), NULL ) )
+                                   pIndex, NULL ) )
          hb_stackPop();
       else
-         hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, hb_stackItemFromTop( -1 ) );
+         hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, pIndex );
    }
    else
    {
