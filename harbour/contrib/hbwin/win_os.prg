@@ -68,7 +68,7 @@
 /* NOTE: To change any of these registry settings
          Administrator rights are required by default in Windows. [vszakats] */
 
-FUNCTION OS_NETREGOK( lSetIt, lDoVista )
+FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
    LOCAL rVal := .T.
    LOCAL cKeySrv
    LOCAL cKeyWks
@@ -76,9 +76,9 @@ FUNCTION OS_NETREGOK( lSetIt, lDoVista )
    DEFAULT lSetIt TO .F.
    DEFAULT lDoVista TO .T.
 
-   IF !lDoVista .AND. OS_ISWINVISTA()
+   IF ! lDoVista .AND. ( win_osIsVista() .OR. win_osIs7() )
       *
-   ELSEIF OS_ISWIN9X()
+   ELSEIF win_osIs9X()
       rVal := QueryRegistry( HKEY_LOCAL_MACHINE, "System\CurrentControlSet\Services\VxD\VREDIR", "DiscardCacheOnOpen", 1, lSetIt )
    ELSE
       cKeySrv := "System\CurrentControlSet\Services\LanmanServer\Parameters"
@@ -98,28 +98,28 @@ FUNCTION OS_NETREGOK( lSetIt, lDoVista )
       rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeyWks, "UtilizeNtCaching", 0, lSetIt )
       rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeyWks, "UseLockReadUnlock", 0, lSetIt )
 
-      IF OS_ISWIN2000_OR_LATER()
+      IF win_osis2000OrUpper()
          rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, "System\CurrentControlSet\Services\MRXSmb\Parameters", "OpLocksDisabled", 1, lSetIt )
       ENDIF
    ENDIF
 
    RETURN rVal
 
-FUNCTION OS_NETVREDIROK( nResult )
+FUNCTION WIN_OSNETVREDIROK( nResult )
    LOCAL cWinDir
    LOCAL cFile
    LOCAL a
 
    nResult := 0
 
-   IF OS_ISWIN9X()
-      cWinDir := GETENV( "WINDIR" )  /* Get the folder that Windows is installed in */
-      IF EMPTY( cWinDir )
+   IF win_osIs9X()
+      cWinDir := GetEnv( "WINDIR" )  /* Get the folder that Windows is installed in */
+      IF Empty( cWinDir )
          cWinDir := "C:\WINDOWS"
       ENDIF
       cFile := cWinDir + "\SYSTEM\VREDIR.VXD"
-      a := DIRECTORY( cFile )  /* Check for faulty files. */
-      IF !EMPTY( a )
+      a := Directory( cFile )  /* Check for faulty files. */
+      IF ! Empty( a )
          IF a[ 1, F_SIZE ] == 156749 .AND. a[ 1, F_TIME ] == "11:11:10"
             nResult := 1111
          ELSEIF a[ 1, F_SIZE ] == 140343 .AND. a[ 1, F_TIME ] == "09:50:00"
@@ -128,4 +128,4 @@ FUNCTION OS_NETVREDIROK( nResult )
       ENDIF
    ENDIF
 
-   RETURN EMPTY( nResult )
+   RETURN Empty( nResult )

@@ -58,7 +58,7 @@
 
 #include <sms.h>
 
-HB_FUNC( SMSSENDMESSAGE ) /* cMessage, cNumber */
+HB_FUNC( WCE_SMSSENDMESSAGE ) /* cMessage, cNumber */
 {
    SMS_HANDLE smshHandle = 0;
    HRESULT hr = SmsOpen( SMS_MSGTYPE_TEXT, SMS_MODE_SEND, &smshHandle, NULL ); /* try to open an SMS Handle */

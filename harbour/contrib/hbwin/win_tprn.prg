@@ -333,7 +333,7 @@ METHOD EndPage( lStartNewPage ) CLASS WIN_PRN
    win_EndPage( ::hPrinterDC )
    IF lStartNewPage
       ::StartPage()
-      IF OS_ISWIN9X() // Reset font on Win9X
+      IF win_osIs9X() // Reset font on Win9X
          ::SetFont()
       ENDIF
    ENDIF

@@ -59,7 +59,7 @@
 
 #include <simmgr.h>
 
-HB_FUNC( SIMINITIALIZE ) /* hSim by reference, lNotifications */
+HB_FUNC( WCE_SIMINITIALIZE ) /* hSim by reference, lNotifications */
 {
    HSIM hSim = 0;
    HRESULT hResult = SimInitialize( hb_parl( 2 ) ? SIM_INIT_SIMCARD_NOTIFICATIONS : 0, NULL, 0, &hSim );
@@ -68,12 +68,12 @@ HB_FUNC( SIMINITIALIZE ) /* hSim by reference, lNotifications */
    hb_retnl( hResult );
 }
 
-HB_FUNC( SIMDEINITIALIZE ) /* hSim */
+HB_FUNC( WCE_SIMDEINITIALIZE ) /* hSim */
 {
    hb_retnl( SimDeinitialize( ( HSIM ) hb_parptr( 1 ) ) );
 }
 
-HB_FUNC( SIMPHONEBOOKSTATUS ) /* hSim, nLocation, @nTotal, @nUsed */
+HB_FUNC( WCE_SIMPHONEBOOKSTATUS ) /* hSim, nLocation, @nTotal, @nUsed */
 {
    DWORD dwUsed = 0, dwTotal = 0;
    HRESULT hResult = SimGetPhonebookStatus( ( HSIM ) hb_parptr( 1 ), ( DWORD ) hb_parnl( 2 ) /* dwLocation */, &dwUsed, &dwTotal );
@@ -84,7 +84,7 @@ HB_FUNC( SIMPHONEBOOKSTATUS ) /* hSim, nLocation, @nTotal, @nUsed */
    hb_retnl( hResult );
 }
 
-HB_FUNC( SIMREADPHONEBOOKENTRY ) /* hSim, nLocation, nPos, @aEntry */
+HB_FUNC( WCE_SIMREADPHONEBOOKENTRY ) /* hSim, nLocation, nPos, @aEntry */
 {
    HSIM hSim = ( HSIM ) hb_parptr( 1 );
    DWORD dwIndex = ( DWORD ) hb_parnl( 3 );
@@ -114,7 +114,7 @@ HB_FUNC( SIMREADPHONEBOOKENTRY ) /* hSim, nLocation, nPos, @aEntry */
    HB_TCHAR_FREE( szText );
 }
 
-HB_FUNC( SIMWRITEPHONEBOOKENTRY ) /* hSim, nLocation, nPos, cNumber, cName, nPlan, nAddrType */
+HB_FUNC( WCE_SIMWRITEPHONEBOOKENTRY ) /* hSim, nLocation, nPos, cNumber, cName, nPlan, nAddrType */
 {
    SIMPHONEBOOKENTRY PhoneEntry;
    wchar_t * lpwszAddress = HB_TCHAR_CONVTO( hb_parcx( 4 ) );
@@ -133,7 +133,7 @@ HB_FUNC( SIMWRITEPHONEBOOKENTRY ) /* hSim, nLocation, nPos, cNumber, cName, nPla
    HB_TCHAR_FREE( lpwszText );
 }
 
-HB_FUNC( SIMDELETEPHONEBOOKENTRY ) /* hSim, nLocation, nPos */
+HB_FUNC( WCE_SIMDELETEPHONEBOOKENTRY ) /* hSim, nLocation, nPos */
 {
    hb_retnl( SimDeletePhonebookEntry( ( HSIM ) hb_parptr( 1 ), ( DWORD ) hb_parnl( 2 ), ( DWORD ) hb_parnl( 3 ) ) );
 }
