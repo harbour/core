@@ -25,6 +25,7 @@ LDFLAGS :=
 
 ifeq ($(HB_COMPILER),gccomf)
    CFLAGS += -Zomf
+   LDFLAGS += -Zomf
 endif
 
 ifneq ($(HB_BUILD_WARN),no)
