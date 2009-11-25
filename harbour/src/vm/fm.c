@@ -1308,17 +1308,13 @@ ULONG hb_xquery( int iMode )
          break;
 
       case HB_MEM_STACKITEMS: /* Harbour extension (Total items allocated for the stack) */
-      {
-         HB_STACK_TLS_PRELOAD
          ulResult = hb_stackTotalItems();
          break;
-      }
+
       case HB_MEM_STACK:      /* Harbour extension (Total memory size used by the stack [bytes]) */
-      {
-         HB_STACK_TLS_PRELOAD
          ulResult = hb_stackTotalItems() * sizeof( HB_ITEM );
          break;
-      }
+
       case HB_MEM_STACK_TOP : /* Harbour extension (Total items currently on the stack) */
       {
          HB_STACK_TLS_PRELOAD
