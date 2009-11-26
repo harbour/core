@@ -2707,6 +2707,7 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
       hb_gtInfo( HB_GTI_WINTITLE, 'Shell.Explorer.2'+'  [  '+'http://www.harbour.vouch.info'+'  ]' )
       oCom:CLSID := 'Shell.Explorer.2'
       oCom:mapEvent( 269, {|| QOut( ' E X P L O R E R - 2 6 9' ) } )
+      oCom:mapEvent( 105, {|| hb_ToOutDebug( ' E X P L O R E R - 105' ) } )
 
    case nActiveX == 11
       hb_gtInfo( HB_GTI_WINTITLE, 'Shell.Explorer.2'+'  [  '+'MSHTML Demo'+'  ]' )
@@ -3580,6 +3581,7 @@ FUNCTION demoxbp()
 
    //--------------------------- Active-X ---------------------------\\
    hb_gtInfo( HB_GTI_WINTITLE, 'http://www.harbour.vouch.info' )
+#if 0
    #if 0
    oCom := WvgActiveXControl():New( oDA, , { 0, 0 }, { 100, 100 }, , .t. )
    oCom:CLSID := 'Shell.Explorer.2'
@@ -3588,9 +3590,15 @@ FUNCTION demoxbp()
    oCom := WvgHTMLViewer():New( oDA, , { 0, 0 }, { 100, 100 }, , .t. )
    oCom:beforeNavigate := {|cURL, x, oHTML| x := x, oHTML := oHTML, oPanel:caption := cURL }
    oCom:statusTextChange := {|cText| oPanel:caption := cText }
+   oCom:mapEvent( 112, {|| oPanel:caption := ' E X P L O R E R - 2 6 9' } )
    #endif
    oCom:create()
    oCom:Navigate( 'http://www.harbour.vouch.info' )
+#endif
+   oCom := WvgActiveXControl():New( oDA, , { 0, 0 }, { 100, 100 }, , .t. )
+   oCom:CLSID := 'newObjects.comctl.VisiLabel'
+   oCom:mapEvent( 2, {|| hb_ToOutDebug( 'VISILABEE' ) } )
+   oCom:create()
 
    oAddr := WvgSLE():new()
    oAddr:bufferLength := 500
@@ -3699,6 +3707,7 @@ FUNCTION demoxbp()
    ENDDO
 
    oCrt:Destroy()
+
    Return nil
 
 //----------------------------------------------------------------------//
