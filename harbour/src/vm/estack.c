@@ -1312,3 +1312,21 @@ void hb_stackIsStackRef( void * pStackId, PHB_TSD_FUNC pCleanFunc )
 
    hb_gtIsGtRef( pStack->hGT );
 }
+
+void hb_stackUpdateAllocator( void * pStackId, PHB_ALLOCUPDT_FUNC pFunc, int iCount )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_stackUpdateAllocator(%p, %p, %d)", pStackId, pFunc, iCount));
+
+#if defined( HB_MT_VM )
+   {
+      PHB_STACK pStack = ( PHB_STACK ) pStackId;
+
+      if( pStack->allocator )
+         pStack->allocator = pFunc( pStack->allocator, iCount );
+   }
+#else
+   HB_SYMBOL_UNUSED( pStackId );
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( iCount );
+#endif
+}

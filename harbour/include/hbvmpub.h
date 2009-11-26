@@ -225,6 +225,8 @@ typedef struct _HB_SYMB
 #define HB_DYNS_FUNC( hbfunc )   BOOL hbfunc( PHB_DYNS pDynSymbol, void * Cargo )
 typedef HB_DYNS_FUNC( PHB_DYNS_FUNC );
 
+typedef void * ( * PHB_ALLOCUPDT_FUNC )( void *, int );
+
 typedef void (*HB_INIT_FUNC)(void *);
 /* List of functions used by hb_vmAtInit()/hb_vmAtExit() */
 typedef struct _HB_FUNC_LIST

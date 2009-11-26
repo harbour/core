@@ -108,6 +108,9 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessDynLibSymbols( PHB_SYMB pSymbols, USHORT u
 
    extern void          hb_vmEnumRelease( PHB_ITEM pBase, PHB_ITEM pValue );
    extern BOOL          hb_vmMsgReference( PHB_ITEM pObject, PHB_DYNS pMessage, PHB_DYNS pAccMsg ); /* create extended message reference */
+
+   extern void          hb_vmUpdateAllocator( PHB_ALLOCUPDT_FUNC pFunc, int iCount );
+
 #endif
 
 extern void hb_vmSetExceptionHandler( void );

@@ -107,6 +107,7 @@
 #include "hbmemory.ch"
 #include "hbdate.h"
 #include "hbset.h"
+#include "hbvm.h"
 #if defined( HB_MT_VM )
 #  include "hbthread.h"
 #  include "hbatomic.h"
@@ -393,6 +394,42 @@ static mspace hb_mspace( void )
    return s_gm;
 }
 
+static PHB_MSPACE hb_mspace_alloc( void )
+{
+   if( s_mspool[ 0 ].ms == NULL && s_gm )
+   {
+      s_mspool[ 0 ].count = 1;
+      s_mspool[ 0 ].ms = s_gm;
+      return &s_mspool[ 0 ];
+   }
+   else
+   {
+      int i, imin = 0;
+      for( i = 1; i < HB_MSPACE_COUNT; ++i )
+      {
+         if( s_mspool[ i ].count < s_mspool[ imin ].count )
+            imin = i;
+      }
+      if( s_mspool[ imin ].ms == NULL )
+         s_mspool[ imin ].ms = create_mspace( 0, 1 );
+      s_mspool[ imin ].count++;
+      return &s_mspool[ imin ];
+   }
+}
+
+static void * hb_mspace_update( void * pAlloc, int iCount )
+{
+   PHB_MSPACE pm = ( PHB_MSPACE ) pAlloc;
+
+   if( pm->count > iCount )
+   {
+      pAlloc = ( void * ) hb_mspace_alloc();
+      pm->count--;
+   }
+
+   return pAlloc;
+}
+
 static void hb_mspace_cleanup( void )
 {
    int i;
@@ -446,25 +483,7 @@ void hb_xinit_thread( void )
    if( hb_stack.allocator == NULL )
    {
       HB_FM_LOCK
-      if( s_mspool[ 0 ].ms == NULL && s_gm )
-      {
-         s_mspool[ 0 ].count = 1;
-         s_mspool[ 0 ].ms = s_gm;
-         hb_stack.allocator = ( void * ) &s_mspool[ 0 ];
-      }
-      else
-      {
-         int i, imin = 0;
-         for( i = 1; i < HB_MSPACE_COUNT; ++i )
-         {
-            if( s_mspool[ i ].count < s_mspool[ imin ].count )
-               imin = i;
-         }
-         if( s_mspool[ imin ].ms == NULL )
-            s_mspool[ imin ].ms = create_mspace( 0, 1 );
-         s_mspool[ imin ].count++;
-         hb_stack.allocator = ( void * ) &s_mspool[ imin ];
-      }
+      hb_stack.allocator = ( void * ) hb_mspace_alloc();
       HB_FM_UNLOCK
    }
 #endif
@@ -474,13 +493,46 @@ void hb_xexit_thread( void )
 {
 #if defined( HB_FM_DLMT_ALLOC )
    HB_STACK_TLS_PRELOAD
-   if( hb_stack.allocator != NULL )
+   PHB_MSPACE pm = ( PHB_MSPACE ) hb_stack.allocator;
+
+   if( pm )
    {
-      HB_FM_LOCK
-      ( ( PHB_MSPACE ) hb_stack.allocator )->count--;
       hb_stack.allocator = NULL;
+      HB_FM_LOCK
+      if( --pm->count == 0 )
+         mspace_trim( pm->ms, 0 );
       HB_FM_UNLOCK
    }
+#endif
+}
+
+void hb_xclean( void )
+{
+#if defined( HB_FM_DLMT_ALLOC )
+   HB_FM_LOCK
+   {
+      int i, imax, icount;
+
+      if( s_gm )
+         mspace_trim( s_gm, 0 );
+
+      for( i = imax = icount = 0; i < HB_MSPACE_COUNT; ++i )
+      {
+         icount += s_mspool[ i ].count;
+         if( imax < s_mspool[ i ].count )
+            imax = s_mspool[ i ].count;
+         mspace_trim( s_mspool[ i ].ms, 0 );
+      }
+      icount = ( icount + HB_MSPACE_COUNT - 1 ) / HB_MSPACE_COUNT;
+      if( imax > icount )
+      {
+         /* balance mspaces between running threads */
+         hb_vmUpdateAllocator( hb_mspace_update, icount );
+      }
+   }
+   HB_FM_UNLOCK
+#elif defined( HB_FM_DL_ALLOC )
+   dlmalloc_trim( 0 );
 #endif
 }
 

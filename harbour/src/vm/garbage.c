@@ -705,6 +705,11 @@ void hb_gcCollectAll( BOOL fForce )
       s_ulBlocksMarked = s_ulBlocks;
 #endif
 
+
+      /* call memory manager cleanup function */
+      hb_xclean();
+
+      /* resume suspended threads */
       hb_vmResumeThreads();
 
       /* do we have any deleted blocks? */

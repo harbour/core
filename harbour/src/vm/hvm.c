@@ -11399,6 +11399,27 @@ void hb_vmIsStackRef( void )
 #endif /* HB_MT_VM */
 }
 
+void hb_vmUpdateAllocator( PHB_ALLOCUPDT_FUNC pFunc, int iCount )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmUpdateAllocator(%p, %d)", pFunc, int iCount));
+
+#if defined( HB_MT_VM )
+   if( s_vmStackLst )
+   {
+      PHB_THREADSTATE pStack = s_vmStackLst;
+      do
+      {
+         if( pStack->pStackId )
+            hb_stackUpdateAllocator( pStack->pStackId, pFunc, iCount );
+         pStack = pStack->pNext;
+      }
+      while( pStack != s_vmStackLst );
+   }
+#else
+   hb_stackUpdateAllocator( hb_stackId(), pFunc, iCount );
+#endif /* HB_MT_VM */
+}
+
 /* ------------------------------------------------------------------------ */
 
 /* $Doc$

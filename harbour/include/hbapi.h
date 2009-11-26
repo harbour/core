@@ -497,6 +497,7 @@ extern HB_EXPORT void   hb_xsetinfo( const char * szValue );
 #ifdef _HB_API_INTERNAL_
 extern void hb_xinit_thread( void );
 extern void hb_xexit_thread( void );
+extern void hb_xclean( void );
 #endif
 
 #ifdef _HB_API_INTERNAL_

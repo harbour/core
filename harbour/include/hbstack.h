@@ -345,6 +345,7 @@ extern void *      hb_stackGetI18N( void );
 extern void        hb_stackSetI18N( void * );
 
 extern void        hb_stackIsStackRef( void *, PHB_TSD_FUNC );
+extern void        hb_stackUpdateAllocator( void *, PHB_ALLOCUPDT_FUNC, int );
 
 #if defined( HB_MT_VM )
    extern void *           hb_stackList( void );
