@@ -137,6 +137,7 @@ PROCEDURE Main_FILE()
    TEST_LINE( TESTFIER( FErase( 1 ) )                                  , 'E: 3      R: -1'                   )
    TEST_LINE( TESTFIER( FErase( "NOT_HERE.$$$" ) )                     , 'E: 2      R: -1'                   )
    TEST_LINE( TESTFIER( FRename( "NOT_HERE.$$$", 'A' ) )               , 'E: 2      R: -1'                   )
+   TEST_LINE( TESTFIER( FOpen( "NOT_HERE.$$$" ) )                      , 'E: 2      R: -1'                   )
 
    nFlags := FO_READWRITE
    fhnd := FOpen( cFileName, nFlags )

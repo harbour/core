@@ -131,10 +131,15 @@ typedef struct HB_GARBAGE_
 #define HB_GC_DELETELST    4  /* item will be deleted during finalization */
 
 #ifdef HB_GC_AUTO
+#define HB_GC_AUTO_CHECK      100000
+#define HB_GC_AUTO_MAX        ( ( HB_PTRUINT ) ( -1 ) );
 /* number of allocated memory blocks */
-static ULONG s_ulBlocks = 0;
+static HB_PTRUINT s_ulBlocks = 0;
 /* number of allocated memory blocks after last GC activation */
-static ULONG s_ulBlocksMarked = 0;
+static HB_PTRUINT s_ulBlocksMarked = 0;
+/* number of allocated memory blocks which should force next GC activation */
+static HB_PTRUINT s_ulBlocksCheck = HB_GC_AUTO_CHECK;
+
 #  define HB_GC_AUTO_INC      ++s_ulBlocks;
 #  define HB_GC_AUTO_DEC      --s_ulBlocks;
 #else
@@ -202,7 +207,7 @@ void * hb_gcAllocate( ULONG ulSize, const HB_GC_FUNCS * pFuncs )
       pAlloc->used   = s_uUsedFlag;
       HB_GC_LOCK
 #ifdef HB_GC_AUTO
-      if( s_ulBlocks > s_ulBlocksMarked + 100000 )
+      if( s_ulBlocks > s_ulBlocksCheck )
       {
          HB_GC_UNLOCK
          hb_gcCollectAll( TRUE );
@@ -233,7 +238,7 @@ void * hb_gcAllocRaw( ULONG ulSize, const HB_GC_FUNCS * pFuncs )
 
       HB_GC_LOCK
 #ifdef HB_GC_AUTO
-      if( s_ulBlocks > s_ulBlocksMarked + 100000 )
+      if( s_ulBlocks > s_ulBlocksCheck )
       {
          HB_GC_UNLOCK
          hb_gcCollectAll( TRUE );
@@ -703,8 +708,10 @@ void hb_gcCollectAll( BOOL fForce )
 #ifdef HB_GC_AUTO
       /* store number of marked blocks for automatic GC activation */
       s_ulBlocksMarked = s_ulBlocks;
+      s_ulBlocksCheck = s_ulBlocksMarked + HB_GC_AUTO_CHECK;
+      if( s_ulBlocksCheck <= s_ulBlocksMarked )
+         s_ulBlocksCheck = HB_GC_AUTO_MAX;
 #endif
-
 
       /* call memory manager cleanup function */
       hb_xclean();
