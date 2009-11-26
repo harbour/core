@@ -175,6 +175,23 @@ static const HB_GC_FUNCS s_gcOleenumFuncs =
 };
 
 
+static void hb_errRT_OLE( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, HB_ERRCODE errOsCode, const char * szDescription, const char * szOperation )
+{
+   PHB_ITEM pError;
+   pError = hb_errRT_New( ES_ERROR, "OLE", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
+
+   if( hb_pcount() != 0 )
+   { 
+      /* HB_ERR_ARGS_BASEPARAMS */
+      PHB_ITEM  pArray = hb_arrayBaseParams();
+      hb_errPutArgsArray( pError, pArray );
+      hb_itemRelease( pArray );
+   }
+   hb_errLaunch( pError );
+   hb_errRelease( pError );
+}
+
+
 IDispatch* hb_oleParam( int iParam )
 {
    HB_OLE * pOle = ( HB_OLE * ) hb_parptrGC( &s_gcOleFuncs, iParam );
@@ -182,7 +199,7 @@ IDispatch* hb_oleParam( int iParam )
    if( pOle && pOle->pDisp )
       return pOle->pDisp;
 
-   hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   hb_errRT_OLE( EG_ARG, 3012, 0, NULL, HB_ERR_FUNCNAME );
    return NULL;
 }
 
@@ -241,7 +258,7 @@ static IEnumVARIANT* hb_oleenumParam( int iParam )
    if( ppEnum && *ppEnum )
       return *ppEnum;
 
-   hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   hb_errRT_OLE( EG_ARG, 3012, 0, NULL, HB_ERR_FUNCNAME );
    return NULL;
 }
 
@@ -1064,7 +1081,7 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
    if( hb_parl( 2 ) )
    {
       hb_oleSetError( S_OK );
-      hb_errRT_BASE_SubstR( EG_UNSUPPORTED, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_OLE( EG_UNSUPPORTED, 3012, 0, NULL, HB_ERR_FUNCNAME );
       return;
    }
 
@@ -1090,7 +1107,7 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
       else
       {
          hb_oleSetError( lOleError );
-         hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+         hb_errRT_OLE( EG_ARG, 3012, ( HB_ERRCODE ) lOleError, NULL, HB_ERR_FUNCNAME );
          return;
       }
 
@@ -1109,7 +1126,7 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
       }
    }
    hb_oleSetError( lOleError );
-   hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   hb_errRT_OLE( EG_ARG, 3012, ( HB_ERRCODE ) lOleError, NULL, HB_ERR_FUNCNAME );
 }
 
 
@@ -1232,7 +1249,7 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
 
          hb_oleSetError( lOleError );
          if( lOleError != S_OK )
-            hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+            hb_errRT_OLE( EG_ARG, 3012, ( HB_ERRCODE ) lOleError, NULL, HB_ERR_FUNCNAME );
          return;
       }
    }
@@ -1263,7 +1280,7 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
 
       hb_oleSetError( lOleError );
       if( lOleError != S_OK )
-         hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+         hb_errRT_OLE( EG_ARG, 3012, ( HB_ERRCODE ) lOleError, NULL, HB_ERR_FUNCNAME );
       return;
    }
 
@@ -1271,9 +1288,9 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
 
    /* TODO: add description containing TypeName of the object */
    if( szMethod[ 0 ] == '_' )
-      hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, szMethod + 1, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_OLE( EG_NOVARMETHOD, 1005, ( HB_ERRCODE ) lOleError, NULL, szMethod + 1 );
    else
-      hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, szMethod, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_OLE( EG_NOMETHOD, 1004, ( HB_ERRCODE ) lOleError, NULL, szMethod );
 }
 
 

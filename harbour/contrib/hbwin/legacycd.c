@@ -61,6 +61,8 @@
 
 #include "hbapi.h"
 
+#ifndef HB_WIN_LEGACY_LEVEL_OFF
+
 /* Please use WAPI_GETLASTERROR(). */
 HB_FUNC( GETLASTERROR )
 {
@@ -73,3 +75,5 @@ HB_FUNC( SETLASTERROR )
    hb_retnl( GetLastError() );
    SetLastError( hb_parnl( 1 ) );
 }
+
+#endif

@@ -62,6 +62,8 @@
 #include "hbapi.h"
 #include "hbwinole.h"
 
+#ifndef HB_WIN_LEGACY_LEVEL_OFF
+
 HB_FUNC_EXTERN( WIN_OLEERROR );
 
 HB_FUNC( OLEERROR )
@@ -120,3 +122,5 @@ HB_FUNC( __OLEPDISP )
    hb_oleItemPut( hb_param( -1, HB_IT_ANY ),
                   ( IDispatch * ) ( HB_PTRUINT ) hb_parnint( 1 ) );
 }
+
+#endif

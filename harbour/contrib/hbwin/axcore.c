@@ -67,6 +67,23 @@ static HMODULE s_hLib = NULL;
 static PHB_AX_GETCTRL   s_pAtlAxGetControl = NULL;
 
 
+static void hb_errRT_OLE( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, HB_ERRCODE errOsCode, const char * szDescription, const char * szOperation )
+{
+   PHB_ITEM pError;
+   pError = hb_errRT_New( ES_ERROR, "OLE", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
+
+   if( hb_pcount() != 0 )
+   { 
+      /* HB_ERR_ARGS_BASEPARAMS */
+      PHB_ITEM  pArray = hb_arrayBaseParams();
+      hb_errPutArgsArray( pError, pArray );
+      hb_itemRelease( pArray );
+   }
+   hb_errLaunch( pError );
+   hb_errRelease( pError );
+}
+
+
 static void hb_oleAxExit( void* cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
@@ -123,7 +140,7 @@ PHB_ITEM hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd )
    if( ! hb_oleAxInit() || ! s_pAtlAxGetControl )
    {
       hb_oleSetError( S_OK );
-      hb_errRT_BASE_SubstR( EG_UNSUPPORTED, 3012, "ActiveX not initialized", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_OLE( EG_UNSUPPORTED, 3012, 0, "ActiveX not initialized", HB_ERR_FUNCNAME );
    }
    else
    {
@@ -140,7 +157,7 @@ PHB_ITEM hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd )
       if( lOleError == S_OK )
          pItem = hb_oleItemPut( pItem, pDisp );
       else
-         hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+         hb_errRT_OLE( EG_ARG, 3012, ( HB_ERRCODE ) lOleError, NULL, HB_ERR_FUNCNAME );
    }
 
    return pItem;
@@ -152,7 +169,7 @@ HB_FUNC( __AXGETCONTROL ) /* ( hWnd ) --> pDisp */
    HWND hWnd = ( HWND ) hb_parptr( 1 );
 
    if( ! hWnd )
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_OLE( EG_ARG, 3012, 0, NULL, HB_ERR_FUNCNAME );
    else
       hb_oleAxControlNew( hb_stackReturnItem(), hWnd );
 }
@@ -166,7 +183,7 @@ HB_FUNC( __AXDOVERB ) /* ( hWndAx, iVerb ) --> hResult */
    if( ! hb_oleAxInit() || ! s_pAtlAxGetControl )
    {
       hb_oleSetError( S_OK );
-      hb_errRT_BASE_SubstR( EG_UNSUPPORTED, 3012, "ActiveX not initialized", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_OLE( EG_UNSUPPORTED, 3012, 0, "ActiveX not initialized", HB_ERR_FUNCNAME );
       return;
    }
 
@@ -452,9 +469,9 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler [, cID] ) --> pSink */
 
          hb_oleSetError( lOleError );
          if( lOleError != S_OK )
-            hb_errRT_BASE_SubstR( EG_ARG, 3012, "Failed to obtain connection point", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+            hb_errRT_OLE( EG_ARG, 3012, ( HB_ERRCODE ) lOleError, "Failed to obtain connection point", HB_ERR_FUNCNAME );
       }
       else
-         hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+         hb_errRT_OLE( EG_ARG, 3012, 0, "Failed to obtain connection point", HB_ERR_FUNCNAME );
    }
 }
