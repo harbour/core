@@ -324,6 +324,7 @@ public slots:
    void cellPressed( int row, int column );
    void currentCellChanged( int currentRow, int currentColumn, int previousRow, int previousColumn );
    void tabCloseRequested( int index );
+   void paintRequested( QPrinter * printer );
 };
 
 class Events: public QObject

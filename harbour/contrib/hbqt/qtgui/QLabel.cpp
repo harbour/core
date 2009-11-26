@@ -96,18 +96,7 @@ QT_G_FUNC( release_QLabel )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         switch( hbqt_get_object_release_method() )
-         {
-         case HBQT_RELEASE_WITH_DELETE:
-            delete ( ( QLabel * ) p->ph );
-            break;
-         case HBQT_RELEASE_WITH_DESTRUTOR:
-            ( ( QLabel * ) p->ph )->~QLabel();
-            break;
-         case HBQT_RELEASE_WITH_DELETE_LATER:
-            ( ( QLabel * ) p->ph )->deleteLater();
-            break;
-         }
+         ( ( QLabel * ) p->ph )->~QLabel();
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QLabel                      Object deleted!" ) );
          #if defined( __HB_DEBUG__ )
@@ -148,7 +137,22 @@ HB_FUNC( QT_QLABEL )
 {
    void * pObj = NULL;
 
-   pObj = ( QLabel* ) new QLabel( hbqt_par_QWidget( 1 ) ) ;
+   if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
+   {
+      pObj = ( QLabel* ) new QLabel( hbqt_par_QString( 1 ), 0, 0 ) ;
+   }
+   else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      pObj = ( QLabel* ) new QLabel( hbqt_par_QWidget( 1 ) ) ;
+   }
+   if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      pObj = ( QLabel* ) new QLabel( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
+   }
+   else
+   {
+      pObj = ( QLabel* ) new QLabel() ;
+   }
 
    hb_retptrGC( gcAllocate_QLabel( pObj ) );
 }

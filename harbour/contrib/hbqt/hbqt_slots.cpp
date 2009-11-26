@@ -1110,8 +1110,13 @@ void Slots::tabCloseRequested( int index )
    QObject *object = qobject_cast<QObject *>( sender() );
    SlotsExecInt( object, ( char* ) "tabCloseRequested(int)", index );
 }
+void Slots::paintRequested( QPrinter * printer )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecPointer( object, ( char* ) "paintRequested(QPrinter)", printer );
+}
 
-
+/*----------------------------------------------------------------------*/
 /*
  * harbour function to connect signals with slots
  */
@@ -1701,6 +1706,11 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       ret = object->connect( object, SIGNAL( tabCloseRequested( int ) ),
                              s_s, SLOT( tabCloseRequested( int ) ), Qt::AutoConnection );
    }
+   if( signal == ( QString ) "paintRequested(QPrinter)" )
+   {
+      ret = object->connect( object,  SIGNAL( paintRequested( QPrinter * ) ),
+                             s_s, SLOT( paintRequested( QPrinter * ) ), Qt::AutoConnection );
+   }
 
 
    hb_retl( ret );
@@ -1950,6 +1960,8 @@ bool disconnect_signal( QObject * object, const char * signal )
       ret = object->disconnect( SIGNAL( currentCellChanged( int, int, int, int ) ) );
    if( signal == ( QString ) "tabCloseRequested(int)" )
       ret = object->disconnect( SIGNAL( tabCloseRequested( int ) ) );
+   if( signal == ( QString ) "paintRequested(QPrinter)" )
+      ret = object->disconnect( SIGNAL( paintRequested( QPrinter * ) ) );
 
    return ret;
 }

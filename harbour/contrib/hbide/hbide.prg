@@ -122,6 +122,7 @@ CLASS HbIde
    DATA   qSplitterR
    DATA   qTabWidget
    DATA   qFindDlg
+
    ACCESS qCurEdit                                INLINE iif( ::getCurrentTab() > 0, ::aTabs[ ::getCurrentTab(), 2 ], NIL )
 
    /* XBP Objects */
@@ -142,6 +143,7 @@ CLASS HbIde
    DATA   oLinkResult
    DATA   oNewDlg
    DATA   oTabWidget
+   DATA   oPBFind, oPBRepl, oPBClose, oFind, oRepl
 
    DATA   oCurProjItem
 
@@ -196,9 +198,12 @@ CLASS HbIde
    DATA   aComments                               INIT {}
 
    METHOD createTags()
-   METHOD loadUI()
+   METHOD findReplace()
    METHOD manageFocusInEditor()
    METHOD convertSelection()
+   METHOD printPreview()
+   METHOD paintRequested()
+   METHOD setTabImage()
 
    ENDCLASS
 
@@ -332,9 +337,12 @@ METHOD HbIde:create( cProjectOrSource )
                ::lDockRVisible := .f.
             ENDIF
 
+         CASE ::mp1 == xbeK_CTRL_S
+            ::saveSource( ::getCurrentTab(), .f. )
+
          CASE ::mp1 == xbeK_CTRL_F
             IF !empty( ::qCurEdit )
-               ::loadUI( "finddialog" )
+               ::findReplace( "finddialog" )
             ENDIF
 
          ENDCASE
@@ -370,6 +378,10 @@ METHOD HbIde:executeAction( cKey )
       ::saveSource( ::getCurrentTab(), .f. )
    CASE cKey == "Close"
       ::closeSource()
+   CASE cKey == "Print"
+      IF !empty( ::qCurEdit )
+         ::printPreview()
+      ENDIF
    CASE cKey == "Undo"
       IF !empty( ::qCurEdit )
          ::qCurEdit:undo()
@@ -396,7 +408,7 @@ METHOD HbIde:executeAction( cKey )
       ENDIF
    CASE cKey == "Find"
       IF !empty( ::qCurEdit )
-         ::loadUI( "finddialog" )
+         ::findReplace( "finddialog" )
       ENDIF
    CASE cKey == "ToUpper"
       ::convertSelection( cKey )
@@ -433,6 +445,7 @@ METHOD HbIde:executeAction( cKey )
       ::lDockRVisible := !( ::lDockRVisible )
 
    CASE cKey == "Compile"
+   CASE cKey == "CompilePPO"
 
    ENDCASE
 
@@ -500,11 +513,26 @@ METHOD HbIde:updateFuncList()
 
 /*----------------------------------------------------------------------*/
 
+METHOD HbIde:setTabImage( cState, oTab )
+   LOCAL nIndex := ::qTabWidget:indexOf( QT_PTROFXBP( oTab ) )
+
+   DO CASE
+   CASE cState == "modified"
+      ::qTabWidget:setTabIcon( nIndex, s_resPath + "tabmodified.png" )
+
+   CASE cState == "unmodified"
+      ::qTabWidget:setTabIcon( nIndex, s_resPath + "tabunmodified.png" )
+
+   ENDCASE
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD HbIde:buildTabPage( oWnd, cSource )
-   LOCAL oTab, cPath, cFile, cExt
+   LOCAL oTab, cPath, cFile, cExt, nIndex
    LOCAL aPos    := { 5,5 }
    LOCAL aSize   := { 890, 420 }
-   LOCAL nIndex  := len( ::aTabs )
 
    DEFAULT cSource TO "Untitled"
 
@@ -516,10 +544,11 @@ METHOD HbIde:buildTabPage( oWnd, cSource )
 
    oTab:create()
 
+   nIndex := ::qTabWidget:currentIndex()
    IF lower( cExt ) $ ".c;.cpp"
-      ::qTabWidget:setTabIcon( nIndex, s_resPath + "filec.png" )
+      ::setTabImage( "unmodified", oTab )
    ELSE
-      ::qTabWidget:setTabIcon( nIndex, s_resPath + "fileprg.png" )
+      ::setTabImage( "unmodified", oTab )
    ENDIF
    ::qTabWidget:setTabTooltip( nIndex, cSource )
 
@@ -531,7 +560,7 @@ METHOD HbIde:buildTabPage( oWnd, cSource )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:editSource( cSourceFile )
-   LOCAL oTab, qEdit, qHiliter, qLayout
+   LOCAL oTab, qEdit, qHiliter, qLayout, qDocument
 
    DEFAULT cSourceFile TO ::cProjFile
 
@@ -564,6 +593,11 @@ METHOD HbIde:editSource( cSourceFile )
    ::createTags()
    ::updateFuncList()
    ::manageFocusInEditor()
+
+   qDocument := QTextDocument():configure( qEdit:document() )
+   qDocument:setModified( .f. )
+
+   Qt_Connect_Signal( QT_PTROF( qEdit ), "textChanged()", {|| ::setTabImage( "modified", oTab ) } )
 
    RETURN Self
 
@@ -676,6 +710,8 @@ METHOD HbIde:saveSource( nTab, lConfirm )
          ELSE
          ENDIF
       ENDIF
+
+      ::setTabImage( "unmodified", ::aTabs[ nTab, 1 ] )
    ENDIF
 
    RETURN Self
@@ -1016,6 +1052,30 @@ METHOD HbIde:CreateTags()
 
 //----------------------------------------------------------------------//
 
+METHOD HbIde:printPreview()
+   LOCAL qDlg
+
+   qDlg := QPrintPreviewDialog():new( QT_PTROFXBP( ::oDlg ) )
+   qDlg:setWindowTitle( "Harbour-QT Preview Dialog" )
+   Qt_Connect_Signal( qDlg:pPtr, "paintRequested(QPrinter)", {|o,p| ::paintRequested( p,o ) } )
+   qDlg:exec()
+   Qt_DisConnect_Signal( qDlg:pPtr, "paintRequested(QPrinter)" )
+
+   RETURN self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:paintRequested( pPrinter )
+   LOCAL qPrinter
+
+   qPrinter := QPrinter():configure( pPrinter )
+
+   ::qCurEdit:print( QT_PTROF( qPrinter ) )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD HbIde:fetchProjectProperties( lNewProject )
    LOCAL nRet
    LOCAL qLayout, qHBLayout
@@ -1105,10 +1165,8 @@ METHOD HbIde:fetchProjectProperties( lNewProject )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:loadUI( cUi )
+METHOD HbIde:findReplace( cUi )
    LOCAL qUiLoader, qFile, cUiFull
-
-   STATIC oPBFind, oPBRepl, oPBClose, qFind, qRepl
 
    IF ::qFindDlg == NIL
       cUiFull := s_resPath + cUi + ".ui"
@@ -1116,27 +1174,27 @@ METHOD HbIde:loadUI( cUi )
       IF qFile:open( 1 )
          qUiLoader  := QUiLoader():new()
          ::qFindDlg := QDialog():configure( qUiLoader:load( QT_PTROF( qFile ), QT_PTROFXBP( ::oDlg ) ) )
-         qFile:close()
          ::qFindDlg:setWindowFlags( Qt_Sheet )
+         qFile:close()
          //
-         oPBFind := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonFind" ) )
-         oPBFind:activate := {|| ::qCurEdit:find( "Harbour" ) }
+         ::oFind := XbpComboBox():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "comboFindWhat" ) )
+         ::oRepl := XbpComboBox():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "comboReplaceWith" ) )
 
-         oPBRepl := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonReplace" ) )
-         oPBRepl:activate := {|| ::qCurEdit:find( "something" ) }
+         ::oPBFind := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonFind" ) )
+         ::oPBFind:activate := {|| ::qCurEdit:find( QLineEdit():configure( ::oFind:oWidget:lineEdit() ):text() ) }
 
-         oPBClose := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonClose" ) )
-         oPBClose:activate := {|| ::qFindDlg:hide() /*done( 1 )*/ }
+         ::oPBRepl := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonReplace" ) )
+         ::oPBRepl:activate := {|t| t := QLineEdit():configure( ::oRepl:oWidget:lineEdit() ):text() }
 
-         qFind := XbpComboBox():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "comboFindWhat" ) )
-         qRepl := XbpComboBox():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "comboReplaceWith" ) )
-
-         JustACall( qFind, qRepl )
+         ::oPBClose := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonClose" ) )
+         ::oPBClose:activate := {|| ::qFindDlg:hide() }
       ENDIF
    ENDIF
 
+   ::oFind:setFocus()
    ::qFindDlg:show()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
