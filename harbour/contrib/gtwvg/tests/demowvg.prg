@@ -35,10 +35,6 @@
 REQUEST DbfCdx
 REQUEST DbfNtx
 
-#ifndef __DBG_PARTS__
-//#xtranslate hb_ToOutDebug( [<x,...>] ) =>
-#endif
-
 //-------------------------------------------------------------------//
 //
 //   WvtSetObjects() array structure
@@ -2707,7 +2703,7 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
       hb_gtInfo( HB_GTI_WINTITLE, 'Shell.Explorer.2'+'  [  '+'http://www.harbour.vouch.info'+'  ]' )
       oCom:CLSID := 'Shell.Explorer.2'
       oCom:mapEvent( 269, {|| QOut( ' E X P L O R E R - 2 6 9' ) } )
-      oCom:mapEvent( 105, {|| hb_ToOutDebug( ' E X P L O R E R - 105' ) } )
+      oCom:mapEvent( 105, {|| WAPI_OutputDebugString( ' E X P L O R E R - 105' ) } )
 
    case nActiveX == 11
       hb_gtInfo( HB_GTI_WINTITLE, 'Shell.Explorer.2'+'  [  '+'MSHTML Demo'+'  ]' )
@@ -2785,12 +2781,12 @@ Static Function ExeActiveX( nActiveX, oCom, xParam )
       oCom:view := 11
       oCom:setBackGroundColor( rgb( 225,225,225 ) )
       //oCom:rotate90()
-//hb_toOutDebug( str( oCom:getTotalPage() ) )
+
    endif
 
    do while .t.
       nKey := inkey()
-//hb_ToOutDebug( "inkey() %i", nKey )
+
       IF nActiveX == 2
          oCom:Value := seconds()/86400
       ENDIF
@@ -3597,7 +3593,7 @@ FUNCTION demoxbp()
 #endif
    oCom := WvgActiveXControl():New( oDA, , { 0, 0 }, { 100, 100 }, , .t. )
    oCom:CLSID := 'newObjects.comctl.VisiLabel'
-   oCom:mapEvent( 2, {|| hb_ToOutDebug( 'VISILABEE' ) } )
+   oCom:mapEvent( 2, {|| WAPI_OutputDebugString( 'VISILABEE' ) } )
    oCom:create()
 
    oAddr := WvgSLE():new()
@@ -4011,65 +4007,6 @@ STATIC FUNCTION FetchText( nMode )
 
    RETURN cText
 /*----------------------------------------------------------------------*/
-#if 0
-#include "memoedit.ch"
-#include "setcurs.ch"
-#include "inkey.ch"
-
-Function Editmemo()
-   Local cText := 'This is initial text'
-   Local lEditMode := .f.
-
-   DO WHILE .T.
-      cText := MEMOEDIT( cText, 3,6,20,76, lEditMode, "EditFunc", 50 )
-      if lastkey() == K_ESC
-         exit
-      endif
-   ENDDO
-
-   Return nil
-//----------------------------------------------------------------------//
-Function EditFunc( nMode, nRow, nCol )
-   Local nKey := Lastkey()
-
-   STATIC nLoop := 0
-
-   nLoop++
-
-   DO CASE
-   CASE nMode == ME_INIT
-
-      DO CASE
-      CASE nLoop == 1                         // Set insert mode
-         SetCursor( SC_SPECIAL1 )
-//hb_ToOutDebug( 'nLoop %i %s', nLoop, 'ME_INIT:K_INS' )
-         RETURN K_INS
-
-      OTHERWISE
-//hb_ToOutDebug( 'nLoop %i %s', nLoop, 'ME_INIT:OTHERWISE' )
-         RETURN ME_DEFAULT
-
-      ENDCASE
-
-   CASE nMode == ME_IDLE
-//hb_ToOutDebug( 'nLoop %i %s', nLoop, 'ME_IDLE' )
-
-   OTHERWISE
-      IF nKey == K_INS
-         IF ReadInsert()
-            SetCursor(SC_NORMAL)
-         ELSE
-            SetCursor(SC_SPECIAL1)
-         ENDIF
-
-      ENDIF
-//hb_ToOutDebug( 'nLoop %i %s %i %i', nLoop, 'OTHERWISE', nKey, nMode )
-
-   ENDCASE
-
-   RETURN ME_DEFAULT
-#endif
-//----------------------------------------------------------------------//
 #ifdef __QT__
 FUNCTION ExeQTWidgets()
    LOCAL oPS, oPPrv, oWZ, oCD, oWP

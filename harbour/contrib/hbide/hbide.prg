@@ -530,27 +530,17 @@ METHOD HbIde:setTabImage( cState, oTab )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:buildTabPage( oWnd, cSource )
-   LOCAL oTab, cPath, cFile, cExt, nIndex
-   LOCAL aPos    := { 5,5 }
-   LOCAL aSize   := { 890, 420 }
-
-   DEFAULT cSource TO "Untitled"
+   LOCAL oTab, cPath, cFile, cExt
 
    hb_fNameSplit( cSource, @cPath, @cFile, @cExt )
 
-   oTab := XbpTabPage():new( oWnd, , aPos, aSize, , .t. )
-   oTab:caption    := cFile + cExt
-   oTab:minimized  := .F.
+   oTab := XbpTabPage():new( oWnd, , { 5,5 }, { 700,400 }, , .t. )
+   oTab:caption   := cFile + cExt
+   oTab:minimized := .F.
 
    oTab:create()
 
-   nIndex := ::qTabWidget:currentIndex()
-   IF lower( cExt ) $ ".c;.cpp"
-      ::setTabImage( "unmodified", oTab )
-   ELSE
-      ::setTabImage( "unmodified", oTab )
-   ENDIF
-   ::qTabWidget:setTabTooltip( nIndex, cSource )
+   ::qTabWidget:setTabTooltip( ::qTabWidget:indexOf( QT_PTROFXBP( oTab ) ), cSource )
 
    oTab:tabActivate    := {|mp1,mp2,oXbp| ::activateTab( mp1, mp2, oXbp ) }
    oTab:closeRequested := {|mp1,mp2,oXbp| ::closeTab( mp1, mp2, oXbp ) }
@@ -572,6 +562,8 @@ METHOD HbIde:editSource( cSourceFile )
    qEdit:setFont( QT_PTROFXBP( ::oFont ) )
    qEdit:setTextBackgroundColor( QT_PTROF( QColor():new( 255,255,255 ) ) )
 
+   qDocument := QTextDocument():configure( qEdit:document() )
+
    qLayout := QBoxLayout():new()
    qLayout:setDirection( 0 )
    qLayout:setContentsMargins( 0,0,0,0 )
@@ -583,7 +575,7 @@ METHOD HbIde:editSource( cSourceFile )
 
    qEdit:show()
 
-   aadd( ::aTabs, { oTab, qEdit, qHiliter, qLayout, cSourceFile } )
+   aadd( ::aTabs, { oTab, qEdit, qHiliter, qLayout, cSourceFile, qDocument } )
 
    ::nPrevTab := ::nCurTab
    ::nCurTab  := len( ::aTabs )
@@ -594,10 +586,8 @@ METHOD HbIde:editSource( cSourceFile )
    ::updateFuncList()
    ::manageFocusInEditor()
 
-   qDocument := QTextDocument():configure( qEdit:document() )
-   qDocument:setModified( .f. )
-
-   Qt_Connect_Signal( QT_PTROF( qEdit ), "textChanged()", {|| ::setTabImage( "modified", oTab ) } )
+   Qt_Connect_Signal( QT_PTROF( qEdit ), "textChanged()", ;
+              {|| ::setTabImage( IF( qDocument:isModified(),"modified","unmodified" ), oTab ) } )
 
    RETURN Self
 

@@ -13,13 +13,13 @@ C_SOURCES := \
    cstructc.c \
    datesxhb.c \
    dbf2txt.c \
-   hboutdbg.c \
    dbgfxc.c \
    filestat.c \
    fparse.c \
    freadlin.c \
    hbcomprs.c \
    hbcrypt.c \
+   hboutdbg.c \
    hbserv.c \
    hbsyslog.c \
    hbxml.c \

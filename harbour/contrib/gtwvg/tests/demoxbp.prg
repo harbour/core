@@ -425,7 +425,6 @@ STATIC FUNCTION ExeFontDialog( oCrt )
 
    //  Every 2nd FontDialog will be MODAL
    oWvgFont := oFontDlg:display( ++nMode % 2 )
-//   hb_ToOutDebug( '%s  %i', oWvgFont:compoundName, oWvgFont:nominalPointSize )
 
    HB_SYMBOL_UNUSED( oWvgFont )
 
