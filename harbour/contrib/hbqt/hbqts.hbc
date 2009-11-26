@@ -10,7 +10,7 @@ libs=hbqts
 libs=hbqtcores hbqtguis hbqtnetworks hbqtwebkits
 
 {win}libs=version shlwapi
-{allwin}libs=QtCore QtGui QtNetwork QtWebKit
+{allwin}libs=QtCore QtGui QtNetwork QtWebKit QtUiTools
 {allgcc}libs=supc++
 
 gui=yes

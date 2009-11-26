@@ -11,10 +11,11 @@ libs=hbqtcore hbqtgui hbqtnetwork
 
 {win}libs=version shlwapi
 {allwin}libs=QtCore4 QtGui4 QtNetwork4 QtUiTools
-{linux}libs=QtCore QtGui QtNetwork 
+{linux}libs=QtCore QtGui QtNetwork QtUiTools
 {darwin}libs=/Library/Frameworks/QtCore.framework/QtCore
 {darwin}libs=/Library/Frameworks/QtGui.framework/QtGui
 {darwin}libs=/Library/Frameworks/QtNetwork.framework/QtNetwork
+{darwin}libs=QtUiTools
 {allgcc}libs=supc++
 
 gui=yes
