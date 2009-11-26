@@ -421,7 +421,7 @@ static void * hb_mspace_update( void * pAlloc, int iCount )
 {
    PHB_MSPACE pm = ( PHB_MSPACE ) pAlloc;
 
-   if( pm->count > iCount )
+   if( pm && pm->count > iCount )
    {
       pAlloc = ( void * ) hb_mspace_alloc();
       pm->count--;
@@ -518,10 +518,13 @@ void hb_xclean( void )
 
       for( i = imax = icount = 0; i < HB_MSPACE_COUNT; ++i )
       {
-         icount += s_mspool[ i ].count;
-         if( imax < s_mspool[ i ].count )
-            imax = s_mspool[ i ].count;
-         mspace_trim( s_mspool[ i ].ms, 0 );
+         if( s_mspool[ i ].ms )
+         {
+            icount += s_mspool[ i ].count;
+            if( imax < s_mspool[ i ].count )
+               imax = s_mspool[ i ].count;
+            mspace_trim( s_mspool[ i ].ms, 0 );
+         }
       }
       icount = ( icount + HB_MSPACE_COUNT - 1 ) / HB_MSPACE_COUNT;
       if( imax > icount )
