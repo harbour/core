@@ -66,6 +66,8 @@
 
 #if QT_VERSION >= 0x040500
 
+#include <QtCore/QObject>
+
 static int s_iObjectReleaseMethod = HBQT_RELEASE_WITH_DELETE_LATER;
 
 /*----------------------------------------------------------------------*/
@@ -129,6 +131,11 @@ HB_FUNC( HBQT_QTPTR_FROM_GCPOINTER )
    {
       hb_retptr( p->ph );
    }
+}
+
+HB_FUNC( QT_FINDCHILD )
+{
+   hb_retptr( ( QObject * ) hbqt_par_QObject( 1 )->findChild< QObject * >( hbqt_par_QString( 2 ) ) );
 }
 
 #if defined( __HB_DEBUG__ )

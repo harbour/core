@@ -54,6 +54,7 @@ CPP_SOURCES := \
    QTimer.cpp \
    QTranslator.cpp \
    QUrl.cpp \
+   QUiLoader.cpp \
    QVariant.cpp \
 
 
@@ -103,6 +104,7 @@ PRG_SOURCES := \
    TQTime.prg \
    TQTimer.prg \
    TQTranslator.prg \
+   TQUiLoader.prg \
    TQUrl.prg \
    TQVariant.prg \
 

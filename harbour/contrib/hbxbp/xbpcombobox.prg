@@ -81,6 +81,7 @@ CLASS XbpComboBox  INHERIT  XbpWindow
 
    METHOD   new()
    METHOD   create()
+   METHOD   createFromQtPtr()
    METHOD   configure()                           VIRTUAL
    METHOD   destroy()
    METHOD   exeBlock()
@@ -158,6 +159,38 @@ METHOD XbpComboBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::show()
    ENDIF
    ::oParent:AddChild( SELF )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpComboBox:createFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+
+   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   IF hb_isPointer( pQtObject )
+      ::oWidget := QComboBox()
+      ::oWidget:pPtr := pQtObject
+
+   ELSE
+      ::oSLE := XbpSLE():new():create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+      ::oLB  := XbpListBox():new():create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+      ::oWidget := QComboBox():New( ::pParent )
+      ::setPosAndSize()
+      IF ::visible
+         ::show()
+      ENDIF
+      ::oWidget:setLineEdit( ::XbpSLE:oWidget:pPtr )
+      ::oWidget:setEditable( ::XbpSLE:editable )
+      ::oWidget:setFrame( ::XbpSLE:border )
+
+   ENDIF
+
+   ::connect( ::pWidget, "highlighted(int)"        , {|o,i| ::exeBlock( 1,i,o ) } )
+   ::connect( ::pWidget, "activated(int)"          , {|o,i| ::exeBlock( 2,i,o ) } )
+   //::connect( ::pWidget, "currentIndexChanged(int)", {|o,i| ::exeBlock( 2,i,o ) } )
+
+   ::AddAsChild( SELF )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

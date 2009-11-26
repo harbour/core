@@ -86,6 +86,7 @@ CLASS XbpPartHandler
    METHOD   status()
 
    METHOD   addChild( oXbp )
+   METHOD   addAsChild()
    METHOD   childFromName( nNameId )
    METHOD   childList()
    METHOD   delChild( oXbp )
@@ -170,6 +171,16 @@ METHOD addChild( oXbp ) CLASS XbpPartHandler
 
    oXbp:nNameID := oXbp:nID
    aadd( ::aChildren, oXbp )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD addAsChild() CLASS XbpPartHandler
+
+   IF !empty( ::oParent )
+      ::oParent:addChild( Self )
+   ENDIF
 
    RETURN Self
 

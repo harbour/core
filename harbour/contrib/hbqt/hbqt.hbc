@@ -10,7 +10,7 @@ libs=hbqt
 libs=hbqtcore hbqtgui hbqtnetwork
 
 {win}libs=version shlwapi
-{allwin}libs=QtCore4 QtGui4 QtNetwork4 
+{allwin}libs=QtCore4 QtGui4 QtNetwork4 QtUiTools
 {linux}libs=QtCore QtGui QtNetwork 
 {darwin}libs=/Library/Frameworks/QtCore.framework/QtCore
 {darwin}libs=/Library/Frameworks/QtGui.framework/QtGui

@@ -2169,6 +2169,39 @@
 #define QTextDocument_StyleSheetResource          3         // The resource contains CSS.
 #define QTextDocument_UserResource                100       // The first available value for user defined resource types.
 
+// This enum describes the errors that may be returned by the error() function.
+#define QFile_NoError                             0        // No error occurred.
+#define QFile_ReadError                           1        // An error occurred when reading from the file.
+#define QFile_WriteError                          2        // An error occurred when writing to the file.
+#define QFile_FatalError                          3        // A fatal error occurred.
+#define QFile_ResourceError                       4        //
+#define QFile_OpenError                           5        // The file could not be opened.
+#define QFile_AbortError                          6        // The operation was aborted.
+#define QFile_TimeOutError                        7        // A timeout occurred.
+#define QFile_UnspecifiedError                    8        // An unspecified error occurred.
+#define QFile_RemoveError                         9        // The file could not be removed.
+#define QFile_RenameError                         10       // The file could not be renamed.
+#define QFile_PositionError                       11       // The position in the file could not be changed.
+#define QFile_ResizeError                         12       // The file could not be resized.
+#define QFile_PermissionsError                    13       // The file could not be accessed.
+#define QFile_CopyError                           14       // The file could not be copied.
+
+#define QFile_NoOptions                           0        // No options.
+
+// This enum is used by the permission() function to report the permissions and ownership of a file. The values may be OR-ed together to test multiple permissions and ownership values.
+#define QFile_ReadOwner                           0x4000   // The file is readable by the owner of the file.
+#define QFile_WriteOwner                          0x2000   // The file is writable by the owner of the file.
+#define QFile_ExeOwner                            0x1000   // The file is executable by the owner of the file.
+#define QFile_ReadUser                            0x0400   // The file is readable by the user.
+#define QFile_WriteUser                           0x0200   // The file is writable by the user.
+#define QFile_ExeUser                             0x0100   // The file is executable by the user.
+#define QFile_ReadGroup                           0x0040   // The file is readable by the group.
+#define QFile_WriteGroup                          0x0020   // The file is writable by the group.
+#define QFile_ExeGroup                            0x0010   // The file is executable by the group.
+#define QFile_ReadOther                           0x0004   // The file is readable by anyone.
+#define QFile_WriteOther                          0x0002   // The file is writable by anyone.
+#define QFile_ExeOther                            0x0001   // The file is executable by anyone.
+
 /*----------------------------------------------------------------------*/
 
 #define _HBQT_CH

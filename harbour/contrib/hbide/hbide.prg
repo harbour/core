@@ -121,6 +121,7 @@ CLASS HbIde
    DATA   qSplitterL
    DATA   qSplitterR
    DATA   qTabWidget
+   DATA   qFindDlg
    ACCESS qCurEdit                                INLINE iif( ::getCurrentTab() > 0, ::aTabs[ ::getCurrentTab(), 2 ], NIL )
 
    /* XBP Objects */
@@ -290,8 +291,6 @@ METHOD HbIde:create( cProjectOrSource )
    ::qSplitter:show()
 #endif
 
-   ::loadUI( "newproject" )
-
    ::oDlg:setPos( { 100, 60 } )
 
    /* Editor's Font */
@@ -323,12 +322,22 @@ METHOD HbIde:create( cProjectOrSource )
          ::closeAllSources()
          EXIT
 
-      ELSEIF ( ::nEvent == xbeP_Keyboard .and. ::mp1 == xbeK_ESC )
-         ::closeSource()
-         IF ::qTabWidget:count() == 0
-            ::oDockR:hide()
-            ::lDockRVisible := .f.
-         ENDIF
+      ELSEIF ::nEvent == xbeP_Keyboard
+         DO CASE
+
+         CASE ::mp1 == xbeK_ESC
+            ::closeSource()
+            IF ::qTabWidget:count() == 0
+               ::oDockR:hide()
+               ::lDockRVisible := .f.
+            ENDIF
+
+         CASE ::mp1 == xbeK_CTRL_F
+            IF !empty( ::qCurEdit )
+               ::loadUI( "finddialog" )
+            ENDIF
+
+         ENDCASE
       ENDIF
 
       ::oXbp:handleEvent( ::nEvent, ::mp1, ::mp2 )
@@ -350,22 +359,17 @@ METHOD HbIde:executeAction( cKey )
 
    CASE cKey == "Exit"
       PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
-
    CASE cKey == "NewProject"
       ::fetchProjectProperties( .t. )
-
    CASE cKey == "Open"
       IF !empty( cFile := ::selectSource( "open" ) )
          ::oProjRoot:addItem( cFile )
          ::editSource( cFile )
       ENDIF
-
    CASE cKey == "Save"
       ::saveSource( ::getCurrentTab(), .f. )
-
    CASE cKey == "Close"
       ::closeSource()
-
    CASE cKey == "Undo"
       IF !empty( ::qCurEdit )
          ::qCurEdit:undo()
@@ -390,6 +394,10 @@ METHOD HbIde:executeAction( cKey )
       IF !empty( ::qCurEdit )
          ::qCurEdit:selectAll()
       ENDIF
+   CASE cKey == "Find"
+      IF !empty( ::qCurEdit )
+         ::loadUI( "finddialog" )
+      ENDIF
    CASE cKey == "ToUpper"
       ::convertSelection( cKey )
    CASE cKey == "ToLower"
@@ -404,7 +412,6 @@ METHOD HbIde:executeAction( cKey )
       IF !empty( ::qCurEdit )
          ::qCurEdit:zoomOut()
       ENDIF
-
    CASE cKey == "11"
       IF ::lDockBVisible
          ::oDockB:hide()
@@ -417,7 +424,6 @@ METHOD HbIde:executeAction( cKey )
          ::oDockB2:show()
          ::lDockBVisible := .t.
       ENDIF
-
    CASE cKey == "12"
       IF ::lDockRVisible
          ::oDockR:hide()
@@ -425,6 +431,8 @@ METHOD HbIde:executeAction( cKey )
          ::oDockR:show()
       ENDIF
       ::lDockRVisible := !( ::lDockRVisible )
+
+   CASE cKey == "Compile"
 
    ENDCASE
 
@@ -1098,24 +1106,36 @@ METHOD HbIde:fetchProjectProperties( lNewProject )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:loadUI( cUi )
+   LOCAL qUiLoader, qFile, cUiFull
 
-   HB_SYMBOL_UNUSED( cUi )
+   STATIC oPBFind, oPBRepl, oPBClose, qFind, qRepl
 
-   #if 0
-   LOCAL qUiLoader, qStrList
-   LOCAL cUiFull := s_resPath + cUi + ".ui"
+   IF ::qFindDlg == NIL
+      cUiFull := s_resPath + cUi + ".ui"
+      qFile := QFile():new( cUiFull )
+      IF qFile:open( 1 )
+         qUiLoader  := QUiLoader():new()
+         ::qFindDlg := QDialog():configure( qUiLoader:load( QT_PTROF( qFile ), QT_PTROFXBP( ::oDlg ) ) )
+         qFile:close()
+         ::qFindDlg:setWindowFlags( Qt_Sheet )
+         //
+         oPBFind := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonFind" ) )
+         oPBFind:activate := {|| ::qCurEdit:find( "Harbour" ) }
 
-   HBXBP_DEBUG( 0, cUiFull )
-   qUiLoader := QUiLoader():new()
-   HBXBP_DEBUG( 1 )
-   qUiLoader:load( cUiFull, QT_PTROFXBP( ::oDlg ) )
-   HBXBP_DEBUG( 2 )
-   qStrList := QStringList():configure( qUiLoader:availableWidgets() )
-   HBXBP_DEBUG( 3 )
-   HBXBP_DEBUG( qStrList:count() )
-   HBXBP_DEBUG( 4 )
-   HBXBP_DEBUG( qUiLoader:workingDirectory() )
-   #endif
+         oPBRepl := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonReplace" ) )
+         oPBRepl:activate := {|| ::qCurEdit:find( "something" ) }
+
+         oPBClose := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonClose" ) )
+         oPBClose:activate := {|| ::qFindDlg:hide() /*done( 1 )*/ }
+
+         qFind := XbpComboBox():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "comboFindWhat" ) )
+         qRepl := XbpComboBox():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "comboReplaceWith" ) )
+
+         JustACall( qFind, qRepl )
+      ENDIF
+   ENDIF
+
+   ::qFindDlg:show()
 
    RETURN Self
 

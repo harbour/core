@@ -88,6 +88,7 @@ CLASS XbpPushButton  INHERIT  XbpWindow
 
    METHOD   new()
    METHOD   create()
+   METHOD   createFromQtPtr()
    METHOD   configure()
    METHOD   destroy()
 
@@ -117,8 +118,6 @@ METHOD XbpPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    ::oWidget := QPushButton():new( QT_PTROF( ::oParent:oWidget ) )
 
-   ::Connect( QT_PTROF( ::oWidget ), "clicked()", {|| ::exeBlock() } )
-
    ::setPosAndSize()
    IF ::visible
       ::oWidget:show()
@@ -130,7 +129,39 @@ METHOD XbpPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
       ::oWidget:setDefault( .t. )
    ENDIF
 
+   ::Connect( QT_PTROF( ::oWidget ), "clicked()", {|| ::exeBlock() } )
+
    ::oParent:AddChild( SELF )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpPushButton:createFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+
+   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   IF hb_isPointer( pQtObject )
+      ::oWidget := QPushButton()
+      ::oWidget:pPtr := pQtObject
+
+   ELSE
+      ::oWidget := QPushButton():new( QT_PTROF( ::oParent:oWidget ) )
+      ::setPosAndSize()
+      IF ::visible
+         ::oWidget:show()
+      ENDIF
+
+      ::setCaption( ::caption )
+
+      IF ::default
+         ::oWidget:setDefault( .t. )
+      ENDIF
+
+   ENDIF
+
+   ::Connect( QT_PTROF( ::oWidget ), "clicked()", {|| ::exeBlock() } )
+
+   ::addAsChild()
    RETURN Self
 
 /*----------------------------------------------------------------------*/

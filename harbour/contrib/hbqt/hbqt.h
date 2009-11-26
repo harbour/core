@@ -350,6 +350,7 @@ const HB_GC_FUNCS * gcFuncs( void );
 #define hbqt_par_QTreeView( n )                     ( ( QTreeView                   * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QTreeWidget( n )                   ( ( QTreeWidget                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QTreeWidgetItem( n )               ( ( QTreeWidgetItem             * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QUiLoader( n )                     ( ( QUiLoader                   * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QUrl( n )                          ( ( QUrl                        * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QValidator( n )                    ( ( QValidator                  * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QVariant( n )                      ( ( QVariant                    * ) hbqt_gcpointer( n ) )
