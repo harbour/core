@@ -11401,7 +11401,7 @@ void hb_vmIsStackRef( void )
 
 void hb_vmUpdateAllocator( PHB_ALLOCUPDT_FUNC pFunc, int iCount )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmUpdateAllocator(%p, %d)", pFunc, int iCount));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmUpdateAllocator(%p, %d)", pFunc, iCount));
 
 #if defined( HB_MT_VM )
    if( s_vmStackLst )
