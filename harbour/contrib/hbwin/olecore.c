@@ -511,27 +511,32 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray, int i
    SafeArrayGetLBound( pSafeArray, iDim, &lFrom );
    SafeArrayGetUBound( pSafeArray, iDim, &lTo );
 
-   if( --iDim == 0 )
-      VariantInit( &vItem );
-
    if( lFrom <= lTo )
    {
       hb_arrayNew( pItem, lTo - lFrom + 1 );
-      do
+      if( --iDim == 0 )
       {
-         plIndex[ iDim ] = lFrom;
-         if( iDim == 0 )
+         VariantInit( &vItem );
+         do
          {
+            plIndex[ iDim ] = lFrom;
             if( SUCCEEDED( SafeArrayGetElement( pSafeArray, plIndex, &vItem ) ) )
             {
                hb_oleVariantToItem( hb_arrayGetItemPtr( pItem, ++ul ), &vItem );
                VariantClear( &vItem );
             }
          }
-         else
-            hb_oleSafeArrayToItem( hb_arrayGetItemPtr( pItem, ++ul ), pSafeArray, iDim, plIndex );
+         while( ++lFrom <= lTo );
       }
-      while( ++lFrom <= lTo );
+      else
+      {
+         do
+         {
+            plIndex[ iDim ] = lFrom;
+            hb_oleSafeArrayToItem( hb_arrayGetItemPtr( pItem, ++ul ), pSafeArray, iDim, plIndex );
+         }
+         while( ++lFrom <= lTo );
+      }
    }
    else
       hb_arrayNew( pItem, 0 );
