@@ -511,7 +511,9 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray, int i
    SafeArrayGetLBound( pSafeArray, iDim, &lFrom );
    SafeArrayGetUBound( pSafeArray, iDim, &lTo );
 
-   iDim--;
+   if( --iDim == 0 )
+      VariantInit( &vItem );
+
    if( lFrom <= lTo )
    {
       hb_arrayNew( pItem, lTo - lFrom + 1 );
@@ -528,7 +530,6 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray, int i
          }
          else
             hb_oleSafeArrayToItem( hb_arrayGetItemPtr( pItem, ++ul ), pSafeArray, iDim, plIndex );
-
       }
       while( ++lFrom <= lTo );
    }
