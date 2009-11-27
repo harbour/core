@@ -83,7 +83,7 @@ FUNCTION buildToolBar( oWnd, oIde )
 
    oTBar:addItem( "Exit"                       , cResPath + "exit.png"           , , , , , "Exit"       )
    oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
-   oTBar:addItem( "New Project"                , cResPath + "properties.png"     , , , , , "NewProject" )
+   oTBar:addItem( "Toggle Project Tree"        , cResPath + "properties.png"     , , , , , "ToggleProjectTree" )
    oTBar:addItem( "Open"                       , cResPath + "open.png"           , , , , , "Open"       )
    oTBar:addItem( "Save"                       , cResPath + "save.png"           , , , , , "Save"       )
    oTBar:addItem( "Close"                      , cResPath + "close.png"          , , , , , "Close"      )
