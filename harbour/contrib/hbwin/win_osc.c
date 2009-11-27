@@ -72,16 +72,16 @@ HB_FUNC( WIN_OSISNT351 )
 {
    OSVERSIONINFO osvi;
    getwinver( &osvi );
-   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_NT
-         && osvi.dwMajorVersion == 3 && osvi.dwMinorVersion == 51 );
+   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_NT &&
+            osvi.dwMajorVersion == 3 && osvi.dwMinorVersion == 51 );
 }
 
 HB_FUNC( WIN_OSISNT4 )
 {
    OSVERSIONINFO osvi;
    getwinver( &osvi );
-   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_NT
-         && osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 0 );
+   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_NT &&
+            osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 0 );
 }
 
 HB_FUNC( WIN_OSIS2000ORUPPER )
@@ -137,29 +137,29 @@ HB_FUNC( WIN_OSIS95 )
 {
    OSVERSIONINFO osvi;
    getwinver( &osvi );
-   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS
-         && osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 0 );
+   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS &&
+            osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 0 );
 }
 
 HB_FUNC( WIN_OSIS98 )
 {
    OSVERSIONINFO osvi;
    getwinver( &osvi );
-   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS
-         && osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 10 );
+   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS &&
+            osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 10 );
 }
 
 HB_FUNC( WIN_OSISME )
 {
    OSVERSIONINFO osvi;
    getwinver( &osvi );
-   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS
-         && osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 90 );
+   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS &&
+            osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 90 );
 }
 
 HB_FUNC( WIN_OSISTSCLIENT )
 {
-   HB_BOOL bResult = FALSE;
+   HB_BOOL bResult = HB_FALSE;
    OSVERSIONINFO osvi;
    getwinver( &osvi );
    if( osvi.dwPlatformId == VER_PLATFORM_WIN32_NT && osvi.dwMajorVersion >= 4 )
@@ -168,7 +168,7 @@ HB_FUNC( WIN_OSISTSCLIENT )
       #ifndef SM_REMOTESESSION
          #define SM_REMOTESESSION        0x1000
       #endif
-      bResult = GetSystemMetrics( SM_REMOTESESSION ) != 0;
+      bResult = ( GetSystemMetrics( SM_REMOTESESSION ) != 0 );
    }
    hb_retl( bResult );
 }

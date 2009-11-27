@@ -120,28 +120,28 @@ HB_FUNC( WIN_REGOPENKEYEX )
 HB_FUNC( WIN_REGQUERYVALUEEX )
 {
    LPTSTR lpKey = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
-   DWORD nType = 0;
-   DWORD nSize = 0;
+   DWORD dwType = 0;
+   DWORD dwSize = 0;
 
    if( RegQueryValueEx( ( HKEY ) hb_parptr( 1 ),
                         lpKey,
                         NULL,
-                        &nType,
+                        &dwType,
                         NULL,
-                        &nSize ) == ERROR_SUCCESS )
+                        &dwSize ) == ERROR_SUCCESS )
    {
-      if( nSize > 0 )
+      if( dwSize > 0 )
       {
-         BYTE * cValue = ( BYTE * ) hb_xgrab( nSize + 1 );
+         BYTE * cValue = ( BYTE * ) hb_xgrab( dwSize + 1 );
 
          RegQueryValueEx( ( HKEY ) hb_parptr( 1 ),
                           lpKey,
                           NULL,
-                          &nType,
+                          &dwType,
                           ( BYTE * ) cValue,
-                          &nSize );
+                          &dwSize );
 
-         if( ! hb_storclen_buffer( ( char * ) cValue, nSize, 5 ) )
+         if( ! hb_storclen_buffer( ( char * ) cValue, dwSize, 5 ) )
             hb_xfree( cValue );
       }
       else
@@ -150,8 +150,8 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
    else
       hb_stor( 5 );
 
-   hb_stornl( nType, 4 );
-   hb_retnl( nSize );
+   hb_stornl( dwType, 4 );
+   hb_retnl( dwSize );
 
    HB_TCHAR_FREE( lpKey );
 }
@@ -159,15 +159,15 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
 HB_FUNC( WIN_REGSETVALUEEX )
 {
    LPTSTR lpKey = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
-   DWORD nType = ( DWORD ) hb_parnl( 4 );
+   DWORD dwType = ( DWORD ) hb_parnl( 4 );
 
-   if( nType == REG_DWORD )
+   if( dwType == REG_DWORD )
    {
       DWORD nSpace = ( DWORD ) hb_parnl( 5 );
       hb_retl( RegSetValueEx( ( HKEY ) hb_parptr( 1 ),
                               lpKey,
                               0,
-                              nType,
+                              dwType,
                               ( BYTE * ) &nSpace,
                               sizeof( REG_DWORD ) ) == ERROR_SUCCESS );
    }
@@ -175,7 +175,7 @@ HB_FUNC( WIN_REGSETVALUEEX )
       hb_retl( RegSetValueEx( ( HKEY ) hb_parptr( 1 ),
                               lpKey,
                               0,
-                              nType,
+                              dwType,
                               ( BYTE * ) hb_parcx( 5 ) /* cValue */,
                               hb_parclen( 5 ) + 1 ) == ERROR_SUCCESS );
 

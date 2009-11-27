@@ -74,6 +74,7 @@
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
+#include "hbapifs.h"
 #include "hbapiitm.h"
 
 #if defined( HB_OS_WIN ) && !defined( HB_OS_WIN_CE )
@@ -181,7 +182,7 @@ HB_FUNC( WIN_STARTDOC )
 {
    HDC hDC = win_HDC_par( 1 );
    DOCINFO sDoc;
-   HB_BOOL bResult = FALSE;
+   HB_BOOL bResult = HB_FALSE;
 
    if( hDC )
    {
@@ -203,7 +204,7 @@ HB_FUNC( WIN_STARTDOC )
 
 HB_FUNC( WIN_ENDDOC )
 {
-   HB_BOOL bResult = FALSE;
+   HB_BOOL bResult = HB_FALSE;
    HDC hDC = win_HDC_par( 1 );
 
    if( hDC )
@@ -328,7 +329,6 @@ HB_FUNC( WIN_GETTEXTSIZE )
    hb_retnl( lResult );
 }
 
-
 HB_FUNC( WIN_GETCHARSIZE )
 {
    long lResult = 0;
@@ -409,7 +409,6 @@ HB_FUNC( WIN_CREATEFONT )
 
       if( lpFont )
          HB_TCHAR_FREE( lpFont );
-
    }
    else
       hb_retptr( NULL );
@@ -443,7 +442,7 @@ HB_FUNC( WIN_BITMAPSOK )
 
 HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
 {
-   HB_BOOL bResult = FALSE;
+   HB_BOOL bResult = HB_FALSE;
    HDC hDC = win_HDC_par( 1 );
 
    if( hDC )
@@ -454,39 +453,35 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
 
       if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) )
       {
-         PDEVMODE pDevMode = NULL;
-         LONG lSize = DocumentProperties( 0, hPrinter, lpPrinterName, pDevMode, pDevMode, 0 );
+         LONG lSize = DocumentProperties( 0, hPrinter, lpPrinterName, NULL, NULL, 0 );
 
          if( lSize > 0 )
          {
-            pDevMode = ( PDEVMODE ) hb_xgrab( lSize );
+            PDEVMODE pDevMode = ( PDEVMODE ) hb_xgrab( lSize );
 
-            if( pDevMode )
-            {
-               DocumentProperties( 0, hPrinter, lpPrinterName, pDevMode, pDevMode, DM_OUT_BUFFER );
+            DocumentProperties( 0, hPrinter, lpPrinterName, pDevMode, pDevMode, DM_OUT_BUFFER );
 
-               if( HB_ISNUM( 3 ) && hb_parni( 3 ) )        /* 22/02/2007 don't change if 0 */
-                  pDevMode->dmPaperSize = ( short ) hb_parni( 3 );
+            if( HB_ISNUM( 3 ) && hb_parni( 3 ) )        /* 22/02/2007 don't change if 0 */
+               pDevMode->dmPaperSize = ( short ) hb_parni( 3 );
 
-               if( HB_ISLOG( 4 ) )
-                  pDevMode->dmOrientation = ( short ) ( hb_parl( 4 ) ? 2 : 1 );
+            if( HB_ISLOG( 4 ) )
+               pDevMode->dmOrientation = ( short ) ( hb_parl( 4 ) ? 2 : 1 );
 
-               if( HB_ISNUM( 5 ) && hb_parni( 5 ) > 0 )
-                  pDevMode->dmCopies = ( short ) hb_parni( 5 );
+            if( HB_ISNUM( 5 ) && hb_parni( 5 ) > 0 )
+               pDevMode->dmCopies = ( short ) hb_parni( 5 );
 
-               if( HB_ISNUM( 6 ) && hb_parni( 6 ) )        /* 22/02/2007 don't change if 0 */
-                  pDevMode->dmDefaultSource = ( short ) hb_parni( 6 );
+            if( HB_ISNUM( 6 ) && hb_parni( 6 ) )        /* 22/02/2007 don't change if 0 */
+               pDevMode->dmDefaultSource = ( short ) hb_parni( 6 );
 
-               if( HB_ISNUM( 7 ) && hb_parni( 7 ) )        /* 22/02/2007 don't change if 0 */
-                  pDevMode->dmDuplex = ( short ) hb_parni( 7 );
+            if( HB_ISNUM( 7 ) && hb_parni( 7 ) )        /* 22/02/2007 don't change if 0 */
+               pDevMode->dmDuplex = ( short ) hb_parni( 7 );
 
-               if( HB_ISNUM( 8 ) && hb_parni( 8 ) )        /* 22/02/2007 don't change if 0 */
-                  pDevMode->dmPrintQuality = ( short ) hb_parni( 8 );
+            if( HB_ISNUM( 8 ) && hb_parni( 8 ) )        /* 22/02/2007 don't change if 0 */
+               pDevMode->dmPrintQuality = ( short ) hb_parni( 8 );
 
-               bResult = ( ResetDC( hDC, pDevMode ) != NULL );
+            bResult = ( ResetDC( hDC, pDevMode ) != NULL );
 
-               hb_xfree( pDevMode );
-            }
+            hb_xfree( pDevMode );
          }
 
          ClosePrinter( hPrinter );
@@ -501,34 +496,30 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
 
 HB_FUNC( WIN_GETDOCUMENTPROPERTIES )
 {
-   HB_BOOL bResult = FALSE;
+   HB_BOOL bResult = HB_FALSE;
    HANDLE hPrinter;
    const char * pszPrinterName = hb_parc( 1 );
    LPTSTR lpPrinterName = pszPrinterName ? HB_TCHAR_CONVTO( pszPrinterName ) : NULL;
 
    if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) )
    {
-      PDEVMODE pDevMode = NULL;
-      LONG lSize = DocumentProperties( 0, hPrinter, lpPrinterName, pDevMode, pDevMode, 0 );
+      LONG lSize = DocumentProperties( 0, hPrinter, lpPrinterName, NULL, NULL, 0 );
 
       if( lSize > 0 )
       {
-         pDevMode = ( PDEVMODE ) hb_xgrab( lSize );
+         PDEVMODE pDevMode = ( PDEVMODE ) hb_xgrab( lSize );
 
-         if( pDevMode )
-         {
-            DocumentProperties( 0, hPrinter, lpPrinterName, pDevMode, pDevMode, DM_OUT_BUFFER );
+         DocumentProperties( 0, hPrinter, lpPrinterName, pDevMode, pDevMode, DM_OUT_BUFFER );
 
-            hb_storni( pDevMode->dmPaperSize, 2 );
-            hb_storl( pDevMode->dmOrientation == 2, 3 );
-            hb_storni( pDevMode->dmCopies, 4 );
-            hb_storni( pDevMode->dmDefaultSource, 5 );
-            hb_storni( pDevMode->dmDuplex, 6 );
-            hb_storni( pDevMode->dmPrintQuality, 7 );
-            bResult = TRUE;
+         hb_storni( pDevMode->dmPaperSize, 2 );
+         hb_storl( pDevMode->dmOrientation == 2, 3 );
+         hb_storni( pDevMode->dmCopies, 4 );
+         hb_storni( pDevMode->dmDefaultSource, 5 );
+         hb_storni( pDevMode->dmDuplex, 6 );
+         hb_storni( pDevMode->dmPrintQuality, 7 );
+         bResult = HB_TRUE;
 
-            hb_xfree( pDevMode );
-         }
+         hb_xfree( pDevMode );
       }
 
       ClosePrinter( hPrinter );
@@ -540,47 +531,34 @@ HB_FUNC( WIN_GETDOCUMENTPROPERTIES )
    hb_retl( bResult );
 }
 
-/* Functions for Loading & Printing bitmaps */
+/* Functions for loading & printing bitmaps */
 
 HB_FUNC( WIN_LOADBITMAPFILE )
 {
-   LPTSTR lpFileName = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
-   HB_BOOL bSuccess = FALSE;
-   DWORD dwFileSize = 0, dwHighSize, dwBytesRead;
-   HANDLE hFile;
-   BITMAPFILEHEADER * pbmfh = NULL;
+   HB_FHANDLE fhnd = hb_fsOpen( hb_parcx( 1 ), FO_READ | FO_SHARED );
 
-   /* TOFIX: To use Harbour File I/O API here. */
-   hFile = CreateFile( ( LPCTSTR ) lpFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING,
-                       FILE_FLAG_SEQUENTIAL_SCAN, NULL );
-
-   HB_TCHAR_FREE( lpFileName );
-
-   if( hFile != INVALID_HANDLE_VALUE )
+   if( fhnd != FS_ERROR )
    {
-      dwFileSize = GetFileSize( hFile, &dwHighSize );
+      ULONG ulSize = hb_fsSeek( fhnd, 0, SEEK_END );
 
-      if( ( dwFileSize != INVALID_FILE_SIZE ) && ! dwHighSize )  /* Do not continue if File size error or TOO big for memory */
+      if( ulSize > 2 && ulSize <= ( 32 * 1024 * 1024 ) )
       {
-         pbmfh = ( BITMAPFILEHEADER * ) hb_xgrab( dwFileSize );
+         BITMAPFILEHEADER * pbmfh = ( BITMAPFILEHEADER * ) hb_xgrab( ulSize );
 
-         if( pbmfh )
-         {
-            bSuccess = ReadFile( hFile, pbmfh, dwFileSize, &dwBytesRead, NULL );
-            bSuccess = bSuccess && ( dwBytesRead == dwFileSize ) && ( pbmfh->bfType == *( WORD * ) "BM" );      /*&& (pbmfh->bfSize == dwFileSize) ;*/
-         }
+         hb_fsSeek( fhnd, 0, SEEK_SET );
+
+         if( hb_fsReadLarge( fhnd, pbmfh, ulSize ) == ulSize && pbmfh->bfType == *( WORD * ) "BM" )
+            hb_retclen( ( char * ) pbmfh, ( HB_SIZE ) ulSize );
+
+         hb_xfree( pbmfh );
       }
+      else
+         hb_retc_null();
 
-      CloseHandle( hFile );
+      hb_fsClose( fhnd );
    }
-
-   if( bSuccess )
-      hb_retclen( ( char * ) pbmfh, ( HB_SIZE ) dwFileSize );
    else
       hb_retc_null();
-
-   if( pbmfh )
-      hb_xfree( pbmfh );
 }
 
 HB_FUNC( WIN_DRAWBITMAP )
@@ -615,10 +593,10 @@ HB_FUNC( WIN_DRAWBITMAP )
                               DIB_RGB_COLORS, SRCCOPY ) != ( int ) GDI_ERROR );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
-static int CALLBACK FontEnumCallBack( LOGFONT * lplf, TEXTMETRIC * lpntm, DWORD FontType,
+static int CALLBACK FontEnumCallBack( LOGFONT * lplf, TEXTMETRIC * lpntm, DWORD dwFontType,
                                       LPVOID pArray )
 {
    char * pszFaceName = HB_TCHAR_CONVFROM( lplf->lfFaceName );
@@ -626,14 +604,14 @@ static int CALLBACK FontEnumCallBack( LOGFONT * lplf, TEXTMETRIC * lpntm, DWORD 
 
    hb_arraySetC( pSubItems, 1, pszFaceName );
    hb_arraySetL( pSubItems, 2, lplf->lfPitchAndFamily & FIXED_PITCH );
-   hb_arraySetL( pSubItems, 3, FontType & TRUETYPE_FONTTYPE );
+   hb_arraySetL( pSubItems, 3, dwFontType & TRUETYPE_FONTTYPE );
    hb_arraySetNL( pSubItems, 4, lpntm->tmCharSet );
    hb_arrayAddForward( ( PHB_ITEM ) pArray, pSubItems );
 
    hb_itemRelease( pSubItems );
    HB_TCHAR_FREE( pszFaceName );
 
-   return TRUE;
+   return HB_TRUE;
 }
 
 HB_FUNC( WIN_ENUMFONTS )
@@ -689,7 +667,6 @@ HB_FUNC( WIN_SETPEN )
       }
       else
          hb_retptr( NULL );
-
    }
    else
       hb_retptr( NULL );
@@ -723,7 +700,7 @@ HB_FUNC( WIN_LINETO )
    int x2 = hb_parni( 4 );
    int y2 = hb_parni( 5 );
 
-   hb_retl( hDC ? MoveToEx( hDC, x1, y1, NULL ) && LineTo( hDC, x2, y2 ) : FALSE );
+   hb_retl( hDC ? MoveToEx( hDC, x1, y1, NULL ) && LineTo( hDC, x2, y2 ) : HB_FALSE );
 }
 
 HB_FUNC( WIN_RECTANGLE )
@@ -737,9 +714,9 @@ HB_FUNC( WIN_RECTANGLE )
    int iHeight = hb_parni( 7 );
 
    if( iWidth && iHeight )
-      hb_retl( hDC ? RoundRect( hDC, x1, y1, x2, y2, iWidth, iHeight ) : FALSE );
+      hb_retl( hDC ? RoundRect( hDC, x1, y1, x2, y2, iWidth, iHeight ) : HB_FALSE );
    else
-      hb_retl( hDC ? Rectangle( hDC, x1, y1, x2, y2 ) : FALSE );
+      hb_retl( hDC ? Rectangle( hDC, x1, y1, x2, y2 ) : HB_FALSE );
 }
 
 HB_FUNC( WIN_ARC )
@@ -754,7 +731,7 @@ HB_FUNC( WIN_ARC )
                         0,
                         0,
                         0,
-                        0 ) : FALSE );
+                        0 ) : HB_FALSE );
 }
 
 HB_FUNC( WIN_ELLIPSE )
@@ -765,7 +742,7 @@ HB_FUNC( WIN_ELLIPSE )
                            hb_parni( 2 ) /* x1 */,
                            hb_parni( 3 ) /* y1 */,
                            hb_parni( 4 ) /* x2 */,
-                           hb_parni( 5 ) /* y2 */ ) : FALSE );
+                           hb_parni( 5 ) /* y2 */ ) : HB_FALSE );
 }
 
 HB_FUNC( WIN_SETBKMODE )
