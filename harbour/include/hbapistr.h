@@ -60,9 +60,9 @@ HB_EXTERN_BEGIN
 
 extern HB_EXPORT void hb_strfree( void * hString );
 
-extern HB_EXPORT void * hb_itemGetStr( PHB_ITEM pItem, void * cdp, const char ** pStrPtr, ULONG * pulLen );
-extern HB_EXPORT void * hb_itemGetStrUTF8( PHB_ITEM pItem, const char ** pStrPtr, ULONG * pulLen );
-extern HB_EXPORT void * hb_itemGetStrU16( PHB_ITEM pItem, int iEndian, const HB_WCHAR ** pStrPtr, ULONG * pulLen );
+extern HB_EXPORT const char * hb_itemGetStr( PHB_ITEM pItem, void * cdp, void ** phString, ULONG * pulLen );
+extern HB_EXPORT const char * hb_itemGetStrUTF8( PHB_ITEM pItem, void ** phString, ULONG * pulLen );
+extern HB_EXPORT const HB_WCHAR * hb_itemGetStrU16( PHB_ITEM pItem, int iEndian, void ** phString, ULONG * pulLen );
 
 extern HB_EXPORT ULONG hb_itemCopyStr( PHB_ITEM pItem, void * cdp, char * pStrBuffer, ULONG ulSize );
 extern HB_EXPORT ULONG hb_itemCopyStrUTF8( PHB_ITEM pItem, char * pStrBuffer, ULONG ulSize );
@@ -73,9 +73,9 @@ extern HB_EXPORT PHB_ITEM hb_itemPutStrLenUTF8( PHB_ITEM pItem, const char * pSt
 extern HB_EXPORT PHB_ITEM hb_itemPutStrLenU16( PHB_ITEM pItem, int iEndian, const HB_WCHAR * pStr, ULONG ulLen );
 
 
-extern HB_EXPORT void * hb_parstr( int iParam, void * cdp, const char ** pStrPtr, ULONG * pulLen );
-extern HB_EXPORT void * hb_parstr_utf8( int iParam, const char ** pStrPtr, ULONG * pulLen );
-extern HB_EXPORT void * hb_parstr_u16( int iParam, int iEndian, const HB_WCHAR ** pStrPtr, ULONG * pulLen );
+extern HB_EXPORT const char * hb_parstr( int iParam, void * cdp, void ** phString, ULONG * pulLen );
+extern HB_EXPORT const char * hb_parstr_utf8( int iParam, void ** phString, ULONG * pulLen );
+extern HB_EXPORT const HB_WCHAR * hb_parstr_u16( int iParam, int iEndian, void ** phString, ULONG * pulLen );
 
 extern HB_EXPORT void hb_retstr( void * cdp, const char * szText );
 extern HB_EXPORT void hb_retstr_utf8( const char * szText );
