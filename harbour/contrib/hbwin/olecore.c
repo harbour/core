@@ -773,6 +773,8 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
 
 #ifdef HB_OLE_PASS_POINTERS
       case VT_PTR:
+      case VT_PTR | VT_BYREF:
+      case VT_BYREF:
          hb_itemPutPtr( pItem, pVariant->n1.n2.n3.byref );
          break;
 #endif
@@ -788,15 +790,15 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
             int  iDim;
 
             if( ( iDim = ( int ) SafeArrayGetDim( pSafeArray ) ) >= 1 )
-            { 
-               long * plIndex = ( long * ) hb_xgrab( SafeArrayGetDim( pSafeArray ) * sizeof( long ) );
+            {
+               long * plIndex = ( long * ) hb_xgrab( iDim * sizeof( long ) );
 
                hb_oleSafeArrayToItem( pItem, pSafeArray, iDim, plIndex );
                hb_xfree( plIndex );
             }
             else
                hb_arrayNew( pItem, 0 );
-            break; 
+            break;
          }
          /* Fall through */
       }
@@ -907,6 +909,12 @@ void hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem )
       case VT_DATE | VT_BYREF:
          *pVariant->n1.n2.n3.pdblVal = hb_itemGetTD( pItem ) - HB_OLE_DATE_BASE;
          break;
+
+#ifdef HB_OLE_PASS_POINTERS
+      case VT_PTR | VT_BYREF:
+         pVariant->n1.n2.n3.byref = hb_itemGetPtr( pItem );
+         break;
+#endif
 
       case VT_BYREF | VT_VARIANT:
          hb_oleItemToVariantRef( pVariant->n1.n2.n3.pvarVal, pItem, NULL );

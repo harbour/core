@@ -2240,6 +2240,30 @@ HB_FUNC( HB_UTF8CHR )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( HB_UTF8ASC )
+{
+   const char *pszString = hb_parc( 1 );
+
+   if( pszString )
+   {
+      ULONG ulLen = hb_parclen( 1 );
+      HB_WCHAR wc = 0;
+      int n = 0;
+
+      while( ulLen-- )
+      {
+         if( utf8tou16nextchar( ( unsigned char ) *pszString++, &n, &wc ) )
+         {
+            if( n == 0 )
+               break;
+         }
+      }
+      hb_retnint( wc );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( HB_STRTOUTF8 )
 {
    ULONG ulLen = hb_parclen( 1 ), ulDest = 0;
