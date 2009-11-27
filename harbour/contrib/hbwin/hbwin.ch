@@ -55,7 +55,7 @@
 #ifndef HBWIN_CH_
 #define HBWIN_CH_
 
-/* Positions for GETPRINTERS() array */
+/* Positions for WIN_PRINTERLIST() array */
 
 #define HB_WINPRN_NAME         1
 #define HB_WINPRN_PORT         2

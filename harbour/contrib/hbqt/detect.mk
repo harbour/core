@@ -32,9 +32,8 @@ ifneq ($(HB_HAS_QT),)
       HB_CFLAGS += -I/Library/Frameworks/QtCore.framework/Headers
       HB_CFLAGS += -I/Library/Frameworks/QtGui.framework/Headers
       HB_CFLAGS += -I/Library/Frameworks/QtNetwork.framework/Headers
-      HB_CFLAGS += -I/Library/Frameworks/QtWebKit.framework/Headers
    else
-      HB_CFLAGS += $(foreach d,$(HB_HAS_QT),-I$(d) -I$(d)/Qt -I$(d)/QtCore -I$(d)/QtGui -I$(d)/QtNetwork -I$(d)/QtWebKit)
+      HB_CFLAGS += $(foreach d,$(HB_HAS_QT),-I$(d) -I$(d)/Qt -I$(d)/QtCore -I$(d)/QtGui -I$(d)/QtNetwork)
    endif
 
    # Locate 'moc' executable
