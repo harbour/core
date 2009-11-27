@@ -119,8 +119,7 @@
 #  undef HB_FM_WIN_ALLOC
 #elif !defined( HB_FM_DL_ALLOC ) && !defined( HB_FM_WIN_ALLOC )
 #  if defined( _MSC_VER ) || defined( __BORLANDC__ ) || defined( __MINGW32__ ) || \
-      ( defined( __WATCOMC__ ) && \
-        ( defined( HB_OS_WIN ) || defined( HB_OS_OS2 ) ) ) || \
+      ( defined( __WATCOMC__ ) && defined( HB_OS_WIN ) ) || defined( HB_OS_OS2 ) || \
       ( defined( HB_FM_DLMT_ALLOC ) && defined( HB_MT_VM ) )
 #     define HB_FM_DL_ALLOC
 #  else
@@ -380,6 +379,7 @@ typedef struct
 
 static mspace s_gm = NULL;
 static HB_MSPACE s_mspool[ HB_MSPACE_COUNT ];
+
 
 static mspace hb_mspace( void )
 {
