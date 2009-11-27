@@ -277,8 +277,6 @@ static wchar_t* AnsiToWide( const char* szString )
 }
 
 
-
-
 static BSTR hb_oleItemToString( PHB_ITEM pItem )
 {
    const char* szString;
@@ -501,6 +499,41 @@ static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
 void hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem )
 {
    hb_oleItemToVariantRef( pVariant, pItem, NULL );
+}
+
+
+static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray, int iDim, long * plIndex )
+{
+   VARIANT   vItem;
+   long      lFrom, lTo;
+   ULONG     ul = 0;
+
+   SafeArrayGetLBound( pSafeArray, iDim, &lFrom );
+   SafeArrayGetUBound( pSafeArray, iDim, &lTo );
+
+   iDim--;
+   if( lFrom <= lTo )
+   {
+      hb_arrayNew( pItem, lTo - lFrom + 1 );
+      do
+      {
+         plIndex[ iDim ] = lFrom;
+         if( iDim == 0 )
+         {
+            if( SUCCEEDED( SafeArrayGetElement( pSafeArray, plIndex, &vItem ) ) )
+            {
+               hb_oleVariantToItem( hb_arrayGetItemPtr( pItem, ++ul ), &vItem );
+               VariantClear( &vItem );
+            }
+         }
+         else
+            hb_oleSafeArrayToItem( hb_arrayGetItemPtr( pItem, ++ul ), pSafeArray, iDim, plIndex );
+
+      }
+      while( ++lFrom <= lTo );
+   }
+   else
+      hb_arrayNew( pItem, 0 );
 }
 
 
@@ -744,38 +777,28 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
          SAFEARRAY * pSafeArray = pVariant->n1.n2.vt & VT_BYREF ?
                                   *pVariant->n1.n2.n3.pparray :
                                   pVariant->n1.n2.n3.parray;
-         if( pSafeArray && SafeArrayGetDim( pSafeArray ) == 1 )
+         if( pSafeArray )
          {
-            long lFrom, lTo;
+            int  iDim;
 
-            SafeArrayGetLBound( pSafeArray, 1, &lFrom );
-            SafeArrayGetUBound( pSafeArray, 1, &lTo );
-            if( lFrom >= lTo )
-            {
-               VARIANT vItem;
-               ULONG ul = 0;
+            if( ( iDim = ( int ) SafeArrayGetDim( pSafeArray ) ) >= 1 )
+            { 
+               long * plIndex = ( long * ) hb_xgrab( SafeArrayGetDim( pSafeArray ) * sizeof( long ) );
 
-               hb_arrayNew( pItem, lTo - lFrom + 1 );
-               VariantInit( &vItem );
-               do
-               {
-                  if( SUCCEEDED( SafeArrayGetElement( pSafeArray, &lFrom, &vItem ) ) )
-                  {
-                     hb_oleVariantToItem( hb_arrayGetItemPtr( pItem, ul++ ), &vItem );
-                     VariantClear( &vItem );
-                  }
-               }
-               while( ++lFrom <= lTo );
-               break;
+               hb_oleSafeArrayToItem( pItem, pSafeArray, iDim, plIndex );
+               hb_xfree( plIndex );
             }
+            else
+               hb_arrayNew( pItem, 0 );
+            break; 
          }
+         /* Fall through */
       }
 
       default:
          hb_itemClear( pItem );
    }
 }
-
 
 void hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem )
 {
