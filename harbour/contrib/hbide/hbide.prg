@@ -241,6 +241,7 @@ METHOD HbIde:create( cProjIni )
    ::loadConfig( cProjIni )
 
    ::BuildDialog()
+HBXBP_DEBUG( 133 )
    ::oDa := ::oDlg:drawingArea
    SetAppWindow( ::oDlg )
    ::oDlg:Show()
@@ -440,6 +441,7 @@ METHOD HbIde:loadConfig( cHbideIni )
    HBXBP_DEBUG( hb_dirBase(), cHbideIni )
 
    ::cProjIni := cHbideIni
+   ::aIni := { afill( array( 7 /*INI_HBIDE_VRBLS*/ ), "" ), {}, {} }
 
    IF file( ::cProjIni )
       #if 0
@@ -462,7 +464,6 @@ METHOD HbIde:loadConfig( cHbideIni )
 
       #endif
 
-      ::aIni := { array( 7 /*INI_HBIDE_VRBLS*/ ), {}, {} }
       aElem := ReadSource( ::cProjIni )
 
       FOR EACH s IN aElem
@@ -498,6 +499,8 @@ METHOD HbIde:loadConfig( cHbideIni )
          ENDIF
       NEXT
    ENDIF
+
+   HBXBP_DEBUG( "Filled Defaults" )
 
    RETURN Self
 
@@ -752,11 +755,12 @@ METHOD HbIde:editSource( cSourceFile )
 METHOD HbIde:loadSources()
    LOCAL i
 
-   FOR i := 1 TO len( ::aIni[ INI_FILES ] )
-      ::editSource( ::aIni[ INI_FILES, i ] )
-   NEXT
-   ::qTabWidget:setCurrentIndex( val( ::aIni[ INI_HBIDE, RecentTabIndex ] ) )
-
+   IF !empty( ::aIni[ INI_FILES ] )
+      FOR i := 1 TO len( ::aIni[ INI_FILES ] )
+         ::editSource( ::aIni[ INI_FILES, i ] )
+      NEXT
+      ::qTabWidget:setCurrentIndex( val( ::aIni[ INI_HBIDE, RecentTabIndex ] ) )
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1121,11 +1125,13 @@ METHOD HbIde:buildFuncList()
 METHOD HbIde:setPosAndSizeByIni( qWidget, nPart )
    LOCAL aRect
 
-   aRect := hb_atokens( ::aIni[ INI_HBIDE, nPart ], "," )
-   aeval( aRect, {|e,i| aRect[ i ] := val( e ) } )
+   IF !empty( ::aIni[ INI_HBIDE, nPart ] )
+      aRect := hb_atokens( ::aIni[ INI_HBIDE, nPart ], "," )
+      aeval( aRect, {|e,i| aRect[ i ] := val( e ) } )
 
-   qWidget:move( aRect[ 1 ], aRect[ 2 ] )
-   qWidget:resize( aRect[ 3 ], aRect[ 4 ] )
+      qWidget:move( aRect[ 1 ], aRect[ 2 ] )
+      qWidget:resize( aRect[ 3 ], aRect[ 4 ] )
+   ENDIF
 
    RETURN Self
 
