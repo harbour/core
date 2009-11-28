@@ -598,7 +598,7 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
                               ( void** ) ( void * ) &pdispVal ) == S_OK )
          {
             hb_oleDispatchToItem( pItem, pdispVal );
-            HB_VTBL( punkVal )->Release( HB_THIS( punkVal ) );
+            HB_VTBL( pdispVal )->Release( HB_THIS( pdispVal ) );
          }
          break;
       }
