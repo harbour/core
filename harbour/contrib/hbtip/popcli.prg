@@ -123,7 +123,7 @@ METHOD Open( cUrl ) CLASS tIPClientPOP
    RETURN .F.
 
 METHOD OpenDigest( cUrl ) CLASS tIPClientPOP
-LOCAL nPos, nPos2, cDigest
+   LOCAL nPos, nPos2, cDigest
 
    IF ! ::super:Open( cUrl )
       RETURN .F.
@@ -138,7 +138,7 @@ LOCAL nPos, nPos2, cDigest
       IF nPos > 0
          nPos2 := hb_At( ">", ::cReply, nPos + 1 )
          IF nPos2 > nPos
-            cDigest := hb_md5( substr(::cReply, nPos, (nPos2-nPos)+1 ) + ::oUrl:cPassword )
+            cDigest := hb_md5( SubStr( ::cReply, nPos, ( nPos2 - nPos ) + 1 ) + ::oUrl:cPassword )
             ::InetSendall( ::SocketCon, "APOP " + ::oUrl:cUserid + " " ;
                                           + cDigest + ::cCRLF )
             IF ::GetOK()
@@ -152,7 +152,7 @@ LOCAL nPos, nPos2, cDigest
 
 METHOD Close( lAutoQuit ) CLASS tIPClientPOP
 
-   IF !hb_isLogical( lAutoQuit ) 
+   IF ! ISLOGICAL( lAutoQuit )
       lAutoQuit := .t.
    ENDIF
 
@@ -167,7 +167,7 @@ METHOD Close( lAutoQuit ) CLASS tIPClientPOP
 /**
 */
 METHOD Delete( nId ) CLASS tIPClientPOP
-   ::InetSendall( ::SocketCon, "DELE " + hb_ntos( nId ) +  ::cCRLF )
+   ::InetSendall( ::SocketCon, "DELE " + hb_ntos( nId ) + ::cCRLF )
    RETURN ::GetOk()
 
 METHOD List() CLASS tIPClientPOP
@@ -334,7 +334,7 @@ METHOD countMail CLASS TIpClientPop
       ::reset()
       cStat := ::stat()
       IF Left( cStat, 3 ) == "+OK"
-         RETURN val( substr( cStat, 4, hb_at(" ", cStat, 5 ) - 4) )
+         RETURN Val( SubStr( cStat, 4, hb_At( " ", cStat, 5 ) - 4 ) )
       ENDIF
    ENDIF
 
