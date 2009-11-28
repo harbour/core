@@ -59,12 +59,7 @@
  */
 
 #include "rddsys.ch"
-#ifdef __XHARBOUR__
-  #include "usrrdd.ch"
-  #xtranslate hb_valtoexp(  => cStr(
-#else
-  #include "hbusrrdd.ch"
-#endif
+#include "hbusrrdd.ch"
 #include "common.ch"
 #include "fileio.ch"
 #include "dbinfo.ch"
@@ -86,12 +81,8 @@ STATIC FUNCTION LOGRDD_INIT( nRDD )
    /* Defaults */
    cFileName := "changes.log"
    lActive   := .F.
-   #ifdef __XHARBOUR__
-      cTag := NETNAME() + "\" + NETNAME( 1 )
-   #else
-      cTag := NETNAME() + "\" + hb_USERNAME()
-   #endif
-   cRDDName := hb_LogRddInherit()
+   cTag      := NETNAME() + "\" + hb_USERNAME()
+   cRDDName  := hb_LogRddInherit()
 
    /* Log File will be open later so user can change parameters */
 
@@ -333,14 +324,6 @@ FUNCTION hb_LogRddUserLogBlock( bUserLogBlock )
    ENDIF
    RETURN bOldUserLogBlock
 
-#ifdef __XHARBOUR__
-FUNCTION hb_LogRddValueToText( uValue )
-
-   LOCAL cType := ValType( uValue )
-   LOCAL cText := ValToPrg( uValue )
-
-   RETURN "[" + cType + "]>>>" + cText + "<<<"
-#else
 FUNCTION hb_LogRddValueToText( uValue )
 
    LOCAL cType := ValType( uValue )
@@ -362,7 +345,6 @@ FUNCTION hb_LogRddValueToText( uValue )
    ENDCASE
 
    RETURN "[" + cType + "]>>>" + cText + "<<<"
-#endif
 
 /* -------------------------------------------------- */
 /*           LOCAL UTILITY FUNCTIONS                  */
@@ -428,9 +410,7 @@ STATIC FUNCTION ToString( cCmd, nWA, xPar1, xPar2, xPar3 )
            cString := Alias() + "->RecNo() = " + LTrim( Str( RecNo() ) )
       CASE cCmd == "PUTVALUE"
            // Parameters received: xPar1 = nField, xPar2 = xValue, xPar3 = xOldValue
-#ifndef __XHARBOUR__
            HB_SYMBOL_UNUSED( xPar3 ) // Here don't log previous value
-#endif
            cString := Alias() + "(" + LTrim( Str( RecNo() ) ) + ")->" + PadR( FieldName( xPar1 ), 10 ) + " := " + hb_LogRddValueToText( xPar2 )
       CASE cCmd == "ZAP"
            // Parameters received: none

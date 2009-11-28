@@ -50,10 +50,6 @@
  *
  */
 
-#ifdef __XHARBOUR__
-   #include "hbcompat.ch"
-#else
-
 #include "common.ch"
 #include "hbclass.ch"
 #include "fileio.ch"

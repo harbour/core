@@ -952,13 +952,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
    }
    else if( hb_itemType( pFirst ) == HB_IT_STRING )
    {
-      #ifdef __XHARBOUR__
-      hb_dynsymLock();
-      #endif
       pExecSym = hb_dynsymFindName( hb_itemGetCPtr( pFirst ) );
-      #ifdef __XHARBOUR__
-      hb_dynsymUnlock();
-      #endif
       if ( pExecSym )
       {
          pFunc = ( PHB_ITEM ) pExecSym;
@@ -1090,13 +1084,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
    }
    else if( hb_itemType( pFirst ) == HB_IT_STRING )
    {
-      #ifdef __XHARBOUR__
-      hb_dynsymLock();
-      #endif
       pExecSym = hb_dynsymFindName( hb_itemGetCPtr( pFirst ) );
-      #ifdef __XHARBOUR__
-      hb_dynsymUnlock();
-      #endif
       if ( pExecSym )
       {
          pFunc = ( PHB_ITEM ) pExecSym;

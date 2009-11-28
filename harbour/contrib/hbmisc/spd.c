@@ -377,7 +377,7 @@ HB_FUNC( SQL_SPRINTF )
                   if( f != s ) cIntMod[f++] = '\0';   /* Date & Time */
                }
 
-#           ifdef __XHARBOUR__
+/*
                if( HB_IS_DATETIME( pItmPar ) ){
                   hb_datetimeFormat( hb_itemGetDTS( pItmPar, cDTBuf ), cDTFrm,
                                        (s ? cIntMod : (IsType ? "YYYY-MM-DD" : hb_setGetDateFormat())),
@@ -389,8 +389,8 @@ HB_FUNC( SQL_SPRINTF )
                         cDTFrm[s] = '\0'; /* RTrim 1 space if only Date */
                      }
                   }
-               }else
-#           endif
+               } else
+*/
                   hb_dateFormat( hb_itemGetDS( pItmPar, cDTBuf ), cDTFrm,
                                     (s ? cIntMod : (IsType ? "YYYY-MM-DD" : hb_setGetDateFormat())) );
 

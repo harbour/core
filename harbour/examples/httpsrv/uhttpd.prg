@@ -84,16 +84,6 @@
 
 #define FIXED_THREADS         // This force application to use fixed number of running threads and no service threads
 
-
-#ifdef __XHARBOUR__
-   #include "hbcompat.ch"
-   #xtranslate hb_StrFormat( [<x,...>] ) => hb_sprintf( <x> )
-#else
-   /* TRY / CATCH / FINALLY / END */
-   #xcommand TRY  => BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
-   #xcommand CATCH [<!oErr!>] => RECOVER [USING <oErr>] <-oErr->
-   #xcommand FINALLY => ALWAYS
-#endif
 #include "fileio.ch"
 #include "common.ch"
 #include "inkey.ch"
@@ -160,25 +150,16 @@
 #define CR_LF    (CHR(13)+CHR(10))
 #define HB_IHASH()   HB_HSETCASEMATCH( {=>}, FALSE )
 
-#ifndef __XHARBOUR__
-
-  #ifdef __PLATFORM__WINDOWS
-     REQUEST HB_GT_WVT_DEFAULT
-     REQUEST HB_GT_WIN
-     REQUEST HB_GT_NUL
-  #else
-     REQUEST HB_GT_TRM_DEFAULT
-     REQUEST HB_GT_NUL
-  #endif
- #define THREAD_GT hb_gtVersion()
-
+#ifdef __PLATFORM__WINDOWS
+   REQUEST HB_GT_WVT_DEFAULT
+   REQUEST HB_GT_WIN
+   REQUEST HB_GT_NUL
 #else
-
-  REQUEST HB_GT_WVT
-  REQUEST HB_GT_WIN
-  REQUEST HB_GT_NUL
-
+   REQUEST HB_GT_TRM_DEFAULT
+   REQUEST HB_GT_NUL
 #endif
+
+#define THREAD_GT hb_gtVersion()
 
 // dynamic call for HRB support
 DYNAMIC HRBMAIN
@@ -2808,7 +2789,7 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
    LOCAL cHRBBody, pHRB, oError
    LOCAL cCurPath
 
-   TRY
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       // Lock HRB to avoid MT race conditions
       IF !HRB_ACTIVATE_CACHE
          cHRBBody := HRB_LoadFromFile( uhttpd_OSFileName( cFileName ) )
@@ -2858,7 +2839,7 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
          // Application in HRB module is responsible to send HTML content
       ENDIF
 
-   CATCH oError
+   RECOVER USING oError
 
       WriteToConsole( "Error!" )
 
@@ -2874,7 +2855,8 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
       uhttpd_Write( "<br>Args: "        + hb_cStr( hb_ValToExp( oError:args ) ) )
       uhttpd_Write( "<br>ProcName: "    + hb_cStr( procname( 0 ) ) )
       uhttpd_Write( "<br>ProcLine: "    + hb_cStr( procline( 0 ) ) )
-   END
+
+   END SEQUENCE
 
    RETURN MakeResponse()
 

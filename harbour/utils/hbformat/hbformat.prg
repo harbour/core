@@ -984,12 +984,6 @@ STATIC FUNCTION rf_ADEL( arr, nItem )
 
    RETURN Nil
 
-#ifdef __XHARBOUR__
-
-#xtranslate HB_AT( < x, ... > ) => At( < x > )
-
-#endif
-
 STATIC FUNCTION FindNotQuoted( subs, stroka, nPos2 )
 
    LOCAL nPos1, i, c, nState := 0, cSymb

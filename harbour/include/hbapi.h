@@ -502,7 +502,7 @@ extern void hb_xclean( void );
 
 #ifdef _HB_API_INTERNAL_
 extern void       hb_xRefInc( void * pMem );    /* increment reference counter */
-extern BOOL       hb_xRefDec( void * pMem );    /* decrement reference counter, return TRUE when 0 reached */
+extern BOOL       hb_xRefDec( void * pMem );    /* decrement reference counter, return HB_TRUE when 0 reached */
 extern void       hb_xRefFree( void * pMem );   /* decrement reference counter and free the block when 0 reached */
 extern HB_COUNTER hb_xRefCount( void * pMem );  /* return number of references */
 extern void *     hb_xRefResize( void * pMem, ULONG ulSave, ULONG ulSize, ULONG * pulAllocated );   /* reallocates memory, create copy if reference counter greater then 1 */
@@ -605,7 +605,7 @@ extern void       hb_gcReleaseAll( void ); /* release all memory blocks uncondit
 
 extern void       hb_gcRefCheck( void * pBlock ); /* Check if block still cannot be access after destructor execution */
 extern void       hb_gcRefInc( void * pAlloc );  /* increment reference counter */
-extern BOOL       hb_gcRefDec( void * pAlloc );  /* decrement reference counter, return TRUE when 0 reached */
+extern BOOL       hb_gcRefDec( void * pAlloc );  /* decrement reference counter, return HB_TRUE when 0 reached */
 extern void       hb_gcRefFree( void * pAlloc ); /* decrement reference counter and free the block when 0 reached */
 extern HB_COUNTER hb_gcRefCount( void * pAlloc );  /* return number of references */
 
@@ -732,7 +732,7 @@ extern HB_EXPORT void   hb_retnlllen( LONGLONG lNumber, int iWidth ); /* returns
 #define hb_retdl( lJulian )                  hb_itemPutDL( hb_stackReturnItem(), lJulian )
 #define hb_rettd( dTimeStamp )               hb_itemPutTD( hb_stackReturnItem(), dTimeStamp )
 #define hb_rettdt( lJulian, lMilliSec )      hb_itemPutTDT( hb_stackReturnItem(), lJulian, lMilliSec )
-#define hb_retl( iLogical )                  hb_itemPutL( hb_stackReturnItem(), (iLogical) ? TRUE : FALSE )
+#define hb_retl( iLogical )                  hb_itemPutL( hb_stackReturnItem(), ( iLogical ) ? HB_TRUE : HB_FALSE )
 #define hb_retnd( dNumber )                  hb_itemPutND( hb_stackReturnItem(), dNumber )
 #define hb_retni( iNumber )                  hb_itemPutNI( hb_stackReturnItem(), iNumber )
 #define hb_retnl( lNumber )                  hb_itemPutNL( hb_stackReturnItem(), lNumber )
@@ -840,8 +840,8 @@ extern HB_EXPORT BOOL         hb_arraySetPtr( PHB_ITEM pArray, ULONG ulIndex, vo
 extern HB_EXPORT BOOL         hb_arraySetPtrGC( PHB_ITEM pArray, ULONG ulIndex, void * pValue );
 extern HB_EXPORT BOOL         hb_arraySetSymbol( PHB_ITEM pArray, ULONG ulIndex, PHB_SYMB pSymbol );
 extern HB_EXPORT BOOL         hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount ); /* fill an array with a given item */
-extern HB_EXPORT ULONG        hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount, BOOL fExact ); /* scan an array for a given item, or until code-block item returns TRUE */
-extern HB_EXPORT ULONG        hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount, BOOL fExact ); /* scan an array for a given item, or until code-block item returns TRUE in reverted order */
+extern HB_EXPORT ULONG        hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount, BOOL fExact ); /* scan an array for a given item, or until code-block item returns HB_TRUE */
+extern HB_EXPORT ULONG        hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount, BOOL fExact ); /* scan an array for a given item, or until code-block item returns HB_TRUE in reverted order */
 extern HB_EXPORT BOOL         hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * pulCount ); /* execute a code-block for every element of an array item */
 extern HB_EXPORT BOOL         hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart, ULONG * pulCount, ULONG * pulTarget ); /* copy items from one array to another */
 extern HB_EXPORT PHB_ITEM     hb_arrayClone( PHB_ITEM pArray ); /* returns a duplicate of an existing array, including all nested items */
@@ -930,10 +930,10 @@ extern HB_EXPORT ULONG     hb_strlentrim( const char * pszText ); /* like strlen
 extern HB_EXPORT ULONG     hb_strnlen( const char * pszText, ULONG ulLen ); /* like strlen() but result is limited to ulLen */
 extern HB_EXPORT char *    hb_xstrcat( char * dest, const char * src, ... ); /* Concatenates multiple strings into a single result */
 extern HB_EXPORT char *    hb_xstrcpy( char * szDest, const char * szSrc, ... ); /* Concatenates multiple strings into a single result */
-extern HB_EXPORT BOOL      hb_compStrToNum( const char * szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns TRUE if results is double, used by compiler */
-extern HB_EXPORT BOOL      hb_valStrnToNum( const char * szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns TRUE if results is double, used by VAL() */
-extern HB_EXPORT BOOL      hb_strToNum( const char * szNum, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns TRUE if results is double */
-extern HB_EXPORT BOOL      hb_strnToNum( const char * szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns TRUE if results is double */
+extern HB_EXPORT BOOL      hb_compStrToNum( const char * szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns HB_TRUE if results is double, used by compiler */
+extern HB_EXPORT BOOL      hb_valStrnToNum( const char * szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns HB_TRUE if results is double, used by VAL() */
+extern HB_EXPORT BOOL      hb_strToNum( const char * szNum, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns HB_TRUE if results is double */
+extern HB_EXPORT BOOL      hb_strnToNum( const char * szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns HB_TRUE if results is double */
 extern HB_EXPORT int       hb_snprintf( char * buffer, size_t bufsize, const char * format, ... ) HB_PRINTF_FORMAT( 3, 4 ); /* snprintf() equivalent */
 extern HB_EXPORT int       hb_vsnprintf( char * buffer, size_t bufsize, const char * format, va_list ap ); /* vsnprintf() equivalent */
 

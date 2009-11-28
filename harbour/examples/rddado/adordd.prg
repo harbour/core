@@ -81,17 +81,7 @@
 #include "dbstruct.ch"
 #include "dbinfo.ch"
 
-#ifndef __XHARBOUR__
-   #include "hbusrrdd.ch"
-   #xcommand TRY              => t_bError := errorBlock( {|oErr| break( oErr ) } ) ;;
-                                 BEGIN SEQUENCE
-   #xcommand CATCH [<!oErr!>] => errorBlock( t_bError ) ;;
-                                 RECOVER [USING <oErr>] <-oErr-> ;;
-                                 errorBlock( t_bError )
-   #command FINALLY           => ALWAYS
-#else
-   #include "usrrdd.ch"
-#endif
+#include "hbusrrdd.ch"
 
 #define WA_RECORDSET   1
 #define WA_BOF         2
@@ -126,20 +116,6 @@ THREAD STATIC t_cServer
 THREAD STATIC t_cUserName
 THREAD STATIC t_cPassword
 THREAD STATIC t_cQuery := ""
-
-#ifndef __XHARBOUR__
-THREAD STATIC t_bError
-#endif
-
-#ifdef __XHARBOUR__
-
-STATIC FUNCTION HB_TokenGet( cText, nPos, cSep )
-
-   LOCAL aTokens := HB_ATokens( cText, cSep )
-
-   RETURN iif( nPos <= Len( aTokens ), aTokens[ nPos ], "" )
-
-#endif
 
 STATIC FUNCTION ADO_INIT( nRDD )
 
@@ -196,16 +172,8 @@ STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
            IF ! hb_FileExists( cDataBase )
               oCatalog:Create( "Driver=Firebird/InterBase(r) driver;Uid=" + cUserName + ";Pwd=" + cPassword + ";DbName=" + cDataBase + ";" )
            ENDIF
-#ifdef __XHARBOUR__
-           __OutDebug( "Driver=Firebird/InterBase(r) driver;Uid=" + cUserName + ";Pwd=" + cPassword + ";DbName=" + cDataBase + ";" )
-#endif
            oConnection:Open( "Driver=Firebird/InterBase(r) driver;Uid=" + cUserName + ";Pwd=" + cPassword + ";DbName=" + cDataBase + ";" )
            oConnection:CursorLocation := adUseClient
-
-#ifdef __XHARBOUR__
-           __OutDebug( oConnection:State != adStateClosed,;
-                       oConnection:State != adStateOpen )
-#endif
 
       CASE Upper( cDbEngine ) == "MYSQL"
            oConnection:Open( "DRIVER={MySQL ODBC 3.51 Driver};" + ;
@@ -216,21 +184,18 @@ STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
 
    ENDCASE
 
-   TRY
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       oConnection:Execute( "DROP TABLE " + cTableName )
-   CATCH
-   END TRY
+   RECOVER
+   END SEQUENCE
 
-   TRY
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       IF Lower( Right( cDataBase, 4 ) ) == ".fdb"
-#ifdef __XHARBOUR__
-         __OutDebug( "CREATE TABLE " + cTableName + " (" + StrTran( StrTran( aWAData[ WA_SQLSTRUCT ], "[", '"' ), "]", '"' ) + ")" )
-#endif
          oConnection:Execute( "CREATE TABLE " + cTableName + " (" + StrTran( StrTran( aWAData[ WA_SQLSTRUCT ], "[", '"' ), "]", '"' ) + ")" )
       ELSE
          oConnection:Execute( "CREATE TABLE [" + cTableName + "] (" + aWAData[ WA_SQLSTRUCT ] + ")" )
       ENDIF
-   CATCH
+   RECOVER
       oError := ErrorNew()
       oError:GenCode     := EG_CREATE
       oError:SubCode     := 1004
@@ -241,9 +206,6 @@ STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
 
       FOR n := 0 To oConnection:Errors:Count - 1
          oError:Description += oConnection:Errors(n):Description
-#ifdef __XHARBOUR__
-         __OutDebug( oConnection:Errors(n):Description )
-#endif
       NEXT
 
       UR_SUPER_ERROR( nWA, oError )
@@ -412,17 +374,17 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
       oRecordSet:Open( aWAData[ WA_QUERY ], aWAData[ WA_CONNECTION ] )
    ENDIF
 
-   TRY
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       aWAData[ WA_CATALOG ] := win_OleCreateObject( "ADOX.Catalog" )
       aWAData[ WA_CATALOG ]:ActiveConnection := aWAData[ WA_CONNECTION ]
-   CATCH
-   END TRY
+   RECOVER
+   END SEQUENCE
 
    IF Empty( aWAData[ WA_CATALOG ] )
-      TRY
+      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          aWAData[ WA_CATALOG ] := aWAData[ WA_CONNECTION ]:OpenSchema( adSchemaIndexes )
-      CATCH
-      END TRY
+      RECOVER
+      END SEQUENCE
    ENDIF
 
    aWAData[ WA_RECORDSET ] := oRecordSet
@@ -459,7 +421,7 @@ STATIC FUNCTION ADO_CLOSE( nWA )
    LOCAL aWAData := USRRDD_AREADATA( nWA )
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-   TRY
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       oRecordSet:Close()
       IF ! Empty( aWAData[ WA_CONNOPEN ] )
         IF aWAData[ WA_CONNECTION ]:State != adStateClosed
@@ -470,8 +432,8 @@ STATIC FUNCTION ADO_CLOSE( nWA )
            ENDIF
         ENDIF
       ENDIF
-   CATCH
-   END
+   RECOVER
+   END SEQUENCE
 
    RETURN UR_SUPER_CLOSE( nWA )
 
@@ -592,7 +554,7 @@ STATIC FUNCTION ADO_SKIPRAW( nWA, nToSkip )
          ADO_GOBOTTOM( nWA )
          ++nToSkip
       ENDIF
-      TRY
+      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          IF aWAData[WA_CONNECTION]:State != adStateClosed
             IF nToSkip < 0 .AND. oRecordSet:AbsolutePosition <= -nToSkip
                oRecordSet:MoveFirst()
@@ -606,9 +568,9 @@ STATIC FUNCTION ADO_SKIPRAW( nWA, nToSkip )
          ELSE
             nResult := HB_FAILURE
          ENDIF
-      CATCH
+      RECOVER
          nResult := HB_FAILURE
-      END
+      END SEQUENCE
    ENDIF
 
 
@@ -627,13 +589,13 @@ STATIC FUNCTION ADO_EOF( nWA, lEof )
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
    LOCAL nResult    := HB_SUCCESS
 
-   TRY
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       IF USRRDD_AREADATA( nWA )[WA_CONNECTION]:State != adStateClosed
          lEof := ( oRecordSet:AbsolutePosition == -3 )
       ENDIF
-   CATCH
+   RECOVER
       nResult := HB_FAILURE
-   END
+   END SEQUENCE
 
    RETURN nResult
 
@@ -641,15 +603,15 @@ STATIC FUNCTION ADO_DELETED( nWA, lDeleted )
 
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-   TRY
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       IF oRecordSet:Status == adRecDeleted
               lDeleted := .T.
            ELSE
               lDeleted := .F.
            ENDIF
-   CATCH
+   RECOVER
       lDeleted := .F.
-   END TRY
+   END SEQUENCE
 
    RETURN HB_SUCCESS
 
@@ -668,7 +630,7 @@ STATIC FUNCTION ADO_RECNO( nWA, nRecNo )
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
    LOCAL nResult    := HB_SUCCESS
 
-   TRY
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       IF USRRDD_AREADATA( nWA )[WA_CONNECTION]:State != adStateClosed
          nRecno := iif( oRecordSet:AbsolutePosition == -3, oRecordSet:RecordCount() + 1, oRecordSet:AbsolutePosition )
 
@@ -676,10 +638,10 @@ STATIC FUNCTION ADO_RECNO( nWA, nRecNo )
          nRecno  := 0
          nResult := HB_FAILURE
       ENDIF
-   CATCH
+   RECOVER
       nRecNo  := 0
       nResult := HB_FAILURE
-   END
+   END SEQUENCE
 
    RETURN nResult
 
@@ -701,10 +663,10 @@ STATIC FUNCTION ADO_PUTVALUE( nWA, nField, xValue )
 
    IF ! aWAData[ WA_EOF ] .AND. !( oRecordSet:Fields( nField - 1 ):Value == xValue )
       oRecordSet:Fields( nField - 1 ):Value := xValue
-      TRY
+      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          oRecordSet:Update()
-      CATCH
-      END
+      RECOVER
+      END SEQUENCE
    ENDIF
 
    RETURN HB_SUCCESS
@@ -717,10 +679,10 @@ STATIC FUNCTION ADO_APPEND( nWA, lUnLockAll )
 
    oRecordSet:AddNew()
 
-   TRY
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       oRecordSet:Update()
-   CATCH
-   END
+   RECOVER
+   END SEQUENCE
 
    RETURN HB_SUCCESS
 
@@ -728,10 +690,10 @@ STATIC FUNCTION ADO_FLUSH( nWA )
 
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-   TRY
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       oRecordSet:Update()
-   CATCH
-   END
+   RECOVER
+   END SEQUENCE
 
    RETURN HB_SUCCESS
 
@@ -839,12 +801,12 @@ STATIC FUNCTION ADO_FIELDNAME( nWA, nField, cFieldName )
    LOCAL nResult := HB_SUCCESS
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-   TRY
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       cFieldName := oRecordSet:Fields( nField - 1 ):Name
-   CATCH
+   RECOVER
       cFieldName := ''
       nResult    := HB_FAILURE
-   END TRY
+   END SEQUENCE
 
    RETURN nResult
 
@@ -1006,10 +968,10 @@ STATIC FUNCTION ADO_CLEARFILTER( nWA )
 
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-   TRY
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       oRecordSet:Filter := ""
-   CATCH
-   END
+   RECOVER
+   END SEQUENCE
 
    RETURN HB_SUCCESS
 
@@ -1019,11 +981,11 @@ STATIC FUNCTION ADO_ZAP( nWA )
    LOCAL oRecordSet := aWAData[ WA_RECORDSET ]
 
    IF aWAData[ WA_CONNECTION ] != NIL .and. aWAData[ WA_TABLENAME ] != nil
-      TRY
+      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          aWAData[ WA_CONNECTION ]:Execute( "TRUNCATE TABLE " + aWAData[ WA_TABLENAME ] )
-      CATCH
+      RECOVER
          aWAData[ WA_CONNECTION ]:Execute( "DELETE * FROM " + aWAData[ WA_TABLENAME ] )
-      END
+      END SEQUENCE
       oRecordSet:Requery()
    ENDIF
 
@@ -1055,10 +1017,10 @@ STATIC FUNCTION ADO_CLEARREL( nWA )
    LOCAL aWAData := USRRDD_AREADATA( nWA )
    LOCAL nKeys := 0, cKeyName
 
-   TRY
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       nKeys := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Count
-   CATCH
-   END
+   RECOVER
+   END SEQUENCE
 
    IF nKeys > 0
       cKeyName := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys( nKeys - 1 ):Name
@@ -1072,13 +1034,13 @@ STATIC FUNCTION ADO_CLEARREL( nWA )
 STATIC FUNCTION ADO_RELAREA( nWA, nRelNo, nRelArea )
 
    LOCAL aWAData := USRRDD_AREADATA( nWA )
-   TRY
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       IF nRelNo <= aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Count()
          nRelArea := Select( aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys( nRelNo - 1 ):RelatedTable )
       ENDIF
-   CATCH
+   RECOVER
       nRelArea := 0
-   END TRY
+   END SEQUENCE
 
    RETURN HB_SUCCESS
 
@@ -1086,13 +1048,13 @@ STATIC FUNCTION ADO_RELTEXT( nWA, nRelNo, cExpr )
 
    LOCAL aWAData := USRRDD_AREADATA( nWA )
 
-   TRY
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       IF nRelNo <= aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Count()
          cExpr := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys( nRelNo - 1 ):Columns( 0 ):RelatedColumn
       ENDIF
-   CATCH
+   RECOVER
       cExpr := ''
-   END TRY
+   END SEQUENCE
 
    RETURN HB_SUCCESS
 
@@ -1103,12 +1065,12 @@ STATIC FUNCTION ADO_SETREL( nWA, aRelInfo )
    LOCAL cChild  := Alias( aRelInfo[ UR_RI_CHILD ] )
    LOCAL cKeyName := cParent + "_" + cChild
 
-   TRY
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Append( cKeyName, adKeyForeign,;
                                     aRelInfo[ UR_RI_CEXPR ], cChild, aRelInfo[ UR_RI_CEXPR ] )
-   CATCH
+   RECOVER
       // raise error for can't create relation
-   END
+   END SEQUENCE
 
    RETURN HB_SUCCESS
 
@@ -1164,10 +1126,10 @@ STATIC FUNCTION ADO_ORDLSTADD( nWA, aOrderInfo )
 
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-   TRY
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       oRecordSet:Index := aOrderInfo[ UR_ORI_BAG ]
-   CATCH
-   END
+   RECOVER
+   END SEQUENCE
 
    RETURN HB_SUCCESS
 
@@ -1175,10 +1137,10 @@ STATIC FUNCTION ADO_ORDLSTCLEAR( nWA )
 
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-   TRY
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       oRecordSet:Index := ""
-   CATCH
-   END
+   RECOVER
+   END SEQUENCE
 
    RETURN HB_SUCCESS
 
@@ -1197,7 +1159,7 @@ STATIC FUNCTION ADO_ORDCREATE( nWA, aOrderCreateInfo )
       next
    endif
 
-   TRY
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       IF aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes == nil .OR. ! lFound
          oIndex := win_OleCreateObject( "ADOX.Index" )
          oIndex:Name := iif( ! Empty( aOrderCreateInfo[ UR_ORCR_TAGNAME ] ), aOrderCreateInfo[ UR_ORCR_TAGNAME ], aOrderCreateInfo[ UR_ORCR_CKEY ] )
@@ -1206,7 +1168,7 @@ STATIC FUNCTION ADO_ORDCREATE( nWA, aOrderCreateInfo )
          oIndex:Columns:Append( aOrderCreateInfo[ UR_ORCR_CKEY ] )
          aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Append( oIndex )
       ENDIF
-   CATCH
+   RECOVER
       oError := ErrorNew()
       oError:GenCode     := EG_CREATE
       oError:SubCode     := 1004
@@ -1215,7 +1177,7 @@ STATIC FUNCTION ADO_ORDCREATE( nWA, aOrderCreateInfo )
       oError:FileName    := aOrderCreateInfo[ UR_ORCR_BAGNAME ]
       oError:CanDefault  := .T.
       UR_SUPER_ERROR( nWA, oError )
-   END
+   END SEQUENCE
 
    RETURN HB_SUCCESS
 
@@ -1261,17 +1223,17 @@ STATIC FUNCTION ADO_EXISTS( nRdd, cTable, cIndex, ulConnect )
    HB_SYMBOL_UNUSED( ulConnect )
 
    IF ! Empty( cTable ) .AND. ! Empty( aRData[ WA_CATALOG ] )
-      TRY
+      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          //n := aRData[ WA_CATALOG ]:Tables( cTable )
          lRet := HB_SUCCESS
-      CATCH
-      END TRY
+      RECOVER
+      END SEQUENCE
       IF ! Empty( cIndex )
-         TRY
+         BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
             //n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes( cIndex )
             lRet := HB_SUCCESS
-         CATCH
-         END TRY
+         RECOVER
+         END SEQUENCE
       ENDIF
    ENDIF
 
@@ -1285,17 +1247,17 @@ STATIC FUNCTION ADO_DROP( nRdd, cTable, cIndex, ulConnect )
    HB_SYMBOL_UNUSED( ulConnect )
 
    IF ! Empty( cTable ) .AND. ! Empty( aRData[ WA_CATALOG ] )
-      TRY
+      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          //n := aRData[ WA_CATALOG ]:Tables:Delete( cTable )
          lRet := HB_SUCCESS
-      CATCH
-      END TRY
+      RECOVER
+      END SEQUENCE
       IF ! Empty( cIndex )
-         TRY
+         BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
             //n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes:Delete( cIndex )
             lRet := HB_SUCCESS
-         CATCH
-         END TRY
+         RECOVER
+         END SEQUENCE
       ENDIF
    ENDIF
 

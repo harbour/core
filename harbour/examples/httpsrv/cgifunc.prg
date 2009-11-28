@@ -50,10 +50,6 @@
  *
  */
 
-#ifdef __XHARBOUR__
-   #include "hbcompat.ch"
-#else
-//#include "xhb.ch"
 #include "common.ch"
 #include "error.ch"
 #include "fileio.ch"
@@ -353,7 +349,6 @@ FUNCTION uhttpd_URLEncode( cString, lComplete )
       ENDCASE
    NEXT
    RETURN cRet
-#endif
 
 /************************************************************
 * Decoding URL
@@ -862,4 +857,3 @@ FUNCTION uhttpd_HGetValue( hHash, cKey )
    ENDIF
    //RETURN IIF( cKey IN hHash:Keys, hHash[ cKey ], NIL )
    RETURN xVal
-
