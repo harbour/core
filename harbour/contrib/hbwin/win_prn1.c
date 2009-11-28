@@ -539,13 +539,13 @@ HB_FUNC( WIN_LOADBITMAPFILE )
 
    if( fhnd != FS_ERROR )
    {
-      ULONG ulSize = hb_fsSeek( fhnd, 0, SEEK_END );
+      ULONG ulSize = hb_fsSeek( fhnd, 0, FS_END );
 
       if( ulSize > 2 && ulSize <= ( 32 * 1024 * 1024 ) )
       {
          BITMAPFILEHEADER * pbmfh = ( BITMAPFILEHEADER * ) hb_xgrab( ulSize );
 
-         hb_fsSeek( fhnd, 0, SEEK_SET );
+         hb_fsSeek( fhnd, 0, FS_SET );
 
          if( hb_fsReadLarge( fhnd, pbmfh, ulSize ) == ulSize && pbmfh->bfType == *( WORD * ) "BM" )
             hb_retclen( ( char * ) pbmfh, ( HB_SIZE ) ulSize );

@@ -441,7 +441,7 @@ static void ioBufferAlloc( struct hb_BTree * pBTree, ULONG ulBuffers )
 
 static void ioBufferWrite( struct hb_BTree * pBTree, ioBuffer_T *thisptr )
 {
-  hb_fsSeek( pBTree->hFile, thisptr->ulPage, SEEK_SET );
+  hb_fsSeek( pBTree->hFile, thisptr->ulPage, FS_SET );
   if ( hb_fsWrite( pBTree->hFile, thisptr->Buffer, pBTree->usPageSize ) != pBTree->usPageSize )
   {
     hb_RaiseError( HB_BTree_WriteError_EC, "write error", "ioBufferWrite*", 0 );
@@ -459,7 +459,7 @@ static void ioBufferRead( struct hb_BTree * pBTree, ULONG ulNode )
     thisptr->IsDirty = FALSE;
   }
   thisptr->ulPage = ulNode;
-  hb_fsSeek( pBTree->hFile, thisptr->ulPage, SEEK_SET );
+  hb_fsSeek( pBTree->hFile, thisptr->ulPage, FS_SET );
   hb_fsRead( pBTree->hFile, thisptr->Buffer, pBTree->usPageSize );
 }
 
@@ -705,7 +705,7 @@ static void HeaderWrite( struct hb_BTree * pBTree )
 
 /* TODO: store this to a temp buffer and write the buffer */
 /* TODO: write this info in a non-endian method */
-  hb_fsSeek( pBTree->hFile, 0, SEEK_SET );
+  hb_fsSeek( pBTree->hFile, 0, FS_SET );
 
   if ( hb_fsWrite( pBTree->hFile, HEADER_ID, sizeof( HEADER_ID ) ) +
        hb_fsWrite( pBTree->hFile, ( const BYTE * )&pBTree->ulFreePage, sizeof( pBTree->ulFreePage ) ) + /* 4 bytes */
@@ -750,7 +750,7 @@ static ULONG Grow( struct hb_BTree * pBTree )
     {
       BYTE *buffer = pBTree->ioBuffer->Buffer;
 
-      pBTree->ioBuffer->ulPage = hb_fsSeek( pBTree->hFile, 0, SEEK_END );
+      pBTree->ioBuffer->ulPage = hb_fsSeek( pBTree->hFile, 0, FS_END );
       hb_xmemset( buffer, '\0', pBTree->usPageSize );
       if ( pBTree->usPageSize != hb_fsWrite( pBTree->hFile, buffer, pBTree->usPageSize ) )
       {
@@ -759,7 +759,7 @@ static ULONG Grow( struct hb_BTree * pBTree )
     }
     else
     {
-      pBTree->ioBuffer->ulPage = hb_fsSeek( pBTree->hFile, pBTree->ulFreePage, SEEK_SET );
+      pBTree->ioBuffer->ulPage = hb_fsSeek( pBTree->hFile, pBTree->ulFreePage, FS_SET );
       hb_fsRead( pBTree->hFile, ( BYTE * )&pBTree->ulFreePage, sizeof( pBTree->ulFreePage ) );
     }
     pBTree->ioBuffer->IsDirty = TRUE;
@@ -790,7 +790,7 @@ static void Prune( struct hb_BTree * pBTree, ULONG ulNode )
   }
   else
   {
-    hb_fsSeek( pBTree->hFile, ulNode, SEEK_SET );
+    hb_fsSeek( pBTree->hFile, ulNode, FS_SET );
     if ( hb_fsWrite( pBTree->hFile, ( const BYTE * )&pBTree->ulFreePage, sizeof( pBTree->ulFreePage ) ) != sizeof( pBTree->ulFreePage ) )
     {
       hb_RaiseError( HB_BTree_WriteError_EC, "write error", "Prune*", 0 );

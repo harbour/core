@@ -134,7 +134,7 @@ HB_FOFFSET hb_fsFSize( const char * pszFileName, BOOL bUseDirEntry )
       {
          HB_FOFFSET ulPos;
 
-         ulPos = hb_fsSeekLarge( hFileHandle, 0, SEEK_END );
+         ulPos = hb_fsSeekLarge( hFileHandle, 0, FS_END );
          hb_fsClose( hFileHandle );
          return ulPos;
       }

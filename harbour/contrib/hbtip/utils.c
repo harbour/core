@@ -478,13 +478,13 @@ static const char * s_findFileMimeType( HB_FHANDLE fileIn )
    int iLen;
    ULONG ulPos;
 
-   ulPos = hb_fsSeek( fileIn, 0, SEEK_CUR );
-   hb_fsSeek( fileIn, 0, SEEK_SET );
+   ulPos = hb_fsSeek( fileIn, 0, FS_RELATIVE );
+   hb_fsSeek( fileIn, 0, FS_SET );
    iLen = hb_fsRead( fileIn, buf, sizeof( buf ) );
 
    if( iLen > 0 )
    {
-      hb_fsSeek( fileIn, ulPos, SEEK_SET );
+      hb_fsSeek( fileIn, ulPos, FS_SET );
       return s_findStringMimeType( buf, iLen );
    }
 

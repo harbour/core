@@ -3195,11 +3195,11 @@ BOOL hb_fsEof( HB_FHANDLE hFileHandle )
    HB_FOFFSET endPos;
    HB_FOFFSET newPos;
 
-   curPos = hb_fsSeekLarge( hFileHandle, 0L, SEEK_CUR );
+   curPos = hb_fsSeekLarge( hFileHandle, 0L, FS_RELATIVE );
    if( curPos != -1 )
    {
-      endPos = hb_fsSeekLarge( hFileHandle, 0L, SEEK_END );
-      newPos = hb_fsSeekLarge( hFileHandle, curPos, SEEK_SET );
+      endPos = hb_fsSeekLarge( hFileHandle, 0L, FS_END );
+      newPos = hb_fsSeekLarge( hFileHandle, curPos, FS_SET );
       fResult = ( endPos != -1 && newPos == curPos );
    }
    else
