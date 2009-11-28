@@ -716,6 +716,14 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
          hb_itemPutNInt( pItem, *pVariant->n1.n2.n3.puintVal );
          break;
 
+      case VT_ERROR:
+         hb_itemPutNInt( pItem, pVariant->n1.n2.n3.scode );
+         break;
+
+      case VT_ERROR | VT_BYREF:
+         hb_itemPutNInt( pItem, *pVariant->n1.n2.n3.pscode );
+         break;
+
       case VT_R4:
          hb_itemPutND( pItem, ( double ) pVariant->n1.n2.n3.fltVal );
          break;
@@ -888,6 +896,10 @@ void hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem )
 
       case VT_UINT | VT_BYREF:
          *pVariant->n1.n2.n3.puintVal = ( unsigned int ) hb_itemGetNI( pItem );
+         break;
+
+      case VT_ERROR | VT_BYREF:
+         *pVariant->n1.n2.n3.pscode = ( SCODE ) hb_itemGetNL( pItem );
          break;
 
       case VT_R4 | VT_BYREF:
