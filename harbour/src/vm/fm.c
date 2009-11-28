@@ -227,7 +227,7 @@
 #endif
 
 #if defined( HB_MT_VM ) && \
-    ( defined( HB_FM_STATISTICS ) || \ defined( HB_FM_DLMT_ALLOC ) || \
+    ( defined( HB_FM_STATISTICS ) || defined( HB_FM_DLMT_ALLOC ) || \
       !defined( HB_ATOM_INC ) || !defined( HB_ATOM_DEC ) )
 
    static HB_CRITICAL_NEW( s_fmMtx );

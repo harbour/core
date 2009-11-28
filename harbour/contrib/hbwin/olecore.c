@@ -520,7 +520,7 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray, int i
          do
          {
             plIndex[ iDim ] = lFrom;
-            if( SUCCEEDED( SafeArrayGetElement( pSafeArray, plIndex, &vItem ) ) )
+            if( SafeArrayGetElement( pSafeArray, plIndex, &vItem ) == S_OK )
             {
                hb_oleVariantToItem( hb_arrayGetItemPtr( pItem, ++ul ), &vItem );
                VariantClear( &vItem );
@@ -543,6 +543,41 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray, int i
 }
 
 
+static void hb_oleDispatchToItem( PHB_ITEM pItem, IDispatch* pdispVal )
+{
+   if( pdispVal )
+   {
+      if( hb_vmRequestReenter() )
+      {
+         PHB_ITEM pObject, pPtrGC;
+
+         hb_vmPushDynSym( s_pDyns_hb_oleauto );
+         hb_vmPushNil();
+         hb_vmDo( 0 );
+
+         pObject = hb_itemNew( hb_stackReturnItem() );
+
+         pPtrGC = hb_oleItemPut( NULL, pdispVal );
+         /* Item is one more copy of the object */
+         HB_VTBL( pdispVal )->AddRef( HB_THIS( pdispVal ) );
+
+         hb_vmPushDynSym( s_pDyns_hObjAssign );
+         hb_vmPush( pObject );
+         hb_vmPush( pPtrGC );
+         hb_vmSend( 1 );
+         hb_itemRelease( pPtrGC );
+         hb_vmRequestRestore();
+
+         /* We should store object to pItem after hb_vmRequestRestore(),
+          * because pItem actualy can be stack's return item!
+          */
+         hb_itemMove( pItem, pObject );
+         hb_itemRelease( pObject );
+      }
+   }
+}
+
+
 void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
 {
    if( pVariant->n1.n2.vt == ( VT_VARIANT | VT_BYREF ) )
@@ -550,6 +585,24 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
 
    switch( pVariant->n1.n2.vt )
    {
+      case VT_UNKNOWN:
+      case VT_UNKNOWN | VT_BYREF:
+      {
+         IDispatch* pdispVal = NULL;
+         IUnknown* punkVal = pVariant->n1.n2.vt == VT_UNKNOWN ?
+                             pVariant->n1.n2.n3.punkVal :
+                             *pVariant->n1.n2.n3.ppunkVal;
+         hb_itemClear( pItem );
+         if( punkVal && HB_VTBL( punkVal )->QueryInterface(
+                              HB_THIS_( punkVal ) HB_ID_REF( IID_IDispatch ),
+                              ( void** ) ( void * ) &pdispVal ) == S_OK )
+         {
+            hb_oleDispatchToItem( pItem, pdispVal );
+            HB_VTBL( punkVal )->Release( HB_THIS( punkVal ) );
+         }
+         break;
+      }
+
       case VT_DISPATCH:
       case VT_DISPATCH | VT_BYREF:
       {
@@ -557,36 +610,7 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
                                pVariant->n1.n2.n3.pdispVal :
                                *pVariant->n1.n2.n3.ppdispVal;
          hb_itemClear( pItem );
-         if( pdispVal )
-         {
-            PHB_ITEM    pObject, pPtrGC;
-
-            if( hb_vmRequestReenter() )
-            {
-               hb_vmPushDynSym( s_pDyns_hb_oleauto );
-               hb_vmPushNil();
-               hb_vmDo( 0 );
-
-               pObject = hb_itemNew( hb_stackReturnItem() );
-
-               pPtrGC = hb_oleItemPut( NULL, pdispVal );
-               /* Item is one more copy of the object */
-               HB_VTBL( pdispVal )->AddRef( HB_THIS( pdispVal ) );
-
-               hb_vmPushDynSym( s_pDyns_hObjAssign );
-               hb_vmPush( pObject );
-               hb_vmPush( pPtrGC );
-               hb_vmSend( 1 );
-               hb_itemRelease( pPtrGC );
-               hb_vmRequestRestore();
-
-               /* We should store object to pItem after hb_vmRequestRestore(),
-                * because pItem actualy can be stack's return item!
-                */
-               hb_itemMove( pItem, pObject );
-               hb_itemRelease( pObject );
-            }
-         }
+         hb_oleDispatchToItem( pItem, pdispVal );
          break;
       }
 
@@ -827,10 +851,13 @@ void hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem )
          if( pDisp )
          {
             IDispatch* pdispVal = *pVariant->n1.n2.n3.ppdispVal;
-            HB_VTBL( pDisp )->AddRef( HB_THIS( pDisp ) );
-            *pVariant->n1.n2.n3.ppdispVal = pDisp;
-            if( pdispVal )
-               HB_VTBL( pdispVal )->Release( HB_THIS( pdispVal ) );
+            if( pdispVal != pDisp )
+            {
+               HB_VTBL( pDisp )->AddRef( HB_THIS( pDisp ) );
+               *pVariant->n1.n2.n3.ppdispVal = pDisp;
+               if( pdispVal )
+                  HB_VTBL( pdispVal )->Release( HB_THIS( pdispVal ) );
+            }
          }
          break;
       }

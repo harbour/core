@@ -149,14 +149,16 @@ PHB_ITEM hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd )
       if( lOleError == S_OK )
       {
          lOleError = HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( IID_IDispatch ), ( void** ) ( void * ) &pDisp );
+
+         if( lOleError == S_OK )
+            pItem = hb_oleItemPut( pItem, pDisp );
+
          HB_VTBL( pUnk )->Release( HB_THIS( pUnk ) );
       }
 
       hb_oleSetError( lOleError );
 
-      if( lOleError == S_OK )
-         pItem = hb_oleItemPut( pItem, pDisp );
-      else
+      if( lOleError != S_OK )
          hb_errRT_OLE( EG_ARG, 3012, ( HB_ERRCODE ) lOleError, NULL, HB_ERR_FUNCNAME );
    }
 
