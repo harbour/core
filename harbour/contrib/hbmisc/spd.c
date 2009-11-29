@@ -152,31 +152,37 @@ static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int
 *    NUMERIC with FIXED DECIMALS = n | n.d   STRING = String's ANSI C
 *    DATE = HB_SET_DATEFORMAT      DATETIME = HB_SET_DATEFORMAT hh:mm:ss
 *     New Internal Modifier {}. Thanks Mindaugas.
-*     Date and Time Format separate by first space {DD/MM/YYYY hh:mm:ss.ccc pm}
-*     {DD/MM/YYYY} = Only Date | { hh:mm:ss.ccc pm} = Only Time
-*        ? Sql_sprintf( "%s", Date() )                // 16/06/08
-*        ? Sql_sprintf( "%s", DateTime() )            // 16/06/08 04:11:21
-*        ? Sql_sprintf( "%{YYYYMMDD}s", DateTime() )  // 20080616
-*        ? Sql_sprintf( "%{ hh:mm pm}s", DateTime() ) // 04:11 AM
+*     Date and Time Format separate by first space {DD/MM/YYYY hh:mm:ss.fff pp}
+*     {DD/MM/YYYY} = Only Date | { hh:mm:ss.fff pp} = Only Time
+*        ? Sql_sprintf( "%s", Date() )                   // 16/06/08
+*        ? Sql_sprintf( "%s", HB_DateTime() )            // 16/06/08 04:11:21
+*        ? Sql_sprintf( "%{YYYYMMDD}s", HB_DateTime() )  // 20080616
+*        ? Sql_sprintf( "%{ hh:mm pp}s", HB_DateTime() ) // 04:11 AM
 *    LOGICAL = TRUE | FALSE        %d converter for LOGICAL = 1 | 0
 *     Accepts Internal Modifier TRUE and FALSE Format separate by first comma
 *     {T .T.,F .F.} = TRUE & FALSE | {ON} = Only TRUE | {,OFF} = Only FALSE
 *        ? Sql_sprintf( "%{VERDADERO,FALSO}s", .F. ) // FALSO
 *        ? Sql_sprintf( "%{ONLY IF TRUE}s", .T. ) // ONLY IF TRUE
 *
-* New t converter for format ANSI SQL types.
-*    NUMERIC with FIXED DECIMALS = n | n.d   STRING = 'String''s ANSI SQL'
+* New t,T converter for format ANSI SQL types.
+*    NUMERIC with FIXED DECIMALS = n | n.d   STRING = 'String''s ANSI\\SQL'
+*     Print DEFAULT if 0 length STRING for T converter
 *    DATE = 'YYYY-MM-DD' DATETIME = 'YYYY-MM-DD HH:MM:SS'
-*     Accepts Internal Modifier like s converter {DD/MM/YYYY hh:mm:ss.ccc pm}
+*     Accepts Internal Modifier like s converter {DD/MM/YYYY hh:mm:ss.fff pp}
+*     Print DEFAULT if the DATE, DATETIME is EMPTY for T converter or print
+*           DK_EMPTYDATE, DK_EMPTYDATETIME for t converter
 *    LOGICAL = TRUE | FALSE        Accepts Internal Modifier like s {ON,OFF}
 *
-* Print NULL if the parameter is NIL or HB_IT_NULL
+* Print DEFAULT if the parameter is NIL for T converter.
+* Print NULL if the parameter is HB_IT_NULL or NIL for the rest of converters.
 * Processing %% and n converter Position.
 *******************************************************************************/
 
 #define DK_INCRES 1024
 #define DK_INCBUF 512
 #define DK_BLKBUF HB_MAX_DOUBLE_LENGTH   /* Expense of DK_INCBUF */
+#define DK_EMPTYDATE "'0001-01-01 BC'"
+#define DK_EMPTYDATETIME "'0001-01-01 00:00:00 BC'"
 
 HB_FUNC( SQL_SPRINTF )
 {
@@ -200,7 +206,7 @@ HB_FUNC( SQL_SPRINTF )
       const char *c;
       int p, arg, iCOut, IsType, IsIndW, IsIndP, iIndWidth, iIndPrec, iErrorPar = 0;
       ULONG s, f, i, ulWidth, ulParPos = 0, ulResPos = 0, ulMaxBuf = DK_INCBUF, ulMaxRes = DK_INCRES;
-      static char cToken[] = "stcdiouxXaAeEfgGpnSC";
+      static char cToken[] = "stTcdiouxXaAeEfgGpnSC";
 
       cIntMod = NULL;
       cRes = (char *)hb_xgrab( ulMaxRes );
@@ -268,9 +274,9 @@ HB_FUNC( SQL_SPRINTF )
          }while( f < 3 && *c ); cParFrm[f = i] = '\0';
          if( iErrorPar ) break;
 
-         if( iCOut == 't' ){
+         if( iCOut == 't' || iCOut == 'T' ){
             if( cParFrm[f - 2] == '%' ){
-               IsType = 1; iCOut = cParFrm[f - 1] = 's';
+               IsType = (iCOut == 'T' ? 2 : 1); iCOut = cParFrm[f - 1] = 's';
             }else{
                iErrorPar = 1; break;
             }
@@ -347,19 +353,27 @@ HB_FUNC( SQL_SPRINTF )
                iCOut = cParFrm[f + 1] = 's'; /* Change format with %s */
                memcpy( cParFrm + f + 2, cParFrm + ulWidth, i - ulWidth + 1 );
                i -= ulWidth - f - 2;   /* i == strlen(cParFrm) */
-               if( (f = i + 5) > ulMaxBuf ){ /* size of "NULL" == 5 */
+               if( (f = i + 8) > ulMaxBuf ){ /* size of "DEFAULT" == 8 */
                   ulMaxBuf += f + DK_INCBUF;
                   cBuffer = (char *)hb_xrealloc( cBuffer, ulMaxBuf );
                }
                hb_itemCopy( pItmCpy = hb_itemNew( NULL ), pItmPar );
-               hb_itemPutCL( pItmCpy, "NULL", 4 );
+#           ifdef HB_IT_NULL
+               if( IsType == 2 && !HB_IS_NULL( pItmPar ) ) hb_itemPutCL( pItmCpy, "DEFAULT", 7 );
+#           else  /* Print DEFAULT if NIL for T converter if not NULL, print NULL for the rest of converters */
+               if( IsType == 2 ) hb_itemPutCL( pItmCpy, "DEFAULT", 7 );
+#           endif
+               else hb_itemPutCL( pItmCpy, "NULL", 4 );
                s = SCItm( cBuffer, ulMaxBuf, cParFrm, iCOut, IsIndW, iIndWidth, IsIndP, iIndPrec, pItmCpy );
                hb_itemRelease( pItmCpy );
 
             }else if( HB_IS_STRING( pItmPar ) && (iCOut == 's' || iCOut == 'S') ){
                if( IsType ){
                   hb_itemCopy( pItmCpy = hb_itemNew( NULL ), pItmPar ); pItmPar = pItmCpy;
-                  STAItm( pItmPar );
+                  if( IsType == 2 && hb_itemGetCLen( pItmPar ) == 0 )   /* 0 length string print DEFAULT for T converter */
+                     hb_itemPutCL( pItmPar, "DEFAULT", 7 );
+                  else
+                     STAItm( pItmPar );
                }
                f = hb_itemGetCLen( pItmPar );
                if( (f = i + HB_MAX(ulWidth, f)) > ulMaxBuf ){
@@ -369,38 +383,45 @@ HB_FUNC( SQL_SPRINTF )
                s = SCItm( cBuffer, ulMaxBuf, cParFrm, iCOut, IsIndW, iIndWidth, IsIndP, iIndPrec, pItmPar );
                if( IsType ) hb_itemRelease( pItmPar );
 
-            }else if( HB_IS_DATE( pItmPar ) && iCOut == 's' ){
-               char cDTBuf[ 19 ], cDTFrm[ 28 ]; /* 26 + 2 if %t and change format time */
+            }else if( HB_IS_DATETIME( pItmPar ) && iCOut == 's' ){
+               long lDate, lTime;
+               char cDTBuf[ 9 ], cDTFrm[ 27 ];
 
                if( s ){ /* Internal Modifier */
                   for( f = 0; cIntMod[f] && cIntMod[f] != ' '; f++ ) {};
                   if( f != s ) cIntMod[f++] = '\0';   /* Date & Time */
                }
 
-#if 0
-               if( HB_IS_DATETIME( pItmPar ) ){
-                  hb_datetimeFormat( hb_itemGetDTS( pItmPar, cDTBuf ), cDTFrm,
+               if( HB_IS_TIMESTAMP( pItmPar ) ){
+                  hb_itemGetTDT( pItmPar, &lDate, &lTime );
+                  hb_timeStampFormat(  cDTFrm,
                                        (s ? cIntMod : (IsType ? "YYYY-MM-DD" : hb_setGetDateFormat())),
-                                       (s ? cIntMod + f : "HH:MM:SS") );
+                                       (s ? cIntMod + f : (IsType ? "HH:MM:SS" : hb_setGetTimeFormat())),
+                                       lDate, lTime );
                   if( s ){
                      if( !cIntMod[0] ){
-                        memcpy( cDTFrm, cDTFrm + 1, 27 );   /* LTrim 1 space if only Time */
+                        memcpy( cDTFrm, cDTFrm + 1, 26 );   /* LTrim 1 space if only Time */
                      }else if( cDTFrm[s] == ' ' ){
                         cDTFrm[s] = '\0'; /* RTrim 1 space if only Date */
                      }
                   }
-               } else
-#endif
+               }else
                   hb_dateFormat( hb_itemGetDS( pItmPar, cDTBuf ), cDTFrm,
                                     (s ? cIntMod : (IsType ? "YYYY-MM-DD" : hb_setGetDateFormat())) );
 
-               if( (f = i + HB_MAX(ulWidth, 28)) > ulMaxBuf ){
+               if( (f = i + HB_MAX(ulWidth, 27)) > ulMaxBuf ){
                   ulMaxBuf += f + DK_INCBUF;
                   cBuffer = (char *)hb_xrealloc( cBuffer, ulMaxBuf );
                }
                hb_itemCopy( pItmCpy = hb_itemNew( NULL ), pItmPar );
                hb_itemPutC( pItmCpy, cDTFrm );
-               if( IsType ) STAItm( pItmCpy );
+               if( IsType ){
+                  /* Empty DATE, DATETIME print DEFAULT for T converter or DK_EMPTYDATE, DK_EMPTYDATETIME for t converter */
+                  if( *cDTFrm == ' ' ) hb_itemPutC( pItmCpy, (HB_IS_TIMESTAMP( pItmPar ) ?
+                                                               (IsType == 2 ? "DEFAULT" : DK_EMPTYDATETIME) :
+                                                               (IsType == 2 ? "DEFAULT" : DK_EMPTYDATE)) );
+                  else STAItm( pItmCpy );
+               }
                s = SCItm( cBuffer, ulMaxBuf, cParFrm, iCOut, IsIndW, iIndWidth, IsIndP, iIndPrec, pItmCpy );
                hb_itemRelease( pItmCpy );
 
