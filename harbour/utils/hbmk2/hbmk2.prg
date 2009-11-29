@@ -832,6 +832,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          convert_xbp_to_hbp( SubStr( cParam, 6 ) )
          RETURN 0
 
+      CASE Left( cParamL, 5 ) == "-xhp="
+
+         convert_xhp_to_hbp( SubStr( cParam, 6 ) )
+         RETURN 0
+
       CASE cParamL == "--version"
 
          ShowHeader( hbmk )
@@ -7514,7 +7519,7 @@ STATIC PROCEDURE convert_xbp_to_hbp( cSrcName, cDstName )
 
    LOCAL lGlobalSection := .T.
 
-   hbmk_OutStd( hb_StrFormat( I_( "Loading xbp project file: %1$s" ), cSrcName ) )
+   hbmk_OutStd( hb_StrFormat( I_( "Loading xbp (xbuild) project file: %1$s" ), cSrcName ) )
 
    IF Empty( cDstName )
       cDstName := FN_ExtSet( cSrcName, ".hbp" )
@@ -7562,7 +7567,7 @@ STATIC PROCEDURE convert_xbp_to_hbp( cSrcName, cDstName )
                   EXIT
                CASE "TARGETFOLDER"
                   IF ! Empty( cValue )
-                     AAdd( aDst, "-o" + FN_DirGet( cValue ) )
+                     AAdd( aDst, "-o" + DirAddPathSep( cValue ) )
                   ENDIF
                   EXIT
                CASE "LIBFOLDERS"
@@ -7598,6 +7603,88 @@ STATIC PROCEDURE convert_xbp_to_hbp( cSrcName, cDstName )
                CASE "MYPRG_FLAGS"
                   FOR EACH tmp IN aValue
                      AAdd( aDst, tmp )
+                  NEXT
+                  EXIT
+               ENDSWITCH
+            ENDIF
+         ENDIF
+      ENDIF
+   NEXT
+
+   cDst := ""
+   FOR EACH tmp IN aDst
+      cDst += tmp + hb_osNewLine()
+   NEXT
+
+   hbmk_OutStd( hb_StrFormat( I_( "Saving as .hbp file: %1$s" ), cDstName ) )
+
+   hb_MemoWrit( cDstName, cDst )
+
+   RETURN
+STATIC PROCEDURE convert_xhp_to_hbp( cSrcName, cDstName )
+   LOCAL cSrc := MemoRead( cSrcName )
+   LOCAL cDst
+   LOCAL aDst := {}
+   LOCAL tmp
+   LOCAL cLine
+   LOCAL cSetting
+   LOCAL cValue
+   LOCAL aValue
+
+   LOCAL cMAIN := NIL
+
+   LOCAL lFileSection := .F.
+
+   hbmk_OutStd( hb_StrFormat( I_( "Loading xhp (xMate) project file: %1$s" ), cSrcName ) )
+
+   cSrc := StrTran( cSrc, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
+   cSrc := StrTran( cSrc, Chr( 9 ), Chr( 32 ) )
+
+   FOR EACH cLine IN hb_ATokens( cSrc, Chr( 10 ) )
+      IF cLine == "[Files]"
+         lFileSection := .T.
+      ELSEIF lFileSection
+         tmp := At( "=", cLine )
+         IF tmp > 0
+            AAdd( aDst, StrTran( AllTrim( Left( cLine, tmp - 1 ) ), "%HOME%\" ) )
+         ENDIF
+      ELSE
+         tmp := At( "=", cLine )
+         IF tmp > 0
+            cSetting := AllTrim( Left( cLine, tmp - 1 ) )
+            cValue := AllTrim( SubStr( cLine, tmp + Len( "=" ) ) )
+            aValue := hb_ATokens( cValue )
+            IF ! Empty( cValue )
+               SWITCH cSetting
+               CASE "Create Map/List File"
+                  IF cValue == "Yes"
+                     AAdd( aDst, "-map" )
+                  ENDIF
+                  EXIT
+               CASE "Final Path"
+                  IF ! Empty( cValue )
+                     AAdd( aDst, "-o" + DirAddPathSep( StrTran( cValue, "%HOME%\" ) ) )
+                  ENDIF
+                  EXIT
+               CASE "Include"
+                  FOR EACH tmp IN aValue
+                     IF Left( tmp, 2 ) == "-I"
+                        tmp := SubStr( tmp, 3 )
+                     ENDIF
+                     AAdd( aDst, "-incpath=" + StrTran( StrTran( tmp, Chr( 34 ) ), "%HOME%\" ) )
+                  NEXT
+                  EXIT
+               CASE "Define"
+                  FOR EACH tmp IN aValue
+                     IF Left( tmp, 2 ) == "-D"
+                        tmp := SubStr( tmp, 3 )
+                     ENDIF
+                     AAdd( aDst, "-D" + tmp )
+                  NEXT
+                  EXIT
+               CASE "Params"
+                  FOR EACH tmp IN aValue
+                     AAdd( aDst, "-runflag=" + tmp )
                   NEXT
                   EXIT
                ENDSWITCH
@@ -7778,11 +7865,13 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-hb10"             , I_( "enable Harbour 1.0.x compatibility mode (experimental)" ) },;
       { "-xhb"              , I_( "enable xhb mode (experimental)" ) },;
       { "-hbc"              , I_( "enable pure C mode (experimental)" ) },;
-      { "-hbmake=<file>"    , I_( "convert hbmake project file to .hbp file (experimental)" ) },;
-      { "-xbp=<file>"       , I_( "convert .xbp project file to .hbp file (experimental)" ) },;
       { "-rtlink"           , "" },;
       { "-blinker"          , "" },;
       { "-exospace"         , I_( "emulate Clipper compatible linker behavior\ncreate link/copy hbmk2 to rtlink/blinker/exospace for the same effect" ) },;
+      NIL,;
+      { "-hbmake=<file>"    , I_( "convert hbmake project file to .hbp file (experimental)" ) },;
+      { "-xbp=<file>"       , I_( "convert .xbp (xbuild) project file to .hbp file (experimental)" ) },;
+      { "-xhp=<file>"       , I_( "convert .xhp (xMate) project file to .hbp file (experimental)" ) },;
       NIL,;
       { "--hbdirbin"        , I_( "output Harbour binary directory" ) },;
       { "--hbdirdyn"        , I_( "output Harbour dynamic library directory" ) },;
