@@ -108,7 +108,7 @@ then
 fi
 if test_reqrpm "gd-devel"
 then
-    v=`rpm -q gd-devel|sed -e "s/[^0-9]*\([0-9]*\).*/\1/g"`
+    v=`rpm -q --whatprovides gd-devel --qf "%{VERSION}"|sed -e "s/[^0-9]*\([0-9]*\).*/\1/g"`
     [ "$v" -ge 2 ] && INST_PARAM="${INST_PARAM} --with gd"
 fi
 if test_reqrpm "unixodbc-devel" || test_reqrpm "unixODBC-devel"
@@ -125,7 +125,8 @@ then
 fi
 if test_reqrpm "libqt4-devel"
 then
-    INST_PARAM="${INST_PARAM} --with qt"
+   v=` rpm -q --whatprovides libqt4-devel --qf "%{VERSION}"|sed -e "s/[^0-9]*[0-9]*.\([0-9]*\).*/\1/g"`
+   [ "$v" -ge 5 ] && INST_PARAM="${INST_PARAM} --with qt"
 fi
 if [ -f /usr/local/ads/acesdk/ace.h ] || [ -f ${HOME}/ads/acesdk/ace.h ]
 then
