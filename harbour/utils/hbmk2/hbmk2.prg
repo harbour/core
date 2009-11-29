@@ -827,6 +827,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          convert_hbmake_to_hbp( SubStr( cParam, 9 ) )
          RETURN 0
 
+      CASE Left( cParamL, 5 ) == "-xbp="
+
+         convert_xbp_to_hbp( SubStr( cParam, 6 ) )
+         RETURN 0
+
       CASE cParamL == "--version"
 
          ShowHeader( hbmk )
@@ -7382,7 +7387,7 @@ STATIC PROCEDURE convert_hbmake_to_hbp( cSrcName, cDstName )
 
    LOCAL cMAIN := NIL
 
-   hbmk_OutStd( hb_StrFormat( I_( "Converting hbmake project file: %1$s" ), cSrcName ) )
+   hbmk_OutStd( hb_StrFormat( I_( "Loading hbmake project file: %1$s" ), cSrcName ) )
 
    IF Empty( cDstName )
       cDstName := FN_ExtSet( cSrcName, ".hbp" )
@@ -7480,6 +7485,123 @@ STATIC PROCEDURE convert_hbmake_to_hbp( cSrcName, cDstName )
                NEXT
                EXIT
             ENDSWITCH
+         ENDIF
+      ENDIF
+   NEXT
+
+   cDst := ""
+   FOR EACH tmp IN aDst
+      cDst += tmp + hb_osNewLine()
+   NEXT
+
+   hbmk_OutStd( hb_StrFormat( I_( "Saving as .hbp file: %1$s" ), cDstName ) )
+
+   hb_MemoWrit( cDstName, cDst )
+
+   RETURN
+
+STATIC PROCEDURE convert_xbp_to_hbp( cSrcName, cDstName )
+   LOCAL cSrc := MemoRead( cSrcName )
+   LOCAL cDst
+   LOCAL aDst := {}
+   LOCAL tmp
+   LOCAL cLine
+   LOCAL cSetting
+   LOCAL cValue
+   LOCAL aValue
+
+   LOCAL cMAIN := NIL
+
+   LOCAL lGlobalSection := .T.
+
+   hbmk_OutStd( hb_StrFormat( I_( "Loading xbp project file: %1$s" ), cSrcName ) )
+
+   IF Empty( cDstName )
+      cDstName := FN_ExtSet( cSrcName, ".hbp" )
+   ENDIF
+
+   cSrc := StrTran( cSrc, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
+   cSrc := StrTran( cSrc, Chr( 9 ), Chr( 32 ) )
+
+   FOR EACH cLine IN hb_ATokens( cSrc, Chr( 10 ) )
+      IF Left( cLine, 1 ) == "[" .AND. Right( cLine, 1 ) == "]"
+         lGlobalSection := .F.
+         AAdd( aDst, SubStr( cLine, 2, Len( cLine ) - 2 ) )
+      ELSEIF lGlobalSection
+         tmp := At( " =", cLine )
+         IF tmp > 0
+            cSetting := AllTrim( Left( cLine, tmp - 1 ) )
+            cValue := AllTrim( SubStr( cLine, tmp + Len( " =" ) ) )
+            aValue := hb_ATokens( cValue )
+            IF ! Empty( cValue )
+               SWITCH cSetting
+               CASE "LDEBUG"
+                  IF cValue == ".T."
+                     AAdd( aDst, "-debug" )
+                  ENDIF
+                  EXIT
+               CASE "LGUI"
+                  IF cValue == ".T."
+                     AAdd( aDst, "-gui" )
+                  ENDIF
+                  EXIT
+               CASE "LMT"
+                  IF cValue == ".T."
+                     AAdd( aDst, "-mt" )
+                  ENDIF
+                  EXIT
+               CASE "LUSEDLL"
+                  IF cValue == ".T."
+                     AAdd( aDst, "-shared" )
+                  ENDIF
+                  EXIT
+               CASE "MAPFILE"
+                  IF ! Empty( cValue )
+                     AAdd( aDst, "-map" )
+                  ENDIF
+                  EXIT
+               CASE "TARGETFOLDER"
+                  IF ! Empty( cValue )
+                     AAdd( aDst, "-o" + FN_DirGet( cValue ) )
+                  ENDIF
+                  EXIT
+               CASE "LIBFOLDERS"
+                  FOR EACH tmp IN aValue
+                     AAdd( aDst, "-L" + tmp )
+                  NEXT
+                  EXIT
+               CASE "INCLUDEFOLDERS"
+                  FOR EACH tmp IN aValue
+                     AAdd( aDst, "-incpath=" + tmp )
+                  NEXT
+                  EXIT
+               CASE "MYC_FLAGS"
+                  FOR EACH tmp IN aValue
+                     AAdd( aDst, "-cflag=" + tmp )
+                  NEXT
+                  EXIT
+               CASE "MYDEFINES"
+                  FOR EACH tmp IN aValue
+                     AAdd( aDst, "-D" + tmp )
+                  NEXT
+                  EXIT
+               CASE "MYLINK_FLAGS"
+                  FOR EACH tmp IN aValue
+                     AAdd( aDst, "-ldflag=" + tmp )
+                  NEXT
+                  EXIT
+               CASE "MYRC_FLAGS"
+                  FOR EACH tmp IN aValue
+                     AAdd( aDst, "-resflag=" + tmp )
+                  NEXT
+                  EXIT
+               CASE "MYPRG_FLAGS"
+                  FOR EACH tmp IN aValue
+                     AAdd( aDst, tmp )
+                  NEXT
+                  EXIT
+               ENDSWITCH
+            ENDIF
          ENDIF
       ENDIF
    NEXT
@@ -7657,6 +7779,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-xhb"              , I_( "enable xhb mode (experimental)" ) },;
       { "-hbc"              , I_( "enable pure C mode (experimental)" ) },;
       { "-hbmake=<file>"    , I_( "convert hbmake project file to .hbp file (experimental)" ) },;
+      { "-xbp=<file>"       , I_( "convert .xbp project file to .hbp file (experimental)" ) },;
       { "-rtlink"           , "" },;
       { "-blinker"          , "" },;
       { "-exospace"         , I_( "emulate Clipper compatible linker behavior\ncreate link/copy hbmk2 to rtlink/blinker/exospace for the same effect" ) },;
