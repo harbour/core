@@ -191,10 +191,6 @@ CREATE CLASS HBDebugger
    VAR nAppTypeAhead
    VAR nAppLastKey
 
-   VAR bAppInkeyAfter
-   VAR bAppInkeyBefore
-   VAR bAppClassScope
-
    VAR nMaxRow
    VAR nMaxCol
 
@@ -2194,11 +2190,6 @@ METHOD RestoreAppState() CLASS HBDebugger
    Set( _SET_FILECASE, ::nAppFileCase )
    Set( _SET_TYPEAHEAD, ::nAppTypeAhead )
    hb_SetLastKey( ::nAppLastKey )
-#ifdef __XHARBOUR__
-   SetInkeyAfterBlock( ::bAppInkeyAfter )
-   SetInkeyBeforeBlock( ::bAppInkeyBefore )
-   __SetClassScope( ::bAppClassScope )
-#endif
    RETURN NIL
 
 
@@ -2264,11 +2255,6 @@ METHOD SaveAppState() CLASS HBDebugger
    ::nAppFileCase := Set( _SET_FILECASE, 0 )
    ::nAppTypeAhead := Set( _SET_TYPEAHEAD, 16 )
    ::nAppLastKey := LastKey()
-#ifdef __XHARBOUR__
-   ::bAppInkeyAfter := SetInkeyAfterBlock( NIL )
-   ::bAppInkeyBefore := SetInkeyBeforeBlock( NIL )
-   ::bAppClassScope := __SetClassScope( .F. )
-#endif
    RETURN NIL
 
 

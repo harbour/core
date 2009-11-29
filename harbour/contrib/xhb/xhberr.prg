@@ -192,11 +192,7 @@ STATIC FUNCTION xhb_DefError( oError )
    ? cMessage
 
    ?
-#ifdef __XHARBOUR__
-   ? "Error at ...:", oError:ProcName + "(" + LTrim( Str( oError:ProcLine ) ) + ") in Module:", oError:ModuleName
-#else
    ? "Error at ...:", ProcName() + "(" + LTrim( Str( ProcLine() ) ) + ") in Module:", ProcFile()
-#endif
    n := 2
    WHILE ! Empty( ProcName( ++n ) )
       ? "Called from :", ProcName( n ) + ;
@@ -255,14 +251,8 @@ Return cMessage
 STATIC FUNCTION LogError( oerr )
 
      LOCAL cScreen
-#ifdef __XHARBOUR__
-     LOCAL aLogFile    := SET( _SET_ERRORLOG )
-     LOCAL cLogFile    := aLogFile[1]  // error log file name
-     LOCAL lAppendLog  := aLogFile[2]  // .f. = create a new error log (default) .t. = append to a existing one.
-#else
      LOCAL cLogFile    := "error.log"  // error log file name
      LOCAL lAppendLog  := .T.          // .f. = create a new error log (default) .t. = append to a existing one.
-#endif
      LOCAL nStart      := 1
      LOCAL nCellSize
      LOCAL nRange
@@ -380,8 +370,8 @@ STATIC FUNCTION LogError( oerr )
 
         FWriteLine( nHandle, "SET EOL............: " + strvalue( Asc( Set( _SET_EOL ) ) )  )
         FWriteLine( nHandle, "SET EPOCH..........: " + strvalue( Set( _SET_EPOCH )      ) )
+        FWriteLine( nHandle, "SET ERRORLOG.......: " + strvalue( cLogFile ) + "," + strvalue( lAppendLog ) )
 #ifdef __XHARBOUR__
-        FWriteLine( nHandle, "SET ERRORLOG.......: " + if(!Empty(aLogFile), strvalue( aLogFile[1] )+","+strvalue( aLogFile[2] ), "") )
         FWriteLine( nHandle, "SET ERRORLOOP......: " + strvalue( Set( _SET_ERRORLOOP )      ) )
 #endif
         FWriteLine( nHandle, "SET ESCAPE.........: " + strvalue( Set( _SET_ESCAPE ), .T. ) )
@@ -495,11 +485,8 @@ STATIC FUNCTION LogError( oerr )
         FWriteLine( nHandle, " Trace Through:" )
         FWriteLine( nHandle, "----------------" )
 
-#ifdef __XHARBOUR__
-        FWriteLine( nHandle, Padr( oErr:ProcName, 21 ) + " : " + Transform( oErr:ProcLine, "999,999" ) + " in Module: " + oErr:ModuleName )
-#else
         FWriteLine( nHandle, Padr( ProcName(), 21 ) + " : " + Transform( ProcLine(), "999,999" ) + " in Module: " + ProcFile() )
-#endif
+
         nCount := 3
         While !Empty( Procname( ++ nCount ) )
           FWriteLine( nHandle, Padr( Procname( nCount ), 21 ) + ' : ' + Transform( Procline( nCount ), "999,999" ) + " in Module: " + ProcFile( nCount ) )

@@ -2195,10 +2195,14 @@ HB_FUNC( __NATSORTVER )
    HB_FUNC_EXEC( HB_CDPINFO );
 }
 
+#ifdef HB_LEGACY_LEVEL2
+
 HB_FUNC( HB_SETCODEPAGE )
 {
    HB_FUNC_EXEC( HB_CDPSELECT );
 }
+
+#endif
 
 /*
  * extended CP PRG functions
