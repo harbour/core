@@ -20,6 +20,7 @@
 # --with odbc        - build hbodbc lib and sddodbc for sqlrdd
 # --with ads         - build rddads RDD
 # --with gd          - build hbgd lib
+# --with qt          - build hbqt and hbxbp
 # --with allegro     - build GTALLEG - Allegro based GT driver
 # --with localzlib   - build local copy of zlib library
 # --with localpcre   - build local copy of pcre library
@@ -86,6 +87,7 @@ do
             [ "$1" = "pgsql" ] && NEED_RPM="${NEED_RPM} postgresql-devel"
             [ "$1" = "fbsql" ] && NEED_RPM="${NEED_RPM} firebird-devel"
             [ "$1" = "allegro" ] && NEED_RPM="${NEED_RPM} allegro-devel"
+            [ "$1" = "qt" ] && NEED_RPM="${NEED_RPM} libqt4-devel"
         fi
     fi
     LAST="$1"
@@ -120,6 +122,10 @@ fi
 if test_reqrpm "curl-devel"
 then
     INST_PARAM="${INST_PARAM} --with curl"
+fi
+if test_reqrpm "libqt4-devel"
+then
+    INST_PARAM="${INST_PARAM} --with qt"
 fi
 if [ -f /usr/local/ads/acesdk/ace.h ] || [ -f ${HOME}/ads/acesdk/ace.h ]
 then

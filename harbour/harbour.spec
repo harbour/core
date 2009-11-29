@@ -22,6 +22,7 @@
 # --with curl        - build hbcurl lib
 # --with localzlib   - build local copy of zlib library
 # --with localpcre   - build local copy of pcre library
+# --with qt
 # --without nf       - do not build nanforum lib
 # --without gpllib   - do not build libs which needs GPL 3-rd party code
 # --without x11      - do not build GTXWC
@@ -84,7 +85,7 @@
 %define hb_ldir  export HB_LIB_INSTALL=%{_libdir}/%{name}
 %define hb_edir  export HB_ETC_INSTALL=%{hb_etcdir}
 %define hb_cmrc  export HB_COMMERCE=%{?_without_gpllib:yes}
-%define hb_ctrb  export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbtpathy hbhpdf hbsms hbziparc xhb rddsql %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_fbsql:hbfbird} %{?_with_allegro:gtalleg}"
+%define hb_ctrb  export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbtpathy hbhpdf hbsms hbziparc xhb rddsql %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_fbsql:hbfbird} %{?_with_allegro:gtalleg} %{?_with_qt:hbqt hbxbp}"
 %define hb_env   %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_edir} ; %{hb_ctrb} ; %{hb_cmrc}
 %define hb_host  www.harbour-project.org
 %define readme   README.RPM
@@ -351,6 +352,17 @@ statikus szerkesztéshez.
 %{?_with_gd:%description -l pl gd}
 %{?_with_gd:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
 %{?_with_gd:Ten pakiet udostêpnia statyczn+ biliotekê GD dla kompilatora %{dname}.}
+
+## qt library
+%{?_with_qt:%package qt}
+%{?_with_qt:Summary:        QT library bindings for %{dname} compiler}
+%{?_with_qt:Group:          Development/Languages}
+%{?_with_qt:Requires:       libqt4-devel %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+
+%{?_with_qt:%description qt}
+%{?_with_qt:%{dname} is a Clipper compatible compiler.}
+%{?_with_qt:This package provides %{dname} QT libraries for program linking.}
+
 
 ######################################################################
 ## Preperation.
@@ -674,7 +686,16 @@ rm -rf $RPM_BUILD_ROOT
 %{?_with_gd:%dir %{_libdir}/%{name}}
 %{?_with_gd:%{_libdir}/%{name}/libhbgd.a}
 
-######################################################################
+%{?_with_qt:%files qt}
+%{?_with_qt:%defattr(644,root,root,755)}
+%{?_with_qt:%dir %{_libdir}/%{name}}
+%{?_with_qt:%{_libdir}/%{name}/libhbqt.a}
+%{?_with_qt:%{_libdir}/%{name}/libhbqtcore.a}
+%{?_with_qt:%{_libdir}/%{name}/libhbqtgui.a}
+%{?_with_qt:%{_libdir}/%{name}/libhbqtnetwork.a}
+%{?_with_qt:%{_libdir}/%{name}/libhbxbp.a}
+
+####################################################################
 ## Spec file Changelog.
 ######################################################################
 
