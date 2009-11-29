@@ -25,7 +25,6 @@
 # --with localzlib   - build local copy of zlib library
 # --with localpcre   - build local copy of pcre library
 # --without gpllib   - do not build libs which needs GPL 3rd party code
-# --without hbnf     - do not build hbnf lib (nanforum lib)
 # --without x11      - do not build gtxwc
 # --without gpm      - build gttrm, gtsln and gtcrs without gpm support
 # --without curses   - do not build gtcrs

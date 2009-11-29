@@ -19,7 +19,6 @@
 # --with allegro     - build GTALLEG - Allegro based GT driver
 # --with ads         - build ADS RDD
 # --without odbc     - do not build odbc lib
-# --without hbnf     - do not build hbnf lib (nanforum lib)
 ######################################################################
 
 test_reqrpm()

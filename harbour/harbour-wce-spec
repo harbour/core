@@ -17,7 +17,6 @@
 # --with allegro     - build gtalleg - Allegro based GT driver
 # --with ads         - build rddads
 # --with odbc        - build odbc lib
-# --without hbnf     - do not build hbnf lib (nanforum lib)
 ######################################################################
 
 ######################################################################
@@ -139,7 +138,6 @@ make install %{?_smp_mflags}
 [ "%{?_with_odbc:1}" ]    || rm -f $HB_LIB_INSTALL/libhbodbc.a
 [ "%{?_with_allegro:1}" ] || rm -f $HB_LIB_INSTALL/libgtalleg.a
 [ "%{?_with_ads:1}" ]     || rm -f $HB_LIB_INSTALL/librddads.a
-[ "%{?_without_hbnf:1}" ] && rm -f $HB_LIB_INSTALL/libhbnf.a
 
 # remove unused files
 rm -fR ${HB_BIN_INSTALL}/{harbour,hbpp,hbmk2,hbrun,hbi18n,hbtest}.exe
