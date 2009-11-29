@@ -728,6 +728,8 @@ HB_FUNC( DLLCALL )
    }
 }
 
+/* TODO: Add support for UNICODE (*W()) calls. */
+
 HB_FUNC( DLLPREPARECALL )
 {
 #if ! defined( HB_OS_WIN_CE )
