@@ -10,16 +10,6 @@
 # ---------------------------------------------------------------
 
 ######################################################################
-# Conditional build:
-# --with mysql       - build mysql lib
-# --with pgsql       - build pgsql lib
-# --with gd          - build gd lib
-# --with allegro     - build gtalleg - Allegro based GT driver
-# --with ads         - build rddads
-# --with odbc        - build odbc lib
-######################################################################
-
-######################################################################
 ## Definitions.
 ######################################################################
 
@@ -134,10 +124,6 @@ export HB_BUILD_STRIP=lib
 mkdir -p $HB_BIN_INSTALL
 
 make install %{?_smp_mflags}
-
-[ "%{?_with_odbc:1}" ]    || rm -f $HB_LIB_INSTALL/libhbodbc.a
-[ "%{?_with_allegro:1}" ] || rm -f $HB_LIB_INSTALL/libgtalleg.a
-[ "%{?_with_ads:1}" ]     || rm -f $HB_LIB_INSTALL/librddads.a
 
 # remove unused files
 rm -fR ${HB_BIN_INSTALL}/{harbour,hbpp,hbmk2,hbrun,hbi18n,hbtest}.exe

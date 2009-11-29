@@ -11,16 +11,6 @@
 # See COPYING for licensing terms.
 # ---------------------------------------------------------------
 
-######################################################################
-# Conditional build:
-# --with mysql       - build mysql lib
-# --with pgsql       - build pgsql lib
-# --with gd          - build gd lib
-# --with allegro     - build GTALLEG - Allegro based GT driver
-# --with ads         - build ADS RDD
-# --without odbc     - do not build odbc lib
-######################################################################
-
 test_reqrpm()
 {
     rpm -q --whatprovides "$1" &> /dev/null
@@ -90,12 +80,6 @@ do
     LAST="$1"
     shift
 done
-
-if [ -f /usr/local/ads/acesdk/ace.h ] || \
-   [ -f ${HOME}/ads/acesdk/ace.h ]
-then
-    INST_PARAM="${INST_PARAM} --with ads"
-fi
 
 TOINST_LST=""
 for i in ${NEED_RPM}
