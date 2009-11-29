@@ -248,36 +248,6 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                      }
                      break;
 
-#ifdef HB_LEGACY_LEVEL2
-                  case 'o':
-                  case 'O':
-                     HB_COMP_PARAM->iLanguage = HB_LANG_OBJ_MODULE;
-
-                     switch( *( s + 2 ) )
-                     {
-                        case '3':
-                           HB_COMP_PARAM->iGenCOutput = HB_COMPGENC_REALCODE;
-                           break;
-
-                        case '2':
-                           HB_COMP_PARAM->iGenCOutput = HB_COMPGENC_VERBOSE;
-                           break;
-
-                        case '1':
-                           HB_COMP_PARAM->iGenCOutput = HB_COMPGENC_NORMAL;
-                           break;
-
-                        case '\0':
-                        case '0':
-                           HB_COMP_PARAM->iGenCOutput = HB_COMPGENC_COMPACT;
-                           break;
-
-                        default:
-                           hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
-                     }
-                     break;
-#endif
-
                   case 'h':
                   case 'H':
                      HB_COMP_PARAM->iLanguage = HB_LANG_PORT_OBJ;

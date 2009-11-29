@@ -393,12 +393,6 @@ install -m644 doc/man/*.1* $HB_INST_PKGPREF%{_mandir}/man1/
 
 mkdir -p $HB_INST_PKGPREF$HB_ETC_INSTALL
 install -m644 src/rtl/gtcrs/hb-charmap.def $HB_INST_PKGPREF$HB_ETC_INSTALL/hb-charmap.def
-cat > $HB_INST_PKGPREF$HB_ETC_INSTALL/harbour.cfg <<EOF
-CC=gcc
-CFLAGS=-c -I$HB_INC_INSTALL
-VERBOSE=YES
-DELTMP=YES
-EOF
 
 # remove unused files
 rm -f $HB_INST_PKGPREF$HB_BIN_INSTALL/hbtest
@@ -548,7 +542,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/en-EN/
 
 %dir %{hb_etcdir}
-%verify(not md5 mtime) %config %{hb_etcdir}/harbour.cfg
 %verify(not md5 mtime) %config %{hb_etcdir}/hb-charmap.def
 %{_bindir}/harbour
 %{_bindir}/hbpp

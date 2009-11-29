@@ -52,7 +52,6 @@ install: build
 	dh_installdirs
 
 	make install
-	install -m644 debian/harbour.cfg $(HB_INST_PKGPREF)$(HB_ETC_INSTALL)/harbour.cfg
 	install -m644 src/rtl/gtcrs/hb-charmap.def $(HB_INST_PKGPREF)$(HB_ETC_INSTALL)/hb-charmap.def
 
 

@@ -27,7 +27,6 @@ C_SOURCES := \
    cmdcheck.c \
    genc.c \
    gencc.c \
-   gencobj.c \
    genhrb.c \
    hbcmplib.c \
    hbcomp.c \

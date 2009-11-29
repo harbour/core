@@ -96,15 +96,15 @@ MAKE=make
 TAR=tar
 hb_gnutar=yes
 if gtar --version >/dev/null 2>&1; then
-   TAR=gtar
+    TAR=gtar
 elif ! tar --version >/dev/null 2>&1; then
-   hb_gnutar=no
-   echo "Warning!!! Cannot find GNU TAR"
+    hb_gnutar=no
+    echo "Warning!!! Cannot find GNU TAR"
 fi
 if gmake --version >/dev/null 2>&1; then
-   MAKE=gmake
+    MAKE=gmake
 elif ! make --version >/dev/null 2>&1; then
-   echo "Warning!!! Cannot find GNU MAKE"
+    echo "Warning!!! Cannot find GNU MAKE"
 fi
 
 # build
@@ -116,18 +116,9 @@ rm -fR "${HB_INST_PKGPREF}"
 $MAKE install "$@" || exit
 
 if [ "${hb_sysdir}" = "yes" ]; then
-
     mkdir -p $HB_INST_PKGPREF$ETC/harbour
     cp -f src/rtl/gtcrs/hb-charmap.def $HB_INST_PKGPREF$ETC/harbour/hb-charmap.def
     chmod 644 $HB_INST_PKGPREF$ETC/harbour/hb-charmap.def
-
-    cat > $HB_INST_PKGPREF$ETC/harbour/harbour.cfg <<EOF
-CC=${HB_CCPREFIX}gcc
-CFLAGS=-c -I${HB_INSTALL_PREFIX}/include/harbour
-VERBOSE=YES
-DELTMP=YES
-EOF
-
 fi
 
 CURDIR=$(pwd)
@@ -142,15 +133,15 @@ rm -fR "${HB_INST_PKGPREF}"
 
 if [ -n "${hb_instfile}" ]; then
 
-   if [ "${HB_PLATFORM}" = linux ]; then
-      DO_LDCONFIG="&& ldconfig"
-   else
-      DO_LDCONFIG=""
-   fi
-   # In the generated script use tar instead of $TAR because we can't be sure
-   # if $TAR exists in the installation environment
-   size=`wc -c "${hb_archfile}"|(read size file; echo $size)`
-   cat > "${hb_instfile}" <<EOF
+    if [ "${HB_PLATFORM}" = linux ]; then
+        DO_LDCONFIG="&& ldconfig"
+    else
+        DO_LDCONFIG=""
+    fi
+    # In the generated script use tar instead of $TAR because we can't be sure
+    # if $TAR exists in the installation environment
+    size=`wc -c "${hb_archfile}"|(read size file; echo $size)`
+    cat > "${hb_instfile}" <<EOF
 #!/bin/sh
 [ "\$BASH" ] || exec bash \`which \$0\` \${1+"\$@"}
 if [ "\$1" = "--extract" ]; then

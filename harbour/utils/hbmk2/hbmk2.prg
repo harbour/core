@@ -822,6 +822,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ShowHelp( .T. )
          RETURN 19
 
+      CASE Left( cParamL, 8 ) == "-hbmake="
+
+         convert_hbmake_to_hbp( SubStr( cParam, 9 ) )
+         RETURN 0
+
       CASE cParamL == "--version"
 
          ShowHeader( hbmk )
@@ -4928,7 +4933,7 @@ STATIC FUNCTION clpfile_read( cFileName )
    cFileBody := StrTran( cFileBody, Chr( 10 ), " " )
    cFileBody := StrTran( cFileBody, Chr( 9 ), " " )
 
-   aFiles := hb_aTokens( cFileBody,, .t. )
+   aFiles := hb_ATokens( cFileBody,, .T. )
    FOR EACH cFile IN aFiles
       cFile := FN_ExtDef( StrTran( cFile, '"' ), ".prg" )
    NEXT
@@ -7365,6 +7370,131 @@ STATIC FUNCTION MacOSXFiles( hbmk, nType, cPROGNAME )
 
    RETURN cString
 
+STATIC PROCEDURE convert_hbmake_to_hbp( cSrcName, cDstName )
+   LOCAL cSrc := MemoRead( cSrcName )
+   LOCAL cDst
+   LOCAL aDst := {}
+   LOCAL tmp
+   LOCAL cLine
+   LOCAL cSetting
+   LOCAL cValue
+   LOCAL aValue
+
+   LOCAL cMAIN := NIL
+
+   hbmk_OutStd( hb_StrFormat( I_( "Converting hbmake project file: %1$s" ), cSrcName ) )
+
+   IF Empty( cDstName )
+      cDstName := FN_ExtSet( cSrcName, ".hbp" )
+   ENDIF
+
+   cSrc := StrTran( cSrc, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
+   cSrc := StrTran( cSrc, Chr( 9 ), Chr( 32 ) )
+
+   FOR EACH cLine IN hb_ATokens( cSrc, Chr( 10 ) )
+      tmp := At( " =", cLine )
+      IF tmp > 0
+         cSetting := AllTrim( Left( cLine, tmp - 1 ) )
+         cValue := AllTrim( SubStr( cLine, tmp + Len( " =" ) ) )
+         aValue := hb_ATokens( cValue )
+         IF ! Empty( cValue )
+            SWITCH cSetting
+            CASE "COMPRESS"
+               IF cValue == "YES"
+                  AAdd( aDst, "-compr=on" )
+               ENDIF
+               EXIT
+            CASE "GUI"
+               IF cValue == "YES"
+                  AAdd( aDst, "-gui" )
+               ENDIF
+               EXIT
+            CASE "MT"
+               IF cValue == "YES"
+                  AAdd( aDst, "-mt" )
+               ENDIF
+               EXIT
+            CASE "PROJECT"
+               IF Len( aValue ) >= 1
+                  AAdd( aDst, "-o" + FN_NameGet( aValue[ 1 ] ) )
+               ENDIF
+               EXIT
+            CASE "USERLIBS"
+               FOR EACH tmp IN aValue
+                  AAdd( aDst, "-l" + FN_NameGet( tmp ) )
+               NEXT
+               EXIT
+            CASE "PRGFILES"
+               FOR EACH tmp IN aValue
+                  IF !( tmp == "$(PS)" )
+                     IF cMAIN == NIL
+                        cMAIN := tmp
+                     ENDIF
+                     AAdd( aDst, tmp )
+                  ENDIF
+               NEXT
+               EXIT
+            CASE "CFILES"
+               FOR EACH tmp IN aValue
+                  IF !( tmp == "$(CF)" )
+                     AAdd( aDst, tmp )
+                  ENDIF
+               NEXT
+               EXIT
+            CASE "OBJFILES"
+               FOR EACH tmp IN aValue
+                  IF !( tmp == "$(OB)" )
+                     AAdd( aDst, tmp )
+                  ENDIF
+               NEXT
+               EXIT
+            CASE "OBJCFILES"
+               FOR EACH tmp IN aValue
+                  IF !( tmp == "$(OBC)" )
+                     AAdd( aDst, tmp )
+                  ENDIF
+               NEXT
+               EXIT
+            CASE "RESFILES"
+               FOR EACH tmp IN aValue
+                  AAdd( aDst, tmp )
+               NEXT
+               EXIT
+            CASE "TOPMODULE"
+               IF !( cValue == cMAIN )
+                  tmp := AScan( aDst, {|tmp| tmp == cValue } )
+                  IF tmp > 0
+                     hb_ADel( aDst, tmp, .T. )
+                     hb_AIns( aDst, 1, cValue, .T. )
+                  ENDIF
+               ENDIF
+               EXIT
+            CASE "CONTRIBLIBS"
+               FOR EACH tmp IN aValue
+                  AAdd( aDst, "-l" + FN_NameGet( tmp ) )
+               NEXT
+               EXIT
+            CASE "HARBOURFLAGS"
+               FOR EACH tmp IN aValue
+                  AAdd( aDst, tmp )
+               NEXT
+               EXIT
+            ENDSWITCH
+         ENDIF
+      ENDIF
+   NEXT
+
+   cDst := ""
+   FOR EACH tmp IN aDst
+      cDst += tmp + hb_osNewLine()
+   NEXT
+
+   hbmk_OutStd( hb_StrFormat( I_( "Saving as .hbp file: %1$s" ), cDstName ) )
+
+   hb_MemoWrit( cDstName, cDst )
+
+   RETURN
+
 STATIC PROCEDURE GetUILangCDP( /* @ */ cLNG, /* @ */ cCDP )
 
    IF Empty( cLNG := GetEnv( "HB_LANG" ) )
@@ -7526,6 +7656,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-hb10"             , I_( "enable Harbour 1.0.x compatibility mode (experimental)" ) },;
       { "-xhb"              , I_( "enable xhb mode (experimental)" ) },;
       { "-hbc"              , I_( "enable pure C mode (experimental)" ) },;
+      { "-hbmake=<file>"    , I_( "convert hbmake project file to .hbp file (experimental)" ) },;
       { "-rtlink"           , "" },;
       { "-blinker"          , "" },;
       { "-exospace"         , I_( "emulate Clipper compatible linker behavior\ncreate link/copy hbmk2 to rtlink/blinker/exospace for the same effect" ) },;

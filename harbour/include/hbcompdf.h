@@ -68,8 +68,7 @@ typedef enum
    HB_LANG_C,                      /* C language (by default) <file.c> */
    HB_LANG_OBJ32,                  /* DOS/Windows 32 bits <file.obj> */
    HB_LANG_PORT_OBJ,               /* Portable objects <file.hrb> */
-   HB_LANG_PORT_OBJ_BUF,           /* Portable objects in memory buffer */
-   HB_LANG_OBJ_MODULE              /* Platform dependant object module <file.obj> */
+   HB_LANG_PORT_OBJ_BUF            /* Portable objects in memory buffer */
 } HB_LANGUAGES;                    /* supported Harbour output languages */
 
 struct _COMCLASS;    /* forward declaration */
