@@ -52,7 +52,11 @@
 
 #include "hbapi.h"
 
-#if !defined( HB_ODBC_LEGACY_LEVEL_OFF )
+#if ! defined( HB_LEGACY_LEVEL3 ) && ! defined( HB_ODBC_LEGACY_LEVEL_OFF )
+   #define HB_ODBC_LEGACY_LEVEL_OFF
+#endif
+
+#if ! defined( HB_ODBC_LEGACY_LEVEL_OFF )
 
 HB_FUNC_EXTERN( SQLALLOCENV       ) ; HB_FUNC( SQLALLOCEN          ) { HB_FUNC_EXEC( SQLALLOCENV       ); }
 HB_FUNC_EXTERN( SQLALLOCCONNECT   ) ; HB_FUNC( SQLALLOCCO          ) { HB_FUNC_EXEC( SQLALLOCCONNECT   ); }

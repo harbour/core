@@ -62,7 +62,11 @@
 #include "hbapi.h"
 #include "hbwinole.h"
 
-#ifndef HB_WIN_LEGACY_LEVEL_OFF
+#if ! defined( HB_LEGACY_LEVEL3 ) && ! defined( HB_WIN_LEGACY_LEVEL_OFF )
+   #define HB_WIN_LEGACY_LEVEL_OFF
+#endif
+
+#if ! defined( HB_WIN_LEGACY_LEVEL_OFF )
 
 HB_FUNC_EXTERN( WIN_OLEERROR );
 

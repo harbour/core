@@ -26,7 +26,7 @@ proc main()
    hb_gtInfo( HB_GTI_CODEPAGE, 255 )
 
    /* Set EN CP-437 encoding */
-   hb_setCodePage( "EN" )
+   hb_cdpSelect( "EN" )
    hb_setTermCP( "EN" )
 
    /* Set font size */

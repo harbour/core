@@ -349,6 +349,7 @@ HB_FUNC( WIN_PRINTERSTATUS )
 
 HB_FUNC( WIN_PRINTERPORTTONAME )
 {
+   /* Set default return value */
    hb_retc_null();
 
    if( hb_parclen( 1 ) > 0 )
@@ -383,13 +384,12 @@ HB_FUNC( WIN_PRINTERPORTTONAME )
                if( bFound )
                {
                   char * pszPrinterName = HB_TCHAR_CONVFROM( pPrinterEnum->pPrinterName );
-
                   hb_retc( pszPrinterName );
-
                   HB_TCHAR_FREE( pszPrinterName );
                }
             }
          }
+
          hb_xfree( pPrinterEnumBak );
       }
    }
@@ -440,6 +440,7 @@ HB_FUNC( WIN_PRINTFILERAW )
 
                      WritePrinter( hPrinter, pbyBuffer, nRead, &dwWritten );
                   }
+
                   iResult = 1;
                   hb_fsClose( fhnd );
                }

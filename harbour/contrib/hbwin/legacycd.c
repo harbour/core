@@ -61,7 +61,11 @@
 
 #include "hbapi.h"
 
-#ifndef HB_WIN_LEGACY_LEVEL_OFF
+#if ! defined( HB_LEGACY_LEVEL3 ) && ! defined( HB_WIN_LEGACY_LEVEL_OFF )
+   #define HB_WIN_LEGACY_LEVEL_OFF
+#endif
+
+#if ! defined( HB_WIN_LEGACY_LEVEL_OFF )
 
 /* Please use WAPI_GETLASTERROR(). */
 HB_FUNC( GETLASTERROR )

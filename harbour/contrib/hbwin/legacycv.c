@@ -52,7 +52,11 @@
 
 #include "hbapi.h"
 
-#if !defined( HB_WIN_LEGACY_LEVEL_OFF )
+#if ! defined( HB_LEGACY_LEVEL3 ) && ! defined( HB_WIN_LEGACY_LEVEL_OFF )
+   #define HB_WIN_LEGACY_LEVEL_OFF
+#endif
+
+#if ! defined( HB_WIN_LEGACY_LEVEL_OFF )
 
 HB_FUNC_EXTERN( WIN_OSISNT          ) ; HB_FUNC( OS_ISWINNT            ) { HB_FUNC_EXEC( WIN_OSISNT          ); }
 HB_FUNC_EXTERN( WIN_OSISNT351       ) ; HB_FUNC( OS_ISWINNT351         ) { HB_FUNC_EXEC( WIN_OSISNT351       ); }

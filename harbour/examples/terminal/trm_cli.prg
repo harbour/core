@@ -572,7 +572,7 @@ Static Function TrmInitFont()
       hb_gtInfo( HB_GTI_CODEPAGE, 255 )
 
       /* Set EN CP-437 encoding */
-      hb_setCodePage( "EN" )
+      hb_cdpSelect( "EN" )
       hb_setTermCP( "EN" )
 
       #ifdef __WINCE__
@@ -587,7 +587,7 @@ Static Function TrmInitFont()
       Local nScrWidth
 
       Wvt_SetCodepage( 255 )
-      hb_setCodePage( "EN" )
+      hb_cdpSelect( "EN" )
       hb_setTermCP( "EN" )
 
       if empty( cFont )

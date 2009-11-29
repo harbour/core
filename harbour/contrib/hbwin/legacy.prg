@@ -57,6 +57,12 @@
 #include "common.ch"
 #include "error.ch"
 
+#if ! defined( HB_LEGACY_LEVEL3 ) && ! defined( HB_WIN_LEGACY_LEVEL_OFF )
+   #define HB_WIN_LEGACY_LEVEL_OFF
+#endif
+
+#if ! defined( HB_WIN_LEGACY_LEVEL_OFF )
+
 #define EG_OLEEXCEPTION 1001
 
 STATIC s_bBreak := { | oError | Break( oError ) }
@@ -350,3 +356,5 @@ ENDCLASS
 
 CREATE CLASS Win32Bmp FROM WIN_BMP
 ENDCLASS
+
+#endif
