@@ -3932,16 +3932,6 @@ static void hb_compGenIncluded( HB_COMP_DECL )
                FileName.szExtension = ".hrb";
                break;
 
-#ifdef HB_LEGACY_LEVEL2
-            case HB_LANG_OBJ_MODULE:
-#  if ( defined( HB_OS_DOS ) || defined( HB_OS_WIN ) || defined( HB_OS_OS2 ) ) && \
-      !defined( __GNUC__ )
-               FileName.szExtension = ".obj";
-#  else
-               FileName.szExtension = ".o";
-#  endif
-               break;
-#endif
             default:
                FileName.szExtension = ".c";
          }

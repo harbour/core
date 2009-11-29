@@ -96,7 +96,7 @@ static void hb_pp_hb_inLine( void * cargo, char * szFunc,
 {
    HB_COMP_DECL = ( HB_COMP_PTR ) cargo;
 
-   if( HB_COMP_PARAM->iLanguage != HB_LANG_C && HB_COMP_PARAM->iLanguage != HB_LANG_OBJ_MODULE )
+   if( HB_COMP_PARAM->iLanguage != HB_LANG_C )
    {
       int iCurrLine = HB_COMP_PARAM->currLine;
       HB_COMP_PARAM->currLine = iLine;

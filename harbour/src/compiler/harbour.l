@@ -1,5 +1,5 @@
 %option noyywrap
-%{ 
+%{
 /*
  * $Id$
  */
@@ -319,7 +319,7 @@ Separator     {SpaceTab}
 	 	closing ']'
 	 */
     int i;
-	 
+
     BEGIN 0;
    yy_breakFlex();
 	 for( i = yyleng-1; i; --i )
@@ -849,8 +849,8 @@ Separator     {SpaceTab}
                pComp->pLex->lasttok = yytext;
                return FOR;
              }
-<FOREACH_>. { 
-               BEGIN 0;             
+<FOREACH_>. {
+               BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                hb_comp_iState = FOREACH;
                pComp->pLex->lasttok = yytext;
@@ -1025,7 +1025,7 @@ Separator     {SpaceTab}
          }
          else
          {
-            if( hb_comp_iLanguage != HB_LANG_C && hb_comp_iLanguage != HB_LANG_OBJ_MODULE )
+            if( hb_comp_iLanguage != HB_LANG_C )
             {
                hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_REQUIRES_C, NULL, NULL );
                hb_xfree( ( void * ) pInline->pCode );
@@ -1477,7 +1477,7 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
-"while"|"whil"  { BEGIN WHILE_; 
+"while"|"whil"  { BEGIN WHILE_;
                   /* store it for later use */
                   pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( HB_COMP_PARAM, yytext, HB_IDENT_COPY );
                 }
@@ -1572,8 +1572,8 @@ Separator     {SpaceTab}
                   pComp->pLex->lasttok = yytext;
                   return WITH;
                }
-               
-               }              
+
+               }
 <WITH_>[\)] { /* ( with ) or with() */
                 BEGIN 0;
                 unput( yytext[ yyleng-1 ] );
@@ -1613,8 +1613,8 @@ Separator     {SpaceTab}
 		In case of &var we have to store in the pcode the source code
 		of the codeblock - the string with the whole codeblock
 		have to be saved. At runtime, this string is macro
-		expanded and the result string is next macro compiled to 
-		create a codeblock - this is called 'the early macro evaluation'. 
+		expanded and the result string is next macro compiled to
+		create a codeblock - this is called 'the early macro evaluation'.
 		  In contrast, the late macro evaluation &(var) creates
 		the codeblock at compile time - the macro is expanded
 		during the codeblock evaluation.
@@ -1629,7 +1629,7 @@ Separator     {SpaceTab}
 		 FOR i:=1 TO 3
 		   ? EVAL( cb[i] ) //prints '1','2','3'
 		 NEXT
-		 //late evaluation 
+		 //late evaluation
 		 FOR i:=1 TO 3
 		   a:=STR(i)
 		   cb[i] := {|| &(a)}
@@ -1644,7 +1644,7 @@ Separator     {SpaceTab}
 		int iPos=0;
 		int iCode=1;
 		char cMark='\0';
-		
+
 		yylval_ptr->asCodeblock.flags = 0;
 		cText = yytext+1;
 		iLen = 1;
@@ -1767,7 +1767,7 @@ Separator     {SpaceTab}
                  * characters should go to grammar analyser instead of printing it
                  * on stdout.
                  */
-            pComp->pLex->lasttok = yytext; 
+            pComp->pLex->lasttok = yytext;
             return yytext[ 0 ];
             }
 
@@ -1896,11 +1896,11 @@ static int yy_ConvertNumber( YYSTYPE *yylval_ptr, char * szBuffer )
 static int yy_ConvertDate( YYSTYPE *yylval_ptr, char * szBuffer )
 {
    int year, month, day;
-   
+
    hb_dateStrGet( szBuffer+2, &year, &month, &day );
    yylval_ptr->valLong.lNumber = hb_dateEncode( year, month, day );
    yylval_ptr->valLong.szValue = szBuffer;
-   
+
    return NUM_DATE;
 }
 
