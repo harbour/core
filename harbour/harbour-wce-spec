@@ -14,10 +14,10 @@
 # --with mysql       - build mysql lib
 # --with pgsql       - build pgsql lib
 # --with gd          - build gd lib
-# --with allegro     - build GTALLEG - Allegro based GT driver
-# --with ads         - build ADS RDD
+# --with allegro     - build gtalleg - Allegro based GT driver
+# --with ads         - build rddads
 # --with odbc        - build odbc lib
-# --without nf       - do not build nanforum lib
+# --without hbnf     - do not build hbnf lib (nanforum lib)
 ######################################################################
 
 ######################################################################
@@ -139,7 +139,7 @@ make install %{?_smp_mflags}
 [ "%{?_with_odbc:1}" ]    || rm -f $HB_LIB_INSTALL/libhbodbc.a
 [ "%{?_with_allegro:1}" ] || rm -f $HB_LIB_INSTALL/libgtalleg.a
 [ "%{?_with_ads:1}" ]     || rm -f $HB_LIB_INSTALL/librddads.a
-[ "%{?_without_nf:1}" ]   && rm -f $HB_LIB_INSTALL/libhbnf.a
+[ "%{?_without_hbnf:1}" ] && rm -f $HB_LIB_INSTALL/libhbnf.a
 
 # remove unused files
 rm -fR ${HB_BIN_INSTALL}/{harbour,hbpp,hbmk2,hbrun,hbi18n,hbtest}.exe
@@ -180,8 +180,6 @@ All these scripts accept command line switches:
 -hwgui                  # link with HWGUI library (GTK+ interface)
 -l<libname>             # link with <libname> library
 -L<libpath>             # additional path to search for libraries
--fmstat                 # link with the memory statistics lib
--nofmstat               # do not link with the memory statistics lib (default)
 -[no]strip              # strip (no strip) binaries
 -main=<main_func>       # set the name of main program function/procedure.
                         # if not set then 'MAIN' is used or if it doesn't

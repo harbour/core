@@ -15,20 +15,20 @@
 # --with static      - link all binaries with static libs
 # --with mysql       - build hbmysql lib and sddmy for sqlrdd
 # --with pgsql       - build hbpgsql lib and sddpg for sqlrdd
-# --with fbsql       - build hbfbird lib and sddfb for sqlrdd
+# --with firebird    - build hbfbird lib and sddfb for sqlrdd
 # --with odbc        - build hbodbc lib and sddodbc for sqlrdd
 # --with gd          - build hbgd lib
-# --with ads         - build rddads RDD
+# --with ads         - build rddads
 # --with curl        - build hbcurl lib
 # --with localzlib   - build local copy of zlib library
 # --with localpcre   - build local copy of pcre library
-# --with qt
-# --without nf       - do not build nanforum lib
-# --without gpllib   - do not build libs which needs GPL 3-rd party code
-# --without x11      - do not build GTXWC
-# --without gpm      - build GTTRM, GTSLN and GTCRS without GPM support
-# --without gtcrs    - do not build GTCRS
-# --without gtsln    - do not build GTSLN
+# --with qt          - build hbqt and hbxbp libs
+# --without hbnf     - do not build hbnf lib (nanforum lib)
+# --without gpllib   - do not build libs which needs GPL 3rd party code
+# --without x11      - do not build gtxwc
+# --without gpm      - build gttrm, gtsln and gtcrs without gpm support
+# --without curses   - do not build gtcrs
+# --without slang    - do not build gtsln
 ######################################################################
 
 ######################################################################
@@ -76,8 +76,8 @@
 %define hb_cflag export HB_USER_CFLAGS=
 %define hb_lflag export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS} %{?_with_static:-static}"
 %define hb_gpm   export HB_WITH_GPM=%{!?_without_gpm:yes}%{?_without_gpm:no}
-%define hb_crs   export HB_WITH_CURSES=%{!?_without_gtcrs:yes}%{?_without_gtcrs:no}
-%define hb_sln   export HB_WITH_SLANG=%{!?_without_gtsln:yes}%{?_without_gtsln:no}
+%define hb_crs   export HB_WITH_CURSES=%{!?_without_curses:yes}%{?_without_curses:no}
+%define hb_sln   export HB_WITH_SLANG=%{!?_without_slang:yes}%{?_without_slang:no}
 %define hb_x11   export HB_WITH_X11=%{!?_without_x11:yes}%{?_without_x11:no}
 %define hb_local export HB_WITH_ZLIB=%{?_with_localzlib:local} ; export HB_WITH_PCRE=%{?_with_localpcre:local}
 %define hb_bdir  export HB_BIN_INSTALL=%{_bindir}
@@ -85,7 +85,7 @@
 %define hb_ldir  export HB_LIB_INSTALL=%{_libdir}/%{name}
 %define hb_edir  export HB_ETC_INSTALL=%{hb_etcdir}
 %define hb_cmrc  export HB_COMMERCE=%{?_without_gpllib:yes}
-%define hb_ctrb  export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbtpathy hbhpdf hbsms hbziparc xhb rddsql %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_fbsql:hbfbird} %{?_with_allegro:gtalleg} %{?_with_qt:hbqt hbxbp}"
+%define hb_ctrb  export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbtpathy hbhpdf hbsms hbziparc xhb rddsql %{!?_without_hbnf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_firebird:hbfbird} %{?_with_allegro:gtalleg} %{?_with_qt:hbqt hbxbp}"
 %define hb_env   %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_edir} ; %{hb_ctrb} ; %{hb_cmrc}
 %define hb_host  www.harbour-project.org
 %define readme   README.RPM
@@ -106,7 +106,7 @@ Vendor:         %{hb_host}
 URL:            http://%{hb_host}/
 Source:         %{name}-%{version}.src.tar.gz
 Packager:       Przemys³aw Czerpak <druzus@polbox.com> Luiz Rafael Culik Guimaraes <culikr@uol.com.br>
-BuildPrereq:    gcc binutils bash %{!?_without_gtcrs: ncurses-devel} %{!?_without_gpm: gpm-devel}
+BuildPrereq:    gcc binutils bash %{!?_without_curses: ncurses-devel} %{!?_without_gpm: gpm-devel}
 Requires:       gcc binutils bash sh-utils %{name}-lib = %{?epoch:%{epoch}:}%{version}-%{release}
 Provides:       %{name} harbour
 BuildRoot:      /tmp/%{name}-%{version}-root
@@ -323,20 +323,20 @@ statikus szerkesztéshez.
 %{?_with_pgsql:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
 %{?_with_pgsql:Ten pakiet udostêpnia statyczn+ biliotekê PGSQL dla kompilatora %{dname}.}
 
-## fbird library
-%{?_with_fbsql:%package fbird}
-%{?_with_fbsql:Summary:        FireBird libarary for %{dname} compiler}
-%{?_with_fbsql:Summary(pl):    Bilioteka FireBird dla kompilatora %{dname}}
-%{?_with_fbsql:Group:          Development/Languages}
-%{?_with_fbsql:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+## firebird library
+%{?_with_firebird:%package firebird}
+%{?_with_firebird:Summary:        FireBird libarary for %{dname} compiler}
+%{?_with_firebird:Summary(pl):    Bilioteka FireBird dla kompilatora %{dname}}
+%{?_with_firebird:Group:          Development/Languages}
+%{?_with_firebird:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
 
-%{?_with_fbsql:%description fbird}
-%{?_with_fbsql:%{dname} is a Clipper compatible compiler.}
-%{?_with_fbsql:This package provides %{dname} FireBird library for program linking.}
+%{?_with_firebird:%description firebird}
+%{?_with_firebird:%{dname} is a Clipper compatible compiler.}
+%{?_with_firebird:This package provides %{dname} FireBird library for program linking.}
 
-%{?_with_fbsql:%description -l pl fbird}
-%{?_with_fbsql:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_fbsql:Ten pakiet udostêpnia statyczn+ biliotekê FireBird dla kompilatora %{dname}.}
+%{?_with_firebird:%description -l pl firebird}
+%{?_with_firebird:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
+%{?_with_firebird:Ten pakiet udostêpnia statyczn+ biliotekê FireBird dla kompilatora %{dname}.}
 
 ## gd library
 %{?_with_gd:%package gd}
@@ -403,8 +403,8 @@ export LD_LIBRARY_PATH=$HB_INST_PKGPREF$HB_LIB_INSTALL
 make install %{?_smp_mflags}
 
 [ "%{?_with_allegro:1}" ]  || rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/libgtalleg.a
-[ "%{?_without_gtcrs:1}" ] && rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/libgtcrs.a
-[ "%{?_without_gtsln:1}" ] && rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/libgtsln.a
+[ "%{?_without_curses:1}" ] && rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/libgtcrs.a
+[ "%{?_without_slang:1}" ] && rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/libgtsln.a
 rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/liblibhpdf.a
 rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/liblibpng.a
 rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/libsqlite3.a
@@ -460,8 +460,6 @@ All these scripts accept command line switches:
 -hwgui                  # link with HWGUI library (GTK+ interface)
 -l<libname>             # link with <libname> library
 -L<libpath>             # additional path to search for libraries
--fmstat                 # link with the memory statistics lib
--nofmstat               # do not link with the memory statistics lib (default)
 -[no]strip              # strip (no strip) binaries
 -main=<main_func>       # set the name of main program function/procedure.
                         # if not set then 'MAIN' is used or if it doesn't
@@ -624,7 +622,7 @@ rm -rf $RPM_BUILD_ROOT
 %files contrib
 %defattr(644,root,root,755)
 %dir %{_libdir}/%{name}
-%{!?_without_nf: %{_libdir}/%{name}/libhbnf.a}
+%{!?_without_hbnf: %{_libdir}/%{name}/libhbnf.a}
 %{_libdir}/%{name}/libhbbtree.a
 %{_libdir}/%{name}/libhbmisc.a
 %{_libdir}/%{name}/libhbmzip.a
@@ -675,11 +673,11 @@ rm -rf $RPM_BUILD_ROOT
 %{?_with_pgsql:%{_libdir}/%{name}/libhbpgsql.a}
 %{?_with_pgsql:%{_libdir}/%{name}/libsddpg.a}
 
-%{?_with_fbsql:%files fbird}
-%{?_with_fbsql:%defattr(644,root,root,755)}
-%{?_with_fbsql:%dir %{_libdir}/%{name}}
-%{?_with_fbsql:%{_libdir}/%{name}/libhbfbird.a}
-%{?_with_fbsql:%{_libdir}/%{name}/libsddfb.a}
+%{?_with_firebird:%files firebird}
+%{?_with_firebird:%defattr(644,root,root,755)}
+%{?_with_firebird:%dir %{_libdir}/%{name}}
+%{?_with_firebird:%{_libdir}/%{name}/libhbfbird.a}
+%{?_with_firebird:%{_libdir}/%{name}/libsddfb.a}
 
 %{?_with_gd:%files gd}
 %{?_with_gd:%defattr(644,root,root,755)}

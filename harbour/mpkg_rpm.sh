@@ -16,20 +16,20 @@
 # --with static      - link all binaries with static libs
 # --with mysql       - build hbmysql lib and sddmy for sqlrdd
 # --with pgsql       - build hbpgsql lib and sddpg for sqlrdd
-# --with fbsql       - build hbfbird lib and sddfb for sqlrdd
+# --with firebird    - build hbfbird lib and sddfb for sqlrdd
 # --with odbc        - build hbodbc lib and sddodbc for sqlrdd
-# --with ads         - build rddads RDD
+# --with ads         - build rddads
 # --with gd          - build hbgd lib
-# --with qt          - build hbqt and hbxbp
-# --with allegro     - build GTALLEG - Allegro based GT driver
+# --with qt          - build hbqt and hbxbp libs
+# --with allegro     - build gtalleg - Allegro based GT driver
 # --with localzlib   - build local copy of zlib library
 # --with localpcre   - build local copy of pcre library
-# --without gpllib   - do not build libs which needs GPL 3-rd party code
-# --without nf       - do not build hbnf lib (nanforum lib)
-# --without x11      - do not build GTXWC
-# --without gpm      - build GTTRM, GTSLN and GTCRS without GPM support
-# --without gtcrs    - do not build GTCRS
-# --without gtsln    - do not build GTSLN
+# --without gpllib   - do not build libs which needs GPL 3rd party code
+# --without hbnf     - do not build hbnf lib (nanforum lib)
+# --without x11      - do not build gtxwc
+# --without gpm      - build gttrm, gtsln and gtcrs without gpm support
+# --without curses   - do not build gtcrs
+# --without slang    - do not build gtsln
 ######################################################################
 
 test_reqrpm()
@@ -85,7 +85,7 @@ do
                 [ "$1" = "odbc" ] && NEED_RPM="${NEED_RPM} unixODBC-devel"
             fi
             [ "$1" = "pgsql" ] && NEED_RPM="${NEED_RPM} postgresql-devel"
-            [ "$1" = "fbsql" ] && NEED_RPM="${NEED_RPM} firebird-devel"
+            [ "$1" = "firebird" ] && NEED_RPM="${NEED_RPM} firebird-devel"
             [ "$1" = "allegro" ] && NEED_RPM="${NEED_RPM} allegro-devel"
             [ "$1" = "qt" ] && NEED_RPM="${NEED_RPM} libqt4-devel"
         fi
@@ -104,7 +104,7 @@ then
 fi
 if test_reqrpm "firebird-devel"
 then
-    INST_PARAM="${INST_PARAM} --with fbsql"
+    INST_PARAM="${INST_PARAM} --with firebird"
 fi
 if test_reqrpm "gd-devel"
 then
@@ -145,11 +145,11 @@ then
 fi
 if ! test_reqrpm ncurses || ! test_reqrpm ncurses-devel
 then
-    INST_PARAM="${INST_PARAM} --without gtcrs"
+    INST_PARAM="${INST_PARAM} --without curses"
 fi
 if ! test_reqrpm slang || ! test_reqrpm slang-devel
 then
-    INST_PARAM="${INST_PARAM} --without gtsln"
+    INST_PARAM="${INST_PARAM} --without slang"
 fi
 if [ ! -f /usr/include/zlib.h ] && [ ! -f /usr/local/include/zlib.h ]
 then
