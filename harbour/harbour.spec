@@ -11,27 +11,6 @@
 # ---------------------------------------------------------------
 
 ######################################################################
-# Conditional build:
-# --with static      - link all binaries with static libs
-# --with mysql       - build hbmysql lib and sddmy for sqlrdd
-# --with pgsql       - build hbpgsql lib and sddpg for sqlrdd
-# --with firebird    - build hbfbird lib and sddfb for sqlrdd
-# --with odbc        - build hbodbc lib and sddodbc for sqlrdd
-# --with gd          - build hbgd lib
-# --with ads         - build rddads
-# --with curl        - build hbcurl lib
-# --with localzlib   - build local copy of zlib library
-# --with localpcre   - build local copy of pcre library
-# --with qt          - build hbqt and hbxbp libs
-# --without hbnf     - do not build hbnf lib (nanforum lib)
-# --without gpllib   - do not build libs which needs GPL 3rd party code
-# --without x11      - do not build gtxwc
-# --without gpm      - build gttrm, gtsln and gtcrs without gpm support
-# --without curses   - do not build gtcrs
-# --without slang    - do not build gtsln
-######################################################################
-
-######################################################################
 ## Definitions.
 ######################################################################
 

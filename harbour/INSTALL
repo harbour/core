@@ -222,9 +222,32 @@ HARBOUR
 
       for native build:
          $ ./mpkg_rpm.sh
-      for Windows cross-build:
+
+      You can fine-tune the build with these options:
+        --with static      - link all binaries with static libs
+        --with mysql       - build components dependent on mysql (hbmysql, sddmy)
+        --with pgsql       - build components dependent on pgsql (hbpgsql, sddpg)
+        --with gd          - build components dependent on gd (hbgd)
+        --with allegro     - build components dependent on allegro (gtalleg)
+        --with ads         - build components dependent on ads (rddads)
+        --with odbc        - build components dependent on odbc (hbodbc, sddodbc)
+        --with firebird    - build componetns dependent on firebird (hbfbird, sddfb)
+        --with curl        - build componetns dependent on libcurl (hbcurl)
+        --with localzlib   - build local copy of zlib library
+        --with localpcre   - build local copy of pcre library
+        --with qt          - build componetns dependent on qt (hbqt, hbxbp)
+        --without gpllib   - do not build components which needs GPL 3rd party code (HB_COMMERCE)
+        --without x11      - build componetns dependent on x11 (gtxwc)
+        --without gpm      - build gttrm, gtsln and gtcrs without gpm support
+        --without curses   - build componetns dependent on curses (gtcrs)
+        --without slang    - build componetns dependent on slang (gtsln)
+
+   Binary .rpm on Linux (cross-builds)
+   -----------------------------------
+
+      for Windows:
          $ ./mpkg_rpm_win.sh
-      for Windows CE cross-build:
+      for Windows CE:
          $ ./mpkg_rpm_wce.sh
 
    Binary .zip + .exe on Windows for all targets (except Linux)
