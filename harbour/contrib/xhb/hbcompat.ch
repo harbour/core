@@ -121,6 +121,8 @@
 
    #xtranslate hb_i18n_gettext(<x>)        => i18n(<x>)
 
+   #xtranslate hb_cdpSelect([<x,...>])     => hb_SetCodepage( <x> )
+
    #xtranslate hb_ARGV([<x,...>])          => hb_CMDARGARGV(<x>)
 
    #xtranslate hb_IniSetComment([<x,...>]) => hb_SetIniComment(<x>)
@@ -329,6 +331,8 @@
    #xtranslate MemoWrit(<x>,<y>,<z>)           => iif( hb_isLogical(<z>) .AND. <z>, MemoWrit(<x>,<y>), hb_MemoWrit(<x>,<y>) )
 
    #xtranslate i18n(<x>)                       => hb_i18n_gettext(<x>)
+
+   #xtranslate hb_SetCodepage([<x,...>])       => hb_cdpSelect( <x> )
 
    /* _SET_TRACE* / TraceLog() */
    #xtranslate Set(_SET_TRACE [,<x,...>])      => xhb_setTrace( <x> )
