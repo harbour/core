@@ -469,31 +469,3 @@ HB_FUNC( CAIRO_PATH_ITERATOR_SET_POINTS )
    }
    hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-
-/*
-
-1) 
-
-2) hb_gcRefInc()/hb_gcRefDec() is required without HB_USE_ITEM. This 
-   requires define _HB_API_INTERNAL_. Is this OK?
-
-3) In function CAIRO_PATH_ITERATOR_CREATE() new item is created using:
-pIterator->pPath = hb_itemNew( hb_param( 1, HB_IT_POINTER ) );
-
-Does pIterator->pPath need to be unlocked? 
-If it remains locked, then hb_gcGripMark( pIterator->pPath ) in mark 
-function is not necessary.
-
-4) Can be sure that inside CAIRO_PATH_ITERATOR_NEXT() pPath is a valid (not destroyed path)?
-(both with and without HB_USE_ITEM)
-
-5) What is correct way to code:
-   pCairo = hb_cairo_par( 1 ); // generate RTE if parameter is wrong
-   if( pData )
-      cairo_something( pCairo );
-or this is also ok:
-    cairo_something( hb_cairo_par( 1 ) );
-
-6) Should implementation of procedures end with hb_ret(); ?
-
-*/
