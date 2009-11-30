@@ -31,7 +31,7 @@ export HB_HAS_WATT       :=
 
 # Exclude Harbour-wide features prohibiting commercial use
 
-ifeq ($(HB_COMMERCE),yes)
+ifeq ($(HB_BUILD_NOGPLLIB),yes)
    export HB_INC_GPM := no
    export HB_INC_SLANG := no
 endif

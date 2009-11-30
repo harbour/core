@@ -249,7 +249,6 @@ ifeq ($(HB_INIT_DONE),)
    ifneq ($(MAKE_381),)
 
       # Some additional ones to be given a standard name:
-      #   HB_COMMERCE                 -> ?
       #   HB_BIN_COMPILE              -> HB_BUILD_BIN_DIR
       #   HB_INC_COMPILE              -> - (HB_BUILD_INC_DIR)
       #   HB_DLLIBS                   -> (only used in one location, so it's a local matter)

@@ -238,7 +238,7 @@ HARBOUR
          --without x11      - do not build components dependent on x11 (gtxwc)
          --without curses   - do not build components dependent on curses (gtcrs)
          --without slang    - do not build components dependent on slang (gtsln)
-         --without gpllib   - do not build components dependent on GPL 3rd party code (HB_COMMERCE)
+         --without gpllib   - do not build components dependent on GPL 3rd party code
          --without gpm      - build components without gpm support (gttrm, gtsln, gtcrs)
 
    Binary .rpm on Linux (cross-builds)
@@ -580,6 +580,9 @@ HARBOUR
                                         compilers, where it's cpp.
    - HB_BUILD_PARTS=
          [all|compiler|lib]    Build only specific part of Harbour.
+   - HB_BUILD_NOGPLLIB=yes     Disables components dependent on GPL 3rd party code,
+                               to allow Harbour for commercial (closed-source)
+                               projects. Default: no
    - HB_BUILD_EXTDEF=no        Controls autodetection of external components
                                on default systems locations. Default: yes
    - HB_CONTRIBLIBS=no         Don't build any contrib libraries. Default: yes

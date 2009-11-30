@@ -111,11 +111,11 @@ if [ -f /usr/local/ads/acesdk/ace.h ] || [ -f ${HOME}/ads/acesdk/ace.h ]
 then
     INST_PARAM="${INST_PARAM} --with ads"
 fi
-if [ "${HB_COMMERCE}" = "yes" ]
+if [ "${HB_BUILD_NOGPLLIB}" = "yes" ]
 then
     INST_PARAM="${INST_PARAM} --without gpllib"
 fi
-if [ "${HB_COMMERCE}" = "yes" ] || ! test_reqrpm "gpm-devel"
+if [ "${HB_BUILD_NOGPLLIB}" = "yes" ] || ! test_reqrpm "gpm-devel"
 then
     INST_PARAM="${INST_PARAM} --without gpm"
 fi
