@@ -175,6 +175,7 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 
    ::oWidget  := QListView():New( ::pParent )
+   ::oWidget:setMouseTracking( .t. )
 
    /* Window Events */
    ::oWidget:installEventFilter( SetEventFilter() )
@@ -211,10 +212,13 @@ METHOD XbpListBox:exeBlock( nMode, pModel )
       IF hb_isBlock( ::sl_itemMarked )
          eval( ::sl_itemMarked, NIL, NIL, self )
       ENDIF
-   ELSEIF nMode == 2 .or. nMode == 3
+   ELSEIF nMode == 2
       IF hb_isBlock( ::sl_itemSelected )
          eval( ::sl_itemSelected, NIL, NIL, self )
       ENDIF
+   ELSEIF nMode == 3  // mouse cursor is on
+      // set the tooltip
+      ::oWidget:setToolTip( ::oStrList:at( ::nCurSelected - 1 ) )
    ENDIF
 
    RETURN nil

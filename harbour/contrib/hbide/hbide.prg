@@ -241,7 +241,6 @@ METHOD HbIde:create( cProjIni )
    ::loadConfig( cProjIni )
 
    ::BuildDialog()
-HBXBP_DEBUG( 133 )
    ::oDa := ::oDlg:drawingArea
    SetAppWindow( ::oDlg )
    ::oDlg:Show()
@@ -441,7 +440,6 @@ METHOD HbIde:loadConfig( cHbideIni )
    HBXBP_DEBUG( hb_dirBase(), cHbideIni )
 
    ::cProjIni := cHbideIni
-   ::aIni := { afill( array( 7 /*INI_HBIDE_VRBLS*/ ), "" ), {}, {} }
 
    IF file( ::cProjIni )
       #if 0
@@ -464,6 +462,7 @@ METHOD HbIde:loadConfig( cHbideIni )
 
       #endif
 
+      ::aIni := { array( 7 /*INI_HBIDE_VRBLS*/ ), {}, {} }
       aElem := ReadSource( ::cProjIni )
 
       FOR EACH s IN aElem
@@ -499,8 +498,6 @@ METHOD HbIde:loadConfig( cHbideIni )
          ENDIF
       NEXT
    ENDIF
-
-   HBXBP_DEBUG( "Filled Defaults" )
 
    RETURN Self
 
@@ -632,7 +629,7 @@ METHOD HbIde:convertSelection( cKey )
          nL := len( cBuffer )
          nB := qCursor:position() - nL
 
-         //qCursor:beginEditBlock()
+         qCursor:beginEditBlock()
 HBXBP_DEBUG( "BEFORE REMOVE", qCursor:position() )
          qCursor:removeSelectedText()
 HBXBP_DEBUG( "BEFORE INSERT", qCursor:position() )
@@ -644,7 +641,7 @@ HBXBP_DEBUG( "AFTER SET    ", qCursor:position() )
          ::qCurEdit:find( cBuffer, QTextDocument_FindCaseSensitively )
 HBXBP_DEBUG( "AFTER FIND   ", qCursor:position() )
          //qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nL )
-         //qCursor:endEditBlock()
+         qCursor:endEditBlock()
       ENDIF
    ENDIF
 
@@ -663,10 +660,11 @@ METHOD HbIde:manageFocusInEditor()
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:updateFuncList()
+   LOCAL o
 
    ::oFuncList:clear()
    IF !empty( ::aTags )
-      aeval( ::aTags, {|e_| ::oFuncList:addItem( e_[ 7 ] ) } )
+      aeval( ::aTags, {|e_| o := ::oFuncList:addItem( e_[ 7 ] ) } )
    ENDIF
 
    RETURN Self
@@ -717,11 +715,15 @@ METHOD HbIde:editSource( cSourceFile )
 
    oTab := ::buildTabPage( ::oDa, cSourceFile )
 
+   #if 0
    qEdit := QTextEdit():new( QT_PTROFXBP( oTab ) )
-   qEdit:setLineWrapMode( QTextEdit_NoWrap )
-   qEdit:setPlainText( memoread( cSourceFile ) )
-   qEdit:setFont( QT_PTROFXBP( ::oFont ) )
    qEdit:setTextBackgroundColor( QT_PTROF( QColor():new( 255,255,255 ) ) )
+   #else
+   qEdit := QPlainTextEdit():new( QT_PTROFXBP( oTab ) )
+   #endif
+   qEdit:setPlainText( memoread( cSourceFile ) )
+   qEdit:setLineWrapMode( QTextEdit_NoWrap )
+   qEdit:setFont( QT_PTROFXBP( ::oFont ) )
 
    qDocument := QTextDocument():configure( qEdit:document() )
 
@@ -755,12 +757,11 @@ METHOD HbIde:editSource( cSourceFile )
 METHOD HbIde:loadSources()
    LOCAL i
 
-   IF !empty( ::aIni[ INI_FILES ] )
-      FOR i := 1 TO len( ::aIni[ INI_FILES ] )
-         ::editSource( ::aIni[ INI_FILES, i ] )
-      NEXT
-      ::qTabWidget:setCurrentIndex( val( ::aIni[ INI_HBIDE, RecentTabIndex ] ) )
-   ENDIF
+   FOR i := 1 TO len( ::aIni[ INI_FILES ] )
+      ::editSource( ::aIni[ INI_FILES, i ] )
+   NEXT
+   ::qTabWidget:setCurrentIndex( val( ::aIni[ INI_HBIDE, RecentTabIndex ] ) )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1125,13 +1126,11 @@ METHOD HbIde:buildFuncList()
 METHOD HbIde:setPosAndSizeByIni( qWidget, nPart )
    LOCAL aRect
 
-   IF !empty( ::aIni[ INI_HBIDE, nPart ] )
-      aRect := hb_atokens( ::aIni[ INI_HBIDE, nPart ], "," )
-      aeval( aRect, {|e,i| aRect[ i ] := val( e ) } )
+   aRect := hb_atokens( ::aIni[ INI_HBIDE, nPart ], "," )
+   aeval( aRect, {|e,i| aRect[ i ] := val( e ) } )
 
-      qWidget:move( aRect[ 1 ], aRect[ 2 ] )
-      qWidget:resize( aRect[ 3 ], aRect[ 4 ] )
-   ENDIF
+   qWidget:move( aRect[ 1 ], aRect[ 2 ] )
+   qWidget:resize( aRect[ 3 ], aRect[ 4 ] )
 
    RETURN Self
 

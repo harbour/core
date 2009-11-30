@@ -143,6 +143,7 @@ QPalette.qth
 QPen.qth
 QPicture.qth
 QPixmap.qth
+QPlainTextEdit.qth
 QPoint.qth
 QPointF.qth
 QPolygon.qth
