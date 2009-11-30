@@ -305,6 +305,39 @@ static void hb_oleStringToItem( BSTR strVal, PHB_ITEM pItem )
 }
 
 
+static IDispatch * hb_oleItemGetDispatch( PHB_ITEM pItem )
+{
+   if( HB_IS_OBJECT( pItem ) )
+   {
+      if( hb_clsIsParent( hb_objGetClass( pItem ), "WIN_OLEAUTO" ) )
+      {
+         hb_vmPushDynSym( s_pDyns_hObjAccess );
+         hb_vmPush( pItem );
+         hb_vmSend( 0 );
+
+         return hb_oleParam( -1 );
+      }
+   }
+   return hb_oleItemGet( pItem );
+}
+
+
+static void hb_oleDispatchToVariant( VARIANT* pVariant, IDispatch* pDisp,
+                                     VARIANT* pVarRef )
+{
+   /* pVariant will be freed using VariantClear().
+      We increment reference count to keep OLE object alive */
+   HB_VTBL( pDisp )->AddRef( HB_THIS( pDisp ) );
+   pVariant->n1.n2.vt = VT_DISPATCH;
+   pVariant->n1.n2.n3.pdispVal = pDisp;
+   if( pVarRef )
+   {
+      pVarRef->n1.n2.vt = VT_DISPATCH | VT_BYREF;
+      pVarRef->n1.n2.n3.ppdispVal = &pVariant->n1.n2.n3.pdispVal;
+   }
+}
+
+
 /* Item <-> Variant conversion */
 
 static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
@@ -405,42 +438,33 @@ static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
          }
          break;
 
-#ifdef HB_OLE_PASS_POINTERS
       case HB_IT_POINTER:
-         pVariant->n1.n2.vt = VT_PTR;
-         pVariant->n1.n2.n3.byref = hb_itemGetPtr( pItem );
-         if( pVarRef )
-         {
-            pVarRef->n1.n2.vt = VT_PTR | VT_BYREF;
-            pVarRef->n1.n2.n3.byref = &pVariant->n1.n2.n3.byref;
-         }
-         break;
-#endif
+      {
+         IDispatch * pDisp = hb_oleItemGet( pItem );
 
+         if( pDisp )
+            hb_oleDispatchToVariant( pVariant, pDisp, pVarRef );
+#ifdef HB_OLE_PASS_POINTERS
+         else
+         {
+            pVariant->n1.n2.vt = VT_PTR;
+            pVariant->n1.n2.n3.byref = hb_itemGetPtr( pItem );
+            if( pVarRef )
+            {
+               pVarRef->n1.n2.vt = VT_PTR | VT_BYREF;
+               pVarRef->n1.n2.n3.byref = &pVariant->n1.n2.n3.byref;
+            }
+         }
+#endif
+         break;
+      }
       case HB_IT_ARRAY: /* or OBJECT */
          if( HB_IS_OBJECT( pItem ) )
          {
-            if( hb_clsIsParent( hb_objGetClass( pItem ), "WIN_OLEAUTO" ) )
-            {
-               IDispatch * pDisp;
+            IDispatch * pDisp = hb_oleItemGetDispatch( pItem );
 
-               hb_vmPushDynSym( s_pDyns_hObjAccess );
-               hb_vmPush( pItem );
-               hb_vmSend( 0 );
-
-               pDisp = hb_oleParam( -1 );
-
-               /* pVariant will be freed using VariantClear().
-                  We increment reference count to keep OLE object alive */
-               HB_VTBL( pDisp )->AddRef( HB_THIS( pDisp ) );
-               pVariant->n1.n2.vt = VT_DISPATCH;
-               pVariant->n1.n2.n3.pdispVal = pDisp;
-               if( pVarRef )
-               {
-                  pVarRef->n1.n2.vt = VT_DISPATCH | VT_BYREF;
-                  pVarRef->n1.n2.n3.ppdispVal = &pVariant->n1.n2.n3.pdispVal;
-               }
-            }
+            if( pDisp )
+               hb_oleDispatchToVariant( pVariant, pDisp, pVarRef );
          }
          else
          {
@@ -840,13 +864,14 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
    }
 }
 
+
 void hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem )
 {
    switch( pVariant->n1.n2.vt )
    {
       case VT_DISPATCH | VT_BYREF:
       {
-         IDispatch* pDisp = hb_oleItemGet( pItem );
+         IDispatch * pDisp = hb_oleItemGetDispatch( pItem );
 
          if( pDisp )
          {
@@ -857,6 +882,31 @@ void hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem )
                *pVariant->n1.n2.n3.ppdispVal = pDisp;
                if( pdispVal )
                   HB_VTBL( pdispVal )->Release( HB_THIS( pdispVal ) );
+            }
+         }
+         break;
+      }
+
+      case VT_UNKNOWN | VT_BYREF:
+      {
+         IDispatch* pDisp = hb_oleItemGetDispatch( pItem );
+
+         if( pDisp )
+         {
+            IUnknown* pUnk = NULL;
+
+            if( HB_VTBL( pDisp )->QueryInterface( HB_THIS_( pDisp )
+                                       HB_ID_REF( IID_IEnumVARIANT ),
+                                       ( void** ) ( void * ) &pUnk ) == S_OK )
+            {
+               IUnknown* punkVal = *pVariant->n1.n2.n3.ppunkVal;
+               if( punkVal != pUnk )
+               {
+                  HB_VTBL( pUnk )->AddRef( HB_THIS( pUnk ) );
+                  *pVariant->n1.n2.n3.ppunkVal = pUnk;
+                  if( punkVal )
+                     HB_VTBL( punkVal )->Release( HB_THIS( punkVal ) );
+               }
             }
          }
          break;
