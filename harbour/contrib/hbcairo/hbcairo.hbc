@@ -5,4 +5,4 @@
 incpaths=.
 
 libs=hbcairo
-libs=libcairo-2.0
+libs=cairo

@@ -296,6 +296,7 @@ HARBOUR
    HB_WITH_ADS=C:\ads\acesdk
    HB_WITH_ALLEGRO=C:\allegro\include
    HB_WITH_BLAT=C:\blat\full\source
+   HB_WITH_CAIRO=C:\cairo\include\cairo
    HB_WITH_CURL=C:\curl\include
    HB_WITH_CURSES= (on *nix systems and DJGPP, where it's autodetected)
    HB_WITH_FIREBIRD=C:\Firebird\include
@@ -820,6 +821,7 @@ HARBOUR
       set HB_WITH_ALLEGRO=C:\allegro\include
       set HB_WITH_APOLLO=C:\Apollo\include
       set HB_WITH_BLAT=C:\blat\full\source
+      set HB_WITH_CAIRO=C:\cairo\include\cairo
       set HB_WITH_CURL=C:\curl\include
       set HB_WITH_FIREBIRD=C:\Firebird\include
       set HB_WITH_FREEIMAGE=C:\FreeImage\Dist

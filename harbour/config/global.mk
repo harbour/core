@@ -815,99 +815,84 @@ ifeq ($(HB_COMPILER),)
                endif
             endif
          endif
-      else
-         ifeq ($(HB_PLATFORM),linux)
+      else ifeq ($(HB_PLATFORM),linux)
+         HB_COMP_PATH := $(call find_in_path,wpp386)
+         ifneq ($(HB_COMP_PATH),)
+            HB_COMPILER := watcom
+            $(eval $(call detect_watcom_platform))
+         else
+            HB_COMP_PATH := $(call find_in_path,gcc)
+            ifneq ($(HB_COMP_PATH),)
+               HB_COMPILER := gcc
+            else
+               HB_COMP_PATH := $(call find_in_path,suncc)
+               ifneq ($(HB_COMP_PATH),)
+                  HB_COMPILER := sunpro
+               else
+                  HB_COMP_PATH := $(call find_in_path,icc)
+                  ifneq ($(HB_COMP_PATH),)
+                     HB_COMPILER := icc
+                  endif
+               endif
+            endif
+         endif
+      else ifneq ($(filter $(HB_PLATFORM),hpux bsd),)
+         HB_COMP_PATH := $(call find_in_path,gcc)
+         ifneq ($(HB_COMP_PATH),)
+            HB_COMPILER := gcc
+         endif
+      else ifeq ($(HB_PLATFORM),darwin)
+         HB_COMP_PATH := $(call find_in_path_par,clang,/Developer/usr/bin/)
+         ifneq ($(HB_COMP_PATH),)
+            HB_CCPREFIX := /Developer/usr/bin/
+            HB_COMPILER := clang
+         else
+            HB_COMP_PATH := $(call find_in_path,gcc)
+            ifneq ($(HB_COMP_PATH),)
+               HB_COMPILER := gcc
+            else
+               HB_COMP_PATH := $(call find_in_path,icc)
+               ifneq ($(HB_COMP_PATH),)
+                  HB_COMPILER := icc
+               endif
+            endif
+         endif
+      else ifeq ($(HB_PLATFORM),sunos)
+         HB_COMP_PATH := $(call find_in_path,suncc)
+         ifneq ($(HB_COMP_PATH),)
+            HB_COMPILER := sunpro
+         else
+            HB_COMP_PATH := $(call find_in_path,gcc)
+            ifneq ($(HB_COMP_PATH),)
+               HB_COMPILER := gcc
+            endif
+         endif
+      else ifeq ($(HB_PLATFORM),dos)
+         HB_COMP_PATH := $(call find_in_path,gcc)
+         ifneq ($(HB_COMP_PATH),)
+            HB_COMPILER := djgpp
+         else
             HB_COMP_PATH := $(call find_in_path,wpp386)
             ifneq ($(HB_COMP_PATH),)
                HB_COMPILER := watcom
                $(eval $(call detect_watcom_platform))
-            else
-               HB_COMP_PATH := $(call find_in_path,gcc)
-               ifneq ($(HB_COMP_PATH),)
-                  HB_COMPILER := gcc
-               else
-                  HB_COMP_PATH := $(call find_in_path,suncc)
-                  ifneq ($(HB_COMP_PATH),)
-                     HB_COMPILER := sunpro
-                  else
-                     HB_COMP_PATH := $(call find_in_path,icc)
-                     ifneq ($(HB_COMP_PATH),)
-                        HB_COMPILER := icc
-                     endif
-                  endif
-               endif
             endif
+         endif
+      else ifeq ($(HB_PLATFORM),os2)
+         HB_COMP_PATH := $(call find_in_path,gcc)
+         ifneq ($(HB_COMP_PATH),)
+            HB_COMPILER := gcc
          else
-            ifneq ($(filter $(HB_PLATFORM),hpux bsd),)
-               HB_COMP_PATH := $(call find_in_path,gcc)
-               ifneq ($(HB_COMP_PATH),)
-                  HB_COMPILER := gcc
-               endif
-            else
-               ifeq ($(HB_PLATFORM),darwin)
-                  HB_COMP_PATH := $(call find_in_path_par,clang,/Developer/usr/bin/)
-                  ifneq ($(HB_COMP_PATH),)
-                     HB_CCPREFIX := /Developer/usr/bin/
-                     HB_COMPILER := clang
-                  else
-                     HB_COMP_PATH := $(call find_in_path,gcc)
-                     ifneq ($(HB_COMP_PATH),)
-                        HB_COMPILER := gcc
-                     else
-                        HB_COMP_PATH := $(call find_in_path,icc)
-                        ifneq ($(HB_COMP_PATH),)
-                           HB_COMPILER := icc
-                        endif
-                     endif
-                  endif
-               else
-                  ifeq ($(HB_PLATFORM),sunos)
-                     HB_COMP_PATH := $(call find_in_path,suncc)
-                     ifneq ($(HB_COMP_PATH),)
-                        HB_COMPILER := sunpro
-                     else
-                        HB_COMP_PATH := $(call find_in_path,gcc)
-                        ifneq ($(HB_COMP_PATH),)
-                           HB_COMPILER := gcc
-                        endif
-                     endif
-                  else
-                     ifeq ($(HB_PLATFORM),dos)
-                        HB_COMP_PATH := $(call find_in_path,gcc)
-                        ifneq ($(HB_COMP_PATH),)
-                           HB_COMPILER := djgpp
-                        else
-                           HB_COMP_PATH := $(call find_in_path,wpp386)
-                           ifneq ($(HB_COMP_PATH),)
-                              HB_COMPILER := watcom
-                              $(eval $(call detect_watcom_platform))
-                           endif
-                        endif
-                     else
-                        ifeq ($(HB_PLATFORM),os2)
-                           HB_COMP_PATH := $(call find_in_path,gcc)
-                           ifneq ($(HB_COMP_PATH),)
-                              HB_COMPILER := gcc
-                           else
-                              HB_COMP_PATH := $(call find_in_path,wpp386)
-                              ifneq ($(HB_COMP_PATH),)
-                                 HB_COMPILER := watcom
-                                 $(eval $(call detect_watcom_platform))
-                              endif
-                           endif
-                        else
-                           ifeq ($(HB_PLATFORM),beos)
-                              HB_COMP_PATH := $(call find_in_path,gcc)
-                              ifneq ($(HB_COMP_PATH),)
-                                 HB_COMPILER := gcc
-                              endif
-                           endif
-                           # add other platforms here
-                        endif
-                     endif
-                  endif
-               endif
+            HB_COMP_PATH := $(call find_in_path,wpp386)
+            ifneq ($(HB_COMP_PATH),)
+               HB_COMPILER := watcom
+               $(eval $(call detect_watcom_platform))
             endif
+         endif
+      else ifeq ($(HB_PLATFORM),beos)
+         HB_COMP_PATH := $(call find_in_path,gcc)
+         ifneq ($(HB_COMP_PATH),)
+            HB_COMPILER := gcc
          endif
       endif
    endif

@@ -19,11 +19,24 @@ C_SOURCES := \
 
 PRG_SOURCES := \
 
-C_HEADERS := \
-   hbcairo.h \
-
 PRG_HEADERS := \
    hbcairo.ch \
 
-include $(TOP)$(ROOT)config/header.mk
-include $(TOP)$(ROOT)config/lib.mk
+_DET_DSP_NAME := cairo
+_DET_VAR_INC_ := HB_INC_CAIRO
+_DET_VAR_HAS_ := HB_HAS_CAIRO
+_DET_FLT_PLAT :=
+_DET_FLT_COMP :=
+_DET_INC_DEFP := /usr/include
+_DET_INC_HEAD := /cairo.h
+include $(TOP)$(ROOT)config/detfun.mk
+
+ifneq ($(HB_HAS_CAIRO),)
+   HB_CFLAGS += $(foreach d,$(HB_HAS_CAIRO),-I$(d))
+
+   include $(TOP)$(ROOT)config/header.mk
+   include $(TOP)$(ROOT)config/lib.mk
+else
+   HB_SKIP_REASON := $(_DET_RES_TEXT)
+   include $(TOP)$(ROOT)config/none.mk
+endif
