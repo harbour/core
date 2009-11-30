@@ -1250,6 +1250,12 @@ HARBOUR
          http://alleg.sourceforge.net/
       HB_WITH_BLAT - Blat (SMTP client) [win, free, open-source]
          http://www.blat.net/
+      HB_WITH_CAIRO - Cairo [multiplatform, open-source]
+         http://www.gtk.org/download-windows.html
+         Direct links, look for these components on page above:
+            http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/cairo-dev_1.8.8-2_win32.zip
+            http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/cairo_1.8.8-2_win32.zip
+            http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/libpng_1.2.39-1_win32.zip
       HB_WITH_CURL - libcurl (file transfer) [multiplatform, free, open-source]
          http://curl.haxx.se/
       HB_WITH_FIREBIRD - firebird SQL [multiplatform, free, open-source]

@@ -95,3 +95,22 @@ HB_FUNC( WAPI_SHELLEXECUTE )
 
 #endif
 }
+
+HB_FUNC( WAPI_USERISANADMIN )
+{
+   BOOL bResult = FALSE;
+
+   HMODULE hLib = LoadLibrary( TEXT( "shell32.dll" ) );
+
+   if( hLib )
+   {
+      typedef int ( WINAPI * ISUSERANADMIN )( void );
+      ISUSERANADMIN pIsUserAnAdmin = ( ISUSERANADMIN ) GetProcAddress( hLib, "IsUserAnAdmin" );
+      if( pIsUserAnAdmin )
+         bResult = ( pIsUserAnAdmin )();
+
+      FreeLibrary( hLib );
+   }
+
+   hb_retl( bResult );
+}
