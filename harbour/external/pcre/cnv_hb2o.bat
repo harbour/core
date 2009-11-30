@@ -3,7 +3,7 @@ rem
 rem $Id$
 rem
 
-rem Tested with PCRE 7.7
+rem Tested with PCRE 8.0
 
 rem NOTE:       Purpose of this script is to take the source files
 rem             in Harbour repo and convert them back to the filenames

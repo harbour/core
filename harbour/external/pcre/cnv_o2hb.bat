@@ -3,7 +3,7 @@ rem
 rem $Id$
 rem
 
-rem Tested with PCRE 7.7
+rem Tested with PCRE 8.0
 
 rem NOTE:       Purpose of this script is to take the original
 rem             files from its source distribution and convert

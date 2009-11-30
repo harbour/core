@@ -2,7 +2,7 @@
 # $Id$
 #
 
-{allwin}libpaths=${HB_DIR_QT}\lib
+{allwin}libpaths=${HB_WITH_QT}\..\lib
 
 libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
 {linux}libs=QtCore QtGui QtNetwork QtWebKit
