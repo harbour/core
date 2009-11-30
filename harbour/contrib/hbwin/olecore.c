@@ -526,9 +526,9 @@ void hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem )
 }
 
 
-static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray, int iDim, long * plIndex )
+static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray,
+                                   int iDim, long * plIndex, VARTYPE vt )
 {
-   VARIANT   vItem;
    long      lFrom, lTo;
    ULONG     ul = 0;
 
@@ -540,12 +540,23 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray, int i
       hb_arrayNew( pItem, lTo - lFrom + 1 );
       if( --iDim == 0 )
       {
+         VARIANT vItem;
          VariantInit( &vItem );
          do
          {
             plIndex[ iDim ] = lFrom;
-            if( SafeArrayGetElement( pSafeArray, plIndex, &vItem ) == S_OK )
+            /* hack: for non VT_VARIANT arrays create VARIANT dynamically
+             *       using pointer to union in variant structure which
+             *       holds all variant values except VT_DECIMAL which is
+             *       stored in different place.
+             */
+            if( SafeArrayGetElement( pSafeArray, plIndex,
+                                     vt == VT_VARIANT ? ( void * ) &vItem :
+                                     ( vt == VT_DECIMAL ? ( void * ) &vItem.n1.decVal :
+                                     ( void * ) &vItem.n1.n2.n3 ) ) == S_OK )
             {
+               if( vt != VT_VARIANT )
+                  vItem.n1.n2.vt = vt; /* it's reserved in VT_DECIMAL structure */
                hb_oleVariantToItem( hb_arrayGetItemPtr( pItem, ++ul ), &vItem );
                VariantClear( &vItem );
             }
@@ -557,7 +568,8 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray, int i
          do
          {
             plIndex[ iDim ] = lFrom;
-            hb_oleSafeArrayToItem( hb_arrayGetItemPtr( pItem, ++ul ), pSafeArray, iDim, plIndex );
+            hb_oleSafeArrayToItem( hb_arrayGetItemPtr( pItem, ++ul ),
+                                   pSafeArray, iDim, plIndex, vt );
          }
          while( ++lFrom <= lTo );
       }
@@ -629,14 +641,11 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
 
       case VT_DISPATCH:
       case VT_DISPATCH | VT_BYREF:
-      {
-         IDispatch* pdispVal = pVariant->n1.n2.vt == VT_DISPATCH ?
-                               pVariant->n1.n2.n3.pdispVal :
-                               *pVariant->n1.n2.n3.ppdispVal;
          hb_itemClear( pItem );
-         hb_oleDispatchToItem( pItem, pdispVal );
+         hb_oleDispatchToItem( pItem, pVariant->n1.n2.vt == VT_DISPATCH ?
+                                      pVariant->n1.n2.n3.pdispVal :
+                                      *pVariant->n1.n2.n3.ppdispVal );
          break;
-      }
 
       case VT_BSTR:
          hb_oleStringToItem( pVariant->n1.n2.n3.bstrVal, pItem );
@@ -835,31 +844,37 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
          break;
 #endif
 
-      case VT_VARIANT | VT_ARRAY:
-      case VT_VARIANT | VT_ARRAY | VT_BYREF:
-      {
-         SAFEARRAY * pSafeArray = pVariant->n1.n2.vt & VT_BYREF ?
-                                  *pVariant->n1.n2.n3.pparray :
-                                  pVariant->n1.n2.n3.parray;
-         if( pSafeArray )
-         {
-            int  iDim;
-
-            if( ( iDim = ( int ) SafeArrayGetDim( pSafeArray ) ) >= 1 )
-            {
-               long * plIndex = ( long * ) hb_xgrab( iDim * sizeof( long ) );
-
-               hb_oleSafeArrayToItem( pItem, pSafeArray, iDim, plIndex );
-               hb_xfree( plIndex );
-            }
-            else
-               hb_arrayNew( pItem, 0 );
-            break;
-         }
-         /* Fall through */
-      }
+      case VT_EMPTY:
+      case VT_EMPTY | VT_BYREF:
+      case VT_NULL:
+      case VT_NULL | VT_BYREF:
+         hb_itemClear( pItem );
+         break;
 
       default:
+         if( pVariant->n1.n2.vt & VT_ARRAY )
+         {
+            SAFEARRAY * pSafeArray = pVariant->n1.n2.vt & VT_BYREF ?
+                                     *pVariant->n1.n2.n3.pparray :
+                                     pVariant->n1.n2.n3.parray;
+            if( pSafeArray )
+            {
+               int  iDim;
+
+               if( ( iDim = ( int ) SafeArrayGetDim( pSafeArray ) ) >= 1 )
+               {
+                  long * plIndex = ( long * ) hb_xgrab( iDim * sizeof( long ) );
+
+                  hb_oleSafeArrayToItem( pItem, pSafeArray, iDim, plIndex,
+                           ( pVariant->n1.n2.vt & ~( VT_ARRAY | VT_BYREF ) ) );
+                  hb_xfree( plIndex );
+               }
+               else
+                  hb_arrayNew( pItem, 0 );
+               break;
+            }
+         }
+         /* possible RT error - unsupported variant */
          hb_itemClear( pItem );
    }
 }

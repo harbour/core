@@ -112,7 +112,7 @@ mk_hbgetlibs()
         then
             libs="$libs gtwin"
         fi
-        echo "hbextern hbvm hbpp hbrtl hbrdd rddfpt rddcdx rddnsx rddntx hbhsx hbsix hbusrrdd ${HB_DB_DRVEXT} hbmacro hbcommon hblang hbcpage gtcrs gtsln gtxvt gtxwc gtcgi gtstd gtpca gttrm $libs gtwvt gtgui gtdos gtos2 hbdebug profiler hbcplr hbpcre hbzlib"
+        echo "hbextern hbvm hbpp hbrtl hbrdd rddfpt rddcdx rddnsx rddntx hbhsx hbsix hbusrrdd hbmacro hbcommon hblang hbcpage gtcrs gtsln gtxvt gtxwc gtcgi gtstd gtpca gttrm $libs gtwvt gtgui gtdos gtos2 hbdebug profiler hbcplr hbpcre hbzlib"
     else
         echo "$@"
     fi
@@ -129,7 +129,7 @@ mk_hbgetlibsctb()
         then
             libs="$libs gtwin"
         fi
-        echo "$libs ${HB_DB_DRVEXT} hbct hbnf hbmzip hbnetio hbtip xhb hbgd hbfimage rddsql sddfb sddmy sddpg hbodbc hbpgsql hbmysql hbfbird rddads rddado hbhpdf hbvpdf hbcurl hbwin gtwvg gtalleg hbsqlit3 hbbtree $HB_USER_LIBS"
+        echo "$libs hbct hbnf hbmzip hbnetio hbtip xhb hbgd hbfimage rddsql sddfb sddmy sddpg hbodbc hbpgsql hbmysql hbfbird rddads rddado hbhpdf hbvpdf hbcurl hbwin gtwvg gtalleg hbsqlit3 hbbtree $HB_USER_LIBS"
         #"hbgf hbgt hbbmcdx hbmisc hbsms hbtpathy hbwhat hbziparc hbmsql"
     else
         echo "$@"
@@ -780,6 +780,9 @@ mk_hblibso()
 
     hb_ver=`get_hbver_so "${hb_rootdir}"`
     hb_libs=`mk_hbgetlibs "$2"`
+    if [ -n "${HB_USER_DLL_ADDONS}" ]; then
+        hb_libs="${hb_libs} ${HB_USER_DLL_ADDONS}"
+    fi
     [ -z "${HB_GT_LIB}" ] && HB_GT_LIB="gtstd"
 
     (cd ${HB_INST_PKGPREF}${HB_LIB_INSTALL}
@@ -890,12 +893,14 @@ mk_hblibso()
     full_lib_name="${lib_pref}${name}${lib_suff}"
     full_lib_name_mt="${lib_pref}${name}mt${lib_suff}"
     hb_mkdyn="${HB_INST_PKGPREF}${HB_BIN_INSTALL}/${HB_TOOLS_PREF-hb}-mkdyn"
-#   echo "Making ${full_lib_name}..."
-#   ${hb_mkdyn} ${full_lib_name} ${LIBS} ${linker_options}
-#   if [ "${LIBS}" != "${LIBSMT}" ]; then
-#       echo "Making ${full_lib_name_mt}..."
-#       ${hb_mkdyn} ${full_lib_name_mt} ${LIBSMT} ${linker_mtoptions} ${linker_options}
-#   fi
+    if [ -n "${HB_USER_DLL_ADDONS}" ]; then
+        echo "Making ${full_lib_name}..."
+        ${hb_mkdyn} ${full_lib_name} ${LIBS} ${linker_options}
+        if [ "${LIBS}" != "${LIBSMT}" ]; then
+            echo "Making ${full_lib_name_mt}..."
+            ${hb_mkdyn} ${full_lib_name_mt} ${LIBSMT} ${linker_mtoptions} ${linker_options}
+        fi
+    fi
     for l in ${full_lib_name} ${full_lib_name_mt}
     do
         if [ -f $l ]
