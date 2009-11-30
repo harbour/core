@@ -69,7 +69,17 @@ else
    endif
 
    # Create a few common core lib lists
-   _HB_RDD := hbrdd $(HB_RDD_LIBS)
+   _HB_RDD := \
+      hbrdd \
+      rddntx \
+      rddnsx \
+      rddcdx \
+      rddfpt \
+      hbsix \
+      hbhsx \
+      hbusrrdd \
+      hbuddall
+
    _HB_VM := hbvm
    HB_LIBS_ST_RDD := $(HB_LIBS_TPL)
    _HB_VM := hbvmmt

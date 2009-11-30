@@ -56,8 +56,16 @@ PRG_SOURCES := \
 
 LIBNAME := hbrdd
 
-# The list of all valid DB drivers is defined in config/global.mk
-DIRS = nulsys $(HB_RDD_DIRS)
+DIRS = \
+   nulsys \
+   dbfntx \
+   dbfnsx \
+   dbfcdx \
+   dbffpt \
+   hbsix \
+   hsx \
+   usrrdd \
+   usrrdd/rdds \
 
 include $(TOP)$(ROOT)config/lib.mk
 include $(TOP)$(ROOT)config/dir.mk

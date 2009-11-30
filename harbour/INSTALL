@@ -220,8 +220,7 @@ HARBOUR
    Binary .rpm on Linux
    --------------------
 
-      for native build:
-         $ ./mpkg_rpm.sh
+      $ ./mpkg_rpm.sh
 
       You can fine-tune the build with these options:
          --with static      - link all binaries with static libs

@@ -249,7 +249,6 @@ ifeq ($(HB_INIT_DONE),)
    ifneq ($(MAKE_381),)
 
       # Some additional ones to be given a standard name:
-      #   HB_DB_DRVEXT                -> -
       #   HB_COMMERCE                 -> ?
       #   HB_BIN_COMPILE              -> HB_BUILD_BIN_DIR
       #   HB_INC_COMPILE              -> - (HB_BUILD_INC_DIR)
@@ -1133,33 +1132,6 @@ ifneq ($(HB_HAS_SLANG),)
 endif
 ifneq ($(HB_HAS_X11),)
    HB_GT_LIBS += gtxwc
-endif
-
-# Names of valid RDD libraries
-HB_RDD_LIBS := \
-   rddntx \
-   rddnsx \
-   rddcdx \
-   rddfpt \
-   hbsix \
-   hbhsx \
-   hbusrrdd \
-   hbuddall \
-
-# Names of valid RDD subdirectories
-HB_RDD_DIRS := \
-   dbfntx \
-   dbfnsx \
-   dbfcdx \
-   dbffpt \
-   hbsix \
-   hsx \
-   usrrdd \
-   usrrdd/rdds \
-
-ifneq ($(HB_DB_DRVEXT),)
-   HB_RDD_LIBS += $(HB_DB_DRVEXT)
-   HB_RDD_DIRS += $(HB_DB_DRVEXT)
 endif
 
 ifneq ($(HB_PLATFORM),dos)
