@@ -1,0 +1,8 @@
+#
+# $Id$
+#
+
+incpaths=.
+
+libs=hbcairo
+libs=libcairo-2.0
