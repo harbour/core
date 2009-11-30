@@ -121,7 +121,8 @@
                 - Compilers of native CPU target have higher priority. (extra)
                   On x64 Windows: msvc64, msvc, msvcia64, mingw64, mingw, ...
                   On x86 Windows: msvc, msvc64, msvcia64, mingw, mingw64, ...
-                  On IA64 Windows: msvcia64, msvc, msvc64, mingw, mingw64, ... */
+                  On IA64 Windows: msvcia64, msvc, msvc64, mingw, mingw64, ...
+         +1 Add compiler version autodetection for MSVC. */
 
 #ifndef _HBMK_EMBEDDED_
 
