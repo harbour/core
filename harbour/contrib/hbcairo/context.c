@@ -56,71 +56,95 @@
 
 HB_FUNC( CAIRO_CREATE )
 {
-   hb_cairo_ret( cairo_create( hb_cairo_surface_param( 1 ) ) );
+   cairo_surface_t *  pSurface = hb_cairo_surface_param( 1 );
+   if( pSurface )
+      hb_cairo_ret( cairo_create( pSurface ) );
 }
 
 
 HB_FUNC( CAIRO_FILL )
 {
-   cairo_fill( hb_cairo_param( 1 ) );
+   cairo_t *  pCairo = hb_cairo_param( 1 );
+   if( pCairo )
+      cairo_fill( pCairo  );
 }
 
 
 HB_FUNC( CAIRO_FILL_PRESERVE )
 {
-   cairo_fill_preserve( hb_cairo_param( 1 ) );
+   cairo_t *  pCairo = hb_cairo_param( 1 );
+   if( pCairo )
+      cairo_fill_preserve( pCairo );
 }
 
 
 HB_FUNC( CAIRO_RESTORE )
 {
-   cairo_restore( hb_cairo_param( 1 ) );
+   cairo_t *  pCairo = hb_cairo_param( 1 );
+   if( pCairo )
+      cairo_restore( pCairo );
 }
 
 
 HB_FUNC( CAIRO_SAVE )
 {
-   cairo_save( hb_cairo_param( 1 ) );
+   cairo_t *  pCairo = hb_cairo_param( 1 );
+   if( pCairo )
+      cairo_save( pCairo );
 }
 
 
 HB_FUNC( CAIRO_SET_LINE_CAP )
 {
-   cairo_set_line_cap( hb_cairo_param( 1 ), hb_parni( 2 ) );
+   cairo_t *  pCairo = hb_cairo_param( 1 );
+   if( pCairo )
+      cairo_set_line_cap( pCairo, hb_parni( 2 ) );
 }
 
 
 HB_FUNC( CAIRO_SET_LINE_WIDTH )
 {
-   cairo_set_line_width( hb_cairo_param( 1 ), hb_parnd( 2 ) );
+   cairo_t *  pCairo = hb_cairo_param( 1 );
+   if( pCairo )
+      cairo_set_line_width( pCairo, hb_parnd( 2 ) );
 }
 
 
 HB_FUNC( CAIRO_SET_SOURCE_RGB )
 {
-   cairo_set_source_rgb( hb_cairo_param( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) );
+   cairo_t *  pCairo = hb_cairo_param( 1 );
+   if( pCairo )
+      cairo_set_source_rgb( pCairo, hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) );
 }
 
 
 HB_FUNC( CAIRO_SET_TOLERANCE )
 {
-   cairo_set_tolerance( hb_cairo_param( 1 ), hb_parnd( 2 ) );
+   cairo_t *  pCairo = hb_cairo_param( 1 );
+   if( pCairo )
+      cairo_set_tolerance( pCairo, hb_parnd( 2 ) );
 }
 
 HB_FUNC( CAIRO_SHOW_PAGE )
 {
-   cairo_show_page( hb_cairo_param( 1 ) );
+   cairo_t *  pCairo = hb_cairo_param( 1 );
+   if( pCairo )
+      cairo_show_page( pCairo );
 }
 
 
 HB_FUNC( CAIRO_STROKE )
 {
-   cairo_stroke( hb_cairo_param( 1 ) );
+   cairo_t *  pCairo = hb_cairo_param( 1 );
+   if( pCairo )
+      cairo_stroke( pCairo );
 }
 
 
 HB_FUNC( CAIRO_STROKE_PRESERVE )
 {
-   cairo_stroke_preserve( hb_cairo_param( 1 ) );
+   cairo_t *  pCairo = hb_cairo_param( 1 );
+   if( pCairo )
+      cairo_stroke_preserve( pCairo );
 }
 

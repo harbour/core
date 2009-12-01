@@ -52,10 +52,8 @@ STATIC PROC draw_table( hCairo, nX, nY, aCol )
    DBGOTOP()
    aWidth := ARRAY( LEN( aCol ) )
    FOR nI := 1 TO LEN( aCol )
-     cairo_text_extents( hCairo, REPLICATE( "9", FIELDLEN( FIELDPOS( aCol[ nI, 2 ] ) ) ),,,,, @nDX )
-     aWidth[ nI ] := nDX
-     cairo_text_extents( hCairo, aCol[ nI, 1 ],,,,, @nDX )
-     aWidth[ nI ] := MAX( aWidth[ nI ], nDX ) + 20
+     aWidth[ nI ] := cairo_text_extents( hCairo, REPLICATE( "9", FIELDLEN( FIELDPOS( aCol[ nI, 2 ] ) ) ) )[ 5 ]
+     aWidth[ nI ] := MAX( aWidth[ nI ], cairo_text_extents( hCairo, aCol[ nI, 1 ] )[ 5 ] ) + 20
    NEXT
    nW := 0
    AEVAL( aWidth, {|X| nW += X} )
@@ -123,7 +121,6 @@ RETURN
 STATIC PROC show_text_center( hCairo, cText )
    LOCAL nDX
    cairo_text_extents( hCairo, cText,,,,, @nDX )
-   ? nDX
    cairo_rel_move_to( hCairo, -nDX/2, 0 )
    cairo_show_text( hCairo, cText )
 RETURN

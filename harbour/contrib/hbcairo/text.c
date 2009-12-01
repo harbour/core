@@ -57,37 +57,54 @@
 
 HB_FUNC( CAIRO_SELECT_FONT_FACE )
 {
-   void *  hFamily;
-   cairo_select_font_face( hb_cairo_param( 1 ), hb_parstr_utf8( 2, &hFamily, NULL ), ( cairo_font_slant_t ) hb_parni( 3 ), ( cairo_font_weight_t ) hb_parni( 4 ) );
-   hb_strfree( hFamily );
+   void *     hFamily;
+   cairo_t *  pCairo = hb_cairo_param( 1 );
+   if( pCairo )
+   {
+      cairo_select_font_face( pCairo, hb_parstr_utf8( 2, &hFamily, NULL ), ( cairo_font_slant_t ) hb_parni( 3 ), ( cairo_font_weight_t ) hb_parni( 4 ) );
+      hb_strfree( hFamily );
+   }
 }
 
 
 HB_FUNC( CAIRO_SET_FONT_SIZE )
 {
-   cairo_set_font_size( hb_cairo_param( 1 ), hb_parnd( 2 ) );
+   cairo_t *  pCairo = hb_cairo_param( 1 );
+   if( pCairo )
+      cairo_set_font_size( pCairo, hb_parnd( 2 ) );
 }
 
 
 HB_FUNC( CAIRO_SHOW_TEXT )
 {
-   void *  hText;
-   cairo_show_text( hb_cairo_param( 1 ), hb_parstr_utf8( 2, &hText, NULL ) );
-   hb_strfree( hText );
+   void *     hText;
+   cairo_t *  pCairo = hb_cairo_param( 1 );
+   if( pCairo )
+   {
+      cairo_show_text( pCairo, hb_parstr_utf8( 2, &hText, NULL ) );
+      hb_strfree( hText );
+   }
 }
 
 
 HB_FUNC( CAIRO_TEXT_EXTENTS )
 {
-   void *  hText;
+   void *     hText;
+   cairo_t *  pCairo = hb_cairo_param( 1 );
    cairo_text_extents_t te;
-   cairo_text_extents( hb_cairo_param( 1 ), hb_parstr_utf8( 2, &hText, NULL ), &te );
-   hb_strfree( hText );
-   hb_stornd( te.x_bearing, 3 );
-   hb_stornd( te.y_bearing, 4 );
-   hb_stornd( te.width,     5 );
-   hb_stornd( te.height,    6 );
-   hb_stornd( te.x_advance, 7 );
-   hb_stornd( te.y_advance, 8 );
+   if( pCairo )
+   {
+      PHB_ITEM  pItem = hb_stackReturnItem();
+
+      cairo_text_extents( pCairo, hb_parstr_utf8( 2, &hText, NULL ), &te );
+      hb_strfree( hText );
+      hb_arrayNew( pItem, 6 )
+      hb_arraySetND( pItem, 1, te.x_bearing );
+      hb_arraySetND( pItem, 2, te.y_bearing );
+      hb_arraySetND( pItem, 3, te.width     );
+      hb_arraySetND( pItem, 4, te.height    );
+      hb_arraySetND( pItem, 5, te.x_advance );
+      hb_arraySetND( pItem, 6, te.y_advance );
+   }
 }
 
