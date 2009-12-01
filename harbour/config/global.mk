@@ -1161,20 +1161,16 @@ else
          HB_INSTALL_PREFIX := /boot/common
       else ifeq ($(HB_PLATFORM_UNIX),)
          HB_INSTALL_PREFIX := $(realpath $(TOP)$(ROOT))
+      else ifneq ($(PREFIX),)
+         HB_INSTALL_PREFIX := $(PREFIX)
+      else ifneq ($(DESTDIR),)
+         HB_INSTALL_PREFIX := $(DESTDIR)
       else
-         ifneq ($(PREFIX),)
-            HB_INSTALL_PREFIX := $(PREFIX)
-         else
-            ifneq ($(DESTDIR),)
-               HB_INSTALL_PREFIX := $(DESTDIR)
-            else
-               # Stick to *nix customs. I do not like it, it needs admin.
-               HB_INSTALL_PREFIX := /usr/local
-               # Add postfix for cross builds
-               ifneq ($(HB_HOST_PLAT),$(HB_PLATFORM))
-                  HB_INSTALL_PREFIX += /harbour-$(HB_PLATFORM)-$(HB_COMPILER)
-               endif
-            endif
+         # Stick to *nix customs. I do not like it, it needs admin.
+         HB_INSTALL_PREFIX := /usr/local
+         # Add postfix for cross builds
+         ifneq ($(HB_HOST_PLAT),$(HB_PLATFORM))
+            HB_INSTALL_PREFIX += /harbour-$(HB_PLATFORM)-$(HB_COMPILER)
          endif
       endif
 
@@ -1318,29 +1314,19 @@ ifeq ($(HB_INIT_DONE),)
       ifeq ($(HB_PLATFORM),win)
          ifeq ($(HB_COMPILER),bcc)
             DYNNAME_POST := $(DYNNAME_POST)-bcc
-         else
-            ifeq ($(HB_CPU),x86_64)
-               DYNNAME_POST := $(DYNNAME_POST)-x64
-            else
-               ifeq ($(HB_CPU),ia64)
-                  DYNNAME_POST := $(DYNNAME_POST)-ia64
-               endif
-            endif
+         else ifeq ($(HB_CPU),x86_64)
+            DYNNAME_POST := $(DYNNAME_POST)-x64
+         else ifeq ($(HB_CPU),ia64)
+            DYNNAME_POST := $(DYNNAME_POST)-ia64
          endif
-      else
-         ifeq ($(HB_PLATFORM),wce)
-            DYNNAME_POST := $(DYNNAME_POST)-wce
-            ifeq ($(HB_CPU),arm)
-               DYNNAME_POST := $(DYNNAME_POST)-arm
-            else
-               ifeq ($(HB_CPU),mips)
-                  DYNNAME_POST := $(DYNNAME_POST)-mips
-               else
-                  ifeq ($(HB_CPU),sh)
-                     DYNNAME_POST := $(DYNNAME_POST)-sh
-                  endif
-               endif
-            endif
+      else ifeq ($(HB_PLATFORM),wce)
+         DYNNAME_POST := $(DYNNAME_POST)-wce
+         ifeq ($(HB_CPU),arm)
+            DYNNAME_POST := $(DYNNAME_POST)-arm
+         else ifeq ($(HB_CPU),mips)
+            DYNNAME_POST := $(DYNNAME_POST)-mips
+         else ifeq ($(HB_CPU),sh)
+            DYNNAME_POST := $(DYNNAME_POST)-sh
          endif
       endif
 
