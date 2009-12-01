@@ -7932,7 +7932,7 @@ STATIC PROCEDURE OutOpt( aOpt )
       aOpt[ 2 ] := StrTran( aOpt[ 2 ], "\n", hb_osNewLine() )
       nLines := MLCount( aOpt[ 2 ], MaxCol() - 21 )
       FOR nLine := 1 TO nLines
-         IF ! Empty( tmp := MemoLine( aOpt[ 2 ], MaxCol() - 21, nLine ) )
+         IF ! Empty( tmp := RTrim( MemoLine( aOpt[ 2 ], MaxCol() - 21, nLine ) ) )
             IF nLine == 1
                OutStd( PadR( Space( 2 ) + aOpt[ 1 ], 21 ) )
             ELSE
@@ -7953,7 +7953,7 @@ STATIC PROCEDURE OutNote( cText )
    cText := StrTran( cText, "\n", hb_osNewLine() )
    nLines := MLCount( cText, MaxCol() - 4 )
    FOR nLine := 1 TO nLines
-      IF ! Empty( tmp := MemoLine( cText, MaxCol() - 4, nLine ) )
+      IF ! Empty( tmp := RTrim( MemoLine( cText, MaxCol() - 4, nLine ) ) )
          IF nLine == 1
             OutStd( PadR( "  -", 4 ) )
          ELSE
@@ -7973,7 +7973,7 @@ STATIC PROCEDURE hbmk_OutStd( cText )
    cText := StrTran( cText, "\n", hb_osNewLine() )
    nLines := MLCount( cText, MaxCol() - 7 )
    FOR nLine := 1 TO nLines
-      IF ! Empty( tmp := MemoLine( cText, MaxCol() - 7, nLine ) )
+      IF ! Empty( tmp := RTrim( MemoLine( cText, MaxCol() - 7, nLine ) ) )
          IF nLine == 1
             OutStd( PadR( "hbmk2:", 7 ) )
          ELSE
@@ -7993,7 +7993,7 @@ STATIC PROCEDURE hbmk_OutErr( cText )
    cText := StrTran( cText, "\n", hb_osNewLine() )
    nLines := MLCount( cText, MaxCol() - 7 )
    FOR nLine := 1 TO nLines
-      IF ! Empty( tmp := MemoLine( cText, MaxCol() - 7, nLine ) )
+      IF ! Empty( tmp := RTrim( MemoLine( cText, MaxCol() - 7, nLine ) ) )
          IF nLine == 1
             OutErr( PadR( "hbmk2:", 7 ) )
          ELSE
