@@ -232,7 +232,7 @@ REQUEST hbmk_KEYW
 
 #define LEFTEQUAL( l, r )       ( l = r ) /* NOTE: This requires Set( _SET_EXACT, .F. ) */
 
-#define _OUT_EOL                hb_osNewLine()
+#define _OUT_EOL                Chr( 10 )
 
 #define _HBMK_lQuiet            1
 #define _HBMK_lInfo             2
