@@ -193,6 +193,12 @@ extern HB_EXPORT void hb_mbtowccpy( wchar_t *dstW, const char *srcA, unsigned lo
 extern HB_EXPORT void hb_mbtowcset( wchar_t *dstW, const char *srcA, unsigned long ulLen );
 extern HB_EXPORT void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen );
 
+#if defined( HB_OS_WIN_CE )
+   #define HBTEXT( x ) TEXT( x )
+#else
+   #define HBTEXT( x ) x
+#endif
+
 #if defined( UNICODE )
 
    #define HB_TCHAR_CPTO(d,s,l)        hb_mbtowccpy(d,s,l)
