@@ -317,12 +317,11 @@ static const HB_GC_FUNCS s_gcIteratorFuncs =
 
 HB_FUNC( CAIRO_PATH_ITERATOR_CREATE )
 {
-   PHB_CAIRO_PATH_ITERATOR  pIterator;
    cairo_path_t *           pPath = hb_cairo_path_param( 1 );
 
    if( pPath )
    {
-      pIterator = ( PHB_CAIRO_PATH_ITERATOR ) hb_gcAllocate( sizeof( PHB_CAIRO_PATH_ITERATOR ), &s_gcIteratorFuncs );
+      PHB_CAIRO_PATH_ITERATOR  pIterator = ( PHB_CAIRO_PATH_ITERATOR ) hb_gcAllocate( sizeof( PHB_CAIRO_PATH_ITERATOR ), &s_gcIteratorFuncs );
 #ifdef HB_USE_ITEM
       pIterator->pPath = hb_itemNew( hb_param( 1, HB_IT_POINTER ) );
 #else
@@ -332,7 +331,6 @@ HB_FUNC( CAIRO_PATH_ITERATOR_CREATE )
       pIterator->iPos = -1;
       hb_itemPutPtrGC( hb_stackReturnItem(), pIterator );
    }
-
 }
 
 
@@ -348,9 +346,9 @@ HB_FUNC( CAIRO_PATH_ITERATOR_DESTROY )
       hb_gcRefDec( pIterator->pPath );
 #endif
       pIterator->pPath = NULL;
-      return;
    }
-   hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   else
+      hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
@@ -379,9 +377,9 @@ HB_FUNC( CAIRO_PATH_ITERATOR_NEXT )
          hb_retni( pPath->data[ pIterator->iPos ].header.type );
       else
          hb_ret();
-      return;
    }
-   hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   else
+      hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
@@ -416,9 +414,9 @@ HB_FUNC( CAIRO_PATH_ITERATOR_GET_POINTS )
       }
       else
          hb_ret();
-      return;
    }
-   hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   else
+      hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
@@ -465,7 +463,7 @@ HB_FUNC( CAIRO_PATH_ITERATOR_SET_POINTS )
       }
       else
          hb_retl( 0 );
-      return;
    }
-   hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   else
+      hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

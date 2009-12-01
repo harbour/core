@@ -57,10 +57,10 @@
 
 HB_FUNC( CAIRO_SELECT_FONT_FACE )
 {
-   void *     hFamily;
    cairo_t *  pCairo = hb_cairo_param( 1 );
    if( pCairo )
    {
+      void * hFamily;
       cairo_select_font_face( pCairo, hb_parstr_utf8( 2, &hFamily, NULL ), ( cairo_font_slant_t ) hb_parni( 3 ), ( cairo_font_weight_t ) hb_parni( 4 ) );
       hb_strfree( hFamily );
    }
@@ -77,10 +77,10 @@ HB_FUNC( CAIRO_SET_FONT_SIZE )
 
 HB_FUNC( CAIRO_SHOW_TEXT )
 {
-   void *     hText;
    cairo_t *  pCairo = hb_cairo_param( 1 );
    if( pCairo )
    {
+      void * hText;
       cairo_show_text( pCairo, hb_parstr_utf8( 2, &hText, NULL ) );
       hb_strfree( hText );
    }
@@ -89,16 +89,16 @@ HB_FUNC( CAIRO_SHOW_TEXT )
 
 HB_FUNC( CAIRO_TEXT_EXTENTS )
 {
-   void *     hText;
    cairo_t *  pCairo = hb_cairo_param( 1 );
-   cairo_text_extents_t te;
    if( pCairo )
    {
+      void * hText;
       PHB_ITEM  pItem = hb_stackReturnItem();
+      cairo_text_extents_t te;
 
       cairo_text_extents( pCairo, hb_parstr_utf8( 2, &hText, NULL ), &te );
       hb_strfree( hText );
-      hb_arrayNew( pItem, 6 )
+      hb_arrayNew( pItem, 6 );
       hb_arraySetND( pItem, 1, te.x_bearing );
       hb_arraySetND( pItem, 2, te.y_bearing );
       hb_arraySetND( pItem, 3, te.width     );
@@ -107,4 +107,3 @@ HB_FUNC( CAIRO_TEXT_EXTENTS )
       hb_arraySetND( pItem, 6, te.y_advance );
    }
 }
-

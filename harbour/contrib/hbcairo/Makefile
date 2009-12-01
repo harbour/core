@@ -17,8 +17,6 @@ C_SOURCES := \
    png.c \
    text.c \
 
-PRG_SOURCES := \
-
 PRG_HEADERS := \
    hbcairo.ch \
 

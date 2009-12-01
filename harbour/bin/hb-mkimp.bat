@@ -209,11 +209,11 @@ rem ---------------------------------------------------------------
    echo    s/^^[ \t]\+[0-9]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+\(.*\)/\1/p>> _hbtemp.sed
    echo  }>> _hbtemp.sed
    echo }>> _hbtemp.sed
-   dumpbin /exports "%2" > _dump.tmp
+   dumpbin -exports "%2" > _dump.tmp
    echo LIBRARY "%~n2" > _temp.def
    echo EXPORTS >> _temp.def
    sed -nf _hbtemp.sed < _dump.tmp >> _temp.def
-   lib /nologo /machine:%1 /def:_temp.def /out:"%3"
+   lib -nologo -machine:%1 -def:_temp.def -out:"%3"
    del _dump.tmp
    del _temp.def
    del _hbtemp.sed

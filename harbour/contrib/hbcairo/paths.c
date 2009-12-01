@@ -154,10 +154,10 @@ HB_FUNC( CAIRO_REL_MOVE_TO )
 
 HB_FUNC( CAIRO_TEXT_PATH )
 {
-   void *     hText;
    cairo_t *  pCairo = hb_cairo_param( 1 );
    if( pCairo )
    {
+      void * hText;
       cairo_text_path( pCairo, hb_parstr_utf8( 2, &hText, NULL ) );
       hb_strfree( hText );
    }
