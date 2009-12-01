@@ -443,7 +443,7 @@ STATIC FUNCTION ADO_GETVALUE( nWA, nField, xValue )
 
    WITH OBJECT USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
       IF aWAData[ WA_EOF ] .OR. :EOF .OR. :BOF
-         xValue := nil
+         xValue := NIL
          IF ADO_GETFIELDTYPE( :Fields( nField - 1 ):Type ) == HB_FT_STRING
             xValue := Space( :Fields( nField - 1 ):DefinedSize )
          ENDIF
@@ -459,20 +459,20 @@ STATIC FUNCTION ADO_GETVALUE( nWA, nField, xValue )
          ELSEIF ADO_GETFIELDTYPE( :Fields( nField - 1 ):Type ) == HB_FT_DATE
             // Null values
             IF ValType( xValue ) == "U"
-                xValue := cToD( "" )
+                xValue := hb_SToD()
             ENDIF
 #ifdef HB_FT_DATETIME
          ELSEIF ADO_GETFIELDTYPE( :Fields( nField - 1 ):Type ) == HB_FT_DATETIME
             // Null values
             IF ValType( xValue ) == "U"
-                xValue := cToD( "" )
+                xValue := hb_SToD()
             ENDIF
 #endif
 #ifdef HB_FT_TIMESTAMP
          ELSEIF ADO_GETFIELDTYPE( :Fields( nField - 1 ):Type ) == HB_FT_TIMESTAMP
             // Null values
             IF ValType( xValue ) == "U"
-                xValue := cToD( "" )
+                xValue := hb_SToD()
             ENDIF
 #endif
          ENDIF
@@ -555,7 +555,7 @@ STATIC FUNCTION ADO_SKIPRAW( nWA, nToSkip )
          ++nToSkip
       ENDIF
       BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-         IF aWAData[WA_CONNECTION]:State != adStateClosed
+         IF aWAData[ WA_CONNECTION ]:State != adStateClosed
             IF nToSkip < 0 .AND. oRecordSet:AbsolutePosition <= -nToSkip
                oRecordSet:MoveFirst()
                aWAData[ WA_BOF ] := .T.
@@ -590,7 +590,7 @@ STATIC FUNCTION ADO_EOF( nWA, lEof )
    LOCAL nResult    := HB_SUCCESS
 
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-      IF USRRDD_AREADATA( nWA )[WA_CONNECTION]:State != adStateClosed
+      IF USRRDD_AREADATA( nWA )[ WA_CONNECTION ]:State != adStateClosed
          lEof := ( oRecordSet:AbsolutePosition == -3 )
       ENDIF
    RECOVER
@@ -631,9 +631,8 @@ STATIC FUNCTION ADO_RECNO( nWA, nRecNo )
    LOCAL nResult    := HB_SUCCESS
 
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-      IF USRRDD_AREADATA( nWA )[WA_CONNECTION]:State != adStateClosed
+      IF USRRDD_AREADATA( nWA )[ WA_CONNECTION ]:State != adStateClosed
          nRecno := iif( oRecordSet:AbsolutePosition == -3, oRecordSet:RecordCount() + 1, oRecordSet:AbsolutePosition )
-
       ELSE
          nRecno  := 0
          nResult := HB_FAILURE
@@ -941,7 +940,7 @@ STATIC FUNCTION ADO_LOCK( nWA, aLockInfo  )
    HB_SYMBOL_UNUSED( nWA )
 
    aLockInfo[ UR_LI_METHOD ] := DBLM_MULTIPLE
-   aLockInfo[ UR_LI_RECORD ] := RECNO()
+   aLockInfo[ UR_LI_RECORD ] := RecNo()
    aLockInfo[ UR_LI_RESULT ] := .T.
 
    RETURN HB_SUCCESS
@@ -980,7 +979,7 @@ STATIC FUNCTION ADO_ZAP( nWA )
    LOCAL aWAData    := USRRDD_AREADATA( nWA )
    LOCAL oRecordSet := aWAData[ WA_RECORDSET ]
 
-   IF aWAData[ WA_CONNECTION ] != NIL .and. aWAData[ WA_TABLENAME ] != nil
+   IF aWAData[ WA_CONNECTION ] != NIL .and. aWAData[ WA_TABLENAME ] != NIL
       BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          aWAData[ WA_CONNECTION ]:Execute( "TRUNCATE TABLE " + aWAData[ WA_TABLENAME ] )
       RECOVER
@@ -1082,7 +1081,7 @@ STATIC FUNCTION ADO_FORCEREL( nWA )
    IF ! Empty( aWAData[ WA_PENDINGREL ] )
 
       aPendingRel := aWAData[ WA_PENDINGREL ]
-      aWAData[ WA_PENDINGREL ] := Nil
+      aWAData[ WA_PENDINGREL ] := NIL
 
       RETURN ADO_RELEVAL( nWA, aPendingRel )
    ENDIF
@@ -1092,7 +1091,7 @@ STATIC FUNCTION ADO_FORCEREL( nWA )
 STATIC FUNCTION ADO_RELEVAL( nWA, aRelInfo )
    LOCAL aInfo, nReturn, nOrder, uResult
 
-   nReturn := ADO_EVALBLOCK( aRelInfo[UR_RI_PARENT], aRelInfo[UR_RI_BEXPR], @uResult )
+   nReturn := ADO_EVALBLOCK( aRelInfo[ UR_RI_PARENT ], aRelInfo[ UR_RI_BEXPR ], @uResult )
 
    IF  nReturn == HB_SUCCESS
       /*
@@ -1102,10 +1101,10 @@ STATIC FUNCTION ADO_RELEVAL( nWA, aRelInfo )
       nReturn := ADO_ORDINFO( nWA, DBOI_NUMBER, @aInfo )
 
       IF nReturn == HB_SUCCESS
-         nOrder := aInfo[UR_ORI_RESULT]
+         nOrder := aInfo[ UR_ORI_RESULT ]
          IF nOrder != 0
-            IF aRelInfo[UR_RI_SCOPED]
-               aInfo[UR_ORI_NEWVAL] := uResult
+            IF aRelInfo[ UR_RI_SCOPED ]
+               aInfo[ UR_ORI_NEWVAL ] := uResult
                nReturn := ADO_ORDINFO( nWA, DBOI_SCOPETOP, @aInfo )
                IF nReturn == HB_SUCCESS
                   nReturn := ADO_ORDINFO( nWA, DBOI_SCOPEBOTTOM, @aInfo )
@@ -1149,7 +1148,7 @@ STATIC FUNCTION ADO_ORDCREATE( nWA, aOrderCreateInfo )
    LOCAL aWAData := USRRDD_AREADATA( nWA )
    LOCAL oIndex, oError, n, lFound := .F.
 
-   if aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes != nil
+   if aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes != NIL
       for n := 1 to aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
           oIndex := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes( n - 1 )
           if oIndex:Name == iif( ! Empty( aOrderCreateInfo[ UR_ORCR_TAGNAME ] ), aOrderCreateInfo[ UR_ORCR_TAGNAME ], aOrderCreateInfo[ UR_ORCR_CKEY ] )
@@ -1160,7 +1159,7 @@ STATIC FUNCTION ADO_ORDCREATE( nWA, aOrderCreateInfo )
    endif
 
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-      IF aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes == nil .OR. ! lFound
+      IF aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes == NIL .OR. ! lFound
          oIndex := win_OleCreateObject( "ADOX.Index" )
          oIndex:Name := iif( ! Empty( aOrderCreateInfo[ UR_ORCR_TAGNAME ] ), aOrderCreateInfo[ UR_ORCR_TAGNAME ], aOrderCreateInfo[ UR_ORCR_CKEY ] )
          oIndex:PrimaryKey := .F.
@@ -1185,7 +1184,7 @@ STATIC FUNCTION ADO_ORDDESTROY( nWA, aOrderInfo )
 
    LOCAL aWAData := USRRDD_AREADATA( nWA ), n, oIndex
 
-   IF aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes != nil
+   IF aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes != NIL
       FOR n := 1 to aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
           oIndex := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes( n - 1 )
           IF oIndex:Name == aOrderInfo[ UR_ORI_TAG ]
@@ -1355,57 +1354,57 @@ FUNCTION ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
 
    LOCAL aADOFunc[ UR_METHODCOUNT ]
 
-   aADOFunc[ UR_INIT ]         := ( @ADO_INIT() )
-   aADOFunc[ UR_NEW ]          := ( @ADO_NEW() )
-   aADOFunc[ UR_CREATE ]       := ( @ADO_CREATE() )
-   aADOFunc[ UR_CREATEFIELDS ] := ( @ADO_CREATEFIELDS() )
-   aADOFunc[ UR_OPEN ]         := ( @ADO_OPEN() )
-   aADOFunc[ UR_CLOSE ]        := ( @ADO_CLOSE() )
-   aADOFunc[ UR_BOF  ]         := ( @ADO_BOF() )
-   aADOFunc[ UR_EOF  ]         := ( @ADO_EOF() )
-   aADOFunc[ UR_DELETED ]      := ( @ADO_DELETED() )
-   aADOFunc[ UR_SKIPRAW ]      := ( @ADO_SKIPRAW() )
-   aADOFunc[ UR_GOTO ]         := ( @ADO_GOTO() )
-   aADOFunc[ UR_GOTOID ]       := ( @ADO_GOTOID() )
-   aADOFunc[ UR_GOTOP ]        := ( @ADO_GOTOP() )
-   aADOFunc[ UR_GOBOTTOM ]     := ( @ADO_GOBOTTOM() )
-   aADOFunc[ UR_RECNO ]        := ( @ADO_RECNO() )
-   aADOFunc[ UR_RECID ]        := ( @ADO_RECID() )
-   aADOFunc[ UR_RECCOUNT ]     := ( @ADO_RECCOUNT() )
-   aADOFunc[ UR_GETVALUE ]     := ( @ADO_GETVALUE() )
-   aADOFunc[ UR_PUTVALUE ]     := ( @ADO_PUTVALUE() )
-   aADOFunc[ UR_DELETE ]       := ( @ADO_DELETE() )
-   aADOFunc[ UR_APPEND ]       := ( @ADO_APPEND() )
-   aADOFunc[ UR_FLUSH ]        := ( @ADO_FLUSH() )
-   aADOFunc[ UR_ORDINFO ]      := ( @ADO_ORDINFO() )
-   aADOFunc[ UR_RECINFO ]      := ( @ADO_RECINFO() )
-   aADOFunc[ UR_FIELDINFO ]    := ( @ADO_FIELDINFO() )
-   aADOFunc[ UR_FIELDNAME ]    := ( @ADO_FIELDNAME() )
-   aADOFunc[ UR_ORDLSTFOCUS ]  := ( @ADO_ORDLSTFOCUS() )
-   aADOFunc[ UR_PACK ]         := ( @ADO_PACK() )
-   aADOFunc[ UR_RAWLOCK ]      := ( @ADO_RAWLOCK() )
-   aADOFunc[ UR_LOCK ]         := ( @ADO_LOCK() )
-   aADOFunc[ UR_UNLOCK ]       := ( @ADO_UNLOCK() )
-   aADOFunc[ UR_SETFILTER ]    := ( @ADO_SETFILTER() )
-   aADOFunc[ UR_CLEARFILTER ]  := ( @ADO_CLEARFILTER() )
-   aADOFunc[ UR_ZAP ]          := ( @ADO_ZAP() )
-   aADOFunc[ UR_SETLOCATE ]    := ( @ADO_SETLOCATE() )
-   aADOFunc[ UR_LOCATE ]       := ( @ADO_LOCATE() )
-   aAdoFunc[ UR_FOUND ]        := ( @ADO_FOUND() )
-   aADOFunc[ UR_FORCEREL ]     := ( @ADO_FORCEREL() )
-   aADOFunc[ UR_RELEVAL ]      := ( @ADO_RELEVAL() )
-   aADOFunc[ UR_CLEARREL ]     := ( @ADO_CLEARREL() )
-   aADOFunc[ UR_RELAREA ]      := ( @ADO_RELAREA() )
-   aADOFunc[ UR_RELTEXT ]      := ( @ADO_RELTEXT() )
-   aADOFunc[ UR_SETREL ]       := ( @ADO_SETREL() )
-   aADOFunc[ UR_ORDCREATE ]    := ( @ADO_ORDCREATE() )
-   aADOFunc[ UR_ORDDESTROY ]   := ( @ADO_ORDDESTROY() )
-   aADOFunc[ UR_ORDLSTADD ]    := ( @ADO_ORDLSTADD() )
-   aADOFunc[ UR_ORDLSTCLEAR ]  := ( @ADO_ORDLSTCLEAR() )
-   aADOFunc[ UR_EVALBLOCK ]    := ( @ADO_EVALBLOCK() )
-   aADOFunc[ UR_SEEK ]         := ( @ADO_SEEK() )
-   aADOFunc[ UR_EXISTS ]       := ( @ADO_EXISTS() )
-   aADOFunc[ UR_DROP ]         := ( @ADO_DROP() )
+   aADOFunc[ UR_INIT ]         := @ADO_INIT()
+   aADOFunc[ UR_NEW ]          := @ADO_NEW()
+   aADOFunc[ UR_CREATE ]       := @ADO_CREATE()
+   aADOFunc[ UR_CREATEFIELDS ] := @ADO_CREATEFIELDS()
+   aADOFunc[ UR_OPEN ]         := @ADO_OPEN()
+   aADOFunc[ UR_CLOSE ]        := @ADO_CLOSE()
+   aADOFunc[ UR_BOF  ]         := @ADO_BOF()
+   aADOFunc[ UR_EOF  ]         := @ADO_EOF()
+   aADOFunc[ UR_DELETED ]      := @ADO_DELETED()
+   aADOFunc[ UR_SKIPRAW ]      := @ADO_SKIPRAW()
+   aADOFunc[ UR_GOTO ]         := @ADO_GOTO()
+   aADOFunc[ UR_GOTOID ]       := @ADO_GOTOID()
+   aADOFunc[ UR_GOTOP ]        := @ADO_GOTOP()
+   aADOFunc[ UR_GOBOTTOM ]     := @ADO_GOBOTTOM()
+   aADOFunc[ UR_RECNO ]        := @ADO_RECNO()
+   aADOFunc[ UR_RECID ]        := @ADO_RECID()
+   aADOFunc[ UR_RECCOUNT ]     := @ADO_RECCOUNT()
+   aADOFunc[ UR_GETVALUE ]     := @ADO_GETVALUE()
+   aADOFunc[ UR_PUTVALUE ]     := @ADO_PUTVALUE()
+   aADOFunc[ UR_DELETE ]       := @ADO_DELETE()
+   aADOFunc[ UR_APPEND ]       := @ADO_APPEND()
+   aADOFunc[ UR_FLUSH ]        := @ADO_FLUSH()
+   aADOFunc[ UR_ORDINFO ]      := @ADO_ORDINFO()
+   aADOFunc[ UR_RECINFO ]      := @ADO_RECINFO()
+   aADOFunc[ UR_FIELDINFO ]    := @ADO_FIELDINFO()
+   aADOFunc[ UR_FIELDNAME ]    := @ADO_FIELDNAME()
+   aADOFunc[ UR_ORDLSTFOCUS ]  := @ADO_ORDLSTFOCUS()
+   aADOFunc[ UR_PACK ]         := @ADO_PACK()
+   aADOFunc[ UR_RAWLOCK ]      := @ADO_RAWLOCK()
+   aADOFunc[ UR_LOCK ]         := @ADO_LOCK()
+   aADOFunc[ UR_UNLOCK ]       := @ADO_UNLOCK()
+   aADOFunc[ UR_SETFILTER ]    := @ADO_SETFILTER()
+   aADOFunc[ UR_CLEARFILTER ]  := @ADO_CLEARFILTER()
+   aADOFunc[ UR_ZAP ]          := @ADO_ZAP()
+   aADOFunc[ UR_SETLOCATE ]    := @ADO_SETLOCATE()
+   aADOFunc[ UR_LOCATE ]       := @ADO_LOCATE()
+   aAdoFunc[ UR_FOUND ]        := @ADO_FOUND()
+   aADOFunc[ UR_FORCEREL ]     := @ADO_FORCEREL()
+   aADOFunc[ UR_RELEVAL ]      := @ADO_RELEVAL()
+   aADOFunc[ UR_CLEARREL ]     := @ADO_CLEARREL()
+   aADOFunc[ UR_RELAREA ]      := @ADO_RELAREA()
+   aADOFunc[ UR_RELTEXT ]      := @ADO_RELTEXT()
+   aADOFunc[ UR_SETREL ]       := @ADO_SETREL()
+   aADOFunc[ UR_ORDCREATE ]    := @ADO_ORDCREATE()
+   aADOFunc[ UR_ORDDESTROY ]   := @ADO_ORDDESTROY()
+   aADOFunc[ UR_ORDLSTADD ]    := @ADO_ORDLSTADD()
+   aADOFunc[ UR_ORDLSTCLEAR ]  := @ADO_ORDLSTCLEAR()
+   aADOFunc[ UR_EVALBLOCK ]    := @ADO_EVALBLOCK()
+   aADOFunc[ UR_SEEK ]         := @ADO_SEEK()
+   aADOFunc[ UR_EXISTS ]       := @ADO_EXISTS()
+   aADOFunc[ UR_DROP ]         := @ADO_DROP()
 
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
                                /* NO SUPER RDD */, aADOFunc )
@@ -1486,7 +1485,7 @@ STATIC FUNCTION ADO_GETFIELDTYPE( nADOFieldType )
       CASE nADOFieldType == adSingle
 
       CASE nADOFieldType == adDouble
-                   nDBFFieldType := HB_FT_DOUBLE
+         nDBFFieldType := HB_FT_DOUBLE
 
       CASE nADOFieldType == adCurrency
          nDBFFieldType := HB_FT_INTEGER
@@ -1501,14 +1500,14 @@ STATIC FUNCTION ADO_GETFIELDTYPE( nADOFieldType )
       CASE nADOFieldType == adError
       CASE nADOFieldType == adUserDefined
       CASE nADOFieldType == adVariant
-                   nDBFFieldType := HB_FT_ANY
+         nDBFFieldType := HB_FT_ANY
 
       CASE nADOFieldType == adIDispatch
 
       CASE nADOFieldType == adIUnknown
 
       CASE nADOFieldType == adGUID
-                   nDBFFieldType := HB_FT_STRING
+         nDBFFieldType := HB_FT_STRING
 
       CASE nADOFieldType == adDate
 #ifdef HB_FT_DATETIME
@@ -1666,4 +1665,4 @@ FUNCTION HB_AdoRddGetRecordSet( nWA )
 
    aWAData := USRRDD_AREADATA( nWA )
 
-   RETURN iif( aWAData != nil, aWAData[ WA_RECORDSET ], nil )
+   RETURN iif( aWAData != NIL, aWAData[ WA_RECORDSET ], NIL )
