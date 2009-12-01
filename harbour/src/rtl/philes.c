@@ -417,6 +417,20 @@ HB_FUNC( HB_FGETDATETIME )
       hb_retl( FALSE );
 }
 
+HB_FUNC( HB_FSETDEVMODE )
+{
+   /* C53 checks only number of parameters: hb_pcount() == 2 */
+   if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
+   {
+      hb_fsSetDevMode( hb_numToHandle( hb_parnint( 1 ) ), ( USHORT ) hb_parni( 2 ) );
+      hb_fsSetFError( hb_fsError() );
+   }
+   /* NOTE: INCOMPATIBILITY! C53 will return the device flags
+            before applying the new setting, Harbour will
+            always return 0. [vszakats] */
+   hb_retni( 0 );
+}
+
 HB_FUNC( HB_OSERROR )
 {
    hb_retni( hb_fsOsError() );

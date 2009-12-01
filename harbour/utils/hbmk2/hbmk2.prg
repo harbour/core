@@ -326,7 +326,6 @@ REQUEST hbmk_KEYW
 
 #ifndef _HBMK_EMBEDDED_
 
-#define hb_FSetDevMod( a, b ) FSetDevMod( a, b )
 #define hb_DirCreate( d )     MakeDir( d )
 #define hb_DirDelete( d )     DirRemove( d )
 
@@ -346,8 +345,8 @@ PROCEDURE Main( ... )
 
    LOCAL lOldExact := Set( _SET_EXACT, .F. )
 
-   hb_FSetDevMod( hb_gtInfo( HB_GTI_OUTPUTFD ), FD_TEXT )
-   hb_FSetDevMod( hb_gtInfo( HB_GTI_ERRORFD ), FD_TEXT )
+   hb_FSetDevMode( hb_gtInfo( HB_GTI_OUTPUTFD ), FD_TEXT )
+   hb_FSetDevMode( hb_gtInfo( HB_GTI_ERRORFD ), FD_TEXT )
 
    /* Emulate -hbcmp, -hbcc, -hblnk switches when certain
       self names are detected.
