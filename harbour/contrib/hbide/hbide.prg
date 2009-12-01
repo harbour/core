@@ -246,7 +246,7 @@ METHOD HbIde:create( cProjIni )
    ::oDlg:Show()
 
    ::oDa:oTabWidget := XbpTabWidget():new():create( ::oDa, , {0,0}, {10,10}, , .t. )
-//   ::oDa:oTabWidget:oWidget:setTabsClosable( .t. )
+   //   ::oDa:oTabWidget:oWidget:setTabsClosable( .t. )
    ::oDa:oTabWidget:oWidget:setUsesScrollButtons( .f. )
    ::oTabWidget := ::oDa:oTabWidget
    ::qTabWidget := ::oDa:oTabWidget:oWidget
@@ -362,15 +362,8 @@ METHOD HbIde:create( cProjIni )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION PosAndSize( qWidget )
-
-   RETURN hb_ntos( qWidget:x() )     + "," + hb_ntos( qWidget:y() )      + "," + ;
-          hb_ntos( qWidget:width() ) + "," + hb_ntos( qWidget:height() ) + ","
-
-/*----------------------------------------------------------------------*/
-
 METHOD HbIde:saveConfig()
-   LOCAL nTab, pTab, n, txt_
+   LOCAL nTab, pTab, n, txt_, qEdit, qCursor, qHScr, qVScr
    LOCAL nTabs := ::qTabWidget:count()
 
    txt_:= {}
@@ -392,9 +385,14 @@ METHOD HbIde:saveConfig()
    aadd( txt_, " " )
 
    FOR n := 1 TO nTabs
-      pTab := ::qTabWidget:widget( n-1 )
-      nTab := ascan( ::aTabs, {|e_| HBQT_QTPTR_FROM_GCPOINTER( QT_PTROFXBP( e_[ 1 ] ) ) == pTab } )
-      aadd( txt_, ::aTabs[ nTab, 5 ] )
+      pTab    := ::qTabWidget:widget( n-1 )
+      nTab    := ascan( ::aTabs, {|e_| HBQT_QTPTR_FROM_GCPOINTER( QT_PTROFXBP( e_[ 1 ] ) ) == pTab } )
+      qEdit   := ::aTabs[ nTab, 2 ]
+      qHScr   := QScrollBar():configure( qEdit:horizontalScrollBar() )
+      qVScr   := QScrollBar():configure( qEdit:verticalScrollBar() )
+      qCursor := QTextCursor():configure( qEdit:textCursor() )
+
+      aadd( txt_, ::aTabs[ nTab, 5 ] +","+ hb_ntos( qCursor:position() ) +","+ hb_ntos( qHScr:value() ) +","+ hb_ntos( qVScr:value() ) +"," )
    NEXT
    aadd( txt_, " " )
    aadd( txt_, " " )
@@ -403,25 +401,8 @@ METHOD HbIde:saveConfig()
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION CreateTarget( cFile, txt_ )
-   LOCAL hHandle := fcreate( cFile )
-   LOCAL cNewLine := hb_OsNewLine()
-
-   IF hHandle != -1
-      aeval( txt_, { |e| fWrite( hHandle, e + cNewLine ) } )
-      fClose( hHandle )
-   ENDIF
-
-   RETURN file( cFile )
-
-/*----------------------------------------------------------------------*/
-
 METHOD HbIde:loadConfig( cHbideIni )
-   LOCAL aElem, s, n, nPart, cKey, cVal
-   #if 0
-   LOCAL aIdeEle := { "MainWindowGeometry", "ProjectTreeVisible", "ProjectTreeGeometry", "FunctionListVisible", ;
-                      "FunctionListGeometry", "RecentTabIndex", "CurrentProject" }
-   #endif
+   LOCAL aElem, s, n, nPart, cKey, cVal, a_
    LOCAL aIdeEle := { "mainwindowgeometry", "projecttreevisible", "projecttreegeometry", "functionlistvisible", ;
                       "functionlistgeometry", "recenttabindex", "currentproject" }
 
@@ -441,6 +422,8 @@ METHOD HbIde:loadConfig( cHbideIni )
 
    ::cProjIni := cHbideIni
 
+   ::aIni := { afill( array( INI_HBIDE_VRBLS ), "" ), {}, {} }
+
    IF file( ::cProjIni )
       #if 0
       [HBIDE]
@@ -451,18 +434,14 @@ METHOD HbIde:loadConfig( cHbideIni )
       FunctionListGeometry =
       RecentTabIndex       =
       CurrentProject       =
-
       [PROJECTS]
       c:\harbour\contrib\hbide\projects\vouch.hbi
       ...
-
       [FILES]
-      c:\dev_sources\vouch\source\vouch.prg : firstRow : CursorPos :
+      c:\dev_sources\vouch\source\vouch.prg : scrollpos horz : scrollpos vert : CursorPos :
       ...
-
       #endif
 
-      ::aIni := { array( 7 /*INI_HBIDE_VRBLS*/ ), {}, {} }
       aElem := ReadSource( ::cProjIni )
 
       FOR EACH s IN aElem
@@ -491,7 +470,17 @@ METHOD HbIde:loadConfig( cHbideIni )
                   aadd( ::aIni[ nPart ], s )
 
                CASE nPart == INI_FILES
-                  aadd( ::aIni[ nPart ], s ) /* Further process */
+                  a_:= hb_atokens( s, "," )
+                  asize( a_, 4 )
+                  DEFAULT a_[ 1 ] TO ""
+                  DEFAULT a_[ 2 ] TO ""
+                  DEFAULT a_[ 3 ] TO ""
+                  DEFAULT a_[ 4 ] TO ""
+                  //
+                  a_[ 2 ] := val( a_[ 2 ] )
+                  a_[ 3 ] := val( a_[ 3 ] )
+                  a_[ 4 ] := val( a_[ 4 ] )
+                  aadd( ::aIni[ nPart ], a_ )
 
                ENDCASE
             ENDCASE
@@ -500,108 +489,6 @@ METHOD HbIde:loadConfig( cHbideIni )
    ENDIF
 
    RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:executeAction( cKey )
-   LOCAL cFile
-
-   DO CASE
-
-   CASE cKey == "Exit"
-      PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
-   CASE cKey == "ToggleProjectTree"
-      ::lProjTreeVisible := !::lProjTreeVisible
-      IF !( ::lProjTreeVisible )
-         ::oProjTree:hide()
-      ELSE
-         ::oProjTree:show()
-      ENDIF
-   CASE cKey == "NewProject"
-      ::fetchProjectProperties( .t. )
-   CASE cKey == "Open"
-      IF !empty( cFile := ::selectSource( "open" ) )
-         ::oProjRoot:addItem( cFile )
-         ::editSource( cFile )
-      ENDIF
-   CASE cKey == "Save"
-      ::saveSource( ::getCurrentTab(), .f. )
-   CASE cKey == "Close"
-      ::closeSource()
-   CASE cKey == "Print"
-      IF !empty( ::qCurEdit )
-         ::printPreview()
-      ENDIF
-   CASE cKey == "Undo"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:undo()
-      ENDIF
-   CASE cKey == "Redo"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:redo()
-      ENDIF
-   CASE cKey == "Cut"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:cut()
-      ENDIF
-   CASE cKey == "Copy"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:copy()
-      ENDIF
-   CASE cKey == "Paste"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:paste()
-      ENDIF
-   CASE cKey == "SelectAll"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:selectAll()
-      ENDIF
-   CASE cKey == "Find"
-      IF !empty( ::qCurEdit )
-         ::findReplace( "finddialog" )
-      ENDIF
-   CASE cKey == "ToUpper"
-      ::convertSelection( cKey )
-   CASE cKey == "ToLower"
-      ::convertSelection( cKey )
-   CASE cKey == "Invert"
-      ::convertSelection( cKey )
-   CASE cKey == "ZoomIn"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:zoomIn()
-      ENDIF
-   CASE cKey == "ZoomOut"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:zoomOut()
-      ENDIF
-   CASE cKey == "11"
-      IF ::lDockBVisible
-         ::oDockB:hide()
-         ::oDockB1:hide()
-         ::oDockB2:hide()
-         ::lDockBVisible := .f.
-      ELSEIF ::qTabWidget:count() > 0
-         ::oDockB:show()
-         ::oDockB1:show()
-         ::oDockB2:show()
-         ::lDockBVisible := .t.
-      ENDIF
-   CASE cKey == "12"
-      IF ::lDockRVisible
-         ::oDockR:hide()
-      ELSE
-         ::oDockR:show()
-      ENDIF
-      ::lDockRVisible := !( ::lDockRVisible )
-
-   CASE cKey == "Compile"
-   CASE cKey == "CompilePPO"
-
-   ENDCASE
-
-   ::manageFocusInEditor()
-
-   RETURN nil
 
 /*----------------------------------------------------------------------*/
 
@@ -665,14 +552,25 @@ METHOD HbIde:updateFuncList()
    ::oFuncList:clear()
    IF !empty( ::aTags )
       aeval( ::aTags, {|e_| o := ::oFuncList:addItem( e_[ 7 ] ) } )
+   ELSE
+      ::lDockRVisible := .f.
+      ::oDockR:hide()
    ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:setTabImage( cState, oTab )
+METHOD HbIde:setTabImage( cState, oTab, qEdit, nPos, lFirst )
+   LOCAL qCursor
    LOCAL nIndex := ::qTabWidget:indexOf( QT_PTROFXBP( oTab ) )
+
+   //IF lFirst
+      lFirst := .t.
+      qCursor := QTextCursor():configure( qEdit:textCursor() )
+      qCursor:setPosition( nPos )
+      HBXBP_DEBUG( "setTabImage:position", qCursor:position() )
+   //ENDIF
 
    DO CASE
    CASE cState == "modified"
@@ -708,19 +606,17 @@ METHOD HbIde:buildTabPage( oWnd, cSource )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:editSource( cSourceFile )
-   LOCAL oTab, qEdit, qHiliter, qLayout, qDocument
+METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos )
+   LOCAL oTab, qEdit, qHiliter, qLayout, qDocument, qHScr, qVScr, qCursor, lFirst
 
    DEFAULT cSourceFile TO ::cProjIni
+   DEFAULT nPos        TO 0
+   DEFAULT nHPos       TO 0
+   DEFAULT nVPos       TO 0
 
    oTab := ::buildTabPage( ::oDa, cSourceFile )
 
-   #if 0
-   qEdit := QTextEdit():new( QT_PTROFXBP( oTab ) )
-   qEdit:setTextBackgroundColor( QT_PTROF( QColor():new( 255,255,255 ) ) )
-   #else
    qEdit := QPlainTextEdit():new( QT_PTROFXBP( oTab ) )
-   #endif
    qEdit:setPlainText( memoread( cSourceFile ) )
    qEdit:setLineWrapMode( QTextEdit_NoWrap )
    qEdit:setFont( QT_PTROFXBP( ::oFont ) )
@@ -738,6 +634,16 @@ METHOD HbIde:editSource( cSourceFile )
 
    qEdit:show()
 
+   qCursor := QTextCursor():configure( qEdit:textCursor() )
+   //qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_MoveAnchor, nPos )
+   qCursor:setPosition( nPos )
+   //
+   qHScr   := QScrollBar():configure( qEdit:horizontalScrollBar() )
+   qHScr:setValue( nHPos )
+   //
+   qVScr   := QScrollBar():configure( qEdit:verticalScrollBar() )
+   qVScr:setValue( nVPos )
+
    aadd( ::aTabs, { oTab, qEdit, qHiliter, qLayout, cSourceFile, qDocument } )
 
    ::nCurTab  := len( ::aTabs )
@@ -747,8 +653,9 @@ METHOD HbIde:editSource( cSourceFile )
    ::updateFuncList()
    ::manageFocusInEditor()
 
+   lFirst := .t.
    Qt_Connect_Signal( QT_PTROF( qEdit ), "textChanged()", ;
-              {|| ::setTabImage( IF( qDocument:isModified(),"modified","unmodified" ), oTab ) } )
+                          {|| ::setTabImage( IF( qDocument:isModified(),"modified","unmodified" ), oTab, qEdit, nPos, @lFirst ) } )
 
    RETURN Self
 
@@ -757,10 +664,12 @@ METHOD HbIde:editSource( cSourceFile )
 METHOD HbIde:loadSources()
    LOCAL i
 
-   FOR i := 1 TO len( ::aIni[ INI_FILES ] )
-      ::editSource( ::aIni[ INI_FILES, i ] )
-   NEXT
-   ::qTabWidget:setCurrentIndex( val( ::aIni[ INI_HBIDE, RecentTabIndex ] ) )
+   IF !empty( ::aIni[ INI_FILES ] )
+      FOR i := 1 TO len( ::aIni[ INI_FILES ] )
+         ::editSource( ::aIni[ INI_FILES, i, 1 ], ::aIni[ INI_FILES, i, 2 ], ::aIni[ INI_FILES, i, 3 ], ::aIni[ INI_FILES, i, 4 ] )
+      NEXT
+      ::qTabWidget:setCurrentIndex( val( ::aIni[ INI_HBIDE, RecentTabIndex ] ) )
+   ENDIF
 
    RETURN Self
 
@@ -1111,12 +1020,12 @@ METHOD HbIde:buildFuncList()
 
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, QT_PTROFXBP( ::oDockR ), Qt_Horizontal )
 
-   IF ::aIni[ INI_HBIDE, FunctionListVisible ] == "NO"
-      ::lDockRVisible := .f.
-      ::oDockR:hide()
-   ELSE
+   IF ::aIni[ INI_HBIDE, FunctionListVisible ] == "YES"
       ::lDockRVisible := .t.
       //::setSizeAndPosByIni( ::oDockR:oWidget, FunctionListGeometry )
+   ELSE
+      ::lDockRVisible := .f.
+      ::oDockR:hide()
    ENDIF
 
    RETURN Self
@@ -1126,11 +1035,13 @@ METHOD HbIde:buildFuncList()
 METHOD HbIde:setPosAndSizeByIni( qWidget, nPart )
    LOCAL aRect
 
-   aRect := hb_atokens( ::aIni[ INI_HBIDE, nPart ], "," )
-   aeval( aRect, {|e,i| aRect[ i ] := val( e ) } )
+   IF !empty( ::aIni[ INI_HBIDE, nPart ] )
+      aRect := hb_atokens( ::aIni[ INI_HBIDE, nPart ], "," )
+      aeval( aRect, {|e,i| aRect[ i ] := val( e ) } )
 
-   qWidget:move( aRect[ 1 ], aRect[ 2 ] )
-   qWidget:resize( aRect[ 3 ], aRect[ 4 ] )
+      qWidget:move( aRect[ 1 ], aRect[ 2 ] )
+      qWidget:resize( aRect[ 3 ], aRect[ 4 ] )
+   ENDIF
 
    RETURN Self
 
@@ -1393,4 +1304,107 @@ METHOD HbIde:findReplace( cUi )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD HbIde:executeAction( cKey )
+   LOCAL cFile
+
+   DO CASE
+
+   CASE cKey == "Exit"
+      PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
+   CASE cKey == "ToggleProjectTree"
+      ::lProjTreeVisible := !::lProjTreeVisible
+      IF !( ::lProjTreeVisible )
+         ::oProjTree:hide()
+      ELSE
+         ::oProjTree:show()
+      ENDIF
+   CASE cKey == "NewProject"
+      ::fetchProjectProperties( .t. )
+   CASE cKey == "Open"
+      IF !empty( cFile := ::selectSource( "open" ) )
+         ::oProjRoot:addItem( cFile )
+         ::editSource( cFile )
+      ENDIF
+   CASE cKey == "Save"
+      ::saveSource( ::getCurrentTab(), .f. )
+   CASE cKey == "Close"
+      ::closeSource()
+   CASE cKey == "Print"
+      IF !empty( ::qCurEdit )
+         ::printPreview()
+      ENDIF
+   CASE cKey == "Undo"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:undo()
+      ENDIF
+   CASE cKey == "Redo"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:redo()
+      ENDIF
+   CASE cKey == "Cut"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:cut()
+      ENDIF
+   CASE cKey == "Copy"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:copy()
+      ENDIF
+   CASE cKey == "Paste"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:paste()
+      ENDIF
+   CASE cKey == "SelectAll"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:selectAll()
+      ENDIF
+   CASE cKey == "Find"
+      IF !empty( ::qCurEdit )
+         ::findReplace( "finddialog" )
+      ENDIF
+   CASE cKey == "ToUpper"
+      ::convertSelection( cKey )
+   CASE cKey == "ToLower"
+      ::convertSelection( cKey )
+   CASE cKey == "Invert"
+      ::convertSelection( cKey )
+   CASE cKey == "ZoomIn"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:zoomIn()
+      ENDIF
+   CASE cKey == "ZoomOut"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:zoomOut()
+      ENDIF
+   CASE cKey == "11"
+      IF ::lDockBVisible
+         ::oDockB:hide()
+         ::oDockB1:hide()
+         ::oDockB2:hide()
+         ::lDockBVisible := .f.
+      ELSEIF ::qTabWidget:count() > 0
+         ::oDockB:show()
+         ::oDockB1:show()
+         ::oDockB2:show()
+         ::lDockBVisible := .t.
+      ENDIF
+   CASE cKey == "12"
+      IF ::lDockRVisible
+         ::oDockR:hide()
+      ELSE
+         ::oDockR:show()
+      ENDIF
+      ::lDockRVisible := !( ::lDockRVisible )
+
+   CASE cKey == "Compile"
+   CASE cKey == "CompilePPO"
+
+   ENDCASE
+
+   ::manageFocusInEditor()
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
 

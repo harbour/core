@@ -66,7 +66,9 @@
 #define FunctionListVisible                       4
 #define FunctionListGeometry                      5
 #define RecentTabIndex                            6
+#define CurrentProject                            7
 
+#define INI_HBIDE_VRBLS                           7
 
 #endif
 

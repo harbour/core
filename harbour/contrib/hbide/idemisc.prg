@@ -111,4 +111,23 @@ FUNCTION MenuAddSep( oMenu )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION CreateTarget( cFile, txt_ )
+   LOCAL hHandle := fcreate( cFile )
+   LOCAL cNewLine := hb_OsNewLine()
+
+   IF hHandle != -1
+      aeval( txt_, { |e| fWrite( hHandle, e + cNewLine ) } )
+      fClose( hHandle )
+   ENDIF
+
+   RETURN file( cFile )
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION PosAndSize( qWidget )
+
+   RETURN hb_ntos( qWidget:x() )     + "," + hb_ntos( qWidget:y() )      + "," + ;
+          hb_ntos( qWidget:width() ) + "," + hb_ntos( qWidget:height() ) + ","
+
+/*----------------------------------------------------------------------*/
 
