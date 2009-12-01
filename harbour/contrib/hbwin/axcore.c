@@ -64,7 +64,7 @@ static PHB_AX_GETCTRL   s_pAtlAxGetControl = NULL;
 static void hb_errRT_OLE( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, HB_ERRCODE errOsCode, const char * szDescription, const char * szOperation )
 {
    PHB_ITEM pError;
-   pError = hb_errRT_New( ES_ERROR, "OLE", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
+   pError = hb_errRT_New( ES_ERROR, "WINOLE", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
 
    if( hb_pcount() != 0 )
    { 
@@ -134,7 +134,7 @@ PHB_ITEM hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd )
    if( ! hb_oleAxInit() || ! s_pAtlAxGetControl )
    {
       hb_oleSetError( S_OK );
-      hb_errRT_OLE( EG_UNSUPPORTED, 3012, 0, "ActiveX not initialized", HB_ERR_FUNCNAME );
+      hb_errRT_OLE( EG_UNSUPPORTED, 1010, 0, "ActiveX not initialized", HB_ERR_FUNCNAME );
    }
    else
    {
@@ -153,7 +153,7 @@ PHB_ITEM hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd )
       hb_oleSetError( lOleError );
 
       if( lOleError != S_OK )
-         hb_errRT_OLE( EG_ARG, 3012, ( HB_ERRCODE ) lOleError, NULL, HB_ERR_FUNCNAME );
+         hb_errRT_OLE( EG_ARG, 1011, ( HB_ERRCODE ) lOleError, NULL, HB_ERR_FUNCNAME );
    }
 
    return pItem;
@@ -165,7 +165,7 @@ HB_FUNC( __AXGETCONTROL ) /* ( hWnd ) --> pDisp */
    HWND hWnd = ( HWND ) hb_parptr( 1 );
 
    if( ! hWnd )
-      hb_errRT_OLE( EG_ARG, 3012, 0, NULL, HB_ERR_FUNCNAME );
+      hb_errRT_OLE( EG_ARG, 1012, 0, NULL, HB_ERR_FUNCNAME );
    else
       hb_oleAxControlNew( hb_stackReturnItem(), hWnd );
 }
@@ -179,7 +179,7 @@ HB_FUNC( __AXDOVERB ) /* ( hWndAx, iVerb ) --> hResult */
    if( ! hb_oleAxInit() || ! s_pAtlAxGetControl )
    {
       hb_oleSetError( S_OK );
-      hb_errRT_OLE( EG_UNSUPPORTED, 3012, 0, "ActiveX not initialized", HB_ERR_FUNCNAME );
+      hb_errRT_OLE( EG_UNSUPPORTED, 1013, 0, "ActiveX not initialized", HB_ERR_FUNCNAME );
       return;
    }
 
@@ -466,9 +466,9 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler [, cID] ) --> pSink */
 
          hb_oleSetError( lOleError );
          if( lOleError != S_OK )
-            hb_errRT_OLE( EG_ARG, 3012, ( HB_ERRCODE ) lOleError, "Failed to obtain connection point", HB_ERR_FUNCNAME );
+            hb_errRT_OLE( EG_ARG, 1014, ( HB_ERRCODE ) lOleError, "Failed to obtain connection point", HB_ERR_FUNCNAME );
       }
       else
-         hb_errRT_OLE( EG_ARG, 3012, 0, "Failed to obtain connection point", HB_ERR_FUNCNAME );
+         hb_errRT_OLE( EG_ARG, 1015, 0, "Failed to obtain connection point", HB_ERR_FUNCNAME );
    }
 }
