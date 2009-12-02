@@ -93,7 +93,7 @@ PROCEDURE Main( cProjIni )
 
    s_resPath := hb_DirBase() + "resources" + hb_OsPathSeparator()
 
-   oIde := HbIde():new( cProjIni )
+   oIde := HbIde():new( cProjIni ) 
    oIde:create()
    oIde:destroy()
 
@@ -345,6 +345,12 @@ METHOD HbIde:create( cProjIni )
       ELSEIF ::nEvent == xbeP_Keyboard
          DO CASE
 
+         CASE ::mp1 == xbeK_INS
+            IF !empty( ::qCurEdit )
+               ::qCurEdit:setOverwriteMode( ! ::qCurEdit:overwriteMode() )
+               ::dispEditInfo()
+            ENDIF
+
          CASE ::mp1 == xbeK_ESC
             ::closeSource()
 
@@ -401,7 +407,11 @@ METHOD HbIde:saveConfig()
       qVScr     := QScrollBar():configure( qEdit:verticalScrollBar() )
       ::qCursor := QTextCursor():configure( qEdit:textCursor() )
 
-      aadd( txt_, ::aTabs[ nTab, 5 ] +","+ hb_ntos( ::qCursor:position() ) +","+ hb_ntos( qHScr:value() ) +","+ hb_ntos( qVScr:value() ) +"," )
+      aadd( txt_, ::aTabs[ nTab, 5 ] +","+ ;
+                  hb_ntos( ::qCursor:position() ) +","+ ;
+                  hb_ntos( qHScr:value() ) + "," + ;
+                  hb_ntos( qVScr:value() ) + ","   ;
+           )
    NEXT
    aadd( txt_, " " )
    aadd( txt_, " " )
@@ -587,6 +597,8 @@ METHOD HbIde:setTabImage( cState, oTab, qEdit, nPos, lFirst )
 
    ENDCASE
 
+   ::oSBar:getItem( 7 ):caption := IF( cState == "modified", "Modified", " " )
+
    IF lFirst
       lFirst := .f.
       ::qCursor:configure( qEdit:textCursor() )
@@ -620,7 +632,8 @@ METHOD HbIde:buildTabPage( oWnd, cSource )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos )
-   LOCAL oTab, qEdit, qHiliter, qLayout, qDocument, qHScr, qVScr, lFirst
+   LOCAL oTab, qEdit, qHiliter, qLayout, qDocument, qHScr, qVScr
+   LOCAL lFirst := .t.
 
    DEFAULT cSourceFile TO ::cProjIni
    DEFAULT nPos        TO 0
@@ -667,7 +680,6 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos )
    ::manageFocusInEditor()
    ::dispEditInfo()
 
-   lFirst := .t.
    Qt_Connect_Signal( QT_PTROF( qEdit ), "textChanged()", ;
                           {|| ::setTabImage( IF( qDocument:isModified(),"modified","unmodified" ), oTab, qEdit, nPos, @lFirst, qDocument ) } )
 
@@ -785,6 +797,7 @@ METHOD HbIde:saveSource( nTab, lConfirm )
 
       nIndex := ::qTabWidget:indexOf( QT_PTROFXBP( ::aTabs[ nTab, 1 ] ) )
       ::qTabWidget:setTabIcon( nIndex, s_resPath + "tabunmodified.png" )
+      ::oSBar:getItem( 7 ):caption := " "
    ENDIF
 
    RETURN Self
@@ -893,18 +906,42 @@ METHOD HbIde:buildProjectTree()
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:dispEditInfo()
-   LOCAL s
+   LOCAL s, qEdit, qDoc
 
    IF !empty( ::qCurEdit )
+      qEdit := ::qCurEdit
+      qDoc  := ::qCurDocument
+
       ::oSBar:getItem( 2 ):caption := "Ready"
 
-      ::qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
+      ::qCursor := QTextCursor():configure( qEdit:textCursor() )
 
       s := "<b>Line "+ hb_ntos( ::qCursor:blockNumber()+1 ) + " of " + ;
-                       hb_ntos( ::qCurDocument:blockCount() ) + "</b>"
+                       hb_ntos( qDoc:blockCount() ) + "</b>"
       ::oSBar:getItem( 3 ):caption := s
 
       ::oSBar:getItem( 4 ):caption := "Col " + hb_ntos( ::qCursor:columnNumber()+1 )
+
+      ::oSBar:getItem( 5 ):caption := IF( qEdit:overwriteMode(), " ", "Ins" )
+
+      ::oSBar:getItem( 7 ):caption := IF( qDoc:isModified(), "Modified", " " )
+
+      ::oSBar:getItem( 9  ):caption := "Stream"
+      ::oSBar:getItem( 10 ):caption := "Edit"
+      ::oSBar:getItem( 1  ):caption := "Success"
+
+   ELSE
+      ::oSBar:getItem(  2 ):caption := " "
+      ::oSBar:getItem(  3 ):caption := " "
+      ::oSBar:getItem(  4 ):caption := " "
+      ::oSBar:getItem(  5 ):caption := " "
+      ::oSBar:getItem(  6 ):caption := " "
+      ::oSBar:getItem(  7 ):caption := " "
+      ::oSBar:getItem(  8 ):caption := " "
+      ::oSBar:getItem(  9 ):caption := " "
+      ::oSBar:getItem( 10 ):caption := " "
+      ::oSBar:getItem(  1 ):caption := " "
+
    ENDIF
 
    RETURN Self
@@ -930,6 +967,7 @@ METHOD HbIde:buildStatusBar()
    ::oSBar:addItem( "", , , , "State"  ):oWidget:setMinimumWidth( 50 )
    ::oSBar:addItem( "", , , , "Misc_2" ):oWidget:setMinimumWidth( 30 )
    ::oSBar:addItem( "", , , , "Misc_3" ):oWidget:setMinimumWidth( 20 )
+   ::oSBar:addItem( "", , , , "Misc_4" ):oWidget:setMinimumWidth( 20 )
 
    RETURN Self
 
@@ -1436,3 +1474,4 @@ METHOD HbIde:executeAction( cKey )
 /*----------------------------------------------------------------------*/
 
 
+
