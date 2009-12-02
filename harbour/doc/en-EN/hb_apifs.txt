@@ -1069,13 +1069,13 @@
  *      C Prototype
  *
  *      #include <hbapifs.h>
- *      hb_fsSetDevMode( HB_FHANDLE hFileHandle, USHORT uiDevMode ) --> BOOL
+ *      hb_fsSetDevMode( HB_FHANDLE hFileHandle, int iDevMode ) --> int
  *  $ARGUMENTS$
  *      <hFileHandle>
  *
- *      <uiDevMode>
+ *      <iDevMode>
  *  $RETURNS$
- *      TRUE when successful, FALSE when not.
+ *      previous mode or -1 on error
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$

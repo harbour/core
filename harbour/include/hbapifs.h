@@ -192,7 +192,7 @@ extern HB_EXPORT BOOL       hb_fsRename      ( const char * pszOldName, const ch
 extern HB_EXPORT ULONG      hb_fsSeek        ( HB_FHANDLE hFileHandle, LONG lOffset, USHORT uiMode ); /* reposition an open file */
 extern HB_EXPORT HB_FOFFSET hb_fsSeekLarge   ( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset, USHORT uiFlags ); /* reposition an open file using 64bit API */
 extern HB_EXPORT ULONG      hb_fsTell        ( HB_FHANDLE hFileHandle ); /* retrieve the current position of a file */
-extern HB_EXPORT BOOL       hb_fsSetDevMode  ( HB_FHANDLE hFileHandle, USHORT uiDevMode ); /* change the device mode of a file (text/binary) */
+extern HB_EXPORT int        hb_fsSetDevMode  ( HB_FHANDLE hFileHandle, int iDevMode ); /* change the device mode of a file (text/binary) */
 extern HB_EXPORT BOOL       hb_fsGetFileTime ( const char * pszFileName, long * plJulian, long * plMillisec );
 extern HB_EXPORT BOOL       hb_fsSetFileTime ( const char * pszFileName, long lJulian, long lMillisec );
 extern HB_EXPORT BOOL       hb_fsGetAttr     ( const char * pszFileName, ULONG * pulAttr );

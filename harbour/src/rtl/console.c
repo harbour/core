@@ -154,6 +154,7 @@ void hb_conInit( void )
     * Some compilers open stdout and stderr in text mode, but
     * Harbour needs them to be open in binary mode.
     */
+   hb_fsSetDevMode( s_hFilenoStdin,  FD_BINARY );
    hb_fsSetDevMode( s_hFilenoStdout, FD_BINARY );
    hb_fsSetDevMode( s_hFilenoStderr, FD_BINARY );
 
@@ -183,6 +184,7 @@ void hb_conRelease( void )
 
    hb_gtExit();
 
+   hb_fsSetDevMode( s_hFilenoStdin,  FD_TEXT );
    hb_fsSetDevMode( s_hFilenoStdout, FD_TEXT );
    hb_fsSetDevMode( s_hFilenoStderr, FD_TEXT );
 }

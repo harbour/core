@@ -57,11 +57,21 @@
 
 /* NOTE: Clipper 5.3 undocumented */
 
-HB_FUNC_EXTERN( HB_FSETDEVMODE );
-
 HB_FUNC( FSETDEVMOD )
 {
-   HB_FUNC_EXEC( HB_FSETDEVMODE );
+   int iRet = FD_BINARY;
+
+   if( HB_ISNUM( 1 ) )
+   {
+      iRet = hb_fsSetDevMode( hb_numToHandle( hb_parnint( 1 ) ), hb_parni( 2 ) );
+      if( iRet != FD_TEXT )
+         iRet = FD_BINARY;
+      hb_fsSetFError( hb_fsError() );
+   }
+   else
+      hb_fsSetFError( 6 ); /* ERROR_INVALID_HANDLE */
+
+   hb_retni( iRet );
 }
 
 #endif

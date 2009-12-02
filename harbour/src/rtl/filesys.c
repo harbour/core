@@ -842,53 +842,66 @@ void hb_fsClose( HB_FHANDLE hFileHandle )
 #endif
 }
 
-BOOL hb_fsSetDevMode( HB_FHANDLE hFileHandle, USHORT uiDevMode )
+
+#define FD_TEST   0
+
+int hb_fsSetDevMode( HB_FHANDLE hFileHandle, int iDevMode )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsSetDevMode(%p, %hu)", ( void * ) ( HB_PTRDIFF ) hFileHandle, uiDevMode));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsSetDevMode(%p, %d)", ( void * ) ( HB_PTRDIFF ) hFileHandle, iDevMode));
 
    /* TODO: HB_IO_WIN support */
 
 #if defined( __BORLANDC__ ) || defined( __IBMCPP__ ) || defined( __DJGPP__ ) || \
     defined( __CYGWIN__ ) || defined( __WATCOMC__ ) || defined( HB_OS_OS2 )
 {
-   int iRet = 0;
+   int iRet = -1;
 
 #if defined( HB_IO_WIN )
-   if( hFileHandle != ( HB_FHANDLE ) 0 &&
-       hFileHandle != ( HB_FHANDLE ) 1 &&
-       hFileHandle != ( HB_FHANDLE ) 2 )
-      iRet = -1;
-   else
+   if( hFileHandle == ( HB_FHANDLE ) 0 ||
+       hFileHandle == ( HB_FHANDLE ) 1 ||
+       hFileHandle == ( HB_FHANDLE ) 2 )
 #endif
-   switch( uiDevMode )
+   switch( iDevMode )
    {
+      case FD_TEST:
+         iRet = setmode( ( int ) hFileHandle, O_BINARY );
+         if( iRet != -1 )
+            setmode( ( int ) hFileHandle, iRet );
+         break;
+
       case FD_BINARY:
-         iRet = setmode( ( HB_NHANDLE ) hFileHandle, O_BINARY );
+         iRet = setmode( ( int ) hFileHandle, O_BINARY );
          break;
 
       case FD_TEXT:
-         iRet = setmode( ( HB_NHANDLE ) hFileHandle, O_TEXT );
+         iRet = setmode( ( int ) hFileHandle, O_TEXT );
          break;
    }
 
+   if( iRet != -1 )
+      iRet = ( iRet & O_TEXT ) == O_TEXT ? FD_TEXT : FD_BINARY;
    hb_fsSetIOError( iRet != -1, 0 );
 
-   return iRet != -1;
+   return iRet;
 }
 #elif ( defined( _MSC_VER ) || defined( __MINGW32__ ) || defined( __DMC__ ) ) && \
       !defined( HB_OS_WIN_CE )
 {
-   int iRet = 0;
+   int iRet = -1;
 
 #if defined( HB_IO_WIN )
-   if( hFileHandle != ( HB_FHANDLE ) 0 &&
-       hFileHandle != ( HB_FHANDLE ) 1 &&
-       hFileHandle != ( HB_FHANDLE ) 2 )
-      iRet = -1;
-   else
+   if( hFileHandle == ( HB_FHANDLE ) 0 ||
+       hFileHandle == ( HB_FHANDLE ) 1 ||
+       hFileHandle == ( HB_FHANDLE ) 2 )
 #endif
-   switch( uiDevMode )
+   switch( iDevMode )
    {
+      case FD_TEST:
+         iRet = _setmode( ( int ) hFileHandle, _O_BINARY );
+         if( iRet != -1 )
+            _setmode( ( int ) hFileHandle, iRet );
+         break;
+
       case FD_BINARY:
          iRet = _setmode( ( int ) hFileHandle, _O_BINARY );
          break;
@@ -898,27 +911,18 @@ BOOL hb_fsSetDevMode( HB_FHANDLE hFileHandle, USHORT uiDevMode )
          break;
    }
 
+   if( iRet != -1 )
+      iRet = ( iRet & _O_TEXT ) == _O_TEXT ? FD_TEXT : FD_BINARY;
    hb_fsSetIOError( iRet != -1, 0 );
 
-   return iRet != -1;
+   return iRet;
 }
-#elif defined( HB_OS_UNIX ) || defined( HB_OS_WIN_CE )
+#else
 
    HB_SYMBOL_UNUSED( hFileHandle );
 
-   if( uiDevMode == FD_TEXT )
-   {
-      hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
-      return FALSE;
-   }
-
-   hb_fsSetError( 0 );
-   return TRUE;
-
-#else
-
-   hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
-   return FALSE;
+   hb_fsSetError( ( HB_ERRCODE ) ( iDevMode == FD_TEXT ? FS_ERROR : 0 ) );
+   return FD_BINARY;
 
 #endif
 }
