@@ -432,6 +432,11 @@ HB_FUNC( HB_FSETDEVMODE )
    hb_retni( iRet );
 }
 
+HB_FUNC( HB_FISDEVICE )
+{
+   hb_retl( hb_fsIsDevice( hb_numToHandle( hb_parnint( 1 ) ) ) );
+}
+
 HB_FUNC( HB_OSERROR )
 {
    hb_retni( hb_fsOsError() );
