@@ -162,8 +162,6 @@ METHOD XbpStatusBar:destroy()
       NEXT
    ENDIF
 
-   ::oParent := NIL
-
    ::xbpWindow:destroy()
 
    RETURN NIL
@@ -186,15 +184,16 @@ METHOD XbpStatusBar:addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
    HB_SYMBOL_UNUSED( xImage )
    HB_SYMBOL_UNUSED( cDLL )
 
-   oPanel := XbpStatusBarPanel():new( cCaption, nStyle, cKey )
-   oPanel:oParent := self
-
-   oPanel:index := ::numItems + 1
-
-   IF nMode <> -1
-      //lSuccess := Wvg_StatusBarCreatePanel( ::hWnd, nMode )
+   IF nMode == -1
+      oPanel := XbpStatusBarPanel():new( cCaption, nStyle, cKey ):create()
+      ::oWidget:addPermanentWidget( QT_PTROFXBP( oPanel ), 1 )
+   ELSE
+      oPanel := XbpStatusBarPanel():new( cCaption, nStyle, cKey ):create()
+      ::oWidget:addWidget( QT_PTROFXBP( oPanel ) )
    ENDIF
 
+   oPanel:oParent := self
+   oPanel:index := ::numItems + 1
    IF lSuccess
       aadd( ::aItems, oPanel )
    ELSE
@@ -287,6 +286,7 @@ METHOD XbpStatusBar:panelDblClick( xParam )
 
 CLASS XbpStatusBarPanel
 
+   DATA     oWidget
    DATA     alignment                             INIT XBPALIGN_LEFT
    DATA     autosize                              INIT XBPSTATUSBAR_AUTOSIZE_NONE
    DATA     bevel                                 INIT XBPSTATUSBAR_BEVEL_INSET
@@ -303,6 +303,7 @@ CLASS XbpStatusBarPanel
    DATA     minWidth                              INIT 0
 
    METHOD   new()
+   METHOD   create()
    METHOD   caption()                             SETGET
 
    DATA     oParent
@@ -324,6 +325,23 @@ METHOD XbpStatusBarPanel:new( cCaption, nStyle, cKey )
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpStatusBarPanel:create( cCaption, nStyle, cKey )
+
+   DEFAULT cCaption       TO ::sl_caption
+   DEFAULT nStyle         TO ::style
+   DEFAULT cKey           TO ::key
+
+   ::sl_caption     := cCaption
+   ::style          := nStyle
+   ::key            := cKey
+
+   // take care of nStyle - later - label right now
+   ::oWidget := QLabel():new()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpStatusBarPanel:caption( cCaption )
 
    IF cCaption == NIL
@@ -334,7 +352,11 @@ METHOD XbpStatusBarPanel:caption( cCaption )
 
       ::sl_caption := cCaption
 
-      ::oParent:oWidget:showMessage( cCaption )
+      IF ::oWidget <> NIL
+         ::oWidget:setText( cCaption )
+      ELSE
+         ::oParent:oWidget:showMessage( cCaption )
+      ENDIF
    ENDIF
 
    RETURN Self

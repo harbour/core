@@ -124,8 +124,11 @@ CLASS HbIde
    DATA   qSplitterR
    DATA   qTabWidget
    DATA   qFindDlg
+   DATA   qSBLine
+   DATA   qSBCol
 
    ACCESS qCurEdit                                INLINE iif( ::getCurrentTab() > 0, ::aTabs[ ::getCurrentTab(), 2 ], NIL )
+   ACCESS qCurDocument                            INLINE iif( ::getCurrentTab() > 0, ::aTabs[ ::getCurrentTab(), 6 ], NIL )
 
    /* XBP Objects */
    DATA   oDlg
@@ -197,6 +200,7 @@ CLASS HbIde
    METHOD activateTab()
    METHOD getCurrentTab()
    METHOD getYesNo()
+   METHOD dispEditInfo()
 
    DATA   aTags                                   INIT {}
    DATA   aText                                   INIT {}
@@ -311,11 +315,11 @@ METHOD HbIde:create( cProjIni )
    ::oTBar := buildToolBar( ::oDlg, Self )
    ::buildStatusBar()
 
-   ::loadSources()
-
    ::setPosAndSizeByIni( ::oProjTree:oWidget, ProjectTreeGeometry )
 
    ::oDlg:Show()
+
+   ::loadSources()
 
    /* Enter Xbase++ Event Loop - working */
    DO WHILE .t.
@@ -652,10 +656,13 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos )
    ::createTags()
    ::updateFuncList()
    ::manageFocusInEditor()
+   ::dispEditInfo()
 
    lFirst := .t.
    Qt_Connect_Signal( QT_PTROF( qEdit ), "textChanged()", ;
                           {|| ::setTabImage( IF( qDocument:isModified(),"modified","unmodified" ), oTab, qEdit, nPos, @lFirst ) } )
+
+   Qt_Connect_Signal( QT_PTROF( qEdit ), "cursorPositionChanged()", {|| ::dispEditInfo() } )
 
    RETURN Self
 
@@ -696,6 +703,7 @@ METHOD HbIde:activateTab( mp1, mp2, oXbp )
       ::aSources := { ::aTabs[ ::nCurTab, 5 ] }
       ::createTags()
       ::updateFuncList()
+      ::dispEditInfo()
    ENDIF
 
    RETURN Self
@@ -893,15 +901,43 @@ METHOD HbIde:buildProjectTree()
 
 /*----------------------------------------------------------------------*/
 
+METHOD HbIde:dispEditInfo()
+   LOCAL qCursor, s
+
+   IF !empty( ::qCurEdit )
+      ::oSBar:getItem( 2 ):caption := "Ready"
+
+      qCursor   := QTextCursor():configure( ::qCurEdit:textCursor() )
+
+      s := "<b>Line "+ hb_ntos( qCursor:blockNumber()+1 ) + " of " + ;
+                       hb_ntos( ::qCurDocument:blockCount() ) + "</b>"
+      ::oSBar:getItem( 3 ):caption := s
+
+      ::oSBar:getItem( 4 ):caption := "Col " + hb_ntos( qCursor:columnNumber()+1 )
+
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD HbIde:buildStatusBar()
    LOCAL oPanel
 
    ::oSBar := XbpStatusBar():new()
    ::oSBar:create( ::oDlg, , { 0,0 }, { ::oDlg:currentSize()[1],30 } )
+   ::oSBar:oWidget:showMessage( "" )
 
    oPanel := ::oSBar:getItem( 1 )
-   oPanel:caption  := "Ready"
    oPanel:autosize := XBPSTATUSBAR_AUTOSIZE_SPRING
+
+   ::oSBar:addItem( "", , , , "Ready"  ):oWidget:setMinimumWidth( 80 )
+   ::oSBar:addItem( "", , , , "Line"   ):oWidget:setMinimumWidth( 110 )
+   ::oSBar:addItem( "", , , , "Col"    ):oWidget:setMinimumWidth( 40 )
+   ::oSBar:addItem( "", , , , "Caps"   ):oWidget:setMinimumWidth( 30 )
+   ::oSBar:addItem( "", , , , "Misc"   ):oWidget:setMinimumWidth( 30 )
+   ::oSBar:addItem( "", , , , "State"  ):oWidget:setMinimumWidth( 50 )
+   ::oSBar:addItem( "", , , , "Misc_2" ):oWidget:setMinimumWidth( 30 )
+   ::oSBar:addItem( "", , , , "Misc_3" ):oWidget:setMinimumWidth( 20 )
 
    RETURN Self
 
