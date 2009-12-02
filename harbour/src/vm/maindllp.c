@@ -96,12 +96,6 @@
    #define HB_DLL_NAMEMT2 HB_DLL_PREF_MT HB_DLL_VER HB_DLL_EXT
 #endif
 
-#if defined( HB_OS_WIN_CE )
-   #define HBTEXT( x ) TEXT( x )
-#else
-   #define HBTEXT( x ) x
-#endif
-
 #if defined( HB_OS_WIN )
 HB_EXTERN_BEGIN
 

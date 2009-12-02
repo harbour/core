@@ -69,12 +69,6 @@
                           (((DWORD)((WORD)((DWORD_PTR)(b) & 0xffff))) << 16)))
 #endif
 
-#if defined( HB_OS_WIN_CE )
-   #define HBTEXT( x ) TEXT( x )
-#else
-   #define HBTEXT( x ) x
-#endif
-
 #if 0
 #define __HBTOOUT__
 #endif
