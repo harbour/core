@@ -9,6 +9,7 @@ include $(TOP)$(ROOT)config/global.mk
 LIBNAME := libpng
 
 HB_BUILD_WARN := no
+HB_BUILD_MODE := c
 
 C_SOURCES := \
    png.c \
