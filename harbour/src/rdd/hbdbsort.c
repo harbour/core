@@ -240,12 +240,10 @@ void hb_dbQSortComplete( LPDBQUICKSORT pQuickSort )
          /* Remove deleted flag */
          pQuickSort->pSwapBufferA[ 0 ] = ' ';
 
-#ifndef HB_CDP_SUPPORT_OFF
          if( pArea->cdPage != hb_vmCDP() )
          {
             hb_dbfTranslateRec( ( DBFAREAP ) pArea, ( BYTE * ) pQuickSort->pSwapBufferA, hb_vmCDP(), pArea->cdPage );
          }
-#endif
 
          /* Append a new record and copy data */
          if( SELF_APPEND( pArea, TRUE ) == HB_FAILURE ||

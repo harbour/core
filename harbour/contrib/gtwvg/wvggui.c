@@ -307,7 +307,6 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->pPP->bRowCols     = FALSE;
    pWVT->pPP->iWndType     = 0;
 
-#ifndef HB_CDP_SUPPORT_OFF
    pWVT->hostCDP    = hb_vmCDP();
 #if defined( UNICODE )
    pWVT->inCDP      = hb_vmCDP();
@@ -317,7 +316,6 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
       for( i = 0; i < 256; ++i )
          pWVT->chrTransTbl[ i ] = pWVT->keyTransTbl[ i ] = ( BYTE ) i;
    }
-#endif
 #endif
    pWVT->bResizing         = FALSE;
    pWVT->width             = 600;

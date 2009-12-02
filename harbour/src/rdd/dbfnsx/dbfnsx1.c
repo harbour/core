@@ -659,7 +659,6 @@ static LPKEYINFO hb_nsxKeyPutItem( LPKEYINFO pKey, PHB_ITEM pItem, ULONG ulRecNo
    switch( hb_nsxItemType( pItem ) )
    {
       case 'C':
-#ifndef HB_CDP_SUPPORT_OFF
          if( fTrans )
          {
             len = pTag->KeyLength;
@@ -668,9 +667,6 @@ static LPKEYINFO hb_nsxKeyPutItem( LPKEYINFO pKey, PHB_ITEM pItem, ULONG ulRecNo
                          hb_vmCDP(), pTag->pIndex->pArea->dbfarea.area.cdPage );
          }
          else
-#else
-         HB_SYMBOL_UNUSED( fTrans );
-#endif
          {
             len = hb_itemGetCLen( pItem );
             if( len > ( ULONG ) pTag->KeyLength )
@@ -726,7 +722,6 @@ static PHB_ITEM hb_nsxKeyGetItem( PHB_ITEM pItem, LPKEYINFO pKey,
       switch( pTag->KeyType )
       {
          case 'C':
-#ifndef HB_CDP_SUPPORT_OFF
             if( fTrans )
             {
                ULONG ulLen = pTag->KeyLength;
@@ -735,9 +730,6 @@ static PHB_ITEM hb_nsxKeyGetItem( PHB_ITEM pItem, LPKEYINFO pKey,
                pItem = hb_itemPutCLPtr( pItem, pszVal, ulLen );
             }
             else
-#else
-            HB_SYMBOL_UNUSED( fTrans );
-#endif
             {
                pItem = hb_itemPutCL( pItem, ( char * ) pKey->val, pTag->KeyLength );
             }
@@ -779,9 +771,7 @@ static LPKEYINFO hb_nsxEvalKey( LPKEYINFO pKey, LPTAGINFO pTag )
 {
    NSXAREAP pArea = pTag->pIndex->pArea;
    PHB_ITEM pItem;
-#ifndef HB_CDP_SUPPORT_OFF
    PHB_CODEPAGE cdpTmp = hb_cdpSelect( pArea->dbfarea.area.cdPage );
-#endif
 
    if( pTag->nField )
    {
@@ -806,9 +796,7 @@ static LPKEYINFO hb_nsxEvalKey( LPKEYINFO pKey, LPTAGINFO pTag )
          hb_rddSelectWorkAreaNumber( iCurrArea );
    }
 
-#ifndef HB_CDP_SUPPORT_OFF
    hb_cdpSelect( cdpTmp );
-#endif
 
    return pKey;
 }
@@ -871,13 +859,11 @@ static int hb_nsxValCompare( LPTAGINFO pTag, UCHAR * val1, int len1,
    {
       if( iLimit > 0 )
       {
-#ifndef HB_CDP_SUPPORT_OFF
          if( pTag->pIndex->pArea->dbfarea.area.cdPage->sort )
             iResult = hb_cdpcmp( ( const char * ) val1, ( ULONG ) iLimit,
                                  ( const char * ) val2, ( ULONG ) iLimit,
                                  pTag->pIndex->pArea->dbfarea.area.cdPage, 0 );
          else
-#endif
             iResult = memcmp( val1, val2, iLimit );
       }
 
@@ -4602,12 +4588,10 @@ static BOOL hb_nsxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm 
       return fForward ? !pArea->dbfarea.area.fEof : !pArea->dbfarea.area.fBof;
    }
 
-#ifndef HB_CDP_SUPPORT_OFF
    if( pArea->dbfarea.area.cdPage != hb_vmCDP() )
    {
       szPattern = szFree = hb_cdpDup( szPattern, hb_vmCDP(), pArea->dbfarea.area.cdPage );
    }
-#endif
    while( iFixed < pTag->KeyLength && szPattern[ iFixed ] &&
           szPattern[ iFixed ] != '*' && szPattern[ iFixed ] != '?' )
    {
@@ -4710,7 +4694,6 @@ static BOOL hb_nsxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm 
 static BOOL hb_nsxRegexMatch( LPTAGINFO pTag, PHB_REGEX pRegEx, const char * szKey )
 {
    ULONG ulLen = pTag->KeyLength;
-#ifndef HB_CDP_SUPPORT_OFF
    char szBuff[ NSX_MAXKEYLEN + 1 ];
 
    if( pTag->pIndex->pArea->dbfarea.area.cdPage != hb_vmCDP() )
@@ -4721,9 +4704,6 @@ static BOOL hb_nsxRegexMatch( LPTAGINFO pTag, PHB_REGEX pRegEx, const char * szK
       szBuff[ ulLen ] = '\0';
       szKey = szBuff;
    }
-#else
-   HB_SYMBOL_UNUSED( pTag );
-#endif
    return hb_regexMatch( pRegEx, szKey, ulLen, FALSE );
 }
 
@@ -5812,9 +5792,7 @@ static HB_ERRCODE hb_nsxTagCreate( LPTAGINFO pTag, BOOL fReindex )
       char szBuffer[ NSX_MAXKEYLEN ];
       int iRecBuff = 0, iRecBufSize, iRec;
       double d;
-#ifndef HB_CDP_SUPPORT_OFF
       PHB_CODEPAGE cdpTmp = hb_cdpSelect( pArea->dbfarea.area.cdPage );
-#endif
 
       pForItem = pTag->pForItem;
       if( pTag->nField )
@@ -6017,9 +5995,7 @@ static HB_ERRCODE hb_nsxTagCreate( LPTAGINFO pTag, BOOL fReindex )
          hb_itemRelease( pItem );
 
       pArea->lpCurTag = pSaveTag;
-#ifndef HB_CDP_SUPPORT_OFF
       hb_cdpSelect( cdpTmp );
-#endif
    }
 
    hb_nsxSortFree( pSort, TRUE );

@@ -103,9 +103,7 @@ static SLsmg_Char_Type s_outboxTab[ 256 ];
 
 /* to convert input characters */
 unsigned char hb_sln_inputTab[ 256 ];
-#ifndef HB_CDP_SUPPORT_OFF
 PHB_CODEPAGE hb_sln_cdpIN;
-#endif
 
 static BOOL s_fActive = FALSE;
 
@@ -350,22 +348,16 @@ static void hb_sln_setCharTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, BOO
 {
    int i, iDst;
 
-#if defined( HB_CDP_SUPPORT_OFF )
-   HB_SYMBOL_UNUSED( cdpHost );
-   HB_SYMBOL_UNUSED( cdpTerm );
-   HB_SYMBOL_UNUSED( fBox );
-#elif !defined( HB_SLN_UNICODE )
+#if !defined( HB_SLN_UNICODE )
    HB_SYMBOL_UNUSED( cdpTerm );
 #endif
 
    /* build a conversion chars table */
    for( i = 0; i < 256; i++ )
    {
-#ifndef HB_CDP_SUPPORT_OFF
       if( hb_sln_Is_Unicode )
          iDst = hb_cdpGetU16( cdpHost, TRUE, ( BYTE ) i );
       else
-#endif
          iDst = i;
 
       if( iDst < 32 )
@@ -392,7 +384,6 @@ static void hb_sln_setCharTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, BOO
 
       memcpy( s_outboxTab, s_outputTab, sizeof( s_outputTab ) );
 
-#ifndef HB_CDP_SUPPORT_OFF
       if( cdpHost )
       {
          for( i = 0; i < 256; ++i )
@@ -413,7 +404,6 @@ static void hb_sln_setCharTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, BOO
             }
          }
       }
-#endif
    }
 }
 
@@ -423,17 +413,10 @@ static void hb_sln_setKeyTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm )
    char *p;
    int i;
 
-#ifndef HB_CDP_SUPPORT_OFF
    for ( i = 0; i < 256; i++ )
       hb_sln_inputTab[ i ] = ( unsigned char )
                            hb_cdpTranslateChar( i, FALSE, cdpTerm, cdpHost );
    hb_sln_cdpIN = cdpTerm ? cdpTerm : cdpHost;
-#else
-   HB_SYMBOL_UNUSED( cdpHost );
-   HB_SYMBOL_UNUSED( cdpTerm );
-   for ( i = 0; i < 256; i++ )
-      hb_sln_inputTab[ i ] = ( unsigned char ) i;
-#endif
 
    /* init national chars */
    p = hb_getenv( hb_NationCharsEnvName );
@@ -955,7 +938,6 @@ static BOOL hb_gt_sln_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
 {
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
-#ifndef HB_CDP_SUPPORT_OFF
    {
       PHB_CODEPAGE cdpTerm = NULL, cdpHost = NULL;
 
@@ -969,7 +951,6 @@ static BOOL hb_gt_sln_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
 
       hb_sln_setCharTrans( cdpHost, cdpTerm, fBox );
    }
-#endif
 
    return TRUE;
 }
@@ -980,7 +961,6 @@ static BOOL hb_gt_sln_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char 
 {
    HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
-#ifndef HB_CDP_SUPPORT_OFF
    {
       PHB_CODEPAGE cdpTerm = NULL, cdpHost = NULL;
 
@@ -994,7 +974,6 @@ static BOOL hb_gt_sln_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char 
 
       hb_sln_setKeyTrans( cdpHost, cdpTerm );
    }
-#endif
 
    return TRUE;
 }

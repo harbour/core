@@ -221,65 +221,6 @@ static const ClipKeyCode extKeyTab[CLIP_EXTKEY_COUNT] = {
     {0,                    0, HB_BREAK_FLAG,          0}  /*  29 */
 };
 
-#ifdef HB_CDP_SUPPORT_OFF
-static const UnixBoxChar boxTranslate[] ={
-   {  16, HB_GTXVG_ARROW_R},
-   {  17, HB_GTXVG_ARROW_L},
-   {  30, HB_GTXVG_ARROW_U},
-   {  31, HB_GTXVG_ARROW_D},
-   { 176, HB_GTXVG_FILLER1},
-   { 177, HB_GTXVG_FILLER2},
-   { 178, HB_GTXVG_FILLER3},
-   { 179, HB_GTXWC_SNG_VRT},
-   { 180, HB_GTXWC_SNG_VR},
-   { 181, HB_GTXWC_SNG_V_DBL_R},
-   { 182, HB_GTXWC_DBL_V_SNG_R},
-   { 183, HB_GTXWC_SNG_R_DBL_T},
-   { 184, HB_GTXWC_DBL_R_SNG_T},
-   { 185, HB_GTXWC_DBL_VR},
-   { 186, HB_GTXWC_DBL_VRT},
-   { 187, HB_GTXWC_DBL_RT},
-   { 188, HB_GTXWC_DBL_RB},
-   { 189, HB_GTXWC_SNG_R_DBL_B},
-   { 190, HB_GTXWC_DBL_R_SNG_B},
-   { 191, HB_GTXWC_SNG_RT},
-   { 192, HB_GTXWC_SNG_LB},
-   { 193, HB_GTXWC_SNG_BU},
-   { 194, HB_GTXWC_SNG_TD},
-   { 195, HB_GTXWC_SNG_VL},
-   { 196, HB_GTXWC_SNG_HOR},
-   { 197, HB_GTXWC_SNG_CRS},
-   { 198, HB_GTXWC_SNG_V_DBL_L},
-   { 199, HB_GTXWC_DBL_V_SNG_L},
-   { 200, HB_GTXWC_DBL_LB},
-   { 201, HB_GTXWC_DBL_LT},
-   { 202, HB_GTXWC_DBL_BU},
-   { 203, HB_GTXWC_DBL_TD},
-   { 204, HB_GTXWC_DBL_VL},
-   { 205, HB_GTXWC_DBL_HOR},
-   { 206, HB_GTXWC_DBL_CRS},
-   { 207, HB_GTXWC_DBL_B_SNG_U},
-   { 208, HB_GTXWC_SNG_B_DBL_U},
-   { 209, HB_GTXWC_DBL_T_SNG_D},
-   { 210, HB_GTXWC_SNG_T_DBL_D},
-   { 211, HB_GTXWC_DBL_L_SNG_B},
-   { 212, HB_GTXWC_SNG_L_DBL_B},
-   { 213, HB_GTXWC_SNG_L_DBL_T},
-   { 214, HB_GTXWC_DBL_L_SNG_T},
-   { 215, HB_GTXWC_DBL_SNG_CRS},
-   { 216, HB_GTXWC_SNG_DBL_CRS},
-   { 217, HB_GTXWC_SNG_RB},
-   { 218, HB_GTXWC_SNG_LT},
-   { 219, HB_GTXVG_FULL},
-   { 220, HB_GTXVG_FULL_B},
-   { 221, HB_GTXVG_FULL_L},
-   { 222, HB_GTXVG_FULL_R},
-   { 223, HB_GTXVG_FULL_T},
-   { 254, HB_GTXVG_SQUARE}
-};
-#define XWC_BOX_CHARS   (sizeof(boxTranslate) / sizeof(UnixBoxChar))
-#endif
-
 /* these are standard PC console colors in RGB */
 static const int rgb_values[] = {
    0x000000,   /* black         "rgb:00/00/00" */
@@ -1596,20 +1537,8 @@ static void hb_gt_xwc_BuildCharTrans( PXWND_DEF wnd )
 
    for( i = 0; i < 256; i++ )
    {
-#ifndef HB_CDP_SUPPORT_OFF
       usCh16 = hb_cdpGetU16( wnd->hostCDP, TRUE, ( BYTE ) i );
-#else
-      int j;
-      usCh16 = ( USHORT ) i;
-      for( j = 0; j < (int) XWC_BOX_CHARS; j++ )
-      {
-         if( boxTranslate[j].c == usCh16 )
-         {
-            usCh16 = boxTranslate[j].u16;
-            break;
-         }
-      }
-#endif
+
       wnd->charTrans[ i ].type = CH_CHAR;
       wnd->charTrans[ i ].u.ch16 = usCh16;
       wnd->charTrans[ i ].size = 0;
@@ -1896,16 +1825,12 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt)
    }
    if( n > 0 )
    {
-#ifndef HB_CDP_SUPPORT_OFF
       unsigned char keystr[ 32 ];
       ULONG u = sizeof( keystr );
 
       hb_cdpnDup2( ( const char * ) buf, n, ( char * ) keystr, &u,
                    wnd->inCDP, wnd->hostCDP );
       n = ( int ) u;
-#else
-      unsigned char * keystr = buf;
-#endif
 
 #ifdef XWC_DEBUG
       keystr[n] = '\0';
@@ -2175,7 +2100,6 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
             if( XGetTextProperty( wnd->dpy, wnd->window, &text,
                                   evt->xselection.property ) != 0 )
             {
-#ifndef HB_CDP_SUPPORT_OFF
                if( evt->xselection.target == s_atomUTF8String && text.format == 8 )
                {
 #ifdef XWC_DEBUG
@@ -2189,7 +2113,6 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                   wnd->ClipboardRcvd = TRUE;
                }
                else
-#endif
                if( evt->xselection.target == s_atomString && text.format == 8 )
                {
 #ifdef XWC_DEBUG
@@ -2199,15 +2122,9 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                      hb_xfree( wnd->ClipboardData );
 
                   wnd->ClipboardSize = text.nitems;
-#ifndef HB_CDP_SUPPORT_OFF
                   wnd->ClipboardData = ( unsigned char * )
                      hb_cdpnDup( ( const char * ) text.value, &wnd->ClipboardSize,
                                  wnd->inCDP, wnd->hostCDP );
-#else
-                  wnd->ClipboardData = ( unsigned char * ) hb_xgrab( text.nitems + 1 );
-                  memcpy( wnd->ClipboardData, text.value, text.nitems );
-                  wnd->ClipboardData[ text.nitems ] = '\0';
-#endif
                   wnd->ClipboardTime = evt->xselection.time;
                   wnd->ClipboardRcvd = TRUE;
                }
@@ -2276,7 +2193,6 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
          }
          else if( req->target == s_atomString )
          {
-#ifndef HB_CDP_SUPPORT_OFF
             if( wnd->inCDP && wnd->hostCDP && wnd->inCDP != wnd->hostCDP )
             {
                ULONG ulLen = wnd->ClipboardSize;
@@ -2290,14 +2206,12 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                hb_xfree( pBuffer );
             }
             else
-#endif
             {
                XChangeProperty( wnd->dpy, req->requestor, req->property,
                                 s_atomString, 8, PropModeReplace,
                                 wnd->ClipboardData, wnd->ClipboardSize );
             }
          }
-#ifndef HB_CDP_SUPPORT_OFF
          else if( req->target == s_atomUTF8String )
          {
             ULONG ulLen = wnd->ClipboardSize;
@@ -2313,7 +2227,6 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                              pBuffer, ulLen );
             hb_xfree( pBuffer );
          }
-#endif
          else
          {
             respond.xselection.property = None;
@@ -3134,11 +3047,9 @@ static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
    wnd->fResizable = TRUE;
    wnd->fClosable = TRUE;
    wnd->fWinResize = FALSE;
-#ifndef HB_CDP_SUPPORT_OFF
    wnd->hostCDP = hb_vmCDP();
    wnd->utf8CDP = hb_cdpFind( "UTF8" );
    wnd->boxCDP = hb_cdpFind( "EN" );
-#endif
    wnd->cursorType = SC_NORMAL;
 
    /* Window Title */
@@ -3787,7 +3698,6 @@ static BOOL hb_gt_xwc_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
 
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
-#ifndef HB_CDP_SUPPORT_OFF
    /*
     * We are displaying text in U16 so pszTermCDP is unimportant.
     * We only have to know what is the internal application codepage
@@ -3813,7 +3723,6 @@ static BOOL hb_gt_xwc_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
          }
       }
    }
-#endif
 
    return TRUE;
 }
@@ -3825,7 +3734,6 @@ static BOOL hb_gt_xwc_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char 
 
    HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
-#ifndef HB_CDP_SUPPORT_OFF
    /*
     * Basic Xlib api has no function to return character key val in
     * unicode so far. We can use some nonstandard extension or try
@@ -3845,7 +3753,6 @@ static BOOL hb_gt_xwc_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char 
          HB_GTXWC_GET( pGT )->inCDP = cdpTerm;
       }
    }
-#endif
 
    return TRUE;
 }

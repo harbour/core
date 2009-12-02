@@ -779,7 +779,6 @@ static BOOL hb_gt_pca_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
 
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
-#ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
       pszHostCDP = hb_cdpID();
    if( !pszTermCDP )
@@ -791,7 +790,6 @@ static BOOL hb_gt_pca_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
       s_cdpHost = hb_cdpFind( pszHostCDP );
       s_fDispTrans = s_cdpTerm && s_cdpHost && s_cdpTerm != s_cdpHost;
    }
-#endif
 
    return TRUE;
 }
@@ -802,14 +800,12 @@ static BOOL hb_gt_pca_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
 
    HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
-#ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
       pszHostCDP = hb_cdpID();
    if( !pszTermCDP )
       pszTermCDP = pszHostCDP;
 
    hb_gt_pca_setKeyTrans( hb_cdpFind( pszTermCDP ), hb_cdpFind( pszHostCDP ) );
-#endif
 
    return TRUE;
 }
@@ -832,7 +828,6 @@ static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
          iColor2 = iColor;
       else if( iColor2 != iColor )
       {
-#ifndef HB_CDP_SUPPORT_OFF
          if( s_fDispTrans )
          {
             ULONG ulLen = iLen;
@@ -843,7 +838,6 @@ static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
             hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, buffer, ulLen );
          }
          else
-#endif
             hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, s_sLineBuf, iLen );
 
          iCol += iLen;
@@ -856,7 +850,6 @@ static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    }
    if( iLen )
    {
-#ifndef HB_CDP_SUPPORT_OFF
       if( s_fDispTrans )
       {
          ULONG ulLen = iLen;
@@ -867,7 +860,6 @@ static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
          hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, buffer, ulLen );
       }
       else
-#endif
          hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, s_sLineBuf, iLen );
    }
 }

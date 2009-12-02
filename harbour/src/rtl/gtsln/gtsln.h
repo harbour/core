@@ -214,11 +214,7 @@ extern BOOL hb_sln_Is_Unicode;
 extern BOOL hb_sln_UnderLinuxConsole;
 extern BOOL hb_sln_UnderXterm;
 extern unsigned char hb_sln_inputTab[ 256 ];
-#ifndef HB_CDP_SUPPORT_OFF
 extern PHB_CODEPAGE hb_sln_cdpIN;
-#else
-#  define hb_vmCDP()    NULL
-#endif
 
 /* delay for waiting on characters after ESC key */
 extern int hb_sln_escDelay;

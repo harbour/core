@@ -61,9 +61,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-#ifndef HB_CDP_SUPPORT_OFF
-#  include "hbapicdp.h"
-#endif
+#include "hbapicdp.h"
 
 #if defined( HB_OS_HPUX )
 #  define _XOPEN_SOURCE_EXTENDED

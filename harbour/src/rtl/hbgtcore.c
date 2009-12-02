@@ -1433,7 +1433,6 @@ static void hb_gt_def_VertLine( PHB_GT pGT, int iCol, int iTop, int iBottom,
 
 static BOOL hb_gt_def_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP, BOOL fBox )
 {
-#ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
       pszHostCDP = hb_cdpID();
    if( !pszTermCDP )
@@ -1447,10 +1446,6 @@ static BOOL hb_gt_def_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
                         pGT->cdpTerm != pGT->cdpHost;
       return TRUE;
    }
-#else
-   HB_SYMBOL_UNUSED( pszTermCDP );
-   HB_SYMBOL_UNUSED( pszHostCDP );
-#endif
    HB_SYMBOL_UNUSED( fBox );
 
    return FALSE;

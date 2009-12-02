@@ -1132,9 +1132,7 @@ int hb_vmQuit( void )
    hb_conRelease();                 /* releases Console */
    hb_vmReleaseLocalSymbols();      /* releases the local modules linked list */
    hb_dynsymRelease();              /* releases the dynamic symbol table */
-#ifndef HB_CDP_SUPPORT_OFF
    hb_cdpReleaseAll();              /* releases codepages */
-#endif
    hb_itemClear( hb_stackReturnItem() );
    hb_gcCollectAll( TRUE );
 

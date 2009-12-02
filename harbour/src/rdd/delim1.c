@@ -555,7 +555,6 @@ static HB_ERRCODE hb_delimGetValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM p
    switch( pField->uiType )
    {
       case HB_FT_STRING:
-#ifndef HB_CDP_SUPPORT_OFF
          if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
          {
             ULONG ulLen = pField->uiLen;
@@ -564,7 +563,6 @@ static HB_ERRCODE hb_delimGetValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM p
             hb_itemPutCLPtr( pItem, pszVal, ulLen );
          }
          else
-#endif
          {
             hb_itemPutCL( pItem, ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                           pField->uiLen );
@@ -662,7 +660,6 @@ static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM p
       {
          if( pField->uiType == HB_FT_STRING )
          {
-#ifndef HB_CDP_SUPPORT_OFF
             if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
             {
                ulSize = pField->uiLen;
@@ -671,7 +668,6 @@ static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM p
                             &ulSize, hb_vmCDP(), pArea->area.cdPage );
             }
             else
-#endif
             {
                ulSize = hb_itemGetCLen( pItem );
                if( ulSize > ( ULONG ) pField->uiLen )
@@ -1261,7 +1257,7 @@ static HB_ERRCODE hb_delimCreate( DELIMAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    pArea->fShared = FALSE;    /* pCreateInfo->fShared; */
    pArea->fReadonly = FALSE;  /* pCreateInfo->fReadonly */
-#ifndef HB_CDP_SUPPORT_OFF
+
    if( pCreateInfo->cdpId )
    {
       pArea->area.cdPage = hb_cdpFindExt( pCreateInfo->cdpId );
@@ -1270,7 +1266,6 @@ static HB_ERRCODE hb_delimCreate( DELIMAREAP pArea, LPDBOPENINFO pCreateInfo )
    }
    else
       pArea->area.cdPage = hb_vmCDP();
-#endif
 
    pFileName = hb_fsFNameSplit( pCreateInfo->abName );
    if( hb_setGetDefExtension() && ! pFileName->szExtension )
@@ -1349,7 +1344,7 @@ static HB_ERRCODE hb_delimOpen( DELIMAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    pArea->fShared = TRUE;     /* pOpenInfo->fShared; */
    pArea->fReadonly = TRUE;   /* pOpenInfo->fReadonly; */
-#ifndef HB_CDP_SUPPORT_OFF
+
    if( pOpenInfo->cdpId )
    {
       pArea->area.cdPage = hb_cdpFindExt( pOpenInfo->cdpId );
@@ -1358,7 +1353,6 @@ static HB_ERRCODE hb_delimOpen( DELIMAREAP pArea, LPDBOPENINFO pOpenInfo )
    }
    else
       pArea->area.cdPage = hb_vmCDP();
-#endif
 
    uiFlags = ( pArea->fReadonly ? FO_READ : FO_READWRITE ) |
              ( pArea->fShared ? FO_DENYNONE : FO_EXCLUSIVE );

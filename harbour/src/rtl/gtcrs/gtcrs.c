@@ -2827,7 +2827,6 @@ static BOOL hb_gt_crs_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox ) );
 
-#ifndef HB_CDP_SUPPORT_OFF
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
    if( !pszHostCDP )
@@ -2838,9 +2837,6 @@ static BOOL hb_gt_crs_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
    setDispTrans( s_ioBase, hb_cdpFind( pszHostCDP ),
                            hb_cdpFind( pszTermCDP ), fBox ? 1 : 0 );
    return TRUE;
-#else
-   return HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
-#endif
 }
 
 /* *********************************************************************** */
@@ -2849,7 +2845,6 @@ static BOOL hb_gt_crs_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
 
-#ifndef HB_CDP_SUPPORT_OFF
    HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
    if( !pszHostCDP )
@@ -2860,9 +2855,6 @@ static BOOL hb_gt_crs_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
    setKeyTrans( s_ioBase, hb_cdpFind( pszTermCDP ), hb_cdpFind( pszHostCDP ) );
 
    return TRUE;
-#else
-   return HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
-#endif
 }
 
 /* *********************************************************************** */

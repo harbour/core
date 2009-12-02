@@ -231,7 +231,6 @@ static BOOL hb_gt_cgi_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
 
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
-#ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
       pszHostCDP = hb_cdpID();
    if( !pszTermCDP )
@@ -246,7 +245,6 @@ static BOOL hb_gt_cgi_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
       pGTCGI->fDispTrans = pGTCGI->cdpTerm && pGTCGI->cdpHost &&
                            pGTCGI->cdpTerm != pGTCGI->cdpHost;
    }
-#endif
 
    return TRUE;
 }
@@ -256,7 +254,6 @@ static void hb_gt_cgi_WriteCon( PHB_GT pGT, const char * szText, ULONG ulLength 
 {
    PHB_GTCGI pGTCGI = HB_GTCGI_GET( pGT );
 
-#ifndef HB_CDP_SUPPORT_OFF
    if( pGTCGI->fDispTrans )
    {
       ULONG ulLen = ulLength;
@@ -266,7 +263,6 @@ static void hb_gt_cgi_WriteCon( PHB_GT pGT, const char * szText, ULONG ulLength 
       hb_xfree( buffer );
    }
    else
-#endif
       hb_gt_cgi_termOut( pGTCGI, szText, ulLength );
 
    while( ulLength-- )
@@ -387,7 +383,6 @@ static void hb_gt_cgi_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       }
       if( iLen )
       {
-#ifndef HB_CDP_SUPPORT_OFF
          if( pGTCGI->fDispTrans )
          {
             ULONG ulLen = iLen;
@@ -397,7 +392,6 @@ static void hb_gt_cgi_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
             hb_xfree( buffer );
          }
          else
-#endif
             hb_gt_cgi_termOut( pGTCGI, pGTCGI->sLineBuf, iLen );
 
          pGTCGI->iCol = iCol;

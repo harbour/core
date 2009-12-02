@@ -1248,7 +1248,6 @@ static BOOL hb_gt_dos_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
 
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
-#ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
       pszHostCDP = hb_cdpID();
 
@@ -1265,12 +1264,6 @@ static BOOL hb_gt_dos_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
       s_charTransRev[ i ] = ( BYTE )
                            hb_cdpTranslateChar( i, FALSE, cdpTerm, cdpHost );
    }
-#else
-   HB_SYMBOL_UNUSED( cdpTerm );
-   HB_SYMBOL_UNUSED( cdpHost );
-   for( i = 0; i < 256; i++ )
-      s_charTransRev[ i ] = s_charTrans[ i ] = ( BYTE ) i;
-#endif
 
    return TRUE;
 }
@@ -1286,7 +1279,6 @@ static BOOL hb_gt_dos_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
 
    HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
-#ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
       pszHostCDP = hb_cdpID();
 
@@ -1301,12 +1293,6 @@ static BOOL hb_gt_dos_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
       s_keyTrans[ i ] = ( BYTE )
                            hb_cdpTranslateChar( i, FALSE, cdpTerm, cdpHost );
    }
-#else
-   HB_SYMBOL_UNUSED( cdpTerm );
-   HB_SYMBOL_UNUSED( cdpHost );
-   for( i = 0; i < 256; i++ )
-      s_keyTrans[ i ] = ( BYTE ) i;
-#endif
 
    return TRUE;
 }

@@ -76,7 +76,7 @@
  *  $SYNTAX$
  *      HB_LANGMESSAGE( <nMensaje> ) --> cMensaje
  *  $ARGUMENTS$
- *      <nMensaje> es el código numérico del mensaje 
+ *      <nMensaje> es el código numérico del mensaje
  *  $RETURNS$
  *      HB_LANGMESSAGE() devuelve el texto asociado con el código <nMensaje>.
  *  $DESCRIPTION$
@@ -275,7 +275,7 @@
  *      Todas
  *  $FILES$
  *      La librer¡a asociada es lang
- *      Nota: el nombre de la extensi¢n de la librer¡a, puede cambiar con 
+ *      Nota: el nombre de la extensi¢n de la librer¡a, puede cambiar con
  *            el sistema operativo (.lib .o , etc.)
  *  $SEEALSO$
  *      HB_LANGSELECT(),NATIONMSG()
@@ -328,11 +328,11 @@
  *  $RETURNS$
  *      <cViejoLeng>   El identificador anterior de Lenguaje
  *  $DESCRIPTION$
- *      HB_SETCODEPAGE() establece el código de página activo usado por 
- *      Harbour para ordenar y comparar cadenas.  El código de página por 
+ *      HB_SETCODEPAGE() establece el código de página activo usado por
+ *      Harbour para ordenar y comparar cadenas.  El código de página por
  *      defecto usa el orden ASCII del idioma inglés (cLang == "EN").
  *
- *      NOTA: Usted debe solicitar a través del comando 'REQUEST' cada 
+ *      NOTA: Usted debe solicitar a través del comando 'REQUEST' cada
  *            módulo de código de página que Ud. intente usar.
  *      Por ejemplo: para usar el código de página Ruso: RU866, Ud. debe
  *      agregar lo siguiente a su programa:
@@ -356,9 +356,6 @@
  *      R
  *  $COMPLIANCE$
  *      Esta funci¢n es una Extensi¢n de Harbour.
- *
- *      Esta funci¢n es solamente visible si source/rtl/cdpapi.c fué
- *      compilado sin la bandera: HB_CDP_SUPPORT_OFF
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -376,34 +373,34 @@
  *  $ONELINER$
  *      Traduce una cadena de un código de página a otro.
  *  $SYNTAX$
- *      HB_TRANSLATE( <cTextoOrig>, [<cCodPagOrig>], [<cCodPagDest>] ) 
+ *      HB_TRANSLATE( <cTextoOrig>, [<cCodPagOrig>], [<cCodPagDest>] )
  *                  --> cTextoDest
  *  $ARGUMENTS$
  *      <cTextoOrig>  Es la cadena original a traducir.
  *
- *      <cCodPagOrig> Es la ID opcional del código de página de la cadena 
- *                    original. Si no es especificada, es usado el código de 
+ *      <cCodPagOrig> Es la ID opcional del código de página de la cadena
+ *                    original. Si no es especificada, es usado el código de
  *                    página por defecto.
  *
  *      <cCodPagDest> Es la ID opcional del código de página de la cadena de
- *                    destino. Si no es especificada, es usado el código de 
+ *                    destino. Si no es especificada, es usado el código de
  *                    página por defecto.
  *  $RETURNS$
  *      HB_TRANSLATE() devuelve la cadena de destino convertida a partir de
  *      la cadena original.
  *  $DESCRIPTION$
- *      HB_TRANSLATE() trata de convertir la cadena original desde un código 
+ *      HB_TRANSLATE() trata de convertir la cadena original desde un código
  *      de página a otro. Si el código de página no es reconocido, ó no es
  *      enlazado, el código de página por defecto, es usado.
  *      HB_TRANSLATE() es generalmente usado para convertir entre los códigos
  *      de página de DOS y Windows, para un mismo idioma.
  *
- *      NOTA: Si el código de página de origen y el código de página de 
+ *      NOTA: Si el código de página de origen y el código de página de
  *            destino, no tienen el mismo número de caracteres, la traducción
- *            no puede ser realizada y la cadena de destino es una copia de 
+ *            no puede ser realizada y la cadena de destino es una copia de
  *            la cadena de origen.
  *
- *      NOTA: Usted debe solicitar a través del comando 'REQUEST' cada 
+ *      NOTA: Usted debe solicitar a través del comando 'REQUEST' cada
  *            módulo de código de página que Ud. intente usar.
  *      Por ejemplo: para usar el código de página Ruso: RU866, Ud. debe
  *      agregar lo siguiente a su programa:
@@ -422,9 +419,6 @@
  *      R
  *  $COMPLIANCE$
  *      Esta funci¢n es una Extensi¢n de Harbour.
- *
- *      Esta funci¢n es solamente visible si source/rtl/cdpapi.c fué
- *      compilado sin la bandera: HB_CDP_SUPPORT_OFF
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -433,6 +427,3 @@
  *      HB_LANGSELECT(),HB_SETCODEPAGE(),NATIONMSG(),REQUEST
  *  $END$
  */
-
-
-

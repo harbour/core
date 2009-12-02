@@ -54,8 +54,6 @@
 #ifndef HB_APICDP_H_
 #define HB_APICDP_H_
 
-#ifndef HB_CDP_SUPPORT_OFF
-
 #include "hbapi.h"
 #include "hbinit.h"
 
@@ -387,12 +385,5 @@ extern HB_EXPORT void         hb_cdpnTranslate( char *, PHB_CODEPAGE, PHB_CODEPA
 #endif
 
 HB_EXTERN_END
-
-#else
-
-typedef void * PHB_CODEPAGE;
-typedef USHORT    HB_WCHAR;
-
-#endif /* HB_CDP_SUPPORT_OFF */
 
 #endif /* HB_APICDP_H_ */

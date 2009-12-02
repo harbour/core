@@ -67,9 +67,7 @@
 #include "rddsys.ch"
 #include "hbsxdef.ch"
 
-#ifndef HB_CDP_SUPPORT_OFF
-#  include "hbapicdp.h"
-#endif
+#include "hbapicdp.h"
 
 
 static USHORT s_uiRddId = ( USHORT ) -1;
@@ -1810,7 +1808,6 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
    {
       case HB_FT_STRING:
          ulLen = pField->uiLen;
-#ifndef HB_CDP_SUPPORT_OFF
          if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
          {
             pszVal = hb_cdpnDup( ( const char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
@@ -1818,7 +1815,6 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
             hb_itemPutCLPtr( pItem, pszVal, ulLen );
          }
          else
-#endif
          {
             pszVal = ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ];
             hb_itemPutCL( pItem, pszVal, ulLen );
@@ -1834,12 +1830,10 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
             if( ulLen > ( ULONG ) pField->uiLen )
                ulLen = pField->uiLen;
          }
-#ifndef HB_CDP_SUPPORT_OFF
          if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
             pszVal = hb_cdpnDup( ( const char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                                  &ulLen, pArea->area.cdPage, hb_vmCDP() );
          else
-#endif
             pszVal = ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ];
 
          hb_itemPutCLPtr( pItem, pszVal, ulLen );
@@ -2269,7 +2263,6 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
 
          if( pField->uiType == HB_FT_STRING )
          {
-#ifndef HB_CDP_SUPPORT_OFF
             if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
             {
                hb_cdpnDup2( pszPtr, ulSize,
@@ -2277,7 +2270,6 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
                             &ulLen, hb_vmCDP(), pArea->area.cdPage );
             }
             else
-#endif
             {
                if( ulLen > ulSize )
                   ulLen = ulSize;
@@ -2290,7 +2282,6 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
          }
          else if( pField->uiType == HB_FT_VARLENGTH )
          {
-#ifndef HB_CDP_SUPPORT_OFF
             if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
             {
                if( ulLen > ( ULONG ) sizeof( szBuffer ) )
@@ -2299,7 +2290,6 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
                                      hb_vmCDP(), pArea->area.cdPage );
             }
             else
-#endif
             {
                if( ulLen > ulSize )
                   ulLen = ulSize;
@@ -3141,7 +3131,6 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    }
    pArea->ulMemoBlockSize = 0;
 
-#ifndef HB_CDP_SUPPORT_OFF
    if( pCreateInfo->cdpId )
    {
       pArea->area.cdPage = hb_cdpFindExt( pCreateInfo->cdpId );
@@ -3150,7 +3139,6 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    }
    else
       pArea->area.cdPage = hb_vmCDP();
-#endif
 
    pItem = hb_itemNew( NULL );
    if( SELF_RDDINFO( SELF_RDDNODE( &pArea->area ), RDDI_PENDINGPASSWORD,
@@ -3721,7 +3709,7 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
       if( !pArea->bLockType )
          pArea->bLockType = DB_DBFLOCK_CLIP;
    }
-#ifndef HB_CDP_SUPPORT_OFF
+
    if( pOpenInfo->cdpId )
    {
       pArea->area.cdPage = hb_cdpFindExt( pOpenInfo->cdpId );
@@ -3730,7 +3718,7 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    }
    else
       pArea->area.cdPage = hb_vmCDP();
-#endif
+
    pArea->fShared = pOpenInfo->fShared;
    pArea->fReadonly = pOpenInfo->fReadonly;
    /* Force exclusive mode
@@ -4385,7 +4373,6 @@ static HB_ERRCODE hb_dbfPack( DBFAREAP pArea )
    return SELF_GOTO( ( AREAP ) pArea, 1 );
 }
 
-#ifndef HB_CDP_SUPPORT_OFF
 void hb_dbfTranslateRec( DBFAREAP pArea, BYTE * pBuffer, PHB_CODEPAGE cdp_src, PHB_CODEPAGE cdp_dest )
 {
    char * pTmpBuf = NULL;
@@ -4425,7 +4412,6 @@ void hb_dbfTranslateRec( DBFAREAP pArea, BYTE * pBuffer, PHB_CODEPAGE cdp_src, P
    if( pTmpBuf != NULL )
       hb_xfree( pTmpBuf );
 }
-#endif
 
 /*
  * Physically reorder a database.
@@ -4518,12 +4504,12 @@ static HB_ERRCODE hb_dbfSort( DBFAREAP pArea, LPDBSORTINFO pSortInfo )
 
          /* Copy data */
          memcpy( pBuffer, pArea->pRecord, pArea->uiRecordLen );
-#ifndef HB_CDP_SUPPORT_OFF
+
          if( pArea->area.cdPage != hb_vmCDP() )
          {
             hb_dbfTranslateRec( pArea, pBuffer, pArea->area.cdPage, hb_vmCDP() );
          }
-#endif
+
          pBuffer += pArea->uiRecordLen;
          uiCount++;
       }

@@ -322,11 +322,10 @@ typedef struct _HB_GTTRM
 
    BOOL       fPosAnswer;
 
-#ifndef HB_CDP_SUPPORT_OFF
    PHB_CODEPAGE cdpHost;
    PHB_CODEPAGE cdpBox;
    PHB_CODEPAGE cdpIn;
-#endif
+
    BOOL       fUTF8;
    UCHAR      keyTransTbl[ 256 ];
    int        charmap[ 256 ];
@@ -725,9 +724,6 @@ static void hb_gt_trm_termOutTrans( PHB_GTTRM pTerm, const char * pStr, int iLen
 {
    if( pTerm->iOutBufSize )
    {
-#ifdef HB_CDP_SUPPORT_OFF
-      HB_SYMBOL_UNUSED( iAttr );
-#else
       PHB_CODEPAGE cdp = NULL;
 
       if( pTerm->fUTF8 )
@@ -761,7 +757,6 @@ static void hb_gt_trm_termOutTrans( PHB_GTTRM pTerm, const char * pStr, int iLen
          }
       }
       else
-#endif
       {
          hb_gt_trm_termOut( pTerm, pStr, iLen );
       }
@@ -1465,7 +1460,6 @@ again:
          pTerm->key_flag = 0;
       }
 
-#ifndef HB_CDP_SUPPORT_OFF
       if( nKey > 0 && nKey <= 255 && pTerm->fUTF8 && pTerm->cdpIn )
       {
          USHORT uc = 0;
@@ -1486,7 +1480,7 @@ again:
             }
          }
       }
-#endif
+
       if( nKey > 0 && nKey <= 255 && pTerm->keyTransTbl[nKey] )
          nKey = pTerm->keyTransTbl[nKey];
 /*
@@ -3052,10 +3046,9 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
 
    hb_gt_chrmapinit( pTerm->charmap, szTerm, pTerm->terminal_type == TERM_XTERM );
 
-#ifndef HB_CDP_SUPPORT_OFF
    pTerm->cdpHost = pTerm->cdpIn = NULL;
    pTerm->cdpBox = hb_cdpFind( "EN" );
-#endif
+
    add_efds( pTerm, pTerm->hFilenoStdin, O_RDONLY, NULL, NULL );
    init_keys( pTerm );
    mouse_init( pTerm );
@@ -3461,7 +3454,6 @@ static BOOL hb_gt_trm_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
 
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
-#ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
       pszHostCDP = hb_cdpID();
    if( !pszTermCDP )
@@ -3470,7 +3462,7 @@ static BOOL hb_gt_trm_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
    hb_gt_trm_SetDispTrans( HB_GTTRM_GET( pGT ), hb_cdpFind( pszHostCDP ),
                                                 hb_cdpFind( pszTermCDP ),
                                                 fBox ? 1 : 0 );
-#endif
+
    return TRUE;
 }
 
@@ -3480,7 +3472,6 @@ static BOOL hb_gt_trm_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
 
    HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
-#ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
       pszHostCDP = hb_cdpID();
    if( !pszTermCDP )
@@ -3488,7 +3479,7 @@ static BOOL hb_gt_trm_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
 
    hb_gt_trm_SetKeyTrans( HB_GTTRM_GET( pGT ), hb_cdpFind( pszTermCDP ),
                                                hb_cdpFind( pszHostCDP ) );
-#endif
+
    return TRUE;
 }
 

@@ -422,7 +422,7 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
          return tmp;
    }
 
-#if !defined( HB_CDP_SUPPORT_OFF ) && ( defined( HB_SLN_UTF8 ) || defined( HB_SLN_UNICODE ) )
+#if ( defined( HB_SLN_UTF8 ) || defined( HB_SLN_UNICODE ) )
    if ( hb_sln_Is_Unicode && ch < 256 )
    {
       int n = 0;

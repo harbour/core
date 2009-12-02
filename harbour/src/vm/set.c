@@ -981,13 +981,8 @@ HB_FUNC( SET )
          hb_retc( pSet->HB_SET_OSCODEPAGE );
          if( args > 1 && ( HB_IS_STRING( pArg2 ) || HB_IS_NIL( pArg2 ) ) )
          {
-#ifndef HB_CDP_SUPPORT_OFF
             PHB_CODEPAGE cdpOS = hb_cdpFindExt( hb_itemGetCPtr( pArg2 ) );
             char * szValue = cdpOS ? hb_strdup( cdpOS->id ) : NULL;
-#else
-            void * cdpOS = NULL;
-            char *szValue = NULL;
-#endif
             if( pSet->HB_SET_OSCODEPAGE )
                hb_xfree( pSet->HB_SET_OSCODEPAGE );
             pSet->HB_SET_OSCODEPAGE = szValue;
@@ -1817,13 +1812,8 @@ BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
          case HB_SET_OSCODEPAGE:
             if( HB_IS_STRING( pItem ) || HB_IS_NIL( pItem ) )
             {
-#ifndef HB_CDP_SUPPORT_OFF
                PHB_CODEPAGE cdpOS = hb_cdpFindExt( hb_itemGetCPtr( pItem ) );
                szValue = cdpOS ? hb_strdup( cdpOS->id ) : NULL;
-#else
-               void * cdpOS = NULL;
-               szValue = NULL;
-#endif
                if( pSet->HB_SET_OSCODEPAGE )
                   hb_xfree( pSet->HB_SET_OSCODEPAGE );
                pSet->HB_SET_OSCODEPAGE = szValue;

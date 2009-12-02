@@ -532,7 +532,6 @@ static BOOL hb_gt_std_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
 
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
-#ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
       pszHostCDP = hb_cdpID();
    if( !pszTermCDP )
@@ -546,7 +545,7 @@ static BOOL hb_gt_std_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
       pGTSTD->fDispTrans = pGTSTD->cdpTerm && pGTSTD->cdpHost &&
                            pGTSTD->cdpTerm != pGTSTD->cdpHost;
    }
-#endif
+
    return TRUE;
 }
 
@@ -556,7 +555,6 @@ static BOOL hb_gt_std_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
 
    HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
-#ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
       pszHostCDP = hb_cdpID();
    if( !pszTermCDP )
@@ -564,7 +562,7 @@ static BOOL hb_gt_std_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
 
    hb_gt_std_setKeyTrans(  HB_GTSTD_GET( pGT ), hb_cdpFind( pszTermCDP ),
                                                 hb_cdpFind( pszHostCDP ) );
-#endif
+
    return TRUE;
 }
 
@@ -695,7 +693,6 @@ static void hb_gt_std_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 
       if( iLen )
       {
-#ifndef HB_CDP_SUPPORT_OFF
          if( pGTSTD->fDispTrans )
          {
             ULONG ulLen = iLen;
@@ -706,7 +703,6 @@ static void hb_gt_std_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
             hb_gt_std_termOut( pGTSTD, buffer, ulLen );
          }
          else
-#endif
             hb_gt_std_termOut( pGTSTD, pGTSTD->sLineBuf, iLen );
       }
       pGTSTD->iRow = iRow;

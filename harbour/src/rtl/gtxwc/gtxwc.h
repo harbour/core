@@ -258,13 +258,6 @@ typedef USHORT HB_GT_CELLTYPE;
 
 /********************** Unix to graphic box translation ******************/
 
-#ifdef HB_CDP_SUPPORT_OFF
-typedef struct tag_UnixBox {
-    BYTE   c;
-    USHORT u16;
-} UnixBoxChar;
-#endif
-
 typedef enum
 {
    CH_CHAR,          /* normal U16 character */

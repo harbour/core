@@ -227,9 +227,7 @@
 #include "hbvm.h"
 #include "hbthread.h"
 #include "hbset.h"
-#ifndef HB_CDP_SUPPORT_OFF
 #include "hbapicdp.h"
-#endif
 
 /* error codes */
 #define HSX_SUCCESSFALSE    0    /* operation finished successfully with false value */
@@ -424,7 +422,6 @@ static int hb_hsxHashVal( int c1, int c2, int iKeyBits,
 
    if( fNoCase )
    {
-#ifndef HB_CDP_SUPPORT_OFF
       if( iFilter == 3 )
       {
          PHB_CODEPAGE cdp = hb_vmCDP();
@@ -432,7 +429,6 @@ static int hb_hsxHashVal( int c1, int c2, int iKeyBits,
          c2 = ( UCHAR ) cdp->upper[ c2 ];
       }
       else
-#endif
       {
          if( c1 >= 'a' && c1 <= 'z' )
             c1 -= 'a' - 'A';
@@ -514,7 +510,6 @@ static int hb_hsxStrCmp( const char * pSub, ULONG ulSub, const char * pStr, ULON
          c2 = ( UCHAR ) pStr[ ul ];
          if( fNoCase )
          {
-#ifndef HB_CDP_SUPPORT_OFF
             if( iFilter == 3 )
             {
                PHB_CODEPAGE cdp = hb_vmCDP();
@@ -522,7 +517,6 @@ static int hb_hsxStrCmp( const char * pSub, ULONG ulSub, const char * pStr, ULON
                c2 = ( UCHAR ) cdp->upper[ c2 ];
             }
             else
-#endif
             {
                if( c1 >= 'a' && c1 <= 'z' )
                   c1 -= 'a' - 'A';
@@ -540,8 +534,6 @@ static int hb_hsxStrCmp( const char * pSub, ULONG ulSub, const char * pStr, ULON
             c2 &= 0x7F;
             if( c2 < 0x20 || c2 == 0x7f ) c2 = ' ';
          }
-#elif defined( HB_CDP_SUPPORT_OFF )
-         HB_SYMBOL_UNUSED( iFilter );
 #endif
          fResult = ( c1 == c2 );
       }

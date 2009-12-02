@@ -383,9 +383,6 @@
  *      R
  *  $COMPLIANCE$
  *      This function is a Harbour Extension.
- *
- *      This function is only visible if src/rtl/cdpapi.c was compiled
- *      without the HB_CDP_SUPPORT_OFF flag.
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -445,9 +442,6 @@
  *      R
  *  $COMPLIANCE$
  *      This function is a Harbour Extension.
- *
- *      This function is only visible if src/rtl/cdpapi.c was compiled
- *      without the HB_CDP_SUPPORT_OFF flag.
  *  $PLATFORMS$
  *      All
  *  $FILES$

@@ -2093,13 +2093,11 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
    /* Both strings not empty */
    if( ulMinLen )
    {
-#ifndef HB_CDP_SUPPORT_OFF
       PHB_CODEPAGE cdp = hb_vmCDP();
       if( cdp && cdp->sort )
          iRet = hb_cdpcmp( szFirst, ulLenFirst, szSecond, ulLenSecond,
                            cdp, bForceExact );
       else
-#endif
       {
          do
          {
@@ -2174,13 +2172,11 @@ int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
    /* Both strings not empty */
    if( ulMinLen )
    {
-#ifndef HB_CDP_SUPPORT_OFF
       PHB_CODEPAGE cdp = hb_vmCDP();
       if( cdp && cdp->sort )
          iRet = hb_cdpicmp( szFirst, ulLenFirst, szSecond, ulLenSecond,
                             cdp, bForceExact );
       else
-#endif
       {
          do
          {

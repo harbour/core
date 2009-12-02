@@ -80,7 +80,6 @@
 /*
 #define HB_CDX_DBGCODE_EXT
 #define HB_CDX_DSPDBG_INFO
-#define HB_CDP_SUPPORT_OFF
 #define HB_CDX_DBGTIME
 #define HB_CDX_DBGUPDT
 */
@@ -98,10 +97,8 @@
 #include "rddsys.ch"
 #include "hbregex.h"
 
-#ifndef HB_CDP_SUPPORT_OFF
-   /* for nation sorting support */
-   #include "hbapicdp.h"
-#endif
+/* for nation sorting support */
+#include "hbapicdp.h"
 
 /*
  * Tag->fRePos = TURE means that rootPage->...->childLeafPage path is
@@ -400,7 +397,6 @@ static HB_ERRCODE hb_cdxErrorRT( CDXAREAP pArea, HB_ERRCODE uiGenCode, HB_ERRCOD
  */
 static void hb_cdxMakeSortTab( CDXAREAP pArea )
 {
-#ifndef HB_CDP_SUPPORT_OFF
    if( pArea->dbfarea.area.cdPage && pArea->dbfarea.area.cdPage->sort && !pArea->bCdxSortTab )
    {
       int i, j, l;
@@ -432,9 +428,6 @@ static void hb_cdxMakeSortTab( CDXAREAP pArea )
          pArea->bCdxSortTab[pbSort[i]] = i;
       hb_xfree( pbSort );
    }
-#else
-   HB_SYMBOL_UNUSED( pArea );
-#endif
 }
 
 /*
@@ -567,7 +560,6 @@ static int hb_cdxValCompare( LPCDXTAG pTag, BYTE * val1, BYTE len1,
 
    if( pTag->uiType == 'C' )
    {
-#ifndef HB_CDP_SUPPORT_OFF
       if( pTag->pIndex->pArea->bCdxSortTab )
       {
          BYTE * pSort = pTag->pIndex->pArea->bCdxSortTab;
@@ -578,10 +570,8 @@ static int hb_cdxValCompare( LPCDXTAG pTag, BYTE * val1, BYTE len1,
             iPos++;
          }
       }
-      else
-#endif
-         if( iLimit > 0 )
-            iResult = memcmp( val1, val2, iLimit );
+      else if( iLimit > 0 )
+         iResult = memcmp( val1, val2, iLimit );
 
       if( iResult == 0 )
       {
@@ -726,12 +716,9 @@ static LPCDXKEY hb_cdxKeyPutItem( LPCDXKEY pKey, PHB_ITEM pItem, ULONG ulRec, LP
    pKey->mode = ( USHORT ) iMode;
    if( pTag->uiType == 'C' )
    {
-#ifndef HB_CDP_SUPPORT_OFF
       if( fTrans )
          hb_cdpnTranslate( ( char * ) pKey->val, hb_vmCDP(), pTag->pIndex->pArea->dbfarea.area.cdPage, pKey->len );
-#else
-      HB_SYMBOL_UNUSED( fTrans );
-#endif
+
       if( pTag->IgnoreCase )
          hb_strUpper( ( char * ) pKey->val, pKey->len );
    }
@@ -750,7 +737,6 @@ static PHB_ITEM hb_cdxKeyGetItem( LPCDXKEY pKey, PHB_ITEM pItem, LPCDXTAG pTag, 
       switch( pTag->uiType )
       {
          case 'C':
-#ifndef HB_CDP_SUPPORT_OFF
             if( fTrans && pTag->pIndex->pArea->dbfarea.area.cdPage != hb_vmCDP() )
             {
                char * pVal = ( char * ) hb_xgrab( pKey->len + 1 );
@@ -761,9 +747,6 @@ static PHB_ITEM hb_cdxKeyGetItem( LPCDXKEY pKey, PHB_ITEM pItem, LPCDXTAG pTag, 
                pItem = hb_itemPutCLPtr( pItem, pVal, pKey->len );
             }
             else
-#else
-            HB_SYMBOL_UNUSED( fTrans );
-#endif
             {
                pItem = hb_itemPutCL( pItem, ( char * ) pKey->val, pKey->len );
             }
@@ -813,9 +796,7 @@ static LPCDXKEY hb_cdxKeyEval( LPCDXKEY pKey, LPCDXTAG pTag )
 {
    CDXAREAP pArea = pTag->pIndex->pArea;
    PHB_ITEM pItem;
-#ifndef HB_CDP_SUPPORT_OFF
    PHB_CODEPAGE cdpTmp = hb_cdpSelect( pArea->dbfarea.area.cdPage );
-#endif
 
    if( pTag->nField )
    {
@@ -840,9 +821,7 @@ static LPCDXKEY hb_cdxKeyEval( LPCDXKEY pKey, LPCDXTAG pTag )
          hb_rddSelectWorkAreaNumber( iCurrArea );
    }
 
-#ifndef HB_CDP_SUPPORT_OFF
    hb_cdpSelect( cdpTmp );
-#endif
 
    return pKey;
 }
@@ -5553,13 +5532,12 @@ static BOOL hb_cdxDBOISkipWild( CDXAREAP pArea, LPCDXTAG pTag, BOOL fForward,
       return fForward ? pArea->dbfarea.fPositioned : !pArea->dbfarea.area.fBof;
    }
 
-#ifndef HB_CDP_SUPPORT_OFF
    if( pArea->dbfarea.area.cdPage != hb_vmCDP() )
    {
       szPattern = szFree = hb_strdup( szPattern );
       hb_cdpTranslate( szFree, hb_vmCDP(), pArea->dbfarea.area.cdPage );
    }
-#endif
+
    while( iFixed < pTag->uiLen && szPattern[ iFixed ] &&
           szPattern[ iFixed ] != '*' && szPattern[ iFixed ] != '?' )
    {
@@ -5686,7 +5664,6 @@ static BOOL hb_cdxDBOISkipWild( CDXAREAP pArea, LPCDXTAG pTag, BOOL fForward,
 static BOOL hb_cdxRegexMatch( CDXAREAP pArea, PHB_REGEX pRegEx, LPCDXKEY pKey )
 {
    char * szKey = ( char * ) pKey->val;
-#ifndef HB_CDP_SUPPORT_OFF
    char szBuff[ CDX_MAXKEY + 1 ];
 
    if( pArea->dbfarea.area.cdPage != hb_vmCDP() )
@@ -5695,9 +5672,7 @@ static BOOL hb_cdxRegexMatch( CDXAREAP pArea, PHB_REGEX pRegEx, LPCDXKEY pKey )
       hb_cdpnTranslate( szBuff, pArea->dbfarea.area.cdPage, hb_vmCDP(), pKey->len );
       szKey = szBuff;
    }
-#else
-   HB_SYMBOL_UNUSED( pArea );
-#endif
+
    return hb_regexMatch( pRegEx, szKey, pKey->len, FALSE );
 }
 
@@ -10118,9 +10093,7 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, BOOL fReindex )
    PHB_ITEM pForItem, pWhileItem = NULL, pEvalItem = NULL, pItem = NULL;
    ULONG ulRecCount, ulRecNo = pArea->dbfarea.ulRecNo;
    LONG lStep = 0;
-#ifndef HB_CDP_SUPPORT_OFF
    PHB_CODEPAGE cdpTmp = hb_cdpSelect( pArea->dbfarea.area.cdPage );
-#endif
 
    if( pArea->dbfarea.area.lpdbOrdCondInfo )
    {
@@ -10402,9 +10375,7 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, BOOL fReindex )
    hb_cdxSortFree( pSort );
    pArea->pSort = NULL;
 
-#ifndef HB_CDP_SUPPORT_OFF
    hb_cdpSelect( cdpTmp );
-#endif
 }
 
 #define __PRG_SOURCE__ __FILE__

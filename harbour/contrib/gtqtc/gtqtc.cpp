@@ -204,7 +204,6 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, int iCmdShow )
    pWVT->bResizing         = FALSE;
    pWVT->bAlreadySizing    = FALSE;
 
-#ifndef HB_CDP_SUPPORT_OFF
    pWVT->hostCDP    = hb_vmCDP();
 #if defined( UNICODE )
    pWVT->inCDP      = hb_vmCDP();
@@ -215,7 +214,6 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, int iCmdShow )
       for( i = 0; i < 256; ++i )
          pWVT->chrTransTbl[ i ] = pWVT->keyTransTbl[ i ] = ( BYTE ) i;
    }
-#endif
 #endif
 
    return pWVT;
@@ -769,7 +767,6 @@ static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
 {
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
-#ifndef HB_CDP_SUPPORT_OFF
 #  if defined( UNICODE )
    /*
     * We are displaying text in U16 so pszTermCDP is unimportant.
@@ -812,7 +809,6 @@ static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
       }
    }
 #  endif
-#endif
 
    return TRUE;
 }
@@ -821,7 +817,6 @@ static BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char 
 {
    HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
-#ifndef HB_CDP_SUPPORT_OFF
 #  if defined( UNICODE )
    /*
     * We are receiving WM_CHAR events in U16 so pszTermCDP is unimportant.
@@ -858,7 +853,6 @@ static BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char 
       pWVT->inCDP = cdpTerm;
    }
 #  endif
-#endif
 
    return TRUE;
 }

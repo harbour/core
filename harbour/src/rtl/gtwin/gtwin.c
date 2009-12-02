@@ -84,9 +84,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-#ifndef HB_CDP_SUPPORT_OFF
-#  include "hbapicdp.h"
-#endif
+#include "hbapicdp.h"
 
 #if !defined( __LCC__ )
 #  include <wincon.h>
@@ -180,7 +178,6 @@ static DWORD         s_cNumRead;   /* Ok to use DWORD here, because this is spec
 static DWORD         s_cNumIndex;  /* ...to the Windows API, which defines DWORD, etc.  */
 static WORD          s_wRepeated = 0;   /* number of times the event (key) was repeated */
 static INPUT_RECORD  s_irInBuf[ INPUT_BUFFER_LEN ];
-#if !defined( HB_CDP_SUPPORT_OFF )
 #if defined( UNICODE )
 static PHB_CODEPAGE  s_cdpHost;
 static PHB_CODEPAGE  s_cdpBox;
@@ -189,7 +186,6 @@ static PHB_CODEPAGE  s_cdpIn;
 static BYTE          s_charTransRev[ 256 ];
 static BYTE          s_charTrans[ 256 ];
 static BYTE          s_keyTrans[ 256 ];
-#endif
 #endif
 static int           s_altisdown = 0;
 static int           s_altnum = 0;
@@ -590,10 +586,7 @@ static void hb_gt_win_xGetScreenContents( PHB_GT pGT, SMALL_RECT * psrWin )
       i = iRow * _GetScreenWidth() + psrWin->Left;
       for( iCol = psrWin->Left; iCol <= psrWin->Right; ++iCol )
       {
-#if defined( HB_CDP_SUPPORT_OFF )
-         HB_GTSELF_PUTSCRCHAR( pGT, iRow, iCol, ( UCHAR ) s_pCharInfoScreen[ i ].Attributes, 0,
-                               ( UCHAR ) s_pCharInfoScreen[ i ].Char.AsciiChar );
-#elif defined( UNICODE )
+#if defined( UNICODE )
          HB_WCHAR wc = s_pCharInfoScreen[ i ].Char.UnicodeChar;
          unsigned char uc;
          BYTE bAttr = 0;
@@ -715,7 +708,7 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_bSpecialKeyHandling = FALSE;
    s_bAltKeyHandling = TRUE;
 
-#if !defined( HB_CDP_SUPPORT_OFF ) && defined( UNICODE )
+#if defined( UNICODE )
    s_cdpHost = s_cdpIn = hb_vmCDP();
    s_cdpBox = hb_cdpFind( "EN" );
 #endif
@@ -1267,9 +1260,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
 
 #if defined( UNICODE )
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.UnicodeChar;
-#  if !defined( HB_CDP_SUPPORT_OFF )
             ch = hb_cdpGetChar( s_cdpIn, FALSE, ( USHORT ) ch );
-#  endif
 #else
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
 #endif
@@ -1398,7 +1389,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
             }
 
             /* national codepage translation */
-#if !defined( HB_CDP_SUPPORT_OFF ) && !defined( UNICODE )
+#if !defined( UNICODE )
             if( ch > 0 && ch <= 255 )
                ch = s_keyTrans[ ch ];
 #endif
@@ -1488,7 +1479,6 @@ static BOOL hb_gt_win_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
 
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
-#ifndef HB_CDP_SUPPORT_OFF
 #  if defined( UNICODE )
    /*
     * We are displaying text in U16 so pszTermCDP is unimportant.
@@ -1530,7 +1520,6 @@ static BOOL hb_gt_win_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
       }
    }
 #  endif
-#endif
 
    return TRUE;
 }
@@ -1544,7 +1533,6 @@ static BOOL hb_gt_win_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
 
    HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
-#ifndef HB_CDP_SUPPORT_OFF
 #  if defined( UNICODE )
    /*
     * We are receiving WM_CHAR events in U16 so pszTermCDP is unimportant.
@@ -1580,7 +1568,6 @@ static BOOL hb_gt_win_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
                            hb_cdpTranslateChar( i, FALSE, cdpTerm, cdpHost );
    }
 #  endif
-#endif
 
    return TRUE;
 }
@@ -1611,7 +1598,7 @@ static BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
       }
       case HB_GTI_BOXCP:
-#if !defined( HB_CDP_SUPPORT_OFF ) && defined( UNICODE )
+#if defined( UNICODE )
          pInfo->pResult = hb_itemPutC( pInfo->pResult,
                                        s_cdpBox ? s_cdpBox->id : NULL );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
@@ -1780,9 +1767,7 @@ static void hb_gt_win_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       {
          if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &iColor, &bAttr, &usChar ) )
             break;
-#if defined( HB_CDP_SUPPORT_OFF )
-         s_pCharInfoScreen[ i ].Char.UnicodeChar = usChar;
-#elif defined( UNICODE )
+#if defined( UNICODE )
          s_pCharInfoScreen[ i ].Char.UnicodeChar =
                hb_cdpGetU16( bAttr & HB_GT_ATTR_BOX ? s_cdpBox : s_cdpHost,
                              TRUE, ( UCHAR ) usChar );

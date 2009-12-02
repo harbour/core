@@ -86,11 +86,7 @@ static char * hb_strescape( const char * szInput, int lLen, const char * cDelim 
 }
 
 /* Export field values to text file */
-#ifndef HB_CDP_SUPPORT_OFF
 static BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cDelim, PHB_CODEPAGE cdp )
-#else
-static BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cDelim )
-#endif
 {
    switch( hb_itemType( pValue ) )
    {
@@ -102,10 +98,9 @@ static BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cDeli
 
          szStrEsc = hb_strescape( hb_itemGetCPtr( pValue ),
                                   hb_itemGetCLen( pValue ), cDelim );
-#ifndef HB_CDP_SUPPORT_OFF
          if( cdp )
             hb_cdpnTranslate( szStrEsc, hb_vmCDP(), cdp, strlen( szStrEsc ) );
-#endif
+
          szString = hb_xstrcpy( NULL, cDelim, szStrEsc, cDelim, NULL );
 
          /* FWrite( handle, szString ) */
@@ -167,9 +162,7 @@ HB_FUNC( DBF2TEXT )
    HB_FHANDLE handle = ( HB_FHANDLE ) hb_parnint( 5 );
    const char * cSep = hb_parc( 6 );
    int nCount        = hb_parni( 7 );
-#ifndef HB_CDP_SUPPORT_OFF
    PHB_CODEPAGE cdp  = hb_cdpFind( hb_parcx( 8 ) );
-#endif
 
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
@@ -239,11 +232,7 @@ HB_FUNC( DBF2TEXT )
                   hb_fsWriteLarge( handle, cSep, iSepLen );
 
                SELF_GETVALUE( pArea, ui, pTmp );
-#ifndef HB_CDP_SUPPORT_OFF
                bWriteSep = hb_ExportVar( handle, pTmp, cDelim, cdp );
-#else
-               bWriteSep = hb_ExportVar( handle, pTmp, cDelim );
-#endif
                hb_itemClear( pTmp );
             }
          }
@@ -266,11 +255,7 @@ HB_FUNC( DBF2TEXT )
                         hb_fsWriteLarge( handle, cSep, iSepLen );
 
                      SELF_GETVALUE( pArea, ( USHORT ) iPos, pTmp );
-#ifndef HB_CDP_SUPPORT_OFF
                      bWriteSep = hb_ExportVar( handle, pTmp, cDelim, cdp );
-#else
-                     bWriteSep = hb_ExportVar( handle, pTmp, cDelim );
-#endif
                      hb_itemClear( pTmp );
                   }
                }
