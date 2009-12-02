@@ -66,6 +66,7 @@
 
 #include "common.ch"
 #include "xbp.ch"
+#include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -128,6 +129,26 @@ FUNCTION PosAndSize( qWidget )
 
    RETURN hb_ntos( qWidget:x() )     + "," + hb_ntos( qWidget:y() )      + "," + ;
           hb_ntos( qWidget:width() ) + "," + hb_ntos( qWidget:height() ) + ","
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION getYesNo( cMsg, cInfo, cTitle )
+   LOCAL oMB
+
+   DEFAULT cTitle TO "Option Please!"
+
+   oMB := QMessageBox():new()
+   oMB:setText( "<b>"+ cMsg +"</b>" )
+   IF !empty( cInfo )
+      oMB:setInformativeText( cInfo )
+   ENDIF
+   oMB:setIcon( QMessageBox_Information )
+   oMB:setParent( SetAppWindow():pWidget )
+   oMB:setWindowFlags( Qt_Dialog )
+   oMB:setWindowTitle( cTitle )
+   oMB:setStandardButtons( QMessageBox_Yes + QMessageBox_No )
+
+   RETURN ( oMB:exec() == QMessageBox_Yes )
 
 /*----------------------------------------------------------------------*/
 

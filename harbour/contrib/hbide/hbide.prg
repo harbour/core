@@ -129,6 +129,8 @@ CLASS HbIde
 
    ACCESS qCurEdit                                INLINE iif( ::getCurrentTab() > 0, ::aTabs[ ::getCurrentTab(), 2 ], NIL )
    ACCESS qCurDocument                            INLINE iif( ::getCurrentTab() > 0, ::aTabs[ ::getCurrentTab(), 6 ], NIL )
+   ACCESS qCurCursor                              INLINE ::getCurCursor()
+   DATA   qCursor
 
    /* XBP Objects */
    DATA   oDlg
@@ -199,8 +201,8 @@ CLASS HbIde
    METHOD closeTab()
    METHOD activateTab()
    METHOD getCurrentTab()
-   METHOD getYesNo()
    METHOD dispEditInfo()
+   METHOD getCurCursor()
 
    DATA   aTags                                   INIT {}
    DATA   aText                                   INIT {}
@@ -306,6 +308,8 @@ METHOD HbIde:create( cProjIni )
    ::qSplitter:show()
 #endif
 
+   ::qCursor := QTextCursor():new()
+
    /* Editor's Font */
    ::oFont := XbpFont():new()
    ::oFont:fixed := .t.
@@ -313,6 +317,7 @@ METHOD HbIde:create( cProjIni )
 
    buildMainMenu( ::oDlg, Self )
    ::oTBar := buildToolBar( ::oDlg, Self )
+
    ::buildStatusBar()
 
    ::setPosAndSizeByIni( ::oProjTree:oWidget, ProjectTreeGeometry )
@@ -367,7 +372,7 @@ METHOD HbIde:create( cProjIni )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:saveConfig()
-   LOCAL nTab, pTab, n, txt_, qEdit, qCursor, qHScr, qVScr
+   LOCAL nTab, pTab, n, txt_, qEdit, qHScr, qVScr
    LOCAL nTabs := ::qTabWidget:count()
 
    txt_:= {}
@@ -389,14 +394,14 @@ METHOD HbIde:saveConfig()
    aadd( txt_, " " )
 
    FOR n := 1 TO nTabs
-      pTab    := ::qTabWidget:widget( n-1 )
-      nTab    := ascan( ::aTabs, {|e_| HBQT_QTPTR_FROM_GCPOINTER( QT_PTROFXBP( e_[ 1 ] ) ) == pTab } )
-      qEdit   := ::aTabs[ nTab, 2 ]
-      qHScr   := QScrollBar():configure( qEdit:horizontalScrollBar() )
-      qVScr   := QScrollBar():configure( qEdit:verticalScrollBar() )
-      qCursor := QTextCursor():configure( qEdit:textCursor() )
+      pTab      := ::qTabWidget:widget( n-1 )
+      nTab      := ascan( ::aTabs, {|e_| HBQT_QTPTR_FROM_GCPOINTER( QT_PTROFXBP( e_[ 1 ] ) ) == pTab } )
+      qEdit     := ::aTabs[ nTab, 2 ]
+      qHScr     := QScrollBar():configure( qEdit:horizontalScrollBar() )
+      qVScr     := QScrollBar():configure( qEdit:verticalScrollBar() )
+      ::qCursor := QTextCursor():configure( qEdit:textCursor() )
 
-      aadd( txt_, ::aTabs[ nTab, 5 ] +","+ hb_ntos( qCursor:position() ) +","+ hb_ntos( qHScr:value() ) +","+ hb_ntos( qVScr:value() ) +"," )
+      aadd( txt_, ::aTabs[ nTab, 5 ] +","+ hb_ntos( ::qCursor:position() ) +","+ hb_ntos( qHScr:value() ) +","+ hb_ntos( qVScr:value() ) +"," )
    NEXT
    aadd( txt_, " " )
    aadd( txt_, " " )
@@ -497,12 +502,12 @@ METHOD HbIde:loadConfig( cHbideIni )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:convertSelection( cKey )
-   LOCAL qCursor, cBuffer, i, s, nLen, c
+   LOCAL cBuffer, i, s, nLen, c
    LOCAL nB, nL
 
    IF !empty( ::qCurEdit )
-      qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
-      IF qCursor:hasSelection() .and. !empty( cBuffer := qCursor:selectedText() )
+      ::qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
+      IF ::qCursor:hasSelection() .and. !empty( cBuffer := ::qCursor:selectedText() )
          DO CASE
          CASE cKey == "ToUpper"
             cBuffer := upper( cBuffer )
@@ -518,21 +523,15 @@ METHOD HbIde:convertSelection( cKey )
             cBuffer := s
          ENDCASE
          nL := len( cBuffer )
-         nB := qCursor:position() - nL
+         nB := ::qCursor:position() - nL
 
-         qCursor:beginEditBlock()
-HBXBP_DEBUG( "BEFORE REMOVE", qCursor:position() )
-         qCursor:removeSelectedText()
-HBXBP_DEBUG( "BEFORE INSERT", qCursor:position() )
-         qCursor:insertText( cBuffer )
-HBXBP_DEBUG( "AFTER INSERT ", qCursor:position() )
-         qCursor:setPosition( nB - 5 )
-HBXBP_DEBUG( "AFTER SET    ", qCursor:position() )
-         //qCursor:find( cBuffer )
-         ::qCurEdit:find( cBuffer, QTextDocument_FindCaseSensitively )
-HBXBP_DEBUG( "AFTER FIND   ", qCursor:position() )
-         //qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nL )
-         qCursor:endEditBlock()
+         ::qCursor:beginEditBlock()
+         ::qCursor:removeSelectedText()
+         ::qCursor:insertText( cBuffer )
+         ::qCursor:setPosition( nB )
+         ::qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nL )
+         ::qCurEdit:setTextCursor( QT_PTROF( ::qCursor ) )
+         ::qCursor:endEditBlock()
       ENDIF
    ENDIF
 
@@ -565,16 +564,19 @@ METHOD HbIde:updateFuncList()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:setTabImage( cState, oTab, qEdit, nPos, lFirst )
-   LOCAL qCursor
-   LOCAL nIndex := ::qTabWidget:indexOf( QT_PTROFXBP( oTab ) )
+METHOD HbIde:getCurCursor()
+   LOCAL iTab
 
-   //IF lFirst
-      lFirst := .t.
-      qCursor := QTextCursor():configure( qEdit:textCursor() )
-      qCursor:setPosition( nPos )
-      HBXBP_DEBUG( "setTabImage:position", qCursor:position() )
-   //ENDIF
+   IF ( iTab := ::getCurrentTab() ) > 0
+      ::qCursor:configure( ::aTabs[ iTab, 1 ]:textCutsor() )
+   ENDIF
+
+   RETURN ::qCursor
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:setTabImage( cState, oTab, qEdit, nPos, lFirst )
+   LOCAL nIndex := ::qTabWidget:indexOf( QT_PTROFXBP( oTab ) )
 
    DO CASE
    CASE cState == "modified"
@@ -584,6 +586,13 @@ METHOD HbIde:setTabImage( cState, oTab, qEdit, nPos, lFirst )
       ::qTabWidget:setTabIcon( nIndex, s_resPath + "tabunmodified.png" )
 
    ENDCASE
+
+   IF lFirst
+      lFirst := .f.
+      ::qCursor:configure( qEdit:textCursor() )
+      ::qCursor:setPosition( nPos, QTextCursor_MoveAnchor )
+      qEdit:setTextCursor( QT_PTROF( ::qCursor ) )
+   ENDIF
 
    RETURN Self
 
@@ -611,7 +620,7 @@ METHOD HbIde:buildTabPage( oWnd, cSource )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos )
-   LOCAL oTab, qEdit, qHiliter, qLayout, qDocument, qHScr, qVScr, qCursor, lFirst
+   LOCAL oTab, qEdit, qHiliter, qLayout, qDocument, qHScr, qVScr, lFirst
 
    DEFAULT cSourceFile TO ::cProjIni
    DEFAULT nPos        TO 0
@@ -624,6 +633,7 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos )
    qEdit:setPlainText( memoread( cSourceFile ) )
    qEdit:setLineWrapMode( QTextEdit_NoWrap )
    qEdit:setFont( QT_PTROFXBP( ::oFont ) )
+   qEdit:ensureCursorVisible()
 
    qDocument := QTextDocument():configure( qEdit:document() )
 
@@ -638,9 +648,8 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos )
 
    qEdit:show()
 
-   qCursor := QTextCursor():configure( qEdit:textCursor() )
-   //qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_MoveAnchor, nPos )
-   qCursor:setPosition( nPos )
+   ::qCursor := QTextCursor():configure( qEdit:textCursor() )
+   ::qCursor:setPosition( nPos )
    //
    qHScr   := QScrollBar():configure( qEdit:horizontalScrollBar() )
    qHScr:setValue( nHPos )
@@ -660,7 +669,7 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos )
 
    lFirst := .t.
    Qt_Connect_Signal( QT_PTROF( qEdit ), "textChanged()", ;
-                          {|| ::setTabImage( IF( qDocument:isModified(),"modified","unmodified" ), oTab, qEdit, nPos, @lFirst ) } )
+                          {|| ::setTabImage( IF( qDocument:isModified(),"modified","unmodified" ), oTab, qEdit, nPos, @lFirst, qDocument ) } )
 
    Qt_Connect_Signal( QT_PTROF( qEdit ), "cursorPositionChanged()", {|| ::dispEditInfo() } )
 
@@ -704,6 +713,7 @@ METHOD HbIde:activateTab( mp1, mp2, oXbp )
       ::createTags()
       ::updateFuncList()
       ::dispEditInfo()
+      ::manageFocusInEditor()
    ENDIF
 
    RETURN Self
@@ -749,37 +759,18 @@ METHOD HbIde:closeAllSources()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:getYesNo( cMsg, cInfo, cTitle )
-   LOCAL oMB
-
-   DEFAULT cTitle TO "Option Please!"
-
-   oMB := QMessageBox():new()
-   oMB:setText( "<b>"+ cMsg +"</b>" )
-   IF !empty( cInfo )
-      oMB:setInformativeText( cInfo )
-   ENDIF
-   oMB:setIcon( QMessageBox_Information )
-   oMB:setParent( SetAppWindow():pWidget )
-   oMB:setWindowFlags( Qt_Dialog )
-   oMB:setWindowTitle( cTitle )
-   oMB:setStandardButtons( QMessageBox_Yes + QMessageBox_No )
-
-   RETURN ( oMB:exec() == QMessageBox_Yes )
-
-/*----------------------------------------------------------------------*/
-
 METHOD HbIde:saveSource( nTab, lConfirm )
-   LOCAL cBuffer, qDocument
+   LOCAL cBuffer, qDocument, nIndex
    LOCAL lSave := .t.
 
    DEFAULT lConfirm TO .t.
 
    IF nTab > 0
-      qDocument := QTextDocument():configure( ::aTabs[ nTab, 2 ]:document() )
+      qDocument := ::aTabs[ nTab, 6 ]
 
       IF qDocument:isModified()
-         IF lConfirm .and. !::getYesNo( ::aTabs[ nTab, 5 ],  "Has been modified, save this source ?" )
+
+         IF lConfirm .and. !GetYesNo( ::aTabs[ nTab, 5 ],  "Has been modified, save this source ?" )
             lSave := .f.
          ENDIF
 
@@ -789,11 +780,11 @@ METHOD HbIde:saveSource( nTab, lConfirm )
             qDocument:setModified( .f. )
             ::createTags()
             ::updateFuncList()
-         ELSE
          ENDIF
       ENDIF
 
-      ::setTabImage( "unmodified", ::aTabs[ nTab, 1 ] )
+      nIndex := ::qTabWidget:indexOf( QT_PTROFXBP( ::aTabs[ nTab, 1 ] ) )
+      ::qTabWidget:setTabIcon( nIndex, s_resPath + "tabunmodified.png" )
    ENDIF
 
    RETURN Self
@@ -902,20 +893,20 @@ METHOD HbIde:buildProjectTree()
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:dispEditInfo()
-   LOCAL qCursor, s
+   LOCAL s
 
    IF !empty( ::qCurEdit )
       ::oSBar:getItem( 2 ):caption := "Ready"
 
-      qCursor   := QTextCursor():configure( ::qCurEdit:textCursor() )
+      ::qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
 
-      s := "<b>Line "+ hb_ntos( qCursor:blockNumber()+1 ) + " of " + ;
+      s := "<b>Line "+ hb_ntos( ::qCursor:blockNumber()+1 ) + " of " + ;
                        hb_ntos( ::qCurDocument:blockCount() ) + "</b>"
       ::oSBar:getItem( 3 ):caption := s
 
-      ::oSBar:getItem( 4 ):caption := "Col " + hb_ntos( qCursor:columnNumber()+1 )
-
+      ::oSBar:getItem( 4 ):caption := "Col " + hb_ntos( ::qCursor:columnNumber()+1 )
    ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -931,6 +922,7 @@ METHOD HbIde:buildStatusBar()
    oPanel:autosize := XBPSTATUSBAR_AUTOSIZE_SPRING
 
    ::oSBar:addItem( "", , , , "Ready"  ):oWidget:setMinimumWidth( 80 )
+
    ::oSBar:addItem( "", , , , "Line"   ):oWidget:setMinimumWidth( 110 )
    ::oSBar:addItem( "", , , , "Col"    ):oWidget:setMinimumWidth( 40 )
    ::oSBar:addItem( "", , , , "Caps"   ):oWidget:setMinimumWidth( 30 )
