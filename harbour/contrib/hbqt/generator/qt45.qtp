@@ -261,7 +261,7 @@ QTranslator.qth
 QTreeView.qth
 QTreeWidget.qth
 QTreeWidgetItem.qth
-;QUiLoader.qth
+QUiLoader.qth
 QUrl.qth
 QValidator.qth
 QVariant.qth

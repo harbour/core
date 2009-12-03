@@ -2,6 +2,12 @@
  * $Id$
  */
 
+/* -------------------------------------------------------------------- */
+/* WARNING: Automatically generated source file. DO NOT EDIT!           */
+/*          Instead, edit corresponding .qth file,                      */
+/*          or the generator tool itself, and run regenarate.           */
+/* -------------------------------------------------------------------- */
+
 /*
  * Harbour Project source code:
  * QT wrapper main header
@@ -90,11 +96,22 @@ QT_G_FUNC( release_QUiLoader )
       const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
       if( ( QString ) m->className() != ( QString ) "QObject" )
       {
-         ( ( QUiLoader * ) p->ph )->~QUiLoader();
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( QUiLoader * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( QUiLoader * ) p->ph )->~QUiLoader();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( QUiLoader * ) p->ph )->deleteLater();
+            break;
+         }
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QUiLoader                   Object deleted!" ) );
          #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  YES release_QUiLoader                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+            hbqt_debug( "  YES release_QUiLoader                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
          #endif
       }
       else
@@ -122,7 +139,7 @@ void * gcAllocate_QUiLoader( void * pObj )
    p->func = release_QUiLoader;
    new( & p->pq ) QPointer< QUiLoader >( ( QUiLoader * ) pObj );
    #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QUiLoader                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+      hbqt_debug( "          new_QUiLoader                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
    #endif
    return( p );
 }
