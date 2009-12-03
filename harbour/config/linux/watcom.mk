@@ -22,7 +22,9 @@ CC_IN :=
 CC_OUT := -fo=
 
 CFLAGS := -zq -bt=linux
+ARFLAGS :=
 LDFLAGS := OP quiet
+DFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -w3
@@ -64,7 +66,7 @@ LDLIBS := $(HB_USER_LIBS)
 LDLIBS += $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 
 DY := $(LD)
-DFLAGS := OP quiet FORM elf dll LIBPATH $(WATCOM)/lib386 LIBPATH $(WATCOM)/lib386/linux OP exportall
+DFLAGS += OP quiet FORM elf dll LIBPATH $(WATCOM)/lib386 LIBPATH $(WATCOM)/lib386/linux OP exportall
 DY_OUT :=
 DLIBS :=
 

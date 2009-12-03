@@ -18,6 +18,10 @@ CC_IN := -c
 CC_OUT := -Fo
 
 CFLAGS := -I. -I$(HB_INC_COMPILE)
+ARFLAGS :=
+LDFLAGS :=
+DFLAGS :=
+
 CFLAGS += -nologo -D_WIN32_WCE=0x501 -DCE_ARCH -DWINCE -D_WINCE -D_WINDOWS -D_UNICODE -D_UWIN -DUNDER_CE
 
 ifeq ($(HB_COMPILER),msvcarm)
@@ -29,8 +33,6 @@ else ifeq ($(HB_COMPILER),msvcmips)
 else ifeq ($(HB_COMPILER),msvc)
    CFLAGS += -D_X86_ -D_M_IX86
 endif
-
-LDFLAGS :=
 
 ifeq ($(HB_BUILD_MODE),c)
    CFLAGS += -TC
@@ -58,6 +60,7 @@ endif
 ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -Zi
    LDFLAGS += -debug
+   DFLAGS += -debug
 endif
 
 LD := $(CC)
@@ -75,11 +78,10 @@ endif
 LDFLAGS += $(LIBPATHS)
 
 AR := lib.exe
-ARFLAGS :=
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -nologo -out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
 
 DY := $(LD)
-DFLAGS := -nologo -dll -subsystem:windowsce $(LIBPATHS)
+DFLAGS += -nologo -dll -subsystem:windowsce $(LIBPATHS)
 DY_OUT := $(LD_OUT)
 DLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 

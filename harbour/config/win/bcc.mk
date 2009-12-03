@@ -15,6 +15,7 @@ CC_IN := -c
 CC_OUT := -o
 
 CFLAGS := -I. -I$(HB_INC_COMPILE) -q -tWM
+ARFLAGS :=
 LDFLAGS :=
 DFLAGS :=
 
@@ -54,7 +55,7 @@ LD_RULE = $(LD) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) c0x32.obj $(^F), "$(
 LDLIBS := $(strip $(HB_USER_LIBS) $(LIBS) $(SYSLIBS))
 
 AR := tlib.exe
-ARFLAGS := /P128
+ARFLAGS += /P128
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" $(foreach file,$(?F),-+$(file))
 
 ifneq ($(HB_SHELL),sh)

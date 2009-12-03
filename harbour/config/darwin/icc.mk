@@ -17,7 +17,9 @@ CC_IN := -c
 CC_OUT := -o
 
 CFLAGS := -I. -I$(HB_INC_COMPILE)
+ARFLAGS :=
 LDFLAGS :=
+DFLAGS :=
 
 CFLAGS += -D_GNU_SOURCE
 
@@ -42,11 +44,10 @@ LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 LDFLAGS += $(LIBPATHS)
 
 AR := libtool
-ARFLAGS :=
 AR_RULE = ( $(AR) -static $(ARFLAGS) $(HB_USER_AFLAGS) -o $(LIB_DIR)/$@ $(^F) $(ARSTRIP) ) || ( $(RM) $(LIB_DIR)/$@ && false )
 
 DY := $(AR)
-DFLAGS := -dynamic -flat_namespace -undefined warning -multiply_defined suppress -single_module $(LIBPATHS)
+DFLAGS += -dynamic -flat_namespace -undefined warning -multiply_defined suppress -single_module $(LIBPATHS)
 DY_OUT := -o$(subst x,x, )
 DLIBS := $(foreach lib,$(HB_USER_LIBS) $(SYSLIBS),-l$(lib))
 

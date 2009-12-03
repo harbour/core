@@ -24,7 +24,9 @@ CC_IN :=
 CC_OUT := -fo=
 
 CFLAGS := -zq -bt=nt -bm
+ARFLAGS :=
 LDFLAGS := OP quiet
+DFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -w3
@@ -67,7 +69,7 @@ LDLIBS += $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 LDLIBS += $(foreach lib,$(SYSLIBS),$(lib))
 
 DY := $(LD)
-DFLAGS := OP quiet SYS nt_dll
+DFLAGS += OP quiet SYS nt_dll
 DY_OUT :=
 DLIBS := $(foreach lib,$(HB_USER_LIBS),$(lib))
 DLIBS += $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))

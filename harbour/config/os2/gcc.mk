@@ -21,7 +21,9 @@ CC_IN := -c
 CC_OUT := -o
 
 CFLAGS := -I. -I$(HB_INC_COMPILE)
+ARFLAGS :=
 LDFLAGS :=
+DFLAGS :=
 
 ifeq ($(HB_COMPILER),gccomf)
    CFLAGS += -Zomf
@@ -102,16 +104,14 @@ endif
 
 ifeq ($(HB_COMPILER),gccomf)
    AR := $(HB_CCPATH)$(HB_CCPREFIX)emxomfar
-   ARFLAGS :=
    AR_RULE = $(create_library) $(ARSTRIP)
 else
    AR := $(HB_CCPATH)$(HB_CCPREFIX)ar
-   ARFLAGS :=
    AR_RULE = $(create_library) $(ARSTRIP) & $(RM) __lib__.tmp
 endif
 
 DY := $(CC)
-DFLAGS := -shared $(LIBPATHS)
+DFLAGS += -shared $(LIBPATHS)
 ifeq ($(HB_COMPILER),gccomf)
    DFLAGS += -Zomf
 endif

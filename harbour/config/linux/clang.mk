@@ -24,7 +24,9 @@ endif
 CC_OUT := -o
 
 CFLAGS := -I. -I$(HB_INC_COMPILE)
+ARFLAGS :=
 LDFLAGS :=
+DFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -Wall -W
@@ -47,11 +49,10 @@ LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 LDFLAGS += $(LIBPATHS)
 
 AR := $(HB_CCPREFIX)ar
-ARFLAGS :=
 AR_RULE = ( $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) rcs $(LIB_DIR)/$@ $(^F) $(ARSTRIP) ) || ( $(RM) $(LIB_DIR)/$@ && false )
 
 DY := $(CC)
-DFLAGS := -shared $(LIBPATHS)
+DFLAGS += -shared $(LIBPATHS)
 DY_OUT := -o$(subst x,x, )
 DLIBS := $(foreach lib,$(HB_USER_LIBS) $(SYSLIBS),-l$(lib))
 

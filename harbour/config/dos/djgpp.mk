@@ -17,7 +17,9 @@ CC_IN := -c
 CC_OUT := -o
 
 CFLAGS := -I. -I$(HB_INC_COMPILE)
+ARFLAGS :=
 LDFLAGS :=
+DFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -Wall -W
@@ -97,13 +99,12 @@ define link_exe_file
 endef
 
 AR := ar
-ARFLAGS :=
 AR_RULE = $(create_library)
 
 LD_RULE = $(link_exe_file)
 
 #DY := $(CC)
-#DFLAGS := -Wl,-shared $(LIBPATHS)
+#DFLAGS += -Wl,-shared $(LIBPATHS)
 #DY_OUT := -o$(subst x,x, )
 #DLIBS := $(foreach lib,$(HB_USER_LIBS) $(SYSLIBS),-l$(lib))
 #

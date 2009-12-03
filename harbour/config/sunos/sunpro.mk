@@ -28,7 +28,9 @@ CC_OUT := -o$(subst x,x, )
 CXX := $(HB_CCACHE) $(HB_CCPATH)$(HB_CCPREFIX)sunCC$(HB_CCPOSTFIX)
 
 CFLAGS := -I. -I$(HB_INC_COMPILE)
+ARFLAGS :=
 LDFLAGS :=
+DFLAGS :=
 
 # try to keep `-fast' as left as possible, as later optim
 # flags may override values set by `-fast', and this way
@@ -67,11 +69,10 @@ LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 LDFLAGS += $(LIBPATHS)
 
 AR := ar
-ARFLAGS :=
 AR_RULE = ( $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) rc $(LIB_DIR)/$@ $(^F) $(ARSTRIP) ) || ( $(RM) $(LIB_DIR)/$@ && false )
 
 DY := $(CC)
-DFLAGS := -G $(HB_ISAOPT) $(LIBPATHS)
+DFLAGS += -G $(HB_ISAOPT) $(LIBPATHS)
 ifneq ($(HB_BUILD_OPTIM),no)
    DFLAGS += -fast -xnolibmopt
 endif

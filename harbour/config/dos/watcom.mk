@@ -22,7 +22,9 @@ CC_IN :=
 CC_OUT := -fo=
 
 CFLAGS := -zq -bt=dos
+ARFLAGS :=
 LDFLAGS := OP quiet
+DFLAGS :=
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -w3
@@ -74,7 +76,7 @@ ifneq ($(HB_LINKING_RTL),)
 endif
 
 DY := $(LD)
-DFLAGS := OP quiet SYS cwdllr
+DFLAGS += OP quiet SYS cwdllr
 DY_OUT :=
 DLIBS := $(foreach lib,$(HB_USER_LIBS),$(lib))
 DLIBS += $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))

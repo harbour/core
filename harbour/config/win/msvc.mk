@@ -21,7 +21,9 @@ CC_IN := -c
 CC_OUT := -Fo
 
 CFLAGS := -nologo -I. -I$(HB_INC_COMPILE) -Gs
+ARFLAGS :=
 LDFLAGS :=
+DFLAGS :=
 
 ifeq ($(HB_BUILD_MODE),c)
    CFLAGS += -TC
@@ -49,6 +51,7 @@ endif
 ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -Zi
    LDFLAGS += -debug
+   DFLAGS += -debug
 endif
 
 ifneq ($(filter $(HB_COMPILER_VER),600 700 710),)
@@ -74,11 +77,10 @@ LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 LDFLAGS += -nologo $(LIBPATHS)
 
 AR := lib.exe
-ARFLAGS :=
 AR_RULE = $(AR) $(ARFLAGS) $(HB_USER_AFLAGS) -nologo -out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
 
 DY := $(LD)
-DFLAGS := -nologo -dll -subsystem:console $(LIBPATHS)
+DFLAGS += -nologo -dll -subsystem:console $(LIBPATHS)
 DY_OUT := $(LD_OUT)
 DLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
