@@ -176,6 +176,7 @@ REQUEST hbmk_KEYW
 #define _COMPDET_bBlock         1
 #define _COMPDET_cCOMP          2
 #define _COMPDET_cCCPREFIX      3 /* optional */
+#define _COMPDET_cCCPOSTFIX     4 /* optional */
 
 #define _COMPDETE_bBlock        1
 #define _COMPDETE_cPLAT         2
@@ -1018,7 +1019,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          watcom also keeps a cl.exe in its binary dir. */
 #if ! defined( __PLATFORM__UNIX )
       aCOMPDET := { { {|| FindInPath( "cygstart" ) }, "cygwin" },;
-                    { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" ) }, "mingw"   },;
+                    { {|| FindInPath( "gcc-dw2" ) }, "mingw", "", "-dw2" },;
+                    { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] ) }, "mingw"   },;
                     { {|| iif( ! Empty( GetEnv( "WATCOM" ) ),;
                                FindInPath( "wpp386"   ),;
                                NIL )               }, "watcom" },;
@@ -1051,7 +1053,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       l_aLIBSYSMISC := { "winspool", "comctl32", "comdlg32", "shell32", "uuid", "ole32", "oleaut32", "mpr", "winmm", "mapi32", "imm32", "msimg32", "wininet" }
    CASE hbmk[ _HBMK_cPLAT ] == "wce"
 #if ! defined( __PLATFORM__UNIX )
-      aCOMPDET := { { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" ) }, "mingwarm" },;
+      aCOMPDET := { { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] ) }, "mingwarm" },;
                     { {|| FindInPath( "clarm"    ) }, "msvcarm" },;
                     { {|| FindInPath( "armasm"   ) }, "msvcarm" },;
                     { {|| FindInPath( "pocc"     ) }, "poccarm" },;
@@ -1256,6 +1258,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                         hbmk[ _HBMK_cCOMP ] := aCOMPDET[ tmp ][ _COMPDET_cCOMP ]
                         IF Len( aCOMPDET[ tmp ] ) >= _COMPDET_cCCPREFIX
                            hbmk[ _HBMK_cCCPREFIX ] := aCOMPDET[ tmp ][ _COMPDET_cCCPREFIX ]
+                        ENDIF
+                        IF Len( aCOMPDET[ tmp ] ) >= _COMPDET_cCCPOSTFIX
+                           hbmk[ _HBMK_cCCPOSTFIX ] := aCOMPDET[ tmp ][ _COMPDET_cCCPOSTFIX ]
                         ENDIF
                         EXIT
                      ELSE
