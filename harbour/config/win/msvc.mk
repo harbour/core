@@ -8,7 +8,7 @@ LIB_EXT := .lib
 
 ifeq ($(HB_CPU),x86)
    # Always compile in -UNICODE mode for MSVC 9.0 and upper
-   # This version doesn't support Win9x anyway. [vszakats]
+   # These versions don't support Win9x anymore, so it's safe. [vszakats]
    ifeq ($(filter $(HB_COMPILER_VER),600 700 710 800),)
       HB_CFLAGS += -DUNICODE
    endif

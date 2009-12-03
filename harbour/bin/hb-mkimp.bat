@@ -119,10 +119,6 @@ if not "%HB_LIB_INSTALL%" == "" (
       if exist "%HB_WITH_OPENSSL%\..\libeay32.lib"          copy /b /y "%HB_WITH_OPENSSL%\..\libeay32.lib"          "%HB_LIB_INSTALL%\liblibeay32.a"
       if exist "%HB_WITH_OPENSSL%\..\ssleay32.lib"          copy /b /y "%HB_WITH_OPENSSL%\..\ssleay32.lib"          "%HB_LIB_INSTALL%\libssleay32.a"
       if exist "%HB_WITH_PGSQL%\..\lib\libpq.lib"           copy /b /y "%HB_WITH_PGSQL%\..\lib\libpq.lib"           "%HB_LIB_INSTALL%\liblibpq.a"
-      if exist "%HB_WITH_QT%\..\lib\libQtCore4.a"           copy /b /y "%HB_WITH_QT%\..\lib\libQtCore4.a"           "%HB_LIB_INSTALL%\libQtCore4.a"
-      if exist "%HB_WITH_QT%\..\lib\libQtGui4.a"            copy /b /y "%HB_WITH_QT%\..\lib\libQtGui4.a"            "%HB_LIB_INSTALL%\libQtGui4.a"
-      if exist "%HB_WITH_QT%\..\lib\libQtNetwork4.a"        copy /b /y "%HB_WITH_QT%\..\lib\libQtNetwork4.a"        "%HB_LIB_INSTALL%\libQtNetwork4.a"
-      if exist "%HB_WITH_QT%\..\lib\libQtWebKit4.a"         copy /b /y "%HB_WITH_QT%\..\lib\libQtWebKit4.a"         "%HB_LIB_INSTALL%\libQtWebKit4.a"
 
       goto END
    )

@@ -2,12 +2,6 @@
  * $Id$
  */
 
-/* -------------------------------------------------------------------- */
-/* WARNING: Automatically generated source file. DO NOT EDIT!           */
-/*          Instead, edit corresponding .qth file,                      */
-/*          or the generator tool itself, and run regenarate.           */
-/* -------------------------------------------------------------------- */
-
 /*
  * Harbour Project source code:
  * QT wrapper main header
@@ -99,23 +93,23 @@ QT_G_FUNC( release_QUiLoader )
          ( ( QUiLoader * ) p->ph )->~QUiLoader();
          p->ph = NULL;
          HB_TRACE( HB_TR_DEBUG, ( "release_QUiLoader                   Object deleted!" ) );
-         #if defined(__debug__)
-            just_debug( "  YES release_QUiLoader                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  YES release_QUiLoader                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
          #endif
       }
       else
       {
          HB_TRACE( HB_TR_DEBUG, ( "release_QUiLoader                   Object Name Missing!" ) );
-         #if defined(__debug__)
-            just_debug( "  NO  release_QUiLoader" );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  NO  release_QUiLoader" );
          #endif
       }
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "release_QUiLoader                   Object Allready deleted!" ) );
-      #if defined(__debug__)
-         just_debug( "  DEL release_QUiLoader" );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QUiLoader" );
       #endif
    }
 }
@@ -127,8 +121,8 @@ void * gcAllocate_QUiLoader( void * pObj )
    p->ph = pObj;
    p->func = release_QUiLoader;
    new( & p->pq ) QPointer< QUiLoader >( ( QUiLoader * ) pObj );
-   #if defined(__debug__)
-      just_debug( "          new_QUiLoader                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QUiLoader                   %i B %i KB", ( int ) hb_xquery( 1001 ), hb_getMemUsed() );
    #endif
    return( p );
 }
