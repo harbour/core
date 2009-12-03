@@ -6,13 +6,11 @@ ROOT := ../
 
 ifeq ($(HB_CONTRIBLIBS),)
 
-# standalone contribs
-
+# contribs _without_ external dependencies
 DIRS := \
    gtwvg \
    hbbmcdx \
    hbbtree \
-   hbcairo \
    hbclipsm \
    hbct \
    hbgt \
@@ -31,10 +29,11 @@ DIRS := \
    xhb \
    xpp \
 
-# contribs with external dependencies
+# contribs _with_ external dependencies
 DIRS += \
    gtalleg \
    hbblat \
+   hbcairo \
    hbcurl \
    hbfbird \
    hbfimage \
