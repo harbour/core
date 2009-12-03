@@ -5179,22 +5179,27 @@ static BOOL hb_cdxCurKeyRefresh( CDXAREAP pArea, LPCDXTAG pTag )
 /*
  * skip to next/previous unique key
  */
-static HB_ERRCODE hb_cdxDBOISkipUnique( CDXAREAP pArea, LPCDXTAG pTag, BOOL fForward )
+static HB_ERRCODE hb_cdxDBOISkipUnique( CDXAREAP pArea, LPCDXTAG pTag, LONG lToSkip )
 {
    HB_ERRCODE retval;
+   BOOL fForward;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_cdxDBOISkipUnique(%p, %p, %i)", pArea, pTag, fForward));
+   HB_TRACE(HB_TR_DEBUG, ("hb_cdxDBOISkipUnique(%p, %p, %ld)", pArea, pTag, lToSkip));
 
    if( FAST_GOCOLD( ( AREAP ) pArea ) == HB_FAILURE )
       return HB_FAILURE;
 
    if( ! pTag )
-      return SELF_SKIP( ( AREAP ) pArea, fForward ? 1 : -1 );
+      return SELF_SKIP( ( AREAP ) pArea, lToSkip );
 
    if( pArea->dbfarea.lpdbPendingRel )
       SELF_FORCEREL( ( AREAP ) pArea );
 
    pArea->dbfarea.area.fTop = pArea->dbfarea.area.fBottom = FALSE;
+
+   /* CL53 DBFCDX when index is active use this parameter
+      only to chose forward or backward skipping */
+   fForward = lToSkip >= 0;
 
    if( !pArea->dbfarea.fPositioned )
    {
@@ -8115,8 +8120,9 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO
 
       case DBOI_SKIPUNIQUE:
          pInfo->itmResult = hb_itemPutL( pInfo->itmResult,
-                        hb_cdxDBOISkipUnique( pArea, pTag,
-                           hb_itemGetNI( pInfo->itmNewVal ) >= 0 ) == HB_SUCCESS );
+                     hb_cdxDBOISkipUnique( pArea, pTag,
+                        pInfo->itmNewVal && HB_IS_NUMERIC( pInfo->itmNewVal ) ?
+                        hb_itemGetNL( pInfo->itmNewVal ) : 1 ) == HB_SUCCESS );
          break;
 
       case DBOI_SKIPEVAL:

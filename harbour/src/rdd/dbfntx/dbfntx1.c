@@ -4047,10 +4047,10 @@ static void hb_ntxOrdSetRelKeyPos( LPTAGINFO pTag, double dPos )
 /*
  * skip to next/previous unique key
  */
-static BOOL hb_ntxOrdSkipUnique( LPTAGINFO pTag, LONG lDir )
+static BOOL hb_ntxOrdSkipUnique( LPTAGINFO pTag, LONG lToSkip )
 {
    NTXAREAP pArea = pTag->Owner->Owner;
-   BOOL fOut = FALSE, fEof = FALSE, fForward = ( lDir >= 0 );
+   BOOL fOut = FALSE, fEof = FALSE, fForward = ( lToSkip >= 0 );
 
    if( pArea->dbfarea.lpdbPendingRel )
       SELF_FORCEREL( ( AREAP ) pArea );
@@ -7100,7 +7100,8 @@ static HB_ERRCODE hb_ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO
             break;
          case DBOI_SKIPUNIQUE:
             hb_itemPutL( pInfo->itmResult, hb_ntxOrdSkipUnique( pTag,
-                                          hb_itemGetNL( pInfo->itmNewVal ) ) );
+                        pInfo->itmNewVal && HB_IS_NUMERIC( pInfo->itmNewVal ) ?
+                        hb_itemGetNL( pInfo->itmNewVal ) : 1 ) );
             break;
          case DBOI_SKIPEVAL:
          case DBOI_SKIPEVALBACK:
@@ -7276,7 +7277,8 @@ static HB_ERRCODE hb_ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO
             break;
          case DBOI_SKIPUNIQUE:
             hb_itemPutL( pInfo->itmResult, SELF_SKIP( ( AREAP ) pArea,
-               hb_itemGetNL( pInfo->itmNewVal ) >= 0 ? 1 : -1 ) == HB_SUCCESS );
+                        pInfo->itmNewVal && HB_IS_NUMERIC( pInfo->itmNewVal ) ?
+                        hb_itemGetNL( pInfo->itmNewVal ) : 1 ) == HB_SUCCESS );
             break;
          case DBOI_SKIPEVAL:
          case DBOI_SKIPEVALBACK:

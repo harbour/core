@@ -4100,7 +4100,6 @@ static HB_ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pO
             hb_itemPutCL( pOrderInfo->itmResult, ( char* ) aucBuffer, u16len );
          else
             hb_itemPutC( pOrderInfo->itmResult, NULL );
-
          break;
 
       case DBOI_ISCOND:
@@ -4113,7 +4112,17 @@ static HB_ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pO
 
       case DBOI_ISDESC:
          if( hIndex )
+         {
             AdsIsIndexDescending( hIndex, &u16 );
+
+#if ADS_LIB_VERSION >= 900
+            if( pOrderInfo->itmNewVal && HB_IS_NUMERIC( pOrderInfo->itmNewVal ) )
+            {
+               if( hb_itemGetL( pOrderInfo->itmNewVal ) ? u16 == 0 : u16 != 0 )
+                  AdsSetIndexDirection( hIndex, TRUE );
+            }
+#endif
+         }
          else
             u16 = 0;
          hb_itemPutL( pOrderInfo->itmResult, u16 != 0 );
@@ -4152,7 +4161,6 @@ static HB_ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pO
          }
          else
             hb_itemPutC( pOrderInfo->itmResult, NULL );
-
          break;
 
       case DBOI_KEYSIZE:
@@ -4349,7 +4357,6 @@ static HB_ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pO
                         if( u16 )
                            break;
                         u32++;
-                   
                         u32RetVal = AdsSkip( hIndex, 1 );
                         if( u32RetVal != AE_SUCCESS )
                            break;
@@ -4458,13 +4465,18 @@ static HB_ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pO
          break;
 
 #if ADS_LIB_VERSION >= 900
-
       case DBOI_SKIPUNIQUE:
-         if( hIndex &&
-             AdsSkipUnique( hIndex, ( SIGNED32 ) ( pOrderInfo && HB_IS_NUMBER( pOrderInfo->itmNewVal ) ? hb_itemGetNL( pOrderInfo->itmNewVal ) : 1 ) ) == AE_SUCCESS )
-            hb_itemPutL( pOrderInfo->itmResult, TRUE );
+      {
+         LONG lToSkip = pOrderInfo->itmNewVal && HB_IS_NUMERIC( pOrderInfo->itmNewVal ) ?
+                        hb_itemGetNL( pOrderInfo->itmNewVal ) : 1;
+         if( hIndex )
+            hb_itemPutL( pOrderInfo->itmResult,
+                         AdsSkipUnique( hIndex, lToSkip >= 0 ? 1 : -1 ) == AE_SUCCESS );
+         else
+            hb_itemPutL( pOrderInfo->itmResult,
+                         SELF_SKIP( ( AREAP ) pArea, lToSkip ) == HB_SUCCESS );
          break;
-
+      }
 #endif
 
       case DBOI_OPTLEVEL :
