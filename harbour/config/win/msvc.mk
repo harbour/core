@@ -47,9 +47,7 @@ ifneq ($(HB_BUILD_OPTIM),no)
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-   CFLAGS += -MTd -Zi
-else
-   CFLAGS += -MT
+   CFLAGS += -Zi
 endif
 
 # # NOTE: -GA flag should be disabled when building MT _.dlls_,
