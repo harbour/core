@@ -93,7 +93,7 @@ PROCEDURE Main( cProjIni )
 
    s_resPath := hb_DirBase() + "resources" + hb_OsPathSeparator()
 
-   oIde := HbIde():new( cProjIni ) 
+   oIde := HbIde():new( cProjIni )
    oIde:create()
    oIde:destroy()
 
@@ -198,6 +198,7 @@ CLASS HbIde
    METHOD updateFuncList()
    METHOD gotoFunction()
    METHOD fetchProjectProperties()
+   METHOD fetchProjectProperties_1()
    METHOD closeTab()
    METHOD activateTab()
    METHOD getCurrentTab()
@@ -218,6 +219,7 @@ CLASS HbIde
    METHOD printPreview()
    METHOD paintRequested()
    METHOD setTabImage()
+   METHOD loadUI()
 
    ENDCLASS
 
@@ -585,19 +587,13 @@ METHOD HbIde:getCurCursor()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:setTabImage( cState, oTab, qEdit, nPos, lFirst )
-   LOCAL nIndex := ::qTabWidget:indexOf( QT_PTROFXBP( oTab ) )
+METHOD HbIde:setTabImage( oTab, qEdit, nPos, lFirst, qDocument )
+   LOCAL nIndex    := ::qTabWidget:indexOf( QT_PTROFXBP( oTab ) )
+   LOCAL lModified := qDocument:isModified()
 
-   DO CASE
-   CASE cState == "modified"
-      ::qTabWidget:setTabIcon( nIndex, s_resPath + "tabmodified.png" )
+   ::qTabWidget:setTabIcon( nIndex, s_resPath + iif( lModified, "tabmodified.png", "tabunmodified.png" ) )
 
-   CASE cState == "unmodified"
-      ::qTabWidget:setTabIcon( nIndex, s_resPath + "tabunmodified.png" )
-
-   ENDCASE
-
-   ::oSBar:getItem( 7 ):caption := IF( cState == "modified", "Modified", " " )
+   ::oSBar:getItem( 7 ):caption := IF( lModified, "Modified", " " )
 
    IF lFirst
       lFirst := .f.
@@ -681,7 +677,7 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos )
    ::dispEditInfo()
 
    Qt_Connect_Signal( QT_PTROF( qEdit ), "textChanged()", ;
-                          {|| ::setTabImage( IF( qDocument:isModified(),"modified","unmodified" ), oTab, qEdit, nPos, @lFirst, qDocument ) } )
+                          {|| ::setTabImage( oTab, qEdit, nPos, @lFirst, qDocument ) } )
 
    Qt_Connect_Signal( QT_PTROF( qEdit ), "cursorPositionChanged()", {|| ::dispEditInfo() } )
 
@@ -1249,6 +1245,159 @@ METHOD HbIde:paintRequested( pPrinter )
 
 /*----------------------------------------------------------------------*/
 
+METHOD HbIde:executeAction( cKey )
+   LOCAL cFile
+
+   DO CASE
+
+   CASE cKey == "Exit"
+      PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
+   CASE cKey == "ToggleProjectTree"
+      ::lProjTreeVisible := !::lProjTreeVisible
+      IF !( ::lProjTreeVisible )
+         ::oProjTree:hide()
+      ELSE
+         ::oProjTree:show()
+      ENDIF
+   CASE cKey == "NewProject"
+      ::fetchProjectProperties( .t. )
+   CASE cKey == "Open"
+      IF !empty( cFile := ::selectSource( "open" ) )
+         ::oProjRoot:addItem( cFile )
+         ::editSource( cFile )
+      ENDIF
+   CASE cKey == "Save"
+      ::saveSource( ::getCurrentTab(), .f. )
+   CASE cKey == "Close"
+      ::closeSource()
+   CASE cKey == "Print"
+      IF !empty( ::qCurEdit )
+         ::printPreview()
+      ENDIF
+   CASE cKey == "Undo"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:undo()
+      ENDIF
+   CASE cKey == "Redo"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:redo()
+      ENDIF
+   CASE cKey == "Cut"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:cut()
+      ENDIF
+   CASE cKey == "Copy"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:copy()
+      ENDIF
+   CASE cKey == "Paste"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:paste()
+      ENDIF
+   CASE cKey == "SelectAll"
+      IF !empty( ::qCurEdit )
+         ::qCurEdit:selectAll()
+      ENDIF
+   CASE cKey == "Find"
+      IF !empty( ::qCurEdit )
+         ::findReplace( "finddialog" )
+      ENDIF
+   CASE cKey == "ToUpper"
+      ::convertSelection( cKey )
+   CASE cKey == "ToLower"
+      ::convertSelection( cKey )
+   CASE cKey == "Invert"
+      ::convertSelection( cKey )
+   CASE cKey == "ZoomIn"
+      IF !empty( ::qCurEdit )
+         //::qCurEdit:zoomIn()
+      ENDIF
+   CASE cKey == "ZoomOut"
+      IF !empty( ::qCurEdit )
+         //::qCurEdit:zoomOut()
+      ENDIF
+   CASE cKey == "11"
+      IF ::lDockBVisible
+         ::oDockB:hide()
+         ::oDockB1:hide()
+         ::oDockB2:hide()
+         ::lDockBVisible := .f.
+      ELSEIF ::qTabWidget:count() > 0
+         ::oDockB:show()
+         ::oDockB1:show()
+         ::oDockB2:show()
+         ::lDockBVisible := .t.
+      ENDIF
+   CASE cKey == "12"
+      IF ::lDockRVisible
+         ::oDockR:hide()
+      ELSE
+         ::oDockR:show()
+      ENDIF
+      ::lDockRVisible := !( ::lDockRVisible )
+
+   CASE cKey == "Compile"
+   CASE cKey == "CompilePPO"
+
+   ENDCASE
+
+   ::manageFocusInEditor()
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:findReplace( cUi )
+   LOCAL qUiLoader, qFile, cUiFull
+
+   IF ::qFindDlg == NIL
+      cUiFull := s_resPath + cUi + ".ui"
+      qFile := QFile():new( cUiFull )
+      IF qFile:open( 1 )
+         qUiLoader  := QUiLoader():new()
+         ::qFindDlg := QDialog():configure( qUiLoader:load( QT_PTROF( qFile ), QT_PTROFXBP( ::oDlg ) ) )
+         qFile:close()
+         //
+         ::qFindDlg:setWindowFlags( Qt_Sheet )
+         //
+         ::oFind := XbpComboBox():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "comboFindWhat" ) )
+         ::oRepl := XbpComboBox():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "comboReplaceWith" ) )
+
+         ::oPBFind := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonFind" ) )
+         ::oPBFind:activate := {|| ::qCurEdit:find( QLineEdit():configure( ::oFind:oWidget:lineEdit() ):text() ) }
+
+         ::oPBRepl := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonReplace" ) )
+         ::oPBRepl:activate := {|t| t := QLineEdit():configure( ::oRepl:oWidget:lineEdit() ):text() }
+
+         ::oPBClose := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonClose" ) )
+         ::oPBClose:activate := {|| ::qFindDlg:hide() }
+      ENDIF
+   ENDIF
+
+   ::oFind:setFocus()
+   ::qFindDlg:show()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:loadUI( cUi )
+   LOCAL cUiFull := s_resPath + cUi + ".ui"
+   LOCAL qDialog, qUiLoader, qFile
+
+   IF file( cUiFull )
+      qFile := QFile():new( cUiFull )
+      IF qFile:open( 1 )
+         qUiLoader  := QUiLoader():new()
+         qDialog    := QDialog():configure( qUiLoader:load( QT_PTROF( qFile ), QT_PTROFXBP( ::oDlg ) ) )
+         qFile:close()
+      ENDIF
+   ENDIF
+
+   RETURN qDialog
+
+/*----------------------------------------------------------------------*/
+
 METHOD HbIde:fetchProjectProperties( lNewProject )
    LOCAL nRet
    LOCAL qLayout, qHBLayout
@@ -1257,6 +1406,10 @@ METHOD HbIde:fetchProjectProperties( lNewProject )
    LOCAL qTypLabel, qPrjLabel, qLocLabel, qWrkLabel, qDstLabel, qOutLabel, qIncLabel, qLauLabel, qLExLabel
 
    DEFAULT lNewProject TO .t.
+
+   IF hb_isObject( ::fetchProjectProperties_1() )
+      RETURN Self
+   ENDIF
 
    HB_SYMBOL_UNUSED( lNewProject )
 
@@ -1338,140 +1491,14 @@ METHOD HbIde:fetchProjectProperties( lNewProject )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:findReplace( cUi )
-   LOCAL qUiLoader, qFile, cUiFull
+METHOD HbIde:fetchProjectProperties_1()
+   LOCAL qPrpDlg
 
-   IF ::qFindDlg == NIL
-      cUiFull := s_resPath + cUi + ".ui"
-      qFile := QFile():new( cUiFull )
-      IF qFile:open( 1 )
-         qUiLoader  := QUiLoader():new()
-         ::qFindDlg := QDialog():configure( qUiLoader:load( QT_PTROF( qFile ), QT_PTROFXBP( ::oDlg ) ) )
-         ::qFindDlg:setWindowFlags( Qt_Sheet )
-         qFile:close()
-         //
-         ::oFind := XbpComboBox():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "comboFindWhat" ) )
-         ::oRepl := XbpComboBox():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "comboReplaceWith" ) )
-
-         ::oPBFind := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonFind" ) )
-         ::oPBFind:activate := {|| ::qCurEdit:find( QLineEdit():configure( ::oFind:oWidget:lineEdit() ):text() ) }
-
-         ::oPBRepl := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonReplace" ) )
-         ::oPBRepl:activate := {|t| t := QLineEdit():configure( ::oRepl:oWidget:lineEdit() ):text() }
-
-         ::oPBClose := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonClose" ) )
-         ::oPBClose:activate := {|| ::qFindDlg:hide() }
-      ENDIF
+   IF !empty( qPrpDlg := ::loadUI( "projectproperties" ) )
+      qPrpDlg:exec()
    ENDIF
-
-   ::oFind:setFocus()
-   ::qFindDlg:show()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:executeAction( cKey )
-   LOCAL cFile
-
-   DO CASE
-
-   CASE cKey == "Exit"
-      PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
-   CASE cKey == "ToggleProjectTree"
-      ::lProjTreeVisible := !::lProjTreeVisible
-      IF !( ::lProjTreeVisible )
-         ::oProjTree:hide()
-      ELSE
-         ::oProjTree:show()
-      ENDIF
-   CASE cKey == "NewProject"
-      ::fetchProjectProperties( .t. )
-   CASE cKey == "Open"
-      IF !empty( cFile := ::selectSource( "open" ) )
-         ::oProjRoot:addItem( cFile )
-         ::editSource( cFile )
-      ENDIF
-   CASE cKey == "Save"
-      ::saveSource( ::getCurrentTab(), .f. )
-   CASE cKey == "Close"
-      ::closeSource()
-   CASE cKey == "Print"
-      IF !empty( ::qCurEdit )
-         ::printPreview()
-      ENDIF
-   CASE cKey == "Undo"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:undo()
-      ENDIF
-   CASE cKey == "Redo"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:redo()
-      ENDIF
-   CASE cKey == "Cut"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:cut()
-      ENDIF
-   CASE cKey == "Copy"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:copy()
-      ENDIF
-   CASE cKey == "Paste"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:paste()
-      ENDIF
-   CASE cKey == "SelectAll"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:selectAll()
-      ENDIF
-   CASE cKey == "Find"
-      IF !empty( ::qCurEdit )
-         ::findReplace( "finddialog" )
-      ENDIF
-   CASE cKey == "ToUpper"
-      ::convertSelection( cKey )
-   CASE cKey == "ToLower"
-      ::convertSelection( cKey )
-   CASE cKey == "Invert"
-      ::convertSelection( cKey )
-   CASE cKey == "ZoomIn"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:zoomIn()
-      ENDIF
-   CASE cKey == "ZoomOut"
-      IF !empty( ::qCurEdit )
-         ::qCurEdit:zoomOut()
-      ENDIF
-   CASE cKey == "11"
-      IF ::lDockBVisible
-         ::oDockB:hide()
-         ::oDockB1:hide()
-         ::oDockB2:hide()
-         ::lDockBVisible := .f.
-      ELSEIF ::qTabWidget:count() > 0
-         ::oDockB:show()
-         ::oDockB1:show()
-         ::oDockB2:show()
-         ::lDockBVisible := .t.
-      ENDIF
-   CASE cKey == "12"
-      IF ::lDockRVisible
-         ::oDockR:hide()
-      ELSE
-         ::oDockR:show()
-      ENDIF
-      ::lDockRVisible := !( ::lDockRVisible )
-
-   CASE cKey == "Compile"
-   CASE cKey == "CompilePPO"
-
-   ENDCASE
-
-   ::manageFocusInEditor()
-
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
-
-
-

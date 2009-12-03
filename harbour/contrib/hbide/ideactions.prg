@@ -120,9 +120,11 @@ FUNCTION buildToolBar( oWnd, oIde )
    oTBar:addItem( "Invert Case"                , cResPath + "invertcase.png"     , , , , , "Invert" )
    oTBar:addItem( "Match Pairs"                , cResPath + "matchobj.png"       , , , , , "28" )
    oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   #if 0
    oTBar:addItem( "ZoomIn"                     , cResPath + "zoomin.png"         , , , , , "ZoomIn" )
    oTBar:addItem( "ZoomOut"                    , cResPath + "zoomout.png"        , , , , , "ZoomOut" )
    oTBar:addItem(                              ,                                  , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   #endif
 
    oTBar:transparentColor := GraMakeRGBColor( { 0,255,255 } ) // GRA_CLR_INVALID
    oTBar:buttonClick := {|oButton| oIde:executeAction( oButton:key ) }
