@@ -45,7 +45,7 @@
       </rect>
      </property>
      <property name="editable">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QLabel" name="label">
@@ -70,7 +70,7 @@
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
-    <widget class="QLineEdit" name="editProjTitle">
+    <widget class="QLineEdit" name="editPrjTitle">
      <property name="geometry">
       <rect>
        <x>124</x>

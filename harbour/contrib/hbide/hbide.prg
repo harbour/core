@@ -199,6 +199,7 @@ CLASS HbIde
    METHOD gotoFunction()
    METHOD fetchProjectProperties()
    METHOD fetchProjectProperties_1()
+   METHOD loadProjectProperties()
    METHOD closeTab()
    METHOD activateTab()
    METHOD getCurrentTab()
@@ -211,6 +212,7 @@ CLASS HbIde
    DATA   aFuncList                               INIT {}
    DATA   aLines                                  INIT {}
    DATA   aComments                               INIT {}
+   DATA   aPrjProps                               INIT {}
 
    METHOD createTags()
    METHOD findReplace()
@@ -220,6 +222,7 @@ CLASS HbIde
    METHOD paintRequested()
    METHOD setTabImage()
    METHOD loadUI()
+
 
    ENDCLASS
 
@@ -385,7 +388,6 @@ METHOD HbIde:saveConfig()
 
    txt_:= {}
    aadd( txt_, "[HBIDE]" )
-   aadd( txt_, " " )
    aadd( txt_, "MainWindowGeometry     = " + PosAndSize( ::oDlg:oWidget )           )
    aadd( txt_, "ProjectTreeVisible     = " + IF( ::lProjTreeVisible, "YES", "NO" )  )
    aadd( txt_, "ProjectTreeGeometry    = " + PosAndSize( ::oProjTree:oWidget )      )
@@ -393,13 +395,10 @@ METHOD HbIde:saveConfig()
    aadd( txt_, "FunctionListGeometry   = " + PosAndSize( ::oFuncList:oWidget )      )
    aadd( txt_, "RecentTabIndex         = " + hb_ntos( ::qTabWidget:currentIndex() ) )
    aadd( txt_, "CurrentProject         = " + ""                                     )
-
-   aadd( txt_, " " )
    aadd( txt_, " " )
    aadd( txt_, "[PROJECTS]" )
-   aadd( txt_, " " )
+
    aadd( txt_, "[FILES]" )
-   aadd( txt_, " " )
 
    FOR n := 1 TO nTabs
       pTab      := ::qTabWidget:widget( n-1 )
@@ -1347,40 +1346,6 @@ METHOD HbIde:executeAction( cKey )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:findReplace( cUi )
-   LOCAL qUiLoader, qFile, cUiFull
-
-   IF ::qFindDlg == NIL
-      cUiFull := s_resPath + cUi + ".ui"
-      qFile := QFile():new( cUiFull )
-      IF qFile:open( 1 )
-         qUiLoader  := QUiLoader():new()
-         ::qFindDlg := QDialog():configure( qUiLoader:load( QT_PTROF( qFile ), QT_PTROFXBP( ::oDlg ) ) )
-         qFile:close()
-         //
-         ::qFindDlg:setWindowFlags( Qt_Sheet )
-         //
-         ::oFind := XbpComboBox():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "comboFindWhat" ) )
-         ::oRepl := XbpComboBox():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "comboReplaceWith" ) )
-
-         ::oPBFind := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonFind" ) )
-         ::oPBFind:activate := {|| ::qCurEdit:find( QLineEdit():configure( ::oFind:oWidget:lineEdit() ):text() ) }
-
-         ::oPBRepl := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonReplace" ) )
-         ::oPBRepl:activate := {|t| t := QLineEdit():configure( ::oRepl:oWidget:lineEdit() ):text() }
-
-         ::oPBClose := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonClose" ) )
-         ::oPBClose:activate := {|| ::qFindDlg:hide() }
-      ENDIF
-   ENDIF
-
-   ::oFind:setFocus()
-   ::qFindDlg:show()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD HbIde:loadUI( cUi )
    LOCAL cUiFull := s_resPath + cUi + ".ui"
    LOCAL qDialog, qUiLoader, qFile
@@ -1491,12 +1456,117 @@ METHOD HbIde:fetchProjectProperties( lNewProject )
 
 /*----------------------------------------------------------------------*/
 
+METHOD HbIde:findReplace( cUi )
+   LOCAL qUiLoader, qFile, cUiFull
+
+   IF ::qFindDlg == NIL
+      cUiFull := s_resPath + cUi + ".ui"
+      qFile := QFile():new( cUiFull )
+      IF qFile:open( 1 )
+         qUiLoader  := QUiLoader():new()
+         ::qFindDlg := QDialog():configure( qUiLoader:load( QT_PTROF( qFile ), QT_PTROFXBP( ::oDlg ) ) )
+         qFile:close()
+         //
+         ::qFindDlg:setWindowFlags( Qt_Sheet )
+         //
+         ::oFind := XbpComboBox():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "comboFindWhat" ) )
+         ::oRepl := XbpComboBox():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "comboReplaceWith" ) )
+
+         ::oPBFind := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonFind" ) )
+         ::oPBFind:activate := {|| ::qCurEdit:find( QLineEdit():configure( ::oFind:oWidget:lineEdit() ):text() ) }
+
+         ::oPBRepl := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonReplace" ) )
+         ::oPBRepl:activate := {|t| t := QLineEdit():configure( ::oRepl:oWidget:lineEdit() ):text() }
+
+         ::oPBClose := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonClose" ) )
+         ::oPBClose:activate := {|| ::qFindDlg:hide() }
+      ENDIF
+   ENDIF
+
+   ::oFind:setFocus()
+   ::qFindDlg:show()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:loadProjectProperties( cProject )
+
+   HB_SYMBOL_UNUSED( cProject )
+   ::aPrjProps := {}
+
+
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD HbIde:fetchProjectProperties_1()
-   LOCAL qPrpDlg
+   LOCAL qPrpDlg, qPrjType, oPrjTtl, cSaveTo, s
+   LOCAL oPrjLoc, oPrjWrk, oPrjDst, oPrjOut, oPrjInc, oPrjLau, oPrjLEx, oPrjSrc, oPrjMta
+   LOCAL oPBOk, oPBCn
+   LOCAL lSave := .f.
+   LOCAL txt_  := {}
+   LOCAL typ_:= { "Executable", "Lib", "Dll" }
 
    IF !empty( qPrpDlg := ::loadUI( "projectproperties" ) )
+
+      qPrjType := QComboBox():configure( Qt_findChild( QT_PTROF( qPrpDlg ), "comboPrjType" ) )
+      qPrjType:addItem( "Executable" )
+      qPrjType:addItem( "Library"    )
+      qPrjType:addItem( "Dll"        )
+
+      oPrjTtl := QLineEdit():configure( Qt_FindChild( QT_PTROF( qPrpDlg ), "editPrjTitle"     ) )
+      oPrjLoc := QLineEdit():configure( Qt_FindChild( QT_PTROF( qPrpDlg ), "editPrjLoctn"     ) )
+      oPrjWrk := QLineEdit():configure( Qt_FindChild( QT_PTROF( qPrpDlg ), "editWrkFolder"    ) )
+      oPrjDst := QLineEdit():configure( Qt_FindChild( QT_PTROF( qPrpDlg ), "editDstFolder"    ) )
+      oPrjOut := QLineEdit():configure( Qt_FindChild( QT_PTROF( qPrpDlg ), "editOutName"      ) )
+      oPrjInc := QTextEdit():configure( Qt_FindChild( QT_PTROF( qPrpDlg ), "editFlags"        ) )
+      oPrjLau := QLineEdit():configure( Qt_FindChild( QT_PTROF( qPrpDlg ), "editLaunchParams" ) )
+      oPrjLEx := QLineEdit():configure( Qt_FindChild( QT_PTROF( qPrpDlg ), "editLaunchExe"    ) )
+      oPrjSrc := QTextEdit():configure( Qt_FindChild( QT_PTROF( qPrpDlg ), "editSources"      ) )
+      oPrjMta := QTextEdit():configure( Qt_FindChild( QT_PTROF( qPrpDlg ), "editMetaData"     ) )
+
+      oPBOk := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( qPrpDlg ), "buttonOk" ) )
+      oPBOk:activate := {|| lSave := .t., qPrpDlg:close() }
+      oPBCn := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( qPrpDlg ), "buttonCn" ) )
+      oPBCn:activate := {|| lSave := .f., qPrpDlg:close() }
+
       qPrpDlg:exec()
+
+      IF lSave
+         cSaveTo := oPrjLoc:text()+"\"+oPrjOut:text()+".hbi"
+HBXBP_DEBUG( lSave, cSaveTo, qPrjType:currentIndex() )
+         aadd( txt_, "     [PROPERTIES]" )
+
+         aadd( txt_, "Type              = " + typ_[ qPrjType:currentIndex()+1 ] )
+         aadd( txt_, "Title             = " + oPrjTtl:text() )
+         aadd( txt_, "Location          = " + oPrjLoc:text() )
+         aadd( txt_, "WorkingFolder     = " + oPrjWrk:text() )
+         aadd( txt_, "DestinationFolder = " + oPrjDst:text() )
+         aadd( txt_, "Output            = " + oPrjOut:text() )
+         aadd( txt_, "LaunchParams      = " + oPrjLau:text() )
+         aadd( txt_, "LaunchProgram     = " + oPrjLEx:text() )
+         //
+         aadd( txt_, "     [FLAGS]" )
+         s := oPrjInc:toPlainText()
+         aadd( txt_, IF( empty( s ), "", s ) )
+         //
+         aadd( txt_, "     [SOURCES]" )
+         s := oPrjSrc:toPlainText()
+         aadd( txt_, IF( empty( s ), "", s ) )
+         //
+         aadd( txt_, "     [METADATA]" )
+         s := oPrjMta:toPlainText()
+         aadd( txt_, IF( empty( s ), "", s ) )
+         aadd( txt_, " " )
+HBXBP_DEBUG( cSaveTo, "About to Save" )
+         CreateTarget( cSaveTo, txt_ )
+HBXBP_DEBUG( cSaveTo, "saved", file( cSaveTo ) )
+      ENDIF
    ENDIF
+
+   JustACall( oPrjTtl, oPrjLoc, oPrjWrk, oPrjDst, oPrjOut, oPrjInc, oPrjLau, oPrjLEx, oPrjSrc, oPrjMta )
 
    RETURN Self
 
