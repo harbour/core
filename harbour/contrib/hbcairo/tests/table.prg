@@ -111,17 +111,13 @@ RETURN
 
 
 STATIC PROC show_text_right( hCairo, cText )
-   LOCAL nDX
-   cairo_text_extents( hCairo, cText,,,,, @nDX )
-   cairo_rel_move_to( hCairo, -nDX, 0 )
+   cairo_rel_move_to( hCairo, - cairo_text_extents( hCairo, cText )[ 5 ], 0 )
    cairo_show_text( hCairo, cText )
 RETURN
 
 
 STATIC PROC show_text_center( hCairo, cText )
-   LOCAL nDX
-   cairo_text_extents( hCairo, cText,,,,, @nDX )
-   cairo_rel_move_to( hCairo, -nDX/2, 0 )
+   cairo_rel_move_to( hCairo, -0.5 * cairo_text_extents( hCairo, cText )[ 5 ], 0 )
    cairo_show_text( hCairo, cText )
 RETURN
 
