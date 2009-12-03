@@ -342,7 +342,7 @@ HARBOUR
 
       1.) Install MacPorts, follow their instructions:
           https://www.macports.org/
-      2.) $ sudo port install pcre slang allegro freeimage gd2 mysql5-devel postgresql84
+      2.) $ sudo port install pcre slang allegro cairo freeimage gd2 mysql5-devel postgresql84
           $ sudo port install upx
 
    Linux (generic)
@@ -368,7 +368,7 @@ HARBOUR
       for console mouse support: $ sudo apt-get install libgpm-dev OR
                                  $ sudo apt-get install libgpmg1-dev
       for contrib/gtalleg lib:   $ sudo apt-get install liballegro4.2-dev
-      for contrib/hbodbc lib:    $ sudo apt-get install unixodbc-dev
+      for contrib/hbcairo lib:   $ sudo apt-get install libcairo2-dev
       for contrib/hbcurl lib:    $ sudo apt-get install libcurl4-openssl-dev OR
                                  $ sudo apt-get install libcurl4-gnutls-dev
       for contrib/hbfbird lib:   $ sudo apt-get install firebird2.1-dev OR
@@ -377,6 +377,7 @@ HARBOUR
       for contrib/hbgd lib:      $ sudo apt-get install libgd2-xpm-dev OR
                                  $ sudo apt-get install libgd-xpm-dev
       for contrib/hbmysql lib:   $ sudo apt-get install libmysqlclient15-dev
+      for contrib/hbodbc lib:    $ sudo apt-get install unixodbc-dev
       for contrib/hbpgsql lib:   $ sudo apt-get install libpq-dev
       for contrib/hbqt lib:      $ sudo apt-get install libqt4-dev
       for contrib/hbsqlit3 lib:  $ sudo apt-get install libsqlite3-dev

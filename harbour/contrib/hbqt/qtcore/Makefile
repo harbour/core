@@ -14,9 +14,6 @@ ifneq ($(HB_HAS_QT),)
 
    include $(TOP)$(ROOT)contrib/hbqt/qtcore/filelist.mk
 
-   CPP_SOURCES += QUiLoader.cpp
-   PRG_SOURCES += TQUiLoader.prg
-
    include $(TOP)$(ROOT)config/header.mk
    include $(TOP)$(ROOT)config/lib.mk
 

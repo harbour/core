@@ -28,7 +28,7 @@ _DET_VAR_INC_ := HB_INC_CAIRO
 _DET_VAR_HAS_ := HB_HAS_CAIRO
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
-_DET_INC_DEFP := /usr/include
+_DET_INC_DEFP := /usr/include/cairo /opt/local/include/cairo
 _DET_INC_HEAD := /cairo.h
 include $(TOP)$(ROOT)config/detfun.mk
 
