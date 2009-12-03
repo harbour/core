@@ -12,6 +12,7 @@ DIRS := \
    gtwvg \
    hbbmcdx \
    hbbtree \
+   hbcairo \
    hbclipsm \
    hbct \
    hbgt \

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Cairo library: pdf
+ * Cairo library: utility functions
  *
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  * www - http://www.harbour-project.org
@@ -52,22 +52,22 @@
 
 
 #include "hbcairo.h"
-#include "cairo-pdf.h"
 
 
-#ifdef CAIRO_HAS_PDF_SURFACE
-
-HB_FUNC( CAIRO_PDF_SURFACE_CREATE )
+HB_FUNC( CAIRO_STATUS_TO_STRING )
 {
-   hb_cairo_surface_ret( cairo_pdf_surface_create( hb_parc( 1 ), hb_parnd( 2 ), hb_parnd( 3 ) ) );
+   hb_retc( cairo_status_to_string( hb_parni( 1 ) ) );
 }
 
 
-HB_FUNC( CAIRO_PDF_SURFACE_SET_SIZE )
+HB_FUNC( CAIRO_VERSION )
 {
-   cairo_surface_t *  pSurface = hb_cairo_surface_param( 1 );
-   if( pSurface )
-      cairo_pdf_surface_set_size( pSurface, hb_parnd( 2 ), hb_parnd( 3 ) );
+   hb_retni( cairo_version() );
 }
 
-#endif /* CAIRO_HAS_PDF_SURFACE */
+
+HB_FUNC( CAIRO_VERSION_STRING )
+{
+   hb_retc( cairo_version_string() );
+}
+

@@ -15,7 +15,10 @@ C_SOURCES := \
    paths.c \
    pdf.c \
    png.c \
+   surface.c \
    text.c \
+   transfor.c \
+   util.c \
 
 PRG_HEADERS := \
    hbcairo.ch \

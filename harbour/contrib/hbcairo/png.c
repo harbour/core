@@ -56,6 +56,12 @@
 
 #ifdef CAIRO_HAS_PNG_FUNCTIONS
 
+HB_FUNC( CAIRO_IMAGE_SURFACE_CREATE_FROM_PNG )
+{
+   hb_cairo_surface_ret( cairo_image_surface_create_from_png( hb_parc( 1 ) ) );
+}
+
+
 HB_FUNC( CAIRO_SURFACE_WRITE_TO_PNG )
 {
    hb_retni( cairo_surface_write_to_png( hb_cairo_surface_param( 1 ), hb_parc( 2 ) ) );
