@@ -59,10 +59,14 @@ clean::
 	fi ; \
 	if [ -n "$(BIN_FILE)" ]; then \
 	   $(RM) $(basename $(BIN_FILE)).tds; \
+	   $(RM) $(basename $(BIN_FILE)).pdb; \
+	   $(RM) $(basename $(BIN_FILE)).ilk; \
 	   [ "`$(ECHO) $(BIN_DIR)/*`" != "$(BIN_DIR)/*" ] || $(RDP) $(BIN_DIR); \
 	fi ; \
 	if [ -n "$(DYN_FILE)" ]; then \
 	   $(RM) $(basename $(DYN_FILE)).tds; \
+	   $(RM) $(basename $(DYN_FILE)).pdb; \
+	   $(RM) $(basename $(DYN_FILE)).ilk; \
 	   $(RM) $(basename $(DYN_FILE)).def; \
 	   $(RM) $(basename $(DYN_FILE)).exp; \
 	   [ "`$(ECHO) $(DYN_DIR)/*`" != "$(DYN_DIR)/*" ] || $(RDP) $(DYN_DIR); \
@@ -110,9 +114,13 @@ clean::
 	$(if $(LIB_FILE),-@if exist "$(LIB_DIR_OS)" if not exist "$(LIB_DIR_OS)\*" $(RDP) "$(LIB_DIR_OS)",)
 	$(if $(BIN_FILE),-@if exist "$(BIN_FILE_OS)" $(RM) "$(BIN_FILE_OS)",)
 	$(if $(BIN_FILE),-@if exist "$(basename $(BIN_FILE_OS)).tds" $(RM) "$(basename $(BIN_FILE_OS)).tds",)
+	$(if $(BIN_FILE),-@if exist "$(basename $(BIN_FILE_OS)).tds" $(RM) "$(basename $(BIN_FILE_OS)).pdb",)
+	$(if $(BIN_FILE),-@if exist "$(basename $(BIN_FILE_OS)).tds" $(RM) "$(basename $(BIN_FILE_OS)).ilk",)
 	$(if $(BIN_FILE),-@if exist "$(BIN_DIR_OS)" if not exist "$(BIN_DIR_OS)\*" $(RDP) "$(BIN_DIR_OS)",)
 	$(if $(DYN_FILE),-@if exist "$(DYN_FILE_OS)" $(RM) "$(DYN_FILE_OS)",)
 	$(if $(DYN_FILE),-@if exist "$(basename $(DYN_FILE_OS)).tds" $(RM) "$(basename $(DYN_FILE_OS)).tds",)
+	$(if $(DYN_FILE),-@if exist "$(basename $(DYN_FILE_OS)).tds" $(RM) "$(basename $(DYN_FILE_OS)).pdb",)
+	$(if $(DYN_FILE),-@if exist "$(basename $(DYN_FILE_OS)).tds" $(RM) "$(basename $(DYN_FILE_OS)).ilk",)
 	$(if $(DYN_FILE),-@if exist "$(basename $(DYN_FILE_OS)).def" $(RM) "$(basename $(DYN_FILE_OS)).def",)
 	$(if $(DYN_FILE),-@if exist "$(basename $(DYN_FILE_OS)).exp" $(RM) "$(basename $(DYN_FILE_OS)).exp",)
 	$(if $(DYN_FILE),-@if exist "$(DYN_DIR_OS)" if not exist "$(DYN_DIR_OS)\*" $(RDP) "$(DYN_DIR_OS)",)
@@ -154,8 +162,12 @@ clean::
 	$(if $(LIB_FILE),-@$(RM) $(basename $(LIB_FILE_OS)).bak,)
 	$(if $(LIB_FILE),$(if $(wildcard $(LIB_DIR)/*.*),,-@$(RDP) $(LIB_DIR_OS)),)
 	$(if $(BIN_FILE),-@$(RM) $(basename $(BIN_FILE_OS)).tds,)
+	$(if $(BIN_FILE),-@$(RM) $(basename $(BIN_FILE_OS)).pdb,)
+	$(if $(BIN_FILE),-@$(RM) $(basename $(BIN_FILE_OS)).ilk,)
 	$(if $(BIN_FILE),$(if $(wildcard $(BIN_DIR)/*.*),,-@$(RDP) $(BIN_DIR_OS)),)
 	$(if $(DYN_FILE),-@$(RM) $(basename $(DYN_FILE_OS)).tds,)
+	$(if $(DYN_FILE),-@$(RM) $(basename $(DYN_FILE_OS)).pdb,)
+	$(if $(DYN_FILE),-@$(RM) $(basename $(DYN_FILE_OS)).ilk,)
 	$(if $(DYN_FILE),-@$(RM) $(basename $(DYN_FILE_OS)).def,)
 	$(if $(DYN_FILE),-@$(RM) $(basename $(DYN_FILE_OS)).exp,)
 	$(if $(DYN_FILE),$(if $(wildcard $(DYN_DIR)/*.*),,-@$(RDP) $(DYN_DIR_OS)),)
@@ -197,8 +209,12 @@ clean::
 	$(if $(LIB_FILE),-@$(RM) $(basename $(LIB_FILE_OS)).bak,)
 	$(if $(LIB_FILE),$(if $(wildcard $(LIB_DIR)/*.*),,-@$(RDP) $(LIB_DIR_OS)),)
 	$(if $(BIN_FILE),-@$(RM) $(basename $(BIN_FILE_OS)).tds,)
+	$(if $(BIN_FILE),-@$(RM) $(basename $(BIN_FILE_OS)).pdb,)
+	$(if $(BIN_FILE),-@$(RM) $(basename $(BIN_FILE_OS)).ilk,)
 	$(if $(BIN_FILE),$(if $(wildcard $(BIN_DIR)/*.*),,-@$(RDP) $(BIN_DIR_OS)),)
 	$(if $(DYN_FILE),-@$(RM) $(basename $(DYN_FILE_OS)).tds,)
+	$(if $(DYN_FILE),-@$(RM) $(basename $(DYN_FILE_OS)).pdb,)
+	$(if $(DYN_FILE),-@$(RM) $(basename $(DYN_FILE_OS)).ilk,)
 	$(if $(DYN_FILE),-@$(RM) $(basename $(DYN_FILE_OS)).def,)
 	$(if $(DYN_FILE),-@$(RM) $(basename $(DYN_FILE_OS)).exp,)
 	$(if $(DYN_FILE),$(if $(wildcard $(DYN_DIR)/*.*),,-@$(RDP) $(DYN_DIR_OS)),)

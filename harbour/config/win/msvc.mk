@@ -48,6 +48,15 @@ endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -Zi
+   LDFLAGS += -debug
+endif
+
+ifneq ($(filter $(HB_COMPILER_VER),600 700 710),)
+   ifeq ($(HB_BUILD_DEBUG),yes)
+      CFLAGS += -MTd
+   else
+      CFLAGS += -MT
+   endif
 endif
 
 # # NOTE: -GA flag should be disabled when building MT _.dlls_,

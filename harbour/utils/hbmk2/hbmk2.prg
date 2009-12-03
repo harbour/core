@@ -2949,6 +2949,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-Zi" )
             AAdd( hbmk[ _HBMK_aOPTL ], "-debug" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-debug" )
          ENDIF
          IF hbmk[ _HBMK_lGUI ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-subsystem:windows" )
@@ -2997,6 +2998,15 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                   cOpt_CompC += " -Ot2b1"
                ELSE
                   cOpt_CompC += " -Ogt2yb1p -GX- -G6 -YX"
+               ENDIF
+            ENDIF
+         ENDIF
+         IF hbmk[ _HBMK_cPLAT ] == "win"
+            IF nCCompVer < 800
+               IF hbmk[ _HBMK_lDEBUG ]
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-MTd" )
+               ELSE
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-MT" )
                ENDIF
             ENDIF
          ENDIF
@@ -7939,7 +7949,7 @@ STATIC PROCEDURE OutOpt( aOpt )
    IF Empty( aOpt )
       OutStd( _OUT_EOL )
    ELSE
-      aOpt[ 2 ] := StrTran( aOpt[ 2 ], "\n", _OUT_EOL )
+      aOpt[ 2 ] := StrTran( aOpt[ 2 ], "\n", hb_osNewLine() )
       nLines := MLCount( aOpt[ 2 ], MaxCol() - 21 )
       FOR nLine := 1 TO nLines
          IF ! Empty( tmp := RTrim( MemoLine( aOpt[ 2 ], MaxCol() - 21, nLine ) ) )
@@ -7960,7 +7970,7 @@ STATIC PROCEDURE OutNote( cText )
    LOCAL nLines
    LOCAL tmp
 
-   cText := StrTran( cText, "\n", _OUT_EOL )
+   cText := StrTran( cText, "\n", hb_osNewLine() )
    nLines := MLCount( cText, MaxCol() - 4 )
    FOR nLine := 1 TO nLines
       IF ! Empty( tmp := RTrim( MemoLine( cText, MaxCol() - 4, nLine ) ) )
@@ -7980,7 +7990,7 @@ STATIC PROCEDURE hbmk_OutStd( cText )
    LOCAL nLines
    LOCAL tmp
 
-   cText := StrTran( cText, "\n", _OUT_EOL )
+   cText := StrTran( cText, "\n", hb_osNewLine() )
    nLines := MLCount( cText, MaxCol() - 7 )
    FOR nLine := 1 TO nLines
       IF ! Empty( tmp := RTrim( MemoLine( cText, MaxCol() - 7, nLine ) ) )
@@ -8000,7 +8010,7 @@ STATIC PROCEDURE hbmk_OutErr( cText )
    LOCAL nLines
    LOCAL tmp
 
-   cText := StrTran( cText, "\n", _OUT_EOL )
+   cText := StrTran( cText, "\n", hb_osNewLine() )
    nLines := MLCount( cText, MaxCol() - 7 )
    FOR nLine := 1 TO nLines
       IF ! Empty( tmp := RTrim( MemoLine( cText, MaxCol() - 7, nLine ) ) )

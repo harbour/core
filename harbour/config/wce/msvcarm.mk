@@ -57,6 +57,7 @@ endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -Zi
+   LDFLAGS += -debug
 endif
 
 LD := $(CC)
