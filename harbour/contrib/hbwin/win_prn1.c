@@ -695,12 +695,11 @@ HB_FUNC( WIN_FILLRECT )
 HB_FUNC( WIN_LINETO )
 {
    HDC hDC = win_HDC_par( 1 );
-   int x1 = hb_parni( 2 );
-   int y1 = hb_parni( 3 );
-   int x2 = hb_parni( 4 );
-   int y2 = hb_parni( 5 );
 
-   hb_retl( hDC ? MoveToEx( hDC, x1, y1, NULL ) && LineTo( hDC, x2, y2 ) : HB_FALSE );
+   hb_retl( hDC ? MoveToEx( hDC, hb_parni( 2 ) /* x1 */,
+                                 hb_parni( 3 ) /* y1 */, NULL ) &&
+                  LineTo( hDC, hb_parni( 4 ) /* x2 */,
+                               hb_parni( 5 ) /* y2 */ ) : HB_FALSE );
 }
 
 HB_FUNC( WIN_RECTANGLE )
@@ -723,15 +722,15 @@ HB_FUNC( WIN_ARC )
 {
    HDC hDC = win_HDC_par( 1 );
 
-   hb_retl( hDC ? Arc(  hDC /* hDC */,
-                        hb_parni( 2 ) /* x1 */,
-                        hb_parni( 3 ) /* y1 */,
-                        hb_parni( 4 ) /* x2 */,
-                        hb_parni( 5 ) /* y2 */,
-                        0,
-                        0,
-                        0,
-                        0 ) : HB_FALSE );
+   hb_retl( hDC ? Arc( hDC /* hDC */,
+                       hb_parni( 2 ) /* x1 */,
+                       hb_parni( 3 ) /* y1 */,
+                       hb_parni( 4 ) /* x2 */,
+                       hb_parni( 5 ) /* y2 */,
+                       0,
+                       0,
+                       0,
+                       0 ) : HB_FALSE );
 }
 
 HB_FUNC( WIN_ELLIPSE )

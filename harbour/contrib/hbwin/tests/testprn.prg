@@ -43,82 +43,82 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile )
    oPrinter:FormType  := FORM_A4
    oPrinter:Copies    := 1
 
-   IF !oPrinter:Create()
+   IF ! oPrinter:Create()
       Alert( "Cannot Create Printer" )
    ELSE
-      IF !oPrinter:startDoc( "Win_Prn(Doc name in Printer Properties)" )
+      IF ! oPrinter:startDoc( "Win_Prn(Doc name in Printer Properties)" )
          Alert( "StartDoc() failed" )
       ELSE
-         oPrinter:SetPen(PS_SOLID, 1, RGB_RED)
-         oPrinter:Bold(800)
-         oPrinter:TextOut(oPrinter:PrinterName+": MaxRow() = "+STR(oPrinter:MaxRow(),4)+"   MaxCol() = "+STR(oPrinter:MaxCol(),4))
-         oPrinter:Bold(0)     // Normal
+         oPrinter:SetPen( PS_SOLID, 1, RGB_RED )
+         oPrinter:Bold( 800 )
+         oPrinter:TextOut( oPrinter:PrinterName + ": MaxRow() = " + Str( oPrinter:MaxRow(), 4 ) + "   MaxCol() = " + Str( oPrinter:MaxCol(), 4 ) )
+         oPrinter:Bold( 0 )     // Normal
          oPrinter:NewLine()
          oPrinter:TextOut("   Partial list of available fonts that are available for OEM_")
          oPrinter:NewLine()
-         oPrinter:UnderLine(.T.)
-         oPrinter:Italic(.T.)
-//         oPrinter:SetFont("Courier New",7,{3,-50})  // Compressed print
-         nColFixed:= 40 * oPrinter:CharWidth
-         nColTTF  := 48 * oPrinter:CharWidth
-         nColCharSet  := 60 * oPrinter:CharWidth
-         oPrinter:TextOut("FontName")
-         oPrinter:SetPos(nColFixed)
-         oPrinter:TextOut("Fixed?")
-         oPrinter:SetPos(nColTTF)
-         oPrinter:TextOut("TrueType?")
-         oPrinter:SetPos(nColCharset)
-         oPrinter:TextOut("CharSet#",.T.)
+         oPrinter:UnderLine( .T. )
+         oPrinter:Italic( .T. )
+//       oPrinter:SetFont( "Courier New", 7, { 3, -50 } )  // Compressed print
+         nColFixed   := 40 * oPrinter:CharWidth
+         nColTTF     := 48 * oPrinter:CharWidth
+         nColCharSet := 60 * oPrinter:CharWidth
+         oPrinter:TextOut( "FontName" )
+         oPrinter:SetPos( nColFixed )
+         oPrinter:TextOut( "Fixed?" )
+         oPrinter:SetPos( nColTTF )
+         oPrinter:TextOut( "TrueType?" )
+         oPrinter:SetPos( nColCharset )
+         oPrinter:TextOut( "CharSet#", .T. )
          oPrinter:NewLine()
-         oPrinter:Italic(.F.)
-         oPrinter:UnderLine(.F.)
-         aFonts:= oPrinter:GetFonts()
+         oPrinter:Italic( .F. )
+         oPrinter:UnderLine( .F. )
+         aFonts := oPrinter:GetFonts()
          oPrinter:NewLine()
-         FOR x:= 1 TO LEN(aFonts) STEP 2
-            oPrinter:CharSet(aFonts[x,4])
-            IF oPrinter:SetFont(aFonts[x,1])       // Could use "IF oPrinter:SetFontOk" after call to oPrinter:SetFont()
-               IF oPrinter:FontName == aFonts[x,1]  // Make sure Windows didn't pick a different font
-                  oPrinter:TextOut(aFonts[x,1])
-                  oPrinter:SetPos(nColFixed)
-                  oPrinter:TextOut(IIF(aFonts[x,2],"Yes","No"))
-                  oPrinter:SetPos(nColTTF)
-                  oPrinter:TextOut(IIF(aFonts[x,3],"Yes","No"))
-                  oPrinter:SetPos(nColCharSet)
-                  oPrinter:TextOut(STR(aFonts[x,4],5))
-                  oPrinter:SetPos(oPrinter:LeftMargin, oPrinter:PosY + (oPrinter:CharHeight*2))
-                  IF oPrinter:PRow() > oPrinter:MaxRow() - 10  // Could use "oPrinter:NewPage()" to start a new page
+         FOR x:= 1 TO Len( aFonts ) STEP 2
+            oPrinter:CharSet( aFonts[ x, 4 ] )
+            IF oPrinter:SetFont( aFonts[ x, 1 ] )       // Could use "IF oPrinter:SetFontOk" after call to oPrinter:SetFont()
+               IF oPrinter:FontName == aFonts[ x, 1 ]  // Make sure Windows didn't pick a different font
+                  oPrinter:TextOut( aFonts[ x, 1 ] )
+                  oPrinter:SetPos( nColFixed )
+                  oPrinter:TextOut( iif( aFonts[ x, 2 ], "Yes", "No" ) )
+                  oPrinter:SetPos( nColTTF )
+                  oPrinter:TextOut( iif( aFonts[ x, 3 ], "Yes", "No" ) )
+                  oPrinter:SetPos( nColCharSet )
+                  oPrinter:TextOut( Str( aFonts[ x, 4 ], 5 ) )
+                  oPrinter:SetPos( oPrinter:LeftMargin, oPrinter:PosY + ( oPrinter:CharHeight * 2 ) )
+                  IF oPrinter:PRow() > oPrinter:MaxRow() - 16  // Could use "oPrinter:NewPage()" to start a new page
                      EXIT
                   ENDIF
                ENDIF
             ENDIF
-            oPrinter:Line(0, oPrinter:PosY+5, 2000, oPrinter:PosY+5)
-         NEXT x
-         oPrinter:SetFont("Lucida Console",8,{3,-50})  // Alternative Compressed print
-         oPrinter:CharSet(0)  // Reset default charset
-         oPrinter:Bold(800)
+            oPrinter:Line( 0, oPrinter:PosY + 5, 2000, oPrinter:PosY + 5 )
+         NEXT
+         oPrinter:SetFont( "Lucida Console", 8, { 3, -50 } )  // Alternative Compressed print
+         oPrinter:CharSet( 0 )  // Reset default charset
+         oPrinter:Bold( 800 )
          oPrinter:NewLine()
-         oPrinter:TextOut("This is on line"+STR(oPrinter:Prow(),4)+", Printed bold, " )
-         oPrinter:TextOut(" finishing at Column: ")
-         oPrinter:TextOut(STR(oPrinter:Pcol(),4))
-         oPrinter:SetPrc(oPrinter:Prow()+3, 0)
-         oPrinter:Bold(0)
-         oPrinter:TextOut("Notice: UNDERLINE only prints correctly if there is a blank line after",.T.)
-         oPrinter:TextOut("        it. This is because of ::LineHeight and the next line",.T.)
-         oPrinter:TextOut("        printing over top of the underline. To avoid this happening",.T.)
-         oPrinter:TextOut("        you can to alter ::LineHeight or use a smaller font")
+         oPrinter:TextOut( "This is on line" + Str( oPrinter:Prow(), 4 ) + ", Printed bold, " )
+         oPrinter:TextOut( " finishing at Column: " )
+         oPrinter:TextOut( Str( oPrinter:Pcol(), 4 ) )
+         oPrinter:SetPrc( oPrinter:Prow() + 3, 0 )
+         oPrinter:Bold( 0 )
+         oPrinter:TextOut( "Notice: UNDERLINE only prints correctly if there is a blank line after", .T. )
+         oPrinter:TextOut( "        it. This is because of ::LineHeight and the next line", .T. )
+         oPrinter:TextOut( "        printing over top of the underline. To avoid this happening", .T. )
+         oPrinter:TextOut( "        you can to alter ::LineHeight or use a smaller font" )
          oPrinter:NewLine()
          oPrinter:NewLine()
-         oPrinter:SetFont("Lucida Console",18, 0)  // Large print
+         oPrinter:SetFont( "Lucida Console", 18, 0 )  // Large print
          oPrinter:SetColor( RGB_GREEN )
-         oPrinter:TextOut("Finally some larger print")
-         oPrinter:Box(  0, oPrinter:PosY+100, 100, oPrinter:PosY+200)
-         oPrinter:Arc(200, oPrinter:PosY+100, 300, oPrinter:PosY+200)
-         oPrinter:Ellipse(400, oPrinter:PosY+100, 500, oPrinter:PosY+200)
-         oPrinter:FillRect(600, oPrinter:PosY+100, 700, oPrinter:PosY+200, RGB_RED )
+         oPrinter:TextOut( "Finally some larger print" )
+         oPrinter:Box(   0, oPrinter:PosY + 100, 100, oPrinter:PosY + 200 )
+         oPrinter:Arc( 200, oPrinter:PosY + 100, 300, oPrinter:PosY + 200 )
+         oPrinter:Ellipse( 400, oPrinter:PosY + 100, 500, oPrinter:PosY + 200 )
+         oPrinter:FillRect( 600, oPrinter:PosY + 100, 700, oPrinter:PosY + 200, RGB_RED )
 
 //       To print a barcode;
 //       Replace 'BCod39HN' with your own bar code font or any other font
-//         oPrinter:TextAtFont( oPrinter:MM_TO_POSX( 30 ) , oPrinter:MM_TO_POSY(60 ), "1234567890", "BCod39HN", 24, 0 )
+//         oPrinter:TextAtFont( oPrinter:MM_TO_POSX( 30 ) , oPrinter:MM_TO_POSY( 60 ), "1234567890", "BCod39HN", 24, 0 )
 //
          PrintBitMap( oPrinter, cBMPFile )
 
