@@ -3113,6 +3113,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       uiCount = ( pArea->uiNullCount + 7 ) >> 3;
       pThisField->bLen = ( BYTE ) uiCount;
       pThisField->bDec = ( BYTE ) ( uiCount >> 8 );
+      pArea->uiNullOffset = pArea->uiRecordLen;
       pArea->uiRecordLen += uiCount;
       ulSize += sizeof( DBFFIELD );
    }
