@@ -323,21 +323,6 @@ FUNCTION Summarize( aText, cComments, aSumData, nFileType )
    RETURN( aSummary )
 
 /*----------------------------------------------------------------------*/
-
-FUNCTION ReadSource( cTxtFile )
-   LOCAL cLine, nHandle, aTxt :={}
-
-   if ( nHandle := fopen( cTxtFile ) ) != -1
-      do WHILE ( hb_fReadLine( nHandle, @cLine ) == 0 )
-         aadd( aTxt, cLine )
-      enddo
-      aadd( aTxt, cLine )
-      fclose( nHandle )
-   endif
-
-   RETURN aTxt
-
-/*----------------------------------------------------------------------*/
 /*
    updates comments of the whole file or down from line nline (if supplied)
    comment nState codes:

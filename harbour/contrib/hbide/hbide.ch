@@ -53,6 +53,9 @@
 #ifndef __HBIDE_CH
    #define __HBIDE_CH
 
+#define CRLF                                      chr( 13 )+chr( 10 )
+#define _EOL                                      chr( 10 )
+
 
 #define INI_HBIDE                                 1
 #define INI_PROJECTS                              2
@@ -69,6 +72,27 @@
 #define CurrentProject                            7
 
 #define INI_HBIDE_VRBLS                           7
+
+/* .hbi structure constants */
+#define PRJ_PRP_PROPERTIES                        1
+#define PRJ_PRP_FLAGS                             2
+#define PRJ_PRP_SOURCES                           3
+#define PRJ_PRP_METADATA                          4
+
+#define PRJ_PRP_SECTIONS                          4
+
+#define PRJ_PRP_TYPE                              1
+#define PRJ_PRP_TITLE                             2
+#define PRJ_PRP_LOCATION                          3
+#define PRJ_PRP_WRKFOLDER                         4
+#define PRJ_PRP_DSTFOLDER                         5
+#define PRJ_PRP_OUTPUT                            6
+#define PRJ_PRP_LPARAMS                           7
+#define PRJ_PRP_LPROGRAM                          8
+
+#define PRJ_PRP_PRP_VRBLS                         8
+
+
 
 #endif
 

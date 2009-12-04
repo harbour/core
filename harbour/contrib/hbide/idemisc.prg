@@ -68,6 +68,8 @@
 #include "xbp.ch"
 #include "hbqt.ch"
 
+#include "hbide.ch"
+
 /*----------------------------------------------------------------------*/
 
 PROCEDURE AppSys()
@@ -132,7 +134,7 @@ FUNCTION PosAndSize( qWidget )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION getYesNo( cMsg, cInfo, cTitle )
+FUNCTION GetYesNo( cMsg, cInfo, cTitle )
    LOCAL oMB
 
    DEFAULT cTitle TO "Option Please!"
@@ -152,3 +154,180 @@ FUNCTION getYesNo( cMsg, cInfo, cTitle )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION FetchAFile( oWnd, cTitle, aFlt, cDftDir )
+   LOCAL oDlg, cFile
+
+   DEFAULT cTitle  TO "Please Select a File"
+   DEFAULT aFlt    TO { { "All Files", "*.*" } }
+   DEFAULT cDftDir TO hb_dirBase()
+
+   oDlg := XbpFileDialog():new():create( oWnd, , { 10,10 } )
+
+   oDlg:title       := cTitle
+   oDlg:center      := .t.
+   oDlg:fileFilters := aFlt
+
+   cFile := oDlg:open( cDftDir, , .f. )
+
+   RETURN cFile
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION ReadSource( cTxtFile )
+   LOCAL cLine, nHandle, aTxt :={}
+
+   if ( nHandle := fopen( cTxtFile ) ) != -1
+      do WHILE ( hb_fReadLine( nHandle, @cLine ) == 0 )
+         aadd( aTxt, cLine )
+      enddo
+      aadd( aTxt, cLine )
+      fclose( nHandle )
+   endif
+
+   RETURN aTxt
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION EvalAsString( cExp )
+   LOCAL cValue
+
+   BEGIN SEQUENCE
+      cValue := eval( &( "{|| " + cExp + "}" ) )
+   RECOVER
+      cValue := cExp
+   END SEQUENCE
+
+   IF !hb_isChar( cValue )
+      cValue := ""
+   ENDIF
+
+   RETURN cValue
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION FetchHbiStructFromBuffer( cBuffer )
+   RETURN PullHbiStruct( hb_atokens( cBuffer, _EOL ) )
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION FetchHbiStructFromFile( cProject )
+   RETURN PullHbiStruct( ReadSource( cProject ) )
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION PullHbiStruct( a_ )
+   LOCAL n, s, nPart, cKey, cVal
+   LOCAL aPrp := { "Type", "Title", "Location", "WorkingFolder", "DestinationFolder", ;
+                                            "Output", "LaunchParams", "LaunchProgram" }
+
+   LOCAL a1_0 := afill( array( PRJ_PRP_PRP_VRBLS ), "" )
+   LOCAL a1_1 := {}
+   local a2_0 := {}
+   local a2_1 := {}
+   local a3_0 := {}
+   local a3_1 := {}
+   local a4_0 := {}
+   local a4_1 := {}
+
+   IF .t.
+      FOR EACH s IN a_
+         s := alltrim( s )
+         IF .t.
+            DO CASE
+            CASE s == "[ PROPERTIES ]"
+               nPart := PRJ_PRP_PROPERTIES
+            CASE s == "[ FLAGS ]"
+               nPart := PRJ_PRP_FLAGS
+            CASE s == "[ SOURCES ]"
+               nPart := PRJ_PRP_SOURCES
+            CASE s == "[ METADATA ]"
+               nPart := PRJ_PRP_METADATA
+            OTHERWISE
+               DO CASE
+               CASE nPart == PRJ_PRP_PROPERTIES
+                  IF ( n := at( "=", s ) ) > 0
+                     cKey := alltrim( substr( s, 1, n-1 ) )
+                     cVal := alltrim( substr( s, n+1 ) )
+                     IF ( n := ascan( aPrp, cKey ) ) > 0
+                        a1_0[ n ] := cVal
+                     ENDIF
+                  ENDIF
+               CASE nPart == PRJ_PRP_FLAGS
+                  aadd( a2_0, s )
+
+               CASE nPart == PRJ_PRP_SOURCES
+                  aadd( a3_0, s )
+
+               CASE nPart == PRJ_PRP_METADATA
+                  aadd( a4_0, s )
+                  IF ( n := at( "=", s ) ) > 0
+                     cKey := alltrim( substr( s, 1, n-1 ) )
+                     cVal := EvalAsString( alltrim( substr( s, n+1 ) ) )
+                     aadd( a4_1, { "<"+ cKey +">", cVal } )
+                  ENDIF
+               ENDCASE
+            ENDCASE
+         ENDIF
+      NEXT
+
+      /* General Properties */
+      FOR EACH s IN a1_0
+         aadd( a1_1, ParseWithMetaData( s, a4_1 ) )
+      NEXT
+
+      /* Parse Flags */
+      IF !empty( a2_0 )
+         FOR EACH s IN a2_0
+            aadd( a2_1, ParseWithMetaData( s, a4_1 ) )
+         NEXT
+      ENDIF
+
+      /* Parse Files */
+      IF !empty( a3_0 )
+         FOR EACH s IN a3_0
+            IF !( "#" == left( s,1 ) ) .and. !empty( s )
+               aadd( a3_1, ParseWithMetaData( s, a4_1 ) )
+            ENDIF
+         NEXT
+      ENDIF
+
+   ENDIF
+
+   RETURN { { a1_0, a1_1 }, { a2_0, a2_1 }, { a3_0, a3_1 }, { a4_0, a4_1 } }
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION ApplyMetaData( s, a_ )
+   LOCAL k
+
+   IF !empty( a_ )
+      FOR k := 1 TO len( a_ )
+         s := strtran( s, a_[ k,2 ], a_[ k,1 ] )
+      NEXT
+   ENDIF
+
+   RETURN s
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION ParseWithMetaData( s, a_ )
+   LOCAL k
+
+   IF !empty( a_ )
+      FOR k := 1 TO len( a_ )
+         s := strtran( s, a_[ k,1 ], a_[ k,2 ] )
+      NEXT
+   ENDIF
+
+   RETURN s
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION ArrayToMemo( a_ )
+   LOCAL s := ""
+
+   aeval( a_, {|e| s += e + CRLF } )
+
+   RETURN s
+
+/*----------------------------------------------------------------------*/

@@ -82,8 +82,6 @@
 
 /*----------------------------------------------------------------------*/
 
-#define CRLF    chr( 13 )+chr( 10 )
-
 STATIC s_resPath
 
 /*----------------------------------------------------------------------*/
@@ -198,7 +196,6 @@ CLASS HbIde
    METHOD updateFuncList()
    METHOD gotoFunction()
    METHOD fetchProjectProperties()
-   METHOD fetchProjectProperties_1()
    METHOD loadProjectProperties()
    METHOD closeTab()
    METHOD activateTab()
@@ -213,6 +210,7 @@ CLASS HbIde
    DATA   aLines                                  INIT {}
    DATA   aComments                               INIT {}
    DATA   aPrjProps                               INIT {}
+   DATA   aProjects                               INIT {}
 
    METHOD createTags()
    METHOD findReplace()
@@ -222,6 +220,7 @@ CLASS HbIde
    METHOD paintRequested()
    METHOD setTabImage()
    METHOD loadUI()
+   METHOD updateHbp()
 
 
    ENDCLASS
@@ -1012,7 +1011,8 @@ METHOD HbIde:manageProjectContext( mp1 )
 
    IF !empty( ::oCurProjItem )
       IF ::oCurProjItem:caption == "Projects"
-         aadd( aPops, { "Properties", {|| ::fetchProjectProperties( .f. ) } } )
+         //aadd( aPops, { "Properties", {|| ::fetchProjectProperties( .f. ) } } )
+         aadd( aPops, { "Properties", {|| ::loadProjectProperties() } } )
 
       ELSEIF ::oCurProjItem:caption == "Executables"
       ELSEIF ::oCurProjItem:caption == "Libs"
@@ -1363,99 +1363,6 @@ METHOD HbIde:loadUI( cUi )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:fetchProjectProperties( lNewProject )
-   LOCAL nRet
-   LOCAL qLayout, qHBLayout
-   LOCAL oDlg, oBtnOK, oBtnCn
-   LOCAL qPrjType , oPrjTtl  , oPrjLoc  , oPrjWrk  , oPrjDst  , oPrjOut  , oPrjInc  , oPrjLau  , oPrjLEx
-   LOCAL qTypLabel, qPrjLabel, qLocLabel, qWrkLabel, qDstLabel, qOutLabel, qIncLabel, qLauLabel, qLExLabel
-
-   DEFAULT lNewProject TO .t.
-
-   IF hb_isObject( ::fetchProjectProperties_1() )
-      RETURN Self
-   ENDIF
-
-   HB_SYMBOL_UNUSED( lNewProject )
-
-   oDlg := XbpWindow():new()
-   oDlg:oWidget := QDialog():new( QT_PTROFXBP( ::oDlg ) )
-   oDlg:oWidget:setWindowTitle( "New Project Properties" )
-
-   qTypLabel := QLabel():new() ; qTypLabel:setText( "<b>Project Type</b>"     )
-   qPrjLabel := QLabel():new() ; qPrjLabel:setText( "Project Title"           )
-   qLocLabel := QLabel():new() ; qLocLabel:setText( "Project Location"        )
-   qWrkLabel := QLabel():new() ; qWrkLabel:setText( "Working Directory"       )
-   qDstLabel := QLabel():new() ; qDstLabel:setText( "Destination Directory"   )
-   qOutLabel := QLabel():new() ; qOutLabel:setText( "Output Name"             )
-   qIncLabel := QLabel():new() ; qIncLabel:setText( "Compile/Link Flags"      )
-   qLauLabel := QLabel():new() ; qLauLabel:setText( "Launch Parameters"       )
-   qLExLabel := QLabel():new() ; qLExLabel:setText( "Launch Program"          )
-
-   qPrjType := QComboBox():New()
-   qPrjType:addItem( "Executable" )
-   qPrjType:addItem( "Library"    )
-   qPrjType:addItem( "Dll"        )
-   //
-   oPrjTtl := XbpSLE():new():create( oDlg, , {0,0}, {10,10}, , .t. )
-   oPrjLoc := XbpSLE():new():create( oDlg, , {0,0}, {10,10}, , .t. )
-   oPrjWrk := XbpSLE():new():create( oDlg, , {0,0}, {10,10}, , .t. )
-   oPrjDst := XbpSLE():new():create( oDlg, , {0,0}, {10,10}, , .t. )
-   oPrjOut := XbpSLE():new():create( oDlg, , {0,0}, {10,10}, , .t. )
-   oPrjInc := XbpMLE():new():create( oDlg, , {0,0}, {10,10}, , .t. )
-   oPrjLau := XbpSLE():new():create( oDlg, , {0,0}, {10,10}, , .t. )
-   oPrjLEx := XbpSLE():new():create( oDlg, , {0,0}, {10,10}, , .t. )
-
-   /* Buttons at lower right end */
-   qHBLayout := QHBoxLayout():new()
-   qHBLayout:setSpacing( 10 )
-   //
-   oBtnOk := XbpPushButton():new( oDlg, , {0,0}, {10,30}, , .t. ):create()
-   oBtnOk:setCaption( "Ok" )
-   oBtnOk:activate := {|| oDlg:oWidget:done( 1 ) }
-   //
-   oBtnCn := XbpPushButton():new( oDlg, , {0,0}, {10,30}, , .t. ):create()
-   oBtnCn:setCaption( "Cancel" )
-   oBtnCn:activate := {|| oDlg:oWidget:done( 2 ) }
-   //
-   qHBLayout:addWidget( QT_PTROFXBP( oBtnOK ) )
-   qHBLayout:addWidget( QT_PTROFXBP( oBtnCN ) )
-
-   /*  Grid layout and */
-   qLayout := QGridLayout():new()
-   qLayout:setColumnStretch( 0,1 )
-   qLayout:setColumnMinimumWidth( 0,75 )
-   qLayout:setColumnMinimumWidth( 1,200 )
-   qLayout:setVerticalSpacing( 5 )
-   qLayout:setHorizontalSpacing( 5 )
-   //                                        R  C                                                 R  C
-   qLayout:addWidget( QT_PTROF( qTypLabel ), 0, 0 ) ; qLayout:addWidget( QT_PTROF( qPrjType )   , 0, 1 )
-   qLayout:addWidget( QT_PTROF( qPrjLabel ), 1, 0 ) ; qLayout:addWidget( QT_PTROFXBP( oPrjTtl ) , 1, 1 )
-   qLayout:addWidget( QT_PTROF( qLocLabel ), 2, 0 ) ; qLayout:addWidget( QT_PTROFXBP( oPrjLoc  ), 2, 1 )
-   qLayout:addWidget( QT_PTROF( qWrkLabel ), 3, 0 ) ; qLayout:addWidget( QT_PTROFXBP( oPrjWrk  ), 3, 1 )
-   qLayout:addWidget( QT_PTROF( qDstLabel ), 4, 0 ) ; qLayout:addWidget( QT_PTROFXBP( oPrjDst  ), 4, 1 )
-   qLayout:addWidget( QT_PTROF( qOutLabel ), 5, 0 ) ; qLayout:addWidget( QT_PTROFXBP( oPrjOut  ), 5, 1 )
-   qLayout:addWidget( QT_PTROF( qIncLabel ), 6, 0 ) ; qLayout:addWidget( QT_PTROFXBP( oPrjInc  ), 6, 1 )
-   qLayout:addWidget( QT_PTROF( qLauLabel ), 7, 0 ) ; qLayout:addWidget( QT_PTROFXBP( oPrjLau  ), 7, 1 )
-   qLayout:addWidget( QT_PTROF( qLExLabel ), 8, 0 ) ; qLayout:addWidget( QT_PTROFXBP( oPrjLEx  ), 8, 1 )
-   //
-   qLayout:addWidget( QT_PTROF( QWidget():new() ), 12, 1 )
-   qLayout:addLayout( QT_PTROF( qHBLayout )      , 13, 1 )
-
-   oDlg:oWidget:setLayout( QT_PTROF( qLayout ) )
-
-   nRet := oDlg:oWidget:exec()
-
-   JustACall( nRet )
-
-   HBXBP_DEBUG( "Done", nRet )
-
-   oDlg:destroy()
-
-   RETURN self
-
-/*----------------------------------------------------------------------*/
-
 METHOD HbIde:findReplace( cUi )
    LOCAL qUiLoader, qFile, cUiFull
 
@@ -1489,56 +1396,108 @@ METHOD HbIde:findReplace( cUi )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
+/*
+ *  <cProject> == c:\harbour\contrib\hbide\projects\hbide.hbi
+*/
 METHOD HbIde:loadProjectProperties( cProject )
+   LOCAL cWrkProject, n
 
-   HB_SYMBOL_UNUSED( cProject )
+   IF empty( cProject )
+      cProject := fetchAFile( ::oDlg, "Select a Harbour IDE Project", { { "IDE Projects", "*.hbi" } } )
+   ENDIF
+   IF empty( cProject )
+      RETURN Self
+   ENDIF
+   cWrkProject := lower( cProject )  // normalized
+
    ::aPrjProps := {}
 
+   IF !empty( ::aProjects )
+      IF ( n := ascan( ::aProjects, {|e_| e_[ 1 ] == cWrkProject } ) ) > 0
+         ::aPrjProps := ::aProjects[ n, 3 ]
+      ENDIF
+   ENDIF
 
+   IF empty( ::aPrjProps )
+      ::aPrjProps := fetchHbiStructFromFile( cProject )
+   ENDIF
+
+   ::fetchProjectProperties( ::aPrjProps )
+
+   IF n == 0
+      aadd( ::aProjects, { cWrkProject, cProject, aclone( ::aPrjProps ) } )
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:fetchProjectProperties_1()
-   LOCAL qPrpDlg, qPrjType, oPrjTtl, cSaveTo, s
-   LOCAL oPrjLoc, oPrjWrk, oPrjDst, oPrjOut, oPrjInc, oPrjLau, oPrjLEx, oPrjSrc, oPrjMta
-   LOCAL oPBOk, oPBCn
-   LOCAL lSave := .f.
-   LOCAL txt_  := {}
-   LOCAL typ_:= { "Executable", "Lib", "Dll" }
+METHOD HbIde:fetchProjectProperties( aPrjProps )
+   LOCAL qPrpDlg, qPrjType, oPrjTtl, cSaveTo, a_, oPBOk, oPBCn, pPrpDlg, oTabWidget
+   LOCAL oPrjLoc, oPrjWrk, oPrjDst, oPrjOut, oPrjInc, oPrjLau, oPrjLEx, oPrjSrc, oPrjMta, oPrjHbp
+   LOCAL lSave   := .f.
+   LOCAL txt_    := {}
+   LOCAL typ_    := { "Executable", "Lib", "Dll" }
+   LOCAL cPrjLoc := hb_dirBase() + "projects"
 
    IF !empty( qPrpDlg := ::loadUI( "projectproperties" ) )
+      pPrpDlg := QT_PTROF( qPrpDlg )
 
-      qPrjType := QComboBox():configure( Qt_findChild( QT_PTROF( qPrpDlg ), "comboPrjType" ) )
+      qPrjType := QComboBox():configure( Qt_findChild( pPrpDlg, "comboPrjType" ) )
       qPrjType:addItem( "Executable" )
       qPrjType:addItem( "Library"    )
       qPrjType:addItem( "Dll"        )
 
-      oPrjTtl := QLineEdit():configure( Qt_FindChild( QT_PTROF( qPrpDlg ), "editPrjTitle"     ) )
-      oPrjLoc := QLineEdit():configure( Qt_FindChild( QT_PTROF( qPrpDlg ), "editPrjLoctn"     ) )
-      oPrjWrk := QLineEdit():configure( Qt_FindChild( QT_PTROF( qPrpDlg ), "editWrkFolder"    ) )
-      oPrjDst := QLineEdit():configure( Qt_FindChild( QT_PTROF( qPrpDlg ), "editDstFolder"    ) )
-      oPrjOut := QLineEdit():configure( Qt_FindChild( QT_PTROF( qPrpDlg ), "editOutName"      ) )
-      oPrjInc := QTextEdit():configure( Qt_FindChild( QT_PTROF( qPrpDlg ), "editFlags"        ) )
-      oPrjLau := QLineEdit():configure( Qt_FindChild( QT_PTROF( qPrpDlg ), "editLaunchParams" ) )
-      oPrjLEx := QLineEdit():configure( Qt_FindChild( QT_PTROF( qPrpDlg ), "editLaunchExe"    ) )
-      oPrjSrc := QTextEdit():configure( Qt_FindChild( QT_PTROF( qPrpDlg ), "editSources"      ) )
-      oPrjMta := QTextEdit():configure( Qt_FindChild( QT_PTROF( qPrpDlg ), "editMetaData"     ) )
+      oPrjTtl := QLineEdit():configure( Qt_FindChild( pPrpDlg, "editPrjTitle"     ) )
+      oPrjLoc := QLineEdit():configure( Qt_FindChild( pPrpDlg, "editPrjLoctn"     ) )
+      oPrjWrk := QLineEdit():configure( Qt_FindChild( pPrpDlg, "editWrkFolder"    ) )
+      oPrjDst := QLineEdit():configure( Qt_FindChild( pPrpDlg, "editDstFolder"    ) )
+      oPrjOut := QLineEdit():configure( Qt_FindChild( pPrpDlg, "editOutName"      ) )
+      oPrjInc := QTextEdit():configure( Qt_FindChild( pPrpDlg, "editFlags"        ) )
+      oPrjLau := QLineEdit():configure( Qt_FindChild( pPrpDlg, "editLaunchParams" ) )
+      oPrjLEx := QLineEdit():configure( Qt_FindChild( pPrpDlg, "editLaunchExe"    ) )
+      oPrjSrc := QTextEdit():configure( Qt_FindChild( pPrpDlg, "editSources"      ) )
+      oPrjMta := QTextEdit():configure( Qt_FindChild( pPrpDlg, "editMetaData"     ) )
+      oPrjHbp := QTextEdit():configure( Qt_FindChild( pPrpDlg, "editHbp"          ) )
 
-      oPBOk := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( qPrpDlg ), "buttonOk" ) )
+      oPBOk := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( pPrpDlg, "buttonOk" ) )
       oPBOk:activate := {|| lSave := .t., qPrpDlg:close() }
-      oPBCn := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( qPrpDlg ), "buttonCn" ) )
+      oPBCn := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( pPrpDlg, "buttonCn" ) )
       oPBCn:activate := {|| lSave := .f., qPrpDlg:close() }
+
+      oTabWidget := QTabWidget():configure( Qt_FindChild( pPrpDlg, "tabWidget" ) )
+      Qt_Connect_Signal( QT_PTROF( oTabWidget ), "currentChanged(int)", {|o,p| ::updateHbp( p, oPrjHbp, o ) } )
+
+      IF empty( aPrjProps )
+         oPrjTtl:setText( "untitled"   )
+         oPrjLoc:setText( cPrjLoc      )
+         oPrjWrk:setText( hb_dirBase() )
+         oPrjDst:setText( cPrjLoc      )
+         oPrjOut:setText( "untitled"   )
+      ELSE
+         oPrjTtl:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_TITLE     ] )
+         oPrjLoc:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_LOCATION  ] )
+         oPrjWrk:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_WRKFOLDER ] )
+         oPrjDst:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_DSTFOLDER ] )
+         oPrjOut:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_OUTPUT    ] )
+
+         oPrjInc:setPlainText( ArrayToMemo( aPrjProps[ PRJ_PRP_FLAGS   , 1 ] ) )
+         oPrjSrc:setPlainText( ArrayToMemo( aPrjProps[ PRJ_PRP_SOURCES , 1 ] ) )
+         oPrjMta:setPlainText( ArrayToMemo( aPrjProps[ PRJ_PRP_METADATA, 1 ] ) )
+
+      ENDIF
 
       qPrpDlg:exec()
 
       IF lSave
-         cSaveTo := oPrjLoc:text()+"\"+oPrjOut:text()+".hbi"
-HBXBP_DEBUG( lSave, cSaveTo, qPrjType:currentIndex() )
-         aadd( txt_, "     [PROPERTIES]" )
+         cSaveTo := ParseWithMetaData( oPrjLoc:text(), aPrjProps[ PRJ_PRP_METADATA, 2 ] ) + ;
+                          hb_OsPathSeparator() + ;
+                    ParseWithMetaData( oPrjOut:text(), aPrjProps[ PRJ_PRP_METADATA, 2 ] ) + ;
+                          ".hbi"
 
+         HBXBP_DEBUG( lSave, cSaveTo )
+
+         aadd( txt_, "[ PROPERTIES ]" )
          aadd( txt_, "Type              = " + typ_[ qPrjType:currentIndex()+1 ] )
          aadd( txt_, "Title             = " + oPrjTtl:text() )
          aadd( txt_, "Location          = " + oPrjLoc:text() )
@@ -1547,28 +1506,37 @@ HBXBP_DEBUG( lSave, cSaveTo, qPrjType:currentIndex() )
          aadd( txt_, "Output            = " + oPrjOut:text() )
          aadd( txt_, "LaunchParams      = " + oPrjLau:text() )
          aadd( txt_, "LaunchProgram     = " + oPrjLEx:text() )
-         //
-         aadd( txt_, "     [FLAGS]" )
-         s := oPrjInc:toPlainText()
-         aadd( txt_, IF( empty( s ), "", s ) )
-         //
-         aadd( txt_, "     [SOURCES]" )
-         s := oPrjSrc:toPlainText()
-         aadd( txt_, IF( empty( s ), "", s ) )
-         //
-         aadd( txt_, "     [METADATA]" )
-         s := oPrjMta:toPlainText()
-         aadd( txt_, IF( empty( s ), "", s ) )
          aadd( txt_, " " )
-HBXBP_DEBUG( cSaveTo, "About to Save" )
+         //
+         aadd( txt_, "[ FLAGS ]" )
+         a_:= hb_atokens( oPrjInc:toPlainText(), _EOL ); aeval( a_, {|e| aadd( txt_, e ) } )
+         aadd( txt_, " " )
+         //
+         aadd( txt_, "[ SOURCES ]" )
+         a_:= hb_atokens( oPrjSrc:toPlainText(), _EOL ); aeval( a_, {|e| aadd( txt_, e ) } )
+         aadd( txt_, " " )
+         //
+         aadd( txt_, "[ METADATA ]" )
+         a_:= hb_atokens( oPrjMta:toPlainText(), _EOL ); aeval( a_, {|e| aadd( txt_, e ) } )
+         aadd( txt_, " " )
+
          CreateTarget( cSaveTo, txt_ )
-HBXBP_DEBUG( cSaveTo, "saved", file( cSaveTo ) )
       ENDIF
    ENDIF
 
    JustACall( oPrjTtl, oPrjLoc, oPrjWrk, oPrjDst, oPrjOut, oPrjInc, oPrjLau, oPrjLEx, oPrjSrc, oPrjMta )
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:updateHbp( iIndex, oPrjHbp )
+
+   IF iIndex == 3
+      oPrjHbp:setPlainText( "Hurray, we are here!" )
+   ENDIF
+
+   RETURN nil
 
 /*----------------------------------------------------------------------*/
 
