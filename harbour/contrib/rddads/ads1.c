@@ -4470,8 +4470,15 @@ static HB_ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pO
          LONG lToSkip = pOrderInfo->itmNewVal && HB_IS_NUMERIC( pOrderInfo->itmNewVal ) ?
                         hb_itemGetNL( pOrderInfo->itmNewVal ) : 1;
          if( hIndex )
+         {
             hb_itemPutL( pOrderInfo->itmResult,
                          AdsSkipUnique( hIndex, lToSkip >= 0 ? 1 : -1 ) == AE_SUCCESS );
+            hb_adsUpdateAreaFlags( pArea );
+            /* Force relational movement in child WorkAreas */
+            if( pArea->area.lpdbRelations )
+               SELF_SYNCCHILDREN( ( AREAP ) pArea );
+            SELF_SKIPFILTER( ( AREAP ) pArea, lToSkip );
+         }
          else
             hb_itemPutL( pOrderInfo->itmResult,
                          SELF_SKIP( ( AREAP ) pArea, lToSkip ) == HB_SUCCESS );
