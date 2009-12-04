@@ -83,6 +83,7 @@
 /*----------------------------------------------------------------------*/
 
 STATIC s_resPath
+STATIC s_pathSep
 
 /*----------------------------------------------------------------------*/
 
@@ -90,6 +91,7 @@ PROCEDURE Main( cProjIni )
    LOCAL oIde
 
    s_resPath := hb_DirBase() + "resources" + hb_OsPathSeparator()
+   s_pathSep := hb_OsPathSeparator()
 
    oIde := HbIde():new( cProjIni )
    oIde:create()
@@ -157,11 +159,14 @@ CLASS HbIde
    DATA   oLibs
    DATA   oDlls
    DATA   aProjData                               INIT {}
+   DATA   aPrpObjs                                INIT {}
 
    DATA   lProjTreeVisible                        INIT .t.
    DATA   lDockRVisible                           INIT .f.
    DATA   lDockBVisible                           INIT .f.
    DATA   lTabCloseRequested                      INIT .f.
+
+   DATA   cSaveTo                                 INIT ""
 
    METHOD new( cProjectOrSource )
    METHOD create( cProjectOrSource )
@@ -221,6 +226,7 @@ CLASS HbIde
    METHOD setTabImage()
    METHOD loadUI()
    METHOD updateHbp()
+   METHOD saveProject()
 
 
    ENDCLASS
@@ -1011,8 +1017,8 @@ METHOD HbIde:manageProjectContext( mp1 )
 
    IF !empty( ::oCurProjItem )
       IF ::oCurProjItem:caption == "Projects"
-         //aadd( aPops, { "Properties", {|| ::fetchProjectProperties( .f. ) } } )
-         aadd( aPops, { "Properties", {|| ::loadProjectProperties() } } )
+         aadd( aPops, { "New Project" , {|| ::loadProjectProperties( , .t., .t. ) } } )
+         aadd( aPops, { "Load Project", {|| ::loadProjectProperties( , .f., .t. ) } } )
 
       ELSEIF ::oCurProjItem:caption == "Executables"
       ELSEIF ::oCurProjItem:caption == "Libs"
@@ -1399,46 +1405,66 @@ METHOD HbIde:findReplace( cUi )
 /*
  *  <cProject> == c:\harbour\contrib\hbide\projects\hbide.hbi
 */
-METHOD HbIde:loadProjectProperties( cProject )
-   LOCAL cWrkProject, n
+METHOD HbIde:loadProjectProperties( cProject, lNew, lFetch )
+   LOCAL cWrkProject
+   LOCAL n := 0
 
-   IF empty( cProject )
-      cProject := fetchAFile( ::oDlg, "Select a Harbour IDE Project", { { "IDE Projects", "*.hbi" } } )
+   DEFAULT cProject TO ""
+   DEFAULT lNew     TO .F.
+   DEFAULT lFetch   TO .T.
+
+   IF lNew
+      lFetch := .t.
    ENDIF
-   IF empty( cProject )
-      RETURN Self
-   ENDIF
-   cWrkProject := lower( cProject )  // normalized
 
-   ::aPrjProps := {}
-
-   IF !empty( ::aProjects )
-      IF ( n := ascan( ::aProjects, {|e_| e_[ 1 ] == cWrkProject } ) ) > 0
-         ::aPrjProps := ::aProjects[ n, 3 ]
+   IF !( lNew )
+      IF empty( cProject )
+         cProject := fetchAFile( ::oDlg, "Select a Harbour IDE Project", { { "Harbour IDE Projects", "*.hbi" } } )
+      ENDIF
+      IF empty( cProject )
+         RETURN Self
       ENDIF
    ENDIF
 
-   IF empty( ::aPrjProps )
-      ::aPrjProps := fetchHbiStructFromFile( cProject )
+   ::aPrjProps := {}
+
+   IF !empty( cProject )
+      cWrkProject := lower( cProject )  // normalized
+
+      IF !empty( ::aProjects )
+         IF ( n := ascan( ::aProjects, {|e_| e_[ 1 ] == cWrkProject } ) ) > 0
+            ::aPrjProps := ::aProjects[ n, 3 ]
+         ENDIF
+      ENDIF
+
+      IF empty( ::aPrjProps )
+         ::aPrjProps := fetchHbiStructFromFile( cProject )
+      ENDIF
    ENDIF
 
-   ::fetchProjectProperties( ::aPrjProps )
+   IF lFetch
+      ::cSaveTo := ""
+      ::fetchProjectProperties()
+      IF !empty( ::cSaveTo ) .and. file( ::cSaveTo )
+         cProject := ::cSaveTo
+         /* Reload from file */
+         ::aPrjProps := fetchHbiStructFromFile( cProject )
+      ENDIF
+   ENDIF
 
    IF n == 0
-      aadd( ::aProjects, { cWrkProject, cProject, aclone( ::aPrjProps ) } )
+      aadd( ::aProjects, { lower( cProject ), cProject, aclone( ::aPrjProps ) } )
    ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:fetchProjectProperties( aPrjProps )
-   LOCAL qPrpDlg, qPrjType, oPrjTtl, cSaveTo, a_, oPBOk, oPBCn, pPrpDlg, oTabWidget
+METHOD HbIde:fetchProjectProperties()
+   LOCAL qPrpDlg, qPrjType, oPrjTtl, oPBOk, oPBCn, pPrpDlg, oTabWidget
    LOCAL oPrjLoc, oPrjWrk, oPrjDst, oPrjOut, oPrjInc, oPrjLau, oPrjLEx, oPrjSrc, oPrjMta, oPrjHbp
-   LOCAL lSave   := .f.
-   LOCAL txt_    := {}
-   LOCAL typ_    := { "Executable", "Lib", "Dll" }
-   LOCAL cPrjLoc := hb_dirBase() + "projects"
+   LOCAL cPrjLoc   := hb_dirBase() + "projects"
+   LOCAL aPrjProps := ::aPrjProps
 
    IF !empty( qPrpDlg := ::loadUI( "projectproperties" ) )
       pPrpDlg := QT_PTROF( qPrpDlg )
@@ -1460,13 +1486,15 @@ METHOD HbIde:fetchProjectProperties( aPrjProps )
       oPrjMta := QTextEdit():configure( Qt_FindChild( pPrpDlg, "editMetaData"     ) )
       oPrjHbp := QTextEdit():configure( Qt_FindChild( pPrpDlg, "editHbp"          ) )
 
+      ::aPrpObjs := { qPrjType, oPrjTtl, oPrjLoc, oPrjWrk, oPrjDst, oPrjOut, oPrjLau, oPrjLEx, oPrjInc, oPrjSrc, oPrjMta, oPrjHbp }
+
       oPBOk := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( pPrpDlg, "buttonOk" ) )
-      oPBOk:activate := {|| lSave := .t., qPrpDlg:close() }
+      oPBOk:activate := {|| ::saveProject(), qPrpDlg:close() }
       oPBCn := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( pPrpDlg, "buttonCn" ) )
-      oPBCn:activate := {|| lSave := .f., qPrpDlg:close() }
+      oPBCn:activate := {|| qPrpDlg:close() }
 
       oTabWidget := QTabWidget():configure( Qt_FindChild( pPrpDlg, "tabWidget" ) )
-      Qt_Connect_Signal( QT_PTROF( oTabWidget ), "currentChanged(int)", {|o,p| ::updateHbp( p, oPrjHbp, o ) } )
+      Qt_Connect_Signal( QT_PTROF( oTabWidget ), "currentChanged(int)", {|o,p| ::updateHbp( p, o ) } )
 
       IF empty( aPrjProps )
          oPrjTtl:setText( "untitled"   )
@@ -1474,6 +1502,7 @@ METHOD HbIde:fetchProjectProperties( aPrjProps )
          oPrjWrk:setText( hb_dirBase() )
          oPrjDst:setText( cPrjLoc      )
          oPrjOut:setText( "untitled"   )
+
       ELSE
          oPrjTtl:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_TITLE     ] )
          oPrjLoc:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_LOCATION  ] )
@@ -1488,55 +1517,97 @@ METHOD HbIde:fetchProjectProperties( aPrjProps )
       ENDIF
 
       qPrpDlg:exec()
-
-      IF lSave
-         cSaveTo := ParseWithMetaData( oPrjLoc:text(), aPrjProps[ PRJ_PRP_METADATA, 2 ] ) + ;
-                          hb_OsPathSeparator() + ;
-                    ParseWithMetaData( oPrjOut:text(), aPrjProps[ PRJ_PRP_METADATA, 2 ] ) + ;
-                          ".hbi"
-
-         HBXBP_DEBUG( lSave, cSaveTo )
-
-         aadd( txt_, "[ PROPERTIES ]" )
-         aadd( txt_, "Type              = " + typ_[ qPrjType:currentIndex()+1 ] )
-         aadd( txt_, "Title             = " + oPrjTtl:text() )
-         aadd( txt_, "Location          = " + oPrjLoc:text() )
-         aadd( txt_, "WorkingFolder     = " + oPrjWrk:text() )
-         aadd( txt_, "DestinationFolder = " + oPrjDst:text() )
-         aadd( txt_, "Output            = " + oPrjOut:text() )
-         aadd( txt_, "LaunchParams      = " + oPrjLau:text() )
-         aadd( txt_, "LaunchProgram     = " + oPrjLEx:text() )
-         aadd( txt_, " " )
-         //
-         aadd( txt_, "[ FLAGS ]" )
-         a_:= hb_atokens( oPrjInc:toPlainText(), _EOL ); aeval( a_, {|e| aadd( txt_, e ) } )
-         aadd( txt_, " " )
-         //
-         aadd( txt_, "[ SOURCES ]" )
-         a_:= hb_atokens( oPrjSrc:toPlainText(), _EOL ); aeval( a_, {|e| aadd( txt_, e ) } )
-         aadd( txt_, " " )
-         //
-         aadd( txt_, "[ METADATA ]" )
-         a_:= hb_atokens( oPrjMta:toPlainText(), _EOL ); aeval( a_, {|e| aadd( txt_, e ) } )
-         aadd( txt_, " " )
-
-         CreateTarget( cSaveTo, txt_ )
-      ENDIF
    ENDIF
 
-   JustACall( oPrjTtl, oPrjLoc, oPrjWrk, oPrjDst, oPrjOut, oPrjInc, oPrjLau, oPrjLEx, oPrjSrc, oPrjMta )
+   ::aPrpObjs := {}
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:updateHbp( iIndex, oPrjHbp )
+METHOD HbIde:updateHbp( iIndex )
+   LOCAL a_, a4_1, o_, txt_, s
 
-   IF iIndex == 3
-      oPrjHbp:setPlainText( "Hurray, we are here!" )
+   IF iIndex != 3
+      RETURN nil
    ENDIF
+   IF empty( o_:= ::aPrpObjs )
+      RETURN nil
+   ENDIF
+
+   a_:= hb_atokens( o_[ E_oPrjMta ]:toPlainText(), _EOL )
+   a4_1 := SetupMetaKeys( a_ )
+
+   txt_:= {}
+   aadd( txt_, "# " )
+   aadd( txt_, "# HBMK2 Project File" )
+   aadd( txt_, "# " )
+   aadd( txt_, "# " + ParseWithMetaData( o_[ E_oPrjWrk ]:text(), a4_1 ) + s_pathSep + ;
+                      ParseWithMetaData( o_[ E_oPrjOut ]:text(), a4_1 ) + ".hbp" )
+   aadd( txt_, " " )
+   a_:= hb_atokens( o_[ E_oPrjInc ]:toPlainText(), _EOL )
+   aeval( a_, {|e| aadd( txt_, ParseWithMetaData( e, a4_1 ) ) } )
+   aadd( txt_, " " )
+
+   a_:= hb_atokens( o_[ E_oPrjSrc ]:toPlainText(), _EOL )
+   FOR EACH s IN a_
+      s := alltrim( s )
+      IF !( "#" == left( s,1 ) )
+         s := ParseWithMetaData( s, a4_1 )
+      ENDIF
+      aadd( txt_, s )
+   NEXT
+   aadd( txt_, " " )
+
+
+   /* Final assault */
+   ::aPrpObjs[ E_oPrjHbp ]:setPlainText( ArrayToMemo( txt_ ) )
 
    RETURN nil
 
 /*----------------------------------------------------------------------*/
 
+METHOD HbIde:saveProject()
+   LOCAL txt_, a_, a4_1, o_
+   LOCAL typ_:= { "Executable", "Lib", "Dll" }
+
+   IF empty( o_:= ::aPrpObjs )
+      RETURN nil
+   ENDIF
+
+   txt_:= {}
+
+   aadd( txt_, "[ PROPERTIES ]" )
+   aadd( txt_, "Type              = " + typ_[ o_[ E_qPrjType ]:currentIndex()+1 ] )
+   aadd( txt_, "Title             = " + o_[ E_oPrjTtl ]:text() )
+   aadd( txt_, "Location          = " + o_[ E_oPrjLoc ]:text() )
+   aadd( txt_, "WorkingFolder     = " + o_[ E_oPrjWrk ]:text() )
+   aadd( txt_, "DestinationFolder = " + o_[ E_oPrjDst ]:text() )
+   aadd( txt_, "Output            = " + o_[ E_oPrjOut ]:text() )
+   aadd( txt_, "LaunchParams      = " + o_[ E_oPrjLau ]:text() )
+   aadd( txt_, "LaunchProgram     = " + o_[ E_oPrjLEx ]:text() )
+   aadd( txt_, " " )
+
+   aadd( txt_, "[ FLAGS ]" )
+   a_:= hb_atokens( o_[ E_oPrjInc ]:toPlainText(), _EOL ); aeval( a_, {|e| aadd( txt_, e ) } )
+   aadd( txt_, " " )
+   aadd( txt_, "[ SOURCES ]" )
+   a_:= hb_atokens( o_[ E_oPrjSrc ]:toPlainText(), _EOL ); aeval( a_, {|e| aadd( txt_, e ) } )
+   aadd( txt_, " " )
+   aadd( txt_, "[ METADATA ]" )
+   a_:= hb_atokens( o_[ E_oPrjMta ]:toPlainText(), _EOL ); aeval( a_, {|e| aadd( txt_, e ) } )
+   aadd( txt_, " " )
+
+   /* Setup Meta Keys */
+   a4_1 := SetupMetaKeys( a_ )
+
+   ::cSaveTo := ParseWithMetaData( o_[ E_oPrjLoc ]:text(), a4_1 ) + ;
+                      hb_OsPathSeparator() + ;
+                ParseWithMetaData( o_[ E_oPrjOut ]:text(), a4_1 ) + ;
+                      ".hbi"
+
+   CreateTarget( ::cSaveTo, txt_ )
+
+   RETURN Nil
+
+/*----------------------------------------------------------------------*/

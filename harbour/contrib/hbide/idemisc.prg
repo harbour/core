@@ -216,7 +216,7 @@ FUNCTION FetchHbiStructFromFile( cProject )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION PullHbiStruct( a_ )
-   LOCAL n, s, nPart, cKey, cVal
+   LOCAL n, s, nPart, cKey, cVal, ss
    LOCAL aPrp := { "Type", "Title", "Location", "WorkingFolder", "DestinationFolder", ;
                                             "Output", "LaunchParams", "LaunchProgram" }
 
@@ -230,8 +230,9 @@ STATIC FUNCTION PullHbiStruct( a_ )
    local a4_1 := {}
 
    IF .t.
-      FOR EACH s IN a_
-         s := alltrim( s )
+      FOR EACH ss IN a_
+         s := alltrim( ss )
+
          IF .t.
             DO CASE
             CASE s == "[ PROPERTIES ]"
@@ -260,10 +261,12 @@ STATIC FUNCTION PullHbiStruct( a_ )
 
                CASE nPart == PRJ_PRP_METADATA
                   aadd( a4_0, s )
-                  IF ( n := at( "=", s ) ) > 0
-                     cKey := alltrim( substr( s, 1, n-1 ) )
-                     cVal := EvalAsString( alltrim( substr( s, n+1 ) ) )
-                     aadd( a4_1, { "<"+ cKey +">", cVal } )
+                  IF !( "#" == left( s,1 ) )
+                     IF ( n := at( "=", s ) ) > 0
+                        cKey := alltrim( substr( s, 1, n-1 ) )
+                        cVal := EvalAsString( alltrim( substr( s, n+1 ) ) )
+                        aadd( a4_1, { "<"+ cKey +">", cVal } )
+                     ENDIF
                   ENDIF
                ENDCASE
             ENDCASE
@@ -297,6 +300,24 @@ STATIC FUNCTION PullHbiStruct( a_ )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION SetupMetaKeys( a_ )
+   LOCAL s, n, cKey, cVal
+   LOCAL a4_1 := {}
+
+   FOR EACH s IN a_
+      IF !( "#" == left( s,1 ) )
+         IF ( n := at( "=", s ) ) > 0
+            cKey := alltrim( substr( s, 1, n-1 ) )
+            cVal := EvalAsString( alltrim( substr( s, n+1 ) ) )
+            aadd( a4_1, { "<"+ cKey +">", cVal } )
+         ENDIF
+      ENDIF
+   NEXT
+
+   RETURN a4_1
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION ApplyMetaData( s, a_ )
    LOCAL k
 
@@ -326,8 +347,9 @@ FUNCTION ParseWithMetaData( s, a_ )
 FUNCTION ArrayToMemo( a_ )
    LOCAL s := ""
 
-   aeval( a_, {|e| s += e + CRLF } )
+   aeval( a_, {|e, i| s += e + CRLF } )
 
    RETURN s
 
 /*----------------------------------------------------------------------*/
+

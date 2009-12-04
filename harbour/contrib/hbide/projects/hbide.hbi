@@ -1,0 +1,48 @@
+[ PROPERTIES ]
+Type              = Executable
+Title             = Harbour-Qt IDE
+Location          = <IdeSrc>projects
+WorkingFolder     = <IdeSrc>
+DestinationFolder = <IdeSrc>projects
+Output            = hbide
+LaunchParams      = 
+LaunchProgram     = 
+ 
+[ FLAGS ]
+-w3
+-es2
+-lhbwin
+-Lc:<{/}>qt<{/}>2009.01<{/}>qt<{/}>lib
+ 
+[ SOURCES ]
+#  "Not Equal To == #" is a comment line as is accepted in .hbp
+#  So you can exploit this feature to visualize project source files
+#  in a graspable way.
+#
+#  .PRG Sources
+#
+<IdeSrc>hbide.prg
+<IdeSrc>ideactions.prg
+<IdeSrc>idemisc.prg
+<IdeSrc>ideparseexpr.prg
+<IdeSrc>idestylesheets.prg
+<IdeSrc>idetags.prg
+
+<IdeSrc>hbide.ch
+
+<IdeSrc>freadlin.c
+
+#  Here and there
+#
+<IdeSrc>hbide.ini
+
+[ METADATA ]
+#  Meta Key/Value pair accepts any valid Harbour defined
+#  function call returning a string value, thus making meta-data
+#  protocol extremely powerful. In case of any error in evaluating
+#  value expression will return itself as string value.
+#  So    <SomeKey = "SomeValue" > OR <SomeKey = SomeValue>
+#  will  return the same string as <SomeValue>
+#
+IdeSrc  =  hb_dirBase()
+{/} = hb_osPathSeparator()

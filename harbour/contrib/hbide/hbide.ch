@@ -92,6 +92,20 @@
 
 #define PRJ_PRP_PRP_VRBLS                         8
 
+/* Project Properties array elements */
+#define E_qPrjType                                1
+#define E_oPrjTtl                                 2
+#define E_oPrjLoc                                 3
+#define E_oPrjWrk                                 4
+#define E_oPrjDst                                 5
+#define E_oPrjOut                                 6
+#define E_oPrjLau                                 7
+#define E_oPrjLEx                                 8
+#define E_oPrjInc                                 9
+#define E_oPrjSrc                                10
+#define E_oPrjMta                                11
+#define E_oPrjHbp                                12
+
 
 
 #endif
