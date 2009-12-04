@@ -14,15 +14,12 @@ CC := xcc.exe
 CC_IN := -c
 CC_OUT := -Fo
 
-CFLAGS := -I. -I$(TOP). -I$(TOP).. -I$(HB_INC_COMPILE)
+CFLAGS += -I. -I$(HB_INC_COMPILE) -I$(TOP). -I$(TOP)..
 ifeq ($(HB_SHELL),sh)
    CFLAGS := $(subst /,\\,$(CFLAGS))
 else
    CFLAGS := $(subst /,\,$(CFLAGS))
 endif
-ARFLAGS :=
-LDFLAGS :=
-DFLAGS :=
 
 CFLAGS += -MT
 

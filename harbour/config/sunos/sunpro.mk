@@ -27,10 +27,7 @@ CC_OUT := -o$(subst x,x, )
 
 CXX := $(HB_CCACHE) $(HB_CCPATH)$(HB_CCPREFIX)sunCC$(HB_CCPOSTFIX)
 
-CFLAGS := -I. -I$(HB_INC_COMPILE)
-ARFLAGS :=
-LDFLAGS :=
-DFLAGS :=
+CFLAGS += -I. -I$(HB_INC_COMPILE)
 
 # try to keep `-fast' as left as possible, as later optim
 # flags may override values set by `-fast', and this way

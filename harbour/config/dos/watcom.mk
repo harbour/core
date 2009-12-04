@@ -21,10 +21,8 @@ endif
 CC_IN :=
 CC_OUT := -fo=
 
-CFLAGS := -zq -bt=dos
-ARFLAGS :=
-LDFLAGS := OP quiet
-DFLAGS :=
+CFLAGS += -zq -bt=dos
+LDFLAGS += OP quiet
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -w3

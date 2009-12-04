@@ -14,10 +14,9 @@ CC := pocc.exe
 CC_IN := -c
 CC_OUT := -Fo
 
-CFLAGS := -I. -I$(HB_INC_COMPILE) -Ze -Go -MT
-ARFLAGS :=
-LDFLAGS :=
-DFLAGS :=
+CFLAGS += -I. -I$(HB_INC_COMPILE)
+
+CFLAGS += -Ze -Go -MT
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W1

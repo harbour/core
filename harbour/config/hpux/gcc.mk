@@ -18,10 +18,11 @@ CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 CC_IN := -c
 CC_OUT := -o
 
-CFLAGS := -I. -I$(HB_INC_COMPILE)
-ARFLAGS :=
-LDFLAGS :=
-DFLAGS :=
+CFLAGS += -I. -I$(HB_INC_COMPILE)
+
+# uncomment this if you want to force creating 64bit binaries on IA64
+#CFLAGS += -mlp64
+#LDFLAGS += -mlp64
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -Wall -W
@@ -30,10 +31,6 @@ endif
 ifneq ($(HB_BUILD_OPTIM),no)
    CFLAGS += -O3
 endif
-
-# uncomment this if you want to force creating 64bit binaries on IA64
-#CFLAGS += -mlp64
-#LDFLAGS += -mlp64
 
 ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g

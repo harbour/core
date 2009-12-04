@@ -15,10 +15,9 @@ CC := icl.exe
 CC_IN := -c
 CC_OUT := -Fo
 
-CFLAGS := -nologo -I. -I$(HB_INC_COMPILE) -Gs
-ARFLAGS :=
-LDFLAGS :=
-DFLAGS :=
+CFLAGS += -I. -I$(HB_INC_COMPILE)
+
+CFLAGS += -nologo -Gs
 
 ifeq ($(HB_BUILD_MODE),c)
    CFLAGS += -TC
