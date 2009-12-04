@@ -120,8 +120,6 @@ endef
 
 define check_host_cpu
 
-   # TODO: Please fix/extend
-
    ifneq ($(findstring ppc64,$(1)),)
       HB_HOST_CPU := ppc64
    else ifneq ($(findstring ppc,$(1)),)
@@ -454,12 +452,10 @@ ifeq ($(HB_HOST_PLAT),win)
    else
       HB_HOST_CPU := x86
    endif
+else ifneq ($(filter $(HB_HOST_PLAT),dos os2),)
+   HB_HOST_CPU := x86
 else
-   ifneq ($(filter $(HB_HOST_PLAT),dos os2),)
-      HB_HOST_CPU := x86
-   else
-      $(eval $(call check_host_cpu,$(shell uname -m),))
-   endif
+   $(eval $(call check_host_cpu,$(shell uname -m),))
 endif
 
 ifeq ($(HB_INIT_DONE),)
@@ -983,24 +979,20 @@ ifeq ($(HB_PLATFORM),win)
    else
       HB_CPU := x86
    endif
-else
-   ifeq ($(HB_PLATFORM),wce)
-      ifneq ($(filter $(HB_COMPILER),msvcarm mingwarm poccarm),)
-         HB_CPU := arm
-      else ifneq ($(filter $(HB_COMPILER),msvcmips),)
-         HB_CPU := mips
-      else ifneq ($(filter $(HB_COMPILER),msvcsh),)
-         HB_CPU := sh
-      else
-         HB_CPU := x86
-      endif
+else ifeq ($(HB_PLATFORM),wce)
+   ifneq ($(filter $(HB_COMPILER),msvcarm mingwarm poccarm),)
+      HB_CPU := arm
+   else ifneq ($(filter $(HB_COMPILER),msvcmips),)
+      HB_CPU := mips
+   else ifneq ($(filter $(HB_COMPILER),msvcsh),)
+      HB_CPU := sh
    else
-      ifneq ($(filter $(HB_PLATFORM),dos os2),)
-         HB_CPU := x86
-      else
-         HB_CPU := $(HB_HOST_CPU)
-      endif
+      HB_CPU := x86
    endif
+else ifneq ($(filter $(HB_PLATFORM),dos os2),)
+   HB_CPU := x86
+else
+   HB_CPU := $(HB_HOST_CPU)
 endif
 
 ifeq ($(HB_INIT_DONE),)
