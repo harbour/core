@@ -58,7 +58,7 @@
 
 HB_FUNC( CAIRO_IMAGE_SURFACE_CREATE )
 {
-   hb_cairo_surface_ret( cairo_image_surface_create( hb_parni( 1 ), hb_parnd( 2 ), hb_parnd( 3 ) ) );
+   hb_cairo_surface_ret( cairo_image_surface_create( ( cairo_format_t ) hb_parni( 1 ), hb_parnd( 2 ), hb_parnd( 3 ) ) );
 }
 
 #endif /* CAIRO_HAS_IMAGE_SURFACE */

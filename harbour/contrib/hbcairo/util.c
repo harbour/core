@@ -56,7 +56,7 @@
 
 HB_FUNC( CAIRO_STATUS_TO_STRING )
 {
-   hb_retc( cairo_status_to_string( hb_parni( 1 ) ) );
+   hb_retc( cairo_status_to_string( ( cairo_status_t ) hb_parni( 1 ) ) );
 }
 
 

@@ -238,7 +238,7 @@ HB_FUNC( CAIRO_SET_FILL_RULE )
 {
    cairo_t *  pCairo = hb_cairo_param( 1 );
    if( pCairo )
-      cairo_set_fill_rule( pCairo, hb_parni( 2 ) );
+      cairo_set_fill_rule( pCairo, ( cairo_fill_rule_t ) hb_parni( 2 ) );
 }
 
 
@@ -246,7 +246,7 @@ HB_FUNC( CAIRO_SET_LINE_CAP )
 {
    cairo_t *  pCairo = hb_cairo_param( 1 );
    if( pCairo )
-      cairo_set_line_cap( pCairo, hb_parni( 2 ) );
+      cairo_set_line_cap( pCairo, ( cairo_line_cap_t ) hb_parni( 2 ) );
 }
 
 
@@ -254,7 +254,7 @@ HB_FUNC( CAIRO_SET_LINE_JOIN )
 {
    cairo_t *  pCairo = hb_cairo_param( 1 );
    if( pCairo )
-      cairo_set_line_join( pCairo, hb_parni( 2 ) );
+      cairo_set_line_join( pCairo, ( cairo_line_join_t ) hb_parni( 2 ) );
 }
 
 
@@ -278,7 +278,7 @@ HB_FUNC( CAIRO_SET_OPERATOR )
 {
    cairo_t *  pCairo = hb_cairo_param( 1 );
    if( pCairo )
-      cairo_set_operator( pCairo, hb_parni( 2 ) );
+      cairo_set_operator( pCairo, ( cairo_operator_t ) hb_parni( 2 ) );
 }
 
 
