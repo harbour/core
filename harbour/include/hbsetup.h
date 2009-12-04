@@ -172,7 +172,7 @@
    Visual C++, 32-bit, version 4.0         1000
    Visual C++, 32-bit, version 5.0         1100
    Visual C++, 32-bit, version 6.0         1200
-   Visual Studio .NET, version 7.0         1300
+   Visual Studio .NET (2002), version 7.0  1300
    Visual Studio .NET 2003, version 7.1    1310
    Visual Studio 2005, version 8.0         1400
    Visual Studio 2008, version 9.0         1500

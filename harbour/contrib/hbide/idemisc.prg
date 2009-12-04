@@ -347,9 +347,8 @@ FUNCTION ParseWithMetaData( s, a_ )
 FUNCTION ArrayToMemo( a_ )
    LOCAL s := ""
 
-   aeval( a_, {|e, i| s += e + CRLF } )
+   aeval( a_, {|e| s += e + CRLF } )
 
    RETURN s
 
 /*----------------------------------------------------------------------*/
-
