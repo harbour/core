@@ -74,11 +74,7 @@
 #include "set.ch"
 #include "hbclass.ch"
 
-#ifdef __HARBOUR__
-   #define UNU( x ) HB_SYMBOL_UNUSED( x )
-#else
-   #define UNU( x ) ( x := x )
-#endif
+#define UNU( x ) HB_SYMBOL_UNUSED( x )
 
 /*----------------------------------------------------------------------*/
 
@@ -394,9 +390,9 @@ METHOD HbIde:saveConfig()
    txt_:= {}
    aadd( txt_, "[HBIDE]" )
    aadd( txt_, "MainWindowGeometry     = " + PosAndSize( ::oDlg:oWidget )           )
-   aadd( txt_, "ProjectTreeVisible     = " + IF( ::lProjTreeVisible, "YES", "NO" )  )
+   aadd( txt_, "ProjectTreeVisible     = " + IIF( ::lProjTreeVisible, "YES", "NO" ) )
    aadd( txt_, "ProjectTreeGeometry    = " + PosAndSize( ::oProjTree:oWidget )      )
-   aadd( txt_, "FunctionListVisible    = " + IF( ::lDockRVisible, "YES", "NO" )     )
+   aadd( txt_, "FunctionListVisible    = " + IIF( ::lDockRVisible, "YES", "NO" )    )
    aadd( txt_, "FunctionListGeometry   = " + PosAndSize( ::oFuncList:oWidget )      )
    aadd( txt_, "RecentTabIndex         = " + hb_ntos( ::qTabWidget:currentIndex() ) )
    aadd( txt_, "CurrentProject         = " + ""                                     )
@@ -534,7 +530,7 @@ METHOD HbIde:convertSelection( cKey )
             nLen := len( cBuffer )
             FOR i := 1 TO nLen
                c := substr( cBuffer, i, 1 )
-               s += IF( isUpper( c ), lower( c ), upper( c ) )
+               s += IIF( isUpper( c ), lower( c ), upper( c ) )
             NEXT
             cBuffer := s
          ENDCASE
@@ -597,7 +593,7 @@ METHOD HbIde:setTabImage( oTab, qEdit, nPos, lFirst, qDocument )
 
    ::qTabWidget:setTabIcon( nIndex, s_resPath + iif( lModified, "tabmodified.png", "tabunmodified.png" ) )
 
-   ::oSBar:getItem( 7 ):caption := IF( lModified, "Modified", " " )
+   ::oSBar:getItem( 7 ):caption := IIF( lModified, "Modified", " " )
 
    IF lFirst
       lFirst := .f.
@@ -922,9 +918,9 @@ METHOD HbIde:dispEditInfo()
 
       ::oSBar:getItem( 4 ):caption := "Col " + hb_ntos( ::qCursor:columnNumber()+1 )
 
-      ::oSBar:getItem( 5 ):caption := IF( qEdit:overwriteMode(), " ", "Ins" )
+      ::oSBar:getItem( 5 ):caption := IIF( qEdit:overwriteMode(), " ", "Ins" )
 
-      ::oSBar:getItem( 7 ):caption := IF( qDoc:isModified(), "Modified", " " )
+      ::oSBar:getItem( 7 ):caption := IIF( qDoc:isModified(), "Modified", " " )
 
       ::oSBar:getItem( 9  ):caption := "Stream"
       ::oSBar:getItem( 10 ):caption := "Edit"

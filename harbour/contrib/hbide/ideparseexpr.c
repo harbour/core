@@ -83,7 +83,7 @@ static int s_lendouble   = HB_SIZEOFARRAY( s_adouble );
 
 /*----------------------------------------------------------------------*/
 
-static HB_SIZE linearfind( const char** array, const char* cText, HB_SIZE lenarray, HB_SIZE lentext, HB_BOOL bMatchCase )
+static HB_SIZE linearfind( const char ** array, const char * cText, HB_SIZE lenarray, HB_SIZE lentext, HB_BOOL bMatchCase )
 {
    HB_SIZE i;
 
@@ -159,8 +159,8 @@ static int _GetWord( const char * cText, HB_BOOL lHonorSpacing, char * cWord, in
       char   csingle[ 2 ];
       char   cdouble[ 3 ];
 
-      csingle[ 1 ] = 0;
-      cdouble[ 2 ] = 0;
+      csingle[ 1 ] = '\0';
+      cdouble[ 2 ] = '\0';
 
       ch = cText[ 0 ];
 
@@ -181,7 +181,7 @@ static int _GetWord( const char * cText, HB_BOOL lHonorSpacing, char * cWord, in
             {
                ch = cText[ npos ];
                cWord[ wordlen++ ] = ch;
-               npos ++;
+               npos++;
             }
          }
          else
@@ -203,7 +203,7 @@ static int _GetWord( const char * cText, HB_BOOL lHonorSpacing, char * cWord, in
                while( ( npos < maxlen ) && ch == ' ' )
                {
                   cWord[ wordlen++ ] = ch;
-                  npos ++;
+                  npos++;
                   ch = cText[ npos ];
                }
 
@@ -216,7 +216,7 @@ static int _GetWord( const char * cText, HB_BOOL lHonorSpacing, char * cWord, in
             else  /* operators, punctuation */
             {
                cWord[ wordlen++ ]= ch;
-               npos ++;
+               npos++;
                ch = cText[ npos ];
                if( maxlen > npos )
                {
@@ -225,7 +225,7 @@ static int _GetWord( const char * cText, HB_BOOL lHonorSpacing, char * cWord, in
                   if( linearfind( s_adouble, cdouble, s_lendouble, 2, HB_TRUE ) )  /* if( (cWord + ch) $ s_adouble) //aScan( s_adouble, cWord + ch ) > 0 */
                   {
                      cWord[ wordlen++ ] = ch;
-                     npos ++;
+                     npos++;
                   }
                }
             }
@@ -233,7 +233,7 @@ static int _GetWord( const char * cText, HB_BOOL lHonorSpacing, char * cWord, in
       }
    }
 
-   cWord[ wordlen ] = 0;
+   cWord[ wordlen ] = '\0';
    *pnpos = npos;
 
    return wordlen;
@@ -262,7 +262,7 @@ HB_FUNC( PARSEXPR )
 
    char NextWord[ MAX_LINE_LEN + 1 ];
 
-   NextWord[ 0 ] = 0;
+   NextWord[ 0 ] = '\0';
 
    while( ( wordlen = _GetWord( c, lHonorSpacing, NextWord, &lenprocessed ) ) != 0  )
    {
@@ -297,7 +297,7 @@ HB_FUNC( PARSEXPR )
             if( lKeepComments )
             {
                strncpy( NextWord + wordlen, c, npos + 1 );
-               NextWord[ wordlen + npos + 1 ] = 0;
+               NextWord[ wordlen + npos + 1 ] = '\0';
                lenwords++;
                hb_arrayAdd( aExpr, hb_itemPutC( element, NextWord ) );
             }

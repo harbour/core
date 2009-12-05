@@ -69,54 +69,49 @@
 /*----------------------------------------------------------------------*/
 
 FUNCTION GetStyleSheet( cWidget )
-   LOCAL s, txt_:={}
 
    DO CASE
    CASE cWidget == "QListView"
-      aadd( txt_, "                                                                        " )
-      aadd( txt_, " QListView {                                                            " )
-      aadd( txt_, "     alternate-background-color: yellow;                                " )
-      aadd( txt_, " }                                                                      " )
-      aadd( txt_, "                                                                        " )
-      aadd( txt_, " QListView {                                                            " )
-      aadd( txt_, "     show-decoration-selected: 1;                                       " )
-      aadd( txt_, " }                                                                      " )
-      aadd( txt_, "                                                                        " )
-      aadd( txt_, " QListView::item:alternate {                                            " )
-      aadd( txt_, "     background: #EEEEEE;                                               " )
-      aadd( txt_, " }                                                                      " )
-      aadd( txt_, "                                                                        " )
-      aadd( txt_, " QListView::item:selected {                                             " )
-      aadd( txt_, "     border: 1px solid #6a6ea9;                                         " )
-      aadd( txt_, " }                                                                      " )
-      aadd( txt_, "                                                                        " )
-      aadd( txt_, " QListView::item:selected:!active {                                     " )
-      aadd( txt_, "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,            " )
-      aadd( txt_, "                                 stop: 0 #ABAFE5, stop: 1 #8588B2);     " )
-      aadd( txt_, " }                                                                      " )
-      aadd( txt_, "                                                                        " )
-      aadd( txt_, " QListView::item:selected:active {                                      " )
-      aadd( txt_, "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,            " )
-      aadd( txt_, "                                 stop: 0 #6a6ea9, stop: 1 #888dd9);     " )
-      aadd( txt_, " }                                                                      " )
-      aadd( txt_, "                                                                        " )
-      aadd( txt_, " QListView::item:hover {                                                " )
-      aadd( txt_, "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,            " )
-      aadd( txt_, "                                 stop: 0 #FAFBFE, stop: 1 #DCDEF1);     " )
-      aadd( txt_, "}                                                                       " )
-      aadd( txt_, "                                                                        " )
-      aadd( txt_, " QListView {                                                            " )
-      aadd( txt_, "     background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,            " )
-      aadd( txt_, "                                 stop: 0 #8588B2, stop: 1 #DCDEF1);     " )
-      aadd( txt_, "}                                                                       " )
-      aadd( txt_, "                                                                        " )
+
+      RETURN ""                                                                       +;
+             " QListView {"                                                           +;
+             "     alternate-background-color: yellow;"                               +;
+             " }"                                                                     +;
+             ""                                                                       +;
+             " QListView {"                                                           +;
+             "     show-decoration-selected: 1;"                                      +;
+             " }"                                                                     +;
+             ""                                                                       +;
+             " QListView::item:alternate {"                                           +;
+             "     background: #EEEEEE;"                                              +;
+             " }"                                                                     +;
+             ""                                                                       +;
+             " QListView::item:selected {"                                            +;
+             "     border: 1px solid #6a6ea9;"                                        +;
+             " }"                                                                     +;
+             ""                                                                       +;
+             " QListView::item:selected:!active {"                                    +;
+             "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"           +;
+             "                                 stop: 0 #ABAFE5, stop: 1 #8588B2);"    +;
+             " }"                                                                     +;
+             ""                                                                       +;
+             " QListView::item:selected:active {"                                     +;
+             "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"           +;
+             "                                 stop: 0 #6a6ea9, stop: 1 #888dd9);"    +;
+             " }"                                                                     +;
+             ""                                                                       +;
+             " QListView::item:hover {"                                               +;
+             "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"           +;
+             "                                 stop: 0 #FAFBFE, stop: 1 #DCDEF1);"    +;
+             "}"                                                                      +;
+             ""                                                                       +;
+             " QListView {"                                                           +;
+             "     background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,"           +;
+             "                                 stop: 0 #8588B2, stop: 1 #DCDEF1);"    +;
+             "}"
 
    ENDCASE
 
-   s := ""
-   aeval( txt_, {|e| s += e + chr( 13 )+chr( 10 ) } )
-
-   RETURN s
+   RETURN ""
 
 /*----------------------------------------------------------------------*/
-
