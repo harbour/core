@@ -39,7 +39,7 @@ HARBOUR
           your setup. For the list of supported compilers, please look up
           the relevant section in this file.
       3.) You need to get GNU Make. We recommend this link:
-             http://sourceforge.net/projects/mingw/files/GNU%20Make/Current%20Release_%20mingw32-make-3.81-20080326/mingw32-make-3.81-20080326-3.tar.gz/download
+             http://sourceforge.net/projects/mingw/files/MinGW%20make/make-3.81-20090914-mingw32/make-3.81-20090914-mingw32-bin.tar.gz/download
           Unpack it to your PATH or Harbour source root directory.
           If you use MinGW compiler, you already have GNU Make.
           You can also use included copy named win-make.exe instead.
@@ -1318,9 +1318,9 @@ HARBOUR
             http://www.bzip.org/downloads.html
       GNU Make
          Windows binary + source:
-            http://sourceforge.net/projects/mingw/files/GNU%20Make/
-            http://sourceforge.net/projects/mingw/files/GNU%20Make/Current%20Release_%20mingw32-make-3.81-20080326/mingw32-make-3.81-20080326-3.tar.gz/download
-            http://sourceforge.net/projects/mingw/files/GNU%20Make/Current%20Release_%20mingw32-make-3.81-20080326/mingw32-make-3.81-20080326-src.tar.gz/download
+            http://sourceforge.net/projects/mingw/files/MinGW%20make
+            http://sourceforge.net/projects/mingw/files/MinGW%20make/make-3.81-20090914-mingw32/make-3.81-20090914-mingw32-bin.tar.gz/download
+            http://sourceforge.net/projects/mingw/files/MinGW%20make/make-3.81-20090914-mingw32/make-3.81-20090914-mingw32-src.tar.gz/download
             (included in Harbour as win-make.exe)
          MS-DOS binary + source:
             ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/
