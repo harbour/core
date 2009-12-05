@@ -1115,7 +1115,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          l_cHB_INSTALL_PREFIX := DirAddPathSep( l_cHB_INSTALL_PREFIX ) + ".." + hb_osPathSeparator()
       ENDIF
 
-      /* Detect special *nix dir layout (/bin, /lib/harbour, /include/harbour) */
+      /* Detect special *nix dir layout (/bin, /lib/harbour, /lib64/harbour, /include/harbour) */
       IF hb_FileExists( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "include" +;
                                          hb_osPathSeparator() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" ) +;
                                          hb_osPathSeparator() + "hbvm.h" )
@@ -1123,7 +1123,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             l_cHB_BIN_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "bin" )
          ENDIF
          IF Empty( l_cHB_LIB_INSTALL )
-            l_cHB_LIB_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "lib" + hb_osPathSeparator() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" ) )
+            IF hb_DirExists( tmp := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "lib64" + hb_osPathSeparator() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" ) ) )
+               l_cHB_LIB_INSTALL := tmp
+            ELSE
+               l_cHB_LIB_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "lib" + hb_osPathSeparator() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" ) )
+            ENDIF
          ENDIF
          IF Empty( l_cHB_INC_INSTALL )
             l_cHB_INC_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "include" + hb_osPathSeparator() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" ) )
