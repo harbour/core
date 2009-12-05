@@ -73,16 +73,17 @@
 
 #define MAX_LINE_LEN 2047
 
-static char * good     = "''_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.";
-static char* adouble[] = {"*/", "/*", "//", "->", "::", "||", "++", "--", "**", ":=",
-                          "<=", ">=", "<>", "!=", "==", "+=", "-=", "*=", "/=", "%=",
-                          "^=", "&&", "^^", ">>", "<<", "=>", "&=", "|=" };
-static int lengood     = 66;
-static int lendouble   = 28;
+static const char good[]      = "''_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.";
+static const char * adouble[] = { "*/", "/*", "//", "->", "::", "||", "++", "--", "**", ":=",
+                                  "<=", ">=", "<>", "!=", "==", "+=", "-=", "*=", "/=", "%=",
+                                  "^=", "&&", "^^", ">>", "<<", "=>", "&=", "|=" };
+
+static int lengood     = HB_SIZEOFARRAY( good ) - 1;
+static int lendouble   = HB_SIZEOFARRAY( adouble );
 
 /*----------------------------------------------------------------------*/
 
-UINT linearfind( char** array, char* cText, UINT lenarray, UINT lentext, int lMatchCase )
+UINT linearfind( const char** array, const char* cText, UINT lenarray, UINT lentext, int lMatchCase )
 {
    UINT i;
 
@@ -130,7 +131,7 @@ BOOL strempty( char* string )
 
 /*----------------------------------------------------------------------*/
 
-UINT atbuff( char * chars, char * string, UINT StartFrom, UINT Target, UINT len_chars, UINT len )
+UINT atbuff( const char * chars, const char * string, UINT StartFrom, UINT Target, UINT len_chars, UINT len )
 {
    UINT x ;
    UINT Counter = 0;
@@ -145,7 +146,7 @@ UINT atbuff( char * chars, char * string, UINT StartFrom, UINT Target, UINT len_
 
 /*----------------------------------------------------------------------*/
 
-static int _GetWord( char * cText, BOOL lHonorSpacing, char * cWord, int * pnpos )
+static int _GetWord( const char * cText, BOOL lHonorSpacing, char * cWord, int * pnpos )
 {
    int    maxlen     = strlen( cText );
    int    npos       = 0;
@@ -247,7 +248,7 @@ static int _GetWord( char * cText, BOOL lHonorSpacing, char * cWord, int * pnpos
  */
 HB_FUNC( PARSEXPR )
 {
-   char *   c             = ( char * ) hb_parc( 1 );
+   const char * c = hb_parcx( 1 );
    BOOL     lHonorSpacing = hb_parl( 2 );
    BOOL     lInRemark     = HB_ISLOG( 3 ) ? hb_parl( 3 ) : FALSE;
    BOOL     lKeepComments = HB_ISLOG( 5 ) ? hb_parl( 5 ) : TRUE;
@@ -261,7 +262,7 @@ HB_FUNC( PARSEXPR )
    int      wordlen          ;
    int      npos             ;
 
-   char NextWord[ MAX_LINE_LEN+1 ];
+   char NextWord[ MAX_LINE_LEN + 1 ];
 
    NextWord[ 0 ] = 0;
 
@@ -348,9 +349,8 @@ HB_FUNC( PARSEXPR )
    if( HB_ISBYREF( 3 ) )
       hb_storl( lInRemark, 3 );
 
-   hb_itemReturn( aExpr );
    hb_itemRelease( element );
-   hb_itemRelease( aExpr );
+   hb_itemReturnRelease( aExpr );
 }
 
 /*----------------------------------------------------------------------*/
