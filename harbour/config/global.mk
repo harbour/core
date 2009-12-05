@@ -481,12 +481,14 @@ ifeq ($(HB_PLATFORM),)
    endif
 endif
 
+HB_CPU :=
+
 HB_COMP_AUTO :=
 HB_COMP_PATH :=
 ifeq ($(HB_COMPILER),)
    ifneq ($(HB_HOST_PLAT),$(HB_PLATFORM))
       # cross-build section *nix -> win/wce
-      ifeq ($(filter $(HB_HOST_PLAT),dos os2),)
+      ifeq ($(filter $(HB_HOST_PLAT),win dos os2),)
          ifeq ($(HB_PLATFORM),win)
 
             ifeq ($(wildcard $(HB_CCPATH)$(HB_CCPREFIX)gcc),)
@@ -568,128 +570,129 @@ ifeq ($(HB_COMPILER),)
             else
                $(error ! Harbour build could not find mingw32 cross-compiler. Please install it, or point HB_CCPATH/HB_CCPREFIX environment variables to it)
             endif
-         else
-            ifeq ($(HB_PLATFORM),wce)
 
-               # Look for known mingw32ce compilers on HB_CCPATH if it's set
-               ifneq ($(HB_CCPATH),)
-                  ifneq ($(call find_in_path_par,arm-mingw32ce-gcc,$(HB_CCPATH)),)
+         else ifeq ($(HB_PLATFORM),wce)
+
+            # Look for known mingw32ce compilers on HB_CCPATH if it's set
+            ifneq ($(HB_CCPATH),)
+               ifneq ($(call find_in_path_par,arm-mingw32ce-gcc,$(HB_CCPATH)),)
+                  HB_COMPILER := mingwarm
+                  HB_CCPREFIX := arm-mingw32ce-
+                  HB_CCPATH := $(HB_CCPATH)/
+               else
+                  ifneq ($(call find_in_path_par,arm-wince-mingw32ce-gcc,$(HB_CCPATH)),)
                      HB_COMPILER := mingwarm
-                     HB_CCPREFIX := arm-mingw32ce-
+                     HB_CCPREFIX := arm-wince-mingw32ce-
                      HB_CCPATH := $(HB_CCPATH)/
                   else
-                     ifneq ($(call find_in_path_par,arm-wince-mingw32ce-gcc,$(HB_CCPATH)),)
-                        HB_COMPILER := mingwarm
-                        HB_CCPREFIX := arm-wince-mingw32ce-
+                     ifneq ($(call find_in_path_par,i386-mingw32ce-gcc,$(HB_CCPATH)),)
+                        HB_COMPILER := mingw
+                        HB_CCPREFIX := i386-mingw32ce-
                         HB_CCPATH := $(HB_CCPATH)/
                      else
-                        ifneq ($(call find_in_path_par,i386-mingw32ce-gcc,$(HB_CCPATH)),)
-                           HB_COMPILER := mingw
-                           HB_CCPREFIX := i386-mingw32ce-
-                           HB_CCPATH := $(HB_CCPATH)/
-                        else
-                           HB_CCPATH :=
-                           HB_CCPREFIX :=
-                        endif
+                        HB_CCPATH :=
+                        HB_CCPREFIX :=
                      endif
                   endif
                endif
+            endif
 
-               # If HB_CCPATH not set, or could not be found on the provided PATH,
-               # try to detect them in default locations
-               ifeq ($(HB_CCPATH),)
-                  HB_CCPATH := /opt/mingw32ce/bin/
-                  ifneq ($(call find_in_path_par,arm-mingw32ce-gcc,$(HB_CCPATH)),)
-                     HB_COMPILER := mingwarm
-                     HB_CCPREFIX := arm-mingw32ce-
-                  else
-                     ifneq ($(call find_in_path_par,arm-wince-mingw32ce-gcc,$(HB_CCPATH)),)
-                        HB_COMPILER := mingwarm
-                        HB_CCPREFIX := arm-wince-mingw32ce-
-                     else
-                        HB_CCPATH := /opt/x86mingw32ce/bin/
-                        ifneq ($(call find_in_path_par,i386-mingw32ce-gcc,$(HB_CCPATH)),)
-                           HB_COMPILER := mingw
-                           HB_CCPREFIX := i386-mingw32ce-
-                        else
-                           HB_CCPATH :=
-                           HB_CCPREFIX :=
-                        endif
-                     endif
-                  endif
-               endif
-
-               ifneq ($(HB_CCPATH)$(HB_CCPREFIX),)
-                  HB_COMP_PATH := $(dir $(HB_CCPATH))
-                  HB_PLATFORM := wce
-                  ifeq ($(HB_TOOLS_PREF),)
-                     export HB_TOOLS_PREF := hbce
-                  endif
-                  export HB_BUILD_EXTDEF := no
-                  ifneq ($(HB_BUILD_PARTS),all)
-                     HB_BUILD_PARTS := lib
-                  endif
+            # If HB_CCPATH not set, or could not be found on the provided PATH,
+            # try to detect them in default locations
+            ifeq ($(HB_CCPATH),)
+               HB_CCPATH := /opt/mingw32ce/bin/
+               ifneq ($(call find_in_path_par,arm-mingw32ce-gcc,$(HB_CCPATH)),)
+                  HB_COMPILER := mingwarm
+                  HB_CCPREFIX := arm-mingw32ce-
                else
-                  $(error ! Harbour build could not find cegcc cross-compiler. Please install it to /opt/mingw32ce, or point HB_CCPATH/HB_CCPREFIX environment variables to it)
+                  ifneq ($(call find_in_path_par,arm-wince-mingw32ce-gcc,$(HB_CCPATH)),)
+                     HB_COMPILER := mingwarm
+                     HB_CCPREFIX := arm-wince-mingw32ce-
+                  else
+                     HB_CCPATH := /opt/x86mingw32ce/bin/
+                     ifneq ($(call find_in_path_par,i386-mingw32ce-gcc,$(HB_CCPATH)),)
+                        HB_COMPILER := mingw
+                        HB_CCPREFIX := i386-mingw32ce-
+                     else
+                        HB_CCPATH :=
+                        HB_CCPREFIX :=
+                     endif
+                  endif
+               endif
+            endif
+
+            ifneq ($(HB_CCPATH)$(HB_CCPREFIX),)
+               HB_COMP_PATH := $(dir $(HB_CCPATH))
+               HB_PLATFORM := wce
+               ifeq ($(HB_TOOLS_PREF),)
+                  export HB_TOOLS_PREF := hbce
+               endif
+               export HB_BUILD_EXTDEF := no
+               ifneq ($(HB_BUILD_PARTS),all)
+                  HB_BUILD_PARTS := lib
                endif
             else
-               ifeq ($(HB_PLATFORM),dos)
-                  # Look for djgpp compiler on HB_CCPATH if it's set
-                  ifneq ($(HB_CCPATH),)
-                     ifneq ($(call find_in_path_par,i586-pc-msdosdjgpp-gcc,$(HB_CCPATH)),)
-                        HB_COMPILER := djgpp
-                        HB_CCPREFIX := i586-pc-msdosdjgpp-
-                        HB_CCPATH := $(HB_CCPATH)/
-                     else
-                        HB_CCPATH :=
-                        HB_CCPREFIX :=
-                     endif
-                  endif
+               $(error ! Harbour build could not find cegcc cross-compiler. Please install it to /opt/mingw32ce, or point HB_CCPATH/HB_CCPREFIX environment variables to it)
+            endif
 
-                  # If HB_CCPATH not set, or could not be found on the provided PATH,
-                  # try to detect them in default locations
-                  ifeq ($(HB_CCPATH),)
-                     HB_CCPATH := /usr/local/i586-pc-msdosdjgpp
-                     ifneq ($(call find_in_path_par,i586-pc-msdosdjgpp-gcc,$(HB_CCPATH)),)
-                        HB_COMPILER := djgpp
-                        HB_CCPREFIX := i586-pc-msdosdjgpp-
-                     else
-                        HB_CCPATH :=
-                        HB_CCPREFIX :=
-                     endif
-                  endif
+         else ifeq ($(HB_PLATFORM),dos)
 
-                  ifneq ($(HB_CCPATH)$(HB_CCPREFIX),)
-                     HB_COMP_PATH := $(dir $(HB_CCPATH))
-                     HB_PLATFORM := dos
-                     ifeq ($(HB_TOOLS_PREF),)
-                        export HB_TOOLS_PREF := hbdos
-                     endif
-                     export HB_BUILD_EXTDEF := no
-                     ifneq ($(HB_BUILD_PARTS),all)
-                        HB_BUILD_PARTS := lib
-                     endif
-                  else
-                     $(error ! Harbour build could not find djgpp cross-compiler. Please install it to /usr/local/i586-pc-msdosdjgpp, or point HB_CCPATH/HB_CCPREFIX environment variables to it)
-                  endif
+            # Look for djgpp compiler on HB_CCPATH if it's set
+            ifneq ($(HB_CCPATH),)
+               ifneq ($(call find_in_path_par,i586-pc-msdosdjgpp-gcc,$(HB_CCPATH)),)
+                  HB_COMPILER := djgpp
+                  HB_CCPREFIX := i586-pc-msdosdjgpp-
+                  HB_CCPATH := $(HB_CCPATH)/
+               else
+                  HB_CCPATH :=
+                  HB_CCPREFIX :=
                endif
+            endif
+
+            # If HB_CCPATH not set, or could not be found on the provided PATH,
+            # try to detect them in default locations
+            ifeq ($(HB_CCPATH),)
+               HB_CCPATH := /usr/local/i586-pc-msdosdjgpp
+               ifneq ($(call find_in_path_par,i586-pc-msdosdjgpp-gcc,$(HB_CCPATH)),)
+                  HB_COMPILER := djgpp
+                  HB_CCPREFIX := i586-pc-msdosdjgpp-
+               else
+                  HB_CCPATH :=
+                  HB_CCPREFIX :=
+               endif
+            endif
+
+            ifneq ($(HB_CCPATH)$(HB_CCPREFIX),)
+               HB_COMP_PATH := $(dir $(HB_CCPATH))
+               HB_PLATFORM := dos
+               ifeq ($(HB_TOOLS_PREF),)
+                  export HB_TOOLS_PREF := hbdos
+               endif
+               export HB_BUILD_EXTDEF := no
+               ifneq ($(HB_BUILD_PARTS),all)
+                  HB_BUILD_PARTS := lib
+               endif
+            else
+               $(error ! Harbour build could not find djgpp cross-compiler. Please install it to /usr/local/i586-pc-msdosdjgpp, or point HB_CCPATH/HB_CCPREFIX environment variables to it)
             endif
          endif
       endif
    endif
    ifeq ($(HB_COMPILER),)
-      ifeq ($(HB_PLATFORM),win)
+      ifneq ($(filter $(HB_PLATFORM),win wce),)
          HB_COMP_PATH := $(call find_in_path,arm-wince-mingw32ce-gcc)
          ifneq ($(HB_COMP_PATH),)
             HB_COMPILER := mingwarm
             HB_PLATFORM := wce
             HB_CCPREFIX := arm-wince-mingw32ce-
+            HB_CPU := arm
          else
             HB_COMP_PATH := $(call find_in_path,arm-mingw32ce-gcc)
             ifneq ($(HB_COMP_PATH),)
                HB_COMPILER := mingwarm
                HB_PLATFORM := wce
                HB_CCPREFIX := arm-mingw32ce-
+               HB_CPU := arm
             else
                HB_COMP_PATH := $(call find_in_path,i386-mingw32ce-gcc)
                ifneq ($(HB_COMP_PATH),)
@@ -728,15 +731,18 @@ ifeq ($(HB_COMPILER),)
                                     HB_COMPILER_VER := 710
                                     HB_COMPILER := msvcarm
                                     HB_PLATFORM := wce
+                                    HB_CPU := arm
                                  else
                                     HB_COMP_PATH := $(call find_in_path,armasm)
                                     ifneq ($(HB_COMP_PATH),)
                                        HB_COMPILER := msvcarm
                                        HB_PLATFORM := wce
+                                       HB_CPU := arm
                                     else
                                        HB_COMP_PATH := $(call find_in_path,idis)
                                        ifneq ($(HB_COMP_PATH),)
                                           HB_COMPILER := iccia64
+                                          HB_CPU := ia64
                                        else
                                           HB_COMP_PATH := $(call find_in_path,icl)
                                           ifneq ($(HB_COMP_PATH),)
@@ -745,10 +751,12 @@ ifeq ($(HB_COMPILER),)
                                              HB_COMP_PATH := $(call find_in_path,ml64)
                                              ifneq ($(HB_COMP_PATH),)
                                                 HB_COMPILER := msvc64
+                                                HB_CPU := x86_64
                                              else
                                                 HB_COMP_PATH := $(call find_in_path,ias)
                                                 ifneq ($(HB_COMP_PATH),)
                                                    HB_COMPILER := msvcia64
+                                                   HB_CPU := ia64
                                                 else
                                                    HB_COMP_PATH := $(call find_in_path,cl)
                                                    ifneq ($(HB_COMP_PATH),)
@@ -774,9 +782,11 @@ ifeq ($(HB_COMPILER),)
                                                             ifneq ($(call find_in_path_raw,coredll.lib,$(LIB)),)
                                                                HB_PLATFORM := wce
                                                                HB_COMPILER := poccarm
+                                                               HB_CPU := arm
                                                             else
                                                                ifneq ($(call find_in_path_raw,dbgeng.lib,$(LIB)),)
                                                                   HB_COMPILER := pocc64
+                                                                  HB_CPU := x86_64
                                                                else
                                                                   HB_COMPILER := pocc
                                                                endif
@@ -790,12 +800,14 @@ ifeq ($(HB_COMPILER),)
                                                                ifneq ($(HB_COMP_PATH),)
                                                                   HB_COMPILER := mingw64
                                                                   HB_CCPREFIX := i686-w64-mingw32-
+                                                                  HB_CPU := x86_64
                                                                else
                                                                   ifeq ($(HB_HOST_CPU),x86_64)
                                                                      HB_COMP_PATH := $(call find_in_path,x86_64-w64-mingw32-gcc)
                                                                      ifneq ($(HB_COMP_PATH),)
                                                                         HB_COMPILER := mingw64
                                                                         HB_CCPREFIX := x86_64-w64-mingw32-
+                                                                        HB_CPU := x86_64
                                                                      endif
                                                                   endif
                                                                endif
@@ -970,29 +982,37 @@ endif
 GRANDP := $(subst $(subst x,x, ),,$(foreach item, $(subst /, ,$(OBJ_DIR)), ../))
 
 # TODO: Set this in <plat>/<comp>.mk (compiler switches may influence it)
-HB_CPU :=
-ifeq ($(HB_PLATFORM),win)
-   ifneq ($(filter $(HB_COMPILER),msvc64 mingw64 pocc64),)
-      HB_CPU := x86_64
-   else ifneq ($(filter $(HB_COMPILER),msvcia64 iccia64),)
-      HB_CPU := ia64
-   else
+ifeq ($(HB_CPU),)
+   ifeq ($(HB_PLATFORM),win)
+      ifneq ($(filter $(HB_COMPILER),msvc64 mingw64 pocc64),)
+         HB_CPU := x86_64
+      else ifneq ($(filter $(HB_COMPILER),msvcia64 iccia64),)
+         HB_CPU := ia64
+      else
+         HB_CPU := x86
+      endif
+   else ifeq ($(HB_PLATFORM),wce)
+      ifneq ($(filter $(HB_COMPILER),msvcarm mingwarm poccarm),)
+         HB_CPU := arm
+      else ifneq ($(filter $(HB_COMPILER),msvcmips),)
+         HB_CPU := mips
+      else ifneq ($(filter $(HB_COMPILER),msvcsh),)
+         HB_CPU := sh
+      else
+         HB_CPU := x86
+      endif
+   else ifneq ($(filter $(HB_PLATFORM),dos os2),)
       HB_CPU := x86
-   endif
-else ifeq ($(HB_PLATFORM),wce)
-   ifneq ($(filter $(HB_COMPILER),msvcarm mingwarm poccarm),)
-      HB_CPU := arm
-   else ifneq ($(filter $(HB_COMPILER),msvcmips),)
-      HB_CPU := mips
-   else ifneq ($(filter $(HB_COMPILER),msvcsh),)
-      HB_CPU := sh
+   else ifeq ($(HB_PLATFORM),linux)
+      HB_CPU := $(HB_HOST_CPU)
+      ifneq ($(filter $(HB_USER_CFLAGS),-m64),)
+         HB_CPU := x86_64
+      else ifneq ($(filter $(HB_USER_CFLAGS),-m32),)
+         HB_CPU := x86
+      endif
    else
-      HB_CPU := x86
+      HB_CPU := $(HB_HOST_CPU)
    endif
-else ifneq ($(filter $(HB_PLATFORM),dos os2),)
-   HB_CPU := x86
-else
-   HB_CPU := $(HB_HOST_CPU)
 endif
 
 ifeq ($(HB_INIT_DONE),)
