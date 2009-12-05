@@ -105,6 +105,7 @@
 #define E_oPrjSrc                                10
 #define E_oPrjMta                                11
 #define E_oPrjHbp                                12
+#define E_oPrjCmp                                13
 
 
 

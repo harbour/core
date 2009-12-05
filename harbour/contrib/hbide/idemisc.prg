@@ -180,7 +180,7 @@ FUNCTION ReadSource( cTxtFile )
       do WHILE ( hb_fReadLine( nHandle, @cLine ) == 0 )
          aadd( aTxt, cLine )
       enddo
-      aadd( aTxt, cLine )
+      //aadd( aTxt, cLine )
       fclose( nHandle )
    endif
 
@@ -349,6 +349,32 @@ FUNCTION ArrayToMemo( a_ )
 
    aeval( a_, {|e| s += e + CRLF } )
 
+   s += CRLF
+
    RETURN s
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION MemoToArray( s )
+   LOCAL a_, b_, i, j
+
+   b_:={}
+
+   s := trim( s )
+   s := strtran( s, CRLF, _EOL )
+   a_:= hb_atokens( s, _EOL )
+
+   FOR i := len( a_ ) TO 1 step -1
+      IF !empty( a_[ i ] )
+         EXIT
+      ENDIF
+   NEXT
+   IF i < len( a_ )
+      FOR j := 1 TO i
+         aadd( b_, a_[ j ] )
+      NEXT
+   ENDIF
+
+   RETURN b_
 
 /*----------------------------------------------------------------------*/
