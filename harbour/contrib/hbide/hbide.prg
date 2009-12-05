@@ -390,6 +390,7 @@ METHOD HbIde:saveConfig()
    LOCAL nTabs := ::qTabWidget:count()
 
    txt_:= {}
+   //    Properties
    aadd( txt_, "[HBIDE]" )
    aadd( txt_, "MainWindowGeometry     = " + PosAndSize( ::oDlg:oWidget )           )
    aadd( txt_, "ProjectTreeVisible     = " + IIF( ::lProjTreeVisible, "YES", "NO" ) )
@@ -399,10 +400,16 @@ METHOD HbIde:saveConfig()
    aadd( txt_, "RecentTabIndex         = " + hb_ntos( ::qTabWidget:currentIndex() ) )
    aadd( txt_, "CurrentProject         = " + ""                                     )
    aadd( txt_, " " )
+
+   //    Projects
    aadd( txt_, "[PROJECTS]" )
+   FOR n := 1 TO len( ::aProjects )
+      aadd( txt_, ::aProjects[ n, 2 ] )
+   NEXT
+   aadd( txt_, " " )
 
+   //    Files
    aadd( txt_, "[FILES]" )
-
    FOR n := 1 TO nTabs
       pTab      := ::qTabWidget:widget( n-1 )
       nTab      := ascan( ::aTabs, {|e_| HBQT_QTPTR_FROM_GCPOINTER( QT_PTROFXBP( e_[ 1 ] ) ) == pTab } )
@@ -417,7 +424,6 @@ METHOD HbIde:saveConfig()
                   hb_ntos( qVScr:value() ) + ","   ;
            )
    NEXT
-   aadd( txt_, " " )
    aadd( txt_, " " )
 
    RETURN CreateTarget( ::cProjIni, txt_ )
@@ -489,6 +495,7 @@ METHOD HbIde:loadConfig( cHbideIni )
 
                CASE nPart == INI_PROJECTS
                   aadd( ::aIni[ nPart ], s )
+                  ::loadProjectProperties( s, .f., .f. )
 
                CASE nPart == INI_FILES
                   a_:= hb_atokens( s, "," )
@@ -837,7 +844,8 @@ METHOD HbIde:selectSource( cMode )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:buildProjectTree()
-   LOCAL aExe, aExeD, i, j, aPrjs
+   //LOCAL aExe, aExeD, aPrjs
+   LOCAL i, j, oParent, cType, aSrc, oP, aPrj
 
    ::oProjTree := XbpTreeView():new()
    ::oProjTree:hasLines   := .T.
@@ -853,9 +861,9 @@ METHOD HbIde:buildProjectTree()
 
    ::oProjRoot := ::oProjTree:rootItem:addItem( "Projects" )
 
-   aadd( ::aProjData, { ::oProjRoot:addItem( "Executables" ), "Executables", NIL, NIL } )
-   aadd( ::aProjData, { ::oProjRoot:addItem( "Libs"        ), "Libs"       , NIL, NIL } )
-   aadd( ::aProjData, { ::oProjRoot:addItem( "Dlls"        ), "Dlls"       , NIL, NIL } )
+   aadd( ::aProjData, { ::oProjRoot:addItem( "Executables" ), "Executables", ::oProjRoot, NIL } )
+   aadd( ::aProjData, { ::oProjRoot:addItem( "Libs"        ), "Libs"       , ::oProjRoot, NIL } )
+   aadd( ::aProjData, { ::oProjRoot:addItem( "Dlls"        ), "Dlls"       , ::oProjRoot, NIL } )
 
    ::oProjRoot:expand( .t. )
 
@@ -864,6 +872,30 @@ METHOD HbIde:buildProjectTree()
       ::oProjTree:hide()
    ENDIF
 
+   FOR i := 1 TO len( ::aProjects )
+      aPrj := ::aProjects[ i, 3 ]
+      cType := aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ]
+      DO CASE
+      CASE cType == "Executable"
+         oParent := ::aProjData[ 1, 1 ]
+      CASE cType == "Lib"
+         oParent := ::aProjData[ 2, 1 ]
+      CASE cType == "Dll"
+         oParent := ::aProjData[ 3, 1 ]
+      ENDCASE
+
+      oP := oParent:addItem( aPrj[ PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] )
+      aadd( ::aProjData, { oP, "Project Name", oParent, NIL } )
+      oParent := oP
+
+      aSrc := aPrj[ PRJ_PRP_SOURCES, 2 ]
+      FOR j := 1 TO len( aSrc )
+         aadd( ::aProjData, { oParent:addItem( aSrc[ j ] ), "Source File", oParent, aSrc[ j ] } )
+      NEXT
+
+   NEXT
+
+   #if 0
    /* Just a prototype : to be filled with project data */
 
    /* Executables */
@@ -907,6 +939,7 @@ METHOD HbIde:buildProjectTree()
       aExe[ j,3 ] := aExeD
       aExe[ j,1 ]:expand( .t. )
    NEXT
+   #endif
 
    RETURN Self
 
