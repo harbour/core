@@ -2939,6 +2939,15 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] $ "msvc|msvc64|msvcia64|icc|iccia64" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "msvcarm" ) /* NOTE: Cross-platform: wce/ARM on win/x86 */
 
+         /* ; Not enabled yet, because it would cause a lot of 3rd party code to
+              break due to sloppy type conversions and other trivial coding errors
+              usually not noticed with C compilers. [vszakats] */
+#if 0
+         IF hbmk[ _HBMK_lCPP ] == NIL
+            hbmk[ _HBMK_lCPP ] := .T.
+         ENDIF
+#endif
+
          IF Empty( nCCompVer )
             /* Compatibility with Harbour GNU Make system */
             IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. FindInPath( "clarm" )
