@@ -269,7 +269,7 @@ HB_FUNC( __TP_ISCTS )
 
 HB_FUNC( __TP_CTRLCTS )
 {
-#if !defined( CRTSCTS ) && defined( __WATCOMC__ )
+#if !defined( CRTSCTS )
 #  define CRTSCTS 020000000000
 #endif
    struct termios options;
