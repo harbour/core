@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Compile help & info related functions
  *
- * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 1999-2010 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -269,6 +269,6 @@ void hb_compPrintLogo( HB_COMP_DECL )
 
    hb_compOutStd( HB_COMP_PARAM, szVer );
    hb_compOutStd( HB_COMP_PARAM,
-                  "\nCopyright (c) 1999-2009, http://www.harbour-project.org/\n" );
+                  "\nCopyright (c) 1999-2010, http://www.harbour-project.org/\n" );
    hb_xfree( szVer );
 }

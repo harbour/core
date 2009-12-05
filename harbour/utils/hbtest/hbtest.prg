@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Regression tests for the runtime library (main)
  *
- * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 1999-2010 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -102,7 +102,7 @@ STATIC s_nEndTime
 PROCEDURE Main( cPar1, cPar2 )
 
    OutStd( "Harbour Regression Test Suite" + HB_OSNewLine() +;
-           "Copyright (c) 1999-2009, http://www.harbour-project.org/" + HB_OSNewLine() )
+           "Copyright (c) 1999-2010, http://www.harbour-project.org/" + HB_OSNewLine() )
 
    IF cPar1 == NIL
       cPar1 := ""

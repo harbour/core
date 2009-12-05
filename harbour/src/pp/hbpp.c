@@ -348,7 +348,7 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iSVNID, char * szChangeL
          " * Harbour Project source code:\n"
          " *    Version information and build time switches.\n"
          " *\n"
-         " * Copyright 2008-2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
+         " * Copyright 2008-2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
          " * www - http://www.harbour-project.org\n"
          " *\n"
          " * This file is generated automatically by Harbour preprocessor\n"
@@ -761,7 +761,7 @@ int main( int argc, char * argv[] )
    {
       printf( "Harbour Preprocessor %d.%d.%d%s\n",
          HB_VER_MAJOR, HB_VER_MINOR, HB_VER_RELEASE, HB_VER_STATUS );
-      printf( "Copyright (c) 1999-2009, http://www.harbour-project.org/\n" );
+      printf( "Copyright (c) 1999-2010, http://www.harbour-project.org/\n" );
    }
 
    if( szFile )
