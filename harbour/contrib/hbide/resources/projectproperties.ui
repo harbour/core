@@ -19,6 +19,9 @@
   <property name="windowTitle">
    <string>Project Properties</string>
   </property>
+  <property name="styleSheet">
+   <string/>
+  </property>
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>
@@ -312,7 +315,7 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Compiler/Linker flags may include all commands except the source files list. Additional libraries can be included here.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="styleSheet">
-      <string>background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(128, 170, 165, 255), stop:1 rgba(255, 255, 255, 255));</string>
+      <string>background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(158, 158, 158, 255), stop:1 rgba(255, 255, 255, 255));</string>
      </property>
      <property name="lineWrapMode">
       <enum>QPlainTextEdit::NoWrap</enum>
@@ -568,7 +571,7 @@ p, li { white-space: pre-wrap; }
     </rect>
    </property>
    <property name="text">
-    <string>Save_Exit</string>
+    <string>Save and Exit</string>
    </property>
   </widget>
  </widget>

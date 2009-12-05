@@ -379,6 +379,8 @@ METHOD HbIde:create( cProjIni )
    /* Very important - destroy resources */
    ::oDlg:destroy()
 
+   HBXBP_DEBUG( "EXITING after destroy .................." )
+
    RETURN self
 
 /*----------------------------------------------------------------------*/
@@ -438,8 +440,6 @@ METHOD HbIde:loadConfig( cHbideIni )
    IF !file( cHbideIni )
       cHbideIni := hb_dirBase() + "hbide.ini"
    ENDIF
-
-   HBXBP_DEBUG( hb_dirBase(), cHbideIni )
 
    ::cProjIni := cHbideIni
 
@@ -745,6 +745,17 @@ METHOD HbIde:closeSource()
       ::oFuncList:clear()
       ::saveSource( nTab )
       ::qTabWidget:removeTab( ::qTabWidget:currentIndex() )
+
+      /* Destroy all objects */
+      // { oTab, qEdit, qHiliter, qLayout, cSourceFile, qDocument }
+      //
+      Qt_DisConnect_Signal( QT_PTROF( ::aTabs[ nTab, 2 ] ), "textChanged()" )
+      Qt_DisConnect_Signal( QT_PTROF( ::aTabs[ nTab, 2 ] ), "cursorPositionChanged()" )
+
+      ::aTabs[ nTab, 6 ]:pPtr := 0
+      ::aTabs[ nTab, 4 ]:pPtr := 0
+      ::aTabs[ nTab, 3 ]:pPtr := 0
+      ::aTabs[ nTab, 2 ]:pPtr := 0
    ENDIF
    IF ::qTabWidget:count() == 0
       ::oDockR:hide()
@@ -1517,6 +1528,11 @@ METHOD HbIde:fetchProjectProperties()
       ENDIF
 
       qPrpDlg:exec()
+
+      oPBOk:destroy()
+      oPBSv:destroy()
+      oPBCn:destroy()
+      Qt_DisConnect_Signal( QT_PTROF( oTabWidget ), "currentChanged(int)" )
    ENDIF
 
    ::aPrpObjs := {}

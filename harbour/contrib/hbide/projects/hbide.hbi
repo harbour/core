@@ -22,14 +22,13 @@ LaunchProgram     =
 <IdeSrc>hbide.prg
 <IdeSrc>ideactions.prg
 <IdeSrc>idemisc.prg
-<IdeSrc>ideparseexpr.prg
 <IdeSrc>idestylesheets.prg
 <IdeSrc>idetags.prg
 
+<IdeSrc>ideparseexpr.c
 <IdeSrc>freadlin.c
 
 <IdeSrc>hbide.ch
-
 <IdeSrc>hbide.ini
  
 [ METADATA ]
