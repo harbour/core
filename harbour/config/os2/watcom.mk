@@ -36,10 +36,13 @@ ifneq ($(HB_BUILD_OPTIM),no)
    # architecture flags
    CFLAGS += -5r -fp5
 
+   ifneq ($(HB_CSTACK_CHECK),yes)
+      CFLAGS += -s
+   endif
    # optimization flags
    # don't enable -ol optimization in OpenWatcom 1.1 - gives buggy code
    # -oxaht
-   CFLAGS += -onaehtr -s -ei -zp4 -zt0
+   CFLAGS += -onaehtr -ei -zp4 -zt0
    #CFLAGS += -obl+m
    ifeq ($(CC),wpp386)
       CFLAGS += -oi+
