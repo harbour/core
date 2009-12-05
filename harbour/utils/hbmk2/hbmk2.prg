@@ -2342,13 +2342,14 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ENDIF
 
          /* Always inherit/reproduce some flags from self */
-
-         tmp := hb_Version( HB_VERSION_FLAG_C )
-         IF     "-mlp64" $ tmp ; AAddNew( hbmk[ _HBMK_aOPTC ], "-mlp64" )
-         ELSEIF "-mlp32" $ tmp ; AAddNew( hbmk[ _HBMK_aOPTC ], "-mlp32" )
-         ELSEIF "-m64"   $ tmp ; AAddNew( hbmk[ _HBMK_aOPTC ], "-m64" )
-         ELSEIF "-m32"   $ tmp ; AAddNew( hbmk[ _HBMK_aOPTC ], "-m32" )
-         ENDIF
+         FOR EACH tmp IN { "-mlp64", "-mlp32", "-m64", "-m32" }
+            IF tmp $ hb_Version( HB_VERSION_FLAG_C )
+               AAddNew( hbmk[ _HBMK_aOPTC ], tmp )
+               AAddNew( hbmk[ _HBMK_aOPTL ], tmp )
+               AAddNew( hbmk[ _HBMK_aOPTD ], tmp )
+               EXIT
+            ENDIF
+         NEXT
 
          /* Add system libraries */
          IF ! hbmk[ _HBMK_lSHARED ]
