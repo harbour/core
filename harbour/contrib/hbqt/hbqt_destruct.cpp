@@ -56,11 +56,7 @@
 #endif
 
 #include "hbapi.h"
-#include "hbvm.h"
 #include "hbapiitm.h"
-#include "hbapierr.h"
-#include "hbstack.h"
-#include "hbthread.h"
 
 #include "hbqt.h"
 
@@ -108,7 +104,7 @@ void * hbqt_gcpointer( int iParam )
 
 int hbqt_get_object_release_method()
 {
-   return ( s_iObjectReleaseMethod );
+   return s_iObjectReleaseMethod;
 }
 
 HB_FUNC( HBQT_SET_RELEASE_METHOD )
@@ -234,4 +230,3 @@ HB_FUNC( HBQT_GETMEMUSED )
 /*----------------------------------------------------------------------*/
 
 #endif                  // #if QT_VERSION >= 0x040500
-
