@@ -26,7 +26,6 @@ LaunchProgram     =
 <IdeSrc>idetags.prg
 
 <IdeSrc>ideparseexpr.c
-<IdeSrc>freadlin.c
 
 <IdeSrc>hbide.ch
 <IdeSrc>hbide.ini

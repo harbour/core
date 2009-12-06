@@ -69,49 +69,86 @@
 /*----------------------------------------------------------------------*/
 
 FUNCTION GetStyleSheet( cWidget )
+   LOCAL s := ""
 
    DO CASE
+
+   CASE cWidget == "QTreeWidget"
+
+      s +=   " QTreeWidget {"                                                         +;
+             "     alternate-background-color: yellow;"                               +;
+             " }"                                                                     +;
+             " QTreeWidget {"                                                         +;
+             "     show-decoration-selected: 1;"                                      +;
+             " }"                                                                     +;
+             " QTreeWidget::item:alternate {"                                         +;
+             "     background: #EEEEEE;"                                              +;
+             " }"                                                                     +;
+             " QTreeWidget::item:selected {"                                          +;
+             "     border: 1px solid #6a6ea9;"                                        +;
+             " }"                                                                     +;
+             " QTreeWidget::item:selected:!active {"                                  +;
+             "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"           +;
+             "                                 stop: 0 #ABAFE5, stop: 1 #8588B2);"    +;
+             " }"                                                                     +;
+             " QTreeWidget::item:selected:active {"                                   +;
+             "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"           +;
+             "                                 stop: 0 #6a6ea9, stop: 1 #888dd9);"    +;
+             " }"                                                                     +;
+             " QTreeWidget::item:hover {"                                             +;
+             "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"           +;
+             "                                 stop: 0 #FAFBFE, stop: 1 #DCDEF1);"    +;
+             "}"                                                                      +;
+             " QTreeWidget {"                                                         +;
+             "     background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,"           +;
+             "       stop: 0 rgba(173, 173, 173, 255), stop:1 rgba(255, 255, 255, 255));"    +;
+             "}"
+
    CASE cWidget == "QListView"
 
-      RETURN ""                                                                       +;
+      s +=   ""                                                                       +;
              " QListView {"                                                           +;
              "     alternate-background-color: yellow;"                               +;
              " }"                                                                     +;
-             ""                                                                       +;
              " QListView {"                                                           +;
              "     show-decoration-selected: 1;"                                      +;
              " }"                                                                     +;
-             ""                                                                       +;
              " QListView::item:alternate {"                                           +;
              "     background: #EEEEEE;"                                              +;
              " }"                                                                     +;
-             ""                                                                       +;
              " QListView::item:selected {"                                            +;
              "     border: 1px solid #6a6ea9;"                                        +;
              " }"                                                                     +;
-             ""                                                                       +;
              " QListView::item:selected:!active {"                                    +;
              "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"           +;
              "                                 stop: 0 #ABAFE5, stop: 1 #8588B2);"    +;
              " }"                                                                     +;
-             ""                                                                       +;
              " QListView::item:selected:active {"                                     +;
              "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"           +;
              "                                 stop: 0 #6a6ea9, stop: 1 #888dd9);"    +;
              " }"                                                                     +;
-             ""                                                                       +;
              " QListView::item:hover {"                                               +;
              "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"           +;
              "                                 stop: 0 #FAFBFE, stop: 1 #DCDEF1);"    +;
              "}"                                                                      +;
-             ""                                                                       +;
              " QListView {"                                                           +;
-             "     background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,"           +;
-             "                                 stop: 0 #8588B2, stop: 1 #DCDEF1);"    +;
+             "   background: qlineargradient(spread:pad, x1:0.755727, y1:0.864, x2:1, y2:0," +;
+             "           stop:0 rgba(214, 209, 142, 255), stop:1 rgba(255, 255, 255, 255));" +;
              "}"
 
    ENDCASE
 
-   RETURN ""
+/*
+             "     background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,"           +;
+             "                                 stop: 0 #8588B2, stop: 1 #DCDEF1);"    +;
+*/
+
+   RETURN s
 
 /*----------------------------------------------------------------------*/
+      /*
+      RETURN "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(173, 173, 173, 255), stop:1 rgba(255, 255, 255, 255));
+selection-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));
+color: rgb(85, 0, 0);
+      */
+

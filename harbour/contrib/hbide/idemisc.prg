@@ -178,9 +178,8 @@ FUNCTION ReadSource( cTxtFile )
    LOCAL cFileBody := MemoRead( cTxtFile )
 
    cFileBody := StrTran( cFileBody, Chr( 13 ) )
-   cFileBody := StrTran( cFileBody, Chr( 10 ), " " )
 
-   RETURN hb_ATokens( cFileBody,, .T. )
+   RETURN hb_ATokens( cFileBody, Chr( 10 ) )
 
 /*----------------------------------------------------------------------*/
 
@@ -368,3 +367,19 @@ FUNCTION MemoToArray( s )
    RETURN aLine
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION IsValidSource( cSourceFile )
+   LOCAL cExt
+
+   hb_fNameSplit( cSourceFile, , , @cExt )
+   cExt := lower( cExt )
+
+   RETURN ( cExt $ ".c,.cpp,.prg,.h,.ch,.txt,.log,.ini,.env" )
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION PathNormalized( cPath )
+   RETURN lower( strtran( cPath, "\", "/" ) )
+
+/*----------------------------------------------------------------------*/
+

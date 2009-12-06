@@ -149,6 +149,7 @@ CLASS HbIde
    DATA   oPBFind, oPBRepl, oPBClose, oFind, oRepl
 
    DATA   oCurProjItem
+   DATA   oCurProject
 
    DATA   oProjRoot
    DATA   oExes
@@ -156,6 +157,7 @@ CLASS HbIde
    DATA   oDlls
    DATA   aProjData                               INIT {}
    DATA   aPrpObjs                                INIT {}
+   DATA   aEditorPath                             INIT {}
 
    DATA   lProjTreeVisible                        INIT .t.
    DATA   lDockRVisible                           INIT .f.
@@ -163,6 +165,7 @@ CLASS HbIde
    DATA   lTabCloseRequested                      INIT .f.
 
    DATA   cSaveTo                                 INIT ""
+   DATA   oOpenedSources
 
    METHOD new( cProjectOrSource )
    METHOD create( cProjectOrSource )
@@ -198,6 +201,9 @@ CLASS HbIde
    METHOD gotoFunction()
    METHOD fetchProjectProperties()
    METHOD loadProjectProperties()
+   METHOD appendProjectInTree()
+   METHOD manageItemSelected()
+   METHOD addSourceInTree()
    METHOD closeTab()
    METHOD activateTab()
    METHOD getCurrentTab()
@@ -558,6 +564,21 @@ METHOD HbIde:convertSelection( cKey )
 
 /*----------------------------------------------------------------------*/
 
+METHOD HbIde:setPosAndSizeByIni( qWidget, nPart )
+   LOCAL aRect
+
+   IF !empty( ::aIni[ INI_HBIDE, nPart ] )
+      aRect := hb_atokens( ::aIni[ INI_HBIDE, nPart ], "," )
+      aeval( aRect, {|e,i| aRect[ i ] := val( e ) } )
+
+      qWidget:move( aRect[ 1 ], aRect[ 2 ] )
+      qWidget:resize( aRect[ 3 ], aRect[ 4 ] )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD HbIde:manageFocusInEditor()
 
    IF ::getCurrentTab() > 0
@@ -565,21 +586,6 @@ METHOD HbIde:manageFocusInEditor()
    ENDIF
 
    RETURN self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:updateFuncList()
-   LOCAL o
-
-   ::oFuncList:clear()
-   IF !empty( ::aTags )
-      aeval( ::aTags, {|e_| o := ::oFuncList:addItem( e_[ 7 ] ) } )
-   ELSE
-      ::lDockRVisible := .f.
-      ::oDockR:hide()
-   ENDIF
-
-   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -593,50 +599,16 @@ METHOD HbIde:getCurCursor()
    RETURN ::qCursor
 
 /*----------------------------------------------------------------------*/
-
-METHOD HbIde:setTabImage( oTab, qEdit, nPos, lFirst, qDocument )
-   LOCAL nIndex    := ::qTabWidget:indexOf( QT_PTROFXBP( oTab ) )
-   LOCAL lModified := qDocument:isModified()
-
-   ::qTabWidget:setTabIcon( nIndex, s_resPath + iif( lModified, "tabmodified.png", "tabunmodified.png" ) )
-
-   ::oSBar:getItem( 7 ):caption := IIF( lModified, "Modified", " " )
-
-   IF lFirst
-      lFirst := .f.
-      ::qCursor:configure( qEdit:textCursor() )
-      ::qCursor:setPosition( nPos, QTextCursor_MoveAnchor )
-      qEdit:setTextCursor( QT_PTROF( ::qCursor ) )
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:buildTabPage( oWnd, cSource )
-   LOCAL oTab, cPath, cFile, cExt
-
-   hb_fNameSplit( cSource, @cPath, @cFile, @cExt )
-
-   oTab := XbpTabPage():new( oWnd, , { 5,5 }, { 700,400 }, , .t. )
-   oTab:caption   := cFile + cExt
-   oTab:minimized := .F.
-
-   oTab:create()
-
-   ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( QT_PTROFXBP( oTab ) ) )
-   ::qTabWidget:setTabTooltip( ::qTabWidget:indexOf( QT_PTROFXBP( oTab ) ), cSource )
-
-   oTab:tabActivate    := {|mp1,mp2,oXbp| ::activateTab( mp1, mp2, oXbp ) }
-   oTab:closeRequested := {|mp1,mp2,oXbp| ::closeTab( mp1, mp2, oXbp ) }
-
-   RETURN oTab
-
+//                          Source Editor
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos )
    LOCAL oTab, qEdit, qHiliter, qLayout, qDocument, qHScr, qVScr
    LOCAL lFirst := .t.
+
+   IF !( IsValidSource( cSourceFile ) )
+      RETURN Self
+   ENDIF
 
    DEFAULT cSourceFile TO ::cProjIni
    DEFAULT nPos        TO 0
@@ -680,6 +652,7 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos )
    ::aSources := { cSourceFile }
    ::createTags()
    ::updateFuncList()
+   ::addSourceInTree( cSourceFile )
    ::manageFocusInEditor()
    ::dispEditInfo()
 
@@ -687,6 +660,46 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos )
                           {|| ::setTabImage( oTab, qEdit, nPos, @lFirst, qDocument ) } )
 
    Qt_Connect_Signal( QT_PTROF( qEdit ), "cursorPositionChanged()", {|| ::dispEditInfo() } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:buildTabPage( oWnd, cSource )
+   LOCAL oTab, cPath, cFile, cExt
+
+   hb_fNameSplit( cSource, @cPath, @cFile, @cExt )
+
+   oTab := XbpTabPage():new( oWnd, , { 5,5 }, { 700,400 }, , .t. )
+   oTab:caption   := cFile + cExt
+   oTab:minimized := .F.
+
+   oTab:create()
+
+   ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( QT_PTROFXBP( oTab ) ) )
+   ::qTabWidget:setTabTooltip( ::qTabWidget:indexOf( QT_PTROFXBP( oTab ) ), cSource )
+
+   oTab:tabActivate    := {|mp1,mp2,oXbp| ::activateTab( mp1, mp2, oXbp ) }
+   oTab:closeRequested := {|mp1,mp2,oXbp| ::closeTab( mp1, mp2, oXbp ) }
+
+   RETURN oTab
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:setTabImage( oTab, qEdit, nPos, lFirst, qDocument )
+   LOCAL nIndex    := ::qTabWidget:indexOf( QT_PTROFXBP( oTab ) )
+   LOCAL lModified := qDocument:isModified()
+
+   ::qTabWidget:setTabIcon( nIndex, s_resPath + iif( lModified, "tabmodified.png", "tabunmodified.png" ) )
+
+   ::oSBar:getItem( 7 ):caption := IIF( lModified, "Modified", " " )
+
+   IF lFirst
+      lFirst := .f.
+      ::qCursor:configure( qEdit:textCursor() )
+      ::qCursor:setPosition( nPos, QTextCursor_MoveAnchor )
+      qEdit:setTextCursor( QT_PTROF( ::qCursor ) )
+   ENDIF
 
    RETURN Self
 
@@ -706,52 +719,15 @@ METHOD HbIde:loadSources()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:closeTab( mp1, mp2, oXbp )
-
-   HB_SYMBOL_UNUSED( mp1 )
-
-   IF ( mp2 := ascan( ::aTabs, {|e_| e_[ 1 ] == oXbp } ) ) > 0
-      ::closeSource( mp2, .t. )
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:activateTab( mp1, mp2, oXbp )
-
-   HB_SYMBOL_UNUSED( mp1 )
-
-   IF ( mp2 := ascan( ::aTabs, {|e_| e_[ 1 ] == oXbp } ) ) > 0
-      ::nCurTab  := mp2
-      ::aSources := { ::aTabs[ ::nCurTab, 5 ] }
-      ::createTags()
-      ::updateFuncList()
-      ::dispEditInfo()
-      ::manageFocusInEditor()
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:getCurrentTab()
-   LOCAL qTab, nTab
-
-   qTab := ::qTabWidget:currentWidget()
-   nTab := ascan( ::aTabs, {|e_| HBQT_QTPTR_FROM_GCPOINTER( e_[ 1 ]:oWidget:pPtr ) == qTab } )
-
-   RETURN nTab
-
-/*----------------------------------------------------------------------*/
-
 METHOD HbIde:closeSource()
-   LOCAL nTab
+   LOCAL nTab, n, cSource
 
    IF !empty( nTab := ::getCurrentTab() )
       ::oFuncList:clear()
       ::saveSource( nTab )
       ::qTabWidget:removeTab( ::qTabWidget:currentIndex() )
+
+      cSource := ::aTabs[ nTab, 5 ]
 
       /* Destroy all objects */
       // { oTab, qEdit, qHiliter, qLayout, cSourceFile, qDocument }
@@ -759,11 +735,26 @@ METHOD HbIde:closeSource()
       Qt_DisConnect_Signal( QT_PTROF( ::aTabs[ nTab, 2 ] ), "textChanged()" )
       Qt_DisConnect_Signal( QT_PTROF( ::aTabs[ nTab, 2 ] ), "cursorPositionChanged()" )
 
+
       ::aTabs[ nTab, 6 ]:pPtr := 0
       ::aTabs[ nTab, 4 ]:pPtr := 0
       ::aTabs[ nTab, 3 ]:pPtr := 0
       ::aTabs[ nTab, 2 ]:pPtr := 0
+
+      //::aTabs[ nTab, 1 ] := NIL
+      ::aTabs[ nTab, 2 ] := NIL
+      ::aTabs[ nTab, 3 ] := NIL
+      ::aTabs[ nTab, 4 ] := NIL
+      ::aTabs[ nTab, 5 ] := ""
+      ::aTabs[ nTab, 6 ] := NIL
+
+      IF ( n := ascan( ::aProjData, {|e_| e_[ 4 ] == cSource } ) ) > 0
+         ::aProjData[ n,3 ]:delItem( ::aProjData[ n,1 ] )
+         adel( ::aProjData, n )
+         asize( ::aProjData, len( ::aProjData )-1 )
+      ENDIF
    ENDIF
+
    IF ::qTabWidget:count() == 0
       ::oDockR:hide()
       ::lDockRVisible := .f.
@@ -843,27 +834,71 @@ METHOD HbIde:selectSource( cMode )
 
 /*----------------------------------------------------------------------*/
 
+METHOD HbIde:closeTab( mp1, mp2, oXbp )
+
+   HB_SYMBOL_UNUSED( mp1 )
+
+   IF ( mp2 := ascan( ::aTabs, {|e_| e_[ 1 ] == oXbp } ) ) > 0
+      ::closeSource( mp2, .t. )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:activateTab( mp1, mp2, oXbp )
+
+   HB_SYMBOL_UNUSED( mp1 )
+
+   IF ( mp2 := ascan( ::aTabs, {|e_| e_[ 1 ] == oXbp } ) ) > 0
+      ::nCurTab  := mp2
+      ::aSources := { ::aTabs[ ::nCurTab, 5 ] }
+      ::createTags()
+      ::updateFuncList()
+      ::dispEditInfo()
+      ::manageFocusInEditor()
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:getCurrentTab()
+   LOCAL qTab, nTab
+
+   qTab := ::qTabWidget:currentWidget()
+   nTab := ascan( ::aTabs, {|e_| HBQT_QTPTR_FROM_GCPOINTER( e_[ 1 ]:oWidget:pPtr ) == qTab } )
+
+   RETURN nTab
+
+/*----------------------------------------------------------------------*/
+//                            Project Tree
+/*----------------------------------------------------------------------*/
+
 METHOD HbIde:buildProjectTree()
-   //LOCAL aExe, aExeD, aPrjs
-   LOCAL i, j, oParent, cType, aSrc, oP, aPrj
+   LOCAL i
 
    ::oProjTree := XbpTreeView():new()
    ::oProjTree:hasLines   := .T.
    ::oProjTree:hasButtons := .T.
    ::oProjTree:create( ::oDa, , { 0,0 }, { 10,10 }, , .t. )
-   ::oProjTree:setColorBG( GraMakeRGBColor( { 223,240,255 } ) )
-   ::oProjTree:itemMarked    := {|oItem| ::oCurProjItem := oItem }
+   ::oProjTree:setStyleSheet( GetStyleSheet( "QTreeWidget" ) )
+
+   //::oProjTree:itemMarked    := {|oItem| ::manageItemSelected( 0, oItem ), ::oCurProjItem := oItem }
+   ::oProjTree:itemMarked    := {|oItem| ::oCurProjItem := oItem, ::manageFocusInEditor() }
+   ::oProjTree:itemSelected  := {|oItem| ::manageItemSelected( oItem ) }
    ::oProjTree:hbContextMenu := {|mp1, mp2, oXbp| ::manageProjectContext( mp1, mp2, oXbp ) }
 
    ::oProjTree:oWidget:setMaximumWidth( 200 )
 
    ::setPosAndSizeByIni( ::oProjTree:oWidget, ProjectTreeGeometry )
 
-   ::oProjRoot := ::oProjTree:rootItem:addItem( "Projects" )
+   ::oProjRoot      := ::oProjTree:rootItem:addItem( "Projects" )
+   ::oOpenedSources := ::oProjTree:rootItem:addItem( "Editor" )
 
-   aadd( ::aProjData, { ::oProjRoot:addItem( "Executables" ), "Executables", ::oProjRoot, NIL } )
-   aadd( ::aProjData, { ::oProjRoot:addItem( "Libs"        ), "Libs"       , ::oProjRoot, NIL } )
-   aadd( ::aProjData, { ::oProjRoot:addItem( "Dlls"        ), "Dlls"       , ::oProjRoot, NIL } )
+   aadd( ::aProjData, { ::oProjRoot:addItem( "Executables" ), "Executables", ::oProjRoot, NIL, NIL } )
+   aadd( ::aProjData, { ::oProjRoot:addItem( "Libs"        ), "Libs"       , ::oProjRoot, NIL, NIL } )
+   aadd( ::aProjData, { ::oProjRoot:addItem( "Dlls"        ), "Dlls"       , ::oProjRoot, NIL, NIL } )
 
    ::oProjRoot:expand( .t. )
 
@@ -873,73 +908,203 @@ METHOD HbIde:buildProjectTree()
    ENDIF
 
    FOR i := 1 TO len( ::aProjects )
-      aPrj := ::aProjects[ i, 3 ]
-      cType := aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ]
-      DO CASE
-      CASE cType == "Executable"
-         oParent := ::aProjData[ 1, 1 ]
-      CASE cType == "Lib"
-         oParent := ::aProjData[ 2, 1 ]
-      CASE cType == "Dll"
-         oParent := ::aProjData[ 3, 1 ]
-      ENDCASE
-
-      oP := oParent:addItem( aPrj[ PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] )
-      aadd( ::aProjData, { oP, "Project Name", oParent, NIL } )
-      oParent := oP
-
-      aSrc := aPrj[ PRJ_PRP_SOURCES, 2 ]
-      FOR j := 1 TO len( aSrc )
-         aadd( ::aProjData, { oParent:addItem( aSrc[ j ] ), "Source File", oParent, aSrc[ j ] } )
-      NEXT
-
+      ::appendProjectInTree( ::aProjects[ i, 3 ] )
    NEXT
 
-   #if 0
-   /* Just a prototype : to be filled with project data */
+   RETURN Self
 
-   /* Executables */
-   aExeD := {}
-   aExe  := ::aProjData[ 1 ]
-   aPrjs := { "Vouch", "CacheMGR" }
-   FOR i := 1 TO len( aPrjs )
-      aadd( aExeD, { aExe[ 1 ]:addItem( aPrjs[ i ] ), aPrjs[ i ], NIL, NIL } )
-   NEXT
-   ::aProjData[ 1,3 ] := aExeD
-   ::aProjData[ 1,1 ]:expand( .t. )
+/*----------------------------------------------------------------------*/
 
-   /* Libs */
-   aExeD := {}
-   aExe  := ::aProjData[ 2 ]
-   aPrjs := { "V32Lib", "Vouch32", "CacheRDD" }
-   FOR i := 1 TO len( aPrjs )
-      aadd( aExeD, { aExe[ 1 ]:addItem( aPrjs[ i ] ), aPrjs[ i ], NIL, NIL } )
-   NEXT
-   ::aProjData[ 2,3 ] := aExeD
-   ::aProjData[ 2,1 ]:expand( .t. )
+METHOD HbIde:appendProjectInTree( aPrj )
+   LOCAL cType, oParent, oP, aSrc, j, cProject, nPath
+   LOCAL aPath, cPath, cFile, cExt, oPP, cPathA
 
-   /* Libs */
-   aExeD := {}
-   aExe  := ::aProjData[ 3 ]
-   aPrjs := { "VouchActiveX" }
-   FOR i := 1 TO len( aPrjs )
-      aadd( aExeD, { aExe[ 1 ]:addItem( aPrjs[ i ] ), aPrjs[ i ], NIL, NIL } )
-   NEXT
-   ::aProjData[ 3,3 ] := aExeD
-   ::aProjData[ 3,1 ]:expand( .t. )
+   IF !empty( aPrj ) .and. !empty( cProject := aPrj[ PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] )
+      IF ascan( ::aProjData, {|e_| e_[ 2 ] == "Project Name" .and. e_[ 4 ] == cProject } ) == 0
 
-   /* Next classification by type of source */
-   aExe  := ::aProjData[ 1,3 ]
-   aPrjs := { "PRG Sources", "C Sources", "CPP Sources", "CH Headers", "H Headers" }
-   FOR j := 1 TO len( aExe )
-      aExeD := {}
-      FOR i := 1 TO len( aPrjs )
-         aadd( aExeD, { aExe[ j,1 ]:addItem( aPrjs[ i ] ), aPrjs[ i ], NIL, NIL } )
-      NEXT
-      aExe[ j,3 ] := aExeD
-      aExe[ j,1 ]:expand( .t. )
-   NEXT
-   #endif
+         cType := aPrj[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ]
+
+         DO CASE
+         CASE cType == "Executable"
+            oParent := ::aProjData[ 1, 1 ]
+         CASE cType == "Lib"
+            oParent := ::aProjData[ 2, 1 ]
+         CASE cType == "Dll"
+            oParent := ::aProjData[ 3, 1 ]
+         ENDCASE
+
+         oParent:expand( .t. )
+
+         oP := oParent:addItem( cProject )
+         aadd( ::aProjData, { oP, "Project Name", oParent, cProject, aPrj } )
+         oParent := oP
+
+         aPath := {}
+         aSrc := aPrj[ PRJ_PRP_SOURCES, 2 ]
+         FOR j := 1 TO len( aSrc )
+            hb_fNameSplit( aSrc[ j ], @cPath, @cFile, @cExt )
+            cPathA := lower( strtran( cPath, "\", "/" ) )
+            IF ( nPath := ascan( aPath, {|e_| e_[ 1 ] == cPathA } ) ) == 0
+               oPP := oParent:addItem( cPath )
+               aadd( ::aProjData, { oPP, "Path", oParent, cPathA, cProject } )
+               aadd( aPath, { cPathA, oPP } )
+               nPath := len( aPath )
+            ENDIF
+
+            oPP := aPath[ nPath,2 ]
+            aadd( ::aProjData, { oPP:addItem( cFile+cExt ), "Source File", oPP, aSrc[ j ], PathNormalized( aSrc[ j ] ) } )
+         NEXT
+      ELSE
+         // Handle duplicate opening
+
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:addSourceInTree( cSourceFile )
+   LOCAL cPath, cPathA, cFile, cExt, n, oParent
+   LOCAL oGrand := ::oOpenedSources
+
+   hb_fNameSplit( cSourceFile, @cPath, @cFile, @cExt )
+   cPathA := PathNormalized( cPath )
+
+   n := ascan( ::aEditorPath, {|e_| e_[ 2 ] == cPathA } )
+
+   IF n == 0
+      oParent := oGrand:addItem( cPath )
+      aadd( ::aProjData, { oParent, "Editor Path", oGrand, cPathA, cSourceFile } )
+      aadd( ::aEditorPath, { oParent, cPathA } )
+   ELSE
+      oParent := ::aEditorPath[ n,1 ]
+   ENDIF
+
+   aadd( ::aProjData, { oParent:addItem( cFile+cExt ), "Opened Source", oParent, ;
+                                                        cSourceFile, PathNormalized( cSourceFile ) } )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:manageItemSelected( oXbpTreeItem )
+   LOCAL n, cHbi, aPrj, cSource
+
+   IF     oXbpTreeItem == ::oProjRoot
+      n  := -1
+   ELSEIF oXbpTreeItem == ::oOpenedSources
+      n  := -2
+   ELSE
+      n := ascan( ::aProjData, {|e_| e_[ 1 ] == oXbpTreeItem } )
+   ENDIF
+
+   ::aPrjProps := {}
+
+   DO CASE
+
+   CASE n ==  0  // Source File - nothing to do
+   CASE n == -2  // "Files"
+   CASE n == -1
+   CASE ::aProjData[ n, 2 ] == "Project Name"
+      aPrj := ::aProjData[ n, 5 ]
+
+      cHbi := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + s_pathSep + ;
+              aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbi"
+
+      ::loadProjectProperties( cHbi, .f., .t. )
+
+   CASE ::aProjData[ n, 2 ] == "Source File"
+      cSource := ::aProjData[ n, 5 ]
+      IF ( n := ascan( ::aTabs, {|e_| PathNormalized( e_[ 5 ] ) == cSource } ) ) == 0
+         ::editSource( cSource )
+      ELSE
+         ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( QT_PTROFXBP( ::aTabs[ n,1 ] ) ) )
+      ENDIF
+
+   CASE ::aProjData[ n, 2 ] == "Opened Source"
+      cSource := ::aProjData[ n, 5 ]
+      IF ( n := ascan( ::aTabs, {|e_| PathNormalized( e_[ 5 ] ) == cSource } ) ) > 0
+         ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( QT_PTROFXBP( ::aTabs[ n,1 ] ) ) )
+      ENDIF
+
+   CASE ::aProjData[ n, 2 ] == "Path"
+
+   ENDCASE
+
+   ::manageFocusInEditor()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
+   LOCAL n, cHbi, aPrj
+   LOCAL aPops := {}
+
+   HB_SYMBOL_UNUSED( mp2 )
+
+   ::aPrjProps := {}
+
+   oXbpTreeItem := ::oCurProjItem
+
+   IF     oXbpTreeItem == ::oProjRoot
+      n  := -1
+   ELSEIF oXbpTreeItem == ::oOpenedSources
+      n  := -2
+   ELSE
+      n := ascan( ::aProjData, {|e_| e_[ 1 ] == oXbpTreeItem } )
+   ENDIF
+
+   DO CASE
+   CASE n ==  0  // Source File - nothing to do
+   CASE n == -2  // "Files"
+   CASE n == -1  // Project Root
+      aadd( aPops, { "New Project" , {|| ::loadProjectProperties( , .t., .t. ), ::appendProjectInTree( ::aPrjProps ) } } )
+      aadd( aPops, { "Load Project", {|| ::loadProjectProperties( , .f., .f. ), ::appendProjectInTree( ::aPrjProps ) } } )
+      ExecPopup( aPops, mp1, ::oProjTree:oWidget )
+
+   CASE ::aProjData[ n, 2 ] == "Project Name"
+      aPrj := ::aProjData[ n, 5 ]
+      cHbi := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + s_pathSep + ;
+              aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbi"
+
+      aadd( aPops, { "Properties", {|| ::loadProjectProperties( cHbi, .f., .t. ) } } )
+      ExecPopup( aPops, mp1, ::oProjTree:oWidget )
+
+   CASE ::aProjData[ n, 2 ] == "Source File"
+
+   CASE ::aProjData[ n, 2 ] == "Opened Source"
+
+   CASE ::aProjData[ n, 2 ] == "Path"
+
+   ENDCASE
+
+   ::manageFocusInEditor()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+//                             Status Bar
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:buildStatusBar()
+   LOCAL oPanel
+
+   ::oSBar := XbpStatusBar():new()
+   ::oSBar:create( ::oDlg, , { 0,0 }, { ::oDlg:currentSize()[1],30 } )
+   ::oSBar:oWidget:showMessage( "" )
+
+   oPanel := ::oSBar:getItem( 1 )
+   oPanel:autosize := XBPSTATUSBAR_AUTOSIZE_SPRING
+
+   ::oSBar:addItem( "", , , , "Ready"  ):oWidget:setMinimumWidth( 80 )
+
+   ::oSBar:addItem( "", , , , "Line"   ):oWidget:setMinimumWidth( 110 )
+   ::oSBar:addItem( "", , , , "Col"    ):oWidget:setMinimumWidth( 40 )
+   ::oSBar:addItem( "", , , , "Caps"   ):oWidget:setMinimumWidth( 30 )
+   ::oSBar:addItem( "", , , , "Misc"   ):oWidget:setMinimumWidth( 30 )
+   ::oSBar:addItem( "", , , , "State"  ):oWidget:setMinimumWidth( 50 )
+   ::oSBar:addItem( "", , , , "Misc_2" ):oWidget:setMinimumWidth( 30 )
+   ::oSBar:addItem( "", , , , "Misc_3" ):oWidget:setMinimumWidth( 20 )
+   ::oSBar:addItem( "", , , , "Misc_4" ):oWidget:setMinimumWidth( 20 )
 
    RETURN Self
 
@@ -987,30 +1152,7 @@ METHOD HbIde:dispEditInfo()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
-METHOD HbIde:buildStatusBar()
-   LOCAL oPanel
-
-   ::oSBar := XbpStatusBar():new()
-   ::oSBar:create( ::oDlg, , { 0,0 }, { ::oDlg:currentSize()[1],30 } )
-   ::oSBar:oWidget:showMessage( "" )
-
-   oPanel := ::oSBar:getItem( 1 )
-   oPanel:autosize := XBPSTATUSBAR_AUTOSIZE_SPRING
-
-   ::oSBar:addItem( "", , , , "Ready"  ):oWidget:setMinimumWidth( 80 )
-
-   ::oSBar:addItem( "", , , , "Line"   ):oWidget:setMinimumWidth( 110 )
-   ::oSBar:addItem( "", , , , "Col"    ):oWidget:setMinimumWidth( 40 )
-   ::oSBar:addItem( "", , , , "Caps"   ):oWidget:setMinimumWidth( 30 )
-   ::oSBar:addItem( "", , , , "Misc"   ):oWidget:setMinimumWidth( 30 )
-   ::oSBar:addItem( "", , , , "State"  ):oWidget:setMinimumWidth( 50 )
-   ::oSBar:addItem( "", , , , "Misc_2" ):oWidget:setMinimumWidth( 30 )
-   ::oSBar:addItem( "", , , , "Misc_3" ):oWidget:setMinimumWidth( 20 )
-   ::oSBar:addItem( "", , , , "Misc_4" ):oWidget:setMinimumWidth( 20 )
-
-   RETURN Self
-
+//                              Main Window
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:buildDialog()
@@ -1031,74 +1173,7 @@ METHOD HbIde:buildDialog()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
-METHOD HbIde:gotoFunction( mp1, mp2, oListBox )
-   LOCAL n, cAnchor
-
-   mp1 := oListBox:getData()
-   mp2 := oListBox:getItem( mp1 )
-
-   IF ( n := ascan( ::aTags, {|e_| mp2 == e_[ 7 ] } ) ) > 0
-      cAnchor := trim( ::aText[ ::aTags[ n,3 ] ] )
-      IF !( ::aTabs[ ::nCurTab, 2 ]:find( cAnchor, QTextDocument_FindCaseSensitively ) )
-         ::aTabs[ ::nCurTab, 2 ]:find( cAnchor, QTextDocument_FindBackward + QTextDocument_FindCaseSensitively )
-
-      ENDIF
-   ENDIF
-   ::manageFocusInEditor()
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:manageProjectContext( mp1 )
-   LOCAL aPops := {}
-
-   /* Decide the contex options from */
-
-   IF !empty( ::oCurProjItem )
-      IF ::oCurProjItem:caption == "Projects"
-         aadd( aPops, { "New Project" , {|| ::loadProjectProperties( , .t., .t. ) } } )
-         aadd( aPops, { "Load Project", {|| ::loadProjectProperties( , .f., .t. ) } } )
-
-      ELSEIF ::oCurProjItem:caption == "Executables"
-      ELSEIF ::oCurProjItem:caption == "Libs"
-      ELSEIF ::oCurProjItem:caption == "Dlls"
-      ELSEIF ::oCurProjItem:caption == "PRG Sources"
-      ELSEIF ::oCurProjItem:caption == "C Sources"
-      ELSEIF ::oCurProjItem:caption == "CPP Sources"
-      ELSEIF ::oCurProjItem:caption == "CH Headers"
-      ELSEIF ::oCurProjItem:caption == "H Headers"
-      ELSE
-         aadd( aPops, { ::oCurProjItem:caption, {|| NIL } } )
-         aadd( aPops, { ::oCurProjItem:caption, {|| NIL } } )
-         aadd( aPops, { ::oCurProjItem:caption, {|| NIL } } )
-      ENDIF
-
-      ExecPopup( aPops, mp1, ::oProjTree:oWidget )
-
-      ::manageFocusInEditor()
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:manageFuncContext( mp1 )
-   LOCAL aPops := {}
-
-   IF ::oFuncList:numItems() > 0
-      aadd( aPops, { 'Comment out'           , {|| NIL } } )
-      aadd( aPops, { 'Reformat'              , {|| NIL } } )
-      aadd( aPops, { 'Print'                 , {|| NIL } } )
-      aadd( aPops, { 'Delete'                , {|| NIL } } )
-      aadd( aPops, { 'Move to another source', {|| NIL } } )
-
-      ExecPopup( aPops, mp1, ::oFuncList:oWidget )
-
-      ::manageFocusInEditor()
-   ENDIF
-   RETURN Self
-
+//                          Function List
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:buildFuncList()
@@ -1139,19 +1214,90 @@ METHOD HbIde:buildFuncList()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:setPosAndSizeByIni( qWidget, nPart )
-   LOCAL aRect
+METHOD HbIde:updateFuncList()
+   LOCAL o
 
-   IF !empty( ::aIni[ INI_HBIDE, nPart ] )
-      aRect := hb_atokens( ::aIni[ INI_HBIDE, nPart ], "," )
-      aeval( aRect, {|e,i| aRect[ i ] := val( e ) } )
-
-      qWidget:move( aRect[ 1 ], aRect[ 2 ] )
-      qWidget:resize( aRect[ 3 ], aRect[ 4 ] )
+   ::oFuncList:clear()
+   IF !empty( ::aTags )
+      aeval( ::aTags, {|e_| o := ::oFuncList:addItem( e_[ 7 ] ) } )
+   ELSE
+      ::lDockRVisible := .f.
+      ::oDockR:hide()
    ENDIF
 
    RETURN Self
 
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:gotoFunction( mp1, mp2, oListBox )
+   LOCAL n, cAnchor
+
+   mp1 := oListBox:getData()
+   mp2 := oListBox:getItem( mp1 )
+
+   IF ( n := ascan( ::aTags, {|e_| mp2 == e_[ 7 ] } ) ) > 0
+      cAnchor := trim( ::aText[ ::aTags[ n,3 ] ] )
+      IF !( ::aTabs[ ::nCurTab, 2 ]:find( cAnchor, QTextDocument_FindCaseSensitively ) )
+         ::aTabs[ ::nCurTab, 2 ]:find( cAnchor, QTextDocument_FindBackward + QTextDocument_FindCaseSensitively )
+
+      ENDIF
+   ENDIF
+   ::manageFocusInEditor()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:manageFuncContext( mp1 )
+   LOCAL aPops := {}
+
+   IF ::oFuncList:numItems() > 0
+      aadd( aPops, { 'Comment out'           , {|| NIL } } )
+      aadd( aPops, { 'Reformat'              , {|| NIL } } )
+      aadd( aPops, { 'Print'                 , {|| NIL } } )
+      aadd( aPops, { 'Delete'                , {|| NIL } } )
+      aadd( aPops, { 'Move to another source', {|| NIL } } )
+
+      ExecPopup( aPops, mp1, ::oFuncList:oWidget )
+
+      ::manageFocusInEditor()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:CreateTags()
+   LOCAL aSumData := ""
+   LOCAL cComments, aSummary, i, cPath, cSource, cExt
+
+   ::aTags := {}
+
+   FOR i := 1 TO Len( ::aSources )
+      HB_FNameSplit( ::aSources[ i ], @cPath, @cSource, @cExt )
+
+      IF Upper( cExt ) $ ".PRG.CPP"
+         IF !empty( ::aText := ReadSource( ::aSources[ i ] ) )
+            aSumData  := {}
+
+            cComments := CheckComments( ::aText )
+            aSummary  := Summarize( ::aText, cComments, @aSumData , IIf( Upper( cExt ) == ".PRG", 9, 1 ) )
+            ::aTags   := UpdateTags( ::aSources[ i ], aSummary, aSumData, @::aFuncList, @::aLines )
+
+            #if 0
+            IF !empty( aTags )
+               aeval( aTags, {|e_| aadd( ::aTags, e_ ) } )
+               ::hData[ cSource+cExt ] := { a[ i ], aTags, aclone( ::aText ), cComments, ::aFuncList, ::aLines }
+               aadd( ::aSrcLines, ::aText   )
+               aadd( ::aComments, cComments )
+            ENDIF
+            #endif
+         ENDIF
+      ENDIF
+   NEXT
+
+   RETURN ( NIL )
+
+//----------------------------------------------------------------------//
+//                            Dock Widgets
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:buildBottomArea()
@@ -1232,39 +1378,8 @@ METHOD HbIde:buildOutputResults()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
-METHOD HbIde:CreateTags()
-   LOCAL aSumData := ""
-   LOCAL cComments, aSummary, i, cPath, cSource, cExt
-
-   ::aTags := {}
-
-   FOR i := 1 TO Len( ::aSources )
-      HB_FNameSplit( ::aSources[ i ], @cPath, @cSource, @cExt )
-
-      IF Upper( cExt ) $ ".PRG.CPP"
-         IF !empty( ::aText := ReadSource( ::aSources[ i ] ) )
-            aSumData  := {}
-
-            cComments := CheckComments( ::aText )
-            aSummary  := Summarize( ::aText, cComments, @aSumData , IIf( Upper( cExt ) == ".PRG", 9, 1 ) )
-            ::aTags   := UpdateTags( ::aSources[ i ], aSummary, aSumData, @::aFuncList, @::aLines )
-
-            #if 0
-            IF !empty( aTags )
-               aeval( aTags, {|e_| aadd( ::aTags, e_ ) } )
-               ::hData[ cSource+cExt ] := { a[ i ], aTags, aclone( ::aText ), cComments, ::aFuncList, ::aLines }
-               aadd( ::aSrcLines, ::aText   )
-               aadd( ::aComments, cComments )
-            ENDIF
-            #endif
-         ENDIF
-      ENDIF
-   NEXT
-
-   RETURN ( NIL )
-
-//----------------------------------------------------------------------//
+//                               Printing
+/*----------------------------------------------------------------------*/
 
 METHOD HbIde:printPreview()
    LOCAL qDlg
@@ -1289,6 +1404,8 @@ METHOD HbIde:paintRequested( pPrinter )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+//                       Menu and Toolbar Actions
+/*----------------------------------------------------------------------*/
 
 METHOD HbIde:executeAction( cKey )
    LOCAL cFile
@@ -1308,7 +1425,6 @@ METHOD HbIde:executeAction( cKey )
       ::fetchProjectProperties( .t. )
    CASE cKey == "Open"
       IF !empty( cFile := ::selectSource( "open" ) )
-         ::oProjRoot:addItem( cFile )
          ::editSource( cFile )
       ENDIF
    CASE cKey == "Save"
@@ -1442,9 +1558,9 @@ METHOD HbIde:findReplace( cUi )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-/*
- *  <cProject> == c:\harbour\contrib\hbide\projects\hbide.hbi
-*/
+//                           Project Properties
+/*----------------------------------------------------------------------*/
+
 METHOD HbIde:loadProjectProperties( cProject, lNew, lFetch )
    LOCAL cWrkProject
    LOCAL n := 0
@@ -1452,6 +1568,8 @@ METHOD HbIde:loadProjectProperties( cProject, lNew, lFetch )
    DEFAULT cProject TO ""
    DEFAULT lNew     TO .F.
    DEFAULT lFetch   TO .T.
+
+   ::aPrjProps := {}
 
    IF lNew
       lFetch := .t.
@@ -1465,8 +1583,6 @@ METHOD HbIde:loadProjectProperties( cProject, lNew, lFetch )
          RETURN Self
       ENDIF
    ENDIF
-
-   ::aPrjProps := {}
 
    IF !empty( cProject )
       cWrkProject := lower( cProject )  // normalized
@@ -1585,7 +1701,7 @@ METHOD HbIde:updateHbp( iIndex )
       RETURN nil
    ENDIF
 
-   a_:= hb_atokens( o_[ E_oPrjMta ]:toPlainText(), _EOL )
+   a_:= hb_atokens( strtran( o_[ E_oPrjMta ]:toPlainText(), chr( 13 ) ), _EOL )
    a4_1 := SetupMetaKeys( a_ )
 
    txt_:= {}
@@ -1667,4 +1783,6 @@ METHOD HbIde:saveProject()
 
    RETURN Nil
 
+/*----------------------------------------------------------------------*/
+//
 /*----------------------------------------------------------------------*/
