@@ -16,6 +16,4 @@ idetags.prg
 idemisc.prg
 ideactions.prg
 
-freadlin.c
 ideparseexpr.c
-

@@ -65,8 +65,9 @@
 /*----------------------------------------------------------------------*/
 
 #include "common.ch"
+#include "fileio.ch"
+
 #include "xbp.ch"
-#include "hbqt.ch"
 
 #include "hbide.ch"
 
@@ -85,7 +86,7 @@ PROCEDURE JustACall()
 FUNCTION ExecPopup( aPops, aPos, qParent )
    LOCAL i, qPop, qPoint, qAct, nAct, cAct, xRet, pAct
 
-   qPop := QMenu():new( IF( hb_isObject( qParent ), QT_PTROF( qParent ), NIL ) )
+   qPop := QMenu():new( IIF( hb_isObject( qParent ), QT_PTROF( qParent ), NIL ) )
 
    FOR i := 1 TO len( aPops )
       qPop:addAction( aPops[ i, 1 ] )
@@ -118,7 +119,7 @@ FUNCTION CreateTarget( cFile, txt_ )
    LOCAL hHandle := fcreate( cFile )
    LOCAL cNewLine := hb_OsNewLine()
 
-   IF hHandle != -1
+   IF hHandle != F_ERROR
       aeval( txt_, { |e| fWrite( hHandle, e + cNewLine ) } )
       fClose( hHandle )
    ENDIF
@@ -174,17 +175,13 @@ FUNCTION FetchAFile( oWnd, cTitle, aFlt, cDftDir )
 /*----------------------------------------------------------------------*/
 
 FUNCTION ReadSource( cTxtFile )
-   LOCAL cLine, nHandle, aTxt :={}
+   LOCAL cFileBody := MemoRead( cTxtFile )
 
-   if ( nHandle := fopen( cTxtFile ) ) != -1
-      do WHILE ( hb_fReadLine( nHandle, @cLine ) == 0 )
-         aadd( aTxt, cLine )
-      enddo
-      //aadd( aTxt, cLine )
-      fclose( nHandle )
-   endif
+   cFileBody := StrTran( cFileBody, Chr( 13 ) )
+   cFileBody := StrTran( cFileBody, Chr( 10 ), " " )
+   cFileBody := StrTran( cFileBody, Chr( 9 ), " " )
 
-   RETURN aTxt
+   RETURN hb_ATokens( cFileBody,, .T. )
 
 /*----------------------------------------------------------------------*/
 
@@ -321,9 +318,9 @@ FUNCTION SetupMetaKeys( a_ )
 FUNCTION ApplyMetaData( s, a_ )
    LOCAL k
 
-   IF !empty( a_ )
-      FOR k := 1 TO len( a_ )
-         s := strtran( s, a_[ k,2 ], a_[ k,1 ] )
+   IF ! Empty( a_ )
+      FOR EACH k IN a_
+         s := StrTran( s, k[ 2 ], k[ 1 ] )
       NEXT
    ENDIF
 
@@ -334,9 +331,9 @@ FUNCTION ApplyMetaData( s, a_ )
 FUNCTION ParseWithMetaData( s, a_ )
    LOCAL k
 
-   IF !empty( a_ )
-      FOR k := 1 TO len( a_ )
-         s := strtran( s, a_[ k,1 ], a_[ k,2 ] )
+   IF ! Empty( a_ )
+      FOR EACH k IN a_
+         s := StrTran( s, k[ 1 ], k[ 2 ] )
       NEXT
    ENDIF
 
@@ -356,25 +353,19 @@ FUNCTION ArrayToMemo( a_ )
 /*----------------------------------------------------------------------*/
 
 FUNCTION MemoToArray( s )
-   LOCAL a_, b_, i, j
+   LOCAL aLine := hb_ATokens( StrTran( RTrim( s ), CRLF, _EOL ), _EOL )
+   LOCAL nNewSize := 0
+   LOCAL line
 
-   b_:={}
-
-   s := trim( s )
-   s := strtran( s, CRLF, _EOL )
-   a_:= hb_atokens( s, _EOL )
-
-   FOR i := len( a_ ) TO 1 step -1
-      IF !empty( a_[ i ] )
+   FOR EACH line IN aLine DESCEND
+      IF ! Empty( line )
+         nNewSize := line:__enumIndex()
          EXIT
       ENDIF
    NEXT
-   IF i < len( a_ )
-      FOR j := 1 TO i
-         aadd( b_, a_[ j ] )
-      NEXT
-   ENDIF
 
-   RETURN b_
+   ASize( aLine, nNewSize )
+
+   RETURN aLine
 
 /*----------------------------------------------------------------------*/

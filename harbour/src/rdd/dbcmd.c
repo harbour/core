@@ -890,6 +890,8 @@ HB_FUNC( DBUNLOCKALL )
    hb_rddUnLockAll();
 }
 
+/* dbUseArea( [<lNewArea>], [<cDriver>], <cName>, [<xcAlias>], [<lShared>], [<lReadonly>], [<cCodePage>], [<nConnection>] ) -> NIL */
+
 HB_FUNC( DBUSEAREA )
 {
    hb_retl( hb_rddOpenTable( hb_parc( 3 ), hb_parc( 2 ),
