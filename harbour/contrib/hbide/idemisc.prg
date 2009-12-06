@@ -179,7 +179,6 @@ FUNCTION ReadSource( cTxtFile )
 
    cFileBody := StrTran( cFileBody, Chr( 13 ) )
    cFileBody := StrTran( cFileBody, Chr( 10 ), " " )
-   cFileBody := StrTran( cFileBody, Chr( 9 ), " " )
 
    RETURN hb_ATokens( cFileBody,, .T. )
 
