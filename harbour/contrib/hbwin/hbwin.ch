@@ -7,8 +7,7 @@
  * hbwin header
  *
  * Copyright 2008 Viktor Szakats (harbour.01 syenar.hu)
- * Copyright 2004 Peter Rees <peter@rees.co.nz>
- *                Rees Software & Systems Ltd
+ * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software & Systems Ltd
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

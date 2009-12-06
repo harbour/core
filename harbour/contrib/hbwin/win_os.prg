@@ -5,25 +5,23 @@
 /*
  * Harbour Project source code:
  *
- *     Copyright 2004 Peter Rees <peter@rees.co.nz>
- *                    Rees Software & Systems Ltd
- *
+ * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software & Systems Ltd
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option )
+ * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.   If not, write to
+ * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/ ).
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -41,15 +39,15 @@
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
  * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.   To avoid misleading
+ * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
-
-*/
+ *
+ */
 
 /*
  * Operating system functions for Windows
@@ -107,7 +105,7 @@ FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
       bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeyWks, "UtilizeNtCaching", 0, lSetIt )
       bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeyWks, "UseLockReadUnlock", 0, lSetIt )
 
-      IF win_osis2000OrUpper()
+      IF win_osIs2000OrUpper()
          bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, "System\CurrentControlSet\Services\MRXSmb\Parameters", "OpLocksDisabled", 1, lSetIt )
       ENDIF
    ENDIF
@@ -115,16 +113,16 @@ FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
    RETURN bRetVal
 
 FUNCTION WIN_OSNETVREDIROK( /* @ */ nResult )
-   LOCAL a
+   LOCAL aFiles
 
    nResult := 0
 
    IF win_osIs9X()
-      a := Directory( hb_GetEnv( "WINDIR", "C:\WINDOWS" ) + "\SYSTEM\VREDIR.VXD" )  /* Check for faulty files. */
-      IF ! Empty( a )
-         IF a[ 1, F_SIZE ] == 156749 .AND. a[ 1, F_TIME ] == "11:11:10"
+      aFiles := Directory( hb_GetEnv( "WINDIR", "C:\WINDOWS" ) + "\SYSTEM\VREDIR.VXD" )  /* Check for faulty files. */
+      IF ! Empty( aFiles )
+         IF aFiles[ 1 ][ F_SIZE ] == 156749 .AND. aFiles[ 1 ][ F_TIME ] == "11:11:10"
             nResult := 1111
-         ELSEIF a[ 1, F_SIZE ] == 140343 .AND. a[ 1, F_TIME ] == "09:50:00"
+         ELSEIF aFiles[ 1 ][ F_SIZE ] == 140343 .AND. aFiles[ 1 ][ F_TIME ] == "09:50:00"
             nResult := 950
          ENDIF
       ENDIF

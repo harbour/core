@@ -202,7 +202,7 @@ static int ide_getword( const char * pszText, HB_BOOL bHonorSpacing, char * pszW
                   ch = pszText[ npos ];
                }
 
-               if( !bHonorSpacing )
+               if( ! bHonorSpacing )
                {
                   pszWord[ 0 ] = ' '; /* reduce spaces to 1 */
                   wordlen = 1;

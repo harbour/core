@@ -63,7 +63,7 @@ endif
 DIRS += $(HB_CONTRIB_ADDONS)
 
 ifneq ($(DIRS),)
-include $(TOP)$(ROOT)config/dir.mk
+   include $(TOP)$(ROOT)config/dir.mk
 else
-include $(TOP)$(ROOT)config/none.mk
+   include $(TOP)$(ROOT)config/none.mk
 endif
