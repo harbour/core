@@ -414,7 +414,7 @@ HB_FUNC( WIN_PRINTFILERAW )
          DOC_INFO_1 DocInfo;
          DocInfo.pDocName = lpDocName;
          DocInfo.pOutputFile = NULL;
-         DocInfo.pDatatype = TEXT( "RAW" );
+         DocInfo.pDatatype = ( LPTSTR ) TEXT( "RAW" );
          if( StartDocPrinter( hPrinter, 1, ( LPBYTE ) &DocInfo ) != 0 )
          {
             if( StartPagePrinter( hPrinter ) != 0 )
