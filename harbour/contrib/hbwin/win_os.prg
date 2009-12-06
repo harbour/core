@@ -114,7 +114,7 @@ FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
 
    RETURN bRetVal
 
-FUNCTION WIN_OSNETVREDIROK( nResult )
+FUNCTION WIN_OSNETVREDIROK( /* @ */ nResult )
    LOCAL a
 
    nResult := 0

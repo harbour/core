@@ -289,9 +289,7 @@ HB_FUNC( PARSEXPR ) /* ( c, bHonorSpacing, bInRemark, bUpperKeyWord, bKeepCommen
          {
             if( bKeepComments )
             {
-               /* TOFIX: To use hb_strncpy() */
-               strncpy( szNextWord + wordlen, pszExpr, npos + 1 );
-               szNextWord[ wordlen + npos + 1 ] = '\0';
+               hb_strncpy( szNextWord + wordlen, pszExpr, sizeof( szNextWord ) - 1 - wordlen );
                lenwords++;
                hb_arrayAdd( paExpr, hb_itemPutC( pTemp, szNextWord ) );
             }
