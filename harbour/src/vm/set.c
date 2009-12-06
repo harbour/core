@@ -989,6 +989,20 @@ HB_FUNC( SET )
             pSet->hb_set_oscp = ( void * ) cdpOS;
          }
          break;
+      case HB_SET_DBCODEPAGE:
+         if( pSet->HB_SET_DBCODEPAGE )
+            hb_retc( pSet->HB_SET_DBCODEPAGE );
+         else
+            hb_ret();
+         if( args > 1 && ( HB_IS_STRING( pArg2 ) || HB_IS_NIL( pArg2 ) ) )
+         {
+            PHB_CODEPAGE cdpOS = hb_cdpFindExt( hb_itemGetCPtr( pArg2 ) );
+            char * szValue = cdpOS ? hb_strdup( cdpOS->id ) : NULL;
+            if( pSet->HB_SET_DBCODEPAGE )
+               hb_xfree( pSet->HB_SET_DBCODEPAGE );
+            pSet->HB_SET_DBCODEPAGE = szValue;
+         }
+         break;
 
       case HB_SET_INVALID_:
          /* Return NIL if called with invalid SET specifier */
@@ -1098,6 +1112,7 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
    pSet->HB_SET_HBOUTLOG = hb_strdup( "hb_out.log" );
    pSet->HB_SET_HBOUTLOGINFO = hb_strdup( "" );
    pSet->HB_SET_OSCODEPAGE = NULL;
+   pSet->HB_SET_DBCODEPAGE = NULL;
 
    hb_xsetfilename( pSet->HB_SET_HBOUTLOG );
    hb_xsetinfo( pSet->HB_SET_HBOUTLOGINFO );
@@ -1128,6 +1143,7 @@ void hb_setRelease( PHB_SET_STRUCT pSet )
    if( pSet->HB_SET_HBOUTLOG )      hb_xfree( pSet->HB_SET_HBOUTLOG );
    if( pSet->HB_SET_HBOUTLOGINFO )  hb_xfree( pSet->HB_SET_HBOUTLOGINFO );
    if( pSet->HB_SET_OSCODEPAGE )    hb_xfree( pSet->HB_SET_OSCODEPAGE );
+   if( pSet->HB_SET_DBCODEPAGE )    hb_xfree( pSet->HB_SET_DBCODEPAGE );
 
    hb_fsFreeSearchPath( pSet->hb_set_path );
 
@@ -1175,6 +1191,7 @@ PHB_SET_STRUCT hb_setClone( PHB_SET_STRUCT pSrc )
    if( pSet->HB_SET_HBOUTLOG )     pSet->HB_SET_HBOUTLOG     = hb_strdup( pSet->HB_SET_HBOUTLOG );
    if( pSet->HB_SET_HBOUTLOGINFO ) pSet->HB_SET_HBOUTLOGINFO = hb_strdup( pSet->HB_SET_HBOUTLOGINFO );
    if( pSet->HB_SET_OSCODEPAGE )   pSet->HB_SET_OSCODEPAGE   = hb_strdup( pSet->HB_SET_OSCODEPAGE );
+   if( pSet->HB_SET_DBCODEPAGE )   pSet->HB_SET_DBCODEPAGE   = hb_strdup( pSet->HB_SET_DBCODEPAGE );
 
    return pSet;
 }
@@ -1821,6 +1838,17 @@ BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
                fResult = TRUE;
             }
             break;
+         case HB_SET_DBCODEPAGE:
+            if( HB_IS_STRING( pItem ) || HB_IS_NIL( pItem ) )
+            {
+               PHB_CODEPAGE cdpOS = hb_cdpFindExt( hb_itemGetCPtr( pItem ) );
+               szValue = cdpOS ? hb_strdup( cdpOS->id ) : NULL;
+               if( pSet->HB_SET_DBCODEPAGE )
+                  hb_xfree( pSet->HB_SET_DBCODEPAGE );
+               pSet->HB_SET_DBCODEPAGE = szValue;
+               fResult = TRUE;
+            }
+            break;
 
          case HB_SET_INVALID_:
             break;
@@ -1977,6 +2005,7 @@ BOOL    hb_setGetL( HB_set_enum set_specifier )
       case HB_SET_HBOUTLOG:
       case HB_SET_HBOUTLOGINFO:
       case HB_SET_OSCODEPAGE:
+      case HB_SET_DBCODEPAGE:
       case HB_SET_INVALID_:
          break;
 #if 0
@@ -2030,6 +2059,8 @@ const char * hb_setGetCPtr( HB_set_enum set_specifier )
          return pSet->HB_SET_HBOUTLOGINFO;
       case HB_SET_OSCODEPAGE:
          return pSet->HB_SET_OSCODEPAGE;
+      case HB_SET_DBCODEPAGE:
+         return pSet->HB_SET_DBCODEPAGE;
       case HB_SET_LANGUAGE:
          return hb_langID();
       case HB_SET_CODEPAGE:
@@ -2183,6 +2214,7 @@ int     hb_setGetNI( HB_set_enum set_specifier )
       case HB_SET_HBOUTLOG:
       case HB_SET_HBOUTLOGINFO:
       case HB_SET_OSCODEPAGE:
+      case HB_SET_DBCODEPAGE:
       case HB_SET_INVALID_:
          break;
 #if 0
@@ -2604,6 +2636,12 @@ void * hb_setGetOSCP( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->hb_set_oscp;
+}
+
+const char * hb_setGetDBCODEPAGE( void )
+{
+   HB_STACK_TLS_PRELOAD
+   return hb_stackSetStruct()->HB_SET_DBCODEPAGE;
 }
 
 const char * hb_osEncodeCP( const char * szName, char ** pszFree, ULONG * pulSize )

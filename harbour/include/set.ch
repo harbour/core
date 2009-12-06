@@ -131,8 +131,9 @@
 #define _SET_CODEPAGE         114 /* Harbour extension */
 #define _SET_OSCODEPAGE       115 /* Harbour extension */
 #define _SET_TIMEFORMAT       116 /* Harbour extension */
+#define _SET_DBCODEPAGE       117 /* Harbour extension */
 
 #define HB_SET_BASE           100
-#define HB_SET_COUNT          15
+#define HB_SET_COUNT          ( _SET_DBCODEPAGE - HB_SET_BASE + 1 )
 
 #endif /* _SET_CH */
