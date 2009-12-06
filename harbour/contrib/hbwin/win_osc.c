@@ -119,6 +119,13 @@ HB_FUNC( WIN_OSISVISTA )
    hb_retl( osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 0 );
 }
 
+HB_FUNC( WIN_OSISVISTAORUPPER )
+{
+   OSVERSIONINFO osvi;
+   getwinver( &osvi );
+   hb_retl( osvi.dwMajorVersion >= 6 );
+}
+
 HB_FUNC( WIN_OSIS7 )
 {
    OSVERSIONINFO osvi;

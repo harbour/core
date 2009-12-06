@@ -71,27 +71,15 @@
 
 /*----------------------------------------------------------------------*/
 
-#define MAX_LINE_LEN 2047
-
-static const char s_good[]      = "''_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.";
-static const char * s_adouble[] = { "*/", "/*", "//", "->", "::", "||", "++", "--", "**", ":=",
-                                    "<=", ">=", "<>", "!=", "==", "+=", "-=", "*=", "/=", "%=",
-                                    "^=", "&&", "^^", ">>", "<<", "=>", "&=", "|=" };
-
-static int s_lengood     = HB_SIZEOFARRAY( s_good ) - 1;
-static int s_lendouble   = HB_SIZEOFARRAY( s_adouble );
-
-/*----------------------------------------------------------------------*/
-
-static HB_SIZE linearfind( const char ** array, const char * cText, HB_SIZE lenarray, HB_SIZE lentext, HB_BOOL bMatchCase )
+static int linearfind( const char ** array, const char * pszText, int lenarray, int lentext, HB_BOOL bMatchCase )
 {
-   HB_SIZE i;
+   int i;
 
    if( bMatchCase )
    {
       for( i = 0; i < lenarray; i++ )
       {
-         if( strncmp( cText, array[ i ], lentext + 1 )  == 0 )
+         if( strncmp( pszText, array[ i ], lentext + 1 )  == 0 )
             return i + 1;
       }
    }
@@ -99,7 +87,7 @@ static HB_SIZE linearfind( const char ** array, const char * cText, HB_SIZE lena
    {
       for( i = 0; i < lenarray; i++ )
       {
-         if( hb_strnicmp( cText, array[ i ], lentext + 1 ) == 0 )
+         if( hb_strnicmp( pszText, array[ i ], lentext + 1 ) == 0 )
             return i + 1;
       }
 
@@ -109,13 +97,13 @@ static HB_SIZE linearfind( const char ** array, const char * cText, HB_SIZE lena
 
 /*----------------------------------------------------------------------*/
 
-static HB_BOOL strempty( const char * string )
+static HB_BOOL strempty( const char * pszString )
 {
-   HB_SIZE i = 0;
+   int i = 0;
 
-   while( string[ i ] != 0 )
+   while( pszString[ i ] != 0 )
    {
-      if( string[ i++ ] != ' ' )
+      if( pszString[ i++ ] != ' ' )
          return HB_FALSE;
    }
 
@@ -124,16 +112,16 @@ static HB_BOOL strempty( const char * string )
 
 /*----------------------------------------------------------------------*/
 
-static HB_SIZE atbuff( const char * chars, const char * string, HB_SIZE StartFrom, HB_SIZE Target, HB_SIZE len_chars, HB_SIZE len )
+static int atbuff( const char * pszChars, const char * pszString, int StartFrom, int Target, int len_chars, int len )
 {
    if( len >= len_chars && StartFrom <= len - len_chars )
    {
-      HB_SIZE x;
-      HB_SIZE Counter = 0;
+      int x;
+      int Counter = 0;
 
       for( x = StartFrom; x <= ( len - len_chars ); x++ )
       {
-         if( strncmp( string + x, chars, len_chars ) == 0 )
+         if( strncmp( pszString + x, pszChars, len_chars ) == 0 )
          {
             if( ++Counter == Target )
                return x + 1;
@@ -146,27 +134,35 @@ static HB_SIZE atbuff( const char * chars, const char * string, HB_SIZE StartFro
 
 /*----------------------------------------------------------------------*/
 
-static int _GetWord( const char * cText, HB_BOOL lHonorSpacing, char * cWord, int * pnpos )
+static int getword( const char * pszText, HB_BOOL bHonorSpacing, char * pszWord, int * pnpos )
 {
-   int maxlen = strlen( cText );
+   static const char s_szGood[]         = "''_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.";
+   static const char * s_szDoubleList[] = { "*/", "/*", "//", "->", "::", "||", "++", "--", "**", ":=",
+                                            "<=", ">=", "<>", "!=", "==", "+=", "-=", "*=", "/=", "%=",
+                                            "^=", "&&", "^^", ">>", "<<", "=>", "&=", "|=" };
+
+   static int s_lengood   = HB_SIZEOFARRAY( s_szGood ) - 1;
+   static int s_lendouble = HB_SIZEOFARRAY( s_szDoubleList );
+
+   int maxlen = strlen( pszText );
    int npos = 0;
    int wordlen = 0;
 
    if( maxlen > 0 )
    {
-      char   temp;
-      char   ch;
-      char   csingle[ 2 ];
-      char   cdouble[ 3 ];
+      char temp;
+      char ch;
+      char csingle[ 2 ];
+      char cdouble[ 3 ];
 
       csingle[ 1 ] = '\0';
       cdouble[ 2 ] = '\0';
 
-      ch = cText[ 0 ];
+      ch = pszText[ 0 ];
 
       if( ch == ',' ) /* lists */
       {
-         cWord[ wordlen++ ] = ch;
+         pszWord[ wordlen++ ] = ch;
          npos++;
       }
       else /* literals */
@@ -174,57 +170,57 @@ static int _GetWord( const char * cText, HB_BOOL lHonorSpacing, char * cWord, in
          if( ch == '"' || ch == '\'' )
          {
             temp = ch;
-            cWord[ wordlen++ ] = ch;
+            pszWord[ wordlen++ ] = ch;
             npos++;
             ch = ' ';
-            while( ( npos < maxlen ) && ( ch != temp ) )
+            while( npos < maxlen && ch != temp )
             {
-               ch = cText[ npos ];
-               cWord[ wordlen++ ] = ch;
+               ch = pszText[ npos ];
+               pszWord[ wordlen++ ] = ch;
                npos++;
             }
          }
          else
          {
-            csingle[0] = ch;
-            if( atbuff( csingle, s_good, 0, 1, 1, s_lengood ) ) /* ch $ s_good ) // variables, commands, function names */
+            csingle[ 0 ] = ch;
+            if( atbuff( csingle, s_szGood, 0, 1, 1, s_lengood ) ) /* ch $ s_szGood ) // variables, commands, function names */
             {
-              while( ( npos < maxlen ) && atbuff( csingle, s_good, 0, 1, 1, s_lengood ) )
+              while( npos < maxlen && atbuff( csingle, s_szGood, 0, 1, 1, s_lengood ) )
               {
-                 cWord[ wordlen++ ] = ch;
+                 pszWord[ wordlen++ ] = ch;
                  npos++;
-                 ch = cText[ npos ];
+                 ch = pszText[ npos ];
                  csingle[ 0 ] = ch;
               }
 
             }
             else if( ch == ' ' )
             {
-               while( ( npos < maxlen ) && ch == ' ' )
+               while( npos < maxlen && ch == ' ' )
                {
-                  cWord[ wordlen++ ] = ch;
+                  pszWord[ wordlen++ ] = ch;
                   npos++;
-                  ch = cText[ npos ];
+                  ch = pszText[ npos ];
                }
 
-               if( !lHonorSpacing )
+               if( !bHonorSpacing )
                {
-                  cWord[ 0 ] = ' '; /* reduce spaces to 1 */
+                  pszWord[ 0 ] = ' '; /* reduce spaces to 1 */
                   wordlen = 1;
                }
             }
             else  /* operators, punctuation */
             {
-               cWord[ wordlen++ ]= ch;
+               pszWord[ wordlen++ ]= ch;
                npos++;
-               ch = cText[ npos ];
+               ch = pszText[ npos ];
                if( maxlen > npos )
                {
-                  cdouble[ 0 ] = cWord[ 0 ];
+                  cdouble[ 0 ] = pszWord[ 0 ];
                   cdouble[ 1 ] = ch;
-                  if( linearfind( s_adouble, cdouble, s_lendouble, 2, HB_TRUE ) )  /* if( (cWord + ch) $ s_adouble) //aScan( s_adouble, cWord + ch ) > 0 */
+                  if( linearfind( s_szDoubleList, cdouble, s_lendouble, 2, HB_TRUE ) )  /* if( (pszWord + ch) $ s_szDoubleList) //aScan( s_szDoubleList, pszWord + ch ) > 0 */
                   {
-                     cWord[ wordlen++ ] = ch;
+                     pszWord[ wordlen++ ] = ch;
                      npos++;
                   }
                }
@@ -233,7 +229,7 @@ static int _GetWord( const char * cText, HB_BOOL lHonorSpacing, char * cWord, in
       }
    }
 
-   cWord[ wordlen ] = '\0';
+   pszWord[ wordlen ] = '\0';
    *pnpos = npos;
 
    return wordlen;
@@ -241,109 +237,107 @@ static int _GetWord( const char * cText, HB_BOOL lHonorSpacing, char * cWord, in
 
 /*----------------------------------------------------------------------*/
 
-/*
- * ( c, lHonorSpacing, lInRemark, lUpperKeyWord, lKeepComments, lPRG, lKeepSpaces )
- */
-HB_FUNC( PARSEXPR )
+HB_FUNC( PARSEXPR ) /* ( c, bHonorSpacing, bInRemark, bUpperKeyWord, bKeepComments, bPRG, bKeepSpaces ) */
 {
-   const char * c = hb_parcx( 1 );
-   HB_BOOL   lHonorSpacing = hb_parl( 2 );
-   HB_BOOL   lInRemark     = HB_ISLOG( 3 ) ? hb_parl( 3 ) : HB_FALSE;
-   HB_BOOL   lKeepComments = HB_ISLOG( 5 ) ? hb_parl( 5 ) : HB_TRUE;
+   const char * pszExpr = hb_parcx( 1 );
+
+   HB_BOOL   bHonorSpacing = hb_parl( 2 );
+   HB_BOOL   bInRemark     = HB_ISLOG( 3 ) ? hb_parl( 3 ) : HB_FALSE;
+   HB_BOOL   bKeepComments = HB_ISLOG( 5 ) ? hb_parl( 5 ) : HB_TRUE;
    HB_BOOL   bPRG          = HB_ISLOG( 6 ) ? hb_parl( 6 ) : HB_TRUE;
-   HB_BOOL   lKeepSpaces   = HB_ISLOG( 7 ) ? hb_parl( 7 ) : HB_TRUE;
-   PHB_ITEM  aExpr         = hb_itemArrayNew( 0 );
-   PHB_ITEM  element       = hb_itemNew( NULL );
-   HB_BOOL   lFirst        = HB_TRUE;
+   HB_BOOL   bKeepSpaces   = HB_ISLOG( 7 ) ? hb_parl( 7 ) : HB_TRUE;
+   PHB_ITEM  paExpr        = hb_itemArrayNew( 0 );
+   PHB_ITEM  pTemp         = hb_itemNew( NULL );
+   HB_BOOL   bFirst        = HB_TRUE;
    int       lenprocessed  = 0;
    int       lenwords      = 0;
    int       wordlen;
    int       npos;
 
-   char NextWord[ MAX_LINE_LEN + 1 ];
+   char szNextWord[ 2048 ];
 
-   NextWord[ 0 ] = '\0';
+   szNextWord[ 0 ] = '\0';
 
-   while( ( wordlen = _GetWord( c, lHonorSpacing, NextWord, &lenprocessed ) ) != 0  )
+   while( ( wordlen = getword( pszExpr, bHonorSpacing, szNextWord, &lenprocessed ) ) != 0  )
    {
-      c += lenprocessed;
+      pszExpr += lenprocessed;
 
-      if( strncmp( NextWord, "*/", 3 ) == 0 ) /* remark end */
+      if( strncmp( szNextWord, "*/", 3 ) == 0 ) /* remark end */
       {
-         if( lKeepComments )
+         if( bKeepComments )
          {
             lenwords++;
-            hb_arrayAdd( aExpr, hb_itemPutC( element, NextWord ) );
+            hb_arrayAdd( paExpr, hb_itemPutC( pTemp, szNextWord ) );
          }
-         lInRemark = HB_FALSE;
+         bInRemark = HB_FALSE;
       }
-      else if( ( strncmp( NextWord, "/*", 3 ) == 0 ) || lInRemark ) /* remark start */
+      else if( ( strncmp( szNextWord, "/*", 3 ) == 0 ) || bInRemark ) /* remark start */
       {
-         lInRemark = ( ( npos = atbuff( "*/", c, 0, 1, 2, strlen( c ) ) ) == 0 );
+         bInRemark = ( ( npos = atbuff( "*/", pszExpr, 0, 1, 2, strlen( pszExpr ) ) ) == 0 );
 
-         if( lInRemark )
+         if( bInRemark )
          {
 
-            if( lKeepComments )
+            if( bKeepComments )
             {
-               hb_strncat( NextWord, c, sizeof( NextWord ) - 1 );
+               hb_strncat( szNextWord, pszExpr, sizeof( szNextWord ) - 1 );
                lenwords++;
-               hb_arrayAdd( aExpr, hb_itemPutC( element, NextWord ) );
+               hb_arrayAdd( paExpr, hb_itemPutC( pTemp, szNextWord ) );
             }
             break;
          }
          else
          {
-            if( lKeepComments )
+            if( bKeepComments )
             {
-               strncpy( NextWord + wordlen, c, npos + 1 );
-               NextWord[ wordlen + npos + 1 ] = '\0';
+               strncpy( szNextWord + wordlen, pszExpr, npos + 1 );
+               szNextWord[ wordlen + npos + 1 ] = '\0';
                lenwords++;
-               hb_arrayAdd( aExpr, hb_itemPutC( element, NextWord ) );
+               hb_arrayAdd( paExpr, hb_itemPutC( pTemp, szNextWord ) );
             }
-            c += ( npos + 1 );
+            pszExpr += npos + 1;
          }
       }
-      else if( strncmp( NextWord, "//", 3 ) == 0 || ( bPRG && strncmp( NextWord, "&&", 3 ) == 0 ) ) /* inline remark */
+      else if( strncmp( szNextWord, "//", 3 ) == 0 || ( bPRG && strncmp( szNextWord, "&&", 3 ) == 0 ) ) /* inline remark */
       {
-         if( lKeepComments )
+         if( bKeepComments )
          {
-            hb_strncat( NextWord, c, sizeof( NextWord ) - 1 );
+            hb_strncat( szNextWord, pszExpr, sizeof( szNextWord ) - 1 );
             lenwords++;
-            hb_arrayAdd( aExpr, hb_itemPutC( element, NextWord ) );
+            hb_arrayAdd( paExpr, hb_itemPutC( pTemp, szNextWord ) );
          }
          break;
       }
-      else if( strncmp( NextWord, "**", 3 ) == 0 && lFirst && bPRG )
+      else if( strncmp( szNextWord, "**", 3 ) == 0 && bFirst && bPRG )
       {
-         if( lKeepComments )
+         if( bKeepComments )
          {
-            hb_strncat( NextWord, c, sizeof( NextWord ) - 1 );
+            hb_strncat( szNextWord, pszExpr, sizeof( szNextWord ) - 1 );
             lenwords++;
-            hb_arrayAdd( aExpr, hb_itemPutC( element, NextWord ) );
+            hb_arrayAdd( paExpr, hb_itemPutC( pTemp, szNextWord ) );
          }
          break;
       }
       else
       {
-         if( lKeepSpaces || ! strempty( NextWord ) )
+         if( bKeepSpaces || ! strempty( szNextWord ) )
          {
             lenwords++;
-            hb_arrayAdd( aExpr, hb_itemPutC( element, NextWord ) );
+            hb_arrayAdd( paExpr, hb_itemPutC( pTemp, szNextWord ) );
          }
       }
 
-      if( ! strempty( NextWord ) )
-         lFirst = HB_FALSE;
+      if( ! strempty( szNextWord ) )
+         bFirst = HB_FALSE;
    }
 
-   if( ! lKeepComments && !( lenwords > 0 ) && hb_arrayGetCPtr( aExpr, lenwords ) )
-      hb_arraySize( aExpr, lenwords );
+   if( ! bKeepComments && !( lenwords > 0 ) && hb_arrayGetCPtr( paExpr, lenwords ) )
+      hb_arraySize( paExpr, lenwords );
 
-   hb_storl( lInRemark, 3 );
+   hb_storl( bInRemark, 3 );
 
-   hb_itemRelease( element );
-   hb_itemReturnRelease( aExpr );
+   hb_itemRelease( pTemp );
+   hb_itemReturnRelease( paExpr );
 }
 
 /*----------------------------------------------------------------------*/

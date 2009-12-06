@@ -76,13 +76,17 @@ FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
    DEFAULT lSetIt TO .F.
    DEFAULT lDoVista TO .T.
 
-   IF ! lDoVista .AND. ( win_osIsVista() .OR. win_osIs7() )
-      *
+   IF ! lDoVista .AND. win_osIsVistaOrUpper()
+      /* do nothing */
    ELSEIF win_osIs9X()
       rVal := QueryRegistry( HKEY_LOCAL_MACHINE, "System\CurrentControlSet\Services\VxD\VREDIR", "DiscardCacheOnOpen", 1, lSetIt )
    ELSE
       cKeySrv := "System\CurrentControlSet\Services\LanmanServer\Parameters"
       cKeyWks := "System\CurrentControlSet\Services\LanmanWorkStation\Parameters"
+
+      IF lSetIt
+         lSetIt := ! win_osIsNT() .OR. wapi_IsUserAnAdmin()
+      ENDIF
 
       /* Server settings */
       rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeySrv, "CachedOpenLimit", 0, lSetIt )
@@ -90,6 +94,11 @@ FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
       rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeySrv, "EnableOpLockForceClose", 1, lSetIt )
       rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeySrv, "SharingViolationDelay", 0, lSetIt )
       rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeySrv, "SharingViolationRetries", 0, lSetIt )
+
+      IF win_osIsVistaOrUpper()
+         /* If SMB2 is enabled turning off oplocks does not work, so SMB2 is required to be turned off on Server. */
+         rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeySrv, "SMB2", 0, lSetIt )
+      ENDIF
 
       /* Workstation settings */
       rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeyWks, "UseOpportunisticLocking", 0, lSetIt )

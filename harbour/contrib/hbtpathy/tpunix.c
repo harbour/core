@@ -267,11 +267,22 @@ HB_FUNC( __TP_ISCTS )
       hb_retl( FALSE );
 }
 
+#if ! defined( CRTSCTS )
+   #if   defined( HB_OS_LINUX ) ||
+         defined( HB_OS_SUNOS )
+      #define CRTSCTS            0x80000000
+   #elif defined( HB_OS_BSD )
+      #define CRTSCTS            0x00010000
+   #elif defined( HB_OS_BEOS )
+      #define CRTSCTS            0x00006000
+   #elif defined( HB_OS_DARWIN )
+      #define CRTSCTS            0x00030000
+   #endif
+#endif
+
 HB_FUNC( __TP_CTRLCTS )
 {
-#if !defined( CRTSCTS )
-#  define CRTSCTS 020000000000
-#endif
+#if defined( CRTSCTS )
    struct termios options;
    int port = hb_parnl( 1 );
    int newvalue = hb_pcount() == 2 ? hb_parnl( 2 ) : -1;
@@ -290,6 +301,10 @@ HB_FUNC( __TP_CTRLCTS )
       rc = tcsetattr( port, TCSAFLUSH, &options );
 
    hb_retni( curvalue ? 1 : 0 );
+#else
+   int iTODO;
+   hb_retni( 0 );
+#endif
 }
 
 #if 0
