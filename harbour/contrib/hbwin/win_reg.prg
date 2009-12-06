@@ -103,14 +103,14 @@ FUNCTION win_regRead( cRegPath, xDefault )
 
    win_regPathSplit( cRegPath, @nHKEY, @cKey, @cEntry )
 
-   RETURN GetRegistry( nHKEY, cKey, cEntry, xDefault )
+   RETURN win_regGet( nHKEY, cKey, cEntry, xDefault )
 
 FUNCTION win_regWrite( cRegPath, xValue )
    LOCAL nHKEY, cKey, cEntry
 
    win_regPathSplit( cRegPath, @nHKEY, @cKey, @cEntry )
 
-   RETURN SetRegistry( nHKEY, cKey, cEntry, xValue )
+   RETURN win_regSet( nHKEY, cKey, cEntry, xValue )
 
 /* ------------------------------------------------------------------- */
 
@@ -135,13 +135,13 @@ FUNCTION win_regWrite( cRegPath, xValue )
 #define REG_FULL_RESOURCE_DESCRIPTOR   9   // Resource list in the hardware description
 #define REG_RESOURCE_REQUIREMENTS_LIST 10
 
-FUNCTION QueryRegistry( nHKEY, cKeyName, cEntryName, xValue, lSetIt )
-   LOCAL xKey := GetRegistry( nHKEY, cKeyName, cEntryName )
+FUNCTION win_regQuery( nHKEY, cKeyName, cEntryName, xValue, lSetIt )
+   LOCAL xKey := win_regGet( nHKEY, cKeyName, cEntryName )
 
    LOCAL cValType := ValType( xValue )
    LOCAL lRetVal
 
-   DEFAULT lSetIT TO .F.
+   DEFAULT lSetIt TO .F.
 
    IF cValType == "L"
       xValue := iif( xValue, 1, 0 )
@@ -153,21 +153,21 @@ FUNCTION QueryRegistry( nHKEY, cKeyName, cEntryName, xValue, lSetIt )
 
    lRetVal := ( xKey != NIL .AND. xValue != NIL .AND. cValType == ValType( xKey ) .AND. xValue == xKey )
    IF ! lRetVal .AND. lSetIt
-      lRetVal := SetRegistry( nHKEY, cKeyName, cEntryName, xValue )
+      lRetVal := win_regSet( nHKEY, cKeyName, cEntryName, xValue )
    ENDIF
 
    RETURN lRetVal
 
-FUNCTION GetRegistry( nHKEY, cKeyName, cEntryName, xDefault )
+FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault )
    LOCAL xRetVal
    LOCAL pKeyHandle
    LOCAL nValueType
 
-   IF win_RegOpenKeyEx( nHKEY, cKeyName, 0, KEY_QUERY_VALUE, @pKeyHandle )
+   IF win_regOpenKeyEx( nHKEY, cKeyName, 0, KEY_QUERY_VALUE, @pKeyHandle )
 
       /* retrieve the length of the value */
 
-      win_RegQueryValueEx( pKeyHandle, cEntryName, 0, @nValueType, @xRetVal )
+      win_regQueryValueEx( pKeyHandle, cEntryName, 0, @nValueType, @xRetVal )
 
       IF ISCHARACTER( xRetVal )
          DO CASE
@@ -185,20 +185,20 @@ FUNCTION GetRegistry( nHKEY, cKeyName, cEntryName, xDefault )
          xRetVal := xDefault
       ENDIF
 
-      win_RegCloseKey( pKeyHandle )
+      win_regCloseKey( pKeyHandle )
    ELSE
       xRetVal := xDefault
    ENDIF
 
    RETURN xRetVal
 
-FUNCTION SetRegistry( nHKEY, cKeyName, cEntryName, xValue )
+FUNCTION win_regSet( nHKEY, cKeyName, cEntryName, xValue )
    LOCAL cName
    LOCAL nValueType
    LOCAL lRetVal := .F.
    LOCAL pKeyHandle
 
-   IF win_RegCreateKeyEx( nHKEY, cKeyName, 0, 0, 0, KEY_SET_VALUE, 0, @pKeyHandle )
+   IF win_regCreateKeyEx( nHKEY, cKeyName, 0, 0, 0, KEY_SET_VALUE, 0, @pKeyHandle )
 
       /* no support for Arrays, Codeblock ... */
       SWITCH ValType( xValue )
@@ -222,10 +222,10 @@ FUNCTION SetRegistry( nHKEY, cKeyName, cEntryName, xValue )
       ENDSWITCH
 
       IF cName != NIL
-         lRetVal := win_RegSetValueEx( pKeyHandle, cEntryName, 0, nValueType, cName )
+         lRetVal := win_regSetValueEx( pKeyHandle, cEntryName, 0, nValueType, cName )
       ENDIF
 
-      win_RegCloseKey( pKeyHandle )
+      win_regCloseKey( pKeyHandle )
    ENDIF
 
    RETURN lRetVal

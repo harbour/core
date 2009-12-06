@@ -69,7 +69,7 @@
          Administrator rights are required by default in Windows. [vszakats] */
 
 FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
-   LOCAL rVal := .T.
+   LOCAL bRetVal := .T.
    LOCAL cKeySrv
    LOCAL cKeyWks
 
@@ -79,7 +79,7 @@ FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
    IF ! lDoVista .AND. win_osIsVistaOrUpper()
       /* do nothing */
    ELSEIF win_osIs9X()
-      rVal := QueryRegistry( HKEY_LOCAL_MACHINE, "System\CurrentControlSet\Services\VxD\VREDIR", "DiscardCacheOnOpen", 1, lSetIt )
+      bRetVal := win_regQuery( HKEY_LOCAL_MACHINE, "System\CurrentControlSet\Services\VxD\VREDIR", "DiscardCacheOnOpen", 1, lSetIt )
    ELSE
       cKeySrv := "System\CurrentControlSet\Services\LanmanServer\Parameters"
       cKeyWks := "System\CurrentControlSet\Services\LanmanWorkStation\Parameters"
@@ -89,45 +89,38 @@ FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
       ENDIF
 
       /* Server settings */
-      rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeySrv, "CachedOpenLimit", 0, lSetIt )
-      rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeySrv, "EnableOpLocks", 0, lSetIt ) /* Q124916 */
-      rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeySrv, "EnableOpLockForceClose", 1, lSetIt )
-      rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeySrv, "SharingViolationDelay", 0, lSetIt )
-      rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeySrv, "SharingViolationRetries", 0, lSetIt )
+      bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeySrv, "CachedOpenLimit", 0, lSetIt )
+      bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeySrv, "EnableOpLocks", 0, lSetIt ) /* Q124916 */
+      bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeySrv, "EnableOpLockForceClose", 1, lSetIt )
+      bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeySrv, "SharingViolationDelay", 0, lSetIt )
+      bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeySrv, "SharingViolationRetries", 0, lSetIt )
 
       IF win_osIsVistaOrUpper()
          /* If SMB2 is enabled turning off oplocks does not work, so SMB2 is required to be turned off on Server. */
-         rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeySrv, "SMB2", 0, lSetIt )
+         bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeySrv, "SMB2", 0, lSetIt )
       ENDIF
 
       /* Workstation settings */
-      rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeyWks, "UseOpportunisticLocking", 0, lSetIt )
-      rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeyWks, "EnableOpLocks", 0, lSetIt )
-      rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeyWks, "EnableOpLockForceClose", 1, lSetIt )
-      rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeyWks, "UtilizeNtCaching", 0, lSetIt )
-      rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeyWks, "UseLockReadUnlock", 0, lSetIt )
+      bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeyWks, "UseOpportunisticLocking", 0, lSetIt )
+      bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeyWks, "EnableOpLocks", 0, lSetIt )
+      bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeyWks, "EnableOpLockForceClose", 1, lSetIt )
+      bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeyWks, "UtilizeNtCaching", 0, lSetIt )
+      bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, cKeyWks, "UseLockReadUnlock", 0, lSetIt )
 
       IF win_osis2000OrUpper()
-         rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, "System\CurrentControlSet\Services\MRXSmb\Parameters", "OpLocksDisabled", 1, lSetIt )
+         bRetVal := bRetVal .AND. win_regQuery( HKEY_LOCAL_MACHINE, "System\CurrentControlSet\Services\MRXSmb\Parameters", "OpLocksDisabled", 1, lSetIt )
       ENDIF
    ENDIF
 
-   RETURN rVal
+   RETURN bRetVal
 
 FUNCTION WIN_OSNETVREDIROK( nResult )
-   LOCAL cWinDir
-   LOCAL cFile
    LOCAL a
 
    nResult := 0
 
    IF win_osIs9X()
-      cWinDir := GetEnv( "WINDIR" )  /* Get the folder that Windows is installed in */
-      IF Empty( cWinDir )
-         cWinDir := "C:\WINDOWS"
-      ENDIF
-      cFile := cWinDir + "\SYSTEM\VREDIR.VXD"
-      a := Directory( cFile )  /* Check for faulty files. */
+      a := Directory( hb_GetEnv( "WINDIR", "C:\WINDOWS" ) + "\SYSTEM\VREDIR.VXD" )  /* Check for faulty files. */
       IF ! Empty( a )
          IF a[ 1, F_SIZE ] == 156749 .AND. a[ 1, F_TIME ] == "11:11:10"
             nResult := 1111

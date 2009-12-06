@@ -15,6 +15,7 @@ C_SOURCES := \
    legacycd.c \
    legacyco.c \
    legacycp.c \
+   legacycr.c \
    legacycv.c \
    wce_simc.c \
    wce_smsc.c \

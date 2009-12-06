@@ -802,7 +802,7 @@ METHOD HbIde:saveSource( nTab, lConfirm )
 
          IF lSave
             cBuffer := ::aTabs[ nTab, 2 ]:toPlainText()
-            memowrit( ::aTabs[ nTab, 5 ], cBuffer )
+            hb_memowrit( ::aTabs[ nTab, 5 ], cBuffer )
             qDocument:setModified( .f. )
             ::createTags()
             ::updateFuncList()
@@ -1663,7 +1663,7 @@ METHOD HbIde:saveProject()
                       ".hbi"
 
    CreateTarget( ::cSaveTo, txt_ )
-   MemoWrit( hb_dirBase() + "hbide.env", o_[ E_oPrjCmp ]:toPlainText() )
+   hb_MemoWrit( hb_dirBase() + "hbide.env", o_[ E_oPrjCmp ]:toPlainText() )
 
    RETURN Nil
 

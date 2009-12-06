@@ -71,7 +71,7 @@
 
 /*----------------------------------------------------------------------*/
 
-static int linearfind( const char ** array, const char * pszText, int lenarray, int lentext, HB_BOOL bMatchCase )
+static int ide_linearfind( const char ** array, const char * pszText, int lenarray, int lentext, HB_BOOL bMatchCase )
 {
    int i;
 
@@ -97,7 +97,7 @@ static int linearfind( const char ** array, const char * pszText, int lenarray, 
 
 /*----------------------------------------------------------------------*/
 
-static HB_BOOL strempty( const char * pszString )
+static HB_BOOL ide_strempty( const char * pszString )
 {
    int i = 0;
 
@@ -112,18 +112,18 @@ static HB_BOOL strempty( const char * pszString )
 
 /*----------------------------------------------------------------------*/
 
-static int atbuff( const char * pszChars, const char * pszString, int StartFrom, int Target, int len_chars, int len )
+static int ide_atbuff( const char * pszChars, const char * pszString, int StartFrom, int Target, int len_chars, int len )
 {
    if( len >= len_chars && StartFrom <= len - len_chars )
    {
       int x;
-      int Counter = 0;
+      int counter = 0;
 
       for( x = StartFrom; x <= ( len - len_chars ); x++ )
       {
          if( strncmp( pszString + x, pszChars, len_chars ) == 0 )
          {
-            if( ++Counter == Target )
+            if( ++counter == Target )
                return x + 1;
          }
       }
@@ -134,7 +134,7 @@ static int atbuff( const char * pszChars, const char * pszString, int StartFrom,
 
 /*----------------------------------------------------------------------*/
 
-static int getword( const char * pszText, HB_BOOL bHonorSpacing, char * pszWord, int * pnpos )
+static int ide_getword( const char * pszText, HB_BOOL bHonorSpacing, char * pszWord, int * pnpos )
 {
    static const char s_szGood[]         = "''_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.";
    static const char * s_szDoubleList[] = { "*/", "/*", "//", "->", "::", "||", "++", "--", "**", ":=",
@@ -152,11 +152,11 @@ static int getword( const char * pszText, HB_BOOL bHonorSpacing, char * pszWord,
    {
       char temp;
       char ch;
-      char csingle[ 2 ];
-      char cdouble[ 3 ];
+      char szSingle[ 2 ];
+      char szDouble[ 3 ];
 
-      csingle[ 1 ] = '\0';
-      cdouble[ 2 ] = '\0';
+      szSingle[ 1 ] = '\0';
+      szDouble[ 2 ] = '\0';
 
       ch = pszText[ 0 ];
 
@@ -182,17 +182,16 @@ static int getword( const char * pszText, HB_BOOL bHonorSpacing, char * pszWord,
          }
          else
          {
-            csingle[ 0 ] = ch;
-            if( atbuff( csingle, s_szGood, 0, 1, 1, s_lengood ) ) /* ch $ s_szGood ) // variables, commands, function names */
+            szSingle[ 0 ] = ch;
+            if( ide_atbuff( szSingle, s_szGood, 0, 1, 1, s_lengood ) ) /* ch $ s_szGood ) // variables, commands, function names */
             {
-              while( npos < maxlen && atbuff( csingle, s_szGood, 0, 1, 1, s_lengood ) )
+              while( npos < maxlen && ide_atbuff( szSingle, s_szGood, 0, 1, 1, s_lengood ) )
               {
                  pszWord[ wordlen++ ] = ch;
                  npos++;
                  ch = pszText[ npos ];
-                 csingle[ 0 ] = ch;
+                 szSingle[ 0 ] = ch;
               }
-
             }
             else if( ch == ' ' )
             {
@@ -216,9 +215,9 @@ static int getword( const char * pszText, HB_BOOL bHonorSpacing, char * pszWord,
                ch = pszText[ npos ];
                if( maxlen > npos )
                {
-                  cdouble[ 0 ] = pszWord[ 0 ];
-                  cdouble[ 1 ] = ch;
-                  if( linearfind( s_szDoubleList, cdouble, s_lendouble, 2, HB_TRUE ) )  /* if( (pszWord + ch) $ s_szDoubleList) //aScan( s_szDoubleList, pszWord + ch ) > 0 */
+                  szDouble[ 0 ] = pszWord[ 0 ];
+                  szDouble[ 1 ] = ch;
+                  if( ide_linearfind( s_szDoubleList, szDouble, s_lendouble, 2, HB_TRUE ) )  /* if( (pszWord + ch) $ s_szDoubleList) //aScan( s_szDoubleList, pszWord + ch ) > 0 */
                   {
                      pszWord[ wordlen++ ] = ch;
                      npos++;
@@ -258,7 +257,7 @@ HB_FUNC( PARSEXPR ) /* ( c, bHonorSpacing, bInRemark, bUpperKeyWord, bKeepCommen
 
    szNextWord[ 0 ] = '\0';
 
-   while( ( wordlen = getword( pszExpr, bHonorSpacing, szNextWord, &lenprocessed ) ) != 0  )
+   while( ( wordlen = ide_getword( pszExpr, bHonorSpacing, szNextWord, &lenprocessed ) ) != 0  )
    {
       pszExpr += lenprocessed;
 
@@ -273,7 +272,7 @@ HB_FUNC( PARSEXPR ) /* ( c, bHonorSpacing, bInRemark, bUpperKeyWord, bKeepCommen
       }
       else if( ( strncmp( szNextWord, "/*", 3 ) == 0 ) || bInRemark ) /* remark start */
       {
-         bInRemark = ( ( npos = atbuff( "*/", pszExpr, 0, 1, 2, strlen( pszExpr ) ) ) == 0 );
+         bInRemark = ( ( npos = ide_atbuff( "*/", pszExpr, 0, 1, 2, strlen( pszExpr ) ) ) == 0 );
 
          if( bInRemark )
          {
@@ -290,6 +289,7 @@ HB_FUNC( PARSEXPR ) /* ( c, bHonorSpacing, bInRemark, bUpperKeyWord, bKeepCommen
          {
             if( bKeepComments )
             {
+               /* TOFIX: To use hb_strncpy() */
                strncpy( szNextWord + wordlen, pszExpr, npos + 1 );
                szNextWord[ wordlen + npos + 1 ] = '\0';
                lenwords++;
@@ -320,14 +320,14 @@ HB_FUNC( PARSEXPR ) /* ( c, bHonorSpacing, bInRemark, bUpperKeyWord, bKeepCommen
       }
       else
       {
-         if( bKeepSpaces || ! strempty( szNextWord ) )
+         if( bKeepSpaces || ! ide_strempty( szNextWord ) )
          {
             lenwords++;
             hb_arrayAdd( paExpr, hb_itemPutC( pTemp, szNextWord ) );
          }
       }
 
-      if( ! strempty( szNextWord ) )
+      if( ! ide_strempty( szNextWord ) )
          bFirst = HB_FALSE;
    }
 
