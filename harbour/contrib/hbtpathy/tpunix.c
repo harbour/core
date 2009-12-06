@@ -128,6 +128,13 @@ HB_FUNC( __TP_INITPORTSPEED )
 #if defined( cfmakeraw )
    /* Raw input from device */
    cfmakeraw( &options );
+#else
+   options.c_iflag &= ~( IGNBRK | BRKINT | PARMRK | ISTRIP | \
+                         INLCR | IGNCR | ICRNL | IXON );
+   options.c_oflag &= ~OPOST;
+   options.c_lflag &= ~( ECHO | ECHONL | ICANON | ISIG | IEXTEN );
+   options.c_cflag &= ~( CSIZE | PARENB );
+   options.c_cflag |= CS8;
 #endif
 
    /* Reset data bits ( cfmakeraw() puts it to CS8 ) */
@@ -268,15 +275,13 @@ HB_FUNC( __TP_ISCTS )
 }
 
 #if ! defined( CRTSCTS )
-   #if   defined( HB_OS_LINUX ) ||
-         defined( HB_OS_SUNOS )
-      #define CRTSCTS            0x80000000
-   #elif defined( HB_OS_BSD )
-      #define CRTSCTS            0x00010000
-   #elif defined( HB_OS_BEOS )
-      #define CRTSCTS            0x00006000
-   #elif defined( HB_OS_DARWIN )
-      #define CRTSCTS            0x00030000
+   /* if you find compiler which does not support it then please check
+    * if such flow control is supported. If yes then check exact value
+    * for this switch on given OS and define it only for this compiler
+    * and OS
+    */
+   #if defined( HB_OS_LINUX ) && defined( __WATCOMC__ )
+      #define CRTSCTS   020000000000
    #endif
 #endif
 

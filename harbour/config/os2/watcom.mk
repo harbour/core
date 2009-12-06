@@ -39,7 +39,7 @@ ifneq ($(HB_BUILD_OPTIM),no)
    #       when -s switch is used for functions calling APIENTRY16 functions.
    #       Such code executed from non main thread causes GPF.
    #       So we turn off -s switch for modules affected:
-   ifeq ($(filter $(LIBNAME),gtos2),)
+   ifeq ($(filter $(LIBNAME),gtos2 gtstd),)
       CFLAGS += -s
    endif
    # optimization flags
