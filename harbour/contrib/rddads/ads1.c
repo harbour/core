@@ -72,7 +72,7 @@ static int s_iSetListenerHandle = 0;
 
 static USHORT s_uiRddCount = 0;
 static USHORT s_uiRddIdADS = ( USHORT ) -1;
-static USHORT s_uiRddIdADT = ( USHORT ) -1;
+static USHORT s_uiRddIdADSADT = ( USHORT ) -1;
 static USHORT s_uiRddIdADSNTX = ( USHORT ) -1;
 static USHORT s_uiRddIdADSCDX = ( USHORT ) -1;
 #if ADS_LIB_VERSION >= 900
@@ -270,7 +270,7 @@ static int adsGetFileType( USHORT uiRddID )
       return ADS_CDX;
    else if( uiRddID == s_uiRddIdADSNTX )
       return ADS_NTX;
-   else if( uiRddID == s_uiRddIdADT )
+   else if( uiRddID == s_uiRddIdADSADT )
       return ADS_ADT;
 #if ADS_LIB_VERSION >= 900
    else if( uiRddID == s_uiRddIdADSVFP )
@@ -290,13 +290,10 @@ static const char * adsMemoExt( int iFileType )
    switch( iFileType )
    {
    case ADS_ADT: return ".adm";
-   case ADS_CDX: return ".fpt";
-#if ADS_LIB_VERSION >= 900
-   case ADS_VFP: return ".fpt";
-#endif
+   case ADS_NTX: return ".dbt";
    }
 
-   return ".dbt";
+   return ".fpt";
 }
 
 static const char * adsIndexExt( int iFileType )
@@ -304,13 +301,10 @@ static const char * adsIndexExt( int iFileType )
    switch( iFileType )
    {
    case ADS_ADT: return ".adi";
-   case ADS_CDX: return ".cdx";
-#if ADS_LIB_VERSION >= 900
-   case ADS_VFP: return ".cdx";
-#endif
+   case ADS_NTX: return ".ntx";
    }
 
-   return ".ntx";
+   return ".cdx";
 }
 
 static ADSHANDLE hb_adsFindBag( ADSAREAP pArea, const char * szBagName )
@@ -3200,7 +3194,7 @@ static HB_ERRCODE adsNewArea( ADSAREAP pArea )
    errCode = SUPER_NEW( ( AREAP ) pArea );
    if( errCode == HB_SUCCESS )
    {
-      if( pArea->area.rddID == s_uiRddIdADT )
+      if( pArea->area.rddID == s_uiRddIdADSADT )
       {
          pArea->iFileType = ADS_ADT;
          pArea->area.uiMaxFieldNameLength = ADS_MAX_FIELD_NAME;
@@ -3713,7 +3707,7 @@ static HB_ERRCODE adsSetRel( ADSAREAP pArea, LPDBRELINFO  lpdbRelations )
    szExp = ( UNSIGNED8 * ) hb_itemGetCPtr( lpdbRelations->abKey );
    rddID = lpdbRelations->lpaChild->rddID;
    if( *szExp && ( rddID == s_uiRddIdADS ||
-                   rddID == s_uiRddIdADT ||
+                   rddID == s_uiRddIdADSADT ||
 #if ADS_LIB_VERSION >= 900
                    rddID == s_uiRddIdADSVFP ||
 #endif
@@ -5188,11 +5182,11 @@ HB_FUNC_STATIC( ADS_GETFUNCTABLE )
    adsRegisterRDD( &s_uiRddIdADS );
 }
 
-HB_FUNC_STATIC( ADT_GETFUNCTABLE )
+HB_FUNC_STATIC( ADSADT_GETFUNCTABLE )
 {
-   HB_TRACE(HB_TR_DEBUG, ("ADT_GETFUNCTABLE()"));
+   HB_TRACE(HB_TR_DEBUG, ("ADSADT_GETFUNCTABLE()"));
 
-   adsRegisterRDD( &s_uiRddIdADT );
+   adsRegisterRDD( &s_uiRddIdADSADT );
 }
 
 HB_FUNC_STATIC( ADSNTX_GETFUNCTABLE )
@@ -5222,12 +5216,22 @@ HB_FUNC_STATIC( ADSVFP_GETFUNCTABLE )
 
 HB_FUNC( ADS ) { ; }
 
+HB_FUNC( ADSADT ) { ; }
+
+HB_FUNC( ADSNTX ) { ; }
+
+HB_FUNC( ADSCDX ) { ; }
+
+#if ADS_LIB_VERSION >= 900
+HB_FUNC( ADSVFP ) { ; }
+#endif
+
 static void hb_adsRddInit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
    if( hb_rddRegister( "ADS", RDT_FULL ) > 1 ||
-       hb_rddRegister( "ADT", RDT_FULL ) > 1 ||
+       hb_rddRegister( "ADSADT", RDT_FULL ) > 1 ||
 #if ADS_LIB_VERSION >= 900
        hb_rddRegister( "ADSVFP", RDT_FULL ) > 1 ||
 #endif
@@ -5241,11 +5245,15 @@ static void hb_adsRddInit( void * cargo )
 HB_INIT_SYMBOLS_BEGIN( ads1__InitSymbols )
 { "ADS",                 {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADS )}, NULL },
 { "ADS_GETFUNCTABLE",    {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADS_GETFUNCTABLE )}, NULL },
-{ "ADT_GETFUNCTABLE",    {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADT_GETFUNCTABLE )}, NULL },
+{ "ADSADT",              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSADT )}, NULL },
+{ "ADSADT_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSADT_GETFUNCTABLE )}, NULL },
 #if ADS_LIB_VERSION >= 900
+{ "ADSVFP",              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSVFP )}, NULL },
 { "ADSVFP_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSVFP_GETFUNCTABLE )}, NULL },
 #endif
+{ "ADSNTX",              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSNTX )}, NULL },
 { "ADSNTX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSNTX_GETFUNCTABLE )}, NULL },
+{ "ADSCDX",              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSCDX )}, NULL },
 { "ADSCDX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSCDX_GETFUNCTABLE )}, NULL }
 HB_INIT_SYMBOLS_END( ads1__InitSymbols )
 
@@ -5275,7 +5283,7 @@ ADSAREAP hb_adsGetWorkAreaPointer( void )
       USHORT rddID = pArea->area.rddID;
 
       if( rddID == s_uiRddIdADS ||
-          rddID == s_uiRddIdADT ||
+          rddID == s_uiRddIdADSADT ||
 #if ADS_LIB_VERSION >= 900
           rddID == s_uiRddIdADSVFP ||
 #endif

@@ -119,7 +119,10 @@ typedef struct _ADSXAREA_
 
 
 
-static USHORT   s_uiRddIdADSX = ( USHORT ) -1;
+static USHORT   s_uiRddIdADSX    = ( USHORT ) -1;
+static USHORT   s_uiRddIdADSNTXX = ( USHORT ) -1;
+static USHORT   s_uiRddIdADSCDXX = ( USHORT ) -1;
+static USHORT   s_uiRddIdADSADTX = ( USHORT ) -1;
 static RDDFUNCS adsxSuper;
 
 
@@ -1405,7 +1408,7 @@ static RDDFUNCS adsxTable = { NULL,
                               NULL  };
 
 
-static void adsxRegisterRDD( USHORT * pusRddId )
+static void adsxRegisterRDD( USHORT * pusRddId, const char * szRddName )
 {
    RDDFUNCS * pTable;
    USHORT * uiCount, uiRddId;
@@ -1419,7 +1422,7 @@ static void adsxRegisterRDD( USHORT * pusRddId )
    {
       HB_ERRCODE errCode;
 
-      errCode = hb_rddInherit( pTable, &adsxTable, &adsxSuper, "ADS" );
+      errCode = hb_rddInherit( pTable, &adsxTable, &adsxSuper, szRddName );
       if( errCode == HB_SUCCESS )
       {
          *pusRddId = uiRddId;
@@ -1435,35 +1438,74 @@ static void adsxRegisterRDD( USHORT * pusRddId )
 
 HB_FUNC( ADSX_GETFUNCTABLE )
 {
-   adsxRegisterRDD( &s_uiRddIdADSX );
+   adsxRegisterRDD( &s_uiRddIdADSX, "ADS" );
+}
+
+
+HB_FUNC( ADSNTXX_GETFUNCTABLE )
+{
+   adsxRegisterRDD( &s_uiRddIdADSNTXX, "ADSNTX" );
+}
+
+
+HB_FUNC( ADSCDXX_GETFUNCTABLE )
+{
+   adsxRegisterRDD( &s_uiRddIdADSCDXX, "ADSCDX" );
+}
+
+
+HB_FUNC( ADSADTX_GETFUNCTABLE )
+{
+   adsxRegisterRDD( &s_uiRddIdADSADTX, "ADSADT" );
 }
 
 
 HB_FUNC( ADSX ) { ; }
 
-HB_FUNC_EXTERN( ADS );
+HB_FUNC( ADSNTXX ) { ; }
+
+HB_FUNC( ADSCDXX ) { ; }
+
+HB_FUNC( ADSADTX ) { ; }
+
+HB_FUNC_EXTERN( ADSCDX );
 
 static void hb_adsxRddInit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   if( hb_rddRegister( "ADSX", RDT_FULL ) > 1 )
+   if( hb_rddRegister( "ADSX",    RDT_FULL ) > 1 || 
+       hb_rddRegister( "ADSNTXX", RDT_FULL ) > 1 || 
+       hb_rddRegister( "ADSCDXX", RDT_FULL ) > 1 || 
+       hb_rddRegister( "ADSADTX", RDT_FULL ) > 1 )
    {
       /* try different RDD registrer order */
       hb_rddRegister( "ADS", RDT_FULL );
+      hb_rddRegister( "ADSNTX", RDT_FULL );
+      hb_rddRegister( "ADSCDX", RDT_FULL );
+      hb_rddRegister( "ADSADT", RDT_FULL );
 
-      if ( hb_rddRegister( "ADSX", RDT_FULL ) > 1 )
+      if( hb_rddRegister( "ADSX",    RDT_FULL ) > 1 || 
+          hb_rddRegister( "ADSNTXX", RDT_FULL ) > 1 || 
+          hb_rddRegister( "ADSCDXX", RDT_FULL ) > 1 || 
+          hb_rddRegister( "ADSADTX", RDT_FULL ) > 1 )
       {
          hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
          /* not executed, only to force linking ADS RDD */
-         HB_FUNC_EXEC( ADS );
+         HB_FUNC_EXEC( ADSCDX );
       }
    }
 }
 
 HB_INIT_SYMBOLS_BEGIN( adsx1__InitSymbols )
-{ "ADSX",              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSX )}, NULL },
-{ "ADSX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSX_GETFUNCTABLE )}, NULL }
+{ "ADSX",                 {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSX )}, NULL },
+{ "ADSX_GETFUNCTABLE",    {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSX_GETFUNCTABLE )}, NULL },
+{ "ADSNTXX",              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSNTXX )}, NULL },
+{ "ADSNTXX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSNTXX_GETFUNCTABLE )}, NULL },
+{ "ADSCDXX",              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSCDXX )}, NULL },
+{ "ADSCDXX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSCDXX_GETFUNCTABLE )}, NULL },
+{ "ADSADTX",              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSADTX )}, NULL },
+{ "ADSADTX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSADTX_GETFUNCTABLE )}, NULL }
 HB_INIT_SYMBOLS_END( adsx1__InitSymbols )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_adsx_rdd_init_ )
