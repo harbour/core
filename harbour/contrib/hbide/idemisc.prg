@@ -89,12 +89,17 @@ FUNCTION ExecPopup( aPops, aPos, qParent )
    qPop := QMenu():new( IIF( hb_isObject( qParent ), QT_PTROF( qParent ), NIL ) )
 
    FOR i := 1 TO len( aPops )
-      qPop:addAction( aPops[ i, 1 ] )
+      IF empty( aPops[ i,1 ] )
+         qPop:addSeparator()
+      ELSE
+         qPop:addAction( aPops[ i, 1 ] )
+      ENDIF
    NEXT
 
    qPoint := QPoint():new( aPos[ 1 ], aPos[ 2 ] )
-   pAct := qPop:exec_1( QT_PTROF( qPoint ) )
-   qAct := QAction():configure( pAct )
+   pAct   := qPop:exec_1( QT_PTROF( qPoint ) )
+   qAct   := QAction():configure( pAct )
+
    IF !empty( qAct:pPtr ) .and. !empty( cAct := qAct:text() )
       IF ( nAct := ascan( aPops, {|e_| e_[ 1 ] == cAct } ) ) > 0
          xRet := eval( aPops[ nAct,2 ] )
@@ -186,7 +191,7 @@ FUNCTION ReadSource( cTxtFile )
 FUNCTION EvalAsString( cExp )
    LOCAL cValue
 
-   BEGIN SEQUENCE
+   BEGIN SEQUENCE WITH { || break() }
       cValue := eval( &( "{|| " + cExp + "}" ) )
    RECOVER
       cValue := cExp
@@ -318,7 +323,7 @@ FUNCTION ApplyMetaData( s, a_ )
 
    IF ! Empty( a_ )
       FOR EACH k IN a_
-         s := StrTran( s, k[ 2 ], k[ 1 ] )
+         s := StrTran( s, PathNormalized( k[ 2 ], .f. ), k[ 1 ] )
       NEXT
    ENDIF
 
@@ -330,7 +335,7 @@ FUNCTION ParseWithMetaData( s, a_ )
    LOCAL k
 
    IF ! Empty( a_ )
-      FOR EACH k IN a_
+      FOR EACH k IN a_ DESCEND
          s := StrTran( s, k[ 1 ], k[ 2 ] )
       NEXT
    ENDIF
@@ -378,8 +383,14 @@ FUNCTION IsValidSource( cSourceFile )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION PathNormalized( cPath )
-   RETURN lower( strtran( cPath, "\", "/" ) )
+FUNCTION PathNormalized( cPath, lLower )
+   LOCAL S
+
+   DEFAULT lLower TO .T.
+
+   s := strtran( cPath, "\", "/" )
+
+   RETURN IF( lLower, lower( s ), s )
 
 /*----------------------------------------------------------------------*/
 

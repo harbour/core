@@ -12,7 +12,7 @@ LaunchProgram     =
 -w3
 -es2
 -lhbwin
--Lc:<{/}>qt<{/}>2009.01<{/}>qt<{/}>lib
+-Lc:\qt\2009.01\qt\lib
  
 [ SOURCES ]
 #  "Not Equal To == #" is a comment line as is accepted in .hbp
@@ -39,5 +39,4 @@ LaunchProgram     =
 #  will  return the same string as <SomeValue>
 #
 IdeSrc  =  hb_dirBase()
-{/} = hb_osPathSeparator()
  

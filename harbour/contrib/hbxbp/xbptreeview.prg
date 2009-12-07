@@ -221,6 +221,7 @@ METHOD XbpTreeView:ExeBlock( nMsg, p1, p2 )
          eval( ::sl_itemSelected, oItem, {0,0,0,0}, self )
       ENDIF
    CASE nMsg == 7              // "itemEntered(QTWItem)"
+      //::oWidget:setToolTip( oItem:caption )
    CASE nMsg == 8              // "itemExpanded(QTWItem)"
       IF hb_isBlock( ::sl_itemExpanded )
          eval( ::sl_itemExpanded, oItem, {0,0,0,0}, self )
@@ -406,6 +407,7 @@ METHOD XbpTreeViewItem:addItem( xItem, xNormalImage, xMarkedImage, xExpandedImag
 
    ::oWidget:addChild( oItem:oWidget:pPtr )
 
+   aadd( ::aChilds, oItem )
    aadd( oItem:aChilds, oItem )
    aadd( oItem:oXbpTree:aItems, oItem )
 
@@ -476,11 +478,10 @@ METHOD XbpTreeViewItem:setMarkedImage( nResIdoBitmap )
 METHOD XbpTreeViewItem:delItem( oItem )
    LOCAL n
 
-   IF ( n := ascan( ::aChilds, oItem ) ) > 0
+   IF ( n := ascan( ::aChilds, {|o| o:caption == oItem:caption  } ) ) > 0
       ::oWidget:removeChild( ::aChilds[ n ]:oWidget:pPtr )
       ::aChilds[ n ]:oWidget:pPtr := 0
-      adel( ::aChilds, n )
-      asize( ::aChilds, len( ::aChilds )-1 )
+      adel( ::aChilds, n ) ; asize( ::aChilds, len( ::aChilds )-1 )
    ENDIF
 
    RETURN NIL

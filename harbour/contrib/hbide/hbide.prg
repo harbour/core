@@ -229,6 +229,7 @@ CLASS HbIde
    METHOD loadUI()
    METHOD updateHbp()
    METHOD saveProject()
+   METHOD addSourcesToProject()
 
 
    ENDCLASS
@@ -719,13 +720,15 @@ METHOD HbIde:loadSources()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:closeSource()
-   LOCAL nTab, n, cSource
+METHOD HbIde:closeSource( nTab )
+   LOCAL n, cSource
 
-   IF !empty( nTab := ::getCurrentTab() )
+   DEFAULT nTab TO ::getCurrentTab()
+
+   IF !empty( nTab  )
       ::oFuncList:clear()
       ::saveSource( nTab )
-      ::qTabWidget:removeTab( ::qTabWidget:currentIndex() )
+      ::qTabWidget:removeTab( ::qTabWidget:indexOf( QT_PTROFXBP( ::aTabs[ nTab,1 ] ) ) )
 
       cSource := ::aTabs[ nTab, 5 ]
 
@@ -735,18 +738,13 @@ METHOD HbIde:closeSource()
       Qt_DisConnect_Signal( QT_PTROF( ::aTabs[ nTab, 2 ] ), "textChanged()" )
       Qt_DisConnect_Signal( QT_PTROF( ::aTabs[ nTab, 2 ] ), "cursorPositionChanged()" )
 
-
       ::aTabs[ nTab, 6 ]:pPtr := 0
       ::aTabs[ nTab, 4 ]:pPtr := 0
       ::aTabs[ nTab, 3 ]:pPtr := 0
       ::aTabs[ nTab, 2 ]:pPtr := 0
 
       //::aTabs[ nTab, 1 ] := NIL
-      ::aTabs[ nTab, 2 ] := NIL
-      ::aTabs[ nTab, 3 ] := NIL
-      ::aTabs[ nTab, 4 ] := NIL
       ::aTabs[ nTab, 5 ] := ""
-      ::aTabs[ nTab, 6 ] := NIL
 
       IF ( n := ascan( ::aProjData, {|e_| e_[ 4 ] == cSource } ) ) > 0
          ::aProjData[ n,3 ]:delItem( ::aProjData[ n,1 ] )
@@ -818,8 +816,13 @@ METHOD HbIde:selectSource( cMode )
       oDlg:center      := .t.
       oDlg:fileFilters := { { "PRG Sources", "*.prg" }, { "C Sources", "*.c" }, { "CPP Sources", "*.cpp" }, ;
                                                             { "H Headers", "*.h" }, { "CH Headers", "*.ch" } }
-
       cFile := oDlg:open( , , .f. )
+   ELSEIF cMode == "openmany"
+      oDlg:title       := "Select Sources"
+      oDlg:center      := .t.
+      oDlg:fileFilters := { { "All Files"  , "*.*"   }, { "PRG Sources", "*.prg" }, { "C Sources" , "*.c"  },;
+                            { "CPP Sources", "*.cpp" }, { "H Headers"  , "*.h"   }, { "CH Headers", "*.ch" } }
+      cFile := oDlg:open( , , .t. )
    ELSE
       oDlg:title       := "Save this Database"
       oDlg:fileFilters := { { "Database Files", "*.dbf" } }
@@ -1037,7 +1040,7 @@ METHOD HbIde:manageItemSelected( oXbpTreeItem )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
-   LOCAL n, cHbi, aPrj
+   LOCAL n, cHbi, aPrj, cSource
    LOCAL aPops := {}
 
    HB_SYMBOL_UNUSED( mp2 )
@@ -1059,6 +1062,7 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
    CASE n == -2  // "Files"
    CASE n == -1  // Project Root
       aadd( aPops, { "New Project" , {|| ::loadProjectProperties( , .t., .t. ), ::appendProjectInTree( ::aPrjProps ) } } )
+      aadd( aPops, { "" } )
       aadd( aPops, { "Load Project", {|| ::loadProjectProperties( , .f., .f. ), ::appendProjectInTree( ::aPrjProps ) } } )
       ExecPopup( aPops, mp1, ::oProjTree:oWidget )
 
@@ -1066,13 +1070,31 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
       aPrj := ::aProjData[ n, 5 ]
       cHbi := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + s_pathSep + ;
               aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT   ] + ".hbi"
-
-      aadd( aPops, { "Properties", {|| ::loadProjectProperties( cHbi, .f., .t. ) } } )
+      //
+      aadd( aPops, { "Properties"               , {|| ::loadProjectProperties( cHbi, .f., .t. ) } } )
+      aadd( aPops, { "" } )
+      aadd( aPops, { "Save and Build"           , {|| NIL } } )
+      aadd( aPops, { "Save, Build and Launch"   , {|| NIL } } )
+      aadd( aPops, { "" } )
+      aadd( aPops, { "Save and Re-Build"        , {|| NIL } } )
+      aadd( aPops, { "Save, Re-Build and Launch", {|| NIL } } )
+      aadd( aPops, { "" } )
+      aadd( aPops, { "Drop Project"             , {|| NIL } } )
+      //
       ExecPopup( aPops, mp1, ::oProjTree:oWidget )
 
    CASE ::aProjData[ n, 2 ] == "Source File"
+      //
 
    CASE ::aProjData[ n, 2 ] == "Opened Source"
+      cSource := ::aProjData[ n, 5 ]
+      n := ascan( ::aTabs, {|e_| PathNormalized( e_[ 5 ] ) == cSource } )
+      //
+      aadd( aPops, { "Save" , {|| ::saveSource( n, .f. ) } } )
+      aadd( aPops, { "" } )
+      aadd( aPops, { "Close", {|| ::closeSource( n ) } } )
+      //
+      ExecPopup( aPops, mp1, ::oProjTree:oWidget )
 
    CASE ::aProjData[ n, 2 ] == "Path"
 
@@ -1617,7 +1639,7 @@ METHOD HbIde:loadProjectProperties( cProject, lNew, lFetch )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:fetchProjectProperties()
-   LOCAL qPrpDlg, qPrjType, oPrjTtl, oPBOk, oPBCn, pPrpDlg, oTabWidget, oPBSv
+   LOCAL qPrpDlg, qPrjType, oPrjTtl, oPBOk, oPBCn, pPrpDlg, oTabWidget, oPBSv, oPBSelect
    LOCAL oPrjLoc, oPrjWrk, oPrjDst, oPrjOut, oPrjInc, oPrjLau, oPrjLEx, oPrjSrc, oPrjMta, oPrjHbp, oPrjCmp
    LOCAL cPrjLoc   := hb_dirBase() + "projects"
    LOCAL aPrjProps := ::aPrjProps
@@ -1651,6 +1673,8 @@ METHOD HbIde:fetchProjectProperties()
       oPBSv:activate := {|| ::saveProject() }
       oPBOk := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( pPrpDlg, "buttonSaveExit" ) )
       oPBOk:activate := {|| ::saveProject(), qPrpDlg:close() }
+      oPBSelect := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( pPrpDlg, "buttonSelect" ) )
+      oPBSelect:activate := {|| ::addSourcesToProject() }
 
       oTabWidget := QTabWidget():configure( Qt_FindChild( pPrpDlg, "tabWidget" ) )
       Qt_Connect_Signal( QT_PTROF( oTabWidget ), "currentChanged(int)", {|o,p| ::updateHbp( p, o ) } )
@@ -1681,6 +1705,8 @@ METHOD HbIde:fetchProjectProperties()
       oPBOk:destroy()
       oPBSv:destroy()
       oPBCn:destroy()
+      oPBSelect:destroy()
+
       Qt_DisConnect_Signal( QT_PTROF( oTabWidget ), "currentChanged(int)" )
    ENDIF
 
@@ -1782,6 +1808,31 @@ METHOD HbIde:saveProject()
    hb_MemoWrit( hb_dirBase() + "hbide.env", o_[ E_oPrjCmp ]:toPlainText() )
 
    RETURN Nil
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:addSourcesToProject()
+   LOCAL aFiles, a_, b_, a4_1, s
+
+   IF !empty( aFiles := ::selectSource( "openmany" ) )
+      a_:= MemoToArray( ::aPrpObjs[ E_oPrjMta ]:toPlainText() )
+      a4_1 := SetupMetaKeys( a_ )
+
+      a_:= MemoToArray( ::aPrpObjs[ E_oPrjSrc ]:toPlainText() )
+
+      b_:={}
+      aeval( aFiles, {|e| aadd( b_, ApplyMetaData( e, a4_1 ) ) } )
+
+      FOR EACH s IN b_
+         IF ascan( a_, s ) == 0
+            aadd( a_, s )
+         ENDIF
+      NEXT
+
+      ::aPrpObjs[ E_oPrjSrc ]:setPlainText( ArrayToMemo( a_ ) )
+   ENDIF
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 //
