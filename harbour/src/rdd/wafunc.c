@@ -650,7 +650,7 @@ HB_ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
    pInfo.atomAlias = szAlias;
    pInfo.fShared = fShared;
    pInfo.fReadonly = fReadonly;
-   pInfo.cdpId = szCpId;
+   pInfo.cdpId = szCpId ? szCpId : hb_setGetDBCODEPAGE();
    pInfo.ulConnection = ulConnection;
    pInfo.lpdbHeader = NULL;
 
@@ -718,7 +718,7 @@ HB_ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
    pInfo.atomAlias = szAlias;
    pInfo.fShared = FALSE;
    pInfo.fReadonly = FALSE;
-   pInfo.cdpId = szCpId;
+   pInfo.cdpId = szCpId ? szCpId : hb_setGetDBCODEPAGE();
    pInfo.ulConnection = ulConnection;
    pInfo.lpdbHeader = NULL;
 
@@ -783,7 +783,7 @@ HB_ERRCODE hb_rddCreateTableTemp( const char * szDriver,
    pInfo.atomAlias = szAlias;
    pInfo.fShared = FALSE;
    pInfo.fReadonly = FALSE;
-   pInfo.cdpId = szCpId;
+   pInfo.cdpId = szCpId ? szCpId : hb_setGetDBCODEPAGE();
    pInfo.ulConnection = ulConnection;
    pInfo.lpdbHeader = NULL;
 

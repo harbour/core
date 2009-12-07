@@ -458,7 +458,7 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
 
             DocumentProperties( 0, hPrinter, lpPrinterName, pDevMode, pDevMode, DM_OUT_BUFFER );
 
-            if( HB_ISNUM( 3 ) && hb_parni( 3 ) )        /* 22/02/2007 don't change if 0 */
+            if( HB_ISNUM( 3 ) && hb_parni( 3 ) )        /* [2007-02-22] don't change if 0 */
                pDevMode->dmPaperSize = ( short ) hb_parni( 3 );
 
             if( HB_ISLOG( 4 ) )
@@ -467,13 +467,13 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
             if( HB_ISNUM( 5 ) && hb_parni( 5 ) > 0 )
                pDevMode->dmCopies = ( short ) hb_parni( 5 );
 
-            if( HB_ISNUM( 6 ) && hb_parni( 6 ) )        /* 22/02/2007 don't change if 0 */
+            if( HB_ISNUM( 6 ) && hb_parni( 6 ) )        /* [2007-02-22] don't change if 0 */
                pDevMode->dmDefaultSource = ( short ) hb_parni( 6 );
 
-            if( HB_ISNUM( 7 ) && hb_parni( 7 ) )        /* 22/02/2007 don't change if 0 */
+            if( HB_ISNUM( 7 ) && hb_parni( 7 ) )        /* [2007-02-22] don't change if 0 */
                pDevMode->dmDuplex = ( short ) hb_parni( 7 );
 
-            if( HB_ISNUM( 8 ) && hb_parni( 8 ) )        /* 22/02/2007 don't change if 0 */
+            if( HB_ISNUM( 8 ) && hb_parni( 8 ) )        /* [2007-02-22] don't change if 0 */
                pDevMode->dmPrintQuality = ( short ) hb_parni( 8 );
 
             bResult = ( ResetDC( hDC, pDevMode ) != NULL );

@@ -67,9 +67,9 @@ typedef long clock_t;
 extern clock_t clock( void );
 #endif
 
-extern int remove( const char *filename );
-extern int system( const char *string );
-extern char *strerror( int errnum );
+extern int remove( const char * filename );
+extern int system( const char * string );
+extern char * strerror( int errnum );
 
 #if defined( HB_OS_WIN_USED ) && defined( _MSC_VER )
 
@@ -151,7 +151,7 @@ extern char *strerror( int errnum );
    BOOL WINAPI GetKeyboardState( PBYTE p );
    BOOL WINAPI SetKeyboardState( PBYTE p );
 
-   int WINAPI FrameRect( HDC hDC, CONST RECT *lprc, HBRUSH hbr );
+   int WINAPI FrameRect( HDC hDC, CONST RECT * lprc, HBRUSH hbr );
    BOOL WINAPI FloodFill( HDC hdc, int x, int y, COLORREF color);
    BOOL  WINAPI Arc( HDC hdc, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4);
 
@@ -201,27 +201,39 @@ extern HB_EXPORT void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned lo
 
 #if defined( UNICODE )
 
-   #define HB_TCHAR_CPTO(d,s,l)        hb_mbtowccpy(d,s,l)
-   #define HB_TCHAR_GETFROM(d,s,l)     hb_wctombget(d,s,l)
-   #define HB_TCHAR_SETTO(d,s,l)       hb_mbtowcset(d,s,l)
-   #define HB_TCHAR_CONVTO(s)          hb_mbtowc(s)
-   #define HB_TCHAR_CONVFROM(s)        hb_wctomb(s)
-   #define HB_TCHAR_CONVNTO(s,l)       hb_mbntowc(s,l)
-   #define HB_TCHAR_CONVNFROM(s,l)     hb_wcntomb(s,l)
-   #define HB_TCHAR_CONVNREV(d,s,l)    do { hb_wctombget(d,s,l); hb_xfree(s); } while( 0 )
-   #define HB_TCHAR_FREE(s)            hb_xfree(s)
+   #define HB_PARSTR( n, h, len )       hb_parstr_u16( n, HB_CDP_ENDIAN_NATIVE, h, len )
+   #define HB_RETSTR( str )             hb_retstr_u16( HB_CDP_ENDIAN_NATIVE, str )
+   #define HB_RETSTRLEN( str, len )     hb_retstr_u16( HB_CDP_ENDIAN_NATIVE, str, len )
+   #define HB_STORSTR( str, n )         hb_storstr_u16( HB_CDP_ENDIAN_NATIVE, str, n )
+   #define HB_STORSTRLEN( str, len, n ) hb_storstrlen_u16( HB_CDP_ENDIAN_NATIVE, str, len, n )
+
+   #define HB_TCHAR_CPTO(d,s,l)         hb_mbtowccpy(d,s,l)
+   #define HB_TCHAR_GETFROM(d,s,l)      hb_wctombget(d,s,l)
+   #define HB_TCHAR_SETTO(d,s,l)        hb_mbtowcset(d,s,l)
+   #define HB_TCHAR_CONVTO(s)           hb_mbtowc(s)
+   #define HB_TCHAR_CONVFROM(s)         hb_wctomb(s)
+   #define HB_TCHAR_CONVNTO(s,l)        hb_mbntowc(s,l)
+   #define HB_TCHAR_CONVNFROM(s,l)      hb_wcntomb(s,l)
+   #define HB_TCHAR_CONVNREV(d,s,l)     do { hb_wctombget(d,s,l); hb_xfree(s); } while( 0 )
+   #define HB_TCHAR_FREE(s)             hb_xfree(s)
 
 #else
 
-   #define HB_TCHAR_CPTO(d,s,l)        hb_strncpy(d,s,l)
-   #define HB_TCHAR_SETTO(d,s,l)       memcpy(d,s,l)
-   #define HB_TCHAR_GETFROM(d,s,l)     memcpy(d,s,l)
-   #define HB_TCHAR_CONVTO(s)          ((char *)(s))
-   #define HB_TCHAR_CONVFROM(s)        ((char *)(s))
-   #define HB_TCHAR_CONVNTO(s,l)       ((char *)(s))
-   #define HB_TCHAR_CONVNFROM(s,l)     ((char *)(s))
-   #define HB_TCHAR_CONVNREV(d,s,l)    do { ; } while( 0 )
-   #define HB_TCHAR_FREE(s)            HB_SYMBOL_UNUSED(s)
+   #define HB_PARSTR( n, h, len )       hb_parstr( n, hb_setGetOSCP(), h, len )
+   #define HB_RETSTR( str )             hb_retstr( hb_setGetOSCP(), str )
+   #define HB_RETSTRLEN( str, len )     hb_retstr( hb_setGetOSCP(), str, len )
+   #define HB_STORSTR( str, n )         hb_storstr( hb_setGetOSCP(), str, n )
+   #define HB_STORSTRLEN( str, len, n ) hb_storstrlen( hb_setGetOSCP(), str, len, n )
+
+   #define HB_TCHAR_CPTO(d,s,l)         hb_strncpy(d,s,l)
+   #define HB_TCHAR_SETTO(d,s,l)        memcpy(d,s,l)
+   #define HB_TCHAR_GETFROM(d,s,l)      memcpy(d,s,l)
+   #define HB_TCHAR_CONVTO(s)           ((char *)(s))
+   #define HB_TCHAR_CONVFROM(s)         ((char *)(s))
+   #define HB_TCHAR_CONVNTO(s,l)        ((char *)(s))
+   #define HB_TCHAR_CONVNFROM(s,l)      ((char *)(s))
+   #define HB_TCHAR_CONVNREV(d,s,l)     do { ; } while( 0 )
+   #define HB_TCHAR_FREE(s)             HB_SYMBOL_UNUSED(s)
 
 #endif /* UNICODE */
 
