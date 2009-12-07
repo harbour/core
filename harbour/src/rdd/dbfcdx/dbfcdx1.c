@@ -9798,7 +9798,7 @@ HB_FUNC( SIXCDX_GETFUNCTABLE )
       hb_retni( HB_FAILURE );
 }
 
-static void hb_dbfcdxRddInit( void * cargo )
+static void hb_sixcdxRddInit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
@@ -9815,10 +9815,27 @@ static void hb_dbfcdxRddInit( void * cargo )
    HB_FUNC_EXEC( _DBF );
 }
 
-HB_INIT_SYMBOLS_BEGIN( dbfcdx1__InitSymbols )
+HB_INIT_SYMBOLS_BEGIN( sixcdx1__InitSymbols )
 { "SIXCDX",              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( SIXCDX )}, NULL },
 { "SIXCDX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( SIXCDX_GETFUNCTABLE )}, NULL }
-HB_INIT_SYMBOLS_END( dbfcdx1__InitSymbols )
+HB_INIT_SYMBOLS_END( sixcdx1__InitSymbols )
+
+HB_CALL_ON_STARTUP_BEGIN( _hb_sixcdx_rdd_init_ )
+   hb_vmAtInit( hb_sixcdxRddInit, NULL );
+HB_CALL_ON_STARTUP_END( _hb_sixcdx_rdd_init_ )
+
+#if defined( HB_PRAGMA_STARTUP )
+   #pragma startup sixcdx1__InitSymbols
+   #pragma startup _hb_sixcdx_rdd_init_
+#elif defined( HB_MSC_STARTUP )
+   #if defined( HB_OS_WIN_64 )
+      #pragma section( HB_MSC_START_SEGMENT, long, read )
+   #endif
+   #pragma data_seg( HB_MSC_START_SEGMENT )
+   static HB_$INITSYM hb_vm_auto_sixcdx1__InitSymbols = sixcdx1__InitSymbols;
+   static HB_$INITSYM hb_vm_auto_sixcdx_rdd_init = _hb_sixcdx_rdd_init_;
+   #pragma data_seg()
+#endif
 
 #else
 
@@ -9882,8 +9899,6 @@ HB_INIT_SYMBOLS_BEGIN( dbfcdx1__InitSymbols )
 { "DBFCDX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( DBFCDX_GETFUNCTABLE )}, NULL }
 HB_INIT_SYMBOLS_END( dbfcdx1__InitSymbols )
 
-#endif
-
 HB_CALL_ON_STARTUP_BEGIN( _hb_dbfcdx_rdd_init_ )
    hb_vmAtInit( hb_dbfcdxRddInit, NULL );
 HB_CALL_ON_STARTUP_END( _hb_dbfcdx_rdd_init_ )
@@ -9899,4 +9914,6 @@ HB_CALL_ON_STARTUP_END( _hb_dbfcdx_rdd_init_ )
    static HB_$INITSYM hb_vm_auto_dbfcdx1__InitSymbols = dbfcdx1__InitSymbols;
    static HB_$INITSYM hb_vm_auto_dbfcdx_rdd_init = _hb_dbfcdx_rdd_init_;
    #pragma data_seg()
+#endif
+
 #endif

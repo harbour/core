@@ -33,6 +33,7 @@ C_HEADERS := \
    hberrors.h \
    hbexprop.h \
    hbgtcore.h \
+   hbgtreg.h \
    hbhash.h \
    hbinit.h \
    hbmacro.h \

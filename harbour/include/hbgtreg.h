@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    code used to register new CP definition
+ *    code used to register GT driver
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -50,53 +50,30 @@
  *
  */
 
-#include "hbapicdp.h"
+static const HB_GT_INIT gtInit = { HB_GT_DRVNAME( HB_GT_NAME ),
+                                   hb_gt_FuncInit,
+                                   HB_GTSUPER,
+                                   HB_GTID_PTR };
 
-HB_CODEPAGE_ANNOUNCE( HB_CP_ID )
-
-#if defined( HB_PRAGMA_STARTUP ) || defined( HB_MSC_STARTUP )
-HB_CALL_ON_STARTUP_BEGIN( _hb_codepage_Init_ )
-#else
-HB_CALL_ON_STARTUP_BEGIN( HB_MACRONAME_JOIN( _hb_codepage_Init_, HB_CP_ID ) )
-#endif
-
-#if defined( HB_CP_RAW )
-   static HB_CODEPAGE s_codePage =
-   {
-      HB_MACRO2STRING( HB_CP_ID ),
-      HB_CP_INFO,
-      HB_CP_UNITB,
-      s_flags,
-      s_upper,
-      s_lower,
-      s_sort,
-      NULL,
-      HB_CDP_ACSORT_NONE,
-      0,
-      0,
-      NULL,
-      NULL,
-      NULL,
-   };
-   hb_cdpRegisterRaw( &s_codePage );
-#else
-   hb_cdpRegisterNew( HB_MACRO2STRING( HB_CP_ID ), HB_CP_INFO, HB_CP_UNITB,
-                      HB_CP_UPPER, HB_CP_LOWER, HB_CP_ACSORT );
-#endif /* HB_CP_RAW */
+HB_GT_ANNOUNCE( HB_GT_NAME )
 
 #if defined( HB_PRAGMA_STARTUP ) || defined( HB_MSC_STARTUP )
-HB_CALL_ON_STARTUP_END( _hb_codepage_Init_ )
+HB_CALL_ON_STARTUP_BEGIN( _hb_startup_gt_Init_ )
+   hb_gtRegister( &gtInit );
+HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
 #else
-HB_CALL_ON_STARTUP_END( HB_MACRONAME_JOIN( _hb_codepage_Init_, HB_CP_ID ) )
+HB_CALL_ON_STARTUP_BEGIN( HB_MACRONAME_JOIN( _hb_startup_gt_Init_, HB_GT_NAME ) )
+   hb_gtRegister( &gtInit );
+HB_CALL_ON_STARTUP_END( HB_MACRONAME_JOIN( _hb_startup_gt_Init_, HB_GT_NAME ) )
 #endif
 
 #if defined( HB_PRAGMA_STARTUP )
-   #pragma startup _hb_codepage_Init_
+   #pragma startup _hb_startup_gt_Init_
 #elif defined( HB_MSC_STARTUP )
    #if defined( HB_OS_WIN_64 )
       #pragma section( HB_MSC_START_SEGMENT, long, read )
    #endif
    #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_ = _hb_codepage_Init_;
+   static HB_$INITSYM hb_vm_auto__hb_startup_gt_Init_ = _hb_startup_gt_Init_;
    #pragma data_seg()
 #endif

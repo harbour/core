@@ -1483,6 +1483,9 @@ typedef unsigned char       HB_U8;
 #define HB_MACRO2STRING( macro )    HB_MACRO2STRING_( macro )
 #define HB_MACRO2STRING_( macro )   #macro
 
+#define HB_MACRONAME_JOIN( m1, m2 )       HB_MACRONAME_JOIN_( m1, m2 )
+#define HB_MACRONAME_JOIN_( m1, m2 )      m1 ## m2
+
 #define HB_SIZEOFARRAY( var )       ( sizeof( var ) / sizeof( *var ) )
 
 

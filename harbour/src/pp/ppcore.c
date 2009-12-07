@@ -656,7 +656,7 @@ static void hb_pp_tokenAddStreamFunc( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
 
 static void hb_pp_readLine( PHB_PP_STATE pState )
 {
-   int ch, iLine = 0;
+   int ch, iLine = 0, iBOM = pState->pFile->iCurrentLine == 0 ? 1 : 0;
 
    for( ;; )
    {
@@ -690,6 +690,15 @@ static void hb_pp_readLine( PHB_PP_STATE pState )
       else if( ch != '\r' )
       {
          hb_membufAddCh( pState->pBuffer, ( char ) ch );
+
+         /* strip UTF-8 BOM signature */
+         if( iBOM && ch == 0xBF && hb_membufLen( pState->pBuffer ) == 3 )
+         {
+            iBOM = 0;
+            if( hb_membufPtr( pState->pBuffer )[ 0 ] == ( char ) 0xEF &&
+                hb_membufPtr( pState->pBuffer )[ 1 ] == ( char ) 0xBB )
+               hb_membufFlush( pState->pBuffer );
+         }
       }
    }
    pState->iLineTot += iLine;

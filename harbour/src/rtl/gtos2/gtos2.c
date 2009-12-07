@@ -883,26 +883,8 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    return TRUE;
 }
 
-/* ********************************************************************** */
+/* *********************************************************************** */
 
-static const HB_GT_INIT gtInit = { HB_GT_DRVNAME( HB_GT_NAME ),
-                                   hb_gt_FuncInit,
-                                   HB_GTSUPER,
-                                   HB_GTID_PTR };
+#include "hbgtreg.h"
 
-HB_GT_ANNOUNCE( HB_GT_NAME )
-
-HB_CALL_ON_STARTUP_BEGIN( _hb_startup_gt_Init_ )
-   hb_gtRegister( &gtInit );
-HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
-
-#if defined( HB_PRAGMA_STARTUP )
-   #pragma startup _hb_startup_gt_Init_
-#elif defined( HB_MSC_STARTUP )
-   #if defined( HB_OS_WIN_64 )
-      #pragma section( HB_MSC_START_SEGMENT, long, read )
-   #endif
-   #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto__hb_startup_gt_Init_ = _hb_startup_gt_Init_;
-   #pragma data_seg()
-#endif
+/* *********************************************************************** */

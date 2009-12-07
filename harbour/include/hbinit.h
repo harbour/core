@@ -106,7 +106,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
       }
 
    #define HB_CALL_ON_STARTUP_BEGIN( func ) \
-      func( void ) \
+      void func( void ) \
       {
 
    #define HB_CALL_ON_STARTUP_END( func ) \
