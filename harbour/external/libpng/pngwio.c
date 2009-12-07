@@ -1,7 +1,7 @@
 
 /* pngwio.c - functions for data output
  *
- * Last changed in libpng 1.2.41 [December 3, 2009]
+ * Last changed in libpng 1.2.37 [June 4, 2009]
  * Copyright (c) 1998-2009 Glenn Randers-Pehrson
  * (Version 0.96 Copyright (c) 1996, 1997 Andreas Dilger)
  * (Version 0.88 Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)
@@ -19,7 +19,6 @@
  */
 
 #define PNG_INTERNAL
-#define PNG_NO_PEDANTIC_WARNINGS
 #include "png.h"
 #ifdef PNG_WRITE_SUPPORTED
 
@@ -39,7 +38,7 @@ png_write_data(png_structp png_ptr, png_bytep data, png_size_t length)
       png_error(png_ptr, "Call to NULL write function");
 }
 
-#ifdef PNG_STDIO_SUPPORTED
+#if !defined(PNG_NO_STDIO)
 /* This is the function that does the actual writing of data.  If you are
  * not writing to a standard C stream, you should create a replacement
  * write_data function and use it at run time with png_set_write_fn(), rather
@@ -53,7 +52,7 @@ png_default_write_data(png_structp png_ptr, png_bytep data, png_size_t length)
 
    if (png_ptr == NULL)
       return;
-#ifdef _WIN32_WCE
+#if defined(_WIN32_WCE)
    if ( !WriteFile((HANDLE)(png_ptr->io_ptr), data, length, &check, NULL) )
       check = 0;
 #else
@@ -85,7 +84,7 @@ png_default_write_data(png_structp png_ptr, png_bytep data, png_size_t length)
    io_ptr = (png_FILE_p)CVT_PTR(png_ptr->io_ptr);
    if ((png_bytep)near_data == data)
    {
-#ifdef _WIN32_WCE
+#if defined(_WIN32_WCE)
       if ( !WriteFile(io_ptr, near_data, length, &check, NULL) )
          check = 0;
 #else
@@ -102,7 +101,7 @@ png_default_write_data(png_structp png_ptr, png_bytep data, png_size_t length)
       {
          written = MIN(NEAR_BUF_SIZE, remaining);
          png_memcpy(buf, data, written); /* Copy far buffer to near buffer */
-#ifdef _WIN32_WCE
+#if defined(_WIN32_WCE)
          if ( !WriteFile(io_ptr, buf, written, &err, NULL) )
             err = 0;
 #else
@@ -130,7 +129,7 @@ png_default_write_data(png_structp png_ptr, png_bytep data, png_size_t length)
  * to disk).  After png_flush is called, there should be no data pending
  * writing in any buffers.
  */
-#ifdef PNG_WRITE_FLUSH_SUPPORTED
+#if defined(PNG_WRITE_FLUSH_SUPPORTED)
 void /* PRIVATE */
 png_flush(png_structp png_ptr)
 {
@@ -138,16 +137,16 @@ png_flush(png_structp png_ptr)
       (*(png_ptr->output_flush_fn))(png_ptr);
 }
 
-#ifdef PNG_STDIO_SUPPORTED
+#if !defined(PNG_NO_STDIO)
 void PNGAPI
 png_default_flush(png_structp png_ptr)
 {
-#ifndef _WIN32_WCE
+#if !defined(_WIN32_WCE)
    png_FILE_p io_ptr;
 #endif
    if (png_ptr == NULL)
       return;
-#ifndef _WIN32_WCE
+#if !defined(_WIN32_WCE)
    io_ptr = (png_FILE_p)CVT_PTR((png_ptr->io_ptr));
    fflush(io_ptr);
 #endif
@@ -193,7 +192,7 @@ png_set_write_fn(png_structp png_ptr, png_voidp io_ptr,
 
    png_ptr->io_ptr = io_ptr;
 
-#ifdef PNG_STDIO_SUPPORTED
+#if !defined(PNG_NO_STDIO)
    if (write_data_fn != NULL)
       png_ptr->write_data_fn = write_data_fn;
 
@@ -203,8 +202,8 @@ png_set_write_fn(png_structp png_ptr, png_voidp io_ptr,
    png_ptr->write_data_fn = write_data_fn;
 #endif
 
-#ifdef PNG_WRITE_FLUSH_SUPPORTED
-#ifdef PNG_STDIO_SUPPORTED
+#if defined(PNG_WRITE_FLUSH_SUPPORTED)
+#if !defined(PNG_NO_STDIO)
    if (output_flush_fn != NULL)
       png_ptr->output_flush_fn = output_flush_fn;
 
@@ -226,8 +225,8 @@ png_set_write_fn(png_structp png_ptr, png_voidp io_ptr,
    }
 }
 
-#ifdef USE_FAR_KEYWORD
-#ifdef _MSC_VER
+#if defined(USE_FAR_KEYWORD)
+#if defined(_MSC_VER)
 void *png_far_to_near(png_structp png_ptr, png_voidp ptr, int check)
 {
    void *near_ptr;
