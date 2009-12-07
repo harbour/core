@@ -269,7 +269,7 @@ ifeq ($(HB_INIT_DONE),)
          $(info ! HB_USER_AFLAGS: $(HB_USER_AFLAGS))
       endif
       ifneq ($(HB_USER_DFLAGS),)
-         $(info ! HB_USER_AFLAGS: $(HB_USER_DFLAGS))
+         $(info ! HB_USER_DFLAGS: $(HB_USER_DFLAGS))
       endif
       ifneq ($(HB_USER_LIBS),)
          $(info ! HB_USER_LIBS: $(HB_USER_LIBS))
