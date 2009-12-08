@@ -286,7 +286,7 @@ static HB_GARBAGE_FUNC( hb_cairo_path_iterator_destructor )
 #ifdef HB_USE_ITEM
       hb_itemRelease( pIterator->pPath );
 #else
-      hb_gcRefDec( pIterator->pPath );
+      hb_gcRefFree( pIterator->pPath );
 #endif
       pIterator->pPath = NULL;
    }
@@ -298,13 +298,7 @@ static HB_GARBAGE_FUNC( hb_cairo_path_iterator_mark )
    PHB_CAIRO_PATH_ITERATOR  pIterator = ( PHB_CAIRO_PATH_ITERATOR ) Cargo;
 
    if( pIterator->pPath )
-   {
-#ifdef HB_USE_ITEM
-      hb_gcGripMark( pIterator->pPath );
-#else
       hb_gcMark( pIterator->pPath );
-#endif
-   }
 }
 
 
@@ -324,9 +318,10 @@ HB_FUNC( CAIRO_PATH_ITERATOR_CREATE )
       PHB_CAIRO_PATH_ITERATOR  pIterator = ( PHB_CAIRO_PATH_ITERATOR ) hb_gcAllocate( sizeof( PHB_CAIRO_PATH_ITERATOR ), &s_gcIteratorFuncs );
 #ifdef HB_USE_ITEM
       pIterator->pPath = hb_itemNew( hb_param( 1, HB_IT_POINTER ) );
+      hb_gcUnlock( pIterator->pPath );
 #else
-      hb_gcRefInc( pPath );
       pIterator->pPath = pPath;
+      hb_gcRefInc( pPath );
 #endif
       pIterator->iPos = -1;
       hb_itemPutPtrGC( hb_stackReturnItem(), pIterator );
@@ -343,7 +338,7 @@ HB_FUNC( CAIRO_PATH_ITERATOR_DESTROY )
 #ifdef HB_USE_ITEM
       hb_itemRelease( pIterator->pPath );
 #else
-      hb_gcRefDec( pIterator->pPath );
+      hb_gcRefFree( pIterator->pPath );
 #endif
       pIterator->pPath = NULL;
    }
