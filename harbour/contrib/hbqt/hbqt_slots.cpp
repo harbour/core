@@ -867,7 +867,7 @@ void Slots::paintRequested( QPrinter * printer )
  */
 HB_FUNC( QT_CONNECT_SIGNAL )
 {
-   QObject * object    = ( QObject * ) hbqt_gcpointer( 1 );         /* get sender    */
+   QObject * object = ( QObject * ) hbqt_gcpointer( 1 );         /* get sender    */
 
    if( object == NULL )
    {
@@ -1202,10 +1202,17 @@ HB_FUNC( QT_QEVENTFILTER )
 
 HB_FUNC( QT_CONNECT_EVENT )
 {
+   QObject * object = ( QObject* ) hbqt_gcpointer( 1 );          /* get sender    */
+
+   if( object == NULL )
+   {
+      hb_retl( HB_FALSE );
+      return;
+   }
+
    int       type      = hb_parni( 2 );
    PHB_ITEM  codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK | HB_IT_BYREF ) );
    Events  * s_e       = qt_getEventFilter();
-   QObject * object    = ( QObject* ) hbqt_gcpointer( 1 );          /* get sender    */
 
    char prop[ 20 ];
    hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
@@ -1220,10 +1227,17 @@ HB_FUNC( QT_CONNECT_EVENT )
 
 HB_FUNC( QT_DISCONNECT_EVENT )
 {
+   QObject * object = ( QObject* ) hbqt_gcpointer( 1 );
+
+   if( object == NULL )
+   {
+      hb_retl( HB_FALSE );
+      return;
+   }
+
    int       type   = hb_parni( 2 );
    bool      bRet   = false;
    Events  * s_e    = qt_getEventFilter();
-   QObject * object = ( QObject* ) hbqt_gcpointer( 1 );
 
    char prop[ 10 ];
    hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
@@ -1268,7 +1282,8 @@ MyMainWindow::~MyMainWindow( void )
 #if defined( __HB_DEBUG__ )
 hbqt_debug( "               MyMainWindow::~MyMainWindow 0" );
 #endif
-   hb_itemRelease( block );
+   if( block )
+      hb_itemRelease( block );
 #if defined( __HB_DEBUG__ )
 hbqt_debug( "               MyMainWindow::~MyMainWindow 1" );
 #endif

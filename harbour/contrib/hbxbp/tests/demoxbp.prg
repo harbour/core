@@ -115,7 +115,7 @@ FUNCTION _BuildADialog()
 PROCEDURE DispMem( cMessage )
 
    HB_SYMBOL_UNUSED( cMessage )
-   HBXBP_DEBUG( ThreadID(), padc( cMessage, 40 ), memory( 1001 ), hbqt_getMemUsed() )
+   HBXBP_DEBUG( hb_threadId(), padc( cMessage, 40 ), memory( 1001 ), hbqt_getMemUsed() )
 
    RETURN
 
@@ -123,7 +123,7 @@ PROCEDURE DispMem( cMessage )
 
 PROCEDURE BuildADialog()
    LOCAL oDlg, mp1, mp2, oXbp, nEvent, aSize, oDa, aTabs, oHTM
-   LOCAL nThread := ThreadID()
+   LOCAL nThread := hb_threadId()
    //LOCAL oStat, aMenu, aTool, aBrow, aChek, a3Sta
 
 HBXBP_DEBUG( "  .   " )
@@ -1985,4 +1985,3 @@ STATIC FUNCTION TBPrev()
    RETURN lMoved
 
 /*----------------------------------------------------------------------*/
-

@@ -182,21 +182,21 @@ FUNCTION SetAppEvent( nEvent, mp1, mp2, oXbp )
       t_nEventIn := 1
    ENDIF
 
-//HBXBP_DEBUG( 0, "SetAppEvent ... ", threadID(), nEvent, xbeP_Paint )
+//HBXBP_DEBUG( 0, "SetAppEvent ... ", hb_threadId(), nEvent, xbeP_Paint )
 
    t_events[ t_nEventIn, 1 ] := nEvent
    t_events[ t_nEventIn, 2 ] := mp1
    t_events[ t_nEventIn, 3 ] := mp2
    t_events[ t_nEventIn, 4 ] := oXbp
 
-//HBXBP_DEBUG( 1, "SetAppEvent ... ", threadID(), nEvent )
+//HBXBP_DEBUG( 1, "SetAppEvent ... ", hb_threadId(), nEvent )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
    LOCAL nEvent
-   //LOCAL nThreadID := ThreadID()
+   //LOCAL nThreadID := hb_threadId()
 
    //DEFAULT nTimeout TO 0
    HB_SYMBOL_UNUSED( nTimeOut )
@@ -218,7 +218,7 @@ FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
       ENDIF
       hb_releaseCPU()
    ENDDO
-//HBXBP_DEBUG( "..........................", threadID() )
+//HBXBP_DEBUG( "..........................", hb_threadId() )
 
    RETURN nEvent
 

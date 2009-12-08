@@ -120,13 +120,13 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::cargo := ThreadID()                               /* To Be Removed */
+   ::cargo := hb_threadId()                               /* To Be Removed */
 
    #ifdef __QMAINWINDOW__
    ::oWidget := QMainWindow():new()
    //::oWidget:setMouseTracking( .t. )
    #else
-   ::oWidget := QMainWindow():configure( QT_MyMainWindow( {|n,p| ::grabEvent( n,p ) }, ThreadID() ) )
+   ::oWidget := QMainWindow():configure( QT_MyMainWindow( {|n,p| ::grabEvent( n,p ) }, hb_threadId() ) )
    #endif
 
    IF !empty( ::title )
@@ -306,4 +306,3 @@ METHOD XbpDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
