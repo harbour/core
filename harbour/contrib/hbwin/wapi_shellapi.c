@@ -78,7 +78,6 @@ HB_FUNC( WAPI_SHELLEXECUTE )
    hb_strfree( hFile       );
    hb_strfree( hParameters );
    hb_strfree( hDirectory  );
-
 #endif
 }
 
