@@ -1106,7 +1106,7 @@ HB_FUNC( QT_DISCONNECT_SIGNAL )
          s_s->listBlock[ i - 1 ] = NULL;
          bFreed = disconnect_signal( object, signal );
 #if defined( __HB_DEBUG__ )
-hbqt_debug( "      QT_DISCONNECT_SIGNAL: %s    %s", ret ? "YES" : "NO", signal );
+hbqt_debug( "      QT_DISCONNECT_SIGNAL: %s    %s", bFreed ? "YES" : "NO", signal );
 #endif
       }
    }
@@ -1132,12 +1132,12 @@ bool Events::eventFilter( QObject * object, QEvent * event )
 {
    QEvent::Type eventtype = event->type();
 #if defined( __HB_DEBUG__ )
-hbqt_debug( "0 Events::eventFilter = %i", ( int ) eventtype );
+//hbqt_debug( "0 Events::eventFilter = %i", ( int ) eventtype );
 #endif
    if( ( int ) eventtype == 0 )
    {
 #if defined( __HB_DEBUG__ )
-hbqt_debug( "x Events::eventFilter =            0" );
+//hbqt_debug( "x Events::eventFilter =            0" );
 #endif
       return false;
    }
@@ -1148,7 +1148,7 @@ hbqt_debug( "x Events::eventFilter =            0" );
    if( found == 0 )
    {
 #if defined( __HB_DEBUG__ )
-hbqt_debug( "f Events::eventFilter = %s  %i", "       found=0", ( int ) eventtype );
+//hbqt_debug( "f Events::eventFilter = %s  %i", "       found=0", ( int ) eventtype );
 #endif
       return false;
    }
@@ -1160,11 +1160,11 @@ hbqt_debug( "f Events::eventFilter = %s  %i", "       found=0", ( int ) eventtyp
       PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
       PHB_ITEM pEvent  = hb_itemPutPtr( NULL, event  );
 #if defined( __HB_DEBUG__ )
-hbqt_debug( "0 Events::eventFilter = %i", ( int ) eventtype );
+//hbqt_debug( "0 Events::eventFilter = %i", ( int ) eventtype );
 #endif
       ret = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 2, pObject, pEvent ) );
 #if defined( __HB_DEBUG__ )
-hbqt_debug( "1 Events::eventFilter = %s", ret ? "   yes" : "   no" );
+//hbqt_debug( "1 Events::eventFilter = %s", ret ? "   yes" : "   no" );
 #endif
       hb_itemRelease( pObject );
       hb_itemRelease( pEvent  );
@@ -1177,7 +1177,7 @@ hbqt_debug( "1 Events::eventFilter = %s", ret ? "   yes" : "   no" );
       }
    }
 #if defined( __HB_DEBUG__ )
-hbqt_debug( "1 Events::eventFilter = %i", ( int ) eventtype );
+//hbqt_debug( "1 Events::eventFilter = %i", ( int ) eventtype );
 #endif
    return ret;
 }
@@ -1283,7 +1283,10 @@ MyMainWindow::~MyMainWindow( void )
 hbqt_debug( "               MyMainWindow::~MyMainWindow 0" );
 #endif
    if( block )
+   {
       hb_itemRelease( block );
+      block = NULL;
+   }
 #if defined( __HB_DEBUG__ )
 hbqt_debug( "               MyMainWindow::~MyMainWindow 1" );
 #endif

@@ -96,8 +96,6 @@ static QVariant hbqt_fetchRole( PHB_ITEM block, int what, int par1, int par2 )
       hb_itemRelease( p1 );
       hb_itemRelease( p2 );
 
-      hb_vmRequestRestore();
-
       if( hb_itemType( ret ) & HB_IT_STRING )
       {
          vv = hb_itemGetCPtr( ret );
@@ -126,6 +124,8 @@ hbqt_debug( "   fetchRole[ d = %i ]",  hb_itemGetND( ret ) );
 hbqt_debug( "   fetchRole[ n = %i ]",  hb_itemGetNI( ret ) );
 #endif
       }
+
+      hb_vmRequestRestore();
    }
    return vv;
 }
@@ -208,7 +208,7 @@ hbqt_debug( "data - row=%i col=%i role=%i", index.row(), index.column(), role );
 QVariant HbDbfModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
 #if defined( __HB_DEBUG__ )
-hbqt_debug( "headerData - section=%i orient=%i role=%i name=%s", section, orientation, role, objectName() );
+hbqt_debug( "headerData - section=%i orient=%i role=%i", section, orientation, role );
 #endif
    if( orientation == Qt::Horizontal )
    {
