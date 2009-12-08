@@ -78,7 +78,7 @@
 
 typedef struct
 {
-   Events * events;
+   Events * t_events;
 } HB_EVENTS, * PHB_EVENTS;
 
 static HB_TSD_NEW( s_events, sizeof( HB_EVENTS ), NULL, NULL );
@@ -87,7 +87,7 @@ static HB_TSD_NEW( s_events, sizeof( HB_EVENTS ), NULL, NULL );
 
 typedef struct
 {
-   Slots * slot;
+   Slots * t_slots;
 } HB_SLOTS, * PHB_SLOTS;
 
 static HB_TSD_NEW( s_slots, sizeof( HB_SLOTS ), NULL, NULL );
@@ -98,26 +98,26 @@ static HB_TSD_NEW( s_slots, sizeof( HB_SLOTS ), NULL, NULL );
 
 static void qt_setEventFilter()
 {
-   Events * s_e = HB_GETQTEVENTFILTER()->events;
-   if( ! s_e )
-      HB_GETQTEVENTFILTER()->events = new Events();
+   Events * t_events = HB_GETQTEVENTFILTER()->t_events;
+   if( ! t_events )
+      HB_GETQTEVENTFILTER()->t_events = new Events();
 }
 
 static Events * qt_getEventFilter( void )
 {
-   return HB_GETQTEVENTFILTER()->events;
+   return HB_GETQTEVENTFILTER()->t_events;
 }
 
 static void qt_setEventSlots()
 {
-   Slots * s_s = HB_GETQTEVENTSLOTS()->slot;
-   if( ! s_s )
-      HB_GETQTEVENTSLOTS()->slot = new Slots();
+   Slots * t_slots = HB_GETQTEVENTSLOTS()->t_slots;
+   if( ! t_slots )
+      HB_GETQTEVENTSLOTS()->t_slots = new Slots();
 }
 
 static Slots * qt_getEventSlots( void )
 {
-   return HB_GETQTEVENTSLOTS()->slot;
+   return HB_GETQTEVENTSLOTS()->t_slots;
 }
 
 HB_FUNC( QT_SETEVENTFILTER )
@@ -150,12 +150,12 @@ static void hbqt_SlotsExec( QObject * object, const char * event )
 {
    if( object )
    {
-      Slots * s_s = qt_getEventSlots();
+      Slots * t_slots = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( i > 0 && i <= s_s->listBlock.size() && hb_vmRequestReenter() )
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
-         hb_vmEvalBlockV( s_s->listBlock.at( i - 1 ), 1, pObject );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, pObject );
          hb_itemRelease( pObject );
          hb_vmRequestRestore();
       }
@@ -166,13 +166,13 @@ static void hbqt_SlotsExecBool( QObject * object, const char* event, bool bBool 
 {
    if( object )
    {
-      Slots * s_s = qt_getEventSlots();
+      Slots * t_slots = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( i > 0 && i <= s_s->listBlock.size() && hb_vmRequestReenter() )
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pBool = hb_itemPutL( NULL, bBool );
-         hb_vmEvalBlockV( s_s->listBlock.at( i - 1 ), 2, pObject, pBool );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pObject, pBool );
          hb_itemRelease( pObject );
          hb_itemRelease( pBool );
          hb_vmRequestRestore();
@@ -184,13 +184,13 @@ static void hbqt_SlotsExecInt( QObject * object, const char * event, int iValue 
 {
    if( object )
    {
-      Slots * s_s = qt_getEventSlots();
+      Slots * t_slots = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( i > 0 && i <= s_s->listBlock.size() && hb_vmRequestReenter() )
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pState = hb_itemPutNI( NULL, iValue );
-         hb_vmEvalBlockV( s_s->listBlock.at( i - 1 ), 2, pObject, pState );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pObject, pState );
          hb_itemRelease( pObject );
          hb_itemRelease( pState );
          hb_vmRequestRestore();
@@ -202,14 +202,14 @@ static void hbqt_SlotsExecIntInt( QObject * object, const char * event, int iVal
 {
    if( object )
    {
-      Slots * s_s = qt_getEventSlots();
+      Slots * t_slots = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( i > 0 && i <= s_s->listBlock.size() && hb_vmRequestReenter() )
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pValue1 = hb_itemPutNI( NULL, iValue1 );
          PHB_ITEM pValue2 = hb_itemPutNI( NULL, iValue2 );
-         hb_vmEvalBlockV( s_s->listBlock.at( i - 1 ), 3, pObject, pValue1, pValue2 );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 3, pObject, pValue1, pValue2 );
          hb_itemRelease( pObject );
          hb_itemRelease( pValue1 );
          hb_itemRelease( pValue2 );
@@ -222,15 +222,15 @@ static void hbqt_SlotsExecIntIntInt( QObject * object, const char * event, int i
 {
    if( object )
    {
-      Slots * s_s = qt_getEventSlots();
+      Slots * t_slots = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( i > 0 && i <= s_s->listBlock.size() && hb_vmRequestReenter() )
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pValue1 = hb_itemPutNI( NULL, iValue1 );
          PHB_ITEM pValue2 = hb_itemPutNI( NULL, iValue2 );
          PHB_ITEM pValue3 = hb_itemPutNI( NULL, iValue3 );
-         hb_vmEvalBlockV( s_s->listBlock.at( i - 1 ), 4, pObject, pValue1, pValue2, pValue3 );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 4, pObject, pValue1, pValue2, pValue3 );
          hb_itemRelease( pObject );
          hb_itemRelease( pValue1 );
          hb_itemRelease( pValue2 );
@@ -244,16 +244,16 @@ static void hbqt_SlotsExecIntIntIntInt( QObject * object, const char * event, in
 {
    if( object )
    {
-      Slots * s_s = qt_getEventSlots();
+      Slots * t_slots = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( i > 0 && i <= s_s->listBlock.size() && hb_vmRequestReenter() )
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pValue1 = hb_itemPutNI( NULL, iValue1 );
          PHB_ITEM pValue2 = hb_itemPutNI( NULL, iValue2 );
          PHB_ITEM pValue3 = hb_itemPutNI( NULL, iValue3 );
          PHB_ITEM pValue4 = hb_itemPutNI( NULL, iValue4 );
-         hb_vmEvalBlockV( s_s->listBlock.at( i - 1 ), 5, pObject, pValue1, pValue2, pValue3, pValue4 );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 5, pObject, pValue1, pValue2, pValue3, pValue4 );
          hb_itemRelease( pObject );
          hb_itemRelease( pValue1 );
          hb_itemRelease( pValue2 );
@@ -268,13 +268,13 @@ static void hbqt_SlotsExecString( QObject * object, const char * event, const QS
 {
    if( object )
    {
-      Slots * s_s = qt_getEventSlots();
+      Slots * t_slots = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( i > 0 && i <= s_s->listBlock.size() && hb_vmRequestReenter() )
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pString = hb_itemPutC( NULL, string.toAscii().data() );
-         hb_vmEvalBlockV( s_s->listBlock.at( i - 1 ), 2, pObject, pString );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pObject, pString );
          hb_itemRelease( pObject );
          hb_itemRelease( pString );
          hb_vmRequestRestore();
@@ -286,13 +286,13 @@ static void hbqt_SlotsExecModel( QObject * object, const char * event, const QMo
 {
    if( object )
    {
-      Slots * s_s = qt_getEventSlots();
+      Slots * t_slots = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( i > 0 && i <= s_s->listBlock.size() && hb_vmRequestReenter() )
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pState = hb_itemPutPtr( NULL, ( QModelIndex * ) new QModelIndex( index ) );
-         hb_vmEvalBlockV( s_s->listBlock.at( i - 1 ), 2, pObject, pState );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pObject, pState );
          hb_itemRelease( pObject );
          delete ( ( QModelIndex * ) hb_itemGetPtr( pState ) );
          hb_itemRelease( pState );
@@ -305,13 +305,13 @@ static void hbqt_SlotsExecTextCharFormat( QObject * object, const char * event, 
 {
    if( object )
    {
-      Slots * s_s = qt_getEventSlots();
+      Slots * t_slots = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( i > 0 && i <= s_s->listBlock.size() && hb_vmRequestReenter() )
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QTextCharFormat( f ) );
-         hb_vmEvalBlockV( s_s->listBlock.at( i - 1 ), 2, pObject, p1 );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pObject, p1 );
          hb_itemRelease( pObject );
          delete ( ( QTextCharFormat * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );
@@ -324,13 +324,13 @@ static void hbqt_SlotsExecFont( QObject * object, const char * event, const QFon
 {
    if( object )
    {
-      Slots * s_s = qt_getEventSlots();
+      Slots * t_slots = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( i > 0 && i <= s_s->listBlock.size() && hb_vmRequestReenter() )
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QFont( font ) );
-         hb_vmEvalBlockV( s_s->listBlock.at( i - 1 ), 2, pObject, p1 );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pObject, p1 );
          hb_itemRelease( pObject );
          delete ( ( QFont * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );
@@ -343,13 +343,13 @@ static void hbqt_SlotsExecStringList( QObject * object, const char * event, cons
 {
    if( object )
    {
-      Slots * s_s = qt_getEventSlots();
+      Slots * t_slots = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( i > 0 && i <= s_s->listBlock.size() && hb_vmRequestReenter() )
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM p1 = hb_itemPutPtr( NULL, new QStringList( stringList ) );
-         hb_vmEvalBlockV( s_s->listBlock.at( i - 1 ), 2, pObject, p1 );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pObject, p1 );
          hb_itemRelease( pObject );
          delete ( ( QStringList * ) hb_itemGetPtr( p1 ) );
          hb_itemRelease( p1 );
@@ -362,13 +362,13 @@ static void hbqt_SlotsExecPointer( QObject * object, const char * event, void * 
 {
    if( object )
    {
-      Slots * s_s = qt_getEventSlots();
+      Slots * t_slots = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( i > 0 && i <= s_s->listBlock.size() && hb_vmRequestReenter() )
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pP1 = hb_itemPutPtr( NULL, p1 );
-         hb_vmEvalBlockV( s_s->listBlock.at( i - 1 ), 2, pObject, pP1 );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 2, pObject, pP1 );
          hb_itemRelease( pObject );
          hb_itemRelease( pP1 );
          hb_vmRequestRestore();
@@ -380,14 +380,14 @@ static void hbqt_SlotsExecPointerInt( QObject * object, const char * event, void
 {
    if( object )
    {
-      Slots * s_s = qt_getEventSlots();
+      Slots * t_slots = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( i > 0 && i <= s_s->listBlock.size() && hb_vmRequestReenter() )
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pP1 = hb_itemPutPtr( NULL, p1 );
          PHB_ITEM pI1 = hb_itemPutNI( NULL, iInt );
-         hb_vmEvalBlockV( s_s->listBlock.at( i - 1 ), 3, pObject, pP1, pI1 );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 3, pObject, pP1, pI1 );
          hb_itemRelease( pObject );
          hb_itemRelease( pP1 );
          hb_itemRelease( pI1 );
@@ -400,14 +400,14 @@ static void hbqt_SlotsExecPointerPointer( QObject * object, const char * event, 
 {
    if( object )
    {
-      Slots * s_s = qt_getEventSlots();
+      Slots * t_slots = qt_getEventSlots();
       int i = object->property( event ).toInt();
-      if( i > 0 && i <= s_s->listBlock.size() && hb_vmRequestReenter() )
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
          PHB_ITEM pP1 = hb_itemPutPtr( NULL, p1 );
          PHB_ITEM pP2 = hb_itemPutPtr( NULL, p2 );
-         hb_vmEvalBlockV( s_s->listBlock.at( i - 1 ), 3, pObject, pP1, pP2 );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 3, pObject, pP1, pP2 );
          hb_itemRelease( pObject );
          hb_itemRelease( pP1 );
          hb_itemRelease( pP2 );
@@ -417,465 +417,104 @@ static void hbqt_SlotsExecPointerPointer( QObject * object, const char * event, 
 }
 
 /* Generic Key and Mouse Events emitted by subclass objects */
-void Slots::keyPressEvent( QKeyEvent * event )
-{
-   hbqt_SlotsExecPointer( qobject_cast<QObject *>( sender() ), "keyPressEvent()", event );
-}
-
-void Slots::keyReleaseEvent( QKeyEvent * event )
-{
-   hbqt_SlotsExecPointer( qobject_cast<QObject *>( sender() ), "keyReleaseEvent()", event );
-}
-
-void Slots::mouseMoveEvent( QMouseEvent * event )
-{
-   hbqt_SlotsExecPointer( qobject_cast<QObject *>( sender() ), "mouseMoveEvent()", event );
-}
-
-void Slots::mouseDoubleClickEvent( QMouseEvent * event )
-{
-   hbqt_SlotsExecPointer( qobject_cast<QObject *>( sender() ), "mouseDoubleClickEvent()", event );
-}
-
-void Slots::mousePressEvent( QMouseEvent * event )
-{
-   hbqt_SlotsExecPointer( qobject_cast<QObject *>( sender() ), "mousePressEvent()", event );
-}
-
-void Slots::mouseReleaseEvent( QMouseEvent * event )
-{
-   hbqt_SlotsExecPointer( qobject_cast<QObject *>( sender() ), "mouseReleaseEvent()", event );
-}
-
-void Slots::wheelEvent( QWheelEvent * event )
-{
-   hbqt_SlotsExecPointer( qobject_cast<QObject *>( sender() ), "wheelEvent()", event );
-}
-
-void Slots::resizeEvent( QResizeEvent * event )
-{
-   hbqt_SlotsExecPointer( qobject_cast<QObject *>( sender() ), "resizeEvent()", event );
-}
-
-/* ........................................................ */
-
-void Slots::triggered( bool checked )
-{
-   hbqt_SlotsExecBool( qobject_cast<QObject *>( sender() ), "triggered(bool)", checked );
-}
-
-void Slots::hovered( QAction * action )
-{
-   hbqt_SlotsExecPointer( qobject_cast<QObject *>( sender() ), "hovered(action)", action );
-}
-
-void Slots::clicked()
-{
-   hbqt_SlotsExec( qobject_cast<QObject *>( sender() ), "clicked()" );
-}
-
-void Slots::returnPressed()
-{
-   hbqt_SlotsExec( qobject_cast<QObject *>( sender() ), "returnPressed()" );
-}
-
-void Slots::viewportEntered()
-{
-   hbqt_SlotsExec( qobject_cast<QObject *>( sender() ), "viewportEntered()" );
-}
-
-void Slots::pressed()
-{
-   hbqt_SlotsExec( qobject_cast<QObject *>( sender() ), "pressed()" );
-}
-
-void Slots::released()
-{
-   hbqt_SlotsExec( qobject_cast<QObject *>( sender() ), "released()" );
-}
-
-void Slots::triggered()
-{
-   hbqt_SlotsExec( qobject_cast<QObject *>( sender() ), "triggered()" );
-}
-
-void Slots::hovered()
-{
-   hbqt_SlotsExec( qobject_cast<QObject *>( sender() ), "hovered()" );
-}
-
-void Slots::stateChanged( int state )
-{
-   hbqt_SlotsExecInt( qobject_cast<QObject *>( sender() ), "stateChanged(int)", state );
-}
-
-void Slots::activated( int index )
-{
-   hbqt_SlotsExecInt( qobject_cast<QObject *>( sender() ), "activated(int)", index );
-}
-
-void Slots::currentIndexChanged( int index )
-{
-   hbqt_SlotsExecInt( qobject_cast<QObject *>( sender() ), "currentIndexChanged(int)", index );
-}
-
-void Slots::currentChanged( int index )
-{
-   hbqt_SlotsExecInt( qobject_cast<QObject *>( sender() ), "currentChanged(int)", index );
-}
-
-void Slots::highlighted( int index )
-{
-   hbqt_SlotsExecInt( qobject_cast<QObject *>( sender() ), "highlighted(int)", index );
-}
-
-void Slots::clicked( const QModelIndex & index )
-{
-   hbqt_SlotsExecModel( qobject_cast<QObject *>( sender() ), "clicked(QModelIndex)", index );
-}
-
-void Slots::doubleClicked( const QModelIndex & index )
-{
-   hbqt_SlotsExecModel( qobject_cast<QObject *>( sender() ), "doubleClicked(QModelIndex)", index );
-}
-
-void Slots::entered( const QModelIndex & index )
-{
-   hbqt_SlotsExecModel( qobject_cast<QObject *>( sender() ), "entered(QModelIndex)", index );
-}
-
-void Slots::actionTriggered( int action )
-{
-   hbqt_SlotsExecInt( qobject_cast<QObject *>( sender() ), "actionTriggered(int)", action );
-}
-
-void Slots::rangeChanged( int min, int max )
-{
-   hbqt_SlotsExecIntInt( qobject_cast<QObject *>( sender() ), "rangeChanged(int)", min, max );
-}
-
-void Slots::sliderMoved( int value )
-{
-   hbqt_SlotsExecInt( qobject_cast<QObject *>( sender() ), "sliderMoved(int)", value );
-}
-
-void Slots::sliderPressed()
-{
-   hbqt_SlotsExec( qobject_cast<QObject *>( sender() ), "sliderPressed()" );
-}
-
-void Slots::sliderReleased()
-{
-   hbqt_SlotsExec( qobject_cast<QObject *>( sender() ), "sliderReleased()" );
-}
-
-void Slots::valueChanged( int value )
-{
-   hbqt_SlotsExecInt( qobject_cast<QObject *>( sender() ), "valueChanged(int)", value );
-}
-
-void Slots::cursorPositionChanged( int iOld, int iNew )
-{
-   hbqt_SlotsExecIntInt( qobject_cast<QObject *>( sender() ), "cursorPositionChanged(int,int)", iOld, iNew );
-}
-
-void Slots::editingFinished()
-{
-   hbqt_SlotsExec( qobject_cast<QObject *>( sender() ), "editingFinished()" );
-}
-
-void Slots::selectionChanged()
-{
-   hbqt_SlotsExec( qobject_cast<QObject *>( sender() ), "selectionChanged()" );
-}
-
-void Slots::textChanged( const QString & text )
-{
-   hbqt_SlotsExecString( qobject_cast<QObject *>( sender() ), "textChanged(QString)", text );
-}
-
-void Slots::textEdited( const QString & text )
-{
-   hbqt_SlotsExecString( qobject_cast<QObject *>( sender() ), "textEdited(QString)", text );
-}
-
+void Slots::keyPressEvent( QKeyEvent * event )                                                           { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "keyPressEvent()", event ); }
+void Slots::keyReleaseEvent( QKeyEvent * event )                                                         { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "keyReleaseEvent()", event ); }
+void Slots::mouseMoveEvent( QMouseEvent * event )                                                        { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "mouseMoveEvent()", event ); }
+void Slots::mouseDoubleClickEvent( QMouseEvent * event )                                                 { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "mouseDoubleClickEvent()", event ); }
+void Slots::mousePressEvent( QMouseEvent * event )                                                       { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "mousePressEvent()", event ); }
+void Slots::mouseReleaseEvent( QMouseEvent * event )                                                     { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "mouseReleaseEvent()", event ); }
+void Slots::wheelEvent( QWheelEvent * event )                                                            { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "wheelEvent()", event ); }
+void Slots::resizeEvent( QResizeEvent * event )                                                          { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "resizeEvent()", event ); }
+void Slots::triggered( bool checked )                                                                    { hbqt_SlotsExecBool(           qobject_cast<QObject *>( sender() ), "triggered(bool)", checked ); }
+void Slots::hovered( QAction * action )                                                                  { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "hovered(action)", action ); }
+void Slots::clicked()                                                                                    { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "clicked()" ); }
+void Slots::returnPressed()                                                                              { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "returnPressed()" ); }
+void Slots::viewportEntered()                                                                            { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "viewportEntered()" ); }
+void Slots::pressed()                                                                                    { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "pressed()" ); }
+void Slots::released()                                                                                   { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "released()" ); }
+void Slots::triggered()                                                                                  { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "triggered()" ); }
+void Slots::hovered()                                                                                    { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "hovered()" ); }
+void Slots::stateChanged( int state )                                                                    { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "stateChanged(int)", state ); }
+void Slots::activated( int index )                                                                       { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "activated(int)", index ); }
+void Slots::currentIndexChanged( int index )                                                             { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "currentIndexChanged(int)", index ); }
+void Slots::currentChanged( int index )                                                                  { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "currentChanged(int)", index ); }
+void Slots::highlighted( int index )                                                                     { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "highlighted(int)", index ); }
+void Slots::clicked( const QModelIndex & index )                                                         { hbqt_SlotsExecModel(          qobject_cast<QObject *>( sender() ), "clicked(QModelIndex)", index ); }
+void Slots::doubleClicked( const QModelIndex & index )                                                   { hbqt_SlotsExecModel(          qobject_cast<QObject *>( sender() ), "doubleClicked(QModelIndex)", index ); }
+void Slots::entered( const QModelIndex & index )                                                         { hbqt_SlotsExecModel(          qobject_cast<QObject *>( sender() ), "entered(QModelIndex)", index ); }
+void Slots::actionTriggered( int action )                                                                { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "actionTriggered(int)", action ); }
+void Slots::rangeChanged( int min, int max )                                                             { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "rangeChanged(int)", min, max ); }
+void Slots::sliderMoved( int value )                                                                     { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "sliderMoved(int)", value ); }
+void Slots::sliderPressed()                                                                              { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "sliderPressed()" ); }
+void Slots::sliderReleased()                                                                             { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "sliderReleased()" ); }
+void Slots::valueChanged( int value )                                                                    { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "valueChanged(int)", value ); }
+void Slots::cursorPositionChanged( int iOld, int iNew )                                                  { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "cursorPositionChanged(int,int)", iOld, iNew ); }
+void Slots::editingFinished()                                                                            { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "editingFinished()" ); }
+void Slots::selectionChanged()                                                                           { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "selectionChanged()" ); }
+void Slots::textChanged( const QString & text )                                                          { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "textChanged(QString)", text ); }
+void Slots::textEdited( const QString & text )                                                           { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "textEdited(QString)", text ); }
 /*  TreeViewobject */
-void Slots::currentItemChanged( QTreeWidgetItem * current, QTreeWidgetItem * previous )
-{
-   hbqt_SlotsExecPointerPointer( qobject_cast<QObject *>( sender() ), "currentItemChanged(QTWItem)", current, previous );
-}
-
-void Slots::itemActivated( QTreeWidgetItem * item, int column )
-{
-   hbqt_SlotsExecPointerInt( qobject_cast<QObject *>( sender() ), "itemActivated(QTWItem)", item, column );
-}
-
-void Slots::itemChanged( QTreeWidgetItem * item, int column )
-{
-   hbqt_SlotsExecPointerInt( qobject_cast<QObject *>( sender() ), "itemChanged(QTWItem)", item, column );
-}
-
-void Slots::itemClicked( QTreeWidgetItem * item, int column )
-{
-   hbqt_SlotsExecPointerInt( qobject_cast<QObject *>( sender() ), "itemClicked(QTWItem)", item, column );
-}
-
-void Slots::itemDoubleClicked( QTreeWidgetItem * item, int column )
-{
-   hbqt_SlotsExecPointerInt( qobject_cast<QObject *>( sender() ), "itemDoubleClicked(QTWItem)", item, column );
-}
-
-void Slots::itemEntered( QTreeWidgetItem * item, int column )
-{
-   hbqt_SlotsExecPointerInt( qobject_cast<QObject *>( sender() ), "itemEntered(QTWItem)", item, column );
-}
-
-void Slots::itemPressed( QTreeWidgetItem * item, int column )
-{
-   hbqt_SlotsExecPointerInt( qobject_cast<QObject *>( sender() ), "itemPressed(QTWItem)", item, column );
-}
-
-void Slots::itemExpanded( QTreeWidgetItem * item )
-{
-   hbqt_SlotsExecPointer( qobject_cast<QObject *>( sender() ), "itemExpanded(QTWItem)", item );
-}
-
-void Slots::itemCollapsed( QTreeWidgetItem * item )
-{
-   hbqt_SlotsExecPointer( qobject_cast<QObject *>( sender() ), "itemCollapsed(QTWItem)", item );
-}
-
-void Slots::itemSelectionChanged()
-{
-   hbqt_SlotsExec( qobject_cast<QObject *>( sender() ), "itemSelectionChanged()" );
-}
-
+void Slots::currentItemChanged( QTreeWidgetItem * current, QTreeWidgetItem * previous )                  { hbqt_SlotsExecPointerPointer( qobject_cast<QObject *>( sender() ), "currentItemChanged(QTWItem)", current, previous ); }
+void Slots::itemActivated( QTreeWidgetItem * item, int column )                                          { hbqt_SlotsExecPointerInt(     qobject_cast<QObject *>( sender() ), "itemActivated(QTWItem)", item, column ); }
+void Slots::itemChanged( QTreeWidgetItem * item, int column )                                            { hbqt_SlotsExecPointerInt(     qobject_cast<QObject *>( sender() ), "itemChanged(QTWItem)", item, column ); }
+void Slots::itemClicked( QTreeWidgetItem * item, int column )                                            { hbqt_SlotsExecPointerInt(     qobject_cast<QObject *>( sender() ), "itemClicked(QTWItem)", item, column ); }
+void Slots::itemDoubleClicked( QTreeWidgetItem * item, int column )                                      { hbqt_SlotsExecPointerInt(     qobject_cast<QObject *>( sender() ), "itemDoubleClicked(QTWItem)", item, column ); }
+void Slots::itemEntered( QTreeWidgetItem * item, int column )                                            { hbqt_SlotsExecPointerInt(     qobject_cast<QObject *>( sender() ), "itemEntered(QTWItem)", item, column ); }
+void Slots::itemPressed( QTreeWidgetItem * item, int column )                                            { hbqt_SlotsExecPointerInt(     qobject_cast<QObject *>( sender() ), "itemPressed(QTWItem)", item, column ); }
+void Slots::itemExpanded( QTreeWidgetItem * item )                                                       { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "itemExpanded(QTWItem)", item ); }
+void Slots::itemCollapsed( QTreeWidgetItem * item )                                                      { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "itemCollapsed(QTWItem)", item ); }
+void Slots::itemSelectionChanged()                                                                       { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "itemSelectionChanged()" ); }
 /* QDialog (s)*/
-void Slots::currentFontChanged( const QFont & font )
-{
-   hbqt_SlotsExecFont( qobject_cast<QObject *>( sender() ), "currentFontChanged(QFont)", font );
-}
-
-void Slots::fontSelected( const QFont & font )
-{
-   hbqt_SlotsExecFont( qobject_cast<QObject *>( sender() ), "fontSelected(QFont)", font );
-}
-
-void Slots::accepted()
-{
-   hbqt_SlotsExec( qobject_cast<QObject *>( sender() ), "accepted()" );
-}
-
-void Slots::finished( int result )
-{
-   hbqt_SlotsExecInt( qobject_cast<QObject *>( sender() ), "finished(int)", result );
-}
-
-void Slots::rejected()
-{
-   hbqt_SlotsExec( qobject_cast<QObject *>( sender() ), "rejected()" );
-}
-
-void Slots::currentChanged( const QString & path )
-{
-   hbqt_SlotsExecString( qobject_cast<QObject *>( sender() ), "currentChanged(QString)", path );
-}
-
-void Slots::directoryEntered( const QString & directory )
-{
-   hbqt_SlotsExecString( qobject_cast<QObject *>( sender() ), "directoryEntered(QString)", directory );
-}
-
-void Slots::fileSelected( const QString & file )
-{
-   hbqt_SlotsExecString( qobject_cast<QObject *>( sender() ), "fileSelected(QString)", file );
-}
-
-void Slots::filesSelected( const QStringList & selected )
-{
-   hbqt_SlotsExecStringList( qobject_cast<QObject *>( sender() ), "filesSelected(QStringList)", selected );
-}
-
-void Slots::filterSelected( const QString & filter )
-{
-   hbqt_SlotsExecString( qobject_cast<QObject *>( sender() ), "filterSelected(QString)", filter );
-}
-
+void Slots::currentFontChanged( const QFont & font )                                                     { hbqt_SlotsExecFont(           qobject_cast<QObject *>( sender() ), "currentFontChanged(QFont)", font ); }
+void Slots::fontSelected( const QFont & font )                                                           { hbqt_SlotsExecFont(           qobject_cast<QObject *>( sender() ), "fontSelected(QFont)", font ); }
+void Slots::accepted()                                                                                   { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "accepted()" ); }
+void Slots::finished( int result )                                                                       { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "finished(int)", result ); }
+void Slots::rejected()                                                                                   { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "rejected()" ); }
+void Slots::currentChanged( const QString & path )                                                       { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "currentChanged(QString)", path ); }
+void Slots::directoryEntered( const QString & directory )                                                { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "directoryEntered(QString)", directory ); }
+void Slots::fileSelected( const QString & file )                                                         { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "fileSelected(QString)", file ); }
+void Slots::filesSelected( const QStringList & selected )                                                { hbqt_SlotsExecStringList(     qobject_cast<QObject *>( sender() ), "filesSelected(QStringList)", selected ); }
+void Slots::filterSelected( const QString & filter )                                                     { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "filterSelected(QString)", filter ); }
 /* QPrintDialog */
-void Slots::accepted( QPrinter * printer )
-{
-   hbqt_SlotsExecPointer( qobject_cast<QObject *>( sender() ), "accepted(QPrinter)", printer );
-}
-
+void Slots::accepted( QPrinter * printer )                                                               { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "accepted(QPrinter)", printer ); }
 /* QTextEdit */
-void Slots::copyAvailable( bool yes )
-{
-   hbqt_SlotsExecBool( qobject_cast<QObject *>( sender() ), "copyAvailable(bool)", yes );
-}
-
-void Slots::currentCharFormatChanged( const QTextCharFormat & f )
-{
-   hbqt_SlotsExecTextCharFormat( qobject_cast<QObject *>( sender() ), "currentCharFormatChanged(QTextCharFormat)", f );
-}
-
-void Slots::cursorPositionChanged()
-{
-   hbqt_SlotsExec( qobject_cast<QObject *>( sender() ), "cursorPositionChanged()" );
-}
-
-void Slots::redoAvailable( bool available )
-{
-   hbqt_SlotsExecBool( qobject_cast<QObject *>( sender() ), "redoAvailable(bool)", available );
-}
-
-void Slots::textChanged()
-{
-   hbqt_SlotsExec( qobject_cast<QObject *>( sender() ), "textChanged()" );
-}
-
-void Slots::undoAvailable( bool available )
-{
-   hbqt_SlotsExecBool( qobject_cast<QObject *>( sender() ), "undoAvailable(available)", available );
-}
-
-void Slots::timeout()
-{
-   hbqt_SlotsExec( qobject_cast<QObject *>( sender() ), "timeout()" );
-}
-
-void Slots::scrollContentsBy( int x, int y )
-{
-   hbqt_SlotsExecIntInt( qobject_cast<QObject *>( sender() ), "scrollContentsBy(int,int)", x, y );
-}
-
-void Slots::geometriesChanged()
-{
-   hbqt_SlotsExec( qobject_cast<QObject *>( sender() ), "geometriesChanged()" );
-}
-
-void Slots::sectionAutoResize( int logicalIndex, QHeaderView::ResizeMode mode )
-{
-   hbqt_SlotsExecIntInt( qobject_cast<QObject *>( sender() ), "sectionAutoResize(int,int)", logicalIndex, mode );
-}
-
-void Slots::sectionClicked( int logicalIndex )
-{
-   hbqt_SlotsExecInt( qobject_cast<QObject *>( sender() ), "sectionClicked(int)", logicalIndex );
-}
-
-void Slots::sectionCountChanged( int oldCount, int newCount )
-{
-   hbqt_SlotsExecIntInt( qobject_cast<QObject *>( sender() ), "sectionCountChanged(int,int)", oldCount, newCount );
-}
-
-void Slots::sectionDoubleClicked( int logicalIndex )
-{
-   hbqt_SlotsExecInt( qobject_cast<QObject *>( sender() ), "sectionDoubleClicked(int)", logicalIndex );
-}
-
-void Slots::sectionEntered( int logicalIndex )
-{
-   hbqt_SlotsExecInt( qobject_cast<QObject *>( sender() ), "sectionEntered(int)", logicalIndex );
-}
-
-void Slots::sectionHandleDoubleClicked( int logicalIndex )
-{
-   hbqt_SlotsExecInt( qobject_cast<QObject *>( sender() ), "sectionHandleDoubleClicked(int)", logicalIndex );
-}
-
-void Slots::sectionMoved( int logicalIndex, int oldVisualIndex, int newVisualIndex )
-{
-   hbqt_SlotsExecIntIntInt( qobject_cast<QObject *>( sender() ), "sectionMoved(int,int,int)", logicalIndex, oldVisualIndex, newVisualIndex );
-}
-
-void Slots::sectionPressed( int logicalIndex )
-{
-   hbqt_SlotsExecInt( qobject_cast<QObject *>( sender() ), "sectionPressed(int)", logicalIndex );
-}
-
-void Slots::sectionResized( int logicalIndex, int oldSize, int newSize )
-{
-   hbqt_SlotsExecIntIntInt( qobject_cast<QObject *>( sender() ), "sectionResized(int,int,int)", logicalIndex, oldSize, newSize );
-}
-
-void Slots::sortIndicatorChanged( int logicalIndex, Qt::SortOrder order )
-{
-   hbqt_SlotsExecIntInt( qobject_cast<QObject *>( sender() ), "sortIndicatorChanged(int,int)", logicalIndex, order );
-}
-
-void Slots::buttonClicked( int id )
-{
-   hbqt_SlotsExecInt( qobject_cast<QObject *>( sender() ), "buttonClicked(int)", id );
-}
-
-void Slots::buttonPressed( int id )
-{
-   hbqt_SlotsExecInt( qobject_cast<QObject *>( sender() ), "buttonPressed(int)", id );
-}
-
-void Slots::buttonReleased( int id )
-{
-   hbqt_SlotsExecInt( qobject_cast<QObject *>( sender() ), "buttonReleased(int)", id );
-}
-
-void Slots::linkActivated( const QString & link )
-{
-   hbqt_SlotsExecString( qobject_cast<QObject *>( sender() ), "linkActivated(QString)", link );
-}
-
-void Slots::linkHovered( const QString & link )
-{
-   hbqt_SlotsExecString( qobject_cast<QObject *>( sender() ), "linkHovered(QString)", link );
-}
-
-void Slots::cellActivated( int row, int column )
-{
-   hbqt_SlotsExecIntInt( qobject_cast<QObject *>( sender() ), "cellActivated(int,int)", row, column );
-}
-
-void Slots::cellChanged( int row, int column )
-{
-   hbqt_SlotsExecIntInt( qobject_cast<QObject *>( sender() ), "cellChanged(int,int)", row, column );
-}
-
-void Slots::cellClicked( int row, int column )
-{
-   hbqt_SlotsExecIntInt( qobject_cast<QObject *>( sender() ), "cellClicked(int,int)", row, column );
-}
-
-void Slots::cellDoubleClicked( int row, int column )
-{
-   hbqt_SlotsExecIntInt( qobject_cast<QObject *>( sender() ), "cellDoubleClicked(int,int)", row, column );
-}
-
-void Slots::cellEntered( int row, int column )
-{
-   hbqt_SlotsExecIntInt( qobject_cast<QObject *>( sender() ), "cellEntered(int,int)", row, column );
-}
-
-void Slots::cellPressed( int row, int column )
-{
-   hbqt_SlotsExecIntInt( qobject_cast<QObject *>( sender() ), "cellEntered(int,int)", row, column );
-}
-
-void Slots::currentCellChanged( int currentRow, int currentColumn, int previousRow, int previousColumn )
-{
-   hbqt_SlotsExecIntIntIntInt( qobject_cast<QObject *>( sender() ), "currentCellChanged(int,int,int,int)", currentRow, currentColumn, previousRow, previousColumn );
-}
-
-void Slots::tabCloseRequested( int index )
-{
-   hbqt_SlotsExecInt( qobject_cast<QObject *>( sender() ), "tabCloseRequested(int)", index );
-}
-
-void Slots::paintRequested( QPrinter * printer )
-{
-   hbqt_SlotsExecPointer( qobject_cast<QObject *>( sender() ), "paintRequested(QPrinter)", printer );
-}
+void Slots::copyAvailable( bool yes )                                                                    { hbqt_SlotsExecBool(           qobject_cast<QObject *>( sender() ), "copyAvailable(bool)", yes ); }
+void Slots::currentCharFormatChanged( const QTextCharFormat & f )                                        { hbqt_SlotsExecTextCharFormat( qobject_cast<QObject *>( sender() ), "currentCharFormatChanged(QTextCharFormat)", f ); }
+void Slots::cursorPositionChanged()                                                                      { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "cursorPositionChanged()" ); }
+void Slots::redoAvailable( bool available )                                                              { hbqt_SlotsExecBool(           qobject_cast<QObject *>( sender() ), "redoAvailable(bool)", available ); }
+void Slots::textChanged()                                                                                { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "textChanged()" ); }
+void Slots::undoAvailable( bool available )                                                              { hbqt_SlotsExecBool(           qobject_cast<QObject *>( sender() ), "undoAvailable(available)", available ); }
+void Slots::timeout()                                                                                    { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "timeout()" ); }
+void Slots::scrollContentsBy( int x, int y )                                                             { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "scrollContentsBy(int,int)", x, y ); }
+void Slots::geometriesChanged()                                                                          { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "geometriesChanged()" ); }
+void Slots::sectionAutoResize( int logicalIndex, QHeaderView::ResizeMode mode )                          { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "sectionAutoResize(int,int)", logicalIndex, mode ); }
+void Slots::sectionClicked( int logicalIndex )                                                           { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "sectionClicked(int)", logicalIndex ); }
+void Slots::sectionCountChanged( int oldCount, int newCount )                                            { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "sectionCountChanged(int,int)", oldCount, newCount ); }
+void Slots::sectionDoubleClicked( int logicalIndex )                                                     { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "sectionDoubleClicked(int)", logicalIndex ); }
+void Slots::sectionEntered( int logicalIndex )                                                           { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "sectionEntered(int)", logicalIndex ); }
+void Slots::sectionHandleDoubleClicked( int logicalIndex )                                               { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "sectionHandleDoubleClicked(int)", logicalIndex ); }
+void Slots::sectionMoved( int logicalIndex, int oldVisualIndex, int newVisualIndex )                     { hbqt_SlotsExecIntIntInt(      qobject_cast<QObject *>( sender() ), "sectionMoved(int,int,int)", logicalIndex, oldVisualIndex, newVisualIndex ); }
+void Slots::sectionPressed( int logicalIndex )                                                           { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "sectionPressed(int)", logicalIndex ); }
+void Slots::sectionResized( int logicalIndex, int oldSize, int newSize )                                 { hbqt_SlotsExecIntIntInt(      qobject_cast<QObject *>( sender() ), "sectionResized(int,int,int)", logicalIndex, oldSize, newSize ); }
+void Slots::sortIndicatorChanged( int logicalIndex, Qt::SortOrder order )                                { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "sortIndicatorChanged(int,int)", logicalIndex, order ); }
+void Slots::buttonClicked( int id )                                                                      { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "buttonClicked(int)", id ); }
+void Slots::buttonPressed( int id )                                                                      { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "buttonPressed(int)", id ); }
+void Slots::buttonReleased( int id )                                                                     { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "buttonReleased(int)", id ); }
+void Slots::linkActivated( const QString & link )                                                        { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "linkActivated(QString)", link ); }
+void Slots::linkHovered( const QString & link )                                                          { hbqt_SlotsExecString(         qobject_cast<QObject *>( sender() ), "linkHovered(QString)", link ); }
+void Slots::cellActivated( int row, int column )                                                         { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "cellActivated(int,int)", row, column ); }
+void Slots::cellChanged( int row, int column )                                                           { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "cellChanged(int,int)", row, column ); }
+void Slots::cellClicked( int row, int column )                                                           { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "cellClicked(int,int)", row, column ); }
+void Slots::cellDoubleClicked( int row, int column )                                                     { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "cellDoubleClicked(int,int)", row, column ); }
+void Slots::cellEntered( int row, int column )                                                           { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "cellEntered(int,int)", row, column ); }
+void Slots::cellPressed( int row, int column )                                                           { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "cellEntered(int,int)", row, column ); }
+void Slots::currentCellChanged( int currentRow, int currentColumn, int previousRow, int previousColumn ) { hbqt_SlotsExecIntIntIntInt(   qobject_cast<QObject *>( sender() ), "currentCellChanged(int,int,int,int)", currentRow, currentColumn, previousRow, previousColumn ); }
+void Slots::tabCloseRequested( int index )                                                               { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "tabCloseRequested(int)", index ); }
+void Slots::paintRequested( QPrinter * printer )                                                         { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "paintRequested(QPrinter)", printer ); }
 
 /*----------------------------------------------------------------------*/
 /*
- * harbour function to connect signals with slots
+ * Harbour function to connect signals with slots
  */
 HB_FUNC( QT_CONNECT_SIGNAL )
 {
@@ -889,113 +528,114 @@ HB_FUNC( QT_CONNECT_SIGNAL )
 
    QString   signal    = hb_parcx( 2 );                             /* get signal    */
    PHB_ITEM  codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK ) );  /* get codeblock */
-   bool      ret       = false;                                     /* return value  */
+   bool      ret;
 
    qt_setEventSlots();
-   Slots   * s_s       = qt_getEventSlots();
+   Slots   * t_slots       = qt_getEventSlots();
 
-   if(      signal == ( QString ) "clicked()" )                                 ret = object->connect( object, SIGNAL( clicked() )                                                 , s_s, SLOT( clicked() )                                                 , Qt::AutoConnection );
-   else if( signal == ( QString ) "returnPressed()" )                           ret = object->connect( object, SIGNAL( returnPressed() )                                           , s_s, SLOT( returnPressed() )                                           , Qt::AutoConnection );
-   else if( signal == ( QString ) "triggered()" )                               ret = object->connect( object, SIGNAL( triggered() )                                               , s_s, SLOT( triggered() )                                               , Qt::AutoConnection );
-   else if( signal == ( QString ) "hovered()" )                                 ret = object->connect( object, SIGNAL( hovered() )                                                 , s_s, SLOT( hovered() )                                                 , Qt::AutoConnection );
-   else if( signal == ( QString ) "viewportEntered()" )                         ret = object->connect( object, SIGNAL( viewportEntered() )                                         , s_s, SLOT( viewportEntered() )                                         , Qt::AutoConnection );
-   else if( signal == ( QString ) "pressed()" )                                 ret = object->connect( object, SIGNAL( pressed() )                                                 , s_s, SLOT( pressed() )                                                 , Qt::AutoConnection );
-   else if( signal == ( QString ) "released()" )                                ret = object->connect( object, SIGNAL( released() )                                                , s_s, SLOT( released() )                                                , Qt::AutoConnection );
-   else if( signal == ( QString ) "stateChanged(int)" )                         ret = object->connect( object, SIGNAL( stateChanged( int ) )                                       , s_s, SLOT( stateChanged( int ) )                                       , Qt::AutoConnection );
-   else if( signal == ( QString ) "activated(int)" )                            ret = object->connect( object, SIGNAL( activated( int ) )                                          , s_s, SLOT( activated( int ) )                                          , Qt::AutoConnection );
-   else if( signal == ( QString ) "currentIndexChanged(int)" )                  ret = object->connect( object, SIGNAL( currentIndexChanged( int ) )                                , s_s, SLOT( currentIndexChanged( int ) )                                , Qt::AutoConnection );
-   else if( signal == ( QString ) "highlighted(int)" )                          ret = object->connect( object, SIGNAL( highlighted( int ) )                                        , s_s, SLOT( highlighted( int ) )                                        , Qt::AutoConnection );
-   else if( signal == ( QString ) "triggered(bool)" )                           ret = object->connect( object, SIGNAL( triggered( bool ) )                                         , s_s, SLOT( triggered( bool ) )                                         , Qt::AutoConnection );
-   else if( signal == ( QString ) "clicked(QModelIndex)" )                      ret = object->connect( object, SIGNAL( clicked( const QModelIndex & ) )                            , s_s, SLOT( clicked( const QModelIndex & ) )                            , Qt::AutoConnection );
-   else if( signal == ( QString ) "doubleClicked(QModelIndex)" )                ret = object->connect( object, SIGNAL( doubleClicked( const QModelIndex & ) )                      , s_s, SLOT( doubleClicked( const QModelIndex & ) )                      , Qt::AutoConnection );
-   else if( signal == ( QString ) "entered(QModelIndex)" )                      ret = object->connect( object, SIGNAL( entered( const QModelIndex & ) )                            , s_s, SLOT( entered( const QModelIndex & ) )                            , Qt::AutoConnection );
-   else if( signal == ( QString ) "hovered(action)" )                           ret = object->connect( object, SIGNAL( hovered( QAction * ) )                                      , s_s, SLOT( hovered( QAction * ) )                                      , Qt::AutoConnection );
-   else if( signal == ( QString ) "currentChanged(int)" )                       ret = object->connect( object, SIGNAL( currentChanged( int ) )                                     , s_s, SLOT( currentChanged( int ) )                                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "actionTriggered(int)" )                      ret = object->connect( object, SIGNAL( actionTriggered(int) )                                      , s_s, SLOT( actionTriggered(int) )                                      , Qt::AutoConnection );
-   else if( signal == ( QString ) "rangeChanged(int,int)" )                     ret = object->connect( object, SIGNAL( rangeChanged(int,int) )                                     , s_s, SLOT( rangeChanged(int,int) )                                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "sliderMoved(int)" )                          ret = object->connect( object, SIGNAL( sliderMoved(int) )                                          , s_s, SLOT( sliderMoved(int) )                                          , Qt::AutoConnection );
-   else if( signal == ( QString ) "sliderPressed()" )                           ret = object->connect( object, SIGNAL( sliderPressed() )                                           , s_s, SLOT( sliderPressed() )                                           , Qt::AutoConnection );
-   else if( signal == ( QString ) "sliderReleased()" )                          ret = object->connect( object, SIGNAL( sliderReleased() )                                          , s_s, SLOT( sliderReleased() )                                          , Qt::AutoConnection );
-   else if( signal == ( QString ) "valueChanged(int)" )                         ret = object->connect( object, SIGNAL( valueChanged(int) )                                         , s_s, SLOT( valueChanged(int) )                                         , Qt::AutoConnection );
-   else if( signal == ( QString ) "cursorPositionChanged(int,int)" )            ret = object->connect( object, SIGNAL( cursorPositionChanged(int,int) )                            , s_s, SLOT( cursorPositionChanged(int,int) )                            , Qt::AutoConnection );
-   else if( signal == ( QString ) "editingFinished()" )                         ret = object->connect( object, SIGNAL( editingFinished() )                                         , s_s, SLOT( editingFinished() )                                         , Qt::AutoConnection );
-   else if( signal == ( QString ) "returnPressed()" )                           ret = object->connect( object, SIGNAL( returnPressed() )                                           , s_s, SLOT( returnPressed() )                                           , Qt::AutoConnection );
-   else if( signal == ( QString ) "selectionChanged()" )                        ret = object->connect( object, SIGNAL( selectionChanged() )                                        , s_s, SLOT( selectionChanged() )                                        , Qt::AutoConnection );
-   else if( signal == ( QString ) "textChanged(QString)" )                      ret = object->connect( object, SIGNAL( textChanged( const QString &) )                             , s_s, SLOT( textChanged( const QString & ) )                            , Qt::AutoConnection );
-   else if( signal == ( QString ) "textEdited(QString)" )                       ret = object->connect( object, SIGNAL( textEdited( const QString &) )                              , s_s, SLOT( textEdited( const QString & ) )                             , Qt::AutoConnection );
+   if(      signal == ( QString ) "clicked()" )                                 ret = object->connect( object, SIGNAL( clicked() )                                                 , t_slots, SLOT( clicked() )                                                 , Qt::AutoConnection );
+   else if( signal == ( QString ) "returnPressed()" )                           ret = object->connect( object, SIGNAL( returnPressed() )                                           , t_slots, SLOT( returnPressed() )                                           , Qt::AutoConnection );
+   else if( signal == ( QString ) "triggered()" )                               ret = object->connect( object, SIGNAL( triggered() )                                               , t_slots, SLOT( triggered() )                                               , Qt::AutoConnection );
+   else if( signal == ( QString ) "hovered()" )                                 ret = object->connect( object, SIGNAL( hovered() )                                                 , t_slots, SLOT( hovered() )                                                 , Qt::AutoConnection );
+   else if( signal == ( QString ) "viewportEntered()" )                         ret = object->connect( object, SIGNAL( viewportEntered() )                                         , t_slots, SLOT( viewportEntered() )                                         , Qt::AutoConnection );
+   else if( signal == ( QString ) "pressed()" )                                 ret = object->connect( object, SIGNAL( pressed() )                                                 , t_slots, SLOT( pressed() )                                                 , Qt::AutoConnection );
+   else if( signal == ( QString ) "released()" )                                ret = object->connect( object, SIGNAL( released() )                                                , t_slots, SLOT( released() )                                                , Qt::AutoConnection );
+   else if( signal == ( QString ) "stateChanged(int)" )                         ret = object->connect( object, SIGNAL( stateChanged( int ) )                                       , t_slots, SLOT( stateChanged( int ) )                                       , Qt::AutoConnection );
+   else if( signal == ( QString ) "activated(int)" )                            ret = object->connect( object, SIGNAL( activated( int ) )                                          , t_slots, SLOT( activated( int ) )                                          , Qt::AutoConnection );
+   else if( signal == ( QString ) "currentIndexChanged(int)" )                  ret = object->connect( object, SIGNAL( currentIndexChanged( int ) )                                , t_slots, SLOT( currentIndexChanged( int ) )                                , Qt::AutoConnection );
+   else if( signal == ( QString ) "highlighted(int)" )                          ret = object->connect( object, SIGNAL( highlighted( int ) )                                        , t_slots, SLOT( highlighted( int ) )                                        , Qt::AutoConnection );
+   else if( signal == ( QString ) "triggered(bool)" )                           ret = object->connect( object, SIGNAL( triggered( bool ) )                                         , t_slots, SLOT( triggered( bool ) )                                         , Qt::AutoConnection );
+   else if( signal == ( QString ) "clicked(QModelIndex)" )                      ret = object->connect( object, SIGNAL( clicked( const QModelIndex & ) )                            , t_slots, SLOT( clicked( const QModelIndex & ) )                            , Qt::AutoConnection );
+   else if( signal == ( QString ) "doubleClicked(QModelIndex)" )                ret = object->connect( object, SIGNAL( doubleClicked( const QModelIndex & ) )                      , t_slots, SLOT( doubleClicked( const QModelIndex & ) )                      , Qt::AutoConnection );
+   else if( signal == ( QString ) "entered(QModelIndex)" )                      ret = object->connect( object, SIGNAL( entered( const QModelIndex & ) )                            , t_slots, SLOT( entered( const QModelIndex & ) )                            , Qt::AutoConnection );
+   else if( signal == ( QString ) "hovered(action)" )                           ret = object->connect( object, SIGNAL( hovered( QAction * ) )                                      , t_slots, SLOT( hovered( QAction * ) )                                      , Qt::AutoConnection );
+   else if( signal == ( QString ) "currentChanged(int)" )                       ret = object->connect( object, SIGNAL( currentChanged( int ) )                                     , t_slots, SLOT( currentChanged( int ) )                                     , Qt::AutoConnection );
+   else if( signal == ( QString ) "actionTriggered(int)" )                      ret = object->connect( object, SIGNAL( actionTriggered(int) )                                      , t_slots, SLOT( actionTriggered(int) )                                      , Qt::AutoConnection );
+   else if( signal == ( QString ) "rangeChanged(int,int)" )                     ret = object->connect( object, SIGNAL( rangeChanged(int,int) )                                     , t_slots, SLOT( rangeChanged(int,int) )                                     , Qt::AutoConnection );
+   else if( signal == ( QString ) "sliderMoved(int)" )                          ret = object->connect( object, SIGNAL( sliderMoved(int) )                                          , t_slots, SLOT( sliderMoved(int) )                                          , Qt::AutoConnection );
+   else if( signal == ( QString ) "sliderPressed()" )                           ret = object->connect( object, SIGNAL( sliderPressed() )                                           , t_slots, SLOT( sliderPressed() )                                           , Qt::AutoConnection );
+   else if( signal == ( QString ) "sliderReleased()" )                          ret = object->connect( object, SIGNAL( sliderReleased() )                                          , t_slots, SLOT( sliderReleased() )                                          , Qt::AutoConnection );
+   else if( signal == ( QString ) "valueChanged(int)" )                         ret = object->connect( object, SIGNAL( valueChanged(int) )                                         , t_slots, SLOT( valueChanged(int) )                                         , Qt::AutoConnection );
+   else if( signal == ( QString ) "cursorPositionChanged(int,int)" )            ret = object->connect( object, SIGNAL( cursorPositionChanged(int,int) )                            , t_slots, SLOT( cursorPositionChanged(int,int) )                            , Qt::AutoConnection );
+   else if( signal == ( QString ) "editingFinished()" )                         ret = object->connect( object, SIGNAL( editingFinished() )                                         , t_slots, SLOT( editingFinished() )                                         , Qt::AutoConnection );
+   else if( signal == ( QString ) "returnPressed()" )                           ret = object->connect( object, SIGNAL( returnPressed() )                                           , t_slots, SLOT( returnPressed() )                                           , Qt::AutoConnection );
+   else if( signal == ( QString ) "selectionChanged()" )                        ret = object->connect( object, SIGNAL( selectionChanged() )                                        , t_slots, SLOT( selectionChanged() )                                        , Qt::AutoConnection );
+   else if( signal == ( QString ) "textChanged(QString)" )                      ret = object->connect( object, SIGNAL( textChanged( const QString &) )                             , t_slots, SLOT( textChanged( const QString & ) )                            , Qt::AutoConnection );
+   else if( signal == ( QString ) "textEdited(QString)" )                       ret = object->connect( object, SIGNAL( textEdited( const QString &) )                              , t_slots, SLOT( textEdited( const QString & ) )                             , Qt::AutoConnection );
    /* QTreeViewWidget */
-   else if( signal == ( QString ) "currentItemChanged(QTWItem)" )               ret = object->connect( object, SIGNAL( currentItemChanged( QTreeWidgetItem *, QTreeWidgetItem * ) ), s_s, SLOT( currentItemChanged( QTreeWidgetItem *, QTreeWidgetItem * ) ), Qt::AutoConnection );
-   else if( signal == ( QString ) "itemActivated(QTWItem)" )                    ret = object->connect( object, SIGNAL( itemActivated( QTreeWidgetItem *, int ) )                   , s_s, SLOT( itemActivated( QTreeWidgetItem *, int ) )                   , Qt::AutoConnection );
-   else if( signal == ( QString ) "itemChanged(QTWItem)" )                      ret = object->connect( object, SIGNAL( itemChanged( QTreeWidgetItem *, int ) )                     , s_s, SLOT( itemChanged( QTreeWidgetItem *, int ) )                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "itemClicked(QTWItem)" )                      ret = object->connect( object, SIGNAL( itemClicked( QTreeWidgetItem *, int ) )                     , s_s, SLOT( itemClicked( QTreeWidgetItem *, int ) )                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "itemCollapsed(QTWItem)" )                    ret = object->connect( object, SIGNAL( itemCollapsed( QTreeWidgetItem * ) )                        , s_s, SLOT( itemCollapsed( QTreeWidgetItem * ) )                        , Qt::AutoConnection );
-   else if( signal == ( QString ) "itemDoubleClicked(QTWItem)" )                ret = object->connect( object, SIGNAL( itemDoubleClicked( QTreeWidgetItem *, int ) )               , s_s, SLOT( itemDoubleClicked( QTreeWidgetItem *, int ) )               , Qt::AutoConnection );
-   else if( signal == ( QString ) "itemEntered(QTWItem)" )                      ret = object->connect( object, SIGNAL( itemEntered( QTreeWidgetItem *, int ) )                     , s_s, SLOT( itemEntered( QTreeWidgetItem *, int ) )                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "itemExpanded(QTWItem)" )                     ret = object->connect( object, SIGNAL( itemExpanded( QTreeWidgetItem * ) )                         , s_s, SLOT( itemExpanded( QTreeWidgetItem * ) )                         , Qt::AutoConnection );
-   else if( signal == ( QString ) "itemPressed(QTWItem)" )                      ret = object->connect( object, SIGNAL( itemPressed( QTreeWidgetItem *, int ) )                     , s_s, SLOT( itemPressed( QTreeWidgetItem *, int ) )                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "itemSelectionChanged()" )                    ret = object->connect( object, SIGNAL( itemSelectionChanged() )                                    , s_s, SLOT( itemSelectionChanged() )                                    , Qt::AutoConnection );
+   else if( signal == ( QString ) "currentItemChanged(QTWItem)" )               ret = object->connect( object, SIGNAL( currentItemChanged( QTreeWidgetItem *, QTreeWidgetItem * ) ), t_slots, SLOT( currentItemChanged( QTreeWidgetItem *, QTreeWidgetItem * ) ), Qt::AutoConnection );
+   else if( signal == ( QString ) "itemActivated(QTWItem)" )                    ret = object->connect( object, SIGNAL( itemActivated( QTreeWidgetItem *, int ) )                   , t_slots, SLOT( itemActivated( QTreeWidgetItem *, int ) )                   , Qt::AutoConnection );
+   else if( signal == ( QString ) "itemChanged(QTWItem)" )                      ret = object->connect( object, SIGNAL( itemChanged( QTreeWidgetItem *, int ) )                     , t_slots, SLOT( itemChanged( QTreeWidgetItem *, int ) )                     , Qt::AutoConnection );
+   else if( signal == ( QString ) "itemClicked(QTWItem)" )                      ret = object->connect( object, SIGNAL( itemClicked( QTreeWidgetItem *, int ) )                     , t_slots, SLOT( itemClicked( QTreeWidgetItem *, int ) )                     , Qt::AutoConnection );
+   else if( signal == ( QString ) "itemCollapsed(QTWItem)" )                    ret = object->connect( object, SIGNAL( itemCollapsed( QTreeWidgetItem * ) )                        , t_slots, SLOT( itemCollapsed( QTreeWidgetItem * ) )                        , Qt::AutoConnection );
+   else if( signal == ( QString ) "itemDoubleClicked(QTWItem)" )                ret = object->connect( object, SIGNAL( itemDoubleClicked( QTreeWidgetItem *, int ) )               , t_slots, SLOT( itemDoubleClicked( QTreeWidgetItem *, int ) )               , Qt::AutoConnection );
+   else if( signal == ( QString ) "itemEntered(QTWItem)" )                      ret = object->connect( object, SIGNAL( itemEntered( QTreeWidgetItem *, int ) )                     , t_slots, SLOT( itemEntered( QTreeWidgetItem *, int ) )                     , Qt::AutoConnection );
+   else if( signal == ( QString ) "itemExpanded(QTWItem)" )                     ret = object->connect( object, SIGNAL( itemExpanded( QTreeWidgetItem * ) )                         , t_slots, SLOT( itemExpanded( QTreeWidgetItem * ) )                         , Qt::AutoConnection );
+   else if( signal == ( QString ) "itemPressed(QTWItem)" )                      ret = object->connect( object, SIGNAL( itemPressed( QTreeWidgetItem *, int ) )                     , t_slots, SLOT( itemPressed( QTreeWidgetItem *, int ) )                     , Qt::AutoConnection );
+   else if( signal == ( QString ) "itemSelectionChanged()" )                    ret = object->connect( object, SIGNAL( itemSelectionChanged() )                                    , t_slots, SLOT( itemSelectionChanged() )                                    , Qt::AutoConnection );
    /* QDialog (s) QFontDialog, QFileDialog */
-   else if( signal == ( QString ) "currentFontChanged(QFont)" )                 ret = object->connect( object, SIGNAL( currentFontChanged( const QFont & ) )                       , s_s, SLOT( currentFontChanged( const QFont & ) )                       , Qt::AutoConnection );
-   else if( signal == ( QString ) "fontSelected(QFont)" )                       ret = object->connect( object, SIGNAL( fontSelected( const QFont & ) )                             , s_s, SLOT( fontSelected( const QFont & ) )                             , Qt::AutoConnection );
-   else if( signal == ( QString ) "accepted()" )                                ret = object->connect( object, SIGNAL( accepted() )                                                , s_s, SLOT( accepted() )                                                , Qt::AutoConnection );
-   else if( signal == ( QString ) "finished(int)" )                             ret = object->connect( object, SIGNAL( finished( int ) )                                           , s_s, SLOT( finished( int ) )                                           , Qt::AutoConnection );
-   else if( signal == ( QString ) "rejected()" )                                ret = object->connect( object, SIGNAL( rejected() )                                                , s_s, SLOT( rejected() )                                                , Qt::AutoConnection );
-   else if( signal == ( QString ) "currentChanged(QString)" )                   ret = object->connect( object, SIGNAL( currentChanged( const QString & ) )                         , s_s, SLOT( currentChanged( const QString & ) )                         , Qt::AutoConnection );
-   else if( signal == ( QString ) "directoryEntered(QString)" )                 ret = object->connect( object, SIGNAL( directoryEntered( const QString & ) )                       , s_s, SLOT( directoryEntered( const QString & ) )                       , Qt::AutoConnection );
-   else if( signal == ( QString ) "fileSelected(QString)" )                     ret = object->connect( object, SIGNAL( fileSelected( const QString & ) )                           , s_s, SLOT( fileSelected( const QString & ) )                           , Qt::AutoConnection );
-   else if( signal == ( QString ) "filesSelected(QStringList)" )                ret = object->connect( object, SIGNAL( filesSelected( const QStringList & ) )                      , s_s, SLOT( filesSelected( const QStringList & ) )                      , Qt::AutoConnection );
-   else if( signal == ( QString ) "filterSelected(QString)" )                   ret = object->connect( object, SIGNAL( filterSelected( const QString & ) )                         , s_s, SLOT( filterSelected( const QString & ) )                         , Qt::AutoConnection );
-   else if( signal == ( QString ) "accepted(QPrinter)" )                        ret = object->connect( object, SIGNAL( accepted( QPrinter * ) )                                    , s_s, SLOT( accepted( QPrinter * ) )                                    , Qt::AutoConnection );
-   else if( signal == ( QString ) "copyAvailable(bool)" )                       ret = object->connect( object, SIGNAL( copyAvailable( bool ) )                                     , s_s, SLOT( copyAvailable( bool ) )                                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "currentCharFormatChanged(QTextCharFormat)" ) ret = object->connect( object, SIGNAL( currentCharFormatChanged( const QTextCharFormat & ) )       , s_s, SLOT( currentCharFormatChanged( const QTextCharFormat & ) )       , Qt::AutoConnection );
-   else if( signal == ( QString ) "cursorPositionChanged()" )                   ret = object->connect( object, SIGNAL( cursorPositionChanged() )                                   , s_s, SLOT( cursorPositionChanged() )                                   , Qt::AutoConnection );
-   else if( signal == ( QString ) "redoAvailable(bool)" )                       ret = object->connect( object, SIGNAL( redoAvailable( bool ) )                                     , s_s, SLOT( redoAvailable( bool ) )                                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "textChanged()" )                             ret = object->connect( object, SIGNAL( textChanged() )                                             , s_s, SLOT( textChanged() )                                             , Qt::AutoConnection );
-   else if( signal == ( QString ) "undoAvailable(available)" )                  ret = object->connect( object, SIGNAL( undoAvailable( bool ) )                                     , s_s, SLOT( undoAvailable( bool ) )                                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "timeout()" )                                 ret = object->connect( object, SIGNAL( timeout() )                                                 , s_s, SLOT( timeout() )                                                 , Qt::AutoConnection );
+   else if( signal == ( QString ) "currentFontChanged(QFont)" )                 ret = object->connect( object, SIGNAL( currentFontChanged( const QFont & ) )                       , t_slots, SLOT( currentFontChanged( const QFont & ) )                       , Qt::AutoConnection );
+   else if( signal == ( QString ) "fontSelected(QFont)" )                       ret = object->connect( object, SIGNAL( fontSelected( const QFont & ) )                             , t_slots, SLOT( fontSelected( const QFont & ) )                             , Qt::AutoConnection );
+   else if( signal == ( QString ) "accepted()" )                                ret = object->connect( object, SIGNAL( accepted() )                                                , t_slots, SLOT( accepted() )                                                , Qt::AutoConnection );
+   else if( signal == ( QString ) "finished(int)" )                             ret = object->connect( object, SIGNAL( finished( int ) )                                           , t_slots, SLOT( finished( int ) )                                           , Qt::AutoConnection );
+   else if( signal == ( QString ) "rejected()" )                                ret = object->connect( object, SIGNAL( rejected() )                                                , t_slots, SLOT( rejected() )                                                , Qt::AutoConnection );
+   else if( signal == ( QString ) "currentChanged(QString)" )                   ret = object->connect( object, SIGNAL( currentChanged( const QString & ) )                         , t_slots, SLOT( currentChanged( const QString & ) )                         , Qt::AutoConnection );
+   else if( signal == ( QString ) "directoryEntered(QString)" )                 ret = object->connect( object, SIGNAL( directoryEntered( const QString & ) )                       , t_slots, SLOT( directoryEntered( const QString & ) )                       , Qt::AutoConnection );
+   else if( signal == ( QString ) "fileSelected(QString)" )                     ret = object->connect( object, SIGNAL( fileSelected( const QString & ) )                           , t_slots, SLOT( fileSelected( const QString & ) )                           , Qt::AutoConnection );
+   else if( signal == ( QString ) "filesSelected(QStringList)" )                ret = object->connect( object, SIGNAL( filesSelected( const QStringList & ) )                      , t_slots, SLOT( filesSelected( const QStringList & ) )                      , Qt::AutoConnection );
+   else if( signal == ( QString ) "filterSelected(QString)" )                   ret = object->connect( object, SIGNAL( filterSelected( const QString & ) )                         , t_slots, SLOT( filterSelected( const QString & ) )                         , Qt::AutoConnection );
+   else if( signal == ( QString ) "accepted(QPrinter)" )                        ret = object->connect( object, SIGNAL( accepted( QPrinter * ) )                                    , t_slots, SLOT( accepted( QPrinter * ) )                                    , Qt::AutoConnection );
+   else if( signal == ( QString ) "copyAvailable(bool)" )                       ret = object->connect( object, SIGNAL( copyAvailable( bool ) )                                     , t_slots, SLOT( copyAvailable( bool ) )                                     , Qt::AutoConnection );
+   else if( signal == ( QString ) "currentCharFormatChanged(QTextCharFormat)" ) ret = object->connect( object, SIGNAL( currentCharFormatChanged( const QTextCharFormat & ) )       , t_slots, SLOT( currentCharFormatChanged( const QTextCharFormat & ) )       , Qt::AutoConnection );
+   else if( signal == ( QString ) "cursorPositionChanged()" )                   ret = object->connect( object, SIGNAL( cursorPositionChanged() )                                   , t_slots, SLOT( cursorPositionChanged() )                                   , Qt::AutoConnection );
+   else if( signal == ( QString ) "redoAvailable(bool)" )                       ret = object->connect( object, SIGNAL( redoAvailable( bool ) )                                     , t_slots, SLOT( redoAvailable( bool ) )                                     , Qt::AutoConnection );
+   else if( signal == ( QString ) "textChanged()" )                             ret = object->connect( object, SIGNAL( textChanged() )                                             , t_slots, SLOT( textChanged() )                                             , Qt::AutoConnection );
+   else if( signal == ( QString ) "undoAvailable(available)" )                  ret = object->connect( object, SIGNAL( undoAvailable( bool ) )                                     , t_slots, SLOT( undoAvailable( bool ) )                                     , Qt::AutoConnection );
+   else if( signal == ( QString ) "timeout()" )                                 ret = object->connect( object, SIGNAL( timeout() )                                                 , t_slots, SLOT( timeout() )                                                 , Qt::AutoConnection );
    /* Generic purpose mechanism to receive key and mouse events off subclasses */
-   else if( signal == ( QString ) "keyPressEvent()" )                           ret = object->connect( object, SIGNAL( sg_keyPressEvent( QKeyEvent * ) )                           , s_s, SLOT( keyPressEvent( QKeyEvent * ) )                              , Qt::AutoConnection );
-   else if( signal == ( QString ) "keyReleaseEvent()" )                         ret = object->connect( object, SIGNAL( sg_keyReleaseEvent( QKeyEvent * ) )                         , s_s, SLOT( keyReleaseEvent( QKeyEvent * ) )                            , Qt::AutoConnection );
-   else if( signal == ( QString ) "mouseMoveEvent()" )                          ret = object->connect( object, SIGNAL( sg_mouseMoveEvent( QMouseEvent * ) )                        , s_s, SLOT( mouseMoveEvent( QMouseEvent * ) )                           , Qt::AutoConnection );
-   else if( signal == ( QString ) "mouseDoubleClickEvent()" )                   ret = object->connect( object, SIGNAL( sg_mouseDoubleClickEvent( QMouseEvent * ) )                 , s_s, SLOT( mouseDoubleClickEvent( QMouseEvent * ) )                    , Qt::AutoConnection );
-   else if( signal == ( QString ) "mousePressEvent()" )                         ret = object->connect( object, SIGNAL( sg_mousePressEvent( QMouseEvent * ) )                       , s_s, SLOT( mousePressEvent( QMouseEvent * ) )                          , Qt::AutoConnection );
-   else if( signal == ( QString ) "mouseReleaseEvent()" )                       ret = object->connect( object, SIGNAL( sg_mouseReleaseEvent( QMouseEvent * ) )                     , s_s, SLOT( mouseReleaseEvent( QMouseEvent * ) )                        , Qt::AutoConnection );
-   else if( signal == ( QString ) "wheelEvent()" )                              ret = object->connect( object, SIGNAL( sg_wheelEvent( QWheelEvent * ) )                            , s_s, SLOT( wheelEvent( QWheelEvent * ) )                               , Qt::AutoConnection );
-   else if( signal == ( QString ) "resizeEvent()" )                             ret = object->connect( object, SIGNAL( sg_resizeEvent( QResizeEvent * ) )                          , s_s, SLOT( resizeEvent( QResizeEvent * ) )                             , Qt::AutoConnection );
-   else if( signal == ( QString ) "scrollContentsBy(int,int)" )                 ret = object->connect( object, SIGNAL( sg_scrollContentsBy( int, int ) )                           , s_s, SLOT( scrollContentsBy( int, int ) )                              , Qt::AutoConnection );
-   else if( signal == ( QString ) "geometriesChanged()" )                       ret = object->connect( object, SIGNAL( geometriesChanged() )                                       , s_s, SLOT( geometriesChanged() )                                       , Qt::AutoConnection );
-   else if( signal == ( QString ) "sectionAutoResize(int,int)" )                ret = object->connect( object, SIGNAL( sectionAutoResize( int, QHeaderView::ResizeMode ) )         , s_s, SLOT( sectionAutoResize( int, QHeaderView::ResizeMode ) )         , Qt::AutoConnection );
-   else if( signal == ( QString ) "sectionClicked(int)" )                       ret = object->connect( object, SIGNAL( sectionClicked( int ) )                                     , s_s, SLOT( sectionClicked( int ) )                                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "sectionCountChanged(int,int)" )              ret = object->connect( object, SIGNAL( sectionCountChanged( int, int ) )                           , s_s, SLOT( sectionCountChanged( int, int ) )                           , Qt::AutoConnection );
-   else if( signal == ( QString ) "sectionDoubleClicked(int)" )                 ret = object->connect( object, SIGNAL( sectionDoubleClicked( int ) )                               , s_s, SLOT( sectionDoubleClicked( int ) )                               , Qt::AutoConnection );
-   else if( signal == ( QString ) "sectionEntered(int)" )                       ret = object->connect( object, SIGNAL( sectionEntered( int ) )                                     , s_s, SLOT( sectionEntered( int ) )                                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "sectionHandleDoubleClicked(int)" )           ret = object->connect( object, SIGNAL( sectionHandleDoubleClicked( int ) )                         , s_s, SLOT( sectionHandleDoubleClicked( int ) )                         , Qt::AutoConnection );
-   else if( signal == ( QString ) "sectionMoved(int,int,int)" )                 ret = object->connect( object, SIGNAL( sectionMoved( int, int, int ) )                             , s_s, SLOT( sectionMoved( int, int, int ) )                             , Qt::AutoConnection );
-   else if( signal == ( QString ) "sectionPressed(int)" )                       ret = object->connect( object, SIGNAL( sectionPressed( int ) )                                     , s_s, SLOT( sectionPressed( int ) )                                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "sectionResized(int,int,int)" )               ret = object->connect( object, SIGNAL( sectionResized( int, int, int ) )                           , s_s, SLOT( sectionResized( int, int, int ) )                           , Qt::AutoConnection );
-   else if( signal == ( QString ) "sortIndicatorChanged(int,int)" )             ret = object->connect( object, SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) )                , s_s, SLOT( sortIndicatorChanged( int, Qt::SortOrder ) )                , Qt::AutoConnection );
-   else if( signal == ( QString ) "buttonClicked(int)" )                        ret = object->connect( object, SIGNAL( buttonClicked( int ) )                                      , s_s, SLOT( buttonClicked( int ) )                                      , Qt::AutoConnection );
-   else if( signal == ( QString ) "buttonPressed(int)" )                        ret = object->connect( object, SIGNAL( buttonPressed( int ) )                                      , s_s, SLOT( buttonPressed( int ) )                                      , Qt::AutoConnection );
-   else if( signal == ( QString ) "buttonReleased(int)" )                       ret = object->connect( object, SIGNAL( buttonReleased( int ) )                                     , s_s, SLOT( buttonReleased( int ) )                                     , Qt::AutoConnection );
-   else if( signal == ( QString ) "linkActivated(QString)" )                    ret = object->connect( object, SIGNAL( linkActivated( const QString & ) )                          , s_s, SLOT( linkActivated( const QString & ) )                          , Qt::AutoConnection );
-   else if( signal == ( QString ) "linkHovered(QString)" )                      ret = object->connect( object, SIGNAL( linkHovered( const QString & ) )                            , s_s, SLOT( linkHovered( const QString & ) )                            , Qt::AutoConnection );
-   else if( signal == ( QString ) "cellActivated(int,int)" )                    ret = object->connect( object, SIGNAL( cellActivated( int, int ) )                                 , s_s, SLOT( cellActivated( int, int ) )                                 , Qt::AutoConnection );
-   else if( signal == ( QString ) "cellChanged(int,int)" )                      ret = object->connect( object, SIGNAL( cellChanged( int, int ) )                                   , s_s, SLOT( cellChanged( int, int ) )                                   , Qt::AutoConnection );
-   else if( signal == ( QString ) "cellClicked(int,int)" )                      ret = object->connect( object, SIGNAL( cellClicked( int, int ) )                                   , s_s, SLOT( cellClicked( int, int ) )                                   , Qt::AutoConnection );
-   else if( signal == ( QString ) "cellDoubleClicked(int,int)" )                ret = object->connect( object, SIGNAL( cellDoubleClicked( int, int ) )                             , s_s, SLOT( cellDoubleClicked( int, int ) )                             , Qt::AutoConnection );
-   else if( signal == ( QString ) "cellEntered(int,int)" )                      ret = object->connect( object, SIGNAL( cellEntered( int, int ) )                                   , s_s, SLOT( cellEntered( int, int ) )                                   , Qt::AutoConnection );
-   else if( signal == ( QString ) "cellPressed(int,int)" )                      ret = object->connect( object, SIGNAL( cellPressed( int, int ) )                                   , s_s, SLOT( cellPressed( int, int ) )                                   , Qt::AutoConnection );
-   else if( signal == ( QString ) "currentCellChanged(int,int,int,int)" )       ret = object->connect( object, SIGNAL( currentCellChanged( int, int, int, int ) )                  , s_s, SLOT( currentCellChanged( int, int, int, int ) )                  , Qt::AutoConnection );
-   else if( signal == ( QString ) "tabCloseRequested(int)" )                    ret = object->connect( object, SIGNAL( tabCloseRequested( int ) )                                  , s_s, SLOT( tabCloseRequested( int ) )                                  , Qt::AutoConnection );
-   else if( signal == ( QString ) "paintRequested(QPrinter)" )                  ret = object->connect( object, SIGNAL( paintRequested( QPrinter * ) )                              , s_s, SLOT( paintRequested( QPrinter * ) )                              , Qt::AutoConnection );
-
-   hb_retl( ret == true );
+   else if( signal == ( QString ) "keyPressEvent()" )                           ret = object->connect( object, SIGNAL( sg_keyPressEvent( QKeyEvent * ) )                           , t_slots, SLOT( keyPressEvent( QKeyEvent * ) )                              , Qt::AutoConnection );
+   else if( signal == ( QString ) "keyReleaseEvent()" )                         ret = object->connect( object, SIGNAL( sg_keyReleaseEvent( QKeyEvent * ) )                         , t_slots, SLOT( keyReleaseEvent( QKeyEvent * ) )                            , Qt::AutoConnection );
+   else if( signal == ( QString ) "mouseMoveEvent()" )                          ret = object->connect( object, SIGNAL( sg_mouseMoveEvent( QMouseEvent * ) )                        , t_slots, SLOT( mouseMoveEvent( QMouseEvent * ) )                           , Qt::AutoConnection );
+   else if( signal == ( QString ) "mouseDoubleClickEvent()" )                   ret = object->connect( object, SIGNAL( sg_mouseDoubleClickEvent( QMouseEvent * ) )                 , t_slots, SLOT( mouseDoubleClickEvent( QMouseEvent * ) )                    , Qt::AutoConnection );
+   else if( signal == ( QString ) "mousePressEvent()" )                         ret = object->connect( object, SIGNAL( sg_mousePressEvent( QMouseEvent * ) )                       , t_slots, SLOT( mousePressEvent( QMouseEvent * ) )                          , Qt::AutoConnection );
+   else if( signal == ( QString ) "mouseReleaseEvent()" )                       ret = object->connect( object, SIGNAL( sg_mouseReleaseEvent( QMouseEvent * ) )                     , t_slots, SLOT( mouseReleaseEvent( QMouseEvent * ) )                        , Qt::AutoConnection );
+   else if( signal == ( QString ) "wheelEvent()" )                              ret = object->connect( object, SIGNAL( sg_wheelEvent( QWheelEvent * ) )                            , t_slots, SLOT( wheelEvent( QWheelEvent * ) )                               , Qt::AutoConnection );
+   else if( signal == ( QString ) "resizeEvent()" )                             ret = object->connect( object, SIGNAL( sg_resizeEvent( QResizeEvent * ) )                          , t_slots, SLOT( resizeEvent( QResizeEvent * ) )                             , Qt::AutoConnection );
+   else if( signal == ( QString ) "scrollContentsBy(int,int)" )                 ret = object->connect( object, SIGNAL( sg_scrollContentsBy( int, int ) )                           , t_slots, SLOT( scrollContentsBy( int, int ) )                              , Qt::AutoConnection );
+   else if( signal == ( QString ) "geometriesChanged()" )                       ret = object->connect( object, SIGNAL( geometriesChanged() )                                       , t_slots, SLOT( geometriesChanged() )                                       , Qt::AutoConnection );
+   else if( signal == ( QString ) "sectionAutoResize(int,int)" )                ret = object->connect( object, SIGNAL( sectionAutoResize( int, QHeaderView::ResizeMode ) )         , t_slots, SLOT( sectionAutoResize( int, QHeaderView::ResizeMode ) )         , Qt::AutoConnection );
+   else if( signal == ( QString ) "sectionClicked(int)" )                       ret = object->connect( object, SIGNAL( sectionClicked( int ) )                                     , t_slots, SLOT( sectionClicked( int ) )                                     , Qt::AutoConnection );
+   else if( signal == ( QString ) "sectionCountChanged(int,int)" )              ret = object->connect( object, SIGNAL( sectionCountChanged( int, int ) )                           , t_slots, SLOT( sectionCountChanged( int, int ) )                           , Qt::AutoConnection );
+   else if( signal == ( QString ) "sectionDoubleClicked(int)" )                 ret = object->connect( object, SIGNAL( sectionDoubleClicked( int ) )                               , t_slots, SLOT( sectionDoubleClicked( int ) )                               , Qt::AutoConnection );
+   else if( signal == ( QString ) "sectionEntered(int)" )                       ret = object->connect( object, SIGNAL( sectionEntered( int ) )                                     , t_slots, SLOT( sectionEntered( int ) )                                     , Qt::AutoConnection );
+   else if( signal == ( QString ) "sectionHandleDoubleClicked(int)" )           ret = object->connect( object, SIGNAL( sectionHandleDoubleClicked( int ) )                         , t_slots, SLOT( sectionHandleDoubleClicked( int ) )                         , Qt::AutoConnection );
+   else if( signal == ( QString ) "sectionMoved(int,int,int)" )                 ret = object->connect( object, SIGNAL( sectionMoved( int, int, int ) )                             , t_slots, SLOT( sectionMoved( int, int, int ) )                             , Qt::AutoConnection );
+   else if( signal == ( QString ) "sectionPressed(int)" )                       ret = object->connect( object, SIGNAL( sectionPressed( int ) )                                     , t_slots, SLOT( sectionPressed( int ) )                                     , Qt::AutoConnection );
+   else if( signal == ( QString ) "sectionResized(int,int,int)" )               ret = object->connect( object, SIGNAL( sectionResized( int, int, int ) )                           , t_slots, SLOT( sectionResized( int, int, int ) )                           , Qt::AutoConnection );
+   else if( signal == ( QString ) "sortIndicatorChanged(int,int)" )             ret = object->connect( object, SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) )                , t_slots, SLOT( sortIndicatorChanged( int, Qt::SortOrder ) )                , Qt::AutoConnection );
+   else if( signal == ( QString ) "buttonClicked(int)" )                        ret = object->connect( object, SIGNAL( buttonClicked( int ) )                                      , t_slots, SLOT( buttonClicked( int ) )                                      , Qt::AutoConnection );
+   else if( signal == ( QString ) "buttonPressed(int)" )                        ret = object->connect( object, SIGNAL( buttonPressed( int ) )                                      , t_slots, SLOT( buttonPressed( int ) )                                      , Qt::AutoConnection );
+   else if( signal == ( QString ) "buttonReleased(int)" )                       ret = object->connect( object, SIGNAL( buttonReleased( int ) )                                     , t_slots, SLOT( buttonReleased( int ) )                                     , Qt::AutoConnection );
+   else if( signal == ( QString ) "linkActivated(QString)" )                    ret = object->connect( object, SIGNAL( linkActivated( const QString & ) )                          , t_slots, SLOT( linkActivated( const QString & ) )                          , Qt::AutoConnection );
+   else if( signal == ( QString ) "linkHovered(QString)" )                      ret = object->connect( object, SIGNAL( linkHovered( const QString & ) )                            , t_slots, SLOT( linkHovered( const QString & ) )                            , Qt::AutoConnection );
+   else if( signal == ( QString ) "cellActivated(int,int)" )                    ret = object->connect( object, SIGNAL( cellActivated( int, int ) )                                 , t_slots, SLOT( cellActivated( int, int ) )                                 , Qt::AutoConnection );
+   else if( signal == ( QString ) "cellChanged(int,int)" )                      ret = object->connect( object, SIGNAL( cellChanged( int, int ) )                                   , t_slots, SLOT( cellChanged( int, int ) )                                   , Qt::AutoConnection );
+   else if( signal == ( QString ) "cellClicked(int,int)" )                      ret = object->connect( object, SIGNAL( cellClicked( int, int ) )                                   , t_slots, SLOT( cellClicked( int, int ) )                                   , Qt::AutoConnection );
+   else if( signal == ( QString ) "cellDoubleClicked(int,int)" )                ret = object->connect( object, SIGNAL( cellDoubleClicked( int, int ) )                             , t_slots, SLOT( cellDoubleClicked( int, int ) )                             , Qt::AutoConnection );
+   else if( signal == ( QString ) "cellEntered(int,int)" )                      ret = object->connect( object, SIGNAL( cellEntered( int, int ) )                                   , t_slots, SLOT( cellEntered( int, int ) )                                   , Qt::AutoConnection );
+   else if( signal == ( QString ) "cellPressed(int,int)" )                      ret = object->connect( object, SIGNAL( cellPressed( int, int ) )                                   , t_slots, SLOT( cellPressed( int, int ) )                                   , Qt::AutoConnection );
+   else if( signal == ( QString ) "currentCellChanged(int,int,int,int)" )       ret = object->connect( object, SIGNAL( currentCellChanged( int, int, int, int ) )                  , t_slots, SLOT( currentCellChanged( int, int, int, int ) )                  , Qt::AutoConnection );
+   else if( signal == ( QString ) "tabCloseRequested(int)" )                    ret = object->connect( object, SIGNAL( tabCloseRequested( int ) )                                  , t_slots, SLOT( tabCloseRequested( int ) )                                  , Qt::AutoConnection );
+   else if( signal == ( QString ) "paintRequested(QPrinter)" )                  ret = object->connect( object, SIGNAL( paintRequested( QPrinter * ) )                              , t_slots, SLOT( paintRequested( QPrinter * ) )                              , Qt::AutoConnection );
+   else ret = false;
 
    if( ret == true )
    {
-      s_s->listBlock  << codeblock;
-      object->setProperty( hb_parcx( 2 ), ( int ) s_s->listBlock.size() );
+      t_slots->listBlock  << codeblock;
+      object->setProperty( hb_parcx( 2 ), ( int ) t_slots->listBlock.size() );
    }
+
+   hb_retl( ret == true );
 }
 
 static bool disconnect_signal( QObject * object, const char * signal )
@@ -1108,14 +748,14 @@ HB_FUNC( QT_DISCONNECT_SIGNAL )
 
    if( object )
    {
-      Slots * s_s = qt_getEventSlots();
+      Slots * t_slots = qt_getEventSlots();
       const char * signal = hb_parcx( 2 );
       int i = object->property( signal ).toInt();
 
-      if( i > 0 && i <= s_s->listBlock.size() )
+      if( i > 0 && i <= t_slots->listBlock.size() )
       {
-         hb_itemRelease( s_s->listBlock.at( i - 1 ) );
-         s_s->listBlock[ i - 1 ] = NULL;
+         hb_itemRelease( t_slots->listBlock.at( i - 1 ) );
+         t_slots->listBlock[ i - 1 ] = NULL;
          bFreed = disconnect_signal( object, signal );
 #if defined( __HB_DEBUG__ )
 hbqt_debug( "      QT_DISCONNECT_SIGNAL: %s    %s", bFreed ? "YES" : "NO", signal );
@@ -1146,17 +786,15 @@ bool Events::eventFilter( QObject * object, QEvent * event )
    QEvent::Type eventtype = event->type();
 
    if( ( int ) eventtype == 0 )
-   {
       return false;
-   }
 
    char prop[ 10 ];
    hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", eventtype, "P" );
+
    int found = object->property( prop ).toInt();
+
    if( found == 0 )
-   {
       return false;
-   }
 
    bool ret = true;
 
@@ -1190,15 +828,15 @@ HB_FUNC( QT_CONNECT_EVENT )
    {
       int       type      = hb_parni( 2 );
       PHB_ITEM  codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK | HB_IT_BYREF ) );
-      Events  * s_e       = qt_getEventFilter();
+      Events  * t_events  = qt_getEventFilter();
 
       char prop[ 20 ];
       hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
 
-      s_e->listBlock << codeblock;
-      s_e->listObj   << object;
+      t_events->listBlock << codeblock;
+      t_events->listObj   << object;
 
-      object->setProperty( prop, ( int ) s_e->listBlock.size() );
+      object->setProperty( prop, ( int ) t_events->listBlock.size() );
 
       hb_retl( HB_TRUE );
    }
@@ -1213,18 +851,18 @@ HB_FUNC( QT_DISCONNECT_EVENT )
 
    if( object )
    {
-      int       type   = hb_parni( 2 );
-      Events  * s_e    = qt_getEventFilter();
+      int       type     = hb_parni( 2 );
+      Events  * t_events = qt_getEventFilter();
 
-      char prop[ 10 ];
+      char prop[ 20 ];
       hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
 
       int i = object->property( prop ).toInt();
-      if( i > 0 && i <= s_e->listBlock.size() )
+      if( i > 0 && i <= t_events->listBlock.size() )
       {
-         hb_itemRelease( s_e->listBlock.at( i - 1 ) );
-         s_e->listBlock[ i - 1 ] = NULL;
-         s_e->listObj[ i - 1 ]   = NULL;
+         hb_itemRelease( t_events->listBlock.at( i - 1 ) );
+         t_events->listBlock[ i - 1 ] = NULL;
+         t_events->listObj[ i - 1 ]   = NULL;
          object->setProperty( prop, QVariant() );
          bRet = HB_TRUE;
 #if defined( __HB_DEBUG__ )
