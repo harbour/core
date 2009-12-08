@@ -6,10 +6,6 @@
 YACC := bison
 YACC_FLAGS := -d $(YACC_FLAGS)
 
-# How to run lex.
-LEX := flex
-LEX_FLAGS := -i -8 $(LEX_FLAGS)
-
 ifeq ($(HB_BUILD_DEBUG),yes)
    HB_CFLAGS := -DHB_TR_LEVEL_DEBUG $(HB_CFLAGS)
 else

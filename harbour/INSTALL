@@ -1294,10 +1294,6 @@ HARBOUR
 
       Subversion (Version Control System) [multiplatform, free, open-source]
          http://subversion.tigris.org/
-      GNU Flex (lexical analyzer) [multiplatform, free, open-source]
-         Windows binary:
-            http://gnuwin32.sourceforge.net/packages/flex.htm
-               (not verified with current Harbour version)
       GNU Bison (grammer paser generator) [multiplatform, free, open-source]
          Windows binary:
             http://gnuwin32.sourceforge.net/packages/bison.htm

@@ -19,14 +19,7 @@ ifdef YACC_SOURCE
    endif
 endif
 
-ifdef LEX_SOURCE
-   LEX_BASE := $(LEX_SOURCE:.l=)
-   LEX_C := $(LEX_BASE)l.c
-   LEX_OBJ := $(LEX_C:.c=$(OBJ_EXT))
-   LEX_HB_H := $(foreach h, $(LEX_HEADERS), $(HB_INC_COMPILE)/$(h))
-endif
-
-ALL_C_OBJS := $(YACC_OBJ) $(LEX_OBJ) $(C_OBJS) $(C_MAIN_OBJ)
+ALL_C_OBJS := $(YACC_OBJ) $(C_OBJS) $(C_MAIN_OBJ)
 
 $(YACC_OBJ) : $(YACC_C)
 
@@ -38,8 +31,3 @@ else
 	$(CP) $(subst /,$(DIRSEP),$<) $@
 	$(CP) $(subst /,$(DIRSEP),$(<:.yyc=.yyh)) $(@:.c=.h)
 endif
-
-$(LEX_OBJ) : $(LEX_C)
-
-$(LEX_C) : $(GRANDP)$(LEX_SOURCE) $(LEX_HB_H)
-	$(LEX) $(LEX_FLAGS) -o$@ $<

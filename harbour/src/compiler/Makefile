@@ -4,13 +4,6 @@
 
 ROOT := ../../
 
-#LEX_FLAGS := -Phb_comp -C
-#LEX_SOURCE := harbour.l
-#LEX_HEADERS := \
-#   hbsetup.h \
-#   hberrors.h \
-#   hbdefs.h \
-
 #YACC_FLAGS := -p hb_comp
 YACC_SOURCE := harbour.y
 YACC_DEPEND := complex.c
