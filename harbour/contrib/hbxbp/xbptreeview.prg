@@ -199,7 +199,7 @@ METHOD XbpTreeView:ExeBlock( nMsg, p1, p2 )
    HB_SYMBOL_UNUSED( p2   )
 
    IF hb_isPointer( p1 )
-      IF ( n := ascan( ::aItems, {|o| IsEqualGcQtPointer( o:oWidget:pPtr, p1 ) } ) ) > 0
+      IF ( n := ascan( ::aItems, {|o| hbqt_IsEqualGcQtPointer( o:oWidget:pPtr, p1 ) } ) ) > 0
          oItem := ::aItems[ n ]
       ENDIF
    ENDIF

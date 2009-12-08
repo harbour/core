@@ -400,8 +400,7 @@ METHOD HbIde:saveConfig()
    aadd( txt_, "[FILES]" )
    FOR n := 1 TO nTabs
       pTab      := ::qTabWidget:widget( n-1 )
-      //nTab      := ascan( ::aTabs, {|e_| HBQT_QTPTR_FROM_GCPOINTER( QT_PTROFXBP( e_[ 1 ] ) ) == pTab } )
-      nTab      := ascan( ::aTabs, {|e_| IsEqualGcQtPointer( QT_PTROFXBP( e_[ 1 ] ), pTab ) } )
+      nTab      := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( QT_PTROFXBP( e_[ 1 ] ), pTab ) } )
       qEdit     := ::aTabs[ nTab, 2 ]
       qHScr     := QScrollBar():configure( qEdit:horizontalScrollBar() )
       qVScr     := QScrollBar():configure( qEdit:verticalScrollBar() )
@@ -852,7 +851,7 @@ METHOD HbIde:getCurrentTab()
    LOCAL qTab, nTab
 
    qTab := ::qTabWidget:currentWidget()
-   nTab := ascan( ::aTabs, {|e_| IsEqualGcQtPointer( e_[ 1 ]:oWidget:pPtr, qTab ) } )
+   nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ 1 ]:oWidget:pPtr, qTab ) } )
 
    RETURN nTab
 
