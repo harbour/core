@@ -146,12 +146,12 @@ Slots::~Slots()
    listBlock.clear();
 }
 
-static void hbqt_SlotsExec( QObject * object, const char * event )
+static void hbqt_SlotsExec( QObject * object, const char * pszEvent )
 {
    if( object )
    {
       Slots * t_slots = qt_getEventSlots();
-      int i = object->property( event ).toInt();
+      int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
@@ -162,12 +162,12 @@ static void hbqt_SlotsExec( QObject * object, const char * event )
    }
 }
 
-static void hbqt_SlotsExecBool( QObject * object, const char* event, bool bBool )
+static void hbqt_SlotsExecBool( QObject * object, const char * pszEvent, bool bBool )
 {
    if( object )
    {
       Slots * t_slots = qt_getEventSlots();
-      int i = object->property( event ).toInt();
+      int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
@@ -180,12 +180,12 @@ static void hbqt_SlotsExecBool( QObject * object, const char* event, bool bBool 
    }
 }
 
-static void hbqt_SlotsExecInt( QObject * object, const char * event, int iValue )
+static void hbqt_SlotsExecInt( QObject * object, const char * pszEvent, int iValue )
 {
    if( object )
    {
       Slots * t_slots = qt_getEventSlots();
-      int i = object->property( event ).toInt();
+      int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
@@ -198,12 +198,12 @@ static void hbqt_SlotsExecInt( QObject * object, const char * event, int iValue 
    }
 }
 
-static void hbqt_SlotsExecIntInt( QObject * object, const char * event, int iValue1, int iValue2 )
+static void hbqt_SlotsExecIntInt( QObject * object, const char * pszEvent, int iValue1, int iValue2 )
 {
    if( object )
    {
       Slots * t_slots = qt_getEventSlots();
-      int i = object->property( event ).toInt();
+      int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
@@ -218,12 +218,12 @@ static void hbqt_SlotsExecIntInt( QObject * object, const char * event, int iVal
    }
 }
 
-static void hbqt_SlotsExecIntIntInt( QObject * object, const char * event, int iValue1, int iValue2, int iValue3 )
+static void hbqt_SlotsExecIntIntInt( QObject * object, const char * pszEvent, int iValue1, int iValue2, int iValue3 )
 {
    if( object )
    {
       Slots * t_slots = qt_getEventSlots();
-      int i = object->property( event ).toInt();
+      int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
@@ -240,12 +240,12 @@ static void hbqt_SlotsExecIntIntInt( QObject * object, const char * event, int i
    }
 }
 
-static void hbqt_SlotsExecIntIntIntInt( QObject * object, const char * event, int iValue1, int iValue2, int iValue3, int iValue4 )
+static void hbqt_SlotsExecIntIntIntInt( QObject * object, const char * pszEvent, int iValue1, int iValue2, int iValue3, int iValue4 )
 {
    if( object )
    {
       Slots * t_slots = qt_getEventSlots();
-      int i = object->property( event ).toInt();
+      int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
@@ -264,12 +264,12 @@ static void hbqt_SlotsExecIntIntIntInt( QObject * object, const char * event, in
    }
 }
 
-static void hbqt_SlotsExecString( QObject * object, const char * event, const QString & string )
+static void hbqt_SlotsExecString( QObject * object, const char * pszEvent, const QString & string )
 {
    if( object )
    {
       Slots * t_slots = qt_getEventSlots();
-      int i = object->property( event ).toInt();
+      int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
@@ -282,12 +282,12 @@ static void hbqt_SlotsExecString( QObject * object, const char * event, const QS
    }
 }
 
-static void hbqt_SlotsExecModel( QObject * object, const char * event, const QModelIndex & index )
+static void hbqt_SlotsExecModel( QObject * object, const char * pszEvent, const QModelIndex & index )
 {
    if( object )
    {
       Slots * t_slots = qt_getEventSlots();
-      int i = object->property( event ).toInt();
+      int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
@@ -301,12 +301,12 @@ static void hbqt_SlotsExecModel( QObject * object, const char * event, const QMo
    }
 }
 
-static void hbqt_SlotsExecTextCharFormat( QObject * object, const char * event, const QTextCharFormat & f )
+static void hbqt_SlotsExecTextCharFormat( QObject * object, const char * pszEvent, const QTextCharFormat & f )
 {
    if( object )
    {
       Slots * t_slots = qt_getEventSlots();
-      int i = object->property( event ).toInt();
+      int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
@@ -320,12 +320,12 @@ static void hbqt_SlotsExecTextCharFormat( QObject * object, const char * event, 
    }
 }
 
-static void hbqt_SlotsExecFont( QObject * object, const char * event, const QFont & font )
+static void hbqt_SlotsExecFont( QObject * object, const char * pszEvent, const QFont & font )
 {
    if( object )
    {
       Slots * t_slots = qt_getEventSlots();
-      int i = object->property( event ).toInt();
+      int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
@@ -339,12 +339,12 @@ static void hbqt_SlotsExecFont( QObject * object, const char * event, const QFon
    }
 }
 
-static void hbqt_SlotsExecStringList( QObject * object, const char * event, const QStringList & stringList )
+static void hbqt_SlotsExecStringList( QObject * object, const char * pszEvent, const QStringList & stringList )
 {
    if( object )
    {
       Slots * t_slots = qt_getEventSlots();
-      int i = object->property( event ).toInt();
+      int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
@@ -358,12 +358,12 @@ static void hbqt_SlotsExecStringList( QObject * object, const char * event, cons
    }
 }
 
-static void hbqt_SlotsExecPointer( QObject * object, const char * event, void * p1 )
+static void hbqt_SlotsExecPointer( QObject * object, const char * pszEvent, void * p1 )
 {
    if( object )
    {
       Slots * t_slots = qt_getEventSlots();
-      int i = object->property( event ).toInt();
+      int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
@@ -376,12 +376,12 @@ static void hbqt_SlotsExecPointer( QObject * object, const char * event, void * 
    }
 }
 
-static void hbqt_SlotsExecPointerInt( QObject * object, const char * event, void * p1, int iInt )
+static void hbqt_SlotsExecPointerInt( QObject * object, const char * pszEvent, void * p1, int iInt )
 {
    if( object )
    {
       Slots * t_slots = qt_getEventSlots();
-      int i = object->property( event ).toInt();
+      int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
@@ -396,12 +396,12 @@ static void hbqt_SlotsExecPointerInt( QObject * object, const char * event, void
    }
 }
 
-static void hbqt_SlotsExecPointerPointer( QObject * object, const char * event, void * p1, void * p2 )
+static void hbqt_SlotsExecPointerPointer( QObject * object, const char * pszEvent, void * p1, void * p2 )
 {
    if( object )
    {
       Slots * t_slots = qt_getEventSlots();
-      int i = object->property( event ).toInt();
+      int i = object->property( pszEvent ).toInt();
       if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
       {
          PHB_ITEM pObject = hb_itemPutPtr( NULL, object );

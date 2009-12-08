@@ -532,7 +532,11 @@ char * hb_verCompiler( void )
    iVerMinor = _MSC_VER % 100;
 
    #if defined( _MSC_FULL_VER )
-      iVerPatch = _MSC_FULL_VER - ( _MSC_VER * 10000 );
+      #if ( _MSC_VER >= 1400 )
+         iVerPatch = _MSC_FULL_VER - ( _MSC_VER * 100000 );
+      #else
+         iVerPatch = _MSC_FULL_VER - ( _MSC_VER * 10000 );
+      #endif
    #else
       iVerPatch = 0;
    #endif
