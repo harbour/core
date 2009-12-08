@@ -56,7 +56,6 @@
 #endif
 
 #include "hbapi.h"
-#include "hbapiitm.h"
 
 #include "hbqt.h"
 
@@ -98,6 +97,7 @@ void * hbqt_gcpointer( int iParam )
    }
    else
    {
+      /* TOFIX: This is dangerous. */
       return hb_parptr( iParam );
    }
 }
@@ -109,14 +109,10 @@ int hbqt_get_object_release_method()
 
 HB_FUNC( HBQT_SET_RELEASE_METHOD )
 {
-   if( (hb_pcount() == 1) && HB_ISNUM( 1 ) )
-   {
-      if ( ( hb_parni( 1 ) >= 0) && ( hb_parni( 1 ) <= HBQT_RELEASE_WITH_DELETE_LATER ) )
-      {
-         s_iObjectReleaseMethod = hb_parni( 1 );
-      }
-   }
    hb_retni( s_iObjectReleaseMethod );
+
+   if( HB_ISNUM( 1 ) && hb_parni( 1 ) >= 0 && hb_parni( 1 ) <= HBQT_RELEASE_WITH_DELETE_LATER )
+      s_iObjectReleaseMethod = hb_parni( 1 );
 }
 
 HB_FUNC( HBQT_QTPTR_FROM_GCPOINTER )

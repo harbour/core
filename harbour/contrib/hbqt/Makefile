@@ -12,7 +12,7 @@ PRG_HEADERS := \
    hbqt.ch \
 
 PRG_SOURCES := \
-   hbqt_misc.prg
+   hbqt_misc.prg \
 
 include $(TOP)$(ROOT)contrib/hbqt/detect.mk
 
@@ -22,6 +22,12 @@ moc_slots.cpp : $(TOP)$(ROOT)contrib/hbqt/hbqt_slots.h
 	$(MOC_BIN) $(TOP)$(ROOT)contrib/hbqt/hbqt_slots.h > moc_slots.cpp
 
    include $(TOP)$(ROOT)contrib/hbqt/filelist.mk
+
+   CPP_SOURCES += \
+      hbqt_hbqtdbfmodel.cpp \
+      hbqt_hbqtmydrawingarea.cpp \
+      hbqt_hbqtsyntaxhighlighter.cpp \
+      hbqt_hbqttableview.cpp \
 
    include $(TOP)$(ROOT)config/header.mk
    include $(TOP)$(ROOT)config/lib.mk
@@ -35,7 +41,7 @@ moc_slots.cpp : $(TOP)$(ROOT)contrib/hbqt/hbqt_slots.h
    DIRS += \
       qtcore \
       qtgui \
-      qtnetwork 
+      qtnetwork
 
    include $(TOP)$(ROOT)config/dir.mk
 endif

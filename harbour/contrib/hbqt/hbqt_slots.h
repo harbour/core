@@ -196,7 +196,6 @@ public:
    Slots( QObject *parent = 0 );
    ~Slots();
    QList<PHB_ITEM>  listBlock;
-   QList<bool>      listActv;
 
 public slots:
    void clicked();
@@ -335,7 +334,6 @@ public:
    Events( QObject *parent = 0 );
    ~Events();
    QList<PHB_ITEM>     listBlock;
-   QList<bool>         listActv;
    QList<QObject*>     listObj;
 
 protected:

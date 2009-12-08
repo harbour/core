@@ -1461,11 +1461,8 @@ HB_FUNC( ADSADTX_GETFUNCTABLE )
 
 
 HB_FUNC( ADSX ) { ; }
-
 HB_FUNC( ADSNTXX ) { ; }
-
 HB_FUNC( ADSCDXX ) { ; }
-
 HB_FUNC( ADSADTX ) { ; }
 
 HB_FUNC_EXTERN( ADSCDX );
@@ -1474,20 +1471,20 @@ static void hb_adsxRddInit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   if( hb_rddRegister( "ADSX",    RDT_FULL ) > 1 || 
-       hb_rddRegister( "ADSNTXX", RDT_FULL ) > 1 || 
-       hb_rddRegister( "ADSCDXX", RDT_FULL ) > 1 || 
+   if( hb_rddRegister( "ADSX",    RDT_FULL ) > 1 ||
+       hb_rddRegister( "ADSNTXX", RDT_FULL ) > 1 ||
+       hb_rddRegister( "ADSCDXX", RDT_FULL ) > 1 ||
        hb_rddRegister( "ADSADTX", RDT_FULL ) > 1 )
    {
-      /* try different RDD registrer order */
-      hb_rddRegister( "ADS", RDT_FULL );
+      /* try different RDD register order */
+      hb_rddRegister( "ADS",    RDT_FULL );
       hb_rddRegister( "ADSNTX", RDT_FULL );
       hb_rddRegister( "ADSCDX", RDT_FULL );
       hb_rddRegister( "ADSADT", RDT_FULL );
 
-      if( hb_rddRegister( "ADSX",    RDT_FULL ) > 1 || 
-          hb_rddRegister( "ADSNTXX", RDT_FULL ) > 1 || 
-          hb_rddRegister( "ADSCDXX", RDT_FULL ) > 1 || 
+      if( hb_rddRegister( "ADSX",    RDT_FULL ) > 1 ||
+          hb_rddRegister( "ADSNTXX", RDT_FULL ) > 1 ||
+          hb_rddRegister( "ADSCDXX", RDT_FULL ) > 1 ||
           hb_rddRegister( "ADSADTX", RDT_FULL ) > 1 )
       {
          hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );

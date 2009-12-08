@@ -876,10 +876,10 @@ static HB_ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
       u32RetVal = AdsGotoRecord( pArea->hTable, 0 );
    }
 
-   /*  Usually AdsGotoRecord( *, 0 ) is valid call and returns no error, 
-    *  but if previous error was AE_INVALID_RECORD_NUMBER, the following 
+   /*  Usually AdsGotoRecord( *, 0 ) is valid call and returns no error,
+    *  but if previous error was AE_INVALID_RECORD_NUMBER, the following
     *  AdsGotoRecord( *, 0 ) returns the same error. I'm not sure if this
-    *  AdsGotoRecord( *, 0 ) will position to phantom record and return 
+    *  AdsGotoRecord( *, 0 ) will position to phantom record and return
     *  empty fields. I hope I have not made any regressions in code, since
     *  it replicates previous behaviour. [Mindaugas]
     */
@@ -1530,7 +1530,7 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
                dbFieldInfo.uiTypeExtended = ADS_STRING;
                dbFieldInfo.uiLen = uiLen;
             }
-            else if( pArea->iFileType == ADS_ADT && 
+            else if( pArea->iFileType == ADS_ADT &&
                      ( ! hb_strnicmp( szFieldType, "curdouble", 2 ) || ( iNameLen == 1 && iData == 'Z' ) ) )
             {
                dbFieldInfo.uiType = HB_FT_CURDOUBLE;
@@ -1616,7 +1616,7 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
             }
 #endif
 #ifdef ADS_MODTIME
-            else if( pArea->iFileType == ADS_ADT && 
+            else if( pArea->iFileType == ADS_ADT &&
                      ( ! hb_strnicmp( szFieldType, "modtime", 3 ) || ( iNameLen == 1 && iData == '=' ) ) )
             {
                dbFieldInfo.uiType = HB_FT_MODTIME;
@@ -1635,7 +1635,7 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
                dbFieldInfo.uiType = HB_FT_INTEGER;
 #ifdef ADS_LONGLONG
                dbFieldInfo.uiLen = ( pArea->iFileType == ADS_ADT && uiLen == 2 ) ? 2 : ( uiLen == 8 ? 8 : 4 );
-               dbFieldInfo.uiTypeExtended = dbFieldInfo.uiLen == 4 ? ADS_INTEGER : 
+               dbFieldInfo.uiTypeExtended = dbFieldInfo.uiLen == 4 ? ADS_INTEGER :
                                             ( dbFieldInfo.uiLen == 2 ? ADS_SHORTINT : ADS_LONGLONG);
 #else
                dbFieldInfo.uiLen = ( pArea->iFileType == ADS_ADT && uiLen == 2 ) ? 2 : 4;
@@ -1692,7 +1692,7 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
                else if( pArea->iFileType == ADS_VFP )
                   dbFieldInfo.uiLen = 4;
 #endif
-               else 
+               else
                   dbFieldInfo.uiLen = 10;
             }
             else
@@ -1768,7 +1768,7 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
                dbFieldInfo.uiFlags = HB_FF_BINARY;
             }
 #if ADS_ROWVERSION
-            else if( pArea->iFileType == ADS_ADT && 
+            else if( pArea->iFileType == ADS_ADT &&
                      ( ! hb_strnicmp( szFieldType, "rowversion", 2 ) || ( iNameLen == 1 && iData == '^' ) ) )
             {
                dbFieldInfo.uiType = HB_FT_ROWVER;
@@ -5215,13 +5215,9 @@ HB_FUNC_STATIC( ADSVFP_GETFUNCTABLE )
 #endif
 
 HB_FUNC( ADS ) { ; }
-
 HB_FUNC( ADSADT ) { ; }
-
 HB_FUNC( ADSNTX ) { ; }
-
 HB_FUNC( ADSCDX ) { ; }
-
 #if ADS_LIB_VERSION >= 900
 HB_FUNC( ADSVFP ) { ; }
 #endif
