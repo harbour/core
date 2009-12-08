@@ -26,6 +26,7 @@ moc_slots.cpp : $(TOP)$(ROOT)contrib/hbqt/hbqt_slots.h
    CPP_SOURCES += \
       hbqt_hbqtdbfmodel.cpp \
       hbqt_hbqtmydrawingarea.cpp \
+      hbqt_hbqtmymainwindow.cpp \
       hbqt_hbqtsyntaxhighlighter.cpp \
       hbqt_hbqttableview.cpp \
 

@@ -1541,16 +1541,16 @@ METHOD HbIde:findReplace( cUi )
          //
          ::qFindDlg:setWindowFlags( Qt_Sheet )
          //
-         ::oFind := XbpComboBox():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "comboFindWhat" ) )
-         ::oRepl := XbpComboBox():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "comboReplaceWith" ) )
+         ::oFind := XbpComboBox():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "comboFindWhat" ) )
+         ::oRepl := XbpComboBox():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "comboReplaceWith" ) )
 
-         ::oPBFind := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonFind" ) )
+         ::oPBFind := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonFind" ) )
          ::oPBFind:activate := {|| ::qCurEdit:find( QLineEdit():configure( ::oFind:oWidget:lineEdit() ):text() ) }
 
-         ::oPBRepl := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonReplace" ) )
+         ::oPBRepl := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonReplace" ) )
          ::oPBRepl:activate := {|t| t := QLineEdit():configure( ::oRepl:oWidget:lineEdit() ):text() }
 
-         ::oPBClose := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonClose" ) )
+         ::oPBClose := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonClose" ) )
          ::oPBClose:activate := {|| ::qFindDlg:hide() }
       ENDIF
    ENDIF
@@ -1648,13 +1648,13 @@ METHOD HbIde:fetchProjectProperties()
 
       ::aPrpObjs := { qPrjType, oPrjTtl, oPrjLoc, oPrjWrk, oPrjDst, oPrjOut, oPrjLau, oPrjLEx, oPrjInc, oPrjSrc, oPrjMta, oPrjHbp, oPrjCmp }
 
-      oPBCn := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( pPrpDlg, "buttonCn" ) )
+      oPBCn := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( pPrpDlg, "buttonCn" ) )
       oPBCn:activate := {|| qPrpDlg:close() }
-      oPBSv := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( pPrpDlg, "buttonSave" ) )
+      oPBSv := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( pPrpDlg, "buttonSave" ) )
       oPBSv:activate := {|| ::saveProject() }
-      oPBOk := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( pPrpDlg, "buttonSaveExit" ) )
+      oPBOk := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( pPrpDlg, "buttonSaveExit" ) )
       oPBOk:activate := {|| ::saveProject(), qPrpDlg:close() }
-      oPBSelect := XbpPushButton():new():createFromQtPtr( , , , , , , Qt_findChild( pPrpDlg, "buttonSelect" ) )
+      oPBSelect := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( pPrpDlg, "buttonSelect" ) )
       oPBSelect:activate := {|| ::addSourcesToProject() }
 
       oTabWidget := QTabWidget():configure( Qt_FindChild( pPrpDlg, "tabWidget" ) )

@@ -406,7 +406,7 @@ METHOD XbpRtf:selAlignment( ... )                           // XBPRTF_ALIGN_LEFT
    IF len( aP ) >= 1 .and. hb_isNumeric( aP[ 1 ] )
       oTBFormat := QTextBlockFormat():configure( ::oCurCursor:blockFormat() )
       xRet := oTBFormat:alignment()
-      oTBFormat:setAlignment( ConvertAFact( "RTFSELALIGNMENT", XBTOQT_FROM_XB, aP[ 1 ] ) )
+      oTBFormat:setAlignment( hbxbp_ConvertAFactFromXBP( "RTFSELALIGNMENT", aP[ 1 ] ) )
       ::oCurCursor:setBlockFormat( QT_PTROF( oTBFormat ) )
    ENDIF
    RETURN xRet
@@ -450,7 +450,7 @@ METHOD XbpRtf:selCharOffset( ... )                          // 0
       IF ::oTextCharFormat:isValid()
          nAlign := IF( aP[ 1 ] < 0, -1, IF( aP[ 1 ] > 0, 1, 0 ) )
          xRet   := ::oTextCharFormat:verticalAlignment()
-         ::oTextCharFormat:setVerticalAlignment( ConvertAFact( "RtfVerticalAlign", XBTOQT_FROM_XB, nAlign ) )
+         ::oTextCharFormat:setVerticalAlignment( hbxbp_ConvertAFactFromXBP( "RtfVerticalAlign", nAlign ) )
          ::oCurCursor:setCharFormat( QT_PTROF( ::oTextCharFormat ) )
       ENDIF
    ENDIF
@@ -467,7 +467,7 @@ METHOD XbpRtf:selColor( ... )
       ::oTextCharFormat:pPtr := ::oCurCursor:charFormat()
       IF ::oTextCharFormat:isValid()
          xRet   := ::oTextCharFormat:foreground()
-         nColor := ConvertAFact( "COLOR", XBTOQT_FROM_XB, aP[ 1 ] )
+         nColor := hbxbp_ConvertAFactFromXBP( "COLOR", aP[ 1 ] )
          oColor := QColor():new( nColor )
          oBrush := QBrush():new( "QColor", QT_PTROF( oColor ) )
          ::oTextCharFormat:setForeground( QT_PTROF( oBrush ) )

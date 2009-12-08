@@ -118,10 +118,9 @@ HB_FUNC( CAIRO_DESTROY )
    {
       cairo_destroy( *ppCairo );
       *ppCairo = NULL;
-      return;
    }
-
-   hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   else
+      hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
@@ -186,9 +185,9 @@ HB_FUNC( CAIRO_SURFACE_DESTROY )
    {
       cairo_surface_destroy( *ppSurface );
       *ppSurface = NULL;
-      return;
    }
-   hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   else
+      hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
@@ -253,17 +252,17 @@ HB_FUNC( CAIRO_PATH_DESTROY )
    {
       cairo_path_destroy( *ppPath );
       *ppPath = NULL;
-      return;
    }
-   hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   else
+      hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
 /* ============ cairo_path_t * iterator support ============ */
 
-/* 
+/*
  * NOTE: Path iterator functions are is not cairo functions.
- *       This is only a way to pass path data to .prg level 
+ *       This is only a way to pass path data to .prg level
  */
 
 typedef struct
@@ -433,7 +432,7 @@ HB_FUNC( CAIRO_PATH_ITERATOR_SET_POINTS )
 #endif
 
       ulLen = hb_arrayLen( pArray );
-      if( pIterator->iPos < pPath->num_data && pIterator->iPos != -1 && 
+      if( pIterator->iPos < pPath->num_data && pIterator->iPos != -1 &&
           ( ULONG ) pPath->data[ pIterator->iPos ].header.length == ulLen + 1 )
       {
          PHB_ITEM  pItem;
@@ -448,7 +447,7 @@ HB_FUNC( CAIRO_PATH_ITERATOR_SET_POINTS )
                pData[ i ].point.x = hb_arrayGetND( pItem, 1 );
                pData[ i ].point.y = hb_arrayGetND( pItem, 2 );
             }
-            else 
+            else
             {
                hb_retl( 0 );
                return;

@@ -88,7 +88,7 @@ CLASS XbpPushButton  INHERIT  XbpWindow
 
    METHOD   new()
    METHOD   create()
-   METHOD   createFromQtPtr()
+   METHOD   hbCreateFromQtPtr()
    METHOD   configure()
    METHOD   destroy()
 
@@ -136,7 +136,7 @@ METHOD XbpPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpPushButton:createFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+METHOD XbpPushButton:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

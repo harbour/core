@@ -17,9 +17,6 @@
 #define HBXBP_EVENT_HANDLED                       0
 #define HBXBP_EVENT_UNHANDLED                     1
 
-#define XBTOQT_FROM_XB                            1
-#define XBTOQT_FROM_QT                            2
-
 /*----------------------------------------------------------------------*/
 
 #define XBP_AUTOSIZE                              -1

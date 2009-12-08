@@ -143,7 +143,7 @@ EXPORTED:
    /*  LIFE CYCLE  */
    METHOD   init()
    METHOD   create()
-   METHOD   createFromQtPtr()                         VIRTUAL
+   METHOD   hbCreateFromQtPtr()                         VIRTUAL
    METHOD   configure()
    METHOD   destroy()
 
@@ -414,7 +414,7 @@ METHOD XbpWindow:connectEvent( pWidget, nEvent, bBlock )
 
 METHOD XbpWindow:connectWindowEvents()
 
-   //::oWidget:installEventFilter( SetEventFilter() )
+   //::oWidget:installEventFilter( hbxbp_SetEventFilter() )
 
    ::connectEvent( ::pWidget, QEvent_MouseMove          , {|o,e| ::grabEvent( QEvent_MouseMove          , e, o ) } )
    ::connectEvent( ::pWidget, QEvent_MouseButtonPress   , {|o,e| ::grabEvent( QEvent_MouseButtonPress   , e, o ) } )
@@ -739,7 +739,7 @@ METHOD XbpWindow:destroy()
 //HBXBP_DEBUG( hb_threadId(),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
 
    IF cXbp == "XBPDIALOG"
-      SetEventLoop( NIL )
+      hbxbp_SetEventLoop( NIL )
       ::oEventLoop:exit( 0 )
       ::oEventLoop:pPtr := 0
       SetAppWindow( XbpObject():new() )
@@ -752,7 +752,7 @@ METHOD XbpWindow:destroy()
       aeval( ::aEConnections, {|e_,i| Qt_DisConnect_Event( e_[ 1 ], e_[ 2 ] ), ;
                                ::aEConnections[ i,1 ] := NIL, ::aEConnections[ i,2 ] := NIL, ::aEConnections[ i ] := NIL } )
       ::aEConnections := {}
-      ::oWidget:removeEventFilter( SetEventFilter() )
+      ::oWidget:removeEventFilter( hbxbp_SetEventFilter() )
    ENDIF
 
    IF Len( ::aChildren ) > 0
@@ -764,7 +764,7 @@ METHOD XbpWindow:destroy()
    ::clearSlots()
 
    IF cXbp == "XBPDIALOG"
-      ClearEventBuffer()
+      hbxbp_ClearEventBuffer()
       Qt_Slots_Destroy()
       Qt_Events_Destroy()
       Qt_MyMainWindow_Destroy( QT_PTROF( ::oWidget ) )

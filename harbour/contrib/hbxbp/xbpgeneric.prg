@@ -95,7 +95,7 @@ THREAD STATIC t_oEventLoop
 
 /*----------------------------------------------------------------------*/
 
-INIT PROCEDURE Qt_Start()
+INIT PROCEDURE hbxbp_Start()
 
    Qt_MutexCreate()
 
@@ -107,9 +107,7 @@ INIT PROCEDURE Qt_Start()
 
 /*----------------------------------------------------------------------*/
 
-EXIT PROCEDURE Qt_End()
-
-   Qt_MutexDestroy()
+EXIT PROCEDURE hbxbp_End()
 
    t_oDummy      := NIL
    t_oAppWindow  := NIL
@@ -122,13 +120,16 @@ EXIT PROCEDURE Qt_End()
    #if 0
    s_oApp:oWidget:pPtr := 0
    #endif
+
+   Qt_MutexDestroy()
+
    RETURN
 
 /*----------------------------------------------------------------------*/
 /*
  * Will be called from XbpDialog() | XbpCRT()
  */
-FUNCTION InitializeEventBuffer()
+FUNCTION hbxbp_InitializeEventBuffer()
 
    IF empty( t_events )
       t_events := array( EVENT_BUFFER )
@@ -139,7 +140,7 @@ FUNCTION InitializeEventBuffer()
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION ClearEventBuffer()
+FUNCTION hbxbp_ClearEventBuffer()
 
    IF !empty( t_events )
       aeval( t_events, {|e,i| e := e, t_events[ i ] := NIL } )
@@ -150,13 +151,13 @@ FUNCTION ClearEventBuffer()
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION SetEventFilter()
+FUNCTION hbxbp_SetEventFilter()
 
    RETURN QT_QEventFilter()
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION SetEventLoop( oELoop )
+FUNCTION hbxbp_SetEventLoop( oELoop )
 
    t_oEventLoop := oELoop
 
@@ -174,7 +175,7 @@ FUNCTION PostAppEvent( nEvent, mp1, mp2, oXbp )
 /*----------------------------------------------------------------------*/
 
 /*
- *  Internal to the XbpParts , Must NOT be called from Application Code
+ *  Internal to the XbpParts, must NOT be called from application code
  */
 FUNCTION SetAppEvent( nEvent, mp1, mp2, oXbp )
 
@@ -301,67 +302,71 @@ FUNCTION GraMakeRGBColor( aRGB )
 
    RETURN nRGB
 
-/*----------------------------------------------------------------------*/
+FUNCTION hbxbp_ConvertAFactFromXBP( cMode, xValue )
 
-FUNCTION ConvertAFact( cMode, nFrom, xValue )
-   LOCAL n, a_:= {}
+   SWITCH Upper( cMode )
+   CASE "COLOR"
+      SWITCH xValue
+      CASE GRA_CLR_WHITE     ; RETURN Qt_white
+      CASE GRA_CLR_BLACK     ; RETURN Qt_black
+      CASE GRA_CLR_BLUE      ; RETURN Qt_blue
+      CASE GRA_CLR_RED       ; RETURN Qt_red
+      CASE GRA_CLR_PINK      ; RETURN Qt_magenta
+      CASE GRA_CLR_GREEN     ; RETURN Qt_green
+      CASE GRA_CLR_CYAN      ; RETURN Qt_cyan
+      CASE GRA_CLR_YELLOW    ; RETURN Qt_yellow
+      CASE GRA_CLR_DARKGRAY  ; RETURN Qt_darkGray
+      CASE GRA_CLR_DARKBLUE  ; RETURN Qt_darkBlue
+      CASE GRA_CLR_DARKRED   ; RETURN Qt_darkRed
+      CASE GRA_CLR_DARKPINK  ; RETURN Qt_darkMagenta
+      CASE GRA_CLR_DARKGREEN ; RETURN Qt_darkGreen
+      CASE GRA_CLR_DARKCYAN  ; RETURN Qt_darkCyan
+      CASE GRA_CLR_BROWN     ; RETURN Qt_darkYellow
+      CASE GRA_CLR_PALEGRAY  ; RETURN Qt_lightGray
+      ENDSWITCH
+      EXIT
 
-   cMode := upper( cMode )
+   CASE "RTFVERTICALALIGN"
+      SWITCH xValue
+      CASE  0; RETURN QTextCharFormat_AlignNormal
+      CASE  1; RETURN QTextCharFormat_AlignSuperScript
+      CASE -1; RETURN QTextCharFormat_AlignSubScript
+      ENDSWITCH
+      EXIT
 
-   DO CASE
-   CASE cMode == "COLOR"
-      aadd( a_, { GRA_CLR_WHITE     , Qt_white         } )
-      aadd( a_, { GRA_CLR_BLACK     , Qt_black         } )
-      aadd( a_, { GRA_CLR_BLUE      , Qt_blue          } )
-      aadd( a_, { GRA_CLR_RED       , Qt_red           } )
-      aadd( a_, { GRA_CLR_PINK      , Qt_magenta       } )
-      aadd( a_, { GRA_CLR_GREEN     , Qt_green         } )
-      aadd( a_, { GRA_CLR_CYAN      , Qt_cyan          } )
-      aadd( a_, { GRA_CLR_YELLOW    , Qt_yellow        } )
-      aadd( a_, { GRA_CLR_DARKGRAY  , Qt_darkGray      } )
-      aadd( a_, { GRA_CLR_DARKBLUE  , Qt_darkBlue      } )
-      aadd( a_, { GRA_CLR_DARKRED   , Qt_darkRed       } )
-      aadd( a_, { GRA_CLR_DARKPINK  , Qt_darkMagenta   } )
-      aadd( a_, { GRA_CLR_DARKGREEN , Qt_darkGreen     } )
-      aadd( a_, { GRA_CLR_DARKCYAN  , Qt_darkCyan      } )
-      aadd( a_, { GRA_CLR_BROWN     , Qt_darkYellow    } )
-      aadd( a_, { GRA_CLR_PALEGRAY  , Qt_lightGray     } )
+   CASE "RTFSELALIGNMENT"
+      SWITCH xValue
+      CASE XBPRTF_ALIGN_LEFT  ; RETURN Qt_AlignLeft
+      CASE XBPRTF_ALIGN_RIGHT ; RETURN Qt_AlignRight
+      CASE XBPRTF_ALIGN_CENTER; RETURN Qt_AlignCenter
+      ENDSWITCH
+      EXIT
 
-   CASE cMode == "RTFVERTICALALIGN"
-      aadd( a_, {  0, QTextCharFormat_AlignNormal      } )
-      aadd( a_, {  1, QTextCharFormat_AlignSuperScript } )
-      aadd( a_, { -1, QTextCharFormat_AlignSubScript   } )
+   CASE "ALIGNMENT"
+      SWITCH xValue
+      CASE XBPALIGN_TOP    ; RETURN Qt_AlignTop
+      CASE XBPALIGN_BOTTOM ; RETURN Qt_AlignBottom
+      CASE XBPALIGN_LEFT   ; RETURN Qt_AlignLeft
+      CASE XBPALIGN_RIGHT  ; RETURN Qt_AlignRight
+      CASE XBPALIGN_VCENTER; RETURN Qt_AlignVCenter
+      CASE XBPALIGN_HCENTER; RETURN Qt_AlignHCenter
+      ENDSWITCH
+      EXIT
 
-   CASE cMode == "RTFSELALIGNMENT"
-      aadd( a_, { XBPRTF_ALIGN_LEFT  , Qt_AlignLeft    } )
-      aadd( a_, { XBPRTF_ALIGN_RIGHT , Qt_AlignRight   } )
-      aadd( a_, { XBPRTF_ALIGN_CENTER, Qt_AlignCenter  } )
+   CASE "BRWNAVIGATE"
+      SWITCH xValue
+      CASE xbeK_DOWN ; RETURN QAbstractItemView_MoveDown
+      CASE xbeK_UP   ; RETURN QAbstractItemView_MoveUp
+      CASE xbeK_RIGHT; RETURN QAbstractItemView_MoveRight
+      CASE xbeK_LEFT ; RETURN QAbstractItemView_MoveLeft
+      CASE xbeK_HOME ; RETURN QAbstractItemView_MoveHome
+      CASE xbeK_END  ; RETURN QAbstractItemView_MoveEnd
+      CASE xbeK_PGUP ; RETURN QAbstractItemView_MovePageUp
+      CASE xbeK_PGDN ; RETURN QAbstractItemView_MovePageDown
+      ENDSWITCH
+      EXIT
 
-   CASE cMode == "ALIGNMENT"
-      aadd( a_, { XBPALIGN_TOP    , Qt_AlignTop        } )
-      aadd( a_, { XBPALIGN_BOTTOM , Qt_AlignBottom     } )
-      aadd( a_, { XBPALIGN_LEFT   , Qt_AlignLeft       } )
-      aadd( a_, { XBPALIGN_RIGHT  , Qt_AlignRight      } )
-      aadd( a_, { XBPALIGN_VCENTER, Qt_AlignVCenter    } )
-      aadd( a_, { XBPALIGN_HCENTER, Qt_AlignHCenter    } )
-
-   CASE cMode == "BRWNAVIGATE"
-      aadd( a_, { xbeK_DOWN , QAbstractItemView_MoveDown      } )
-      aadd( a_, { xbeK_UP   , QAbstractItemView_MoveUp        } )
-      aadd( a_, { xbeK_RIGHT, QAbstractItemView_MoveRight     } )
-      aadd( a_, { xbeK_LEFT , QAbstractItemView_MoveLeft      } )
-      aadd( a_, { xbeK_HOME , QAbstractItemView_MoveHome      } )
-      aadd( a_, { xbeK_END  , QAbstractItemView_MoveEnd       } )
-      aadd( a_, { xbeK_PGUP , QAbstractItemView_MovePageUp    } )
-      aadd( a_, { xbeK_PGDN , QAbstractItemView_MovePageDown  } )
-
-   CASE cMode == "SOMEOTHER"
-
-   ENDCASE
-
-   IF ( n := ascan( a_, {|e_| e_[ nFrom ] == xValue } ) ) > 0
-      RETURN a_[ n, IF( nFrom == 2, 1, 2 ) ]
-   ENDIF
+   ENDSWITCH
 
    RETURN xValue
 

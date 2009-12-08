@@ -81,7 +81,7 @@ CLASS XbpComboBox  INHERIT  XbpWindow
 
    METHOD   new()
    METHOD   create()
-   METHOD   createFromQtPtr()
+   METHOD   hbCreateFromQtPtr()
    METHOD   configure()                           VIRTUAL
    METHOD   destroy()
    METHOD   exeBlock()
@@ -163,7 +163,7 @@ METHOD XbpComboBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpComboBox:createFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+METHOD XbpComboBox:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

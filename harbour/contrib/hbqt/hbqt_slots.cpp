@@ -57,7 +57,6 @@
 #include "hbvm.h"
 #include "hbapiitm.h"
 #include "hbstack.h"
-#include "hbthread.h"
 
 #include "hbqt.h"
 
@@ -74,8 +73,6 @@
 #include <QEvent>
 #include <QMessageBox>
 #include <QFileDialog>
-
-static PHB_ITEM s_mutex = NULL;
 
 /*----------------------------------------------------------------------*/
 
@@ -121,6 +118,21 @@ static void qt_setEventSlots()
 static Slots * qt_getEventSlots( void )
 {
    return HB_GETQTEVENTSLOTS()->slot;
+}
+
+HB_FUNC( QT_SETEVENTFILTER )
+{
+   qt_setEventFilter();
+}
+
+HB_FUNC( QT_SETEVENTSLOTS )
+{
+   qt_setEventSlots();
+}
+
+HB_FUNC( QT_QEVENTFILTER )
+{
+   hb_retptr( qt_getEventFilter() );
 }
 
 /*----------------------------------------------------------------------*/
@@ -1123,6 +1135,7 @@ HB_FUNC( QT_SLOTS_DESTROY )
 Events::Events( QObject * parent ) : QObject( parent )
 {
 }
+
 Events::~Events()
 {
    listBlock.clear();
@@ -1131,14 +1144,9 @@ Events::~Events()
 bool Events::eventFilter( QObject * object, QEvent * event )
 {
    QEvent::Type eventtype = event->type();
-#if defined( __HB_DEBUG__ )
-//hbqt_debug( "0 Events::eventFilter = %i", ( int ) eventtype );
-#endif
+
    if( ( int ) eventtype == 0 )
    {
-#if defined( __HB_DEBUG__ )
-//hbqt_debug( "x Events::eventFilter =            0" );
-#endif
       return false;
    }
 
@@ -1147,350 +1155,85 @@ bool Events::eventFilter( QObject * object, QEvent * event )
    int found = object->property( prop ).toInt();
    if( found == 0 )
    {
-#if defined( __HB_DEBUG__ )
-//hbqt_debug( "f Events::eventFilter = %s  %i", "       found=0", ( int ) eventtype );
-#endif
       return false;
    }
 
-   //bool ret = false;
    bool ret = true;
+
    if( found <= listBlock.size() && listObj.at( found - 1 ) == object && hb_vmRequestReenter() )
    {
       PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
       PHB_ITEM pEvent  = hb_itemPutPtr( NULL, event  );
-#if defined( __HB_DEBUG__ )
-//hbqt_debug( "0 Events::eventFilter = %i", ( int ) eventtype );
-#endif
       ret = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 2, pObject, pEvent ) );
-#if defined( __HB_DEBUG__ )
-//hbqt_debug( "1 Events::eventFilter = %s", ret ? "   yes" : "   no" );
-#endif
       hb_itemRelease( pObject );
       hb_itemRelease( pEvent  );
 
       hb_vmRequestRestore();
 
       if( eventtype == QEvent::Close )
-      {
          event->ignore();
-      }
    }
-#if defined( __HB_DEBUG__ )
-//hbqt_debug( "1 Events::eventFilter = %i", ( int ) eventtype );
-#endif
+
    return ret;
 }
 
-HB_FUNC( QT_SETEVENTFILTER )
-{
-   qt_setEventFilter();
-}
-HB_FUNC( QT_SETEVENTSLOTS )
-{
-   qt_setEventSlots();
-}
 HB_FUNC( QT_EVENTS_DESTROY )
 {
    qt_getEventFilter()->~Events();
-}
-
-HB_FUNC( QT_QEVENTFILTER )
-{
-   hb_retptr( qt_getEventFilter() );
 }
 
 HB_FUNC( QT_CONNECT_EVENT )
 {
    QObject * object = ( QObject* ) hbqt_gcpointer( 1 );          /* get sender    */
 
-   if( object == NULL )
+   if( object )
    {
-      hb_retl( HB_FALSE );
-      return;
+      int       type      = hb_parni( 2 );
+      PHB_ITEM  codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK | HB_IT_BYREF ) );
+      Events  * s_e       = qt_getEventFilter();
+
+      char prop[ 20 ];
+      hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
+
+      s_e->listBlock << codeblock;
+      s_e->listObj   << object;
+
+      object->setProperty( prop, ( int ) s_e->listBlock.size() );
+
+      hb_retl( HB_TRUE );
    }
-
-   int       type      = hb_parni( 2 );
-   PHB_ITEM  codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK | HB_IT_BYREF ) );
-   Events  * s_e       = qt_getEventFilter();
-
-   char prop[ 20 ];
-   hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
-
-   s_e->listBlock << codeblock;
-   s_e->listObj   << object;
-
-   object->setProperty( prop, ( int ) s_e->listBlock.size() );
-
-   hb_retl( HB_TRUE );
+   else
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( QT_DISCONNECT_EVENT )
 {
+   HB_BOOL   bRet   = HB_FALSE;
    QObject * object = ( QObject* ) hbqt_gcpointer( 1 );
 
-   if( object == NULL )
+   if( object )
    {
-      hb_retl( HB_FALSE );
-      return;
-   }
+      int       type   = hb_parni( 2 );
+      Events  * s_e    = qt_getEventFilter();
 
-   int       type   = hb_parni( 2 );
-   bool      bRet   = false;
-   Events  * s_e    = qt_getEventFilter();
+      char prop[ 10 ];
+      hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
 
-   char prop[ 10 ];
-   hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
-
-   int i = object->property( prop ).toInt();
-   if( i > 0 && i <= s_e->listBlock.size() )
-   {
-      hb_itemRelease( s_e->listBlock.at( i - 1 ) );
-      s_e->listBlock[ i - 1 ] = NULL;
-      s_e->listObj[ i - 1 ]   = NULL;
-      object->setProperty( prop, QVariant() );
-      bRet = true;
+      int i = object->property( prop ).toInt();
+      if( i > 0 && i <= s_e->listBlock.size() )
+      {
+         hb_itemRelease( s_e->listBlock.at( i - 1 ) );
+         s_e->listBlock[ i - 1 ] = NULL;
+         s_e->listObj[ i - 1 ]   = NULL;
+         object->setProperty( prop, QVariant() );
+         bRet = HB_TRUE;
 #if defined( __HB_DEBUG__ )
 hbqt_debug( "      QT_DISCONNECT_EVENT: %i", type );
 #endif
+      }
    }
+
    hb_retl( bRet );
-}
-
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-
-MyMainWindow::MyMainWindow( PHB_ITEM pBlock, int iThreadID )
-{
-   Qt::WindowFlags flags = Qt::WindowCloseButtonHint    | Qt::WindowMaximizeButtonHint |
-                           Qt::WindowMinimizeButtonHint | Qt::WindowSystemMenuHint     |
-                           Qt::CustomizeWindowHint      | Qt::WindowTitleHint          |
-                           Qt::Window;
-   setWindowFlags( flags );
-   setFocusPolicy( Qt::StrongFocus );
-   setAttribute( Qt::WA_DeleteOnClose );
-   //setAttribute( Qt::WA_NoSystemBackground );
-   //setAttribute( Qt::WA_PaintOnScreen );
-   //setMouseTracking( true );
-
-   block     = pBlock;
-   threadID  = iThreadID;
-}
-MyMainWindow::~MyMainWindow( void )
-{
-#if defined( __HB_DEBUG__ )
-hbqt_debug( "               MyMainWindow::~MyMainWindow 0" );
-#endif
-   if( block )
-   {
-      hb_itemRelease( block );
-      block = NULL;
-   }
-#if defined( __HB_DEBUG__ )
-hbqt_debug( "               MyMainWindow::~MyMainWindow 1" );
-#endif
-}
-void MyMainWindow::paintEvent( QPaintEvent * event )
-{
-   hb_threadMutexLock( s_mutex );
-   if( hb_vmRequestReenter() )
-   {
-      PHB_ITEM p0 = hb_itemPutNI( NULL, QEvent::Paint );
-      PHB_ITEM p1 = hb_itemPutPtr( NULL, event );
-      hb_vmEvalBlockV( block, 2, p0, p1 );
-      hb_itemRelease( p0 );
-      hb_itemRelease( p1 );
-      hb_vmRequestRestore();
-   }
-   hb_threadMutexUnlock( s_mutex );
-}
-bool MyMainWindow::event( QEvent * event )
-{
-   hb_threadMutexLock( s_mutex );
-   bool bRet = QWidget::event( event );
-   hb_threadMutexUnlock( s_mutex );
-   return bRet;
-}
-void MyMainWindow::focusInEvent( QFocusEvent *event )
-{
-   hb_threadMutexLock( s_mutex );
-   if( hb_vmRequestReenter() )
-   {
-      PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::FocusIn );
-      PHB_ITEM p1  = hb_itemPutPtr( NULL, event );
-      hb_vmEvalBlockV( block, 2, p0, p1 );
-      hb_itemRelease( p0 );
-      hb_itemRelease( p1 );
-      hb_vmRequestRestore();
-   }
-   QWidget::focusInEvent( event );
-   hb_threadMutexUnlock( s_mutex );
-}
-void MyMainWindow::focusOutEvent( QFocusEvent *event )
-{
-   hb_threadMutexLock( s_mutex );
-   if( hb_vmRequestReenter() )
-   {
-      PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::FocusOut );
-      PHB_ITEM p1  = hb_itemPutPtr( NULL, event );
-      hb_vmEvalBlockV( block, 2, p0, p1 );
-      hb_itemRelease( p0 );
-      hb_itemRelease( p1 );
-      hb_vmRequestRestore();
-   }
-   QWidget::focusOutEvent( event );
-   hb_threadMutexUnlock( s_mutex );
-}
-void MyMainWindow::keyPressEvent( QKeyEvent * event )
-{
-   hb_threadMutexLock( s_mutex );
-   if( hb_vmRequestReenter() )
-   {
-      PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::KeyPress );
-      PHB_ITEM p1  = hb_itemPutPtr( NULL, event );
-      hb_vmEvalBlockV( block, 2, p0, p1 );
-      hb_itemRelease( p0 );
-      hb_itemRelease( p1 );
-      hb_vmRequestRestore();
-   }
-   QWidget::keyPressEvent( event );
-   hb_threadMutexUnlock( s_mutex );
-}
-void MyMainWindow::mouseDoubleClickEvent( QMouseEvent * event )
-{
-   hb_threadMutexLock( s_mutex );
-   if( hb_vmRequestReenter() )
-   {
-      PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::MouseButtonDblClick );
-      PHB_ITEM p1  = hb_itemPutPtr( NULL, event );
-      hb_vmEvalBlockV( block, 2, p0, p1 );
-      hb_itemRelease( p0 );
-      hb_itemRelease( p1 );
-      hb_vmRequestRestore();
-   }
-   QWidget::mouseDoubleClickEvent( event );
-   hb_threadMutexUnlock( s_mutex );
-}
-void MyMainWindow::mouseMoveEvent( QMouseEvent * event )
-{
-   hb_threadMutexLock( s_mutex );
-   if( hb_vmRequestReenter() )
-   {
-      PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::MouseMove );
-      PHB_ITEM p1  = hb_itemPutPtr( NULL, event );
-      hb_vmEvalBlockV( block, 2, p0, p1 );
-      hb_itemRelease( p0 );
-      hb_itemRelease( p1 );
-      hb_vmRequestRestore();
-   }
-   QWidget::mouseMoveEvent( event );
-   hb_threadMutexUnlock( s_mutex );
-}
-void MyMainWindow::mousePressEvent( QMouseEvent * event )
-{
-   hb_threadMutexLock( s_mutex );
-   if( hb_vmRequestReenter() )
-   {
-      PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::MouseButtonPress );
-      PHB_ITEM p1  = hb_itemPutPtr( NULL, event );
-      hb_vmEvalBlockV( block, 2, p0, p1 );
-      hb_itemRelease( p0 );
-      hb_itemRelease( p1 );
-      hb_vmRequestRestore();
-   }
-   QWidget::mousePressEvent( event );
-   hb_threadMutexUnlock( s_mutex );
-}
-void MyMainWindow::mouseReleaseEvent( QMouseEvent * event )
-{
-   hb_threadMutexLock( s_mutex );
-   if( hb_vmRequestReenter() )
-   {
-      PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::MouseButtonRelease );
-      PHB_ITEM p1  = hb_itemPutPtr( NULL, event );
-      hb_vmEvalBlockV( block, 2, p0, p1 );
-      hb_itemRelease( p0 );
-      hb_itemRelease( p1 );
-      hb_vmRequestRestore();
-   }
-   QWidget::mouseReleaseEvent( event );
-   hb_threadMutexUnlock( s_mutex );
-}
-void MyMainWindow::wheelEvent( QWheelEvent * event )
-{
-   hb_threadMutexLock( s_mutex );
-   if( hb_vmRequestReenter() )
-   {
-      PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::Wheel );
-      PHB_ITEM p1  = hb_itemPutPtr( NULL, event );
-      hb_vmEvalBlockV( block, 2, p0, p1 );
-      hb_itemRelease( p0 );
-      hb_itemRelease( p1 );
-      hb_vmRequestRestore();
-   }
-   QWidget::wheelEvent( event );
-   hb_threadMutexUnlock( s_mutex );
-}
-void MyMainWindow::resizeEvent( QResizeEvent * event )
-{
-   hb_threadMutexLock( s_mutex );
-   if( hb_vmRequestReenter() )
-   {
-      PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::Resize );
-      PHB_ITEM p1  = hb_itemPutPtr( NULL, event );
-      hb_vmEvalBlockV( block, 2, p0, p1 );
-      hb_itemRelease( p0 );
-      hb_itemRelease( p1 );
-      hb_vmRequestRestore();
-   }
-   QWidget::resizeEvent( event );
-   hb_threadMutexUnlock( s_mutex );
-}
-void MyMainWindow::closeEvent( QCloseEvent * event )
-{
-#if defined( __HB_DEBUG__ )
-hbqt_debug( "               close event(%i)", threadID );
-#endif
-   hb_threadMutexLock( s_mutex );
-   if( hb_vmRequestReenter() )
-   {
-      PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::Close );
-      PHB_ITEM p1  = hb_itemPutPtr( NULL, event );
-      hb_vmEvalBlockV( block, 2, p0, p1 );
-      hb_itemRelease( p0 );
-      hb_itemRelease( p1 );
-      hb_vmRequestRestore();
-   }
-   hb_threadMutexUnlock( s_mutex );
-}
-
-HB_FUNC( QT_MYMAINWINDOW )
-{
-   PHB_ITEM bBlock = hb_itemNew( ( PHB_ITEM ) hb_param( 1, HB_IT_BLOCK ) );
-   hb_retptr( ( MyMainWindow * ) new MyMainWindow( bBlock, hb_parni( 2 ) ) );
-}
-
-HB_FUNC( QT_MYMAINWINDOW_DESTROY )
-{
-   hbqt_par_MyMainWindow( 1 )->~MyMainWindow();
-}
-
-HB_FUNC( QT_MUTEXCREATE )
-{
-   if( s_mutex == NULL )
-   {
-      s_mutex = hb_threadMutexCreate();
-   }
-}
-
-HB_FUNC( QT_MUTEXDESTROY )
-{
-   if( s_mutex != NULL )
-   {
-      hb_itemRelease( s_mutex );
-      s_mutex = NULL;
-   }
 }
 
 /*----------------------------------------------------------------------*/

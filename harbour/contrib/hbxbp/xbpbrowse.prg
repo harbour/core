@@ -1116,7 +1116,7 @@ METHOD fetchColumnInfo( nInfo, nArea, nRow, nCol ) CLASS XbpBrowse
       IF hb_isBlock( oCol:colorBlock )
          aColor := eval( oCol:colorBlock, ::cellValueA( nRow, nCol ) )
          IF hb_isArray( aColor ) .and. hb_isNumeric( aColor[ 1 ] )
-            RETURN ConvertAFact( "Color", XBTOQT_FROM_XB, aColor[ 1 ] )
+            RETURN hbxbp_ConvertAFactFromXBP( "Color", aColor[ 1 ] )
          ELSE
             RETURN oCol:dFgColor
          ENDIF
@@ -1128,7 +1128,7 @@ METHOD fetchColumnInfo( nInfo, nArea, nRow, nCol ) CLASS XbpBrowse
       IF hb_isBlock( oCol:colorBlock )
          aColor := eval( oCol:colorBlock, ::cellValueA( nRow, nCol ) )
          IF hb_isArray( aColor ) .and. hb_isNumeric( aColor[ 2 ] )
-            RETURN ConvertAFact( "Color", XBTOQT_FROM_XB, aColor[ 2 ] )
+            RETURN hbxbp_ConvertAFactFromXBP( "Color", aColor[ 2 ] )
          ELSE
             RETURN oCol:dBgColor
          ENDIF
@@ -4212,16 +4212,16 @@ METHOD configure() CLASS XbpColumn
       ::cHeading := ::aPresParams[ n,2 ]
    ENDIF
    IF ( n := ascan( ::aPresParams, {|e_| e_[ 1 ] == XBP_PP_COL_HA_FGCLR } ) ) > 0
-      ::hFgColor := ConvertAFact( "Color", XBTOQT_FROM_XB, ::aPresParams[ n,2 ] )
+      ::hFgColor := hbxbp_ConvertAFactFromXBP( "Color", ::aPresParams[ n,2 ] )
    ENDIF
    IF ( n := ascan( ::aPresParams, {|e_| e_[ 1 ] == XBP_PP_COL_HA_BGCLR } ) ) > 0
-      ::hBgColor := ConvertAFact( "Color", XBTOQT_FROM_XB, ::aPresParams[ n,2 ] )
+      ::hBgColor := hbxbp_ConvertAFactFromXBP( "Color", ::aPresParams[ n,2 ] )
    ENDIF
    IF ( n := ascan( ::aPresParams, {|e_| e_[ 1 ] == XBP_PP_COL_HA_HEIGHT } ) ) > 0
       ::hHeight := ::aPresParams[ n,2 ]
    ENDIF
    IF ( n := ascan( ::aPresParams, {|e_| e_[ 1 ] == XBP_PP_COL_HA_ALIGNMENT } ) ) > 0
-      ::hAlignment := ConvertAFact( "Alignment", XBTOQT_FROM_XB, ::aPresParams[ n,2 ] )
+      ::hAlignment := hbxbp_ConvertAFactFromXBP( "Alignment", ::aPresParams[ n,2 ] )
       ::hAlignment += Qt_AlignVCenter
    ENDIF
 
@@ -4233,10 +4233,10 @@ METHOD configure() CLASS XbpColumn
       ::dAlignment += Qt_AlignVCenter
    ENDIF
    IF ( n := ascan( ::aPresParams, {|e_| e_[ 1 ] == XBP_PP_COL_DA_FGCLR } ) ) > 0
-      ::dFgColor := ConvertAFact( "Color", XBTOQT_FROM_XB, ::aPresParams[ n,2 ] )
+      ::dFgColor := hbxbp_ConvertAFactFromXBP( "Color", ::aPresParams[ n,2 ] )
    ENDIF
    IF ( n := ascan( ::aPresParams, {|e_| e_[ 1 ] == XBP_PP_COL_DA_BGCLR } ) ) > 0
-      ::dBgColor := ConvertAFact( "Color", XBTOQT_FROM_XB, ::aPresParams[ n,2 ] )
+      ::dBgColor := hbxbp_ConvertAFactFromXBP( "Color", ::aPresParams[ n,2 ] )
    ENDIF
    IF ( n := ascan( ::aPresParams, {|e_| e_[ 1 ] == XBP_PP_COL_DA_ROWHEIGHT } ) ) > 0
       ::dHeight := ::aPresParams[ n,2 ]
@@ -4250,16 +4250,16 @@ METHOD configure() CLASS XbpColumn
       ::cFooting := ::aPresParams[ n,2 ]
    ENDIF
    IF ( n := ascan( ::aPresParams, {|e_| e_[ 1 ] == XBP_PP_COL_FA_FGCLR } ) ) > 0
-      ::fFgColor := ConvertAFact( "Color", XBTOQT_FROM_XB, ::aPresParams[ n,2 ] )
+      ::fFgColor := hbxbp_ConvertAFactFromXBP( "Color", ::aPresParams[ n,2 ] )
    ENDIF
    IF ( n := ascan( ::aPresParams, {|e_| e_[ 1 ] == XBP_PP_COL_FA_BGCLR } ) ) > 0
-      ::fBgColor := ConvertAFact( "Color", XBTOQT_FROM_XB, ::aPresParams[ n,2 ] )
+      ::fBgColor := hbxbp_ConvertAFactFromXBP( "Color", ::aPresParams[ n,2 ] )
    ENDIF
    IF ( n := ascan( ::aPresParams, {|e_| e_[ 1 ] == XBP_PP_COL_FA_HEIGHT } ) ) > 0
       ::fHeight := ::aPresParams[ n,2 ]
    ENDIF
    IF ( n := ascan( ::aPresParams, {|e_| e_[ 1 ] == XBP_PP_COL_FA_ALIGNMENT } ) ) > 0
-      ::fAlignment := ConvertAFact( "Alignment", XBTOQT_FROM_XB, ::aPresParams[ n,2 ] )
+      ::fAlignment := hbxbp_ConvertAFactFromXBP( "Alignment", ::aPresParams[ n,2 ] )
       ::fAlignment += Qt_AlignVCenter
    ENDIF
 
@@ -4414,4 +4414,3 @@ METHOD XbpCellGroup:itemSelected()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

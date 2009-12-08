@@ -153,14 +153,14 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    QT_SetEventFilter()
 
    /* Thread specific event buffer */
-   InitializeEventBuffer()
+   hbxbp_InitializeEventBuffer()
 
    /* Install Event Loop per Dialog Basis */
    ::oEventLoop := QEventLoop():new( ::pWidget )
-   SetEventLoop( ::oEventLoop )
+   hbxbp_SetEventLoop( ::oEventLoop )
 
    /* Instal Event Filter */
-   ::oWidget:installEventFilter( SetEventFilter() )
+   ::oWidget:installEventFilter( hbxbp_SetEventFilter() )
 
    ::connectWindowEvents()
    //
