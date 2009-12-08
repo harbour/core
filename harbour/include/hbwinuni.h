@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Windows API functions (shellapi.h - shell32.dll)
+ * Windows UNICODE helper macros
  *
- * Copyright 2008-2009 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,53 +50,29 @@
  *
  */
 
-#define HB_OS_WIN_USED
+#ifndef HB_WINUNI_H_
+#define HB_WINUNI_H_
 
-#include "hbapi.h"
-#include "hbwinuni.h"
+#include "hbapistr.h"
 
-#include <shellapi.h>
+#if defined( HB_OS_WIN )
 
-HB_FUNC( WAPI_SHELLEXECUTE )
-{
-#if defined( HB_OS_WIN_CE )
-   hb_retnint( -1 );
+#include "hbset.h"
+
+#if defined( UNICODE )
+   #define HB_PARSTR( n, h, len )       hb_parstr_u16( n, HB_CDP_ENDIAN_NATIVE, h, len )
+   #define HB_RETSTR( str )             hb_retstr_u16( HB_CDP_ENDIAN_NATIVE, str )
+   #define HB_RETSTRLEN( str, len )     hb_retstr_u16( HB_CDP_ENDIAN_NATIVE, str, len )
+   #define HB_STORSTR( str, n )         hb_storstr_u16( HB_CDP_ENDIAN_NATIVE, str, n )
+   #define HB_STORSTRLEN( str, len, n ) hb_storstrlen_u16( HB_CDP_ENDIAN_NATIVE, str, len, n )
 #else
-   void * hOperation;
-   void * hFile;
-   void * hParameters;
-   void * hDirectory;
-
-   hb_retnint( ( HB_PTRDIFF ) ShellExecute( ( HWND ) hb_parptr( 1 ),
-                                            ( LPCTSTR ) HB_PARSTR( 2, &hOperation , NULL ), /* edit, explore, open, print, play?, properties? */
-                                            ( LPCTSTR ) HB_PARSTR( 3, &hFile      , NULL ),
-                                            ( LPCTSTR ) HB_PARSTR( 4, &hParameters, NULL ),
-                                            ( LPCTSTR ) HB_PARSTR( 5, &hDirectory , NULL ),
-                                            HB_ISNUM( 6 ) ? hb_parni( 6 ) : SW_SHOWNORMAL /* nShowCmd */ ) );
-
-   hb_strfree( hOperation  );
-   hb_strfree( hFile       );
-   hb_strfree( hParameters );
-   hb_strfree( hDirectory  );
-
+   #define HB_PARSTR( n, h, len )       hb_parstr( n, hb_setGetOSCP(), h, len )
+   #define HB_RETSTR( str )             hb_retstr( hb_setGetOSCP(), str )
+   #define HB_RETSTRLEN( str, len )     hb_retstr( hb_setGetOSCP(), str, len )
+   #define HB_STORSTR( str, n )         hb_storstr( hb_setGetOSCP(), str, n )
+   #define HB_STORSTRLEN( str, len, n ) hb_storstrlen( hb_setGetOSCP(), str, len, n )
 #endif
-}
 
-HB_FUNC( WAPI_ISUSERANADMIN )
-{
-   BOOL bResult = FALSE;
+#endif /* HB_OS_WIN */
 
-   HMODULE hLib = LoadLibrary( TEXT( "shell32.dll" ) );
-
-   if( hLib )
-   {
-      typedef int ( WINAPI * ISUSERANADMIN )( void );
-      ISUSERANADMIN pIsUserAnAdmin = ( ISUSERANADMIN ) GetProcAddress( hLib, HBTEXT( "IsUserAnAdmin" ) );
-      if( pIsUserAnAdmin )
-         bResult = ( pIsUserAnAdmin )();
-
-      FreeLibrary( hLib );
-   }
-
-   hb_retl( bResult );
-}
+#endif /* HB_WINUNI_H_ */

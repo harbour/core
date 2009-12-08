@@ -201,12 +201,6 @@ extern HB_EXPORT void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned lo
 
 #if defined( UNICODE )
 
-   #define HB_PARSTR( n, h, len )       hb_parstr_u16( n, HB_CDP_ENDIAN_NATIVE, h, len )
-   #define HB_RETSTR( str )             hb_retstr_u16( HB_CDP_ENDIAN_NATIVE, str )
-   #define HB_RETSTRLEN( str, len )     hb_retstr_u16( HB_CDP_ENDIAN_NATIVE, str, len )
-   #define HB_STORSTR( str, n )         hb_storstr_u16( HB_CDP_ENDIAN_NATIVE, str, n )
-   #define HB_STORSTRLEN( str, len, n ) hb_storstrlen_u16( HB_CDP_ENDIAN_NATIVE, str, len, n )
-
    #define HB_TCHAR_CPTO(d,s,l)         hb_mbtowccpy(d,s,l)
    #define HB_TCHAR_GETFROM(d,s,l)      hb_wctombget(d,s,l)
    #define HB_TCHAR_SETTO(d,s,l)        hb_mbtowcset(d,s,l)
@@ -218,12 +212,6 @@ extern HB_EXPORT void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned lo
    #define HB_TCHAR_FREE(s)             hb_xfree(s)
 
 #else
-
-   #define HB_PARSTR( n, h, len )       hb_parstr( n, hb_setGetOSCP(), h, len )
-   #define HB_RETSTR( str )             hb_retstr( hb_setGetOSCP(), str )
-   #define HB_RETSTRLEN( str, len )     hb_retstr( hb_setGetOSCP(), str, len )
-   #define HB_STORSTR( str, n )         hb_storstr( hb_setGetOSCP(), str, n )
-   #define HB_STORSTRLEN( str, len, n ) hb_storstrlen( hb_setGetOSCP(), str, len, n )
 
    #define HB_TCHAR_CPTO(d,s,l)         hb_strncpy(d,s,l)
    #define HB_TCHAR_SETTO(d,s,l)        memcpy(d,s,l)
