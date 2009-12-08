@@ -50,7 +50,11 @@
  *
  */
 
-#define _HB_API_INTERNAL_
+#define HB_USE_ITEM
+
+#ifndef HB_USE_ITEM
+   #define _HB_API_INTERNAL_
+#endif
 
 #include "hbcairo.h"
 #include "hbapiitm.h"
