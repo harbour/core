@@ -460,6 +460,9 @@ METHOD XbpFont:configure()
 
 METHOD XbpFont:destroy()
 
+   ::oFontInfo:pPtr := 0
+   ::oWidget:pPtr   := 0
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/

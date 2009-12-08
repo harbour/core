@@ -115,13 +115,17 @@ HB_FUNC( HBQT_SET_RELEASE_METHOD )
       s_iObjectReleaseMethod = hb_parni( 1 );
 }
 
-HB_FUNC( HBQT_QTPTR_FROM_GCPOINTER )
+HB_FUNC( ISEQUALGCQTPOINTER )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( gcFuncs(), 1 );
 
    if( p && p->ph )
    {
-      hb_retptr( p->ph );
+      hb_retl( p->ph == hb_parptr( 2 ) );
+   }
+   else
+   {
+      hb_retl( false );
    }
 }
 

@@ -199,7 +199,7 @@ METHOD XbpTreeView:ExeBlock( nMsg, p1, p2 )
    HB_SYMBOL_UNUSED( p2   )
 
    IF hb_isPointer( p1 )
-      IF ( n := ascan( ::aItems, {|o| o:qPointer == p1 } ) ) > 0
+      IF ( n := ascan( ::aItems, {|o| IsEqualGcQtPointer( o:oWidget:pPtr, p1 ) } ) ) > 0
          oItem := ::aItems[ n ]
       ENDIF
    ENDIF
@@ -221,7 +221,6 @@ METHOD XbpTreeView:ExeBlock( nMsg, p1, p2 )
          eval( ::sl_itemSelected, oItem, {0,0,0,0}, self )
       ENDIF
    CASE nMsg == 7              // "itemEntered(QTWItem)"
-      //::oWidget:setToolTip( oItem:caption )
    CASE nMsg == 8              // "itemExpanded(QTWItem)"
       IF hb_isBlock( ::sl_itemExpanded )
          eval( ::sl_itemExpanded, oItem, {0,0,0,0}, self )
@@ -347,7 +346,6 @@ CLASS XbpTreeViewItem  INHERIT  XbpDataRef
    DATA     hItem
    DATA     oParent
    DATA     oXbpTree
-   DATA     qPointer
 
    DATA     aChilds                               INIT {}
 
@@ -384,7 +382,6 @@ METHOD XbpTreeViewItem:addItem( xItem, xNormalImage, xMarkedImage, xExpandedImag
       oItem:caption := xItem
       oItem:oWidget := QTreeWidgetItem():new()
       oItem:oWidget:setText( 0, oItem:caption )
-      oItem:qPointer := HBQT_QTPTR_FROM_GCPOINTER( oItem:oWidget:pPtr )
    ELSE
       oItem := xItem   // aNode
    ENDIF
@@ -478,10 +475,11 @@ METHOD XbpTreeViewItem:setMarkedImage( nResIdoBitmap )
 METHOD XbpTreeViewItem:delItem( oItem )
    LOCAL n
 
-   IF ( n := ascan( ::aChilds, {|o| o:caption == oItem:caption  } ) ) > 0
+   IF ( n := ascan( ::aChilds, {|o| o == oItem } ) ) > 0
       ::oWidget:removeChild( ::aChilds[ n ]:oWidget:pPtr )
       ::aChilds[ n ]:oWidget:pPtr := 0
-      adel( ::aChilds, n ) ; asize( ::aChilds, len( ::aChilds )-1 )
+      adel( ::aChilds, n )
+      asize( ::aChilds, len( ::aChilds )-1 )
    ENDIF
 
    RETURN NIL

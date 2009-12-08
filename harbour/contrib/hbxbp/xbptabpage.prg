@@ -295,7 +295,7 @@ METHOD XbpTabWidget:exeBlock( nMode, iIndex )
    IF !empty( ::aChildren ) .and. iIndex >= 0 .and. iIndex < len( ::aChildren )
       qTab := ::oWidget:widget( iIndex )
 
-      IF ( nIndex := ascan( ::aChildren, {|o| HBQT_QTPTR_FROM_GCPOINTER( o:oWidget:pPtr ) == qTab } ) ) > 0
+      IF ( nIndex := ascan( ::aChildren, {|o| IsEqualGcQtPointer( o:oWidget:pPtr, qTab ) } ) ) > 0
          oTab := ::aChildren[ nIndex ]
 
          DO CASE

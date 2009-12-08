@@ -104,7 +104,7 @@ static void hbqt_Exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   release_codeblocks();
+   //release_codeblocks();
 }
 
 static void hbqt_Init( void * cargo )

@@ -86,6 +86,10 @@ STATIC s_pathSep
 PROCEDURE Main( cProjIni )
    LOCAL oIde
 
+   HBQT_SET_RELEASE_METHOD( HBQT_RELEASE_WITH_DESTRUTOR )             // Exits cleanly
+   //HBQT_SET_RELEASE_METHOD( HBQT_RELEASE_WITH_DELETE )                // Exits cleanly
+   //HBQT_SET_RELEASE_METHOD( HBQT_RELEASE_WITH_DELETE_LATER )          // Exits cleanly
+
    s_resPath := hb_DirBase() + "resources" + hb_OsPathSeparator()
    s_pathSep := hb_OsPathSeparator()
 
@@ -255,7 +259,6 @@ METHOD HbIde:new( cProjIni )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:create( cProjIni )
-   // LOCAL qWidget
 
    ::loadConfig( cProjIni )
 
@@ -274,36 +277,6 @@ METHOD HbIde:create( cProjIni )
    ::buildFuncList()
    ::buildBottomArea()
 
-#if 0
-   ::qLeftLayout := QGridLayout():new()
-   ::qLeftLayout:setContentsMargins( 0,0,0,0 )
-   ::qLeftLayout:setHorizontalSpacing( 0 )
-   ::qLeftLayout:setVerticalSpacing( 0 )
-
-   ::qMidLayout  := QGridLayout():new()
-   ::qMidLayout:setContentsMargins( 0,0,0,0 )
-   ::qMidLayout:setHorizontalSpacing( 0 )
-   ::qMidLayout:setVerticalSpacing( 0 )
-
-   ::qLeftArea   := QWidget():new()
-   ::qLeftArea:setLayout( QT_PTROF( ::qLeftLayout ) )
-//   qWidget:oWidget:setLayout( QT_PTROF( ::qLeftLayout ) )
-   ::qMidArea    := QWidget():new()
-   ::qMidArea:setLayout( QT_PTROF( ::qMidLayout ) )
-
-   ::qLeftLayout:addWidget_1( QT_PTROFXBP( ::oProjTree ), 0, 0, 1, 1 )
-   ::qLeftLayout:addWidget_1( QT_PTROFXBP( qWidget ), 1, 0, 1, 1 )
-
-   ::qMidLayout:addWidget_1( QT_PTROFXBP( ::oDa:oTabWidget ), 0, 0, 1, 1 )
-
-   ::qSplitter := QSplitter():new( QT_PTROF( ::oDa:oWidget ) )
-
-   ::qSplitter:addWidget( QT_PTROF( ::qLeftArea   ) )
-   ::qSplitter:addWidget( QT_PTROF( ::qMidArea    ) )
-
-   ::qSplitter:show()
-
-#else
    ::qLayout := QGridLayout():new()
    ::qLayout:setContentsMargins( 0,0,0,0 )
    ::qLayout:setHorizontalSpacing( 0 )
@@ -319,7 +292,6 @@ METHOD HbIde:create( cProjIni )
    ::qSplitter:addWidget( QT_PTROFXBP( ::oDa:oTabWidget ) )
 
    ::qSplitter:show()
-#endif
 
    ::qCursor := QTextCursor():new()
 
@@ -381,13 +353,22 @@ METHOD HbIde:create( cProjIni )
       ::oXbp:handleEvent( ::nEvent, ::mp1, ::mp2 )
    ENDDO
 
-   HBXBP_DEBUG( "EXITING.................." )
-
    /* Very important - destroy resources */
+   HBXBP_DEBUG( "Before", "::oDlg:destroy()" )
    ::oDlg:destroy()
+   HBXBP_DEBUG( "After", "::oDlg:destroy()" )
+
+   ::qCursor:pPtr := 0
+   ::oFont        := NIL
 
    HBXBP_DEBUG( "EXITING after destroy .................." )
 
+   /*  A NOTE:
+
+       ::qSplitter and ::qLayout are released automatically
+       when ~MainWindow() is called and GC engine reports it as relaesed.
+       This is a good testimony that all the memory is recaptured properly.
+   */
    RETURN self
 
 /*----------------------------------------------------------------------*/
@@ -419,7 +400,8 @@ METHOD HbIde:saveConfig()
    aadd( txt_, "[FILES]" )
    FOR n := 1 TO nTabs
       pTab      := ::qTabWidget:widget( n-1 )
-      nTab      := ascan( ::aTabs, {|e_| HBQT_QTPTR_FROM_GCPOINTER( QT_PTROFXBP( e_[ 1 ] ) ) == pTab } )
+      //nTab      := ascan( ::aTabs, {|e_| HBQT_QTPTR_FROM_GCPOINTER( QT_PTROFXBP( e_[ 1 ] ) ) == pTab } )
+      nTab      := ascan( ::aTabs, {|e_| IsEqualGcQtPointer( QT_PTROFXBP( e_[ 1 ] ), pTab ) } )
       qEdit     := ::aTabs[ nTab, 2 ]
       qHScr     := QScrollBar():configure( qEdit:horizontalScrollBar() )
       qVScr     := QScrollBar():configure( qEdit:verticalScrollBar() )
@@ -870,7 +852,7 @@ METHOD HbIde:getCurrentTab()
    LOCAL qTab, nTab
 
    qTab := ::qTabWidget:currentWidget()
-   nTab := ascan( ::aTabs, {|e_| HBQT_QTPTR_FROM_GCPOINTER( e_[ 1 ]:oWidget:pPtr ) == qTab } )
+   nTab := ascan( ::aTabs, {|e_| IsEqualGcQtPointer( e_[ 1 ]:oWidget:pPtr, qTab ) } )
 
    RETURN nTab
 
@@ -1702,15 +1684,15 @@ METHOD HbIde:fetchProjectProperties()
 
       qPrpDlg:exec()
 
+      Qt_DisConnect_Signal( QT_PTROF( oTabWidget ), "currentChanged(int)" )
+
       oPBOk:destroy()
       oPBSv:destroy()
       oPBCn:destroy()
       oPBSelect:destroy()
 
-      Qt_DisConnect_Signal( QT_PTROF( oTabWidget ), "currentChanged(int)" )
+      ::aPrpObjs := {}
    ENDIF
-
-   ::aPrpObjs := {}
 
    RETURN Self
 

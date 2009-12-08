@@ -1120,50 +1120,8 @@ HB_FUNC( QT_SLOTS_DESTROY )
    qt_getEventSlots()->~Slots();
 }
 
-
-/*
- * harbour function to release all codeblocks stored
- */
-HB_FUNC( RELEASE_CODEBLOCKS )
-{
-   Slots * s_s = qt_getEventSlots();
-
-   if( s_s )
-   {
-      for( int i = 0; i < s_s->listBlock.size(); ++i )
-      {
-         if( s_s->listBlock.at( i ) )
-         {
-            hb_itemRelease( s_s->listBlock.at( i ) );
-            s_s->listBlock[ i ] = NULL;
-         }
-      }
-   }
-}
-
-/*
- * C function to release all codeblocks storeds
- * called at end of the program
- * see qapplication.cpp
- */
-void release_codeblocks( void )
-{
-   Slots * s_s = qt_getEventSlots();
-
-   if( s_s )
-   {
-      for( int i = 0; i < s_s->listBlock.size(); ++i )
-      {
-         if( s_s->listBlock.at( i ) )
-         {
-            hb_itemRelease( s_s->listBlock.at( i ) );
-            s_s->listBlock[ i ] = NULL;
-         }
-      }
-   }
-}
-
 /*----------------------------------------------------------------------*/
+
 Events::Events( QObject * parent ) : QObject( parent )
 {
 }
@@ -1313,7 +1271,6 @@ MyMainWindow::~MyMainWindow( void )
 hbqt_debug( "               MyMainWindow::~MyMainWindow 0" );
 #endif
    hb_itemRelease( block );
-   destroy();
 #if defined( __HB_DEBUG__ )
 hbqt_debug( "               MyMainWindow::~MyMainWindow 1" );
 #endif
