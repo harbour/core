@@ -1264,7 +1264,7 @@ HB_CALL_ON_STARTUP_BEGIN( _hb_sqlbase_init_ )
 HB_CALL_ON_STARTUP_END( _hb_sqlbase_init_ )
 
 #if defined( HB_PRAGMA_STARTUP )
-   #pragma startup sqlbase1__InitSymbols
+   #pragma startup sqlbase__InitSymbols
    #pragma startup _hb_sqlbase_init_
 #elif defined( HB_DATASEG_STARTUP )
    #define HB_DATASEG_BODY    HB_DATASEG_FUNC( sqlbase__InitSymbols ) \
