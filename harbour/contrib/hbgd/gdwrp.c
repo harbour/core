@@ -384,10 +384,8 @@ static void GDImageCreateFrom( int nType )
    }
    else
    {
-
-      /* Parameter error */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-         "GDIMAGECREATEFROM*", 2,
+         HB_ERR_FUNCNAME, 2,
          hb_paramError( 1 ), hb_paramError( 2 ) );
       return;
    }
@@ -447,7 +445,7 @@ static void GDImageSaveTo( int nType )
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0,
             "Second argument must be NIL or numeric or a string.",
-            "GDIMAGE* (Save functions)", 2,
+            HB_ERR_FUNCNAME, 2,
             hb_paramError( 2 ) );
          return;
       }
@@ -459,7 +457,7 @@ static void GDImageSaveTo( int nType )
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0,
             "Tirdh argument must be NIL or numeric.",
-            "GDIMAGE* (Save functions)", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 3 ) );
          return;
       }
@@ -472,7 +470,7 @@ static void GDImageSaveTo( int nType )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 0,
                "Compression level must be -1 (default) or a value between 0 and 95.",
-               "GDIMAGEJPEG (Save functions)", 1,
+               HB_ERR_FUNCNAME, 1,
                hb_paramError( 3 ) );
             return;
          }
@@ -485,7 +483,7 @@ static void GDImageSaveTo( int nType )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 0,
                "Compression level must be -1 (default) or a value between 0 and 9.",
-               "GDIMAGEPNG (Save functions)", 1,
+               HB_ERR_FUNCNAME, 1,
                hb_paramError( 3 ) );
             return;
          }
@@ -496,7 +494,7 @@ static void GDImageSaveTo( int nType )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 0,
                "Foreground color nedeed",
-               "GDIMAGEWBMP (Save functions)", 1,
+               HB_ERR_FUNCNAME, 1,
                hb_paramError( 3 ) );
             return;
          }
@@ -556,12 +554,9 @@ static void GDImageSaveTo( int nType )
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "GDIMAGE* (save functions)", 1,
-            hb_paramError( 1 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 1,
+         hb_paramError( 1 ) );
    }
 }
 
@@ -618,12 +613,9 @@ HB_FUNC( GDIMAGECREATE ) /* gdImagePtr gdImageCreate(sx, sy) */
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 2,
-            hb_paramError( 1 ), hb_paramError( 2 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 2,
+         hb_paramError( 1 ), hb_paramError( 2 ) );
    }
 }
 
@@ -659,12 +651,9 @@ HB_FUNC( GDIMAGECREATETRUECOLOR ) /* gdImageCreateTrueColor(sx, sy) */
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 2,
-            hb_paramError( 1 ), hb_paramError( 2 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 2,
+         hb_paramError( 1 ), hb_paramError( 2 ) );
    }
 }
 
@@ -785,12 +774,9 @@ HB_FUNC( GDIMAGEDESTROY ) /* gdImageDestroy(gdImagePtr im) */
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 1,
-            hb_paramError( 1 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 1,
+         hb_paramError( 1 ) );
    }
 
 }
@@ -830,12 +816,9 @@ HB_FUNC( GDIMAGESETPIXEL ) /* void gdImageSetPixel(gdImagePtr im, int x, int y, 
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 4,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 4,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
    }
 }
 
@@ -874,13 +857,10 @@ HB_FUNC( GDIMAGELINE ) /* void gdImageLine(gdImagePtr im, int x1, int y1, int x2
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 6,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ), hb_paramError( 6 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 6,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ), hb_paramError( 6 ) );
    }
 }
 
@@ -919,13 +899,10 @@ HB_FUNC( GDIMAGEDASHEDLINE ) /* void gdImageDashedLine(gdImagePtr im, int x1, in
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 6,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ), hb_paramError( 6 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 6,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ), hb_paramError( 6 ) );
    }
 }
 
@@ -976,12 +953,9 @@ HB_FUNC( GDIMAGEPOLYGON ) /* original: void gdImagePolygon(gdImagePtr im, gdPoin
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 3,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 3,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
    }
 }
 
@@ -1032,12 +1006,9 @@ HB_FUNC( GDIMAGEOPENPOLYGON ) /* original: void gdImageOpenPolygon(gdImagePtr im
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 3,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 3,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
    }
 }
 #endif /* ( GD_VERS >= 2033 ) */
@@ -1077,13 +1048,10 @@ HB_FUNC( GDIMAGERECTANGLE ) /* void gdImageRectangle(gdImagePtr im, int x1, int 
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 6,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ), hb_paramError( 6 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 6,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ), hb_paramError( 6 ) );
    }
 }
 
@@ -1134,12 +1102,9 @@ HB_FUNC( GDIMAGEFILLEDPOLYGON ) /* original: void gdImageFilledPolygon(gdImagePt
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 3,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 3,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
    }
 }
 
@@ -1178,13 +1143,10 @@ HB_FUNC( GDIMAGEFILLEDRECTANGLE ) /* void gdImageFilledRectangle(gdImagePtr im, 
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 6,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ), hb_paramError( 6 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 6,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ), hb_paramError( 6 ) );
    }
 }
 
@@ -1226,13 +1188,10 @@ HB_FUNC( GDIMAGEARC ) /* void gdImageArc(gdImagePtr im, int cx, int cy, int w, i
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 8,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 8,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ) );
    }
 }
 
@@ -1278,14 +1237,11 @@ HB_FUNC( GDIMAGEFILLEDARC ) /* void gdImageFilledArc(gdImagePtr im, int cx, int 
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 9,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
-            hb_paramError( 9 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 9,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
+         hb_paramError( 9 ) );
    }
 }
 
@@ -1323,13 +1279,10 @@ HB_FUNC( GDIMAGEFILLEDELLIPSE ) /* void gdImageFilledEllipse(gdImagePtr im, int 
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 6,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ), hb_paramError( 6 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 6,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ), hb_paramError( 6 ) );
    }
 }
 
@@ -1365,13 +1318,10 @@ HB_FUNC( GDIMAGEFILLTOBORDER ) /* void gdImageFillToBorder(gdImagePtr im, int x,
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 5,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 5,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ) );
    }
 }
 
@@ -1411,13 +1361,10 @@ HB_FUNC( GDIMAGEELLIPSE ) /* void gdImageEllipse(gdImagePtr im, int cx, int cy, 
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 6,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ), hb_paramError( 6 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 6,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ), hb_paramError( 6 ) );
    }
 }
 #endif /* ( GD_VERS >= 2035 ) */
@@ -1452,12 +1399,9 @@ HB_FUNC( GDIMAGEFILL ) /* void gdImageFill(gdImagePtr im, int x, int y, int colo
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 4,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 4,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
    }
 }
 
@@ -1485,12 +1429,9 @@ HB_FUNC( GDIMAGESETANTIALIASED ) /* void gdImageSetAntiAliased(gdImagePtr im, in
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 2,
-            hb_paramError( 1 ), hb_paramError( 2 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 2,
+         hb_paramError( 1 ), hb_paramError( 2 ) );
    }
 }
 
@@ -1523,12 +1464,9 @@ HB_FUNC( GDIMAGESETANTIALIASEDDONTBLEND ) /* void gdImageSetAntiAliasedDontBlend
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 3,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 3,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
    }
 }
 
@@ -1556,12 +1494,9 @@ HB_FUNC( GDIMAGESETBRUSH ) /* void gdImageSetBrush(gdImagePtr im, gdImagePtr bru
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 2,
-            hb_paramError( 1 ), hb_paramError( 2 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 2,
+         hb_paramError( 1 ), hb_paramError( 2 ) );
    }
 }
 
@@ -1589,12 +1524,9 @@ HB_FUNC( GDIMAGESETTILE ) /* void gdImageSetTile(gdImagePtr im, gdImagePtr tile)
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 2,
-            hb_paramError( 1 ), hb_paramError( 2 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 2,
+         hb_paramError( 1 ), hb_paramError( 2 ) );
    }
 }
 
@@ -1633,12 +1565,9 @@ HB_FUNC( GDIMAGESETSTYLE ) /* original: void gdImageSetStyle(gdImagePtr im, int 
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 2,
-            hb_paramError( 1 ), hb_paramError( 2 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 2,
+         hb_paramError( 1 ), hb_paramError( 2 ) );
    }
 }
 
@@ -1673,12 +1602,9 @@ HB_FUNC( GDIMAGESETTHICKNESS ) /* void gdImageSetThickness(gdImagePtr im, int th
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 2,
-            hb_paramError( 1 ), hb_paramError( 2 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 2,
+         hb_paramError( 1 ), hb_paramError( 2 ) );
    }
 }
 
@@ -1706,12 +1632,9 @@ HB_FUNC( GDIMAGEALPHABLENDING ) /* void gdImageAlphaBlending(gdImagePtr im, int 
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 2,
-            hb_paramError( 1 ), hb_paramError( 2 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 2,
+         hb_paramError( 1 ), hb_paramError( 2 ) );
    }
 }
 
@@ -1739,12 +1662,9 @@ HB_FUNC( GDIMAGESAVEALPHA ) /* void gdImageSaveAlpha(gdImagePtr im, int saveFlag
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 2,
-            hb_paramError( 1 ), hb_paramError( 2 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 2,
+         hb_paramError( 1 ), hb_paramError( 2 ) );
    }
 }
 
@@ -1778,13 +1698,10 @@ HB_FUNC( GDIMAGESETCLIP ) /* void gdImageSetClip(gdImagePtr im, int x1, int y1, 
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 5,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 5,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ) );
    }
 }
 
@@ -1820,12 +1737,9 @@ HB_FUNC( GDIMAGEGETCLIP ) /* original: void gdImageGetClip(gdImagePtr im, int *x
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 1,
-            hb_paramError( 1 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 1,
+         hb_paramError( 1 ) );
    }
 }
 
@@ -1853,12 +1767,9 @@ HB_FUNC( GDIMAGECOLORSTOTAL ) /* int gdImageColorsTotal(gdImagePtr im) */
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 1,
-            hb_paramError( 1 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 1,
+         hb_paramError( 1 ) );
    }
 }
 
@@ -1886,12 +1797,9 @@ HB_FUNC( GDIMAGEALPHA ) /* int gdImageAlpha(gdImagePtr im, int color) */
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 2,
-            hb_paramError( 1 ), hb_paramError( 2 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 2,
+         hb_paramError( 1 ), hb_paramError( 2 ) );
    }
 }
 
@@ -1919,12 +1827,9 @@ HB_FUNC( GDIMAGERED ) /* int gdImageRed(gdImagePtr im, int color) */
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 2,
-            hb_paramError( 1 ), hb_paramError( 2 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 2,
+         hb_paramError( 1 ), hb_paramError( 2 ) );
    }
 }
 
@@ -1952,12 +1857,9 @@ HB_FUNC( GDIMAGEGREEN ) /* int gdImageGreen(gdImagePtr im, int color) */
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 2,
-            hb_paramError( 1 ), hb_paramError( 2 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 2,
+         hb_paramError( 1 ), hb_paramError( 2 ) );
    }
 }
 
@@ -1985,12 +1887,9 @@ HB_FUNC( GDIMAGEBLUE ) /* int gdImageBlue(gdImagePtr im, int color) */
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 2,
-            hb_paramError( 1 ), hb_paramError( 2 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 2,
+         hb_paramError( 1 ), hb_paramError( 2 ) );
    }
 }
 
@@ -2013,12 +1912,9 @@ HB_FUNC( GDIMAGESX ) /* int gdImageSX(gdImagePtr im) */
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 1,
-            hb_paramError( 1 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 1,
+         hb_paramError( 1 ) );
    }
 }
 
@@ -2041,12 +1937,9 @@ HB_FUNC( GDIMAGESY ) /* int gdImageSX(gdImagePtr im) */
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 1,
-            hb_paramError( 1 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 1,
+         hb_paramError( 1 ) );
    }
 }
 
@@ -2076,12 +1969,9 @@ HB_FUNC( GDIMAGEGETPIXEL ) /* int gdImageGetPixel(gdImagePtr im, int x, int y) *
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 3,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 3,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
    }
 }
 
@@ -2111,12 +2001,9 @@ HB_FUNC( GDIMAGEBOUNDSSAFE ) /* int gdImageBoundsSafe(gdImagePtr im, int x, int 
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 3,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 3,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
    }
 }
 
@@ -2139,12 +2026,9 @@ HB_FUNC( GDIMAGEGETINTERLACED ) /* int gdImageGetInterlaced(gdImagePtr im) */
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 3,
-            hb_paramError( 1 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 3,
+         hb_paramError( 1 ) );
    }
 }
 
@@ -2167,12 +2051,9 @@ HB_FUNC( GDIMAGEGETTRANSPARENT ) /* int gdImageGetTransparent(gdImagePtr im) */
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 1,
-            hb_paramError( 1 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 1,
+         hb_paramError( 1 ) );
    }
 }
 
@@ -2195,12 +2076,9 @@ HB_FUNC( GDIMAGETRUECOLOR ) /* int gdImageTrueColor(gdImagePtr im) */
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 1,
-            hb_paramError( 1 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 1,
+         hb_paramError( 1 ) );
    }
 }
 
@@ -2232,12 +2110,9 @@ HB_FUNC( GDIMAGETRUECOLORTOPALETTE ) /* void gdImageTrueColorToPalette (gdImageP
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 3,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 3,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
    }
 }
 
@@ -2273,12 +2148,9 @@ HB_FUNC( GDIMAGECREATEPALETTEFROMTRUECOLOR ) /* gdImagePtr gdImageCreatePaletteF
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 3,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 3,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
    }
 }
 
@@ -2308,12 +2180,9 @@ HB_FUNC( GDIMAGEPALETTEPIXEL ) /* int gdImagePalettePixel(gdImagePtr im, int x, 
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 3,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 3,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
    }
 }
 
@@ -2343,12 +2212,9 @@ HB_FUNC( GDIMAGETRUECOLORPIXEL ) /* int gdImageTrueColorPixel(gdImagePtr im, int
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 3,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 3,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
    }
 }
 
@@ -2371,12 +2237,9 @@ HB_FUNC( GDIMAGEGETTHICKNESS ) /* void gdImageGetThickness(gdImagePtr im) */
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 1,
-            hb_paramError( 1 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 1,
+         hb_paramError( 1 ) );
    }
 }
 
@@ -2503,13 +2366,10 @@ HB_FUNC( GDIMAGESTRING ) /* void gdImageChar(gdImagePtr im, gdFontPtr font, int 
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 6,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ), hb_paramError( 6 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 6,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ), hb_paramError( 6 ) );
    }
 }
 
@@ -2562,13 +2422,10 @@ HB_FUNC( GDIMAGESTRINGUP ) /* void gdImageCharUp(gdImagePtr im, gdFontPtr font, 
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 6,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ), hb_paramError( 6 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 6,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ), hb_paramError( 6 ) );
    }
 }
 
@@ -2699,14 +2556,11 @@ HB_FUNC( GDIMAGESTRINGFTEX )
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 12,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
-            hb_paramError( 9 ), hb_paramError( 10 ), hb_paramError( 11 ), hb_paramError( 12 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 12,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
+         hb_paramError( 9 ), hb_paramError( 10 ), hb_paramError( 11 ), hb_paramError( 12 ) );
    }
 }
 
@@ -2777,14 +2631,11 @@ HB_FUNC( GDIMAGESTRINGFTCIRCLE ) /* char *gdImageStringFTCircle(gdImagePtr im, i
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 11,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
-            hb_paramError( 9 ), hb_paramError( 10 ), hb_paramError( 11 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 11,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
+         hb_paramError( 9 ), hb_paramError( 10 ), hb_paramError( 11 ) );
    }
 }
 
@@ -2823,12 +2674,9 @@ HB_FUNC( GDFONTGETWIDTH )
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 1,
-            hb_paramError( 1 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 1,
+         hb_paramError( 1 ) );
    }
 }
 
@@ -2851,12 +2699,9 @@ HB_FUNC( GDFONTGETHEIGHT )
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 1,
-            hb_paramError( 1 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 1,
+         hb_paramError( 1 ) );
    }
 }
 
@@ -2896,12 +2741,9 @@ HB_FUNC( GDIMAGECOLORALLOCATE ) /* int gdImageColorAllocate(gdImagePtr im, int r
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 4,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 4,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
    }
 }
 
@@ -2929,12 +2771,9 @@ HB_FUNC( GDIMAGECOLORDEALLOCATE ) /* void gdImageColorDeallocate(gdImagePtr im, 
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 2,
-            hb_paramError( 1 ), hb_paramError( 2 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 2,
+         hb_paramError( 1 ), hb_paramError( 2 ) );
    }
 }
 
@@ -2975,13 +2814,10 @@ HB_FUNC( GDIMAGECOLORALLOCATEALPHA ) /* int gdImageColorAllocateAlpha(gdImagePtr
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 5,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 5,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ) );
    }
 }
 
@@ -3017,12 +2853,9 @@ HB_FUNC( GDIMAGECOLORCLOSEST ) /* int gdImageColorClosest(gdImagePtr im, int r, 
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 4,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 4,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
    }
 }
 
@@ -3063,13 +2896,10 @@ HB_FUNC( GDIMAGECOLORCLOSESTALPHA ) /* int gdImageColorClosestAlpha(gdImagePtr i
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 5,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 5,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ) );
    }
 }
 
@@ -3105,12 +2935,9 @@ HB_FUNC( GDIMAGECOLORCLOSESTHWB ) /*  gdImageColorClosestHWB(gdImagePtr im, int 
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 4,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 4,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
    }
 }
 
@@ -3146,12 +2973,9 @@ HB_FUNC( GDIMAGECOLOREXACT ) /* int gdImageColorExact(gdImagePtr im, int r, int 
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 4,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 4,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
    }
 }
 
@@ -3187,12 +3011,9 @@ HB_FUNC( GDIMAGECOLORRESOLVE ) /* int gdImageColorResolve(gdImagePtr im, int r, 
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 4,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 4,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
    }
 }
 
@@ -3233,13 +3054,10 @@ HB_FUNC( GDIMAGECOLORRESOLVEALPHA ) /* int gdImageColorResolveAlpha(gdImagePtr i
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 5,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 5,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ) );
    }
 }
 
@@ -3267,12 +3085,9 @@ HB_FUNC( GDIMAGECOLORTRANSPARENT ) /* void gdImageColorTransparent(gdImagePtr im
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 2,
-            hb_paramError( 1 ), hb_paramError( 2 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 2,
+         hb_paramError( 1 ), hb_paramError( 2 ) );
    }
 }
 
@@ -3303,12 +3118,9 @@ HB_FUNC( GDTRUECOLOR ) /* int gdTrueColor(int red, int green, int blue) */
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 3,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 3,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
    }
 }
 
@@ -3341,12 +3153,9 @@ HB_FUNC( GDTRUECOLORALPHA ) /* int gdTrueColorAlpha(int red, int green, int blue
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 4,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 4,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
    }
 }
 
@@ -3397,13 +3206,10 @@ HB_FUNC( GDIMAGECOPY ) /* void gdImageCopy(gdImagePtr dst, gdImagePtr src, int d
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 8,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 8,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ) );
    }
 }
 
@@ -3459,14 +3265,11 @@ HB_FUNC( GDIMAGECOPYRESIZED ) /* void gdImageCopyResized(gdImagePtr dst, gdImage
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 10,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
-            hb_paramError( 9 ), hb_paramError( 10 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 10,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
+         hb_paramError( 9 ), hb_paramError( 10 ) );
    }
 }
 
@@ -3522,14 +3325,11 @@ HB_FUNC( GDIMAGECOPYRESAMPLED ) /* void gdImageCopyResampled(gdImagePtr dst, gdI
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 10,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
-            hb_paramError( 9 ), hb_paramError( 10 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 10,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
+         hb_paramError( 9 ), hb_paramError( 10 ) );
    }
 }
 
@@ -3581,14 +3381,11 @@ HB_FUNC( GDIMAGECOPYROTATED ) /* void gdImageCopyRotated(gdImagePtr dst, gdImage
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 9,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
-            hb_paramError( 9 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 9,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
+         hb_paramError( 9 ) );
    }
 }
 
@@ -3639,14 +3436,11 @@ HB_FUNC( GDIMAGECOPYMERGE ) /* void gdImageCopyMerge(gdImagePtr dst, gdImagePtr 
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 9,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
-            hb_paramError( 9 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 9,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
+         hb_paramError( 9 ) );
    }
 }
 
@@ -3697,14 +3491,11 @@ HB_FUNC( GDIMAGECOPYMERGEGRAY ) /* void gdImageCopyMergeGray(gdImagePtr dst, gdI
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 9,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
-            hb_paramError( 9 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 9,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
+         hb_paramError( 9 ) );
    }
 }
 
@@ -3730,12 +3521,9 @@ HB_FUNC( GDIMAGEPALETTECOPY ) /* void gdImagePaletteCopy(gdImagePtr dst, gdImage
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 2,
-            hb_paramError( 1 ), hb_paramError( 2 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 2,
+         hb_paramError( 1 ), hb_paramError( 2 ) );
    }
 }
 
@@ -3763,12 +3551,9 @@ HB_FUNC( GDIMAGESQUARETOCIRCLE ) /* void gdImageSquareToCircle(gdImagePtr im, in
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 2,
-            hb_paramError( 1 ), hb_paramError( 2 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 2,
+         hb_paramError( 1 ), hb_paramError( 2 ) );
    }
 }
 
@@ -3795,12 +3580,9 @@ HB_FUNC( GDIMAGESHARPEN ) /* void gdImageSharpen(gdImagePtr im, int pct) */
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 2,
-            hb_paramError( 1 ), hb_paramError( 2 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 2,
+         hb_paramError( 1 ), hb_paramError( 2 ) );
    }
 }
 
@@ -3830,12 +3612,9 @@ HB_FUNC( GDIMAGECOMPARE ) /* int gdImageCompare(gdImagePtr im1, gdImagePtr im2) 
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 2,
-            hb_paramError( 1 ), hb_paramError( 2 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 2,
+         hb_paramError( 1 ), hb_paramError( 2 ) );
    }
 }
 
@@ -3863,12 +3642,9 @@ HB_FUNC( GDIMAGEINTERLACE ) /* void gdImageInterlace(gdImagePtr im, int interlac
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 2,
-            hb_paramError( 1 ), hb_paramError( 2 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 2,
+         hb_paramError( 1 ), hb_paramError( 2 ) );
    }
 }
 
@@ -3940,12 +3716,9 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 3,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 3,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
    }
 }
 
@@ -4005,14 +3778,10 @@ HB_FUNC( GDIMAGEGIFANIMADD )
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 8,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 )
-         );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 8,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+         hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ) );
    }
 }
 
@@ -4053,13 +3822,9 @@ HB_FUNC( GDIMAGEGIFANIMEND )
    }
    else
    {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 1,
-            hb_paramError( 1 )
-         );
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 1,
+         hb_paramError( 1 ) );
    }
 }
 
