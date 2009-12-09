@@ -67,7 +67,7 @@ static void hb_errRT_OLE( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, HB_ERRCO
    pError = hb_errRT_New( ES_ERROR, "WINOLE", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
 
    if( hb_pcount() != 0 )
-   { 
+   {
       /* HB_ERR_ARGS_BASEPARAMS */
       PHB_ITEM  pArray = hb_arrayBaseParams();
       hb_errPutArgsArray( pError, pArray );
@@ -112,7 +112,7 @@ HB_BOOL hb_oleAxInit( void )
 
       hb_vmAtQuit( hb_oleAxExit, NULL );
    }
-   return TRUE;
+   return HB_TRUE;
 }
 
 

@@ -111,7 +111,7 @@ HB_FUNC( WIN_RUNDETACHED )
 #endif
       )
    {
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
 
 #if ! defined( HB_OS_WIN_CE )
       hb_stornl( pi.dwProcessId, 3 );
@@ -124,7 +124,7 @@ HB_FUNC( WIN_RUNDETACHED )
    else
    {
       hb_stornl( -1, 3 );
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
    }
 
    if( lpCommandName ) HB_TCHAR_FREE( lpCommandName );

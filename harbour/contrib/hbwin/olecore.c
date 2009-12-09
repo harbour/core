@@ -181,7 +181,7 @@ static void hb_errRT_OLE( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, HB_ERRCO
    pError = hb_errRT_New( ES_ERROR, "WINOLE", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
 
    if( hb_pcount() != 0 )
-   { 
+   {
       /* HB_ERR_ARGS_BASEPARAMS */
       PHB_ITEM  pArray = hb_arrayBaseParams();
       hb_errPutArgsArray( pError, pArray );
@@ -656,11 +656,11 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
          break;
 
       case VT_BOOL:
-         hb_itemPutL( pItem, pVariant->n1.n2.n3.boolVal ? TRUE : FALSE );
+         hb_itemPutL( pItem, pVariant->n1.n2.n3.boolVal ? HB_TRUE : HB_FALSE );
          break;
 
       case VT_BOOL | VT_BYREF:
-         hb_itemPutL( pItem, *pVariant->n1.n2.n3.pboolVal ? TRUE : FALSE );
+         hb_itemPutL( pItem, *pVariant->n1.n2.n3.pboolVal ? HB_TRUE : HB_FALSE );
          break;
 
       case VT_I1:
@@ -1281,10 +1281,10 @@ HB_FUNC( __OLEENUMNEXT )
    {
       hb_oleVariantToItem( hb_stackReturnItem(), &variant );
       VariantClear( &variant );
-      hb_storl( TRUE, 2 );
+      hb_storl( HB_TRUE, 2 );
    }
    else
-      hb_storl( FALSE, 2 );
+      hb_storl( HB_FALSE, 2 );
 }
 
 

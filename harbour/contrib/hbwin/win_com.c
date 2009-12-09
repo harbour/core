@@ -290,18 +290,18 @@ HB_FUNC( WIN_COMSTATUS )
          hb_storl( ( dwModemStat & MS_RING_ON ) != 0, 4 );     /* The ring indicator signal is on. */
          hb_storl( ( dwModemStat & MS_RLSD_ON ) != 0, 5 );     /* The RLSD (receive-line-signal-detect) signal is on. Also is DCD. */
 
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
       }
       else
       {
          s_PortData[ iPort ].dwError = GetLastError();
 
-         hb_storl( FALSE, 2 );
-         hb_storl( FALSE, 3 );
-         hb_storl( FALSE, 4 );
-         hb_storl( FALSE, 5 );
+         hb_storl( HB_FALSE, 2 );
+         hb_storl( HB_FALSE, 3 );
+         hb_storl( HB_FALSE, 4 );
+         hb_storl( HB_FALSE, 5 );
 
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
       }
    }
    else
@@ -321,11 +321,11 @@ HB_FUNC( WIN_COMPURGE )
       s_PortData[ iPort ].iFunction = WIN_COM_FUN_PURGECOMM;
       s_PortData[ iPort ].dwError = 0;
       if( PurgeComm( hCommPort, dwFlags ) )
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
       else
       {
          s_PortData[ iPort ].dwError = GetLastError();
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
       }
    }
    else
@@ -354,21 +354,21 @@ HB_FUNC( WIN_COMQUEUESTATUS )
          hb_stornl( ComStat.cbInQue, 7 );
          hb_stornl( ComStat.cbOutQue, 8 ); /* This value will be zero for a nonoverlapped write */
 
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
       }
       else
       {
          s_PortData[ iPort ].dwError = GetLastError();
 
-         hb_storl( FALSE, 2 );
-         hb_storl( FALSE, 3 );
-         hb_storl( FALSE, 4 );
-         hb_storl( FALSE, 5 );
-         hb_storl( FALSE, 6 );
+         hb_storl( HB_FALSE, 2 );
+         hb_storl( HB_FALSE, 3 );
+         hb_storl( HB_FALSE, 4 );
+         hb_storl( HB_FALSE, 5 );
+         hb_storl( HB_FALSE, 6 );
          hb_stornl( 0, 7 );
          hb_stornl( 0, 8 );
 
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
       }
    }
    else
@@ -390,11 +390,11 @@ HB_FUNC( WIN_COMSETRTS )
       s_PortData[ iPort ].iFunction = WIN_COM_FUN_ESCAPECOMMFUNCTION;
       s_PortData[ iPort ].dwError = 0;
       if( EscapeCommFunction( hCommPort, dwFunc ) )
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
       else
       {
          s_PortData[ iPort ].dwError = GetLastError();
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
       }
    }
    else
@@ -416,11 +416,11 @@ HB_FUNC( WIN_COMSETDTR )
       s_PortData[ iPort ].iFunction = WIN_COM_FUN_ESCAPECOMMFUNCTION;
       s_PortData[ iPort ].dwError = 0;
       if( EscapeCommFunction( hCommPort, dwFunc ) )
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
       else
       {
          s_PortData[ iPort ].dwError = GetLastError();
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
       }
    }
    else
@@ -443,7 +443,7 @@ HB_FUNC( WIN_COMRTSFLOW )
       if( ! GetCommState( hCommPort, &CurDCB ) )
       {
          s_PortData[ iPort ].dwError = GetLastError();
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
          return;
       }
 
@@ -464,7 +464,7 @@ HB_FUNC( WIN_COMRTSFLOW )
       }
       else    /* RTS_CONTROL_TOGGLE - RS485? */
       {
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
          return;
       }
 
@@ -473,10 +473,10 @@ HB_FUNC( WIN_COMRTSFLOW )
       if( ! SetCommState( hCommPort, &CurDCB ) )
       {
          s_PortData[ iPort ].dwError = GetLastError();
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
       }
       else
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -498,7 +498,7 @@ HB_FUNC( WIN_COMDTRFLOW )
       if( ! GetCommState( hCommPort, &CurDCB ) )
       {
          s_PortData[ iPort ].dwError = GetLastError();
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
          return;
       }
 
@@ -519,7 +519,7 @@ HB_FUNC( WIN_COMDTRFLOW )
       }
       else
       {
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
          return;
       }
 
@@ -528,10 +528,10 @@ HB_FUNC( WIN_COMDTRFLOW )
       if( ! SetCommState( hCommPort, &CurDCB ) )
       {
          s_PortData[ iPort ].dwError = GetLastError();
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
       }
       else
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -552,7 +552,7 @@ HB_FUNC( WIN_COMXONXOFFFLOW )
       if( ! GetCommState( hCommPort, &CurDCB ) )
       {
          s_PortData[ iPort ].dwError = GetLastError();
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
          return;
       }
 
@@ -572,10 +572,10 @@ HB_FUNC( WIN_COMXONXOFFFLOW )
       if( ! SetCommState( hCommPort, &CurDCB ) )
       {
          s_PortData[ iPort ].dwError = GetLastError();
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
       }
       else
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -657,7 +657,7 @@ HB_FUNC( WIN_COMSETTIMEOUTS )
       if( ! GetCommState( hCommPort, &CurDCB ) )
       {
          s_PortData[ iPort ].dwError = GetLastError();
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
          return;
       }
 
@@ -666,10 +666,10 @@ HB_FUNC( WIN_COMSETTIMEOUTS )
       if( ! hb_win_ComSetTimeouts( hCommPort, &Timeouts, CurDCB.BaudRate, CurDCB.Parity, CurDCB.ByteSize, CurDCB.StopBits ) )
       {
          s_PortData[ iPort ].dwError = GetLastError();
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
       }
       else
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -687,10 +687,10 @@ HB_FUNC( WIN_COMSETQUEUESIZE )
       if( ! SetupComm( hCommPort, hb_parni( 2 ), hb_parni( 3 ) ) )
       {
          s_PortData[ iPort ].dwError = GetLastError();
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
       }
       else
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

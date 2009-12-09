@@ -98,8 +98,7 @@ static HB_TSD_NEW( s_slots, sizeof( HB_SLOTS ), NULL, NULL );
 
 static void qt_setEventFilter()
 {
-   Events * t_events = HB_GETQTEVENTFILTER()->t_events;
-   if( ! t_events )
+   if( ! HB_GETQTEVENTFILTER()->t_events )
       HB_GETQTEVENTFILTER()->t_events = new Events();
 }
 
@@ -110,8 +109,7 @@ static Events * qt_getEventFilter( void )
 
 static void qt_setEventSlots()
 {
-   Slots * t_slots = HB_GETQTEVENTSLOTS()->t_slots;
-   if( ! t_slots )
+   if( ! HB_GETQTEVENTSLOTS()->t_slots )
       HB_GETQTEVENTSLOTS()->t_slots = new Slots();
 }
 

@@ -203,13 +203,13 @@ HB_FUNC( WAPI_GETSCROLLRANGE )
          hb_storni( minPos, 3 );
          hb_storni( maxPos, 4 );
 
-         wapi_ret_L( TRUE );
+         wapi_ret_L( HB_TRUE );
          return;
       }
    }
 #endif
 
-   wapi_ret_L( FALSE );
+   wapi_ret_L( HB_FALSE );
 }
 /*----------------------------------------------------------------------*/
 #if 0
