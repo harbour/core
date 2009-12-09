@@ -255,14 +255,18 @@ HARBOUR
       > set HB_DIR_NSIS=%ProgramFiles%\NSIS\
       > set HB_DIR_ZIP=C:\info-zip\
       > set HB_BUILD_PKG=yes
-      (then run build as usual, see: HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE)
+
+      Then run build as usual with 'clean install' options.
+      See: HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
 
    Binary .zip on MS-DOS for all targets (except Linux)
    ----------------------------------------------------
 
       > set HB_DIR_ZIP=C:\info-zip\
       > set HB_BUILD_PKG=yes
-      (then run build as usual, see: HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE)
+
+      Then run build as usual with 'clean install' options.
+      See: HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
 
    Unified .7z + .exe installer for Windows
    ----------------------------------------
@@ -530,7 +534,7 @@ HARBOUR
                                non-*nix systems. On *nix systems the default
                                is set to /usr/local/ or $(PREFIX) if specified,
                                and /usr/local/harbour-<arch>-<comp> for
-                               cross-builds. It's always set to /pkg/<arch>/<comp>
+                               cross-builds. It's always set to ./pkg/<arch>/<comp>
                                when HB_BUILD_PKG is set to 'yes'.
                                Use absolute paths only. For a peace of mind,
                                avoid using spaces and quotes in the name.
@@ -832,15 +836,6 @@ HARBOUR
       set HB_WITH_QT=C:\Qt\include
       -->8--
 
-      --8<--
-      rem ; To create installation packages (.exe + .zip),
-      rem   add these lines before above sample scripts and
-      rem   pass 'clean install' to make:
-      set HB_DIR_NSIS=%ProgramFiles%\NSIS\
-      set HB_DIR_ZIP=C:\info-zip\
-      set HB_BUILD_PKG=yes
-      -->8--
-
    for Windows x64 (x86-64) hosts
    ------------------------------
 
@@ -900,14 +895,6 @@ HARBOUR
       set HB_WITH_MYSQL=C:\MYSQL-~1.67\include
       set HB_WITH_PGSQL=C:\PGSQL-~1.3\include
       set HB_WITH_WATT=C:\WATT\inc
-      -->8--
-
-      --8<--
-      rem ; To create installation packages (.zip),
-      rem   add these lines before above sample scripts and
-      rem   pass 'clean install' to make:
-      set HB_DIR_ZIP=C:\info-zip\
-      set HB_BUILD_PKG=yes
       -->8--
 
    for OS/2 hosts
