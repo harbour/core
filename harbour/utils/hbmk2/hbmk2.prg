@@ -2699,10 +2699,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       /* Watcom family */
       CASE hbmk[ _HBMK_cCOMP ] == "watcom"
 
-         IF hbmk[ _HBMK_lCPP ] == NIL
-            hbmk[ _HBMK_lCPP ] := .T.
-         ENDIF
-
          IF hbmk[ _HBMK_cPLAT ] == "win"
             nCmd_Esc := _ESC_DBLQUOTE
             nScr_Esc := _ESC_SGLQUOTE_WATCOM

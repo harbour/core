@@ -8,15 +8,10 @@ OBJ_EXT := .obj
 LIB_PREF :=
 LIB_EXT := .lib
 
-ifeq ($(HB_BUILD_MODE),c)
-   CC := wcc386
-endif
 ifeq ($(HB_BUILD_MODE),cpp)
    CC := wpp386
-endif
-# Build in C++ mode by default
-ifeq ($(HB_BUILD_MODE),)
-   CC := wpp386
+else
+   CC := wcc386
 endif
 CC_IN :=
 CC_OUT := -fo=
