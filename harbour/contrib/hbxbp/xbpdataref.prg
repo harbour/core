@@ -110,7 +110,10 @@ METHOD XbpDataRef:getData()
    LOCAL cClass := __ObjGetClsName( self )
 
    DO CASE
-   CASE cClass $ "XBPSLE,XBPMLE"
+   CASE cClass $ "XBPMLE"
+      ::sl_editBuffer := ::oWidget:toPlainText()
+
+   CASE cClass $ "XBPSLE"
       ::sl_editBuffer := ::oWidget:text()
 
    // CASE cClass $ "XBPCOMBOBOX"
@@ -171,9 +174,13 @@ METHOD XbpDataRef:setData( xValue, mp2 )
          //Win_TreeView_SelectItem( ::hWnd, ::sl_editBuffer:hItem )
       ENDIF
 
-   CASE cClass $ "XBPSLE,XBPMLE"
+   CASE cClass $ "XBPSLE"
       IF hb_isChar( ::sl_editBuffer )
          ::oWidget:setText( ::sl_editBuffer )
+      ENDIF
+   CASE cClass $ "XBPMLE"
+      IF hb_isChar( ::sl_editBuffer )
+         ::oWidget:setPlainText( ::sl_editBuffer )
       ENDIF
    #if 0
    CASE cClass $ "XBPCOMBOBOX"

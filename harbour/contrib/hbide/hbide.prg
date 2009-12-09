@@ -625,15 +625,15 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos )
    ::qCursor := QTextCursor():configure( qEdit:textCursor() )
    ::qCursor:setPosition( nPos )
    //
-   qHScr   := QScrollBar():configure( qEdit:horizontalScrollBar() )
+   qHScr := QScrollBar():configure( qEdit:horizontalScrollBar() )
    qHScr:setValue( nHPos )
    //
-   qVScr   := QScrollBar():configure( qEdit:verticalScrollBar() )
+   qVScr := QScrollBar():configure( qEdit:verticalScrollBar() )
    qVScr:setValue( nVPos )
 
    aadd( ::aTabs, { oTab, qEdit, qHiliter, qLayout, cSourceFile, qDocument } )
 
-   ::nCurTab  := len( ::aTabs )
+   ::nCurTab := len( ::aTabs )
 
    ::aSources := { cSourceFile }
    ::createTags()
@@ -1856,7 +1856,7 @@ METHOD HbIde:buildProject( cProject )
 
    hb_processRun( cCmd, , @cOutput, @cErrors )
 
-   ::oOutputResult:setData( cOutput + CRLF + CRLF + cErrors )
+   ::oOutputResult:oWidget:appendPlainText( cOutput + CRLF + IF( empty( cErrors ), "", cErrors ) )
 
    RETURN Self
 
@@ -1888,7 +1888,7 @@ METHOD HbIde:buildProjectViaQt( cProject )
    ::qProcess:setReadChannel( 0 )
 
    Qt_Connect_Signal( QT_PTROF( ::qProcess ), "readyReadStandardOutput()", {|o,i| ::readProcessInfo( 3, i, o ) } )
-   Qt_Connect_Signal( QT_PTROF( ::qProcess ), "finished(int,int)", {|o,i| ::readProcessInfo( 2, i, o ) } )
+   Qt_Connect_Signal( QT_PTROF( ::qProcess ), "finished(int,int)"        , {|o,i| ::readProcessInfo( 2, i, o ) } )
 
    ::qProcess:start( "hbmk2.exe", QT_PTROF( qStringList ) )
 
