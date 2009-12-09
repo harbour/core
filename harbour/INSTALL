@@ -438,7 +438,7 @@ HARBOUR
    -----
    gcc      - GNU C
    clang    - Clang compiler frontend
-   watcom   - Open Watcom C++
+   watcom   - Open Watcom C/C++
    icc      - Intel(R) C/C++
    sunpro   - Sun Studio C/C++
 
@@ -475,7 +475,7 @@ HARBOUR
 
    Also supported, some features may be missing:
 
-   watcom   - Open Watcom C++
+   watcom   - Open Watcom C/C++
    bcc      - Borland/CodeGear/Embarcadero C++ 4.x and above
    icc      - Intel(R) C/C++
    iccia64  - Intel(R) C/C++ IA-64 (Itanium)
@@ -494,13 +494,13 @@ HARBOUR
    dos
    ---
    djgpp    - Delorie GNU C
-   watcom   - Open Watcom C++
+   watcom   - Open Watcom C/C++
 
    os2
    ---
    gcc      - EMX GNU C 3.3.5 or lower
    gccomf   - EMX GNU C 3.3.5 or upper
-   watcom   - Open Watcom C++
+   watcom   - Open Watcom C/C++
 
 
 6. OPTIONS AVAILABLE WHEN BUILDING HARBOUR
@@ -780,7 +780,7 @@ HARBOUR
       mingw32-make
       ---
 
-      --- Open Watcom C++
+      --- Open Watcom C/C++
       SET WATCOM=C:\watcom
       SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
       SET EDPATH=%WATCOM%\EDDAT
@@ -788,7 +788,7 @@ HARBOUR
       mingw32-make
       ---
 
-      --- Open Watcom C++ for MS-DOS
+      --- Open Watcom C/C++ for MS-DOS
       SET WATCOM=C:\watcom
       SET PATH=%WATCOM%\BINNT;%PATH%
       SET EDPATH=%WATCOM%\EDDAT
@@ -796,7 +796,7 @@ HARBOUR
       mingw32-make
       ---
 
-      --- Open Watcom C++ for OS/2 (requires preceding build for Windows target)
+      --- Open Watcom C/C++ for OS/2 (requires preceding build for Windows target)
       SET WATCOM=C:\watcom
       SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
       SET BEGINLIBPATH=%WATCOM%\BINP\DLL
@@ -805,7 +805,7 @@ HARBOUR
       mingw32-make
       ---
 
-      --- Open Watcom C++ for Linux (requires preceding build for Windows target)
+      --- Open Watcom C/C++ for Linux (requires preceding build for Windows target)
       SET WATCOM=C:\watcom
       SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
       SET EDPATH=%WATCOM%\EDDAT
@@ -883,7 +883,7 @@ HARBOUR
       make
       ---
 
-      --- Open Watcom C++
+      --- Open Watcom C/C++
       SET WATCOM=C:\watcom
       SET PATH=%WATCOM%\BINW;%PATH%
       SET EDPATH=%WATCOM%\EDDAT
@@ -924,7 +924,7 @@ HARBOUR
       os2-make
       ---
 
-      --- Open Watcom C++
+      --- Open Watcom C/C++
       SET WATCOM=C:\watcom
       SET PATH=%WATCOM%\BINP;%WATCOM%\BINW;%PATH%
       SET BEGINLIBPATH=%WATCOM%\BINP\DLL
@@ -938,7 +938,7 @@ HARBOUR
    for Linux hosts
    ---------------
 
-      --- Open Watcom C++ for OS/2 (requires preceding build for Linux target)
+      --- Open Watcom C/C++ for OS/2 (requires preceding build for Linux target)
       export WATCOM="/opt/lng/watcom"
       export INCLUDE="${WATCOM}/h:${WATCOM}/h/os2"
       export PATH="${WATCOM}/binl:$PATH"
