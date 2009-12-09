@@ -70,7 +70,8 @@ HB_EXTERN_BEGIN
                                        }
 
 /* Macro to publish a specific language module, for both C and Harbour level */
-#define HB_LANG_ANNOUNCE( id )          HB_FUNC( HB_LANG_##id ) {}
+#define HB_LANG_ANNOUNCE( id )          HB_LANG_ANNOUNCE_( id )
+#define HB_LANG_ANNOUNCE_( id )         HB_FUNC( HB_LANG_##id ) {}
 
 typedef struct _HB_LANG
 {

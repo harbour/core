@@ -1254,10 +1254,10 @@ HB_FUNC( SQLBASE_GETFUNCTABLE )
 }
 
 
-HB_INIT_SYMBOLS_BEGIN( sqlbase1__InitSymbols )
+HB_INIT_SYMBOLS_BEGIN( sqlbase__InitSymbols )
 { "SQLBASE",              {HB_FS_PUBLIC}, {HB_FUNCNAME( SQLBASE )}, NULL },
 { "SQLBASE_GETFUNCTABLE", {HB_FS_PUBLIC}, {HB_FUNCNAME( SQLBASE_GETFUNCTABLE )}, NULL }
-HB_INIT_SYMBOLS_END( sqlbase1__InitSymbols )
+HB_INIT_SYMBOLS_END( sqlbase__InitSymbols )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_sqlbase_init_ )
    hb_vmAtInit( hb_sqlbaseInit, NULL );
@@ -1266,12 +1266,8 @@ HB_CALL_ON_STARTUP_END( _hb_sqlbase_init_ )
 #if defined( HB_PRAGMA_STARTUP )
    #pragma startup sqlbase1__InitSymbols
    #pragma startup _hb_sqlbase_init_
-#elif defined( HB_MSC_STARTUP )
-   #if defined( HB_OS_WIN_64 )
-      #pragma section( HB_MSC_START_SEGMENT, long, read )
-   #endif
-   #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_sqlbase1__InitSymbols = sqlbase1__InitSymbols;
-   static HB_$INITSYM hb_vm_auto_sqlbase_init = _hb_sqlbase_init_;
-   #pragma data_seg()
+#elif defined( HB_DATASEG_STARTUP )
+   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( sqlbase__InitSymbols ) \
+                              HB_DATASEG_FUNC( _hb_sqlbase_init_ )
+   #include "hbiniseg.h"
 #endif

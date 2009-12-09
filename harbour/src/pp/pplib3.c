@@ -69,13 +69,9 @@ HB_INIT_SYMBOLS_EX_END( hb_vm_SymbolInit_PPLIB3, "pplib3.c", 0, 0 )
 
 #if defined( HB_PRAGMA_STARTUP )
    #pragma startup hb_vm_SymbolInit_PPLIB3
-#elif defined( HB_MSC_STARTUP )
-   #if defined( HB_OS_WIN_64 )
-      #pragma section( HB_MSC_START_SEGMENT, long, read )
-   #endif
-   #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_SymbolInit_PPLIB3 = hb_vm_SymbolInit_PPLIB3;
-   #pragma data_seg()
+#elif defined( HB_DATASEG_STARTUP )
+   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( hb_vm_SymbolInit_PPLIB3 )
+   #include "hbiniseg.h"
 #endif
 
 

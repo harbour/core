@@ -1166,25 +1166,26 @@ BOOL hb_fsSetFileTime( const char * pszFileName, long lJulian, long lMillisec )
 
             DosGetDateTime( &dt );
 
-            fdate.year = dt.year - 1980;
-            fdate.month = dt.month;
-            fdate.day = dt.day;
-            ftime.hours = dt.hours;
-            ftime.minutes = dt.minutes;
-            ftime.twosecs = dt.seconds / 2;
+            if( lJulian <= 0 )
+            {
+               iYear = dt.year;
+               iMonth = dt.month;
+               iDay = dt.day;
+            }
+            if( lMillisec < 0 )
+            {
+               iHour = dt.hours;
+               iMinute = dt.minutes;
+               iSecond = dt.seconds;
+            }
          }
-         if( lJulian > 0 )
-         {
-            fdate.year = iYear - 1980;
-            fdate.month = iMonth;
-            fdate.day = iDay;
-         }
-         if( lMillisec >= 0 )
-         {
-            ftime.hours = iHour;
-            ftime.minutes = iMinute;
-            ftime.twosecs = iSecond / 2;
-         }
+
+         fdate.year = iYear - 1980;
+         fdate.month = iMonth;
+         fdate.day = iDay;
+         ftime.hours = iHour;
+         ftime.minutes = iMinute;
+         ftime.twosecs = iSecond / 2;
 
          fs3.fdateCreation = fs3.fdateLastAccess = fs3.fdateLastWrite = fdate;
          fs3.ftimeCreation = fs3.ftimeLastAccess = fs3.ftimeLastWrite = ftime;

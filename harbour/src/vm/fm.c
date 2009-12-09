@@ -171,6 +171,7 @@
 #     pragma warning 367 9
 #     pragma warning 368 9
 #     pragma warning 887 9
+#     pragma disable_message ( 201 )
 #     if !defined( USE_DL_PREFIX ) && !defined( HB_FM_DLMT_ALLOC )
 #        define USE_DL_PREFIX
 #     endif
@@ -198,6 +199,8 @@
 #     pragma warning 367 2
 #     pragma warning 368 2
 #     pragma warning 887 2
+#     pragma warning 887 2
+#     pragma enable_message ( 201 )
 #  endif
 #  if defined( HB_FM_DLMT_ALLOC )
 #     define malloc( n )         mspace_malloc( hb_mspace(), ( n ) )

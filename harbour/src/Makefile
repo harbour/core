@@ -88,8 +88,8 @@ else
       pp{common,nortl} \
       compiler{pp} \
       $(HB_COMP_DIR) \
-      rtl$(HB_COMP_REF) \
       vm$(HB_COMP_REF) \
+      rtl$(HB_COMP_REF) \
       macro \
       codepage \
       lang \

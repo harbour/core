@@ -359,7 +359,7 @@ HB_FUNC( CAIRO_PATH_ITERATOR_NEXT )
       cairo_path_t *      pPath;
 
 #ifdef HB_USE_ITEM
-      pPath = hb_itemGetPtr( pIterator->pPath );
+      pPath = ( cairo_path_t * ) hb_itemGetPtr( pIterator->pPath );
 #else
       pPath = pIterator->pPath;
 #endif
@@ -391,7 +391,7 @@ HB_FUNC( CAIRO_PATH_ITERATOR_GET_POINTS )
       cairo_path_data_t * pData;
 
 #ifdef HB_USE_ITEM
-      pPath = hb_itemGetPtr( pIterator->pPath );
+      pPath = ( cairo_path_t * ) hb_itemGetPtr( pIterator->pPath );
 #else
       pPath = pIterator->pPath;
 #endif
@@ -430,7 +430,7 @@ HB_FUNC( CAIRO_PATH_ITERATOR_SET_POINTS )
       ULONG               ulLen;
 
 #ifdef HB_USE_ITEM
-      pPath = hb_itemGetPtr( pIterator->pPath );
+      pPath = ( cairo_path_t * ) hb_itemGetPtr( pIterator->pPath );
 #else
       pPath = pIterator->pPath;
 #endif

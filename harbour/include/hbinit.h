@@ -114,7 +114,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
 
 #elif defined( __GNUC__ ) || defined( __SUNPRO_C ) || defined( __SUNPRO_CC )
 
-   #if defined( HB_PRAGMA_STARTUP ) || defined( HB_MSC_STARTUP )
+   #if defined( HB_PRAGMA_STARTUP ) ||  defined( HB_MSC_STARTUP )
       #error Wrong macros set for startup code - clean your make/env settings.
    #endif
 
@@ -138,12 +138,12 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
 
 #elif defined( HB_MSC_STARTUP )
 
-   typedef int (* HB_$INITSYM)( void );
+   #define HB_DATASEG_STARTUP
 
    #if _MSC_VER >= 1010
-      #define HB_MSC_START_SEGMENT ".CRT$XIY"
+      #define HB_STARTUP_SEGMENT    ".CRT$XIY"
    #else
-      #define HB_MSC_START_SEGMENT "XIY"
+      #define HB_STARTUP_SEGMENT    "XIY"
    #endif
 
    #define HB_INIT_SYMBOLS_BEGIN( func ) \
@@ -166,9 +166,15 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
          return 0; \
       }
 
-   /*  After each '_END' symbol, additional 'hooks' are required See the C
-       output of a generated prg for example
-   */
+   typedef int (* HB_$INITSYM)( void );
+
+   #define HB_DATASEG_FUNC( func )     HB_DATASEG_FUNC_( func )
+   #define HB_DATASEG_FUNC_( func ) \
+      static HB_$INITSYM _s_init_func_##func = func;
+
+   /*  After each '*_END' symbol, additional 'hooks' are required
+    *  See the C output of a generated prg for example
+    */
 
 #elif defined( HB_STATIC_STARTUP ) || defined( __cplusplus )
 
@@ -225,6 +231,48 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
 
    #define HB_CALL_ON_STARTUP_END( func ) \
       }
+
+#elif defined( __WATCOMC__ )
+
+   #define HB_INIT_SYMBOLS_BEGIN( func ) \
+      static HB_SYMB symbols_table[] = {
+
+   #define HB_INIT_SYMBOLS_EX_END( func, module, id, vpcode ) \
+      }; \
+      static PHB_SYMB symbols = symbols_table; \
+      static void func( void ) \
+      { \
+         symbols = hb_vmProcessSymbols( symbols_table, (USHORT) ( sizeof( symbols_table ) / sizeof( HB_SYMB ) ), (module), (id), (vpcode) ); \
+      }
+
+   #define HB_CALL_ON_STARTUP_BEGIN( func ) \
+      static void func( void ) \
+      {
+
+   #define HB_CALL_ON_STARTUP_END( func ) \
+      }
+
+   #define HB_DATASEG_STARTUP
+   #define HB_STARTUP_SEGMENT          "XI"
+
+   #define HB_WATCOM_STARTUP_ID        0x00
+   #define HB_WATCOM_STARTUP_PRIORITY  0x40  /* default "program" priority */
+
+   #pragma pack( __push, 1 )
+   struct _s_init_info_
+   {
+      unsigned char     id;
+      unsigned char     priority;
+      void ( * func ) ( void );
+   };
+   #pragma pack( __pop )
+
+
+   #define HB_DATASEG_FUNC( func )     HB_DATASEG_FUNC_( func )
+
+   #define HB_DATASEG_FUNC_( func ) \
+         static struct _s_init_info_ _s_init_info_##func = \
+                  { HB_WATCOM_STARTUP_ID, HB_WATCOM_STARTUP_PRIORITY, func };
 
 #else
    #error Unknown initialization method.

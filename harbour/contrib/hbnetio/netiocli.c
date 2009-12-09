@@ -832,19 +832,15 @@ static const HB_FILE_FUNCS * s_fileMethods( void )
  */
 #if defined( HB_NETIO_STARTUP_INIT )
 
-HB_CALL_ON_STARTUP_BEGIN( _hb_file_io_init_ )
+HB_CALL_ON_STARTUP_BEGIN( _hb_file_netio_init_ )
    s_netio_init();
-HB_CALL_ON_STARTUP_END( _hb_file_io_init_ )
+HB_CALL_ON_STARTUP_END( _hb_file_netio_init_ )
 
 #if defined( HB_PRAGMA_STARTUP )
-   #pragma startup _hb_file_io_init_
-#elif defined( HB_MSC_STARTUP )
-   #if defined( HB_OS_WIN_64 )
-      #pragma section( HB_MSC_START_SEGMENT, long, read )
-   #endif
-   #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_hb_file_io_init_ = _hb_file_io_init_;
-   #pragma data_seg()
+   #pragma startup _hb_file_netio_init_
+#elif defined( HB_DATASEG_STARTUP )
+   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hb_file_netio_init_ )
+   #include "hbiniseg.h"
 #endif
 
 #endif /* HB_NETIO_STARTUP_INIT */

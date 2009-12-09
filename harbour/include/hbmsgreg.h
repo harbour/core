@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    code used to register GT driver
+ *    code used to register new lang definition
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -50,27 +50,26 @@
  *
  */
 
-static const HB_GT_INIT gtInit = { HB_GT_DRVNAME( HB_GT_NAME ),
-                                   hb_gt_FuncInit,
-                                   HB_GTSUPER,
-                                   HB_GTID_PTR };
+#if defined( HB_LANG_ID )
 
-HB_GT_ANNOUNCE( HB_GT_NAME )
+HB_LANG_ANNOUNCE( HB_LANG_ID )
 
 #if defined( HB_PRAGMA_STARTUP )
-HB_CALL_ON_STARTUP_BEGIN( _hb_startup_gt_Init_ )
-   hb_gtRegister( &gtInit );
-HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
+HB_CALL_ON_STARTUP_BEGIN( _hb_lang_Init_ )
+   hb_langRegister( &s_lang );
+HB_CALL_ON_STARTUP_END( _hb_lang_Init_ )
 #else
-HB_CALL_ON_STARTUP_BEGIN( HB_MACRONAME_JOIN( _hb_startup_gt_Init_, HB_GT_NAME ) )
-   hb_gtRegister( &gtInit );
-HB_CALL_ON_STARTUP_END( HB_MACRONAME_JOIN( _hb_startup_gt_Init_, HB_GT_NAME ) )
+HB_CALL_ON_STARTUP_BEGIN( HB_MACRONAME_JOIN( _hb_lang_Init_, HB_LANG_ID ) )
+   hb_langRegister( &s_lang );
+HB_CALL_ON_STARTUP_END( HB_MACRONAME_JOIN( _hb_lang_Init_, HB_LANG_ID ) )
 #endif
 
 #if defined( HB_PRAGMA_STARTUP )
-   #pragma startup _hb_startup_gt_Init_
+   #pragma startup hb_lang_Init_
 #elif defined( HB_DATASEG_STARTUP )
    #define HB_DATASEG_BODY    \
-      HB_DATASEG_FUNC( HB_MACRONAME_JOIN( _hb_startup_gt_Init_, HB_GT_NAME ) )
+            HB_DATASEG_FUNC( HB_MACRONAME_JOIN( _hb_lang_Init_, HB_LANG_ID ) )
    #include "hbiniseg.h"
 #endif
+
+#endif /* HB_LANG_ID */

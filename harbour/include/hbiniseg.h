@@ -4,10 +4,13 @@
 
 /*
  * Harbour Project source code:
- *    code used to register GT driver
+ *    startup code using special data segments
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
+ *
+ * This code uses MSC startup macros created by
+ * Paul Tucker <ptucker /at/ sympatico.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,27 +53,23 @@
  *
  */
 
-static const HB_GT_INIT gtInit = { HB_GT_DRVNAME( HB_GT_NAME ),
-                                   hb_gt_FuncInit,
-                                   HB_GTSUPER,
-                                   HB_GTID_PTR };
+#if defined( HB_DATASEG_STARTUP )
 
-HB_GT_ANNOUNCE( HB_GT_NAME )
+   #if defined( __WATCOMC__ )
+      #pragma off (unreferenced)    /* disable unused variable warnings */
+   #elif defined( _MSC_VER ) && defined( HB_OS_WIN_64 )
+      #pragma section( HB_STARTUP_SEGMENT, long, read )
+   #endif
 
-#if defined( HB_PRAGMA_STARTUP )
-HB_CALL_ON_STARTUP_BEGIN( _hb_startup_gt_Init_ )
-   hb_gtRegister( &gtInit );
-HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
-#else
-HB_CALL_ON_STARTUP_BEGIN( HB_MACRONAME_JOIN( _hb_startup_gt_Init_, HB_GT_NAME ) )
-   hb_gtRegister( &gtInit );
-HB_CALL_ON_STARTUP_END( HB_MACRONAME_JOIN( _hb_startup_gt_Init_, HB_GT_NAME ) )
-#endif
+   #pragma data_seg( HB_STARTUP_SEGMENT )
 
-#if defined( HB_PRAGMA_STARTUP )
-   #pragma startup _hb_startup_gt_Init_
-#elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY    \
-      HB_DATASEG_FUNC( HB_MACRONAME_JOIN( _hb_startup_gt_Init_, HB_GT_NAME ) )
-   #include "hbiniseg.h"
+   HB_DATASEG_BODY
+   #undef HB_DATASEG_BODY
+
+   #pragma data_seg()
+
+   #if defined( __WATCOMC__ )
+      #pragma on (unreferenced)     /* reenable unused variable warnings */
+   #endif
+
 #endif

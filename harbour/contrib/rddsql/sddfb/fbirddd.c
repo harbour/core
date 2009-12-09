@@ -117,14 +117,10 @@ HB_CALL_ON_STARTUP_END( _hb_firebirddd_init_ )
 #if defined( HB_PRAGMA_STARTUP )
    #pragma startup firebirddd__InitSymbols
    #pragma startup _hb_firebirddd_init_
-#elif defined( HB_MSC_STARTUP )
-   #if defined( HB_OS_WIN_64 )
-      #pragma section( HB_MSC_START_SEGMENT, long, read )
-   #endif
-   #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_firebirddd__InitSymbols = firebirddd__InitSymbols;
-   static HB_$INITSYM hb_vm_auto_firebirddd_init = _hb_firebirddd_init_;
-   #pragma data_seg()
+#elif defined( HB_DATASEG_STARTUP )
+   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( firebirddd__InitSymbols ) \
+                              HB_DATASEG_FUNC( _hb_firebirddd_init_ )
+   #include "hbiniseg.h"
 #endif
 
 

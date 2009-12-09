@@ -9827,14 +9827,10 @@ HB_CALL_ON_STARTUP_END( _hb_sixcdx_rdd_init_ )
 #if defined( HB_PRAGMA_STARTUP )
    #pragma startup sixcdx1__InitSymbols
    #pragma startup _hb_sixcdx_rdd_init_
-#elif defined( HB_MSC_STARTUP )
-   #if defined( HB_OS_WIN_64 )
-      #pragma section( HB_MSC_START_SEGMENT, long, read )
-   #endif
-   #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_sixcdx1__InitSymbols = sixcdx1__InitSymbols;
-   static HB_$INITSYM hb_vm_auto_sixcdx_rdd_init = _hb_sixcdx_rdd_init_;
-   #pragma data_seg()
+#elif defined( HB_DATASEG_STARTUP )
+   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( sixcdx1__InitSymbols ) \
+                              HB_DATASEG_FUNC( _hb_sixcdx_rdd_init_ )
+   #include "hbiniseg.h"
 #endif
 
 #else
@@ -9906,14 +9902,10 @@ HB_CALL_ON_STARTUP_END( _hb_dbfcdx_rdd_init_ )
 #if defined( HB_PRAGMA_STARTUP )
    #pragma startup dbfcdx1__InitSymbols
    #pragma startup _hb_dbfcdx_rdd_init_
-#elif defined( HB_MSC_STARTUP )
-   #if defined( HB_OS_WIN_64 )
-      #pragma section( HB_MSC_START_SEGMENT, long, read )
-   #endif
-   #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_dbfcdx1__InitSymbols = dbfcdx1__InitSymbols;
-   static HB_$INITSYM hb_vm_auto_dbfcdx_rdd_init = _hb_dbfcdx_rdd_init_;
-   #pragma data_seg()
+#elif defined( HB_DATASEG_STARTUP )
+   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( dbfcdx1__InitSymbols ) \
+                              HB_DATASEG_FUNC( _hb_dbfcdx_rdd_init_ )
+   #include "hbiniseg.h"
 #endif
 
 #endif

@@ -3731,13 +3731,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                            ''                                                                     + Chr( 10 ) +;
                            '#if defined( HB_PRAGMA_STARTUP )'                                     + Chr( 10 ) +;
                            '   #pragma startup _hb_hbmk_setdef_'                                  + Chr( 10 ) +;
-                           '#elif defined( HB_MSC_STARTUP )'                                      + Chr( 10 ) +;
-                           '   #if defined( HB_OS_WIN_64 )'                                       + Chr( 10 ) +;
-                           '      #pragma section( HB_MSC_START_SEGMENT, long, read )'            + Chr( 10 ) +;
-                           '   #endif'                                                            + Chr( 10 ) +;
-                           '   #pragma data_seg( HB_MSC_START_SEGMENT )'                          + Chr( 10 ) +;
-                           '   static HB_$INITSYM hb_vm_auto_hbmk_setdef_ = _hb_hbmk_setdef_;'    + Chr( 10 ) +;
-                           '   #pragma data_seg()'                                                + Chr( 10 ) +;
+                           '#elif defined( HB_DATASEG_STARTUP )'                                  + Chr( 10 ) +;
+                           '   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hb_hbmk_setdef_ )'    + Chr( 10 ) +;
+                           '   #include "hbiniseg.h"'                                             + Chr( 10 ) +;
                            '#endif'                                                               + Chr( 10 )
                ENDIF
 

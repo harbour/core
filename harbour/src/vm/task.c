@@ -209,21 +209,23 @@ static HB_LONG hb_taskTimeStop( unsigned long ulMilliSec )
 {
    if( ulMilliSec == HB_TASK_INFINITE_WAIT )
       return HB_TASK_INFINITE_DELAY;
-
+   else
+   {
 #if defined( __DJGPP__ )
-   /* uclock_t uclock() * 1000 / UCLOCKS_PER_SEC */
-   return ( HB_LONG ) clock() * 1000 / CLOCKS_PER_SEC + ulMilliSec;
+      /* uclock_t uclock() * 1000 / UCLOCKS_PER_SEC */
+      return ( HB_LONG ) clock() * 1000 / CLOCKS_PER_SEC + ulMilliSec;
 #elif _POSIX_C_SOURCE >= 199309L
-   struct timespec ts;
-   clock_gettime( CLOCK_REALTIME, &ts );
-   return ( HB_LONG ) ts.tv_sec * 1000 + ts.tv_nsec / 1000000 + ulMilliSec;
+      struct timespec ts;
+      clock_gettime( CLOCK_REALTIME, &ts );
+      return ( HB_LONG ) ts.tv_sec * 1000 + ts.tv_nsec / 1000000 + ulMilliSec;
 #elif defined( HB_OS_UNIX )
-   struct timeval tv;
-   gettimeofday( &tv, NULL );
-   return ( HB_LONG ) tv.tv_sec * 1000 + tv.tv_usec / 1000 + ulMilliSec;
+      struct timeval tv;
+      gettimeofday( &tv, NULL );
+      return ( HB_LONG ) tv.tv_sec * 1000 + tv.tv_usec / 1000 + ulMilliSec;
 #else
-   return ( HB_LONG ) clock() * 1000 / CLOCKS_PER_SEC + ulMilliSec;
+      return ( HB_LONG ) clock() * 1000 / CLOCKS_PER_SEC + ulMilliSec;
 #endif
+   }
 }
 
 static void hb_taskFreeze( HB_LONG wakeup )

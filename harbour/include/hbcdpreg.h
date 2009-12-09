@@ -54,7 +54,7 @@
 
 HB_CODEPAGE_ANNOUNCE( HB_CP_ID )
 
-#if defined( HB_PRAGMA_STARTUP ) || defined( HB_MSC_STARTUP )
+#if defined( HB_PRAGMA_STARTUP )
 HB_CALL_ON_STARTUP_BEGIN( _hb_codepage_Init_ )
 #else
 HB_CALL_ON_STARTUP_BEGIN( HB_MACRONAME_JOIN( _hb_codepage_Init_, HB_CP_ID ) )
@@ -84,7 +84,7 @@ HB_CALL_ON_STARTUP_BEGIN( HB_MACRONAME_JOIN( _hb_codepage_Init_, HB_CP_ID ) )
                       HB_CP_UPPER, HB_CP_LOWER, HB_CP_ACSORT );
 #endif /* HB_CP_RAW */
 
-#if defined( HB_PRAGMA_STARTUP ) || defined( HB_MSC_STARTUP )
+#if defined( HB_PRAGMA_STARTUP )
 HB_CALL_ON_STARTUP_END( _hb_codepage_Init_ )
 #else
 HB_CALL_ON_STARTUP_END( HB_MACRONAME_JOIN( _hb_codepage_Init_, HB_CP_ID ) )
@@ -92,11 +92,8 @@ HB_CALL_ON_STARTUP_END( HB_MACRONAME_JOIN( _hb_codepage_Init_, HB_CP_ID ) )
 
 #if defined( HB_PRAGMA_STARTUP )
    #pragma startup _hb_codepage_Init_
-#elif defined( HB_MSC_STARTUP )
-   #if defined( HB_OS_WIN_64 )
-      #pragma section( HB_MSC_START_SEGMENT, long, read )
-   #endif
-   #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_ = _hb_codepage_Init_;
-   #pragma data_seg()
+#elif defined( HB_DATASEG_STARTUP )
+   #define HB_DATASEG_BODY    \
+         HB_DATASEG_FUNC( HB_MACRONAME_JOIN( _hb_codepage_Init_, HB_CP_ID ) )
+   #include "hbiniseg.h"
 #endif

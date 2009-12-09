@@ -442,15 +442,10 @@ static void hb_writeEndInit( HB_COMP_DECL, FILE* yyc, const char * szModulname, 
 
    fprintf( yyc, "#if defined( HB_PRAGMA_STARTUP )\n"
                  "   #pragma startup hb_vm_SymbolInit_%s%s\n"
-                 "#elif defined( HB_MSC_STARTUP )\n"
-                 "   #if defined( HB_OS_WIN_64 )\n"
-                 "      #pragma section( HB_MSC_START_SEGMENT, long, read )\n"
-                 "   #endif\n"
-                 "   #pragma data_seg( HB_MSC_START_SEGMENT )\n"
-                 "   static HB_$INITSYM hb_vm_auto_SymbolInit_%s%s = hb_vm_SymbolInit_%s%s;\n"
-                 "   #pragma data_seg()\n"
+                 "#elif defined( HB_DATASEG_STARTUP )\n"
+                 "   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( hb_vm_SymbolInit_%s%s )\n"
+                 "   #include \"hbiniseg.h\"\n"
                  "#endif\n\n",
-                 HB_COMP_PARAM->szPrefix, szModulname,
                  HB_COMP_PARAM->szPrefix, szModulname,
                  HB_COMP_PARAM->szPrefix, szModulname );
 }

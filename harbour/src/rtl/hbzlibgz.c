@@ -59,11 +59,11 @@
 /* GZIP stream destructor */
 static HB_GARBAGE_FUNC( hb_gz_Destructor )
 {
-   gzFile * gz = ( gzFile * ) Cargo;
-   if( * gz )
+   gzFile * gzHolder = ( gzFile * ) Cargo;
+   if( * gzHolder )
    {
-      gzclose( * gz );
-      * gz = NULL;
+      gzclose( * gzHolder );
+      * gzHolder = NULL;
    }
 }
 
@@ -85,7 +85,7 @@ static gzFile hb_gzParam( int iParam )
 }
 
 /*
- * HB_GZOPEN( <cFile>, <cMode> ) => <pGZipStram> or NIL on Error
+ * HB_GZOPEN( <cFile>, <cMode> ) => <pGZipStream> or NIL on Error
  */
 HB_FUNC( HB_GZOPEN )
 {
@@ -106,7 +106,7 @@ HB_FUNC( HB_GZOPEN )
 }
 
 /*
- * HB_GZDOPEN( <hFile>, <cMode> ) => <pGZipStram> or NIL on Error
+ * HB_GZDOPEN( <hFile>, <cMode> ) => <pGZipStream> or NIL on Error
  */
 HB_FUNC( HB_GZDOPEN )
 {

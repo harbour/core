@@ -820,7 +820,7 @@ static HB_FHANDLE s_fileHandle( PHB_FILE pFile )
 }
 
 
-const HB_FILE_FUNCS s_fileFuncs =
+static const HB_FILE_FUNCS s_fileFuncs =
 {
    s_fileAccept,
    s_fileExists,
@@ -850,24 +850,15 @@ static PHB_FILE s_fileNew( HB_FHANDLE hFile )
 
 HB_FUNC( HB_MEMIO ) {;}
 
-HB_INIT_SYMBOLS_BEGIN( iodmem__InitSymbols )
-{ "HB_MEMIO",   {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( HB_MEMIO )}, NULL }
-HB_INIT_SYMBOLS_END( iodmem__InitSymbols )
 
-HB_CALL_ON_STARTUP_BEGIN( _hb_file_io_init_ )
+HB_CALL_ON_STARTUP_BEGIN( _hb_file_memio_init_ )
    memfsInit();
    hb_fileRegister( &s_fileFuncs );
-HB_CALL_ON_STARTUP_END( _hb_file_io_init_ )
+HB_CALL_ON_STARTUP_END( _hb_file_memio_init_ )
 
 #if defined( HB_PRAGMA_STARTUP )
-   #pragma startup iodmem__InitSymbols
-   #pragma startup _hb_file_io_init_
-#elif defined( HB_MSC_STARTUP )
-   #if defined( HB_OS_WIN_64 )
-      #pragma section( HB_MSC_START_SEGMENT, long, read )
-   #endif
-   #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_iodmem__InitSymbols = iodmem__InitSymbols;
-   static HB_$INITSYM hb_vm_auto_hb_file_io_init_ = _hb_file_io_init_;
-   #pragma data_seg()
+   #pragma startup _hb_file_memio_init_
+#elif defined( HB_DATASEG_STARTUP )
+   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hb_file_memio_init_ )
+   #include "hbiniseg.h"
 #endif
