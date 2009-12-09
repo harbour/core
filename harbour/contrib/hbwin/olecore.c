@@ -470,10 +470,12 @@ static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
          {
             SAFEARRAY*      pSafeArray;
             SAFEARRAYBOUND  sabound[ 1 ];
-            ULONG           ul, ulLen;
+            HB_SIZE         ul, ulLen;
+
+            ulLen = hb_arrayLen( pItem );
 
             sabound[ 0 ].lLbound = 0;
-            sabound[ 0 ].cElements = ulLen = hb_arrayLen( pItem );
+            sabound[ 0 ].cElements = ( long ) ulLen;
 
             pSafeArray = SafeArrayCreate( VT_VARIANT, 1, sabound );
             pVariant->n1.n2.vt = VT_VARIANT | VT_ARRAY;
@@ -529,14 +531,15 @@ void hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem )
 static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray,
                                    int iDim, long * plIndex, VARTYPE vt )
 {
-   long      lFrom, lTo;
-   ULONG     ul = 0;
+   long lFrom, lTo;
 
    SafeArrayGetLBound( pSafeArray, iDim, &lFrom );
    SafeArrayGetUBound( pSafeArray, iDim, &lTo );
 
    if( lFrom <= lTo )
    {
+      HB_SIZE ul = 0;
+
       hb_arrayNew( pItem, lTo - lFrom + 1 );
       if( --iDim == 0 )
       {
