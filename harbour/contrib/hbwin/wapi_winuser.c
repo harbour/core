@@ -55,6 +55,7 @@
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
+#include "hbwinuni.h"
 #include "hbwapi.h"
 
 #include <winuser.h>

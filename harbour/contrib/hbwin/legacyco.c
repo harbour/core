@@ -61,6 +61,7 @@
 
 #include "hbapi.h"
 #include "hbwinole.h"
+#include "hbwinuni.h"
 
 #if ! defined( HB_LEGACY_LEVEL3 ) && ! defined( HB_WIN_LEGACY_LEVEL_OFF )
    #define HB_WIN_LEGACY_LEVEL_OFF
