@@ -342,7 +342,7 @@ static void GDImageCreateFrom( int nType )
    /*TraceLog( NULL, "Params = %i, 1 = %i, 2 = %i \n\r", hb_pcount(), hb_parinfo( 1 ), hb_parinfo( 2 ) );*/
 
    if( hb_pcount() == 1 &&
-        ( hb_parinfo( 1 ) & HB_IT_STRING )
+        ( HB_ISCHAR( 1 ) )
      )
    {
       /* Retrieve file name */
@@ -353,8 +353,8 @@ static void GDImageCreateFrom( int nType )
 
    /* From Image Pointer + size */
    else if( hb_pcount() == 2 &&
-        ( hb_parinfo( 1 ) & HB_IT_POINTER ) &&
-        ( hb_parinfo( 2 ) & HB_IT_NUMERIC )
+        ( HB_ISPOINTER( 1 ) ) &&
+        ( HB_ISNUM( 2 ) )
      )
    {
 
@@ -366,15 +366,15 @@ static void GDImageCreateFrom( int nType )
 
    /* From file handle */
    else if( hb_pcount() == 2 &&
-        ( hb_parinfo( 1 ) & HB_IT_NUMERIC ) &&
-        ( hb_parinfo( 2 ) & HB_IT_NUMERIC )
+        ( HB_ISNUM( 1 ) ) &&
+        ( HB_ISNUM( 2 ) )
      )
    {
 
       HB_FHANDLE fhandle;
 
       /* Retrieve file handle */
-      fhandle = ( hb_parinfo( 1 ) & HB_IT_NUMERIC ) ? hb_parnl( 1 ) : 0; /* 0 = std input */
+      fhandle = ( HB_ISNUM( 1 ) ) ? hb_parnl( 1 ) : 0; /* 0 = std input */
       /* Retrieve image size */
       sz     = hb_parni( 2 );
 
@@ -428,7 +428,7 @@ static void GDImageCreateFrom( int nType )
 static void GDImageSaveTo( int nType )
 {
    if( hb_pcount() >= 1 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER
+       HB_ISPOINTER( 1 )
      )
    {
       gdImagePtr im;
@@ -442,8 +442,8 @@ static void GDImageSaveTo( int nType )
 
       /* Get file name or an output handler or NIL it I want a return string */
       if( !( HB_ISNIL( 2 ) ||
-             hb_parinfo( 2 ) & HB_IT_STRING ||
-             hb_parinfo( 2 ) & HB_IT_NUMERIC ) )
+             HB_ISCHAR( 2 ) ||
+             HB_ISNUM( 2 ) ) )
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0,
             "Second argument must be NIL or numeric or a string.",
@@ -455,7 +455,7 @@ static void GDImageSaveTo( int nType )
       /* Retrieve compression level */
       /*TraceLog( NULL, "Count = %i\n\r", hb_pcount() ); */
       /* check if is numeric */
-      if( !( HB_ISNIL( 3 ) || hb_parinfo( 3 ) & HB_IT_NUMERIC ) )
+      if( !( HB_ISNIL( 3 ) || HB_ISNUM( 3 ) ) )
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0,
             "Tirdh argument must be NIL or numeric.",
@@ -467,7 +467,7 @@ static void GDImageSaveTo( int nType )
       if( nType == IMAGE_JPEG )
       {
          /* check range */
-         level = ( hb_parinfo( 3 ) & HB_IT_NUMERIC ? hb_parni( 3 ) : -1 );
+         level = ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 );
          if( !( level >= -1 && level <= 95 ) )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 0,
@@ -480,7 +480,7 @@ static void GDImageSaveTo( int nType )
       else if( nType == IMAGE_PNG )
       {
          /* check range */
-         level = ( hb_parinfo( 3 ) & HB_IT_NUMERIC ? hb_parni( 3 ) : -1 );
+         level = ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 );
          if( !( level >= -1 && level <= 9 ) )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 0,
@@ -492,7 +492,7 @@ static void GDImageSaveTo( int nType )
       }
       else if( nType == IMAGE_WBMP )
       {
-         if( !( hb_parinfo( 3 ) & HB_IT_NUMERIC ) )
+         if( !( HB_ISNUM( 3 ) ) )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 0,
                "Foreground color nedeed",
@@ -528,14 +528,14 @@ static void GDImageSaveTo( int nType )
       }
 
       /* If i get a file name */
-      if( hb_parinfo( 2 ) & HB_IT_STRING )
+      if( HB_ISCHAR( 2 ) )
       {
          const char *szFile = hb_parcx( 2 );
          SaveImageToFile( szFile, iptr, sz );
       }
 
       /* Write to file handle (1 = std output) */
-      else if( hb_parinfo( 2 ) & HB_IT_NUMERIC )
+      else if( HB_ISNUM( 2 ) )
       {
          /* Write to std output or to a passed file */
          fhandle = ( hb_parnl( 2 ) > -1 ) ? hb_parnl( 2 ) : 1 ; /* 1 = std output */
@@ -561,7 +561,6 @@ static void GDImageSaveTo( int nType )
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             "GDIMAGE* (save functions)", 1,
             hb_paramError( 1 ) );
-         return;
       }
    }
 }
@@ -601,8 +600,8 @@ HB_FUNC( GDVERSIONNUMBER )
 HB_FUNC( GDIMAGECREATE ) /* gdImagePtr gdImageCreate(sx, sy) */
 {
    if( hb_pcount() == 2 &&
-       hb_parinfo( 1 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC )
+       HB_ISNUM( 1 ) &&
+       HB_ISNUM( 2 ) )
    {
       gdImagePtr im;
       int sx, sy;
@@ -624,7 +623,6 @@ HB_FUNC( GDIMAGECREATE ) /* gdImagePtr gdImageCreate(sx, sy) */
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
-         return;
       }
    }
 }
@@ -643,8 +641,8 @@ HB_FUNC( GDIMAGECREATEPALETTE ) /* gdImagePtr gdImageCreatePalette(sx, sy) */
 HB_FUNC( GDIMAGECREATETRUECOLOR ) /* gdImageCreateTrueColor(sx, sy) */
 {
    if( hb_pcount() == 2 &&
-       hb_parinfo( 1 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC )
+       HB_ISNUM( 1 ) &&
+       HB_ISNUM( 2 ) )
    {
       gdImagePtr im;
       int sx, sy;
@@ -666,7 +664,6 @@ HB_FUNC( GDIMAGECREATETRUECOLOR ) /* gdImageCreateTrueColor(sx, sy) */
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
-         return;
       }
    }
 }
@@ -769,7 +766,7 @@ HB_FUNC( GDIMAGEGD ) /* original: void gdImageGD(gdImagePtr im, FILE *out) */
 HB_FUNC( GDIMAGEDESTROY ) /* gdImageDestroy(gdImagePtr im) */
 {
    if( hb_pcount() == 1 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER )
+       HB_ISPOINTER( 1 ) )
    {
       /*
       gdImagePtr im;
@@ -793,7 +790,6 @@ HB_FUNC( GDIMAGEDESTROY ) /* gdImageDestroy(gdImagePtr im) */
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
-         return;
       }
    }
 
@@ -808,10 +804,10 @@ HB_FUNC( GDIMAGEDESTROY ) /* gdImageDestroy(gdImagePtr im) */
 HB_FUNC( GDIMAGESETPIXEL ) /* void gdImageSetPixel(gdImagePtr im, int x, int y, int color) */
 {
    if( hb_pcount() == 4 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 )
      )
    {
       gdImagePtr im;
@@ -839,7 +835,6 @@ HB_FUNC( GDIMAGESETPIXEL ) /* void gdImageSetPixel(gdImagePtr im, int x, int y, 
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 4,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
-         return;
       }
    }
 }
@@ -849,12 +844,12 @@ HB_FUNC( GDIMAGESETPIXEL ) /* void gdImageSetPixel(gdImagePtr im, int x, int y, 
 HB_FUNC( GDIMAGELINE ) /* void gdImageLine(gdImagePtr im, int x1, int y1, int x2, int y2, int color) */
 {
    if( hb_pcount() == 6 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 6 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 ) &&
+       HB_ISNUM( 6 )
      )
    {
       gdImagePtr im;
@@ -885,7 +880,6 @@ HB_FUNC( GDIMAGELINE ) /* void gdImageLine(gdImagePtr im, int x1, int y1, int x2
             HB_ERR_FUNCNAME, 6,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ), hb_paramError( 6 ) );
-         return;
       }
    }
 }
@@ -895,12 +889,12 @@ HB_FUNC( GDIMAGELINE ) /* void gdImageLine(gdImagePtr im, int x1, int y1, int x2
 HB_FUNC( GDIMAGEDASHEDLINE ) /* void gdImageDashedLine(gdImagePtr im, int x1, int y1, int x2, int y2, int color) */
 {
    if( hb_pcount() == 6 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 6 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 ) &&
+       HB_ISNUM( 6 )
      )
    {
       gdImagePtr im;
@@ -931,7 +925,6 @@ HB_FUNC( GDIMAGEDASHEDLINE ) /* void gdImageDashedLine(gdImagePtr im, int x1, in
             HB_ERR_FUNCNAME, 6,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ), hb_paramError( 6 ) );
-         return;
       }
    }
 }
@@ -942,9 +935,9 @@ HB_FUNC( GDIMAGEPOLYGON ) /* original: void gdImagePolygon(gdImagePtr im, gdPoin
                           /* implementation: void gdImagePolygon(gdImagePtr im, gdPointPtr points, int color) */
 {
    if( hb_pcount() == 3 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_ARRAY   &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISARRAY( 2 ) &&
+       HB_ISNUM( 3 )
      )
    {
       gdImagePtr im;
@@ -988,7 +981,6 @@ HB_FUNC( GDIMAGEPOLYGON ) /* original: void gdImagePolygon(gdImagePtr im, gdPoin
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-         return;
       }
    }
 }
@@ -999,9 +991,9 @@ HB_FUNC( GDIMAGEOPENPOLYGON ) /* original: void gdImageOpenPolygon(gdImagePtr im
                               /* implementation: void gdImageOpenPolygon(gdImagePtr im, gdPointPtr points, int color) */
 {
    if( hb_pcount() == 3 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_ARRAY   &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISARRAY( 2 ) &&
+       HB_ISNUM( 3 )
      )
    {
       gdImagePtr im;
@@ -1045,7 +1037,6 @@ HB_FUNC( GDIMAGEOPENPOLYGON ) /* original: void gdImageOpenPolygon(gdImagePtr im
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-         return;
       }
    }
 }
@@ -1056,12 +1047,12 @@ HB_FUNC( GDIMAGEOPENPOLYGON ) /* original: void gdImageOpenPolygon(gdImagePtr im
 HB_FUNC( GDIMAGERECTANGLE ) /* void gdImageRectangle(gdImagePtr im, int x1, int y1, int x2, int y2, int color) */
 {
    if( hb_pcount() == 6 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 6 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 ) &&
+       HB_ISNUM( 6 )
      )
    {
       gdImagePtr im;
@@ -1092,7 +1083,6 @@ HB_FUNC( GDIMAGERECTANGLE ) /* void gdImageRectangle(gdImagePtr im, int x1, int 
             HB_ERR_FUNCNAME, 6,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ), hb_paramError( 6 ) );
-         return;
       }
    }
 }
@@ -1103,9 +1093,9 @@ HB_FUNC( GDIMAGEFILLEDPOLYGON ) /* original: void gdImageFilledPolygon(gdImagePt
                                 /* implementation: void gdImageFilledPolygon(gdImagePtr im, gdPointPtr points, int color) */
 {
    if( hb_pcount() == 3 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_ARRAY   &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISARRAY( 2 ) &&
+       HB_ISNUM( 3 )
      )
    {
       gdImagePtr im;
@@ -1149,7 +1139,6 @@ HB_FUNC( GDIMAGEFILLEDPOLYGON ) /* original: void gdImageFilledPolygon(gdImagePt
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-         return;
       }
    }
 }
@@ -1159,12 +1148,12 @@ HB_FUNC( GDIMAGEFILLEDPOLYGON ) /* original: void gdImageFilledPolygon(gdImagePt
 HB_FUNC( GDIMAGEFILLEDRECTANGLE ) /* void gdImageFilledRectangle(gdImagePtr im, int x1, int y1, int x2, int y2, int color) */
 {
    if( hb_pcount() == 6 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 6 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 ) &&
+       HB_ISNUM( 6 )
      )
    {
       gdImagePtr im;
@@ -1195,7 +1184,6 @@ HB_FUNC( GDIMAGEFILLEDRECTANGLE ) /* void gdImageFilledRectangle(gdImagePtr im, 
             HB_ERR_FUNCNAME, 6,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ), hb_paramError( 6 ) );
-         return;
       }
    }
 }
@@ -1205,14 +1193,14 @@ HB_FUNC( GDIMAGEFILLEDRECTANGLE ) /* void gdImageFilledRectangle(gdImagePtr im, 
 HB_FUNC( GDIMAGEARC ) /* void gdImageArc(gdImagePtr im, int cx, int cy, int w, int h, int s, int e, int color) */
 {
    if( hb_pcount() == 8 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 7 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 8 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 ) &&
+       HB_ISNUM( 6 ) &&
+       HB_ISNUM( 7 ) &&
+       HB_ISNUM( 8 )
      )
    {
       gdImagePtr im;
@@ -1244,7 +1232,6 @@ HB_FUNC( GDIMAGEARC ) /* void gdImageArc(gdImagePtr im, int cx, int cy, int w, i
             HB_ERR_FUNCNAME, 8,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ) );
-         return;
       }
    }
 }
@@ -1254,14 +1241,14 @@ HB_FUNC( GDIMAGEARC ) /* void gdImageArc(gdImagePtr im, int cx, int cy, int w, i
 HB_FUNC( GDIMAGEFILLEDARC ) /* void gdImageFilledArc(gdImagePtr im, int cx, int cy, int w, int h, int s, int e, int color[, int style]) */
 {
    if( hb_pcount() >= 8 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 7 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 8 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 ) &&
+       HB_ISNUM( 6 ) &&
+       HB_ISNUM( 7 ) &&
+       HB_ISNUM( 8 )
      )
    {
       gdImagePtr im;
@@ -1283,7 +1270,7 @@ HB_FUNC( GDIMAGEFILLEDARC ) /* void gdImageFilledArc(gdImagePtr im, int cx, int 
       color = hb_parni( 8 );
 
       /* Retrieve style value */
-      style = ( hb_parinfo( 9 ) & HB_IT_NUMERIC ? hb_parni( 9 ) : gdNoFill );
+      style = ( HB_ISNUM( 9 ) ? hb_parni( 9 ) : gdNoFill );
 
       /* Draw a filled arc */
       gdImageFilledArc(im, cx, cy, w, h, s, e, color, style);
@@ -1298,7 +1285,6 @@ HB_FUNC( GDIMAGEFILLEDARC ) /* void gdImageFilledArc(gdImagePtr im, int cx, int 
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
             hb_paramError( 9 ) );
-         return;
       }
    }
 }
@@ -1308,12 +1294,12 @@ HB_FUNC( GDIMAGEFILLEDARC ) /* void gdImageFilledArc(gdImagePtr im, int cx, int 
 HB_FUNC( GDIMAGEFILLEDELLIPSE ) /* void gdImageFilledEllipse(gdImagePtr im, int cx, int cy, int w, int h, int color) */
 {
    if( hb_pcount() == 6 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 6 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 ) &&
+       HB_ISNUM( 6 )
      )
    {
       gdImagePtr im;
@@ -1343,7 +1329,6 @@ HB_FUNC( GDIMAGEFILLEDELLIPSE ) /* void gdImageFilledEllipse(gdImagePtr im, int 
             HB_ERR_FUNCNAME, 6,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ), hb_paramError( 6 ) );
-         return;
       }
    }
 }
@@ -1353,11 +1338,11 @@ HB_FUNC( GDIMAGEFILLEDELLIPSE ) /* void gdImageFilledEllipse(gdImagePtr im, int 
 HB_FUNC( GDIMAGEFILLTOBORDER ) /* void gdImageFillToBorder(gdImagePtr im, int x, int y, int border, int color) */
 {
    if( hb_pcount() == 5 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 )
      )
    {
       gdImagePtr im;
@@ -1386,7 +1371,6 @@ HB_FUNC( GDIMAGEFILLTOBORDER ) /* void gdImageFillToBorder(gdImagePtr im, int x,
             HB_ERR_FUNCNAME, 5,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ) );
-         return;
       }
    }
 }
@@ -1399,12 +1383,12 @@ HB_FUNC( GDIMAGEFILLTOBORDER ) /* void gdImageFillToBorder(gdImagePtr im, int x,
 HB_FUNC( GDIMAGEELLIPSE ) /* void gdImageEllipse(gdImagePtr im, int cx, int cy, int w, int h, int color) */
 {
    if( hb_pcount() == 6 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 6 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 ) &&
+       HB_ISNUM( 6 )
      )
    {
       gdImagePtr im;
@@ -1433,7 +1417,6 @@ HB_FUNC( GDIMAGEELLIPSE ) /* void gdImageEllipse(gdImagePtr im, int cx, int cy, 
             HB_ERR_FUNCNAME, 6,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ), hb_paramError( 6 ) );
-         return;
       }
    }
 }
@@ -1445,10 +1428,10 @@ HB_FUNC( GDIMAGEELLIPSE ) /* void gdImageEllipse(gdImagePtr im, int cx, int cy, 
 HB_FUNC( GDIMAGEFILL ) /* void gdImageFill(gdImagePtr im, int x, int y, int color) */
 {
    if( hb_pcount() == 4 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 )
      )
    {
       gdImagePtr im;
@@ -1474,7 +1457,6 @@ HB_FUNC( GDIMAGEFILL ) /* void gdImageFill(gdImagePtr im, int x, int y, int colo
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 4,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
-         return;
       }
    }
 }
@@ -1484,8 +1466,8 @@ HB_FUNC( GDIMAGEFILL ) /* void gdImageFill(gdImagePtr im, int x, int y, int colo
 HB_FUNC( GDIMAGESETANTIALIASED ) /* void gdImageSetAntiAliased(gdImagePtr im, int color) */
 {
    if( hb_pcount() == 2 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 )
      )
    {
       gdImagePtr im;
@@ -1508,7 +1490,6 @@ HB_FUNC( GDIMAGESETANTIALIASED ) /* void gdImageSetAntiAliased(gdImagePtr im, in
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
-         return;
       }
    }
 }
@@ -1518,9 +1499,9 @@ HB_FUNC( GDIMAGESETANTIALIASED ) /* void gdImageSetAntiAliased(gdImagePtr im, in
 HB_FUNC( GDIMAGESETANTIALIASEDDONTBLEND ) /* void gdImageSetAntiAliasedDontBlend(gdImagePtr im, int c, int dont_blend) */
 {
    if( hb_pcount() == 3 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 )
      )
    {
       gdImagePtr im;
@@ -1547,7 +1528,6 @@ HB_FUNC( GDIMAGESETANTIALIASEDDONTBLEND ) /* void gdImageSetAntiAliasedDontBlend
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-         return;
       }
    }
 }
@@ -1557,8 +1537,8 @@ HB_FUNC( GDIMAGESETANTIALIASEDDONTBLEND ) /* void gdImageSetAntiAliasedDontBlend
 HB_FUNC( GDIMAGESETBRUSH ) /* void gdImageSetBrush(gdImagePtr im, gdImagePtr brush) */
 {
    if( hb_pcount() == 2 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_POINTER
+       HB_ISPOINTER( 1 ) &&
+       HB_ISPOINTER( 2 )
      )
    {
       gdImagePtr im;
@@ -1581,7 +1561,6 @@ HB_FUNC( GDIMAGESETBRUSH ) /* void gdImageSetBrush(gdImagePtr im, gdImagePtr bru
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
-         return;
       }
    }
 }
@@ -1591,8 +1570,8 @@ HB_FUNC( GDIMAGESETBRUSH ) /* void gdImageSetBrush(gdImagePtr im, gdImagePtr bru
 HB_FUNC( GDIMAGESETTILE ) /* void gdImageSetTile(gdImagePtr im, gdImagePtr tile) */
 {
    if( hb_pcount() == 2 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_POINTER
+       HB_ISPOINTER( 1 ) &&
+       HB_ISPOINTER( 2 )
      )
    {
       gdImagePtr im;
@@ -1615,7 +1594,6 @@ HB_FUNC( GDIMAGESETTILE ) /* void gdImageSetTile(gdImagePtr im, gdImagePtr tile)
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
-         return;
       }
    }
 }
@@ -1626,8 +1604,8 @@ HB_FUNC( GDIMAGESETSTYLE ) /* original: void gdImageSetStyle(gdImagePtr im, int 
                            /* implementation: void gdImageSetStyle(gdImagePtr im, int *style) */
 {
    if( hb_pcount() == 2 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_ARRAY
+       HB_ISPOINTER( 1 ) &&
+       HB_ISARRAY( 2 )
      )
    {
       gdImagePtr im;
@@ -1660,7 +1638,6 @@ HB_FUNC( GDIMAGESETSTYLE ) /* original: void gdImageSetStyle(gdImagePtr im, int 
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
-         return;
       }
    }
 }
@@ -1670,8 +1647,8 @@ HB_FUNC( GDIMAGESETSTYLE ) /* original: void gdImageSetStyle(gdImagePtr im, int 
 HB_FUNC( GDIMAGESETTHICKNESS ) /* void gdImageSetThickness(gdImagePtr im, int thickness) */
 {
    if( hb_pcount() == 2 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 )
      )
    {
       gdImagePtr im;
@@ -1701,7 +1678,6 @@ HB_FUNC( GDIMAGESETTHICKNESS ) /* void gdImageSetThickness(gdImagePtr im, int th
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
-         return;
       }
    }
 }
@@ -1711,8 +1687,8 @@ HB_FUNC( GDIMAGESETTHICKNESS ) /* void gdImageSetThickness(gdImagePtr im, int th
 HB_FUNC( GDIMAGEALPHABLENDING ) /* void gdImageAlphaBlending(gdImagePtr im, int blending) */
 {
    if( hb_pcount() == 2 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_LOGICAL
+       HB_ISPOINTER( 1 ) &&
+       HB_ISLOG( 2 )
      )
    {
       gdImagePtr im;
@@ -1735,7 +1711,6 @@ HB_FUNC( GDIMAGEALPHABLENDING ) /* void gdImageAlphaBlending(gdImagePtr im, int 
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
-         return;
       }
    }
 }
@@ -1745,8 +1720,8 @@ HB_FUNC( GDIMAGEALPHABLENDING ) /* void gdImageAlphaBlending(gdImagePtr im, int 
 HB_FUNC( GDIMAGESAVEALPHA ) /* void gdImageSaveAlpha(gdImagePtr im, int saveFlag) */
 {
    if( hb_pcount() == 2 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_LOGICAL
+       HB_ISPOINTER( 1 ) &&
+       HB_ISLOG( 2 )
      )
    {
       gdImagePtr im;
@@ -1769,7 +1744,6 @@ HB_FUNC( GDIMAGESAVEALPHA ) /* void gdImageSaveAlpha(gdImagePtr im, int saveFlag
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
-         return;
       }
    }
 }
@@ -1779,11 +1753,11 @@ HB_FUNC( GDIMAGESAVEALPHA ) /* void gdImageSaveAlpha(gdImagePtr im, int saveFlag
 HB_FUNC( GDIMAGESETCLIP ) /* void gdImageSetClip(gdImagePtr im, int x1, int y1, int x2, int y2) */
 {
    if( hb_pcount() == 5 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 )
      )
    {
       gdImagePtr im;
@@ -1810,7 +1784,6 @@ HB_FUNC( GDIMAGESETCLIP ) /* void gdImageSetClip(gdImagePtr im, int x1, int y1, 
             HB_ERR_FUNCNAME, 5,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ) );
-         return;
       }
    }
 }
@@ -1821,7 +1794,7 @@ HB_FUNC( GDIMAGEGETCLIP ) /* original: void gdImageGetClip(gdImagePtr im, int *x
                           /* implementation: array gdImageGetClip(gdImagePtr im) */
 {
    if( hb_pcount() == 1 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER
+       HB_ISPOINTER( 1 )
      )
    {
       gdImagePtr im;
@@ -1852,7 +1825,6 @@ HB_FUNC( GDIMAGEGETCLIP ) /* original: void gdImageGetClip(gdImagePtr im, int *x
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
-         return;
       }
    }
 }
@@ -1867,7 +1839,7 @@ HB_FUNC( GDIMAGEGETCLIP ) /* original: void gdImageGetClip(gdImagePtr im, int *x
 HB_FUNC( GDIMAGECOLORSTOTAL ) /* int gdImageColorsTotal(gdImagePtr im) */
 {
    if( hb_pcount() == 1 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER
+       HB_ISPOINTER( 1 )
      )
    {
       gdImagePtr im;
@@ -1886,7 +1858,6 @@ HB_FUNC( GDIMAGECOLORSTOTAL ) /* int gdImageColorsTotal(gdImagePtr im) */
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
-         return;
       }
    }
 }
@@ -1896,8 +1867,8 @@ HB_FUNC( GDIMAGECOLORSTOTAL ) /* int gdImageColorsTotal(gdImagePtr im) */
 HB_FUNC( GDIMAGEALPHA ) /* int gdImageAlpha(gdImagePtr im, int color) */
 {
    if( hb_pcount() == 2 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 )
      )
    {
       gdImagePtr im;
@@ -1920,7 +1891,6 @@ HB_FUNC( GDIMAGEALPHA ) /* int gdImageAlpha(gdImagePtr im, int color) */
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
-         return;
       }
    }
 }
@@ -1930,8 +1900,8 @@ HB_FUNC( GDIMAGEALPHA ) /* int gdImageAlpha(gdImagePtr im, int color) */
 HB_FUNC( GDIMAGERED ) /* int gdImageRed(gdImagePtr im, int color) */
 {
    if( hb_pcount() == 2 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 )
      )
    {
       gdImagePtr im;
@@ -1954,7 +1924,6 @@ HB_FUNC( GDIMAGERED ) /* int gdImageRed(gdImagePtr im, int color) */
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
-         return;
       }
    }
 }
@@ -1964,8 +1933,8 @@ HB_FUNC( GDIMAGERED ) /* int gdImageRed(gdImagePtr im, int color) */
 HB_FUNC( GDIMAGEGREEN ) /* int gdImageGreen(gdImagePtr im, int color) */
 {
    if( hb_pcount() == 2 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 )
      )
    {
       gdImagePtr im;
@@ -1988,7 +1957,6 @@ HB_FUNC( GDIMAGEGREEN ) /* int gdImageGreen(gdImagePtr im, int color) */
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
-         return;
       }
    }
 }
@@ -1998,8 +1966,8 @@ HB_FUNC( GDIMAGEGREEN ) /* int gdImageGreen(gdImagePtr im, int color) */
 HB_FUNC( GDIMAGEBLUE ) /* int gdImageBlue(gdImagePtr im, int color) */
 {
    if( hb_pcount() == 2 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 )
      )
    {
       gdImagePtr im;
@@ -2022,7 +1990,6 @@ HB_FUNC( GDIMAGEBLUE ) /* int gdImageBlue(gdImagePtr im, int color) */
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
-         return;
       }
    }
 }
@@ -2032,7 +1999,7 @@ HB_FUNC( GDIMAGEBLUE ) /* int gdImageBlue(gdImagePtr im, int color) */
 HB_FUNC( GDIMAGESX ) /* int gdImageSX(gdImagePtr im) */
 {
    if( hb_pcount() == 1 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER
+       HB_ISPOINTER( 1 )
      )
    {
       gdImagePtr im;
@@ -2051,7 +2018,6 @@ HB_FUNC( GDIMAGESX ) /* int gdImageSX(gdImagePtr im) */
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
-         return;
       }
    }
 }
@@ -2061,7 +2027,7 @@ HB_FUNC( GDIMAGESX ) /* int gdImageSX(gdImagePtr im) */
 HB_FUNC( GDIMAGESY ) /* int gdImageSX(gdImagePtr im) */
 {
    if( hb_pcount() == 1 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER
+       HB_ISPOINTER( 1 )
      )
    {
       gdImagePtr im;
@@ -2080,7 +2046,6 @@ HB_FUNC( GDIMAGESY ) /* int gdImageSX(gdImagePtr im) */
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
-         return;
       }
    }
 }
@@ -2090,9 +2055,9 @@ HB_FUNC( GDIMAGESY ) /* int gdImageSX(gdImagePtr im) */
 HB_FUNC( GDIMAGEGETPIXEL ) /* int gdImageGetPixel(gdImagePtr im, int x, int y) */
 {
    if( hb_pcount() == 3 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 )
      )
    {
       gdImagePtr im;
@@ -2116,7 +2081,6 @@ HB_FUNC( GDIMAGEGETPIXEL ) /* int gdImageGetPixel(gdImagePtr im, int x, int y) *
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-         return;
       }
    }
 }
@@ -2126,9 +2090,9 @@ HB_FUNC( GDIMAGEGETPIXEL ) /* int gdImageGetPixel(gdImagePtr im, int x, int y) *
 HB_FUNC( GDIMAGEBOUNDSSAFE ) /* int gdImageBoundsSafe(gdImagePtr im, int x, int y) */
 {
    if( hb_pcount() == 3 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 )
      )
    {
       gdImagePtr im;
@@ -2152,7 +2116,6 @@ HB_FUNC( GDIMAGEBOUNDSSAFE ) /* int gdImageBoundsSafe(gdImagePtr im, int x, int 
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-         return;
       }
    }
 }
@@ -2162,7 +2125,7 @@ HB_FUNC( GDIMAGEBOUNDSSAFE ) /* int gdImageBoundsSafe(gdImagePtr im, int x, int 
 HB_FUNC( GDIMAGEGETINTERLACED ) /* int gdImageGetInterlaced(gdImagePtr im) */
 {
    if( hb_pcount() == 1 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER
+       HB_ISPOINTER( 1 )
      )
    {
       gdImagePtr im;
@@ -2181,7 +2144,6 @@ HB_FUNC( GDIMAGEGETINTERLACED ) /* int gdImageGetInterlaced(gdImagePtr im) */
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ) );
-         return;
       }
    }
 }
@@ -2191,7 +2153,7 @@ HB_FUNC( GDIMAGEGETINTERLACED ) /* int gdImageGetInterlaced(gdImagePtr im) */
 HB_FUNC( GDIMAGEGETTRANSPARENT ) /* int gdImageGetTransparent(gdImagePtr im) */
 {
    if( hb_pcount() == 1 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER
+       HB_ISPOINTER( 1 )
      )
    {
       gdImagePtr im;
@@ -2210,7 +2172,6 @@ HB_FUNC( GDIMAGEGETTRANSPARENT ) /* int gdImageGetTransparent(gdImagePtr im) */
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
-         return;
       }
    }
 }
@@ -2220,7 +2181,7 @@ HB_FUNC( GDIMAGEGETTRANSPARENT ) /* int gdImageGetTransparent(gdImagePtr im) */
 HB_FUNC( GDIMAGETRUECOLOR ) /* int gdImageTrueColor(gdImagePtr im) */
 {
    if( hb_pcount() == 1 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER
+       HB_ISPOINTER( 1 )
      )
    {
       gdImagePtr im;
@@ -2239,7 +2200,6 @@ HB_FUNC( GDIMAGETRUECOLOR ) /* int gdImageTrueColor(gdImagePtr im) */
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
-         return;
       }
    }
 }
@@ -2249,9 +2209,9 @@ HB_FUNC( GDIMAGETRUECOLOR ) /* int gdImageTrueColor(gdImagePtr im) */
 HB_FUNC( GDIMAGETRUECOLORTOPALETTE ) /* void gdImageTrueColorToPalette (gdImagePtr im, int ditherFlag, int colorsWanted) */
 {
    if( hb_pcount() == 3 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_LOGICAL &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISLOG( 2 ) &&
+       HB_ISNUM( 3 )
      )
    {
       gdImagePtr im;
@@ -2277,7 +2237,6 @@ HB_FUNC( GDIMAGETRUECOLORTOPALETTE ) /* void gdImageTrueColorToPalette (gdImageP
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-         return;
       }
    }
 }
@@ -2287,9 +2246,9 @@ HB_FUNC( GDIMAGETRUECOLORTOPALETTE ) /* void gdImageTrueColorToPalette (gdImageP
 HB_FUNC( GDIMAGECREATEPALETTEFROMTRUECOLOR ) /* gdImagePtr gdImageCreatePaletteFromTrueColor(gdImagePtr im, int ditherFlag, int colorsWanted) */
 {
    if( hb_pcount() == 3 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_LOGICAL &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISLOG( 2 ) &&
+       HB_ISNUM( 3 )
      )
    {
       gdImagePtr im;
@@ -2319,7 +2278,6 @@ HB_FUNC( GDIMAGECREATEPALETTEFROMTRUECOLOR ) /* gdImagePtr gdImageCreatePaletteF
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-         return;
       }
    }
 }
@@ -2329,9 +2287,9 @@ HB_FUNC( GDIMAGECREATEPALETTEFROMTRUECOLOR ) /* gdImagePtr gdImageCreatePaletteF
 HB_FUNC( GDIMAGEPALETTEPIXEL ) /* int gdImagePalettePixel(gdImagePtr im, int x, int y) */
 {
    if( hb_pcount() == 3 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 )
      )
    {
       gdImagePtr im;
@@ -2355,7 +2313,6 @@ HB_FUNC( GDIMAGEPALETTEPIXEL ) /* int gdImagePalettePixel(gdImagePtr im, int x, 
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-         return;
       }
    }
 }
@@ -2365,9 +2322,9 @@ HB_FUNC( GDIMAGEPALETTEPIXEL ) /* int gdImagePalettePixel(gdImagePtr im, int x, 
 HB_FUNC( GDIMAGETRUECOLORPIXEL ) /* int gdImageTrueColorPixel(gdImagePtr im, int x, int y) */
 {
    if( hb_pcount() == 3 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 )
      )
    {
       gdImagePtr im;
@@ -2391,7 +2348,6 @@ HB_FUNC( GDIMAGETRUECOLORPIXEL ) /* int gdImageTrueColorPixel(gdImagePtr im, int
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-         return;
       }
    }
 }
@@ -2401,7 +2357,7 @@ HB_FUNC( GDIMAGETRUECOLORPIXEL ) /* int gdImageTrueColorPixel(gdImagePtr im, int
 HB_FUNC( GDIMAGEGETTHICKNESS ) /* void gdImageGetThickness(gdImagePtr im) */
 {
    if( hb_pcount() == 1 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER
+       HB_ISPOINTER( 1 )
      )
    {
       gdImagePtr im;
@@ -2420,7 +2376,6 @@ HB_FUNC( GDIMAGEGETTHICKNESS ) /* void gdImageGetThickness(gdImagePtr im) */
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
-         return;
       }
    }
 }
@@ -2505,12 +2460,12 @@ HB_FUNC( GDIMAGESTRING ) /* void gdImageChar(gdImagePtr im, gdFontPtr font, int 
                          /* void gdImageString(gdImagePtr im, gdFontPtr font, int x, int y, unsigned char *s, int color) */
 {
    if( hb_pcount() == 6 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_POINTER &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_STRING  &&
-       hb_parinfo( 6 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISPOINTER( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISCHAR( 5 ) &&
+       HB_ISNUM( 6 )
      )
    {
       gdImagePtr im;
@@ -2554,7 +2509,6 @@ HB_FUNC( GDIMAGESTRING ) /* void gdImageChar(gdImagePtr im, gdFontPtr font, int 
             HB_ERR_FUNCNAME, 6,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ), hb_paramError( 6 ) );
-         return;
       }
    }
 }
@@ -2565,12 +2519,12 @@ HB_FUNC( GDIMAGESTRINGUP ) /* void gdImageCharUp(gdImagePtr im, gdFontPtr font, 
                            /* void gdImageStringUp(gdImagePtr im, gdFontPtr font, int x, int y, unsigned char *s, int color) */
 {
    if( hb_pcount() == 6 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_POINTER &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_STRING  &&
-       hb_parinfo( 6 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISPOINTER( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISCHAR( 5 ) &&
+       HB_ISNUM( 6 )
      )
    {
       gdImagePtr im;
@@ -2614,7 +2568,6 @@ HB_FUNC( GDIMAGESTRINGUP ) /* void gdImageCharUp(gdImagePtr im, gdFontPtr font, 
             HB_ERR_FUNCNAME, 6,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ), hb_paramError( 6 ) );
-         return;
       }
    }
 }
@@ -2627,15 +2580,15 @@ HB_FUNC( GDIMAGESTRINGFTEX )
    /* TraceLog( NULL, "Parameters: %i, Type 1 =%i=\n\r", hb_pcount(), hb_parinfo( 1 ) ); */
 
    if( hb_pcount() >= 9 &&
-        ( HB_ISNIL( 1 ) || hb_parinfo( 1 ) & ( HB_IT_POINTER ) ) &&
-       hb_parinfo( 2 ) & HB_IT_ARRAY   &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_STRING  &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 7 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 8 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 9 ) & HB_IT_STRING
+       ( HB_ISNIL( 1 ) || HB_ISPOINTER( 1 ) ) &&
+       HB_ISARRAY( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISCHAR( 4 ) &&
+       HB_ISNUM( 5 ) &&
+       HB_ISNUM( 6 ) &&
+       HB_ISNUM( 7 ) &&
+       HB_ISNUM( 8 ) &&
+       HB_ISCHAR( 9 )
      )
    {
       gdImagePtr im;
@@ -2698,21 +2651,21 @@ HB_FUNC( GDIMAGESTRINGFTEX )
       resolution  = 96;
 
       /* Retrieve line spacing */
-      if( hb_parinfo( 10 ) & HB_IT_DOUBLE )
+      if( HB_ISNUM( 10 ) )
       {
          linespacing = hb_parnd( 10 );
          flags |= gdFTEX_LINESPACE;
       }
 
       /* Retrieve charmap */
-      if( hb_parinfo( 11 ) & HB_IT_NUMERIC )
+      if( HB_ISNUM( 11 ) )
       {
          charmap = hb_parni( 11 );
          flags |= gdFTEX_CHARMAP;
       }
 
       /* Retrieve resolution */
-      if( hb_parinfo( 12 ) & HB_IT_NUMERIC )
+      if( HB_ISNUM( 12 ) )
       {
          resolution = hb_parni( 12 );
          flags |= gdFTEX_RESOLUTION;
@@ -2753,7 +2706,6 @@ HB_FUNC( GDIMAGESTRINGFTEX )
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
             hb_paramError( 9 ), hb_paramError( 10 ), hb_paramError( 11 ), hb_paramError( 12 ) );
-         return;
       }
    }
 }
@@ -2765,17 +2717,17 @@ HB_FUNC( GDIMAGESTRINGFTCIRCLE ) /* char *gdImageStringFTCircle(gdImagePtr im, i
    /*TraceLog( NULL, "Parameters: %i, Type 9 =%i=\n\r", hb_pcount(), hb_parinfo( 10 ) ); */
 
    if( hb_pcount() == 11 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 7 ) & HB_IT_STRING  &&
-       hb_parinfo( 8 ) & HB_IT_NUMERIC &&
-       ( HB_ISNIL( 9 ) || ( hb_parinfo( 9 ) & HB_IT_STRING ) ) &&
-       ( HB_ISNIL( 10 ) || ( hb_parinfo( 10 ) & HB_IT_STRING ) ) &&
-       hb_parinfo( 11 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 ) &&
+       HB_ISNUM( 6 ) &&
+       HB_ISCHAR( 7 ) &&
+       HB_ISNUM( 8 ) &&
+       ( HB_ISNIL( 9 ) || HB_ISCHAR( 9 ) ) &&
+       ( HB_ISNIL( 10 ) || HB_ISCHAR( 10 ) ) &&
+       HB_ISNUM( 11 )
      )
    {
       gdImagePtr im;
@@ -2832,7 +2784,6 @@ HB_FUNC( GDIMAGESTRINGFTCIRCLE ) /* char *gdImageStringFTCircle(gdImagePtr im, i
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
             hb_paramError( 9 ), hb_paramError( 10 ), hb_paramError( 11 ) );
-         return;
       }
    }
 }
@@ -2858,7 +2809,7 @@ HB_FUNC( GDFONTCACHESHUTDOWN ) /* void gdFontCacheShutdown (void) */
 HB_FUNC( GDFONTGETWIDTH )
 {
    if( hb_pcount() == 1 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER
+       HB_ISPOINTER( 1 )
      )
    {
       gdFontPtr font;
@@ -2877,7 +2828,6 @@ HB_FUNC( GDFONTGETWIDTH )
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
-         return;
       }
    }
 }
@@ -2887,7 +2837,7 @@ HB_FUNC( GDFONTGETWIDTH )
 HB_FUNC( GDFONTGETHEIGHT )
 {
    if( hb_pcount() == 1 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER
+       HB_ISPOINTER( 1 )
      )
    {
       gdFontPtr font;
@@ -2906,7 +2856,6 @@ HB_FUNC( GDFONTGETHEIGHT )
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
-         return;
       }
    }
 }
@@ -2920,10 +2869,10 @@ HB_FUNC( GDFONTGETHEIGHT )
 HB_FUNC( GDIMAGECOLORALLOCATE ) /* int gdImageColorAllocate(gdImagePtr im, int r, int g, int b) */
 {
    if( hb_pcount() == 4 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 )
      )
    {
       gdImagePtr im;
@@ -2952,7 +2901,6 @@ HB_FUNC( GDIMAGECOLORALLOCATE ) /* int gdImageColorAllocate(gdImagePtr im, int r
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 4,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
-         return;
       }
    }
 }
@@ -2962,8 +2910,8 @@ HB_FUNC( GDIMAGECOLORALLOCATE ) /* int gdImageColorAllocate(gdImagePtr im, int r
 HB_FUNC( GDIMAGECOLORDEALLOCATE ) /* void gdImageColorDeallocate(gdImagePtr im, int color) */
 {
    if( hb_pcount() == 2 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 )
      )
    {
       gdImagePtr im;
@@ -2986,7 +2934,6 @@ HB_FUNC( GDIMAGECOLORDEALLOCATE ) /* void gdImageColorDeallocate(gdImagePtr im, 
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
-         return;
       }
    }
 }
@@ -2996,11 +2943,11 @@ HB_FUNC( GDIMAGECOLORDEALLOCATE ) /* void gdImageColorDeallocate(gdImagePtr im, 
 HB_FUNC( GDIMAGECOLORALLOCATEALPHA ) /* int gdImageColorAllocateAlpha(gdImagePtr im, int r, int g, int b, int a) */
 {
    if( hb_pcount() == 5 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 )
      )
    {
       gdImagePtr im;
@@ -3034,7 +2981,6 @@ HB_FUNC( GDIMAGECOLORALLOCATEALPHA ) /* int gdImageColorAllocateAlpha(gdImagePtr
             HB_ERR_FUNCNAME, 5,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ) );
-         return;
       }
    }
 }
@@ -3044,10 +2990,10 @@ HB_FUNC( GDIMAGECOLORALLOCATEALPHA ) /* int gdImageColorAllocateAlpha(gdImagePtr
 HB_FUNC( GDIMAGECOLORCLOSEST ) /* int gdImageColorClosest(gdImagePtr im, int r, int g, int b) */
 {
    if( hb_pcount() == 4 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 )
      )
    {
       gdImagePtr im;
@@ -3076,7 +3022,6 @@ HB_FUNC( GDIMAGECOLORCLOSEST ) /* int gdImageColorClosest(gdImagePtr im, int r, 
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 4,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
-         return;
       }
    }
 }
@@ -3086,11 +3031,11 @@ HB_FUNC( GDIMAGECOLORCLOSEST ) /* int gdImageColorClosest(gdImagePtr im, int r, 
 HB_FUNC( GDIMAGECOLORCLOSESTALPHA ) /* int gdImageColorClosestAlpha(gdImagePtr im, int r, int g, int b, int a) */
 {
    if( hb_pcount() == 5 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 )
      )
    {
       gdImagePtr im;
@@ -3124,7 +3069,6 @@ HB_FUNC( GDIMAGECOLORCLOSESTALPHA ) /* int gdImageColorClosestAlpha(gdImagePtr i
             HB_ERR_FUNCNAME, 5,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ) );
-         return;
       }
    }
 }
@@ -3134,10 +3078,10 @@ HB_FUNC( GDIMAGECOLORCLOSESTALPHA ) /* int gdImageColorClosestAlpha(gdImagePtr i
 HB_FUNC( GDIMAGECOLORCLOSESTHWB ) /*  gdImageColorClosestHWB(gdImagePtr im, int r, int g, int b) */
 {
    if( hb_pcount() == 4 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 )
      )
    {
       gdImagePtr im;
@@ -3166,7 +3110,6 @@ HB_FUNC( GDIMAGECOLORCLOSESTHWB ) /*  gdImageColorClosestHWB(gdImagePtr im, int 
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 4,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
-         return;
       }
    }
 }
@@ -3176,10 +3119,10 @@ HB_FUNC( GDIMAGECOLORCLOSESTHWB ) /*  gdImageColorClosestHWB(gdImagePtr im, int 
 HB_FUNC( GDIMAGECOLOREXACT ) /* int gdImageColorExact(gdImagePtr im, int r, int g, int b) */
 {
    if( hb_pcount() == 4 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 )
      )
    {
       gdImagePtr im;
@@ -3208,7 +3151,6 @@ HB_FUNC( GDIMAGECOLOREXACT ) /* int gdImageColorExact(gdImagePtr im, int r, int 
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 4,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
-         return;
       }
    }
 }
@@ -3218,10 +3160,10 @@ HB_FUNC( GDIMAGECOLOREXACT ) /* int gdImageColorExact(gdImagePtr im, int r, int 
 HB_FUNC( GDIMAGECOLORRESOLVE ) /* int gdImageColorResolve(gdImagePtr im, int r, int g, int b) */
 {
    if( hb_pcount() == 4 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 )
      )
    {
       gdImagePtr im;
@@ -3250,7 +3192,6 @@ HB_FUNC( GDIMAGECOLORRESOLVE ) /* int gdImageColorResolve(gdImagePtr im, int r, 
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 4,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
-         return;
       }
    }
 }
@@ -3260,11 +3201,11 @@ HB_FUNC( GDIMAGECOLORRESOLVE ) /* int gdImageColorResolve(gdImagePtr im, int r, 
 HB_FUNC( GDIMAGECOLORRESOLVEALPHA ) /* int gdImageColorResolveAlpha(gdImagePtr im, int r, int g, int b, int a) */
 {
    if( hb_pcount() == 5 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 )
      )
    {
       gdImagePtr im;
@@ -3298,7 +3239,6 @@ HB_FUNC( GDIMAGECOLORRESOLVEALPHA ) /* int gdImageColorResolveAlpha(gdImagePtr i
             HB_ERR_FUNCNAME, 5,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ) );
-         return;
       }
    }
 }
@@ -3308,8 +3248,8 @@ HB_FUNC( GDIMAGECOLORRESOLVEALPHA ) /* int gdImageColorResolveAlpha(gdImagePtr i
 HB_FUNC( GDIMAGECOLORTRANSPARENT ) /* void gdImageColorTransparent(gdImagePtr im, int color) */
 {
    if( hb_pcount() == 2 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 )
      )
    {
       gdImagePtr im;
@@ -3332,7 +3272,6 @@ HB_FUNC( GDIMAGECOLORTRANSPARENT ) /* void gdImageColorTransparent(gdImagePtr im
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
-         return;
       }
    }
 }
@@ -3342,9 +3281,9 @@ HB_FUNC( GDIMAGECOLORTRANSPARENT ) /* void gdImageColorTransparent(gdImagePtr im
 HB_FUNC( GDTRUECOLOR ) /* int gdTrueColor(int red, int green, int blue) */
 {
    if( hb_pcount() == 3 &&
-       hb_parinfo( 1 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC
+       HB_ISNUM( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 )
      )
    {
       int r, g, b;
@@ -3369,7 +3308,6 @@ HB_FUNC( GDTRUECOLOR ) /* int gdTrueColor(int red, int green, int blue) */
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-         return;
       }
    }
 }
@@ -3379,10 +3317,10 @@ HB_FUNC( GDTRUECOLOR ) /* int gdTrueColor(int red, int green, int blue) */
 HB_FUNC( GDTRUECOLORALPHA ) /* int gdTrueColorAlpha(int red, int green, int blue, int alpha) */
 {
    if( hb_pcount() == 4 &&
-       hb_parinfo( 1 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC
+       HB_ISNUM( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 )
      )
    {
       int r, g, b, a;
@@ -3408,7 +3346,6 @@ HB_FUNC( GDTRUECOLORALPHA ) /* int gdTrueColorAlpha(int red, int green, int blue
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 4,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
-         return;
       }
    }
 }
@@ -3422,14 +3359,14 @@ HB_FUNC( GDTRUECOLORALPHA ) /* int gdTrueColorAlpha(int red, int green, int blue
 HB_FUNC( GDIMAGECOPY ) /* void gdImageCopy(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int w, int h) */
 {
    if( hb_pcount() == 8 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_POINTER &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 7 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 8 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISPOINTER( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 ) &&
+       HB_ISNUM( 6 ) &&
+       HB_ISNUM( 7 ) &&
+       HB_ISNUM( 8 )
      )
    {
       gdImagePtr dst, src;
@@ -3466,7 +3403,6 @@ HB_FUNC( GDIMAGECOPY ) /* void gdImageCopy(gdImagePtr dst, gdImagePtr src, int d
             HB_ERR_FUNCNAME, 8,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ) );
-         return;
       }
    }
 }
@@ -3476,16 +3412,16 @@ HB_FUNC( GDIMAGECOPY ) /* void gdImageCopy(gdImagePtr dst, gdImagePtr src, int d
 HB_FUNC( GDIMAGECOPYRESIZED ) /* void gdImageCopyResized(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int dstW, int dstH, int srcW, int srcH) */
 {
    if( hb_pcount() == 10 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_POINTER &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 7 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 8 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 9 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 10 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISPOINTER( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 ) &&
+       HB_ISNUM( 6 ) &&
+       HB_ISNUM( 7 ) &&
+       HB_ISNUM( 8 ) &&
+       HB_ISNUM( 9 ) &&
+       HB_ISNUM( 10 )
      )
    {
       gdImagePtr dst, src;
@@ -3530,7 +3466,6 @@ HB_FUNC( GDIMAGECOPYRESIZED ) /* void gdImageCopyResized(gdImagePtr dst, gdImage
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
             hb_paramError( 9 ), hb_paramError( 10 ) );
-         return;
       }
    }
 }
@@ -3540,16 +3475,16 @@ HB_FUNC( GDIMAGECOPYRESIZED ) /* void gdImageCopyResized(gdImagePtr dst, gdImage
 HB_FUNC( GDIMAGECOPYRESAMPLED ) /* void gdImageCopyResampled(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int dstW, int dstH, int srcW, int srcH) */
 {
    if( hb_pcount() == 10 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_POINTER &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 7 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 8 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 9 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 10 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISPOINTER( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 ) &&
+       HB_ISNUM( 6 ) &&
+       HB_ISNUM( 7 ) &&
+       HB_ISNUM( 8 ) &&
+       HB_ISNUM( 9 ) &&
+       HB_ISNUM( 10 )
      )
    {
       gdImagePtr dst, src;
@@ -3594,7 +3529,6 @@ HB_FUNC( GDIMAGECOPYRESAMPLED ) /* void gdImageCopyResampled(gdImagePtr dst, gdI
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
             hb_paramError( 9 ), hb_paramError( 10 ) );
-         return;
       }
    }
 }
@@ -3604,15 +3538,15 @@ HB_FUNC( GDIMAGECOPYRESAMPLED ) /* void gdImageCopyResampled(gdImagePtr dst, gdI
 HB_FUNC( GDIMAGECOPYROTATED ) /* void gdImageCopyRotated(gdImagePtr dst, gdImagePtr src, double dstX, double dstY, int srcX, int srcY, int srcW, int srcH, int angle) */
 {
    if( hb_pcount() == 9 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_POINTER &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 7 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 8 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 9 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISPOINTER( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 ) &&
+       HB_ISNUM( 6 ) &&
+       HB_ISNUM( 7 ) &&
+       HB_ISNUM( 8 ) &&
+       HB_ISNUM( 9 )
      )
    {
       gdImagePtr dst, src;
@@ -3654,7 +3588,6 @@ HB_FUNC( GDIMAGECOPYROTATED ) /* void gdImageCopyRotated(gdImagePtr dst, gdImage
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
             hb_paramError( 9 ) );
-         return;
       }
    }
 }
@@ -3664,22 +3597,22 @@ HB_FUNC( GDIMAGECOPYROTATED ) /* void gdImageCopyRotated(gdImagePtr dst, gdImage
 HB_FUNC( GDIMAGECOPYMERGE ) /* void gdImageCopyMerge(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int w, int h, int pct) */
 {
    if( hb_pcount() == 9 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_POINTER &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 7 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 8 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 9 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISPOINTER( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 ) &&
+       HB_ISNUM( 6 ) &&
+       HB_ISNUM( 7 ) &&
+       HB_ISNUM( 8 ) &&
+       HB_ISNUM( 9 )
      )
    {
       gdImagePtr dst, src;
       int dstX, dstY, srcX, srcY, w, h, pct;
 
       /* Retrieve destination image pointer */
-      dst =hb_parGdImage( 1 );
+      dst = hb_parGdImage( 1 );
 
       /* Retrieve source image pointer */
       src = hb_parGdImage( 2 );
@@ -3713,7 +3646,6 @@ HB_FUNC( GDIMAGECOPYMERGE ) /* void gdImageCopyMerge(gdImagePtr dst, gdImagePtr 
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
             hb_paramError( 9 ) );
-         return;
       }
    }
 }
@@ -3723,15 +3655,15 @@ HB_FUNC( GDIMAGECOPYMERGE ) /* void gdImageCopyMerge(gdImagePtr dst, gdImagePtr 
 HB_FUNC( GDIMAGECOPYMERGEGRAY ) /* void gdImageCopyMergeGray(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int w, int h, int pct) */
 {
    if( hb_pcount() == 9 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_POINTER &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 7 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 8 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 9 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISPOINTER( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 ) &&
+       HB_ISNUM( 6 ) &&
+       HB_ISNUM( 7 ) &&
+       HB_ISNUM( 8 ) &&
+       HB_ISNUM( 9 )
      )
    {
       gdImagePtr dst, src;
@@ -3772,7 +3704,6 @@ HB_FUNC( GDIMAGECOPYMERGEGRAY ) /* void gdImageCopyMergeGray(gdImagePtr dst, gdI
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ),
             hb_paramError( 9 ) );
-         return;
       }
    }
 }
@@ -3782,8 +3713,8 @@ HB_FUNC( GDIMAGECOPYMERGEGRAY ) /* void gdImageCopyMergeGray(gdImagePtr dst, gdI
 HB_FUNC( GDIMAGEPALETTECOPY ) /* void gdImagePaletteCopy(gdImagePtr dst, gdImagePtr src) */
 {
    if( hb_pcount() == 2 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_POINTER
+       HB_ISPOINTER( 1 ) &&
+       HB_ISPOINTER( 2 )
      )
    {
       gdImagePtr dst, src;
@@ -3804,7 +3735,6 @@ HB_FUNC( GDIMAGEPALETTECOPY ) /* void gdImagePaletteCopy(gdImagePtr dst, gdImage
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
-         return;
       }
    }
 }
@@ -3814,8 +3744,8 @@ HB_FUNC( GDIMAGEPALETTECOPY ) /* void gdImagePaletteCopy(gdImagePtr dst, gdImage
 HB_FUNC( GDIMAGESQUARETOCIRCLE ) /* void gdImageSquareToCircle(gdImagePtr im, int radius) */
 {
    if( hb_pcount() == 2 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 )
      )
    {
       gdImagePtr im;
@@ -3838,7 +3768,6 @@ HB_FUNC( GDIMAGESQUARETOCIRCLE ) /* void gdImageSquareToCircle(gdImagePtr im, in
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
-         return;
       }
    }
 }
@@ -3848,8 +3777,8 @@ HB_FUNC( GDIMAGESQUARETOCIRCLE ) /* void gdImageSquareToCircle(gdImagePtr im, in
 HB_FUNC( GDIMAGESHARPEN ) /* void gdImageSharpen(gdImagePtr im, int pct) */
 {
    if( hb_pcount() == 2 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 )
      )
    {
       gdImagePtr im;
@@ -3871,7 +3800,6 @@ HB_FUNC( GDIMAGESHARPEN ) /* void gdImageSharpen(gdImagePtr im, int pct) */
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
-         return;
       }
    }
 }
@@ -3885,8 +3813,8 @@ HB_FUNC( GDIMAGESHARPEN ) /* void gdImageSharpen(gdImagePtr im, int pct) */
 HB_FUNC( GDIMAGECOMPARE ) /* int gdImageCompare(gdImagePtr im1, gdImagePtr im2) */
 {
    if( hb_pcount() == 2 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_POINTER
+       HB_ISPOINTER( 1 ) &&
+       HB_ISPOINTER( 2 )
      )
    {
       gdImagePtr dst, src;
@@ -3907,7 +3835,6 @@ HB_FUNC( GDIMAGECOMPARE ) /* int gdImageCompare(gdImagePtr im1, gdImagePtr im2) 
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
-         return;
       }
    }
 }
@@ -3917,8 +3844,8 @@ HB_FUNC( GDIMAGECOMPARE ) /* int gdImageCompare(gdImagePtr im1, gdImagePtr im2) 
 HB_FUNC( GDIMAGEINTERLACE ) /* void gdImageInterlace(gdImagePtr im, int interlace) */
 {
    if( hb_pcount() == 2 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_LOGICAL
+       HB_ISPOINTER( 1 ) &&
+       HB_ISLOG( 2 )
      )
    {
       gdImagePtr im;
@@ -3941,7 +3868,6 @@ HB_FUNC( GDIMAGEINTERLACE ) /* void gdImageInterlace(gdImagePtr im, int interlac
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
-         return;
       }
    }
 }
@@ -3972,10 +3898,10 @@ static void AddImageToFile( const char *szFile, const void * iptr, int sz )
 HB_FUNC( GDIMAGEGIFANIMBEGIN )
 {
    if( hb_pcount() == 4 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-        ( hb_parinfo( 2 ) & HB_IT_STRING || hb_parinfo( 2 ) & HB_IT_NUMERIC || HB_ISNIL( 2 ) ) &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+        ( HB_ISCHAR( 2 ) || HB_ISNUM( 2 ) || HB_ISNIL( 2 ) ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 )
      )
    {
       gdImagePtr im;
@@ -3996,18 +3922,18 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
       iptr = gdImageGifAnimBeginPtr(im, &size, GlobalCM, Loops);
 
       /* Check if 2nd parameter is a file name or an handle */
-      if( hb_parinfo( 2 ) & HB_IT_STRING )
+      if( HB_ISCHAR( 2 ) )
       {
          const char *szFile = hb_parcx( 2 );
 
          SaveImageToFile( szFile, iptr, size );
       }
-      else if( hb_parinfo( 2 ) & HB_IT_NUMERIC || HB_ISNIL( 2 ) )
+      else if( HB_ISNUM( 2 ) || HB_ISNIL( 2 ) )
       {
          HB_FHANDLE fhandle;
 
          /* Retrieve file handle */
-         fhandle = ( hb_parinfo( 2 ) & HB_IT_NUMERIC ) ? hb_parnl( 2 ) : 1; /* 1 = std output */
+         fhandle = ( HB_ISNUM( 2 ) ) ? hb_parnl( 2 ) : 1; /* 1 = std output */
 
          SaveImageToHandle( fhandle, iptr, size );
       }
@@ -4019,7 +3945,6 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-         return;
       }
    }
 }
@@ -4031,14 +3956,14 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
 HB_FUNC( GDIMAGEGIFANIMADD )
 {
    if( hb_pcount() == 8 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       ( hb_parinfo( 2 ) & HB_IT_STRING || hb_parinfo( 2 ) & HB_IT_NUMERIC || HB_ISNIL( 2 ) ) &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 7 ) & HB_IT_NUMERIC &&
-       ( hb_parinfo( 8 ) & HB_IT_POINTER || HB_ISNIL( 8 ) )
+       HB_ISPOINTER( 1 ) &&
+       ( HB_ISCHAR( 2 ) || HB_ISNUM( 2 ) || HB_ISNIL( 2 ) ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 ) &&
+       HB_ISNUM( 6 ) &&
+       HB_ISNUM( 7 ) &&
+       ( HB_ISPOINTER( 8 ) || HB_ISNIL( 8 ) )
      )
    {
       gdImagePtr im, previm;
@@ -4060,18 +3985,18 @@ HB_FUNC( GDIMAGEGIFANIMADD )
       iptr = gdImageGifAnimAddPtr(im, &size, LocalCM, LeftOfs, TopOfs, Delay, Disposal, previm);
 
       /* Check if 2nd parameter is a file name or an handle */
-      if( hb_parinfo( 2 ) & HB_IT_STRING )
+      if( HB_ISCHAR( 2 ) )
       {
          const char * szFile = hb_parcx( 2 );
 
          AddImageToFile( szFile, iptr, size );
       }
-      else if( hb_parinfo( 2 ) & HB_IT_NUMERIC || HB_ISNIL( 2 ) )
+      else if( HB_ISNUM( 2 ) || HB_ISNIL( 2 ) )
       {
          HB_FHANDLE fhandle;
 
          /* Retrieve file handle */
-         fhandle = ( hb_parinfo( 2 ) & HB_IT_NUMERIC ) ? hb_parnl( 2 ) : 1; /* 1 = std output */
+         fhandle = ( HB_ISNUM( 2 ) ) ? hb_parnl( 2 ) : 1; /* 1 = std output */
 
          SaveImageToHandle( fhandle, iptr, size );
 
@@ -4087,7 +4012,6 @@ HB_FUNC( GDIMAGEGIFANIMADD )
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 )
          );
-         return;
       }
    }
 }
@@ -4099,7 +4023,7 @@ HB_FUNC( GDIMAGEGIFANIMADD )
 HB_FUNC( GDIMAGEGIFANIMEND )
 {
    if( hb_pcount() == 1 &&
-       ( hb_parinfo( 1 ) & HB_IT_STRING || hb_parinfo( 1 ) & HB_IT_NUMERIC || HB_ISNIL( 1 ) )
+       ( HB_ISCHAR( 1 ) || HB_ISNUM( 1 ) || HB_ISNIL( 1 ) )
      )
    {
       void * iptr;
@@ -4109,18 +4033,18 @@ HB_FUNC( GDIMAGEGIFANIMEND )
       iptr = gdImageGifAnimEndPtr( &size );
 
       /* Check if 1st parameter is a file name or an handle */
-      if( hb_parinfo( 1 ) & HB_IT_STRING )
+      if( HB_ISCHAR( 1 ) )
       {
          const char * szFile = hb_parcx( 1 );
 
          AddImageToFile( szFile, iptr, size );
       }
-      else if( hb_parinfo( 2 ) & HB_IT_NUMERIC || HB_ISNIL( 2 ) )
+      else if( HB_ISNUM( 2 ) || HB_ISNIL( 2 ) )
       {
          HB_FHANDLE fhandle;
 
          /* Retrieve file handle */
-         fhandle = ( hb_parinfo( 1 ) & HB_IT_NUMERIC ) ? hb_parnl( 1 ) : 1; /* 1 = std output */
+         fhandle = ( HB_ISNUM( 1 ) ) ? hb_parnl( 1 ) : 1; /* 1 = std output */
 
          SaveImageToHandle( fhandle, iptr, size );
 
@@ -4135,7 +4059,6 @@ HB_FUNC( GDIMAGEGIFANIMEND )
             HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 )
          );
-         return;
       }
    }
 }

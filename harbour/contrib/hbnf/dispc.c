@@ -582,7 +582,7 @@ HB_FUNC( _FT_DFINIT )
         norm   = hb_parni(7);                 /* normal color attribute    */
         hlight = hb_parni(8);                 /* highlight color attribute */
 
-        if (hb_parinfo(9) & HB_IT_ARRAY)       /* if array */
+        if( HB_ISARRAY( 9 ) )
         {
            keytype = K_LIST;
            kcount  = hb_parinfa( 9, 0 );

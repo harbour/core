@@ -75,7 +75,7 @@
 HB_FUNC( FI_FITOBITMAP )
 {
    if( hb_pcount() == 1 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER
+       HB_ISPOINTER( 1 )
      )
    {
       FIBITMAP *dib;
@@ -98,7 +98,6 @@ HB_FUNC( FI_FITOBITMAP )
    }
    else
    {
-      /* Parameter error */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
          HB_ERR_FUNCNAME, 1,
          hb_paramError( 1 ) );
@@ -115,7 +114,7 @@ HB_FUNC( FI_FITOBITMAP )
 HB_FUNC( FI_BITMAPTOFI )
 {
    if( hb_pcount() == 1 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER
+       HB_ISPOINTER( 1 )
      )
    {
       FIBITMAP * dib;
@@ -146,7 +145,6 @@ HB_FUNC( FI_BITMAPTOFI )
    }
    else
    {
-      /* Parameter error */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
          HB_ERR_FUNCNAME, 1,
          hb_paramError( 1 ) );
@@ -163,12 +161,12 @@ HB_FUNC( FI_BITMAPTOFI )
 HB_FUNC( FI_WINDRAW )
 {
    if( hb_pcount() == 6 &&
-       hb_parinfo( 1 ) & HB_IT_POINTER &&
-       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-       hb_parinfo( 6 ) & HB_IT_NUMERIC
+       HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) &&
+       HB_ISNUM( 3 ) &&
+       HB_ISNUM( 4 ) &&
+       HB_ISNUM( 5 ) &&
+       HB_ISNUM( 6 )
      )
    {
       FIBITMAP * dib;
@@ -200,7 +198,6 @@ HB_FUNC( FI_WINDRAW )
    }
    else
    {
-      /* Parameter error */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
          HB_ERR_FUNCNAME, 6,
          hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ),
