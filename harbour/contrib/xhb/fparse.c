@@ -398,9 +398,7 @@ HB_FUNC( FPARSE )
    nByte = pDelim ? (BYTE) hb_itemGetCPtr( pDelim )[0] : (BYTE) 44;
 
    /* the main array */
-   pArray = hb_itemNew( NULL );
-   hb_arrayNew( pArray, 0 );
-
+   pArray = hb_itemArrayNew( 0 );
    pItem = hb_itemNew( NULL );
 
    /* book memory for line to read */
@@ -433,7 +431,7 @@ HB_FUNC( FPARSE )
    }
 
    /* return main array */
-   hb_itemReturnForward( pArray );
+   hb_itemReturnRelease( pArray );
    hb_itemRelease( pItem );
 
    /* clean up */
@@ -480,9 +478,7 @@ HB_FUNC( FPARSEEX )
    nByte = pDelim ? (BYTE) hb_itemGetCPtr( pDelim )[0] : (BYTE) 44;
 
    /* the main array */
-   pArray = hb_itemNew( NULL );
-   hb_arrayNew( pArray, 0 );
-
+   pArray = hb_itemArrayNew( 0 );
    pSubArray = hb_itemNew( NULL );
 
    /* book memory for line to read */
@@ -502,7 +498,7 @@ HB_FUNC( FPARSEEX )
    }
 
    /* return main array */
-   hb_itemReturnForward( pArray );
+   hb_itemReturnRelease( pArray );
    hb_itemRelease( pSubArray );
 
    /* clean up */
@@ -673,22 +669,19 @@ HB_FUNC( FCHARCOUNT )
 /*----------------------------------------------------------------------------*/
 HB_FUNC( FPARSELINE )
 {
-   PHB_ITEM pReturn = NULL;
+   PHB_ITEM pArray = NULL;
    int iWords = 0;
+   const char * szText;
 
-   hb_arrayNew( pReturn, 0 );
+   pArray = hb_itemArrayNew( 0 );
+   szText = hb_parc( 1 );
 
-   if ( HB_ISCHAR(1) )
+   if( szText )
    {
-      PHB_ITEM pDelim = hb_param( 2, HB_IT_STRING );
-
-      hb_ParseLine( pReturn, hb_parcx(1), pDelim ? hb_itemGetCPtr( pDelim )[ 0 ] : (int) ',', &iWords );
+      const char * szDelim = hb_parc( 2 );
+      hb_ParseLine( pArray, szText, szDelim ? ( unsigned char ) *szDelim : ',', &iWords );
    }
 
-   hb_itemReturnForward( pReturn );
-
-   if ( hb_pcount() >= 3 )
-   {
-      hb_stornl( iWords, 3 );
-   }
+   hb_itemReturnRelease( pArray );
+   hb_stornl( iWords, 3 );
 }
