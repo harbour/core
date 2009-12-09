@@ -53,6 +53,7 @@
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
+#include "hbapierr.h"
 #include "hbwinuni.h"
 #include "hbwapi.h"
 
@@ -74,6 +75,58 @@ HB_FUNC( WAPI_GETCURRENTPROCESSID )
 HB_FUNC( WAPI_GETCURRENTTHREAD )
 {
    wapi_ret_HANDLE( GetCurrentThread() );
+}
+
+HB_FUNC( WAPI_WAITFORSINGLEOBJECT )
+{
+   hb_retnl( WaitForSingleObject( wapi_par_HANDLE( 1 ), ( DWORD ) hb_parnl( 2 ) ) );
+}
+
+HB_FUNC( WAPI_WAITFORSINGLEOBJECTEX )
+{
+   hb_retnl( WaitForSingleObjectEx( wapi_par_HANDLE( 1 ), ( DWORD ) hb_parnl( 2 ), hb_parl( 3 ) ) );
+}
+
+HB_FUNC( WAPI_WAITFORMULTIPLEOBJECT )
+{
+   PHB_ITEM pArray = hb_param( 2, HB_IT_ARRAY );
+   HB_SIZE nLen = pArray ? hb_arrayLen( pArray ) : 0;
+
+   if( nLen > 0 && nLen <= MAXIMUM_WAIT_OBJECTS )
+   {
+      HANDLE * handles = ( HANDLE * ) hb_xgrab( nLen * sizeof( HANDLE ) );
+      HB_SIZE nPos;
+
+      for( nPos = 0; nPos < nLen; ++nPos )
+         handles[ nPos ] = hb_arrayGetPtr( pArray, nPos + 1 );
+
+      hb_retnl( WaitForMultipleObjects( nLen, handles, hb_parl( 3 ), ( DWORD ) hb_parnl( 4 ) ) );
+
+      hb_xfree( handles );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 1001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( WAPI_WAITFORMULTIPLEOBJECTEX )
+{
+   PHB_ITEM pArray = hb_param( 2, HB_IT_ARRAY );
+   HB_SIZE nLen = pArray ? hb_arrayLen( pArray ) : 0;
+
+   if( nLen > 0 && nLen <= MAXIMUM_WAIT_OBJECTS )
+   {
+      HANDLE * handles = ( HANDLE * ) hb_xgrab( nLen * sizeof( HANDLE ) );
+      HB_SIZE nPos;
+
+      for( nPos = 0; nPos < nLen; ++nPos )
+         handles[ nPos ] = hb_arrayGetPtr( pArray, nPos + 1 );
+
+      hb_retnl( WaitForMultipleObjectsEx( nLen, handles, hb_parl( 3 ), ( DWORD ) hb_parnl( 4 ), hb_parl( 5 ) ) );
+
+      hb_xfree( handles );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 1001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( WAPI_SETPROCESSWORKINGSETSIZE )
