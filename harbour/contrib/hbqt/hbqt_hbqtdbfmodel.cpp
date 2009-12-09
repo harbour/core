@@ -99,34 +99,27 @@ static QVariant hbqt_fetchRole( PHB_ITEM block, int what, int par1, int par2 )
       if( hb_itemType( ret ) & HB_IT_STRING )
       {
          vv = hb_itemGetCPtr( ret );
-#if defined( __HB_DEBUG__ )
-hbqt_debug( "   fetchRole[ s = %s ]",  hb_itemGetCPtr( ret ) );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "   fetchRole[ s = %s ]", hb_itemGetCPtr( ret ) ) );
       }
       else if( hb_itemType( ret ) & HB_IT_LOGICAL )
       {
          vv = hb_itemGetL( ret );
-#if defined( __HB_DEBUG__ )
-hbqt_debug( "   fetchRole[ l = %i ]",  hb_itemGetL( ret ) );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "   fetchRole[ l = %i ]", hb_itemGetL( ret ) ) );
       }
       else if( hb_itemType( ret ) & HB_IT_DOUBLE  )
       {
          vv = hb_itemGetND( ret );
-#if defined( __HB_DEBUG__ )
-hbqt_debug( "   fetchRole[ d = %i ]",  hb_itemGetND( ret ) );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "   fetchRole[ d = %f ]", hb_itemGetND( ret ) ) );
       }
       else if( hb_itemType( ret ) & HB_IT_NUMERIC )
       {
          vv = hb_itemGetNI( ret );
-#if defined( __HB_DEBUG__ )
-hbqt_debug( "   fetchRole[ n = %i ]",  hb_itemGetNI( ret ) );
-#endif
+         HB_TRACE( HB_TR_DEBUG, ( "   fetchRole[ n = %i ]", hb_itemGetNI( ret ) ) );
       }
 
       hb_vmRequestRestore();
    }
+
    return vv;
 }
 
@@ -156,9 +149,8 @@ Qt::ItemFlags HbDbfModel::flags( const QModelIndex & index ) const
 
 QVariant HbDbfModel::data( const QModelIndex & index, int role ) const
 {
-#if defined( __HB_DEBUG__ )
-hbqt_debug( "data - row=%i col=%i role=%i", index.row(), index.column(), role );
-#endif
+   HB_TRACE( HB_TR_DEBUG, ( "HbDbfModel::data( row=%i col=%i role=%i )", index.row(), index.column(), role ) );
+
    if( !index.isValid() )
       return QVariant();
 
@@ -207,9 +199,8 @@ hbqt_debug( "data - row=%i col=%i role=%i", index.row(), index.column(), role );
 
 QVariant HbDbfModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-#if defined( __HB_DEBUG__ )
-hbqt_debug( "headerData - section=%i orient=%i role=%i", section, orientation, role );
-#endif
+   HB_TRACE( HB_TR_DEBUG, ( "HbDbfModel::headerData( section=%i orient=%i role=%i )", section, orientation, role ) );
+
    if( orientation == Qt::Horizontal )
    {
       switch( role )

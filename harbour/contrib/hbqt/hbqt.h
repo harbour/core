@@ -76,15 +76,17 @@ typedef struct
   QT_G_FUNC_PTR func;
 } QGC_POINTER;
 
-int hbqt_get_object_release_method();
+extern int hbqt_get_object_release_method();
 #define HBQT_RELEASE_WITH_DELETE         0
 #define HBQT_RELEASE_WITH_DESTRUTOR      1
 #define HBQT_RELEASE_WITH_DELETE_LATER   2
 
 HB_GARBAGE_FUNC( Q_release );
 
-void * hbqt_gcpointer( int iParam );
+extern void * hbqt_gcpointer( int iParam );
 const HB_GC_FUNCS * gcFuncs( void );
+
+extern int hbqt_getmemused( void );
 
 #include "hbqt_garbage.h"
 

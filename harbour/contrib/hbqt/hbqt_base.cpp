@@ -52,6 +52,8 @@
  */
 /*----------------------------------------------------------------------*/
 
+#define HB_OS_WIN_USED
+
 #include "hbapi.h"
 
 #include "hbqt.h"
@@ -66,3 +68,83 @@ HB_FUNC( QT_VERSION_STR )
    hb_retc_const( QT_VERSION_STR );
 }
 
+#if QT_VERSION >= 0x040500
+
+#include <QtCore/QObject>
+
+HB_FUNC( QT_FINDCHILD )
+{
+   hb_retptr( ( QObject * ) hbqt_par_QObject( 1 )->findChild< QObject * >( hbqt_par_QString( 2 ) ) );
+}
+
+HB_FUNC( HBQT_ISEQUALGCQTPOINTER )
+{
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( gcFuncs(), 1 );
+
+   if( p && p->ph )
+   {
+      hb_retl( p->ph == hb_parptr( 2 ) );
+   }
+   else
+   {
+      hb_retl( false );
+   }
+}
+
+#if defined( HB_OS_WIN )
+   #include <psapi.h>
+#endif
+
+int hbqt_getmemused( void )
+{
+#if defined( HB_OS_WIN )
+#if (_WIN32_WINNT >= 0x0501)
+#ifdef __GNUC__
+// MingW32 doesn't have this struct in psapi.h
+typedef struct _PROCESS_MEMORY_COUNTERS_EX
+{
+   DWORD  cb;
+   DWORD  PageFaultCount;
+   SIZE_T PeakWorkingSetSize;
+   SIZE_T WorkingSetSize;
+   SIZE_T QuotaPeakPagedPoolUsage;
+   SIZE_T QuotaPagedPoolUsage;
+   SIZE_T QuotaPeakNonPagedPoolUsage;
+   SIZE_T QuotaNonPagedPoolUsage;
+   SIZE_T PagefileUsage;
+   SIZE_T PeakPagefileUsage;
+   SIZE_T PrivateUsage;
+}PROCESS_MEMORY_COUNTERS_EX, *PPROCESS_MEMORY_COUNTERS_EX;
+#endif
+#endif
+#endif
+   int size = 0;
+#if defined( HB_OS_WIN )
+   HANDLE hProcess;
+#if (_WIN32_WINNT >= 0x0501)
+   PROCESS_MEMORY_COUNTERS_EX pmc;
+#else
+   PROCESS_MEMORY_COUNTERS pmc;
+#endif
+   hProcess = OpenProcess( PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, GetCurrentProcessId() );
+   if( hProcess == NULL )
+      return 0;
+
+   pmc.cb = sizeof(pmc);
+   if( GetProcessMemoryInfo( hProcess, (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof( pmc ) ) )
+#if (_WIN32_WINNT >= 0x0501)
+      size = ( int ) pmc.PrivateUsage / 1024;
+#else
+      size = ( int ) pmc.WorkingSetSize / 1024;
+#endif
+   CloseHandle( hProcess );
+#endif
+   return size;
+}
+
+HB_FUNC( HBQT_GETMEMUSED )
+{
+   hb_retni( hbqt_getmemused() );
+}
+
+#endif                  // #if QT_VERSION >= 0x040500

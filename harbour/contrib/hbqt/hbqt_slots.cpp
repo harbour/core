@@ -791,9 +791,8 @@ HB_FUNC( QT_DISCONNECT_SIGNAL )
          hb_itemRelease( t_slots->listBlock.at( i - 1 ) );
          t_slots->listBlock[ i - 1 ] = NULL;
          bFreed = disconnect_signal( object, signal );
-#if defined( __HB_DEBUG__ )
-hbqt_debug( "      QT_DISCONNECT_SIGNAL: %s    %s", bFreed ? "YES" : "NO", signal );
-#endif
+
+         HB_TRACE( HB_TR_DEBUG, ( "      QT_DISCONNECT_SIGNAL: %s    %s", bFreed ? "YES" : "NO", signal ) );
       }
    }
    hb_retl( bFreed );
@@ -899,9 +898,8 @@ HB_FUNC( QT_DISCONNECT_EVENT )
          t_events->listObj[ i - 1 ]   = NULL;
          object->setProperty( prop, QVariant() );
          bRet = HB_TRUE;
-#if defined( __HB_DEBUG__ )
-hbqt_debug( "      QT_DISCONNECT_EVENT: %i", type );
-#endif
+
+         HB_TRACE( HB_TR_DEBUG, ( "      QT_DISCONNECT_EVENT: %i", type ) );
       }
    }
 

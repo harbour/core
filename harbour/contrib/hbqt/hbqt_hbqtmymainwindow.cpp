@@ -85,17 +85,15 @@ MyMainWindow::MyMainWindow( PHB_ITEM pBlock, int iThreadID )
 
 MyMainWindow::~MyMainWindow( void )
 {
-#if defined( __HB_DEBUG__ )
-hbqt_debug( "               MyMainWindow::~MyMainWindow 0" );
-#endif
+   HB_TRACE( HB_TR_DEBUG, ( "MyMainWindow::~MyMainWindow: BEGIN" ) );
+
    if( block )
    {
       hb_itemRelease( block );
       block = NULL;
    }
-#if defined( __HB_DEBUG__ )
-hbqt_debug( "               MyMainWindow::~MyMainWindow 1" );
-#endif
+
+   HB_TRACE( HB_TR_DEBUG, ( "MyMainWindow::~MyMainWindow: END" ) );
 }
 
 void MyMainWindow::paintEvent( QPaintEvent * event )
@@ -267,9 +265,8 @@ void MyMainWindow::resizeEvent( QResizeEvent * event )
 
 void MyMainWindow::closeEvent( QCloseEvent * event )
 {
-#if defined( __HB_DEBUG__ )
-hbqt_debug( "               close event(%i)", threadID );
-#endif
+   HB_TRACE( HB_TR_DEBUG, ( "MyMainWindow::closeEvent: ThreadID: %i", threadID ) );
+
    hb_threadMutexLock( s_mutex );
    if( hb_vmRequestReenter() )
    {

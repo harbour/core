@@ -67,13 +67,11 @@ HbTableView::HbTableView( QWidget * parent ) : QTableView( parent )
 
 HbTableView::~HbTableView()
 {
-#if defined( __HB_DEBUG__ )
-hbqt_debug( "HbTableView::~HbTableView() 0 %i %i", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-#endif
+   HB_TRACE( HB_TR_DEBUG, ( "HbTableView::~HbTableView: BEGIN %i %i", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
    destroy();
-#if defined( __HB_DEBUG__ )
-hbqt_debug( "HbTableView::~HbTableView() 1 %i %i", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-#endif
+
+   HB_TRACE( HB_TR_DEBUG, ( "HbTableView::~HbTableView: END %i %i", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
 }
 
 void HbTableView::keyPressEvent( QKeyEvent * event )
@@ -113,7 +111,7 @@ void HbTableView::resizeEvent( QResizeEvent * event )
 
 QModelIndex HbTableView::moveCursor( HbTableView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers )
 {
-//hbqt_debug( "HbTableView: action=%i %i", cursorAction, QAbstractItemView::MoveDown );
+// HB_TRACE( HB_TR_DEBUG, ( "HbTableView::moveCursor( action=%i %i )", cursorAction, QAbstractItemView::MoveDown ) );
 
    //emit sg_moveCursor( cursorAction, modifiers );
    return QTableView::moveCursor( cursorAction, modifiers );
@@ -131,7 +129,8 @@ void HbTableView::scrollContentsBy( int x, int y )
 
 void HbTableView::scrollTo( const QModelIndex & index, QAbstractItemView::ScrollHint hint )
 {
-//hbqt_debug( "HbTableView:scrollTo row = %i col = %i", index.row(),index.column() );
+// HB_TRACE( HB_TR_DEBUG, ( "HbTableView::scrollTo( row = %i col = %i )", index.row(), index.column() ) );
+
    QTableView::scrollTo( index, hint );
 }
 
