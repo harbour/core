@@ -65,7 +65,7 @@ HB_CALL_ON_STARTUP_END( HB_MACRONAME_JOIN( _hb_lang_Init_, HB_LANG_ID ) )
 #endif
 
 #if defined( HB_PRAGMA_STARTUP )
-   #pragma startup hb_lang_Init_
+   #pragma startup _hb_lang_Init_
 #elif defined( HB_DATASEG_STARTUP )
    #define HB_DATASEG_BODY    \
             HB_DATASEG_FUNC( HB_MACRONAME_JOIN( _hb_lang_Init_, HB_LANG_ID ) )

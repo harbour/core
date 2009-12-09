@@ -35,9 +35,11 @@ C_HEADERS := \
    hbgtcore.h \
    hbgtreg.h \
    hbhash.h \
+   hbiniseg.h \
    hbinit.h \
    hbmacro.h \
    hbmath.h \
+   hbmsgreg.h \
    hbpcode.h \
    hbpp.h \
    hbrddcdx.h \
