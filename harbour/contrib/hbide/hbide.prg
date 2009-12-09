@@ -234,8 +234,12 @@ CLASS HbIde
    METHOD updateHbp()
    METHOD saveProject()
    METHOD addSourcesToProject()
-
-
+   /* Project Build and Launch Methods */
+   DATA   cProcessInfo
+   DATA   qProcess
+   METHOD buildProject()
+   METHOD buildProjectViaQt()
+   METHOD readProcessInfo()
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -588,7 +592,7 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos )
    LOCAL oTab, qEdit, qHiliter, qLayout, qDocument, qHScr, qVScr
    LOCAL lFirst := .t.
 
-   IF !( IsValidSource( cSourceFile ) )
+   IF !( IsValidText( cSourceFile ) )
       RETURN Self
    ENDIF
 
@@ -1054,7 +1058,8 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
       //
       aadd( aPops, { "Properties"               , {|| ::loadProjectProperties( cHbi, .f., .t. ) } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "Save and Build"           , {|| NIL } } )
+      aadd( aPops, { "Save and Build"           , {|| ::buildProject( oXbpTreeItem:caption ) } } )
+      aadd( aPops, { "Save and Build (Qt)"      , {|| ::buildProjectViaQt( oXbpTreeItem:caption ) } } )
       aadd( aPops, { "Save, Build and Launch"   , {|| NIL } } )
       aadd( aPops, { "" } )
       aadd( aPops, { "Save and Re-Build"        , {|| NIL } } )
@@ -1373,6 +1378,9 @@ METHOD HbIde:buildOutputResults()
    ::oDockB2:oWidget:setFocusPolicy( Qt_NoFocus )
 
    ::oOutputResult := XbpMLE():new( ::oDockB2 ):create( , , { 0,0 }, { 100, 400 }, , .t. )
+   ::oOutputResult:wordWrap := .f.
+   //::oOutputResult:dataLink := {|x| IIf( x==NIL, cText, cText := x ) }
+
    ::oDockB2:oWidget:setWidget( QT_PTROFXBP( ::oOutputResult ) )
 
    ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, QT_PTROFXBP( ::oDockB2 ), Qt_Vertical )
@@ -1613,6 +1621,8 @@ METHOD HbIde:loadProjectProperties( cProject, lNew, lFetch )
 
    IF n == 0
       aadd( ::aProjects, { lower( cProject ), cProject, aclone( ::aPrjProps ) } )
+   ELSE
+      ::aProjects[ n,3 ] := aclone( ::aPrjProps )
    ENDIF
 
    RETURN Self
@@ -1693,6 +1703,8 @@ METHOD HbIde:fetchProjectProperties()
       ::aPrpObjs := {}
    ENDIF
 
+   ::manageFocusInEditor()
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1745,7 +1757,7 @@ METHOD HbIde:updateHbp( iIndex )
    /* Final assault */
    ::aPrpObjs[ E_oPrjHbp ]:setPlainText( ArrayToMemo( txt_ ) )
 
-   RETURN nil
+   RETURN txt_
 
 /*----------------------------------------------------------------------*/
 
@@ -1816,5 +1828,100 @@ METHOD HbIde:addSourcesToProject()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-//
+//                          Project Builds
 /*----------------------------------------------------------------------*/
+/* hb_processRun( <cCommand>, [ <cStdIn> ], [ @<cStdOut> ], [ @<cStdErr> ], [ <lDetach> ] ) -> <nResult> */
+
+METHOD HbIde:buildProject( cProject )
+   LOCAL cCmd, cOutput, cErrors, n, aPrj, cHbpPath, aHbp
+
+   IF empty( cProject )
+      RETURN Self
+   ENDIF
+
+   n    := ascan( ::aProjects, {|e_, x| x := e_[ 3 ], x[ 1,2,PRJ_PRP_TITLE ] == cProject } )
+   aPrj := ::aProjects[ n,3 ]
+   cHbpPath := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + hb_OsPathSeparator() + aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT ] + ".hbp"
+
+   aHbp := {}
+   aeval( aPrj[ PRJ_PRP_FLAGS, 2 ], {|e| aadd( aHbp, e ) } )
+   aeval( FilesToSources( aPrj[ PRJ_PRP_SOURCES, 2 ] ), {|e| aadd( aHbp, e ) } )
+
+   CreateTarget( cHbpPath, aHbp )
+
+   cCmd := "hbmk2.exe " + cHbpPath
+
+   ::lDockBVisible := .t.
+   ::oDockB2:show()
+
+   hb_processRun( cCmd, , @cOutput, @cErrors )
+
+   ::oOutputResult:setData( cOutput + CRLF + CRLF + cErrors )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:buildProjectViaQt( cProject )
+   LOCAL n, aPrj, cHbpPath, aHbp, qStringList
+
+   n    := ascan( ::aProjects, {|e_, x| x := e_[ 3 ], x[ 1,2,PRJ_PRP_TITLE ] == cProject } )
+   aPrj := ::aProjects[ n,3 ]
+   cHbpPath := aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_LOCATION ] + hb_OsPathSeparator() + aPrj[ PRJ_PRP_PROPERTIES, 2, PRJ_PRP_OUTPUT ] + ".hbp"
+
+   aHbp := {}
+   aeval( aPrj[ PRJ_PRP_FLAGS, 2 ], {|e| aadd( aHbp, e ) } )
+   aeval( FilesToSources( aPrj[ PRJ_PRP_SOURCES, 2 ] ), {|e| aadd( aHbp, e ) } )
+
+   CreateTarget( cHbpPath, aHbp )
+
+   ::lDockBVisible := .t.
+   ::oDockB2:show()
+
+   ::cProcessInfo := ""
+
+   qStringList := QStringList():new()
+   qStringList:append( cHbpPath )
+
+   ::qProcess := QProcess():new()
+   ::qProcess:setReadChannelMode( 0 )
+   ::qProcess:setReadChannel( 0 )
+
+   Qt_Connect_Signal( QT_PTROF( ::qProcess ), "readyReadStandardOutput()", {|o,i| ::readProcessInfo( 3, i, o ) } )
+   Qt_Connect_Signal( QT_PTROF( ::qProcess ), "finished(int,int)", {|o,i| ::readProcessInfo( 2, i, o ) } )
+
+   ::qProcess:start( "hbmk2.exe", QT_PTROF( qStringList ) )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:readProcessInfo( nMode, iBytes )
+   LOCAL cLine
+
+   DO CASE
+   CASE nMode == 1
+      ::cProcessInfo += ::qProcess:read( iBytes )
+      ::oOutputResult:setData( ::cProcessInfo )
+
+   CASE nMode == 3
+      cLine := space( 1024 )
+      ::qProcess:readLine( @cLine, 1024 )
+      IF !empty( cLine )
+         ::cProcessInfo += CRLF + trim( cLine )
+         ::oOutputResult:oWidget:appendPlainText( cLine )
+      ENDIF
+
+   CASE nMode == 2
+      ::qProcess:kill()
+      Qt_DisConnect_Signal( QT_PTROF( ::qProcess ), "finished(int,int)" )
+      Qt_DisConnect_Signal( QT_PTROF( ::qProcess ), "bytesWritten(int)" )
+
+      ::qProcess:pPtr := 0
+
+   ENDCASE
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+

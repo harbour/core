@@ -75,6 +75,7 @@
 #include <QTableWidget>
 #include <QHeaderView>
 #include <QPainter>
+#include <QProcess>
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -324,6 +325,19 @@ public slots:
    void currentCellChanged( int currentRow, int currentColumn, int previousRow, int previousColumn );
    void tabCloseRequested( int index );
    void paintRequested( QPrinter * printer );
+   /* QIODevice */
+   void aboutToClose();
+   void bytesWritten( qint64 bytes );
+   void readChannelFinished();
+   void readyRead();
+   /* QProcess */
+   void error( QProcess::ProcessError error );
+   void finished( int exitCode, QProcess::ExitStatus exitStatus );
+   void readyReadStandardError();
+   void readyReadStandardOutput();
+   void started();
+   void stateChanged( QProcess::ProcessState newState );
+   /* */
 };
 
 class Events: public QObject

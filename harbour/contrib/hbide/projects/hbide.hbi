@@ -2,17 +2,23 @@
 Type              = Executable
 Title             = Harbour-Qt IDE
 Location          = <IdeSrc>projects
-WorkingFolder     = <IdeSrc>
+WorkingFolder     = <IdeSrc>projects
 DestinationFolder = <IdeSrc>projects
 Output            = hbide
 LaunchParams      = 
 LaunchProgram     = 
  
 [ FLAGS ]
+../../hbxbp/hbxbp.hbc
 -w3
+-inc
+-gui
 -es2
 -lhbwin
+-lpsapi
 -Lc:\qt\2009.01\qt\lib
+-o<IdeSrc>projects\hbides.exe
+-workdir=<IdeSrc>projects/${hb_comp}/hbide
  
 [ SOURCES ]
 #  "Not Equal To == #" is a comment line as is accepted in .hbp

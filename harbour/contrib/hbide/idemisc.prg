@@ -373,13 +373,23 @@ FUNCTION MemoToArray( s )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION IsValidSource( cSourceFile )
+FUNCTION IsValidText( cSourceFile )
    LOCAL cExt
 
    hb_fNameSplit( cSourceFile, , , @cExt )
    cExt := lower( cExt )
 
    RETURN ( cExt $ ".c,.cpp,.prg,.h,.ch,.txt,.log,.ini,.env" )
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION IsValidSource( cSourceFile )
+   LOCAL cExt
+
+   hb_fNameSplit( cSourceFile, , , @cExt )
+   cExt := lower( cExt )
+
+   RETURN ( cExt $ ".c,.cpp,.prg,.res,.rc" )
 
 /*----------------------------------------------------------------------*/
 
@@ -394,3 +404,16 @@ FUNCTION PathNormalized( cPath, lLower )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION FilesToSources( aFiles )
+   LOCAL aSrc := {}
+   LOCAL s
+
+   FOR EACH s IN aFiles
+      IF IsValidSource( s )
+         aadd( aSrc, s )
+      ENDIF
+   NEXT
+
+   RETURN aSrc
+
+/*----------------------------------------------------------------------*/

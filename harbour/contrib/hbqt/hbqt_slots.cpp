@@ -511,6 +511,20 @@ void Slots::cellPressed( int row, int column )                                  
 void Slots::currentCellChanged( int currentRow, int currentColumn, int previousRow, int previousColumn ) { hbqt_SlotsExecIntIntIntInt(   qobject_cast<QObject *>( sender() ), "currentCellChanged(int,int,int,int)", currentRow, currentColumn, previousRow, previousColumn ); }
 void Slots::tabCloseRequested( int index )                                                               { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "tabCloseRequested(int)", index ); }
 void Slots::paintRequested( QPrinter * printer )                                                         { hbqt_SlotsExecPointer(        qobject_cast<QObject *>( sender() ), "paintRequested(QPrinter)", printer ); }
+/* QIODevice */
+void Slots::aboutToClose()                                                                               { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "aboutToClose()" ); }
+void Slots::bytesWritten( qint64 bytes )                                                                 { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "bytesWritten(int)", bytes ); }
+void Slots::readChannelFinished()                                                                        { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "readChannelFinished()" ); }
+void Slots::readyRead()                                                                                  { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "readyRead()" ); }
+/* QProcess */
+void Slots::error( QProcess::ProcessError error )                                                        { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "error(error)", error ); }
+void Slots::finished( int exitCode, QProcess::ExitStatus exitStatus )                                    { hbqt_SlotsExecIntInt(         qobject_cast<QObject *>( sender() ), "finished(int,int)", exitCode, exitStatus ); }
+void Slots::readyReadStandardError()                                                                     { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "readyReadStandardError()" ); }
+void Slots::readyReadStandardOutput()                                                                    { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "readyReadStandardOutput()" ); }
+void Slots::started()                                                                                    { hbqt_SlotsExec(               qobject_cast<QObject *>( sender() ), "started()" ); }
+void Slots::stateChanged( QProcess::ProcessState newState )                                              { hbqt_SlotsExecInt(            qobject_cast<QObject *>( sender() ), "stateChanged(int)", newState ); }
+/* */
+
 
 /*----------------------------------------------------------------------*/
 /*
@@ -627,6 +641,17 @@ HB_FUNC( QT_CONNECT_SIGNAL )
    else if( signal == ( QString ) "currentCellChanged(int,int,int,int)" )       ret = object->connect( object, SIGNAL( currentCellChanged( int, int, int, int ) )                  , t_slots, SLOT( currentCellChanged( int, int, int, int ) )                  , Qt::AutoConnection );
    else if( signal == ( QString ) "tabCloseRequested(int)" )                    ret = object->connect( object, SIGNAL( tabCloseRequested( int ) )                                  , t_slots, SLOT( tabCloseRequested( int ) )                                  , Qt::AutoConnection );
    else if( signal == ( QString ) "paintRequested(QPrinter)" )                  ret = object->connect( object, SIGNAL( paintRequested( QPrinter * ) )                              , t_slots, SLOT( paintRequested( QPrinter * ) )                              , Qt::AutoConnection );
+   /* QIODevice & QProcess */
+   else if( signal == ( QString ) "aboutToClose()" )                            ret = object->connect( object, SIGNAL( aboutToClose() )                                            , t_slots, SLOT( aboutToClose() )                                            , Qt::AutoConnection );
+   else if( signal == ( QString ) "bytesWritten(int)" )                         ret = object->connect( object, SIGNAL( bytesWritten( qint64 ) )                                    , t_slots, SLOT( bytesWritten( qint64 ) )                                    , Qt::AutoConnection );
+   else if( signal == ( QString ) "readChannelFinished()" )                     ret = object->connect( object, SIGNAL( readChannelFinished() )                                     , t_slots, SLOT( readChannelFinished() )                                     , Qt::AutoConnection );
+   else if( signal == ( QString ) "readyRead()" )                               ret = object->connect( object, SIGNAL( readyRead() )                                               , t_slots, SLOT( readyRead() )                                               , Qt::AutoConnection );
+   else if( signal == ( QString ) "error(int)" )                                ret = object->connect( object, SIGNAL( error( int ) )                                              , t_slots, SLOT( error( int ) )                                              , Qt::AutoConnection );
+   else if( signal == ( QString ) "finished(int,int)" )                         ret = object->connect( object, SIGNAL( finished( int, QProcess::ExitStatus ) )                     , t_slots, SLOT( finished( int, QProcess::ExitStatus ) )                     , Qt::AutoConnection );
+   else if( signal == ( QString ) "readyReadStandardError()" )                  ret = object->connect( object, SIGNAL( readyReadStandardError() )                                  , t_slots, SLOT( readyReadStandardError() )                                  , Qt::AutoConnection );
+   else if( signal == ( QString ) "readyReadStandardOutput()" )                 ret = object->connect( object, SIGNAL( readyReadStandardOutput() )                                 , t_slots, SLOT( readyReadStandardOutput() )                                 , Qt::AutoConnection );
+   else if( signal == ( QString ) "started()" )                                 ret = object->connect( object, SIGNAL( started() )                                                 , t_slots, SLOT( started() )                                                 , Qt::AutoConnection );
+   else if( signal == ( QString ) "stateChanged(int)" )                         ret = object->connect( object, SIGNAL( stateChanged( int ) )                                       , t_slots, SLOT( stateChanged( int ) )                                       , Qt::AutoConnection );
    else ret = false;
 
    if( ret == true )
@@ -734,6 +759,17 @@ static bool disconnect_signal( QObject * object, const char * signal )
    else if( signal == ( QString ) "currentCellChanged(int,int,int,int)" )       return object->disconnect( SIGNAL( currentCellChanged( int, int, int, int ) ) );
    else if( signal == ( QString ) "tabCloseRequested(int)" )                    return object->disconnect( SIGNAL( tabCloseRequested( int ) ) );
    else if( signal == ( QString ) "paintRequested(QPrinter)" )                  return object->disconnect( SIGNAL( paintRequested( QPrinter * ) ) );
+   /* QIODevice & QProcess */
+   else if( signal == ( QString ) "aboutToClose()" )                            return object->disconnect( SIGNAL( aboutToClose() ) );
+   else if( signal == ( QString ) "bytesWritten(int)" )                         return object->disconnect( SIGNAL( bytesWritten( qint64 ) ) );
+   else if( signal == ( QString ) "readChannelFinished()" )                     return object->disconnect( SIGNAL( readChannelFinished() ) );
+   else if( signal == ( QString ) "readyRead()" )                               return object->disconnect( SIGNAL( readyRead() ) );
+   else if( signal == ( QString ) "error(int)" )                                return object->disconnect( SIGNAL( error( int ) ) );
+   else if( signal == ( QString ) "finished(int,int)" )                         return object->disconnect( SIGNAL( finished( int, QProcess::ExitStatus ) ) );
+   else if( signal == ( QString ) "readyReadStandardError()" )                  return object->disconnect( SIGNAL( readyReadStandardError() ) );
+   else if( signal == ( QString ) "readyReadStandardOutput()" )                 return object->disconnect( SIGNAL( readyReadStandardOutput() ) );
+   else if( signal == ( QString ) "started()" )                                 return object->disconnect( SIGNAL( started() ) );
+   else if( signal == ( QString ) "stateChanged(int)" )                         return object->disconnect( SIGNAL( stateChanged( int ) ) );
 
    return false;
 }
