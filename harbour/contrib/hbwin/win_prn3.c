@@ -64,6 +64,7 @@
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
+#include "hbwinuni.h"
 
 static HB_BOOL hb_SetDefaultPrinter( LPTSTR lpPrinterName )
 {
@@ -251,11 +252,11 @@ HB_FUNC( WIN_PRINTERSETDEFAULT )
 {
    if( hb_parclen( 1 ) > 0 )
    {
-      LPTSTR lpPrinterName = HB_TCHAR_CONVTO( hb_parc( 1 ) );
+      void * hPrinterName;
 
-      hb_retl( hb_SetDefaultPrinter( lpPrinterName ) );
+      hb_retl( hb_SetDefaultPrinter( ( LPTSTR ) HB_PARSTR( 1, &hPrinterName, NULL ) ) );
 
-      HB_TCHAR_FREE( lpPrinterName );
+      hb_strfree( hPrinterName );
    }
    else
       hb_retl( HB_FALSE );

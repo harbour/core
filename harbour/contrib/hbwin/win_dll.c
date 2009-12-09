@@ -64,6 +64,7 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
+#include "hbwinuni.h"
 
 #if !defined( HB_NO_ASM ) && defined( HB_OS_WIN ) && !defined( __CYGWIN__ )
 
@@ -660,11 +661,11 @@ static LPVOID hb_getprocaddress( HMODULE hDLL, int iProc )
 
 HB_FUNC( LOADLIBRARY )
 {
-   LPTSTR lpName = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
+   void * hName;
 
-   hb_retnint( ( HB_PTRDIFF ) LoadLibrary( lpName ) );
+   hb_retnint( ( HB_PTRDIFF ) LoadLibrary( ( LPCTSTR ) HB_PARSTRDEF( 1, &hName, NULL ) ) );
 
-   HB_TCHAR_FREE( lpName );
+   hb_strfree( hName );
 }
 
 HB_FUNC( FREELIBRARY )
@@ -711,11 +712,9 @@ HB_FUNC( DLLCALL )
       hDLL = ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 );
    else
    {
-      LPTSTR lpName = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
-
-      hDLL = LoadLibrary( lpName );
-
-      HB_TCHAR_FREE( lpName );
+      void * hName;
+      hDLL = LoadLibrary( ( LPCTSTR ) HB_PARSTRDEF( 1, &hName, NULL ) );
+      hb_strfree( hName );
    }
 
    if( hDLL && ( HB_PTRDIFF ) hDLL >= 32 )
@@ -739,9 +738,9 @@ HB_FUNC( DLLPREPARECALL )
 
    if( HB_ISCHAR( 1 ) )
    {
-      LPTSTR lpName = HB_TCHAR_CONVTO( hb_parc( 1 ) );
-      xec->hDLL = LoadLibrary( lpName );
-      HB_TCHAR_FREE( lpName );
+      void * hName;
+      xec->hDLL = LoadLibrary( ( LPCTSTR ) HB_PARSTRDEF( 1, &hName, NULL ) );
+      hb_strfree( hName );
    }
    else if( HB_ISPOINTER( 1 ) )
       xec->hDLL = ( HMODULE ) hb_parptr( 1 );

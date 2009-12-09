@@ -54,6 +54,7 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbwinuni.h"
 
 static HKEY hb_regkeyconv( HB_PTRUINT nKey )
 {
@@ -80,12 +81,12 @@ static HKEY hb_regkeyconv( HB_PTRUINT nKey )
 
 HB_FUNC( WIN_REGCREATEKEYEX )
 {
-   LPTSTR lpText = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+   void * hKey;
    HKEY hkResult = NULL;
    DWORD dwDisposition = 0;
 
    hb_retl( RegCreateKeyEx( hb_regkeyconv( ( HB_PTRUINT ) hb_parnint( 1 ) ),
-                            lpText,
+                            ( LPCTSTR ) HB_PARSTRDEF( 2, &hKey, NULL ),
                             0,
                             NULL,
                             hb_parnl( 5 ) /* dwOptions */,
@@ -97,23 +98,23 @@ HB_FUNC( WIN_REGCREATEKEYEX )
    hb_storptr( hkResult, 8 );
    hb_stornl( dwDisposition, 9 );
 
-   HB_TCHAR_FREE( lpText );
+   hb_strfree( hKey );
 }
 
 HB_FUNC( WIN_REGOPENKEYEX )
 {
-   LPTSTR lpText = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+   void * hKey;
    HKEY hkResult = NULL;
 
    hb_retl( RegOpenKeyEx( hb_regkeyconv( ( HB_PTRUINT ) hb_parnint( 1 ) ),
-                          lpText,
+                          ( LPCTSTR ) HB_PARSTRDEF( 2, &hKey, NULL ),
                           0 /* dwOptions */,
                           hb_parnl( 4 ) /* samDesired */,
                           &hkResult ) == ERROR_SUCCESS );
 
    hb_storptr( hkResult, 5 );
 
-   HB_TCHAR_FREE( lpText );
+   hb_strfree( hKey );
 }
 
 HB_FUNC( WIN_REGQUERYVALUEEX )
@@ -131,17 +132,39 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
    {
       if( dwSize > 0 )
       {
-         BYTE * cValue = ( BYTE * ) hb_xgrab( dwSize + 1 );
+         if( dwType == REG_SZ || dwType == REG_EXPAND_SZ || dwType == REG_MULTI_SZ )
+         {
+            LPTSTR lpValue = ( LPTSTR ) hb_xgrab( ( dwSize + 1 ) * sizeof( TCHAR ) );
 
-         RegQueryValueEx( ( HKEY ) hb_parptr( 1 ),
-                          lpKey,
-                          NULL,
-                          &dwType,
-                          ( BYTE * ) cValue,
-                          &dwSize );
+            RegQueryValueEx( ( HKEY ) hb_parptr( 1 ),
+                             lpKey,
+                             NULL,
+                             &dwType,
+                             ( LPBYTE ) lpValue,
+                             &dwSize );
 
-         if( ! hb_storclen_buffer( ( char * ) cValue, dwSize, 5 ) )
-            hb_xfree( cValue );
+            #if defined( UNICODE )
+                dwSize >>= 1;
+            #endif
+
+            HB_STORSTRLEN( lpValue, dwSize, 5 );
+
+            hb_xfree( lpValue );
+         }
+         else /* No translation for binary data */
+         {
+            BYTE * cValue = ( BYTE * ) hb_xgrab( dwSize + 1 );
+
+            RegQueryValueEx( ( HKEY ) hb_parptr( 1 ),
+                             lpKey,
+                             NULL,
+                             &dwType,
+                             ( LPBYTE ) cValue,
+                             &dwSize );
+
+            if( ! hb_storclen_buffer( ( char * ) cValue, dwSize, 5 ) )
+               hb_xfree( cValue );
+         }
       }
       else
          hb_storc( NULL, 5 );
@@ -157,14 +180,14 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
 
 HB_FUNC( WIN_REGSETVALUEEX )
 {
-   LPTSTR lpKey = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+   void * hKey;
    DWORD dwType = ( DWORD ) hb_parnl( 4 );
 
    if( dwType == REG_DWORD )
    {
       DWORD nSpace = ( DWORD ) hb_parnl( 5 );
       hb_retl( RegSetValueEx( ( HKEY ) hb_parptr( 1 ),
-                              lpKey,
+                              ( LPCTSTR ) HB_PARSTRDEF( 2, &hKey, NULL ),
                               0,
                               dwType,
                               ( BYTE * ) &nSpace,
@@ -172,13 +195,13 @@ HB_FUNC( WIN_REGSETVALUEEX )
    }
    else
       hb_retl( RegSetValueEx( ( HKEY ) hb_parptr( 1 ),
-                              lpKey,
+                              ( LPCTSTR ) HB_PARSTRDEF( 2, &hKey, NULL ),
                               0,
                               dwType,
                               ( BYTE * ) hb_parcx( 5 ) /* cValue */,
                               hb_parclen( 5 ) + 1 ) == ERROR_SUCCESS );
 
-   HB_TCHAR_FREE( lpKey );
+   hb_strfree( hKey );
 }
 
 HB_FUNC( WIN_REGCLOSEKEY )
