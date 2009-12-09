@@ -289,12 +289,13 @@ static char * hb_itemStringCon( PHB_ITEM pItem, ULONG * pulLen, BOOL * pfFreeReq
 HB_FUNC( OUTSTD ) /* writes a list of values to the standard output device */
 {
    int iPCount = hb_pcount(), iParam;
-   char * pszString;
-   ULONG ulLen;
-   BOOL fFree;
 
    for( iParam = 1; iParam <= iPCount; iParam++ )
    {
+      char * pszString;
+      ULONG ulLen;
+      BOOL fFree;
+
       if( iParam > 1 )
          hb_conOutStd( " ", 1 );
       pszString = hb_itemString( hb_param( iParam, HB_IT_ANY ), &ulLen, &fFree );
@@ -308,12 +309,13 @@ HB_FUNC( OUTSTD ) /* writes a list of values to the standard output device */
 HB_FUNC( OUTERR ) /* writes a list of values to the standard error device */
 {
    int iPCount = hb_pcount(), iParam;
-   char * pszString;
-   ULONG ulLen;
-   BOOL fFree;
 
    for( iParam = 1; iParam <= iPCount; iParam++ )
    {
+      char * pszString;
+      ULONG ulLen;
+      BOOL fFree;
+
       if( iParam > 1 )
          hb_conOutErr( " ", 1 );
       pszString = hb_itemString( hb_param( iParam, HB_IT_ANY ), &ulLen, &fFree );
@@ -327,12 +329,13 @@ HB_FUNC( OUTERR ) /* writes a list of values to the standard error device */
 HB_FUNC( QQOUT ) /* writes a list of values to the current device (screen or printer) and is affected by SET ALTERNATE */
 {
    int iPCount = hb_pcount(), iParam;
-   char * pszString;
-   ULONG ulLen;
-   BOOL fFree;
 
    for( iParam = 1; iParam <= iPCount; iParam++ )
    {
+      char * pszString;
+      ULONG ulLen;
+      BOOL fFree;
+
       if( iParam > 1 )
          hb_conOutAlt( " ", 1 );
       pszString = hb_itemString( hb_param( iParam, HB_IT_ANY ), &ulLen, &fFree );

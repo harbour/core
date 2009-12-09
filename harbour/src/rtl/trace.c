@@ -6,6 +6,7 @@
  * Harbour Project source code:
  * The Clipper tracing API.
  *
+ * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
  * Copyright 1999 Gonzalo A. Diethelm <gonzalo.diethelm@iname.com>
  * www - http://www.harbour-project.org
  *
@@ -51,6 +52,7 @@
  */
 
 #include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbtrace.h"
 
 HB_FUNC( HB_TRACESTATE )
@@ -65,9 +67,32 @@ HB_FUNC( HB_TRACELEVEL )
 
 HB_FUNC( HB_TRACESTRING )
 {
-   const char * szMessage = hb_parc( 1 );
-   if( szMessage )
+   int iPCount = hb_pcount();
+
+   if( iPCount > 0 )
    {
-      HB_TRACE(HB_TR_ALWAYS, ("%s", szMessage) );
+      char buffer[ 1024 ];
+      int iParam;
+
+      buffer[ 0 ] = '\0';
+
+      for( iParam = 1; iParam <= iPCount; iParam++ )
+      {
+         char * pszString;
+         ULONG ulLen;
+         BOOL fFree;
+
+         if( iParam > 1 )
+            hb_strncat( buffer, " ", sizeof( buffer ) - 1 );
+
+         pszString = hb_itemString( hb_param( iParam, HB_IT_ANY ), &ulLen, &fFree );
+
+         hb_strncat( buffer, pszString, sizeof( buffer ) - 1 );
+
+         if( fFree )
+            hb_xfree( pszString );
+      }
+
+      HB_TRACE(HB_TR_ALWAYS, ("%s", buffer) );
    }
 }

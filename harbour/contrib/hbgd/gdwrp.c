@@ -674,7 +674,7 @@ HB_FUNC( GDIMAGECREATETRUECOLOR ) /* gdImageCreateTrueColor(sx, sy) */
 HB_FUNC( GDIMAGECREATEFROMJPEG ) /* gdImageCreateFromJpegPtr(int size, void *data) */
                                  /* implementation: gdImagePtr gdImageCreateFromJpeg( char *szFile ) */
 {
-     GDImageCreateFrom( IMAGE_JPEG );
+   GDImageCreateFrom( IMAGE_JPEG );
 }
 
 

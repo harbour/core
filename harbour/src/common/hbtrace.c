@@ -6,6 +6,7 @@
  * Harbour Project source code:
  * Tracing functions.
  *
+ * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
  * Copyright 1999 Gonzalo Diethelm <gonzalo.diethelm@iname.com>
  * www - http://www.harbour-project.org
  *
@@ -50,6 +51,8 @@
  *
  */
 
+#define HB_OS_WIN_USED
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -66,6 +69,9 @@ int          hb_tr_level_ = 0;
 
 static int s_enabled = 1;
 static int s_flush   = 0;
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+static int s_winout  = 0;
+#endif
 
 static FILE * s_fp = NULL;
 
@@ -151,6 +157,21 @@ int hb_tr_level( void )
 
       /* ; */
 
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+
+      env = hb_getenv( "HB_TR_WINOUT" );
+      if( env != NULL && env[ 0 ] != '\0' )
+         s_winout = 1;
+      else
+         s_winout = 0;
+
+      if( env )
+         hb_xfree( ( void * ) env );
+
+#endif
+
+      /* ; */
+
       env = hb_getenv( "HB_TR_FLUSH" );
       if( env != NULL && env[ 0 ] != '\0' )
          s_flush = 1;
@@ -208,6 +229,32 @@ void hb_tr_trace( const char * fmt, ... )
        * Print a new-line.
        */
       fprintf( s_fp, "\n" );
+
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+
+      if( s_winout )
+      {
+         char buffer1[ 1024 ];
+         char buffer2[ 1024 ];
+
+         va_start( ap, fmt );
+         hb_vsnprintf( buffer1, sizeof( buffer1 ), fmt, ap );
+         va_end( ap );
+
+         hb_snprintf( buffer2, sizeof( buffer2 ), "%s:%d: %s %s", hb_tr_file_ + i, hb_tr_line_, s_slevel[ hb_tr_level_ ], buffer1 );
+
+         #if defined( UNICODE )
+         {
+            LPTSTR lpOutputString = HB_TCHAR_CONVTO( buffer2 );
+            OutputDebugString( lpOutputString );
+            HB_TCHAR_FREE( lpOutputString );
+         }
+         #else
+            OutputDebugString( buffer2 );
+         #endif
+      }
+
+#endif
 
       /*
        * Reset file and line.
