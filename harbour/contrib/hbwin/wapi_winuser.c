@@ -71,22 +71,22 @@ HB_FUNC( WAPI_GETDESKTOPWINDOW )
 
 HB_FUNC( WAPI_MESSAGEBOX )
 {
-   LPTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
-   LPTSTR lpStr2 = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
-   hb_retni( MessageBox( ( HWND ) hb_parptr( 1 ), lpStr1, lpStr2, hb_parni( 4 ) ) );
-   HB_TCHAR_FREE( lpStr1 );
-   HB_TCHAR_FREE( lpStr2 );
+   void * hStr1;
+   void * hStr2;
+   hb_retni( MessageBox( ( HWND ) hb_parptr( 1 ), ( LPCTSTR ) HB_PARSTR( 2, &hStr1, NULL ), ( LPCTSTR ) HB_PARSTR( 3, &hStr2, NULL ), hb_parni( 4 ) ) );
+   hb_strfree( hStr1 );
+   hb_strfree( hStr2 );
 }
 
 HB_FUNC( WAPI_CREATEWINDOWEX )
 {
-   LPTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
-   LPTSTR lpStr2 = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
+   void * hClassName;
+   void * hWindowName;
 
    hb_retptr( CreateWindowEx(
       ( DWORD )     hb_parnl( 1 ) /* dwExStyle */,
-      ( LPCTSTR )   lpStr1 /* lpClassName */,
-      ( LPCTSTR )   lpStr2 /* lpWindowName */,
+      ( LPCTSTR )   HB_PARSTRDEF( 2, &hClassName, NULL ),
+      ( LPCTSTR )   HB_PARSTRDEF( 3, &hWindowName, NULL ),
       HB_ISNUM( 4 ) ? ( DWORD ) hb_parnl( 4 ) : WS_OVERLAPPEDWINDOW /* dwStyle */,
       HB_ISNUM( 5 ) ? ( int ) hb_parni( 5 ) : ( int ) CW_USEDEFAULT /* x */,
       HB_ISNUM( 6 ) ? ( int ) hb_parni( 6 ) : ( int ) CW_USEDEFAULT /* y */,
@@ -97,8 +97,8 @@ HB_FUNC( WAPI_CREATEWINDOWEX )
       ( HINSTANCE ) hb_parptr( 11 ) /* hInstance */,
       ( LPVOID )    hb_parptr( 12 ) /* lpParam */ ) );
 
-   HB_TCHAR_FREE( lpStr1 );
-   HB_TCHAR_FREE( lpStr2 );
+   hb_strfree( hClassName );
+   hb_strfree( hWindowName );
 }
 
 HB_FUNC( WAPI_DESTROYWINDOW )
@@ -301,17 +301,14 @@ HB_FUNC( WAPI_SETFOCUS )
 #if 0
 HB_FUNC( WAPI_LOADBITMAP )
 {
-   LPTSTR lpBmp;
-
    if( HB_ISNUM( 2 ) )
-      lpBmp = ( LPTSTR ) MAKEINTRESOURCE( wapi_par_INT( 2 ) );
+      hb_retptr( LoadBitmap( wapi_par_HINSTANCE( 1 ), ( LPTSTR ) MAKEINTRESOURCE( wapi_par_INT( 2 ) ) ) );
    else
-      lpBmp = ( LPTSTR ) HB_TCHAR_CONVTO( hb_parcx( 2 ) );
-
-   hb_retptr( LoadBitmap( wapi_par_HINSTANCE( 1 ), lpBmp ) );
-
-   if( ! HB_ISNUM( 2 ) )
-      HB_TCHAR_FREE( lpBmp );
+   {
+      void * hBmp;
+      hb_retptr( LoadBitmap( wapi_par_HINSTANCE( 1 ), ( LPCTSTR ) HB_PARSTRDEF( 2, &hBmp, NULL ) ) );
+      hb_strfree( hBmp );
+   }
 }
 #endif
 /*----------------------------------------------------------------------*/

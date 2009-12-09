@@ -112,13 +112,13 @@ HB_FUNC( WIDETOANSI )
 
 HB_FUNC( MESSAGEBOX )
 {
-   LPTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
-   LPTSTR lpStr2 = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
+   void * hStr1;
+   void * hStr2;
    HWND hWnd = HB_ISNUM( 1 ) ? ( HWND ) ( HB_PTRUINT ) hb_parnint( 1 ) :
                                ( HWND ) hb_parptr( 1 );
-   hb_retni( MessageBox( hWnd, lpStr1, lpStr2, hb_parni( 4 ) ) );
-   HB_TCHAR_FREE( lpStr1 );
-   HB_TCHAR_FREE( lpStr2 );
+   hb_retni( MessageBox( hWnd, ( LPCTSTR ) HB_PARSTR( 2, &hStr1, NULL ), ( LPCTSTR ) HB_PARSTR( 3, &hStr2, NULL ), hb_parni( 4 ) ) );
+   hb_strfree( hStr1 );
+   hb_strfree( hStr2 );
 }
 
 HB_FUNC( __OLEPDISP )

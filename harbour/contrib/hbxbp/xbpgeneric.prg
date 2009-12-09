@@ -133,7 +133,7 @@ FUNCTION hbxbp_InitializeEventBuffer()
 
    IF empty( t_events )
       t_events := array( EVENT_BUFFER )
-      aeval( t_events, {|e,i| e := e, t_events[ i ] := { 0, NIL, NIL, NIL } } )
+      aeval( t_events, {|e,i| HB_SYMBOL_UNUSED( e ), t_events[ i ] := { 0, NIL, NIL, NIL } } )
    ENDIF
 
    RETURN nil
@@ -143,7 +143,7 @@ FUNCTION hbxbp_InitializeEventBuffer()
 FUNCTION hbxbp_ClearEventBuffer()
 
    IF !empty( t_events )
-      aeval( t_events, {|e,i| e := e, t_events[ i ] := NIL } )
+      aeval( t_events, {|e,i| HB_SYMBOL_UNUSED( e ), t_events[ i ] := NIL } )
       t_events := NIL
    ENDIF
 
@@ -166,11 +166,10 @@ FUNCTION hbxbp_SetEventLoop( oELoop )
 /*----------------------------------------------------------------------*/
 
 FUNCTION PostAppEvent( nEvent, mp1, mp2, oXbp )
-   LOCAL lSuccess := .T.
 
    SetAppEvent( nEvent, mp1, mp2, oXbp )
 
-   RETURN lSuccess
+   RETURN .T.
 
 /*----------------------------------------------------------------------*/
 
@@ -226,9 +225,7 @@ FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
 /*----------------------------------------------------------------------*/
 
 FUNCTION SetAppWindow( oXbp )
-   LOCAL oldAppWindow
-
-   oldAppWindow := t_oAppWindow
+   LOCAL oldAppWindow := t_oAppWindow
 
    IF hb_isObject( oXbp )
       t_oAppWindow := oXbp
@@ -270,12 +267,12 @@ FUNCTION MsgBox( cMsg, cTitle )
 
    DEFAULT cTitle TO "  "
 
-   cMsg := strtran( cMsg, chr( 13 )+chr( 10 ), "<BR>" )
-   cMsg := strtran( cMsg, chr( 13 ), "<BR>" )
-   cMsg := strtran( cMsg, chr( 10 ), "<BR>" )
+   cMsg := strtran( cMsg, chr( 13 ) + chr( 10 ), "<br />" )
+   cMsg := strtran( cMsg, chr( 13 ), "<br />" )
+   cMsg := strtran( cMsg, chr( 10 ), "<br />" )
 
    oMB := QMessageBox():new()
-   oMB:setText( "<b>"+ cMsg +"</b>" )
+   oMB:setText( /* "<b>" + */ cMsg /* + "</b>" */ )
    oMB:setIcon( QMessageBox_Information )
    oMB:setParent( SetAppWindow():pWidget )
    oMB:setWindowFlags( Qt_Dialog )

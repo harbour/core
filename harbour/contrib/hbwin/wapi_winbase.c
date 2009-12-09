@@ -53,24 +53,12 @@
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
+#include "hbwinuni.h"
 #include "hbwapi.h"
 
 HB_FUNC( WAPI_GETCOMMANDLINE )
 {
-   char * buffer = HB_TCHAR_CONVFROM( GetCommandLine() );
-
-   {
-      /* Convert from OS codepage */
-      char * pszFree = NULL;
-      const char * pszResult = hb_osDecodeCP( buffer, &pszFree, NULL );
-
-      if( pszFree )
-         hb_retc_buffer( pszFree );
-      else
-         hb_retc( pszResult );
-   }
-
-   HB_TCHAR_FREE( buffer );
+   HB_RETSTR( GetCommandLine() );
 }
 
 HB_FUNC( WAPI_GETCURRENTPROCESS )
@@ -117,11 +105,11 @@ HB_FUNC( WAPI_SETERRORMODE )
 
 HB_FUNC( WAPI_LOADLIBRARY )
 {
-   LPTSTR lpName = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
+   void * hName;
 
-   hb_retptr( LoadLibrary( ( LPCTSTR ) lpName ) );
+   hb_retptr( LoadLibrary( ( LPCTSTR ) HB_PARSTRDEF( 1, &hName, NULL ) ) );
 
-   HB_TCHAR_FREE( lpName );
+   hb_strfree( hName );
 }
 
 HB_FUNC( WAPI_FREELIBRARY )
@@ -141,12 +129,11 @@ HB_FUNC( WAPI_GETPROCADDRESS )
 /* HMODULE WINAPI GetModuleHandle( __in_opt LPCTSTR lpModuleName ); */
 HB_FUNC( WAPI_GETMODULEHANDLE )
 {
-   LPTSTR lpModuleName = HB_ISCHAR( 1 ) ? ( LPTSTR ) HB_TCHAR_CONVTO( hb_parc( 1 ) ) : ( LPTSTR ) NULL;
+   void * hModuleName;
 
-   wapi_ret_HANDLE( GetModuleHandle( lpModuleName ) );
+   wapi_ret_HANDLE( GetModuleHandle( ( LPCTSTR ) HB_PARSTR( 1, &hModuleName, NULL ) ) );
 
-   if( lpModuleName )
-      HB_TCHAR_FREE( lpModuleName );
+   hb_strfree( hModuleName );
 }
 
 /* VOID WINAPI Sleep( __in DWORD dwMilliseconds ); */
@@ -157,37 +144,36 @@ HB_FUNC( WAPI_SLEEP )
 
 HB_FUNC( WAPI_OUTPUTDEBUGSTRING )
 {
-   LPTSTR lpOutputString = HB_ISCHAR( 1 ) ? ( LPTSTR ) HB_TCHAR_CONVTO( hb_parc( 1 ) ) : ( LPTSTR ) NULL;
+   void * hOutputString;
 
-   OutputDebugString( lpOutputString );
+   OutputDebugString( ( LPCTSTR ) HB_PARSTR( 1, &hOutputString, NULL ) );
 
-   if( lpOutputString )
-      HB_TCHAR_FREE( lpOutputString );
+   hb_strfree( hOutputString );
 }
 
 HB_FUNC( WAPI_FORMATMESSAGE )
 {
-   LPTSTR lpSource = HB_ISCHAR( 2 ) ? HB_TCHAR_CONVTO( hb_parc( 2 ) ) : NULL;
-   HB_SIZE nBufferLen = hb_parclen( 5 );
-   LPTSTR lpBuffer = nBufferLen > 0 ? ( LPTSTR ) hb_xgrab( nBufferLen * sizeof( LPTSTR ) ) : NULL;
+   void * hSource = NULL;
 
-   hb_retnl( FormatMessage( ( DWORD ) hb_parnldef( 1, FORMAT_MESSAGE_FROM_SYSTEM ) /* dwFlags */,
-                            ( LPCVOID ) ( HB_ISCHAR( 2 ) ? lpSource : hb_parptr( 2 ) ),
-                            HB_ISNUM( 3 ) ? ( DWORD ) hb_parnl( 3 ) : GetLastError() /* dwMessageId */,
-                            ( DWORD ) hb_parnldef( 4, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ) ) /* dwLanguageId */,
-                            ( LPTSTR ) lpBuffer,
-                            ( DWORD ) nBufferLen,
-                            NULL /* TODO: Add support for this parameter. */ ) );
+   DWORD dwBufferLen = ( DWORD ) hb_parclen( 5 );
+   LPTSTR lpBuffer = dwBufferLen > 0 ? ( LPTSTR ) hb_xgrab( dwBufferLen * sizeof( LPTSTR ) ) : NULL;
+   DWORD dwRetVal;
+
+   hb_retnl( dwRetVal = FormatMessage( ( DWORD ) hb_parnldef( 1, FORMAT_MESSAGE_FROM_SYSTEM ) /* dwFlags */,
+                                       ( LPCVOID ) ( HB_ISCHAR( 2 ) ? HB_PARSTR( 2, &hSource, NULL ) : hb_parptr( 2 ) ),
+                                       HB_ISNUM( 3 ) ? ( DWORD ) hb_parnl( 3 ) : GetLastError() /* dwMessageId */,
+                                       ( DWORD ) hb_parnldef( 4, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ) ) /* dwLanguageId */,
+                                       lpBuffer,
+                                       dwBufferLen,
+                                       NULL /* TODO: Add support for this parameter. */ ) );
 
    if( lpBuffer )
    {
-      char * buffer = HB_TCHAR_CONVFROM( lpBuffer );
-      hb_storc( buffer, 5 );
-      HB_TCHAR_FREE( buffer );
-
+      HB_STORSTR( dwRetVal ? lpBuffer : NULL, 5 );
       hb_xfree( lpBuffer );
    }
+   else
+      hb_storc( NULL, 5 );
 
-   if( lpSource )
-      HB_TCHAR_FREE( lpSource );
+   hb_strfree( hSource );
 }
