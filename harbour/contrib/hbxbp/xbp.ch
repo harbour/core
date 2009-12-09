@@ -5,7 +5,7 @@
 #ifndef _XBP_CH
 
 #if defined( __HB_DEBUG__ )
-   #xtranslate HBXBP_DEBUG( [<x,...>] ) => _HBXBP_DEBUG( <x> )
+   #xtranslate HBXBP_DEBUG( [<x,...>] ) => hb_TraceString( <x> )
 #else
    #xtranslate HBXBP_DEBUG( [<x,...>] ) => iif( .T.,, )
 #endif

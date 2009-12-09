@@ -68,7 +68,7 @@
 #ifndef _HBQT_CH
 
 #if defined( __HB_DEBUG__ )
-   #xtranslate HBQT_DEBUG( [<x,...>] ) => _HBQT_DEBUG( <x> )
+   #xtranslate HBQT_DEBUG( [<x,...>] ) => hb_TraceString( <x> )
 #else
    #xtranslate HBQT_DEBUG( [<x,...>] ) => iif( .T.,, )
 #endif

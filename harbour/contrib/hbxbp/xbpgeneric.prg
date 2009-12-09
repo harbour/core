@@ -368,22 +368,3 @@ FUNCTION hbxbp_ConvertAFactFromXBP( cMode, xValue )
    RETURN xValue
 
 /*----------------------------------------------------------------------*/
-
-#if defined( __HB_DEBUG__ )
-
-PROCEDURE _HBXBP_DEBUG( ... )
-   LOCAL cString := ""
-
-   AEval( hb_AParams(), {| x | cString += iif( ISARRAY( x ), "[" + hb_ntos( Len( x ) ) + "]", hb_ValToStr( x ) ) + "   " } )
-
-   #if defined( __PLATFORM__WINDOWS ) .AND. defined( __HB_WINDEBUG__ )
-      wapi_OutputDebugString( cString )
-   #else
-      hb_TraceString( cString )
-   #endif
-
-   RETURN
-
-#endif
-
-/*----------------------------------------------------------------------*/
