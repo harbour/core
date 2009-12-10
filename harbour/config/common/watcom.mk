@@ -94,6 +94,8 @@ ifeq ($(ANYDOS),yes)
 
    # disable DOS/4GW Banner
    export DOS4G := quiet
+   # disable DOS/32A Banner
+   export DOS32A := /NOC
 
    # work arround to DOS command line size limit
    ifeq ($(CC),wcc386)

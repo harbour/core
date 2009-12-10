@@ -299,12 +299,12 @@ HB_EXTERN_BEGIN
 
 #     if HB_COUNTER_SIZE == 4
 
-         static inline void hb_atomic_inc32( volatile int * p );
+         void hb_atomic_inc32( volatile int * p );
          #pragma aux hb_atomic_inc32 = \
                "lock inc dword ptr [eax]" \
                parm [ eax ] modify exact [] ;
 
-         static inline unsigned char hb_atomic_dec32( volatile int * p );
+         unsigned char hb_atomic_dec32( volatile int * p );
          #pragma aux hb_atomic_dec32 = \
                "lock dec dword ptr [eax]", \
                "setne al" \
@@ -321,7 +321,7 @@ HB_EXTERN_BEGIN
 
 #     endif
 
-      static inline int hb_spinlock_trylock( volatile int * p );
+      int hb_spinlock_trylock( volatile int * p );
       #pragma aux hb_spinlock_trylock = \
             "mov eax, 1", \
             "xchg eax, dword ptr [edx]" \

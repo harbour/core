@@ -51,12 +51,14 @@ LD := wlink
 ifeq ($(HB_BUILD_DEBUG),yes)
    LDFLAGS += DEBUG ALL
 endif
-# different SYS values: dos4g (default), pmodew (commercial), causeway
-ifeq ($(LIBNAME),hbpp)
-   # we force causeway here as workaround for reduced command line size in dos4g
-   LDFLAGS += SYS causeway
-else
-   LDFLAGS += SYS dos4g OP stub=wstubq.exe
+
+# different SYS values: dos4g (default), pmodew (commercial), causeway,
+# dos32a (DOS/32A LE executable), dos32x (DOS/32A LX executable)
+LDFLAGS += SYS dos32a
+
+# workaround for not included automatically CLIB in pure C mode builds
+ifeq ($(CC),wcc386)
+   LDFLAGS += LIB clib3r.lib
 endif
 
 LDLIBS := $(HB_USER_LIBS)
