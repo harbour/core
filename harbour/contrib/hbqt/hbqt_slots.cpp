@@ -54,9 +54,9 @@
 /*----------------------------------------------------------------------*/
 
 #include "hbapi.h"
-#include "hbvm.h"
 #include "hbapiitm.h"
 #include "hbstack.h"
+#include "hbvm.h"
 
 #include "hbqt.h"
 
@@ -64,26 +64,7 @@
 
 #include "hbqt_slots.h"
 
-#include <QWidget>
-#include <QString>
-#include <QList>
-#include <QKeyEvent>
-#include <QAction>
-#include <QObject>
-#include <QEvent>
-#include <QMessageBox>
-#include <QFileDialog>
-
 /*----------------------------------------------------------------------*/
-
-typedef struct
-{
-   Events * t_events;
-} HB_EVENTS, * PHB_EVENTS;
-
-static HB_TSD_NEW( s_events, sizeof( HB_EVENTS ), NULL, NULL );
-
-#define HB_GETQTEVENTFILTER()       ( ( PHB_EVENTS ) hb_stackGetTSD( &s_events ) )
 
 typedef struct
 {
@@ -96,17 +77,6 @@ static HB_TSD_NEW( s_slots, sizeof( HB_SLOTS ), NULL, NULL );
 
 /*----------------------------------------------------------------------*/
 
-static void qt_setEventFilter()
-{
-   if( ! HB_GETQTEVENTFILTER()->t_events )
-      HB_GETQTEVENTFILTER()->t_events = new Events();
-}
-
-static Events * qt_getEventFilter( void )
-{
-   return HB_GETQTEVENTFILTER()->t_events;
-}
-
 static void qt_setEventSlots()
 {
    if( ! HB_GETQTEVENTSLOTS()->t_slots )
@@ -116,16 +86,6 @@ static void qt_setEventSlots()
 static Slots * qt_getEventSlots( void )
 {
    return HB_GETQTEVENTSLOTS()->t_slots;
-}
-
-HB_FUNC( QT_SETEVENTFILTER )
-{
-   qt_setEventFilter();
-}
-
-HB_FUNC( QT_GETEVENTFILTER )
-{
-   hb_retptr( qt_getEventFilter() );
 }
 
 HB_FUNC( QT_SETEVENTSLOTS )
@@ -801,109 +761,6 @@ HB_FUNC( QT_DISCONNECT_SIGNAL )
 HB_FUNC( QT_SLOTS_DESTROY )
 {
    qt_getEventSlots()->~Slots();
-}
-
-/*----------------------------------------------------------------------*/
-
-Events::Events( QObject * parent ) : QObject( parent )
-{
-}
-
-Events::~Events()
-{
-   listBlock.clear();
-}
-
-bool Events::eventFilter( QObject * object, QEvent * event )
-{
-   QEvent::Type eventtype = event->type();
-
-   if( ( int ) eventtype == 0 )
-      return false;
-
-   char prop[ 10 ];
-   hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", eventtype, "P" );
-
-   int found = object->property( prop ).toInt();
-
-   if( found == 0 )
-      return false;
-
-   bool ret = true;
-
-   if( found <= listBlock.size() && listObj.at( found - 1 ) == object && hb_vmRequestReenter() )
-   {
-      PHB_ITEM pObject = hb_itemPutPtr( NULL, object );
-      PHB_ITEM pEvent  = hb_itemPutPtr( NULL, event  );
-      ret = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 2, pObject, pEvent ) );
-      hb_itemRelease( pObject );
-      hb_itemRelease( pEvent  );
-
-      hb_vmRequestRestore();
-
-      if( eventtype == QEvent::Close )
-         event->ignore();
-   }
-
-   return ret;
-}
-
-HB_FUNC( QT_EVENTS_DESTROY )
-{
-   qt_getEventFilter()->~Events();
-}
-
-HB_FUNC( QT_CONNECT_EVENT )
-{
-   QObject * object = ( QObject* ) hbqt_gcpointer( 1 );          /* get sender    */
-
-   if( object )
-   {
-      int       type      = hb_parni( 2 );
-      PHB_ITEM  codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK | HB_IT_BYREF ) );
-      Events  * t_events  = qt_getEventFilter();
-
-      char prop[ 20 ];
-      hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
-
-      t_events->listBlock << codeblock;
-      t_events->listObj   << object;
-
-      object->setProperty( prop, ( int ) t_events->listBlock.size() );
-
-      hb_retl( HB_TRUE );
-   }
-   else
-      hb_retl( HB_FALSE );
-}
-
-HB_FUNC( QT_DISCONNECT_EVENT )
-{
-   HB_BOOL   bRet   = HB_FALSE;
-   QObject * object = ( QObject* ) hbqt_gcpointer( 1 );
-
-   if( object )
-   {
-      int       type     = hb_parni( 2 );
-      Events  * t_events = qt_getEventFilter();
-
-      char prop[ 20 ];
-      hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
-
-      int i = object->property( prop ).toInt();
-      if( i > 0 && i <= t_events->listBlock.size() )
-      {
-         hb_itemRelease( t_events->listBlock.at( i - 1 ) );
-         t_events->listBlock[ i - 1 ] = NULL;
-         t_events->listObj[ i - 1 ]   = NULL;
-         object->setProperty( prop, QVariant() );
-         bRet = HB_TRUE;
-
-         HB_TRACE( HB_TR_DEBUG, ( "      QT_DISCONNECT_EVENT: %i", type ) );
-      }
-   }
-
-   hb_retl( bRet );
 }
 
 /*----------------------------------------------------------------------*/

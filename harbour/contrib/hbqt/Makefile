@@ -21,6 +21,12 @@ moc_slots.cpp : $(TOP)$(ROOT)contrib/hbqt/hbqt_slots.h
    include $(TOP)$(ROOT)contrib/hbqt/filelist.mk
 
    CPP_SOURCES += \
+      moc_slots.cpp \
+      hbqt_base.cpp \
+      hbqt_utils.cpp \
+      hbqt_slots.cpp \
+      hbqt_destruct.cpp \
+      hbqt_events.cpp \
       hbqt_hbdbfmodel.cpp \
       hbqt_hbdrawingarea.cpp \
       hbqt_hbqmainwindow.cpp \

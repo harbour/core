@@ -1661,11 +1661,6 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
    aeval( hdr_, {|e| aadd( txt_, e ) } )
    aadd( txt_, "CPP_SOURCES := \" )
    //
-   aadd( txt_, "   " + "moc_slots.cpp \" )
-   aadd( txt_, "   " + "hbqt_base.cpp \" )
-   aadd( txt_, "   " + "hbqt_utils.cpp \" )
-   aadd( txt_, "   " + "hbqt_slots.cpp \" )
-   aadd( txt_, "   " + "hbqt_destruct.cpp \" )
    //  We will strip lines below once subs proto is running
    #if 0
    FOR EACH s IN cpp_
