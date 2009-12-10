@@ -289,6 +289,7 @@ HB_FUNC( QT_HBQMAINWINDOW )
    hb_retptr( ( HBQMainWindow * ) new HBQMainWindow( hb_itemNew( hb_param( 1, HB_IT_BLOCK ) ), hb_parni( 2 ) ) );
 }
 
+/* TOFIX: Leak if .prg code doesn't call this explicitly. */
 HB_FUNC( QT_HBQMAINWINDOW_DESTROY )
 {
    hbqt_par_HBQMainWindow( 1 )->~HBQMainWindow();

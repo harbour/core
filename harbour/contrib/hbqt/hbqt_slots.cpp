@@ -87,6 +87,8 @@ static Slots * qt_getEventSlots( void )
    return p_slots->t_slots;
 }
 
+/* TOFIX: Leak if .prg code doesn't call this explicitly. 
+   QUESTION: Should there be all remaining active slots disconnected at this point? */
 HB_FUNC( QT_SLOTS_DESTROY )
 {
    PHB_SLOTS p_slots = HB_QTTHREAD_SLOTS();
@@ -106,6 +108,7 @@ Slots::Slots( QObject* parent ) : QObject( parent )
 
 Slots::~Slots()
 {
+   /* TOFIX: Possible leak of PHB_ITEMs stored in list. */
    listBlock.clear();
 }
 

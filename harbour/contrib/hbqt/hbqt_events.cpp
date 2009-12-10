@@ -89,11 +89,13 @@ static Events * qt_getEventFilter( void )
    return p_events->t_events;
 }
 
+/* TOFIX: Possible GPF is below pointer is used by .prg after release. */
 HB_FUNC( QT_GETEVENTFILTER )
 {
    hb_retptr( qt_getEventFilter() );
 }
 
+/* TOFIX: Leak if .prg code doesn't call this explicitly. */
 HB_FUNC( QT_EVENTS_DESTROY )
 {
    PHB_EVENTS p_events = HB_QTTHREAD_EVENTS();
@@ -113,6 +115,7 @@ Events::Events( QObject * parent ) : QObject( parent )
 
 Events::~Events()
 {
+   /* TOFIX: Possible leak of PHB_ITEMs stored in list. */
    listBlock.clear();
 }
 
@@ -123,7 +126,7 @@ bool Events::eventFilter( QObject * object, QEvent * event )
    if( ( int ) eventtype == 0 )
       return false;
 
-   char prop[ 10 ];
+   char prop[ 20 ];
    hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", eventtype, "P" );
 
    int found = object->property( prop ).toInt();

@@ -127,6 +127,7 @@ HB_FUNC( QT_HBDBFMODEL_HBSETROWCOLUMNS )
    hbqt_par_HBDbfModel( 1 )->hbSetRowColumns( hb_parni( 2 ), hb_parni( 3 ) );
 }
 
+/* TOFIX: Leak if .prg code doesn't call this explicitly. */
 HB_FUNC( QT_HBDBFMODEL_DESTROY )
 {
 // BI:TODO fix the GPF  hbqt_par_HBDbfModel( 1 )->~HBDbfModel();

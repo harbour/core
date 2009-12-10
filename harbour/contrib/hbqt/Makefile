@@ -18,7 +18,6 @@ ifneq ($(HB_HAS_QT),)
    MOC_HEADERS := \
       hbqt_events.h \
       hbqt_hbdbfmodel.h \
-      hbqt_hbdrawingarea.h \
       hbqt_hbqmainwindow.h \
       hbqt_hbqsyntaxhighlighter.h \
       hbqt_hbqtableview.h \
@@ -31,7 +30,6 @@ ifneq ($(HB_HAS_QT),)
       hbqt_destruct.cpp \
       hbqt_events.cpp \
       hbqt_hbdbfmodel.cpp \
-      hbqt_hbdrawingarea.cpp \
       hbqt_hbqmainwindow.cpp \
       hbqt_hbqsyntaxhighlighter.cpp \
       hbqt_hbqtableview.cpp \

@@ -87,6 +87,7 @@ HB_FUNC( QT_HBQTABLEVIEW_NAVIGATE )
    hb_retptr( new QModelIndex( hbqt_par_HBQTableView( 1 )->navigate( hb_parni( 2 ) ) ) );
 }
 
+/* TOFIX: Leak if .prg code doesn't call this explicitly. */
 HB_FUNC( QT_HBQTABLEVIEW_DESTROY )
 {
    hbqt_par_HBQTableView( 1 )->~HBQTableView();
