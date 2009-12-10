@@ -57,26 +57,10 @@
 
 #include "hbapiitm.h"
 
-#include "hbqt_hbdrawingarea.h"
-#include "hbqt_hbqtableview.h"
-
-#include <QObject>
-#include <QMainWindow>
-#include <QList>
 #include <QTextCharFormat>
-#include <QModelIndex>
-#include <QEvent>
-#include <QKeyEvent>
-#include <QMouseEvent>
-#include <QLineEdit>
-#include <QTreeWidget>
 #include <QTreeWidgetItem>
 //#include <QWebFrame>
-#include <QNetworkRequest>
-#include <QTableView>
-#include <QTableWidget>
 #include <QHeaderView>
-#include <QPainter>
 #include <QProcess>
 
 /*----------------------------------------------------------------------*/
