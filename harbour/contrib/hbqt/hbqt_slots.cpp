@@ -87,8 +87,7 @@ static Slots * qt_getEventSlots( void )
    return p_slots->t_slots;
 }
 
-/* TOFIX: Leak if .prg code doesn't call this explicitly. 
-   QUESTION: Should there be all remaining active slots disconnected at this point? */
+/* TOFIX: Leak if .prg code doesn't call this explicitly. */
 HB_FUNC( QT_SLOTS_DESTROY )
 {
    PHB_SLOTS p_slots = HB_QTTHREAD_SLOTS();
@@ -108,7 +107,8 @@ Slots::Slots( QObject* parent ) : QObject( parent )
 
 Slots::~Slots()
 {
-   /* TOFIX: Possible leak of PHB_ITEMs stored in list. */
+   /* TOFIX: Possible leak of PHB_ITEMs stored in list. 
+      QUESTION: Should there be all remaining active slots disconnected at this point? */
    listBlock.clear();
 }
 
@@ -506,11 +506,11 @@ HB_FUNC( QT_CONNECT_SIGNAL )
        return;
    }
 
-   QString   signal    = hb_parcx( 2 );                             /* get signal    */
-   PHB_ITEM  codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK ) );  /* get codeblock */
+   QString   signal = hb_parcx( 2 );                             /* get signal    */
+   PHB_ITEM  pBlock = hb_itemNew( hb_param( 3, HB_IT_BLOCK ) );  /* get codeblock */
    bool      ret;
 
-   Slots   * t_slots       = qt_getEventSlots();
+   Slots * t_slots = qt_getEventSlots();
 
    if(      signal == ( QString ) "clicked()" )                                 ret = object->connect( object, SIGNAL( clicked() )                                                 , t_slots, SLOT( clicked() )                                                 , Qt::AutoConnection );
    else if( signal == ( QString ) "returnPressed()" )                           ret = object->connect( object, SIGNAL( returnPressed() )                                           , t_slots, SLOT( returnPressed() )                                           , Qt::AutoConnection );
@@ -621,7 +621,7 @@ HB_FUNC( QT_CONNECT_SIGNAL )
 
    if( ret == true )
    {
-      t_slots->listBlock  << codeblock;
+      t_slots->listBlock << pBlock;
       object->setProperty( hb_parcx( 2 ), ( int ) t_slots->listBlock.size() );
    }
 
@@ -757,6 +757,7 @@ HB_FUNC( QT_DISCONNECT_SIGNAL )
       {
          hb_itemRelease( t_slots->listBlock.at( i - 1 ) );
          t_slots->listBlock[ i - 1 ] = NULL;
+
          bFreed = disconnect_signal( object, signal );
 
          HB_TRACE( HB_TR_DEBUG, ( "      QT_DISCONNECT_SIGNAL: %s    %s", bFreed ? "YES" : "NO", signal ) );
