@@ -58,14 +58,14 @@
 
 #define READING_BLOCK      4096
 
-char * hb_fsReadLine( HB_FHANDLE hFileHandle, LONG * plBuffLen, const char ** Term, int * iTermSizes, USHORT iTerms, BOOL * bFound, BOOL * bEOF )
+char * hb_fsReadLine( HB_FHANDLE hFileHandle, LONG * plBuffLen, const char ** Term, int * iTermSizes, int iTerms, BOOL * bFound, BOOL * bEOF )
 {
-   USHORT uiPosTerm = 0, iPos, uiPosition;
-   USHORT nTries;
+   int iPosTerm = 0, iPos, iPosition;
+   int nTries;
    LONG lRead = 0, lOffset, lSize;
    char * pBuff;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsReadLine(%p, %ld, %p, %p, %hu, %i, %i)", ( void * ) ( HB_PTRDIFF ) hFileHandle, *plBuffLen, Term, iTermSizes, iTerms, *bFound, *bEOF ));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsReadLine(%p, %ld, %p, %p, %i, %i, %i)", ( void * ) ( HB_PTRDIFF ) hFileHandle, *plBuffLen, Term, iTermSizes, iTerms, *bFound, *bEOF ));
 
    *bFound  = FALSE;
    *bEOF    = FALSE;
@@ -97,16 +97,16 @@ char * hb_fsReadLine( HB_FHANDLE hFileHandle, LONG * plBuffLen, const char ** Te
       {
          for( iPos = 0; iPos < lRead; iPos++ )
          {
-            for( uiPosTerm = 0; uiPosTerm < iTerms; uiPosTerm++ )
+            for( iPosTerm = 0; iPosTerm < iTerms; iPosTerm++ )
             {
                /* Compare with the LAST terminator byte */
-               if( pBuff[lOffset+iPos] == Term[uiPosTerm][iTermSizes[uiPosTerm]-1] && (iTermSizes[uiPosTerm]-1) <= (iPos+lOffset) )
+               if( pBuff[lOffset+iPos] == Term[iPosTerm][iTermSizes[iPosTerm]-1] && (iTermSizes[iPosTerm]-1) <= (iPos+lOffset) )
                {
                   *bFound = TRUE;
 
-                  for(uiPosition=0; uiPosition < (iTermSizes[uiPosTerm]-1); uiPosition++)
+                  for(iPosition=0; iPosition < (iTermSizes[iPosTerm]-1); iPosition++)
                   {
-                     if(Term[uiPosTerm][uiPosition] != pBuff[ lOffset+(iPos-iTermSizes[uiPosTerm])+uiPosition+1 ])
+                     if(Term[iPosTerm][iPosition] != pBuff[ lOffset+(iPos-iTermSizes[iPosTerm])+iPosition+1 ])
                      {
                         *bFound = FALSE;
                         break;
@@ -124,7 +124,7 @@ char * hb_fsReadLine( HB_FHANDLE hFileHandle, LONG * plBuffLen, const char ** Te
 
          if( *bFound )
          {
-            *plBuffLen = lOffset + iPos - iTermSizes[ uiPosTerm ] + 1;
+            *plBuffLen = lOffset + iPos - iTermSizes[ iPosTerm ] + 1;
 
             pBuff[ *plBuffLen ] = '\0';
 
@@ -170,7 +170,7 @@ HB_FUNC( HB_FREADLINE )
    char * pBuffer;
    int * iTermSizes;
    LONG lSize = hb_parnl( 4 );
-   USHORT i, iTerms;
+   int i, iTerms;
    BOOL bFound, bEOF;
 
    if( ( !HB_ISBYREF( 2 ) ) || ( !HB_ISNUM( 1 ) ) )
@@ -188,7 +188,7 @@ HB_FUNC( HB_FREADLINE )
       if( HB_ISARRAY( 3 ) )
       {
          pTerm1 = hb_param( 3, HB_IT_ARRAY );
-         iTerms = ( USHORT ) hb_arrayLen( pTerm1 );
+         iTerms = ( int ) hb_arrayLen( pTerm1 );
 
          if( iTerms <= 0 )
          {

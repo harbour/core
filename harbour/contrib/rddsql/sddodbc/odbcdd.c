@@ -672,7 +672,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
       pArea->pRowFlags[ pArea->ulRecCount ] = SQLDD_FLAG_CACHED;
    }
 
-   if ( ulRecNo <= 0 || ulRecNo > pArea->ulRecCount )
+   if ( ulRecNo == 0 || ulRecNo > pArea->ulRecCount )
    {
       pArea->pRecord = pArea->pRow[ 0 ];
       pArea->bRecordFlags = pArea->pRowFlags[ 0 ];

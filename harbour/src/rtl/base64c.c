@@ -71,7 +71,7 @@ HB_FUNC( HB_BASE64ENCODE )
          x = *s++;
          *p++ = s_b64chars[ ( x >> 2 ) & 0x3F ];
 
-         if( len-- <= 0 )
+         if( len-- == 0 )
          {
             *p++ = s_b64chars[ ( x << 4 ) & 0x3F ];
             *p++ = '=';
@@ -81,7 +81,7 @@ HB_FUNC( HB_BASE64ENCODE )
          y = *s++;
          *p++ = s_b64chars[ ( ( x << 4 ) | ( ( y >> 4 ) & 0x0F ) ) & 0x3F ];
 
-         if( len-- <= 0 )
+         if( len-- == 0 )
          {
             *p++ = s_b64chars[ ( y << 2 ) & 0x3F ];
             *p++ = '=';

@@ -188,7 +188,7 @@ static HB_ERRCODE sddClose( SQLBASEAREAP pArea )
 
 static HB_ERRCODE sddGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
 {
-   if ( ulRecNo <= 0 || ulRecNo > pArea->ulRecCount )
+   if ( ulRecNo == 0 || ulRecNo > pArea->ulRecCount )
    {
       pArea->pRecord = pArea->pRow[ 0 ];
       pArea->bRecordFlags = pArea->pRowFlags[ 0 ];
@@ -786,7 +786,7 @@ static HB_ERRCODE sqlbaseOpen( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    pArea->ulConnection = pOpenInfo->ulConnection ? pOpenInfo->ulConnection : s_ulConnectionCurrent;
 
-   if ( pArea->ulConnection <= 0 || pArea->ulConnection > s_ulConnectionCount ||
+   if ( pArea->ulConnection == 0 || pArea->ulConnection > s_ulConnectionCount ||
         ! s_pConnection[ pArea->ulConnection - 1 ].hConnection )
    {
       hb_errRT_SQLBASE( EG_OPEN, ESQLDD_NOTCONNECTED, "Not connected", NULL );

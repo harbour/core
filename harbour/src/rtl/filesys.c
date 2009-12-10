@@ -615,7 +615,11 @@ HB_FHANDLE hb_fsPOpen( const char * pFilename, const char * pMode )
                   close( hNullHandle );
                setuid( getuid() );
                setgid( getgid() );
+#if defined( __WATCOMC__ )
+               execv( "/bin/sh", argv );
+#else
                execv( "/bin/sh", ( char ** ) argv );
+#endif
                exit(1);
             }
          }

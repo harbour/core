@@ -421,7 +421,7 @@ static void ioBufferAlloc( struct hb_BTree * pBTree, ULONG ulBuffers )
 {
   ioBuffer_T *thisptr = NULL, *last = NULL;
 
-  if ( ulBuffers <= 0 )
+  if ( ulBuffers == 0 )
     ulBuffers = 1;
 
   if ( ulBuffers > 1 || GETFLAG( pBTree, IsInMemory ) )

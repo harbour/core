@@ -202,6 +202,8 @@ HB_FUNC( DISKSPACE )
       {
 #if defined( __WATCOMC__ ) || defined( __CEGCC__ )
          int iTODO;
+
+         bError = FALSE;
 #else
 #if defined( HB_OS_DARWIN )
          struct statfs st;

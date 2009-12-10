@@ -293,30 +293,22 @@ HB_EXTERN_BEGIN
 
 #  endif    /* x86 */
 
-#elif defined( __WATCOMC__ ) && defined( __cplusplus )
+#elif defined( __WATCOMC__ )
 
 #  if defined( HB_CPU_X86 ) || defined( HB_CPU_X86_64 )
 
 #     if HB_COUNTER_SIZE == 4
 
-         static inline void hb_atomic_inc32( volatile int * p )
-         {
-            _asm {
-               mov eax, p
-               lock inc dword ptr [eax]
-            }
-         }
+         static inline void hb_atomic_inc32( volatile int * p );
+         #pragma aux hb_atomic_inc32 = \
+               "lock inc dword ptr [eax]" \
+               parm [ eax ] modify exact [] ;
 
-         static inline int hb_atomic_dec32( volatile int * p )
-         {
-            unsigned char c;
-            _asm {
-               mov eax, p
-               lock dec dword ptr [eax]
-               setne c
-            }
-            return c;
-         }
+         static inline unsigned char hb_atomic_dec32( volatile int * p );
+         #pragma aux hb_atomic_dec32 = \
+               "lock dec dword ptr [eax]", \
+               "setne al" \
+               parm [ eax ] value [ al ] modify exact [ al ] ;
 
 #        define HB_ATOM_INC( p )    ( hb_atomic_inc32( ( volatile int * ) (p) ) )
 #        define HB_ATOM_DEC( p )    ( hb_atomic_dec32( ( volatile int * ) (p) ) )
@@ -329,17 +321,11 @@ HB_EXTERN_BEGIN
 
 #     endif
 
-      static inline int hb_spinlock_trylock( volatile int * p )
-      {
-         int i = 1;
-         _asm {
-            mov eax, i
-            mov edx, p
-            xchg eax, dword ptr [edx]
-            mov i, eax
-         }
-         return i;
-      }
+      static inline int hb_spinlock_trylock( volatile int * p );
+      #pragma aux hb_spinlock_trylock = \
+            "mov eax, 1", \
+            "xchg eax, dword ptr [edx]" \
+            parm [ edx ] value [ eax ] modify exact [ eax ] ;
 
       static inline void hb_spinlock_acquire( volatile int * l )
       {

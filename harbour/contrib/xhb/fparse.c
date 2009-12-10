@@ -669,7 +669,7 @@ HB_FUNC( FCHARCOUNT )
 /*----------------------------------------------------------------------------*/
 HB_FUNC( FPARSELINE )
 {
-   PHB_ITEM pArray = NULL;
+   PHB_ITEM pArray;
    int iWords = 0;
    const char * szText;
 

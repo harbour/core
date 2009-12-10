@@ -70,7 +70,7 @@ void hb_readLine( const char * szText, ULONG ulTextLen, ULONG uiLineLen, USHORT 
    ulCurrCol  = 0;
    ulLastBlk  = 0;
 
-   if( ulTextLen <= 0 )
+   if( ulTextLen == 0 )
    {
       *lEnd        = -1;
       *ulEndOffset = 0;

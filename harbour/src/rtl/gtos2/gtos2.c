@@ -681,7 +681,7 @@ static void hb_gt_os2_Tone( PHB_GT pGT, double dFrequency, double dDuration )
       USHORT temp = ( USHORT ) HB_MIN( HB_MAX( 0, dDuration ), USHRT_MAX );
 
       dDuration -= temp;
-      if( temp <= 0 )
+      if( temp == 0 )
       {
          /* Ensure that the loop gets terminated when
             only a fraction of the delay time remains. */

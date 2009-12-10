@@ -963,7 +963,7 @@ static ULONG hb_fptGetMemoLen( FPTAREAP pArea, USHORT uiIndex )
                {
                   ulLen = hb_fileReadAt( pArea->pMemoFile, pBlock, DBT_DEFBLOCKSIZE, fOffset );
                   fOffset += ulLen;
-                  if( ulLen <= 0 )
+                  if( ulLen == 0 )
                      break;
                   u = 0;
                   while( u < ulLen && pBlock[ u ] != 0x1A )
@@ -2364,7 +2364,7 @@ static HB_ERRCODE hb_fptCopyToRawFile( PHB_FILE pSrc, HB_FOFFSET from,
          ulRead = hb_fileReadAt( pSrc, pBuffer, ( ULONG )
                      HB_MIN( ( HB_FOFFSET ) ulBufSize, size - written ),
                      from + written );
-         if( ulRead <= 0 )
+         if( ulRead == 0 )
             errCode = EDBF_READ;
          else if( hb_fsWriteLarge( hDst, pBuffer, ulRead ) != ulRead )
             errCode = EDBF_WRITE;
@@ -2398,7 +2398,7 @@ static HB_ERRCODE hb_fptCopyToFile( PHB_FILE pSrc, HB_FOFFSET from,
          ulRead = hb_fileReadAt( pSrc, pBuffer, ( ULONG )
                      HB_MIN( ( HB_FOFFSET ) ulBufSize, size - written ),
                      from + written );
-         if( ulRead <= 0 )
+         if( ulRead == 0 )
             errCode = EDBF_READ;
          else if( hb_fileWriteAt( pDst, pBuffer, ulRead,
                                   to + written ) != ulRead )
@@ -2833,7 +2833,7 @@ static HB_ERRCODE hb_fptWriteMemo( FPTAREAP pArea, ULONG ulBlock, ULONG ulSize,
             {
                ulRead = hb_fsReadLarge( hFile, bBuffer,
                                         HB_MIN( ulBufSize, ulLen - ulWritten ) );
-               if( ulRead <= 0 )
+               if( ulRead == 0 )
                   errCode = EDBF_READ;
                else if( hb_fileWriteAt( pArea->pMemoFile, bBuffer,
                                         ulRead, fOffset ) != ulRead )
