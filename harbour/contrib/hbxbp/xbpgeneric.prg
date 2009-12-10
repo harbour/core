@@ -153,7 +153,7 @@ FUNCTION hbxbp_ClearEventBuffer()
 
 FUNCTION hbxbp_SetEventFilter()
 
-   RETURN QT_QEventFilter()
+   RETURN QT_GetEventFilter()
 
 /*----------------------------------------------------------------------*/
 

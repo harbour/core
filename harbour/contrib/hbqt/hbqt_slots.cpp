@@ -123,14 +123,14 @@ HB_FUNC( QT_SETEVENTFILTER )
    qt_setEventFilter();
 }
 
+HB_FUNC( QT_GETEVENTFILTER )
+{
+   hb_retptr( qt_getEventFilter() );
+}
+
 HB_FUNC( QT_SETEVENTSLOTS )
 {
    qt_setEventSlots();
-}
-
-HB_FUNC( QT_QEVENTFILTER )
-{
-   hb_retptr( qt_getEventFilter() );
 }
 
 /*----------------------------------------------------------------------*/
