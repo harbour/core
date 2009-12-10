@@ -73,6 +73,7 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbapiitm.h"
+#include "hbwinuni.h"
 
 #if defined( HB_OS_WIN ) && !defined( HB_OS_WIN_CE )
 
@@ -156,8 +157,9 @@ HB_FUNC( WIN_CREATEDC )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      LPTSTR lpText = HB_TCHAR_CONVTO( hb_parc( 1 ) );
-      HDC hDC = CreateDC( TEXT( "" ), lpText, NULL, NULL );
+      void * hDevice;
+
+      HDC hDC = CreateDC( TEXT( "" ), ( LPCTSTR ) HB_PARSTR( 1, &hDevice, NULL ), NULL, NULL );
 
       if( hDC )
       {
@@ -169,7 +171,7 @@ HB_FUNC( WIN_CREATEDC )
       else
          hb_retptr( NULL );
 
-      HB_TCHAR_FREE( lpText );
+      hb_strfree( hDevice );
    }
    else
       hb_retptr( NULL );
@@ -418,13 +420,10 @@ HB_FUNC( WIN_GETPRINTERFONTNAME )
    if( hDC )
    {
       TCHAR tszFontName[ 128 ];
-      char * pszFontName;
 
       GetTextFace( hDC, sizeof( tszFontName ) - 1, tszFontName );
 
-      pszFontName = HB_TCHAR_CONVFROM( tszFontName );
-      hb_retc( pszFontName );
-      HB_TCHAR_FREE( pszFontName );
+      HB_RETSTR( tszFontName );
    }
    else
       hb_retc_null();

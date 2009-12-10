@@ -64,6 +64,7 @@
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
+#include "hbwinuni.h"
 
 #ifndef QS_ALLPOSTMESSAGE
 #define QS_ALLPOSTMESSAGE   0x0100
@@ -71,14 +72,8 @@
 
 HB_FUNC( WIN_RUNDETACHED )
 {
-   char * pszFreeCommandName = NULL;
-   char * pszFreeCommandLine = NULL;
-
-   const char * pszCommandName = HB_ISCHAR( 1 ) ? hb_osEncodeCP( hb_parc( 1 ), &pszFreeCommandName, NULL ) : NULL;
-   const char * pszCommandLine = HB_ISCHAR( 2 ) ? hb_osEncodeCP( hb_parc( 2 ), &pszFreeCommandLine, NULL ) : NULL;
-
-   LPTSTR lpCommandName = pszCommandName ? HB_TCHAR_CONVTO( pszCommandName ) : NULL;
-   LPTSTR lpCommandLine = pszCommandLine ? HB_TCHAR_CONVTO( pszCommandLine ) : NULL;
+   void * hCommandName;
+   void * hCommandLine;
 
 #if ! defined( HB_OS_WIN_CE )
    STARTUPINFO si;
@@ -90,8 +85,8 @@ HB_FUNC( WIN_RUNDETACHED )
 #endif
 
    if( CreateProcess(
-         ( LPCTSTR ) lpCommandName,                            /* Command name */
-         ( LPTSTR ) lpCommandLine,                             /* Command line (Unicode version needs an non-const buffer) */
+         ( LPCTSTR ) HB_PARSTR( 1, &hCommandName, NULL ),      /* Command name */
+         ( LPTSTR ) HB_PARSTR( 2, &hCommandLine, NULL ),       /* Command line (Unicode version needs an non-const buffer) */
          NULL,                                                 /* Process handle not inheritable */
          NULL,                                                 /* Thread handle not inheritable */
          FALSE,                                                /* Set handle inheritance to FALSE */
@@ -127,11 +122,8 @@ HB_FUNC( WIN_RUNDETACHED )
       hb_retl( HB_FALSE );
    }
 
-   if( lpCommandName ) HB_TCHAR_FREE( lpCommandName );
-   if( lpCommandLine ) HB_TCHAR_FREE( lpCommandLine );
-
-   if( pszFreeCommandName ) hb_xfree( pszFreeCommandName );
-   if( pszFreeCommandLine ) hb_xfree( pszFreeCommandLine );
+   hb_strfree( hCommandName );
+   hb_strfree( hCommandLine );
 }
 
 HB_FUNC( WIN_LOADRESOURCE )
@@ -143,10 +135,12 @@ HB_FUNC( WIN_LOADRESOURCE )
 
    if( hb_winmainArgGet( &hInstance, NULL, NULL ) )
    {
-      LPTSTR lpName = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
-      LPTSTR lpType = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+      void * hName;
+      void * hType;
 
-      HRSRC hRes = FindResource( ( HMODULE ) hInstance, ( LPCTSTR ) lpName, ( LPCTSTR ) lpType );
+      HRSRC hRes = FindResource( ( HMODULE ) hInstance, 
+                                 ( LPCTSTR ) HB_PARSTRDEF( 1, &hName, NULL ),
+                                 ( LPCTSTR ) HB_PARSTRDEF( 2, &hType, NULL ) );
 
       if( hRes )
       {
@@ -161,8 +155,8 @@ HB_FUNC( WIN_LOADRESOURCE )
          }
       }
 
-      HB_TCHAR_FREE( lpName );
-      HB_TCHAR_FREE( lpType );
+      hb_strfree( hName );
+      hb_strfree( hType );
    }
 }
 

@@ -11,6 +11,7 @@ libs=hbqtcores hbqtguis hbqtnetworks hbqtwebkits
 
 {win}libs=version shlwapi
 {allwin}libs=QtCore QtGui QtNetwork QtWebKit QtUiTools
+{allwin}libs=psapi
 {allgcc}libs=supc++
 
 gui=yes

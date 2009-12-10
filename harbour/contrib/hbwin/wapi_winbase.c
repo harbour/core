@@ -87,7 +87,7 @@ HB_FUNC( WAPI_WAITFORSINGLEOBJECTEX )
    hb_retnl( WaitForSingleObjectEx( wapi_par_HANDLE( 1 ), ( DWORD ) hb_parnl( 2 ), hb_parl( 3 ) ) );
 }
 
-HB_FUNC( WAPI_WAITFORMULTIPLEOBJECT )
+HB_FUNC( WAPI_WAITFORMULTIPLEOBJECTS )
 {
    PHB_ITEM pArray = hb_param( 2, HB_IT_ARRAY );
    HB_SIZE nLen = pArray ? hb_arrayLen( pArray ) : 0;
@@ -108,7 +108,7 @@ HB_FUNC( WAPI_WAITFORMULTIPLEOBJECT )
       hb_errRT_BASE( EG_ARG, 1001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( WAPI_WAITFORMULTIPLEOBJECTEX )
+HB_FUNC( WAPI_WAITFORMULTIPLEOBJECTSEX )
 {
    PHB_ITEM pArray = hb_param( 2, HB_IT_ARRAY );
    HB_SIZE nLen = pArray ? hb_arrayLen( pArray ) : 0;
