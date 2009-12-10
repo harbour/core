@@ -57,6 +57,7 @@
 #include "hbapiitm.h"
 #include "hbthread.h"
 #include "hbvm.h"
+#include "hbinit.h"
 
 #include "hbqt.h"
 
@@ -293,19 +294,37 @@ HB_FUNC( QT_HBQMAINWINDOW_DESTROY )
    hbqt_par_HBQMainWindow( 1 )->~HBQMainWindow();
 }
 
-HB_FUNC( QT_MUTEXCREATE )
+static void hbqt_hbqmainwindow_init( void * cargo )
 {
+   HB_SYMBOL_UNUSED( cargo );
+
    if( s_mutex == NULL )
       s_mutex = hb_threadMutexCreate();
 }
 
-HB_FUNC( QT_MUTEXDESTROY )
+static void hbqt_hbqmainwindow_exit( void * cargo )
 {
+   HB_SYMBOL_UNUSED( cargo );
+
    if( s_mutex != NULL )
    {
       hb_itemRelease( s_mutex );
       s_mutex = NULL;
    }
 }
+
+HB_FUNC( HB_QT ) {;}
+
+HB_CALL_ON_STARTUP_BEGIN( _hbqt_hbqmainwindow_initialize_ )
+   hb_vmAtInit( hbqt_hbqmainwindow_init, NULL );
+   hb_vmAtExit( hbqt_hbqmainwindow_exit, NULL );
+HB_CALL_ON_STARTUP_END( _hbqt_hbqmainwindow_initialize_ )
+
+#if defined( HB_PRAGMA_STARTUP )
+   #pragma startup _hbqt_hbqmainwindow_initialize_
+#elif defined( HB_DATASEG_STARTUP )
+   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hbqt_hbqmainwindow_initialize_ )
+   #include "hbiniseg.h"
+#endif
 
 #endif

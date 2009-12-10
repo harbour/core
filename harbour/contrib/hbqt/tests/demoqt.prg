@@ -87,6 +87,8 @@
 
 STATIC qApp
 
+REQUEST HB_QT
+
 /*----------------------------------------------------------------------*/
 
 INIT PROCEDURE Qt_Start()

@@ -97,10 +97,7 @@ THREAD STATIC t_oEventLoop
 
 INIT PROCEDURE hbxbp_Start()
 
-   Qt_MutexCreate()
-
    t_oDummy := XbpObject():new()
-
    s_oApp   := QApplication():new()
 
    RETURN
@@ -120,8 +117,6 @@ EXIT PROCEDURE hbxbp_End()
    #if 0
    s_oApp:oWidget:pPtr := 0
    #endif
-
-   Qt_MutexDestroy()
 
    RETURN
 
