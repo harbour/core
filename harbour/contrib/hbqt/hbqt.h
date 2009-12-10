@@ -377,9 +377,9 @@ extern int hbqt_getmemused( void );
 #define hbqt_par_QWizardPage( n )                   ( ( QWizardPage                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QWSEvent( n )                      ( ( QWSEvent                    * ) hbqt_gcpointer( n ) )
 
-#define hbqt_par_HbDbfModel( n )                    ( ( HbDbfModel* ) hb_parptr( n ) )
-#define hbqt_par_HbTableView( n )                   ( ( HbTableView* ) hb_parptr( n ) )
-#define hbqt_par_MyMainWindow( n )                  ( ( MyMainWindow* ) hb_parptr( n ) )
+#define hbqt_par_HBDbfModel( n )                    ( ( HBDbfModel* ) hb_parptr( n ) )
+#define hbqt_par_HBQTableView( n )                  ( ( HBQTableView* ) hb_parptr( n ) )
+#define hbqt_par_HBQMainWindow( n )                 ( ( HBQMainWindow* ) hb_parptr( n ) )
 
 #define hbqt_par_QString( n )                       ( ( QString ) hb_parcx( n ) )
 #define hbqt_par_QRgb( n )                          ( hb_parnint( n ) )

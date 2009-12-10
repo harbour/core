@@ -476,7 +476,7 @@ METHOD new( nTop, nLeft, nBottom, nRight ) CLASS XbpBrowse
 METHOD XbpBrowse:buildLeftFreeze()
 
    /*  Left Freeze */
-   ::oLeftView := HbTableView():new()
+   ::oLeftView := HBQTableView():new()
    //
    ::oLeftView:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
    ::oLeftView:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
@@ -495,7 +495,7 @@ METHOD XbpBrowse:buildLeftFreeze()
    ::oLeftHeaderView:configure( ::oLeftView:horizontalHeader() )
    ::oLeftHeaderView:setHighlightSections( .F. )
 
-   ::oLeftDbfModel := HbDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 151, p1, p2, p3, p4 ) } )
+   ::oLeftDbfModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 151, p1, p2, p3, p4 ) } )
    ::oLeftView:setModel( QT_PTROF( ::oLeftDbfModel ) )
    //
    //::oLeftView:hide()
@@ -509,7 +509,7 @@ METHOD XbpBrowse:buildLeftFreeze()
    ::oLeftFooterView:setResizeMode( QHeaderView_Fixed )
    ::oLeftFooterView:setFocusPolicy( Qt_NoFocus )
    //
-   ::oLeftFooterModel := HbDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 152, p1, p2, p3, p4 ) } )
+   ::oLeftFooterModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 152, p1, p2, p3, p4 ) } )
    ::oLeftFooterView:setModel( QT_PTROF( ::oLeftFooterModel ) )
    //
    //::oLeftFooterView:hide()
@@ -526,7 +526,7 @@ METHOD XbpBrowse:buildRightFreeze()
    LOCAL oVHdr
 
    /*  Left Freeze */
-   ::oRightView := HbTableView():new()
+   ::oRightView := HBQTableView():new()
    //
    ::oRightView:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
    ::oRightView:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
@@ -545,7 +545,7 @@ METHOD XbpBrowse:buildRightFreeze()
    ::oRightHeaderView:configure( ::oRightView:horizontalHeader() )
    ::oRightHeaderView:setHighlightSections( .F. )
 
-   ::oRightDbfModel := HbDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 161, p1, p2, p3, p4 ) } )
+   ::oRightDbfModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 161, p1, p2, p3, p4 ) } )
    ::oRightView:setModel( QT_PTROF( ::oRightDbfModel ) )
 
    /*  Horizontal Footer */
@@ -557,7 +557,7 @@ METHOD XbpBrowse:buildRightFreeze()
    ::oRightFooterView:setResizeMode( QHeaderView_Fixed )
    ::oRightFooterView:setFocusPolicy( Qt_NoFocus )
    //
-   ::oRightFooterModel := HbDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 162, p1, p2, p3, p4 ) } )
+   ::oRightFooterModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 162, p1, p2, p3, p4 ) } )
    ::oRightFooterView:setModel( QT_PTROF( ::oRightFooterModel ) )
 
    ::connect( QT_PTROF( ::oRightView )      , "mousePressEvent()"  , {|o,p| ::exeBlock( 31, p, o ) } )
@@ -579,7 +579,7 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::setPosAndSize()
 
    /* Subclass of QTableView */
-   ::oTableView := HbTableView():new()
+   ::oTableView := HBQTableView():new()
 
    /* Some parameters */
    ::oTableView:setTabKeyNavigation( .t. )
@@ -625,7 +625,7 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::connect( QT_PTROF( ::oHeaderView ), "sectionResized(int,int,int)", {|o,i,i1,i2| ::exeBlock( 121, i, i1, i2, o ) } )
 
    /* .DBF Manipulation Model */
-   ::oDbfModel := HbDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 141, p1, p2, p3, p4 ) } )
+   ::oDbfModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 141, p1, p2, p3, p4 ) } )
    /*  Attach Model with the View */
    ::oTableView:setModel( QT_PTROF( ::oDbfModel ) )
 
@@ -639,7 +639,7 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oFooterView:setResizeMode( QHeaderView_Fixed )
    ::oFooterView:setFocusPolicy( Qt_NoFocus )
    //
-   ::oFooterModel := HbDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 142, p1, p2, p3, p4 ) } )
+   ::oFooterModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 142, p1, p2, p3, p4 ) } )
 
    ::oFooterView:setModel( QT_PTROF( ::oFooterModel ) )
    ::oFooterView:setFocusPolicy( Qt_NoFocus )

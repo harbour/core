@@ -61,7 +61,7 @@
 
 #include "hbqt_slots.h"
 
-HbSyntaxHighlighter::HbSyntaxHighlighter( QTextDocument *parent )
+HBQSyntaxHighlighter::HBQSyntaxHighlighter( QTextDocument *parent )
    : QSyntaxHighlighter( parent )
 {
    HighlightingRule rule;
@@ -113,7 +113,7 @@ HbSyntaxHighlighter::HbSyntaxHighlighter( QTextDocument *parent )
    commentEndExpression = QRegExp("\\*/");
 }
 
-void HbSyntaxHighlighter::highlightBlock( const QString &text )
+void HBQSyntaxHighlighter::highlightBlock( const QString &text )
 {
    foreach ( const HighlightingRule &rule, highlightingRules ) {
       QRegExp expression( rule.pattern );

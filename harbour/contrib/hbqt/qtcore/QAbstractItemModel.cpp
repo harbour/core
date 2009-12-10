@@ -96,31 +96,31 @@
 
 HB_FUNC( QT_HBDBFMODEL )
 {
-   //hb_retptrGC( hbqt_ptrTOgcpointer( new HbDbfModel( ( PHB_ITEM ) hb_param( 1, HB_IT_BLOCK ) ), release_QAbstractItemModel ) );
-   hb_retptr( new HbDbfModel( ( PHB_ITEM ) hb_param( 1, HB_IT_BLOCK ) ) );
+   //hb_retptrGC( hbqt_ptrTOgcpointer( new HBDbfModel( ( PHB_ITEM ) hb_param( 1, HB_IT_BLOCK ) ), release_QAbstractItemModel ) );
+   hb_retptr( new HBDbfModel( ( PHB_ITEM ) hb_param( 1, HB_IT_BLOCK ) ) );
 }
 
 HB_FUNC( QT_HBDBFMODEL_RESET )
 {
-   hbqt_par_HbDbfModel( 1 )->reset();
+   hbqt_par_HBDbfModel( 1 )->reset();
 }
 
 HB_FUNC( QT_HBDBFMODEL_INDEX )
 {
-// BI  hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_HbDbfModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), QModelIndex() ) ), release_QModelIndex ) );
-   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_HbDbfModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), QModelIndex() ) ) ) );
+// BI  hb_retptrGC( hbqt_ptrTOgcpointer( new QModelIndex( hbqt_par_HBDbfModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), QModelIndex() ) ), release_QModelIndex ) );
+   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_HBDbfModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), QModelIndex() ) ) ) );
 }
 
 HB_FUNC( QT_HBDBFMODEL_HBSETROWCOLUMNS )
 {
-   hbqt_par_HbDbfModel( 1 )->hbSetRowColumns( hb_parni( 2 ), hb_parni( 3 ) );
+   hbqt_par_HBDbfModel( 1 )->hbSetRowColumns( hb_parni( 2 ), hb_parni( 3 ) );
 }
 
 HB_FUNC( QT_HBDBFMODEL_DESTROY )
 {
-// BI:TODO fix the GPF  hbqt_par_HbDbfModel( 1 )->~HbDbfModel();
+// BI:TODO fix the GPF  hbqt_par_HBDbfModel( 1 )->~HBDbfModel();
 //     BUT WITHOUT THIS FM STATISTICS GENERATE A BIG LOG SO THIS IS NOT THE OPTION NOW
-   hbqt_par_HbDbfModel( 1 )->~HbDbfModel();
+   hbqt_par_HBDbfModel( 1 )->~HBDbfModel();
 }
 
 

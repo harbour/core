@@ -61,36 +61,77 @@
 
 #include "hbqt_slots.h"
 
-MyDrawingArea::MyDrawingArea(QWidget *parent) : QWidget(parent)
-{
-   setAttribute( Qt::WA_StaticContents );
-   setAttribute( Qt::WA_PaintOnScreen );
-   setAttribute( Qt::WA_DeleteOnClose );
-   setAttribute( Qt::WA_WindowPropagation );
-
-   setFocusPolicy( Qt::StrongFocus );
-   setMouseTracking( true );
-
-   setAttribute( Qt::WA_InputMethodEnabled, true );
-}
-
-MyDrawingArea::~MyDrawingArea( void )
+HBQTableView::HBQTableView( QWidget * parent ) : QTableView( parent )
 {
 }
 
-void MyDrawingArea::mouseMoveEvent( QMouseEvent * event )
+HBQTableView::~HBQTableView()
 {
-   emit sg_mouseMoveEvent( event );
+   HB_TRACE( HB_TR_DEBUG, ( "HBQTableView::~HBQTableView: BEGIN %i %i", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+
+   destroy();
+
+   HB_TRACE( HB_TR_DEBUG, ( "HBQTableView::~HBQTableView: END %i %i", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
 }
 
-void MyDrawingArea::keyPressEvent( QKeyEvent * event )
+void HBQTableView::keyPressEvent( QKeyEvent * event )
 {
    emit sg_keyPressEvent( event );
 }
 
-HB_FUNC( QT_MYDRAWINGAREA )
+void HBQTableView::mouseDoubleClickEvent( QMouseEvent * event )
 {
-   hb_retptr( ( MyDrawingArea * ) new MyDrawingArea() );
+   emit sg_mouseDoubleClickEvent( event );
+}
+
+void HBQTableView::mouseMoveEvent( QMouseEvent * event )
+{
+   emit sg_mouseMoveEvent( event );
+}
+
+void HBQTableView::mousePressEvent( QMouseEvent * event )
+{
+   emit sg_mousePressEvent( event );
+}
+
+void HBQTableView::mouseReleaseEvent( QMouseEvent * event )
+{
+   emit sg_mouseReleaseEvent( event );
+}
+
+void HBQTableView::wheelEvent( QWheelEvent * event )
+{
+   emit sg_wheelEvent( event );
+}
+
+void HBQTableView::resizeEvent( QResizeEvent * event )
+{
+   emit sg_resizeEvent( event );
+}
+
+QModelIndex HBQTableView::moveCursor( HBQTableView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers )
+{
+// HB_TRACE( HB_TR_DEBUG, ( "HBQTableView::moveCursor( action=%i %i )", cursorAction, QAbstractItemView::MoveDown ) );
+
+   //emit sg_moveCursor( cursorAction, modifiers );
+   return QTableView::moveCursor( cursorAction, modifiers );
+}
+
+QModelIndex HBQTableView::navigate( int cursorAction )
+{
+   return moveCursor( ( HBQTableView::CursorAction ) cursorAction, ( Qt::KeyboardModifiers ) 0 );
+}
+
+void HBQTableView::scrollContentsBy( int x, int y )
+{
+   emit sg_scrollContentsBy( x, y );
+}
+
+void HBQTableView::scrollTo( const QModelIndex & index, QAbstractItemView::ScrollHint hint )
+{
+// HB_TRACE( HB_TR_DEBUG, ( "HBQTableView::scrollTo( row = %i col = %i )", index.row(), index.column() ) );
+
+   QTableView::scrollTo( index, hint );
 }
 
 #endif

@@ -21,11 +21,11 @@ moc_slots.cpp : $(TOP)$(ROOT)contrib/hbqt/hbqt_slots.h
    include $(TOP)$(ROOT)contrib/hbqt/filelist.mk
 
    CPP_SOURCES += \
-      hbqt_hbqtdbfmodel.cpp \
-      hbqt_hbqtmydrawingarea.cpp \
-      hbqt_hbqtmymainwindow.cpp \
-      hbqt_hbqtsyntaxhighlighter.cpp \
-      hbqt_hbqttableview.cpp \
+      hbqt_hbdbfmodel.cpp \
+      hbqt_hbdrawingarea.cpp \
+      hbqt_hbqmainwindow.cpp \
+      hbqt_hbqsyntaxhighlighter.cpp \
+      hbqt_hbqtableview.cpp \
 
    include $(TOP)$(ROOT)config/header.mk
    include $(TOP)$(ROOT)config/lib.mk

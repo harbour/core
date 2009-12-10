@@ -55,9 +55,9 @@
 ;
 
 <CLASS>
-QObject  = 
+QObject  =
 Inherits = QObject
-Type     = 
+Type     =
 New      =
 </CLASS>
 
@@ -84,7 +84,7 @@ HB_FUNC( QT_QSYNTAXHIGHLIGHTER )
 {
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new HbSyntaxHighlighter( hbqt_par_QTextDocument( 1 ) ) );
+      hb_retptr( new HBQSyntaxHighlighter( hbqt_par_QTextDocument( 1 ) ) );
    }
 }
 </CODE>

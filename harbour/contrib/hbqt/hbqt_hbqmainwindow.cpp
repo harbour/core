@@ -66,7 +66,7 @@
 
 static PHB_ITEM s_mutex = NULL;
 
-MyMainWindow::MyMainWindow( PHB_ITEM pBlock, int iThreadID )
+HBQMainWindow::HBQMainWindow( PHB_ITEM pBlock, int iThreadID )
 {
    Qt::WindowFlags flags = Qt::WindowCloseButtonHint    | Qt::WindowMaximizeButtonHint |
                            Qt::WindowMinimizeButtonHint | Qt::WindowSystemMenuHint     |
@@ -83,9 +83,9 @@ MyMainWindow::MyMainWindow( PHB_ITEM pBlock, int iThreadID )
    threadID  = iThreadID;
 }
 
-MyMainWindow::~MyMainWindow( void )
+HBQMainWindow::~HBQMainWindow( void )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "MyMainWindow::~MyMainWindow: BEGIN" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "HBQMainWindow::~HBQMainWindow: BEGIN" ) );
 
    if( block )
    {
@@ -93,10 +93,10 @@ MyMainWindow::~MyMainWindow( void )
       block = NULL;
    }
 
-   HB_TRACE( HB_TR_DEBUG, ( "MyMainWindow::~MyMainWindow: END" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "HBQMainWindow::~HBQMainWindow: END" ) );
 }
 
-void MyMainWindow::paintEvent( QPaintEvent * event )
+void HBQMainWindow::paintEvent( QPaintEvent * event )
 {
    hb_threadMutexLock( s_mutex );
    if( hb_vmRequestReenter() )
@@ -111,7 +111,7 @@ void MyMainWindow::paintEvent( QPaintEvent * event )
    hb_threadMutexUnlock( s_mutex );
 }
 
-bool MyMainWindow::event( QEvent * event )
+bool HBQMainWindow::event( QEvent * event )
 {
    hb_threadMutexLock( s_mutex );
    bool bRet = QWidget::event( event );
@@ -119,7 +119,7 @@ bool MyMainWindow::event( QEvent * event )
    return bRet;
 }
 
-void MyMainWindow::focusInEvent( QFocusEvent *event )
+void HBQMainWindow::focusInEvent( QFocusEvent *event )
 {
    hb_threadMutexLock( s_mutex );
    if( hb_vmRequestReenter() )
@@ -135,7 +135,7 @@ void MyMainWindow::focusInEvent( QFocusEvent *event )
    hb_threadMutexUnlock( s_mutex );
 }
 
-void MyMainWindow::focusOutEvent( QFocusEvent *event )
+void HBQMainWindow::focusOutEvent( QFocusEvent *event )
 {
    hb_threadMutexLock( s_mutex );
    if( hb_vmRequestReenter() )
@@ -151,7 +151,7 @@ void MyMainWindow::focusOutEvent( QFocusEvent *event )
    hb_threadMutexUnlock( s_mutex );
 }
 
-void MyMainWindow::keyPressEvent( QKeyEvent * event )
+void HBQMainWindow::keyPressEvent( QKeyEvent * event )
 {
    hb_threadMutexLock( s_mutex );
    if( hb_vmRequestReenter() )
@@ -167,7 +167,7 @@ void MyMainWindow::keyPressEvent( QKeyEvent * event )
    hb_threadMutexUnlock( s_mutex );
 }
 
-void MyMainWindow::mouseDoubleClickEvent( QMouseEvent * event )
+void HBQMainWindow::mouseDoubleClickEvent( QMouseEvent * event )
 {
    hb_threadMutexLock( s_mutex );
    if( hb_vmRequestReenter() )
@@ -183,7 +183,7 @@ void MyMainWindow::mouseDoubleClickEvent( QMouseEvent * event )
    hb_threadMutexUnlock( s_mutex );
 }
 
-void MyMainWindow::mouseMoveEvent( QMouseEvent * event )
+void HBQMainWindow::mouseMoveEvent( QMouseEvent * event )
 {
    hb_threadMutexLock( s_mutex );
    if( hb_vmRequestReenter() )
@@ -199,7 +199,7 @@ void MyMainWindow::mouseMoveEvent( QMouseEvent * event )
    hb_threadMutexUnlock( s_mutex );
 }
 
-void MyMainWindow::mousePressEvent( QMouseEvent * event )
+void HBQMainWindow::mousePressEvent( QMouseEvent * event )
 {
    hb_threadMutexLock( s_mutex );
    if( hb_vmRequestReenter() )
@@ -215,7 +215,7 @@ void MyMainWindow::mousePressEvent( QMouseEvent * event )
    hb_threadMutexUnlock( s_mutex );
 }
 
-void MyMainWindow::mouseReleaseEvent( QMouseEvent * event )
+void HBQMainWindow::mouseReleaseEvent( QMouseEvent * event )
 {
    hb_threadMutexLock( s_mutex );
    if( hb_vmRequestReenter() )
@@ -231,7 +231,7 @@ void MyMainWindow::mouseReleaseEvent( QMouseEvent * event )
    hb_threadMutexUnlock( s_mutex );
 }
 
-void MyMainWindow::wheelEvent( QWheelEvent * event )
+void HBQMainWindow::wheelEvent( QWheelEvent * event )
 {
    hb_threadMutexLock( s_mutex );
    if( hb_vmRequestReenter() )
@@ -247,7 +247,7 @@ void MyMainWindow::wheelEvent( QWheelEvent * event )
    hb_threadMutexUnlock( s_mutex );
 }
 
-void MyMainWindow::resizeEvent( QResizeEvent * event )
+void HBQMainWindow::resizeEvent( QResizeEvent * event )
 {
    hb_threadMutexLock( s_mutex );
    if( hb_vmRequestReenter() )
@@ -263,9 +263,9 @@ void MyMainWindow::resizeEvent( QResizeEvent * event )
    hb_threadMutexUnlock( s_mutex );
 }
 
-void MyMainWindow::closeEvent( QCloseEvent * event )
+void HBQMainWindow::closeEvent( QCloseEvent * event )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "MyMainWindow::closeEvent: ThreadID: %i", threadID ) );
+   HB_TRACE( HB_TR_DEBUG, ( "HBQMainWindow::closeEvent: ThreadID: %i", threadID ) );
 
    hb_threadMutexLock( s_mutex );
    if( hb_vmRequestReenter() )
@@ -280,17 +280,17 @@ void MyMainWindow::closeEvent( QCloseEvent * event )
    hb_threadMutexUnlock( s_mutex );
 }
 
-HB_FUNC( QT_MYMAINWINDOW )
+HB_FUNC( QT_HBQMAINWINDOW )
 {
    if( s_mutex == NULL )
       s_mutex = hb_threadMutexCreate();
 
-   hb_retptr( ( MyMainWindow * ) new MyMainWindow( hb_itemNew( hb_param( 1, HB_IT_BLOCK ) ), hb_parni( 2 ) ) );
+   hb_retptr( ( HBQMainWindow * ) new HBQMainWindow( hb_itemNew( hb_param( 1, HB_IT_BLOCK ) ), hb_parni( 2 ) ) );
 }
 
-HB_FUNC( QT_MYMAINWINDOW_DESTROY )
+HB_FUNC( QT_HBQMAINWINDOW_DESTROY )
 {
-   hbqt_par_MyMainWindow( 1 )->~MyMainWindow();
+   hbqt_par_HBQMainWindow( 1 )->~HBQMainWindow();
 }
 
 HB_FUNC( QT_MUTEXCREATE )

@@ -140,7 +140,7 @@ HB_FUNC( QT_QSYNTAXHIGHLIGHTER )
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj = new HbSyntaxHighlighter( hbqt_par_QTextDocument( 1 ) ) ;
+      pObj = new HBQSyntaxHighlighter( hbqt_par_QTextDocument( 1 ) ) ;
    }
 
    hb_retptrGC( gcAllocate_QSyntaxHighlighter( pObj ) );

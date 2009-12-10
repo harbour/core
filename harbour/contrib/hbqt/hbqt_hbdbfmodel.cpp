@@ -123,14 +123,14 @@ static QVariant hbqt_fetchRole( PHB_ITEM block, int what, int par1, int par2 )
    return vv;
 }
 
-HbDbfModel::HbDbfModel( PHB_ITEM pBlock ) : QAbstractItemModel()
+HBDbfModel::HBDbfModel( PHB_ITEM pBlock ) : QAbstractItemModel()
 {
    block = hb_itemNew( pBlock );
    iRows = 0;
    iCols = 0;
 }
 
-HbDbfModel::~HbDbfModel( void )
+HBDbfModel::~HBDbfModel( void )
 {
    if( block )
    {
@@ -139,7 +139,7 @@ HbDbfModel::~HbDbfModel( void )
    }
 }
 
-Qt::ItemFlags HbDbfModel::flags( const QModelIndex & index ) const
+Qt::ItemFlags HBDbfModel::flags( const QModelIndex & index ) const
 {
    if( ! index.isValid() )
       return 0;
@@ -147,9 +147,9 @@ Qt::ItemFlags HbDbfModel::flags( const QModelIndex & index ) const
    return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
 
-QVariant HbDbfModel::data( const QModelIndex & index, int role ) const
+QVariant HBDbfModel::data( const QModelIndex & index, int role ) const
 {
-   HB_TRACE( HB_TR_DEBUG, ( "HbDbfModel::data( row=%i col=%i role=%i )", index.row(), index.column(), role ) );
+   HB_TRACE( HB_TR_DEBUG, ( "HBDbfModel::data( row=%i col=%i role=%i )", index.row(), index.column(), role ) );
 
    if( !index.isValid() )
       return QVariant();
@@ -197,9 +197,9 @@ QVariant HbDbfModel::data( const QModelIndex & index, int role ) const
    return QVariant();
 }
 
-QVariant HbDbfModel::headerData( int section, Qt::Orientation orientation, int role ) const
+QVariant HBDbfModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-   HB_TRACE( HB_TR_DEBUG, ( "HbDbfModel::headerData( section=%i orient=%i role=%i )", section, orientation, role ) );
+   HB_TRACE( HB_TR_DEBUG, ( "HBDbfModel::headerData( section=%i orient=%i role=%i )", section, orientation, role ) );
 
    if( orientation == Qt::Horizontal )
    {
@@ -248,7 +248,7 @@ QVariant HbDbfModel::headerData( int section, Qt::Orientation orientation, int r
    return QVariant();
 }
 
-int HbDbfModel::rowCount( const QModelIndex & /*parent = QModelIndex()*/ ) const
+int HBDbfModel::rowCount( const QModelIndex & /*parent = QModelIndex()*/ ) const
 {
    if( hb_vmRequestReenter() )
    {
@@ -265,7 +265,7 @@ int HbDbfModel::rowCount( const QModelIndex & /*parent = QModelIndex()*/ ) const
       return 0;
 }
 
-int HbDbfModel::columnCount( const QModelIndex & /*parent = QModelIndex()*/ ) const
+int HBDbfModel::columnCount( const QModelIndex & /*parent = QModelIndex()*/ ) const
 {
    if( hb_vmRequestReenter() )
    {
@@ -282,23 +282,23 @@ int HbDbfModel::columnCount( const QModelIndex & /*parent = QModelIndex()*/ ) co
       return 0;
 }
 
-QModelIndex HbDbfModel::index( int row, int column, const QModelIndex & parent ) const
+QModelIndex HBDbfModel::index( int row, int column, const QModelIndex & parent ) const
 {
    HB_SYMBOL_UNUSED( parent );
    return createIndex( row, column, row * column );
 }
 
-QModelIndex HbDbfModel::parent( const QModelIndex & /* child */ ) const
+QModelIndex HBDbfModel::parent( const QModelIndex & /* child */ ) const
 {
    return QModelIndex();
 }
 
-void HbDbfModel::reset()
+void HBDbfModel::reset()
 {
    QAbstractItemModel::reset();
 }
 
-void HbDbfModel::hbSetRowColumns( int rows, int cols )
+void HBDbfModel::hbSetRowColumns( int rows, int cols )
 {
    iRows = rows;
    iCols = cols;

@@ -1479,19 +1479,19 @@ STATIC FUNCTION HBRawVersion()
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION CreateTarget( cFile, txt_ )
-   LOCAL hHandle := fcreate( cFile )
+   LOCAL cContent := ""
 
-   OutStd( "Creating: " + cFile + hb_osNewLine() )
+   AEval( txt_, { |e| cContent += RTrim( e ) + s_NewLine } )
 
-   /* Truncate entries */
-   aeval( txt_, {|e,i| txt_[ i ] := trim( e ) } )
+   /* Save it only if it has changed. */
+   IF !( hb_MemoRead( cFile ) == cContent )
 
-   IF hHandle != -1
-      aeval( txt_, { |e| fWrite( hHandle, e + s_NewLine ) } )
-      fClose( hHandle )
+      OutStd( "Creating: " + cFile + hb_osNewLine() )
+
+      hb_MemoWrit( cFile, cContent )
    ENDIF
 
-   RETURN file( cFile )
+   RETURN hb_FileExists( cFile )
 
 /*----------------------------------------------------------------------*/
 

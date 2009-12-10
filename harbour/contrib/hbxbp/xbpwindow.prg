@@ -767,7 +767,7 @@ METHOD XbpWindow:destroy()
       hbxbp_ClearEventBuffer()
       Qt_Slots_Destroy()
       Qt_Events_Destroy()
-      Qt_MyMainWindow_Destroy( QT_PTROF( ::oWidget ) )
+      Qt_HBQMainWindow_Destroy( QT_PTROF( ::oWidget ) )
    ELSE
       ::oWidget:pPtr := 0
       ::oWidget := NIL

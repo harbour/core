@@ -77,19 +77,19 @@
  * ~QTableView ()
  */
 
-HB_FUNC( QT_HBTABLEVIEW )
+HB_FUNC( QT_HBQTABLEVIEW )
 {
-   hb_retptr( new HbTableView( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( new HBQTableView( hbqt_par_QWidget( 1 ) ) );
 }
 
-HB_FUNC( QT_HBTABLEVIEW_NAVIGATE )
+HB_FUNC( QT_HBQTABLEVIEW_NAVIGATE )
 {
-   hb_retptr( new QModelIndex( hbqt_par_HbTableView( 1 )->navigate( hb_parni( 2 ) ) ) );
+   hb_retptr( new QModelIndex( hbqt_par_HBQTableView( 1 )->navigate( hb_parni( 2 ) ) ) );
 }
 
-HB_FUNC( QT_HBTABLEVIEW_DESTROY )
+HB_FUNC( QT_HBQTABLEVIEW_DESTROY )
 {
-   hbqt_par_HbTableView( 1 )->~HbTableView();
+   hbqt_par_HBQTableView( 1 )->~HBQTableView();
 }
 
 

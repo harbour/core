@@ -82,13 +82,13 @@
 
 /*----------------------------------------------------------------------*/
 
-class MyMainWindow : public QMainWindow
+class HBQMainWindow : public QMainWindow
 {
    Q_OBJECT
 
 public:
-   MyMainWindow( PHB_ITEM pBlock, int iThreadID );
-   virtual ~MyMainWindow();
+   HBQMainWindow( PHB_ITEM pBlock, int iThreadID );
+   virtual ~HBQMainWindow();
 
    bool event( QEvent * event );
    void keyPressEvent( QKeyEvent * event );
@@ -109,13 +109,13 @@ public:
 
 /*----------------------------------------------------------------------*/
 
-class MyDrawingArea : public QWidget
+class HBDrawingArea : public QWidget
 {
    Q_OBJECT
 
 public:
-   MyDrawingArea( QWidget *parent = 0 );
-   virtual ~MyDrawingArea( void );
+   HBDrawingArea( QWidget *parent = 0 );
+   virtual ~HBDrawingArea( void );
 
    void keyPressEvent( QKeyEvent * event );
    void mouseMoveEvent( QMouseEvent * event );
@@ -127,13 +127,13 @@ signals:
 
 /*----------------------------------------------------------------------*/
 
-class HbDbfModel : public QAbstractItemModel
+class HBDbfModel : public QAbstractItemModel
 {
    Q_OBJECT
 
 public:
-   HbDbfModel( PHB_ITEM pBlock );
-   virtual ~HbDbfModel( void );
+   HBDbfModel( PHB_ITEM pBlock );
+   virtual ~HBDbfModel( void );
 
    PHB_ITEM block;
    int      iRows;
@@ -153,13 +153,13 @@ public:
 
 /*----------------------------------------------------------------------*/
 
-class HbTableView : public QTableView
+class HBQTableView : public QTableView
 {
    Q_OBJECT
 
 public:
-   HbTableView( QWidget * parent = 0 );
-   virtual ~HbTableView();
+   HBQTableView( QWidget * parent = 0 );
+   virtual ~HBQTableView();
 
    void keyPressEvent( QKeyEvent * event );
    void mouseDoubleClickEvent( QMouseEvent * event );
@@ -173,7 +173,7 @@ public:
 
    QModelIndex navigate( int cursorAction );
 
-   QModelIndex moveCursor( HbTableView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers );
+   QModelIndex moveCursor( HBQTableView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers );
 
 signals:
    void sg_keyPressEvent( QKeyEvent * event );
@@ -183,7 +183,7 @@ signals:
    void sg_mouseReleaseEvent( QMouseEvent * event );
    void sg_wheelEvent( QWheelEvent * event );
    void sg_resizeEvent( QResizeEvent * event );
-   void sg_moveCursor( HbTableView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers );
+   void sg_moveCursor( HBQTableView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers );
    void sg_scrollContentsBy( int x, int y );
 };
 
@@ -363,12 +363,12 @@ protected:
 
 class QTextDocument;
 
-class HbSyntaxHighlighter : public QSyntaxHighlighter
+class HBQSyntaxHighlighter : public QSyntaxHighlighter
 {
    Q_OBJECT
 
 public:
-   HbSyntaxHighlighter( QTextDocument *parent = 0 );
+   HBQSyntaxHighlighter( QTextDocument *parent = 0 );
 
 protected:
    void highlightBlock( const QString &text );

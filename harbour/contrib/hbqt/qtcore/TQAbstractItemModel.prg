@@ -250,7 +250,7 @@ METHOD QAbstractItemModel:submit()
 
 
 
-CREATE CLASS HbDbfModel INHERIT QAbstractItemModel
+CREATE CLASS HBDbfModel INHERIT QAbstractItemModel
 
    METHOD new( bBlock )
    METHOD reset()
@@ -260,20 +260,20 @@ CREATE CLASS HbDbfModel INHERIT QAbstractItemModel
 
    ENDCLASS
 
-METHOD HbDbfModel:new( bBlock )
-   ::pPtr := Qt_HbDbfModel( bBlock )
+METHOD HBDbfModel:new( bBlock )
+   ::pPtr := Qt_HBDbfModel( bBlock )
    RETURN Self
 
-METHOD HbDbfModel:reset()
-   RETURN Qt_HbDbfModel_reset( ::pPtr )
+METHOD HBDbfModel:reset()
+   RETURN Qt_HBDbfModel_reset( ::pPtr )
 
-METHOD HbDbfModel:index( nRow, nCol )
-   RETURN Qt_HbDbfModel_index( ::pPtr, nRow, nCol, 0 )
+METHOD HBDbfModel:index( nRow, nCol )
+   RETURN Qt_HBDbfModel_index( ::pPtr, nRow, nCol, 0 )
 
-METHOD HbDbfModel:hbSetRowColumns( nRows, nCols )
-   RETURN Qt_HbDbfModel_hbSetRowColumns( ::pPtr, nRows, nCols )
+METHOD HBDbfModel:hbSetRowColumns( nRows, nCols )
+   RETURN Qt_HBDbfModel_hbSetRowColumns( ::pPtr, nRows, nCols )
 
-METHOD HbDbfModel:destroy()
-   RETURN Qt_HbDbfModel_destroy( ::pPtr )
+METHOD HBDbfModel:destroy()
+   RETURN Qt_HBDbfModel_destroy( ::pPtr )
 
 

@@ -300,7 +300,7 @@ METHOD QTableView:showRow( nRow )
 
 
 
-CREATE CLASS HBTableView INHERIT QTableView
+CREATE CLASS HBQTableView INHERIT QTableView
 
    METHOD new( pParent )
    METHOD navigate( nCursorAction, nModifiers )
@@ -308,14 +308,14 @@ CREATE CLASS HBTableView INHERIT QTableView
 
    ENDCLASS
 
-METHOD HBTableView:new( pParent )
-   ::pPtr := Qt_HbTableView( pParent )
+METHOD HBQTableView:new( pParent )
+   ::pPtr := Qt_HBQTableView( pParent )
    RETURN Self
 
-METHOD HBTableView:navigate( nCursorAction, nModifiers )
-   RETURN Qt_HbTableView_navigate( ::pPtr, nCursorAction, nModifiers )
+METHOD HBQTableView:navigate( nCursorAction, nModifiers )
+   RETURN Qt_HBQTableView_navigate( ::pPtr, nCursorAction, nModifiers )
 
-METHOD HBTableView:destroy()
-   RETURN Qt_HbTableView_destroy( ::pPtr )
+METHOD HBQTableView:destroy()
+   RETURN Qt_HBQTableView_destroy( ::pPtr )
 
 
