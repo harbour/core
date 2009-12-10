@@ -96,7 +96,7 @@ QT_G_FUNC( release_QTextCharFormat )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextCharFormat             Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextCharFormat             Object Already deleted!" ) );
    }
 }
 

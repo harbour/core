@@ -117,7 +117,7 @@ QT_G_FUNC( release_QSizeGrip )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSizeGrip                   Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSizeGrip                   Object Already deleted!" ) );
    }
 }
 

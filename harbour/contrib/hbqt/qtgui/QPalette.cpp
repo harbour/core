@@ -101,7 +101,7 @@ QT_G_FUNC( release_QPalette )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QPalette                    Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QPalette                    Object Already deleted!" ) );
    }
 }
 

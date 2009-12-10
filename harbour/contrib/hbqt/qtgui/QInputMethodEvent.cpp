@@ -104,7 +104,7 @@ QT_G_FUNC( release_QInputMethodEvent )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QInputMethodEvent           Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QInputMethodEvent           Object Already deleted!" ) );
    }
 }
 

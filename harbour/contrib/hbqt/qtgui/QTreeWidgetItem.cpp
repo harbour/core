@@ -115,7 +115,7 @@ QT_G_FUNC( release_QTreeWidgetItem )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTreeWidgetItem             Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTreeWidgetItem             Object Already deleted!" ) );
    }
 }
 

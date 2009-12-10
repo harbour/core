@@ -99,7 +99,7 @@ QT_G_FUNC( release_QStyleOptionHeader )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionHeader          Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionHeader          Object Already deleted!" ) );
    }
 }
 

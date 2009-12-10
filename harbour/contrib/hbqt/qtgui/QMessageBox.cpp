@@ -134,7 +134,7 @@ QT_G_FUNC( release_QMessageBox )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QMessageBox                 Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QMessageBox                 Object Already deleted!" ) );
    }
 }
 

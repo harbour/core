@@ -118,7 +118,7 @@ QT_G_FUNC( release_QLabel )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QLabel                      Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QLabel                      Object Already deleted!" ) );
    }
 }
 

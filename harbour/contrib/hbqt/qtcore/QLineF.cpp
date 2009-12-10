@@ -96,7 +96,7 @@ QT_G_FUNC( release_QLineF )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QLineF                      Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QLineF                      Object Already deleted!" ) );
    }
 }
 

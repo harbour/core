@@ -96,7 +96,7 @@ QT_G_FUNC( release_QStyleOptionToolBox )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionToolBox         Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionToolBox         Object Already deleted!" ) );
    }
 }
 

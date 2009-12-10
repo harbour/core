@@ -96,7 +96,7 @@ QT_G_FUNC( release_QStyleOptionTitleBar )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionTitleBar        Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionTitleBar        Object Already deleted!" ) );
    }
 }
 

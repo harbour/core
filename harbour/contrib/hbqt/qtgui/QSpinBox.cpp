@@ -116,7 +116,7 @@ QT_G_FUNC( release_QSpinBox )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSpinBox                    Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSpinBox                    Object Already deleted!" ) );
    }
 }
 

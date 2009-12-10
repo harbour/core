@@ -540,7 +540,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
             aadd( cpp_, "   }" )
             aadd( cpp_, "   else" )
             aadd( cpp_, "   {" )
-            aadd( cpp_, '      HB_TRACE( HB_TR_DEBUG, ( "DEL release_' + pad( cWidget, 27 ) + ' Object Allready deleted!" ) );' )
+            aadd( cpp_, '      HB_TRACE( HB_TR_DEBUG, ( "DEL release_' + pad( cWidget, 27 ) + ' Object Already deleted!" ) );' )
             aadd( cpp_, "   }" )
          ELSE
             aadd( cpp_, "   HB_SYMBOL_UNUSED( Cargo );" )

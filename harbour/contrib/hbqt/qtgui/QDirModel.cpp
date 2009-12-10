@@ -122,7 +122,7 @@ QT_G_FUNC( release_QDirModel )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QDirModel                   Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QDirModel                   Object Already deleted!" ) );
    }
 }
 

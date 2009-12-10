@@ -90,7 +90,7 @@ QT_G_FUNC( release_QLatin1Char )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QLatin1Char                 Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QLatin1Char                 Object Already deleted!" ) );
    }
 }
 

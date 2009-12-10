@@ -98,7 +98,7 @@ QT_G_FUNC( release_QStyleOptionMenuItem )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionMenuItem        Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionMenuItem        Object Already deleted!" ) );
    }
 }
 

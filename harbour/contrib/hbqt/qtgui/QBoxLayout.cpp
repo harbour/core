@@ -121,7 +121,7 @@ QT_G_FUNC( release_QBoxLayout )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QBoxLayout                  Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QBoxLayout                  Object Already deleted!" ) );
    }
 }
 

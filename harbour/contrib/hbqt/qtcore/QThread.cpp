@@ -120,7 +120,7 @@ QT_G_FUNC( release_QThread )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QThread                     Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QThread                     Object Already deleted!" ) );
    }
 }
 

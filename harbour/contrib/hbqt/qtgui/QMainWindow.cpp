@@ -131,7 +131,7 @@ QT_G_FUNC( release_QMainWindow )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QMainWindow                 Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QMainWindow                 Object Already deleted!" ) );
    }
 }
 

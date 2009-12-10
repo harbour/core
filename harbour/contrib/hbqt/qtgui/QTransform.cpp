@@ -96,7 +96,7 @@ QT_G_FUNC( release_QTransform )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTransform                  Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTransform                  Object Already deleted!" ) );
    }
 }
 

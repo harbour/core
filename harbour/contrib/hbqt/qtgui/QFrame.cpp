@@ -123,7 +123,7 @@ QT_G_FUNC( release_QFrame )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QFrame                      Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QFrame                      Object Already deleted!" ) );
    }
 }
 

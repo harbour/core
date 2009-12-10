@@ -106,7 +106,7 @@ QT_G_FUNC( release_QImageWriter )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QImageWriter                Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QImageWriter                Object Already deleted!" ) );
    }
 }
 

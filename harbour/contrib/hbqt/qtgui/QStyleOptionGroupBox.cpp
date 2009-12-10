@@ -96,7 +96,7 @@ QT_G_FUNC( release_QStyleOptionGroupBox )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionGroupBox        Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionGroupBox        Object Already deleted!" ) );
    }
 }
 

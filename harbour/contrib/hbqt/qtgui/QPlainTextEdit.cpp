@@ -137,7 +137,7 @@ QT_G_FUNC( release_QPlainTextEdit )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QPlainTextEdit              Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QPlainTextEdit              Object Already deleted!" ) );
    }
 }
 

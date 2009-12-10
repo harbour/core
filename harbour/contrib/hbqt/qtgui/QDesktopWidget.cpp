@@ -117,7 +117,7 @@ QT_G_FUNC( release_QDesktopWidget )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QDesktopWidget              Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QDesktopWidget              Object Already deleted!" ) );
    }
 }
 

@@ -92,7 +92,7 @@ QT_G_FUNC( release_QPointF )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QPointF                     Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QPointF                     Object Already deleted!" ) );
    }
 }
 

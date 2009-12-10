@@ -95,7 +95,7 @@ QT_G_FUNC( release_QTextLine )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextLine                   Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextLine                   Object Already deleted!" ) );
    }
 }
 

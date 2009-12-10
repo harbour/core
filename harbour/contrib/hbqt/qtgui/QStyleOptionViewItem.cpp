@@ -97,7 +97,7 @@ QT_G_FUNC( release_QStyleOptionViewItem )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionViewItem        Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionViewItem        Object Already deleted!" ) );
    }
 }
 

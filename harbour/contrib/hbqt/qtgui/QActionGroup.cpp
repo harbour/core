@@ -125,7 +125,7 @@ QT_G_FUNC( release_QActionGroup )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QActionGroup                Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QActionGroup                Object Already deleted!" ) );
    }
 }
 

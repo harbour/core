@@ -120,7 +120,7 @@ QT_G_FUNC( release_QLocale )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QLocale                     Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QLocale                     Object Already deleted!" ) );
    }
 }
 

@@ -121,7 +121,7 @@ QT_G_FUNC( release_QHeaderView )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QHeaderView                 Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QHeaderView                 Object Already deleted!" ) );
    }
 }
 

@@ -109,7 +109,7 @@ QT_G_FUNC( release_QByteArray )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QByteArray                  Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QByteArray                  Object Already deleted!" ) );
    }
 }
 

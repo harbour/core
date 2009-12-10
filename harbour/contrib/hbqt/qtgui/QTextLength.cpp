@@ -95,7 +95,7 @@ QT_G_FUNC( release_QTextLength )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextLength                 Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextLength                 Object Already deleted!" ) );
    }
 }
 

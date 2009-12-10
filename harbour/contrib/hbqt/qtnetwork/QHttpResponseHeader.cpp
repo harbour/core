@@ -92,7 +92,7 @@ QT_G_FUNC( release_QHttpResponseHeader )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QHttpResponseHeader         Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QHttpResponseHeader         Object Already deleted!" ) );
    }
 }
 

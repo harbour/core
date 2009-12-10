@@ -98,7 +98,7 @@ QT_G_FUNC( release_QConicalGradient )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QConicalGradient            Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QConicalGradient            Object Already deleted!" ) );
    }
 }
 

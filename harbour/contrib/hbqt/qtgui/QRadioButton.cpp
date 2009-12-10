@@ -117,7 +117,7 @@ QT_G_FUNC( release_QRadioButton )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QRadioButton                Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QRadioButton                Object Already deleted!" ) );
    }
 }
 

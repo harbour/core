@@ -94,7 +94,7 @@ QT_G_FUNC( release_QFontMetricsF )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QFontMetricsF               Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QFontMetricsF               Object Already deleted!" ) );
    }
 }
 

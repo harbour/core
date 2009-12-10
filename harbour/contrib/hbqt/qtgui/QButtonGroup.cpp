@@ -126,7 +126,7 @@ QT_G_FUNC( release_QButtonGroup )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QButtonGroup                Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QButtonGroup                Object Already deleted!" ) );
    }
 }
 

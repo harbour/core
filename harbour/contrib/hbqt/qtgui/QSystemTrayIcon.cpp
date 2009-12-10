@@ -123,7 +123,7 @@ QT_G_FUNC( release_QSystemTrayIcon )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSystemTrayIcon             Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSystemTrayIcon             Object Already deleted!" ) );
    }
 }
 

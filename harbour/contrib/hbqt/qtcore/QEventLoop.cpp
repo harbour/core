@@ -122,7 +122,7 @@ QT_G_FUNC( release_QEventLoop )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QEventLoop                  Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QEventLoop                  Object Already deleted!" ) );
    }
 }
 

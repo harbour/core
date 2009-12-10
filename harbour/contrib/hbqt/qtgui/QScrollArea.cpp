@@ -117,7 +117,7 @@ QT_G_FUNC( release_QScrollArea )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QScrollArea                 Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QScrollArea                 Object Already deleted!" ) );
    }
 }
 

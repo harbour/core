@@ -92,7 +92,7 @@ QT_G_FUNC( release_QMatrix )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QMatrix                     Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QMatrix                     Object Already deleted!" ) );
    }
 }
 

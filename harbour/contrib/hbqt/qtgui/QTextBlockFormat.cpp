@@ -109,7 +109,7 @@ QT_G_FUNC( release_QTextBlockFormat )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextBlockFormat            Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextBlockFormat            Object Already deleted!" ) );
    }
 }
 

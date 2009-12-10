@@ -110,7 +110,7 @@ QT_G_FUNC( release_QIcon )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QIcon                       Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QIcon                       Object Already deleted!" ) );
    }
 }
 

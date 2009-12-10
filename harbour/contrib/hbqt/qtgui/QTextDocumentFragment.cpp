@@ -94,7 +94,7 @@ QT_G_FUNC( release_QTextDocumentFragment )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextDocumentFragment       Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextDocumentFragment       Object Already deleted!" ) );
    }
 }
 

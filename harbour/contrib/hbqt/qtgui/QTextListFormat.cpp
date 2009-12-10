@@ -94,7 +94,7 @@ QT_G_FUNC( release_QTextListFormat )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextListFormat             Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextListFormat             Object Already deleted!" ) );
    }
 }
 

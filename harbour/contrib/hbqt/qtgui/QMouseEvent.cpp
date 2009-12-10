@@ -92,7 +92,7 @@ QT_G_FUNC( release_QMouseEvent )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QMouseEvent                 Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QMouseEvent                 Object Already deleted!" ) );
    }
 }
 

@@ -120,7 +120,7 @@ QT_G_FUNC( release_QProgressBar )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QProgressBar                Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QProgressBar                Object Already deleted!" ) );
    }
 }
 

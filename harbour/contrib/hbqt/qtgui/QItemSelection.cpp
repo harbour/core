@@ -90,7 +90,7 @@ QT_G_FUNC( release_QItemSelection )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QItemSelection              Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QItemSelection              Object Already deleted!" ) );
    }
 }
 

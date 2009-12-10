@@ -95,7 +95,7 @@ QT_G_FUNC( release_QBitmap )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QBitmap                     Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QBitmap                     Object Already deleted!" ) );
    }
 }
 

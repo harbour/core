@@ -121,7 +121,7 @@ QT_G_FUNC( release_QToolButton )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QToolButton                 Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QToolButton                 Object Already deleted!" ) );
    }
 }
 

@@ -100,7 +100,7 @@ QT_G_FUNC( release_QDir )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QDir                        Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QDir                        Object Already deleted!" ) );
    }
 }
 

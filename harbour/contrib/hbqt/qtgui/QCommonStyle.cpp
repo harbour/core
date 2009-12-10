@@ -116,7 +116,7 @@ QT_G_FUNC( release_QCommonStyle )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QCommonStyle                Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QCommonStyle                Object Already deleted!" ) );
    }
 }
 

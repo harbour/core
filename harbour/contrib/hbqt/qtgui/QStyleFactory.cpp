@@ -90,7 +90,7 @@ QT_G_FUNC( release_QStyleFactory )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleFactory               Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleFactory               Object Already deleted!" ) );
    }
 }
 

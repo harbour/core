@@ -96,7 +96,7 @@ QT_G_FUNC( release_QStyleOptionFrame )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionFrame           Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionFrame           Object Already deleted!" ) );
    }
 }
 

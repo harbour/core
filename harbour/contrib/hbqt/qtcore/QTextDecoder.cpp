@@ -91,7 +91,7 @@ QT_G_FUNC( release_QTextDecoder )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextDecoder                Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextDecoder                Object Already deleted!" ) );
    }
 }
 

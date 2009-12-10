@@ -117,7 +117,7 @@ QT_G_FUNC( release_QSignalMapper )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSignalMapper               Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSignalMapper               Object Already deleted!" ) );
    }
 }
 

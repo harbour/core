@@ -128,7 +128,7 @@ QT_G_FUNC( release_QProcess )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QProcess                    Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QProcess                    Object Already deleted!" ) );
    }
 }
 

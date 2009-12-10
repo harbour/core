@@ -115,7 +115,7 @@ QT_G_FUNC( release_QWizardPage )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QWizardPage                 Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QWizardPage                 Object Already deleted!" ) );
    }
 }
 

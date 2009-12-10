@@ -118,7 +118,7 @@ QT_G_FUNC( release_QScrollBar )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QScrollBar                  Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QScrollBar                  Object Already deleted!" ) );
    }
 }
 

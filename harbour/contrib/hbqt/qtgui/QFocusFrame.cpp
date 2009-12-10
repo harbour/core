@@ -117,7 +117,7 @@ QT_G_FUNC( release_QFocusFrame )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QFocusFrame                 Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QFocusFrame                 Object Already deleted!" ) );
    }
 }
 

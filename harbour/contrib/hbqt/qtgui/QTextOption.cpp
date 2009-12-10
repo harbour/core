@@ -112,7 +112,7 @@ QT_G_FUNC( release_QTextOption )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextOption                 Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextOption                 Object Already deleted!" ) );
    }
 }
 

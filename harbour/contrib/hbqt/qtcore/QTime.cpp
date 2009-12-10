@@ -90,7 +90,7 @@ QT_G_FUNC( release_QTime )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTime                       Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTime                       Object Already deleted!" ) );
    }
 }
 

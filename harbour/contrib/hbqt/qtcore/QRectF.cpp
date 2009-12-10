@@ -95,7 +95,7 @@ QT_G_FUNC( release_QRectF )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QRectF                      Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QRectF                      Object Already deleted!" ) );
    }
 }
 

@@ -99,7 +99,7 @@ QT_G_FUNC( release_QTextTableFormat )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextTableFormat            Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextTableFormat            Object Already deleted!" ) );
    }
 }
 

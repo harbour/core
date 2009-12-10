@@ -122,7 +122,7 @@ QT_G_FUNC( release_QFontDialog )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QFontDialog                 Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QFontDialog                 Object Already deleted!" ) );
    }
 }
 

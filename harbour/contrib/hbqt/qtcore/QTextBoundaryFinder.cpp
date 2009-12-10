@@ -100,7 +100,7 @@ QT_G_FUNC( release_QTextBoundaryFinder )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextBoundaryFinder         Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextBoundaryFinder         Object Already deleted!" ) );
    }
 }
 

@@ -97,7 +97,7 @@ QT_G_FUNC( release_QCursor )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QCursor                     Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QCursor                     Object Already deleted!" ) );
    }
 }
 

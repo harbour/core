@@ -269,15 +269,8 @@ char * hb_verPlatform( void )
          const char * pszWine = "";
          const char * pszName = "";
 
-         if( hntdll )
-         {
-#if defined( HB_OS_WIN_CE )
-            if( GetProcAddress( hntdll, TEXT( "wine_get_version" ) ) )
-#else
-            if( GetProcAddress( hntdll, "wine_get_version" ) )
-#endif
-               pszWine = " (Wine)";
-         }
+         if( hntdll && GetProcAddress( hntdll, HBTEXT( "wine_get_version" ) ) )
+            pszWine = " (Wine)";
 
          switch( osVer.dwPlatformId )
          {

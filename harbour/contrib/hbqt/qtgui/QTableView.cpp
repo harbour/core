@@ -134,7 +134,7 @@ QT_G_FUNC( release_QTableView )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTableView                  Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTableView                  Object Already deleted!" ) );
    }
 }
 

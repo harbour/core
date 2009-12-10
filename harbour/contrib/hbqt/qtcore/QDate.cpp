@@ -94,7 +94,7 @@ QT_G_FUNC( release_QDate )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QDate                       Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QDate                       Object Already deleted!" ) );
    }
 }
 

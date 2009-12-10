@@ -117,7 +117,7 @@ QT_G_FUNC( release_QTimeEdit )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTimeEdit                   Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTimeEdit                   Object Already deleted!" ) );
    }
 }
 

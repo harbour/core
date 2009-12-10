@@ -100,7 +100,7 @@ QT_G_FUNC( release_QRadialGradient )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QRadialGradient             Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QRadialGradient             Object Already deleted!" ) );
    }
 }
 

@@ -97,7 +97,7 @@ QT_G_FUNC( release_QRegExp )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QRegExp                     Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QRegExp                     Object Already deleted!" ) );
    }
 }
 

@@ -96,7 +96,7 @@ QT_G_FUNC( release_QStyleOptionComplex )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionComplex         Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionComplex         Object Already deleted!" ) );
    }
 }
 

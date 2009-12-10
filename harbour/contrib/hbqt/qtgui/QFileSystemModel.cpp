@@ -121,7 +121,7 @@ QT_G_FUNC( release_QFileSystemModel )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QFileSystemModel            Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QFileSystemModel            Object Already deleted!" ) );
    }
 }
 

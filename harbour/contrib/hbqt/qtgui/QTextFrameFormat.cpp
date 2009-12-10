@@ -100,7 +100,7 @@ QT_G_FUNC( release_QTextFrameFormat )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextFrameFormat            Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextFrameFormat            Object Already deleted!" ) );
    }
 }
 

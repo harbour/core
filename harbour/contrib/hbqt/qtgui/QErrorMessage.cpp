@@ -126,7 +126,7 @@ QT_G_FUNC( release_QErrorMessage )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QErrorMessage               Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QErrorMessage               Object Already deleted!" ) );
    }
 }
 

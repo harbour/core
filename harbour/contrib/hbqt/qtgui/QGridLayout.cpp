@@ -118,7 +118,7 @@ QT_G_FUNC( release_QGridLayout )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QGridLayout                 Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QGridLayout                 Object Already deleted!" ) );
    }
 }
 

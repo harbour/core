@@ -100,7 +100,7 @@ QT_G_FUNC( release_QStyleOptionTab )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionTab             Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionTab             Object Already deleted!" ) );
    }
 }
 

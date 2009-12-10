@@ -100,7 +100,7 @@ QT_G_FUNC( release_QColor )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QColor                      Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QColor                      Object Already deleted!" ) );
    }
 }
 

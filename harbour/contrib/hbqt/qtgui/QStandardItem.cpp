@@ -114,7 +114,7 @@ QT_G_FUNC( release_QStandardItem )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStandardItem               Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStandardItem               Object Already deleted!" ) );
    }
 }
 

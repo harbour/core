@@ -100,7 +100,7 @@ QT_G_FUNC( release_QBrush )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QBrush                      Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QBrush                      Object Already deleted!" ) );
    }
 }
 

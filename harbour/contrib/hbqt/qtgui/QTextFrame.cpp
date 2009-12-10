@@ -132,7 +132,7 @@ QT_G_FUNC( release_QTextFrame )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextFrame                  Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextFrame                  Object Already deleted!" ) );
    }
 }
 

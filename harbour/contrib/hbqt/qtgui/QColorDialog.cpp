@@ -122,7 +122,7 @@ QT_G_FUNC( release_QColorDialog )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QColorDialog                Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QColorDialog                Object Already deleted!" ) );
    }
 }
 

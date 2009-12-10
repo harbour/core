@@ -125,7 +125,7 @@ QT_G_FUNC( release_QListView )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QListView                   Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QListView                   Object Already deleted!" ) );
    }
 }
 

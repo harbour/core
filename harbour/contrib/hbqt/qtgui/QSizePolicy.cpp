@@ -99,7 +99,7 @@ QT_G_FUNC( release_QSizePolicy )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSizePolicy                 Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSizePolicy                 Object Already deleted!" ) );
    }
 }
 

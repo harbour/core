@@ -102,7 +102,7 @@ QT_G_FUNC( release_QTextCursor )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextCursor                 Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextCursor                 Object Already deleted!" ) );
    }
 }
 

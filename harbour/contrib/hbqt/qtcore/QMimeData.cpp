@@ -127,7 +127,7 @@ QT_G_FUNC( release_QMimeData )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QMimeData                   Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QMimeData                   Object Already deleted!" ) );
    }
 }
 

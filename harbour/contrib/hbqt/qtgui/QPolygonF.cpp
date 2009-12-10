@@ -95,7 +95,7 @@ QT_G_FUNC( release_QPolygonF )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QPolygonF                   Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QPolygonF                   Object Already deleted!" ) );
    }
 }
 

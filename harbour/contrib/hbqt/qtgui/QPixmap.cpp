@@ -101,7 +101,7 @@ QT_G_FUNC( release_QPixmap )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QPixmap                     Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QPixmap                     Object Already deleted!" ) );
    }
 }
 

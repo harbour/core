@@ -95,7 +95,7 @@ QT_G_FUNC( release_QContextMenuEvent )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QContextMenuEvent           Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QContextMenuEvent           Object Already deleted!" ) );
    }
 }
 

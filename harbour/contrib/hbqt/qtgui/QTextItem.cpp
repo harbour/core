@@ -96,7 +96,7 @@ QT_G_FUNC( release_QTextItem )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextItem                   Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextItem                   Object Already deleted!" ) );
    }
 }
 

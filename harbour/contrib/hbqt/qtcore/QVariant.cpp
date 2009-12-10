@@ -154,7 +154,7 @@ QT_G_FUNC( release_QVariant )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QVariant                    Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QVariant                    Object Already deleted!" ) );
    }
 }
 

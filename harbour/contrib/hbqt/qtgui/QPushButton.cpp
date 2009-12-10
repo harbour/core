@@ -119,7 +119,7 @@ QT_G_FUNC( release_QPushButton )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QPushButton                 Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QPushButton                 Object Already deleted!" ) );
    }
 }
 

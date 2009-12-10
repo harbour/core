@@ -118,7 +118,7 @@ QT_G_FUNC( release_QWindowsStyle )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QWindowsStyle               Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QWindowsStyle               Object Already deleted!" ) );
    }
 }
 

@@ -118,7 +118,7 @@ QT_G_FUNC( release_QList )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QList                       Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QList                       Object Already deleted!" ) );
    }
 }
 

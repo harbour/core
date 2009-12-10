@@ -111,7 +111,7 @@ QT_G_FUNC( release_QNetworkRequest )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QNetworkRequest             Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QNetworkRequest             Object Already deleted!" ) );
    }
 }
 

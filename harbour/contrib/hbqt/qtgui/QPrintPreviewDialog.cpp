@@ -118,7 +118,7 @@ QT_G_FUNC( release_QPrintPreviewDialog )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QPrintPreviewDialog         Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QPrintPreviewDialog         Object Already deleted!" ) );
    }
 }
 

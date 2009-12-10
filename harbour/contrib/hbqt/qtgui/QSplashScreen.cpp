@@ -118,7 +118,7 @@ QT_G_FUNC( release_QSplashScreen )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSplashScreen               Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSplashScreen               Object Already deleted!" ) );
    }
 }
 

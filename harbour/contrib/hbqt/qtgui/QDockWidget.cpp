@@ -123,7 +123,7 @@ QT_G_FUNC( release_QDockWidget )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QDockWidget                 Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QDockWidget                 Object Already deleted!" ) );
    }
 }
 

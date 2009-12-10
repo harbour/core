@@ -96,7 +96,7 @@ QT_G_FUNC( release_QStyleOptionSpinBox )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionSpinBox         Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionSpinBox         Object Already deleted!" ) );
    }
 }
 

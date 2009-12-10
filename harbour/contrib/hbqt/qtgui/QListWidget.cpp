@@ -127,7 +127,7 @@ QT_G_FUNC( release_QListWidget )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QListWidget                 Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QListWidget                 Object Already deleted!" ) );
    }
 }
 

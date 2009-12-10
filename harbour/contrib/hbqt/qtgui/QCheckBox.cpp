@@ -117,7 +117,7 @@ QT_G_FUNC( release_QCheckBox )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QCheckBox                   Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QCheckBox                   Object Already deleted!" ) );
    }
 }
 

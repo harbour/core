@@ -98,7 +98,7 @@ QT_G_FUNC( release_QLinearGradient )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QLinearGradient             Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QLinearGradient             Object Already deleted!" ) );
    }
 }
 

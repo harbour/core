@@ -96,7 +96,7 @@ QT_G_FUNC( release_QStyleOptionSizeGrip )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionSizeGrip        Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionSizeGrip        Object Already deleted!" ) );
    }
 }
 

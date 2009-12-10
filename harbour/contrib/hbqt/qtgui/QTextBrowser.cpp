@@ -116,7 +116,7 @@ QT_G_FUNC( release_QTextBrowser )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextBrowser                Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextBrowser                Object Already deleted!" ) );
    }
 }
 

@@ -129,7 +129,7 @@ QT_G_FUNC( release_QTreeView )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTreeView                   Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTreeView                   Object Already deleted!" ) );
    }
 }
 

@@ -100,7 +100,7 @@ QT_G_FUNC( release_QFileInfo )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QFileInfo                   Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QFileInfo                   Object Already deleted!" ) );
    }
 }
 

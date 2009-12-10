@@ -140,7 +140,7 @@ QT_G_FUNC( release_QTextDocument )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextDocument               Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextDocument               Object Already deleted!" ) );
    }
 }
 

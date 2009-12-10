@@ -118,7 +118,7 @@ QT_G_FUNC( release_QGroupBox )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QGroupBox                   Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QGroupBox                   Object Already deleted!" ) );
    }
 }
 

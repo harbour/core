@@ -93,7 +93,7 @@ QT_G_FUNC( release_QSizeF )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSizeF                      Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSizeF                      Object Already deleted!" ) );
    }
 }
 

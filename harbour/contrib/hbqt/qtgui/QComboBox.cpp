@@ -122,7 +122,7 @@ QT_G_FUNC( release_QComboBox )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QComboBox                   Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QComboBox                   Object Already deleted!" ) );
    }
 }
 

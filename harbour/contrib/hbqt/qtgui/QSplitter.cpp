@@ -128,7 +128,7 @@ QT_G_FUNC( release_QSplitter )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSplitter                   Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSplitter                   Object Already deleted!" ) );
    }
 }
 

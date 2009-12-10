@@ -99,7 +99,7 @@ QT_G_FUNC( release_QDataStream )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QDataStream                 Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QDataStream                 Object Already deleted!" ) );
    }
 }
 

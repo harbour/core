@@ -119,7 +119,7 @@ QT_G_FUNC( release_QSyntaxHighlighter )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSyntaxHighlighter          Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSyntaxHighlighter          Object Already deleted!" ) );
    }
 }
 

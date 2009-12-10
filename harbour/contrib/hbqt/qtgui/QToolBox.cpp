@@ -117,7 +117,7 @@ QT_G_FUNC( release_QToolBox )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QToolBox                    Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QToolBox                    Object Already deleted!" ) );
    }
 }
 

@@ -90,7 +90,7 @@ QT_G_FUNC( release_QTextBlock )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextBlock                  Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextBlock                  Object Already deleted!" ) );
    }
 }
 

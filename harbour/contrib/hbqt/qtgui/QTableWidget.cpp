@@ -129,7 +129,7 @@ QT_G_FUNC( release_QTableWidget )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTableWidget                Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTableWidget                Object Already deleted!" ) );
    }
 }
 

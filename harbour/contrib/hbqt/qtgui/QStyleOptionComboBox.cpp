@@ -96,7 +96,7 @@ QT_G_FUNC( release_QStyleOptionComboBox )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionComboBox        Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionComboBox        Object Already deleted!" ) );
    }
 }
 

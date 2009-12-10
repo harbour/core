@@ -118,7 +118,7 @@ QT_G_FUNC( release_QCommandLinkButton )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QCommandLinkButton          Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QCommandLinkButton          Object Already deleted!" ) );
    }
 }
 

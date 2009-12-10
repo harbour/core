@@ -108,7 +108,7 @@ QT_G_FUNC( release_QFontDatabase )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QFontDatabase               Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QFontDatabase               Object Already deleted!" ) );
    }
 }
 

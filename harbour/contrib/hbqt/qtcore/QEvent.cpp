@@ -95,7 +95,7 @@ QT_G_FUNC( release_QEvent )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QEvent                      Object Allready deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QEvent                      Object Already deleted!" ) );
    }
 }
 
