@@ -148,10 +148,6 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    SetAppWindow( Self )
 
-   /* Initialize Qt's event stacks */
-   QT_SetEventSlots()
-   QT_SetEventFilter()
-
    /* Thread specific event buffer */
    hbxbp_InitializeEventBuffer()
 
@@ -160,7 +156,7 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    hbxbp_SetEventLoop( ::oEventLoop )
 
    /* Instal Event Filter */
-   ::oWidget:installEventFilter( hbxbp_SetEventFilter() )
+   ::oWidget:installEventFilter( QT_GetEventFilter() )
 
    ::connectWindowEvents()
    //

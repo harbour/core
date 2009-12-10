@@ -414,7 +414,7 @@ METHOD XbpWindow:connectEvent( pWidget, nEvent, bBlock )
 
 METHOD XbpWindow:connectWindowEvents()
 
-   //::oWidget:installEventFilter( hbxbp_SetEventFilter() )
+   //::oWidget:installEventFilter( QT_GetEventFilter() )
 
    ::connectEvent( ::pWidget, QEvent_MouseMove          , {|o,e| ::grabEvent( QEvent_MouseMove          , e, o ) } )
    ::connectEvent( ::pWidget, QEvent_MouseButtonPress   , {|o,e| ::grabEvent( QEvent_MouseButtonPress   , e, o ) } )
@@ -752,7 +752,7 @@ METHOD XbpWindow:destroy()
       aeval( ::aEConnections, {|e_,i| Qt_DisConnect_Event( e_[ 1 ], e_[ 2 ] ), ;
                                ::aEConnections[ i,1 ] := NIL, ::aEConnections[ i,2 ] := NIL, ::aEConnections[ i ] := NIL } )
       ::aEConnections := {}
-      ::oWidget:removeEventFilter( hbxbp_SetEventFilter() )
+      ::oWidget:removeEventFilter( QT_GetEventFilter() )
    ENDIF
 
    IF Len( ::aChildren ) > 0

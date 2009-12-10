@@ -73,24 +73,29 @@ typedef struct
 
 static HB_TSD_NEW( s_slots, sizeof( HB_SLOTS ), NULL, NULL );
 
-#define HB_GETQTEVENTSLOTS()       ( ( PHB_SLOTS ) hb_stackGetTSD( &s_slots ) )
+#define HB_QTTHREAD_SLOTS()       ( ( PHB_SLOTS ) hb_stackGetTSD( &s_slots ) )
 
 /*----------------------------------------------------------------------*/
 
-static void qt_setEventSlots()
-{
-   if( ! HB_GETQTEVENTSLOTS()->t_slots )
-      HB_GETQTEVENTSLOTS()->t_slots = new Slots();
-}
-
 static Slots * qt_getEventSlots( void )
 {
-   return HB_GETQTEVENTSLOTS()->t_slots;
+   PHB_SLOTS p_slots = HB_QTTHREAD_SLOTS();
+
+   if( ! p_slots->t_slots )
+      p_slots->t_slots = new Slots();
+
+   return p_slots->t_slots;
 }
 
-HB_FUNC( QT_SETEVENTSLOTS )
+HB_FUNC( QT_SLOTS_DESTROY )
 {
-   qt_setEventSlots();
+   PHB_SLOTS p_slots = HB_QTTHREAD_SLOTS();
+
+   if( p_slots->t_slots )
+   {
+      p_slots->t_slots->~Slots();
+      p_slots->t_slots = NULL;
+   }
 }
 
 /*----------------------------------------------------------------------*/
@@ -502,7 +507,6 @@ HB_FUNC( QT_CONNECT_SIGNAL )
    PHB_ITEM  codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK ) );  /* get codeblock */
    bool      ret;
 
-   qt_setEventSlots();
    Slots   * t_slots       = qt_getEventSlots();
 
    if(      signal == ( QString ) "clicked()" )                                 ret = object->connect( object, SIGNAL( clicked() )                                                 , t_slots, SLOT( clicked() )                                                 , Qt::AutoConnection );
@@ -756,11 +760,6 @@ HB_FUNC( QT_DISCONNECT_SIGNAL )
       }
    }
    hb_retl( bFreed );
-}
-
-HB_FUNC( QT_SLOTS_DESTROY )
-{
-   qt_getEventSlots()->~Slots();
 }
 
 /*----------------------------------------------------------------------*/

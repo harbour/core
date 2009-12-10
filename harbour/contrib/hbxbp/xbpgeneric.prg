@@ -146,12 +146,6 @@ FUNCTION hbxbp_ClearEventBuffer()
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbxbp_SetEventFilter()
-
-   RETURN QT_GetEventFilter()
-
-/*----------------------------------------------------------------------*/
-
 FUNCTION hbxbp_SetEventLoop( oELoop )
 
    t_oEventLoop := oELoop

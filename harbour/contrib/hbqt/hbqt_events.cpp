@@ -75,29 +75,34 @@ typedef struct
 
 static HB_TSD_NEW( s_events, sizeof( HB_EVENTS ), NULL, NULL );
 
-#define HB_GETQTEVENTFILTER()       ( ( PHB_EVENTS ) hb_stackGetTSD( &s_events ) )
+#define HB_QTTHREAD_EVENTS()       ( ( PHB_EVENTS ) hb_stackGetTSD( &s_events ) )
 
 /*----------------------------------------------------------------------*/
 
-static void qt_setEventFilter()
-{
-   if( ! HB_GETQTEVENTFILTER()->t_events )
-      HB_GETQTEVENTFILTER()->t_events = new Events();
-}
-
 static Events * qt_getEventFilter( void )
 {
-   return HB_GETQTEVENTFILTER()->t_events;
-}
+   PHB_EVENTS p_events = HB_QTTHREAD_EVENTS();
 
-HB_FUNC( QT_SETEVENTFILTER )
-{
-   qt_setEventFilter();
+   if( ! p_events->t_events )
+      p_events->t_events = new Events();
+
+   return p_events->t_events;
 }
 
 HB_FUNC( QT_GETEVENTFILTER )
 {
    hb_retptr( qt_getEventFilter() );
+}
+
+HB_FUNC( QT_EVENTS_DESTROY )
+{
+   PHB_EVENTS p_events = HB_QTTHREAD_EVENTS();
+
+   if( p_events->t_events )
+   {
+      p_events->t_events->~Events();
+      p_events->t_events = NULL;
+   }
 }
 
 /*----------------------------------------------------------------------*/
@@ -143,11 +148,6 @@ bool Events::eventFilter( QObject * object, QEvent * event )
    }
 
    return ret;
-}
-
-HB_FUNC( QT_EVENTS_DESTROY )
-{
-   qt_getEventFilter()->~Events();
 }
 
 HB_FUNC( QT_CONNECT_EVENT )
