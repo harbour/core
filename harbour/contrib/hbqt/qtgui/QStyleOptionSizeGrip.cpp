@@ -92,17 +92,11 @@ QT_G_FUNC( release_QStyleOptionSizeGrip )
    {
       delete ( ( QStyleOptionSizeGrip * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionSizeGrip        Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QStyleOptionSizeGrip        %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QStyleOptionSizeGrip        Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionSizeGrip        Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QStyleOptionSizeGrip" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionSizeGrip        Object Allready deleted!" ) );
    }
 }
 
@@ -112,9 +106,7 @@ void * gcAllocate_QStyleOptionSizeGrip( void * pObj )
 
    p->ph = pObj;
    p->func = release_QStyleOptionSizeGrip;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QStyleOptionSizeGrip        %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QStyleOptionSizeGrip        %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

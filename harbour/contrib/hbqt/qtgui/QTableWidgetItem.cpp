@@ -94,17 +94,11 @@ QT_G_FUNC( release_QTableWidgetItem )
    {
       delete ( ( QTableWidgetItem * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QTableWidgetItem            Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QTableWidgetItem            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QTableWidgetItem            Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QTableWidgetItem            Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QTableWidgetItem" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTableWidgetItem            Object Allready deleted!" ) );
    }
 }
 
@@ -114,9 +108,7 @@ void * gcAllocate_QTableWidgetItem( void * pObj )
 
    p->ph = pObj;
    p->func = release_QTableWidgetItem;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QTableWidgetItem            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QTableWidgetItem            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

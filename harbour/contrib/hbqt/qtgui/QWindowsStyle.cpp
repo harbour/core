@@ -109,25 +109,16 @@ QT_G_FUNC( release_QWindowsStyle )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QWindowsStyle               Object deleted!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  YES release_QWindowsStyle               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QWindowsStyle               Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "release_QWindowsStyle               Object Name Missing!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  NO  release_QWindowsStyle" );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_QWindowsStyle               Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QWindowsStyle               Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QWindowsStyle" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QWindowsStyle               Object Allready deleted!" ) );
    }
 }
 
@@ -138,9 +129,7 @@ void * gcAllocate_QWindowsStyle( void * pObj )
    p->ph = pObj;
    p->func = release_QWindowsStyle;
    new( & p->pq ) QPointer< QWindowsStyle >( ( QWindowsStyle * ) pObj );
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QWindowsStyle               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QWindowsStyle               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

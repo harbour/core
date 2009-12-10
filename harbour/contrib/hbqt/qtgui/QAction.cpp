@@ -127,25 +127,16 @@ QT_G_FUNC( release_QAction )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QAction                     Object deleted!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  YES release_QAction                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QAction                     Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "release_QAction                     Object Name Missing!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  NO  release_QAction" );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_QAction                     Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QAction                     Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QAction" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QAction                     Object Allready deleted!" ) );
    }
 }
 
@@ -156,9 +147,7 @@ void * gcAllocate_QAction( void * pObj )
    p->ph = pObj;
    p->func = release_QAction;
    new( & p->pq ) QPointer< QAction >( ( QAction * ) pObj );
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QAction                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QAction                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

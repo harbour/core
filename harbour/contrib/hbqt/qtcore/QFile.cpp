@@ -118,25 +118,16 @@ QT_G_FUNC( release_QFile )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QFile                       Object deleted!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  YES release_QFile                       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QFile                       Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "release_QFile                       Object Name Missing!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  NO  release_QFile" );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_QFile                       Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QFile                       Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QFile" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QFile                       Object Allready deleted!" ) );
    }
 }
 
@@ -147,9 +138,7 @@ void * gcAllocate_QFile( void * pObj )
    p->ph = pObj;
    p->func = release_QFile;
    new( & p->pq ) QPointer< QFile >( ( QFile * ) pObj );
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QFile                       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QFile                       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

@@ -61,11 +61,6 @@
 
 #if QT_VERSION >= 0x040500
 
-#if defined( __HB_DEBUG__ )
-   int hbqt_getmemused( void );
-   void hbqt_debug( const char * sTraceMsg, ... );
-#endif
-
 #define QT_G_FUNC( hbfunc )   void hbfunc( void * Cargo ) /* callback function for cleaning garbage memory pointer */
 typedef QT_G_FUNC( QT_G_FUNC_ );
 typedef QT_G_FUNC_ * QT_G_FUNC_PTR;

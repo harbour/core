@@ -110,17 +110,11 @@ QT_G_FUNC( release_QStandardItem )
    {
       delete ( ( QStandardItem * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QStandardItem               Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QStandardItem               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QStandardItem               Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QStandardItem               Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QStandardItem" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStandardItem               Object Allready deleted!" ) );
    }
 }
 
@@ -130,9 +124,7 @@ void * gcAllocate_QStandardItem( void * pObj )
 
    p->ph = pObj;
    p->func = release_QStandardItem;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QStandardItem               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QStandardItem               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

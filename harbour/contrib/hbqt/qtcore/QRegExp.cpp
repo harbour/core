@@ -93,17 +93,11 @@ QT_G_FUNC( release_QRegExp )
    {
       delete ( ( QRegExp * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QRegExp                     Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QRegExp                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QRegExp                     Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QRegExp                     Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QRegExp" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QRegExp                     Object Allready deleted!" ) );
    }
 }
 
@@ -113,9 +107,7 @@ void * gcAllocate_QRegExp( void * pObj )
 
    p->ph = pObj;
    p->func = release_QRegExp;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QRegExp                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QRegExp                     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

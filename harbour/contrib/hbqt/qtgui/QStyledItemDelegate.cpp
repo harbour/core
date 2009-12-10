@@ -108,25 +108,16 @@ QT_G_FUNC( release_QStyledItemDelegate )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QStyledItemDelegate         Object deleted!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  YES release_QStyledItemDelegate         %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QStyledItemDelegate         Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "release_QStyledItemDelegate         Object Name Missing!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  NO  release_QStyledItemDelegate" );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_QStyledItemDelegate         Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QStyledItemDelegate         Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QStyledItemDelegate" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyledItemDelegate         Object Allready deleted!" ) );
    }
 }
 
@@ -137,9 +128,7 @@ void * gcAllocate_QStyledItemDelegate( void * pObj )
    p->ph = pObj;
    p->func = release_QStyledItemDelegate;
    new( & p->pq ) QPointer< QStyledItemDelegate >( ( QStyledItemDelegate * ) pObj );
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QStyledItemDelegate         %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QStyledItemDelegate         %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

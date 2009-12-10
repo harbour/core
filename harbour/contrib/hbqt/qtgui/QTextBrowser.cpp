@@ -107,25 +107,16 @@ QT_G_FUNC( release_QTextBrowser )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QTextBrowser                Object deleted!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  YES release_QTextBrowser                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTextBrowser                Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "release_QTextBrowser                Object Name Missing!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  NO  release_QTextBrowser" );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_QTextBrowser                Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QTextBrowser                Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QTextBrowser" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextBrowser                Object Allready deleted!" ) );
    }
 }
 
@@ -136,9 +127,7 @@ void * gcAllocate_QTextBrowser( void * pObj )
    p->ph = pObj;
    p->func = release_QTextBrowser;
    new( & p->pq ) QPointer< QTextBrowser >( ( QTextBrowser * ) pObj );
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QTextBrowser                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QTextBrowser                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

@@ -90,17 +90,11 @@ QT_G_FUNC( release_QTextDocumentFragment )
    {
       delete ( ( QTextDocumentFragment * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QTextDocumentFragment       Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QTextDocumentFragment       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QTextDocumentFragment       Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QTextDocumentFragment       Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QTextDocumentFragment" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextDocumentFragment       Object Allready deleted!" ) );
    }
 }
 
@@ -110,9 +104,7 @@ void * gcAllocate_QTextDocumentFragment( void * pObj )
 
    p->ph = pObj;
    p->func = release_QTextDocumentFragment;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QTextDocumentFragment       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QTextDocumentFragment       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

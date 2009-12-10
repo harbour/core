@@ -113,25 +113,16 @@ QT_G_FUNC( release_QFontComboBox )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QFontComboBox               Object deleted!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  YES release_QFontComboBox               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QFontComboBox               Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "release_QFontComboBox               Object Name Missing!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  NO  release_QFontComboBox" );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_QFontComboBox               Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QFontComboBox               Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QFontComboBox" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QFontComboBox               Object Allready deleted!" ) );
    }
 }
 
@@ -142,9 +133,7 @@ void * gcAllocate_QFontComboBox( void * pObj )
    p->ph = pObj;
    p->func = release_QFontComboBox;
    new( & p->pq ) QPointer< QFontComboBox >( ( QFontComboBox * ) pObj );
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QFontComboBox               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QFontComboBox               %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

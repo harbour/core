@@ -109,25 +109,16 @@ QT_G_FUNC( release_QScrollBar )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QScrollBar                  Object deleted!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  YES release_QScrollBar                  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QScrollBar                  Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "release_QScrollBar                  Object Name Missing!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  NO  release_QScrollBar" );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_QScrollBar                  Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QScrollBar                  Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QScrollBar" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QScrollBar                  Object Allready deleted!" ) );
    }
 }
 
@@ -138,9 +129,7 @@ void * gcAllocate_QScrollBar( void * pObj )
    p->ph = pObj;
    p->func = release_QScrollBar;
    new( & p->pq ) QPointer< QScrollBar >( ( QScrollBar * ) pObj );
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QScrollBar                  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QScrollBar                  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

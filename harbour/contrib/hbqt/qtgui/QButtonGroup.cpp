@@ -117,25 +117,16 @@ QT_G_FUNC( release_QButtonGroup )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QButtonGroup                Object deleted!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  YES release_QButtonGroup                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QButtonGroup                Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "release_QButtonGroup                Object Name Missing!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  NO  release_QButtonGroup" );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_QButtonGroup                Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QButtonGroup                Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QButtonGroup" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QButtonGroup                Object Allready deleted!" ) );
    }
 }
 
@@ -146,9 +137,7 @@ void * gcAllocate_QButtonGroup( void * pObj )
    p->ph = pObj;
    p->func = release_QButtonGroup;
    new( & p->pq ) QPointer< QButtonGroup >( ( QButtonGroup * ) pObj );
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QButtonGroup                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QButtonGroup                %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

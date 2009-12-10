@@ -93,17 +93,11 @@ QT_G_FUNC( release_QStyleOptionProgressBar )
    {
       delete ( ( QStyleOptionProgressBar * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionProgressBar     Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QStyleOptionProgressBar     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QStyleOptionProgressBar     Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionProgressBar     Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QStyleOptionProgressBar" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionProgressBar     Object Allready deleted!" ) );
    }
 }
 
@@ -113,9 +107,7 @@ void * gcAllocate_QStyleOptionProgressBar( void * pObj )
 
    p->ph = pObj;
    p->func = release_QStyleOptionProgressBar;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QStyleOptionProgressBar     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QStyleOptionProgressBar     %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

@@ -125,25 +125,16 @@ QT_G_FUNC( release_QMessageBox )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QMessageBox                 Object deleted!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  YES release_QMessageBox                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QMessageBox                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "release_QMessageBox                 Object Name Missing!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  NO  release_QMessageBox" );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_QMessageBox                 Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QMessageBox                 Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QMessageBox" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QMessageBox                 Object Allready deleted!" ) );
    }
 }
 
@@ -154,9 +145,7 @@ void * gcAllocate_QMessageBox( void * pObj )
    p->ph = pObj;
    p->func = release_QMessageBox;
    new( & p->pq ) QPointer< QMessageBox >( ( QMessageBox * ) pObj );
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QMessageBox                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QMessageBox                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

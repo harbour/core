@@ -108,25 +108,16 @@ QT_G_FUNC( release_QTimeEdit )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QTimeEdit                   Object deleted!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  YES release_QTimeEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTimeEdit                   Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "release_QTimeEdit                   Object Name Missing!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  NO  release_QTimeEdit" );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_QTimeEdit                   Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QTimeEdit                   Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QTimeEdit" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTimeEdit                   Object Allready deleted!" ) );
    }
 }
 
@@ -137,9 +128,7 @@ void * gcAllocate_QTimeEdit( void * pObj )
    p->ph = pObj;
    p->func = release_QTimeEdit;
    new( & p->pq ) QPointer< QTimeEdit >( ( QTimeEdit * ) pObj );
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QTimeEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QTimeEdit                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

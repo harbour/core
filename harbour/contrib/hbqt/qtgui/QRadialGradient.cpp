@@ -96,17 +96,11 @@ QT_G_FUNC( release_QRadialGradient )
    {
       delete ( ( QRadialGradient * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QRadialGradient             Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QRadialGradient             %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QRadialGradient             Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QRadialGradient             Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QRadialGradient" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QRadialGradient             Object Allready deleted!" ) );
    }
 }
 
@@ -116,9 +110,7 @@ void * gcAllocate_QRadialGradient( void * pObj )
 
    p->ph = pObj;
    p->func = release_QRadialGradient;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QRadialGradient             %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QRadialGradient             %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

@@ -91,17 +91,11 @@ QT_G_FUNC( release_QRectF )
    {
       delete ( ( QRectF * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QRectF                      Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QRectF                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QRectF                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QRectF                      Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QRectF" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QRectF                      Object Allready deleted!" ) );
    }
 }
 
@@ -111,9 +105,7 @@ void * gcAllocate_QRectF( void * pObj )
 
    p->ph = pObj;
    p->func = release_QRectF;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QRectF                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QRectF                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

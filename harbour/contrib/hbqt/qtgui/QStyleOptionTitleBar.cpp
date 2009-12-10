@@ -92,17 +92,11 @@ QT_G_FUNC( release_QStyleOptionTitleBar )
    {
       delete ( ( QStyleOptionTitleBar * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionTitleBar        Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QStyleOptionTitleBar        %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QStyleOptionTitleBar        Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionTitleBar        Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QStyleOptionTitleBar" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionTitleBar        Object Allready deleted!" ) );
    }
 }
 
@@ -112,9 +106,7 @@ void * gcAllocate_QStyleOptionTitleBar( void * pObj )
 
    p->ph = pObj;
    p->func = release_QStyleOptionTitleBar;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QStyleOptionTitleBar        %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QStyleOptionTitleBar        %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

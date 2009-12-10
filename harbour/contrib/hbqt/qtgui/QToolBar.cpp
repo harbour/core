@@ -109,25 +109,16 @@ QT_G_FUNC( release_QToolBar )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QToolBar                    Object deleted!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  YES release_QToolBar                    %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QToolBar                    Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "release_QToolBar                    Object Name Missing!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  NO  release_QToolBar" );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_QToolBar                    Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QToolBar                    Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QToolBar" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QToolBar                    Object Allready deleted!" ) );
    }
 }
 
@@ -138,9 +129,7 @@ void * gcAllocate_QToolBar( void * pObj )
    p->ph = pObj;
    p->func = release_QToolBar;
    new( & p->pq ) QPointer< QToolBar >( ( QToolBar * ) pObj );
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QToolBar                    %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QToolBar                    %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

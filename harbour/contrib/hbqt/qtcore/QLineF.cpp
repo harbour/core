@@ -92,17 +92,11 @@ QT_G_FUNC( release_QLineF )
    {
       delete ( ( QLineF * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QLineF                      Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QLineF                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QLineF                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QLineF                      Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QLineF" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QLineF                      Object Allready deleted!" ) );
    }
 }
 
@@ -112,9 +106,7 @@ void * gcAllocate_QLineF( void * pObj )
 
    p->ph = pObj;
    p->func = release_QLineF;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QLineF                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QLineF                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

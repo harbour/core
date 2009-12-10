@@ -92,17 +92,11 @@ QT_G_FUNC( release_QStyleOptionFocusRect )
    {
       delete ( ( QStyleOptionFocusRect * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionFocusRect       Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QStyleOptionFocusRect       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QStyleOptionFocusRect       Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QStyleOptionFocusRect       Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QStyleOptionFocusRect" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStyleOptionFocusRect       Object Allready deleted!" ) );
    }
 }
 
@@ -112,9 +106,7 @@ void * gcAllocate_QStyleOptionFocusRect( void * pObj )
 
    p->ph = pObj;
    p->func = release_QStyleOptionFocusRect;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QStyleOptionFocusRect       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QStyleOptionFocusRect       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

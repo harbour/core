@@ -119,25 +119,16 @@ QT_G_FUNC( release_QSplitter )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QSplitter                   Object deleted!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  YES release_QSplitter                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QSplitter                   Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "release_QSplitter                   Object Name Missing!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  NO  release_QSplitter" );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_QSplitter                   Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QSplitter                   Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QSplitter" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSplitter                   Object Allready deleted!" ) );
    }
 }
 
@@ -148,9 +139,7 @@ void * gcAllocate_QSplitter( void * pObj )
    p->ph = pObj;
    p->func = release_QSplitter;
    new( & p->pq ) QPointer< QSplitter >( ( QSplitter * ) pObj );
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QSplitter                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QSplitter                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

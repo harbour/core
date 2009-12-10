@@ -87,17 +87,11 @@ QT_G_FUNC( release_QInputEvent )
    {
       delete ( ( QInputEvent * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QInputEvent                 Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QInputEvent                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QInputEvent                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QInputEvent                 Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QInputEvent" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QInputEvent                 Object Allready deleted!" ) );
    }
 }
 
@@ -107,9 +101,7 @@ void * gcAllocate_QInputEvent( void * pObj )
 
    p->ph = pObj;
    p->func = release_QInputEvent;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QInputEvent                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QInputEvent                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

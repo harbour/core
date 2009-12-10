@@ -87,17 +87,11 @@ QT_G_FUNC( release_QBitArray )
    {
       delete ( ( QBitArray * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QBitArray                   Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QBitArray                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QBitArray                   Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QBitArray                   Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QBitArray" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QBitArray                   Object Allready deleted!" ) );
    }
 }
 
@@ -107,9 +101,7 @@ void * gcAllocate_QBitArray( void * pObj )
 
    p->ph = pObj;
    p->func = release_QBitArray;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QBitArray                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QBitArray                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

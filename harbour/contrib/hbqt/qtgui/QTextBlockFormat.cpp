@@ -105,17 +105,11 @@ QT_G_FUNC( release_QTextBlockFormat )
    {
       delete ( ( QTextBlockFormat * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QTextBlockFormat            Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QTextBlockFormat            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QTextBlockFormat            Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QTextBlockFormat            Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QTextBlockFormat" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextBlockFormat            Object Allready deleted!" ) );
    }
 }
 
@@ -125,9 +119,7 @@ void * gcAllocate_QTextBlockFormat( void * pObj )
 
    p->ph = pObj;
    p->func = release_QTextBlockFormat;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QTextBlockFormat            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QTextBlockFormat            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

@@ -109,25 +109,16 @@ QT_G_FUNC( release_QLabel )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QLabel                      Object deleted!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  YES release_QLabel                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QLabel                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "release_QLabel                      Object Name Missing!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  NO  release_QLabel" );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_QLabel                      Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QLabel                      Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QLabel" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QLabel                      Object Allready deleted!" ) );
    }
 }
 
@@ -138,9 +129,7 @@ void * gcAllocate_QLabel( void * pObj )
    p->ph = pObj;
    p->func = release_QLabel;
    new( & p->pq ) QPointer< QLabel >( ( QLabel * ) pObj );
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QLabel                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QLabel                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

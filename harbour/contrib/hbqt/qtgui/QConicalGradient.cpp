@@ -94,17 +94,11 @@ QT_G_FUNC( release_QConicalGradient )
    {
       delete ( ( QConicalGradient * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QConicalGradient            Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QConicalGradient            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QConicalGradient            Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QConicalGradient            Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QConicalGradient" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QConicalGradient            Object Allready deleted!" ) );
    }
 }
 
@@ -114,9 +108,7 @@ void * gcAllocate_QConicalGradient( void * pObj )
 
    p->ph = pObj;
    p->func = release_QConicalGradient;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QConicalGradient            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QConicalGradient            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

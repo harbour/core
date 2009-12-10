@@ -110,25 +110,16 @@ QT_G_FUNC( release_QSyntaxHighlighter )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QSyntaxHighlighter          Object deleted!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  YES release_QSyntaxHighlighter          %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QSyntaxHighlighter          Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "release_QSyntaxHighlighter          Object Name Missing!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  NO  release_QSyntaxHighlighter" );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_QSyntaxHighlighter          Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QSyntaxHighlighter          Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QSyntaxHighlighter" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSyntaxHighlighter          Object Allready deleted!" ) );
    }
 }
 
@@ -139,9 +130,7 @@ void * gcAllocate_QSyntaxHighlighter( void * pObj )
    p->ph = pObj;
    p->func = release_QSyntaxHighlighter;
    new( & p->pq ) QPointer< QSyntaxHighlighter >( ( QSyntaxHighlighter * ) pObj );
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QSyntaxHighlighter          %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QSyntaxHighlighter          %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

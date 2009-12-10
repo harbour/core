@@ -109,25 +109,16 @@ QT_G_FUNC( release_QCommandLinkButton )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QCommandLinkButton          Object deleted!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  YES release_QCommandLinkButton          %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QCommandLinkButton          Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "release_QCommandLinkButton          Object Name Missing!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  NO  release_QCommandLinkButton" );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_QCommandLinkButton          Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QCommandLinkButton          Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QCommandLinkButton" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QCommandLinkButton          Object Allready deleted!" ) );
    }
 }
 
@@ -138,9 +129,7 @@ void * gcAllocate_QCommandLinkButton( void * pObj )
    p->ph = pObj;
    p->func = release_QCommandLinkButton;
    new( & p->pq ) QPointer< QCommandLinkButton >( ( QCommandLinkButton * ) pObj );
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QCommandLinkButton          %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QCommandLinkButton          %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

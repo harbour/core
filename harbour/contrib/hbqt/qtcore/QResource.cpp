@@ -87,17 +87,11 @@ QT_G_FUNC( release_QResource )
    {
       delete ( ( QResource * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QResource                   Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QResource                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QResource                   Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QResource                   Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QResource" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QResource                   Object Allready deleted!" ) );
    }
 }
 
@@ -107,9 +101,7 @@ void * gcAllocate_QResource( void * pObj )
 
    p->ph = pObj;
    p->func = release_QResource;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QResource                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QResource                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

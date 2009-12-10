@@ -108,25 +108,16 @@ QT_G_FUNC( release_QStringListModel )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QStringListModel            Object deleted!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  YES release_QStringListModel            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QStringListModel            Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "release_QStringListModel            Object Name Missing!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  NO  release_QStringListModel" );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_QStringListModel            Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QStringListModel            Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QStringListModel" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QStringListModel            Object Allready deleted!" ) );
    }
 }
 
@@ -137,9 +128,7 @@ void * gcAllocate_QStringListModel( void * pObj )
    p->ph = pObj;
    p->func = release_QStringListModel;
    new( & p->pq ) QPointer< QStringListModel >( ( QStringListModel * ) pObj );
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QStringListModel            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QStringListModel            %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

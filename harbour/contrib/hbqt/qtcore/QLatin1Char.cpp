@@ -86,17 +86,11 @@ QT_G_FUNC( release_QLatin1Char )
    {
       delete ( ( QLatin1Char * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QLatin1Char                 Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QLatin1Char                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QLatin1Char                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QLatin1Char                 Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QLatin1Char" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QLatin1Char                 Object Allready deleted!" ) );
    }
 }
 
@@ -106,9 +100,7 @@ void * gcAllocate_QLatin1Char( void * pObj )
 
    p->ph = pObj;
    p->func = release_QLatin1Char;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QLatin1Char                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QLatin1Char                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

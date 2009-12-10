@@ -107,17 +107,11 @@ QT_G_FUNC( release_QTextStream )
    {
       delete ( ( QTextStream * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QTextStream                 Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QTextStream                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QTextStream                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QTextStream                 Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QTextStream" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextStream                 Object Allready deleted!" ) );
    }
 }
 
@@ -127,9 +121,7 @@ void * gcAllocate_QTextStream( void * pObj )
 
    p->ph = pObj;
    p->func = release_QTextStream;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QTextStream                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QTextStream                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

@@ -89,17 +89,11 @@ QT_G_FUNC( release_QSizeF )
    {
       delete ( ( QSizeF * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QSizeF                      Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QSizeF                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QSizeF                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QSizeF                      Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QSizeF" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QSizeF                      Object Allready deleted!" ) );
    }
 }
 
@@ -109,9 +103,7 @@ void * gcAllocate_QSizeF( void * pObj )
 
    p->ph = pObj;
    p->func = release_QSizeF;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QSizeF                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QSizeF                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

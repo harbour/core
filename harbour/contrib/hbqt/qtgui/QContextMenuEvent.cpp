@@ -91,17 +91,11 @@ QT_G_FUNC( release_QContextMenuEvent )
    {
       delete ( ( QContextMenuEvent * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QContextMenuEvent           Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QContextMenuEvent           %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QContextMenuEvent           Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QContextMenuEvent           Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QContextMenuEvent" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QContextMenuEvent           Object Allready deleted!" ) );
    }
 }
 
@@ -111,9 +105,7 @@ void * gcAllocate_QContextMenuEvent( void * pObj )
 
    p->ph = pObj;
    p->func = release_QContextMenuEvent;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QContextMenuEvent           %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QContextMenuEvent           %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

@@ -90,17 +90,11 @@ QT_G_FUNC( release_QRect )
    {
       delete ( ( QRect * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QRect                       Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QRect                       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QRect                       Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QRect                       Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QRect" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QRect                       Object Allready deleted!" ) );
    }
 }
 
@@ -110,9 +104,7 @@ void * gcAllocate_QRect( void * pObj )
 
    p->ph = pObj;
    p->func = release_QRect;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QRect                       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QRect                       %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

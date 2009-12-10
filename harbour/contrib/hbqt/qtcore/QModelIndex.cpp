@@ -88,17 +88,11 @@ QT_G_FUNC( release_QModelIndex )
    {
       delete ( ( QModelIndex * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QModelIndex                 Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QModelIndex                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QModelIndex                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QModelIndex                 Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QModelIndex" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QModelIndex                 Object Allready deleted!" ) );
    }
 }
 
@@ -108,9 +102,7 @@ void * gcAllocate_QModelIndex( void * pObj )
 
    p->ph = pObj;
    p->func = release_QModelIndex;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QModelIndex                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QModelIndex                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

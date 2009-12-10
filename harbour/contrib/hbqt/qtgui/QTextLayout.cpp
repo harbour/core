@@ -104,17 +104,11 @@ QT_G_FUNC( release_QTextLayout )
    {
       delete ( ( QTextLayout * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QTextLayout                 Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QTextLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QTextLayout                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QTextLayout                 Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QTextLayout" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTextLayout                 Object Allready deleted!" ) );
    }
 }
 
@@ -124,9 +118,7 @@ void * gcAllocate_QTextLayout( void * pObj )
 
    p->ph = pObj;
    p->func = release_QTextLayout;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QTextLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QTextLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

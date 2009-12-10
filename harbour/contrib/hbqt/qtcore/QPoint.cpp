@@ -88,17 +88,11 @@ QT_G_FUNC( release_QPoint )
    {
       delete ( ( QPoint * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QPoint                      Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QPoint                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QPoint                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QPoint                      Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QPoint" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QPoint                      Object Allready deleted!" ) );
    }
 }
 
@@ -108,9 +102,7 @@ void * gcAllocate_QPoint( void * pObj )
 
    p->ph = pObj;
    p->func = release_QPoint;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QPoint                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QPoint                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

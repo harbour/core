@@ -88,17 +88,11 @@ QT_G_FUNC( release_QFontInfo )
    {
       delete ( ( QFontInfo * ) p->ph );
       p->ph = NULL;
-      HB_TRACE( HB_TR_DEBUG, ( "release_QFontInfo                   Object deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  YES release_QFontInfo                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "YES release_QFontInfo                   Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QFontInfo                   Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QFontInfo" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QFontInfo                   Object Allready deleted!" ) );
    }
 }
 
@@ -108,9 +102,7 @@ void * gcAllocate_QFontInfo( void * pObj )
 
    p->ph = pObj;
    p->func = release_QFontInfo;
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QFontInfo                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QFontInfo                   %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

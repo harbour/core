@@ -116,25 +116,16 @@ QT_G_FUNC( release_QMovie )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QMovie                      Object deleted!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  YES release_QMovie                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QMovie                      Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "release_QMovie                      Object Name Missing!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  NO  release_QMovie" );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_QMovie                      Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QMovie                      Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QMovie" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QMovie                      Object Allready deleted!" ) );
    }
 }
 
@@ -145,9 +136,7 @@ void * gcAllocate_QMovie( void * pObj )
    p->ph = pObj;
    p->func = release_QMovie;
    new( & p->pq ) QPointer< QMovie >( ( QMovie * ) pObj );
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QMovie                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QMovie                      %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 

@@ -109,25 +109,16 @@ QT_G_FUNC( release_QHBoxLayout )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QHBoxLayout                 Object deleted!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  YES release_QHBoxLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "release_QHBoxLayout                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "release_QHBoxLayout                 Object Name Missing!" ) );
-         #if defined( __HB_DEBUG__ )
-            hbqt_debug( "  NO  release_QHBoxLayout" );
-         #endif
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_QHBoxLayout                 Object Name Missing!" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "release_QHBoxLayout                 Object Allready deleted!" ) );
-      #if defined( __HB_DEBUG__ )
-         hbqt_debug( "  DEL release_QHBoxLayout" );
-      #endif
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QHBoxLayout                 Object Allready deleted!" ) );
    }
 }
 
@@ -138,9 +129,7 @@ void * gcAllocate_QHBoxLayout( void * pObj )
    p->ph = pObj;
    p->func = release_QHBoxLayout;
    new( & p->pq ) QPointer< QHBoxLayout >( ( QHBoxLayout * ) pObj );
-   #if defined( __HB_DEBUG__ )
-      hbqt_debug( "          new_QHBoxLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
-   #endif
+   HB_TRACE( HB_TR_DEBUG, ( "          new_QHBoxLayout                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
 }
 
