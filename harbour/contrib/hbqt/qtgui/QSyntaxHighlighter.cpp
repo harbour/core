@@ -69,7 +69,7 @@
 #include <QtCore/QPointer>
 
 #include <QtGui/QSyntaxHighlighter>
-#include "../hbqt_slots.h"
+#include "../hbqt_hbqsyntaxhighlighter.h"
 
 /*
  * QSyntaxHighlighter ( QObject * parent )

@@ -87,7 +87,7 @@
 #include <QStringList>
 #include <QtCore/QAbstractItemModel>
 
-#include "../hbqt_slots.h"
+#include "../hbqt_hbdbfmodel.h"
 
 /*
  * QAbstractItemModel ( QObject * parent = 0 )

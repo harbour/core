@@ -70,7 +70,7 @@
 
 #include <QtGui/QTableView>
 
-#include "../hbqt_slots.h"
+#include "../hbqt_hbqtableview.h"
 
 /*
  * QTableView ( QWidget * parent = 0 )

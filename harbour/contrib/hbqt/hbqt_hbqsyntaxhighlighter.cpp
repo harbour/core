@@ -59,7 +59,10 @@
 
 #if QT_VERSION >= 0x040500
 
-#include "hbqt_slots.h"
+#include "hbqt_hbqsyntaxhighlighter.h"
+
+#include <QHash>
+#include <QTextCharFormat>
 
 HBQSyntaxHighlighter::HBQSyntaxHighlighter( QTextDocument *parent )
    : QSyntaxHighlighter( parent )

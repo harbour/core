@@ -65,8 +65,6 @@ endif
 # Eliminate these rules.
 %.c : %.y
 
-%.c : %.l
-
 # Rule to generate an object file from a C source file in the parent.
 %$(OBJ_EXT) : $(GRANDP)%.c
 	$(CC_RULE)

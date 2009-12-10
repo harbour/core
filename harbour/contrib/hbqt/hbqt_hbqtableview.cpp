@@ -59,7 +59,7 @@
 
 #if QT_VERSION >= 0x040500
 
-#include "hbqt_slots.h"
+#include "hbqt_hbqtableview.h"
 
 HBQTableView::HBQTableView( QWidget * parent ) : QTableView( parent )
 {

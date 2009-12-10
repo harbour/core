@@ -54,13 +54,17 @@
 /*----------------------------------------------------------------------*/
 
 #include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbvm.h"
 
 #include "hbqt.h"
 
 #if QT_VERSION >= 0x040500
 
-#include "hbqt_slots.h"
+#include "hbqt_hbdbfmodel.h"
+
+#include <QIcon>
+#include <QWidget>
 
 #define HBQT_BRW_CELLVALUE                        1001
 

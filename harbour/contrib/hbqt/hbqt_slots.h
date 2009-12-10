@@ -51,12 +51,14 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*----------------------------------------------------------------------*/
 
+#ifndef HBQT_SLOTS_H
+#define HBQT_SLOTS_H
 
-#ifndef SLOTS_H
+#include "hbapiitm.h"
 
-#define SLOTS_H
+#include "hbqt_hbdrawingarea.h"
+#include "hbqt_hbqtableview.h"
 
 #include <QObject>
 #include <QMainWindow>
@@ -76,116 +78,6 @@
 #include <QHeaderView>
 #include <QPainter>
 #include <QProcess>
-
-#include "hbapi.h"
-#include "hbapiitm.h"
-
-/*----------------------------------------------------------------------*/
-
-class HBQMainWindow : public QMainWindow
-{
-   Q_OBJECT
-
-public:
-   HBQMainWindow( PHB_ITEM pBlock, int iThreadID );
-   virtual ~HBQMainWindow();
-
-   bool event( QEvent * event );
-   void keyPressEvent( QKeyEvent * event );
-   void mouseDoubleClickEvent( QMouseEvent * event );
-   void mouseMoveEvent( QMouseEvent * event );
-   void mousePressEvent( QMouseEvent * event );
-   void mouseReleaseEvent( QMouseEvent * event );
-   void wheelEvent( QWheelEvent * event );
-   void resizeEvent( QResizeEvent * event );
-   void paintEvent( QPaintEvent * event );
-   void focusInEvent( QFocusEvent * event );
-   void focusOutEvent( QFocusEvent * event );
-   void closeEvent( QCloseEvent * event );
-
-   PHB_ITEM   block;
-   int        threadID;
-};
-
-/*----------------------------------------------------------------------*/
-
-class HBDrawingArea : public QWidget
-{
-   Q_OBJECT
-
-public:
-   HBDrawingArea( QWidget *parent = 0 );
-   virtual ~HBDrawingArea( void );
-
-   void keyPressEvent( QKeyEvent * event );
-   void mouseMoveEvent( QMouseEvent * event );
-
-signals:
-   void sg_mouseMoveEvent( QMouseEvent * event );
-   void sg_keyPressEvent( QKeyEvent * event );
-};
-
-/*----------------------------------------------------------------------*/
-
-class HBDbfModel : public QAbstractItemModel
-{
-   Q_OBJECT
-
-public:
-   HBDbfModel( PHB_ITEM pBlock );
-   virtual ~HBDbfModel( void );
-
-   PHB_ITEM block;
-   int      iRows;
-   int      iCols;
-
-   void          hbSetRowColumns( int rows, int cols );
-
-   Qt::ItemFlags flags( const QModelIndex & index ) const;
-   QVariant      data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
-   QVariant      headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
-   int           rowCount( const QModelIndex & parent = QModelIndex() ) const;
-   int           columnCount( const QModelIndex & parent = QModelIndex() ) const;
-   QModelIndex   index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
-   QModelIndex   parent(const QModelIndex &child) const;
-   void          reset();
-};
-
-/*----------------------------------------------------------------------*/
-
-class HBQTableView : public QTableView
-{
-   Q_OBJECT
-
-public:
-   HBQTableView( QWidget * parent = 0 );
-   virtual ~HBQTableView();
-
-   void keyPressEvent( QKeyEvent * event );
-   void mouseDoubleClickEvent( QMouseEvent * event );
-   void mouseMoveEvent( QMouseEvent * event );
-   void mousePressEvent( QMouseEvent * event );
-   void mouseReleaseEvent( QMouseEvent * event );
-   void wheelEvent( QWheelEvent * event );
-   void resizeEvent( QResizeEvent * event );
-   void scrollContentsBy( int x, int y );
-   void scrollTo( const QModelIndex & index, QAbstractItemView::ScrollHint hint = QAbstractItemView::EnsureVisible );
-
-   QModelIndex navigate( int cursorAction );
-
-   QModelIndex moveCursor( HBQTableView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers );
-
-signals:
-   void sg_keyPressEvent( QKeyEvent * event );
-   void sg_mouseMoveEvent( QMouseEvent * event );
-   void sg_mouseDoubleClickEvent( QMouseEvent * event );
-   void sg_mousePressEvent( QMouseEvent * event );
-   void sg_mouseReleaseEvent( QMouseEvent * event );
-   void sg_wheelEvent( QWheelEvent * event );
-   void sg_resizeEvent( QResizeEvent * event );
-   void sg_moveCursor( HBQTableView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers );
-   void sg_scrollContentsBy( int x, int y );
-};
 
 /*----------------------------------------------------------------------*/
 
@@ -338,58 +230,6 @@ public slots:
    void started();
    void stateChanged( QProcess::ProcessState newState );
    /* */
-};
-
-class Events: public QObject
-{
-   Q_OBJECT
-
-public:
-   Events( QObject *parent = 0 );
-   ~Events();
-   QList<PHB_ITEM>     listBlock;
-   QList<QObject*>     listObj;
-
-protected:
-   bool eventFilter( QObject * obj, QEvent * event );
-
-};
-
-/*----------------------------------------------------------------------*/
-
-#include <QSyntaxHighlighter>
-#include <QHash>
-#include <QTextCharFormat>
-
-class QTextDocument;
-
-class HBQSyntaxHighlighter : public QSyntaxHighlighter
-{
-   Q_OBJECT
-
-public:
-   HBQSyntaxHighlighter( QTextDocument *parent = 0 );
-
-protected:
-   void highlightBlock( const QString &text );
-
-private:
-   struct HighlightingRule
-   {
-      QRegExp pattern;
-      QTextCharFormat format;
-   };
-   QVector<HighlightingRule> highlightingRules;
-
-   QRegExp commentStartExpression;
-   QRegExp commentEndExpression;
-
-   QTextCharFormat keywordFormat;
-   QTextCharFormat classFormat;
-   QTextCharFormat singleLineCommentFormat;
-   QTextCharFormat multiLineCommentFormat;
-   QTextCharFormat quotationFormat;
-   QTextCharFormat functionFormat;
 };
 
 /*----------------------------------------------------------------------*/

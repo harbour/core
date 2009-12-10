@@ -1656,35 +1656,6 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
    aadd( hdr_, "# --------------------------------------------------------------------" )
    aadd( hdr_, "" )
 
-   /* Insert .cpp sources */
-   txt_:= {}
-   aeval( hdr_, {|e| aadd( txt_, e ) } )
-   aadd( txt_, "CPP_SOURCES := \" )
-   //
-   //  We will strip lines below once subs proto is running
-   #if 0
-   FOR EACH s IN cpp_
-      aadd( txt_, "   " + s + ".cpp \" )
-   NEXT
-   aadd( txt_, "" )
-   aadd( txt_, "" )
-   aadd( txt_, "" )
-   IF !empty( prg_ )
-      aadd( txt_, "PRG_SOURCES := \" )
-      FOR EACH s IN prg_
-         aadd( txt_, "   " + "T" + s + ".prg \" )
-      NEXT
-   ENDIF
-   #endif
-   // ------------------------------------------------------
-   aadd( txt_, "" )
-   aadd( txt_, "# Don't delete this comment, it's here to ensure empty" )
-   aadd( txt_, "# line above is kept intact." )
-   //
-   cFile := cPathOut + s_PathSep + "filelist.mk"
-   CreateTarget( cFile, txt_ )
-
-
    /* Sub Libraries */
    aadd( aSubs, { "qtwebkit" , aWebkit  } )
    aadd( aSubs, { "qtnetwork", aNetwork } )

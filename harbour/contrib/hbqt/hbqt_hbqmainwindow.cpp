@@ -62,7 +62,7 @@
 
 #if QT_VERSION >= 0x040500
 
-#include "hbqt_slots.h"
+#include "hbqt_hbqmainwindow.h"
 
 static PHB_ITEM s_mutex = NULL;
 
