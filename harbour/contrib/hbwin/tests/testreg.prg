@@ -19,6 +19,7 @@ PROCEDURE Main()
    ? ">" + hb_ValToStr( win_regRead( "" ) ) + "<"
 
    ? win_regWrite( "HKCU\Control Panel\Desktop\Wallpaper", "harbour.bmp" )
+   ? win_regRead( "HKCU\Control Panel\Desktop\Wallpaper" )
 
    Inkey( 0 )
 

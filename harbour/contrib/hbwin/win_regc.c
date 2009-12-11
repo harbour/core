@@ -193,15 +193,36 @@ HB_FUNC( WIN_REGSETVALUEEX )
                               HB_PARSTRDEF( 2, &hKey, NULL ),
                               0,
                               dwType,
-                              ( BYTE * ) &nSpace,
+                              ( const BYTE * ) &nSpace,
                               sizeof( REG_DWORD ) ) == ERROR_SUCCESS );
    }
-   else
+   else if( dwType == REG_SZ || 
+            dwType == REG_EXPAND_SZ || 
+            dwType == REG_MULTI_SZ )
+   {
+      void * hValue;
+      HB_SIZE nValueLen;
+      LPCTSTR lpValue = HB_PARSTR( 5, &hValue, &nValueLen );
+
+      #if defined( UNICODE )
+          nValueLen *= 2;
+      #endif
+
       hb_retl( RegSetValueEx( ( HKEY ) hb_parptr( 1 ),
                               HB_PARSTRDEF( 2, &hKey, NULL ),
                               0,
                               dwType,
-                              ( BYTE * ) hb_parcx( 5 ) /* cValue */,
+                              ( const BYTE * ) lpValue,
+                              ( DWORD ) nValueLen + 1 ) == ERROR_SUCCESS );
+
+      hb_strfree( hValue );
+   }
+   else /* No translation for binary data */
+      hb_retl( RegSetValueEx( ( HKEY ) hb_parptr( 1 ),
+                              HB_PARSTRDEF( 2, &hKey, NULL ),
+                              0,
+                              dwType,
+                              ( const BYTE * ) hb_parc( 5 ) /* cValue */,
                               hb_parclen( 5 ) + 1 ) == ERROR_SUCCESS );
 
    hb_strfree( hKey );
