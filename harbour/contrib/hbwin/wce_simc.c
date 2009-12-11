@@ -103,7 +103,7 @@ HB_FUNC( WCE_SIMREADPHONEBOOKENTRY ) /* hSim, nLocation, nPos, @aEntry */
    hb_arraySetNL( pArray, 4, PhoneEntry.dwNumPlan );
    hb_arraySetNI( pArray, 5, dwIndex );
 
-   hb_itemCopy( hb_param( 4, HB_IT_ANY ), pArray );
+   hb_itemParamStoreForward( 4, pArray );
    hb_itemRelease( pArray );
 }
 

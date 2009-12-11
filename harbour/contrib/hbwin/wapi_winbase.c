@@ -221,7 +221,7 @@ HB_FUNC( WAPI_FORMATMESSAGE )
    DWORD dwRetVal;
 
    hb_retnl( dwRetVal = FormatMessage( ( DWORD ) hb_parnldef( 1, FORMAT_MESSAGE_FROM_SYSTEM ) /* dwFlags */,
-                                       HB_ISCHAR( 2 ) ? HB_PARSTR( 2, &hSource, NULL ) : hb_parptr( 2 ),
+                                       HB_ISCHAR( 2 ) ? ( LPCVOID ) HB_PARSTR( 2, &hSource, NULL ) : hb_parptr( 2 ),
                                        HB_ISNUM( 3 ) ? ( DWORD ) hb_parnl( 3 ) : GetLastError() /* dwMessageId */,
                                        ( DWORD ) hb_parnldef( 4, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ) ) /* dwLanguageId */,
                                        lpBuffer,

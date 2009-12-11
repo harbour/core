@@ -250,16 +250,12 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
 
 HB_FUNC( WIN_PRINTERSETDEFAULT )
 {
-   if( hb_parclen( 1 ) > 0 )
-   {
-      void * hPrinterName;
+   void * hPrinterName;
+   HB_SIZE nLen;
+   TCHAR pszPrinterName = HB_PARSTR( 1, &hPrinterName, &ulLen );
 
-      hb_retl( hb_SetDefaultPrinter( HB_PARSTR( 1, &hPrinterName, NULL ) ) );
-
-      hb_strfree( hPrinterName );
-   }
-   else
-      hb_retl( HB_FALSE );
+   hb_retl( ulLen > 0 ? hb_SetDefaultPrinter( pszPrinterName ) : HB_FALSE );
+   hb_strfree( hPrinterName );
 }
 
 #endif
