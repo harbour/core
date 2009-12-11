@@ -64,50 +64,56 @@ HB_FUNC( WCE_SMSSENDMESSAGE ) /* cMessage, cNumber */
    SMS_HANDLE smshHandle = 0;
    HRESULT hr = SmsOpen( SMS_MSGTYPE_TEXT, SMS_MODE_SEND, &smshHandle, NULL ); /* try to open an SMS Handle */
 
-   if( hr == ERROR_SUCCESS && hb_parclen( 2 ) <= SMS_MAX_ADDRESS_LENGTH )
-   {
-      SMS_ADDRESS smsaDestination;
-      TEXT_PROVIDER_SPECIFIC_DATA tpsd;
-      SMS_MESSAGE_ID smsmidMessageID = 0;
+   /* Set default return value */
+   hb_retnl( -1 );
 
+   if( hr == ERROR_SUCCESS )
+   {
       void * hMessage;
       void * hPhoneNumber;
 
+      HB_SIZE nPhoneNumberLen;
+
       LPCTSTR sztMessage     = HB_PARSTRDEF( 1, &hMessage    , NULL );
-      LPCTSTR sztPhoneNumber = HB_PARSTRDEF( 2, &hPhoneNumber, NULL );
+      LPCTSTR sztPhoneNumber = HB_PARSTRDEF( 2, &hPhoneNumber, &nPhoneNumberLen );
 
-      /* Create the destination address */
-      memset( &smsaDestination, 0, sizeof( smsaDestination ) );
-      smsaDestination.smsatAddressType = ( *sztPhoneNumber == _T( '+' ) ) ? SMSAT_INTERNATIONAL : SMSAT_NATIONAL;
-      /* TOFIX: lstrcpy() unsafe and may cause buffer overrun.
-                Worked around using hb_parclen( 2 ) check against SMS_MAX_ADDRESS_LENGTH.
-                [vszakats]. */
-      lstrcpy( smsaDestination.ptsAddress, sztPhoneNumber );
+      if( nPhoneNumberLen <= SMS_MAX_ADDRESS_LENGTH )
+      {
+         SMS_ADDRESS smsaDestination;
+         TEXT_PROVIDER_SPECIFIC_DATA tpsd;
+         SMS_MESSAGE_ID smsmidMessageID = 0;
 
-      /* Set up provider specific data */
-      tpsd.dwMessageOptions = PS_MESSAGE_OPTION_NONE;
-      tpsd.psMessageClass = PS_MESSAGE_CLASS0;
-      tpsd.psReplaceOption = PSRO_NONE;
-
-      /* Send the message, indicating success or failure */
-      hb_retnl( SmsSendMessage( smshHandle,
-                                NULL,
-                                &smsaDestination,
-                                NULL,
-                                ( PBYTE ) sztMessage,
-                                _tcslen( sztMessage ) * sizeof( wchar_t ),
-                                ( PBYTE ) &tpsd, 12,
-                                SMSDE_OPTIMAL,
-                                SMS_OPTION_DELIVERY_NONE,
-                                &smsmidMessageID ) );
-
-      SmsClose( smshHandle );
+         /* Create the destination address */
+         memset( &smsaDestination, 0, sizeof( smsaDestination ) );
+         smsaDestination.smsatAddressType = ( *sztPhoneNumber == _T( '+' ) ) ? SMSAT_INTERNATIONAL : SMSAT_NATIONAL;
+         /* TOFIX: lstrcpy() unsafe and may cause buffer overrun.
+                   Worked around using length check against SMS_MAX_ADDRESS_LENGTH.
+                   [vszakats]. */
+         lstrcpy( smsaDestination.ptsAddress, sztPhoneNumber );
+         
+         /* Set up provider specific data */
+         tpsd.dwMessageOptions = PS_MESSAGE_OPTION_NONE;
+         tpsd.psMessageClass = PS_MESSAGE_CLASS0;
+         tpsd.psReplaceOption = PSRO_NONE;
+         
+         /* Send the message, indicating success or failure */
+         hb_retnl( SmsSendMessage( smshHandle,
+                                   NULL,
+                                   &smsaDestination,
+                                   NULL,
+                                   ( PBYTE ) sztMessage,
+                                   _tcslen( sztMessage ) * sizeof( wchar_t ),
+                                   ( PBYTE ) &tpsd, 12,
+                                   SMSDE_OPTIMAL,
+                                   SMS_OPTION_DELIVERY_NONE,
+                                   &smsmidMessageID ) );
+      }
 
       hb_strfree( hMessage );
       hb_strfree( hPhoneNumber );
+
+      SmsClose( smshHandle );
    }
-   else
-      hb_retnl( -1 );
 }
 
 #endif

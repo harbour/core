@@ -252,9 +252,9 @@ HB_FUNC( WIN_PRINTERSETDEFAULT )
 {
    void * hPrinterName;
    HB_SIZE nLen;
-   TCHAR pszPrinterName = HB_PARSTR( 1, &hPrinterName, &ulLen );
+   LPCTSTR pszPrinterName = HB_PARSTR( 1, &hPrinterName, &nLen );
 
-   hb_retl( ulLen > 0 ? hb_SetDefaultPrinter( pszPrinterName ) : HB_FALSE );
+   hb_retl( nLen > 0 ? hb_SetDefaultPrinter( pszPrinterName ) : HB_FALSE );
    hb_strfree( hPrinterName );
 }
 
