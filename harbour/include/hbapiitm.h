@@ -202,6 +202,18 @@ extern HB_EXPORT PHB_ITEM     hb_itemDeserialize( const char ** pBufferPtr, ULON
 #  define hb_itemRawMove( dst, src )      hb_itemMove( (dst), (src) )
 #endif
 
+   /* intentional low level hack to eliminate race condition in
+    * unprotected readonly access in few places in core code only.
+    * hb_item[Raw]Move() moves HB_ITEM structure members first coping
+    * 'type' and then 'item' parts of HB_ITEM. In this macro the order
+    * is reverted. [druzus]
+    */
+#  define hb_itemSafeMove( dst, src )  do { \
+                                             (dst)->item = (src)->item; \
+                                             (dst)->type = (src)->type; \
+                                             (src)->type = HB_IT_NIL; \
+                                          } while( 0 )
+
 #else
 
 #  define hb_itemSetNil( item )           hb_itemClear( (item) )

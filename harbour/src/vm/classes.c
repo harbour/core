@@ -4970,16 +4970,10 @@ HB_FUNC( __CLSUNLOCKDEF )
 
    if( pClsDst && pClsSrc && HB_IS_NIL( pClsDst ) && ! HB_ISBYREF( 2 ) )
    {
-      /* intentional low level hack to eliminate race condition in
-       * unprotected readonly access.
-       * hb_itemMove() uses memcpy() for whole HB_ITEM structure first
-       * coping 'type' and then 'item' parts of HB_ITEM so it cannot be
-       * used by us. [druzus]
+      /* special core code only macro used to eliminate race condition
+       * in unprotected readonly access to pClsDst variable.
        */
-      memcpy( &pClsDst->item, &pClsSrc->item, sizeof( pClsDst->item ) );
-      /* pClsDst->item.asArray.value = pClsSrc->item.asArray.value; */
-      pClsDst->type = pClsSrc->type;
-      pClsSrc->type = HB_IT_NIL;
+      hb_itemSafeMove( pClsDst, pClsSrc );
    }
 
    if( s_pClassMtx )

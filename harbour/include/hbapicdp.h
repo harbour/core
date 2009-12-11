@@ -74,7 +74,11 @@ HB_EXTERN_BEGIN
                                        hb_cdpRegister( &s_codepage ); \
                                        HB_CALL_ON_STARTUP_END( hb_codepage_Init_##id )
 
-typedef USHORT    HB_WCHAR;
+#if defined( HB_OS_WIN )
+   typedef wchar_t         HB_WCHAR;
+#else
+   typedef unsigned short  HB_WCHAR;
+#endif
 
 typedef struct _HB_UNITABLE
 {

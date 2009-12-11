@@ -1494,6 +1494,44 @@ HB_FUNC( HB_THREADONCE )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+/* hb_threadOnceInit( @<item> <value> ) -> <lInitialized>
+ * assign <value> to @<item> only if <item> is NIL
+ */
+HB_FUNC( HB_THREADONCEINIT )
+{
+   PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
+   PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
+
+   if( pItem && pValue && HB_ISBYREF( 1 ) && !HB_ISBYREF( 2 ) )
+   {
+      BOOL fInitialized = FALSE;
+
+      if( HB_IS_NIL( pItem ) && !HB_IS_NIL( pValue ) )
+      {
+#if defined( HB_MT_VM )
+         if( !s_fThreadInit )
+            hb_threadInit();
+         HB_CRITICAL_LOCK( s_once_mtx );
+         if( HB_IS_NIL( pItem ) )
+         {
+            /* special core code only macro used to eliminate race condition
+             * in unprotected readonly access to pItem variable.
+             */
+            hb_itemSafeMove( pItem, pValue );
+            fInitialized = TRUE;
+         }
+         HB_CRITICAL_UNLOCK( s_once_mtx );
+#else
+         hb_itemSafeMove( pItem, pValue );
+         fInitialized = TRUE;
+#endif
+      }
+      hb_retl( fInitialized );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 /* II. MUTEXES */
 
 typedef struct _HB_MUTEX
