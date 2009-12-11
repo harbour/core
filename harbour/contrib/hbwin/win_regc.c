@@ -204,6 +204,8 @@ HB_FUNC( WIN_REGSETVALUEEX )
       HB_SIZE nValueLen;
       LPCTSTR lpValue = HB_PARSTR( 5, &hValue, &nValueLen );
 
+      ++nValueLen;
+
       #if defined( UNICODE )
           nValueLen *= 2;
       #endif
@@ -213,7 +215,7 @@ HB_FUNC( WIN_REGSETVALUEEX )
                               0,
                               dwType,
                               ( const BYTE * ) lpValue,
-                              ( DWORD ) nValueLen + 1 ) == ERROR_SUCCESS );
+                              ( DWORD ) nValueLen ) == ERROR_SUCCESS );
 
       hb_strfree( hValue );
    }
