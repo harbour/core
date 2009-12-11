@@ -53,6 +53,7 @@
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
+#include "hbwinuni.h"
 
 #if defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ )
 
@@ -69,12 +70,15 @@ HB_FUNC( WCE_SMSSENDMESSAGE ) /* cMessage, cNumber */
       TEXT_PROVIDER_SPECIFIC_DATA tpsd;
       SMS_MESSAGE_ID smsmidMessageID = 0;
 
-      wchar_t * sztMessage     = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
-      wchar_t * sztPhoneNumber = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+      void * hMessage;
+      void * hPhoneNumber;
+
+      LPCTSTR sztMessage     = HB_PARSTRDEF( 1, &hMessage    , NULL );
+      LPCTSTR sztPhoneNumber = HB_PARSTRDEF( 2, &hPhoneNumber, NULL );
 
       /* Create the destination address */
       memset( &smsaDestination, 0, sizeof( smsaDestination ) );
-      smsaDestination.smsatAddressType = ( *sztPhoneNumber == '+' ) ? SMSAT_INTERNATIONAL : SMSAT_NATIONAL;
+      smsaDestination.smsatAddressType = ( *sztPhoneNumber == _T( '+' ) ) ? SMSAT_INTERNATIONAL : SMSAT_NATIONAL;
       /* TOFIX: lstrcpy() unsafe and may cause buffer overrun.
                 Worked around using hb_parclen( 2 ) check against SMS_MAX_ADDRESS_LENGTH.
                 [vszakats]. */
@@ -99,8 +103,8 @@ HB_FUNC( WCE_SMSSENDMESSAGE ) /* cMessage, cNumber */
 
       SmsClose( smshHandle );
 
-      HB_TCHAR_FREE( sztMessage );
-      HB_TCHAR_FREE( sztPhoneNumber );
+      hb_strfree( hMessage );
+      hb_strfree( hPhoneNumber );
    }
    else
       hb_retnl( -1 );

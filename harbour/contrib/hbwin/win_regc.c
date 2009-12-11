@@ -119,7 +119,8 @@ HB_FUNC( WIN_REGOPENKEYEX )
 
 HB_FUNC( WIN_REGQUERYVALUEEX )
 {
-   LPTSTR lpKey = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+   void * hKey;
+   LPCTSTR lpKey = HB_PARSTRDEF( 2, &hKey, NULL );
    DWORD dwType = 0;
    DWORD dwSize = 0;
 
@@ -177,7 +178,7 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
    hb_stornl( dwType, 4 );
    hb_retnl( dwSize );
 
-   HB_TCHAR_FREE( lpKey );
+   hb_strfree( hKey );
 }
 
 HB_FUNC( WIN_REGSETVALUEEX )

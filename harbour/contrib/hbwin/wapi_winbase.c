@@ -84,7 +84,11 @@ HB_FUNC( WAPI_WAITFORSINGLEOBJECT )
 
 HB_FUNC( WAPI_WAITFORSINGLEOBJECTEX )
 {
+#if ! defined( HB_OS_WIN_CE )
    hb_retnl( WaitForSingleObjectEx( wapi_par_HANDLE( 1 ), ( DWORD ) hb_parnl( 2 ), hb_parl( 3 ) ) );
+#else
+   hb_retnl( 0 );
+#endif
 }
 
 HB_FUNC( WAPI_WAITFORMULTIPLEOBJECTS )
@@ -110,6 +114,7 @@ HB_FUNC( WAPI_WAITFORMULTIPLEOBJECTS )
 
 HB_FUNC( WAPI_WAITFORMULTIPLEOBJECTSEX )
 {
+#if ! defined( HB_OS_WIN_CE )
    PHB_ITEM pArray = hb_param( 2, HB_IT_ARRAY );
    HB_SIZE nLen = pArray ? hb_arrayLen( pArray ) : 0;
 
@@ -127,6 +132,9 @@ HB_FUNC( WAPI_WAITFORMULTIPLEOBJECTSEX )
    }
    else
       hb_errRT_BASE( EG_ARG, 1001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_retnl( 0 );
+#endif
 }
 
 HB_FUNC( WAPI_SETPROCESSWORKINGSETSIZE )
@@ -209,7 +217,7 @@ HB_FUNC( WAPI_FORMATMESSAGE )
    void * hSource = NULL;
 
    DWORD dwBufferLen = ( DWORD ) hb_parclen( 5 );
-   LPTSTR lpBuffer = dwBufferLen > 0 ? ( LPTSTR ) hb_xgrab( dwBufferLen * sizeof( LPTSTR ) ) : NULL;
+   LPTSTR lpBuffer = dwBufferLen > 0 ? ( LPTSTR ) hb_xgrab( dwBufferLen * sizeof( TCHAR ) ) : NULL;
    DWORD dwRetVal;
 
    hb_retnl( dwRetVal = FormatMessage( ( DWORD ) hb_parnldef( 1, FORMAT_MESSAGE_FROM_SYSTEM ) /* dwFlags */,

@@ -66,6 +66,7 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbapiitm.h"
+#include "hbwinuni.h"
 
 #define _ENUMPRN_FLAGS_             ( PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS )
 
@@ -401,18 +402,18 @@ HB_FUNC( WIN_PRINTFILERAW )
 
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
-      const char * pszPrinterName = hb_parc( 1 );
       const char * pszFileName = hb_parc( 2 );
-      const char * pszDocName = HB_ISCHAR( 3 ) ? hb_parc( 3 ) : hb_parc( 2 );
 
       HANDLE hPrinter;
-      LPTSTR lpPrinterName = HB_TCHAR_CONVTO( pszPrinterName );
+      void * hDeviceName;
+      LPCTSTR lpDeviceName = HB_PARSTR( 1, &hDeviceName, NULL );
 
-      if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) != 0 )
+      if( OpenPrinter( ( LPTSTR ) lpDeviceName, &hPrinter, NULL ) != 0 )
       {
-         LPTSTR lpDocName = HB_TCHAR_CONVTO( pszDocName );
+         void * hDocName;
+
          DOC_INFO_1 DocInfo;
-         DocInfo.pDocName = lpDocName;
+         DocInfo.pDocName = ( LPTSTR ) HB_PARSTR( HB_ISCHAR( 3 ) ? 3 : 2, &hDocName, NULL );
          DocInfo.pOutputFile = NULL;
          DocInfo.pDatatype = ( LPTSTR ) TEXT( "RAW" );
          if( StartDocPrinter( hPrinter, 1, ( LPBYTE ) &DocInfo ) != 0 )
@@ -454,13 +455,15 @@ HB_FUNC( WIN_PRINTFILERAW )
          }
          else
             iResult = -3;
-         HB_TCHAR_FREE( lpDocName );
+
          ClosePrinter( hPrinter );
+
+         hb_strfree( hDocName );
       }
       else
          iResult = -2;
 
-      HB_TCHAR_FREE( lpPrinterName );
+      hb_strfree( hDeviceName );
    }
 
    hb_retni( iResult );
@@ -495,13 +498,11 @@ HB_FUNC( WIN_PRINTERLIST )
       {
          for( i = 0; i < dwReturned; ++i, ++pPrinterEnum )
          {
-            char * pszData;
-
             if( ! bLocalPrintersOnly || pPrinterEnum->Attributes & PRINTER_ATTRIBUTE_LOCAL )
             {
                if( bPrinterNamesOnly )
                {
-                  pszData = HB_TCHAR_CONVFROM( pPrinterEnum->pPrinterName );
+                  char * pszData = HB_TCHAR_CONVFROM( pPrinterEnum->pPrinterName );
                   hb_itemPutC( pTempItem, pszData );
                   HB_TCHAR_FREE( pszData );
                   hb_arrayAddForward( pPrinterArray, pTempItem );
@@ -517,27 +518,17 @@ HB_FUNC( WIN_PRINTERLIST )
                      {
                         hb_arrayNew( pTempItem, HB_WINPRN_LEN_ );
 
-                        pszData = HB_TCHAR_CONVFROM( pPrinterEnum->pPrinterName );
-                        hb_arraySetC( pTempItem, HB_WINPRN_NAME, pszData );
-                        HB_TCHAR_FREE( pszData );
+                        HB_ARRAYSETSTR( pTempItem, HB_WINPRN_NAME, pPrinterEnum->pPrinterName );
 
                         {
                            PRINTER_INFO_2 * pPrinterInfo2 = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
 
                            if( GetPrinter( hPrinter, 2, ( LPBYTE ) pPrinterInfo2, dwNeeded, &dwNeeded ) )
                            {
-                              pszData = HB_TCHAR_CONVFROM( pPrinterInfo2->pPortName );
-                              hb_arraySetC( pTempItem, HB_WINPRN_PORT, pszData );
-                              HB_TCHAR_FREE( pszData );
-                              pszData = HB_TCHAR_CONVFROM( pPrinterInfo2->pDriverName );
-                              hb_arraySetC( pTempItem, HB_WINPRN_DRIVER, pszData );
-                              HB_TCHAR_FREE( pszData );
-                              pszData = HB_TCHAR_CONVFROM( pPrinterInfo2->pShareName );
-                              hb_arraySetC( pTempItem, HB_WINPRN_SHARE, pszData );
-                              HB_TCHAR_FREE( pszData );
-                              pszData = HB_TCHAR_CONVFROM( pPrinterInfo2->pServerName );
-                              hb_arraySetC( pTempItem, HB_WINPRN_SERVER, pszData );
-                              HB_TCHAR_FREE( pszData );
+                              HB_ARRAYSETSTR( pTempItem, HB_WINPRN_PORT, pPrinterInfo2->pPortName );
+                              HB_ARRAYSETSTR( pTempItem, HB_WINPRN_DRIVER, pPrinterInfo2->pDriverName );
+                              HB_ARRAYSETSTR( pTempItem, HB_WINPRN_SHARE, pPrinterInfo2->pShareName );
+                              HB_ARRAYSETSTR( pTempItem, HB_WINPRN_SERVER, pPrinterInfo2->pServerName );
                            }
                            else
                            {

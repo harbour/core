@@ -54,6 +54,7 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbwinuni.h"
 
 #if defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ )
 
@@ -90,47 +91,40 @@ HB_FUNC( WCE_SIMREADPHONEBOOKENTRY ) /* hSim, nLocation, nPos, @aEntry */
    DWORD dwIndex = ( DWORD ) hb_parnl( 3 );
    SIMPHONEBOOKENTRY PhoneEntry;
    PHB_ITEM pArray;
-   char * szAddress;
-   char * szText;
 
    PhoneEntry.cbSize = sizeof( SIMPHONEBOOKENTRY );
    hb_retnl( SimReadPhonebookEntry( hSim, ( DWORD ) hb_parnl( 2 ) /* dwLocation */, dwIndex, &PhoneEntry ) );
 
-   szAddress = HB_TCHAR_CONVFROM( PhoneEntry.lpszAddress );
-   szText = HB_TCHAR_CONVFROM( PhoneEntry.lpszText );
-
    pArray = hb_itemArrayNew( 5 );
 
-   hb_arraySetC( pArray, 1, szAddress );
-   hb_arraySetC( pArray, 2, szText );
+   HB_ARRAYSETSTR( pArray, 1, PhoneEntry.lpszAddress );
+   HB_ARRAYSETSTR( pArray, 2, PhoneEntry.lpszText );
    hb_arraySetNL( pArray, 3, PhoneEntry.dwAddressType );
    hb_arraySetNL( pArray, 4, PhoneEntry.dwNumPlan );
    hb_arraySetNI( pArray, 5, dwIndex );
 
    hb_itemCopy( hb_param( 4, HB_IT_ANY ), pArray );
    hb_itemRelease( pArray );
-
-   HB_TCHAR_FREE( szAddress );
-   HB_TCHAR_FREE( szText );
 }
 
 HB_FUNC( WCE_SIMWRITEPHONEBOOKENTRY ) /* hSim, nLocation, nPos, cNumber, cName, nPlan, nAddrType */
 {
    SIMPHONEBOOKENTRY PhoneEntry;
-   wchar_t * lpwszAddress = HB_TCHAR_CONVTO( hb_parcx( 4 ) );
-   wchar_t * lpwszText = HB_TCHAR_CONVTO( hb_parcx( 5 ) );
+
+   void * hAddress;
+   void * hText;
 
    PhoneEntry.cbSize        = sizeof( SIMPHONEBOOKENTRY );
    PhoneEntry.dwParams      = SIM_PARAM_PBE_ALL;
-   wcsncpy( PhoneEntry.lpszAddress, lpwszAddress, MAX_LENGTH_ADDRESS );
-   wcsncpy( PhoneEntry.lpszText   , lpwszText   , MAX_LENGTH_PHONEBOOKENTRYTEXT );
+   wcsncpy( PhoneEntry.lpszAddress, HB_PARSTRDEF( 4, &hAddress, NULL ), MAX_LENGTH_ADDRESS );
+   wcsncpy( PhoneEntry.lpszText   , HB_PARSTRDEF( 5, &hText   , NULL ), MAX_LENGTH_PHONEBOOKENTRYTEXT );
    PhoneEntry.dwAddressType = ( DWORD ) hb_parnl( 7 );
    PhoneEntry.dwNumPlan     = ( DWORD ) hb_parnl( 6 );
 
    hb_retnl( SimWritePhonebookEntry( ( HSIM ) hb_parptr( 1 ), ( DWORD ) hb_parnl( 2 ), ( DWORD ) hb_parnl( 3 ), &PhoneEntry ) );
 
-   HB_TCHAR_FREE( lpwszAddress );
-   HB_TCHAR_FREE( lpwszText );
+   hb_strfree( hAddress );
+   hb_strfree( hText );
 }
 
 HB_FUNC( WCE_SIMDELETEPHONEBOOKENTRY ) /* hSim, nLocation, nPos */

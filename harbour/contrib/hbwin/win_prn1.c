@@ -159,7 +159,10 @@ HB_FUNC( WIN_CREATEDC )
    {
       void * hDevice;
 
-      HDC hDC = CreateDC( TEXT( "" ), HB_PARSTR( 1, &hDevice, NULL ), NULL, NULL );
+      HDC hDC = CreateDC( TEXT( "" ),
+                          HB_PARSTR( 1, &hDevice, NULL ),
+                          NULL,
+                          NULL );
 
       if( hDC )
       {
@@ -185,17 +188,16 @@ HB_FUNC( WIN_STARTDOC )
 
    if( hDC )
    {
-      const char * szDocName = hb_parc( 2 );
-      LPTSTR lpDocName = szDocName ? HB_TCHAR_CONVTO( szDocName ) : NULL;
+      void * hDocName;
+
       sDoc.cbSize = sizeof( DOCINFO );
-      sDoc.lpszDocName = lpDocName;
+      sDoc.lpszDocName = HB_PARSTR( 2, &hDocName, NULL );
       sDoc.lpszOutput = NULL;
       sDoc.lpszDatatype = NULL;
       sDoc.fwType = 0;
       bResult = ( StartDoc( hDC, &sDoc ) > 0 );
 
-      if( lpDocName )
-         HB_TCHAR_FREE( lpDocName );
+      hb_strfree( hDocName );
    }
 
    hb_retl( bResult );
@@ -249,22 +251,25 @@ HB_FUNC( WIN_TEXTOUT )
 {
    long lResult = 0;
    HDC hDC = win_HDC_par( 1 );
-   HB_SIZE ulLen = hb_parclen( 4 );
-   SIZE sSize;
 
-   if( hDC && ulLen )
+   if( hDC && HB_ISCHAR( 4 ) )
    {
-      HB_SIZE iLen = hb_parnl( 5 );
+      HB_SIZE nLen = hb_parnl( 5 );
 
-      if( iLen > ulLen )
-         iLen = ulLen;
+      void * hData;
+      HB_SIZE nDataLen;
+      LPCTSTR lpData = HB_PARSTR( 4, &hData, &nDataLen );
 
-      if( iLen > 0 )
+      if( nLen > nDataLen )
+         nLen = nDataLen;
+
+      if( nLen > 0 )
       {
+         SIZE sSize;
+
          int iRow = hb_parni( 2 );
          int iCol = hb_parni( 3 );
          int iWidth = hb_parni( 6 ); /* defaults to 0 */
-         LPTSTR lpData = HB_TCHAR_CONVNTO( hb_parc( 4 ), iLen );
 
          if( hb_parni( 7 ) == 1 )
             SetTextAlign( ( HDC ) hDC, TA_NOUPDATECP | TA_BOTTOM | TA_RIGHT );
@@ -273,26 +278,26 @@ HB_FUNC( WIN_TEXTOUT )
          else
             SetTextAlign( ( HDC ) hDC, TA_NOUPDATECP | TA_BOTTOM | TA_LEFT );
 
-         if( iWidth < 0 && iLen < 1024 )
+         if( iWidth < 0 && nLen < 1024 )
          {
-            int n = iLen, aFixed[ 1024 ];
+            int n = nLen, aFixed[ 1024 ];
 
             iWidth = -iWidth;
 
             while( n )
                aFixed[ --n ] = iWidth;
 
-            if( ExtTextOut( hDC, iRow, iCol, 0, NULL, lpData, ( UINT ) iLen, aFixed ) )
-               lResult = ( long ) ( iLen * iWidth );
+            if( ExtTextOut( hDC, iRow, iCol, 0, NULL, lpData, ( UINT ) nLen, aFixed ) )
+               lResult = ( long ) ( nLen * iWidth );
          }
-         else if( TextOut( hDC, iRow, iCol, lpData, iLen ) )
+         else if( TextOut( hDC, iRow, iCol, lpData, nLen ) )
          {
-            GetTextExtentPoint32( hDC, lpData, iLen, &sSize ); /* Get the length of the text in device size */
+            GetTextExtentPoint32( hDC, lpData, nLen, &sSize ); /* Get the length of the text in device size */
             lResult = ( long ) sSize.cx; /* return the width so we can update the current pen position (::PosY) */
          }
-
-         HB_TCHAR_FREE( lpData );
       }
+
+      hb_strfree( hData );
    }
 
    hb_retnl( lResult );
@@ -302,27 +307,31 @@ HB_FUNC( WIN_GETTEXTSIZE )
 {
    long lResult = 0;
    HDC hDC = win_HDC_par( 1 );
-   HB_SIZE ulLen = hb_parclen( 2 );
 
-   if( hDC && ulLen )
+   if( hDC && HB_ISCHAR( 2 ) )
    {
-      HB_SIZE iLen = hb_parnl( 3 );
-      LPTSTR lpData;
-      SIZE sSize;
+      HB_SIZE nLen = hb_parnl( 3 );
 
-      if( iLen > ulLen )
-         iLen = ulLen;
+      void * hData;
+      HB_SIZE nDataLen;
+      LPCTSTR lpData = HB_PARSTR( 2, &hData, &nDataLen );
 
-      lpData = HB_TCHAR_CONVNTO( hb_parc( 2 ), iLen );
+      if( nLen > nDataLen )
+         nLen = nDataLen;
 
-      GetTextExtentPoint32( hDC, lpData, ( int ) iLen, &sSize );       /* Get the length of the text in device size */
+      if( nLen > 0 )
+      {
+         SIZE sSize;
 
-      if( ! hb_parldef( 4, 1 ) )
-         lResult = ( long ) sSize.cy;    /* return the height */
-      else
-         lResult = ( long ) sSize.cx;    /* return the width */
+         GetTextExtentPoint32( hDC, lpData, ( int ) nLen, &sSize );       /* Get the length of the text in device size */
+      
+         if( ! hb_parldef( 4, 1 ) )
+            lResult = ( long ) sSize.cy;    /* return the height */
+         else
+            lResult = ( long ) sSize.cx;    /* return the width */
+      }
 
-      HB_TCHAR_FREE( lpData );
+      hb_strfree( hData );
    }
 
    hb_retnl( lResult );
@@ -373,27 +382,36 @@ HB_FUNC( WIN_CREATEFONT )
    if( hDC )
    {
       HFONT hFont;
-      const char * pszFont = hb_parc( 2 );
-      LPTSTR lpFont = pszFont ? HB_TCHAR_CONVTO( pszFont ) : NULL;
+      void * hFontFace;
       int iHeight = hb_parni( 3 );
       int iMul = hb_parni( 4 );
       int iDiv = hb_parni( 5 );
       int iWidth;
       int iWeight = hb_parni( 6 );
-      DWORD dwUnderLine = ( DWORD ) hb_parl( 7 );
-      DWORD dwItalic = ( DWORD ) hb_parl( 8 );
-      DWORD dwCharSet = ( DWORD ) hb_parnl( 9 );
 
       iWeight = iWeight > 0 ? iWeight : FW_NORMAL;
       iHeight = -MulDiv( iHeight, GetDeviceCaps( hDC, LOGPIXELSY ), 72 );
       if( iDiv )
          iWidth = MulDiv( abs( iMul ), GetDeviceCaps( hDC, LOGPIXELSX ), abs( iDiv ) );
       else
-         iWidth = 0;               /* Use the default font width */
+         iWidth = 0;  /* Use the default font width */
 
-      hFont = CreateFont( iHeight, iWidth, 0, 0, iWeight, dwItalic, dwUnderLine, 0,
-                           dwCharSet, OUT_DEVICE_PRECIS, CLIP_DEFAULT_PRECIS, DRAFT_QUALITY,
-                           DEFAULT_PITCH | FF_DONTCARE, lpFont );
+      hFont = CreateFont( iHeight, 
+                          iWidth,
+                          0,
+                          0,
+                          iWeight,
+                          ( DWORD ) hb_parl( 8 ) /* dwItalic */,
+                          ( DWORD ) hb_parl( 7 ) /* dwUnderLine */,
+                          0,
+                          ( DWORD ) hb_parnl( 9 ) /* dwCharSet */,
+                          OUT_DEVICE_PRECIS,
+                          CLIP_DEFAULT_PRECIS,
+                          DRAFT_QUALITY,
+                          DEFAULT_PITCH | FF_DONTCARE,
+                          HB_PARSTR( 2, &hFontFace, NULL ) );
+
+      hb_strfree( hFontFace );
 
       if( hFont )
       {
@@ -405,9 +423,6 @@ HB_FUNC( WIN_CREATEFONT )
       }
       else
          hb_retptr( NULL );
-
-      if( lpFont )
-         HB_TCHAR_FREE( lpFont );
    }
    else
       hb_retptr( NULL );
@@ -444,18 +459,18 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
    if( hDC )
    {
       HANDLE hPrinter;
-      const char * pszPrinterName = hb_parc( 2 );
-      LPTSTR lpPrinterName = pszPrinterName ? HB_TCHAR_CONVTO( pszPrinterName ) : NULL;
+      void * hDeviceName;
+      LPCTSTR lpDeviceName = HB_PARSTR( 2, &hDeviceName, NULL );
 
-      if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) )
+      if( OpenPrinter( ( LPTSTR ) lpDeviceName, &hPrinter, NULL ) )
       {
-         LONG lSize = DocumentProperties( 0, hPrinter, lpPrinterName, NULL, NULL, 0 );
+         LONG lSize = DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, NULL, NULL, 0 );
 
          if( lSize > 0 )
          {
             PDEVMODE pDevMode = ( PDEVMODE ) hb_xgrab( lSize );
 
-            DocumentProperties( 0, hPrinter, lpPrinterName, pDevMode, pDevMode, DM_OUT_BUFFER );
+            DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, pDevMode, pDevMode, DM_OUT_BUFFER );
 
             if( HB_ISNUM( 3 ) && hb_parni( 3 ) )        /* [2007-02-22] don't change if 0 */
                pDevMode->dmPaperSize = ( short ) hb_parni( 3 );
@@ -483,8 +498,7 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
          ClosePrinter( hPrinter );
       }
 
-      if( lpPrinterName )
-         HB_TCHAR_FREE( lpPrinterName );
+      hb_strfree( hDeviceName );
    }
 
    hb_retl( bResult );
@@ -494,18 +508,18 @@ HB_FUNC( WIN_GETDOCUMENTPROPERTIES )
 {
    HB_BOOL bResult = HB_FALSE;
    HANDLE hPrinter;
-   const char * pszPrinterName = hb_parc( 1 );
-   LPTSTR lpPrinterName = pszPrinterName ? HB_TCHAR_CONVTO( pszPrinterName ) : NULL;
+   void * hDeviceName;
+   LPCTSTR lpDeviceName = HB_PARSTR( 1, &hDeviceName, NULL );
 
-   if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) )
+   if( OpenPrinter( ( LPTSTR ) lpDeviceName, &hPrinter, NULL ) )
    {
-      LONG lSize = DocumentProperties( 0, hPrinter, lpPrinterName, NULL, NULL, 0 );
+      LONG lSize = DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, NULL, NULL, 0 );
 
       if( lSize > 0 )
       {
          PDEVMODE pDevMode = ( PDEVMODE ) hb_xgrab( lSize );
 
-         DocumentProperties( 0, hPrinter, lpPrinterName, pDevMode, pDevMode, DM_OUT_BUFFER );
+         DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, pDevMode, pDevMode, DM_OUT_BUFFER );
 
          hb_storni( pDevMode->dmPaperSize, 2 );
          hb_storl( pDevMode->dmOrientation == 2, 3 );
@@ -521,8 +535,7 @@ HB_FUNC( WIN_GETDOCUMENTPROPERTIES )
       ClosePrinter( hPrinter );
    }
 
-   if( lpPrinterName )
-      HB_TCHAR_FREE( lpPrinterName );
+   hb_strfree( hDeviceName );
 
    hb_retl( bResult );
 }
@@ -595,17 +608,15 @@ HB_FUNC( WIN_DRAWBITMAP )
 static int CALLBACK FontEnumCallBack( LOGFONT * lplf, TEXTMETRIC * lpntm, DWORD dwFontType,
                                       LPVOID pArray )
 {
-   char * pszFaceName = HB_TCHAR_CONVFROM( lplf->lfFaceName );
    PHB_ITEM pSubItems = hb_itemArrayNew( 4 );
 
-   hb_arraySetC( pSubItems, 1, pszFaceName );
+   HB_ARRAYSETSTR( pSubItems, 1, lplf->lfFaceName );
    hb_arraySetL( pSubItems, 2, lplf->lfPitchAndFamily & FIXED_PITCH );
    hb_arraySetL( pSubItems, 3, dwFontType & TRUETYPE_FONTTYPE );
    hb_arraySetNL( pSubItems, 4, lpntm->tmCharSet );
    hb_arrayAddForward( ( PHB_ITEM ) pArray, pSubItems );
 
    hb_itemRelease( pSubItems );
-   HB_TCHAR_FREE( pszFaceName );
 
    return HB_TRUE;
 }
