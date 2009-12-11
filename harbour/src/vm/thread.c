@@ -1504,6 +1504,7 @@ HB_FUNC( HB_THREADONCEINIT )
 
    if( pItem && pValue && HB_ISBYREF( 1 ) && !HB_ISBYREF( 2 ) )
    {
+      HB_STACK_TLS_PRELOAD
       BOOL fInitialized = FALSE;
 
       if( HB_IS_NIL( pItem ) && !HB_IS_NIL( pValue ) )
