@@ -74,7 +74,7 @@ HB_FUNC( WAPI_MESSAGEBOX )
 {
    void * hStr1;
    void * hStr2;
-   hb_retni( MessageBox( ( HWND ) hb_parptr( 1 ), ( LPCTSTR ) HB_PARSTR( 2, &hStr1, NULL ), ( LPCTSTR ) HB_PARSTR( 3, &hStr2, NULL ), hb_parni( 4 ) ) );
+   hb_retni( MessageBox( ( HWND ) hb_parptr( 1 ), HB_PARSTR( 2, &hStr1, NULL ), HB_PARSTR( 3, &hStr2, NULL ), hb_parni( 4 ) ) );
    hb_strfree( hStr1 );
    hb_strfree( hStr2 );
 }
@@ -86,8 +86,8 @@ HB_FUNC( WAPI_CREATEWINDOWEX )
 
    hb_retptr( CreateWindowEx(
       ( DWORD )     hb_parnl( 1 ) /* dwExStyle */,
-      ( LPCTSTR )   HB_PARSTRDEF( 2, &hClassName, NULL ),
-      ( LPCTSTR )   HB_PARSTRDEF( 3, &hWindowName, NULL ),
+      HB_PARSTRDEF( 2, &hClassName, NULL ),
+      HB_PARSTRDEF( 3, &hWindowName, NULL ),
       HB_ISNUM( 4 ) ? ( DWORD ) hb_parnl( 4 ) : WS_OVERLAPPEDWINDOW /* dwStyle */,
       HB_ISNUM( 5 ) ? ( int ) hb_parni( 5 ) : ( int ) CW_USEDEFAULT /* x */,
       HB_ISNUM( 6 ) ? ( int ) hb_parni( 6 ) : ( int ) CW_USEDEFAULT /* y */,
@@ -307,7 +307,7 @@ HB_FUNC( WAPI_LOADBITMAP )
    else
    {
       void * hBmp;
-      hb_retptr( LoadBitmap( wapi_par_HINSTANCE( 1 ), ( LPCTSTR ) HB_PARSTRDEF( 2, &hBmp, NULL ) ) );
+      hb_retptr( LoadBitmap( wapi_par_HINSTANCE( 1 ), HB_PARSTRDEF( 2, &hBmp, NULL ) ) );
       hb_strfree( hBmp );
    }
 }

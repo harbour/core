@@ -85,7 +85,8 @@ HB_FUNC( WIN_RUNDETACHED )
 #endif
 
    if( CreateProcess(
-         ( LPCTSTR ) HB_PARSTR( 1, &hCommandName, NULL ),      /* Command name */
+         HB_PARSTR( 1, &hCommandName, NULL ),                  /* Command name */
+         /* TOFIX */
          ( LPTSTR ) HB_PARSTR( 2, &hCommandLine, NULL ),       /* Command line (Unicode version needs an non-const buffer) */
          NULL,                                                 /* Process handle not inheritable */
          NULL,                                                 /* Thread handle not inheritable */
@@ -139,8 +140,8 @@ HB_FUNC( WIN_LOADRESOURCE )
       void * hType;
 
       HRSRC hRes = FindResource( ( HMODULE ) hInstance, 
-                                 ( LPCTSTR ) HB_PARSTRDEF( 1, &hName, NULL ),
-                                 ( LPCTSTR ) HB_PARSTRDEF( 2, &hType, NULL ) );
+                                 HB_PARSTRDEF( 1, &hName, NULL ),
+                                 HB_PARSTRDEF( 2, &hType, NULL ) );
 
       if( hRes )
       {

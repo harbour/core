@@ -159,7 +159,7 @@ HB_FUNC( WIN_CREATEDC )
    {
       void * hDevice;
 
-      HDC hDC = CreateDC( TEXT( "" ), ( LPCTSTR ) HB_PARSTR( 1, &hDevice, NULL ), NULL, NULL );
+      HDC hDC = CreateDC( TEXT( "" ), HB_PARSTR( 1, &hDevice, NULL ), NULL, NULL );
 
       if( hDC )
       {

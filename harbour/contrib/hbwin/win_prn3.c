@@ -66,7 +66,7 @@
 #include "hbapi.h"
 #include "hbwinuni.h"
 
-static HB_BOOL hb_SetDefaultPrinter( LPTSTR lpPrinterName )
+static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
 {
    BOOL bFlag;
    OSVERSIONINFO osv;
@@ -83,7 +83,7 @@ static HB_BOOL hb_SetDefaultPrinter( LPTSTR lpPrinterName )
    if( osv.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
    {
       /* Open this printer so you can get information about it. */
-      bFlag = OpenPrinter( lpPrinterName, &hPrinter, NULL );
+      bFlag = OpenPrinter( ( LPTSTR ) lpPrinterName, &hPrinter, NULL );
       if( ! bFlag || ! hPrinter )
          return HB_FALSE;
 
@@ -141,7 +141,7 @@ static HB_BOOL hb_SetDefaultPrinter( LPTSTR lpPrinterName )
       if( osv.dwMajorVersion >= 5 ) /* Windows 2000 or later (use explicit call) */
       {
          HMODULE hWinSpool;
-         typedef BOOL ( WINAPI * DEFPRINTER )( LPTSTR ); /* stops warnings */
+         typedef BOOL ( WINAPI * DEFPRINTER )( LPCTSTR ); /* stops warnings */
          DEFPRINTER fnSetDefaultPrinter;
 
          hWinSpool = LoadLibrary( TEXT( "winspool.drv" ) );
@@ -167,7 +167,7 @@ static HB_BOOL hb_SetDefaultPrinter( LPTSTR lpPrinterName )
       else /* NT4.0 or earlier */
       {
          /* Open this printer so you can get information about it. */
-         bFlag = OpenPrinter( lpPrinterName, &hPrinter, NULL );
+         bFlag = OpenPrinter( ( LPTSTR ) lpPrinterName, &hPrinter, NULL );
          if( ! bFlag || ! hPrinter )
             return HB_FALSE;
 
@@ -254,7 +254,7 @@ HB_FUNC( WIN_PRINTERSETDEFAULT )
    {
       void * hPrinterName;
 
-      hb_retl( hb_SetDefaultPrinter( ( LPTSTR ) HB_PARSTR( 1, &hPrinterName, NULL ) ) );
+      hb_retl( hb_SetDefaultPrinter( HB_PARSTR( 1, &hPrinterName, NULL ) ) );
 
       hb_strfree( hPrinterName );
    }

@@ -113,9 +113,6 @@ PROCEDURE Main()
    //LOCAL oStyle, oSize, n, aObj := array( nLoops )
    //LOCAL nLoops := 500
 
-   Qt_SetEventFilter()
-   Qt_SetEventSlots()
-
    DO CASE
    CASE HbQt_Set_Release_Method() == HBQT_RELEASE_WITH_DELETE
 HBQT_DEBUG( "HbQt_Set_Release_Method DEFAULT   : HBQT_RELEASE_WITH_DELETE" )

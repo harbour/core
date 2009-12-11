@@ -160,7 +160,7 @@ HB_FUNC( WAPI_LOADLIBRARY )
 {
    void * hName;
 
-   hb_retptr( LoadLibrary( ( LPCTSTR ) HB_PARSTRDEF( 1, &hName, NULL ) ) );
+   hb_retptr( LoadLibrary( HB_PARSTRDEF( 1, &hName, NULL ) ) );
 
    hb_strfree( hName );
 }
@@ -184,7 +184,7 @@ HB_FUNC( WAPI_GETMODULEHANDLE )
 {
    void * hModuleName;
 
-   wapi_ret_HANDLE( GetModuleHandle( ( LPCTSTR ) HB_PARSTR( 1, &hModuleName, NULL ) ) );
+   wapi_ret_HANDLE( GetModuleHandle( HB_PARSTR( 1, &hModuleName, NULL ) ) );
 
    hb_strfree( hModuleName );
 }
@@ -199,7 +199,7 @@ HB_FUNC( WAPI_OUTPUTDEBUGSTRING )
 {
    void * hOutputString;
 
-   OutputDebugString( ( LPCTSTR ) HB_PARSTR( 1, &hOutputString, NULL ) );
+   OutputDebugString( HB_PARSTR( 1, &hOutputString, NULL ) );
 
    hb_strfree( hOutputString );
 }
@@ -213,7 +213,7 @@ HB_FUNC( WAPI_FORMATMESSAGE )
    DWORD dwRetVal;
 
    hb_retnl( dwRetVal = FormatMessage( ( DWORD ) hb_parnldef( 1, FORMAT_MESSAGE_FROM_SYSTEM ) /* dwFlags */,
-                                       HB_ISCHAR( 2 ) ? ( LPCVOID ) HB_PARSTR( 2, &hSource, NULL ) : hb_parptr( 2 ),
+                                       HB_ISCHAR( 2 ) ? HB_PARSTR( 2, &hSource, NULL ) : hb_parptr( 2 ),
                                        HB_ISNUM( 3 ) ? ( DWORD ) hb_parnl( 3 ) : GetLastError() /* dwMessageId */,
                                        ( DWORD ) hb_parnldef( 4, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ) ) /* dwLanguageId */,
                                        lpBuffer,

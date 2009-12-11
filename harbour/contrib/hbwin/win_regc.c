@@ -86,7 +86,7 @@ HB_FUNC( WIN_REGCREATEKEYEX )
    DWORD dwDisposition = 0;
 
    hb_retl( RegCreateKeyEx( hb_regkeyconv( ( HB_PTRUINT ) hb_parnint( 1 ) ),
-                            ( LPCTSTR ) HB_PARSTRDEF( 2, &hKey, NULL ),
+                            HB_PARSTRDEF( 2, &hKey, NULL ),
                             0,
                             NULL,
                             hb_parnl( 5 ) /* dwOptions */,
@@ -107,7 +107,7 @@ HB_FUNC( WIN_REGOPENKEYEX )
    HKEY hkResult = NULL;
 
    hb_retl( RegOpenKeyEx( hb_regkeyconv( ( HB_PTRUINT ) hb_parnint( 1 ) ),
-                          ( LPCTSTR ) HB_PARSTRDEF( 2, &hKey, NULL ),
+                          HB_PARSTRDEF( 2, &hKey, NULL ),
                           0 /* dwOptions */,
                           hb_parnl( 4 ) /* samDesired */,
                           &hkResult ) == ERROR_SUCCESS );
@@ -189,7 +189,7 @@ HB_FUNC( WIN_REGSETVALUEEX )
    {
       DWORD nSpace = ( DWORD ) hb_parnl( 5 );
       hb_retl( RegSetValueEx( ( HKEY ) hb_parptr( 1 ),
-                              ( LPCTSTR ) HB_PARSTRDEF( 2, &hKey, NULL ),
+                              HB_PARSTRDEF( 2, &hKey, NULL ),
                               0,
                               dwType,
                               ( BYTE * ) &nSpace,
@@ -197,7 +197,7 @@ HB_FUNC( WIN_REGSETVALUEEX )
    }
    else
       hb_retl( RegSetValueEx( ( HKEY ) hb_parptr( 1 ),
-                              ( LPCTSTR ) HB_PARSTRDEF( 2, &hKey, NULL ),
+                              HB_PARSTRDEF( 2, &hKey, NULL ),
                               0,
                               dwType,
                               ( BYTE * ) hb_parcx( 5 ) /* cValue */,

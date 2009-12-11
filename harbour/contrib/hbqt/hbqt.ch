@@ -73,8 +73,7 @@
    #xtranslate HBQT_DEBUG( [<x,...>] ) => iif( .T.,, )
 #endif
 
-#define QT_PTROF( oObj )     ( oObj:pPtr )
-#define QT_PTROFXBP( oXbp )  ( oXbp:oWidget:pPtr )
+#define QT_PTROF( oObj )                          ( oObj:pPtr )
 
 #define HBQT_RELEASE_WITH_DELETE                  0        // Release the QObject with delete operator
 #define HBQT_RELEASE_WITH_DESTRUTOR               1        // Release the QObject with his destructor

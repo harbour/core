@@ -167,6 +167,7 @@ HB_FUNC( QT_CONNECT_EVENT )
       hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
 
       t_events->listBlock << codeblock;
+      /* TOFIX: Reference to GC collected pointer is stored. */
       t_events->listObj   << object;
 
       object->setProperty( prop, ( int ) t_events->listBlock.size() );
