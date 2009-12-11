@@ -14,6 +14,7 @@ ifneq ($(HB_HAS_QT),)
 
    include $(TOP)$(ROOT)contrib/hbqt/qtcore/filelist.mk
 
+   include $(TOP)$(ROOT)contrib/hbqt/moc.mk
    include $(TOP)$(ROOT)config/header.mk
    include $(TOP)$(ROOT)config/lib.mk
 

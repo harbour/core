@@ -30,10 +30,21 @@ endif
 ifneq ($(HB_HAS_QT),)
    ifeq ($(_QT_DARWIN),yes)
       HB_CFLAGS += -I/Library/Frameworks/QtCore.framework/Headers
-      HB_CFLAGS += -I/Library/Frameworks/QtGui.framework/Headers
-      HB_CFLAGS += -I/Library/Frameworks/QtNetwork.framework/Headers
+      ifneq ($(filter $(LIBNAME),hbqt hbqtgui hbqtgui),)
+         HB_CFLAGS += -I/Library/Frameworks/QtGui.framework/Headers
+      endif
+      ifneq ($(filter $(LIBNAME),hbqt hbqtnetwork hbqtnetworks),)
+         HB_CFLAGS += -I/Library/Frameworks/QtNetwork.framework/Headers
+      endif
    else
-      HB_CFLAGS += $(foreach d,$(HB_HAS_QT),-I$(d) -I$(d)/Qt -I$(d)/QtCore -I$(d)/QtGui -I$(d)/QtNetwork)
+      HB_CFLAGS += $(foreach d,$(HB_HAS_QT),-I$(d))
+      HB_CFLAGS += $(foreach d,$(HB_HAS_QT),-I$(d)/QtCore)
+      ifneq ($(filter $(LIBNAME),hbqt hbqtgui hbqtgui),)
+         HB_CFLAGS += $(foreach d,$(HB_HAS_QT),-I$(d)/QtGui)
+      endif
+      ifneq ($(filter $(LIBNAME),hbqt hbqtnetwork hbqtnetworks),)
+         HB_CFLAGS += $(foreach d,$(HB_HAS_QT),-I$(d)/QtNetwork)
+      endif
    endif
 
    # Locate 'moc' executable

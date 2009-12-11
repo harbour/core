@@ -85,7 +85,6 @@
 
 #include <QtCore/QPointer>
 
-#include <QWidget>
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
 
@@ -154,7 +153,7 @@ HB_FUNC( QT_QOBJECT )
 {
    void * pObj = NULL;
 
-   pObj = ( QObject* ) new QObject( hbqt_par_QWidget( 1 ) ) ;
+   pObj = ( QObject* ) new QObject( hbqt_par_QObject( 1 ) ) ;
 
    hb_retptrGC( gcAllocate_QObject( pObj ) );
 }
