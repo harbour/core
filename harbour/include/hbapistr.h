@@ -58,6 +58,18 @@
 
 HB_EXTERN_BEGIN
 
+extern HB_EXPORT ULONG hb_wstrlen( const HB_WCHAR * szText );
+extern HB_EXPORT int hb_wstrcmp( const HB_WCHAR * s1, const HB_WCHAR * s2 );
+extern HB_EXPORT int hb_wstrncmp( const HB_WCHAR * s1, const HB_WCHAR * s2, ULONG count );
+extern HB_EXPORT HB_WCHAR * hb_wstrdup( const HB_WCHAR * szText );
+extern HB_EXPORT HB_WCHAR * hb_wstrndup( const HB_WCHAR * szText, ULONG ulLen );
+
+extern HB_EXPORT char * hb_strunshare( void ** phStr, const char * pStr, ULONG ulLen );
+extern HB_EXPORT HB_WCHAR * hb_wstrunshare( void ** phStr, const HB_WCHAR * pStr, ULONG ulLen );
+extern HB_EXPORT const char * hb_strnull( const char * str );
+extern HB_EXPORT const HB_WCHAR * hb_wstrnull( const HB_WCHAR * str );
+
+
 extern HB_EXPORT void hb_strfree( void * hString );
 
 extern HB_EXPORT const char * hb_itemGetStr( PHB_ITEM pItem, void * cdp, void ** phString, ULONG * pulLen );

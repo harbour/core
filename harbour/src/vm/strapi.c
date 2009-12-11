@@ -58,9 +58,11 @@
 
 static const HB_WCHAR s_szConstStr[ 1 ] = { 0 };
 
-static ULONG hb_wstrlen( const HB_WCHAR * szText )
+ULONG hb_wstrlen( const HB_WCHAR * szText )
 {
    ULONG ulLen = 0;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_wstrlen(%p)", szText));
 
    if( szText )
    {
@@ -69,6 +71,140 @@ static ULONG hb_wstrlen( const HB_WCHAR * szText )
    }
 
    return ulLen;
+}
+
+int hb_wstrcmp( const HB_WCHAR * s1, const HB_WCHAR * s2 )
+{
+   int rc = 0;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_wstrcmp(%p, %p)", s1, s2));
+
+   for( ;; )
+   {
+      if( *s1 != *s2 )
+      {
+         rc = ( *s1 < *s2 ? -1 : 1 );
+         break;
+      }
+      else if( *s1 == 0 )
+         break;
+
+      s1++;
+      s2++;
+   }
+
+   return rc;
+}
+
+int hb_wstrncmp( const HB_WCHAR * s1, const HB_WCHAR * s2, ULONG count )
+{
+   int rc = 0;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_wstrncmp(%p, %p, %lu)", s1, s2, count));
+
+   while( count-- )
+   {
+      if( *s1 != *s2 )
+      {
+         rc = ( *s1 < *s2 ? -1 : 1 );
+         break;
+      }
+      else if( *s1 == 0 )
+         break;
+
+      s1++;
+      s2++;
+   }
+
+   return rc;
+}
+
+HB_WCHAR * hb_wstrdup( const HB_WCHAR * szText )
+{
+   HB_WCHAR * pszDest;
+   ULONG ulSize;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_wstrdup(%p)", szText));
+
+   ulSize = ( hb_wstrlen( szText ) + 1 ) * sizeof( HB_WCHAR );
+   pszDest = ( HB_WCHAR * ) hb_xgrab( ulSize );
+
+   memcpy( pszDest, szText, ulSize );
+
+   return pszDest;
+}
+
+HB_WCHAR * hb_wstrndup( const HB_WCHAR * szText, ULONG ulLen )
+{
+   HB_WCHAR * pszDest;
+   ULONG ulSize;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_wstrndup(%p,%lu)", szText,ulLen));
+
+   ulSize = hb_wstrlen( szText );
+   if( ulSize < ulLen )
+      ulLen = ulSize;
+   ulSize = ulLen * sizeof( HB_WCHAR );
+   pszDest = ( HB_WCHAR * ) hb_xgrab( ulSize + sizeof( HB_WCHAR ) );
+   memcpy( pszDest, szText, ulSize );
+   pszDest[ ulLen ] = 0;
+
+   return pszDest;
+}
+
+HB_WCHAR * hb_wstrunshare( void ** phStr, const HB_WCHAR * pStr, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_wstrunshare(%p,%p,%lu)", phStr, pStr, ulLen));
+
+   if( pStr == NULL || phStr == NULL || *phStr == NULL )
+      return NULL;
+
+   if( *phStr == ( void * ) s_szConstStr && ulLen > 0 )
+   {
+      HB_WCHAR * pszDest = ( HB_WCHAR * ) hb_xgrab( ( ulLen + 1 ) *
+                                                    sizeof( HB_WCHAR ) );
+      memcpy( pszDest, pStr, ulLen * sizeof( HB_WCHAR ) );
+      pszDest[ ulLen ] = 0;
+      * phStr = ( void * ) pszDest;
+
+      return pszDest;
+   }
+
+   return ( HB_WCHAR * ) pStr;
+}
+
+char * hb_strunshare( void ** phStr, const char * pStr, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_strunshare(%p,%p,%lu)", phStr, pStr, ulLen));
+
+   if( pStr == NULL || phStr == NULL || *phStr == NULL )
+      return NULL;
+
+   if( *phStr == ( void * ) s_szConstStr && ulLen > 0 )
+   {
+      char * pszDest = ( char * ) hb_xgrab( ( ulLen + 1 ) * sizeof( char ) );
+      memcpy( pszDest, pStr, ulLen * sizeof( char ) );
+      pszDest[ ulLen ] = 0;
+      * phStr = ( void * ) pszDest;
+
+      return pszDest;
+   }
+
+   return ( char * ) pStr;
+}
+
+const char * hb_strnull( const char * str )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_strnull(%p)", str));
+
+   return str ? str : "";
+}
+
+const HB_WCHAR * hb_wstrnull( const HB_WCHAR * str )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_wstrnull(%p)", str));
+
+   return str ? str : s_szConstStr;
 }
 
 void hb_strfree( void * hString )
