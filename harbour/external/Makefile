@@ -8,10 +8,10 @@ ifeq ($(HB_EXTERNALLIBS),)
 
 # standalone contribs
 DIRS := \
+   sqlite3 \
    libhpdf \
    libpng \
    pcre \
-   sqlite3 \
    zlib \
 
 else

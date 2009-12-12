@@ -215,6 +215,9 @@ void hb_strfree( void * hString )
       hb_xRefFree( hString );
 }
 
+
+
+
 const char * hb_itemGetStr( PHB_ITEM pItem, void * cdp, void ** phString, ULONG * pulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetStr(%p,%p,%p,%p)", pItem, cdp, phString, pulLen));
@@ -325,6 +328,7 @@ const HB_WCHAR * hb_itemGetStrU16( PHB_ITEM pItem, int iEndian,
    return NULL;
 }
 
+
 ULONG hb_itemCopyStr( PHB_ITEM pItem, void * cdp, char * pStrBuffer, ULONG ulSize )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemCopyStr(%p,%p,%p,%lu)", pItem, cdp, pStrBuffer, ulSize));
@@ -361,6 +365,7 @@ ULONG hb_itemCopyStrUTF8( PHB_ITEM pItem, char * pStrBuffer, ULONG ulSize )
    return 0;
 }
 
+
 ULONG hb_itemCopyStrU16( PHB_ITEM pItem, int iEndian, HB_WCHAR * pStrBuffer, ULONG ulSize )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemCopyStrU16(%p,%d,%p,%lu)", pItem, iEndian, pStrBuffer, ulSize));
@@ -382,11 +387,15 @@ ULONG hb_itemCopyStrU16( PHB_ITEM pItem, int iEndian, HB_WCHAR * pStrBuffer, ULO
    return 0;
 }
 
+
 PHB_ITEM hb_itemPutStrLen( PHB_ITEM pItem, void * cdp, const char * pStr, ULONG ulLen )
 {
    char * pszText;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutStrLen(%p,%p,%p,%lu)", pItem, cdp, pStr, ulLen));
+
+   if( ulLen == 0 )
+      return hb_itemPutC( pItem, NULL );
 
    pszText = hb_cdpnDup( pStr, &ulLen, ( PHB_CODEPAGE ) cdp, hb_vmCDP() );
 
@@ -400,6 +409,9 @@ PHB_ITEM hb_itemPutStrLenUTF8( PHB_ITEM pItem, const char * pStr, ULONG ulLen )
    ULONG ulDest;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutStrLenUTF8(%p,%p,%lu)", pItem, pStr, ulLen));
+
+   if( ulLen == 0 )
+      return hb_itemPutC( pItem, NULL );
 
    cdp = hb_vmCDP();
    ulDest = hb_cdpUTF8AsStrLen( cdp, FALSE, pStr, ulLen, 0 );
@@ -417,12 +429,206 @@ PHB_ITEM hb_itemPutStrLenU16( PHB_ITEM pItem, int iEndian, const HB_WCHAR * pStr
 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutStrLenU16(%p,%d,%p,%lu)", pItem, iEndian, pStr, ulLen));
 
+   if( ulLen == 0 )
+      return hb_itemPutC( pItem, NULL );
+
    cdp = hb_vmCDP();
    ulDest = hb_cdpU16AsStrLen( cdp, FALSE, pStr, ulLen, 0 );
    pszDest = ( char * ) hb_xgrab( ulDest + 1 );
    hb_cdpU16ToStr( hb_vmCDP(), FALSE, iEndian, pStr, ulLen, pszDest, ulDest + 1 );
 
    return hb_itemPutCLPtr( pItem, pszDest, ulDest );
+}
+
+
+PHB_ITEM hb_itemPutStr( PHB_ITEM pItem, void * cdp, const char * pStr )
+{
+   char * pszText;
+   ULONG ulLen;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutStr(%p,%p,%p)", pItem, cdp, pStr));
+
+   if( pStr == NULL )
+      return hb_itemPutC( pItem, NULL );
+
+   ulLen = ( ULONG ) strlen( pStr );
+   pszText = hb_cdpnDup( pStr, &ulLen, ( PHB_CODEPAGE ) cdp, hb_vmCDP() );
+
+   return hb_itemPutCLPtr( pItem, pszText, ulLen );
+}
+
+PHB_ITEM hb_itemPutStrUTF8( PHB_ITEM pItem, const char * pStr )
+{
+   PHB_CODEPAGE cdp;
+   char * pszDest;
+   ULONG ulDest, ulLen;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutStrUTF8(%p,%p)", pItem, pStr));
+
+   if( pStr == NULL )
+      return hb_itemPutC( pItem, NULL );
+
+   cdp = hb_vmCDP();
+   ulLen = ( ULONG ) strlen( pStr );
+   ulDest = hb_cdpUTF8AsStrLen( cdp, FALSE, pStr, ulLen, 0 );
+   pszDest = ( char * ) hb_xgrab( ulDest + 1 );
+   hb_cdpUTF8ToStr( hb_vmCDP(), FALSE, pStr, ulLen, pszDest, ulDest + 1 );
+
+   return hb_itemPutCLPtr( pItem, pszDest, ulDest );
+}
+
+PHB_ITEM hb_itemPutStrU16( PHB_ITEM pItem, int iEndian, const HB_WCHAR * pStr )
+{
+   PHB_CODEPAGE cdp;
+   char * pszDest;
+   ULONG ulDest, ulLen;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutStrU16(%p,%d,%p)", pItem, iEndian, pStr));
+
+   if( pStr == NULL )
+      return hb_itemPutC( pItem, NULL );
+
+   cdp = hb_vmCDP();
+   ulLen = hb_wstrlen( pStr );
+   ulDest = hb_cdpU16AsStrLen( cdp, FALSE, pStr, ulLen, 0 );
+   pszDest = ( char * ) hb_xgrab( ulDest + 1 );
+   hb_cdpU16ToStr( hb_vmCDP(), FALSE, iEndian, pStr, ulLen, pszDest, ulDest + 1 );
+
+   return hb_itemPutCLPtr( pItem, pszDest, ulDest );
+}
+
+
+
+
+const char * hb_arrayGetStr( PHB_ITEM pArray, ULONG ulIndex, void * cdp,
+                             void ** phString, ULONG * pulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetStr(%p, %lu, %p, %p, %p)", pArray, ulIndex, cdp, phString, pulLen));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return hb_itemGetStr( pArray->item.asArray.value->pItems + ulIndex - 1,
+                            cdp, phString, pulLen );
+   if( pulLen )
+      * pulLen = 0;
+   * phString = NULL;
+
+   return NULL;
+}
+
+const char * hb_arrayGetStrUTF8( PHB_ITEM pArray, ULONG ulIndex,
+                                 void ** phString, ULONG * pulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetStrUTF8(%p, %lu, %p, %p)", pArray, ulIndex, phString, pulLen));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return hb_itemGetStrUTF8( pArray->item.asArray.value->pItems + ulIndex - 1,
+                                phString, pulLen );
+   if( pulLen )
+      * pulLen = 0;
+   * phString = NULL;
+
+   return NULL;
+}
+
+const HB_WCHAR * hb_arrayGetStrU16( PHB_ITEM pArray, ULONG ulIndex, int iEndian,
+                                    void ** phString, ULONG * pulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetStrU16(%p, %lu, %d, %p, %p)", pArray, ulIndex, iEndian, phString, pulLen));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return hb_itemGetStrU16( pArray->item.asArray.value->pItems + ulIndex - 1,
+                               iEndian, phString, pulLen );
+   if( pulLen )
+      * pulLen = 0;
+   * phString = NULL;
+
+   return NULL;
+}
+
+
+BOOL hb_arraySetStrLen( PHB_ITEM pArray, ULONG ulIndex, void * cdp,
+                        const char * pStr, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetStrLen(%p, %lu, %p, %p, %lu)", pArray, ulIndex, cdp, pStr, ulLen));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutStrLen( pArray->item.asArray.value->pItems + ulIndex - 1, cdp,
+                        pStr, ulLen );
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+
+BOOL hb_arraySetStrLenUTF8( PHB_ITEM pArray, ULONG ulIndex,
+                            const char * pStr, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetStrLenUTF8(%p, %lu, %p, %lu)", pArray, ulIndex, pStr, ulLen));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutStrLenUTF8( pArray->item.asArray.value->pItems + ulIndex - 1,
+                            pStr, ulLen );
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+
+BOOL hb_arraySetStrLenU16( PHB_ITEM pArray, ULONG ulIndex, int iEndian,
+                           const HB_WCHAR * pStr, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetStrLenU16(%p, %lu, %d, %p, %lu)", pArray, ulIndex, iEndian, pStr, ulLen));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutStrLenU16( pArray->item.asArray.value->pItems + ulIndex - 1,
+                           iEndian, pStr, ulLen );
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+
+
+BOOL hb_arraySetStr( PHB_ITEM pArray, ULONG ulIndex, void * cdp, const char * pStr )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetStr(%p, %lu, %p, %p)", pArray, ulIndex, cdp, pStr));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutStr( pArray->item.asArray.value->pItems + ulIndex - 1, cdp, pStr );
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+
+BOOL hb_arraySetStrUTF8( PHB_ITEM pArray, ULONG ulIndex, const char * pStr)
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetStrUTF8(%p, %lu, %p)", pArray, ulIndex, pStr));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutStrUTF8( pArray->item.asArray.value->pItems + ulIndex - 1, pStr );
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+
+BOOL hb_arraySetStrU16( PHB_ITEM pArray, ULONG ulIndex, int iEndian, const HB_WCHAR * pStr )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetStrU16(%p, %lu, %d, %p)", pArray, ulIndex, iEndian, pStr));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutStrU16( pArray->item.asArray.value->pItems + ulIndex - 1, iEndian, pStr );
+      return TRUE;
+   }
+   else
+      return FALSE;
 }
 
 
@@ -498,6 +704,7 @@ const HB_WCHAR * hb_parstr_u16( int iParam, int iEndian,
    return NULL;
 }
 
+
 void hb_retstr( void * cdp, const char * szText )
 {
    HB_STACK_TLS_PRELOAD
@@ -528,6 +735,7 @@ void hb_retstr_u16( int iEndian, const HB_WCHAR * szText )
                         hb_wstrlen( szText ) );
 }
 
+
 void hb_retstrlen( void * cdp, const char * szText, ULONG ulLen )
 {
    HB_STACK_TLS_PRELOAD
@@ -554,6 +762,7 @@ void hb_retstrlen_u16( int iEndian, const HB_WCHAR * szText, ULONG ulLen )
 
    hb_itemPutStrLenU16( hb_stackReturnItem(), iEndian, szText, ulLen );
 }
+
 
 int hb_storstr( void * cdp, const char * szText, int iParam )
 {
@@ -635,6 +844,7 @@ int hb_storstr_u16( int iEndian, const HB_WCHAR * szText, int iParam )
 
    return 0;
 }
+
 
 int hb_storstrlen( void * cdp, const char * szText, ULONG ulLen, int iParam )
 {
