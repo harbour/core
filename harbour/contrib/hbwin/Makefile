@@ -9,6 +9,7 @@ include $(TOP)$(ROOT)config/global.mk
 LIBNAME := hbwin
 
 C_SOURCES := \
+   mapi.c \
    olecore.c \
    oleinit.c \
    axcore.c \

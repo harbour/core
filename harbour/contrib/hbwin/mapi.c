@@ -1,125 +1,205 @@
+/*
+ * $Id$
+ */
 
-#include <windows.h>
-#include <hbapi.h>
-#include <hbstack.h>
+/*
+ * Harbour Project source code:
+ * MAPI wrappers
+ *
+ * Copyright 2009 {list of individual authors and e-mail addresses}
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+
+#define HB_OS_WIN_USED
+
+#include "hbapi.h"
+#include "hbwinuni.h"
+
 #include <mapi.h>
 
-static HINSTANCE hMapiLib = 0L;
+/* TOFIX: Add UNICODE conversion support */
 
-BOOL static LoadMapiLib( void )
+#if ! defined( UNICODE )
+
+HB_FUNC( WIN_MAPISENDMAIL )
 {
-   if( ( hMapiLib = LoadLibrary( "mapi32.dll" ) ) >= (HINSTANCE) 32)
+   HINSTANCE hMapiDll;
+
+   /* Set default return value */
+   hb_retnl( -1 );
+
+   if( ( hMapiDll = LoadLibrary( TEXT( "mapi32.dll" ) ) ) >= ( HINSTANCE ) 32 )
    {
-      return TRUE;
+      LPMAPISENDMAIL MAPISendMail = ( LPMAPISENDMAIL ) GetProcAddress( hMapiDll, HBTEXT( "MAPISendMail" ) );
+
+      if( MAPISendMail )
+      {
+         HB_SIZE nLen, i;
+
+         PHB_ITEM pFrom = hb_param( 8, HB_IT_ARRAY );
+         PHB_ITEM pToList = hb_param( 9, HB_IT_ARRAY );
+         PHB_ITEM pFileList = hb_param( 10, HB_IT_ARRAY );
+
+         MapiMessage note;
+         MapiRecipDesc origin;
+         FLAGS flags = MAPI_LOGON_UI;
+
+         void * hSubject;
+         void * hNoteText;
+         void * hMessageType;
+         void * hDateReceived;
+
+         ZeroMemory( &note, sizeof( MapiMessage ) );
+         ZeroMemory( &origin, sizeof( MapiRecipDesc ) );
+
+         note.lpszSubject      = ( LPTSTR ) HB_PARSTR( 1, &hSubject, NULL );
+         note.lpszNoteText     = ( LPTSTR ) HB_PARSTR( 2, &hNoteText, NULL );
+         note.lpszMessageType  = ( LPTSTR ) HB_PARSTR( 3, &hMessageType, NULL );
+         note.lpszDateReceived = ( LPTSTR ) HB_PARSTRDEF( 4, &hDateReceived, NULL );
+
+         if( hb_parl( 6 ) )
+            note.flFlags |= MAPI_RECEIPT_REQUESTED;
+
+         if( hb_parl( 7 ) )
+            flags |= MAPI_DIALOG;
+
+         #if defined( UNICODE )
+            flags |= MAPI_UNICODE;
+         #endif
+
+         if( pFrom && hb_arrayLen( pFrom ) >= 2 )
+         {
+            origin.lpszName    = ( LPTSTR ) hb_arrayGetCPtr( pFrom, 1 );
+            origin.lpszAddress = ( LPTSTR ) hb_arrayGetCPtr( pFrom, 2 );
+            note.lpOriginator  = &origin;
+         }
+
+         if( pToList && ( nLen = hb_arrayLen( pToList ) ) > 0 )
+         {
+            MapiRecipDesc recipList[ 100 ];
+            ULONG ulCount = 0;
+
+            ZeroMemory( recipList, sizeof( recipList ) );
+
+            if( nLen >= HB_SIZEOFARRAY( recipList ) )
+               nLen = HB_SIZEOFARRAY( recipList );
+
+            for( i = 0; i < nLen; ++i )
+            {
+               PHB_ITEM pItem = hb_arrayGetItemPtr( pToList, i + 1 );
+
+               if( HB_IS_ARRAY( pItem ) && hb_arrayLen( pItem ) >= 3 )
+               {
+                  if( hb_arrayGetCLen( pItem, 1 ) > 0 )
+                  {
+                     /* TOFIX: Add UNICODE conversion */
+                     recipList[ ulCount ].lpszName = ( LPTSTR ) hb_arrayGetCPtr( pItem, 1 );
+
+                     if( hb_arrayGetCLen( pItem, 2 ) > 0 )
+                     {
+                        /* TOFIX: Add UNICODE conversion */
+                        recipList[ ulCount ].lpszAddress = ( LPTSTR ) hb_arrayGetCPtr( pItem, 2 );
+                     }
+                  }
+                  else
+                  {
+                     /* TOFIX: Add UNICODE conversion */
+                     recipList[ ulCount ].lpszName = ( LPTSTR ) hb_arrayGetCPtr( pItem, 2 );
+                  }
+
+                  recipList[ ulCount ].ulRecipClass = ( ULONG ) hb_arrayGetNL( pItem, 2 );
+
+                  ++ulCount;
+               }
+            }
+
+            note.lpRecips    = recipList;
+            note.nRecipCount = ulCount;
+         }
+         else
+            note.nRecipCount = 0;
+
+         if( pFileList && ( nLen = hb_arrayLen( pFileList ) ) > 0 )
+         {
+            MapiFileDesc filedescList[ 100 ];
+            ULONG ulCount = 0;
+
+            ZeroMemory( filedescList, sizeof( filedescList ) );
+
+            if( nLen >= HB_SIZEOFARRAY( filedescList ) )
+               nLen = HB_SIZEOFARRAY( filedescList );
+
+            for( i = 0; i < nLen; ++i )
+            {
+               PHB_ITEM pItem = hb_arrayGetItemPtr( pFileList, i + 1 );
+
+               if( HB_IS_ARRAY( pItem ) && hb_arrayLen( pItem ) >= 2 )
+               {
+                  /* TOFIX: Add UNICODE conversion */
+                  filedescList[ ulCount ].ulReserved   = 0;
+                  filedescList[ ulCount ].lpszFileName = ( LPTSTR ) hb_arrayGetCPtr( pItem, 1 );
+                  filedescList[ ulCount ].lpszPathName = ( LPTSTR ) hb_arrayGetCPtr( pItem, 2 );
+                  filedescList[ ulCount ].nPosition    = -1;
+                  ++ulCount;
+               }
+            }
+
+            note.lpFiles    = filedescList;
+            note.nFileCount = ulCount;
+         }
+         else
+            note.nFileCount = 0;
+
+         hb_retnint( ( *MAPISendMail )( 0, ( ULONG_PTR ) GetActiveWindow(), &note, flags, 0 ) );
+
+         hb_strfree( hSubject );
+         hb_strfree( hNoteText );
+         hb_strfree( hMessageType );
+         hb_strfree( hDateReceived );
+      }
+
+      FreeLibrary( hMapiDll );
    }
-
-   return FALSE;
 }
 
-HB_FUNC( HB_MAPISENDMAIL )
-{
-    ULONG uError;
-    int   iLen, i;
-    LPMAPISENDMAIL MAPISendMail;
-    MapiRecipDesc origin;
-
-    MapiMessage note;
-
-    ZeroMemory ( &note, sizeof ( MapiMessage ) );
-    ZeroMemory ( &origin, sizeof ( MapiRecipDesc ) );
-
-    note.ulReserved       = 0L;
-    note.nRecipCount      = 0;
-    note.lpRecips         = NULL;
-    note.lpOriginator     = NULL;
-    note.nFileCount       = 1;
-    note.lpszSubject      = ISCHAR( 1 ) ? hb_parc( 1 ) : "";
-    note.lpszNoteText     = ISCHAR( 2 ) ? hb_parc( 2 ) : "";
-    note.lpszMessageType  = ISCHAR( 3 ) ? hb_parc( 3 ) : NULL;
-    note.lpszDateReceived = ISCHAR( 4 ) ? hb_parc( 4 ) : "";
-    note.flFlags          = ( ISLOG( 6 ) && hb_parl( 6 ) ) ? MAPI_RECEIPT_REQUESTED: 0;
-
-    if( hb_pcount() >= 8 && ISARRAY( 8 ) && hb_arrayLen( hb_param( 8, HB_IT_ARRAY ) ) )
-    {
-       origin.lpszName    = hb_parvc( 8, 1 );
-       origin.lpszAddress = hb_parvc( 8, 2 );
-       note.lpOriginator  = &origin;
-    }
-
-    if( hb_pcount() >= 9 && ISARRAY( 9 ) && ( iLen = hb_arrayLen( hb_param( 9, HB_IT_ARRAY ) ) ) > 0 )
-    {
-       MapiRecipDesc target[ 100 ];
-
-       ZeroMemory( target, sizeof ( MapiRecipDesc ) * 100 );
-
-       for( i = 0; i < ( iLen < 100 ? iLen : 100 ); i++ )
-       {
-          hb_arrayGet( hb_param( 9, HB_IT_ARRAY ), i + 1, hb_stackReturnItem() );
-
-          if ( hb_parvclen( -1, 1 ) > 0 )
-          {
-             target[ i ].lpszName = hb_parvc( -1, 1 );
-             if ( hb_parvclen( -1, 2 ) > 0 )
-             {
-                target[ i ].lpszAddress = hb_parvc( -1, 2 );
-             }
-          }
-          else
-          {
-             target[ i ].lpszName = hb_parvc( -1, 2 );
-          }
-          target[ i ].ulRecipClass = hb_parvnl( -1, 3 ) ;
-       }
-       note.nRecipCount = iLen;
-       note.lpRecips    = target;
-    }
-    else
-    {
-       note.nRecipCount = 0;
-    }
-
-    if( hb_pcount() >= 10 && ISARRAY( 10 ) && ( iLen = hb_arrayLen( hb_param( 10, HB_IT_ARRAY ) ) ) > 0 )
-    {
-       MapiFileDesc FileDesc[ 100 ];
-
-       ZeroMemory( FileDesc, sizeof( MapiFileDesc ) * 100 );
-
-       for( i = 0; i < ( iLen < 100 ? iLen : 100 ); i++ )
-       {
-          hb_arrayGet( hb_param( 10, HB_IT_ARRAY ), i + 1, hb_stackReturnItem() );
-          FileDesc[ i ].ulReserved   = 0 ;
-          FileDesc[ i ].lpszPathName = hb_parvc( -1, 2 );
-          FileDesc[ i ].lpszFileName = hb_parvc( -1, 1 );
-          FileDesc[ i ].nPosition    = -1 ;
-       }
-
-       note.nFileCount = iLen;
-       note.lpFiles    = FileDesc;
-    }
-    else
-    {
-       note.nFileCount = 0;
-    }
-
-    if( LoadMapiLib() )
-    {
-       MAPISendMail = ( LPMAPISENDMAIL ) GetProcAddress( hMapiLib, "MAPISendMail");
-
-       if ( ISLOG( 7 ) && hb_parl( 7 ) )
-       {
-          uError = (*MAPISendMail) (0L, ( ULONG ) GetActiveWindow(), &note, MAPI_DIALOG | MAPI_LOGON_UI, 0L);
-       }
-       else
-       {
-          uError = (*MAPISendMail) (0L, ( ULONG ) GetActiveWindow(), &note, MAPI_LOGON_UI, 0L);
-       }
-
-       FreeLibrary( hMapiLib );
-
-       hb_retnl( uError );
-    }
-    else
-    {
-       hb_retnl( -1 );
-    }
-}
+#endif
