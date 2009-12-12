@@ -75,6 +75,9 @@ HB_FUNC( WIN_RUNDETACHED )
    void * hCommandName;
    void * hCommandLine;
 
+   HB_SIZE nLen;
+   LPCTSTR lpCommandRO = HB_PARSTR( 2, &hCommandLine, &nLen );
+
 #if ! defined( HB_OS_WIN_CE )
    STARTUPINFO si;
    PROCESS_INFORMATION pi;
@@ -83,9 +86,6 @@ HB_FUNC( WIN_RUNDETACHED )
    si.cb = sizeof( si );
    ZeroMemory( &pi, sizeof( pi ) );
 #endif
-
-   HB_SIZE nLen;
-   LPCTSTR lpCommandRO = HB_PARSTR( 2, &hCommandLine, &nLen );
 
    if( CreateProcess(
          HB_PARSTR( 1, &hCommandName, NULL ),                  /* Command name */
