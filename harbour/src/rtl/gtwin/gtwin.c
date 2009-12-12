@@ -83,6 +83,7 @@
 #include "hbinit.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
+#include "hbwinuni.h"
 
 #include "hbapicdp.h"
 
@@ -1611,18 +1612,16 @@ static BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_WINTITLE:
       {
          TCHAR buff[ 256 ];
-         char * szTitle;
          DWORD dwLen;
 
          dwLen = GetConsoleTitle( buff, sizeof( buff ) / sizeof( TCHAR ) );
-         szTitle = ( char * ) hb_xgrab( dwLen + 1 );
-         HB_TCHAR_GETFROM( szTitle, buff, dwLen );
-         pInfo->pResult = hb_itemPutCLPtr( pInfo->pResult, szTitle, dwLen );
+         pInfo->pResult = HB_ITEMPUTSTRLEN( pInfo->pResult, buff, dwLen );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            LPTSTR lpTitle = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
-            SetConsoleTitle( lpTitle );
-            HB_TCHAR_FREE( lpTitle );
+            void * hTitle;
+
+            SetConsoleTitle( HB_ITEMGETSTR( pInfo->pNewVal, &hTitle, NULL ) );
+            hb_strfree( hTitle );
          }
          break;
       }

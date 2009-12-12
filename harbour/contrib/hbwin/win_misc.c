@@ -165,45 +165,22 @@ HB_FUNC( WIN_LOADRESOURCE )
 
 HB_FUNC( WIN_GETCOMMANDLINEPARAM )
 {
-   char * buffer = HB_TCHAR_CONVFROM( GetCommandLine() );
+   LPCTSTR lpCmdLine = GetCommandLine();
+   HB_BOOL fQuote = HB_FALSE;
    long pos;
 
    /* Skip application path */
    pos = 0;
-   if( buffer[ pos ] == '"' )
+   while( lpCmdLine[ pos ] && ( fQuote || !HB_ISSPACE( lpCmdLine[ pos ] ) ) )
    {
-      /* If it contains spaces, it will be enclosed in quote chars,
-         skip this to get to the command line. */
+      if( lpCmdLine[ pos ] == '"' )
+         fQuote = !fQuote;
       pos++;
-      while( buffer[ pos ] && buffer[ pos ] != '"' )
-         pos++;
-
-      if( buffer[ pos ] == '"' )
-         pos++;
    }
-   else
-   {
-      /* If not, look for the next space for the beginning of the
-         command line. */
-      while( buffer[ pos ] && buffer[ pos ] != ' ' )
-         pos++;
-   }
-
-   if( buffer[ pos ] == ' ' )
+   while( HB_ISSPACE( lpCmdLine[ pos ] ) )
       pos++;
 
-   {
-      /* Convert from OS codepage */
-      char * pszFree = NULL;
-      const char * pszResult = hb_osDecodeCP( buffer + pos, &pszFree, NULL );
-
-      if( pszFree )
-         hb_retc_buffer( pszFree );
-      else
-         hb_retc( pszResult );
-   }
-
-   HB_TCHAR_FREE( buffer );
+   HB_RETSTR( lpCmdLine + pos );
 }
 
 HB_FUNC( WIN_ANSITOWIDE )
