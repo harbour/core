@@ -81,25 +81,20 @@ HB_FUNC( WIN_MAPISENDMAIL )
          PHB_ITEM pToList = hb_param( 9, HB_IT_ARRAY );
          PHB_ITEM pFileList = hb_param( 10, HB_IT_ARRAY );
 
-         void * hString[ 2 + 2 * 100 + 2 * 100 ];
+         void * hString[ 4 + 2 + 2 * 100 + 2 * 100 ];
          int iString = 0;
 
          MapiMessage note;
          MapiRecipDesc origin;
          FLAGS flags = MAPI_LOGON_UI;
 
-         void * hSubject;
-         void * hNoteText;
-         void * hMessageType;
-         void * hDateReceived;
-
          ZeroMemory( &note, sizeof( MapiMessage ) );
          ZeroMemory( &origin, sizeof( MapiRecipDesc ) );
 
-         note.lpszSubject      = ( LPSTR ) HB_PARSTR( 1, &hSubject, NULL );
-         note.lpszNoteText     = ( LPSTR ) HB_PARSTR( 2, &hNoteText, NULL );
-         note.lpszMessageType  = ( LPSTR ) HB_PARSTR( 3, &hMessageType, NULL );
-         note.lpszDateReceived = ( LPSTR ) HB_PARSTRDEF( 4, &hDateReceived, NULL );
+         note.lpszSubject      = ( LPSTR ) HB_PARSTR( 1, &hString[ iString++ ], NULL );
+         note.lpszNoteText     = ( LPSTR ) HB_PARSTR( 2, &hString[ iString++ ], NULL );
+         note.lpszMessageType  = ( LPSTR ) HB_PARSTR( 3, &hString[ iString++ ], NULL );
+         note.lpszDateReceived = ( LPSTR ) HB_PARSTRDEF( 4, &hString[ iString++ ], NULL );
 
          if( hb_parl( 6 ) )
             note.flFlags |= MAPI_RECEIPT_REQUESTED;
@@ -187,11 +182,6 @@ HB_FUNC( WIN_MAPISENDMAIL )
             note.nFileCount = 0;
 
          hb_retnint( ( *MAPISendMail )( 0, ( ULONG_PTR ) GetActiveWindow(), &note, flags, 0 ) );
-
-         hb_strfree( hSubject );
-         hb_strfree( hNoteText );
-         hb_strfree( hMessageType );
-         hb_strfree( hDateReceived );
 
          while( --iString >= 0 )
             hb_strfree( hString[ iString ] );
