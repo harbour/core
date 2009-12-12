@@ -416,7 +416,7 @@ PHB_ITEM hb_itemPutStrLenUTF8( PHB_ITEM pItem, const char * pStr, ULONG ulLen )
    cdp = hb_vmCDP();
    ulDest = hb_cdpUTF8AsStrLen( cdp, FALSE, pStr, ulLen, 0 );
    pszDest = ( char * ) hb_xgrab( ulDest + 1 );
-   hb_cdpUTF8ToStr( hb_vmCDP(), FALSE, pStr, ulLen, pszDest, ulDest + 1 );
+   hb_cdpUTF8ToStr( cdp, FALSE, pStr, ulLen, pszDest, ulDest + 1 );
 
    return hb_itemPutCLPtr( pItem, pszDest, ulDest );
 }
@@ -435,7 +435,7 @@ PHB_ITEM hb_itemPutStrLenU16( PHB_ITEM pItem, int iEndian, const HB_WCHAR * pStr
    cdp = hb_vmCDP();
    ulDest = hb_cdpU16AsStrLen( cdp, FALSE, pStr, ulLen, 0 );
    pszDest = ( char * ) hb_xgrab( ulDest + 1 );
-   hb_cdpU16ToStr( hb_vmCDP(), FALSE, iEndian, pStr, ulLen, pszDest, ulDest + 1 );
+   hb_cdpU16ToStr( cdp, FALSE, iEndian, pStr, ulLen, pszDest, ulDest + 1 );
 
    return hb_itemPutCLPtr( pItem, pszDest, ulDest );
 }
@@ -472,7 +472,7 @@ PHB_ITEM hb_itemPutStrUTF8( PHB_ITEM pItem, const char * pStr )
    ulLen = ( ULONG ) strlen( pStr );
    ulDest = hb_cdpUTF8AsStrLen( cdp, FALSE, pStr, ulLen, 0 );
    pszDest = ( char * ) hb_xgrab( ulDest + 1 );
-   hb_cdpUTF8ToStr( hb_vmCDP(), FALSE, pStr, ulLen, pszDest, ulDest + 1 );
+   hb_cdpUTF8ToStr( cdp, FALSE, pStr, ulLen, pszDest, ulDest + 1 );
 
    return hb_itemPutCLPtr( pItem, pszDest, ulDest );
 }
@@ -492,7 +492,7 @@ PHB_ITEM hb_itemPutStrU16( PHB_ITEM pItem, int iEndian, const HB_WCHAR * pStr )
    ulLen = hb_wstrlen( pStr );
    ulDest = hb_cdpU16AsStrLen( cdp, FALSE, pStr, ulLen, 0 );
    pszDest = ( char * ) hb_xgrab( ulDest + 1 );
-   hb_cdpU16ToStr( hb_vmCDP(), FALSE, iEndian, pStr, ulLen, pszDest, ulDest + 1 );
+   hb_cdpU16ToStr( cdp, FALSE, iEndian, pStr, ulLen, pszDest, ulDest + 1 );
 
    return hb_itemPutCLPtr( pItem, pszDest, ulDest );
 }

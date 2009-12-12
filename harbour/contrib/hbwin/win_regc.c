@@ -133,8 +133,8 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
    {
       if( dwSize > 0 )
       {
-         if( dwType == REG_SZ || 
-             dwType == REG_EXPAND_SZ || 
+         if( dwType == REG_SZ ||
+             dwType == REG_EXPAND_SZ ||
              dwType == REG_MULTI_SZ )
          {
             LPTSTR lpValue = ( LPTSTR ) hb_xgrab( ( dwSize + 1 ) * sizeof( TCHAR ) );
@@ -196,8 +196,8 @@ HB_FUNC( WIN_REGSETVALUEEX )
                               ( const BYTE * ) &nSpace,
                               sizeof( REG_DWORD ) ) == ERROR_SUCCESS );
    }
-   else if( dwType == REG_SZ || 
-            dwType == REG_EXPAND_SZ || 
+   else if( dwType == REG_SZ ||
+            dwType == REG_EXPAND_SZ ||
             dwType == REG_MULTI_SZ )
    {
       void * hValue;

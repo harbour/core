@@ -53,7 +53,9 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbwinuni.h"
 #include "hbwapi.h"
+
 #include <commctrl.h>
 
 #if defined( __BORLANDC__ ) && !defined( HB_ARCH_64BIT )
@@ -295,9 +297,9 @@ HB_FUNC( WAPI_IMAGELIST_GETIMAGEINFO )
    IMAGEINFO ii;
 
    if( ImageList_GetImageInfo( wapi_par_HIMAGELIST( 1 ), wapi_par_INT( 2 ), &ii ) )
-   {
       hb_retclen( ( char * ) &ii, sizeof( IMAGEINFO ) );
-   }
+   else
+      hb_retc_null();
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -477,15 +479,16 @@ HB_FUNC( WAPI_IMAGELIST_WRITEEX )
 HB_FUNC( WAPI_TABCTRL_INSERTITEM )
 {
    TC_ITEM item;
-   LPTSTR szText = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
+
+   void * hText;
 
    item.mask    = TCIF_TEXT | TCIF_IMAGE;
    item.iImage  = HB_ISNUM( 4 ) ? wapi_par_INT( 4 ) : -1;
-   item.pszText = szText;
+   item.pszText = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
 
    wapi_ret_NI( TabCtrl_InsertItem( wapi_par_HWND( 1 ), wapi_par_INT( 3 ), &item ) );
 
-   HB_TCHAR_FREE( szText );
+   hb_strfree( hText );
 }
 /*----------------------------------------------------------------------*/
 
@@ -560,15 +563,16 @@ HB_FUNC( WAPI_TABCTRL_SETIMAGELIST )
 HB_FUNC( WAPI_TABCTRL_SETITEM )
 {
    TC_ITEM item;
-   LPTSTR szText = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
+
+   void * hText;
 
    item.mask    = TCIF_TEXT | TCIF_IMAGE;
    item.iImage  = HB_ISNUM( 4 ) ? wapi_par_INT( 4 ) : -1;
-   item.pszText = szText;
+   item.pszText = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
 
    wapi_ret_L( TabCtrl_SetItem( wapi_par_HWND( 1 ), wapi_par_INT( 2 ), &item ) );
 
-   HB_TCHAR_FREE( szText );
+   hb_strfree( hText );
 }
 /*----------------------------------------------------------------------*/
 /* TabCtrl_DeleteAllItems(hwnd) */
@@ -780,15 +784,17 @@ HB_FUNC( WAPI_TABCTRL_CREATE )
 HB_FUNC( WAPI_TABCTRL_ADDITEM )
 {
    int     iCount = TabCtrl_GetItemCount( wapi_par_HWND( 1 ) );
-   LPTSTR  szText = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
    TC_ITEM item;
+
+   void * hText;
 
    item.mask    = TCIF_TEXT | TCIF_IMAGE;
    item.iImage  = HB_ISNUM( 3 ) ? wapi_par_INT( 3 ) : -1;
-   item.pszText = szText;
+   item.pszText = ( LPTSTR ) HB_PARSTRDEF( 2, &hText, NULL );
 
    wapi_ret_NI( TabCtrl_InsertItem( wapi_par_HWND( 1 ), iCount, &item ) );
-   HB_TCHAR_FREE( szText );
+
+   hb_strfree( hText );
 }
 /*----------------------------------------------------------------------*/
 /*

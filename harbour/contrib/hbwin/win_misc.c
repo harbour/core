@@ -84,10 +84,12 @@ HB_FUNC( WIN_RUNDETACHED )
    ZeroMemory( &pi, sizeof( pi ) );
 #endif
 
+   HB_SIZE nLen;
+   LPCTSTR lpCommandRO = HB_PARSTR( 2, &hCommandLine, &nLen );
+
    if( CreateProcess(
          HB_PARSTR( 1, &hCommandName, NULL ),                  /* Command name */
-         /* TOFIX */
-         ( LPTSTR ) HB_PARSTR( 2, &hCommandLine, NULL ),       /* Command line (Unicode version needs an non-const buffer) */
+         HB_STRUNSHARE( &hCommandLine, lpCommandRO, nLen ),    /* Command line (Unicode version needs an non-const buffer) */
          NULL,                                                 /* Process handle not inheritable */
          NULL,                                                 /* Thread handle not inheritable */
          FALSE,                                                /* Set handle inheritance to FALSE */
@@ -139,7 +141,7 @@ HB_FUNC( WIN_LOADRESOURCE )
       void * hName;
       void * hType;
 
-      HRSRC hRes = FindResource( ( HMODULE ) hInstance, 
+      HRSRC hRes = FindResource( ( HMODULE ) hInstance,
                                  HB_PARSTRDEF( 1, &hName, NULL ),
                                  HB_PARSTRDEF( 2, &hType, NULL ) );
 
