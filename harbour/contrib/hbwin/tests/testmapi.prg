@@ -9,7 +9,7 @@ PROCEDURE Main()
    LOCAL lMailConf := .F.
    LOCAL lFromUser := .T.
    LOCAL aSender := { "test from", "from@test.com" }
-   LOCAL aDest := { { "test to", "to@test.com" } }
+   LOCAL aDest := { { "test to", "to@test.com", 1 } }
    LOCAL aFiles := { { "testmapi.prg", "" } }
 
    ? win_MAPISendMail( cSubject,                        ; // subject
