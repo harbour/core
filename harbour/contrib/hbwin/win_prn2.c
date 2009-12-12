@@ -502,8 +502,7 @@ HB_FUNC( WIN_PRINTERLIST )
             {
                if( bPrinterNamesOnly )
                {
-                  HB_ITEMPUTSTR( pTempItem, pPrinterEnum->pPrinterName );
-                  hb_arrayAddForward( pPrinterArray, pTempItem );
+                  hb_arrayAddForward( pPrinterArray, HB_ITEMPUTSTR( pTempItem, pPrinterEnum->pPrinterName ) );
                }
                else
                {

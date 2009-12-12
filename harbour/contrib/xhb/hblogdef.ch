@@ -51,6 +51,8 @@
  *
  */
 
+/* NOTE: This file is also used by C code. */
+
 #ifndef HB_LOGDEF_CH
 #define HB_LOGDEF_CH
 

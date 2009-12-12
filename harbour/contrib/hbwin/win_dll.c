@@ -662,11 +662,11 @@ static LPVOID hb_getprocaddress( HMODULE hDLL, int iParam )
 
 HB_FUNC( LOADLIBRARY )
 {
-   void * hName;
+   void * hFileName;
 
-   hb_retnint( ( HB_PTRDIFF ) LoadLibrary( HB_PARSTRDEF( 1, &hName, NULL ) ) );
+   hb_retnint( ( HB_PTRDIFF ) LoadLibrary( HB_PARSTRDEF( 1, &hFileName, NULL ) ) );
 
-   hb_strfree( hName );
+   hb_strfree( hFileName );
 }
 
 HB_FUNC( FREELIBRARY )
@@ -713,9 +713,9 @@ HB_FUNC( DLLCALL )
       hDLL = ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 );
    else if( HB_ISCHAR( 1 ) )
    {
-      void * hName;
-      hDLL = LoadLibrary( HB_PARSTR( 1, &hName, NULL ) );
-      hb_strfree( hName );
+      void * hFileName;
+      hDLL = LoadLibrary( HB_PARSTR( 1, &hFileName, NULL ) );
+      hb_strfree( hFileName );
    }
 
    if( hDLL && ( HB_PTRDIFF ) hDLL >= 32 )
@@ -738,9 +738,9 @@ HB_FUNC( DLLPREPARECALL )
 
    if( HB_ISCHAR( 1 ) )
    {
-      void * hName;
-      xec->hDLL = LoadLibrary( HB_PARSTR( 1, &hName, NULL ) );
-      hb_strfree( hName );
+      void * hFileName;
+      xec->hDLL = LoadLibrary( HB_PARSTR( 1, &hFileName, NULL ) );
+      hb_strfree( hFileName );
       if( xec->hDLL )
          xec->fFreeDLL = TRUE;
    }

@@ -53,6 +53,7 @@
 #define HB_OS_WIN_USED
 
 #include "hbapiitm.h"
+#include "hbwinuni.h"
 
 static void getwinver( OSVERSIONINFO * pOSvi )
 {
@@ -183,7 +184,6 @@ HB_FUNC( WIN_OSVERSIONINFO )
 {
    PHB_ITEM pArray = hb_itemArrayNew( 5 );
    OSVERSIONINFO osvi;
-   char * szCSDVersion;
 
    getwinver( &osvi );
    hb_arraySetNL( pArray, 1, osvi.dwMajorVersion );
@@ -192,8 +192,6 @@ HB_FUNC( WIN_OSVERSIONINFO )
       osvi.dwBuildNumber = LOWORD( osvi.dwBuildNumber );
    hb_arraySetNL( pArray, 3, osvi.dwBuildNumber );
    hb_arraySetNL( pArray, 4, osvi.dwPlatformId );
-   szCSDVersion = HB_TCHAR_CONVFROM( osvi.szCSDVersion );
-   hb_arraySetC(  pArray, 5, szCSDVersion );
-   HB_TCHAR_FREE( szCSDVersion );
+   HB_ARRAYSETSTR( pArray, 5, osvi.szCSDVersion );
    hb_itemReturnRelease( pArray );
 }

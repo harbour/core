@@ -63,6 +63,7 @@
 #include "hbapiitm.h"
 #include "hbstack.h"
 #include "hbvm.h"
+#include "hbwinuni.h"
 
 #if !defined( HB_HAS_DLFCN ) && \
     ( ( defined( HB_OS_LINUX ) && !defined( __WATCOMC__ ) ) || \
@@ -109,11 +110,11 @@ HB_FUNC( HB_LIBLOAD )
          hb_vmBeginSymbolGroup( ( void * ) hb_stackId(), TRUE );
 #if defined( HB_OS_WIN )
          {
-            LPTSTR lpFileName = HB_TCHAR_CONVTO( hb_parc( 1 ) );
+            void * hFileName;
 
-            hDynLib = ( void * ) LoadLibrary( ( LPCTSTR ) lpFileName );
+            hDynLib = ( void * ) LoadLibrary( HB_PARSTR( 1, &hFileName, NULL ) );
 
-            HB_TCHAR_FREE( lpFileName );
+            hb_strfree( hFileName );
          }
 #elif defined( HB_OS_OS2 )
          {

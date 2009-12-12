@@ -166,11 +166,11 @@ HB_FUNC( WAPI_SETERRORMODE )
 
 HB_FUNC( WAPI_LOADLIBRARY )
 {
-   void * hName;
+   void * hFileName;
 
-   hb_retptr( LoadLibrary( HB_PARSTRDEF( 1, &hName, NULL ) ) );
+   hb_retptr( LoadLibrary( HB_PARSTRDEF( 1, &hFileName, NULL ) ) );
 
-   hb_strfree( hName );
+   hb_strfree( hFileName );
 }
 
 HB_FUNC( WAPI_FREELIBRARY )
