@@ -82,8 +82,8 @@
    #define HB_ARRAYSETSTR( arr, n, str )         hb_arraySetStr( arr, n, hb_setGetOSCP(), str )
    #define HB_ARRAYSETSTRLEN( arr, n, str, len ) hb_arraySetStrLen( arr, n, hb_setGetOSCP(), str, len )
    #define HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStr( itm, hb_setGetOSCP(), phstr, plen )
-   #define HB_ITEMPUTSTR( p, str )               hb_itemPutStr( itm, hb_setGetOSCP(), str )
-   #define HB_ITEMPUTSTRLEN( p, str, len )       hb_itemPutStrLen( itm, hb_setGetOSCP(), str, len )
+   #define HB_ITEMPUTSTR( itm, str )             hb_itemPutStr( itm, hb_setGetOSCP(), str )
+   #define HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLen( itm, hb_setGetOSCP(), str, len )
    #define HB_STRUNSHARE( h, str, len )          hb_strunshare( h, str, len )
 #endif
 

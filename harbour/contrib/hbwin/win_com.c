@@ -81,21 +81,32 @@ HB_FUNC( WIN_COMOPEN )
       int iParity = hb_parni( 3 );
       int iByteSize = hb_parni( 4 );
       int iStopBits = hb_parni( 5 );
-
-      char szName[ 11 ];
-      TCHAR tszName[ 11 ];
+      int iPos, i;
 
       HANDLE hCommPort;
       DCB NewDCB;
 
-      hb_snprintf( szName, sizeof( szName ), "\\\\.\\COM%d", iPort + 1 );
-      HB_TCHAR_CPTO( tszName, szName, sizeof( tszName ) - 1 );
+      TCHAR szName[ 11 ] = { '\\', '\\', '.', '\\', 'C', 'O', 'M', 0, 0, 0, 0 };
+
+      i = iPort + 1;
+      iPos = 6;
+      while( i > 0 )
+      {
+         iPos++;
+         i /= 10;
+      }
+      i = iPort + 1;
+      while( i > 0 )
+      {
+         szName[ iPos-- ] = ( TCHAR ) ( i % 10 + '0' );
+         i /= 10;
+      }
 
       s_PortData[ iPort ].hPort = INVALID_HANDLE_VALUE;
       s_PortData[ iPort ].iFunction = WIN_COM_FUN_CREATEFILE;
       s_PortData[ iPort ].dwError = 0;
 
-      if( ( hCommPort = CreateFile( tszName,
+      if( ( hCommPort = CreateFile( szName,
                                     GENERIC_READ | GENERIC_WRITE,
                                     0,
                                     NULL,
