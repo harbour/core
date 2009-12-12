@@ -855,7 +855,7 @@ typedef unsigned char       HB_U8;
 #if defined( __GNUC__ )
 
 #  if ( __GNUC__ > 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 3 ) ) && \
-      ! defined( __ICC )
+      ! defined( __ICC ) && !defined( __OPENCC__ )
 #     define HB_BUILTIN_BSWAP 1
 #  else
 #     define HB_BUILTIN_BSWAP 0

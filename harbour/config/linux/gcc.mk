@@ -2,10 +2,12 @@
 # $Id$
 #
 
-ifeq ($(HB_BUILD_MODE),cpp)
-   HB_CMP := g++
-else
-   HB_CMP := gcc
+ifeq ($(HB_CMP),)
+   ifeq ($(HB_BUILD_MODE),cpp)
+      HB_CMP := g++
+   else
+      HB_CMP := gcc
+   endif
 endif
 
 OBJ_EXT := .o

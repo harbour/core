@@ -299,6 +299,7 @@ mk_hbtools()
 # set environment variables
 export HB_PLATFORM="${HB_PLATFORM}"
 export HB_COMPILER="${HB_COMPILER}"
+export HB_BUILD_MODE="${HB_BUILD_MODE}"
 [ -z "\${HB_BIN_INSTALL}" ] && export HB_BIN_INSTALL="${HB_BIN_INSTALL}"
 [ -z "\${HB_INC_INSTALL}" ] && export HB_INC_INSTALL="${HB_INC_INSTALL}"
 [ -z "\${HB_LIB_INSTALL}" ] && export HB_LIB_INSTALL="${HB_LIB_INSTALL}"
@@ -306,12 +307,32 @@ export HB_COMPILER="${HB_COMPILER}"
 # be sure that ${name} binaries are in your path
 export PATH="\${HB_BIN_INSTALL}${hb_path_separator}${hb_ccpath}\${PATH}"
 
-if [ "\${HB_COMPILER}" == "gpp" ]; then
+if [ "\${HB_COMPILER}" = "icc" ]; then
+   if [ "\${HB_BUILD_MODE}" = "cpp" ]; then
+      HB_CC="icpc"
+   else
+      HB_CC="icc"
+   fi
+elif [ "\${HB_COMPILER}" = "open64" ]; then
+   if [ "\${HB_BUILD_MODE}" = "cpp" ]; then
+      HB_CC="openCC"
+   else
+      HB_CC="opencc"
+   fi
+elif [ "\${HB_COMPILER}" = "sunpro" ]; then
+   if [ "\${HB_BUILD_MODE}" = "cpp" ]; then
+      HB_CC="sunCC"
+   else
+      HB_CC="suncc"
+   fi
+elif [ "\${HB_COMPILER}" = "gpp" ]; then
    HB_CC="g++"
-elif [ "\${HB_COMPILER}" == "icc" ]; then
-   HB_CC="icc"
 else
-   HB_CC="gcc"
+   if [ "\${HB_BUILD_MODE}" = "cpp" ]; then
+      HB_CC="g++"
+   else
+      HB_CC="gcc"
+   fi
 fi
 
 if [ \$# = 0 ]; then

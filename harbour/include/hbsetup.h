@@ -507,14 +507,15 @@
    #define HB_NORETURN_ATTR
 #  endif
 #  if ( ( __GNUC__ > 4 ) || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 1 ) ) && \
-      !defined( __ICC ) && !defined( HB_NO_FLATTEN ) && !defined( __clang__ )
+      !defined( __ICC ) && !defined( __clang__ ) && \
+      !defined( HB_NO_FLATTEN )
    #define HB_FLATTEN_ATTR \
                      __attribute__ (( flatten ))
 #  else
    #define HB_FLATTEN_ATTR
 #  endif
 #  if ( ( __GNUC__ > 4 ) || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 3 ) ) && \
-      !defined( __ICC )
+      !defined( __ICC ) && !defined( __OPENCC__ )
    #define HB_ALLOC_SIZE_ATTR( _nParam ) \
                      __attribute__ (( alloc_size (_nParam)))
 #  else

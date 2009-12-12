@@ -430,7 +430,7 @@ char * hb_verCompiler( void )
 {
    char * pszCompiler;
    const char * pszName;
-   char szSub[ 32 ];
+   char szSub[ 64 ];
    int iVerMajor;
    int iVerMinor;
    int iVerPatch;
@@ -508,6 +508,18 @@ char * hb_verCompiler( void )
    iVerMajor = __ICC / 100;
    iVerMinor = __ICC % 100;
    iVerPatch = 0;
+
+#elif defined( __OPENCC__ )
+
+   pszName = "Open64 C";
+
+   #if defined( __cplusplus )
+      hb_strncpy( szSub, "++", sizeof( szSub ) - 1 );
+   #endif
+
+   iVerMajor = __OPENCC__;
+   iVerMinor = __OPENCC_MINOR__;
+   iVerPatch = __OPENCC_PATCHLEVEL__;
 
 #elif defined( _MSC_VER )
 
@@ -681,9 +693,9 @@ char * hb_verCompiler( void )
    if( pszName )
    {
       if( iVerPatch != 0 )
-         hb_snprintf( pszCompiler, COMPILER_BUF_SIZE, "%s%s %hd.%hd.%hd", pszName, szSub, iVerMajor, iVerMinor, iVerPatch );
+         hb_snprintf( pszCompiler, COMPILER_BUF_SIZE, "%s%s %d.%d.%d", pszName, szSub, iVerMajor, iVerMinor, iVerPatch );
       else if( iVerMajor != 0 || iVerMinor != 0 )
-         hb_snprintf( pszCompiler, COMPILER_BUF_SIZE, "%s%s %hd.%hd", pszName, szSub, iVerMajor, iVerMinor );
+         hb_snprintf( pszCompiler, COMPILER_BUF_SIZE, "%s%s %d.%d", pszName, szSub, iVerMajor, iVerMinor );
       else
          hb_snprintf( pszCompiler, COMPILER_BUF_SIZE, "%s%s", pszName, szSub );
    }
