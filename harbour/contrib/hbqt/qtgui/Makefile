@@ -8,6 +8,8 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := hbqtgui
 
+_QT_HEADERS = qtgui
+
 include $(TOP)$(ROOT)contrib/hbqt/detect.mk
 
 ifneq ($(HB_HAS_QT),)

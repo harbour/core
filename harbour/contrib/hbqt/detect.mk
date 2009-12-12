@@ -30,19 +30,19 @@ endif
 ifneq ($(HB_HAS_QT),)
    ifeq ($(_QT_DARWIN),yes)
       HB_CFLAGS += -I/Library/Frameworks/QtCore.framework/Headers
-      ifneq ($(filter $(LIBNAME),hbqt hbqts hbqtgui hbqtguis),)
+      ifneq ($(filter qtgui,$(_QT_HEADERS)),)
          HB_CFLAGS += -I/Library/Frameworks/QtGui.framework/Headers
       endif
-      ifneq ($(filter $(LIBNAME),hbqt hbqts hbqtnetwork hbqtnetworks),)
+      ifneq ($(filter qtnetwork,$(_QT_HEADERS)),)
          HB_CFLAGS += -I/Library/Frameworks/QtNetwork.framework/Headers
       endif
    else
       HB_CFLAGS += $(foreach d,$(HB_HAS_QT),-I$(d))
       HB_CFLAGS += $(foreach d,$(HB_HAS_QT),-I$(d)/QtCore)
-      ifneq ($(filter $(LIBNAME),hbqt hbqts hbqtgui hbqtguis),)
+      ifneq ($(filter qtgui,$(_QT_HEADERS)),)
          HB_CFLAGS += $(foreach d,$(HB_HAS_QT),-I$(d)/QtGui)
       endif
-      ifneq ($(filter $(LIBNAME),hbqt hbqts hbqtnetwork hbqtnetworks),)
+      ifneq ($(filter qtnetwork,$(_QT_HEADERS)),)
          HB_CFLAGS += $(foreach d,$(HB_HAS_QT),-I$(d)/QtNetwork)
       endif
    endif

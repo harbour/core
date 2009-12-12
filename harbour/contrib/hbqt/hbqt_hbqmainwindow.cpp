@@ -65,7 +65,9 @@
 
 #include "hbqt_hbqmainwindow.h"
 
+#if defined( _HBQT_MAINWINDOW_MUTEX )
 static PHB_ITEM s_mutex = NULL;
+#endif
 
 HBQMainWindow::HBQMainWindow( PHB_ITEM pBlock, int iThreadID )
 {
@@ -99,7 +101,9 @@ HBQMainWindow::~HBQMainWindow( void )
 
 void HBQMainWindow::paintEvent( QPaintEvent * event )
 {
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexLock( s_mutex );
+#endif
    if( hb_vmRequestReenter() )
    {
       PHB_ITEM p0 = hb_itemPutNI( NULL, QEvent::Paint );
@@ -109,20 +113,28 @@ void HBQMainWindow::paintEvent( QPaintEvent * event )
       hb_itemRelease( p1 );
       hb_vmRequestRestore();
    }
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexUnlock( s_mutex );
+#endif
 }
 
 bool HBQMainWindow::event( QEvent * event )
 {
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexLock( s_mutex );
+#endif
    bool bRet = QWidget::event( event );
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexUnlock( s_mutex );
+#endif
    return bRet;
 }
 
 void HBQMainWindow::focusInEvent( QFocusEvent *event )
 {
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexLock( s_mutex );
+#endif
    if( hb_vmRequestReenter() )
    {
       PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::FocusIn );
@@ -133,12 +145,16 @@ void HBQMainWindow::focusInEvent( QFocusEvent *event )
       hb_vmRequestRestore();
    }
    QWidget::focusInEvent( event );
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexUnlock( s_mutex );
+#endif
 }
 
 void HBQMainWindow::focusOutEvent( QFocusEvent *event )
 {
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexLock( s_mutex );
+#endif
    if( hb_vmRequestReenter() )
    {
       PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::FocusOut );
@@ -149,12 +165,16 @@ void HBQMainWindow::focusOutEvent( QFocusEvent *event )
       hb_vmRequestRestore();
    }
    QWidget::focusOutEvent( event );
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexUnlock( s_mutex );
+#endif
 }
 
 void HBQMainWindow::keyPressEvent( QKeyEvent * event )
 {
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexLock( s_mutex );
+#endif
    if( hb_vmRequestReenter() )
    {
       PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::KeyPress );
@@ -165,12 +185,16 @@ void HBQMainWindow::keyPressEvent( QKeyEvent * event )
       hb_vmRequestRestore();
    }
    QWidget::keyPressEvent( event );
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexUnlock( s_mutex );
+#endif
 }
 
 void HBQMainWindow::mouseDoubleClickEvent( QMouseEvent * event )
 {
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexLock( s_mutex );
+#endif
    if( hb_vmRequestReenter() )
    {
       PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::MouseButtonDblClick );
@@ -181,12 +205,16 @@ void HBQMainWindow::mouseDoubleClickEvent( QMouseEvent * event )
       hb_vmRequestRestore();
    }
    QWidget::mouseDoubleClickEvent( event );
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexUnlock( s_mutex );
+#endif
 }
 
 void HBQMainWindow::mouseMoveEvent( QMouseEvent * event )
 {
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexLock( s_mutex );
+#endif
    if( hb_vmRequestReenter() )
    {
       PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::MouseMove );
@@ -197,12 +225,16 @@ void HBQMainWindow::mouseMoveEvent( QMouseEvent * event )
       hb_vmRequestRestore();
    }
    QWidget::mouseMoveEvent( event );
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexUnlock( s_mutex );
+#endif
 }
 
 void HBQMainWindow::mousePressEvent( QMouseEvent * event )
 {
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexLock( s_mutex );
+#endif
    if( hb_vmRequestReenter() )
    {
       PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::MouseButtonPress );
@@ -213,12 +245,16 @@ void HBQMainWindow::mousePressEvent( QMouseEvent * event )
       hb_vmRequestRestore();
    }
    QWidget::mousePressEvent( event );
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexUnlock( s_mutex );
+#endif
 }
 
 void HBQMainWindow::mouseReleaseEvent( QMouseEvent * event )
 {
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexLock( s_mutex );
+#endif
    if( hb_vmRequestReenter() )
    {
       PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::MouseButtonRelease );
@@ -229,12 +265,16 @@ void HBQMainWindow::mouseReleaseEvent( QMouseEvent * event )
       hb_vmRequestRestore();
    }
    QWidget::mouseReleaseEvent( event );
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexUnlock( s_mutex );
+#endif
 }
 
 void HBQMainWindow::wheelEvent( QWheelEvent * event )
 {
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexLock( s_mutex );
+#endif
    if( hb_vmRequestReenter() )
    {
       PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::Wheel );
@@ -245,12 +285,16 @@ void HBQMainWindow::wheelEvent( QWheelEvent * event )
       hb_vmRequestRestore();
    }
    QWidget::wheelEvent( event );
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexUnlock( s_mutex );
+#endif
 }
 
 void HBQMainWindow::resizeEvent( QResizeEvent * event )
 {
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexLock( s_mutex );
+#endif
    if( hb_vmRequestReenter() )
    {
       PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::Resize );
@@ -261,14 +305,18 @@ void HBQMainWindow::resizeEvent( QResizeEvent * event )
       hb_vmRequestRestore();
    }
    QWidget::resizeEvent( event );
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexUnlock( s_mutex );
+#endif
 }
 
 void HBQMainWindow::closeEvent( QCloseEvent * event )
 {
    HB_TRACE( HB_TR_DEBUG, ( "HBQMainWindow::closeEvent: ThreadID: %i", threadID ) );
 
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexLock( s_mutex );
+#endif
    if( hb_vmRequestReenter() )
    {
       PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::Close );
@@ -278,13 +326,17 @@ void HBQMainWindow::closeEvent( QCloseEvent * event )
       hb_itemRelease( p1 );
       hb_vmRequestRestore();
    }
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    hb_threadMutexUnlock( s_mutex );
+#endif
 }
 
 HB_FUNC( QT_HBQMAINWINDOW )
 {
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    if( s_mutex == NULL )
       s_mutex = hb_threadMutexCreate();
+#endif
 
    hb_retptr( ( HBQMainWindow * ) new HBQMainWindow( hb_itemNew( hb_param( 1, HB_IT_BLOCK ) ), hb_parni( 2 ) ) );
 }
@@ -299,19 +351,23 @@ static void hbqt_hbqmainwindow_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    if( s_mutex == NULL )
       s_mutex = hb_threadMutexCreate();
+#endif
 }
 
 static void hbqt_hbqmainwindow_exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
+#if defined( _HBQT_MAINWINDOW_MUTEX )
    if( s_mutex != NULL )
    {
       hb_itemRelease( s_mutex );
       s_mutex = NULL;
    }
+#endif
 }
 
 HB_FUNC( HB_QT ) {;}

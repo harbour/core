@@ -11,6 +11,8 @@ LIBNAME := hbqt
 PRG_HEADERS := \
    hbqt.ch \
 
+_QT_HEADERS = qtgui qtnetwork
+
 include $(TOP)$(ROOT)contrib/hbqt/detect.mk
 
 ifneq ($(HB_HAS_QT),)

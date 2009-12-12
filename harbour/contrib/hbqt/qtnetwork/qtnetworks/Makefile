@@ -11,6 +11,8 @@ vpath %.prg ../
 
 LIBNAME := hbqtnetworks
 
+_QT_HEADERS = qtnetwork
+
 include $(TOP)$(ROOT)contrib/hbqt/detect.mk
 
 ifneq ($(HB_HAS_QT),)

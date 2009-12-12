@@ -8,6 +8,9 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := gtqtc
 
+MOC_HEADERS := \
+   gtqtc.h \
+
 CPP_SOURCES := \
    gtqtc.cpp \
    moc_gtqtc.cpp \
@@ -15,13 +18,13 @@ CPP_SOURCES := \
 PRG_HEADERS := \
    hbgtqtc.ch
 
+_QT_HEADERS = qtgui
+
 include $(TOP)$(ROOT)contrib/hbqt/detect.mk
 
 ifneq ($(HB_HAS_QT),)
 
-moc_gtqtc.cpp : $(TOP)$(ROOT)contrib/gtqtc/gtqtc.h
-	$(MOC_BIN) $(TOP)$(ROOT)contrib/gtqtc/gtqtc.h > moc_gtqtc.cpp
-
+   include $(TOP)$(ROOT)contrib/hbqt/moc.mk
    include $(TOP)$(ROOT)config/header.mk
    include $(TOP)$(ROOT)config/lib.mk
 
