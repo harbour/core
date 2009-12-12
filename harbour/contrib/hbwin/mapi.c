@@ -6,7 +6,8 @@
  * Harbour Project source code:
  * MAPI wrappers
  *
- * Copyright 2009 {list of individual authors and e-mail addresses}
+ * Copyright 2009 Toninho (toninhofwi yahoo.com.br)
+ * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,9 +58,9 @@
 
 #include <mapi.h>
 
-/* TOFIX: Add UNICODE conversion support */
-
-#if ! defined( UNICODE )
+#if ! defined( MAPI_UNICODE )
+   #define MAPI_UNICODE   ( ( ULONG ) 0x80000000 )
+#endif
 
 HB_FUNC( WIN_MAPISENDMAIL )
 {
@@ -80,6 +81,9 @@ HB_FUNC( WIN_MAPISENDMAIL )
          PHB_ITEM pToList = hb_param( 9, HB_IT_ARRAY );
          PHB_ITEM pFileList = hb_param( 10, HB_IT_ARRAY );
 
+         void * hString[ 2 + 2 * 100 + 2 * 100 ];
+         int iString = 0;
+
          MapiMessage note;
          MapiRecipDesc origin;
          FLAGS flags = MAPI_LOGON_UI;
@@ -92,10 +96,10 @@ HB_FUNC( WIN_MAPISENDMAIL )
          ZeroMemory( &note, sizeof( MapiMessage ) );
          ZeroMemory( &origin, sizeof( MapiRecipDesc ) );
 
-         note.lpszSubject      = ( LPTSTR ) HB_PARSTR( 1, &hSubject, NULL );
-         note.lpszNoteText     = ( LPTSTR ) HB_PARSTR( 2, &hNoteText, NULL );
-         note.lpszMessageType  = ( LPTSTR ) HB_PARSTR( 3, &hMessageType, NULL );
-         note.lpszDateReceived = ( LPTSTR ) HB_PARSTRDEF( 4, &hDateReceived, NULL );
+         note.lpszSubject      = ( LPSTR ) HB_PARSTR( 1, &hSubject, NULL );
+         note.lpszNoteText     = ( LPSTR ) HB_PARSTR( 2, &hNoteText, NULL );
+         note.lpszMessageType  = ( LPSTR ) HB_PARSTR( 3, &hMessageType, NULL );
+         note.lpszDateReceived = ( LPSTR ) HB_PARSTRDEF( 4, &hDateReceived, NULL );
 
          if( hb_parl( 6 ) )
             note.flFlags |= MAPI_RECEIPT_REQUESTED;
@@ -109,8 +113,8 @@ HB_FUNC( WIN_MAPISENDMAIL )
 
          if( pFrom && hb_arrayLen( pFrom ) >= 2 )
          {
-            origin.lpszName    = ( LPTSTR ) hb_arrayGetCPtr( pFrom, 1 );
-            origin.lpszAddress = ( LPTSTR ) hb_arrayGetCPtr( pFrom, 2 );
+            origin.lpszName    = ( LPSTR ) HB_ARRAYGETSTR( pFrom, 1, &hString[ iString++ ], NULL );
+            origin.lpszAddress = ( LPSTR ) HB_ARRAYGETSTR( pFrom, 2, &hString[ iString++ ], NULL );
             note.lpOriginator  = &origin;
          }
 
@@ -132,22 +136,15 @@ HB_FUNC( WIN_MAPISENDMAIL )
                {
                   if( hb_arrayGetCLen( pItem, 1 ) > 0 )
                   {
-                     /* TOFIX: Add UNICODE conversion */
-                     recipList[ ulCount ].lpszName = ( LPTSTR ) hb_arrayGetCPtr( pItem, 1 );
+                     recipList[ ulCount ].lpszName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 1, &hString[ iString++ ], NULL );
 
                      if( hb_arrayGetCLen( pItem, 2 ) > 0 )
-                     {
-                        /* TOFIX: Add UNICODE conversion */
-                        recipList[ ulCount ].lpszAddress = ( LPTSTR ) hb_arrayGetCPtr( pItem, 2 );
-                     }
+                        recipList[ ulCount ].lpszAddress = ( LPSTR ) HB_ARRAYGETSTR( pItem, 2, &hString[ iString++ ], NULL );
                   }
                   else
-                  {
-                     /* TOFIX: Add UNICODE conversion */
-                     recipList[ ulCount ].lpszName = ( LPTSTR ) hb_arrayGetCPtr( pItem, 2 );
-                  }
+                     recipList[ ulCount ].lpszName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 2, &hString[ iString++ ], NULL );
 
-                  recipList[ ulCount ].ulRecipClass = ( ULONG ) hb_arrayGetNL( pItem, 2 );
+                  recipList[ ulCount ].ulRecipClass = ( ULONG ) hb_arrayGetNL( pItem, 3 );
 
                   ++ulCount;
                }
@@ -173,13 +170,12 @@ HB_FUNC( WIN_MAPISENDMAIL )
             {
                PHB_ITEM pItem = hb_arrayGetItemPtr( pFileList, i + 1 );
 
-               if( HB_IS_ARRAY( pItem ) && hb_arrayLen( pItem ) >= 2 )
+               if( HB_IS_ARRAY( pItem ) && hb_arrayLen( pItem ) >= 1 )
                {
-                  /* TOFIX: Add UNICODE conversion */
                   filedescList[ ulCount ].ulReserved   = 0;
-                  filedescList[ ulCount ].lpszFileName = ( LPTSTR ) hb_arrayGetCPtr( pItem, 1 );
-                  filedescList[ ulCount ].lpszPathName = ( LPTSTR ) hb_arrayGetCPtr( pItem, 2 );
-                  filedescList[ ulCount ].nPosition    = -1;
+                  filedescList[ ulCount ].lpszFileName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 1, &hString[ iString++ ], NULL );
+                  filedescList[ ulCount ].lpszPathName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 2, &hString[ iString++ ], NULL );
+                  filedescList[ ulCount ].nPosition    = ( ULONG ) -1;
                   ++ulCount;
                }
             }
@@ -196,10 +192,11 @@ HB_FUNC( WIN_MAPISENDMAIL )
          hb_strfree( hNoteText );
          hb_strfree( hMessageType );
          hb_strfree( hDateReceived );
+
+         while( --iString >= 0 )
+            hb_strfree( hString[ iString ] );
       }
 
       FreeLibrary( hMapiDll );
    }
 }
-
-#endif

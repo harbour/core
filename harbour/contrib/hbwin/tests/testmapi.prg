@@ -2,7 +2,15 @@
  * $Id$
  */
 
-PROCEDURE Main( cSubject, cBody, lMailConf, lFromUser, aSender, aDest, aFiles )
+PROCEDURE Main()
+
+   cSubject := "Test subject"
+   cBody := "Test body"
+   lMailConf := .F.
+   lFromUser := .T.
+   aSender := { "test from", "from@test.com" }
+   aDest := { { "test to", "to@test.com" } }
+   aFiles := { { "testmapi.prg", "" } }
 
    ? win_MAPISendMail( cSubject,                        ; // subject
                        cBody,                           ; // menssage
