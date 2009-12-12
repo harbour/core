@@ -1614,12 +1614,11 @@ static BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          TCHAR buff[ 256 ];
          DWORD dwLen;
 
-         dwLen = GetConsoleTitle( buff, sizeof( buff ) / sizeof( TCHAR ) );
+         dwLen = GetConsoleTitle( buff, HB_SIZEOFARRAY( buff ) );
          pInfo->pResult = HB_ITEMPUTSTRLEN( pInfo->pResult, buff, dwLen );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             void * hTitle;
-
             SetConsoleTitle( HB_ITEMGETSTR( pInfo->pNewVal, &hTitle, NULL ) );
             hb_strfree( hTitle );
          }

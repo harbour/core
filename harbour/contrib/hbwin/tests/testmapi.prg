@@ -1,15 +1,19 @@
-function main( cSubject, cBody, lMailConf, lFromUser, aSender, aDest, aFiles )
+/*
+ * $Id$
+ */
 
-   local nRet := HB_MAPISendMail( cSubject,                        ; // subject
-                                  cBody,                           ; // menssage
-                                  nil,                             ; // type of message
-                                  DtoS( Date() ) + " " + Time(),   ; // send date
-                                  "",                              ; // conversation ID
-                                  lMailConf,                       ; // acknowledgment
-                                  lFromUser,                       ; // user intervention
-                                  aSender,                         ; // sender
-                                  aDest,                           ; // destinators
-                                  aFiles                           ; // attach
-                                )
+PROCEDURE Main( cSubject, cBody, lMailConf, lFromUser, aSender, aDest, aFiles )
 
-return nRet == 0
+   ? win_MAPISendMail( cSubject,                        ; // subject
+                       cBody,                           ; // menssage
+                       NIL,                             ; // type of message
+                       DToS( Date() ) + " " + Time(),   ; // send date
+                       "",                              ; // conversation ID
+                       lMailConf,                       ; // acknowledgment
+                       lFromUser,                       ; // user intervention
+                       aSender,                         ; // sender
+                       aDest,                           ; // destinators
+                       aFiles                           ; // attach
+                     )
+
+   RETURN

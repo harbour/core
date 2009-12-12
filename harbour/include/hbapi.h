@@ -122,7 +122,7 @@ HB_EXTERN_BEGIN
  * know that sth is wrong and has to be fixed.
  * the version below which check only chosen bits allow compiler to
  * use some optimizations if used CPU supports it. F.e. on standard
- * x86 machines they can safe few CPU cycles. [druzus]
+ * x86 machines they can save few CPU cycles. [druzus]
  */
 
 #define HB_IS_NIL( p )        HB_IS_OF_TYPE( p, HB_IT_NIL )
