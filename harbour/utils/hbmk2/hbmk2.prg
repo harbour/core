@@ -973,7 +973,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
    CASE hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|beos|linux" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" /* Separated to avoid match with 'win' */
       DO CASE
       CASE hbmk[ _HBMK_cPLAT ] == "linux"
-         aCOMPSUP := { "gcc", "clang", "icc", "watcom", "sunpro" }
+         aCOMPSUP := { "gcc", "clang", "icc", "watcom", "sunpro", "open64" }
       CASE hbmk[ _HBMK_cPLAT ] == "darwin"
          aCOMPSUP := { "gcc", "clang", "icc" }
       CASE hbmk[ _HBMK_cPLAT ] == "sunos"
@@ -2111,10 +2111,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
       DEFAULT hbmk[ _HBMK_lSHAREDDIST ] TO lSysLoc
 
-      IF hbmk[ _HBMK_lSHAREDDIST ] .OR. !( hbmk[ _HBMK_cCOMP ] $ "gcc|clang" )
+      IF hbmk[ _HBMK_lSHAREDDIST ] .OR. !( hbmk[ _HBMK_cCOMP ] $ "gcc|clang|open64" )
          cPrefix := ""
       ELSE
-         /* Only supported by gcc, clang compilers. */
+         /* Only supported by gcc, clang, open64 compilers. */
          cPrefix := DirAddPathSep( l_cHB_DYN_INSTALL )
       ENDIF
 #if 1
@@ -2211,7 +2211,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
            ( hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "icc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "beos"   .AND. hbmk[ _HBMK_cCOMP ] == "gcc" )
+           ( hbmk[ _HBMK_cPLAT ] == "beos"   .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "open64" )
 
          nCmd_Esc := _ESC_NIX
          IF hbmk[ _HBMK_lDEBUG ]
@@ -2242,6 +2243,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_GNU_SOURCE" )
          CASE hbmk[ _HBMK_cCOMP ] == "clang"
             cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + "clang" + hbmk[ _HBMK_cCCPOSTFIX ]
+         CASE hbmk[ _HBMK_cCOMP ] == "open64"
+            cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], "openCC", "opencc" )
          OTHERWISE
             cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], "g++", "gcc" ) + hbmk[ _HBMK_cCCPOSTFIX ]
          ENDCASE
@@ -4883,7 +4886,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
          ENDIF
       NEXT
 
-   ELSEIF lCMode .AND. hbmk[ _HBMK_nHEAD ] == _HEAD_NATIVE .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin|djgpp|gccomf|clang"
+   ELSEIF lCMode .AND. hbmk[ _HBMK_nHEAD ] == _HEAD_NATIVE .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin|djgpp|gccomf|clang|open64"
 
       IF hbmk[ _HBMK_lDEBUGINC ]
          hbmk_OutStd( hb_StrFormat( "debuginc: Calling C compiler to detect dependencies of %1$s", cFileName ) )
@@ -5337,7 +5340,7 @@ STATIC FUNCTION ListCookLib( hbmk, aLIB, aLIBA, array, cPrefix, cExtNew )
    LOCAL cLibName
    LOCAL cLibNameCooked
 
-   IF hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|djgpp|cygwin|gccomf|clang"
+   IF hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|djgpp|cygwin|gccomf|clang|open64"
       FOR EACH cLibName IN array
          hb_FNameSplit( cLibName, @cDir )
          IF Empty( cDir )
@@ -7296,12 +7299,12 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword )
    ENDIF
 
    IF ( cKeyword == "unix"     .AND. ( hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|beos|linux" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" ) ) .OR. ;
-      ( cKeyword == "allwin"   .AND. hbmk[ _HBMK_cPLAT ] $ "win|wce"                                              ) .OR. ;
-      ( cKeyword == "allgcc"   .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin|djgpp|gccomf|clang" ) .OR. ;
-      ( cKeyword == "allmingw" .AND. hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"                               ) .OR. ;
-      ( cKeyword == "allmsvc"  .AND. hbmk[ _HBMK_cCOMP ] $ "msvc|msvc64|msvcia64|msvcarm"                         ) .OR. ;
-      ( cKeyword == "allpocc"  .AND. hbmk[ _HBMK_cCOMP ] $ "pocc|pocc64|poccarm"                                  ) .OR. ;
-      ( cKeyword == "allicc"   .AND. hbmk[ _HBMK_cCOMP ] $ "icc|iccia64"                                          )
+      ( cKeyword == "allwin"   .AND. hbmk[ _HBMK_cPLAT ] $ "win|wce"                                                     ) .OR. ;
+      ( cKeyword == "allgcc"   .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin|djgpp|gccomf|clang|open64" ) .OR. ;
+      ( cKeyword == "allmingw" .AND. hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"                                      ) .OR. ;
+      ( cKeyword == "allmsvc"  .AND. hbmk[ _HBMK_cCOMP ] $ "msvc|msvc64|msvcia64|msvcarm"                                ) .OR. ;
+      ( cKeyword == "allpocc"  .AND. hbmk[ _HBMK_cCOMP ] $ "pocc|pocc64|poccarm"                                         ) .OR. ;
+      ( cKeyword == "allicc"   .AND. hbmk[ _HBMK_cCOMP ] $ "icc|iccia64"                                                 )
       RETURN .T.
    ENDIF
 
@@ -7801,7 +7804,7 @@ STATIC PROCEDURE ShowHelp( lLong )
    LOCAL aText_Supp := {;
       "",;
       I_( "Supported <comp> values for each supported <plat> value:" ),;
-      "  - linux  : gcc, clang, icc, watcom, sunpro",;
+      "  - linux  : gcc, clang, icc, watcom, sunpro, open64",;
       "  - darwin : gcc, clang, icc",;
       "  - win    : mingw, msvc, bcc, watcom, icc, pocc, cygwin, xcc,",;
       "  -          mingw64, msvc64, msvcia64, iccia64, pocc64",;

@@ -445,6 +445,7 @@ HARBOUR
    watcom   - Open Watcom C/C++
    icc      - Intel(R) C/C++
    sunpro   - Sun Studio C/C++
+   open64   - Open64 C/C++
 
    darwin
    ------
@@ -1138,6 +1139,7 @@ HARBOUR
      linux  -> linux/clang   (CPU cross-builds possible)
      linux  -> linux/icc     (CPU cross-builds possible: x86, x86-64, ia64)
      linux  -> linux/sunpro  (CPU cross-builds possible: x86, x86-64)
+     linux  -> linux/open64  x86-64 (CPU cross-builds possible: ia64, ...)
    x linux  -> wce/mingwarm  arm
    x linux  -> wce/mingw     x86
    x linux  -> win/mingw     x86

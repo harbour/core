@@ -75,29 +75,39 @@ HB_FUNC( WIN_MAPISENDMAIL )
 
       if( MAPISendMail )
       {
-         HB_SIZE nLen, i;
-
          PHB_ITEM pFrom = hb_param( 8, HB_IT_ARRAY );
-         PHB_ITEM pToList = hb_param( 9, HB_IT_ARRAY );
+         PHB_ITEM pRecpList = hb_param( 9, HB_IT_ARRAY );
          PHB_ITEM pFileList = hb_param( 10, HB_IT_ARRAY );
 
-         void * hString[ 4 + 2 + 2 * 100 + 2 * 100 ];
+         HB_SIZE nRecpCount = pRecpList ? hb_arrayLen( pRecpList ) : 0;
+         HB_SIZE nFileCount = pFileList ? hb_arrayLen( pFileList ) : 0;
+         HB_SIZE i;
+
+         void ** hString;
          int iString = 0;
 
          MapiMessage note;
          MapiRecipDesc origin;
-         FLAGS flags = MAPI_LOGON_UI;
+         FLAGS flags;
 
          ZeroMemory( &note, sizeof( MapiMessage ) );
          ZeroMemory( &origin, sizeof( MapiRecipDesc ) );
+
+         hString = ( void ** ) hb_xgrab( ( 4 + 2 + ( 2 * nRecpCount ) + ( 2 * nFileCount ) ) * sizeof( void * ) );
 
          note.lpszSubject      = ( LPSTR ) HB_PARSTR( 1, &hString[ iString++ ], NULL );
          note.lpszNoteText     = ( LPSTR ) HB_PARSTR( 2, &hString[ iString++ ], NULL );
          note.lpszMessageType  = ( LPSTR ) HB_PARSTR( 3, &hString[ iString++ ], NULL );
          note.lpszDateReceived = ( LPSTR ) HB_PARSTRDEF( 4, &hString[ iString++ ], NULL );
+         note.lpRecips         = nRecpCount > 0 ? ( MapiRecipDesc * ) hb_xgrab( nRecpCount * sizeof( MapiRecipDesc ) ) : NULL;
+         note.lpFiles          = nFileCount > 0 ? ( MapiFileDesc * ) hb_xgrab( nFileCount * sizeof( MapiFileDesc ) ) : NULL;
+         note.nFileCount       = 0;
+         note.nRecipCount      = 0;
 
          if( hb_parl( 6 ) )
             note.flFlags |= MAPI_RECEIPT_REQUESTED;
+
+         flags = MAPI_LOGON_UI;
 
          if( hb_parl( 7 ) )
             flags |= MAPI_DIALOG;
@@ -113,78 +123,54 @@ HB_FUNC( WIN_MAPISENDMAIL )
             note.lpOriginator  = &origin;
          }
 
-         if( pToList && ( nLen = hb_arrayLen( pToList ) ) > 0 )
+         for( i = 0; i < nRecpCount; ++i )
          {
-            MapiRecipDesc recipList[ 100 ];
-            ULONG ulCount = 0;
+            PHB_ITEM pItem = hb_arrayGetItemPtr( pRecpList, i + 1 );
 
-            ZeroMemory( recipList, sizeof( recipList ) );
-
-            if( nLen >= HB_SIZEOFARRAY( recipList ) )
-               nLen = HB_SIZEOFARRAY( recipList );
-
-            for( i = 0; i < nLen; ++i )
+            if( HB_IS_ARRAY( pItem ) && hb_arrayLen( pItem ) >= 3 )
             {
-               PHB_ITEM pItem = hb_arrayGetItemPtr( pToList, i + 1 );
-
-               if( HB_IS_ARRAY( pItem ) && hb_arrayLen( pItem ) >= 3 )
+               if( hb_arrayGetCLen( pItem, 1 ) > 0 )
                {
-                  if( hb_arrayGetCLen( pItem, 1 ) > 0 )
-                  {
-                     recipList[ ulCount ].lpszName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 1, &hString[ iString++ ], NULL );
+                  note.lpRecips[ note.nRecipCount ].lpszName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 1, &hString[ iString++ ], NULL );
 
-                     if( hb_arrayGetCLen( pItem, 2 ) > 0 )
-                        recipList[ ulCount ].lpszAddress = ( LPSTR ) HB_ARRAYGETSTR( pItem, 2, &hString[ iString++ ], NULL );
-                  }
-                  else
-                     recipList[ ulCount ].lpszName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 2, &hString[ iString++ ], NULL );
-
-                  recipList[ ulCount ].ulRecipClass = ( ULONG ) hb_arrayGetNL( pItem, 3 );
-
-                  ++ulCount;
+                  if( hb_arrayGetCLen( pItem, 2 ) > 0 )
+                     note.lpRecips[ note.nRecipCount ].lpszAddress = ( LPSTR ) HB_ARRAYGETSTR( pItem, 2, &hString[ iString++ ], NULL );
                }
+               else
+                  note.lpRecips[ note.nRecipCount ].lpszName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 2, &hString[ iString++ ], NULL );
+
+               note.lpRecips[ note.nRecipCount ].ulRecipClass = ( ULONG ) hb_arrayGetNL( pItem, 3 );
+
+               ++note.nRecipCount;
             }
-
-            note.lpRecips    = recipList;
-            note.nRecipCount = ulCount;
          }
-         else
-            note.nRecipCount = 0;
 
-         if( pFileList && ( nLen = hb_arrayLen( pFileList ) ) > 0 )
+         for( i = 0; i < nFileCount; ++i )
          {
-            MapiFileDesc filedescList[ 100 ];
-            ULONG ulCount = 0;
+            PHB_ITEM pItem = hb_arrayGetItemPtr( pFileList, i + 1 );
 
-            ZeroMemory( filedescList, sizeof( filedescList ) );
-
-            if( nLen >= HB_SIZEOFARRAY( filedescList ) )
-               nLen = HB_SIZEOFARRAY( filedescList );
-
-            for( i = 0; i < nLen; ++i )
+            if( HB_IS_ARRAY( pItem ) && hb_arrayLen( pItem ) >= 1 )
             {
-               PHB_ITEM pItem = hb_arrayGetItemPtr( pFileList, i + 1 );
-
-               if( HB_IS_ARRAY( pItem ) && hb_arrayLen( pItem ) >= 1 )
-               {
-                  filedescList[ ulCount ].ulReserved   = 0;
-                  filedescList[ ulCount ].lpszFileName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 1, &hString[ iString++ ], NULL );
-                  filedescList[ ulCount ].lpszPathName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 2, &hString[ iString++ ], NULL );
-                  filedescList[ ulCount ].nPosition    = ( ULONG ) -1;
-                  ++ulCount;
-               }
+               note.lpFiles[ note.nFileCount ].ulReserved   = 0;
+               note.lpFiles[ note.nFileCount ].lpszFileName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 1, &hString[ iString++ ], NULL );
+               note.lpFiles[ note.nFileCount ].lpszPathName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 2, &hString[ iString++ ], NULL );
+               note.lpFiles[ note.nFileCount ].nPosition    = ( ULONG ) -1;
+               ++note.nFileCount;
             }
-
-            note.lpFiles    = filedescList;
-            note.nFileCount = ulCount;
          }
-         else
-            note.nFileCount = 0;
 
          hb_retnint( ( *MAPISendMail )( 0, ( ULONG_PTR ) GetActiveWindow(), &note, flags, 0 ) );
 
+         if( nRecpCount > 0 )
+            hb_xfree( note.lpRecips );
+
+         if( nFileCount > 0 )
+            hb_xfree( note.lpFiles );
+
          while( --iString >= 0 )
             hb_strfree( hString[ iString ] );
+
+         hb_xfree( hString );
       }
 
       FreeLibrary( hMapiDll );
