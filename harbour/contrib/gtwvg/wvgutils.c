@@ -1501,7 +1501,7 @@ HB_FUNC( WVT__GETOPENFILENAME )
    lpstrInitialDir = HB_PARTSTR( 6 );
    lpstrDefExt     = HB_PARTSTR( 7 );
 
-   ZeroMemory( &ofn, sizeof( ofn ) );
+   memset( &ofn, 0, sizeof( ofn ) );
 
    ofn.hInstance        = GetModuleHandle( NULL )  ;
    ofn.lStructSize      = sizeof( ofn );
@@ -1548,7 +1548,7 @@ HB_FUNC( WVT__GETSAVEFILENAME )
    lpstrInitialDir = HB_PARTSTR( 6 );
    lpstrDefExt     = HB_PARTSTR( 7 );
 
-   ZeroMemory( &ofn, sizeof( ofn ) );
+   memset( &ofn, 0, sizeof( ofn ) );
 
    ofn.hInstance       = GetModuleHandle( NULL );
    ofn.lStructSize     = sizeof( ofn );

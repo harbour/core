@@ -90,8 +90,8 @@ HB_FUNC( WIN_MAPISENDMAIL )
          MapiRecipDesc origin;
          FLAGS flags;
 
-         ZeroMemory( &note, sizeof( MapiMessage ) );
-         ZeroMemory( &origin, sizeof( MapiRecipDesc ) );
+         memset( &note, 0, sizeof( MapiMessage ) );
+         memset( &origin, 0, sizeof( MapiRecipDesc ) );
 
          hString = ( void ** ) hb_xgrab( ( 4 + 2 + ( 2 * nRecpCount ) + ( 2 * nFileCount ) ) * sizeof( void * ) );
 
@@ -103,6 +103,9 @@ HB_FUNC( WIN_MAPISENDMAIL )
          note.lpFiles          = nFileCount > 0 ? ( MapiFileDesc * ) hb_xgrab( nFileCount * sizeof( MapiFileDesc ) ) : NULL;
          note.nFileCount       = 0;
          note.nRecipCount      = 0;
+
+         memset( note.lpRecips, 0, nRecpCount * sizeof( MapiRecipDesc ) );
+         memset( note.lpRecips, 0, nFileCount * sizeof( MapiFileDesc  ) );
 
          if( hb_parl( 6 ) )
             note.flFlags |= MAPI_RECEIPT_REQUESTED;

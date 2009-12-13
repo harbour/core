@@ -82,9 +82,9 @@ HB_FUNC( WIN_RUNDETACHED )
    STARTUPINFO si;
    PROCESS_INFORMATION pi;
 
-   ZeroMemory( &si, sizeof( si ) );
+   memset( &si, 0, sizeof( si ) );
    si.cb = sizeof( si );
-   ZeroMemory( &pi, sizeof( pi ) );
+   memset( &pi, 0, sizeof( pi ) );
 #endif
 
    if( CreateProcess(
