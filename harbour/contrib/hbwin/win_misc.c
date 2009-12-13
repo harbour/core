@@ -186,17 +186,25 @@ HB_FUNC( WIN_GETCOMMANDLINEPARAM )
 HB_FUNC( WIN_ANSITOWIDE )
 {
    HB_SIZE nLen = hb_parclen( 1 );
-   BSTR wString = hb_mbntowc( hb_parcx( 1 ), nLen );
+   LPCSTR lpSrcMB = hb_parcx( 1 );
+   DWORD dwLength = MultiByteToWideChar( CP_ACP, 0, lpSrcMB, ( int ) nLen, NULL, 0 );
+   LPWSTR lpDstWide = ( LPWSTR ) hb_xgrab( ( dwLength + 1 ) * sizeof( wchar_t ) );
 
-   hb_retclen_buffer( ( char * ) wString, nLen * sizeof( wchar_t ) );
+   MultiByteToWideChar( CP_ACP, 0, lpSrcMB, ( int ) nLen, lpDstWide, dwLength + 1 );
+
+   hb_retclen_buffer( ( char * ) lpDstWide, dwLength * sizeof( wchar_t ) );
 }
 
 HB_FUNC( WIN_WIDETOANSI )
 {
    HB_SIZE nLen = hb_parclen( 1 );
-   char * cString = hb_wcntomb( ( wchar_t * ) hb_parcx( 1 ), nLen );
+   LPCWSTR lpSrcWide = ( LPCWSTR ) hb_parcx( 1 );
+   DWORD dwLength = WideCharToMultiByte( CP_ACP, 0, lpSrcWide, ( int ) nLen, NULL, 0, NULL, NULL ) / sizeof( wchar_t );
+   LPSTR lpDstMB = ( LPSTR ) hb_xgrab( dwLength + 1 );
 
-   hb_retclen_buffer( cString, nLen / sizeof( wchar_t ) );
+   WideCharToMultiByte( CP_ACP, 0, lpSrcWide, ( int ) nLen, lpDstMB, dwLength + 1, NULL, NULL );
+
+   hb_retclen_buffer( lpDstMB, ( HB_SIZE ) dwLength );
 }
 
 HB_FUNC( WIN_N2P )
