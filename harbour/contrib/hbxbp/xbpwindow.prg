@@ -767,11 +767,10 @@ METHOD XbpWindow:destroy()
       hbxbp_ClearEventBuffer()
       Qt_Slots_Destroy()
       Qt_Events_Destroy()
-      Qt_HBQMainWindow_Destroy( QT_PTROF( ::oWidget ) )
-   ELSE
-      ::oWidget:pPtr := 0
-      ::oWidget := NIL
    ENDIF
+
+   ::oWidget:pPtr := 0
+   ::oWidget := NIL
 
 //HBXBP_DEBUG( hb_threadId(),"          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
 

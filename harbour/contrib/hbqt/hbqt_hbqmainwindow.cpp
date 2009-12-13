@@ -6,8 +6,6 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
- *
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
  *
@@ -331,22 +329,6 @@ void HBQMainWindow::closeEvent( QCloseEvent * event )
 #endif
 }
 
-HB_FUNC( QT_HBQMAINWINDOW )
-{
-#if defined( _HBQT_MAINWINDOW_MUTEX )
-   if( s_mutex == NULL )
-      s_mutex = hb_threadMutexCreate();
-#endif
-
-   hb_retptr( ( HBQMainWindow * ) new HBQMainWindow( hb_itemNew( hb_param( 1, HB_IT_BLOCK ) ), hb_parni( 2 ) ) );
-}
-
-/* TOFIX: Leak if .prg code doesn't call this explicitly. */
-HB_FUNC( QT_HBQMAINWINDOW_DESTROY )
-{
-   hbqt_par_HBQMainWindow( 1 )->~HBQMainWindow();
-}
-
 static void hbqt_hbqmainwindow_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
@@ -368,6 +350,76 @@ static void hbqt_hbqmainwindow_exit( void * cargo )
       s_mutex = NULL;
    }
 #endif
+}
+
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< HBQMainWindow > pq;
+} QGC_POINTER_HBQMainWindow;
+
+QT_G_FUNC( release_HBQMainWindow )
+{
+   QGC_POINTER_HBQMainWindow * p = ( QGC_POINTER_HBQMainWindow * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_HBQMainWindow                  p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_HBQMainWindow                 ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
+   {
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+      if( ( QString ) m->className() != ( QString ) "QObject" )
+      {
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( HBQMainWindow * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( HBQMainWindow * ) p->ph )->~HBQMainWindow();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( HBQMainWindow * ) p->ph )->deleteLater();
+            break;
+         }
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_HBQMainWindow                 Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_HBQMainWindow                 Object Name Missing!" ) );
+      }
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_HBQMainWindow                 Object Already deleted!" ) );
+   }
+}
+
+void * gcAllocate_HBQMainWindow( void * pObj )
+{
+   QGC_POINTER_HBQMainWindow * p = ( QGC_POINTER_HBQMainWindow * ) hb_gcAllocate( sizeof( QGC_POINTER_HBQMainWindow ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_HBQMainWindow;
+   new( & p->pq ) QPointer< HBQMainWindow >( ( HBQMainWindow * ) pObj );
+   HB_TRACE( HB_TR_DEBUG, ( "          new_HBQMainWindow                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   return( p );
+}
+
+HB_FUNC( QT_HBQMAINWINDOW )
+{
+#if defined( _HBQT_MAINWINDOW_MUTEX )
+   if( s_mutex == NULL )
+      s_mutex = hb_threadMutexCreate();
+#endif
+
+   void * pObj = NULL;
+
+   pObj = ( HBQMainWindow * ) new HBQMainWindow( hb_itemNew( hb_param( 1, HB_IT_BLOCK ) ), hb_parni( 2 ) );
+
+   hb_retptrGC( gcAllocate_HBQMainWindow( pObj ) );
 }
 
 HB_FUNC( HB_QT ) {;}
