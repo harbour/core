@@ -298,7 +298,19 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                 */
             case 'i':
             case 'I':
-               hb_pp_addSearchPath( HB_COMP_PARAM->pLex->pPP, s + 1, FALSE );
+               switch( *( s + 1 ) )
+               {
+                  case '-':
+                     HB_COMP_PARAM->fINCLUDE = FALSE;
+                     break;
+
+                  case '+':
+                     HB_COMP_PARAM->fINCLUDE = TRUE;
+                     break;
+
+                  default:
+                     hb_pp_addSearchPath( HB_COMP_PARAM->pLex->pPP, s + 1, FALSE );
+               }
                break;
 
             case 'j':

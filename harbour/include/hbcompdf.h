@@ -719,6 +719,7 @@ typedef struct _HB_COMP
    BOOL              fError;              /* error appeared during compilation */
    BOOL              fNoArchDefs;         /* do not define architecture dependent macros: __PLATFORM__*, __ARCH??BIT__, __*_ENDIAN__ */
    BOOL              fMeaningful;         /* do not generate warnings about meaningless expression usage */
+   BOOL              fINCLUDE;            /* use INCLUDE envvar as header path (default) */
 }
 HB_COMP, * HB_COMP_PTR;
 

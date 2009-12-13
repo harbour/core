@@ -231,6 +231,7 @@ HB_COMP_PTR hb_comp_new( void )
       pComp->fLogo            = TRUE;     /* print logo */
       pComp->fSingleModule    = FALSE;
       pComp->fError           = FALSE;
+      pComp->fINCLUDE         = TRUE;
 
       pComp->iSyntaxCheckOnly = 0;        /* syntax check only */
       pComp->iStartProc       = 0;        /* no implicit starting procedure */

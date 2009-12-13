@@ -113,7 +113,8 @@ int hb_compMain( int argc, const char * const argv[],
       }
 
       /* Set Search Path */
-      hb_compChkPaths( HB_COMP_PARAM );
+      if( HB_COMP_PARAM->fINCLUDE )
+         hb_compChkPaths( HB_COMP_PARAM );
 
       /* Set standard rules */
       hb_compInitPP( HB_COMP_PARAM, argc, argv );

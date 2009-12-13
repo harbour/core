@@ -79,6 +79,7 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
            "\n          %cgh              output type: Harbour Portable Object (.hrb)",
            "\n          %cgd[.<destext>]  generate dependencies list into (.d) file",
            "\n          %ci<path>         #include file search path",
+           "\n          %ci[-|+]          disable/enable support for INCLUDE envvar",
            "\n          %cj[<file>]       generate i18n gettext file (.pot)",
            "\n          %ck               compilation mode (type -k? for more data)",
            "\n          %cl               suppress line number information",
