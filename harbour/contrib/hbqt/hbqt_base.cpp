@@ -82,13 +82,9 @@ HB_FUNC( HBQT_ISEQUALGCQTPOINTER )
    QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( gcFuncs(), 1 );
 
    if( p && p->ph )
-   {
       hb_retl( p->ph == hb_parptr( 2 ) );
-   }
    else
-   {
       hb_retl( false );
-   }
 }
 
 #if defined( HB_OS_WIN )
@@ -98,7 +94,7 @@ HB_FUNC( HBQT_ISEQUALGCQTPOINTER )
 int hbqt_getmemused( void )
 {
 #if defined( HB_OS_WIN )
-#if (_WIN32_WINNT >= 0x0501)
+#if _WIN32_WINNT >= 0x0501
 #ifdef __GNUC__
 // MingW32 doesn't have this struct in psapi.h
 typedef struct _PROCESS_MEMORY_COUNTERS_EX
@@ -114,14 +110,14 @@ typedef struct _PROCESS_MEMORY_COUNTERS_EX
    SIZE_T PagefileUsage;
    SIZE_T PeakPagefileUsage;
    SIZE_T PrivateUsage;
-}PROCESS_MEMORY_COUNTERS_EX, *PPROCESS_MEMORY_COUNTERS_EX;
+} PROCESS_MEMORY_COUNTERS_EX, * PPROCESS_MEMORY_COUNTERS_EX;
 #endif
 #endif
 #endif
    int size = 0;
 #if defined( HB_OS_WIN )
    HANDLE hProcess;
-#if (_WIN32_WINNT >= 0x0501)
+#if _WIN32_WINNT >= 0x0501
    PROCESS_MEMORY_COUNTERS_EX pmc;
 #else
    PROCESS_MEMORY_COUNTERS pmc;
@@ -130,9 +126,9 @@ typedef struct _PROCESS_MEMORY_COUNTERS_EX
    if( hProcess == NULL )
       return 0;
 
-   pmc.cb = sizeof(pmc);
-   if( GetProcessMemoryInfo( hProcess, (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof( pmc ) ) )
-#if (_WIN32_WINNT >= 0x0501)
+   pmc.cb = sizeof( pmc );
+   if( GetProcessMemoryInfo( hProcess, ( PROCESS_MEMORY_COUNTERS * ) &pmc, sizeof( pmc ) ) )
+#if _WIN32_WINNT >= 0x0501
       size = ( int ) pmc.PrivateUsage / 1024;
 #else
       size = ( int ) pmc.WorkingSetSize / 1024;

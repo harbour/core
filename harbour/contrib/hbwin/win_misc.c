@@ -192,7 +192,7 @@ HB_FUNC( WIN_ANSITOWIDE )
 
    MultiByteToWideChar( CP_ACP, 0, lpSrcMB, ( int ) nLen, lpDstWide, dwLength + 1 );
 
-   hb_retclen_buffer( ( char * ) lpDstWide, dwLength * sizeof( wchar_t ) );
+   hb_retclen_buffer( ( char * ) lpDstWide, ( HB_SIZE ) ( dwLength * sizeof( wchar_t ) ) );
 }
 
 HB_FUNC( WIN_WIDETOANSI )

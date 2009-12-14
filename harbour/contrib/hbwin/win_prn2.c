@@ -6,6 +6,7 @@
  * Harbour Project source code:
  * Harbour Windows Printing support functions
  *
+ * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
  * Copyright 2002 Luiz Rafael Culik <culikr@uol.com.br>
  * www - http://www.harbour-project.org
  *
@@ -70,7 +71,7 @@
 
 #define _ENUMPRN_FLAGS_             ( PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS )
 
-#define MAXBUFFERSIZE 255
+#define MAXBUFFERSIZE 256
 
 static HB_BOOL hb_IsLegacyDevice( const char * pszPrinterName )
 {
@@ -107,15 +108,18 @@ HB_FUNC( WIN_PRINTEREXISTS )
 
             if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) pPrinterEnum, dwNeeded, &dwNeeded, &dwReturned ) )
             {
+               PHB_ITEM pTemp = hb_itemNew( NULL );
                DWORD i;
 
                for( i = 0; ! bResult && i < dwReturned; ++i, ++pPrinterEnum )
                {
-                  char * pszData = HB_TCHAR_CONVFROM( pPrinterEnum->pPrinterName );
-                  bResult = ( strcmp( pszPrinterName, pszData ) == 0 );
-                  HB_TCHAR_FREE( pszData );
+                  HB_ITEMPUTSTR( pTemp, pPrinterEnum->pPrinterName );
+                  bResult = ( strcmp( pszPrinterName, hb_itemGetCPtr( pTemp ) ) == 0 );
                }
+
+               hb_itemRelease( pTemp );
             }
+
             hb_xfree( pPrinterEnumBak );
          }
       }
@@ -124,125 +128,100 @@ HB_FUNC( WIN_PRINTEREXISTS )
    hb_retl( bResult );
 }
 
-static HB_BOOL hb_GetDefaultPrinter( char * pszPrinterName, HB_SIZE * pnBufferSize )
+static void hb_GetDefaultPrinter( PHB_ITEM pPrinterName )
 {
    HB_BOOL bResult = HB_FALSE;
+   OSVERSIONINFO osvi;
 
-   if( pszPrinterName && pnBufferSize )
+   hb_itemPutC( pPrinterName, NULL );
+
+   osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
+   GetVersionEx( &osvi );
+
+   if( osvi.dwPlatformId == VER_PLATFORM_WIN32_NT && osvi.dwMajorVersion >= 5 ) /* Windows 2000 or later */
    {
-      OSVERSIONINFO osvi;
+      typedef BOOL( WINAPI * DEFPRINTER ) ( LPTSTR, LPDWORD );
+      DEFPRINTER fnGetDefaultPrinter;
+      HMODULE hWinSpool = LoadLibrary( TEXT( "winspool.drv" ) );
 
-      pszPrinterName[ 0 ] = '\0';
-
-      osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
-      GetVersionEx( &osvi );
-
-      if( osvi.dwPlatformId == VER_PLATFORM_WIN32_NT && osvi.dwMajorVersion >= 5 ) /* Windows 2000 or later */
+      if( hWinSpool )
       {
-         typedef BOOL( WINAPI * DEFPRINTER ) ( LPTSTR, LPDWORD );
-         DEFPRINTER fnGetDefaultPrinter;
-         HMODULE hWinSpool = LoadLibrary( TEXT( "winspool.drv" ) );
-
-         if( hWinSpool )
-         {
-            fnGetDefaultPrinter = ( DEFPRINTER ) GetProcAddress( hWinSpool,
+         fnGetDefaultPrinter = ( DEFPRINTER ) GetProcAddress( hWinSpool,
 #if defined( UNICODE )
-               "GetDefaultPrinterW" );
+             "GetDefaultPrinterW" );
 #else
-               "GetDefaultPrinterA" );
+             "GetDefaultPrinterA" );
 #endif
 
-            if( fnGetDefaultPrinter )
-            {
-               LPTSTR lpPrinterName = ( LPTSTR ) hb_xgrab( *pnBufferSize * sizeof( TCHAR ) );
-
-               bResult = ( *fnGetDefaultPrinter )( lpPrinterName, pnBufferSize );
-
-               HB_TCHAR_GETFROM( pszPrinterName, lpPrinterName, *pnBufferSize );
-
-               hb_xfree( lpPrinterName );
-            }
-
-            FreeLibrary( hWinSpool );
-         }
-      }
-
-      if( ! bResult ) /* Win9x and Windows NT 4.0 or earlier & 2000+ if necessary for some reason i.e. dll could not load! */
-      {
-         LPTSTR lpPrinterName = ( LPTSTR ) hb_xgrab( *pnBufferSize * sizeof( TCHAR ) );
-
-         DWORD dwSize = GetProfileString( TEXT( "windows" ), TEXT( "device" ), TEXT( "" ), lpPrinterName, ( DWORD ) *pnBufferSize );
-
-         HB_TCHAR_GETFROM( pszPrinterName, lpPrinterName, *pnBufferSize );
-
-         hb_xfree( lpPrinterName );
-
-         if( dwSize && dwSize < *pnBufferSize )
+         if( fnGetDefaultPrinter )
          {
-            dwSize = 0;
-            while( pszPrinterName[ dwSize ] != '\0' && pszPrinterName[ dwSize ] != ',' )
-               dwSize++;
+            TCHAR lpPrinterName[ MAXBUFFERSIZE ];
+            DWORD dwSize = HB_SIZEOFARRAY( lpPrinterName ) - 1;
 
-            pszPrinterName[ dwSize ] = '\0';
-            *pnBufferSize = dwSize + 1;
-            bResult = HB_TRUE;
+            bResult = ( *fnGetDefaultPrinter )( lpPrinterName, &dwSize );
+
+            HB_ITEMPUTSTR( pPrinterName, lpPrinterName );
          }
-         else
-            *pnBufferSize = dwSize + 1;
-      }
 
-      if( ! bResult && osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
+         FreeLibrary( hWinSpool );
+      }
+   }
+
+   if( ! bResult ) /* Win9x and Windows NT 4.0 or earlier & 2000+ if necessary for some reason i.e. dll could not load! */
+   {
+      TCHAR lpPrinterName[ MAXBUFFERSIZE ];
+
+      DWORD dwSize = GetProfileString( TEXT( "windows" ), TEXT( "device" ), TEXT( "" ), lpPrinterName, ( DWORD ) HB_SIZEOFARRAY( lpPrinterName ) - 1 );
+
+      if( dwSize && dwSize < HB_SIZEOFARRAY( lpPrinterName ) )
       {
-/*
-         This option should never be required but is included because of this article
-             http://support.microsoft.com/kb/246772/en-us
+         dwSize = 0;
+         while( lpPrinterName[ dwSize ] != '\0' && lpPrinterName[ dwSize ] != ',' )
+            dwSize++;
+         lpPrinterName[ dwSize ] = '\0';
+
+         bResult = HB_TRUE;
+
+         HB_ITEMPUTSTRLEN( pPrinterName, lpPrinterName, dwSize );
+      }
+   }
+
+   if( ! bResult && osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
+   {
+      /* This option should never be required but is included because of this article
+            http://support.microsoft.com/kb/246772/en-us
 
          This option will not enumerate any network printers.
 
          From the SDK technical reference for EnumPrinters();
+            If Level is 2 or 5, Name is a pointer to a null-terminated string that specifies
+            the name of a server whose printers are to be enumerated.
+            If this string is NULL, then the function enumerates the printers installed on the local machine.
+      */
+      DWORD dwNeeded = 0, dwReturned = 0;
 
-         If Level is 2 or 5, Name is a pointer to a null-terminated string that specifies
-         the name of a server whose printers are to be enumerated.
-         If this string is NULL, then the function enumerates the printers installed on the local machine.
-*/
-
-         DWORD dwNeeded = 0, dwReturned = 0;
-
-         if( EnumPrinters( PRINTER_ENUM_DEFAULT, NULL, 2, NULL, 0, &dwNeeded, &dwReturned ) )
+      if( EnumPrinters( PRINTER_ENUM_DEFAULT, NULL, 2, NULL, 0, &dwNeeded, &dwReturned ) )
+      {
+         if( dwNeeded )
          {
-            if( dwNeeded )
-            {
-               PRINTER_INFO_2 * pPrinterInfo = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
+            PRINTER_INFO_2 * pPrinterInfo = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
 
-               if( EnumPrinters( PRINTER_ENUM_DEFAULT, NULL, 2, ( LPBYTE ) pPrinterInfo, dwNeeded, &dwNeeded, &dwReturned ) && dwReturned )
-               {
-                  DWORD dwSize = ( DWORD ) lstrlen( pPrinterInfo->pPrinterName );
+            if( EnumPrinters( PRINTER_ENUM_DEFAULT, NULL, 2, ( LPBYTE ) pPrinterInfo, dwNeeded, &dwNeeded, &dwReturned ) && dwReturned )
+               HB_ITEMPUTSTR( pPrinterName, pPrinterInfo->pPrinterName );
 
-                  if( dwSize && dwSize < *pnBufferSize )
-                  {
-                     HB_TCHAR_GETFROM( pszPrinterName, pPrinterInfo->pPrinterName, lstrlen( pPrinterInfo->pPrinterName ) );
-                     *pnBufferSize = dwSize + 1;
-                     bResult = HB_TRUE;
-                  }
-               }
-               hb_xfree( pPrinterInfo );
-            }
+            hb_xfree( pPrinterInfo );
          }
       }
    }
-
-   return bResult;
 }
 
 HB_FUNC( WIN_PRINTERGETDEFAULT )
 {
-   char szDefaultPrinter[ MAXBUFFERSIZE ];
-   HB_SIZE nBufferSize = sizeof( szDefaultPrinter );
+   PHB_ITEM pPrinterName = hb_itemNew( NULL );
 
-   if( hb_GetDefaultPrinter( szDefaultPrinter, &nBufferSize ) )
-      hb_retclen( szDefaultPrinter, nBufferSize - 1 );
-   else
-      hb_retc_null();
+   hb_GetDefaultPrinter( pPrinterName );
+
+   hb_itemReturnRelease( pPrinterName );
 }
 
 static HB_BOOL hb_GetJobs( HANDLE hPrinter, JOB_INFO_2 ** ppJobInfo, long * plJobs )
@@ -283,23 +262,19 @@ static HB_BOOL hb_GetJobs( HANDLE hPrinter, JOB_INFO_2 ** ppJobInfo, long * plJo
 
 HB_FUNC( WIN_PRINTERSTATUS )
 {
-   char szDefaultPrinter[ MAXBUFFERSIZE ];
-   HB_SIZE nBufferSize = sizeof( szDefaultPrinter );
-   const char * pszPrinterName = hb_parc( 1 );
+   PHB_ITEM pPrinterName = hb_itemParam( 1 );
    long nStatus = -1;
 
-   if( hb_parclen( 1 ) == 0 )
-   {
-      hb_GetDefaultPrinter( szDefaultPrinter, &nBufferSize );
-      pszPrinterName = szDefaultPrinter;
-   }
+   if( hb_itemGetCLen( pPrinterName ) == 0 )
+      hb_GetDefaultPrinter( pPrinterName );
 
-   if( *pszPrinterName )
+   if( hb_itemGetCLen( pPrinterName ) )
    {
-      LPTSTR lpPrinterName = HB_TCHAR_CONVTO( pszPrinterName );
+      void * hPrinterName;
+      LPCTSTR lpPrinterName = HB_ITEMGETSTR( pPrinterName, &hPrinterName, NULL );
       HANDLE hPrinter;
 
-      if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) )
+      if( OpenPrinter( ( LPTSTR ) lpPrinterName, &hPrinter, NULL ) )
       {
          DWORD dwByteNeeded = 0;
 
@@ -342,7 +317,7 @@ HB_FUNC( WIN_PRINTERSTATUS )
          CloseHandle( hPrinter );
       }
 
-      HB_TCHAR_FREE( lpPrinterName );
+      hb_strfree( hPrinterName );
    }
 
    hb_retnl( nStatus );
@@ -355,9 +330,6 @@ HB_FUNC( WIN_PRINTERPORTTONAME )
 
    if( hb_parclen( 1 ) > 0 )
    {
-      const char * pszPortNameFind = hb_parc( 1 );
-      HB_BOOL bSubStr = hb_parl( 2 );
-
       DWORD dwNeeded = 0, dwReturned = 0;
 
       EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) NULL, 0, &dwNeeded, &dwReturned );
@@ -368,27 +340,26 @@ HB_FUNC( WIN_PRINTERPORTTONAME )
 
          if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) pPrinterEnum, dwNeeded, &dwNeeded, &dwReturned ) )
          {
+            const char * pszPortNameFind = hb_parc( 1 );
+            HB_BOOL bSubStr = hb_parl( 2 );
             HB_BOOL bFound = HB_FALSE;
+            PHB_ITEM pTemp = hb_itemNew( NULL );
             DWORD i;
 
             for( i = 0; i < dwReturned && ! bFound; ++i, ++pPrinterEnum )
             {
-               char * pszPortName = HB_TCHAR_CONVFROM( pPrinterEnum->pPortName );
+               HB_ITEMPUTSTR( pTemp, pPrinterEnum->pPortName );
 
                if( bSubStr )
-                  bFound = ( hb_strnicmp( pszPortName, pszPortNameFind, ( HB_SIZE ) strlen( pszPortNameFind ) ) == 0 );
+                  bFound = ( hb_strnicmp( hb_itemGetCPtr( pTemp ), pszPortNameFind, ( HB_SIZE ) strlen( pszPortNameFind ) ) == 0 );
                else
-                  bFound = ( hb_stricmp( pszPortName, pszPortNameFind ) == 0 );
-
-               HB_TCHAR_FREE( pszPortName );
+                  bFound = ( hb_stricmp( hb_itemGetCPtr( pTemp ), pszPortNameFind ) == 0 );
 
                if( bFound )
-               {
-                  char * pszPrinterName = HB_TCHAR_CONVFROM( pPrinterEnum->pPrinterName );
-                  hb_retc( pszPrinterName );
-                  HB_TCHAR_FREE( pszPrinterName );
-               }
+                  HB_RETSTR( pPrinterEnum->pPrinterName );
             }
+
+            hb_itemRelease( pTemp );
          }
 
          hb_xfree( pPrinterEnumBak );
