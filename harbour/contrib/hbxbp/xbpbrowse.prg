@@ -719,24 +719,24 @@ METHOD XbpBrowse:destroy()
    ::oVScrollBar:pPtr         := 0
 
    ::oLeftView:destroy()
-   ::oLeftDbfModel:destroy()
+   ::oLeftDbfModel:pPtr       := 0
    ::oLeftVHeaderView:pPtr    := 0
    ::oLeftHeaderView:pPtr     := 0
    ::oLeftFooterView:pPtr     := 0
-   ::oLeftFooterModel:destroy()
+   ::oLeftFooterModel:pPtr    := 0
 
    ::oRightView:destroy()
    ::oRightHeaderView:pPtr    := 0
-   ::oRightDbfModel:destroy()
+   ::oRightDbfModel:pPtr      := 0
    ::oRightFooterView:pPtr    := 0
-   ::oRightFooterModel:destroy()
+   ::oRightFooterModel:pPtr   := 0
 
    ::oTableView:destroy()
    ::oVHeaderView:pPtr        := 0
-   ::oDbfModel:destroy()
+   ::oDbfModel:pPtr           := 0
 
    ::oFooterView:pPtr         := 0
-   ::oFooterModel:destroy()
+   ::oFooterModel:pPtr        := 0
 
    ::oGridLayout:pPtr         := 0
 

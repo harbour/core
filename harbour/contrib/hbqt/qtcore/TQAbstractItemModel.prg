@@ -256,7 +256,6 @@ CREATE CLASS HBDbfModel INHERIT QAbstractItemModel
    METHOD reset()
    METHOD index( nRow, nCol )
    METHOD hbSetRowColumns( nRows, nCols )
-   METHOD destroy()
 
    ENDCLASS
 
@@ -272,8 +271,5 @@ METHOD HBDbfModel:index( nRow, nCol )
 
 METHOD HBDbfModel:hbSetRowColumns( nRows, nCols )
    RETURN Qt_HBDbfModel_hbSetRowColumns( ::pPtr, nRows, nCols )
-
-METHOD HBDbfModel:destroy()
-   RETURN Qt_HBDbfModel_destroy( ::pPtr )
 
 

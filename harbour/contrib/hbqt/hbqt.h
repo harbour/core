@@ -377,9 +377,10 @@ extern int hbqt_getmemused( void );
 #define hbqt_par_QWizardPage( n )                   ( ( QWizardPage                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QWSEvent( n )                      ( ( QWSEvent                    * ) hbqt_gcpointer( n ) )
 
-#define hbqt_par_HBDbfModel( n )                    ( ( HBDbfModel* ) hb_parptr( n ) )
+#define hbqt_par_HBDbfModel( n )                    ( ( HBDbfModel                  * ) hbqt_gcpointer( n ) )
+#define hbqt_par_HBQMainWindow( n )                 ( ( HBQMainWindow               * ) hbqt_gcpointer( n ) )
+
 #define hbqt_par_HBQTableView( n )                  ( ( HBQTableView* ) hb_parptr( n ) )
-#define hbqt_par_HBQMainWindow( n )                 ( ( HBQMainWindow* ) hb_parptr( n ) )
 
 #define hbqt_par_QString( n )                       ( ( QString ) hb_parcx( n ) )
 #define hbqt_par_QRgb( n )                          ( hb_parnint( n ) )
@@ -390,6 +391,10 @@ extern int hbqt_getmemused( void );
 #define hbqt_ret_QAbstractItemDelegate( p )         ( hb_retptr( ( QAbstractItemDelegate* ) p ) )
 #define hbqt_ret_QAbstractItemModel( p )            ( hb_retptr( ( QAbstractItemModel* ) p ) )
 #define hbqt_ret_QPrinter( p )                      ( hb_retptr( ( QPrinter* ) p ) )
+
+/* Declarations which will not be generated auto */
+extern QT_G_FUNC( release_HBDbfModel );
+extern void * gcAllocate_HBDbfModel( void * pObj );
 
 #endif
 
