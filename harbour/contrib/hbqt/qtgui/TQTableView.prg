@@ -304,7 +304,6 @@ CREATE CLASS HBQTableView INHERIT QTableView
 
    METHOD new( pParent )
    METHOD navigate( nCursorAction, nModifiers )
-   METHOD destroy()
 
    ENDCLASS
 
@@ -314,8 +313,5 @@ METHOD HBQTableView:new( pParent )
 
 METHOD HBQTableView:navigate( nCursorAction, nModifiers )
    RETURN Qt_HBQTableView_navigate( ::pPtr, nCursorAction, nModifiers )
-
-METHOD HBQTableView:destroy()
-   RETURN Qt_HBQTableView_destroy( ::pPtr )
 
 

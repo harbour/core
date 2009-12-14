@@ -64,7 +64,6 @@ CREATE CLASS HBQTableView INHERIT QTableView
 
    METHOD new( pParent )
    METHOD navigate( nCursorAction, nModifiers )
-   METHOD destroy()
 
    ENDCLASS
 
@@ -74,9 +73,6 @@ METHOD HBQTableView:new( pParent )
 
 METHOD HBQTableView:navigate( nCursorAction, nModifiers )
    RETURN Qt_HBQTableView_navigate( ::pPtr, nCursorAction, nModifiers )
-
-METHOD HBQTableView:destroy()
-   RETURN Qt_HBQTableView_destroy( ::pPtr )
 
 </SUBCLASS>
 
@@ -92,22 +88,6 @@ METHOD HBQTableView:destroy()
 HB_FUNC( QT_QTABLEVIEW )
 {
    hb_retptr( ( QTableView* ) new QTableView( hbqt_par_QWidget( 1 ) ) );
-}
-
-HB_FUNC( QT_HBQTABLEVIEW )
-{
-   hb_retptr( new HBQTableView( hbqt_par_QWidget( 1 ) ) );
-}
-
-HB_FUNC( QT_HBQTABLEVIEW_NAVIGATE )
-{
-   hb_retptr( new QModelIndex( hbqt_par_HBQTableView( 1 )->navigate( hb_parni( 2 ) ) ) );
-}
-
-/* TOFIX: Leak if .prg code doesn't call this explicitly. */
-HB_FUNC( QT_HBQTABLEVIEW_DESTROY )
-{
-   hbqt_par_HBQTableView( 1 )->~HBQTableView();
 }
 
 </CODE>

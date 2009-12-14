@@ -77,22 +77,6 @@
  * ~QTableView ()
  */
 
-HB_FUNC( QT_HBQTABLEVIEW )
-{
-   hb_retptr( new HBQTableView( hbqt_par_QWidget( 1 ) ) );
-}
-
-HB_FUNC( QT_HBQTABLEVIEW_NAVIGATE )
-{
-   hb_retptr( new QModelIndex( hbqt_par_HBQTableView( 1 )->navigate( hb_parni( 2 ) ) ) );
-}
-
-/* TOFIX: Leak if .prg code doesn't call this explicitly. */
-HB_FUNC( QT_HBQTABLEVIEW_DESTROY )
-{
-   hbqt_par_HBQTableView( 1 )->~HBQTableView();
-}
-
 
 typedef struct
 {
@@ -126,16 +110,25 @@ QT_G_FUNC( release_QTableView )
             break;
          }
          p->ph = NULL;
-         HB_TRACE( HB_TR_DEBUG, ( "release_QTableView                  Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTableView                  Object deleted!" ) );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  YES release_QTableView                  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
+         #endif
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "NO release_QTableView                  Object Name Missing!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "release_QTableView                  Object Name Missing!" ) );
+         #if defined( __HB_DEBUG__ )
+            hbqt_debug( "  NO  release_QTableView" );
+         #endif
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "DEL release_QTableView                  Object Already deleted!" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "release_QTableView                  Object Allready deleted!" ) );
+      #if defined( __HB_DEBUG__ )
+         hbqt_debug( "  DEL release_QTableView" );
+      #endif
    }
 }
 
@@ -146,7 +139,9 @@ void * gcAllocate_QTableView( void * pObj )
    p->ph = pObj;
    p->func = release_QTableView;
    new( & p->pq ) QPointer< QTableView >( ( QTableView * ) pObj );
-   HB_TRACE( HB_TR_DEBUG, ( "          new_QTableView                  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   #if defined( __HB_DEBUG__ )
+      hbqt_debug( "          new_QTableView                  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() );
+   #endif
    return( p );
 }
 

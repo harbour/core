@@ -59,6 +59,7 @@
 
 #if QT_VERSION >= 0x040500
 
+#include <QPointer>
 #include "hbqt_hbqtableview.h"
 
 HBQTableView::HBQTableView( QWidget * parent ) : QTableView( parent )
@@ -67,11 +68,6 @@ HBQTableView::HBQTableView( QWidget * parent ) : QTableView( parent )
 
 HBQTableView::~HBQTableView()
 {
-   HB_TRACE( HB_TR_DEBUG, ( "HBQTableView::~HBQTableView: BEGIN %i %i", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
-
-   destroy();
-
-   HB_TRACE( HB_TR_DEBUG, ( "HBQTableView::~HBQTableView: END %i %i", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
 }
 
 void HBQTableView::keyPressEvent( QKeyEvent * event )
@@ -112,8 +108,6 @@ void HBQTableView::resizeEvent( QResizeEvent * event )
 QModelIndex HBQTableView::moveCursor( HBQTableView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers )
 {
 // HB_TRACE( HB_TR_DEBUG, ( "HBQTableView::moveCursor( action=%i %i )", cursorAction, QAbstractItemView::MoveDown ) );
-
-   //emit sg_moveCursor( cursorAction, modifiers );
    return QTableView::moveCursor( cursorAction, modifiers );
 }
 
@@ -132,6 +126,76 @@ void HBQTableView::scrollTo( const QModelIndex & index, QAbstractItemView::Scrol
 // HB_TRACE( HB_TR_DEBUG, ( "HBQTableView::scrollTo( row = %i col = %i )", index.row(), index.column() ) );
 
    QTableView::scrollTo( index, hint );
+}
+
+typedef struct
+{
+  void * ph;
+  QT_G_FUNC_PTR func;
+  QPointer< HBQTableView > pq;
+} QGC_POINTER_HBQTableView;
+
+QT_G_FUNC( release_HBQTableView )
+{
+   QGC_POINTER_HBQTableView * p = ( QGC_POINTER_HBQTableView * ) Cargo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "release_HBQTableView                   p=%p", p));
+   HB_TRACE( HB_TR_DEBUG, ( "release_HBQTableView                  ph=%p pq=%p", p->ph, (void *)(p->pq)));
+
+   if( p && p->ph && p->pq )
+   {
+      const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+      if( ( QString ) m->className() != ( QString ) "QObject" )
+      {
+         switch( hbqt_get_object_release_method() )
+         {
+         case HBQT_RELEASE_WITH_DELETE:
+            delete ( ( HBQTableView * ) p->ph );
+            break;
+         case HBQT_RELEASE_WITH_DESTRUTOR:
+            ( ( HBQTableView * ) p->ph )->~HBQTableView();
+            break;
+         case HBQT_RELEASE_WITH_DELETE_LATER:
+            ( ( HBQTableView * ) p->ph )->deleteLater();
+            break;
+         }
+         p->ph = NULL;
+         HB_TRACE( HB_TR_DEBUG, ( "release_HBQTableView                  Object deleted! %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "NO release_HBQTableView                  Object Name Missing!" ) );
+      }
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "DEL release_HBQTableView                  Object Already deleted!" ) );
+   }
+}
+
+void * gcAllocate_HBQTableView( void * pObj )
+{
+   QGC_POINTER_HBQTableView * p = ( QGC_POINTER_HBQTableView * ) hb_gcAllocate( sizeof( QGC_POINTER_HBQTableView ), gcFuncs() );
+
+   p->ph = pObj;
+   p->func = release_HBQTableView;
+   new( & p->pq ) QPointer< HBQTableView >( ( HBQTableView * ) pObj );
+   HB_TRACE( HB_TR_DEBUG, ( "          new_HBQTableView                  %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+   return( p );
+}
+
+HB_FUNC( QT_HBQTABLEVIEW )
+{
+   void * pObj = NULL;
+
+   pObj = ( HBQTableView* ) new HBQTableView( hbqt_par_QWidget( 1 ) ) ;
+
+   hb_retptrGC( gcAllocate_HBQTableView( pObj ) );
+}
+
+HB_FUNC( QT_HBQTABLEVIEW_NAVIGATE )
+{
+   hb_retptr( new QModelIndex( hbqt_par_HBQTableView( 1 )->navigate( hb_parni( 2 ) ) ) );
 }
 
 #endif

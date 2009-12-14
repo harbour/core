@@ -379,8 +379,7 @@ extern int hbqt_getmemused( void );
 
 #define hbqt_par_HBDbfModel( n )                    ( ( HBDbfModel                  * ) hbqt_gcpointer( n ) )
 #define hbqt_par_HBQMainWindow( n )                 ( ( HBQMainWindow               * ) hbqt_gcpointer( n ) )
-
-#define hbqt_par_HBQTableView( n )                  ( ( HBQTableView* ) hb_parptr( n ) )
+#define hbqt_par_HBQTableView( n )                  ( ( HBQTableView                * ) hbqt_gcpointer( n ) )
 
 #define hbqt_par_QString( n )                       ( ( QString ) hb_parcx( n ) )
 #define hbqt_par_QRgb( n )                          ( hb_parnint( n ) )
