@@ -185,12 +185,13 @@ HB_FUNC( WIN_REGSETVALUEEX )
 {
    void * hKey;
    DWORD dwType = ( DWORD ) hb_parnl( 4 );
+   LPCTSTR lpKey = HB_PARSTRDEF( 2, &hKey, NULL );
 
    if( dwType == REG_DWORD )
    {
       DWORD nSpace = ( DWORD ) hb_parnl( 5 );
       hb_retl( RegSetValueEx( ( HKEY ) hb_parptr( 1 ),
-                              HB_PARSTRDEF( 2, &hKey, NULL ),
+                              lpKey,
                               0,
                               dwType,
                               ( const BYTE * ) &nSpace,
@@ -211,7 +212,7 @@ HB_FUNC( WIN_REGSETVALUEEX )
       #endif
 
       hb_retl( RegSetValueEx( ( HKEY ) hb_parptr( 1 ),
-                              HB_PARSTRDEF( 2, &hKey, NULL ),
+                              lpKey,
                               0,
                               dwType,
                               ( const BYTE * ) lpValue,
@@ -221,7 +222,7 @@ HB_FUNC( WIN_REGSETVALUEEX )
    }
    else /* No translation for binary data */
       hb_retl( RegSetValueEx( ( HKEY ) hb_parptr( 1 ),
-                              HB_PARSTRDEF( 2, &hKey, NULL ),
+                              lpKey,
                               0,
                               dwType,
                               ( const BYTE * ) hb_parc( 5 ) /* cValue */,
