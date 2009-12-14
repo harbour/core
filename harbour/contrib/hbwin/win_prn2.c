@@ -268,7 +268,7 @@ HB_FUNC( WIN_PRINTERSTATUS )
    if( hb_itemGetCLen( pPrinterName ) == 0 )
       hb_GetDefaultPrinter( pPrinterName );
 
-   if( hb_itemGetCLen( pPrinterName ) )
+   if( hb_itemGetCLen( pPrinterName ) > 0 )
    {
       void * hPrinterName;
       LPCTSTR lpPrinterName = HB_ITEMGETSTR( pPrinterName, &hPrinterName, NULL );
@@ -319,6 +319,8 @@ HB_FUNC( WIN_PRINTERSTATUS )
 
       hb_strfree( hPrinterName );
    }
+
+   hb_itemRelease( pPrinterName );
 
    hb_retnl( nStatus );
 }
