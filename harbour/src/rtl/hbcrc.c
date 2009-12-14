@@ -193,12 +193,11 @@ HB_ULONG hb_crc( HB_ULONG crc, const void * buf, ULONG len, HB_ULONG poly )
       crc ^= --mask;
       do
       {
-         HB_ULONG b = ( crc ^ *ucbuf++ ) & 0xFF;
          int i = 8;
+         crc ^= *ucbuf++;
          do
-            b = b & 1 ? revp ^ ( b >> 1 ) : b >> 1;
+            crc = crc & 1 ? revp ^ ( crc >> 1 ) : crc >> 1;
          while( --i );
-         crc = b ^ ( crc >> 8 );
       }
       while( --len );
       crc ^= mask;
@@ -218,16 +217,36 @@ HB_ULONG hb_crcct( HB_ULONG crc, const void * buf, ULONG len, HB_ULONG poly )
          ++bits;
       mask = ( HB_LONG ) 1 << ( bits - 1 );
       bits -= 8;
-      do
+      if( bits < 0 )
       {
-         int i = 8;
-         crc ^= ( HB_ULONG ) ( *ucbuf++ ) << bits;
+         mask <<= -bits;
+         poly <<= -bits;
+         crc <<= -bits;
          do
-            crc = crc & mask ? poly ^ ( crc << 1 ) : crc << 1;
-         while( --i );
+         {
+            int i = 8;
+            crc ^= ( HB_ULONG ) ( *ucbuf++ );
+            do
+               crc = crc & mask ? poly ^ ( crc << 1 ) : crc << 1;
+            while( --i );
+         }
+         while( --len );
+         crc &= ( mask << 1 ) - 1;
+         crc >>= -bits;
       }
-      while( --len );
-      crc &= ( mask << 1 ) - 1;
+      else
+      {
+         do
+         {
+            int i = 8;
+            crc ^= ( HB_ULONG ) ( *ucbuf++ ) << bits;
+            do
+               crc = crc & mask ? poly ^ ( crc << 1 ) : crc << 1;
+            while( --i );
+         }
+         while( --len );
+         crc &= ( mask << 1 ) - 1;
+      }
    }
    return crc;
 }
