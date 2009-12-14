@@ -50,7 +50,6 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*----------------------------------------------------------------------*/
 
 #define HB_OS_WIN_USED
 
@@ -322,4 +321,3 @@ HB_FUNC( WAPI_SETACTIVEWINDOW )
 {
    hb_retptr( SetActiveWindow( wapi_par_HWND( 1 ) ) );
 }
-/*----------------------------------------------------------------------*/

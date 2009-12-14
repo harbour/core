@@ -50,7 +50,6 @@
  *
  */
 
-
 #include "hbwinole.h"
 
 typedef BOOL      ( CALLBACK * PHB_AX_WININIT )( void );

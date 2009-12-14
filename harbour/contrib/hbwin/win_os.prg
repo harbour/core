@@ -4,6 +4,7 @@
 
 /*
  * Harbour Project source code:
+ * Windows OS version information
  *
  * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software & Systems Ltd
  * www - http://www.harbour-project.org

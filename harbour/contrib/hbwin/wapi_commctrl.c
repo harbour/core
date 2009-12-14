@@ -3,6 +3,9 @@
  */
 
 /*
+ * Harbour Project source code:
+ * Windows API functions (commctrl)
+ *
  * Pritpal Bedi <pritpal@vouchcac.com> 14Feb2009
  * www - http://www.harbour-project.org
  *
@@ -46,8 +49,6 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-
-/*----------------------------------------------------------------------*/
 
 #define HB_OS_WIN_USED
 
@@ -1454,4 +1455,3 @@ HB_FUNC( WAPI_TREEVIEW_SORTCHILDRENCB )
    wapi_ret_L( TreeView_SortChildrenCB( wapi_par_HWND( 1 ), wapi_par_TVSORTCB( 2 ), wapi_par_BOOL( 3 ) ) );
 }
 #endif
-/*----------------------------------------------------------------------*/
