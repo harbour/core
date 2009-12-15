@@ -112,6 +112,28 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
    #define HB_CALL_ON_STARTUP_END( func ) \
       }
 
+#elif defined( HB_INITSEG_STARTUP )
+
+   #define HB_INIT_SYMBOLS_BEGIN( func ) \
+      static HB_SYMB symbols_table[] = {
+
+   #define HB_INIT_SYMBOLS_EX_END( func, module, id, vpcode ) \
+      }; \
+      static PHB_SYMB symbols = symbols_table; \
+      void func( void ) \
+      { \
+         symbols = hb_vmProcessSymbols( symbols_table, (USHORT) ( sizeof( symbols_table ) / sizeof( HB_SYMB ) ), (module), (id), (vpcode) ); \
+      } \
+      __asm__ ( ".section .init\n\tcall " HB_MACRO2STRING( func ) "\n\t" );
+
+   #define HB_CALL_ON_STARTUP_BEGIN( func ) \
+      void func( void ) \
+      {
+
+   #define HB_CALL_ON_STARTUP_END( func ) \
+      } \
+      __asm__ ( ".section .init\n\tcall " HB_MACRO2STRING( func ) "\n\t" );
+
 #elif defined( __GNUC__ ) || defined( __SUNPRO_C ) || defined( __SUNPRO_CC )
 
    #if defined( HB_PRAGMA_STARTUP ) ||  defined( HB_MSC_STARTUP )
