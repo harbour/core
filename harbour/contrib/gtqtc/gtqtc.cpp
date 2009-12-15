@@ -540,9 +540,7 @@ static bool hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       if( hSysMenu )
       {
          /* Create "Mark" prompt in SysMenu to allow console type copy operation */
-         LPTSTR buffer = HB_TCHAR_CONVTO( pWVT->pszSelectCopy );
-         AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, buffer );
-         HB_TCHAR_FREE( buffer );
+         AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, pWVT->pszSelectCopy );
 
          if( ! pWVT->bClosable )
             EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | MF_GRAYED );

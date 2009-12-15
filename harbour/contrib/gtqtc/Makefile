@@ -13,7 +13,6 @@ MOC_HEADERS := \
 
 CPP_SOURCES := \
    gtqtc.cpp \
-   moc_gtqtc.cpp \
 
 PRG_HEADERS := \
    hbgtqtc.ch

@@ -8,5 +8,3 @@ libs=QtCore QtGui QtNetwork QtWebKit
 {allgcc}libs=supc++
 gui=yes
 gt=gtqtcs
-# optional
-mt=yes

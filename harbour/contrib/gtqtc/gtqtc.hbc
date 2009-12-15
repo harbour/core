@@ -13,5 +13,3 @@ libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
 {allgcc}libs=supc++
 gui=yes
 gt=gtqtc
-# optional
-mt=yes
