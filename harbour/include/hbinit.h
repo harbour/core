@@ -114,6 +114,10 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
 
 #elif defined( HB_INITSEG_STARTUP )
 
+   #if defined( HB_PRAGMA_STARTUP ) || defined( HB_DATASEG_STARTUP )
+      #error Wrong macros set for startup code - clean your make/env settings.
+   #endif
+
    #define HB_INIT_SYMBOLS_BEGIN( func ) \
       static HB_SYMB symbols_table[] = {
 
@@ -145,7 +149,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
 
 #elif defined( __GNUC__ ) || defined( __SUNPRO_C ) || defined( __SUNPRO_CC )
 
-   #if defined( HB_PRAGMA_STARTUP ) ||  defined( HB_MSC_STARTUP )
+   #if defined( HB_PRAGMA_STARTUP ) || defined( HB_DATASEG_STARTUP )
       #error Wrong macros set for startup code - clean your make/env settings.
    #endif
 
@@ -168,6 +172,10 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
       }
 
 #elif defined( HB_MSC_STARTUP )
+
+   #if defined( HB_PRAGMA_STARTUP )
+      #error Wrong macros set for startup code - clean your make/env settings.
+   #endif
 
    #define HB_DATASEG_STARTUP
 
@@ -209,7 +217,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
 
 #elif defined( HB_STATIC_STARTUP ) || defined( __cplusplus )
 
-   #if defined( HB_PRAGMA_STARTUP ) || defined( HB_MSC_STARTUP )
+   #if defined( HB_PRAGMA_STARTUP ) || defined( HB_DATASEG_STARTUP )
       #error Wrong macros set for startup code - clean your make/env settings.
    #endif
 
@@ -237,7 +245,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
 #elif defined( HB_PRAGMA_STARTUP ) || \
       defined( __BORLANDC__ ) || defined( __LCC__ ) || defined( __POCC__ ) || defined( __XCC__ )
 
-   #if defined( HB_MSC_STARTUP )
+   #if defined( HB_DATASEG_STARTUP )
       #error Wrong macros set for startup code - clean your make/env settings.
    #endif
 
@@ -264,6 +272,10 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
       }
 
 #elif defined( __WATCOMC__ )
+
+   #if defined( HB_PRAGMA_STARTUP )
+      #error Wrong macros set for startup code - clean your make/env settings.
+   #endif
 
    #define HB_INIT_SYMBOLS_BEGIN( func ) \
       static HB_SYMB symbols_table[] = {
