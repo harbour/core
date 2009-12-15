@@ -186,31 +186,23 @@ HB_FUNC( ADDMONTH )
 */
 HB_FUNC( DATEASARRAY )
 {
-   PHB_ITEM pReturn = hb_itemArrayNew( 3 );     /* Create array */
    PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
 
    if( pDate )
    {
-      PHB_ITEM pItem;
+      PHB_ITEM pReturn = hb_itemArrayNew( 3 );     /* Create array */
       int iYear, iMonth, iDay;
 
       hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
 
-      pItem = hb_itemPutNI( NULL, iYear );
-      hb_itemArrayPut( pReturn, 1, pItem );
-      hb_itemRelease( pItem );
+      hb_arraySetNI( pReturn, 1, iYear );
+      hb_arraySetNI( pReturn, 2, iMonth );
+      hb_arraySetNI( pReturn, 3, iDay );
 
-      pItem = hb_itemPutNI( NULL, iMonth );
-      hb_itemArrayPut( pReturn, 2, pItem );
-      hb_itemRelease( pItem );
-
-      pItem = hb_itemPutNI( NULL, iDay );
-      hb_itemArrayPut( pReturn, 3, pItem );
-      hb_itemRelease( pItem );
+      hb_itemReturnRelease( pReturn );
    }
-
-   hb_itemReturn( pReturn );
-   hb_itemRelease( pReturn );
+   else
+      hb_reta( 0 );
 }
 
 /* ARRAYASDATE( { <Year>, <Month>, <Day> } ) --> <dDate>
@@ -240,7 +232,7 @@ HB_FUNC( DATEISLEAP )
       hb_retl( ( iYear % 4 == 0 && iYear % 100 != 0 ) || ( iYear % 400 == 0 ) );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 /* NTOD( <nMonth>, <nDay>, <nYear> ) --> <dDate>

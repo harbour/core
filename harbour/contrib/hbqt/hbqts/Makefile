@@ -6,6 +6,7 @@ ROOT := ../../../
 
 include $(TOP)$(ROOT)config/global.mk
 
+vpath %.h ../
 vpath %.cpp ../
 vpath %.prg ../
 

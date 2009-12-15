@@ -735,6 +735,8 @@ HARBOUR
 
       --- MinGW GCC for Windows CE ARM (requires Cygwin + preceding build for native target)
       set PATH=C:\mingwce\opt\mingw32ce\bin;C:\cygwin\bin;%PATH%
+      rem ; optional
+      set CYGWIN=nodosfilewarning
       mingw32-make
       ---
 
