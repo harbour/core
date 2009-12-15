@@ -405,7 +405,7 @@ HB_MODE=""
 HB_EXIT=""
 LN_OPT="${CC_HB_USER_LDFLAGS}"
 CC_OPT="-O3 ${CC_HB_USER_CFLAGS}"
-HB_OPT="${CC_HB_USER_PRGFLAGS}"
+HB_OPT="-n2 ${CC_HB_USER_PRGFLAGS}"
 
 if [ "\${HB_PLATFORM}" = "sunos" ]; then
     HB_STRIP="no"
@@ -695,7 +695,7 @@ hb_cc()
 
 hb_cmp()
 {
-    ${hb_cmpname} "\$@" \${HB_OPT} \${HB_PATHS} && \\
+    ${hb_cmpname} \${HB_OPT} "\$@" \${HB_PATHS} && \\
     ( [ "\${HB_GEN//c/}" != "" ] || [ "\${HB_NOC}" = "yes" ] || \\
     ( [ -f "\${FOUTC}" ] && \\
     hb_cc -c "\${FOUTC}" -o "\${FOUTO}" && \\
