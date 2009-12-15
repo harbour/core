@@ -131,7 +131,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
    #define HB_CALL_ON_STARTUP_END( func ) \
       } \
       HB_INIT_FUNCTION_REF( func ) \
-      __asm__ ( ".section .init\n\tcall " HB_MACRO2STRING( func ) "\n\t" );
+      asm ( ".section .init\n\tcall " HB_MACRO2STRING( func ) "\n\t.section .init\n\t" );
 
 
    #define HB_INIT_FUNCTION_REF( func )    \
