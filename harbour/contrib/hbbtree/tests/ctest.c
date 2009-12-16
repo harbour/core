@@ -44,9 +44,9 @@ static void display( const char *cKey, LONG lData, BOOL NewLine )
    char buffer[ 80 ];
 
    if( *cKey )
-      n = sprintf( buffer, "%s  %ld", cKey, lData );
+      n = hb_snprintf( buffer, sizeof( buffer ), "%s  %ld", cKey, lData );
    else
-      n = sprintf( buffer, "%ld", lData );
+      n = hb_snprintf( buffer, sizeof( buffer ), "%ld", lData );
 
    hb_conOutStd( buffer, n );
 
