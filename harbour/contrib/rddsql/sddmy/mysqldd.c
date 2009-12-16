@@ -101,8 +101,8 @@ static void hb_mysqldd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   if ( ! hb_sddRegister( & mysqldd ) || 
-        ( sizeof( MYSQL_ROW_OFFSET ) != sizeof( void * ) ) || 
+   if ( ! hb_sddRegister( & mysqldd ) ||
+        ( sizeof( MYSQL_ROW_OFFSET ) != sizeof( void * ) ) ||
         ( sizeof( MYSQL_ROW ) != sizeof( void * ) ) )
    {
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
@@ -429,7 +429,7 @@ static HB_ERRCODE mysqlClose( SQLBASEAREAP pArea )
 
 static HB_ERRCODE mysqlGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
 {
-   if ( ulRecNo <= 0 || ulRecNo > pArea->ulRecCount )
+   if ( ulRecNo == 0 || ulRecNo > pArea->ulRecCount )
    {
       pArea->pRecord = pArea->pRow[ 0 ];
       pArea->bRecordFlags = pArea->pRowFlags[ 0 ];
