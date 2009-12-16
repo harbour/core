@@ -94,9 +94,9 @@ ifeq ($(ANYDOS),yes)
 
    # work arround to DOS command line size limit
    ifeq ($(CC),wcc386)
-      export WCC386 := $(strip $(CC_FLAGS))
+      export WCC386 := $(strip $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS)))
    else
-      export WPP386 := $(strip $(CC_FLAGS))
+      export WPP386 := $(strip $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS)))
    endif
    CC_FLAGS :=
 
