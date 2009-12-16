@@ -18,7 +18,7 @@
 #endif
 
 function main()
-local k, i
+local k, i, s
 local aKeys := { ;
  { "K_UP",               5, "Up arrow, Ctrl-E"                }, ;
  { "K_DOWN",            24, "Down arrow, Ctrl-X"              }, ;
@@ -235,8 +235,23 @@ while (.t.)
     ? " key:"+str(k,7)
   endif
 //  ?? "  ("+ltrim(str(maxrow()))+":"+ltrim(str(maxcol()))+")"
-  if k==64 .and. nextkey()==0
+
+  if k==asc("@") .and. nextkey()==0
     exit
+#ifdef __HARBOUR__
+  elseif k==K_CTRL_INS
+    if alert( "Would you like to show clipboard text?", { "YES", "NO" } ) == 1
+      s := hb_gtInfo( HB_GTI_CLIPBOARDDATA )
+      ? "Clipboard text: [" + s + "]"
+    endif
+  elseif k==K_CTRL_END
+    if alert( "Would you like to set clipboard text?", { "YES", "NO" } ) == 1
+      s := hb_tstostr( hb_datetime() ) + hb_osNewLine() + ;
+           "Harbour " + hb_gtVersion() + " clipboard test" + hb_osNewLine()
+      ? "New clipboard text: [" + s + "]"
+      hb_gtInfo( HB_GTI_CLIPBOARDDATA, s )
+    endif
+#endif
   endif
 enddo
 ?
