@@ -31,14 +31,14 @@ CRCCheck on
    ; The name of the installer
    Name "Harbour Project 2.0 (full)"
    ; The file to write
-   OutFile "harbour-2.0.0beta3-win-full.exe"
+   OutFile "harbour-2.0.0rc1-win-full.exe"
 !else
    !ifdef PKG_MINI
       Name "Harbour Project 2.0 (minimal)"
-      OutFile "harbour-2.0.0beta3-win-mini.exe"
+      OutFile "harbour-2.0.0rc1-win-mini.exe"
    !else
       Name "Harbour Project 2.0"
-      OutFile "harbour-2.0.0beta3-win-20090905.exe"
+      OutFile "harbour-2.0.0rc1-win-20090905.exe"
    !endif
 !endif
 

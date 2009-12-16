@@ -147,13 +147,14 @@ Syntax and indentation
 
     and to:
 
-    if( foo )
+    if( foo ){
        bar;
+    }
 
     Keep one empty line between the variable declaration section and
     the statements in a block, as well as between logical statement
     groups in a block.  Maintain at least one empty line between
-    two functions, preferably two.
+    two functions.
 
 [4] When indenting, use three spaces. It is important to maintain
     consistency in indenture so that definitions, comments, and
