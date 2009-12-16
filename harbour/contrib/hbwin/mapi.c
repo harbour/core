@@ -134,7 +134,14 @@ HB_FUNC( WIN_MAPISENDMAIL )
          if( pFrom && hb_arrayLen( pFrom ) >= 2 )
          {
             origin.lpszName     = ( LPSTR ) HB_ARRAYGETSTR( pFrom, 1, &hString[ iString++ ], NULL );
-            origin.lpszAddress  = ( LPSTR ) HB_ARRAYGETSTR( pFrom, 2, &hString[ iString++ ], NULL );
+            origin.lpszAddress  = ( LPSTR ) HB_ARRAYGETSTR( pFrom, 2, &hString[ iString++ ], NULL ); /* optional */
+            origin.ulRecipClass = MAPI_ORIG;
+
+            note.lpOriginator = &origin;
+         }
+         else if( HB_ISCHAR( 8 ) )
+         {
+            origin.lpszName     = ( LPSTR ) HB_PARSTR( 8, &hString[ iString++ ], NULL );
             origin.ulRecipClass = MAPI_ORIG;
 
             note.lpOriginator = &origin;
@@ -165,6 +172,11 @@ HB_FUNC( WIN_MAPISENDMAIL )
 
                ++note.nRecipCount;
             }
+            else if( HB_IS_STRING( pItem ) )
+            {
+               note.lpRecips[ note.nRecipCount ].lpszName = ( LPSTR ) HB_ITEMGETSTR( pItem, &hString[ iString++ ], NULL );
+               note.lpRecips[ note.nRecipCount ].ulRecipClass = MAPI_TO;
+            }
          }
 
          for( i = 0; i < nFileCount; ++i )
@@ -175,9 +187,14 @@ HB_FUNC( WIN_MAPISENDMAIL )
                 hb_arrayLen( pItem ) >= 1 &&
                 hb_arrayGetCLen( pItem, 1 ) > 0 )
             {
-               note.lpFiles[ note.nFileCount ].ulReserved   = 0;
                note.lpFiles[ note.nFileCount ].lpszPathName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 1, &hString[ iString++ ], NULL );
                note.lpFiles[ note.nFileCount ].lpszFileName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 2, &hString[ iString++ ], NULL ); /* optional */
+               note.lpFiles[ note.nFileCount ].nPosition    = ( ULONG ) -1;
+               ++note.nFileCount;
+            }
+            else if( HB_IS_STRING( pItem ) )
+            {
+               note.lpFiles[ note.nFileCount ].lpszPathName = ( LPSTR ) HB_ITEMGETSTR( pItem, &hString[ iString++ ], NULL );
                note.lpFiles[ note.nFileCount ].nPosition    = ( ULONG ) -1;
                ++note.nFileCount;
             }

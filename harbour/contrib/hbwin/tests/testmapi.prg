@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#include "hbwin.ch"
+
 PROCEDURE Main()
 
    LOCAL cSubject := "Test subject"
@@ -9,8 +11,8 @@ PROCEDURE Main()
    LOCAL lMailConf := .F.
    LOCAL lFromUser := .T.
    LOCAL aSender := { "test from", "from@test.com" }
-   LOCAL aDest := { { "test to", "to@test.com", 1 } }
-   LOCAL aFiles := { { "testmapi.prg", "" } }
+   LOCAL aDest := { { "test to", "to@test.com", HB_WIN_MAPI_TO } }
+   LOCAL aFiles := { { "testmapi.prg", "testmapi" } }
 
    ? win_MAPISendMail( cSubject,                        ; // subject
                        cBody,                           ; // menssage
@@ -22,6 +24,20 @@ PROCEDURE Main()
                        aSender,                         ; // sender
                        aDest,                           ; // destinators
                        aFiles                           ; // attach
+                     )
+
+   // simple format
+
+   ? win_MAPISendMail( cSubject,                        ; // subject
+                       cBody,                           ; // menssage
+                       NIL,                             ; // type of message
+                       DToS( Date() ) + " " + Time(),   ; // send date
+                       "",                              ; // conversation ID
+                       lMailConf,                       ; // acknowledgment
+                       lFromUser,                       ; // user intervention
+                       "from@test.com",                 ; // sender
+                       { "to@test.com" },               ; // destinators
+                       { "testmapi.prg" }               ; // attach
                      )
 
    RETURN

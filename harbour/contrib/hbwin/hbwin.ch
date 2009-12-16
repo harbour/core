@@ -54,6 +54,12 @@
 #ifndef HBWIN_CH_
 #define HBWIN_CH_
 
+/* Positions for WIN_MAPISENDMAIL() array */
+
+#define HB_WIN_MAPI_TO         1
+#define HB_WIN_MAPI_CC         2
+#define HB_WIN_MAPI_BCC        3
+
 /* Positions for WIN_PRINTERLIST() array */
 
 #define HB_WINPRN_NAME         1
