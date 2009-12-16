@@ -329,29 +329,6 @@ void HBQMainWindow::closeEvent( QCloseEvent * event )
 #endif
 }
 
-static void hbqt_hbqmainwindow_init( void * cargo )
-{
-   HB_SYMBOL_UNUSED( cargo );
-
-#if defined( _HBQT_MAINWINDOW_MUTEX )
-   if( s_mutex == NULL )
-      s_mutex = hb_threadMutexCreate();
-#endif
-}
-
-static void hbqt_hbqmainwindow_exit( void * cargo )
-{
-   HB_SYMBOL_UNUSED( cargo );
-
-#if defined( _HBQT_MAINWINDOW_MUTEX )
-   if( s_mutex != NULL )
-   {
-      hb_itemRelease( s_mutex );
-      s_mutex = NULL;
-   }
-#endif
-}
-
 typedef struct
 {
   void * ph;
@@ -423,6 +400,29 @@ HB_FUNC( QT_HBQMAINWINDOW )
 }
 
 HB_FUNC( HB_QT ) {;}
+
+static void hbqt_hbqmainwindow_init( void * cargo )
+{
+   HB_SYMBOL_UNUSED( cargo );
+
+#if defined( _HBQT_MAINWINDOW_MUTEX )
+   if( s_mutex == NULL )
+      s_mutex = hb_threadMutexCreate();
+#endif
+}
+
+static void hbqt_hbqmainwindow_exit( void * cargo )
+{
+   HB_SYMBOL_UNUSED( cargo );
+
+#if defined( _HBQT_MAINWINDOW_MUTEX )
+   if( s_mutex != NULL )
+   {
+      hb_itemRelease( s_mutex );
+      s_mutex = NULL;
+   }
+#endif
+}
 
 HB_CALL_ON_STARTUP_BEGIN( _hbqt_hbqmainwindow_initialize_ )
    hb_vmAtInit( hbqt_hbqmainwindow_init, NULL );
