@@ -2761,7 +2761,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          CASE hbmk[ _HBMK_cPLAT ] == "os2"   ; cOpt_CompC += " -zq -bt=os2 {FC}"
          ENDCASE
          cOptIncMask := "-i{DI}"
-         IF hbmk[ _HBMK_lINC ] .AND. ! Empty( cWorkDir )
+         IF ( hbmk[ _HBMK_lINC ] .AND. ! Empty( cWorkDir ) ) .OR. !( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ] )
             cOpt_CompC += " {IC} -fo={OO}"
          ELSE
             cOpt_CompC += " {LC}"
