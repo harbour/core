@@ -59,7 +59,19 @@
 #include <mapi.h>
 
 #if ! defined( MAPI_UNICODE )
-   #define MAPI_UNICODE   ( ( ULONG ) 0x80000000 )
+#  define MAPI_UNICODE   ( ( ULONG ) 0x80000000 )
+#endif
+
+#if !defined( MAPI_RECEIPT_REQUESTED )
+#  if defined( MAPI_RECIPIENT_REQUESTED )
+#     define MAPI_RECEIPT_REQUESTED MAPI_RECIPIENT_REQUESTED
+#  else
+#     define MAPI_RECEIPT_REQUESTED 0x00000002L
+#  endif
+#endif
+
+#if defined( __WATCOMC__ )
+typedef ULONG (PASCAL * LPMAPISENDMAIL) (LHANDLE,ULONG,lpMapiMessage,FLAGS,ULONG);
 #endif
 
 HB_FUNC( WIN_MAPISENDMAIL )
