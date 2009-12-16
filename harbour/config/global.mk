@@ -1381,6 +1381,8 @@ endif
 HB_DYN_COMPILE := no
 
 CXX :=
+CC_DIRSEPFROM :=
+CC_DIRSEPTO :=
 
 # export some variables to eliminate repeated setting in recursive calls
 export HB_HOST_PLAT

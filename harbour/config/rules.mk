@@ -33,14 +33,14 @@ CC_FLAGS := $(HB_INC_DEPEND) $(CFLAGS) $(HB_CFLAGS)
 
 # The rule to compile a C source file.
 ifeq ($(CC_RULE),)
-   CC_RULE = $(CC) $(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<
+   CC_RULE = $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<)
    ifneq ($(HB_BUILD_DLL),no)
       ifneq ($(HB_DYN_COPT),)
          ifneq ($(LIBNAME),)
             ifneq ($(filter $(LIBNAME),$(HB_DYN_LIBS)),)
                define cc_comp_all
-                  $(CC) $(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<
-                  $(CC) $(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_DYN_POSTFIX)$(OBJ_EXT)) $(HB_DYN_COPT) $(CC_IN) $<
+                  $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<)
+                  $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_DYN_POSTFIX)$(OBJ_EXT)) $(HB_DYN_COPT) $(CC_IN) $<)
                endef
                CC_RULE = $(cc_comp_all)
             endif

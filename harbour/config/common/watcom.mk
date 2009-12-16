@@ -70,17 +70,12 @@ endif
 
 ifeq ($(CC),wcc386)
    ifneq ($(HB_HOST_PLAT),linux)
-      CC_RULE = $(CC) $(CC_FLAGS) $(subst /,\,$(HB_USER_CFLAGS)) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN)$(subst /,\,$<)
+      CC_DIRSEPFROM := /
+      CC_DIRSEPTO   := $(subst /,\,\)
    endif
 endif
 
 include $(TOP)$(ROOT)config/rules.mk
-
-ifeq ($(CC),wcc386)
-   ifneq ($(HB_HOST_PLAT),linux)
-      CC_FLAGS := $(subst /,\,$(CC_FLAGS))
-   endif
-endif
 
 ANYDOS := no
 ifeq ($(HB_SHELL),dos)
