@@ -6,8 +6,8 @@
  * Harbour Project source code:
  * MAPI wrappers
  *
- * Copyright 2009 Toninho (toninhofwi yahoo.com.br)
  * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2009 Toninho (toninhofwi yahoo.com.br)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -133,16 +133,18 @@ HB_FUNC( WIN_MAPISENDMAIL )
 
          if( pFrom && hb_arrayLen( pFrom ) >= 2 )
          {
-            origin.lpszName    = ( LPSTR ) HB_ARRAYGETSTR( pFrom, 1, &hString[ iString++ ], NULL );
-            origin.lpszAddress = ( LPSTR ) HB_ARRAYGETSTR( pFrom, 2, &hString[ iString++ ], NULL );
-            note.lpOriginator  = &origin;
+            origin.lpszName     = ( LPSTR ) HB_ARRAYGETSTR( pFrom, 1, &hString[ iString++ ], NULL );
+            origin.lpszAddress  = ( LPSTR ) HB_ARRAYGETSTR( pFrom, 2, &hString[ iString++ ], NULL );
+            origin.ulRecipClass = MAPI_ORIG;
+
+            note.lpOriginator = &origin;
          }
 
          for( i = 0; i < nRecpCount; ++i )
          {
             PHB_ITEM pItem = hb_arrayGetItemPtr( pRecpList, i + 1 );
 
-            if( HB_IS_ARRAY( pItem ) && hb_arrayLen( pItem ) >= 3 )
+            if( HB_IS_ARRAY( pItem ) && hb_arrayLen( pItem ) >= 2 )
             {
                if( hb_arrayGetCLen( pItem, 1 ) > 0 )
                {
@@ -151,10 +153,15 @@ HB_FUNC( WIN_MAPISENDMAIL )
                   if( hb_arrayGetCLen( pItem, 2 ) > 0 )
                      note.lpRecips[ note.nRecipCount ].lpszAddress = ( LPSTR ) HB_ARRAYGETSTR( pItem, 2, &hString[ iString++ ], NULL );
                }
-               else
+               else if( hb_arrayGetCLen( pItem, 2 ) > 0 )
                   note.lpRecips[ note.nRecipCount ].lpszName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 2, &hString[ iString++ ], NULL );
+               else
+                  continue;
 
-               note.lpRecips[ note.nRecipCount ].ulRecipClass = ( ULONG ) hb_arrayGetNL( pItem, 3 );
+               if( hb_arrayLen( pItem ) >= 3 && HB_IS_NUMERIC( hb_arrayGetPtr( pItem, 3 ) ) )
+                  note.lpRecips[ note.nRecipCount ].ulRecipClass = ( ULONG ) hb_arrayGetNL( pItem, 3 );
+               else
+                  note.lpRecips[ note.nRecipCount ].ulRecipClass = MAPI_TO;
 
                ++note.nRecipCount;
             }
@@ -164,11 +171,13 @@ HB_FUNC( WIN_MAPISENDMAIL )
          {
             PHB_ITEM pItem = hb_arrayGetItemPtr( pFileList, i + 1 );
 
-            if( HB_IS_ARRAY( pItem ) && hb_arrayLen( pItem ) >= 1 )
+            if( HB_IS_ARRAY( pItem ) &&
+                hb_arrayLen( pItem ) >= 1 &&
+                hb_arrayGetCLen( pItem, 1 ) > 0 )
             {
                note.lpFiles[ note.nFileCount ].ulReserved   = 0;
-               note.lpFiles[ note.nFileCount ].lpszFileName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 1, &hString[ iString++ ], NULL );
-               note.lpFiles[ note.nFileCount ].lpszPathName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 2, &hString[ iString++ ], NULL );
+               note.lpFiles[ note.nFileCount ].lpszPathName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 1, &hString[ iString++ ], NULL );
+               note.lpFiles[ note.nFileCount ].lpszFileName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 2, &hString[ iString++ ], NULL ); /* optional */
                note.lpFiles[ note.nFileCount ].nPosition    = ( ULONG ) -1;
                ++note.nFileCount;
             }
