@@ -2833,10 +2833,15 @@ static void hb_gt_xwc_UpdateSize( PXWND_DEF wnd )
 {
    if( wnd->fWinResize )
    {
+      int iRows = wnd->newHeight / wnd->fontHeight,
+          iCols = wnd->newWidth / wnd->fontWidth;
+
       wnd->fWinResize = FALSE;
-      HB_GTSELF_SETMODE( wnd->pGT, wnd->newHeight / wnd->fontHeight,
-                                   wnd->newWidth / wnd->fontWidth );
-      hb_gt_xwc_AddCharToInputQueue( wnd, HB_K_RESIZE );
+      if( iRows != wnd->rows || iCols != wnd->cols )
+      {
+         if( HB_GTSELF_SETMODE( wnd->pGT, iRows, iCols ) )
+            hb_gt_xwc_AddCharToInputQueue( wnd, HB_K_RESIZE );
+      }
    }
 }
 
@@ -3031,6 +3036,126 @@ static BOOL hb_gt_xwc_SetFont( PXWND_DEF wnd, const char *fontFace,
 
 /* *********************************************************************** */
 
+static void hb_gt_xwc_ClearSelection( PXWND_DEF wnd )
+{
+   if( wnd->ClipboardOwner )
+   {
+      XSetSelectionOwner( wnd->dpy, s_atomPrimary, None, wnd->ClipboardTime );
+      XSetSelectionOwner( wnd->dpy, s_atomClipboard, None, wnd->ClipboardTime );
+      wnd->ClipboardOwner = FALSE;
+   }
+}
+
+/* *********************************************************************** */
+
+static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, const char *szData, ULONG ulSize )
+{
+   HB_XWC_XLIB_LOCK
+
+   if( ulSize == 0 )
+      hb_gt_xwc_ClearSelection( wnd );
+
+   if( wnd->ClipboardData != NULL )
+      hb_xfree( wnd->ClipboardData );
+   wnd->ClipboardData = ( unsigned char * ) hb_xgrab( ulSize + 1 );
+   memcpy( wnd->ClipboardData, szData, ulSize );
+   wnd->ClipboardData[ ulSize ] = '\0';
+   wnd->ClipboardSize = ulSize;
+   wnd->ClipboardTime = wnd->lastEventTime;
+   wnd->ClipboardOwner = FALSE;
+
+   if( ulSize > 0 )
+   {
+      XSetSelectionOwner( wnd->dpy, s_atomPrimary, wnd->window, wnd->ClipboardTime );
+      if( XGetSelectionOwner( wnd->dpy, s_atomPrimary ) == wnd->window )
+      {
+         wnd->ClipboardOwner = TRUE;
+         XSetSelectionOwner( wnd->dpy, s_atomClipboard, wnd->window, wnd->ClipboardTime );
+      }
+      else
+      {
+         const char * cMsg = "Cannot set primary selection\r\n";
+         hb_gt_xwc_ClearSelection( wnd );
+         HB_GTSELF_OUTERR( wnd->pGT, cMsg, strlen( cMsg ) );
+      }
+   }
+
+   HB_XWC_XLIB_UNLOCK
+}
+
+/* *********************************************************************** */
+
+static void hb_gt_xwc_RequestSelection( PXWND_DEF wnd )
+{
+   if( !wnd->ClipboardOwner )
+   {
+      Atom aRequest;
+      ULONG ulCurrentTime = hb_gt_xwc_CurrentTime();
+      int iConnFD = ConnectionNumber( wnd->dpy );
+
+      wnd->ClipboardRcvd = FALSE;
+      wnd->ClipboardRequest = s_atomTargets;
+      aRequest = None;
+
+      if( s_updateMode == XWC_ASYNC_UPDATE )
+         s_iUpdateCounter = 150;
+
+      do
+      {
+         if( aRequest != wnd->ClipboardRequest )
+         {
+            aRequest = wnd->ClipboardRequest;
+            if( aRequest == None )
+               break;
+
+            HB_XWC_XLIB_LOCK
+
+#ifdef XWC_DEBUG
+            printf("XConvertSelection: %ld (%s)\r\n", aRequest,
+               XGetAtomName(wnd->dpy, aRequest)); fflush(stdout);
+#endif
+            XConvertSelection( wnd->dpy, s_atomPrimary, aRequest,
+                               s_atomCutBuffer0, wnd->window, wnd->lastEventTime );
+
+            HB_XWC_XLIB_UNLOCK
+         }
+
+         if( s_updateMode == XWC_ASYNC_UPDATE )
+         {
+            if( s_iUpdateCounter == 0 )
+               break;
+            sleep( 1 );
+         }
+         else
+         {
+            hb_gt_xwc_ProcessMessages( wnd );
+            if( !wnd->ClipboardRcvd && wnd->ClipboardRequest == aRequest )
+            {
+               ULONG ulTime = hb_gt_xwc_CurrentTime() - ulCurrentTime;
+               struct timeval timeout;
+               fd_set readfds;
+
+               if( ulTime > 3000 )
+                  break;
+               ulTime = 3000 - ulTime;
+               timeout.tv_sec = ulTime / 1000;
+               timeout.tv_usec = ( ulTime % 1000 ) / 1000;
+
+               FD_ZERO( &readfds );
+               FD_SET( iConnFD, &readfds );
+               if( select( iConnFD + 1, &readfds, NULL, NULL, &timeout ) <= 0 )
+                  break;
+            }
+         }
+      }
+      while( !wnd->ClipboardRcvd && wnd->ClipboardRequest != None );
+
+      wnd->ClipboardRequest = None;
+   }
+}
+
+/* *********************************************************************** */
+
 static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
 {
    PHB_FNAME pFileName;
@@ -3048,7 +3173,7 @@ static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
    wnd->fClosable = TRUE;
    wnd->fWinResize = FALSE;
    wnd->hostCDP = hb_vmCDP();
-   wnd->utf8CDP = hb_cdpFind( "UTF8" );
+   wnd->utf8CDP = hb_cdpFindExt( "UTF8" );
    wnd->boxCDP = hb_cdpFind( "EN" );
    wnd->cursorType = SC_NORMAL;
 
@@ -3140,6 +3265,7 @@ static void hb_gt_xwc_DissConnectX( PXWND_DEF wnd )
 
    if( wnd->dpy != NULL )
    {
+      hb_gt_xwc_ClearSelection( wnd );
       hb_gt_xwc_DestroyCharTrans( wnd );
 
       if( wnd->pm )
@@ -3316,116 +3442,6 @@ static void hb_gt_xwc_Initialize( PXWND_DEF wnd )
          wnd->fInit = TRUE;
          hb_gt_xwc_Enable();
       }
-   }
-}
-
-/* *********************************************************************** */
-
-static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, const char *szData, ULONG ulSize )
-{
-   HB_XWC_XLIB_LOCK
-
-   if( wnd->ClipboardOwner && ulSize == 0 )
-   {
-      XSetSelectionOwner( wnd->dpy, s_atomPrimary, None, wnd->ClipboardTime );
-      XSetSelectionOwner( wnd->dpy, s_atomClipboard, None, wnd->ClipboardTime );
-   }
-
-   if( wnd->ClipboardData != NULL )
-      hb_xfree( wnd->ClipboardData );
-   wnd->ClipboardData = ( unsigned char * ) hb_xgrab( ulSize + 1 );
-   memcpy( wnd->ClipboardData, szData, ulSize );
-   wnd->ClipboardData[ ulSize ] = '\0';
-   wnd->ClipboardSize = ulSize;
-   wnd->ClipboardTime = wnd->lastEventTime;
-   wnd->ClipboardOwner = FALSE;
-
-   if( ulSize > 0 )
-   {
-      XSetSelectionOwner( wnd->dpy, s_atomPrimary, wnd->window, wnd->ClipboardTime );
-      if( XGetSelectionOwner( wnd->dpy, s_atomPrimary ) == wnd->window )
-      {
-         wnd->ClipboardOwner = TRUE;
-         XSetSelectionOwner( wnd->dpy, s_atomClipboard, wnd->window, wnd->ClipboardTime );
-      }
-      else
-      {
-         const char * cMsg = "Cannot set primary selection\r\n";
-         HB_GTSELF_OUTERR( wnd->pGT, cMsg, strlen( cMsg ) );
-      }
-   }
-
-   HB_XWC_XLIB_UNLOCK
-}
-
-/* *********************************************************************** */
-
-static void hb_gt_xwc_RequestSelection( PXWND_DEF wnd )
-{
-   if( !wnd->ClipboardOwner )
-   {
-      Atom aRequest;
-      ULONG ulCurrentTime = hb_gt_xwc_CurrentTime();
-      int iConnFD = ConnectionNumber( wnd->dpy );
-
-      wnd->ClipboardRcvd = FALSE;
-      wnd->ClipboardRequest = s_atomTargets;
-      aRequest = None;
-
-      if( s_updateMode == XWC_ASYNC_UPDATE )
-         s_iUpdateCounter = 150;
-
-      do
-      {
-         if( aRequest != wnd->ClipboardRequest )
-         {
-            aRequest = wnd->ClipboardRequest;
-            if( aRequest == None )
-               break;
-
-            HB_XWC_XLIB_LOCK
-
-#ifdef XWC_DEBUG
-            printf("XConvertSelection: %ld (%s)\r\n", aRequest,
-               XGetAtomName(wnd->dpy, aRequest)); fflush(stdout);
-#endif
-            XConvertSelection( wnd->dpy, s_atomPrimary, aRequest,
-                               s_atomCutBuffer0, wnd->window, wnd->lastEventTime );
-
-            HB_XWC_XLIB_UNLOCK
-         }
-
-         if( s_updateMode == XWC_ASYNC_UPDATE )
-         {
-            if( s_iUpdateCounter == 0 )
-               break;
-            sleep( 1 );
-         }
-         else
-         {
-            hb_gt_xwc_ProcessMessages( wnd );
-            if( !wnd->ClipboardRcvd && wnd->ClipboardRequest == aRequest )
-            {
-               ULONG ulTime = hb_gt_xwc_CurrentTime() - ulCurrentTime;
-               struct timeval timeout;
-               fd_set readfds;
-
-               if( ulTime > 3000 )
-                  break;
-               ulTime = 3000 - ulTime;
-               timeout.tv_sec = ulTime / 1000;
-               timeout.tv_usec = ( ulTime % 1000 ) / 1000;
-
-               FD_ZERO( &readfds );
-               FD_SET( iConnFD, &readfds );
-               if( select( iConnFD + 1, &readfds, NULL, NULL, &timeout ) <= 0 )
-                  break;
-            }
-         }
-      }
-      while( !wnd->ClipboardRcvd && wnd->ClipboardRequest != None );
-
-      wnd->ClipboardRequest = None;
    }
 }
 
