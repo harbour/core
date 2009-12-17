@@ -3406,14 +3406,15 @@ static void hb_gt_xwc_RequestSelection( PXWND_DEF wnd )
             hb_gt_xwc_ProcessMessages( wnd );
             if( !wnd->ClipboardRcvd && wnd->ClipboardRequest == aRequest )
             {
+               ULONG ulTime = hb_gt_xwc_CurrentTime() - ulCurrentTime;
                struct timeval timeout;
                fd_set readfds;
 
-               if( hb_gt_xwc_CurrentTime() - ulCurrentTime > 3 )
+               if( ulTime > 3000 )
                   break;
-
-               timeout.tv_sec = 3;
-               timeout.tv_usec = 0;
+               ulTime = 3000 - ulTime;
+               timeout.tv_sec = ulTime / 1000;
+               timeout.tv_usec = ( ulTime % 1000 ) / 1000;
 
                FD_ZERO( &readfds );
                FD_SET( iConnFD, &readfds );
