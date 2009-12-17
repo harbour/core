@@ -165,7 +165,7 @@ HB_FUNC( WIN_MAPISENDMAIL )
                else
                   continue;
 
-               if( hb_arrayLen( pItem ) >= 3 && HB_IS_NUMERIC( hb_arrayGetPtr( pItem, 3 ) ) )
+               if( hb_arrayLen( pItem ) >= 3 && HB_IS_NUMERIC( hb_arrayGetItemPtr( pItem, 3 ) ) )
                   note.lpRecips[ note.nRecipCount ].ulRecipClass = ( ULONG ) hb_arrayGetNL( pItem, 3 );
                else
                   note.lpRecips[ note.nRecipCount ].ulRecipClass = MAPI_TO;
@@ -176,6 +176,8 @@ HB_FUNC( WIN_MAPISENDMAIL )
             {
                note.lpRecips[ note.nRecipCount ].lpszName = ( LPSTR ) HB_ITEMGETSTR( pItem, &hString[ iString++ ], NULL );
                note.lpRecips[ note.nRecipCount ].ulRecipClass = MAPI_TO;
+
+               ++note.nRecipCount;
             }
          }
 
