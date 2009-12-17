@@ -86,6 +86,7 @@ CLASS XbpTabPage  INHERIT  XbpWindow
 
    METHOD   new()
    METHOD   create()
+   METHOD   hbCreateFromQtPtr()
    METHOD   configure()
    METHOD   destroy()
 
@@ -145,6 +146,20 @@ METHOD XbpTabPage:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
 
    oPar:addChild( SELF )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpTabPage:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+
+   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   IF hb_isPointer( pQtObject )
+      ::oWidget := QWidget()
+      ::oWidget:pPtr := pQtObject
+
+   ENDIF
 
    RETURN Self
 

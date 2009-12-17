@@ -86,6 +86,7 @@ CLASS XbpMLE INHERIT XbpWindow, XbpDataRef
 
    METHOD   new()
    METHOD   create()
+   METHOD   hbCreateFromQtPtr()
    METHOD   configure()                           VIRTUAL
    METHOD   destroy()
    METHOD   exeBlock()
@@ -187,6 +188,20 @@ METHOD XbpMLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::setStyle()
    ::oParent:addChild( Self )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpMLE:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+
+   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   IF hb_isPointer( pQtObject )
+      ::oWidget := QPlainTextEdit()
+      ::oWidget:pPtr := pQtObject
+
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

@@ -88,6 +88,7 @@ CLASS XbpSLE INHERIT XbpWindow, XbpDataRef
 
    METHOD   new()
    METHOD   create()
+   METHOD   hbCreateFromQtPtr()
    METHOD   configure()                           VIRTUAL
    METHOD   destroy()
    METHOD   handleEvent()
@@ -169,6 +170,20 @@ METHOD XbpSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
 
    ::oParent:addChild( Self )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpSLE:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+
+   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   IF hb_isPointer( pQtObject )
+      ::oWidget := QLineEdit()
+      ::oWidget:pPtr := pQtObject
+
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

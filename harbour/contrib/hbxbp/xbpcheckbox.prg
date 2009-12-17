@@ -82,6 +82,7 @@ CLASS XbpCheckBox  INHERIT  XbpWindow, XbpDataRef
 
    METHOD   new()
    METHOD   create()
+   METHOD   hbCreateFromQtPtr()
    METHOD   configure()
    METHOD   destroy()
 
@@ -124,6 +125,20 @@ METHOD XbpCheckBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::editBuffer := ::oWidget:isChecked()
 
    ::oParent:AddChild( SELF )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpCheckBox:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+
+   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   IF hb_isPointer( pQtObject )
+      ::oWidget := QCheckBox()
+      ::oWidget:pPtr := pQtObject
+
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

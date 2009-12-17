@@ -79,6 +79,7 @@ CLASS XbpRtf INHERIT XbpWindow
    METHOD   init()
    METHOD   create()
    METHOD   configure()
+   METHOD   hbCreateFromQtPtr()
    METHOD   destroy()
    METHOD   exeBlock()
 
@@ -186,6 +187,20 @@ METHOD XbpRtf:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oTextCursor:pPtr     := ::oWidget:textCursor()
    ::oTextCharFormat:pPtr := ::oTextCursor:charFormat()
 
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpRtf:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+
+   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   IF hb_isPointer( pQtObject )
+      ::oWidget := QTextEdit()
+      ::oWidget:pPtr := pQtObject
+
+   ENDIF
 
    RETURN Self
 

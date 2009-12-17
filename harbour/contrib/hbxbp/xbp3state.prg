@@ -82,6 +82,7 @@ CLASS Xbp3State  INHERIT  XbpWindow, XbpDataRef
 
    METHOD   new()
    METHOD   create()
+   METHOD   hbCreateFromQtPtr()
    METHOD   configure()
    METHOD   destroy()
 
@@ -133,6 +134,20 @@ METHOD Xbp3State:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::editBuffer := ::oWidget:checkState()
 
    ::oParent:AddChild( SELF )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Xbp3State:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+
+   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   IF hb_isPointer( pQtObject )
+      ::oWidget := QCheckBox()
+      ::oWidget:pPtr := pQtObject
+
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

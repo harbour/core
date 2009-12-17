@@ -86,6 +86,7 @@ CLASS XbpStatic  INHERIT  XbpWindow
 
    METHOD   new()
    METHOD   create()
+   METHOD   hbCreateFromQtPtr()
    METHOD   configure()
    METHOD   destroy()
 
@@ -243,6 +244,76 @@ METHOD XbpStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::show()
    ENDIF
    ::oParent:addChild( SELF )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpStatic:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+
+   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   IF hb_isPointer( pQtObject )
+   DO CASE
+   CASE ::type == XBPSTATIC_TYPE_TEXT
+      ::oWidget := QLabel()
+
+   CASE ::type == XBPSTATIC_TYPE_GROUPBOX
+      ::oWidget := QGroupBox()
+
+   CASE ::type == XBPSTATIC_TYPE_RAISEDBOX
+      ::oWidget := QFrame()
+
+   CASE ::type == XBPSTATIC_TYPE_RECESSEDBOX
+      ::oWidget := QFrame()
+
+   CASE ::type == XBPSTATIC_TYPE_RAISEDRECT
+      ::oWidget := QFrame()
+
+   CASE ::type == XBPSTATIC_TYPE_RECESSEDRECT
+      ::oWidget := QFrame()
+
+   CASE ::type == XBPSTATIC_TYPE_FGNDFRAME     // rectangle in foreground color, not filled
+      ::oWidget := QFrame()
+
+   CASE ::type == XBPSTATIC_TYPE_BGNDFRAME
+      ::oWidget := QFrame()
+
+   CASE ::type == XBPSTATIC_TYPE_FGNDRECT
+      ::oWidget := QFrame()
+
+   CASE ::type == XBPSTATIC_TYPE_BGNDRECT
+      ::oWidget := QFrame()
+
+   CASE ::type == XBPSTATIC_TYPE_HALFTONERECT
+      ::oWidget := QFrame()
+
+   CASE ::type == XBPSTATIC_TYPE_HALFTONEFRAME
+      ::oWidget := QFrame()
+
+   CASE ::type == XBPSTATIC_TYPE_RAISEDLINE
+      ::oWidget := QFrame()
+
+   CASE ::type == XBPSTATIC_TYPE_RECESSEDLINE
+      ::oWidget := QFrame()
+
+   CASE ::type == XBPSTATIC_TYPE_ICON
+      ::oWidget := QLabel()
+
+   CASE ::type == XBPSTATIC_TYPE_SYSICON
+      ::oWidget := QLabel()
+
+   CASE ::type == XBPSTATIC_TYPE_BITMAP
+      ::oWidget := QLabel()
+
+   OTHERWISE
+      ::oWidget := QFrame()
+
+   ENDCASE
+
+      ::oWidget:pPtr := pQtObject
+
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

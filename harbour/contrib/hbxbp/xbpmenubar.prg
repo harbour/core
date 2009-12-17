@@ -101,6 +101,7 @@ CLASS xbpMenuBar INHERIT xbpWindow
 
    METHOD   new()
    METHOD   create()
+   METHOD   hbCreateFromQtPtr()
    METHOD   configure()
    METHOD   destroy()
 
@@ -198,6 +199,20 @@ METHOD xbpMenuBar:create( oParent, aPresParams, lVisible )
    ::setStyle()
 
    ::oParent:addChild( self )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD xbpMenuBar:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+
+   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   IF hb_isPointer( pQtObject )
+      ::oWidget := QMenuBar()
+      ::oWidget:pPtr := pQtObject
+
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
