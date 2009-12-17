@@ -82,7 +82,7 @@ CREATE CLASS QEventLoop INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QEventLoop:new( pParent )
-   ::pPtr := Qt_QEventLoop( pParent )
+   ::pPtr := Qt_QEventLoop( hbqt_ptr( pParent ) )
    RETURN Self
 
 

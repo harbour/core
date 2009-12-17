@@ -83,7 +83,7 @@ CREATE CLASS QEvent
 /*----------------------------------------------------------------------*/
 
 METHOD QEvent:new( pParent )
-   ::pPtr := Qt_QEvent( pParent )
+   ::pPtr := Qt_QEvent( hbqt_ptr( pParent ) )
    RETURN Self
 
 

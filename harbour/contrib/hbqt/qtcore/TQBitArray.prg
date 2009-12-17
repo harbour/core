@@ -92,7 +92,7 @@ CREATE CLASS QBitArray
 /*----------------------------------------------------------------------*/
 
 METHOD QBitArray:new( pParent )
-   ::pPtr := Qt_QBitArray( pParent )
+   ::pPtr := Qt_QBitArray( hbqt_ptr( pParent ) )
    RETURN Self
 
 

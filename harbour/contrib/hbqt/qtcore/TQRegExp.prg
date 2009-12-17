@@ -95,7 +95,7 @@ CREATE CLASS QRegExp
 /*----------------------------------------------------------------------*/
 
 METHOD QRegExp:new( pParent )
-   ::pPtr := Qt_QRegExp( pParent )
+   ::pPtr := Qt_QRegExp( hbqt_ptr( pParent ) )
    RETURN Self
 
 

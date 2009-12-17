@@ -80,7 +80,7 @@ CREATE CLASS QTranslator INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QTranslator:new( pParent )
-   ::pPtr := Qt_QTranslator( pParent )
+   ::pPtr := Qt_QTranslator( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -102,9 +102,9 @@ METHOD QTranslator:load( cFilename, cDirectory, cSearch_delimiters, cSuffix )
 
 
 METHOD QTranslator:translate( pContext, pSourceText, pDisambiguation )
-   RETURN Qt_QTranslator_translate( ::pPtr, pContext, pSourceText, pDisambiguation )
+   RETURN Qt_QTranslator_translate( ::pPtr, hbqt_ptr( pContext ), hbqt_ptr( pSourceText ), hbqt_ptr( pDisambiguation ) )
 
 
 METHOD QTranslator:translate_1( pContext, pSourceText, pDisambiguation, nN )
-   RETURN Qt_QTranslator_translate_1( ::pPtr, pContext, pSourceText, pDisambiguation, nN )
+   RETURN Qt_QTranslator_translate_1( ::pPtr, hbqt_ptr( pContext ), hbqt_ptr( pSourceText ), hbqt_ptr( pDisambiguation ), nN )
 

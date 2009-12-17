@@ -92,7 +92,7 @@ CREATE CLASS QLine
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( ... ) CLASS QLine
+METHOD QLine:new( ... )
 
    ::pPtr := Qt_QLine( ... )
 
@@ -145,11 +145,11 @@ METHOD QLine:isNull()
 
 
 METHOD QLine:setP1( pP1 )
-   RETURN Qt_QLine_setP1( ::pPtr, pP1 )
+   RETURN Qt_QLine_setP1( ::pPtr, hbqt_ptr( pP1 ) )
 
 
 METHOD QLine:setP2( pP2 )
-   RETURN Qt_QLine_setP2( ::pPtr, pP2 )
+   RETURN Qt_QLine_setP2( ::pPtr, hbqt_ptr( pP2 ) )
 
 
 METHOD QLine:setLine( nX1, nY1, nX2, nY2 )
@@ -157,11 +157,11 @@ METHOD QLine:setLine( nX1, nY1, nX2, nY2 )
 
 
 METHOD QLine:setPoints( pP1, pP2 )
-   RETURN Qt_QLine_setPoints( ::pPtr, pP1, pP2 )
+   RETURN Qt_QLine_setPoints( ::pPtr, hbqt_ptr( pP1 ), hbqt_ptr( pP2 ) )
 
 
 METHOD QLine:translate( pOffset )
-   RETURN Qt_QLine_translate( ::pPtr, pOffset )
+   RETURN Qt_QLine_translate( ::pPtr, hbqt_ptr( pOffset ) )
 
 
 METHOD QLine:translate_1( nDx, nDy )
@@ -169,7 +169,7 @@ METHOD QLine:translate_1( nDx, nDy )
 
 
 METHOD QLine:translated( pOffset )
-   RETURN Qt_QLine_translated( ::pPtr, pOffset )
+   RETURN Qt_QLine_translated( ::pPtr, hbqt_ptr( pOffset ) )
 
 
 METHOD QLine:translated_1( nDx, nDy )

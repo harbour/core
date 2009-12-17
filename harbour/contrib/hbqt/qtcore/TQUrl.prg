@@ -145,7 +145,7 @@ CREATE CLASS QUrl INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QUrl:new( pParent )
-   ::pPtr := Qt_QUrl( pParent )
+   ::pPtr := Qt_QUrl( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -159,7 +159,7 @@ METHOD QUrl:configure( xObject )
 
 
 METHOD QUrl:addEncodedQueryItem( pKey, pValue )
-   RETURN Qt_QUrl_addEncodedQueryItem( ::pPtr, pKey, pValue )
+   RETURN Qt_QUrl_addEncodedQueryItem( ::pPtr, hbqt_ptr( pKey ), hbqt_ptr( pValue ) )
 
 
 METHOD QUrl:addQueryItem( cKey, cValue )
@@ -199,7 +199,7 @@ METHOD QUrl:encodedQuery()
 
 
 METHOD QUrl:encodedQueryItemValue( pKey )
-   RETURN Qt_QUrl_encodedQueryItemValue( ::pPtr, pKey )
+   RETURN Qt_QUrl_encodedQueryItemValue( ::pPtr, hbqt_ptr( pKey ) )
 
 
 METHOD QUrl:encodedUserName()
@@ -215,7 +215,7 @@ METHOD QUrl:fragment()
 
 
 METHOD QUrl:hasEncodedQueryItem( pKey )
-   RETURN Qt_QUrl_hasEncodedQueryItem( ::pPtr, pKey )
+   RETURN Qt_QUrl_hasEncodedQueryItem( ::pPtr, hbqt_ptr( pKey ) )
 
 
 METHOD QUrl:hasFragment()
@@ -239,7 +239,7 @@ METHOD QUrl:isEmpty()
 
 
 METHOD QUrl:isParentOf( pChildUrl )
-   RETURN Qt_QUrl_isParentOf( ::pPtr, pChildUrl )
+   RETURN Qt_QUrl_isParentOf( ::pPtr, hbqt_ptr( pChildUrl ) )
 
 
 METHOD QUrl:isRelative()
@@ -279,7 +279,7 @@ METHOD QUrl:queryValueDelimiter()
 
 
 METHOD QUrl:removeAllEncodedQueryItems( pKey )
-   RETURN Qt_QUrl_removeAllEncodedQueryItems( ::pPtr, pKey )
+   RETURN Qt_QUrl_removeAllEncodedQueryItems( ::pPtr, hbqt_ptr( pKey ) )
 
 
 METHOD QUrl:removeAllQueryItems( cKey )
@@ -287,7 +287,7 @@ METHOD QUrl:removeAllQueryItems( cKey )
 
 
 METHOD QUrl:removeEncodedQueryItem( pKey )
-   RETURN Qt_QUrl_removeEncodedQueryItem( ::pPtr, pKey )
+   RETURN Qt_QUrl_removeEncodedQueryItem( ::pPtr, hbqt_ptr( pKey ) )
 
 
 METHOD QUrl:removeQueryItem( cKey )
@@ -295,7 +295,7 @@ METHOD QUrl:removeQueryItem( cKey )
 
 
 METHOD QUrl:resolved( pRelative )
-   RETURN Qt_QUrl_resolved( ::pPtr, pRelative )
+   RETURN Qt_QUrl_resolved( ::pPtr, hbqt_ptr( pRelative ) )
 
 
 METHOD QUrl:scheme()
@@ -307,35 +307,35 @@ METHOD QUrl:setAuthority( cAuthority )
 
 
 METHOD QUrl:setEncodedFragment( pFragment )
-   RETURN Qt_QUrl_setEncodedFragment( ::pPtr, pFragment )
+   RETURN Qt_QUrl_setEncodedFragment( ::pPtr, hbqt_ptr( pFragment ) )
 
 
 METHOD QUrl:setEncodedHost( pHost )
-   RETURN Qt_QUrl_setEncodedHost( ::pPtr, pHost )
+   RETURN Qt_QUrl_setEncodedHost( ::pPtr, hbqt_ptr( pHost ) )
 
 
 METHOD QUrl:setEncodedPassword( pPassword )
-   RETURN Qt_QUrl_setEncodedPassword( ::pPtr, pPassword )
+   RETURN Qt_QUrl_setEncodedPassword( ::pPtr, hbqt_ptr( pPassword ) )
 
 
 METHOD QUrl:setEncodedPath( pPath )
-   RETURN Qt_QUrl_setEncodedPath( ::pPtr, pPath )
+   RETURN Qt_QUrl_setEncodedPath( ::pPtr, hbqt_ptr( pPath ) )
 
 
 METHOD QUrl:setEncodedQuery( pQuery )
-   RETURN Qt_QUrl_setEncodedQuery( ::pPtr, pQuery )
+   RETURN Qt_QUrl_setEncodedQuery( ::pPtr, hbqt_ptr( pQuery ) )
 
 
 METHOD QUrl:setEncodedUrl( pEncodedUrl )
-   RETURN Qt_QUrl_setEncodedUrl( ::pPtr, pEncodedUrl )
+   RETURN Qt_QUrl_setEncodedUrl( ::pPtr, hbqt_ptr( pEncodedUrl ) )
 
 
 METHOD QUrl:setEncodedUrl_1( pEncodedUrl, nParsingMode )
-   RETURN Qt_QUrl_setEncodedUrl_1( ::pPtr, pEncodedUrl, nParsingMode )
+   RETURN Qt_QUrl_setEncodedUrl_1( ::pPtr, hbqt_ptr( pEncodedUrl ), nParsingMode )
 
 
 METHOD QUrl:setEncodedUserName( pUserName )
-   RETURN Qt_QUrl_setEncodedUserName( ::pPtr, pUserName )
+   RETURN Qt_QUrl_setEncodedUserName( ::pPtr, hbqt_ptr( pUserName ) )
 
 
 METHOD QUrl:setFragment( cFragment )
@@ -399,15 +399,15 @@ METHOD QUrl:userName()
 
 
 METHOD QUrl:fromAce( pDomain )
-   RETURN Qt_QUrl_fromAce( ::pPtr, pDomain )
+   RETURN Qt_QUrl_fromAce( ::pPtr, hbqt_ptr( pDomain ) )
 
 
 METHOD QUrl:fromEncoded( pInput )
-   RETURN Qt_QUrl_fromEncoded( ::pPtr, pInput )
+   RETURN Qt_QUrl_fromEncoded( ::pPtr, hbqt_ptr( pInput ) )
 
 
 METHOD QUrl:fromEncoded_1( pInput, nParsingMode )
-   RETURN Qt_QUrl_fromEncoded_1( ::pPtr, pInput, nParsingMode )
+   RETURN Qt_QUrl_fromEncoded_1( ::pPtr, hbqt_ptr( pInput ), nParsingMode )
 
 
 METHOD QUrl:fromLocalFile( cLocalFile )
@@ -415,7 +415,7 @@ METHOD QUrl:fromLocalFile( cLocalFile )
 
 
 METHOD QUrl:fromPercentEncoding( pInput )
-   RETURN Qt_QUrl_fromPercentEncoding( ::pPtr, pInput )
+   RETURN Qt_QUrl_fromPercentEncoding( ::pPtr, hbqt_ptr( pInput ) )
 
 
 METHOD QUrl:idnWhitelist()
@@ -423,7 +423,7 @@ METHOD QUrl:idnWhitelist()
 
 
 METHOD QUrl:setIdnWhitelist( pList )
-   RETURN Qt_QUrl_setIdnWhitelist( ::pPtr, pList )
+   RETURN Qt_QUrl_setIdnWhitelist( ::pPtr, hbqt_ptr( pList ) )
 
 
 METHOD QUrl:toAce( cDomain )
@@ -431,5 +431,5 @@ METHOD QUrl:toAce( cDomain )
 
 
 METHOD QUrl:toPercentEncoding( cInput, pExclude, pInclude )
-   RETURN Qt_QUrl_toPercentEncoding( ::pPtr, cInput, pExclude, pInclude )
+   RETURN Qt_QUrl_toPercentEncoding( ::pPtr, cInput, hbqt_ptr( pExclude ), hbqt_ptr( pInclude ) )
 

@@ -90,7 +90,7 @@ CREATE CLASS QUiLoader INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QUiLoader:new( pParent )
-   ::pPtr := Qt_QUiLoader( pParent )
+   ::pPtr := Qt_QUiLoader( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -120,19 +120,19 @@ METHOD QUiLoader:clearPluginPaths()
 
 
 METHOD QUiLoader:createAction( pParent, cName )
-   RETURN Qt_QUiLoader_createAction( ::pPtr, pParent, cName )
+   RETURN Qt_QUiLoader_createAction( ::pPtr, hbqt_ptr( pParent ), cName )
 
 
 METHOD QUiLoader:createActionGroup( pParent, cName )
-   RETURN Qt_QUiLoader_createActionGroup( ::pPtr, pParent, cName )
+   RETURN Qt_QUiLoader_createActionGroup( ::pPtr, hbqt_ptr( pParent ), cName )
 
 
 METHOD QUiLoader:createLayout( cClassName, pParent, cName )
-   RETURN Qt_QUiLoader_createLayout( ::pPtr, cClassName, pParent, cName )
+   RETURN Qt_QUiLoader_createLayout( ::pPtr, cClassName, hbqt_ptr( pParent ), cName )
 
 
 METHOD QUiLoader:createWidget( cClassName, pParent, cName )
-   RETURN Qt_QUiLoader_createWidget( ::pPtr, cClassName, pParent, cName )
+   RETURN Qt_QUiLoader_createWidget( ::pPtr, cClassName, hbqt_ptr( pParent ), cName )
 
 
 METHOD QUiLoader:isLanguageChangeEnabled()
@@ -140,7 +140,7 @@ METHOD QUiLoader:isLanguageChangeEnabled()
 
 
 METHOD QUiLoader:load( pDevice, pParentWidget )
-   RETURN Qt_QUiLoader_load( ::pPtr, pDevice, pParentWidget )
+   RETURN Qt_QUiLoader_load( ::pPtr, hbqt_ptr( pDevice ), hbqt_ptr( pParentWidget ) )
 
 
 METHOD QUiLoader:pluginPaths()
@@ -152,7 +152,7 @@ METHOD QUiLoader:setLanguageChangeEnabled( lEnabled )
 
 
 METHOD QUiLoader:setWorkingDirectory( pDir )
-   RETURN Qt_QUiLoader_setWorkingDirectory( ::pPtr, pDir )
+   RETURN Qt_QUiLoader_setWorkingDirectory( ::pPtr, hbqt_ptr( pDir ) )
 
 
 METHOD QUiLoader:workingDirectory()

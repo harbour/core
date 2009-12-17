@@ -109,7 +109,7 @@ CREATE CLASS QProcess INHERIT QIODevice
 /*----------------------------------------------------------------------*/
 
 METHOD QProcess:new( pParent )
-   ::pPtr := Qt_QProcess( pParent )
+   ::pPtr := Qt_QProcess( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -167,7 +167,7 @@ METHOD QProcess:readChannel()
 
 
 METHOD QProcess:setEnvironment( pEnvironment )
-   RETURN Qt_QProcess_setEnvironment( ::pPtr, pEnvironment )
+   RETURN Qt_QProcess_setEnvironment( ::pPtr, hbqt_ptr( pEnvironment ) )
 
 
 METHOD QProcess:setProcessChannelMode( nMode )
@@ -191,7 +191,7 @@ METHOD QProcess:setStandardOutputFile( cFileName, nMode )
 
 
 METHOD QProcess:setStandardOutputProcess( pDestination )
-   RETURN Qt_QProcess_setStandardOutputProcess( ::pPtr, pDestination )
+   RETURN Qt_QProcess_setStandardOutputProcess( ::pPtr, hbqt_ptr( pDestination ) )
 
 
 METHOD QProcess:setWorkingDirectory( cDir )
@@ -199,7 +199,7 @@ METHOD QProcess:setWorkingDirectory( cDir )
 
 
 METHOD QProcess:start( cProgram, pArguments, nMode )
-   RETURN Qt_QProcess_start( ::pPtr, cProgram, pArguments, nMode )
+   RETURN Qt_QProcess_start( ::pPtr, cProgram, hbqt_ptr( pArguments ), nMode )
 
 
 METHOD QProcess:start_1( cProgram, nMode )
@@ -223,7 +223,7 @@ METHOD QProcess:workingDirectory()
 
 
 METHOD QProcess:execute( cProgram, pArguments )
-   RETURN Qt_QProcess_execute( ::pPtr, cProgram, pArguments )
+   RETURN Qt_QProcess_execute( ::pPtr, cProgram, hbqt_ptr( pArguments ) )
 
 
 METHOD QProcess:execute_1( cProgram )
@@ -231,11 +231,11 @@ METHOD QProcess:execute_1( cProgram )
 
 
 METHOD QProcess:startDetached( cProgram, pArguments, cWorkingDirectory, nPid )
-   RETURN Qt_QProcess_startDetached( ::pPtr, cProgram, pArguments, cWorkingDirectory, nPid )
+   RETURN Qt_QProcess_startDetached( ::pPtr, cProgram, hbqt_ptr( pArguments ), cWorkingDirectory, nPid )
 
 
 METHOD QProcess:startDetached_1( cProgram, pArguments )
-   RETURN Qt_QProcess_startDetached_1( ::pPtr, cProgram, pArguments )
+   RETURN Qt_QProcess_startDetached_1( ::pPtr, cProgram, hbqt_ptr( pArguments ) )
 
 
 METHOD QProcess:startDetached_2( cProgram )

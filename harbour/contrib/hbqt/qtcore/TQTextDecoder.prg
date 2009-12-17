@@ -77,7 +77,7 @@ CREATE CLASS QTextDecoder
 /*----------------------------------------------------------------------*/
 
 METHOD QTextDecoder:new( pParent )
-   ::pPtr := Qt_QTextDecoder( pParent )
+   ::pPtr := Qt_QTextDecoder( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -91,5 +91,5 @@ METHOD QTextDecoder:configure( xObject )
 
 
 METHOD QTextDecoder:toUnicode( pChars, nLen )
-   RETURN Qt_QTextDecoder_toUnicode( ::pPtr, pChars, nLen )
+   RETURN Qt_QTextDecoder_toUnicode( ::pPtr, hbqt_ptr( pChars ), nLen )
 

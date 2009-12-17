@@ -120,7 +120,7 @@ CREATE CLASS QFileInfo
 /*----------------------------------------------------------------------*/
 
 METHOD QFileInfo:new( pParent )
-   ::pPtr := Qt_QFileInfo( pParent )
+   ::pPtr := Qt_QFileInfo( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -290,11 +290,11 @@ METHOD QFileInfo:setFile( cFile )
 
 
 METHOD QFileInfo:setFile_1( pFile )
-   RETURN Qt_QFileInfo_setFile_1( ::pPtr, pFile )
+   RETURN Qt_QFileInfo_setFile_1( ::pPtr, hbqt_ptr( pFile ) )
 
 
 METHOD QFileInfo:setFile_2( pDir, cFile )
-   RETURN Qt_QFileInfo_setFile_2( ::pPtr, pDir, cFile )
+   RETURN Qt_QFileInfo_setFile_2( ::pPtr, hbqt_ptr( pDir ), cFile )
 
 
 METHOD QFileInfo:size()

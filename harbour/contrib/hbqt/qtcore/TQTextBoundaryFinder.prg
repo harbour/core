@@ -87,7 +87,7 @@ CREATE CLASS QTextBoundaryFinder
 /*----------------------------------------------------------------------*/
 
 METHOD QTextBoundaryFinder:new( pParent )
-   ::pPtr := Qt_QTextBoundaryFinder( pParent )
+   ::pPtr := Qt_QTextBoundaryFinder( hbqt_ptr( pParent ) )
    RETURN Self
 
 

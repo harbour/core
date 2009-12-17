@@ -89,7 +89,7 @@ CREATE CLASS QSize
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( ... ) CLASS QSize
+METHOD QSize:new( ... )
 
    ::pPtr := Qt_QSize( ... )
 
@@ -134,7 +134,7 @@ METHOD QSize:scale( nWidth, nHeight, nMode )
 
 
 METHOD QSize:scale_1( pSize, nMode )
-   RETURN Qt_QSize_scale_1( ::pPtr, pSize, nMode )
+   RETURN Qt_QSize_scale_1( ::pPtr, hbqt_ptr( pSize ), nMode )
 
 
 METHOD QSize:setHeight( nHeight )
@@ -154,9 +154,9 @@ METHOD QSize:width()
 
 
 METHOD QSize:boundedTo( pOtherSize )
-   RETURN Qt_QSize_boundedTo( ::pPtr, pOtherSize )
+   RETURN Qt_QSize_boundedTo( ::pPtr, hbqt_ptr( pOtherSize ) )
 
 
 METHOD QSize:expandedTo( pOtherSize )
-   RETURN Qt_QSize_expandedTo( ::pPtr, pOtherSize )
+   RETURN Qt_QSize_expandedTo( ::pPtr, hbqt_ptr( pOtherSize ) )
 

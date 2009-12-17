@@ -102,7 +102,7 @@ CREATE CLASS QDateTime
 /*----------------------------------------------------------------------*/
 
 METHOD QDateTime:new( pParent )
-   ::pPtr := Qt_QDateTime( pParent )
+   ::pPtr := Qt_QDateTime( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -140,7 +140,7 @@ METHOD QDateTime:date()
 
 
 METHOD QDateTime:daysTo( pOther )
-   RETURN Qt_QDateTime_daysTo( ::pPtr, pOther )
+   RETURN Qt_QDateTime_daysTo( ::pPtr, hbqt_ptr( pOther ) )
 
 
 METHOD QDateTime:isNull()
@@ -152,15 +152,15 @@ METHOD QDateTime:isValid()
 
 
 METHOD QDateTime:secsTo( pOther )
-   RETURN Qt_QDateTime_secsTo( ::pPtr, pOther )
+   RETURN Qt_QDateTime_secsTo( ::pPtr, hbqt_ptr( pOther ) )
 
 
 METHOD QDateTime:setDate( pDate )
-   RETURN Qt_QDateTime_setDate( ::pPtr, pDate )
+   RETURN Qt_QDateTime_setDate( ::pPtr, hbqt_ptr( pDate ) )
 
 
 METHOD QDateTime:setTime( pTime )
-   RETURN Qt_QDateTime_setTime( ::pPtr, pTime )
+   RETURN Qt_QDateTime_setTime( ::pPtr, hbqt_ptr( pTime ) )
 
 
 METHOD QDateTime:setTimeSpec( nSpec )

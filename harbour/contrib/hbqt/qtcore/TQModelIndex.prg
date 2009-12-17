@@ -87,7 +87,7 @@ CREATE CLASS QModelIndex
 /*----------------------------------------------------------------------*/
 
 METHOD QModelIndex:new( pParent )
-   ::pPtr := Qt_QModelIndex( pParent )
+   ::pPtr := Qt_QModelIndex( hbqt_ptr( pParent ) )
    RETURN Self
 
 

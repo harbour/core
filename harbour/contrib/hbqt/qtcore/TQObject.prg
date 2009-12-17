@@ -105,7 +105,7 @@ CREATE CLASS QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QObject:new( pParent )
-   ::pPtr := Qt_QObject( pParent )
+   ::pPtr := Qt_QObject( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -123,15 +123,15 @@ METHOD QObject:blockSignals( lBlock )
 
 
 METHOD QObject:connect( pSender, pSignal, pMethod, nType )
-   RETURN Qt_QObject_connect( ::pPtr, pSender, pSignal, pMethod, nType )
+   RETURN Qt_QObject_connect( ::pPtr, hbqt_ptr( pSender ), hbqt_ptr( pSignal ), hbqt_ptr( pMethod ), nType )
 
 
 METHOD QObject:disconnect( pSignal, pReceiver, pMethod )
-   RETURN Qt_QObject_disconnect( ::pPtr, pSignal, pReceiver, pMethod )
+   RETURN Qt_QObject_disconnect( ::pPtr, hbqt_ptr( pSignal ), hbqt_ptr( pReceiver ), hbqt_ptr( pMethod ) )
 
 
 METHOD QObject:disconnect_1( pReceiver, pMethod )
-   RETURN Qt_QObject_disconnect_1( ::pPtr, pReceiver, pMethod )
+   RETURN Qt_QObject_disconnect_1( ::pPtr, hbqt_ptr( pReceiver ), hbqt_ptr( pMethod ) )
 
 
 METHOD QObject:dumpObjectInfo()
@@ -143,19 +143,19 @@ METHOD QObject:dumpObjectTree()
 
 
 METHOD QObject:event( pE )
-   RETURN Qt_QObject_event( ::pPtr, pE )
+   RETURN Qt_QObject_event( ::pPtr, hbqt_ptr( pE ) )
 
 
 METHOD QObject:eventFilter( pWatched, pEvent )
-   RETURN Qt_QObject_eventFilter( ::pPtr, pWatched, pEvent )
+   RETURN Qt_QObject_eventFilter( ::pPtr, hbqt_ptr( pWatched ), hbqt_ptr( pEvent ) )
 
 
 METHOD QObject:inherits( pClassName )
-   RETURN Qt_QObject_inherits( ::pPtr, pClassName )
+   RETURN Qt_QObject_inherits( ::pPtr, hbqt_ptr( pClassName ) )
 
 
 METHOD QObject:installEventFilter( pFilterObj )
-   RETURN Qt_QObject_installEventFilter( ::pPtr, pFilterObj )
+   RETURN Qt_QObject_installEventFilter( ::pPtr, hbqt_ptr( pFilterObj ) )
 
 
 METHOD QObject:isWidgetType()
@@ -171,7 +171,7 @@ METHOD QObject:metaObject()
 
 
 METHOD QObject:moveToThread( pTargetThread )
-   RETURN Qt_QObject_moveToThread( ::pPtr, pTargetThread )
+   RETURN Qt_QObject_moveToThread( ::pPtr, hbqt_ptr( pTargetThread ) )
 
 
 METHOD QObject:objectName()
@@ -183,11 +183,11 @@ METHOD QObject:parent()
 
 
 METHOD QObject:property( pName )
-   RETURN Qt_QObject_property( ::pPtr, pName )
+   RETURN Qt_QObject_property( ::pPtr, hbqt_ptr( pName ) )
 
 
 METHOD QObject:removeEventFilter( pObj )
-   RETURN Qt_QObject_removeEventFilter( ::pPtr, pObj )
+   RETURN Qt_QObject_removeEventFilter( ::pPtr, hbqt_ptr( pObj ) )
 
 
 METHOD QObject:setObjectName( cName )
@@ -195,11 +195,11 @@ METHOD QObject:setObjectName( cName )
 
 
 METHOD QObject:setParent( pParent )
-   RETURN Qt_QObject_setParent( ::pPtr, pParent )
+   RETURN Qt_QObject_setParent( ::pPtr, hbqt_ptr( pParent ) )
 
 
 METHOD QObject:setProperty( pName, pValue )
-   RETURN Qt_QObject_setProperty( ::pPtr, pName, pValue )
+   RETURN Qt_QObject_setProperty( ::pPtr, hbqt_ptr( pName ), hbqt_ptr( pValue ) )
 
 
 METHOD QObject:signalsBlocked()
@@ -215,19 +215,19 @@ METHOD QObject:thread()
 
 
 METHOD QObject:connect_1( pSender, pSignal, pReceiver, pMethod, nType )
-   RETURN Qt_QObject_connect_1( ::pPtr, pSender, pSignal, pReceiver, pMethod, nType )
+   RETURN Qt_QObject_connect_1( ::pPtr, hbqt_ptr( pSender ), hbqt_ptr( pSignal ), hbqt_ptr( pReceiver ), hbqt_ptr( pMethod ), nType )
 
 
 METHOD QObject:disconnect_2( pSender, pSignal, pReceiver, pMethod )
-   RETURN Qt_QObject_disconnect_2( ::pPtr, pSender, pSignal, pReceiver, pMethod )
+   RETURN Qt_QObject_disconnect_2( ::pPtr, hbqt_ptr( pSender ), hbqt_ptr( pSignal ), hbqt_ptr( pReceiver ), hbqt_ptr( pMethod ) )
 
 
 METHOD QObject:tr( pSourceText, pDisambiguation, nN )
-   RETURN Qt_QObject_tr( ::pPtr, pSourceText, pDisambiguation, nN )
+   RETURN Qt_QObject_tr( ::pPtr, hbqt_ptr( pSourceText ), hbqt_ptr( pDisambiguation ), nN )
 
 
 METHOD QObject:trUtf8( pSourceText, pDisambiguation, nN )
-   RETURN Qt_QObject_trUtf8( ::pPtr, pSourceText, pDisambiguation, nN )
+   RETURN Qt_QObject_trUtf8( ::pPtr, hbqt_ptr( pSourceText ), hbqt_ptr( pDisambiguation ), nN )
 
 
 METHOD QObject:deleteLater()

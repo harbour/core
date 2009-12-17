@@ -95,7 +95,7 @@ CREATE CLASS QMimeData INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QMimeData:new( pParent )
-   ::pPtr := Qt_QMimeData( pParent )
+   ::pPtr := Qt_QMimeData( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -161,11 +161,11 @@ METHOD QMimeData:removeFormat( cMimeType )
 
 
 METHOD QMimeData:setColorData( pColor )
-   RETURN Qt_QMimeData_setColorData( ::pPtr, pColor )
+   RETURN Qt_QMimeData_setColorData( ::pPtr, hbqt_ptr( pColor ) )
 
 
 METHOD QMimeData:setData( cMimeType, pData )
-   RETURN Qt_QMimeData_setData( ::pPtr, cMimeType, pData )
+   RETURN Qt_QMimeData_setData( ::pPtr, cMimeType, hbqt_ptr( pData ) )
 
 
 METHOD QMimeData:setHtml( cHtml )
@@ -173,7 +173,7 @@ METHOD QMimeData:setHtml( cHtml )
 
 
 METHOD QMimeData:setImageData( pImage )
-   RETURN Qt_QMimeData_setImageData( ::pPtr, pImage )
+   RETURN Qt_QMimeData_setImageData( ::pPtr, hbqt_ptr( pImage ) )
 
 
 METHOD QMimeData:setText( cText )

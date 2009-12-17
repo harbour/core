@@ -96,7 +96,7 @@ CREATE CLASS QTime
 /*----------------------------------------------------------------------*/
 
 METHOD QTime:new( pParent )
-   ::pPtr := Qt_QTime( pParent )
+   ::pPtr := Qt_QTime( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -142,7 +142,7 @@ METHOD QTime:msec()
 
 
 METHOD QTime:msecsTo( pT )
-   RETURN Qt_QTime_msecsTo( ::pPtr, pT )
+   RETURN Qt_QTime_msecsTo( ::pPtr, hbqt_ptr( pT ) )
 
 
 METHOD QTime:restart()
@@ -154,7 +154,7 @@ METHOD QTime:second()
 
 
 METHOD QTime:secsTo( pT )
-   RETURN Qt_QTime_secsTo( ::pPtr, pT )
+   RETURN Qt_QTime_secsTo( ::pPtr, hbqt_ptr( pT ) )
 
 
 METHOD QTime:setHMS( nH, nM, nS, nMs )

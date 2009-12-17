@@ -103,7 +103,7 @@ CREATE CLASS QLineF
 /*----------------------------------------------------------------------*/
 
 METHOD QLineF:new( pParent )
-   ::pPtr := Qt_QLineF( pParent )
+   ::pPtr := Qt_QLineF( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -145,7 +145,7 @@ METHOD QLineF:angle()
 
 
 METHOD QLineF:angleTo( pLine )
-   RETURN Qt_QLineF_angleTo( ::pPtr, pLine )
+   RETURN Qt_QLineF_angleTo( ::pPtr, hbqt_ptr( pLine ) )
 
 
 METHOD QLineF:dx()
@@ -157,7 +157,7 @@ METHOD QLineF:dy()
 
 
 METHOD QLineF:intersect( pLine, pIntersectionPoint )
-   RETURN Qt_QLineF_intersect( ::pPtr, pLine, pIntersectionPoint )
+   RETURN Qt_QLineF_intersect( ::pPtr, hbqt_ptr( pLine ), hbqt_ptr( pIntersectionPoint ) )
 
 
 METHOD QLineF:isNull()
@@ -177,11 +177,11 @@ METHOD QLineF:pointAt( nT )
 
 
 METHOD QLineF:setP1( pP1 )
-   RETURN Qt_QLineF_setP1( ::pPtr, pP1 )
+   RETURN Qt_QLineF_setP1( ::pPtr, hbqt_ptr( pP1 ) )
 
 
 METHOD QLineF:setP2( pP2 )
-   RETURN Qt_QLineF_setP2( ::pPtr, pP2 )
+   RETURN Qt_QLineF_setP2( ::pPtr, hbqt_ptr( pP2 ) )
 
 
 METHOD QLineF:setAngle( nAngle )
@@ -197,7 +197,7 @@ METHOD QLineF:setLine( nX1, nY1, nX2, nY2 )
 
 
 METHOD QLineF:setPoints( pP1, pP2 )
-   RETURN Qt_QLineF_setPoints( ::pPtr, pP1, pP2 )
+   RETURN Qt_QLineF_setPoints( ::pPtr, hbqt_ptr( pP1 ), hbqt_ptr( pP2 ) )
 
 
 METHOD QLineF:toLine()
@@ -205,7 +205,7 @@ METHOD QLineF:toLine()
 
 
 METHOD QLineF:translate( pOffset )
-   RETURN Qt_QLineF_translate( ::pPtr, pOffset )
+   RETURN Qt_QLineF_translate( ::pPtr, hbqt_ptr( pOffset ) )
 
 
 METHOD QLineF:translate_1( nDx, nDy )
@@ -213,7 +213,7 @@ METHOD QLineF:translate_1( nDx, nDy )
 
 
 METHOD QLineF:translated( pOffset )
-   RETURN Qt_QLineF_translated( ::pPtr, pOffset )
+   RETURN Qt_QLineF_translated( ::pPtr, hbqt_ptr( pOffset ) )
 
 
 METHOD QLineF:translated_1( nDx, nDy )

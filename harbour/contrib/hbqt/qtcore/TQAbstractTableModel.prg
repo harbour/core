@@ -77,7 +77,7 @@ CREATE CLASS QAbstractTableModel INHERIT QAbstractItemModel
 /*----------------------------------------------------------------------*/
 
 METHOD QAbstractTableModel:new( pParent )
-   ::pPtr := Qt_QAbstractTableModel( pParent )
+   ::pPtr := Qt_QAbstractTableModel( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -91,5 +91,5 @@ METHOD QAbstractTableModel:configure( xObject )
 
 
 METHOD QAbstractTableModel:index( nRow, nColumn, pParent )
-   RETURN Qt_QAbstractTableModel_index( ::pPtr, nRow, nColumn, pParent )
+   RETURN Qt_QAbstractTableModel_index( ::pPtr, nRow, nColumn, hbqt_ptr( pParent ) )
 

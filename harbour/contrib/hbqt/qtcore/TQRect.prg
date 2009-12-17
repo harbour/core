@@ -134,7 +134,7 @@ CREATE CLASS QRect
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( ... ) CLASS QRect
+METHOD QRect:new( ... )
 
    ::pPtr := Qt_QRect( ... )
 
@@ -175,7 +175,7 @@ METHOD QRect:center()
 
 
 METHOD QRect:contains( pPoint, lProper )
-   RETURN Qt_QRect_contains( ::pPtr, pPoint, lProper )
+   RETURN Qt_QRect_contains( ::pPtr, hbqt_ptr( pPoint ), lProper )
 
 
 METHOD QRect:contains_1( nX, nY, lProper )
@@ -187,7 +187,7 @@ METHOD QRect:contains_2( nX, nY )
 
 
 METHOD QRect:contains_3( pRectangle, lProper )
-   RETURN Qt_QRect_contains_3( ::pPtr, pRectangle, lProper )
+   RETURN Qt_QRect_contains_3( ::pPtr, hbqt_ptr( pRectangle ), lProper )
 
 
 METHOD QRect:getCoords( nX1, nY1, nX2, nY2 )
@@ -203,11 +203,11 @@ METHOD QRect:height()
 
 
 METHOD QRect:intersected( pRectangle )
-   RETURN Qt_QRect_intersected( ::pPtr, pRectangle )
+   RETURN Qt_QRect_intersected( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QRect:intersects( pRectangle )
-   RETURN Qt_QRect_intersects( ::pPtr, pRectangle )
+   RETURN Qt_QRect_intersects( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QRect:isEmpty()
@@ -231,15 +231,15 @@ METHOD QRect:moveBottom( nY )
 
 
 METHOD QRect:moveBottomLeft( pPosition )
-   RETURN Qt_QRect_moveBottomLeft( ::pPtr, pPosition )
+   RETURN Qt_QRect_moveBottomLeft( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QRect:moveBottomRight( pPosition )
-   RETURN Qt_QRect_moveBottomRight( ::pPtr, pPosition )
+   RETURN Qt_QRect_moveBottomRight( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QRect:moveCenter( pPosition )
-   RETURN Qt_QRect_moveCenter( ::pPtr, pPosition )
+   RETURN Qt_QRect_moveCenter( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QRect:moveLeft( nX )
@@ -255,7 +255,7 @@ METHOD QRect:moveTo( nX, nY )
 
 
 METHOD QRect:moveTo_1( pPosition )
-   RETURN Qt_QRect_moveTo_1( ::pPtr, pPosition )
+   RETURN Qt_QRect_moveTo_1( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QRect:moveTop( nY )
@@ -263,11 +263,11 @@ METHOD QRect:moveTop( nY )
 
 
 METHOD QRect:moveTopLeft( pPosition )
-   RETURN Qt_QRect_moveTopLeft( ::pPtr, pPosition )
+   RETURN Qt_QRect_moveTopLeft( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QRect:moveTopRight( pPosition )
-   RETURN Qt_QRect_moveTopRight( ::pPtr, pPosition )
+   RETURN Qt_QRect_moveTopRight( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QRect:normalized()
@@ -283,11 +283,11 @@ METHOD QRect:setBottom( nY )
 
 
 METHOD QRect:setBottomLeft( pPosition )
-   RETURN Qt_QRect_setBottomLeft( ::pPtr, pPosition )
+   RETURN Qt_QRect_setBottomLeft( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QRect:setBottomRight( pPosition )
-   RETURN Qt_QRect_setBottomRight( ::pPtr, pPosition )
+   RETURN Qt_QRect_setBottomRight( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QRect:setCoords( nX1, nY1, nX2, nY2 )
@@ -311,7 +311,7 @@ METHOD QRect:setRight( nX )
 
 
 METHOD QRect:setSize( pSize )
-   RETURN Qt_QRect_setSize( ::pPtr, pSize )
+   RETURN Qt_QRect_setSize( ::pPtr, hbqt_ptr( pSize ) )
 
 
 METHOD QRect:setTop( nY )
@@ -319,11 +319,11 @@ METHOD QRect:setTop( nY )
 
 
 METHOD QRect:setTopLeft( pPosition )
-   RETURN Qt_QRect_setTopLeft( ::pPtr, pPosition )
+   RETURN Qt_QRect_setTopLeft( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QRect:setTopRight( pPosition )
-   RETURN Qt_QRect_setTopRight( ::pPtr, pPosition )
+   RETURN Qt_QRect_setTopRight( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QRect:setWidth( nWidth )
@@ -359,7 +359,7 @@ METHOD QRect:translate( nDx, nDy )
 
 
 METHOD QRect:translate_1( pOffset )
-   RETURN Qt_QRect_translate_1( ::pPtr, pOffset )
+   RETURN Qt_QRect_translate_1( ::pPtr, hbqt_ptr( pOffset ) )
 
 
 METHOD QRect:translated( nDx, nDy )
@@ -367,11 +367,11 @@ METHOD QRect:translated( nDx, nDy )
 
 
 METHOD QRect:translated_1( pOffset )
-   RETURN Qt_QRect_translated_1( ::pPtr, pOffset )
+   RETURN Qt_QRect_translated_1( ::pPtr, hbqt_ptr( pOffset ) )
 
 
 METHOD QRect:united( pRectangle )
-   RETURN Qt_QRect_united( ::pPtr, pRectangle )
+   RETURN Qt_QRect_united( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QRect:width()

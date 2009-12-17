@@ -89,7 +89,7 @@ CREATE CLASS QDataStream
 /*----------------------------------------------------------------------*/
 
 METHOD QDataStream:new( pParent )
-   ::pPtr := Qt_QDataStream( pParent )
+   ::pPtr := Qt_QDataStream( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -127,7 +127,7 @@ METHOD QDataStream:setByteOrder( nBo )
 
 
 METHOD QDataStream:setDevice( pD )
-   RETURN Qt_QDataStream_setDevice( ::pPtr, pD )
+   RETURN Qt_QDataStream_setDevice( ::pPtr, hbqt_ptr( pD ) )
 
 
 METHOD QDataStream:setStatus( nStatus )
@@ -151,5 +151,5 @@ METHOD QDataStream:version()
 
 
 METHOD QDataStream:writeRawData( pS, nLen )
-   RETURN Qt_QDataStream_writeRawData( ::pPtr, pS, nLen )
+   RETURN Qt_QDataStream_writeRawData( ::pPtr, hbqt_ptr( pS ), nLen )
 

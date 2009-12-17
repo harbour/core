@@ -112,7 +112,7 @@ CREATE CLASS QVariant
 /*----------------------------------------------------------------------*/
 
 METHOD QVariant:new( pParent )
-   ::pPtr := Qt_QVariant( pParent )
+   ::pPtr := Qt_QVariant( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -262,7 +262,7 @@ METHOD QVariant:fromValue( xValue )
 
 
 METHOD QVariant:nameToType( pName )
-   RETURN Qt_QVariant_nameToType( ::pPtr, pName )
+   RETURN Qt_QVariant_nameToType( ::pPtr, hbqt_ptr( pName ) )
 
 
 METHOD QVariant:typeToName( nTyp )

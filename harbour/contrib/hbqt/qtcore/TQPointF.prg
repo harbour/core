@@ -83,7 +83,7 @@ CREATE CLASS QPointF
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( ... ) CLASS QPointF
+METHOD QPointF:new( ... )
 
    ::pPtr := Qt_QPointF( ... )
 

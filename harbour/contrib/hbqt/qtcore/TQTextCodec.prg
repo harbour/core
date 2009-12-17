@@ -96,7 +96,7 @@ CREATE CLASS QTextCodec
 /*----------------------------------------------------------------------*/
 
 METHOD QTextCodec:new( pParent )
-   ::pPtr := Qt_QTextCodec( pParent )
+   ::pPtr := Qt_QTextCodec( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -138,11 +138,11 @@ METHOD QTextCodec:name()
 
 
 METHOD QTextCodec:toUnicode( pA )
-   RETURN Qt_QTextCodec_toUnicode( ::pPtr, pA )
+   RETURN Qt_QTextCodec_toUnicode( ::pPtr, hbqt_ptr( pA ) )
 
 
 METHOD QTextCodec:toUnicode_1( pChars )
-   RETURN Qt_QTextCodec_toUnicode_1( ::pPtr, pChars )
+   RETURN Qt_QTextCodec_toUnicode_1( ::pPtr, hbqt_ptr( pChars ) )
 
 
 METHOD QTextCodec:codecForCStrings()
@@ -150,11 +150,11 @@ METHOD QTextCodec:codecForCStrings()
 
 
 METHOD QTextCodec:codecForHtml( pBa, pDefaultCodec )
-   RETURN Qt_QTextCodec_codecForHtml( ::pPtr, pBa, pDefaultCodec )
+   RETURN Qt_QTextCodec_codecForHtml( ::pPtr, hbqt_ptr( pBa ), hbqt_ptr( pDefaultCodec ) )
 
 
 METHOD QTextCodec:codecForHtml_1( pBa )
-   RETURN Qt_QTextCodec_codecForHtml_1( ::pPtr, pBa )
+   RETURN Qt_QTextCodec_codecForHtml_1( ::pPtr, hbqt_ptr( pBa ) )
 
 
 METHOD QTextCodec:codecForLocale()
@@ -166,11 +166,11 @@ METHOD QTextCodec:codecForMib( nMib )
 
 
 METHOD QTextCodec:codecForName( pName )
-   RETURN Qt_QTextCodec_codecForName( ::pPtr, pName )
+   RETURN Qt_QTextCodec_codecForName( ::pPtr, hbqt_ptr( pName ) )
 
 
 METHOD QTextCodec:codecForName_1( pName )
-   RETURN Qt_QTextCodec_codecForName_1( ::pPtr, pName )
+   RETURN Qt_QTextCodec_codecForName_1( ::pPtr, hbqt_ptr( pName ) )
 
 
 METHOD QTextCodec:codecForTr()
@@ -178,13 +178,13 @@ METHOD QTextCodec:codecForTr()
 
 
 METHOD QTextCodec:setCodecForCStrings( pCodec )
-   RETURN Qt_QTextCodec_setCodecForCStrings( ::pPtr, pCodec )
+   RETURN Qt_QTextCodec_setCodecForCStrings( ::pPtr, hbqt_ptr( pCodec ) )
 
 
 METHOD QTextCodec:setCodecForLocale( pC )
-   RETURN Qt_QTextCodec_setCodecForLocale( ::pPtr, pC )
+   RETURN Qt_QTextCodec_setCodecForLocale( ::pPtr, hbqt_ptr( pC ) )
 
 
 METHOD QTextCodec:setCodecForTr( pC )
-   RETURN Qt_QTextCodec_setCodecForTr( ::pPtr, pC )
+   RETURN Qt_QTextCodec_setCodecForTr( ::pPtr, hbqt_ptr( pC ) )
 

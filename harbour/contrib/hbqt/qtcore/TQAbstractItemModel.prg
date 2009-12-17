@@ -108,7 +108,7 @@ CREATE CLASS QAbstractItemModel INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QAbstractItemModel:new( pParent )
-   ::pPtr := Qt_QAbstractItemModel( pParent )
+   ::pPtr := Qt_QAbstractItemModel( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -122,39 +122,39 @@ METHOD QAbstractItemModel:configure( xObject )
 
 
 METHOD QAbstractItemModel:buddy( pIndex )
-   RETURN Qt_QAbstractItemModel_buddy( ::pPtr, pIndex )
+   RETURN Qt_QAbstractItemModel_buddy( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QAbstractItemModel:canFetchMore( pParent )
-   RETURN Qt_QAbstractItemModel_canFetchMore( ::pPtr, pParent )
+   RETURN Qt_QAbstractItemModel_canFetchMore( ::pPtr, hbqt_ptr( pParent ) )
 
 
 METHOD QAbstractItemModel:columnCount( pParent )
-   RETURN Qt_QAbstractItemModel_columnCount( ::pPtr, pParent )
+   RETURN Qt_QAbstractItemModel_columnCount( ::pPtr, hbqt_ptr( pParent ) )
 
 
 METHOD QAbstractItemModel:data( pIndex, nRole )
-   RETURN Qt_QAbstractItemModel_data( ::pPtr, pIndex, nRole )
+   RETURN Qt_QAbstractItemModel_data( ::pPtr, hbqt_ptr( pIndex ), nRole )
 
 
 METHOD QAbstractItemModel:dropMimeData( pData, nAction, nRow, nColumn, pParent )
-   RETURN Qt_QAbstractItemModel_dropMimeData( ::pPtr, pData, nAction, nRow, nColumn, pParent )
+   RETURN Qt_QAbstractItemModel_dropMimeData( ::pPtr, hbqt_ptr( pData ), nAction, nRow, nColumn, hbqt_ptr( pParent ) )
 
 
 METHOD QAbstractItemModel:fetchMore( pParent )
-   RETURN Qt_QAbstractItemModel_fetchMore( ::pPtr, pParent )
+   RETURN Qt_QAbstractItemModel_fetchMore( ::pPtr, hbqt_ptr( pParent ) )
 
 
 METHOD QAbstractItemModel:flags( pIndex )
-   RETURN Qt_QAbstractItemModel_flags( ::pPtr, pIndex )
+   RETURN Qt_QAbstractItemModel_flags( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QAbstractItemModel:hasChildren( pParent )
-   RETURN Qt_QAbstractItemModel_hasChildren( ::pPtr, pParent )
+   RETURN Qt_QAbstractItemModel_hasChildren( ::pPtr, hbqt_ptr( pParent ) )
 
 
 METHOD QAbstractItemModel:hasIndex( nRow, nColumn, pParent )
-   RETURN Qt_QAbstractItemModel_hasIndex( ::pPtr, nRow, nColumn, pParent )
+   RETURN Qt_QAbstractItemModel_hasIndex( ::pPtr, nRow, nColumn, hbqt_ptr( pParent ) )
 
 
 METHOD QAbstractItemModel:headerData( nSection, nOrientation, nRole )
@@ -162,23 +162,23 @@ METHOD QAbstractItemModel:headerData( nSection, nOrientation, nRole )
 
 
 METHOD QAbstractItemModel:index( nRow, nColumn, pParent )
-   RETURN Qt_QAbstractItemModel_index( ::pPtr, nRow, nColumn, pParent )
+   RETURN Qt_QAbstractItemModel_index( ::pPtr, nRow, nColumn, hbqt_ptr( pParent ) )
 
 
 METHOD QAbstractItemModel:insertColumn( nColumn, pParent )
-   RETURN Qt_QAbstractItemModel_insertColumn( ::pPtr, nColumn, pParent )
+   RETURN Qt_QAbstractItemModel_insertColumn( ::pPtr, nColumn, hbqt_ptr( pParent ) )
 
 
 METHOD QAbstractItemModel:insertColumns( nColumn, nCount, pParent )
-   RETURN Qt_QAbstractItemModel_insertColumns( ::pPtr, nColumn, nCount, pParent )
+   RETURN Qt_QAbstractItemModel_insertColumns( ::pPtr, nColumn, nCount, hbqt_ptr( pParent ) )
 
 
 METHOD QAbstractItemModel:insertRow( nRow, pParent )
-   RETURN Qt_QAbstractItemModel_insertRow( ::pPtr, nRow, pParent )
+   RETURN Qt_QAbstractItemModel_insertRow( ::pPtr, nRow, hbqt_ptr( pParent ) )
 
 
 METHOD QAbstractItemModel:insertRows( nRow, nCount, pParent )
-   RETURN Qt_QAbstractItemModel_insertRows( ::pPtr, nRow, nCount, pParent )
+   RETURN Qt_QAbstractItemModel_insertRows( ::pPtr, nRow, nCount, hbqt_ptr( pParent ) )
 
 
 METHOD QAbstractItemModel:mimeTypes()
@@ -186,35 +186,35 @@ METHOD QAbstractItemModel:mimeTypes()
 
 
 METHOD QAbstractItemModel:parent( pIndex )
-   RETURN Qt_QAbstractItemModel_parent( ::pPtr, pIndex )
+   RETURN Qt_QAbstractItemModel_parent( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QAbstractItemModel:removeColumn( nColumn, pParent )
-   RETURN Qt_QAbstractItemModel_removeColumn( ::pPtr, nColumn, pParent )
+   RETURN Qt_QAbstractItemModel_removeColumn( ::pPtr, nColumn, hbqt_ptr( pParent ) )
 
 
 METHOD QAbstractItemModel:removeColumns( nColumn, nCount, pParent )
-   RETURN Qt_QAbstractItemModel_removeColumns( ::pPtr, nColumn, nCount, pParent )
+   RETURN Qt_QAbstractItemModel_removeColumns( ::pPtr, nColumn, nCount, hbqt_ptr( pParent ) )
 
 
 METHOD QAbstractItemModel:removeRow( nRow, pParent )
-   RETURN Qt_QAbstractItemModel_removeRow( ::pPtr, nRow, pParent )
+   RETURN Qt_QAbstractItemModel_removeRow( ::pPtr, nRow, hbqt_ptr( pParent ) )
 
 
 METHOD QAbstractItemModel:removeRows( nRow, nCount, pParent )
-   RETURN Qt_QAbstractItemModel_removeRows( ::pPtr, nRow, nCount, pParent )
+   RETURN Qt_QAbstractItemModel_removeRows( ::pPtr, nRow, nCount, hbqt_ptr( pParent ) )
 
 
 METHOD QAbstractItemModel:rowCount( pParent )
-   RETURN Qt_QAbstractItemModel_rowCount( ::pPtr, pParent )
+   RETURN Qt_QAbstractItemModel_rowCount( ::pPtr, hbqt_ptr( pParent ) )
 
 
 METHOD QAbstractItemModel:setData( pIndex, pValue, nRole )
-   RETURN Qt_QAbstractItemModel_setData( ::pPtr, pIndex, pValue, nRole )
+   RETURN Qt_QAbstractItemModel_setData( ::pPtr, hbqt_ptr( pIndex ), hbqt_ptr( pValue ), nRole )
 
 
 METHOD QAbstractItemModel:setHeaderData( nSection, nOrientation, pValue, nRole )
-   RETURN Qt_QAbstractItemModel_setHeaderData( ::pPtr, nSection, nOrientation, pValue, nRole )
+   RETURN Qt_QAbstractItemModel_setHeaderData( ::pPtr, nSection, nOrientation, hbqt_ptr( pValue ), nRole )
 
 
 METHOD QAbstractItemModel:setSupportedDragActions( nActions )
@@ -222,7 +222,7 @@ METHOD QAbstractItemModel:setSupportedDragActions( nActions )
 
 
 METHOD QAbstractItemModel:sibling( nRow, nColumn, pIndex )
-   RETURN Qt_QAbstractItemModel_sibling( ::pPtr, nRow, nColumn, pIndex )
+   RETURN Qt_QAbstractItemModel_sibling( ::pPtr, nRow, nColumn, hbqt_ptr( pIndex ) )
 
 
 METHOD QAbstractItemModel:sort( nColumn, nOrder )
@@ -230,7 +230,7 @@ METHOD QAbstractItemModel:sort( nColumn, nOrder )
 
 
 METHOD QAbstractItemModel:span( pIndex )
-   RETURN Qt_QAbstractItemModel_span( ::pPtr, pIndex )
+   RETURN Qt_QAbstractItemModel_span( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QAbstractItemModel:supportedDragActions()

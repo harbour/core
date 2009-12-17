@@ -124,7 +124,7 @@ CREATE CLASS QLocale
 /*----------------------------------------------------------------------*/
 
 METHOD QLocale:new( pParent )
-   ::pPtr := Qt_QLocale( pParent )
+   ::pPtr := Qt_QLocale( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -238,27 +238,27 @@ METHOD QLocale:toString( nI )
 
 
 METHOD QLocale:toString_1( pDate, cFormat )
-   RETURN Qt_QLocale_toString_1( ::pPtr, pDate, cFormat )
+   RETURN Qt_QLocale_toString_1( ::pPtr, hbqt_ptr( pDate ), cFormat )
 
 
 METHOD QLocale:toString_2( pDate, nFormat )
-   RETURN Qt_QLocale_toString_2( ::pPtr, pDate, nFormat )
+   RETURN Qt_QLocale_toString_2( ::pPtr, hbqt_ptr( pDate ), nFormat )
 
 
 METHOD QLocale:toString_3( pTime, cFormat )
-   RETURN Qt_QLocale_toString_3( ::pPtr, pTime, cFormat )
+   RETURN Qt_QLocale_toString_3( ::pPtr, hbqt_ptr( pTime ), cFormat )
 
 
 METHOD QLocale:toString_4( pTime, nFormat )
-   RETURN Qt_QLocale_toString_4( ::pPtr, pTime, nFormat )
+   RETURN Qt_QLocale_toString_4( ::pPtr, hbqt_ptr( pTime ), nFormat )
 
 
 METHOD QLocale:toString_5( pDateTime, nFormat )
-   RETURN Qt_QLocale_toString_5( ::pPtr, pDateTime, nFormat )
+   RETURN Qt_QLocale_toString_5( ::pPtr, hbqt_ptr( pDateTime ), nFormat )
 
 
 METHOD QLocale:toString_6( pDateTime, cFormat )
-   RETURN Qt_QLocale_toString_6( ::pPtr, pDateTime, cFormat )
+   RETURN Qt_QLocale_toString_6( ::pPtr, hbqt_ptr( pDateTime ), cFormat )
 
 
 METHOD QLocale:toString_7( nI )
@@ -322,7 +322,7 @@ METHOD QLocale:languageToString( nLanguage )
 
 
 METHOD QLocale:setDefault( pLocale )
-   RETURN Qt_QLocale_setDefault( ::pPtr, pLocale )
+   RETURN Qt_QLocale_setDefault( ::pPtr, hbqt_ptr( pLocale ) )
 
 
 METHOD QLocale:system()

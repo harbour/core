@@ -110,7 +110,7 @@ CREATE CLASS QFile INHERIT QIODevice
 /*----------------------------------------------------------------------*/
 
 METHOD QFile:new( pParent )
-   ::pPtr := Qt_QFile( pParent )
+   ::pPtr := Qt_QFile( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -216,11 +216,11 @@ METHOD QFile:copy_1( cFileName, cNewName )
 
 
 METHOD QFile:decodeName( pLocalFileName )
-   RETURN Qt_QFile_decodeName( ::pPtr, pLocalFileName )
+   RETURN Qt_QFile_decodeName( ::pPtr, hbqt_ptr( pLocalFileName ) )
 
 
 METHOD QFile:decodeName_1( pLocalFileName )
-   RETURN Qt_QFile_decodeName_1( ::pPtr, pLocalFileName )
+   RETURN Qt_QFile_decodeName_1( ::pPtr, hbqt_ptr( pLocalFileName ) )
 
 
 METHOD QFile:encodeName( cFileName )

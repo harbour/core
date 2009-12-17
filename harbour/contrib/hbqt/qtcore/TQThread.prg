@@ -90,7 +90,7 @@ CREATE CLASS QThread INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QThread:new( pParent )
-   ::pPtr := Qt_QThread( pParent )
+   ::pPtr := Qt_QThread( hbqt_ptr( pParent ) )
    RETURN Self
 
 

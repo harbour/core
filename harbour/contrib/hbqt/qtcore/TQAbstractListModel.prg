@@ -77,7 +77,7 @@ CREATE CLASS QAbstractListModel INHERIT QAbstractItemModel
 /*----------------------------------------------------------------------*/
 
 METHOD QAbstractListModel:new( pParent )
-   ::pPtr := Qt_QAbstractListModel( pParent )
+   ::pPtr := Qt_QAbstractListModel( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -91,5 +91,5 @@ METHOD QAbstractListModel:configure( xObject )
 
 
 METHOD QAbstractListModel:index( nRow, nColumn, pParent )
-   RETURN Qt_QAbstractListModel_index( ::pPtr, nRow, nColumn, pParent )
+   RETURN Qt_QAbstractListModel_index( ::pPtr, nRow, nColumn, hbqt_ptr( pParent ) )
 

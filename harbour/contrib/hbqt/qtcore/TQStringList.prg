@@ -111,7 +111,7 @@ CREATE CLASS QStringList INHERIT QList
 /*----------------------------------------------------------------------*/
 
 METHOD QStringList:new( pParent )
-   ::pPtr := Qt_QStringList( pParent )
+   ::pPtr := Qt_QStringList( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -133,7 +133,7 @@ METHOD QStringList:filter( cStr, nCs )
 
 
 METHOD QStringList:filter_1( pRx )
-   RETURN Qt_QStringList_filter_1( ::pPtr, pRx )
+   RETURN Qt_QStringList_filter_1( ::pPtr, hbqt_ptr( pRx ) )
 
 
 METHOD QStringList:indexOf( cValue, nFrom )
@@ -141,11 +141,11 @@ METHOD QStringList:indexOf( cValue, nFrom )
 
 
 METHOD QStringList:indexOf_1( pRx, nFrom )
-   RETURN Qt_QStringList_indexOf_1( ::pPtr, pRx, nFrom )
+   RETURN Qt_QStringList_indexOf_1( ::pPtr, hbqt_ptr( pRx ), nFrom )
 
 
 METHOD QStringList:indexOf_2( pRx, nFrom )
-   RETURN Qt_QStringList_indexOf_2( ::pPtr, pRx, nFrom )
+   RETURN Qt_QStringList_indexOf_2( ::pPtr, hbqt_ptr( pRx ), nFrom )
 
 
 METHOD QStringList:join( cSeparator )
@@ -153,7 +153,7 @@ METHOD QStringList:join( cSeparator )
 
 
 METHOD QStringList:lastIndexOf( pRx, nFrom )
-   RETURN Qt_QStringList_lastIndexOf( ::pPtr, pRx, nFrom )
+   RETURN Qt_QStringList_lastIndexOf( ::pPtr, hbqt_ptr( pRx ), nFrom )
 
 
 METHOD QStringList:lastIndexOf_1( cValue, nFrom )
@@ -161,7 +161,7 @@ METHOD QStringList:lastIndexOf_1( cValue, nFrom )
 
 
 METHOD QStringList:lastIndexOf_2( pRx, nFrom )
-   RETURN Qt_QStringList_lastIndexOf_2( ::pPtr, pRx, nFrom )
+   RETURN Qt_QStringList_lastIndexOf_2( ::pPtr, hbqt_ptr( pRx ), nFrom )
 
 
 METHOD QStringList:removeDuplicates()

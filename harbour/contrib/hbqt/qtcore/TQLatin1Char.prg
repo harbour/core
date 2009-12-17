@@ -78,7 +78,7 @@ CREATE CLASS QLatin1Char
 /*----------------------------------------------------------------------*/
 
 METHOD QLatin1Char:new( pParent )
-   ::pPtr := Qt_QLatin1Char( pParent )
+   ::pPtr := Qt_QLatin1Char( hbqt_ptr( pParent ) )
    RETURN Self
 
 

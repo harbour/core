@@ -109,7 +109,7 @@ CREATE CLASS QIODevice INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QIODevice:new( pParent )
-   ::pPtr := Qt_QIODevice( pParent )
+   ::pPtr := Qt_QIODevice( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -243,13 +243,13 @@ METHOD QIODevice:waitForReadyRead( nMsecs )
 
 
 METHOD QIODevice:write( pData, nMaxSize )
-   RETURN Qt_QIODevice_write( ::pPtr, pData, nMaxSize )
+   RETURN Qt_QIODevice_write( ::pPtr, hbqt_ptr( pData ), nMaxSize )
 
 
 METHOD QIODevice:write_1( pData )
-   RETURN Qt_QIODevice_write_1( ::pPtr, pData )
+   RETURN Qt_QIODevice_write_1( ::pPtr, hbqt_ptr( pData ) )
 
 
 METHOD QIODevice:write_2( pByteArray )
-   RETURN Qt_QIODevice_write_2( ::pPtr, pByteArray )
+   RETURN Qt_QIODevice_write_2( ::pPtr, hbqt_ptr( pByteArray ) )
 

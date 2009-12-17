@@ -90,7 +90,7 @@ CREATE CLASS QSizeF
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( ... ) CLASS QSizeF
+METHOD QSizeF:new( ... )
 
    ::pPtr := Qt_QSizeF( ... )
 
@@ -107,11 +107,11 @@ METHOD QSizeF:configure( xObject )
 
 
 METHOD QSizeF:boundedTo( pOtherSize )
-   RETURN Qt_QSizeF_boundedTo( ::pPtr, pOtherSize )
+   RETURN Qt_QSizeF_boundedTo( ::pPtr, hbqt_ptr( pOtherSize ) )
 
 
 METHOD QSizeF:expandedTo( pOtherSize )
-   RETURN Qt_QSizeF_expandedTo( ::pPtr, pOtherSize )
+   RETURN Qt_QSizeF_expandedTo( ::pPtr, hbqt_ptr( pOtherSize ) )
 
 
 METHOD QSizeF:height()
@@ -143,7 +143,7 @@ METHOD QSizeF:scale( nWidth, nHeight, nMode )
 
 
 METHOD QSizeF:scale_1( pSize, nMode )
-   RETURN Qt_QSizeF_scale_1( ::pPtr, pSize, nMode )
+   RETURN Qt_QSizeF_scale_1( ::pPtr, hbqt_ptr( pSize ), nMode )
 
 
 METHOD QSizeF:setHeight( nHeight )

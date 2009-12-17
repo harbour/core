@@ -86,7 +86,7 @@ CREATE CLASS QTimer INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QTimer:new( pParent )
-   ::pPtr := Qt_QTimer( pParent )
+   ::pPtr := Qt_QTimer( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -124,7 +124,7 @@ METHOD QTimer:timerId()
 
 
 METHOD QTimer:singleShot( nMsec, pReceiver, pMember )
-   RETURN Qt_QTimer_singleShot( ::pPtr, nMsec, pReceiver, pMember )
+   RETURN Qt_QTimer_singleShot( ::pPtr, nMsec, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
 
 
 METHOD QTimer:start()

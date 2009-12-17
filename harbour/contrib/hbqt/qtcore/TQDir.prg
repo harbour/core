@@ -128,7 +128,7 @@ CREATE CLASS QDir
 /*----------------------------------------------------------------------*/
 
 METHOD QDir:new( pParent )
-   ::pPtr := Qt_QDir( pParent )
+   ::pPtr := Qt_QDir( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -170,7 +170,7 @@ METHOD QDir:dirName()
 
 
 METHOD QDir:entryList( pNameFilters, nFilters, nSort )
-   RETURN Qt_QDir_entryList( ::pPtr, pNameFilters, nFilters, nSort )
+   RETURN Qt_QDir_entryList( ::pPtr, hbqt_ptr( pNameFilters ), nFilters, nSort )
 
 
 METHOD QDir:entryList_1( nFilters, nSort )
@@ -258,7 +258,7 @@ METHOD QDir:setFilter( nFilters )
 
 
 METHOD QDir:setNameFilters( pNameFilters )
-   RETURN Qt_QDir_setNameFilters( ::pPtr, pNameFilters )
+   RETURN Qt_QDir_setNameFilters( ::pPtr, hbqt_ptr( pNameFilters ) )
 
 
 METHOD QDir:setPath( cPath )
@@ -314,7 +314,7 @@ METHOD QDir:match( cFilter, cFileName )
 
 
 METHOD QDir:match_1( pFilters, cFileName )
-   RETURN Qt_QDir_match_1( ::pPtr, pFilters, cFileName )
+   RETURN Qt_QDir_match_1( ::pPtr, hbqt_ptr( pFilters ), cFileName )
 
 
 METHOD QDir:root()
@@ -334,7 +334,7 @@ METHOD QDir:setCurrent( cPath )
 
 
 METHOD QDir:setSearchPaths( cPrefix, pSearchPaths )
-   RETURN Qt_QDir_setSearchPaths( ::pPtr, cPrefix, pSearchPaths )
+   RETURN Qt_QDir_setSearchPaths( ::pPtr, cPrefix, hbqt_ptr( pSearchPaths ) )
 
 
 METHOD QDir:temp()

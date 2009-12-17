@@ -135,7 +135,7 @@ CREATE CLASS QRectF
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( ... ) CLASS QRectF
+METHOD QRectF:new( ... )
 
    ::pPtr := Qt_QRectF( ... )
 
@@ -176,7 +176,7 @@ METHOD QRectF:center()
 
 
 METHOD QRectF:contains( pPoint )
-   RETURN Qt_QRectF_contains( ::pPtr, pPoint )
+   RETURN Qt_QRectF_contains( ::pPtr, hbqt_ptr( pPoint ) )
 
 
 METHOD QRectF:contains_1( nX, nY )
@@ -184,7 +184,7 @@ METHOD QRectF:contains_1( nX, nY )
 
 
 METHOD QRectF:contains_2( pRectangle )
-   RETURN Qt_QRectF_contains_2( ::pPtr, pRectangle )
+   RETURN Qt_QRectF_contains_2( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QRectF:getCoords( nX1, nY1, nX2, nY2 )
@@ -200,11 +200,11 @@ METHOD QRectF:height()
 
 
 METHOD QRectF:intersected( pRectangle )
-   RETURN Qt_QRectF_intersected( ::pPtr, pRectangle )
+   RETURN Qt_QRectF_intersected( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QRectF:intersects( pRectangle )
-   RETURN Qt_QRectF_intersects( ::pPtr, pRectangle )
+   RETURN Qt_QRectF_intersects( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QRectF:isEmpty()
@@ -228,15 +228,15 @@ METHOD QRectF:moveBottom( nY )
 
 
 METHOD QRectF:moveBottomLeft( pPosition )
-   RETURN Qt_QRectF_moveBottomLeft( ::pPtr, pPosition )
+   RETURN Qt_QRectF_moveBottomLeft( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QRectF:moveBottomRight( pPosition )
-   RETURN Qt_QRectF_moveBottomRight( ::pPtr, pPosition )
+   RETURN Qt_QRectF_moveBottomRight( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QRectF:moveCenter( pPosition )
-   RETURN Qt_QRectF_moveCenter( ::pPtr, pPosition )
+   RETURN Qt_QRectF_moveCenter( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QRectF:moveLeft( nX )
@@ -252,7 +252,7 @@ METHOD QRectF:moveTo( nX, nY )
 
 
 METHOD QRectF:moveTo_1( pPosition )
-   RETURN Qt_QRectF_moveTo_1( ::pPtr, pPosition )
+   RETURN Qt_QRectF_moveTo_1( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QRectF:moveTop( nY )
@@ -260,11 +260,11 @@ METHOD QRectF:moveTop( nY )
 
 
 METHOD QRectF:moveTopLeft( pPosition )
-   RETURN Qt_QRectF_moveTopLeft( ::pPtr, pPosition )
+   RETURN Qt_QRectF_moveTopLeft( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QRectF:moveTopRight( pPosition )
-   RETURN Qt_QRectF_moveTopRight( ::pPtr, pPosition )
+   RETURN Qt_QRectF_moveTopRight( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QRectF:normalized()
@@ -280,11 +280,11 @@ METHOD QRectF:setBottom( nY )
 
 
 METHOD QRectF:setBottomLeft( pPosition )
-   RETURN Qt_QRectF_setBottomLeft( ::pPtr, pPosition )
+   RETURN Qt_QRectF_setBottomLeft( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QRectF:setBottomRight( pPosition )
-   RETURN Qt_QRectF_setBottomRight( ::pPtr, pPosition )
+   RETURN Qt_QRectF_setBottomRight( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QRectF:setCoords( nX1, nY1, nX2, nY2 )
@@ -308,7 +308,7 @@ METHOD QRectF:setRight( nX )
 
 
 METHOD QRectF:setSize( pSize )
-   RETURN Qt_QRectF_setSize( ::pPtr, pSize )
+   RETURN Qt_QRectF_setSize( ::pPtr, hbqt_ptr( pSize ) )
 
 
 METHOD QRectF:setTop( nY )
@@ -316,11 +316,11 @@ METHOD QRectF:setTop( nY )
 
 
 METHOD QRectF:setTopLeft( pPosition )
-   RETURN Qt_QRectF_setTopLeft( ::pPtr, pPosition )
+   RETURN Qt_QRectF_setTopLeft( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QRectF:setTopRight( pPosition )
-   RETURN Qt_QRectF_setTopRight( ::pPtr, pPosition )
+   RETURN Qt_QRectF_setTopRight( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QRectF:setWidth( nWidth )
@@ -364,7 +364,7 @@ METHOD QRectF:translate( nDx, nDy )
 
 
 METHOD QRectF:translate_1( pOffset )
-   RETURN Qt_QRectF_translate_1( ::pPtr, pOffset )
+   RETURN Qt_QRectF_translate_1( ::pPtr, hbqt_ptr( pOffset ) )
 
 
 METHOD QRectF:translated( nDx, nDy )
@@ -372,11 +372,11 @@ METHOD QRectF:translated( nDx, nDy )
 
 
 METHOD QRectF:translated_1( pOffset )
-   RETURN Qt_QRectF_translated_1( ::pPtr, pOffset )
+   RETURN Qt_QRectF_translated_1( ::pPtr, hbqt_ptr( pOffset ) )
 
 
 METHOD QRectF:united( pRectangle )
-   RETURN Qt_QRectF_united( ::pPtr, pRectangle )
+   RETURN Qt_QRectF_united( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QRectF:width()

@@ -116,7 +116,7 @@ CREATE CLASS QList
 /*----------------------------------------------------------------------*/
 
 METHOD QList:new( pParent )
-   ::pPtr := Qt_QList( pParent )
+   ::pPtr := Qt_QList( hbqt_ptr( pParent ) )
    RETURN Self
 
 

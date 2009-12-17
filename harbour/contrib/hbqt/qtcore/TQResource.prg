@@ -88,7 +88,7 @@ CREATE CLASS QResource
 /*----------------------------------------------------------------------*/
 
 METHOD QResource:new( pParent )
-   ::pPtr := Qt_QResource( pParent )
+   ::pPtr := Qt_QResource( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -130,7 +130,7 @@ METHOD QResource:setFileName( cFile )
 
 
 METHOD QResource:setLocale( pLocale )
-   RETURN Qt_QResource_setLocale( ::pPtr, pLocale )
+   RETURN Qt_QResource_setLocale( ::pPtr, hbqt_ptr( pLocale ) )
 
 
 METHOD QResource:size()

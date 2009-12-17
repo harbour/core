@@ -77,7 +77,7 @@ CREATE CLASS QTextEncoder
 /*----------------------------------------------------------------------*/
 
 METHOD QTextEncoder:new( pParent )
-   ::pPtr := Qt_QTextEncoder( pParent )
+   ::pPtr := Qt_QTextEncoder( hbqt_ptr( pParent ) )
    RETURN Self
 
 

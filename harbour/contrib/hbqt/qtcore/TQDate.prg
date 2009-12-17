@@ -95,7 +95,7 @@ CREATE CLASS QDate
 /*----------------------------------------------------------------------*/
 
 METHOD QDate:new( pParent )
-   ::pPtr := Qt_QDate( pParent )
+   ::pPtr := Qt_QDate( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -141,7 +141,7 @@ METHOD QDate:daysInYear()
 
 
 METHOD QDate:daysTo( pD )
-   RETURN Qt_QDate_daysTo( ::pPtr, pD )
+   RETURN Qt_QDate_daysTo( ::pPtr, hbqt_ptr( pD ) )
 
 
 METHOD QDate:getDate( nYear, nMonth, nDay )

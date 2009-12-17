@@ -112,7 +112,7 @@ CREATE CLASS QTextStream
 /*----------------------------------------------------------------------*/
 
 METHOD QTextStream:new( pParent )
-   ::pPtr := Qt_QTextStream( pParent )
+   ::pPtr := Qt_QTextStream( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -210,15 +210,15 @@ METHOD QTextStream:setAutoDetectUnicode( lEnabled )
 
 
 METHOD QTextStream:setCodec( pCodec )
-   RETURN Qt_QTextStream_setCodec( ::pPtr, pCodec )
+   RETURN Qt_QTextStream_setCodec( ::pPtr, hbqt_ptr( pCodec ) )
 
 
 METHOD QTextStream:setCodec_1( pCodecName )
-   RETURN Qt_QTextStream_setCodec_1( ::pPtr, pCodecName )
+   RETURN Qt_QTextStream_setCodec_1( ::pPtr, hbqt_ptr( pCodecName ) )
 
 
 METHOD QTextStream:setDevice( pDevice )
-   RETURN Qt_QTextStream_setDevice( ::pPtr, pDevice )
+   RETURN Qt_QTextStream_setDevice( ::pPtr, hbqt_ptr( pDevice ) )
 
 
 METHOD QTextStream:setFieldAlignment( nMode )
@@ -238,7 +238,7 @@ METHOD QTextStream:setIntegerBase( nBase )
 
 
 METHOD QTextStream:setLocale( pLocale )
-   RETURN Qt_QTextStream_setLocale( ::pPtr, pLocale )
+   RETURN Qt_QTextStream_setLocale( ::pPtr, hbqt_ptr( pLocale ) )
 
 
 METHOD QTextStream:setNumberFlags( nFlags )

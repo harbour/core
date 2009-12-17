@@ -116,7 +116,7 @@ CREATE CLASS QCoreApplication INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QCoreApplication:new( pParent )
-   ::pPtr := Qt_QCoreApplication( pParent )
+   ::pPtr := Qt_QCoreApplication( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -130,7 +130,7 @@ METHOD QCoreApplication:configure( xObject )
 
 
 METHOD QCoreApplication:notify( pReceiver, pEvent )
-   RETURN Qt_QCoreApplication_notify( ::pPtr, pReceiver, pEvent )
+   RETURN Qt_QCoreApplication_notify( ::pPtr, hbqt_ptr( pReceiver ), hbqt_ptr( pEvent ) )
 
 
 METHOD QCoreApplication:addLibraryPath( cPath )
@@ -182,7 +182,7 @@ METHOD QCoreApplication:hasPendingEvents()
 
 
 METHOD QCoreApplication:installTranslator( pTranslationFile )
-   RETURN Qt_QCoreApplication_installTranslator( ::pPtr, pTranslationFile )
+   RETURN Qt_QCoreApplication_installTranslator( ::pPtr, hbqt_ptr( pTranslationFile ) )
 
 
 METHOD QCoreApplication:instance()
@@ -202,11 +202,11 @@ METHOD QCoreApplication:organizationName()
 
 
 METHOD QCoreApplication:postEvent( pReceiver, pEvent )
-   RETURN Qt_QCoreApplication_postEvent( ::pPtr, pReceiver, pEvent )
+   RETURN Qt_QCoreApplication_postEvent( ::pPtr, hbqt_ptr( pReceiver ), hbqt_ptr( pEvent ) )
 
 
 METHOD QCoreApplication:postEvent_1( pReceiver, pEvent, nPriority )
-   RETURN Qt_QCoreApplication_postEvent_1( ::pPtr, pReceiver, pEvent, nPriority )
+   RETURN Qt_QCoreApplication_postEvent_1( ::pPtr, hbqt_ptr( pReceiver ), hbqt_ptr( pEvent ), nPriority )
 
 
 METHOD QCoreApplication:processEvents( nFlags )
@@ -222,23 +222,23 @@ METHOD QCoreApplication:removeLibraryPath( cPath )
 
 
 METHOD QCoreApplication:removePostedEvents( pReceiver )
-   RETURN Qt_QCoreApplication_removePostedEvents( ::pPtr, pReceiver )
+   RETURN Qt_QCoreApplication_removePostedEvents( ::pPtr, hbqt_ptr( pReceiver ) )
 
 
 METHOD QCoreApplication:removePostedEvents_1( pReceiver, nEventType )
-   RETURN Qt_QCoreApplication_removePostedEvents_1( ::pPtr, pReceiver, nEventType )
+   RETURN Qt_QCoreApplication_removePostedEvents_1( ::pPtr, hbqt_ptr( pReceiver ), nEventType )
 
 
 METHOD QCoreApplication:removeTranslator( pTranslationFile )
-   RETURN Qt_QCoreApplication_removeTranslator( ::pPtr, pTranslationFile )
+   RETURN Qt_QCoreApplication_removeTranslator( ::pPtr, hbqt_ptr( pTranslationFile ) )
 
 
 METHOD QCoreApplication:sendEvent( pReceiver, pEvent )
-   RETURN Qt_QCoreApplication_sendEvent( ::pPtr, pReceiver, pEvent )
+   RETURN Qt_QCoreApplication_sendEvent( ::pPtr, hbqt_ptr( pReceiver ), hbqt_ptr( pEvent ) )
 
 
 METHOD QCoreApplication:sendPostedEvents( pReceiver, nEvent_type )
-   RETURN Qt_QCoreApplication_sendPostedEvents( ::pPtr, pReceiver, nEvent_type )
+   RETURN Qt_QCoreApplication_sendPostedEvents( ::pPtr, hbqt_ptr( pReceiver ), nEvent_type )
 
 
 METHOD QCoreApplication:sendPostedEvents_1()
@@ -258,7 +258,7 @@ METHOD QCoreApplication:setAttribute( nAttribute, lOn )
 
 
 METHOD QCoreApplication:setLibraryPaths( pPaths )
-   RETURN Qt_QCoreApplication_setLibraryPaths( ::pPtr, pPaths )
+   RETURN Qt_QCoreApplication_setLibraryPaths( ::pPtr, hbqt_ptr( pPaths ) )
 
 
 METHOD QCoreApplication:setOrganizationDomain( cOrgDomain )
@@ -278,11 +278,11 @@ METHOD QCoreApplication:testAttribute( nAttribute )
 
 
 METHOD QCoreApplication:translate( pContext, pSourceText, pDisambiguation, nEncoding, nN )
-   RETURN Qt_QCoreApplication_translate( ::pPtr, pContext, pSourceText, pDisambiguation, nEncoding, nN )
+   RETURN Qt_QCoreApplication_translate( ::pPtr, hbqt_ptr( pContext ), hbqt_ptr( pSourceText ), hbqt_ptr( pDisambiguation ), nEncoding, nN )
 
 
 METHOD QCoreApplication:translate_1( pContext, pSourceText, pDisambiguation, nEncoding )
-   RETURN Qt_QCoreApplication_translate_1( ::pPtr, pContext, pSourceText, pDisambiguation, nEncoding )
+   RETURN Qt_QCoreApplication_translate_1( ::pPtr, hbqt_ptr( pContext ), hbqt_ptr( pSourceText ), hbqt_ptr( pDisambiguation ), nEncoding )
 
 
 METHOD QCoreApplication:quit()
