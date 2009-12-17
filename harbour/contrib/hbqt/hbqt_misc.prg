@@ -62,9 +62,6 @@ FUNCTION hbqt_ptr( xParam )
       ELSEIF left( cClsName, 2 ) == "HB"
          RETURN xParam:pPtr
 
-      ELSEIF left( cClsName, 3 ) == "XBP"
-         RETURN xParam:oWidget:pPtr
-
       ELSE /* we don't care, programmer is at a fault */
 
       ENDIF
@@ -73,4 +70,3 @@ FUNCTION hbqt_ptr( xParam )
    RETURN xParam
 
 /*----------------------------------------------------------------------*/
-

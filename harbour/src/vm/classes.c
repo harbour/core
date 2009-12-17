@@ -3720,15 +3720,12 @@ HB_FUNC( __OBJSENDMSG )
       hb_vmPush( hb_param( 1, HB_IT_ANY ) );    /* Push object */
 
       for( uiParam = 3; uiParam <= uiPCount; ++uiParam )    /* Push arguments on stack */
-      {
          hb_vmPush( hb_stackItemFromBase( uiParam ) );
-      }
+
       hb_vmSend( ( USHORT ) ( uiPCount - 2 ) );             /* Execute message */
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 3000, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-   }
 }
 
 /*
