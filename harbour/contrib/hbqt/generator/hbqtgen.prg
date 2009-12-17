@@ -2,6 +2,55 @@
  * $Id$
  */
 
+/*
+ * Harbour Project source code:
+ * Harbour-Qt wrapper generator.
+ *
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+/*----------------------------------------------------------------------*/
+
 #include "common.ch"
 #include "fileio.ch"
 
@@ -1538,8 +1587,9 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
          cCall := strtran( s, ss, '::pPtr' )
 
          aadd( mth_, { cM, cCall } )
-         //aadd( txt_, '   METHOD  ' + cM + ' INLINE  ' + cCall )
          aadd( txt_, '   METHOD  ' + cM  )
+
+         //       cDocs  += IF( left( aA[ PRT_DOC  ], 1 ) == "p", "Qt_Ptr( " + aA[ PRT_DOC ] + " )", aA[ PRT_DOC ] ) + ', '
 
       ENDIF
    NEXT
@@ -1558,7 +1608,8 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
 
    DO CASE
    CASE cClassType == "PLAINOBJECT"
-      aadd( txt_, 'METHOD New( ... ) CLASS ' + cWidget )
+      aadd( txt_, 'METHOD ' + cWidget + ':new( ... )' )
+//      aadd( txt_, 'METHOD New( ... ) CLASS ' + cWidget )
       aadd( txt_, '' )
       aadd( txt_, '   ::pPtr := Qt_' + cWidget + '( ... )' )
       aadd( txt_, '' )
@@ -1567,7 +1618,7 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
 
    OTHERWISE
       aadd( txt_, 'METHOD ' + cWidget + ':new( pParent )' )
-      aadd( txt_, '   ::pPtr := Qt_' + cWidget + '( pParent )' )
+      aadd( txt_, '   ::pPtr := Qt_' + cWidget + '( hbqt_ptr( pParent ) )' )
       aadd( txt_, '   RETURN Self' )
       aadd( txt_, '' )
 
@@ -1587,7 +1638,7 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
    FOR i := 1 TO len( mth_ )
       aadd( txt_, '                                                                           ' )
       aadd( txt_, 'METHOD ' + cWidget + ':' + mth_[ i, 1 ] )
-      aadd( txt_, '   RETURN ' + mth_[ i, 2 ] )
+      aadd( txt_, '   RETURN ' + ParsePtr( mth_[ i, 2 ] ) )
       aadd( txt_, '                                                                           ' )
    NEXT
 
@@ -2304,4 +2355,46 @@ FUNCTION Get_Command( cWgt, cCmn )
    ENDIF
 
    RETURN cRet
+/*----------------------------------------------------------------------*/
+
+FUNCTION ParsePtr( cParam )
+   LOCAL cPar := ""
+   LOCAL s, n
+
+
+   IF at( " p" , cParam ) > 0
+      DO WHILE .t.
+
+         IF ( n := at( " p" , cParam ) ) > 0
+            cPar += substr( cParam, 1, n )
+            cParam := substr( cParam, n+1 )
+
+            IF ( n := at( ",", cParam ) ) > 0
+               s := substr( cParam, 1, n-1 )
+               cParam := substr( cParam, n )
+               cPar += "hbqt_ptr( " + s + " )"
+
+            ELSEIF ( n := at( " ", cParam ) ) > 0
+               s := substr( cParam, 1, n-1 )
+               cParam := substr( cParam, n )
+               cPar += "hbqt_ptr( " + s + " )"
+               cPar += cParam
+               EXIT
+
+            ENDIF
+
+         ELSE
+            cPar += cParam
+            EXIT
+
+         ENDif
+      ENDDO
+
+   ELSE
+      cPar := cParam
+
+   ENDIF
+
+   RETURN cPar
+
 /*----------------------------------------------------------------------*/

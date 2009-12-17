@@ -21,5 +21,8 @@ CPP_SOURCES := \
    hbqt_hbqsyntaxhighlighter.cpp \
    hbqt_hbqtableview.cpp \
 
+PRG_SOURCES := \
+   hbqt_misc.prg \
+   
 # Don't delete this comment, it's here to ensure empty
 # line above is kept intact.

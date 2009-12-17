@@ -288,14 +288,14 @@ METHOD HbIde:create( cProjIni )
    ::qLayout:setHorizontalSpacing( 0 )
    ::qLayout:setVerticalSpacing( 0 )
 
-   ::oDa:oWidget:setLayout( QT_PTROF( ::qLayout ) )
+   ::oDa:oWidget:setLayout( ::qLayout )
 
-   ::qSplitter := QSplitter():new( QT_PTROF( ::oDa:oWidget ) )
+   ::qSplitter := QSplitter():new( ::oDa )
 
-   ::qLayout:addWidget_1( QT_PTROF( ::qSplitter ), 0, 0, 1, 1 )
+   ::qLayout:addWidget_1( ::qSplitter, 0, 0, 1, 1 )
 
-   ::qSplitter:addWidget( QT_PTROFXBP( ::oProjTree      ) )
-   ::qSplitter:addWidget( QT_PTROFXBP( ::oDa:oTabWidget ) )
+   ::qSplitter:addWidget( ::oProjTree )
+   ::qSplitter:addWidget( ::oDa:oTabWidget )
 
    ::qSplitter:show()
 
@@ -543,7 +543,7 @@ METHOD HbIde:convertSelection( cKey )
          ::qCursor:insertText( cBuffer )
          ::qCursor:setPosition( nB )
          ::qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nL )
-         ::qCurEdit:setTextCursor( QT_PTROF( ::qCursor ) )
+         ::qCurEdit:setTextCursor( ::qCursor )
          ::qCursor:endEditBlock()
       ENDIF
    ENDIF
@@ -605,10 +605,10 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos )
 
    oTab := ::buildTabPage( ::oDa, cSourceFile )
 
-   qEdit := QPlainTextEdit():new( QT_PTROFXBP( oTab ) )
+   qEdit := QPlainTextEdit():new( oTab )
    qEdit:setPlainText( memoread( cSourceFile ) )
    qEdit:setLineWrapMode( QTextEdit_NoWrap )
-   qEdit:setFont( QT_PTROFXBP( ::oFont ) )
+   qEdit:setFont( ::oFont )
    qEdit:ensureCursorVisible()
 
    qDocument := QTextDocument():configure( qEdit:document() )
@@ -616,9 +616,9 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos )
    qLayout := QBoxLayout():new()
    qLayout:setDirection( 0 )
    qLayout:setContentsMargins( 0,0,0,0 )
-   qLayout:addWidget( QT_PTROF( qEdit ) )
+   qLayout:addWidget( qEdit )
 
-   oTab:oWidget:setLayout( QT_PTROF( qLayout ) )
+   oTab:oWidget:setLayout( qLayout )
 
    qHiliter := QSyntaxHighlighter():new( qEdit:document() )
 
@@ -664,8 +664,8 @@ METHOD HbIde:buildTabPage( oWnd, cSource )
 
    oTab:create()
 
-   ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( QT_PTROFXBP( oTab ) ) )
-   ::qTabWidget:setTabTooltip( ::qTabWidget:indexOf( QT_PTROFXBP( oTab ) ), cSource )
+   ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( oTab ) )
+   ::qTabWidget:setTabTooltip( ::qTabWidget:indexOf( oTab ), cSource )
 
    oTab:tabActivate    := {|mp1,mp2,oXbp| ::activateTab( mp1, mp2, oXbp ) }
    oTab:closeRequested := {|mp1,mp2,oXbp| ::closeTab( mp1, mp2, oXbp ) }
@@ -675,7 +675,7 @@ METHOD HbIde:buildTabPage( oWnd, cSource )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:setTabImage( oTab, qEdit, nPos, lFirst, qDocument )
-   LOCAL nIndex    := ::qTabWidget:indexOf( QT_PTROFXBP( oTab ) )
+   LOCAL nIndex    := ::qTabWidget:indexOf( oTab )
    LOCAL lModified := qDocument:isModified()
 
    ::qTabWidget:setTabIcon( nIndex, s_resPath + iif( lModified, "tabmodified.png", "tabunmodified.png" ) )
@@ -686,7 +686,7 @@ METHOD HbIde:setTabImage( oTab, qEdit, nPos, lFirst, qDocument )
       lFirst := .f.
       ::qCursor:configure( qEdit:textCursor() )
       ::qCursor:setPosition( nPos, QTextCursor_MoveAnchor )
-      qEdit:setTextCursor( QT_PTROF( ::qCursor ) )
+      qEdit:setTextCursor( ::qCursor )
    ENDIF
 
    RETURN Self
@@ -715,7 +715,7 @@ METHOD HbIde:closeSource( nTab )
    IF !empty( nTab  )
       ::oFuncList:clear()
       ::saveSource( nTab )
-      ::qTabWidget:removeTab( ::qTabWidget:indexOf( QT_PTROFXBP( ::aTabs[ nTab,1 ] ) ) )
+      ::qTabWidget:removeTab( ::qTabWidget:indexOf( ::aTabs[ nTab,1 ] ) )
 
       cSource := ::aTabs[ nTab, 5 ]
 
@@ -785,7 +785,7 @@ METHOD HbIde:saveSource( nTab, lConfirm )
          ENDIF
       ENDIF
 
-      nIndex := ::qTabWidget:indexOf( QT_PTROFXBP( ::aTabs[ nTab, 1 ] ) )
+      nIndex := ::qTabWidget:indexOf( ::aTabs[ nTab, 1 ] )
       ::qTabWidget:setTabIcon( nIndex, s_resPath + "tabunmodified.png" )
       ::oSBar:getItem( 7 ):caption := " "
    ENDIF
@@ -1008,13 +1008,13 @@ METHOD HbIde:manageItemSelected( oXbpTreeItem )
       IF ( n := ascan( ::aTabs, {|e_| PathNormalized( e_[ 5 ] ) == cSource } ) ) == 0
          ::editSource( cSource )
       ELSE
-         ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( QT_PTROFXBP( ::aTabs[ n,1 ] ) ) )
+         ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( ::aTabs[ n,1 ] ) )
       ENDIF
 
    CASE ::aProjData[ n, 2 ] == "Opened Source"
       cSource := ::aProjData[ n, 5 ]
       IF ( n := ascan( ::aTabs, {|e_| PathNormalized( e_[ 5 ] ) == cSource } ) ) > 0
-         ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( QT_PTROFXBP( ::aTabs[ n,1 ] ) ) )
+         ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( ::aTabs[ n,1 ] ) )
       ENDIF
 
    CASE ::aProjData[ n, 2 ] == "Path"
@@ -1189,7 +1189,7 @@ METHOD HbIde:buildDialog()
 METHOD HbIde:buildFuncList()
 
    ::oDockR := XbpWindow():new( ::oDa )
-   ::oDockR:oWidget := QDockWidget():new( QT_PTROFXBP( ::oDlg ) )
+   ::oDockR:oWidget := QDockWidget():new( ::oDlg )
    ::oDlg:addChild( ::oDockR )
    ::oDockR:oWidget:setFeatures( QDockWidget_DockWidgetClosable + QDockWidget_DockWidgetMovable )
    ::oDockR:oWidget:setAllowedAreas( Qt_RightDockWidgetArea )
@@ -1208,13 +1208,14 @@ METHOD HbIde:buildFuncList()
 
    ::oFuncList:oWidget:setEditTriggers( QAbstractItemView_NoEditTriggers )
 
-   ::oDockR:oWidget:setWidget( QT_PTROFXBP( ::oFuncList ) )
+   ::oDockR:oWidget:setWidget( ::oFuncList )
 
-   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, QT_PTROFXBP( ::oDockR ), Qt_Horizontal )
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oDockR, Qt_Horizontal )
 
    IF ::aIni[ INI_HBIDE, FunctionListVisible ] == "YES"
       ::lDockRVisible := .t.
-      //::setSizeAndPosByIni( ::oDockR:oWidget, FunctionListGeometry )
+      ::oDockR:show()
+      //::setPosAndSizeByIni( ::oDockR:oWidget, FunctionListGeometry )
    ELSE
       ::lDockRVisible := .f.
       ::oDockR:hide()
@@ -1316,8 +1317,8 @@ METHOD HbIde:buildBottomArea()
    ::buildLinkResults()
    ::buildOutputResults()
 
-   ::oDlg:oWidget:tabifyDockWidget( QT_PTROFXBP( ::oDockB ), QT_PTROFXBP( ::oDockB1 ) )
-   ::oDlg:oWidget:tabifyDockWidget( QT_PTROFXBP( ::oDockB1 ), QT_PTROFXBP( ::oDockB2 ) )
+   ::oDlg:oWidget:tabifyDockWidget( ::oDockB, ::oDockB1 )
+   ::oDlg:oWidget:tabifyDockWidget( ::oDockB1, ::oDockB2 )
 
    RETURN Self
 
@@ -1326,7 +1327,7 @@ METHOD HbIde:buildBottomArea()
 METHOD HbIde:buildCompileResults()
 
    ::oDockB := XbpWindow():new( ::oDa )
-   ::oDockB:oWidget := QDockWidget():new( QT_PTROFXBP( ::oDlg ) )
+   ::oDockB:oWidget := QDockWidget():new( ::oDlg )
    ::oDlg:addChild( ::oDockB )
    ::oDockB:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
    ::oDockB:oWidget:setAllowedAreas( Qt_BottomDockWidgetArea )
@@ -1336,9 +1337,9 @@ METHOD HbIde:buildCompileResults()
    ::oDockB:oWidget:setFocusPolicy( Qt_NoFocus )
 
    ::oCompileResult := XbpMLE():new( ::oDockB ):create( , , { 0,0 }, { 100,400 }, , .t. )
-   ::oDockB:oWidget:setWidget( QT_PTROFXBP( ::oCompileResult ) )
+   ::oDockB:oWidget:setWidget( ::oCompileResult )
 
-   ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, QT_PTROFXBP( ::oDockB ), Qt_Vertical )
+   ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, ::oDockB, Qt_Vertical )
    ::oDockB:hide()
 
    RETURN Self
@@ -1348,7 +1349,7 @@ METHOD HbIde:buildCompileResults()
 METHOD HbIde:buildLinkResults()
 
    ::oDockB1 := XbpWindow():new( ::oDa )
-   ::oDockB1:oWidget := QDockWidget():new( QT_PTROFXBP( ::oDlg ) )
+   ::oDockB1:oWidget := QDockWidget():new( ::oDlg )
    ::oDlg:addChild( ::oDockB1 )
    ::oDockB1:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
    ::oDockB1:oWidget:setAllowedAreas( Qt_BottomDockWidgetArea )
@@ -1358,9 +1359,9 @@ METHOD HbIde:buildLinkResults()
    ::oDockB1:oWidget:setFocusPolicy( Qt_NoFocus )
 
    ::oLinkResult := XbpMLE():new( ::oDockB1 ):create( , , { 0,0 }, { 100, 400 }, , .t. )
-   ::oDockB1:oWidget:setWidget( QT_PTROFXBP( ::oLinkResult ) )
+   ::oDockB1:oWidget:setWidget( ::oLinkResult )
 
-   ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, QT_PTROFXBP( ::oDockB1 ), Qt_Vertical )
+   ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, ::oDockB1, Qt_Vertical )
    ::oDockB1:hide()
 
    RETURN Self
@@ -1370,7 +1371,7 @@ METHOD HbIde:buildLinkResults()
 METHOD HbIde:buildOutputResults()
 
    ::oDockB2 := XbpWindow():new( ::oDa )
-   ::oDockB2:oWidget := QDockWidget():new( QT_PTROFXBP( ::oDlg ) )
+   ::oDockB2:oWidget := QDockWidget():new( ::oDlg )
    ::oDlg:addChild( ::oDockB2 )
    ::oDockB2:oWidget:setFeatures( QDockWidget_DockWidgetClosable )
    ::oDockB2:oWidget:setAllowedAreas( Qt_BottomDockWidgetArea )
@@ -1383,9 +1384,9 @@ METHOD HbIde:buildOutputResults()
    ::oOutputResult:wordWrap := .f.
    //::oOutputResult:dataLink := {|x| IIf( x==NIL, cText, cText := x ) }
 
-   ::oDockB2:oWidget:setWidget( QT_PTROFXBP( ::oOutputResult ) )
+   ::oDockB2:oWidget:setWidget( ::oOutputResult )
 
-   ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, QT_PTROFXBP( ::oDockB2 ), Qt_Vertical )
+   ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, ::oDockB2, Qt_Vertical )
    ::oDockB2:hide()
 
    RETURN Self
@@ -1397,7 +1398,7 @@ METHOD HbIde:buildOutputResults()
 METHOD HbIde:printPreview()
    LOCAL qDlg
 
-   qDlg := QPrintPreviewDialog():new( QT_PTROFXBP( ::oDlg ) )
+   qDlg := QPrintPreviewDialog():new( ::oDlg )
    qDlg:setWindowTitle( "Harbour-QT Preview Dialog" )
    Qt_Connect_Signal( qDlg:pPtr, "paintRequested(QPrinter)", {|o,p| ::paintRequested( p,o ) } )
    qDlg:exec()
@@ -1412,7 +1413,7 @@ METHOD HbIde:paintRequested( pPrinter )
 
    qPrinter := QPrinter():configure( pPrinter )
 
-   ::qCurEdit:print( QT_PTROF( qPrinter ) )
+   ::qCurEdit:print( qPrinter )
 
    RETURN Self
 
@@ -1529,7 +1530,7 @@ METHOD HbIde:loadUI( cUi )
       qFile := QFile():new( cUiFull )
       IF qFile:open( 1 )
          qUiLoader  := QUiLoader():new()
-         qDialog    := QDialog():configure( qUiLoader:load( QT_PTROF( qFile ), QT_PTROFXBP( ::oDlg ) ) )
+         qDialog    := QDialog():configure( qUiLoader:load( qFile, ::oDlg ) )
          qFile:close()
       ENDIF
    ENDIF
@@ -1546,7 +1547,7 @@ METHOD HbIde:findReplace( cUi )
       qFile := QFile():new( cUiFull )
       IF qFile:open( 1 )
          qUiLoader  := QUiLoader():new()
-         ::qFindDlg := QDialog():configure( qUiLoader:load( QT_PTROF( qFile ), QT_PTROFXBP( ::oDlg ) ) )
+         ::qFindDlg := QDialog():configure( qUiLoader:load( qFile, ::oDlg ) )
          qFile:close()
          //
          ::qFindDlg:setWindowFlags( Qt_Sheet )
@@ -1892,7 +1893,7 @@ METHOD HbIde:buildProjectViaQt( cProject )
    Qt_Connect_Signal( QT_PTROF( ::qProcess ), "readyReadStandardOutput()", {|o,i| ::readProcessInfo( 3, i, o ) } )
    Qt_Connect_Signal( QT_PTROF( ::qProcess ), "finished(int,int)"        , {|o,i| ::readProcessInfo( 2, i, o ) } )
 
-   ::qProcess:start( "hbmk2.exe", QT_PTROF( qStringList ) )
+   ::qProcess:start( "hbmk2.exe", qStringList )
 
    RETURN Self
 
@@ -1926,4 +1927,5 @@ METHOD HbIde:readProcessInfo( nMode, iBytes )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
+
 
