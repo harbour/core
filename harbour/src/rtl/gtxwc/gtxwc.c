@@ -253,6 +253,8 @@ static Atom s_atomClipboard;
 static Atom s_atomTargets;
 static Atom s_atomCutBuffer0;
 static Atom s_atomText;
+static Atom s_atomTextHtml;
+static Atom s_atomTextMozHtmlInfo;
 static Atom s_atomCompoundText;
 
 
@@ -2100,6 +2102,12 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
             if( XGetTextProperty( wnd->dpy, wnd->window, &text,
                                   evt->xselection.property ) != 0 )
             {
+#ifdef XWC_DEBUG
+               printf( "xselection.target.target=%ld (%s), TextProperty.format='%d'\r\n",
+                       evt->xselection.target,
+                       evt->xselection.target == None ? "None" : XGetAtomName(wnd->dpy, evt->xselection.target),
+                       text.format ); fflush(stdout);
+#endif
                if( evt->xselection.target == s_atomUTF8String && text.format == 8 )
                {
 #ifdef XWC_DEBUG
@@ -2112,8 +2120,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                   wnd->ClipboardTime = evt->xselection.time;
                   wnd->ClipboardRcvd = TRUE;
                }
-               else
-               if( evt->xselection.target == s_atomString && text.format == 8 )
+               else if( evt->xselection.target == s_atomString && text.format == 8 )
                {
 #ifdef XWC_DEBUG
                   printf( "String='%s'\r\n", text.value ); fflush(stdout);
@@ -2140,8 +2147,13 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                      aValue = ( ( unsigned int * ) text.value )[ nItem ];
                      if( aValue == s_atomUTF8String )
                         aNextRequest = s_atomUTF8String;
-                     else if( aValue == s_atomString && aNextRequest == None )
+                     else if( aValue == s_atomString && aNextRequest != s_atomUTF8String )
                         aNextRequest = s_atomString;
+                     else if( aValue == s_atomTextMozHtmlInfo && aNextRequest == None )
+                        /* hack for FireFox which does not set UTF8_STRING target
+                         * though it supports it
+                         */
+                        aNextRequest = s_atomUTF8String;
 #ifdef XWC_DEBUG
                      if( aValue )
                         printf("%ld, %8lx (%s)\r\n", nItem, aValue, XGetAtomName(wnd->dpy, aValue));
@@ -2154,13 +2166,9 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
             }
          }
          else if( wnd->ClipboardRequest == s_atomTargets )
-         {
             aNextRequest = s_atomUTF8String;
-         }
          else if( wnd->ClipboardRequest == s_atomUTF8String )
-         {
             aNextRequest = s_atomString;
-         }
          wnd->ClipboardRequest = aNextRequest;
          break;
       }
@@ -3240,19 +3248,21 @@ static BOOL hb_gt_xwc_ConnectX( PXWND_DEF wnd, BOOL fExit )
    hb_gt_xwc_MouseInit( wnd );
 
    /* set atom identifiers for atom names we will use */
-   s_atomDelWin       = XInternAtom( wnd->dpy, "WM_DELETE_WINDOW", True );
-   s_atomTimestamp    = XInternAtom( wnd->dpy, "TIMESTAMP", False );
-   s_atomAtom         = XInternAtom( wnd->dpy, "ATOM", False );
-   s_atomInteger      = XInternAtom( wnd->dpy, "INTEGER", False );
-   s_atomString       = XInternAtom( wnd->dpy, "STRING", False );
-   s_atomUTF8String   = XInternAtom( wnd->dpy, "UTF8_STRING", False );
-   s_atomPrimary      = XInternAtom( wnd->dpy, "PRIMARY", False );
-   s_atomSecondary    = XInternAtom( wnd->dpy, "SECONDARY", False );
-   s_atomClipboard    = XInternAtom( wnd->dpy, "CLIPBOARD", False );
-   s_atomTargets      = XInternAtom( wnd->dpy, "TARGETS", False );
-   s_atomCutBuffer0   = XInternAtom( wnd->dpy, "CUT_BUFFER0", False );
-   s_atomText         = XInternAtom( wnd->dpy, "TEXT", False );
-   s_atomCompoundText = XInternAtom( wnd->dpy, "COMPOUND_TEXT", False );
+   s_atomDelWin          = XInternAtom( wnd->dpy, "WM_DELETE_WINDOW", True );
+   s_atomTimestamp       = XInternAtom( wnd->dpy, "TIMESTAMP", False );
+   s_atomAtom            = XInternAtom( wnd->dpy, "ATOM", False );
+   s_atomInteger         = XInternAtom( wnd->dpy, "INTEGER", False );
+   s_atomString          = XInternAtom( wnd->dpy, "STRING", False );
+   s_atomUTF8String      = XInternAtom( wnd->dpy, "UTF8_STRING", False );
+   s_atomPrimary         = XInternAtom( wnd->dpy, "PRIMARY", False );
+   s_atomSecondary       = XInternAtom( wnd->dpy, "SECONDARY", False );
+   s_atomClipboard       = XInternAtom( wnd->dpy, "CLIPBOARD", False );
+   s_atomTargets         = XInternAtom( wnd->dpy, "TARGETS", False );
+   s_atomCutBuffer0      = XInternAtom( wnd->dpy, "CUT_BUFFER0", False );
+   s_atomText            = XInternAtom( wnd->dpy, "TEXT", False );
+   s_atomCompoundText    = XInternAtom( wnd->dpy, "COMPOUND_TEXT", False );
+   s_atomTextHtml        = XInternAtom( wnd->dpy, "text/html", False );
+   s_atomTextMozHtmlInfo = XInternAtom( wnd->dpy, "text/_moz_htmlinfo", False );
 
    HB_XWC_XLIB_UNLOCK
 
