@@ -83,7 +83,7 @@ CREATE CLASS QTextImageFormat INHERIT QTextCharFormat
 /*----------------------------------------------------------------------*/
 
 METHOD QTextImageFormat:new( pParent )
-   ::pPtr := Qt_QTextImageFormat( pParent )
+   ::pPtr := Qt_QTextImageFormat( hbqt_ptr( pParent ) )
    RETURN Self
 
 

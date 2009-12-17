@@ -82,7 +82,7 @@ CREATE CLASS QPrintEngine
 /*----------------------------------------------------------------------*/
 
 METHOD QPrintEngine:new( pParent )
-   ::pPtr := Qt_QPrintEngine( pParent )
+   ::pPtr := Qt_QPrintEngine( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -116,5 +116,5 @@ METHOD QPrintEngine:property( nKey )
 
 
 METHOD QPrintEngine:setProperty( nKey, pValue )
-   RETURN Qt_QPrintEngine_setProperty( ::pPtr, nKey, pValue )
+   RETURN Qt_QPrintEngine_setProperty( ::pPtr, nKey, hbqt_ptr( pValue ) )
 

@@ -76,7 +76,7 @@ CREATE CLASS QRadioButton INHERIT QAbstractButton
 /*----------------------------------------------------------------------*/
 
 METHOD QRadioButton:new( pParent )
-   ::pPtr := Qt_QRadioButton( pParent )
+   ::pPtr := Qt_QRadioButton( hbqt_ptr( pParent ) )
    RETURN Self
 
 

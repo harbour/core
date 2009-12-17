@@ -83,7 +83,7 @@ CREATE CLASS QTextFragment
 /*----------------------------------------------------------------------*/
 
 METHOD QTextFragment:new( pParent )
-   ::pPtr := Qt_QTextFragment( pParent )
+   ::pPtr := Qt_QTextFragment( hbqt_ptr( pParent ) )
    RETURN Self
 
 

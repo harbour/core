@@ -82,7 +82,7 @@ CREATE CLASS QGradient
 /*----------------------------------------------------------------------*/
 
 METHOD QGradient:new( pParent )
-   ::pPtr := Qt_QGradient( pParent )
+   ::pPtr := Qt_QGradient( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -100,7 +100,7 @@ METHOD QGradient:coordinateMode()
 
 
 METHOD QGradient:setColorAt( nPosition, pColor )
-   RETURN Qt_QGradient_setColorAt( ::pPtr, nPosition, pColor )
+   RETURN Qt_QGradient_setColorAt( ::pPtr, nPosition, hbqt_ptr( pColor ) )
 
 
 METHOD QGradient:setCoordinateMode( nMode )

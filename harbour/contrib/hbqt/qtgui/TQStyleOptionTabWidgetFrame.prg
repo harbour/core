@@ -82,7 +82,7 @@ CREATE CLASS QStyleOptionTabWidgetFrame INHERIT QStyleOption
 /*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionTabWidgetFrame:new( pParent )
-   ::pPtr := Qt_QStyleOptionTabWidgetFrame( pParent )
+   ::pPtr := Qt_QStyleOptionTabWidgetFrame( hbqt_ptr( pParent ) )
    RETURN Self
 
 

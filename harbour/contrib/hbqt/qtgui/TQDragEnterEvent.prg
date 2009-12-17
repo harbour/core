@@ -76,7 +76,7 @@ CREATE CLASS QDragEnterEvent INHERIT QDragMoveEvent
 /*----------------------------------------------------------------------*/
 
 METHOD QDragEnterEvent:new( pParent )
-   ::pPtr := Qt_QDragEnterEvent( pParent )
+   ::pPtr := Qt_QDragEnterEvent( hbqt_ptr( pParent ) )
    RETURN Self
 
 

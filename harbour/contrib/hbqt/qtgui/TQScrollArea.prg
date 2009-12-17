@@ -85,7 +85,7 @@ CREATE CLASS QScrollArea INHERIT QAbstractScrollArea
 /*----------------------------------------------------------------------*/
 
 METHOD QScrollArea:new( pParent )
-   ::pPtr := Qt_QScrollArea( pParent )
+   ::pPtr := Qt_QScrollArea( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -107,7 +107,7 @@ METHOD QScrollArea:ensureVisible( nX, nY, nXmargin, nYmargin )
 
 
 METHOD QScrollArea:ensureWidgetVisible( pChildWidget, nXmargin, nYmargin )
-   RETURN Qt_QScrollArea_ensureWidgetVisible( ::pPtr, pChildWidget, nXmargin, nYmargin )
+   RETURN Qt_QScrollArea_ensureWidgetVisible( ::pPtr, hbqt_ptr( pChildWidget ), nXmargin, nYmargin )
 
 
 METHOD QScrollArea:setAlignment( nQt_Alignment )
@@ -115,7 +115,7 @@ METHOD QScrollArea:setAlignment( nQt_Alignment )
 
 
 METHOD QScrollArea:setWidget( pWidget )
-   RETURN Qt_QScrollArea_setWidget( ::pPtr, pWidget )
+   RETURN Qt_QScrollArea_setWidget( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QScrollArea:setWidgetResizable( lResizable )

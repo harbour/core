@@ -95,7 +95,7 @@ CREATE CLASS QLCDNumber INHERIT QFrame
 /*----------------------------------------------------------------------*/
 
 METHOD QLCDNumber:new( pParent )
-   ::pPtr := Qt_QLCDNumber( pParent )
+   ::pPtr := Qt_QLCDNumber( hbqt_ptr( pParent ) )
    RETURN Self
 
 

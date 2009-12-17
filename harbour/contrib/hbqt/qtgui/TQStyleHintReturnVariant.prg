@@ -76,7 +76,7 @@ CREATE CLASS QStyleHintReturnVariant INHERIT QStyleHintReturn
 /*----------------------------------------------------------------------*/
 
 METHOD QStyleHintReturnVariant:new( pParent )
-   ::pPtr := Qt_QStyleHintReturnVariant( pParent )
+   ::pPtr := Qt_QStyleHintReturnVariant( hbqt_ptr( pParent ) )
    RETURN Self
 
 

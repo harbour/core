@@ -110,7 +110,7 @@ CREATE CLASS QPalette
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( ... ) CLASS QPalette
+METHOD QPalette:new( ... )
 
    ::pPtr := Qt_QPalette( ... )
 
@@ -187,7 +187,7 @@ METHOD QPalette:isBrushSet( nCg, nCr )
 
 
 METHOD QPalette:isCopyOf( pP )
-   RETURN Qt_QPalette_isCopyOf( ::pPtr, pP )
+   RETURN Qt_QPalette_isCopyOf( ::pPtr, hbqt_ptr( pP ) )
 
 
 METHOD QPalette:isEqual( nCg1, nCg2 )
@@ -215,27 +215,27 @@ METHOD QPalette:midlight()
 
 
 METHOD QPalette:resolve( pOther )
-   RETURN Qt_QPalette_resolve( ::pPtr, pOther )
+   RETURN Qt_QPalette_resolve( ::pPtr, hbqt_ptr( pOther ) )
 
 
 METHOD QPalette:setBrush( nRole, pBrush )
-   RETURN Qt_QPalette_setBrush( ::pPtr, nRole, pBrush )
+   RETURN Qt_QPalette_setBrush( ::pPtr, nRole, hbqt_ptr( pBrush ) )
 
 
 METHOD QPalette:setBrush_1( nGroup, nRole, pBrush )
-   RETURN Qt_QPalette_setBrush_1( ::pPtr, nGroup, nRole, pBrush )
+   RETURN Qt_QPalette_setBrush_1( ::pPtr, nGroup, nRole, hbqt_ptr( pBrush ) )
 
 
 METHOD QPalette:setColor( nRole, pColor )
-   RETURN Qt_QPalette_setColor( ::pPtr, nRole, pColor )
+   RETURN Qt_QPalette_setColor( ::pPtr, nRole, hbqt_ptr( pColor ) )
 
 
 METHOD QPalette:setColor_1( nGroup, nRole, pColor )
-   RETURN Qt_QPalette_setColor_1( ::pPtr, nGroup, nRole, pColor )
+   RETURN Qt_QPalette_setColor_1( ::pPtr, nGroup, nRole, hbqt_ptr( pColor ) )
 
 
 METHOD QPalette:setColorGroup( nCg, pWindowText, pButton, pLight, pDark, pMid, pText, pBright_text, pBase, pWindow )
-   RETURN Qt_QPalette_setColorGroup( ::pPtr, nCg, pWindowText, pButton, pLight, pDark, pMid, pText, pBright_text, pBase, pWindow )
+   RETURN Qt_QPalette_setColorGroup( ::pPtr, nCg, hbqt_ptr( pWindowText ), hbqt_ptr( pButton ), hbqt_ptr( pLight ), hbqt_ptr( pDark ), hbqt_ptr( pMid ), hbqt_ptr( pText ), hbqt_ptr( pBright_text ), hbqt_ptr( pBase ), hbqt_ptr( pWindow ) )
 
 
 METHOD QPalette:setCurrentColorGroup( nCg )

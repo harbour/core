@@ -84,7 +84,7 @@ CREATE CLASS QStringListModel INHERIT QAbstractListModel
 /*----------------------------------------------------------------------*/
 
 METHOD QStringListModel:new( pParent )
-   ::pPtr := Qt_QStringListModel( pParent )
+   ::pPtr := Qt_QStringListModel( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -98,31 +98,31 @@ METHOD QStringListModel:configure( xObject )
 
 
 METHOD QStringListModel:data( pIndex, nRole )
-   RETURN Qt_QStringListModel_data( ::pPtr, pIndex, nRole )
+   RETURN Qt_QStringListModel_data( ::pPtr, hbqt_ptr( pIndex ), nRole )
 
 
 METHOD QStringListModel:flags( pIndex )
-   RETURN Qt_QStringListModel_flags( ::pPtr, pIndex )
+   RETURN Qt_QStringListModel_flags( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QStringListModel:insertRows( nRow, nCount, pParent )
-   RETURN Qt_QStringListModel_insertRows( ::pPtr, nRow, nCount, pParent )
+   RETURN Qt_QStringListModel_insertRows( ::pPtr, nRow, nCount, hbqt_ptr( pParent ) )
 
 
 METHOD QStringListModel:removeRows( nRow, nCount, pParent )
-   RETURN Qt_QStringListModel_removeRows( ::pPtr, nRow, nCount, pParent )
+   RETURN Qt_QStringListModel_removeRows( ::pPtr, nRow, nCount, hbqt_ptr( pParent ) )
 
 
 METHOD QStringListModel:rowCount( pParent )
-   RETURN Qt_QStringListModel_rowCount( ::pPtr, pParent )
+   RETURN Qt_QStringListModel_rowCount( ::pPtr, hbqt_ptr( pParent ) )
 
 
 METHOD QStringListModel:setData( pIndex, pValue, nRole )
-   RETURN Qt_QStringListModel_setData( ::pPtr, pIndex, pValue, nRole )
+   RETURN Qt_QStringListModel_setData( ::pPtr, hbqt_ptr( pIndex ), hbqt_ptr( pValue ), nRole )
 
 
 METHOD QStringListModel:setStringList( pStrings )
-   RETURN Qt_QStringListModel_setStringList( ::pPtr, pStrings )
+   RETURN Qt_QStringListModel_setStringList( ::pPtr, hbqt_ptr( pStrings ) )
 
 
 METHOD QStringListModel:stringList()

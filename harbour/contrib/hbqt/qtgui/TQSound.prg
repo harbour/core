@@ -83,7 +83,7 @@ CREATE CLASS QSound
 /*----------------------------------------------------------------------*/
 
 METHOD QSound:new( pParent )
-   ::pPtr := Qt_QSound( pParent )
+   ::pPtr := Qt_QSound( hbqt_ptr( pParent ) )
    RETURN Self
 
 

@@ -125,7 +125,7 @@ CREATE CLASS QTransform
 /*----------------------------------------------------------------------*/
 
 METHOD QTransform:new( pParent )
-   ::pPtr := Qt_QTransform( pParent )
+   ::pPtr := Qt_QTransform( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -227,35 +227,35 @@ METHOD QTransform:map( nX, nY, nTx, nTy )
 
 
 METHOD QTransform:map_1( pP )
-   RETURN Qt_QTransform_map_1( ::pPtr, pP )
+   RETURN Qt_QTransform_map_1( ::pPtr, hbqt_ptr( pP ) )
 
 
 METHOD QTransform:map_2( pPoint )
-   RETURN Qt_QTransform_map_2( ::pPtr, pPoint )
+   RETURN Qt_QTransform_map_2( ::pPtr, hbqt_ptr( pPoint ) )
 
 
 METHOD QTransform:map_3( pL )
-   RETURN Qt_QTransform_map_3( ::pPtr, pL )
+   RETURN Qt_QTransform_map_3( ::pPtr, hbqt_ptr( pL ) )
 
 
 METHOD QTransform:map_4( pLine )
-   RETURN Qt_QTransform_map_4( ::pPtr, pLine )
+   RETURN Qt_QTransform_map_4( ::pPtr, hbqt_ptr( pLine ) )
 
 
 METHOD QTransform:map_5( pPolygon )
-   RETURN Qt_QTransform_map_5( ::pPtr, pPolygon )
+   RETURN Qt_QTransform_map_5( ::pPtr, hbqt_ptr( pPolygon ) )
 
 
 METHOD QTransform:map_6( pPolygon )
-   RETURN Qt_QTransform_map_6( ::pPtr, pPolygon )
+   RETURN Qt_QTransform_map_6( ::pPtr, hbqt_ptr( pPolygon ) )
 
 
 METHOD QTransform:map_7( pRegion )
-   RETURN Qt_QTransform_map_7( ::pPtr, pRegion )
+   RETURN Qt_QTransform_map_7( ::pPtr, hbqt_ptr( pRegion ) )
 
 
 METHOD QTransform:map_8( pPath )
-   RETURN Qt_QTransform_map_8( ::pPtr, pPath )
+   RETURN Qt_QTransform_map_8( ::pPtr, hbqt_ptr( pPath ) )
 
 
 METHOD QTransform:map_9( nX, nY, nTx, nTy )
@@ -263,15 +263,15 @@ METHOD QTransform:map_9( nX, nY, nTx, nTy )
 
 
 METHOD QTransform:mapRect( pRectangle )
-   RETURN Qt_QTransform_mapRect( ::pPtr, pRectangle )
+   RETURN Qt_QTransform_mapRect( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QTransform:mapRect_1( pRectangle )
-   RETURN Qt_QTransform_mapRect_1( ::pPtr, pRectangle )
+   RETURN Qt_QTransform_mapRect_1( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QTransform:mapToPolygon( pRectangle )
-   RETURN Qt_QTransform_mapToPolygon( ::pPtr, pRectangle )
+   RETURN Qt_QTransform_mapToPolygon( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QTransform:reset()
@@ -323,13 +323,13 @@ METHOD QTransform:fromTranslate( nDx, nDy )
 
 
 METHOD QTransform:quadToQuad( pOne, pTwo, pTrans )
-   RETURN Qt_QTransform_quadToQuad( ::pPtr, pOne, pTwo, pTrans )
+   RETURN Qt_QTransform_quadToQuad( ::pPtr, hbqt_ptr( pOne ), hbqt_ptr( pTwo ), hbqt_ptr( pTrans ) )
 
 
 METHOD QTransform:quadToSquare( pQuad, pTrans )
-   RETURN Qt_QTransform_quadToSquare( ::pPtr, pQuad, pTrans )
+   RETURN Qt_QTransform_quadToSquare( ::pPtr, hbqt_ptr( pQuad ), hbqt_ptr( pTrans ) )
 
 
 METHOD QTransform:squareToQuad( pQuad, pTrans )
-   RETURN Qt_QTransform_squareToQuad( ::pPtr, pQuad, pTrans )
+   RETURN Qt_QTransform_squareToQuad( ::pPtr, hbqt_ptr( pQuad ), hbqt_ptr( pTrans ) )
 

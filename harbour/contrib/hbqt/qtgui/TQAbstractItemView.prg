@@ -139,7 +139,7 @@ CREATE CLASS QAbstractItemView INHERIT QAbstractScrollArea
 /*----------------------------------------------------------------------*/
 
 METHOD QAbstractItemView:new( pParent )
-   ::pPtr := Qt_QAbstractItemView( pParent )
+   ::pPtr := Qt_QAbstractItemView( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -161,7 +161,7 @@ METHOD QAbstractItemView:autoScrollMargin()
 
 
 METHOD QAbstractItemView:closePersistentEditor( pIndex )
-   RETURN Qt_QAbstractItemView_closePersistentEditor( ::pPtr, pIndex )
+   RETURN Qt_QAbstractItemView_closePersistentEditor( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QAbstractItemView:currentIndex()
@@ -197,11 +197,11 @@ METHOD QAbstractItemView:iconSize()
 
 
 METHOD QAbstractItemView:indexAt( pPoint )
-   RETURN Qt_QAbstractItemView_indexAt( ::pPtr, pPoint )
+   RETURN Qt_QAbstractItemView_indexAt( ::pPtr, hbqt_ptr( pPoint ) )
 
 
 METHOD QAbstractItemView:indexWidget( pIndex )
-   RETURN Qt_QAbstractItemView_indexWidget( ::pPtr, pIndex )
+   RETURN Qt_QAbstractItemView_indexWidget( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QAbstractItemView:itemDelegate()
@@ -209,7 +209,7 @@ METHOD QAbstractItemView:itemDelegate()
 
 
 METHOD QAbstractItemView:itemDelegate_1( pIndex )
-   RETURN Qt_QAbstractItemView_itemDelegate_1( ::pPtr, pIndex )
+   RETURN Qt_QAbstractItemView_itemDelegate_1( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QAbstractItemView:itemDelegateForColumn( nColumn )
@@ -229,7 +229,7 @@ METHOD QAbstractItemView:model()
 
 
 METHOD QAbstractItemView:openPersistentEditor( pIndex )
-   RETURN Qt_QAbstractItemView_openPersistentEditor( ::pPtr, pIndex )
+   RETURN Qt_QAbstractItemView_openPersistentEditor( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QAbstractItemView:rootIndex()
@@ -237,7 +237,7 @@ METHOD QAbstractItemView:rootIndex()
 
 
 METHOD QAbstractItemView:scrollTo( pIndex, nHint )
-   RETURN Qt_QAbstractItemView_scrollTo( ::pPtr, pIndex, nHint )
+   RETURN Qt_QAbstractItemView_scrollTo( ::pPtr, hbqt_ptr( pIndex ), nHint )
 
 
 METHOD QAbstractItemView:selectionBehavior()
@@ -289,27 +289,27 @@ METHOD QAbstractItemView:setHorizontalScrollMode( nMode )
 
 
 METHOD QAbstractItemView:setIconSize( pSize )
-   RETURN Qt_QAbstractItemView_setIconSize( ::pPtr, pSize )
+   RETURN Qt_QAbstractItemView_setIconSize( ::pPtr, hbqt_ptr( pSize ) )
 
 
 METHOD QAbstractItemView:setIndexWidget( pIndex, pWidget )
-   RETURN Qt_QAbstractItemView_setIndexWidget( ::pPtr, pIndex, pWidget )
+   RETURN Qt_QAbstractItemView_setIndexWidget( ::pPtr, hbqt_ptr( pIndex ), hbqt_ptr( pWidget ) )
 
 
 METHOD QAbstractItemView:setItemDelegate( pDelegate )
-   RETURN Qt_QAbstractItemView_setItemDelegate( ::pPtr, pDelegate )
+   RETURN Qt_QAbstractItemView_setItemDelegate( ::pPtr, hbqt_ptr( pDelegate ) )
 
 
 METHOD QAbstractItemView:setItemDelegateForColumn( nColumn, pDelegate )
-   RETURN Qt_QAbstractItemView_setItemDelegateForColumn( ::pPtr, nColumn, pDelegate )
+   RETURN Qt_QAbstractItemView_setItemDelegateForColumn( ::pPtr, nColumn, hbqt_ptr( pDelegate ) )
 
 
 METHOD QAbstractItemView:setItemDelegateForRow( nRow, pDelegate )
-   RETURN Qt_QAbstractItemView_setItemDelegateForRow( ::pPtr, nRow, pDelegate )
+   RETURN Qt_QAbstractItemView_setItemDelegateForRow( ::pPtr, nRow, hbqt_ptr( pDelegate ) )
 
 
 METHOD QAbstractItemView:setModel( pModel )
-   RETURN Qt_QAbstractItemView_setModel( ::pPtr, pModel )
+   RETURN Qt_QAbstractItemView_setModel( ::pPtr, hbqt_ptr( pModel ) )
 
 
 METHOD QAbstractItemView:setSelectionBehavior( nBehavior )
@@ -321,7 +321,7 @@ METHOD QAbstractItemView:setSelectionMode( nMode )
 
 
 METHOD QAbstractItemView:setSelectionModel( pSelectionModel )
-   RETURN Qt_QAbstractItemView_setSelectionModel( ::pPtr, pSelectionModel )
+   RETURN Qt_QAbstractItemView_setSelectionModel( ::pPtr, hbqt_ptr( pSelectionModel ) )
 
 
 METHOD QAbstractItemView:setTabKeyNavigation( lEnable )
@@ -345,7 +345,7 @@ METHOD QAbstractItemView:sizeHintForColumn( nColumn )
 
 
 METHOD QAbstractItemView:sizeHintForIndex( pIndex )
-   RETURN Qt_QAbstractItemView_sizeHintForIndex( ::pPtr, pIndex )
+   RETURN Qt_QAbstractItemView_sizeHintForIndex( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QAbstractItemView:sizeHintForRow( nRow )
@@ -365,7 +365,7 @@ METHOD QAbstractItemView:verticalScrollMode()
 
 
 METHOD QAbstractItemView:visualRect( pIndex )
-   RETURN Qt_QAbstractItemView_visualRect( ::pPtr, pIndex )
+   RETURN Qt_QAbstractItemView_visualRect( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QAbstractItemView:clearSelection()
@@ -373,7 +373,7 @@ METHOD QAbstractItemView:clearSelection()
 
 
 METHOD QAbstractItemView:edit( pIndex )
-   RETURN Qt_QAbstractItemView_edit( ::pPtr, pIndex )
+   RETURN Qt_QAbstractItemView_edit( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QAbstractItemView:reset()
@@ -393,13 +393,13 @@ METHOD QAbstractItemView:selectAll()
 
 
 METHOD QAbstractItemView:setCurrentIndex( pIndex )
-   RETURN Qt_QAbstractItemView_setCurrentIndex( ::pPtr, pIndex )
+   RETURN Qt_QAbstractItemView_setCurrentIndex( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QAbstractItemView:setRootIndex( pIndex )
-   RETURN Qt_QAbstractItemView_setRootIndex( ::pPtr, pIndex )
+   RETURN Qt_QAbstractItemView_setRootIndex( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QAbstractItemView:update( pIndex )
-   RETURN Qt_QAbstractItemView_update( ::pPtr, pIndex )
+   RETURN Qt_QAbstractItemView_update( ::pPtr, hbqt_ptr( pIndex ) )
 

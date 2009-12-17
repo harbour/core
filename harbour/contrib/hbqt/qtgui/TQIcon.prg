@@ -85,7 +85,7 @@ CREATE CLASS QIcon
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( ... ) CLASS QIcon
+METHOD QIcon:new( ... )
 
    ::pPtr := Qt_QIcon( ... )
 
@@ -102,15 +102,15 @@ METHOD QIcon:configure( xObject )
 
 
 METHOD QIcon:actualSize( pSize, nMode, nState )
-   RETURN Qt_QIcon_actualSize( ::pPtr, pSize, nMode, nState )
+   RETURN Qt_QIcon_actualSize( ::pPtr, hbqt_ptr( pSize ), nMode, nState )
 
 
 METHOD QIcon:addFile( cFileName, pSize, nMode, nState )
-   RETURN Qt_QIcon_addFile( ::pPtr, cFileName, pSize, nMode, nState )
+   RETURN Qt_QIcon_addFile( ::pPtr, cFileName, hbqt_ptr( pSize ), nMode, nState )
 
 
 METHOD QIcon:addPixmap( pPixmap, nMode, nState )
-   RETURN Qt_QIcon_addPixmap( ::pPtr, pPixmap, nMode, nState )
+   RETURN Qt_QIcon_addPixmap( ::pPtr, hbqt_ptr( pPixmap ), nMode, nState )
 
 
 METHOD QIcon:cacheKey()
@@ -122,15 +122,15 @@ METHOD QIcon:isNull()
 
 
 METHOD QIcon:paint( pPainter, pRect, nAlignment, nMode, nState )
-   RETURN Qt_QIcon_paint( ::pPtr, pPainter, pRect, nAlignment, nMode, nState )
+   RETURN Qt_QIcon_paint( ::pPtr, hbqt_ptr( pPainter ), hbqt_ptr( pRect ), nAlignment, nMode, nState )
 
 
 METHOD QIcon:paint_1( pPainter, nX, nY, nW, nH, nAlignment, nMode, nState )
-   RETURN Qt_QIcon_paint_1( ::pPtr, pPainter, nX, nY, nW, nH, nAlignment, nMode, nState )
+   RETURN Qt_QIcon_paint_1( ::pPtr, hbqt_ptr( pPainter ), nX, nY, nW, nH, nAlignment, nMode, nState )
 
 
 METHOD QIcon:pixmap( pSize, nMode, nState )
-   RETURN Qt_QIcon_pixmap( ::pPtr, pSize, nMode, nState )
+   RETURN Qt_QIcon_pixmap( ::pPtr, hbqt_ptr( pSize ), nMode, nState )
 
 
 METHOD QIcon:pixmap_1( nW, nH, nMode, nState )

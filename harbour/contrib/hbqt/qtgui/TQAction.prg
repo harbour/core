@@ -124,7 +124,7 @@ CREATE CLASS QAction INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QAction:new( pParent )
-   ::pPtr := Qt_QAction( pParent )
+   ::pPtr := Qt_QAction( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -202,7 +202,7 @@ METHOD QAction:parentWidget()
 
 
 METHOD QAction:setActionGroup( pGroup )
-   RETURN Qt_QAction_setActionGroup( ::pPtr, pGroup )
+   RETURN Qt_QAction_setActionGroup( ::pPtr, hbqt_ptr( pGroup ) )
 
 
 METHOD QAction:setAutoRepeat( lBool )
@@ -214,11 +214,11 @@ METHOD QAction:setCheckable( lBool )
 
 
 METHOD QAction:setData( pUserData )
-   RETURN Qt_QAction_setData( ::pPtr, pUserData )
+   RETURN Qt_QAction_setData( ::pPtr, hbqt_ptr( pUserData ) )
 
 
 METHOD QAction:setFont( pFont )
-   RETURN Qt_QAction_setFont( ::pPtr, pFont )
+   RETURN Qt_QAction_setFont( ::pPtr, hbqt_ptr( pFont ) )
 
 
 METHOD QAction:setIcon( cIcon )
@@ -234,7 +234,7 @@ METHOD QAction:setIconVisibleInMenu( lVisible )
 
 
 METHOD QAction:setMenu( pMenu )
-   RETURN Qt_QAction_setMenu( ::pPtr, pMenu )
+   RETURN Qt_QAction_setMenu( ::pPtr, hbqt_ptr( pMenu ) )
 
 
 METHOD QAction:setMenuRole( nMenuRole )
@@ -246,7 +246,7 @@ METHOD QAction:setSeparator( lB )
 
 
 METHOD QAction:setShortcut( pShortcut )
-   RETURN Qt_QAction_setShortcut( ::pPtr, pShortcut )
+   RETURN Qt_QAction_setShortcut( ::pPtr, hbqt_ptr( pShortcut ) )
 
 
 METHOD QAction:setShortcutContext( nContext )
@@ -282,7 +282,7 @@ METHOD QAction:shortcutContext()
 
 
 METHOD QAction:showStatusText( pWidget )
-   RETURN Qt_QAction_showStatusText( ::pPtr, pWidget )
+   RETURN Qt_QAction_showStatusText( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QAction:statusTip()

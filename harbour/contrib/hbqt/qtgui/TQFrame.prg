@@ -89,7 +89,7 @@ CREATE CLASS QFrame INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QFrame:new( pParent )
-   ::pPtr := Qt_QFrame( pParent )
+   ::pPtr := Qt_QFrame( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -131,7 +131,7 @@ METHOD QFrame:midLineWidth()
 
 
 METHOD QFrame:setFrameRect( pQRect )
-   RETURN Qt_QFrame_setFrameRect( ::pPtr, pQRect )
+   RETURN Qt_QFrame_setFrameRect( ::pPtr, hbqt_ptr( pQRect ) )
 
 
 METHOD QFrame:setFrameShadow( nShadow )

@@ -100,7 +100,7 @@ CREATE CLASS QHttp INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QHttp:new( pParent )
-   ::pPtr := Qt_QHttp( pParent )
+   ::pPtr := Qt_QHttp( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -150,7 +150,7 @@ METHOD QHttp:errorString()
 
 
 METHOD QHttp:get( cPath, pTo )
-   RETURN Qt_QHttp_get( ::pPtr, cPath, pTo )
+   RETURN Qt_QHttp_get( ::pPtr, cPath, hbqt_ptr( pTo ) )
 
 
 METHOD QHttp:hasPendingRequests()
@@ -166,11 +166,11 @@ METHOD QHttp:lastResponse()
 
 
 METHOD QHttp:post( cPath, pData, pTo )
-   RETURN Qt_QHttp_post( ::pPtr, cPath, pData, pTo )
+   RETURN Qt_QHttp_post( ::pPtr, cPath, hbqt_ptr( pData ), hbqt_ptr( pTo ) )
 
 
 METHOD QHttp:post_1( cPath, pData, pTo )
-   RETURN Qt_QHttp_post_1( ::pPtr, cPath, pData, pTo )
+   RETURN Qt_QHttp_post_1( ::pPtr, cPath, hbqt_ptr( pData ), hbqt_ptr( pTo ) )
 
 
 METHOD QHttp:readAll()
@@ -178,11 +178,11 @@ METHOD QHttp:readAll()
 
 
 METHOD QHttp:request( pHeader, pData, pTo )
-   RETURN Qt_QHttp_request( ::pPtr, pHeader, pData, pTo )
+   RETURN Qt_QHttp_request( ::pPtr, hbqt_ptr( pHeader ), hbqt_ptr( pData ), hbqt_ptr( pTo ) )
 
 
 METHOD QHttp:request_1( pHeader, pData, pTo )
-   RETURN Qt_QHttp_request_1( ::pPtr, pHeader, pData, pTo )
+   RETURN Qt_QHttp_request_1( ::pPtr, hbqt_ptr( pHeader ), hbqt_ptr( pData ), hbqt_ptr( pTo ) )
 
 
 METHOD QHttp:setHost( cHostName, nPort )

@@ -105,7 +105,7 @@ CREATE CLASS QCompleter INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QCompleter:new( pParent )
-   ::pPtr := Qt_QCompleter( pParent )
+   ::pPtr := Qt_QCompleter( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -167,7 +167,7 @@ METHOD QCompleter:modelSorting()
 
 
 METHOD QCompleter:pathFromIndex( pIndex )
-   RETURN Qt_QCompleter_pathFromIndex( ::pPtr, pIndex )
+   RETURN Qt_QCompleter_pathFromIndex( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QCompleter:popup()
@@ -195,7 +195,7 @@ METHOD QCompleter:setCurrentRow( nRow )
 
 
 METHOD QCompleter:setModel( pModel )
-   RETURN Qt_QCompleter_setModel( ::pPtr, pModel )
+   RETURN Qt_QCompleter_setModel( ::pPtr, hbqt_ptr( pModel ) )
 
 
 METHOD QCompleter:setModelSorting( nSorting )
@@ -203,11 +203,11 @@ METHOD QCompleter:setModelSorting( nSorting )
 
 
 METHOD QCompleter:setPopup( pPopup )
-   RETURN Qt_QCompleter_setPopup( ::pPtr, pPopup )
+   RETURN Qt_QCompleter_setPopup( ::pPtr, hbqt_ptr( pPopup ) )
 
 
 METHOD QCompleter:setWidget( pWidget )
-   RETURN Qt_QCompleter_setWidget( ::pPtr, pWidget )
+   RETURN Qt_QCompleter_setWidget( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QCompleter:splitPath( cPath )
@@ -223,7 +223,7 @@ METHOD QCompleter:wrapAround()
 
 
 METHOD QCompleter:complete( pRect )
-   RETURN Qt_QCompleter_complete( ::pPtr, pRect )
+   RETURN Qt_QCompleter_complete( ::pPtr, hbqt_ptr( pRect ) )
 
 
 METHOD QCompleter:setCompletionPrefix( cPrefix )

@@ -111,7 +111,7 @@ CREATE CLASS QListWidgetItem INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QListWidgetItem:new( pParent )
-   ::pPtr := Qt_QListWidgetItem( pParent )
+   ::pPtr := Qt_QListWidgetItem( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -169,11 +169,11 @@ METHOD QListWidgetItem:listWidget()
 
 
 METHOD QListWidgetItem:read( pIn )
-   RETURN Qt_QListWidgetItem_read( ::pPtr, pIn )
+   RETURN Qt_QListWidgetItem_read( ::pPtr, hbqt_ptr( pIn ) )
 
 
 METHOD QListWidgetItem:setBackground( pBrush )
-   RETURN Qt_QListWidgetItem_setBackground( ::pPtr, pBrush )
+   RETURN Qt_QListWidgetItem_setBackground( ::pPtr, hbqt_ptr( pBrush ) )
 
 
 METHOD QListWidgetItem:setCheckState( nState )
@@ -181,7 +181,7 @@ METHOD QListWidgetItem:setCheckState( nState )
 
 
 METHOD QListWidgetItem:setData( nRole, pValue )
-   RETURN Qt_QListWidgetItem_setData( ::pPtr, nRole, pValue )
+   RETURN Qt_QListWidgetItem_setData( ::pPtr, nRole, hbqt_ptr( pValue ) )
 
 
 METHOD QListWidgetItem:setFlags( nFlags )
@@ -189,11 +189,11 @@ METHOD QListWidgetItem:setFlags( nFlags )
 
 
 METHOD QListWidgetItem:setFont( pFont )
-   RETURN Qt_QListWidgetItem_setFont( ::pPtr, pFont )
+   RETURN Qt_QListWidgetItem_setFont( ::pPtr, hbqt_ptr( pFont ) )
 
 
 METHOD QListWidgetItem:setForeground( pBrush )
-   RETURN Qt_QListWidgetItem_setForeground( ::pPtr, pBrush )
+   RETURN Qt_QListWidgetItem_setForeground( ::pPtr, hbqt_ptr( pBrush ) )
 
 
 METHOD QListWidgetItem:setHidden( lHide )
@@ -209,7 +209,7 @@ METHOD QListWidgetItem:setSelected( lSelect )
 
 
 METHOD QListWidgetItem:setSizeHint( pSize )
-   RETURN Qt_QListWidgetItem_setSizeHint( ::pPtr, pSize )
+   RETURN Qt_QListWidgetItem_setSizeHint( ::pPtr, hbqt_ptr( pSize ) )
 
 
 METHOD QListWidgetItem:setStatusTip( cStatusTip )
@@ -261,5 +261,5 @@ METHOD QListWidgetItem:whatsThis()
 
 
 METHOD QListWidgetItem:write( pOut )
-   RETURN Qt_QListWidgetItem_write( ::pPtr, pOut )
+   RETURN Qt_QListWidgetItem_write( ::pPtr, hbqt_ptr( pOut ) )
 

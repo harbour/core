@@ -97,7 +97,7 @@ CREATE CLASS QTextLine
 /*----------------------------------------------------------------------*/
 
 METHOD QTextLine:new( pParent )
-   ::pPtr := Qt_QTextLine( pParent )
+   ::pPtr := Qt_QTextLine( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -167,7 +167,7 @@ METHOD QTextLine:setNumColumns_1( nNumColumns, nAlignmentWidth )
 
 
 METHOD QTextLine:setPosition( pPos )
-   RETURN Qt_QTextLine_setPosition( ::pPtr, pPos )
+   RETURN Qt_QTextLine_setPosition( ::pPtr, hbqt_ptr( pPos ) )
 
 
 METHOD QTextLine:textLength()

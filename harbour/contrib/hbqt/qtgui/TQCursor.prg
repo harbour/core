@@ -84,7 +84,7 @@ CREATE CLASS QCursor
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( ... ) CLASS QCursor
+METHOD QCursor:new( ... )
 
    ::pPtr := Qt_QCursor( ... )
 
@@ -133,5 +133,5 @@ METHOD QCursor:setPos( nX, nY )
 
 
 METHOD QCursor:setPos_1( pP )
-   RETURN Qt_QCursor_setPos_1( ::pPtr, pP )
+   RETURN Qt_QCursor_setPos_1( ::pPtr, hbqt_ptr( pP ) )
 

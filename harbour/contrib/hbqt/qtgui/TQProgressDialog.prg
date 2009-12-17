@@ -100,7 +100,7 @@ CREATE CLASS QProgressDialog INHERIT QDialog
 /*----------------------------------------------------------------------*/
 
 METHOD QProgressDialog:new( pParent )
-   ::pPtr := Qt_QProgressDialog( pParent )
+   ::pPtr := Qt_QProgressDialog( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -138,7 +138,7 @@ METHOD QProgressDialog:minimumDuration()
 
 
 METHOD QProgressDialog:open( pReceiver, pMember )
-   RETURN Qt_QProgressDialog_open( ::pPtr, pReceiver, pMember )
+   RETURN Qt_QProgressDialog_open( ::pPtr, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
 
 
 METHOD QProgressDialog:setAutoClose( lClose )
@@ -150,15 +150,15 @@ METHOD QProgressDialog:setAutoReset( lReset )
 
 
 METHOD QProgressDialog:setBar( pBar )
-   RETURN Qt_QProgressDialog_setBar( ::pPtr, pBar )
+   RETURN Qt_QProgressDialog_setBar( ::pPtr, hbqt_ptr( pBar ) )
 
 
 METHOD QProgressDialog:setCancelButton( pCancelButton )
-   RETURN Qt_QProgressDialog_setCancelButton( ::pPtr, pCancelButton )
+   RETURN Qt_QProgressDialog_setCancelButton( ::pPtr, hbqt_ptr( pCancelButton ) )
 
 
 METHOD QProgressDialog:setLabel( pLabel )
-   RETURN Qt_QProgressDialog_setLabel( ::pPtr, pLabel )
+   RETURN Qt_QProgressDialog_setLabel( ::pPtr, hbqt_ptr( pLabel ) )
 
 
 METHOD QProgressDialog:sizeHint()

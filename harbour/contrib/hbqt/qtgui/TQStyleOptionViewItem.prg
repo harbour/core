@@ -83,7 +83,7 @@ CREATE CLASS QStyleOptionViewItem INHERIT QStyleOption
 /*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionViewItem:new( pParent )
-   ::pPtr := Qt_QStyleOptionViewItem( pParent )
+   ::pPtr := Qt_QStyleOptionViewItem( hbqt_ptr( pParent ) )
    RETURN Self
 
 

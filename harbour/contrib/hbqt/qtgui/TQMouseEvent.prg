@@ -85,7 +85,7 @@ CREATE CLASS QMouseEvent INHERIT QInputEvent
 /*----------------------------------------------------------------------*/
 
 METHOD QMouseEvent:new( pParent )
-   ::pPtr := Qt_QMouseEvent( pParent )
+   ::pPtr := Qt_QMouseEvent( hbqt_ptr( pParent ) )
    RETURN Self
 
 

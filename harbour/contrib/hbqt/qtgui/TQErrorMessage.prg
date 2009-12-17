@@ -77,7 +77,7 @@ CREATE CLASS QErrorMessage INHERIT QDialog
 /*----------------------------------------------------------------------*/
 
 METHOD QErrorMessage:new( pParent )
-   ::pPtr := Qt_QErrorMessage( pParent )
+   ::pPtr := Qt_QErrorMessage( hbqt_ptr( pParent ) )
    RETURN Self
 
 

@@ -123,7 +123,7 @@ CREATE CLASS QTextCharFormat INHERIT QTextFormat
 /*----------------------------------------------------------------------*/
 
 METHOD QTextCharFormat:new( pParent )
-   ::pPtr := Qt_QTextCharFormat( pParent )
+   ::pPtr := Qt_QTextCharFormat( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -221,11 +221,11 @@ METHOD QTextCharFormat:setAnchorHref( cValue )
 
 
 METHOD QTextCharFormat:setAnchorNames( pNames )
-   RETURN Qt_QTextCharFormat_setAnchorNames( ::pPtr, pNames )
+   RETURN Qt_QTextCharFormat_setAnchorNames( ::pPtr, hbqt_ptr( pNames ) )
 
 
 METHOD QTextCharFormat:setFont( pFont )
-   RETURN Qt_QTextCharFormat_setFont( ::pPtr, pFont )
+   RETURN Qt_QTextCharFormat_setFont( ::pPtr, hbqt_ptr( pFont ) )
 
 
 METHOD QTextCharFormat:setFontCapitalization( nCapitalization )
@@ -285,7 +285,7 @@ METHOD QTextCharFormat:setFontWordSpacing( nSpacing )
 
 
 METHOD QTextCharFormat:setTextOutline( pPen )
-   RETURN Qt_QTextCharFormat_setTextOutline( ::pPtr, pPen )
+   RETURN Qt_QTextCharFormat_setTextOutline( ::pPtr, hbqt_ptr( pPen ) )
 
 
 METHOD QTextCharFormat:setToolTip( cText )
@@ -293,7 +293,7 @@ METHOD QTextCharFormat:setToolTip( cText )
 
 
 METHOD QTextCharFormat:setUnderlineColor( pColor )
-   RETURN Qt_QTextCharFormat_setUnderlineColor( ::pPtr, pColor )
+   RETURN Qt_QTextCharFormat_setUnderlineColor( ::pPtr, hbqt_ptr( pColor ) )
 
 
 METHOD QTextCharFormat:setUnderlineStyle( nStyle )

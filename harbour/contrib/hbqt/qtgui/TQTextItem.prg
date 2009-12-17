@@ -82,7 +82,7 @@ CREATE CLASS QTextItem
 /*----------------------------------------------------------------------*/
 
 METHOD QTextItem:new( pParent )
-   ::pPtr := Qt_QTextItem( pParent )
+   ::pPtr := Qt_QTextItem( hbqt_ptr( pParent ) )
    RETURN Self
 
 

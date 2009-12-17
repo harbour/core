@@ -157,7 +157,7 @@ CREATE CLASS QTextEdit INHERIT QAbstractScrollArea
 /*----------------------------------------------------------------------*/
 
 METHOD QTextEdit:new( pParent )
-   ::pPtr := Qt_QTextEdit( pParent )
+   ::pPtr := Qt_QTextEdit( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -179,7 +179,7 @@ METHOD QTextEdit:alignment()
 
 
 METHOD QTextEdit:anchorAt( pPos )
-   RETURN Qt_QTextEdit_anchorAt( ::pPtr, pPos )
+   RETURN Qt_QTextEdit_anchorAt( ::pPtr, hbqt_ptr( pPos ) )
 
 
 METHOD QTextEdit:autoFormatting()
@@ -195,7 +195,7 @@ METHOD QTextEdit:createStandardContextMenu()
 
 
 METHOD QTextEdit:createStandardContextMenu_1( pPosition )
-   RETURN Qt_QTextEdit_createStandardContextMenu_1( ::pPtr, pPosition )
+   RETURN Qt_QTextEdit_createStandardContextMenu_1( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QTextEdit:currentCharFormat()
@@ -207,11 +207,11 @@ METHOD QTextEdit:currentFont()
 
 
 METHOD QTextEdit:cursorForPosition( pPos )
-   RETURN Qt_QTextEdit_cursorForPosition( ::pPtr, pPos )
+   RETURN Qt_QTextEdit_cursorForPosition( ::pPtr, hbqt_ptr( pPos ) )
 
 
 METHOD QTextEdit:cursorRect( pCursor )
-   RETURN Qt_QTextEdit_cursorRect( ::pPtr, pCursor )
+   RETURN Qt_QTextEdit_cursorRect( ::pPtr, hbqt_ptr( pCursor ) )
 
 
 METHOD QTextEdit:cursorRect_1()
@@ -275,11 +275,11 @@ METHOD QTextEdit:lineWrapMode()
 
 
 METHOD QTextEdit:loadResource( nType, pName )
-   RETURN Qt_QTextEdit_loadResource( ::pPtr, nType, pName )
+   RETURN Qt_QTextEdit_loadResource( ::pPtr, nType, hbqt_ptr( pName ) )
 
 
 METHOD QTextEdit:mergeCurrentCharFormat( pModifier )
-   RETURN Qt_QTextEdit_mergeCurrentCharFormat( ::pPtr, pModifier )
+   RETURN Qt_QTextEdit_mergeCurrentCharFormat( ::pPtr, hbqt_ptr( pModifier ) )
 
 
 METHOD QTextEdit:moveCursor( nOperation, nMode )
@@ -291,7 +291,7 @@ METHOD QTextEdit:overwriteMode()
 
 
 METHOD QTextEdit:print( pPrinter )
-   RETURN Qt_QTextEdit_print( ::pPtr, pPrinter )
+   RETURN Qt_QTextEdit_print( ::pPtr, hbqt_ptr( pPrinter ) )
 
 
 METHOD QTextEdit:setAcceptRichText( lAccept )
@@ -303,7 +303,7 @@ METHOD QTextEdit:setAutoFormatting( nFeatures )
 
 
 METHOD QTextEdit:setCurrentCharFormat( pFormat )
-   RETURN Qt_QTextEdit_setCurrentCharFormat( ::pPtr, pFormat )
+   RETURN Qt_QTextEdit_setCurrentCharFormat( ::pPtr, hbqt_ptr( pFormat ) )
 
 
 METHOD QTextEdit:setCursorWidth( nWidth )
@@ -311,7 +311,7 @@ METHOD QTextEdit:setCursorWidth( nWidth )
 
 
 METHOD QTextEdit:setDocument( pDocument )
-   RETURN Qt_QTextEdit_setDocument( ::pPtr, pDocument )
+   RETURN Qt_QTextEdit_setDocument( ::pPtr, hbqt_ptr( pDocument ) )
 
 
 METHOD QTextEdit:setDocumentTitle( cTitle )
@@ -343,7 +343,7 @@ METHOD QTextEdit:setTabStopWidth( nWidth )
 
 
 METHOD QTextEdit:setTextCursor( pCursor )
-   RETURN Qt_QTextEdit_setTextCursor( ::pPtr, pCursor )
+   RETURN Qt_QTextEdit_setTextCursor( ::pPtr, hbqt_ptr( pCursor ) )
 
 
 METHOD QTextEdit:setTextInteractionFlags( nFlags )
@@ -439,7 +439,7 @@ METHOD QTextEdit:setAlignment( nA )
 
 
 METHOD QTextEdit:setCurrentFont( pF )
-   RETURN Qt_QTextEdit_setCurrentFont( ::pPtr, pF )
+   RETURN Qt_QTextEdit_setCurrentFont( ::pPtr, hbqt_ptr( pF ) )
 
 
 METHOD QTextEdit:setFontFamily( cFontFamily )
@@ -475,11 +475,11 @@ METHOD QTextEdit:setText( cText )
 
 
 METHOD QTextEdit:setTextBackgroundColor( pC )
-   RETURN Qt_QTextEdit_setTextBackgroundColor( ::pPtr, pC )
+   RETURN Qt_QTextEdit_setTextBackgroundColor( ::pPtr, hbqt_ptr( pC ) )
 
 
 METHOD QTextEdit:setTextColor( pC )
-   RETURN Qt_QTextEdit_setTextColor( ::pPtr, pC )
+   RETURN Qt_QTextEdit_setTextColor( ::pPtr, hbqt_ptr( pC ) )
 
 
 METHOD QTextEdit:undo()

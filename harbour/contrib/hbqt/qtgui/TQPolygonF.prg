@@ -85,7 +85,7 @@ CREATE CLASS QPolygonF
 /*----------------------------------------------------------------------*/
 
 METHOD QPolygonF:new( pParent )
-   ::pPtr := Qt_QPolygonF( pParent )
+   ::pPtr := Qt_QPolygonF( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -103,11 +103,11 @@ METHOD QPolygonF:boundingRect()
 
 
 METHOD QPolygonF:containsPoint( pPoint, nFillRule )
-   RETURN Qt_QPolygonF_containsPoint( ::pPtr, pPoint, nFillRule )
+   RETURN Qt_QPolygonF_containsPoint( ::pPtr, hbqt_ptr( pPoint ), nFillRule )
 
 
 METHOD QPolygonF:intersected( pR )
-   RETURN Qt_QPolygonF_intersected( ::pPtr, pR )
+   RETURN Qt_QPolygonF_intersected( ::pPtr, hbqt_ptr( pR ) )
 
 
 METHOD QPolygonF:isClosed()
@@ -115,7 +115,7 @@ METHOD QPolygonF:isClosed()
 
 
 METHOD QPolygonF:subtracted( pR )
-   RETURN Qt_QPolygonF_subtracted( ::pPtr, pR )
+   RETURN Qt_QPolygonF_subtracted( ::pPtr, hbqt_ptr( pR ) )
 
 
 METHOD QPolygonF:toPolygon()
@@ -123,7 +123,7 @@ METHOD QPolygonF:toPolygon()
 
 
 METHOD QPolygonF:translate( pOffset )
-   RETURN Qt_QPolygonF_translate( ::pPtr, pOffset )
+   RETURN Qt_QPolygonF_translate( ::pPtr, hbqt_ptr( pOffset ) )
 
 
 METHOD QPolygonF:translate_1( nDx, nDy )
@@ -131,5 +131,5 @@ METHOD QPolygonF:translate_1( nDx, nDy )
 
 
 METHOD QPolygonF:united( pR )
-   RETURN Qt_QPolygonF_united( ::pPtr, pR )
+   RETURN Qt_QPolygonF_united( ::pPtr, hbqt_ptr( pR ) )
 

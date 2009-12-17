@@ -131,7 +131,7 @@ CREATE CLASS QLineEdit INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QLineEdit:new( pParent )
-   ::pPtr := Qt_QLineEdit( pParent )
+   ::pPtr := Qt_QLineEdit( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -173,7 +173,7 @@ METHOD QLineEdit:cursorPosition()
 
 
 METHOD QLineEdit:cursorPositionAt( pPos )
-   RETURN Qt_QLineEdit_cursorPositionAt( ::pPtr, pPos )
+   RETURN Qt_QLineEdit_cursorPositionAt( ::pPtr, hbqt_ptr( pPos ) )
 
 
 METHOD QLineEdit:cursorWordBackward( lMark )
@@ -273,7 +273,7 @@ METHOD QLineEdit:setAlignment( nFlag )
 
 
 METHOD QLineEdit:setCompleter( pC )
-   RETURN Qt_QLineEdit_setCompleter( ::pPtr, pC )
+   RETURN Qt_QLineEdit_setCompleter( ::pPtr, hbqt_ptr( pC ) )
 
 
 METHOD QLineEdit:setCursorPosition( nInt )
@@ -317,7 +317,7 @@ METHOD QLineEdit:setTextMargins( nLeft, nTop, nRight, nBottom )
 
 
 METHOD QLineEdit:setValidator( pV )
-   RETURN Qt_QLineEdit_setValidator( ::pPtr, pV )
+   RETURN Qt_QLineEdit_setValidator( ::pPtr, hbqt_ptr( pV ) )
 
 
 METHOD QLineEdit:sizeHint()

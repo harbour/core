@@ -81,7 +81,7 @@ CREATE CLASS QLinearGradient INHERIT QGradient
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( ... ) CLASS QLinearGradient
+METHOD QLinearGradient:new( ... )
 
    ::pPtr := Qt_QLinearGradient( ... )
 
@@ -102,7 +102,7 @@ METHOD QLinearGradient:finalStop()
 
 
 METHOD QLinearGradient:setFinalStop( pStop )
-   RETURN Qt_QLinearGradient_setFinalStop( ::pPtr, pStop )
+   RETURN Qt_QLinearGradient_setFinalStop( ::pPtr, hbqt_ptr( pStop ) )
 
 
 METHOD QLinearGradient:setFinalStop_1( nX, nY )
@@ -110,7 +110,7 @@ METHOD QLinearGradient:setFinalStop_1( nX, nY )
 
 
 METHOD QLinearGradient:setStart( pStart )
-   RETURN Qt_QLinearGradient_setStart( ::pPtr, pStart )
+   RETURN Qt_QLinearGradient_setStart( ::pPtr, hbqt_ptr( pStart ) )
 
 
 METHOD QLinearGradient:setStart_1( nX, nY )

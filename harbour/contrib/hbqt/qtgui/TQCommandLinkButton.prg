@@ -78,7 +78,7 @@ CREATE CLASS QCommandLinkButton INHERIT QPushButton
 /*----------------------------------------------------------------------*/
 
 METHOD QCommandLinkButton:new( pParent )
-   ::pPtr := Qt_QCommandLinkButton( pParent )
+   ::pPtr := Qt_QCommandLinkButton( hbqt_ptr( pParent ) )
    RETURN Self
 
 

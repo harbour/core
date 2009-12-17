@@ -81,7 +81,7 @@ CREATE CLASS QConicalGradient INHERIT QGradient
 /*----------------------------------------------------------------------*/
 
 METHOD QConicalGradient:new( pParent )
-   ::pPtr := Qt_QConicalGradient( pParent )
+   ::pPtr := Qt_QConicalGradient( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -107,7 +107,7 @@ METHOD QConicalGradient:setAngle( nAngle )
 
 
 METHOD QConicalGradient:setCenter( pCenter )
-   RETURN Qt_QConicalGradient_setCenter( ::pPtr, pCenter )
+   RETURN Qt_QConicalGradient_setCenter( ::pPtr, hbqt_ptr( pCenter ) )
 
 
 METHOD QConicalGradient:setCenter_1( nX, nY )

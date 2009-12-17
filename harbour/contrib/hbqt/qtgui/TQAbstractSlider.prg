@@ -100,7 +100,7 @@ CREATE CLASS QAbstractSlider INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QAbstractSlider:new( pParent )
-   ::pPtr := Qt_QAbstractSlider( pParent )
+   ::pPtr := Qt_QAbstractSlider( hbqt_ptr( pParent ) )
    RETURN Self
 
 

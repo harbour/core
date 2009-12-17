@@ -96,7 +96,7 @@ CREATE CLASS QPen
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( ... ) CLASS QPen
+METHOD QPen:new( ... )
 
    ::pPtr := Qt_QPen( ... )
 
@@ -145,7 +145,7 @@ METHOD QPen:miterLimit()
 
 
 METHOD QPen:setBrush( pBrush )
-   RETURN Qt_QPen_setBrush( ::pPtr, pBrush )
+   RETURN Qt_QPen_setBrush( ::pPtr, hbqt_ptr( pBrush ) )
 
 
 METHOD QPen:setCapStyle( nStyle )
@@ -153,7 +153,7 @@ METHOD QPen:setCapStyle( nStyle )
 
 
 METHOD QPen:setColor( pColor )
-   RETURN Qt_QPen_setColor( ::pPtr, pColor )
+   RETURN Qt_QPen_setColor( ::pPtr, hbqt_ptr( pColor ) )
 
 
 METHOD QPen:setCosmetic( lCosmetic )

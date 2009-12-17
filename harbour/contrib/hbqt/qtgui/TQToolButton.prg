@@ -89,7 +89,7 @@ CREATE CLASS QToolButton INHERIT QAbstractButton
 /*----------------------------------------------------------------------*/
 
 METHOD QToolButton:new( pParent )
-   ::pPtr := Qt_QToolButton( pParent )
+   ::pPtr := Qt_QToolButton( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -131,7 +131,7 @@ METHOD QToolButton:setAutoRaise( lEnable )
 
 
 METHOD QToolButton:setMenu( pMenu )
-   RETURN Qt_QToolButton_setMenu( ::pPtr, pMenu )
+   RETURN Qt_QToolButton_setMenu( ::pPtr, hbqt_ptr( pMenu ) )
 
 
 METHOD QToolButton:setPopupMode( nMode )
@@ -143,7 +143,7 @@ METHOD QToolButton:toolButtonStyle()
 
 
 METHOD QToolButton:setDefaultAction( pAction )
-   RETURN Qt_QToolButton_setDefaultAction( ::pPtr, pAction )
+   RETURN Qt_QToolButton_setDefaultAction( ::pPtr, hbqt_ptr( pAction ) )
 
 
 METHOD QToolButton:setToolButtonStyle( nStyle )

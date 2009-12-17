@@ -109,7 +109,7 @@ CREATE CLASS QWizard INHERIT QDialog
 /*----------------------------------------------------------------------*/
 
 METHOD QWizard:new( pParent )
-   ::pPtr := Qt_QWizard( pParent )
+   ::pPtr := Qt_QWizard( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -123,7 +123,7 @@ METHOD QWizard:configure( xObject )
 
 
 METHOD QWizard:addPage( pPage )
-   RETURN Qt_QWizard_addPage( ::pPtr, pPage )
+   RETURN Qt_QWizard_addPage( ::pPtr, hbqt_ptr( pPage ) )
 
 
 METHOD QWizard:button( nWhich )
@@ -171,7 +171,7 @@ METHOD QWizard:removePage( nId )
 
 
 METHOD QWizard:setButton( nWhich, pButton )
-   RETURN Qt_QWizard_setButton( ::pPtr, nWhich, pButton )
+   RETURN Qt_QWizard_setButton( ::pPtr, nWhich, hbqt_ptr( pButton ) )
 
 
 METHOD QWizard:setButtonText( nWhich, cText )
@@ -179,11 +179,11 @@ METHOD QWizard:setButtonText( nWhich, cText )
 
 
 METHOD QWizard:setDefaultProperty( pClassName, pProperty, pChangedSignal )
-   RETURN Qt_QWizard_setDefaultProperty( ::pPtr, pClassName, pProperty, pChangedSignal )
+   RETURN Qt_QWizard_setDefaultProperty( ::pPtr, hbqt_ptr( pClassName ), hbqt_ptr( pProperty ), hbqt_ptr( pChangedSignal ) )
 
 
 METHOD QWizard:setField( cName, pValue )
-   RETURN Qt_QWizard_setField( ::pPtr, cName, pValue )
+   RETURN Qt_QWizard_setField( ::pPtr, cName, hbqt_ptr( pValue ) )
 
 
 METHOD QWizard:setOption( nOption, lOn )
@@ -195,11 +195,11 @@ METHOD QWizard:setOptions( nOptions )
 
 
 METHOD QWizard:setPage( nId, pPage )
-   RETURN Qt_QWizard_setPage( ::pPtr, nId, pPage )
+   RETURN Qt_QWizard_setPage( ::pPtr, nId, hbqt_ptr( pPage ) )
 
 
 METHOD QWizard:setPixmap( nWhich, pPixmap )
-   RETURN Qt_QWizard_setPixmap( ::pPtr, nWhich, pPixmap )
+   RETURN Qt_QWizard_setPixmap( ::pPtr, nWhich, hbqt_ptr( pPixmap ) )
 
 
 METHOD QWizard:setStartId( nId )

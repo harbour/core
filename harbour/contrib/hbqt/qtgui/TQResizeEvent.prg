@@ -78,7 +78,7 @@ CREATE CLASS QResizeEvent INHERIT QEvent
 /*----------------------------------------------------------------------*/
 
 METHOD QResizeEvent:new( pParent )
-   ::pPtr := Qt_QResizeEvent( pParent )
+   ::pPtr := Qt_QResizeEvent( hbqt_ptr( pParent ) )
    RETURN Self
 
 

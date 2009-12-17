@@ -88,7 +88,7 @@ CREATE CLASS QStyleOptionSlider INHERIT QStyleOptionComplex
 /*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionSlider:new( pParent )
-   ::pPtr := Qt_QStyleOptionSlider( pParent )
+   ::pPtr := Qt_QStyleOptionSlider( hbqt_ptr( pParent ) )
    RETURN Self
 
 

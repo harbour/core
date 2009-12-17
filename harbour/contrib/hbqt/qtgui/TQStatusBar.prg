@@ -86,7 +86,7 @@ CREATE CLASS QStatusBar INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QStatusBar:new( pParent )
-   ::pPtr := Qt_QStatusBar( pParent )
+   ::pPtr := Qt_QStatusBar( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -100,11 +100,11 @@ METHOD QStatusBar:configure( xObject )
 
 
 METHOD QStatusBar:addPermanentWidget( pWidget, nStretch )
-   RETURN Qt_QStatusBar_addPermanentWidget( ::pPtr, pWidget, nStretch )
+   RETURN Qt_QStatusBar_addPermanentWidget( ::pPtr, hbqt_ptr( pWidget ), nStretch )
 
 
 METHOD QStatusBar:addWidget( pWidget, nStretch )
-   RETURN Qt_QStatusBar_addWidget( ::pPtr, pWidget, nStretch )
+   RETURN Qt_QStatusBar_addWidget( ::pPtr, hbqt_ptr( pWidget ), nStretch )
 
 
 METHOD QStatusBar:currentMessage()
@@ -112,11 +112,11 @@ METHOD QStatusBar:currentMessage()
 
 
 METHOD QStatusBar:insertPermanentWidget( nIndex, pWidget, nStretch )
-   RETURN Qt_QStatusBar_insertPermanentWidget( ::pPtr, nIndex, pWidget, nStretch )
+   RETURN Qt_QStatusBar_insertPermanentWidget( ::pPtr, nIndex, hbqt_ptr( pWidget ), nStretch )
 
 
 METHOD QStatusBar:insertWidget( nIndex, pWidget, nStretch )
-   RETURN Qt_QStatusBar_insertWidget( ::pPtr, nIndex, pWidget, nStretch )
+   RETURN Qt_QStatusBar_insertWidget( ::pPtr, nIndex, hbqt_ptr( pWidget ), nStretch )
 
 
 METHOD QStatusBar:isSizeGripEnabled()
@@ -124,7 +124,7 @@ METHOD QStatusBar:isSizeGripEnabled()
 
 
 METHOD QStatusBar:removeWidget( pWidget )
-   RETURN Qt_QStatusBar_removeWidget( ::pPtr, pWidget )
+   RETURN Qt_QStatusBar_removeWidget( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QStatusBar:setSizeGripEnabled( lBool )

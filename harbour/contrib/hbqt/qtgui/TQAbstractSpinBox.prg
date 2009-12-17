@@ -102,7 +102,7 @@ CREATE CLASS QAbstractSpinBox INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QAbstractSpinBox:new( pParent )
-   ::pPtr := Qt_QAbstractSpinBox( pParent )
+   ::pPtr := Qt_QAbstractSpinBox( hbqt_ptr( pParent ) )
    RETURN Self
 
 

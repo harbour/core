@@ -83,7 +83,7 @@ CREATE CLASS QStyleOptionTab INHERIT QStyleOption
 /*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionTab:new( pParent )
-   ::pPtr := Qt_QStyleOptionTab( pParent )
+   ::pPtr := Qt_QStyleOptionTab( hbqt_ptr( pParent ) )
    RETURN Self
 
 

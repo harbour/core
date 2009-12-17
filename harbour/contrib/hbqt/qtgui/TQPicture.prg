@@ -86,7 +86,7 @@ CREATE CLASS QPicture INHERIT QPaintDevice
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( ... ) CLASS QPicture
+METHOD QPicture:new( ... )
 
    ::pPtr := Qt_QPicture( ... )
 
@@ -115,31 +115,31 @@ METHOD QPicture:isNull()
 
 
 METHOD QPicture:load( cFileName, pFormat )
-   RETURN Qt_QPicture_load( ::pPtr, cFileName, pFormat )
+   RETURN Qt_QPicture_load( ::pPtr, cFileName, hbqt_ptr( pFormat ) )
 
 
 METHOD QPicture:load_1( pDev, pFormat )
-   RETURN Qt_QPicture_load_1( ::pPtr, pDev, pFormat )
+   RETURN Qt_QPicture_load_1( ::pPtr, hbqt_ptr( pDev ), hbqt_ptr( pFormat ) )
 
 
 METHOD QPicture:play( pPainter )
-   RETURN Qt_QPicture_play( ::pPtr, pPainter )
+   RETURN Qt_QPicture_play( ::pPtr, hbqt_ptr( pPainter ) )
 
 
 METHOD QPicture:save( cFileName, pFormat )
-   RETURN Qt_QPicture_save( ::pPtr, cFileName, pFormat )
+   RETURN Qt_QPicture_save( ::pPtr, cFileName, hbqt_ptr( pFormat ) )
 
 
 METHOD QPicture:save_1( pDev, pFormat )
-   RETURN Qt_QPicture_save_1( ::pPtr, pDev, pFormat )
+   RETURN Qt_QPicture_save_1( ::pPtr, hbqt_ptr( pDev ), hbqt_ptr( pFormat ) )
 
 
 METHOD QPicture:setBoundingRect( pR )
-   RETURN Qt_QPicture_setBoundingRect( ::pPtr, pR )
+   RETURN Qt_QPicture_setBoundingRect( ::pPtr, hbqt_ptr( pR ) )
 
 
 METHOD QPicture:setData( pData, nSize )
-   RETURN Qt_QPicture_setData( ::pPtr, pData, nSize )
+   RETURN Qt_QPicture_setData( ::pPtr, hbqt_ptr( pData ), nSize )
 
 
 METHOD QPicture:size()

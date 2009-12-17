@@ -133,7 +133,7 @@ CREATE CLASS QPlainTextEdit INHERIT QAbstractScrollArea
 /*----------------------------------------------------------------------*/
 
 METHOD QPlainTextEdit:new( pParent )
-   ::pPtr := Qt_QPlainTextEdit( pParent )
+   ::pPtr := Qt_QPlainTextEdit( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -171,11 +171,11 @@ METHOD QPlainTextEdit:currentCharFormat()
 
 
 METHOD QPlainTextEdit:cursorForPosition( pPos )
-   RETURN Qt_QPlainTextEdit_cursorForPosition( ::pPtr, pPos )
+   RETURN Qt_QPlainTextEdit_cursorForPosition( ::pPtr, hbqt_ptr( pPos ) )
 
 
 METHOD QPlainTextEdit:cursorRect( pCursor )
-   RETURN Qt_QPlainTextEdit_cursorRect( ::pPtr, pCursor )
+   RETURN Qt_QPlainTextEdit_cursorRect( ::pPtr, hbqt_ptr( pCursor ) )
 
 
 METHOD QPlainTextEdit:cursorRect_1()
@@ -215,7 +215,7 @@ METHOD QPlainTextEdit:lineWrapMode()
 
 
 METHOD QPlainTextEdit:loadResource( nType, pName )
-   RETURN Qt_QPlainTextEdit_loadResource( ::pPtr, nType, pName )
+   RETURN Qt_QPlainTextEdit_loadResource( ::pPtr, nType, hbqt_ptr( pName ) )
 
 
 METHOD QPlainTextEdit:maximumBlockCount()
@@ -223,7 +223,7 @@ METHOD QPlainTextEdit:maximumBlockCount()
 
 
 METHOD QPlainTextEdit:mergeCurrentCharFormat( pModifier )
-   RETURN Qt_QPlainTextEdit_mergeCurrentCharFormat( ::pPtr, pModifier )
+   RETURN Qt_QPlainTextEdit_mergeCurrentCharFormat( ::pPtr, hbqt_ptr( pModifier ) )
 
 
 METHOD QPlainTextEdit:moveCursor( nOperation, nMode )
@@ -235,7 +235,7 @@ METHOD QPlainTextEdit:overwriteMode()
 
 
 METHOD QPlainTextEdit:print( pPrinter )
-   RETURN Qt_QPlainTextEdit_print( ::pPtr, pPrinter )
+   RETURN Qt_QPlainTextEdit_print( ::pPtr, hbqt_ptr( pPrinter ) )
 
 
 METHOD QPlainTextEdit:setBackgroundVisible( lVisible )
@@ -247,7 +247,7 @@ METHOD QPlainTextEdit:setCenterOnScroll( lEnabled )
 
 
 METHOD QPlainTextEdit:setCurrentCharFormat( pFormat )
-   RETURN Qt_QPlainTextEdit_setCurrentCharFormat( ::pPtr, pFormat )
+   RETURN Qt_QPlainTextEdit_setCurrentCharFormat( ::pPtr, hbqt_ptr( pFormat ) )
 
 
 METHOD QPlainTextEdit:setCursorWidth( nWidth )
@@ -255,7 +255,7 @@ METHOD QPlainTextEdit:setCursorWidth( nWidth )
 
 
 METHOD QPlainTextEdit:setDocument( pDocument )
-   RETURN Qt_QPlainTextEdit_setDocument( ::pPtr, pDocument )
+   RETURN Qt_QPlainTextEdit_setDocument( ::pPtr, hbqt_ptr( pDocument ) )
 
 
 METHOD QPlainTextEdit:setDocumentTitle( cTitle )
@@ -287,7 +287,7 @@ METHOD QPlainTextEdit:setTabStopWidth( nWidth )
 
 
 METHOD QPlainTextEdit:setTextCursor( pCursor )
-   RETURN Qt_QPlainTextEdit_setTextCursor( ::pPtr, pCursor )
+   RETURN Qt_QPlainTextEdit_setTextCursor( ::pPtr, hbqt_ptr( pCursor ) )
 
 
 METHOD QPlainTextEdit:setTextInteractionFlags( nFlags )

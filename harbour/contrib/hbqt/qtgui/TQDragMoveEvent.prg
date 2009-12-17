@@ -81,7 +81,7 @@ CREATE CLASS QDragMoveEvent INHERIT QDropEvent
 /*----------------------------------------------------------------------*/
 
 METHOD QDragMoveEvent:new( pParent )
-   ::pPtr := Qt_QDragMoveEvent( pParent )
+   ::pPtr := Qt_QDragMoveEvent( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -95,7 +95,7 @@ METHOD QDragMoveEvent:configure( xObject )
 
 
 METHOD QDragMoveEvent:accept( pRectangle )
-   RETURN Qt_QDragMoveEvent_accept( ::pPtr, pRectangle )
+   RETURN Qt_QDragMoveEvent_accept( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QDragMoveEvent:accept_1()
@@ -107,7 +107,7 @@ METHOD QDragMoveEvent:answerRect()
 
 
 METHOD QDragMoveEvent:ignore( pRectangle )
-   RETURN Qt_QDragMoveEvent_ignore( ::pPtr, pRectangle )
+   RETURN Qt_QDragMoveEvent_ignore( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QDragMoveEvent:ignore_1()

@@ -89,7 +89,7 @@ CREATE CLASS QBrush
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( ... ) CLASS QBrush
+METHOD QBrush:new( ... )
 
    ::pPtr := Qt_QBrush( ... )
 
@@ -118,7 +118,7 @@ METHOD QBrush:matrix()
 
 
 METHOD QBrush:setColor( pColor )
-   RETURN Qt_QBrush_setColor( ::pPtr, pColor )
+   RETURN Qt_QBrush_setColor( ::pPtr, hbqt_ptr( pColor ) )
 
 
 METHOD QBrush:setColor_1( nColor )
@@ -126,7 +126,7 @@ METHOD QBrush:setColor_1( nColor )
 
 
 METHOD QBrush:setMatrix( pMatrix )
-   RETURN Qt_QBrush_setMatrix( ::pPtr, pMatrix )
+   RETURN Qt_QBrush_setMatrix( ::pPtr, hbqt_ptr( pMatrix ) )
 
 
 METHOD QBrush:setStyle( nStyle )
@@ -134,15 +134,15 @@ METHOD QBrush:setStyle( nStyle )
 
 
 METHOD QBrush:setTexture( pPixmap )
-   RETURN Qt_QBrush_setTexture( ::pPtr, pPixmap )
+   RETURN Qt_QBrush_setTexture( ::pPtr, hbqt_ptr( pPixmap ) )
 
 
 METHOD QBrush:setTextureImage( pImage )
-   RETURN Qt_QBrush_setTextureImage( ::pPtr, pImage )
+   RETURN Qt_QBrush_setTextureImage( ::pPtr, hbqt_ptr( pImage ) )
 
 
 METHOD QBrush:setTransform( pMatrix )
-   RETURN Qt_QBrush_setTransform( ::pPtr, pMatrix )
+   RETURN Qt_QBrush_setTransform( ::pPtr, hbqt_ptr( pMatrix ) )
 
 
 METHOD QBrush:style()

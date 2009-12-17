@@ -121,7 +121,7 @@ CREATE CLASS QFileDialog INHERIT QDialog
 /*----------------------------------------------------------------------*/
 
 METHOD QFileDialog:new( pParent )
-   ::pPtr := Qt_QFileDialog( pParent )
+   ::pPtr := Qt_QFileDialog( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -199,7 +199,7 @@ METHOD QFileDialog:resolveSymlinks()
 
 
 METHOD QFileDialog:restoreState( pState )
-   RETURN Qt_QFileDialog_restoreState( ::pPtr, pState )
+   RETURN Qt_QFileDialog_restoreState( ::pPtr, hbqt_ptr( pState ) )
 
 
 METHOD QFileDialog:saveState()
@@ -239,7 +239,7 @@ METHOD QFileDialog:setDirectory( cDirectory )
 
 
 METHOD QFileDialog:setDirectory_1( pDirectory )
-   RETURN Qt_QFileDialog_setDirectory_1( ::pPtr, pDirectory )
+   RETURN Qt_QFileDialog_setDirectory_1( ::pPtr, hbqt_ptr( pDirectory ) )
 
 
 METHOD QFileDialog:setFileMode( nMode )
@@ -251,15 +251,15 @@ METHOD QFileDialog:setFilter( nFilters )
 
 
 METHOD QFileDialog:setHistory( pPaths )
-   RETURN Qt_QFileDialog_setHistory( ::pPtr, pPaths )
+   RETURN Qt_QFileDialog_setHistory( ::pPtr, hbqt_ptr( pPaths ) )
 
 
 METHOD QFileDialog:setIconProvider( pProvider )
-   RETURN Qt_QFileDialog_setIconProvider( ::pPtr, pProvider )
+   RETURN Qt_QFileDialog_setIconProvider( ::pPtr, hbqt_ptr( pProvider ) )
 
 
 METHOD QFileDialog:setItemDelegate( pDelegate )
-   RETURN Qt_QFileDialog_setItemDelegate( ::pPtr, pDelegate )
+   RETURN Qt_QFileDialog_setItemDelegate( ::pPtr, hbqt_ptr( pDelegate ) )
 
 
 METHOD QFileDialog:setLabelText( nLabel, cText )
@@ -275,7 +275,7 @@ METHOD QFileDialog:setNameFilterDetailsVisible( lEnabled )
 
 
 METHOD QFileDialog:setNameFilters( pFilters )
-   RETURN Qt_QFileDialog_setNameFilters( ::pPtr, pFilters )
+   RETURN Qt_QFileDialog_setNameFilters( ::pPtr, hbqt_ptr( pFilters ) )
 
 
 METHOD QFileDialog:setOption( nOption, lOn )
@@ -287,7 +287,7 @@ METHOD QFileDialog:setOptions( nOptions )
 
 
 METHOD QFileDialog:setProxyModel( pProxyModel )
-   RETURN Qt_QFileDialog_setProxyModel( ::pPtr, pProxyModel )
+   RETURN Qt_QFileDialog_setProxyModel( ::pPtr, hbqt_ptr( pProxyModel ) )
 
 
 METHOD QFileDialog:setReadOnly( lEnabled )
@@ -311,5 +311,5 @@ METHOD QFileDialog:viewMode()
 
 
 METHOD QFileDialog:getExistingDirectory( pParent, cCaption, cDir, nOptions )
-   RETURN Qt_QFileDialog_getExistingDirectory( ::pPtr, pParent, cCaption, cDir, nOptions )
+   RETURN Qt_QFileDialog_getExistingDirectory( ::pPtr, hbqt_ptr( pParent ), cCaption, cDir, nOptions )
 

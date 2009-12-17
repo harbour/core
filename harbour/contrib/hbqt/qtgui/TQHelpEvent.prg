@@ -82,7 +82,7 @@ CREATE CLASS QHelpEvent
 /*----------------------------------------------------------------------*/
 
 METHOD QHelpEvent:new( pParent )
-   ::pPtr := Qt_QHelpEvent( pParent )
+   ::pPtr := Qt_QHelpEvent( hbqt_ptr( pParent ) )
    RETURN Self
 
 

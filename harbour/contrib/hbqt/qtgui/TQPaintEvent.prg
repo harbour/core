@@ -78,7 +78,7 @@ CREATE CLASS QPaintEvent INHERIT QEvent
 /*----------------------------------------------------------------------*/
 
 METHOD QPaintEvent:new( pParent )
-   ::pPtr := Qt_QPaintEvent( pParent )
+   ::pPtr := Qt_QPaintEvent( hbqt_ptr( pParent ) )
    RETURN Self
 
 

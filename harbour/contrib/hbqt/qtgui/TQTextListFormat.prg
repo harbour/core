@@ -81,7 +81,7 @@ CREATE CLASS QTextListFormat INHERIT QTextFormat
 /*----------------------------------------------------------------------*/
 
 METHOD QTextListFormat:new( pParent )
-   ::pPtr := Qt_QTextListFormat( pParent )
+   ::pPtr := Qt_QTextListFormat( hbqt_ptr( pParent ) )
    RETURN Self
 
 

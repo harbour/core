@@ -90,7 +90,7 @@ CREATE CLASS QClipboard INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QClipboard:new( pParent )
-   ::pPtr := Qt_QClipboard( pParent )
+   ::pPtr := Qt_QClipboard( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -132,15 +132,15 @@ METHOD QClipboard:pixmap( nMode )
 
 
 METHOD QClipboard:setImage( pImage, nMode )
-   RETURN Qt_QClipboard_setImage( ::pPtr, pImage, nMode )
+   RETURN Qt_QClipboard_setImage( ::pPtr, hbqt_ptr( pImage ), nMode )
 
 
 METHOD QClipboard:setMimeData( pSrc, nMode )
-   RETURN Qt_QClipboard_setMimeData( ::pPtr, pSrc, nMode )
+   RETURN Qt_QClipboard_setMimeData( ::pPtr, hbqt_ptr( pSrc ), nMode )
 
 
 METHOD QClipboard:setPixmap( pPixmap, nMode )
-   RETURN Qt_QClipboard_setPixmap( ::pPtr, pPixmap, nMode )
+   RETURN Qt_QClipboard_setPixmap( ::pPtr, hbqt_ptr( pPixmap ), nMode )
 
 
 METHOD QClipboard:setText( cText, nMode )

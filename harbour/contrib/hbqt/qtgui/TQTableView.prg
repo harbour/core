@@ -118,7 +118,7 @@ CREATE CLASS QTableView INHERIT QAbstractItemView
 /*----------------------------------------------------------------------*/
 
 METHOD QTableView:new( pParent )
-   ::pPtr := Qt_QTableView( pParent )
+   ::pPtr := Qt_QTableView( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -160,7 +160,7 @@ METHOD QTableView:horizontalHeader()
 
 
 METHOD QTableView:indexAt( pPos )
-   RETURN Qt_QTableView_indexAt( ::pPtr, pPos )
+   RETURN Qt_QTableView_indexAt( ::pPtr, hbqt_ptr( pPos ) )
 
 
 METHOD QTableView:isColumnHidden( nColumn )
@@ -212,7 +212,7 @@ METHOD QTableView:setGridStyle( nStyle )
 
 
 METHOD QTableView:setHorizontalHeader( pHeader )
-   RETURN Qt_QTableView_setHorizontalHeader( ::pPtr, pHeader )
+   RETURN Qt_QTableView_setHorizontalHeader( ::pPtr, hbqt_ptr( pHeader ) )
 
 
 METHOD QTableView:setRowHeight( nRow, nHeight )
@@ -232,7 +232,7 @@ METHOD QTableView:setSpan( nRow, nColumn, nRowSpanCount, nColumnSpanCount )
 
 
 METHOD QTableView:setVerticalHeader( pHeader )
-   RETURN Qt_QTableView_setVerticalHeader( ::pPtr, pHeader )
+   RETURN Qt_QTableView_setVerticalHeader( ::pPtr, hbqt_ptr( pHeader ) )
 
 
 METHOD QTableView:setWordWrap( lOn )

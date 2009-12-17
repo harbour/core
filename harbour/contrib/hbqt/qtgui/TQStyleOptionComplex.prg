@@ -78,7 +78,7 @@ CREATE CLASS QStyleOptionComplex INHERIT QStyleOption
 /*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionComplex:new( pParent )
-   ::pPtr := Qt_QStyleOptionComplex( pParent )
+   ::pPtr := Qt_QStyleOptionComplex( hbqt_ptr( pParent ) )
    RETURN Self
 
 

@@ -133,7 +133,7 @@ CREATE CLASS QHeaderView INHERIT QAbstractItemView
 /*----------------------------------------------------------------------*/
 
 METHOD QHeaderView:new( pParent )
-   ::pPtr := Qt_QHeaderView( pParent )
+   ::pPtr := Qt_QHeaderView( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -207,7 +207,7 @@ METHOD QHeaderView:logicalIndexAt_1( nX, nY )
 
 
 METHOD QHeaderView:logicalIndexAt_2( pPos )
-   RETURN Qt_QHeaderView_logicalIndexAt_2( ::pPtr, pPos )
+   RETURN Qt_QHeaderView_logicalIndexAt_2( ::pPtr, hbqt_ptr( pPos ) )
 
 
 METHOD QHeaderView:minimumSectionSize()
@@ -239,7 +239,7 @@ METHOD QHeaderView:resizeSections( nMode )
 
 
 METHOD QHeaderView:restoreState( pState )
-   RETURN Qt_QHeaderView_restoreState( ::pPtr, pState )
+   RETURN Qt_QHeaderView_restoreState( ::pPtr, hbqt_ptr( pState ) )
 
 
 METHOD QHeaderView:saveState()

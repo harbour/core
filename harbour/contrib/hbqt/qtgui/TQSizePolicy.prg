@@ -90,7 +90,7 @@ CREATE CLASS QSizePolicy
 /*----------------------------------------------------------------------*/
 
 METHOD QSizePolicy:new( pParent )
-   ::pPtr := Qt_QSizePolicy( pParent )
+   ::pPtr := Qt_QSizePolicy( hbqt_ptr( pParent ) )
    RETURN Self
 
 

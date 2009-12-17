@@ -109,7 +109,7 @@ CREATE CLASS QMenu INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QMenu:new( pParent )
-   ::pPtr := Qt_QMenu( pParent )
+   ::pPtr := Qt_QMenu( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -123,11 +123,11 @@ METHOD QMenu:configure( xObject )
 
 
 METHOD QMenu:actionAt( pPt )
-   RETURN Qt_QMenu_actionAt( ::pPtr, pPt )
+   RETURN Qt_QMenu_actionAt( ::pPtr, hbqt_ptr( pPt ) )
 
 
 METHOD QMenu:actionGeometry( pAct )
-   RETURN Qt_QMenu_actionGeometry( ::pPtr, pAct )
+   RETURN Qt_QMenu_actionGeometry( ::pPtr, hbqt_ptr( pAct ) )
 
 
 METHOD QMenu:activeAction()
@@ -143,19 +143,19 @@ METHOD QMenu:addAction_1( cIcon, cText )
 
 
 METHOD QMenu:addAction_2( cText, pReceiver, pMember, pShortcut )
-   RETURN Qt_QMenu_addAction_2( ::pPtr, cText, pReceiver, pMember, pShortcut )
+   RETURN Qt_QMenu_addAction_2( ::pPtr, cText, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ), hbqt_ptr( pShortcut ) )
 
 
 METHOD QMenu:addAction_3( cIcon, cText, pReceiver, pMember, pShortcut )
-   RETURN Qt_QMenu_addAction_3( ::pPtr, cIcon, cText, pReceiver, pMember, pShortcut )
+   RETURN Qt_QMenu_addAction_3( ::pPtr, cIcon, cText, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ), hbqt_ptr( pShortcut ) )
 
 
 METHOD QMenu:addAction_4( pAction )
-   RETURN Qt_QMenu_addAction_4( ::pPtr, pAction )
+   RETURN Qt_QMenu_addAction_4( ::pPtr, hbqt_ptr( pAction ) )
 
 
 METHOD QMenu:addMenu( pMenu )
-   RETURN Qt_QMenu_addMenu( ::pPtr, pMenu )
+   RETURN Qt_QMenu_addMenu( ::pPtr, hbqt_ptr( pMenu ) )
 
 
 METHOD QMenu:addMenu_1( cTitle )
@@ -183,7 +183,7 @@ METHOD QMenu:exec()
 
 
 METHOD QMenu:exec_1( pP, pAction )
-   RETURN Qt_QMenu_exec_1( ::pPtr, pP, pAction )
+   RETURN Qt_QMenu_exec_1( ::pPtr, hbqt_ptr( pP ), hbqt_ptr( pAction ) )
 
 
 METHOD QMenu:hideTearOffMenu()
@@ -195,11 +195,11 @@ METHOD QMenu:icon()
 
 
 METHOD QMenu:insertMenu( pBefore, pMenu )
-   RETURN Qt_QMenu_insertMenu( ::pPtr, pBefore, pMenu )
+   RETURN Qt_QMenu_insertMenu( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pMenu ) )
 
 
 METHOD QMenu:insertSeparator( pBefore )
-   RETURN Qt_QMenu_insertSeparator( ::pPtr, pBefore )
+   RETURN Qt_QMenu_insertSeparator( ::pPtr, hbqt_ptr( pBefore ) )
 
 
 METHOD QMenu:isEmpty()
@@ -219,7 +219,7 @@ METHOD QMenu:menuAction()
 
 
 METHOD QMenu:popup( pP, pAtAction )
-   RETURN Qt_QMenu_popup( ::pPtr, pP, pAtAction )
+   RETURN Qt_QMenu_popup( ::pPtr, hbqt_ptr( pP ), hbqt_ptr( pAtAction ) )
 
 
 METHOD QMenu:separatorsCollapsible()
@@ -227,11 +227,11 @@ METHOD QMenu:separatorsCollapsible()
 
 
 METHOD QMenu:setActiveAction( pAct )
-   RETURN Qt_QMenu_setActiveAction( ::pPtr, pAct )
+   RETURN Qt_QMenu_setActiveAction( ::pPtr, hbqt_ptr( pAct ) )
 
 
 METHOD QMenu:setDefaultAction( pAct )
-   RETURN Qt_QMenu_setDefaultAction( ::pPtr, pAct )
+   RETURN Qt_QMenu_setDefaultAction( ::pPtr, hbqt_ptr( pAct ) )
 
 
 METHOD QMenu:setIcon( cIcon )

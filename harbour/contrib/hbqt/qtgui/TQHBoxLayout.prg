@@ -76,7 +76,7 @@ CREATE CLASS QHBoxLayout INHERIT QBoxLayout
 /*----------------------------------------------------------------------*/
 
 METHOD QHBoxLayout:new( pParent )
-   ::pPtr := Qt_QHBoxLayout( pParent )
+   ::pPtr := Qt_QHBoxLayout( hbqt_ptr( pParent ) )
    RETURN Self
 
 

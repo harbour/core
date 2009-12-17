@@ -79,7 +79,7 @@ CREATE CLASS QStyleOptionTabBarBase INHERIT QStyleOption
 /*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionTabBarBase:new( pParent )
-   ::pPtr := Qt_QStyleOptionTabBarBase( pParent )
+   ::pPtr := Qt_QStyleOptionTabBarBase( hbqt_ptr( pParent ) )
    RETURN Self
 
 

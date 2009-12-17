@@ -79,7 +79,7 @@ CREATE CLASS QSpacerItem INHERIT QLayoutItem
 /*----------------------------------------------------------------------*/
 
 METHOD QSpacerItem:new( pParent )
-   ::pPtr := Qt_QSpacerItem( pParent )
+   ::pPtr := Qt_QSpacerItem( hbqt_ptr( pParent ) )
    RETURN Self
 
 

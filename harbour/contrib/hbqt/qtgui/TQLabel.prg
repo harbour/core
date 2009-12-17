@@ -105,7 +105,7 @@ CREATE CLASS QLabel INHERIT QFrame
 /*----------------------------------------------------------------------*/
 
 METHOD QLabel:new( pParent )
-   ::pPtr := Qt_QLabel( pParent )
+   ::pPtr := Qt_QLabel( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -159,7 +159,7 @@ METHOD QLabel:setAlignment( nQt_Alignment )
 
 
 METHOD QLabel:setBuddy( pBuddy )
-   RETURN Qt_QLabel_setBuddy( ::pPtr, pBuddy )
+   RETURN Qt_QLabel_setBuddy( ::pPtr, hbqt_ptr( pBuddy ) )
 
 
 METHOD QLabel:setIndent( nInt )
@@ -211,7 +211,7 @@ METHOD QLabel:clear()
 
 
 METHOD QLabel:setMovie( pMovie )
-   RETURN Qt_QLabel_setMovie( ::pPtr, pMovie )
+   RETURN Qt_QLabel_setMovie( ::pPtr, hbqt_ptr( pMovie ) )
 
 
 METHOD QLabel:setNum( nNum )
@@ -223,11 +223,11 @@ METHOD QLabel:setNum_1( nNum )
 
 
 METHOD QLabel:setPicture( pPicture )
-   RETURN Qt_QLabel_setPicture( ::pPtr, pPicture )
+   RETURN Qt_QLabel_setPicture( ::pPtr, hbqt_ptr( pPicture ) )
 
 
 METHOD QLabel:setPixmap( pQPixmap )
-   RETURN Qt_QLabel_setPixmap( ::pPtr, pQPixmap )
+   RETURN Qt_QLabel_setPixmap( ::pPtr, hbqt_ptr( pQPixmap ) )
 
 
 METHOD QLabel:setText( cQString )

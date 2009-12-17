@@ -102,7 +102,7 @@ CREATE CLASS QGridLayout INHERIT QLayout
 /*----------------------------------------------------------------------*/
 
 METHOD QGridLayout:new( pParent )
-   ::pPtr := Qt_QGridLayout( pParent )
+   ::pPtr := Qt_QGridLayout( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -116,23 +116,23 @@ METHOD QGridLayout:configure( xObject )
 
 
 METHOD QGridLayout:addItem( pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
-   RETURN Qt_QGridLayout_addItem( ::pPtr, pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
+   RETURN Qt_QGridLayout_addItem( ::pPtr, hbqt_ptr( pItem ), nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
 
 
 METHOD QGridLayout:addLayout( pLayout, nRow, nColumn, nAlignment )
-   RETURN Qt_QGridLayout_addLayout( ::pPtr, pLayout, nRow, nColumn, nAlignment )
+   RETURN Qt_QGridLayout_addLayout( ::pPtr, hbqt_ptr( pLayout ), nRow, nColumn, nAlignment )
 
 
 METHOD QGridLayout:addLayout_1( pLayout, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
-   RETURN Qt_QGridLayout_addLayout_1( ::pPtr, pLayout, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
+   RETURN Qt_QGridLayout_addLayout_1( ::pPtr, hbqt_ptr( pLayout ), nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
 
 
 METHOD QGridLayout:addWidget( pWidget, nRow, nColumn, nAlignment )
-   RETURN Qt_QGridLayout_addWidget( ::pPtr, pWidget, nRow, nColumn, nAlignment )
+   RETURN Qt_QGridLayout_addWidget( ::pPtr, hbqt_ptr( pWidget ), nRow, nColumn, nAlignment )
 
 
 METHOD QGridLayout:addWidget_1( pWidget, nFromRow, nFromColumn, nRowSpan, nColumnSpan, nAlignment )
-   RETURN Qt_QGridLayout_addWidget_1( ::pPtr, pWidget, nFromRow, nFromColumn, nRowSpan, nColumnSpan, nAlignment )
+   RETURN Qt_QGridLayout_addWidget_1( ::pPtr, hbqt_ptr( pWidget ), nFromRow, nFromColumn, nRowSpan, nColumnSpan, nAlignment )
 
 
 METHOD QGridLayout:cellRect( nRow, nColumn )

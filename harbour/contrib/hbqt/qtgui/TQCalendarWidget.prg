@@ -114,7 +114,7 @@ CREATE CLASS QCalendarWidget INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QCalendarWidget:new( pParent )
-   ::pPtr := Qt_QCalendarWidget( pParent )
+   ::pPtr := Qt_QCalendarWidget( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -132,7 +132,7 @@ METHOD QCalendarWidget:dateEditAcceptDelay()
 
 
 METHOD QCalendarWidget:dateTextFormat( pDate )
-   RETURN Qt_QCalendarWidget_dateTextFormat( ::pPtr, pDate )
+   RETURN Qt_QCalendarWidget_dateTextFormat( ::pPtr, hbqt_ptr( pDate ) )
 
 
 METHOD QCalendarWidget:firstDayOfWeek()
@@ -188,7 +188,7 @@ METHOD QCalendarWidget:setDateEditEnabled( lEnable )
 
 
 METHOD QCalendarWidget:setDateTextFormat( pDate, pFormat )
-   RETURN Qt_QCalendarWidget_setDateTextFormat( ::pPtr, pDate, pFormat )
+   RETURN Qt_QCalendarWidget_setDateTextFormat( ::pPtr, hbqt_ptr( pDate ), hbqt_ptr( pFormat ) )
 
 
 METHOD QCalendarWidget:setFirstDayOfWeek( nDayOfWeek )
@@ -196,7 +196,7 @@ METHOD QCalendarWidget:setFirstDayOfWeek( nDayOfWeek )
 
 
 METHOD QCalendarWidget:setHeaderTextFormat( pFormat )
-   RETURN Qt_QCalendarWidget_setHeaderTextFormat( ::pPtr, pFormat )
+   RETURN Qt_QCalendarWidget_setHeaderTextFormat( ::pPtr, hbqt_ptr( pFormat ) )
 
 
 METHOD QCalendarWidget:setHorizontalHeaderFormat( nFormat )
@@ -204,11 +204,11 @@ METHOD QCalendarWidget:setHorizontalHeaderFormat( nFormat )
 
 
 METHOD QCalendarWidget:setMaximumDate( pDate )
-   RETURN Qt_QCalendarWidget_setMaximumDate( ::pPtr, pDate )
+   RETURN Qt_QCalendarWidget_setMaximumDate( ::pPtr, hbqt_ptr( pDate ) )
 
 
 METHOD QCalendarWidget:setMinimumDate( pDate )
-   RETURN Qt_QCalendarWidget_setMinimumDate( ::pPtr, pDate )
+   RETURN Qt_QCalendarWidget_setMinimumDate( ::pPtr, hbqt_ptr( pDate ) )
 
 
 METHOD QCalendarWidget:setSelectionMode( nMode )
@@ -220,7 +220,7 @@ METHOD QCalendarWidget:setVerticalHeaderFormat( nFormat )
 
 
 METHOD QCalendarWidget:setWeekdayTextFormat( nDayOfWeek, pFormat )
-   RETURN Qt_QCalendarWidget_setWeekdayTextFormat( ::pPtr, nDayOfWeek, pFormat )
+   RETURN Qt_QCalendarWidget_setWeekdayTextFormat( ::pPtr, nDayOfWeek, hbqt_ptr( pFormat ) )
 
 
 METHOD QCalendarWidget:verticalHeaderFormat()
@@ -240,7 +240,7 @@ METHOD QCalendarWidget:setCurrentPage( nYear, nMonth )
 
 
 METHOD QCalendarWidget:setDateRange( pMin, pMax )
-   RETURN Qt_QCalendarWidget_setDateRange( ::pPtr, pMin, pMax )
+   RETURN Qt_QCalendarWidget_setDateRange( ::pPtr, hbqt_ptr( pMin ), hbqt_ptr( pMax ) )
 
 
 METHOD QCalendarWidget:setGridVisible( lShow )
@@ -252,7 +252,7 @@ METHOD QCalendarWidget:setNavigationBarVisible( lVisible )
 
 
 METHOD QCalendarWidget:setSelectedDate( pDate )
-   RETURN Qt_QCalendarWidget_setSelectedDate( ::pPtr, pDate )
+   RETURN Qt_QCalendarWidget_setSelectedDate( ::pPtr, hbqt_ptr( pDate ) )
 
 
 METHOD QCalendarWidget:showNextMonth()

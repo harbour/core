@@ -76,7 +76,7 @@ CREATE CLASS QCommonStyle INHERIT QStyle
 /*----------------------------------------------------------------------*/
 
 METHOD QCommonStyle:new( pParent )
-   ::pPtr := Qt_QCommonStyle( pParent )
+   ::pPtr := Qt_QCommonStyle( hbqt_ptr( pParent ) )
    RETURN Self
 
 

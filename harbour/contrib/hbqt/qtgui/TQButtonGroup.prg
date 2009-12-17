@@ -86,7 +86,7 @@ CREATE CLASS QButtonGroup INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QButtonGroup:new( pParent )
-   ::pPtr := Qt_QButtonGroup( pParent )
+   ::pPtr := Qt_QButtonGroup( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -100,11 +100,11 @@ METHOD QButtonGroup:configure( xObject )
 
 
 METHOD QButtonGroup:addButton( pButton )
-   RETURN Qt_QButtonGroup_addButton( ::pPtr, pButton )
+   RETURN Qt_QButtonGroup_addButton( ::pPtr, hbqt_ptr( pButton ) )
 
 
 METHOD QButtonGroup:addButton_1( pButton, nId )
-   RETURN Qt_QButtonGroup_addButton_1( ::pPtr, pButton, nId )
+   RETURN Qt_QButtonGroup_addButton_1( ::pPtr, hbqt_ptr( pButton ), nId )
 
 
 METHOD QButtonGroup:button( nId )
@@ -124,11 +124,11 @@ METHOD QButtonGroup:exclusive()
 
 
 METHOD QButtonGroup:id( pButton )
-   RETURN Qt_QButtonGroup_id( ::pPtr, pButton )
+   RETURN Qt_QButtonGroup_id( ::pPtr, hbqt_ptr( pButton ) )
 
 
 METHOD QButtonGroup:removeButton( pButton )
-   RETURN Qt_QButtonGroup_removeButton( ::pPtr, pButton )
+   RETURN Qt_QButtonGroup_removeButton( ::pPtr, hbqt_ptr( pButton ) )
 
 
 METHOD QButtonGroup:setExclusive( lBool )
@@ -136,5 +136,5 @@ METHOD QButtonGroup:setExclusive( lBool )
 
 
 METHOD QButtonGroup:setId( pButton, nId )
-   RETURN Qt_QButtonGroup_setId( ::pPtr, pButton, nId )
+   RETURN Qt_QButtonGroup_setId( ::pPtr, hbqt_ptr( pButton ), nId )
 

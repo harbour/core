@@ -92,7 +92,7 @@ CREATE CLASS QSessionManager INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QSessionManager:new( pParent )
-   ::pPtr := Qt_QSessionManager( pParent )
+   ::pPtr := Qt_QSessionManager( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -150,11 +150,11 @@ METHOD QSessionManager:sessionKey()
 
 
 METHOD QSessionManager:setDiscardCommand( pList )
-   RETURN Qt_QSessionManager_setDiscardCommand( ::pPtr, pList )
+   RETURN Qt_QSessionManager_setDiscardCommand( ::pPtr, hbqt_ptr( pList ) )
 
 
 METHOD QSessionManager:setManagerProperty( cName, pValue )
-   RETURN Qt_QSessionManager_setManagerProperty( ::pPtr, cName, pValue )
+   RETURN Qt_QSessionManager_setManagerProperty( ::pPtr, cName, hbqt_ptr( pValue ) )
 
 
 METHOD QSessionManager:setManagerProperty_1( cName, cValue )
@@ -162,7 +162,7 @@ METHOD QSessionManager:setManagerProperty_1( cName, cValue )
 
 
 METHOD QSessionManager:setRestartCommand( pCommand )
-   RETURN Qt_QSessionManager_setRestartCommand( ::pPtr, pCommand )
+   RETURN Qt_QSessionManager_setRestartCommand( ::pPtr, hbqt_ptr( pCommand ) )
 
 
 METHOD QSessionManager:setRestartHint( nHint )

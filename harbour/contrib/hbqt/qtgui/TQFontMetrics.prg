@@ -101,7 +101,7 @@ CREATE CLASS QFontMetrics
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( ... ) CLASS QFontMetrics
+METHOD QFontMetrics:new( ... )
 
    ::pPtr := Qt_QFontMetrics( ... )
 
@@ -138,7 +138,7 @@ METHOD QFontMetrics:boundingRect_2( nX, nY, nWidth, nHeight, nFlags, cText, nTab
 
 
 METHOD QFontMetrics:boundingRect_3( pRect, nFlags, cText, nTabStops, nTabArray )
-   RETURN Qt_QFontMetrics_boundingRect_3( ::pPtr, pRect, nFlags, cText, nTabStops, nTabArray )
+   RETURN Qt_QFontMetrics_boundingRect_3( ::pPtr, hbqt_ptr( pRect ), nFlags, cText, nTabStops, nTabArray )
 
 
 METHOD QFontMetrics:descent()

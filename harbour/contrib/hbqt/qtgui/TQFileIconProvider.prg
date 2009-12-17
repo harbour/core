@@ -79,7 +79,7 @@ CREATE CLASS QFileIconProvider
 /*----------------------------------------------------------------------*/
 
 METHOD QFileIconProvider:new( pParent )
-   ::pPtr := Qt_QFileIconProvider( pParent )
+   ::pPtr := Qt_QFileIconProvider( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -97,9 +97,9 @@ METHOD QFileIconProvider:icon( nType )
 
 
 METHOD QFileIconProvider:icon_1( pInfo )
-   RETURN Qt_QFileIconProvider_icon_1( ::pPtr, pInfo )
+   RETURN Qt_QFileIconProvider_icon_1( ::pPtr, hbqt_ptr( pInfo ) )
 
 
 METHOD QFileIconProvider:type( pInfo )
-   RETURN Qt_QFileIconProvider_type( ::pPtr, pInfo )
+   RETURN Qt_QFileIconProvider_type( ::pPtr, hbqt_ptr( pInfo ) )
 

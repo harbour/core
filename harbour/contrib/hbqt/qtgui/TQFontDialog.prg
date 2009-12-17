@@ -88,7 +88,7 @@ CREATE CLASS QFontDialog INHERIT QDialog
 /*----------------------------------------------------------------------*/
 
 METHOD QFontDialog:new( pParent )
-   ::pPtr := Qt_QFontDialog( pParent )
+   ::pPtr := Qt_QFontDialog( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -114,7 +114,7 @@ METHOD QFontDialog:selectedFont()
 
 
 METHOD QFontDialog:setCurrentFont( pFont )
-   RETURN Qt_QFontDialog_setCurrentFont( ::pPtr, pFont )
+   RETURN Qt_QFontDialog_setCurrentFont( ::pPtr, hbqt_ptr( pFont ) )
 
 
 METHOD QFontDialog:setOption( nOption, lOn )
@@ -130,21 +130,21 @@ METHOD QFontDialog:testOption( nOption )
 
 
 METHOD QFontDialog:getFont( lOk, pInitial, pParent, cTitle, nOptions )
-   RETURN Qt_QFontDialog_getFont( ::pPtr, lOk, pInitial, pParent, cTitle, nOptions )
+   RETURN Qt_QFontDialog_getFont( ::pPtr, lOk, hbqt_ptr( pInitial ), hbqt_ptr( pParent ), cTitle, nOptions )
 
 
 METHOD QFontDialog:getFont_1( lOk, pInitial, pParent, pName )
-   RETURN Qt_QFontDialog_getFont_1( ::pPtr, lOk, pInitial, pParent, pName )
+   RETURN Qt_QFontDialog_getFont_1( ::pPtr, lOk, hbqt_ptr( pInitial ), hbqt_ptr( pParent ), hbqt_ptr( pName ) )
 
 
 METHOD QFontDialog:getFont_2( lOk, pInitial, pParent, cTitle )
-   RETURN Qt_QFontDialog_getFont_2( ::pPtr, lOk, pInitial, pParent, cTitle )
+   RETURN Qt_QFontDialog_getFont_2( ::pPtr, lOk, hbqt_ptr( pInitial ), hbqt_ptr( pParent ), cTitle )
 
 
 METHOD QFontDialog:getFont_3( lOk, pInitial, pParent )
-   RETURN Qt_QFontDialog_getFont_3( ::pPtr, lOk, pInitial, pParent )
+   RETURN Qt_QFontDialog_getFont_3( ::pPtr, lOk, hbqt_ptr( pInitial ), hbqt_ptr( pParent ) )
 
 
 METHOD QFontDialog:getFont_4( lOk, pParent )
-   RETURN Qt_QFontDialog_getFont_4( ::pPtr, lOk, pParent )
+   RETURN Qt_QFontDialog_getFont_4( ::pPtr, lOk, hbqt_ptr( pParent ) )
 

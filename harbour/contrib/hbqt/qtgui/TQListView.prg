@@ -105,7 +105,7 @@ CREATE CLASS QListView INHERIT QAbstractItemView
 /*----------------------------------------------------------------------*/
 
 METHOD QListView:new( pParent )
-   ::pPtr := Qt_QListView( pParent )
+   ::pPtr := Qt_QListView( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -171,7 +171,7 @@ METHOD QListView:setFlow( nFlow )
 
 
 METHOD QListView:setGridSize( pSize )
-   RETURN Qt_QListView_setGridSize( ::pPtr, pSize )
+   RETURN Qt_QListView_setGridSize( ::pPtr, hbqt_ptr( pSize ) )
 
 
 METHOD QListView:setLayoutMode( nMode )

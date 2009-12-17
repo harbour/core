@@ -80,7 +80,7 @@ CREATE CLASS QTextObject INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QTextObject:new( pParent )
-   ::pPtr := Qt_QTextObject( pParent )
+   ::pPtr := Qt_QTextObject( hbqt_ptr( pParent ) )
    RETURN Self
 
 

@@ -86,7 +86,7 @@ CREATE CLASS QTextDocumentWriter
 /*----------------------------------------------------------------------*/
 
 METHOD QTextDocumentWriter:new( pParent )
-   ::pPtr := Qt_QTextDocumentWriter( pParent )
+   ::pPtr := Qt_QTextDocumentWriter( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -116,11 +116,11 @@ METHOD QTextDocumentWriter:format()
 
 
 METHOD QTextDocumentWriter:setCodec( pCodec )
-   RETURN Qt_QTextDocumentWriter_setCodec( ::pPtr, pCodec )
+   RETURN Qt_QTextDocumentWriter_setCodec( ::pPtr, hbqt_ptr( pCodec ) )
 
 
 METHOD QTextDocumentWriter:setDevice( pDevice )
-   RETURN Qt_QTextDocumentWriter_setDevice( ::pPtr, pDevice )
+   RETURN Qt_QTextDocumentWriter_setDevice( ::pPtr, hbqt_ptr( pDevice ) )
 
 
 METHOD QTextDocumentWriter:setFileName( cFileName )
@@ -128,13 +128,13 @@ METHOD QTextDocumentWriter:setFileName( cFileName )
 
 
 METHOD QTextDocumentWriter:setFormat( pFormat )
-   RETURN Qt_QTextDocumentWriter_setFormat( ::pPtr, pFormat )
+   RETURN Qt_QTextDocumentWriter_setFormat( ::pPtr, hbqt_ptr( pFormat ) )
 
 
 METHOD QTextDocumentWriter:write( pDocument )
-   RETURN Qt_QTextDocumentWriter_write( ::pPtr, pDocument )
+   RETURN Qt_QTextDocumentWriter_write( ::pPtr, hbqt_ptr( pDocument ) )
 
 
 METHOD QTextDocumentWriter:write_1( pFragment )
-   RETURN Qt_QTextDocumentWriter_write_1( ::pPtr, pFragment )
+   RETURN Qt_QTextDocumentWriter_write_1( ::pPtr, hbqt_ptr( pFragment ) )
 

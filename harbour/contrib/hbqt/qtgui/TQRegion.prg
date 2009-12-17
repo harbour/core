@@ -93,7 +93,7 @@ CREATE CLASS QRegion
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( ... ) CLASS QRegion
+METHOD QRegion:new( ... )
 
    ::pPtr := Qt_QRegion( ... )
 
@@ -114,27 +114,27 @@ METHOD QRegion:boundingRect()
 
 
 METHOD QRegion:contains( pP )
-   RETURN Qt_QRegion_contains( ::pPtr, pP )
+   RETURN Qt_QRegion_contains( ::pPtr, hbqt_ptr( pP ) )
 
 
 METHOD QRegion:contains_1( pR )
-   RETURN Qt_QRegion_contains_1( ::pPtr, pR )
+   RETURN Qt_QRegion_contains_1( ::pPtr, hbqt_ptr( pR ) )
 
 
 METHOD QRegion:intersected( pR )
-   RETURN Qt_QRegion_intersected( ::pPtr, pR )
+   RETURN Qt_QRegion_intersected( ::pPtr, hbqt_ptr( pR ) )
 
 
 METHOD QRegion:intersected_1( pRect )
-   RETURN Qt_QRegion_intersected_1( ::pPtr, pRect )
+   RETURN Qt_QRegion_intersected_1( ::pPtr, hbqt_ptr( pRect ) )
 
 
 METHOD QRegion:intersects( pRegion )
-   RETURN Qt_QRegion_intersects( ::pPtr, pRegion )
+   RETURN Qt_QRegion_intersects( ::pPtr, hbqt_ptr( pRegion ) )
 
 
 METHOD QRegion:intersects_1( pRect )
-   RETURN Qt_QRegion_intersects_1( ::pPtr, pRect )
+   RETURN Qt_QRegion_intersects_1( ::pPtr, hbqt_ptr( pRect ) )
 
 
 METHOD QRegion:isEmpty()
@@ -146,11 +146,11 @@ METHOD QRegion:numRects()
 
 
 METHOD QRegion:setRects( pRects, nNumber )
-   RETURN Qt_QRegion_setRects( ::pPtr, pRects, nNumber )
+   RETURN Qt_QRegion_setRects( ::pPtr, hbqt_ptr( pRects ), nNumber )
 
 
 METHOD QRegion:subtracted( pR )
-   RETURN Qt_QRegion_subtracted( ::pPtr, pR )
+   RETURN Qt_QRegion_subtracted( ::pPtr, hbqt_ptr( pR ) )
 
 
 METHOD QRegion:translate( nDx, nDy )
@@ -158,7 +158,7 @@ METHOD QRegion:translate( nDx, nDy )
 
 
 METHOD QRegion:translate_1( pPoint )
-   RETURN Qt_QRegion_translate_1( ::pPtr, pPoint )
+   RETURN Qt_QRegion_translate_1( ::pPtr, hbqt_ptr( pPoint ) )
 
 
 METHOD QRegion:translated( nDx, nDy )
@@ -166,17 +166,17 @@ METHOD QRegion:translated( nDx, nDy )
 
 
 METHOD QRegion:translated_1( pP )
-   RETURN Qt_QRegion_translated_1( ::pPtr, pP )
+   RETURN Qt_QRegion_translated_1( ::pPtr, hbqt_ptr( pP ) )
 
 
 METHOD QRegion:united( pR )
-   RETURN Qt_QRegion_united( ::pPtr, pR )
+   RETURN Qt_QRegion_united( ::pPtr, hbqt_ptr( pR ) )
 
 
 METHOD QRegion:united_1( pRect )
-   RETURN Qt_QRegion_united_1( ::pPtr, pRect )
+   RETURN Qt_QRegion_united_1( ::pPtr, hbqt_ptr( pRect ) )
 
 
 METHOD QRegion:xored( pR )
-   RETURN Qt_QRegion_xored( ::pPtr, pR )
+   RETURN Qt_QRegion_xored( ::pPtr, hbqt_ptr( pR ) )
 

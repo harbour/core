@@ -111,7 +111,7 @@ CREATE CLASS QTableWidgetItem
 /*----------------------------------------------------------------------*/
 
 METHOD QTableWidgetItem:new( pParent )
-   ::pPtr := Qt_QTableWidgetItem( pParent )
+   ::pPtr := Qt_QTableWidgetItem( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -165,7 +165,7 @@ METHOD QTableWidgetItem:isSelected()
 
 
 METHOD QTableWidgetItem:read( pIn )
-   RETURN Qt_QTableWidgetItem_read( ::pPtr, pIn )
+   RETURN Qt_QTableWidgetItem_read( ::pPtr, hbqt_ptr( pIn ) )
 
 
 METHOD QTableWidgetItem:row()
@@ -173,7 +173,7 @@ METHOD QTableWidgetItem:row()
 
 
 METHOD QTableWidgetItem:setBackground( pBrush )
-   RETURN Qt_QTableWidgetItem_setBackground( ::pPtr, pBrush )
+   RETURN Qt_QTableWidgetItem_setBackground( ::pPtr, hbqt_ptr( pBrush ) )
 
 
 METHOD QTableWidgetItem:setCheckState( nState )
@@ -181,7 +181,7 @@ METHOD QTableWidgetItem:setCheckState( nState )
 
 
 METHOD QTableWidgetItem:setData( nRole, pValue )
-   RETURN Qt_QTableWidgetItem_setData( ::pPtr, nRole, pValue )
+   RETURN Qt_QTableWidgetItem_setData( ::pPtr, nRole, hbqt_ptr( pValue ) )
 
 
 METHOD QTableWidgetItem:setFlags( nFlags )
@@ -189,11 +189,11 @@ METHOD QTableWidgetItem:setFlags( nFlags )
 
 
 METHOD QTableWidgetItem:setFont( pFont )
-   RETURN Qt_QTableWidgetItem_setFont( ::pPtr, pFont )
+   RETURN Qt_QTableWidgetItem_setFont( ::pPtr, hbqt_ptr( pFont ) )
 
 
 METHOD QTableWidgetItem:setForeground( pBrush )
-   RETURN Qt_QTableWidgetItem_setForeground( ::pPtr, pBrush )
+   RETURN Qt_QTableWidgetItem_setForeground( ::pPtr, hbqt_ptr( pBrush ) )
 
 
 METHOD QTableWidgetItem:setIcon( cIcon )
@@ -205,7 +205,7 @@ METHOD QTableWidgetItem:setSelected( lSelect )
 
 
 METHOD QTableWidgetItem:setSizeHint( pSize )
-   RETURN Qt_QTableWidgetItem_setSizeHint( ::pPtr, pSize )
+   RETURN Qt_QTableWidgetItem_setSizeHint( ::pPtr, hbqt_ptr( pSize ) )
 
 
 METHOD QTableWidgetItem:setStatusTip( cStatusTip )
@@ -261,5 +261,5 @@ METHOD QTableWidgetItem:whatsThis()
 
 
 METHOD QTableWidgetItem:write( pOut )
-   RETURN Qt_QTableWidgetItem_write( ::pPtr, pOut )
+   RETURN Qt_QTableWidgetItem_write( ::pPtr, hbqt_ptr( pOut ) )
 

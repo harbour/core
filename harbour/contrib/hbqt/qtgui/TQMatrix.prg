@@ -105,7 +105,7 @@ CREATE CLASS QMatrix
 /*----------------------------------------------------------------------*/
 
 METHOD QMatrix:new( pParent )
-   ::pPtr := Qt_QMatrix( pParent )
+   ::pPtr := Qt_QMatrix( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -167,47 +167,47 @@ METHOD QMatrix:map_1( nX, nY, nTx, nTy )
 
 
 METHOD QMatrix:map_2( pPoint )
-   RETURN Qt_QMatrix_map_2( ::pPtr, pPoint )
+   RETURN Qt_QMatrix_map_2( ::pPtr, hbqt_ptr( pPoint ) )
 
 
 METHOD QMatrix:map_3( pPoint )
-   RETURN Qt_QMatrix_map_3( ::pPtr, pPoint )
+   RETURN Qt_QMatrix_map_3( ::pPtr, hbqt_ptr( pPoint ) )
 
 
 METHOD QMatrix:map_4( pLine )
-   RETURN Qt_QMatrix_map_4( ::pPtr, pLine )
+   RETURN Qt_QMatrix_map_4( ::pPtr, hbqt_ptr( pLine ) )
 
 
 METHOD QMatrix:map_5( pLine )
-   RETURN Qt_QMatrix_map_5( ::pPtr, pLine )
+   RETURN Qt_QMatrix_map_5( ::pPtr, hbqt_ptr( pLine ) )
 
 
 METHOD QMatrix:map_6( pPolygon )
-   RETURN Qt_QMatrix_map_6( ::pPtr, pPolygon )
+   RETURN Qt_QMatrix_map_6( ::pPtr, hbqt_ptr( pPolygon ) )
 
 
 METHOD QMatrix:map_7( pPolygon )
-   RETURN Qt_QMatrix_map_7( ::pPtr, pPolygon )
+   RETURN Qt_QMatrix_map_7( ::pPtr, hbqt_ptr( pPolygon ) )
 
 
 METHOD QMatrix:map_8( pRegion )
-   RETURN Qt_QMatrix_map_8( ::pPtr, pRegion )
+   RETURN Qt_QMatrix_map_8( ::pPtr, hbqt_ptr( pRegion ) )
 
 
 METHOD QMatrix:map_9( pPath )
-   RETURN Qt_QMatrix_map_9( ::pPtr, pPath )
+   RETURN Qt_QMatrix_map_9( ::pPtr, hbqt_ptr( pPath ) )
 
 
 METHOD QMatrix:mapRect( pRectangle )
-   RETURN Qt_QMatrix_mapRect( ::pPtr, pRectangle )
+   RETURN Qt_QMatrix_mapRect( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QMatrix:mapRect_1( pRectangle )
-   RETURN Qt_QMatrix_mapRect_1( ::pPtr, pRectangle )
+   RETURN Qt_QMatrix_mapRect_1( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QMatrix:mapToPolygon( pRectangle )
-   RETURN Qt_QMatrix_mapToPolygon( ::pPtr, pRectangle )
+   RETURN Qt_QMatrix_mapToPolygon( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QMatrix:reset()

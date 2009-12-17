@@ -131,7 +131,7 @@ CREATE CLASS QPrinter INHERIT QPaintDevice
 /*----------------------------------------------------------------------*/
 
 METHOD QPrinter:new( pParent )
-   ::pPtr := Qt_QPrinter( pParent )
+   ::pPtr := Qt_QPrinter( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -337,7 +337,7 @@ METHOD QPrinter:setPaperSize( nNewPaperSize )
 
 
 METHOD QPrinter:setPaperSize_1( pPaperSize, nUnit )
-   RETURN Qt_QPrinter_setPaperSize_1( ::pPtr, pPaperSize, nUnit )
+   RETURN Qt_QPrinter_setPaperSize_1( ::pPtr, hbqt_ptr( pPaperSize ), nUnit )
 
 
 METHOD QPrinter:setPaperSource( nSource )

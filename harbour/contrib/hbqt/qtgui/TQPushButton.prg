@@ -85,7 +85,7 @@ CREATE CLASS QPushButton INHERIT QAbstractButton
 /*----------------------------------------------------------------------*/
 
 METHOD QPushButton:new( pParent )
-   ::pPtr := Qt_QPushButton( pParent )
+   ::pPtr := Qt_QPushButton( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -127,7 +127,7 @@ METHOD QPushButton:setFlat( lBool )
 
 
 METHOD QPushButton:setMenu( pMenu )
-   RETURN Qt_QPushButton_setMenu( ::pPtr, pMenu )
+   RETURN Qt_QPushButton_setMenu( ::pPtr, hbqt_ptr( pMenu ) )
 
 
 METHOD QPushButton:showMenu()

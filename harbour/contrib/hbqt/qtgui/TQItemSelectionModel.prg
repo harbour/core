@@ -91,7 +91,7 @@ CREATE CLASS QItemSelectionModel INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QItemSelectionModel:new( pParent )
-   ::pPtr := Qt_QItemSelectionModel( pParent )
+   ::pPtr := Qt_QItemSelectionModel( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -105,7 +105,7 @@ METHOD QItemSelectionModel:configure( xObject )
 
 
 METHOD QItemSelectionModel:columnIntersectsSelection( nColumn, pParent )
-   RETURN Qt_QItemSelectionModel_columnIntersectsSelection( ::pPtr, nColumn, pParent )
+   RETURN Qt_QItemSelectionModel_columnIntersectsSelection( ::pPtr, nColumn, hbqt_ptr( pParent ) )
 
 
 METHOD QItemSelectionModel:currentIndex()
@@ -117,15 +117,15 @@ METHOD QItemSelectionModel:hasSelection()
 
 
 METHOD QItemSelectionModel:isColumnSelected( nColumn, pParent )
-   RETURN Qt_QItemSelectionModel_isColumnSelected( ::pPtr, nColumn, pParent )
+   RETURN Qt_QItemSelectionModel_isColumnSelected( ::pPtr, nColumn, hbqt_ptr( pParent ) )
 
 
 METHOD QItemSelectionModel:isRowSelected( nRow, pParent )
-   RETURN Qt_QItemSelectionModel_isRowSelected( ::pPtr, nRow, pParent )
+   RETURN Qt_QItemSelectionModel_isRowSelected( ::pPtr, nRow, hbqt_ptr( pParent ) )
 
 
 METHOD QItemSelectionModel:isSelected( pIndex )
-   RETURN Qt_QItemSelectionModel_isSelected( ::pPtr, pIndex )
+   RETURN Qt_QItemSelectionModel_isSelected( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QItemSelectionModel:model()
@@ -133,7 +133,7 @@ METHOD QItemSelectionModel:model()
 
 
 METHOD QItemSelectionModel:rowIntersectsSelection( nRow, pParent )
-   RETURN Qt_QItemSelectionModel_rowIntersectsSelection( ::pPtr, nRow, pParent )
+   RETURN Qt_QItemSelectionModel_rowIntersectsSelection( ::pPtr, nRow, hbqt_ptr( pParent ) )
 
 
 METHOD QItemSelectionModel:selection()
@@ -153,13 +153,13 @@ METHOD QItemSelectionModel:reset()
 
 
 METHOD QItemSelectionModel:select( pIndex, nCommand )
-   RETURN Qt_QItemSelectionModel_select( ::pPtr, pIndex, nCommand )
+   RETURN Qt_QItemSelectionModel_select( ::pPtr, hbqt_ptr( pIndex ), nCommand )
 
 
 METHOD QItemSelectionModel:select_1( pSelection, nCommand )
-   RETURN Qt_QItemSelectionModel_select_1( ::pPtr, pSelection, nCommand )
+   RETURN Qt_QItemSelectionModel_select_1( ::pPtr, hbqt_ptr( pSelection ), nCommand )
 
 
 METHOD QItemSelectionModel:setCurrentIndex( pIndex, nCommand )
-   RETURN Qt_QItemSelectionModel_setCurrentIndex( ::pPtr, pIndex, nCommand )
+   RETURN Qt_QItemSelectionModel_setCurrentIndex( ::pPtr, hbqt_ptr( pIndex ), nCommand )
 

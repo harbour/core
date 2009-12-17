@@ -112,7 +112,7 @@ CREATE CLASS QFormLayout INHERIT QLayout
 /*----------------------------------------------------------------------*/
 
 METHOD QFormLayout:new( pParent )
-   ::pPtr := Qt_QFormLayout( pParent )
+   ::pPtr := Qt_QFormLayout( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -126,27 +126,27 @@ METHOD QFormLayout:configure( xObject )
 
 
 METHOD QFormLayout:addRow( pLabel, pField )
-   RETURN Qt_QFormLayout_addRow( ::pPtr, pLabel, pField )
+   RETURN Qt_QFormLayout_addRow( ::pPtr, hbqt_ptr( pLabel ), hbqt_ptr( pField ) )
 
 
 METHOD QFormLayout:addRow_1( pLabel, pField )
-   RETURN Qt_QFormLayout_addRow_1( ::pPtr, pLabel, pField )
+   RETURN Qt_QFormLayout_addRow_1( ::pPtr, hbqt_ptr( pLabel ), hbqt_ptr( pField ) )
 
 
 METHOD QFormLayout:addRow_2( pWidget )
-   RETURN Qt_QFormLayout_addRow_2( ::pPtr, pWidget )
+   RETURN Qt_QFormLayout_addRow_2( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QFormLayout:addRow_3( cLabelText, pField )
-   RETURN Qt_QFormLayout_addRow_3( ::pPtr, cLabelText, pField )
+   RETURN Qt_QFormLayout_addRow_3( ::pPtr, cLabelText, hbqt_ptr( pField ) )
 
 
 METHOD QFormLayout:addRow_4( cLabelText, pField )
-   RETURN Qt_QFormLayout_addRow_4( ::pPtr, cLabelText, pField )
+   RETURN Qt_QFormLayout_addRow_4( ::pPtr, cLabelText, hbqt_ptr( pField ) )
 
 
 METHOD QFormLayout:addRow_5( pLayout )
-   RETURN Qt_QFormLayout_addRow_5( ::pPtr, pLayout )
+   RETURN Qt_QFormLayout_addRow_5( ::pPtr, hbqt_ptr( pLayout ) )
 
 
 METHOD QFormLayout:fieldGrowthPolicy()
@@ -162,11 +162,11 @@ METHOD QFormLayout:getItemPosition( nIndex, nRowPtr, nRolePtr )
 
 
 METHOD QFormLayout:getLayoutPosition( pLayout, nRowPtr, nRolePtr )
-   RETURN Qt_QFormLayout_getLayoutPosition( ::pPtr, pLayout, nRowPtr, nRolePtr )
+   RETURN Qt_QFormLayout_getLayoutPosition( ::pPtr, hbqt_ptr( pLayout ), nRowPtr, nRolePtr )
 
 
 METHOD QFormLayout:getWidgetPosition( pWidget, nRowPtr, nRolePtr )
-   RETURN Qt_QFormLayout_getWidgetPosition( ::pPtr, pWidget, nRowPtr, nRolePtr )
+   RETURN Qt_QFormLayout_getWidgetPosition( ::pPtr, hbqt_ptr( pWidget ), nRowPtr, nRolePtr )
 
 
 METHOD QFormLayout:horizontalSpacing()
@@ -174,27 +174,27 @@ METHOD QFormLayout:horizontalSpacing()
 
 
 METHOD QFormLayout:insertRow( nRow, pLabel, pField )
-   RETURN Qt_QFormLayout_insertRow( ::pPtr, nRow, pLabel, pField )
+   RETURN Qt_QFormLayout_insertRow( ::pPtr, nRow, hbqt_ptr( pLabel ), hbqt_ptr( pField ) )
 
 
 METHOD QFormLayout:insertRow_1( nRow, pLabel, pField )
-   RETURN Qt_QFormLayout_insertRow_1( ::pPtr, nRow, pLabel, pField )
+   RETURN Qt_QFormLayout_insertRow_1( ::pPtr, nRow, hbqt_ptr( pLabel ), hbqt_ptr( pField ) )
 
 
 METHOD QFormLayout:insertRow_2( nRow, pWidget )
-   RETURN Qt_QFormLayout_insertRow_2( ::pPtr, nRow, pWidget )
+   RETURN Qt_QFormLayout_insertRow_2( ::pPtr, nRow, hbqt_ptr( pWidget ) )
 
 
 METHOD QFormLayout:insertRow_3( nRow, cLabelText, pField )
-   RETURN Qt_QFormLayout_insertRow_3( ::pPtr, nRow, cLabelText, pField )
+   RETURN Qt_QFormLayout_insertRow_3( ::pPtr, nRow, cLabelText, hbqt_ptr( pField ) )
 
 
 METHOD QFormLayout:insertRow_4( nRow, cLabelText, pField )
-   RETURN Qt_QFormLayout_insertRow_4( ::pPtr, nRow, cLabelText, pField )
+   RETURN Qt_QFormLayout_insertRow_4( ::pPtr, nRow, cLabelText, hbqt_ptr( pField ) )
 
 
 METHOD QFormLayout:insertRow_5( nRow, pLayout )
-   RETURN Qt_QFormLayout_insertRow_5( ::pPtr, nRow, pLayout )
+   RETURN Qt_QFormLayout_insertRow_5( ::pPtr, nRow, hbqt_ptr( pLayout ) )
 
 
 METHOD QFormLayout:itemAt( nRow, nRole )
@@ -206,11 +206,11 @@ METHOD QFormLayout:labelAlignment()
 
 
 METHOD QFormLayout:labelForField( pField )
-   RETURN Qt_QFormLayout_labelForField( ::pPtr, pField )
+   RETURN Qt_QFormLayout_labelForField( ::pPtr, hbqt_ptr( pField ) )
 
 
 METHOD QFormLayout:labelForField_1( pField )
-   RETURN Qt_QFormLayout_labelForField_1( ::pPtr, pField )
+   RETURN Qt_QFormLayout_labelForField_1( ::pPtr, hbqt_ptr( pField ) )
 
 
 METHOD QFormLayout:rowCount()
@@ -234,7 +234,7 @@ METHOD QFormLayout:setHorizontalSpacing( nSpacing )
 
 
 METHOD QFormLayout:setItem( nRow, nRole, pItem )
-   RETURN Qt_QFormLayout_setItem( ::pPtr, nRow, nRole, pItem )
+   RETURN Qt_QFormLayout_setItem( ::pPtr, nRow, nRole, hbqt_ptr( pItem ) )
 
 
 METHOD QFormLayout:setLabelAlignment( nAlignment )
@@ -242,7 +242,7 @@ METHOD QFormLayout:setLabelAlignment( nAlignment )
 
 
 METHOD QFormLayout:setLayout( nRow, nRole, pLayout )
-   RETURN Qt_QFormLayout_setLayout( ::pPtr, nRow, nRole, pLayout )
+   RETURN Qt_QFormLayout_setLayout( ::pPtr, nRow, nRole, hbqt_ptr( pLayout ) )
 
 
 METHOD QFormLayout:setRowWrapPolicy( nPolicy )
@@ -258,7 +258,7 @@ METHOD QFormLayout:setVerticalSpacing( nSpacing )
 
 
 METHOD QFormLayout:setWidget( nRow, nRole, pWidget )
-   RETURN Qt_QFormLayout_setWidget( ::pPtr, nRow, nRole, pWidget )
+   RETURN Qt_QFormLayout_setWidget( ::pPtr, nRow, nRole, hbqt_ptr( pWidget ) )
 
 
 METHOD QFormLayout:spacing()

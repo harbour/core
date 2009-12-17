@@ -78,7 +78,7 @@ CREATE CLASS QMoveEvent INHERIT QEvent
 /*----------------------------------------------------------------------*/
 
 METHOD QMoveEvent:new( pParent )
-   ::pPtr := Qt_QMoveEvent( pParent )
+   ::pPtr := Qt_QMoveEvent( hbqt_ptr( pParent ) )
    RETURN Self
 
 

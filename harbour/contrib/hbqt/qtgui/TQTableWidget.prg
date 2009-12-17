@@ -122,7 +122,7 @@ CREATE CLASS QTableWidget INHERIT QTableView
 /*----------------------------------------------------------------------*/
 
 METHOD QTableWidget:new( pParent )
-   ::pPtr := Qt_QTableWidget( pParent )
+   ::pPtr := Qt_QTableWidget( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -140,11 +140,11 @@ METHOD QTableWidget:cellWidget( nRow, nColumn )
 
 
 METHOD QTableWidget:closePersistentEditor( pItem )
-   RETURN Qt_QTableWidget_closePersistentEditor( ::pPtr, pItem )
+   RETURN Qt_QTableWidget_closePersistentEditor( ::pPtr, hbqt_ptr( pItem ) )
 
 
 METHOD QTableWidget:column( pItem )
-   RETURN Qt_QTableWidget_column( ::pPtr, pItem )
+   RETURN Qt_QTableWidget_column( ::pPtr, hbqt_ptr( pItem ) )
 
 
 METHOD QTableWidget:columnCount()
@@ -164,7 +164,7 @@ METHOD QTableWidget:currentRow()
 
 
 METHOD QTableWidget:editItem( pItem )
-   RETURN Qt_QTableWidget_editItem( ::pPtr, pItem )
+   RETURN Qt_QTableWidget_editItem( ::pPtr, hbqt_ptr( pItem ) )
 
 
 METHOD QTableWidget:horizontalHeaderItem( nColumn )
@@ -176,7 +176,7 @@ METHOD QTableWidget:item( nRow, nColumn )
 
 
 METHOD QTableWidget:itemAt( pPoint )
-   RETURN Qt_QTableWidget_itemAt( ::pPtr, pPoint )
+   RETURN Qt_QTableWidget_itemAt( ::pPtr, hbqt_ptr( pPoint ) )
 
 
 METHOD QTableWidget:itemAt_1( nAx, nAy )
@@ -188,7 +188,7 @@ METHOD QTableWidget:itemPrototype()
 
 
 METHOD QTableWidget:openPersistentEditor( pItem )
-   RETURN Qt_QTableWidget_openPersistentEditor( ::pPtr, pItem )
+   RETURN Qt_QTableWidget_openPersistentEditor( ::pPtr, hbqt_ptr( pItem ) )
 
 
 METHOD QTableWidget:removeCellWidget( nRow, nColumn )
@@ -196,7 +196,7 @@ METHOD QTableWidget:removeCellWidget( nRow, nColumn )
 
 
 METHOD QTableWidget:row( pItem )
-   RETURN Qt_QTableWidget_row( ::pPtr, pItem )
+   RETURN Qt_QTableWidget_row( ::pPtr, hbqt_ptr( pItem ) )
 
 
 METHOD QTableWidget:rowCount()
@@ -204,7 +204,7 @@ METHOD QTableWidget:rowCount()
 
 
 METHOD QTableWidget:setCellWidget( nRow, nColumn, pWidget )
-   RETURN Qt_QTableWidget_setCellWidget( ::pPtr, nRow, nColumn, pWidget )
+   RETURN Qt_QTableWidget_setCellWidget( ::pPtr, nRow, nColumn, hbqt_ptr( pWidget ) )
 
 
 METHOD QTableWidget:setColumnCount( nColumns )
@@ -220,31 +220,31 @@ METHOD QTableWidget:setCurrentCell_1( nRow, nColumn, nCommand )
 
 
 METHOD QTableWidget:setCurrentItem( pItem )
-   RETURN Qt_QTableWidget_setCurrentItem( ::pPtr, pItem )
+   RETURN Qt_QTableWidget_setCurrentItem( ::pPtr, hbqt_ptr( pItem ) )
 
 
 METHOD QTableWidget:setCurrentItem_1( pItem, nCommand )
-   RETURN Qt_QTableWidget_setCurrentItem_1( ::pPtr, pItem, nCommand )
+   RETURN Qt_QTableWidget_setCurrentItem_1( ::pPtr, hbqt_ptr( pItem ), nCommand )
 
 
 METHOD QTableWidget:setHorizontalHeaderItem( nColumn, pItem )
-   RETURN Qt_QTableWidget_setHorizontalHeaderItem( ::pPtr, nColumn, pItem )
+   RETURN Qt_QTableWidget_setHorizontalHeaderItem( ::pPtr, nColumn, hbqt_ptr( pItem ) )
 
 
 METHOD QTableWidget:setHorizontalHeaderLabels( pLabels )
-   RETURN Qt_QTableWidget_setHorizontalHeaderLabels( ::pPtr, pLabels )
+   RETURN Qt_QTableWidget_setHorizontalHeaderLabels( ::pPtr, hbqt_ptr( pLabels ) )
 
 
 METHOD QTableWidget:setItem( nRow, nColumn, pItem )
-   RETURN Qt_QTableWidget_setItem( ::pPtr, nRow, nColumn, pItem )
+   RETURN Qt_QTableWidget_setItem( ::pPtr, nRow, nColumn, hbqt_ptr( pItem ) )
 
 
 METHOD QTableWidget:setItemPrototype( pItem )
-   RETURN Qt_QTableWidget_setItemPrototype( ::pPtr, pItem )
+   RETURN Qt_QTableWidget_setItemPrototype( ::pPtr, hbqt_ptr( pItem ) )
 
 
 METHOD QTableWidget:setRangeSelected( pRange, lSelect )
-   RETURN Qt_QTableWidget_setRangeSelected( ::pPtr, pRange, lSelect )
+   RETURN Qt_QTableWidget_setRangeSelected( ::pPtr, hbqt_ptr( pRange ), lSelect )
 
 
 METHOD QTableWidget:setRowCount( nRows )
@@ -252,11 +252,11 @@ METHOD QTableWidget:setRowCount( nRows )
 
 
 METHOD QTableWidget:setVerticalHeaderItem( nRow, pItem )
-   RETURN Qt_QTableWidget_setVerticalHeaderItem( ::pPtr, nRow, pItem )
+   RETURN Qt_QTableWidget_setVerticalHeaderItem( ::pPtr, nRow, hbqt_ptr( pItem ) )
 
 
 METHOD QTableWidget:setVerticalHeaderLabels( pLabels )
-   RETURN Qt_QTableWidget_setVerticalHeaderLabels( ::pPtr, pLabels )
+   RETURN Qt_QTableWidget_setVerticalHeaderLabels( ::pPtr, hbqt_ptr( pLabels ) )
 
 
 METHOD QTableWidget:sortItems( nColumn, nOrder )
@@ -284,7 +284,7 @@ METHOD QTableWidget:visualColumn( nLogicalColumn )
 
 
 METHOD QTableWidget:visualItemRect( pItem )
-   RETURN Qt_QTableWidget_visualItemRect( ::pPtr, pItem )
+   RETURN Qt_QTableWidget_visualItemRect( ::pPtr, hbqt_ptr( pItem ) )
 
 
 METHOD QTableWidget:visualRow( nLogicalRow )
@@ -316,5 +316,5 @@ METHOD QTableWidget:removeRow( nRow )
 
 
 METHOD QTableWidget:scrollToItem( pItem, nHint )
-   RETURN Qt_QTableWidget_scrollToItem( ::pPtr, pItem, nHint )
+   RETURN Qt_QTableWidget_scrollToItem( ::pPtr, hbqt_ptr( pItem ), nHint )
 

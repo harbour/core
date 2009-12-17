@@ -79,7 +79,7 @@ CREATE CLASS QTextLength
 /*----------------------------------------------------------------------*/
 
 METHOD QTextLength:new( pParent )
-   ::pPtr := Qt_QTextLength( pParent )
+   ::pPtr := Qt_QTextLength( hbqt_ptr( pParent ) )
    RETURN Self
 
 

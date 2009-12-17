@@ -258,7 +258,7 @@ CREATE CLASS QPainter
 /*----------------------------------------------------------------------*/
 
 METHOD QPainter:new( pParent )
-   ::pPtr := Qt_QPainter( pParent )
+   ::pPtr := Qt_QPainter( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -280,15 +280,15 @@ METHOD QPainter:backgroundMode()
 
 
 METHOD QPainter:begin( pDevice )
-   RETURN Qt_QPainter_begin( ::pPtr, pDevice )
+   RETURN Qt_QPainter_begin( ::pPtr, hbqt_ptr( pDevice ) )
 
 
 METHOD QPainter:boundingRect( pRectangle, nFlags, cText )
-   RETURN Qt_QPainter_boundingRect( ::pPtr, pRectangle, nFlags, cText )
+   RETURN Qt_QPainter_boundingRect( ::pPtr, hbqt_ptr( pRectangle ), nFlags, cText )
 
 
 METHOD QPainter:boundingRect_1( pRectangle, nFlags, cText )
-   RETURN Qt_QPainter_boundingRect_1( ::pPtr, pRectangle, nFlags, cText )
+   RETURN Qt_QPainter_boundingRect_1( ::pPtr, hbqt_ptr( pRectangle ), nFlags, cText )
 
 
 METHOD QPainter:boundingRect_2( nX, nY, nW, nH, nFlags, cText )
@@ -296,7 +296,7 @@ METHOD QPainter:boundingRect_2( nX, nY, nW, nH, nFlags, cText )
 
 
 METHOD QPainter:boundingRect_3( pRectangle, cText, pOption )
-   RETURN Qt_QPainter_boundingRect_3( ::pPtr, pRectangle, cText, pOption )
+   RETURN Qt_QPainter_boundingRect_3( ::pPtr, hbqt_ptr( pRectangle ), cText, hbqt_ptr( pOption ) )
 
 
 METHOD QPainter:brush()
@@ -340,11 +340,11 @@ METHOD QPainter:deviceTransform()
 
 
 METHOD QPainter:drawArc( pRectangle, nStartAngle, nSpanAngle )
-   RETURN Qt_QPainter_drawArc( ::pPtr, pRectangle, nStartAngle, nSpanAngle )
+   RETURN Qt_QPainter_drawArc( ::pPtr, hbqt_ptr( pRectangle ), nStartAngle, nSpanAngle )
 
 
 METHOD QPainter:drawArc_1( pRectangle, nStartAngle, nSpanAngle )
-   RETURN Qt_QPainter_drawArc_1( ::pPtr, pRectangle, nStartAngle, nSpanAngle )
+   RETURN Qt_QPainter_drawArc_1( ::pPtr, hbqt_ptr( pRectangle ), nStartAngle, nSpanAngle )
 
 
 METHOD QPainter:drawArc_2( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )
@@ -352,11 +352,11 @@ METHOD QPainter:drawArc_2( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )
 
 
 METHOD QPainter:drawChord( pRectangle, nStartAngle, nSpanAngle )
-   RETURN Qt_QPainter_drawChord( ::pPtr, pRectangle, nStartAngle, nSpanAngle )
+   RETURN Qt_QPainter_drawChord( ::pPtr, hbqt_ptr( pRectangle ), nStartAngle, nSpanAngle )
 
 
 METHOD QPainter:drawChord_1( pRectangle, nStartAngle, nSpanAngle )
-   RETURN Qt_QPainter_drawChord_1( ::pPtr, pRectangle, nStartAngle, nSpanAngle )
+   RETURN Qt_QPainter_drawChord_1( ::pPtr, hbqt_ptr( pRectangle ), nStartAngle, nSpanAngle )
 
 
 METHOD QPainter:drawChord_2( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )
@@ -364,27 +364,27 @@ METHOD QPainter:drawChord_2( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )
 
 
 METHOD QPainter:drawConvexPolygon( pPoints, nPointCount )
-   RETURN Qt_QPainter_drawConvexPolygon( ::pPtr, pPoints, nPointCount )
+   RETURN Qt_QPainter_drawConvexPolygon( ::pPtr, hbqt_ptr( pPoints ), nPointCount )
 
 
 METHOD QPainter:drawConvexPolygon_1( pPoints, nPointCount )
-   RETURN Qt_QPainter_drawConvexPolygon_1( ::pPtr, pPoints, nPointCount )
+   RETURN Qt_QPainter_drawConvexPolygon_1( ::pPtr, hbqt_ptr( pPoints ), nPointCount )
 
 
 METHOD QPainter:drawConvexPolygon_2( pPolygon )
-   RETURN Qt_QPainter_drawConvexPolygon_2( ::pPtr, pPolygon )
+   RETURN Qt_QPainter_drawConvexPolygon_2( ::pPtr, hbqt_ptr( pPolygon ) )
 
 
 METHOD QPainter:drawConvexPolygon_3( pPolygon )
-   RETURN Qt_QPainter_drawConvexPolygon_3( ::pPtr, pPolygon )
+   RETURN Qt_QPainter_drawConvexPolygon_3( ::pPtr, hbqt_ptr( pPolygon ) )
 
 
 METHOD QPainter:drawEllipse( pRectangle )
-   RETURN Qt_QPainter_drawEllipse( ::pPtr, pRectangle )
+   RETURN Qt_QPainter_drawEllipse( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QPainter:drawEllipse_1( pRectangle )
-   RETURN Qt_QPainter_drawEllipse_1( ::pPtr, pRectangle )
+   RETURN Qt_QPainter_drawEllipse_1( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QPainter:drawEllipse_2( nX, nY, nWidth, nHeight )
@@ -392,63 +392,63 @@ METHOD QPainter:drawEllipse_2( nX, nY, nWidth, nHeight )
 
 
 METHOD QPainter:drawEllipse_3( pCenter, nRx, nRy )
-   RETURN Qt_QPainter_drawEllipse_3( ::pPtr, pCenter, nRx, nRy )
+   RETURN Qt_QPainter_drawEllipse_3( ::pPtr, hbqt_ptr( pCenter ), nRx, nRy )
 
 
 METHOD QPainter:drawEllipse_4( pCenter, nRx, nRy )
-   RETURN Qt_QPainter_drawEllipse_4( ::pPtr, pCenter, nRx, nRy )
+   RETURN Qt_QPainter_drawEllipse_4( ::pPtr, hbqt_ptr( pCenter ), nRx, nRy )
 
 
 METHOD QPainter:drawImage( pTarget, pImage, pSource, nFlags )
-   RETURN Qt_QPainter_drawImage( ::pPtr, pTarget, pImage, pSource, nFlags )
+   RETURN Qt_QPainter_drawImage( ::pPtr, hbqt_ptr( pTarget ), hbqt_ptr( pImage ), hbqt_ptr( pSource ), nFlags )
 
 
 METHOD QPainter:drawImage_1( pTarget, pImage, pSource, nFlags )
-   RETURN Qt_QPainter_drawImage_1( ::pPtr, pTarget, pImage, pSource, nFlags )
+   RETURN Qt_QPainter_drawImage_1( ::pPtr, hbqt_ptr( pTarget ), hbqt_ptr( pImage ), hbqt_ptr( pSource ), nFlags )
 
 
 METHOD QPainter:drawImage_2( pPoint, pImage )
-   RETURN Qt_QPainter_drawImage_2( ::pPtr, pPoint, pImage )
+   RETURN Qt_QPainter_drawImage_2( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pImage ) )
 
 
 METHOD QPainter:drawImage_3( pPoint, pImage )
-   RETURN Qt_QPainter_drawImage_3( ::pPtr, pPoint, pImage )
+   RETURN Qt_QPainter_drawImage_3( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pImage ) )
 
 
 METHOD QPainter:drawImage_4( pPoint, pImage, pSource, nFlags )
-   RETURN Qt_QPainter_drawImage_4( ::pPtr, pPoint, pImage, pSource, nFlags )
+   RETURN Qt_QPainter_drawImage_4( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pImage ), hbqt_ptr( pSource ), nFlags )
 
 
 METHOD QPainter:drawImage_5( pPoint, pImage, pSource, nFlags )
-   RETURN Qt_QPainter_drawImage_5( ::pPtr, pPoint, pImage, pSource, nFlags )
+   RETURN Qt_QPainter_drawImage_5( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pImage ), hbqt_ptr( pSource ), nFlags )
 
 
 METHOD QPainter:drawImage_6( pRectangle, pImage )
-   RETURN Qt_QPainter_drawImage_6( ::pPtr, pRectangle, pImage )
+   RETURN Qt_QPainter_drawImage_6( ::pPtr, hbqt_ptr( pRectangle ), hbqt_ptr( pImage ) )
 
 
 METHOD QPainter:drawImage_7( pRectangle, pImage )
-   RETURN Qt_QPainter_drawImage_7( ::pPtr, pRectangle, pImage )
+   RETURN Qt_QPainter_drawImage_7( ::pPtr, hbqt_ptr( pRectangle ), hbqt_ptr( pImage ) )
 
 
 METHOD QPainter:drawImage_8( nX, nY, pImage, nSx, nSy, nSw, nSh, nFlags )
-   RETURN Qt_QPainter_drawImage_8( ::pPtr, nX, nY, pImage, nSx, nSy, nSw, nSh, nFlags )
+   RETURN Qt_QPainter_drawImage_8( ::pPtr, nX, nY, hbqt_ptr( pImage ), nSx, nSy, nSw, nSh, nFlags )
 
 
 METHOD QPainter:drawLine( pLine )
-   RETURN Qt_QPainter_drawLine( ::pPtr, pLine )
+   RETURN Qt_QPainter_drawLine( ::pPtr, hbqt_ptr( pLine ) )
 
 
 METHOD QPainter:drawLine_1( pLine )
-   RETURN Qt_QPainter_drawLine_1( ::pPtr, pLine )
+   RETURN Qt_QPainter_drawLine_1( ::pPtr, hbqt_ptr( pLine ) )
 
 
 METHOD QPainter:drawLine_2( pP1, pP2 )
-   RETURN Qt_QPainter_drawLine_2( ::pPtr, pP1, pP2 )
+   RETURN Qt_QPainter_drawLine_2( ::pPtr, hbqt_ptr( pP1 ), hbqt_ptr( pP2 ) )
 
 
 METHOD QPainter:drawLine_3( pP1, pP2 )
-   RETURN Qt_QPainter_drawLine_3( ::pPtr, pP1, pP2 )
+   RETURN Qt_QPainter_drawLine_3( ::pPtr, hbqt_ptr( pP1 ), hbqt_ptr( pP2 ) )
 
 
 METHOD QPainter:drawLine_4( nX1, nY1, nX2, nY2 )
@@ -456,43 +456,43 @@ METHOD QPainter:drawLine_4( nX1, nY1, nX2, nY2 )
 
 
 METHOD QPainter:drawLines( pLines, nLineCount )
-   RETURN Qt_QPainter_drawLines( ::pPtr, pLines, nLineCount )
+   RETURN Qt_QPainter_drawLines( ::pPtr, hbqt_ptr( pLines ), nLineCount )
 
 
 METHOD QPainter:drawLines_1( pLines, nLineCount )
-   RETURN Qt_QPainter_drawLines_1( ::pPtr, pLines, nLineCount )
+   RETURN Qt_QPainter_drawLines_1( ::pPtr, hbqt_ptr( pLines ), nLineCount )
 
 
 METHOD QPainter:drawLines_2( pPointPairs, nLineCount )
-   RETURN Qt_QPainter_drawLines_2( ::pPtr, pPointPairs, nLineCount )
+   RETURN Qt_QPainter_drawLines_2( ::pPtr, hbqt_ptr( pPointPairs ), nLineCount )
 
 
 METHOD QPainter:drawLines_3( pPointPairs, nLineCount )
-   RETURN Qt_QPainter_drawLines_3( ::pPtr, pPointPairs, nLineCount )
+   RETURN Qt_QPainter_drawLines_3( ::pPtr, hbqt_ptr( pPointPairs ), nLineCount )
 
 
 METHOD QPainter:drawPath( pPath )
-   RETURN Qt_QPainter_drawPath( ::pPtr, pPath )
+   RETURN Qt_QPainter_drawPath( ::pPtr, hbqt_ptr( pPath ) )
 
 
 METHOD QPainter:drawPicture( pPoint, pPicture )
-   RETURN Qt_QPainter_drawPicture( ::pPtr, pPoint, pPicture )
+   RETURN Qt_QPainter_drawPicture( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pPicture ) )
 
 
 METHOD QPainter:drawPicture_1( pPoint, pPicture )
-   RETURN Qt_QPainter_drawPicture_1( ::pPtr, pPoint, pPicture )
+   RETURN Qt_QPainter_drawPicture_1( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pPicture ) )
 
 
 METHOD QPainter:drawPicture_2( nX, nY, pPicture )
-   RETURN Qt_QPainter_drawPicture_2( ::pPtr, nX, nY, pPicture )
+   RETURN Qt_QPainter_drawPicture_2( ::pPtr, nX, nY, hbqt_ptr( pPicture ) )
 
 
 METHOD QPainter:drawPie( pRectangle, nStartAngle, nSpanAngle )
-   RETURN Qt_QPainter_drawPie( ::pPtr, pRectangle, nStartAngle, nSpanAngle )
+   RETURN Qt_QPainter_drawPie( ::pPtr, hbqt_ptr( pRectangle ), nStartAngle, nSpanAngle )
 
 
 METHOD QPainter:drawPie_1( pRectangle, nStartAngle, nSpanAngle )
-   RETURN Qt_QPainter_drawPie_1( ::pPtr, pRectangle, nStartAngle, nSpanAngle )
+   RETURN Qt_QPainter_drawPie_1( ::pPtr, hbqt_ptr( pRectangle ), nStartAngle, nSpanAngle )
 
 
 METHOD QPainter:drawPie_2( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )
@@ -500,55 +500,55 @@ METHOD QPainter:drawPie_2( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )
 
 
 METHOD QPainter:drawPixmap( pTarget, pPixmap, pSource )
-   RETURN Qt_QPainter_drawPixmap( ::pPtr, pTarget, pPixmap, pSource )
+   RETURN Qt_QPainter_drawPixmap( ::pPtr, hbqt_ptr( pTarget ), hbqt_ptr( pPixmap ), hbqt_ptr( pSource ) )
 
 
 METHOD QPainter:drawPixmap_1( pTarget, pPixmap, pSource )
-   RETURN Qt_QPainter_drawPixmap_1( ::pPtr, pTarget, pPixmap, pSource )
+   RETURN Qt_QPainter_drawPixmap_1( ::pPtr, hbqt_ptr( pTarget ), hbqt_ptr( pPixmap ), hbqt_ptr( pSource ) )
 
 
 METHOD QPainter:drawPixmap_2( pPoint, pPixmap, pSource )
-   RETURN Qt_QPainter_drawPixmap_2( ::pPtr, pPoint, pPixmap, pSource )
+   RETURN Qt_QPainter_drawPixmap_2( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pPixmap ), hbqt_ptr( pSource ) )
 
 
 METHOD QPainter:drawPixmap_3( pPoint, pPixmap, pSource )
-   RETURN Qt_QPainter_drawPixmap_3( ::pPtr, pPoint, pPixmap, pSource )
+   RETURN Qt_QPainter_drawPixmap_3( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pPixmap ), hbqt_ptr( pSource ) )
 
 
 METHOD QPainter:drawPixmap_4( pPoint, pPixmap )
-   RETURN Qt_QPainter_drawPixmap_4( ::pPtr, pPoint, pPixmap )
+   RETURN Qt_QPainter_drawPixmap_4( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pPixmap ) )
 
 
 METHOD QPainter:drawPixmap_5( pPoint, pPixmap )
-   RETURN Qt_QPainter_drawPixmap_5( ::pPtr, pPoint, pPixmap )
+   RETURN Qt_QPainter_drawPixmap_5( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pPixmap ) )
 
 
 METHOD QPainter:drawPixmap_6( nX, nY, pPixmap )
-   RETURN Qt_QPainter_drawPixmap_6( ::pPtr, nX, nY, pPixmap )
+   RETURN Qt_QPainter_drawPixmap_6( ::pPtr, nX, nY, hbqt_ptr( pPixmap ) )
 
 
 METHOD QPainter:drawPixmap_7( pRectangle, pPixmap )
-   RETURN Qt_QPainter_drawPixmap_7( ::pPtr, pRectangle, pPixmap )
+   RETURN Qt_QPainter_drawPixmap_7( ::pPtr, hbqt_ptr( pRectangle ), hbqt_ptr( pPixmap ) )
 
 
 METHOD QPainter:drawPixmap_8( nX, nY, nWidth, nHeight, pPixmap )
-   RETURN Qt_QPainter_drawPixmap_8( ::pPtr, nX, nY, nWidth, nHeight, pPixmap )
+   RETURN Qt_QPainter_drawPixmap_8( ::pPtr, nX, nY, nWidth, nHeight, hbqt_ptr( pPixmap ) )
 
 
 METHOD QPainter:drawPixmap_9( nX, nY, nW, nH, pPixmap, nSx, nSy, nSw, nSh )
-   RETURN Qt_QPainter_drawPixmap_9( ::pPtr, nX, nY, nW, nH, pPixmap, nSx, nSy, nSw, nSh )
+   RETURN Qt_QPainter_drawPixmap_9( ::pPtr, nX, nY, nW, nH, hbqt_ptr( pPixmap ), nSx, nSy, nSw, nSh )
 
 
 METHOD QPainter:drawPixmap_10( nX, nY, pPixmap, nSx, nSy, nSw, nSh )
-   RETURN Qt_QPainter_drawPixmap_10( ::pPtr, nX, nY, pPixmap, nSx, nSy, nSw, nSh )
+   RETURN Qt_QPainter_drawPixmap_10( ::pPtr, nX, nY, hbqt_ptr( pPixmap ), nSx, nSy, nSw, nSh )
 
 
 METHOD QPainter:drawPoint( pPosition )
-   RETURN Qt_QPainter_drawPoint( ::pPtr, pPosition )
+   RETURN Qt_QPainter_drawPoint( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QPainter:drawPoint_1( pPosition )
-   RETURN Qt_QPainter_drawPoint_1( ::pPtr, pPosition )
+   RETURN Qt_QPainter_drawPoint_1( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QPainter:drawPoint_2( nX, nY )
@@ -556,59 +556,59 @@ METHOD QPainter:drawPoint_2( nX, nY )
 
 
 METHOD QPainter:drawPoints( pPoints, nPointCount )
-   RETURN Qt_QPainter_drawPoints( ::pPtr, pPoints, nPointCount )
+   RETURN Qt_QPainter_drawPoints( ::pPtr, hbqt_ptr( pPoints ), nPointCount )
 
 
 METHOD QPainter:drawPoints_1( pPoints, nPointCount )
-   RETURN Qt_QPainter_drawPoints_1( ::pPtr, pPoints, nPointCount )
+   RETURN Qt_QPainter_drawPoints_1( ::pPtr, hbqt_ptr( pPoints ), nPointCount )
 
 
 METHOD QPainter:drawPoints_2( pPoints )
-   RETURN Qt_QPainter_drawPoints_2( ::pPtr, pPoints )
+   RETURN Qt_QPainter_drawPoints_2( ::pPtr, hbqt_ptr( pPoints ) )
 
 
 METHOD QPainter:drawPoints_3( pPoints )
-   RETURN Qt_QPainter_drawPoints_3( ::pPtr, pPoints )
+   RETURN Qt_QPainter_drawPoints_3( ::pPtr, hbqt_ptr( pPoints ) )
 
 
 METHOD QPainter:drawPolygon( pPoints, nPointCount, nFillRule )
-   RETURN Qt_QPainter_drawPolygon( ::pPtr, pPoints, nPointCount, nFillRule )
+   RETURN Qt_QPainter_drawPolygon( ::pPtr, hbqt_ptr( pPoints ), nPointCount, nFillRule )
 
 
 METHOD QPainter:drawPolygon_1( pPoints, nPointCount, nFillRule )
-   RETURN Qt_QPainter_drawPolygon_1( ::pPtr, pPoints, nPointCount, nFillRule )
+   RETURN Qt_QPainter_drawPolygon_1( ::pPtr, hbqt_ptr( pPoints ), nPointCount, nFillRule )
 
 
 METHOD QPainter:drawPolygon_2( pPoints, nFillRule )
-   RETURN Qt_QPainter_drawPolygon_2( ::pPtr, pPoints, nFillRule )
+   RETURN Qt_QPainter_drawPolygon_2( ::pPtr, hbqt_ptr( pPoints ), nFillRule )
 
 
 METHOD QPainter:drawPolygon_3( pPoints, nFillRule )
-   RETURN Qt_QPainter_drawPolygon_3( ::pPtr, pPoints, nFillRule )
+   RETURN Qt_QPainter_drawPolygon_3( ::pPtr, hbqt_ptr( pPoints ), nFillRule )
 
 
 METHOD QPainter:drawPolyline( pPoints, nPointCount )
-   RETURN Qt_QPainter_drawPolyline( ::pPtr, pPoints, nPointCount )
+   RETURN Qt_QPainter_drawPolyline( ::pPtr, hbqt_ptr( pPoints ), nPointCount )
 
 
 METHOD QPainter:drawPolyline_1( pPoints, nPointCount )
-   RETURN Qt_QPainter_drawPolyline_1( ::pPtr, pPoints, nPointCount )
+   RETURN Qt_QPainter_drawPolyline_1( ::pPtr, hbqt_ptr( pPoints ), nPointCount )
 
 
 METHOD QPainter:drawPolyline_2( pPoints )
-   RETURN Qt_QPainter_drawPolyline_2( ::pPtr, pPoints )
+   RETURN Qt_QPainter_drawPolyline_2( ::pPtr, hbqt_ptr( pPoints ) )
 
 
 METHOD QPainter:drawPolyline_3( pPoints )
-   RETURN Qt_QPainter_drawPolyline_3( ::pPtr, pPoints )
+   RETURN Qt_QPainter_drawPolyline_3( ::pPtr, hbqt_ptr( pPoints ) )
 
 
 METHOD QPainter:drawRect( pRectangle )
-   RETURN Qt_QPainter_drawRect( ::pPtr, pRectangle )
+   RETURN Qt_QPainter_drawRect( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QPainter:drawRect_1( pRectangle )
-   RETURN Qt_QPainter_drawRect_1( ::pPtr, pRectangle )
+   RETURN Qt_QPainter_drawRect_1( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QPainter:drawRect_2( nX, nY, nWidth, nHeight )
@@ -616,19 +616,19 @@ METHOD QPainter:drawRect_2( nX, nY, nWidth, nHeight )
 
 
 METHOD QPainter:drawRects( pRectangles, nRectCount )
-   RETURN Qt_QPainter_drawRects( ::pPtr, pRectangles, nRectCount )
+   RETURN Qt_QPainter_drawRects( ::pPtr, hbqt_ptr( pRectangles ), nRectCount )
 
 
 METHOD QPainter:drawRects_1( pRectangles, nRectCount )
-   RETURN Qt_QPainter_drawRects_1( ::pPtr, pRectangles, nRectCount )
+   RETURN Qt_QPainter_drawRects_1( ::pPtr, hbqt_ptr( pRectangles ), nRectCount )
 
 
 METHOD QPainter:drawRoundedRect( pRect, nXRadius, nYRadius, nMode )
-   RETURN Qt_QPainter_drawRoundedRect( ::pPtr, pRect, nXRadius, nYRadius, nMode )
+   RETURN Qt_QPainter_drawRoundedRect( ::pPtr, hbqt_ptr( pRect ), nXRadius, nYRadius, nMode )
 
 
 METHOD QPainter:drawRoundedRect_1( pRect, nXRadius, nYRadius, nMode )
-   RETURN Qt_QPainter_drawRoundedRect_1( ::pPtr, pRect, nXRadius, nYRadius, nMode )
+   RETURN Qt_QPainter_drawRoundedRect_1( ::pPtr, hbqt_ptr( pRect ), nXRadius, nYRadius, nMode )
 
 
 METHOD QPainter:drawRoundedRect_2( nX, nY, nW, nH, nXRadius, nYRadius, nMode )
@@ -636,19 +636,19 @@ METHOD QPainter:drawRoundedRect_2( nX, nY, nW, nH, nXRadius, nYRadius, nMode )
 
 
 METHOD QPainter:drawText( pPosition, cText )
-   RETURN Qt_QPainter_drawText( ::pPtr, pPosition, cText )
+   RETURN Qt_QPainter_drawText( ::pPtr, hbqt_ptr( pPosition ), cText )
 
 
 METHOD QPainter:drawText_1( pPosition, cText )
-   RETURN Qt_QPainter_drawText_1( ::pPtr, pPosition, cText )
+   RETURN Qt_QPainter_drawText_1( ::pPtr, hbqt_ptr( pPosition ), cText )
 
 
 METHOD QPainter:drawText_2( pRectangle, nFlags, cText, pBoundingRect )
-   RETURN Qt_QPainter_drawText_2( ::pPtr, pRectangle, nFlags, cText, pBoundingRect )
+   RETURN Qt_QPainter_drawText_2( ::pPtr, hbqt_ptr( pRectangle ), nFlags, cText, hbqt_ptr( pBoundingRect ) )
 
 
 METHOD QPainter:drawText_3( pRectangle, nFlags, cText, pBoundingRect )
-   RETURN Qt_QPainter_drawText_3( ::pPtr, pRectangle, nFlags, cText, pBoundingRect )
+   RETURN Qt_QPainter_drawText_3( ::pPtr, hbqt_ptr( pRectangle ), nFlags, cText, hbqt_ptr( pBoundingRect ) )
 
 
 METHOD QPainter:drawText_4( nX, nY, cText )
@@ -656,23 +656,23 @@ METHOD QPainter:drawText_4( nX, nY, cText )
 
 
 METHOD QPainter:drawText_5( nX, nY, nWidth, nHeight, nFlags, cText, pBoundingRect )
-   RETURN Qt_QPainter_drawText_5( ::pPtr, nX, nY, nWidth, nHeight, nFlags, cText, pBoundingRect )
+   RETURN Qt_QPainter_drawText_5( ::pPtr, nX, nY, nWidth, nHeight, nFlags, cText, hbqt_ptr( pBoundingRect ) )
 
 
 METHOD QPainter:drawText_6( pRectangle, cText, pOption )
-   RETURN Qt_QPainter_drawText_6( ::pPtr, pRectangle, cText, pOption )
+   RETURN Qt_QPainter_drawText_6( ::pPtr, hbqt_ptr( pRectangle ), cText, hbqt_ptr( pOption ) )
 
 
 METHOD QPainter:drawTiledPixmap( pRectangle, pPixmap, pPosition )
-   RETURN Qt_QPainter_drawTiledPixmap( ::pPtr, pRectangle, pPixmap, pPosition )
+   RETURN Qt_QPainter_drawTiledPixmap( ::pPtr, hbqt_ptr( pRectangle ), hbqt_ptr( pPixmap ), hbqt_ptr( pPosition ) )
 
 
 METHOD QPainter:drawTiledPixmap_1( pRectangle, pPixmap, pPosition )
-   RETURN Qt_QPainter_drawTiledPixmap_1( ::pPtr, pRectangle, pPixmap, pPosition )
+   RETURN Qt_QPainter_drawTiledPixmap_1( ::pPtr, hbqt_ptr( pRectangle ), hbqt_ptr( pPixmap ), hbqt_ptr( pPosition ) )
 
 
 METHOD QPainter:drawTiledPixmap_2( nX, nY, nWidth, nHeight, pPixmap, nSx, nSy )
-   RETURN Qt_QPainter_drawTiledPixmap_2( ::pPtr, nX, nY, nWidth, nHeight, pPixmap, nSx, nSy )
+   RETURN Qt_QPainter_drawTiledPixmap_2( ::pPtr, nX, nY, nWidth, nHeight, hbqt_ptr( pPixmap ), nSx, nSy )
 
 
 METHOD QPainter:end()
@@ -680,11 +680,11 @@ METHOD QPainter:end()
 
 
 METHOD QPainter:eraseRect( pRectangle )
-   RETURN Qt_QPainter_eraseRect( ::pPtr, pRectangle )
+   RETURN Qt_QPainter_eraseRect( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QPainter:eraseRect_1( pRectangle )
-   RETURN Qt_QPainter_eraseRect_1( ::pPtr, pRectangle )
+   RETURN Qt_QPainter_eraseRect_1( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QPainter:eraseRect_2( nX, nY, nWidth, nHeight )
@@ -692,11 +692,11 @@ METHOD QPainter:eraseRect_2( nX, nY, nWidth, nHeight )
 
 
 METHOD QPainter:fillPath( pPath, pBrush )
-   RETURN Qt_QPainter_fillPath( ::pPtr, pPath, pBrush )
+   RETURN Qt_QPainter_fillPath( ::pPtr, hbqt_ptr( pPath ), hbqt_ptr( pBrush ) )
 
 
 METHOD QPainter:fillRect( pRectangle, pBrush )
-   RETURN Qt_QPainter_fillRect( ::pPtr, pRectangle, pBrush )
+   RETURN Qt_QPainter_fillRect( ::pPtr, hbqt_ptr( pRectangle ), hbqt_ptr( pBrush ) )
 
 
 METHOD QPainter:fillRect_1( nX, nY, nWidth, nHeight, nStyle )
@@ -704,31 +704,31 @@ METHOD QPainter:fillRect_1( nX, nY, nWidth, nHeight, nStyle )
 
 
 METHOD QPainter:fillRect_2( pRectangle, nStyle )
-   RETURN Qt_QPainter_fillRect_2( ::pPtr, pRectangle, nStyle )
+   RETURN Qt_QPainter_fillRect_2( ::pPtr, hbqt_ptr( pRectangle ), nStyle )
 
 
 METHOD QPainter:fillRect_3( pRectangle, nStyle )
-   RETURN Qt_QPainter_fillRect_3( ::pPtr, pRectangle, nStyle )
+   RETURN Qt_QPainter_fillRect_3( ::pPtr, hbqt_ptr( pRectangle ), nStyle )
 
 
 METHOD QPainter:fillRect_4( pRectangle, pBrush )
-   RETURN Qt_QPainter_fillRect_4( ::pPtr, pRectangle, pBrush )
+   RETURN Qt_QPainter_fillRect_4( ::pPtr, hbqt_ptr( pRectangle ), hbqt_ptr( pBrush ) )
 
 
 METHOD QPainter:fillRect_5( pRectangle, pColor )
-   RETURN Qt_QPainter_fillRect_5( ::pPtr, pRectangle, pColor )
+   RETURN Qt_QPainter_fillRect_5( ::pPtr, hbqt_ptr( pRectangle ), hbqt_ptr( pColor ) )
 
 
 METHOD QPainter:fillRect_6( pRectangle, pColor )
-   RETURN Qt_QPainter_fillRect_6( ::pPtr, pRectangle, pColor )
+   RETURN Qt_QPainter_fillRect_6( ::pPtr, hbqt_ptr( pRectangle ), hbqt_ptr( pColor ) )
 
 
 METHOD QPainter:fillRect_7( nX, nY, nWidth, nHeight, pBrush )
-   RETURN Qt_QPainter_fillRect_7( ::pPtr, nX, nY, nWidth, nHeight, pBrush )
+   RETURN Qt_QPainter_fillRect_7( ::pPtr, nX, nY, nWidth, nHeight, hbqt_ptr( pBrush ) )
 
 
 METHOD QPainter:fillRect_8( nX, nY, nWidth, nHeight, pColor )
-   RETURN Qt_QPainter_fillRect_8( ::pPtr, nX, nY, nWidth, nHeight, pColor )
+   RETURN Qt_QPainter_fillRect_8( ::pPtr, nX, nY, nWidth, nHeight, hbqt_ptr( pColor ) )
 
 
 METHOD QPainter:fillRect_9( nX, nY, nWidth, nHeight, nColor )
@@ -736,11 +736,11 @@ METHOD QPainter:fillRect_9( nX, nY, nWidth, nHeight, nColor )
 
 
 METHOD QPainter:fillRect_10( pRectangle, nColor )
-   RETURN Qt_QPainter_fillRect_10( ::pPtr, pRectangle, nColor )
+   RETURN Qt_QPainter_fillRect_10( ::pPtr, hbqt_ptr( pRectangle ), nColor )
 
 
 METHOD QPainter:fillRect_11( pRectangle, nColor )
-   RETURN Qt_QPainter_fillRect_11( ::pPtr, pRectangle, nColor )
+   RETURN Qt_QPainter_fillRect_11( ::pPtr, hbqt_ptr( pRectangle ), nColor )
 
 
 METHOD QPainter:font()
@@ -760,7 +760,7 @@ METHOD QPainter:hasClipping()
 
 
 METHOD QPainter:initFrom( pWidget )
-   RETURN Qt_QPainter_initFrom( ::pPtr, pWidget )
+   RETURN Qt_QPainter_initFrom( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QPainter:isActive()
@@ -812,7 +812,7 @@ METHOD QPainter:scale( nSx, nSy )
 
 
 METHOD QPainter:setBackground( pBrush )
-   RETURN Qt_QPainter_setBackground( ::pPtr, pBrush )
+   RETURN Qt_QPainter_setBackground( ::pPtr, hbqt_ptr( pBrush ) )
 
 
 METHOD QPainter:setBackgroundMode( nMode )
@@ -820,7 +820,7 @@ METHOD QPainter:setBackgroundMode( nMode )
 
 
 METHOD QPainter:setBrush( pBrush )
-   RETURN Qt_QPainter_setBrush( ::pPtr, pBrush )
+   RETURN Qt_QPainter_setBrush( ::pPtr, hbqt_ptr( pBrush ) )
 
 
 METHOD QPainter:setBrush_1( nStyle )
@@ -828,11 +828,11 @@ METHOD QPainter:setBrush_1( nStyle )
 
 
 METHOD QPainter:setBrushOrigin( pPosition )
-   RETURN Qt_QPainter_setBrushOrigin( ::pPtr, pPosition )
+   RETURN Qt_QPainter_setBrushOrigin( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QPainter:setBrushOrigin_1( pPosition )
-   RETURN Qt_QPainter_setBrushOrigin_1( ::pPtr, pPosition )
+   RETURN Qt_QPainter_setBrushOrigin_1( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QPainter:setBrushOrigin_2( nX, nY )
@@ -840,11 +840,11 @@ METHOD QPainter:setBrushOrigin_2( nX, nY )
 
 
 METHOD QPainter:setClipPath( pPath, nOperation )
-   RETURN Qt_QPainter_setClipPath( ::pPtr, pPath, nOperation )
+   RETURN Qt_QPainter_setClipPath( ::pPtr, hbqt_ptr( pPath ), nOperation )
 
 
 METHOD QPainter:setClipRect( pRectangle, nOperation )
-   RETURN Qt_QPainter_setClipRect( ::pPtr, pRectangle, nOperation )
+   RETURN Qt_QPainter_setClipRect( ::pPtr, hbqt_ptr( pRectangle ), nOperation )
 
 
 METHOD QPainter:setClipRect_1( nX, nY, nWidth, nHeight, nOperation )
@@ -852,11 +852,11 @@ METHOD QPainter:setClipRect_1( nX, nY, nWidth, nHeight, nOperation )
 
 
 METHOD QPainter:setClipRect_2( pRectangle, nOperation )
-   RETURN Qt_QPainter_setClipRect_2( ::pPtr, pRectangle, nOperation )
+   RETURN Qt_QPainter_setClipRect_2( ::pPtr, hbqt_ptr( pRectangle ), nOperation )
 
 
 METHOD QPainter:setClipRegion( pRegion, nOperation )
-   RETURN Qt_QPainter_setClipRegion( ::pPtr, pRegion, nOperation )
+   RETURN Qt_QPainter_setClipRegion( ::pPtr, hbqt_ptr( pRegion ), nOperation )
 
 
 METHOD QPainter:setClipping( lEnable )
@@ -868,7 +868,7 @@ METHOD QPainter:setCompositionMode( nMode )
 
 
 METHOD QPainter:setFont( pFont )
-   RETURN Qt_QPainter_setFont( ::pPtr, pFont )
+   RETURN Qt_QPainter_setFont( ::pPtr, hbqt_ptr( pFont ) )
 
 
 METHOD QPainter:setLayoutDirection( nDirection )
@@ -880,11 +880,11 @@ METHOD QPainter:setOpacity( nOpacity )
 
 
 METHOD QPainter:setPen( pPen )
-   RETURN Qt_QPainter_setPen( ::pPtr, pPen )
+   RETURN Qt_QPainter_setPen( ::pPtr, hbqt_ptr( pPen ) )
 
 
 METHOD QPainter:setPen_1( pColor )
-   RETURN Qt_QPainter_setPen_1( ::pPtr, pColor )
+   RETURN Qt_QPainter_setPen_1( ::pPtr, hbqt_ptr( pColor ) )
 
 
 METHOD QPainter:setPen_2( nStyle )
@@ -900,7 +900,7 @@ METHOD QPainter:setRenderHints( nHints, lOn )
 
 
 METHOD QPainter:setTransform( pTransform, lCombine )
-   RETURN Qt_QPainter_setTransform( ::pPtr, pTransform, lCombine )
+   RETURN Qt_QPainter_setTransform( ::pPtr, hbqt_ptr( pTransform ), lCombine )
 
 
 METHOD QPainter:setViewTransformEnabled( lEnable )
@@ -908,7 +908,7 @@ METHOD QPainter:setViewTransformEnabled( lEnable )
 
 
 METHOD QPainter:setViewport( pRectangle )
-   RETURN Qt_QPainter_setViewport( ::pPtr, pRectangle )
+   RETURN Qt_QPainter_setViewport( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QPainter:setViewport_1( nX, nY, nWidth, nHeight )
@@ -916,7 +916,7 @@ METHOD QPainter:setViewport_1( nX, nY, nWidth, nHeight )
 
 
 METHOD QPainter:setWindow( pRectangle )
-   RETURN Qt_QPainter_setWindow( ::pPtr, pRectangle )
+   RETURN Qt_QPainter_setWindow( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QPainter:setWindow_1( nX, nY, nWidth, nHeight )
@@ -924,7 +924,7 @@ METHOD QPainter:setWindow_1( nX, nY, nWidth, nHeight )
 
 
 METHOD QPainter:setWorldMatrix( pMatrix, lCombine )
-   RETURN Qt_QPainter_setWorldMatrix( ::pPtr, pMatrix, lCombine )
+   RETURN Qt_QPainter_setWorldMatrix( ::pPtr, hbqt_ptr( pMatrix ), lCombine )
 
 
 METHOD QPainter:setWorldMatrixEnabled( lEnable )
@@ -932,7 +932,7 @@ METHOD QPainter:setWorldMatrixEnabled( lEnable )
 
 
 METHOD QPainter:setWorldTransform( pMatrix, lCombine )
-   RETURN Qt_QPainter_setWorldTransform( ::pPtr, pMatrix, lCombine )
+   RETURN Qt_QPainter_setWorldTransform( ::pPtr, hbqt_ptr( pMatrix ), lCombine )
 
 
 METHOD QPainter:shear( nSh, nSv )
@@ -940,7 +940,7 @@ METHOD QPainter:shear( nSh, nSv )
 
 
 METHOD QPainter:strokePath( pPath, pPen )
-   RETURN Qt_QPainter_strokePath( ::pPtr, pPath, pPen )
+   RETURN Qt_QPainter_strokePath( ::pPtr, hbqt_ptr( pPath ), hbqt_ptr( pPen ) )
 
 
 METHOD QPainter:testRenderHint( nHint )
@@ -952,11 +952,11 @@ METHOD QPainter:transform()
 
 
 METHOD QPainter:translate( pOffset )
-   RETURN Qt_QPainter_translate( ::pPtr, pOffset )
+   RETURN Qt_QPainter_translate( ::pPtr, hbqt_ptr( pOffset ) )
 
 
 METHOD QPainter:translate_1( pOffset )
-   RETURN Qt_QPainter_translate_1( ::pPtr, pOffset )
+   RETURN Qt_QPainter_translate_1( ::pPtr, hbqt_ptr( pOffset ) )
 
 
 METHOD QPainter:translate_2( nDx, nDy )
@@ -988,13 +988,13 @@ METHOD QPainter:worldTransform()
 
 
 METHOD QPainter:redirected( pDevice, pOffset )
-   RETURN Qt_QPainter_redirected( ::pPtr, pDevice, pOffset )
+   RETURN Qt_QPainter_redirected( ::pPtr, hbqt_ptr( pDevice ), hbqt_ptr( pOffset ) )
 
 
 METHOD QPainter:restoreRedirected( pDevice )
-   RETURN Qt_QPainter_restoreRedirected( ::pPtr, pDevice )
+   RETURN Qt_QPainter_restoreRedirected( ::pPtr, hbqt_ptr( pDevice ) )
 
 
 METHOD QPainter:setRedirected( pDevice, pReplacement, pOffset )
-   RETURN Qt_QPainter_setRedirected( ::pPtr, pDevice, pReplacement, pOffset )
+   RETURN Qt_QPainter_setRedirected( ::pPtr, hbqt_ptr( pDevice ), hbqt_ptr( pReplacement ), hbqt_ptr( pOffset ) )
 

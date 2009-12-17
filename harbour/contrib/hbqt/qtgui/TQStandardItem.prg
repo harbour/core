@@ -147,7 +147,7 @@ CREATE CLASS QStandardItem
 /*----------------------------------------------------------------------*/
 
 METHOD QStandardItem:new( pParent )
-   ::pPtr := Qt_QStandardItem( pParent )
+   ::pPtr := Qt_QStandardItem( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -169,7 +169,7 @@ METHOD QStandardItem:accessibleText()
 
 
 METHOD QStandardItem:appendRow( pItem )
-   RETURN Qt_QStandardItem_appendRow( ::pPtr, pItem )
+   RETURN Qt_QStandardItem_appendRow( ::pPtr, hbqt_ptr( pItem ) )
 
 
 METHOD QStandardItem:background()
@@ -229,7 +229,7 @@ METHOD QStandardItem:insertColumns( nColumn, nCount )
 
 
 METHOD QStandardItem:insertRow( nRow, pItem )
-   RETURN Qt_QStandardItem_insertRow( ::pPtr, nRow, pItem )
+   RETURN Qt_QStandardItem_insertRow( ::pPtr, nRow, hbqt_ptr( pItem ) )
 
 
 METHOD QStandardItem:insertRows( nRow, nCount )
@@ -273,7 +273,7 @@ METHOD QStandardItem:parent()
 
 
 METHOD QStandardItem:read( pIn )
-   RETURN Qt_QStandardItem_read( ::pPtr, pIn )
+   RETURN Qt_QStandardItem_read( ::pPtr, hbqt_ptr( pIn ) )
 
 
 METHOD QStandardItem:removeColumn( nColumn )
@@ -309,7 +309,7 @@ METHOD QStandardItem:setAccessibleText( cAccessibleText )
 
 
 METHOD QStandardItem:setBackground( pBrush )
-   RETURN Qt_QStandardItem_setBackground( ::pPtr, pBrush )
+   RETURN Qt_QStandardItem_setBackground( ::pPtr, hbqt_ptr( pBrush ) )
 
 
 METHOD QStandardItem:setCheckState( nState )
@@ -321,11 +321,11 @@ METHOD QStandardItem:setCheckable( lCheckable )
 
 
 METHOD QStandardItem:setChild( nRow, nColumn, pItem )
-   RETURN Qt_QStandardItem_setChild( ::pPtr, nRow, nColumn, pItem )
+   RETURN Qt_QStandardItem_setChild( ::pPtr, nRow, nColumn, hbqt_ptr( pItem ) )
 
 
 METHOD QStandardItem:setChild_1( nRow, pItem )
-   RETURN Qt_QStandardItem_setChild_1( ::pPtr, nRow, pItem )
+   RETURN Qt_QStandardItem_setChild_1( ::pPtr, nRow, hbqt_ptr( pItem ) )
 
 
 METHOD QStandardItem:setColumnCount( nColumns )
@@ -333,7 +333,7 @@ METHOD QStandardItem:setColumnCount( nColumns )
 
 
 METHOD QStandardItem:setData( pValue, nRole )
-   RETURN Qt_QStandardItem_setData( ::pPtr, pValue, nRole )
+   RETURN Qt_QStandardItem_setData( ::pPtr, hbqt_ptr( pValue ), nRole )
 
 
 METHOD QStandardItem:setDragEnabled( lDragEnabled )
@@ -357,11 +357,11 @@ METHOD QStandardItem:setFlags( nFlags )
 
 
 METHOD QStandardItem:setFont( pFont )
-   RETURN Qt_QStandardItem_setFont( ::pPtr, pFont )
+   RETURN Qt_QStandardItem_setFont( ::pPtr, hbqt_ptr( pFont ) )
 
 
 METHOD QStandardItem:setForeground( pBrush )
-   RETURN Qt_QStandardItem_setForeground( ::pPtr, pBrush )
+   RETURN Qt_QStandardItem_setForeground( ::pPtr, hbqt_ptr( pBrush ) )
 
 
 METHOD QStandardItem:setIcon( cIcon )
@@ -377,7 +377,7 @@ METHOD QStandardItem:setSelectable( lSelectable )
 
 
 METHOD QStandardItem:setSizeHint( pSize )
-   RETURN Qt_QStandardItem_setSizeHint( ::pPtr, pSize )
+   RETURN Qt_QStandardItem_setSizeHint( ::pPtr, hbqt_ptr( pSize ) )
 
 
 METHOD QStandardItem:setStatusTip( cStatusTip )
@@ -441,5 +441,5 @@ METHOD QStandardItem:whatsThis()
 
 
 METHOD QStandardItem:write( pOut )
-   RETURN Qt_QStandardItem_write( ::pPtr, pOut )
+   RETURN Qt_QStandardItem_write( ::pPtr, hbqt_ptr( pOut ) )
 

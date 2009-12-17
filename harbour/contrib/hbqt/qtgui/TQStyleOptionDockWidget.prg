@@ -80,7 +80,7 @@ CREATE CLASS QStyleOptionDockWidget INHERIT QStyleOption
 /*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionDockWidget:new( pParent )
-   ::pPtr := Qt_QStyleOptionDockWidget( pParent )
+   ::pPtr := Qt_QStyleOptionDockWidget( hbqt_ptr( pParent ) )
    RETURN Self
 
 

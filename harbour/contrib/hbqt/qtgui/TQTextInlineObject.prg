@@ -89,7 +89,7 @@ CREATE CLASS QTextInlineObject
 /*----------------------------------------------------------------------*/
 
 METHOD QTextInlineObject:new( pParent )
-   ::pPtr := Qt_QTextInlineObject( pParent )
+   ::pPtr := Qt_QTextInlineObject( hbqt_ptr( pParent ) )
    RETURN Self
 
 

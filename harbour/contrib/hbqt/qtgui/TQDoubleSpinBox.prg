@@ -94,7 +94,7 @@ CREATE CLASS QDoubleSpinBox INHERIT QAbstractSpinBox
 /*----------------------------------------------------------------------*/
 
 METHOD QDoubleSpinBox:new( pParent )
-   ::pPtr := Qt_QDoubleSpinBox( pParent )
+   ::pPtr := Qt_QDoubleSpinBox( hbqt_ptr( pParent ) )
    RETURN Self
 
 

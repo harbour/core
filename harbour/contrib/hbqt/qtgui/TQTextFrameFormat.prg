@@ -105,7 +105,7 @@ CREATE CLASS QTextFrameFormat INHERIT QTextFormat
 /*----------------------------------------------------------------------*/
 
 METHOD QTextFrameFormat:new( pParent )
-   ::pPtr := Qt_QTextFrameFormat( pParent )
+   ::pPtr := Qt_QTextFrameFormat( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -171,7 +171,7 @@ METHOD QTextFrameFormat:setBorder( nWidth )
 
 
 METHOD QTextFrameFormat:setBorderBrush( pBrush )
-   RETURN Qt_QTextFrameFormat_setBorderBrush( ::pPtr, pBrush )
+   RETURN Qt_QTextFrameFormat_setBorderBrush( ::pPtr, hbqt_ptr( pBrush ) )
 
 
 METHOD QTextFrameFormat:setBorderStyle( nStyle )
@@ -183,7 +183,7 @@ METHOD QTextFrameFormat:setBottomMargin( nMargin )
 
 
 METHOD QTextFrameFormat:setHeight( pHeight )
-   RETURN Qt_QTextFrameFormat_setHeight( ::pPtr, pHeight )
+   RETURN Qt_QTextFrameFormat_setHeight( ::pPtr, hbqt_ptr( pHeight ) )
 
 
 METHOD QTextFrameFormat:setHeight_1( nHeight )
@@ -219,7 +219,7 @@ METHOD QTextFrameFormat:setTopMargin( nMargin )
 
 
 METHOD QTextFrameFormat:setWidth( pWidth )
-   RETURN Qt_QTextFrameFormat_setWidth( ::pPtr, pWidth )
+   RETURN Qt_QTextFrameFormat_setWidth( ::pPtr, hbqt_ptr( pWidth ) )
 
 
 METHOD QTextFrameFormat:setWidth_1( nWidth )

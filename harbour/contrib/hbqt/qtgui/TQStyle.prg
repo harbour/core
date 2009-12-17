@@ -105,7 +105,7 @@ CREATE CLASS QStyle INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QStyle:new( pParent )
-   ::pPtr := Qt_QStyle( pParent )
+   ::pPtr := Qt_QStyle( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -119,71 +119,71 @@ METHOD QStyle:configure( xObject )
 
 
 METHOD QStyle:combinedLayoutSpacing( nControls1, nControls2, nOrientation, pOption, pWidget )
-   RETURN Qt_QStyle_combinedLayoutSpacing( ::pPtr, nControls1, nControls2, nOrientation, pOption, pWidget )
+   RETURN Qt_QStyle_combinedLayoutSpacing( ::pPtr, nControls1, nControls2, nOrientation, hbqt_ptr( pOption ), hbqt_ptr( pWidget ) )
 
 
 METHOD QStyle:drawComplexControl( nControl, pOption, pPainter, pWidget )
-   RETURN Qt_QStyle_drawComplexControl( ::pPtr, nControl, pOption, pPainter, pWidget )
+   RETURN Qt_QStyle_drawComplexControl( ::pPtr, nControl, hbqt_ptr( pOption ), hbqt_ptr( pPainter ), hbqt_ptr( pWidget ) )
 
 
 METHOD QStyle:drawControl( nElement, pOption, pPainter, pWidget )
-   RETURN Qt_QStyle_drawControl( ::pPtr, nElement, pOption, pPainter, pWidget )
+   RETURN Qt_QStyle_drawControl( ::pPtr, nElement, hbqt_ptr( pOption ), hbqt_ptr( pPainter ), hbqt_ptr( pWidget ) )
 
 
 METHOD QStyle:drawItemPixmap( pPainter, pRectangle, nAlignment, pPixmap )
-   RETURN Qt_QStyle_drawItemPixmap( ::pPtr, pPainter, pRectangle, nAlignment, pPixmap )
+   RETURN Qt_QStyle_drawItemPixmap( ::pPtr, hbqt_ptr( pPainter ), hbqt_ptr( pRectangle ), nAlignment, hbqt_ptr( pPixmap ) )
 
 
 METHOD QStyle:drawItemText( pPainter, pRectangle, nAlignment, pPalette, lEnabled, cText, nTextRole )
-   RETURN Qt_QStyle_drawItemText( ::pPtr, pPainter, pRectangle, nAlignment, pPalette, lEnabled, cText, nTextRole )
+   RETURN Qt_QStyle_drawItemText( ::pPtr, hbqt_ptr( pPainter ), hbqt_ptr( pRectangle ), nAlignment, hbqt_ptr( pPalette ), lEnabled, cText, nTextRole )
 
 
 METHOD QStyle:drawPrimitive( nElement, pOption, pPainter, pWidget )
-   RETURN Qt_QStyle_drawPrimitive( ::pPtr, nElement, pOption, pPainter, pWidget )
+   RETURN Qt_QStyle_drawPrimitive( ::pPtr, nElement, hbqt_ptr( pOption ), hbqt_ptr( pPainter ), hbqt_ptr( pWidget ) )
 
 
 METHOD QStyle:generatedIconPixmap( nIconMode, pPixmap, pOption )
-   RETURN Qt_QStyle_generatedIconPixmap( ::pPtr, nIconMode, pPixmap, pOption )
+   RETURN Qt_QStyle_generatedIconPixmap( ::pPtr, nIconMode, hbqt_ptr( pPixmap ), hbqt_ptr( pOption ) )
 
 
 METHOD QStyle:hitTestComplexControl( nControl, pOption, pPosition, pWidget )
-   RETURN Qt_QStyle_hitTestComplexControl( ::pPtr, nControl, pOption, pPosition, pWidget )
+   RETURN Qt_QStyle_hitTestComplexControl( ::pPtr, nControl, hbqt_ptr( pOption ), hbqt_ptr( pPosition ), hbqt_ptr( pWidget ) )
 
 
 METHOD QStyle:itemPixmapRect( pRectangle, nAlignment, pPixmap )
-   RETURN Qt_QStyle_itemPixmapRect( ::pPtr, pRectangle, nAlignment, pPixmap )
+   RETURN Qt_QStyle_itemPixmapRect( ::pPtr, hbqt_ptr( pRectangle ), nAlignment, hbqt_ptr( pPixmap ) )
 
 
 METHOD QStyle:itemTextRect( pMetrics, pRectangle, nAlignment, lEnabled, cText )
-   RETURN Qt_QStyle_itemTextRect( ::pPtr, pMetrics, pRectangle, nAlignment, lEnabled, cText )
+   RETURN Qt_QStyle_itemTextRect( ::pPtr, hbqt_ptr( pMetrics ), hbqt_ptr( pRectangle ), nAlignment, lEnabled, cText )
 
 
 METHOD QStyle:layoutSpacing( nControl1, nControl2, nOrientation, pOption, pWidget )
-   RETURN Qt_QStyle_layoutSpacing( ::pPtr, nControl1, nControl2, nOrientation, pOption, pWidget )
+   RETURN Qt_QStyle_layoutSpacing( ::pPtr, nControl1, nControl2, nOrientation, hbqt_ptr( pOption ), hbqt_ptr( pWidget ) )
 
 
 METHOD QStyle:pixelMetric( nMetric, pOption, pWidget )
-   RETURN Qt_QStyle_pixelMetric( ::pPtr, nMetric, pOption, pWidget )
+   RETURN Qt_QStyle_pixelMetric( ::pPtr, nMetric, hbqt_ptr( pOption ), hbqt_ptr( pWidget ) )
 
 
 METHOD QStyle:polish( pWidget )
-   RETURN Qt_QStyle_polish( ::pPtr, pWidget )
+   RETURN Qt_QStyle_polish( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QStyle:polish_1( pApplication )
-   RETURN Qt_QStyle_polish_1( ::pPtr, pApplication )
+   RETURN Qt_QStyle_polish_1( ::pPtr, hbqt_ptr( pApplication ) )
 
 
 METHOD QStyle:polish_2( pPalette )
-   RETURN Qt_QStyle_polish_2( ::pPtr, pPalette )
+   RETURN Qt_QStyle_polish_2( ::pPtr, hbqt_ptr( pPalette ) )
 
 
 METHOD QStyle:sizeFromContents( nType, pOption, pContentsSize, pWidget )
-   RETURN Qt_QStyle_sizeFromContents( ::pPtr, nType, pOption, pContentsSize, pWidget )
+   RETURN Qt_QStyle_sizeFromContents( ::pPtr, nType, hbqt_ptr( pOption ), hbqt_ptr( pContentsSize ), hbqt_ptr( pWidget ) )
 
 
 METHOD QStyle:standardIcon( nStandardIcon, pOption, pWidget )
-   RETURN Qt_QStyle_standardIcon( ::pPtr, nStandardIcon, pOption, pWidget )
+   RETURN Qt_QStyle_standardIcon( ::pPtr, nStandardIcon, hbqt_ptr( pOption ), hbqt_ptr( pWidget ) )
 
 
 METHOD QStyle:standardPalette()
@@ -191,27 +191,27 @@ METHOD QStyle:standardPalette()
 
 
 METHOD QStyle:styleHint( nHint, pOption, pWidget, pReturnData )
-   RETURN Qt_QStyle_styleHint( ::pPtr, nHint, pOption, pWidget, pReturnData )
+   RETURN Qt_QStyle_styleHint( ::pPtr, nHint, hbqt_ptr( pOption ), hbqt_ptr( pWidget ), hbqt_ptr( pReturnData ) )
 
 
 METHOD QStyle:subControlRect( nControl, pOption, nSubControl, pWidget )
-   RETURN Qt_QStyle_subControlRect( ::pPtr, nControl, pOption, nSubControl, pWidget )
+   RETURN Qt_QStyle_subControlRect( ::pPtr, nControl, hbqt_ptr( pOption ), nSubControl, hbqt_ptr( pWidget ) )
 
 
 METHOD QStyle:subElementRect( nElement, pOption, pWidget )
-   RETURN Qt_QStyle_subElementRect( ::pPtr, nElement, pOption, pWidget )
+   RETURN Qt_QStyle_subElementRect( ::pPtr, nElement, hbqt_ptr( pOption ), hbqt_ptr( pWidget ) )
 
 
 METHOD QStyle:unpolish( pWidget )
-   RETURN Qt_QStyle_unpolish( ::pPtr, pWidget )
+   RETURN Qt_QStyle_unpolish( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QStyle:unpolish_1( pApplication )
-   RETURN Qt_QStyle_unpolish_1( ::pPtr, pApplication )
+   RETURN Qt_QStyle_unpolish_1( ::pPtr, hbqt_ptr( pApplication ) )
 
 
 METHOD QStyle:alignedRect( nDirection, nAlignment, pSize, pRectangle )
-   RETURN Qt_QStyle_alignedRect( ::pPtr, nDirection, nAlignment, pSize, pRectangle )
+   RETURN Qt_QStyle_alignedRect( ::pPtr, nDirection, nAlignment, hbqt_ptr( pSize ), hbqt_ptr( pRectangle ) )
 
 
 METHOD QStyle:sliderPositionFromValue( nMin, nMax, nLogicalValue, nSpan, lUpsideDown )
@@ -227,9 +227,9 @@ METHOD QStyle:visualAlignment( nDirection, nAlignment )
 
 
 METHOD QStyle:visualPos( nDirection, pBoundingRectangle, pLogicalPosition )
-   RETURN Qt_QStyle_visualPos( ::pPtr, nDirection, pBoundingRectangle, pLogicalPosition )
+   RETURN Qt_QStyle_visualPos( ::pPtr, nDirection, hbqt_ptr( pBoundingRectangle ), hbqt_ptr( pLogicalPosition ) )
 
 
 METHOD QStyle:visualRect( nDirection, pBoundingRectangle, pLogicalRectangle )
-   RETURN Qt_QStyle_visualRect( ::pPtr, nDirection, pBoundingRectangle, pLogicalRectangle )
+   RETURN Qt_QStyle_visualRect( ::pPtr, nDirection, hbqt_ptr( pBoundingRectangle ), hbqt_ptr( pLogicalRectangle ) )
 

@@ -76,7 +76,7 @@ CREATE CLASS QSizeGrip INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QSizeGrip:new( pParent )
-   ::pPtr := Qt_QSizeGrip( pParent )
+   ::pPtr := Qt_QSizeGrip( hbqt_ptr( pParent ) )
    RETURN Self
 
 

@@ -80,7 +80,7 @@ CREATE CLASS QWidgetAction INHERIT QAction
 /*----------------------------------------------------------------------*/
 
 METHOD QWidgetAction:new( pParent )
-   ::pPtr := Qt_QWidgetAction( pParent )
+   ::pPtr := Qt_QWidgetAction( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -98,13 +98,13 @@ METHOD QWidgetAction:defaultWidget()
 
 
 METHOD QWidgetAction:releaseWidget( pWidget )
-   RETURN Qt_QWidgetAction_releaseWidget( ::pPtr, pWidget )
+   RETURN Qt_QWidgetAction_releaseWidget( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QWidgetAction:requestWidget( pParent )
-   RETURN Qt_QWidgetAction_requestWidget( ::pPtr, pParent )
+   RETURN Qt_QWidgetAction_requestWidget( ::pPtr, hbqt_ptr( pParent ) )
 
 
 METHOD QWidgetAction:setDefaultWidget( pWidget )
-   RETURN Qt_QWidgetAction_setDefaultWidget( ::pPtr, pWidget )
+   RETURN Qt_QWidgetAction_setDefaultWidget( ::pPtr, hbqt_ptr( pWidget ) )
 

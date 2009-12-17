@@ -77,7 +77,7 @@ CREATE CLASS QStyleOptionSizeGrip INHERIT QStyleOptionComplex
 /*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionSizeGrip:new( pParent )
-   ::pPtr := Qt_QStyleOptionSizeGrip( pParent )
+   ::pPtr := Qt_QStyleOptionSizeGrip( hbqt_ptr( pParent ) )
    RETURN Self
 
 

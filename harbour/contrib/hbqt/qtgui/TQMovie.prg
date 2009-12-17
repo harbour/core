@@ -104,7 +104,7 @@ CREATE CLASS QMovie INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QMovie:new( pParent )
-   ::pPtr := Qt_QMovie( pParent )
+   ::pPtr := Qt_QMovie( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -178,7 +178,7 @@ METHOD QMovie:scaledSize()
 
 
 METHOD QMovie:setBackgroundColor( pColor )
-   RETURN Qt_QMovie_setBackgroundColor( ::pPtr, pColor )
+   RETURN Qt_QMovie_setBackgroundColor( ::pPtr, hbqt_ptr( pColor ) )
 
 
 METHOD QMovie:setCacheMode( nMode )
@@ -186,7 +186,7 @@ METHOD QMovie:setCacheMode( nMode )
 
 
 METHOD QMovie:setDevice( pDevice )
-   RETURN Qt_QMovie_setDevice( ::pPtr, pDevice )
+   RETURN Qt_QMovie_setDevice( ::pPtr, hbqt_ptr( pDevice ) )
 
 
 METHOD QMovie:setFileName( cFileName )
@@ -194,11 +194,11 @@ METHOD QMovie:setFileName( cFileName )
 
 
 METHOD QMovie:setFormat( pFormat )
-   RETURN Qt_QMovie_setFormat( ::pPtr, pFormat )
+   RETURN Qt_QMovie_setFormat( ::pPtr, hbqt_ptr( pFormat ) )
 
 
 METHOD QMovie:setScaledSize( pSize )
-   RETURN Qt_QMovie_setScaledSize( ::pPtr, pSize )
+   RETURN Qt_QMovie_setScaledSize( ::pPtr, hbqt_ptr( pSize ) )
 
 
 METHOD QMovie:speed()

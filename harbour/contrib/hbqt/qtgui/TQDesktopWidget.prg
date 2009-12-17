@@ -88,7 +88,7 @@ CREATE CLASS QDesktopWidget INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QDesktopWidget:new( pParent )
-   ::pPtr := Qt_QDesktopWidget( pParent )
+   ::pPtr := Qt_QDesktopWidget( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -106,11 +106,11 @@ METHOD QDesktopWidget:availableGeometry( nScreen )
 
 
 METHOD QDesktopWidget:availableGeometry_1( pWidget )
-   RETURN Qt_QDesktopWidget_availableGeometry_1( ::pPtr, pWidget )
+   RETURN Qt_QDesktopWidget_availableGeometry_1( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QDesktopWidget:availableGeometry_2( pP )
-   RETURN Qt_QDesktopWidget_availableGeometry_2( ::pPtr, pP )
+   RETURN Qt_QDesktopWidget_availableGeometry_2( ::pPtr, hbqt_ptr( pP ) )
 
 
 METHOD QDesktopWidget:isVirtualDesktop()
@@ -134,17 +134,17 @@ METHOD QDesktopWidget:screenGeometry( nScreen )
 
 
 METHOD QDesktopWidget:screenGeometry_1( pWidget )
-   RETURN Qt_QDesktopWidget_screenGeometry_1( ::pPtr, pWidget )
+   RETURN Qt_QDesktopWidget_screenGeometry_1( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QDesktopWidget:screenGeometry_2( pP )
-   RETURN Qt_QDesktopWidget_screenGeometry_2( ::pPtr, pP )
+   RETURN Qt_QDesktopWidget_screenGeometry_2( ::pPtr, hbqt_ptr( pP ) )
 
 
 METHOD QDesktopWidget:screenNumber( pWidget )
-   RETURN Qt_QDesktopWidget_screenNumber( ::pPtr, pWidget )
+   RETURN Qt_QDesktopWidget_screenNumber( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QDesktopWidget:screenNumber_1( pPoint )
-   RETURN Qt_QDesktopWidget_screenNumber_1( ::pPtr, pPoint )
+   RETURN Qt_QDesktopWidget_screenNumber_1( ::pPtr, hbqt_ptr( pPoint ) )
 

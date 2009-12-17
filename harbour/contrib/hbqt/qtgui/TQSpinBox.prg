@@ -90,7 +90,7 @@ CREATE CLASS QSpinBox INHERIT QAbstractSpinBox
 /*----------------------------------------------------------------------*/
 
 METHOD QSpinBox:new( pParent )
-   ::pPtr := Qt_QSpinBox( pParent )
+   ::pPtr := Qt_QSpinBox( hbqt_ptr( pParent ) )
    RETURN Self
 
 

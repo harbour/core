@@ -82,7 +82,7 @@ CREATE CLASS QKeySequence
 /*----------------------------------------------------------------------*/
 
 METHOD QKeySequence:new( pParent )
-   ::pPtr := Qt_QKeySequence( pParent )
+   ::pPtr := Qt_QKeySequence( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -104,7 +104,7 @@ METHOD QKeySequence:isEmpty()
 
 
 METHOD QKeySequence:matches( pSeq )
-   RETURN Qt_QKeySequence_matches( ::pPtr, pSeq )
+   RETURN Qt_QKeySequence_matches( ::pPtr, hbqt_ptr( pSeq ) )
 
 
 METHOD QKeySequence:toString( nFormat )

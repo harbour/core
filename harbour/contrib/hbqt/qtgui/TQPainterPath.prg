@@ -127,7 +127,7 @@ CREATE CLASS QPainterPath
 /*----------------------------------------------------------------------*/
 
 METHOD QPainterPath:new( pParent )
-   ::pPtr := Qt_QPainterPath( pParent )
+   ::pPtr := Qt_QPainterPath( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -141,7 +141,7 @@ METHOD QPainterPath:configure( xObject )
 
 
 METHOD QPainterPath:addEllipse( pBoundingRectangle )
-   RETURN Qt_QPainterPath_addEllipse( ::pPtr, pBoundingRectangle )
+   RETURN Qt_QPainterPath_addEllipse( ::pPtr, hbqt_ptr( pBoundingRectangle ) )
 
 
 METHOD QPainterPath:addEllipse_1( nX, nY, nWidth, nHeight )
@@ -149,19 +149,19 @@ METHOD QPainterPath:addEllipse_1( nX, nY, nWidth, nHeight )
 
 
 METHOD QPainterPath:addEllipse_2( pCenter, nRx, nRy )
-   RETURN Qt_QPainterPath_addEllipse_2( ::pPtr, pCenter, nRx, nRy )
+   RETURN Qt_QPainterPath_addEllipse_2( ::pPtr, hbqt_ptr( pCenter ), nRx, nRy )
 
 
 METHOD QPainterPath:addPath( pPath )
-   RETURN Qt_QPainterPath_addPath( ::pPtr, pPath )
+   RETURN Qt_QPainterPath_addPath( ::pPtr, hbqt_ptr( pPath ) )
 
 
 METHOD QPainterPath:addPolygon( pPolygon )
-   RETURN Qt_QPainterPath_addPolygon( ::pPtr, pPolygon )
+   RETURN Qt_QPainterPath_addPolygon( ::pPtr, hbqt_ptr( pPolygon ) )
 
 
 METHOD QPainterPath:addRect( pRectangle )
-   RETURN Qt_QPainterPath_addRect( ::pPtr, pRectangle )
+   RETURN Qt_QPainterPath_addRect( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QPainterPath:addRect_1( nX, nY, nWidth, nHeight )
@@ -169,11 +169,11 @@ METHOD QPainterPath:addRect_1( nX, nY, nWidth, nHeight )
 
 
 METHOD QPainterPath:addRegion( pRegion )
-   RETURN Qt_QPainterPath_addRegion( ::pPtr, pRegion )
+   RETURN Qt_QPainterPath_addRegion( ::pPtr, hbqt_ptr( pRegion ) )
 
 
 METHOD QPainterPath:addRoundedRect( pRect, nXRadius, nYRadius, nMode )
-   RETURN Qt_QPainterPath_addRoundedRect( ::pPtr, pRect, nXRadius, nYRadius, nMode )
+   RETURN Qt_QPainterPath_addRoundedRect( ::pPtr, hbqt_ptr( pRect ), nXRadius, nYRadius, nMode )
 
 
 METHOD QPainterPath:addRoundedRect_1( nX, nY, nW, nH, nXRadius, nYRadius, nMode )
@@ -181,11 +181,11 @@ METHOD QPainterPath:addRoundedRect_1( nX, nY, nW, nH, nXRadius, nYRadius, nMode 
 
 
 METHOD QPainterPath:addText( pPoint, pFont, cText )
-   RETURN Qt_QPainterPath_addText( ::pPtr, pPoint, pFont, cText )
+   RETURN Qt_QPainterPath_addText( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pFont ), cText )
 
 
 METHOD QPainterPath:addText_1( nX, nY, pFont, cText )
-   RETURN Qt_QPainterPath_addText_1( ::pPtr, nX, nY, pFont, cText )
+   RETURN Qt_QPainterPath_addText_1( ::pPtr, nX, nY, hbqt_ptr( pFont ), cText )
 
 
 METHOD QPainterPath:angleAtPercent( nT )
@@ -193,7 +193,7 @@ METHOD QPainterPath:angleAtPercent( nT )
 
 
 METHOD QPainterPath:arcMoveTo( pRectangle, nAngle )
-   RETURN Qt_QPainterPath_arcMoveTo( ::pPtr, pRectangle, nAngle )
+   RETURN Qt_QPainterPath_arcMoveTo( ::pPtr, hbqt_ptr( pRectangle ), nAngle )
 
 
 METHOD QPainterPath:arcMoveTo_1( nX, nY, nWidth, nHeight, nAngle )
@@ -201,7 +201,7 @@ METHOD QPainterPath:arcMoveTo_1( nX, nY, nWidth, nHeight, nAngle )
 
 
 METHOD QPainterPath:arcTo( pRectangle, nStartAngle, nSweepLength )
-   RETURN Qt_QPainterPath_arcTo( ::pPtr, pRectangle, nStartAngle, nSweepLength )
+   RETURN Qt_QPainterPath_arcTo( ::pPtr, hbqt_ptr( pRectangle ), nStartAngle, nSweepLength )
 
 
 METHOD QPainterPath:arcTo_1( nX, nY, nWidth, nHeight, nStartAngle, nSweepLength )
@@ -217,19 +217,19 @@ METHOD QPainterPath:closeSubpath()
 
 
 METHOD QPainterPath:connectPath( pPath )
-   RETURN Qt_QPainterPath_connectPath( ::pPtr, pPath )
+   RETURN Qt_QPainterPath_connectPath( ::pPtr, hbqt_ptr( pPath ) )
 
 
 METHOD QPainterPath:contains( pPoint )
-   RETURN Qt_QPainterPath_contains( ::pPtr, pPoint )
+   RETURN Qt_QPainterPath_contains( ::pPtr, hbqt_ptr( pPoint ) )
 
 
 METHOD QPainterPath:contains_1( pRectangle )
-   RETURN Qt_QPainterPath_contains_1( ::pPtr, pRectangle )
+   RETURN Qt_QPainterPath_contains_1( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QPainterPath:contains_2( pP )
-   RETURN Qt_QPainterPath_contains_2( ::pPtr, pP )
+   RETURN Qt_QPainterPath_contains_2( ::pPtr, hbqt_ptr( pP ) )
 
 
 METHOD QPainterPath:controlPointRect()
@@ -237,7 +237,7 @@ METHOD QPainterPath:controlPointRect()
 
 
 METHOD QPainterPath:cubicTo( pC1, pC2, pEndPoint )
-   RETURN Qt_QPainterPath_cubicTo( ::pPtr, pC1, pC2, pEndPoint )
+   RETURN Qt_QPainterPath_cubicTo( ::pPtr, hbqt_ptr( pC1 ), hbqt_ptr( pC2 ), hbqt_ptr( pEndPoint ) )
 
 
 METHOD QPainterPath:cubicTo_1( nC1X, nC1Y, nC2X, nC2Y, nEndPointX, nEndPointY )
@@ -257,15 +257,15 @@ METHOD QPainterPath:fillRule()
 
 
 METHOD QPainterPath:intersected( pP )
-   RETURN Qt_QPainterPath_intersected( ::pPtr, pP )
+   RETURN Qt_QPainterPath_intersected( ::pPtr, hbqt_ptr( pP ) )
 
 
 METHOD QPainterPath:intersects( pRectangle )
-   RETURN Qt_QPainterPath_intersects( ::pPtr, pRectangle )
+   RETURN Qt_QPainterPath_intersects( ::pPtr, hbqt_ptr( pRectangle ) )
 
 
 METHOD QPainterPath:intersects_1( pP )
-   RETURN Qt_QPainterPath_intersects_1( ::pPtr, pP )
+   RETURN Qt_QPainterPath_intersects_1( ::pPtr, hbqt_ptr( pP ) )
 
 
 METHOD QPainterPath:isEmpty()
@@ -277,7 +277,7 @@ METHOD QPainterPath:length()
 
 
 METHOD QPainterPath:lineTo( pEndPoint )
-   RETURN Qt_QPainterPath_lineTo( ::pPtr, pEndPoint )
+   RETURN Qt_QPainterPath_lineTo( ::pPtr, hbqt_ptr( pEndPoint ) )
 
 
 METHOD QPainterPath:lineTo_1( nX, nY )
@@ -285,7 +285,7 @@ METHOD QPainterPath:lineTo_1( nX, nY )
 
 
 METHOD QPainterPath:moveTo( pPoint )
-   RETURN Qt_QPainterPath_moveTo( ::pPtr, pPoint )
+   RETURN Qt_QPainterPath_moveTo( ::pPtr, hbqt_ptr( pPoint ) )
 
 
 METHOD QPainterPath:moveTo_1( nX, nY )
@@ -301,7 +301,7 @@ METHOD QPainterPath:pointAtPercent( nT )
 
 
 METHOD QPainterPath:quadTo( pC, pEndPoint )
-   RETURN Qt_QPainterPath_quadTo( ::pPtr, pC, pEndPoint )
+   RETURN Qt_QPainterPath_quadTo( ::pPtr, hbqt_ptr( pC ), hbqt_ptr( pEndPoint ) )
 
 
 METHOD QPainterPath:quadTo_1( nCx, nCy, nEndPointX, nEndPointY )
@@ -325,15 +325,15 @@ METHOD QPainterPath:slopeAtPercent( nT )
 
 
 METHOD QPainterPath:subtracted( pP )
-   RETURN Qt_QPainterPath_subtracted( ::pPtr, pP )
+   RETURN Qt_QPainterPath_subtracted( ::pPtr, hbqt_ptr( pP ) )
 
 
 METHOD QPainterPath:toFillPolygon( pMatrix )
-   RETURN Qt_QPainterPath_toFillPolygon( ::pPtr, pMatrix )
+   RETURN Qt_QPainterPath_toFillPolygon( ::pPtr, hbqt_ptr( pMatrix ) )
 
 
 METHOD QPainterPath:toFillPolygon_1( pMatrix )
-   RETURN Qt_QPainterPath_toFillPolygon_1( ::pPtr, pMatrix )
+   RETURN Qt_QPainterPath_toFillPolygon_1( ::pPtr, hbqt_ptr( pMatrix ) )
 
 
 METHOD QPainterPath:toReversed()
@@ -341,5 +341,5 @@ METHOD QPainterPath:toReversed()
 
 
 METHOD QPainterPath:united( pP )
-   RETURN Qt_QPainterPath_united( ::pPtr, pP )
+   RETURN Qt_QPainterPath_united( ::pPtr, hbqt_ptr( pP ) )
 

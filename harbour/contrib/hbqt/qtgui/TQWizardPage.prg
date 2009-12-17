@@ -93,7 +93,7 @@ CREATE CLASS QWizardPage INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QWizardPage:new( pParent )
-   ::pPtr := Qt_QWizardPage( pParent )
+   ::pPtr := Qt_QWizardPage( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -151,7 +151,7 @@ METHOD QWizardPage:setFinalPage( lFinalPage )
 
 
 METHOD QWizardPage:setPixmap( nWhich, pPixmap )
-   RETURN Qt_QWizardPage_setPixmap( ::pPtr, nWhich, pPixmap )
+   RETURN Qt_QWizardPage_setPixmap( ::pPtr, nWhich, hbqt_ptr( pPixmap ) )
 
 
 METHOD QWizardPage:setSubTitle( cSubTitle )

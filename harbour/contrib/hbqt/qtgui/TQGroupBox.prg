@@ -86,7 +86,7 @@ CREATE CLASS QGroupBox INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QGroupBox:new( pParent )
-   ::pPtr := Qt_QGroupBox( pParent )
+   ::pPtr := Qt_QGroupBox( hbqt_ptr( pParent ) )
    RETURN Self
 
 

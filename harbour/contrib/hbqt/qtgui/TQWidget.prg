@@ -287,7 +287,7 @@ CREATE CLASS QWidget INHERIT QObject, QPaintDevice
 /*----------------------------------------------------------------------*/
 
 METHOD QWidget:new( pParent )
-   ::pPtr := Qt_QWidget( pParent )
+   ::pPtr := Qt_QWidget( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -317,7 +317,7 @@ METHOD QWidget:activateWindow()
 
 
 METHOD QWidget:addAction( pAction )
-   RETURN Qt_QWidget_addAction( ::pPtr, pAction )
+   RETURN Qt_QWidget_addAction( ::pPtr, hbqt_ptr( pAction ) )
 
 
 METHOD QWidget:adjustSize()
@@ -341,7 +341,7 @@ METHOD QWidget:childAt( nX, nY )
 
 
 METHOD QWidget:childAt_1( pP )
-   RETURN Qt_QWidget_childAt_1( ::pPtr, pP )
+   RETURN Qt_QWidget_childAt_1( ::pPtr, hbqt_ptr( pP ) )
 
 
 METHOD QWidget:childrenRect()
@@ -429,11 +429,11 @@ METHOD QWidget:grabMouse()
 
 
 METHOD QWidget:grabMouse_1( pCursor )
-   RETURN Qt_QWidget_grabMouse_1( ::pPtr, pCursor )
+   RETURN Qt_QWidget_grabMouse_1( ::pPtr, hbqt_ptr( pCursor ) )
 
 
 METHOD QWidget:grabShortcut( pKey, nContext )
-   RETURN Qt_QWidget_grabShortcut( ::pPtr, pKey, nContext )
+   RETURN Qt_QWidget_grabShortcut( ::pPtr, hbqt_ptr( pKey ), nContext )
 
 
 METHOD QWidget:graphicsProxyWidget()
@@ -465,7 +465,7 @@ METHOD QWidget:inputMethodQuery( nQuery )
 
 
 METHOD QWidget:insertAction( pBefore, pAction )
-   RETURN Qt_QWidget_insertAction( ::pPtr, pBefore, pAction )
+   RETURN Qt_QWidget_insertAction( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pAction ) )
 
 
 METHOD QWidget:isActiveWindow()
@@ -473,7 +473,7 @@ METHOD QWidget:isActiveWindow()
 
 
 METHOD QWidget:isAncestorOf( pChild )
-   RETURN Qt_QWidget_isAncestorOf( ::pPtr, pChild )
+   RETURN Qt_QWidget_isAncestorOf( ::pPtr, hbqt_ptr( pChild ) )
 
 
 METHOD QWidget:isEnabled()
@@ -481,7 +481,7 @@ METHOD QWidget:isEnabled()
 
 
 METHOD QWidget:isEnabledTo( pAncestor )
-   RETURN Qt_QWidget_isEnabledTo( ::pPtr, pAncestor )
+   RETURN Qt_QWidget_isEnabledTo( ::pPtr, hbqt_ptr( pAncestor ) )
 
 
 METHOD QWidget:isFullScreen()
@@ -509,7 +509,7 @@ METHOD QWidget:isVisible()
 
 
 METHOD QWidget:isVisibleTo( pAncestor )
-   RETURN Qt_QWidget_isVisibleTo( ::pPtr, pAncestor )
+   RETURN Qt_QWidget_isVisibleTo( ::pPtr, hbqt_ptr( pAncestor ) )
 
 
 METHOD QWidget:isWindow()
@@ -533,27 +533,27 @@ METHOD QWidget:locale()
 
 
 METHOD QWidget:mapFrom( pParent, pPos )
-   RETURN Qt_QWidget_mapFrom( ::pPtr, pParent, pPos )
+   RETURN Qt_QWidget_mapFrom( ::pPtr, hbqt_ptr( pParent ), hbqt_ptr( pPos ) )
 
 
 METHOD QWidget:mapFromGlobal( pPos )
-   RETURN Qt_QWidget_mapFromGlobal( ::pPtr, pPos )
+   RETURN Qt_QWidget_mapFromGlobal( ::pPtr, hbqt_ptr( pPos ) )
 
 
 METHOD QWidget:mapFromParent( pPos )
-   RETURN Qt_QWidget_mapFromParent( ::pPtr, pPos )
+   RETURN Qt_QWidget_mapFromParent( ::pPtr, hbqt_ptr( pPos ) )
 
 
 METHOD QWidget:mapTo( pParent, pPos )
-   RETURN Qt_QWidget_mapTo( ::pPtr, pParent, pPos )
+   RETURN Qt_QWidget_mapTo( ::pPtr, hbqt_ptr( pParent ), hbqt_ptr( pPos ) )
 
 
 METHOD QWidget:mapToGlobal( pPos )
-   RETURN Qt_QWidget_mapToGlobal( ::pPtr, pPos )
+   RETURN Qt_QWidget_mapToGlobal( ::pPtr, hbqt_ptr( pPos ) )
 
 
 METHOD QWidget:mapToParent( pPos )
-   RETURN Qt_QWidget_mapToParent( ::pPtr, pPos )
+   RETURN Qt_QWidget_mapToParent( ::pPtr, hbqt_ptr( pPos ) )
 
 
 METHOD QWidget:mask()
@@ -593,7 +593,7 @@ METHOD QWidget:move( nX, nY )
 
 
 METHOD QWidget:move_1( pQPoint )
-   RETURN Qt_QWidget_move_1( ::pPtr, pQPoint )
+   RETURN Qt_QWidget_move_1( ::pPtr, hbqt_ptr( pQPoint ) )
 
 
 METHOD QWidget:nativeParentWidget()
@@ -645,7 +645,7 @@ METHOD QWidget:releaseShortcut( nId )
 
 
 METHOD QWidget:removeAction( pAction )
-   RETURN Qt_QWidget_removeAction( ::pPtr, pAction )
+   RETURN Qt_QWidget_removeAction( ::pPtr, hbqt_ptr( pAction ) )
 
 
 METHOD QWidget:repaint( nX, nY, nW, nH )
@@ -653,11 +653,11 @@ METHOD QWidget:repaint( nX, nY, nW, nH )
 
 
 METHOD QWidget:repaint_1( pRect )
-   RETURN Qt_QWidget_repaint_1( ::pPtr, pRect )
+   RETURN Qt_QWidget_repaint_1( ::pPtr, hbqt_ptr( pRect ) )
 
 
 METHOD QWidget:repaint_2( pRgn )
-   RETURN Qt_QWidget_repaint_2( ::pPtr, pRgn )
+   RETURN Qt_QWidget_repaint_2( ::pPtr, hbqt_ptr( pRgn ) )
 
 
 METHOD QWidget:resize( nW, nH )
@@ -665,11 +665,11 @@ METHOD QWidget:resize( nW, nH )
 
 
 METHOD QWidget:resize_1( pQSize )
-   RETURN Qt_QWidget_resize_1( ::pPtr, pQSize )
+   RETURN Qt_QWidget_resize_1( ::pPtr, hbqt_ptr( pQSize ) )
 
 
 METHOD QWidget:restoreGeometry( pGeometry )
-   RETURN Qt_QWidget_restoreGeometry( ::pPtr, pGeometry )
+   RETURN Qt_QWidget_restoreGeometry( ::pPtr, hbqt_ptr( pGeometry ) )
 
 
 METHOD QWidget:saveGeometry()
@@ -681,7 +681,7 @@ METHOD QWidget:scroll( nDx, nDy )
 
 
 METHOD QWidget:scroll_1( nDx, nDy, pR )
-   RETURN Qt_QWidget_scroll_1( ::pPtr, nDx, nDy, pR )
+   RETURN Qt_QWidget_scroll_1( ::pPtr, nDx, nDy, hbqt_ptr( pR ) )
 
 
 METHOD QWidget:setAcceptDrops( lOn )
@@ -709,7 +709,7 @@ METHOD QWidget:setBackgroundRole( nRole )
 
 
 METHOD QWidget:setBaseSize( pQSize )
-   RETURN Qt_QWidget_setBaseSize( ::pPtr, pQSize )
+   RETURN Qt_QWidget_setBaseSize( ::pPtr, hbqt_ptr( pQSize ) )
 
 
 METHOD QWidget:setBaseSize_1( nBasew, nBaseh )
@@ -725,7 +725,7 @@ METHOD QWidget:setContextMenuPolicy( nPolicy )
 
 
 METHOD QWidget:setCursor( pQCursor )
-   RETURN Qt_QWidget_setCursor( ::pPtr, pQCursor )
+   RETURN Qt_QWidget_setCursor( ::pPtr, hbqt_ptr( pQCursor ) )
 
 
 METHOD QWidget:setFixedHeight( nH )
@@ -733,7 +733,7 @@ METHOD QWidget:setFixedHeight( nH )
 
 
 METHOD QWidget:setFixedSize( pS )
-   RETURN Qt_QWidget_setFixedSize( ::pPtr, pS )
+   RETURN Qt_QWidget_setFixedSize( ::pPtr, hbqt_ptr( pS ) )
 
 
 METHOD QWidget:setFixedSize_1( nW, nH )
@@ -753,11 +753,11 @@ METHOD QWidget:setFocusPolicy( nPolicy )
 
 
 METHOD QWidget:setFocusProxy( pW )
-   RETURN Qt_QWidget_setFocusProxy( ::pPtr, pW )
+   RETURN Qt_QWidget_setFocusProxy( ::pPtr, hbqt_ptr( pW ) )
 
 
 METHOD QWidget:setFont( pQFont )
-   RETURN Qt_QWidget_setFont( ::pPtr, pQFont )
+   RETURN Qt_QWidget_setFont( ::pPtr, hbqt_ptr( pQFont ) )
 
 
 METHOD QWidget:setForegroundRole( nRole )
@@ -765,7 +765,7 @@ METHOD QWidget:setForegroundRole( nRole )
 
 
 METHOD QWidget:setGeometry( pQRect )
-   RETURN Qt_QWidget_setGeometry( ::pPtr, pQRect )
+   RETURN Qt_QWidget_setGeometry( ::pPtr, hbqt_ptr( pQRect ) )
 
 
 METHOD QWidget:setGeometry_1( nX, nY, nW, nH )
@@ -773,11 +773,11 @@ METHOD QWidget:setGeometry_1( nX, nY, nW, nH )
 
 
 METHOD QWidget:setInputContext( pContext )
-   RETURN Qt_QWidget_setInputContext( ::pPtr, pContext )
+   RETURN Qt_QWidget_setInputContext( ::pPtr, hbqt_ptr( pContext ) )
 
 
 METHOD QWidget:setLayout( pLayout )
-   RETURN Qt_QWidget_setLayout( ::pPtr, pLayout )
+   RETURN Qt_QWidget_setLayout( ::pPtr, hbqt_ptr( pLayout ) )
 
 
 METHOD QWidget:setLayoutDirection( nDirection )
@@ -785,15 +785,15 @@ METHOD QWidget:setLayoutDirection( nDirection )
 
 
 METHOD QWidget:setLocale( pLocale )
-   RETURN Qt_QWidget_setLocale( ::pPtr, pLocale )
+   RETURN Qt_QWidget_setLocale( ::pPtr, hbqt_ptr( pLocale ) )
 
 
 METHOD QWidget:setMask( pBitmap )
-   RETURN Qt_QWidget_setMask( ::pPtr, pBitmap )
+   RETURN Qt_QWidget_setMask( ::pPtr, hbqt_ptr( pBitmap ) )
 
 
 METHOD QWidget:setMask_1( pRegion )
-   RETURN Qt_QWidget_setMask_1( ::pPtr, pRegion )
+   RETURN Qt_QWidget_setMask_1( ::pPtr, hbqt_ptr( pRegion ) )
 
 
 METHOD QWidget:setMaximumHeight( nMaxh )
@@ -801,7 +801,7 @@ METHOD QWidget:setMaximumHeight( nMaxh )
 
 
 METHOD QWidget:setMaximumSize( pQSize )
-   RETURN Qt_QWidget_setMaximumSize( ::pPtr, pQSize )
+   RETURN Qt_QWidget_setMaximumSize( ::pPtr, hbqt_ptr( pQSize ) )
 
 
 METHOD QWidget:setMaximumSize_1( nMaxw, nMaxh )
@@ -817,7 +817,7 @@ METHOD QWidget:setMinimumHeight( nMinh )
 
 
 METHOD QWidget:setMinimumSize( pQSize )
-   RETURN Qt_QWidget_setMinimumSize( ::pPtr, pQSize )
+   RETURN Qt_QWidget_setMinimumSize( ::pPtr, hbqt_ptr( pQSize ) )
 
 
 METHOD QWidget:setMinimumSize_1( nMinw, nMinh )
@@ -833,15 +833,15 @@ METHOD QWidget:setMouseTracking( lEnable )
 
 
 METHOD QWidget:setPalette( pQPalette )
-   RETURN Qt_QWidget_setPalette( ::pPtr, pQPalette )
+   RETURN Qt_QWidget_setPalette( ::pPtr, hbqt_ptr( pQPalette ) )
 
 
 METHOD QWidget:setParent( pParent )
-   RETURN Qt_QWidget_setParent( ::pPtr, pParent )
+   RETURN Qt_QWidget_setParent( ::pPtr, hbqt_ptr( pParent ) )
 
 
 METHOD QWidget:setParent_1( pParent, nF )
-   RETURN Qt_QWidget_setParent_1( ::pPtr, pParent, nF )
+   RETURN Qt_QWidget_setParent_1( ::pPtr, hbqt_ptr( pParent ), nF )
 
 
 METHOD QWidget:setShortcutAutoRepeat( nId, lEnable )
@@ -853,7 +853,7 @@ METHOD QWidget:setShortcutEnabled( nId, lEnable )
 
 
 METHOD QWidget:setSizeIncrement( pQSize )
-   RETURN Qt_QWidget_setSizeIncrement( ::pPtr, pQSize )
+   RETURN Qt_QWidget_setSizeIncrement( ::pPtr, hbqt_ptr( pQSize ) )
 
 
 METHOD QWidget:setSizeIncrement_1( nW, nH )
@@ -869,7 +869,7 @@ METHOD QWidget:setStatusTip( cQString )
 
 
 METHOD QWidget:setStyle( pStyle )
-   RETURN Qt_QWidget_setStyle( ::pPtr, pStyle )
+   RETURN Qt_QWidget_setStyle( ::pPtr, hbqt_ptr( pStyle ) )
 
 
 METHOD QWidget:setToolTip( cQString )
@@ -933,7 +933,7 @@ METHOD QWidget:sizePolicy()
 
 
 METHOD QWidget:stackUnder( pW )
-   RETURN Qt_QWidget_stackUnder( ::pPtr, pW )
+   RETURN Qt_QWidget_stackUnder( ::pPtr, hbqt_ptr( pW ) )
 
 
 METHOD QWidget:statusTip()
@@ -977,11 +977,11 @@ METHOD QWidget:update( nX, nY, nW, nH )
 
 
 METHOD QWidget:update_1( pRect )
-   RETURN Qt_QWidget_update_1( ::pPtr, pRect )
+   RETURN Qt_QWidget_update_1( ::pPtr, hbqt_ptr( pRect ) )
 
 
 METHOD QWidget:update_2( pRgn )
-   RETURN Qt_QWidget_update_2( ::pPtr, pRgn )
+   RETURN Qt_QWidget_update_2( ::pPtr, hbqt_ptr( pRgn ) )
 
 
 METHOD QWidget:updateGeometry()
@@ -1065,7 +1065,7 @@ METHOD QWidget:mouseGrabber()
 
 
 METHOD QWidget:setTabOrder( pFirst, pSecond )
-   RETURN Qt_QWidget_setTabOrder( ::pPtr, pFirst, pSecond )
+   RETURN Qt_QWidget_setTabOrder( ::pPtr, hbqt_ptr( pFirst ), hbqt_ptr( pSecond ) )
 
 
 METHOD QWidget:close()

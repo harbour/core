@@ -93,7 +93,7 @@ CREATE CLASS QLayoutItem
 /*----------------------------------------------------------------------*/
 
 METHOD QLayoutItem:new( pParent )
-   ::pPtr := Qt_QLayoutItem( pParent )
+   ::pPtr := Qt_QLayoutItem( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -159,7 +159,7 @@ METHOD QLayoutItem:setAlignment( nAlignment )
 
 
 METHOD QLayoutItem:setGeometry( pR )
-   RETURN Qt_QLayoutItem_setGeometry( ::pPtr, pR )
+   RETURN Qt_QLayoutItem_setGeometry( ::pPtr, hbqt_ptr( pR ) )
 
 
 METHOD QLayoutItem:sizeHint()

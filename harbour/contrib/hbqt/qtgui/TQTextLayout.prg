@@ -105,7 +105,7 @@ CREATE CLASS QTextLayout
 /*----------------------------------------------------------------------*/
 
 METHOD QTextLayout:new( pParent )
-   ::pPtr := Qt_QTextLayout( pParent )
+   ::pPtr := Qt_QTextLayout( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -143,11 +143,11 @@ METHOD QTextLayout:createLine()
 
 
 METHOD QTextLayout:drawCursor( pPainter, pPosition, nCursorPosition, nWidth )
-   RETURN Qt_QTextLayout_drawCursor( ::pPtr, pPainter, pPosition, nCursorPosition, nWidth )
+   RETURN Qt_QTextLayout_drawCursor( ::pPtr, hbqt_ptr( pPainter ), hbqt_ptr( pPosition ), nCursorPosition, nWidth )
 
 
 METHOD QTextLayout:drawCursor_1( pPainter, pPosition, nCursorPosition )
-   RETURN Qt_QTextLayout_drawCursor_1( ::pPtr, pPainter, pPosition, nCursorPosition )
+   RETURN Qt_QTextLayout_drawCursor_1( ::pPtr, hbqt_ptr( pPainter ), hbqt_ptr( pPosition ), nCursorPosition )
 
 
 METHOD QTextLayout:endLayout()
@@ -207,11 +207,11 @@ METHOD QTextLayout:setCacheEnabled( lEnable )
 
 
 METHOD QTextLayout:setFont( pFont )
-   RETURN Qt_QTextLayout_setFont( ::pPtr, pFont )
+   RETURN Qt_QTextLayout_setFont( ::pPtr, hbqt_ptr( pFont ) )
 
 
 METHOD QTextLayout:setPosition( pP )
-   RETURN Qt_QTextLayout_setPosition( ::pPtr, pP )
+   RETURN Qt_QTextLayout_setPosition( ::pPtr, hbqt_ptr( pP ) )
 
 
 METHOD QTextLayout:setPreeditArea( nPosition, cText )
@@ -223,7 +223,7 @@ METHOD QTextLayout:setText( cString )
 
 
 METHOD QTextLayout:setTextOption( pOption )
-   RETURN Qt_QTextLayout_setTextOption( ::pPtr, pOption )
+   RETURN Qt_QTextLayout_setTextOption( ::pPtr, hbqt_ptr( pOption ) )
 
 
 METHOD QTextLayout:text()

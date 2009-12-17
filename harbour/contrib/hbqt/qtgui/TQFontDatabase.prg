@@ -96,7 +96,7 @@ CREATE CLASS QFontDatabase
 /*----------------------------------------------------------------------*/
 
 METHOD QFontDatabase:new( pParent )
-   ::pPtr := Qt_QFontDatabase( pParent )
+   ::pPtr := Qt_QFontDatabase( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -142,11 +142,11 @@ METHOD QFontDatabase:italic( cFamily, cStyle )
 
 
 METHOD QFontDatabase:styleString( pFont )
-   RETURN Qt_QFontDatabase_styleString( ::pPtr, pFont )
+   RETURN Qt_QFontDatabase_styleString( ::pPtr, hbqt_ptr( pFont ) )
 
 
 METHOD QFontDatabase:styleString_1( pFontInfo )
-   RETURN Qt_QFontDatabase_styleString_1( ::pPtr, pFontInfo )
+   RETURN Qt_QFontDatabase_styleString_1( ::pPtr, hbqt_ptr( pFontInfo ) )
 
 
 METHOD QFontDatabase:styles( cFamily )
@@ -162,7 +162,7 @@ METHOD QFontDatabase:addApplicationFont( cFileName )
 
 
 METHOD QFontDatabase:addApplicationFontFromData( pFontData )
-   RETURN Qt_QFontDatabase_addApplicationFontFromData( ::pPtr, pFontData )
+   RETURN Qt_QFontDatabase_addApplicationFontFromData( ::pPtr, hbqt_ptr( pFontData ) )
 
 
 METHOD QFontDatabase:applicationFontFamilies( nId )

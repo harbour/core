@@ -97,7 +97,7 @@ CREATE CLASS QSplitter INHERIT QFrame
 /*----------------------------------------------------------------------*/
 
 METHOD QSplitter:new( pParent )
-   ::pPtr := Qt_QSplitter( pParent )
+   ::pPtr := Qt_QSplitter( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -111,7 +111,7 @@ METHOD QSplitter:configure( xObject )
 
 
 METHOD QSplitter:addWidget( pWidget )
-   RETURN Qt_QSplitter_addWidget( ::pPtr, pWidget )
+   RETURN Qt_QSplitter_addWidget( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QSplitter:childrenCollapsible()
@@ -135,11 +135,11 @@ METHOD QSplitter:handleWidth()
 
 
 METHOD QSplitter:indexOf( pWidget )
-   RETURN Qt_QSplitter_indexOf( ::pPtr, pWidget )
+   RETURN Qt_QSplitter_indexOf( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QSplitter:insertWidget( nIndex, pWidget )
-   RETURN Qt_QSplitter_insertWidget( ::pPtr, nIndex, pWidget )
+   RETURN Qt_QSplitter_insertWidget( ::pPtr, nIndex, hbqt_ptr( pWidget ) )
 
 
 METHOD QSplitter:isCollapsible( nIndex )
@@ -159,7 +159,7 @@ METHOD QSplitter:refresh()
 
 
 METHOD QSplitter:restoreState( pState )
-   RETURN Qt_QSplitter_restoreState( ::pPtr, pState )
+   RETURN Qt_QSplitter_restoreState( ::pPtr, hbqt_ptr( pState ) )
 
 
 METHOD QSplitter:saveState()

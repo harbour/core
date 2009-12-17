@@ -104,7 +104,7 @@ CREATE CLASS QToolBar INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QToolBar:new( pParent )
-   ::pPtr := Qt_QToolBar( pParent )
+   ::pPtr := Qt_QToolBar( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -118,7 +118,7 @@ METHOD QToolBar:configure( xObject )
 
 
 METHOD QToolBar:actionAt( pP )
-   RETURN Qt_QToolBar_actionAt( ::pPtr, pP )
+   RETURN Qt_QToolBar_actionAt( ::pPtr, hbqt_ptr( pP ) )
 
 
 METHOD QToolBar:actionAt_1( nX, nY )
@@ -126,7 +126,7 @@ METHOD QToolBar:actionAt_1( nX, nY )
 
 
 METHOD QToolBar:addAction( pAction )
-   RETURN Qt_QToolBar_addAction( ::pPtr, pAction )
+   RETURN Qt_QToolBar_addAction( ::pPtr, hbqt_ptr( pAction ) )
 
 
 METHOD QToolBar:addAction_1( cText )
@@ -138,11 +138,11 @@ METHOD QToolBar:addAction_2( cIcon, cText )
 
 
 METHOD QToolBar:addAction_3( cText, pReceiver, pMember )
-   RETURN Qt_QToolBar_addAction_3( ::pPtr, cText, pReceiver, pMember )
+   RETURN Qt_QToolBar_addAction_3( ::pPtr, cText, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
 
 
 METHOD QToolBar:addAction_4( cIcon, cText, pReceiver, pMember )
-   RETURN Qt_QToolBar_addAction_4( ::pPtr, cIcon, cText, pReceiver, pMember )
+   RETURN Qt_QToolBar_addAction_4( ::pPtr, cIcon, cText, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
 
 
 METHOD QToolBar:addSeparator()
@@ -150,7 +150,7 @@ METHOD QToolBar:addSeparator()
 
 
 METHOD QToolBar:addWidget( pWidget )
-   RETURN Qt_QToolBar_addWidget( ::pPtr, pWidget )
+   RETURN Qt_QToolBar_addWidget( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QToolBar:allowedAreas()
@@ -166,11 +166,11 @@ METHOD QToolBar:iconSize()
 
 
 METHOD QToolBar:insertSeparator( pBefore )
-   RETURN Qt_QToolBar_insertSeparator( ::pPtr, pBefore )
+   RETURN Qt_QToolBar_insertSeparator( ::pPtr, hbqt_ptr( pBefore ) )
 
 
 METHOD QToolBar:insertWidget( pBefore, pWidget )
-   RETURN Qt_QToolBar_insertWidget( ::pPtr, pBefore, pWidget )
+   RETURN Qt_QToolBar_insertWidget( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pWidget ) )
 
 
 METHOD QToolBar:isAreaAllowed( nArea )
@@ -218,11 +218,11 @@ METHOD QToolBar:toolButtonStyle()
 
 
 METHOD QToolBar:widgetForAction( pAction )
-   RETURN Qt_QToolBar_widgetForAction( ::pPtr, pAction )
+   RETURN Qt_QToolBar_widgetForAction( ::pPtr, hbqt_ptr( pAction ) )
 
 
 METHOD QToolBar:setIconSize( pIconSize )
-   RETURN Qt_QToolBar_setIconSize( ::pPtr, pIconSize )
+   RETURN Qt_QToolBar_setIconSize( ::pPtr, hbqt_ptr( pIconSize ) )
 
 
 METHOD QToolBar:setToolButtonStyle( nToolButtonStyle )

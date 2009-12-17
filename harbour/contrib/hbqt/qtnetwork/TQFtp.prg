@@ -102,7 +102,7 @@ CREATE CLASS QFtp INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QFtp:new( pParent )
-   ::pPtr := Qt_QFtp( pParent )
+   ::pPtr := Qt_QFtp( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -156,7 +156,7 @@ METHOD QFtp:errorString()
 
 
 METHOD QFtp:get( cFile, pDev, nType )
-   RETURN Qt_QFtp_get( ::pPtr, cFile, pDev, nType )
+   RETURN Qt_QFtp_get( ::pPtr, cFile, hbqt_ptr( pDev ), nType )
 
 
 METHOD QFtp:hasPendingCommands()
@@ -176,11 +176,11 @@ METHOD QFtp:mkdir( cDir )
 
 
 METHOD QFtp:put( pDev, cFile, nType )
-   RETURN Qt_QFtp_put( ::pPtr, pDev, cFile, nType )
+   RETURN Qt_QFtp_put( ::pPtr, hbqt_ptr( pDev ), cFile, nType )
 
 
 METHOD QFtp:put_1( pData, cFile, nType )
-   RETURN Qt_QFtp_put_1( ::pPtr, pData, cFile, nType )
+   RETURN Qt_QFtp_put_1( ::pPtr, hbqt_ptr( pData ), cFile, nType )
 
 
 METHOD QFtp:rawCommand( cCommand )

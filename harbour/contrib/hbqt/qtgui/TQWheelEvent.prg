@@ -85,7 +85,7 @@ CREATE CLASS QWheelEvent INHERIT QInputEvent
 /*----------------------------------------------------------------------*/
 
 METHOD QWheelEvent:new( pParent )
-   ::pPtr := Qt_QWheelEvent( pParent )
+   ::pPtr := Qt_QWheelEvent( hbqt_ptr( pParent ) )
    RETURN Self
 
 

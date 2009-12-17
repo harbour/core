@@ -83,7 +83,7 @@ CREATE CLASS QContextMenuEvent INHERIT QInputEvent
 /*----------------------------------------------------------------------*/
 
 METHOD QContextMenuEvent:new( pParent )
-   ::pPtr := Qt_QContextMenuEvent( pParent )
+   ::pPtr := Qt_QContextMenuEvent( hbqt_ptr( pParent ) )
    RETURN Self
 
 

@@ -113,7 +113,7 @@ CREATE CLASS QTreeWidget INHERIT QTreeView
 /*----------------------------------------------------------------------*/
 
 METHOD QTreeWidget:new( pParent )
-   ::pPtr := Qt_QTreeWidget( pParent )
+   ::pPtr := Qt_QTreeWidget( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -127,11 +127,11 @@ METHOD QTreeWidget:configure( xObject )
 
 
 METHOD QTreeWidget:addTopLevelItem( pItem )
-   RETURN Qt_QTreeWidget_addTopLevelItem( ::pPtr, pItem )
+   RETURN Qt_QTreeWidget_addTopLevelItem( ::pPtr, hbqt_ptr( pItem ) )
 
 
 METHOD QTreeWidget:closePersistentEditor( pItem, nColumn )
-   RETURN Qt_QTreeWidget_closePersistentEditor( ::pPtr, pItem, nColumn )
+   RETURN Qt_QTreeWidget_closePersistentEditor( ::pPtr, hbqt_ptr( pItem ), nColumn )
 
 
 METHOD QTreeWidget:columnCount()
@@ -147,7 +147,7 @@ METHOD QTreeWidget:currentItem()
 
 
 METHOD QTreeWidget:editItem( pItem, nColumn )
-   RETURN Qt_QTreeWidget_editItem( ::pPtr, pItem, nColumn )
+   RETURN Qt_QTreeWidget_editItem( ::pPtr, hbqt_ptr( pItem ), nColumn )
 
 
 METHOD QTreeWidget:headerItem()
@@ -155,11 +155,11 @@ METHOD QTreeWidget:headerItem()
 
 
 METHOD QTreeWidget:indexOfTopLevelItem( pItem )
-   RETURN Qt_QTreeWidget_indexOfTopLevelItem( ::pPtr, pItem )
+   RETURN Qt_QTreeWidget_indexOfTopLevelItem( ::pPtr, hbqt_ptr( pItem ) )
 
 
 METHOD QTreeWidget:insertTopLevelItem( nIndex, pItem )
-   RETURN Qt_QTreeWidget_insertTopLevelItem( ::pPtr, nIndex, pItem )
+   RETURN Qt_QTreeWidget_insertTopLevelItem( ::pPtr, nIndex, hbqt_ptr( pItem ) )
 
 
 METHOD QTreeWidget:invisibleRootItem()
@@ -167,15 +167,15 @@ METHOD QTreeWidget:invisibleRootItem()
 
 
 METHOD QTreeWidget:isFirstItemColumnSpanned( pItem )
-   RETURN Qt_QTreeWidget_isFirstItemColumnSpanned( ::pPtr, pItem )
+   RETURN Qt_QTreeWidget_isFirstItemColumnSpanned( ::pPtr, hbqt_ptr( pItem ) )
 
 
 METHOD QTreeWidget:itemAbove( pItem )
-   RETURN Qt_QTreeWidget_itemAbove( ::pPtr, pItem )
+   RETURN Qt_QTreeWidget_itemAbove( ::pPtr, hbqt_ptr( pItem ) )
 
 
 METHOD QTreeWidget:itemAt( pP )
-   RETURN Qt_QTreeWidget_itemAt( ::pPtr, pP )
+   RETURN Qt_QTreeWidget_itemAt( ::pPtr, hbqt_ptr( pP ) )
 
 
 METHOD QTreeWidget:itemAt_1( nX, nY )
@@ -183,19 +183,19 @@ METHOD QTreeWidget:itemAt_1( nX, nY )
 
 
 METHOD QTreeWidget:itemBelow( pItem )
-   RETURN Qt_QTreeWidget_itemBelow( ::pPtr, pItem )
+   RETURN Qt_QTreeWidget_itemBelow( ::pPtr, hbqt_ptr( pItem ) )
 
 
 METHOD QTreeWidget:itemWidget( pItem, nColumn )
-   RETURN Qt_QTreeWidget_itemWidget( ::pPtr, pItem, nColumn )
+   RETURN Qt_QTreeWidget_itemWidget( ::pPtr, hbqt_ptr( pItem ), nColumn )
 
 
 METHOD QTreeWidget:openPersistentEditor( pItem, nColumn )
-   RETURN Qt_QTreeWidget_openPersistentEditor( ::pPtr, pItem, nColumn )
+   RETURN Qt_QTreeWidget_openPersistentEditor( ::pPtr, hbqt_ptr( pItem ), nColumn )
 
 
 METHOD QTreeWidget:removeItemWidget( pItem, nColumn )
-   RETURN Qt_QTreeWidget_removeItemWidget( ::pPtr, pItem, nColumn )
+   RETURN Qt_QTreeWidget_removeItemWidget( ::pPtr, hbqt_ptr( pItem ), nColumn )
 
 
 METHOD QTreeWidget:setColumnCount( nColumns )
@@ -203,23 +203,23 @@ METHOD QTreeWidget:setColumnCount( nColumns )
 
 
 METHOD QTreeWidget:setCurrentItem( pItem )
-   RETURN Qt_QTreeWidget_setCurrentItem( ::pPtr, pItem )
+   RETURN Qt_QTreeWidget_setCurrentItem( ::pPtr, hbqt_ptr( pItem ) )
 
 
 METHOD QTreeWidget:setCurrentItem_1( pItem, nColumn )
-   RETURN Qt_QTreeWidget_setCurrentItem_1( ::pPtr, pItem, nColumn )
+   RETURN Qt_QTreeWidget_setCurrentItem_1( ::pPtr, hbqt_ptr( pItem ), nColumn )
 
 
 METHOD QTreeWidget:setCurrentItem_2( pItem, nColumn, nCommand )
-   RETURN Qt_QTreeWidget_setCurrentItem_2( ::pPtr, pItem, nColumn, nCommand )
+   RETURN Qt_QTreeWidget_setCurrentItem_2( ::pPtr, hbqt_ptr( pItem ), nColumn, nCommand )
 
 
 METHOD QTreeWidget:setFirstItemColumnSpanned( pItem, lSpan )
-   RETURN Qt_QTreeWidget_setFirstItemColumnSpanned( ::pPtr, pItem, lSpan )
+   RETURN Qt_QTreeWidget_setFirstItemColumnSpanned( ::pPtr, hbqt_ptr( pItem ), lSpan )
 
 
 METHOD QTreeWidget:setHeaderItem( pItem )
-   RETURN Qt_QTreeWidget_setHeaderItem( ::pPtr, pItem )
+   RETURN Qt_QTreeWidget_setHeaderItem( ::pPtr, hbqt_ptr( pItem ) )
 
 
 METHOD QTreeWidget:setHeaderLabel( cLabel )
@@ -227,11 +227,11 @@ METHOD QTreeWidget:setHeaderLabel( cLabel )
 
 
 METHOD QTreeWidget:setHeaderLabels( pLabels )
-   RETURN Qt_QTreeWidget_setHeaderLabels( ::pPtr, pLabels )
+   RETURN Qt_QTreeWidget_setHeaderLabels( ::pPtr, hbqt_ptr( pLabels ) )
 
 
 METHOD QTreeWidget:setItemWidget( pItem, nColumn, pWidget )
-   RETURN Qt_QTreeWidget_setItemWidget( ::pPtr, pItem, nColumn, pWidget )
+   RETURN Qt_QTreeWidget_setItemWidget( ::pPtr, hbqt_ptr( pItem ), nColumn, hbqt_ptr( pWidget ) )
 
 
 METHOD QTreeWidget:sortColumn()
@@ -255,7 +255,7 @@ METHOD QTreeWidget:topLevelItemCount()
 
 
 METHOD QTreeWidget:visualItemRect( pItem )
-   RETURN Qt_QTreeWidget_visualItemRect( ::pPtr, pItem )
+   RETURN Qt_QTreeWidget_visualItemRect( ::pPtr, hbqt_ptr( pItem ) )
 
 
 METHOD QTreeWidget:clear()
@@ -263,13 +263,13 @@ METHOD QTreeWidget:clear()
 
 
 METHOD QTreeWidget:collapseItem( pItem )
-   RETURN Qt_QTreeWidget_collapseItem( ::pPtr, pItem )
+   RETURN Qt_QTreeWidget_collapseItem( ::pPtr, hbqt_ptr( pItem ) )
 
 
 METHOD QTreeWidget:expandItem( pItem )
-   RETURN Qt_QTreeWidget_expandItem( ::pPtr, pItem )
+   RETURN Qt_QTreeWidget_expandItem( ::pPtr, hbqt_ptr( pItem ) )
 
 
 METHOD QTreeWidget:scrollToItem( pItem, nHint )
-   RETURN Qt_QTreeWidget_scrollToItem( ::pPtr, pItem, nHint )
+   RETURN Qt_QTreeWidget_scrollToItem( ::pPtr, hbqt_ptr( pItem ), nHint )
 

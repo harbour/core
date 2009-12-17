@@ -90,7 +90,7 @@ CREATE CLASS QMenuBar INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QMenuBar:new( pParent )
-   ::pPtr := Qt_QMenuBar( pParent )
+   ::pPtr := Qt_QMenuBar( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -112,15 +112,15 @@ METHOD QMenuBar:addAction( cText )
 
 
 METHOD QMenuBar:addAction_1( cText, pReceiver, pMember )
-   RETURN Qt_QMenuBar_addAction_1( ::pPtr, cText, pReceiver, pMember )
+   RETURN Qt_QMenuBar_addAction_1( ::pPtr, cText, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
 
 
 METHOD QMenuBar:addAction_2( pAction )
-   RETURN Qt_QMenuBar_addAction_2( ::pPtr, pAction )
+   RETURN Qt_QMenuBar_addAction_2( ::pPtr, hbqt_ptr( pAction ) )
 
 
 METHOD QMenuBar:addMenu( pMenu )
-   RETURN Qt_QMenuBar_addMenu( ::pPtr, pMenu )
+   RETURN Qt_QMenuBar_addMenu( ::pPtr, hbqt_ptr( pMenu ) )
 
 
 METHOD QMenuBar:addMenu_1( cTitle )
@@ -140,11 +140,11 @@ METHOD QMenuBar:clear()
 
 
 METHOD QMenuBar:insertMenu( pBefore, pMenu )
-   RETURN Qt_QMenuBar_insertMenu( ::pPtr, pBefore, pMenu )
+   RETURN Qt_QMenuBar_insertMenu( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pMenu ) )
 
 
 METHOD QMenuBar:insertSeparator( pBefore )
-   RETURN Qt_QMenuBar_insertSeparator( ::pPtr, pBefore )
+   RETURN Qt_QMenuBar_insertSeparator( ::pPtr, hbqt_ptr( pBefore ) )
 
 
 METHOD QMenuBar:isDefaultUp()
@@ -152,7 +152,7 @@ METHOD QMenuBar:isDefaultUp()
 
 
 METHOD QMenuBar:setActiveAction( pAct )
-   RETURN Qt_QMenuBar_setActiveAction( ::pPtr, pAct )
+   RETURN Qt_QMenuBar_setActiveAction( ::pPtr, hbqt_ptr( pAct ) )
 
 
 METHOD QMenuBar:setDefaultUp( lBool )

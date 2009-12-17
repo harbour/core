@@ -82,7 +82,7 @@ CREATE CLASS QAbstractProxyModel INHERIT QAbstractItemModel
 /*----------------------------------------------------------------------*/
 
 METHOD QAbstractProxyModel:new( pParent )
-   ::pPtr := Qt_QAbstractProxyModel( pParent )
+   ::pPtr := Qt_QAbstractProxyModel( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -96,23 +96,23 @@ METHOD QAbstractProxyModel:configure( xObject )
 
 
 METHOD QAbstractProxyModel:mapFromSource( pSourceIndex )
-   RETURN Qt_QAbstractProxyModel_mapFromSource( ::pPtr, pSourceIndex )
+   RETURN Qt_QAbstractProxyModel_mapFromSource( ::pPtr, hbqt_ptr( pSourceIndex ) )
 
 
 METHOD QAbstractProxyModel:mapSelectionFromSource( pSourceSelection )
-   RETURN Qt_QAbstractProxyModel_mapSelectionFromSource( ::pPtr, pSourceSelection )
+   RETURN Qt_QAbstractProxyModel_mapSelectionFromSource( ::pPtr, hbqt_ptr( pSourceSelection ) )
 
 
 METHOD QAbstractProxyModel:mapSelectionToSource( pProxySelection )
-   RETURN Qt_QAbstractProxyModel_mapSelectionToSource( ::pPtr, pProxySelection )
+   RETURN Qt_QAbstractProxyModel_mapSelectionToSource( ::pPtr, hbqt_ptr( pProxySelection ) )
 
 
 METHOD QAbstractProxyModel:mapToSource( pProxyIndex )
-   RETURN Qt_QAbstractProxyModel_mapToSource( ::pPtr, pProxyIndex )
+   RETURN Qt_QAbstractProxyModel_mapToSource( ::pPtr, hbqt_ptr( pProxyIndex ) )
 
 
 METHOD QAbstractProxyModel:setSourceModel( pSourceModel )
-   RETURN Qt_QAbstractProxyModel_setSourceModel( ::pPtr, pSourceModel )
+   RETURN Qt_QAbstractProxyModel_setSourceModel( ::pPtr, hbqt_ptr( pSourceModel ) )
 
 
 METHOD QAbstractProxyModel:sourceModel()

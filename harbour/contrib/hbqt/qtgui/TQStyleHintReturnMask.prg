@@ -76,7 +76,7 @@ CREATE CLASS QStyleHintReturnMask INHERIT QStyleHintReturn
 /*----------------------------------------------------------------------*/
 
 METHOD QStyleHintReturnMask:new( pParent )
-   ::pPtr := Qt_QStyleHintReturnMask( pParent )
+   ::pPtr := Qt_QStyleHintReturnMask( hbqt_ptr( pParent ) )
    RETURN Self
 
 

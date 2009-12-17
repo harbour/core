@@ -83,7 +83,7 @@ CREATE CLASS QStyledItemDelegate
 /*----------------------------------------------------------------------*/
 
 METHOD QStyledItemDelegate:new( pParent )
-   ::pPtr := Qt_QStyledItemDelegate( pParent )
+   ::pPtr := Qt_QStyledItemDelegate( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -97,29 +97,29 @@ METHOD QStyledItemDelegate:configure( xObject )
 
 
 METHOD QStyledItemDelegate:createEditor( pParent, pOption, pIndex )
-   RETURN Qt_QStyledItemDelegate_createEditor( ::pPtr, pParent, pOption, pIndex )
+   RETURN Qt_QStyledItemDelegate_createEditor( ::pPtr, hbqt_ptr( pParent ), hbqt_ptr( pOption ), hbqt_ptr( pIndex ) )
 
 
 METHOD QStyledItemDelegate:displayText( pValue, pLocale )
-   RETURN Qt_QStyledItemDelegate_displayText( ::pPtr, pValue, pLocale )
+   RETURN Qt_QStyledItemDelegate_displayText( ::pPtr, hbqt_ptr( pValue ), hbqt_ptr( pLocale ) )
 
 
 METHOD QStyledItemDelegate:paint( pPainter, pOption, pIndex )
-   RETURN Qt_QStyledItemDelegate_paint( ::pPtr, pPainter, pOption, pIndex )
+   RETURN Qt_QStyledItemDelegate_paint( ::pPtr, hbqt_ptr( pPainter ), hbqt_ptr( pOption ), hbqt_ptr( pIndex ) )
 
 
 METHOD QStyledItemDelegate:setEditorData( pEditor, pIndex )
-   RETURN Qt_QStyledItemDelegate_setEditorData( ::pPtr, pEditor, pIndex )
+   RETURN Qt_QStyledItemDelegate_setEditorData( ::pPtr, hbqt_ptr( pEditor ), hbqt_ptr( pIndex ) )
 
 
 METHOD QStyledItemDelegate:setModelData( pEditor, pModel, pIndex )
-   RETURN Qt_QStyledItemDelegate_setModelData( ::pPtr, pEditor, pModel, pIndex )
+   RETURN Qt_QStyledItemDelegate_setModelData( ::pPtr, hbqt_ptr( pEditor ), hbqt_ptr( pModel ), hbqt_ptr( pIndex ) )
 
 
 METHOD QStyledItemDelegate:sizeHint( pOption, pIndex )
-   RETURN Qt_QStyledItemDelegate_sizeHint( ::pPtr, pOption, pIndex )
+   RETURN Qt_QStyledItemDelegate_sizeHint( ::pPtr, hbqt_ptr( pOption ), hbqt_ptr( pIndex ) )
 
 
 METHOD QStyledItemDelegate:updateEditorGeometry( pEditor, pOption, pIndex )
-   RETURN Qt_QStyledItemDelegate_updateEditorGeometry( ::pPtr, pEditor, pOption, pIndex )
+   RETURN Qt_QStyledItemDelegate_updateEditorGeometry( ::pPtr, hbqt_ptr( pEditor ), hbqt_ptr( pOption ), hbqt_ptr( pIndex ) )
 

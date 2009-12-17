@@ -86,7 +86,7 @@ CREATE CLASS QDialog INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QDialog:new( pParent )
-   ::pPtr := Qt_QDialog( pParent )
+   ::pPtr := Qt_QDialog( hbqt_ptr( pParent ) )
    RETURN Self
 
 

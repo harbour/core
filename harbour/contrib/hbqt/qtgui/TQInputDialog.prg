@@ -120,7 +120,7 @@ CREATE CLASS QInputDialog INHERIT QDialog
 /*----------------------------------------------------------------------*/
 
 METHOD QInputDialog:new( pParent )
-   ::pPtr := Qt_QInputDialog( pParent )
+   ::pPtr := Qt_QInputDialog( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -194,7 +194,7 @@ METHOD QInputDialog:okButtonText()
 
 
 METHOD QInputDialog:open( pReceiver, pMember )
-   RETURN Qt_QInputDialog_open( ::pPtr, pReceiver, pMember )
+   RETURN Qt_QInputDialog_open( ::pPtr, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
 
 
 METHOD QInputDialog:options()
@@ -210,7 +210,7 @@ METHOD QInputDialog:setComboBoxEditable( lEditable )
 
 
 METHOD QInputDialog:setComboBoxItems( pItems )
-   RETURN Qt_QInputDialog_setComboBoxItems( ::pPtr, pItems )
+   RETURN Qt_QInputDialog_setComboBoxItems( ::pPtr, hbqt_ptr( pItems ) )
 
 
 METHOD QInputDialog:setDoubleDecimals( nDecimals )
@@ -294,17 +294,17 @@ METHOD QInputDialog:textValue()
 
 
 METHOD QInputDialog:getDouble( pParent, cTitle, cLabel, nValue, nMin, nMax, nDecimals, lOk, nFlags )
-   RETURN Qt_QInputDialog_getDouble( ::pPtr, pParent, cTitle, cLabel, nValue, nMin, nMax, nDecimals, lOk, nFlags )
+   RETURN Qt_QInputDialog_getDouble( ::pPtr, hbqt_ptr( pParent ), cTitle, cLabel, nValue, nMin, nMax, nDecimals, lOk, nFlags )
 
 
 METHOD QInputDialog:getInt( pParent, cTitle, cLabel, nValue, nMin, nMax, nStep, lOk, nFlags )
-   RETURN Qt_QInputDialog_getInt( ::pPtr, pParent, cTitle, cLabel, nValue, nMin, nMax, nStep, lOk, nFlags )
+   RETURN Qt_QInputDialog_getInt( ::pPtr, hbqt_ptr( pParent ), cTitle, cLabel, nValue, nMin, nMax, nStep, lOk, nFlags )
 
 
 METHOD QInputDialog:getItem( pParent, cTitle, cLabel, pItems, nCurrent, lEditable, lOk, nFlags )
-   RETURN Qt_QInputDialog_getItem( ::pPtr, pParent, cTitle, cLabel, pItems, nCurrent, lEditable, lOk, nFlags )
+   RETURN Qt_QInputDialog_getItem( ::pPtr, hbqt_ptr( pParent ), cTitle, cLabel, hbqt_ptr( pItems ), nCurrent, lEditable, lOk, nFlags )
 
 
 METHOD QInputDialog:getText( pParent, cTitle, cLabel, nMode, cText, lOk, nFlags )
-   RETURN Qt_QInputDialog_getText( ::pPtr, pParent, cTitle, cLabel, nMode, cText, lOk, nFlags )
+   RETURN Qt_QInputDialog_getText( ::pPtr, hbqt_ptr( pParent ), cTitle, cLabel, nMode, cText, lOk, nFlags )
 

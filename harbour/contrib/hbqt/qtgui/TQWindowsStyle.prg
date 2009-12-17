@@ -76,7 +76,7 @@ CREATE CLASS QWindowsStyle INHERIT QCommonStyle
 /*----------------------------------------------------------------------*/
 
 METHOD QWindowsStyle:new( pParent )
-   ::pPtr := Qt_QWindowsStyle( pParent )
+   ::pPtr := Qt_QWindowsStyle( hbqt_ptr( pParent ) )
    RETURN Self
 
 

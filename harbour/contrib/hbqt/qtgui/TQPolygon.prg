@@ -89,7 +89,7 @@ CREATE CLASS QPolygon
 /*----------------------------------------------------------------------*/
 
 METHOD QPolygon:new( pParent )
-   ::pPtr := Qt_QPolygon( pParent )
+   ::pPtr := Qt_QPolygon( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -107,11 +107,11 @@ METHOD QPolygon:boundingRect()
 
 
 METHOD QPolygon:containsPoint( pPoint, nFillRule )
-   RETURN Qt_QPolygon_containsPoint( ::pPtr, pPoint, nFillRule )
+   RETURN Qt_QPolygon_containsPoint( ::pPtr, hbqt_ptr( pPoint ), nFillRule )
 
 
 METHOD QPolygon:intersected( pR )
-   RETURN Qt_QPolygon_intersected( ::pPtr, pR )
+   RETURN Qt_QPolygon_intersected( ::pPtr, hbqt_ptr( pR ) )
 
 
 METHOD QPolygon:point( nIndex, nX, nY )
@@ -123,7 +123,7 @@ METHOD QPolygon:point_1( nIndex )
 
 
 METHOD QPolygon:putPoints( nIndex, nNPoints, pFromPolygon, nFromIndex )
-   RETURN Qt_QPolygon_putPoints( ::pPtr, nIndex, nNPoints, pFromPolygon, nFromIndex )
+   RETURN Qt_QPolygon_putPoints( ::pPtr, nIndex, nNPoints, hbqt_ptr( pFromPolygon ), nFromIndex )
 
 
 METHOD QPolygon:setPoint( nIndex, nX, nY )
@@ -131,7 +131,7 @@ METHOD QPolygon:setPoint( nIndex, nX, nY )
 
 
 METHOD QPolygon:setPoint_1( nIndex, pPoint )
-   RETURN Qt_QPolygon_setPoint_1( ::pPtr, nIndex, pPoint )
+   RETURN Qt_QPolygon_setPoint_1( ::pPtr, nIndex, hbqt_ptr( pPoint ) )
 
 
 METHOD QPolygon:setPoints( nNPoints, nPoints )
@@ -139,7 +139,7 @@ METHOD QPolygon:setPoints( nNPoints, nPoints )
 
 
 METHOD QPolygon:subtracted( pR )
-   RETURN Qt_QPolygon_subtracted( ::pPtr, pR )
+   RETURN Qt_QPolygon_subtracted( ::pPtr, hbqt_ptr( pR ) )
 
 
 METHOD QPolygon:translate( nDx, nDy )
@@ -147,9 +147,9 @@ METHOD QPolygon:translate( nDx, nDy )
 
 
 METHOD QPolygon:translate_1( pOffset )
-   RETURN Qt_QPolygon_translate_1( ::pPtr, pOffset )
+   RETURN Qt_QPolygon_translate_1( ::pPtr, hbqt_ptr( pOffset ) )
 
 
 METHOD QPolygon:united( pR )
-   RETURN Qt_QPolygon_united( ::pPtr, pR )
+   RETURN Qt_QPolygon_united( ::pPtr, hbqt_ptr( pR ) )
 

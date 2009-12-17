@@ -90,7 +90,7 @@ CREATE CLASS QSystemTrayIcon INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QSystemTrayIcon:new( pParent )
-   ::pPtr := Qt_QSystemTrayIcon( pParent )
+   ::pPtr := Qt_QSystemTrayIcon( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -120,7 +120,7 @@ METHOD QSystemTrayIcon:isVisible()
 
 
 METHOD QSystemTrayIcon:setContextMenu( pMenu )
-   RETURN Qt_QSystemTrayIcon_setContextMenu( ::pPtr, pMenu )
+   RETURN Qt_QSystemTrayIcon_setContextMenu( ::pPtr, hbqt_ptr( pMenu ) )
 
 
 METHOD QSystemTrayIcon:setIcon( cIcon )

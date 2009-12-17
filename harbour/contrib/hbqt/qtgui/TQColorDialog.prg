@@ -91,7 +91,7 @@ CREATE CLASS QColorDialog INHERIT QDialog
 /*----------------------------------------------------------------------*/
 
 METHOD QColorDialog:new( pParent )
-   ::pPtr := Qt_QColorDialog( pParent )
+   ::pPtr := Qt_QColorDialog( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -121,7 +121,7 @@ METHOD QColorDialog:selectedColor()
 
 
 METHOD QColorDialog:setCurrentColor( pColor )
-   RETURN Qt_QColorDialog_setCurrentColor( ::pPtr, pColor )
+   RETURN Qt_QColorDialog_setCurrentColor( ::pPtr, hbqt_ptr( pColor ) )
 
 
 METHOD QColorDialog:setOption( nOption, lOn )
@@ -149,11 +149,11 @@ METHOD QColorDialog:customCount()
 
 
 METHOD QColorDialog:getColor( pInitial, pParent, cTitle, nOptions )
-   RETURN Qt_QColorDialog_getColor( ::pPtr, pInitial, pParent, cTitle, nOptions )
+   RETURN Qt_QColorDialog_getColor( ::pPtr, hbqt_ptr( pInitial ), hbqt_ptr( pParent ), cTitle, nOptions )
 
 
 METHOD QColorDialog:getColor_1( pInitial, pParent )
-   RETURN Qt_QColorDialog_getColor_1( ::pPtr, pInitial, pParent )
+   RETURN Qt_QColorDialog_getColor_1( ::pPtr, hbqt_ptr( pInitial ), hbqt_ptr( pParent ) )
 
 
 METHOD QColorDialog:setCustomColor( nIndex, nColor )

@@ -85,7 +85,7 @@ CREATE CLASS QKeyEvent INHERIT QInputEvent
 /*----------------------------------------------------------------------*/
 
 METHOD QKeyEvent:new( pParent )
-   ::pPtr := Qt_QKeyEvent( pParent )
+   ::pPtr := Qt_QKeyEvent( hbqt_ptr( pParent ) )
    RETURN Self
 
 

@@ -114,7 +114,7 @@ CREATE CLASS QMessageBox INHERIT QDialog
 /*----------------------------------------------------------------------*/
 
 METHOD QMessageBox:new( pParent )
-   ::pPtr := Qt_QMessageBox( pParent )
+   ::pPtr := Qt_QMessageBox( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -128,7 +128,7 @@ METHOD QMessageBox:configure( xObject )
 
 
 METHOD QMessageBox:addButton( pButton, nRole )
-   RETURN Qt_QMessageBox_addButton( ::pPtr, pButton, nRole )
+   RETURN Qt_QMessageBox_addButton( ::pPtr, hbqt_ptr( pButton ), nRole )
 
 
 METHOD QMessageBox:addButton_1( cText, nRole )
@@ -144,7 +144,7 @@ METHOD QMessageBox:button( nWhich )
 
 
 METHOD QMessageBox:buttonRole( pButton )
-   RETURN Qt_QMessageBox_buttonRole( ::pPtr, pButton )
+   RETURN Qt_QMessageBox_buttonRole( ::pPtr, hbqt_ptr( pButton ) )
 
 
 METHOD QMessageBox:clickedButton()
@@ -176,15 +176,15 @@ METHOD QMessageBox:informativeText()
 
 
 METHOD QMessageBox:open( pReceiver, pMember )
-   RETURN Qt_QMessageBox_open( ::pPtr, pReceiver, pMember )
+   RETURN Qt_QMessageBox_open( ::pPtr, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
 
 
 METHOD QMessageBox:removeButton( pButton )
-   RETURN Qt_QMessageBox_removeButton( ::pPtr, pButton )
+   RETURN Qt_QMessageBox_removeButton( ::pPtr, hbqt_ptr( pButton ) )
 
 
 METHOD QMessageBox:setDefaultButton( pButton )
-   RETURN Qt_QMessageBox_setDefaultButton( ::pPtr, pButton )
+   RETURN Qt_QMessageBox_setDefaultButton( ::pPtr, hbqt_ptr( pButton ) )
 
 
 METHOD QMessageBox:setDefaultButton_1( nButton )
@@ -196,7 +196,7 @@ METHOD QMessageBox:setDetailedText( cText )
 
 
 METHOD QMessageBox:setEscapeButton( pButton )
-   RETURN Qt_QMessageBox_setEscapeButton( ::pPtr, pButton )
+   RETURN Qt_QMessageBox_setEscapeButton( ::pPtr, hbqt_ptr( pButton ) )
 
 
 METHOD QMessageBox:setEscapeButton_1( nButton )
@@ -208,7 +208,7 @@ METHOD QMessageBox:setIcon( nIcon )
 
 
 METHOD QMessageBox:setIconPixmap( pPixmap )
-   RETURN Qt_QMessageBox_setIconPixmap( ::pPtr, pPixmap )
+   RETURN Qt_QMessageBox_setIconPixmap( ::pPtr, hbqt_ptr( pPixmap ) )
 
 
 METHOD QMessageBox:setInformativeText( cText )
@@ -236,7 +236,7 @@ METHOD QMessageBox:setWindowTitle( cTitle )
 
 
 METHOD QMessageBox:standardButton( pButton )
-   RETURN Qt_QMessageBox_standardButton( ::pPtr, pButton )
+   RETURN Qt_QMessageBox_standardButton( ::pPtr, hbqt_ptr( pButton ) )
 
 
 METHOD QMessageBox:standardButtons()
@@ -252,27 +252,27 @@ METHOD QMessageBox:textFormat()
 
 
 METHOD QMessageBox:about( pParent, cTitle, cText )
-   RETURN Qt_QMessageBox_about( ::pPtr, pParent, cTitle, cText )
+   RETURN Qt_QMessageBox_about( ::pPtr, hbqt_ptr( pParent ), cTitle, cText )
 
 
 METHOD QMessageBox:aboutQt( pParent, cTitle )
-   RETURN Qt_QMessageBox_aboutQt( ::pPtr, pParent, cTitle )
+   RETURN Qt_QMessageBox_aboutQt( ::pPtr, hbqt_ptr( pParent ), cTitle )
 
 
 METHOD QMessageBox:critical( pParent, cTitle, cText, nButtons, nDefaultButton )
-   RETURN Qt_QMessageBox_critical( ::pPtr, pParent, cTitle, cText, nButtons, nDefaultButton )
+   RETURN Qt_QMessageBox_critical( ::pPtr, hbqt_ptr( pParent ), cTitle, cText, nButtons, nDefaultButton )
 
 
 METHOD QMessageBox:information( pParent, cTitle, cText, nButtons, nDefaultButton )
-   RETURN Qt_QMessageBox_information( ::pPtr, pParent, cTitle, cText, nButtons, nDefaultButton )
+   RETURN Qt_QMessageBox_information( ::pPtr, hbqt_ptr( pParent ), cTitle, cText, nButtons, nDefaultButton )
 
 
 METHOD QMessageBox:question( pParent, cTitle, cText, nButtons, nDefaultButton )
-   RETURN Qt_QMessageBox_question( ::pPtr, pParent, cTitle, cText, nButtons, nDefaultButton )
+   RETURN Qt_QMessageBox_question( ::pPtr, hbqt_ptr( pParent ), cTitle, cText, nButtons, nDefaultButton )
 
 
 METHOD QMessageBox:warning( pParent, cTitle, cText, nButtons, nDefaultButton )
-   RETURN Qt_QMessageBox_warning( ::pPtr, pParent, cTitle, cText, nButtons, nDefaultButton )
+   RETURN Qt_QMessageBox_warning( ::pPtr, hbqt_ptr( pParent ), cTitle, cText, nButtons, nDefaultButton )
 
 
 METHOD QMessageBox:exec()

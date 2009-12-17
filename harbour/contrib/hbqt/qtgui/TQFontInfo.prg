@@ -88,7 +88,7 @@ CREATE CLASS QFontInfo
 /*----------------------------------------------------------------------*/
 
 METHOD QFontInfo:new( pParent )
-   ::pPtr := Qt_QFontInfo( pParent )
+   ::pPtr := Qt_QFontInfo( hbqt_ptr( pParent ) )
    RETURN Self
 
 

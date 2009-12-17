@@ -140,7 +140,7 @@ CREATE CLASS QColor
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( ... ) CLASS QColor
+METHOD QColor:new( ... )
 
    ::pPtr := Qt_QColor( ... )
 

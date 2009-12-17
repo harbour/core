@@ -128,7 +128,7 @@ CREATE CLASS QTreeWidgetItem
 /*----------------------------------------------------------------------*/
 
 METHOD QTreeWidgetItem:new( pParent )
-   ::pPtr := Qt_QTreeWidgetItem( pParent )
+   ::pPtr := Qt_QTreeWidgetItem( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -142,7 +142,7 @@ METHOD QTreeWidgetItem:configure( xObject )
 
 
 METHOD QTreeWidgetItem:addChild( pChild )
-   RETURN Qt_QTreeWidgetItem_addChild( ::pPtr, pChild )
+   RETURN Qt_QTreeWidgetItem_addChild( ::pPtr, hbqt_ptr( pChild ) )
 
 
 METHOD QTreeWidgetItem:background( nColumn )
@@ -194,11 +194,11 @@ METHOD QTreeWidgetItem:icon( nColumn )
 
 
 METHOD QTreeWidgetItem:indexOfChild( pChild )
-   RETURN Qt_QTreeWidgetItem_indexOfChild( ::pPtr, pChild )
+   RETURN Qt_QTreeWidgetItem_indexOfChild( ::pPtr, hbqt_ptr( pChild ) )
 
 
 METHOD QTreeWidgetItem:insertChild( nIndex, pChild )
-   RETURN Qt_QTreeWidgetItem_insertChild( ::pPtr, nIndex, pChild )
+   RETURN Qt_QTreeWidgetItem_insertChild( ::pPtr, nIndex, hbqt_ptr( pChild ) )
 
 
 METHOD QTreeWidgetItem:isDisabled()
@@ -226,15 +226,15 @@ METHOD QTreeWidgetItem:parent()
 
 
 METHOD QTreeWidgetItem:read( pIn )
-   RETURN Qt_QTreeWidgetItem_read( ::pPtr, pIn )
+   RETURN Qt_QTreeWidgetItem_read( ::pPtr, hbqt_ptr( pIn ) )
 
 
 METHOD QTreeWidgetItem:removeChild( pChild )
-   RETURN Qt_QTreeWidgetItem_removeChild( ::pPtr, pChild )
+   RETURN Qt_QTreeWidgetItem_removeChild( ::pPtr, hbqt_ptr( pChild ) )
 
 
 METHOD QTreeWidgetItem:setBackground( nColumn, pBrush )
-   RETURN Qt_QTreeWidgetItem_setBackground( ::pPtr, nColumn, pBrush )
+   RETURN Qt_QTreeWidgetItem_setBackground( ::pPtr, nColumn, hbqt_ptr( pBrush ) )
 
 
 METHOD QTreeWidgetItem:setCheckState( nColumn, nState )
@@ -246,7 +246,7 @@ METHOD QTreeWidgetItem:setChildIndicatorPolicy( nPolicy )
 
 
 METHOD QTreeWidgetItem:setData( nColumn, nRole, pValue )
-   RETURN Qt_QTreeWidgetItem_setData( ::pPtr, nColumn, nRole, pValue )
+   RETURN Qt_QTreeWidgetItem_setData( ::pPtr, nColumn, nRole, hbqt_ptr( pValue ) )
 
 
 METHOD QTreeWidgetItem:setDisabled( lDisabled )
@@ -266,11 +266,11 @@ METHOD QTreeWidgetItem:setFlags( nFlags )
 
 
 METHOD QTreeWidgetItem:setFont( nColumn, pFont )
-   RETURN Qt_QTreeWidgetItem_setFont( ::pPtr, nColumn, pFont )
+   RETURN Qt_QTreeWidgetItem_setFont( ::pPtr, nColumn, hbqt_ptr( pFont ) )
 
 
 METHOD QTreeWidgetItem:setForeground( nColumn, pBrush )
-   RETURN Qt_QTreeWidgetItem_setForeground( ::pPtr, nColumn, pBrush )
+   RETURN Qt_QTreeWidgetItem_setForeground( ::pPtr, nColumn, hbqt_ptr( pBrush ) )
 
 
 METHOD QTreeWidgetItem:setHidden( lHide )
@@ -286,7 +286,7 @@ METHOD QTreeWidgetItem:setSelected( lSelect )
 
 
 METHOD QTreeWidgetItem:setSizeHint( nColumn, pSize )
-   RETURN Qt_QTreeWidgetItem_setSizeHint( ::pPtr, nColumn, pSize )
+   RETURN Qt_QTreeWidgetItem_setSizeHint( ::pPtr, nColumn, hbqt_ptr( pSize ) )
 
 
 METHOD QTreeWidgetItem:setStatusTip( nColumn, cStatusTip )

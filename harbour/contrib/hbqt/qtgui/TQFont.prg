@@ -133,7 +133,7 @@ CREATE CLASS QFont
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( ... ) CLASS QFont
+METHOD QFont:new( ... )
 
    ::pPtr := Qt_QFont( ... )
 
@@ -362,7 +362,7 @@ METHOD QFont:insertSubstitution( cFamilyName, cSubstituteName )
 
 
 METHOD QFont:insertSubstitutions( cFamilyName, pSubstituteNames )
-   RETURN Qt_QFont_insertSubstitutions( ::pPtr, cFamilyName, pSubstituteNames )
+   RETURN Qt_QFont_insertSubstitutions( ::pPtr, cFamilyName, hbqt_ptr( pSubstituteNames ) )
 
 
 METHOD QFont:removeSubstitution( cFamilyName )

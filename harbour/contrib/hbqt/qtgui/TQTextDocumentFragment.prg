@@ -83,7 +83,7 @@ CREATE CLASS QTextDocumentFragment
 /*----------------------------------------------------------------------*/
 
 METHOD QTextDocumentFragment:new( pParent )
-   ::pPtr := Qt_QTextDocumentFragment( pParent )
+   ::pPtr := Qt_QTextDocumentFragment( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -101,7 +101,7 @@ METHOD QTextDocumentFragment:isEmpty()
 
 
 METHOD QTextDocumentFragment:toHtml( pEncoding )
-   RETURN Qt_QTextDocumentFragment_toHtml( ::pPtr, pEncoding )
+   RETURN Qt_QTextDocumentFragment_toHtml( ::pPtr, hbqt_ptr( pEncoding ) )
 
 
 METHOD QTextDocumentFragment:toHtml_1()
@@ -117,7 +117,7 @@ METHOD QTextDocumentFragment:fromHtml( cText )
 
 
 METHOD QTextDocumentFragment:fromHtml_1( cText, pResourceProvider )
-   RETURN Qt_QTextDocumentFragment_fromHtml_1( ::pPtr, cText, pResourceProvider )
+   RETURN Qt_QTextDocumentFragment_fromHtml_1( ::pPtr, cText, hbqt_ptr( pResourceProvider ) )
 
 
 METHOD QTextDocumentFragment:fromPlainText( cPlainText )

@@ -80,7 +80,7 @@ CREATE CLASS QStyleOptionButton INHERIT QStyleOption
 /*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionButton:new( pParent )
-   ::pPtr := Qt_QStyleOptionButton( pParent )
+   ::pPtr := Qt_QStyleOptionButton( hbqt_ptr( pParent ) )
    RETURN Self
 
 

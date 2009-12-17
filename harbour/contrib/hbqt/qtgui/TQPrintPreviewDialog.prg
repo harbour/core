@@ -78,7 +78,7 @@ CREATE CLASS QPrintPreviewDialog INHERIT QDialog
 /*----------------------------------------------------------------------*/
 
 METHOD QPrintPreviewDialog:new( pParent )
-   ::pPtr := Qt_QPrintPreviewDialog( pParent )
+   ::pPtr := Qt_QPrintPreviewDialog( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -92,7 +92,7 @@ METHOD QPrintPreviewDialog:configure( xObject )
 
 
 METHOD QPrintPreviewDialog:open( pReceiver, pMember )
-   RETURN Qt_QPrintPreviewDialog_open( ::pPtr, pReceiver, pMember )
+   RETURN Qt_QPrintPreviewDialog_open( ::pPtr, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
 
 
 METHOD QPrintPreviewDialog:printer()

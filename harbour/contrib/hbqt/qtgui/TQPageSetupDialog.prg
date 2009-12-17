@@ -84,7 +84,7 @@ CREATE CLASS QPageSetupDialog INHERIT QDialog
 /*----------------------------------------------------------------------*/
 
 METHOD QPageSetupDialog:new( pParent )
-   ::pPtr := Qt_QPageSetupDialog( pParent )
+   ::pPtr := Qt_QPageSetupDialog( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -102,7 +102,7 @@ METHOD QPageSetupDialog:exec()
 
 
 METHOD QPageSetupDialog:open( pReceiver, pMember )
-   RETURN Qt_QPageSetupDialog_open( ::pPtr, pReceiver, pMember )
+   RETURN Qt_QPageSetupDialog_open( ::pPtr, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
 
 
 METHOD QPageSetupDialog:options()

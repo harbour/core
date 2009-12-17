@@ -76,7 +76,7 @@ CREATE CLASS QStyleHintReturn
 /*----------------------------------------------------------------------*/
 
 METHOD QStyleHintReturn:new( pParent )
-   ::pPtr := Qt_QStyleHintReturn( pParent )
+   ::pPtr := Qt_QStyleHintReturn( hbqt_ptr( pParent ) )
    RETURN Self
 
 

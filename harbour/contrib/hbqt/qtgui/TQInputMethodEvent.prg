@@ -81,7 +81,7 @@ CREATE CLASS QInputMethodEvent INHERIT QEvent
 /*----------------------------------------------------------------------*/
 
 METHOD QInputMethodEvent:new( pParent )
-   ::pPtr := Qt_QInputMethodEvent( pParent )
+   ::pPtr := Qt_QInputMethodEvent( hbqt_ptr( pParent ) )
    RETURN Self
 
 

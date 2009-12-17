@@ -117,7 +117,7 @@ CREATE CLASS QTextFormat
 /*----------------------------------------------------------------------*/
 
 METHOD QTextFormat:new( pParent )
-   ::pPtr := Qt_QTextFormat( pParent )
+   ::pPtr := Qt_QTextFormat( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -215,7 +215,7 @@ METHOD QTextFormat:lengthProperty( nPropertyId )
 
 
 METHOD QTextFormat:merge( pOther )
-   RETURN Qt_QTextFormat_merge( ::pPtr, pOther )
+   RETURN Qt_QTextFormat_merge( ::pPtr, hbqt_ptr( pOther ) )
 
 
 METHOD QTextFormat:objectIndex()
@@ -239,11 +239,11 @@ METHOD QTextFormat:propertyCount()
 
 
 METHOD QTextFormat:setBackground( pBrush )
-   RETURN Qt_QTextFormat_setBackground( ::pPtr, pBrush )
+   RETURN Qt_QTextFormat_setBackground( ::pPtr, hbqt_ptr( pBrush ) )
 
 
 METHOD QTextFormat:setForeground( pBrush )
-   RETURN Qt_QTextFormat_setForeground( ::pPtr, pBrush )
+   RETURN Qt_QTextFormat_setForeground( ::pPtr, hbqt_ptr( pBrush ) )
 
 
 METHOD QTextFormat:setLayoutDirection( nDirection )
@@ -259,7 +259,7 @@ METHOD QTextFormat:setObjectType( nType )
 
 
 METHOD QTextFormat:setProperty( nPropertyId, pValue )
-   RETURN Qt_QTextFormat_setProperty( ::pPtr, nPropertyId, pValue )
+   RETURN Qt_QTextFormat_setProperty( ::pPtr, nPropertyId, hbqt_ptr( pValue ) )
 
 
 METHOD QTextFormat:stringProperty( nPropertyId )

@@ -96,7 +96,7 @@ CREATE CLASS QBoxLayout INHERIT QLayout
 /*----------------------------------------------------------------------*/
 
 METHOD QBoxLayout:new( pParent )
-   ::pPtr := Qt_QBoxLayout( pParent )
+   ::pPtr := Qt_QBoxLayout( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -110,11 +110,11 @@ METHOD QBoxLayout:configure( xObject )
 
 
 METHOD QBoxLayout:addLayout( pLayout, nStretch )
-   RETURN Qt_QBoxLayout_addLayout( ::pPtr, pLayout, nStretch )
+   RETURN Qt_QBoxLayout_addLayout( ::pPtr, hbqt_ptr( pLayout ), nStretch )
 
 
 METHOD QBoxLayout:addSpacerItem( pSpacerItem )
-   RETURN Qt_QBoxLayout_addSpacerItem( ::pPtr, pSpacerItem )
+   RETURN Qt_QBoxLayout_addSpacerItem( ::pPtr, hbqt_ptr( pSpacerItem ) )
 
 
 METHOD QBoxLayout:addSpacing( nSize )
@@ -130,7 +130,7 @@ METHOD QBoxLayout:addStrut( nSize )
 
 
 METHOD QBoxLayout:addWidget( pWidget, nStretch, nAlignment )
-   RETURN Qt_QBoxLayout_addWidget( ::pPtr, pWidget, nStretch, nAlignment )
+   RETURN Qt_QBoxLayout_addWidget( ::pPtr, hbqt_ptr( pWidget ), nStretch, nAlignment )
 
 
 METHOD QBoxLayout:direction()
@@ -138,11 +138,11 @@ METHOD QBoxLayout:direction()
 
 
 METHOD QBoxLayout:insertLayout( nIndex, pLayout, nStretch )
-   RETURN Qt_QBoxLayout_insertLayout( ::pPtr, nIndex, pLayout, nStretch )
+   RETURN Qt_QBoxLayout_insertLayout( ::pPtr, nIndex, hbqt_ptr( pLayout ), nStretch )
 
 
 METHOD QBoxLayout:insertSpacerItem( nIndex, pSpacerItem )
-   RETURN Qt_QBoxLayout_insertSpacerItem( ::pPtr, nIndex, pSpacerItem )
+   RETURN Qt_QBoxLayout_insertSpacerItem( ::pPtr, nIndex, hbqt_ptr( pSpacerItem ) )
 
 
 METHOD QBoxLayout:insertSpacing( nIndex, nSize )
@@ -154,7 +154,7 @@ METHOD QBoxLayout:insertStretch( nIndex, nStretch )
 
 
 METHOD QBoxLayout:insertWidget( nIndex, pWidget, nStretch, nAlignment )
-   RETURN Qt_QBoxLayout_insertWidget( ::pPtr, nIndex, pWidget, nStretch, nAlignment )
+   RETURN Qt_QBoxLayout_insertWidget( ::pPtr, nIndex, hbqt_ptr( pWidget ), nStretch, nAlignment )
 
 
 METHOD QBoxLayout:invalidate()
@@ -174,11 +174,11 @@ METHOD QBoxLayout:setStretch( nIndex, nStretch )
 
 
 METHOD QBoxLayout:setStretchFactor( pWidget, nStretch )
-   RETURN Qt_QBoxLayout_setStretchFactor( ::pPtr, pWidget, nStretch )
+   RETURN Qt_QBoxLayout_setStretchFactor( ::pPtr, hbqt_ptr( pWidget ), nStretch )
 
 
 METHOD QBoxLayout:setStretchFactor_1( pLayout, nStretch )
-   RETURN Qt_QBoxLayout_setStretchFactor_1( ::pPtr, pLayout, nStretch )
+   RETURN Qt_QBoxLayout_setStretchFactor_1( ::pPtr, hbqt_ptr( pLayout ), nStretch )
 
 
 METHOD QBoxLayout:spacing()

@@ -81,7 +81,7 @@ CREATE CLASS QHttpRequestHeader INHERIT QHttpHeader
 /*----------------------------------------------------------------------*/
 
 METHOD QHttpRequestHeader:new( pParent )
-   ::pPtr := Qt_QHttpRequestHeader( pParent )
+   ::pPtr := Qt_QHttpRequestHeader( hbqt_ptr( pParent ) )
    RETURN Self
 
 

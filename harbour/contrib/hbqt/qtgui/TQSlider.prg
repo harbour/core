@@ -80,7 +80,7 @@ CREATE CLASS QSlider INHERIT QAbstractSlider
 /*----------------------------------------------------------------------*/
 
 METHOD QSlider:new( pParent )
-   ::pPtr := Qt_QSlider( pParent )
+   ::pPtr := Qt_QSlider( hbqt_ptr( pParent ) )
    RETURN Self
 
 

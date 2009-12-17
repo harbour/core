@@ -113,7 +113,7 @@ CREATE CLASS QDirModel INHERIT QAbstractItemModel
 /*----------------------------------------------------------------------*/
 
 METHOD QDirModel:new( pParent )
-   ::pPtr := Qt_QDirModel( pParent )
+   ::pPtr := Qt_QDirModel( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -127,31 +127,31 @@ METHOD QDirModel:configure( xObject )
 
 
 METHOD QDirModel:columnCount( pParent )
-   RETURN Qt_QDirModel_columnCount( ::pPtr, pParent )
+   RETURN Qt_QDirModel_columnCount( ::pPtr, hbqt_ptr( pParent ) )
 
 
 METHOD QDirModel:data( pIndex, nRole )
-   RETURN Qt_QDirModel_data( ::pPtr, pIndex, nRole )
+   RETURN Qt_QDirModel_data( ::pPtr, hbqt_ptr( pIndex ), nRole )
 
 
 METHOD QDirModel:dropMimeData( pData, nAction, nRow, nColumn, pParent )
-   RETURN Qt_QDirModel_dropMimeData( ::pPtr, pData, nAction, nRow, nColumn, pParent )
+   RETURN Qt_QDirModel_dropMimeData( ::pPtr, hbqt_ptr( pData ), nAction, nRow, nColumn, hbqt_ptr( pParent ) )
 
 
 METHOD QDirModel:fileIcon( pIndex )
-   RETURN Qt_QDirModel_fileIcon( ::pPtr, pIndex )
+   RETURN Qt_QDirModel_fileIcon( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QDirModel:fileInfo( pIndex )
-   RETURN Qt_QDirModel_fileInfo( ::pPtr, pIndex )
+   RETURN Qt_QDirModel_fileInfo( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QDirModel:fileName( pIndex )
-   RETURN Qt_QDirModel_fileName( ::pPtr, pIndex )
+   RETURN Qt_QDirModel_fileName( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QDirModel:filePath( pIndex )
-   RETURN Qt_QDirModel_filePath( ::pPtr, pIndex )
+   RETURN Qt_QDirModel_filePath( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QDirModel:filter()
@@ -159,11 +159,11 @@ METHOD QDirModel:filter()
 
 
 METHOD QDirModel:flags( pIndex )
-   RETURN Qt_QDirModel_flags( ::pPtr, pIndex )
+   RETURN Qt_QDirModel_flags( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QDirModel:hasChildren( pParent )
-   RETURN Qt_QDirModel_hasChildren( ::pPtr, pParent )
+   RETURN Qt_QDirModel_hasChildren( ::pPtr, hbqt_ptr( pParent ) )
 
 
 METHOD QDirModel:headerData( nSection, nOrientation, nRole )
@@ -175,7 +175,7 @@ METHOD QDirModel:iconProvider()
 
 
 METHOD QDirModel:index( nRow, nColumn, pParent )
-   RETURN Qt_QDirModel_index( ::pPtr, nRow, nColumn, pParent )
+   RETURN Qt_QDirModel_index( ::pPtr, nRow, nColumn, hbqt_ptr( pParent ) )
 
 
 METHOD QDirModel:index_1( cPath, nColumn )
@@ -183,7 +183,7 @@ METHOD QDirModel:index_1( cPath, nColumn )
 
 
 METHOD QDirModel:isDir( pIndex )
-   RETURN Qt_QDirModel_isDir( ::pPtr, pIndex )
+   RETURN Qt_QDirModel_isDir( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QDirModel:isReadOnly()
@@ -199,7 +199,7 @@ METHOD QDirModel:mimeTypes()
 
 
 METHOD QDirModel:mkdir( pParent, cName )
-   RETURN Qt_QDirModel_mkdir( ::pPtr, pParent, cName )
+   RETURN Qt_QDirModel_mkdir( ::pPtr, hbqt_ptr( pParent ), cName )
 
 
 METHOD QDirModel:nameFilters()
@@ -207,11 +207,11 @@ METHOD QDirModel:nameFilters()
 
 
 METHOD QDirModel:parent( pChild )
-   RETURN Qt_QDirModel_parent( ::pPtr, pChild )
+   RETURN Qt_QDirModel_parent( ::pPtr, hbqt_ptr( pChild ) )
 
 
 METHOD QDirModel:remove( pIndex )
-   RETURN Qt_QDirModel_remove( ::pPtr, pIndex )
+   RETURN Qt_QDirModel_remove( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QDirModel:resolveSymlinks()
@@ -219,15 +219,15 @@ METHOD QDirModel:resolveSymlinks()
 
 
 METHOD QDirModel:rmdir( pIndex )
-   RETURN Qt_QDirModel_rmdir( ::pPtr, pIndex )
+   RETURN Qt_QDirModel_rmdir( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QDirModel:rowCount( pParent )
-   RETURN Qt_QDirModel_rowCount( ::pPtr, pParent )
+   RETURN Qt_QDirModel_rowCount( ::pPtr, hbqt_ptr( pParent ) )
 
 
 METHOD QDirModel:setData( pIndex, pValue, nRole )
-   RETURN Qt_QDirModel_setData( ::pPtr, pIndex, pValue, nRole )
+   RETURN Qt_QDirModel_setData( ::pPtr, hbqt_ptr( pIndex ), hbqt_ptr( pValue ), nRole )
 
 
 METHOD QDirModel:setFilter( nFilters )
@@ -235,7 +235,7 @@ METHOD QDirModel:setFilter( nFilters )
 
 
 METHOD QDirModel:setIconProvider( pProvider )
-   RETURN Qt_QDirModel_setIconProvider( ::pPtr, pProvider )
+   RETURN Qt_QDirModel_setIconProvider( ::pPtr, hbqt_ptr( pProvider ) )
 
 
 METHOD QDirModel:setLazyChildCount( lEnable )
@@ -243,7 +243,7 @@ METHOD QDirModel:setLazyChildCount( lEnable )
 
 
 METHOD QDirModel:setNameFilters( pFilters )
-   RETURN Qt_QDirModel_setNameFilters( ::pPtr, pFilters )
+   RETURN Qt_QDirModel_setNameFilters( ::pPtr, hbqt_ptr( pFilters ) )
 
 
 METHOD QDirModel:setReadOnly( lEnable )
@@ -271,5 +271,5 @@ METHOD QDirModel:supportedDropActions()
 
 
 METHOD QDirModel:refresh( pParent )
-   RETURN Qt_QDirModel_refresh( ::pPtr, pParent )
+   RETURN Qt_QDirModel_refresh( ::pPtr, hbqt_ptr( pParent ) )
 

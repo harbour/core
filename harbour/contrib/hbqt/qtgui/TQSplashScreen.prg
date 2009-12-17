@@ -82,7 +82,7 @@ CREATE CLASS QSplashScreen INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QSplashScreen:new( pParent )
-   ::pPtr := Qt_QSplashScreen( pParent )
+   ::pPtr := Qt_QSplashScreen( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -96,7 +96,7 @@ METHOD QSplashScreen:configure( xObject )
 
 
 METHOD QSplashScreen:finish( pMainWin )
-   RETURN Qt_QSplashScreen_finish( ::pPtr, pMainWin )
+   RETURN Qt_QSplashScreen_finish( ::pPtr, hbqt_ptr( pMainWin ) )
 
 
 METHOD QSplashScreen:pixmap()
@@ -108,7 +108,7 @@ METHOD QSplashScreen:repaint()
 
 
 METHOD QSplashScreen:setPixmap( pPixmap )
-   RETURN Qt_QSplashScreen_setPixmap( ::pPtr, pPixmap )
+   RETURN Qt_QSplashScreen_setPixmap( ::pPtr, hbqt_ptr( pPixmap ) )
 
 
 METHOD QSplashScreen:clearMessage()
@@ -116,5 +116,5 @@ METHOD QSplashScreen:clearMessage()
 
 
 METHOD QSplashScreen:showMessage( cMessage, nAlignment, pColor )
-   RETURN Qt_QSplashScreen_showMessage( ::pPtr, cMessage, nAlignment, pColor )
+   RETURN Qt_QSplashScreen_showMessage( ::pPtr, cMessage, nAlignment, hbqt_ptr( pColor ) )
 

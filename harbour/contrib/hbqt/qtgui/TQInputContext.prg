@@ -87,7 +87,7 @@ CREATE CLASS QInputContext INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QInputContext:new( pParent )
-   ::pPtr := Qt_QInputContext( pParent )
+   ::pPtr := Qt_QInputContext( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -101,7 +101,7 @@ METHOD QInputContext:configure( xObject )
 
 
 METHOD QInputContext:filterEvent( pEvent )
-   RETURN Qt_QInputContext_filterEvent( ::pPtr, pEvent )
+   RETURN Qt_QInputContext_filterEvent( ::pPtr, hbqt_ptr( pEvent ) )
 
 
 METHOD QInputContext:font()
@@ -121,7 +121,7 @@ METHOD QInputContext:language()
 
 
 METHOD QInputContext:mouseHandler( nX, pEvent )
-   RETURN Qt_QInputContext_mouseHandler( ::pPtr, nX, pEvent )
+   RETURN Qt_QInputContext_mouseHandler( ::pPtr, nX, hbqt_ptr( pEvent ) )
 
 
 METHOD QInputContext:reset()
@@ -129,7 +129,7 @@ METHOD QInputContext:reset()
 
 
 METHOD QInputContext:sendEvent( pEvent )
-   RETURN Qt_QInputContext_sendEvent( ::pPtr, pEvent )
+   RETURN Qt_QInputContext_sendEvent( ::pPtr, hbqt_ptr( pEvent ) )
 
 
 METHOD QInputContext:standardFormat( nS )
@@ -141,5 +141,5 @@ METHOD QInputContext:update()
 
 
 METHOD QInputContext:widgetDestroyed( pWidget )
-   RETURN Qt_QInputContext_widgetDestroyed( ::pPtr, pWidget )
+   RETURN Qt_QInputContext_widgetDestroyed( ::pPtr, hbqt_ptr( pWidget ) )
 

@@ -135,7 +135,7 @@ CREATE CLASS QTextCursor
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( ... ) CLASS QTextCursor
+METHOD QTextCursor:new( ... )
 
    ::pPtr := Qt_QTextCursor( ... )
 
@@ -200,7 +200,7 @@ METHOD QTextCursor:columnNumber()
 
 
 METHOD QTextCursor:createList( pFormat )
-   RETURN Qt_QTextCursor_createList( ::pPtr, pFormat )
+   RETURN Qt_QTextCursor_createList( ::pPtr, hbqt_ptr( pFormat ) )
 
 
 METHOD QTextCursor:createList_1( nStyle )
@@ -248,19 +248,19 @@ METHOD QTextCursor:insertBlock()
 
 
 METHOD QTextCursor:insertBlock_1( pFormat )
-   RETURN Qt_QTextCursor_insertBlock_1( ::pPtr, pFormat )
+   RETURN Qt_QTextCursor_insertBlock_1( ::pPtr, hbqt_ptr( pFormat ) )
 
 
 METHOD QTextCursor:insertBlock_2( pFormat, pCharFormat )
-   RETURN Qt_QTextCursor_insertBlock_2( ::pPtr, pFormat, pCharFormat )
+   RETURN Qt_QTextCursor_insertBlock_2( ::pPtr, hbqt_ptr( pFormat ), hbqt_ptr( pCharFormat ) )
 
 
 METHOD QTextCursor:insertFragment( pFragment )
-   RETURN Qt_QTextCursor_insertFragment( ::pPtr, pFragment )
+   RETURN Qt_QTextCursor_insertFragment( ::pPtr, hbqt_ptr( pFragment ) )
 
 
 METHOD QTextCursor:insertFrame( pFormat )
-   RETURN Qt_QTextCursor_insertFrame( ::pPtr, pFormat )
+   RETURN Qt_QTextCursor_insertFrame( ::pPtr, hbqt_ptr( pFormat ) )
 
 
 METHOD QTextCursor:insertHtml( cHtml )
@@ -272,19 +272,19 @@ METHOD QTextCursor:insertImage( cName )
 
 
 METHOD QTextCursor:insertImage_1( pFormat )
-   RETURN Qt_QTextCursor_insertImage_1( ::pPtr, pFormat )
+   RETURN Qt_QTextCursor_insertImage_1( ::pPtr, hbqt_ptr( pFormat ) )
 
 
 METHOD QTextCursor:insertImage_2( pFormat, nAlignment )
-   RETURN Qt_QTextCursor_insertImage_2( ::pPtr, pFormat, nAlignment )
+   RETURN Qt_QTextCursor_insertImage_2( ::pPtr, hbqt_ptr( pFormat ), nAlignment )
 
 
 METHOD QTextCursor:insertImage_3( pImage, cName )
-   RETURN Qt_QTextCursor_insertImage_3( ::pPtr, pImage, cName )
+   RETURN Qt_QTextCursor_insertImage_3( ::pPtr, hbqt_ptr( pImage ), cName )
 
 
 METHOD QTextCursor:insertList( pFormat )
-   RETURN Qt_QTextCursor_insertList( ::pPtr, pFormat )
+   RETURN Qt_QTextCursor_insertList( ::pPtr, hbqt_ptr( pFormat ) )
 
 
 METHOD QTextCursor:insertList_1( nStyle )
@@ -292,7 +292,7 @@ METHOD QTextCursor:insertList_1( nStyle )
 
 
 METHOD QTextCursor:insertTable( nRows, nColumns, pFormat )
-   RETURN Qt_QTextCursor_insertTable( ::pPtr, nRows, nColumns, pFormat )
+   RETURN Qt_QTextCursor_insertTable( ::pPtr, nRows, nColumns, hbqt_ptr( pFormat ) )
 
 
 METHOD QTextCursor:insertTable_1( nRows, nColumns )
@@ -304,11 +304,11 @@ METHOD QTextCursor:insertText( cText )
 
 
 METHOD QTextCursor:insertText_1( cText, pFormat )
-   RETURN Qt_QTextCursor_insertText_1( ::pPtr, cText, pFormat )
+   RETURN Qt_QTextCursor_insertText_1( ::pPtr, cText, hbqt_ptr( pFormat ) )
 
 
 METHOD QTextCursor:isCopyOf( pOther )
-   RETURN Qt_QTextCursor_isCopyOf( ::pPtr, pOther )
+   RETURN Qt_QTextCursor_isCopyOf( ::pPtr, hbqt_ptr( pOther ) )
 
 
 METHOD QTextCursor:isNull()
@@ -320,15 +320,15 @@ METHOD QTextCursor:joinPreviousEditBlock()
 
 
 METHOD QTextCursor:mergeBlockCharFormat( pModifier )
-   RETURN Qt_QTextCursor_mergeBlockCharFormat( ::pPtr, pModifier )
+   RETURN Qt_QTextCursor_mergeBlockCharFormat( ::pPtr, hbqt_ptr( pModifier ) )
 
 
 METHOD QTextCursor:mergeBlockFormat( pModifier )
-   RETURN Qt_QTextCursor_mergeBlockFormat( ::pPtr, pModifier )
+   RETURN Qt_QTextCursor_mergeBlockFormat( ::pPtr, hbqt_ptr( pModifier ) )
 
 
 METHOD QTextCursor:mergeCharFormat( pModifier )
-   RETURN Qt_QTextCursor_mergeCharFormat( ::pPtr, pModifier )
+   RETURN Qt_QTextCursor_mergeCharFormat( ::pPtr, hbqt_ptr( pModifier ) )
 
 
 METHOD QTextCursor:movePosition( nOperation, nMode, nN )
@@ -368,15 +368,15 @@ METHOD QTextCursor:selectionStart()
 
 
 METHOD QTextCursor:setBlockCharFormat( pFormat )
-   RETURN Qt_QTextCursor_setBlockCharFormat( ::pPtr, pFormat )
+   RETURN Qt_QTextCursor_setBlockCharFormat( ::pPtr, hbqt_ptr( pFormat ) )
 
 
 METHOD QTextCursor:setBlockFormat( pFormat )
-   RETURN Qt_QTextCursor_setBlockFormat( ::pPtr, pFormat )
+   RETURN Qt_QTextCursor_setBlockFormat( ::pPtr, hbqt_ptr( pFormat ) )
 
 
 METHOD QTextCursor:setCharFormat( pFormat )
-   RETURN Qt_QTextCursor_setCharFormat( ::pPtr, pFormat )
+   RETURN Qt_QTextCursor_setCharFormat( ::pPtr, hbqt_ptr( pFormat ) )
 
 
 METHOD QTextCursor:setPosition( nPos, nM )

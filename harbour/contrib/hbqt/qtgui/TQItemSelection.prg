@@ -79,7 +79,7 @@ CREATE CLASS QItemSelection INHERIT QList
 /*----------------------------------------------------------------------*/
 
 METHOD QItemSelection:new( pParent )
-   ::pPtr := Qt_QItemSelection( pParent )
+   ::pPtr := Qt_QItemSelection( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -93,13 +93,13 @@ METHOD QItemSelection:configure( xObject )
 
 
 METHOD QItemSelection:contains( pIndex )
-   RETURN Qt_QItemSelection_contains( ::pPtr, pIndex )
+   RETURN Qt_QItemSelection_contains( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QItemSelection:merge( pOther, nCommand )
-   RETURN Qt_QItemSelection_merge( ::pPtr, pOther, nCommand )
+   RETURN Qt_QItemSelection_merge( ::pPtr, hbqt_ptr( pOther ), nCommand )
 
 
 METHOD QItemSelection:select( pTopLeft, pBottomRight )
-   RETURN Qt_QItemSelection_select( ::pPtr, pTopLeft, pBottomRight )
+   RETURN Qt_QItemSelection_select( ::pPtr, hbqt_ptr( pTopLeft ), hbqt_ptr( pBottomRight ) )
 

@@ -88,7 +88,7 @@ CREATE CLASS QDockWidget INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QDockWidget:new( pParent )
-   ::pPtr := Qt_QDockWidget( pParent )
+   ::pPtr := Qt_QDockWidget( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -130,11 +130,11 @@ METHOD QDockWidget:setFloating( lFloating )
 
 
 METHOD QDockWidget:setTitleBarWidget( pWidget )
-   RETURN Qt_QDockWidget_setTitleBarWidget( ::pPtr, pWidget )
+   RETURN Qt_QDockWidget_setTitleBarWidget( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QDockWidget:setWidget( pWidget )
-   RETURN Qt_QDockWidget_setWidget( ::pPtr, pWidget )
+   RETURN Qt_QDockWidget_setWidget( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QDockWidget:titleBarWidget()

@@ -88,7 +88,7 @@ CREATE CLASS QPaintDevice
 /*----------------------------------------------------------------------*/
 
 METHOD QPaintDevice:new( pParent )
-   ::pPtr := Qt_QPaintDevice( pParent )
+   ::pPtr := Qt_QPaintDevice( hbqt_ptr( pParent ) )
    RETURN Self
 
 

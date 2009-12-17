@@ -94,7 +94,7 @@ CREATE CLASS QImageWriter
 /*----------------------------------------------------------------------*/
 
 METHOD QImageWriter:new( pParent )
-   ::pPtr := Qt_QImageWriter( pParent )
+   ::pPtr := Qt_QImageWriter( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -148,7 +148,7 @@ METHOD QImageWriter:setCompression( nCompression )
 
 
 METHOD QImageWriter:setDevice( pDevice )
-   RETURN Qt_QImageWriter_setDevice( ::pPtr, pDevice )
+   RETURN Qt_QImageWriter_setDevice( ::pPtr, hbqt_ptr( pDevice ) )
 
 
 METHOD QImageWriter:setFileName( cFileName )
@@ -156,7 +156,7 @@ METHOD QImageWriter:setFileName( cFileName )
 
 
 METHOD QImageWriter:setFormat( pFormat )
-   RETURN Qt_QImageWriter_setFormat( ::pPtr, pFormat )
+   RETURN Qt_QImageWriter_setFormat( ::pPtr, hbqt_ptr( pFormat ) )
 
 
 METHOD QImageWriter:setGamma( nGamma )
@@ -176,5 +176,5 @@ METHOD QImageWriter:supportsOption( nOption )
 
 
 METHOD QImageWriter:write( pImage )
-   RETURN Qt_QImageWriter_write( ::pPtr, pImage )
+   RETURN Qt_QImageWriter_write( ::pPtr, hbqt_ptr( pImage ) )
 

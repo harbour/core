@@ -78,7 +78,7 @@ CREATE CLASS QStyleFactory
 /*----------------------------------------------------------------------*/
 
 METHOD QStyleFactory:new( pParent )
-   ::pPtr := Qt_QStyleFactory( pParent )
+   ::pPtr := Qt_QStyleFactory( hbqt_ptr( pParent ) )
    RETURN Self
 
 

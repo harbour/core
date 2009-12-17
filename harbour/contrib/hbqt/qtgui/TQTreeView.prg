@@ -125,7 +125,7 @@ CREATE CLASS QTreeView INHERIT QAbstractItemView
 /*----------------------------------------------------------------------*/
 
 METHOD QTreeView:new( pParent )
-   ::pPtr := Qt_QTreeView( pParent )
+   ::pPtr := Qt_QTreeView( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -171,11 +171,11 @@ METHOD QTreeView:indentation()
 
 
 METHOD QTreeView:indexAbove( pIndex )
-   RETURN Qt_QTreeView_indexAbove( ::pPtr, pIndex )
+   RETURN Qt_QTreeView_indexAbove( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QTreeView:indexBelow( pIndex )
-   RETURN Qt_QTreeView_indexBelow( ::pPtr, pIndex )
+   RETURN Qt_QTreeView_indexBelow( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QTreeView:isAnimated()
@@ -187,11 +187,11 @@ METHOD QTreeView:isColumnHidden( nColumn )
 
 
 METHOD QTreeView:isExpanded( pIndex )
-   RETURN Qt_QTreeView_isExpanded( ::pPtr, pIndex )
+   RETURN Qt_QTreeView_isExpanded( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QTreeView:isFirstColumnSpanned( nRow, pParent )
-   RETURN Qt_QTreeView_isFirstColumnSpanned( ::pPtr, nRow, pParent )
+   RETURN Qt_QTreeView_isFirstColumnSpanned( ::pPtr, nRow, hbqt_ptr( pParent ) )
 
 
 METHOD QTreeView:isHeaderHidden()
@@ -199,7 +199,7 @@ METHOD QTreeView:isHeaderHidden()
 
 
 METHOD QTreeView:isRowHidden( nRow, pParent )
-   RETURN Qt_QTreeView_isRowHidden( ::pPtr, nRow, pParent )
+   RETURN Qt_QTreeView_isRowHidden( ::pPtr, nRow, hbqt_ptr( pParent ) )
 
 
 METHOD QTreeView:isSortingEnabled()
@@ -215,7 +215,7 @@ METHOD QTreeView:rootIsDecorated()
 
 
 METHOD QTreeView:scrollTo( pIndex, nHint )
-   RETURN Qt_QTreeView_scrollTo( ::pPtr, pIndex, nHint )
+   RETURN Qt_QTreeView_scrollTo( ::pPtr, hbqt_ptr( pIndex ), nHint )
 
 
 METHOD QTreeView:setAllColumnsShowFocus( lEnable )
@@ -239,7 +239,7 @@ METHOD QTreeView:setColumnWidth( nColumn, nWidth )
 
 
 METHOD QTreeView:setExpanded( pIndex, lExpanded )
-   RETURN Qt_QTreeView_setExpanded( ::pPtr, pIndex, lExpanded )
+   RETURN Qt_QTreeView_setExpanded( ::pPtr, hbqt_ptr( pIndex ), lExpanded )
 
 
 METHOD QTreeView:setExpandsOnDoubleClick( lEnable )
@@ -247,11 +247,11 @@ METHOD QTreeView:setExpandsOnDoubleClick( lEnable )
 
 
 METHOD QTreeView:setFirstColumnSpanned( nRow, pParent, lSpan )
-   RETURN Qt_QTreeView_setFirstColumnSpanned( ::pPtr, nRow, pParent, lSpan )
+   RETURN Qt_QTreeView_setFirstColumnSpanned( ::pPtr, nRow, hbqt_ptr( pParent ), lSpan )
 
 
 METHOD QTreeView:setHeader( pHeader )
-   RETURN Qt_QTreeView_setHeader( ::pPtr, pHeader )
+   RETURN Qt_QTreeView_setHeader( ::pPtr, hbqt_ptr( pHeader ) )
 
 
 METHOD QTreeView:setHeaderHidden( lHide )
@@ -271,7 +271,7 @@ METHOD QTreeView:setRootIsDecorated( lShow )
 
 
 METHOD QTreeView:setRowHidden( nRow, pParent, lHide )
-   RETURN Qt_QTreeView_setRowHidden( ::pPtr, nRow, pParent, lHide )
+   RETURN Qt_QTreeView_setRowHidden( ::pPtr, nRow, hbqt_ptr( pParent ), lHide )
 
 
 METHOD QTreeView:setSortingEnabled( lEnable )
@@ -295,7 +295,7 @@ METHOD QTreeView:uniformRowHeights()
 
 
 METHOD QTreeView:visualRect( pIndex )
-   RETURN Qt_QTreeView_visualRect( ::pPtr, pIndex )
+   RETURN Qt_QTreeView_visualRect( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QTreeView:wordWrap()
@@ -303,7 +303,7 @@ METHOD QTreeView:wordWrap()
 
 
 METHOD QTreeView:collapse( pIndex )
-   RETURN Qt_QTreeView_collapse( ::pPtr, pIndex )
+   RETURN Qt_QTreeView_collapse( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QTreeView:collapseAll()
@@ -311,7 +311,7 @@ METHOD QTreeView:collapseAll()
 
 
 METHOD QTreeView:expand( pIndex )
-   RETURN Qt_QTreeView_expand( ::pPtr, pIndex )
+   RETURN Qt_QTreeView_expand( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QTreeView:expandAll()

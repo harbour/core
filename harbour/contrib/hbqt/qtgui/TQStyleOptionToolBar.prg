@@ -82,7 +82,7 @@ CREATE CLASS QStyleOptionToolBar INHERIT QStyleOption
 /*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionToolBar:new( pParent )
-   ::pPtr := Qt_QStyleOptionToolBar( pParent )
+   ::pPtr := Qt_QStyleOptionToolBar( hbqt_ptr( pParent ) )
    RETURN Self
 
 

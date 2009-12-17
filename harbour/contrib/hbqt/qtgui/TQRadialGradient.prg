@@ -83,7 +83,7 @@ CREATE CLASS QRadialGradient INHERIT QGradient
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( ... ) CLASS QRadialGradient
+METHOD QRadialGradient:new( ... )
 
    ::pPtr := Qt_QRadialGradient( ... )
 
@@ -112,7 +112,7 @@ METHOD QRadialGradient:radius()
 
 
 METHOD QRadialGradient:setCenter( pCenter )
-   RETURN Qt_QRadialGradient_setCenter( ::pPtr, pCenter )
+   RETURN Qt_QRadialGradient_setCenter( ::pPtr, hbqt_ptr( pCenter ) )
 
 
 METHOD QRadialGradient:setCenter_1( nX, nY )
@@ -120,7 +120,7 @@ METHOD QRadialGradient:setCenter_1( nX, nY )
 
 
 METHOD QRadialGradient:setFocalPoint( pFocalPoint )
-   RETURN Qt_QRadialGradient_setFocalPoint( ::pPtr, pFocalPoint )
+   RETURN Qt_QRadialGradient_setFocalPoint( ::pPtr, hbqt_ptr( pFocalPoint ) )
 
 
 METHOD QRadialGradient:setFocalPoint_1( nX, nY )

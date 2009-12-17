@@ -79,7 +79,7 @@ CREATE CLASS QSyntaxHighlighter INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QSyntaxHighlighter:new( pParent )
-   ::pPtr := Qt_QSyntaxHighlighter( pParent )
+   ::pPtr := Qt_QSyntaxHighlighter( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -97,7 +97,7 @@ METHOD QSyntaxHighlighter:document()
 
 
 METHOD QSyntaxHighlighter:setDocument( pDoc )
-   RETURN Qt_QSyntaxHighlighter_setDocument( ::pPtr, pDoc )
+   RETURN Qt_QSyntaxHighlighter_setDocument( ::pPtr, hbqt_ptr( pDoc ) )
 
 
 METHOD QSyntaxHighlighter:rehighlight()

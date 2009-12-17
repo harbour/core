@@ -81,7 +81,7 @@ CREATE CLASS QHttpResponseHeader INHERIT QHttpHeader
 /*----------------------------------------------------------------------*/
 
 METHOD QHttpResponseHeader:new( pParent )
-   ::pPtr := Qt_QHttpResponseHeader( pParent )
+   ::pPtr := Qt_QHttpResponseHeader( hbqt_ptr( pParent ) )
    RETURN Self
 
 

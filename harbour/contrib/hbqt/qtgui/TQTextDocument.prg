@@ -142,7 +142,7 @@ CREATE CLASS QTextDocument INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QTextDocument:new( pParent )
-   ::pPtr := Qt_QTextDocument( pParent )
+   ::pPtr := Qt_QTextDocument( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -156,7 +156,7 @@ METHOD QTextDocument:configure( xObject )
 
 
 METHOD QTextDocument:addResource( nType, pName, pResource )
-   RETURN Qt_QTextDocument_addResource( ::pPtr, nType, pName, pResource )
+   RETURN Qt_QTextDocument_addResource( ::pPtr, nType, hbqt_ptr( pName ), hbqt_ptr( pResource ) )
 
 
 METHOD QTextDocument:adjustSize()
@@ -180,7 +180,7 @@ METHOD QTextDocument:clear()
 
 
 METHOD QTextDocument:clone( pParent )
-   RETURN Qt_QTextDocument_clone( ::pPtr, pParent )
+   RETURN Qt_QTextDocument_clone( ::pPtr, hbqt_ptr( pParent ) )
 
 
 METHOD QTextDocument:defaultFont()
@@ -204,7 +204,7 @@ METHOD QTextDocument:documentMargin()
 
 
 METHOD QTextDocument:drawContents( pP, pRect )
-   RETURN Qt_QTextDocument_drawContents( ::pPtr, pP, pRect )
+   RETURN Qt_QTextDocument_drawContents( ::pPtr, hbqt_ptr( pP ), hbqt_ptr( pRect ) )
 
 
 METHOD QTextDocument:end()
@@ -212,11 +212,11 @@ METHOD QTextDocument:end()
 
 
 METHOD QTextDocument:find( cSubString, pCursor, nOptions )
-   RETURN Qt_QTextDocument_find( ::pPtr, cSubString, pCursor, nOptions )
+   RETURN Qt_QTextDocument_find( ::pPtr, cSubString, hbqt_ptr( pCursor ), nOptions )
 
 
 METHOD QTextDocument:find_1( pExpr, pCursor, nOptions )
-   RETURN Qt_QTextDocument_find_1( ::pPtr, pExpr, pCursor, nOptions )
+   RETURN Qt_QTextDocument_find_1( ::pPtr, hbqt_ptr( pExpr ), hbqt_ptr( pCursor ), nOptions )
 
 
 METHOD QTextDocument:find_2( cSubString, nPosition, nOptions )
@@ -224,7 +224,7 @@ METHOD QTextDocument:find_2( cSubString, nPosition, nOptions )
 
 
 METHOD QTextDocument:find_3( pExpr, nPosition, nOptions )
-   RETURN Qt_QTextDocument_find_3( ::pPtr, pExpr, nPosition, nOptions )
+   RETURN Qt_QTextDocument_find_3( ::pPtr, hbqt_ptr( pExpr ), nPosition, nOptions )
 
 
 METHOD QTextDocument:findBlock( nPos )
@@ -296,7 +296,7 @@ METHOD QTextDocument:object( nObjectIndex )
 
 
 METHOD QTextDocument:objectForFormat( pF )
-   RETURN Qt_QTextDocument_objectForFormat( ::pPtr, pF )
+   RETURN Qt_QTextDocument_objectForFormat( ::pPtr, hbqt_ptr( pF ) )
 
 
 METHOD QTextDocument:pageCount()
@@ -308,15 +308,15 @@ METHOD QTextDocument:pageSize()
 
 
 METHOD QTextDocument:print( pPrinter )
-   RETURN Qt_QTextDocument_print( ::pPtr, pPrinter )
+   RETURN Qt_QTextDocument_print( ::pPtr, hbqt_ptr( pPrinter ) )
 
 
 METHOD QTextDocument:redo( pCursor )
-   RETURN Qt_QTextDocument_redo( ::pPtr, pCursor )
+   RETURN Qt_QTextDocument_redo( ::pPtr, hbqt_ptr( pCursor ) )
 
 
 METHOD QTextDocument:resource( nType, pName )
-   RETURN Qt_QTextDocument_resource( ::pPtr, nType, pName )
+   RETURN Qt_QTextDocument_resource( ::pPtr, nType, hbqt_ptr( pName ) )
 
 
 METHOD QTextDocument:revision()
@@ -328,7 +328,7 @@ METHOD QTextDocument:rootFrame()
 
 
 METHOD QTextDocument:setDefaultFont( pFont )
-   RETURN Qt_QTextDocument_setDefaultFont( ::pPtr, pFont )
+   RETURN Qt_QTextDocument_setDefaultFont( ::pPtr, hbqt_ptr( pFont ) )
 
 
 METHOD QTextDocument:setDefaultStyleSheet( cSheet )
@@ -336,11 +336,11 @@ METHOD QTextDocument:setDefaultStyleSheet( cSheet )
 
 
 METHOD QTextDocument:setDefaultTextOption( pOption )
-   RETURN Qt_QTextDocument_setDefaultTextOption( ::pPtr, pOption )
+   RETURN Qt_QTextDocument_setDefaultTextOption( ::pPtr, hbqt_ptr( pOption ) )
 
 
 METHOD QTextDocument:setDocumentLayout( pLayout )
-   RETURN Qt_QTextDocument_setDocumentLayout( ::pPtr, pLayout )
+   RETURN Qt_QTextDocument_setDocumentLayout( ::pPtr, hbqt_ptr( pLayout ) )
 
 
 METHOD QTextDocument:setDocumentMargin( nMargin )
@@ -364,7 +364,7 @@ METHOD QTextDocument:setMetaInformation( nInfo, cString )
 
 
 METHOD QTextDocument:setPageSize( pSize )
-   RETURN Qt_QTextDocument_setPageSize( ::pPtr, pSize )
+   RETURN Qt_QTextDocument_setPageSize( ::pPtr, hbqt_ptr( pSize ) )
 
 
 METHOD QTextDocument:setPlainText( cText )
@@ -392,7 +392,7 @@ METHOD QTextDocument:textWidth()
 
 
 METHOD QTextDocument:toHtml( pEncoding )
-   RETURN Qt_QTextDocument_toHtml( ::pPtr, pEncoding )
+   RETURN Qt_QTextDocument_toHtml( ::pPtr, hbqt_ptr( pEncoding ) )
 
 
 METHOD QTextDocument:toPlainText()
@@ -400,7 +400,7 @@ METHOD QTextDocument:toPlainText()
 
 
 METHOD QTextDocument:undo( pCursor )
-   RETURN Qt_QTextDocument_undo( ::pPtr, pCursor )
+   RETURN Qt_QTextDocument_undo( ::pPtr, hbqt_ptr( pCursor ) )
 
 
 METHOD QTextDocument:useDesignMetrics()

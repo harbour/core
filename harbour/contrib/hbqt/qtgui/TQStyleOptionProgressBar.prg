@@ -82,7 +82,7 @@ CREATE CLASS QStyleOptionProgressBar INHERIT QStyleOption
 /*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionProgressBar:new( pParent )
-   ::pPtr := Qt_QStyleOptionProgressBar( pParent )
+   ::pPtr := Qt_QStyleOptionProgressBar( hbqt_ptr( pParent ) )
    RETURN Self
 
 

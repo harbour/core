@@ -84,7 +84,7 @@ CREATE CLASS QStyleOption
 /*----------------------------------------------------------------------*/
 
 METHOD QStyleOption:new( pParent )
-   ::pPtr := Qt_QStyleOption( pParent )
+   ::pPtr := Qt_QStyleOption( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -98,7 +98,7 @@ METHOD QStyleOption:configure( xObject )
 
 
 METHOD QStyleOption:initFrom( pWidget )
-   RETURN Qt_QStyleOption_initFrom( ::pPtr, pWidget )
+   RETURN Qt_QStyleOption_initFrom( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QStyleOption:direction()

@@ -78,7 +78,7 @@ CREATE CLASS QStyleOptionFrame INHERIT qStyleOption
 /*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionFrame:new( pParent )
-   ::pPtr := Qt_QStyleOptionFrame( pParent )
+   ::pPtr := Qt_QStyleOptionFrame( hbqt_ptr( pParent ) )
    RETURN Self
 
 

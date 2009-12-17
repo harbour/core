@@ -101,7 +101,7 @@ CREATE CLASS QTextBlock
 /*----------------------------------------------------------------------*/
 
 METHOD QTextBlock:new( pParent )
-   ::pPtr := Qt_QTextBlock( pParent )
+   ::pPtr := Qt_QTextBlock( hbqt_ptr( pParent ) )
    RETURN Self
 
 

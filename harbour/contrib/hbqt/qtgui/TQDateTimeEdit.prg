@@ -120,7 +120,7 @@ CREATE CLASS QDateTimeEdit INHERIT QAbstractSpinBox
 /*----------------------------------------------------------------------*/
 
 METHOD QDateTimeEdit:new( pParent )
-   ::pPtr := Qt_QDateTimeEdit( pParent )
+   ::pPtr := Qt_QDateTimeEdit( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -230,7 +230,7 @@ METHOD QDateTimeEdit:setCalendarPopup( lEnable )
 
 
 METHOD QDateTimeEdit:setCalendarWidget( pCalendarWidget )
-   RETURN Qt_QDateTimeEdit_setCalendarWidget( ::pPtr, pCalendarWidget )
+   RETURN Qt_QDateTimeEdit_setCalendarWidget( ::pPtr, hbqt_ptr( pCalendarWidget ) )
 
 
 METHOD QDateTimeEdit:setCurrentSection( nSection )
@@ -242,11 +242,11 @@ METHOD QDateTimeEdit:setCurrentSectionIndex( nIndex )
 
 
 METHOD QDateTimeEdit:setDateRange( pMin, pMax )
-   RETURN Qt_QDateTimeEdit_setDateRange( ::pPtr, pMin, pMax )
+   RETURN Qt_QDateTimeEdit_setDateRange( ::pPtr, hbqt_ptr( pMin ), hbqt_ptr( pMax ) )
 
 
 METHOD QDateTimeEdit:setDateTimeRange( pMin, pMax )
-   RETURN Qt_QDateTimeEdit_setDateTimeRange( ::pPtr, pMin, pMax )
+   RETURN Qt_QDateTimeEdit_setDateTimeRange( ::pPtr, hbqt_ptr( pMin ), hbqt_ptr( pMax ) )
 
 
 METHOD QDateTimeEdit:setDisplayFormat( cFormat )
@@ -254,27 +254,27 @@ METHOD QDateTimeEdit:setDisplayFormat( cFormat )
 
 
 METHOD QDateTimeEdit:setMaximumDate( pMax )
-   RETURN Qt_QDateTimeEdit_setMaximumDate( ::pPtr, pMax )
+   RETURN Qt_QDateTimeEdit_setMaximumDate( ::pPtr, hbqt_ptr( pMax ) )
 
 
 METHOD QDateTimeEdit:setMaximumDateTime( pDt )
-   RETURN Qt_QDateTimeEdit_setMaximumDateTime( ::pPtr, pDt )
+   RETURN Qt_QDateTimeEdit_setMaximumDateTime( ::pPtr, hbqt_ptr( pDt ) )
 
 
 METHOD QDateTimeEdit:setMaximumTime( pMax )
-   RETURN Qt_QDateTimeEdit_setMaximumTime( ::pPtr, pMax )
+   RETURN Qt_QDateTimeEdit_setMaximumTime( ::pPtr, hbqt_ptr( pMax ) )
 
 
 METHOD QDateTimeEdit:setMinimumDate( pMin )
-   RETURN Qt_QDateTimeEdit_setMinimumDate( ::pPtr, pMin )
+   RETURN Qt_QDateTimeEdit_setMinimumDate( ::pPtr, hbqt_ptr( pMin ) )
 
 
 METHOD QDateTimeEdit:setMinimumDateTime( pDt )
-   RETURN Qt_QDateTimeEdit_setMinimumDateTime( ::pPtr, pDt )
+   RETURN Qt_QDateTimeEdit_setMinimumDateTime( ::pPtr, hbqt_ptr( pDt ) )
 
 
 METHOD QDateTimeEdit:setMinimumTime( pMin )
-   RETURN Qt_QDateTimeEdit_setMinimumTime( ::pPtr, pMin )
+   RETURN Qt_QDateTimeEdit_setMinimumTime( ::pPtr, hbqt_ptr( pMin ) )
 
 
 METHOD QDateTimeEdit:setSelectedSection( nSection )
@@ -282,7 +282,7 @@ METHOD QDateTimeEdit:setSelectedSection( nSection )
 
 
 METHOD QDateTimeEdit:setTimeRange( pMin, pMax )
-   RETURN Qt_QDateTimeEdit_setTimeRange( ::pPtr, pMin, pMax )
+   RETURN Qt_QDateTimeEdit_setTimeRange( ::pPtr, hbqt_ptr( pMin ), hbqt_ptr( pMax ) )
 
 
 METHOD QDateTimeEdit:setTimeSpec( nSpec )
@@ -298,13 +298,13 @@ METHOD QDateTimeEdit:timeSpec()
 
 
 METHOD QDateTimeEdit:setDate( pDate )
-   RETURN Qt_QDateTimeEdit_setDate( ::pPtr, pDate )
+   RETURN Qt_QDateTimeEdit_setDate( ::pPtr, hbqt_ptr( pDate ) )
 
 
 METHOD QDateTimeEdit:setDateTime( pDateTime )
-   RETURN Qt_QDateTimeEdit_setDateTime( ::pPtr, pDateTime )
+   RETURN Qt_QDateTimeEdit_setDateTime( ::pPtr, hbqt_ptr( pDateTime ) )
 
 
 METHOD QDateTimeEdit:setTime( pTime )
-   RETURN Qt_QDateTimeEdit_setTime( ::pPtr, pTime )
+   RETURN Qt_QDateTimeEdit_setTime( ::pPtr, hbqt_ptr( pTime ) )
 

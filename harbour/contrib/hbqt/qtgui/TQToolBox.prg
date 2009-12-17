@@ -96,7 +96,7 @@ CREATE CLASS QToolBox INHERIT QFrame
 /*----------------------------------------------------------------------*/
 
 METHOD QToolBox:new( pParent )
-   ::pPtr := Qt_QToolBox( pParent )
+   ::pPtr := Qt_QToolBox( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -110,11 +110,11 @@ METHOD QToolBox:configure( xObject )
 
 
 METHOD QToolBox:addItem( pWidget, cIconSet, cText )
-   RETURN Qt_QToolBox_addItem( ::pPtr, pWidget, cIconSet, cText )
+   RETURN Qt_QToolBox_addItem( ::pPtr, hbqt_ptr( pWidget ), cIconSet, cText )
 
 
 METHOD QToolBox:addItem_1( pW, cText )
-   RETURN Qt_QToolBox_addItem_1( ::pPtr, pW, cText )
+   RETURN Qt_QToolBox_addItem_1( ::pPtr, hbqt_ptr( pW ), cText )
 
 
 METHOD QToolBox:count()
@@ -130,15 +130,15 @@ METHOD QToolBox:currentWidget()
 
 
 METHOD QToolBox:indexOf( pWidget )
-   RETURN Qt_QToolBox_indexOf( ::pPtr, pWidget )
+   RETURN Qt_QToolBox_indexOf( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QToolBox:insertItem( nIndex, pWidget, cIcon, cText )
-   RETURN Qt_QToolBox_insertItem( ::pPtr, nIndex, pWidget, cIcon, cText )
+   RETURN Qt_QToolBox_insertItem( ::pPtr, nIndex, hbqt_ptr( pWidget ), cIcon, cText )
 
 
 METHOD QToolBox:insertItem_1( nIndex, pWidget, cText )
-   RETURN Qt_QToolBox_insertItem_1( ::pPtr, nIndex, pWidget, cText )
+   RETURN Qt_QToolBox_insertItem_1( ::pPtr, nIndex, hbqt_ptr( pWidget ), cText )
 
 
 METHOD QToolBox:isItemEnabled( nIndex )
@@ -186,5 +186,5 @@ METHOD QToolBox:setCurrentIndex( nIndex )
 
 
 METHOD QToolBox:setCurrentWidget( pWidget )
-   RETURN Qt_QToolBox_setCurrentWidget( ::pPtr, pWidget )
+   RETURN Qt_QToolBox_setCurrentWidget( ::pPtr, hbqt_ptr( pWidget ) )
 

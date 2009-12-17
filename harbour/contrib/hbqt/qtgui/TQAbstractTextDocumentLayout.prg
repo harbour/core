@@ -87,7 +87,7 @@ CREATE CLASS QAbstractTextDocumentLayout INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QAbstractTextDocumentLayout:new( pParent )
-   ::pPtr := Qt_QAbstractTextDocumentLayout( pParent )
+   ::pPtr := Qt_QAbstractTextDocumentLayout( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -101,11 +101,11 @@ METHOD QAbstractTextDocumentLayout:configure( xObject )
 
 
 METHOD QAbstractTextDocumentLayout:anchorAt( pPosition )
-   RETURN Qt_QAbstractTextDocumentLayout_anchorAt( ::pPtr, pPosition )
+   RETURN Qt_QAbstractTextDocumentLayout_anchorAt( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QAbstractTextDocumentLayout:blockBoundingRect( pBlock )
-   RETURN Qt_QAbstractTextDocumentLayout_blockBoundingRect( ::pPtr, pBlock )
+   RETURN Qt_QAbstractTextDocumentLayout_blockBoundingRect( ::pPtr, hbqt_ptr( pBlock ) )
 
 
 METHOD QAbstractTextDocumentLayout:document()
@@ -117,7 +117,7 @@ METHOD QAbstractTextDocumentLayout:documentSize()
 
 
 METHOD QAbstractTextDocumentLayout:frameBoundingRect( pFrame )
-   RETURN Qt_QAbstractTextDocumentLayout_frameBoundingRect( ::pPtr, pFrame )
+   RETURN Qt_QAbstractTextDocumentLayout_frameBoundingRect( ::pPtr, hbqt_ptr( pFrame ) )
 
 
 METHOD QAbstractTextDocumentLayout:handlerForObject( nObjectType )
@@ -125,7 +125,7 @@ METHOD QAbstractTextDocumentLayout:handlerForObject( nObjectType )
 
 
 METHOD QAbstractTextDocumentLayout:hitTest( pPoint, nAccuracy )
-   RETURN Qt_QAbstractTextDocumentLayout_hitTest( ::pPtr, pPoint, nAccuracy )
+   RETURN Qt_QAbstractTextDocumentLayout_hitTest( ::pPtr, hbqt_ptr( pPoint ), nAccuracy )
 
 
 METHOD QAbstractTextDocumentLayout:pageCount()
@@ -137,9 +137,9 @@ METHOD QAbstractTextDocumentLayout:paintDevice()
 
 
 METHOD QAbstractTextDocumentLayout:registerHandler( nObjectType, pComponent )
-   RETURN Qt_QAbstractTextDocumentLayout_registerHandler( ::pPtr, nObjectType, pComponent )
+   RETURN Qt_QAbstractTextDocumentLayout_registerHandler( ::pPtr, nObjectType, hbqt_ptr( pComponent ) )
 
 
 METHOD QAbstractTextDocumentLayout:setPaintDevice( pDevice )
-   RETURN Qt_QAbstractTextDocumentLayout_setPaintDevice( ::pPtr, pDevice )
+   RETURN Qt_QAbstractTextDocumentLayout_setPaintDevice( ::pPtr, hbqt_ptr( pDevice ) )
 

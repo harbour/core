@@ -79,7 +79,7 @@ CREATE CLASS QBitmap INHERIT QPixmap
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( ... ) CLASS QBitmap
+METHOD QBitmap:new( ... )
 
    ::pPtr := Qt_QBitmap( ... )
 
@@ -100,13 +100,13 @@ METHOD QBitmap:clear()
 
 
 METHOD QBitmap:transformed( pMatrix )
-   RETURN Qt_QBitmap_transformed( ::pPtr, pMatrix )
+   RETURN Qt_QBitmap_transformed( ::pPtr, hbqt_ptr( pMatrix ) )
 
 
 METHOD QBitmap:transformed_1( pMatrix )
-   RETURN Qt_QBitmap_transformed_1( ::pPtr, pMatrix )
+   RETURN Qt_QBitmap_transformed_1( ::pPtr, hbqt_ptr( pMatrix ) )
 
 
 METHOD QBitmap:fromImage( pImage, nFlags )
-   RETURN Qt_QBitmap_fromImage( ::pPtr, pImage, nFlags )
+   RETURN Qt_QBitmap_fromImage( ::pPtr, hbqt_ptr( pImage ), nFlags )
 

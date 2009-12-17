@@ -83,7 +83,7 @@ CREATE CLASS QDial INHERIT QAbstractSlider
 /*----------------------------------------------------------------------*/
 
 METHOD QDial:new( pParent )
-   ::pPtr := Qt_QDial( pParent )
+   ::pPtr := Qt_QDial( hbqt_ptr( pParent ) )
    RETURN Self
 
 

@@ -120,7 +120,7 @@ CREATE CLASS QTabBar INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QTabBar:new( pParent )
-   ::pPtr := Qt_QTabBar( pParent )
+   ::pPtr := Qt_QTabBar( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -206,7 +206,7 @@ METHOD QTabBar:setExpanding( lEnabled )
 
 
 METHOD QTabBar:setIconSize( pSize )
-   RETURN Qt_QTabBar_setIconSize( ::pPtr, pSize )
+   RETURN Qt_QTabBar_setIconSize( ::pPtr, hbqt_ptr( pSize ) )
 
 
 METHOD QTabBar:setMovable( lMovable )
@@ -222,11 +222,11 @@ METHOD QTabBar:setShape( nShape )
 
 
 METHOD QTabBar:setTabButton( nIndex, nPosition, pWidget )
-   RETURN Qt_QTabBar_setTabButton( ::pPtr, nIndex, nPosition, pWidget )
+   RETURN Qt_QTabBar_setTabButton( ::pPtr, nIndex, nPosition, hbqt_ptr( pWidget ) )
 
 
 METHOD QTabBar:setTabData( nIndex, pData )
-   RETURN Qt_QTabBar_setTabData( ::pPtr, nIndex, pData )
+   RETURN Qt_QTabBar_setTabData( ::pPtr, nIndex, hbqt_ptr( pData ) )
 
 
 METHOD QTabBar:setTabEnabled( nIndex, lEnabled )
@@ -238,7 +238,7 @@ METHOD QTabBar:setTabText( nIndex, cText )
 
 
 METHOD QTabBar:setTabTextColor( nIndex, pColor )
-   RETURN Qt_QTabBar_setTabTextColor( ::pPtr, nIndex, pColor )
+   RETURN Qt_QTabBar_setTabTextColor( ::pPtr, nIndex, hbqt_ptr( pColor ) )
 
 
 METHOD QTabBar:setTabToolTip( nIndex, cTip )
@@ -262,7 +262,7 @@ METHOD QTabBar:shape()
 
 
 METHOD QTabBar:tabAt( pPosition )
-   RETURN Qt_QTabBar_tabAt( ::pPtr, pPosition )
+   RETURN Qt_QTabBar_tabAt( ::pPtr, hbqt_ptr( pPosition ) )
 
 
 METHOD QTabBar:tabButton( nIndex, nPosition )

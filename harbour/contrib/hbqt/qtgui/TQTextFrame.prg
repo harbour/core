@@ -83,7 +83,7 @@ CREATE CLASS QTextFrame INHERIT QTextObject
 /*----------------------------------------------------------------------*/
 
 METHOD QTextFrame:new( pParent )
-   ::pPtr := Qt_QTextFrame( pParent )
+   ::pPtr := Qt_QTextFrame( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -121,5 +121,5 @@ METHOD QTextFrame:parentFrame()
 
 
 METHOD QTextFrame:setFrameFormat( pFormat )
-   RETURN Qt_QTextFrame_setFrameFormat( ::pPtr, pFormat )
+   RETURN Qt_QTextFrame_setFrameFormat( ::pPtr, hbqt_ptr( pFormat ) )
 

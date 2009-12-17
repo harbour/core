@@ -88,7 +88,7 @@ CREATE CLASS QActionGroup INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QActionGroup:new( pParent )
-   ::pPtr := Qt_QActionGroup( pParent )
+   ::pPtr := Qt_QActionGroup( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -102,7 +102,7 @@ METHOD QActionGroup:configure( xObject )
 
 
 METHOD QActionGroup:addAction( pAction )
-   RETURN Qt_QActionGroup_addAction( ::pPtr, pAction )
+   RETURN Qt_QActionGroup_addAction( ::pPtr, hbqt_ptr( pAction ) )
 
 
 METHOD QActionGroup:addAction_1( cText )
@@ -130,7 +130,7 @@ METHOD QActionGroup:isVisible()
 
 
 METHOD QActionGroup:removeAction( pAction )
-   RETURN Qt_QActionGroup_removeAction( ::pPtr, pAction )
+   RETURN Qt_QActionGroup_removeAction( ::pPtr, hbqt_ptr( pAction ) )
 
 
 METHOD QActionGroup:setDisabled( lB )

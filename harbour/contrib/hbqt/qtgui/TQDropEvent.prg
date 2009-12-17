@@ -86,7 +86,7 @@ CREATE CLASS QDropEvent INHERIT QEvent
 /*----------------------------------------------------------------------*/
 
 METHOD QDropEvent:new( pParent )
-   ::pPtr := Qt_QDropEvent( pParent )
+   ::pPtr := Qt_QDropEvent( hbqt_ptr( pParent ) )
    RETURN Self
 
 

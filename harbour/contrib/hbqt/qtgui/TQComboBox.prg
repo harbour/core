@@ -135,7 +135,7 @@ CREATE CLASS QComboBox INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QComboBox:new( pParent )
-   ::pPtr := Qt_QComboBox( pParent )
+   ::pPtr := Qt_QComboBox( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -149,15 +149,15 @@ METHOD QComboBox:configure( xObject )
 
 
 METHOD QComboBox:addItem( cText, pUserData )
-   RETURN Qt_QComboBox_addItem( ::pPtr, cText, pUserData )
+   RETURN Qt_QComboBox_addItem( ::pPtr, cText, hbqt_ptr( pUserData ) )
 
 
 METHOD QComboBox:addItem_1( cIcon, cText, pUserData )
-   RETURN Qt_QComboBox_addItem_1( ::pPtr, cIcon, cText, pUserData )
+   RETURN Qt_QComboBox_addItem_1( ::pPtr, cIcon, cText, hbqt_ptr( pUserData ) )
 
 
 METHOD QComboBox:addItems( pTexts )
-   RETURN Qt_QComboBox_addItems( ::pPtr, pTexts )
+   RETURN Qt_QComboBox_addItems( ::pPtr, hbqt_ptr( pTexts ) )
 
 
 METHOD QComboBox:completer()
@@ -181,7 +181,7 @@ METHOD QComboBox:duplicatesEnabled()
 
 
 METHOD QComboBox:findData( pData, nRole, nFlags )
-   RETURN Qt_QComboBox_findData( ::pPtr, pData, nRole, nFlags )
+   RETURN Qt_QComboBox_findData( ::pPtr, hbqt_ptr( pData ), nRole, nFlags )
 
 
 METHOD QComboBox:findText( cText, nFlags )
@@ -201,15 +201,15 @@ METHOD QComboBox:iconSize()
 
 
 METHOD QComboBox:insertItem( nIndex, cText, pUserData )
-   RETURN Qt_QComboBox_insertItem( ::pPtr, nIndex, cText, pUserData )
+   RETURN Qt_QComboBox_insertItem( ::pPtr, nIndex, cText, hbqt_ptr( pUserData ) )
 
 
 METHOD QComboBox:insertItem_1( nIndex, cIcon, cText, pUserData )
-   RETURN Qt_QComboBox_insertItem_1( ::pPtr, nIndex, cIcon, cText, pUserData )
+   RETURN Qt_QComboBox_insertItem_1( ::pPtr, nIndex, cIcon, cText, hbqt_ptr( pUserData ) )
 
 
 METHOD QComboBox:insertItems( nIndex, pList )
-   RETURN Qt_QComboBox_insertItems( ::pPtr, nIndex, pList )
+   RETURN Qt_QComboBox_insertItems( ::pPtr, nIndex, hbqt_ptr( pList ) )
 
 
 METHOD QComboBox:insertPolicy()
@@ -273,7 +273,7 @@ METHOD QComboBox:rootModelIndex()
 
 
 METHOD QComboBox:setCompleter( pCompleter )
-   RETURN Qt_QComboBox_setCompleter( ::pPtr, pCompleter )
+   RETURN Qt_QComboBox_setCompleter( ::pPtr, hbqt_ptr( pCompleter ) )
 
 
 METHOD QComboBox:setDuplicatesEnabled( lEnable )
@@ -289,7 +289,7 @@ METHOD QComboBox:setFrame( lBool )
 
 
 METHOD QComboBox:setIconSize( pSize )
-   RETURN Qt_QComboBox_setIconSize( ::pPtr, pSize )
+   RETURN Qt_QComboBox_setIconSize( ::pPtr, hbqt_ptr( pSize ) )
 
 
 METHOD QComboBox:setInsertPolicy( nPolicy )
@@ -297,11 +297,11 @@ METHOD QComboBox:setInsertPolicy( nPolicy )
 
 
 METHOD QComboBox:setItemData( nIndex, pValue, nRole )
-   RETURN Qt_QComboBox_setItemData( ::pPtr, nIndex, pValue, nRole )
+   RETURN Qt_QComboBox_setItemData( ::pPtr, nIndex, hbqt_ptr( pValue ), nRole )
 
 
 METHOD QComboBox:setItemDelegate( pDelegate )
-   RETURN Qt_QComboBox_setItemDelegate( ::pPtr, pDelegate )
+   RETURN Qt_QComboBox_setItemDelegate( ::pPtr, hbqt_ptr( pDelegate ) )
 
 
 METHOD QComboBox:setItemIcon( nIndex, cIcon )
@@ -313,7 +313,7 @@ METHOD QComboBox:setItemText( nIndex, cText )
 
 
 METHOD QComboBox:setLineEdit( pEdit )
-   RETURN Qt_QComboBox_setLineEdit( ::pPtr, pEdit )
+   RETURN Qt_QComboBox_setLineEdit( ::pPtr, hbqt_ptr( pEdit ) )
 
 
 METHOD QComboBox:setMaxCount( nMax )
@@ -329,7 +329,7 @@ METHOD QComboBox:setMinimumContentsLength( nCharacters )
 
 
 METHOD QComboBox:setModel( pModel )
-   RETURN Qt_QComboBox_setModel( ::pPtr, pModel )
+   RETURN Qt_QComboBox_setModel( ::pPtr, hbqt_ptr( pModel ) )
 
 
 METHOD QComboBox:setModelColumn( nVisibleColumn )
@@ -337,7 +337,7 @@ METHOD QComboBox:setModelColumn( nVisibleColumn )
 
 
 METHOD QComboBox:setRootModelIndex( pIndex )
-   RETURN Qt_QComboBox_setRootModelIndex( ::pPtr, pIndex )
+   RETURN Qt_QComboBox_setRootModelIndex( ::pPtr, hbqt_ptr( pIndex ) )
 
 
 METHOD QComboBox:setSizeAdjustPolicy( nPolicy )
@@ -345,11 +345,11 @@ METHOD QComboBox:setSizeAdjustPolicy( nPolicy )
 
 
 METHOD QComboBox:setValidator( pValidator )
-   RETURN Qt_QComboBox_setValidator( ::pPtr, pValidator )
+   RETURN Qt_QComboBox_setValidator( ::pPtr, hbqt_ptr( pValidator ) )
 
 
 METHOD QComboBox:setView( pItemView )
-   RETURN Qt_QComboBox_setView( ::pPtr, pItemView )
+   RETURN Qt_QComboBox_setView( ::pPtr, hbqt_ptr( pItemView ) )
 
 
 METHOD QComboBox:showPopup()

@@ -76,7 +76,7 @@ CREATE CLASS QTimeEdit INHERIT QDateTimeEdit
 /*----------------------------------------------------------------------*/
 
 METHOD QTimeEdit:new( pParent )
-   ::pPtr := Qt_QTimeEdit( pParent )
+   ::pPtr := Qt_QTimeEdit( hbqt_ptr( pParent ) )
    RETURN Self
 
 

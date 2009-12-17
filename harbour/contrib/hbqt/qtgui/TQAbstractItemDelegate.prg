@@ -83,7 +83,7 @@ CREATE CLASS QAbstractItemDelegate INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QAbstractItemDelegate:new( pParent )
-   ::pPtr := Qt_QAbstractItemDelegate( pParent )
+   ::pPtr := Qt_QAbstractItemDelegate( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -97,29 +97,29 @@ METHOD QAbstractItemDelegate:configure( xObject )
 
 
 METHOD QAbstractItemDelegate:createEditor( pParent, pOption, pIndex )
-   RETURN Qt_QAbstractItemDelegate_createEditor( ::pPtr, pParent, pOption, pIndex )
+   RETURN Qt_QAbstractItemDelegate_createEditor( ::pPtr, hbqt_ptr( pParent ), hbqt_ptr( pOption ), hbqt_ptr( pIndex ) )
 
 
 METHOD QAbstractItemDelegate:editorEvent( pEvent, pModel, pOption, pIndex )
-   RETURN Qt_QAbstractItemDelegate_editorEvent( ::pPtr, pEvent, pModel, pOption, pIndex )
+   RETURN Qt_QAbstractItemDelegate_editorEvent( ::pPtr, hbqt_ptr( pEvent ), hbqt_ptr( pModel ), hbqt_ptr( pOption ), hbqt_ptr( pIndex ) )
 
 
 METHOD QAbstractItemDelegate:paint( pPainter, pOption, pIndex )
-   RETURN Qt_QAbstractItemDelegate_paint( ::pPtr, pPainter, pOption, pIndex )
+   RETURN Qt_QAbstractItemDelegate_paint( ::pPtr, hbqt_ptr( pPainter ), hbqt_ptr( pOption ), hbqt_ptr( pIndex ) )
 
 
 METHOD QAbstractItemDelegate:setEditorData( pEditor, pIndex )
-   RETURN Qt_QAbstractItemDelegate_setEditorData( ::pPtr, pEditor, pIndex )
+   RETURN Qt_QAbstractItemDelegate_setEditorData( ::pPtr, hbqt_ptr( pEditor ), hbqt_ptr( pIndex ) )
 
 
 METHOD QAbstractItemDelegate:setModelData( pEditor, pModel, pIndex )
-   RETURN Qt_QAbstractItemDelegate_setModelData( ::pPtr, pEditor, pModel, pIndex )
+   RETURN Qt_QAbstractItemDelegate_setModelData( ::pPtr, hbqt_ptr( pEditor ), hbqt_ptr( pModel ), hbqt_ptr( pIndex ) )
 
 
 METHOD QAbstractItemDelegate:sizeHint( pOption, pIndex )
-   RETURN Qt_QAbstractItemDelegate_sizeHint( ::pPtr, pOption, pIndex )
+   RETURN Qt_QAbstractItemDelegate_sizeHint( ::pPtr, hbqt_ptr( pOption ), hbqt_ptr( pIndex ) )
 
 
 METHOD QAbstractItemDelegate:updateEditorGeometry( pEditor, pOption, pIndex )
-   RETURN Qt_QAbstractItemDelegate_updateEditorGeometry( ::pPtr, pEditor, pOption, pIndex )
+   RETURN Qt_QAbstractItemDelegate_updateEditorGeometry( ::pPtr, hbqt_ptr( pEditor ), hbqt_ptr( pOption ), hbqt_ptr( pIndex ) )
 

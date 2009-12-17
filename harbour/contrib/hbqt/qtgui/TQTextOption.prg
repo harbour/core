@@ -88,7 +88,7 @@ CREATE CLASS QTextOption
 /*----------------------------------------------------------------------*/
 
 METHOD QTextOption:new( pParent )
-   ::pPtr := Qt_QTextOption( pParent )
+   ::pPtr := Qt_QTextOption( hbqt_ptr( pParent ) )
    RETURN Self
 
 

@@ -76,7 +76,7 @@ CREATE CLASS QTextBlockGroup INHERIT QTextObject
 /*----------------------------------------------------------------------*/
 
 METHOD QTextBlockGroup:new( pParent )
-   ::pPtr := Qt_QTextBlockGroup( pParent )
+   ::pPtr := Qt_QTextBlockGroup( hbqt_ptr( pParent ) )
    RETURN Self
 
 

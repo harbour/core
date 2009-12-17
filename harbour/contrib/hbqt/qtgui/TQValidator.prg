@@ -78,7 +78,7 @@ CREATE CLASS QValidator INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD QValidator:new( pParent )
-   ::pPtr := Qt_QValidator( pParent )
+   ::pPtr := Qt_QValidator( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -96,5 +96,5 @@ METHOD QValidator:locale()
 
 
 METHOD QValidator:setLocale( pLocale )
-   RETURN Qt_QValidator_setLocale( ::pPtr, pLocale )
+   RETURN Qt_QValidator_setLocale( ::pPtr, hbqt_ptr( pLocale ) )
 

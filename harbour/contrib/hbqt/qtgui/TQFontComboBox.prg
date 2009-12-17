@@ -82,7 +82,7 @@ CREATE CLASS QFontComboBox INHERIT QComboBox
 /*----------------------------------------------------------------------*/
 
 METHOD QFontComboBox:new( pParent )
-   ::pPtr := Qt_QFontComboBox( pParent )
+   ::pPtr := Qt_QFontComboBox( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -116,5 +116,5 @@ METHOD QFontComboBox:writingSystem()
 
 
 METHOD QFontComboBox:setCurrentFont( pFont )
-   RETURN Qt_QFontComboBox_setCurrentFont( ::pPtr, pFont )
+   RETURN Qt_QFontComboBox_setCurrentFont( ::pPtr, hbqt_ptr( pFont ) )
 

@@ -79,7 +79,7 @@ CREATE CLASS QFocusEvent INHERIT QEvent
 /*----------------------------------------------------------------------*/
 
 METHOD QFocusEvent:new( pParent )
-   ::pPtr := Qt_QFocusEvent( pParent )
+   ::pPtr := Qt_QFocusEvent( hbqt_ptr( pParent ) )
    RETURN Self
 
 

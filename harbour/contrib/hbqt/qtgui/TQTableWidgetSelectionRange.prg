@@ -82,7 +82,7 @@ CREATE CLASS QTableWidgetSelectionRange
 /*----------------------------------------------------------------------*/
 
 METHOD QTableWidgetSelectionRange:new( pParent )
-   ::pPtr := Qt_QTableWidgetSelectionRange( pParent )
+   ::pPtr := Qt_QTableWidgetSelectionRange( hbqt_ptr( pParent ) )
    RETURN Self
 
 

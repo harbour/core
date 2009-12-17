@@ -80,7 +80,7 @@ CREATE CLASS QStyleOptionTitleBar INHERIT QStyleOptionComplex
 /*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionTitleBar:new( pParent )
-   ::pPtr := Qt_QStyleOptionTitleBar( pParent )
+   ::pPtr := Qt_QStyleOptionTitleBar( hbqt_ptr( pParent ) )
    RETURN Self
 
 

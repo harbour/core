@@ -105,7 +105,7 @@ CREATE CLASS QLayout INHERIT QObject, QLayoutItem
 /*----------------------------------------------------------------------*/
 
 METHOD QLayout:new( pParent )
-   ::pPtr := Qt_QLayout( pParent )
+   ::pPtr := Qt_QLayout( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -123,11 +123,11 @@ METHOD QLayout:activate()
 
 
 METHOD QLayout:addItem( pItem )
-   RETURN Qt_QLayout_addItem( ::pPtr, pItem )
+   RETURN Qt_QLayout_addItem( ::pPtr, hbqt_ptr( pItem ) )
 
 
 METHOD QLayout:addWidget( pW )
-   RETURN Qt_QLayout_addWidget( ::pPtr, pW )
+   RETURN Qt_QLayout_addWidget( ::pPtr, hbqt_ptr( pW ) )
 
 
 METHOD QLayout:contentsRect()
@@ -147,7 +147,7 @@ METHOD QLayout:getContentsMargins( nLeft, nTop, nRight, nBottom )
 
 
 METHOD QLayout:indexOf( pWidget )
-   RETURN Qt_QLayout_indexOf( ::pPtr, pWidget )
+   RETURN Qt_QLayout_indexOf( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QLayout:isEnabled()
@@ -175,15 +175,15 @@ METHOD QLayout:parentWidget()
 
 
 METHOD QLayout:removeItem( pItem )
-   RETURN Qt_QLayout_removeItem( ::pPtr, pItem )
+   RETURN Qt_QLayout_removeItem( ::pPtr, hbqt_ptr( pItem ) )
 
 
 METHOD QLayout:removeWidget( pWidget )
-   RETURN Qt_QLayout_removeWidget( ::pPtr, pWidget )
+   RETURN Qt_QLayout_removeWidget( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QLayout:setAlignment( pW, nAlignment )
-   RETURN Qt_QLayout_setAlignment( ::pPtr, pW, nAlignment )
+   RETURN Qt_QLayout_setAlignment( ::pPtr, hbqt_ptr( pW ), nAlignment )
 
 
 METHOD QLayout:setAlignment_1( nAlignment )
@@ -191,7 +191,7 @@ METHOD QLayout:setAlignment_1( nAlignment )
 
 
 METHOD QLayout:setAlignment_2( pL, nAlignment )
-   RETURN Qt_QLayout_setAlignment_2( ::pPtr, pL, nAlignment )
+   RETURN Qt_QLayout_setAlignment_2( ::pPtr, hbqt_ptr( pL ), nAlignment )
 
 
 METHOD QLayout:setContentsMargins( nLeft, nTop, nRight, nBottom )
@@ -203,7 +203,7 @@ METHOD QLayout:setEnabled( lEnable )
 
 
 METHOD QLayout:setMenuBar( pWidget )
-   RETURN Qt_QLayout_setMenuBar( ::pPtr, pWidget )
+   RETURN Qt_QLayout_setMenuBar( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QLayout:setSizeConstraint( nSizeConstraint )
@@ -231,5 +231,5 @@ METHOD QLayout:update()
 
 
 METHOD QLayout:closestAcceptableSize( pWidget, pSize )
-   RETURN Qt_QLayout_closestAcceptableSize( ::pPtr, pWidget, pSize )
+   RETURN Qt_QLayout_closestAcceptableSize( ::pPtr, hbqt_ptr( pWidget ), hbqt_ptr( pSize ) )
 

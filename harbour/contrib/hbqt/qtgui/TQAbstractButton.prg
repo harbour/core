@@ -102,7 +102,7 @@ CREATE CLASS QAbstractButton INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QAbstractButton:new( pParent )
-   ::pPtr := Qt_QAbstractButton( pParent )
+   ::pPtr := Qt_QAbstractButton( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -184,7 +184,7 @@ METHOD QAbstractButton:setIcon( cIcon )
 
 
 METHOD QAbstractButton:setShortcut( pKey )
-   RETURN Qt_QAbstractButton_setShortcut( ::pPtr, pKey )
+   RETURN Qt_QAbstractButton_setShortcut( ::pPtr, hbqt_ptr( pKey ) )
 
 
 METHOD QAbstractButton:setText( cText )
@@ -212,7 +212,7 @@ METHOD QAbstractButton:setChecked( lBool )
 
 
 METHOD QAbstractButton:setIconSize( pSize )
-   RETURN Qt_QAbstractButton_setIconSize( ::pPtr, pSize )
+   RETURN Qt_QAbstractButton_setIconSize( ::pPtr, hbqt_ptr( pSize ) )
 
 
 METHOD QAbstractButton:toggle()

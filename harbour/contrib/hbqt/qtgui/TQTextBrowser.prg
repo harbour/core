@@ -96,7 +96,7 @@ CREATE CLASS QTextBrowser INHERIT QTextEdit
 /*----------------------------------------------------------------------*/
 
 METHOD QTextBrowser:new( pParent )
-   ::pPtr := Qt_QTextBrowser( pParent )
+   ::pPtr := Qt_QTextBrowser( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -138,7 +138,7 @@ METHOD QTextBrowser:isForwardAvailable()
 
 
 METHOD QTextBrowser:loadResource( nType, pName )
-   RETURN Qt_QTextBrowser_loadResource( ::pPtr, nType, pName )
+   RETURN Qt_QTextBrowser_loadResource( ::pPtr, nType, hbqt_ptr( pName ) )
 
 
 METHOD QTextBrowser:openExternalLinks()
@@ -162,7 +162,7 @@ METHOD QTextBrowser:setOpenLinks( lOpen )
 
 
 METHOD QTextBrowser:setSearchPaths( pPaths )
-   RETURN Qt_QTextBrowser_setSearchPaths( ::pPtr, pPaths )
+   RETURN Qt_QTextBrowser_setSearchPaths( ::pPtr, hbqt_ptr( pPaths ) )
 
 
 METHOD QTextBrowser:source()
@@ -186,5 +186,5 @@ METHOD QTextBrowser:reload()
 
 
 METHOD QTextBrowser:setSource( pName )
-   RETURN Qt_QTextBrowser_setSource( ::pPtr, pName )
+   RETURN Qt_QTextBrowser_setSource( ::pPtr, hbqt_ptr( pName ) )
 

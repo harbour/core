@@ -117,7 +117,7 @@ CREATE CLASS QTabWidget INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QTabWidget:new( pParent )
-   ::pPtr := Qt_QTabWidget( pParent )
+   ::pPtr := Qt_QTabWidget( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -131,11 +131,11 @@ METHOD QTabWidget:configure( xObject )
 
 
 METHOD QTabWidget:addTab( pPage, cLabel )
-   RETURN Qt_QTabWidget_addTab( ::pPtr, pPage, cLabel )
+   RETURN Qt_QTabWidget_addTab( ::pPtr, hbqt_ptr( pPage ), cLabel )
 
 
 METHOD QTabWidget:addTab_1( pPage, cIcon, cLabel )
-   RETURN Qt_QTabWidget_addTab_1( ::pPtr, pPage, cIcon, cLabel )
+   RETURN Qt_QTabWidget_addTab_1( ::pPtr, hbqt_ptr( pPage ), cIcon, cLabel )
 
 
 METHOD QTabWidget:clear()
@@ -171,15 +171,15 @@ METHOD QTabWidget:iconSize()
 
 
 METHOD QTabWidget:indexOf( pW )
-   RETURN Qt_QTabWidget_indexOf( ::pPtr, pW )
+   RETURN Qt_QTabWidget_indexOf( ::pPtr, hbqt_ptr( pW ) )
 
 
 METHOD QTabWidget:insertTab( nIndex, pPage, cLabel )
-   RETURN Qt_QTabWidget_insertTab( ::pPtr, nIndex, pPage, cLabel )
+   RETURN Qt_QTabWidget_insertTab( ::pPtr, nIndex, hbqt_ptr( pPage ), cLabel )
 
 
 METHOD QTabWidget:insertTab_1( nIndex, pPage, cIcon, cLabel )
-   RETURN Qt_QTabWidget_insertTab_1( ::pPtr, nIndex, pPage, cIcon, cLabel )
+   RETURN Qt_QTabWidget_insertTab_1( ::pPtr, nIndex, hbqt_ptr( pPage ), cIcon, cLabel )
 
 
 METHOD QTabWidget:isMovable()
@@ -195,7 +195,7 @@ METHOD QTabWidget:removeTab( nIndex )
 
 
 METHOD QTabWidget:setCornerWidget( pWidget, nCorner )
-   RETURN Qt_QTabWidget_setCornerWidget( ::pPtr, pWidget, nCorner )
+   RETURN Qt_QTabWidget_setCornerWidget( ::pPtr, hbqt_ptr( pWidget ), nCorner )
 
 
 METHOD QTabWidget:setDocumentMode( lSet )
@@ -207,7 +207,7 @@ METHOD QTabWidget:setElideMode( nQt_TextElideMode )
 
 
 METHOD QTabWidget:setIconSize( pSize )
-   RETURN Qt_QTabWidget_setIconSize( ::pPtr, pSize )
+   RETURN Qt_QTabWidget_setIconSize( ::pPtr, hbqt_ptr( pSize ) )
 
 
 METHOD QTabWidget:setMovable( lMovable )
@@ -291,5 +291,5 @@ METHOD QTabWidget:setCurrentIndex( nIndex )
 
 
 METHOD QTabWidget:setCurrentWidget( pWidget )
-   RETURN Qt_QTabWidget_setCurrentWidget( ::pPtr, pWidget )
+   RETURN Qt_QTabWidget_setCurrentWidget( ::pPtr, hbqt_ptr( pWidget ) )
 

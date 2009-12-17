@@ -152,7 +152,7 @@ CREATE CLASS QApplication INHERIT QCoreApplication
 /*----------------------------------------------------------------------*/
 
 METHOD QApplication:new( pParent )
-   ::pPtr := Qt_QApplication( pParent )
+   ::pPtr := Qt_QApplication( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -166,7 +166,7 @@ METHOD QApplication:configure( xObject )
 
 
 METHOD QApplication:commitData( pManager )
-   RETURN Qt_QApplication_commitData( ::pPtr, pManager )
+   RETURN Qt_QApplication_commitData( ::pPtr, hbqt_ptr( pManager ) )
 
 
 METHOD QApplication:inputContext()
@@ -178,7 +178,7 @@ METHOD QApplication:isSessionRestored()
 
 
 METHOD QApplication:saveState( pManager )
-   RETURN Qt_QApplication_saveState( ::pPtr, pManager )
+   RETURN Qt_QApplication_saveState( ::pPtr, hbqt_ptr( pManager ) )
 
 
 METHOD QApplication:sessionId()
@@ -190,7 +190,7 @@ METHOD QApplication:sessionKey()
 
 
 METHOD QApplication:setInputContext( pInputContext )
-   RETURN Qt_QApplication_setInputContext( ::pPtr, pInputContext )
+   RETURN Qt_QApplication_setInputContext( ::pPtr, hbqt_ptr( pInputContext ) )
 
 
 METHOD QApplication:styleSheet()
@@ -210,7 +210,7 @@ METHOD QApplication:activeWindow()
 
 
 METHOD QApplication:alert( pWidget, nMsec )
-   RETURN Qt_QApplication_alert( ::pPtr, pWidget, nMsec )
+   RETURN Qt_QApplication_alert( ::pPtr, hbqt_ptr( pWidget ), nMsec )
 
 
 METHOD QApplication:beep()
@@ -218,7 +218,7 @@ METHOD QApplication:beep()
 
 
 METHOD QApplication:changeOverrideCursor( pCursor )
-   RETURN Qt_QApplication_changeOverrideCursor( ::pPtr, pCursor )
+   RETURN Qt_QApplication_changeOverrideCursor( ::pPtr, hbqt_ptr( pCursor ) )
 
 
 METHOD QApplication:clipboard()
@@ -258,11 +258,11 @@ METHOD QApplication:font()
 
 
 METHOD QApplication:font_1( pWidget )
-   RETURN Qt_QApplication_font_1( ::pPtr, pWidget )
+   RETURN Qt_QApplication_font_1( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QApplication:font_2( pClassName )
-   RETURN Qt_QApplication_font_2( ::pPtr, pClassName )
+   RETURN Qt_QApplication_font_2( ::pPtr, hbqt_ptr( pClassName ) )
 
 
 METHOD QApplication:fontMetrics()
@@ -318,11 +318,11 @@ METHOD QApplication:palette()
 
 
 METHOD QApplication:palette_1( pWidget )
-   RETURN Qt_QApplication_palette_1( ::pPtr, pWidget )
+   RETURN Qt_QApplication_palette_1( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QApplication:palette_2( pClassName )
-   RETURN Qt_QApplication_palette_2( ::pPtr, pClassName )
+   RETURN Qt_QApplication_palette_2( ::pPtr, hbqt_ptr( pClassName ) )
 
 
 METHOD QApplication:quitOnLastWindowClosed()
@@ -334,7 +334,7 @@ METHOD QApplication:restoreOverrideCursor()
 
 
 METHOD QApplication:setActiveWindow( pActive )
-   RETURN Qt_QApplication_setActiveWindow( ::pPtr, pActive )
+   RETURN Qt_QApplication_setActiveWindow( ::pPtr, hbqt_ptr( pActive ) )
 
 
 METHOD QApplication:setColorSpec( nSpec )
@@ -358,11 +358,11 @@ METHOD QApplication:setEffectEnabled( nEffect, lEnable )
 
 
 METHOD QApplication:setFont( pFont, pClassName )
-   RETURN Qt_QApplication_setFont( ::pPtr, pFont, pClassName )
+   RETURN Qt_QApplication_setFont( ::pPtr, hbqt_ptr( pFont ), hbqt_ptr( pClassName ) )
 
 
 METHOD QApplication:setGlobalStrut( pQSize )
-   RETURN Qt_QApplication_setGlobalStrut( ::pPtr, pQSize )
+   RETURN Qt_QApplication_setGlobalStrut( ::pPtr, hbqt_ptr( pQSize ) )
 
 
 METHOD QApplication:setGraphicsSystem( cSystem )
@@ -378,11 +378,11 @@ METHOD QApplication:setLayoutDirection( nDirection )
 
 
 METHOD QApplication:setOverrideCursor( pCursor )
-   RETURN Qt_QApplication_setOverrideCursor( ::pPtr, pCursor )
+   RETURN Qt_QApplication_setOverrideCursor( ::pPtr, hbqt_ptr( pCursor ) )
 
 
 METHOD QApplication:setPalette( pPalette, pClassName )
-   RETURN Qt_QApplication_setPalette( ::pPtr, pPalette, pClassName )
+   RETURN Qt_QApplication_setPalette( ::pPtr, hbqt_ptr( pPalette ), hbqt_ptr( pClassName ) )
 
 
 METHOD QApplication:setQuitOnLastWindowClosed( lQuit )
@@ -398,7 +398,7 @@ METHOD QApplication:setStartDragTime( nMs )
 
 
 METHOD QApplication:setStyle( pStyle )
-   RETURN Qt_QApplication_setStyle( ::pPtr, pStyle )
+   RETURN Qt_QApplication_setStyle( ::pPtr, hbqt_ptr( pStyle ) )
 
 
 METHOD QApplication:setStyle_1( cStyle )
@@ -430,7 +430,7 @@ METHOD QApplication:syncX()
 
 
 METHOD QApplication:topLevelAt( pPoint )
-   RETURN Qt_QApplication_topLevelAt( ::pPtr, pPoint )
+   RETURN Qt_QApplication_topLevelAt( ::pPtr, hbqt_ptr( pPoint ) )
 
 
 METHOD QApplication:topLevelAt_1( nX, nY )
@@ -446,7 +446,7 @@ METHOD QApplication:wheelScrollLines()
 
 
 METHOD QApplication:widgetAt( pPoint )
-   RETURN Qt_QApplication_widgetAt( ::pPtr, pPoint )
+   RETURN Qt_QApplication_widgetAt( ::pPtr, hbqt_ptr( pPoint ) )
 
 
 METHOD QApplication:widgetAt_1( nX, nY )

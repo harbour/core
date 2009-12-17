@@ -95,7 +95,7 @@ CREATE CLASS QTextBlockFormat INHERIT QTextFormat
 /*----------------------------------------------------------------------*/
 
 METHOD QTextBlockFormat:new( pParent )
-   ::pPtr := Qt_QTextBlockFormat( pParent )
+   ::pPtr := Qt_QTextBlockFormat( hbqt_ptr( pParent ) )
    RETURN Self
 
 

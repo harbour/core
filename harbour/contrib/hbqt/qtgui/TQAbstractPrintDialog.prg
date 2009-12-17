@@ -86,7 +86,7 @@ CREATE CLASS QAbstractPrintDialog INHERIT QDialog
 /*----------------------------------------------------------------------*/
 
 METHOD QAbstractPrintDialog:new( pParent )
-   ::pPtr := Qt_QAbstractPrintDialog( pParent )
+   ::pPtr := Qt_QAbstractPrintDialog( hbqt_ptr( pParent ) )
    RETURN Self
 
 

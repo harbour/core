@@ -114,7 +114,7 @@ CREATE CLASS QImageReader
 /*----------------------------------------------------------------------*/
 
 METHOD QImageReader:new( pParent )
-   ::pPtr := Qt_QImageReader( pParent )
+   ::pPtr := Qt_QImageReader( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -204,7 +204,7 @@ METHOD QImageReader:read()
 
 
 METHOD QImageReader:read_1( pImage )
-   RETURN Qt_QImageReader_read_1( ::pPtr, pImage )
+   RETURN Qt_QImageReader_read_1( ::pPtr, hbqt_ptr( pImage ) )
 
 
 METHOD QImageReader:scaledClipRect()
@@ -220,15 +220,15 @@ METHOD QImageReader:setAutoDetectImageFormat( lEnabled )
 
 
 METHOD QImageReader:setBackgroundColor( pColor )
-   RETURN Qt_QImageReader_setBackgroundColor( ::pPtr, pColor )
+   RETURN Qt_QImageReader_setBackgroundColor( ::pPtr, hbqt_ptr( pColor ) )
 
 
 METHOD QImageReader:setClipRect( pRect )
-   RETURN Qt_QImageReader_setClipRect( ::pPtr, pRect )
+   RETURN Qt_QImageReader_setClipRect( ::pPtr, hbqt_ptr( pRect ) )
 
 
 METHOD QImageReader:setDevice( pDevice )
-   RETURN Qt_QImageReader_setDevice( ::pPtr, pDevice )
+   RETURN Qt_QImageReader_setDevice( ::pPtr, hbqt_ptr( pDevice ) )
 
 
 METHOD QImageReader:setFileName( cFileName )
@@ -236,7 +236,7 @@ METHOD QImageReader:setFileName( cFileName )
 
 
 METHOD QImageReader:setFormat( pFormat )
-   RETURN Qt_QImageReader_setFormat( ::pPtr, pFormat )
+   RETURN Qt_QImageReader_setFormat( ::pPtr, hbqt_ptr( pFormat ) )
 
 
 METHOD QImageReader:setQuality( nQuality )
@@ -244,11 +244,11 @@ METHOD QImageReader:setQuality( nQuality )
 
 
 METHOD QImageReader:setScaledClipRect( pRect )
-   RETURN Qt_QImageReader_setScaledClipRect( ::pPtr, pRect )
+   RETURN Qt_QImageReader_setScaledClipRect( ::pPtr, hbqt_ptr( pRect ) )
 
 
 METHOD QImageReader:setScaledSize( pSize )
-   RETURN Qt_QImageReader_setScaledSize( ::pPtr, pSize )
+   RETURN Qt_QImageReader_setScaledSize( ::pPtr, hbqt_ptr( pSize ) )
 
 
 METHOD QImageReader:size()
@@ -276,5 +276,5 @@ METHOD QImageReader:imageFormat_1( cFileName )
 
 
 METHOD QImageReader:imageFormat_2( pDevice )
-   RETURN Qt_QImageReader_imageFormat_2( ::pPtr, pDevice )
+   RETURN Qt_QImageReader_imageFormat_2( ::pPtr, hbqt_ptr( pDevice ) )
 

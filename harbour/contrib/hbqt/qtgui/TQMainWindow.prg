@@ -124,7 +124,7 @@ CREATE CLASS QMainWindow INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD QMainWindow:new( pParent )
-   ::pPtr := Qt_QMainWindow( pParent )
+   ::pPtr := Qt_QMainWindow( hbqt_ptr( pParent ) )
    RETURN Self
 
 
@@ -138,19 +138,19 @@ METHOD QMainWindow:configure( xObject )
 
 
 METHOD QMainWindow:addDockWidget( nArea, pDockwidget )
-   RETURN Qt_QMainWindow_addDockWidget( ::pPtr, nArea, pDockwidget )
+   RETURN Qt_QMainWindow_addDockWidget( ::pPtr, nArea, hbqt_ptr( pDockwidget ) )
 
 
 METHOD QMainWindow:addDockWidget_1( nArea, pDockwidget, nOrientation )
-   RETURN Qt_QMainWindow_addDockWidget_1( ::pPtr, nArea, pDockwidget, nOrientation )
+   RETURN Qt_QMainWindow_addDockWidget_1( ::pPtr, nArea, hbqt_ptr( pDockwidget ), nOrientation )
 
 
 METHOD QMainWindow:addToolBar( nArea, pToolbar )
-   RETURN Qt_QMainWindow_addToolBar( ::pPtr, nArea, pToolbar )
+   RETURN Qt_QMainWindow_addToolBar( ::pPtr, nArea, hbqt_ptr( pToolbar ) )
 
 
 METHOD QMainWindow:addToolBar_1( pToolbar )
-   RETURN Qt_QMainWindow_addToolBar_1( ::pPtr, pToolbar )
+   RETURN Qt_QMainWindow_addToolBar_1( ::pPtr, hbqt_ptr( pToolbar ) )
 
 
 METHOD QMainWindow:addToolBar_2( cTitle )
@@ -178,7 +178,7 @@ METHOD QMainWindow:dockOptions()
 
 
 METHOD QMainWindow:dockWidgetArea( pDockwidget )
-   RETURN Qt_QMainWindow_dockWidgetArea( ::pPtr, pDockwidget )
+   RETURN Qt_QMainWindow_dockWidgetArea( ::pPtr, hbqt_ptr( pDockwidget ) )
 
 
 METHOD QMainWindow:documentMode()
@@ -190,11 +190,11 @@ METHOD QMainWindow:iconSize()
 
 
 METHOD QMainWindow:insertToolBar( pBefore, pToolbar )
-   RETURN Qt_QMainWindow_insertToolBar( ::pPtr, pBefore, pToolbar )
+   RETURN Qt_QMainWindow_insertToolBar( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pToolbar ) )
 
 
 METHOD QMainWindow:insertToolBarBreak( pBefore )
-   RETURN Qt_QMainWindow_insertToolBarBreak( ::pPtr, pBefore )
+   RETURN Qt_QMainWindow_insertToolBarBreak( ::pPtr, hbqt_ptr( pBefore ) )
 
 
 METHOD QMainWindow:isAnimated()
@@ -214,23 +214,23 @@ METHOD QMainWindow:menuWidget()
 
 
 METHOD QMainWindow:removeDockWidget( pDockwidget )
-   RETURN Qt_QMainWindow_removeDockWidget( ::pPtr, pDockwidget )
+   RETURN Qt_QMainWindow_removeDockWidget( ::pPtr, hbqt_ptr( pDockwidget ) )
 
 
 METHOD QMainWindow:removeToolBar( pToolbar )
-   RETURN Qt_QMainWindow_removeToolBar( ::pPtr, pToolbar )
+   RETURN Qt_QMainWindow_removeToolBar( ::pPtr, hbqt_ptr( pToolbar ) )
 
 
 METHOD QMainWindow:removeToolBarBreak( pBefore )
-   RETURN Qt_QMainWindow_removeToolBarBreak( ::pPtr, pBefore )
+   RETURN Qt_QMainWindow_removeToolBarBreak( ::pPtr, hbqt_ptr( pBefore ) )
 
 
 METHOD QMainWindow:restoreDockWidget( pDockwidget )
-   RETURN Qt_QMainWindow_restoreDockWidget( ::pPtr, pDockwidget )
+   RETURN Qt_QMainWindow_restoreDockWidget( ::pPtr, hbqt_ptr( pDockwidget ) )
 
 
 METHOD QMainWindow:restoreState( pState, nVersion )
-   RETURN Qt_QMainWindow_restoreState( ::pPtr, pState, nVersion )
+   RETURN Qt_QMainWindow_restoreState( ::pPtr, hbqt_ptr( pState ), nVersion )
 
 
 METHOD QMainWindow:saveState( nVersion )
@@ -238,7 +238,7 @@ METHOD QMainWindow:saveState( nVersion )
 
 
 METHOD QMainWindow:setCentralWidget( pWidget )
-   RETURN Qt_QMainWindow_setCentralWidget( ::pPtr, pWidget )
+   RETURN Qt_QMainWindow_setCentralWidget( ::pPtr, hbqt_ptr( pWidget ) )
 
 
 METHOD QMainWindow:setCorner( nCorner, nArea )
@@ -254,19 +254,19 @@ METHOD QMainWindow:setDocumentMode( lEnabled )
 
 
 METHOD QMainWindow:setIconSize( pIconSize )
-   RETURN Qt_QMainWindow_setIconSize( ::pPtr, pIconSize )
+   RETURN Qt_QMainWindow_setIconSize( ::pPtr, hbqt_ptr( pIconSize ) )
 
 
 METHOD QMainWindow:setMenuBar( pMenuBar )
-   RETURN Qt_QMainWindow_setMenuBar( ::pPtr, pMenuBar )
+   RETURN Qt_QMainWindow_setMenuBar( ::pPtr, hbqt_ptr( pMenuBar ) )
 
 
 METHOD QMainWindow:setMenuWidget( pMenuBar )
-   RETURN Qt_QMainWindow_setMenuWidget( ::pPtr, pMenuBar )
+   RETURN Qt_QMainWindow_setMenuWidget( ::pPtr, hbqt_ptr( pMenuBar ) )
 
 
 METHOD QMainWindow:setStatusBar( pStatusbar )
-   RETURN Qt_QMainWindow_setStatusBar( ::pPtr, pStatusbar )
+   RETURN Qt_QMainWindow_setStatusBar( ::pPtr, hbqt_ptr( pStatusbar ) )
 
 
 METHOD QMainWindow:setTabPosition( nAreas, nTabPosition )
@@ -286,7 +286,7 @@ METHOD QMainWindow:setUnifiedTitleAndToolBarOnMac( lSet )
 
 
 METHOD QMainWindow:splitDockWidget( pFirst, pSecond, nOrientation )
-   RETURN Qt_QMainWindow_splitDockWidget( ::pPtr, pFirst, pSecond, nOrientation )
+   RETURN Qt_QMainWindow_splitDockWidget( ::pPtr, hbqt_ptr( pFirst ), hbqt_ptr( pSecond ), nOrientation )
 
 
 METHOD QMainWindow:statusBar()
@@ -302,15 +302,15 @@ METHOD QMainWindow:tabShape()
 
 
 METHOD QMainWindow:tabifyDockWidget( pFirst, pSecond )
-   RETURN Qt_QMainWindow_tabifyDockWidget( ::pPtr, pFirst, pSecond )
+   RETURN Qt_QMainWindow_tabifyDockWidget( ::pPtr, hbqt_ptr( pFirst ), hbqt_ptr( pSecond ) )
 
 
 METHOD QMainWindow:toolBarArea( pToolbar )
-   RETURN Qt_QMainWindow_toolBarArea( ::pPtr, pToolbar )
+   RETURN Qt_QMainWindow_toolBarArea( ::pPtr, hbqt_ptr( pToolbar ) )
 
 
 METHOD QMainWindow:toolBarBreak( pToolbar )
-   RETURN Qt_QMainWindow_toolBarBreak( ::pPtr, pToolbar )
+   RETURN Qt_QMainWindow_toolBarBreak( ::pPtr, hbqt_ptr( pToolbar ) )
 
 
 METHOD QMainWindow:toolButtonStyle()

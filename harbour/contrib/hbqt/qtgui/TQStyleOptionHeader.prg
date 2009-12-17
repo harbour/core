@@ -85,7 +85,7 @@ CREATE CLASS QStyleOptionHeader INHERIT QStyleOption
 /*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionHeader:new( pParent )
-   ::pPtr := Qt_QStyleOptionHeader( pParent )
+   ::pPtr := Qt_QStyleOptionHeader( hbqt_ptr( pParent ) )
    RETURN Self
 
 

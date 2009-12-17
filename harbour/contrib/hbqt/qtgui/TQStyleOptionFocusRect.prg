@@ -77,7 +77,7 @@ CREATE CLASS QStyleOptionFocusRect INHERIT QStyleOption
 /*----------------------------------------------------------------------*/
 
 METHOD QStyleOptionFocusRect:new( pParent )
-   ::pPtr := Qt_QStyleOptionFocusRect( pParent )
+   ::pPtr := Qt_QStyleOptionFocusRect( hbqt_ptr( pParent ) )
    RETURN Self
 
 
