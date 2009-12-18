@@ -2113,6 +2113,9 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 #ifdef XWC_DEBUG
                   printf( "UTF8String='%s'\r\n", text.value ); fflush(stdout);
 #endif
+                  if( wnd->ClipboardData != NULL )
+                     hb_xfree( wnd->ClipboardData );
+
                   wnd->ClipboardSize = text.nitems;
                   wnd->ClipboardData = ( unsigned char * )
                      hb_cdpnDup( ( const char * ) text.value, &wnd->ClipboardSize,
