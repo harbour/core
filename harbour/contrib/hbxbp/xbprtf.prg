@@ -348,9 +348,9 @@ METHOD XbpRtf:print( oXbpPrinter, lOnlySelection )
    ENDIF
 
    IF hb_isLogical( lOnlySelection ) .and. lOnlySelection
-      ::oWidget:print( QT_PTROF( oXbpPrinter:oWidget ) )
+      ::oWidget:print( oXbpPrinter:oWidget )
    ELSE
-      ::oWidget:print( QT_PTROF( oXbpPrinter:oWidget ) )
+      ::oWidget:print( oXbpPrinter:oWidget )
    ENDIF
    RETURN Self
 
@@ -422,7 +422,7 @@ METHOD XbpRtf:selAlignment( ... )                           // XBPRTF_ALIGN_LEFT
       oTBFormat := QTextBlockFormat():configure( ::oCurCursor:blockFormat() )
       xRet := oTBFormat:alignment()
       oTBFormat:setAlignment( hbxbp_ConvertAFactFromXBP( "RTFSELALIGNMENT", aP[ 1 ] ) )
-      ::oCurCursor:setBlockFormat( QT_PTROF( oTBFormat ) )
+      ::oCurCursor:setBlockFormat( oTBFormat )
    ENDIF
    RETURN xRet
 
@@ -436,7 +436,7 @@ METHOD XbpRtf:selBold( ... )                                // .F.
       ::oTextCharFormat:pPtr := ::oCurCursor:charFormat()
       IF ::oTextCharFormat:isValid()
          ::oTextCharFormat:setFontWeight( QFont_Bold )
-         ::oCurCursor:setCharFormat( QT_PTROF( ::oTextCharFormat ) )
+         ::oCurCursor:setCharFormat( ::oTextCharFormat )
       ENDIF
    ENDIF
    RETURN xRet
@@ -466,7 +466,7 @@ METHOD XbpRtf:selCharOffset( ... )                          // 0
          nAlign := IF( aP[ 1 ] < 0, -1, IF( aP[ 1 ] > 0, 1, 0 ) )
          xRet   := ::oTextCharFormat:verticalAlignment()
          ::oTextCharFormat:setVerticalAlignment( hbxbp_ConvertAFactFromXBP( "RtfVerticalAlign", nAlign ) )
-         ::oCurCursor:setCharFormat( QT_PTROF( ::oTextCharFormat ) )
+         ::oCurCursor:setCharFormat( ::oTextCharFormat )
       ENDIF
    ENDIF
    RETURN xRet
@@ -485,8 +485,8 @@ METHOD XbpRtf:selColor( ... )
          nColor := hbxbp_ConvertAFactFromXBP( "COLOR", aP[ 1 ] )
          oColor := QColor():new( nColor )
          oBrush := QBrush():new( "QColor", QT_PTROF( oColor ) )
-         ::oTextCharFormat:setForeground( QT_PTROF( oBrush ) )
-         ::oCurCursor:setCharFormat( QT_PTROF( ::oTextCharFormat ) )
+         ::oTextCharFormat:setForeground( oBrush )
+         ::oCurCursor:setCharFormat( ::oTextCharFormat )
       ENDIF
    ENDIF
    RETURN xRet
@@ -501,8 +501,8 @@ METHOD XbpRtf:selFont( ... )                            // ""
    IF len( aP ) >= 1 .and. hb_isObject( aP[ 1 ] )
       ::oTextCharFormat:pPtr := ::oCurCursor:charFormat()
       IF ::oTextCharFormat:isValid()
-         ::oTextCharFormat:setFont( QT_PTROF( aP[ 1 ]:oWidget ) )
-         ::oCurCursor:setCharFormat( QT_PTROF( ::oTextCharFormat ) )
+         ::oTextCharFormat:setFont( aP[ 1 ]:oWidget )
+         ::oCurCursor:setCharFormat( ::oTextCharFormat )
       ENDIF
    ENDIF
    RETURN xRet
@@ -518,7 +518,7 @@ METHOD XbpRtf:selFontName( ... )                            // ""
       IF ::oTextCharFormat:isValid()
          xRet := ::oTextCharFormat:fontFamily()
          ::oTextCharFormat:setFontFamily( aP[ 1 ] )
-         ::oCurCursor:setCharFormat( QT_PTROF( ::oTextCharFormat ) )
+         ::oCurCursor:setCharFormat( ::oTextCharFormat )
       ENDIF
    ENDIF
    RETURN xRet
@@ -534,7 +534,7 @@ METHOD XbpRtf:selFontSize( ... )                            // 0
       xRet := ::oTextCharFormat:fontPointSize()
       IF len( aP ) >= 1 .and. hb_isNumeric( aP[ 1 ] )
          ::oTextCharFormat:setFontPointSize( aP[ 1 ] )
-         ::oCurCursor:setCharFormat( QT_PTROF( ::oTextCharFormat ) )
+         ::oCurCursor:setCharFormat( ::oTextCharFormat )
       ENDIF
    ENDIF
    RETURN xRet
@@ -571,7 +571,7 @@ METHOD XbpRtf:selItalic( ... )                              // .F.
       ::oTextCharFormat:pPtr := ::oCurCursor:charFormat()
       IF ::oTextCharFormat:isValid()
          ::oTextCharFormat:setFontItalic( aP[ 1 ] )
-         ::oCurCursor:setCharFormat( QT_PTROF( ::oTextCharFormat ) )
+         ::oCurCursor:setCharFormat( ::oTextCharFormat )
       ENDIF
    ENDIF
    RETURN xRet
@@ -622,7 +622,7 @@ METHOD XbpRtf:selStrikeThru( ... )                          // .F.
       ::oTextCharFormat:pPtr := ::oCurCursor:charFormat()
       IF ::oTextCharFormat:isValid()
          ::oTextCharFormat:setFontStrikeOut( aP[ 1 ] )
-         ::oCurCursor:setCharFormat( QT_PTROF( ::oTextCharFormat ) )
+         ::oCurCursor:setCharFormat( ::oTextCharFormat )
       ENDIF
    ENDIF
    RETURN xRet
@@ -674,7 +674,7 @@ METHOD XbpRtf:selUnderline( ... )                           // .F.
       ::oTextCharFormat:pPtr := ::oCurCursor:charFormat()
       IF ::oTextCharFormat:isValid()
          ::oTextCharFormat:setFontUnderline( aP[ 1 ] )
-         ::oCurCursor:setCharFormat( QT_PTROF( ::oTextCharFormat ) )
+         ::oCurCursor:setCharFormat( ::oTextCharFormat )
       ENDIF
    ENDIF
    RETURN xRet

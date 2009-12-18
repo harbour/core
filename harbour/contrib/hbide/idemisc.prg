@@ -86,7 +86,7 @@ PROCEDURE JustACall()
 FUNCTION ExecPopup( aPops, aPos, qParent )
    LOCAL i, qPop, qPoint, qAct, nAct, cAct, xRet, pAct
 
-   qPop := QMenu():new( IIF( hb_isObject( qParent ), QT_PTROF( qParent ), NIL ) )
+   qPop := QMenu():new( IIF( hb_isObject( qParent ), qParent, NIL ) )
 
    FOR i := 1 TO len( aPops )
       IF empty( aPops[ i,1 ] )
@@ -97,7 +97,7 @@ FUNCTION ExecPopup( aPops, aPos, qParent )
    NEXT
 
    qPoint := QPoint():new( aPos[ 1 ], aPos[ 2 ] )
-   pAct   := qPop:exec_1( QT_PTROF( qPoint ) )
+   pAct   := qPop:exec_1( qPoint )
    qAct   := QAction():configure( pAct )
 
    IF !empty( qAct:pPtr ) .and. !empty( cAct := qAct:text() )

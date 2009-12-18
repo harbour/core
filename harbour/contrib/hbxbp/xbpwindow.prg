@@ -393,8 +393,8 @@ METHOD XbpWindow:setQtProperty( cProperty )
 METHOD XbpWindow:connect( pWidget, cSignal, bBlock )
    LOCAL lSuccess
 
-   IF ( lSuccess := Qt_Connect_Signal( pWidget, cSignal, bBlock ) )
-      aadd( ::aConnections, { pWidget, cSignal } )
+   IF ( lSuccess := Qt_Connect_Signal( hbqt_ptr( pWidget ), cSignal, bBlock ) )
+      aadd( ::aConnections, { hbqt_ptr( pWidget ), cSignal } )
    ENDIF
 
    RETURN lSuccess
@@ -404,8 +404,8 @@ METHOD XbpWindow:connect( pWidget, cSignal, bBlock )
 METHOD XbpWindow:connectEvent( pWidget, nEvent, bBlock )
    LOCAL lSuccess
 
-   IF ( lSuccess := Qt_Connect_Event( pWidget, nEvent, bBlock ) )
-      aadd( ::aEConnections, { pWidget, nEvent } )
+   IF ( lSuccess := Qt_Connect_Event( hbqt_ptr( pWidget ), nEvent, bBlock ) )
+      aadd( ::aEConnections, { hbqt_ptr( pWidget ), nEvent } )
    ENDIF
 
    RETURN lSuccess
@@ -735,8 +735,8 @@ METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 METHOD XbpWindow:destroy()
    LOCAL cXbp := __ObjGetClsName( self )
 
-//HBXBP_DEBUG( ".   " )
-//HBXBP_DEBUG( hb_threadId(),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
+HBXBP_DEBUG( ".   " )
+HBXBP_DEBUG( hb_threadId(),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
 
    IF cXbp == "XBPDIALOG"
       hbxbp_SetEventLoop( NIL )
@@ -772,7 +772,7 @@ METHOD XbpWindow:destroy()
    ::oWidget:pPtr := 0
    ::oWidget := NIL
 
-//HBXBP_DEBUG( hb_threadId(),"          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
+HBXBP_DEBUG( hb_threadId(),"          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
 
    RETURN NIL
 

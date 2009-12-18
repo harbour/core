@@ -317,7 +317,7 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
       aItem := { QMF_SEPARATOR, 0, 0, NIL, oAction }
 
    CASE cType == "C"
-      oAction := QAction():new( QT_PTROF( ::oWidget ) )
+      oAction := QAction():new( ::oWidget )
       cCaption := strtran( xCaption, '~', '&' )
       IF ( n := at( '|', cCaption ) ) > 0
          cIcon := substr( cCaption, 1, n-1 )
@@ -336,8 +336,8 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
          oAction:setShortcut( oKey )
       ENDIF
 
-      ::Connect( QT_PTROF( oAction ), "triggered(bool)", {|| ::exeBlock( nMenuItemID ) } )
-      ::Connect( QT_PTROF( oAction ), "hovered()"      , {|| ::exeHovered( nMenuItemID ) } )
+      ::Connect( oAction, "triggered(bool)", {|| ::exeBlock( nMenuItemID ) } )
+      ::Connect( oAction, "hovered()"      , {|| ::exeHovered( nMenuItemID ) } )
 
       DO CASE
       CASE nAttrb == XBPMENUBAR_MIA_CHECKED

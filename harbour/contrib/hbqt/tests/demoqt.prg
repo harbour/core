@@ -162,7 +162,7 @@ HBQT_DEBUG( "-----------------b-----------------" )
    oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
    aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
 
-HBQT_DEBUG( "connected: "  + IIF( QT_CONNECT_EVENT( QT_PTROF( oWnd ), 6, {|o,e| My_Events( o, e ) } ), "Yes", "No" ) )
+   QT_CONNECT_EVENT( QT_PTROF( oWnd ), 6, {|o,e| My_Events( o, e ) } )
 
    oWnd:Show()
 
@@ -231,7 +231,7 @@ PROCEDURE ExecOneMore()
    oWnd:setStatusBar( oSBar )
    oSBar:showMessage( "Harbour-QT Statusbar Ready!" )
 
-   oEventLoop := QEventLoop():new( QT_PTROF( oWnd ) )
+   oEventLoop := QEventLoop():new( oWnd )
 
    DO WHILE .t.
       oEventLoop:processEvents()
@@ -290,20 +290,20 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    LOCAL oTB, oActNew, oActOpen, oActSave
 
    /* Create a Toolbar Object */
-   oTB := QToolBar():new()// QT_PTROF( oWnd ) )
+   oTB := QToolBar():new()
 
    /* Create an action */
-   oActNew := QAction():new( QT_PTROF( oWnd ) )
+   oActNew := QAction():new( oWnd )
    oActNew:setText( "&New" )
    oActNew:setIcon( "new.png" )
    oActNew:setToolTip( "A New File" )
    /* Attach codeblock to be triggered */
    Qt_Connect_Signal( QT_PTROF( oActNew ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )
    /* Attach Action with Toolbar */
-   oTB:addAction( QT_PTROF( oActNew ) )
+   oTB:addAction( oActNew )
 
    /* Create another action */
-   oActOpen := QAction():new( QT_PTROF( oWnd ) )
+   oActOpen := QAction():new( oWnd )
    oActOpen:setText( "&Open" )
    oActOpen:setIcon( "open.png" )
    oActOpen:setToolTip( "Select a file to be opened!" )
@@ -315,7 +315,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oTB:addSeparator()
 
    /* Create another action */
-   oActSave := QAction():new( QT_PTROF( oWnd ) )
+   oActSave := QAction():new( oWnd )
    oActSave:setText( "&Save" )
    oActSave:setIcon( "save.png" )
    oActSave:setToolTip( "Save this file!" )
@@ -330,15 +330,15 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    ///////////////////////////////////////////////////////////
 #if 0
    /* Build another toolbar - we will have two toolbats now */
-   oTB := QToolBar():new( QT_PTROF( oWnd ) )
+   oTB := QToolBar():new( oWnd )
 
-   oAct := QAction():new( QT_PTROF( oWnd ) )
+   oAct := QAction():new( oWnd )
    oAct:setText( "&Colors" )
    oAct:setToolTip( "Colors Dialog" )
    Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Colors", w, l ) } )
    oTB:addAction( oAct )
 
-   oAct := QAction():new( QT_PTROF( oWnd ) )
+   oAct := QAction():new( oWnd )
    oAct:setText( "&Fonts" )
    oAct:setToolTip( "Fonts Dialog" )
    Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Fonts", w, l ) } )
@@ -346,13 +346,13 @@ STATIC FUNCTION Build_ToolBar( oWnd )
 
    oTB:addSeparator()
 
-   oAct := QAction():new( QT_PTROF( oWnd ) )
+   oAct := QAction():new( oWnd )
    oAct:setText( "&PgSetup" )
    oAct:setToolTip( "Page Setup Dialog" )
    Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "PageSetup", w, l ) } )
    oTB:addAction( oAct )
 
-   oAct := QAction():new( QT_PTROF( oWnd ) )
+   oAct := QAction():new( oWnd )
    oAct:setText( "&Preview" )
    oAct:setToolTip( "Page Preview Dialog" )
    Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Preview", w, l ) } )
@@ -360,19 +360,19 @@ STATIC FUNCTION Build_ToolBar( oWnd )
 
    oTB:addSeparator()
 
-   oAct := QAction():new( QT_PTROF( oWnd ) )
+   oAct := QAction():new( oWnd )
    oAct:setText( "&Webpage" )
    oAct:setToolTip( "Web Browser Dialog" )
    Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "WebPage", w, l ) } )
    oTB:addAction( oAct )
 
-   oAct := QAction():new( QT_PTROF( oWnd ) )
+   oAct := QAction():new( oWnd )
    oAct:setText( "&Wizard" )
    oAct:setToolTip( "Generic Wizard Dialog" )
    Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Wizard", w, l ) } )
    oTB:addAction( oAct )
 
-   oAct := QAction():new( QT_PTROF( oWnd ) )
+   oAct := QAction():new( oWnd )
    oAct:setText( "&SystemTray" )
    oAct:setToolTip( "Show in System Tray!" )
    Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| ShowInSystemTray( oWnd, w, l ) } )

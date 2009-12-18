@@ -360,15 +360,15 @@ METHOD HbIde:create( cProjIni )
    ENDDO
 
    /* Very important - destroy resources */
-   HBXBP_DEBUG( "----------------------------------------------" )
+   HBXBP_DEBUG( "------------------------------------------------------" )
    HBXBP_DEBUG( "Before    ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
-   HBXBP_DEBUG( "----------------------------------------------" )
+   HBXBP_DEBUG( "------------------------------------------------------" )
 
    ::oDlg:destroy()
 
-   HBXBP_DEBUG( "----------------------------------------------" )
+   HBXBP_DEBUG( "------------------------------------------------------" )
    HBXBP_DEBUG( "After     ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
-   HBXBP_DEBUG( "----------------------------------------------" )
+   HBXBP_DEBUG( "------------------------------------------------------" )
 
    ::qCursor:pPtr := 0
    ::oFont        := NIL
@@ -1932,9 +1932,9 @@ METHOD HbIde:readProcessInfo( nMode, iBytes )
       ENDIF
 
    CASE nMode == 4
-      HBXBP_DEBUG( Qt_DisConnect_Signal( QT_PTROF( ::qProcess ), "finished(int,int)"         ) )
-      HBXBP_DEBUG( Qt_DisConnect_Signal( QT_PTROF( ::qProcess ), "readyReadStandardOutput()" ) )
-      HBXBP_DEBUG( Qt_DisConnect_Signal( QT_PTROF( ::qProcess ), "readyReadStandardError()"  ) )
+      Qt_DisConnect_Signal( QT_PTROF( ::qProcess ), "finished(int,int)"         )
+      Qt_DisConnect_Signal( QT_PTROF( ::qProcess ), "readyReadStandardOutput()" )
+      Qt_DisConnect_Signal( QT_PTROF( ::qProcess ), "readyReadStandardError()"  )
 
       ::qProcess:kill()
       ::qProcess:pPtr := 0
@@ -1945,4 +1945,3 @@ METHOD HbIde:readProcessInfo( nMode, iBytes )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
-

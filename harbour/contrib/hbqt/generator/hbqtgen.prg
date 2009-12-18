@@ -1609,7 +1609,6 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
    DO CASE
    CASE cClassType == "PLAINOBJECT"
       aadd( txt_, 'METHOD ' + cWidget + ':new( ... )' )
-//      aadd( txt_, 'METHOD New( ... ) CLASS ' + cWidget )
       aadd( txt_, '' )
       aadd( txt_, '   ::pPtr := Qt_' + cWidget + '( ... )' )
       aadd( txt_, '' )

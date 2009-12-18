@@ -261,7 +261,7 @@ METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
 
    ELSE
       /* Create an action */
-      oBtn:oAction := QAction():new( QT_PTROF( ::oWidget ) )
+      oBtn:oAction := QAction():new( ::oWidget )
       oBtn:oAction:setText( cCaption )
 
       IF valtype( xImage ) == "C" .and. hb_FileExists( xImage )
@@ -269,7 +269,7 @@ METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
       ENDIF
 
       /* Attach codeblock to be triggered */
-      ::Connect( QT_PTROF( oBtn:oAction ), "triggered(bool)", {|| ::exeBlock( oBtn ) } )
+      ::Connect( oBtn:oAction, "triggered(bool)", {|| ::exeBlock( oBtn ) } )
 
       /* Attach Action with Toolbar */
       ::oWidget:addAction( oBtn:oAction )
