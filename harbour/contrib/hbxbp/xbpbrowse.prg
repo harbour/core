@@ -514,9 +514,9 @@ METHOD XbpBrowse:buildLeftFreeze()
    //
    //::oLeftFooterView:hide()
 
-   ::connect( ::oLeftView      , "mousePressEvent()"  , {|o,p| ::exeBlock( 31, p, o ) } )
-   ::connect( ::oLeftHeaderView, "sectionPressed(int)", {|o,i| ::exeBlock( 31, i, o ) } )
-   ::connect( ::oLeftFooterView, "sectionPressed(int)", {|o,i| ::exeBlock( 31, i, o ) } )
+   ::connect( QT_PTROF( ::oLeftView )      , "mousePressEvent()"  , {|o,p| ::exeBlock( 31, p, o ) } )
+   ::connect( QT_PTROF( ::oLeftHeaderView ), "sectionPressed(int)", {|o,i| ::exeBlock( 31, i, o ) } )
+   ::connect( QT_PTROF( ::oLeftFooterView ), "sectionPressed(int)", {|o,i| ::exeBlock( 31, i, o ) } )
 
    RETURN Self
 
@@ -560,9 +560,9 @@ METHOD XbpBrowse:buildRightFreeze()
    ::oRightFooterModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 162, p1, p2, p3, p4 ) } )
    ::oRightFooterView:setModel( ::oRightFooterModel )
 
-   ::connect( ::oRightView      , "mousePressEvent()"  , {|o,p| ::exeBlock( 31, p, o ) } )
-   ::connect( ::oRightHeaderView, "sectionPressed(int)", {|o,i| ::exeBlock( 31, i, o ) } )
-   ::connect( ::oRightFooterView, "sectionPressed(int)", {|o,i| ::exeBlock( 31, i, o ) } )
+   ::connect( QT_PTROF( ::oRightView )      , "mousePressEvent()"  , {|o,p| ::exeBlock( 31, p, o ) } )
+   ::connect( QT_PTROF( ::oRightHeaderView ), "sectionPressed(int)", {|o,i| ::exeBlock( 31, i, o ) } )
+   ::connect( QT_PTROF( ::oRightFooterView ), "sectionPressed(int)", {|o,i| ::exeBlock( 31, i, o ) } )
 
    RETURN Self
 
@@ -589,27 +589,27 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oTableView:setSelectionBehavior( IF( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
 
    /* Connect Keyboard Events */
-   ::connect( ::oTableView, "keyPressEvent()"           , {|o,p   | ::exeBlock( 1, p, o ) } )
-   ::connect( ::oTableView, "mousePressEvent()"         , {|o,p   | ::exeBlock( 2, p, o ) } )
-   ::connect( ::oTableView, "mouseDoubleClickEvent()"   , {|o,p   | ::exeBlock( 3, p, o ) } )
-   ::connect( ::oTableView, "wheelEvent()"              , {|o,p   | ::exeBlock( 4, p, o ) } )
-   ::connect( ::oTableView, "scrollContentsBy(int,int)" , {|o,p,p1| ::exeBlock(11, p, p1, o ) } )
+   ::connect( QT_PTROF( ::oTableView ), "keyPressEvent()"           , {|o,p   | ::exeBlock( 1, p, o ) } )
+   ::connect( QT_PTROF( ::oTableView ), "mousePressEvent()"         , {|o,p   | ::exeBlock( 2, p, o ) } )
+   ::connect( QT_PTROF( ::oTableView ), "mouseDoubleClickEvent()"   , {|o,p   | ::exeBlock( 3, p, o ) } )
+   ::connect( QT_PTROF( ::oTableView ), "wheelEvent()"              , {|o,p   | ::exeBlock( 4, p, o ) } )
+   ::connect( QT_PTROF( ::oTableView ), "scrollContentsBy(int,int)" , {|o,p,p1| ::exeBlock(11, p, p1, o ) } )
 
    /* Finetune Horizontal Scrollbar */
    ::oTableView:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
    //
    ::oHScrollBar := QScrollBar():new()
    ::oHScrollBar:setOrientation( Qt_Horizontal )
-   ::connect( ::oHScrollBar, "actionTriggered(int)"     , {|o,i| ::exeBlock( 103, i, o ) } )
-   ::connect( ::oHScrollBar, "sliderReleased()"         , {|o,i| ::exeBlock( 104, i, o ) } )
+   ::connect( QT_PTROF( ::oHScrollBar ), "actionTriggered(int)"     , {|o,i| ::exeBlock( 103, i, o ) } )
+   ::connect( QT_PTROF( ::oHScrollBar ), "sliderReleased()"         , {|o,i| ::exeBlock( 104, i, o ) } )
 
    /*  Replace Vertical Scrollbar with our own */
    ::oTableView:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
    //
    ::oVScrollBar := QScrollBar():new()
    ::oVScrollBar:setOrientation( Qt_Vertical )
-   ::connect( ::oVScrollBar, "actionTriggered(int)"     , {|o,i| ::exeBlock( 101, i, o ) } )
-   ::connect( ::oVScrollBar, "sliderReleased()"         , {|o,i| ::exeBlock( 102, i, o ) } )
+   ::connect( QT_PTROF( ::oVScrollBar ), "actionTriggered(int)"     , {|o,i| ::exeBlock( 101, i, o ) } )
+   ::connect( QT_PTROF( ::oVScrollBar ), "sliderReleased()"         , {|o,i| ::exeBlock( 102, i, o ) } )
 
    /*  Veritical Header because of Performance boost */
    ::oVHeaderView := QHeaderView()
@@ -621,8 +621,8 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oHeaderView:configure( ::oTableView:horizontalHeader() )
    ::oHeaderView:setHighlightSections( .F. )
    //
-   ::connect( ::oHeaderView, "sectionPressed(int)"        , {|o,i      | ::exeBlock( 111, i, o ) } )
-   ::connect( ::oHeaderView, "sectionResized(int,int,int)", {|o,i,i1,i2| ::exeBlock( 121, i, i1, i2, o ) } )
+   ::connect( QT_PTROF( ::oHeaderView ), "sectionPressed(int)"        , {|o,i      | ::exeBlock( 111, i, o ) } )
+   ::connect( QT_PTROF( ::oHeaderView ), "sectionResized(int,int,int)", {|o,i,i1,i2| ::exeBlock( 121, i, i1, i2, o ) } )
 
    /* .DBF Manipulation Model */
    ::oDbfModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 141, p1, p2, p3, p4 ) } )

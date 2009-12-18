@@ -74,7 +74,8 @@ HB_FUNC( QT_VERSION_STR )
 
 HB_FUNC( QT_FINDCHILD )
 {
-   hb_retptr( ( QObject * ) hbqt_par_QObject( 1 )->findChild< QObject * >( hbqt_par_QString( 2 ) ) );
+   QObject * object = ( QObject * ) hbqt_pPtrFromObj( 1 );
+   hb_retptr( object->findChild< QObject * >( hbqt_par_QString( 2 ) ) );
 }
 
 HB_FUNC( HBQT_ISEQUALGCQTPOINTER )

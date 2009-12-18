@@ -393,8 +393,8 @@ METHOD XbpWindow:setQtProperty( cProperty )
 METHOD XbpWindow:connect( pWidget, cSignal, bBlock )
    LOCAL lSuccess
 
-   IF ( lSuccess := Qt_Connect_Signal( hbqt_ptr( pWidget ), cSignal, bBlock ) )
-      aadd( ::aConnections, { hbqt_ptr( pWidget ), cSignal } )
+   IF ( lSuccess := Qt_Connect_Signal( pWidget, cSignal, bBlock ) )
+      aadd( ::aConnections, { pWidget, cSignal } )
    ENDIF
 
    RETURN lSuccess
@@ -405,6 +405,7 @@ METHOD XbpWindow:connectEvent( pWidget, nEvent, bBlock )
    LOCAL lSuccess
 
    IF ( lSuccess := Qt_Connect_Event( hbqt_ptr( pWidget ), nEvent, bBlock ) )
+//hbxbp_debug( "Event Connected", nEvent )
       aadd( ::aEConnections, { hbqt_ptr( pWidget ), nEvent } )
    ENDIF
 
@@ -733,10 +734,11 @@ METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:destroy()
+   LOCAL e_, lSuccess
    LOCAL cXbp := __ObjGetClsName( self )
 
-HBXBP_DEBUG( ".   " )
-HBXBP_DEBUG( hb_threadId(),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
+//HBXBP_DEBUG( ".   " )
+//HBXBP_DEBUG( hb_threadId(),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
 
    IF cXbp == "XBPDIALOG"
       hbxbp_SetEventLoop( NIL )
@@ -749,8 +751,10 @@ HBXBP_DEBUG( hb_threadId(),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty
    ::disconnect()
 
    IF len( ::aEConnections ) > 0
-      aeval( ::aEConnections, {|e_,i| Qt_DisConnect_Event( e_[ 1 ], e_[ 2 ] ), ;
-                               ::aEConnections[ i,1 ] := NIL, ::aEConnections[ i,2 ] := NIL, ::aEConnections[ i ] := NIL } )
+      FOR EACH e_ IN ::aEConnections
+         lSuccess := Qt_DisConnect_Event( e_[ 1 ], e_[ 2 ] )
+         hbxbp_debug( "Event Disconnect:", iif( lSuccess, "SUCCEEDED", "FAILED   " ), e_[ 1 ], e_[ 2 ] )
+      NEXT
       ::aEConnections := {}
       ::oWidget:removeEventFilter( QT_GetEventFilter() )
    ENDIF
@@ -772,9 +776,24 @@ HBXBP_DEBUG( hb_threadId(),"Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty
    ::oWidget:pPtr := 0
    ::oWidget := NIL
 
-HBXBP_DEBUG( hb_threadId(),"          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
+//HBXBP_DEBUG( hb_threadId(),"          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
 
    RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpWindow:disconnect()
+   LOCAL lSuccess, e_
+
+   IF len( ::aConnections ) > 0
+      FOR EACH e_ IN ::aConnections
+         lSuccess := Qt_DisConnect_Signal( e_[ 1 ], e_[ 2 ] )
+         hbxbp_debug( "   Signal Disconnect:", iif( lSuccess, "SUCCEEDED", "FAILED   " ), e_[ 1 ], e_[ 2 ] )
+      NEXT
+      ::aConnections := {}
+   ENDIF
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -823,17 +842,6 @@ METHOD XbpWindow:clearSlots()
       NEXT
    ENDIF
    ::aPresParams           := NIL
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpWindow:disconnect()
-
-   IF len( ::aConnections ) > 0
-      aeval( ::aConnections, {|e_| Qt_DisConnect_Signal( e_[ 1 ], e_[ 2 ] ), e_[ 1 ] := NIL, e_[ 2 ] := NIL } )
-      ::aConnections := {}
-   ENDIF
 
    RETURN Self
 
@@ -1318,7 +1326,7 @@ METHOD XbpWindow:currentSize()
 
 METHOD XbpWindow:getHWND()
 
-   RETURN QT_PTROF( ::oWidget )
+   RETURN ::oWidget:pPtr
 
 /*----------------------------------------------------------------------*/
 

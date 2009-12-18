@@ -650,10 +650,10 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos )
    ::manageFocusInEditor()
    ::dispEditInfo()
 
-   Qt_Connect_Signal( QT_PTROF( qEdit ), "textChanged()", ;
+   Qt_Connect_Signal( qEdit, "textChanged()", ;
                           {|| ::setTabImage( oTab, qEdit, nPos, @lFirst, qDocument ) } )
 
-   Qt_Connect_Signal( QT_PTROF( qEdit ), "cursorPositionChanged()", {|| ::dispEditInfo() } )
+   Qt_Connect_Signal( qEdit, "cursorPositionChanged()", {|| ::dispEditInfo() } )
 
    RETURN Self
 
@@ -728,8 +728,8 @@ METHOD HbIde:closeSource( nTab )
       /* Destroy all objects */
       // { oTab, qEdit, qHiliter, qLayout, cSourceFile, qDocument }
       //
-      Qt_DisConnect_Signal( QT_PTROF( ::aTabs[ nTab, 2 ] ), "textChanged()" )
-      Qt_DisConnect_Signal( QT_PTROF( ::aTabs[ nTab, 2 ] ), "cursorPositionChanged()" )
+      Qt_DisConnect_Signal( ::aTabs[ nTab, 2 ], "textChanged()" )
+      Qt_DisConnect_Signal( ::aTabs[ nTab, 2 ], "cursorPositionChanged()" )
 
       ::aTabs[ nTab, 6 ]:pPtr := 0
       ::aTabs[ nTab, 4 ]:pPtr := 0
@@ -1405,7 +1405,7 @@ METHOD HbIde:printPreview()
 
    qDlg := QPrintPreviewDialog():new( QT_PTROFXBP( ::oDlg ) )
    qDlg:setWindowTitle( "Harbour-QT Preview Dialog" )
-   Qt_Connect_Signal( qDlg:pPtr, "paintRequested(QPrinter)", {|o,p| ::paintRequested( p,o ) } )
+   Qt_Connect_Signal( qDlg, "paintRequested(QPrinter)", {|o,p| ::paintRequested( p,o ) } )
    qDlg:exec()
    Qt_DisConnect_Signal( qDlg:pPtr, "paintRequested(QPrinter)" )
 
@@ -1557,16 +1557,16 @@ METHOD HbIde:findReplace( cUi )
          //
          ::qFindDlg:setWindowFlags( Qt_Sheet )
          //
-         ::oFind := XbpComboBox():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "comboFindWhat" ) )
-         ::oRepl := XbpComboBox():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "comboReplaceWith" ) )
+         ::oFind := XbpComboBox():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( ::qFindDlg, "comboFindWhat" ) )
+         ::oRepl := XbpComboBox():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( ::qFindDlg, "comboReplaceWith" ) )
 
-         ::oPBFind := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonFind" ) )
+         ::oPBFind := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( ::qFindDlg, "buttonFind" ) )
          ::oPBFind:activate := {|| ::qCurEdit:find( QLineEdit():configure( ::oFind:oWidget:lineEdit() ):text() ) }
 
-         ::oPBRepl := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonReplace" ) )
+         ::oPBRepl := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( ::qFindDlg, "buttonReplace" ) )
          ::oPBRepl:activate := {|t| t := QLineEdit():configure( ::oRepl:oWidget:lineEdit() ):text() }
 
-         ::oPBClose := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( QT_PTROF( ::qFindDlg ), "buttonClose" ) )
+         ::oPBClose := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( ::qFindDlg, "buttonClose" ) )
          ::oPBClose:activate := {|| ::qFindDlg:hide() }
       ENDIF
    ENDIF
@@ -1638,45 +1638,44 @@ METHOD HbIde:loadProjectProperties( cProject, lNew, lFetch )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:fetchProjectProperties()
-   LOCAL qPrpDlg, qPrjType, oPrjTtl, oPBOk, oPBCn, pPrpDlg, oTabWidget, oPBSv, oPBSelect
+   LOCAL qPrpDlg, qPrjType, oPrjTtl, oPBOk, oPBCn, oTabWidget, oPBSv, oPBSelect
    LOCAL oPrjLoc, oPrjWrk, oPrjDst, oPrjOut, oPrjInc, oPrjLau, oPrjLEx, oPrjSrc, oPrjMta, oPrjHbp, oPrjCmp
    LOCAL cPrjLoc   := hb_dirBase() + "projects"
    LOCAL aPrjProps := ::aPrjProps
 
    IF !empty( qPrpDlg := ::loadUI( "projectproperties" ) )
-      pPrpDlg := QT_PTROF( qPrpDlg )
 
-      qPrjType := QComboBox():configure( Qt_findChild( pPrpDlg, "comboPrjType" ) )
+      qPrjType := QComboBox():configure( Qt_findChild( qPrpDlg, "comboPrjType" ) )
       qPrjType:addItem( "Executable" )
       qPrjType:addItem( "Library"    )
       qPrjType:addItem( "Dll"        )
 
-      oPrjTtl := QLineEdit():configure( Qt_FindChild( pPrpDlg, "editPrjTitle"     ) )
-      oPrjLoc := QLineEdit():configure( Qt_FindChild( pPrpDlg, "editPrjLoctn"     ) )
-      oPrjWrk := QLineEdit():configure( Qt_FindChild( pPrpDlg, "editWrkFolder"    ) )
-      oPrjDst := QLineEdit():configure( Qt_FindChild( pPrpDlg, "editDstFolder"    ) )
-      oPrjOut := QLineEdit():configure( Qt_FindChild( pPrpDlg, "editOutName"      ) )
-      oPrjInc := QTextEdit():configure( Qt_FindChild( pPrpDlg, "editFlags"        ) )
-      oPrjLau := QLineEdit():configure( Qt_FindChild( pPrpDlg, "editLaunchParams" ) )
-      oPrjLEx := QLineEdit():configure( Qt_FindChild( pPrpDlg, "editLaunchExe"    ) )
-      oPrjSrc := QTextEdit():configure( Qt_FindChild( pPrpDlg, "editSources"      ) )
-      oPrjMta := QTextEdit():configure( Qt_FindChild( pPrpDlg, "editMetaData"     ) )
-      oPrjHbp := QTextEdit():configure( Qt_FindChild( pPrpDlg, "editHbp"          ) )
-      oPrjCmp := QTextEdit():configure( Qt_FindChild( pPrpDlg, "editCompilers"    ) )
+      oPrjTtl := QLineEdit():configure( Qt_FindChild( qPrpDlg, "editPrjTitle"     ) )
+      oPrjLoc := QLineEdit():configure( Qt_FindChild( qPrpDlg, "editPrjLoctn"     ) )
+      oPrjWrk := QLineEdit():configure( Qt_FindChild( qPrpDlg, "editWrkFolder"    ) )
+      oPrjDst := QLineEdit():configure( Qt_FindChild( qPrpDlg, "editDstFolder"    ) )
+      oPrjOut := QLineEdit():configure( Qt_FindChild( qPrpDlg, "editOutName"      ) )
+      oPrjInc := QTextEdit():configure( Qt_FindChild( qPrpDlg, "editFlags"        ) )
+      oPrjLau := QLineEdit():configure( Qt_FindChild( qPrpDlg, "editLaunchParams" ) )
+      oPrjLEx := QLineEdit():configure( Qt_FindChild( qPrpDlg, "editLaunchExe"    ) )
+      oPrjSrc := QTextEdit():configure( Qt_FindChild( qPrpDlg, "editSources"      ) )
+      oPrjMta := QTextEdit():configure( Qt_FindChild( qPrpDlg, "editMetaData"     ) )
+      oPrjHbp := QTextEdit():configure( Qt_FindChild( qPrpDlg, "editHbp"          ) )
+      oPrjCmp := QTextEdit():configure( Qt_FindChild( qPrpDlg, "editCompilers"    ) )
 
       ::aPrpObjs := { qPrjType, oPrjTtl, oPrjLoc, oPrjWrk, oPrjDst, oPrjOut, oPrjLau, oPrjLEx, oPrjInc, oPrjSrc, oPrjMta, oPrjHbp, oPrjCmp }
 
-      oPBCn := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( pPrpDlg, "buttonCn" ) )
+      oPBCn := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( qPrpDlg, "buttonCn" ) )
       oPBCn:activate := {|| qPrpDlg:close() }
-      oPBSv := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( pPrpDlg, "buttonSave" ) )
+      oPBSv := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( qPrpDlg, "buttonSave" ) )
       oPBSv:activate := {|| ::saveProject() }
-      oPBOk := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( pPrpDlg, "buttonSaveExit" ) )
+      oPBOk := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( qPrpDlg, "buttonSaveExit" ) )
       oPBOk:activate := {|| ::saveProject(), qPrpDlg:close() }
-      oPBSelect := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( pPrpDlg, "buttonSelect" ) )
+      oPBSelect := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( qPrpDlg, "buttonSelect" ) )
       oPBSelect:activate := {|| ::addSourcesToProject() }
 
-      oTabWidget := QTabWidget():configure( Qt_FindChild( pPrpDlg, "tabWidget" ) )
-      Qt_Connect_Signal( QT_PTROF( oTabWidget ), "currentChanged(int)", {|o,p| ::updateHbp( p, o ) } )
+      oTabWidget := QTabWidget():configure( Qt_FindChild( qPrpDlg, "tabWidget" ) )
+      Qt_Connect_Signal( oTabWidget, "currentChanged(int)", {|o,p| ::updateHbp( p, o ) } )
 
       IF empty( aPrjProps )
          oPrjTtl:setText( "untitled"   )
@@ -1701,7 +1700,7 @@ METHOD HbIde:fetchProjectProperties()
 
       qPrpDlg:exec()
 
-      Qt_DisConnect_Signal( QT_PTROF( oTabWidget ), "currentChanged(int)" )
+      Qt_DisConnect_Signal( oTabWidget, "currentChanged(int)" )
 
       oPBOk:destroy()
       oPBSv:destroy()
@@ -1895,9 +1894,9 @@ METHOD HbIde:buildProjectViaQt( cProject )
    ::qProcess:setReadChannelMode( 0 )
    ::qProcess:setReadChannel( 0 )
 
-   Qt_Connect_Signal( QT_PTROF( ::qProcess ), "readyReadStandardOutput()", {|o,i| ::readProcessInfo( 2, i, o ) } )
-   Qt_Connect_Signal( QT_PTROF( ::qProcess ), "readyReadStandardError()" , {|o,i| ::readProcessInfo( 3, i, o ) } )
-   Qt_Connect_Signal( QT_PTROF( ::qProcess ), "finished(int,int)"        , {|o,i| ::readProcessInfo( 4, i, o ) } )
+   Qt_Connect_Signal( ::qProcess, "readyReadStandardOutput()", {|o,i| ::readProcessInfo( 2, i, o ) } )
+   Qt_Connect_Signal( ::qProcess, "readyReadStandardError()" , {|o,i| ::readProcessInfo( 3, i, o ) } )
+   Qt_Connect_Signal( ::qProcess, "finished(int,int)"        , {|o,i| ::readProcessInfo( 4, i, o ) } )
 
    ::qProcess:start( "hbmk2.exe", qStringList )
 
@@ -1932,9 +1931,9 @@ METHOD HbIde:readProcessInfo( nMode, iBytes )
       ENDIF
 
    CASE nMode == 4
-      Qt_DisConnect_Signal( QT_PTROF( ::qProcess ), "finished(int,int)"         )
-      Qt_DisConnect_Signal( QT_PTROF( ::qProcess ), "readyReadStandardOutput()" )
-      Qt_DisConnect_Signal( QT_PTROF( ::qProcess ), "readyReadStandardError()"  )
+      Qt_DisConnect_Signal( ::qProcess, "finished(int,int)"         )
+      Qt_DisConnect_Signal( ::qProcess, "readyReadStandardOutput()" )
+      Qt_DisConnect_Signal( ::qProcess, "readyReadStandardError()"  )
 
       ::qProcess:kill()
       ::qProcess:pPtr := 0

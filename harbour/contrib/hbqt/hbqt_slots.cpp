@@ -498,7 +498,7 @@ void Slots::stateChanged( QProcess::ProcessState newState )                     
  */
 HB_FUNC( QT_CONNECT_SIGNAL )
 {
-   QObject * object = ( QObject * ) hbqt_gcpointer( 1 );         /* get sender    */
+   QObject * object = ( QObject * ) hbqt_pPtrFromObj( 1 );         /* get sender    */
 
    if( object == NULL )
    {
@@ -744,7 +744,7 @@ static bool disconnect_signal( QObject * object, const char * signal )
  */
 HB_FUNC( QT_DISCONNECT_SIGNAL )
 {
-   QObject * object = ( QObject* ) hbqt_gcpointer( 1 );
+   QObject * object = ( QObject* ) hbqt_pPtrFromObj( 1 );
    bool bFreed = false;
 
    if( object )

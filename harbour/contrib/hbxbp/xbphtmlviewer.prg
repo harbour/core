@@ -246,7 +246,7 @@ METHOD XbpHTMLViewer:navigate( cURL )
 
    ::oURL:setURL( cURL )
 
-   ::oWidget:setURL( QT_PTROF( ::oURL ) )
+   ::oWidget:setURL( ::oURL )
 
    RETURN .t.
 

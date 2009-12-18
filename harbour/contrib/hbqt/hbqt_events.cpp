@@ -155,7 +155,7 @@ bool Events::eventFilter( QObject * object, QEvent * event )
 
 HB_FUNC( QT_CONNECT_EVENT )
 {
-   QObject * object = ( QObject* ) hbqt_gcpointer( 1 );          /* get sender    */
+   QObject * object = ( QObject* ) hbqt_pPtrFromObj( 1 );          /* get sender    */
 
    if( object )
    {
@@ -181,7 +181,7 @@ HB_FUNC( QT_CONNECT_EVENT )
 HB_FUNC( QT_DISCONNECT_EVENT )
 {
    HB_BOOL   bRet   = HB_FALSE;
-   QObject * object = ( QObject* ) hbqt_gcpointer( 1 );
+   QObject * object = ( QObject* ) hbqt_pPtrFromObj( 1 );
 
    if( object )
    {

@@ -77,7 +77,7 @@
 CLASS XbpPrinter
 
    DATA     oWidget
-   ACCESS   pWidget                               INLINE  IF( empty( ::oWidget ), NIL, QT_PTROF( ::oWidget ) )
+   ACCESS   pWidget                               INLINE  IF( empty( ::oWidget ), NIL, ::oWidget:pPtr )
 
    DATA     comment                               READONLY
    DATA     devName                               READONLY

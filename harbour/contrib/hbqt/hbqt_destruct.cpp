@@ -52,6 +52,9 @@
 /*----------------------------------------------------------------------*/
 
 #include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbstack.h"
+#include "hbvm.h"
 
 #include "hbqt.h"
 
@@ -88,6 +91,28 @@ void * hbqt_gcpointer( int iParam )
       return p->ph;
    else
       return hb_parptr( iParam ); /* TOFIX: This is dangerous. */
+}
+
+void * hbqt_pPtrFromObj( int iParam )
+{
+   PHB_ITEM pObj = hb_param( iParam, HB_IT_ANY );
+
+   if( hb_itemType( pObj ) == HB_IT_OBJECT )
+   {
+      hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( "PPTR" ) ) );
+      hb_vmPush( pObj );
+      hb_vmSend( 0 );
+
+      return( hbqt_gcpointer( -1 ) );
+   }
+   else if( hb_itemType( pObj ) == HB_IT_POINTER )
+   {
+      return( hbqt_gcpointer( iParam ) );
+   }
+   else
+   {
+      return( NULL );
+   }
 }
 
 int hbqt_get_object_release_method()

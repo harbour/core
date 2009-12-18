@@ -129,7 +129,7 @@ METHOD XbpPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
       ::oWidget:setDefault( .t. )
    ENDIF
 
-   ::Connect( ::oWidget, "clicked()", {|| ::exeBlock() } )
+   ::Connect( ::pWidget, "clicked()", {|| ::exeBlock() } )
 
    ::oParent:AddChild( SELF )
    RETURN Self
@@ -159,7 +159,7 @@ METHOD XbpPushButton:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParam
 
    ENDIF
 
-   ::Connect( ::oWidget, "clicked()", {|| ::exeBlock() } )
+   ::Connect( ::pWidget, "clicked()", {|| ::exeBlock() } )
 
    ::addAsChild()
    RETURN Self

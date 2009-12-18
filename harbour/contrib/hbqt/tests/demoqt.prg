@@ -162,7 +162,7 @@ HBQT_DEBUG( "-----------------b-----------------" )
    oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
    aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
 
-   QT_CONNECT_EVENT( QT_PTROF( oWnd ), 6, {|o,e| My_Events( o, e ) } )
+   QT_CONNECT_EVENT( oWnd, 6, {|o,e| My_Events( o, e ) } )
 
    oWnd:Show()
 
@@ -298,7 +298,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oActNew:setIcon( "new.png" )
    oActNew:setToolTip( "A New File" )
    /* Attach codeblock to be triggered */
-   Qt_Connect_Signal( QT_PTROF( oActNew ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )
+   Qt_Connect_Signal( oActNew, QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )
    /* Attach Action with Toolbar */
    oTB:addAction( oActNew )
 
@@ -308,7 +308,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oActOpen:setIcon( "open.png" )
    oActOpen:setToolTip( "Select a file to be opened!" )
    /* Attach codeblock to be triggered */
-   Qt_Connect_Signal( QT_PTROF( oActOpen ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open" , w, l ) } )
+   Qt_Connect_Signal( oActOpen, QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open" , w, l ) } )
    /* Attach Action with Toolbar */
    oTB:addAction( oActOpen )
 
@@ -320,7 +320,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oActSave:setIcon( "save.png" )
    oActSave:setToolTip( "Save this file!" )
    /* Attach codeblock to be triggered */
-   Qt_Connect_Signal( QT_PTROF( oActSave ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save" , w, l ) } )
+   Qt_Connect_Signal( oActSave, QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save" , w, l ) } )
    /* Attach Action with Toolbar */
    oTB:addAction( oActSave )
 
@@ -335,13 +335,13 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oAct := QAction():new( oWnd )
    oAct:setText( "&Colors" )
    oAct:setToolTip( "Colors Dialog" )
-   Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Colors", w, l ) } )
+   Qt_Connect_Signal( oAct, QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Colors", w, l ) } )
    oTB:addAction( oAct )
 
    oAct := QAction():new( oWnd )
    oAct:setText( "&Fonts" )
    oAct:setToolTip( "Fonts Dialog" )
-   Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Fonts", w, l ) } )
+   Qt_Connect_Signal( oAct, QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Fonts", w, l ) } )
    oTB:addAction( oAct )
 
    oTB:addSeparator()
@@ -349,13 +349,13 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oAct := QAction():new( oWnd )
    oAct:setText( "&PgSetup" )
    oAct:setToolTip( "Page Setup Dialog" )
-   Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "PageSetup", w, l ) } )
+   Qt_Connect_Signal( oAct, QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "PageSetup", w, l ) } )
    oTB:addAction( oAct )
 
    oAct := QAction():new( oWnd )
    oAct:setText( "&Preview" )
    oAct:setToolTip( "Page Preview Dialog" )
-   Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Preview", w, l ) } )
+   Qt_Connect_Signal( oAct, QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Preview", w, l ) } )
    oTB:addAction( oAct )
 
    oTB:addSeparator()
@@ -363,19 +363,19 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oAct := QAction():new( oWnd )
    oAct:setText( "&Webpage" )
    oAct:setToolTip( "Web Browser Dialog" )
-   Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "WebPage", w, l ) } )
+   Qt_Connect_Signal( oAct, QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "WebPage", w, l ) } )
    oTB:addAction( oAct )
 
    oAct := QAction():new( oWnd )
    oAct:setText( "&Wizard" )
    oAct:setToolTip( "Generic Wizard Dialog" )
-   Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Wizard", w, l ) } )
+   Qt_Connect_Signal( oAct, QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Wizard", w, l ) } )
    oTB:addAction( oAct )
 
    oAct := QAction():new( oWnd )
    oAct:setText( "&SystemTray" )
    oAct:setToolTip( "Show in System Tray!" )
-   Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| ShowInSystemTray( oWnd, w, l ) } )
+   Qt_Connect_Signal( oAct, QT_EVE_TRIGGERED_B, {|w,l| ShowInSystemTray( oWnd, w, l ) } )
    oTB:addAction( oAct )
 
    /* Add this toolbar with main window */
@@ -397,9 +397,9 @@ STATIC FUNCTION Build_PushButton( oWnd, aPos, aSize, cLabel, cMsg, lExit )
    oBtn:resize( aSize[ 1 ],aSize[ 2 ] )
    oBtn:show()
    IF hb_isLogical( lExit )
-      Qt_Connect_Signal( QT_PTROF( oBtn ), QT_EVE_CLICKED, {|| lExit := .t. } )
+      Qt_Connect_Signal( oBtn, QT_EVE_CLICKED, {|| lExit := .t. } )
    ELSE
-      Qt_Connect_Signal( QT_PTROF( oBtn ), QT_EVE_CLICKED, {|| MsgInfo( cMsg ), lExit := .t. } )
+      Qt_Connect_Signal( oBtn, QT_EVE_CLICKED, {|| MsgInfo( cMsg ), lExit := .t. } )
    ENDIF
 
    RETURN oBtn
@@ -528,7 +528,7 @@ STATIC FUNCTION Build_Controls( oWnd )
    LOCAL oEdit, oCheckBox, oComboBox, oSpinBox, oRadioButton
 
    oEdit := QLineEdit():new( oWnd )
-   Qt_Connect_Signal( QT_PTROF( oEdit ), QT_EVE_RETURNPRESSED, {|o,i| o := o, i := i, MsgInfo( oEdit:text() ) } )
+   Qt_Connect_Signal( oEdit, QT_EVE_RETURNPRESSED, {|o,i| o := o, i := i, MsgInfo( oEdit:text() ) } )
    oEdit:move( 5, 10 )
    oEdit:resize( 345, 30 )
    oEdit:setMaxLength( 40 )
@@ -541,13 +541,13 @@ STATIC FUNCTION Build_Controls( oWnd )
    oComboBox:addItem( "Second" )
    oComboBox:addItem( "Third"  )
    //Qt_Connect_Signal( QT_PTROF( oComboBox ), QT_EVE_HIGHLIGHTED_I        , {|o,i| HBQT_DEBUG( oComboBox:itemText( i ) ) } )
-   Qt_Connect_Signal( QT_PTROF( oComboBox ), QT_EVE_CURRENTINDEXCHANGED_I, {|o,i| o := o, i := i, MsgInfo( oComboBox:itemText( i ) ) } )
+   Qt_Connect_Signal( oComboBox, QT_EVE_CURRENTINDEXCHANGED_I, {|o,i| o := o, i := i, MsgInfo( oComboBox:itemText( i ) ) } )
    oComboBox:move( 5, 60 )
    oComboBox:resize( 345, 30 )
    oComboBox:show()
 
    oCheckBox := QCheckBox():New( oWnd )
-   Qt_Connect_Signal( QT_PTROF( oCheckBox ), QT_EVE_STATECHANGED_I, {|o,i| o := o, i := i, MsgInfo( IF( i == 0,"Uncheckd","Checked" ) ) } )
+   Qt_Connect_Signal( oCheckBox, QT_EVE_STATECHANGED_I, {|o,i| o := o, i := i, MsgInfo( IF( i == 0,"Uncheckd","Checked" ) ) } )
    oCheckBox:setText( "Testing CheckBox HbQt" )
    oCheckBox:move( 5, 110 )
    oCheckBox:resize( 345, 30 )
@@ -559,7 +559,7 @@ STATIC FUNCTION Build_Controls( oWnd )
    oSpinBox:Show()
 
    oRadioButton := QRadioButton():New( oWnd )
-   Qt_Connect_Signal( QT_PTROF( oRadioButton ), QT_EVE_CLICKED, {|o,i| o := o, i := i, MsgInfo( "Checked" ) } )
+   Qt_Connect_Signal( oRadioButton, QT_EVE_CLICKED, {|o,i| o := o, i := i, MsgInfo( "Checked" ) } )
    oRadioButton:Move( 5, 210 )
    oRadioButton:ReSize( 345, 30 )
    oRadioButton:Show()

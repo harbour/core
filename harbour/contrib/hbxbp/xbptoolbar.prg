@@ -269,7 +269,7 @@ METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
       ENDIF
 
       /* Attach codeblock to be triggered */
-      ::Connect( oBtn:oAction, "triggered(bool)", {|| ::exeBlock( oBtn ) } )
+      ::Connect( oBtn:oAction:pPtr, "triggered(bool)", {|| ::exeBlock( oBtn ) } )
 
       /* Attach Action with Toolbar */
       ::oWidget:addAction( oBtn:oAction )

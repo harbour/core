@@ -280,8 +280,8 @@ METHOD xbpMenuBar:delItem( nItemIndex )
          //::aMenuItems[ nItemIndex, 4 ]:destroy()
       ELSE
          oAction := ::aMenuItems[ nItemIndex, 5 ]
-         QT_DISCONNECT_SIGNAL( QT_PTROF( oAction ), "triggered(bool)" )
-         QT_DISCONNECT_SIGNAL( QT_PTROF( oAction ), "hovered()"       )
+         QT_DISCONNECT_SIGNAL( oAction:pPtr, "triggered(bool)" )
+         QT_DISCONNECT_SIGNAL( oAction:pPtr, "hovered()"       )
          oAction:pPtr := 0
       ENDIF
       ADEL( ::aMenuItems, nItemIndex )
@@ -336,8 +336,8 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
          oAction:setShortcut( oKey )
       ENDIF
 
-      ::Connect( oAction, "triggered(bool)", {|| ::exeBlock( nMenuItemID ) } )
-      ::Connect( oAction, "hovered()"      , {|| ::exeHovered( nMenuItemID ) } )
+      ::Connect( oAction:pPtr, "triggered(bool)", {|| ::exeBlock( nMenuItemID ) } )
+      ::Connect( oAction:pPtr, "hovered()"      , {|| ::exeHovered( nMenuItemID ) } )
 
       DO CASE
       CASE nAttrb == XBPMENUBAR_MIA_CHECKED
