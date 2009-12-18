@@ -3969,6 +3969,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             cOpt_Res := AllTrim( cOpt_Res )
 
             /* Handle moving the whole command line to a script, if requested. */
+            cScriptFile := NIL
             IF "{SCRIPT}" $ cOpt_Res
                fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
                IF fhnd != F_ERROR
@@ -4104,6 +4105,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                   cOpt_CompCLoop := AllTrim( StrTran( cOpt_CompC, "{LC}"  , ArrayToList( aTODO,, nOpt_Esc ) ) )
 
                   /* Handle moving the whole command line to a script, if requested. */
+                  cScriptFile := NIL
                   IF "{SCRIPT}" $ cOpt_CompCLoop
                      fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".cpl" )
                      IF fhnd != F_ERROR
@@ -4266,6 +4268,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                cOpt_Link := AllTrim( cOpt_Link )
 
                /* Handle moving the whole command line to a script, if requested. */
+               cScriptFile := NIL
                IF "{SCRIPT}" $ cOpt_Link
                   fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
                   IF fhnd != F_ERROR
@@ -4353,6 +4356,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                cOpt_Dyn := AllTrim( cOpt_Dyn )
 
                /* Handle moving the whole command line to a script, if requested. */
+               cScriptFile := NIL
                IF "{SCRIPT}" $ cOpt_Dyn
                   fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
                   IF fhnd != F_ERROR
@@ -4413,6 +4417,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                cOpt_Lib := AllTrim( cOpt_Lib )
 
                /* Handle moving the whole command line to a script, if requested. */
+               cScriptFile := NIL
                IF "{SCRIPT}" $ cOpt_Lib
                   fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
                   IF fhnd != F_ERROR

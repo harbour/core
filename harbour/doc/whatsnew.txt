@@ -12,10 +12,20 @@
    The license applies to all entries on or after Version 1.1.0.
 */
 
-Version 2.0.0 (2009-0?-??)
+Version 2.0.0 (2009-12-??)
+
+Note
+=============================
+
+Too many to list, it's yet to be collected and sorted in 
+digestible form.
 
 [ Incomplete, unordered.
-  Processed from now until 2008-12-19 19:46 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl) ]
+  This section only contains update between 
+  2008-12-19 19:46 UTC+0100 and 2009-03-11 08:51 UTC+0100.
+
+  2008-08/09 - 2008-12-19 and 
+  2009-03-11 - 2009-12-22 are missing. ]
 
 General
 =============================
