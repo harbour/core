@@ -240,14 +240,18 @@ HBXBP_DEBUG( ".............................. WOW ...............................
    ENDDO
 
    /* Very important - destroy resources */
-   oDlg:destroy()
+   HBXBP_DEBUG( "----------------------------------------------" )
+   HBXBP_DEBUG( "Before    ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
+   HBXBP_DEBUG( "----------------------------------------------" )
 
+   oDlg:destroy()
    oHTM := NIL
 
-HBXBP_DEBUG( "------------------------------ WOW ---------------------------------" )
-HBXBP_DEBUG( ".  " )
+   HBXBP_DEBUG( "----------------------------------------------" )
+   HBXBP_DEBUG( "After     ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
+   HBXBP_DEBUG( "----------------------------------------------" )
 
-DispMem( "THE END" )
+HBXBP_DEBUG( "------------------------------ WOW ---------------------------------" )
 
    RETURN
 

@@ -143,14 +143,14 @@ HBQT_DEBUG( "-----------------b-----------------" )
 
    oWnd:resize( 900, 500 )
 
-   oDA    := QWidget():new( QT_PTROF( oWnd ) )
-   oWnd:setCentralWidget( QT_PTROF( oDA ) )
+   oDA    := QWidget():new( oWnd )
+   oWnd:setCentralWidget( oDA )
 
    aMenu  := Build_MenuBar( oWnd )
    aTool  := Build_ToolBar( oWnd )
 
-   oSBar  := QStatusBar():new( QT_PTROF( oWnd ) )
-   oWnd:setStatusBar( QT_PTROF( oSBar ) )
+   oSBar  := QStatusBar():new( oWnd )
+   oWnd:setStatusBar( oSBar )
    oSBar:showMessage( "Harbour-QT Statusbar Ready!" )
 
    oLabel := Build_Label( oDA, { 30,190 }, { 300, 30 } )
@@ -213,7 +213,7 @@ PROCEDURE ExecOneMore()
    oWnd:resize( 900, 500 )
 
    oDA    := QWidget():new( oWnd )
-   oWnd:setCentralWidget( QT_PTROF( oDA ) )
+   oWnd:setCentralWidget( oDA )
 
    oWnd:show()
 
@@ -227,8 +227,8 @@ PROCEDURE ExecOneMore()
    oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
    aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
 
-   oSBar  := QStatusBar():new( QT_PTROF( oWnd ) )
-   oWnd:setStatusBar( QT_PTROF( oSBar ) )
+   oSBar  := QStatusBar():new( oWnd )
+   oWnd:setStatusBar( oSBar )
    oSBar:showMessage( "Harbour-QT Statusbar Ready!" )
 
    oEventLoop := QEventLoop():new( QT_PTROF( oWnd ) )
@@ -264,7 +264,7 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    Qt_Connect_Signal( oMenu1:addAction_1( "save.png", "&Save" ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save", w, l ) } )
    oMenu1:addSeparator()
    Qt_Connect_Signal( oMenu1:addAction( "E&xit" ), QT_EVE_TRIGGERED_B, {|w,l| w := w, l := l, MsgInfo( "Exit ?" ) } )
-   oMenuBar:addMenu( QT_PTROF( oMenu1 ) )
+   oMenuBar:addMenu( oMenu1 )
 
    oMenu2 := QMenu():new()
    oMenu2:setTitle( "&Dialogs" )
@@ -278,9 +278,9 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    Qt_Connect_Signal( oMenu2:addAction( "W&ebPage"   ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "WebPage"  , w, l ) } )
    oMenu2:addSeparator()
    Qt_Connect_Signal( oMenu2:addAction( "&Another Dialog" ), QT_EVE_TRIGGERED_B, {|w,l| w := w, l := l, ExecOneMore() } )
-   oMenuBar:addMenu( QT_PTROF( oMenu2 ) )
+   oMenuBar:addMenu( oMenu2 )
 
-   oWnd:setMenuBar( QT_PTROF( oMenuBar ) )
+   oWnd:setMenuBar( oMenuBar )
 
    RETURN { oMenu1, oMenu2, oMenuBar }
 
@@ -310,7 +310,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    /* Attach codeblock to be triggered */
    Qt_Connect_Signal( QT_PTROF( oActOpen ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open" , w, l ) } )
    /* Attach Action with Toolbar */
-   oTB:addAction( QT_PTROF( oActOpen ) )
+   oTB:addAction( oActOpen )
 
    oTB:addSeparator()
 
@@ -322,10 +322,10 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    /* Attach codeblock to be triggered */
    Qt_Connect_Signal( QT_PTROF( oActSave ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save" , w, l ) } )
    /* Attach Action with Toolbar */
-   oTB:addAction( QT_PTROF( oActSave ) )
+   oTB:addAction( oActSave )
 
    /* Add this toolbar with main window */
-   oWnd:addToolBar_1( QT_PTROF( oTB ) )
+   oWnd:addToolBar_1( oTB )
 
    ///////////////////////////////////////////////////////////
 #if 0
@@ -336,13 +336,13 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oAct:setText( "&Colors" )
    oAct:setToolTip( "Colors Dialog" )
    Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Colors", w, l ) } )
-   oTB:addAction( QT_PTROF( oAct ) )
+   oTB:addAction( oAct )
 
    oAct := QAction():new( QT_PTROF( oWnd ) )
    oAct:setText( "&Fonts" )
    oAct:setToolTip( "Fonts Dialog" )
    Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Fonts", w, l ) } )
-   oTB:addAction( QT_PTROF( oAct ) )
+   oTB:addAction( oAct )
 
    oTB:addSeparator()
 
@@ -350,13 +350,13 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oAct:setText( "&PgSetup" )
    oAct:setToolTip( "Page Setup Dialog" )
    Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "PageSetup", w, l ) } )
-   oTB:addAction( QT_PTROF( oAct ) )
+   oTB:addAction( oAct )
 
    oAct := QAction():new( QT_PTROF( oWnd ) )
    oAct:setText( "&Preview" )
    oAct:setToolTip( "Page Preview Dialog" )
    Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Preview", w, l ) } )
-   oTB:addAction( QT_PTROF( oAct ) )
+   oTB:addAction( oAct )
 
    oTB:addSeparator()
 
@@ -364,22 +364,22 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oAct:setText( "&Webpage" )
    oAct:setToolTip( "Web Browser Dialog" )
    Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "WebPage", w, l ) } )
-   oTB:addAction( QT_PTROF( oAct ) )
+   oTB:addAction( oAct )
 
    oAct := QAction():new( QT_PTROF( oWnd ) )
    oAct:setText( "&Wizard" )
    oAct:setToolTip( "Generic Wizard Dialog" )
    Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Wizard", w, l ) } )
-   oTB:addAction( QT_PTROF( oAct ) )
+   oTB:addAction( oAct )
 
    oAct := QAction():new( QT_PTROF( oWnd ) )
    oAct:setText( "&SystemTray" )
    oAct:setToolTip( "Show in System Tray!" )
    Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| ShowInSystemTray( oWnd, w, l ) } )
-   oTB:addAction( QT_PTROF( oAct ) )
+   oTB:addAction( oAct )
 
    /* Add this toolbar with main window */
-   oWnd:addToolBar_1( QT_PTROF( oTB ) )
+   oWnd:addToolBar_1( oTB )
 #endif
    RETURN { oActNew, oActOpen, oActSave, oTB }
 
@@ -391,7 +391,7 @@ STATIC FUNCTION Build_PushButton( oWnd, aPos, aSize, cLabel, cMsg, lExit )
    DEFAULT cLabel TO "Push Button"
    DEFAULT cMsg   TO "Push Button Pressed"
 
-   oBtn := QPushButton():new( QT_PTROF( oWnd ) )
+   oBtn := QPushButton():new( oWnd )
    oBtn:setText( cLabel )
    oBtn:move( aPos[ 1 ],aPos[ 2 ] )
    oBtn:resize( aSize[ 1 ],aSize[ 2 ] )
@@ -409,7 +409,7 @@ STATIC FUNCTION Build_PushButton( oWnd, aPos, aSize, cLabel, cMsg, lExit )
 STATIC FUNCTION Build_Grid( oWnd, aPos, aSize )
    LOCAL oGrid, oBrushBackItem0x0, oBrushForeItem0x0, oGridItem0x0
 
-   oGrid := QTableWidget():new( QT_PTROF( oWnd ) )
+   oGrid := QTableWidget():new( oWnd )
    oGrid:setRowCount( 2 )
    oGrid:setColumnCount( 4 )
    //
@@ -421,11 +421,11 @@ STATIC FUNCTION Build_Grid( oWnd, aPos, aSize )
    oBrushForeItem0x0:setColor_1( 7 )
    //
    oGridItem0x0 := QTableWidgetItem():new()
-   oGridItem0x0:setBackground( QT_PTROF( oBrushBackItem0x0 ) )
-   oGridItem0x0:setForeground( QT_PTROF( oBrushForeItem0x0 ) )
+   oGridItem0x0:setBackground( oBrushBackItem0x0 )
+   oGridItem0x0:setForeground( oBrushForeItem0x0 )
    oGridItem0x0:setText( "Item 0x0" )
    //
-   oGrid:setItem( 0, 0, QT_PTROF( oGridItem0x0 ) )
+   oGrid:setItem( 0, 0, oGridItem0x0 )
    //
    oGrid:Move( aPos[ 1 ], aPos[ 2 ] )
    oGrid:ReSize( aSize[ 1 ], aSize[ 2 ] )
@@ -439,15 +439,15 @@ STATIC FUNCTION Build_Grid( oWnd, aPos, aSize )
 STATIC FUNCTION Build_Tabs( oWnd, aPos, aSize )
    LOCAL oTabWidget, oTab1, oTab2, oTab3, aTree, aCntl, aText
 
-   oTabWidget := QTabWidget():new( QT_PTROF( oWnd ) )
+   oTabWidget := QTabWidget():new( oWnd )
 
    oTab1 := QWidget():new()
    oTab2 := QWidget():new()
    oTab3 := QWidget():new()
 
-   oTabWidget:addTab( QT_PTROF( oTab1 ), "Folders"  )
-   oTabWidget:addTab( QT_PTROF( oTab2 ), "Controls" )
-   oTabWidget:addTab( QT_PTROF( oTab3 ), "TextBox"  )
+   oTabWidget:addTab( oTab1, "Folders"  )
+   oTabWidget:addTab( oTab2, "Controls" )
+   oTabWidget:addTab( oTab3, "TextBox"  )
 
    oTabWidget:Move( aPos[ 1 ], aPos[ 2 ] )
    oTabWidget:ReSize( aSize[ 1 ], aSize[ 2 ] )
@@ -467,11 +467,11 @@ STATIC FUNCTION Build_Tabs( oWnd, aPos, aSize )
 STATIC FUNCTION Build_TreeView( oWnd )
    LOCAL oTV, oDirModel
 
-   oTV := QTreeView():new( QT_PTROF( oWnd ) )
+   oTV := QTreeView():new( oWnd )
    oTV:setMouseTracking( .t. )
    //Qt_Connect_Signal( QT_PTROF( oTV ), QT_EVE_HOVERED, {|o,i| HBQT_DEBUG( "oTV:hovered" ) } )
    oDirModel := QDirModel():new()
-   oTV:setModel( QT_PTROF( oDirModel ) )
+   oTV:setModel( oDirModel )
    oTV:move( 5, 7 )
    oTV:resize( 345, 365 )
    OTV:show()
@@ -483,7 +483,7 @@ STATIC FUNCTION Build_TreeView( oWnd )
 STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
    LOCAL oListBox, oStrList, oStrModel
 
-   oListBox := QListView():New( QT_PTROF( oWnd ) )
+   oListBox := QListView():New( oWnd )
    oListBox:setMouseTracking( .t. )
    //Qt_Connect_Signal( QT_PTROF( oListBox ), QT_EVE_HOVERED, {|o,i| HBQT_DEBUG( "oListBox:hovered" ) } )
 
@@ -499,9 +499,9 @@ STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
    oStrList:sort()
 
    oStrModel := QStringListModel():new()
-   oStrModel:setStringList( QT_PTROF( oStrList ) )
+   oStrModel:setStringList( oStrList )
 
-   oListBox:setModel( QT_PTROF( oStrModel ) )
+   oListBox:setModel( oStrModel )
    oListBox:Move( aPos[ 1 ], aPos[ 2 ] )
    oListBox:ReSize( aSize[ 1 ], aSize[ 2 ] )
    oListBox:Show()
@@ -513,7 +513,7 @@ STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
 STATIC FUNCTION Build_TextBox( oWnd )
    LOCAL oTextBox
 
-   oTextBox := QTextEdit():new( QT_PTROF( oWnd ) )
+   oTextBox := QTextEdit():new( oWnd )
    oTextBox:Move( 5, 7 )
    oTextBox:Resize( 345,365 )
    oTextBox:setAcceptRichText( .t. )
@@ -527,7 +527,7 @@ STATIC FUNCTION Build_TextBox( oWnd )
 STATIC FUNCTION Build_Controls( oWnd )
    LOCAL oEdit, oCheckBox, oComboBox, oSpinBox, oRadioButton
 
-   oEdit := QLineEdit():new( QT_PTROF( oWnd ) )
+   oEdit := QLineEdit():new( oWnd )
    Qt_Connect_Signal( QT_PTROF( oEdit ), QT_EVE_RETURNPRESSED, {|o,i| o := o, i := i, MsgInfo( oEdit:text() ) } )
    oEdit:move( 5, 10 )
    oEdit:resize( 345, 30 )
@@ -536,7 +536,7 @@ STATIC FUNCTION Build_Controls( oWnd )
    oEdit:setAlignment( 1 )   // 1: Left  2: Right  4: center 8: use all textbox length
    oEdit:show()
 
-   oComboBox := QComboBox():New( QT_PTROF( oWnd ) )
+   oComboBox := QComboBox():New( oWnd )
    oComboBox:addItem( "First"  )
    oComboBox:addItem( "Second" )
    oComboBox:addItem( "Third"  )
@@ -546,19 +546,19 @@ STATIC FUNCTION Build_Controls( oWnd )
    oComboBox:resize( 345, 30 )
    oComboBox:show()
 
-   oCheckBox := QCheckBox():New( QT_PTROF( oWnd ) )
+   oCheckBox := QCheckBox():New( oWnd )
    Qt_Connect_Signal( QT_PTROF( oCheckBox ), QT_EVE_STATECHANGED_I, {|o,i| o := o, i := i, MsgInfo( IF( i == 0,"Uncheckd","Checked" ) ) } )
    oCheckBox:setText( "Testing CheckBox HbQt" )
    oCheckBox:move( 5, 110 )
    oCheckBox:resize( 345, 30 )
    oCheckBox:show()
 
-   oSpinBox := QSpinBox():New( QT_PTROF( oWnd ) )
+   oSpinBox := QSpinBox():New( oWnd )
    oSpinBox:Move( 5, 160 )
    oSpinBox:ReSize( 345, 30 )
    oSpinBox:Show()
 
-   oRadioButton := QRadioButton():New( QT_PTROF( oWnd ) )
+   oRadioButton := QRadioButton():New( oWnd )
    Qt_Connect_Signal( QT_PTROF( oRadioButton ), QT_EVE_CLICKED, {|o,i| o := o, i := i, MsgInfo( "Checked" ) } )
    oRadioButton:Move( 5, 210 )
    oRadioButton:ReSize( 345, 30 )
@@ -571,7 +571,7 @@ STATIC FUNCTION Build_Controls( oWnd )
 STATIC FUNCTION Build_ProgressBar( oWnd, aPos, aSize )
    LOCAL oProgressBar
 
-   oProgressBar := QProgressBar():New( QT_PTROF( oWnd ) )
+   oProgressBar := QProgressBar():New( oWnd )
    oProgressBar:SetRange( 1, 1500 )
    oProgressBar:Setvalue( 500 )
    oProgressBar:Move( aPos[ 1 ], aPos[ 2 ] )
@@ -585,7 +585,7 @@ STATIC FUNCTION Build_ProgressBar( oWnd, aPos, aSize )
 STATIC FUNCTION Build_Label( oWnd, aPos, aSize )
    LOCAL oLabel
 
-   oLabel := QLabel():New( QT_PTROF( oWnd ) )
+   oLabel := QLabel():New( oWnd )
    oLabel:SetTextFormat( 1 )  // 0 text plain  1 RichText
    oLabel:SetText( [<font color="Blue" size=6 ><u>This is a</u> <i>Label</i> in <b>Harbour QT</b></font>] )
    oLabel:Move( aPos[ 1 ], aPos[ 2 ] )
@@ -918,7 +918,7 @@ FUNCTION ShowInSystemTray( oWnd )
    LOCAL oSys
    LOCAL oMenu
 
-   oMenu := QMenu():new( QT_PTROF( oWnd ) )
+   oMenu := QMenu():new( oWnd )
    oMenu:setTitle( "&File" )
    Qt_Connect_Signal( oMenu:addAction_1( "new.png" , "&Show" ), QT_EVE_TRIGGERED_B, {|| oWnd:show() } )
    oMenu:addSeparator()
@@ -926,7 +926,7 @@ FUNCTION ShowInSystemTray( oWnd )
 
    oSys := QSystemTrayIcon():new( QT_PTROF( oWnd ) )
    oSys:setIcon( 'new.png' )
-   oSys:setContextMenu( QT_PTROF( oMenu ) )
+   oSys:setContextMenu( oMenu )
    oSys:showMessage( "Harbour-QT", "This is Harbour-QT System Tray" )
    oSys:show()
    oWnd:hide()
