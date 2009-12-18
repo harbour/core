@@ -253,8 +253,6 @@ static Atom s_atomClipboard;
 static Atom s_atomTargets;
 static Atom s_atomCutBuffer0;
 static Atom s_atomText;
-static Atom s_atomTextHtml;
-static Atom s_atomTextMozHtmlInfo;
 static Atom s_atomCompoundText;
 
 
@@ -2152,11 +2150,8 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                         aNextRequest = s_atomUTF8String;
                      else if( aValue == s_atomString && aNextRequest != s_atomUTF8String )
                         aNextRequest = s_atomString;
-                     else if( aValue == s_atomTextMozHtmlInfo && aNextRequest == None )
-                        /* hack for FireFox which does not set UTF8_STRING target
-                         * though it supports it
-                         */
-                        aNextRequest = s_atomUTF8String;
+                     else if( aValue == s_atomText && aNextRequest == None )
+                        aNextRequest = s_atomText;
 #ifdef XWC_DEBUG
                      if( aValue )
                         printf("%ld, %8lx (%s)\r\n", nItem, aValue, XGetAtomName(wnd->dpy, aValue));
@@ -3268,8 +3263,6 @@ static BOOL hb_gt_xwc_ConnectX( PXWND_DEF wnd, BOOL fExit )
    s_atomCutBuffer0      = XInternAtom( wnd->dpy, "CUT_BUFFER0", False );
    s_atomText            = XInternAtom( wnd->dpy, "TEXT", False );
    s_atomCompoundText    = XInternAtom( wnd->dpy, "COMPOUND_TEXT", False );
-   s_atomTextHtml        = XInternAtom( wnd->dpy, "text/html", False );
-   s_atomTextMozHtmlInfo = XInternAtom( wnd->dpy, "text/_moz_htmlinfo", False );
 
    HB_XWC_XLIB_UNLOCK
 
