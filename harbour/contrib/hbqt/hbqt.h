@@ -79,7 +79,7 @@ extern int hbqt_get_object_release_method();
 HB_GARBAGE_FUNC( Q_release );
 
 extern void * hbqt_gcpointer( int iParam );
-const HB_GC_FUNCS * gcFuncs( void );
+extern const HB_GC_FUNCS * gcFuncs( void ); /* TOFIX: prefix: hbqt_ */
 
 extern int hbqt_getmemused( void );
 
@@ -392,8 +392,8 @@ extern int hbqt_getmemused( void );
 #define hbqt_ret_QPrinter( p )                      ( hb_retptr( ( QPrinter* ) p ) )
 
 /* Declarations which will not be generated auto */
-extern QT_G_FUNC( release_HBDbfModel );
-extern void * gcAllocate_HBDbfModel( void * pObj );
+extern QT_G_FUNC( hbqt_release_HBDbfModel );
+extern void * hbqt_gcAllocate_HBDbfModel( void * pObj );
 
 #endif
 

@@ -173,7 +173,7 @@ QT_G_FUNC( release_HBQTableView )
    }
 }
 
-void * gcAllocate_HBQTableView( void * pObj )
+void * hbqt_gcAllocate_HBQTableView( void * pObj )
 {
    QGC_POINTER_HBQTableView * p = ( QGC_POINTER_HBQTableView * ) hb_gcAllocate( sizeof( QGC_POINTER_HBQTableView ), gcFuncs() );
 
@@ -190,9 +190,10 @@ HB_FUNC( QT_HBQTABLEVIEW )
 
    pObj = ( HBQTableView* ) new HBQTableView( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_HBQTableView( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_HBQTableView( pObj ) );
 }
 
+/* TOFIX: Leak */
 HB_FUNC( QT_HBQTABLEVIEW_NAVIGATE )
 {
    hb_retptr( new QModelIndex( hbqt_par_HBQTableView( 1 )->navigate( hb_parni( 2 ) ) ) );

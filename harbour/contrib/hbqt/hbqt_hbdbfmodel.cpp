@@ -313,7 +313,7 @@ typedef struct
   QPointer< HBDbfModel > pq;
 } QGC_POINTER_HBDbfModel;
 
-QT_G_FUNC( release_HBDbfModel )
+QT_G_FUNC( hbqt_release_HBDbfModel )
 {
    QGC_POINTER_HBDbfModel * p = ( QGC_POINTER_HBDbfModel * ) Cargo;
 
@@ -351,12 +351,12 @@ QT_G_FUNC( release_HBDbfModel )
    }
 }
 
-void * gcAllocate_HBDbfModel( void * pObj )
+void * hbqt_gcAllocate_HBDbfModel( void * pObj )
 {
    QGC_POINTER_HBDbfModel * p = ( QGC_POINTER_HBDbfModel * ) hb_gcAllocate( sizeof( QGC_POINTER_HBDbfModel ), gcFuncs() );
 
    p->ph = pObj;
-   p->func = release_HBDbfModel;
+   p->func = hbqt_release_HBDbfModel;
    new( & p->pq ) QPointer< HBDbfModel >( ( HBDbfModel * ) pObj );
    HB_TRACE( HB_TR_DEBUG, ( "          new_HBDbfModel                 %i B %i KB", ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
    return( p );
@@ -368,7 +368,7 @@ HB_FUNC( QT_HBDBFMODEL )
 
    pObj = ( HBDbfModel * ) new HBDbfModel( ( PHB_ITEM ) hb_param( 1, HB_IT_BLOCK ) );
 
-   hb_retptrGC( gcAllocate_HBDbfModel( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_HBDbfModel( pObj ) );
 }
 
 HB_FUNC( QT_HBDBFMODEL_RESET )
@@ -378,7 +378,7 @@ HB_FUNC( QT_HBDBFMODEL_RESET )
 
 HB_FUNC( QT_HBDBFMODEL_INDEX )
 {
-   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_HBDbfModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), QModelIndex() ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_HBDbfModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), QModelIndex() ) ) ) );
 }
 
 HB_FUNC( QT_HBDBFMODEL_HBSETROWCOLUMNS )

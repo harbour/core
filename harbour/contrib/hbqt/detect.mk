@@ -2,6 +2,11 @@
 # $Id$
 #
 
+# ---------------------------------------------------------------
+# Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
+# See COPYING for licensing terms.
+# ---------------------------------------------------------------
+
 # force redetect. needed for _QT_DARWIN trick
 HB_HAS_QT :=
 

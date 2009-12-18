@@ -647,7 +647,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       IF ( lNewGCtoQT )
          IF lConst
             IF lDestructor
-               aadd( cpp_, "void * gcAllocate_" + cWidget + "( void * pObj )" )
+               aadd( cpp_, "void * hbqt_gcAllocate_" + cWidget + "( void * pObj )" )
                aadd( cpp_, "{                                      " )
                IF lObject
                   aadd( cpp_, "   QGC_POINTER_" + cWidget + " * p = ( QGC_POINTER_" + cWidget + " * ) hb_gcAllocate( sizeof( QGC_POINTER_" + cWidget + " ), gcFuncs() );" )
@@ -687,7 +687,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
             NEXT
             aadd( cpp_, " " )
             IF lDestructor
-               aadd( cpp_, "   hb_retptrGC( gcAllocate_" + cWidget + "( pObj ) );" )
+               aadd( cpp_, "   hb_retptrGC( hbqt_gcAllocate_" + cWidget + "( pObj ) );" )
             ELSE
                aadd( cpp_, "   hb_retptr( pObj );" )
             ENDIF
@@ -1679,7 +1679,7 @@ STATIC FUNCTION Build_GarbageFile( cpp_, cPathOut )
 
    IF (lNewGCtoQT)
       FOR EACH s IN cpp_
-         aadd( txt_, "extern void * gcAllocate_" + s + "( void * pObj );" )
+         aadd( txt_, "extern void * hbqt_gcAllocate_" + s + "( void * pObj );" )
       NEXT
       aadd( txt_, "" )
    ENDIF
@@ -2348,7 +2348,7 @@ FUNCTION Get_Command( cWgt, cCmn )
    ENDIF
 
    IF (lNewGCtoQT)
-      cRet := 'hb_retptrGC( gcAllocate_' + cWgt + '( new ' + cWgt + '( ' + cCmn + ' ) ) )'
+      cRet := 'hb_retptrGC( hbqt_gcAllocate_' + cWgt + '( new ' + cWgt + '( ' + cCmn + ' ) ) )'
    ELSE
       cRet := 'hb_retptrGC( hbqt_ptrTOgcpointer( new ' + cWgt + '( ' + cCmn + ' ), release_' + cWgt +' ) )'
    ENDIF

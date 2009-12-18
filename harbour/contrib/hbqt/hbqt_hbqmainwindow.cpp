@@ -374,7 +374,7 @@ QT_G_FUNC( release_HBQMainWindow )
    }
 }
 
-void * gcAllocate_HBQMainWindow( void * pObj )
+void * hbqt_gcAllocate_HBQMainWindow( void * pObj )
 {
    QGC_POINTER_HBQMainWindow * p = ( QGC_POINTER_HBQMainWindow * ) hb_gcAllocate( sizeof( QGC_POINTER_HBQMainWindow ), gcFuncs() );
 
@@ -396,7 +396,7 @@ HB_FUNC( QT_HBQMAINWINDOW )
 
    pObj = ( HBQMainWindow * ) new HBQMainWindow( hb_itemNew( hb_param( 1, HB_IT_BLOCK ) ), hb_parni( 2 ) );
 
-   hb_retptrGC( gcAllocate_HBQMainWindow( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_HBQMainWindow( pObj ) );
 }
 
 HB_FUNC( HB_QT ) {;}
