@@ -2163,6 +2163,8 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 #endif
                   }
                }
+               if( text.value )
+                  XFree( text.value );
             }
          }
          else if( wnd->ClipboardRequest == s_atomTargets )
