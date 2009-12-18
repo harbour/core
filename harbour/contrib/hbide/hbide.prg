@@ -1895,8 +1895,9 @@ METHOD HbIde:buildProjectViaQt( cProject )
    ::qProcess:setReadChannelMode( 0 )
    ::qProcess:setReadChannel( 0 )
 
-   Qt_Connect_Signal( QT_PTROF( ::qProcess ), "readyReadStandardOutput()", {|o,i| ::readProcessInfo( 3, i, o ) } )
-   Qt_Connect_Signal( QT_PTROF( ::qProcess ), "finished(int,int)"        , {|o,i| ::readProcessInfo( 2, i, o ) } )
+   Qt_Connect_Signal( QT_PTROF( ::qProcess ), "readyReadStandardOutput()", {|o,i| ::readProcessInfo( 2, i, o ) } )
+   Qt_Connect_Signal( QT_PTROF( ::qProcess ), "readyReadStandardError()" , {|o,i| ::readProcessInfo( 3, i, o ) } )
+   Qt_Connect_Signal( QT_PTROF( ::qProcess ), "finished(int,int)"        , {|o,i| ::readProcessInfo( 4, i, o ) } )
 
    ::qProcess:start( "hbmk2.exe", qStringList )
 
@@ -1912,7 +1913,8 @@ METHOD HbIde:readProcessInfo( nMode, iBytes )
       ::cProcessInfo += ::qProcess:read( iBytes )
       ::oOutputResult:setData( ::cProcessInfo )
 
-   CASE nMode == 3
+   CASE nMode == 2
+      ::qProcess:setReadChannel( 0 ) // QProcess_StandardOutput )
       cLine := space( 1024 )
       ::qProcess:readLine( @cLine, 1024 )
       IF !empty( cLine )
@@ -1920,12 +1922,23 @@ METHOD HbIde:readProcessInfo( nMode, iBytes )
          ::oOutputResult:oWidget:appendPlainText( cLine )
       ENDIF
 
-   CASE nMode == 2
-      ::qProcess:kill()
-      Qt_DisConnect_Signal( QT_PTROF( ::qProcess ), "finished(int,int)" )
-      Qt_DisConnect_Signal( QT_PTROF( ::qProcess ), "bytesWritten(int)" )
+   CASE nMode == 3
+      ::qProcess:setReadChannel( 1 ) // QProcess_StandardError )
+      cLine := space( 1024 )
+      ::qProcess:readLine( @cLine, 1024 )
+      IF !empty( cLine )
+         ::cProcessInfo += CRLF + trim( cLine )
+         ::oOutputResult:oWidget:appendPlainText( cLine )
+      ENDIF
 
+   CASE nMode == 4
+      HBXBP_DEBUG( Qt_DisConnect_Signal( QT_PTROF( ::qProcess ), "finished(int,int)"         ) )
+      HBXBP_DEBUG( Qt_DisConnect_Signal( QT_PTROF( ::qProcess ), "readyReadStandardOutput()" ) )
+      HBXBP_DEBUG( Qt_DisConnect_Signal( QT_PTROF( ::qProcess ), "readyReadStandardError()"  ) )
+
+      ::qProcess:kill()
       ::qProcess:pPtr := 0
+      ::qProcess := NIL
 
    ENDCASE
 
