@@ -734,7 +734,7 @@ METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:destroy()
-   LOCAL e_, lSuccess
+   LOCAL e_
    LOCAL cXbp := __ObjGetClsName( self )
 
 //HBXBP_DEBUG( ".   " )
@@ -752,8 +752,8 @@ METHOD XbpWindow:destroy()
 
    IF len( ::aEConnections ) > 0
       FOR EACH e_ IN ::aEConnections
-         lSuccess := Qt_DisConnect_Event( e_[ 1 ], e_[ 2 ] )
-         hbxbp_debug( "Event Disconnect:", iif( lSuccess, "SUCCEEDED", "FAILED   " ), e_[ 1 ], e_[ 2 ] )
+         ::xDummy := Qt_DisConnect_Event( e_[ 1 ], e_[ 2 ] )
+         hbxbp_debug( "Event Disconnect:", iif( ::xDummy, "SUCCEEDED", "FAILED   " ), e_[ 1 ], e_[ 2 ] )
       NEXT
       ::aEConnections := {}
       ::oWidget:removeEventFilter( QT_GetEventFilter() )
@@ -783,12 +783,12 @@ METHOD XbpWindow:destroy()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:disconnect()
-   LOCAL lSuccess, e_
+   LOCAL e_
 
    IF len( ::aConnections ) > 0
       FOR EACH e_ IN ::aConnections
-         lSuccess := Qt_DisConnect_Signal( e_[ 1 ], e_[ 2 ] )
-         hbxbp_debug( "   Signal Disconnect:", iif( lSuccess, "SUCCEEDED", "FAILED   " ), e_[ 1 ], e_[ 2 ] )
+         ::xDummy := Qt_DisConnect_Signal( e_[ 1 ], e_[ 2 ] )
+         hbxbp_debug( "   Signal Disconnect:", iif( ::xDummy, "SUCCEEDED", "FAILED   " ), e_[ 1 ], e_[ 2 ] )
       NEXT
       ::aConnections := {}
    ENDIF
