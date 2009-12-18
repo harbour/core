@@ -110,7 +110,7 @@ METHOD Xbp3State:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oWidget := QCheckBox():New( QT_PTROF( ::oParent:oWidget ) )
+   ::oWidget := QCheckBox():New( ::oParent:oWidget )
 
    ::Connect( ::pWidget, "stateChanged(int)", {|o,i| ::exeBlock( i,o ) } )
 

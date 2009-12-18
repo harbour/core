@@ -94,14 +94,14 @@ CLASS XbpComboBox  INHERIT  XbpWindow
 
    #if 0
    METHOD   clear()                               INLINE  ::oStrList:clear(),;
-                                                          ::oStrModel:setStringList( QT_PTROF( ::oStrList ) )
+                                                          ::oStrModel:setStringList( ::oStrList )
    METHOD   delItem( nIndex )                     INLINE  ::oStrList:removeAt( nIndex-1 ),;
-                                                          ::oStrModel:setStringList( QT_PTROF( ::oStrList ) )
+                                                          ::oStrModel:setStringList( ::oStrList )
    METHOD   getItem( nIndex )                     INLINE  ::oStrList:at( nIndex-1 )
    METHOD   insItem( nIndex, cItem )              INLINE  ::oStrList:insert( nIndex-1, cItem ),;
-                                                          ::oStrModel:setStringList( QT_PTROF( ::oStrList ) )
+                                                          ::oStrModel:setStringList( ::oStrList )
    METHOD   setItem( nIndex, cItem )              INLINE  ::oStrModel:replace( nIndex-1, cItem ),;
-                                                          ::oStrModel:setStringList( QT_PTROF( ::oStrList ) )
+                                                          ::oStrModel:setStringList( ::oStrList )
    #endif
 
 

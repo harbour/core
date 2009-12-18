@@ -258,8 +258,7 @@ METHOD XbpFontDialog:display( nMode )
       ::oFont:setPointSize( ::nominalPointSize )
    ENDIF
 
-   ::oWidget:setCurrentFont( QT_PTROF( ::oFont ) )
-
+   ::oWidget:setCurrentFont( ::oFont )
    IF ::aPos[ 1 ] + ::aPos[ 2 ] != 0
       ::setPos()
    ENDIF
@@ -430,7 +429,7 @@ METHOD XbpFont:create( cFontName )
    //::oWidget:initialize()
 
    /* Call the final step - beyond that any changes to properties above will have NO effect */
-   ::oFontInfo := QFontInfo():new( QT_PTROF( ::oWidget ) )
+   ::oFontInfo := QFontInfo():new( ::oWidget )
 
    /* Reassign actual properties */
    ::bold        := ::oFontInfo:bold()

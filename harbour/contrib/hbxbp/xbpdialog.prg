@@ -138,7 +138,7 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
 
    ::drawingArea := XbpDrawingArea():new( self, , {0,0}, ::aSize, , .t. ):create()
-   ::oWidget:setCentralWidget( QT_PTROF( ::drawingArea:oWidget ) )
+   ::oWidget:setCentralWidget( ::drawingArea:oWidget )
 
    //::setQtProperty()
 

@@ -207,7 +207,7 @@ METHOD XbpFileDialog:open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFile
          FOR i := 1 TO len( ::fileFilters )
             oList:append( Xbp_ArrayToFileFilter( ::fileFilters[ i ] ) )
          NEXT
-         ::oWidget:setNameFilters( QT_PTROF( oList ) )
+         ::oWidget:setNameFilters( oList )
       ENDIF
    ENDIF
 

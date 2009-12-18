@@ -496,7 +496,7 @@ METHOD XbpBrowse:buildLeftFreeze()
    ::oLeftHeaderView:setHighlightSections( .F. )
 
    ::oLeftDbfModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 151, p1, p2, p3, p4 ) } )
-   ::oLeftView:setModel( QT_PTROF( ::oLeftDbfModel ) )
+   ::oLeftView:setModel( ::oLeftDbfModel )
    //
    //::oLeftView:hide()
 
@@ -510,7 +510,7 @@ METHOD XbpBrowse:buildLeftFreeze()
    ::oLeftFooterView:setFocusPolicy( Qt_NoFocus )
    //
    ::oLeftFooterModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 152, p1, p2, p3, p4 ) } )
-   ::oLeftFooterView:setModel( QT_PTROF( ::oLeftFooterModel ) )
+   ::oLeftFooterView:setModel( ::oLeftFooterModel )
    //
    //::oLeftFooterView:hide()
 
@@ -546,7 +546,7 @@ METHOD XbpBrowse:buildRightFreeze()
    ::oRightHeaderView:setHighlightSections( .F. )
 
    ::oRightDbfModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 161, p1, p2, p3, p4 ) } )
-   ::oRightView:setModel( QT_PTROF( ::oRightDbfModel ) )
+   ::oRightView:setModel( ::oRightDbfModel )
 
    /*  Horizontal Footer */
    ::oRightFooterView := QHeaderView():new( Qt_Horizontal )
@@ -558,7 +558,7 @@ METHOD XbpBrowse:buildRightFreeze()
    ::oRightFooterView:setFocusPolicy( Qt_NoFocus )
    //
    ::oRightFooterModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 162, p1, p2, p3, p4 ) } )
-   ::oRightFooterView:setModel( QT_PTROF( ::oRightFooterModel ) )
+   ::oRightFooterView:setModel( ::oRightFooterModel )
 
    ::connect( QT_PTROF( ::oRightView )      , "mousePressEvent()"  , {|o,p| ::exeBlock( 31, p, o ) } )
    ::connect( QT_PTROF( ::oRightHeaderView ), "sectionPressed(int)", {|o,i| ::exeBlock( 31, i, o ) } )
@@ -627,7 +627,7 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    /* .DBF Manipulation Model */
    ::oDbfModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 141, p1, p2, p3, p4 ) } )
    /*  Attach Model with the View */
-   ::oTableView:setModel( QT_PTROF( ::oDbfModel ) )
+   ::oTableView:setModel( ::oDbfModel )
 
    /*  Horizontal Footer */
    ::oFooterView := QHeaderView():new( Qt_Horizontal )
@@ -641,7 +641,7 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    //
    ::oFooterModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 142, p1, p2, p3, p4 ) } )
 
-   ::oFooterView:setModel( QT_PTROF( ::oFooterModel ) )
+   ::oFooterView:setModel( ::oFooterModel )
    ::oFooterView:setFocusPolicy( Qt_NoFocus )
 
    /*  Widget for ::setLeftFrozen( aColumns )  */
@@ -655,18 +655,18 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oGridLayout:setHorizontalSpacing( 0 )
    ::oGridLayout:setVerticalSpacing( 0 )
    /*  Rows */
-   ::oGridLayout:addWidget_1( QT_PTROF( ::oLeftView        ), 0, 0, 1, 1 )
-   ::oGridLayout:addWidget_1( QT_PTROF( ::oLeftFooterView  ), 1, 0, 1, 1 )
+   ::oGridLayout:addWidget_1( ::oLeftView       , 0, 0, 1, 1 )
+   ::oGridLayout:addWidget_1( ::oLeftFooterView , 1, 0, 1, 1 )
    //
-   ::oGridLayout:addWidget_1( QT_PTROF( ::oTableView       ), 0, 1, 1, 1 )
-   ::oGridLayout:addWidget_1( QT_PTROF( ::oFooterView      ), 1, 1, 1, 1 )
+   ::oGridLayout:addWidget_1( ::oTableView      , 0, 1, 1, 1 )
+   ::oGridLayout:addWidget_1( ::oFooterView     , 1, 1, 1, 1 )
    //
-   ::oGridLayout:addWidget_1( QT_PTROF( ::oRightView       ), 0, 2, 1, 1 )
-   ::oGridLayout:addWidget_1( QT_PTROF( ::oRightFooterView ), 1, 2, 1, 1 )
+   ::oGridLayout:addWidget_1( ::oRightView      , 0, 2, 1, 1 )
+   ::oGridLayout:addWidget_1( ::oRightFooterView, 1, 2, 1, 1 )
    //
-   ::oGridLayout:addWidget_1( QT_PTROF( ::oHScrollBar      ), 2, 0, 1, 3 )
+   ::oGridLayout:addWidget_1( ::oHScrollBar     , 2, 0, 1, 3 )
    /*  Columns */
-   ::oGridLayout:addWidget_1( QT_PTROF( ::oVScrollBar      ), 0, 3, 2, 1 )
+   ::oGridLayout:addWidget_1( ::oVScrollBar     , 0, 3, 2, 1 )
 
    IF ::visible
       ::show()
@@ -775,7 +775,7 @@ METHOD XbpBrowse:exeBlock( nEvent, p1, p2, p3 )
       oMouseEvent := QMouseEvent():configure( p1 )
 
       oPoint := QPoint():new( oMouseEvent:x(), oMouseEvent:y() )
-      ::oModelIndex:configure( ::oTableView:indexAt( QT_PTROF( oPoint ) ) )
+      ::oModelIndex:configure( ::oTableView:indexAt( oPoint ) )
 
       /* Reposition the record pointer */
       IF ::oModelIndex:isValid()

@@ -103,16 +103,16 @@ CLASS XbpListBox  INHERIT  XbpWindow, XbpDataRef
    METHOD   setTopItem( nIndex )                  VIRTUAL
 
    METHOD   addItem( cItem )                      INLINE  ::oStrList:append( cItem ),;
-                                                          ::oStrModel:setStringList( QT_PTROF( ::oStrList ) )
+                                                          ::oStrModel:setStringList( ::oStrList )
    METHOD   clear()                               INLINE  ::oStrList:clear(),;
-                                                          ::oStrModel:setStringList( QT_PTROF( ::oStrList ) )
+                                                          ::oStrModel:setStringList( ::oStrList )
    METHOD   delItem( nIndex )                     INLINE  ::oStrList:removeAt( nIndex-1 ),;
-                                                          ::oStrModel:setStringList( QT_PTROF( ::oStrList ) )
+                                                          ::oStrModel:setStringList( ::oStrList )
    METHOD   getItem( nIndex )                     INLINE  ::oStrList:at( nIndex-1 )
    METHOD   insItem( nIndex, cItem )              INLINE  ::oStrList:insert( nIndex-1, cItem ),;
-                                                          ::oStrModel:setStringList( QT_PTROF( ::oStrList ) )
+                                                          ::oStrModel:setStringList( ::oStrList )
    METHOD   setItem( nIndex, cItem )              INLINE  ::oStrModel:replace( nIndex-1, cItem ),;
-                                                          ::oStrModel:setStringList( QT_PTROF( ::oStrList ) )
+                                                          ::oStrModel:setStringList( ::oStrList )
 
    METHOD   getTabstops()                         VIRTUAL
    METHOD   setColumnWidth()                      VIRTUAL
@@ -189,8 +189,8 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oStrList  := QStringList():new( ::pWidget )
    ::oStrModel := QStringListModel():new( ::pWidget )
-   ::oStrModel:setStringList( QT_PTROF( ::oStrList ) )
-   ::oWidget:setModel( QT_PTROF( ::oStrModel ) )
+   ::oStrModel:setStringList( ::oStrList )
+   ::oWidget:setModel( ::oStrModel )
 
    ::setPosAndSize()
    IF ::visible

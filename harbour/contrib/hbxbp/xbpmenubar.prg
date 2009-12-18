@@ -333,7 +333,7 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
       ENDIF
       IF !empty( cKey )
          oKey := QKeySequence():new( cKey )
-         oAction:setShortcut( QT_PTROF( oKey ) )
+         oAction:setShortcut( oKey )
       ENDIF
 
       ::Connect( QT_PTROF( oAction ), "triggered(bool)", {|| ::exeBlock( nMenuItemID ) } )
@@ -348,10 +348,10 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
          oAction:setDisabled( .t. )
 
       CASE nAttrb == XBPMENUBAR_MIA_HILITED
-         ::oWidget:setActiveAction( QT_PTROF( oAction ) )
+         ::oWidget:setActiveAction( oAction )
 
       CASE nAttrb == XBPMENUBAR_MIA_DEFAULT
-         ::oWidget:setDefaultAction( QT_PTROF( oAction ) )
+         ::oWidget:setDefaultAction( oAction )
 
       CASE nAttrb == XBPMENUBAR_MIA_FRAMED
 
@@ -366,9 +366,9 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
       ENDIF
 
       IF nMode == QTC_MENUITEM_ADD
-         ::oWidget:addAction_4( QT_PTROF( oAction ) )
+         ::oWidget:addAction_4( oAction )
       ELSE
-         ::oWidget:insertAction( QT_PTROF( pOldAct ), QT_PTROF( oAction ) )
+         ::oWidget:insertAction( pOldAct, oAction )
       ENDIF
 
       aItem := { QMF_STRING, nMenuItemID, xCaption, bAction, oAction }

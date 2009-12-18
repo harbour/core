@@ -122,7 +122,7 @@ METHOD XbpStatusBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
       RETURN Self
    ENDIF
 
-   ::oWidget := QStatusBar():new( QT_PTROF( oPar:oWidget ) )
+   ::oWidget := QStatusBar():new( oPar:oWidget )
    oPar:oWidget:setStatusBar( ::pWidget )
 
    ::oWidget:setSizeGripEnabled( ::sizeGrip )

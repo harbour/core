@@ -150,7 +150,7 @@ METHOD XbpToolbar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       RETURN Self
    ENDIF
 
-   ::oWidget := QToolBar():new( QT_PTROF( oPar:oWidget ) )
+   ::oWidget := QToolBar():new( oPar:oWidget )
    oPar:oWidget:addToolBar_1( ::pWidget )
 
    #if 0
@@ -272,7 +272,7 @@ METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
       ::Connect( QT_PTROF( oBtn:oAction ), "triggered(bool)", {|| ::exeBlock( oBtn ) } )
 
       /* Attach Action with Toolbar */
-      ::oWidget:addAction( QT_PTROF( oBtn:oAction ) )
+      ::oWidget:addAction( oBtn:oAction )
 
    ENDIF
 
