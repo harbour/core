@@ -53,7 +53,6 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
-#include "hbstack.h"
 #include "hbvm.h"
 
 #include "hbqt.h"
@@ -103,16 +102,12 @@ void * hbqt_pPtrFromObj( int iParam )
       hb_vmPush( pObj );
       hb_vmSend( 0 );
 
-      return( hbqt_gcpointer( -1 ) );
+      return hbqt_gcpointer( -1 );
    }
    else if( hb_itemType( pObj ) == HB_IT_POINTER )
-   {
-      return( hbqt_gcpointer( iParam ) );
-   }
+      return hbqt_gcpointer( iParam );
    else
-   {
-      return( NULL );
-   }
+      return NULL;
 }
 
 int hbqt_get_object_release_method()
