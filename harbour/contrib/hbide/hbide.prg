@@ -83,15 +83,6 @@ REQUEST HB_QT
 STATIC s_resPath
 STATIC s_pathSep
 
-// HACK HACK HACK
-#undef QT_PTROF
-#define QT_PTROF( oObj )                          ( oObj )
-
-// HACK HACK HACK
-#undef QT_PTROFXBP
-#define QT_PTROFXBP( oXbp )                       ( oXbp:oWidget )
-
-
 /*----------------------------------------------------------------------*/
 
 PROCEDURE Main( cProjIni )
@@ -297,11 +288,11 @@ METHOD HbIde:create( cProjIni )
    ::qLayout:setHorizontalSpacing( 0 )
    ::qLayout:setVerticalSpacing( 0 )
 
-   ::oDa:oWidget:setLayout( QT_PTROF( ::qLayout ) )
+   ::oDa:oWidget:setLayout( ::qLayout )
 
-   ::qSplitter := QSplitter():new( QT_PTROF( ::oDa:oWidget ) )
+   ::qSplitter := QSplitter():new( QT_PTROFXBP( ::oDa ) )
 
-   ::qLayout:addWidget_1( QT_PTROF( ::qSplitter ), 0, 0, 1, 1 )
+   ::qLayout:addWidget_1( ::qSplitter, 0, 0, 1, 1 )
 
    ::qSplitter:addWidget( QT_PTROFXBP( ::oProjTree      ) )
    ::qSplitter:addWidget( QT_PTROFXBP( ::oDa:oTabWidget ) )
@@ -369,14 +360,20 @@ METHOD HbIde:create( cProjIni )
    ENDDO
 
    /* Very important - destroy resources */
-   HBXBP_DEBUG( "Before", "::oDlg:destroy()" )
+   HBXBP_DEBUG( "----------------------------------------------" )
+   HBXBP_DEBUG( "Before    ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
+   HBXBP_DEBUG( "----------------------------------------------" )
+
    ::oDlg:destroy()
-   HBXBP_DEBUG( "After", "::oDlg:destroy()" )
+
+   HBXBP_DEBUG( "----------------------------------------------" )
+   HBXBP_DEBUG( "After     ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
+   HBXBP_DEBUG( "----------------------------------------------" )
 
    ::qCursor:pPtr := 0
    ::oFont        := NIL
 
-   HBXBP_DEBUG( "EXITING after destroy .................." )
+   HBXBP_DEBUG( "EXITING after destroy ....", memory( 1001 ), hbqt_getMemUsed() )
 
    /*  A NOTE:
 
@@ -552,7 +549,7 @@ METHOD HbIde:convertSelection( cKey )
          ::qCursor:insertText( cBuffer )
          ::qCursor:setPosition( nB )
          ::qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nL )
-         ::qCurEdit:setTextCursor( QT_PTROF( ::qCursor ) )
+         ::qCurEdit:setTextCursor( ::qCursor )
          ::qCursor:endEditBlock()
       ENDIF
    ENDIF
@@ -625,9 +622,9 @@ METHOD HbIde:editSource( cSourceFile, nPos, nHPos, nVPos )
    qLayout := QBoxLayout():new()
    qLayout:setDirection( 0 )
    qLayout:setContentsMargins( 0,0,0,0 )
-   qLayout:addWidget( QT_PTROF( qEdit ) )
+   qLayout:addWidget( qEdit )
 
-   oTab:oWidget:setLayout( QT_PTROF( qLayout ) )
+   oTab:oWidget:setLayout( qLayout )
 
    qHiliter := QSyntaxHighlighter():new( qEdit:document() )
 
@@ -695,7 +692,7 @@ METHOD HbIde:setTabImage( oTab, qEdit, nPos, lFirst, qDocument )
       lFirst := .f.
       ::qCursor:configure( qEdit:textCursor() )
       ::qCursor:setPosition( nPos, QTextCursor_MoveAnchor )
-      qEdit:setTextCursor( QT_PTROF( ::qCursor ) )
+      qEdit:setTextCursor( ::qCursor )
    ENDIF
 
    RETURN Self
@@ -1421,7 +1418,7 @@ METHOD HbIde:paintRequested( pPrinter )
 
    qPrinter := QPrinter():configure( pPrinter )
 
-   ::qCurEdit:print( QT_PTROF( qPrinter ) )
+   ::qCurEdit:print( qPrinter )
 
    RETURN Self
 
@@ -1538,7 +1535,7 @@ METHOD HbIde:loadUI( cUi )
       qFile := QFile():new( cUiFull )
       IF qFile:open( 1 )
          qUiLoader  := QUiLoader():new()
-         qDialog    := QDialog():configure( qUiLoader:load( QT_PTROF( qFile ), QT_PTROFXBP( ::oDlg ) ) )
+         qDialog    := QDialog():configure( qUiLoader:load( qFile, QT_PTROFXBP( ::oDlg ) ) )
          qFile:close()
       ENDIF
    ENDIF
@@ -1555,7 +1552,7 @@ METHOD HbIde:findReplace( cUi )
       qFile := QFile():new( cUiFull )
       IF qFile:open( 1 )
          qUiLoader  := QUiLoader():new()
-         ::qFindDlg := QDialog():configure( qUiLoader:load( QT_PTROF( qFile ), QT_PTROFXBP( ::oDlg ) ) )
+         ::qFindDlg := QDialog():configure( qUiLoader:load( qFile, QT_PTROFXBP( ::oDlg ) ) )
          qFile:close()
          //
          ::qFindDlg:setWindowFlags( Qt_Sheet )
@@ -1901,7 +1898,7 @@ METHOD HbIde:buildProjectViaQt( cProject )
    Qt_Connect_Signal( QT_PTROF( ::qProcess ), "readyReadStandardOutput()", {|o,i| ::readProcessInfo( 3, i, o ) } )
    Qt_Connect_Signal( QT_PTROF( ::qProcess ), "finished(int,int)"        , {|o,i| ::readProcessInfo( 2, i, o ) } )
 
-   ::qProcess:start( "hbmk2.exe", QT_PTROF( qStringList ) )
+   ::qProcess:start( "hbmk2.exe", qStringList )
 
    RETURN Self
 
@@ -1935,3 +1932,4 @@ METHOD HbIde:readProcessInfo( nMode, iBytes )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
+
