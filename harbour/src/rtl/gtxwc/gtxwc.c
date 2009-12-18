@@ -74,9 +74,9 @@ static HB_GT_FUNCS   SuperTable;
 #endif
 
 /* mouse button mapping into Clipper keycodes */
-static const int mousePressKeys[ XWC_MAX_BUTTONS ]    = { K_LBUTTONDOWN, K_MBUTTONDOWN, K_RBUTTONDOWN, K_MWFORWARD, K_MWBACKWARD };
-static const int mouseReleaseKeys[ XWC_MAX_BUTTONS ]  = { K_LBUTTONUP,   K_MBUTTONUP,   K_RBUTTONUP   };
-static const int mouseDblPressKeys[ XWC_MAX_BUTTONS ] = { K_LDBLCLK,     K_MDBLCLK,     K_RDBLCLK    , K_MWFORWARD, K_MWBACKWARD };
+static const int s_mousePressKeys[ XWC_MAX_BUTTONS ]    = { K_LBUTTONDOWN, K_MBUTTONDOWN, K_RBUTTONDOWN, K_MWFORWARD, K_MWBACKWARD };
+static const int s_mouseReleaseKeys[ XWC_MAX_BUTTONS ]  = { K_LBUTTONUP,   K_MBUTTONUP,   K_RBUTTONUP   };
+static const int s_mouseDblPressKeys[ XWC_MAX_BUTTONS ] = { K_LDBLCLK,     K_MDBLCLK,     K_RDBLCLK    , K_MWFORWARD, K_MWBACKWARD };
 
 typedef struct tag_ClipKeyCode {
     int key;
@@ -89,7 +89,7 @@ typedef struct tag_ClipKeyCode {
  * It cause that we don't have to make any linear scans
  * to access proper ClipKeyCode entry
  */
-static const ClipKeyCode stdKeyTab[CLIP_STDKEY_COUNT] = {
+static const ClipKeyCode s_stdKeyTab[ CLIP_STDKEY_COUNT ] = {
     {K_SPACE,              0,             0,         0}, /*  32 */
     {'!',                  0,             0,         0}, /*  33 */
     {'"',                  0,             0,         0}, /*  34 */
@@ -188,7 +188,7 @@ static const ClipKeyCode stdKeyTab[CLIP_STDKEY_COUNT] = {
     {K_CTRL_BS,     K_ALT_BS,           127,         0}, /* 127 */
 };
 
-static const ClipKeyCode extKeyTab[CLIP_EXTKEY_COUNT] = {
+static const ClipKeyCode s_extKeyTab[ CLIP_EXTKEY_COUNT ] = {
     {K_F1,          K_ALT_F1,     K_CTRL_F1,    K_SH_F1}, /*  00 */
     {K_F2,          K_ALT_F2,     K_CTRL_F2,    K_SH_F2}, /*  01 */
     {K_F3,          K_ALT_F3,     K_CTRL_F3,    K_SH_F3}, /*  02 */
@@ -222,7 +222,7 @@ static const ClipKeyCode extKeyTab[CLIP_EXTKEY_COUNT] = {
 };
 
 /* these are standard PC console colors in RGB */
-static const int rgb_values[] = {
+static const int s_rgb_values[] = {
    0x000000,   /* black         "rgb:00/00/00" */
    0xAA0000,   /* blue          "rgb:00/00/AA" */
    0x00AA00,   /* green         "rgb:00/AA/00" */
@@ -1629,15 +1629,15 @@ static void hb_gt_xwc_TranslateKey( PXWND_DEF wnd, int key )
 
    if( key >= K_SPACE && key <= K_CTRL_BS )
    {
-      clipKey = &stdKeyTab[ key - K_SPACE ];
+      clipKey = &s_stdKeyTab[ key - K_SPACE ];
    }
    else if( key > 0 && key < K_SPACE && wnd->keyModifiers.bCtrl )
    {
-      clipKey = &stdKeyTab[ key + '@' ];
+      clipKey = &s_stdKeyTab[ key + '@' ];
    }
    else if( XWC_IS_EXTKEY( key ) )
    {
-      clipKey = &extKeyTab[ XWC_CLR_KEYMASK( key ) ];
+      clipKey = &s_extKeyTab[ XWC_CLR_KEYMASK( key ) ];
    }
    if( clipKey != NULL )
    {
@@ -2006,18 +2006,18 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                if( evtTime - wnd->mouseButtonsTime[ button ] <
                    ( Time ) HB_GTSELF_MOUSEGETDOUBLECLICKSPEED( wnd->pGT ) )
                {
-                  key = mouseDblPressKeys[ button ];
+                  key = s_mouseDblPressKeys[ button ];
                }
                else
                {
-                  key = mousePressKeys[ button ];
+                  key = s_mousePressKeys[ button ];
                }
                wnd->mouseButtonsState |= 1 << button;
                wnd->mouseButtonsTime[ button ] = evtTime;
             }
             else
             {
-               key = mouseReleaseKeys[ button ];
+               key = s_mouseReleaseKeys[ button ];
                wnd->mouseButtonsState &= ~(1 << button);
             }
             if( key != 0 )
@@ -3213,7 +3213,7 @@ static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
    wnd->keyModifiers.bShift = FALSE;
 
    for( i = 0; i < 16; i++ )
-      wnd->colors[i].value = rgb_values[i];
+      wnd->colors[ i ].value = s_rgb_values[ i ];
 
    wnd->lastEventTime = CurrentTime;
 
