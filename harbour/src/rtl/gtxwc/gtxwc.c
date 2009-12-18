@@ -2144,7 +2144,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 #endif
                   for( nItem = 0; nItem < text.nitems; ++nItem )
                   {
-                     aValue = ( ( unsigned int * ) text.value )[ nItem ];
+                     aValue = ( Atom ) ( ( long * ) text.value )[ nItem ];
                      if( aValue == s_atomUTF8String )
                         aNextRequest = s_atomUTF8String;
                      else if( aValue == s_atomString && aNextRequest != s_atomUTF8String )
@@ -2186,21 +2186,23 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 
          if ( req->target == s_atomTimestamp )
          {
+            long timeStamp = wnd->ClipboardTime;
             XChangeProperty( wnd->dpy, req->requestor, req->property,
-                             s_atomInteger, /* 8 * sizeof( Time ) */ 32, PropModeReplace,
-                             ( unsigned char * ) &wnd->ClipboardTime, 1 );
+                             s_atomInteger, 32, PropModeReplace,
+                             ( unsigned char * ) &timeStamp, 1 );
          }
          else if ( req->target == s_atomTargets )
          {
-            Atom aProp[] = { s_atomTimestamp, s_atomTargets,
+            long aProp[] = { s_atomTimestamp, s_atomTargets,
                              s_atomString, s_atomUTF8String,
-                             s_atomCompoundText, s_atomText };
+                             s_atomText };
             XChangeProperty( wnd->dpy, req->requestor, req->property,
-                             s_atomAtom, /* 8 * sizeof( Atom ) */ 32, PropModeReplace,
-                             ( unsigned char * ) aProp, sizeof( aProp ) / sizeof( Atom ) );
+                             s_atomAtom, 32, PropModeReplace,
+                             ( unsigned char * ) aProp, sizeof( aProp ) / sizeof( long ) );
          }
-         else if( req->target == s_atomString )
+         else if( req->target == s_atomString || req->target == s_atomText )
          {
+            /* TODO: for s_atomString convert data to ISO-8859-1 */
             if( wnd->inCDP && wnd->hostCDP && wnd->inCDP != wnd->hostCDP )
             {
                ULONG ulLen = wnd->ClipboardSize;
