@@ -75,14 +75,14 @@ const HB_GC_FUNCS QT_gcFuncs =
    hb_gcDummyMark
 };
 
-const HB_GC_FUNCS * gcFuncs( void )
+const HB_GC_FUNCS * hbqt_gcFuncs( void )
 {
    return &QT_gcFuncs;
 }
 
 void * hbqt_gcpointer( int iParam )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( gcFuncs(), iParam );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), iParam );
 
    if( p && p->ph )
       return p->ph;

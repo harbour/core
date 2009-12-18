@@ -353,7 +353,7 @@ QT_G_FUNC( hbqt_release_HBDbfModel )
 
 void * hbqt_gcAllocate_HBDbfModel( void * pObj )
 {
-   QGC_POINTER_HBDbfModel * p = ( QGC_POINTER_HBDbfModel * ) hb_gcAllocate( sizeof( QGC_POINTER_HBDbfModel ), gcFuncs() );
+   QGC_POINTER_HBDbfModel * p = ( QGC_POINTER_HBDbfModel * ) hb_gcAllocate( sizeof( QGC_POINTER_HBDbfModel ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = hbqt_release_HBDbfModel;

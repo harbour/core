@@ -376,7 +376,7 @@ QT_G_FUNC( release_HBQMainWindow )
 
 void * hbqt_gcAllocate_HBQMainWindow( void * pObj )
 {
-   QGC_POINTER_HBQMainWindow * p = ( QGC_POINTER_HBQMainWindow * ) hb_gcAllocate( sizeof( QGC_POINTER_HBQMainWindow ), gcFuncs() );
+   QGC_POINTER_HBQMainWindow * p = ( QGC_POINTER_HBQMainWindow * ) hb_gcAllocate( sizeof( QGC_POINTER_HBQMainWindow ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_HBQMainWindow;

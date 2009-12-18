@@ -650,9 +650,9 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
                aadd( cpp_, "void * hbqt_gcAllocate_" + cWidget + "( void * pObj )" )
                aadd( cpp_, "{                                      " )
                IF lObject
-                  aadd( cpp_, "   QGC_POINTER_" + cWidget + " * p = ( QGC_POINTER_" + cWidget + " * ) hb_gcAllocate( sizeof( QGC_POINTER_" + cWidget + " ), gcFuncs() );" )
+                  aadd( cpp_, "   QGC_POINTER_" + cWidget + " * p = ( QGC_POINTER_" + cWidget + " * ) hb_gcAllocate( sizeof( QGC_POINTER_" + cWidget + " ), hbqt_gcFuncs() );" )
                ELSE
-                  aadd( cpp_, "   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );" )
+                  aadd( cpp_, "   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );" )
                ENDIF
                aadd( cpp_, " " )
                aadd( cpp_, "   p->ph = pObj;" )
@@ -698,7 +698,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
          aadd( cpp_, new_[ 2 ] )           // {
          IF lConst
             IF lDestructor
-               aadd( cpp_, "   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );" )
+               aadd( cpp_, "   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );" )
             ENDIF
             IF lObject
                aadd( cpp_, "   QPointer< "+ cWidget +" > pObj = NULL;" )

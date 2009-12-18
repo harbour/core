@@ -79,7 +79,7 @@ extern int hbqt_get_object_release_method();
 HB_GARBAGE_FUNC( Q_release );
 
 extern void * hbqt_gcpointer( int iParam );
-extern const HB_GC_FUNCS * gcFuncs( void ); /* TOFIX: prefix: hbqt_ */
+extern const HB_GC_FUNCS * hbqt_gcFuncs( void );
 
 extern int hbqt_getmemused( void );
 

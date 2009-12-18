@@ -175,7 +175,7 @@ QT_G_FUNC( release_HBQTableView )
 
 void * hbqt_gcAllocate_HBQTableView( void * pObj )
 {
-   QGC_POINTER_HBQTableView * p = ( QGC_POINTER_HBQTableView * ) hb_gcAllocate( sizeof( QGC_POINTER_HBQTableView ), gcFuncs() );
+   QGC_POINTER_HBQTableView * p = ( QGC_POINTER_HBQTableView * ) hb_gcAllocate( sizeof( QGC_POINTER_HBQTableView ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_HBQTableView;
