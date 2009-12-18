@@ -122,9 +122,9 @@ QT_G_FUNC( release_QSplashScreen )
    }
 }
 
-void * gcAllocate_QSplashScreen( void * pObj )
+void * hbqt_gcAllocate_QSplashScreen( void * pObj )
 {
-   QGC_POINTER_QSplashScreen * p = ( QGC_POINTER_QSplashScreen * ) hb_gcAllocate( sizeof( QGC_POINTER_QSplashScreen ), gcFuncs() );
+   QGC_POINTER_QSplashScreen * p = ( QGC_POINTER_QSplashScreen * ) hb_gcAllocate( sizeof( QGC_POINTER_QSplashScreen ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QSplashScreen;
@@ -139,7 +139,7 @@ HB_FUNC( QT_QSPLASHSCREEN )
 
    pObj = new QSplashScreen( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QSplashScreen( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QSplashScreen( pObj ) );
 }
 /*
  * void finish ( QWidget * mainWin )
@@ -154,7 +154,7 @@ HB_FUNC( QT_QSPLASHSCREEN_FINISH )
  */
 HB_FUNC( QT_QSPLASHSCREEN_PIXMAP )
 {
-   hb_retptrGC( gcAllocate_QPixmap( new QPixmap( hbqt_par_QSplashScreen( 1 )->pixmap() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QSplashScreen( 1 )->pixmap() ) ) );
 }
 
 /*

@@ -103,9 +103,9 @@ QT_G_FUNC( release_QStyleOptionToolBar )
    }
 }
 
-void * gcAllocate_QStyleOptionToolBar( void * pObj )
+void * hbqt_gcAllocate_QStyleOptionToolBar( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStyleOptionToolBar;
@@ -119,7 +119,7 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBAR )
 
    pObj = ( QStyleOptionToolBar* ) new QStyleOptionToolBar() ;
 
-   hb_retptrGC( gcAllocate_QStyleOptionToolBar( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionToolBar( pObj ) );
 }
 /*
  * ToolBarFeatures features

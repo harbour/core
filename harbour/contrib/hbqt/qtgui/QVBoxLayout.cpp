@@ -122,9 +122,9 @@ QT_G_FUNC( release_QVBoxLayout )
    }
 }
 
-void * gcAllocate_QVBoxLayout( void * pObj )
+void * hbqt_gcAllocate_QVBoxLayout( void * pObj )
 {
-   QGC_POINTER_QVBoxLayout * p = ( QGC_POINTER_QVBoxLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QVBoxLayout ), gcFuncs() );
+   QGC_POINTER_QVBoxLayout * p = ( QGC_POINTER_QVBoxLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QVBoxLayout ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QVBoxLayout;
@@ -139,7 +139,7 @@ HB_FUNC( QT_QVBOXLAYOUT )
 
    pObj = ( QVBoxLayout* ) new QVBoxLayout( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QVBoxLayout( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QVBoxLayout( pObj ) );
 }
 
 /*----------------------------------------------------------------------*/

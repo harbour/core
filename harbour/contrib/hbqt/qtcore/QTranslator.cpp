@@ -120,9 +120,9 @@ QT_G_FUNC( release_QTranslator )
    }
 }
 
-void * gcAllocate_QTranslator( void * pObj )
+void * hbqt_gcAllocate_QTranslator( void * pObj )
 {
-   QGC_POINTER_QTranslator * p = ( QGC_POINTER_QTranslator * ) hb_gcAllocate( sizeof( QGC_POINTER_QTranslator ), gcFuncs() );
+   QGC_POINTER_QTranslator * p = ( QGC_POINTER_QTranslator * ) hb_gcAllocate( sizeof( QGC_POINTER_QTranslator ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTranslator;
@@ -137,7 +137,7 @@ HB_FUNC( QT_QTRANSLATOR )
 
    pObj = new QTranslator() ;
 
-   hb_retptrGC( gcAllocate_QTranslator( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTranslator( pObj ) );
 }
 /*
  * virtual bool isEmpty () const

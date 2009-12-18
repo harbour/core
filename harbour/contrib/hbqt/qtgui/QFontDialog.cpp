@@ -126,9 +126,9 @@ QT_G_FUNC( release_QFontDialog )
    }
 }
 
-void * gcAllocate_QFontDialog( void * pObj )
+void * hbqt_gcAllocate_QFontDialog( void * pObj )
 {
-   QGC_POINTER_QFontDialog * p = ( QGC_POINTER_QFontDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QFontDialog ), gcFuncs() );
+   QGC_POINTER_QFontDialog * p = ( QGC_POINTER_QFontDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QFontDialog ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QFontDialog;
@@ -154,14 +154,14 @@ HB_FUNC( QT_QFONTDIALOG )
       pObj = new QFontDialog( 0 ) ;
    }
 
-   hb_retptrGC( gcAllocate_QFontDialog( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QFontDialog( pObj ) );
 }
 /*
  * QFont currentFont () const
  */
 HB_FUNC( QT_QFONTDIALOG_CURRENTFONT )
 {
-   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QFontDialog( 1 )->currentFont() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QFontDialog( 1 )->currentFont() ) ) );
 }
 
 /*
@@ -177,7 +177,7 @@ HB_FUNC( QT_QFONTDIALOG_OPTIONS )
  */
 HB_FUNC( QT_QFONTDIALOG_SELECTEDFONT )
 {
-   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QFontDialog( 1 )->selectedFont() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QFontDialog( 1 )->selectedFont() ) ) );
 }
 
 /*
@@ -219,7 +219,7 @@ HB_FUNC( QT_QFONTDIALOG_GETFONT )
 {
    bool iOk = 0;
 
-   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QFontDialog( 1 )->getFont( &iOk, *hbqt_par_QFont( 3 ), hbqt_par_QWidget( 4 ), hbqt_par_QString( 5 ), ( QFontDialog::FontDialogOptions ) hb_parni( 6 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QFontDialog( 1 )->getFont( &iOk, *hbqt_par_QFont( 3 ), hbqt_par_QWidget( 4 ), hbqt_par_QString( 5 ), ( QFontDialog::FontDialogOptions ) hb_parni( 6 ) ) ) ) );
 
    hb_stornl( iOk, 2 );
 }
@@ -231,7 +231,7 @@ HB_FUNC( QT_QFONTDIALOG_GETFONT_1 )
 {
    bool iOk = 0;
 
-   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QFontDialog( 1 )->getFont( &iOk, *hbqt_par_QFont( 3 ), hbqt_par_QWidget( 4 ), hbqt_par_char( 5 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QFontDialog( 1 )->getFont( &iOk, *hbqt_par_QFont( 3 ), hbqt_par_QWidget( 4 ), hbqt_par_char( 5 ) ) ) ) );
 
    hb_stornl( iOk, 2 );
 }
@@ -243,7 +243,7 @@ HB_FUNC( QT_QFONTDIALOG_GETFONT_2 )
 {
    bool iOk = 0;
 
-   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QFontDialog( 1 )->getFont( &iOk, *hbqt_par_QFont( 3 ), hbqt_par_QWidget( 4 ), hbqt_par_QString( 5 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QFontDialog( 1 )->getFont( &iOk, *hbqt_par_QFont( 3 ), hbqt_par_QWidget( 4 ), hbqt_par_QString( 5 ) ) ) ) );
 
    hb_stornl( iOk, 2 );
 }
@@ -255,7 +255,7 @@ HB_FUNC( QT_QFONTDIALOG_GETFONT_3 )
 {
    bool iOk = 0;
 
-   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QFontDialog( 1 )->getFont( &iOk, *hbqt_par_QFont( 3 ), hbqt_par_QWidget( 4 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QFontDialog( 1 )->getFont( &iOk, *hbqt_par_QFont( 3 ), hbqt_par_QWidget( 4 ) ) ) ) );
 
    hb_stornl( iOk, 2 );
 }
@@ -267,7 +267,7 @@ HB_FUNC( QT_QFONTDIALOG_GETFONT_4 )
 {
    bool iOk = 0;
 
-   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QFontDialog( 1 )->getFont( &iOk, hbqt_par_QWidget( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QFontDialog( 1 )->getFont( &iOk, hbqt_par_QWidget( 3 ) ) ) ) );
 
    hb_stornl( iOk, 2 );
 }

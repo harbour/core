@@ -164,7 +164,7 @@ HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONVERSION )
  */
 HB_FUNC( QT_QCOREAPPLICATION_ARGUMENTS )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QCoreApplication( 1 )->arguments() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QCoreApplication( 1 )->arguments() ) ) );
 }
 
 /*
@@ -228,7 +228,7 @@ HB_FUNC( QT_QCOREAPPLICATION_INSTANCE )
  */
 HB_FUNC( QT_QCOREAPPLICATION_LIBRARYPATHS )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QCoreApplication( 1 )->libraryPaths() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QCoreApplication( 1 )->libraryPaths() ) ) );
 }
 
 /*

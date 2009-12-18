@@ -121,9 +121,9 @@ QT_G_FUNC( release_QSound )
    }
 }
 
-void * gcAllocate_QSound( void * pObj )
+void * hbqt_gcAllocate_QSound( void * pObj )
 {
-   QGC_POINTER_QSound * p = ( QGC_POINTER_QSound * ) hb_gcAllocate( sizeof( QGC_POINTER_QSound ), gcFuncs() );
+   QGC_POINTER_QSound * p = ( QGC_POINTER_QSound * ) hb_gcAllocate( sizeof( QGC_POINTER_QSound ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QSound;
@@ -138,7 +138,7 @@ HB_FUNC( QT_QSOUND )
 
    pObj = ( QSound* ) new QSound( hbqt_par_QString( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QSound( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QSound( pObj ) );
 }
 /*
  * QString fileName () const

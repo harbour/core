@@ -127,9 +127,9 @@ QT_G_FUNC( release_QPrintDialog )
    }
 }
 
-void * gcAllocate_QPrintDialog( void * pObj )
+void * hbqt_gcAllocate_QPrintDialog( void * pObj )
 {
-   QGC_POINTER_QPrintDialog * p = ( QGC_POINTER_QPrintDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QPrintDialog ), gcFuncs() );
+   QGC_POINTER_QPrintDialog * p = ( QGC_POINTER_QPrintDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QPrintDialog ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QPrintDialog;
@@ -144,7 +144,7 @@ HB_FUNC( QT_QPRINTDIALOG )
 
    pObj = ( QPrintDialog* ) new QPrintDialog ( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QPrintDialog( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QPrintDialog( pObj ) );
 }
 /*
  * virtual void done ( int result )

@@ -95,9 +95,9 @@ QT_G_FUNC( release_QTextImageFormat )
    }
 }
 
-void * gcAllocate_QTextImageFormat( void * pObj )
+void * hbqt_gcAllocate_QTextImageFormat( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTextImageFormat;
@@ -111,7 +111,7 @@ HB_FUNC( QT_QTEXTIMAGEFORMAT )
 
    pObj = ( QTextImageFormat* ) new QTextImageFormat() ;
 
-   hb_retptrGC( gcAllocate_QTextImageFormat( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextImageFormat( pObj ) );
 }
 /*
  * qreal height () const

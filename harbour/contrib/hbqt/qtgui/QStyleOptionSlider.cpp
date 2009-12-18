@@ -100,9 +100,9 @@ QT_G_FUNC( release_QStyleOptionSlider )
    }
 }
 
-void * gcAllocate_QStyleOptionSlider( void * pObj )
+void * hbqt_gcAllocate_QStyleOptionSlider( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStyleOptionSlider;
@@ -116,7 +116,7 @@ HB_FUNC( QT_QSTYLEOPTIONSLIDER )
 
    pObj = ( QStyleOptionSlider* ) new QStyleOptionSlider() ;
 
-   hb_retptrGC( gcAllocate_QStyleOptionSlider( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionSlider( pObj ) );
 }
 /*
  * bool dialWrapping

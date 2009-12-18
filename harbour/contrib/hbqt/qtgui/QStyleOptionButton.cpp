@@ -102,9 +102,9 @@ QT_G_FUNC( release_QStyleOptionButton )
    }
 }
 
-void * gcAllocate_QStyleOptionButton( void * pObj )
+void * hbqt_gcAllocate_QStyleOptionButton( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStyleOptionButton;
@@ -118,7 +118,7 @@ HB_FUNC( QT_QSTYLEOPTIONBUTTON )
 
    pObj = ( QStyleOptionButton* ) new QStyleOptionButton() ;
 
-   hb_retptrGC( gcAllocate_QStyleOptionButton( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionButton( pObj ) );
 }
 /*
  * ButtonFeatures features
@@ -133,7 +133,7 @@ HB_FUNC( QT_QSTYLEOPTIONBUTTON_FEATURES )
  */
 HB_FUNC( QT_QSTYLEOPTIONBUTTON_ICON )
 {
-   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QStyleOptionButton( 1 )->icon ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QStyleOptionButton( 1 )->icon ) ) );
 }
 
 /*
@@ -141,7 +141,7 @@ HB_FUNC( QT_QSTYLEOPTIONBUTTON_ICON )
  */
 HB_FUNC( QT_QSTYLEOPTIONBUTTON_ICONSIZE )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionButton( 1 )->iconSize ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionButton( 1 )->iconSize ) ) );
 }
 
 /*

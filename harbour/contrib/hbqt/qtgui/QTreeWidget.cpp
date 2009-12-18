@@ -133,9 +133,9 @@ QT_G_FUNC( release_QTreeWidget )
    }
 }
 
-void * gcAllocate_QTreeWidget( void * pObj )
+void * hbqt_gcAllocate_QTreeWidget( void * pObj )
 {
-   QGC_POINTER_QTreeWidget * p = ( QGC_POINTER_QTreeWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QTreeWidget ), gcFuncs() );
+   QGC_POINTER_QTreeWidget * p = ( QGC_POINTER_QTreeWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QTreeWidget ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTreeWidget;
@@ -150,7 +150,7 @@ HB_FUNC( QT_QTREEWIDGET )
 
    pObj = ( QTreeWidget* ) new QTreeWidget( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QTreeWidget( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTreeWidget( pObj ) );
 }
 /*
  * void addTopLevelItem ( QTreeWidgetItem * item )
@@ -413,7 +413,7 @@ HB_FUNC( QT_QTREEWIDGET_TOPLEVELITEMCOUNT )
  */
 HB_FUNC( QT_QTREEWIDGET_VISUALITEMRECT )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QTreeWidget( 1 )->visualItemRect( hbqt_par_QTreeWidgetItem( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QTreeWidget( 1 )->visualItemRect( hbqt_par_QTreeWidgetItem( 2 ) ) ) ) );
 }
 
 /*

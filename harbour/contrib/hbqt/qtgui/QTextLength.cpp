@@ -99,9 +99,9 @@ QT_G_FUNC( release_QTextLength )
    }
 }
 
-void * gcAllocate_QTextLength( void * pObj )
+void * hbqt_gcAllocate_QTextLength( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTextLength;
@@ -115,7 +115,7 @@ HB_FUNC( QT_QTEXTLENGTH )
 
    pObj = ( QTextLength* ) new QTextLength() ;
 
-   hb_retptrGC( gcAllocate_QTextLength( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextLength( pObj ) );
 }
 /*
  * qreal rawValue () const

@@ -215,7 +215,7 @@ HB_FUNC( QT_QIODEVICE_PEEK )
  */
 HB_FUNC( QT_QIODEVICE_PEEK_1 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QIODevice( 1 )->peek( hb_parnint( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QIODevice( 1 )->peek( hb_parnint( 2 ) ) ) ) );
 }
 
 /*
@@ -247,7 +247,7 @@ HB_FUNC( QT_QIODEVICE_READ )
  */
 HB_FUNC( QT_QIODEVICE_READ_1 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QIODevice( 1 )->read( hb_parnint( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QIODevice( 1 )->read( hb_parnint( 2 ) ) ) ) );
 }
 
 /*
@@ -255,7 +255,7 @@ HB_FUNC( QT_QIODEVICE_READ_1 )
  */
 HB_FUNC( QT_QIODEVICE_READALL )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QIODevice( 1 )->readAll() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QIODevice( 1 )->readAll() ) ) );
 }
 
 /*
@@ -271,7 +271,7 @@ HB_FUNC( QT_QIODEVICE_READLINE )
  */
 HB_FUNC( QT_QIODEVICE_READLINE_1 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QIODevice( 1 )->readLine( hb_parnint( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QIODevice( 1 )->readLine( hb_parnint( 2 ) ) ) ) );
 }
 
 /*

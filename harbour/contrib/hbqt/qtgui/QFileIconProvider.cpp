@@ -98,9 +98,9 @@ QT_G_FUNC( release_QFileIconProvider )
    }
 }
 
-void * gcAllocate_QFileIconProvider( void * pObj )
+void * hbqt_gcAllocate_QFileIconProvider( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QFileIconProvider;
@@ -114,14 +114,14 @@ HB_FUNC( QT_QFILEICONPROVIDER )
 
    pObj = new QFileIconProvider() ;
 
-   hb_retptrGC( gcAllocate_QFileIconProvider( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QFileIconProvider( pObj ) );
 }
 /*
  * virtual QIcon icon ( IconType type ) const
  */
 HB_FUNC( QT_QFILEICONPROVIDER_ICON )
 {
-   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QFileIconProvider( 1 )->icon( ( QFileIconProvider::IconType ) hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QFileIconProvider( 1 )->icon( ( QFileIconProvider::IconType ) hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -129,7 +129,7 @@ HB_FUNC( QT_QFILEICONPROVIDER_ICON )
  */
 HB_FUNC( QT_QFILEICONPROVIDER_ICON_1 )
 {
-   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QFileIconProvider( 1 )->icon( *hbqt_par_QFileInfo( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QFileIconProvider( 1 )->icon( *hbqt_par_QFileInfo( 2 ) ) ) ) );
 }
 
 /*

@@ -95,9 +95,9 @@ QT_G_FUNC( release_QResource )
    }
 }
 
-void * gcAllocate_QResource( void * pObj )
+void * hbqt_gcAllocate_QResource( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QResource;
@@ -111,7 +111,7 @@ HB_FUNC( QT_QRESOURCE )
 
    pObj = ( QResource* ) new QResource() ;
 
-   hb_retptrGC( gcAllocate_QResource( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QResource( pObj ) );
 }
 /*
  * QString absoluteFilePath () const
@@ -158,7 +158,7 @@ HB_FUNC( QT_QRESOURCE_ISVALID )
  */
 HB_FUNC( QT_QRESOURCE_LOCALE )
 {
-   hb_retptrGC( gcAllocate_QLocale( new QLocale( hbqt_par_QResource( 1 )->locale() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( hbqt_par_QResource( 1 )->locale() ) ) );
 }
 
 /*
@@ -198,7 +198,7 @@ HB_FUNC( QT_QRESOURCE_REGISTERRESOURCE )
  */
 HB_FUNC( QT_QRESOURCE_SEARCHPATHS )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QResource( 1 )->searchPaths() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QResource( 1 )->searchPaths() ) ) );
 }
 
 /*

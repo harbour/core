@@ -111,9 +111,9 @@ QT_G_FUNC( release_QImageReader )
    }
 }
 
-void * gcAllocate_QImageReader( void * pObj )
+void * hbqt_gcAllocate_QImageReader( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QImageReader;
@@ -127,7 +127,7 @@ HB_FUNC( QT_QIMAGEREADER )
 
    pObj = ( QImageReader* ) new QImageReader() ;
 
-   hb_retptrGC( gcAllocate_QImageReader( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QImageReader( pObj ) );
 }
 /*
  * bool autoDetectImageFormat () const
@@ -142,7 +142,7 @@ HB_FUNC( QT_QIMAGEREADER_AUTODETECTIMAGEFORMAT )
  */
 HB_FUNC( QT_QIMAGEREADER_BACKGROUNDCOLOR )
 {
-   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QImageReader( 1 )->backgroundColor() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QImageReader( 1 )->backgroundColor() ) ) );
 }
 
 /*
@@ -158,7 +158,7 @@ HB_FUNC( QT_QIMAGEREADER_CANREAD )
  */
 HB_FUNC( QT_QIMAGEREADER_CLIPRECT )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QImageReader( 1 )->clipRect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QImageReader( 1 )->clipRect() ) ) );
 }
 
 /*
@@ -174,7 +174,7 @@ HB_FUNC( QT_QIMAGEREADER_CURRENTIMAGENUMBER )
  */
 HB_FUNC( QT_QIMAGEREADER_CURRENTIMAGERECT )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QImageReader( 1 )->currentImageRect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QImageReader( 1 )->currentImageRect() ) ) );
 }
 
 /*
@@ -214,7 +214,7 @@ HB_FUNC( QT_QIMAGEREADER_FILENAME )
  */
 HB_FUNC( QT_QIMAGEREADER_FORMAT )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QImageReader( 1 )->format() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QImageReader( 1 )->format() ) ) );
 }
 
 /*
@@ -278,7 +278,7 @@ HB_FUNC( QT_QIMAGEREADER_QUALITY )
  */
 HB_FUNC( QT_QIMAGEREADER_READ )
 {
-   hb_retptrGC( gcAllocate_QImage( new QImage( hbqt_par_QImageReader( 1 )->read() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( hbqt_par_QImageReader( 1 )->read() ) ) );
 }
 
 /*
@@ -294,7 +294,7 @@ HB_FUNC( QT_QIMAGEREADER_READ_1 )
  */
 HB_FUNC( QT_QIMAGEREADER_SCALEDCLIPRECT )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QImageReader( 1 )->scaledClipRect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QImageReader( 1 )->scaledClipRect() ) ) );
 }
 
 /*
@@ -302,7 +302,7 @@ HB_FUNC( QT_QIMAGEREADER_SCALEDCLIPRECT )
  */
 HB_FUNC( QT_QIMAGEREADER_SCALEDSIZE )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QImageReader( 1 )->scaledSize() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QImageReader( 1 )->scaledSize() ) ) );
 }
 
 /*
@@ -382,7 +382,7 @@ HB_FUNC( QT_QIMAGEREADER_SETSCALEDSIZE )
  */
 HB_FUNC( QT_QIMAGEREADER_SIZE )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QImageReader( 1 )->size() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QImageReader( 1 )->size() ) ) );
 }
 
 /*
@@ -414,7 +414,7 @@ HB_FUNC( QT_QIMAGEREADER_TEXT )
  */
 HB_FUNC( QT_QIMAGEREADER_TEXTKEYS )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QImageReader( 1 )->textKeys() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QImageReader( 1 )->textKeys() ) ) );
 }
 
 /*
@@ -422,7 +422,7 @@ HB_FUNC( QT_QIMAGEREADER_TEXTKEYS )
  */
 HB_FUNC( QT_QIMAGEREADER_IMAGEFORMAT_1 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QImageReader( 1 )->imageFormat( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QImageReader( 1 )->imageFormat( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -430,7 +430,7 @@ HB_FUNC( QT_QIMAGEREADER_IMAGEFORMAT_1 )
  */
 HB_FUNC( QT_QIMAGEREADER_IMAGEFORMAT_2 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QImageReader( 1 )->imageFormat( hbqt_par_QIODevice( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QImageReader( 1 )->imageFormat( hbqt_par_QIODevice( 2 ) ) ) ) );
 }
 
 

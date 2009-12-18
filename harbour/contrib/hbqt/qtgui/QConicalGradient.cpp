@@ -102,9 +102,9 @@ QT_G_FUNC( release_QConicalGradient )
    }
 }
 
-void * gcAllocate_QConicalGradient( void * pObj )
+void * hbqt_gcAllocate_QConicalGradient( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QConicalGradient;
@@ -118,7 +118,7 @@ HB_FUNC( QT_QCONICALGRADIENT )
 
    pObj = ( QConicalGradient* ) new QConicalGradient() ;
 
-   hb_retptrGC( gcAllocate_QConicalGradient( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QConicalGradient( pObj ) );
 }
 /*
  * qreal angle () const
@@ -133,7 +133,7 @@ HB_FUNC( QT_QCONICALGRADIENT_ANGLE )
  */
 HB_FUNC( QT_QCONICALGRADIENT_CENTER )
 {
-   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QConicalGradient( 1 )->center() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QConicalGradient( 1 )->center() ) ) );
 }
 
 /*

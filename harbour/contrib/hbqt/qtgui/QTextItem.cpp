@@ -100,9 +100,9 @@ QT_G_FUNC( release_QTextItem )
    }
 }
 
-void * gcAllocate_QTextItem( void * pObj )
+void * hbqt_gcAllocate_QTextItem( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTextItem;
@@ -116,7 +116,7 @@ HB_FUNC( QT_QTEXTITEM )
 
    pObj = ( QTextItem* ) new QTextItem() ;
 
-   hb_retptrGC( gcAllocate_QTextItem( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextItem( pObj ) );
 }
 /*
  * qreal ascent () const
@@ -139,7 +139,7 @@ HB_FUNC( QT_QTEXTITEM_DESCENT )
  */
 HB_FUNC( QT_QTEXTITEM_FONT )
 {
-   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QTextItem( 1 )->font() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QTextItem( 1 )->font() ) ) );
 }
 
 /*

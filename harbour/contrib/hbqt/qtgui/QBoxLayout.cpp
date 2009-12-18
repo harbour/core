@@ -125,9 +125,9 @@ QT_G_FUNC( release_QBoxLayout )
    }
 }
 
-void * gcAllocate_QBoxLayout( void * pObj )
+void * hbqt_gcAllocate_QBoxLayout( void * pObj )
 {
-   QGC_POINTER_QBoxLayout * p = ( QGC_POINTER_QBoxLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QBoxLayout ), gcFuncs() );
+   QGC_POINTER_QBoxLayout * p = ( QGC_POINTER_QBoxLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QBoxLayout ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QBoxLayout;
@@ -142,7 +142,7 @@ HB_FUNC( QT_QBOXLAYOUT )
 
    pObj = ( QBoxLayout* ) new QBoxLayout( ( QBoxLayout::Direction ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) ;
 
-   hb_retptrGC( gcAllocate_QBoxLayout( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QBoxLayout( pObj ) );
 }
 /*
  * void addLayout ( QLayout * layout, int stretch = 0 )

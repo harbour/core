@@ -126,9 +126,9 @@ QT_G_FUNC( release_QLineEdit )
    }
 }
 
-void * gcAllocate_QLineEdit( void * pObj )
+void * hbqt_gcAllocate_QLineEdit( void * pObj )
 {
-   QGC_POINTER_QLineEdit * p = ( QGC_POINTER_QLineEdit * ) hb_gcAllocate( sizeof( QGC_POINTER_QLineEdit ), gcFuncs() );
+   QGC_POINTER_QLineEdit * p = ( QGC_POINTER_QLineEdit * ) hb_gcAllocate( sizeof( QGC_POINTER_QLineEdit ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QLineEdit;
@@ -143,7 +143,7 @@ HB_FUNC( QT_QLINEEDIT )
 
    pObj = ( QLineEdit* ) new QLineEdit( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QLineEdit( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QLineEdit( pObj ) );
 }
 /*
  * Qt::Alignment alignment () const
@@ -384,7 +384,7 @@ HB_FUNC( QT_QLINEEDIT_MAXLENGTH )
  */
 HB_FUNC( QT_QLINEEDIT_MINIMUMSIZEHINT )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QLineEdit( 1 )->minimumSizeHint() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QLineEdit( 1 )->minimumSizeHint() ) ) );
 }
 
 /*
@@ -512,7 +512,7 @@ HB_FUNC( QT_QLINEEDIT_SETVALIDATOR )
  */
 HB_FUNC( QT_QLINEEDIT_SIZEHINT )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QLineEdit( 1 )->sizeHint() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QLineEdit( 1 )->sizeHint() ) ) );
 }
 
 /*

@@ -126,9 +126,9 @@ QT_G_FUNC( release_QComboBox )
    }
 }
 
-void * gcAllocate_QComboBox( void * pObj )
+void * hbqt_gcAllocate_QComboBox( void * pObj )
 {
-   QGC_POINTER_QComboBox * p = ( QGC_POINTER_QComboBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QComboBox ), gcFuncs() );
+   QGC_POINTER_QComboBox * p = ( QGC_POINTER_QComboBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QComboBox ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QComboBox;
@@ -143,7 +143,7 @@ HB_FUNC( QT_QCOMBOBOX )
 
    pObj = ( QComboBox* ) new QComboBox( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QComboBox( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QComboBox( pObj ) );
 }
 /*
  * void addItem ( const QString & text, const QVariant & userData = QVariant() )
@@ -246,7 +246,7 @@ HB_FUNC( QT_QCOMBOBOX_HIDEPOPUP )
  */
 HB_FUNC( QT_QCOMBOBOX_ICONSIZE )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QComboBox( 1 )->iconSize() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QComboBox( 1 )->iconSize() ) ) );
 }
 
 /*
@@ -302,7 +302,7 @@ HB_FUNC( QT_QCOMBOBOX_ISEDITABLE )
  */
 HB_FUNC( QT_QCOMBOBOX_ITEMDATA )
 {
-   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QComboBox( 1 )->itemData( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::UserRole ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QComboBox( 1 )->itemData( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::UserRole ) ) ) ) );
 }
 
 /*
@@ -318,7 +318,7 @@ HB_FUNC( QT_QCOMBOBOX_ITEMDELEGATE )
  */
 HB_FUNC( QT_QCOMBOBOX_ITEMICON )
 {
-   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QComboBox( 1 )->itemIcon( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QComboBox( 1 )->itemIcon( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -390,7 +390,7 @@ HB_FUNC( QT_QCOMBOBOX_REMOVEITEM )
  */
 HB_FUNC( QT_QCOMBOBOX_ROOTMODELINDEX )
 {
-   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QComboBox( 1 )->rootModelIndex() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QComboBox( 1 )->rootModelIndex() ) ) );
 }
 
 /*

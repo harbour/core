@@ -104,9 +104,9 @@ QT_G_FUNC( release_QTextFrameFormat )
    }
 }
 
-void * gcAllocate_QTextFrameFormat( void * pObj )
+void * hbqt_gcAllocate_QTextFrameFormat( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTextFrameFormat;
@@ -120,7 +120,7 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT )
 
    pObj = ( QTextFrameFormat* ) new QTextFrameFormat() ;
 
-   hb_retptrGC( gcAllocate_QTextFrameFormat( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextFrameFormat( pObj ) );
 }
 /*
  * qreal border () const
@@ -135,7 +135,7 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_BORDER )
  */
 HB_FUNC( QT_QTEXTFRAMEFORMAT_BORDERBRUSH )
 {
-   hb_retptrGC( gcAllocate_QBrush( new QBrush( hbqt_par_QTextFrameFormat( 1 )->borderBrush() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QTextFrameFormat( 1 )->borderBrush() ) ) );
 }
 
 /*
@@ -159,7 +159,7 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_BOTTOMMARGIN )
  */
 HB_FUNC( QT_QTEXTFRAMEFORMAT_HEIGHT )
 {
-   hb_retptrGC( gcAllocate_QTextLength( new QTextLength( hbqt_par_QTextFrameFormat( 1 )->height() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextLength( new QTextLength( hbqt_par_QTextFrameFormat( 1 )->height() ) ) );
 }
 
 /*
@@ -351,7 +351,7 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_TOPMARGIN )
  */
 HB_FUNC( QT_QTEXTFRAMEFORMAT_WIDTH )
 {
-   hb_retptrGC( gcAllocate_QTextLength( new QTextLength( hbqt_par_QTextFrameFormat( 1 )->width() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextLength( new QTextLength( hbqt_par_QTextFrameFormat( 1 )->width() ) ) );
 }
 
 

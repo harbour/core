@@ -103,9 +103,9 @@ QT_G_FUNC( release_QSizePolicy )
    }
 }
 
-void * gcAllocate_QSizePolicy( void * pObj )
+void * hbqt_gcAllocate_QSizePolicy( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QSizePolicy;
@@ -119,7 +119,7 @@ HB_FUNC( QT_QSIZEPOLICY )
 
    pObj = ( QSizePolicy* ) new QSizePolicy() ;
 
-   hb_retptrGC( gcAllocate_QSizePolicy( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QSizePolicy( pObj ) );
 }
 /*
  * ControlType controlType () const

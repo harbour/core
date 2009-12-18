@@ -121,9 +121,9 @@ QT_G_FUNC( release_QSizeGrip )
    }
 }
 
-void * gcAllocate_QSizeGrip( void * pObj )
+void * hbqt_gcAllocate_QSizeGrip( void * pObj )
 {
-   QGC_POINTER_QSizeGrip * p = ( QGC_POINTER_QSizeGrip * ) hb_gcAllocate( sizeof( QGC_POINTER_QSizeGrip ), gcFuncs() );
+   QGC_POINTER_QSizeGrip * p = ( QGC_POINTER_QSizeGrip * ) hb_gcAllocate( sizeof( QGC_POINTER_QSizeGrip ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QSizeGrip;
@@ -138,7 +138,7 @@ HB_FUNC( QT_QSIZEGRIP )
 
    pObj = ( QSizeGrip* ) new QSizeGrip( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QSizeGrip( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QSizeGrip( pObj ) );
 }
 
 /*----------------------------------------------------------------------*/

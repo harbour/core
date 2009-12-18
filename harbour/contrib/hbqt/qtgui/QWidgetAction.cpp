@@ -121,9 +121,9 @@ QT_G_FUNC( release_QWidgetAction )
    }
 }
 
-void * gcAllocate_QWidgetAction( void * pObj )
+void * hbqt_gcAllocate_QWidgetAction( void * pObj )
 {
-   QGC_POINTER_QWidgetAction * p = ( QGC_POINTER_QWidgetAction * ) hb_gcAllocate( sizeof( QGC_POINTER_QWidgetAction ), gcFuncs() );
+   QGC_POINTER_QWidgetAction * p = ( QGC_POINTER_QWidgetAction * ) hb_gcAllocate( sizeof( QGC_POINTER_QWidgetAction ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QWidgetAction;
@@ -138,7 +138,7 @@ HB_FUNC( QT_QWIDGETACTION )
 
    pObj = ( QWidgetAction* ) new QWidgetAction( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QWidgetAction( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QWidgetAction( pObj ) );
 }
 /*
  * QWidget * defaultWidget () const

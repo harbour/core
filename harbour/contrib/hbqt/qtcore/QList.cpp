@@ -122,9 +122,9 @@ QT_G_FUNC( release_QList )
    }
 }
 
-void * gcAllocate_QList( void * pObj )
+void * hbqt_gcAllocate_QList( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QList;
@@ -139,7 +139,7 @@ HB_FUNC( QT_QLIST )
    QList<void*>* list = NULL;
    pObj = ( QList<void*>* ) list ;
 
-   hb_retptrGC( gcAllocate_QList( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QList( pObj ) );
 }
 /*
  * void append ( const T & value )

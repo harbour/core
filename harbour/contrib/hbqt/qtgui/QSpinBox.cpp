@@ -120,9 +120,9 @@ QT_G_FUNC( release_QSpinBox )
    }
 }
 
-void * gcAllocate_QSpinBox( void * pObj )
+void * hbqt_gcAllocate_QSpinBox( void * pObj )
 {
-   QGC_POINTER_QSpinBox * p = ( QGC_POINTER_QSpinBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QSpinBox ), gcFuncs() );
+   QGC_POINTER_QSpinBox * p = ( QGC_POINTER_QSpinBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QSpinBox ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QSpinBox;
@@ -137,7 +137,7 @@ HB_FUNC( QT_QSPINBOX )
 
    pObj = ( QSpinBox* ) new QSpinBox( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QSpinBox( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QSpinBox( pObj ) );
 }
 /*
  * QString cleanText () const

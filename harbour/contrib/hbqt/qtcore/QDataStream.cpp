@@ -103,9 +103,9 @@ QT_G_FUNC( release_QDataStream )
    }
 }
 
-void * gcAllocate_QDataStream( void * pObj )
+void * hbqt_gcAllocate_QDataStream( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QDataStream;
@@ -119,7 +119,7 @@ HB_FUNC( QT_QDATASTREAM )
 
    pObj = new QDataStream() ;
 
-   hb_retptrGC( gcAllocate_QDataStream( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QDataStream( pObj ) );
 }
 /*
  * bool atEnd () const

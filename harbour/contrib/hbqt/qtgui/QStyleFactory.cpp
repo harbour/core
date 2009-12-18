@@ -94,9 +94,9 @@ QT_G_FUNC( release_QStyleFactory )
    }
 }
 
-void * gcAllocate_QStyleFactory( void * pObj )
+void * hbqt_gcAllocate_QStyleFactory( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStyleFactory;
@@ -110,7 +110,7 @@ HB_FUNC( QT_QSTYLEFACTORY )
 
    pObj = new QStyleFactory() ;
 
-   hb_retptrGC( gcAllocate_QStyleFactory( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleFactory( pObj ) );
 }
 /*
  * QStyle * create ( const QString & key )
@@ -125,7 +125,7 @@ HB_FUNC( QT_QSTYLEFACTORY_CREATE )
  */
 HB_FUNC( QT_QSTYLEFACTORY_KEYS )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QStyleFactory( 1 )->keys() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QStyleFactory( 1 )->keys() ) ) );
 }
 
 

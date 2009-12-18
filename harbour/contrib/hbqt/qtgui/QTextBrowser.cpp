@@ -120,9 +120,9 @@ QT_G_FUNC( release_QTextBrowser )
    }
 }
 
-void * gcAllocate_QTextBrowser( void * pObj )
+void * hbqt_gcAllocate_QTextBrowser( void * pObj )
 {
-   QGC_POINTER_QTextBrowser * p = ( QGC_POINTER_QTextBrowser * ) hb_gcAllocate( sizeof( QGC_POINTER_QTextBrowser ), gcFuncs() );
+   QGC_POINTER_QTextBrowser * p = ( QGC_POINTER_QTextBrowser * ) hb_gcAllocate( sizeof( QGC_POINTER_QTextBrowser ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTextBrowser;
@@ -137,7 +137,7 @@ HB_FUNC( QT_QTEXTBROWSER )
 
    pObj = ( QTextBrowser* ) new QTextBrowser( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QTextBrowser( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextBrowser( pObj ) );
 }
 /*
  * int backwardHistoryCount () const
@@ -176,7 +176,7 @@ HB_FUNC( QT_QTEXTBROWSER_HISTORYTITLE )
  */
 HB_FUNC( QT_QTEXTBROWSER_HISTORYURL )
 {
-   hb_retptrGC( gcAllocate_QUrl( new QUrl( hbqt_par_QTextBrowser( 1 )->historyUrl( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( hbqt_par_QTextBrowser( 1 )->historyUrl( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -200,7 +200,7 @@ HB_FUNC( QT_QTEXTBROWSER_ISFORWARDAVAILABLE )
  */
 HB_FUNC( QT_QTEXTBROWSER_LOADRESOURCE )
 {
-   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QTextBrowser( 1 )->loadResource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QTextBrowser( 1 )->loadResource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ) ) );
 }
 
 /*
@@ -224,7 +224,7 @@ HB_FUNC( QT_QTEXTBROWSER_OPENLINKS )
  */
 HB_FUNC( QT_QTEXTBROWSER_SEARCHPATHS )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QTextBrowser( 1 )->searchPaths() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QTextBrowser( 1 )->searchPaths() ) ) );
 }
 
 /*
@@ -256,7 +256,7 @@ HB_FUNC( QT_QTEXTBROWSER_SETSEARCHPATHS )
  */
 HB_FUNC( QT_QTEXTBROWSER_SOURCE )
 {
-   hb_retptrGC( gcAllocate_QUrl( new QUrl( hbqt_par_QTextBrowser( 1 )->source() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( hbqt_par_QTextBrowser( 1 )->source() ) ) );
 }
 
 /*

@@ -127,9 +127,9 @@ QT_G_FUNC( release_QPrinter )
    }
 }
 
-void * gcAllocate_QPrinter( void * pObj )
+void * hbqt_gcAllocate_QPrinter( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QPrinter;
@@ -143,7 +143,7 @@ HB_FUNC( QT_QPRINTER )
 
    pObj = ( QPrinter* ) new QPrinter() ;
 
-   hb_retptrGC( gcAllocate_QPrinter( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QPrinter( pObj ) );
 }
 /*
  * bool abort ()
@@ -304,7 +304,7 @@ HB_FUNC( QT_QPRINTER_PAGEORDER )
  */
 HB_FUNC( QT_QPRINTER_PAGERECT )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QPrinter( 1 )->pageRect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QPrinter( 1 )->pageRect() ) ) );
 }
 
 /*
@@ -312,7 +312,7 @@ HB_FUNC( QT_QPRINTER_PAGERECT )
  */
 HB_FUNC( QT_QPRINTER_PAGERECT_1 )
 {
-   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QPrinter( 1 )->pageRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QPrinter( 1 )->pageRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -328,7 +328,7 @@ HB_FUNC( QT_QPRINTER_PAINTENGINE )
  */
 HB_FUNC( QT_QPRINTER_PAPERRECT )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QPrinter( 1 )->paperRect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QPrinter( 1 )->paperRect() ) ) );
 }
 
 /*
@@ -336,7 +336,7 @@ HB_FUNC( QT_QPRINTER_PAPERRECT )
  */
 HB_FUNC( QT_QPRINTER_PAPERRECT_1 )
 {
-   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QPrinter( 1 )->paperRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QPrinter( 1 )->paperRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -352,7 +352,7 @@ HB_FUNC( QT_QPRINTER_PAPERSIZE )
  */
 HB_FUNC( QT_QPRINTER_PAPERSIZE_1 )
 {
-   hb_retptrGC( gcAllocate_QSizeF( new QSizeF( hbqt_par_QPrinter( 1 )->paperSize( ( QPrinter::Unit ) hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( hbqt_par_QPrinter( 1 )->paperSize( ( QPrinter::Unit ) hb_parni( 2 ) ) ) ) );
 }
 
 /*

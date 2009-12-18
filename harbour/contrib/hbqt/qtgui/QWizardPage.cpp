@@ -119,9 +119,9 @@ QT_G_FUNC( release_QWizardPage )
    }
 }
 
-void * gcAllocate_QWizardPage( void * pObj )
+void * hbqt_gcAllocate_QWizardPage( void * pObj )
 {
-   QGC_POINTER_QWizardPage * p = ( QGC_POINTER_QWizardPage * ) hb_gcAllocate( sizeof( QGC_POINTER_QWizardPage ), gcFuncs() );
+   QGC_POINTER_QWizardPage * p = ( QGC_POINTER_QWizardPage * ) hb_gcAllocate( sizeof( QGC_POINTER_QWizardPage ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QWizardPage;
@@ -136,7 +136,7 @@ HB_FUNC( QT_QWIZARDPAGE )
 
    pObj = new QWizardPage() ;
 
-   hb_retptrGC( gcAllocate_QWizardPage( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QWizardPage( pObj ) );
 }
 /*
  * QString buttonText ( QWizard::WizardButton which ) const
@@ -199,7 +199,7 @@ HB_FUNC( QT_QWIZARDPAGE_NEXTID )
  */
 HB_FUNC( QT_QWIZARDPAGE_PIXMAP )
 {
-   hb_retptrGC( gcAllocate_QPixmap( new QPixmap( hbqt_par_QWizardPage( 1 )->pixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QWizardPage( 1 )->pixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ) ) ) ) );
 }
 
 /*

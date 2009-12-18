@@ -105,7 +105,7 @@ HB_FUNC( QT_QDRAGMOVEEVENT_ACCEPT_1 )
  */
 HB_FUNC( QT_QDRAGMOVEEVENT_ANSWERRECT )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QDragMoveEvent( 1 )->answerRect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QDragMoveEvent( 1 )->answerRect() ) ) );
 }
 
 /*

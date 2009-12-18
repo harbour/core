@@ -102,9 +102,9 @@ QT_G_FUNC( release_QStyleOptionToolButton )
    }
 }
 
-void * gcAllocate_QStyleOptionToolButton( void * pObj )
+void * hbqt_gcAllocate_QStyleOptionToolButton( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStyleOptionToolButton;
@@ -118,7 +118,7 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON )
 
    pObj = ( QStyleOptionToolButton* ) new QStyleOptionToolButton() ;
 
-   hb_retptrGC( gcAllocate_QStyleOptionToolButton( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionToolButton( pObj ) );
 }
 /*
  * Qt::ArrowType arrowType
@@ -141,7 +141,7 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON_FEATURES )
  */
 HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON_FONT )
 {
-   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QStyleOptionToolButton( 1 )->font ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QStyleOptionToolButton( 1 )->font ) ) );
 }
 
 /*
@@ -149,7 +149,7 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON_FONT )
  */
 HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON_ICON )
 {
-   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QStyleOptionToolButton( 1 )->icon ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QStyleOptionToolButton( 1 )->icon ) ) );
 }
 
 /*
@@ -157,7 +157,7 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON_ICON )
  */
 HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON_ICONSIZE )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionToolButton( 1 )->iconSize ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionToolButton( 1 )->iconSize ) ) );
 }
 
 /*
@@ -165,7 +165,7 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON_ICONSIZE )
  */
 HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON_POS )
 {
-   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QStyleOptionToolButton( 1 )->pos ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QStyleOptionToolButton( 1 )->pos ) ) );
 }
 
 /*

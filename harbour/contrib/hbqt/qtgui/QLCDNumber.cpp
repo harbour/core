@@ -127,9 +127,9 @@ QT_G_FUNC( release_QLCDNumber )
    }
 }
 
-void * gcAllocate_QLCDNumber( void * pObj )
+void * hbqt_gcAllocate_QLCDNumber( void * pObj )
 {
-   QGC_POINTER_QLCDNumber * p = ( QGC_POINTER_QLCDNumber * ) hb_gcAllocate( sizeof( QGC_POINTER_QLCDNumber ), gcFuncs() );
+   QGC_POINTER_QLCDNumber * p = ( QGC_POINTER_QLCDNumber * ) hb_gcAllocate( sizeof( QGC_POINTER_QLCDNumber ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QLCDNumber;
@@ -144,7 +144,7 @@ HB_FUNC( QT_QLCDNUMBER )
 
    pObj = ( QLCDNumber * ) new QLCDNumber( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QLCDNumber( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QLCDNumber( pObj ) );
 }
 /*
  * bool checkOverflow ( double num ) const

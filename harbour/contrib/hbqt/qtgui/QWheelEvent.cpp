@@ -105,7 +105,7 @@ HB_FUNC( QT_QWHEELEVENT_DELTA )
  */
 HB_FUNC( QT_QWHEELEVENT_GLOBALPOS )
 {
-   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QWheelEvent( 1 )->globalPos() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QWheelEvent( 1 )->globalPos() ) ) );
 }
 
 /*
@@ -137,7 +137,7 @@ HB_FUNC( QT_QWHEELEVENT_ORIENTATION )
  */
 HB_FUNC( QT_QWHEELEVENT_POS )
 {
-   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QWheelEvent( 1 )->pos() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QWheelEvent( 1 )->pos() ) ) );
 }
 
 /*

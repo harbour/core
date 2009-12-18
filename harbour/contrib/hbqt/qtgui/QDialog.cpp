@@ -125,9 +125,9 @@ QT_G_FUNC( release_QDialog )
    }
 }
 
-void * gcAllocate_QDialog( void * pObj )
+void * hbqt_gcAllocate_QDialog( void * pObj )
 {
-   QGC_POINTER_QDialog * p = ( QGC_POINTER_QDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QDialog ), gcFuncs() );
+   QGC_POINTER_QDialog * p = ( QGC_POINTER_QDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QDialog ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QDialog;
@@ -142,7 +142,7 @@ HB_FUNC( QT_QDIALOG )
 
    pObj = new QDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
-   hb_retptrGC( gcAllocate_QDialog( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QDialog( pObj ) );
 }
 /*
  * bool isSizeGripEnabled () const

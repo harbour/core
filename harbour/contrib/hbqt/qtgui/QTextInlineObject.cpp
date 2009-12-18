@@ -105,7 +105,7 @@ HB_FUNC( QT_QTEXTINLINEOBJECT_DESCENT )
  */
 HB_FUNC( QT_QTEXTINLINEOBJECT_FORMAT )
 {
-   hb_retptrGC( gcAllocate_QTextFormat( new QTextFormat( hbqt_par_QTextInlineObject( 1 )->format() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextFormat( new QTextFormat( hbqt_par_QTextInlineObject( 1 )->format() ) ) );
 }
 
 /*
@@ -137,7 +137,7 @@ HB_FUNC( QT_QTEXTINLINEOBJECT_ISVALID )
  */
 HB_FUNC( QT_QTEXTINLINEOBJECT_RECT )
 {
-   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QTextInlineObject( 1 )->rect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QTextInlineObject( 1 )->rect() ) ) );
 }
 
 /*

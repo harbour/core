@@ -126,9 +126,9 @@ QT_G_FUNC( release_QPageSetupDialog )
    }
 }
 
-void * gcAllocate_QPageSetupDialog( void * pObj )
+void * hbqt_gcAllocate_QPageSetupDialog( void * pObj )
 {
-   QGC_POINTER_QPageSetupDialog * p = ( QGC_POINTER_QPageSetupDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QPageSetupDialog ), gcFuncs() );
+   QGC_POINTER_QPageSetupDialog * p = ( QGC_POINTER_QPageSetupDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QPageSetupDialog ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QPageSetupDialog;
@@ -146,7 +146,7 @@ HB_FUNC( QT_QPAGESETUPDIALOG )
    else
       pObj = ( QPageSetupDialog* ) new QPageSetupDialog( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QPageSetupDialog( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QPageSetupDialog( pObj ) );
 }
 /*
  * virtual int exec ()

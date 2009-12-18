@@ -122,9 +122,9 @@ QT_G_FUNC( release_QGridLayout )
    }
 }
 
-void * gcAllocate_QGridLayout( void * pObj )
+void * hbqt_gcAllocate_QGridLayout( void * pObj )
 {
-   QGC_POINTER_QGridLayout * p = ( QGC_POINTER_QGridLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QGridLayout ), gcFuncs() );
+   QGC_POINTER_QGridLayout * p = ( QGC_POINTER_QGridLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QGridLayout ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QGridLayout;
@@ -139,7 +139,7 @@ HB_FUNC( QT_QGRIDLAYOUT )
 
    pObj = new QGridLayout( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QGridLayout( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QGridLayout( pObj ) );
 }
 /*
  * void addItem ( QLayoutItem * item, int row, int column, int rowSpan = 1, int columnSpan = 1, Qt::Alignment alignment = 0 )
@@ -186,7 +186,7 @@ HB_FUNC( QT_QGRIDLAYOUT_ADDWIDGET_1 )
  */
 HB_FUNC( QT_QGRIDLAYOUT_CELLRECT )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QGridLayout( 1 )->cellRect( hb_parni( 2 ), hb_parni( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QGridLayout( 1 )->cellRect( hb_parni( 2 ), hb_parni( 3 ) ) ) ) );
 }
 
 /*

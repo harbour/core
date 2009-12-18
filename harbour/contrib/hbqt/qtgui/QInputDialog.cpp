@@ -127,9 +127,9 @@ QT_G_FUNC( release_QInputDialog )
    }
 }
 
-void * gcAllocate_QInputDialog( void * pObj )
+void * hbqt_gcAllocate_QInputDialog( void * pObj )
 {
-   QGC_POINTER_QInputDialog * p = ( QGC_POINTER_QInputDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QInputDialog ), gcFuncs() );
+   QGC_POINTER_QInputDialog * p = ( QGC_POINTER_QInputDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QInputDialog ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QInputDialog;
@@ -144,7 +144,7 @@ HB_FUNC( QT_QINPUTDIALOG )
 
    pObj = ( QInputDialog * ) new QInputDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
-   hb_retptrGC( gcAllocate_QInputDialog( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QInputDialog( pObj ) );
 }
 /*
  * QString cancelButtonText () const
@@ -159,7 +159,7 @@ HB_FUNC( QT_QINPUTDIALOG_CANCELBUTTONTEXT )
  */
 HB_FUNC( QT_QINPUTDIALOG_COMBOBOXITEMS )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QInputDialog( 1 )->comboBoxItems() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QInputDialog( 1 )->comboBoxItems() ) ) );
 }
 
 /*

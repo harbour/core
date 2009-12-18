@@ -126,9 +126,9 @@ QT_G_FUNC( release_QTabWidget )
    }
 }
 
-void * gcAllocate_QTabWidget( void * pObj )
+void * hbqt_gcAllocate_QTabWidget( void * pObj )
 {
-   QGC_POINTER_QTabWidget * p = ( QGC_POINTER_QTabWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QTabWidget ), gcFuncs() );
+   QGC_POINTER_QTabWidget * p = ( QGC_POINTER_QTabWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QTabWidget ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTabWidget;
@@ -143,7 +143,7 @@ HB_FUNC( QT_QTABWIDGET )
 
    pObj = ( QTabWidget* ) new QTabWidget( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QTabWidget( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTabWidget( pObj ) );
 }
 /*
  * int addTab ( QWidget * page, const QString & label )
@@ -222,7 +222,7 @@ HB_FUNC( QT_QTABWIDGET_ELIDEMODE )
  */
 HB_FUNC( QT_QTABWIDGET_ICONSIZE )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QTabWidget( 1 )->iconSize() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QTabWidget( 1 )->iconSize() ) ) );
 }
 
 /*
@@ -390,7 +390,7 @@ HB_FUNC( QT_QTABWIDGET_SETUSESSCROLLBUTTONS )
  */
 HB_FUNC( QT_QTABWIDGET_TABICON )
 {
-   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QTabWidget( 1 )->tabIcon( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QTabWidget( 1 )->tabIcon( hb_parni( 2 ) ) ) ) );
 }
 
 /*

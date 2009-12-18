@@ -101,9 +101,9 @@ QT_G_FUNC( release_QCursor )
    }
 }
 
-void * gcAllocate_QCursor( void * pObj )
+void * hbqt_gcAllocate_QCursor( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QCursor;
@@ -145,7 +145,7 @@ HB_FUNC( QT_QCURSOR )
       pObj = ( QCursor* ) new QCursor() ;
    }
 
-   hb_retptrGC( gcAllocate_QCursor( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QCursor( pObj ) );
 }
 /*
  * const QBitmap * bitmap () const
@@ -160,7 +160,7 @@ HB_FUNC( QT_QCURSOR_BITMAP )
  */
 HB_FUNC( QT_QCURSOR_HOTSPOT )
 {
-   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QCursor( 1 )->hotSpot() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QCursor( 1 )->hotSpot() ) ) );
 }
 
 /*
@@ -176,7 +176,7 @@ HB_FUNC( QT_QCURSOR_MASK )
  */
 HB_FUNC( QT_QCURSOR_PIXMAP )
 {
-   hb_retptrGC( gcAllocate_QPixmap( new QPixmap( hbqt_par_QCursor( 1 )->pixmap() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QCursor( 1 )->pixmap() ) ) );
 }
 
 /*
@@ -200,7 +200,7 @@ HB_FUNC( QT_QCURSOR_SHAPE )
  */
 HB_FUNC( QT_QCURSOR_POS )
 {
-   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QCursor( 1 )->pos() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QCursor( 1 )->pos() ) ) );
 }
 
 /*

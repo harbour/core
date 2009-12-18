@@ -135,9 +135,9 @@ QT_G_FUNC( release_QMenuBar )
    }
 }
 
-void * gcAllocate_QMenuBar( void * pObj )
+void * hbqt_gcAllocate_QMenuBar( void * pObj )
 {
-   QGC_POINTER_QMenuBar * p = ( QGC_POINTER_QMenuBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QMenuBar ), gcFuncs() );
+   QGC_POINTER_QMenuBar * p = ( QGC_POINTER_QMenuBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QMenuBar ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QMenuBar;
@@ -152,7 +152,7 @@ HB_FUNC( QT_QMENUBAR )
 
    pObj = ( QMenuBar* ) new QMenuBar( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QMenuBar( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QMenuBar( pObj ) );
 }
 /*
  * QAction * activeAction () const

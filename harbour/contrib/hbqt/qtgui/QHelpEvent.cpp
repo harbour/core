@@ -88,7 +88,7 @@ HB_FUNC( QT_QHELPEVENT )
  */
 HB_FUNC( QT_QHELPEVENT_GLOBALPOS )
 {
-   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QHelpEvent( 1 )->globalPos() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QHelpEvent( 1 )->globalPos() ) ) );
 }
 
 /*
@@ -112,7 +112,7 @@ HB_FUNC( QT_QHELPEVENT_GLOBALY )
  */
 HB_FUNC( QT_QHELPEVENT_POS )
 {
-   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QHelpEvent( 1 )->pos() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QHelpEvent( 1 )->pos() ) ) );
 }
 
 /*

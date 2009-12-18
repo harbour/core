@@ -108,9 +108,9 @@ QT_G_FUNC( release_QFont )
    }
 }
 
-void * gcAllocate_QFont( void * pObj )
+void * hbqt_gcAllocate_QFont( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QFont;
@@ -151,7 +151,7 @@ HB_FUNC( QT_QFONT )
       pObj = ( QFont* ) new QFont() ;
    }
 
-   hb_retptrGC( gcAllocate_QFont( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( pObj ) );
 }
 /*
  * bool bold () const
@@ -606,7 +606,7 @@ HB_FUNC( QT_QFONT_SUBSTITUTE )
  */
 HB_FUNC( QT_QFONT_SUBSTITUTES )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QFont( 1 )->substitutes( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QFont( 1 )->substitutes( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -614,7 +614,7 @@ HB_FUNC( QT_QFONT_SUBSTITUTES )
  */
 HB_FUNC( QT_QFONT_SUBSTITUTIONS )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QFont( 1 )->substitutions() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QFont( 1 )->substitutions() ) ) );
 }
 
 

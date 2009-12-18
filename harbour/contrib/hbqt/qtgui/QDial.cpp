@@ -121,9 +121,9 @@ QT_G_FUNC( release_QDial )
    }
 }
 
-void * gcAllocate_QDial( void * pObj )
+void * hbqt_gcAllocate_QDial( void * pObj )
 {
-   QGC_POINTER_QDial * p = ( QGC_POINTER_QDial * ) hb_gcAllocate( sizeof( QGC_POINTER_QDial ), gcFuncs() );
+   QGC_POINTER_QDial * p = ( QGC_POINTER_QDial * ) hb_gcAllocate( sizeof( QGC_POINTER_QDial ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QDial;
@@ -138,7 +138,7 @@ HB_FUNC( QT_QDIAL )
 
    pObj = ( QDial* ) new QDial( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QDial( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QDial( pObj ) );
 }
 /*
  * int notchSize () const

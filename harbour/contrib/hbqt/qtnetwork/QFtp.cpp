@@ -144,9 +144,9 @@ QT_G_FUNC( release_QFtp )
    }
 }
 
-void * gcAllocate_QFtp( void * pObj )
+void * hbqt_gcAllocate_QFtp( void * pObj )
 {
-   QGC_POINTER_QFtp * p = ( QGC_POINTER_QFtp * ) hb_gcAllocate( sizeof( QGC_POINTER_QFtp ), gcFuncs() );
+   QGC_POINTER_QFtp * p = ( QGC_POINTER_QFtp * ) hb_gcAllocate( sizeof( QGC_POINTER_QFtp ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QFtp;
@@ -161,7 +161,7 @@ HB_FUNC( QT_QFTP )
 
    pObj = new QFtp( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QFtp( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QFtp( pObj ) );
 }
 /*
  * qint64 bytesAvailable () const
@@ -312,7 +312,7 @@ HB_FUNC( QT_QFTP_RAWCOMMAND )
  */
 HB_FUNC( QT_QFTP_READALL )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QFtp( 1 )->readAll() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QFtp( 1 )->readAll() ) ) );
 }
 
 /*

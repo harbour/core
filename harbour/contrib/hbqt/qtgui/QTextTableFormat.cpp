@@ -103,9 +103,9 @@ QT_G_FUNC( release_QTextTableFormat )
    }
 }
 
-void * gcAllocate_QTextTableFormat( void * pObj )
+void * hbqt_gcAllocate_QTextTableFormat( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTextTableFormat;
@@ -119,7 +119,7 @@ HB_FUNC( QT_QTEXTTABLEFORMAT )
 
    pObj = new QTextTableFormat() ;
 
-   hb_retptrGC( gcAllocate_QTextTableFormat( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextTableFormat( pObj ) );
 }
 /*
  * Qt::Alignment alignment () const

@@ -95,9 +95,9 @@ QT_G_FUNC( release_QTextDecoder )
    }
 }
 
-void * gcAllocate_QTextDecoder( void * pObj )
+void * hbqt_gcAllocate_QTextDecoder( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTextDecoder;
@@ -111,7 +111,7 @@ HB_FUNC( QT_QTEXTDECODER )
 
    pObj = ( QTextDecoder* ) new QTextDecoder( hbqt_par_QTextCodec( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QTextDecoder( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextDecoder( pObj ) );
 }
 /*
  * QString toUnicode ( const char * chars, int len )

@@ -94,9 +94,9 @@ QT_G_FUNC( release_QLatin1Char )
    }
 }
 
-void * gcAllocate_QLatin1Char( void * pObj )
+void * hbqt_gcAllocate_QLatin1Char( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QLatin1Char;
@@ -110,7 +110,7 @@ HB_FUNC( QT_QLATIN1CHAR )
 
    pObj = ( QLatin1Char* ) new QLatin1Char( *hb_parcx( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QLatin1Char( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QLatin1Char( pObj ) );
 }
 /*
  * char toLatin1 () const

@@ -138,9 +138,9 @@ QT_G_FUNC( release_QMessageBox )
    }
 }
 
-void * gcAllocate_QMessageBox( void * pObj )
+void * hbqt_gcAllocate_QMessageBox( void * pObj )
 {
-   QGC_POINTER_QMessageBox * p = ( QGC_POINTER_QMessageBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QMessageBox ), gcFuncs() );
+   QGC_POINTER_QMessageBox * p = ( QGC_POINTER_QMessageBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QMessageBox ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QMessageBox;
@@ -155,7 +155,7 @@ HB_FUNC( QT_QMESSAGEBOX )
 
    pObj = ( QMessageBox* ) new QMessageBox() ;
 
-   hb_retptrGC( gcAllocate_QMessageBox( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QMessageBox( pObj ) );
 }
 /*
  * void addButton ( QAbstractButton * button, ButtonRole role )
@@ -242,7 +242,7 @@ HB_FUNC( QT_QMESSAGEBOX_ICON )
  */
 HB_FUNC( QT_QMESSAGEBOX_ICONPIXMAP )
 {
-   hb_retptrGC( gcAllocate_QPixmap( new QPixmap( hbqt_par_QMessageBox( 1 )->iconPixmap() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QMessageBox( 1 )->iconPixmap() ) ) );
 }
 
 /*

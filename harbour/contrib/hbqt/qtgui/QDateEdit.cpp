@@ -121,9 +121,9 @@ QT_G_FUNC( release_QDateEdit )
    }
 }
 
-void * gcAllocate_QDateEdit( void * pObj )
+void * hbqt_gcAllocate_QDateEdit( void * pObj )
 {
-   QGC_POINTER_QDateEdit * p = ( QGC_POINTER_QDateEdit * ) hb_gcAllocate( sizeof( QGC_POINTER_QDateEdit ), gcFuncs() );
+   QGC_POINTER_QDateEdit * p = ( QGC_POINTER_QDateEdit * ) hb_gcAllocate( sizeof( QGC_POINTER_QDateEdit ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QDateEdit;
@@ -138,7 +138,7 @@ HB_FUNC( QT_QDATEEDIT )
 
    pObj = ( QDateEdit* ) new QDateEdit( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QDateEdit( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateEdit( pObj ) );
 }
 
 /*----------------------------------------------------------------------*/

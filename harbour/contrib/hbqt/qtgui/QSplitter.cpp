@@ -132,9 +132,9 @@ QT_G_FUNC( release_QSplitter )
    }
 }
 
-void * gcAllocate_QSplitter( void * pObj )
+void * hbqt_gcAllocate_QSplitter( void * pObj )
 {
-   QGC_POINTER_QSplitter * p = ( QGC_POINTER_QSplitter * ) hb_gcAllocate( sizeof( QGC_POINTER_QSplitter ), gcFuncs() );
+   QGC_POINTER_QSplitter * p = ( QGC_POINTER_QSplitter * ) hb_gcAllocate( sizeof( QGC_POINTER_QSplitter ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QSplitter;
@@ -152,7 +152,7 @@ HB_FUNC( QT_QSPLITTER )
    else
       pObj = ( QSplitter* ) new QSplitter( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QSplitter( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QSplitter( pObj ) );
 }
 /*
  * void addWidget ( QWidget * widget )
@@ -269,7 +269,7 @@ HB_FUNC( QT_QSPLITTER_RESTORESTATE )
  */
 HB_FUNC( QT_QSPLITTER_SAVESTATE )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QSplitter( 1 )->saveState() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QSplitter( 1 )->saveState() ) ) );
 }
 
 /*

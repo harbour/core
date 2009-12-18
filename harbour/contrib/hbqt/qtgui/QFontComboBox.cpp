@@ -126,9 +126,9 @@ QT_G_FUNC( release_QFontComboBox )
    }
 }
 
-void * gcAllocate_QFontComboBox( void * pObj )
+void * hbqt_gcAllocate_QFontComboBox( void * pObj )
 {
-   QGC_POINTER_QFontComboBox * p = ( QGC_POINTER_QFontComboBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QFontComboBox ), gcFuncs() );
+   QGC_POINTER_QFontComboBox * p = ( QGC_POINTER_QFontComboBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QFontComboBox ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QFontComboBox;
@@ -143,14 +143,14 @@ HB_FUNC( QT_QFONTCOMBOBOX )
 
    pObj = ( QFontComboBox * ) new QFontComboBox( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QFontComboBox( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QFontComboBox( pObj ) );
 }
 /*
  * QFont currentFont () const
  */
 HB_FUNC( QT_QFONTCOMBOBOX_CURRENTFONT )
 {
-   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QFontComboBox( 1 )->currentFont() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QFontComboBox( 1 )->currentFont() ) ) );
 }
 
 /*

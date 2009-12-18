@@ -126,9 +126,9 @@ QT_G_FUNC( release_QColorDialog )
    }
 }
 
-void * gcAllocate_QColorDialog( void * pObj )
+void * hbqt_gcAllocate_QColorDialog( void * pObj )
 {
-   QGC_POINTER_QColorDialog * p = ( QGC_POINTER_QColorDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QColorDialog ), gcFuncs() );
+   QGC_POINTER_QColorDialog * p = ( QGC_POINTER_QColorDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QColorDialog ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QColorDialog;
@@ -150,14 +150,14 @@ HB_FUNC( QT_QCOLORDIALOG )
       pObj = ( QColorDialog* ) new QColorDialog( hbqt_par_QWidget( 1 ) ) ;
    }
 
-   hb_retptrGC( gcAllocate_QColorDialog( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QColorDialog( pObj ) );
 }
 /*
  * QColor currentColor () const
  */
 HB_FUNC( QT_QCOLORDIALOG_CURRENTCOLOR )
 {
-   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->currentColor() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->currentColor() ) ) );
 }
 
 /*
@@ -181,7 +181,7 @@ HB_FUNC( QT_QCOLORDIALOG_OPTIONS )
  */
 HB_FUNC( QT_QCOLORDIALOG_SELECTEDCOLOR )
 {
-   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->selectedColor() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->selectedColor() ) ) );
 }
 
 /*
@@ -245,7 +245,7 @@ HB_FUNC( QT_QCOLORDIALOG_CUSTOMCOUNT )
  */
 HB_FUNC( QT_QCOLORDIALOG_GETCOLOR )
 {
-   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ), hbqt_par_QString( 4 ), ( QColorDialog::ColorDialogOptions ) hb_parni( 5 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ), hbqt_par_QString( 4 ), ( QColorDialog::ColorDialogOptions ) hb_parni( 5 ) ) ) ) );
 }
 
 /*
@@ -253,7 +253,7 @@ HB_FUNC( QT_QCOLORDIALOG_GETCOLOR )
  */
 HB_FUNC( QT_QCOLORDIALOG_GETCOLOR_1 )
 {
-   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QColorDialog( 1 )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ) ) ) ) );
 }
 
 /*

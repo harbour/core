@@ -121,9 +121,9 @@ QT_G_FUNC( release_QRadioButton )
    }
 }
 
-void * gcAllocate_QRadioButton( void * pObj )
+void * hbqt_gcAllocate_QRadioButton( void * pObj )
 {
-   QGC_POINTER_QRadioButton * p = ( QGC_POINTER_QRadioButton * ) hb_gcAllocate( sizeof( QGC_POINTER_QRadioButton ), gcFuncs() );
+   QGC_POINTER_QRadioButton * p = ( QGC_POINTER_QRadioButton * ) hb_gcAllocate( sizeof( QGC_POINTER_QRadioButton ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QRadioButton;
@@ -141,7 +141,7 @@ HB_FUNC( QT_QRADIOBUTTON )
    else
       pObj = ( QRadioButton* ) new QRadioButton( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QRadioButton( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QRadioButton( pObj ) );
 }
 
 /*----------------------------------------------------------------------*/

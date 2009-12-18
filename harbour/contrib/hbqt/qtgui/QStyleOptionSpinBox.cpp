@@ -100,9 +100,9 @@ QT_G_FUNC( release_QStyleOptionSpinBox )
    }
 }
 
-void * gcAllocate_QStyleOptionSpinBox( void * pObj )
+void * hbqt_gcAllocate_QStyleOptionSpinBox( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStyleOptionSpinBox;
@@ -116,7 +116,7 @@ HB_FUNC( QT_QSTYLEOPTIONSPINBOX )
 
    pObj = ( QStyleOptionSpinBox* ) new QStyleOptionSpinBox() ;
 
-   hb_retptrGC( gcAllocate_QStyleOptionSpinBox( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionSpinBox( pObj ) );
 }
 /*
  * QAbstractSpinBox::ButtonSymbols buttonSymbols

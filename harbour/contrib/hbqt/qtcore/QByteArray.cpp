@@ -113,9 +113,9 @@ QT_G_FUNC( release_QByteArray )
    }
 }
 
-void * gcAllocate_QByteArray( void * pObj )
+void * hbqt_gcAllocate_QByteArray( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QByteArray;
@@ -129,14 +129,14 @@ HB_FUNC( QT_QBYTEARRAY )
 
    pObj = new QByteArray() ;
 
-   hb_retptrGC( gcAllocate_QByteArray( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( pObj ) );
 }
 /*
  * QByteArray & append ( const QByteArray & ba )
  */
 HB_FUNC( QT_QBYTEARRAY_APPEND )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->append( *hbqt_par_QByteArray( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->append( *hbqt_par_QByteArray( 2 ) ) ) ) );
 }
 
 /*
@@ -144,7 +144,7 @@ HB_FUNC( QT_QBYTEARRAY_APPEND )
  */
 HB_FUNC( QT_QBYTEARRAY_APPEND_1 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->append( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->append( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -152,7 +152,7 @@ HB_FUNC( QT_QBYTEARRAY_APPEND_1 )
  */
 HB_FUNC( QT_QBYTEARRAY_APPEND_2 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->append( hbqt_par_char( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->append( hbqt_par_char( 2 ) ) ) ) );
 }
 
 /*
@@ -160,7 +160,7 @@ HB_FUNC( QT_QBYTEARRAY_APPEND_2 )
  */
 HB_FUNC( QT_QBYTEARRAY_APPEND_3 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->append( hbqt_par_char( 2 ), hb_parni( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->append( hbqt_par_char( 2 ), hb_parni( 3 ) ) ) ) );
 }
 
 /*
@@ -168,7 +168,7 @@ HB_FUNC( QT_QBYTEARRAY_APPEND_3 )
  */
 HB_FUNC( QT_QBYTEARRAY_APPEND_4 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->append( ( char ) hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->append( ( char ) hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -288,7 +288,7 @@ HB_FUNC( QT_QBYTEARRAY_ENDSWITH_2 )
  */
 HB_FUNC( QT_QBYTEARRAY_FILL )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->fill( ( char ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->fill( ( char ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ) ) );
 }
 
 /*
@@ -328,7 +328,7 @@ HB_FUNC( QT_QBYTEARRAY_INDEXOF_3 )
  */
 HB_FUNC( QT_QBYTEARRAY_INSERT )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->insert( hb_parni( 2 ), *hbqt_par_QByteArray( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->insert( hb_parni( 2 ), *hbqt_par_QByteArray( 3 ) ) ) ) );
 }
 
 /*
@@ -336,7 +336,7 @@ HB_FUNC( QT_QBYTEARRAY_INSERT )
  */
 HB_FUNC( QT_QBYTEARRAY_INSERT_1 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->insert( hb_parni( 2 ), hbqt_par_QString( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->insert( hb_parni( 2 ), hbqt_par_QString( 3 ) ) ) ) );
 }
 
 /*
@@ -344,7 +344,7 @@ HB_FUNC( QT_QBYTEARRAY_INSERT_1 )
  */
 HB_FUNC( QT_QBYTEARRAY_INSERT_2 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->insert( hb_parni( 2 ), hbqt_par_char( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->insert( hb_parni( 2 ), hbqt_par_char( 3 ) ) ) ) );
 }
 
 /*
@@ -352,7 +352,7 @@ HB_FUNC( QT_QBYTEARRAY_INSERT_2 )
  */
 HB_FUNC( QT_QBYTEARRAY_INSERT_3 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->insert( hb_parni( 2 ), ( char ) hb_parni( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->insert( hb_parni( 2 ), ( char ) hb_parni( 3 ) ) ) ) );
 }
 
 /*
@@ -408,7 +408,7 @@ HB_FUNC( QT_QBYTEARRAY_LASTINDEXOF_3 )
  */
 HB_FUNC( QT_QBYTEARRAY_LEFT )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->left( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->left( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -416,7 +416,7 @@ HB_FUNC( QT_QBYTEARRAY_LEFT )
  */
 HB_FUNC( QT_QBYTEARRAY_LEFTJUSTIFIED )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->leftJustified( hb_parni( 2 ), ( char ) hb_parni( 3 ), hb_parl( 4 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->leftJustified( hb_parni( 2 ), ( char ) hb_parni( 3 ), hb_parl( 4 ) ) ) ) );
 }
 
 /*
@@ -432,7 +432,7 @@ HB_FUNC( QT_QBYTEARRAY_LENGTH )
  */
 HB_FUNC( QT_QBYTEARRAY_MID )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->mid( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->mid( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ) ) );
 }
 
 /*
@@ -440,7 +440,7 @@ HB_FUNC( QT_QBYTEARRAY_MID )
  */
 HB_FUNC( QT_QBYTEARRAY_PREPEND )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->prepend( *hbqt_par_QByteArray( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->prepend( *hbqt_par_QByteArray( 2 ) ) ) ) );
 }
 
 /*
@@ -448,7 +448,7 @@ HB_FUNC( QT_QBYTEARRAY_PREPEND )
  */
 HB_FUNC( QT_QBYTEARRAY_PREPEND_1 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->prepend( hbqt_par_char( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->prepend( hbqt_par_char( 2 ) ) ) ) );
 }
 
 /*
@@ -456,7 +456,7 @@ HB_FUNC( QT_QBYTEARRAY_PREPEND_1 )
  */
 HB_FUNC( QT_QBYTEARRAY_PREPEND_2 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->prepend( ( char ) hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->prepend( ( char ) hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -512,7 +512,7 @@ HB_FUNC( QT_QBYTEARRAY_PUSH_FRONT_2 )
  */
 HB_FUNC( QT_QBYTEARRAY_REMOVE )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->remove( hb_parni( 2 ), hb_parni( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->remove( hb_parni( 2 ), hb_parni( 3 ) ) ) ) );
 }
 
 /*
@@ -520,7 +520,7 @@ HB_FUNC( QT_QBYTEARRAY_REMOVE )
  */
 HB_FUNC( QT_QBYTEARRAY_REPEATED )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->repeated( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->repeated( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -528,7 +528,7 @@ HB_FUNC( QT_QBYTEARRAY_REPEATED )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QByteArray( 4 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QByteArray( 4 ) ) ) ) );
 }
 
 /*
@@ -536,7 +536,7 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_1 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_char( 4 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_char( 4 ) ) ) ) );
 }
 
 /*
@@ -544,7 +544,7 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_1 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_2 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( *hbqt_par_QByteArray( 2 ), *hbqt_par_QByteArray( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( *hbqt_par_QByteArray( 2 ), *hbqt_par_QByteArray( 3 ) ) ) ) );
 }
 
 /*
@@ -552,7 +552,7 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_2 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_3 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( hbqt_par_char( 2 ), *hbqt_par_QByteArray( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( hbqt_par_char( 2 ), *hbqt_par_QByteArray( 3 ) ) ) ) );
 }
 
 /*
@@ -560,7 +560,7 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_3 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_4 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( hbqt_par_char( 2 ), hb_parni( 3 ), hbqt_par_char( 4 ), hb_parni( 5 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( hbqt_par_char( 2 ), hb_parni( 3 ), hbqt_par_char( 4 ), hb_parni( 5 ) ) ) ) );
 }
 
 /*
@@ -568,7 +568,7 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_4 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_5 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( *hbqt_par_QByteArray( 2 ), hbqt_par_char( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( *hbqt_par_QByteArray( 2 ), hbqt_par_char( 3 ) ) ) ) );
 }
 
 /*
@@ -576,7 +576,7 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_5 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_6 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( hbqt_par_QString( 2 ), *hbqt_par_QByteArray( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( hbqt_par_QString( 2 ), *hbqt_par_QByteArray( 3 ) ) ) ) );
 }
 
 /*
@@ -584,7 +584,7 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_6 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_7 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( hbqt_par_QString( 2 ), hbqt_par_char( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( hbqt_par_QString( 2 ), hbqt_par_char( 3 ) ) ) ) );
 }
 
 /*
@@ -592,7 +592,7 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_7 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_8 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( hbqt_par_char( 2 ), hbqt_par_char( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( hbqt_par_char( 2 ), hbqt_par_char( 3 ) ) ) ) );
 }
 
 /*
@@ -600,7 +600,7 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_8 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_9 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( ( char ) hb_parni( 2 ), *hbqt_par_QByteArray( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( ( char ) hb_parni( 2 ), *hbqt_par_QByteArray( 3 ) ) ) ) );
 }
 
 /*
@@ -608,7 +608,7 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_9 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_10 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( ( char ) hb_parni( 2 ), hbqt_par_QString( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( ( char ) hb_parni( 2 ), hbqt_par_QString( 3 ) ) ) ) );
 }
 
 /*
@@ -616,7 +616,7 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_10 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_11 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( ( char ) hb_parni( 2 ), hbqt_par_char( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( ( char ) hb_parni( 2 ), hbqt_par_char( 3 ) ) ) ) );
 }
 
 /*
@@ -624,7 +624,7 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_11 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_12 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( ( char ) hb_parni( 2 ), ( char ) hb_parni( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( ( char ) hb_parni( 2 ), ( char ) hb_parni( 3 ) ) ) ) );
 }
 
 /*
@@ -648,7 +648,7 @@ HB_FUNC( QT_QBYTEARRAY_RESIZE )
  */
 HB_FUNC( QT_QBYTEARRAY_RIGHT )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->right( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->right( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -656,7 +656,7 @@ HB_FUNC( QT_QBYTEARRAY_RIGHT )
  */
 HB_FUNC( QT_QBYTEARRAY_RIGHTJUSTIFIED )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->rightJustified( hb_parni( 2 ), ( char ) hb_parni( 3 ), hb_parl( 4 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->rightJustified( hb_parni( 2 ), ( char ) hb_parni( 3 ), hb_parl( 4 ) ) ) ) );
 }
 
 /*
@@ -664,7 +664,7 @@ HB_FUNC( QT_QBYTEARRAY_RIGHTJUSTIFIED )
  */
 HB_FUNC( QT_QBYTEARRAY_SETNUM )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ) ) );
 }
 
 /*
@@ -672,7 +672,7 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM )
  */
 HB_FUNC( QT_QBYTEARRAY_SETNUM_1 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ) ) );
 }
 
 /*
@@ -680,7 +680,7 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_1 )
  */
 HB_FUNC( QT_QBYTEARRAY_SETNUM_2 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ) ) );
 }
 
 /*
@@ -688,7 +688,7 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_2 )
  */
 HB_FUNC( QT_QBYTEARRAY_SETNUM_3 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ) ) );
 }
 
 /*
@@ -696,7 +696,7 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_3 )
  */
 HB_FUNC( QT_QBYTEARRAY_SETNUM_4 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( ( qlonglong ) hb_parnint( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( ( qlonglong ) hb_parnint( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ) ) );
 }
 
 /*
@@ -704,7 +704,7 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_4 )
  */
 HB_FUNC( QT_QBYTEARRAY_SETNUM_5 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( ( qulonglong ) hb_parnint( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( ( qulonglong ) hb_parnint( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ) ) );
 }
 
 /*
@@ -712,7 +712,7 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_5 )
  */
 HB_FUNC( QT_QBYTEARRAY_SETNUM_6 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( hb_parnd( 2 ), ( char ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 6 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( hb_parnd( 2 ), ( char ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 6 ) ) ) ) );
 }
 
 /*
@@ -720,7 +720,7 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_6 )
  */
 HB_FUNC( QT_QBYTEARRAY_SETNUM_7 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( hb_parnd( 2 ), ( char ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 6 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( hb_parnd( 2 ), ( char ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 6 ) ) ) ) );
 }
 
 /*
@@ -728,7 +728,7 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_7 )
  */
 HB_FUNC( QT_QBYTEARRAY_SIMPLIFIED )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->simplified() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->simplified() ) ) );
 }
 
 /*
@@ -776,7 +776,7 @@ HB_FUNC( QT_QBYTEARRAY_STARTSWITH_2 )
  */
 HB_FUNC( QT_QBYTEARRAY_TOBASE64 )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->toBase64() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->toBase64() ) ) );
 }
 
 /*
@@ -808,7 +808,7 @@ HB_FUNC( QT_QBYTEARRAY_TOFLOAT )
  */
 HB_FUNC( QT_QBYTEARRAY_TOHEX )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->toHex() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->toHex() ) ) );
 }
 
 /*
@@ -852,7 +852,7 @@ HB_FUNC( QT_QBYTEARRAY_TOLONGLONG )
  */
 HB_FUNC( QT_QBYTEARRAY_TOLOWER )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->toLower() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->toLower() ) ) );
 }
 
 /*
@@ -860,7 +860,7 @@ HB_FUNC( QT_QBYTEARRAY_TOLOWER )
  */
 HB_FUNC( QT_QBYTEARRAY_TOPERCENTENCODING )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->toPercentEncoding( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QByteArray( 2 ) : QByteArray() ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QByteArray( 3 ) : QByteArray() ), ( char ) hb_parni( 4 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->toPercentEncoding( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QByteArray( 2 ) : QByteArray() ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QByteArray( 3 ) : QByteArray() ), ( char ) hb_parni( 4 ) ) ) ) );
 }
 
 /*
@@ -928,7 +928,7 @@ HB_FUNC( QT_QBYTEARRAY_TOUSHORT )
  */
 HB_FUNC( QT_QBYTEARRAY_TOUPPER )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->toUpper() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->toUpper() ) ) );
 }
 
 /*
@@ -936,7 +936,7 @@ HB_FUNC( QT_QBYTEARRAY_TOUPPER )
  */
 HB_FUNC( QT_QBYTEARRAY_TRIMMED )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->trimmed() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->trimmed() ) ) );
 }
 
 /*

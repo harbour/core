@@ -127,9 +127,9 @@ QT_G_FUNC( release_QSystemTrayIcon )
    }
 }
 
-void * gcAllocate_QSystemTrayIcon( void * pObj )
+void * hbqt_gcAllocate_QSystemTrayIcon( void * pObj )
 {
-   QGC_POINTER_QSystemTrayIcon * p = ( QGC_POINTER_QSystemTrayIcon * ) hb_gcAllocate( sizeof( QGC_POINTER_QSystemTrayIcon ), gcFuncs() );
+   QGC_POINTER_QSystemTrayIcon * p = ( QGC_POINTER_QSystemTrayIcon * ) hb_gcAllocate( sizeof( QGC_POINTER_QSystemTrayIcon ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QSystemTrayIcon;
@@ -144,7 +144,7 @@ HB_FUNC( QT_QSYSTEMTRAYICON )
 
    pObj = ( QSystemTrayIcon* ) new QSystemTrayIcon( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QSystemTrayIcon( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QSystemTrayIcon( pObj ) );
 }
 /*
  * QMenu * contextMenu () const
@@ -159,7 +159,7 @@ HB_FUNC( QT_QSYSTEMTRAYICON_CONTEXTMENU )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_GEOMETRY )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QSystemTrayIcon( 1 )->geometry() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QSystemTrayIcon( 1 )->geometry() ) ) );
 }
 
 /*
@@ -167,7 +167,7 @@ HB_FUNC( QT_QSYSTEMTRAYICON_GEOMETRY )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_ICON )
 {
-   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QSystemTrayIcon( 1 )->icon() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QSystemTrayIcon( 1 )->icon() ) ) );
 }
 
 /*

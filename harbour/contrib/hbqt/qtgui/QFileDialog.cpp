@@ -148,9 +148,9 @@ QT_G_FUNC( release_QFileDialog )
    }
 }
 
-void * gcAllocate_QFileDialog( void * pObj )
+void * hbqt_gcAllocate_QFileDialog( void * pObj )
 {
-   QGC_POINTER_QFileDialog * p = ( QGC_POINTER_QFileDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QFileDialog ), gcFuncs() );
+   QGC_POINTER_QFileDialog * p = ( QGC_POINTER_QFileDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QFileDialog ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QFileDialog;
@@ -176,7 +176,7 @@ HB_FUNC( QT_QFILEDIALOG )
       pObj = new QFileDialog() ;
    }
 
-   hb_retptrGC( gcAllocate_QFileDialog( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QFileDialog( pObj ) );
 }
 /*
  * AcceptMode acceptMode () const
@@ -207,7 +207,7 @@ HB_FUNC( QT_QFILEDIALOG_DEFAULTSUFFIX )
  */
 HB_FUNC( QT_QFILEDIALOG_DIRECTORY )
 {
-   hb_retptrGC( gcAllocate_QDir( new QDir( hbqt_par_QFileDialog( 1 )->directory() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QFileDialog( 1 )->directory() ) ) );
 }
 
 /*
@@ -231,7 +231,7 @@ HB_FUNC( QT_QFILEDIALOG_FILTER )
  */
 HB_FUNC( QT_QFILEDIALOG_HISTORY )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QFileDialog( 1 )->history() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QFileDialog( 1 )->history() ) ) );
 }
 
 /*
@@ -279,7 +279,7 @@ HB_FUNC( QT_QFILEDIALOG_LABELTEXT )
  */
 HB_FUNC( QT_QFILEDIALOG_NAMEFILTERS )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QFileDialog( 1 )->nameFilters() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QFileDialog( 1 )->nameFilters() ) ) );
 }
 
 /*
@@ -319,7 +319,7 @@ HB_FUNC( QT_QFILEDIALOG_RESTORESTATE )
  */
 HB_FUNC( QT_QFILEDIALOG_SAVESTATE )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QFileDialog( 1 )->saveState() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QFileDialog( 1 )->saveState() ) ) );
 }
 
 /*
@@ -343,7 +343,7 @@ HB_FUNC( QT_QFILEDIALOG_SELECTNAMEFILTER )
  */
 HB_FUNC( QT_QFILEDIALOG_SELECTEDFILES )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QFileDialog( 1 )->selectedFiles() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QFileDialog( 1 )->selectedFiles() ) ) );
 }
 
 /*

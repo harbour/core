@@ -121,9 +121,9 @@ QT_G_FUNC( release_QTimeEdit )
    }
 }
 
-void * gcAllocate_QTimeEdit( void * pObj )
+void * hbqt_gcAllocate_QTimeEdit( void * pObj )
 {
-   QGC_POINTER_QTimeEdit * p = ( QGC_POINTER_QTimeEdit * ) hb_gcAllocate( sizeof( QGC_POINTER_QTimeEdit ), gcFuncs() );
+   QGC_POINTER_QTimeEdit * p = ( QGC_POINTER_QTimeEdit * ) hb_gcAllocate( sizeof( QGC_POINTER_QTimeEdit ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTimeEdit;
@@ -141,7 +141,7 @@ HB_FUNC( QT_QTIMEEDIT )
    pObj = (QTimeEdit *) new QTimeEdit( QTime( hbqt_par_QString( 1 ) ), hbqt_par_QWidget( 2 ) ) ;
    #endif
 
-   hb_retptrGC( gcAllocate_QTimeEdit( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTimeEdit( pObj ) );
 }
 
 /*----------------------------------------------------------------------*/

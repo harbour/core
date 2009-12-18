@@ -98,9 +98,9 @@ QT_G_FUNC( release_QTextDocumentFragment )
    }
 }
 
-void * gcAllocate_QTextDocumentFragment( void * pObj )
+void * hbqt_gcAllocate_QTextDocumentFragment( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTextDocumentFragment;
@@ -114,7 +114,7 @@ HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT )
 
    pObj = ( QTextDocumentFragment* ) new QTextDocumentFragment() ;
 
-   hb_retptrGC( gcAllocate_QTextDocumentFragment( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextDocumentFragment( pObj ) );
 }
 /*
  * bool isEmpty () const
@@ -153,7 +153,7 @@ HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_TOPLAINTEXT )
  */
 HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMHTML )
 {
-   hb_retptrGC( gcAllocate_QTextDocumentFragment( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromHtml( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextDocumentFragment( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromHtml( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -161,7 +161,7 @@ HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMHTML )
  */
 HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMHTML_1 )
 {
-   hb_retptrGC( gcAllocate_QTextDocumentFragment( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromHtml( hbqt_par_QString( 2 ), hbqt_par_QTextDocument( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextDocumentFragment( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromHtml( hbqt_par_QString( 2 ), hbqt_par_QTextDocument( 3 ) ) ) ) );
 }
 
 /*
@@ -169,7 +169,7 @@ HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMHTML_1 )
  */
 HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMPLAINTEXT )
 {
-   hb_retptrGC( gcAllocate_QTextDocumentFragment( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromPlainText( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextDocumentFragment( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromPlainText( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 

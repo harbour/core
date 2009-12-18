@@ -98,9 +98,9 @@ QT_G_FUNC( release_QTextListFormat )
    }
 }
 
-void * gcAllocate_QTextListFormat( void * pObj )
+void * hbqt_gcAllocate_QTextListFormat( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTextListFormat;
@@ -114,7 +114,7 @@ HB_FUNC( QT_QTEXTLISTFORMAT )
 
    pObj = new QTextListFormat() ;
 
-   hb_retptrGC( gcAllocate_QTextListFormat( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextListFormat( pObj ) );
 }
 /*
  * int indent () const

@@ -120,9 +120,9 @@ QT_G_FUNC( release_QCommonStyle )
    }
 }
 
-void * gcAllocate_QCommonStyle( void * pObj )
+void * hbqt_gcAllocate_QCommonStyle( void * pObj )
 {
-   QGC_POINTER_QCommonStyle * p = ( QGC_POINTER_QCommonStyle * ) hb_gcAllocate( sizeof( QGC_POINTER_QCommonStyle ), gcFuncs() );
+   QGC_POINTER_QCommonStyle * p = ( QGC_POINTER_QCommonStyle * ) hb_gcAllocate( sizeof( QGC_POINTER_QCommonStyle ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QCommonStyle;
@@ -137,7 +137,7 @@ HB_FUNC( QT_QCOMMONSTYLE )
 
    pObj = ( QCommonStyle* ) new QCommonStyle() ;
 
-   hb_retptrGC( gcAllocate_QCommonStyle( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QCommonStyle( pObj ) );
 }
 
 /*----------------------------------------------------------------------*/

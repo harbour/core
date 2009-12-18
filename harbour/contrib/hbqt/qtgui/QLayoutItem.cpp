@@ -113,7 +113,7 @@ HB_FUNC( QT_QLAYOUTITEM_EXPANDINGDIRECTIONS )
  */
 HB_FUNC( QT_QLAYOUTITEM_GEOMETRY )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QLayoutItem( 1 )->geometry() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QLayoutItem( 1 )->geometry() ) ) );
 }
 
 /*
@@ -161,7 +161,7 @@ HB_FUNC( QT_QLAYOUTITEM_LAYOUT )
  */
 HB_FUNC( QT_QLAYOUTITEM_MAXIMUMSIZE )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QLayoutItem( 1 )->maximumSize() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QLayoutItem( 1 )->maximumSize() ) ) );
 }
 
 /*
@@ -177,7 +177,7 @@ HB_FUNC( QT_QLAYOUTITEM_MINIMUMHEIGHTFORWIDTH )
  */
 HB_FUNC( QT_QLAYOUTITEM_MINIMUMSIZE )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QLayoutItem( 1 )->minimumSize() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QLayoutItem( 1 )->minimumSize() ) ) );
 }
 
 /*
@@ -201,7 +201,7 @@ HB_FUNC( QT_QLAYOUTITEM_SETGEOMETRY )
  */
 HB_FUNC( QT_QLAYOUTITEM_SIZEHINT )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QLayoutItem( 1 )->sizeHint() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QLayoutItem( 1 )->sizeHint() ) ) );
 }
 
 /*

@@ -95,9 +95,9 @@ QT_G_FUNC( release_QInputEvent )
    }
 }
 
-void * gcAllocate_QInputEvent( void * pObj )
+void * hbqt_gcAllocate_QInputEvent( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QInputEvent;
@@ -111,7 +111,7 @@ HB_FUNC( QT_QINPUTEVENT )
 
    pObj = ( QInputEvent* ) new QInputEvent( ( QEvent::Type ) hb_parni( 1 ), ( Qt::KeyboardModifiers ) hb_parni( 2 ) ) ;
 
-   hb_retptrGC( gcAllocate_QInputEvent( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QInputEvent( pObj ) );
 }
 /*
  * Qt::KeyboardModifiers modifiers () const

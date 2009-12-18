@@ -129,9 +129,9 @@ QT_G_FUNC( release_QMovie )
    }
 }
 
-void * gcAllocate_QMovie( void * pObj )
+void * hbqt_gcAllocate_QMovie( void * pObj )
 {
-   QGC_POINTER_QMovie * p = ( QGC_POINTER_QMovie * ) hb_gcAllocate( sizeof( QGC_POINTER_QMovie ), gcFuncs() );
+   QGC_POINTER_QMovie * p = ( QGC_POINTER_QMovie * ) hb_gcAllocate( sizeof( QGC_POINTER_QMovie ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QMovie;
@@ -146,14 +146,14 @@ HB_FUNC( QT_QMOVIE )
 
    pObj = new QMovie() ;
 
-   hb_retptrGC( gcAllocate_QMovie( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QMovie( pObj ) );
 }
 /*
  * QColor backgroundColor () const
  */
 HB_FUNC( QT_QMOVIE_BACKGROUNDCOLOR )
 {
-   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QMovie( 1 )->backgroundColor() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QMovie( 1 )->backgroundColor() ) ) );
 }
 
 /*
@@ -177,7 +177,7 @@ HB_FUNC( QT_QMOVIE_CURRENTFRAMENUMBER )
  */
 HB_FUNC( QT_QMOVIE_CURRENTIMAGE )
 {
-   hb_retptrGC( gcAllocate_QImage( new QImage( hbqt_par_QMovie( 1 )->currentImage() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( hbqt_par_QMovie( 1 )->currentImage() ) ) );
 }
 
 /*
@@ -185,7 +185,7 @@ HB_FUNC( QT_QMOVIE_CURRENTIMAGE )
  */
 HB_FUNC( QT_QMOVIE_CURRENTPIXMAP )
 {
-   hb_retptrGC( gcAllocate_QPixmap( new QPixmap( hbqt_par_QMovie( 1 )->currentPixmap() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QMovie( 1 )->currentPixmap() ) ) );
 }
 
 /*
@@ -209,7 +209,7 @@ HB_FUNC( QT_QMOVIE_FILENAME )
  */
 HB_FUNC( QT_QMOVIE_FORMAT )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QMovie( 1 )->format() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QMovie( 1 )->format() ) ) );
 }
 
 /*
@@ -225,7 +225,7 @@ HB_FUNC( QT_QMOVIE_FRAMECOUNT )
  */
 HB_FUNC( QT_QMOVIE_FRAMERECT )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QMovie( 1 )->frameRect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QMovie( 1 )->frameRect() ) ) );
 }
 
 /*
@@ -265,7 +265,7 @@ HB_FUNC( QT_QMOVIE_NEXTFRAMEDELAY )
  */
 HB_FUNC( QT_QMOVIE_SCALEDSIZE )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QMovie( 1 )->scaledSize() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QMovie( 1 )->scaledSize() ) ) );
 }
 
 /*

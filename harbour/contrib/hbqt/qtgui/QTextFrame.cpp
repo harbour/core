@@ -136,9 +136,9 @@ QT_G_FUNC( release_QTextFrame )
    }
 }
 
-void * gcAllocate_QTextFrame( void * pObj )
+void * hbqt_gcAllocate_QTextFrame( void * pObj )
 {
-   QGC_POINTER_QTextFrame * p = ( QGC_POINTER_QTextFrame * ) hb_gcAllocate( sizeof( QGC_POINTER_QTextFrame ), gcFuncs() );
+   QGC_POINTER_QTextFrame * p = ( QGC_POINTER_QTextFrame * ) hb_gcAllocate( sizeof( QGC_POINTER_QTextFrame ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTextFrame;
@@ -153,14 +153,14 @@ HB_FUNC( QT_QTEXTFRAME )
 
    pObj = ( QTextFrame* ) new QTextFrame( hbqt_par_QTextDocument( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QTextFrame( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextFrame( pObj ) );
 }
 /*
  * QTextCursor firstCursorPosition () const
  */
 HB_FUNC( QT_QTEXTFRAME_FIRSTCURSORPOSITION )
 {
-   hb_retptrGC( gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextFrame( 1 )->firstCursorPosition() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextFrame( 1 )->firstCursorPosition() ) ) );
 }
 
 /*
@@ -176,7 +176,7 @@ HB_FUNC( QT_QTEXTFRAME_FIRSTPOSITION )
  */
 HB_FUNC( QT_QTEXTFRAME_FRAMEFORMAT )
 {
-   hb_retptrGC( gcAllocate_QTextFrameFormat( new QTextFrameFormat( hbqt_par_QTextFrame( 1 )->frameFormat() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextFrameFormat( new QTextFrameFormat( hbqt_par_QTextFrame( 1 )->frameFormat() ) ) );
 }
 
 /*
@@ -184,7 +184,7 @@ HB_FUNC( QT_QTEXTFRAME_FRAMEFORMAT )
  */
 HB_FUNC( QT_QTEXTFRAME_LASTCURSORPOSITION )
 {
-   hb_retptrGC( gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextFrame( 1 )->lastCursorPosition() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextFrame( 1 )->lastCursorPosition() ) ) );
 }
 
 /*

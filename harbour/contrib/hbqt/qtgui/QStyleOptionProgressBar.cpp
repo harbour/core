@@ -101,9 +101,9 @@ QT_G_FUNC( release_QStyleOptionProgressBar )
    }
 }
 
-void * gcAllocate_QStyleOptionProgressBar( void * pObj )
+void * hbqt_gcAllocate_QStyleOptionProgressBar( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStyleOptionProgressBar;
@@ -117,7 +117,7 @@ HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR )
 
    pObj = ( QStyleOptionProgressBar* ) new QStyleOptionProgressBar() ;
 
-   hb_retptrGC( gcAllocate_QStyleOptionProgressBar( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionProgressBar( pObj ) );
 }
 /*
  * int maximum

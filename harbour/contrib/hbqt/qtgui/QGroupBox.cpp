@@ -122,9 +122,9 @@ QT_G_FUNC( release_QGroupBox )
    }
 }
 
-void * gcAllocate_QGroupBox( void * pObj )
+void * hbqt_gcAllocate_QGroupBox( void * pObj )
 {
-   QGC_POINTER_QGroupBox * p = ( QGC_POINTER_QGroupBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QGroupBox ), gcFuncs() );
+   QGC_POINTER_QGroupBox * p = ( QGC_POINTER_QGroupBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QGroupBox ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QGroupBox;
@@ -139,7 +139,7 @@ HB_FUNC( QT_QGROUPBOX )
 
    pObj = ( QGroupBox * ) new QGroupBox( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QGroupBox( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QGroupBox( pObj ) );
 }
 /*
  * Qt::Alignment alignment () const

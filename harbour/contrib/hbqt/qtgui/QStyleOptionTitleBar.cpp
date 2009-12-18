@@ -100,9 +100,9 @@ QT_G_FUNC( release_QStyleOptionTitleBar )
    }
 }
 
-void * gcAllocate_QStyleOptionTitleBar( void * pObj )
+void * hbqt_gcAllocate_QStyleOptionTitleBar( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStyleOptionTitleBar;
@@ -116,14 +116,14 @@ HB_FUNC( QT_QSTYLEOPTIONTITLEBAR )
 
    pObj = ( QStyleOptionTitleBar* ) new QStyleOptionTitleBar() ;
 
-   hb_retptrGC( gcAllocate_QStyleOptionTitleBar( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionTitleBar( pObj ) );
 }
 /*
  * QIcon icon
  */
 HB_FUNC( QT_QSTYLEOPTIONTITLEBAR_ICON )
 {
-   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QStyleOptionTitleBar( 1 )->icon ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QStyleOptionTitleBar( 1 )->icon ) ) );
 }
 
 /*

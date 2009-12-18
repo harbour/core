@@ -100,9 +100,9 @@ QT_G_FUNC( release_QTextCharFormat )
    }
 }
 
-void * gcAllocate_QTextCharFormat( void * pObj )
+void * hbqt_gcAllocate_QTextCharFormat( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTextCharFormat;
@@ -116,7 +116,7 @@ HB_FUNC( QT_QTEXTCHARFORMAT )
 
    pObj = ( QTextCharFormat* ) new QTextCharFormat() ;
 
-   hb_retptrGC( gcAllocate_QTextCharFormat( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( pObj ) );
 }
 /*
  * QString anchorHref () const
@@ -131,7 +131,7 @@ HB_FUNC( QT_QTEXTCHARFORMAT_ANCHORHREF )
  */
 HB_FUNC( QT_QTEXTCHARFORMAT_ANCHORNAMES )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QTextCharFormat( 1 )->anchorNames() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QTextCharFormat( 1 )->anchorNames() ) ) );
 }
 
 /*
@@ -139,7 +139,7 @@ HB_FUNC( QT_QTEXTCHARFORMAT_ANCHORNAMES )
  */
 HB_FUNC( QT_QTEXTCHARFORMAT_FONT )
 {
-   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QTextCharFormat( 1 )->font() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QTextCharFormat( 1 )->font() ) ) );
 }
 
 /*
@@ -459,7 +459,7 @@ HB_FUNC( QT_QTEXTCHARFORMAT_SETVERTICALALIGNMENT )
  */
 HB_FUNC( QT_QTEXTCHARFORMAT_TEXTOUTLINE )
 {
-   hb_retptrGC( gcAllocate_QPen( new QPen( hbqt_par_QTextCharFormat( 1 )->textOutline() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPen( new QPen( hbqt_par_QTextCharFormat( 1 )->textOutline() ) ) );
 }
 
 /*
@@ -475,7 +475,7 @@ HB_FUNC( QT_QTEXTCHARFORMAT_TOOLTIP )
  */
 HB_FUNC( QT_QTEXTCHARFORMAT_UNDERLINECOLOR )
 {
-   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QTextCharFormat( 1 )->underlineColor() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QTextCharFormat( 1 )->underlineColor() ) ) );
 }
 
 /*

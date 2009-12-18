@@ -141,9 +141,9 @@ QT_G_FUNC( release_QWizard )
    }
 }
 
-void * gcAllocate_QWizard( void * pObj )
+void * hbqt_gcAllocate_QWizard( void * pObj )
 {
-   QGC_POINTER_QWizard * p = ( QGC_POINTER_QWizard * ) hb_gcAllocate( sizeof( QGC_POINTER_QWizard ), gcFuncs() );
+   QGC_POINTER_QWizard * p = ( QGC_POINTER_QWizard * ) hb_gcAllocate( sizeof( QGC_POINTER_QWizard ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QWizard;
@@ -158,7 +158,7 @@ HB_FUNC( QT_QWIZARD )
 
    pObj = new QWizard( hbqt_par_QWidget( 2 ) ) ;
 
-   hb_retptrGC( gcAllocate_QWizard( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QWizard( pObj ) );
 }
 /*
  * int addPage ( QWizardPage * page )
@@ -205,7 +205,7 @@ HB_FUNC( QT_QWIZARD_CURRENTPAGE )
  */
 HB_FUNC( QT_QWIZARD_FIELD )
 {
-   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QWizard( 1 )->field( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QWizard( 1 )->field( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -245,7 +245,7 @@ HB_FUNC( QT_QWIZARD_PAGE )
  */
 HB_FUNC( QT_QWIZARD_PIXMAP )
 {
-   hb_retptrGC( gcAllocate_QPixmap( new QPixmap( hbqt_par_QWizard( 1 )->pixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QWizard( 1 )->pixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ) ) ) ) );
 }
 
 /*

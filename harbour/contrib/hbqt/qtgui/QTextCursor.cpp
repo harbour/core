@@ -106,9 +106,9 @@ QT_G_FUNC( release_QTextCursor )
    }
 }
 
-void * gcAllocate_QTextCursor( void * pObj )
+void * hbqt_gcAllocate_QTextCursor( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTextCursor;
@@ -150,7 +150,7 @@ HB_FUNC( QT_QTEXTCURSOR )
       pObj = ( QTextCursor* ) new QTextCursor() ;
    }
 
-   hb_retptrGC( gcAllocate_QTextCursor( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextCursor( pObj ) );
 }
 /*
  * int anchor () const
@@ -205,7 +205,7 @@ HB_FUNC( QT_QTEXTCURSOR_BEGINEDITBLOCK )
  */
 HB_FUNC( QT_QTEXTCURSOR_BLOCKCHARFORMAT )
 {
-   hb_retptrGC( gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QTextCursor( 1 )->blockCharFormat() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QTextCursor( 1 )->blockCharFormat() ) ) );
 }
 
 /*
@@ -213,7 +213,7 @@ HB_FUNC( QT_QTEXTCURSOR_BLOCKCHARFORMAT )
  */
 HB_FUNC( QT_QTEXTCURSOR_BLOCKFORMAT )
 {
-   hb_retptrGC( gcAllocate_QTextBlockFormat( new QTextBlockFormat( hbqt_par_QTextCursor( 1 )->blockFormat() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextBlockFormat( new QTextBlockFormat( hbqt_par_QTextCursor( 1 )->blockFormat() ) ) );
 }
 
 /*
@@ -229,7 +229,7 @@ HB_FUNC( QT_QTEXTCURSOR_BLOCKNUMBER )
  */
 HB_FUNC( QT_QTEXTCURSOR_CHARFORMAT )
 {
-   hb_retptrGC( gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QTextCursor( 1 )->charFormat() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QTextCursor( 1 )->charFormat() ) ) );
 }
 
 /*
@@ -575,7 +575,7 @@ HB_FUNC( QT_QTEXTCURSOR_SELECTEDTEXT )
  */
 HB_FUNC( QT_QTEXTCURSOR_SELECTION )
 {
-   hb_retptrGC( gcAllocate_QTextDocumentFragment( new QTextDocumentFragment( hbqt_par_QTextCursor( 1 )->selection() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextDocumentFragment( new QTextDocumentFragment( hbqt_par_QTextCursor( 1 )->selection() ) ) );
 }
 
 /*

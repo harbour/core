@@ -127,9 +127,9 @@ QT_G_FUNC( release_QFrame )
    }
 }
 
-void * gcAllocate_QFrame( void * pObj )
+void * hbqt_gcAllocate_QFrame( void * pObj )
 {
-   QGC_POINTER_QFrame * p = ( QGC_POINTER_QFrame * ) hb_gcAllocate( sizeof( QGC_POINTER_QFrame ), gcFuncs() );
+   QGC_POINTER_QFrame * p = ( QGC_POINTER_QFrame * ) hb_gcAllocate( sizeof( QGC_POINTER_QFrame ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QFrame;
@@ -144,14 +144,14 @@ HB_FUNC( QT_QFRAME )
 
    pObj = new QFrame( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
-   hb_retptrGC( gcAllocate_QFrame( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QFrame( pObj ) );
 }
 /*
  * QRect frameRect () const
  */
 HB_FUNC( QT_QFRAME_FRAMERECT )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QFrame( 1 )->frameRect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QFrame( 1 )->frameRect() ) ) );
 }
 
 /*

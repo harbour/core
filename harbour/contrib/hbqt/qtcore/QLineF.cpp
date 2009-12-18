@@ -100,9 +100,9 @@ QT_G_FUNC( release_QLineF )
    }
 }
 
-void * gcAllocate_QLineF( void * pObj )
+void * hbqt_gcAllocate_QLineF( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QLineF;
@@ -116,14 +116,14 @@ HB_FUNC( QT_QLINEF )
 
    pObj = new QLineF() ;
 
-   hb_retptrGC( gcAllocate_QLineF( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QLineF( pObj ) );
 }
 /*
  * QPointF p1 () const
  */
 HB_FUNC( QT_QLINEF_P1 )
 {
-   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QLineF( 1 )->p1() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QLineF( 1 )->p1() ) ) );
 }
 
 /*
@@ -131,7 +131,7 @@ HB_FUNC( QT_QLINEF_P1 )
  */
 HB_FUNC( QT_QLINEF_P2 )
 {
-   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QLineF( 1 )->p2() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QLineF( 1 )->p2() ) ) );
 }
 
 /*
@@ -227,7 +227,7 @@ HB_FUNC( QT_QLINEF_LENGTH )
  */
 HB_FUNC( QT_QLINEF_NORMALVECTOR )
 {
-   hb_retptrGC( gcAllocate_QLineF( new QLineF( hbqt_par_QLineF( 1 )->normalVector() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QLineF( new QLineF( hbqt_par_QLineF( 1 )->normalVector() ) ) );
 }
 
 /*
@@ -235,7 +235,7 @@ HB_FUNC( QT_QLINEF_NORMALVECTOR )
  */
 HB_FUNC( QT_QLINEF_POINTAT )
 {
-   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QLineF( 1 )->pointAt( hb_parnd( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QLineF( 1 )->pointAt( hb_parnd( 2 ) ) ) ) );
 }
 
 /*
@@ -291,7 +291,7 @@ HB_FUNC( QT_QLINEF_SETPOINTS )
  */
 HB_FUNC( QT_QLINEF_TOLINE )
 {
-   hb_retptrGC( gcAllocate_QLine( new QLine( hbqt_par_QLineF( 1 )->toLine() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QLine( new QLine( hbqt_par_QLineF( 1 )->toLine() ) ) );
 }
 
 /*
@@ -315,7 +315,7 @@ HB_FUNC( QT_QLINEF_TRANSLATE_1 )
  */
 HB_FUNC( QT_QLINEF_TRANSLATED )
 {
-   hb_retptrGC( gcAllocate_QLineF( new QLineF( hbqt_par_QLineF( 1 )->translated( *hbqt_par_QPointF( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QLineF( new QLineF( hbqt_par_QLineF( 1 )->translated( *hbqt_par_QPointF( 2 ) ) ) ) );
 }
 
 /*
@@ -323,7 +323,7 @@ HB_FUNC( QT_QLINEF_TRANSLATED )
  */
 HB_FUNC( QT_QLINEF_TRANSLATED_1 )
 {
-   hb_retptrGC( gcAllocate_QLineF( new QLineF( hbqt_par_QLineF( 1 )->translated( hb_parnd( 2 ), hb_parnd( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QLineF( new QLineF( hbqt_par_QLineF( 1 )->translated( hb_parnd( 2 ), hb_parnd( 3 ) ) ) ) );
 }
 
 /*
@@ -331,7 +331,7 @@ HB_FUNC( QT_QLINEF_TRANSLATED_1 )
  */
 HB_FUNC( QT_QLINEF_UNITVECTOR )
 {
-   hb_retptrGC( gcAllocate_QLineF( new QLineF( hbqt_par_QLineF( 1 )->unitVector() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QLineF( new QLineF( hbqt_par_QLineF( 1 )->unitVector() ) ) );
 }
 
 

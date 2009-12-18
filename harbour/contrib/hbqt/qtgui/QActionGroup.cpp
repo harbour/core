@@ -129,9 +129,9 @@ QT_G_FUNC( release_QActionGroup )
    }
 }
 
-void * gcAllocate_QActionGroup( void * pObj )
+void * hbqt_gcAllocate_QActionGroup( void * pObj )
 {
-   QGC_POINTER_QActionGroup * p = ( QGC_POINTER_QActionGroup * ) hb_gcAllocate( sizeof( QGC_POINTER_QActionGroup ), gcFuncs() );
+   QGC_POINTER_QActionGroup * p = ( QGC_POINTER_QActionGroup * ) hb_gcAllocate( sizeof( QGC_POINTER_QActionGroup ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QActionGroup;
@@ -149,7 +149,7 @@ HB_FUNC( QT_QACTIONGROUP )
       pObj = new QActionGroup( hbqt_par_QObject( 1 ) ) ;
    }
 
-   hb_retptrGC( gcAllocate_QActionGroup( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QActionGroup( pObj ) );
 }
 /*
  * QAction * addAction ( QAction * action )

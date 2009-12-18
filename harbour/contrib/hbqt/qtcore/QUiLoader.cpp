@@ -122,9 +122,9 @@ QT_G_FUNC( release_QUiLoader )
    }
 }
 
-void * gcAllocate_QUiLoader( void * pObj )
+void * hbqt_gcAllocate_QUiLoader( void * pObj )
 {
-   QGC_POINTER_QUiLoader * p = ( QGC_POINTER_QUiLoader * ) hb_gcAllocate( sizeof( QGC_POINTER_QUiLoader ), gcFuncs() );
+   QGC_POINTER_QUiLoader * p = ( QGC_POINTER_QUiLoader * ) hb_gcAllocate( sizeof( QGC_POINTER_QUiLoader ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QUiLoader;
@@ -146,7 +146,7 @@ HB_FUNC( QT_QUILOADER )
       pObj = new QUiLoader() ;
    }
 
-   hb_retptrGC( gcAllocate_QUiLoader( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QUiLoader( pObj ) );
 }
 /*
  * void addPluginPath ( const QString & path )
@@ -161,7 +161,7 @@ HB_FUNC( QT_QUILOADER_ADDPLUGINPATH )
  */
 HB_FUNC( QT_QUILOADER_AVAILABLELAYOUTS )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QUiLoader( 1 )->availableLayouts() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QUiLoader( 1 )->availableLayouts() ) ) );
 }
 
 /*
@@ -169,7 +169,7 @@ HB_FUNC( QT_QUILOADER_AVAILABLELAYOUTS )
  */
 HB_FUNC( QT_QUILOADER_AVAILABLEWIDGETS )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QUiLoader( 1 )->availableWidgets() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QUiLoader( 1 )->availableWidgets() ) ) );
 }
 
 /*
@@ -233,7 +233,7 @@ HB_FUNC( QT_QUILOADER_LOAD )
  */
 HB_FUNC( QT_QUILOADER_PLUGINPATHS )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QUiLoader( 1 )->pluginPaths() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QUiLoader( 1 )->pluginPaths() ) ) );
 }
 
 /*
@@ -257,7 +257,7 @@ HB_FUNC( QT_QUILOADER_SETWORKINGDIRECTORY )
  */
 HB_FUNC( QT_QUILOADER_WORKINGDIRECTORY )
 {
-   hb_retptrGC( gcAllocate_QDir( new QDir( hbqt_par_QUiLoader( 1 )->workingDirectory() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QUiLoader( 1 )->workingDirectory() ) ) );
 }
 
 

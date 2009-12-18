@@ -101,9 +101,9 @@ QT_G_FUNC( release_QRegExp )
    }
 }
 
-void * gcAllocate_QRegExp( void * pObj )
+void * hbqt_gcAllocate_QRegExp( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QRegExp;
@@ -117,7 +117,7 @@ HB_FUNC( QT_QREGEXP )
 
    pObj = new QRegExp() ;
 
-   hb_retptrGC( gcAllocate_QRegExp( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QRegExp( pObj ) );
 }
 /*
  * QString cap ( int nth = 0 ) const
@@ -132,7 +132,7 @@ HB_FUNC( QT_QREGEXP_CAP )
  */
 HB_FUNC( QT_QREGEXP_CAPTUREDTEXTS )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QRegExp( 1 )->capturedTexts() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QRegExp( 1 )->capturedTexts() ) ) );
 }
 
 /*

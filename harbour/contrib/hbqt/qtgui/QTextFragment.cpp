@@ -95,9 +95,9 @@ QT_G_FUNC( release_QTextFragment )
    }
 }
 
-void * gcAllocate_QTextFragment( void * pObj )
+void * hbqt_gcAllocate_QTextFragment( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTextFragment;
@@ -111,14 +111,14 @@ HB_FUNC( QT_QTEXTFRAGMENT )
 
    pObj = ( QTextFragment* ) new QTextFragment() ;
 
-   hb_retptrGC( gcAllocate_QTextFragment( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextFragment( pObj ) );
 }
 /*
  * QTextCharFormat charFormat () const
  */
 HB_FUNC( QT_QTEXTFRAGMENT_CHARFORMAT )
 {
-   hb_retptrGC( gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QTextFragment( 1 )->charFormat() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QTextFragment( 1 )->charFormat() ) ) );
 }
 
 /*

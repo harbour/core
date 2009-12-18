@@ -116,9 +116,9 @@ QT_G_FUNC( release_QTextOption )
    }
 }
 
-void * gcAllocate_QTextOption( void * pObj )
+void * hbqt_gcAllocate_QTextOption( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTextOption;
@@ -132,7 +132,7 @@ HB_FUNC( QT_QTEXTOPTION )
 
    pObj = new QTextOption() ;
 
-   hb_retptrGC( gcAllocate_QTextOption( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextOption( pObj ) );
 }
 /*
  * Qt::Alignment alignment () const

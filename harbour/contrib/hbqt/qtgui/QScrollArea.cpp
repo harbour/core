@@ -121,9 +121,9 @@ QT_G_FUNC( release_QScrollArea )
    }
 }
 
-void * gcAllocate_QScrollArea( void * pObj )
+void * hbqt_gcAllocate_QScrollArea( void * pObj )
 {
-   QGC_POINTER_QScrollArea * p = ( QGC_POINTER_QScrollArea * ) hb_gcAllocate( sizeof( QGC_POINTER_QScrollArea ), gcFuncs() );
+   QGC_POINTER_QScrollArea * p = ( QGC_POINTER_QScrollArea * ) hb_gcAllocate( sizeof( QGC_POINTER_QScrollArea ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QScrollArea;
@@ -138,7 +138,7 @@ HB_FUNC( QT_QSCROLLAREA )
 
    pObj = ( QScrollArea* ) new QScrollArea( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QScrollArea( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QScrollArea( pObj ) );
 }
 /*
  * Qt::Alignment alignment () const

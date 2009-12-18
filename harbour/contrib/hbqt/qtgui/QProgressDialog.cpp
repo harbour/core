@@ -122,9 +122,9 @@ QT_G_FUNC( release_QProgressDialog )
    }
 }
 
-void * gcAllocate_QProgressDialog( void * pObj )
+void * hbqt_gcAllocate_QProgressDialog( void * pObj )
 {
-   QGC_POINTER_QProgressDialog * p = ( QGC_POINTER_QProgressDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QProgressDialog ), gcFuncs() );
+   QGC_POINTER_QProgressDialog * p = ( QGC_POINTER_QProgressDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QProgressDialog ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QProgressDialog;
@@ -139,7 +139,7 @@ HB_FUNC( QT_QPROGRESSDIALOG )
 
    pObj = new QProgressDialog( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QProgressDialog( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QProgressDialog( pObj ) );
 }
 /*
  * bool autoClose () const
@@ -242,7 +242,7 @@ HB_FUNC( QT_QPROGRESSDIALOG_SETLABEL )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_SIZEHINT )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QProgressDialog( 1 )->sizeHint() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QProgressDialog( 1 )->sizeHint() ) ) );
 }
 
 /*

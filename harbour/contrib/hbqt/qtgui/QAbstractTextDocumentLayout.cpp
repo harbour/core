@@ -96,7 +96,7 @@ HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_ANCHORAT )
  */
 HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_BLOCKBOUNDINGRECT )
 {
-   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QAbstractTextDocumentLayout( 1 )->blockBoundingRect( *hbqt_par_QTextBlock( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QAbstractTextDocumentLayout( 1 )->blockBoundingRect( *hbqt_par_QTextBlock( 2 ) ) ) ) );
 }
 
 /*
@@ -112,7 +112,7 @@ HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_DOCUMENT )
  */
 HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_DOCUMENTSIZE )
 {
-   hb_retptrGC( gcAllocate_QSizeF( new QSizeF( hbqt_par_QAbstractTextDocumentLayout( 1 )->documentSize() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( hbqt_par_QAbstractTextDocumentLayout( 1 )->documentSize() ) ) );
 }
 
 /*
@@ -120,7 +120,7 @@ HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_DOCUMENTSIZE )
  */
 HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT_FRAMEBOUNDINGRECT )
 {
-   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QAbstractTextDocumentLayout( 1 )->frameBoundingRect( hbqt_par_QTextFrame( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QAbstractTextDocumentLayout( 1 )->frameBoundingRect( hbqt_par_QTextFrame( 2 ) ) ) ) );
 }
 
 /*

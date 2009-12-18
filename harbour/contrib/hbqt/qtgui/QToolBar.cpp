@@ -122,9 +122,9 @@ QT_G_FUNC( release_QToolBar )
    }
 }
 
-void * gcAllocate_QToolBar( void * pObj )
+void * hbqt_gcAllocate_QToolBar( void * pObj )
 {
-   QGC_POINTER_QToolBar * p = ( QGC_POINTER_QToolBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QToolBar ), gcFuncs() );
+   QGC_POINTER_QToolBar * p = ( QGC_POINTER_QToolBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QToolBar ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QToolBar;
@@ -142,7 +142,7 @@ HB_FUNC( QT_QTOOLBAR )
    else
       pObj = ( QToolBar* ) new QToolBar( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QToolBar( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QToolBar( pObj ) );
 }
 /*
  * QAction * actionAt ( const QPoint & p ) const
@@ -237,7 +237,7 @@ HB_FUNC( QT_QTOOLBAR_CLEAR )
  */
 HB_FUNC( QT_QTOOLBAR_ICONSIZE )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QToolBar( 1 )->iconSize() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QToolBar( 1 )->iconSize() ) ) );
 }
 
 /*

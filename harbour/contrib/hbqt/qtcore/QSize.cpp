@@ -96,9 +96,9 @@ QT_G_FUNC( release_QSize )
    }
 }
 
-void * gcAllocate_QSize( void * pObj )
+void * hbqt_gcAllocate_QSize( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QSize;
@@ -123,7 +123,7 @@ HB_FUNC( QT_QSIZE )
       pObj = ( QSize* ) new QSize() ;
    }
 
-   hb_retptrGC( gcAllocate_QSize( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( pObj ) );
 }
 /*
  * int height () const
@@ -226,7 +226,7 @@ HB_FUNC( QT_QSIZE_WIDTH )
  */
 HB_FUNC( QT_QSIZE_BOUNDEDTO )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QSize( 1 )->boundedTo( *hbqt_par_QSize( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QSize( 1 )->boundedTo( *hbqt_par_QSize( 2 ) ) ) ) );
 }
 
 /*
@@ -234,7 +234,7 @@ HB_FUNC( QT_QSIZE_BOUNDEDTO )
  */
 HB_FUNC( QT_QSIZE_EXPANDEDTO )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QSize( 1 )->expandedTo( *hbqt_par_QSize( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QSize( 1 )->expandedTo( *hbqt_par_QSize( 2 ) ) ) ) );
 }
 
 

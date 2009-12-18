@@ -121,9 +121,9 @@ QT_G_FUNC( release_QTimer )
    }
 }
 
-void * gcAllocate_QTimer( void * pObj )
+void * hbqt_gcAllocate_QTimer( void * pObj )
 {
-   QGC_POINTER_QTimer * p = ( QGC_POINTER_QTimer * ) hb_gcAllocate( sizeof( QGC_POINTER_QTimer ), gcFuncs() );
+   QGC_POINTER_QTimer * p = ( QGC_POINTER_QTimer * ) hb_gcAllocate( sizeof( QGC_POINTER_QTimer ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTimer;
@@ -138,7 +138,7 @@ HB_FUNC( QT_QTIMER )
 
    pObj = new QTimer( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QTimer( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTimer( pObj ) );
 }
 /*
  * int interval () const

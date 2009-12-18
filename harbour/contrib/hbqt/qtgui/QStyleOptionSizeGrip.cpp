@@ -100,9 +100,9 @@ QT_G_FUNC( release_QStyleOptionSizeGrip )
    }
 }
 
-void * gcAllocate_QStyleOptionSizeGrip( void * pObj )
+void * hbqt_gcAllocate_QStyleOptionSizeGrip( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStyleOptionSizeGrip;
@@ -116,7 +116,7 @@ HB_FUNC( QT_QSTYLEOPTIONSIZEGRIP )
 
    pObj = ( QStyleOptionSizeGrip* ) new QStyleOptionSizeGrip() ;
 
-   hb_retptrGC( gcAllocate_QStyleOptionSizeGrip( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionSizeGrip( pObj ) );
 }
 /*
  * Qt::Corner corner

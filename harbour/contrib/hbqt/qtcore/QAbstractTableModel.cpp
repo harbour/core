@@ -89,7 +89,7 @@ HB_FUNC( QT_QABSTRACTTABLEMODEL )
  */
 HB_FUNC( QT_QABSTRACTTABLEMODEL_INDEX )
 {
-   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractTableModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractTableModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ) ) );
 }
 
 

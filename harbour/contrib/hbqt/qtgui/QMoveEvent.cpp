@@ -89,7 +89,7 @@ HB_FUNC( QT_QMOVEEVENT )
  */
 HB_FUNC( QT_QMOVEEVENT_OLDPOS )
 {
-   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QMoveEvent( 1 )->oldPos() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QMoveEvent( 1 )->oldPos() ) ) );
 }
 
 /*
@@ -97,7 +97,7 @@ HB_FUNC( QT_QMOVEEVENT_OLDPOS )
  */
 HB_FUNC( QT_QMOVEEVENT_POS )
 {
-   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QMoveEvent( 1 )->pos() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QMoveEvent( 1 )->pos() ) ) );
 }
 
 

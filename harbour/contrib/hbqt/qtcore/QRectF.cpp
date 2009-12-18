@@ -99,9 +99,9 @@ QT_G_FUNC( release_QRectF )
    }
 }
 
-void * gcAllocate_QRectF( void * pObj )
+void * hbqt_gcAllocate_QRectF( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QRectF;
@@ -130,7 +130,7 @@ HB_FUNC( QT_QRECTF )
       pObj = ( QRectF* ) new QRectF() ;
    }
 
-   hb_retptrGC( gcAllocate_QRectF( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( pObj ) );
 }
 /*
  * void adjust ( qreal dx1, qreal dy1, qreal dx2, qreal dy2 )
@@ -145,7 +145,7 @@ HB_FUNC( QT_QRECTF_ADJUST )
  */
 HB_FUNC( QT_QRECTF_ADJUSTED )
 {
-   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QRectF( 1 )->adjusted( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QRectF( 1 )->adjusted( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ) ) ) );
 }
 
 /*
@@ -161,7 +161,7 @@ HB_FUNC( QT_QRECTF_BOTTOM )
  */
 HB_FUNC( QT_QRECTF_BOTTOMLEFT )
 {
-   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QRectF( 1 )->bottomLeft() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QRectF( 1 )->bottomLeft() ) ) );
 }
 
 /*
@@ -169,7 +169,7 @@ HB_FUNC( QT_QRECTF_BOTTOMLEFT )
  */
 HB_FUNC( QT_QRECTF_BOTTOMRIGHT )
 {
-   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QRectF( 1 )->bottomRight() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QRectF( 1 )->bottomRight() ) ) );
 }
 
 /*
@@ -177,7 +177,7 @@ HB_FUNC( QT_QRECTF_BOTTOMRIGHT )
  */
 HB_FUNC( QT_QRECTF_CENTER )
 {
-   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QRectF( 1 )->center() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QRectF( 1 )->center() ) ) );
 }
 
 /*
@@ -253,7 +253,7 @@ HB_FUNC( QT_QRECTF_HEIGHT )
  */
 HB_FUNC( QT_QRECTF_INTERSECTED )
 {
-   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QRectF( 1 )->intersected( *hbqt_par_QRectF( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QRectF( 1 )->intersected( *hbqt_par_QRectF( 2 ) ) ) ) );
 }
 
 /*
@@ -389,7 +389,7 @@ HB_FUNC( QT_QRECTF_MOVETOPRIGHT )
  */
 HB_FUNC( QT_QRECTF_NORMALIZED )
 {
-   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QRectF( 1 )->normalized() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QRectF( 1 )->normalized() ) ) );
 }
 
 /*
@@ -525,7 +525,7 @@ HB_FUNC( QT_QRECTF_SETY )
  */
 HB_FUNC( QT_QRECTF_SIZE )
 {
-   hb_retptrGC( gcAllocate_QSizeF( new QSizeF( hbqt_par_QRectF( 1 )->size() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( hbqt_par_QRectF( 1 )->size() ) ) );
 }
 
 /*
@@ -533,7 +533,7 @@ HB_FUNC( QT_QRECTF_SIZE )
  */
 HB_FUNC( QT_QRECTF_TOALIGNEDRECT )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QRectF( 1 )->toAlignedRect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QRectF( 1 )->toAlignedRect() ) ) );
 }
 
 /*
@@ -541,7 +541,7 @@ HB_FUNC( QT_QRECTF_TOALIGNEDRECT )
  */
 HB_FUNC( QT_QRECTF_TORECT )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QRectF( 1 )->toRect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QRectF( 1 )->toRect() ) ) );
 }
 
 /*
@@ -557,7 +557,7 @@ HB_FUNC( QT_QRECTF_TOP )
  */
 HB_FUNC( QT_QRECTF_TOPLEFT )
 {
-   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QRectF( 1 )->topLeft() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QRectF( 1 )->topLeft() ) ) );
 }
 
 /*
@@ -565,7 +565,7 @@ HB_FUNC( QT_QRECTF_TOPLEFT )
  */
 HB_FUNC( QT_QRECTF_TOPRIGHT )
 {
-   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QRectF( 1 )->topRight() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QRectF( 1 )->topRight() ) ) );
 }
 
 /*
@@ -589,7 +589,7 @@ HB_FUNC( QT_QRECTF_TRANSLATE_1 )
  */
 HB_FUNC( QT_QRECTF_TRANSLATED )
 {
-   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QRectF( 1 )->translated( hb_parnd( 2 ), hb_parnd( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QRectF( 1 )->translated( hb_parnd( 2 ), hb_parnd( 3 ) ) ) ) );
 }
 
 /*
@@ -597,7 +597,7 @@ HB_FUNC( QT_QRECTF_TRANSLATED )
  */
 HB_FUNC( QT_QRECTF_TRANSLATED_1 )
 {
-   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QRectF( 1 )->translated( *hbqt_par_QPointF( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QRectF( 1 )->translated( *hbqt_par_QPointF( 2 ) ) ) ) );
 }
 
 /*
@@ -605,7 +605,7 @@ HB_FUNC( QT_QRECTF_TRANSLATED_1 )
  */
 HB_FUNC( QT_QRECTF_UNITED )
 {
-   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QRectF( 1 )->united( *hbqt_par_QRectF( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QRectF( 1 )->united( *hbqt_par_QRectF( 2 ) ) ) ) );
 }
 
 /*

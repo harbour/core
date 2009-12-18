@@ -122,9 +122,9 @@ QT_G_FUNC( release_QCommandLinkButton )
    }
 }
 
-void * gcAllocate_QCommandLinkButton( void * pObj )
+void * hbqt_gcAllocate_QCommandLinkButton( void * pObj )
 {
-   QGC_POINTER_QCommandLinkButton * p = ( QGC_POINTER_QCommandLinkButton * ) hb_gcAllocate( sizeof( QGC_POINTER_QCommandLinkButton ), gcFuncs() );
+   QGC_POINTER_QCommandLinkButton * p = ( QGC_POINTER_QCommandLinkButton * ) hb_gcAllocate( sizeof( QGC_POINTER_QCommandLinkButton ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QCommandLinkButton;
@@ -139,7 +139,7 @@ HB_FUNC( QT_QCOMMANDLINKBUTTON )
 
    pObj = ( QCommandLinkButton* ) new QCommandLinkButton( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QCommandLinkButton( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QCommandLinkButton( pObj ) );
 }
 /*
  * QString description () const

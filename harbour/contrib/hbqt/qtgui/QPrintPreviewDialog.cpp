@@ -122,9 +122,9 @@ QT_G_FUNC( release_QPrintPreviewDialog )
    }
 }
 
-void * gcAllocate_QPrintPreviewDialog( void * pObj )
+void * hbqt_gcAllocate_QPrintPreviewDialog( void * pObj )
 {
-   QGC_POINTER_QPrintPreviewDialog * p = ( QGC_POINTER_QPrintPreviewDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QPrintPreviewDialog ), gcFuncs() );
+   QGC_POINTER_QPrintPreviewDialog * p = ( QGC_POINTER_QPrintPreviewDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QPrintPreviewDialog ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QPrintPreviewDialog;
@@ -142,7 +142,7 @@ HB_FUNC( QT_QPRINTPREVIEWDIALOG )
    else
       pObj = new QPrintPreviewDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
-   hb_retptrGC( gcAllocate_QPrintPreviewDialog( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QPrintPreviewDialog( pObj ) );
 }
 /*
  * void open ( QObject * receiver, const char * member )

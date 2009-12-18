@@ -96,9 +96,9 @@ QT_G_FUNC( release_QFontInfo )
    }
 }
 
-void * gcAllocate_QFontInfo( void * pObj )
+void * hbqt_gcAllocate_QFontInfo( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QFontInfo;
@@ -119,7 +119,7 @@ HB_FUNC( QT_QFONTINFO )
       pObj = new QFontInfo( *hbqt_par_QFont( 2 ) ) ;
    }
 
-   hb_retptrGC( gcAllocate_QFontInfo( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QFontInfo( pObj ) );
 }
 /*
  * bool bold () const

@@ -110,9 +110,9 @@ QT_G_FUNC( release_QImageWriter )
    }
 }
 
-void * gcAllocate_QImageWriter( void * pObj )
+void * hbqt_gcAllocate_QImageWriter( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QImageWriter;
@@ -126,7 +126,7 @@ HB_FUNC( QT_QIMAGEWRITER )
 
    pObj = ( QImageWriter* ) new QImageWriter() ;
 
-   hb_retptrGC( gcAllocate_QImageWriter( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QImageWriter( pObj ) );
 }
 /*
  * bool canWrite () const
@@ -181,7 +181,7 @@ HB_FUNC( QT_QIMAGEWRITER_FILENAME )
  */
 HB_FUNC( QT_QIMAGEWRITER_FORMAT )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QImageWriter( 1 )->format() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QImageWriter( 1 )->format() ) ) );
 }
 
 /*

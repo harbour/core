@@ -125,9 +125,9 @@ QT_G_FUNC( release_QHeaderView )
    }
 }
 
-void * gcAllocate_QHeaderView( void * pObj )
+void * hbqt_gcAllocate_QHeaderView( void * pObj )
 {
-   QGC_POINTER_QHeaderView * p = ( QGC_POINTER_QHeaderView * ) hb_gcAllocate( sizeof( QGC_POINTER_QHeaderView ), gcFuncs() );
+   QGC_POINTER_QHeaderView * p = ( QGC_POINTER_QHeaderView * ) hb_gcAllocate( sizeof( QGC_POINTER_QHeaderView ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QHeaderView;
@@ -142,7 +142,7 @@ HB_FUNC( QT_QHEADERVIEW )
 
    pObj = new QHeaderView( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) ;
 
-   hb_retptrGC( gcAllocate_QHeaderView( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QHeaderView( pObj ) );
 }
 /*
  * bool cascadingSectionResizes () const
@@ -341,7 +341,7 @@ HB_FUNC( QT_QHEADERVIEW_RESTORESTATE )
  */
 HB_FUNC( QT_QHEADERVIEW_SAVESTATE )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QHeaderView( 1 )->saveState() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QHeaderView( 1 )->saveState() ) ) );
 }
 
 /*
@@ -509,7 +509,7 @@ HB_FUNC( QT_QHEADERVIEW_SHOWSECTION )
  */
 HB_FUNC( QT_QHEADERVIEW_SIZEHINT )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QHeaderView( 1 )->sizeHint() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QHeaderView( 1 )->sizeHint() ) ) );
 }
 
 /*

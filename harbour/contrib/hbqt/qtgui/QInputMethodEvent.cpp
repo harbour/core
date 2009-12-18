@@ -108,9 +108,9 @@ QT_G_FUNC( release_QInputMethodEvent )
    }
 }
 
-void * gcAllocate_QInputMethodEvent( void * pObj )
+void * hbqt_gcAllocate_QInputMethodEvent( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QInputMethodEvent;
@@ -124,7 +124,7 @@ HB_FUNC( QT_QINPUTMETHODEVENT )
 
    pObj = new QInputMethodEvent() ;
 
-   hb_retptrGC( gcAllocate_QInputMethodEvent( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QInputMethodEvent( pObj ) );
 }
 /*
  * const QString & commitString () const

@@ -115,9 +115,9 @@ QT_G_FUNC( release_QNetworkRequest )
    }
 }
 
-void * gcAllocate_QNetworkRequest( void * pObj )
+void * hbqt_gcAllocate_QNetworkRequest( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QNetworkRequest;
@@ -131,14 +131,14 @@ HB_FUNC( QT_QNETWORKREQUEST )
 
    pObj = new QNetworkRequest() ;
 
-   hb_retptrGC( gcAllocate_QNetworkRequest( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QNetworkRequest( pObj ) );
 }
 /*
  * QVariant attribute ( Attribute code, const QVariant & defaultValue = QVariant() ) const
  */
 HB_FUNC( QT_QNETWORKREQUEST_ATTRIBUTE )
 {
-   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QNetworkRequest( 1 )->attribute( ( QNetworkRequest::Attribute ) hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QVariant( 3 ) : QVariant() ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QNetworkRequest( 1 )->attribute( ( QNetworkRequest::Attribute ) hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QVariant( 3 ) : QVariant() ) ) ) ) );
 }
 
 /*
@@ -154,7 +154,7 @@ HB_FUNC( QT_QNETWORKREQUEST_HASRAWHEADER )
  */
 HB_FUNC( QT_QNETWORKREQUEST_HEADER )
 {
-   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QNetworkRequest( 1 )->header( ( QNetworkRequest::KnownHeaders ) hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QNetworkRequest( 1 )->header( ( QNetworkRequest::KnownHeaders ) hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -162,7 +162,7 @@ HB_FUNC( QT_QNETWORKREQUEST_HEADER )
  */
 HB_FUNC( QT_QNETWORKREQUEST_RAWHEADER )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QNetworkRequest( 1 )->rawHeader( *hbqt_par_QByteArray( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QNetworkRequest( 1 )->rawHeader( *hbqt_par_QByteArray( 2 ) ) ) ) );
 }
 
 /*
@@ -202,7 +202,7 @@ HB_FUNC( QT_QNETWORKREQUEST_SETURL )
  */
 HB_FUNC( QT_QNETWORKREQUEST_URL )
 {
-   hb_retptrGC( gcAllocate_QUrl( new QUrl( hbqt_par_QNetworkRequest( 1 )->url() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( hbqt_par_QNetworkRequest( 1 )->url() ) ) );
 }
 
 

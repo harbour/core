@@ -92,7 +92,7 @@ HB_FUNC( QT_QVALIDATOR )
  */
 HB_FUNC( QT_QVALIDATOR_LOCALE )
 {
-   hb_retptrGC( gcAllocate_QLocale( new QLocale( hbqt_par_QValidator( 1 )->locale() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( hbqt_par_QValidator( 1 )->locale() ) ) );
 }
 
 /*

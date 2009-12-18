@@ -102,9 +102,9 @@ QT_G_FUNC( release_QTableWidgetItem )
    }
 }
 
-void * gcAllocate_QTableWidgetItem( void * pObj )
+void * hbqt_gcAllocate_QTableWidgetItem( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTableWidgetItem;
@@ -133,14 +133,14 @@ HB_FUNC( QT_QTABLEWIDGETITEM )
       pObj = new QTableWidgetItem( 0 ) ;
    }
 
-   hb_retptrGC( gcAllocate_QTableWidgetItem( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( pObj ) );
 }
 /*
  * QBrush background () const
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_BACKGROUND )
 {
-   hb_retptrGC( gcAllocate_QBrush( new QBrush( hbqt_par_QTableWidgetItem( 1 )->background() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QTableWidgetItem( 1 )->background() ) ) );
 }
 
 /*
@@ -172,7 +172,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_COLUMN )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_DATA )
 {
-   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QTableWidgetItem( 1 )->data( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QTableWidgetItem( 1 )->data( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -188,7 +188,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_FLAGS )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_FONT )
 {
-   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QTableWidgetItem( 1 )->font() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QTableWidgetItem( 1 )->font() ) ) );
 }
 
 /*
@@ -196,7 +196,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_FONT )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_FOREGROUND )
 {
-   hb_retptrGC( gcAllocate_QBrush( new QBrush( hbqt_par_QTableWidgetItem( 1 )->foreground() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QTableWidgetItem( 1 )->foreground() ) ) );
 }
 
 /*
@@ -204,7 +204,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_FOREGROUND )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_ICON )
 {
-   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QTableWidgetItem( 1 )->icon() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QTableWidgetItem( 1 )->icon() ) ) );
 }
 
 /*
@@ -348,7 +348,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_SETWHATSTHIS )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_SIZEHINT )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QTableWidgetItem( 1 )->sizeHint() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QTableWidgetItem( 1 )->sizeHint() ) ) );
 }
 
 /*

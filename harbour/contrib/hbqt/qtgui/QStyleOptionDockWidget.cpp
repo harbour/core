@@ -100,9 +100,9 @@ QT_G_FUNC( release_QStyleOptionDockWidget )
    }
 }
 
-void * gcAllocate_QStyleOptionDockWidget( void * pObj )
+void * hbqt_gcAllocate_QStyleOptionDockWidget( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStyleOptionDockWidget;
@@ -116,7 +116,7 @@ HB_FUNC( QT_QSTYLEOPTIONDOCKWIDGET )
 
    pObj = ( QStyleOptionDockWidget* ) new QStyleOptionDockWidget() ;
 
-   hb_retptrGC( gcAllocate_QStyleOptionDockWidget( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionDockWidget( pObj ) );
 }
 /*
  * bool closable

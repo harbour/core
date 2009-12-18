@@ -115,9 +115,9 @@ QT_G_FUNC( release_QTextStream )
    }
 }
 
-void * gcAllocate_QTextStream( void * pObj )
+void * hbqt_gcAllocate_QTextStream( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTextStream;
@@ -131,7 +131,7 @@ HB_FUNC( QT_QTEXTSTREAM )
 
    pObj = new QTextStream( hb_parcx( 1 ), ( QIODevice::OpenMode ) ( HB_ISNUM( 2 ) ?  hb_parni( 2 ) : QIODevice::ReadWrite ) ) ;
 
-   hb_retptrGC( gcAllocate_QTextStream( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextStream( pObj ) );
 }
 /*
  * bool atEnd () const
@@ -210,7 +210,7 @@ HB_FUNC( QT_QTEXTSTREAM_INTEGERBASE )
  */
 HB_FUNC( QT_QTEXTSTREAM_LOCALE )
 {
-   hb_retptrGC( gcAllocate_QLocale( new QLocale( hbqt_par_QTextStream( 1 )->locale() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( hbqt_par_QTextStream( 1 )->locale() ) ) );
 }
 
 /*

@@ -100,9 +100,9 @@ QT_G_FUNC( release_QStyleOptionTabBarBase )
    }
 }
 
-void * gcAllocate_QStyleOptionTabBarBase( void * pObj )
+void * hbqt_gcAllocate_QStyleOptionTabBarBase( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStyleOptionTabBarBase;
@@ -116,14 +116,14 @@ HB_FUNC( QT_QSTYLEOPTIONTABBARBASE )
 
    pObj = ( QStyleOptionTabBarBase* ) new QStyleOptionTabBarBase() ;
 
-   hb_retptrGC( gcAllocate_QStyleOptionTabBarBase( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionTabBarBase( pObj ) );
 }
 /*
  * QRect selectedTabRect
  */
 HB_FUNC( QT_QSTYLEOPTIONTABBARBASE_SELECTEDTABRECT )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QStyleOptionTabBarBase( 1 )->selectedTabRect ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QStyleOptionTabBarBase( 1 )->selectedTabRect ) ) );
 }
 
 /*
@@ -139,7 +139,7 @@ HB_FUNC( QT_QSTYLEOPTIONTABBARBASE_SHAPE )
  */
 HB_FUNC( QT_QSTYLEOPTIONTABBARBASE_TABBARRECT )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QStyleOptionTabBarBase( 1 )->tabBarRect ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QStyleOptionTabBarBase( 1 )->tabBarRect ) ) );
 }
 
 

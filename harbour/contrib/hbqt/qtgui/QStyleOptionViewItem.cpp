@@ -101,9 +101,9 @@ QT_G_FUNC( release_QStyleOptionViewItem )
    }
 }
 
-void * gcAllocate_QStyleOptionViewItem( void * pObj )
+void * hbqt_gcAllocate_QStyleOptionViewItem( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStyleOptionViewItem;
@@ -117,7 +117,7 @@ HB_FUNC( QT_QSTYLEOPTIONVIEWITEM )
 
    pObj = ( QStyleOptionViewItem* ) new QStyleOptionViewItem() ;
 
-   hb_retptrGC( gcAllocate_QStyleOptionViewItem( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionViewItem( pObj ) );
 }
 /*
  * Qt::Alignment decorationAlignment
@@ -140,7 +140,7 @@ HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_DECORATIONPOSITION )
  */
 HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_DECORATIONSIZE )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionViewItem( 1 )->decorationSize ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionViewItem( 1 )->decorationSize ) ) );
 }
 
 /*
@@ -156,7 +156,7 @@ HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_DISPLAYALIGNMENT )
  */
 HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_FONT )
 {
-   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QStyleOptionViewItem( 1 )->font ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QStyleOptionViewItem( 1 )->font ) ) );
 }
 
 /*

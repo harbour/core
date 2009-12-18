@@ -121,9 +121,9 @@ QT_G_FUNC( release_QSignalMapper )
    }
 }
 
-void * gcAllocate_QSignalMapper( void * pObj )
+void * hbqt_gcAllocate_QSignalMapper( void * pObj )
 {
-   QGC_POINTER_QSignalMapper * p = ( QGC_POINTER_QSignalMapper * ) hb_gcAllocate( sizeof( QGC_POINTER_QSignalMapper ), gcFuncs() );
+   QGC_POINTER_QSignalMapper * p = ( QGC_POINTER_QSignalMapper * ) hb_gcAllocate( sizeof( QGC_POINTER_QSignalMapper ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QSignalMapper;
@@ -138,7 +138,7 @@ HB_FUNC( QT_QSIGNALMAPPER )
 
    pObj = new QSignalMapper( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QSignalMapper( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QSignalMapper( pObj ) );
 }
 /*
  * QObject * mapping ( int id ) const

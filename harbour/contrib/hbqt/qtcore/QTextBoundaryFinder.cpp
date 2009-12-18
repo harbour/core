@@ -104,9 +104,9 @@ QT_G_FUNC( release_QTextBoundaryFinder )
    }
 }
 
-void * gcAllocate_QTextBoundaryFinder( void * pObj )
+void * hbqt_gcAllocate_QTextBoundaryFinder( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTextBoundaryFinder;
@@ -120,7 +120,7 @@ HB_FUNC( QT_QTEXTBOUNDARYFINDER )
 
    pObj = ( QTextBoundaryFinder* ) new QTextBoundaryFinder() ;
 
-   hb_retptrGC( gcAllocate_QTextBoundaryFinder( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextBoundaryFinder( pObj ) );
 }
 /*
  * BoundaryReasons boundaryReasons () const

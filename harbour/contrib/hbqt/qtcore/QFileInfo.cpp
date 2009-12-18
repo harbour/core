@@ -104,9 +104,9 @@ QT_G_FUNC( release_QFileInfo )
    }
 }
 
-void * gcAllocate_QFileInfo( void * pObj )
+void * hbqt_gcAllocate_QFileInfo( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QFileInfo;
@@ -120,14 +120,14 @@ HB_FUNC( QT_QFILEINFO )
 
    pObj = new QFileInfo() ;
 
-   hb_retptrGC( gcAllocate_QFileInfo( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QFileInfo( pObj ) );
 }
 /*
  * QDir absoluteDir () const
  */
 HB_FUNC( QT_QFILEINFO_ABSOLUTEDIR )
 {
-   hb_retptrGC( gcAllocate_QDir( new QDir( hbqt_par_QFileInfo( 1 )->absoluteDir() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QFileInfo( 1 )->absoluteDir() ) ) );
 }
 
 /*
@@ -207,7 +207,7 @@ HB_FUNC( QT_QFILEINFO_COMPLETESUFFIX )
  */
 HB_FUNC( QT_QFILEINFO_CREATED )
 {
-   hb_retptrGC( gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileInfo( 1 )->created() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileInfo( 1 )->created() ) ) );
 }
 
 /*
@@ -215,7 +215,7 @@ HB_FUNC( QT_QFILEINFO_CREATED )
  */
 HB_FUNC( QT_QFILEINFO_DIR )
 {
-   hb_retptrGC( gcAllocate_QDir( new QDir( hbqt_par_QFileInfo( 1 )->dir() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QFileInfo( 1 )->dir() ) ) );
 }
 
 /*
@@ -351,7 +351,7 @@ HB_FUNC( QT_QFILEINFO_ISWRITABLE )
  */
 HB_FUNC( QT_QFILEINFO_LASTMODIFIED )
 {
-   hb_retptrGC( gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileInfo( 1 )->lastModified() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileInfo( 1 )->lastModified() ) ) );
 }
 
 /*
@@ -359,7 +359,7 @@ HB_FUNC( QT_QFILEINFO_LASTMODIFIED )
  */
 HB_FUNC( QT_QFILEINFO_LASTREAD )
 {
-   hb_retptrGC( gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileInfo( 1 )->lastRead() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileInfo( 1 )->lastRead() ) ) );
 }
 
 /*

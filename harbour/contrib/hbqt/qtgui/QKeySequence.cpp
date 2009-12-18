@@ -114,9 +114,9 @@ QT_G_FUNC( release_QKeySequence )
    }
 }
 
-void * gcAllocate_QKeySequence( void * pObj )
+void * hbqt_gcAllocate_QKeySequence( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QKeySequence;
@@ -137,7 +137,7 @@ HB_FUNC( QT_QKEYSEQUENCE )
    else
       pObj = ( QKeySequence * ) new QKeySequence() ;
 
-   hb_retptrGC( gcAllocate_QKeySequence( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QKeySequence( pObj ) );
 }
 /*
  * uint count () const
@@ -176,7 +176,7 @@ HB_FUNC( QT_QKEYSEQUENCE_TOSTRING )
  */
 HB_FUNC( QT_QKEYSEQUENCE_FROMSTRING )
 {
-   hb_retptrGC( gcAllocate_QKeySequence( new QKeySequence( hbqt_par_QKeySequence( 1 )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 3 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QKeySequence( new QKeySequence( hbqt_par_QKeySequence( 1 )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 3 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ) ) ) );
 }
 
 /*
@@ -184,7 +184,7 @@ HB_FUNC( QT_QKEYSEQUENCE_FROMSTRING )
  */
 HB_FUNC( QT_QKEYSEQUENCE_MNEMONIC )
 {
-   hb_retptrGC( gcAllocate_QKeySequence( new QKeySequence( hbqt_par_QKeySequence( 1 )->mnemonic( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QKeySequence( new QKeySequence( hbqt_par_QKeySequence( 1 )->mnemonic( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 

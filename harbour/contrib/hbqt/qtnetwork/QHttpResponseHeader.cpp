@@ -96,9 +96,9 @@ QT_G_FUNC( release_QHttpResponseHeader )
    }
 }
 
-void * gcAllocate_QHttpResponseHeader( void * pObj )
+void * hbqt_gcAllocate_QHttpResponseHeader( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QHttpResponseHeader;
@@ -112,7 +112,7 @@ HB_FUNC( QT_QHTTPRESPONSEHEADER )
 
    pObj = new QHttpResponseHeader() ;
 
-   hb_retptrGC( gcAllocate_QHttpResponseHeader( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QHttpResponseHeader( pObj ) );
 }
 /*
  * virtual int majorVersion () const

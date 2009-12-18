@@ -95,9 +95,9 @@ QT_G_FUNC( release_QTextEncoder )
    }
 }
 
-void * gcAllocate_QTextEncoder( void * pObj )
+void * hbqt_gcAllocate_QTextEncoder( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTextEncoder;
@@ -111,14 +111,14 @@ HB_FUNC( QT_QTEXTENCODER )
 
    pObj = ( QTextEncoder* ) new QTextEncoder( hbqt_par_QTextCodec( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QTextEncoder( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextEncoder( pObj ) );
 }
 /*
  * QByteArray fromUnicode ( const QString & str )
  */
 HB_FUNC( QT_QTEXTENCODER_FROMUNICODE )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QTextEncoder( 1 )->fromUnicode( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QTextEncoder( 1 )->fromUnicode( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 

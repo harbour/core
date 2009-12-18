@@ -121,7 +121,7 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_HORIZONTALSCROLLBARPOLICY )
  */
 HB_FUNC( QT_QABSTRACTSCROLLAREA_MAXIMUMVIEWPORTSIZE )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QAbstractScrollArea( 1 )->maximumViewportSize() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QAbstractScrollArea( 1 )->maximumViewportSize() ) ) );
 }
 
 /*

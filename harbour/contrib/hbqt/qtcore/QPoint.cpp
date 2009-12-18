@@ -96,9 +96,9 @@ QT_G_FUNC( release_QPoint )
    }
 }
 
-void * gcAllocate_QPoint( void * pObj )
+void * hbqt_gcAllocate_QPoint( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QPoint;
@@ -123,7 +123,7 @@ HB_FUNC( QT_QPOINT )
       pObj = ( QPoint* ) new QPoint() ;
    }
 
-   hb_retptrGC( gcAllocate_QPoint( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( pObj ) );
 }
 /*
  * bool isNull () const

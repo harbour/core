@@ -137,9 +137,9 @@ QT_G_FUNC( release_QStandardItemModel )
    }
 }
 
-void * gcAllocate_QStandardItemModel( void * pObj )
+void * hbqt_gcAllocate_QStandardItemModel( void * pObj )
 {
-   QGC_POINTER_QStandardItemModel * p = ( QGC_POINTER_QStandardItemModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QStandardItemModel ), gcFuncs() );
+   QGC_POINTER_QStandardItemModel * p = ( QGC_POINTER_QStandardItemModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QStandardItemModel ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStandardItemModel;
@@ -154,7 +154,7 @@ HB_FUNC( QT_QSTANDARDITEMMODEL )
 
    pObj = ( QStandardItemModel* ) new QStandardItemModel( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QStandardItemModel( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStandardItemModel( pObj ) );
 }
 /*
  * void appendRow ( QStandardItem * item )
@@ -185,7 +185,7 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_HORIZONTALHEADERITEM )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_INDEXFROMITEM )
 {
-   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QStandardItemModel( 1 )->indexFromItem( hbqt_par_QStandardItem( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QStandardItemModel( 1 )->indexFromItem( hbqt_par_QStandardItem( 2 ) ) ) ) );
 }
 
 /*

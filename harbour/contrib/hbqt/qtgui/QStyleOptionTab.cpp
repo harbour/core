@@ -104,9 +104,9 @@ QT_G_FUNC( release_QStyleOptionTab )
    }
 }
 
-void * gcAllocate_QStyleOptionTab( void * pObj )
+void * hbqt_gcAllocate_QStyleOptionTab( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStyleOptionTab;
@@ -120,7 +120,7 @@ HB_FUNC( QT_QSTYLEOPTIONTAB )
 
    pObj = ( QStyleOptionTab* ) new QStyleOptionTab() ;
 
-   hb_retptrGC( gcAllocate_QStyleOptionTab( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionTab( pObj ) );
 }
 /*
  * CornerWidgets cornerWidgets
@@ -135,7 +135,7 @@ HB_FUNC( QT_QSTYLEOPTIONTAB_CORNERWIDGETS )
  */
 HB_FUNC( QT_QSTYLEOPTIONTAB_ICON )
 {
-   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QStyleOptionTab( 1 )->icon ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QStyleOptionTab( 1 )->icon ) ) );
 }
 
 /*

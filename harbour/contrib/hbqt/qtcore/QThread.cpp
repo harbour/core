@@ -124,9 +124,9 @@ QT_G_FUNC( release_QThread )
    }
 }
 
-void * gcAllocate_QThread( void * pObj )
+void * hbqt_gcAllocate_QThread( void * pObj )
 {
-   QGC_POINTER_QThread * p = ( QGC_POINTER_QThread * ) hb_gcAllocate( sizeof( QGC_POINTER_QThread ), gcFuncs() );
+   QGC_POINTER_QThread * p = ( QGC_POINTER_QThread * ) hb_gcAllocate( sizeof( QGC_POINTER_QThread ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QThread;
@@ -141,7 +141,7 @@ HB_FUNC( QT_QTHREAD )
 
    pObj = new QThread() ;
 
-   hb_retptrGC( gcAllocate_QThread( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QThread( pObj ) );
 }
 /*
  * void exit ( int returnCode = 0 )

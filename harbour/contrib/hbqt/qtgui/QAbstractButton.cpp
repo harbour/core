@@ -129,7 +129,7 @@ HB_FUNC( QT_QABSTRACTBUTTON_GROUP )
  */
 HB_FUNC( QT_QABSTRACTBUTTON_ICON )
 {
-   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QAbstractButton( 1 )->icon() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QAbstractButton( 1 )->icon() ) ) );
 }
 
 /*
@@ -137,7 +137,7 @@ HB_FUNC( QT_QABSTRACTBUTTON_ICON )
  */
 HB_FUNC( QT_QABSTRACTBUTTON_ICONSIZE )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QAbstractButton( 1 )->iconSize() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QAbstractButton( 1 )->iconSize() ) ) );
 }
 
 /*
@@ -241,7 +241,7 @@ HB_FUNC( QT_QABSTRACTBUTTON_SETTEXT )
  */
 HB_FUNC( QT_QABSTRACTBUTTON_SHORTCUT )
 {
-   hb_retptrGC( gcAllocate_QKeySequence( new QKeySequence( hbqt_par_QAbstractButton( 1 )->shortcut() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QKeySequence( new QKeySequence( hbqt_par_QAbstractButton( 1 )->shortcut() ) ) );
 }
 
 /*

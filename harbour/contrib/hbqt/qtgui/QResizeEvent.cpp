@@ -88,7 +88,7 @@ HB_FUNC( QT_QRESIZEEVENT )
  */
 HB_FUNC( QT_QRESIZEEVENT_OLDSIZE )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QResizeEvent( 1 )->oldSize() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QResizeEvent( 1 )->oldSize() ) ) );
 }
 
 /*
@@ -96,7 +96,7 @@ HB_FUNC( QT_QRESIZEEVENT_OLDSIZE )
  */
 HB_FUNC( QT_QRESIZEEVENT_SIZE )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QResizeEvent( 1 )->size() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QResizeEvent( 1 )->size() ) ) );
 }
 
 

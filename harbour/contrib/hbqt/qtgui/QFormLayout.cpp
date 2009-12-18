@@ -127,9 +127,9 @@ QT_G_FUNC( release_QFormLayout )
    }
 }
 
-void * gcAllocate_QFormLayout( void * pObj )
+void * hbqt_gcAllocate_QFormLayout( void * pObj )
 {
-   QGC_POINTER_QFormLayout * p = ( QGC_POINTER_QFormLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QFormLayout ), gcFuncs() );
+   QGC_POINTER_QFormLayout * p = ( QGC_POINTER_QFormLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QFormLayout ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QFormLayout;
@@ -144,7 +144,7 @@ HB_FUNC( QT_QFORMLAYOUT )
 
    pObj = ( QFormLayout * ) new QFormLayout( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QFormLayout( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QFormLayout( pObj ) );
 }
 /*
  * void addRow ( QWidget * label, QWidget * field )

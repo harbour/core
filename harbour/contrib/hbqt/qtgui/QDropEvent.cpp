@@ -128,7 +128,7 @@ HB_FUNC( QT_QDROPEVENT_MOUSEBUTTONS )
  */
 HB_FUNC( QT_QDROPEVENT_POS )
 {
-   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QDropEvent( 1 )->pos() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QDropEvent( 1 )->pos() ) ) );
 }
 
 /*

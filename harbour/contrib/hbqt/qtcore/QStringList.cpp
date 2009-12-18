@@ -115,9 +115,9 @@ QT_G_FUNC( release_QStringList )
    }
 }
 
-void * gcAllocate_QStringList( void * pObj )
+void * hbqt_gcAllocate_QStringList( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStringList;
@@ -131,7 +131,7 @@ HB_FUNC( QT_QSTRINGLIST )
 
    pObj = ( QStringList* ) new QStringList() ;
 
-   hb_retptrGC( gcAllocate_QStringList( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( pObj ) );
 }
 /*
  * void append ( const QString & value )
@@ -146,7 +146,7 @@ HB_FUNC( QT_QSTRINGLIST_APPEND )
  */
 HB_FUNC( QT_QSTRINGLIST_FILTER )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QStringList( 1 )->filter( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::CaseSensitivity ) hb_parni( 3 ) : ( Qt::CaseSensitivity ) Qt::CaseSensitive ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QStringList( 1 )->filter( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::CaseSensitivity ) hb_parni( 3 ) : ( Qt::CaseSensitivity ) Qt::CaseSensitive ) ) ) ) );
 }
 
 /*
@@ -154,7 +154,7 @@ HB_FUNC( QT_QSTRINGLIST_FILTER )
  */
 HB_FUNC( QT_QSTRINGLIST_FILTER_1 )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QStringList( 1 )->filter( *hbqt_par_QRegExp( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QStringList( 1 )->filter( *hbqt_par_QRegExp( 2 ) ) ) ) );
 }
 
 /*

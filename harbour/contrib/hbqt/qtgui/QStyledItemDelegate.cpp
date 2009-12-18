@@ -121,9 +121,9 @@ QT_G_FUNC( release_QStyledItemDelegate )
    }
 }
 
-void * gcAllocate_QStyledItemDelegate( void * pObj )
+void * hbqt_gcAllocate_QStyledItemDelegate( void * pObj )
 {
-   QGC_POINTER_QStyledItemDelegate * p = ( QGC_POINTER_QStyledItemDelegate * ) hb_gcAllocate( sizeof( QGC_POINTER_QStyledItemDelegate ), gcFuncs() );
+   QGC_POINTER_QStyledItemDelegate * p = ( QGC_POINTER_QStyledItemDelegate * ) hb_gcAllocate( sizeof( QGC_POINTER_QStyledItemDelegate ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStyledItemDelegate;
@@ -138,7 +138,7 @@ HB_FUNC( QT_QSTYLEDITEMDELEGATE )
 
    pObj = ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QStyledItemDelegate( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyledItemDelegate( pObj ) );
 }
 /*
  * virtual QWidget * createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
@@ -185,7 +185,7 @@ HB_FUNC( QT_QSTYLEDITEMDELEGATE_SETMODELDATA )
  */
 HB_FUNC( QT_QSTYLEDITEMDELEGATE_SIZEHINT )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QStyledItemDelegate( 1 )->sizeHint( *hbqt_par_QStyleOptionViewItem( 2 ), *hbqt_par_QModelIndex( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QStyledItemDelegate( 1 )->sizeHint( *hbqt_par_QStyleOptionViewItem( 2 ), *hbqt_par_QModelIndex( 3 ) ) ) ) );
 }
 
 /*

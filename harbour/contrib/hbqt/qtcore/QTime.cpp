@@ -94,9 +94,9 @@ QT_G_FUNC( release_QTime )
    }
 }
 
-void * gcAllocate_QTime( void * pObj )
+void * hbqt_gcAllocate_QTime( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTime;
@@ -110,14 +110,14 @@ HB_FUNC( QT_QTIME )
 
    pObj = new QTime() ;
 
-   hb_retptrGC( gcAllocate_QTime( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTime( pObj ) );
 }
 /*
  * QTime addMSecs ( int ms ) const
  */
 HB_FUNC( QT_QTIME_ADDMSECS )
 {
-   hb_retptrGC( gcAllocate_QTime( new QTime( hbqt_par_QTime( 1 )->addMSecs( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( hbqt_par_QTime( 1 )->addMSecs( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -125,7 +125,7 @@ HB_FUNC( QT_QTIME_ADDMSECS )
  */
 HB_FUNC( QT_QTIME_ADDSECS )
 {
-   hb_retptrGC( gcAllocate_QTime( new QTime( hbqt_par_QTime( 1 )->addSecs( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( hbqt_par_QTime( 1 )->addSecs( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -245,7 +245,7 @@ HB_FUNC( QT_QTIME_TOSTRING_1 )
  */
 HB_FUNC( QT_QTIME_CURRENTTIME )
 {
-   hb_retptrGC( gcAllocate_QTime( new QTime( hbqt_par_QTime( 1 )->currentTime() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( hbqt_par_QTime( 1 )->currentTime() ) ) );
 }
 
 /*
@@ -253,7 +253,7 @@ HB_FUNC( QT_QTIME_CURRENTTIME )
  */
 HB_FUNC( QT_QTIME_FROMSTRING )
 {
-   hb_retptrGC( gcAllocate_QTime( new QTime( hbqt_par_QTime( 1 )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::DateFormat ) hb_parni( 3 ) : ( Qt::DateFormat ) Qt::TextDate ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( hbqt_par_QTime( 1 )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::DateFormat ) hb_parni( 3 ) : ( Qt::DateFormat ) Qt::TextDate ) ) ) ) );
 }
 
 /*
@@ -261,7 +261,7 @@ HB_FUNC( QT_QTIME_FROMSTRING )
  */
 HB_FUNC( QT_QTIME_FROMSTRING_1 )
 {
-   hb_retptrGC( gcAllocate_QTime( new QTime( hbqt_par_QTime( 1 )->fromString( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( hbqt_par_QTime( 1 )->fromString( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ) ) );
 }
 
 /*

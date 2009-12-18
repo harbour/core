@@ -123,9 +123,9 @@ QT_G_FUNC( release_QTableView )
    }
 }
 
-void * gcAllocate_QTableView( void * pObj )
+void * hbqt_gcAllocate_QTableView( void * pObj )
 {
-   QGC_POINTER_QTableView * p = ( QGC_POINTER_QTableView * ) hb_gcAllocate( sizeof( QGC_POINTER_QTableView ), gcFuncs() );
+   QGC_POINTER_QTableView * p = ( QGC_POINTER_QTableView * ) hb_gcAllocate( sizeof( QGC_POINTER_QTableView ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTableView;
@@ -140,7 +140,7 @@ HB_FUNC( QT_QTABLEVIEW )
 
    pObj = ( QTableView* ) new QTableView( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QTableView( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTableView( pObj ) );
 }
 /*
  * void clearSpans ()
@@ -203,7 +203,7 @@ HB_FUNC( QT_QTABLEVIEW_HORIZONTALHEADER )
  */
 HB_FUNC( QT_QTABLEVIEW_INDEXAT )
 {
-   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QTableView( 1 )->indexAt( *hbqt_par_QPoint( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QTableView( 1 )->indexAt( *hbqt_par_QPoint( 2 ) ) ) ) );
 }
 
 /*

@@ -96,9 +96,9 @@ QT_G_FUNC( release_QStylePainter )
    }
 }
 
-void * gcAllocate_QStylePainter( void * pObj )
+void * hbqt_gcAllocate_QStylePainter( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStylePainter;
@@ -112,7 +112,7 @@ HB_FUNC( QT_QSTYLEPAINTER )
 
    pObj = ( QStylePainter* ) new QStylePainter() ;
 
-   hb_retptrGC( gcAllocate_QStylePainter( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStylePainter( pObj ) );
 }
 /*
  * bool begin ( QWidget * widget )

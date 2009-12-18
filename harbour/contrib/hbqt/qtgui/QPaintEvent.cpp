@@ -95,9 +95,9 @@ QT_G_FUNC( release_QPaintEvent )
    }
 }
 
-void * gcAllocate_QPaintEvent( void * pObj )
+void * hbqt_gcAllocate_QPaintEvent( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QPaintEvent;
@@ -123,14 +123,14 @@ HB_FUNC( QT_QPAINTEVENT )
       }
    }
 
-   hb_retptrGC( gcAllocate_QPaintEvent( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QPaintEvent( pObj ) );
 }
 /*
  * const QRect & rect () const
  */
 HB_FUNC( QT_QPAINTEVENT_RECT )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QPaintEvent( 1 )->rect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QPaintEvent( 1 )->rect() ) ) );
 }
 
 /*
@@ -138,7 +138,7 @@ HB_FUNC( QT_QPAINTEVENT_RECT )
  */
 HB_FUNC( QT_QPAINTEVENT_REGION )
 {
-   hb_retptrGC( gcAllocate_QRegion( new QRegion( hbqt_par_QPaintEvent( 1 )->region() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( hbqt_par_QPaintEvent( 1 )->region() ) ) );
 }
 
 

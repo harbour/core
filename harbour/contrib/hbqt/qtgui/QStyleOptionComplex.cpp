@@ -100,9 +100,9 @@ QT_G_FUNC( release_QStyleOptionComplex )
    }
 }
 
-void * gcAllocate_QStyleOptionComplex( void * pObj )
+void * hbqt_gcAllocate_QStyleOptionComplex( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStyleOptionComplex;
@@ -116,7 +116,7 @@ HB_FUNC( QT_QSTYLEOPTIONCOMPLEX )
 
    pObj = ( QStyleOptionComplex* ) new QStyleOptionComplex() ;
 
-   hb_retptrGC( gcAllocate_QStyleOptionComplex( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionComplex( pObj ) );
 }
 /*
  * QStyle::SubControls activeSubControls

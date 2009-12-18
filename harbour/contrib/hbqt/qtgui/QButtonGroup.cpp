@@ -130,9 +130,9 @@ QT_G_FUNC( release_QButtonGroup )
    }
 }
 
-void * gcAllocate_QButtonGroup( void * pObj )
+void * hbqt_gcAllocate_QButtonGroup( void * pObj )
 {
-   QGC_POINTER_QButtonGroup * p = ( QGC_POINTER_QButtonGroup * ) hb_gcAllocate( sizeof( QGC_POINTER_QButtonGroup ), gcFuncs() );
+   QGC_POINTER_QButtonGroup * p = ( QGC_POINTER_QButtonGroup * ) hb_gcAllocate( sizeof( QGC_POINTER_QButtonGroup ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QButtonGroup;
@@ -154,7 +154,7 @@ HB_FUNC( QT_QBUTTONGROUP )
       pObj = ( QButtonGroup* ) new QButtonGroup() ;
    }
 
-   hb_retptrGC( gcAllocate_QButtonGroup( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QButtonGroup( pObj ) );
 }
 /*
  * void addButton ( QAbstractButton * button )

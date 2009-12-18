@@ -135,9 +135,9 @@ QT_G_FUNC( release_QMainWindow )
    }
 }
 
-void * gcAllocate_QMainWindow( void * pObj )
+void * hbqt_gcAllocate_QMainWindow( void * pObj )
 {
-   QGC_POINTER_QMainWindow * p = ( QGC_POINTER_QMainWindow * ) hb_gcAllocate( sizeof( QGC_POINTER_QMainWindow ), gcFuncs() );
+   QGC_POINTER_QMainWindow * p = ( QGC_POINTER_QMainWindow * ) hb_gcAllocate( sizeof( QGC_POINTER_QMainWindow ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QMainWindow;
@@ -152,7 +152,7 @@ HB_FUNC( QT_QMAINWINDOW )
 
    pObj = ( QMainWindow* ) new QMainWindow( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
-   hb_retptrGC( gcAllocate_QMainWindow( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QMainWindow( pObj ) );
 }
 /*
  * void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget )
@@ -255,7 +255,7 @@ HB_FUNC( QT_QMAINWINDOW_DOCUMENTMODE )
  */
 HB_FUNC( QT_QMAINWINDOW_ICONSIZE )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QMainWindow( 1 )->iconSize() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QMainWindow( 1 )->iconSize() ) ) );
 }
 
 /*
@@ -351,7 +351,7 @@ HB_FUNC( QT_QMAINWINDOW_RESTORESTATE )
  */
 HB_FUNC( QT_QMAINWINDOW_SAVESTATE )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QMainWindow( 1 )->saveState( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QMainWindow( 1 )->saveState( hb_parni( 2 ) ) ) ) );
 }
 
 /*

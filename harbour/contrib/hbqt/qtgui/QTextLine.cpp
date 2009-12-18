@@ -99,9 +99,9 @@ QT_G_FUNC( release_QTextLine )
    }
 }
 
-void * gcAllocate_QTextLine( void * pObj )
+void * hbqt_gcAllocate_QTextLine( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTextLine;
@@ -115,7 +115,7 @@ HB_FUNC( QT_QTEXTLINE )
 
    pObj = ( QTextLine* ) new QTextLine() ;
 
-   hb_retptrGC( gcAllocate_QTextLine( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextLine( pObj ) );
 }
 /*
  * qreal ascent () const
@@ -182,7 +182,7 @@ HB_FUNC( QT_QTEXTLINE_LINENUMBER )
  */
 HB_FUNC( QT_QTEXTLINE_NATURALTEXTRECT )
 {
-   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QTextLine( 1 )->naturalTextRect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QTextLine( 1 )->naturalTextRect() ) ) );
 }
 
 /*
@@ -198,7 +198,7 @@ HB_FUNC( QT_QTEXTLINE_NATURALTEXTWIDTH )
  */
 HB_FUNC( QT_QTEXTLINE_POSITION )
 {
-   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QTextLine( 1 )->position() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QTextLine( 1 )->position() ) ) );
 }
 
 /*
@@ -206,7 +206,7 @@ HB_FUNC( QT_QTEXTLINE_POSITION )
  */
 HB_FUNC( QT_QTEXTLINE_RECT )
 {
-   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QTextLine( 1 )->rect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QTextLine( 1 )->rect() ) ) );
 }
 
 /*

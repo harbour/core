@@ -123,9 +123,9 @@ QT_G_FUNC( release_QPushButton )
    }
 }
 
-void * gcAllocate_QPushButton( void * pObj )
+void * hbqt_gcAllocate_QPushButton( void * pObj )
 {
-   QGC_POINTER_QPushButton * p = ( QGC_POINTER_QPushButton * ) hb_gcAllocate( sizeof( QGC_POINTER_QPushButton ), gcFuncs() );
+   QGC_POINTER_QPushButton * p = ( QGC_POINTER_QPushButton * ) hb_gcAllocate( sizeof( QGC_POINTER_QPushButton ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QPushButton;
@@ -140,7 +140,7 @@ HB_FUNC( QT_QPUSHBUTTON )
 
     pObj = ( QPushButton* ) new QPushButton( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QPushButton( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QPushButton( pObj ) );
 }
 /*
  * bool autoDefault () const

@@ -126,9 +126,9 @@ QT_G_FUNC( release_QEventLoop )
    }
 }
 
-void * gcAllocate_QEventLoop( void * pObj )
+void * hbqt_gcAllocate_QEventLoop( void * pObj )
 {
-   QGC_POINTER_QEventLoop * p = ( QGC_POINTER_QEventLoop * ) hb_gcAllocate( sizeof( QGC_POINTER_QEventLoop ), gcFuncs() );
+   QGC_POINTER_QEventLoop * p = ( QGC_POINTER_QEventLoop * ) hb_gcAllocate( sizeof( QGC_POINTER_QEventLoop ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QEventLoop;
@@ -143,7 +143,7 @@ HB_FUNC( QT_QEVENTLOOP )
 
    pObj = new QEventLoop( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QEventLoop( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QEventLoop( pObj ) );
 }
 /*
  * int exec ( ProcessEventsFlags flags = AllEvents )

@@ -125,9 +125,9 @@ QT_G_FUNC( release_QToolButton )
    }
 }
 
-void * gcAllocate_QToolButton( void * pObj )
+void * hbqt_gcAllocate_QToolButton( void * pObj )
 {
-   QGC_POINTER_QToolButton * p = ( QGC_POINTER_QToolButton * ) hb_gcAllocate( sizeof( QGC_POINTER_QToolButton ), gcFuncs() );
+   QGC_POINTER_QToolButton * p = ( QGC_POINTER_QToolButton * ) hb_gcAllocate( sizeof( QGC_POINTER_QToolButton ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QToolButton;
@@ -142,7 +142,7 @@ HB_FUNC( QT_QTOOLBUTTON )
 
    pObj = ( QToolButton* ) new QToolButton( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QToolButton( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QToolButton( pObj ) );
 }
 /*
  * Qt::ArrowType arrowType () const

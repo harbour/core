@@ -100,9 +100,9 @@ QT_G_FUNC( release_QStyleOptionFocusRect )
    }
 }
 
-void * gcAllocate_QStyleOptionFocusRect( void * pObj )
+void * hbqt_gcAllocate_QStyleOptionFocusRect( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStyleOptionFocusRect;
@@ -116,14 +116,14 @@ HB_FUNC( QT_QSTYLEOPTIONFOCUSRECT )
 
    pObj = ( QStyleOptionFocusRect* ) new QStyleOptionFocusRect() ;
 
-   hb_retptrGC( gcAllocate_QStyleOptionFocusRect( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionFocusRect( pObj ) );
 }
 /*
  * QColor backgroundColor
  */
 HB_FUNC( QT_QSTYLEOPTIONFOCUSRECT_BACKGROUNDCOLOR )
 {
-   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QStyleOptionFocusRect( 1 )->backgroundColor ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QStyleOptionFocusRect( 1 )->backgroundColor ) ) );
 }
 
 

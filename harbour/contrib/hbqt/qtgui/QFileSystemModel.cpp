@@ -125,9 +125,9 @@ QT_G_FUNC( release_QFileSystemModel )
    }
 }
 
-void * gcAllocate_QFileSystemModel( void * pObj )
+void * hbqt_gcAllocate_QFileSystemModel( void * pObj )
 {
-   QGC_POINTER_QFileSystemModel * p = ( QGC_POINTER_QFileSystemModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QFileSystemModel ), gcFuncs() );
+   QGC_POINTER_QFileSystemModel * p = ( QGC_POINTER_QFileSystemModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QFileSystemModel ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QFileSystemModel;
@@ -142,7 +142,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL )
 
    pObj = ( QFileSystemModel * ) new QFileSystemModel() ;
 
-   hb_retptrGC( gcAllocate_QFileSystemModel( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QFileSystemModel( pObj ) );
 }
 /*
  * virtual bool dropMimeData ( const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent )
@@ -157,7 +157,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_DROPMIMEDATA )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_FILEICON )
 {
-   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QFileSystemModel( 1 )->fileIcon( *hbqt_par_QModelIndex( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QFileSystemModel( 1 )->fileIcon( *hbqt_par_QModelIndex( 2 ) ) ) ) );
 }
 
 /*
@@ -165,7 +165,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_FILEICON )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_FILEINFO )
 {
-   hb_retptrGC( gcAllocate_QFileInfo( new QFileInfo( hbqt_par_QFileSystemModel( 1 )->fileInfo( *hbqt_par_QModelIndex( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFileInfo( new QFileInfo( hbqt_par_QFileSystemModel( 1 )->fileInfo( *hbqt_par_QModelIndex( 2 ) ) ) ) );
 }
 
 /*
@@ -197,7 +197,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_FILTER )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_INDEX )
 {
-   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QFileSystemModel( 1 )->index( hbqt_par_QString( 2 ), hb_parni( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QFileSystemModel( 1 )->index( hbqt_par_QString( 2 ), hb_parni( 3 ) ) ) ) );
 }
 
 /*
@@ -221,7 +221,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_ISREADONLY )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_LASTMODIFIED )
 {
-   hb_retptrGC( gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileSystemModel( 1 )->lastModified( *hbqt_par_QModelIndex( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileSystemModel( 1 )->lastModified( *hbqt_par_QModelIndex( 2 ) ) ) ) );
 }
 
 /*
@@ -229,7 +229,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_LASTMODIFIED )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_MIMETYPES )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QFileSystemModel( 1 )->mimeTypes() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QFileSystemModel( 1 )->mimeTypes() ) ) );
 }
 
 /*
@@ -237,7 +237,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_MIMETYPES )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_MKDIR )
 {
-   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QFileSystemModel( 1 )->mkdir( *hbqt_par_QModelIndex( 2 ), hbqt_par_QString( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QFileSystemModel( 1 )->mkdir( *hbqt_par_QModelIndex( 2 ), hbqt_par_QString( 3 ) ) ) ) );
 }
 
 /*
@@ -245,7 +245,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_MKDIR )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_MYCOMPUTER )
 {
-   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QFileSystemModel( 1 )->myComputer( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : Qt::DisplayRole ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QFileSystemModel( 1 )->myComputer( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : Qt::DisplayRole ) ) ) ) );
 }
 
 /*
@@ -261,7 +261,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_NAMEFILTERDISABLES )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_NAMEFILTERS )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QFileSystemModel( 1 )->nameFilters() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QFileSystemModel( 1 )->nameFilters() ) ) );
 }
 
 /*
@@ -301,7 +301,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_RMDIR )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_ROOTDIRECTORY )
 {
-   hb_retptrGC( gcAllocate_QDir( new QDir( hbqt_par_QFileSystemModel( 1 )->rootDirectory() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QFileSystemModel( 1 )->rootDirectory() ) ) );
 }
 
 /*
@@ -357,7 +357,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_SETRESOLVESYMLINKS )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_SETROOTPATH )
 {
-   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QFileSystemModel( 1 )->setRootPath( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QFileSystemModel( 1 )->setRootPath( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*

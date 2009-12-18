@@ -100,9 +100,9 @@ QT_G_FUNC( release_QStyleOptionGroupBox )
    }
 }
 
-void * gcAllocate_QStyleOptionGroupBox( void * pObj )
+void * hbqt_gcAllocate_QStyleOptionGroupBox( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStyleOptionGroupBox;
@@ -116,7 +116,7 @@ HB_FUNC( QT_QSTYLEOPTIONGROUPBOX )
 
    pObj = ( QStyleOptionGroupBox* ) new QStyleOptionGroupBox() ;
 
-   hb_retptrGC( gcAllocate_QStyleOptionGroupBox( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionGroupBox( pObj ) );
 }
 /*
  * QStyleOptionFrameV2::FrameFeatures features
@@ -163,7 +163,7 @@ HB_FUNC( QT_QSTYLEOPTIONGROUPBOX_TEXTALIGNMENT )
  */
 HB_FUNC( QT_QSTYLEOPTIONGROUPBOX_TEXTCOLOR )
 {
-   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QStyleOptionGroupBox( 1 )->textColor ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QStyleOptionGroupBox( 1 )->textColor ) ) );
 }
 
 

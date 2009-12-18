@@ -98,9 +98,9 @@ QT_G_FUNC( release_QDate )
    }
 }
 
-void * gcAllocate_QDate( void * pObj )
+void * hbqt_gcAllocate_QDate( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QDate;
@@ -114,14 +114,14 @@ HB_FUNC( QT_QDATE )
 
    pObj = new QDate() ;
 
-   hb_retptrGC( gcAllocate_QDate( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QDate( pObj ) );
 }
 /*
  * QDate addDays ( int ndays ) const
  */
 HB_FUNC( QT_QDATE_ADDDAYS )
 {
-   hb_retptrGC( gcAllocate_QDate( new QDate( hbqt_par_QDate( 1 )->addDays( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QDate( 1 )->addDays( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -129,7 +129,7 @@ HB_FUNC( QT_QDATE_ADDDAYS )
  */
 HB_FUNC( QT_QDATE_ADDMONTHS )
 {
-   hb_retptrGC( gcAllocate_QDate( new QDate( hbqt_par_QDate( 1 )->addMonths( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QDate( 1 )->addMonths( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -137,7 +137,7 @@ HB_FUNC( QT_QDATE_ADDMONTHS )
  */
 HB_FUNC( QT_QDATE_ADDYEARS )
 {
-   hb_retptrGC( gcAllocate_QDate( new QDate( hbqt_par_QDate( 1 )->addYears( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QDate( 1 )->addYears( hb_parni( 2 ) ) ) ) );
 }
 
 /*

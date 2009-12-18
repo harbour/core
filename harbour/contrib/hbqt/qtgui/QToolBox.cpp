@@ -121,9 +121,9 @@ QT_G_FUNC( release_QToolBox )
    }
 }
 
-void * gcAllocate_QToolBox( void * pObj )
+void * hbqt_gcAllocate_QToolBox( void * pObj )
 {
-   QGC_POINTER_QToolBox * p = ( QGC_POINTER_QToolBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QToolBox ), gcFuncs() );
+   QGC_POINTER_QToolBox * p = ( QGC_POINTER_QToolBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QToolBox ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QToolBox;
@@ -138,7 +138,7 @@ HB_FUNC( QT_QTOOLBOX )
 
    pObj = ( QToolBox* ) new QToolBox( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
-   hb_retptrGC( gcAllocate_QToolBox( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QToolBox( pObj ) );
 }
 /*
  * int addItem ( QWidget * widget, const QIcon & iconSet, const QString & text )
@@ -217,7 +217,7 @@ HB_FUNC( QT_QTOOLBOX_ISITEMENABLED )
  */
 HB_FUNC( QT_QTOOLBOX_ITEMICON )
 {
-   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QToolBox( 1 )->itemIcon( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QToolBox( 1 )->itemIcon( hb_parni( 2 ) ) ) ) );
 }
 
 /*

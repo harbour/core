@@ -121,9 +121,9 @@ QT_G_FUNC( release_QFocusFrame )
    }
 }
 
-void * gcAllocate_QFocusFrame( void * pObj )
+void * hbqt_gcAllocate_QFocusFrame( void * pObj )
 {
-   QGC_POINTER_QFocusFrame * p = ( QGC_POINTER_QFocusFrame * ) hb_gcAllocate( sizeof( QGC_POINTER_QFocusFrame ), gcFuncs() );
+   QGC_POINTER_QFocusFrame * p = ( QGC_POINTER_QFocusFrame * ) hb_gcAllocate( sizeof( QGC_POINTER_QFocusFrame ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QFocusFrame;
@@ -138,7 +138,7 @@ HB_FUNC( QT_QFOCUSFRAME )
 
    pObj = ( QFocusFrame* ) new QFocusFrame( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QFocusFrame( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QFocusFrame( pObj ) );
 }
 /*
  * void setWidget ( QWidget * widget )

@@ -132,9 +132,9 @@ QT_G_FUNC( release_QMenu )
    }
 }
 
-void * gcAllocate_QMenu( void * pObj )
+void * hbqt_gcAllocate_QMenu( void * pObj )
 {
-   QGC_POINTER_QMenu * p = ( QGC_POINTER_QMenu * ) hb_gcAllocate( sizeof( QGC_POINTER_QMenu ), gcFuncs() );
+   QGC_POINTER_QMenu * p = ( QGC_POINTER_QMenu * ) hb_gcAllocate( sizeof( QGC_POINTER_QMenu ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QMenu;
@@ -156,7 +156,7 @@ HB_FUNC( QT_QMENU )
       pObj = ( QMenu* ) new QMenu( hbqt_par_QWidget( 1 ) ) ;
    }
 
-   hb_retptrGC( gcAllocate_QMenu( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QMenu( pObj ) );
 }
 /*
  * QAction * actionAt ( const QPoint & pt ) const
@@ -171,7 +171,7 @@ HB_FUNC( QT_QMENU_ACTIONAT )
  */
 HB_FUNC( QT_QMENU_ACTIONGEOMETRY )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QMenu( 1 )->actionGeometry( hbqt_par_QAction( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QMenu( 1 )->actionGeometry( hbqt_par_QAction( 2 ) ) ) ) );
 }
 
 /*
@@ -299,7 +299,7 @@ HB_FUNC( QT_QMENU_HIDETEAROFFMENU )
  */
 HB_FUNC( QT_QMENU_ICON )
 {
-   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QMenu( 1 )->icon() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QMenu( 1 )->icon() ) ) );
 }
 
 /*

@@ -99,9 +99,9 @@ QT_G_FUNC( release_QEvent )
    }
 }
 
-void * gcAllocate_QEvent( void * pObj )
+void * hbqt_gcAllocate_QEvent( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QEvent;
@@ -115,7 +115,7 @@ HB_FUNC( QT_QEVENT )
 
    pObj = ( QEvent* ) new QEvent( ( QEvent::Type ) hb_parni( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QEvent( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QEvent( pObj ) );
 }
 /*
  * void accept ()

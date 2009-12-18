@@ -127,9 +127,9 @@ QT_G_FUNC( release_QCompleter )
    }
 }
 
-void * gcAllocate_QCompleter( void * pObj )
+void * hbqt_gcAllocate_QCompleter( void * pObj )
 {
-   QGC_POINTER_QCompleter * p = ( QGC_POINTER_QCompleter * ) hb_gcAllocate( sizeof( QGC_POINTER_QCompleter ), gcFuncs() );
+   QGC_POINTER_QCompleter * p = ( QGC_POINTER_QCompleter * ) hb_gcAllocate( sizeof( QGC_POINTER_QCompleter ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QCompleter;
@@ -144,7 +144,7 @@ HB_FUNC( QT_QCOMPLETER )
 
    pObj = new QCompleter() ;
 
-   hb_retptrGC( gcAllocate_QCompleter( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QCompleter( pObj ) );
 }
 /*
  * Qt::CaseSensitivity caseSensitivity () const
@@ -215,7 +215,7 @@ HB_FUNC( QT_QCOMPLETER_CURRENTCOMPLETION )
  */
 HB_FUNC( QT_QCOMPLETER_CURRENTINDEX )
 {
-   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QCompleter( 1 )->currentIndex() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QCompleter( 1 )->currentIndex() ) ) );
 }
 
 /*
@@ -335,7 +335,7 @@ HB_FUNC( QT_QCOMPLETER_SETWIDGET )
  */
 HB_FUNC( QT_QCOMPLETER_SPLITPATH )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QCompleter( 1 )->splitPath( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QCompleter( 1 )->splitPath( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*

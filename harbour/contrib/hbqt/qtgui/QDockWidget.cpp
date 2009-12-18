@@ -127,9 +127,9 @@ QT_G_FUNC( release_QDockWidget )
    }
 }
 
-void * gcAllocate_QDockWidget( void * pObj )
+void * hbqt_gcAllocate_QDockWidget( void * pObj )
 {
-   QGC_POINTER_QDockWidget * p = ( QGC_POINTER_QDockWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QDockWidget ), gcFuncs() );
+   QGC_POINTER_QDockWidget * p = ( QGC_POINTER_QDockWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QDockWidget ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QDockWidget;
@@ -144,7 +144,7 @@ HB_FUNC( QT_QDOCKWIDGET )
 
    pObj = new QDockWidget( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
-   hb_retptrGC( gcAllocate_QDockWidget( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QDockWidget( pObj ) );
 }
 /*
  * Qt::DockWidgetAreas allowedAreas () const

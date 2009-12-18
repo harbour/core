@@ -133,9 +133,9 @@ QT_G_FUNC( release_QTableWidget )
    }
 }
 
-void * gcAllocate_QTableWidget( void * pObj )
+void * hbqt_gcAllocate_QTableWidget( void * pObj )
 {
-   QGC_POINTER_QTableWidget * p = ( QGC_POINTER_QTableWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QTableWidget ), gcFuncs() );
+   QGC_POINTER_QTableWidget * p = ( QGC_POINTER_QTableWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QTableWidget ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTableWidget;
@@ -153,7 +153,7 @@ HB_FUNC( QT_QTABLEWIDGET )
    else
       pObj = ( QTableWidget* ) new QTableWidget( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QTableWidget( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTableWidget( pObj ) );
 }
 /*
  * QWidget * cellWidget ( int row, int column ) const
@@ -456,7 +456,7 @@ HB_FUNC( QT_QTABLEWIDGET_VISUALCOLUMN )
  */
 HB_FUNC( QT_QTABLEWIDGET_VISUALITEMRECT )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QTableWidget( 1 )->visualItemRect( hbqt_par_QTableWidgetItem( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QTableWidget( 1 )->visualItemRect( hbqt_par_QTableWidgetItem( 2 ) ) ) ) );
 }
 
 /*

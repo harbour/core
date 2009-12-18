@@ -131,9 +131,9 @@ QT_G_FUNC( release_QListWidget )
    }
 }
 
-void * gcAllocate_QListWidget( void * pObj )
+void * hbqt_gcAllocate_QListWidget( void * pObj )
 {
-   QGC_POINTER_QListWidget * p = ( QGC_POINTER_QListWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QListWidget ), gcFuncs() );
+   QGC_POINTER_QListWidget * p = ( QGC_POINTER_QListWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QListWidget ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QListWidget;
@@ -148,7 +148,7 @@ HB_FUNC( QT_QLISTWIDGET )
 
    pObj = new QListWidget( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QListWidget( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QListWidget( pObj ) );
 }
 /*
  * void addItem ( const QString & label )
@@ -371,7 +371,7 @@ HB_FUNC( QT_QLISTWIDGET_TAKEITEM )
  */
 HB_FUNC( QT_QLISTWIDGET_VISUALITEMRECT )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QListWidget( 1 )->visualItemRect( hbqt_par_QListWidgetItem( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QListWidget( 1 )->visualItemRect( hbqt_par_QListWidgetItem( 2 ) ) ) ) );
 }
 
 /*

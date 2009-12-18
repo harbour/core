@@ -95,9 +95,9 @@ QT_G_FUNC( release_QBitArray )
    }
 }
 
-void * gcAllocate_QBitArray( void * pObj )
+void * hbqt_gcAllocate_QBitArray( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QBitArray;
@@ -111,7 +111,7 @@ HB_FUNC( QT_QBITARRAY )
 
    pObj = new QBitArray() ;
 
-   hb_retptrGC( gcAllocate_QBitArray( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QBitArray( pObj ) );
 }
 /*
  * bool at ( int i ) const

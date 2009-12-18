@@ -100,9 +100,9 @@ QT_G_FUNC( release_QStyleOptionToolBox )
    }
 }
 
-void * gcAllocate_QStyleOptionToolBox( void * pObj )
+void * hbqt_gcAllocate_QStyleOptionToolBox( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStyleOptionToolBox;
@@ -116,14 +116,14 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBOX )
 
    pObj = ( QStyleOptionToolBox* ) new QStyleOptionToolBox() ;
 
-   hb_retptrGC( gcAllocate_QStyleOptionToolBox( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionToolBox( pObj ) );
 }
 /*
  * QIcon icon
  */
 HB_FUNC( QT_QSTYLEOPTIONTOOLBOX_ICON )
 {
-   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QStyleOptionToolBox( 1 )->icon ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QStyleOptionToolBox( 1 )->icon ) ) );
 }
 
 /*

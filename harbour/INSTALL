@@ -1270,7 +1270,8 @@ HARBOUR
       HB_WITH_PNG - libpng [multiplatform, free, open-source]
          http://www.libpng.org/pub/png/libpng.html
       HB_WITH_QT - Nokia QT (GUI) [win, wce, darwin, linux, free, open-source]
-         http://qt.nokia.com/products
+         http://qt.nokia.com/products/
+         http://get.qt.nokia.com/qt/source/
          Currently supported Windows binary package:
             http://get.qt.nokia.com/qt/source/qt-win-opensource-4.5.3-mingw.exe
          How to create static and MSVC builds:

@@ -120,9 +120,9 @@ QT_G_FUNC( release_QDoubleSpinBox )
    }
 }
 
-void * gcAllocate_QDoubleSpinBox( void * pObj )
+void * hbqt_gcAllocate_QDoubleSpinBox( void * pObj )
 {
-   QGC_POINTER_QDoubleSpinBox * p = ( QGC_POINTER_QDoubleSpinBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QDoubleSpinBox ), gcFuncs() );
+   QGC_POINTER_QDoubleSpinBox * p = ( QGC_POINTER_QDoubleSpinBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QDoubleSpinBox ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QDoubleSpinBox;
@@ -137,7 +137,7 @@ HB_FUNC( QT_QDOUBLESPINBOX )
 
    pObj = ( QDoubleSpinBox* ) new QDoubleSpinBox( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QDoubleSpinBox( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QDoubleSpinBox( pObj ) );
 }
 /*
  * QString cleanText () const

@@ -121,9 +121,9 @@ QT_G_FUNC( release_QStringListModel )
    }
 }
 
-void * gcAllocate_QStringListModel( void * pObj )
+void * hbqt_gcAllocate_QStringListModel( void * pObj )
 {
-   QGC_POINTER_QStringListModel * p = ( QGC_POINTER_QStringListModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QStringListModel ), gcFuncs() );
+   QGC_POINTER_QStringListModel * p = ( QGC_POINTER_QStringListModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QStringListModel ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStringListModel;
@@ -138,14 +138,14 @@ HB_FUNC( QT_QSTRINGLISTMODEL )
 
    pObj = ( QStringListModel* ) new QStringListModel() ;
 
-   hb_retptrGC( gcAllocate_QStringListModel( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringListModel( pObj ) );
 }
 /*
  * virtual QVariant data ( const QModelIndex & index, int role ) const
  */
 HB_FUNC( QT_QSTRINGLISTMODEL_DATA )
 {
-   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QStringListModel( 1 )->data( *hbqt_par_QModelIndex( 2 ), hb_parni( 3 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QStringListModel( 1 )->data( *hbqt_par_QModelIndex( 2 ), hb_parni( 3 ) ) ) ) );
 }
 
 /*
@@ -201,7 +201,7 @@ HB_FUNC( QT_QSTRINGLISTMODEL_SETSTRINGLIST )
  */
 HB_FUNC( QT_QSTRINGLISTMODEL_STRINGLIST )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QStringListModel( 1 )->stringList() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QStringListModel( 1 )->stringList() ) ) );
 }
 
 

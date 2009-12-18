@@ -98,9 +98,9 @@ QT_G_FUNC( release_QPolygon )
    }
 }
 
-void * gcAllocate_QPolygon( void * pObj )
+void * hbqt_gcAllocate_QPolygon( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QPolygon;
@@ -114,14 +114,14 @@ HB_FUNC( QT_QPOLYGON )
 
    pObj = new QPolygon() ;
 
-   hb_retptrGC( gcAllocate_QPolygon( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QPolygon( pObj ) );
 }
 /*
  * QRect boundingRect () const
  */
 HB_FUNC( QT_QPOLYGON_BOUNDINGRECT )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QPolygon( 1 )->boundingRect() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QPolygon( 1 )->boundingRect() ) ) );
 }
 
 /*
@@ -137,7 +137,7 @@ HB_FUNC( QT_QPOLYGON_CONTAINSPOINT )
  */
 HB_FUNC( QT_QPOLYGON_INTERSECTED )
 {
-   hb_retptrGC( gcAllocate_QPolygon( new QPolygon( hbqt_par_QPolygon( 1 )->intersected( *hbqt_par_QPolygon( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( hbqt_par_QPolygon( 1 )->intersected( *hbqt_par_QPolygon( 2 ) ) ) ) );
 }
 
 /*
@@ -159,7 +159,7 @@ HB_FUNC( QT_QPOLYGON_POINT )
  */
 HB_FUNC( QT_QPOLYGON_POINT_1 )
 {
-   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QPolygon( 1 )->point( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QPolygon( 1 )->point( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -203,7 +203,7 @@ HB_FUNC( QT_QPOLYGON_SETPOINTS )
  */
 HB_FUNC( QT_QPOLYGON_SUBTRACTED )
 {
-   hb_retptrGC( gcAllocate_QPolygon( new QPolygon( hbqt_par_QPolygon( 1 )->subtracted( *hbqt_par_QPolygon( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( hbqt_par_QPolygon( 1 )->subtracted( *hbqt_par_QPolygon( 2 ) ) ) ) );
 }
 
 /*
@@ -227,7 +227,7 @@ HB_FUNC( QT_QPOLYGON_TRANSLATE_1 )
  */
 HB_FUNC( QT_QPOLYGON_UNITED )
 {
-   hb_retptrGC( gcAllocate_QPolygon( new QPolygon( hbqt_par_QPolygon( 1 )->united( *hbqt_par_QPolygon( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( hbqt_par_QPolygon( 1 )->united( *hbqt_par_QPolygon( 2 ) ) ) ) );
 }
 
 

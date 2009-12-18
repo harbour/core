@@ -129,9 +129,9 @@ QT_G_FUNC( release_QListView )
    }
 }
 
-void * gcAllocate_QListView( void * pObj )
+void * hbqt_gcAllocate_QListView( void * pObj )
 {
-   QGC_POINTER_QListView * p = ( QGC_POINTER_QListView * ) hb_gcAllocate( sizeof( QGC_POINTER_QListView ), gcFuncs() );
+   QGC_POINTER_QListView * p = ( QGC_POINTER_QListView * ) hb_gcAllocate( sizeof( QGC_POINTER_QListView ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QListView;
@@ -146,7 +146,7 @@ HB_FUNC( QT_QLISTVIEW )
 
    pObj = ( QListView * ) new QListView( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QListView( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QListView( pObj ) );
 }
 /*
  * int batchSize () const
@@ -177,7 +177,7 @@ HB_FUNC( QT_QLISTVIEW_FLOW )
  */
 HB_FUNC( QT_QLISTVIEW_GRIDSIZE )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QListView( 1 )->gridSize() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QListView( 1 )->gridSize() ) ) );
 }
 
 /*

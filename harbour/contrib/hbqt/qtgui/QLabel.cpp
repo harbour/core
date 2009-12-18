@@ -122,9 +122,9 @@ QT_G_FUNC( release_QLabel )
    }
 }
 
-void * gcAllocate_QLabel( void * pObj )
+void * hbqt_gcAllocate_QLabel( void * pObj )
 {
-   QGC_POINTER_QLabel * p = ( QGC_POINTER_QLabel * ) hb_gcAllocate( sizeof( QGC_POINTER_QLabel ), gcFuncs() );
+   QGC_POINTER_QLabel * p = ( QGC_POINTER_QLabel * ) hb_gcAllocate( sizeof( QGC_POINTER_QLabel ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QLabel;
@@ -139,7 +139,7 @@ HB_FUNC( QT_QLABEL )
 
    pObj = ( QLabel* ) new QLabel( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QLabel( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QLabel( pObj ) );
 }
 /*
  * Qt::Alignment alignment () const

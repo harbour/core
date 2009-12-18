@@ -112,9 +112,9 @@ QT_G_FUNC( release_QFontDatabase )
    }
 }
 
-void * gcAllocate_QFontDatabase( void * pObj )
+void * hbqt_gcAllocate_QFontDatabase( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QFontDatabase;
@@ -128,7 +128,7 @@ HB_FUNC( QT_QFONTDATABASE )
 
    pObj = new QFontDatabase() ;
 
-   hb_retptrGC( gcAllocate_QFontDatabase( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QFontDatabase( pObj ) );
 }
 /*
  * bool bold ( const QString & family, const QString & style ) const
@@ -143,7 +143,7 @@ HB_FUNC( QT_QFONTDATABASE_BOLD )
  */
 HB_FUNC( QT_QFONTDATABASE_FAMILIES )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QFontDatabase( 1 )->families( ( HB_ISNUM( 2 ) ? ( QFontDatabase::WritingSystem ) hb_parni( 2 ) : ( QFontDatabase::WritingSystem ) QFontDatabase::Any ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QFontDatabase( 1 )->families( ( HB_ISNUM( 2 ) ? ( QFontDatabase::WritingSystem ) hb_parni( 2 ) : ( QFontDatabase::WritingSystem ) QFontDatabase::Any ) ) ) ) );
 }
 
 /*
@@ -151,7 +151,7 @@ HB_FUNC( QT_QFONTDATABASE_FAMILIES )
  */
 HB_FUNC( QT_QFONTDATABASE_FONT )
 {
-   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QFontDatabase( 1 )->font( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ), hb_parni( 4 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QFontDatabase( 1 )->font( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ), hb_parni( 4 ) ) ) ) );
 }
 
 /*
@@ -215,7 +215,7 @@ HB_FUNC( QT_QFONTDATABASE_STYLESTRING_1 )
  */
 HB_FUNC( QT_QFONTDATABASE_STYLES )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QFontDatabase( 1 )->styles( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QFontDatabase( 1 )->styles( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -247,7 +247,7 @@ HB_FUNC( QT_QFONTDATABASE_ADDAPPLICATIONFONTFROMDATA )
  */
 HB_FUNC( QT_QFONTDATABASE_APPLICATIONFONTFAMILIES )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QFontDatabase( 1 )->applicationFontFamilies( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QFontDatabase( 1 )->applicationFontFamilies( hb_parni( 2 ) ) ) ) );
 }
 
 /*

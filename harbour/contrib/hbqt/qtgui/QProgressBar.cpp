@@ -124,9 +124,9 @@ QT_G_FUNC( release_QProgressBar )
    }
 }
 
-void * gcAllocate_QProgressBar( void * pObj )
+void * hbqt_gcAllocate_QProgressBar( void * pObj )
 {
-   QGC_POINTER_QProgressBar * p = ( QGC_POINTER_QProgressBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QProgressBar ), gcFuncs() );
+   QGC_POINTER_QProgressBar * p = ( QGC_POINTER_QProgressBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QProgressBar ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QProgressBar;
@@ -141,7 +141,7 @@ HB_FUNC( QT_QPROGRESSBAR )
 
    pObj = ( QProgressBar* ) new QProgressBar( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QProgressBar( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QProgressBar( pObj ) );
 }
 /*
  * Qt::Alignment alignment () const

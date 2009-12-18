@@ -109,9 +109,9 @@ QT_G_FUNC( release_QPen )
    }
 }
 
-void * gcAllocate_QPen( void * pObj )
+void * hbqt_gcAllocate_QPen( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QPen;
@@ -157,14 +157,14 @@ HB_FUNC( QT_QPEN )
       pObj = ( QPen* ) new QPen() ;
    }
 
-   hb_retptrGC( gcAllocate_QPen( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QPen( pObj ) );
 }
 /*
  * QBrush brush () const
  */
 HB_FUNC( QT_QPEN_BRUSH )
 {
-   hb_retptrGC( gcAllocate_QBrush( new QBrush( hbqt_par_QPen( 1 )->brush() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPen( 1 )->brush() ) ) );
 }
 
 /*
@@ -180,7 +180,7 @@ HB_FUNC( QT_QPEN_CAPSTYLE )
  */
 HB_FUNC( QT_QPEN_COLOR )
 {
-   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QPen( 1 )->color() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QPen( 1 )->color() ) ) );
 }
 
 /*

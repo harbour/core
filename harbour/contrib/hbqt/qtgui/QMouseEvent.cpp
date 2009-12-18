@@ -96,9 +96,9 @@ QT_G_FUNC( release_QMouseEvent )
    }
 }
 
-void * gcAllocate_QMouseEvent( void * pObj )
+void * hbqt_gcAllocate_QMouseEvent( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QMouseEvent;
@@ -115,7 +115,7 @@ HB_FUNC( QT_QMOUSEEVENT )
       pObj = new QMouseEvent( *hbqt_par_QMouseEvent( 1 ) ) ;
    }
 
-   hb_retptrGC( gcAllocate_QMouseEvent( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QMouseEvent( pObj ) );
 }
 /*
  * Qt::MouseButton button () const
@@ -138,7 +138,7 @@ HB_FUNC( QT_QMOUSEEVENT_BUTTONS )
  */
 HB_FUNC( QT_QMOUSEEVENT_GLOBALPOS )
 {
-   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QMouseEvent( 1 )->globalPos() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QMouseEvent( 1 )->globalPos() ) ) );
 }
 
 /*
@@ -162,7 +162,7 @@ HB_FUNC( QT_QMOUSEEVENT_GLOBALY )
  */
 HB_FUNC( QT_QMOUSEEVENT_POS )
 {
-   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QMouseEvent( 1 )->pos() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QMouseEvent( 1 )->pos() ) ) );
 }
 
 /*
@@ -170,7 +170,7 @@ HB_FUNC( QT_QMOUSEEVENT_POS )
  */
 HB_FUNC( QT_QMOUSEEVENT_POSF )
 {
-   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QMouseEvent( 1 )->posF() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QMouseEvent( 1 )->posF() ) ) );
 }
 
 /*

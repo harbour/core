@@ -202,9 +202,9 @@ QT_G_FUNC( release_QApplication )
    }
 }
 
-void * gcAllocate_QApplication( void * pObj )
+void * hbqt_gcAllocate_QApplication( void * pObj )
 {
-   QGC_POINTER_QApplication * p = ( QGC_POINTER_QApplication * ) hb_gcAllocate( sizeof( QGC_POINTER_QApplication ), gcFuncs() );
+   QGC_POINTER_QApplication * p = ( QGC_POINTER_QApplication * ) hb_gcAllocate( sizeof( QGC_POINTER_QApplication ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QApplication;
@@ -219,7 +219,7 @@ HB_FUNC( QT_QAPPLICATION )
 
    pObj = ( QApplication * ) app ;
 
-   hb_retptrGC( gcAllocate_QApplication( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QApplication( pObj ) );
 }
 /*
  * virtual void commitData ( QSessionManager & manager )
@@ -402,7 +402,7 @@ HB_FUNC( QT_QAPPLICATION_FOCUSWIDGET )
  */
 HB_FUNC( QT_QAPPLICATION_FONT )
 {
-   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QApplication( 1 )->font() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QApplication( 1 )->font() ) ) );
 }
 
 /*
@@ -410,7 +410,7 @@ HB_FUNC( QT_QAPPLICATION_FONT )
  */
 HB_FUNC( QT_QAPPLICATION_FONT_1 )
 {
-   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QApplication( 1 )->font( hbqt_par_QWidget( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QApplication( 1 )->font( hbqt_par_QWidget( 2 ) ) ) ) );
 }
 
 /*
@@ -418,7 +418,7 @@ HB_FUNC( QT_QAPPLICATION_FONT_1 )
  */
 HB_FUNC( QT_QAPPLICATION_FONT_2 )
 {
-   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QApplication( 1 )->font( hbqt_par_char( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QApplication( 1 )->font( hbqt_par_char( 2 ) ) ) ) );
 }
 
 /*
@@ -426,7 +426,7 @@ HB_FUNC( QT_QAPPLICATION_FONT_2 )
  */
 HB_FUNC( QT_QAPPLICATION_FONTMETRICS )
 {
-   hb_retptrGC( gcAllocate_QFontMetrics( new QFontMetrics( hbqt_par_QApplication( 1 )->fontMetrics() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFontMetrics( new QFontMetrics( hbqt_par_QApplication( 1 )->fontMetrics() ) ) );
 }
 
 /*
@@ -434,7 +434,7 @@ HB_FUNC( QT_QAPPLICATION_FONTMETRICS )
  */
 HB_FUNC( QT_QAPPLICATION_GLOBALSTRUT )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QApplication( 1 )->globalStrut() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QApplication( 1 )->globalStrut() ) ) );
 }
 
 /*
@@ -482,7 +482,7 @@ HB_FUNC( QT_QAPPLICATION_KEYBOARDINPUTINTERVAL )
  */
 HB_FUNC( QT_QAPPLICATION_KEYBOARDINPUTLOCALE )
 {
-   hb_retptrGC( gcAllocate_QLocale( new QLocale( hbqt_par_QApplication( 1 )->keyboardInputLocale() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( hbqt_par_QApplication( 1 )->keyboardInputLocale() ) ) );
 }
 
 /*
@@ -522,7 +522,7 @@ HB_FUNC( QT_QAPPLICATION_OVERRIDECURSOR )
  */
 HB_FUNC( QT_QAPPLICATION_PALETTE )
 {
-   hb_retptrGC( gcAllocate_QPalette( new QPalette( hbqt_par_QApplication( 1 )->palette() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPalette( new QPalette( hbqt_par_QApplication( 1 )->palette() ) ) );
 }
 
 /*
@@ -530,7 +530,7 @@ HB_FUNC( QT_QAPPLICATION_PALETTE )
  */
 HB_FUNC( QT_QAPPLICATION_PALETTE_1 )
 {
-   hb_retptrGC( gcAllocate_QPalette( new QPalette( hbqt_par_QApplication( 1 )->palette( hbqt_par_QWidget( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPalette( new QPalette( hbqt_par_QApplication( 1 )->palette( hbqt_par_QWidget( 2 ) ) ) ) );
 }
 
 /*
@@ -538,7 +538,7 @@ HB_FUNC( QT_QAPPLICATION_PALETTE_1 )
  */
 HB_FUNC( QT_QAPPLICATION_PALETTE_2 )
 {
-   hb_retptrGC( gcAllocate_QPalette( new QPalette( hbqt_par_QApplication( 1 )->palette( hbqt_par_char( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPalette( new QPalette( hbqt_par_QApplication( 1 )->palette( hbqt_par_char( 2 ) ) ) ) );
 }
 
 /*
@@ -802,7 +802,7 @@ HB_FUNC( QT_QAPPLICATION_WIDGETAT_1 )
  */
 HB_FUNC( QT_QAPPLICATION_WINDOWICON )
 {
-   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QApplication( 1 )->windowIcon() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QApplication( 1 )->windowIcon() ) ) );
 }
 
 /*

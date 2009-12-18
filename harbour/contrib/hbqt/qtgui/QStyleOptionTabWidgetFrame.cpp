@@ -100,9 +100,9 @@ QT_G_FUNC( release_QStyleOptionTabWidgetFrame )
    }
 }
 
-void * gcAllocate_QStyleOptionTabWidgetFrame( void * pObj )
+void * hbqt_gcAllocate_QStyleOptionTabWidgetFrame( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStyleOptionTabWidgetFrame;
@@ -116,14 +116,14 @@ HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME )
 
    pObj = ( QStyleOptionTabWidgetFrame* ) new QStyleOptionTabWidgetFrame() ;
 
-   hb_retptrGC( gcAllocate_QStyleOptionTabWidgetFrame( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionTabWidgetFrame( pObj ) );
 }
 /*
  * QSize leftCornerWidgetSize
  */
 HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_LEFTCORNERWIDGETSIZE )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->leftCornerWidgetSize ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->leftCornerWidgetSize ) ) );
 }
 
 /*
@@ -147,7 +147,7 @@ HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_MIDLINEWIDTH )
  */
 HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_RIGHTCORNERWIDGETSIZE )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->rightCornerWidgetSize ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->rightCornerWidgetSize ) ) );
 }
 
 /*
@@ -163,7 +163,7 @@ HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_SHAPE )
  */
 HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_TABBARSIZE )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->tabBarSize ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->tabBarSize ) ) );
 }
 
 

@@ -102,9 +102,9 @@ QT_G_FUNC( release_QListWidgetItem )
    }
 }
 
-void * gcAllocate_QListWidgetItem( void * pObj )
+void * hbqt_gcAllocate_QListWidgetItem( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QListWidgetItem;
@@ -118,14 +118,14 @@ HB_FUNC( QT_QLISTWIDGETITEM )
 
    pObj = new QListWidgetItem( hbqt_par_QListWidget( 1 ), hb_parni( 2 ) ) ;
 
-   hb_retptrGC( gcAllocate_QListWidgetItem( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QListWidgetItem( pObj ) );
 }
 /*
  * QBrush background () const
  */
 HB_FUNC( QT_QLISTWIDGETITEM_BACKGROUND )
 {
-   hb_retptrGC( gcAllocate_QBrush( new QBrush( hbqt_par_QListWidgetItem( 1 )->background() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QListWidgetItem( 1 )->background() ) ) );
 }
 
 /*
@@ -149,7 +149,7 @@ HB_FUNC( QT_QLISTWIDGETITEM_CLONE )
  */
 HB_FUNC( QT_QLISTWIDGETITEM_DATA )
 {
-   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QListWidgetItem( 1 )->data( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QListWidgetItem( 1 )->data( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -165,7 +165,7 @@ HB_FUNC( QT_QLISTWIDGETITEM_FLAGS )
  */
 HB_FUNC( QT_QLISTWIDGETITEM_FONT )
 {
-   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QListWidgetItem( 1 )->font() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QListWidgetItem( 1 )->font() ) ) );
 }
 
 /*
@@ -173,7 +173,7 @@ HB_FUNC( QT_QLISTWIDGETITEM_FONT )
  */
 HB_FUNC( QT_QLISTWIDGETITEM_FOREGROUND )
 {
-   hb_retptrGC( gcAllocate_QBrush( new QBrush( hbqt_par_QListWidgetItem( 1 )->foreground() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QListWidgetItem( 1 )->foreground() ) ) );
 }
 
 /*
@@ -181,7 +181,7 @@ HB_FUNC( QT_QLISTWIDGETITEM_FOREGROUND )
  */
 HB_FUNC( QT_QLISTWIDGETITEM_ICON )
 {
-   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QListWidgetItem( 1 )->icon() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QListWidgetItem( 1 )->icon() ) ) );
 }
 
 /*
@@ -341,7 +341,7 @@ HB_FUNC( QT_QLISTWIDGETITEM_SETWHATSTHIS )
  */
 HB_FUNC( QT_QLISTWIDGETITEM_SIZEHINT )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QListWidgetItem( 1 )->sizeHint() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QListWidgetItem( 1 )->sizeHint() ) ) );
 }
 
 /*

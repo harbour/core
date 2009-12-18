@@ -130,9 +130,9 @@ QT_G_FUNC( release_QErrorMessage )
    }
 }
 
-void * gcAllocate_QErrorMessage( void * pObj )
+void * hbqt_gcAllocate_QErrorMessage( void * pObj )
 {
-   QGC_POINTER_QErrorMessage * p = ( QGC_POINTER_QErrorMessage * ) hb_gcAllocate( sizeof( QGC_POINTER_QErrorMessage ), gcFuncs() );
+   QGC_POINTER_QErrorMessage * p = ( QGC_POINTER_QErrorMessage * ) hb_gcAllocate( sizeof( QGC_POINTER_QErrorMessage ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QErrorMessage;
@@ -147,7 +147,7 @@ HB_FUNC( QT_QERRORMESSAGE )
 
    pObj = ( QErrorMessage* ) new QErrorMessage( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QErrorMessage( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QErrorMessage( pObj ) );
 }
 /*
  * void showMessage ( const QString & message, const QString & type )

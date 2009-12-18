@@ -113,7 +113,7 @@ HB_FUNC( QT_QINPUTCONTEXT_FILTEREVENT )
  */
 HB_FUNC( QT_QINPUTCONTEXT_FONT )
 {
-   hb_retptrGC( gcAllocate_QFont( new QFont( hbqt_par_QInputContext( 1 )->font() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QInputContext( 1 )->font() ) ) );
 }
 
 /*
@@ -169,7 +169,7 @@ HB_FUNC( QT_QINPUTCONTEXT_SENDEVENT )
  */
 HB_FUNC( QT_QINPUTCONTEXT_STANDARDFORMAT )
 {
-   hb_retptrGC( gcAllocate_QTextFormat( new QTextFormat( hbqt_par_QInputContext( 1 )->standardFormat( ( QInputContext::StandardFormat ) hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextFormat( new QTextFormat( hbqt_par_QInputContext( 1 )->standardFormat( ( QInputContext::StandardFormat ) hb_parni( 2 ) ) ) ) );
 }
 
 /*

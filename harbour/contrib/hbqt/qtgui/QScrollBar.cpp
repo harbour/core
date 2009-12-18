@@ -122,9 +122,9 @@ QT_G_FUNC( release_QScrollBar )
    }
 }
 
-void * gcAllocate_QScrollBar( void * pObj )
+void * hbqt_gcAllocate_QScrollBar( void * pObj )
 {
-   QGC_POINTER_QScrollBar * p = ( QGC_POINTER_QScrollBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QScrollBar ), gcFuncs() );
+   QGC_POINTER_QScrollBar * p = ( QGC_POINTER_QScrollBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QScrollBar ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QScrollBar;
@@ -139,7 +139,7 @@ HB_FUNC( QT_QSCROLLBAR )
 
    pObj = ( QScrollBar* ) new QScrollBar( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QScrollBar( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QScrollBar( pObj ) );
 }
 
 /*----------------------------------------------------------------------*/

@@ -121,9 +121,9 @@ QT_G_FUNC( release_QCheckBox )
    }
 }
 
-void * gcAllocate_QCheckBox( void * pObj )
+void * hbqt_gcAllocate_QCheckBox( void * pObj )
 {
-   QGC_POINTER_QCheckBox * p = ( QGC_POINTER_QCheckBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QCheckBox ), gcFuncs() );
+   QGC_POINTER_QCheckBox * p = ( QGC_POINTER_QCheckBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QCheckBox ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QCheckBox;
@@ -145,7 +145,7 @@ HB_FUNC( QT_QCHECKBOX )
       pObj = ( QCheckBox* ) new QCheckBox( hbqt_par_QWidget( 1 ) ) ;
    }
 
-   hb_retptrGC( gcAllocate_QCheckBox( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QCheckBox( pObj ) );
 }
 /*
  * Qt::CheckState checkState () const

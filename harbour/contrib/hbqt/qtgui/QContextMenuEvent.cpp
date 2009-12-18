@@ -99,9 +99,9 @@ QT_G_FUNC( release_QContextMenuEvent )
    }
 }
 
-void * gcAllocate_QContextMenuEvent( void * pObj )
+void * hbqt_gcAllocate_QContextMenuEvent( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QContextMenuEvent;
@@ -115,14 +115,14 @@ HB_FUNC( QT_QCONTEXTMENUEVENT )
 
    pObj = new QContextMenuEvent( ( QContextMenuEvent::Reason ) hb_parni( 1 ), *hbqt_par_QPoint( 2 ) ) ;
 
-   hb_retptrGC( gcAllocate_QContextMenuEvent( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QContextMenuEvent( pObj ) );
 }
 /*
  * const QPoint & globalPos () const
  */
 HB_FUNC( QT_QCONTEXTMENUEVENT_GLOBALPOS )
 {
-   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QContextMenuEvent( 1 )->globalPos() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QContextMenuEvent( 1 )->globalPos() ) ) );
 }
 
 /*
@@ -146,7 +146,7 @@ HB_FUNC( QT_QCONTEXTMENUEVENT_GLOBALY )
  */
 HB_FUNC( QT_QCONTEXTMENUEVENT_POS )
 {
-   hb_retptrGC( gcAllocate_QPoint( new QPoint( hbqt_par_QContextMenuEvent( 1 )->pos() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QContextMenuEvent( 1 )->pos() ) ) );
 }
 
 /*

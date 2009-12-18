@@ -100,9 +100,9 @@ QT_G_FUNC( release_QStyleOptionComboBox )
    }
 }
 
-void * gcAllocate_QStyleOptionComboBox( void * pObj )
+void * hbqt_gcAllocate_QStyleOptionComboBox( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStyleOptionComboBox;
@@ -116,14 +116,14 @@ HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX )
 
    pObj = ( QStyleOptionComboBox* ) new QStyleOptionComboBox() ;
 
-   hb_retptrGC( gcAllocate_QStyleOptionComboBox( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionComboBox( pObj ) );
 }
 /*
  * QIcon currentIcon
  */
 HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_CURRENTICON )
 {
-   hb_retptrGC( gcAllocate_QIcon( new QIcon( hbqt_par_QStyleOptionComboBox( 1 )->currentIcon ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QStyleOptionComboBox( 1 )->currentIcon ) ) );
 }
 
 /*
@@ -155,7 +155,7 @@ HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_FRAME )
  */
 HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_ICONSIZE )
 {
-   hb_retptrGC( gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionComboBox( 1 )->iconSize ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionComboBox( 1 )->iconSize ) ) );
 }
 
 /*
@@ -163,7 +163,7 @@ HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_ICONSIZE )
  */
 HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_POPUPRECT )
 {
-   hb_retptrGC( gcAllocate_QRect( new QRect( hbqt_par_QStyleOptionComboBox( 1 )->popupRect ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QStyleOptionComboBox( 1 )->popupRect ) ) );
 }
 
 

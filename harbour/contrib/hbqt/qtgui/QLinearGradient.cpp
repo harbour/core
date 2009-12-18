@@ -102,9 +102,9 @@ QT_G_FUNC( release_QLinearGradient )
    }
 }
 
-void * gcAllocate_QLinearGradient( void * pObj )
+void * hbqt_gcAllocate_QLinearGradient( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QLinearGradient;
@@ -133,14 +133,14 @@ HB_FUNC( QT_QLINEARGRADIENT )
       pObj = ( QLinearGradient* ) new QLinearGradient() ;
    }
 
-   hb_retptrGC( gcAllocate_QLinearGradient( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QLinearGradient( pObj ) );
 }
 /*
  * QPointF finalStop () const
  */
 HB_FUNC( QT_QLINEARGRADIENT_FINALSTOP )
 {
-   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QLinearGradient( 1 )->finalStop() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QLinearGradient( 1 )->finalStop() ) ) );
 }
 
 /*
@@ -180,7 +180,7 @@ HB_FUNC( QT_QLINEARGRADIENT_SETSTART_1 )
  */
 HB_FUNC( QT_QLINEARGRADIENT_START )
 {
-   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QLinearGradient( 1 )->start() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QLinearGradient( 1 )->start() ) ) );
 }
 
 

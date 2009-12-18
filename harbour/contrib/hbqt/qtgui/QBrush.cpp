@@ -104,9 +104,9 @@ QT_G_FUNC( release_QBrush )
    }
 }
 
-void * gcAllocate_QBrush( void * pObj )
+void * hbqt_gcAllocate_QBrush( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QBrush;
@@ -172,14 +172,14 @@ HB_FUNC( QT_QBRUSH )
       pObj = ( QBrush* ) new QBrush() ;
    }
 
-   hb_retptrGC( gcAllocate_QBrush( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QBrush( pObj ) );
 }
 /*
  * const QColor & color () const
  */
 HB_FUNC( QT_QBRUSH_COLOR )
 {
-   hb_retptrGC( gcAllocate_QColor( new QColor( hbqt_par_QBrush( 1 )->color() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QBrush( 1 )->color() ) ) );
 }
 
 /*
@@ -195,7 +195,7 @@ HB_FUNC( QT_QBRUSH_ISOPAQUE )
  */
 HB_FUNC( QT_QBRUSH_MATRIX )
 {
-   hb_retptrGC( gcAllocate_QMatrix( new QMatrix( hbqt_par_QBrush( 1 )->matrix() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QMatrix( new QMatrix( hbqt_par_QBrush( 1 )->matrix() ) ) );
 }
 
 /*
@@ -267,7 +267,7 @@ HB_FUNC( QT_QBRUSH_STYLE )
  */
 HB_FUNC( QT_QBRUSH_TEXTURE )
 {
-   hb_retptrGC( gcAllocate_QPixmap( new QPixmap( hbqt_par_QBrush( 1 )->texture() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QBrush( 1 )->texture() ) ) );
 }
 
 /*
@@ -275,7 +275,7 @@ HB_FUNC( QT_QBRUSH_TEXTURE )
  */
 HB_FUNC( QT_QBRUSH_TEXTUREIMAGE )
 {
-   hb_retptrGC( gcAllocate_QImage( new QImage( hbqt_par_QBrush( 1 )->textureImage() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( hbqt_par_QBrush( 1 )->textureImage() ) ) );
 }
 
 /*
@@ -283,7 +283,7 @@ HB_FUNC( QT_QBRUSH_TEXTUREIMAGE )
  */
 HB_FUNC( QT_QBRUSH_TRANSFORM )
 {
-   hb_retptrGC( gcAllocate_QTransform( new QTransform( hbqt_par_QBrush( 1 )->transform() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QTransform( new QTransform( hbqt_par_QBrush( 1 )->transform() ) ) );
 }
 
 

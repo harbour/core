@@ -100,9 +100,9 @@ QT_G_FUNC( release_QStyleOptionFrame )
    }
 }
 
-void * gcAllocate_QStyleOptionFrame( void * pObj )
+void * hbqt_gcAllocate_QStyleOptionFrame( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStyleOptionFrame;
@@ -116,7 +116,7 @@ HB_FUNC( QT_QSTYLEOPTIONFRAME )
 
    pObj = ( QStyleOptionFrame* ) new QStyleOptionFrame() ;
 
-   hb_retptrGC( gcAllocate_QStyleOptionFrame( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionFrame( pObj ) );
 }
 /*
  * int lineWidth

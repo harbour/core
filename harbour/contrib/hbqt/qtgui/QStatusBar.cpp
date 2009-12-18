@@ -121,9 +121,9 @@ QT_G_FUNC( release_QStatusBar )
    }
 }
 
-void * gcAllocate_QStatusBar( void * pObj )
+void * hbqt_gcAllocate_QStatusBar( void * pObj )
 {
-   QGC_POINTER_QStatusBar * p = ( QGC_POINTER_QStatusBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QStatusBar ), gcFuncs() );
+   QGC_POINTER_QStatusBar * p = ( QGC_POINTER_QStatusBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QStatusBar ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QStatusBar;
@@ -138,7 +138,7 @@ HB_FUNC( QT_QSTATUSBAR )
 
    pObj = ( QStatusBar* ) new QStatusBar( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QStatusBar( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QStatusBar( pObj ) );
 }
 /*
  * void addPermanentWidget ( QWidget * widget, int stretch = 0 )

@@ -123,9 +123,9 @@ QT_G_FUNC( release_QSyntaxHighlighter )
    }
 }
 
-void * gcAllocate_QSyntaxHighlighter( void * pObj )
+void * hbqt_gcAllocate_QSyntaxHighlighter( void * pObj )
 {
-   QGC_POINTER_QSyntaxHighlighter * p = ( QGC_POINTER_QSyntaxHighlighter * ) hb_gcAllocate( sizeof( QGC_POINTER_QSyntaxHighlighter ), gcFuncs() );
+   QGC_POINTER_QSyntaxHighlighter * p = ( QGC_POINTER_QSyntaxHighlighter * ) hb_gcAllocate( sizeof( QGC_POINTER_QSyntaxHighlighter ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QSyntaxHighlighter;
@@ -143,7 +143,7 @@ HB_FUNC( QT_QSYNTAXHIGHLIGHTER )
       pObj = new HBQSyntaxHighlighter( hbqt_par_QTextDocument( 1 ) ) ;
    }
 
-   hb_retptrGC( gcAllocate_QSyntaxHighlighter( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QSyntaxHighlighter( pObj ) );
 }
 /*
  * QTextDocument * document () const

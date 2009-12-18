@@ -97,9 +97,9 @@ QT_G_FUNC( release_QTextDocumentWriter )
    }
 }
 
-void * gcAllocate_QTextDocumentWriter( void * pObj )
+void * hbqt_gcAllocate_QTextDocumentWriter( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTextDocumentWriter;
@@ -113,7 +113,7 @@ HB_FUNC( QT_QTEXTDOCUMENTWRITER )
 
    pObj = ( QTextDocumentWriter* ) new QTextDocumentWriter() ;
 
-   hb_retptrGC( gcAllocate_QTextDocumentWriter( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextDocumentWriter( pObj ) );
 }
 /*
  * QTextCodec * codec () const
@@ -144,7 +144,7 @@ HB_FUNC( QT_QTEXTDOCUMENTWRITER_FILENAME )
  */
 HB_FUNC( QT_QTEXTDOCUMENTWRITER_FORMAT )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QTextDocumentWriter( 1 )->format() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QTextDocumentWriter( 1 )->format() ) ) );
 }
 
 /*

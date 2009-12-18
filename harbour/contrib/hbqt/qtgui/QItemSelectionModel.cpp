@@ -126,9 +126,9 @@ QT_G_FUNC( release_QItemSelectionModel )
    }
 }
 
-void * gcAllocate_QItemSelectionModel( void * pObj )
+void * hbqt_gcAllocate_QItemSelectionModel( void * pObj )
 {
-   QGC_POINTER_QItemSelectionModel * p = ( QGC_POINTER_QItemSelectionModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QItemSelectionModel ), gcFuncs() );
+   QGC_POINTER_QItemSelectionModel * p = ( QGC_POINTER_QItemSelectionModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QItemSelectionModel ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QItemSelectionModel;
@@ -146,7 +146,7 @@ HB_FUNC( QT_QITEMSELECTIONMODEL )
       pObj = new QItemSelectionModel( hbqt_par_QAbstractItemModel( 1 ) ) ;
    }
 
-   hb_retptrGC( gcAllocate_QItemSelectionModel( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QItemSelectionModel( pObj ) );
 }
 /*
  * bool columnIntersectsSelection ( int column, const QModelIndex & parent ) const
@@ -161,7 +161,7 @@ HB_FUNC( QT_QITEMSELECTIONMODEL_COLUMNINTERSECTSSELECTION )
  */
 HB_FUNC( QT_QITEMSELECTIONMODEL_CURRENTINDEX )
 {
-   hb_retptrGC( gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QItemSelectionModel( 1 )->currentIndex() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QItemSelectionModel( 1 )->currentIndex() ) ) );
 }
 
 /*
@@ -217,7 +217,7 @@ HB_FUNC( QT_QITEMSELECTIONMODEL_ROWINTERSECTSSELECTION )
  */
 HB_FUNC( QT_QITEMSELECTIONMODEL_SELECTION )
 {
-   hb_retptrGC( gcAllocate_QItemSelection( new QItemSelection( hbqt_par_QItemSelectionModel( 1 )->selection() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( hbqt_par_QItemSelectionModel( 1 )->selection() ) ) );
 }
 
 /*

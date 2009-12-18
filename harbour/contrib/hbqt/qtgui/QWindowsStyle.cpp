@@ -122,9 +122,9 @@ QT_G_FUNC( release_QWindowsStyle )
    }
 }
 
-void * gcAllocate_QWindowsStyle( void * pObj )
+void * hbqt_gcAllocate_QWindowsStyle( void * pObj )
 {
-   QGC_POINTER_QWindowsStyle * p = ( QGC_POINTER_QWindowsStyle * ) hb_gcAllocate( sizeof( QGC_POINTER_QWindowsStyle ), gcFuncs() );
+   QGC_POINTER_QWindowsStyle * p = ( QGC_POINTER_QWindowsStyle * ) hb_gcAllocate( sizeof( QGC_POINTER_QWindowsStyle ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QWindowsStyle;
@@ -139,7 +139,7 @@ HB_FUNC( QT_QWINDOWSSTYLE )
 
    pObj = ( QWindowsStyle* ) new QWindowsStyle() ;
 
-   hb_retptrGC( gcAllocate_QWindowsStyle( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QWindowsStyle( pObj ) );
 }
 
 /*----------------------------------------------------------------------*/

@@ -94,9 +94,9 @@ QT_G_FUNC( release_QSpacerItem )
    }
 }
 
-void * gcAllocate_QSpacerItem( void * pObj )
+void * hbqt_gcAllocate_QSpacerItem( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QSpacerItem;
@@ -113,7 +113,7 @@ HB_FUNC( QT_QSPACERITEM )
       pObj = new QSpacerItem( *hbqt_par_QSpacerItem( 1 ) ) ;
    }
 
-   hb_retptrGC( gcAllocate_QSpacerItem( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QSpacerItem( pObj ) );
 }
 /*
  * void changeSize ( int w, int h, QSizePolicy::Policy hPolicy = QSizePolicy::Minimum, QSizePolicy::Policy vPolicy = QSizePolicy::Minimum )

@@ -126,9 +126,9 @@ QT_G_FUNC( release_QSlider )
    }
 }
 
-void * gcAllocate_QSlider( void * pObj )
+void * hbqt_gcAllocate_QSlider( void * pObj )
 {
-   QGC_POINTER_QSlider * p = ( QGC_POINTER_QSlider * ) hb_gcAllocate( sizeof( QGC_POINTER_QSlider ), gcFuncs() );
+   QGC_POINTER_QSlider * p = ( QGC_POINTER_QSlider * ) hb_gcAllocate( sizeof( QGC_POINTER_QSlider ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QSlider;
@@ -146,7 +146,7 @@ HB_FUNC( QT_QSLIDER )
    else
       pObj = ( QSlider* ) new QSlider( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QSlider( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QSlider( pObj ) );
 }
 /*
  * void setTickInterval ( int ti )

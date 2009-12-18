@@ -131,9 +131,9 @@ QT_G_FUNC( release_QFile )
    }
 }
 
-void * gcAllocate_QFile( void * pObj )
+void * hbqt_gcAllocate_QFile( void * pObj )
 {
-   QGC_POINTER_QFile * p = ( QGC_POINTER_QFile * ) hb_gcAllocate( sizeof( QGC_POINTER_QFile ), gcFuncs() );
+   QGC_POINTER_QFile * p = ( QGC_POINTER_QFile * ) hb_gcAllocate( sizeof( QGC_POINTER_QFile ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QFile;
@@ -151,7 +151,7 @@ HB_FUNC( QT_QFILE )
       pObj = new QFile( hbqt_par_QString( 1 ) ) ;
    }
 
-   hb_retptrGC( gcAllocate_QFile( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QFile( pObj ) );
 }
 /*
  * virtual bool atEnd () const
@@ -358,7 +358,7 @@ HB_FUNC( QT_QFILE_DECODENAME_1 )
  */
 HB_FUNC( QT_QFILE_ENCODENAME )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QFile( 1 )->encodeName( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QFile( 1 )->encodeName( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*

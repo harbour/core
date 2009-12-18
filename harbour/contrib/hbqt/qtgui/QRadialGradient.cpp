@@ -104,9 +104,9 @@ QT_G_FUNC( release_QRadialGradient )
    }
 }
 
-void * gcAllocate_QRadialGradient( void * pObj )
+void * hbqt_gcAllocate_QRadialGradient( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QRadialGradient;
@@ -139,14 +139,14 @@ HB_FUNC( QT_QRADIALGRADIENT )
       pObj = ( QRadialGradient* ) new QRadialGradient() ;
    }
 
-   hb_retptrGC( gcAllocate_QRadialGradient( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QRadialGradient( pObj ) );
 }
 /*
  * QPointF center () const
  */
 HB_FUNC( QT_QRADIALGRADIENT_CENTER )
 {
-   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QRadialGradient( 1 )->center() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QRadialGradient( 1 )->center() ) ) );
 }
 
 /*
@@ -154,7 +154,7 @@ HB_FUNC( QT_QRADIALGRADIENT_CENTER )
  */
 HB_FUNC( QT_QRADIALGRADIENT_FOCALPOINT )
 {
-   hb_retptrGC( gcAllocate_QPointF( new QPointF( hbqt_par_QRadialGradient( 1 )->focalPoint() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QRadialGradient( 1 )->focalPoint() ) ) );
 }
 
 /*

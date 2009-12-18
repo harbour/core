@@ -124,7 +124,7 @@ HB_FUNC( QT_QPRINTENGINE_PRINTERSTATE )
  */
 HB_FUNC( QT_QPRINTENGINE_PROPERTY )
 {
-   hb_retptrGC( gcAllocate_QVariant( new QVariant( hbqt_par_QPrintEngine( 1 )->property( ( QPrintEngine::PrintEnginePropertyKey ) hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QPrintEngine( 1 )->property( ( QPrintEngine::PrintEnginePropertyKey ) hb_parni( 2 ) ) ) ) );
 }
 
 /*

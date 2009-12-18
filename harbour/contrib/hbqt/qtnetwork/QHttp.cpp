@@ -144,9 +144,9 @@ QT_G_FUNC( release_QHttp )
    }
 }
 
-void * gcAllocate_QHttp( void * pObj )
+void * hbqt_gcAllocate_QHttp( void * pObj )
 {
-   QGC_POINTER_QHttp * p = ( QGC_POINTER_QHttp * ) hb_gcAllocate( sizeof( QGC_POINTER_QHttp ), gcFuncs() );
+   QGC_POINTER_QHttp * p = ( QGC_POINTER_QHttp * ) hb_gcAllocate( sizeof( QGC_POINTER_QHttp ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QHttp;
@@ -161,7 +161,7 @@ HB_FUNC( QT_QHTTP )
 
    pObj = new QHttp( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( gcAllocate_QHttp( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QHttp( pObj ) );
 }
 /*
  * qint64 bytesAvailable () const
@@ -208,7 +208,7 @@ HB_FUNC( QT_QHTTP_CURRENTID )
  */
 HB_FUNC( QT_QHTTP_CURRENTREQUEST )
 {
-   hb_retptrGC( gcAllocate_QHttpRequestHeader( new QHttpRequestHeader( hbqt_par_QHttp( 1 )->currentRequest() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QHttpRequestHeader( new QHttpRequestHeader( hbqt_par_QHttp( 1 )->currentRequest() ) ) );
 }
 
 /*
@@ -264,7 +264,7 @@ HB_FUNC( QT_QHTTP_HEAD )
  */
 HB_FUNC( QT_QHTTP_LASTRESPONSE )
 {
-   hb_retptrGC( gcAllocate_QHttpResponseHeader( new QHttpResponseHeader( hbqt_par_QHttp( 1 )->lastResponse() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QHttpResponseHeader( new QHttpResponseHeader( hbqt_par_QHttp( 1 )->lastResponse() ) ) );
 }
 
 /*
@@ -288,7 +288,7 @@ HB_FUNC( QT_QHTTP_POST_1 )
  */
 HB_FUNC( QT_QHTTP_READALL )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QHttp( 1 )->readAll() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QHttp( 1 )->readAll() ) ) );
 }
 
 /*

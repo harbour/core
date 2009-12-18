@@ -98,9 +98,9 @@ QT_G_FUNC( release_QFontMetricsF )
    }
 }
 
-void * gcAllocate_QFontMetricsF( void * pObj )
+void * hbqt_gcAllocate_QFontMetricsF( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QFontMetricsF;
@@ -132,7 +132,7 @@ HB_FUNC( QT_QFONTMETRICSF )
       pObj = ( QFontMetricsF* ) new QFontMetricsF( *hbqt_par_QFont( 1 ), hbqt_par_QPaintDevice( 2 ) ) ;
    }
 
-   hb_retptrGC( gcAllocate_QFontMetricsF( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QFontMetricsF( pObj ) );
 }
 /*
  * qreal ascent () const
@@ -155,7 +155,7 @@ HB_FUNC( QT_QFONTMETRICSF_AVERAGECHARWIDTH )
  */
 HB_FUNC( QT_QFONTMETRICSF_BOUNDINGRECT )
 {
-   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QFontMetricsF( 1 )->boundingRect( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QFontMetricsF( 1 )->boundingRect( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*
@@ -163,7 +163,7 @@ HB_FUNC( QT_QFONTMETRICSF_BOUNDINGRECT )
  */
 HB_FUNC( QT_QFONTMETRICSF_BOUNDINGRECT_1 )
 {
-   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QFontMetricsF( 1 )->boundingRect( hb_parni( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QFontMetricsF( 1 )->boundingRect( hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -173,7 +173,7 @@ HB_FUNC( QT_QFONTMETRICSF_BOUNDINGRECT_2 )
 {
    int iTabArray = 0;
 
-   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QFontMetricsF( 1 )->boundingRect( *hbqt_par_QRectF( 2 ), hb_parni( 3 ), hbqt_par_QString( 4 ), hb_parni( 5 ), &iTabArray ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QFontMetricsF( 1 )->boundingRect( *hbqt_par_QRectF( 2 ), hb_parni( 3 ), hbqt_par_QString( 4 ), hb_parni( 5 ), &iTabArray ) ) ) );
 
    hb_storni( iTabArray, 6 );
 }
@@ -289,7 +289,7 @@ HB_FUNC( QT_QFONTMETRICSF_SIZE )
 {
    int iTabArray = 0;
 
-   hb_retptrGC( gcAllocate_QSizeF( new QSizeF( hbqt_par_QFontMetricsF( 1 )->size( hb_parni( 2 ), hbqt_par_QString( 3 ), hb_parni( 4 ), &iTabArray ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( hbqt_par_QFontMetricsF( 1 )->size( hb_parni( 2 ), hbqt_par_QString( 3 ), hb_parni( 4 ), &iTabArray ) ) ) );
 
    hb_storni( iTabArray, 5 );
 }
@@ -307,7 +307,7 @@ HB_FUNC( QT_QFONTMETRICSF_STRIKEOUTPOS )
  */
 HB_FUNC( QT_QFONTMETRICSF_TIGHTBOUNDINGRECT )
 {
-   hb_retptrGC( gcAllocate_QRectF( new QRectF( hbqt_par_QFontMetricsF( 1 )->tightBoundingRect( hbqt_par_QString( 2 ) ) ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QFontMetricsF( 1 )->tightBoundingRect( hbqt_par_QString( 2 ) ) ) ) );
 }
 
 /*

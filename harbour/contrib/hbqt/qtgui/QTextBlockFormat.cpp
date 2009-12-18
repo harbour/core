@@ -113,9 +113,9 @@ QT_G_FUNC( release_QTextBlockFormat )
    }
 }
 
-void * gcAllocate_QTextBlockFormat( void * pObj )
+void * hbqt_gcAllocate_QTextBlockFormat( void * pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), gcFuncs() );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QTextBlockFormat;
@@ -136,7 +136,7 @@ HB_FUNC( QT_QTEXTBLOCKFORMAT )
       pObj = ( QTextBlockFormat* ) new QTextBlockFormat() ;
    }
 
-   hb_retptrGC( gcAllocate_QTextBlockFormat( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextBlockFormat( pObj ) );
 }
 /*
  * Qt::Alignment alignment () const

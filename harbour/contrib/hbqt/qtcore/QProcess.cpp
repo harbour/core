@@ -132,9 +132,9 @@ QT_G_FUNC( release_QProcess )
    }
 }
 
-void * gcAllocate_QProcess( void * pObj )
+void * hbqt_gcAllocate_QProcess( void * pObj )
 {
-   QGC_POINTER_QProcess * p = ( QGC_POINTER_QProcess * ) hb_gcAllocate( sizeof( QGC_POINTER_QProcess ), gcFuncs() );
+   QGC_POINTER_QProcess * p = ( QGC_POINTER_QProcess * ) hb_gcAllocate( sizeof( QGC_POINTER_QProcess ), hbqt_gcFuncs() );
 
    p->ph = pObj;
    p->func = release_QProcess;
@@ -156,7 +156,7 @@ HB_FUNC( QT_QPROCESS )
       pObj = ( QProcess* ) new QProcess() ;
    }
 
-   hb_retptrGC( gcAllocate_QProcess( pObj ) );
+   hb_retptrGC( hbqt_gcAllocate_QProcess( pObj ) );
 }
 /*
  * virtual void close ()
@@ -187,7 +187,7 @@ HB_FUNC( QT_QPROCESS_CLOSEWRITECHANNEL )
  */
 HB_FUNC( QT_QPROCESS_ENVIRONMENT )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QProcess( 1 )->environment() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QProcess( 1 )->environment() ) ) );
 }
 
 /*
@@ -227,7 +227,7 @@ HB_FUNC( QT_QPROCESS_PROCESSCHANNELMODE )
  */
 HB_FUNC( QT_QPROCESS_READALLSTANDARDERROR )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QProcess( 1 )->readAllStandardError() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QProcess( 1 )->readAllStandardError() ) ) );
 }
 
 /*
@@ -235,7 +235,7 @@ HB_FUNC( QT_QPROCESS_READALLSTANDARDERROR )
  */
 HB_FUNC( QT_QPROCESS_READALLSTANDARDOUTPUT )
 {
-   hb_retptrGC( gcAllocate_QByteArray( new QByteArray( hbqt_par_QProcess( 1 )->readAllStandardOutput() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QProcess( 1 )->readAllStandardOutput() ) ) );
 }
 
 /*
@@ -407,7 +407,7 @@ HB_FUNC( QT_QPROCESS_STARTDETACHED_2 )
  */
 HB_FUNC( QT_QPROCESS_SYSTEMENVIRONMENT )
 {
-   hb_retptrGC( gcAllocate_QStringList( new QStringList( hbqt_par_QProcess( 1 )->systemEnvironment() ) ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QProcess( 1 )->systemEnvironment() ) ) );
 }
 
 /*
