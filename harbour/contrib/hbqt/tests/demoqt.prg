@@ -650,7 +650,7 @@ STATIC FUNCTION Dialogs( cType )
       oDlg := QWebView():new()
       oUrl := QUrl():new()
       oUrl:setUrl( "http://www.harbour.vouch.info" )
-      QT_QWebView_SetUrl( QT_PTROF( oDlg ), QT_PTROF( oUrl ) )
+      QT_QWebView_SetUrl( oDlg:pPtr, oUrl:pPtr )
       oDlg:setWindowTitle( "Harbour-QT Web Page Navigator" )
       oDlg:exec()
       #endif
@@ -934,4 +934,3 @@ FUNCTION ShowInSystemTray( oWnd )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
-
