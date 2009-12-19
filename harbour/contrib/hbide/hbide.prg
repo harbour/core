@@ -206,7 +206,6 @@ CLASS HbIde
    METHOD updateFuncList()
    METHOD gotoFunction()
    METHOD fetchProjectProperties()
-   METHOD fetchProjectPropertiesViaUI()
    METHOD loadProjectProperties()
    METHOD appendProjectInTree()
    METHOD manageItemSelected()
@@ -1421,7 +1420,7 @@ METHOD HbIde:printPreview()
    qDlg:setWindowTitle( "Harbour-QT Preview Dialog" )
    Qt_Connect_Signal( qDlg, "paintRequested(QPrinter)", {|o,p| ::paintRequested( p,o ) } )
    qDlg:exec()
-   Qt_DisConnect_Signal( qDlg:pPtr, "paintRequested(QPrinter)" )
+   Qt_DisConnect_Signal( qDlg, "paintRequested(QPrinter)" )
 
    RETURN self
 
@@ -1601,7 +1600,6 @@ METHOD HbIde:loadProjectProperties( cProject, lNew, lFetch )
    IF lFetch
       ::cSaveTo := ""
       ::fetchProjectProperties()
-      //::fetchProjectPropertiesViaUI()
       IF !empty( ::cSaveTo ) .and. file( ::cSaveTo )
          cProject := ::cSaveTo
          /* Reload from file */
@@ -1619,9 +1617,8 @@ METHOD HbIde:loadProjectProperties( cProject, lNew, lFetch )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:fetchProjectPropertiesViaUI()
-   LOCAL cPrjLoc   := hb_dirBase() + "projects"
-   LOCAL aPrjProps := ::aPrjProps
+METHOD HbIde:fetchProjectProperties()
+   LOCAL cPrjLoc := hb_dirBase() + "projects"
 
    ::oProps := XbpQtUiLoader():new( ::oDlg )
    ::oProps:file := s_resPath + "projectproperties.ui"
@@ -1638,7 +1635,7 @@ METHOD HbIde:fetchProjectPropertiesViaUI()
 
    ::oProps:signal( "tabWidget"     , "currentChanged(int)", {|o,p| ::updateHbp( p, o ) } )
 
-   IF empty( aPrjProps )
+   IF empty( ::aPrjProps )
       ::oProps:qObj[ "editPrjTitle"  ]:setText( "untitled"   )
       ::oProps:qObj[ "editPrjLoctn"  ]:setText( cPrjLoc      )
       ::oProps:qObj[ "editWrkFolder" ]:setText( hb_dirBase() )
@@ -1646,15 +1643,15 @@ METHOD HbIde:fetchProjectPropertiesViaUI()
       ::oProps:qObj[ "editOutName"   ]:setText( "untitled"   )
 
    ELSE
-      ::oProps:qObj[ "editPrjTitle"  ]:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_TITLE     ] )
-      ::oProps:qObj[ "editPrjLoctn"  ]:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_LOCATION  ] )
-      ::oProps:qObj[ "editWrkFolder" ]:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_WRKFOLDER ] )
-      ::oProps:qObj[ "editDstFolder" ]:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_DSTFOLDER ] )
-      ::oProps:qObj[ "editOutName"   ]:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_OUTPUT    ] )
+      ::oProps:qObj[ "editPrjTitle"  ]:setText( ::aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_TITLE     ] )
+      ::oProps:qObj[ "editPrjLoctn"  ]:setText( ::aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_LOCATION  ] )
+      ::oProps:qObj[ "editWrkFolder" ]:setText( ::aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_WRKFOLDER ] )
+      ::oProps:qObj[ "editDstFolder" ]:setText( ::aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_DSTFOLDER ] )
+      ::oProps:qObj[ "editOutName"   ]:setText( ::aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_OUTPUT    ] )
 
-      ::oProps:qObj[ "editFlags"     ]:setPlainText( ArrayToMemo( aPrjProps[ PRJ_PRP_FLAGS   , 1 ] ) )
-      ::oProps:qObj[ "editSources"   ]:setPlainText( ArrayToMemo( aPrjProps[ PRJ_PRP_SOURCES , 1 ] ) )
-      ::oProps:qObj[ "editMetaData"  ]:setPlainText( ArrayToMemo( aPrjProps[ PRJ_PRP_METADATA, 1 ] ) )
+      ::oProps:qObj[ "editFlags"     ]:setPlainText( ArrayToMemo( ::aPrjProps[ PRJ_PRP_FLAGS   , 1 ] ) )
+      ::oProps:qObj[ "editSources"   ]:setPlainText( ArrayToMemo( ::aPrjProps[ PRJ_PRP_SOURCES , 1 ] ) )
+      ::oProps:qObj[ "editMetaData"  ]:setPlainText( ArrayToMemo( ::aPrjProps[ PRJ_PRP_METADATA, 1 ] ) )
       ::oProps:qObj[ "editCompilers" ]:setPlainText( memoread( hb_dirBase() + "hbide.env" ) )
 
       #if 0
@@ -1674,107 +1671,63 @@ METHOD HbIde:fetchProjectPropertiesViaUI()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:fetchProjectProperties()
-   LOCAL qPrpDlg, qPrjType, oPrjTtl, oPBOk, oPBCn, oTabWidget, oPBSv, oPBSelect
-   LOCAL oPrjLoc, oPrjWrk, oPrjDst, oPrjOut, oPrjInc, oPrjLau, oPrjLEx, oPrjSrc, oPrjMta, oPrjHbp, oPrjCmp
-   LOCAL cPrjLoc   := hb_dirBase() + "projects"
-   LOCAL aPrjProps := ::aPrjProps
+METHOD HbIde:saveProject()
+   LOCAL a_, a4_1
+   LOCAL typ_:= { "Executable", "Lib", "Dll" }
+   LOCAL txt_:= {}
 
-   IF !empty( qPrpDlg := ::loadUI( "projectproperties" ) )
+   aadd( txt_, "[ PROPERTIES ]" )
+   aadd( txt_, "Type              = " + typ_[ ::oProps:qObj[ "comboPrjType"     ]:currentIndex()+1 ] )
+   aadd( txt_, "Title             = " + ::oProps:qObj[ "editPrjTitle"     ]:text() )
+   aadd( txt_, "Location          = " + ::oProps:qObj[ "editPrjLoctn"     ]:text() )
+   aadd( txt_, "WorkingFolder     = " + ::oProps:qObj[ "editWrkFolder"    ]:text() )
+   aadd( txt_, "DestinationFolder = " + ::oProps:qObj[ "editDstFolder"    ]:text() )
+   aadd( txt_, "Output            = " + ::oProps:qObj[ "editOutName"      ]:text() )
+   aadd( txt_, "LaunchParams      = " + ::oProps:qObj[ "editLaunchParams" ]:text() )
+   aadd( txt_, "LaunchProgram     = " + ::oProps:qObj[ "editLaunchExe"    ]:text() )
+   aadd( txt_, " " )
 
-      qPrjType := QComboBox():configure( Qt_findChild( qPrpDlg, "comboPrjType" ) )
-      qPrjType:addItem( "Executable" )
-      qPrjType:addItem( "Library"    )
-      qPrjType:addItem( "Dll"        )
+   aadd( txt_, "[ FLAGS ]" )
+   a_:= MemoToArray( ::oProps:qObj[ "editFlags"     ]:toPlainText() ); aeval( a_, {|e| aadd( txt_, e ) } ) ; aadd( txt_, " " )
+   aadd( txt_, "[ SOURCES ]" )
+   a_:= MemoToArray( ::oProps:qObj[ "editSources"   ]:toPlainText() ); aeval( a_, {|e| aadd( txt_, e ) } ) ; aadd( txt_, " " )
+   aadd( txt_, "[ METADATA ]" )
+   a_:= MemoToArray( ::oProps:qObj[ "editMetaData"  ]:toPlainText() ); aeval( a_, {|e| aadd( txt_, e ) } ) ; aadd( txt_, " " )
 
-      oPrjTtl := QLineEdit():configure( Qt_FindChild( qPrpDlg, "editPrjTitle"     ) )
-      oPrjLoc := QLineEdit():configure( Qt_FindChild( qPrpDlg, "editPrjLoctn"     ) )
-      oPrjWrk := QLineEdit():configure( Qt_FindChild( qPrpDlg, "editWrkFolder"    ) )
-      oPrjDst := QLineEdit():configure( Qt_FindChild( qPrpDlg, "editDstFolder"    ) )
-      oPrjOut := QLineEdit():configure( Qt_FindChild( qPrpDlg, "editOutName"      ) )
-      oPrjInc := QTextEdit():configure( Qt_FindChild( qPrpDlg, "editFlags"        ) )
-      oPrjLau := QLineEdit():configure( Qt_FindChild( qPrpDlg, "editLaunchParams" ) )
-      oPrjLEx := QLineEdit():configure( Qt_FindChild( qPrpDlg, "editLaunchExe"    ) )
-      oPrjSrc := QTextEdit():configure( Qt_FindChild( qPrpDlg, "editSources"      ) )
-      oPrjMta := QTextEdit():configure( Qt_FindChild( qPrpDlg, "editMetaData"     ) )
-      oPrjHbp := QTextEdit():configure( Qt_FindChild( qPrpDlg, "editHbp"          ) )
-      oPrjCmp := QTextEdit():configure( Qt_FindChild( qPrpDlg, "editCompilers"    ) )
+   /* Setup Meta Keys */
+   a4_1 := SetupMetaKeys( a_ )
 
-      ::aPrpObjs := { qPrjType, oPrjTtl, oPrjLoc, oPrjWrk, oPrjDst, oPrjOut, oPrjLau, oPrjLEx, oPrjInc, oPrjSrc, oPrjMta, oPrjHbp, oPrjCmp }
+   ::cSaveTo := ParseWithMetaData( ::oProps:qObj[ "editPrjLoctn" ]:text(), a4_1 ) + ;
+                      hb_OsPathSeparator() + ;
+                ParseWithMetaData( ::oProps:qObj[ "editOutName"  ]:text(), a4_1 ) + ;
+                      ".hbi"
 
-      oPBCn := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( qPrpDlg, "buttonCn" ) )
-      oPBCn:activate := {|| qPrpDlg:close() }
-      oPBSv := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( qPrpDlg, "buttonSave" ) )
-      oPBSv:activate := {|| ::saveProject() }
-      oPBOk := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( qPrpDlg, "buttonSaveExit" ) )
-      oPBOk:activate := {|| ::saveProject(), qPrpDlg:close() }
-      oPBSelect := XbpPushButton():new():hbCreateFromQtPtr( , , , , , , Qt_findChild( qPrpDlg, "buttonSelect" ) )
-      oPBSelect:activate := {|| ::addSourcesToProject() }
+   CreateTarget( ::cSaveTo, txt_ )
+   hb_MemoWrit( hb_dirBase() + "hbide.env", ::oProps:qObj[ "editCompilers" ]:toPlainText() )
 
-      oTabWidget := QTabWidget():configure( Qt_FindChild( qPrpDlg, "tabWidget" ) )
-      Qt_Connect_Signal( oTabWidget, "currentChanged(int)", {|o,p| ::updateHbp( p, o ) } )
-
-      IF empty( aPrjProps )
-         oPrjTtl:setText( "untitled"   )
-         oPrjLoc:setText( cPrjLoc      )
-         oPrjWrk:setText( hb_dirBase() )
-         oPrjDst:setText( cPrjLoc      )
-         oPrjOut:setText( "untitled"   )
-
-      ELSE
-         oPrjTtl:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_TITLE     ] )
-         oPrjLoc:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_LOCATION  ] )
-         oPrjWrk:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_WRKFOLDER ] )
-         oPrjDst:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_DSTFOLDER ] )
-         oPrjOut:setText( aPrjProps[ PRJ_PRP_PROPERTIES, 1, PRJ_PRP_OUTPUT    ] )
-
-         oPrjInc:setPlainText( ArrayToMemo( aPrjProps[ PRJ_PRP_FLAGS   , 1 ] ) )
-         oPrjSrc:setPlainText( ArrayToMemo( aPrjProps[ PRJ_PRP_SOURCES , 1 ] ) )
-         oPrjMta:setPlainText( ArrayToMemo( aPrjProps[ PRJ_PRP_METADATA, 1 ] ) )
-         oPrjCmp:setPlainText( memoread( hb_dirBase() + "hbide.env" ) )
-
-      ENDIF
-
-      qPrpDlg:exec()
-
-      Qt_DisConnect_Signal( oTabWidget, "currentChanged(int)" )
-
-      oPBOk:destroy()
-      oPBSv:destroy()
-      oPBCn:destroy()
-      oPBSelect:destroy()
-
-      ::aPrpObjs := {}
-   ENDIF
-
-   ::manageFocusInEditor()
-
-   RETURN Self
+   RETURN Nil
 
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:updateHbp( iIndex )
-   LOCAL a_, a4_1, o_, txt_, s
+   LOCAL a_, a4_1, txt_, s
    LOCAL cExt
 
    IF iIndex != 3
       RETURN nil
    ENDIF
-   IF empty( o_:= ::aPrpObjs )
-      RETURN nil
-   ENDIF
 
-   a_:= hb_atokens( strtran( o_[ E_oPrjMta ]:toPlainText(), chr( 13 ) ), _EOL )
+   a_:= hb_atokens( strtran( ::oProps:qObj[ "editMetaData"  ]:toPlainText(), chr( 13 ) ), _EOL )
    a4_1 := SetupMetaKeys( a_ )
 
    txt_:= {}
    /* This block will be absent when submitting to hbmk engine */
-   aadd( txt_, "#   " + ParseWithMetaData( o_[ E_oPrjWrk ]:text(), a4_1 ) + s_pathSep + ;
-                        ParseWithMetaData( o_[ E_oPrjOut ]:text(), a4_1 ) + ".hbp" )
+   aadd( txt_, "#   " + ParseWithMetaData( ::oProps:qObj[ "editWrkFolder"    ]:text(), a4_1 ) + s_pathSep + ;
+                        ParseWithMetaData( ::oProps:qObj[ "editOutName"      ]:text(), a4_1 ) + ".hbp" )
    aadd( txt_, " " )
 
    /* Flags */
-   a_:= hb_atokens( o_[ E_oPrjInc ]:toPlainText(), _EOL )
+   a_:= hb_atokens( ::oProps:qObj[ "editFlags" ]:toPlainText(), _EOL )
    FOR EACH s IN a_
       s := alltrim( s )
       IF !( "#" == left( s,1 ) ) .and. !empty( s )
@@ -1785,7 +1738,7 @@ METHOD HbIde:updateHbp( iIndex )
    aadd( txt_, " " )
 
    /* Sources */
-   a_:= hb_atokens( o_[ E_oPrjSrc ]:toPlainText(), _EOL )
+   a_:= hb_atokens( ::oProps:qObj[ "editSources" ]:toPlainText(), _EOL )
    FOR EACH s IN a_
       s := alltrim( s )
       IF !( "#" == left( s,1 ) ) .and. !empty( s )
@@ -1799,52 +1752,9 @@ METHOD HbIde:updateHbp( iIndex )
    aadd( txt_, " " )
 
    /* Final assault */
-   ::aPrpObjs[ E_oPrjHbp ]:setPlainText( ArrayToMemo( txt_ ) )
+   ::oProps:qObj[ "editHbp" ]:setPlainText( ArrayToMemo( txt_ ) )
 
    RETURN txt_
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:saveProject()
-   LOCAL txt_, a_, a4_1, o_//, s, b_, i, j
-   LOCAL typ_:= { "Executable", "Lib", "Dll" }
-
-   IF empty( o_:= ::aPrpObjs )
-      RETURN nil
-   ENDIF
-
-   txt_:= {}
-
-   aadd( txt_, "[ PROPERTIES ]" )
-   aadd( txt_, "Type              = " + typ_[ o_[ E_qPrjType ]:currentIndex()+1 ] )
-   aadd( txt_, "Title             = " + o_[ E_oPrjTtl ]:text() )
-   aadd( txt_, "Location          = " + o_[ E_oPrjLoc ]:text() )
-   aadd( txt_, "WorkingFolder     = " + o_[ E_oPrjWrk ]:text() )
-   aadd( txt_, "DestinationFolder = " + o_[ E_oPrjDst ]:text() )
-   aadd( txt_, "Output            = " + o_[ E_oPrjOut ]:text() )
-   aadd( txt_, "LaunchParams      = " + o_[ E_oPrjLau ]:text() )
-   aadd( txt_, "LaunchProgram     = " + o_[ E_oPrjLEx ]:text() )
-   aadd( txt_, " " )
-
-   aadd( txt_, "[ FLAGS ]" )
-   a_:= MemoToArray( o_[ E_oPrjInc ]:toPlainText() ); aeval( a_, {|e| aadd( txt_, e ) } ) ; aadd( txt_, " " )
-   aadd( txt_, "[ SOURCES ]" )
-   a_:= MemoToArray( o_[ E_oPrjSrc ]:toPlainText() ); aeval( a_, {|e| aadd( txt_, e ) } ) ; aadd( txt_, " " )
-   aadd( txt_, "[ METADATA ]" )
-   a_:= MemoToArray( o_[ E_oPrjMta ]:toPlainText() ); aeval( a_, {|e| aadd( txt_, e ) } ) ; aadd( txt_, " " )
-
-   /* Setup Meta Keys */
-   a4_1 := SetupMetaKeys( a_ )
-
-   ::cSaveTo := ParseWithMetaData( o_[ E_oPrjLoc ]:text(), a4_1 ) + ;
-                      hb_OsPathSeparator() + ;
-                ParseWithMetaData( o_[ E_oPrjOut ]:text(), a4_1 ) + ;
-                      ".hbi"
-
-   CreateTarget( ::cSaveTo, txt_ )
-   hb_MemoWrit( hb_dirBase() + "hbide.env", o_[ E_oPrjCmp ]:toPlainText() )
-
-   RETURN Nil
 
 /*----------------------------------------------------------------------*/
 
@@ -1852,10 +1762,10 @@ METHOD HbIde:addSourcesToProject()
    LOCAL aFiles, a_, b_, a4_1, s
 
    IF !empty( aFiles := ::selectSource( "openmany" ) )
-      a_:= MemoToArray( ::aPrpObjs[ E_oPrjMta ]:toPlainText() )
+      a_:= MemoToArray( ::oProps:qObj[ "editMetaData" ]:toPlainText() )
       a4_1 := SetupMetaKeys( a_ )
 
-      a_:= MemoToArray( ::aPrpObjs[ E_oPrjSrc ]:toPlainText() )
+      a_:= MemoToArray( ::oProps:qObj[ "editSources" ]:toPlainText() )
 
       b_:={}
       aeval( aFiles, {|e| aadd( b_, ApplyMetaData( e, a4_1 ) ) } )
@@ -1866,7 +1776,7 @@ METHOD HbIde:addSourcesToProject()
          ENDIF
       NEXT
 
-      ::aPrpObjs[ E_oPrjSrc ]:setPlainText( ArrayToMemo( a_ ) )
+      ::oProps:qObj[ "editSources" ]:setPlainText( ArrayToMemo( a_ ) )
    ENDIF
 
    RETURN Self

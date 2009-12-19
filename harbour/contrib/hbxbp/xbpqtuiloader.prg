@@ -140,7 +140,6 @@ METHOD XbpQtUiLoader:destroy()
    NEXT
 
    ::oWidget:hide()
-   ::oWidget:close()
    ::oWidget:pPtr := 0
 
    RETURN NIL
