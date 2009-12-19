@@ -1517,6 +1517,7 @@ METHOD HbIde:executeAction( cKey )
       ::lDockRVisible := !( ::lDockRVisible )
 
    CASE cKey == "Compile"
+      TestXbpQtUiLoader()
    CASE cKey == "CompilePPO"
 
    ENDCASE
@@ -1944,3 +1945,17 @@ METHOD HbIde:readProcessInfo( nMode, iBytes )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION TestXbpQtUiLoader()
+   LOCAL oUiLoader
+
+   oUiLoader := XbpQtUiLoader():new()
+   oUiLoader:file := s_resPath + "finddialog.ui"
+   oUiLoader:create()
+
+   oUiLoader:setText( "comboFindWhat", "Harbour" )
+
+   RETURN Nil
+
+/*----------------------------------------------------------------------*/
+

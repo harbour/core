@@ -288,6 +288,8 @@ FUNCTION GraMakeRGBColor( aRGB )
 
    RETURN nRGB
 
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbxbp_ConvertAFactFromXBP( cMode, xValue )
 
    SWITCH Upper( cMode )
@@ -355,5 +357,10 @@ FUNCTION hbxbp_ConvertAFactFromXBP( cMode, xValue )
    ENDSWITCH
 
    RETURN xValue
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbxbp_Just()
+   RETURN nil
 
 /*----------------------------------------------------------------------*/

@@ -41,6 +41,7 @@ PRG_SOURCES := \
    xbpprinter.prg \
    xbpprintdialog.prg \
    xbpbrowse.prg \
+   xbpqtuiloader.prg \
 
 PRG_HEADERS := \
    xbp.ch \
