@@ -102,8 +102,15 @@ CREATE CLASS QFontMetrics
 /*----------------------------------------------------------------------*/
 
 METHOD QFontMetrics:new( ... )
+   LOCAL p, aP := hb_aParams()
 
-   ::pPtr := Qt_QFontMetrics( ... )
+   IF len( aP ) > 0
+      FOR EACH p IN aP
+         p := hbqt_ptr( p )
+      NEXT
+   ENDIF
+
+   ::pPtr := hb_ExecFromArray( @Qt_QFontMetrics(), aP )
 
    RETURN Self
 

@@ -93,8 +93,15 @@ CREATE CLASS QLine
 /*----------------------------------------------------------------------*/
 
 METHOD QLine:new( ... )
+   LOCAL p, aP := hb_aParams()
 
-   ::pPtr := Qt_QLine( ... )
+   IF len( aP ) > 0
+      FOR EACH p IN aP
+         p := hbqt_ptr( p )
+      NEXT
+   ENDIF
+
+   ::pPtr := hb_ExecFromArray( @Qt_QLine(), aP )
 
    RETURN Self
 

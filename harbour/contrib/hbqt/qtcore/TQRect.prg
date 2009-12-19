@@ -135,8 +135,15 @@ CREATE CLASS QRect
 /*----------------------------------------------------------------------*/
 
 METHOD QRect:new( ... )
+   LOCAL p, aP := hb_aParams()
 
-   ::pPtr := Qt_QRect( ... )
+   IF len( aP ) > 0
+      FOR EACH p IN aP
+         p := hbqt_ptr( p )
+      NEXT
+   ENDIF
+
+   ::pPtr := hb_ExecFromArray( @Qt_QRect(), aP )
 
    RETURN Self
 

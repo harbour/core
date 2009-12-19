@@ -136,8 +136,15 @@ CREATE CLASS QTextCursor
 /*----------------------------------------------------------------------*/
 
 METHOD QTextCursor:new( ... )
+   LOCAL p, aP := hb_aParams()
 
-   ::pPtr := Qt_QTextCursor( ... )
+   IF len( aP ) > 0
+      FOR EACH p IN aP
+         p := hbqt_ptr( p )
+      NEXT
+   ENDIF
+
+   ::pPtr := hb_ExecFromArray( @Qt_QTextCursor(), aP )
 
    RETURN Self
 

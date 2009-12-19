@@ -80,8 +80,15 @@ CREATE CLASS QBitmap INHERIT QPixmap
 /*----------------------------------------------------------------------*/
 
 METHOD QBitmap:new( ... )
+   LOCAL p, aP := hb_aParams()
 
-   ::pPtr := Qt_QBitmap( ... )
+   IF len( aP ) > 0
+      FOR EACH p IN aP
+         p := hbqt_ptr( p )
+      NEXT
+   ENDIF
+
+   ::pPtr := hb_ExecFromArray( @Qt_QBitmap(), aP )
 
    RETURN Self
 

@@ -85,8 +85,15 @@ CREATE CLASS QCursor
 /*----------------------------------------------------------------------*/
 
 METHOD QCursor:new( ... )
+   LOCAL p, aP := hb_aParams()
 
-   ::pPtr := Qt_QCursor( ... )
+   IF len( aP ) > 0
+      FOR EACH p IN aP
+         p := hbqt_ptr( p )
+      NEXT
+   ENDIF
+
+   ::pPtr := hb_ExecFromArray( @Qt_QCursor(), aP )
 
    RETURN Self
 

@@ -116,8 +116,15 @@ CREATE CLASS QPixmap INHERIT QPaintDevice
 /*----------------------------------------------------------------------*/
 
 METHOD QPixmap:new( ... )
+   LOCAL p, aP := hb_aParams()
 
-   ::pPtr := Qt_QPixmap( ... )
+   IF len( aP ) > 0
+      FOR EACH p IN aP
+         p := hbqt_ptr( p )
+      NEXT
+   ENDIF
+
+   ::pPtr := hb_ExecFromArray( @Qt_QPixmap(), aP )
 
    RETURN Self
 

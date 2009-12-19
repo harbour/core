@@ -84,8 +84,15 @@ CREATE CLASS QRadialGradient INHERIT QGradient
 /*----------------------------------------------------------------------*/
 
 METHOD QRadialGradient:new( ... )
+   LOCAL p, aP := hb_aParams()
 
-   ::pPtr := Qt_QRadialGradient( ... )
+   IF len( aP ) > 0
+      FOR EACH p IN aP
+         p := hbqt_ptr( p )
+      NEXT
+   ENDIF
+
+   ::pPtr := hb_ExecFromArray( @Qt_QRadialGradient(), aP )
 
    RETURN Self
 

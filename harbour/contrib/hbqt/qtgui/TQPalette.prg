@@ -111,8 +111,15 @@ CREATE CLASS QPalette
 /*----------------------------------------------------------------------*/
 
 METHOD QPalette:new( ... )
+   LOCAL p, aP := hb_aParams()
 
-   ::pPtr := Qt_QPalette( ... )
+   IF len( aP ) > 0
+      FOR EACH p IN aP
+         p := hbqt_ptr( p )
+      NEXT
+   ENDIF
+
+   ::pPtr := hb_ExecFromArray( @Qt_QPalette(), aP )
 
    RETURN Self
 

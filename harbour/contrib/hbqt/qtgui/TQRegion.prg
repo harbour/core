@@ -94,8 +94,15 @@ CREATE CLASS QRegion
 /*----------------------------------------------------------------------*/
 
 METHOD QRegion:new( ... )
+   LOCAL p, aP := hb_aParams()
 
-   ::pPtr := Qt_QRegion( ... )
+   IF len( aP ) > 0
+      FOR EACH p IN aP
+         p := hbqt_ptr( p )
+      NEXT
+   ENDIF
+
+   ::pPtr := hb_ExecFromArray( @Qt_QRegion(), aP )
 
    RETURN Self
 

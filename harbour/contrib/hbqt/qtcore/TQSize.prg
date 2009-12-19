@@ -90,8 +90,15 @@ CREATE CLASS QSize
 /*----------------------------------------------------------------------*/
 
 METHOD QSize:new( ... )
+   LOCAL p, aP := hb_aParams()
 
-   ::pPtr := Qt_QSize( ... )
+   IF len( aP ) > 0
+      FOR EACH p IN aP
+         p := hbqt_ptr( p )
+      NEXT
+   ENDIF
+
+   ::pPtr := hb_ExecFromArray( @Qt_QSize(), aP )
 
    RETURN Self
 
