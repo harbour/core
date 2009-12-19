@@ -1545,7 +1545,7 @@ STATIC FUNCTION CreateTarget( cFile, txt_ )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
-   LOCAL cFile, s, n, cM, ss, cCall, sm, cClassType, i
+   LOCAL cFile, s, n, cM, ss, cCall, sm, i
    LOCAL nLen := len( cWidget )
    LOCAL txt_ := {}, mth_:= {}
 
@@ -1593,66 +1593,44 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
 
       ENDIF
    NEXT
-   aadd( txt_, '' )
+   aadd( txt_, '   ' )
    aadd( txt_, '   ENDCLASS' )
-   aadd( txt_, '' )
+   aadd( txt_, '   ' )
    aadd( txt_, '/*----------------------------------------------------------------------*/' )
-   aadd( txt_, ''                                                                           )
+   aadd( txt_, '   '                                                                           )
 
-   n  := ascan( cls_, {|e_| lower( e_[ 1 ] ) == 'type' } )
-   IF n > 0
-      cClassType := upper( cls_[ n,2 ] )
-   ELSE
-      cClassType := ""
-   ENDIF
+   aadd( txt_, 'METHOD ' + cWidget + ':new( ... )' )
+   aadd( txt_, '   LOCAL p' )
+   aadd( txt_, '   FOR EACH p IN { ... }' )
+   aadd( txt_, '      p := hbqt_ptr( p )' )
+   aadd( txt_, '      hb_pvalue( p:__enumIndex(), p )' )
+   aadd( txt_, '   NEXT' )
+   aadd( txt_, '   ::pPtr := Qt_' + cWidget + '( ... )' )
+   aadd( txt_, '   RETURN Self' )
+   aadd( txt_, '   ' )
 
-   DO CASE
-   CASE cClassType == "PLAINOBJECT"
-      aadd( txt_, 'METHOD ' + cWidget + ':new( ... )' )
-      aadd( txt_, '   LOCAL p, aP := hb_aParams()' )
-      aadd( txt_, '  ' )
-      aadd( txt_, '   IF len( aP ) > 0' )
-      aadd( txt_, '      FOR EACH p IN aP' )
-      aadd( txt_, '         p := hbqt_ptr( p )' )
-      aadd( txt_, '      NEXT' )
-      aadd( txt_, '   ENDIF' )
-      aadd( txt_, '  ' )
-      aadd( txt_, '   ::pPtr := hb_ExecFromArray( @Qt_' + cWidget + '(), aP )' )
-      //aadd( txt_, '   ::pPtr := Qt_' + cWidget + '( ... )' )
-      aadd( txt_, '' )
-      aadd( txt_, '   RETURN Self' )
-      aadd( txt_, '' )
-
-   OTHERWISE
-      aadd( txt_, 'METHOD ' + cWidget + ':new( pParent )' )
-      aadd( txt_, '   ::pPtr := Qt_' + cWidget + '( hbqt_ptr( pParent ) )' )
-      aadd( txt_, '   RETURN Self' )
-      aadd( txt_, '' )
-
-   ENDCASE
-   aadd( txt_, '' )
-
+   aadd( txt_, '   ' )
    aadd( txt_, 'METHOD ' + cWidget + ':configure( xObject )' )
-   aadd( txt_, '   IF hb_isObject( xObject )                                               ' )
-   aadd( txt_, '      ::pPtr := xObject:pPtr                                               ' )
-   aadd( txt_, '   ELSEIF hb_isPointer( xObject )                                          ' )
-   aadd( txt_, '      ::pPtr := xObject                                                    ' )
-   aadd( txt_, '   ENDIF                                                                   ' )
-   aadd( txt_, '   RETURN Self                                                             ' )
-   aadd( txt_, '                                                                           ' )
+   aadd( txt_, '   IF hb_isObject( xObject )               ' )
+   aadd( txt_, '      ::pPtr := xObject:pPtr               ' )
+   aadd( txt_, '   ELSEIF hb_isPointer( xObject )          ' )
+   aadd( txt_, '      ::pPtr := xObject                    ' )
+   aadd( txt_, '   ENDIF                                   ' )
+   aadd( txt_, '   RETURN Self                             ' )
+   aadd( txt_, '                                           ' )
 
    /* Define methods */
    FOR i := 1 TO len( mth_ )
-      aadd( txt_, '                                                                           ' )
+      aadd( txt_, '                                        ' )
       aadd( txt_, 'METHOD ' + cWidget + ':' + mth_[ i, 1 ] )
       aadd( txt_, '   RETURN ' + ParsePtr( mth_[ i, 2 ] ) )
-      aadd( txt_, '                                                                           ' )
+      aadd( txt_, '                                        ' )
    NEXT
 
    IF !empty( subCls_ )
-      aadd( txt_, '                                                                           ' )
+      aadd( txt_, '                                        ' )
       aeval( subCls_, {|e| aadd( txt_, e ) } )
-      aadd( txt_, '                                                                           ' )
+      aadd( txt_, '                                        ' )
    ENDIF
 
    /* Generate .prg */

@@ -83,7 +83,7 @@ enum Encoding { CodecForTr, UnicodeUTF8, DefaultCodec }
 <PROTOS>
 // bool filterEvent ( void * message, long * result )
 virtual bool notify ( QObject * receiver, QEvent * event )
-EventFilter setEventFilter ( EventFilter filter )
+// EventFilter setEventFilter ( EventFilter filter )
 // virtual bool winEventFilter ( MSG * msg, long * result )
 
 void addLibraryPath ( const QString & path )

@@ -87,7 +87,7 @@ void append ( const QList<T> & value )
 const T & at ( int i ) const
 T & back ()
 const T & back () const
-iterator begin ()
+//iterator begin ()
 //const_iterator begin () const
 void clear ()
 //const_iterator constBegin () const
@@ -99,15 +99,15 @@ bool empty () const
 //iterator end ()
 //const_iterator end () const
 bool endsWith ( const T & value ) const
-iterator erase ( iterator pos )
-iterator erase ( iterator begin, iterator end )
+//iterator erase ( iterator pos )
+//iterator erase ( iterator begin, iterator end )
 T & first ()
 const T & first () const
 T & front ()
 const T & front () const
 int indexOf ( const T & value, int from = 0 ) const
 void insert ( int i, const T & value )
-iterator insert ( iterator before, const T & value )
+//iterator insert ( iterator before, const T & value )
 bool isEmpty () const
 T & last ()
 const T & last () const
