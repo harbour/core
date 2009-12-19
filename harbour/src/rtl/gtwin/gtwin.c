@@ -718,9 +718,6 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    HB_GTSELF_SETDISPCP( pGT, NULL, NULL, FALSE );
    HB_GTSELF_SETKEYCP( pGT, NULL, NULL );
 
-   /* Add Ctrl+Break handler [vszakats] */
-   SetConsoleCtrlHandler( hb_gt_win_CtrlHandler, TRUE );
-
 #ifndef HB_NO_ALLOC_CONSOLE
    /*
     * This is a hack for MSYS console. It does not support full screen output
@@ -758,6 +755,11 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       if( s_HInput == INVALID_HANDLE_VALUE )
          hb_errInternal( 10001, "Can't allocate console", NULL, NULL );
    }
+
+   /* AllocConsole() initializes standard input, standard output,
+      and standard error handles for the new console. [jarabal] */
+   /* Add Ctrl+Break handler [vszakats] */
+   SetConsoleCtrlHandler( hb_gt_win_CtrlHandler, TRUE );
 
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
 
