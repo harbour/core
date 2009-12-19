@@ -10,8 +10,6 @@
    #xtranslate HBXBP_DEBUG( [<x,...>] ) => iif( .T.,, )
 #endif
 
-#define QT_PTROFXBP( oXbp )  ( oXbp:oWidget:pPtr )
-
 /*----------------------------------------------------------------------*/
 
 #include "hbqt.ch"
