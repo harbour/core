@@ -63,6 +63,7 @@
   hb_threadWaitForAll() -> NIL
   hb_threadWait( <pThID> | <apThID>, [ <nTimeOut> ] [, <lAll> ] ) => <nThInd> | <nThCount> | 0
   hb_threadOnce( @<onceControl> [, <bAction> ] ) -> <lFirstCall>
+  hb_threadOnceInit( @<item> <value> ) -> <lInitialized>
   hb_mutexCreate() -> <pMtx>
   hb_mutexLock( <pMtx> [, <nTimeOut> ] ) -> <lLocked>
   hb_mutexUnlock( <pMtx> ) -> <lOK>
