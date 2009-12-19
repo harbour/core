@@ -1145,8 +1145,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ELSE
             lSysLoc := LEFTEQUAL( l_cHB_BIN_INSTALL, "/usr/local/bin" ) .OR. ;
                        LEFTEQUAL( l_cHB_BIN_INSTALL, "/usr/bin"       ) .OR. ;
-                       LEFTEQUAL( l_cHB_BIN_INSTALL, "/opt/harbour"   ) .OR. ;
-                       LEFTEQUAL( l_cHB_BIN_INSTALL, "/opt/bin"       ) .OR. ;
                        AScan( ListToArray( GetEnv( "LD_LIBRARY_PATH" ), ":" ), {| tmp | LEFTEQUAL( l_cHB_LIB_INSTALL, tmp ) } ) > 0
          ENDIF
       #else
