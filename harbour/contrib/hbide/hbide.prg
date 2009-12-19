@@ -360,15 +360,15 @@ METHOD HbIde:create( cProjIni )
    ENDDO
 
    /* Very important - destroy resources */
-   HBXBP_DEBUG( "------------------------------------------------------" )
+   HBXBP_DEBUG( "======================================================" )
    HBXBP_DEBUG( "Before    ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
-   HBXBP_DEBUG( "------------------------------------------------------" )
+   HBXBP_DEBUG( "                                                      " )
 
    ::oDlg:destroy()
 
-   HBXBP_DEBUG( "------------------------------------------------------" )
+   HBXBP_DEBUG( "                                                      " )
    HBXBP_DEBUG( "After     ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
-   HBXBP_DEBUG( "------------------------------------------------------" )
+   HBXBP_DEBUG( "======================================================" )
 
    ::qCursor:pPtr := 0
    ::oFont        := NIL

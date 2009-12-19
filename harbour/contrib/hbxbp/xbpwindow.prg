@@ -753,7 +753,7 @@ METHOD XbpWindow:destroy()
    IF len( ::aEConnections ) > 0
       FOR EACH e_ IN ::aEConnections
          ::xDummy := Qt_DisConnect_Event( e_[ 1 ], e_[ 2 ] )
-         hbxbp_debug( "Event Disconnect:", iif( ::xDummy, "SUCCEEDED", "FAILED   " ), e_[ 1 ], e_[ 2 ] )
+//         HBXBP_DEBUG( "Event Disconnect:", iif( ::xDummy, "SUCCEEDED", "FAILED   " ), e_[ 1 ], e_[ 2 ] )
       NEXT
       ::aEConnections := {}
       ::oWidget:removeEventFilter( QT_GetEventFilter() )
@@ -788,7 +788,7 @@ METHOD XbpWindow:disconnect()
    IF len( ::aConnections ) > 0
       FOR EACH e_ IN ::aConnections
          ::xDummy := Qt_DisConnect_Signal( e_[ 1 ], e_[ 2 ] )
-         hbxbp_debug( "   Signal Disconnect:", iif( ::xDummy, "SUCCEEDED", "FAILED   " ), e_[ 1 ], e_[ 2 ] )
+//         HBXBP_DEBUG( "   Signal Disconnect:", iif( ::xDummy, "SUCCEEDED", "FAILED   " ), e_[ 1 ], e_[ 2 ] )
       NEXT
       ::aConnections := {}
    ENDIF

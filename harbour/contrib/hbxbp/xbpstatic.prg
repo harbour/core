@@ -365,7 +365,7 @@ METHOD XbpStatic:setCaption( xCaption, cDll )
             IF ::options == XBPSTATIC_BITMAP_SCALED
                ::oWidget:setScaledContents( .t. )
             ENDIF
-            ::oWidget:setPixmap( QPixmap():fromImage( QT_PTROF( ::caption:oWidget ) ) )
+            ::oWidget:setPixmap( QPixmap():fromImage( ::caption:oWidget ) )
 
          ELSEIF hb_isChar( ::caption )               /* $HARBOUR$ */
             IF ::options == XBPSTATIC_BITMAP_SCALED
