@@ -227,7 +227,7 @@ METHOD XbpQtUiLoader:loadUI( cUiFull )
    qFile := QFile():new( cUiFull )
    IF qFile:open( 1 )
       qUiLoader  := QUiLoader():new()
-      pWidget    := qUiLoader:load( qFile, IF( empty( ::oParent ), NIL, QT_PTROFXBP( ::oParent ) ) )
+      pWidget    := qUiLoader:load( qFile, IF( empty( ::oParent ), NIL, ::oParent:oWidget ) )
       DO CASE
       CASE ::widgets[ 1,1 ] == "QWidget"
          qWidget    := QWidget():configure( pWidget )

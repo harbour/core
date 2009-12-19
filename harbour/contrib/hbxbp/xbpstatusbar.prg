@@ -202,10 +202,10 @@ METHOD XbpStatusBar:addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
 
    IF nMode == -1
       oPanel := XbpStatusBarPanel():new( cCaption, nStyle, cKey ):create()
-      ::oWidget:addPermanentWidget( QT_PTROFXBP( oPanel ), 1 )
+      ::oWidget:addPermanentWidget( oPanel:oWidget, 1 )
    ELSE
       oPanel := XbpStatusBarPanel():new( cCaption, nStyle, cKey ):create()
-      ::oWidget:addWidget( QT_PTROFXBP( oPanel ) )
+      ::oWidget:addWidget( oPanel:oWidget )
    ENDIF
 
    oPanel:oParent := self
