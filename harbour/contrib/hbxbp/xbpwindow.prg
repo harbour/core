@@ -259,8 +259,8 @@ EXPORTED:
    METHOD   isDerivedFrom()
 
    DATA     oWidget
-   ACCESS   pWidget                               INLINE  IF( empty( ::oWidget ), NIL, QT_PTROF( ::oWidget ) )
-   ACCESS   pParent                               INLINE  IF( empty( ::oParent ), NIL, QT_PTROF( ::oParent:oWidget ) )
+   ACCESS   pWidget                               INLINE  IF( empty( ::oWidget ), NIL, ::oWidget:pPtr )
+   ACCESS   pParent                               INLINE  IF( empty( ::oParent ), NIL, ::oParent:oWidget:pPtr )
    DATA     oTabWidget
    DATA     aTabs                                 INIT  {}
    DATA     oPalette
@@ -404,9 +404,8 @@ METHOD XbpWindow:connect( pWidget, cSignal, bBlock )
 METHOD XbpWindow:connectEvent( pWidget, nEvent, bBlock )
    LOCAL lSuccess
 
-   IF ( lSuccess := Qt_Connect_Event( hbqt_ptr( pWidget ), nEvent, bBlock ) )
-//hbxbp_debug( "Event Connected", nEvent )
-      aadd( ::aEConnections, { hbqt_ptr( pWidget ), nEvent } )
+   IF ( lSuccess := Qt_Connect_Event( pWidget, nEvent, bBlock ) )
+      aadd( ::aEConnections, { pWidget, nEvent } )
    ENDIF
 
    RETURN lSuccess

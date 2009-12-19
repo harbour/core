@@ -484,7 +484,7 @@ METHOD XbpRtf:selColor( ... )
          xRet   := ::oTextCharFormat:foreground()
          nColor := hbxbp_ConvertAFactFromXBP( "COLOR", aP[ 1 ] )
          oColor := QColor():new( nColor )
-         oBrush := QBrush():new( "QColor", QT_PTROF( oColor ) )
+         oBrush := QBrush():new( "QColor", oColor )
          ::oTextCharFormat:setForeground( oBrush )
          ::oCurCursor:setCharFormat( ::oTextCharFormat )
       ENDIF
