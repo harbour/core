@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( GR437 )
+ * National Collation Support Module ( EL437 )
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -12,7 +12,7 @@
  * This file is generated automatically by cpinfo.prg
  */
 
-#define HB_CP_ID        GR437
+#define HB_CP_ID        EL437
 #define HB_CP_INFO      "Greek CP-437 (ntxgr437.obj compatible)"
 #define HB_CP_UNITB     HB_UNITB_437
 

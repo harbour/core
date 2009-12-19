@@ -18,6 +18,7 @@ C_SOURCES := \
    cpdeiso.c \
    cpdewin.c \
    cpdk865.c \
+   cpel437.c \
    cpel737.c \
    cpeliso.c \
    cpelwin.c \
@@ -32,7 +33,6 @@ C_SOURCES := \
    cpfr850m.c \
    cpfriso.c \
    cpfrwin.c \
-   cpgr437.c \
    cphr437.c \
    cphr852.c \
    cphrwin.c \
