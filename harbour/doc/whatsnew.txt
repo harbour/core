@@ -17,14 +17,14 @@ Version 2.0.0 (2009-12-??)
 Note
 =============================
 
-Too many to list, it's yet to be collected and sorted in 
+Too many to list, it's yet to be collected and sorted in
 digestible form.
 
 [ Incomplete, unordered.
-  This section only contains update between 
+  This section only contains update between
   2008-12-19 19:46 UTC+0100 and 2009-03-11 08:51 UTC+0100.
 
-  2008-08/09 - 2008-12-19 and 
+  2008-08/09 - 2008-12-19 and
   2009-03-11 - 2009-12-22 are missing. ]
 
 General
@@ -431,6 +431,8 @@ Known build issues
   normal in this non-Harbour code.
 - Using Pelles C 5.00.1 in 64-bit mode, HB_INET*() functions
   won't work.
+- Using Pelles C 6.00.6 in 64-bit mode, there will be
+  missing symbols at link time due to bugs in Pelles C.
 - gtalleg contrib may not compile on all platforms/compilers.
 - hbssl won't work with watcom on win platform due to OpenSSL
   header compatibility problems.
